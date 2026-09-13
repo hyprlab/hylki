@@ -109,6 +109,9 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
+msgid "About"
+msgstr ""
+
 msgid "Actions"
 msgstr ""
 

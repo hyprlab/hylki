@@ -7643,7 +7643,7 @@ impl AppModel {
         }
         self.help_menu.append(Some(i18n("Keyboard Shortcuts").as_str()), Some("win.shortcuts"));
         self.help_menu
-            .append(Some(format!("About {}", crate::APP_NAME).as_str()), Some("win.about"));
+            .append(Some(format!("{} {}", i18n("About"), crate::APP_NAME).as_str()), Some("win.about"));
     }
 
     /// The reader's font-and-colour override (#56) as the reader applies it:
@@ -12277,7 +12277,7 @@ impl AppModel {
         let win = adw::Window::builder()
             .transient_for(&self.window)
             .modal(false)
-            .title(format!("About {}", crate::APP_NAME).as_str())
+            .title(format!("{} {}", i18n("About"), crate::APP_NAME).as_str())
             .default_width(460)
             // Remembered vertical size (tall by default) — resizing sticks
             // across restarts via the save on close below.
@@ -12482,7 +12482,7 @@ impl AppModel {
         main_tv.set_content(Some(&scroller));
         nav.add(
             &adw::NavigationPage::builder()
-                .title(format!("About {}", crate::APP_NAME).as_str())
+                .title(format!("{} {}", i18n("About"), crate::APP_NAME).as_str())
                 .tag("main")
                 .child(&main_tv)
                 .build(),
