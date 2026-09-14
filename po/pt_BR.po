@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vireo\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/vireo/issues\n"
-"POT-Creation-Date: 2026-09-12 23:23+0100\n"
-"PO-Revision-Date: 2026-09-13 04:15+0100\n"
+"POT-Creation-Date:\n"
+"PO-Revision-Date: 2026-09-15 00:15+0100\n"
 "Last-Translator: Paulo Fino <somepaulo@duck.com>\n"
 "Language-Team: Portuguese (Brazil)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 50.0\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.9\n"
 
 msgid "Refresh or long-press for Status Bar"
 msgstr "Atualizar ou pressionar e segurar para mostrar a barra de status"
@@ -257,7 +257,7 @@ msgid "Keyboard Shortcuts"
 msgstr "Atalhos de teclado"
 
 msgid "About"
-msgstr ""
+msgstr "Sobre"
 
 msgid ""
 "Single-key shortcuts are switched off. Turn them on in Settings → System & "
@@ -328,44 +328,41 @@ msgstr "Nova mensagem"
 msgid "Could not attach {names}: Vireo cannot read the file."
 msgid_plural "Could not attach {n} files (Vireo cannot read them): {names}"
 msgstr[0] ""
+"Não foi possível anexar {names}: o Vireo não consegue ler o arquivo."
 msgstr[1] ""
+"Não foi possível anexar {n} arquivos (o Vireo não consegue lê-los): {names}"
 
 msgid "Send {n} file with Vireo"
 msgid_plural "Send {n} files with Vireo"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Enviar {n} arquivo com o Vireo"
+msgstr[1] "Enviar {n} arquivos com o Vireo"
 
 msgid "{names} ({size}). What should the files go into?"
-msgstr ""
+msgstr "{names} ({size}). Onde os arquivos devem ser inseridos?"
 
 msgid "Cancel"
 msgstr "Cancelar"
 
-#, fuzzy
 msgid "Reply to a Message…"
-msgstr "Responder a esta mensagem"
+msgstr "Responder a uma mensagem…"
 
 msgid "Continue a Draft…"
-msgstr ""
+msgstr "Continuar um rascunho…"
 
-#, fuzzy
 msgid "Reply to a Message"
-msgstr "Responder a esta mensagem"
+msgstr "Responder a uma mensagem"
 
 msgid "The files go into a reply to the message you pick."
-msgstr ""
+msgstr "Os arquivos serão adicionados a uma resposta à mensagem escolhida."
 
-#, fuzzy
 msgid "No messages to reply to yet."
-msgstr "Nenhuma mensagem selecionada"
+msgstr "Ainda não há mensagens para responder."
 
-#, fuzzy
 msgid "Reply With the Files"
-msgstr "Responder a esta mensagem"
+msgstr "Responder com os arquivos"
 
-#, fuzzy
 msgid "Large files"
-msgstr "Maiores primeiro"
+msgstr "Arquivos grandes"
 
 msgid ""
 "{names} is {size}, over the {limit} limit. Upload it to cloud storage and "
@@ -374,27 +371,29 @@ msgid_plural ""
 "{names} add up to {size}, over the {limit} limit. Upload them to cloud "
 "storage and put download links in the message instead?"
 msgstr[0] ""
+"{names} tem {size}, acima do limite de {limit}. Deseja enviá-lo para o "
+"armazenamento na nuvem e inserir um link de download na mensagem?"
 msgstr[1] ""
+"{names} somam {size}, acima do limite de {limit}. Deseja enviá-los para o "
+"armazenamento na nuvem e inserir links de download na mensagem?"
 
 msgid "Attach Anyway"
-msgstr ""
+msgstr "Anexar mesmo assim"
 
 msgid "Upload to Cloud Storage"
 msgstr "Enviar para o armazenamento na nuvem"
 
-#, fuzzy
 msgid "Continue a Draft"
-msgstr "Continuar"
+msgstr "Continuar um rascunho"
 
 msgid "The files go into the draft you pick."
-msgstr ""
+msgstr "Os arquivos serão adicionados ao rascunho escolhido."
 
-#, fuzzy
 msgid "No drafts to continue."
-msgstr "Nenhuma mensagem selecionada"
+msgstr "Não há rascunhos para continuar."
 
 msgid "Attach to This Draft"
-msgstr ""
+msgstr "Anexar a este rascunho"
 
 msgid "Delete this conversation?"
 msgstr "Excluir esta conversa?"
@@ -661,18 +660,16 @@ msgstr "Salvar todos os anexos"
 
 msgid "Always do this (change it in Settings → System → GNOME Files)"
 msgstr ""
+"Sempre fazer isso (altere em Configurações → Sistema → Arquivos do GNOME)"
 
-#, fuzzy
 msgid "New Message Instead"
-msgstr "Nova mensagem"
+msgstr "Criar uma nova mensagem"
 
-#, fuzzy
 msgid "Search by sender, subject or account"
-msgstr "Pesquisar por remetente, assunto, tipo, nome de arquivo…"
+msgstr "Pesquisar por remetente, assunto ou conta"
 
-#, fuzzy
 msgid "(no subject)"
-msgstr "Assunto"
+msgstr "(sem assunto)"
 
 msgid "Default"
 msgstr "Padrão"
@@ -785,18 +782,16 @@ msgstr "Agendada para {when}"
 msgid "New message"
 msgstr "Nova mensagem"
 
-#, fuzzy
 msgid "Message ready to send"
-msgstr "Ações nos cartões de mensagens"
+msgstr "Mensagem pronta para enviar"
 
-#, fuzzy
 msgid "A new message is open in Vireo."
-msgstr "Abra primeiro uma mensagem e, em seguida, imprima-a."
+msgstr "Uma nova mensagem está aberta no Vireo."
 
 msgid "A new message with {n} file attached is open in Vireo."
 msgid_plural "A new message with {n} files attached is open in Vireo."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Uma nova mensagem com {n} arquivo anexado está aberta no Vireo."
+msgstr[1] "Uma nova mensagem com {n} arquivos anexados está aberta no Vireo."
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
@@ -862,22 +857,19 @@ msgstr "O gpg não criptografou a mensagem."
 msgid "Open Vireo"
 msgstr "Abrir o Vireo"
 
-#, fuzzy
 msgid "View all {n} unread in Inboxes…"
-msgstr "Ver todas as {n} não lidas…"
+msgstr "Ver todas as {n} mensagens não lidas nas Caixas de entrada…"
 
 msgid "Accounts"
 msgstr "Contas"
 
-#, fuzzy
 msgid "No unread mail in Inboxes"
-msgstr "Nenhuma mensagem não lida"
+msgstr "Nenhuma mensagem não lida nas Caixas de entrada"
 
-#, fuzzy
 msgid "{n} unread in Inboxes"
 msgid_plural "{n} unread in Inboxes"
-msgstr[0] "{n} mensagem não lida"
-msgstr[1] "{n} mensagens não lidas"
+msgstr[0] "{n} mensagem não lida nas Caixas de entrada"
+msgstr[1] "{n} mensagens não lidas nas Caixas de entrada"
 
 msgid "Requires an app-specific password (not your normal login password)."
 msgstr ""
@@ -1130,13 +1122,16 @@ msgid "The circle, and this account's marks in the sidebar and lists"
 msgstr "O círculo e as marcas desta conta na barra lateral e nas listas"
 
 msgid "Use my Gravatar"
-msgstr ""
+msgstr "Usar meu Gravatar"
 
 msgid ""
 "Show the picture this address has at gravatar.com. Looking it up sends them "
 "a hash of the address, and if there is none, the circle falls back to the "
 "choice below."
 msgstr ""
+"Mostrar a imagem associada a este endereço em gravatar.com. A consulta envia "
+"ao serviço um hash do endereço; se não houver imagem, o círculo usa a opção "
+"abaixo."
 
 msgid "Circle shows"
 msgstr "Conteúdo do círculo"
@@ -1204,14 +1199,13 @@ msgstr ""
 msgid "Special Folders"
 msgstr "Pastas especiais"
 
-#, fuzzy
 msgid ""
 "Where sent, deleted and junk mail goes. Automatically follows the server's "
 "own markings; pick a folder when a role isn't detected or lands wrong."
 msgstr ""
-"O local onde são salvas as mensagens enviadas, excluídas e de spam. A opção "
-"Automático segue as marcações do próprio servidor; escolha uma pasta quando "
-"uma função não for detectada ou for atribuída incorretamente."
+"Destino das mensagens enviadas, excluídas e de spam. A opção Automático "
+"segue as marcações do servidor; escolha uma pasta quando uma função não for "
+"detectada ou for atribuída incorretamente."
 
 msgid "Sent"
 msgstr "Enviadas"
@@ -1360,14 +1354,13 @@ msgid "Test SMTP"
 msgstr "Testar SMTP"
 
 msgid "GOA"
-msgstr ""
+msgstr "GOA"
 
 msgid "Vireo"
 msgstr "Vireo"
 
-#, fuzzy
 msgid "Imported GNOME Online Account"
-msgstr "Importada das Contas online do GNOME"
+msgstr "Conta importada das Contas online do GNOME"
 
 msgid "Added directly in Vireo"
 msgstr "Adicionada diretamente no Vireo"
@@ -1390,36 +1383,33 @@ msgstr[0] "Após {n} dia"
 msgstr[1] "Após {n} dias"
 
 msgid "Google (Gmail)"
-msgstr ""
+msgstr "Google (Gmail)"
 
 msgid "Microsoft 365 / Outlook"
-msgstr ""
+msgstr "Microsoft 365 / Outlook"
 
 msgid "Proton Mail"
-msgstr ""
+msgstr "Proton Mail"
 
 msgid "Custom OAuth"
-msgstr ""
+msgstr "OAuth personalizado"
 
-#, fuzzy
 msgid "IMAP/POP3 account"
-msgstr "Adicionar conta"
+msgstr "Conta IMAP/POP3"
 
 msgid "IMAP/POP3 account on {host}"
-msgstr ""
+msgstr "Conta IMAP/POP3 em {host}"
 
-#, fuzzy
 msgid "Mail account"
 msgstr "Conta de email"
 
 #. Every condition, joined the way the rule combines them (#192).
-#, fuzzy
 msgid " or "
-msgstr "Para ou Cc"
+msgstr " ou "
 
 #. Every condition, joined the way the rule combines them (#192).
 msgid " and "
-msgstr ""
+msgstr " e "
 
 msgid ", tagged {tag}"
 msgstr ", com a etiqueta {tag}"
@@ -1500,9 +1490,8 @@ msgstr "Editar filtro"
 msgid "Add Filter"
 msgstr "Adicionar filtro"
 
-#, fuzzy
 msgid "Remove condition"
-msgstr "Remover conta?"
+msgstr "Remover condição"
 
 msgid "Where"
 msgstr "Campo"
@@ -1511,50 +1500,47 @@ msgid "Match"
 msgstr "Correspondência"
 
 msgid "Commas separate alternatives; any one of them counts"
-msgstr ""
+msgstr "Separe as alternativas por vírgulas; qualquer uma delas conta"
 
 msgid "Text to match"
 msgstr "Texto a procurar"
 
 msgid "Searched on the server; nothing is downloaded"
-msgstr ""
+msgstr "Pesquisado no servidor; nada é baixado"
 
 msgid "From address when no Reply-To is set"
-msgstr ""
+msgstr "Endereço do remetente quando Responder a não está definido"
 
-#, fuzzy
 msgid "Add Condition"
-msgstr "Adicionar conta de armazenamento na nuvem"
+msgstr "Adicionar condição"
 
-#, fuzzy
 msgid "Condition matching"
-msgstr "Conversas"
+msgstr "Combinação de condições"
 
 msgid "All must match"
-msgstr ""
+msgstr "Todas devem corresponder"
 
 msgid "Any one may match"
-msgstr ""
+msgstr "Qualquer uma pode corresponder"
 
-#, fuzzy
 msgid "Condition {n}"
-msgstr "Conversas"
+msgstr "Condição {n}"
 
-#, fuzzy
 msgid "Or where"
-msgstr "Campo"
+msgstr "Ou onde"
 
 msgid "And where"
-msgstr ""
+msgstr "E onde"
 
 msgid "Then"
-msgstr ""
+msgstr "Então"
 
 msgid "Move to"
 msgstr "Mover para"
 
 msgid "Leave in Inbox to only tag matching mail"
 msgstr ""
+"Deixar na Caixa de entrada para apenas etiquetar as mensagens correspondentes"
 
 #. Entry 0 files nowhere (a tag-only rule, #71): its path is "".
 msgid "Leave in Inbox"
@@ -1632,11 +1618,12 @@ msgstr "Os anexos das suas caixas de entrada irão aparecer aqui."
 msgid "No matching attachments"
 msgstr "Nenhum anexo correspondente"
 
-#, fuzzy
 msgid ""
 "Try a different search, or check which accounts and folders the footer is "
 "pulling from."
-msgstr "Experimente outra pesquisa ou limpe o filtro."
+msgstr ""
+"Tente outra pesquisa ou verifique quais contas e pastas estão selecionadas "
+"no rodapé."
 
 msgid "Thumbnail grid"
 msgstr "Grade de miniaturas"
@@ -1644,27 +1631,23 @@ msgstr "Grade de miniaturas"
 msgid "Table"
 msgstr "Tabela"
 
-#, fuzzy
 msgid "Show only this account"
-msgstr "Mostrar somente este tipo"
+msgstr "Mostrar somente esta conta"
 
 msgid "Folders to pull from"
-msgstr ""
+msgstr "Pastas de origem"
 
-#, fuzzy
 msgid "Include Archive"
-msgstr "Arquivar"
+msgstr "Incluir Arquivo"
 
-#, fuzzy
 msgid "Include other folders"
-msgstr "Conta da pasta atual"
+msgstr "Incluir outras pastas"
 
 msgid "Everything that is not an inbox or an archive"
-msgstr ""
+msgstr "Tudo o que não é uma caixa de entrada nem um arquivo"
 
-#, fuzzy
 msgid "Pulling attachments from"
-msgstr "Carregar anexos do servidor"
+msgstr "Obtendo anexos de"
 
 msgid "Show only this type"
 msgstr "Mostrar somente este tipo"
@@ -1728,9 +1711,8 @@ msgstr "Todas as contas"
 
 #. Deliberately counts messages, not attachments: until a message has
 #. been described there is no telling how many files it holds.
-#, fuzzy
 msgid "Indexing {n} messages…"
-msgstr "Mensagens: {n}"
+msgstr "Indexando {n} mensagens…"
 
 msgid "Loading more…"
 msgstr "Carregando mais…"
@@ -1835,13 +1817,16 @@ msgid "Upload folder"
 msgstr "Pasta de envio"
 
 msgid "Server is behind Cloudflare"
-msgstr ""
+msgstr "O servidor usa o proxy da Cloudflare"
 
 msgid ""
 "Cloudflare's proxy refuses a request over 100 MB, so bigger files are "
 "uploaded in 90 MB pieces the server puts back together. For a self-hosted "
 "server on a Cloudflare domain or tunnel."
 msgstr ""
+"O proxy da Cloudflare recusa solicitações acima de 100 MB, portanto arquivos "
+"maiores são enviados em partes de 90 MB que o servidor recompõe. Para "
+"servidores próprios em um domínio ou túnel da Cloudflare."
 
 msgid "Links expire after"
 msgstr "Os links expiram após"
@@ -2348,16 +2333,14 @@ msgstr ""
 "Um resultado positivo prova que o endereço não foi falsificado — não que a "
 "mensagem seja segura."
 
-#, fuzzy
 msgid "No draft selected"
-msgstr "Nenhuma mensagem selecionada"
+msgstr "Nenhum rascunho selecionado"
 
 msgid "No message selected"
 msgstr "Nenhuma mensagem selecionada"
 
-#, fuzzy
 msgid "Choose a draft from the list to edit it here."
-msgstr "Escolha uma mensagem da lista para lê-la aqui."
+msgstr "Escolha um rascunho da lista para editá-lo aqui."
 
 msgid "Choose a message from the list to read it here."
 msgstr "Escolha uma mensagem da lista para lê-la aqui."
@@ -2777,16 +2760,14 @@ msgstr "A cada 30 minutos"
 msgid "Left group"
 msgstr "Grupo esquerdo"
 
-#, fuzzy
 msgid "Always shown · up to 6"
-msgstr "Sempre exibido"
+msgstr "Sempre exibido · até 6"
 
 msgid "Right group"
 msgstr "Grupo direito"
 
-#, fuzzy
 msgid "Folds into ⋯ when narrow · up to 6"
-msgstr "Recolhido no menu ⋯ quando há pouco espaço"
+msgstr "Recolhido no menu ⋯ quando há pouco espaço · até 6"
 
 msgid "Not shown"
 msgstr "Não exibido"
@@ -2824,25 +2805,28 @@ msgstr "Data e hora"
 msgid "Backup"
 msgstr "Backup"
 
-#, fuzzy
 msgid "Not installed"
-msgstr "Sessão não iniciada"
+msgstr "Não instalada"
 
 msgid "Installed and loaded by Files"
-msgstr ""
+msgstr "Instalada e carregada pelo aplicativo Arquivos"
 
 msgid ""
 "Installed, but the nautilus-python package is missing, so Files cannot load "
 "it"
 msgstr ""
+"Instalada, mas o pacote nautilus-python está ausente, portanto o aplicativo "
+"Arquivos não consegue carregá-la"
 
 msgid ""
 "Installed. Files has not loaded it yet: restart Files, and make sure the "
 "nautilus-python package is installed"
 msgstr ""
+"Instalada. O aplicativo Arquivos ainda não a carregou: reinicie-o e confirme "
+"que o pacote nautilus-python está instalado"
 
 msgid "Installed, but not this version's copy"
-msgstr ""
+msgstr "Instalada, mas não é a cópia desta versão"
 
 msgid "Save the filter?"
 msgstr "Salvar o filtro?"
@@ -3168,13 +3152,16 @@ msgstr ""
 "Desativá-lo dá mais espaço ao remetente e ao assunto."
 
 msgid "Your own mail shows your account circle"
-msgstr ""
+msgstr "Suas mensagens mostram o círculo da conta"
 
 msgid ""
 "Messages you sent wear the account's Gravatar, picture or emoji, as its "
 "circle in the sidebar does. Turning it off gives them whatever circle anyone "
 "else's mail would get."
 msgstr ""
+"As mensagens que você envia usam o Gravatar, a imagem ou o emoji da conta, "
+"assim como o círculo na barra lateral. Ao desativar, elas recebem o mesmo "
+"círculo que qualquer mensagem de outra pessoa."
 
 msgid "Preview lines"
 msgstr "Linhas de prévia"
@@ -3238,15 +3225,6 @@ msgstr ""
 "Deslize uma mensagem para a esquerda, com o mouse ou touchpad, para excluí-"
 "la e para a direita para arquivá-la. Ao ativar esta opção, as duas ações são "
 "invertidas: a esquerda arquiva e a direita exclui."
-
-msgid "Trackpad swipe sensitivity"
-msgstr ""
-
-msgid ""
-"How readily a two-finger trackpad swipe moves a message. Raise it if a swipe "
-"never gets far enough to archive or delete, lower it if messages slide when "
-"you did not mean them to. Mouse drags are unaffected."
-msgstr ""
 
 msgid "Actions Palette timeout"
 msgstr "Tempo limite da Paleta de ações"
@@ -3526,16 +3504,17 @@ msgstr ""
 msgid "Show sender logos"
 msgstr "Mostrar logotipos dos remetentes"
 
-#, fuzzy
 msgid ""
 "Fills the sender's avatar with the brand's logo: the one the sender "
 "publishes for mail (BIMI), one bundled with Vireo, or the site's own icon. "
 "All but the bundled ones are fetched from the sender's domain, which then "
 "learns your IP address, as blocking remote content otherwise avoids."
 msgstr ""
-"Preenche o avatar do remetente com o ícone do site da marca, obtido a partir "
-"do domínio do remetente. Esse domínio fica a conhecer seu endereço IP, "
-"precisamente o que o bloqueio de conteúdo remoto evita."
+"Preenche o avatar do remetente com o logotipo da marca: o publicado pelo "
+"remetente para email (BIMI), um incluído no Vireo ou o ícone do próprio "
+"site. Todos, exceto os incluídos, são obtidos do domínio do remetente, que "
+"passa a saber seu endereço IP — algo que o bloqueio de conteúdo remoto "
+"normalmente evita."
 
 msgid ""
 "By default dates follow the system's own arrangement — its field order, "
@@ -3643,7 +3622,7 @@ msgstr ""
 "respectivo domínio."
 
 msgid "GNOME Files"
-msgstr ""
+msgstr "Arquivos do GNOME"
 
 msgid ""
 "Add \"Send with Vireo\" to the right-click menu in Files (Nautilus): the "
@@ -3652,53 +3631,62 @@ msgid ""
 "(python3-nautilus on Debian and Ubuntu), and Files has to be restarted "
 "before the entry appears."
 msgstr ""
+"Adicionar “Enviar com o Vireo” ao menu de contexto do aplicativo Arquivos "
+"(Nautilus): os arquivos selecionados serão anexados e abertos em uma nova "
+"mensagem. Isso instala uma pequena extensão na sua pasta pessoal. Também é "
+"necessário o pacote nautilus-python (python3-nautilus no Debian e Ubuntu), e "
+"o Arquivos precisa ser reiniciado para que a entrada apareça."
 
 msgid "Right-click menu entry"
-msgstr ""
+msgstr "Entrada do menu de contexto"
 
 msgid "Update"
-msgstr ""
+msgstr "Atualizar"
 
 msgid "Install"
-msgstr ""
+msgstr "Instalar"
 
 msgid "Install the nautilus-python package first: paste this in a terminal"
-msgstr ""
+msgstr "Instale primeiro o pacote nautilus-python: cole isto em um terminal"
 
-#, fuzzy
 msgid "Restart Files"
-msgstr "Reiniciar o Vireo"
+msgstr "Reiniciar Arquivos"
 
 msgid ""
 "Closes every Files window, the same as \"nautilus -q\". The next one opens "
 "with the entry, or without it once removed."
 msgstr ""
+"Fecha todas as janelas do aplicativo Arquivos, como “nautilus -q”. A próxima "
+"será aberta com a entrada ou, após a remoção, sem ela."
 
-#, fuzzy
 msgid "Restart"
-msgstr "Reiniciar agora"
+msgstr "Reiniciar"
 
 msgid "Files sent from Files go into"
-msgstr ""
+msgstr "Os arquivos enviados pelo aplicativo Arquivos são adicionados a"
 
 msgid ""
 "What Send with Vireo, Open With Vireo and Email… open with the files. Asking "
 "offers all three each time."
 msgstr ""
+"Define o que “Enviar com o Vireo”, “Abrir com o Vireo” e “Email…” abrem com "
+"os arquivos. Perguntar oferece as três opções a cada vez."
 
 msgid "Files over the size limit"
-msgstr ""
+msgstr "Arquivos acima do limite de tamanho"
 
 msgid ""
 "Uploading needs a cloud storage account (Settings → Cloud Storage); without "
 "one the files are attached."
 msgstr ""
+"O envio requer uma conta de armazenamento na nuvem (Configurações → "
+"Armazenamento na nuvem); sem uma, os arquivos são anexados."
 
 msgid "Size limit"
-msgstr ""
+msgstr "Limite de tamanho"
 
 msgid "In MB, for all the files together."
-msgstr ""
+msgstr "Em MB, para todos os arquivos juntos."
 
 msgid ""
 "Everything Vireo keeps, as one file: mail and cloud storage accounts, "
@@ -3774,25 +3762,22 @@ msgid "Always visible"
 msgstr "Sempre visível"
 
 msgid "Ask each time"
-msgstr ""
+msgstr "Perguntar sempre"
 
-#, fuzzy
 msgid "A new message"
-msgstr "Nova mensagem"
+msgstr "Uma nova mensagem"
 
 msgid "A draft you pick"
-msgstr ""
+msgstr "Um rascunho à sua escolha"
 
-#, fuzzy
 msgid "A reply to a message you pick"
-msgstr "Responder a esta mensagem"
+msgstr "Uma resposta a uma mensagem à sua escolha"
 
 msgid "Attach them anyway"
-msgstr ""
+msgstr "Anexá-los mesmo assim"
 
-#, fuzzy
 msgid "Upload to cloud storage and link them"
-msgstr "Enviar para o armazenamento na nuvem e compartilhar um link"
+msgstr "Enviar para o armazenamento na nuvem e criar links"
 
 msgid "Account of the current folder"
 msgstr "Conta da pasta atual"
@@ -3803,17 +3788,14 @@ msgstr "Idioma do sistema — {language}"
 msgid "Add a word"
 msgstr "Adicionar uma palavra"
 
-#, fuzzy
 msgid "Could not install the extension"
-msgstr "Não foi possível assinar a chave: {e}"
+msgstr "Não foi possível instalar a extensão"
 
-#, fuzzy
 msgid "Could not remove the extension"
-msgstr "Não foi possível importar a chave"
+msgstr "Não foi possível remover a extensão"
 
-#, fuzzy
 msgid "Could not restart Files"
-msgstr "Não foi possível ler o arquivo"
+msgstr "Não foi possível reiniciar o aplicativo Arquivos"
 
 msgid "Forget this word"
 msgstr "Esquecer esta palavra"
@@ -4409,37 +4391,3 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
-
-#, fuzzy
-#~ msgid "Conditions"
-#~ msgstr "Conversas"
-
-#~ msgid ""
-#~ "Where matching mail is filed; or leave it in the Inbox and only tag it"
-#~ msgstr ""
-#~ "Pasta onde a mensagem correspondente será arquivada; ou deixe-a na Caixa "
-#~ "de entrada e apenas atribua uma etiqueta"
-
-#~ msgid "From address"
-#~ msgstr "Endereço do remetente"
-
-#~ msgid "From name"
-#~ msgstr "Nome do remetente"
-
-#~ msgid "contains"
-#~ msgstr "contém"
-
-#~ msgid "is exactly"
-#~ msgstr "é exatamente"
-
-#~ msgid "starts with"
-#~ msgstr "começa por"
-
-#~ msgid "ends with"
-#~ msgstr "termina com"
-
-#~ msgid "Send Now"
-#~ msgstr "Enviar agora"
-
-#~ msgid "Send All"
-#~ msgstr "Enviar tudo"
