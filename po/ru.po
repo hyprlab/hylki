@@ -324,35 +324,35 @@ msgstr "Новое сообщение"
 
 msgid "Could not attach {names}: Vireo cannot read the file."
 msgid_plural "Could not attach {n} files (Vireo cannot read them): {names}"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Не удалось прикрепить {names}: Vireo не удаётся прочитать файл."
+msgstr[1] "Не удалось прикрепить {n} файла (Vireo не удаётся прочитать их): {names}"
+msgstr[2] "Не удалось прикрепить {n} файлов (Vireo не удаётся прочитать их): {names}"
 
 msgid "Send {n} file with Vireo"
 msgid_plural "Send {n} files with Vireo"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Отправить {n} файл через Vireo"
+msgstr[1] "Отправить {n} файла через Vireo"
+msgstr[2] "Отправить {n} файлов через Vireo"
 
 msgid "{names} ({size}). What should the files go into?"
-msgstr ""
+msgstr "{names} ({size}). Куда поместить эти файлы?"
 
 msgid "Cancel"
 msgstr "Отмена"
 
 #, fuzzy
 msgid "Reply to a Message…"
-msgstr "Ответить на это сообщение"
+msgstr "Ответить на письмо…"
 
 msgid "Continue a Draft…"
-msgstr ""
+msgstr "Продолжить черновик…"
 
 #, fuzzy
 msgid "Reply to a Message"
-msgstr "Ответить на это сообщение"
+msgstr "Ответ на письмо"
 
 msgid "The files go into a reply to the message you pick."
-msgstr ""
+msgstr "Файлы будут добавлены в ответ на выбранное письмо."
 
 #, fuzzy
 msgid "No messages to reply to yet."
@@ -373,28 +373,34 @@ msgid_plural ""
 "{names} add up to {size}, over the {limit} limit. Upload them to cloud "
 "storage and put download links in the message instead?"
 msgstr[0] ""
+"Размер файла {names} составляет {size}, что превышает лимит {limit}. Загрузить "
+"его в облачное хранилище и добавить ссылку на скачивание в письмо?"
 msgstr[1] ""
+"Файлы {names} суммарно занимают {size}, что превышает лимит {limit}. "
+"Загрузить их в облачное хранилище и добавить ссылки на скачивание в письмо?"
 msgstr[2] ""
+"Файлы {names} суммарно занимают {size}, что превышает лимит {limit}. "
+"Загрузить их в облачное хранилище и добавить ссылки на скачивание в письмо?"
 
 msgid "Attach Anyway"
-msgstr ""
+msgstr "Всё равно прикрепить"
 
 msgid "Upload to Cloud Storage"
 msgstr "Загрузить в облачное хранилище"
 
 #, fuzzy
 msgid "Continue a Draft"
-msgstr "Продолжить"
+msgstr "Продолжить черновик"
 
 msgid "The files go into the draft you pick."
-msgstr ""
+msgstr "Файлы будут добавлены в выбранный черновик."
 
 #, fuzzy
 msgid "No drafts to continue."
-msgstr "Сообщение не выбрано"
+msgstr "Нет черновиков для продолжения."
 
 msgid "Attach to This Draft"
-msgstr ""
+msgstr "Прикрепить к этому черновику"
 
 msgid "Delete this conversation?"
 msgstr "Удалить эту переписку?"
@@ -658,7 +664,7 @@ msgid "Save All Attachments"
 msgstr "Сохранить все вложения"
 
 msgid "Always do this (change it in Settings → System → GNOME Files)"
-msgstr ""
+msgstr "Всегда выполнять это действие (можно изменить в Параметрах → Система → «Файлы» GNOME)"
 
 #, fuzzy
 msgid "New Message Instead"
@@ -792,9 +798,9 @@ msgstr "Сначала откройте сообщение, затем расп�
 
 msgid "A new message with {n} file attached is open in Vireo."
 msgid_plural "A new message with {n} files attached is open in Vireo."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Новое письмо с {n} прикрёпленным файлом открыто в Vireo."
+msgstr[1] "Новое письмо с {n} прикрёпленными файлами открыто в Vireo."
+msgstr[2] "Новое письмо с {n} прикрёпленными файлами открыто в Vireo."
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "GnuPG (gpg) не установлен, поэтому это сообщение нельзя прочитать."
@@ -936,7 +942,7 @@ msgstr ""
 "Просмотреть все почтовые ящики на предмет меток, заданных другими клиентами"
 
 msgid "Find Tags…"
-msgstr "Найти метки…"
+msgstr "Найти теги…"
 
 msgid "Search filters"
 msgstr "Поиск фильтров"
@@ -1127,13 +1133,16 @@ msgid ""
 msgstr "Кружок и метки этой учётной записи на боковой панели и в списках"
 
 msgid "Use my Gravatar"
-msgstr ""
+msgstr "Использовать мой Gravatar"
 
 msgid ""
 "Show the picture this address has at gravatar.com. Looking it up sends them "
 "a hash of the address, and if there is none, the circle falls back to the "
 "choice below."
 msgstr ""
+"Отображать аватар, привязанный к этому адресу на gravatar.com. Для его поиска "
+"сервису отправляется хэш адреса, а при отсутствии изображения значок "
+"возвращается к выбранному ниже варианту."
 
 msgid "Circle shows"
 msgstr "Что показывает кружок"
@@ -1357,7 +1366,7 @@ msgid "Test SMTP"
 msgstr "Проверить SMTP"
 
 msgid "GOA"
-msgstr ""
+msgstr "GOA"
 
 msgid "Vireo"
 msgstr "Vireo"
@@ -1388,23 +1397,23 @@ msgstr[1] "Через {n} дня"
 msgstr[2] "Через {n} дней"
 
 msgid "Google (Gmail)"
-msgstr ""
+msgstr "Google (Gmail)"
 
 msgid "Microsoft 365 / Outlook"
-msgstr ""
+msgstr "Microsoft 365 / Outlook"
 
 msgid "Proton Mail"
-msgstr ""
+msgstr "Proton Mail"
 
 msgid "Custom OAuth"
-msgstr ""
+msgstr "Собственный OAuth"
 
 #, fuzzy
 msgid "IMAP/POP3 account"
-msgstr "Добавить учётную запись"
+msgstr "Учётная запись IMAP/POP3"
 
 msgid "IMAP/POP3 account on {host}"
-msgstr ""
+msgstr "Учётная запись IMAP/POP3 на {host}"
 
 #, fuzzy
 msgid "Mail account"
@@ -1413,11 +1422,11 @@ msgstr "Почтовая учётная запись"
 #. Every condition, joined the way the rule combines them (#192).
 #, fuzzy
 msgid " or "
-msgstr "Кому или копия"
+msgstr " или "
 
 #. Every condition, joined the way the rule combines them (#192).
 msgid " and "
-msgstr ""
+msgstr " и "
 
 msgid ", tagged {tag}"
 msgstr ", с тегом {tag}"
@@ -1436,7 +1445,7 @@ msgstr ""
 "В ваших почтовых ящиках не найдено меток, которых ещё нет в настройках."
 
 msgid "Tags Found"
-msgstr "Найденные метки"
+msgstr "Найденные теги"
 
 msgid ""
 "{n} tags are in use in your mailboxes but not set up here. Import them all, "
@@ -1507,16 +1516,16 @@ msgid "Match"
 msgstr "Совпадение"
 
 msgid "Commas separate alternatives; any one of them counts"
-msgstr ""
+msgstr "Запятые разделяют варианты; учитывается любой из них"
 
 msgid "Text to match"
 msgstr "Текст для совпадения"
 
 msgid "Searched on the server; nothing is downloaded"
-msgstr ""
+msgstr "Поиск выполняется на сервере; ничего не скачивается"
 
 msgid "From address when no Reply-To is set"
-msgstr ""
+msgstr "Адрес отправителя, если не указан адрес для ответа (Reply-To)"
 
 #, fuzzy
 msgid "Add Condition"
@@ -1527,30 +1536,30 @@ msgid "Condition matching"
 msgstr "Обсуждения"
 
 msgid "All must match"
-msgstr ""
+msgstr "Все условия должны совпадать"
 
 msgid "Any one may match"
-msgstr ""
+msgstr "Любое условие может совпадать"
 
 #, fuzzy
 msgid "Condition {n}"
-msgstr "Обсуждения"
+msgstr "Условие {n}"
 
 #, fuzzy
 msgid "Or where"
-msgstr "Где искать"
+msgstr "Или где"
 
 msgid "And where"
-msgstr ""
+msgstr "И где"
 
 msgid "Then"
-msgstr ""
+msgstr "Затем"
 
 msgid "Move to"
 msgstr "Переместить в"
 
 msgid "Leave in Inbox to only tag matching mail"
-msgstr ""
+msgstr "Оставить во «Входящих», чтобы только размечать подходящие письма тегами"
 
 #. Entry 0 files nowhere (a tag-only rule, #71): its path is "".
 msgid "Leave in Inbox"
@@ -1646,18 +1655,18 @@ msgid "Show only this account"
 msgstr "Показывать только этот тип"
 
 msgid "Folders to pull from"
-msgstr ""
+msgstr "Папки для получения сообщений"
 
 #, fuzzy
 msgid "Include Archive"
-msgstr "Архив"
+msgstr "Включать архив"
 
 #, fuzzy
 msgid "Include other folders"
-msgstr "Учётная запись текущей папки"
+msgstr "Включать другие папки"
 
 msgid "Everything that is not an inbox or an archive"
-msgstr ""
+msgstr "Всё, что не является входящими или архивом"
 
 #, fuzzy
 msgid "Pulling attachments from"
@@ -1833,13 +1842,17 @@ msgid "Upload folder"
 msgstr "Папка для загрузки"
 
 msgid "Server is behind Cloudflare"
-msgstr ""
+msgstr "Сервер находится за Cloudflare"
 
 msgid ""
 "Cloudflare's proxy refuses a request over 100 MB, so bigger files are "
 "uploaded in 90 MB pieces the server puts back together. For a self-hosted "
 "server on a Cloudflare domain or tunnel."
 msgstr ""
+"Прокси Cloudflare отклоняет запросы размером более 100 МБ, поэтому крупные "
+"файлы загружаются частями по 90 МБ, которые сервер затем собирает воедино. "
+"Используется для собственного сервера, работающего через домен или туннель "
+"Cloudflare."
 
 msgid "Links expire after"
 msgstr "Срок действия ссылок истекает через"
@@ -2281,9 +2294,9 @@ msgstr "Всё обсуждение"
 
 msgid "{n} message"
 msgid_plural "{n} messages"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{n} письмо"
+msgstr[1] "{n} письма"
+msgstr[2] "{n} писем"
 
 msgid "Search folders"
 msgstr "Папки поиска"
@@ -2833,20 +2846,24 @@ msgid "Not installed"
 msgstr "Вход не выполнен"
 
 msgid "Installed and loaded by Files"
-msgstr ""
+msgstr "Установлено и загружено приложением «Файлы»"
 
 msgid ""
 "Installed, but the nautilus-python package is missing, so Files cannot load "
 "it"
 msgstr ""
+"Установлено, но пакет nautilus-python отсутствует, поэтому приложение «Файлы» "
+"не может его загрузить"
 
 msgid ""
 "Installed. Files has not loaded it yet: restart Files, and make sure the "
 "nautilus-python package is installed"
 msgstr ""
+"Установлено. Приложение «Файлы» ещё не загрузило расширение: перезапустите "
+"«Файлы» и убедитесь, что пакет nautilus-python установлен"
 
 msgid "Installed, but not this version's copy"
-msgstr ""
+msgstr "Установлено, но используется копия от другой версии"
 
 msgid "Save the filter?"
 msgstr "Сохранить фильтр?"
@@ -2865,7 +2882,7 @@ msgid ""
 "The tag editor is open. Save what you changed, or discard it, before moving "
 "on."
 msgstr ""
-"Редактор метки открыт. Сохраните изменения или отмените их, прежде чем "
+"Редактор тега открыт. Сохраните изменения или отмените их, прежде чем "
 "продолжить."
 
 msgid "Save the account?"
@@ -2912,7 +2929,7 @@ msgstr ""
 "«Чтение»."
 
 msgid "Theme"
-msgstr ""
+msgstr "Тема"
 
 msgid "App icon"
 msgstr "Иконка приложения"
@@ -3146,7 +3163,7 @@ msgid "The folders under the Filters row."
 msgstr "Папки под строкой «Фильтры»."
 
 msgid "The tags under the Tags row."
-msgstr "Метки под строкой «Метки»."
+msgstr "Теги под строкой «Теги»."
 
 msgid "Sender avatars"
 msgstr "Аватары отправителей"
@@ -3159,12 +3176,14 @@ msgstr ""
 "Отключение этой функции освобождает больше места для имени и темы."
 
 msgid "Sent mail uses your account circle"
-msgstr ""
+msgstr "В отправленных письмах используется значок вашей учётной записи"
 
 msgid ""
 "Messages you sent wear the account's Gravatar, picture or emoji, as its "
 "circle in the sidebar does."
 msgstr ""
+"Отправленные вами письма содержат Gravatar, изображение или эмодзи учётной "
+"записи — так же, как и её значок на боковой панели."
 
 msgid "Preview lines"
 msgstr "Строки предпросмотра"
@@ -3219,15 +3238,21 @@ msgstr "Инвертировать направление свайпа"
 msgid ""
 "Turning this on swaps the swipe actions to: left archives, right deletes."
 msgstr ""
+"Включение этой опции меняет действия при смахивании местами: влево — в архив, "
+"вправо — удалить."
 
 msgid "Trackpad swipe sensitivity"
-msgstr ""
+msgstr "Чувствительность смахивания на трекпаде"
 
 msgid ""
 "How readily a two-finger trackpad swipe moves a message. Raise it if a swipe "
 "never gets far enough to archive or delete, lower it if messages slide when "
 "you did not mean them to. Mouse drags are unaffected."
 msgstr ""
+"Насколько легко смахивание двумя пальцами по трекпаду сдвигает письмо. "
+"Увеличьте параметр, если смахивание не доходит до архивации или удаления, "
+"или уменьшите, если письма сдвигаются случайно. На перетаскивание мышью не "
+"влияет."
 
 #, fuzzy
 msgid "Actions palette timeout"
@@ -3648,7 +3673,7 @@ msgstr ""
 "отчёту об ошибке. Адреса электронной почты сокращаются до домена."
 
 msgid "GNOME Files Integration"
-msgstr ""
+msgstr "Интеграция с «Файлами» GNOME"
 
 msgid ""
 "Add \"Send with Vireo\" to the right-click menu in Files (Nautilus): the "
@@ -3657,49 +3682,60 @@ msgid ""
 "(python3-nautilus on Debian and Ubuntu), and Files has to be restarted "
 "before the entry appears."
 msgstr ""
+"Добавляет пункт «Отправить через Vireo» в контекстное меню приложения «Файлы» "
+"(Nautilus): выбранные файлы прикрепляются к новому письму. Для этого "
+"устанавливается небольшое расширение в вашу домашнюю папку. Также требуется "
+"пакет nautilus-python (python3-nautilus в Debian и Ubuntu), а приложение «Файлы» "
+"необходимо перезапустить, чтобы пункт появился."
 
 msgid "Right-click menu entry"
-msgstr ""
+msgstr "Пункт контекстного меню"
 
 msgid "Update"
-msgstr ""
+msgstr "Обновить"
 
 msgid "Install"
-msgstr ""
+msgstr "Установить"
 
 msgid "Install the nautilus-python package first: paste this in a terminal"
-msgstr ""
+msgstr "Сначала установите пакет nautilus-python: вставьте это в терминал"
 
 #, fuzzy
 msgid "Restart Files"
-msgstr "Перезапустить Vireo"
+msgstr "Перезапустить «Файлы»"
 
 msgid ""
 "Closes every Files window, the same as \"nautilus -q\". The next one opens "
 "with the entry, or without it once removed."
 msgstr ""
+"Закрывает все окна приложения «Файлы», аналогично команде «nautilus -q». При "
+"следующем открытии пункт меню появится (или исчезнет, если расширение было "
+"удалено)."
 
 #, fuzzy
 msgid "Restart"
-msgstr "Перезапустить сейчас"
+msgstr "Перезапустить"
 
 msgid "Default Send with Vireo behavior"
-msgstr ""
+msgstr "Действие по умолчанию для «Отправить через Vireo»"
 
 #, fuzzy
 msgid "Default large attachments behavior"
-msgstr "Загрузить вложения с сервера"
+msgstr "Действие по умолчанию для крупных вложений"
 
 msgid ""
 "Upload to cloud storage needs a cloud storage account (Settings → Cloud "
 "Storage) otherwise the files are attached by default."
 msgstr ""
+"Для загрузки в облачное хранилище требуется подключённая учётная запись "
+"(Параметры → Облачное хранилище), иначе файлы по умолчанию прикрепляются к "
+"письму."
 
 msgid "Size limit"
-msgstr ""
+msgstr "Ограничение по размеру"
 
 msgid "In MB, for all the files together."
-msgstr ""
+msgstr "В МБ, суммарно для всех файлов."
 
 msgid ""
 "Everything Vireo keeps, as one file: mail and cloud storage accounts, "
@@ -3769,21 +3805,21 @@ msgid "Always visible"
 msgstr "Всегда показывать"
 
 msgid "Ask each time"
-msgstr ""
+msgstr "Спрашивать каждый раз"
 
 #, fuzzy
 msgid "A new message"
-msgstr "Новое сообщение"
+msgstr "Новое письмо"
 
 msgid "A draft you pick"
-msgstr ""
+msgstr "Выбранный черновик"
 
 #, fuzzy
 msgid "A reply to a message you pick"
-msgstr "Ответить на это сообщение"
+msgstr "Ответ на выбранное письмо"
 
 msgid "Attach them anyway"
-msgstr ""
+msgstr "Всё равно прикрепить"
 
 #, fuzzy
 msgid "Upload to cloud storage and link them"
