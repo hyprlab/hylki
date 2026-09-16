@@ -146,9 +146,8 @@ msgstr "Сначала непрочитанные"
 msgid "Flagged first"
 msgstr "Сначала отмеченные"
 
-#, fuzzy
 msgid "Create Folder"
-msgstr "Новая папка"
+msgstr "Создать папку"
 
 msgid "Added to Contacts"
 msgstr "Добавлено в контакты"
@@ -254,9 +253,8 @@ msgstr "Сочетания клавиш"
 msgid "About"
 msgstr "О программе"
 
-#, fuzzy
 msgid "Remove Tags"
-msgstr "Удалить тег"
+msgstr "Удалить теги"
 
 msgid ""
 "Single-key shortcuts are switched off. Turn them on in Settings → System & "
@@ -271,17 +269,14 @@ msgstr "Ваши теги"
 msgid "Delete"
 msgstr "Удалить"
 
-#, fuzzy
 msgid "Move to {name}"
-msgstr "Удалить {name}?"
+msgstr "Переместить в {name}"
 
-#, fuzzy
 msgid "Add Tag {name}"
-msgstr "Адрес электронной почты добавлен к контакту {name}"
+msgstr "Добавить тег {name}"
 
-#, fuzzy
 msgid "Remove Tag {name}"
-msgstr "Удалить {name}?"
+msgstr "Удалить тег {name}?"
 
 msgid "Undo"
 msgstr ""
@@ -336,13 +331,11 @@ msgstr "Отметить звёздочкой"
 msgid "Add Sender to Contacts"
 msgstr "Добавить отправителя в «Контакты»"
 
-#, fuzzy
 msgid "Block Remote Content"
-msgstr "Блокировать удалённые изображения"
+msgstr "Блокировать удалённое содержимое"
 
-#, fuzzy
 msgid "Show Remote Content"
-msgstr "Всегда загружать удалённое содержимое"
+msgstr "Показать удалённое содержимое"
 
 msgid "Delete {n} messages"
 msgstr "Удалить {n} сообщений"
@@ -370,31 +363,26 @@ msgstr "{names} ({size}). Куда поместить эти файлы?"
 msgid "Cancel"
 msgstr "Отмена"
 
-#, fuzzy
 msgid "Reply to a Message…"
-msgstr "Ответить на письмо…"
+msgstr "Ответить на сообщение…"
 
 msgid "Continue a Draft…"
 msgstr "Продолжить черновик…"
 
-#, fuzzy
 msgid "Reply to a Message"
-msgstr "Ответ на письмо"
+msgstr "Ответить на письмо"
 
 msgid "The files go into a reply to the message you pick."
 msgstr "Файлы будут добавлены в ответ на выбранное письмо."
 
-#, fuzzy
 msgid "No messages to reply to yet."
-msgstr "Сообщение не выбрано"
+msgstr "Пока нет писем для ответа."
 
-#, fuzzy
 msgid "Reply With the Files"
-msgstr "Ответить на это сообщение"
+msgstr "Ответить с прикреплением файлов"
 
-#, fuzzy
 msgid "Large files"
-msgstr "Сначала большие"
+msgstr "Большие файлы"
 
 msgid ""
 "{names} is {size}, over the {limit} limit. Upload it to cloud storage and "
@@ -418,14 +406,12 @@ msgstr "Всё равно прикрепить"
 msgid "Upload to Cloud Storage"
 msgstr "Загрузить в облачное хранилище"
 
-#, fuzzy
 msgid "Continue a Draft"
 msgstr "Продолжить черновик"
 
 msgid "The files go into the draft you pick."
 msgstr "Файлы будут добавлены в выбранный черновик."
 
-#, fuzzy
 msgid "No drafts to continue."
 msgstr "Нет черновиков для продолжения."
 
@@ -471,9 +457,8 @@ msgstr ""
 "{foreign} сообщений осталось на месте — почту нельзя перемещать между "
 "учётными записями"
 
-#, fuzzy
 msgid "Move Folder"
-msgstr "Новая папка"
+msgstr "Переместить папку"
 
 msgid "Vireo couldn’t save your password"
 msgstr "Vireo не смог сохранить ваш пароль"
@@ -505,15 +490,15 @@ msgstr "Переименовать"
 msgid "A folder named {new_name} is already there."
 msgstr "Папка с именем {new_name} уже существует."
 
-#, fuzzy
 msgid "Rename Folder"
 msgstr "Переименовать папку…"
 
-#, fuzzy
 msgid ""
 "Its messages are moved to Trash and the folder is removed from the server. "
 "This cannot be undone."
-msgstr "Её сообщения будут перемещены в «Корзину», а сама папка — удалена."
+msgstr ""
+"Её сообщения переносятся в «Корзину», а папка удаляется с сервера. Это "
+"действие нельзя отменить."
 
 msgid "Empty “{name}”?"
 msgstr "Очистить «{name}»?"
@@ -617,55 +602,47 @@ msgstr "© 2026 Hyprlab"
 msgid "No {v1} folder available for some messages"
 msgstr "Для некоторых сообщений нет доступной папки {v1}"
 
-#, fuzzy
 msgid "No filters to apply here yet"
-msgstr "Сообщение не выбрано"
+msgstr "Здесь пока нет фильтров для применения"
 
-#, fuzzy
 msgid "Applying Filters"
-msgstr "Добавить фильтр"
+msgstr "Применение фильтров"
 
-#, fuzzy
 msgid "Run in Background"
 msgstr "Продолжать работу в фоновом режиме"
 
-#, fuzzy
 msgid "Looked at {n} message so far"
 msgid_plural "Looked at {n} messages so far"
-msgstr[0] "Отправлять новые сообщения с адреса"
-msgstr[1] "Отправлять новые сообщения с адреса"
-msgstr[2] "Отправлять новые сообщения с адреса"
+msgstr[0] "Обработано {n} письмо"
+msgstr[1] "Обработано {n} письма"
+msgstr[2] "Обработано {n} писем"
 
-#, fuzzy
 msgid "Matched {n} message"
 msgid_plural "Matched {n} messages"
-msgstr[0] "{n} письмо"
-msgstr[1] "{n} письма"
-msgstr[2] "{n} писем"
+msgstr[0] "Совпало {n} письмо"
+msgstr[1] "Совпало {n} письма"
+msgstr[2] "Совпало {n} писем"
 
-#, fuzzy
 msgid "Tagged {n} message"
 msgid_plural "Tagged {n} messages"
-msgstr[0] "{n} письмо"
-msgstr[1] "{n} письма"
-msgstr[2] "{n} писем"
+msgstr[0] "Метка добавлена к {n} письму"
+msgstr[1] "Метки добавлены к {n} письмам"
+msgstr[2] "Метки добавлены к {n} письмам"
 
-#, fuzzy
 msgid "Filed {n} message away"
 msgid_plural "Filed {n} messages away"
-msgstr[0] "Найти в сообщении"
-msgstr[1] "Найти в сообщении"
-msgstr[2] "Найти в сообщении"
+msgstr[0] "Перемещено {n} письмо"
+msgstr[1] "Перемещено {n} письма"
+msgstr[2] "Перемещено {n} писем"
 
-#, fuzzy
 msgid "Folder {done} of {total}"
-msgstr "{cur} из {total}"
+msgstr "Папка {done} из {total}"
 
 msgid "Filters looked at {n} message, and it matched nothing"
 msgid_plural "Filters looked at {n} messages, and none of them matched"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Фильтры проверили {n} письмо, и совпадений не найдено"
+msgstr[1] "Фильтры проверили {n} письма, и совпадений не найдено"
+msgstr[2] "Фильтры проверили {n} писем, и совпадений не найдено"
 
 #. Matches that needed nothing: the rules had already done their
 #. work on an earlier sync (#201). Saying "none matched" here
@@ -676,30 +653,38 @@ msgid_plural ""
 "Filters matched {matched} of {n} messages, and all of them were already "
 "tagged or filed"
 msgstr[0] ""
+"Фильтры сопоставили {matched} из {n} письма, и к нему уже были добавлены "
+"метки или оно уже было перемещено"
 msgstr[1] ""
+"Фильтры сопоставили {matched} из {n} писем, и к ним уже были добавлены метки "
+"или они уже были перемещены"
 msgstr[2] ""
+"Фильтры сопоставили {matched} из {n} писем, и к ним уже были добавлены метки "
+"или они уже были перемещены"
 
 msgid "Filters tagged {tagged} of {n} message"
 msgid_plural "Filters tagged {tagged} of {n} messages"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Фильтры добавили метку к {tagged} из {n} письма"
+msgstr[1] "Фильтры добавили метки к {tagged} из {n} писем"
+msgstr[2] "Фильтры добавили метки к {tagged} из {n} писем"
 
 msgid "Filters filed {filed} of {n} message away"
 msgid_plural "Filters filed {filed} of {n} messages away"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Фильтры переместили {filed} из {n} письма"
+msgstr[1] "Фильтры переместили {filed} из {n} писем"
+msgstr[2] "Фильтры переместили {filed} из {n} писем"
 
 msgid "Filters tagged {tagged} and filed {filed} of {n} message"
 msgid_plural "Filters tagged {tagged} and filed {filed} of {n} messages"
 msgstr[0] ""
+"Фильтры добавили метку к {tagged} и переместили {filed} из {n} письма"
 msgstr[1] ""
+"Фильтры добавили метки к {tagged} и переместили {filed} из {n} писем"
 msgstr[2] ""
+"Фильтры добавили метки к {tagged} и переместили {filed} из {n} писем"
 
-#, fuzzy
 msgid "Filters Applied"
-msgstr "Расположение фильтров"
+msgstr "Фильтры применены"
 
 msgid "Move around"
 msgstr "Перемещаться"
@@ -758,12 +743,12 @@ msgstr "Написать"
 msgid "Back out of a reply and return to the list"
 msgstr "Отменить ответ и вернуться к списку"
 
-#, fuzzy
 msgid "Undo the last action, or the last edit while you are writing"
-msgstr "Непрочитанная почта в меню трея"
+msgstr ""
+"Отменить последнее действие или последнее изменение при написании письма"
 
 msgid "Redo it (Ctrl+Y does the same)"
-msgstr ""
+msgstr "Повторить отменённое действие (Ctrl+Y делает то же самое)"
 
 msgid "Print the message you are reading"
 msgstr "Печать открытого сообщения"
@@ -789,9 +774,8 @@ msgstr "Полностью выйти из Vireo"
 msgid "This list"
 msgstr "Этот список"
 
-#, fuzzy
 msgid "Unstar"
-msgstr "Установить"
+msgstr "Снять отметку"
 
 msgid "Save All Attachments"
 msgstr "Сохранить все вложения"
@@ -801,17 +785,14 @@ msgstr ""
 "Всегда выполнять это действие (можно изменить в Параметрах → Система → "
 "«Файлы» GNOME)"
 
-#, fuzzy
 msgid "New Message Instead"
-msgstr "Новое сообщение"
+msgstr "Написать новое письмо"
 
-#, fuzzy
 msgid "Search by sender, subject or account"
-msgstr "Поиск по отправителю, теме, типу, имени файла…"
+msgstr "Поиск по отправителю, теме или учётной записи"
 
-#, fuzzy
 msgid "(no subject)"
-msgstr "Тема"
+msgstr "(без темы)"
 
 msgid "Default"
 msgstr "По умолчанию"
@@ -923,13 +904,11 @@ msgstr "Запланировано на {when}"
 msgid "New message"
 msgstr "Новое сообщение"
 
-#, fuzzy
 msgid "Message ready to send"
-msgstr "Действия на карточке сообщения"
+msgstr "Сообщение готово к отправке"
 
-#, fuzzy
 msgid "A new message is open in Vireo."
-msgstr "Сначала откройте сообщение, затем распечатайте его."
+msgstr "В Vireo открыто новое сообщение."
 
 msgid "A new message with {n} file attached is open in Vireo."
 msgid_plural "A new message with {n} files attached is open in Vireo."
@@ -998,23 +977,20 @@ msgstr "Программе gpg не удалось зашифровать соо
 msgid "Open Vireo"
 msgstr "Открыть Vireo"
 
-#, fuzzy
 msgid "View all {n} unread in Inboxes…"
 msgstr "Посмотреть все непрочитанные: {n}…"
 
 msgid "Accounts"
 msgstr "Учётные записи"
 
-#, fuzzy
 msgid "No unread mail in Inboxes"
 msgstr "Нет непрочитанных писем"
 
-#, fuzzy
 msgid "{n} unread in Inboxes"
 msgid_plural "{n} unread in Inboxes"
-msgstr[0] "{n} непрочитанное сообщение"
-msgstr[1] "{n} непрочитанных сообщения"
-msgstr[2] "{n} непрочитанных сообщений"
+msgstr[0] "{n} непрочитанное во «Входящих»"
+msgstr[1] "{n} непрочитанных во «Входящих»"
+msgstr[2] "{n} непрочитанных во «Входящих»"
 
 msgid "Requires an app-specific password (not your normal login password)."
 msgstr "Требуется пароль приложения (не ваш обычный пароль для входа)."
@@ -1085,16 +1061,17 @@ msgstr "Поиск фильтров"
 msgid "Filters"
 msgstr "Фильтры"
 
-#, fuzzy
 msgid ""
 "File incoming mail into folders or tag it automatically, by sender, subject "
 "or recipients. Applied to each account's Inbox as Vireo syncs it, or to the "
 "mail already there with Apply Now; a folder's right-click menu runs them "
 "over that one folder."
 msgstr ""
-"Раскладывайте входящую почту по папкам или автоматически присваивайте ей тег "
+"Раскладывайте входящую почту по папкам или автоматически присваивайте ей теги "
 "по отправителю, теме или получателям. Применяется к папке «Входящие» каждой "
-"учётной записи во время синхронизации Vireo."
+"учётной записи во время синхронизации Vireo или к уже находящимся там "
+"письмам по кнопке «Применить сейчас». Контекстное меню папки позволяет "
+"запустить их для этой конкретной папки."
 
 msgid "Add Filter…"
 msgstr "Добавить фильтр…"
@@ -1102,7 +1079,6 @@ msgstr "Добавить фильтр…"
 msgid "Run every rule over the mail already in your inboxes"
 msgstr ""
 
-#, fuzzy
 msgid "Apply Now"
 msgstr "Применить"
 
@@ -1271,11 +1247,11 @@ msgstr "Метка (по умолчанию адрес электронной п
 msgid "Account accent color"
 msgstr "Цвет учётной записи"
 
-#, fuzzy
 msgid ""
 "The account circle background, and this account's marks in the sidebar and "
 "lists"
-msgstr "Кружок и метки этой учётной записи на боковой панели и в списках"
+msgstr ""
+"Фон кружка учётной записи и её метки на боковой панели и в списках"
 
 msgid "Use my Gravatar"
 msgstr "Использовать мой Gravatar"
@@ -1353,17 +1329,16 @@ msgstr ""
 msgid "Special Folders"
 msgstr "Специальные папки"
 
-#, fuzzy
 msgid ""
 "Which of this account's folders hold each role. Automatically follows the "
 "server's own markings; pick a folder when a role isn't detected or lands "
 "wrong. Nothing already on the server moves: a role says where mail goes from "
 "now on."
 msgstr ""
-"Папки для отправленных, удалённых писем и спама. Автоматический "
-"режим                                      следует меткам сервера; выберите "
-"папку вручную,                                      если роль не "
-"определилась или назначена неверно."
+"Какие из папок этой учётной записи выполняют каждую роль. Автоматически "
+"следует собственной разметке сервера; выберите папку вручную, если роль не "
+"определилась или назначена неверно. Существующие на сервере сообщения не "
+"перемещаются: назначение роли определяет, куда почта будет попадать в дальнейшем."
 
 msgid "Sent"
 msgstr "Отправленные"
@@ -1535,7 +1510,6 @@ msgstr "GOA"
 msgid "Vireo"
 msgstr "Vireo"
 
-#, fuzzy
 msgid "Imported GNOME Online Account"
 msgstr "Импортировано из «Сетевых учётных записей GNOME»"
 
@@ -1572,19 +1546,16 @@ msgstr "Proton Mail"
 msgid "Custom OAuth"
 msgstr "Собственный OAuth"
 
-#, fuzzy
 msgid "IMAP/POP3 account"
 msgstr "Учётная запись IMAP/POP3"
 
 msgid "IMAP/POP3 account on {host}"
 msgstr "Учётная запись IMAP/POP3 на {host}"
 
-#, fuzzy
 msgid "Mail account"
 msgstr "Почтовая учётная запись"
 
 #. Every condition, joined the way the rule combines them (#192).
-#, fuzzy
 msgid " or "
 msgstr " или "
 
@@ -1598,9 +1569,8 @@ msgstr ", с тегом {tag}"
 msgid "Remove filter"
 msgstr "Удалить фильтр"
 
-#, fuzzy
 msgid "Applying…"
-msgstr "Загрузка…"
+msgstr "Применение…"
 
 msgid "Searching…"
 msgstr "Поиск…"
@@ -1673,13 +1643,11 @@ msgstr "Редактировать фильтр"
 msgid "Add Filter"
 msgstr "Добавить фильтр"
 
-#, fuzzy
 msgid "Name (optional)"
-msgstr "Псевдоним (необязательно)"
+msgstr "Название (необязательно)"
 
-#, fuzzy
 msgid "Remove condition"
-msgstr "Удалить аккаунт?"
+msgstr "Удалить условие"
 
 msgid "Where"
 msgstr "Где искать"
@@ -1699,13 +1667,11 @@ msgstr "Поиск выполняется на сервере; ничего не
 msgid "From address when no Reply-To is set"
 msgstr "Адрес отправителя, если не указан адрес для ответа (Reply-To)"
 
-#, fuzzy
 msgid "Add Condition"
-msgstr "Добавить облачную учётную запись"
+msgstr "Добавить условие"
 
-#, fuzzy
 msgid "Condition matching"
-msgstr "Обсуждения"
+msgstr "Совпадение условий"
 
 msgid "All must match"
 msgstr "Все условия должны совпадать"
@@ -1713,11 +1679,9 @@ msgstr "Все условия должны совпадать"
 msgid "Any one may match"
 msgstr "Любое условие может совпадать"
 
-#, fuzzy
 msgid "Condition {n}"
 msgstr "Условие {n}"
 
-#, fuzzy
 msgid "Or where"
 msgstr "Или где"
 
@@ -1811,11 +1775,12 @@ msgstr "Вложения из ваших почтовых ящиков появ�
 msgid "No matching attachments"
 msgstr "Вложения не найдены"
 
-#, fuzzy
 msgid ""
 "Try a different search, or check which accounts and folders the footer is "
 "pulling from."
-msgstr "Попробуйте изменить поисковый запрос или сбросить фильтр."
+msgstr ""
+"Попробуйте изменить поисковый запрос или проверьте, из каких учётных "
+"записей и папок подвал получает данные."
 
 msgid "Thumbnail grid"
 msgstr "Сетка миниатюр"
@@ -1823,25 +1788,21 @@ msgstr "Сетка миниатюр"
 msgid "Table"
 msgstr "Таблица"
 
-#, fuzzy
 msgid "Show only this account"
-msgstr "Показывать только этот тип"
+msgstr "Показывать только эту учётную запись"
 
 msgid "Folders to pull from"
 msgstr "Папки для получения сообщений"
 
-#, fuzzy
 msgid "Include Archive"
 msgstr "Включать архив"
 
-#, fuzzy
 msgid "Include other folders"
 msgstr "Включать другие папки"
 
 msgid "Everything that is not an inbox or an archive"
 msgstr "Всё, что не является входящими или архивом"
 
-#, fuzzy
 msgid "Pulling attachments from"
 msgstr "Загрузить вложения с сервера"
 
@@ -1907,9 +1868,10 @@ msgstr "Все учётные записи"
 
 #. Deliberately counts messages, not attachments: until a message has
 #. been described there is no telling how many files it holds.
-#, fuzzy
 msgid "Indexing {n} messages…"
-msgstr "{n} сообщений"
+msgstr[0] "Индексация {n} сообщения…"
+msgstr[1] "Индексация {n} сообщений…"
+msgstr[2] "Индексация {n} сообщений…"
 
 msgid "Loading more…"
 msgstr "Загрузка остальных…"
@@ -2231,7 +2193,6 @@ msgstr ""
 msgid "HTML"
 msgstr ""
 
-#, fuzzy
 msgid "Plain text"
 msgstr "Вставлять как обычный текст"
 
@@ -2241,13 +2202,11 @@ msgstr ""
 msgid "Write Markdown; it is sent as formatted mail"
 msgstr ""
 
-#, fuzzy
 msgid "Write the message's HTML by hand"
-msgstr "Печать открытого сообщения"
+msgstr "Создавать HTML-код сообщения вручную"
 
-#, fuzzy
 msgid "No formatting at all"
-msgstr "Очистить форматирование"
+msgstr "Без форматирования"
 
 msgid "Collapse into reader"
 msgstr "Свернуть в область чтения"
@@ -2336,13 +2295,11 @@ msgstr "Адрес для ответа"
 msgid "Subject"
 msgstr "Тема"
 
-#, fuzzy
 msgid "Writing in {format}"
-msgstr "Ожидает с {ago}"
+msgstr "Формат письма: {format}"
 
 #. The one label on the row goes when there is no width for it, the
 #. same trade the header makes when it folds.
-#, fuzzy
 msgid "Preview"
 msgstr "Предпросмотр печати"
 
@@ -2374,11 +2331,9 @@ msgstr "Не удалось загрузить {name}"
 msgid "Attach Files"
 msgstr "Прикрепить файлы"
 
-#, fuzzy
 msgid "Attach {name}"
-msgstr "Всё равно прикрепить"
+msgstr "Прикрепить {name}"
 
-#, fuzzy
 msgid "Remove {name}"
 msgstr "Удалить {name}?"
 
@@ -2429,12 +2384,11 @@ msgstr "Это время уже прошло"
 msgid "Choose a time later than now."
 msgstr "Выберите время позже текущего."
 
-#, fuzzy
 msgid "{n} attachment"
 msgid_plural "{n} attachments"
-msgstr[0] "Нет вложений"
-msgstr[1] "Нет вложений"
-msgstr[2] "Нет вложений"
+msgstr[0] "{n} вложение"
+msgstr[1] "{n} вложения"
+msgstr[2] "{n} вложений"
 
 msgid "Contacts"
 msgstr "Контакты"
@@ -2517,9 +2471,8 @@ msgstr "Папки поиска"
 msgid "the portal answered response code {code}"
 msgstr ""
 
-#, fuzzy
 msgid "The link could not be opened"
-msgstr "Не удалось открыть файл"
+msgstr "Не удалось открыть ссылку"
 
 #. No Flatseal toggle can help here: portal access is not a
 #. permission, and the failure is inside the portal's own launcher.
@@ -2593,16 +2546,14 @@ msgstr ""
 "Пройденная проверка доказывает лишь, что адрес не подделан, — но не "
 "безопасность письма."
 
-#, fuzzy
 msgid "No draft selected"
 msgstr "Сообщение не выбрано"
 
 msgid "No message selected"
 msgstr "Сообщение не выбрано"
 
-#, fuzzy
 msgid "Choose a draft from the list to edit it here."
-msgstr "Выберите сообщение из списка, чтобы прочитать его здесь."
+msgstr "Выберите черновик из списка, чтобы отредактировать его здесь."
 
 msgid "Choose a message from the list to read it here."
 msgstr "Выберите сообщение из списка, чтобы прочитать его здесь."
@@ -2711,13 +2662,11 @@ msgstr "Вернуться к моим шрифтам и цветам"
 msgid "Show the sender's fonts and colours"
 msgstr "Показывать шрифты и цвета отправителя"
 
-#, fuzzy
 msgid "Show remote content"
-msgstr "Всегда загружать удалённое содержимое"
+msgstr "Показать удалённое содержимое"
 
-#, fuzzy
 msgid "Block remote content"
-msgstr "Всегда загружать удалённое содержимое"
+msgstr "Блокировать удалённое содержимое"
 
 msgid "{n} recipient"
 msgid_plural "{n} recipients"
@@ -3032,16 +2981,14 @@ msgstr "Каждые 30 минут"
 msgid "Left group"
 msgstr "Левая группа"
 
-#, fuzzy
 msgid "Always shown · up to 6"
-msgstr "Отображаются всегда"
+msgstr "Отображаются всегда · до 6"
 
 msgid "Right group"
 msgstr "Правая группа"
 
-#, fuzzy
 msgid "Folds into ⋯ when narrow · up to 6"
-msgstr "Сворачиваются в ⋯ при узком окне"
+msgstr "Сворачиваются в ⋯ при узком окне · до 6"
 
 msgid "Not shown"
 msgstr "Скрыты"
@@ -3079,9 +3026,8 @@ msgstr "Дата и время"
 msgid "Backup"
 msgstr "Резервное копирование"
 
-#, fuzzy
 msgid "Not installed"
-msgstr "Вход не выполнен"
+msgstr "Не установлено"
 
 msgid "Installed and loaded by Files"
 msgstr "Установлено и загружено приложением «Файлы»"
@@ -3337,13 +3283,12 @@ msgstr ""
 msgid "Filters placement"
 msgstr "Расположение фильтров"
 
-#, fuzzy
 msgid ""
 "Choose between appearing in a unified section, or a list above or below the "
 "accounts."
 msgstr ""
-"Те же варианты размещения для раздела «Теги»: в объединённом разделе либо в "
-"виде заголовка выше или ниже учётных записей."
+"Выберите между отображением в объединённом разделе либо в виде списка выше "
+"или ниже учётных записей."
 
 msgid "Tags placement"
 msgstr "Расположение тегов"
@@ -3381,9 +3326,8 @@ msgstr ""
 msgid "Every account's folder list."
 msgstr "Список папок каждой учётной записи."
 
-#, fuzzy
 msgid "The account list under the unified Inboxes row."
-msgstr "Список учётных записей под общей строкой «Отправленные»."
+msgstr "Список учётных записей под общей строкой «Входящие»."
 
 msgid "The account list under the unified Starred row."
 msgstr "Список учётных записей под общей строкой «Отмеченные»."
@@ -3433,7 +3377,6 @@ msgstr ""
 "Количество строк текста письма, отображаемых под его темой. При отключении "
 "загрузка предпросмотров также прекращается."
 
-#, fuzzy
 msgid "Actions palette in the message list"
 msgstr "Палитра действий в списке сообщений"
 
@@ -3446,29 +3389,27 @@ msgstr ""
 "освобождается; управлять сообщениями по-прежнему можно из их карточек и "
 "контекстного меню."
 
-#, fuzzy
 msgid "Open the actions palette on hover"
 msgstr "Открывать палитру действий при наведении"
 
-#, fuzzy
 msgid ""
 "The message list's ⋯ actions palette slides open by itself while the pointer "
 "rests on a row."
 msgstr ""
-"Палитра «⋯» в списке сообщений открывается автоматически при наведении "
-"курсора на строку."
+"Палитра действий «⋯» в списке сообщений выдвигается автоматически, пока "
+"курсор задерживается на строке."
 
 msgid "Swipe actions"
 msgstr "Действия свайпом"
 
-#, fuzzy
 msgid ""
 "Drag a message sideways with the mouse, or swipe it with two fingers on a "
 "trackpad, to archive or delete it. Default is left to delete, right to "
 "archive."
 msgstr ""
 "Перетащите сообщение в сторону мышью или смахните двумя пальцами на тачпаде, "
-"чтобы архивировать или удалить его."
+"чтобы архивировать или удалить его. По умолчанию: влево — удалить, вправо — "
+"в архив."
 
 msgid "Reverse swipe directions"
 msgstr "Инвертировать направление свайпа"
@@ -3492,17 +3433,15 @@ msgstr ""
 "или уменьшите, если письма сдвигаются случайно. На перетаскивание мышью не "
 "влияет."
 
-#, fuzzy
 msgid "Actions palette timeout"
-msgstr "Задержка закрытия палитры действий"
+msgstr "Задержка палитры действий"
 
-#, fuzzy
 msgid ""
 "Seconds the message list's actions palette stays open after the cursor "
 "leaves it."
 msgstr ""
-"Время в секундах, в течение которого палитра действий остаётся открытой "
-"после увода курсора — как в списке, так и на карточках сообщений."
+"Время в секундах, в течение которого палитра действий списка сообщений "
+"остаётся открытой после того, как курсор покинул её."
 
 msgid "Conversations"
 msgstr "Обсуждения"
@@ -3607,44 +3546,37 @@ msgstr ""
 "Отображать письма без форматирования моноширинным шрифтом, чтобы колонки и "
 "код выравнивались ровно. На форматированные письма не влияет."
 
-#, fuzzy
 msgid "Monospace font"
 msgstr "Моноширинный шрифт"
 
-#, fuzzy
 msgid "The system's monospace font unless another is chosen."
 msgstr "Системный моноширинный шрифт, если не выбран другой."
 
-#, fuzzy
 msgid "Message card actions palette"
-msgstr "Действия на карточке сообщения"
+msgstr "Палитра действий на карточке сообщения"
 
 msgid "How each message's action icons show in the reader, single or threaded."
 msgstr ""
-"Отображение значков действий для каждого письма: в одиночном режиме и в "
-"цепочке."
+"Способ отображения значков действий для каждого сообщения в окне чтения: "
+"отдельно или в цепочке."
 
-#, fuzzy
 msgid "Message card actions palette timeout"
-msgstr "Действия на карточке сообщения"
+msgstr "Задержка палитры действий на карточке сообщения"
 
-#, fuzzy
 msgid "Seconds a card's actions palette stays open after the cursor leaves it."
 msgstr ""
-"Время в секундах, в течение которого палитра действий остаётся открытой "
-"после увода курсора — как в списке, так и на карточках сообщений."
+"Время в секундах, в течение которого палитра действий карточки остаётся "
+"открытой после того, как курсор покинул её."
 
-#, fuzzy
 msgid "Message card actions palette as a menu"
-msgstr "Палитра действий в виде меню"
+msgstr "Палитра действий карточки сообщения в виде меню"
 
-#, fuzzy
 msgid ""
 "The ⋯ opens the message's menu, the same one a right-click shows, instead of "
 "sliding the actions palette out."
 msgstr ""
-"Кнопка «⋯» открывает меню строки (то же, что и при щелчке правой кнопкой "
-"мыши) вместо выдвижения палитры."
+"Кнопка «⋯» открывает меню сообщения (то же, что и при щелчке правой кнопкой "
+"мыши) вместо выдвижения палитры действий."
 
 msgid "Single messages as cards"
 msgstr "Одиночные сообщения в виде карточек"
@@ -3706,19 +3638,18 @@ msgstr ""
 "отключено, форматирование сохраняется. Правый клик в редакторе всегда "
 "предлагает оба варианта."
 
-#, fuzzy
 msgid "Write messages in"
-msgstr "Сортировка сообщений"
+msgstr "Составлять сообщения в"
 
-#, fuzzy
 msgid ""
 "What new messages, replies and forwards start as. Markdown and HTML are "
 "written as source and sent as formatted mail; plain text is sent without "
 "formatting. The composer's format button switches any one message."
 msgstr ""
-"Новые письма, ответы и пересылаемые сообщения создаются в виде обычного "
-"текста без форматирования. Кнопка «Обычный текст» в редакторе позволяет "
-"переключить режим для конкретного письма."
+"Формат по умолчанию для новых сообщений, ответов и пересылок. Markdown и HTML "
+"пишутся в виде исходного кода и отправляются как форматированное письмо; "
+"обычный текст отправляется без форматирования. Кнопка формата в редакторе "
+"позволяет переключить режим для отдельного сообщения."
 
 msgid "Spelling"
 msgstr "Орфография"
@@ -3795,26 +3726,25 @@ msgstr ""
 msgid "Show sender logos"
 msgstr "Показывать логотипы отправителей"
 
-#, fuzzy
 msgid ""
 "Fills the sender's avatar with the brand's logo: the one the sender "
 "publishes for mail (BIMI), one bundled with Vireo, or the site's own icon. "
 "All but the bundled ones are fetched from the sender's domain, which then "
 "learns your IP address, as blocking remote content otherwise avoids."
 msgstr ""
-"Отображает на аватаре отправителя иконку сайта бренда, полученную с его "
-"домена. При этом владелец домена узнаёт ваш IP-адрес — то, чего "
-"предотвращает блокировка удалённого содержимого."
+"Заполняет аватар отправителя логотипом бренда: опубликованным для почты "
+"(BIMI), встроенным в Vireo или значком самого сайта. Все логотипы, кроме "
+"встроенных, загружаются с домена отправителя, из-за чего он узнает ваш IP-"
+"адрес, от чего в остальных случаях защищает блокировка удаленного содержимого."
 
-#, fuzzy
 msgid ""
 "By default dates follow the system's own arrangement — its field order, "
 "month names and clock. Choose a format here to override what your system is "
 "set to."
 msgstr ""
-"По умолчанию формат даты соответствует системным настройкам — порядку полей, "
+"По умолчанию формат дат соответствует системным настройкам — порядку полей, "
 "названиям месяцев и формату времени. Выберите формат здесь, чтобы "
-"использовать его независимо от настроек системы."
+"переопределить текущие параметры системы."
 
 msgid "Date format"
 msgstr "Формат даты"
@@ -3939,7 +3869,6 @@ msgstr "Установить"
 msgid "Install the nautilus-python package first: paste this in a terminal"
 msgstr "Сначала установите пакет nautilus-python: вставьте это в терминал"
 
-#, fuzzy
 msgid "Restart Files"
 msgstr "Перезапустить «Файлы»"
 
@@ -3951,14 +3880,12 @@ msgstr ""
 "следующем открытии пункт меню появится (или исчезнет, если расширение было "
 "удалено)."
 
-#, fuzzy
 msgid "Restart"
 msgstr "Перезапустить"
 
 msgid "Default Send with Vireo behavior"
 msgstr "Действие по умолчанию для «Отправить через Vireo»"
 
-#, fuzzy
 msgid "Default large attachments behavior"
 msgstr "Действие по умолчанию для крупных вложений"
 
@@ -4046,23 +3973,20 @@ msgstr "Всегда показывать"
 msgid "Ask each time"
 msgstr "Спрашивать каждый раз"
 
-#, fuzzy
 msgid "A new message"
-msgstr "Новое письмо"
+msgstr "Новое сообщение"
 
 msgid "A draft you pick"
 msgstr "Выбранный черновик"
 
-#, fuzzy
 msgid "A reply to a message you pick"
-msgstr "Ответ на выбранное письмо"
+msgstr "Ответ на выбранное сообщение"
 
 msgid "Attach them anyway"
 msgstr "Всё равно прикрепить"
 
-#, fuzzy
 msgid "Upload to cloud storage and link them"
-msgstr "Загрузить в облачное хранилище и поделиться ссылкой"
+msgstr "Загрузить в облачное хранилище и добавить ссылки"
 
 msgid "Account of the current folder"
 msgstr "Учётная запись текущей папки"
@@ -4074,15 +3998,13 @@ msgid "Add a word"
 msgstr "Добавить слово"
 
 msgid "Could not install the extension"
-msgstr ""
+msgstr "Не удалось установить расширение"
 
-#, fuzzy
 msgid "Could not remove the extension"
-msgstr "Не удалось импортировать ключ"
+msgstr "Не удалось удалить расширение"
 
-#, fuzzy
 msgid "Could not restart Files"
-msgstr "Не удалось прочитать файл"
+msgstr "Не удалось перезапустить «Файлы»"
 
 msgid "Forget this word"
 msgstr "Удалить это слово"
@@ -4221,9 +4143,8 @@ msgstr "Показывать каждую метку"
 msgid "Long-press to expand or collapse"
 msgstr "Долгое нажатие — развернуть или свернуть"
 
-#, fuzzy
 msgid "Apply Filters"
-msgstr "Фильтры"
+msgstr "Применить фильтры"
 
 msgid "Edit Filter…"
 msgstr "Редактировать фильтр…"
@@ -4672,13 +4593,11 @@ msgstr "Hyprlab"
 #~ msgid "Response"
 #~ msgstr "Ответ"
 
-#, fuzzy
 #~ msgid "Preview the formatted message"
-#~ msgstr "Открыть выбранное сообщение"
+#~ msgstr "Предварительный просмотр форматированного сообщения"
 
-#, fuzzy
 #~ msgid "Back to the source"
-#~ msgstr "Вернуться к списку сообщений"
+#~ msgstr "Вернуться к исходному тексту"
 
 #~ msgid "Nothing to undo"
 #~ msgstr "Нечего отменять"
@@ -4689,21 +4608,17 @@ msgstr "Hyprlab"
 #~ msgid "Undo the last move or delete"
 #~ msgstr "Отменить последнее перемещение или удаление"
 
-#, fuzzy
 #~ msgid "Plain text: send without formatting"
-#~ msgstr "Вставить с форматированием"
+#~ msgstr "Обычный текст: отправлять без форматирования"
 
-#, fuzzy
 #~ msgid "Send with formatting"
-#~ msgstr "Вставить с форматированием"
+#~ msgstr "Отправлять с форматированием"
 
-#, fuzzy
 #~ msgid "Send as plain text"
-#~ msgstr "Вставлять как обычный текст"
+#~ msgstr "Отправлять как обычный текст"
 
-#, fuzzy
 #~ msgid "Compose in plain text"
-#~ msgstr "Вставлять как обычный текст"
+#~ msgstr "Создавать в формате обычного текста"
 
 #~ msgid "Undo: the messages are no longer where that move put them."
 #~ msgstr "Отмена: сообщения больше не там, куда их переместили."
@@ -4744,9 +4659,8 @@ msgstr "Hyprlab"
 #~ "Показывается в доке, списке приложений, переключателе окон и значке в "
 #~ "трее."
 
-#, fuzzy
 #~ msgid "Conditions"
-#~ msgstr "Обсуждения"
+#~ msgstr "Условия"
 
 #~ msgid ""
 #~ "Where matching mail is filed; or leave it in the Inbox and only tag it"
