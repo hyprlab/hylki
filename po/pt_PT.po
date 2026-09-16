@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: vireo\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/vireo/issues\n"
 "POT-Creation-Date:\n"
-"PO-Revision-Date: 2026-09-15 00:15+0100\n"
+"PO-Revision-Date: 2026-09-16 20:25+0100\n"
 "Last-Translator: Paulo Fino <somepaulo@duck.com>\n"
 "Language-Team: Portuguese (Portugal)\n"
 "Language: pt_PT\n"
@@ -149,9 +149,8 @@ msgstr "Não lidas primeiro"
 msgid "Flagged first"
 msgstr "Com estrela primeiro"
 
-#, fuzzy
 msgid "Create Folder"
-msgstr "Nova pasta"
+msgstr "Criar pasta"
 
 msgid "Added to Contacts"
 msgstr "Adicionado aos contactos"
@@ -258,9 +257,8 @@ msgstr "Atalhos de teclado"
 msgid "About"
 msgstr "Acerca"
 
-#, fuzzy
 msgid "Remove Tags"
-msgstr "Remover etiqueta"
+msgstr "Remover etiquetas"
 
 msgid ""
 "Single-key shortcuts are switched off. Turn them on in Settings → System & "
@@ -275,23 +273,20 @@ msgstr "As suas etiquetas"
 msgid "Delete"
 msgstr "Eliminar"
 
-#, fuzzy
 msgid "Move to {name}"
-msgstr "Remover {name}?"
+msgstr "Mover para {name}"
 
-#, fuzzy
 msgid "Add Tag {name}"
-msgstr "E-mail adicionado a {name}"
+msgstr "Adicionar etiqueta {name}"
 
-#, fuzzy
 msgid "Remove Tag {name}"
-msgstr "Remover {name}?"
+msgstr "Remover etiqueta {name}"
 
 msgid "Undo"
-msgstr ""
+msgstr "Anular"
 
 msgid "Redo"
-msgstr ""
+msgstr "Refazer"
 
 msgid "Restarting Vireo"
 msgstr "A reiniciar o Vireo"
@@ -340,13 +335,11 @@ msgstr "Adicionar estrela"
 msgid "Add Sender to Contacts"
 msgstr "Adicionar remetente aos contactos"
 
-#, fuzzy
 msgid "Block Remote Content"
-msgstr "Bloquear imagens remotas"
+msgstr "Bloquear conteúdo remoto"
 
-#, fuzzy
 msgid "Show Remote Content"
-msgstr "Carregar sempre conteúdo remoto"
+msgstr "Mostrar conteúdo remoto"
 
 msgid "Delete {n} messages"
 msgstr "Eliminar {n} mensagens"
@@ -462,9 +455,8 @@ msgstr ""
 "Não foram movidas {foreign} mensagens — não é possível mover correio entre "
 "contas"
 
-#, fuzzy
 msgid "Move Folder"
-msgstr "Nova pasta"
+msgstr "Mover pasta"
 
 msgid "Vireo couldn’t save your password"
 msgstr "O Vireo não conseguiu guardar a sua palavra-passe"
@@ -496,16 +488,15 @@ msgstr "Renomear"
 msgid "A folder named {new_name} is already there."
 msgstr "Já existe uma pasta com o nome {new_name}."
 
-#, fuzzy
 msgid "Rename Folder"
-msgstr "Renomear pasta…"
+msgstr "Renomear pasta"
 
-#, fuzzy
 msgid ""
 "Its messages are moved to Trash and the folder is removed from the server. "
 "This cannot be undone."
 msgstr ""
-"As mensagens nela contidas são movidas para o Lixo e a pasta é removida."
+"As mensagens nela contidas são movidas para o Lixo e a pasta é removida "
+"do servidor. Esta ação não pode ser anulada."
 
 msgid "Empty “{name}”?"
 msgstr "Esvaziar «{name}»?"
@@ -612,50 +603,42 @@ msgstr "© 2026 Hyprlab"
 msgid "No {v1} folder available for some messages"
 msgstr "Não está disponível nenhuma pasta {v1} para algumas mensagens"
 
-#, fuzzy
 msgid "No filters to apply here yet"
-msgstr "Ainda não existem mensagens às quais responder."
+msgstr "Ainda não existem filtros para aplicar aqui"
 
-#, fuzzy
 msgid "Applying Filters"
-msgstr "Adicionar filtro"
+msgstr "A aplicar filtros"
 
-#, fuzzy
 msgid "Run in Background"
-msgstr "Manter em execução em segundo plano"
+msgstr "Executar em segundo plano"
 
-#, fuzzy
 msgid "Looked at {n} message so far"
 msgid_plural "Looked at {n} messages so far"
-msgstr[0] "Enviar novas mensagens a partir de"
-msgstr[1] "Enviar novas mensagens a partir de"
+msgstr[0] "Analisada {n} mensagem até ao momento"
+msgstr[1] "Analisadas {n} mensagens até ao momento"
 
-#, fuzzy
 msgid "Matched {n} message"
 msgid_plural "Matched {n} messages"
-msgstr[0] "{n} mensagem"
-msgstr[1] "{n} mensagens"
+msgstr[0] "{n} mensagem correspondente"
+msgstr[1] "{n} mensagens correspondentes"
 
-#, fuzzy
 msgid "Tagged {n} message"
 msgid_plural "Tagged {n} messages"
-msgstr[0] "{n} mensagem"
-msgstr[1] "{n} mensagens"
+msgstr[0] "{n} mensagem etiquetada"
+msgstr[1] "{n} mensagens etiquetadas"
 
-#, fuzzy
 msgid "Filed {n} message away"
 msgid_plural "Filed {n} messages away"
-msgstr[0] "Localizar na mensagem"
-msgstr[1] "Localizar na mensagem"
+msgstr[0] "{n} mensagem movida para uma pasta"
+msgstr[1] "{n} mensagens movidas para pastas"
 
-#, fuzzy
 msgid "Folder {done} of {total}"
-msgstr "{cur} de {total}"
+msgstr "Pasta {done} de {total}"
 
 msgid "Filters looked at {n} message, and it matched nothing"
 msgid_plural "Filters looked at {n} messages, and none of them matched"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Os filtros analisaram {n} mensagem e esta não correspondeu a nenhuma regra"
+msgstr[1] "Os filtros analisaram {n} mensagens e nenhuma correspondeu às regras"
 
 #. Matches that needed nothing: the rules had already done their
 #. work on an earlier sync (#201). Saying "none matched" here
@@ -666,26 +649,29 @@ msgid_plural ""
 "Filters matched {matched} of {n} messages, and all of them were already "
 "tagged or filed"
 msgstr[0] ""
+"Os filtros encontraram correspondência em {matched} de {n} mensagem, que "
+"já estava etiquetada ou movida para uma pasta"
 msgstr[1] ""
+"Os filtros encontraram correspondência em {matched} de {n} mensagens, e "
+"todas já estavam etiquetadas ou movidas para pastas"
 
 msgid "Filters tagged {tagged} of {n} message"
 msgid_plural "Filters tagged {tagged} of {n} messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Os filtros etiquetaram {tagged} de {n} mensagem"
+msgstr[1] "Os filtros etiquetaram {tagged} de {n} mensagens"
 
 msgid "Filters filed {filed} of {n} message away"
 msgid_plural "Filters filed {filed} of {n} messages away"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Os filtros moveram {filed} de {n} mensagem para uma pasta"
+msgstr[1] "Os filtros moveram {filed} de {n} mensagens para pastas"
 
 msgid "Filters tagged {tagged} and filed {filed} of {n} message"
 msgid_plural "Filters tagged {tagged} and filed {filed} of {n} messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Os filtros etiquetaram {tagged} e moveram {filed} de {n} mensagem para uma pasta"
+msgstr[1] "Os filtros etiquetaram {tagged} e moveram {filed} de {n} mensagens para pastas"
 
-#, fuzzy
 msgid "Filters Applied"
-msgstr "Posição dos filtros"
+msgstr "Filtros aplicados"
 
 msgid "Move around"
 msgstr "Navegação"
@@ -746,12 +732,11 @@ msgstr "Compor"
 msgid "Back out of a reply and return to the list"
 msgstr "Cancelar uma resposta e voltar à lista"
 
-#, fuzzy
 msgid "Undo the last action, or the last edit while you are writing"
-msgstr "Correio não lido no menu da área de notificação"
+msgstr "Anular a última ação ou a última edição enquanto está a escrever"
 
 msgid "Redo it (Ctrl+Y does the same)"
-msgstr ""
+msgstr "Refazer (Ctrl+Y faz o mesmo)"
 
 msgid "Print the message you are reading"
 msgstr "Imprimir a mensagem que está a ler"
@@ -777,9 +762,8 @@ msgstr "Sair completamente do Vireo"
 msgid "This list"
 msgstr "Esta lista"
 
-#, fuzzy
 msgid "Unstar"
-msgstr "Instalar"
+msgstr "Remover estrela"
 
 msgid "Save All Attachments"
 msgstr "Guardar todos os anexos"
@@ -1072,7 +1056,6 @@ msgstr "Pesquisar filtros"
 msgid "Filters"
 msgstr "Filtros"
 
-#, fuzzy
 msgid ""
 "File incoming mail into folders or tag it automatically, by sender, subject "
 "or recipients. Applied to each account's Inbox as Vireo syncs it, or to the "
@@ -1080,19 +1063,19 @@ msgid ""
 "over that one folder."
 msgstr ""
 "Arquive automaticamente o correio recebido em pastas ou atribua-lhe "
-"etiquetas, consoante o remetente, o assunto ou os destinatários. As regras "
-"são aplicadas à Caixa de entrada de cada conta à medida que o Vireo "
-"sincroniza."
+"etiquetas, consoante o remetente, o assunto ou os destinatários. As "
+"regras são aplicadas à Caixa de entrada de cada conta à medida que o "
+"Vireo sincroniza ou ao correio já existente através de Aplicar agora; o "
+"menu de contexto de uma pasta executa-as apenas nessa pasta."
 
 msgid "Add Filter…"
 msgstr "Adicionar filtro…"
 
 msgid "Run every rule over the mail already in your inboxes"
-msgstr ""
+msgstr "Executar todas as regras no correio que já se encontra nas caixas de entrada"
 
-#, fuzzy
 msgid "Apply Now"
-msgstr "Aplicar"
+msgstr "Aplicar agora"
 
 msgid "Search senders"
 msgstr "Pesquisar remetentes"
@@ -1260,11 +1243,12 @@ msgstr "Etiqueta (por predefinição, o endereço de e-mail)"
 msgid "Account accent color"
 msgstr "Cor de destaque da conta"
 
-#, fuzzy
 msgid ""
 "The account circle background, and this account's marks in the sidebar and "
 "lists"
-msgstr "O círculo e as marcas desta conta na barra lateral e nas listas"
+msgstr ""
+"O fundo do círculo da conta e as marcas desta conta na barra lateral e "
+"nas listas"
 
 msgid "Use my Gravatar"
 msgstr "Utilizar o meu Gravatar"
@@ -1346,30 +1330,33 @@ msgstr ""
 msgid "Special Folders"
 msgstr "Pastas especiais"
 
-#, fuzzy
 msgid ""
 "Which of this account's folders hold each role. Automatically follows the "
 "server's own markings; pick a folder when a role isn't detected or lands "
 "wrong. Nothing already on the server moves: a role says where mail goes from "
 "now on."
 msgstr ""
-"Destino das mensagens enviadas, apagadas e de lixo eletrónico. A opção "
-"Automático segue as marcações do servidor; escolha uma pasta quando uma "
-"função não for detetada ou for atribuída incorretamente."
+"Quais as pastas desta conta que desempenham cada função. A opção "
+"Automático segue as marcações do próprio servidor; escolha uma pasta "
+"quando uma função não for detetada ou for atribuída incorretamente. Nada "
+"do que já está no servidor é movido: uma função define para onde irá o "
+"correio a partir de agora."
 
 msgid "Sent"
 msgstr "Enviadas"
 
 msgid "Save a copy of sent mail in"
-msgstr ""
+msgstr "Guardar uma cópia do correio enviado em"
 
 msgid "Server saves its own copy of sent mail"
-msgstr ""
+msgstr "O servidor guarda a sua própria cópia do correio enviado"
 
 msgid ""
 "For Gmail and others that file sent mail themselves. Disables above Save a "
 "copy."
 msgstr ""
+"Para o Gmail e outros serviços que arquivam o correio enviado por conta "
+"própria. Desativa a opção Guardar uma cópia acima."
 
 msgid "Drafts"
 msgstr "Rascunhos"
@@ -1515,10 +1502,10 @@ msgid "Test SMTP"
 msgstr "Testar SMTP"
 
 msgid "Microsoft 365 files its own copy in Sent Items; this cannot be changed."
-msgstr ""
+msgstr "O Microsoft 365 arquiva a sua própria cópia em Itens Enviados; isto não pode ser alterado."
 
 msgid "POP3 accounts have no server folders to save a copy in."
-msgstr ""
+msgstr "As contas POP3 não têm pastas no servidor onde guardar uma cópia."
 
 msgid "GOA"
 msgstr "GOA"
@@ -1584,9 +1571,8 @@ msgstr ", com a etiqueta {tag}"
 msgid "Remove filter"
 msgstr "Remover filtro"
 
-#, fuzzy
 msgid "Applying…"
-msgstr "A carregar…"
+msgstr "A aplicar…"
 
 msgid "Searching…"
 msgstr "A pesquisar…"
@@ -1661,9 +1647,8 @@ msgstr "Editar filtro"
 msgid "Add Filter"
 msgstr "Adicionar filtro"
 
-#, fuzzy
 msgid "Name (optional)"
-msgstr "Alcunha (opcional)"
+msgstr "Nome (opcional)"
 
 msgid "Remove condition"
 msgstr "Remover condição"
@@ -2210,31 +2195,28 @@ msgid "Signed in as {who}. {terms}"
 msgstr "Sessão iniciada como {who}. {terms}"
 
 msgid "Rich text"
-msgstr ""
+msgstr "Texto rico"
 
 msgid "Markdown"
-msgstr ""
+msgstr "Markdown"
 
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
-#, fuzzy
 msgid "Plain text"
-msgstr "Colar como texto simples"
+msgstr "Texto simples"
 
 msgid "Format as you type, with the toolbar"
-msgstr ""
+msgstr "Formatar à medida que escreve, utilizando a barra de ferramentas"
 
 msgid "Write Markdown; it is sent as formatted mail"
-msgstr ""
+msgstr "Escrever em Markdown; a mensagem é enviada formatada"
 
-#, fuzzy
 msgid "Write the message's HTML by hand"
-msgstr "Imprimir a mensagem que está a ler"
+msgstr "Escrever manualmente o HTML da mensagem"
 
-#, fuzzy
 msgid "No formatting at all"
-msgstr "Limpar formatação"
+msgstr "Sem qualquer formatação"
 
 msgid "Collapse into reader"
 msgstr "Recolher no leitor"
@@ -2323,18 +2305,16 @@ msgstr "Responder a"
 msgid "Subject"
 msgstr "Assunto"
 
-#, fuzzy
 msgid "Writing in {format}"
-msgstr "Em espera desde {ago}"
+msgstr "A escrever em {format}"
 
 #. The one label on the row goes when there is no width for it, the
 #. same trade the header makes when it folds.
-#, fuzzy
 msgid "Preview"
-msgstr "Pré-visualizar impressão"
+msgstr "Pré-visualizar"
 
 msgid "Show the message as it will be sent"
-msgstr ""
+msgstr "Mostrar a mensagem tal como será enviada"
 
 msgid "More"
 msgstr "Mais"
@@ -2361,16 +2341,14 @@ msgstr "Não foi possível carregar {name}"
 msgid "Attach Files"
 msgstr "Anexar ficheiros"
 
-#, fuzzy
 msgid "Attach {name}"
-msgstr "Anexar mesmo assim"
+msgstr "Anexar {name}"
 
-#, fuzzy
 msgid "Remove {name}"
-msgstr "Remover {name}?"
+msgstr "Remover {name}"
 
 msgid "Typing"
-msgstr ""
+msgstr "Escrita"
 
 msgid "Cannot send with OpenPGP"
 msgstr "Não é possível enviar com OpenPGP"
@@ -2418,11 +2396,10 @@ msgstr "Essa hora já passou"
 msgid "Choose a time later than now."
 msgstr "Escolha uma hora posterior à atual."
 
-#, fuzzy
 msgid "{n} attachment"
 msgid_plural "{n} attachments"
-msgstr[0] "Sem anexos"
-msgstr[1] "Sem anexos"
+msgstr[0] "{n} anexo"
+msgstr[1] "{n} anexos"
 
 msgid "Contacts"
 msgstr "Contactos"
@@ -2502,11 +2479,10 @@ msgid "Search folders"
 msgstr "Pesquisar pastas"
 
 msgid "the portal answered response code {code}"
-msgstr ""
+msgstr "o portal devolveu o código de resposta {code}"
 
-#, fuzzy
 msgid "The link could not be opened"
-msgstr "Não foi possível abrir o ficheiro"
+msgstr "Não foi possível abrir a ligação"
 
 #. No Flatseal toggle can help here: portal access is not a
 #. permission, and the failure is inside the portal's own launcher.
@@ -2517,6 +2493,11 @@ msgid ""
 "• Updating “xdg-desktop-portal” and logging back in may fix opening links "
 "directly"
 msgstr ""
+"O portal do ambiente de trabalho comunicou: {error}\n"
+"\n"
+"• Clique com o botão direito na ligação, copie-a e abra-a no navegador\n"
+"• Atualizar o “xdg-desktop-portal” e terminar e voltar a iniciar a "
+"sessão poderá corrigir a abertura direta das ligações"
 
 msgid "Mark as read"
 msgstr "Marcar como lida"
@@ -2696,13 +2677,11 @@ msgstr "Voltar aos meus tipos de letra e cores"
 msgid "Show the sender's fonts and colours"
 msgstr "Mostrar os tipos de letra e as cores do remetente"
 
-#, fuzzy
 msgid "Show remote content"
-msgstr "Carregar sempre conteúdo remoto"
+msgstr "Mostrar conteúdo remoto"
 
-#, fuzzy
 msgid "Block remote content"
-msgstr "Carregar sempre conteúdo remoto"
+msgstr "Bloquear conteúdo remoto"
 
 msgid "{n} recipient"
 msgid_plural "{n} recipients"
@@ -3147,7 +3126,7 @@ msgstr ""
 "Leitura."
 
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 msgid "App icon"
 msgstr "Ícone da aplicação"
@@ -3320,13 +3299,12 @@ msgstr ""
 msgid "Filters placement"
 msgstr "Posição dos filtros"
 
-#, fuzzy
 msgid ""
 "Choose between appearing in a unified section, or a list above or below the "
 "accounts."
 msgstr ""
-"As mesmas opções para a secção Etiquetas: uma linha unificada ou um "
-"cabeçalho acima ou abaixo das contas."
+"Escolha entre a apresentação numa secção unificada ou numa lista acima "
+"ou abaixo das contas."
 
 msgid "Tags placement"
 msgstr "Posição das etiquetas"
@@ -3365,9 +3343,8 @@ msgstr ""
 msgid "Every account's folder list."
 msgstr "A lista de pastas de cada conta."
 
-#, fuzzy
 msgid "The account list under the unified Inboxes row."
-msgstr "A lista de contas sob a linha unificada Enviadas."
+msgstr "A lista de contas sob a linha unificada Caixas de entrada."
 
 msgid "The account list under the unified Starred row."
 msgstr "A lista de contas sob a linha unificada Com estrela."
@@ -3397,18 +3374,15 @@ msgstr ""
 "O avatar do remetente junto de cada mensagem, na lista e acima da mensagem. "
 "Desativá-lo dá mais espaço ao remetente e ao assunto."
 
-#, fuzzy
 msgid "Sent mail uses your account circle"
-msgstr "As suas mensagens mostram o círculo da conta"
+msgstr "O correio enviado utiliza o círculo da sua conta"
 
-#, fuzzy
 msgid ""
 "Messages you sent wear the account's Gravatar, picture or emoji, as its "
 "circle in the sidebar does."
 msgstr ""
-"As mensagens que envia utilizam o Gravatar, a imagem ou o emoji da conta, "
-"tal como o círculo na barra lateral. Ao desativar, passam a utilizar o mesmo "
-"círculo que qualquer mensagem de outra pessoa."
+"As mensagens que envia utilizam o Gravatar, a imagem ou o emoji da "
+"conta, tal como o círculo na barra lateral."
 
 msgid "Preview lines"
 msgstr "Linhas de pré-visualização"
@@ -3420,7 +3394,6 @@ msgstr ""
 "A quantidade de cada mensagem apresentada sob o respetivo assunto. Desativar "
 "esta opção também impede a transferência das pré-visualizações."
 
-#, fuzzy
 msgid "Actions palette in the message list"
 msgstr "Paleta de ações na lista de mensagens"
 
@@ -3433,29 +3406,27 @@ msgstr ""
 "espaço à linha; as mensagens continuam a poder ser manipuladas a partir dos "
 "respetivos cartões e do menu de contexto."
 
-#, fuzzy
 msgid "Open the actions palette on hover"
-msgstr "Abrir a Paleta de ações ao passar o ponteiro"
+msgstr "Abrir a paleta de ações ao passar o ponteiro"
 
-#, fuzzy
 msgid ""
 "The message list's ⋯ actions palette slides open by itself while the pointer "
 "rests on a row."
 msgstr ""
-"A paleta ⋯ da lista de mensagens abre-se automaticamente enquanto o ponteiro "
-"permanece sobre uma linha."
+"A paleta de ações ⋯ da lista de mensagens abre-se automaticamente "
+"enquanto o ponteiro permanece sobre uma linha."
 
 msgid "Swipe actions"
 msgstr "Ações de deslize"
 
-#, fuzzy
 msgid ""
 "Drag a message sideways with the mouse, or swipe it with two fingers on a "
 "trackpad, to archive or delete it. Default is left to delete, right to "
 "archive."
 msgstr ""
-"Arraste uma mensagem lateralmente com o rato ou deslize-a com dois dedos num "
-"painel tátil para a arquivar ou eliminar."
+"Arraste uma mensagem lateralmente com o rato ou deslize-a com dois dedos "
+"num painel tátil para a arquivar ou eliminar. Por predefinição, deslizar "
+"para a esquerda elimina e para a direita arquiva."
 
 msgid "Reverse swipe directions"
 msgstr "Inverter as direções de deslize"
@@ -3463,27 +3434,32 @@ msgstr "Inverter as direções de deslize"
 msgid ""
 "Turning this on swaps the swipe actions to: left archives, right deletes."
 msgstr ""
+"Ativar esta opção troca as ações de deslizar: para a esquerda arquiva e "
+"para a direita elimina."
 
 msgid "Trackpad swipe sensitivity"
-msgstr ""
+msgstr "Sensibilidade do gesto de deslizar no painel tátil"
 
 msgid ""
 "How readily a two-finger trackpad swipe moves a message. Raise it if a swipe "
 "never gets far enough to archive or delete, lower it if messages slide when "
 "you did not mean them to. Mouse drags are unaffected."
 msgstr ""
+"Define a facilidade com que um gesto de deslizar com dois dedos no "
+"painel tátil move uma mensagem. Aumente a sensibilidade se o gesto nunca "
+"percorrer distância suficiente para arquivar ou eliminar; reduza-a se as "
+"mensagens deslizarem sem intenção. Os arrastamentos com o rato não são "
+"afetados."
 
-#, fuzzy
 msgid "Actions palette timeout"
-msgstr "Tempo limite da Paleta de ações"
+msgstr "Tempo limite da paleta de ações"
 
-#, fuzzy
 msgid ""
 "Seconds the message list's actions palette stays open after the cursor "
 "leaves it."
 msgstr ""
-"O número de segundos durante os quais uma paleta de ações permanece aberta "
-"depois de o cursor sair — tanto na lista como nos cartões das mensagens."
+"Número de segundos durante os quais a paleta de ações da lista de "
+"mensagens permanece aberta depois de o cursor sair."
 
 msgid "Conversations"
 msgstr "Conversas"
@@ -3599,36 +3575,30 @@ msgid "The system's monospace font unless another is chosen."
 msgstr ""
 "O tipo de letra de largura fixa do sistema, a menos que seja escolhido outro."
 
-#, fuzzy
 msgid "Message card actions palette"
-msgstr "Ações nos cartões de mensagens"
+msgstr "Paleta de ações dos cartões de mensagens"
 
 msgid "How each message's action icons show in the reader, single or threaded."
 msgstr ""
 "A forma como os ícones de ação de cada mensagem aparecem no leitor, isolada "
 "ou encadeada."
 
-#, fuzzy
 msgid "Message card actions palette timeout"
-msgstr "Ações nos cartões de mensagens"
+msgstr "Tempo limite da paleta de ações dos cartões de mensagens"
 
-#, fuzzy
 msgid "Seconds a card's actions palette stays open after the cursor leaves it."
-msgstr ""
-"O número de segundos durante os quais uma paleta de ações permanece aberta "
-"depois de o cursor sair — tanto na lista como nos cartões das mensagens."
+msgstr "Número de segundos durante os quais a paleta de ações de um cartão permanece aberta depois de o cursor sair."
 
-#, fuzzy
 msgid "Message card actions palette as a menu"
-msgstr "Paleta de ações como menu"
+msgstr "Paleta de ações dos cartões de mensagens como menu"
 
-#, fuzzy
 msgid ""
 "The ⋯ opens the message's menu, the same one a right-click shows, instead of "
 "sliding the actions palette out."
 msgstr ""
-"O botão ⋯ abre o menu da linha, o mesmo que aparece ao clicar com o botão "
-"direito, em vez de fazer deslizar a paleta para fora."
+"O botão ⋯ abre o menu da mensagem, o mesmo que é apresentado ao clicar "
+"com o botão direito, em vez de fazer deslizar a paleta de ações para "
+"fora."
 
 msgid "Single messages as cards"
 msgstr "Mensagens individuais como cartões"
@@ -3693,19 +3663,19 @@ msgstr ""
 "desativada, a formatação é mantida. O menu de contexto do editor "
 "disponibiliza sempre ambas as opções."
 
-#, fuzzy
 msgid "Write messages in"
-msgstr "Ordenar mensagens"
+msgstr "Escrever mensagens em"
 
-#, fuzzy
 msgid ""
 "What new messages, replies and forwards start as. Markdown and HTML are "
 "written as source and sent as formatted mail; plain text is sent without "
 "formatting. The composer's format button switches any one message."
 msgstr ""
-"As novas mensagens, respostas e reencaminhamentos começam em texto simples e "
-"são enviados sem formatação. O botão Texto simples do compositor permite "
-"alternar o formato de cada mensagem."
+"Define o formato inicial das novas mensagens, respostas e "
+"reencaminhamentos. Markdown e HTML são escritos como código-fonte e "
+"enviados como correio formatado; o texto simples é enviado sem "
+"formatação. O botão de formato do compositor alterna o formato de cada "
+"mensagem."
 
 msgid "Spelling"
 msgstr "Ortografia"
@@ -3793,15 +3763,14 @@ msgstr ""
 "remetente, que fica assim a conhecer o seu endereço IP — algo que o bloqueio "
 "de conteúdo remoto normalmente evita."
 
-#, fuzzy
 msgid ""
 "By default dates follow the system's own arrangement — its field order, "
 "month names and clock. Choose a format here to override what your system is "
 "set to."
 msgstr ""
 "Por predefinição, as datas seguem a disposição do sistema — a ordem dos "
-"campos, os nomes dos meses e o relógio. Escolha aqui um formato para o "
-"utilizar independentemente das definições do sistema."
+"campos, os nomes dos meses e o relógio. Escolha aqui um formato para "
+"substituir a definição do sistema."
 
 msgid "Date format"
 msgstr "Formato da data"
@@ -3899,9 +3868,8 @@ msgstr ""
 "anexar a um relatório de erro. Os endereços de e-mail são abreviados para o "
 "respetivo domínio."
 
-#, fuzzy
 msgid "GNOME Files Integration"
-msgstr "Ficheiros do GNOME"
+msgstr "Integração com Ficheiros do GNOME"
 
 msgid ""
 "Add \"Send with Vireo\" to the right-click menu in Files (Nautilus): the "
@@ -3942,19 +3910,18 @@ msgid "Restart"
 msgstr "Reiniciar"
 
 msgid "Default Send with Vireo behavior"
-msgstr ""
+msgstr "Comportamento predefinido de Enviar com o Vireo"
 
-#, fuzzy
 msgid "Default large attachments behavior"
-msgstr "A obter anexos de"
+msgstr "Comportamento predefinido para anexos grandes"
 
-#, fuzzy
 msgid ""
 "Upload to cloud storage needs a cloud storage account (Settings → Cloud "
 "Storage) otherwise the files are attached by default."
 msgstr ""
-"O carregamento requer uma conta de armazenamento na nuvem (Definições → "
-"Armazenamento na nuvem); sem uma, os ficheiros são anexados."
+"O carregamento para o armazenamento na nuvem requer uma conta de "
+"armazenamento na nuvem (Definições → Armazenamento na nuvem); caso "
+"contrário, os ficheiros são anexados por predefinição."
 
 msgid "Size limit"
 msgstr "Limite de tamanho"
@@ -4203,9 +4170,8 @@ msgstr "Mostrar cada etiqueta"
 msgid "Long-press to expand or collapse"
 msgstr "Premir sem soltar para expandir ou recolher"
 
-#, fuzzy
 msgid "Apply Filters"
-msgstr "Filtros"
+msgstr "Aplicar filtros"
 
 msgid "Edit Filter…"
 msgstr "Editar filtro…"
@@ -4658,90 +4624,41 @@ msgstr "A caixa de entrada unificada no modo claro"
 msgid "Hyprlab"
 msgstr "Hyprlab"
 
-#~ msgid "Response"
-#~ msgstr "Resposta"
 
-#, fuzzy
-#~ msgid "Preview the formatted message"
-#~ msgstr "Abrir a mensagem selecionada"
 
-#, fuzzy
-#~ msgid "Back to the source"
-#~ msgstr "Voltar à lista de mensagens"
 
-#~ msgid "Nothing to undo"
-#~ msgstr "Nada para anular"
 
-#~ msgid "Undoing move…"
-#~ msgstr "A anular a deslocação…"
 
-#~ msgid "Undo the last move or delete"
-#~ msgstr "Anular a última deslocação ou eliminação"
 
-#~ msgid "Plain text: send without formatting"
-#~ msgstr "Texto simples: enviar sem formatação"
 
-#~ msgid "Send with formatting"
-#~ msgstr "Enviar com formatação"
 
-#~ msgid "Send as plain text"
-#~ msgstr "Enviar como texto simples"
 
-#~ msgid "Compose in plain text"
-#~ msgstr "Compor em texto simples"
 
-#~ msgid "Undo: the messages are no longer where that move put them."
-#~ msgstr ""
-#~ "Não é possível anular: as mensagens já não se encontram no local para "
-#~ "onde foram movidas."
 
-#~ msgid "Move undone — message restored"
-#~ msgid_plural "Move undone — {n} messages restored"
-#~ msgstr[0] "Deslocação anulada — mensagem restaurada"
-#~ msgstr[1] "Deslocação anulada — {n} mensagens restauradas"
 
-#~ msgid ""
-#~ "Name who wrote and what about in the notification. Turn this off to keep "
-#~ "both off the lock screen."
-#~ msgstr ""
-#~ "Indicar na notificação quem escreveu e qual o assunto. Desative esta "
-#~ "opção para manter ambos fora do ecrã de bloqueio."
 
-#~ msgid ""
-#~ "In the unified section, as a row like Inboxes whose caret opens the "
-#~ "folders; or above or below the accounts as a heading with its own list."
-#~ msgstr ""
-#~ "Na secção unificada, como uma linha semelhante a Caixas de entrada cuja "
-#~ "seta abre as pastas; ou acima ou abaixo das contas, como um cabeçalho com "
-#~ "a sua própria lista."
 
-#~ msgid "The account list under Inboxes."
-#~ msgstr "A lista de contas sob Caixas de entrada."
 
-#~ msgid ""
-#~ "Swipe (mouse-drag or trackpad) a message left to delete it and right to "
-#~ "archive it. Turning this on swaps the two: left archives, right deletes."
-#~ msgstr ""
-#~ "Deslize uma mensagem para a esquerda (arrastando com o rato ou num painel "
-#~ "tátil) para a eliminar e para a direita para a arquivar. A ativação desta "
-#~ "opção troca as duas direções: para a esquerda arquiva e para a direita "
-#~ "elimina."
 
-#~ msgid "Files sent from Files go into"
-#~ msgstr "Os ficheiros enviados pela aplicação Ficheiros são adicionados a"
 
-#~ msgid ""
-#~ "What Send with Vireo, Open With Vireo and Email… open with the files. "
-#~ "Asking offers all three each time."
-#~ msgstr ""
-#~ "Define o que «Enviar com o Vireo», «Abrir com o Vireo» e «Correio…» abrem "
-#~ "com os ficheiros. A opção Perguntar apresenta as três alternativas de "
-#~ "cada vez."
 
-#~ msgid "Files over the size limit"
-#~ msgstr "Ficheiros acima do limite de tamanho"
 
-#~ msgid "Shown in the dock, app grid and switcher, and by the tray icon."
-#~ msgstr ""
-#~ "Apresentado na doca, na grelha e no alternador de aplicações, bem como no "
-#~ "ícone da área de notificação."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
