@@ -59,6 +59,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.33.2-beta.1" date="2026-09-17" type="development">
+      <description>
+        <p>Catch-up with stable 1.33.1: a message whose part headers carried a non-ASCII character at one particular position crashed the account's mail thread while building list previews, after which that account never synced again. The header is now read safely.</p>
+      </description>
+    </release>
     <release version="1.33.1-beta.1" date="2026-09-17" type="development">
       <description>
         <p>Catch-up with stable 1.33.0: replies answer a conversation's newest message, a conversation's row stays selected while its messages are read, the reply editor can open beneath the reader, each message lists its own attachments, Conversations has its own Settings page, the attachment drawer's count is a button, and French is updated.</p>

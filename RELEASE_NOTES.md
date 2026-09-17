@@ -2,9 +2,13 @@
 
 Vireo is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.33.1-beta.1
+## What's new in 1.33.2-beta.1
 
-Catch-up release: the beta channel is level with stable 1.33.0. Everything below applies.
+Catch-up release: the beta channel is level with stable 1.33.1. Everything below applies.
+
+## What's new in 1.33.1
+
+**An account no longer stops syncing over one odd message** (#215, reported and fixed by [@typedev](https://github.com/typedev), PR #216). A message whose part headers carried an accented character at one particular position made the app's mail thread for that account crash while building list previews, and because the same message was offered again on every sync, that account's wheel turned forever while the others carried on. Restarting did not help. The header is now read safely, and the two tests that come with the fix reproduce the crash without it.
 
 ## What's new in 1.33.0
 

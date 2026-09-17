@@ -6390,8 +6390,14 @@ fn mime_header(headers: &str, name: &str) -> Option<String> {
     unfolded
         .lines()
         .find(|l| {
+            // Compare as bytes: a header block reaches us through
+            // `from_utf8_lossy`, so a line can carry a multibyte character
+            // that `name.len()` falls inside — slicing there would panic and
+            // take the account's mail thread with it. A name is ASCII, so a
+            // byte-wise match also proves `name.len()` is a char boundary,
+            // which is what makes the slice below safe.
             l.len() > name.len()
-                && l[..name.len()].eq_ignore_ascii_case(name)
+                && l.as_bytes()[..name.len()].eq_ignore_ascii_case(name.as_bytes())
                 && l[name.len()..].trim_start().starts_with(':')
         })
         .map(|l| l[name.len()..].trim_start()[1..].trim().to_ascii_lowercase())
@@ -11145,6 +11151,32 @@ mod tests {
                 .and_then(charset_param),
             Some("us-ascii".into())
         );
+    }
+
+    /// A part header carrying a non-ASCII character where a header name's
+    /// length falls mid-character used to panic the account's mail thread, so
+    /// its mail never arrived and the spinner turned for good.
+    #[test]
+    fn a_header_line_with_a_multibyte_character_is_not_sliced_apart() {
+        // "content-transfer-encoding" is 25 bytes, and byte 25 of this line
+        // sits inside the two-byte character that starts at byte 24.
+        let headers = "Content-Description: abc\u{f3}de\r\nContent-Transfer-Encoding: base64\r\n";
+        assert_eq!(mime_header(headers, "content-transfer-encoding").as_deref(), Some("base64"));
+        assert_eq!(mime_header(headers, "content-type"), None);
+    }
+
+    /// The same line reached through the preview path that reads it: a part of
+    /// a multipart, headers decoded leniently from raw bytes.
+    #[test]
+    fn a_preview_survives_a_multibyte_part_header() {
+        let part = concat!(
+            "--b1\r\n",
+            "Content-Description: abc\u{f3}de\r\n",
+            "Content-Type: text/plain; charset=utf-8\r\n\r\n",
+            "Hello.\r\n",
+            "--b1--\r\n",
+        );
+        assert_eq!(preview_from_part(part.as_bytes(), None, None).trim(), "Hello.");
     }
 
     /// Issue #9's message: an Apple Mail PDF marked `inline` with a filename and

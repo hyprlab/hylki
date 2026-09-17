@@ -619,7 +619,10 @@ all in 1.28; to [**EmmanuelP**](https://github.com/EmmanuelP) for the
 undo and sent-copy requests, [**yioannides**](https://github.com/yioannides)
 for the recipient-rule report, [**7system7**](https://github.com/7system7)
 for the links report and [**frenchy82**](https://github.com/frenchy82) for the
-French update, all in 1.32; and to everyone who files issues and ideas.
+French update, all in 1.32; to [**p-mitana**](https://github.com/p-mitana)
+for the reply-target, thread-selection, reply-placement and per-message
+attachment reports, with [**yioannides**](https://github.com/yioannides)
+weighing in, all in 1.33; and to everyone who files issues and ideas.
 
 Pull requests are welcome. There's no CLA — by opening one you agree your
 contribution ships under the [AGPL-3.0-or-later](LICENSE), and it may be adapted

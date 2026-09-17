@@ -56,6 +56,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.33.1" date="2026-09-17">
+      <description>
+        <p>A message whose part headers carried a non-ASCII character at one particular position crashed the account's mail thread while building list previews, after which that account never synced again. The header is now read safely.</p>
+      </description>
+    </release>
     <release version="1.33.0" date="2026-09-17">
       <description>
         <p>Replies answer a conversation's newest message, a conversation's row stays selected while its messages are read, the reply editor can open beneath the reader, and each message in a conversation lists its own attachments. Conversations have their own Settings page, the attachment drawer's count is a button that opens and closes it, and French is updated.</p>
