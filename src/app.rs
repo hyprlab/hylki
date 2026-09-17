@@ -8079,6 +8079,14 @@ impl SimpleComponent for AppModel {
                         self.send_to(account_id, MailRequest::LoadMessages { folder_id, path });
                     }
                 }
+                // A unified view merges one folder per account, and this
+                // account's folders may only now have arrived — so the set the
+                // completeness flag is measured over just changed. It is
+                // otherwise recomputed on `BackfillDone` alone, which meant an
+                // account joining after every other one had finished left the
+                // list claiming a complete index, or (once its own load
+                // landed) spinning with no event left to clear it (#218).
+                self.push_index_complete();
             }
 
             AppMsg::FolderUnread { account_id, folder_id, unread } => {

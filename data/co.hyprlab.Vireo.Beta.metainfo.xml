@@ -59,6 +59,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.33.3-beta.1" date="2026-09-17" type="development">
+      <description>
+        <p>Catch-up with stable 1.33.2: with more than one account, the message list could sit on "Loading more..." forever when one account could not answer. An account that cannot be reached now stops the spinner instead of pinning it over everyone's mail.</p>
+      </description>
+    </release>
     <release version="1.33.2-beta.1" date="2026-09-17" type="development">
       <description>
         <p>Catch-up with stable 1.33.1: a message whose part headers carried a non-ASCII character at one particular position crashed the account's mail thread while building list previews, after which that account never synced again. The header is now read safely.</p>

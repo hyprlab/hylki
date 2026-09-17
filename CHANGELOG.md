@@ -1,9 +1,52 @@
 # Changelog
 
-## 1.33.2-beta.1 — 2026-09-17
+## 1.33.3-beta.1 — 2026-09-17
 
-Catch-up release: the beta channel is brought level with stable 1.33.1. No
-changes of its own — see the 1.33.1 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.33.2. No
+changes of its own — see the 1.33.2 section below for what is in it.
+
+## 1.33.2 — 2026-09-17
+
+All Inboxes could sit on "Loading more…" forever when one account could
+not answer.
+
+- **All Inboxes no longer loads forever when one account cannot answer**
+  (#218, reported by [@7system7](https://github.com/7system7)). The message
+  list's tail spinner is driven by one flag, `index_complete`, and in a
+  unified view that flag is all-or-nothing: it is true only once *every*
+  account's inbox has reported a `BackfillDone`. Several paths never sent
+  one, so a single account that could not answer pinned the spinner over
+  every account's mail, and because `is_empty_state` also waits on the
+  flag, an empty list showed the spinner instead of "No Messages". Three
+  fixes. A folder load that ends in failure now closes that folder's
+  index, in all four backends: the IMAP request path when no session can
+  be established and when the load itself errors, the Graph path when GOA
+  will not hand over a token and when the fetch errors, and the POP3 error
+  branch — "we tried and could not reach the server" has to end the
+  spinner the same way success does, with the connectivity banner
+  reporting the failure. A successful IMAP load that came back with less
+  than a full first page *is* the whole folder (an uncached folder asks
+  for the newest `FIRST_PAGE` of however many the server holds, and a
+  cached one is reconciled against the server's complete UID set), so it
+  closes its own index instead of waiting for the background backfill's
+  turn — that job sits behind every other folder in the mailbox and behind
+  the body prefetch, unread sweep and attachment prefetch in the idle
+  ladder, so a small inbox could wait a very long time for a spinner that
+  had nothing left to load. And `SetFolders` now re-pushes the flag,
+  because the set it is measured over is one folder per account and an
+  account's folders can arrive well after the unified view opened, most
+  visibly with several GNOME Online Accounts each paying a D-Bus token
+  round trip before it can list anything. Folders holding a full page or
+  more are unaffected: the list stops showing the spinner once it holds
+  one. Measured on this desktop: with every account failing to connect the
+  flag never became true at all before the fix and now settles once each
+  connection attempt has definitively failed; a healthy four-account start
+  reached a complete index in 7.8s against 10.4s before.
+- **French updated** (PR #217 by
+  [@frenchy82](https://github.com/frenchy82)). The thirteen strings 1.33.0
+  added: the attachment drawer's show and hide labels, "Show in Message",
+  "Save…", and the Settings → Conversations reply-editor rows. French is
+  complete again at 1233 of 1233.
 
 ## 1.33.1 — 2026-09-17
 

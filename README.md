@@ -554,7 +554,8 @@ upstream — their work ships in the app and is credited in the About window:
 - [**Alexander Lubovenko**](https://github.com/typedev) ([#45](https://github.com/hyprlab/vireo/pull/45),
   [#110](https://github.com/hyprlab/vireo/pull/110), [#112](https://github.com/hyprlab/vireo/pull/112),
   [#118](https://github.com/hyprlab/vireo/pull/118),
-  [#127](https://github.com/hyprlab/vireo/pull/127)) — Gmail
+  [#127](https://github.com/hyprlab/vireo/pull/127),
+  [#216](https://github.com/hyprlab/vireo/pull/216)) — Gmail
   conversations: showing a message once rather than once per label, answering it
   from whichever label already holds its body or attachments, and fetching a
   conversation's bodies in one request instead of one apiece; listing small
@@ -562,7 +563,8 @@ upstream — their work ships in the app and is credited in the About window:
   fetching a labelled message's attachments once instead of once per label;
   rejoining filenames split across RFC 2047 encoded-words; and pictures
   dropped or pasted from a file manager landing in the message, keeping their
-  filename, with resizing by handle or menu and an optional recompress on send.
+  filename, with resizing by handle or menu and an optional recompress on send;
+  and the non-ASCII part header that took an account's mail thread down.
 - [**frenchy82**](https://github.com/frenchy82) ([#122](https://github.com/hyprlab/vireo/issues/122),
   [#131](https://github.com/hyprlab/vireo/pull/131),
   [#134](https://github.com/hyprlab/vireo/pull/134)) — the French translation,

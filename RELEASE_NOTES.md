@@ -2,9 +2,15 @@
 
 Vireo is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.33.2-beta.1
+## What's new in 1.33.3-beta.1
 
-Catch-up release: the beta channel is level with stable 1.33.1. Everything below applies.
+Catch-up release: the beta channel is level with stable 1.33.2. Everything below applies.
+
+## What's new in 1.33.2
+
+**All Inboxes no longer loads forever** (#218, reported by [@7system7](https://github.com/7system7)). With more than one account set up, the "Loading more…" spinner under the message list waited for every account to finish indexing its inbox, and several things could stop an account from ever reporting in: a sign-in that failed, a server that could not be reached, or simply a small inbox whose turn in the background queue never came. One account in that state left the spinner turning over everyone's mail, and an empty list showed it instead of "No Messages". An account that cannot be reached now says so and stops the spinner, with the usual banner reporting the problem, and a folder whose mail has all arrived no longer waits on anything.
+
+**French updated** (PR #217 by [@frenchy82](https://github.com/frenchy82)), covering the attachment drawer and the new Conversations settings.
 
 ## What's new in 1.33.1
 

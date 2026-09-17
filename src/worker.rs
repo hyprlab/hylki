@@ -1241,7 +1241,19 @@ async fn run_imap(
         if session.is_none() {
             session = connect_and_list(account_id, &account, cache.as_ref(), &emit).await;
             if session.is_none() {
-                continue; // still offline; cached data (if any) was already sent
+                // Still offline; cached data (if any) was already sent. Close
+                // the folder's index anyway (#218): "we tried and could not
+                // reach the server" has to end the list's "Loading more…"
+                // spinner the same way success does, or an unreachable account
+                // is indistinguishable from one that is still streaming — and
+                // in a unified view one such account pins the spinner for
+                // every account's mail.
+                if let MailRequest::LoadMessages { folder_id, .. }
+                | MailRequest::SyncFolder { folder_id, .. } = &req
+                {
+                    emit(WorkerEvent::BackfillDone { folder_id: *folder_id });
+                }
+                continue;
             }
         }
         // On a connection-shaped failure we drop the session to force a reconnect.
@@ -1325,7 +1337,26 @@ async fn run_imap(
                             cache.as_ref(), &emit,
                         )
                         .await;
+                        // A load that came back with less than a full first
+                        // page *is* the whole folder — an uncached folder asks
+                        // for the newest FIRST_PAGE of however many the server
+                        // holds, and a cached one is reconciled against the
+                        // server's complete UID set — so its index is already
+                        // complete and the background backfill has nothing to
+                        // add. Saying so now (#218) instead of waiting for that
+                        // job's turn matters because the job sits behind every
+                        // other folder in the mailbox, and behind the body
+                        // prefetch, unread sweep and attachment prefetch ahead
+                        // of it in the idle ladder: a small inbox could wait
+                        // hours for a "Loading more…" spinner that had nothing
+                        // left to load. Larger folders are unaffected — the
+                        // list stops showing the spinner once it holds a full
+                        // page anyway.
+                        let complete = messages.len() < FIRST_PAGE as usize;
                         emit(WorkerEvent::Messages { folder_id, messages });
+                        if complete {
+                            emit(WorkerEvent::BackfillDone { folder_id });
+                        }
                         // Refresh the true unread count (catches new mail and
                         // reads from other clients beyond the loaded window).
                         if let Some(sess) = session.as_mut() {
@@ -1340,6 +1371,10 @@ async fn run_imap(
                             text: i18n_f("Could not load {path}: {e}", &[("path", &(path).to_string()), ("e", &(e).to_string())]),
                             connectivity: true,
                         });
+                        // The load failed, so nothing more is on its way for
+                        // this folder: end its index (#218) rather than leave
+                        // the list spinning on a backfill that will not run.
+                        emit(WorkerEvent::BackfillDone { folder_id });
                     }
                 }
                 // However it went, this folder has been to the server (#198).
@@ -7747,10 +7782,13 @@ async fn run_pop3(
                         // follows, so the index is complete (see the Graph path).
                         emit(WorkerEvent::BackfillDone { folder_id });
                     }
-                    Err(e) => emit(WorkerEvent::Error {
-                        text: i18n_f("Could not fetch mail: {e}", &[("e", &(e).to_string())]),
-                        connectivity: true,
-                    }),
+                    Err(e) => {
+                        emit(WorkerEvent::Error {
+                            text: i18n_f("Could not fetch mail: {e}", &[("e", &(e).to_string())]),
+                            connectivity: true,
+                        });
+                        emit(WorkerEvent::BackfillDone { folder_id });
+                    }
                 }
                 emit(WorkerEvent::Status(String::new()));
             }
@@ -9375,6 +9413,9 @@ async fn run_graph(
                 }
                 emit(WorkerEvent::Status(i18n("Syncing…")));
                 let Some(token) = graph_token(&account, &emit).await else {
+                    // No token, so no mail is coming: end the folder's index
+                    // (#218) rather than leave the list spinning.
+                    emit(WorkerEvent::BackfillDone { folder_id });
                     emit(WorkerEvent::Status(String::new()));
                     continue;
                 };
@@ -9396,10 +9437,13 @@ async fn run_graph(
                         // (an emptied inbox most visibly).
                         emit(WorkerEvent::BackfillDone { folder_id });
                     }
-                    Err(e) => emit(WorkerEvent::Error {
-                        text: i18n_f("Could not fetch mail: {e}", &[("e", &(e).to_string())]),
-                        connectivity: true,
-                    }),
+                    Err(e) => {
+                        emit(WorkerEvent::Error {
+                            text: i18n_f("Could not fetch mail: {e}", &[("e", &(e).to_string())]),
+                            connectivity: true,
+                        });
+                        emit(WorkerEvent::BackfillDone { folder_id });
+                    }
                 }
                 emit(WorkerEvent::Status(String::new()));
             }
