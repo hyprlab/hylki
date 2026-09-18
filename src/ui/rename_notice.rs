@@ -130,19 +130,9 @@ pub fn show(parent: &impl IsA<gtk::Window>, startup: bool) {
     // Wide enough for the install command to read in one line.
     dialog.set_size_request(480, -1);
 
-    // Below the text: the site, then the command (or the download) to run.
+    // Below the text: the command (or the download) to run, then the site.
     let extra = gtk::Box::new(gtk::Orientation::Vertical, 10);
     extra.set_margin_top(6);
-
-    let site = gtk::Button::with_label(&i18n("Open hylki.hyprlab.co"));
-    site.add_css_class("pill");
-    site.add_css_class("suggested-action");
-    site.set_halign(gtk::Align::Center);
-    {
-        let parent = parent.as_ref().clone();
-        site.connect_clicked(move |_| crate::ui::launch::open_link(SITE, Some(&parent)));
-    }
-    extra.append(&site);
 
     let command = if installed { Some(UNINSTALL.to_string()) } else { install_command(kind) };
     match command {
@@ -182,6 +172,17 @@ pub fn show(parent: &impl IsA<gtk::Window>, startup: bool) {
             extra.append(&releases);
         }
     }
+    // The site last, under the command.
+    let site = gtk::Button::with_label(&i18n("Open hylki.hyprlab.co"));
+    site.add_css_class("pill");
+    site.add_css_class("suggested-action");
+    site.set_halign(gtk::Align::Center);
+    site.set_margin_top(4);
+    {
+        let parent = parent.as_ref().clone();
+        site.connect_clicked(move |_| crate::ui::launch::open_link(SITE, Some(&parent)));
+    }
+    extra.append(&site);
     dialog.set_extra_child(Some(&extra));
 
     if startup && !installed {
