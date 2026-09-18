@@ -2,9 +2,20 @@
 
 Vireo is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.33.5-beta.1
+## What's new in 1.34.1-beta.1
 
-Catch-up release: the beta channel is level with stable 1.33.4. Everything below applies.
+Catch-up release: the beta channel is level with stable 1.34.0, the last Vireo release. Everything below applies; the beta's notice names the Hylki beta install command.
+
+## What's new in 1.34.0
+
+**Vireo is now Hylki.** This is the last release under the Vireo name. Updates continue as Hylki, which installs alongside Vireo, and its first start carries your accounts, settings and cached mail across: nothing in Vireo is changed or removed, and there is nothing to set up again. Once Hylki is running, you can uninstall Vireo.
+
+A notice opens at every start with the website and the install command until you choose "Don't Show Again"; it stops opening by itself once Hylki is installed. You can reopen it any time from the main menu ("Vireo Is Now Hylki…") or the About window.
+
+Install Hylki: `flatpak install --from https://hylki.hyprlab.co/flatpak/co.hyprlab.Hylki.flatpakref`, or visit [hylki.hyprlab.co](https://hylki.hyprlab.co).
+
+**Memory that was freed is now given back to the system** (#221). A user's log showed the app at over 2 GB with only 270 MB actually in use. The allocator is tuned at startup, held memory is returned every 30 seconds when there is enough of it, the attachment gallery's thumbnail and PDF caches are bounded, and a preview retry no longer re-fetches the same rows on every sync.
+
 
 ## What's new in 1.33.4
 

@@ -69,6 +69,10 @@ pub const WIZARD_AGAIN_VAR: &str = "VIREO_WIZARD_AGAIN";
 pub static HIDDEN_START: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
 
 fn main() {
+    // The allocator's tunables before the first allocation that matters (see
+    // memory_report::tune_allocator).
+    memory_report::tune_allocator();
+
     // Translations first: the text domain must be bound before any string
     // is shown, and the locale set before GTK sets its own.
     i18n::init();

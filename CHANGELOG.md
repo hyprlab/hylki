@@ -1,9 +1,32 @@
 # Changelog
 
-## 1.33.5-beta.1 — 2026-09-18
+## 1.34.1-beta.1 — 2026-09-18
 
-Catch-up release: the beta channel is brought level with stable 1.33.4. No
-changes of its own — see the 1.33.4 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.34.0, the
+last Vireo release. Its notice names the Hylki beta install command. No
+changes of its own — see the 1.34.0 section below for what is in it.
+
+## 1.34.0 — 2026-09-18
+
+The last release under the Vireo name.
+
+- **Vireo is now Hylki.** Updates continue as Hylki (app ID
+  `co.hyprlab.Hylki`), a separate install whose first start carries this
+  install's accounts, settings and cached mail across; nothing in Vireo is
+  changed or removed. A notice opens at every start with the site and the
+  install command (Flatpak, beta and native package each get their own)
+  until "Don't Show Again", and stops opening by itself once Hylki is
+  installed. It stays reachable from the main menu ("Vireo Is Now Hylki…")
+  and the About window.
+- **Freed memory goes back to the system.** A log from 1.33.4 showed the
+  process at 2.17 GB with 270 MB in use: the rest had been freed but the
+  allocator held on to it. The allocator is now tuned before the first
+  allocation, an idle timer returns held memory every 30 seconds when there
+  is enough of it, the gallery's thumbnail and PDF caches are bounded, and a
+  preview retry remembers its answer instead of re-fetching the same rows on
+  every sync (#221).
+- The Memory section of an exported log no longer reports software
+  rendering when lavapipe sits beside a hardware driver.
 
 ## 1.33.4 — 2026-09-18
 

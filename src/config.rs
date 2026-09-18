@@ -2966,6 +2966,10 @@ struct StateFile {
     /// Set once the user dismisses the Linux Mint keyring setup tip.
     #[serde(default)]
     mint_keyring_help_dismissed: bool,
+    /// Set once the user chooses "Don't Show Again" on the notice that
+    /// Vireo has become Hylki (1.34.0, the last Vireo release).
+    #[serde(default)]
+    rename_notice_dismissed: bool,
     /// In-message attachment drawer: collapsed (showing only its header).
     #[serde(default)]
     drawer_collapsed: bool,
@@ -3135,6 +3139,18 @@ pub fn mint_keyring_help_dismissed() -> bool {
 pub fn dismiss_mint_keyring_help() {
     let mut state = load_state();
     state.mint_keyring_help_dismissed = true;
+    save_state(&state);
+}
+
+/// Whether the Vireo-is-now-Hylki notice was dismissed for good.
+pub fn rename_notice_dismissed() -> bool {
+    load_state().rename_notice_dismissed
+}
+
+/// Persist "Don't Show Again" on the Vireo-is-now-Hylki notice.
+pub fn dismiss_rename_notice() {
+    let mut state = load_state();
+    state.rename_notice_dismissed = true;
     save_state(&state);
 }
 

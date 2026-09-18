@@ -3323,7 +3323,7 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 
 [[package]]
 name = "vireo"
-version = "1.33.5-beta.1"
+version = "1.34.1-beta.1"
 dependencies = [
  "ammonia",
  "async-imap",

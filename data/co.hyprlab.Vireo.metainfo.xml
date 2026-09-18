@@ -56,6 +56,12 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.34.0" date="2026-09-18">
+      <description>
+        <p>Vireo is now Hylki. This is the last release under the Vireo name; updates continue as Hylki, which installs alongside Vireo and carries your accounts, settings and cached mail across on its first start. A notice at startup has the website and the install command.</p>
+        <p>Memory that was freed is now given back to the system, and the attachment gallery's caches are bounded.</p>
+      </description>
+    </release>
     <release version="1.33.4" date="2026-09-18">
       <description>
         <p>A background loop that re-downloaded an OpenPGP message several times a second, holding Vireo at several gigabytes, is fixed. The conversation row stays selected when you click one of your own replies, and the message header has more air under the split reply.</p>

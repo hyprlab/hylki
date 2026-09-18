@@ -152,6 +152,7 @@ relm4::new_action_group!(WindowActionGroup, "win");
 relm4::new_stateless_action!(AccountsAction, WindowActionGroup, "accounts");
 relm4::new_stateless_action!(PreferencesAction, WindowActionGroup, "preferences");
 relm4::new_stateless_action!(AboutAction, WindowActionGroup, "about");
+relm4::new_stateless_action!(RenameNoticeAction, WindowActionGroup, "rename-notice");
 relm4::new_stateless_action!(ShortcutsAction, WindowActionGroup, "shortcuts");
 relm4::new_stateless_action!(PrintAction, WindowActionGroup, "print");
 relm4::new_stateless_action!(PrintPreviewAction, WindowActionGroup, "print-preview");
@@ -1391,6 +1392,9 @@ pub enum AppMsg {
     /// Show the keyring / Secret Service setup help. `problem: true` when a save
     /// actually failed to persist; `false` for the proactive one-time tip.
     ShowKeyringHelp { problem: bool },
+    /// Open the notice that Vireo has become Hylki (`startup`: offered
+    /// "Remind Me Later" / "Don't Show Again" rather than a plain Close).
+    ShowRenameNotice { startup: bool },
     AccountRemoved { email: String },
     AccountEnabledChanged { email: String, enabled: bool },
     ImportGoaAccount(Box<AccountConfig>),
@@ -3481,6 +3485,10 @@ impl SimpleComponent for AppModel {
         group.add_action(RelmAction::<AboutAction>::new_stateless(move |_| {
             about_sender.input(AppMsg::OpenAbout);
         }));
+        let rename_sender = sender.clone();
+        group.add_action(RelmAction::<RenameNoticeAction>::new_stateless(move |_| {
+            rename_sender.input(AppMsg::ShowRenameNotice { startup: false });
+        }));
         let shortcuts_sender = sender.clone();
         group.add_action(RelmAction::<ShortcutsAction>::new_stateless(move |_| {
             shortcuts_sender.input(AppMsg::ShowShortcuts);
@@ -3630,6 +3638,12 @@ impl SimpleComponent for AppModel {
             sender.input(AppMsg::ShowKeyringHelp { problem: false });
         }
 
+        // 1.34.0 is the last Vireo release: say so at every start until the
+        // user asks not to, or until Hylki is on the machine.
+        if crate::ui::rename_notice::due_at_startup() {
+            sender.input(AppMsg::ShowRenameNotice { startup: true });
+        }
+
         model.lightbox_picture = Some(widgets.lightbox_picture.clone());
         model.lightbox_scroller = Some(widgets.lightbox_scroller.clone());
 
@@ -3685,6 +3699,16 @@ impl SimpleComponent for AppModel {
         // the demo the way the marketing shots want it — first row (the demo
         // conversation, expanded via the threads_expanded preference) selected,
         // one mid-thread card highlighted — then render the window to a PNG.
+        // Return freed heap to the system now and then. What the gallery,
+        // the composer or a big conversation allocated and dropped otherwise
+        // stays held by the allocator, and a system monitor counts it against
+        // the app: a user's log showed 1.73 GB held with 270 MB live.
+        gtk::glib::timeout_add_seconds_local(30, || {
+            if let Some(held) = crate::memory_report::trim_if_worthwhile() {
+                tracing::debug!(target: "vireo::memory", "trimmed the heap: {} was freed but held", crate::memory_report::human_bytes(held as u64));
+            }
+            gtk::glib::ControlFlow::Continue
+        });
         // VIREO_SHOWCASE_MEMORY=/path.txt writes the exported log (memory
         // section included) there after VIREO_SHOWCASE_MEMORY_AT seconds
         // (default 20), on a real mailbox as much as the demo: a memory
@@ -7329,6 +7353,9 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::ShowKeyringHelp { problem } => self.show_keyring_help(problem),
+            AppMsg::ShowRenameNotice { startup } => {
+                crate::ui::rename_notice::show(&self.window, startup);
+            }
 
             AppMsg::AccountEnabledChanged { email, enabled } => {
                 if let Some(slot) = self.config.iter_mut().find(|c| c.email == email) {
@@ -8997,13 +9024,27 @@ impl AppModel {
             .map(|r| r.type_().name().to_string())
             .unwrap_or_else(|| "none yet".to_string());
         let libs = crate::memory_report::graphics_libraries();
+        // Mesa's Vulkan loader maps every installed driver to enumerate the
+        // devices, so lavapipe (and with it LLVM) shows up on a machine that
+        // draws with its GPU too; software rendering is the verdict only when
+        // no hardware driver is there beside it.
+        let hardware = libs.iter().any(|l| {
+            let l = l.as_str();
+            (l.starts_with("libvulkan_") && !l.starts_with("libvulkan_lvp") && !l.starts_with("libvulkan_dzn"))
+                || l.contains("nvidia")
+                || (l.ends_with("_dri.so") && !l.contains("swrast"))
+        });
         let software = libs.iter().any(|l| {
             l.starts_with("libvulkan_lvp") || l.starts_with("libLLVM") || l.contains("swrast")
         });
         out.push_str(&format!(
             "Graphics: {renderer}; driver libraries: {}{}\n",
             if libs.is_empty() { "none loaded".to_string() } else { libs.join(", ") },
-            if software { " (SOFTWARE rendering: shaders compile through LLVM in this process)" } else { "" }
+            match (hardware, software) {
+                (false, true) => " (SOFTWARE rendering: shaders compile through LLVM in this process)",
+                (true, true) => " (hardware driver in use; the software fallback is mapped alongside it, as Mesa's loader does)",
+                _ => "",
+            }
         ));
 
         out.push_str("Mail index (follows the mailbox size, kept in RAM by design):\n");
@@ -9142,6 +9183,7 @@ impl AppModel {
             self.help_menu.append(Some(i18n("Console").as_str()), Some("win.console"));
         }
         self.help_menu.append(Some(i18n("Keyboard Shortcuts").as_str()), Some("win.shortcuts"));
+        self.help_menu.append(Some(i18n("Vireo Is Now Hylki…").as_str()), Some("win.rename-notice"));
         self.help_menu
             .append(Some(format!("{} {}", i18n("About"), crate::APP_NAME).as_str()), Some("win.about"));
     }
@@ -15161,6 +15203,19 @@ impl AppModel {
         info.add_css_class("boxed-list");
         info.set_selection_mode(gtk::SelectionMode::None);
         info.set_margin_top(20);
+
+        // The last Vireo release: where updates continue.
+        let rename_row = adw::ActionRow::builder()
+            .title(&i18n("Vireo is now Hylki"))
+            .subtitle(&i18n("This is the last Vireo release. Updates continue as Hylki."))
+            .activatable(true)
+            .build();
+        rename_row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Vireo-go-next-symbolic"));
+        {
+            let win = win.clone();
+            rename_row.connect_activated(move |_| crate::ui::rename_notice::show(&win, false));
+        }
+        info.append(&rename_row);
 
         let notes_row = adw::ActionRow::builder()
             .title(&i18n("Release Notes"))
