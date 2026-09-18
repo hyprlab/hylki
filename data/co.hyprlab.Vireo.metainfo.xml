@@ -56,7 +56,7 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
-    <release version="1.34.0" date="2026-09-XX">
+    <release version="1.34.0" date="2026-09-18">
       <description>
         <p>Vireo is now Hylki. This is the last release under the Vireo name; updates continue as Hylki, which installs alongside Vireo and carries your accounts, settings and cached mail across on its first start. A notice at startup has the website and the install command.</p>
       </description>

@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.34.0 — 2026-09-XX
+## 1.34.0 — 2026-09-18
 
 The last release under the Vireo name.
 
