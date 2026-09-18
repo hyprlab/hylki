@@ -956,6 +956,13 @@ headerbar.compose-toolbar button.image-button {
   padding: 4px 24px 16px 24px;
 }
 
+/* …or the split reply is open above it: the reader's header bar is gone and
+   the subject block starts right under the composer's grab strip, which the
+   4px reads as touching. 14px more air there. A bar (below) still wins. */
+.reader-header.under-split {
+  padding-top: 18px;
+}
+
 /* …unless a bar (spoofing warning, blocked remote content, find) sits
    between it and the toolbar. There is nothing to line up with there, and
    4px against a filled band reads as cramped rather than aligned, so the

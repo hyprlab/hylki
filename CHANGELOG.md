@@ -1,9 +1,48 @@
 # Changelog
 
-## 1.33.4-beta.1 — 2026-09-18
+## 1.33.5-beta.1 — 2026-09-18
 
-Catch-up release: the beta channel is brought level with stable 1.33.3. No
-changes of its own — see the 1.33.3 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.33.4. No
+changes of its own — see the 1.33.4 section below for what is in it.
+
+## 1.33.4 — 2026-09-18
+
+A background loop that could hold a mailbox at several gigabytes, the
+conversation row staying selected for your own replies, and more air under
+the split reply.
+
+- **Attachment prefetch no longer re-fetches a message it cannot finish.**
+  A message the background attachment prefetch popped but could not finish
+  (OpenPGP mail, which is left for an explicit open, or a read that would
+  not parse) was never marked checked in the cache, and the resync the
+  prefetch triggers queued it again at once: a full download of the same
+  message several times a second, each followed by a folder listing and a
+  rebuild of the message list, for as long as it stayed among the newest
+  rows. PGP/MIME mail always carries the attachment flag, so any PGP user
+  with a recent encrypted message sat in that loop; one user's log showed
+  1,796 cycles in eight and a half minutes and the process at 2.6 GB. The
+  prefetch now remembers every message it has tried this session
+  (`ATTACHMENT_PREFETCH_TRIED`, checked by `queue_attachment_prefetch`) and
+  never queues one again; a body prefetch whose read fails is likewise given
+  up for the session; and a preview the BODY[TEXT] retry also finds empty is
+  not asked about again on every sync (`PREVIEW_GIVEN_UP`). Regression test
+  `attachment_prefetch_never_requeues_a_message_it_already_tried`.
+- **Conversation row stays selected for your own replies** (#220, reported
+  by [@p-mitana](https://github.com/p-mitana)). The #211 fix let a card
+  with no row of its own keep the row of the conversation it was read in
+  with, but judged "part of the conversation" by what the list had handed
+  the reader. Your own replies are not in that set: the app pulls them in
+  from Sent afterwards, under ids of its own that the list never listed, so
+  clicking one of their cards still deselected the thread. The reader's
+  selection now travels with the conversation as the app has it, Sent
+  members included, and the list widens what it emitted by that before
+  looking the row up.
+- **Reader header under the split reply.** The header's 4px top padding
+  lines the account chip up with the list's first row; with the split reply
+  open above the reader there is no row to line up with and the subject
+  block started right under the composer's grab strip. An under-split class
+  gives it 18px there; a bar (warning, blocked content, find) keeps its
+  20px.
 
 ## 1.33.3 — 2026-09-18
 

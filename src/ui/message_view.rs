@@ -130,6 +130,10 @@ pub struct MessageView {
     webview_ready: bool,
     /// In-message find (#103).
     find_open: bool,
+    /// The split reply is open above this reader: its header bar is gone and
+    /// the subject block meets the composer's grab strip instead, where the
+    /// list-aligned 4px reads as cramped.
+    under_split: bool,
     find_matches: Option<(u32, u32)>,
     find_entry: Option<gtk::SearchEntry>,
     /// When find last closed itself (empty entry blur) — the toolbar click
@@ -335,6 +339,8 @@ pub enum MessageViewInput {
     /// Whether the blocked-remote-content banner is shown. It doesn't change
     /// what is blocked — only what the reader says about it.
     SetBannerShown(bool),
+    /// The split reply opened above the reader (true) or went away (false).
+    SetUnderSplit(bool),
     /// The "always show recipients" preference changed (re-render follows).
     SetAlwaysShowRecipients(bool),
     /// The "single messages as cards" preference changed (re-render follows).
@@ -837,6 +843,11 @@ impl Component for MessageView {
                             || (model.blocked && model.show_banner)
                             || model.find_open,
                     ),
+                    // Under the split reply there is no list row to line up
+                    // with either, only the composer's grab strip: 14px more
+                    // air than the aligned case.
+                    #[watch]
+                    set_class_active: ("under-split", model.under_split),
                     set_orientation: gtk::Orientation::Vertical,
                     set_spacing: 12,
 
@@ -1005,6 +1016,7 @@ impl Component for MessageView {
             loading: false,
             webview_ready: false,
             find_open: false,
+            under_split: false,
             find_matches: None,
             find_entry: None,
             find_closed_at: None,
@@ -1545,6 +1557,9 @@ impl Component for MessageView {
             }
             MessageViewInput::SetBannerShown(show) => {
                 self.show_banner = show;
+            }
+            MessageViewInput::SetUnderSplit(under) => {
+                self.under_split = under;
             }
             MessageViewInput::SetContentTheme(o) => {
                 if self.content_dark != o {

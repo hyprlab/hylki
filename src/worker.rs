@@ -81,6 +81,40 @@ const BODY_FETCH_BATCH: usize = 10;
 /// small, so this stays cheap; older messages load on demand.
 const PREFETCH_BODY_LIMIT: usize = 50;
 
+/// Messages the attachment prefetch has already tried this session, as
+/// (account, folder path, uid). A message the prefetch cannot finish — OpenPGP
+/// mail, which is left for an explicit open, or a read that fails to parse —
+/// is never marked checked in the cache, and without this it was queued again
+/// by the very resync the prefetch triggers, then fetched again, then queued
+/// again: a full download of the same message several times a second, each
+/// one followed by a folder listing and a rebuild of the message list, for as
+/// long as it stayed among the newest rows. PGP/MIME mail always carries the
+/// attachment flag (its encrypted part), so every PGP user with a recent
+/// encrypted message sat in that loop.
+static ATTACHMENT_PREFETCH_TRIED: std::sync::LazyLock<
+    std::sync::Mutex<std::collections::HashSet<(u32, String, u32)>>,
+> = std::sync::LazyLock::new(Default::default);
+
+fn attachment_prefetch_tried(account_id: u32, path: &str, uid: u32) -> bool {
+    ATTACHMENT_PREFETCH_TRIED
+        .lock()
+        .map(|s| s.contains(&(account_id, path.to_string(), uid)))
+        .unwrap_or(false)
+}
+
+fn note_attachment_prefetch_tried(account_id: u32, path: &str, uid: u32) {
+    if let Ok(mut s) = ATTACHMENT_PREFETCH_TRIED.lock() {
+        s.insert((account_id, path.to_string(), uid));
+    }
+}
+
+/// Rows whose preview came back empty from the BODY[TEXT] retry too, as
+/// (account, folder id, uid): a message with no text to show — an encrypted
+/// one, a photo — is asked about once per session, not on every sync.
+static PREVIEW_GIVEN_UP: std::sync::LazyLock<
+    std::sync::Mutex<std::collections::HashSet<(u32, u32, u32)>>,
+> = std::sync::LazyLock::new(Default::default);
+
 /// Floor between two unread-count sweeps out of the IDLE loop, so a burst of
 /// new mail (one `Refreshed` wake per delivery) doesn't STATUS the whole folder
 /// tree over and over. Explicit [`MailRequest::RefreshUnread`]s are never
@@ -2569,6 +2603,9 @@ async fn run_one_prefetch(
     }
     if session.is_some() {
         prefetch.pop_front();
+        // Tried is tried, whatever comes of it: the resync this pass ends
+        // with must not queue the same message again.
+        note_attachment_prefetch_tried(account_id, &path, uid);
         let already = cache
             .map(|c| c.attachments_checked(account_id, &path, uid))
             .unwrap_or(false);
@@ -2669,12 +2706,15 @@ fn queue_attachment_prefetch(
         }
         // Skip messages we've already fetched attachments for — including ones
         // that turned out to have none (so false "has attachment" flags, e.g.
-        // iCloud's multipart/mixed, aren't re-downloaded on every sync).
+        // iCloud's multipart/mixed, aren't re-downloaded on every sync) — and
+        // ones this session already tried and could not finish (see
+        // [`ATTACHMENT_PREFETCH_TRIED`]).
         let checked = cache
             .map(|c| c.attachments_checked(account_id, path, m.uid))
             .unwrap_or(false);
+        let tried = attachment_prefetch_tried(account_id, path, m.uid);
         let queued = queue.iter().any(|(p, u)| p == path && *u == m.uid);
-        if !checked && !queued {
+        if !checked && !tried && !queued {
             queue.push_back((path.to_string(), m.uid));
         }
     }
@@ -2716,7 +2756,14 @@ async fn run_one_body_prefetch(
         return;
     }
     queue.pop_front();
-    if let Ok(raw) = load_raw_retry(session, account, &path, uid).await {
+    let Ok(raw) = load_raw_retry(session, account, &path, uid).await else {
+        // One failed read is enough for this session: left out of `emitted`,
+        // the message would be queued again by every resync and fetched
+        // again each time.
+        emitted.insert((path, uid));
+        return;
+    };
+    {
         // OpenPGP mail (#133) is left for an explicit open: nothing of it is
         // cached or pushed ahead, and rendering it here would decrypt in the
         // background — a passphrase prompt out of nowhere.
@@ -6090,9 +6137,37 @@ async fn redecode_garbled_previews(session: &mut ImapSession, messages: &mut [Me
 /// MIME-prefix extraction. Callers bound the list: genuinely body-less messages
 /// stay empty and shouldn't grow the fetch each sync.
 async fn retry_missing_previews(session: &mut ImapSession, messages: &mut [Message], uids: Vec<u32>) {
+    // Rows the retry already found empty this session are not asked again
+    // (see [`PREVIEW_GIVEN_UP`]): the retry runs on every sync of the folder,
+    // and a message with no text to show would otherwise cost 32 KB per sync
+    // for as long as it stayed among the rows checked.
+    fn key(messages: &[Message], uid: u32) -> Option<(u32, u32, u32)> {
+        messages.iter().find(|m| m.uid == uid).map(|m| (m.account_id, m.folder_id, uid))
+    }
+    let uids: Vec<u32> = {
+        let given_up = PREVIEW_GIVEN_UP.lock().ok();
+        uids.into_iter()
+            .filter(|&uid| {
+                !given_up.as_ref().zip(key(messages, uid)).is_some_and(|(g, k)| g.contains(&k))
+            })
+            .collect()
+    };
     if uids.is_empty() {
         return;
     }
+    retry_missing_previews_now(session, messages, &uids).await;
+    let still_empty: Vec<(u32, u32, u32)> = uids
+        .iter()
+        .filter_map(|&uid| key(messages, uid))
+        .filter(|&(_, _, uid)| messages.iter().any(|m| m.uid == uid && m.preview.is_empty()))
+        .collect();
+    if let Ok(mut given_up) = PREVIEW_GIVEN_UP.lock() {
+        given_up.extend(still_empty);
+    }
+}
+
+/// The BODY[TEXT] retry itself, for `uids` (non-empty).
+async fn retry_missing_previews_now(session: &mut ImapSession, messages: &mut [Message], uids: &[u32]) {
     tracing::info!("previews: retrying via BODY[TEXT] uids={uids:?}");
     let refetched: Result<Vec<Fetch>, _> = async {
         fetch_uids(
@@ -10484,6 +10559,56 @@ async fn graph_flush_outbox(
 mod tests {
 
     use super::*;
+
+    fn flagged_message(uid: u32) -> Message {
+        Message {
+            id: uid,
+            account_id: 7,
+            folder_id: 1,
+            uid,
+            from_name: String::new(),
+            from_addr: String::new(),
+            reply_to: String::new(),
+            to: String::new(),
+            cc: String::new(),
+            subject: String::new(),
+            preview: String::new(),
+            body: String::new(),
+            date: String::new(),
+            timestamp: 0,
+            unread: true,
+            starred: false,
+            keywords: Vec::new(),
+            has_attachment: true,
+            message_id: String::new(),
+            references: String::new(),
+        }
+    }
+
+    /// The loop behind the 2.6 GB report: a message the attachment prefetch
+    /// popped but could not finish (OpenPGP, or a read that would not parse)
+    /// was queued again by the resync the prefetch triggers, and fetched
+    /// again, forever. One attempt per session is all it gets now.
+    #[test]
+    fn attachment_prefetch_never_requeues_a_message_it_already_tried() {
+        let msgs = vec![flagged_message(2383), flagged_message(2372)];
+        let mut queue = std::collections::VecDeque::new();
+        queue_attachment_prefetch(&mut queue, "INBOX", &msgs, None, 7);
+        assert_eq!(queue.len(), 2, "both flagged rows are queued the first time");
+
+        // The prefetch pops 2383 and notes the attempt, as run_one_prefetch does
+        // before anything can go wrong with the read.
+        queue.pop_front();
+        note_attachment_prefetch_tried(7, "INBOX", 2383);
+        assert!(attachment_prefetch_tried(7, "INBOX", 2383));
+
+        // The resync that follows sees the same rows: 2383 must stay out.
+        queue_attachment_prefetch(&mut queue, "INBOX", &msgs, None, 7);
+        assert_eq!(queue.iter().map(|(_, u)| *u).collect::<Vec<_>>(), vec![2372]);
+
+        // Another account's row with the same uid and path is its own attempt.
+        assert!(!attachment_prefetch_tried(8, "INBOX", 2383));
+    }
 
     fn sample_account() -> AccountConfig {
         AccountConfig {

@@ -2250,6 +2250,16 @@ fn row_for_reader_key(
     own_row.or_else(thread_row).or_else(viewed_row)
 }
 
+/// The conversation the reader is showing, for [`row_for_reader_key`]: what
+/// this list `emitted` when the row was opened, plus whatever the app has
+/// `merged` into it since from other folders — the user's own replies from
+/// Sent, which reach the reader under ids this list never listed (#220).
+fn reader_conversation(emitted: &[(u32, u32)], merged: &[(u32, u32)]) -> Vec<(u32, u32)> {
+    let mut all = emitted.to_vec();
+    all.extend(merged.iter().filter(|k| !emitted.contains(k)).copied());
+    all
+}
+
 /// Group messages into conversations by their reply headers (Message-ID linked
 /// via In-Reply-To / References), scoped per account. Returns each message's
 /// thread key `(account_id, root)`. Messages with no reply relationship get a
@@ -2607,9 +2617,12 @@ pub enum MessageListInput {
     /// so everything that acts on the list's selection acts on the messages the
     /// user pointed at. The reader is already showing them, so this must not
     /// re-open anything. Messages the list cannot represent — a reply read in
-    /// from Sent, which belongs to another folder — are simply not mirrored;
-    /// the reader keeps showing them selected regardless.
-    SelectFromReader { keys: Vec<(u32, u32)> },
+    /// from Sent, which belongs to another folder — keep the row of the
+    /// conversation they were read in with (#211, #220). `conversation` is that
+    /// conversation as the reader has it, which is wider than what this list
+    /// handed over: the app pulls the user's own replies in from Sent after
+    /// the fact, under ids the list never sees.
+    SelectFromReader { keys: Vec<(u32, u32)>, conversation: Vec<(u32, u32)> },
     /// The set of selected rows changed (single click, Ctrl/Shift multi-select).
     SelectionChanged,
     /// A row was activated (double-click / Enter): pop it out into its own window.
@@ -3388,7 +3401,7 @@ impl SimpleComponent for MessageList {
                     self.rebuild_preserving_scroll();
                 }
             }
-            MessageListInput::SelectFromReader { keys } => {
+            MessageListInput::SelectFromReader { keys, conversation } => {
                 // An empty set means the reader cleared its card selection (a
                 // click on the document's empty space). The list keeps the
                 // viewed message highlighted rather than losing its anchor —
@@ -3418,6 +3431,10 @@ impl SimpleComponent for MessageList {
                     }
                     self.rebuild_preserving_scroll();
                 }
+                // The conversation as the reader shows it: what this list
+                // handed over plus what the app merged in from other folders
+                // since (#220). Either way it was opened from the viewed row.
+                let conversation = reader_conversation(&self.emitted_thread, &conversation);
                 let list = self.rows.widget();
                 list.unselect_all();
                 for key in &keys {
@@ -3425,7 +3442,7 @@ impl SimpleComponent for MessageList {
                         key,
                         &self.shown,
                         &self.msg_thread,
-                        &self.emitted_thread,
+                        &conversation,
                         self.selected_id,
                     ) {
                         if let Some(row) = list.row_at_index(idx as i32) {
@@ -5393,7 +5410,10 @@ impl MessageList {
 
 #[cfg(test)]
 mod tests {
-    use super::{compute_thread_keys, row_for_reader_key, swipe_progress_px, SWIPE_ARM, SWIPE_MAX};
+    use super::{
+        compute_thread_keys, reader_conversation, row_for_reader_key, swipe_progress_px, SWIPE_ARM,
+        SWIPE_MAX,
+    };
     use crate::models::Message;
 
     fn msg(id: u32, message_id: &str, references: &str) -> Message {
@@ -5583,13 +5603,17 @@ mod tests {
         .into_iter()
         .collect();
 
-        // The conversation as the reader was given it, opened from its head
-        // row — including a message of the user's own, pulled in from Sent,
-        // which this folder has no row for and no thread entry either.
-        let emitted = [(1, 1), (1, 2), (1, 3), (1, 77)];
+        // The conversation as this list handed it over, opened from its head
+        // row. A message of the user's own, pulled in from Sent, joins it
+        // only later and only on the app's side: this folder has no row for
+        // it, no thread entry, and never listed it at all (#220).
+        let emitted = [(1, 1), (1, 2), (1, 3)];
+        let merged = [(1, 1), (1, 2), (1, 3), (1, 77)];
+        let conversation = reader_conversation(&emitted, &merged);
+        assert_eq!(conversation, [(1, 1), (1, 2), (1, 3), (1, 77)]);
         let viewed = Some((1, 1));
         let row = |key: (u32, u32)| {
-            row_for_reader_key(&key, &shown, &msg_thread, &emitted, viewed)
+            row_for_reader_key(&key, &shown, &msg_thread, &conversation, viewed)
         };
 
         // The head has a row of its own.
@@ -5599,6 +5623,9 @@ mod tests {
         assert_eq!(row((1, 3)), Some(0));
         // Neither does the copy from Sent, which this folder never lists.
         assert_eq!(row((1, 77)), Some(0));
+        // Going by what the list handed over alone, that copy would land
+        // nowhere — the bug behind #220.
+        assert_eq!(row_for_reader_key(&(1, 77), &shown, &msg_thread, &emitted, viewed), None);
         // A message in no conversation still matches only itself.
         assert_eq!(row((1, 9)), Some(1));
         // And one from neither is no row at all.

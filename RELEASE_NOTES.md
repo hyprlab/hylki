@@ -2,9 +2,17 @@
 
 Vireo is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.33.4-beta.1
+## What's new in 1.33.5-beta.1
 
-Catch-up release: the beta channel is level with stable 1.33.3. Everything below applies.
+Catch-up release: the beta channel is level with stable 1.33.4. Everything below applies.
+
+## What's new in 1.33.4
+
+**A background loop that could hold Vireo at several gigabytes is fixed.** When the newest messages in a folder included one the background attachment prefetch could not finish, an OpenPGP message in particular, Vireo downloaded that message again and again, several times a second, re-listing the folder each time. Memory climbed for as long as the message stayed near the top of the folder. Each message is now tried once per session. If Vireo has been large on your machine, this is the likely reason, and an exported log after updating will say so either way.
+
+**The conversation row stays selected when you click one of your own replies** (#220, reported by [@p-mitana](https://github.com/p-mitana)). Replies pulled in from Sent used to deselect the thread in the list.
+
+**More air above the message header when the split reply is open.**
 
 ## What's new in 1.33.3
 

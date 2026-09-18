@@ -59,6 +59,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.33.5-beta.1" date="2026-09-18" type="development">
+      <description>
+        <p>Catch-up with stable 1.33.4: a background loop that re-downloaded an OpenPGP message several times a second, holding Vireo at several gigabytes, is fixed. The conversation row stays selected when you click one of your own replies, and the message header has more air under the split reply.</p>
+      </description>
+    </release>
     <release version="1.33.4-beta.1" date="2026-09-18" type="development">
       <description>
         <p>Catch-up with stable 1.33.3: the exported log now opens with a Memory section that says how much each process uses and how much of it is Vireo's own data, WebKit or the graphics driver. The tag icon is now an outline.</p>

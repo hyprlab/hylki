@@ -8633,7 +8633,11 @@ impl SimpleComponent for AppModel {
                         self.set_read(&m, true);
                     }
                 }
-                self.message_list.emit(MessageListInput::SelectFromReader { keys });
+                // The conversation as the reader has it, Sent members and all,
+                // so a card the list never listed still keeps its row (#220).
+                let conversation =
+                    self.current_thread.iter().map(|m| (m.account_id, m.id)).collect();
+                self.message_list.emit(MessageListInput::SelectFromReader { keys, conversation });
             }
 
             AppMsg::ThreadMessageSeen { account_id, id } => {
@@ -12972,6 +12976,9 @@ impl AppModel {
     /// from appearing at full strength on the first frame of the slide.
     /// Timed to match the split reply's own 300ms slide, which it accompanies.
     fn show_reader_header(&self, shown: bool) {
+        // The header bar goes only while a split reply sits above the
+        // reader; the subject block under it wants more air then.
+        self.message_view.emit(MessageViewInput::SetUnderSplit(!shown));
         let Some(header) = self.reader_header.get() else { return };
         let tv = header
             .ancestor(adw::ToolbarView::static_type())

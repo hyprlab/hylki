@@ -1,6 +1,6 @@
 [package]
 name = "vireo"
-version = "1.33.4-beta.1"
+version = "1.33.5-beta.1"
 edition = "2021"
 description = "A clean, fast GNOME-native email client"
 license = "AGPL-3.0-or-later"
