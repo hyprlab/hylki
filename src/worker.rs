@@ -108,11 +108,15 @@ fn note_attachment_prefetch_tried(account_id: u32, path: &str, uid: u32) {
     }
 }
 
-/// Rows whose preview came back empty from the BODY[TEXT] retry too, as
-/// (account, folder id, uid): a message with no text to show — an encrypted
-/// one, a photo — is asked about once per session, not on every sync.
-static PREVIEW_GIVEN_UP: std::sync::LazyLock<
-    std::sync::Mutex<std::collections::HashSet<(u32, u32, u32)>>,
+/// What the BODY[TEXT] retry found for a row, as (account, folder id, uid) →
+/// preview, kept for the session. The summary fetch comes back empty for
+/// the same rows on every sync (iCloud's re-appended messages, file-first
+/// messages), so without this the retry ran again each time — three rows
+/// cost ~100 KB per sync in one user's log. An empty string is a message
+/// with no text to show at all — an encrypted one, a photo — which is then
+/// not asked about again either.
+static PREVIEW_RETRIED: std::sync::LazyLock<
+    std::sync::Mutex<std::collections::HashMap<(u32, u32, u32), String>>,
 > = std::sync::LazyLock::new(Default::default);
 
 /// Floor between two unread-count sweeps out of the IDLE loop, so a burst of
@@ -6137,18 +6141,27 @@ async fn redecode_garbled_previews(session: &mut ImapSession, messages: &mut [Me
 /// MIME-prefix extraction. Callers bound the list: genuinely body-less messages
 /// stay empty and shouldn't grow the fetch each sync.
 async fn retry_missing_previews(session: &mut ImapSession, messages: &mut [Message], uids: Vec<u32>) {
-    // Rows the retry already found empty this session are not asked again
-    // (see [`PREVIEW_GIVEN_UP`]): the retry runs on every sync of the folder,
-    // and a message with no text to show would otherwise cost 32 KB per sync
-    // for as long as it stayed among the rows checked.
+    // Rows the retry already answered this session are served from that
+    // answer (see [`PREVIEW_RETRIED`]): the retry runs on every sync of the
+    // folder, and it would otherwise cost 32 KB per row per sync for as
+    // long as the row stayed among those checked.
     fn key(messages: &[Message], uid: u32) -> Option<(u32, u32, u32)> {
         messages.iter().find(|m| m.uid == uid).map(|m| (m.account_id, m.folder_id, uid))
     }
     let uids: Vec<u32> = {
-        let given_up = PREVIEW_GIVEN_UP.lock().ok();
+        let retried = PREVIEW_RETRIED.lock().ok();
         uids.into_iter()
             .filter(|&uid| {
-                !given_up.as_ref().zip(key(messages, uid)).is_some_and(|(g, k)| g.contains(&k))
+                let Some(k) = key(messages, uid) else { return false };
+                match retried.as_ref().and_then(|r| r.get(&k)) {
+                    None => true,
+                    Some(found) => {
+                        if let Some(m) = messages.iter_mut().find(|m| m.uid == uid) {
+                            m.preview = found.clone();
+                        }
+                        false
+                    }
+                }
             })
             .collect()
     };
@@ -6156,13 +6169,16 @@ async fn retry_missing_previews(session: &mut ImapSession, messages: &mut [Messa
         return;
     }
     retry_missing_previews_now(session, messages, &uids).await;
-    let still_empty: Vec<(u32, u32, u32)> = uids
+    let answers: Vec<((u32, u32, u32), String)> = uids
         .iter()
-        .filter_map(|&uid| key(messages, uid))
-        .filter(|&(_, _, uid)| messages.iter().any(|m| m.uid == uid && m.preview.is_empty()))
+        .filter_map(|&uid| {
+            let k = key(messages, uid)?;
+            let preview = messages.iter().find(|m| m.uid == uid)?.preview.clone();
+            Some((k, preview))
+        })
         .collect();
-    if let Ok(mut given_up) = PREVIEW_GIVEN_UP.lock() {
-        given_up.extend(still_empty);
+    if let Ok(mut retried) = PREVIEW_RETRIED.lock() {
+        retried.extend(answers);
     }
 }
 

@@ -3699,6 +3699,16 @@ impl SimpleComponent for AppModel {
         // the demo the way the marketing shots want it — first row (the demo
         // conversation, expanded via the threads_expanded preference) selected,
         // one mid-thread card highlighted — then render the window to a PNG.
+        // Return freed heap to the system now and then. What the gallery,
+        // the composer or a big conversation allocated and dropped otherwise
+        // stays held by the allocator, and a system monitor counts it against
+        // the app: a user's log showed 1.73 GB held with 270 MB live.
+        gtk::glib::timeout_add_seconds_local(30, || {
+            if let Some(held) = crate::memory_report::trim_if_worthwhile() {
+                tracing::debug!(target: "vireo::memory", "trimmed the heap: {} was freed but held", crate::memory_report::human_bytes(held as u64));
+            }
+            gtk::glib::ControlFlow::Continue
+        });
         // VIREO_SHOWCASE_MEMORY=/path.txt writes the exported log (memory
         // section included) there after VIREO_SHOWCASE_MEMORY_AT seconds
         // (default 20), on a real mailbox as much as the demo: a memory

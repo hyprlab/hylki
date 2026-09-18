@@ -1988,32 +1988,112 @@ pub(crate) enum Thumbnail {
     Fallback,
 }
 
+/// Rendered textures by content hash, under a pixel-byte budget: the oldest
+/// go when a new one would exceed it. Failures (`None`) cost nothing and
+/// stay, so an attachment that would not decode is not tried again. A
+/// user's log showed 62 thumbnails holding 116 MB of pixels twelve minutes
+/// into a session; the deep archive would have kept adding to that for as
+/// long as they scrolled.
+struct TextureCache {
+    map: std::collections::HashMap<u64, Option<gdk::Texture>>,
+    /// Insertion order of the rendered entries, oldest first.
+    order: std::collections::VecDeque<u64>,
+    bytes: u64,
+    budget: u64,
+}
+
+impl TextureCache {
+    fn new(budget: u64) -> Self {
+        TextureCache { map: Default::default(), order: Default::default(), bytes: 0, budget }
+    }
+
+    fn get(&self, key: &u64) -> Option<&Option<gdk::Texture>> {
+        self.map.get(key)
+    }
+
+    fn insert(&mut self, key: u64, tex: Option<gdk::Texture>) {
+        if let Some(Some(old)) = self.map.insert(key, tex.clone()) {
+            self.bytes -= crate::memory_report::texture_bytes(&old);
+            self.order.retain(|k| *k != key);
+        }
+        if let Some(tex) = tex {
+            self.bytes += crate::memory_report::texture_bytes(&tex);
+            self.order.push_back(key);
+        }
+        // Keep at least the newest entry even when it alone busts the budget.
+        while self.bytes > self.budget && self.order.len() > 1 {
+            let Some(oldest) = self.order.pop_front() else { break };
+            if let Some(Some(old)) = self.map.remove(&oldest) {
+                self.bytes -= crate::memory_report::texture_bytes(&old);
+            }
+        }
+    }
+
+    /// (entries, of which rendered, pixel bytes), for the memory section.
+    fn stats(&self) -> (usize, usize, u64) {
+        (self.map.len(), self.order.len(), self.bytes)
+    }
+}
+
+/// Pixel bytes the thumbnail cache may hold: 360px-wide renders, so a few
+/// hundred of them.
+const THUMB_CACHE_BUDGET: u64 = 96 * 1024 * 1024;
+/// Pixel bytes the lightbox PDF cache may hold: 1600px-wide pages, so a
+/// dozen or so.
+const PDF_PREVIEW_BUDGET: u64 = 64 * 1024 * 1024;
+
 thread_local! {
     /// Finished thumbnail renders — decoded images and PDF pages alike,
     /// successes and failures, keyed by content hash — so a gallery rebuild or
     /// a revisit this session never decodes the same attachment twice.
     /// Main-thread only; results land here from `spawn_thumbnail_render`.
-    static THUMB_CACHE: std::cell::RefCell<std::collections::HashMap<u64, Option<gdk::Texture>>> =
-        std::cell::RefCell::new(std::collections::HashMap::new());
+    static THUMB_CACHE: std::cell::RefCell<TextureCache> =
+        std::cell::RefCell::new(TextureCache::new(THUMB_CACHE_BUDGET));
     /// Lightbox-size PDF page renders, cached separately from the thumbnails
     /// (same key, much bigger pixels). Failures cache too.
-    static PDF_PREVIEWS: std::cell::RefCell<std::collections::HashMap<u64, Option<gdk::Texture>>> =
-        std::cell::RefCell::new(std::collections::HashMap::new());
+    static PDF_PREVIEWS: std::cell::RefCell<TextureCache> =
+        std::cell::RefCell::new(TextureCache::new(PDF_PREVIEW_BUDGET));
 }
 
 /// The session's render caches, for the memory section of an export:
 /// thumbnails (entries, of which rendered, pixel bytes) then the lightbox
 /// PDF pages the same way.
 pub(crate) fn cache_stats() -> ((usize, usize, u64), (usize, usize, u64)) {
-    fn measure(c: &std::collections::HashMap<u64, Option<gdk::Texture>>) -> (usize, usize, u64) {
-        let rendered: Vec<&gdk::Texture> = c.values().flatten().collect();
-        let bytes = rendered.iter().map(|t| crate::memory_report::texture_bytes(t)).sum();
-        (c.len(), rendered.len(), bytes)
+    (THUMB_CACHE.with(|c| c.borrow().stats()), PDF_PREVIEWS.with(|c| c.borrow().stats()))
+}
+
+#[cfg(test)]
+mod texture_cache_tests {
+    use super::*;
+
+    fn texture(px: i32) -> gdk::Texture {
+        let bytes = glib::Bytes::from_owned(vec![0u8; (px * px * 4) as usize]);
+        gdk::MemoryTexture::new(px, px, gdk::MemoryFormat::R8g8b8a8, &bytes, (px * 4) as usize).upcast()
     }
-    (
-        THUMB_CACHE.with(|c| measure(&c.borrow())),
-        PDF_PREVIEWS.with(|c| measure(&c.borrow())),
-    )
+
+    #[test]
+    fn evicts_the_oldest_render_under_the_budget() {
+        // 100×100 RGBA = 40,000 bytes each; room for two.
+        let mut c = TextureCache::new(90_000);
+        c.insert(1, Some(texture(100)));
+        c.insert(2, None); // a failure costs nothing
+        c.insert(3, Some(texture(100)));
+        assert_eq!(c.stats(), (3, 2, 80_000));
+        c.insert(4, Some(texture(100)));
+        assert!(c.get(&1).is_none(), "the oldest render went");
+        assert!(c.get(&2).is_some(), "failures stay");
+        assert!(c.get(&3).is_some() && c.get(&4).is_some());
+        assert_eq!(c.stats(), (3, 2, 80_000));
+    }
+
+    #[test]
+    fn a_single_render_over_budget_is_still_kept() {
+        let mut c = TextureCache::new(1_000);
+        c.insert(1, Some(texture(100)));
+        assert!(c.get(&1).is_some());
+        c.insert(2, Some(texture(100)));
+        assert!(c.get(&1).is_none() && c.get(&2).is_some());
+    }
 }
 
 /// Whether a filename names a PDF (by extension).

@@ -227,6 +227,57 @@ pub fn graphics_libraries() -> Vec<String> {
     names
 }
 
+extern "C" {
+    fn mallopt(param: std::ffi::c_int, value: std::ffi::c_int) -> std::ffi::c_int;
+    fn malloc_trim(pad: usize) -> std::ffi::c_int;
+}
+
+/// glibc's `mallopt` parameters (malloc.h).
+const M_TRIM_THRESHOLD: std::ffi::c_int = -1;
+const M_MMAP_THRESHOLD: std::ffi::c_int = -3;
+
+/// Above this, an allocation is its own mapping and goes back to the system
+/// the moment it is freed. glibc's default starts at 128 KB but *grows* to
+/// the size of whatever large block was last freed, up to 32 MB: after one
+/// attachment or decoded image has come and gone, every later one that size
+/// is carved out of the heap instead, and the heap never shrinks around what
+/// it once held. Pinning the threshold keeps mail-sized buffers off the heap.
+const MMAP_THRESHOLD_BYTES: std::ffi::c_int = 1024 * 1024;
+/// How much free space may sit at the top of the heap before it is returned.
+const TRIM_THRESHOLD_BYTES: std::ffi::c_int = 4 * 1024 * 1024;
+/// Freed-but-held bytes below which a trim is not worth the call.
+const TRIM_WORTHWHILE: usize = 64 * 1024 * 1024;
+
+/// Settle the allocator before anything is allocated in earnest: see
+/// [`MMAP_THRESHOLD_BYTES`]. A user's exported log showed the process at
+/// 2.17 GB with 270 MB live and 1.73 GB freed but held, twelve minutes in,
+/// after the gallery had decoded 62 thumbnails: the heap had grown around
+/// the attachment bytes and never let go.
+pub fn tune_allocator() {
+    // SAFETY: mallopt takes two ints and touches only malloc's own tunables;
+    // it is meant to be called before the first allocation, which main does.
+    unsafe {
+        mallopt(M_MMAP_THRESHOLD, MMAP_THRESHOLD_BYTES);
+        mallopt(M_TRIM_THRESHOLD, TRIM_THRESHOLD_BYTES);
+    }
+}
+
+/// Hand freed-but-held heap back to the system when there is enough of it
+/// to matter, across every arena. Returns what was held before the trim, or
+/// `None` when it was not worth one. A few milliseconds on a big heap; called
+/// from an idle timer, never from a hot path.
+pub fn trim_if_worthwhile() -> Option<usize> {
+    let held = allocator().held_free;
+    if held < TRIM_WORTHWHILE {
+        return None;
+    }
+    // SAFETY: malloc_trim takes a pad size and releases only free chunks.
+    unsafe {
+        malloc_trim(0);
+    }
+    Some(held)
+}
+
 /// How long this process has been running, from the kernel's clock.
 pub fn uptime() -> Option<std::time::Duration> {
     let system: f64 =
