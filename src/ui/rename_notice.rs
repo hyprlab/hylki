@@ -14,6 +14,12 @@ use crate::i18n::i18n;
 
 /// Where the new app lives.
 pub const SITE: &str = "https://hylki.hyprlab.co";
+/// The site's account of the name: what a hylki is and why the change.
+const WHY: &str = "https://hylki.hyprlab.co/#why-hylki";
+
+fn esc(text: &str) -> String {
+    gtk::glib::markup_escape_text(text).to_string()
+}
 const RELEASES: &str = "https://github.com/hyprlab/hylki/releases/latest";
 const FLATPAK_ID: &str = "co.hyprlab.Hylki";
 const UNINSTALL: &str = "flatpak uninstall co.hyprlab.Vireo";
@@ -103,30 +109,41 @@ pub fn show(parent: &impl IsA<gtk::Window>, startup: bool) {
     let heading = if installed { i18n("Hylki is installed") } else { i18n("Vireo is now Hylki") };
     let mut body = String::new();
     if installed {
-        body.push_str(&i18n(
+        body.push_str(&esc(&i18n(
             "Vireo has a new name: Hylki. Hylki is installed on this computer, and \
              its first start carries your accounts, settings and cached mail across \
              from Vireo. Nothing in Vireo is changed or removed.",
-        ));
+        )));
         body.push_str("\n\n");
-        body.push_str(&i18n(
+        body.push_str(&esc(&i18n(
             "This is the last Vireo release. Once Hylki is running with your \
              accounts, you can uninstall Vireo.",
-        ));
+        )));
     } else {
-        body.push_str(&i18n(
-            "Vireo has a new name: Hylki. This is the last release under the old \
-             name; updates continue as Hylki, which installs alongside Vireo.",
+        body.push_str(&esc(&i18n("Vireo has a new name: Hylki.")));
+        body.push(' ');
+        body.push_str(&format!(
+            "<a href=\"{WHY}\">{}</a>",
+            esc(&i18n("(What's a 'hylki' and why the change?)"))
         ));
+        body.push(' ');
+        body.push_str(&esc(&i18n(
+            "This is the last release under the old name; updates continue as \
+             Hylki, which installs alongside Vireo.",
+        )));
         body.push_str("\n\n");
-        body.push_str(&i18n(
+        body.push_str(&esc(&i18n(
             "Install Hylki and its first start carries your accounts, settings and \
              cached mail across. Nothing in Vireo is changed or removed, and there is \
              nothing to set up again. Once Hylki is running, you can uninstall Vireo.",
-        ));
+        )));
     }
 
-    let dialog = adw::MessageDialog::new(Some(parent.as_ref()), Some(&heading), Some(&body));
+    let dialog = adw::MessageDialog::new(Some(parent.as_ref()), Some(&heading), None);
+    // The body carries one link (Pango markup); the text around it is
+    // escaped so an apostrophe or ampersand in a translation cannot break it.
+    dialog.set_body_use_markup(true);
+    dialog.set_body(&body);
     // Wide enough for the install command to read in one line.
     dialog.set_size_request(480, -1);
 
