@@ -49,7 +49,7 @@ impl FactoryComponent for NotificationCard {
             add_css_class: "toast-card",
 
             gtk::Image {
-                set_icon_name: Some("co.hyprlab.Vireo-dialog-warning-symbolic"),
+                set_icon_name: Some("co.hyprlab.Hylki-dialog-warning-symbolic"),
                 set_valign: gtk::Align::Start,
                 add_css_class: "toast-card-icon",
             },
@@ -63,7 +63,7 @@ impl FactoryComponent for NotificationCard {
             },
 
             gtk::Button {
-                set_icon_name: "co.hyprlab.Vireo-window-close-symbolic",
+                set_icon_name: "co.hyprlab.Hylki-window-close-symbolic",
                 set_valign: gtk::Align::Start,
                 add_css_class: "flat",
                 add_css_class: "circular",
@@ -194,7 +194,7 @@ impl SimpleComponent for NotificationCenter {
 
                         gtk::Button {
                             #[watch]
-                            set_icon_name: if model.panel_open { "co.hyprlab.Vireo-pan-up-symbolic" } else { "co.hyprlab.Vireo-pan-down-symbolic" },
+                            set_icon_name: if model.panel_open { "co.hyprlab.Hylki-pan-up-symbolic" } else { "co.hyprlab.Hylki-pan-down-symbolic" },
                             set_tooltip_text: Some(i18n("Collapse status bar").as_str()),
                             add_css_class: "flat",
                             connect_clicked => NotifyInput::TogglePanel,
@@ -204,7 +204,7 @@ impl SimpleComponent for NotificationCenter {
                         gtk::Button {
                             #[watch]
                             set_visible: model.console_enabled,
-                            set_icon_name: "co.hyprlab.Vireo-code-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-code-symbolic",
                             set_tooltip_text: Some(i18n("Console").as_str()),
                             add_css_class: "flat",
                             connect_clicked => NotifyInput::ShowConsole,
@@ -213,7 +213,7 @@ impl SimpleComponent for NotificationCenter {
                         gtk::Button {
                             #[watch]
                             set_visible: model.console_enabled && model.console_open,
-                            set_icon_name: "co.hyprlab.Vireo-document-save-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-document-save-symbolic",
                             set_tooltip_text: Some(i18n("Export log").as_str()),
                             add_css_class: "flat",
                             connect_clicked => NotifyInput::ExportLog,
@@ -631,11 +631,11 @@ impl NotificationCenter {
 
     fn bar_icon(&self) -> &'static str {
         if self.is_error_state() {
-            "co.hyprlab.Vireo-dialog-warning-symbolic"
+            "co.hyprlab.Hylki-dialog-warning-symbolic"
         } else {
             // The bell — the same icon as the toolbar button that opens this
             // panel, so the two read as one feature.
-            "co.hyprlab.Vireo-preferences-system-notifications-symbolic"
+            "co.hyprlab.Hylki-preferences-system-notifications-symbolic"
         }
     }
 

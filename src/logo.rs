@@ -32,7 +32,7 @@
 //! One fetch per domain per session, remembered either way: a miss is cached too,
 //! or every row from the same sender would ask again.
 //!
-//! Icons persist on disk (`~/.local/share/vireo/logos/<domain>.img`) so a
+//! Icons persist on disk (`~/.local/share/hylki/logos/<domain>.img`) so a
 //! restart shows them without touching the network; a `.miss` marker remembers
 //! a domain with nothing to give. Both go stale after a week: the next message
 //! from that sender then re-asks the domain — a changed brand icon appears, a
@@ -75,7 +75,7 @@ pub fn cache_stats() -> (usize, u64, usize) {
 const REFRESH_AFTER: std::time::Duration = std::time::Duration::from_secs(7 * 24 * 60 * 60);
 
 fn store_dir() -> Option<PathBuf> {
-    let dir = crate::config::data_base()?.join("vireo").join("logos");
+    let dir = crate::config::data_base()?.join("hylki").join("logos");
     let _ = std::fs::create_dir_all(&dir);
     Some(dir)
 }
@@ -277,7 +277,7 @@ pub fn fetch(email: &str) -> Option<Vec<u8>> {
 }
 
 /// What [`fetch`] would answer for an address and where from, in words —
-/// for the `VIREO_LOGO_PROBE` hook.
+/// for the `HYLKI_LOGO_PROBE` hook.
 pub fn probe(email: &str) -> String {
     match fetch_from(email) {
         Some((bytes, source)) => format!("{source} ({} bytes)", bytes.len()),
@@ -545,7 +545,7 @@ fn bundled_bytes(entry: &LogoEntry) -> Option<Vec<u8>> {
     match entry.source.as_str() {
         "brand" => crate::brand::png(&entry.file).map(<[u8]>::to_vec),
         "simple" | "gilbarbara" => {
-            let path = format!("/co/hyprlab/Vireo/logos/{}/{}", entry.source, entry.file);
+            let path = format!("/co/hyprlab/Hylki/logos/{}/{}", entry.source, entry.file);
             let data = gtk::gio::resources_lookup_data(&path, gtk::gio::ResourceLookupFlags::NONE).ok()?;
             let svg = std::str::from_utf8(&data).ok()?;
             let framed = if entry.source == "simple" {
@@ -713,7 +713,7 @@ fn discover(domain: &str) -> Vec<(u32, String)> {
 
 /// The browser-ish identity sites see: plenty answer a bare library
 /// identity with a challenge page instead of their icon.
-const USER_AGENT: &str = "Mozilla/5.0 (X11; Linux) Vireo";
+const USER_AGENT: &str = "Mozilla/5.0 (X11; Linux) Hylki";
 
 /// A page or manifest as text, with the URL it was finally served from (so
 /// relative links resolve against where redirects landed). Capped: the head

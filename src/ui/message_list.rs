@@ -47,46 +47,46 @@ impl MessageRow {
             let s = sender.clone();
             b.connect_clicked(move |_| s.input(MessageRowInput::Action(a)));
         };
-        let reply = button("co.hyprlab.Vireo-mail-reply-sender-symbolic", i18n("Reply"));
+        let reply = button("co.hyprlab.Hylki-mail-reply-sender-symbolic", i18n("Reply"));
         action(&reply, RowAction::Reply);
-        let reply_all = button("co.hyprlab.Vireo-mail-reply-all-symbolic", i18n("Reply All"));
+        let reply_all = button("co.hyprlab.Hylki-mail-reply-all-symbolic", i18n("Reply All"));
         action(&reply_all, RowAction::ReplyAll);
-        let forward = button("co.hyprlab.Vireo-mail-forward-symbolic", i18n("Forward"));
+        let forward = button("co.hyprlab.Hylki-mail-forward-symbolic", i18n("Forward"));
         action(&forward, RowAction::Forward);
         // A draft is neither read nor unread, so it gets no toggle.
         let read = (!self.in_drafts).then(|| {
-            let b = button("co.hyprlab.Vireo-mail-read-symbolic", i18n("Mark as read"));
+            let b = button("co.hyprlab.Hylki-mail-read-symbolic", i18n("Mark as read"));
             action(&b, RowAction::ToggleRead);
             b
         });
-        let star = button("co.hyprlab.Vireo-non-starred-symbolic", i18n("Star"));
+        let star = button("co.hyprlab.Hylki-non-starred-symbolic", i18n("Star"));
         action(&star, RowAction::ToggleStar);
-        let tag = button("co.hyprlab.Vireo-tag-outline-symbolic", i18n("Tags"));
+        let tag = button("co.hyprlab.Hylki-tag-outline-symbolic", i18n("Tags"));
         {
             let s = sender.clone();
             tag.connect_clicked(move |b| s.input(MessageRowInput::OpenTagMenu(b.clone())));
         }
-        let moveto = button("co.hyprlab.Vireo-folder-symbolic", i18n("Move to…"));
+        let moveto = button("co.hyprlab.Hylki-folder-symbolic", i18n("Move to…"));
         {
             let s = sender.clone();
             moveto.connect_clicked(move |b| s.input(MessageRowInput::OpenMoveMenu(b.clone())));
         }
-        let archive = button("co.hyprlab.Vireo-mail-archive-symbolic", i18n("Archive"));
+        let archive = button("co.hyprlab.Hylki-mail-archive-symbolic", i18n("Archive"));
         action(&archive, RowAction::Archive);
-        let delete = button("co.hyprlab.Vireo-user-trash-symbolic", i18n("Delete"));
+        let delete = button("co.hyprlab.Hylki-user-trash-symbolic", i18n("Delete"));
         action(&delete, RowAction::Delete);
         let spam = if self.in_junk {
-            let b = button("co.hyprlab.Vireo-mail-mark-notjunk-symbolic", i18n("Not spam"));
+            let b = button("co.hyprlab.Hylki-mail-mark-notjunk-symbolic", i18n("Not spam"));
             action(&b, RowAction::NotSpam);
             b
         } else {
-            let b = button("co.hyprlab.Vireo-mail-mark-junk-symbolic", i18n("Mark as spam"));
+            let b = button("co.hyprlab.Hylki-mail-mark-junk-symbolic", i18n("Mark as spam"));
             action(&b, RowAction::Spam);
             b
         };
-        let contact = button("co.hyprlab.Vireo-contact-new-symbolic", i18n("Add sender to Contacts"));
+        let contact = button("co.hyprlab.Hylki-contact-new-symbolic", i18n("Add sender to Contacts"));
         action(&contact, RowAction::AddContact);
-        let source = button("co.hyprlab.Vireo-code-symbolic", i18n("View Source"));
+        let source = button("co.hyprlab.Hylki-code-symbolic", i18n("View Source"));
         action(&source, RowAction::ViewSource);
         for b in [Some(&reply), Some(&reply_all), Some(&forward), read.as_ref(), Some(&star), Some(&tag), Some(&moveto), Some(&archive), Some(&delete), Some(&spam), Some(&contact), Some(&source)].into_iter().flatten() {
             inner.append(b);
@@ -105,10 +105,10 @@ impl MessageRow {
         // menus and toolbar.
         if let Some(read) = &b.read {
             if self.msg.unread {
-                read.set_icon_name("co.hyprlab.Vireo-mail-read-symbolic");
+                read.set_icon_name("co.hyprlab.Hylki-mail-read-symbolic");
                 read.set_tooltip_text(Some(i18n("Mark as read").as_str()));
             } else {
-                read.set_icon_name("co.hyprlab.Vireo-mail-unread-symbolic");
+                read.set_icon_name("co.hyprlab.Hylki-mail-unread-symbolic");
                 read.set_tooltip_text(Some(i18n("Mark as unread").as_str()));
             }
         }
@@ -670,7 +670,7 @@ mod swipe_surface_imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for SwipeSurface {
-        const NAME: &'static str = "VireoSwipeSurface";
+        const NAME: &'static str = "HylkiSwipeSurface";
         type Type = super::SwipeSurface;
         type ParentType = gtk::Widget;
         type Interfaces = (adw::Swipeable,);
@@ -1065,7 +1065,7 @@ impl FactoryComponent for MessageRow {
                     // does NOT select or open the message (it's a button, so the
                     // click is consumed before the row's selection gesture).
                     gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-view-more-horizontal-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-view-more-horizontal-symbolic",
                         // Hidden until the row is hovered (or the palette is open);
                         // the .revealed class fades it in via a CSS transition.
                         #[watch]
@@ -1183,13 +1183,13 @@ impl FactoryComponent for MessageRow {
                         set_css_classes: &self.sender_classes(),
                     },
                     gtk::Image {
-                        set_icon_name: Some("co.hyprlab.Vireo-mail-attachment-symbolic"),
+                        set_icon_name: Some("co.hyprlab.Hylki-mail-attachment-symbolic"),
                         #[watch]
                         set_visible: self.msg.has_attachment,
                         add_css_class: "dim-icon",
                     },
                     gtk::Image {
-                        set_icon_name: Some("co.hyprlab.Vireo-starred-symbolic"),
+                        set_icon_name: Some("co.hyprlab.Hylki-starred-symbolic"),
                         #[watch]
                         set_visible: self.msg.starred || self.thread_starred,
                         add_css_class: "star-icon",
@@ -1231,7 +1231,7 @@ impl FactoryComponent for MessageRow {
                                 // No caret when expansion is off — the chip is
                                 // just a count then, not a toggle.
                                 set_visible: self.thread_expandable,
-                                set_icon_name: Some("co.hyprlab.Vireo-pan-end-symbolic"),
+                                set_icon_name: Some("co.hyprlab.Hylki-pan-end-symbolic"),
                                 #[watch]
                                 set_css_classes: if self.thread_expanded {
                                     &["thread-toggle-icon", "open"]
@@ -1277,7 +1277,7 @@ impl FactoryComponent for MessageRow {
                     // icon takes the label's foreground, so it follows the
                     // light and dark themes with it.
                     gtk::Image {
-                        set_icon_name: Some("co.hyprlab.Vireo-channel-secure-symbolic"),
+                        set_icon_name: Some("co.hyprlab.Hylki-channel-secure-symbolic"),
                         set_pixel_size: 12,
                         set_valign: gtk::Align::Center,
                         set_visible: crate::models::preview_is_encrypted(
@@ -1911,8 +1911,8 @@ impl MessageRow {
 
     fn swipe_icon(&self) -> &'static str {
         match self.swipe_action() {
-            RowAction::Delete => "co.hyprlab.Vireo-user-trash-symbolic",
-            _ => "co.hyprlab.Vireo-mail-archive-symbolic",
+            RowAction::Delete => "co.hyprlab.Hylki-user-trash-symbolic",
+            _ => "co.hyprlab.Hylki-mail-archive-symbolic",
         }
     }
 
@@ -2648,9 +2648,9 @@ pub enum MessageListInput {
     /// the header button while open.
     CloseSearch,
     /// Showcase staging: open row N's actions palette (screenshot hook only —
-    /// see VIREO_SHOWCASE_PALETTE in app.rs).
+    /// see HYLKI_SHOWCASE_PALETTE in app.rs).
     DebugOpenPalette(usize),
-    /// Showcase only (VIREO_SHOWCASE_SWIPE): drive row `index` through a full
+    /// Showcase only (HYLKI_SHOWCASE_SWIPE): drive row `index` through a full
     /// swipe and release, so the commit exit can be caught in stills — there
     /// is no way to inject a real gesture on this desktop.
     DebugSwipe { index: usize, left: bool },
@@ -2881,7 +2881,7 @@ impl SimpleComponent for MessageList {
                     // Drafts are neither read nor unread: both go when the
                     // list shows them.
                     gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-mail-read-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-mail-read-symbolic",
                         set_tooltip_text: Some(i18n("Mark as Read").as_str()),
                         add_css_class: "flat",
                         #[watch]
@@ -2889,7 +2889,7 @@ impl SimpleComponent for MessageList {
                         connect_clicked => MessageListInput::Bulk(BulkAction::MarkRead),
                     },
                     gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-mail-unread-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-mail-unread-symbolic",
                         set_tooltip_text: Some(i18n("Mark as Unread").as_str()),
                         add_css_class: "flat",
                         #[watch]
@@ -2897,13 +2897,13 @@ impl SimpleComponent for MessageList {
                         connect_clicked => MessageListInput::Bulk(BulkAction::MarkUnread),
                     },
                     gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-starred-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-starred-symbolic",
                         set_tooltip_text: Some(i18n("Flag").as_str()),
                         add_css_class: "flat",
                         connect_clicked => MessageListInput::Bulk(BulkAction::Flag),
                     },
                     gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-mail-archive-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-mail-archive-symbolic",
                         set_tooltip_text: Some(i18n("Archive").as_str()),
                         add_css_class: "flat",
                         connect_clicked => MessageListInput::Bulk(BulkAction::Archive),
@@ -2911,9 +2911,9 @@ impl SimpleComponent for MessageList {
                     gtk::Button {
                         #[watch]
                         set_icon_name: if model.in_junk {
-                            "co.hyprlab.Vireo-mail-mark-notjunk-symbolic"
+                            "co.hyprlab.Hylki-mail-mark-notjunk-symbolic"
                         } else {
-                            "co.hyprlab.Vireo-mail-mark-junk-symbolic"
+                            "co.hyprlab.Hylki-mail-mark-junk-symbolic"
                         },
                         #[watch]
                         set_tooltip_text: Some(if model.in_junk { i18n("Not Spam") } else { i18n("Mark as Spam") }.as_str()),
@@ -2922,7 +2922,7 @@ impl SimpleComponent for MessageList {
                         connect_clicked => MessageListInput::Bulk(BulkAction::Spam),
                     },
                     gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-user-trash-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-user-trash-symbolic",
                         set_tooltip_text: Some(i18n("Delete").as_str()),
                         add_css_class: "flat",
                         connect_clicked => MessageListInput::Bulk(BulkAction::Delete),
@@ -2931,7 +2931,7 @@ impl SimpleComponent for MessageList {
                         set_orientation: gtk::Orientation::Vertical,
                     },
                     gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-edit-clear-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-edit-clear-symbolic",
                         set_tooltip_text: Some(i18n("Clear selection").as_str()),
                         add_css_class: "flat",
                         connect_clicked => MessageListInput::ClearSelection,
@@ -3002,7 +3002,7 @@ impl SimpleComponent for MessageList {
                     // Same full-size AdwStatusPage styling as the reader's
                     // "No message selected", so the two placeholders match.
                     adw::StatusPage {
-                        set_icon_name: Some("co.hyprlab.Vireo-mail-inbox-symbolic"),
+                        set_icon_name: Some("co.hyprlab.Hylki-mail-inbox-symbolic"),
                         set_title: &i18n("No Messages"),
                         set_description: Some(i18n("There's nothing here right now.").as_str()),
                         set_vexpand: true,
@@ -4152,14 +4152,14 @@ impl MessageList {
                 },
             )
             .icon(if any {
-                "co.hyprlab.Vireo-non-starred-symbolic"
+                "co.hyprlab.Hylki-non-starred-symbolic"
             } else {
-                "co.hyprlab.Vireo-starred-symbolic"
+                "co.hyprlab.Hylki-starred-symbolic"
             })
         } else if msg.starred {
-            item(RowAction::ToggleStar, &i18n("Remove Star"), "co.hyprlab.Vireo-non-starred-symbolic")
+            item(RowAction::ToggleStar, &i18n("Remove Star"), "co.hyprlab.Hylki-non-starred-symbolic")
         } else {
-            item(RowAction::ToggleStar, &i18n("Star"), "co.hyprlab.Vireo-starred-symbolic")
+            item(RowAction::ToggleStar, &i18n("Star"), "co.hyprlab.Hylki-starred-symbolic")
         }];
 
         // A conversation row acts on the whole thread: its read entry marks
@@ -4185,7 +4185,7 @@ impl MessageList {
                     y: wy,
                 });
             })
-            .icon("co.hyprlab.Vireo-folder-symbolic")
+            .icon("co.hyprlab.Hylki-folder-symbolic")
         };
         if self.in_drafts {
             // A draft is neither read nor unread: no toggle to offer.
@@ -4207,19 +4207,19 @@ impl MessageList {
                     },
                 )
                 .icon(if any_unread {
-                    "co.hyprlab.Vireo-mail-read-symbolic"
+                    "co.hyprlab.Hylki-mail-read-symbolic"
                 } else {
-                    "co.hyprlab.Vireo-mail-unread-symbolic"
+                    "co.hyprlab.Hylki-mail-unread-symbolic"
                 }),
             );
         } else if msg.unread {
             flag_section
-                .push(item(RowAction::ToggleRead, &i18n("Mark as Read"), "co.hyprlab.Vireo-mail-read-symbolic"));
+                .push(item(RowAction::ToggleRead, &i18n("Mark as Read"), "co.hyprlab.Hylki-mail-read-symbolic"));
         } else {
             flag_section.push(item(
                 RowAction::ToggleRead,
                 &i18n("Mark as Unread"),
-                "co.hyprlab.Vireo-mail-unread-symbolic",
+                "co.hyprlab.Hylki-mail-unread-symbolic",
             ));
         }
 
@@ -4240,15 +4240,15 @@ impl MessageList {
             if entries.is_empty() {
                 Vec::new()
             } else {
-                vec![MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("co.hyprlab.Vireo-tag-outline-symbolic")]
+                vec![MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("co.hyprlab.Hylki-tag-outline-symbolic")]
             }
         };
 
         let sections = vec![
             vec![
-                item(RowAction::Reply, &i18n("Reply"), "co.hyprlab.Vireo-mail-reply-sender-symbolic"),
-                item(RowAction::ReplyAll, &i18n("Reply All"), "co.hyprlab.Vireo-mail-reply-all-symbolic"),
-                item(RowAction::Forward, &i18n("Forward"), "co.hyprlab.Vireo-mail-forward-symbolic"),
+                item(RowAction::Reply, &i18n("Reply"), "co.hyprlab.Hylki-mail-reply-sender-symbolic"),
+                item(RowAction::ReplyAll, &i18n("Reply All"), "co.hyprlab.Hylki-mail-reply-all-symbolic"),
+                item(RowAction::Forward, &i18n("Forward"), "co.hyprlab.Hylki-mail-forward-symbolic"),
             ],
             flag_section,
             tag_section,
@@ -4258,24 +4258,24 @@ impl MessageList {
                 // told, and the message returns to the Inbox. In Trash it
                 // is a plain move, with spam still on offer.
                 if self.in_junk {
-                    section.push(item(RowAction::NotSpam, &i18n("Not Spam"), "co.hyprlab.Vireo-mail-mark-notjunk-symbolic"));
+                    section.push(item(RowAction::NotSpam, &i18n("Not Spam"), "co.hyprlab.Hylki-mail-mark-notjunk-symbolic"));
                 } else {
                     if self.restorable {
-                        section.push(item(RowAction::MoveToInbox, &i18n("Move to Inbox"), "co.hyprlab.Vireo-mail-inbox-symbolic"));
+                        section.push(item(RowAction::MoveToInbox, &i18n("Move to Inbox"), "co.hyprlab.Hylki-mail-inbox-symbolic"));
                     }
-                    section.push(item(RowAction::Spam, &i18n("Mark as Spam"), "co.hyprlab.Vireo-mail-mark-junk-symbolic"));
+                    section.push(item(RowAction::Spam, &i18n("Mark as Spam"), "co.hyprlab.Hylki-mail-mark-junk-symbolic"));
                 }
                 section.push(move_entry);
-                section.push(item(RowAction::Archive, &i18n("Archive"), "co.hyprlab.Vireo-mail-archive-symbolic"));
-                section.push(item(RowAction::Delete, &i18n("Delete"), "co.hyprlab.Vireo-user-trash-symbolic"));
+                section.push(item(RowAction::Archive, &i18n("Archive"), "co.hyprlab.Hylki-mail-archive-symbolic"));
+                section.push(item(RowAction::Delete, &i18n("Delete"), "co.hyprlab.Hylki-user-trash-symbolic"));
                 section
             },
             vec![item(
                 RowAction::AddContact,
                 &i18n("Add Sender to Contacts"),
-                "co.hyprlab.Vireo-contact-new-symbolic",
+                "co.hyprlab.Hylki-contact-new-symbolic",
             )],
-            vec![item(RowAction::ViewSource, &i18n("View Source"), "co.hyprlab.Vireo-code-symbolic")],
+            vec![item(RowAction::ViewSource, &i18n("View Source"), "co.hyprlab.Hylki-code-symbolic")],
         ];
 
         show_context_menu(self.rows.widget(), x, y, sections);
@@ -4293,21 +4293,21 @@ impl MessageList {
                 let mut section = Vec::new();
                 // Drafts are neither read nor unread.
                 if !self.in_drafts {
-                    section.push(item(BulkAction::MarkRead, &i18n("Mark as Read"), "co.hyprlab.Vireo-mail-read-symbolic"));
-                    section.push(item(BulkAction::MarkUnread, &i18n("Mark as Unread"), "co.hyprlab.Vireo-mail-unread-symbolic"));
+                    section.push(item(BulkAction::MarkRead, &i18n("Mark as Read"), "co.hyprlab.Hylki-mail-read-symbolic"));
+                    section.push(item(BulkAction::MarkUnread, &i18n("Mark as Unread"), "co.hyprlab.Hylki-mail-unread-symbolic"));
                 }
-                section.push(item(BulkAction::Flag, &i18n("Flag"), "co.hyprlab.Vireo-starred-symbolic"));
+                section.push(item(BulkAction::Flag, &i18n("Flag"), "co.hyprlab.Hylki-starred-symbolic"));
                 section
             },
             {
                 let mut section = Vec::new();
                 if self.in_junk {
-                    section.push(item(BulkAction::NotSpam, &i18n("Not Spam"), "co.hyprlab.Vireo-mail-mark-notjunk-symbolic"));
+                    section.push(item(BulkAction::NotSpam, &i18n("Not Spam"), "co.hyprlab.Hylki-mail-mark-notjunk-symbolic"));
                 } else {
                     if self.restorable {
-                        section.push(item(BulkAction::MoveToInbox, &i18n("Move to Inbox"), "co.hyprlab.Vireo-mail-inbox-symbolic"));
+                        section.push(item(BulkAction::MoveToInbox, &i18n("Move to Inbox"), "co.hyprlab.Hylki-mail-inbox-symbolic"));
                     }
-                    section.push(item(BulkAction::Spam, &i18n("Mark as Spam"), "co.hyprlab.Vireo-mail-mark-junk-symbolic"));
+                    section.push(item(BulkAction::Spam, &i18n("Mark as Spam"), "co.hyprlab.Hylki-mail-mark-junk-symbolic"));
                 }
                 {
                     // Move To… for the whole selection.
@@ -4329,11 +4329,11 @@ impl MessageList {
                                 y: wy,
                             });
                         })
-                        .icon("co.hyprlab.Vireo-folder-symbolic"),
+                        .icon("co.hyprlab.Hylki-folder-symbolic"),
                     );
                 }
-                section.push(item(BulkAction::Archive, &i18n("Archive"), "co.hyprlab.Vireo-mail-archive-symbolic"));
-                section.push(item(BulkAction::Delete, &i18n("Delete"), "co.hyprlab.Vireo-user-trash-symbolic"));
+                section.push(item(BulkAction::Archive, &i18n("Archive"), "co.hyprlab.Hylki-mail-archive-symbolic"));
+                section.push(item(BulkAction::Delete, &i18n("Delete"), "co.hyprlab.Hylki-user-trash-symbolic"));
                 section
             },
         ];

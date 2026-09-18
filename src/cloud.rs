@@ -214,7 +214,7 @@ pub struct LinkTerms {
 }
 
 fn default_folder() -> String {
-    "Vireo".to_string()
+    "Hylki".to_string()
 }
 
 fn default_true() -> bool {
@@ -359,7 +359,7 @@ struct CloudFile {
 }
 
 fn path() -> Option<PathBuf> {
-    Some(crate::config::config_base()?.join("vireo").join("cloud.toml"))
+    Some(crate::config::config_base()?.join("hylki").join("cloud.toml"))
 }
 
 pub fn load_accounts() -> Vec<CloudAccount> {
@@ -696,7 +696,7 @@ fn nextcloud_upload_and_share(
         // v2 wants the target named on every request (Destination);
         // ownCloud and OpenCloud ignore that header and work the same way.
         let upload = format!(
-            "{}/remote.php/dav/uploads/{}/vireo-{}",
+            "{}/remote.php/dav/uploads/{}/hylki-{}",
             account.base(),
             seg(account.user.trim()),
             crate::rng::token(12).map_err(|e| e.to_string())?
@@ -1156,7 +1156,7 @@ fn seafile_library(account: &CloudAccount, token: &str) -> Result<String, String
     let v: serde_json::Value = ureq::post(&format!("{base}/api2/repos/"))
         .set("Authorization", &seafile_auth(token))
         .timeout(Duration::from_secs(60))
-        .send_form(&[("name", want.as_str()), ("desc", "Files shared from Vireo")])
+        .send_form(&[("name", want.as_str()), ("desc", "Files shared from Hylki")])
         .map_err(|e| seafile_err("Could not create the library", e))?
         .into_json()
         .map_err(|e| format!("Could not read the new library's answer: {e}"))?;
@@ -1174,7 +1174,7 @@ fn multipart_upload<R: Read>(
     file: R,
     size: u64,
 ) -> Result<(String, u64, impl Read), String> {
-    let boundary = format!("----VireoUpload{}", crate::rng::token(24).map_err(|e| e.to_string())?);
+    let boundary = format!("----HylkiUpload{}", crate::rng::token(24).map_err(|e| e.to_string())?);
     let mut head = String::new();
     for (k, v) in fields {
         head.push_str(&format!("--{boundary}\r\nContent-Disposition: form-data; name=\"{k}\"\r\n\r\n{v}\r\n"));
@@ -1590,7 +1590,7 @@ mod tests {
     fn dav_segments_are_encoded() {
         assert_eq!(seg("Q3 report.pdf"), "Q3%20report.pdf");
         assert_eq!(seg("caf\u{e9}"), "caf%C3%A9");
-        assert_eq!(pct_path("/Vireo/Q3 report.pdf"), "/Vireo/Q3%20report.pdf");
+        assert_eq!(pct_path("/Hylki/Q3 report.pdf"), "/Hylki/Q3%20report.pdf");
     }
 
     #[test]
@@ -1667,7 +1667,7 @@ mod tests {
         assert_eq!(a.key(), "cloud:goa|account_123");
         let back = toml::to_string(&CloudFile { accounts: vec![a] }).unwrap();
         assert!(back.contains("kind = \"onedrive\""));
-        assert_eq!(onedrive_item("Vireo/Q3 report"), "https://graph.microsoft.com/v1.0/me/drive/root:/Vireo/Q3%20report");
+        assert_eq!(onedrive_item("Hylki/Q3 report"), "https://graph.microsoft.com/v1.0/me/drive/root:/Hylki/Q3%20report");
         assert_eq!(onedrive_item(""), "https://graph.microsoft.com/v1.0/me/drive/root");
     }
 
@@ -1700,7 +1700,7 @@ mod tests {
 
     #[test]
     fn dropbox_header_arg_is_ascii() {
-        let arg = dropbox_arg(&serde_json::json!({"path": "/Vireo/caf\u{e9} \u{1F4CE}.pdf"}));
+        let arg = dropbox_arg(&serde_json::json!({"path": "/Hylki/caf\u{e9} \u{1F4CE}.pdf"}));
         assert!(arg.is_ascii());
         assert!(arg.contains("caf\\u00e9"));
         assert!(arg.contains("\\ud83d\\udcce"));
@@ -1708,7 +1708,7 @@ mod tests {
 
     #[test]
     fn multipart_body_has_the_right_length() {
-        let dir = std::env::temp_dir().join(format!("vireo-mp-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("hylki-mp-{}", std::process::id()));
         std::fs::write(&dir, b"hello").unwrap();
         let f = std::fs::File::open(&dir).unwrap();
         let (ctype, len, mut body) = multipart_upload(&[("parent_dir", "/"), ("replace", "0")], "a \"b\".txt", f, 5).unwrap();

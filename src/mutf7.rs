@@ -8,7 +8,7 @@
 //!
 //! Only *display* is decoded. The encoded form is the mailbox's real name on the
 //! server — the string SELECT, APPEND, CREATE and the rest must be given — so it
-//! is what Vireo stores and sends; [`encode`] exists for the one direction that
+//! is what Hylki stores and sends; [`encode`] exists for the one direction that
 //! goes the other way, naming a new folder the user typed.
 //!
 //! Decoding is deliberately forgiving. A name that isn't valid modified UTF-7 —

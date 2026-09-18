@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Uninstall Vireo for the current user: removes everything install.sh placed
+# Uninstall Hylki for the current user: removes everything install.sh placed
 # into the XDG user prefix (binary, icons, desktop entry, translations), and
 # the icon override the app itself writes there when an app icon is chosen
 # in Settings. Your accounts, mail cache and settings stay unless asked.
@@ -10,7 +10,7 @@
 #         PREFIX=/usr ./uninstall.sh  # system-wide (run with sudo)
 set -euo pipefail
 
-APP_ID="co.hyprlab.Vireo"
+APP_ID="co.hyprlab.Hylki"
 PREFIX="${PREFIX:-$HOME/.local}"
 PURGE=0
 for arg in "$@"; do
@@ -21,7 +21,7 @@ for arg in "$@"; do
 done
 
 echo "==> Removing binary"
-rm -f "$PREFIX/bin/vireo"
+rm -f "$PREFIX/bin/hylki"
 
 echo "==> Removing icons"
 for size in 256x256 512x512; do
@@ -29,14 +29,14 @@ for size in 256x256 512x512; do
 done
 rm -f "$PREFIX/share/icons/hicolor/scalable/apps/$APP_ID.svg"
 # The app icon chosen in Settings lives beside the shipped one under its own
-# name (`co.hyprlab.Vireo-<choice>.png`), in the user's icon directory.
+# name (`co.hyprlab.Hylki-<choice>.png`), in the user's icon directory.
 rm -f "$HOME"/.local/share/icons/hicolor/*/apps/"$APP_ID"-*.png
 
 echo "==> Removing desktop entry"
 rm -f "$PREFIX/share/applications/$APP_ID.desktop"
 
 echo "==> Removing translations"
-for mo in "$PREFIX"/share/locale/*/LC_MESSAGES/vireo.mo; do
+for mo in "$PREFIX"/share/locale/*/LC_MESSAGES/hylki.mo; do
     [ -e "$mo" ] || continue
     rm -f "$mo"
     rmdir --ignore-fail-on-non-empty "$(dirname "$mo")" 2>/dev/null || true
@@ -48,14 +48,14 @@ update-desktop-database "$PREFIX/share/applications" 2>/dev/null || true
 
 if [ "$PURGE" = 1 ]; then
     echo "==> Removing settings, cache and data"
-    rm -rf "${XDG_CONFIG_HOME:-$HOME/.config}/vireo" \
-           "${XDG_CACHE_HOME:-$HOME/.cache}/vireo" \
-           "${XDG_DATA_HOME:-$HOME/.local/share}/vireo"
-    echo "    Account passwords stay in the system keyring (Passwords and Keys, entries named Vireo)."
+    rm -rf "${XDG_CONFIG_HOME:-$HOME/.config}/hylki" \
+           "${XDG_CACHE_HOME:-$HOME/.cache}/hylki" \
+           "${XDG_DATA_HOME:-$HOME/.local/share}/hylki"
+    echo "    Account passwords stay in the system keyring (Passwords and Keys, entries named Hylki)."
 fi
 
-echo "==> Done. Vireo has been removed from $PREFIX."
+echo "==> Done. Hylki has been removed from $PREFIX."
 if [ "$PURGE" = 0 ]; then
-    echo "    Settings (~/.config/vireo), the mail cache (~/.cache/vireo) and data (~/.local/share/vireo)"
+    echo "    Settings (~/.config/hylki), the mail cache (~/.cache/hylki) and data (~/.local/share/hylki)"
     echo "    were left in place; run with --purge to remove them too."
 fi

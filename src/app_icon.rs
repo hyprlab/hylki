@@ -1,19 +1,15 @@
 //! The app icon the user chose, and how it reaches the desktop.
 //!
-//! Vireo ships one icon (the envelope with the bird since 1.23; the yellow
-//! squircle in 1.21 and 1.22, the round envelope before) and carries a gallery of
-//! alternatives inside the binary. The beta ships the envelope's `.Devel`
-//! twin, GNOME's development-build styling (the hazard stripe). A
-//! choice is applied by writing that artwork over the app's icon name in the
-//! user's own icon directory (`~/.local/share/icons/hicolor`), which every
-//! desktop searches before the install's — the Flatpak export included — so
-//! the dock, app grid and switcher pick it up under the same name. "Default"
-//! removes the override and whatever the build installed shows again.
-//!
-//! Existing installs keep the envelope: the first start of a build that
-//! ships the new default records "legacy" for any install that already has
-//! settings on disk, so nobody's dock changes without them asking (the
-//! gallery offers the switch). Fresh installs pick in the welcome wizard.
+//! The app ships one icon (the Hylki envelope, `data/icons/src/default.svg`)
+//! and carries a gallery of alternative envelopes inside the binary. The
+//! beta ships the default's `.Devel` twin, GNOME's development-build
+//! styling (the hazard stripe). A choice is applied by writing that artwork
+//! over the app's icon name in the user's own icon directory
+//! (`~/.local/share/icons/hicolor`), which every desktop searches before
+//! the install's — the Flatpak export included — so the dock, app grid and
+//! switcher pick it up under the same name. "Default" removes the override
+//! and whatever the build installed shows again. Fresh installs pick in the
+//! welcome wizard.
 //!
 //! The tray icon and the in-app uses draw the same choice, so it needs no
 //! restart; the window's own icon (X11 fallback, some panels) does, and a
@@ -33,19 +29,18 @@ pub struct IconChoice {
 /// The id meaning "whatever this build ships".
 pub const DEFAULT_ID: &str = "default";
 /// Bumped when a release's new default icon is to replace every existing
-/// choice once (1.23's blue bird envelope, generation 1): the first start
-/// on such a release resets the stored choice to the default, and records
-/// the generation so a choice made afterwards stands.
-pub const ICON_GENERATION: u32 = 1;
-/// The pre-1.21 round envelope, kept for installs that had it.
-pub const LEGACY_ID: &str = "legacy";
+/// choice once (1.23's blue bird envelope was generation 1; the Hylki
+/// envelope of 1.35, the first release under the new name, is 2): the
+/// first start on such a release resets the stored choice to the default,
+/// and records the generation so a choice made afterwards stands.
+pub const ICON_GENERATION: u32 = 2;
 
 /// The icon this build installs under its app ID.
 #[cfg(not(feature = "beta"))]
-const DEFAULT_PNG: &[u8] = include_bytes!("../data/icons/hicolor/512x512/apps/co.hyprlab.Vireo.png");
+const DEFAULT_PNG: &[u8] = include_bytes!("../data/icons/hicolor/512x512/apps/co.hyprlab.Hylki.png");
 #[cfg(feature = "beta")]
 const DEFAULT_PNG: &[u8] =
-    include_bytes!("../data/icons/hicolor/512x512/apps/co.hyprlab.Vireo.Beta.png");
+    include_bytes!("../data/icons/hicolor/512x512/apps/co.hyprlab.Hylki.Beta.png");
 
 macro_rules! alt {
     ($id:literal, $label:literal) => {
@@ -57,64 +52,30 @@ macro_rules! alt {
     };
 }
 
-/// The gallery, in display order: the build's own icon (the blue envelope
-/// with the bird, so it has no entry of its own), the other bird
-/// envelopes, the plain envelopes, the birds, the logotype, then the
-/// colours, and the classic icon last.
+/// The gallery, in display order: the build's own icon (the Hylki
+/// envelope, so it has no entry of its own), then the other envelopes.
 const CATALOG: &[IconChoice] = &[
     IconChoice { id: DEFAULT_ID, label: i18n_noop("Default"), png: DEFAULT_PNG },
-    alt!("envelope-bird-yellow", "Vireo envelope, yellow"),
-    alt!("envelope-bird-blue-subtle", "Vireo envelope, blue subtle"),
-    alt!("envelope-bird-white", "Vireo envelope, white"),
-    alt!("envelope-bird-beige", "Vireo envelope, beige"),
-    alt!("envelope-bird-faded-blue", "Vireo envelope, faded blue"),
-    alt!("envelope-blue", "Envelope, blue"),
-    alt!("envelope-yellow", "Envelope, yellow"),
-    alt!("envelope-white", "Envelope, white"),
-    alt!("envelope-beige", "Envelope, beige"),
-    alt!("envelope-starfield", "Envelope, starfield"),
-    alt!("envelope-faded-blue", "Envelope, faded blue"),
-    alt!("bird", "Vireo"),
-    alt!("bird-at-symbol", "Vireo, @"),
-    alt!("logotype-yellow", "Logotype"),
-    alt!("yellow-blue", "Yellow & blue"),
-    alt!("blue", "Blue"),
-    alt!("blue-dark", "Dark blue"),
-    alt!("blue-yellow", "Blue & yellow"),
-    alt!("teal", "Teal"),
-    alt!("green", "Green"),
-    alt!("orange", "Orange"),
-    alt!("red", "Red"),
-    alt!("peach", "Peach"),
-    alt!("pink", "Pink"),
-    alt!("purple", "Purple"),
-    alt!("grey", "Grey"),
-    alt!("pattern-blue", "Pattern, blue"),
-    alt!("pattern-pink", "Pattern, pink"),
-    alt!("pattern-teal", "Pattern, teal"),
-    alt!("legacy", "Classic"),
+    alt!("envelope-bird-blue", "Blue with bird"),
+    alt!("envelope-bird-yellow", "Yellow with bird"),
+    alt!("envelope-blue", "Blue"),
+    alt!("envelope-yellow", "Yellow"),
+    alt!("envelope-white", "White"),
+    alt!("envelope-manilla", "Manila"),
+    alt!("envelope-faded-blue", "Faded blue"),
+    alt!("envelope-starfield", "Starfield"),
 ];
 
-/// Every choice the gallery offers. The classic envelope belongs to the
-/// stable app: on the beta it would hide the beta ribbon, so it is left out
-/// and treated as the default there.
+/// Every choice the gallery offers.
 pub fn catalog() -> impl Iterator<Item = &'static IconChoice> {
-    CATALOG.iter().filter(|c| !(cfg!(feature = "beta") && c.id == LEGACY_ID))
+    CATALOG.iter()
 }
 
-/// Normalise a stored id to one this build offers. Ids from the 1.22
-/// gallery map onto their redrawn successors, so a choice made there keeps
-/// its look after the upgrade.
+/// Normalise a stored id to one this build offers. Every id from the
+/// Hylki galleries (birds, colours, patterns, the classic envelope) is
+/// gone; a stored one falls back to the default, which generation 2 puts
+/// on every install once anyway.
 fn effective(id: &str) -> &'static str {
-    let id = match id {
-        "envelope" => "envelope-yellow",
-        "envelope-cream" => "envelope-beige",
-        "bird-blue" => "bird",
-        "bird-blue-at-symbol" => "bird-at-symbol",
-        "envelope-bird" => DEFAULT_ID,
-        "logotype" => "logotype-yellow",
-        other => other,
-    };
     catalog().find(|c| c.id == id).map(|c| c.id).unwrap_or(DEFAULT_ID)
 }
 
@@ -124,13 +85,12 @@ pub fn png_for(id: &str) -> &'static [u8] {
     CATALOG.iter().find(|c| c.id == id).map(|c| c.png).unwrap_or(DEFAULT_PNG)
 }
 
-/// The choice in force, settling it on the first start that finds none:
-/// an install with settings already on disk keeps the envelope it had, a
-/// fresh one gets the default (the wizard lets it pick). The override on
+/// The choice in force, settling it on the first start that finds none
+/// (the default; the wizard lets a fresh install pick). The override on
 /// disk is brought in line either way, so a reinstall (or a changed
 /// default) never silently swaps the icon someone chose.
 pub fn init_on_startup() -> String {
-    if std::env::var("VIREO_DEMO").is_ok() {
+    if std::env::var("HYLKI_DEMO").is_ok() {
         return DEFAULT_ID.to_string();
     }
     let id = if crate::config::load_app_icon_generation() < ICON_GENERATION {
@@ -143,9 +103,8 @@ pub fn init_on_startup() -> String {
         match crate::config::load_app_icon() {
             Some(id) => id,
             None => {
-                let id = if crate::config::settings_on_disk() { LEGACY_ID } else { DEFAULT_ID };
-                crate::config::save_app_icon(id);
-                id.to_string()
+                crate::config::save_app_icon(DEFAULT_ID);
+                DEFAULT_ID.to_string()
             }
         }
     };
@@ -158,7 +117,7 @@ pub fn init_on_startup() -> String {
 pub fn set(id: &str) -> String {
     let id = effective(id).to_string();
     crate::config::save_app_icon(&id);
-    if std::env::var("VIREO_DEMO").is_err() {
+    if std::env::var("HYLKI_DEMO").is_err() {
         apply(&id);
     }
     id
@@ -226,7 +185,7 @@ fn apply(id: &str) {
     sync_icon_files(&hicolor, id, &name, own_file);
     let path = hicolor.join("512x512/apps").join(format!("{name}.png"));
     launcher.point_at(&path.to_string_lossy(), is_default && !own_file);
-    // Vireo's own windows (X11, panels that draw window icons).
+    // Hylki's own windows (X11, panels that draw window icons).
     if own_file {
         gtk::Window::set_default_icon_name(&name);
     } else {
@@ -320,9 +279,9 @@ fn touch(dir: &std::path::Path) {
 // The launcher
 // ---------------------------------------------------------------------------
 
-/// Marker key in a launcher Vireo wrote, so only its own files are ever
+/// Marker key in a launcher Hylki wrote, so only its own files are ever
 /// removed or regenerated.
-const LAUNCHER_MARK: &str = "X-Vireo-Icon-Launcher";
+const LAUNCHER_MARK: &str = "X-Hylki-Icon-Launcher";
 
 /// When the launcher was last written by this process.
 static LAST_LAUNCHER_WRITE: std::sync::Mutex<Option<std::time::Instant>> =
@@ -449,9 +408,9 @@ fn flatpak_exec() -> Option<(String, String)> {
         .split_once(&format!("/app/{}/", crate::APP_ID))
         .map(|(root, _)| root.to_string())?;
     // `%U` as in the shipped entry: one launch for every selected file, so
-    // "Send with Vireo" from Files attaches them all to the same message.
+    // "Send with Hylki" from Files attaches them all to the same message.
     let exec = format!(
-        "flatpak run --branch={branch} --arch={arch} --command=vireo --file-forwarding {} @@u %U @@",
+        "flatpak run --branch={branch} --arch={arch} --command=hylki --file-forwarding {} @@u %U @@",
         crate::APP_ID
     );
     Some((exec, format!("{root}/exports/bin/{}", crate::APP_ID)))
@@ -673,18 +632,18 @@ pub fn run_restart_helper() -> ! {
         std::thread::sleep(std::time::Duration::from_millis(200));
     }
     drop(conn);
-    let exe = std::env::current_exe().unwrap_or_else(|_| PathBuf::from("vireo"));
+    let exe = std::env::current_exe().unwrap_or_else(|_| PathBuf::from("hylki"));
     // A one-off launch's review and capture switches must not carry over
     // into the instance that comes back.
     let err = std::process::Command::new(exe)
-        .env_remove("VIREO_WELCOME")
-        .env_remove("VIREO_SHOWCASE")
-        .env_remove("VIREO_SHOWCASE_PAGE")
-        .env_remove("VIREO_SHOWCASE_SETTINGS")
-        .env_remove("VIREO_SHOWCASE_SCROLL")
-        .env_remove("VIREO_SHOWCASE_DELAY")
+        .env_remove("HYLKI_WELCOME")
+        .env_remove("HYLKI_SHOWCASE")
+        .env_remove("HYLKI_SHOWCASE_PAGE")
+        .env_remove("HYLKI_SHOWCASE_SETTINGS")
+        .env_remove("HYLKI_SHOWCASE_SCROLL")
+        .env_remove("HYLKI_SHOWCASE_DELAY")
         .exec();
-    eprintln!("vireo: restart failed: {err}");
+    eprintln!("hylki: restart failed: {err}");
     std::process::exit(1);
 }
 

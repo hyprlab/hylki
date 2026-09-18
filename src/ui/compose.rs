@@ -44,10 +44,10 @@ fn sig_source(kind: SourceKind, sig: &str) -> String {
 /// The icon a composing format carries, in the header and in its menu.
 fn format_icon(format: ComposeFormat) -> &'static str {
     match format {
-        ComposeFormat::Rich => "co.hyprlab.Vireo-format-text-rich-symbolic",
-        ComposeFormat::Markdown => "co.hyprlab.Vireo-markdown-symbolic",
-        ComposeFormat::Html => "co.hyprlab.Vireo-code-symbolic",
-        ComposeFormat::Plain => "co.hyprlab.Vireo-text-x-generic-symbolic",
+        ComposeFormat::Rich => "co.hyprlab.Hylki-format-text-rich-symbolic",
+        ComposeFormat::Markdown => "co.hyprlab.Hylki-markdown-symbolic",
+        ComposeFormat::Html => "co.hyprlab.Hylki-code-symbolic",
+        ComposeFormat::Plain => "co.hyprlab.Hylki-text-x-generic-symbolic",
     }
 }
 
@@ -130,10 +130,10 @@ fn size_for_host(
 /// Set the inline/window toggle button's icon + tooltip for the current host.
 fn set_toggle_icon(btn: &gtk::Button, windowed: bool) {
     if windowed {
-        btn.set_icon_name("co.hyprlab.Vireo-view-restore-symbolic");
+        btn.set_icon_name("co.hyprlab.Hylki-view-restore-symbolic");
         btn.set_tooltip_text(Some(i18n("Collapse into reader").as_str()));
     } else {
-        btn.set_icon_name("co.hyprlab.Vireo-view-fullscreen-symbolic");
+        btn.set_icon_name("co.hyprlab.Hylki-view-fullscreen-symbolic");
         btn.set_tooltip_text(Some(i18n("Open in window").as_str()));
     }
 }
@@ -432,7 +432,7 @@ pub enum ComposeInput {
     /// The body's text history changed: WebKit gained or lost a step. The
     /// flag is whether it now has anything to take back.
     BodyHistory(bool),
-    /// Showcase only (VIREO_SHOWCASE_COMPOSE_UNDO): one step of the scripted
+    /// Showcase only (HYLKI_SHOWCASE_COMPOSE_UNDO): one step of the scripted
     /// history check. See [`Compose::showcase_history`].
     ShowcaseHistory(u8),
 }
@@ -482,7 +482,7 @@ impl Component for Compose {
                     add_css_class: "compose-toolbar",
                     set_show_start_title_buttons: false,
                     set_show_end_title_buttons: false,
-                    // No "Vireo" branding on the compose bar.
+                    // No "Hylki" branding on the compose bar.
                     #[wrap(Some)]
                     set_title_widget = &gtk::Label {
                         set_label: "",
@@ -525,7 +525,7 @@ impl Component for Compose {
                             set_orientation: gtk::Orientation::Vertical,
                         },
                         gtk::MenuButton {
-                            set_icon_name: "co.hyprlab.Vireo-pan-down-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-pan-down-symbolic",
                             add_css_class: "suggested-action",
                             set_tooltip_text: Some(i18n("Send later").as_str()),
                             set_can_focus: false,
@@ -599,7 +599,7 @@ impl Component for Compose {
                     // not Cancel or Send lives in this menu.
                     #[name = "overflow_btn"]
                     pack_end = &gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-view-more-horizontal-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-view-more-horizontal-symbolic",
                         set_tooltip_text: Some(i18n("Actions").as_str()),
                         #[watch]
                         set_visible: model.narrow,
@@ -608,7 +608,7 @@ impl Component for Compose {
                     // OpenPGP (#133): only offered where a gpg exists.
                     #[name = "encrypt_btn"]
                     pack_end = &gtk::ToggleButton {
-                        set_icon_name: "co.hyprlab.Vireo-channel-secure-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-channel-secure-symbolic",
                         set_tooltip_text: Some(i18n("Encrypt with OpenPGP to every recipient's key").as_str()),
                         #[watch]
                         set_visible: crate::pgp::available() && !model.narrow,
@@ -618,7 +618,7 @@ impl Component for Compose {
                     },
                     #[name = "sign_btn"]
                     pack_end = &gtk::ToggleButton {
-                        set_icon_name: "co.hyprlab.Vireo-security-high-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-security-high-symbolic",
                         set_tooltip_text: Some(i18n("Sign with your OpenPGP key").as_str()),
                         #[watch]
                         set_visible: crate::pgp::available() && !model.narrow,
@@ -627,7 +627,7 @@ impl Component for Compose {
                         },
                     },
                     pack_end = &gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-mail-attachment-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-mail-attachment-symbolic",
                         set_tooltip_text: Some(i18n("Attach files").as_str()),
                         #[watch]
                         set_visible: !model.narrow,
@@ -635,7 +635,7 @@ impl Component for Compose {
                     },
                     // Cloud attachments (#144): only with an account set up.
                     pack_end = &gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-cloud-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-cloud-symbolic",
                         set_tooltip_text: Some(i18n("Upload to cloud storage and share a link").as_str()),
                         #[watch]
                         set_visible: !model.cloud_accounts.is_empty() && !model.narrow,
@@ -644,7 +644,7 @@ impl Component for Compose {
                         connect_clicked => ComposeInput::CloudAttach,
                     },
                     pack_end = &gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-x-office-address-book-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-x-office-address-book-symbolic",
                         set_tooltip_text: Some(i18n("Open Contacts").as_str()),
                         #[watch]
                         set_visible: !model.narrow,
@@ -663,7 +663,7 @@ impl Component for Compose {
                     // away by default, one press brings them back.
                     #[name = "fields_btn"]
                     pack_end = &gtk::ToggleButton {
-                        set_icon_name: "co.hyprlab.Vireo-pan-down-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-pan-down-symbolic",
                         add_css_class: "fields-chevron",
                         set_tooltip_text: Some(i18n("Show From, To and Subject").as_str()),
                         set_can_focus: false,
@@ -685,7 +685,7 @@ impl Component for Compose {
                     set_margin_bottom: 4,
                     #[watch]
                     set_visible: model.send_at.is_some(),
-                    gtk::Image { set_icon_name: Some("co.hyprlab.Vireo-alarm-symbolic") },
+                    gtk::Image { set_icon_name: Some("co.hyprlab.Hylki-alarm-symbolic") },
                     gtk::Label {
                         set_hexpand: true,
                         set_halign: gtk::Align::Start,
@@ -709,7 +709,7 @@ impl Component for Compose {
                     set_margin_bottom: 4,
                     #[watch]
                     set_visible: !model.cloud_passwords.is_empty(),
-                    gtk::Image { set_icon_name: Some("co.hyprlab.Vireo-dialog-password-symbolic") },
+                    gtk::Image { set_icon_name: Some("co.hyprlab.Hylki-dialog-password-symbolic") },
                     gtk::Label {
                         set_hexpand: true,
                         set_halign: gtk::Align::Start,
@@ -866,7 +866,7 @@ impl Component for Compose {
         // The preview keeps its word. It is a state rather than an action,
         // and an eye on its own leaves which state to guesswork.
         let preview_content = adw::ButtonContent::builder()
-            .icon_name("co.hyprlab.Vireo-eye-open-negative-filled-symbolic")
+            .icon_name("co.hyprlab.Hylki-eye-open-negative-filled-symbolic")
             .label(i18n("Preview"))
             .build();
         let preview_btn = gtk::ToggleButton::builder().child(&preview_content).build();
@@ -1091,10 +1091,10 @@ impl Component for Compose {
             });
         }
 
-        // VIREO_SHOWCASE_CLOUD_DIALOG opens the cloud upload dialog on a
+        // HYLKI_SHOWCASE_CLOUD_DIALOG opens the cloud upload dialog on a
         // stand-in file two seconds after the composer is up (demo only),
         // for a capture of this upload's terms.
-        if std::env::var_os("VIREO_SHOWCASE_CLOUD_DIALOG").is_some() && std::env::var_os("VIREO_DEMO").is_some() {
+        if std::env::var_os("HYLKI_SHOWCASE_CLOUD_DIALOG").is_some() && std::env::var_os("HYLKI_DEMO").is_some() {
             let s = sender.clone();
             gtk::glib::timeout_add_seconds_local_once(2, move || {
                 s.input(ComposeInput::CloudPicked(vec![std::path::PathBuf::from("/tmp/Q3 report.pdf")]));
@@ -1278,7 +1278,7 @@ impl Component for Compose {
                 let entry = |label: String, icon: &str, msg: fn() -> ComposeInput| {
                     let s = sender.clone();
                     MenuEntry::new(&label, move || s.input(msg()))
-                        .icon(&format!("co.hyprlab.Vireo-{icon}-symbolic"))
+                        .icon(&format!("co.hyprlab.Hylki-{icon}-symbolic"))
                 };
                 let mut drafts = vec![entry(i18n("Save Draft"), "document-save", || ComposeInput::SaveDraft)];
                 if self.draft_origin.is_some() {
@@ -1300,7 +1300,7 @@ impl Component for Compose {
                     let sign = widgets.sign_btn.clone();
                     pgp.push(
                         MenuEntry::new(&i18n("Sign with your OpenPGP key"), move || sign.set_active(!sign.is_active()))
-                            .icon(&format!("co.hyprlab.Vireo-{}-symbolic", check(self.sign, "security-high"))),
+                            .icon(&format!("co.hyprlab.Hylki-{}-symbolic", check(self.sign, "security-high"))),
                     );
                     let encrypt = widgets.encrypt_btn.clone();
                     pgp.push(
@@ -1308,7 +1308,7 @@ impl Component for Compose {
                             &i18n("Encrypt with OpenPGP to every recipient's key"),
                             move || encrypt.set_active(!encrypt.is_active()),
                         )
-                        .icon(&format!("co.hyprlab.Vireo-{}-symbolic", check(self.encrypt, "channel-secure"))),
+                        .icon(&format!("co.hyprlab.Hylki-{}-symbolic", check(self.encrypt, "channel-secure"))),
                     );
                 }
                 // The format chooser and the preview toggle are not here:
@@ -1416,7 +1416,7 @@ impl Component for Compose {
                                  var l='{}';var v=t.value;var i=v.lastIndexOf('\\n-- \\n');\
                                  if(i>=0){{v=v.slice(0,i)+'\\n'+l+'\\n'+v.slice(i);}}\
                                  else{{v=v.replace(/\\s*$/,'')+'\\n\\n'+l+'\\n';}}\
-                                 t.value=v;window.__vireoDirty=true;}})()",
+                                 t.value=v;window.__hylkiDirty=true;}})()",
                                 js_escape(&line)
                             ));
                             if let Some(p) = share.password.clone() {
@@ -1466,7 +1466,7 @@ impl Component for Compose {
                             "(function(){{var t=document.getElementById('src');if(!t)return;\
                              var u='{}';\
                              t.value=t.value.split('\\n').filter(function(l){{return l.indexOf(u)<0;}})\
-                               .join('\\n');window.__vireoDirty=true;}})()",
+                               .join('\\n');window.__hylkiDirty=true;}})()",
                             js_escape(&link.url)
                         ));
                         self.rebuild_attachments(&widgets.attach_box, &sender);
@@ -1671,7 +1671,7 @@ impl Component for Compose {
                          var o='{}',n='{}';var v=t.value;\
                          var i=o?v.lastIndexOf(o):-1;\
                          if(i>=0){{v=v.slice(0,i)+n+v.slice(i+o.length);}}else{{v=v+n;}}\
-                         t.value=v;window.__vireoDirty=true;}})()",
+                         t.value=v;window.__hylkiDirty=true;}})()",
                         js_escape(&old),
                         js_escape(&new)
                     ));
@@ -2123,9 +2123,9 @@ impl Compose {
             item.set_margin_bottom(3);
             // Mark where the suggestion came from: address book vs. mail history.
             let icon = gtk::Image::from_icon_name(if sug.from_contacts {
-                "co.hyprlab.Vireo-avatar-default-symbolic"
+                "co.hyprlab.Hylki-avatar-default-symbolic"
             } else {
-                "co.hyprlab.Vireo-document-open-recent-symbolic"
+                "co.hyprlab.Hylki-document-open-recent-symbolic"
             });
             icon.set_valign(gtk::Align::Center);
             icon.add_css_class("dim-label");
@@ -2301,7 +2301,7 @@ impl Compose {
 
     /// Showcase only: walk the history through a round that mixes typing
     /// with attachments, logging the body and the attachment names after
-    /// each step on `vireo::compose::undo`. The keys cannot be injected on
+    /// each step on `hylki::compose::undo`. The keys cannot be injected on
     /// a Wayland desktop, so this is how the interleaving is checked.
     ///
     /// Each step schedules the next a beat later, because both sides of it
@@ -2331,10 +2331,10 @@ impl Compose {
         } else {
             "document.body.focus();"
         };
-        // VIREO_SHOWCASE_COMPOSE_UNDO=backspace trims the body with the
+        // HYLKI_SHOWCASE_COMPOSE_UNDO=backspace trims the body with the
         // Backspace key's own editing command instead of typing into it,
         // which is how a reply is usually cut down to size.
-        let mode = std::env::var("VIREO_SHOWCASE_COMPOSE_UNDO").unwrap_or_default();
+        let mode = std::env::var("HYLKI_SHOWCASE_COMPOSE_UNDO").unwrap_or_default();
         let deleting = mode == "backspace";
         // `pause` leaves more than the script's PAUSE_MS between two runs of
         // typing, so each should come back on a press of its own.
@@ -2343,7 +2343,7 @@ impl Compose {
             editor.run_js(&format!("{focus_js}document.execCommand('insertText',false,'{text}')"));
         };
         let attach = |sender: &ComponentSender<Self>| {
-            let path = std::env::temp_dir().join("vireo-undo-probe.txt");
+            let path = std::env::temp_dir().join("hylki-undo-probe.txt");
             let _ = std::fs::write(&path, b"probe");
             sender.input(ComposeInput::AddAttachments(vec![path]));
         };
@@ -2392,7 +2392,7 @@ impl Compose {
         let gap = if pausing && step == 1 { 7000 } else { 700 };
         gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(gap), move || {
             let report = move |body: String| {
-                tracing::info!(target: "vireo::compose::undo", "step {step}: body {body:?}");
+                tracing::info!(target: "hylki::compose::undo", "step {step}: body {body:?}");
                 s.input(ComposeInput::ShowcaseHistory(step + 1));
             };
             if editor.source_kind().is_some() {
@@ -2402,7 +2402,7 @@ impl Compose {
             }
         });
         tracing::info!(
-            target: "vireo::compose::undo",
+            target: "hylki::compose::undo",
             "step {step}: undo [{}] redo [{}] text({},{}) attachments [{}]",
             stack(&self.undo_stack),
             stack(&self.redo_stack),
@@ -2429,12 +2429,12 @@ impl Compose {
             // stretch this box the full width of its cell — leaving the pill's
             // background trailing well past the remove button. Hug the content.
             chip.set_halign(gtk::Align::Start);
-            chip.append(&gtk::Image::from_icon_name("co.hyprlab.Vireo-mail-attachment-symbolic"));
+            chip.append(&gtk::Image::from_icon_name("co.hyprlab.Hylki-mail-attachment-symbolic"));
             let lbl = gtk::Label::new(Some(&name));
             lbl.set_ellipsize(gtk::pango::EllipsizeMode::Middle);
             lbl.set_max_width_chars(22);
             chip.append(&lbl);
-            let rm = gtk::Button::from_icon_name("co.hyprlab.Vireo-window-close-symbolic");
+            let rm = gtk::Button::from_icon_name("co.hyprlab.Hylki-window-close-symbolic");
             rm.add_css_class("flat");
             rm.set_valign(gtk::Align::Center);
             let s = sender.input_sender().clone();
@@ -2464,12 +2464,12 @@ impl Compose {
             chip.add_css_class("cloud-chip");
             chip.set_halign(gtk::Align::Start);
             chip.set_tooltip_text(Some(&link.url));
-            chip.append(&gtk::Image::from_icon_name("co.hyprlab.Vireo-cloud-symbolic"));
+            chip.append(&gtk::Image::from_icon_name("co.hyprlab.Hylki-cloud-symbolic"));
             let lbl = gtk::Label::new(Some(&i18n_f("{name} (link)", &[("name", &link.name)])));
             lbl.set_ellipsize(gtk::pango::EllipsizeMode::Middle);
             lbl.set_max_width_chars(26);
             chip.append(&lbl);
-            let rm = gtk::Button::from_icon_name("co.hyprlab.Vireo-window-close-symbolic");
+            let rm = gtk::Button::from_icon_name("co.hyprlab.Hylki-window-close-symbolic");
             rm.add_css_class("flat");
             rm.set_valign(gtk::Align::Center);
             let s = sender.input_sender().clone();

@@ -2,10 +2,10 @@
 """Regenerate the app icons from their sources in data/icons/src.
 
 Every gallery entry is a 512² PNG in data/icons/alt/<id>.png, embedded into
-the binary by src/app_icon.rs; a `<id>.Devel.svg` source is the beta build's
-art for that entry. The bird envelope (and its .Devel twin) also becomes
-the hicolor icon each build installs under its app ID (512 and 256 PNG,
-plus the SVG itself as the scalable icon), and refreshes docs/logo.png.
+the binary by src/app_icon.rs. `default.svg` (and its `default.Devel.svg`
+twin for the beta) becomes the hicolor icon each build installs under its
+app ID (512 and 256 PNG, plus the SVG itself as the scalable icon), and
+refreshes docs/logo.png.
 
 Sources are either an SVG (rendered with librsvg, the same renderer GNOME
 uses, so what ships matches what the desktop would draw) or a PNG master
@@ -24,12 +24,11 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = ROOT / "data/icons/src"
 ALT = ROOT / "data/icons/alt"
 HICOLOR = ROOT / "data/icons/hicolor"
-# The icon each build installs under its app ID: the stable app ships the
-# envelope with the bird, the beta its `.Devel` twin (GNOME's
-# development-build styling: the hazard stripe). Sources named
-# `<id>.Devel.svg` are the beta gallery's art for `<id>` and land in alt/
-# as `<id>.Devel.png`.
-SHIPPED = {"envelope-bird-blue": "co.hyprlab.Vireo", "envelope-bird-blue.Devel": "co.hyprlab.Vireo.Beta"}
+# The icon each build installs under its app ID: the stable app ships
+# `default`, the beta its `.Devel` twin (GNOME's development-build styling:
+# the hazard stripe). These two are the gallery's "Default" entry, so they
+# get no alt/ PNG of their own; every other source is one gallery entry.
+SHIPPED = {"default": "co.hyprlab.Hylki", "default.Devel": "co.hyprlab.Hylki.Beta"}
 
 
 def render_svg(svg: pathlib.Path, png: pathlib.Path, size: int) -> None:
@@ -55,10 +54,14 @@ def make(src: pathlib.Path, png: pathlib.Path, size: int) -> None:
     (render_svg if src.suffix == ".svg" else resize_png)(src, png, size)
 
 
+# Outputs are rebuilt from scratch, so a removed source leaves nothing behind.
+for stale in list(ALT.glob("*.png")) + list(HICOLOR.glob("*/apps/*")):
+    stale.unlink()
 for src in sorted(SRC.iterdir()):
     # `<id>.Devel.svg` has two suffixes; keep ".Devel" as part of the id.
     name = src.name[: -len(src.suffix)]
-    make(src, ALT / f"{name}.png", 512)
+    if name not in SHIPPED:
+        make(src, ALT / f"{name}.png", 512)
     if name in SHIPPED:
         app_id = SHIPPED[name]
         for size in (512, 256):
@@ -67,6 +70,6 @@ for src in sorted(SRC.iterdir()):
             scalable = HICOLOR / f"scalable/apps/{app_id}.svg"
             scalable.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(src, scalable)
-        if app_id == "co.hyprlab.Vireo":
-            shutil.copyfile(HICOLOR / "512x512/apps/co.hyprlab.Vireo.png", ROOT / "docs/logo.png")
+        if app_id == "co.hyprlab.Hylki":
+            shutil.copyfile(HICOLOR / "512x512/apps/co.hyprlab.Hylki.png", ROOT / "docs/logo.png")
     print(f"{name:<28} <- {src.name}")

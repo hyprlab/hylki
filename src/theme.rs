@@ -1,7 +1,7 @@
 //! Appearance themes: whole palettes the app can wear, on top of the
 //! light/dark preference.
 //!
-//! Vireo normally paints itself in the system's own colours — stock
+//! Hylki normally paints itself in the system's own colours — stock
 //! libadwaita plus the desktop accent — and that is still the default
 //! ([`SYSTEM_ID`]). A theme replaces those colours wholesale: each one
 //! carries a light and a dark palette, so "Follow system", "Light" and

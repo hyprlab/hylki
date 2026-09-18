@@ -1,13 +1,13 @@
 # Security policy
 
-Vireo reads untrusted content — every message it opens was written by someone
+Hylki reads untrusted content — every message it opens was written by someone
 else — so security reports are welcome and taken seriously.
 
 ## Reporting a vulnerability
 
 **Please report privately, not as a public issue.** Either channel works:
 
-- **GitHub private vulnerability reporting** — <https://github.com/hyprlab/vireo/security/advisories/new>
+- **GitHub private vulnerability reporting** — <https://github.com/hyprlab/hylki/security/advisories/new>
   (Security → Report a vulnerability). This is the preferred route: it keeps the
   report, the discussion and the eventual advisory in one place.
 - **Email** — hyprlab@proton.me
@@ -33,7 +33,7 @@ Nothing here is meant to restrict what you may say about your own research.
 ## Supported versions
 
 Fixes go into the next release from `main`. Older versions are not patched
-separately — Vireo ships as a Flatpak, an RPM and an Arch package, and all three
+separately — Hylki ships as a Flatpak, an RPM and an Arch package, and all three
 track releases.
 
 ## Scope
@@ -47,7 +47,7 @@ In scope, roughly in order of interest:
 - Credential handling — the keyring, OAuth, what reaches disk.
 - TLS: verification, downgrade, `STARTTLS` handling.
 - Sandbox escapes and over-broad Flatpak permissions.
-- File permissions on anything Vireo writes.
+- File permissions on anything Hylki writes.
 
 Out of scope: vulnerabilities in the user's own mail server, findings that need
 an attacker who already has local code execution as the user, and reports

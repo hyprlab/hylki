@@ -193,7 +193,7 @@ fn db_book_active(db: &std::path::Path, active: &Option<HashMap<String, String>>
 }
 
 /// Photo bytes and the EDS database state they came from. The inexpensive
-/// fingerprint check lets a long-running Vireo notice CardDAV synchronizations
+/// fingerprint check lets a long-running Hylki notice CardDAV synchronizations
 /// without subscribing to backend-specific EDS signals.
 #[derive(Clone)]
 struct PhotoLocation {
@@ -599,7 +599,7 @@ fn vcard_photo(vcard: &str) -> Option<Vec<u8>> {
 }
 
 /// Read an EDS-materialized `file://` photo, but only from an address-book data
-/// or cache directory. A CardDAV vCard must not be able to make Vireo read an
+/// or cache directory. A CardDAV vCard must not be able to make Hylki read an
 /// arbitrary local file.
 fn read_eds_photo_file(uri: &str, max_bytes: usize) -> Option<Vec<u8>> {
     use std::io::Read;
@@ -1325,7 +1325,7 @@ fn parse_vcard_details(vcard: &str) -> Option<ContactDetails> {
     Some(c)
 }
 
-/// Sample contacts for demo mode (VIREO_DEMO): the people from the demo
+/// Sample contacts for demo mode (HYLKI_DEMO): the people from the demo
 /// mailbox, fleshed out so the contacts view has something to show off.
 /// No book/EDS identity — demo entries are display-only.
 pub fn demo_contacts() -> Vec<ContactDetails> {
@@ -1346,14 +1346,14 @@ pub fn demo_contacts() -> Vec<ContactDetails> {
             phones: vec![l("Mobile", "+1 (415) 555-0114")],
             addresses: vec![l("Work", "2261 Market St, San Francisco, CA 94114")],
             urls: vec!["sophie.design".into()],
-            ..contact("Sophie Turner", "CardDAV — jason@vireo.hyprlab.co")
+            ..contact("Sophie Turner", "CardDAV — jason@hylki.hyprlab.co")
         },
         ContactDetails {
             org: "Studio.dev".into(),
             title: "Engineering Manager".into(),
             emails: vec![l("Work", "marcus@studio.dev")],
             phones: vec![l("Mobile", "+1 (415) 555-0187"), l("Work", "+1 (415) 555-0100")],
-            ..contact("Marcus Chen", "CardDAV — jason@vireo.hyprlab.co")
+            ..contact("Marcus Chen", "CardDAV — jason@hylki.hyprlab.co")
         },
         ContactDetails {
             org: "Studio.dev".into(),
@@ -1382,7 +1382,7 @@ pub fn demo_contacts() -> Vec<ContactDetails> {
             emails: vec![l("Work", "diego@ferroustype.com"), l("Home", "d.alvarez@example.com")],
             phones: vec![l("Mobile", "+34 612 555 021")],
             urls: vec!["ferroustype.com".into()],
-            ..contact("Diego Álvarez", "CardDAV — jason@vireo.hyprlab.co")
+            ..contact("Diego Álvarez", "CardDAV — jason@hylki.hyprlab.co")
         },
         ContactDetails {
             emails: vec![l("Home", "tom.okafor@example.com")],
@@ -1396,7 +1396,7 @@ pub fn demo_contacts() -> Vec<ContactDetails> {
             emails: vec![l("Work", "grace@kimpartners.example")],
             phones: vec![l("Work", "+1 (212) 555-0170")],
             addresses: vec![l("Work", "425 Lexington Ave, New York, NY 10017")],
-            ..contact("Grace Kim", "CardDAV — jason@vireo.hyprlab.co")
+            ..contact("Grace Kim", "CardDAV — jason@hylki.hyprlab.co")
         },
     ]
 }
@@ -1637,7 +1637,7 @@ mod tests {
     impl ConfineFixture {
         fn new(n: u32) -> Self {
             let base = std::env::temp_dir()
-                .join(format!("vireo-confine-{}-{n}", std::process::id()));
+                .join(format!("hylki-confine-{}-{n}", std::process::id()));
             std::fs::create_dir_all(base.join("root")).unwrap();
             std::fs::create_dir_all(base.join("outside")).unwrap();
             std::fs::write(base.join("root/photo.png"), b"in").unwrap();

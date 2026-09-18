@@ -50,7 +50,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for ChipFlow {
-        const NAME: &'static str = "VireoChipFlow";
+        const NAME: &'static str = "HylkiChipFlow";
         type Type = super::ChipFlow;
         type ParentType = gtk::Widget;
     }

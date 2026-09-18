@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Hylki (beta)
+GenericName=Email Client
+Comment=A clean, fast GNOME-native email client — beta channel
+Exec=hylki %u
+Icon=co.hyprlab.Hylki.Beta
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;Network;Email;
+Keywords=Email;Mail;IMAP;
+MimeType=x-scheme-handler/mailto;x-scheme-handler/mid;
+StartupNotify=true
+StartupWMClass=co.hyprlab.Hylki.Beta

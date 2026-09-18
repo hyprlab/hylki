@@ -66,7 +66,7 @@ fn compose_new_mail(
 /// Notification id for an account's new-mail toast (one per account, so a later
 /// batch replaces the previous rather than stacking).
 fn mail_id(account_id: u32) -> String {
-    format!("vireo-mail-{account_id}")
+    format!("hylki-mail-{account_id}")
 }
 
 /// Post (or replace) the new-mail notification for an account. Clicking it opens
@@ -129,7 +129,7 @@ pub fn error(account_id: u32, title: &str, body: &str) {
     }
     n.set_priority(gio::NotificationPriority::High);
     n.set_default_action(&format!("app.{PRESENT_ACTION}"));
-    send(&format!("vireo-error-{account_id}"), &n);
+    send(&format!("hylki-error-{account_id}"), &n);
 }
 
 /// A message opened from outside the app (a file manager's "Send by email",
@@ -140,11 +140,11 @@ pub fn error(account_id: u32, title: &str, body: &str) {
 pub fn compose_ready(attachments: u32) {
     let n = gio::Notification::new(&i18n("Message ready to send"));
     let body = if attachments == 0 {
-        i18n("A new message is open in Vireo.")
+        i18n("A new message is open in Hylki.")
     } else {
         crate::i18n::ni18n_f(
-            "A new message with {n} file attached is open in Vireo.",
-            "A new message with {n} files attached is open in Vireo.",
+            "A new message with {n} file attached is open in Hylki.",
+            "A new message with {n} files attached is open in Hylki.",
             attachments,
             &[("n", &attachments.to_string())],
         )

@@ -31,14 +31,14 @@ pub enum FolderKind {
 impl FolderKind {
     pub fn icon(self) -> &'static str {
         match self {
-            FolderKind::Inbox => "co.hyprlab.Vireo-mail-inbox-symbolic",
-            FolderKind::Starred => "co.hyprlab.Vireo-starred-symbolic",
-            FolderKind::Sent => "co.hyprlab.Vireo-mail-send-symbolic",
-            FolderKind::Drafts => "co.hyprlab.Vireo-document-edit-symbolic",
-            FolderKind::Archive => "co.hyprlab.Vireo-mail-archive-symbolic",
-            FolderKind::Junk => "co.hyprlab.Vireo-mail-mark-junk-symbolic",
-            FolderKind::Trash => "co.hyprlab.Vireo-user-trash-symbolic",
-            FolderKind::Custom => "co.hyprlab.Vireo-folder-symbolic",
+            FolderKind::Inbox => "co.hyprlab.Hylki-mail-inbox-symbolic",
+            FolderKind::Starred => "co.hyprlab.Hylki-starred-symbolic",
+            FolderKind::Sent => "co.hyprlab.Hylki-mail-send-symbolic",
+            FolderKind::Drafts => "co.hyprlab.Hylki-document-edit-symbolic",
+            FolderKind::Archive => "co.hyprlab.Hylki-mail-archive-symbolic",
+            FolderKind::Junk => "co.hyprlab.Hylki-mail-mark-junk-symbolic",
+            FolderKind::Trash => "co.hyprlab.Hylki-user-trash-symbolic",
+            FolderKind::Custom => "co.hyprlab.Hylki-folder-symbolic",
         }
     }
 }

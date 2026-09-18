@@ -1,15 +1,15 @@
 [package]
-name = "vireo"
-version = "1.34.1-beta.1"
+name = "hylki"
+version = "1.35.1-beta.1"
 edition = "2021"
 description = "A clean, fast GNOME-native email client"
 license = "AGPL-3.0-or-later"
-repository = "https://github.com/hyprlab/vireo"
-homepage = "https://vireo.hyprlab.co"
+repository = "https://github.com/hyprlab/hylki"
+homepage = "https://hylki.hyprlab.co"
 
 [features]
-# The community beta channel: "Vireo (beta)" branding, app ID
-# co.hyprlab.Vireo.Beta, a "b"-suffixed version, and — inside Flatpak — the
+# The community beta channel: "Hylki (beta)" branding, app ID
+# co.hyprlab.Hylki.Beta, a "b"-suffixed version, and — inside Flatpak — the
 # stable app's data dirs, so beta testers share their accounts and mail cache
 # with the stable install instead of setting everything up twice.
 beta = []

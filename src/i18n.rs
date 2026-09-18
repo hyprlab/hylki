@@ -4,9 +4,9 @@
 //! placeholder variants), which looks it up in the catalogue for the
 //! session's language and falls back to the English source string. The
 //! catalogues are compiled from `po/<lang>.po` into `<localedir>/<lang>/
-//! LC_MESSAGES/vireo.mo` — by the Flatpak build for installs, by
+//! LC_MESSAGES/hylki.mo` — by the Flatpak build for installs, by
 //! `tools/build-locale.sh` for a source-tree run. `tools/update-pot.sh`
-//! regenerates the template (`po/vireo.pot`) from the source; translators
+//! regenerates the template (`po/hylki.pot`) from the source; translators
 //! only ever touch `po/<lang>.po`.
 //!
 //! Placeholders are named: `i18n_f("Marked {n} messages", &[("n", &n)])`,
@@ -17,7 +17,7 @@ use std::path::{Path, PathBuf};
 
 use gettextrs::LocaleCategory;
 
-const DOMAIN: &str = "vireo";
+const DOMAIN: &str = "hylki";
 
 /// Bind the text domain. Called once, first thing in `main`, before GTK
 /// (which would otherwise set the locale without our domain in place).
@@ -56,7 +56,7 @@ pub fn init() {
 /// restarted instance (which inherits the environment) can put it back:
 /// otherwise a language once chosen followed the app through every
 /// restart, even after the choice went back to the system's.
-const LANGUAGE_ORIG: &str = "VIREO_LANGUAGE_ORIG";
+const LANGUAGE_ORIG: &str = "HYLKI_LANGUAGE_ORIG";
 
 /// Point gettext at `code` ("" = the system's): restore the LANGUAGE the
 /// session had, then set the choice over it.
@@ -83,7 +83,7 @@ pub fn apply_language(code: &str) {
 /// system copy — and vice versa.
 fn locale_dir() -> Option<PathBuf> {
     let mut candidates: Vec<PathBuf> = Vec::new();
-    if let Some(dir) = std::env::var_os("VIREO_LOCALEDIR") {
+    if let Some(dir) = std::env::var_os("HYLKI_LOCALEDIR") {
         candidates.push(PathBuf::from(dir));
     }
     candidates.push(Path::new(env!("CARGO_MANIFEST_DIR")).join("po/.build"));
@@ -102,7 +102,7 @@ fn locale_dir() -> Option<PathBuf> {
         .or(prefix_dir)
 }
 
-/// Whether `dir/<lang>/LC_MESSAGES/vireo.mo` exists for any language.
+/// Whether `dir/<lang>/LC_MESSAGES/hylki.mo` exists for any language.
 fn has_catalogue(dir: &Path) -> bool {
     let Ok(entries) = std::fs::read_dir(dir) else { return false };
     entries

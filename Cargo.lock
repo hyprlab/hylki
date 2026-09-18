@@ -1321,6 +1321,45 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "df3b46402a9d5adb4c86a0cf463f42e19994e3ee891101b1841f30a545cb49a9"
 
 [[package]]
+name = "hylki"
+version = "1.35.1-beta.1"
+dependencies = [
+ "ammonia",
+ "async-imap",
+ "async-native-tls",
+ "base64",
+ "cairo-rs",
+ "chrono",
+ "dirs",
+ "futures",
+ "getrandom 0.2.17",
+ "gettext-rs",
+ "glib-build-tools",
+ "gtk4",
+ "keyring",
+ "ksni",
+ "lettre",
+ "libadwaita",
+ "mail-parser",
+ "poppler-rs",
+ "pulldown-cmark",
+ "relm4",
+ "relm4-components",
+ "rfc2047-decoder",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tokio",
+ "toml 0.8.23",
+ "tracing",
+ "tracing-subscriber",
+ "ureq",
+ "webkit6",
+ "zbus 4.4.0",
+]
+
+[[package]]
 name = "iana-time-zone"
 version = "0.1.65"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3320,45 +3359,6 @@ name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
-
-[[package]]
-name = "vireo"
-version = "1.34.1-beta.1"
-dependencies = [
- "ammonia",
- "async-imap",
- "async-native-tls",
- "base64",
- "cairo-rs",
- "chrono",
- "dirs",
- "futures",
- "getrandom 0.2.17",
- "gettext-rs",
- "glib-build-tools",
- "gtk4",
- "keyring",
- "ksni",
- "lettre",
- "libadwaita",
- "mail-parser",
- "poppler-rs",
- "pulldown-cmark",
- "relm4",
- "relm4-components",
- "rfc2047-decoder",
- "rusqlite",
- "serde",
- "serde_json",
- "sha2",
- "tokio",
- "toml 0.8.23",
- "tracing",
- "tracing-subscriber",
- "ureq",
- "webkit6",
- "zbus 4.4.0",
-]
 
 [[package]]
 name = "wasi"

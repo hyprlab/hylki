@@ -1,4 +1,4 @@
-//! Print preview, shown inside Vireo (issue #16).
+//! Print preview, shown inside Hylki (issue #16).
 //!
 //! The print dialog's own Preview button belongs to the portal and, in a
 //! sandbox, produces nothing. Writing a PDF and handing it to an external viewer
@@ -7,7 +7,7 @@
 //! `application/pdf`. None of that is needed to answer the only question a
 //! preview is asked: *what will come out of the printer?*
 //!
-//! So the preview is a window of Vireo's own, showing the message with its print
+//! So the preview is a window of Hylki's own, showing the message with its print
 //! styling applied — the header block, light colours — laid out on a page-shaped
 //! sheet. Printing from that window prints the very thing being looked at.
 
@@ -77,7 +77,7 @@ pub fn print_html(html: &str, job_name: &str, parent: Option<gtk::Window>) {
         }
         print_webview(view, &job, parent.clone());
     });
-    webview.load_html(html, Some("https://vireo.localhost/print"));
+    webview.load_html(html, Some("https://hylki.localhost/print"));
 }
 
 thread_local! {
@@ -189,7 +189,7 @@ pub fn open(parent: &adw::ApplicationWindow, html: &str, job_name: &str) {
 
     let webview = crate::ui::message_view::new_preview_webview();
     webview.set_vexpand(true);
-    webview.load_html(html, Some("https://vireo.localhost/print-preview"));
+    webview.load_html(html, Some("https://hylki.localhost/print-preview"));
 
     // Toasts confirm a save without stealing focus from the preview.
     let toasts = adw::ToastOverlay::new();

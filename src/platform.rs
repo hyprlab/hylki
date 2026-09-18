@@ -8,7 +8,7 @@
 
 use std::fs;
 
-/// Whether Vireo is running inside a Flatpak sandbox.
+/// Whether Hylki is running inside a Flatpak sandbox.
 pub fn is_flatpak() -> bool {
     std::path::Path::new("/.flatpak-info").exists()
 }
@@ -64,7 +64,7 @@ pub fn is_mint_cinnamon() -> bool {
 }
 
 /// The terminal command that installs the nautilus-python bindings (the
-/// loader GNOME Files needs for the Vireo extension, #188) on this machine,
+/// loader GNOME Files needs for the Hylki extension, #188) on this machine,
 /// judged by the host's os-release. `None` for a distribution whose package
 /// manager and package name are not known here.
 pub fn nautilus_python_install_command() -> Option<&'static str> {

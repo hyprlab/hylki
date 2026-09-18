@@ -24,7 +24,7 @@ GB_REF = os.environ.get("GB_REF", "main")
 SI_REF = os.environ.get("SI_REF", "develop")
 
 def fetch(url):
-    req = urllib.request.Request(url, headers={"User-Agent": "vireo-fetch-logos"})
+    req = urllib.request.Request(url, headers={"User-Agent": "hylki-fetch-logos"})
     with urllib.request.urlopen(req, timeout=30) as r:
         return r.read()
 
@@ -163,7 +163,7 @@ def main():
     # The gresource listing, compressed: an SVG shrinks to a fraction.
     files = sorted({(e["source"], e["file"]) for e in entries if e["source"] != "brand"})
     xml = ['<?xml version="1.0" encoding="UTF-8"?>', "<gresources>",
-           '  <gresource prefix="/co/hyprlab/Vireo/logos">']
+           '  <gresource prefix="/co/hyprlab/Hylki/logos">']
     for source, file in files:
         xml.append(f'    <file compressed="true" alias="{source}/{file}">../data/logos/{source}/{file}</file>')
     xml += ["  </gresource>", "</gresources>", ""]

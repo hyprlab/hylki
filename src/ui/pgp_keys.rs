@@ -78,7 +78,7 @@ impl Component for PgpKeys {
                     #[name = "status_row"]
                     adw::ActionRow {
                         set_title: &i18n("GnuPG"),
-                        set_subtitle: &i18n("Vireo reads and writes the keyring of the GnuPG on this \
+                        set_subtitle: &i18n("Hylki reads and writes the keyring of the GnuPG on this \
                                        computer, the same one the gpg command and other mail \
                                        programs use."),
                     },
@@ -180,7 +180,7 @@ impl Component for PgpKeys {
                 if available {
                     let version = gpg_version().unwrap_or_default();
                     status_row.set_subtitle(&i18n_f(
-                        "GnuPG {version} found. Vireo reads and writes its keyring, the same one the gpg \
+                        "GnuPG {version} found. Hylki reads and writes its keyring, the same one the gpg \
                          command and other mail programs use.",
                         &[("version", &version)],
                     ));
@@ -582,18 +582,18 @@ fn key_row(key: &KeyInfo, own: bool, sender: &ComponentSender<PgpKeys>) -> adw::
     };
     let fpr = key.fingerprint.clone();
     if own {
-        let export = action("co.hyprlab.Vireo-document-save-symbolic", &i18n("Export public key…"));
+        let export = action("co.hyprlab.Hylki-document-save-symbolic", &i18n("Export public key…"));
         let s = sender.clone();
         let f = fpr.clone();
         export.connect_clicked(move |_| s.input(PgpKeysInput::Export(f.clone())));
         row.add_suffix(&export);
-        let delete = action("co.hyprlab.Vireo-user-trash-symbolic", &i18n("Delete this key"));
+        let delete = action("co.hyprlab.Hylki-user-trash-symbolic", &i18n("Delete this key"));
         let s = sender.clone();
         delete.connect_clicked(move |_| s.input(PgpKeysInput::Delete { fingerprint: fpr.clone(), secret: true }));
         row.add_suffix(&delete);
     } else {
         if key.validity.trusted() {
-            let seal = gtk::Image::from_icon_name("co.hyprlab.Vireo-verified-checkmark-symbolic");
+            let seal = gtk::Image::from_icon_name("co.hyprlab.Hylki-verified-checkmark-symbolic");
             seal.set_tooltip_text(Some(&i18n("Trusted")));
             seal.add_css_class("accent");
             row.add_suffix(&seal);
@@ -606,7 +606,7 @@ fn key_row(key: &KeyInfo, own: bool, sender: &ComponentSender<PgpKeys>) -> adw::
             trust.connect_clicked(move |_| s.input(PgpKeysInput::Trust(f.clone())));
             row.add_suffix(&trust);
         }
-        let remove = action("co.hyprlab.Vireo-user-trash-symbolic", &i18n("Remove this key"));
+        let remove = action("co.hyprlab.Hylki-user-trash-symbolic", &i18n("Remove this key"));
         let s = sender.clone();
         remove.connect_clicked(move |_| s.input(PgpKeysInput::Delete { fingerprint: fpr.clone(), secret: false }));
         row.add_suffix(&remove);

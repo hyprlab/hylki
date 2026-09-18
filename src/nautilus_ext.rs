@@ -1,20 +1,20 @@
 //! The GNOME Files (Nautilus) right-click extension (#188): "Send with
-//! Vireo" on selected files opens a composer with them attached.
+//! Hylki" on selected files opens a composer with them attached.
 //!
 //! Nautilus loads its extensions on the host, outside any sandbox, so the
 //! copy bundled here is installed into the user's own extension directory
 //! on request (Settings → System → GNOME Files) and removed the same way.
-//! The extension itself launches Vireo by desktop id, so it does not care
+//! The extension itself launches Hylki by desktop id, so it does not care
 //! whether the app is the Flatpak or a native package.
 
 use std::path::PathBuf;
 
-/// The extension, verbatim: `data/nautilus/vireo-nautilus.py`.
-pub const SOURCE: &str = include_str!("../data/nautilus/vireo-nautilus.py");
-const FILE_NAME: &str = "vireo-nautilus.py";
+/// The extension, verbatim: `data/nautilus/hylki-nautilus.py`.
+pub const SOURCE: &str = include_str!("../data/nautilus/hylki-nautilus.py");
+pub const FILE_NAME: &str = "hylki-nautilus.py";
 /// Written by the extension itself when Files loads it: the SHA-256 of the
 /// file it loaded (see `_mark_loaded` in the extension).
-const LOADED_MARKER: &str = ".vireo-nautilus.loaded";
+const LOADED_MARKER: &str = ".hylki-nautilus.loaded";
 
 /// Whether (and which) copy of the extension the user's directory holds.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -189,7 +189,7 @@ mod tests {
 
     #[test]
     fn install_status_remove_round_trip() {
-        let dir = std::env::temp_dir().join(format!("vireo-nautilus-ext-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("hylki-nautilus-ext-{}", std::process::id()));
         let path = dir.join("extensions").join(FILE_NAME);
         let _ = std::fs::remove_dir_all(&dir);
         assert_eq!(status_at(&path), Status::NotInstalled);
@@ -208,7 +208,7 @@ mod tests {
 
     #[test]
     fn loaded_marker_must_carry_this_copys_hash() {
-        let dir = std::env::temp_dir().join(format!("vireo-nautilus-marker-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("hylki-nautilus-marker-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let marker = dir.join(LOADED_MARKER);
         assert!(!loaded_at(&marker));
@@ -226,8 +226,8 @@ mod tests {
 
     #[test]
     fn bundled_extension_names_both_builds() {
-        assert!(SOURCE.contains("\"co.hyprlab.Vireo\""));
-        assert!(SOURCE.contains("\"co.hyprlab.Vireo.Beta\""));
+        assert!(SOURCE.contains("\"co.hyprlab.Hylki\""));
+        assert!(SOURCE.contains("\"co.hyprlab.Hylki.Beta\""));
         assert!(SOURCE.contains("Nautilus.MenuProvider"));
     }
 }

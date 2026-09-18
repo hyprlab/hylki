@@ -632,7 +632,7 @@ fn att_chips_html(key: (u32, u32), atts: &[CardAttachment]) -> String {
     for (idx, a) in atts.iter().enumerate() {
         // The gallery names its icons with the app prefix; the inliner adds
         // that itself.
-        let icon = icon_for(&a.name).trim_start_matches("co.hyprlab.Vireo-");
+        let icon = icon_for(&a.name).trim_start_matches("co.hyprlab.Hylki-");
         out.push_str(&format!(
             "<span class=\"vireo-attw\">\
              <button type=\"button\" class=\"vireo-attc {cls}\" data-key=\"{aid}:{id}\" \
@@ -684,7 +684,7 @@ impl Component for MessageView {
             add_named[Some("empty")] = &adw::StatusPage {
                 // Drafts open in the editor, so the empty pane says so there.
                 #[watch]
-                set_icon_name: Some(if model.drafts_view { "co.hyprlab.Vireo-document-edit-symbolic" } else { "co.hyprlab.Vireo-mail-read-symbolic" }),
+                set_icon_name: Some(if model.drafts_view { "co.hyprlab.Hylki-document-edit-symbolic" } else { "co.hyprlab.Hylki-mail-read-symbolic" }),
                 #[watch]
                 set_title: &if model.drafts_view { i18n("No draft selected") } else { i18n("No message selected") },
                 #[watch]
@@ -708,7 +708,7 @@ impl Component for MessageView {
                         add_css_class: "spoof-alert",
                         set_spacing: 8,
 
-                        gtk::Image { set_icon_name: Some("co.hyprlab.Vireo-dialog-warning-symbolic") },
+                        gtk::Image { set_icon_name: Some("co.hyprlab.Hylki-dialog-warning-symbolic") },
                         gtk::Label {
                             #[watch]
                             set_label: model
@@ -733,7 +733,7 @@ impl Component for MessageView {
                         add_css_class: "remote-alert",
                         set_spacing: 8,
 
-                        gtk::Image { set_icon_name: Some("co.hyprlab.Vireo-security-high-symbolic") },
+                        gtk::Image { set_icon_name: Some("co.hyprlab.Hylki-security-high-symbolic") },
                         gtk::Label {
                             set_label: &i18n("Remote content (images, trackers) is blocked to protect your privacy."),
                             set_hexpand: true,
@@ -809,19 +809,19 @@ impl Component for MessageView {
                         },
 
                         gtk::Button {
-                            set_icon_name: "co.hyprlab.Vireo-pan-up-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-pan-up-symbolic",
                             set_tooltip_text: Some(i18n("Previous match").as_str()),
                             add_css_class: "flat",
                             connect_clicked => MessageViewInput::FindPrev,
                         },
                         gtk::Button {
-                            set_icon_name: "co.hyprlab.Vireo-pan-down-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-pan-down-symbolic",
                             set_tooltip_text: Some(i18n("Next match").as_str()),
                             add_css_class: "flat",
                             connect_clicked => MessageViewInput::FindNext,
                         },
                         gtk::Button {
-                            set_icon_name: "co.hyprlab.Vireo-window-close-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-window-close-symbolic",
                             set_tooltip_text: Some(i18n("Close find").as_str()),
                             add_css_class: "flat",
                             connect_clicked => MessageViewInput::CloseFind,
@@ -1034,12 +1034,12 @@ impl Component for MessageView {
         // wrong size and then jumping. The page says when its frames have
         // settled; this is only the backstop for a page that never does.
         let ready_sender = sender.clone();
-        // Debug hook: VIREO_SHOWCASE_CLICK_LINK=1 clicks the first web link
+        // Debug hook: HYLKI_SHOWCASE_CLICK_LINK=1 clicks the first web link
         // in the first message that has one, once, a few seconds after a
         // conversation is in, and logs what the click landed on. Exercises
         // the whole link path (frame → policy decision → launcher, #202)
         // without a pointer.
-        let click_link = std::env::var("VIREO_SHOWCASE_CLICK_LINK").is_ok();
+        let click_link = std::env::var("HYLKI_SHOWCASE_CLICK_LINK").is_ok();
         let clicked = std::rc::Rc::new(std::cell::Cell::new(false));
         model.webview.connect_load_changed(move |view, event| {
             if event == webkit6::LoadEvent::Finished {
@@ -1124,7 +1124,7 @@ impl Component for MessageView {
         // Double-click on a conversation header → open that message's window.
         if let Some(ucm) = model.webview.user_content_manager() {
             let open_sender = sender.clone();
-            ucm.connect_script_message_received(Some("vireo"), move |_ucm, value| {
+            ucm.connect_script_message_received(Some("hylki"), move |_ucm, value| {
                 // "verb:account:id" — the page only ever posts what this document
                 // put there, but it is still parsed strictly.
                 use crate::ui::message_list::RowAction;
@@ -1475,7 +1475,7 @@ impl Component for MessageView {
             }
 
             MessageViewInput::PrintPreview => {
-                // Shown inside Vireo rather than exported to a PDF and handed to
+                // Shown inside Hylki rather than exported to a PDF and handed to
                 // whatever the desktop opens PDFs with: that route is a temporary
                 // file, a URI, the document portal and an external viewer, each
                 // able to fail without saying anything — and it did.
@@ -1768,7 +1768,7 @@ impl Component for MessageView {
             }
             MessageViewInput::CopySelection => {
                 self.webview.evaluate_javascript(
-                    "window.__vireoCopySel && window.__vireoCopySel()",
+                    "window.__hylkiCopySel && window.__hylkiCopySel()",
                     None,
                     None,
                     gtk::gio::Cancellable::NONE,
@@ -1977,21 +1977,21 @@ impl Component for MessageView {
                 if let Some(entry) = &self.find_entry {
                     entry.set_text("");
                 }
-                self.eval_find("vireoFindClear()");
+                self.eval_find("hylkiFindClear()");
             }
             MessageViewInput::FindChanged(text) => {
                 let text = text.trim();
                 if text.is_empty() {
                     self.find_matches = None;
-                    self.eval_find("vireoFindClear()");
+                    self.eval_find("hylkiFindClear()");
                     return;
                 }
                 // Into a JS single-quoted string: backslashes and quotes only.
                 let quoted = text.replace('\\', "\\\\").replace('\'', "\\'");
-                self.eval_find(&format!("vireoFind('{quoted}')"));
+                self.eval_find(&format!("hylkiFind('{quoted}')"));
             }
-            MessageViewInput::FindNext => self.eval_find("vireoFindStep(1)"),
-            MessageViewInput::FindPrev => self.eval_find("vireoFindStep(-1)"),
+            MessageViewInput::FindNext => self.eval_find("hylkiFindStep(1)"),
+            MessageViewInput::FindPrev => self.eval_find("hylkiFindStep(-1)"),
             MessageViewInput::FindCounted { current, total } => {
                 self.find_matches = Some((current, total));
             }
@@ -2310,7 +2310,7 @@ impl MessageView {
         let n = self.seq.get().wrapping_add(1);
         self.seq.set(n);
         self.webview
-            .load_html(&html, Some(&format!("https://vireo.localhost/message/{n}")));
+            .load_html(&html, Some(&format!("https://hylki.localhost/message/{n}")));
     }
 
     /// Which body-stack page to show: spinner while fetching, themed cover while
@@ -3232,7 +3232,7 @@ fn new_webview() -> webkit6::WebView {
     // A user-content manager with a script message handler lets the wrapper
     // document notify us (e.g. a double-clicked conversation header).
     let ucm = webkit6::UserContentManager::new();
-    ucm.register_script_message_handler("vireo", None);
+    ucm.register_script_message_handler("hylki", None);
     let webview = webkit6::WebView::builder()
         .web_context(&shared_web_context())
         .user_content_manager(&ucm)
@@ -3378,7 +3378,7 @@ fn new_webview() -> webkit6::WebView {
 /// An allowlist, not a blocklist: every scheme a desktop registers is a program
 /// that would be started with a sender-controlled argument, and there is no way
 /// to enumerate the dangerous ones ahead of time.
-/// The VIREO_SHOWCASE_CLICK_LINK probe: find the first web link in any
+/// The HYLKI_SHOWCASE_CLICK_LINK probe: find the first web link in any
 /// message frame, say what the top document has at that point (the frame
 /// itself when nothing covers it), and click the link.
 const CLICK_LINK_PROBE: &str = "(function(){var fs=document.querySelectorAll('iframe.vireo-frame');\
@@ -3523,17 +3523,17 @@ fn card_action_button(key: (u32, u32), act: &str, icon: &str, title: &str) -> St
 /// so `tools/gen-icon-gresource.sh` (which scans for the prefixed literal)
 /// bundles it; the card draws it inline through `inline_icon_svg`.
 #[allow(dead_code)]
-const SENDER_STYLE_ICON: &str = "co.hyprlab.Vireo-format-text-rich-symbolic";
+const SENDER_STYLE_ICON: &str = "co.hyprlab.Hylki-format-text-rich-symbolic";
 /// The OpenPGP chip's lock (#133), named in full for the same reason.
 #[allow(dead_code)]
-const PGP_LOCK_ICON: &str = "co.hyprlab.Vireo-channel-secure-symbolic";
+const PGP_LOCK_ICON: &str = "co.hyprlab.Hylki-channel-secure-symbolic";
 
 /// An embedded symbolic icon's SVG, inlined for the wrapper document (its
 /// paths carry no fill, so the document's `fill:currentColor` recolours it);
 /// empty when the resource bundle isn't registered (tests).
 fn inline_icon_svg(icon: &str) -> String {
     let path =
-        format!("/co/hyprlab/Vireo/icons/scalable/actions/co.hyprlab.Vireo-{icon}.svg");
+        format!("/co/hyprlab/Hylki/icons/scalable/actions/co.hyprlab.Hylki-{icon}.svg");
     gtk::gio::resources_lookup_data(&path, gtk::gio::ResourceLookupFlags::NONE)
         .ok()
         .and_then(|b| String::from_utf8(b.to_vec()).ok())
@@ -3839,7 +3839,7 @@ fn push_css(b: &[u8], start: usize, end: usize, spans: &mut Vec<(usize, usize)>)
 /// Whether a URL reaches a remote host.
 ///
 /// `data:` and `cid:` carry their own bytes, and a path-relative or root-relative
-/// URL resolves against `vireo.localhost`, which serves nothing. A
+/// URL resolves against `hylki.localhost`, which serves nothing. A
 /// protocol-relative `//host/x` does reach the network — that one is the bypass
 /// the old substring list missed.
 fn is_remote_url(u: &[u8]) -> bool {
@@ -4666,7 +4666,7 @@ fn inject_csp(html: &str, allow_remote: bool, dark: bool) -> String {
          @media print{{:root{{color-scheme:light;}}html{{overflow:visible !important;}}html,body{{background:#fff !important;}}}}\
          </style>"
     );
-    // `no-referrer` keeps the synthetic `vireo.localhost` base URI from leaking as
+    // `no-referrer` keeps the synthetic `hylki.localhost` base URI from leaking as
     // a Referer/Origin header — both for privacy and because hotlink-protected
     // servers (e.g. some DreamHost sites) return 403 to foreign referrers, which
     // otherwise blocks legitimate images even once the sender is trusted.
@@ -4792,7 +4792,7 @@ var prev=f.style.height;f.style.height='0px';void f.offsetHeight;\
 var h=Math.max(b?b.scrollHeight:0,e?e.scrollHeight:0,b?b.offsetHeight:0);\
 if(h>0){f.style.height=h+'px';\
 if(f.dataset.key&&f._h!==h){f._h=h;\
-try{window.webkit.messageHandlers.vireo.postMessage('size:'+f.dataset.key+':'+h);}catch(_){}}}\
+try{window.webkit.messageHandlers.hylki.postMessage('size:'+f.dataset.key+':'+h);}catch(_){}}}\
 else{f.style.height=prev;h=old;}\
 if(sy>0)window.scrollTo(0,above?sy+(h-old):sy);\
 chase();pin();\
@@ -4803,7 +4803,7 @@ if(mo!=='p'){try{e.preventDefault();\
 var g=(e.view&&e.view.getSelection)?e.view.getSelection():null;if(g)g.removeAllRanges();}catch(_){}}\
 else{try{var t=(e.view&&e.view.getSelection)?e.view.getSelection():null;\
 if(t&&String(t).length)return;}catch(_){}}\
-try{window.webkit.messageHandlers.vireo.postMessage('sel:'+k+':'+mo);}catch(_){}}\
+try{window.webkit.messageHandlers.hylki.postMessage('sel:'+k+':'+mo);}catch(_){}}\
 var QS='.vireo-quote-attr,.gmail_quote,blockquote,#divRplyFwdMsg';\
 var SIG='.moz-signature,#Signature,.gmail_signature,[class*=\"signature\"]';\
 function isq(n){return n.nodeType===1&&(n.matches(QS)||!!n.querySelector(QS));}\
@@ -4870,9 +4870,9 @@ function all(){return document.querySelectorAll('iframe.vireo-frame');}\
 document.addEventListener('DOMContentLoaded',function(){\
 var fs=all();var pend=fs.length,rdy=false;\
 function ready(){if(rdy)return;rdy=true;\
-try{window.webkit.messageHandlers.vireo.postMessage('ready:0:0');}catch(_){}\
+try{window.webkit.messageHandlers.hylki.postMessage('ready:0:0');}catch(_){}\
 var bd=document.body.dataset;\
-if(bd.vireoNoscroll){var a=(bd.vireoAnchor||'').split(':');\
+if(bd.hylkiNoscroll){var a=(bd.hylkiAnchor||'').split(':');\
 if(a.length>=3){var el=document.querySelector('.vireo-msg[data-key=\"'+a[0]+':'+a[1]+'\"]');\
 if(el){hold={el:el,off:parseInt(a[2],10)||0,g:a[3]==='g'};\
 if(el.querySelector('.vireo-dot'))follow=el;\
@@ -4881,8 +4881,8 @@ var ds=document.querySelectorAll('.vireo-msg .vireo-dot');\
 var d=ds.length?ds[0]:null;\
 if(d){var m=d.closest('.vireo-msg');\
 if(m)setTimeout(function(){try{follow=m;reveal(m);}catch(_){}},0);}\
-else if(bd.vireoNewest){\
-var nm=document.querySelector('.vireo-msg[data-key=\"'+bd.vireoNewest+'\"]');\
+else if(bd.hylkiNewest){\
+var nm=document.querySelector('.vireo-msg[data-key=\"'+bd.hylkiNewest+'\"]');\
 if(nm)setTimeout(function(){try{follow=nm;reveal(nm);}catch(_){}},0);}}\
 setTimeout(markClipped,0);setTimeout(markClipped,400);\
 if(!pend)ready();\
@@ -4893,15 +4893,15 @@ f.addEventListener('load',function(){init(f);tick();});})(fs[i]);}\
 setTimeout(ready,450);\
 var hs=document.querySelectorAll('.vireo-msg-hdr');\
 for(var j=0;j<hs.length;j++){hs[j].addEventListener('dblclick',function(){\
-try{window.webkit.messageHandlers.vireo.postMessage('open:'+this.dataset.key);}catch(_){}});}\
+try{window.webkit.messageHandlers.hylki.postMessage('open:'+this.dataset.key);}catch(_){}});}\
 var rbd=document.body.dataset;\
-if(rbd.vireoReadmark&&document.body.classList.contains('vireo-conv')){\
-var rdel=parseInt(rbd.vireoReadmark,10)||250;var rt={};\
+if(rbd.hylkiReadmark&&document.body.classList.contains('vireo-conv')){\
+var rdel=parseInt(rbd.hylkiReadmark,10)||250;var rt={};\
 var rio=new IntersectionObserver(function(es){es.forEach(function(en){\
 var el=en.target,k=el.dataset.key;\
 var vis=en.intersectionRatio>=0.5||en.intersectionRect.height>window.innerHeight*0.6;\
 if(vis&&!rt[k]){rt[k]=setTimeout(function(){\
-try{window.webkit.messageHandlers.vireo.postMessage('seen:'+k);}catch(_){}\
+try{window.webkit.messageHandlers.hylki.postMessage('seen:'+k);}catch(_){}\
 rio.unobserve(el);},rdel);}\
 else if(!vis&&rt[k]){clearTimeout(rt[k]);delete rt[k];}\
 });},{threshold:[0,0.25,0.5,0.75,1]});\
@@ -4914,10 +4914,10 @@ window.vfCss=function(d){if(d.getElementById('vireo-find-css'))return;\
 var st=d.createElement('style');st.id='vireo-find-css';\
 st.textContent='.vireo-find{background:rgba(255,198,0,0.5);color:#000;border-radius:5px;box-shadow:0 0 0 2px rgba(255,198,0,0.5);}.vireo-find.current{background:#ffc600;box-shadow:0 0 0 2px #ffc600;}';\
 (d.head||d.documentElement).appendChild(st);};\
-window.vireoFindClear=function(){for(var i=0;i<vf.marks.length;i++){var m=vf.marks[i];\
+window.hylkiFindClear=function(){for(var i=0;i<vf.marks.length;i++){var m=vf.marks[i];\
 var p=m.parentNode;if(!p)continue;while(m.firstChild)p.insertBefore(m.firstChild,m);p.removeChild(m);p.normalize();}\
 vf.marks=[];vf.cur=-1;};\
-window.vfPost=function(){try{window.webkit.messageHandlers.vireo.postMessage(\
+window.vfPost=function(){try{window.webkit.messageHandlers.hylki.postMessage(\
 'found:0:0:'+(vf.marks.length?vf.cur+1:0)+','+vf.marks.length);}catch(_){}};\
 window.vfShow=function(){for(var i=0;i<vf.marks.length;i++)vf.marks[i].className='vireo-find'+(i===vf.cur?' current':'');\
 vfPost();\
@@ -4934,9 +4934,9 @@ var fs=document.querySelectorAll('iframe');\
 for(var j=0;j<fs.length;j++){if(fs[j].contentDocument===d)\
 return fs[j].getBoundingClientRect().top+window.scrollY+r.top;}\
 return r.top;};\
-window.vireoFindStep=function(dir){if(!vf.marks.length)return;\
+window.hylkiFindStep=function(dir){if(!vf.marks.length)return;\
 vf.cur=(vf.cur+dir+vf.marks.length)%vf.marks.length;vfShow();};\
-window.vireoFind=function(q){vireoFindClear();q=(q||'').toLowerCase();\
+window.hylkiFind=function(q){hylkiFindClear();q=(q||'').toLowerCase();\
 if(q){var docs=vfDocs();\
 for(var di=0;di<docs.length;di++){var d=docs[di];vfCss(d);\
 var w=d.createTreeWalker(d.body||d.documentElement,NodeFilter.SHOW_TEXT,null);\
@@ -4968,23 +4968,23 @@ this.setAttribute('title',on?'Hide recipients':'Show recipients');});\
 rs[r].addEventListener('dblclick',function(e){e.stopPropagation();});}\
 document.addEventListener('click',function(e){\
 if(e.target&&e.target.closest&&e.target.closest('.vireo-msg'))return;\
-try{window.webkit.messageHandlers.vireo.postMessage('desel:0:0');}catch(_){}});\
+try{window.webkit.messageHandlers.hylki.postMessage('desel:0:0');}catch(_){}});\
 document.addEventListener('click',function(e){\
 var t=e.target&&e.target.closest?e.target.closest('.vireo-attc,.vireo-attsave'):null;if(!t)return;\
 e.stopPropagation();e.preventDefault();\
 var verb=t.classList.contains('vireo-attsave')?'attsave':'attopen';\
-try{window.webkit.messageHandlers.vireo.postMessage(verb+':'+t.dataset.key+':'+t.dataset.idx);}catch(_){}},true);\
+try{window.webkit.messageHandlers.hylki.postMessage(verb+':'+t.dataset.key+':'+t.dataset.idx);}catch(_){}},true);\
 var ms=document.querySelectorAll('.vireo-msg');\
 for(var q=0;q<ms.length;q++){ms[q].addEventListener('click',function(e){\
 var k=this.dataset.key;if(k)pick(k,e);});}\
-var actsDelay=parseInt(document.body.dataset.vireoActsdelay||'0',10)||1200;\
+var actsDelay=parseInt(document.body.dataset.hylkiActsdelay||'0',10)||1200;\
 document.documentElement.style.setProperty('--acts-delay',actsDelay+'ms');\
-var actsMenu=document.body.dataset.vireoActsmenu==='1';\
+var actsMenu=document.body.dataset.hylkiActsmenu==='1';\
 var ts=document.querySelectorAll('.vireo-acts-toggle');\
 for(var t=0;t<ts.length;t++){ts[t].addEventListener('click',function(e){\
 e.stopPropagation();e.preventDefault();\
 if(actsMenu){var br=this.getBoundingClientRect();\
-try{window.webkit.messageHandlers.vireo.postMessage('cardmenu:'+this.dataset.key+':'\
+try{window.webkit.messageHandlers.hylki.postMessage('cardmenu:'+this.dataset.key+':'\
 +br.left+','+br.bottom+','+window.innerWidth);}catch(_){}return;}\
 var h=this.closest('.vireo-msg-hdr');var ac=h?h.querySelector('.vireo-acts'):null;if(!ac)return;\
 var on=!ac.classList.contains('open');\
@@ -5002,33 +5002,33 @@ e.stopPropagation();e.preventDefault();reportPos();\
 if(this.dataset.act==='star')this.classList.toggle('on');\
 var extra='';if(this.dataset.act==='moveto'){var br=this.getBoundingClientRect();\
 extra=':'+(br.left+br.width/2)+','+br.bottom+','+window.innerWidth;}\
-try{window.webkit.messageHandlers.vireo.postMessage(this.dataset.act+':'+this.dataset.key+extra);}catch(_){}});\
+try{window.webkit.messageHandlers.hylki.postMessage(this.dataset.act+':'+this.dataset.key+extra);}catch(_){}});\
 as[k].addEventListener('dblclick',function(e){e.stopPropagation();});}\
 });\
 function markClipped(){var as=document.querySelectorAll('.vireo-addr');\
 for(var i=0;i<as.length;i++){var a=as[i];\
 a.classList.toggle('clipped',a.scrollWidth>a.clientWidth+1);}}\
-function hideMailMenu(){var m=window.__vireoMailMenu;\
-if(m&&m.parentNode)m.parentNode.removeChild(m);window.__vireoMailMenu=null;\
-var sc=window.__vireoMailScrim;\
-if(sc&&sc.parentNode)sc.parentNode.removeChild(sc);window.__vireoMailScrim=null;}\
-function mailMsg(mail){try{window.webkit.messageHandlers.vireo.postMessage('composeto:0:0:'+mail);}catch(_){}}\
+function hideMailMenu(){var m=window.__hylkiMailMenu;\
+if(m&&m.parentNode)m.parentNode.removeChild(m);window.__hylkiMailMenu=null;\
+var sc=window.__hylkiMailScrim;\
+if(sc&&sc.parentNode)sc.parentNode.removeChild(sc);window.__hylkiMailScrim=null;}\
+function mailMsg(mail){try{window.webkit.messageHandlers.hylki.postMessage('composeto:0:0:'+mail);}catch(_){}}\
 function showMailMenu(x,y,mail){hideMailMenu();\
 var sc=document.createElement('div');sc.className='vireo-mailmenu-scrim';\
 ['mousedown','contextmenu'].forEach(function(ev){sc.addEventListener(ev,function(e){\
 e.preventDefault();e.stopPropagation();hideMailMenu();});});\
-document.body.appendChild(sc);window.__vireoMailScrim=sc;\
+document.body.appendChild(sc);window.__hylkiMailScrim=sc;\
 var mn=document.createElement('div');mn.className='vireo-mailmenu';\
 function item(label,fn){var b=document.createElement('button');b.type='button';\
 b.textContent=label;b.addEventListener('click',function(ev){\
 ev.stopPropagation();ev.preventDefault();hideMailMenu();fn();});mn.appendChild(b);}\
 item('New Message',function(){mailMsg(mail);});\
-item('Copy Address',function(){try{window.webkit.messageHandlers.vireo.postMessage('copyaddr:0:0:'+mail);}catch(_){}});\
-item('Add to Contacts',function(){try{window.webkit.messageHandlers.vireo.postMessage('addcontact:0:0:'+mail);}catch(_){}});\
+item('Copy Address',function(){try{window.webkit.messageHandlers.hylki.postMessage('copyaddr:0:0:'+mail);}catch(_){}});\
+item('Add to Contacts',function(){try{window.webkit.messageHandlers.hylki.postMessage('addcontact:0:0:'+mail);}catch(_){}});\
 mn.style.left=Math.max(0,Math.min(x,window.innerWidth-200))+'px';\
 mn.style.top=Math.max(0,Math.min(y,window.innerHeight-124))+'px';\
-document.body.appendChild(mn);window.__vireoMailMenu=mn;}\
-document.addEventListener('click',function(e){var m=window.__vireoMailMenu;\
+document.body.appendChild(mn);window.__hylkiMailMenu=mn;}\
+document.addEventListener('click',function(e){var m=window.__hylkiMailMenu;\
 if(m&&e.target&&m.contains(e.target))return;hideMailMenu();},true);\
 window.addEventListener('scroll',hideMailMenu,{passive:true});\
 document.addEventListener('click',function(e){\
@@ -5039,7 +5039,7 @@ document.addEventListener('click',function(e){\
 var v=e.target&&e.target.closest?e.target.closest('.vireo-verify,.vireo-pgp'):null;\
 if(!v||!v.dataset.key)return;e.preventDefault();e.stopPropagation();\
 var r=v.getBoundingClientRect();\
-try{window.webkit.messageHandlers.vireo.postMessage(\
+try{window.webkit.messageHandlers.hylki.postMessage(\
 'senderinfo:'+v.dataset.key+':'+r.left+','+r.top+','+r.width+','+r.height+','+window.innerWidth);}catch(_){}},true);\
 document.addEventListener('contextmenu',function(e){\
 var t=e.target&&e.target.closest?e.target.closest('.vireo-mail'):null;\
@@ -5052,7 +5052,7 @@ var _st;function reportPos(){var ms=document.querySelectorAll('.vireo-msg');\
 var best=null,off=0;\
 for(var i=0;i<ms.length;i++){var r=ms[i].getBoundingClientRect();\
 if(r.top<=1){best=ms[i];off=Math.max(0,-r.top);}else break;}\
-if(best&&best.dataset.key){try{window.webkit.messageHandlers.vireo.postMessage(\
+if(best&&best.dataset.key){try{window.webkit.messageHandlers.hylki.postMessage(\
 'scrollat:'+best.dataset.key+':'+Math.round(off));}catch(_){}}}\
 window.addEventListener('scroll',function(){clearTimeout(_st);\
 _st=setTimeout(reportPos,120);},{passive:true});\
@@ -5060,7 +5060,7 @@ var follow=null,hold=null;\
 function selAll(e){if(!(e.ctrlKey||e.metaKey)||e.altKey||(e.key!=='a'&&e.key!=='A'))return;\
 if(!document.body||!document.body.classList.contains('vireo-conv'))return;\
 e.preventDefault();e.stopPropagation();\
-try{window.webkit.messageHandlers.vireo.postMessage('selall:0:0');}catch(_){}}\
+try{window.webkit.messageHandlers.hylki.postMessage('selall:0:0');}catch(_){}}\
 window.addEventListener('keydown',selAll,true);\
 /* Ctrl+C. Focus is kept in this document (see the blur handler below) so\
    the single-key shortcuts keep working, which leaves the selection in a\
@@ -5070,22 +5070,22 @@ window.addEventListener('keydown',selAll,true);\
 function copyDoc(d,w){var sel=d&&d.getSelection();if(!sel||sel.isCollapsed||!String(sel).length)return false;\
 var ok=false;try{if(w!==window)w.focus();ok=d.execCommand('copy');}catch(_){}\
 try{if(w!==window)window.focus();}catch(_){}\
-if(!ok){try{window.webkit.messageHandlers.vireo.postMessage('copy:0:0:'+String(sel));}catch(_){}}\
+if(!ok){try{window.webkit.messageHandlers.hylki.postMessage('copy:0:0:'+String(sel));}catch(_){}}\
 showCopied();return true;}\
 /* Copies whatever is selected, in this document or in a body frame. Called\
    from the keydown below when this view has the keyboard, and by the host\
    when it does not: the list takes GTK focus back after a click in the\
    reader, so Ctrl+C usually lands on the window, not here. */\
-window.__vireoCopySel=function(){try{if(copyDoc(document,window))return true;\
+window.__hylkiCopySel=function(){try{if(copyDoc(document,window))return true;\
 var fs=all();for(var i=0;i<fs.length;i++){try{if(copyDoc(fs[i].contentDocument,fs[i].contentWindow))return true;}catch(_){}}}catch(_){}\
 return false;};\
 function copySel(e){if(!(e.ctrlKey||e.metaKey)||e.altKey||e.shiftKey||(e.key!=='c'&&e.key!=='C'))return;\
 var s=window.getSelection();if(s&&!s.isCollapsed&&String(s).length)return;\
-if(window.__vireoCopySel()){e.preventDefault();e.stopPropagation();}}\
+if(window.__hylkiCopySel()){e.preventDefault();e.stopPropagation();}}\
 function showCopied(){var b=document.body;if(!b)return;\
 var p=document.getElementById('vireo-copied');\
 if(!p){p=document.createElement('div');p.id='vireo-copied';p.className='vireo-copied';b.appendChild(p);}\
-p.textContent=b.dataset.vireoCopied||'Copied';\
+p.textContent=b.dataset.hylkiCopied||'Copied';\
 void p.offsetHeight;p.classList.add('on');clearTimeout(p._t);\
 p._t=setTimeout(function(){p.classList.remove('on');},1400);}\
 window.addEventListener('keydown',copySel,true);\
@@ -5100,7 +5100,7 @@ window.addEventListener('blur',function(){setTimeout(function(){\
 var a=document.activeElement;\
 if(a&&a.tagName==='IFRAME'&&a.classList&&a.classList.contains('vireo-frame')&&a.dataset.key){\
 reportPos();\
-try{window.webkit.messageHandlers.vireo.postMessage('sel:'+a.dataset.key+':p');}catch(_){}\
+try{window.webkit.messageHandlers.hylki.postMessage('sel:'+a.dataset.key+':p');}catch(_){}\
 try{a.blur();window.focus();}catch(_){}}},0);});";
 
 /// One message body as a sandboxed iframe: its own document (so CSS can't leak to
@@ -5868,7 +5868,7 @@ mod tests {
 
         // A picture wins over the emoji, and rides along embedded: the
         // document is handed the image, never a path it could go and read.
-        let dir = std::env::temp_dir().join(format!("vireo-own-face-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("hylki-own-face-{}", std::process::id()));
         std::fs::create_dir_all(&dir).expect("a directory to write the picture in");
         let path = dir.join("avatar.png");
         let pixbuf = gtk::gdk_pixbuf::Pixbuf::new(gtk::gdk_pixbuf::Colorspace::Rgb, true, 8, 64, 64)
@@ -6314,7 +6314,7 @@ mod tests {
         // Every row here loaded a tracking pixel with no banner shown, because
         // the old detector matched fixed substrings like `src="http`.
         for html in [
-            // Protocol-relative: resolves against https://vireo.localhost.
+            // Protocol-relative: resolves against https://hylki.localhost.
             r#"<img src="//tracker.example/p.gif">"#,
             // HTML permits whitespace around `=`.
             r#"<img src = "http://tracker.example/p.gif">"#,
@@ -6445,7 +6445,7 @@ mod tests {
         win.set_child(Some(&view));
         win.set_default_size(800, 600);
         win.present();
-        view.load_html(&html, Some("https://vireo.localhost/message/1"));
+        view.load_html(&html, Some("https://hylki.localhost/message/1"));
 
         let answer: Rc<RefCell<Option<String>>> = Rc::new(RefCell::new(None));
         let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);

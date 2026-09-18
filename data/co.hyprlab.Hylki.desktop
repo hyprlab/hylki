@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Hylki
+GenericName=Email Client
+Comment=A clean, fast GNOME-native email client
+# %U, not %u: a file manager hands every selected file to one launch, so
+# they all land in the same message ("Send with Hylki" from GNOME Files).
+Exec=hylki %U
+Icon=co.hyprlab.Hylki
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;Network;Email;
+Keywords=Email;Mail;IMAP;
+MimeType=x-scheme-handler/mailto;x-scheme-handler/mid;
+StartupNotify=true
+StartupWMClass=co.hyprlab.Hylki
+# Earlier names, for desktops that carry favourites across a rename.
+X-Flatpak-RenamedFrom=co.hyprlab.Vireo.desktop;com.getveem.Veem.desktop;

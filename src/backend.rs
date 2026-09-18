@@ -34,8 +34,8 @@ impl MockBackend {
             Account {
                 id: 1,
                 name: "Jason M.".into(),
-                email: "jason@vireo.hyprlab.co".into(),
-                label: "jason@vireo.hyprlab.co".into(),
+                email: "jason@hylki.hyprlab.co".into(),
+                label: "jason@hylki.hyprlab.co".into(),
                 accent: "#3584e4".into(),
             },
             Account {
@@ -174,10 +174,10 @@ fn build(s: &Spec) -> Message {
         starred: s.starred,
         keywords: s.keywords.iter().map(|k| k.to_string()).collect(),
         has_attachment: s.has_attachment,
-        message_id: format!("<demo-{}@vireo.local>", s.id),
+        message_id: format!("<demo-{}@hylki.local>", s.id),
         references: s
             .in_reply_to
-            .map(|p| format!("<demo-{p}@vireo.local>"))
+            .map(|p| format!("<demo-{p}@hylki.local>"))
             .unwrap_or_default(),
     }
 }
@@ -251,10 +251,10 @@ pub fn seed_demo_cache(cache: &crate::cache::Cache) {
         }
     }
 
-    // VIREO_DEMO_ATTACHMENTS=N adds N more attachments per account, spread back
+    // HYLKI_DEMO_ATTACHMENTS=N adds N more attachments per account, spread back
     // over twenty years — the shape of a real archive, for exercising the
     // gallery's paging and its scroll.
-    if let Some(n) = std::env::var("VIREO_DEMO_ATTACHMENTS").ok().and_then(|v| v.parse::<u32>().ok())
+    if let Some(n) = std::env::var("HYLKI_DEMO_ATTACHMENTS").ok().and_then(|v| v.parse::<u32>().ok())
     {
         let kinds = [
             ("invoice", "pdf", 90u64),
@@ -351,7 +351,7 @@ fn demo_attachments(
 }
 
 /// A late reply into the demo's deep conversation (account 1's Inbox):
-/// what a sync brings in while that thread is open. `VIREO_DEMO_ARRIVAL=<s>`
+/// what a sync brings in while that thread is open. `HYLKI_DEMO_ARRIVAL=<s>`
 /// has the mock worker deliver it after that many seconds.
 pub fn demo_arrival() -> Message {
     let mut m = build(&Spec {
@@ -360,7 +360,7 @@ pub fn demo_arrival() -> Message {
         folder_id: 1,
         from_name: "Priya Sharma",
         from_addr: "priya@studio.dev",
-        to: "jason@vireo.hyprlab.co",
+        to: "jason@hylki.hyprlab.co",
         subject: "Re: Reader redesign: final review",
         preview: "One more thing: the dark-mode cards need a hair more contrast on the sender line…",
         body: "One more thing: the dark-mode cards need a hair more contrast on the sender line. I've pushed a tweak to the branch.\n\nPriya",
@@ -377,7 +377,7 @@ pub fn demo_arrival() -> Message {
 }
 
 fn sample_messages() -> Vec<Message> {
-    const ME: &str = "jason@vireo.hyprlab.co";
+    const ME: &str = "jason@hylki.hyprlab.co";
     const LAB: &str = "hello@hyprlab.dev";
     const PERSONAL: &str = "jason.m@fastmail.com";
     let specs = [
@@ -463,7 +463,7 @@ fn sample_messages() -> Vec<Message> {
             preview: "The design token pipeline is finally merged into main. Dark mode now derives entirely from the token set…",
             body: "Hey,\n\nThe design token pipeline is finally merged into main. Dark mode now derives entirely from the token set, so we no longer maintain two stylesheets. Pull main when you get a chance.\n\nMarcus",
             date: "Wed", unread: true, starred: false, keywords: &[], has_attachment: false, in_reply_to: None },
-        Spec { id: 13, account_id: 1, folder_id: 1, from_name: "Calendar", from_addr: "calendar@vireo.hyprlab.co", to: ME,
+        Spec { id: 13, account_id: 1, folder_id: 1, from_name: "Calendar", from_addr: "calendar@hylki.hyprlab.co", to: ME,
             subject: "Invitation: Architecture sync @ Thu 2:00 PM",
             preview: "You have been invited to Architecture sync. Thursday 2:00 PM – 3:00 PM. Conference Room B / video link…",
             body: "You have been invited to: Architecture sync\n\nWhen: Thursday 2:00 PM – 3:00 PM\nWhere: Conference Room B / video link\n\nAccept · Decline · Maybe",
@@ -480,11 +480,11 @@ fn sample_messages() -> Vec<Message> {
             date: "Tue", unread: true, starred: false, keywords: &[], has_attachment: false, in_reply_to: None },
         Spec { id: 16, account_id: 1, folder_id: 1, from_name: "Framer", from_addr: "team@framer.com", to: ME,
             subject: "Your weekly site analytics",
-            preview: "vireo.hyprlab.co had 4,218 visitors this week, up 32%. Top page: /download. See the full breakdown…",
-            body: "vireo.hyprlab.co — weekly summary\n\nVisitors: 4,218 (+32%)\nTop page: /download\nAvg. time on page: 1m 47s\n\nView the full report online.",
+            preview: "hylki.hyprlab.co had 4,218 visitors this week, up 32%. Top page: /download. See the full breakdown…",
+            body: "hylki.hyprlab.co — weekly summary\n\nVisitors: 4,218 (+32%)\nTop page: /download\nAvg. time on page: 1m 47s\n\nView the full report online.",
             date: "Mon", unread: false, starred: false, keywords: &[], has_attachment: false, in_reply_to: None },
         // ---- Account 1 · Drafts ----
-        Spec { id: 20, account_id: 1, folder_id: 4, from_name: "Jason M.", from_addr: ME, to: "team@vireo.hyprlab.co",
+        Spec { id: 20, account_id: 1, folder_id: 4, from_name: "Jason M.", from_addr: ME, to: "team@hylki.hyprlab.co",
             subject: "Release notes for 0.2",
             preview: "Draft — Highlights for the next build: actions palette, message-content theme, infinite scroll…",
             body: "Draft.\n\nHighlights for 0.2:\n  • actions palette with slide-in animation\n  • Per-message light/dark content theme\n  • Infinite scroll for large folders\n\nTODO: add screenshots.",
@@ -497,13 +497,13 @@ fn sample_messages() -> Vec<Message> {
             date: "10:11 AM", unread: true, starred: false, keywords: &[], has_attachment: false, in_reply_to: None },
         Spec { id: 31, account_id: 2, folder_id: 11, from_name: "Buy Me a Coffee", from_addr: "no-reply@buymeacoffee.com", to: LAB,
             subject: "You have a new supporter ☕",
-            preview: "Alex bought you a coffee and left a note: “Love Vireo — the GNOME-native mail client I've wanted for years!”",
-            body: "Good news!\n\nAlex bought you a coffee and left a note:\n\n  “Love Vireo — the GNOME-native mail client I've wanted for years!”\n\nSay thanks from your dashboard.",
+            preview: "Alex bought you a coffee and left a note: “Love Hylki — the GNOME-native mail client I've wanted for years!”",
+            body: "Good news!\n\nAlex bought you a coffee and left a note:\n\n  “Love Hylki — the GNOME-native mail client I've wanted for years!”\n\nSay thanks from your dashboard.",
             date: "Yesterday", unread: true, starred: true, keywords: &[], has_attachment: false, in_reply_to: None },
         Spec { id: 32, account_id: 2, folder_id: 11, from_name: "GitHub", from_addr: "notifications@github.com", to: LAB,
-            subject: "[hyprlab/vireo] Star milestone: 1,000 ⭐",
-            preview: "Your repository hyprlab/vireo just reached 1,000 stars. Nice work! See who starred recently…",
-            body: "hyprlab/vireo just reached 1,000 stars 🎉\n\nRecent stargazers: @ada, @torvalds-fan, @rustacean…\n\nView on GitHub.",
+            subject: "[hyprlab/hylki] Star milestone: 1,000 ⭐",
+            preview: "Your repository hyprlab/hylki just reached 1,000 stars. Nice work! See who starred recently…",
+            body: "hyprlab/hylki just reached 1,000 stars 🎉\n\nRecent stargazers: @ada, @torvalds-fan, @rustacean…\n\nView on GitHub.",
             date: "Yesterday", unread: true, starred: false, keywords: &[], has_attachment: false, in_reply_to: None },
         Spec { id: 33, account_id: 2, folder_id: 11, from_name: "This Week in GNOME", from_addr: "hello@thisweek.gnome.org", to: LAB,
             subject: "This Week in GNOME #180",
@@ -584,9 +584,9 @@ fn sample_messages() -> Vec<Message> {
             date: "Sun", unread: true, starred: false, keywords: &[], has_attachment: false, in_reply_to: None },
     ];
     let mut out: Vec<Message> = specs.iter().map(build).collect();
-    // VIREO_DEMO_BULK=N pads every account's Inbox and Sent with N more
+    // HYLKI_DEMO_BULK=N pads every account's Inbox and Sent with N more
     // messages, to exercise the list at a real mailbox's size.
-    if let Some(n) = std::env::var("VIREO_DEMO_BULK").ok().and_then(|v| v.parse::<u32>().ok()) {
+    if let Some(n) = std::env::var("HYLKI_DEMO_BULK").ok().and_then(|v| v.parse::<u32>().ok()) {
         let base = out.iter().map(|m| m.timestamp).max().unwrap_or(1_700_000_000);
         let mut id = 100_000u32;
         for (account_id, folders) in [(1u32, [1u32, 3u32]), (2, [11, 13]), (3, [21, 23])] {
@@ -613,7 +613,7 @@ fn sample_messages() -> Vec<Message> {
                         starred: i % 41 == 0,
                         keywords: Vec::new(),
                         has_attachment: false,
-                        message_id: format!("<bulk-{id}@vireo.local>"),
+                        message_id: format!("<bulk-{id}@hylki.local>"),
                         references: String::new(),
                     });
                 }

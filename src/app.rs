@@ -152,7 +152,6 @@ relm4::new_action_group!(WindowActionGroup, "win");
 relm4::new_stateless_action!(AccountsAction, WindowActionGroup, "accounts");
 relm4::new_stateless_action!(PreferencesAction, WindowActionGroup, "preferences");
 relm4::new_stateless_action!(AboutAction, WindowActionGroup, "about");
-relm4::new_stateless_action!(RenameNoticeAction, WindowActionGroup, "rename-notice");
 relm4::new_stateless_action!(ShortcutsAction, WindowActionGroup, "shortcuts");
 relm4::new_stateless_action!(PrintAction, WindowActionGroup, "print");
 relm4::new_stateless_action!(PrintPreviewAction, WindowActionGroup, "print-preview");
@@ -324,8 +323,8 @@ struct ReaderCompose {
     window: Option<adw::Window>,
 }
 
-/// Files handed in from outside the app (GNOME Files' "Send with Vireo",
-/// "Open With Vireo", a mailto: with attach=), on their way to a composer.
+/// Files handed in from outside the app (GNOME Files' "Send with Hylki",
+/// "Open With Hylki", a mailto: with attach=), on their way to a composer.
 #[derive(Debug, Default)]
 pub struct FileHandOff {
     /// The composer's other fields (a mailto's recipient, subject, body):
@@ -523,7 +522,7 @@ pub struct AppModel {
     pending_seen: HashMap<(u32, String, u32), (bool, std::time::Instant)>,
     /// The account-list split view, narrowed to icon-only width when collapsed.
     sidebar_split: Option<adw::OverlaySplitView>,
-    /// The "Vireo" title label, hidden while the sidebar is collapsed.
+    /// The "Hylki" title label, hidden while the sidebar is collapsed.
     app_title: Option<gtk::Label>,
     /// Sidebar header. In the icon-only rail its window-control buttons are
     /// hidden so the header stops forcing a minimum width wider than the rail.
@@ -644,10 +643,10 @@ pub struct AppModel {
     /// The keyboard-shortcut reference, while it is open — so the shortcut that
     /// opens it closes it again.
     shortcuts_win: Option<adw::Window>,
-    /// Whether Vireo keeps running with no window. Shared with the window's
+    /// Whether Hylki keeps running with no window. Shared with the window's
     /// close handler, which has to read it without the model.
     run_in_background: std::rc::Rc<std::cell::Cell<bool>>,
-    /// Whether Vireo starts at login (background running only).
+    /// Whether Hylki starts at login (background running only).
     autostart: bool,
     /// Tray icon (issue #116): the setting, the icon choice, and the running
     /// item while the setting is on.
@@ -910,7 +909,7 @@ pub struct AppModel {
     /// whether that editor goes in the reading pane (true) or a window.
     pending_draft: Option<(Message, bool, HandOffFiles)>,
     /// A message whose body is being fetched so a reply to it can open with
-    /// handed-in files (Send with Vireo → Reply to a Message…).
+    /// handed-in files (Send with Hylki → Reply to a Message…).
     pending_reply: Option<(Message, HandOffFiles)>,
     /// A draft picker waiting for Drafts folders never listed this run
     /// (the hand-off, and the folders still to answer).
@@ -1318,7 +1317,7 @@ pub enum AppMsg {
     ShowAttachmentInMessage(Attachment),
     /// Showcase only: turn the inline composer's preview on.
     ShowcaseComposePreview,
-    /// Showcase only (VIREO_SHOWCASE_COMPOSE_UNDO): drive the inline
+    /// Showcase only (HYLKI_SHOWCASE_COMPOSE_UNDO): drive the inline
     /// composer's history through a scripted round of edits and undos.
     ShowcaseComposeUndo,
     /// Showcase only: open the window's burger menu, to read its Undo and
@@ -1335,10 +1334,10 @@ pub enum AppMsg {
     /// Select a settings category by id (the showcase hook).
     ShowSettingsPage(String),
     ComposeTo(String),
-    /// Showcase only (VIREO_SHOWCASE_FOLDER): switch to the first account's
+    /// Showcase only (HYLKI_SHOWCASE_FOLDER): switch to the first account's
     /// folder of this kind, so a capture can start from Drafts, Sent, etc.
     ShowcaseFolder(FolderKind),
-    /// Showcase only (VIREO_SHOWCASE_EDITOR_DIRTY): change the open account
+    /// Showcase only (HYLKI_SHOWCASE_EDITOR_DIRTY): change the open account
     /// editor, so leaving an edited one can be captured.
     ShowcaseDirtyEditor,
     Reply,
@@ -1364,7 +1363,7 @@ pub enum AppMsg {
     /// still the one running.
     TagScanTimeout(u32),
     /// Files handed in from outside the app (a file manager's "Open With
-    /// Vireo", or the command line): open a fresh composer with them attached
+    /// Hylki", or the command line): open a fresh composer with them attached
     /// (Isaac's PR #96).
     OpenWithFiles(Vec<std::path::PathBuf>),
     /// The click on a "message ready" desktop alert: raise the window and
@@ -1392,9 +1391,8 @@ pub enum AppMsg {
     /// Show the keyring / Secret Service setup help. `problem: true` when a save
     /// actually failed to persist; `false` for the proactive one-time tip.
     ShowKeyringHelp { problem: bool },
-    /// Open the notice that Vireo has become Hylki (`startup`: offered
-    /// "Remind Me Later" / "Don't Show Again" rather than a plain Close).
-    ShowRenameNotice { startup: bool },
+    /// The one-time notice that an earlier install's data was carried over.
+    ShowCarryOverNotice(&'static crate::legacy::Predecessor),
     AccountRemoved { email: String },
     AccountEnabledChanged { email: String, enabled: bool },
     ImportGoaAccount(Box<AccountConfig>),
@@ -1425,7 +1423,7 @@ pub enum AppMsg {
     /// Save the console's log to a file for a bug report (#132).
     ExportLog,
     /// Write the exported log straight to `path`, no chooser: the
-    /// VIREO_SHOWCASE_MEMORY hook, for reading the memory section of a
+    /// HYLKI_SHOWCASE_MEMORY hook, for reading the memory section of a
     /// running instance.
     ExportLogTo(std::path::PathBuf),
     ImportSettings,
@@ -1553,7 +1551,7 @@ impl SimpleComponent for AppModel {
         adw::ApplicationWindow {
             set_title: Some(crate::APP_NAME),
             set_icon_name: Some(crate::APP_ID),
-            add_css_class: "vireo",
+            add_css_class: "hylki",
 
             // Persist the window size + maximized state on close. (Position and
             // which monitor can't be restored on Wayland — the compositor owns
@@ -1568,7 +1566,7 @@ impl SimpleComponent for AppModel {
                 };
                 crate::config::save_window_state(width, height, maximized);
                 // Running in the background: hide the window and stay alive, so
-                // mail keeps arriving and GNOME lists Vireo under Background Apps
+                // mail keeps arriving and GNOME lists Hylki under Background Apps
                 // (issue #3). The window is kept rather than rebuilt, so reopening
                 // is instant and nothing is torn down — which is also what makes
                 // this safe, given the exit below.
@@ -1656,7 +1654,7 @@ impl SimpleComponent for AppModel {
                                 },
                             },
                             pack_end = &gtk::MenuButton {
-                                set_icon_name: "co.hyprlab.Vireo-open-menu-symbolic",
+                                set_icon_name: "co.hyprlab.Hylki-open-menu-symbolic",
                                 set_tooltip_text: Some(i18n("Main Menu").as_str()),
                                 add_css_class: "flat",
                                 set_menu_model: Some(&model.menu),
@@ -1690,7 +1688,7 @@ impl SimpleComponent for AppModel {
                             pack_start: &model.sidebar_refresh,
                             #[name = "sidebar_menu"]
                             pack_end = &gtk::MenuButton {
-                                set_icon_name: "co.hyprlab.Vireo-open-menu-symbolic",
+                                set_icon_name: "co.hyprlab.Hylki-open-menu-symbolic",
                                 set_tooltip_text: Some(i18n("Main Menu").as_str()),
                                 add_css_class: "flat",
                                 set_menu_model: Some(&model.menu),
@@ -1775,7 +1773,7 @@ impl SimpleComponent for AppModel {
                                 set_show_end_title_buttons: false,
                                 // No folder title here — the sidebar's selection
                                 // already names it. An empty label keeps the
-                                // window's "Vireo" title from appearing instead.
+                                // window's "Hylki" title from appearing instead.
                                 #[wrap(Some)]
                                 set_title_widget = &gtk::Label {
                                     set_label: "",
@@ -1784,7 +1782,7 @@ impl SimpleComponent for AppModel {
                                 // sidebar expand/collapse toggle (moved here from
                                 // the sidebar's own footer).
                                 pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-sidebar-show-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-sidebar-show-symbolic",
                                     #[watch]
                                     set_tooltip_text: Some(if model.rail_active { i18n("Expand sidebar") } else { i18n("Collapse sidebar") }.as_str()),
                                     add_css_class: "flat",
@@ -1793,7 +1791,7 @@ impl SimpleComponent for AppModel {
                                 // Search lives behind this button (#102);
                                 // Ctrl+F and / open it too.
                                 pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-system-search-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-system-search-symbolic",
                                     set_tooltip_text: Some(i18n("Search messages (Ctrl+F)").as_str()),
                                     add_css_class: "flat",
                                     connect_clicked[sender] => move |_| {
@@ -1807,7 +1805,7 @@ impl SimpleComponent for AppModel {
                                 // Quick filters (#97): unread / starred only.
                                 // Session state, like Mail.app's filter bar.
                                 pack_end = &gtk::ToggleButton {
-                                    set_icon_name: "co.hyprlab.Vireo-mail-unread-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-mail-unread-symbolic",
                                     set_tooltip_text: Some(i18n("Show only unread").as_str()),
                                     set_valign: gtk::Align::Center,
                                     add_css_class: "flat",
@@ -1816,7 +1814,7 @@ impl SimpleComponent for AppModel {
                                     },
                                 },
                                 pack_end = &gtk::ToggleButton {
-                                    set_icon_name: "co.hyprlab.Vireo-starred-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-starred-symbolic",
                                     set_tooltip_text: Some(i18n("Show only starred").as_str()),
                                     set_valign: gtk::Align::Center,
                                     add_css_class: "flat",
@@ -1827,7 +1825,7 @@ impl SimpleComponent for AppModel {
 
                                 #[name = "list_sort_btn"]
                                 pack_end = &gtk::MenuButton {
-                                    set_icon_name: "co.hyprlab.Vireo-view-sort-descending-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-view-sort-descending-symbolic",
                                     set_tooltip_text: Some(i18n("Sort messages").as_str()),
                                     set_valign: gtk::Align::Center,
                                     add_css_class: "flat",
@@ -1866,7 +1864,7 @@ impl SimpleComponent for AppModel {
                                 // action row fits a narrower pane (see
                                 // READER_ACTIONS_BREAKPOINT and styles.css).
                                 add_css_class: "reader-toolbar",
-                                // Empty title so the window's "Vireo" title isn't
+                                // Empty title so the window's "Hylki" title isn't
                                 // shown here; the app title lives above the sidebar.
                                 #[wrap(Some)]
                                 set_title_widget = &gtk::Label {
@@ -1877,7 +1875,7 @@ impl SimpleComponent for AppModel {
                                 // to, and the questions worth asking about it are
                                 // whether to edit, send or bin it.
                                 pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-document-edit-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-document-edit-symbolic",
                                     set_tooltip_text: Some(i18n("Edit this message").as_str()),
                                     add_css_class: "flat",
                                     #[watch]
@@ -1888,7 +1886,7 @@ impl SimpleComponent for AppModel {
                                     connect_clicked[sender] => move |_| sender.input(AppMsg::EditCurrentOutbox),
                                 },
                                 pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-mail-send-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-mail-send-symbolic",
                                     set_tooltip_text: Some(i18n("Try to send this message now").as_str()),
                                     add_css_class: "flat",
                                     #[watch]
@@ -1915,7 +1913,7 @@ impl SimpleComponent for AppModel {
                                 // Reply All, Forward, Star, Archive, Delete.
                                 #[name = "tb_reply"]
                                 pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-mail-reply-sender-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-mail-reply-sender-symbolic",
                                     set_tooltip_text: Some(i18n("Reply").as_str()),
                                     add_css_class: "flat",
                                     #[watch]
@@ -1930,7 +1928,7 @@ impl SimpleComponent for AppModel {
                                 },
                                 #[name = "tb_reply_all"]
                                 pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-mail-reply-all-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-mail-reply-all-symbolic",
                                     set_tooltip_text: Some(i18n("Reply All").as_str()),
                                     add_css_class: "flat",
                                     #[watch]
@@ -1941,7 +1939,7 @@ impl SimpleComponent for AppModel {
                                 },
                                 #[name = "tb_forward"]
                                 pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-mail-forward-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-mail-forward-symbolic",
                                     set_tooltip_text: Some(i18n("Forward").as_str()),
                                     add_css_class: "flat",
                                     #[watch]
@@ -1955,7 +1953,7 @@ impl SimpleComponent for AppModel {
                                     set_tooltip_text: Some(i18n("Flag").as_str()),
                                     // One glyph in both states, like every other
                                     // icon; the flagged state carries colour only.
-                                    set_icon_name: "co.hyprlab.Vireo-non-starred-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-non-starred-symbolic",
                                     #[watch]
                                     set_css_classes: if model.toolbar_star_lit() {
                                         &["flat", "star-active"]
@@ -1970,7 +1968,7 @@ impl SimpleComponent for AppModel {
                                 },
                                 #[name = "tb_archive"]
                                 pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-mail-archive-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-mail-archive-symbolic",
                                     set_tooltip_text: Some(i18n("Archive").as_str()),
                                     add_css_class: "flat",
                                     #[watch]
@@ -1981,7 +1979,7 @@ impl SimpleComponent for AppModel {
                                 },
                                 #[name = "tb_delete"]
                                 pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-user-trash-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-user-trash-symbolic",
                                     #[watch]
                                     set_tooltip_text: Some(&model.delete_tooltip()),
                                     add_css_class: "flat",
@@ -2002,7 +2000,7 @@ impl SimpleComponent for AppModel {
                                 // message header.)
                                 #[name = "tb_print"]
                                 pack_end = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-printer-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-printer-symbolic",
                                     set_tooltip_text: Some(i18n("Print Preview (Ctrl+Shift+P)").as_str()),
                                     add_css_class: "flat",
                                     #[watch]
@@ -2017,7 +2015,7 @@ impl SimpleComponent for AppModel {
                                 // In-message find (#103).
                                 #[name = "tb_find"]
                                 pack_end = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Vireo-loupe-with-arrow-symbolic",
+                                    set_icon_name: "co.hyprlab.Hylki-loupe-with-arrow-symbolic",
                                     set_tooltip_text: Some(i18n("Find in message (Ctrl+F)").as_str()),
                                     add_css_class: "flat",
                                     // Greyed out, not hidden, with no message
@@ -2047,9 +2045,9 @@ impl SimpleComponent for AppModel {
                                 pack_end = &gtk::Button {
                                     #[watch]
                                     set_icon_name: if model.target_in_junk() {
-                                        "co.hyprlab.Vireo-mail-mark-notjunk-symbolic"
+                                        "co.hyprlab.Hylki-mail-mark-notjunk-symbolic"
                                     } else {
-                                        "co.hyprlab.Vireo-mail-mark-junk-symbolic"
+                                        "co.hyprlab.Hylki-mail-mark-junk-symbolic"
                                     },
                                     #[watch]
                                     set_tooltip_text: Some(if model.target_in_junk() { i18n("Not Spam") } else { i18n("Mark as Spam") }.as_str()),
@@ -2070,9 +2068,9 @@ impl SimpleComponent for AppModel {
                                     // "mark as read"), matching the menus.
                                     #[watch]
                                     set_icon_name: if model.reply_target().is_some_and(|m| m.unread) {
-                                        "co.hyprlab.Vireo-mail-read-symbolic"
+                                        "co.hyprlab.Hylki-mail-read-symbolic"
                                     } else {
-                                        "co.hyprlab.Vireo-mail-unread-symbolic"
+                                        "co.hyprlab.Hylki-mail-unread-symbolic"
                                     },
                                     #[watch]
                                     set_tooltip_text: Some(if model.reply_target().is_some_and(|m| m.unread) { i18n("Mark as Read") } else { i18n("Mark as Unread") }.as_str()),
@@ -2149,7 +2147,7 @@ impl SimpleComponent for AppModel {
                         },
                         #[wrap(Some)]
                         set_end_widget = &gtk::Button {
-                            set_icon_name: "co.hyprlab.Vireo-window-close-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-window-close-symbolic",
                             set_tooltip_text: Some(i18n("Close").as_str()),
                             add_css_class: "circular",
                             add_css_class: "flat",
@@ -2163,7 +2161,7 @@ impl SimpleComponent for AppModel {
                         set_spacing: 8,
 
                         gtk::Button {
-                            set_icon_name: "co.hyprlab.Vireo-go-previous-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-go-previous-symbolic",
                             set_tooltip_text: Some(i18n("Previous").as_str()),
                             set_valign: gtk::Align::Center,
                             add_css_class: "circular",
@@ -2214,7 +2212,7 @@ impl SimpleComponent for AppModel {
                         },
 
                         gtk::Button {
-                            set_icon_name: "co.hyprlab.Vireo-go-next-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-go-next-symbolic",
                             set_tooltip_text: Some(i18n("Next").as_str()),
                             set_valign: gtk::Align::Center,
                             add_css_class: "circular",
@@ -2239,13 +2237,13 @@ impl SimpleComponent for AppModel {
                         set_end_widget = &gtk::Box {
                             set_spacing: 6,
                             gtk::Button {
-                                set_icon_name: "co.hyprlab.Vireo-document-open-symbolic",
+                                set_icon_name: "co.hyprlab.Hylki-document-open-symbolic",
                                 set_tooltip_text: Some(i18n("Open").as_str()),
                                 add_css_class: "flat",
                                 connect_clicked => AppMsg::LightboxOpenCurrent,
                             },
                             gtk::Button {
-                                set_icon_name: "co.hyprlab.Vireo-folder-download-symbolic",
+                                set_icon_name: "co.hyprlab.Hylki-folder-download-symbolic",
                                 set_tooltip_text: Some(i18n("Download…").as_str()),
                                 add_css_class: "flat",
                                 connect_clicked => AppMsg::LightboxDownloadCurrent,
@@ -2641,7 +2639,7 @@ impl SimpleComponent for AppModel {
             reader_toolbar_widgets: std::cell::OnceCell::new(),
             reader_overflow_btn: {
                 let b = gtk::Button::from_icon_name(
-                    "co.hyprlab.Vireo-view-more-horizontal-symbolic",
+                    "co.hyprlab.Hylki-view-more-horizontal-symbolic",
                 );
                 b.set_tooltip_text(Some(i18n("Actions").as_str()));
                 b.add_css_class("flat");
@@ -2649,13 +2647,13 @@ impl SimpleComponent for AppModel {
                 b
             },
             reader_tag_btn: {
-                let b = gtk::Button::from_icon_name("co.hyprlab.Vireo-tag-outline-symbolic");
+                let b = gtk::Button::from_icon_name("co.hyprlab.Hylki-tag-outline-symbolic");
                 b.set_tooltip_text(Some(i18n("Tags").as_str()));
                 b.add_css_class("flat");
                 b
             },
             reader_move_btn: {
-                let b = gtk::Button::from_icon_name("co.hyprlab.Vireo-folder-symbolic");
+                let b = gtk::Button::from_icon_name("co.hyprlab.Hylki-folder-symbolic");
                 b.set_tooltip_text(Some(i18n("Move To…").as_str()));
                 b.add_css_class("flat");
                 b
@@ -2905,7 +2903,7 @@ impl SimpleComponent for AppModel {
             }
         });
         // Watch GNOME Online Accounts so a change there (account removed, Mail
-        // toggled) is reflected in Vireo live, no restart needed. The watcher
+        // toggled) is reflected in Hylki live, no restart needed. The watcher
         // debounces signal bursts and snapshots GOA on its own thread;
         // reconciliation happens on GoaChanged.
         crate::goa::watch_changes({
@@ -2933,13 +2931,13 @@ impl SimpleComponent for AppModel {
         if wizard_again {
             std::env::remove_var(crate::WIZARD_AGAIN_VAR);
         }
-        if model.config.is_empty() || std::env::var("VIREO_WELCOME").is_ok() || wizard_again {
+        if model.config.is_empty() || std::env::var("HYLKI_WELCOME").is_ok() || wizard_again {
             model.rebuild_sidebar();
-            // VIREO_WELCOME=1 forces the wizard over an existing config, for
+            // HYLKI_WELCOME=1 forces the wizard over an existing config, for
             // design review and screenshots. A wizard already completed once
             // (Start Reading pressed, even with no account added) doesn't
             // come back on its own — a restart right after it must not loop.
-            if std::env::var("VIREO_WELCOME").is_ok()
+            if std::env::var("HYLKI_WELCOME").is_ok()
                 || wizard_again
                 || (!demo_mode() && !config::wizard_completed())
             {
@@ -3198,7 +3196,7 @@ impl SimpleComponent for AppModel {
             // Leftmost, same spot as the message list header's: the sidebar
             // collapse/expand toggle.
             let sidebar_btn =
-                gtk::Button::from_icon_name("co.hyprlab.Vireo-sidebar-show-symbolic");
+                gtk::Button::from_icon_name("co.hyprlab.Hylki-sidebar-show-symbolic");
             sidebar_btn.set_tooltip_text(Some(i18n("Toggle sidebar").as_str()));
             sidebar_btn.add_css_class("flat");
             let s = sender.input_sender().clone();
@@ -3369,7 +3367,7 @@ impl SimpleComponent for AppModel {
         model.sidebar_menu = Some(widgets.sidebar_menu.clone());
         // The header Refresh's icon/spinner faces, and its click.
         {
-            let icon = gtk::Image::from_icon_name("co.hyprlab.Vireo-view-refresh-symbolic");
+            let icon = gtk::Image::from_icon_name("co.hyprlab.Hylki-view-refresh-symbolic");
             model.sidebar_refresh_stack.add_named(&icon, Some("icon"));
             model
                 .sidebar_refresh_stack
@@ -3393,7 +3391,7 @@ impl SimpleComponent for AppModel {
         }
         // The peek panel's Refresh: the same icon/spinner faces.
         {
-            let icon = gtk::Image::from_icon_name("co.hyprlab.Vireo-view-refresh-symbolic");
+            let icon = gtk::Image::from_icon_name("co.hyprlab.Hylki-view-refresh-symbolic");
             model.peek_refresh_stack.add_named(&icon, Some("icon"));
             model
                 .peek_refresh_stack
@@ -3484,10 +3482,6 @@ impl SimpleComponent for AppModel {
         let about_sender = sender.clone();
         group.add_action(RelmAction::<AboutAction>::new_stateless(move |_| {
             about_sender.input(AppMsg::OpenAbout);
-        }));
-        let rename_sender = sender.clone();
-        group.add_action(RelmAction::<RenameNoticeAction>::new_stateless(move |_| {
-            rename_sender.input(AppMsg::ShowRenameNotice { startup: false });
         }));
         let shortcuts_sender = sender.clone();
         group.add_action(RelmAction::<ShortcutsAction>::new_stateless(move |_| {
@@ -3638,10 +3632,15 @@ impl SimpleComponent for AppModel {
             sender.input(AppMsg::ShowKeyringHelp { problem: false });
         }
 
-        // 1.34.0 is the last Vireo release: say so at every start until the
-        // user asks not to, or until Hylki is on the machine.
-        if crate::ui::rename_notice::due_at_startup() {
-            sender.input(AppMsg::ShowRenameNotice { startup: true });
+        // An earlier install's data came across at this start (see
+        // `legacy`): say so once, and take its start-at-login over — the
+        // portal's autostart entry is per app ID, so it has to be asked
+        // for again under this one.
+        if let Some(from) = crate::legacy::migrated_from() {
+            if model.run_in_background.get() && model.autostart {
+                crate::background::request(true);
+            }
+            sender.input(AppMsg::ShowCarryOverNotice(from));
         }
 
         model.lightbox_picture = Some(widgets.lightbox_picture.clone());
@@ -3695,7 +3694,7 @@ impl SimpleComponent for AppModel {
             widgets.lightbox_picture.add_controller(click);
         }
 
-        // Screenshot showcase (VIREO_DEMO + VIREO_SHOWCASE=/path.png): stage
+        // Screenshot showcase (HYLKI_DEMO + HYLKI_SHOWCASE=/path.png): stage
         // the demo the way the marketing shots want it — first row (the demo
         // conversation, expanded via the threads_expanded preference) selected,
         // one mid-thread card highlighted — then render the window to a PNG.
@@ -3705,20 +3704,20 @@ impl SimpleComponent for AppModel {
         // the app: a user's log showed 1.73 GB held with 270 MB live.
         gtk::glib::timeout_add_seconds_local(30, || {
             if let Some(held) = crate::memory_report::trim_if_worthwhile() {
-                tracing::debug!(target: "vireo::memory", "trimmed the heap: {} was freed but held", crate::memory_report::human_bytes(held as u64));
+                tracing::debug!(target: "hylki::memory", "trimmed the heap: {} was freed but held", crate::memory_report::human_bytes(held as u64));
             }
             gtk::glib::ControlFlow::Continue
         });
-        // VIREO_SHOWCASE_MEMORY=/path.txt writes the exported log (memory
-        // section included) there after VIREO_SHOWCASE_MEMORY_AT seconds
+        // HYLKI_SHOWCASE_MEMORY=/path.txt writes the exported log (memory
+        // section included) there after HYLKI_SHOWCASE_MEMORY_AT seconds
         // (default 20), on a real mailbox as much as the demo: a memory
         // reading is only worth having once the index has loaded. With
-        // VIREO_SHOWCASE_MEMORY_EVERY=N it is rewritten every N seconds
+        // HYLKI_SHOWCASE_MEMORY_EVERY=N it is rewritten every N seconds
         // after that, for watching a session grow.
-        if let Some(path) = std::env::var_os("VIREO_SHOWCASE_MEMORY") {
+        if let Some(path) = std::env::var_os("HYLKI_SHOWCASE_MEMORY") {
             let secs = |name: &str| std::env::var(name).ok().and_then(|v| v.parse::<u32>().ok());
-            let at = secs("VIREO_SHOWCASE_MEMORY_AT").unwrap_or(20);
-            let every = secs("VIREO_SHOWCASE_MEMORY_EVERY").filter(|n| *n > 0);
+            let at = secs("HYLKI_SHOWCASE_MEMORY_AT").unwrap_or(20);
+            let every = secs("HYLKI_SHOWCASE_MEMORY_EVERY").filter(|n| *n > 0);
             let s = sender.clone();
             let path = std::path::PathBuf::from(path);
             gtk::glib::timeout_add_seconds_local_once(at, move || {
@@ -3733,19 +3732,19 @@ impl SimpleComponent for AppModel {
         }
         // Timers leave room for the WebViews to load and settle between steps.
         if demo_mode() {
-            if let Some(shot) = std::env::var("VIREO_SHOWCASE").ok() {
-                // VIREO_SHOWCASE_STAGE=0 skips the staging (capture-only, for
-                // testing arbitrary states); VIREO_SHOWCASE_DELAY overrides the
+            if let Some(shot) = std::env::var("HYLKI_SHOWCASE").ok() {
+                // HYLKI_SHOWCASE_STAGE=0 skips the staging (capture-only, for
+                // testing arbitrary states); HYLKI_SHOWCASE_DELAY overrides the
                 // capture time (seconds, default 9).
-                let stage = std::env::var("VIREO_SHOWCASE_STAGE").as_deref() != Ok("0");
-                let delay: u32 = std::env::var("VIREO_SHOWCASE_DELAY")
+                let stage = std::env::var("HYLKI_SHOWCASE_STAGE").as_deref() != Ok("0");
+                let delay: u32 = std::env::var("HYLKI_SHOWCASE_DELAY")
                     .ok()
                     .and_then(|v| v.parse().ok())
                     .unwrap_or(9);
-                // VIREO_SHOWCASE_HEIGHTS=1 logs the allocated height of the
+                // HYLKI_SHOWCASE_HEIGHTS=1 logs the allocated height of the
                 // sidebar's section headings and their rows just before the
                 // capture, for checking pill geometry without a pointer.
-                if std::env::var("VIREO_SHOWCASE_HEIGHTS").is_ok() {
+                if std::env::var("HYLKI_SHOWCASE_HEIGHTS").is_ok() {
                     let sidebar = model.sidebar.widget().clone().upcast::<gtk::Widget>();
                     gtk::glib::timeout_add_seconds_local_once(delay.saturating_sub(1).max(1), move || {
                         fn walk(w: &gtk::Widget, depth: usize, root: &gtk::Widget) {
@@ -3778,13 +3777,13 @@ impl SimpleComponent for AppModel {
                     gtk::glib::timeout_add_seconds_local_once(3, move || {
                         let _ = list.send(MessageListInput::MoveSelection(1));
                     });
-                    // VIREO_SHOWCASE_PALETTE=N opens row N's actions palette
+                    // HYLKI_SHOWCASE_PALETTE=N opens row N's actions palette
                     // (so a capture can verify the floating palette's look).
                     if let Some(Ok(idx)) =
-                        std::env::var("VIREO_SHOWCASE_PALETTE").ok().map(|v| v.parse())
+                        std::env::var("HYLKI_SHOWCASE_PALETTE").ok().map(|v| v.parse())
                     {
                         let list = model.message_list.sender().clone();
-                        let burst = std::env::var("VIREO_SHOWCASE_BURST").ok();
+                        let burst = std::env::var("HYLKI_SHOWCASE_BURST").ok();
                         let win = root.clone();
                         {
                             // An occluded window's frame clock is suspended
@@ -3825,16 +3824,16 @@ impl SimpleComponent for AppModel {
                         });
                     });
                 }
-                // VIREO_SHOWCASE_SWIPE=N[:left|right] swipes row N fully and
-                // releases it at 7s, with VIREO_SHOWCASE_BURST=<path> writing
+                // HYLKI_SHOWCASE_SWIPE=N[:left|right] swipes row N fully and
+                // releases it at 7s, with HYLKI_SHOWCASE_BURST=<path> writing
                 // stills through the commit exit — the only way to see the
                 // gesture's animation here (no input injection).
-                if let Ok(spec) = std::env::var("VIREO_SHOWCASE_SWIPE") {
+                if let Ok(spec) = std::env::var("HYLKI_SHOWCASE_SWIPE") {
                     let (idx, side) = spec.split_once(':').unwrap_or((spec.as_str(), "left"));
                     let index: usize = idx.trim().parse().unwrap_or(0);
                     let left = side != "right";
                     let list = model.message_list.sender().clone();
-                    let burst = std::env::var("VIREO_SHOWCASE_BURST").ok();
+                    let burst = std::env::var("HYLKI_SHOWCASE_BURST").ok();
                     let win = root.clone();
                     {
                         // An occluded window's frame clock is suspended, so
@@ -3858,9 +3857,9 @@ impl SimpleComponent for AppModel {
                         }
                     });
                 }
-                // VIREO_SHOWCASE_ROW=N selects the list's row N at 4s (with
-                // VIREO_SHOWCASE_STAGE=0), for capturing or probing one message.
-                if let Some(Ok(n)) = std::env::var("VIREO_SHOWCASE_ROW").ok().map(|v| v.parse::<u32>()) {
+                // HYLKI_SHOWCASE_ROW=N selects the list's row N at 4s (with
+                // HYLKI_SHOWCASE_STAGE=0), for capturing or probing one message.
+                if let Some(Ok(n)) = std::env::var("HYLKI_SHOWCASE_ROW").ok().map(|v| v.parse::<u32>()) {
                     let list = model.message_list.sender().clone();
                     gtk::glib::timeout_add_seconds_local_once(4, move || {
                         for _ in 0..=n {
@@ -3868,10 +3867,10 @@ impl SimpleComponent for AppModel {
                         }
                     });
                 }
-                // VIREO_SHOWCASE_UNIFIED=sent|starred|drafts opens that unified
+                // HYLKI_SHOWCASE_UNIFIED=sent|starred|drafts opens that unified
                 // row at 3s, All Inboxes at 6s and the row again at 9s, so the
                 // timing logs show a cold and a warm open.
-                if let Ok(which) = std::env::var("VIREO_SHOWCASE_UNIFIED") {
+                if let Ok(which) = std::env::var("HYLKI_SHOWCASE_UNIFIED") {
                     let pick = move || match which.as_str() {
                         "starred" => SidebarInput::UnifiedKindRowSelected(FolderKind::Starred),
                         "drafts" => SidebarInput::UnifiedKindRowSelected(FolderKind::Drafts),
@@ -3894,19 +3893,19 @@ impl SimpleComponent for AppModel {
                         let _ = sb.send(pick());
                     });
                 }
-                // VIREO_SHOWCASE_ROW_MENU=1 opens the first row's context
-                // menu at 5s (pair with VIREO_SHOWCASE_MENU to capture it).
-                if std::env::var("VIREO_SHOWCASE_ROW_MENU").is_ok() {
+                // HYLKI_SHOWCASE_ROW_MENU=1 opens the first row's context
+                // menu at 5s (pair with HYLKI_SHOWCASE_MENU to capture it).
+                if std::env::var("HYLKI_SHOWCASE_ROW_MENU").is_ok() {
                     let ml = model.message_list.sender().clone();
                     gtk::glib::timeout_add_seconds_local_once(5, move || {
                         let _ = ml.send(MessageListInput::ContextMenu { x: 120.0, y: 40.0 });
                     });
                 }
-                // VIREO_SHOWCASE_APPLY_FILTERS=inboxes|<account>:<folder>
+                // HYLKI_SHOWCASE_APPLY_FILTERS=inboxes|<account>:<folder>
                 // starts a manual filter run at 5s (#198), the way Apply Now
                 // and the folder menu's Apply Filters do, and the run's
                 // report lands in the status bar a beat later.
-                if let Ok(spec) = std::env::var("VIREO_SHOWCASE_APPLY_FILTERS") {
+                if let Ok(spec) = std::env::var("HYLKI_SHOWCASE_APPLY_FILTERS") {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(5, move || {
                         let targets = spec
@@ -3916,11 +3915,11 @@ impl SimpleComponent for AppModel {
                         s.input(AppMsg::ApplyFilters(targets));
                     });
                 }
-                // VIREO_SHOWCASE_TOOLBAR_GAP=<zone>:<index> opens a drop gap
+                // HYLKI_SHOWCASE_TOOLBAR_GAP=<zone>:<index> opens a drop gap
                 // in the Settings toolbar editor at 6s (pair with
-                // VIREO_SHOWCASE_SETTINGS=appearance), as a hovering drag
+                // HYLKI_SHOWCASE_SETTINGS=appearance), as a hovering drag
                 // would.
-                if let Ok(spec) = std::env::var("VIREO_SHOWCASE_TOOLBAR_GAP") {
+                if let Ok(spec) = std::env::var("HYLKI_SHOWCASE_TOOLBAR_GAP") {
                     if let Some((z, i)) = spec.split_once(':') {
                         if let (Ok(zone), Ok(index)) = (z.parse::<usize>(), i.parse::<usize>()) {
                             let s = sender.input_sender().clone();
@@ -3930,10 +3929,10 @@ impl SimpleComponent for AppModel {
                         }
                     }
                 }
-                // VIREO_SHOWCASE_TOOLBAR_MENU=1 opens the header's right-click
+                // HYLKI_SHOWCASE_TOOLBAR_MENU=1 opens the header's right-click
                 // menu (Customize Toolbar…) at 5s, as a click on its empty
                 // middle would.
-                if std::env::var("VIREO_SHOWCASE_TOOLBAR_MENU").is_ok() {
+                if std::env::var("HYLKI_SHOWCASE_TOOLBAR_MENU").is_ok() {
                     let s = sender.input_sender().clone();
                     let header: gtk::Widget = widgets.reader_header.clone().upcast();
                     gtk::glib::timeout_add_seconds_local_once(5, move || {
@@ -3943,42 +3942,42 @@ impl SimpleComponent for AppModel {
                         });
                     });
                 }
-                // VIREO_SHOWCASE_READER_MENU=1 opens the reader header's ⋯
-                // overflow menu at 5s (pair with VIREO_SHOWCASE_MENU to
+                // HYLKI_SHOWCASE_READER_MENU=1 opens the reader header's ⋯
+                // overflow menu at 5s (pair with HYLKI_SHOWCASE_MENU to
                 // capture it; the window must be narrow enough to collapse).
-                if std::env::var("VIREO_SHOWCASE_READER_MENU").is_ok() {
+                if std::env::var("HYLKI_SHOWCASE_READER_MENU").is_ok() {
                     let s = sender.input_sender().clone();
                     gtk::glib::timeout_add_seconds_local_once(5, move || {
                         let _ = s.send(AppMsg::ReaderOverflowMenu);
                     });
                 }
-                // VIREO_SHOWCASE_MOVE=1 opens the Move To… picker at 5s
+                // HYLKI_SHOWCASE_MOVE=1 opens the Move To… picker at 5s
                 // (it captures itself a second later).
-                if std::env::var("VIREO_SHOWCASE_MOVE").is_ok() {
+                if std::env::var("HYLKI_SHOWCASE_MOVE").is_ok() {
                     let s = sender.input_sender().clone();
                     gtk::glib::timeout_add_seconds_local_once(5, move || {
                         let _ = s.send(AppMsg::MoveToMenu);
                     });
                 }
-                // VIREO_SHOWCASE_GALLERY=1 opens the attachments gallery at
-                // 3s; add VIREO_SHOWCASE_GALLERY_FOLDERS=1 to drop its folder
-                // popover open a second later, or VIREO_SHOWCASE_GALLERY_ACCOUNT=<row>
+                // HYLKI_SHOWCASE_GALLERY=1 opens the attachments gallery at
+                // 3s; add HYLKI_SHOWCASE_GALLERY_FOLDERS=1 to drop its folder
+                // popover open a second later, or HYLKI_SHOWCASE_GALLERY_ACCOUNT=<row>
                 // to pick that row of its account filter (0 = all accounts).
-                if std::env::var("VIREO_SHOWCASE_GALLERY").is_ok() {
+                if std::env::var("HYLKI_SHOWCASE_GALLERY").is_ok() {
                     let s = sender.input_sender().clone();
                     let g = model.gallery.sender().clone();
                     gtk::glib::timeout_add_seconds_local_once(3, move || {
                         let _ = s.send(AppMsg::ShowAttachments);
-                        let row: Option<u32> = std::env::var("VIREO_SHOWCASE_GALLERY_ACCOUNT")
+                        let row: Option<u32> = std::env::var("HYLKI_SHOWCASE_GALLERY_ACCOUNT")
                             .ok()
                             .and_then(|v| v.parse().ok());
-                        let folders = std::env::var("VIREO_SHOWCASE_GALLERY_FOLDERS").is_ok();
-                        // VIREO_SHOWCASE_GALLERY_SEARCH=<text> types into the
+                        let folders = std::env::var("HYLKI_SHOWCASE_GALLERY_FOLDERS").is_ok();
+                        // HYLKI_SHOWCASE_GALLERY_SEARCH=<text> types into the
                         // search box and reports whether it keeps the focus.
-                        let search = std::env::var("VIREO_SHOWCASE_GALLERY_SEARCH").ok();
-                        // VIREO_SHOWCASE_GALLERY_MORE=<n> pages down n times,
+                        let search = std::env::var("HYLKI_SHOWCASE_GALLERY_SEARCH").ok();
+                        // HYLKI_SHOWCASE_GALLERY_MORE=<n> pages down n times,
                         // as scrolling to the end would.
-                        let more: u32 = std::env::var("VIREO_SHOWCASE_GALLERY_MORE")
+                        let more: u32 = std::env::var("HYLKI_SHOWCASE_GALLERY_MORE")
                             .ok()
                             .and_then(|v| v.parse().ok())
                             .unwrap_or(0);
@@ -4001,17 +4000,17 @@ impl SimpleComponent for AppModel {
                         });
                     });
                 }
-                // VIREO_SHOWCASE_RAIL=1 collapses the sidebar to the rail
+                // HYLKI_SHOWCASE_RAIL=1 collapses the sidebar to the rail
                 // at 3s (the user's own toggle, fold-ups and all).
-                if std::env::var("VIREO_SHOWCASE_RAIL").is_ok() {
+                if std::env::var("HYLKI_SHOWCASE_RAIL").is_ok() {
                     let sb = model.sidebar.sender().clone();
                     gtk::glib::timeout_add_seconds_local_once(3, move || {
                         let _ = sb.send(SidebarInput::ToggleCollapsed);
                     });
                 }
-                // VIREO_SHOWCASE_TOGGLE=starred|sent|drafts toggles that
+                // HYLKI_SHOWCASE_TOGGLE=starred|sent|drafts toggles that
                 // unified row's list at 5s (what a long-press does).
-                if let Ok(which) = std::env::var("VIREO_SHOWCASE_TOGGLE") {
+                if let Ok(which) = std::env::var("HYLKI_SHOWCASE_TOGGLE") {
                     let kind = match which.as_str() {
                         "sent" => FolderKind::Sent,
                         "drafts" => FolderKind::Drafts,
@@ -4023,22 +4022,22 @@ impl SimpleComponent for AppModel {
                         let _ = sb.send(SidebarInput::ToggleKindExpand(kind));
                     });
                 }
-                // VIREO_SHOWCASE_FOLD_FILTERED folds All Inboxes' Filtered
+                // HYLKI_SHOWCASE_FOLD_FILTERED folds All Inboxes' Filtered
                 // Folders section, to check its folded header.
-                if std::env::var("VIREO_SHOWCASE_FOLD_FILTERED").is_ok() {
+                if std::env::var("HYLKI_SHOWCASE_FOLD_FILTERED").is_ok() {
                     let sb = model.sidebar.sender().clone();
                     gtk::glib::timeout_add_seconds_local_once(3, move || {
                         let _ = sb.send(SidebarInput::ToggleFilteredExpand(crate::ui::sidebar::Slot::Unified));
                     });
                 }
-                // VIREO_SHOWCASE_REPLY opens the inline reply composer on the
+                // HYLKI_SHOWCASE_REPLY opens the inline reply composer on the
                 // selected message, to check the composer's grounds (#148).
-                // VIREO_SHOWCASE_FLIP=dark|light then switches the app theme
+                // HYLKI_SHOWCASE_FLIP=dark|light then switches the app theme
                 // at 6 s, to check a live flip re-resolves those grounds.
-                // VIREO_SHOWCASE_FOLDER=drafts|sent|archive|junk|trash switches
+                // HYLKI_SHOWCASE_FOLDER=drafts|sent|archive|junk|trash switches
                 // to that folder at 2 s, before the staging's 3 s selection
                 // moves onto its first row.
-                if let Ok(kind) = std::env::var("VIREO_SHOWCASE_FOLDER") {
+                if let Ok(kind) = std::env::var("HYLKI_SHOWCASE_FOLDER") {
                     let kind = match kind.as_str() {
                         "drafts" => Some(FolderKind::Drafts),
                         "sent" => Some(FolderKind::Sent),
@@ -4054,42 +4053,42 @@ impl SimpleComponent for AppModel {
                         });
                     }
                 }
-                if std::env::var("VIREO_SHOWCASE_REPLY").is_ok() {
+                if std::env::var("HYLKI_SHOWCASE_REPLY").is_ok() {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(4, move || {
                         s.input(AppMsg::Reply);
                     });
                 }
-                // VIREO_SHOWCASE_COMPOSE_PREVIEW=1 turns the inline
+                // HYLKI_SHOWCASE_COMPOSE_PREVIEW=1 turns the inline
                 // composer's preview on a beat after it opens, so a
                 // capture can show the rendered message rather than the
                 // source it was written in.
-                // VIREO_SHOWCASE_COMPOSE_MENU=format opens the inline
+                // HYLKI_SHOWCASE_COMPOSE_MENU=format opens the inline
                 // composer's format chooser; any other value opens its
-                // overflow menu. Pair either with VIREO_SHOWCASE_MENU=main.
-                if let Ok(which) = std::env::var("VIREO_SHOWCASE_COMPOSE_MENU") {
+                // overflow menu. Pair either with HYLKI_SHOWCASE_MENU=main.
+                if let Ok(which) = std::env::var("HYLKI_SHOWCASE_COMPOSE_MENU") {
                     let s = sender.clone();
                     let format = which == "format";
                     gtk::glib::timeout_add_seconds_local_once(6, move || {
                         s.input(AppMsg::ShowcaseComposeMenu { format });
                     });
                 }
-                if std::env::var("VIREO_SHOWCASE_COMPOSE_PREVIEW").is_ok() {
+                if std::env::var("HYLKI_SHOWCASE_COMPOSE_PREVIEW").is_ok() {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(6, move || {
                         s.input(AppMsg::ShowcaseComposePreview);
                     });
                 }
-                // VIREO_SHOWCASE_COMPOSE_UNDO=1 runs the composer's history
+                // HYLKI_SHOWCASE_COMPOSE_UNDO=1 runs the composer's history
                 // (#200) through a scripted round of edits and undos on the
-                // `vireo::compose::undo` log target: the one way to exercise
+                // `hylki::compose::undo` log target: the one way to exercise
                 // it without a keyboard, since the keys cannot be injected
-                // on this desktop. Pair with VIREO_SHOWCASE_REPLY.
+                // on this desktop. Pair with HYLKI_SHOWCASE_REPLY.
                 // Set it to markdown, html or plain to walk a source-mode
                 // body (a textarea) instead of the rich document, to
                 // `backspace` to trim text rather than type it, or to
                 // `pause` to leave a long gap between two runs of typing.
-                if let Ok(which) = std::env::var("VIREO_SHOWCASE_COMPOSE_UNDO") {
+                if let Ok(which) = std::env::var("HYLKI_SHOWCASE_COMPOSE_UNDO") {
                     let format = match which.as_str() {
                         "markdown" => Some(config::ComposeFormat::Markdown),
                         "html" => Some(config::ComposeFormat::Html),
@@ -4113,18 +4112,18 @@ impl SimpleComponent for AppModel {
                         s.input(AppMsg::ShowcaseBurger);
                     });
                 }
-                // VIREO_SHOWCASE_FILES=/a:/b hands those files in at 4 s,
-                // as GNOME Files' "Send with Vireo" would; with
-                // VIREO_SHOWCASE_TOP=1 the capture takes the newest window
+                // HYLKI_SHOWCASE_FILES=/a:/b hands those files in at 4 s,
+                // as GNOME Files' "Send with Hylki" would; with
+                // HYLKI_SHOWCASE_TOP=1 the capture takes the newest window
                 // (the dialog asking about them) instead of the main one.
-                if let Ok(list) = std::env::var("VIREO_SHOWCASE_FILES") {
+                if let Ok(list) = std::env::var("HYLKI_SHOWCASE_FILES") {
                     let s = sender.clone();
                     let paths: Vec<std::path::PathBuf> = list.split(':').filter(|p| !p.is_empty()).map(Into::into).collect();
                     gtk::glib::timeout_add_seconds_local_once(4, move || {
                         s.input(AppMsg::OpenWithFiles(paths));
                     });
                 }
-                if let Ok(flip) = std::env::var("VIREO_SHOWCASE_FLIP") {
+                if let Ok(flip) = std::env::var("HYLKI_SHOWCASE_FLIP") {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(6, move || {
                         s.input(AppMsg::SetAppTheme(if flip == "dark" {
@@ -4134,44 +4133,44 @@ impl SimpleComponent for AppModel {
                         }));
                     });
                 }
-                // VIREO_SHOWCASE_THEME=<id> picks that appearance theme at
+                // HYLKI_SHOWCASE_THEME=<id> picks that appearance theme at
                 // 6 s, exactly as the Settings gallery does, so the live
                 // repaint (chrome, reader and composer) can be captured.
-                if let Ok(id) = std::env::var("VIREO_SHOWCASE_THEME") {
+                if let Ok(id) = std::env::var("HYLKI_SHOWCASE_THEME") {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(6, move || {
                         s.input(AppMsg::SetTheme(id.clone()));
                     });
                 }
-                // VIREO_SHOWCASE_ACCOUNT=N opens account N's editor a beat
-                // after the Settings window (with VIREO_SHOWCASE_SETTINGS),
+                // HYLKI_SHOWCASE_ACCOUNT=N opens account N's editor a beat
+                // after the Settings window (with HYLKI_SHOWCASE_SETTINGS),
                 // so the editor itself can be captured.
-                if let Some(Ok(n)) = std::env::var("VIREO_SHOWCASE_ACCOUNT").ok().map(|v| v.parse::<u32>()) {
+                if let Some(Ok(n)) = std::env::var("HYLKI_SHOWCASE_ACCOUNT").ok().map(|v| v.parse::<u32>()) {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(5, move || {
                         s.input(AppMsg::SidebarContext(CtxAction::OpenAccountSettings(n + 1)));
                     });
                 }
-                // VIREO_SHOWCASE_EDITOR_DIRTY=1 types into the open account
+                // HYLKI_SHOWCASE_EDITOR_DIRTY=1 types into the open account
                 // editor's Label field at 7s, so leaving an edited editor can
                 // be exercised without a keyboard.
-                if std::env::var("VIREO_SHOWCASE_EDITOR_DIRTY").is_ok() {
+                if std::env::var("HYLKI_SHOWCASE_EDITOR_DIRTY").is_ok() {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(7, move || {
                         s.input(AppMsg::ShowcaseDirtyEditor);
                     });
                 }
-                // VIREO_SHOWCASE_SETTINGS_GO=<category> picks that sidebar
+                // HYLKI_SHOWCASE_SETTINGS_GO=<category> picks that sidebar
                 // category at 8s, exactly as a click on its row does.
-                if let Ok(page) = std::env::var("VIREO_SHOWCASE_SETTINGS_GO") {
+                if let Ok(page) = std::env::var("HYLKI_SHOWCASE_SETTINGS_GO") {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(8, move || {
                         s.input(AppMsg::ShowSettingsPage(page.clone()));
                     });
                 }
-                // VIREO_SHOWCASE_DIALOG=save|discard|cancel answers whatever
+                // HYLKI_SHOWCASE_DIALOG=save|discard|cancel answers whatever
                 // message dialog is on screen at 10s.
-                if let Ok(answer) = std::env::var("VIREO_SHOWCASE_DIALOG") {
+                if let Ok(answer) = std::env::var("HYLKI_SHOWCASE_DIALOG") {
                     gtk::glib::timeout_add_seconds_local_once(10, move || {
                         let tops = gtk::Window::toplevels();
                         let dialog = (0..tops.n_items())
@@ -4190,10 +4189,10 @@ impl SimpleComponent for AppModel {
                         }
                     });
                 }
-                // VIREO_SHOWCASE_SETTINGS=accounts|prefs opens the Settings
+                // HYLKI_SHOWCASE_SETTINGS=accounts|prefs opens the Settings
                 // window on that panel and captures it instead of the main
                 // window, so its pages can be checked in stills too.
-                let settings = std::env::var("VIREO_SHOWCASE_SETTINGS").ok();
+                let settings = std::env::var("HYLKI_SHOWCASE_SETTINGS").ok();
                 if let Some(panel) = settings.clone() {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(3, move || {
@@ -4210,9 +4209,9 @@ impl SimpleComponent for AppModel {
                             });
                         }
                     });
-                    // VIREO_SHOWCASE_SETTINGS_REOPEN=1 closes the window at
+                    // HYLKI_SHOWCASE_SETTINGS_REOPEN=1 closes the window at
                     // 5s and opens it again at 7s, to time a reopen.
-                    if std::env::var("VIREO_SHOWCASE_SETTINGS_REOPEN").is_ok() {
+                    if std::env::var("HYLKI_SHOWCASE_SETTINGS_REOPEN").is_ok() {
                         let s = sender.clone();
                         gtk::glib::timeout_add_seconds_local_once(5, move || {
                             s.input(AppMsg::DebugCloseSettings);
@@ -4233,18 +4232,18 @@ impl SimpleComponent for AppModel {
                         // The newest: a dialog over Settings, when one is up.
                         .last()
                 };
-                // With VIREO_SHOWCASE_SCROLL set, the Settings window is
+                // With HYLKI_SHOWCASE_SCROLL set, the Settings window is
                 // made tall a beat after opening and every scroller in it
                 // is run to its end just before the capture, so the lower
                 // groups of a panel can be checked.
                 // The value is the fraction of the way down (default 1).
-                let scroll: Option<f64> = std::env::var("VIREO_SHOWCASE_SCROLL")
+                let scroll: Option<f64> = std::env::var("HYLKI_SHOWCASE_SCROLL")
                     .ok()
                     .map(|v| v.parse().unwrap_or(1.0));
                 if let (Some(_), Some(frac)) = (&settings, scroll) {
-                    // VIREO_SHOWCASE_SCROLL_WIDTH overrides the 720px width,
+                    // HYLKI_SHOWCASE_SCROLL_WIDTH overrides the 720px width,
                     // for checking a panel at the window's real width.
-                    let width: i32 = std::env::var("VIREO_SHOWCASE_SCROLL_WIDTH")
+                    let width: i32 = std::env::var("HYLKI_SHOWCASE_SCROLL_WIDTH")
                         .ok()
                         .and_then(|v| v.parse().ok())
                         .unwrap_or(720);
@@ -4262,7 +4261,7 @@ impl SimpleComponent for AppModel {
                     });
                 }
                 let win = root.clone();
-                let top = std::env::var_os("VIREO_SHOWCASE_TOP").is_some();
+                let top = std::env::var_os("HYLKI_SHOWCASE_TOP").is_some();
                 gtk::glib::timeout_add_seconds_local_once(delay, move || {
                     let target = settings
                         .as_ref()
@@ -4322,7 +4321,7 @@ impl SimpleComponent for AppModel {
             .emit(NotifyInput::SetConsoleEnabled(model.console_mode));
         // Screenshot/dev hook: open the status bar console shortly after
         // launch (pref permitting) so captures can show it.
-        if std::env::var("VIREO_SHOWCASE_CONSOLE").is_ok() {
+        if std::env::var("HYLKI_SHOWCASE_CONSOLE").is_ok() {
             let s = sender.clone();
             gtk::glib::timeout_add_seconds_local_once(3, move || {
                 s.input(AppMsg::OpenConsole);
@@ -5175,7 +5174,7 @@ impl SimpleComponent for AppModel {
                     // gathering, no spinner — returning to a thread shouldn't
                     // cost what opening it did.
                     tracing::debug!(
-                        target: "vireo::undo",
+                        target: "hylki::undo",
                         "select {}: thread of {}, remembered={}, needs_body={needs_body}",
                         m.id,
                         thread.len(),
@@ -5257,7 +5256,7 @@ impl SimpleComponent for AppModel {
                                 && !mid.is_empty()
                         });
                     tracing::debug!(
-                        target: "vireo::undo",
+                        target: "hylki::undo",
                         "select {}: single message, needs_body={needs_body}, unchanged={unchanged}",
                         m.id,
                     );
@@ -5511,7 +5510,7 @@ impl SimpleComponent for AppModel {
                 // a separate compose window.
                 let m = self.with_cached_body(*message);
                 tracing::debug!(
-                    target: "vireo::reply",
+                    target: "hylki::reply",
                     "card {:?}: {}:{} from={}",
                     action, m.account_id, m.id, m.from_addr,
                 );
@@ -5557,7 +5556,7 @@ impl SimpleComponent for AppModel {
                 let m = *message;
                 if matches!(action, RowAction::Reply | RowAction::ReplyAll | RowAction::Forward) {
                     tracing::debug!(
-                        target: "vireo::reply",
+                        target: "hylki::reply",
                         "row {:?}: {}:{} from={} conversation={:?}",
                         action, m.account_id, m.id, m.from_addr,
                         conversation.iter().map(|c| c.id).collect::<Vec<_>>(),
@@ -5950,7 +5949,7 @@ impl SimpleComponent for AppModel {
                 if config::load_language() != code {
                     config::save_language(&code);
                     self.notifications.emit(NotifyInput::Push {
-                        text: i18n("The language applies the next time Vireo starts."),
+                        text: i18n("The language applies the next time Hylki starts."),
                         error: false,
                         connectivity: false,
                     });
@@ -5959,7 +5958,7 @@ impl SimpleComponent for AppModel {
 
             AppMsg::WizardLanguage(code) => {
                 // The drop-down also notifies as it is set up; only a real
-                // change counts. Saved, then Vireo restarts through the same
+                // change counts. Saved, then Hylki restarts through the same
                 // helper the icon change uses, so every window — the wizard
                 // first, since it is not completed yet — comes up in the
                 // chosen language. Should the helper fail, the wizard alone
@@ -6197,7 +6196,7 @@ impl SimpleComponent for AppModel {
                     tracing::warn!("restart helper failed: {e}");
                     self.restart_pending = false;
                     self.notifications.emit(NotifyInput::Push {
-                        text: i18n("Couldn't restart automatically — quit and reopen Vireo \
+                        text: i18n("Couldn't restart automatically — quit and reopen Hylki \
                                to finish switching the icon."),
                         error: true,
                         connectivity: false,
@@ -6791,7 +6790,7 @@ impl SimpleComponent for AppModel {
                     let entry = MenuEntry::new(i18n("Customize Toolbar…"), move || {
                         let _ = s.send(AppMsg::CustomizeToolbar);
                     })
-                    .icon("co.hyprlab.Vireo-preferences-desktop-appearance-symbolic");
+                    .icon("co.hyprlab.Hylki-preferences-desktop-appearance-symbolic");
                     show_context_menu(header, x, y, vec![vec![entry]]);
                 }
             }
@@ -6872,7 +6871,7 @@ impl SimpleComponent for AppModel {
                         node = w.parent();
                     }
                     tracing::info!(
-                        target: "vireo::compose::undo",
+                        target: "hylki::compose::undo",
                         "burger: opened, focus now [{}]",
                         chain.join(" < ")
                     );
@@ -6958,7 +6957,7 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::OpenMid(uri) => {
-                // The cache first: it holds every message Vireo has listed,
+                // The cache first: it holds every message Hylki has listed,
                 // across accounts, and answers at once. Only a miss asks the
                 // servers, one HEADER search per folder per account.
                 let Some(id) = parse_mid(&uri) else {
@@ -7074,7 +7073,7 @@ impl SimpleComponent for AppModel {
                 // along invisibly if a web link (rather than Nautilus)
                 // carried the parameter. The ones that don't are reported,
                 // not dropped in silence: from inside the Flatpak sandbox a
-                // path the file manager can see may be one Vireo cannot.
+                // path the file manager can see may be one Hylki cannot.
                 let (attachments, dropped): (Vec<_>, Vec<_>) =
                     std::mem::take(&mut prefill.attachments).into_iter().partition(|p| p.is_file());
                 for p in &dropped {
@@ -7087,7 +7086,7 @@ impl SimpleComponent for AppModel {
                 );
                 if !attachments.is_empty() || !dropped.is_empty() {
                     // Files came along (Files' own "Email…" entry): the same
-                    // choice of destination as "Send with Vireo".
+                    // choice of destination as "Send with Hylki".
                     self.begin_hand_off(FileHandOff { base: prefill, files: attachments, dropped }, &sender);
                     return;
                 }
@@ -7353,9 +7352,7 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::ShowKeyringHelp { problem } => self.show_keyring_help(problem),
-            AppMsg::ShowRenameNotice { startup } => {
-                crate::ui::rename_notice::show(&self.window, startup);
-            }
+            AppMsg::ShowCarryOverNotice(from) => crate::ui::carry_over::show(&self.window, from),
 
             AppMsg::AccountEnabledChanged { email, enabled } => {
                 if let Some(slot) = self.config.iter_mut().find(|c| c.email == email) {
@@ -7733,7 +7730,7 @@ impl SimpleComponent for AppModel {
             AppMsg::ExportLog => {
                 let dialog = gtk::FileDialog::builder()
                     .title(&i18n("Export Log"))
-                    .initial_name(&format!("vireo-log-{}.txt", chrono::Local::now().format("%Y%m%d-%H%M")))
+                    .initial_name(&format!("hylki-log-{}.txt", chrono::Local::now().format("%Y%m%d-%H%M")))
                     .build();
                 let win = self.window.clone();
                 let notif = self.notifications.sender().clone();
@@ -7803,14 +7800,14 @@ impl SimpleComponent for AppModel {
                             Some(i18n("Settings Imported").as_str()),
                             Some(&i18n_f(
                                 "{n} mail account(s), the cloud storage accounts and all \
-                                 preferences were imported. Restart Vireo to apply them. \
+                                 preferences were imported. Restart Hylki to apply them. \
                                  Passwords and sign-ins are not part of a backup; re-enter \
                                  them on first use if this is a new machine.",
                                 &[("n", &n.to_string())],
                             )),
                         );
                         alert.add_response("later", &i18n("Later"));
-                        alert.add_response("restart", &i18n("Restart Vireo"));
+                        alert.add_response("restart", &i18n("Restart Hylki"));
                         alert
                             .set_response_appearance("restart", adw::ResponseAppearance::Suggested);
                         alert.connect_response(None, |_, resp| {
@@ -7866,7 +7863,7 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::ImportGoaAccount(account) => {
-                // Enable a GNOME Online Account in Vireo (or re-enable if already
+                // Enable a GNOME Online Account in Hylki (or re-enable if already
                 // imported). Its password came from GOA and is stored in the keyring.
                 let email = account.email.clone();
                 if let Some(slot) = self.config.iter_mut().find(|c| c.email == email) {
@@ -8272,7 +8269,7 @@ impl SimpleComponent for AppModel {
                 } else {
                     None
                 };
-                // Desktop-notify for genuinely new inbox mail. Only when Vireo
+                // Desktop-notify for genuinely new inbox mail. Only when Hylki
                 // isn't the active window (no point notifying about mail you're
                 // watching arrive), only for the Inbox, and never on the first load
                 // of a folder (no prior cache) — that would fire for every existing
@@ -8350,7 +8347,7 @@ impl SimpleComponent for AppModel {
                 self.message_cache
                     .insert((account_id, folder_id), messages.clone());
                 // A draft picker waiting on this folder's list (Send with
-                // Vireo → Continue a Draft…) opens once every Drafts folder
+                // Hylki → Continue a Draft…) opens once every Drafts folder
                 // has answered.
                 if let Some((_, waiting)) = self.pending_draft_pick.as_mut() {
                     waiting.remove(&(account_id, folder_id));
@@ -8385,7 +8382,7 @@ impl SimpleComponent for AppModel {
                             }
                         }
                         tracing::debug!(
-                            target: "vireo::undo",
+                            target: "hylki::undo",
                             "re-filed conversation under id {}",
                             m.id,
                         );
@@ -8992,7 +8989,7 @@ impl AppModel {
     /// The memory section of an exported log: the process tree as the
     /// kernel sees it, then what the main process is holding — the mail
     /// index (whose size follows the mailbox, not the session) apart from the
-    /// session caches (which follow use). Written so a "Vireo is using N GB"
+    /// session caches (which follow use). Written so a "Hylki is using N GB"
     /// report answers itself: a big index on a big mailbox is the accepted
     /// cost of keeping everything in RAM; a big cache is something to fix.
     fn memory_report(&self) -> String {
@@ -9183,7 +9180,6 @@ impl AppModel {
             self.help_menu.append(Some(i18n("Console").as_str()), Some("win.console"));
         }
         self.help_menu.append(Some(i18n("Keyboard Shortcuts").as_str()), Some("win.shortcuts"));
-        self.help_menu.append(Some(i18n("Vireo Is Now Hylki…").as_str()), Some("win.rename-notice"));
         self.help_menu
             .append(Some(format!("{} {}", i18n("About"), crate::APP_NAME).as_str()), Some("win.about"));
     }
@@ -9687,7 +9683,7 @@ impl AppModel {
         // every account's slot but only spawn a worker for enabled ones — disabled
         // accounts simply have no worker (no sync, no sidebar presence). With no
         // accounts configured, the app is blank — the sample/demo data only appears
-        // when explicitly requested via VIREO_DEMO (so removing all real accounts
+        // when explicitly requested via HYLKI_DEMO (so removing all real accounts
         // doesn't fall back to fake content).
         if self.config.is_empty() {
             if demo_mode() {
@@ -10096,7 +10092,7 @@ impl AppModel {
                     .insert((entry.account_id, message_id.clone()), thread.clone());
             }
             tracing::debug!(
-                target: "vireo::undo",
+                target: "hylki::undo",
                 "carrying {} bodies and {} conversations over the move",
                 entry.rows.iter().filter(|m| !m.body.is_empty()).count(),
                 entry.threads.len(),
@@ -10180,7 +10176,7 @@ impl AppModel {
             self.message_cache.entry((account_id, folder_id)).or_default().push(m);
             added = true;
         }
-        tracing::debug!(target: "vireo::undo", "instant restore: added={added} to folder {folder_id}");
+        tracing::debug!(target: "hylki::undo", "instant restore: added={added} to folder {folder_id}");
         if !added {
             return;
         }
@@ -10207,7 +10203,7 @@ impl AppModel {
             .iter()
             .max_by_key(|m| m.timestamp)
             .map(|m| (account_id, m.id));
-        tracing::debug!(target: "vireo::undo", "instant restore: selecting {newest:?}");
+        tracing::debug!(target: "hylki::undo", "instant restore: selecting {newest:?}");
         if let Some(key) = newest {
             self.message_list.emit(MessageListInput::SelectAndLoad(key));
         }
@@ -10328,7 +10324,7 @@ impl AppModel {
             "win.redo",
             "<Control><Shift>z",
         ));
-        if std::env::var_os("VIREO_SHOWCASE_COMPOSE_UNDO").is_some() {
+        if std::env::var_os("HYLKI_SHOWCASE_COMPOSE_UNDO").is_some() {
             let mut chain = Vec::new();
             let mut node = gtk::prelude::GtkWindowExt::focus(&self.window);
             while let Some(w) = node {
@@ -10336,7 +10332,7 @@ impl AppModel {
                 node = w.parent();
             }
             tracing::info!(
-                target: "vireo::compose::undo",
+                target: "hylki::compose::undo",
                 "menu: composing={composing} undo={undo_what:?} redo={redo_what:?} focus=[{}]",
                 chain.join(" < ")
             );
@@ -10435,7 +10431,7 @@ impl AppModel {
     fn compose_target(&self) -> Option<Message> {
         let m = self.reply_target()?;
         tracing::debug!(
-            target: "vireo::reply",
+            target: "hylki::reply",
             "toolbar target: selected {}:{} from={} cards={} thread={} head={}",
             m.account_id, m.id, m.from_addr, self.selection_from_cards,
             self.current_thread.len(), self.thread_star_target(&m),
@@ -10445,7 +10441,7 @@ impl AppModel {
         }
         let picked = self.newest_to_answer(&self.current_thread, m);
         tracing::debug!(
-            target: "vireo::reply",
+            target: "hylki::reply",
             "toolbar target: answering {}:{} from={}",
             picked.account_id, picked.id, picked.from_addr,
         );
@@ -10481,7 +10477,7 @@ impl AppModel {
     }
 
     /// Launch (or re-present) the welcome wizard: the first run's greeting,
-    /// the VIREO_WELCOME review mode, and — on beta builds only — the burger
+    /// the HYLKI_WELCOME review mode, and — on beta builds only — the burger
     /// menu's Welcome Wizard entry for testers.
     fn open_wizard(&mut self, sender: &ComponentSender<Self>) {
         use crate::ui::welcome::{Welcome, WelcomeOutput};
@@ -10743,7 +10739,7 @@ impl AppModel {
         let folders = self.folder_unread.clone();
         let unified = self.unified_unread();
         self.sidebars_emit(SidebarInput::SetUnread { folders, unified: self.inboxes_unread() });
-        // The counted total is what GNOME shows beside Vireo in Background
+        // The counted total is what GNOME shows beside Hylki in Background
         // Apps, so a process with no window still says what it is there for.
         if self.run_in_background.get() {
             crate::background::set_status(&crate::background::status_text(unified));
@@ -10785,8 +10781,8 @@ impl AppModel {
     fn show_restarting_dialog(&self) {
         let dialog = adw::MessageDialog::new(
             Some(&self.icon_dialog_parent()),
-            Some(i18n("Restarting Vireo").as_str()),
-            Some(i18n("Applying your new app icon. Vireo will close and reopen in a moment.").as_str()),
+            Some(i18n("Restarting Hylki").as_str()),
+            Some(i18n("Applying your new app icon. Hylki will close and reopen in a moment.").as_str()),
         );
         let spinner = gtk::Spinner::new();
         spinner.set_size_request(32, 32);
@@ -10801,7 +10797,7 @@ impl AppModel {
     /// new icon, so the app grid shows it — but GNOME Shell keeps a running
     /// app's windows bound to the app object it created for the old
     /// launcher (a changed launcher only replaces the object, it never
-    /// re-tracks the windows), so the dock's running entry, like Vireo's
+    /// re-tracks the windows), so the dock's running entry, like Hylki's
     /// own window icon, only switches once every window has closed: a
     /// restart. Offered, never forced, over whichever window the change
     /// came from.
@@ -10809,7 +10805,7 @@ impl AppModel {
         let dialog = adw::MessageDialog::new(
             Some(&self.icon_dialog_parent()),
             Some(i18n("Restart to finish switching icons?").as_str()),
-            Some(i18n("The dock and Vireo's own windows keep the old icon until Vireo restarts.").as_str()),
+            Some(i18n("The dock and Hylki's own windows keep the old icon until Hylki restarts.").as_str()),
         );
         dialog.add_responses(&[("later", i18n("Later").as_str()), ("restart", i18n("Restart Now").as_str())]);
         dialog.set_response_appearance("restart", adw::ResponseAppearance::Suggested);
@@ -11177,7 +11173,7 @@ impl AppModel {
                 MenuEntry::new($label, move || {
                     let _ = s.send($msg);
                 })
-                .icon(concat!("co.hyprlab.Vireo-", $icon, "-symbolic"))
+                .icon(concat!("co.hyprlab.Hylki-", $icon, "-symbolic"))
                 .enabled($enabled)
             }};
         }
@@ -11232,7 +11228,7 @@ impl AppModel {
                     T::Tags => {
                         if let Some(entries) = self.reader_tag_entries(sender) {
                             section.push(
-                                MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("co.hyprlab.Vireo-tag-outline-symbolic"),
+                                MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("co.hyprlab.Hylki-tag-outline-symbolic"),
                             );
                         }
                     }
@@ -11576,7 +11572,7 @@ impl AppModel {
             MenuEntry::new(label, move || {
                 let _ = s.send(AppMsg::CardAction { action, message: Box::new(message.clone()) });
             })
-            .icon(format!("co.hyprlab.Vireo-{icon}-symbolic"))
+            .icon(format!("co.hyprlab.Hylki-{icon}-symbolic"))
         };
         let kind = self.folder_kind(m.account_id, m.folder_id);
         let in_junk = kind == Some(FolderKind::Junk);
@@ -11612,7 +11608,7 @@ impl AppModel {
                     });
                 });
             sections.push(vec![
-                MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("co.hyprlab.Vireo-tag-outline-symbolic"),
+                MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("co.hyprlab.Hylki-tag-outline-symbolic"),
             ]);
         }
         let mut acts = Vec::new();
@@ -11636,7 +11632,7 @@ impl AppModel {
                         y,
                     });
                 })
-                .icon("co.hyprlab.Vireo-folder-symbolic"),
+                .icon("co.hyprlab.Hylki-folder-symbolic"),
             );
         }
         acts.push(item(RowAction::Archive, i18n("Archive"), "mail-archive"));
@@ -11660,7 +11656,7 @@ impl AppModel {
             sections.push(vec![MenuEntry::new(label, move || {
                 let _ = s.send(AppMsg::SetRemoteContent { account_id, id, show: !showing });
             })
-            .icon(format!("co.hyprlab.Vireo-{icon}-symbolic"))]);
+            .icon(format!("co.hyprlab.Hylki-{icon}-symbolic"))]);
         }
         sections.push(vec![item(RowAction::ViewSource, i18n("View Source"), "code")]);
         show_context_menu(&self.window, x, y, sections);
@@ -12217,7 +12213,7 @@ impl AppModel {
 
         let mut attachments = Vec::new();
         if !editable.attachments.is_empty() {
-            let dir = std::env::temp_dir().join(format!("vireo-outbox-{account_id}-{id}"));
+            let dir = std::env::temp_dir().join(format!("hylki-outbox-{account_id}-{id}"));
             if std::fs::create_dir_all(&dir).is_ok() {
                 for (i, att) in editable.attachments.iter().enumerate() {
                     // The name came out of a message header; keep it to a single
@@ -12495,8 +12491,8 @@ impl AppModel {
                 .map(|p| p.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_else(|| p.display().to_string()))
                 .collect();
             let text = crate::i18n::ni18n_f(
-                "Could not attach {names}: Vireo cannot read the file.",
-                "Could not attach {n} files (Vireo cannot read them): {names}",
+                "Could not attach {names}: Hylki cannot read the file.",
+                "Could not attach {n} files (Hylki cannot read them): {names}",
                 dropped.len() as u32,
                 &[("n", &dropped.len().to_string()), ("names", &names.join(", "))],
             );
@@ -12518,7 +12514,7 @@ impl AppModel {
         });
     }
 
-    /// Files handed in from outside (Send with Vireo, Open With, Email…):
+    /// Files handed in from outside (Send with Hylki, Open With, Email…):
     /// the first step. Reports the unreadable ones, then goes where
     /// Settings → System → GNOME Files says: straight into a new message, a
     /// draft or a reply, or a dialog offering the three.
@@ -12552,7 +12548,7 @@ impl AppModel {
         let size = crate::cloud::human_size(hand_off_size(&hand_off.files));
         let dialog = adw::MessageDialog::new(
             Some(&self.window),
-            Some(ni18n_f("Send {n} file with Vireo", "Send {n} files with Vireo", n, &[("n", &n.to_string())]).as_str()),
+            Some(ni18n_f("Send {n} file with Hylki", "Send {n} files with Hylki", n, &[("n", &n.to_string())]).as_str()),
             Some(i18n_f("{names} ({size}). What should the files go into?", &[("names", &names), ("size", &size)]).as_str()),
         );
         dialog.add_response("cancel", &i18n("Cancel"));
@@ -13947,7 +13943,7 @@ impl AppModel {
         let mint = crate::platform::is_mint_cinnamon();
 
         let heading = if problem {
-            i18n("Vireo couldn’t save your password")
+            i18n("Hylki couldn’t save your password")
         } else {
             i18n("Keyring setup on Linux Mint")
         };
@@ -13955,13 +13951,13 @@ impl AppModel {
         let mut body = String::new();
         if problem {
             body.push_str(
-                "Vireo stores account passwords in the system keyring (the Secret \
+                "Hylki stores account passwords in the system keyring (the Secret \
                  Service), never on disk. The keyring didn’t accept the password, so \
-                 this account won’t stay signed in after you close Vireo.\n\n",
+                 this account won’t stay signed in after you close Hylki.\n\n",
             );
         } else {
             body.push_str(
-                "Vireo keeps your account passwords in the system keyring (the Secret \
+                "Hylki keeps your account passwords in the system keyring (the Secret \
                  Service) rather than on disk. On Linux Mint with Cinnamon the keyring \
                  sometimes needs a one-time setup so passwords persist — and so it \
                  doesn’t ask you to unlock it at every login.\n\n",
@@ -13988,7 +13984,7 @@ impl AppModel {
             if crate::platform::is_flatpak() {
                 body.push_str(
                     "\n\nNote: run these steps on the host system (not inside the \
-                     Flatpak) — Vireo uses whatever keyring your desktop provides.",
+                     Flatpak) — Hylki uses whatever keyring your desktop provides.",
                 );
             }
         } else {
@@ -14833,12 +14829,12 @@ impl AppModel {
         accounts.emit(crate::ui::accounts::AccountsInput::SetFolderChoices(
             self.folder_choice_map(),
         ));
-        // Showcase hook: VIREO_SHOWCASE_EDIT_FILTER=<index> opens that
+        // Showcase hook: HYLKI_SHOWCASE_EDIT_FILTER=<index> opens that
         // filter rule's editor once the panel is up, for a capture.
         // Sent through the app so it reaches whichever panel is current
         // when it fires: an open right after the pre-warm may have swapped
         // in a fresh one.
-        if let Some(Ok(i)) = std::env::var("VIREO_SHOWCASE_EDIT_FILTER").ok().map(|v| v.parse::<usize>()) {
+        if let Some(Ok(i)) = std::env::var("HYLKI_SHOWCASE_EDIT_FILTER").ok().map(|v| v.parse::<usize>()) {
             if demo_mode() {
                 let s = sender.clone();
                 gtk::glib::timeout_add_seconds_local_once(2, move || {
@@ -14846,16 +14842,16 @@ impl AppModel {
                 });
             }
         }
-        // VIREO_SHOWCASE_FIND_TAGS=1 runs the tag finder once the panel is
+        // HYLKI_SHOWCASE_FIND_TAGS=1 runs the tag finder once the panel is
         // up (the demo backend answers with a fixed set); the report dialog
         // captures itself two seconds after it appears.
-        if std::env::var("VIREO_SHOWCASE_FIND_TAGS").is_ok() && demo_mode() {
+        if std::env::var("HYLKI_SHOWCASE_FIND_TAGS").is_ok() && demo_mode() {
             let s = sender.clone();
             gtk::glib::timeout_add_seconds_local_once(2, move || s.input(AppMsg::FindTags));
         }
-        // VIREO_SHOWCASE_EDIT_TAG=<index> likewise opens that tag's editor
+        // HYLKI_SHOWCASE_EDIT_TAG=<index> likewise opens that tag's editor
         // (#147); an index past the end opens the Add Tag dialog.
-        if let Some(Ok(i)) = std::env::var("VIREO_SHOWCASE_EDIT_TAG").ok().map(|v| v.parse::<usize>()) {
+        if let Some(Ok(i)) = std::env::var("HYLKI_SHOWCASE_EDIT_TAG").ok().map(|v| v.parse::<usize>()) {
             if demo_mode() {
                 let a = accounts.sender().clone();
                 let n = self.tags.len();
@@ -15105,7 +15101,7 @@ impl AppModel {
             Some(&self.window),
             Some(i18n("Remove Account?").as_str()),
             Some(&format!(
-                "Remove {label} from Vireo? Its saved password is deleted. \
+                "Remove {label} from Hylki? Its saved password is deleted. \
                  Mail on the server is not affected."
             )),
         );
@@ -15187,7 +15183,7 @@ impl AppModel {
                 i18n("This is a beta build for trying upcoming changes early. \
                  Expect bugs and instability — please report anything broken \
                  on GitHub. It shares your accounts and mail with the stable \
-                 Vireo install.").as_str(),
+                 Hylki install.").as_str(),
             ));
             warn.set_wrap(true);
             warn.set_justify(gtk::Justification::Center);
@@ -15204,25 +15200,12 @@ impl AppModel {
         info.set_selection_mode(gtk::SelectionMode::None);
         info.set_margin_top(20);
 
-        // The last Vireo release: where updates continue.
-        let rename_row = adw::ActionRow::builder()
-            .title(&i18n("Vireo is now Hylki"))
-            .subtitle(&i18n("This is the last Vireo release. Updates continue as Hylki."))
-            .activatable(true)
-            .build();
-        rename_row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Vireo-go-next-symbolic"));
-        {
-            let win = win.clone();
-            rename_row.connect_activated(move |_| crate::ui::rename_notice::show(&win, false));
-        }
-        info.append(&rename_row);
-
         let notes_row = adw::ActionRow::builder()
             .title(&i18n("Release Notes"))
             .subtitle(format!("What's new in {}", crate::VERSION))
             .activatable(true)
             .build();
-        notes_row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Vireo-go-next-symbolic"));
+        notes_row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Hylki-go-next-symbolic"));
         {
             let nav = nav.clone();
             notes_row.connect_activated(move |_| nav.push_by_tag("notes"));
@@ -15234,7 +15217,7 @@ impl AppModel {
             .subtitle(&i18n("Full version history"))
             .activatable(true)
             .build();
-        changelog_row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Vireo-go-next-symbolic"));
+        changelog_row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Hylki-go-next-symbolic"));
         {
             let nav = nav.clone();
             changelog_row.connect_activated(move |_| nav.push_by_tag("changelog"));
@@ -15249,7 +15232,7 @@ impl AppModel {
                 .subtitle(&i18n("Make account passwords persist on Linux Mint"))
                 .activatable(true)
                 .build();
-            keyring_row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Vireo-go-next-symbolic"));
+            keyring_row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Hylki-go-next-symbolic"));
             let sender = sender.clone();
             keyring_row.connect_activated(move |_| {
                 sender.input(AppMsg::ShowKeyringHelp { problem: false });
@@ -15273,19 +15256,19 @@ impl AppModel {
         let mk_row = |title: &str, url: &str| -> adw::ActionRow {
             let row = adw::ActionRow::builder().title(title).activatable(true).build();
             row.set_tooltip_text(Some(url));
-            row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Vireo-adw-external-link-symbolic"));
+            row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Hylki-adw-external-link-symbolic"));
             let u = url.to_string();
             row.connect_activated(move |_| crate::oauth::open_uri(&u));
             row
         };
-        links.append(&mk_row(&i18n("Website"), "https://vireo.hyprlab.co"));
+        links.append(&mk_row(&i18n("Website"), "https://hylki.hyprlab.co"));
         links.append(&mk_row(
             &i18n("Report an issue or feature request"),
-            "https://github.com/hyprlab/vireo/issues",
+            "https://github.com/hyprlab/hylki/issues",
         ));
         links.append(&mk_row("Discord", "https://discord.gg/YfEJ4b6PFW"));
         links.append(&mk_row(&i18n("Contact — hyprlab@proton.me"), "mailto:hyprlab@proton.me"));
-        links.append(&mk_row(&i18n("Source Code"), "https://github.com/hyprlab/vireo"));
+        links.append(&mk_row(&i18n("Source Code"), "https://github.com/hyprlab/hylki"));
         links.append(&mk_row(&i18n("License (GNU AGPL v3)"), "https://www.gnu.org/licenses/agpl-3.0.html"));
 
         // Buy Me a Coffee — with a coffee-cup glyph as its leading icon.
@@ -15297,7 +15280,7 @@ impl AppModel {
         let cup = gtk::Label::new(Some("☕"));
         cup.add_css_class("about-coffee");
         coffee.add_prefix(&cup);
-        coffee.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Vireo-adw-external-link-symbolic"));
+        coffee.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Hylki-adw-external-link-symbolic"));
         coffee.connect_activated(move |_| crate::oauth::open_uri("https://buymeacoffee.com/hyprlab"));
         links.append(&coffee);
         page.append(&links);
@@ -15321,7 +15304,7 @@ impl AppModel {
                 .build();
             let url = format!("https://github.com/{handle}");
             row.set_tooltip_text(Some(&url));
-            row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Vireo-adw-external-link-symbolic"));
+            row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Hylki-adw-external-link-symbolic"));
             row.connect_activated(move |_| crate::oauth::open_uri(&url));
             thanks.append(&row);
         }
@@ -15663,7 +15646,7 @@ impl AppModel {
     /// Apply the mail filter rules (#47) to an inbox sync, Evolution-style:
     /// the first matching rule files the message into its folder; everything
     /// else passes through. On-sight like the blacklist, so mail that arrived
-    /// while Vireo was closed still gets filed on the next sync.
+    /// while Hylki was closed still gets filed on the next sync.
     ///
     /// Returns the messages staying in the inbox, plus the ones filed away on
     /// this sync (paired with their destination path) so the caller can still
@@ -16808,7 +16791,7 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ("Ctrl+Shift+A", i18n_noop("Show or hide the accounts in the sidebar")),
             ("Ctrl+Shift+C", i18n_noop("Console mode (when enabled in Settings)")),
             ("Ctrl+W", i18n_noop("Close the window (background sync keeps running)")),
-            ("Ctrl+Q", i18n_noop("Quit Vireo entirely")),
+            ("Ctrl+Q", i18n_noop("Quit Hylki entirely")),
             ("?", i18n_noop("This list")),
         ],
     ),
@@ -16881,7 +16864,7 @@ fn set_split_shrink(split: &gtk::Paned, bottom: bool, shrink: bool) {
     }
 }
 
-/// `VIREO_DEMO` is set, so removing all real accounts leaves the app blank.
+/// `HYLKI_DEMO` is set, so removing all real accounts leaves the app blank.
 /// Stand-in [`AccountConfig`]s mirroring the demo backend's three accounts
 /// (same names, colours and emoji), so the Accounts window has something to
 /// show in demo screenshots.
@@ -16942,7 +16925,7 @@ fn demo_account_configs() -> Vec<AccountConfig> {
         pgp_key: None,
     };
     vec![
-        mk("Jason M.", "jason@vireo.hyprlab.co", "#3584e4", "🚀"),
+        mk("Jason M.", "jason@hylki.hyprlab.co", "#3584e4", "🚀"),
         mk("Hyprlab", "hello@hyprlab.dev", "#2ec27e", "🦀"),
         mk("Jason (Personal)", "jason.m@fastmail.com", "#9141ac", "🌿"),
     ]
@@ -16983,7 +16966,7 @@ fn demo_filters() -> Vec<config::FilterRule> {
         count_unread: true,
     };
     vec![
-        mk("Substack", "jason@vireo.hyprlab.co", FilterField::FromAddress, FilterMatch::EndsWith, "substack.com", "Newsletters"),
+        mk("Substack", "jason@hylki.hyprlab.co", FilterField::FromAddress, FilterMatch::EndsWith, "substack.com", "Newsletters"),
         mk("Invoices", "hello@hyprlab.dev", FilterField::Subject, FilterMatch::Contains, "invoice", "Invoices"),
         mk("", "jason.m@fastmail.com", FilterField::Subject, FilterMatch::Contains, "order", "Orders"),
     ]
@@ -17000,7 +16983,7 @@ fn read_label(read: bool) -> String {
 }
 
 fn demo_mode() -> bool {
-    std::env::var_os("VIREO_DEMO").is_some()
+    std::env::var_os("HYLKI_DEMO").is_some()
 }
 
 /// The folder a sent copy is filed in (#199): the chosen one when the account
@@ -17467,15 +17450,15 @@ fn apply_app_theme(theme: config::AppTheme) {
 
 /// Register the app icon so windows and dialogs can find it by name.
 ///
-/// Vireo's toolbar/list icons are shipped inside the binary as a GResource
+/// Hylki's toolbar/list icons are shipped inside the binary as a GResource
 /// (registered in `main`), so they no longer depend on the host icon theme.
-/// GTK auto-adds the bundle's resource path (`/co/hyprlab/Vireo/icons`) to the
+/// GTK auto-adds the bundle's resource path (`/co/hyprlab/Hylki/icons`) to the
 /// default theme; we add it explicitly too, so lookups work even if that
 /// convention ever changes.
 fn register_icons() {
     if let Some(display) = gtk::gdk::Display::default() {
         let theme = gtk::IconTheme::for_display(&display);
-        theme.add_resource_path("/co/hyprlab/Vireo/icons");
+        theme.add_resource_path("/co/hyprlab/Hylki/icons");
         // Dev-only: lets the window/about app icon resolve when running from the
         // source tree (uninstalled). Silently ignored on installed systems.
         theme.add_search_path(concat!(env!("CARGO_MANIFEST_DIR"), "/data/icons"));
@@ -18159,8 +18142,8 @@ mod tests {
         assert_eq!(super::parse_mid("mid:///%3CCAH5B6Q=abc123@example.com%3E"), want);
         // Slashes inside the id are part of it; one after the domain is a cid.
         assert_eq!(
-            super::parse_mid("mid:hyprlab/vireo/issues/128/5558573653@github.com/att1"),
-            Some("hyprlab/vireo/issues/128/5558573653@github.com".to_string())
+            super::parse_mid("mid:hyprlab/hylki/issues/128/5558573653@github.com/att1"),
+            Some("hyprlab/hylki/issues/128/5558573653@github.com".to_string())
         );
         assert_eq!(super::parse_mid("mid:"), None);
         assert_eq!(super::parse_mid("mid:not-an-id"), None);

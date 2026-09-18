@@ -15,7 +15,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-APP_ID="co.hyprlab.Vireo"
+APP_ID="co.hyprlab.Hylki"
 REPO="$ROOT/dist/repo"
 GPG_HOME="$ROOT/dist/gpg-home"
 KEYID="$(cat "$ROOT/dist/keyid.txt")"
@@ -29,7 +29,7 @@ if [ "${1:-}" = "--run" ]; then
 else
     TAG="${1:-v$VERSION}"
     # The newest successful run of the workflow for that tag.
-    RUN_ID="$(gh run list --repo hyprlab/vireo --workflow build-arm64.yml \
+    RUN_ID="$(gh run list --repo hyprlab/hylki --workflow build-arm64.yml \
         --branch "$TAG" --status success --limit 1 --json databaseId \
         --jq '.[0].databaseId')"
     [ -n "$RUN_ID" ] || { echo "no successful aarch64 build for $TAG" >&2; exit 1; }
@@ -37,8 +37,8 @@ else
     RUN_ARGS=("$RUN_ID")
 fi
 
-gh run download "${RUN_ARGS[0]}" --repo hyprlab/vireo --name vireo-aarch64-repo --dir "$WORK"
-tar xzf "$WORK/vireo-aarch64-repo.tar.gz" -C "$WORK"
+gh run download "${RUN_ARGS[0]}" --repo hyprlab/hylki --name hylki-aarch64-repo --dir "$WORK"
+tar xzf "$WORK/hylki-aarch64-repo.tar.gz" -C "$WORK"
 SRC="$WORK/repo-aarch64"
 
 # Re-commit into the signed repo. `build-commit-from` copies the commit's
@@ -52,13 +52,13 @@ flatpak build-update-repo --generate-static-deltas \
     --gpg-sign="$KEYID" --gpg-homedir="$GPG_HOME" "$REPO"
 
 mkdir -p "$OUT"
-flatpak build-bundle --arch=aarch64 "$REPO" "$OUT/Vireo-aarch64.flatpak" \
+flatpak build-bundle --arch=aarch64 "$REPO" "$OUT/Hylki-aarch64.flatpak" \
     "$APP_ID" stable \
     --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo \
-    --repo-url=https://vireo.hyprlab.co/flatpak \
+    --repo-url=https://hylki.hyprlab.co/flatpak \
     --gpg-keys="$ROOT/dist/veem.gpg"
 
 echo
 echo "imported:"
 ostree --repo="$REPO" refs | grep "$APP_ID" | sort
-echo "bundle:   $OUT/Vireo-aarch64.flatpak"
+echo "bundle:   $OUT/Hylki-aarch64.flatpak"

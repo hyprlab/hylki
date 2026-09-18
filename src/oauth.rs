@@ -1,13 +1,13 @@
-//! Native OAuth2 (XOAUTH2) sign-in for accounts added directly in Vireo.
+//! Native OAuth2 (XOAUTH2) sign-in for accounts added directly in Hylki.
 //!
 //! Runs the authorization-code flow with PKCE against the provider: opens the
 //! system browser, captures the redirect on a loopback socket, and exchanges the
 //! code for a refresh token. The refresh token is kept in the keyring; a fresh
 //! access token is minted from it at connect time.
 //!
-//! Microsoft uses Vireo's built-in OAuth client; Google's client is bundled into
+//! Microsoft uses Hylki's built-in OAuth client; Google's client is bundled into
 //! official builds at compile time (otherwise use GNOME Online Accounts, or your
-//! own client in `~/.config/vireo/oauth.toml`). Advanced users can override any of
+//! own client in `~/.config/hylki/oauth.toml`). Advanced users can override any of
 //! it or point "Custom OAuth" at another provider — see `provider_credentials`.
 
 use std::io::{Read, Write};
@@ -27,16 +27,16 @@ use crate::config::OAuthSettings;
 // Google's client is deliberately kept OUT of the public source — GitHub push
 // protection and Google's own secret scanning flag it, and Google may auto-revoke
 // an exposed secret. It's read at COMPILE TIME from env vars, so a build *can*
-// bundle a Google app by setting `VIREO_GOOGLE_CLIENT_ID` / `VIREO_GOOGLE_CLIENT_SECRET`
+// bundle a Google app by setting `HYLKI_GOOGLE_CLIENT_ID` / `HYLKI_GOOGLE_CLIENT_SECRET`
 // — but the official builds ship empty, so Google sign-in goes through GNOME
 // Online Accounts (or a client the user supplies). Runtime overrides —
-// `~/.config/vireo/oauth.toml` or `VIREO_*` env vars at runtime — still take
+// `~/.config/hylki/oauth.toml` or `HYLKI_*` env vars at runtime — still take
 // precedence; see `provider_credentials`.
-const GOOGLE_CLIENT_ID: &str = match option_env!("VIREO_GOOGLE_CLIENT_ID") {
+const GOOGLE_CLIENT_ID: &str = match option_env!("HYLKI_GOOGLE_CLIENT_ID") {
     Some(v) => v,
     None => "",
 };
-const GOOGLE_CLIENT_SECRET: &str = match option_env!("VIREO_GOOGLE_CLIENT_SECRET") {
+const GOOGLE_CLIENT_SECRET: &str = match option_env!("HYLKI_GOOGLE_CLIENT_SECRET") {
     Some(v) => v,
     None => "",
 };
@@ -46,10 +46,10 @@ const GOOGLE_CLIENT_SECRET: &str = match option_env!("VIREO_GOOGLE_CLIENT_SECRET
 const MICROSOFT_CLIENT_ID: &str = "";
 const MICROSOFT_CLIENT_SECRET: &str = "";
 // Dropbox (cloud attachments, #144): a public client with PKCE, so an app
-// key alone is enough. A build can bundle one via `VIREO_DROPBOX_CLIENT_ID`;
+// key alone is enough. A build can bundle one via `HYLKI_DROPBOX_CLIENT_ID`;
 // otherwise the user makes an app in the Dropbox App Console and types its
 // key into the account's settings.
-const DROPBOX_CLIENT_ID: &str = match option_env!("VIREO_DROPBOX_CLIENT_ID") {
+const DROPBOX_CLIENT_ID: &str = match option_env!("HYLKI_DROPBOX_CLIENT_ID") {
     Some(v) => v,
     None => "",
 };
@@ -59,8 +59,8 @@ const DROPBOX_CLIENT_ID: &str = match option_env!("VIREO_DROPBOX_CLIENT_ID") {
 /// redirect URI is `http://localhost:41597/`.
 pub const DROPBOX_REDIRECT_PORT: u16 = 41597;
 
-/// The Vireo app icon, embedded so the success page needs no external resources.
-const ICON_PNG: &[u8] = include_bytes!("../data/icons/hicolor/256x256/apps/co.hyprlab.Vireo.png");
+/// The Hylki app icon, embedded so the success page needs no external resources.
+const ICON_PNG: &[u8] = include_bytes!("../data/icons/hicolor/256x256/apps/co.hyprlab.Hylki.png");
 
 /// Branded sign-in success page. `__ICON__` is replaced with the app icon (as a
 /// data URI) at runtime by [`success_page`]. Self-contained (inline CSS/SVG,
@@ -70,7 +70,7 @@ const SUCCESS_TEMPLATE: &str = r##"<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vireo — Signed in</title>
+<title>Hylki — Signed in</title>
 <style>
   :root { color-scheme: light dark; --bg1:#0b1220; --bg2:#0e1526; --glow:rgba(53,132,228,.28);
           --card:rgba(255,255,255,.045); --stroke:rgba(255,255,255,.09); --shadow:rgba(0,0,0,.5);
@@ -120,15 +120,15 @@ const SUCCESS_TEMPLATE: &str = r##"<!doctype html>
 <body>
   <main class="card">
     <div class="hero">
-      <img src="data:image/png;base64,__ICON__" alt="Vireo">
+      <img src="data:image/png;base64,__ICON__" alt="Hylki">
       <span class="check">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2"
              stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.3L19 6.8"/></svg>
       </span>
     </div>
-    <div class="brand">Vireo</div>
+    <div class="brand">Hylki</div>
     <h1>You&rsquo;re signed in</h1>
-    <p>Your account is connected. You can close this tab and head back to Vireo.</p>
+    <p>Your account is connected. You can close this tab and head back to Hylki.</p>
     <div class="hint">It&rsquo;s safe to close this window.</div>
   </main>
 </body>
@@ -226,9 +226,9 @@ pub fn preset(provider: &str) -> Option<Preset> {
 
 /// Resolve a provider's OAuth client credentials `(client_id, client_secret)`,
 /// preferring the user's own over the built-in fallback. Order:
-///   1. Environment: `VIREO_GOOGLE_CLIENT_ID` / `VIREO_GOOGLE_CLIENT_SECRET`
-///      (or `VIREO_MICROSOFT_*`).
-///   2. `~/.config/vireo/oauth.toml` — `[google]` / `[microsoft]` with
+///   1. Environment: `HYLKI_GOOGLE_CLIENT_ID` / `HYLKI_GOOGLE_CLIENT_SECRET`
+///      (or `HYLKI_MICROSOFT_*`).
+///   2. `~/.config/hylki/oauth.toml` — `[google]` / `[microsoft]` with
 ///      `client_id` and `client_secret`. Keeps secrets out of the source repo.
 ///   3. The built-in Thunderbird fallback.
 ///
@@ -242,20 +242,20 @@ pub fn provider_credentials(provider: &str) -> (String, String) {
     // valid override there.
     let (env_id, env_secret, default_id, default_secret, secret_required) = match provider {
         "google" => (
-            "VIREO_GOOGLE_CLIENT_ID",
-            "VIREO_GOOGLE_CLIENT_SECRET",
+            "HYLKI_GOOGLE_CLIENT_ID",
+            "HYLKI_GOOGLE_CLIENT_SECRET",
             GOOGLE_CLIENT_ID,
             GOOGLE_CLIENT_SECRET,
             true,
         ),
         "microsoft" => (
-            "VIREO_MICROSOFT_CLIENT_ID",
-            "VIREO_MICROSOFT_CLIENT_SECRET",
+            "HYLKI_MICROSOFT_CLIENT_ID",
+            "HYLKI_MICROSOFT_CLIENT_SECRET",
             MICROSOFT_CLIENT_ID,
             MICROSOFT_CLIENT_SECRET,
             false,
         ),
-        "dropbox" => ("VIREO_DROPBOX_CLIENT_ID", "VIREO_DROPBOX_CLIENT_SECRET", DROPBOX_CLIENT_ID, "", false),
+        "dropbox" => ("HYLKI_DROPBOX_CLIENT_ID", "HYLKI_DROPBOX_CLIENT_SECRET", DROPBOX_CLIENT_ID, "", false),
         _ => ("", "", "", "", true),
     };
 
@@ -297,7 +297,7 @@ struct FileCreds {
 }
 
 fn creds_from_file(provider: &str) -> Option<(String, String)> {
-    let path = crate::config::config_base()?.join("vireo").join("oauth.toml");
+    let path = crate::config::config_base()?.join("hylki").join("oauth.toml");
     let text = std::fs::read_to_string(path).ok()?;
     let file: OAuthFile = toml::from_str(&text).ok()?;
     let creds = match provider {

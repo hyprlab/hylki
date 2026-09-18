@@ -19,7 +19,7 @@ const SWATCH: i32 = 44;
 /// The stock GNOME look's own swatch colours: the shades libadwaita paints
 /// without a theme, and the GNOME blue it accents with. (The desktop's
 /// chosen accent is not readable through libadwaita 1.4's API, which is what
-/// Vireo builds against; the default is what the great majority run.)
+/// Hylki builds against; the default is what the great majority run.)
 const SYSTEM_LIGHT: (&str, &str) = ("#fafafa", "#3584e4");
 const SYSTEM_DARK: (&str, &str) = ("#242424", "#3584e4");
 

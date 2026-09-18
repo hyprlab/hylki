@@ -1,0 +1,172 @@
+# Flatpak manifest for the Hylki BETA channel — same self-hosted repo as stable
+# (hylki.hyprlab.co/flatpak), published under the ostree branch "beta" with app
+# ID co.hyprlab.Hylki.Beta so it installs alongside the stable app. Built with
+# the `beta` cargo feature: "Hylki (beta)" branding, a b-suffixed version, and
+# XDG dirs redirected into the stable app's ~/.var/app tree so both installs
+# share accounts, settings and the mail cache. x86_64 only — no ARM beta.
+#
+# Ship it with (see the beta ship workflow):
+#   flatpak-builder --user --force-clean --disable-rofiles-fuse \
+#     --repo=dist/repo --default-branch=beta \
+#     --gpg-sign=$(cat dist/keyid.txt) --gpg-homedir=dist/gpg-home \
+#     --mirror-screenshots-url=https://dl.flathub.org/media \
+#     dist/build-dir-beta co.hyprlab.Hylki.Beta.yml
+id: co.hyprlab.Hylki.Beta
+runtime: org.gnome.Platform
+runtime-version: '50'
+sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
+command: hylki
+# Keep the message catalogues in the app itself (see the stable manifest, #183).
+separate-locales: false
+
+finish-args:
+  - --share=ipc
+  - --share=network                              # IMAP/SMTP, OAuth loopback, Gravatar
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri                                 # WebKit rendering
+  - --talk-name=org.freedesktop.secrets          # keyring: passwords + OAuth tokens
+  - --talk-name=org.gnome.OnlineAccounts          # import GNOME Online Accounts
+  - --talk-name=org.gnome.Settings                 # "Open Online Accounts" button
+  - --talk-name=org.gnome.evolution.dataserver.*  # GNOME Contacts (Evolution Data Server)
+  - --talk-name=org.gnome.Contacts                 # "Open GNOME Contacts" button (D-Bus activation)
+  - --talk-name=org.kde.StatusNotifierWatcher      # optional tray icon (#116); absent on plain GNOME
+  - --talk-name=org.gnome.Nautilus                 # "Restart Files" after installing the Files extension (#188)
+  # Deliberately NOT --talk-name=org.freedesktop.Flatpak — see the stable
+  # manifest for why (it would permit arbitrary host command execution).
+  # Read the host's Evolution Data Server address books.
+  # OpenPGP (#133): the runtime's gpg reads the user's keyring and talks to
+  # the host's gpg-agent (passphrases, pinentry) over its socket.
+  - --filesystem=~/.gnupg
+  - --filesystem=xdg-run/gnupg
+  - --filesystem=xdg-data/evolution:ro
+  - --filesystem=xdg-cache/evolution:ro
+  - --filesystem=xdg-config/evolution:ro
+  # THE beta twist: read-write access to the stable app's sandbox tree. The
+  # beta binary redirects its config/cache/data base dirs there (see
+  # `shared_base` in src/config.rs), so beta testers keep their accounts,
+  # settings and cached mail without a second setup.
+  # :create makes flatpak create the stable app's directory on the HOST when
+  # it doesn't exist yet — without it the grant is silently skipped on
+  # beta-only installs and the shared home pointed at the sandbox's throwaway
+  # tmpfs, losing accounts on quit (issue #83). With it, a beta-first install
+  # establishes the standard persistent home that a later stable install picks
+  # up natively; install order no longer matters.
+  - --filesystem=~/.var/app/co.hyprlab.Hylki:create
+  # The earlier names' sandbox data, read-only, so a beta-only install
+  # carries a Vireo (or Veem) install across too (src/legacy.rs).
+  - --filesystem=~/.var/app/co.hyprlab.Vireo:ro
+  # Read the old Veem app's data so first-run migration matches stable's.
+  - --filesystem=~/.var/app/com.getveem.Veem:ro
+  # The GNOME Files right-click extension (#188) is a Python file Nautilus
+  # loads on the host; Settings → System installs the bundled copy there.
+  - --filesystem=xdg-data/nautilus-python/extensions:create
+  # A file manager's "Send by email" (#90) hands the files over as attach=
+  # paths inside a mailto: URI, which reach the sandbox as-is, so the app has
+  # to be able to read them where they are: the home directory and removable
+  # drives, read-only. Everything the app writes goes through portals or the
+  # narrower entries above (a more specific entry wins over this one).
+  - --filesystem=home:ro
+  - --filesystem=/run/media:ro
+  - --filesystem=/media:ro
+  # The chosen app icon (Settings → App icon) is written over the app's icon
+  # name in the user's icon directory, which every desktop searches before the
+  # Flatpak export's — that is how the dock and app grid follow the choice.
+  - --filesystem=xdg-data/icons/hicolor:create
+  # …and the app's launcher is re-pointed at that icon through a per-user
+  # copy of its .desktop entry (the desktop caches app icons by name).
+  - --filesystem=xdg-data/applications:create
+
+build-options:
+  append-path: /usr/lib/sdk/rust-stable/bin
+  env:
+    CARGO_HOME: /run/build/hylki/cargo
+
+modules:
+  # PDF attachment thumbnails render via poppler-glib — same modules as the
+  # stable manifest; keep the two in sync.
+  - name: popplerdata
+    no-autogen: true
+    make-install-args:
+      - prefix=/app
+    sources:
+      - type: archive
+        url: https://poppler.freedesktop.org/poppler-data-0.4.12.tar.gz
+        sha256: c835b640a40ce357e1b83666aabd95edffa24ddddd49b8daff63adb851cdab74
+  - name: poppler
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_INSTALL_LIBDIR=/app/lib
+      - -DCMAKE_INSTALL_INCLUDEDIR=/app/include
+      - -DBUILD_GTK_TESTS=OFF
+      - -DBUILD_CPP_TESTS=OFF
+      - -DENABLE_CPP=OFF
+      - -DENABLE_BOOST=OFF
+      - -DENABLE_GOBJECT_INTROSPECTION=OFF
+      - -DENABLE_LIBOPENJPEG=OFF
+      - -DENABLE_QT5=OFF
+      - -DENABLE_QT6=OFF
+    cleanup:
+      - /bin
+    sources:
+      - type: archive
+        url: https://poppler.freedesktop.org/poppler-26.07.0.tar.xz
+        sha256: 304832f48f8a47fdca90c6b6d1f684e68f37c10c9a0726f345f4ca9df4ca01e2
+  # Spell-checking dictionaries beyond the runtime's English (#114): a modest
+  # set of common languages from LibreOffice's collection, installed under
+  # /app/share/hunspell where enchant (and so both the composer body's WebKit
+  # checker and the subject line's) finds them via XDG_DATA_DIRS. Renamed to
+  # canonical lang_REGION codes so enchant's tag lookup matches. Languages
+  # beyond these still come via the runtime locale extension
+  # (flatpak config --set extra-languages).
+  - name: hunspell-dictionaries
+    buildsystem: simple
+    build-commands:
+      - install -d /app/share/hunspell
+      - install -m644 de/de_DE_frami.dic /app/share/hunspell/de_DE.dic
+      - install -m644 de/de_DE_frami.aff /app/share/hunspell/de_DE.aff
+      - install -m644 es/es_ES.dic es/es_ES.aff /app/share/hunspell/
+      - install -m644 fr_FR/dictionaries/fr.dic /app/share/hunspell/fr_FR.dic
+      - install -m644 fr_FR/dictionaries/fr.aff /app/share/hunspell/fr_FR.aff
+      - install -m644 it_IT/it_IT.dic it_IT/it_IT.aff /app/share/hunspell/
+      - install -m644 nl_NL/nl_NL.dic nl_NL/nl_NL.aff /app/share/hunspell/
+      - install -m644 pl_PL/pl_PL.dic pl_PL/pl_PL.aff /app/share/hunspell/
+      - install -m644 pt_BR/pt_BR.dic pt_BR/pt_BR.aff /app/share/hunspell/
+      - install -m644 pt_PT/pt_PT.dic pt_PT/pt_PT.aff /app/share/hunspell/
+      - install -m644 ru_RU/ru_RU.dic ru_RU/ru_RU.aff /app/share/hunspell/
+      - install -m644 sv_SE/dictionaries/sv_SE.dic /app/share/hunspell/sv_SE.dic
+      - install -m644 sv_SE/dictionaries/sv_SE.aff /app/share/hunspell/sv_SE.aff
+      - install -m644 uk_UA/uk_UA.dic uk_UA/uk_UA.aff /app/share/hunspell/
+    sources:
+      - type: archive
+        url: https://github.com/LibreOffice/dictionaries/archive/32b006a2c22a4ac7e8ed3f03346f7b3d85a970a4.tar.gz
+        sha256: cbd790eca560de5e8ec8bd64117a00dfd0bc06b091c8f52d23e44ea00d3e8461
+  - name: hylki
+    buildsystem: simple
+    build-commands:
+      - cargo --offline fetch --manifest-path Cargo.toml --verbose
+      - cargo --offline build --release --features beta --verbose
+      - install -Dm755 target/release/hylki /app/bin/hylki
+      # Translations: each po/<lang>.po becomes a message catalogue under
+      # /app/share/locale (which Flatpak splits into the .Locale extension),
+      # and the launcher and metainfo get their translated fields merged in
+      # (see po/README.md).
+      - for po in po/*.po; do [ -e "$po" ] || continue; lang=$(basename "$po" .po); install -d /app/share/locale/$lang/LC_MESSAGES; msgfmt -o /app/share/locale/$lang/LC_MESSAGES/hylki.mo "$po"; done
+      - install -d /app/share/applications && msgfmt --desktop --template=data/co.hyprlab.Hylki.Beta.desktop -d po -o /app/share/applications/co.hyprlab.Hylki.Beta.desktop
+      - install -Dm644 data/icons/hicolor/256x256/apps/co.hyprlab.Hylki.Beta.png /app/share/icons/hicolor/256x256/apps/co.hyprlab.Hylki.Beta.png
+      - install -Dm644 data/icons/hicolor/512x512/apps/co.hyprlab.Hylki.Beta.png /app/share/icons/hicolor/512x512/apps/co.hyprlab.Hylki.Beta.png
+      - install -Dm644 data/icons/hicolor/scalable/apps/co.hyprlab.Hylki.Beta.svg /app/share/icons/hicolor/scalable/apps/co.hyprlab.Hylki.Beta.svg
+      # The restart helper's D-Bus service (Settings → App icon → Restart Now):
+      # exported by Flatpak, so the bus can start a fresh sandbox instance.
+      - install -Dm644 data/co.hyprlab.Hylki.Beta.Restart.service /app/share/dbus-1/services/co.hyprlab.Hylki.Beta.Restart.service
+      - install -d /app/share/metainfo && msgfmt --xml --template=data/co.hyprlab.Hylki.Beta.metainfo.xml -d po -o /app/share/metainfo/co.hyprlab.Hylki.Beta.metainfo.xml
+    sources:
+      - type: git
+        url: https://github.com/hyprlab/hylki.git
+        tag: v1.34.1-beta.1
+        commit: d4ced24691c5ef001e01cce02507e5bf818557c3
+      # Vendored crate sources for the offline Flatpak build. Generate with:
+      #   flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
+      - cargo-sources.json

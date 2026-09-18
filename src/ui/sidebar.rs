@@ -100,8 +100,8 @@ fn row_title(row: UnifiedRow) -> String {
 fn row_icon(row: UnifiedRow) -> &'static str {
     match row {
         UnifiedRow::Kind(kind) => kind.icon(),
-        UnifiedRow::Filtered => "co.hyprlab.Vireo-filter-folder-symbolic",
-        UnifiedRow::Tags => "co.hyprlab.Vireo-tag-outline-symbolic",
+        UnifiedRow::Filtered => "co.hyprlab.Hylki-filter-folder-symbolic",
+        UnifiedRow::Tags => "co.hyprlab.Hylki-tag-outline-symbolic",
     }
 }
 
@@ -127,7 +127,7 @@ fn toggle_msg(row: UnifiedRow) -> SidebarInput {
 
 /// The chevron glyph for a section that is open or folded.
 fn chevron_icon(open: bool) -> &'static str {
-    if open { "co.hyprlab.Vireo-pan-down-symbolic" } else { "co.hyprlab.Vireo-pan-end-symbolic" }
+    if open { "co.hyprlab.Hylki-pan-down-symbolic" } else { "co.hyprlab.Hylki-pan-end-symbolic" }
 }
 
 /// What a unified row is called.
@@ -1366,7 +1366,7 @@ impl Sidebar {
                     let expanded = !rev.reveals_child();
                     rev.set_reveal_child(expanded);
                     if let Some(ch) = self.chevrons.get(&id) {
-                        ch.set_icon_name(Some(if expanded { "co.hyprlab.Vireo-pan-down-symbolic" } else { "co.hyprlab.Vireo-pan-end-symbolic" }));
+                        ch.set_icon_name(Some(if expanded { "co.hyprlab.Hylki-pan-down-symbolic" } else { "co.hyprlab.Hylki-pan-end-symbolic" }));
                     }
                     if rail_only {
                         self.rail_open_accounts.insert(id, expanded);
@@ -1397,7 +1397,7 @@ impl Sidebar {
                     let expanded = !rev.reveals_child();
                     rev.set_reveal_child(expanded);
                     if let Some(ch) = self.custom_chevrons.get(&id) {
-                        ch.set_icon_name(Some(if expanded { "co.hyprlab.Vireo-pan-down-symbolic" } else { "co.hyprlab.Vireo-pan-end-symbolic" }));
+                        ch.set_icon_name(Some(if expanded { "co.hyprlab.Hylki-pan-down-symbolic" } else { "co.hyprlab.Hylki-pan-end-symbolic" }));
                     }
                     if let Some(s) = self.sections.iter_mut().find(|s| s.account.id == id) {
                         s.custom_expanded = expanded;
@@ -1687,13 +1687,13 @@ impl Sidebar {
                 let _ = s.output(SidebarOutput::AddAccount);
             });
             if self.collapsed {
-                add.set_icon_name("co.hyprlab.Vireo-list-add-symbolic");
+                add.set_icon_name("co.hyprlab.Hylki-list-add-symbolic");
                 add.set_tooltip_text(Some(i18n("Add account").as_str()));
                 add.set_margin_top(12);
                 container.append(&add);
             } else {
                 let label_box = gtk::Box::new(gtk::Orientation::Horizontal, 8);
-                label_box.append(&gtk::Image::from_icon_name("co.hyprlab.Vireo-list-add-symbolic"));
+                label_box.append(&gtk::Image::from_icon_name("co.hyprlab.Hylki-list-add-symbolic"));
                 label_box.append(&gtk::Label::new(Some(i18n("Add first account").as_str())));
                 add.set_child(Some(&label_box));
                 let empty = gtk::Box::new(gtk::Orientation::Vertical, 12);
@@ -1737,7 +1737,7 @@ impl Sidebar {
                 refresh.set_halign(gtk::Align::Center);
                 let stack = gtk::Stack::new();
                 stack.set_transition_type(gtk::StackTransitionType::Crossfade);
-                let icon = gtk::Image::from_icon_name("co.hyprlab.Vireo-view-refresh-symbolic");
+                let icon = gtk::Image::from_icon_name("co.hyprlab.Hylki-view-refresh-symbolic");
                 stack.add_named(&icon, Some("icon"));
                 let spinner = gtk::Spinner::new();
                 spinner.set_spinning(self.busy);
@@ -1774,7 +1774,7 @@ impl Sidebar {
             hbox.add_css_class("folder-row");
             if self.collapsed {
                 // The rail has no room for a label; the icon carries it there.
-                let img = gtk::Image::from_icon_name("co.hyprlab.Vireo-mail-message-new-symbolic");
+                let img = gtk::Image::from_icon_name("co.hyprlab.Hylki-mail-message-new-symbolic");
                 img.add_css_class("folder-icon");
                 pin_icon_size(&img);
                 hbox.set_halign(gtk::Align::Center);
@@ -1784,7 +1784,7 @@ impl Sidebar {
                 hbox.set_halign(gtk::Align::Center);
                 hbox.set_spacing(6);
                 let icon =
-                    gtk::Image::from_icon_name("co.hyprlab.Vireo-mail-message-new-symbolic");
+                    gtk::Image::from_icon_name("co.hyprlab.Hylki-mail-message-new-symbolic");
                 icon.add_css_class("folder-icon");
                 hbox.append(&icon);
                 let label = gtk::Label::new(Some(i18n("New Message").as_str()));
@@ -1860,7 +1860,7 @@ impl Sidebar {
                 let hbox = gtk::Box::new(gtk::Orientation::Horizontal, 12);
                 hbox.add_css_class("folder-row");
                 let img =
-                    gtk::Image::from_icon_name("co.hyprlab.Vireo-x-office-address-book-symbolic");
+                    gtk::Image::from_icon_name("co.hyprlab.Hylki-x-office-address-book-symbolic");
                 img.add_css_class("folder-icon");
                 pin_icon_size(&img);
                 if self.collapsed {
@@ -1893,7 +1893,7 @@ impl Sidebar {
                         vec![vec![MenuEntry::new(i18n("Open GNOME Contacts"), move || {
                             let _ = s2.output(SidebarOutput::OpenGnomeContacts);
                         })
-                        .icon("co.hyprlab.Vireo-adw-external-link-symbolic")]],
+                        .icon("co.hyprlab.Hylki-adw-external-link-symbolic")]],
                     );
                 });
                 row.add_controller(right_click);
@@ -1907,7 +1907,7 @@ impl Sidebar {
                 let row = gtk::ListBoxRow::new();
                 let hbox = gtk::Box::new(gtk::Orientation::Horizontal, 12);
                 hbox.add_css_class("folder-row");
-                let img = gtk::Image::from_icon_name("co.hyprlab.Vireo-mail-attachment-symbolic");
+                let img = gtk::Image::from_icon_name("co.hyprlab.Hylki-mail-attachment-symbolic");
                 img.add_css_class("folder-icon");
                 pin_icon_size(&img);
                 if self.collapsed {
@@ -1959,7 +1959,7 @@ impl Sidebar {
             let row = gtk::ListBoxRow::new();
             let hbox = gtk::Box::new(gtk::Orientation::Horizontal, 12);
             hbox.add_css_class("folder-row");
-            let img = gtk::Image::from_icon_name("co.hyprlab.Vireo-mail-send-symbolic");
+            let img = gtk::Image::from_icon_name("co.hyprlab.Hylki-mail-send-symbolic");
             img.add_css_class("folder-icon");
             pin_icon_size(&img);
             let badge = gtk::Label::new(Some(&self.outbox_count.to_string()));
@@ -2111,9 +2111,9 @@ impl Sidebar {
             // layout space, like the All Inboxes row's) or classic trailing,
             // per Settings → Chevron placement.
             let chevron = gtk::Image::from_icon_name(if folded {
-                "co.hyprlab.Vireo-pan-end-symbolic"
+                "co.hyprlab.Hylki-pan-end-symbolic"
             } else {
-                "co.hyprlab.Vireo-pan-down-symbolic"
+                "co.hyprlab.Hylki-pan-down-symbolic"
             });
             chevron.set_valign(gtk::Align::Center);
 
@@ -2285,9 +2285,9 @@ impl Sidebar {
             custom_list.add_css_class("navigation-sidebar");
             let custom_revealer = gtk::Revealer::new();
             let custom_chevron = gtk::Image::from_icon_name(if section.custom_expanded {
-                "co.hyprlab.Vireo-pan-down-symbolic"
+                "co.hyprlab.Hylki-pan-down-symbolic"
             } else {
-                "co.hyprlab.Vireo-pan-end-symbolic"
+                "co.hyprlab.Hylki-pan-end-symbolic"
             });
             let folders_toggle = gtk::Button::new();
             if !custom.is_empty() {
@@ -2307,7 +2307,7 @@ impl Sidebar {
                         // One right-pointing caret; the "open" class rotates it
                         // 90° via a CSS transition, so toggling spins smoothly
                         // instead of swapping glyphs.
-                        let img = gtk::Image::from_icon_name("co.hyprlab.Vireo-pan-end-symbolic");
+                        let img = gtk::Image::from_icon_name("co.hyprlab.Hylki-pan-end-symbolic");
                         img.add_css_class("tree-expander-icon");
                         if !collapsed_nodes.contains(&folder.path) {
                             img.add_css_class("open");
@@ -2429,7 +2429,7 @@ impl Sidebar {
                 hb.add_css_class("folder-row");
                 if self.collapsed {
                     hb.set_halign(gtk::Align::Center);
-                    hb.append(&gtk::Image::from_icon_name("co.hyprlab.Vireo-folder-symbolic"));
+                    hb.append(&gtk::Image::from_icon_name("co.hyprlab.Hylki-folder-symbolic"));
                     folders_toggle.set_tooltip_text(Some(i18n("Folders").as_str()));
                 } else {
                     if self.chevrons_left {
@@ -2461,7 +2461,7 @@ impl Sidebar {
             add_btn.add_css_class("add-folder-btn");
             let add_box = gtk::Box::new(gtk::Orientation::Horizontal, 8);
             add_box.add_css_class("folder-row");
-            let add_img = gtk::Image::from_icon_name("co.hyprlab.Vireo-list-add-symbolic");
+            let add_img = gtk::Image::from_icon_name("co.hyprlab.Hylki-list-add-symbolic");
             pin_icon_size(&add_img);
             add_box.append(&add_img);
             if self.collapsed {
@@ -3148,7 +3148,7 @@ impl Sidebar {
         if self.collapsed {
             // The rail has no room for a label: Jason's filter-folder glyph
             // (a folder with a funnel's bars) carries the toggle alone.
-            let icon = gtk::Image::from_icon_name("co.hyprlab.Vireo-filter-folder-symbolic");
+            let icon = gtk::Image::from_icon_name("co.hyprlab.Hylki-filter-folder-symbolic");
             hb.set_halign(gtk::Align::Center);
             let (overlay, b) = with_unread_overlay(&icon, unread);
             b.set_visible(show_chip);
@@ -3316,7 +3316,7 @@ impl Sidebar {
         let hb = gtk::Box::new(gtk::Orientation::Horizontal, 8);
         hb.add_css_class("folder-row");
         if self.collapsed {
-            let icon = gtk::Image::from_icon_name("co.hyprlab.Vireo-tag-outline-symbolic");
+            let icon = gtk::Image::from_icon_name("co.hyprlab.Hylki-tag-outline-symbolic");
             pin_icon_size(&icon);
             hb.set_halign(gtk::Align::Center);
             hb.append(&icon);
@@ -3727,7 +3727,7 @@ impl Sidebar {
         }
         rev.set_reveal_child(true);
         if let Some(ch) = self.chevrons.get(&id) {
-            ch.set_icon_name(Some("co.hyprlab.Vireo-pan-down-symbolic"));
+            ch.set_icon_name(Some("co.hyprlab.Hylki-pan-down-symbolic"));
         }
         if self.collapsed {
             self.rail_open_accounts.insert(id, true);
@@ -4245,7 +4245,7 @@ enum FolderGlyph {
 /// either in the account's colour, which is what says "part of a filter".
 fn filtered_folder_icon(folder: &Folder, account_id: u32) -> gtk::Image {
     let name = if folder.kind == FolderKind::Custom {
-        "co.hyprlab.Vireo-filter-folder-symbolic"
+        "co.hyprlab.Hylki-filter-folder-symbolic"
     } else {
         folder.kind.icon()
     };
@@ -4311,7 +4311,7 @@ fn build_folder_row(
         FolderGlyph::Marked(account_id) => {
             let overlay = gtk::Overlay::new();
             overlay.set_child(Some(&img));
-            let mark = gtk::Image::from_icon_name("co.hyprlab.Vireo-filter-symbolic");
+            let mark = gtk::Image::from_icon_name("co.hyprlab.Hylki-filter-symbolic");
             mark.set_pixel_size(9);
             mark.add_css_class("filter-mark");
             mark.add_css_class(&format!("acct-tint-{account_id}"));

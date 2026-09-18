@@ -1,7 +1,7 @@
 //! Account configuration.
 //!
 //! Account metadata (name, email, servers, username) lives in
-//! `~/.config/vireo/accounts.toml`. Passwords are kept in the system keyring
+//! `~/.config/hylki/accounts.toml`. Passwords are kept in the system keyring
 //! (secret-service, e.g. gnome-keyring) — never written to disk. The `password`
 //! field is read from the TOML if present (older configs / manual setup) and
 //! migrated into the keyring on first use, then stripped from the file.
@@ -39,26 +39,26 @@ fn write_private(path: &std::path::Path, contents: &str) -> std::io::Result<()> 
 }
 
 /// XDG base directories, with one twist: the beta channel running inside its
-/// own Flatpak sandbox (app ID co.hyprlab.Vireo.Beta) would get an empty
-/// `~/.var/app/co.hyprlab.Vireo.Beta` tree of its own — so it redirects to the
+/// own Flatpak sandbox (app ID co.hyprlab.Hylki.Beta) would get an empty
+/// `~/.var/app/co.hyprlab.Hylki.Beta` tree of its own — so it redirects to the
 /// STABLE app's tree instead, sharing accounts, settings and the mail cache
 /// with the stable install. The keyring service name is identical across
 /// channels, so credentials are shared through the same redirection-free path.
-/// Outside Flatpak (host builds) both channels already share `~/.config/vireo`
+/// Outside Flatpak (host builds) both channels already share `~/.config/hylki`
 /// et al., so no redirection is needed or done.
 fn shared_base(own: fn() -> Option<PathBuf>, sub: &str) -> Option<PathBuf> {
     if cfg!(feature = "beta")
-        && std::env::var("FLATPAK_ID").is_ok_and(|id| id == "co.hyprlab.Vireo.Beta")
+        && std::env::var("FLATPAK_ID").is_ok_and(|id| id == "co.hyprlab.Hylki.Beta")
         && stable_data_present()
     {
-        return Some(dirs::home_dir()?.join(".var/app/co.hyprlab.Vireo").join(sub));
+        return Some(dirs::home_dir()?.join(".var/app/co.hyprlab.Hylki").join(sub));
     }
     own()
 }
 
 /// Whether the shared flatpak directory is actually reachable. Flatpak
 /// silently SKIPS a `--filesystem` grant whose host path doesn't exist, which
-/// left `~/.var/app/co.hyprlab.Vireo` pointing at the sandbox's throwaway
+/// left `~/.var/app/co.hyprlab.Hylki` pointing at the sandbox's throwaway
 /// tmpfs on beta-only installs — accounts "saved" there and vanished on quit
 /// (issue #83). The real fix is the manifest's `:create` suffix, which makes
 /// flatpak create the host directory itself — a beta-first install thereby
@@ -73,7 +73,7 @@ fn stable_data_present() -> bool {
     static PRESENT: OnceLock<bool> = OnceLock::new();
     *PRESENT.get_or_init(|| {
         dirs::home_dir()
-            .map(|h| h.join(".var/app/co.hyprlab.Vireo").is_dir())
+            .map(|h| h.join(".var/app/co.hyprlab.Hylki").is_dir())
             .unwrap_or(false)
     })
 }
@@ -106,7 +106,7 @@ pub fn save_language(lang: &str) {
 }
 
 fn language_path() -> Option<PathBuf> {
-    Some(config_base()?.join("vireo").join("language"))
+    Some(config_base()?.join("hylki").join("language"))
 }
 
 pub fn cache_base() -> Option<PathBuf> {
@@ -155,7 +155,7 @@ fn prune_avatars(accounts: &[AccountConfig]) {
 }
 
 /// Service name used for keyring entries; password items are keyed by email.
-const KEYRING_SERVICE: &str = "co.hyprlab.Vireo";
+const KEYRING_SERVICE: &str = "co.hyprlab.Hylki";
 
 /// Incoming-mail protocol for an account.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Deserialize, Serialize)]
@@ -252,7 +252,7 @@ pub struct AccountConfig {
     #[serde(default = "default_enabled")]
     pub goa_enabled_before_mail_disabled: bool,
     /// Authenticate with OAuth2 (XOAUTH2) instead of a stored password. The token
-    /// comes from GOA (`goa_id`) or, for accounts added directly in Vireo, from
+    /// comes from GOA (`goa_id`) or, for accounts added directly in Hylki, from
     /// refreshing `oauth_settings` with the keyring-stored refresh token.
     #[serde(default)]
     pub oauth: bool,
@@ -280,10 +280,10 @@ pub struct AccountConfig {
     /// would (#136). Ignored by Microsoft 365, which files its own copy.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sent_copy_path: Option<String>,
-    /// The server files its own copy of outgoing mail, so Vireo must not add
+    /// The server files its own copy of outgoing mail, so Hylki must not add
     /// one. Gmail does this for anything sent through its SMTP, which leaves
-    /// two copies of every message: Google's, and the one Vireo appends.
-    /// Off by default, because a server that does *not* do it and a Vireo
+    /// two copies of every message: Google's, and the one Hylki appends.
+    /// Off by default, because a server that does *not* do it and a Hylki
     /// that has stopped appending means no sent mail is kept at all.
     #[serde(default, skip_serializing_if = "is_false")]
     pub server_saves_sent: bool,
@@ -389,7 +389,7 @@ where
         .collect())
 }
 
-/// OAuth2 client configuration for an account added directly in Vireo.
+/// OAuth2 client configuration for an account added directly in Hylki.
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub struct OAuthSettings {
     pub auth_url: String,
@@ -429,7 +429,7 @@ struct ConfigFile {
     accounts: Vec<AccountConfig>,
 }
 
-/// Demo mode's edited stand-in accounts (`~/.config/vireo/demo-accounts.toml`):
+/// Demo mode's edited stand-in accounts (`~/.config/hylki/demo-accounts.toml`):
 /// what the Accounts panel changed on the sample accounts (colour, emoji,
 /// picture, label), kept apart from the real accounts file so the demo
 /// stays a demo. `None` when there is none, or it is empty.
@@ -453,12 +453,12 @@ pub fn save_demo_accounts(accounts: &[AccountConfig]) -> std::io::Result<()> {
 }
 
 fn demo_accounts_path() -> Option<PathBuf> {
-    Some(config_base()?.join("vireo").join("demo-accounts.toml"))
+    Some(config_base()?.join("hylki").join("demo-accounts.toml"))
 }
 
-/// Path to the accounts config file (`~/.config/vireo/accounts.toml`).
+/// Path to the accounts config file (`~/.config/hylki/accounts.toml`).
 pub fn path() -> Option<PathBuf> {
-    Some(config_base()?.join("vireo").join("accounts.toml"))
+    Some(config_base()?.join("hylki").join("accounts.toml"))
 }
 
 /// Returns the configured accounts, or `None` if there is no usable config
@@ -676,20 +676,24 @@ fn load_key(key: &str) -> Option<String> {
     }
 }
 
-/// Keyring service name used before the 1.6.0 rename (Veem → Vireo).
-const LEGACY_KEYRING_SERVICE: &str = "com.getveem.Veem";
-
-/// Fall back to an entry stored under the pre-rename service, moving it to the
-/// current service so accounts added as Veem keep working after the rename.
+/// Fall back to an entry stored under an earlier name's service (Vireo,
+/// then Veem — see `legacy::PREDECESSORS`), copying it to the current
+/// service so accounts added there keep working. The old entry is left as
+/// it is: the old app may still be installed and using it.
 fn load_legacy_key(key: &str) -> Option<String> {
-    let old = keyring::Entry::new(LEGACY_KEYRING_SERVICE, key).ok()?;
-    let password = old.get_password().ok()?;
-    if let Ok(new) = keyring_entry(key) {
-        if new.set_password(&password).is_ok() {
-            let _ = old.delete_credential();
+    for pred in crate::legacy::PREDECESSORS {
+        let Ok(old) = keyring::Entry::new(pred.keyring_service, key) else { continue };
+        let Ok(password) = old.get_password() else { continue };
+        if password.is_empty() {
+            continue;
         }
+        match keyring_entry(key).and_then(|new| new.set_password(&password)) {
+            Ok(()) => tracing::info!("keyring entry for {key} carried over from {}", pred.name),
+            Err(e) => tracing::warn!("could not carry the keyring entry for {key} over: {e}"),
+        }
+        return Some(password);
     }
-    Some(password)
+    None
 }
 
 pub fn delete_password(email: &str) {
@@ -728,7 +732,7 @@ pub enum AppTheme {
 pub enum TrayIcon {
     /// The app icon.
     #[default]
-    Vireo,
+    Hylki,
     /// `mail-unread-symbolic` in white, for dark panels.
     EnvelopeLight,
     /// `mail-unread-symbolic` in black, for light panels.
@@ -1342,7 +1346,7 @@ impl Default for PrivacyFile {
 }
 
 fn privacy_path() -> Option<PathBuf> {
-    Some(config_base()?.join("vireo").join("privacy.toml"))
+    Some(config_base()?.join("hylki").join("privacy.toml"))
 }
 
 fn load_privacy() -> PrivacyFile {
@@ -1625,8 +1629,8 @@ pub fn load_read_mark() -> ReadMark {
     load_privacy().read_mark
 }
 
-/// What a hand-off of files from GNOME Files ("Send with Vireo", "Open
-/// With Vireo", "Email…") opens them into.
+/// What a hand-off of files from GNOME Files ("Send with Hylki", "Open
+/// With Hylki", "Email…") opens them into.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum FilesAction {
@@ -1688,7 +1692,7 @@ pub fn load_files_prefs() -> FilesPrefs {
 
 
 /// A mail filter rule (#47): file matching inbox arrivals into a folder,
-/// Evolution-style, applied client-side whenever Vireo syncs the inbox.
+/// Evolution-style, applied client-side whenever Hylki syncs the inbox.
 ///
 /// A rule holds one or more conditions (#192). The first lives at the top
 /// level as `field`/`matcher`/`value`, exactly where versions that knew only
@@ -1968,7 +1972,7 @@ struct FiltersFile {
 }
 
 fn filters_path() -> Option<PathBuf> {
-    Some(config_base()?.join("vireo").join("filters.toml"))
+    Some(config_base()?.join("hylki").join("filters.toml"))
 }
 
 pub fn load_filters() -> Vec<FilterRule> {
@@ -1996,7 +2000,7 @@ pub fn save_filters(rules: &[FilterRule]) {
 /// or a webmail shows — and theirs show here once a tag names their keyword
 /// (Thunderbird's built-in five are `$label1`…`$label5`). Microsoft 365
 /// stores them as categories; POP3 and servers that refuse custom keywords
-/// keep them in Vireo's own cache instead.
+/// keep them in Hylki's own cache instead.
 #[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Tag {
     /// What the user sees.
@@ -2116,7 +2120,7 @@ struct TagsFile {
 }
 
 fn tags_path() -> Option<PathBuf> {
-    Some(config_base()?.join("vireo").join("tags.toml"))
+    Some(config_base()?.join("hylki").join("tags.toml"))
 }
 
 pub fn load_tags() -> Vec<Tag> {
@@ -2138,7 +2142,7 @@ pub fn save_tags(tags: &[Tag]) {
     }
 }
 
-/// A portable settings bundle (#50): every configuration file Vireo keeps —
+/// A portable settings bundle (#50): every configuration file Hylki keeps —
 /// preferences, accounts (colours, emoji, labels, aliases, folder roles and
 /// per-account push included), filters, tags, cloud storage accounts,
 /// sidebar layout, window/pane state (the app icon choice with it), and
@@ -2558,18 +2562,18 @@ pub fn load_single_key_shortcuts() -> bool {
     load_privacy().single_key_shortcuts
 }
 
-/// Whether Vireo keeps running once its window is closed.
+/// Whether Hylki keeps running once its window is closed.
 pub fn load_run_in_background() -> bool {
     load_privacy().run_in_background
 }
 
-/// Whether Vireo starts at login (background running only).
+/// Whether Hylki starts at login (background running only).
 pub fn load_autostart() -> bool {
     let p = load_privacy();
     p.run_in_background && p.autostart
 }
 
-/// Whether Vireo publishes a tray icon.
+/// Whether Hylki publishes a tray icon.
 pub fn load_tray() -> bool {
     load_privacy().tray
 }
@@ -2817,7 +2821,7 @@ struct SidebarFile {
 }
 
 fn sidebar_path() -> Option<PathBuf> {
-    Some(config_base()?.join("vireo").join("sidebar.toml"))
+    Some(config_base()?.join("hylki").join("sidebar.toml"))
 }
 
 /// Sidebar state persisted across restarts.
@@ -2929,7 +2933,7 @@ impl Default for WindowFile {
 }
 
 fn window_path() -> Option<PathBuf> {
-    Some(config_base()?.join("vireo").join("window.toml"))
+    Some(config_base()?.join("hylki").join("window.toml"))
 }
 
 /// Returns the saved `(width, height, maximized)`, or sensible defaults.
@@ -2966,10 +2970,6 @@ struct StateFile {
     /// Set once the user dismisses the Linux Mint keyring setup tip.
     #[serde(default)]
     mint_keyring_help_dismissed: bool,
-    /// Set once the user chooses "Don't Show Again" on the notice that
-    /// Vireo has become Hylki (1.34.0, the last Vireo release).
-    #[serde(default)]
-    rename_notice_dismissed: bool,
     /// In-message attachment drawer: collapsed (showing only its header).
     #[serde(default)]
     drawer_collapsed: bool,
@@ -3058,7 +3058,7 @@ fn default_gallery_thumb_width() -> i32 {
 }
 
 fn state_path() -> Option<PathBuf> {
-    Some(config_base()?.join("vireo").join("state.toml"))
+    Some(config_base()?.join("hylki").join("state.toml"))
 }
 
 /// Read the remembered UI state. A missing or unreadable file falls back to
@@ -3124,7 +3124,7 @@ pub fn save_app_icon(id: &str) {
 /// Whether this install has any settings on disk at all — how a build that
 /// changes a default tells an existing install from a fresh one.
 pub fn settings_on_disk() -> bool {
-    let Some(dir) = config_base().map(|b| b.join("vireo")) else { return false };
+    let Some(dir) = config_base().map(|b| b.join("hylki")) else { return false };
     ["accounts.toml", "privacy.toml", "state.toml", "sidebar.toml", "window.toml"]
         .iter()
         .any(|f| dir.join(f).exists())
@@ -3139,18 +3139,6 @@ pub fn mint_keyring_help_dismissed() -> bool {
 pub fn dismiss_mint_keyring_help() {
     let mut state = load_state();
     state.mint_keyring_help_dismissed = true;
-    save_state(&state);
-}
-
-/// Whether the Vireo-is-now-Hylki notice was dismissed for good.
-pub fn rename_notice_dismissed() -> bool {
-    load_state().rename_notice_dismissed
-}
-
-/// Persist "Don't Show Again" on the Vireo-is-now-Hylki notice.
-pub fn dismiss_rename_notice() {
-    let mut state = load_state();
-    state.rename_notice_dismissed = true;
     save_state(&state);
 }
 
@@ -3763,7 +3751,7 @@ dest_path = "Lists"
             cloud: Some(vec![crate::cloud::CloudAccount::empty()]),
             spell_words: Some(std::collections::BTreeMap::from([(
                 "en_US".to_string(),
-                vec!["Vireo".to_string()],
+                vec!["Hylki".to_string()],
             )])),
         };
         let text = toml::to_string_pretty(&bundle).unwrap();
@@ -3887,18 +3875,18 @@ impl ToolbarItem {
     /// The symbolic icon the button (and the settings chip) wears.
     pub fn icon(self) -> &'static str {
         match self {
-            ToolbarItem::Reply => "co.hyprlab.Vireo-mail-reply-sender-symbolic",
-            ToolbarItem::ReplyAll => "co.hyprlab.Vireo-mail-reply-all-symbolic",
-            ToolbarItem::Forward => "co.hyprlab.Vireo-mail-forward-symbolic",
-            ToolbarItem::Star => "co.hyprlab.Vireo-non-starred-symbolic",
-            ToolbarItem::Archive => "co.hyprlab.Vireo-mail-archive-symbolic",
-            ToolbarItem::Delete => "co.hyprlab.Vireo-user-trash-symbolic",
-            ToolbarItem::Spam => "co.hyprlab.Vireo-mail-mark-junk-symbolic",
-            ToolbarItem::ReadUnread => "co.hyprlab.Vireo-mail-unread-symbolic",
-            ToolbarItem::Tags => "co.hyprlab.Vireo-tag-outline-symbolic",
-            ToolbarItem::MoveTo => "co.hyprlab.Vireo-folder-symbolic",
-            ToolbarItem::Find => "co.hyprlab.Vireo-loupe-with-arrow-symbolic",
-            ToolbarItem::Print => "co.hyprlab.Vireo-printer-symbolic",
+            ToolbarItem::Reply => "co.hyprlab.Hylki-mail-reply-sender-symbolic",
+            ToolbarItem::ReplyAll => "co.hyprlab.Hylki-mail-reply-all-symbolic",
+            ToolbarItem::Forward => "co.hyprlab.Hylki-mail-forward-symbolic",
+            ToolbarItem::Star => "co.hyprlab.Hylki-non-starred-symbolic",
+            ToolbarItem::Archive => "co.hyprlab.Hylki-mail-archive-symbolic",
+            ToolbarItem::Delete => "co.hyprlab.Hylki-user-trash-symbolic",
+            ToolbarItem::Spam => "co.hyprlab.Hylki-mail-mark-junk-symbolic",
+            ToolbarItem::ReadUnread => "co.hyprlab.Hylki-mail-unread-symbolic",
+            ToolbarItem::Tags => "co.hyprlab.Hylki-tag-outline-symbolic",
+            ToolbarItem::MoveTo => "co.hyprlab.Hylki-folder-symbolic",
+            ToolbarItem::Find => "co.hyprlab.Hylki-loupe-with-arrow-symbolic",
+            ToolbarItem::Print => "co.hyprlab.Hylki-printer-symbolic",
         }
     }
 
@@ -4030,11 +4018,11 @@ struct ToolbarFile {
 }
 
 fn toolbar_path() -> Option<PathBuf> {
-    Some(config_base()?.join("vireo").join("toolbar.toml"))
+    Some(config_base()?.join("hylki").join("toolbar.toml"))
 }
 
 /// The saved reader toolbar layout, or the default when there is none.
-/// Unknown names (a newer Vireo's buttons) are skipped, not fatal.
+/// Unknown names (a newer Hylki's buttons) are skipped, not fatal.
 pub fn load_reader_toolbar() -> ReaderToolbar {
     let Some(text) = toolbar_path().and_then(|p| std::fs::read_to_string(p).ok()) else {
         return ReaderToolbar::default();

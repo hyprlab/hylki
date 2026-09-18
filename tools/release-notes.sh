@@ -34,4 +34,4 @@ if [ -z "${notes//[[:space:]]/}" ]; then
 fi
 
 printf '%s\n' "$notes" | awk 'NF{f=1} f' | tac | awk 'NF{f=1} f' | tac
-printf '\n---\n_The full release history lives in [RELEASE_NOTES.md](https://github.com/hyprlab/vireo/blob/main/RELEASE_NOTES.md)._\n'
+printf '\n---\n_The full release history lives in [RELEASE_NOTES.md](https://github.com/hyprlab/hylki/blob/main/RELEASE_NOTES.md)._\n'

@@ -1,6 +1,6 @@
 name: Build aarch64 Flatpak
 
-# Vireo is developed and released from an x86_64 machine, so the ARM64 build is
+# Hylki is developed and released from an x86_64 machine, so the ARM64 build is
 # made here, natively, on GitHub's arm64 runners (free for public repos).
 # Emulating the build locally through qemu takes hours; this takes minutes.
 #
@@ -113,35 +113,35 @@ jobs:
         # runs on a tag (the pin commit necessarily comes after the tag), so the
         # build takes the checkout itself. Same recipe otherwise.
         run: |
-          tools/local-manifest.sh /tmp/vireo-aarch64.yml
+          tools/local-manifest.sh /tmp/hylki-aarch64.yml
           # Point the manifest at whichever extension actually installed.
           if [ "${{ steps.sdk.outputs.toolchain }}" = "rust-nightly" ]; then
-            sed -i 's/rust-stable/rust-nightly/g' /tmp/vireo-aarch64.yml
-            grep -n "rust-" /tmp/vireo-aarch64.yml
+            sed -i 's/rust-stable/rust-nightly/g' /tmp/hylki-aarch64.yml
+            grep -n "rust-" /tmp/hylki-aarch64.yml
           fi
           flatpak-builder --user --force-clean --disable-rofiles-fuse \
             --repo="$PWD/repo-aarch64" --default-branch=stable \
             --mirror-screenshots-url=https://dl.flathub.org/media \
-            "$PWD/build-dir" /tmp/vireo-aarch64.yml
+            "$PWD/build-dir" /tmp/hylki-aarch64.yml
 
       - name: Check the result is actually ARM64
         run: |
-          file build-dir/files/bin/vireo | tee /dev/stderr | grep -q 'ARM aarch64'
+          file build-dir/files/bin/hylki | tee /dev/stderr | grep -q 'ARM aarch64'
           # Guard against building the wrong revision: the app's version has to
           # match the checkout's Cargo.toml.
           want="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
-          grep -q "version=\"$want\"" build-dir/files/share/metainfo/co.hyprlab.Vireo.metainfo.xml \
+          grep -q "version=\"$want\"" build-dir/files/share/metainfo/co.hyprlab.Hylki.metainfo.xml \
             || { echo "built app is not $want" >&2; exit 1; }
-          echo "built Vireo $want for aarch64 with ${{ steps.sdk.outputs.toolchain }}"
+          echo "built Hylki $want for aarch64 with ${{ steps.sdk.outputs.toolchain }}"
           flatpak build-update-repo "$PWD/repo-aarch64"
           ostree --repo="$PWD/repo-aarch64" refs | sort
 
       - name: Package the repo
-        run: tar czf vireo-aarch64-repo.tar.gz repo-aarch64
+        run: tar czf hylki-aarch64-repo.tar.gz repo-aarch64
 
       - uses: actions/upload-artifact@v4
         with:
-          name: vireo-aarch64-repo
-          path: vireo-aarch64-repo.tar.gz
+          name: hylki-aarch64-repo
+          path: hylki-aarch64-repo.tar.gz
           retention-days: 30
           if-no-files-found: error

@@ -226,11 +226,11 @@ impl SimpleComponent for CloudAccounts {
                 let _ = s.send(CloudAccountsOutput::EditorOpen(editor));
             });
         }
-        // VIREO_SHOWCASE_EDIT_CLOUD=<index> opens that account's editor
+        // HYLKI_SHOWCASE_EDIT_CLOUD=<index> opens that account's editor
         // for a capture (demo only); "add", "add:dropbox", "add:seafile"
         // or "add:onedrive" opens the Add page on that kind.
-        if let Ok(what) = std::env::var("VIREO_SHOWCASE_EDIT_CLOUD") {
-            if std::env::var_os("VIREO_DEMO").is_some() {
+        if let Ok(what) = std::env::var("HYLKI_SHOWCASE_EDIT_CLOUD") {
+            if std::env::var_os("HYLKI_DEMO").is_some() {
                 let s = sender.input_sender().clone();
                 gtk::glib::timeout_add_seconds_local_once(2, move || {
                     let _ = s.send(match what.as_str() {
@@ -279,7 +279,7 @@ impl SimpleComponent for CloudAccounts {
                 let dialog = adw::MessageDialog::new(
                     parent.as_ref(),
                     Some(&i18n_f("Remove {name}?", &[("name", &name)])),
-                    Some(&i18n("Vireo forgets the account and its sign-in. Files already uploaded, and the links in messages you sent, stay where they are.")),
+                    Some(&i18n("Hylki forgets the account and its sign-in. Files already uploaded, and the links in messages you sent, stay where they are.")),
                 );
                 dialog.add_response("cancel", &i18n("Cancel"));
                 dialog.add_response("remove", &i18n("Remove"));
@@ -440,7 +440,7 @@ impl CloudAccounts {
                 gtk::glib::Propagation::Proceed
             });
             hbox.append(&toggle);
-            let next = gtk::Image::from_icon_name("co.hyprlab.Vireo-go-next-symbolic");
+            let next = gtk::Image::from_icon_name("co.hyprlab.Hylki-go-next-symbolic");
             next.add_css_class("dim-label");
             hbox.append(&next);
             row.set_child(Some(&hbox));
@@ -509,7 +509,7 @@ fn build_editor(
         move |id: &str| {
             match crate::brand::texture(id, 112) {
                 Some(t) => header_mark.set_paintable(Some(&t)),
-                None => header_mark.set_icon_name(Some("co.hyprlab.Vireo-cloud-symbolic")),
+                None => header_mark.set_icon_name(Some("co.hyprlab.Hylki-cloud-symbolic")),
             }
         }
     };
@@ -532,7 +532,7 @@ fn build_editor(
     code.set_title(&i18n("Two-step verification code, if the account uses it"));
     code.set_input_purpose(gtk::InputPurpose::Digits);
     let seafile_hint = gtk::Label::new(Some(&i18n(
-        "Sign in with your Seafile password. If the account uses two-step verification, also enter the current code from your authenticator app: Vireo turns it into an API token once and keeps that instead of the password. A token obtained another way can be pasted in the password field.",
+        "Sign in with your Seafile password. If the account uses two-step verification, also enter the current code from your authenticator app: Hylki turns it into an API token once and keeps that instead of the password. A token obtained another way can be pasted in the password field.",
     )));
     seafile_hint.set_wrap(true);
     seafile_hint.set_xalign(0.0);
@@ -776,8 +776,8 @@ fn build_editor(
                     app_key_hint.set_label(&i18n_f(
                         "Dropbox only lets an app sign in when it is registered, so make one for yourself (it takes a minute and stays private):\n\
                          1. Open dropbox.com/developers/apps, signed in to your Dropbox, and press Create app.\n\
-                         2. Choose Scoped access, then App folder (Vireo sees only its own folder under Apps) or Full Dropbox (uploads go to the folder named above).\n\
-                         3. Give the app a name that no one else has used, such as Vireo for your name, and press Create app.\n\
+                         2. Choose Scoped access, then App folder (Hylki sees only its own folder under Apps) or Full Dropbox (uploads go to the folder named above).\n\
+                         3. Give the app a name that no one else has used, such as Hylki for your name, and press Create app.\n\
                          4. On the Permissions tab, tick account_info.read, files.content.write and sharing.write, then press Submit.\n\
                          5. On the Settings tab, under OAuth 2, add the redirect URI {uri} and press Add.\n\
                          6. Copy the App key from the top of the Settings tab into the field above.\n\

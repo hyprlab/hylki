@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2026 Hyprlab -->
+<component type="desktop-application">
+  <id>co.hyprlab.Hylki.Beta</id>
+  <!-- The beta was co.hyprlab.Vireo.Beta through 1.34.1-beta.1 -->
+  <replaces>
+    <id>co.hyprlab.Vireo.Beta</id>
+  </replaces>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-or-later</project_license>
+
+  <name>Hylki (beta)</name>
+  <summary>Private, GNOME-native email client — beta channel</summary>
+
+  <description>
+    <p>
+      The beta channel of Hylki, a desktop email client for Wayland that feels
+      at home in GNOME. Beta builds carry upcoming changes before they reach the
+      stable release: expect bugs and instability, and please report anything
+      broken on GitHub.
+    </p>
+    <p>
+      The beta installs alongside stable Hylki and shares its accounts,
+      settings and mail cache, so trying it needs no second setup — but a beta
+      bug can affect that shared data. If you'd rather not risk it, stick with
+      the stable release.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Multiple IMAP and POP3 accounts, with a unified All Inboxes view</li>
+      <li>Google, Microsoft and custom OAuth 2.0 sign-in, plus GNOME Online Accounts import</li>
+      <li>Whole-mailbox sync and search with infinite scroll</li>
+      <li>Deletions and moves made on other devices sync back automatically</li>
+      <li>Conversation threading, compose, reply, forward, and editable drafts</li>
+      <li>Remote content blocked by default; per-message light or dark reading</li>
+      <li>Passwords and OAuth tokens kept in the system keyring</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">co.hyprlab.Hylki.Beta.desktop</launchable>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#99c1f1</color>
+    <color type="primary" scheme_preference="dark">#1a5fb4</color>
+  </branding>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/hyprlab/hylki/main/docs/screenshot.png</image>
+      <caption>The unified inbox in light mode</caption>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://hylki.hyprlab.co</url>
+  <url type="bugtracker">https://github.com/hyprlab/hylki/issues</url>
+  <url type="vcs-browser">https://github.com/hyprlab/hylki</url>
+
+  <developer id="co.hyprlab">
+    <name>Hyprlab</name>
+  </developer>
+  <update_contact>hyprlab@proton.me</update_contact>
+
+  <content_rating type="oars-1.1"/>
+
+  <releases>
+    <release version="1.35.1-beta.1" date="2026-09-18" type="development">
+      <description>
+        <p>Catch-up with stable 1.35.0, the first Hylki release: the beta is now co.hyprlab.Hylki.Beta and carries a Vireo beta's accounts, settings and cached mail across on its first start.</p>
+      </description>
+    </release>
+    <release version="1.34.1-beta.1" date="2026-09-18" type="development">
+      <description>
+        <p>Catch-up with stable 1.34.0, the last Hylki release: the notice that Hylki is now Hylki, and the memory fix.</p>
+      </description>
+    </release>
+    <release version="1.33.5-beta.1" date="2026-09-18" type="development">
+      <description>
+        <p>Catch-up with stable 1.33.4: a background loop that re-downloaded an OpenPGP message several times a second, holding Hylki at several gigabytes, is fixed. The conversation row stays selected when you click one of your own replies, and the message header has more air under the split reply.</p>
+      </description>
+    </release>
+    <release version="1.33.4-beta.1" date="2026-09-18" type="development">
+      <description>
+        <p>Catch-up with stable 1.33.3: the exported log now opens with a Memory section that says how much each process uses and how much of it is Hylki's own data, WebKit or the graphics driver. The tag icon is now an outline.</p>
+      </description>
+    </release>
+    <release version="1.33.3-beta.1" date="2026-09-17" type="development">
+      <description>
+        <p>Catch-up with stable 1.33.2: with more than one account, the message list could sit on "Loading more..." forever when one account could not answer. An account that cannot be reached now stops the spinner instead of pinning it over everyone's mail.</p>
+      </description>
+    </release>
+    <release version="1.33.2-beta.1" date="2026-09-17" type="development">
+      <description>
+        <p>Catch-up with stable 1.33.1: a message whose part headers carried a non-ASCII character at one particular position crashed the account's mail thread while building list previews, after which that account never synced again. The header is now read safely.</p>
+      </description>
+    </release>
+    <release version="1.33.1-beta.1" date="2026-09-17" type="development">
+      <description>
+        <p>Catch-up with stable 1.33.0: replies answer a conversation's newest message, a conversation's row stays selected while its messages are read, the reply editor can open beneath the reader, each message lists its own attachments, Conversations has its own Settings page, the attachment drawer's count is a button, and French is updated.</p>
+      </description>
+    </release>
+    <release version="1.32.4-beta.1" date="2026-09-16" type="development">
+      <description>
+        <p>Catch-up with stable 1.32.3: the two strings the About page gained in 1.32.2 are translated in European and Brazilian Portuguese, so both are complete again.</p>
+      </description>
+    </release>
+    <release version="1.32.3-beta.1" date="2026-09-16" type="development">
+      <description>
+        <p>Catch-up with stable 1.32.2: Russian shows its translation where around sixty-six strings had been skipped and left in English, Portuguese is complete in both the European and Brazilian variants, and the About page's links are tidied.</p>
+      </description>
+    </release>
+    <release version="1.32.2-beta.1" date="2026-09-16" type="development">
+      <description>
+        <p>Catch-up with stable 1.32.1: undo and redo reach the composer, typing is undone a step at a time, and the inline reply no longer aborts the app as it opens.</p>
+      </description>
+    </release>
+    <release version="1.32.1-beta.1" date="2026-09-16" type="development">
+      <description>
+        <p>Messages can be written in Markdown or HTML as well as rich or plain text, with a preview and a default in Settings. Undo and redo cover moves, read state, stars, tags and folders (#200). Copies of sent mail can be filed in any folder, the Inbox included, with a switch for servers that keep their own copy (#199), and a sent reply joins its conversation at once. Links open again inside the Flatpak through the portal with a chooser fallback (#202). Filter rules on recipients match each recipient on its own and a run reports matches that needed nothing (#201). Remote content can be loaded or blocked per message. Quoted-printable and preheader-padded previews read correctly. French translation updated (#203).</p>
+      </description>
+    </release>
+    <release version="1.31.2-beta.1" date="2026-09-15" type="development">
+      <description>
+        <p>Catch-up with stable 1.31.1. Filter rules can be given a name of their own (#197), and the rules can be run over mail that is already in a folder rather than only meeting mail as it arrives (#198): Apply Now in Settings sweeps every inbox, a folder's right-click menu sweeps that folder, and a dialog shows a live count while the run works. French and Russian translations updated.</p>
+      </description>
+    </release>
+    <release version="1.31.1-beta.1" date="2026-09-15" type="development">
+      <description>
+        <p>Catch-up with stable 1.31.0. Appearance themes (Settings, Appearance: System, Midnight, Tidal, Rose, Earth, Forest, each light and dark), a Drafts folder assigned under Special Folders now shows its count, Settings rows reworded, Mail Accounts marks aligned, Portuguese translations updated.</p>
+      </description>
+    </release>
+    <release version="1.31.0-beta.2" date="2026-09-14" type="development">
+      <description>
+        <p>Catch-up with stable 1.30.1. Trackpad swipe sensitivity (Settings, Message List), and a swipe that goes far enough now flies the message off the side it was sent while the list closes over it.</p>
+      </description>
+    </release>
+    <release version="1.31.0-beta.1" date="2026-09-14" type="development">
+      <description>
+        <p>Trackpad swipe sensitivity: a setting that tunes how far a two-finger swipe has to travel to archive or delete a message.</p>
+      </description>
+    </release>
+    <release version="1.30.1-beta.1" date="2026-09-14" type="development">
+      <description>
+        <p>Catch-up with stable 1.30.0. Filters can match the message body (searched on the server, nothing downloaded) and the Reply-To address, hold several conditions (all or any) laid out as separate groups in the editor, and take comma-separated alternatives per condition (#191, #192); the filter editor's "Move to" list is no longer empty after Settings reopens.</p>
+      </description>
+    </release>
+    <release version="1.29.4-beta.1" date="2026-09-14" type="development">
+      <description>
+        <p>Catch-up with stable 1.29.3. Files sent from GNOME Files now ask whether they go into a new message, a draft or a reply, with an offer to upload big ones to cloud storage instead and defaults under Settings → System → GNOME Files; a "Server is behind Cloudflare" switch uploads to self-hosted Nextcloud-kind and Seafile servers in 90 MB pieces; French updated (PR #193).</p>
+      </description>
+    </release>
+    <release version="1.29.3-beta.1" date="2026-09-14" type="development">
+      <description>
+        <p>Catch-up with stable 1.29.2. Your own messages show your mailbox's picture or emoji in conversations and the message list, with a Settings switch to keep the old circle and a per-account "Use my Gravatar" option; leaving a settings editor now shows the page you chose, and an unchanged editor no longer asks about saving.</p>
+      </description>
+    </release>
+    <release version="1.29.2-beta.1" date="2026-09-14" type="development">
+      <description>
+        <p>Catch-up with stable 1.29.1. "Send with Hylki" from GNOME Files, and "Open With Hylki" on a selection, now attach every selected file to one message instead of opening one message per file.</p>
+      </description>
+    </release>
+    <release version="1.29.1-beta.1" date="2026-09-14" type="development">
+      <description>
+        <p>Catch-up with stable 1.29.0. The attachments gallery reaches the whole archive without downloading it and can be scoped to accounts and folders, "Send with Hylki" from the GNOME Files right-click menu, "Send by email" from a file manager works inside the Flatpak, opening the app while it runs in the background no longer leaves the pointer busy, and people on Gmail and other mailbox hosts no longer wear their provider's logo.</p>
+      </description>
+    </release>
+    <release version="1.28.3-beta.1" date="2026-09-13" type="development">
+      <description>
+        <p>Catch-up with stable 1.28.2. Sender logos from BIMI and a bundled set of common senders, wide mail that scrolls again in a narrow pane, drafts that are neither read nor unread, an evenly spaced Special Folders description, more room above the first account in the sidebar, and an updated French translation.</p>
+      </description>
+    </release>
+    <release version="1.28.2-beta.1" date="2026-09-13" type="development">
+      <description>
+        <p>Catch-up with stable 1.28.1. A white flash between messages in dark mode fixed, account circles and provider marks in the accounts list, a wider toolbar editor with six buttons a side, a tray count that names what it counts, the chosen language now applying in the Flatpak and shipping in the RPM, and updated Russian, French and Portuguese translations plus Brazilian Portuguese.</p>
+      </description>
+    </release>
+    <release version="1.28.1-beta.1" date="2026-09-12" type="development">
+      <description>
+        <p>Catch-up with stable 1.28.0: the same code and documentation on the beta channel.</p>
+      </description>
+    </release>
+    <release version="1.28.0-beta.1" date="2026-09-12" type="development">
+      <description>
+        <p>First preview of 1.28.0: an arrangeable reader toolbar, a slide-over sidebar that stays open, notification clicks that open in Inboxes at once, conversations that move as one and take in new replies while open, and Hungarian.</p>
+      </description>
+    </release>
+    <release version="1.27.4-beta.1" date="2026-09-11" type="development">
+      <description>
+        <p>Catch-up with stable 1.27.3: the same code and documentation on the beta channel.</p>
+      </description>
+    </release>
+    <release version="1.27.3-beta.5" date="2026-09-11" type="development">
+      <description>
+        <p>The narrow-window sidebar slides in from the left edge over the icon rail, which stays unchanged underneath.</p>
+      </description>
+    </release>
+    <release version="1.27.3-beta.4" date="2026-09-11" type="development">
+      <description>
+        <p>The narrow-window sidebar floats out beside the icon rail as its own panel; the rail is never changed while it opens or closes.</p>
+      </description>
+    </release>
+    <release version="1.27.3-beta.3" date="2026-09-11" type="development">
+      <description>
+        <p>The sidebar peek's menu and refresh buttons stay where the icon rail draws them while the panel slides over it.</p>
+      </description>
+    </release>
+    <release version="1.27.3-beta.2" date="2026-09-11" type="development">
+      <description>
+        <p>The narrow-window sidebar peek slides out over the icon rail without moving or redrawing it, and the rail comes back reliably when the peek closes.</p>
+      </description>
+    </release>
+    <release version="1.27.3-beta.1" date="2026-09-11" type="development">
+      <description>
+        <p>Catch-up with stable 1.27.2: the same code and documentation on the beta channel.</p>
+      </description>
+    </release>
+    <release version="1.27.2-beta.1" date="2026-09-11" type="development">
+      <description>
+        <p>Catch-up with stable 1.27.1: the same code and documentation on the beta channel.</p>
+      </description>
+    </release>
+    <release version="1.27.1-beta.1" date="2026-09-11" type="development">
+      <description>
+        <p>Catch-up with stable 1.27.0: the same code and documentation on the beta channel.</p>
+      </description>
+    </release>
+    <release version="1.27.0-beta.3" date="2026-09-11" type="development">
+      <description>
+        <p>Third preview of 1.27.0: a tag finder in Settings that reads every mailbox for tags already in use and imports them; Not Spam in Junk; sender logos at the size the site publishes; initials centred by their ink in the list, the sidebar and the reader; the compose toolbar folds into a menu in a narrow pane; tags in a submenu of the context menu; the icon rail toggle no longer stretches the icons.</p>
+      </description>
+    </release>
+    <release version="1.27.0-beta.2" date="2026-09-11" type="development">
+      <description>
+        <p>Second preview of 1.27.0: the Filters row lists every rule's folder; filtered folders are marked in the account's colour under each account with Edit Filter in the menu; Edit Tag on every tag row; filter and tag editors as pages; per-row unread-chip switches; chips never overflow; a renamed folder follows the selection; All Inboxes is Inboxes.</p>
+      </description>
+    </release>
+    <release version="1.27.0-beta.1" date="2026-09-10" type="development">
+      <description>
+        <p>Preview of 1.27.0: unified Starred, Sent, Drafts, Filtered Folders and Tags rows with combined views; per-account filtered folders and tags; a remembered sidebar layout; icon-rail dots and fold-up options; previews read their charset (#159); folder switches and Settings open far faster.</p>
+      </description>
+    </release>
+    <release version="1.26.1-beta.1" date="2026-09-10" type="development">
+      <description>
+        <p>Catch-up with stable 1.26.0: a default sender for new messages, number keys for tags, the services' own marks throughout Settings and the wizard, the Cloud Storage panel reworked, the Settings window reopening on the last category, a fuller settings backup, French updated.</p>
+      </description>
+    </release>
+    <release version="1.25.3-beta.1" date="2026-09-09" type="development">
+      <description>
+        <p>Catch-up with stable 1.25.2: cloud attachments to OneDrive, Dropbox and Seafile with per-upload link terms, recipient suggestions that remember everyone you write to.</p>
+      </description>
+    </release>
+    <release version="1.25.2-beta.1" date="2026-09-09" type="development">
+      <description>
+        <p>Catch-up with stable 1.25.1: French translation completed for the 1.25.0 features, thread node dots drawn whole, richer demo content.</p>
+      </description>
+    </release>
+    <release version="1.25.1-beta.1" date="2026-09-09" type="development">
+      <description>
+        <p>Catch-up with stable 1.25.0: Send Later, cloud attachments, Empty Trash and Empty Junk, reply-panel fields, drafts in the reading pane, quote folding fixes, French update.</p>
+      </description>
+    </release>
+    <release version="1.24.4-beta.1" date="2026-09-08" type="development">
+      <description>
+        <p>Catch-up with stable 1.24.3: French translation updated to cover the 1.23 and 1.24 features.</p>
+      </description>
+    </release>
+    <release version="1.24.3-beta.1" date="2026-09-08" type="development">
+      <description>
+        <p>Catch-up with stable 1.24.2: tags take any colour from the GTK colour chooser; the composer follows the GTK theme and a live light/dark switch.</p>
+      </description>
+    </release>
+    <release version="1.24.2-beta.1" date="2026-09-08" type="development">
+      <description>
+        <p>Catch-up with stable 1.24.1: multi-line message previews show every line again; swiping a row to archive or delete slides it flush over a full-width strip.</p>
+      </description>
+    </release>
+    <release version="1.24.1-beta.1" date="2026-09-08" type="development">
+      <description><p>Catch-up with stable 1.24.0: the reader font and colour override, auto-empty Junk and Trash, the two-pane settings window, and OpenPGP end to end.</p></description>
+    </release>
+    <release version="1.23.1-beta.1" date="2026-09-07" type="development">
+
+      <description><p>The beta channel catches up with stable 1.23.0: tags, swipe actions, the redrawn icon set, the log export, and four fixes.</p></description>
+
+    </release>
+    <release version="1.22.1-beta.1" date="2026-09-06" type="development">
+
+      <description><p>The beta channel catches up with stable 1.22.0: Ctrl+C copies from the reader, and the latest French corrections.</p></description>
+
+    </release>
+    <release version="1.22.0-beta.7" date="2026-09-06" type="development">
+
+      <description><p>Deleting works on servers without the IMAP MOVE extension; mid: links open a message by its Message-ID; the envelope icon redrawn in four colours.</p></description>
+
+    </release>
+    <release version="1.22.0-beta.6" date="2026-09-06" type="development">
+
+      <description><p>Labels that stayed English in a translated interface now translate: folder menus, toolbar tooltips, the shortcuts help and dialog buttons.</p></description>
+
+    </release>
+    <release version="1.22.0-beta.5" date="2026-09-06" type="development">
+
+      <description><p>Signatures can be imported from an HTML file or edited as HTML.</p></description>
+
+    </release>
+    <release version="1.22.0-beta.4" date="2026-09-05" type="development">
+
+      <description><p>Pictures dropped or pasted from a file manager land in the message and can be resized (contributed); a new Envelope icon.</p></description>
+
+    </release>
+    <release version="1.22.0-beta.3" date="2026-09-05" type="development">
+
+      <description><p>French translation (contributed), and the Inbox name and recipient count now translate too.</p></description>
+
+    </release>
+    <release version="1.22.0-beta.2" date="2026-09-05" type="development">
+
+      <description><p>The beta channel catches up with stable 1.21.1: refreshed icons, the beta's own included.</p></description>
+
+    </release>
+    <release version="1.22.0-beta.1" date="2026-09-05" type="development">
+
+      <description><p>The interface can be translated: gettext plumbing and the translation template, ready for translators.</p></description>
+
+    </release>
+    <release version="1.21.1-beta.1" date="2026-09-05" type="development">
+
+      <description><p>The beta channel catches up with stable 1.21.0. No beta-only changes.</p></description>
+
+    </release>
+    <release version="1.20.3-beta.1" date="2026-09-04" type="development">
+
+      <description><p>The beta channel catches up with stable 1.20.2. No beta-only changes.</p></description>
+
+    </release>
+    <release version="1.20.2-beta.1" date="2026-09-04" type="development">
+
+      <description><p>The beta channel catches up with stable 1.20.1. No beta-only changes.</p></description>
+
+    </release>
+    <release version="1.20.1-beta.1" date="2026-09-04" type="development">
+
+      <description><p>The beta channel catches up with stable 1.20.0. No beta-only changes.</p></description>
+
+    </release>
+    <release version="1.20.0-beta.9" date="2026-09-03" type="development">
+
+      <description><p>Mail that filter rules file into folders counts as unread, per rule (#116): a "Count unread mail" switch on each rule, on by default. The All Inboxes badge, the tray icon and the Background Apps status share the total.</p></description>
+
+    </release>
+    <release version="1.20.0-beta.8" date="2026-09-03" type="development">
+
+      <description><p>The tray menu's unread list and new-mail notifications keep up with the inbox while another folder is open (#116). Account Settings… from the sidebar opens that account's editor. The split reply closes in one motion.</p></description>
+
+    </release>
+    <release version="1.20.0-beta.7" date="2026-09-03" type="development">
+
+      <description><p>The tray icon (#116) now appears in the beta Flatpak, whose sandbox lacked permission to reach the tray watcher. On Cinnamon it is drawn smaller, level with the panel's other icons.</p></description>
+
+    </release>
+    <release version="1.20.0-beta.6" date="2026-09-03" type="development">
+
+      <description><p>The tray icon's menu lists the newest five unread messages (#116), each opening in the reader, with a View all unread row past five. The beta-only Welcome Wizard menu entry is removed.</p></description>
+
+    </release>
+    <release version="1.20.0-beta.5" date="2026-09-03" type="development">
+
+      <description><p>Cached messages open instantly at startup, even mid-sync. An optional tray icon (#116) for desktops with a tray: the Hylki icon or a white or black envelope, a red dot while any inbox has unread mail, and a menu to open Hylki, Accounts, Settings, or quit.</p></description>
+
+    </release>
+    <release version="1.20.0-beta.4" date="2026-09-03" type="development">
+
+      <description><p>The attachment drawer's seam finished: the dead click zone is gone at its root, the whole edge is one continuous handle that highlights on hover, and each seam's cursor matches how it works.</p></description>
+
+    </release>
+    <release version="1.20.0-beta.3" date="2026-09-03" type="development">
+
+      <description><p>Attachment-drawer fixes: collapsing no longer flashes, a resized drawer reopens at its dragged height, and the whole seam answers clicks and drags.</p></description>
+
+    </release>
+    <release version="1.20.0-beta.2" date="2026-09-03" type="development">
+
+      <description><p>Polish on beta.1's composer work: the split reply and New Message slide in and out smoothly with the editor fading in, the reader sheds its header while a reply is open, and the attachment drawer's grab handle is visible in dark mode with its whole edge answering clicks and drags.</p></description>
+
+    </release>
+    <release version="1.20.0-beta.1" date="2026-09-03" type="development">
+
+      <description><p>Feature beta previewing 1.20.0: spell checking in the composer (body and subject, with bundled dictionaries and a personal word list), inline images (paste or drop pictures into the text), replies that follow Reply-To, grab handles for the split reply and attachment drawer, paste-as-plain-text by default, and attachment fixes for web Gmail, per-label duplicate downloads and split encoded-word filenames.</p></description>
+
+    </release>
+    <release version="1.19.3-beta.1" date="2026-09-02" type="development">
+
+      <description><p>Catch-up release: the beta matches stable 1.19.2 and its dark-mode email fix. No beta-only changes.</p></description>
+
+    </release>
+    <release version="1.19.2-beta.1" date="2026-09-01" type="development">
+
+      <description><p>Catch-up release: the beta matches stable 1.19.1 and its memory-use fixes. No beta-only changes.</p></description>
+
+    </release>
+    <release version="1.19.1-beta.1" date="2026-09-01" type="development">
+
+      <description><p>Catch-up release: the beta matches stable 1.19.0. No beta-only changes.</p></description>
+
+    </release>
+    <release version="1.19.0-beta.3" date="2026-08-31" type="development">
+
+      <description><p>Mail filed by a filter now raises the new-mail notification (#47 beta feedback), split-reply outline and composer styling fixes, and single messages render as cards by default on new installs.</p></description>
+
+    </release>
+    <release version="1.19.0-beta.2" date="2026-08-31" type="development">
+
+      <description><p>The beta registers its own mailto handler, so it can be selected as the default mail app separately from stable.</p></description>
+
+    </release>
+    <release version="1.19.0-beta.1" date="2026-08-31" type="development">
+
+      <description><p>The 1.19 feature preview: welcome wizard, console mode, mail filters, settings backup, notification actions, split replies, reworked search and find-in-message, quick filters, viewport read marking, and conversation starring.</p></description>
+
+    </release>
+    <release version="1.18.5-beta.1" date="2026-08-30" type="development">
+
+      <description><p>Catch-up release: matches stable 1.18.4.</p></description>
+
+    </release>
+    <release version="1.18.4-beta.1" date="2026-08-30" type="development">
+
+      <description><p>Catch-up release: matches stable 1.18.3.</p></description>
+
+    </release>
+    <release version="1.18.3-beta.1" date="2026-08-30" type="development">
+
+      <description><p>Catch-up release: matches stable 1.18.2.</p></description>
+
+    </release>
+    <release version="1.18.2-beta.4" date="2026-08-30" type="development">
+
+      <description><p>Chevron placement option (Left/Right), double-click All Inboxes to expand, circle-text clearance.</p></description>
+
+    </release>
+    <release version="1.18.2-beta.3" date="2026-08-30" type="development">
+
+      <description><p>Leading sidebar chevrons on one aligned column, right-aligned unread chips, the Sender avatars rename, and unread-dot alignment without avatars.</p></description>
+
+    </release>
+    <release version="1.18.2-beta.2" date="2026-08-30" type="development">
+
+      <description><p>The 1.18.2 preview: everything in stable 1.18.1, plus the verified-sender seal in the message header and aligned sidebar unread counts.</p></description>
+
+    </release>
+    <release version="1.18.2-beta.1" date="2026-08-30" type="development">
+
+      <description><p>Opened the 1.18.2 cycle as the catch-up to stable 1.18.1.</p></description>
+
+    </release>
+    <release version="1.18.1b" date="2026-08-29" type="development">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.18.1b</url>
+      <description>
+        <p>Catches up with stable 1.18.0: all of 1.18.0b plus the community-feedback fixes — sanitized HTML forwards, Reply-To, thread animations, notification clearing, and the beta-first shared-data fix.</p>
+      </description>
+    </release>
+    <release version="1.18.0b" date="2026-08-29" type="development">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.18.0b</url>
+      <description>
+        <p>Contacts become a full in-app view with editing via Evolution Data Server; Accounts and Preferences merge into one window with a view switcher; bulk mail actions apply instantly and run in the background; All Inboxes loads instantly from cache; the sidebar pins Contacts and Attachments to its bottom edge.</p>
+      </description>
+    </release>
+    <release version="1.17.2b" date="2026-08-28" type="development">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.17.2b</url>
+      <description>
+        <p>Catches up with stable 1.17.1: Microsoft 365 accounts work through GNOME Online Accounts via the Graph API, GOA accounts can be un-imported and removed cleanly, and the sidebar gains the refresh/New Message bar and Contacts row.</p>
+      </description>
+    </release>
+    <release version="1.17.1b" date="2026-08-28" type="development">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.17.1b</url>
+      <description>
+        <p>The first beta-channel release, based on Hylki 1.17.0. Installs alongside the stable app and shares its accounts, settings and mail cache.</p>
+      </description>
+    </release>
+  </releases>
+</component>

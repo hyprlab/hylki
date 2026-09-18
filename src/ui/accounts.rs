@@ -194,7 +194,7 @@ pub struct AccountsWindow {
     /// The email value the label field currently mirrors, so the label auto-fills
     /// from the email until the user customizes it.
     label_synced: String,
-    /// GNOME Online Accounts mail accounts available to import (not yet in Vireo).
+    /// GNOME Online Accounts mail accounts available to import (not yet in Hylki).
     goa: Vec<crate::goa::GoaMailAccount>,
     /// Refresh token captured from a successful OAuth sign-in, applied on save.
     pending_oauth_refresh: Option<String>,
@@ -227,9 +227,9 @@ pub enum AccountsInput {
     /// The editor's "Use my Gravatar" switch moved (#189).
     SetOwnGravatar(bool),
     /// The "Server saves its own copy of sent mail" switch: with it on there is
-    /// no copy of Vireo's to file, so the folder row above has nothing to say.
+    /// no copy of Hylki's to file, so the folder row above has nothing to say.
     SetServerSavesSent(bool),
-    /// Showcase only (VIREO_SHOWCASE_EDITOR_DIRTY): type into the open
+    /// Showcase only (HYLKI_SHOWCASE_EDITOR_DIRTY): type into the open
     /// editor's Label field, the way a capture cannot.
     DebugEditLabel(String),
     /// The settings sidebar wants to show another category while an editor
@@ -260,7 +260,7 @@ pub enum AccountsInput {
     ToggleEnabled { index: usize, enabled: bool },
     /// Enable/disable the account currently open in the editor (GOA group toggle).
     ToggleCurrentEnabled(bool),
-    /// Import a GNOME Online Account (by index into `goa`) into Vireo.
+    /// Import a GNOME Online Account (by index into `goa`) into Hylki.
     ImportGoa(usize),
     /// The provider dropdown changed — adapt the form (servers vs. OAuth).
     ProviderChanged,
@@ -373,7 +373,7 @@ pub enum AccountsOutput {
     Reordered(Vec<String>),
     /// An account was enabled/disabled from the list.
     EnabledChanged { email: String, enabled: bool },
-    /// Import a GNOME Online Account into Vireo (with its credentials).
+    /// Import a GNOME Online Account into Hylki (with its credentials).
     ImportGoa(Box<AccountConfig>),
     /// An editor subpage opened (the settings page it belongs to: accounts,
     /// filters or tags) or closed (`None`) — the combined settings window
@@ -438,14 +438,14 @@ fn wrap_subtitle(row: &impl IsA<gtk::Widget>, chars: i32) {
 /// Declared once because the row is rebuilt whenever an editor opens, and the
 /// two copies drifting apart is how a hint goes stale.
 const SENT_COPY_HINT: &str =
-    "Any folder, inbox included. Only applies to mail sent from this Vireo client \
+    "Any folder, inbox included. Only applies to mail sent from this Hylki client \
      going forward. Not recursive.";
 
 fn goa_uses_graph(g: &crate::goa::GoaMailAccount) -> bool {
     g.oauth2 && g.provider_type == "ms_graph"
 }
 
-/// GNOME Online Accounts mail accounts not (properly) configured in Vireo.
+/// GNOME Online Accounts mail accounts not (properly) configured in Hylki.
 /// A configured entry counts when it has an IMAP host or runs over Graph — an
 /// entry with neither is a broken pre-#36 Microsoft 365 import, so its GOA
 /// account is offered again and re-importing repairs it. Accounts GOA can
@@ -644,7 +644,7 @@ impl Component for AccountsWindow {
                                     set_title: &i18n("GNOME Online Accounts"),
                                     set_description: Some(
                                         i18n("Mail accounts from GNOME Settings. Toggle one on to \
-                                         use it in Vireo.").as_str()
+                                         use it in Hylki.").as_str()
                                     ),
                                     set_visible: false,
 
@@ -737,7 +737,7 @@ impl Component for AccountsWindow {
                                     set_description: Some(
                                         i18n("File incoming mail into folders or tag it automatically, \
                                          by sender, subject or recipients. Applied to each \
-                                         account's Inbox as Vireo syncs it, or to the mail already \
+                                         account's Inbox as Hylki syncs it, or to the mail already \
                                          there with Apply Now; a folder's right-click menu runs \
                                          them over that one folder.").as_str()
                                     ),
@@ -822,7 +822,7 @@ impl Component for AccountsWindow {
                                         },
 
                                         add_suffix = &gtk::Button {
-                                            set_icon_name: "co.hyprlab.Vireo-list-add-symbolic",
+                                            set_icon_name: "co.hyprlab.Hylki-list-add-symbolic",
                                             set_tooltip_text: Some(i18n("Allow this sender").as_str()),
                                             set_valign: gtk::Align::Center,
                                             add_css_class: "flat",
@@ -862,7 +862,7 @@ impl Component for AccountsWindow {
                                         },
 
                                         add_suffix = &gtk::Button {
-                                            set_icon_name: "co.hyprlab.Vireo-list-add-symbolic",
+                                            set_icon_name: "co.hyprlab.Hylki-list-add-symbolic",
                                             set_tooltip_text: Some(i18n("Block this sender").as_str()),
                                             set_valign: gtk::Align::Center,
                                             add_css_class: "flat",
@@ -920,11 +920,11 @@ impl Component for AccountsWindow {
                         #[wrap(Some)]
                         set_content = &adw::PreferencesPage {
                             // GNOME Online Accounts owns this account's servers and
-                            // credentials; Vireo only mirrors them. Saying so where
+                            // credentials; Hylki only mirrors them. Saying so where
                             // the greyed-out fields are is worth more than leaving
                             // the user to work out why they can't type.
                             // GNOME Online Accounts owns this account's servers and
-                            // credentials; Vireo only mirrors them, and can hide it
+                            // credentials; Hylki only mirrors them, and can hide it
                             // locally. Both facts belong together, above the fields
                             // they explain.
                             // The provider's mark over the form, following
@@ -946,7 +946,7 @@ impl Component for AccountsWindow {
 
                                 #[name = "goa_enabled_row"]
                                 adw::SwitchRow {
-                                    set_title: &i18n("Show in Vireo"),
+                                    set_title: &i18n("Show in Hylki"),
                                     set_subtitle: &i18n("Switching this off returns the account to the \
                                                    import list — it stays in GNOME Online Accounts."),
                                     connect_active_notify[sender] => move |row| {
@@ -1077,7 +1077,7 @@ impl Component for AccountsWindow {
                                         set_label: &i18n("Google and Microsoft sign-in use GNOME Online \
                                             Accounts.\n\n\
                                             1. Open Online Accounts and sign in there.\n\
-                                            2. Come back to Vireo and reopen this window — the \
+                                            2. Come back to Hylki and reopen this window — the \
                                             account then appears under “GNOME Online \
                                             Accounts” at the top of this window. Enable it there."),
                                     },
@@ -1359,9 +1359,9 @@ impl Component for AccountsWindow {
                                     set_subtitle: &i18n(SENT_COPY_HINT),
                                 },
                                 // Gmail files a copy of anything sent through
-                                // its SMTP, so Vireo's append makes a second
+                                // its SMTP, so Hylki's append makes a second
                                 // one. Off by default: a server that does not
-                                // do it, paired with a Vireo that has stopped
+                                // do it, paired with a Hylki that has stopped
                                 // appending, keeps no sent mail at all.
                                 #[name = "server_saves_row"]
                                 adw::SwitchRow {
@@ -1431,7 +1431,7 @@ impl Component for AccountsWindow {
                             },
 
                             // For a GOA-imported account this removes it from
-                            // Vireo only — it stays in GNOME Online Accounts and
+                            // Hylki only — it stays in GNOME Online Accounts and
                             // returns to the import list.
                             add = &adw::PreferencesGroup {
                                 gtk::Label {
@@ -1827,10 +1827,10 @@ impl Component for AccountsWindow {
                 set_connection_editable(widgets, !is_goa);
                 widgets.goa_banner.set_visible(is_goa);
                 // GOA accounts get the same Remove flow — it removes the account
-                // from Vireo only (back to the import list); GNOME keeps it.
+                // from Hylki only (back to the import list); GNOME keeps it.
                 widgets.remove_btn.set_visible(true);
                 // GNOME owns a GOA account's connection outright, so the server
-                // and credential section isn't shown at all — only what Vireo
+                // and credential section isn't shown at all — only what Hylki
                 // owns (name, label, colour, signature, aliases) plus the email
                 // for identification. `apply_provider` re-shows what applies the
                 // next time a native account or the add-form opens the editor.
@@ -1898,7 +1898,7 @@ impl Component for AccountsWindow {
 
             AccountsInput::ToggleEnabled { index, enabled } => {
                 // A GNOME Online Account switched off here isn't paused — it is
-                // un-imported: it drops out of Vireo (the config entry and its
+                // un-imported: it drops out of Hylki (the config entry and its
                 // stored copies go) and returns to the "GNOME Online Accounts"
                 // list below, ready to import again. The account itself stays
                 // in GNOME untouched.
@@ -1918,7 +1918,7 @@ impl Component for AccountsWindow {
             AccountsInput::ToggleCurrentEnabled(enabled) => {
                 if let Some(i) = self.editing {
                     // Same un-import semantics as the list toggle; the editor
-                    // page closes since its account is no longer in Vireo.
+                    // page closes since its account is no longer in Hylki.
                     if !enabled && self.accounts.get(i).is_some_and(|a| a.goa_id.is_some()) {
                         self.unimport_goa(i, widgets, &sender);
                         widgets.nav.pop();
@@ -2220,7 +2220,7 @@ impl Component for AccountsWindow {
                         account.oauth = orig.oauth;
                         account.oauth_settings = orig.oauth_settings.clone();
                         // GNOME Online Accounts is the source of truth for these;
-                        // Vireo keeps only what it owns (display name, signature,
+                        // Hylki keeps only what it owns (display name, signature,
                         // colour, emoji, label).
                         account.email = orig.email.clone();
                         account.protocol = orig.protocol;
@@ -2284,7 +2284,7 @@ impl Component for AccountsWindow {
                 // A GOA account's connection fields were all restored from the
                 // original above (GNOME owns them; a Graph account rightly has
                 // no IMAP host at all) — validating them would only block the
-                // fields Vireo does own: label, signature, colour, aliases.
+                // fields Hylki does own: label, signature, colour, aliases.
                 let is_goa_edit = account.goa_id.is_some();
                 if !is_goa_edit
                     && (account.imap_host.is_empty()
@@ -2327,13 +2327,13 @@ impl Component for AccountsWindow {
                 };
                 let body = if account.goa_id.is_some() {
                     format!(
-                        "Remove {name} from Vireo? It stays in GNOME Online Accounts \
+                        "Remove {name} from Hylki? It stays in GNOME Online Accounts \
                          and can be imported again from the list below. Mail on the \
                          server is not affected."
                     )
                 } else {
                     format!(
-                        "Remove {name} from Vireo? Its saved password is deleted from \
+                        "Remove {name} from Hylki? Its saved password is deleted from \
                          the keyring. Mail on the server is not affected."
                     )
                 };
@@ -2773,11 +2773,11 @@ impl AccountsWindow {
             }));
 
             // A dim pencil says "activate to edit"; the trash button removes.
-            let edit = gtk::Image::from_icon_name("co.hyprlab.Vireo-document-edit-symbolic");
+            let edit = gtk::Image::from_icon_name("co.hyprlab.Hylki-document-edit-symbolic");
             edit.add_css_class("dim-label");
             row.add_suffix(&edit);
 
-            let remove = gtk::Button::from_icon_name("co.hyprlab.Vireo-user-trash-symbolic");
+            let remove = gtk::Button::from_icon_name("co.hyprlab.Hylki-user-trash-symbolic");
             remove.set_valign(gtk::Align::Center);
             remove.add_css_class("flat");
             remove.set_tooltip_text(Some(i18n("Remove this alias").as_str()));
@@ -3073,7 +3073,7 @@ impl AccountsWindow {
         // The provider mark and the source badge each get a column of their
         // own, held to one width down the whole list. Both vary: the marks
         // are logos of different aspect (Gmail's M is wider than an envelope),
-        // and "GOA" is narrower than "Vireo" (and the pair differs again in
+        // and "GOA" is narrower than "Hylki" (and the pair differs again in
         // each language). Left to themselves they pushed each other sideways
         // and neither read as a column.
         let mark_widths = gtk::SizeGroup::new(gtk::SizeGroupMode::Horizontal);
@@ -3102,7 +3102,7 @@ impl AccountsWindow {
             let hbox = gtk::Box::new(gtk::Orientation::Horizontal, 12);
             hbox.add_css_class("account-list-row");
 
-            let handle = gtk::Image::from_icon_name("co.hyprlab.Vireo-list-drag-handle-symbolic");
+            let handle = gtk::Image::from_icon_name("co.hyprlab.Hylki-list-drag-handle-symbolic");
             handle.add_css_class("dim-label");
             hbox.append(&handle);
 
@@ -3175,16 +3175,16 @@ impl AccountsWindow {
             hbox.append(&slot(mark.upcast_ref(), &mark_widths));
 
             // Source badge: is this account from GNOME Online Accounts, or added
-            // directly in Vireo?
+            // directly in Hylki?
             let from_goa = acc.goa_id.is_some();
-            let badge = gtk::Label::new(Some(if from_goa { i18n("GOA") } else { i18n("Vireo") }.as_str()));
+            let badge = gtk::Label::new(Some(if from_goa { i18n("GOA") } else { i18n("Hylki") }.as_str()));
             badge.set_valign(gtk::Align::Center);
             badge.add_css_class("account-source-badge");
             if from_goa {
                 badge.add_css_class("goa");
                 badge.set_tooltip_text(Some(i18n("Imported GNOME Online Account").as_str()));
             } else {
-                badge.set_tooltip_text(Some(i18n("Added directly in Vireo").as_str()));
+                badge.set_tooltip_text(Some(i18n("Added directly in Hylki").as_str()));
             }
             hbox.append(&slot(badge.upcast_ref(), &badge_widths));
 
@@ -3209,7 +3209,7 @@ impl AccountsWindow {
             });
             hbox.append(&toggle);
 
-            let next = gtk::Image::from_icon_name("co.hyprlab.Vireo-go-next-symbolic");
+            let next = gtk::Image::from_icon_name("co.hyprlab.Hylki-go-next-symbolic");
             next.add_css_class("dim-label");
             hbox.append(&next);
 
@@ -3245,7 +3245,7 @@ impl AccountsWindow {
         self.list_css.load_from_string(&css);
     }
 
-    /// Un-import a GNOME Online Account: drop it from Vireo (the app removes
+    /// Un-import a GNOME Online Account: drop it from Hylki (the app removes
     /// the config entry and its stored copies) and return it to the "GNOME
     /// Online Accounts" import list below. The account stays in GNOME.
     fn unimport_goa(
@@ -3291,7 +3291,7 @@ impl AccountsWindow {
             let toggle = gtk::Switch::new();
             toggle.set_valign(gtk::Align::Center);
             toggle.set_active(false);
-            toggle.set_tooltip_text(Some(i18n("Use this account in Vireo").as_str()));
+            toggle.set_tooltip_text(Some(i18n("Use this account in Hylki").as_str()));
             let ti = sender.input_sender().clone();
             let tpos = pos;
             toggle.connect_state_set(move |_, state| {
@@ -3894,7 +3894,7 @@ fn fill_editor(widgets: &AccountsWindowWidgets, acc: &AccountConfig) {
 /// An account imported from GOA takes its address, servers, protocol and
 /// credentials from the system; editing them here would either be overwritten
 /// the next time GOA is read, or quietly disagree with what the rest of the
-/// desktop uses. What stays editable is what Vireo owns: the sender's display
+/// desktop uses. What stays editable is what Hylki owns: the sender's display
 /// name, signature, colour, emoji and label.
 fn set_connection_editable(widgets: &AccountsWindowWidgets, editable: bool) {
     for row in [
@@ -4206,14 +4206,14 @@ impl AccountsWindow {
             // The trash button removes; a chevron says the row opens the
             // rule's editor, as the account and cloud rows do. The rule's
             // "count unread" switch lives in the editor.
-            let rm = gtk::Button::from_icon_name("co.hyprlab.Vireo-user-trash-symbolic");
+            let rm = gtk::Button::from_icon_name("co.hyprlab.Hylki-user-trash-symbolic");
             rm.add_css_class("flat");
             rm.set_valign(gtk::Align::Center);
             rm.set_tooltip_text(Some(i18n("Remove filter").as_str()));
             let s = sender.clone();
             rm.connect_clicked(move |_| s.input(AccountsInput::RemoveFilter(i)));
             row.add_suffix(&rm);
-            let next = gtk::Image::from_icon_name("co.hyprlab.Vireo-go-next-symbolic");
+            let next = gtk::Image::from_icon_name("co.hyprlab.Hylki-go-next-symbolic");
             next.add_css_class("dim-label");
             row.add_suffix(&next);
             list.append(&row);
@@ -4321,9 +4321,9 @@ impl AccountsWindow {
         scroller.set_child(Some(&list));
         dialog.set_extra_child(Some(&scroller));
 
-        // The report is the showcase's to capture (VIREO_SHOWCASE_FIND_TAGS).
-        if std::env::var("VIREO_SHOWCASE_FIND_TAGS").is_ok() {
-            if let Ok(path) = std::env::var("VIREO_SHOWCASE") {
+        // The report is the showcase's to capture (HYLKI_SHOWCASE_FIND_TAGS).
+        if std::env::var("HYLKI_SHOWCASE_FIND_TAGS").is_ok() {
+            if let Ok(path) = std::env::var("HYLKI_SHOWCASE") {
                 let d = dialog.clone();
                 gtk::glib::timeout_add_seconds_local_once(2, move || {
                     crate::app::showcase_capture(d.upcast_ref(), &path);
@@ -4364,7 +4364,7 @@ impl AccountsWindow {
             row.connect_activated(move |_| s.input(AccountsInput::EditTag(i)));
             row.set_title(&gtk::glib::markup_escape_text(&t.name));
             row.set_subtitle(&gtk::glib::markup_escape_text(&t.keyword));
-            let handle = gtk::Image::from_icon_name("co.hyprlab.Vireo-list-drag-handle-symbolic");
+            let handle = gtk::Image::from_icon_name("co.hyprlab.Hylki-list-drag-handle-symbolic");
             handle.add_css_class("dim-label");
             row.add_prefix(&handle);
             row.add_prefix(&crate::ui::context_menu::swatch_widget(&t.color, true));
@@ -4399,7 +4399,7 @@ impl AccountsWindow {
                 }
             });
             row.add_controller(drop);
-            let rm = gtk::Button::from_icon_name("co.hyprlab.Vireo-user-trash-symbolic");
+            let rm = gtk::Button::from_icon_name("co.hyprlab.Hylki-user-trash-symbolic");
             rm.add_css_class("flat");
             rm.set_valign(gtk::Align::Center);
             rm.set_tooltip_text(Some(i18n("Remove tag").as_str()));
@@ -4408,7 +4408,7 @@ impl AccountsWindow {
             row.add_suffix(&rm);
             // A chevron says the row opens the tag's editor, as the
             // account and cloud rows do.
-            let next = gtk::Image::from_icon_name("co.hyprlab.Vireo-go-next-symbolic");
+            let next = gtk::Image::from_icon_name("co.hyprlab.Hylki-go-next-symbolic");
             next.add_css_class("dim-label");
             row.add_suffix(&next);
             list.append(&row);
@@ -4771,7 +4771,7 @@ impl AccountsWindow {
             let match_names = match_names.clone();
             move |init: Option<&crate::config::FilterCondition>| -> CondRows {
                 let group = adw::PreferencesGroup::new();
-                let remove = gtk::Button::from_icon_name("co.hyprlab.Vireo-user-trash-symbolic");
+                let remove = gtk::Button::from_icon_name("co.hyprlab.Hylki-user-trash-symbolic");
                 remove.add_css_class("flat");
                 remove.set_valign(gtk::Align::Center);
                 remove.set_tooltip_text(Some(i18n("Remove condition").as_str()));
@@ -4829,7 +4829,7 @@ impl AccountsWindow {
         let add_row = adw::ActionRow::new();
         add_row.set_title(&i18n("Add Condition"));
         add_row.set_activatable(true);
-        add_row.add_prefix(&gtk::Image::from_icon_name("co.hyprlab.Vireo-list-add-symbolic"));
+        add_row.add_prefix(&gtk::Image::from_icon_name("co.hyprlab.Hylki-list-add-symbolic"));
         // All or any (#192); only shown once there is a second condition.
         let combine_row = adw::ComboRow::new();
         combine_row.set_title(&i18n("Condition matching"));
@@ -5024,11 +5024,11 @@ impl AccountsWindow {
             None => add_cond(None),
         }
 
-        // Showcase hook: VIREO_SHOWCASE_OPEN_ROW=dest|tag|where|match|account
+        // Showcase hook: HYLKI_SHOWCASE_OPEN_ROW=dest|tag|where|match|account
         // activates that combo row once the page is up and logs whether its
         // popover opened and how many choices it holds, the way a click would
         // (the "Move to" list was found empty this way, 2026-09-14).
-        if let Ok(which) = std::env::var("VIREO_SHOWCASE_OPEN_ROW") {
+        if let Ok(which) = std::env::var("HYLKI_SHOWCASE_OPEN_ROW") {
             let row: adw::ComboRow = match which.as_str() {
                 "dest" => dest_row.clone(),
                 "tag" => tag_row.clone(),
@@ -5060,9 +5060,9 @@ impl AccountsWindow {
                 });
             });
         }
-        // VIREO_SHOWCASE_ADD_CONDITION=<n> adds that many blank conditions
+        // HYLKI_SHOWCASE_ADD_CONDITION=<n> adds that many blank conditions
         // once the page is up, for a capture of the stacked groups.
-        if let Some(Ok(n)) = std::env::var("VIREO_SHOWCASE_ADD_CONDITION").ok().map(|v| v.parse::<usize>()) {
+        if let Some(Ok(n)) = std::env::var("HYLKI_SHOWCASE_ADD_CONDITION").ok().map(|v| v.parse::<usize>()) {
             let add_cond = add_cond.clone();
             gtk::glib::timeout_add_local_once(std::time::Duration::from_secs(1), move || {
                 for _ in 0..n {

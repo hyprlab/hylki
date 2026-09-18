@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/co/hyprlab/Vireo/logos">
+  <gresource prefix="/co/hyprlab/Hylki/logos">
     <file compressed="true" alias="gilbarbara/adobe-icon.svg">../data/logos/gilbarbara/adobe-icon.svg</file>
     <file compressed="true" alias="gilbarbara/airbnb-icon.svg">../data/logos/gilbarbara/airbnb-icon.svg</file>
     <file compressed="true" alias="gilbarbara/asana-icon.svg">../data/logos/gilbarbara/asana-icon.svg</file>

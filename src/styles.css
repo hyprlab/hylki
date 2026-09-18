@@ -1,4 +1,4 @@
-/* Vireo — clean, calm styling layered on top of libadwaita defaults. */
+/* Hylki — clean, calm styling layered on top of libadwaita defaults. */
 
 .app-title {
   font-weight: 700;
@@ -211,7 +211,7 @@ headerbar.rail-header {
   padding: 14px 12px;
 }
 
-/* Badge marking where an account comes from (GNOME Online Accounts vs Vireo). */
+/* Badge marking where an account comes from (GNOME Online Accounts vs Hylki). */
 .account-source-badge {
   font-size: 0.72em;
   font-weight: 700;
@@ -284,7 +284,7 @@ button.star-active {
 /* The entry a menu is currently set to. `color` is inherited, so one class
    on the row carries both the label and the symbolic icon beside it, and
    `@accent_color` is libadwaita's legible-on-a-normal-background accent —
-   the desktop's under the stock look, the palette's under a Vireo theme. */
+   the desktop's under the stock look, the palette's under a Hylki theme. */
 .context-menu-selected,
 .context-menu-selected label {
   color: @accent_color;

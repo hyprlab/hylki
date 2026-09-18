@@ -51,8 +51,8 @@ pub fn texture(id: &str, px: i32) -> Option<gtk::gdk::Texture> {
 
 /// The generic icons for a mark we do not have: a cloud for storage, an
 /// envelope for mail.
-pub const GENERIC_CLOUD: &str = "co.hyprlab.Vireo-cloud-symbolic";
-pub const GENERIC_MAIL: &str = "co.hyprlab.Vireo-mail-unread-symbolic";
+pub const GENERIC_CLOUD: &str = "co.hyprlab.Hylki-cloud-symbolic";
+pub const GENERIC_MAIL: &str = "co.hyprlab.Hylki-mail-unread-symbolic";
 
 /// An image of the mark, `px` logical pixels square (decoded at twice
 /// that for HiDPI). An unknown id gets the generic cloud icon, so a row

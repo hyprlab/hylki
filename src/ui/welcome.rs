@@ -1,4 +1,4 @@
-//! First-run welcome wizard: a guided, five-step setup shown when Vireo starts
+//! First-run welcome wizard: a guided, five-step setup shown when Hylki starts
 //! with no accounts configured.
 //!
 //! The whole window wears the icon's yellow (#fec200) with the wordmark as the
@@ -17,7 +17,7 @@ use crate::worker::{self, ConnTest};
 use crate::i18n::{i18n, i18n_f};
 
 /// Wordmark art, embedded so the wizard needs nothing on disk.
-const WORDMARK_SVG: &[u8] = include_bytes!("../../data/welcome/wordmark-blue.svg");
+const WORDMARK_SVG: &[u8] = include_bytes!("../../data/welcome/wordmark-black.svg");
 
 /// The settings chosen on the privacy + personalize pages, applied by the app
 /// through its normal Set* handlers when the wizard finishes.
@@ -233,8 +233,8 @@ const SMALL_TOP: f64 = 6.0;
 const SMALL_BOTTOM: f64 = 16.0;
 const SMALL_SIZE: f64 = 100.0;
 
-/// The wordmark art's aspect (its viewBox is 1329x483).
-const WORDMARK_ASPECT: f64 = 483.0 / 1329.0;
+/// The wordmark art's aspect (its viewBox is 433x125).
+const WORDMARK_ASPECT: f64 = 125.0 / 433.0;
 
 /// The wordmark's height for a given width.
 pub(crate) fn wordmark_height(width: f64) -> i32 {
@@ -272,7 +272,7 @@ impl Component for Welcome {
         let win = adw::Window::new();
         win.set_default_size(600, 700);
         win.add_css_class("welcome-window");
-        win.set_title(Some(i18n("Welcome to Vireo").as_str()));
+        win.set_title(Some(i18n("Welcome to Hylki").as_str()));
         win
     }
 
@@ -331,7 +331,7 @@ impl Component for Welcome {
         let tag = tagline(&i18n("A clean, fast home for your mail.\nLet's set things up — it takes about a minute."));
         tag.set_margin_top(16);
         // The interface language, first of all (#179): System, English and
-        // every shipped translation. A pick restarts Vireo into it, so the
+        // every shipped translation. A pick restarts Hylki into it, so the
         // rest of the wizard reads in the chosen language.
         let lang_row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
         lang_row.set_halign(gtk::Align::Center);
@@ -355,7 +355,7 @@ impl Component for Welcome {
         lang_row.append(&lang);
         // Fair warning: a pick restarts the app.
         let lang_note = gtk::Label::new(Some(
-            i18n("Choosing another language restarts Vireo: it closes for a moment and this wizard comes back in that language.").as_str(),
+            i18n("Choosing another language restarts Hylki: it closes for a moment and this wizard comes back in that language.").as_str(),
         ));
         lang_note.add_css_class("welcome-hint");
         lang_note.add_css_class("caption");
@@ -384,9 +384,9 @@ impl Component for Welcome {
             lang_note.clone().upcast(),
             start.clone().upcast(),
         ]);
-        // VIREO_SHOWCASE_WIZARD_LANG=<n> picks choice n on the drop-down
+        // HYLKI_SHOWCASE_WIZARD_LANG=<n> picks choice n on the drop-down
         // after 4 s, what a click there does (for testing the restart).
-        if let Some(n) = std::env::var("VIREO_SHOWCASE_WIZARD_LANG").ok().and_then(|v| v.parse::<u32>().ok()) {
+        if let Some(n) = std::env::var("HYLKI_SHOWCASE_WIZARD_LANG").ok().and_then(|v| v.parse::<u32>().ok()) {
             let lang = lang.clone();
             gtk::glib::timeout_add_seconds_local_once(4, move || lang.set_selected(n));
         }
@@ -505,7 +505,7 @@ impl Component for Welcome {
         // ---- Page 3: privacy ----
         let priv_pg = gtk::Box::new(gtk::Orientation::Vertical, 14);
         priv_pg.append(&title(&i18n("Privacy, your way")));
-        priv_pg.append(&tagline(&i18n("Vireo sends no telemetry, ever. These control what leaves your machine while you read.")));
+        priv_pg.append(&tagline(&i18n("Hylki sends no telemetry, ever. These control what leaves your machine while you read.")));
         let priv_card = card();
         let sw_remote = adw::SwitchRow::new();
         sw_remote.set_title(&i18n("Block remote images"));
@@ -585,7 +585,7 @@ impl Component for Welcome {
 
         // ---- Page 5: done ----
         let done = gtk::Box::new(gtk::Orientation::Vertical, 16);
-        let check = gtk::Image::from_icon_name("co.hyprlab.Vireo-verified-checkmark-symbolic");
+        let check = gtk::Image::from_icon_name("co.hyprlab.Hylki-verified-checkmark-symbolic");
         check.set_pixel_size(72);
         check.add_css_class("welcome-check");
         done.append(&check);
@@ -594,7 +594,7 @@ impl Component for Welcome {
         done_sub.set_use_markup(true);
         done_sub.set_markup(&i18n_f(
             "Enjoy! If you encounter an issue or have a feature request,\nplease open an issue on our <a href=\"{url}\">Github</a>.",
-            &[("url", "https://github.com/hyprlab/vireo")],
+            &[("url", "https://github.com/hyprlab/hylki")],
         ));
         done.append(&done_sub);
         let finish_btn = pill(&i18n("Start Reading"));
@@ -611,7 +611,7 @@ impl Component for Welcome {
         let hb = adw::HeaderBar::new();
         hb.set_show_title(false);
         hb.add_css_class("flat");
-        let back_btn = gtk::Button::from_icon_name("co.hyprlab.Vireo-go-previous-symbolic");
+        let back_btn = gtk::Button::from_icon_name("co.hyprlab.Hylki-go-previous-symbolic");
         back_btn.add_css_class("flat");
         back_btn.set_visible(false);
         {
@@ -682,16 +682,16 @@ impl Component for Welcome {
         rebuild_goa_rows(&widgets.goa_list, &model.goa, &sender);
         bind_wordmark_to_position(&widgets.carousel, &widgets.wordmark_frame, &widgets.wordmark_box);
 
-        // Screenshot hook, mirroring the main window's: VIREO_SHOWCASE=path
-        // captures the wizard after a beat; VIREO_SHOWCASE_PAGE=N walks to
+        // Screenshot hook, mirroring the main window's: HYLKI_SHOWCASE=path
+        // captures the wizard after a beat; HYLKI_SHOWCASE_PAGE=N walks to
         // that page first.
-        if let Ok(path) = std::env::var("VIREO_SHOWCASE") {
+        if let Ok(path) = std::env::var("HYLKI_SHOWCASE") {
             let win = root.clone();
             let s = sender.clone();
             gtk::glib::timeout_add_seconds_local_once(4, move || {
                 // Walk pages via Next so the capture includes everything a
                 // real click drives (the wordmark choreography included).
-                let n = std::env::var("VIREO_SHOWCASE_PAGE")
+                let n = std::env::var("HYLKI_SHOWCASE_PAGE")
                     .unwrap_or_default()
                     .parse::<u32>()
                     .unwrap_or(0);

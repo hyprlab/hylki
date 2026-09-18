@@ -82,7 +82,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for InitialsPaintable {
-        const NAME: &'static str = "VireoInitialsPaintable";
+        const NAME: &'static str = "HylkiInitialsPaintable";
         type Type = super::InitialsPaintable;
         type Interfaces = (gdk::Paintable,);
     }

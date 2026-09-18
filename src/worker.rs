@@ -346,7 +346,7 @@ pub struct OutgoingMessage {
     /// normalized (no angle brackets), as [`crate::models::Message`] stores
     /// them. Empty for a message that starts a conversation. Without these
     /// headers a reply is a new thread to every client that receives it,
-    /// including Vireo.
+    /// including Hylki.
     pub in_reply_to: String,
     pub references: String,
     /// When editing an existing draft, the draft being replaced (removed from the
@@ -492,13 +492,13 @@ pub fn spawn(
         let protocol = account.as_ref().map(|a| a.protocol);
         let emit = emit.clone();
         std::thread::Builder::new()
-            .name(format!("vireo-cache-{account_id}"))
+            .name(format!("hylki-cache-{account_id}"))
             .spawn(move || cache_lane(account_id, protocol, lane_rx, tx, emit))
             .expect("failed to spawn cache lane thread");
     }
 
     std::thread::Builder::new()
-        .name(format!("vireo-mail-{account_id}"))
+        .name(format!("hylki-mail-{account_id}"))
         .spawn(move || {
             let rt = match tokio::runtime::Builder::new_current_thread()
                 .enable_all()
@@ -898,7 +898,7 @@ async fn run_imap(
         .unwrap_or_default()
     {
         if backfill_seen.insert(f.path.clone()) {
-            // Messages indexed before Vireo fetched References thread by their
+            // Messages indexed before Hylki fetched References thread by their
             // immediate parent alone — which for an incoming reply is usually
             // your own message, filed in Sent, so the link points outside the
             // folder and the reply starts a thread of its own.
@@ -1592,7 +1592,7 @@ async fn run_imap(
                     }
                     Ok(false) => {
                         // The mailbox takes no custom keywords: keep the tag
-                        // in Vireo, and say so once per session.
+                        // in Hylki, and say so once per session.
                         if let Some(c) = cache.as_ref() {
                             if message_id.is_empty() {
                                 c.set_keyword(account_id, &path, uid, &keyword, add);
@@ -1603,7 +1603,7 @@ async fn run_imap(
                         if !local_tags_noticed {
                             local_tags_noticed = true;
                             emit(WorkerEvent::Notice(i18n(
-                                "This server does not store tags, so Vireo keeps them on this computer only",
+                                "This server does not store tags, so Hylki keeps them on this computer only",
                             )));
                         }
                     }
@@ -1776,7 +1776,7 @@ async fn run_imap(
                 // A folder at a time: SELECT, then a HEADER search. Servers
                 // whose header index lags (see UndoMove below) are the reason
                 // the cache is asked first; this is the fallback for a message
-                // Vireo has never listed.
+                // Hylki has never listed.
                 let sess = session.as_mut().unwrap();
                 let mut hit: Option<(String, u32)> = None;
                 match list_folders(account_id, sess, &account.folder_roles).await {
@@ -2849,7 +2849,7 @@ async fn idle_wait(
         _ => return recv_one(rx).await,
     }
 
-    tracing::debug!(target: "vireo::imap", "> IDLE");
+    tracing::debug!(target: "hylki::imap", "> IDLE");
     let mut handle = sess.idle();
     match tokio::time::timeout(IDLE_START_TIMEOUT, handle.init()).await {
         Ok(Ok(())) => {}
@@ -3090,7 +3090,7 @@ async fn watch_folder(
                     .as_secs()
                     .clamp(1, WATCH_VERIFY.as_secs())
             });
-            tracing::debug!(target: "vireo::imap", "> IDLE");
+            tracing::debug!(target: "hylki::imap", "> IDLE");
             let mut handle = sess.idle();
             match tokio::time::timeout(IDLE_START_TIMEOUT, handle.init()).await {
                 Ok(Ok(())) => {}
@@ -3416,7 +3416,7 @@ fn queue_failed_send(
 /// Send Later (#145): park the message in the Outbox until `at`. The bytes are
 /// built now, like a failed send's, so the attachments are read while they
 /// exist; the app's clock sends it when the time comes, or the next launch
-/// does if Vireo was not running then. Replaces the queued row it was edited
+/// does if Hylki was not running then. Replaces the queued row it was edited
 /// from, and drops the draft it was opened from (the caller handles the
 /// server-side copy).
 fn schedule_send(
@@ -4104,7 +4104,7 @@ fn extract_data_images(html: &str) -> (String, Vec<InlineImage>) {
         });
         match lifted {
             Some((len, mime, data)) => {
-                let cid = format!("{}.{}@vireo.inline", stamp, parts.len() + 1);
+                let cid = format!("{}.{}@hylki.inline", stamp, parts.len() + 1);
                 let name = alt_of_enclosing_tag(html, start, start + len);
                 out.push_str(&html[i..start]);
                 out.push_str("cid:");
@@ -4163,7 +4163,7 @@ fn new_message_id(from: &str) -> String {
             .map(|d| d.as_nanos().to_string())
             .unwrap_or_default()
     });
-    format!("<vireo-{unique}@{domain}>")
+    format!("<hylki-{unique}@{domain}>")
 }
 
 /// Wrap each stored (bare) message id back in angle brackets for a header value.
@@ -4304,7 +4304,7 @@ async fn send_raw_smtp(
     let mailer = smtp_transport(account, alias).await?;
     // The SMTP leg for the console: size and recipient count, then the verdict.
     tracing::debug!(
-        target: "vireo::smtp",
+        target: "hylki::smtp",
         "> send {} bytes to {} recipient(s) via {}",
         raw.len(),
         envelope.to().len(),
@@ -4312,8 +4312,8 @@ async fn send_raw_smtp(
     );
     let r = mailer.send_raw(envelope, raw).await;
     match &r {
-        Ok(_) => tracing::debug!(target: "vireo::smtp", "< OK (send)"),
-        Err(e) => tracing::warn!(target: "vireo::smtp", "< {e} (send)"),
+        Ok(_) => tracing::debug!(target: "hylki::smtp", "< OK (send)"),
+        Err(e) => tracing::warn!(target: "hylki::smtp", "< {e} (send)"),
     }
     r?;
     Ok(())
@@ -4498,19 +4498,19 @@ async fn flag_deleted_and_expunge(
 
 // ---------------------------------------------------------------------------
 // The IMAP conversation, for the console (#132 and every "it failed on my
-// server" report): each command Vireo sends is logged as `> …` and the
-// server's verdict as `< OK` or `< <error>`, under the `vireo::imap`
+// server" report): each command Hylki sends is logged as `> …` and the
+// server's verdict as `< OK` or `< <error>`, under the `hylki::imap`
 // target — commands and results only, never a message body or a password.
 // The console keeps it whether or not console mode is on, so "Export log"
 // carries it after the fact; stderr sees only the failures.
 fn wire(cmd: &str) {
-    tracing::debug!(target: "vireo::imap", "> {cmd}");
+    tracing::debug!(target: "hylki::imap", "> {cmd}");
 }
 
 fn wired<T>(cmd: &str, r: &Result<T, async_imap::error::Error>) {
     match r {
-        Ok(_) => tracing::debug!(target: "vireo::imap", "< OK ({})", cmd_head(cmd)),
-        Err(e) => tracing::warn!(target: "vireo::imap", "< {e} ({cmd})"),
+        Ok(_) => tracing::debug!(target: "hylki::imap", "< OK ({})", cmd_head(cmd)),
+        Err(e) => tracing::warn!(target: "hylki::imap", "< {e} ({cmd})"),
     }
 }
 
@@ -4739,7 +4739,7 @@ async fn uid_move(
         // If even CAPABILITY fails, let MOVE produce the real error.
         Err(_) => true,
     };
-    tracing::debug!(target: "vireo::imap", "server {} MOVE", if can_move { "offers" } else { "lacks" });
+    tracing::debug!(target: "hylki::imap", "server {} MOVE", if can_move { "offers" } else { "lacks" });
     if can_move {
         return mv_uids(session, set, dest).await;
     }
@@ -5071,27 +5071,27 @@ async fn connect_inner(account: &AccountConfig) -> Result<ImapSession, Box<dyn s
     // The sign-in for the console: mechanism and user, never the secret.
     let session = if account.oauth {
         // XOAUTH2 with a fresh access token (from GOA or a native refresh token).
-        tracing::debug!(target: "vireo::imap", "> AUTHENTICATE XOAUTH2 {}", oauth_user(account));
+        tracing::debug!(target: "hylki::imap", "> AUTHENTICATE XOAUTH2 {}", oauth_user(account));
         let token = match fetch_oauth_token(account).await {
             Some(t) => t,
             None => {
-                tracing::warn!(target: "vireo::imap", "< no OAuth token (AUTHENTICATE XOAUTH2)");
+                tracing::warn!(target: "hylki::imap", "< no OAuth token (AUTHENTICATE XOAUTH2)");
                 return Err("could not get an OAuth token".into());
             }
         };
         let auth = XOAuth2 { user: oauth_user(account), token, step: 0 };
         let r = client.authenticate("XOAUTH2", auth).await.map_err(|(e, _client)| e);
         match &r {
-            Ok(_) => tracing::debug!(target: "vireo::imap", "< OK (AUTHENTICATE XOAUTH2)"),
-            Err(e) => tracing::warn!(target: "vireo::imap", "< {e} (AUTHENTICATE XOAUTH2)"),
+            Ok(_) => tracing::debug!(target: "hylki::imap", "< OK (AUTHENTICATE XOAUTH2)"),
+            Err(e) => tracing::warn!(target: "hylki::imap", "< {e} (AUTHENTICATE XOAUTH2)"),
         }
         r?
     } else {
-        tracing::debug!(target: "vireo::imap", "> LOGIN {} ****", account.username);
+        tracing::debug!(target: "hylki::imap", "> LOGIN {} ****", account.username);
         let r = client.login(&account.username, &account.password).await.map_err(|(e, _client)| e);
         match &r {
-            Ok(_) => tracing::debug!(target: "vireo::imap", "< OK (LOGIN)"),
-            Err(e) => tracing::warn!(target: "vireo::imap", "< {e} (LOGIN)"),
+            Ok(_) => tracing::debug!(target: "hylki::imap", "< OK (LOGIN)"),
+            Err(e) => tracing::warn!(target: "hylki::imap", "< {e} (LOGIN)"),
         }
         r?
     };
@@ -5569,7 +5569,7 @@ async fn refresh_folders(
 /// can put them on the watch list. UIDNEXT (from the EXAMINE response)
 /// catches deliveries of already-read mail that the unseen count alone would
 /// miss. A folder with no baseline yet is recorded, not reported: everything
-/// that happened while Vireo was closed would otherwise look like fresh
+/// that happened while Hylki was closed would otherwise look like fresh
 /// activity.
 /// The keyword half of a refresh with a tag view open (#166): every folder
 /// is examined and, for each configured tag, the server's KEYWORD search is
@@ -6383,7 +6383,7 @@ fn pgp_preview(collapsed: &str) -> Option<String> {
 ///
 /// A converter renders a link as `text ( url )`, so a mail whose first element is
 /// a linked logo — every marketing template — begins with a bare tracking URL.
-/// Vireo showed that URL as the preview where Apple Mail shows the greeting. The
+/// Hylki showed that URL as the preview where Apple Mail shows the greeting. The
 /// parenthesised URLs go, and any URL-only lines left at the front go with them;
 /// if that is the whole message, it stays as it was, since a link is better than
 /// an empty row.
@@ -6771,7 +6771,7 @@ const REFS_REPAIR_CHUNK: usize = 500;
 /// One step of the one-time References repair for the folder at the head of the
 /// queue (#21, #42).
 ///
-/// Messages indexed before Vireo asked for References hold only In-Reply-To,
+/// Messages indexed before Hylki asked for References hold only In-Reply-To,
 /// which names the immediate parent — and for an incoming reply that parent is
 /// usually your own message in Sent, so the link points outside the folder and
 /// the reply starts a thread of its own. This asks the server for the one header
@@ -7531,7 +7531,7 @@ const POP3_LIMIT: usize = 200;
 /// (a PASS line with its secret dropped) and the server's first reply line.
 fn pop3_wire(cmd: &str) {
     let shown = if cmd.starts_with("PASS ") { "PASS ****" } else { cmd };
-    tracing::debug!(target: "vireo::pop3", "> {shown}");
+    tracing::debug!(target: "hylki::pop3", "> {shown}");
 }
 
 fn pop3_wired(cmd: &str, reply: &[u8]) {
@@ -7539,9 +7539,9 @@ fn pop3_wired(cmd: &str, reply: &[u8]) {
     let line = line.trim();
     let shown = if cmd.starts_with("PASS ") { "PASS" } else { cmd };
     if reply.starts_with(b"+OK") {
-        tracing::debug!(target: "vireo::pop3", "< {} ({shown})", line.chars().take(80).collect::<String>());
+        tracing::debug!(target: "hylki::pop3", "< {} ({shown})", line.chars().take(80).collect::<String>());
     } else {
-        tracing::warn!(target: "vireo::pop3", "< {line} ({shown})");
+        tracing::warn!(target: "hylki::pop3", "< {line} ({shown})");
     }
 }
 
@@ -7994,7 +7994,7 @@ async fn run_pop3(
                     c.set_starred(account_id, INBOX, uid, flagged);
                 }
             }
-            // POP3 has no flags at all: every tag is Vireo's own.
+            // POP3 has no flags at all: every tag is Hylki's own.
             MailRequest::SetKeyword { uid, message_id, keyword, add, .. } => {
                 if let Some(c) = cache.as_ref() {
                     if message_id.is_empty() {
@@ -8246,12 +8246,12 @@ async fn run_mock(
         emit(WorkerEvent::Account(account));
     }
     emit(WorkerEvent::Folders(backend.folders(account_id)));
-    // VIREO_DEMO_ARRIVAL=<secs>: a reply lands in account 1's Inbox
+    // HYLKI_DEMO_ARRIVAL=<secs>: a reply lands in account 1's Inbox
     // conversation after that long, as a sync would bring it — for
     // watching an open conversation take in a new message.
     if account_id == 1 {
         if let Some(secs) =
-            std::env::var("VIREO_DEMO_ARRIVAL").ok().and_then(|v| v.parse::<u64>().ok())
+            std::env::var("HYLKI_DEMO_ARRIVAL").ok().and_then(|v| v.parse::<u64>().ok())
         {
             let emit = emit.clone();
             let mut messages = backend.messages(1);
@@ -8304,10 +8304,10 @@ async fn run_mock(
                     folder_id,
                     messages: backend.messages(folder_id),
                 });
-                // VIREO_DEMO_SYNC_DELAY=<secs> holds the "been to the server"
+                // HYLKI_DEMO_SYNC_DELAY=<secs> holds the "been to the server"
                 // signal back, so the progress a long sync shows (the manual
                 // filter run's dialog, #198) can be watched here.
-                match std::env::var("VIREO_DEMO_SYNC_DELAY")
+                match std::env::var("HYLKI_DEMO_SYNC_DELAY")
                     .ok()
                     .and_then(|v| v.parse::<u64>().ok())
                 {
@@ -9025,14 +9025,14 @@ fn graph_err(e: ureq::Error) -> String {
 /// The Microsoft Graph conversation for the console: method and URL (the
 /// token travels in a header and is never logged), then the verdict.
 fn graph_wire(method: &str, url: &str) {
-    tracing::debug!(target: "vireo::graph", "> {method} {}", url.strip_prefix(GRAPH_BASE).unwrap_or(url));
+    tracing::debug!(target: "hylki::graph", "> {method} {}", url.strip_prefix(GRAPH_BASE).unwrap_or(url));
 }
 
 fn graph_wired<T>(method: &str, url: &str, r: &Result<T, String>) {
     let path = url.strip_prefix(GRAPH_BASE).unwrap_or(url);
     match r {
-        Ok(_) => tracing::debug!(target: "vireo::graph", "< OK ({method} {path})"),
-        Err(e) => tracing::warn!(target: "vireo::graph", "< {e} ({method} {path})"),
+        Ok(_) => tracing::debug!(target: "hylki::graph", "< OK ({method} {path})"),
+        Err(e) => tracing::warn!(target: "hylki::graph", "< {e} ({method} {path})"),
     }
 }
 
@@ -9314,7 +9314,7 @@ fn graph_list_messages(
 
 /// Per-account state the Graph loop threads through its handlers.
 struct GraphState {
-    /// Vireo folder path → (folder id, Graph folder id), from the last listing.
+    /// Hylki folder path → (folder id, Graph folder id), from the last listing.
     folders: std::collections::HashMap<String, (u32, String)>,
     /// Message uid (hashed Graph id) → Graph message id.
     uids: std::collections::HashMap<u32, String>,
@@ -9423,7 +9423,7 @@ async fn run_graph(
             MailRequest::FindKeywords => {
                 // Categories are defined once per mailbox, with a name and a
                 // colour: the master list is the whole answer. Counts come
-                // from the cache, the only place Vireo has them.
+                // from the cache, the only place Hylki has them.
                 let mut found: Vec<KeywordFinding> = Vec::new();
                 if let Some(token) = graph_token(&account, &emit).await {
                     let t = token.clone();
@@ -10701,9 +10701,9 @@ mod tests {
         let err = build_email(&account, &msg).expect_err("send needs a recipient").to_string();
         assert!(err.contains("missing destination"), "{err}");
         // With a recipient the draft is built the ordinary way.
-        msg.to = "Peer <peer@vireo.invalid>".into();
+        msg.to = "Peer <peer@hylki.invalid>".into();
         let raw = build_draft(&account, &msg).expect("builds").formatted();
-        assert!(String::from_utf8_lossy(&raw).contains("peer@vireo.invalid"));
+        assert!(String::from_utf8_lossy(&raw).contains("peer@hylki.invalid"));
     }
 
     /// OpenPGP sending (#133), end to end against a real gpg in a throwaway
@@ -10717,7 +10717,7 @@ mod tests {
             eprintln!("gpg not installed; skipping");
             return;
         }
-        let home = std::env::temp_dir().join(format!("vireo-gpg-send-{}", std::process::id()));
+        let home = std::env::temp_dir().join(format!("hylki-gpg-send-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&home);
         std::fs::create_dir_all(&home).unwrap();
         #[cfg(unix)]
@@ -10726,15 +10726,15 @@ mod tests {
             std::fs::set_permissions(&home, std::fs::Permissions::from_mode(0o700)).unwrap();
         }
         // `Gpg::system()` (what build_email uses) honours this override.
-        std::env::set_var("VIREO_GNUPGHOME", &home);
+        std::env::set_var("HYLKI_GNUPGHOME", &home);
         let gpg = crate::pgp::Gpg::system();
         let mut account = sample_account();
-        account.email = "sender@vireo.invalid".into();
-        let fpr = crate::pgp::generate_key(&gpg, "Sender", "sender@vireo.invalid", "never", "").expect("own key");
-        crate::pgp::generate_key(&gpg, "Peer", "peer@vireo.invalid", "never", "").expect("peer key");
+        account.email = "sender@hylki.invalid".into();
+        let fpr = crate::pgp::generate_key(&gpg, "Sender", "sender@hylki.invalid", "never", "").expect("own key");
+        crate::pgp::generate_key(&gpg, "Peer", "peer@hylki.invalid", "never", "").expect("peer key");
 
         let mut msg = sample_outgoing();
-        msg.to = "Peer <peer@vireo.invalid>".into();
+        msg.to = "Peer <peer@hylki.invalid>".into();
         msg.body = "signed body text".into();
         msg.sign = true;
         let raw = build_email(&account, &msg).expect("builds").formatted();
@@ -10771,13 +10771,13 @@ mod tests {
         assert!(inner.contains("secret body text"), "{inner}");
 
         // A recipient without a key is refused by name; a From without a key too.
-        msg.cc = "nobody@vireo.invalid".into();
+        msg.cc = "nobody@hylki.invalid".into();
         let err = build_email(&account, &msg).expect_err("no key for nobody").to_string();
-        assert!(err.contains("nobody@vireo.invalid"), "{err}");
+        assert!(err.contains("nobody@hylki.invalid"), "{err}");
         msg.cc.clear();
-        account.email = "keyless@vireo.invalid".into();
+        account.email = "keyless@hylki.invalid".into();
         let err = build_email(&account, &msg).expect_err("no own key").to_string();
-        assert!(err.contains("keyless@vireo.invalid"), "{err}");
+        assert!(err.contains("keyless@hylki.invalid"), "{err}");
         // The account's chosen key overrides the address match.
         account.pgp_key = Some(fpr);
         build_email(&account, &msg).expect("chosen key signs");
@@ -10787,13 +10787,13 @@ mod tests {
         let raw = build_email(&account, &plain).expect("builds").formatted();
         assert!(String::from_utf8_lossy(&raw).contains("secret body text"));
 
-        std::env::remove_var("VIREO_GNUPGHOME");
+        std::env::remove_var("HYLKI_GNUPGHOME");
         let _ = std::process::Command::new("gpgconf").env("GNUPGHOME", &home).args(["--kill", "all"]).status();
         let _ = std::fs::remove_dir_all(&home);
     }
 
     /// A reply with no In-Reply-To/References is a new conversation to every
-    /// client that receives it — including Vireo's own threading.
+    /// client that receives it — including Hylki's own threading.
     #[test]
     fn reply_to_header_reaches_the_wire() {
         let mut msg = sample_outgoing();
@@ -10929,7 +10929,7 @@ mod tests {
 
     #[test]
     fn editing_a_queued_message_keeps_its_attachments_and_html() {
-        let dir = std::env::temp_dir().join(format!("vireo-edit-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("hylki-edit-{}", std::process::id()));
         std::fs::create_dir_all(&dir).expect("temp dir");
         let file = dir.join("report.pdf");
         std::fs::write(&file, [0x25, 0x50, 0x44, 0x46, 0x00, 0xff]).expect("write");
@@ -11525,7 +11525,7 @@ mod tests {
         // "Name <addr>" string — which 1.8.x did for From/To and 1.9.0 replaced
         // with mailboxes built from parts. This pins the attachment path itself,
         // including a name that would have needed quoting and a UTF-8 filename.
-        let dir = std::env::temp_dir().join(format!("vireo-test-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("hylki-test-{}", std::process::id()));
         std::fs::create_dir_all(&dir).expect("temp dir");
         let file = dir.join("Meeting notes, final.pdf");
         // Binary, so the encoder has to base64 it — as it would a real PDF.

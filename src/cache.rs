@@ -370,7 +370,7 @@ impl Cache {
             .unwrap_or_default()
     }
 
-    /// Open (creating if needed) the cache DB at `~/.local/share/vireo/cache.db`.
+    /// Open (creating if needed) the cache DB at `~/.local/share/hylki/cache.db`.
     /// A cache that lives only in memory, for the offline demo: the demo's
     /// sample mail must never reach the real `cache.db`, and running it through
     /// the same schema and the same queries is the point — the gallery's
@@ -394,7 +394,7 @@ impl Cache {
                     "no XDG data directory for the mail cache",
                 ))
             })?
-            .join("vireo");
+            .join("hylki");
         let _ = std::fs::create_dir_all(&path);
         restrict(&path, 0o700);
         let db = path.join("cache.db");
@@ -1646,7 +1646,7 @@ impl Cache {
             .unwrap_or_default()
     }
 
-    /// Add or drop a tag kept in Vireo only (#71), for accounts whose server
+    /// Add or drop a tag kept in Hylki only (#71), for accounts whose server
     /// can't hold it: POP3, or IMAP without `\*` in PERMANENTFLAGS. Keyed by
     /// Message-ID so the tag follows the message between folders and
     /// survives a re-sync of the row.
@@ -1829,12 +1829,12 @@ mod tests {
     fn the_cache_is_not_world_readable() {
         use std::os::unix::fs::PermissionsExt;
 
-        let base = std::env::temp_dir().join(format!("vireo-cache-test-{}", std::process::id()));
+        let base = std::env::temp_dir().join(format!("hylki-cache-test-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&base);
         std::fs::create_dir_all(&base).unwrap();
         std::env::set_var("XDG_DATA_HOME", &base);
 
-        let dir = base.join("vireo");
+        let dir = base.join("hylki");
         // Start from the permissions the old code left behind, to prove an
         // existing cache is tightened rather than only a freshly created one.
         std::fs::create_dir_all(&dir).unwrap();

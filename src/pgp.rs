@@ -1,6 +1,6 @@
 //! OpenPGP (#133), first slice: decrypt and verify what arrives, through the
 //! user's own GnuPG — `gpg` on the path, the keyring in `~/.gnupg`, the agent
-//! (and its pinentry) for passphrases. Vireo never sees a secret key and never
+//! (and its pinentry) for passphrases. Hylki never sees a secret key and never
 //! writes anything decrypted to disk: the worker renders a decrypted message
 //! straight to the reader and leaves the cache alone.
 //!
@@ -25,10 +25,10 @@ pub struct Gpg {
 }
 
 impl Gpg {
-    /// The user's GnuPG (honouring `VIREO_GNUPGHOME`, for trying an
+    /// The user's GnuPG (honouring `HYLKI_GNUPGHOME`, for trying an
     /// alternative keyring without touching the real one).
     pub fn system() -> Gpg {
-        Gpg { home: std::env::var_os("VIREO_GNUPGHOME").map(PathBuf::from) }
+        Gpg { home: std::env::var_os("HYLKI_GNUPGHOME").map(PathBuf::from) }
     }
 
     fn command(&self) -> Command {
@@ -378,12 +378,12 @@ fn run(gpg: &Gpg, args: &[&str], input: &[u8], detached_sig: Option<&[u8]>) -> R
             status_lines.push(s.to_string());
         } else if !line.trim().is_empty() {
             let l = line.trim_start_matches("gpg: ").trim().to_string();
-            tracing::debug!(target: "vireo::pgp", "gpg: {l}");
+            tracing::debug!(target: "hylki::pgp", "gpg: {l}");
             detail = Some(l);
         }
     }
     for s in &status_lines {
-        tracing::debug!(target: "vireo::pgp", "[GNUPG:] {s}");
+        tracing::debug!(target: "hylki::pgp", "[GNUPG:] {s}");
     }
     Run { stdout: output.stdout, status_lines, detail }
 }
@@ -1084,7 +1084,7 @@ uid:r::::1757000000::ABCDEF::Old Name <old@example.org>::::::::::0:\n";
             eprintln!("gpg not installed; skipping");
             return;
         }
-        let home = std::env::temp_dir().join(format!("vireo-gpg-test-{}", std::process::id()));
+        let home = std::env::temp_dir().join(format!("hylki-gpg-test-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&home);
         std::fs::create_dir_all(&home).unwrap();
         #[cfg(unix)]
@@ -1094,14 +1094,14 @@ uid:r::::1757000000::ABCDEF::Old Name <old@example.org>::::::::::0:\n";
         }
         let gpg = Gpg { home: Some(home.clone()) };
         let status = |args: &[&str], input: &[u8]| -> Run { run(&gpg, args, input, None) };
-        let gen = status(&["--passphrase", "", "--pinentry-mode", "loopback", "--quick-gen-key", "Test Vireo <test@vireo.invalid>", "default", "default", "never"], b"");
+        let gen = status(&["--passphrase", "", "--pinentry-mode", "loopback", "--quick-gen-key", "Test Hylki <test@hylki.invalid>", "default", "default", "never"], b"");
         assert!(gen.status_lines.iter().any(|l| l.starts_with("KEY_CREATED")), "{gen:?}");
         let entity = b"Content-Type: text/plain; charset=utf-8\r\n\r\nsecret hello\r\n";
-        let enc = status(&["--armor", "--trust-model", "always", "--pinentry-mode", "loopback", "--passphrase", "", "--recipient", "test@vireo.invalid", "--sign", "--encrypt"], entity);
+        let enc = status(&["--armor", "--trust-model", "always", "--pinentry-mode", "loopback", "--passphrase", "", "--recipient", "test@hylki.invalid", "--sign", "--encrypt"], entity);
         let armored = String::from_utf8(enc.stdout.clone()).unwrap();
         assert!(armored.contains("-----BEGIN PGP MESSAGE-----"), "{:?}", enc.status_lines);
         let mail = format!(
-            "From: test@vireo.invalid\r\nSubject: s\r\nMIME-Version: 1.0\r\n\
+            "From: test@hylki.invalid\r\nSubject: s\r\nMIME-Version: 1.0\r\n\
              Content-Type: multipart/encrypted; protocol=\"application/pgp-encrypted\"; boundary=\"enc\"\r\n\r\n\
              --enc\r\nContent-Type: application/pgp-encrypted\r\n\r\nVersion: 1\r\n\
              --enc\r\nContent-Type: application/octet-stream\r\n\r\n{armored}\r\n--enc--\r\n"
@@ -1117,7 +1117,7 @@ uid:r::::1757000000::ABCDEF::Old Name <old@example.org>::::::::::0:\n";
         let sig = status(&["--armor", "--pinentry-mode", "loopback", "--passphrase", "", "--detach-sign"], part);
         let sig = String::from_utf8(sig.stdout).unwrap();
         let mail = format!(
-            "From: test@vireo.invalid\r\nMIME-Version: 1.0\r\n\
+            "From: test@hylki.invalid\r\nMIME-Version: 1.0\r\n\
              Content-Type: multipart/signed; micalg=pgp-sha256; protocol=\"application/pgp-signature\"; boundary=\"b\"\r\n\r\n\
              --b\r\n{}\r\n--b\r\nContent-Type: application/pgp-signature\r\n\r\n{sig}\r\n--b--\r\n",
             String::from_utf8_lossy(part)
@@ -1143,17 +1143,17 @@ uid:r::::1757000000::ABCDEF::Old Name <old@example.org>::::::::::0:\n";
         let mine = list_keys(&gpg, true);
         assert_eq!(mine.len(), 1, "{mine:?}");
         assert!(mine[0].can_encrypt && mine[0].secret);
-        assert!(secret_key_for(&gpg, "TEST@vireo.invalid").is_some());
-        assert!(public_key_for(&gpg, "test@vireo.invalid").is_some());
-        assert!(public_key_for(&gpg, "nobody@vireo.invalid").is_none());
-        let fpr = generate_key(&gpg, "Second Key", "second@vireo.invalid", "1y", "pw").expect("generated");
+        assert!(secret_key_for(&gpg, "TEST@hylki.invalid").is_some());
+        assert!(public_key_for(&gpg, "test@hylki.invalid").is_some());
+        assert!(public_key_for(&gpg, "nobody@hylki.invalid").is_none());
+        let fpr = generate_key(&gpg, "Second Key", "second@hylki.invalid", "1y", "pw").expect("generated");
         let second = key_by_fingerprint(&gpg, &fpr).expect("listed");
         assert!(second.can_encrypt, "default default gives an encryption subkey: {second:?}");
         assert!(second.expires.is_some());
         let armored = export_public(&gpg, &fpr).expect("exported");
         assert!(String::from_utf8_lossy(&armored).contains("BEGIN PGP PUBLIC KEY BLOCK"));
         // Into a second, empty keyring: imported, untrusted, then vouched for.
-        let home2 = std::env::temp_dir().join(format!("vireo-gpg-test2-{}", std::process::id()));
+        let home2 = std::env::temp_dir().join(format!("hylki-gpg-test2-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&home2);
         std::fs::create_dir_all(&home2).unwrap();
         #[cfg(unix)]
@@ -1169,12 +1169,12 @@ uid:r::::1757000000::ABCDEF::Old Name <old@example.org>::::::::::0:\n";
         assert!(import_keys(&gpg2, b"not a key").is_err());
         assert_eq!(key_by_fingerprint(&gpg2, &fpr).unwrap().validity, KeyValidity::Unknown);
         assert!(trust_key(&gpg2, &fpr, None).is_err(), "no key of one's own to sign with");
-        let own = generate_key(&gpg2, "", "me@vireo.invalid", "never", "").expect("own key");
+        let own = generate_key(&gpg2, "", "me@hylki.invalid", "never", "").expect("own key");
         trust_key(&gpg2, &fpr, Some(&own)).expect("signed");
         assert!(key_by_fingerprint(&gpg2, &fpr).unwrap().validity.trusted());
         // Encrypt to the imported key from the second keyring; the first opens it.
-        let ct = encrypt(&gpg2, b"Content-Type: text/plain\r\n\r\nfor second", &["second@vireo.invalid".into()], Some(&own)).expect("encrypted");
-        let mail = format!("From: me@vireo.invalid\r\nMIME-Version: 1.0\r\nContent-Type: multipart/encrypted; protocol=\"application/pgp-encrypted\"; boundary=\"e\"\r\n\r\n--e\r\nContent-Type: application/pgp-encrypted\r\n\r\nVersion: 1\r\n--e\r\nContent-Type: application/octet-stream\r\n\r\n{}\r\n--e--\r\n", String::from_utf8_lossy(&ct));
+        let ct = encrypt(&gpg2, b"Content-Type: text/plain\r\n\r\nfor second", &["second@hylki.invalid".into()], Some(&own)).expect("encrypted");
+        let mail = format!("From: me@hylki.invalid\r\nMIME-Version: 1.0\r\nContent-Type: multipart/encrypted; protocol=\"application/pgp-encrypted\"; boundary=\"e\"\r\n\r\n--e\r\nContent-Type: application/pgp-encrypted\r\n\r\nVersion: 1\r\n--e\r\nContent-Type: application/octet-stream\r\n\r\n{}\r\n--e--\r\n", String::from_utf8_lossy(&ct));
         // The second key has a passphrase, fed through the loopback for the test.
         let gpg_pw = Gpg { home: Some(home.clone()) };
         let out = run(&gpg_pw, &["--pinentry-mode", "loopback", "--passphrase", "pw", "--decrypt"], &ct, None);

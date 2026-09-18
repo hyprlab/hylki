@@ -149,10 +149,10 @@ pub fn show_folder_picker(
     popover.popup();
     search.grab_focus();
 
-    // VIREO_SHOWCASE_MOVE=1 captures the picker a second after it opens
+    // HYLKI_SHOWCASE_MOVE=1 captures the picker a second after it opens
     // (the window snapshot never includes a popover).
-    if std::env::var("VIREO_SHOWCASE_MOVE").is_ok() {
-        if let Ok(path) = std::env::var("VIREO_SHOWCASE") {
+    if std::env::var("HYLKI_SHOWCASE_MOVE").is_ok() {
+        if let Ok(path) = std::env::var("HYLKI_SHOWCASE") {
             let column = column.clone();
             gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(1000), move || {
                 crate::app::showcase_capture(column.upcast_ref(), &path);

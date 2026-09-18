@@ -1,6 +1,0 @@
-# Restart helper (src/app_icon.rs): activating this name starts a fresh
-# sandbox instance that waits for the running app to quit, then becomes the
-# new one. Flatpak rewrites Exec to `flatpak run … --command=vireo` on export.
-[D-BUS Service]
-Name=co.hyprlab.Vireo.Beta.Restart
-Exec=/app/bin/vireo --restart-helper

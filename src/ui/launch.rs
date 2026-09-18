@@ -1,4 +1,4 @@
-//! Opening a link outside Vireo. The road out differs by host and every
+//! Opening a link outside Hylki. The road out differs by host and every
 //! road has been seen to fail without a word, so each attempt has a fallback
 //! and the last one says what happened instead of leaving a click that does
 //! nothing (#202).
@@ -129,7 +129,7 @@ pub(crate) fn portal_request(
     };
     let token = crate::rng::nonce(16)
         .map(|t| t.replace('-', "_"))
-        .unwrap_or_else(|_| format!("vireo{}", std::process::id()));
+        .unwrap_or_else(|_| format!("hylki{}", std::process::id()));
     let sender_token = conn
         .unique_name()
         .map(|n| n.trim_start_matches(':').replace('.', "_"))

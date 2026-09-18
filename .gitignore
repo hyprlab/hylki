@@ -21,6 +21,6 @@ cargo-sources.json
 .claude/
 
 # Local-build manifest (tools/local-manifest.sh output)
-co.hyprlab.Vireo.local.yml
+co.hyprlab.Hylki.local.yml
 po/.build/
 __pycache__/

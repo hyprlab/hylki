@@ -1,0 +1,6 @@
+# Restart helper (src/app_icon.rs): activating this name starts a fresh
+# sandbox instance that waits for the running app to quit, then becomes the
+# new one. Flatpak rewrites Exec to `flatpak run … --command=hylki` on export.
+[D-BUS Service]
+Name=co.hyprlab.Hylki.Beta.Restart
+Exec=/app/bin/hylki --restart-helper

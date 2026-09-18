@@ -143,7 +143,7 @@ pub struct PrefInit {
 
 /// App-chrome appearance options, in combo order.
 const TRAY_ICONS: &[(&str, TrayIcon)] = &[
-    (i18n_noop("Vireo icon"), TrayIcon::Vireo),
+    (i18n_noop("Hylki icon"), TrayIcon::Hylki),
     (i18n_noop("Envelope, white"), TrayIcon::EnvelopeLight),
     (i18n_noop("Envelope, black"), TrayIcon::EnvelopeDark),
 ];
@@ -252,7 +252,7 @@ impl FactoryComponent for SenderRow {
         adw::ActionRow {
             set_title: &self.addr,
             add_suffix = &gtk::Button {
-                set_icon_name: "co.hyprlab.Vireo-user-trash-symbolic",
+                set_icon_name: "co.hyprlab.Hylki-user-trash-symbolic",
                 set_valign: gtk::Align::Center,
                 set_tooltip_text: Some(i18n("Remove").as_str()),
                 add_css_class: "flat",
@@ -613,28 +613,28 @@ const SIDE_PAGES: &[(&str, &[SidePage])] = &[
     (
         i18n_noop("Accounts"),
         &[
-            SidePage { id: "accounts", title: i18n_noop("Mail Accounts"), icon: "co.hyprlab.Vireo-avatar-default-symbolic", accounts: true },
-            SidePage { id: "tags", title: i18n_noop("Tags"), icon: "co.hyprlab.Vireo-tag-outline-symbolic", accounts: true },
-            SidePage { id: "filters", title: i18n_noop("Filters"), icon: "co.hyprlab.Vireo-filter-folder-symbolic", accounts: true },
-            SidePage { id: "senders", title: i18n_noop("Senders"), icon: "co.hyprlab.Vireo-contact-new-symbolic", accounts: true },
-            SidePage { id: "openpgp", title: i18n_noop("OpenPGP"), icon: "co.hyprlab.Vireo-channel-secure-symbolic", accounts: false },
-            SidePage { id: "cloud", title: i18n_noop("Cloud Storage"), icon: "co.hyprlab.Vireo-cloud-symbolic", accounts: false },
+            SidePage { id: "accounts", title: i18n_noop("Mail Accounts"), icon: "co.hyprlab.Hylki-avatar-default-symbolic", accounts: true },
+            SidePage { id: "tags", title: i18n_noop("Tags"), icon: "co.hyprlab.Hylki-tag-outline-symbolic", accounts: true },
+            SidePage { id: "filters", title: i18n_noop("Filters"), icon: "co.hyprlab.Hylki-filter-folder-symbolic", accounts: true },
+            SidePage { id: "senders", title: i18n_noop("Senders"), icon: "co.hyprlab.Hylki-contact-new-symbolic", accounts: true },
+            SidePage { id: "openpgp", title: i18n_noop("OpenPGP"), icon: "co.hyprlab.Hylki-channel-secure-symbolic", accounts: false },
+            SidePage { id: "cloud", title: i18n_noop("Cloud Storage"), icon: "co.hyprlab.Hylki-cloud-symbolic", accounts: false },
         ],
     ),
     (
         i18n_noop("Settings"),
         &[
-            SidePage { id: "general", title: i18n_noop("General"), icon: "co.hyprlab.Vireo-puzzle-piece-symbolic", accounts: false },
-            SidePage { id: "appearance", title: i18n_noop("Appearance"), icon: "co.hyprlab.Vireo-preferences-desktop-appearance-symbolic", accounts: false },
-            SidePage { id: "sidebar", title: i18n_noop("Sidebar"), icon: "co.hyprlab.Vireo-sidebar-show-symbolic", accounts: false },
-            SidePage { id: "list", title: i18n_noop("Message List"), icon: "co.hyprlab.Vireo-view-list-bullet-symbolic", accounts: false },
-            SidePage { id: "conversations", title: i18n_noop("Conversations"), icon: "co.hyprlab.Vireo-chat-bubbles-text-symbolic", accounts: false },
-            SidePage { id: "reading", title: i18n_noop("Reading"), icon: "co.hyprlab.Vireo-mail-read-symbolic", accounts: false },
-            SidePage { id: "composing", title: i18n_noop("Composing"), icon: "co.hyprlab.Vireo-document-edit-symbolic", accounts: false },
-            SidePage { id: "privacy", title: i18n_noop("Privacy"), icon: "co.hyprlab.Vireo-security-high-symbolic", accounts: false },
-            SidePage { id: "datetime", title: i18n_noop("Date and Time"), icon: "co.hyprlab.Vireo-x-office-calendar-symbolic", accounts: false },
-            SidePage { id: "system", title: i18n_noop("System"), icon: "co.hyprlab.Vireo-applications-system-symbolic", accounts: false },
-            SidePage { id: "backup", title: i18n_noop("Backup"), icon: "co.hyprlab.Vireo-document-save-symbolic", accounts: false },
+            SidePage { id: "general", title: i18n_noop("General"), icon: "co.hyprlab.Hylki-puzzle-piece-symbolic", accounts: false },
+            SidePage { id: "appearance", title: i18n_noop("Appearance"), icon: "co.hyprlab.Hylki-preferences-desktop-appearance-symbolic", accounts: false },
+            SidePage { id: "sidebar", title: i18n_noop("Sidebar"), icon: "co.hyprlab.Hylki-sidebar-show-symbolic", accounts: false },
+            SidePage { id: "list", title: i18n_noop("Message List"), icon: "co.hyprlab.Hylki-view-list-bullet-symbolic", accounts: false },
+            SidePage { id: "conversations", title: i18n_noop("Conversations"), icon: "co.hyprlab.Hylki-chat-bubbles-text-symbolic", accounts: false },
+            SidePage { id: "reading", title: i18n_noop("Reading"), icon: "co.hyprlab.Hylki-mail-read-symbolic", accounts: false },
+            SidePage { id: "composing", title: i18n_noop("Composing"), icon: "co.hyprlab.Hylki-document-edit-symbolic", accounts: false },
+            SidePage { id: "privacy", title: i18n_noop("Privacy"), icon: "co.hyprlab.Hylki-security-high-symbolic", accounts: false },
+            SidePage { id: "datetime", title: i18n_noop("Date and Time"), icon: "co.hyprlab.Hylki-x-office-calendar-symbolic", accounts: false },
+            SidePage { id: "system", title: i18n_noop("System"), icon: "co.hyprlab.Hylki-applications-system-symbolic", accounts: false },
+            SidePage { id: "backup", title: i18n_noop("Backup"), icon: "co.hyprlab.Hylki-document-save-symbolic", accounts: false },
         ],
     ),
 ];
@@ -1195,7 +1195,7 @@ impl Component for Preferences {
                                     #[name = "notifications_row"]
                                     adw::SwitchRow {
                                         set_title: &i18n("Desktop notifications"),
-                                        set_subtitle: &i18n("Show system notifications for new mail and error alerts when Vireo isn't focused."),
+                                        set_subtitle: &i18n("Show system notifications for new mail and error alerts when Hylki isn't focused."),
                                         connect_active_notify[sender] => move |row| {
                                             sender.input(PrefInput::ToggleNotifications(row.is_active()));
                                         },
@@ -2080,7 +2080,7 @@ impl Component for Preferences {
                                 add = &adw::PreferencesGroup {
                                     set_title: &i18n("Privacy"),
                                     set_description: Some(
-                                        i18n("Vireo collects no telemetry and sends no analytics. Remote \
+                                        i18n("Hylki collects no telemetry and sends no analytics. Remote \
                                          content (images, trackers) is blocked by default. Allow it per \
                                          message, trust a sender to always load it, or turn on \"Always \
                                          load remote content\" below.").as_str()
@@ -2124,7 +2124,7 @@ impl Component for Preferences {
                                         set_title: &i18n("Show sender logos"),
                                         set_subtitle: &i18n("Fills the sender's avatar with the brand's logo: the \
                                                        one the sender publishes for mail (BIMI), one bundled \
-                                                       with Vireo, or the site's own icon. All but the bundled \
+                                                       with Hylki, or the site's own icon. All but the bundled \
                                                        ones are fetched from the sender's domain, which then \
                                                        learns your IP address, as blocking remote content \
                                                        otherwise avoids."),
@@ -2170,9 +2170,9 @@ impl Component for Preferences {
                                     #[name = "language_row"]
                                     adw::ComboRow {
                                         set_title: &i18n("Language"),
-                                        set_subtitle: &i18n("The language Vireo is shown in. \"System\" follows \
+                                        set_subtitle: &i18n("The language Hylki is shown in. \"System\" follows \
                                                        the desktop, with English where no translation exists. \
-                                                       A change applies the next time Vireo starts."),
+                                                       A change applies the next time Hylki starts."),
                                         connect_selected_notify[sender] => move |row| {
                                             sender.input(PrefInput::ChangeLanguage(row.selected()));
                                         },
@@ -2182,7 +2182,7 @@ impl Component for Preferences {
                                     adw::SwitchRow {
                                         set_title: &i18n("Keep running in the background"),
                                         set_subtitle: &i18n("Closing the window hides it instead of quitting, so new \
-                                                       mail still arrives. Vireo then appears under Background \
+                                                       mail still arrives. Hylki then appears under Background \
                                                        Apps in the system menu, where it can be quit."),
                                         connect_active_notify[sender] => move |row| {
                                             sender.input(PrefInput::ToggleRunInBackground(row.is_active()));
@@ -2192,7 +2192,7 @@ impl Component for Preferences {
                                     #[name = "autostart_row"]
                                     adw::SwitchRow {
                                         set_title: &i18n("Start at login"),
-                                        set_subtitle: &i18n("Start checking for mail when you log in. Vireo starts \
+                                        set_subtitle: &i18n("Start checking for mail when you log in. Hylki starts \
                                                        without a window and waits in the system menu."),
                                         connect_active_notify[sender] => move |row| {
                                             sender.input(PrefInput::ToggleAutostart(row.is_active()));
@@ -2203,7 +2203,7 @@ impl Component for Preferences {
                                     adw::SwitchRow {
                                         set_title: &i18n("Show a tray icon"),
                                         set_subtitle: &i18n("An icon in the system tray, with a red dot while any \
-                                                       inbox has unread mail. Click it to open Vireo. GNOME \
+                                                       inbox has unread mail. Click it to open Hylki. GNOME \
                                                        needs the AppIndicator extension; other desktops show \
                                                        it as they are."),
                                         connect_active_notify[sender] => move |row| {
@@ -2214,7 +2214,7 @@ impl Component for Preferences {
                                     #[name = "tray_icon_row"]
                                     adw::ComboRow {
                                         set_title: &i18n("Tray icon"),
-                                        set_subtitle: &i18n("The Vireo icon, or a plain envelope in white or black \
+                                        set_subtitle: &i18n("The Hylki icon, or a plain envelope in white or black \
                                                        to match the panel."),
                                         connect_selected_notify[sender] => move |row| {
                                             sender.input(PrefInput::ChangeTrayIcon(row.selected()));
@@ -2245,7 +2245,7 @@ impl Component for Preferences {
                                     adw::SwitchRow {
                                         set_title: &i18n("Console mode"),
                                         set_subtitle: &i18n("A verbose live console in the status bar showing \
-                                                       everything Vireo is doing under the hood."),
+                                                       everything Hylki is doing under the hood."),
                                         connect_active_notify[sender] => move |row| {
                                             sender.input(PrefInput::ToggleConsoleMode(row.is_active()));
                                         },
@@ -2253,13 +2253,13 @@ impl Component for Preferences {
 
                                     adw::ActionRow {
                                         set_title: &i18n("Export log"),
-                                        set_subtitle: &i18n("Save everything the console has recorded since Vireo \
+                                        set_subtitle: &i18n("Save everything the console has recorded since Hylki \
                                                        started, to attach to a bug report. Email addresses \
                                                        are shortened to their domain."),
                                         set_activatable: true,
                                         connect_activated => PrefInput::ExportLog,
                                         add_suffix = &gtk::Image {
-                                            set_icon_name: Some("co.hyprlab.Vireo-go-next-symbolic"),
+                                            set_icon_name: Some("co.hyprlab.Hylki-go-next-symbolic"),
                                         },
                                     },
                                 },
@@ -2268,7 +2268,7 @@ impl Component for Preferences {
                                 add = &adw::PreferencesGroup {
                                     set_title: &i18n("GNOME Files Integration"),
                                     set_description: Some(
-                                        i18n("Add \"Send with Vireo\" to the right-click menu in Files (Nautilus): \
+                                        i18n("Add \"Send with Hylki\" to the right-click menu in Files (Nautilus): \
                                               the selected files open in a new message, attached. This installs \
                                               a small extension in your home folder. It also needs the \
                                               nautilus-python package (python3-nautilus on Debian and Ubuntu), \
@@ -2314,16 +2314,16 @@ impl Component for Preferences {
                                             && !model.nautilus.loaded
                                             && model.nautilus.loader != Some(true),
                                         add_suffix = &gtk::Button {
-                                            set_icon_name: "co.hyprlab.Vireo-edit-copy-symbolic",
+                                            set_icon_name: "co.hyprlab.Hylki-edit-copy-symbolic",
                                             set_valign: gtk::Align::Center,
                                             set_tooltip_text: Some(i18n("Copy").as_str()),
                                             add_css_class: "flat",
                                             connect_clicked[cmd = model.nautilus_cmd.unwrap_or_default().to_string()] => move |b| {
                                                 b.clipboard().set_text(&cmd);
-                                                b.set_icon_name("co.hyprlab.Vireo-verified-checkmark-symbolic");
+                                                b.set_icon_name("co.hyprlab.Hylki-verified-checkmark-symbolic");
                                                 let b = b.clone();
                                                 gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(1200), move || {
-                                                    b.set_icon_name("co.hyprlab.Vireo-edit-copy-symbolic");
+                                                    b.set_icon_name("co.hyprlab.Hylki-edit-copy-symbolic");
                                                 });
                                             },
                                         },
@@ -2345,7 +2345,7 @@ impl Component for Preferences {
                                     // what happens when they are big.
                                     #[name = "files_action_row"]
                                     adw::ComboRow {
-                                        set_title: &i18n("Default Send with Vireo behavior"),
+                                        set_title: &i18n("Default Send with Hylki behavior"),
                                         connect_selected_notify[sender] => move |row| {
                                             sender.input(PrefInput::ChangeFilesAction(row.selected()));
                                         },
@@ -2379,7 +2379,7 @@ impl Component for Preferences {
                                 add = &adw::PreferencesGroup {
                                     set_title: &i18n("Backup"),
                                     set_description: Some(
-                                        i18n("Everything Vireo keeps, as one file: mail and cloud storage \
+                                        i18n("Everything Hylki keeps, as one file: mail and cloud storage \
                                          accounts, preferences, filters, tags, the sidebar and window \
                                          layout, the app icon choice and the words taught to the spell \
                                          checker. Passwords and sign-ins stay in the system keyring and \
@@ -2391,7 +2391,7 @@ impl Component for Preferences {
                                         set_activatable: true,
                                         connect_activated => PrefInput::ExportSettings,
                                         add_suffix = &gtk::Image {
-                                            set_icon_name: Some("co.hyprlab.Vireo-go-next-symbolic"),
+                                            set_icon_name: Some("co.hyprlab.Hylki-go-next-symbolic"),
                                         },
                                     },
 
@@ -2404,7 +2404,7 @@ impl Component for Preferences {
                                         set_activatable: true,
                                         connect_activated => PrefInput::ImportSettings,
                                         add_suffix = &gtk::Image {
-                                            set_icon_name: Some("co.hyprlab.Vireo-go-next-symbolic"),
+                                            set_icon_name: Some("co.hyprlab.Hylki-go-next-symbolic"),
                                         },
                                     },
                                 },
@@ -2581,7 +2581,7 @@ impl Component for Preferences {
 
         widgets.background_row.set_active(init.run_in_background);
         widgets.autostart_row.set_active(init.autostart);
-        // Starting at login only means anything if Vireo stays running.
+        // Starting at login only means anything if Hylki stays running.
         widgets.autostart_row.set_sensitive(init.run_in_background);
         {
             let autostart_row = widgets.autostart_row.clone();
@@ -3605,7 +3605,7 @@ fn rebuild_personal_words(exp: &adw::ExpanderRow) {
     for w in words {
         let row = adw::ActionRow::builder().title(&w).build();
         row.set_widget_name("vireo-spell-word");
-        let del = gtk::Button::from_icon_name("co.hyprlab.Vireo-user-trash-symbolic");
+        let del = gtk::Button::from_icon_name("co.hyprlab.Hylki-user-trash-symbolic");
         del.add_css_class("flat");
         del.set_valign(gtk::Align::Center);
         del.set_tooltip_text(Some(i18n("Forget this word").as_str()));

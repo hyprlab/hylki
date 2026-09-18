@@ -1,0 +1,810 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2026 Hyprlab -->
+<component type="desktop-application">
+  <id>co.hyprlab.Hylki</id>
+  <!-- Hylki was called Veem through v1.5.1 and Vireo through v1.34.0 -->
+  <replaces>
+    <id>co.hyprlab.Vireo</id>
+    <id>com.getveem.Veem</id>
+  </replaces>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-or-later</project_license>
+
+  <name>Hylki</name>
+  <summary>Private, GNOME-native email client</summary>
+
+  <description>
+    <p>
+      Hylki is a desktop email client for Wayland that feels at home in GNOME. It
+      talks IMAP and SMTP directly, keeps your mail and credentials on your
+      machine, and blocks trackers by default — no telemetry, no analytics.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Multiple IMAP and POP3 accounts, with a unified Inboxes view</li>
+      <li>Google, Microsoft and custom OAuth 2.0 sign-in, plus GNOME Online Accounts import</li>
+      <li>Whole-mailbox sync and search with infinite scroll</li>
+      <li>Deletions and moves made on other devices sync back automatically</li>
+      <li>Conversation threading, compose, reply, forward, and editable drafts</li>
+      <li>Remote content blocked by default; per-message light or dark reading</li>
+      <li>Passwords and OAuth tokens kept in the system keyring</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">co.hyprlab.Hylki.desktop</launchable>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#99c1f1</color>
+    <color type="primary" scheme_preference="dark">#1a5fb4</color>
+  </branding>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/hyprlab/hylki/main/docs/screenshot.png</image>
+      <caption>The unified inbox in light mode</caption>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://hylki.hyprlab.co</url>
+  <url type="bugtracker">https://github.com/hyprlab/hylki/issues</url>
+  <url type="vcs-browser">https://github.com/hyprlab/hylki</url>
+
+  <developer id="co.hyprlab">
+    <name>Hyprlab</name>
+  </developer>
+  <update_contact>hyprlab@proton.me</update_contact>
+
+  <content_rating type="oars-1.1"/>
+
+  <releases>
+    <release version="1.35.0" date="2026-09-18">
+      <description>
+        <p>Vireo is now Hylki. Same app, new name and icon. The first start carries a Vireo install's accounts, settings and cached mail across, leaving Vireo untouched until you remove it. The app icon gallery is a new set of Hylki envelopes.</p>
+        <p>Memory that was freed is now given back to the system, and the attachment gallery's caches are bounded.</p>
+      </description>
+    </release>
+    <release version="1.33.4" date="2026-09-18">
+      <description>
+        <p>A background loop that re-downloaded an OpenPGP message several times a second, holding Hylki at several gigabytes, is fixed. The conversation row stays selected when you click one of your own replies, and the message header has more air under the split reply.</p>
+      </description>
+    </release>
+    <release version="1.33.3" date="2026-09-18">
+      <description>
+        <p>The exported log now opens with a Memory section that says how much each process uses and how much of it is Hylki's own data, WebKit or the graphics driver. The tag icon is now an outline.</p>
+      </description>
+    </release>
+    <release version="1.33.2" date="2026-09-17">
+      <description>
+        <p>With more than one account, the message list could sit on "Loading more..." forever when one account could not answer. An account that cannot be reached now stops the spinner instead of pinning it over everyone's mail.</p>
+      </description>
+    </release>
+    <release version="1.33.1" date="2026-09-17">
+      <description>
+        <p>A message whose part headers carried a non-ASCII character at one particular position crashed the account's mail thread while building list previews, after which that account never synced again. The header is now read safely.</p>
+      </description>
+    </release>
+    <release version="1.33.0" date="2026-09-17">
+      <description>
+        <p>Replies answer a conversation's newest message, a conversation's row stays selected while its messages are read, the reply editor can open beneath the reader, and each message in a conversation lists its own attachments. Conversations have their own Settings page, the attachment drawer's count is a button that opens and closes it, and French is updated.</p>
+      </description>
+    </release>
+    <release version="1.32.3" date="2026-09-16">
+      <description>
+        <p>The two strings the About page gained in 1.32.2, its reworded description and the issue tracker's row, are translated in European and Brazilian Portuguese, so both are complete again.</p>
+      </description>
+    </release>
+    <release version="1.32.2" date="2026-09-16">
+      <description>
+        <p>Russian shows its translation: around sixty-six strings were marked as needing review and so were skipped when the translation was built, leaving them in English. Portuguese is complete in both the European and Brazilian variants. The About page's links are tidied and its issue tracker row can be translated.</p>
+      </description>
+    </release>
+    <release version="1.32.1" date="2026-09-16">
+      <description>
+        <p>Undo and redo reach the composer: Ctrl+Z takes back what you were just writing, a step at a time, along with the attachments beside it, in every composing format. Deleting with Backspace is its own step and a pause of more than five seconds starts a new one. The main menu's Undo and Redo name what they would take back. The inline reply no longer aborts the app as it slides in. French translation complete (#204).</p>
+      </description>
+    </release>
+    <release version="1.32.0" date="2026-09-16">
+      <description>
+        <p>Messages can be written in Markdown or HTML as well as rich or plain text, with a preview and a default in Settings. Undo and redo cover moves, read state, stars, tags and folders (#200). Copies of sent mail can be filed in any folder, the Inbox included, with a switch for servers that keep their own copy (#199), and a sent reply joins its conversation at once. Links open again inside the Flatpak through the portal with a chooser fallback (#202). Filter rules on recipients match each recipient on its own and a run reports matches that needed nothing (#201). Remote content can be loaded or blocked per message. Quoted-printable and preheader-padded previews read correctly. French translation updated (#203).</p>
+      </description>
+    </release>
+    <release version="1.31.1" date="2026-09-15">
+      <description>
+        <p>Filter rules can be given a name of their own (#197), and the rules can be run over mail that is already in a folder rather than only meeting mail as it arrives (#198): Apply Now in Settings sweeps every inbox, a folder's right-click menu sweeps that folder, and a dialog shows a live count while the run works and reports what it did. French and Russian translations updated (#195, #196).</p>
+      </description>
+    </release>
+    <release version="1.31.0" date="2026-09-15">
+      <description>
+        <p>Appearance themes: Settings, Appearance gained a Theme gallery (System, Midnight, Tidal, Rose, Earth, Forest), each with a light and a dark palette that reaches the reader and the composer; a Drafts folder assigned under Special Folders now shows its count; Settings rows reworded and the ⋯-as-a-menu switch moved to Reading; Mail Accounts marks and badges aligned in columns; Portuguese translations updated (#194).</p>
+      </description>
+    </release>
+    <release version="1.30.1" date="2026-09-14">
+      <description>
+        <p>Swipe actions can be tuned to the trackpad they are used on (Settings, Message List), and a swipe that goes far enough now flies the message off the side it was sent while the list closes over it, instead of the row vanishing on release.</p>
+      </description>
+    </release>
+    <release version="1.30.0" date="2026-09-14">
+      <description>
+        <p>Filters can match the message body (searched on the server, nothing downloaded) and the Reply-To address, hold several conditions (all or any) laid out as separate groups in the editor, and take comma-separated alternatives per condition (#191, #192); the filter editor's "Move to" list is no longer empty after Settings reopens.</p>
+      </description>
+    </release>
+    <release version="1.29.3" date="2026-09-14">
+      <description>
+        <p>Files sent from GNOME Files now ask whether they go into a new message, a draft or a reply, with an offer to upload big ones to cloud storage instead and defaults under Settings → System → GNOME Files; a "Server is behind Cloudflare" switch uploads to self-hosted Nextcloud-kind and Seafile servers in 90 MB pieces; French updated (PR #193).</p>
+      </description>
+    </release>
+    <release version="1.29.2" date="2026-09-14">
+      <description>
+        <p>Your own messages show your mailbox's picture or emoji in conversations and the message list, with a Settings switch to keep the old circle and a per-account "Use my Gravatar" option; leaving a settings editor now shows the page you chose, and an unchanged editor no longer asks about saving.</p>
+      </description>
+    </release>
+    <release version="1.29.1" date="2026-09-14">
+      <description>
+        <p>"Send with Hylki" from GNOME Files, and "Open With Hylki" on a selection, now attach every selected file to one message instead of opening one message per file.</p>
+      </description>
+    </release>
+    <release version="1.29.0" date="2026-09-14">
+      <description>
+        <p>The attachments gallery reaches the whole archive without downloading it and can be scoped to accounts and folders, "Send with Hylki" from the GNOME Files right-click menu, "Send by email" from a file manager works inside the Flatpak, opening the app while it runs in the background no longer leaves the pointer busy, and people on Gmail and other mailbox hosts no longer wear their provider's logo.</p>
+      </description>
+    </release>
+    <release version="1.28.2" date="2026-09-13">
+      <description>
+        <p>Sender logos from BIMI and a bundled set of common senders, wide mail that scrolls again in a narrow pane, drafts that are neither read nor unread, an evenly spaced Special Folders description, more room above the first account in the sidebar, and an updated French translation.</p>
+      </description>
+    </release>
+    <release version="1.28.1" date="2026-09-13">
+      <description>
+        <p>A white flash between messages in dark mode fixed, account circles and provider marks in the accounts list, a wider toolbar editor with six buttons a side, a tray count that names what it counts, the chosen language now applying in the Flatpak and shipping in the RPM, and updated Russian, French and Portuguese translations plus Brazilian Portuguese.</p>
+      </description>
+    </release>
+    <release version="1.28.0" date="2026-09-12">
+      <description>
+        <p>An arrangeable reader toolbar, a slide-over sidebar that stays open, notification clicks that open in Inboxes at once, conversations that move as one and take in new replies while open, a right-click menu on reader cards, plain-text composing and monospace reading, the clock following the desktop, a language chooser, and Hungarian, Russian and Portuguese translations.</p>
+      </description>
+    </release>
+    <release version="1.27.3" date="2026-09-11">
+      <description>
+        <p>The narrow-window sidebar slides in over the icon rail as its own panel; the rail no longer changes underneath it, and the rare vanished-rail case is gone.</p>
+      </description>
+    </release>
+    <release version="1.27.2" date="2026-09-11">
+      <description>
+        <p>Inbox and Archive use GNOME's inbox and shoe-box icons in the sidebar, toolbars and menus.</p>
+      </description>
+    </release>
+    <release version="1.27.1" date="2026-09-11">
+      <description>
+        <p>French translation catch-up: the strings added in 1.26.0 are now translated (PR #160 by frenchy82).</p>
+      </description>
+    </release>
+    <release version="1.27.0" date="2026-09-11">
+      <description>
+        <p>A Move To button in the reader. Reply on a conversation answers its latest message. Tags set on another device reach the tag lists. A picture can stand in for the account's emoji or initials, with a preview in the account editor. The Actions Palette can act as a menu. The unified section gains Starred, Sent, Drafts, Archive, Filters and Tags rows; the sidebar layout is remembered; the icon rail folds items and shows unread dots. Folder switches and the Settings window open in tens of milliseconds. A tag finder imports tags other clients set. Not Spam in Junk. Sender logos at full size. List previews read their charset.</p>
+      </description>
+    </release>
+    <release version="1.26.0" date="2026-09-10">
+      <description>
+        <p>A default sender for new messages and number keys for tags. The cloud services' and mail providers' own marks throughout Settings and the setup wizard. The Cloud Storage panel works like Mail Accounts: separate Nextcloud, ownCloud and OpenCloud entries, cards with an on/off switch, Remove in the editor header with a confirmation. The Settings window reopens on the last category. Settings backup includes cloud accounts and spell-checker words. French updated.</p>
+      </description>
+    </release>
+    <release version="1.25.2" date="2026-09-09">
+      <description>
+        <p>Cloud attachments to OneDrive, Dropbox and Seafile, with link expiry and passwords chosen per upload; recipient suggestions remember everyone you write to.</p>
+      </description>
+    </release>
+    <release version="1.25.1" date="2026-09-09">
+      <description>
+        <p>French translation completed for the 1.25.0 features; thread node dots in the message list are drawn whole again; richer demo content.</p>
+      </description>
+    </release>
+    <release version="1.25.0" date="2026-09-09">
+      <description>
+        <p>Send Later with presets and a date-time picker; cloud attachments via Nextcloud, ownCloud or OpenCloud share links; Empty Trash and Empty Junk; From/To/Subject in the reply panel; drafts open in the reading pane with a Delete Draft button; quote folding keeps interleaved replies; French translation update.</p>
+      </description>
+    </release>
+    <release version="1.24.3" date="2026-09-08">
+      <description>
+        <p>French translation updated to cover the 1.23 and 1.24 features.</p>
+      </description>
+    </release>
+    <release version="1.24.2" date="2026-09-08">
+      <description>
+        <p>Tags can take any colour from the GTK colour chooser; the composer's background and editor follow the GTK theme and a live light/dark switch.</p>
+      </description>
+    </release>
+    <release version="1.24.1" date="2026-09-08">
+      <description>
+        <p>Multi-line message previews show every line again (clipped since 1.23.0); swiping a row to archive or delete slides it flush over a strip that fills the full width of the list.</p>
+      </description>
+    </release>
+    <release version="1.24.0" date="2026-09-08">
+      <description>
+        <p>Your own font and colours over every message; Junk and Trash that empty themselves; a settings window with a sidebar of categories and searchable lists; and OpenPGP end to end: read encrypted and signed mail, manage keys without a terminal, sign and encrypt what you send.</p>
+      </description>
+    </release>
+    <release version="1.23.1" date="2026-09-07">
+
+      <description><p>Deleting, archiving and moving mail on iCloud works again (the no-MOVE fallback sent the Trash folder's name unquoted); the log records every command sent to the mail server and the server's answer, for IMAP, Microsoft 365, POP3 and outgoing mail; an uninstall script for source installs.</p></description>
+
+    </release>
+    <release version="1.23.0" date="2026-09-07">
+
+      <description><p>Tags: coloured labels stored on the server as IMAP keywords, with a Tags section in the sidebar and rules that tag; swipe a message row to archive or delete it; a redrawn icon set with a new default; a log export for bug reports; fixes for an account vanishing from All Inboxes, forwards without a To field, leaving a quote in the editor, and restoring mail from Trash; the French translation completed.</p></description>
+
+    </release>
+    <release version="1.22.0" date="2026-09-06">
+
+      <description><p>A translatable interface with a French translation; pictures dropped from the file manager and picture resizing in the composer; HTML signatures; mid: links open a message by its Message-ID; deleting works on servers without the IMAP MOVE extension; Ctrl+C copies from the reader; a redrawn envelope icon in four colours.</p></description>
+
+    </release>
+    <release version="1.21.1" date="2026-09-05">
+
+      <description><p>Refreshed icon artwork throughout, and a second bird variant in the app icon gallery.</p></description>
+
+    </release>
+    <release version="1.21.0" date="2026-09-05">
+
+      <description><p>Choose the app icon from a set of eighteen in Settings or the welcome wizard, with a new default icon; existing installs keep the classic envelope. Redrawn wordmark.</p></description>
+
+    </release>
+    <release version="1.20.2" date="2026-09-04">
+
+      <description><p>Filter rules can be edited in place from Settings → Accounts → Filters, and the rule rows have more room.</p></description>
+
+    </release>
+    <release version="1.20.1" date="2026-09-04">
+
+      <description><p>Filter-rule folders can be listed in a Filtered Folders section inside All Inboxes, switched on per rule beside Count unread mail, with a global switch under Settings → Sidebar.</p></description>
+
+    </release>
+    <release version="1.20.0" date="2026-09-04">
+
+      <description><p>Spell checking and inline images in the composer, an optional tray icon with your newest unread mail in its menu, filtered folders counting toward unread per rule, cached mail opening instantly during sync, Reply-To honoured, grab handles for the split reply and attachment drawer, plain-text paste by default, and attachment fixes for web Gmail senders.</p></description>
+
+    </release>
+    <release version="1.19.2" date="2026-09-02">
+
+      <description><p>Emails that carry their own dark-mode styling, like Google Calendar invitations, now follow the background the message is shown on instead of the desktop's light/dark setting, fixing light-grey text on a white card.</p></description>
+
+    </release>
+    <release version="1.19.1" date="2026-09-01">
+
+      <description><p>Memory-use fixes for long-running sessions: the web renderer runs with a document-viewer cache model and a memory ceiling, and the body, attachment, logo and gallery caches are bounded, so a long day of reading stays in the hundreds of MB.</p></description>
+
+    </release>
+    <release version="1.19.0" date="2026-09-01">
+
+      <description><p>First-run welcome wizard, per-account mail filters, settings backup and restore, notification action buttons, split replies, collapsible search plus find-in-message, unread and starred quick filters, viewport-based read marking with a reading policy, conversation-level starring, and threads surfacing their newest message.</p></description>
+
+    </release>
+    <release version="1.18.4" date="2026-08-30">
+
+      <description><p>Composer attachment pills shrink to their content, and files opened with Hylki from a file manager or the command line attach to a fresh composer.</p></description>
+
+    </release>
+    <release version="1.18.3" date="2026-08-30">
+
+      <description><p>Folder clicks can no longer be wedged by a stalled IMAP IDLE, push becomes a per-account setting, Nautilus's Send by email attaches the files, and the sender seal renders correctly under GNOME text scaling.</p></description>
+
+    </release>
+    <release version="1.18.2" date="2026-08-30">
+
+      <description><p>Sender-authentication seal in the message header, a chevron-placement preference with a column-aligned leading layout, thread rows that show the newest message, and thread-wide mark as read in the context menu.</p></description>
+
+    </release>
+    <release version="1.18.1" date="2026-08-30">
+
+      <description><p>Polish release: Hylki registers as a mailto-handling email client, per-account special-folder mapping, a steadier message list with a sliding Actions Palette, direction-following deletion, trustworthy undo, and many sizing fixes from community feedback.</p></description>
+
+    </release>
+    <release version="1.18.0" date="2026-08-29" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.18.0</url>
+      <description>
+        <p>Contacts become a full in-app view with editing via Evolution Data Server; Accounts and Settings merge into one window; bulk mail actions apply instantly and run in the background; All Inboxes loads instantly from cache; threads animate open and shut; forwards keep their formatting through a proper HTML sanitizer; and a Reply-To field joins the composer.</p>
+      </description>
+    </release>
+    <release version="1.17.1" date="2026-08-28" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.17.1</url>
+      <description>
+        <p>Microsoft 365 accounts from GNOME Online Accounts work now, speaking the Graph API with GNOME's own sign-in; GOA accounts can be un-imported and removed properly and their editors slim down; Contacts and Refresh move into the sidebar beside a New Message button; and the message list reclaims a row by moving its count and sort menu into the header bar.</p>
+      </description>
+    </release>
+    <release version="1.17.0" date="2026-08-28" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.17.0</url>
+      <description>
+        <p>Composing slides down inline over the reader (with a pop-out and a preference), Ctrl+Z undoes any move or delete without limit, send-as aliases can use their own SMTP server, single messages adopt the full-width conversation layout with reliable scroll-to-unread, per-message action palettes, a full-accent message list selection, a cleaner attachment drawer, and a fix for a crash when opening several PDF attachments at once.</p>
+      </description>
+    </release>
+    <release version="1.16.2" date="2026-08-27" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.16.2</url>
+      <description>
+        <p>Cancelling an attachment's Open With dialog no longer reopens it, and the message list gets rounded inset highlights with floating separators.</p>
+      </description>
+    </release>
+    <release version="1.16.1" date="2026-08-27" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.16.1</url>
+      <description>
+        <p>Rename folders from the context menu, single-click a folder to expand its sub-tree, new folders appear instantly, and unread chips survive folder moves.</p>
+      </description>
+    </release>
+    <release version="1.16.0" date="2026-08-27" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.16.0</url>
+      <description>
+        <p>Nested folders render as a collapsible tree with drag-and-drop moving; dark mode adapts every email's colours so text always reads; a new app-wide light/dark/system preference; the sidebar can float over the panes on hover; thread messages show as cards on a rail; GNOME-styled context menus with icons; plus server-robustness hardening.</p>
+      </description>
+    </release>
+    <release version="1.15.7" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.15.7</url>
+      <description>
+        <p>Panning a zoomed attachment preview is smooth, and the toolbar attachment menu's Open button opens files properly, matching the drawer and gallery.</p>
+      </description>
+    </release>
+    <release version="1.15.6" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.15.6</url>
+      <description>
+        <p>Opening attachments from the Flatpak truly works now — three deep sandbox bugs fixed and verified live. The attachment preview fills the Hylki window itself instead of opening a second window, and a click zooms the document 3x right where you clicked, with drag to pan and Escape to fit.</p>
+      </description>
+    </release>
+    <release version="1.15.5" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.15.5</url>
+      <description>
+        <p>Opening attachments works even where the desktop portal misbehaves: when a direct launch fails, Hylki falls back to the Open With chooser (remembered once confirmed), and the failure dialog now reports the system's actual error with practical steps. Double-clicking a lightbox preview opens the document in its external app.</p>
+      </description>
+    </release>
+    <release version="1.15.4" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.15.4</url>
+      <description>
+        <p>Opening attachments works in the Flatpak: the sandboxed build now hands opened files to the desktop portal as a document handle the viewer can actually read, instead of a private path it couldn't. And when a desktop's portal genuinely cannot launch applications, Hylki says so in a dialog instead of doing nothing.</p>
+      </description>
+    </release>
+    <release version="1.15.3" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.15.3</url>
+      <description>
+        <p>Send-as aliases: give an account extra From addresses, pick them in the composer, and replies to mail sent to an alias answer as that alias automatically. Attachment opening is now a clean double-click gesture — photos and PDFs preview in the lightbox, other types open in their app — and the conversation chevron pill renders smoothly.</p>
+      </description>
+    </release>
+    <release version="1.15.2" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.15.2</url>
+      <description>
+        <p>A community-feedback release: conversation cards gain tinted initials avatars, sticky headers and a comfortable reading width; the inline composer shows its address fields so forwarding works without a separate window; Sent folders name recipients instead of you; the message list remembers its width; the attachment drawer previews photos and PDFs in-app with double-click to open externally; and clearer icons throughout.</p>
+      </description>
+    </release>
+    <release version="1.15.1" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.15.1</url>
+      <description>
+        <p>Attachment polish: opening a message or conversation now downloads its attachments automatically (no more "load attachments" click), the gallery's lightbox renders PDF first pages in-app at full size, and the table view's columns line up with per-row Download, Open and Go-to-Message actions.</p>
+      </description>
+    </release>
+    <release version="1.15.0" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.15.0</url>
+      <description>
+        <p>An attachments release, with contributions by Isaac: opening attachments works again (a wrong open() flag prevented staging entirely) and goes through the desktop portal; PDFs show their first page as thumbnails, rendered in the background so the window never freezes; the attachments gallery gains a control footer with a sortable table view, type filter and thumbnail-size slider; conversations fill the attachment drawer immediately; and the reader shows who a message was sent to.</p>
+      </description>
+    </release>
+    <release version="1.14.4" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.14.4</url>
+      <description>
+        <p>Sender avatars now show your GNOME Contacts photos, contributed by Anton Palgunov. The circle beside a message resolves personal-first — the contact's own photo, then Gravatar and the sender's site icon when enabled, then coloured initials — reading photos from the local address-book cache with no network request, picking up changes within moments, and hiding a tier's images immediately when it is switched off.</p>
+      </description>
+    </release>
+    <release version="1.14.3" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.14.3</url>
+      <description>
+        <p>Better GNOME Online Accounts integration, contributed by Anton Palgunov: custom server ports (IPv6 included) are honored, turning an account's Mail service off in GNOME Settings pauses the account and turning it back on restores it with every local setting intact, changes in Online Accounts are picked up without stutters, connection tests authenticate OAuth accounts correctly, and stalled IMAP connections time out after 30 seconds.</p>
+      </description>
+    </release>
+    <release version="1.14.2" date="2026-08-26" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.14.2</url>
+      <description>
+        <p>The window now tiles to half a screen: the sidebar collapses to its icon rail when the window narrows and floats over the panes when expanded from the rail. Every folder shows its unread count with sub-folders sorted and indented as the server structures them, the toolbar's Delete removes the whole multi-selection, conversation cards gain an expandable recipients list, and the attachment drawer gains filename tooltips and an alphabetical list view.</p>
+      </description>
+    </release>
+    <release version="1.14.1" date="2026-08-25" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.14.1</url>
+      <description>
+        <p>Conversations now include mail that was already in the mailbox. Threading applied only to mail arriving after the upgrade, so a newly added account showed no conversations at all; Hylki now groups messages by their reply headers whatever the date, and the "Thread older messages too" setting is retired.</p>
+      </description>
+    </release>
+    <release version="1.14.0" date="2026-08-25" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.14.0</url>
+      <description>
+        <p>Conversations, properly: threads read oldest first as cards you can act on individually, quoted replies fold away, and unread messages clear as you read down. Replies you send now stay in their conversation, Gmail accounts show a message once rather than once per label, and opening a thread no longer flashes.</p>
+      </description>
+    </release>
+    <release version="1.13.5" date="2026-08-24" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.13.5</url>
+      <description>
+        <p>Replies sent from Hylki now carry the In-Reply-To and References headers that mark them as replies, so they stay in their conversation for the recipient and in Hylki itself.</p>
+      </description>
+    </release>
+    <release version="1.13.4" date="2026-08-24" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.13.4</url>
+      <description>
+        <p>Brings back conversation threading without the memory exhaustion of 1.13.3, and applies it to mail from this release forward rather than your archive. Dragging several messages now moves all of them, All Inboxes no longer omits an account still syncing, and the blocked-remote-content banner can be quieter or hidden.</p>
+      </description>
+    </release>
+    <release version="1.13.2" date="2026-08-23" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.13.2</url>
+      <description>
+        <p>Fixes deleting messages from Trash, which previously did nothing. Deleting there now erases the message from the server, after asking.</p>
+      </description>
+    </release>
+    <release version="1.13.1" date="2026-08-23" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.13.1</url>
+      <description>
+        <p>Adds an option to always load remote content, for people who would rather not be asked each time. Remote content stays blocked unless you turn it on.</p>
+      </description>
+    </release>
+    <release version="1.13.0" date="2026-08-23" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.13.0</url>
+      <description>
+        <p>Security release. Fixes a flaw that let a sender run JavaScript in the reader and read a conversation, closes several ways remote content could load while the interface reported nothing blocked, and tightens file permissions, the Flatpak sandbox and OAuth.</p>
+      </description>
+    </release>
+    <release version="1.12.7" date="2026-08-23" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.12.7</url>
+      <description>
+        <p>Sender circles can now show a brand's own logo, fetched from the sender's domain.</p>
+      </description>
+    </release>
+    <release version="1.12.6" date="2026-08-23" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.12.6</url>
+      <description>
+        <p>Dates and times follow the system format, and can be set independently of it.</p>
+      </description>
+    </release>
+    <release version="1.12.5" date="2026-08-23" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.12.5</url>
+      <description>
+        <p>Message previews now show the message, not MIME boundaries or tracking links.</p>
+      </description>
+    </release>
+    <release version="1.12.4" date="2026-08-23" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.12.4</url>
+      <description>
+        <p>The message list can be made much narrower, and the reader's toolbar icons no longer fall off the window.</p>
+      </description>
+    </release>
+    <release version="1.12.3" date="2026-08-22" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.12.3</url>
+      <description>
+        <p>The coloured sender circles can now be turned off, in the message list and the reader.</p>
+      </description>
+    </release>
+    <release version="1.12.2" date="2026-08-22" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.12.2</url>
+      <description>
+        <p>Deleting a message no longer throws the selection to the top of the folder.</p>
+      </description>
+    </release>
+    <release version="1.12.1" date="2026-08-22" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.12.1</url>
+      <description>
+        <p>Printing no longer puts scrollbars on the page or cuts long messages off.</p>
+      </description>
+    </release>
+    <release version="1.12.0" date="2026-08-22" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.12.0</url>
+      <description>
+        <p>Messages can now be printed, with a preview inside Hylki that also saves straight to PDF.</p>
+      </description>
+    </release>
+    <release version="1.11.0" date="2026-08-22" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.11.0</url>
+      <description>
+        <p>Hylki can now keep running with its window closed, appearing under Background Apps in the GNOME system menu, and can start at login without opening a window.</p>
+      </description>
+    </release>
+    <release version="1.10.3" date="2026-08-22" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.10.3</url>
+      <description>
+        <p>Fixes password-based accounts imported from GNOME Online Accounts failing to authenticate.</p>
+      </description>
+    </release>
+    <release version="1.10.2" date="2026-08-22" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.10.2</url>
+      <description>
+        <p>Accounts imported from GNOME Online Accounts are now read-only in Hylki, which points to Settings → Online Accounts for the settings the system owns.</p>
+      </description>
+    </release>
+    <release version="1.10.1" date="2026-08-22" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.10.1</url>
+      <description>
+        <p>Fixes attachments sent "inline" (typically from Apple Mail) showing neither a paperclip in the list nor the file itself when opened.</p>
+      </description>
+    </release>
+    <release version="1.10.0" date="2026-08-21" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.10.0</url>
+      <description>
+        <p>New Outbox for messages that could not be sent, message previews in the list, single-key keyboard shortcuts, and folders with non-Latin names now display correctly.</p>
+      </description>
+    </release>
+    <release version="1.9.2" date="2026-08-19" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.9.2</url>
+      <description>
+        <p>ARM64 (aarch64) builds are now published alongside x86_64, so ARM machines install and run Hylki like any other. The About window also formats its changelog and release notes properly.</p>
+      </description>
+    </release>
+    <release version="1.9.1" date="2026-08-19" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.9.1</url>
+      <description>
+        <p>Credits a contributor correctly after 1.9.0 attributed his work to an unmatched email address, and shows contributors' GitHub handles in the About window.</p>
+      </description>
+    </release>
+    <release version="1.9.0" date="2026-08-19" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.9.0</url>
+      <description>
+        <p>Community fixes: sending to recipients with accented or punctuated names, Proton Bridge support, and a message list that fills from cache at startup. Compose moves above the message list.</p>
+      </description>
+    </release>
+    <release version="1.8.1" date="2026-08-13" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.8.1</url>
+      <description>
+        <p>The sender-authentication lightbulb now stays in the toolbar, greyed out until a verdict arrives, so the reader's icons no longer shift.</p>
+      </description>
+    </release>
+    <release version="1.8.0" date="2026-08-12" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.8.0</url>
+      <description>
+        <p>New sender-authentication badge showing whether a message's From: address was forged, and a hover preview of where each link really goes.</p>
+      </description>
+    </release>
+    <release version="1.7.2" date="2026-08-10" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.7.2</url>
+      <description>
+        <p>Photos embedded in a message can now be saved from the right-click menu, and are listed as attachments.</p>
+      </description>
+    </release>
+    <release version="1.7.1" date="2026-08-10" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.7.1</url>
+      <description>
+        <p>Fixed inline images sent from Gmail and many newsletters showing as a filename instead of the picture.</p>
+      </description>
+    </release>
+    <release version="1.7.0" date="2026-08-05" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.7.0</url>
+      <description>
+        <p>New Debian/Ubuntu and Snap packages are published with every release, alongside the Flatpak, RPM and Arch packages.</p>
+      </description>
+    </release>
+    <release version="1.6.1" date="2026-08-03" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.6.1</url>
+      <description>
+        <p>Flatpak installs now migrate the old Veem app's accounts, settings and cached mail automatically on first run.</p>
+      </description>
+    </release>
+    <release version="1.6.0" date="2026-08-03" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.6.0</url>
+      <description>
+        <p>Veem is now Vireo. New name, new icon, same app — renamed to avoid confusion with similarly named products. Native Fedora and Arch packages are now published alongside the Flatpak.</p>
+      </description>
+    </release>
+    <release version="1.5.1" date="2026-07-28" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.5.1</url>
+      <description>
+        <p>A collapsed conversation now keeps a strong unread highlight and dot until every message in it is read, and a new setting chooses whether conversations start collapsed or expanded.</p>
+      </description>
+    </release>
+    <release version="1.5.0" date="2026-07-19" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.5.0</url>
+      <description>
+        <p>Reply and forward now open an inline panel that drops down in the reader instead of a separate window, with a button to expand it to a full compose window and collapse it back.</p>
+      </description>
+    </release>
+    <release version="1.4.6" date="2026-07-19" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.4.6</url>
+      <description>
+        <p>The message-list Actions Palette now opens from a horizontal ellipsis (⋯) button instead of a chevron.</p>
+      </description>
+    </release>
+    <release version="1.4.5" date="2026-07-19" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.4.5</url>
+      <description>
+        <p>Sidebar unread badges now update on their own when new mail arrives in a background account, and a collapsed account shows its inbox unread count on its avatar circle.</p>
+      </description>
+    </release>
+    <release version="1.4.4" date="2026-07-16" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.4.4</url>
+      <description>
+        <p>Fixed messages with no Date header showing a blank date; Hylki now falls back to the server's delivery date (INTERNALDATE).</p>
+      </description>
+    </release>
+    <release version="1.4.3" date="2026-07-15" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.4.3</url>
+      <description>
+        <p>Fixed contact names showing in all lowercase in the contacts browser; they now keep their proper capitalisation.</p>
+      </description>
+    </release>
+    <release version="1.4.2" date="2026-07-15" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.4.2</url>
+      <description>
+        <p>Fixed GNOME Contacts integration in the Flatpak build: the contacts list is no longer empty and the "Open GNOME Contacts" button now launches the app.</p>
+      </description>
+    </release>
+    <release version="1.4.1" date="2026-07-14" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.4.1</url>
+      <description>
+        <p>Fixed false attachment paperclips on iCloud newsletters and other HTML mail that have no real attachments.</p>
+      </description>
+    </release>
+    <release version="1.4.0" date="2026-07-14" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.4.0</url>
+      <description>
+        <p>New in-message attachment drawer: a resizable, collapsible footer showing every attachment as a thumbnail grid, with a lightbox, quick Download/Open actions, and adjustable thumbnail size. The reader's attachments dropdown now shows image thumbnails with Preview / Open / Download.</p>
+      </description>
+    </release>
+    <release version="1.3.9" date="2026-07-13" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.3.9</url>
+      <description>
+        <p>Fixed the app not fetching new mail after the computer wakes from sleep — Hylki now detects resume and reconnects to your mail servers immediately.</p>
+      </description>
+    </release>
+    <release version="1.3.8" date="2026-07-12" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.3.8</url>
+      <description>
+        <p>Added a "Keyring Setup Help" entry to the About window on Linux Mint, so the keyring setup tip can be reopened after it's dismissed.</p>
+      </description>
+    </release>
+    <release version="1.3.7" date="2026-07-12" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.3.7</url>
+      <description>
+        <p>Keyring save failures are now surfaced instead of silent, with a Linux Mint / Cinnamon setup tip covering how to make passwords persist and stop the keyring prompting at every login.</p>
+      </description>
+    </release>
+    <release version="1.3.6" date="2026-07-12" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.3.6</url>
+      <description>
+        <p>UI icons are now embedded in the app, so they look identical on every distribution instead of changing or going missing with the host icon theme.</p>
+      </description>
+    </release>
+    <release version="1.3.5" date="2026-07-12" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.3.5</url>
+      <description>
+        <p>Custom sidebar folders collapse under a per-account "Folders" section, and attachment thumbnails gain Download and Go to Message hover actions.</p>
+      </description>
+    </release>
+    <release version="1.3.4" date="2026-07-12" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.3.4</url>
+      <description>
+        <p>Search and sort the attachments gallery, and see each attachment's date in its meta.</p>
+      </description>
+    </release>
+    <release version="1.3.3" date="2026-07-12" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.3.3</url>
+      <description>
+        <p>Attachment gallery icons are now colour-coded by file type — PDFs red, documents blue, spreadsheets green, and more.</p>
+      </description>
+    </release>
+    <release version="1.3.2" date="2026-07-12" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.3.2</url>
+      <description>
+        <p>Fixes newsletter subjects that showed as raw encoded text and stretched the window controls off-screen.</p>
+      </description>
+    </release>
+    <release version="1.3.1" date="2026-07-12" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.3.1</url>
+      <description>
+        <p>The Attachments gallery now spans every folder with a responsive 4:3 grid, right-click and double-click actions, and a hover Open button.</p>
+      </description>
+    </release>
+    <release version="1.3.0" date="2026-07-11" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.3.0</url>
+      <description>
+        <p>New Attachments gallery: browse every attachment across your inboxes in a grid, with thumbnails and a full-size preview.</p>
+      </description>
+    </release>
+    <release version="1.2.3" date="2026-07-11" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.2.3</url>
+      <description>
+        <p>Add Account now has a provider dropdown that auto-fills sign-in and server settings for iCloud, Yahoo, Proton, Google, Microsoft and more.</p>
+      </description>
+    </release>
+    <release version="1.2.2" date="2026-07-11" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.2.2</url>
+      <description>
+        <p>Desktop notifications for new mail and error alerts, with click-to-open and a toggle in Preferences.</p>
+      </description>
+    </release>
+    <release version="1.2.1" date="2026-07-11" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.2.1</url>
+      <description>
+        <p>Clickable links in plain-text emails, Delete/Backspace to delete in the message list, and an account-settings shortcut in the All Inboxes context menu.</p>
+      </description>
+    </release>
+    <release version="1.2.0" date="2026-07-11" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.2.0</url>
+      <description>
+        <p>Search now spans every folder of every account, with a selector to narrow it back to the current folder.</p>
+      </description>
+    </release>
+    <release version="1.1.5" date="2026-07-11" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.1.5</url>
+      <description>
+        <p>Reordered the reader's message-action buttons and tightened the message list to its minimum width.</p>
+      </description>
+    </release>
+    <release version="1.1.4" date="2026-07-10" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.1.4</url>
+      <description>
+        <p>Refreshes cached message renderings on upgrade, so mail read under an earlier version picks up the 1.1.3 body fixes.</p>
+      </description>
+    </release>
+    <release version="1.1.3" date="2026-07-10" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.1.3</url>
+      <description>
+        <p>Photos emailed from an iPhone now render inline and appear as attachments, instead of arriving as a blank message.</p>
+      </description>
+    </release>
+    <release version="1.1.2" date="2026-07-08" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.1.2</url>
+      <description>
+        <p>Fast, reliable mass delete/archive with correct Gmail Trash routing, plus live GNOME Online Accounts sync.</p>
+      </description>
+    </release>
+    <release version="1.1.1" date="2026-07-07" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.1.1</url>
+      <description>
+        <p>Fixed unreliable sidebar unread badges: stale counts after collapsing the sidebar, and inaccurate STATUS-based counts for inboxes on connect.</p>
+      </description>
+    </release>
+    <release version="1.1.0" date="2026-07-06" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.1.0</url>
+      <description>
+        <p>Compact sidebar: unread badges on inbox icons, per-account inboxes stay available when collapsed, and a narrower rail.</p>
+      </description>
+    </release>
+    <release version="1.0.9" date="2026-07-05" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.0.9</url>
+      <description>
+        <p>Added a Changelog section to the About window.</p>
+      </description>
+    </release>
+    <release version="1.0.8" date="2026-07-05" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.0.8</url>
+      <description>
+        <p>Quit cleanly when closing the window, fixing a spurious crash notification after the app had been running for a while.</p>
+      </description>
+    </release>
+    <release version="1.0.7" date="2026-07-05" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.0.7</url>
+      <description>
+        <p>Housekeeping: tidy up in-app links and bundled sample content.</p>
+      </description>
+    </release>
+    <release version="1.0.6" date="2026-07-05" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.0.6</url>
+      <description>
+        <p>First public release.</p>
+      </description>
+    </release>
+    <release version="1.0.4" date="2026-07-05" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.0.4</url>
+      <description>
+        <p>Manage GNOME Online Accounts from the account editor (enable/disable instead of remove), mark each account's source in the list, and route Google sign-in through GNOME Online Accounts.</p>
+      </description>
+    </release>
+    <release version="1.0.3" date="2026-07-05" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.0.3</url>
+      <description>
+        <p>Guide Google sign-in to GNOME Online Accounts from the account editor. Microsoft sign-in works out of the box.</p>
+      </description>
+    </release>
+    <release version="1.0.2" date="2026-07-05" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.0.2</url>
+      <description>
+        <p>Open sign-in and links through the desktop portal, so OAuth works inside the Flatpak sandbox. Flatpak packaging.</p>
+      </description>
+    </release>
+    <release version="1.0.1" date="2026-07-04" type="stable">
+      <url type="details">https://github.com/hyprlab/hylki/releases/tag/v1.0.1</url>
+      <description>
+        <p>
+          First stable release: multi-account IMAP/POP with OAuth, a unified
+          inbox, whole-mailbox sync and search, conversation threading, and
+          privacy-first reading.
+        </p>
+      </description>
+    </release>
+  </releases>
+</component>

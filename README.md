@@ -1,36 +1,37 @@
 <p align="center">
-  <img src="docs/logo.png" width="120" alt="Vireo logo">
+  <img src="docs/logo.png" width="120" alt="Hylki logo">
 </p>
 
-<h1 align="center">Vireo</h1>
+<h1 align="center">Hylki</h1>
 
 <p align="center">
   A fast, <strong>GNOME-native</strong> email client — built with Rust and libadwaita, privacy-first.
 </p>
 
 <p align="center">
-  <a href="https://vireo.hyprlab.co">Website</a> ·
+  <a href="https://hylki.hyprlab.co">Website</a> ·
   <a href="RELEASE_NOTES.md">Release notes</a> ·
-  <a href="https://github.com/hyprlab/vireo/releases">Releases</a> ·
+  <a href="https://github.com/hyprlab/hylki/releases">Releases</a> ·
   <a href="https://discord.gg/YfEJ4b6PFW">Discord</a>
   <br>
   <img alt="License: AGPL-3.0" src="https://img.shields.io/badge/license-AGPL--3.0-blue">
 </p>
 
 <p align="center">
-  <img src="docs/screenshot.png" width="900" alt="Vireo showing a unified inbox in light mode">
+  <img src="docs/screenshot.png" width="900" alt="Hylki showing a unified inbox in light mode">
 </p>
 
 ---
 
 > [!NOTE]
-> **Veem is now Vireo.** As of v1.6.0 the app formerly known as Veem has a new
-> name and icon — the old name was too easily confused with similarly named
-> products. Same app, same code. Native installs migrate your data
-> automatically; Flatpak users should [install Vireo fresh](https://vireo.hyprlab.co)
-> and remove the old Veem app. getveem.com now redirects here.
+> **Vireo is now Hylki.** As of v1.35.0 the app formerly known as Vireo (and,
+> before v1.6.0, Veem) has a new name and icon. Same app, same code. Install
+> Hylki from [hylki.hyprlab.co](https://hylki.hyprlab.co): its first start
+> carries your accounts, settings and cached mail across from Vireo, which
+> is left untouched until you remove it. vireo.hyprlab.co and getveem.com
+> redirect here.
 
-Vireo is a GNOME-native desktop email client for the Linux desktop. It talks
+Hylki is a GNOME-native desktop email client for the Linux desktop. It talks
 IMAP/SMTP directly, keeps your mail and credentials on your machine, and blocks
 trackers by default — no telemetry, no analytics.
 
@@ -48,18 +49,18 @@ trackers by default — no telemetry, no analytics.
 - **Message previews** — the first one to three lines of each message under its subject in the list (or off).
 - **Single-key shortcuts** — Gmail-style `j`/`k`, `r`, `a`, `d` and friends, without a modifier (see below).
 - **Printing** — print a message with its sender, recipients and date, with an in-app preview that also saves straight to PDF.
-- **Runs in the background** (optional) — closing the window keeps mail arriving; Vireo appears under *Background Apps* in the GNOME system menu, and can start at login without opening a window.
+- **Runs in the background** (optional) — closing the window keeps mail arriving; Hylki appears under *Background Apps* in the GNOME system menu, and can start at login without opening a window.
 - **Privacy-first reading** — remote content blocked by default, per-sender allow/block lists, and a per-message light/dark content theme.
 - **OpenPGP** — read encrypted and signed mail, sign and encrypt what you send, and manage keys from Settings, through the GnuPG already on your computer. See [OpenPGP](#openpgp-encrypted-and-signed-mail) below.
-- **Send from Files** — a *Send with Vireo* entry in the GNOME Files right-click menu sends the selected files into a new message, a draft or a reply of your choosing, with an offer to upload big ones to cloud storage instead (optional; see [below](#send-with-vireo-from-gnome-files)). *Email…* and *Open With Vireo* work too.
-- **Appearance themes** — five palettes (Rose, Forest, Tidal, Earth and Midnight) in Settings → Appearance, each carrying its own light and dark version, or the stock GNOME colours Vireo has always worn.
+- **Send from Files** — a *Send with Hylki* entry in the GNOME Files right-click menu sends the selected files into a new message, a draft or a reply of your choosing, with an offer to upload big ones to cloud storage instead (optional; see [below](#send-with-hylki-from-gnome-files)). *Email…* and *Open With Hylki* work too.
+- **Appearance themes** — five palettes (Rose, Forest, Tidal, Earth and Midnight) in Settings → Appearance, each carrying its own light and dark version, or the stock GNOME colours Hylki has always worn.
 - **GNOME-native** — adaptive three-pane layout, per-account colours and emoji avatars, light/dark following the system, optional GNOME Contacts.
 
 See **[RELEASE_NOTES.md](RELEASE_NOTES.md)** for the full list.
 
 ## Keyboard shortcuts
 
-Vireo can be driven from the keyboard without holding a modifier, in the style of
+Hylki can be driven from the keyboard without holding a modifier, in the style of
 Gmail and Geary. The scheme is **off by default** — a stray keystroke shouldn't
 archive mail — so switch it on first in **Preferences → Message List → Single-key
 shortcuts**. Press **Ctrl+?** (or F1, or *Main Menu → Keyboard Shortcuts*) at any
@@ -89,26 +90,26 @@ Keys never fire while you are typing: whatever has focus gets first refusal, so
 ## Installing
 
 **Flatpak (recommended)** — works on any distribution, on **x86_64 and
-aarch64 (ARM64)**; see [vireo.hyprlab.co](https://vireo.hyprlab.co) for the
+aarch64 (ARM64)**; see [hylki.hyprlab.co](https://hylki.hyprlab.co) for the
 signed Flatpak repo. Installing from the repo picks the right architecture on
 its own:
 
 ```sh
-flatpak install --user --from https://vireo.hyprlab.co/flatpak/co.hyprlab.Vireo.flatpakref
+flatpak install --user --from https://hylki.hyprlab.co/flatpak/co.hyprlab.Hylki.flatpakref
 ```
 
-Prefer a direct download? Each release carries `Vireo-x86_64.flatpak` and
-`Vireo-aarch64.flatpak`; grab the one matching `uname -m` from the
-[latest release](https://github.com/hyprlab/vireo/releases/latest) and run
-`flatpak install --user ./Vireo-*.flatpak` — the bundle carries the repo address and
+Prefer a direct download? Each release carries `Hylki-x86_64.flatpak` and
+`Hylki-aarch64.flatpak`; grab the one matching `uname -m` from the
+[latest release](https://github.com/hyprlab/hylki/releases/latest) and run
+`flatpak install --user ./Hylki-*.flatpak` — the bundle carries the repo address and
 signing key, so it still receives updates from the official repo. (A bundle
 holds a single architecture; the repo above holds both.)
 
 **Fedora** — download the `.rpm` from the
-[latest release](https://github.com/hyprlab/vireo/releases/latest) and:
+[latest release](https://github.com/hyprlab/hylki/releases/latest) and:
 
 ```sh
-sudo dnf install ./vireo-*.x86_64.rpm
+sudo dnf install ./hylki-*.x86_64.rpm
 ```
 
 **Gentoo** — a community-maintained ebuild lives in
@@ -118,14 +119,14 @@ sudo dnf install ./vireo-*.x86_64.rpm
 ```sh
 eselect repository enable bennypowers
 emaint sync -r bennypowers
-emerge -av mail-client/vireo
+emerge -av mail-client/hylki
 ```
 
 **Nix** — a community-maintained flake lives in
-[tbaumann's fork](https://github.com/tbaumann/vireo) (thanks @tbaumann):
+[tbaumann's fork](https://github.com/tbaumann/hylki) (thanks @tbaumann):
 
 ```sh
-nix run github:tbaumann/vireo
+nix run github:tbaumann/hylki
 ```
 
 Arch, Debian/Ubuntu and Snap packages were discontinued after 1.7.0 — use the
@@ -137,7 +138,7 @@ preinstalled on GNOME) is needed at runtime for password storage.
 
 ## Building from source
 
-Vireo needs the Rust toolchain and the GTK 4 / libadwaita / WebKitGTK 6
+Hylki needs the Rust toolchain and the GTK 4 / libadwaita / WebKitGTK 6
 development libraries, plus a Secret Service provider (e.g. gnome-keyring) at
 runtime.
 
@@ -156,8 +157,8 @@ sudo apt install libgtk-4-dev libadwaita-1-dev libwebkitgtk-6.0-dev libpoppler-g
 **Build & install**
 
 ```sh
-git clone https://github.com/hyprlab/vireo.git
-cd vireo
+git clone https://github.com/hyprlab/hylki.git
+cd hylki
 cargo build --release
 ./install.sh          # installs the binary, icon and .desktop file into ~/.local
 ./uninstall.sh        # removes them again (--purge also removes settings and the mail cache)
@@ -177,13 +178,13 @@ removed from the file.
 sign in.
 
 **Google** signs in through **GNOME Online Accounts** — add your Google account in
-*GNOME Settings → Online Accounts*, then import it in Vireo. Official builds don't
+*GNOME Settings → Online Accounts*, then import it in Hylki. Official builds don't
 bundle a Google OAuth client (Google's secret can't live in a public repo), so
 GNOME Online Accounts is the standard path. You can also use your own OAuth client
 (see below).
 
 To use **your own** OAuth client (a fork, a self-hosted build, or to replace the
-bundled ones), put it in `~/.config/vireo/oauth.toml`:
+bundled ones), put it in `~/.config/hylki/oauth.toml`:
 
 ```toml
 [google]
@@ -197,15 +198,15 @@ client_id = "your-azure-application-client-id"  # public client, no secret
 client_id = "your-dropbox-app-key"  # public client, no secret
 ```
 
-or via the `VIREO_GOOGLE_CLIENT_ID` / `VIREO_GOOGLE_CLIENT_SECRET`,
-`VIREO_MICROSOFT_CLIENT_ID` / `VIREO_MICROSOFT_CLIENT_SECRET` and
-`VIREO_DROPBOX_CLIENT_ID` environment variables.
+or via the `HYLKI_GOOGLE_CLIENT_ID` / `HYLKI_GOOGLE_CLIENT_SECRET`,
+`HYLKI_MICROSOFT_CLIENT_ID` / `HYLKI_MICROSOFT_CLIENT_SECRET` and
+`HYLKI_DROPBOX_CLIENT_ID` environment variables.
 
 **Bundling a Google client at build time** (for maintainers) — set the env vars
 during the build and they're compiled in via `option_env!`:
 
 ```sh
-VIREO_GOOGLE_CLIENT_ID=... VIREO_GOOGLE_CLIENT_SECRET=... cargo build --release
+HYLKI_GOOGLE_CLIENT_ID=... HYLKI_GOOGLE_CLIENT_SECRET=... cargo build --release
 ```
 
 ### Cloud attachments (Nextcloud, OneDrive, Dropbox, Seafile)
@@ -222,7 +223,7 @@ of the generated one.
 
 - **OneDrive** — through GNOME Online Accounts: add your Microsoft 365
   account under Settings → Online Accounts, then pick it in the cloud
-  account's editor. GOA holds the sign-in and refreshes the token, so Vireo
+  account's editor. GOA holds the sign-in and refreshes the token, so Hylki
   stores no password or key. Uploads go into the upload folder (made when
   missing) and are shared with "anyone with the link". **Link expiry and
   download passwords need a Microsoft 365 subscription or OneDrive for
@@ -232,7 +233,7 @@ of the generated one.
   greys out the rows it rules out, with the reason, in the account's
   settings and in the upload dialog. Uploads and plain links work on any
   OneDrive. Google Drive is not offered: GNOME Online Accounts
-  does not ask Google for Drive access on every system, and Vireo carries
+  does not ask Google for Drive access on every system, and Hylki carries
   no Google client of its own.
 - **Nextcloud, ownCloud, OpenCloud** — the server URL, your user name and an
   app password (made under *Security* in the server's personal settings).
@@ -246,20 +247,20 @@ of the generated one.
   as one request as before.
 - **Seafile** — the server URL, your e-mail and your password. If the
   account uses two-step verification, also enter the current code from your
-  authenticator app: Vireo signs in with it once, gets an API token from the
+  authenticator app: Hylki signs in with it once, gets an API token from the
   server and keeps that in the keyring instead of the password (Seafile's
   web interface shows no such token itself; one obtained another way, say
   from the `api2/auth-token/` endpoint, can be pasted in the password
-  field). Uploads go into a library (made when missing, "Vireo" by default)
+  field). Uploads go into a library (made when missing, "Hylki" by default)
   and a folder inside it.
 - **Dropbox** — sign in through your browser. Dropbox only lets a registered
   app sign in, so make one for yourself; it takes a minute and stays private:
   1. Open [dropbox.com/developers/apps](https://www.dropbox.com/developers/apps)
      signed in to your Dropbox and press **Create app**.
   2. Choose **Scoped access**, then the access type: **App folder** gives
-     Vireo its own folder under *Apps* and nothing else, **Full Dropbox** puts
+     Hylki its own folder under *Apps* and nothing else, **Full Dropbox** puts
      uploads in the folder named in the account's settings.
-  3. Give the app a name no one else has used ("Vireo for Jane", say) and
+  3. Give the app a name no one else has used ("Hylki for Jane", say) and
      press **Create app**.
   4. On the **Permissions** tab tick `account_info.read`,
      `files.content.write` and `sharing.write`, then press **Submit**.
@@ -268,13 +269,13 @@ of the generated one.
      Dropbox matches redirect URIs exactly.
   6. Copy the **App key** from the top of the Settings tab.
 
-  In Vireo, add a Dropbox account under Settings → Cloud Storage, paste the
+  In Hylki, add a Dropbox account under Settings → Cloud Storage, paste the
   app key and press **Connect with Dropbox**; the browser opens, you approve
   the app, and the account's e-mail appears in the dialog. The app can stay
   in *Development* status, which allows your own account (Dropbox asks for a
   production review only past a few hundred users). A build can carry an app
   key of its own (the `[dropbox]` entry in `oauth.toml`, or
-  `VIREO_DROPBOX_CLIENT_ID` at build time), in which case the field can stay
+  `HYLKI_DROPBOX_CLIENT_ID` at build time), in which case the field can stay
   empty. Link passwords and expiry dates are a paid Dropbox feature; on a
   Basic plan leave both off, or the share step reports it.
 
@@ -305,7 +306,7 @@ Switching format converts what is already in the message, so you can start a
 reply in rich text and finish it in Markdown; the quoted original comes
 across as `>` lines.
 
-**The Markdown Vireo understands** is the dialect documented at
+**The Markdown Hylki understands** is the dialect documented at
 [markdownguide.org](https://www.markdownguide.org/) — all of the basic
 syntax, and all of the extended syntax:
 
@@ -314,7 +315,7 @@ syntax, and all of the extended syntax:
 | Basic | headings (both styles), bold, italic, blockquotes, ordered and unordered lists, code, horizontal rules, links (inline, reference and autolinks), images, hard line breaks, backslash escapes |
 | Extended | tables with alignment, fenced code blocks with a language, footnotes, heading IDs (`{#id}`), definition lists, `~~strikethrough~~`, task lists, `:emoji:` shortcodes, `==highlighting==`, `~subscript~` and `^superscript^`, and bare URLs and email addresses turned into links |
 
-Two notes on what that means in mail. The HTML Vireo writes carries its
+Two notes on what that means in mail. The HTML Hylki writes carries its
 styling as `style` attributes on the tags themselves, because a `<style>`
 block is the first thing most webmail clients throw away — so tables really
 do arrive with their borders. And anything you send, in Markdown or in HTML,
@@ -332,7 +333,7 @@ a message that started life as Markdown lands very close to what you wrote.
 
 ### OpenPGP (encrypted and signed mail)
 
-Vireo can read OpenPGP-encrypted mail, check signatures, and sign and encrypt
+Hylki can read OpenPGP-encrypted mail, check signatures, and sign and encrypt
 what you send. It does this through **GnuPG** (`gpg`), the same program the
 terminal command and other mail clients use, so your keys live in one place
 (`~/.gnupg`) and every program on the computer sees the same keyring. Nothing
@@ -342,7 +343,7 @@ here needs a terminal.
 
 - The Flatpak build carries GnuPG and is set up already. A source or RPM
   install needs the `gnupg2` package (on Fedora it is installed by default).
-- Vireo never stores a decrypted message on disk: an encrypted message is
+- Hylki never stores a decrypted message on disk: an encrypted message is
   decrypted for the reading pane each time you open it, and its body and
   attachments are kept out of the cache.
 
@@ -350,7 +351,7 @@ here needs a terminal.
 
 Open *Settings → OpenPGP*. The top row says whether GnuPG was found. Under
 *Your keys*, click **Generate…**, pick the address the key is for, choose how
-long it lasts, and enter a passphrase twice. Vireo hands the passphrase to gpg
+long it lasts, and enter a passphrase twice. Hylki hands the passphrase to gpg
 over a pipe and does not keep it; from then on gpg asks for it when the key is
 used, and remembers it for a while (ten minutes by default, the normal
 gpg-agent behaviour). The key is a signing key with an encryption subkey, so it
@@ -367,11 +368,11 @@ never leaves your keyring.
 
 **3. Get other people's keys**
 
-Vireo needs a person's public key to encrypt to them and to check their
+Hylki needs a person's public key to encrypt to them and to check their
 signature. There are four ways to get one, none of which need a terminal:
 
 - A signed message from someone whose key you don't have shows an amber shield
-  beside their name. Click it and choose **Fetch the sender's key**. Vireo
+  beside their name. Click it and choose **Fetch the sender's key**. Hylki
   looks in the message itself first (many clients attach the key in an
   Autocrypt header), then asks the sender's provider (WKD), then the keyservers.
 - A message with a key file attached shows an **Import OpenPGP key** button on
@@ -386,7 +387,7 @@ An imported key checks signatures, but until you have vouched for it the
 shield stays amber and says the key is not trusted yet. Compare the key's
 fingerprint with the one its owner gives you in person, on their website or
 over another channel, then click **Trust…** on the key's row (or **Trust this
-key…** in the shield's popover). Vireo signs the key locally with your own,
+key…** in the shield's popover). Hylki signs the key locally with your own,
 which is what turns the shield green. Trusting a key you have not checked
 lets an impostor's signature pass as theirs, so do check.
 
@@ -396,7 +397,7 @@ The composer has two buttons beside Send: **Sign** and **Encrypt**. Sign adds
 a signature others can check with your public key. Encrypt scrambles the
 message to every recipient's key and your own, and turns Sign on too. If a
 recipient has no key in your keyring, or your address has no key of its own,
-Vireo says so before anything is sent. Replying to an encrypted message starts
+Hylki says so before anything is sent. Replying to an encrypted message starts
 with Encrypt on.
 
 Each account uses the key whose address matches. To use another key for an
@@ -422,9 +423,9 @@ be decrypted. Click the icon for the details.
 - *Nothing to encrypt with for an address*: that person's key is missing;
   see step 3.
 
-### Send with Vireo from GNOME Files
+### Send with Hylki from GNOME Files
 
-Select files in GNOME Files (Nautilus), right-click, *Send with Vireo*: a new
+Select files in GNOME Files (Nautilus), right-click, *Send with Hylki*: a new
 message opens with them attached. The entry comes from a small extension that
 Files loads, so it has to live outside the app, in your home folder.
 
@@ -434,42 +435,42 @@ Files loads, so it has to live outside the app, in your home folder.
   Python: `sudo dnf install nautilus-python` on Fedora, `sudo apt install
   python3-nautilus` on Debian and Ubuntu, `sudo pacman -S python-nautilus` on
   Arch.
-- Vireo 1.29 or newer, Flatpak or native.
+- Hylki 1.29 or newer, Flatpak or native.
 
 **Installing it**
 
-Open **Settings → System → GNOME Files** and click **Install**. Vireo writes
-the extension to `~/.local/share/nautilus-python/extensions/vireo-nautilus.py`
+Open **Settings → System → GNOME Files** and click **Install**. Hylki writes
+the extension to `~/.local/share/nautilus-python/extensions/hylki-nautilus.py`
 and shows whether the installed copy is this version's. Then click
 **Restart** (or run `nautilus -q`): Files closes its windows, and the next one
 opens with the entry. Once Files has loaded the extension the row says so; if
 it still says "not loaded" after a restart, the `nautilus-python` package is
-the usual reason (a native install of Vireo checks for it and tells you; the
+the usual reason (a native install of Hylki checks for it and tells you; the
 Flatpak cannot see the host's packages). Until Files has loaded the extension,
 the group also shows the install command for your distribution, with a copy
 button. **Remove** takes it out again the same way.
 
 Without the app, the same file is in the repository at
-`data/nautilus/vireo-nautilus.py`:
+`data/nautilus/hylki-nautilus.py`:
 
 ```sh
 mkdir -p ~/.local/share/nautilus-python/extensions
-curl -fsSL -o ~/.local/share/nautilus-python/extensions/vireo-nautilus.py \
-  https://raw.githubusercontent.com/hyprlab/vireo/main/data/nautilus/vireo-nautilus.py
+curl -fsSL -o ~/.local/share/nautilus-python/extensions/hylki-nautilus.py \
+  https://raw.githubusercontent.com/hyprlab/hylki/main/data/nautilus/hylki-nautilus.py
 nautilus -q
 ```
 
-The extension launches Vireo by its desktop id (`co.hyprlab.Vireo`, then the
-beta's), so it works whichever way Vireo is installed. Folders are skipped;
+The extension launches Hylki by its desktop id (`co.hyprlab.Hylki`, then the
+beta's), so it works whichever way Hylki is installed. Folders are skipped;
 files on a mounted share reach the app through their mount path.
 
 Files also has its own *Email…* entry, which sends the selection to whatever
-app handles `mailto:` links; if that is Vireo, it does the same thing without
+app handles `mailto:` links; if that is Hylki, it does the same thing without
 the extension.
 
 **What the files go into**
 
-When the files arrive, Vireo asks what they are for: a **new message**, a
+When the files arrive, Hylki asks what they are for: a **new message**, a
 **draft** you pick from a list of every account's drafts, or a **reply** to a
 message you pick (the one you are reading comes first; a search box narrows
 the list by sender, subject or account). Files that together exceed the size
@@ -482,18 +483,18 @@ itself.
 
 ## Privacy
 
-Vireo collects no telemetry and sends no analytics. Remote content in messages is
+Hylki collects no telemetry and sends no analytics. Remote content in messages is
 blocked by default to defeat tracking pixels. Passwords and OAuth refresh tokens
 live in the system keyring (secret-service), never in plain files.
 
-## The Vireo Manifesto
+## The Hylki Manifesto
 
-Vireo exists to fill a need in the Linux desktop community for a modern,
+Hylki exists to fill a need in the Linux desktop community for a modern,
 GNOME-native email client that doesn't sacrifice aesthetics for features.
 
 The project has the following foundational values that guide its development:
 
-- **Vireo is committed to free and open source software.** Vireo will never be
+- **Hylki is committed to free and open source software.** Hylki will never be
   for sale and is committed to remaining that way through our AGPLv3 license
   adherence.
 - **This project is community-driven and committed to putting humans at the
@@ -502,18 +503,18 @@ The project has the following foundational values that guide its development:
 - **We are committed to GNOME-first development** ensuring 100% compatibility
   with the latest GNOME release. This app was conceived for GNOME and it will
   remain the desktop environment we target primarily.
-- **Aesthetics matter as much as features.** Vireo should make using email on
+- **Aesthetics matter as much as features.** Hylki should make using email on
   the Linux desktop both visually pleasing and enjoyable through consistent and
   familiar UI/UX paradigms. New users to GNOME should be able to intuit how to
   use the app without needing to refer to documentation.
 - **Feature-rich and choice-forward philosophy.** Providing means for the user
   to maximally customize the app's feature set is a high priority. We maintain
-  that Vireo is both beautiful and highly functional to tackle every email edge
+  that Hylki is both beautiful and highly functional to tackle every email edge
   case.
 
 ## AI notice
 
-Vireo is built by a human maintainer working with generative AI as a
+Hylki is built by a human maintainer working with generative AI as a
 development tool:
 
 - **Code** — the large majority of the Rust code in this repository was written
@@ -524,7 +525,7 @@ development tool:
   AI-drafted and human-edited.
 - **Artwork** — the app icon and other visual assets are human-made, without
   generative AI.
-- **The app itself contains no AI.** Vireo has no AI features, makes no
+- **The app itself contains no AI.** Hylki has no AI features, makes no
   requests to AI services, and never sends your mail or any other data to one —
   AI was used to *build* the app, not to run it. See [Privacy](#privacy).
 
@@ -533,29 +534,29 @@ everything merged gets the same human review.
 
 ## Contributors
 
-Vireo is maintained by Hyprlab. Thanks to the people who have sent patches
+Hylki is maintained by Hyprlab. Thanks to the people who have sent patches
 upstream — their work ships in the app and is credited in the About window:
 
-- [**Alfonso Lizárraga**](https://github.com/alfonsolzrg) ([#14](https://github.com/hyprlab/vireo/pull/14)) — sending
+- [**Alfonso Lizárraga**](https://github.com/alfonsolzrg) ([#14](https://github.com/hyprlab/hylki/pull/14)) — sending
   to recipients with punctuated or accented names, the startup message list,
   message-list rebuild performance, the unread dot, and the Attachments-row
   setting.
-- [**Chris Pouliot**](https://github.com/chrispouliot) ([#13](https://github.com/hyprlab/vireo/pull/13)) — Proton
+- [**Chris Pouliot**](https://github.com/chrispouliot) ([#13](https://github.com/hyprlab/hylki/pull/13)) — Proton
   Bridge connections: IMAP STARTTLS and locally signed certificates.
-- [**Isaac**](https://github.com/thecalamityjoe87) ([#31](https://github.com/hyprlab/vireo/pull/31),
-  [#43](https://github.com/hyprlab/vireo/pull/43), [#44](https://github.com/hyprlab/vireo/pull/44),
-  [#49](https://github.com/hyprlab/vireo/pull/49), [#63](https://github.com/hyprlab/vireo/pull/63),
-  [#135](https://github.com/hyprlab/vireo/pull/135), [#142](https://github.com/hyprlab/vireo/pull/142)) — PDF first-page thumbnails
+- [**Isaac**](https://github.com/thecalamityjoe87) ([#31](https://github.com/hyprlab/hylki/pull/31),
+  [#43](https://github.com/hyprlab/hylki/pull/43), [#44](https://github.com/hyprlab/hylki/pull/44),
+  [#49](https://github.com/hyprlab/hylki/pull/49), [#63](https://github.com/hyprlab/hylki/pull/63),
+  [#135](https://github.com/hyprlab/hylki/pull/135), [#142](https://github.com/hyprlab/hylki/pull/142)) — PDF first-page thumbnails
   in the attachment gallery and drawer, the fix for attachments not opening
   (wrong O_NOFOLLOW constant + portal-based launching), the reader header's
   "To:" line, the preference to always load remote content, the shared
   GNOME-styled right-click context menus, swipe-to-archive/delete on
   message rows, and the uninstall script.
-- [**Alexander Lubovenko**](https://github.com/typedev) ([#45](https://github.com/hyprlab/vireo/pull/45),
-  [#110](https://github.com/hyprlab/vireo/pull/110), [#112](https://github.com/hyprlab/vireo/pull/112),
-  [#118](https://github.com/hyprlab/vireo/pull/118),
-  [#127](https://github.com/hyprlab/vireo/pull/127),
-  [#216](https://github.com/hyprlab/vireo/pull/216)) — Gmail
+- [**Alexander Lubovenko**](https://github.com/typedev) ([#45](https://github.com/hyprlab/hylki/pull/45),
+  [#110](https://github.com/hyprlab/hylki/pull/110), [#112](https://github.com/hyprlab/hylki/pull/112),
+  [#118](https://github.com/hyprlab/hylki/pull/118),
+  [#127](https://github.com/hyprlab/hylki/pull/127),
+  [#216](https://github.com/hyprlab/hylki/pull/216)) — Gmail
   conversations: showing a message once rather than once per label, answering it
   from whichever label already holds its body or attachments, and fetching a
   conversation's bodies in one request instead of one apiece; listing small
@@ -565,31 +566,31 @@ upstream — their work ships in the app and is credited in the About window:
   dropped or pasted from a file manager landing in the message, keeping their
   filename, with resizing by handle or menu and an optional recompress on send;
   and the non-ASCII part header that took an account's mail thread down.
-- [**frenchy82**](https://github.com/frenchy82) ([#122](https://github.com/hyprlab/vireo/issues/122),
-  [#131](https://github.com/hyprlab/vireo/pull/131),
-  [#134](https://github.com/hyprlab/vireo/pull/134)) — the French translation,
-  Vireo's first, and the report that found the labels the app was showing in
+- [**frenchy82**](https://github.com/frenchy82) ([#122](https://github.com/hyprlab/hylki/issues/122),
+  [#131](https://github.com/hyprlab/hylki/pull/131),
+  [#134](https://github.com/hyprlab/hylki/pull/134)) — the French translation,
+  Hylki's first, and the report that found the labels the app was showing in
   English despite having the translation.
-- [**Laszlo Lang**](https://github.com/7system7) ([#169](https://github.com/hyprlab/vireo/pull/169)) — the
+- [**Laszlo Lang**](https://github.com/7system7) ([#169](https://github.com/hyprlab/hylki/pull/169)) — the
   Hungarian translation.
-- [**Ilya Semenkovich**](https://github.com/iliasen) ([#176](https://github.com/hyprlab/vireo/pull/176),
-  [#185](https://github.com/hyprlab/vireo/pull/185)) — the Russian translation, two
+- [**Ilya Semenkovich**](https://github.com/iliasen) ([#176](https://github.com/hyprlab/hylki/pull/176),
+  [#185](https://github.com/hyprlab/hylki/pull/185)) — the Russian translation, two
   reader tooltips that could not be translated, and the About menu entry that
   could not be either.
-- [**Paulo Fino**](https://github.com/somepaulo) ([#178](https://github.com/hyprlab/vireo/pull/178),
-  [#179](https://github.com/hyprlab/vireo/issues/179),
-  [#182](https://github.com/hyprlab/vireo/pull/182),
-  [#183](https://github.com/hyprlab/vireo/issues/183),
-  [#194](https://github.com/hyprlab/vireo/pull/194)) — the Portuguese (Portugal)
+- [**Paulo Fino**](https://github.com/somepaulo) ([#178](https://github.com/hyprlab/hylki/pull/178),
+  [#179](https://github.com/hyprlab/hylki/issues/179),
+  [#182](https://github.com/hyprlab/hylki/pull/182),
+  [#183](https://github.com/hyprlab/hylki/issues/183),
+  [#194](https://github.com/hyprlab/hylki/pull/194)) — the Portuguese (Portugal)
   and Brazilian Portuguese translations, the request for a language chooser, and
   the report that the chosen language never reached the Flatpak.
-- [**Anton Palgunov**](https://github.com/Toxblh) ([#7](https://github.com/hyprlab/vireo/pull/7),
-  [#8](https://github.com/hyprlab/vireo/pull/8)) — sender avatars from GNOME
+- [**Anton Palgunov**](https://github.com/Toxblh) ([#7](https://github.com/hyprlab/hylki/pull/7),
+  [#8](https://github.com/hyprlab/hylki/pull/8)) — sender avatars from GNOME
   Contacts photos, and GNOME Online Accounts refinements: custom server ports
   (IPv6 included), pausing an account while its Mail service is off in GNOME
   Settings, OAuth-aware connection tests, and a timeout on stalled IMAP
   connections.
-- [**Yiannis Ioannides**](https://github.com/yioannides) ([#75](https://github.com/hyprlab/vireo/pull/75)) — the
+- [**Yiannis Ioannides**](https://github.com/yioannides) ([#75](https://github.com/hyprlab/hylki/pull/75)) — the
   `--user` flag in the Flatpak install instructions, so a local install no
   longer asks for root; and a long run of requests and design feedback that
   shaped tags, split replies, the reader's own font and colours, Empty Trash
@@ -632,20 +633,20 @@ before it lands (with the change explained on the pull request).
 
 ## Contact & support
 
-- Website — [vireo.hyprlab.co](https://vireo.hyprlab.co)
+- Website — [hylki.hyprlab.co](https://hylki.hyprlab.co)
 - Discord — [discord.gg/YfEJ4b6PFW](https://discord.gg/YfEJ4b6PFW)
 - Email — [hyprlab@proton.me](mailto:hyprlab@proton.me)
 - [Buy me a coffee](https://buymeacoffee.com/hyprlab) ☕
 
 ## License
 
-Vireo is free software licensed under the **GNU Affero General Public License
+Hylki is free software licensed under the **GNU Affero General Public License
 v3.0 or later** ([AGPL-3.0-or-later](LICENSE)).
 
 The Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox and Seafile marks shown
 in Settings are trademarks of their owners, used only to identify those
 services, and are not covered by that licence (see
-[data/brands/README.md](data/brands/README.md)). Vireo is not affiliated with
+[data/brands/README.md](data/brands/README.md)). Hylki is not affiliated with
 or endorsed by any of them. The same goes for the bundled sender logos that
 can fill a sender's avatar: they come from
 [gilbarbara/logos](https://github.com/gilbarbara/logos) (MIT) and
@@ -655,7 +656,7 @@ are listed with their sources in [data/logos/README.md](data/logos/README.md).
 The appearance themes (Rose, Forest, Tidal, Earth and Midnight) are the theme
 library from [T3 Code](https://github.com/pingdotgg/t3code) (MIT, © 2026 T3
 Tools Inc.), converted to sRGB, renamed, and mapped onto libadwaita's colour
-roles by `tools/gen-themes.py`. Vireo is not affiliated with or endorsed by
+roles by `tools/gen-themes.py`. Hylki is not affiliated with or endorsed by
 T3 Tools.
 
 © 2026 Hyprlab

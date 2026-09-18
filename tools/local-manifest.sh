@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
 # Emit a copy of the Flatpak manifest that builds the *working tree* instead of
-# the tagged commit pinned in co.hyprlab.Vireo.yml.
+# the tagged commit pinned in co.hyprlab.Hylki.yml.
 #
-#   tools/local-manifest.sh /tmp/vireo-local.yml
+#   tools/local-manifest.sh /tmp/hylki-local.yml
 #
 # Two callers need this:
 #
@@ -19,8 +19,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SRC="$ROOT/co.hyprlab.Vireo.yml"
-OUT="${1:-$ROOT/co.hyprlab.Vireo.local.yml}"
+SRC="$ROOT/co.hyprlab.Hylki.yml"
+OUT="${1:-$ROOT/co.hyprlab.Hylki.local.yml}"
 
 python3 - "$SRC" "$OUT" "$ROOT" <<'PY'
 import re, sys
@@ -32,7 +32,7 @@ manifest = open(src).read()
 # output and the signed repo out of the copy flatpak-builder makes.
 pinned = re.compile(
     r"      - type: git\n"
-    r"        url: https://github\.com/hyprlab/vireo\.git\n"
+    r"        url: https://github\.com/hyprlab/hylki\.git\n"
     r"        tag: v[0-9.]+\n"
     r"        commit: [0-9a-f]+\n"
 )

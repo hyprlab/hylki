@@ -247,10 +247,10 @@ pub enum GalleryInput {
     /// A lightbox-size PDF render finished (keyed by content hash) — show it
     /// if that PDF is still the one being previewed.
     PreviewRendered(u64),
-    /// Showcase only (VIREO_SHOWCASE_GALLERY_FOLDERS): drop the footer's
+    /// Showcase only (HYLKI_SHOWCASE_GALLERY_FOLDERS): drop the footer's
     /// folder popover open so a capture can see it.
     ShowcaseFolders,
-    /// Showcase only (VIREO_SHOWCASE_GALLERY_SEARCH): focus the search box and
+    /// Showcase only (HYLKI_SHOWCASE_GALLERY_SEARCH): focus the search box and
     /// put text in it, as typing would, then report whether the box still has
     /// the focus once the search has run. Guards the bug where a search that
     /// matched nothing hid the toolbar the box lives in.
@@ -316,13 +316,13 @@ impl Component for AttachmentsGallery {
                     },
 
                     add_named[Some("empty")] = &adw::StatusPage {
-                        set_icon_name: Some("co.hyprlab.Vireo-mail-attachment-symbolic"),
+                        set_icon_name: Some("co.hyprlab.Hylki-mail-attachment-symbolic"),
                         set_title: &i18n("No attachments"),
                         set_description: Some(i18n("Attachments from your inboxes will appear here.").as_str()),
                     },
 
                     add_named[Some("noresults")] = &adw::StatusPage {
-                        set_icon_name: Some("co.hyprlab.Vireo-system-search-symbolic"),
+                        set_icon_name: Some("co.hyprlab.Hylki-system-search-symbolic"),
                         set_title: &i18n("No matching attachments"),
                         set_description: Some(i18n("Try a different search, or check which accounts and folders the footer is pulling from.").as_str()),
                     },
@@ -474,7 +474,7 @@ impl Component for AttachmentsGallery {
                         add_css_class: "linked",
 
                         gtk::ToggleButton {
-                            set_icon_name: "co.hyprlab.Vireo-view-grid-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-view-grid-symbolic",
                             set_tooltip_text: Some(i18n("Thumbnail grid").as_str()),
                             #[watch]
                             #[block_signal(grid_toggle)]
@@ -484,7 +484,7 @@ impl Component for AttachmentsGallery {
                             } @grid_toggle,
                         },
                         gtk::ToggleButton {
-                            set_icon_name: "co.hyprlab.Vireo-view-list-bullet-symbolic",
+                            set_icon_name: "co.hyprlab.Hylki-view-list-bullet-symbolic",
                             set_tooltip_text: Some(i18n("Table").as_str()),
                             #[watch]
                             #[block_signal(table_toggle)]
@@ -511,7 +511,7 @@ impl Component for AttachmentsGallery {
 
                     #[name = "folders_button"]
                     pack_start = &gtk::MenuButton {
-                        set_icon_name: "co.hyprlab.Vireo-folder-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-folder-symbolic",
                         set_tooltip_text: Some(i18n("Folders to pull from").as_str()),
 
                         #[wrap(Some)]
@@ -675,7 +675,7 @@ impl Component for AttachmentsGallery {
                     },
                     #[wrap(Some)]
                     set_end_widget = &gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-window-close-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-window-close-symbolic",
                         set_tooltip_text: Some(i18n("Close").as_str()),
                         add_css_class: "circular",
                         add_css_class: "flat",
@@ -690,7 +690,7 @@ impl Component for AttachmentsGallery {
                     set_spacing: 8,
 
                     gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-go-previous-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-go-previous-symbolic",
                         set_tooltip_text: Some(i18n("Previous").as_str()),
                         set_valign: gtk::Align::Center,
                         add_css_class: "circular",
@@ -757,7 +757,7 @@ impl Component for AttachmentsGallery {
                     },
 
                     gtk::Button {
-                        set_icon_name: "co.hyprlab.Vireo-go-next-symbolic",
+                        set_icon_name: "co.hyprlab.Hylki-go-next-symbolic",
                         set_tooltip_text: Some(i18n("Next").as_str()),
                         set_valign: gtk::Align::Center,
                         add_css_class: "circular",
@@ -1130,7 +1130,7 @@ impl Component for AttachmentsGallery {
                         .as_ref()
                         .is_some_and(|f| f == entry.upcast_ref::<gtk::Widget>() || f.is_ancestor(&entry));
                     tracing::info!(
-                        target: "vireo::showcase",
+                        target: "hylki::showcase",
                         "gallery search focus: kept={kept} holder={} toolbar_visible={} text={:?}",
                         focus.map(|w| w.type_().name().to_string()).unwrap_or_else(|| "none".into()),
                         entry.parent().is_some_and(|p| p.is_visible()),
@@ -1143,7 +1143,7 @@ impl Component for AttachmentsGallery {
                 // A popover is its own surface, so the window snapshot never
                 // has it: capture its contents directly, as the context menu
                 // does (see `ui::context_menu`).
-                if let Ok(path) = std::env::var("VIREO_SHOWCASE") {
+                if let Ok(path) = std::env::var("HYLKI_SHOWCASE") {
                     let content = widgets.folders_box.clone();
                     glib::timeout_add_seconds_local_once(1, move || {
                         crate::app::showcase_capture(content.upcast_ref(), &path);
@@ -1569,13 +1569,13 @@ impl AttachmentsGallery {
         // attachments are known but not held.
         let s = sender.clone();
         let open = MenuEntry::new(i18n("Open"), move || s.input(GalleryInput::OpenItem(index)))
-            .icon("co.hyprlab.Vireo-document-open-symbolic");
+            .icon("co.hyprlab.Hylki-document-open-symbolic");
         let s = sender.clone();
         let download = MenuEntry::new(i18n("Download…"), move || s.input(GalleryInput::DownloadItem(index)))
-            .icon("co.hyprlab.Vireo-folder-download-symbolic");
+            .icon("co.hyprlab.Hylki-folder-download-symbolic");
         let s = sender.clone();
         let goto = MenuEntry::new(i18n("Go to Message"), move || s.input(GalleryInput::GoToItem(index)))
-            .icon("co.hyprlab.Vireo-mail-unread-symbolic");
+            .icon("co.hyprlab.Hylki-mail-unread-symbolic");
         let sections = vec![vec![open, download, goto]];
 
         // Anchor on the clicked cell/row itself so the click point (already
@@ -1663,17 +1663,17 @@ fn build_cell(
         b
     };
     if item.data.is_some() {
-        let download = action_btn("co.hyprlab.Vireo-folder-download-symbolic", "Download");
+        let download = action_btn("co.hyprlab.Hylki-folder-download-symbolic", "Download");
         let s = sender.clone();
         download.connect_clicked(move |_| s.input(GalleryInput::DownloadItem(index)));
         actions.append(&download);
 
-        let open = action_btn("co.hyprlab.Vireo-document-open-symbolic", "Open");
+        let open = action_btn("co.hyprlab.Hylki-document-open-symbolic", "Open");
         let s = sender.clone();
         open.connect_clicked(move |_| s.input(GalleryInput::OpenItem(index)));
         actions.append(&open);
     }
-    let goto = action_btn("co.hyprlab.Vireo-mail-unread-symbolic", &i18n("Go to Message"));
+    let goto = action_btn("co.hyprlab.Hylki-mail-unread-symbolic", &i18n("Go to Message"));
     let s = sender.clone();
     goto.connect_clicked(move |_| s.input(GalleryInput::GoToItem(index)));
     actions.append(&goto);
@@ -1858,16 +1858,16 @@ fn build_row(
         b
     };
     if item.data.is_some() {
-        let download = act("co.hyprlab.Vireo-folder-download-symbolic", "Download");
+        let download = act("co.hyprlab.Hylki-folder-download-symbolic", "Download");
         let s = sender.clone();
         download.connect_clicked(move |_| s.input(GalleryInput::DownloadItem(index)));
         actions.append(&download);
-        let open = act("co.hyprlab.Vireo-document-open-symbolic", "Open");
+        let open = act("co.hyprlab.Hylki-document-open-symbolic", "Open");
         let s = sender.clone();
         open.connect_clicked(move |_| s.input(GalleryInput::OpenItem(index)));
         actions.append(&open);
     }
-    let goto = act("co.hyprlab.Vireo-mail-unread-symbolic", &i18n("Go to Message"));
+    let goto = act("co.hyprlab.Hylki-mail-unread-symbolic", &i18n("Go to Message"));
     let s = sender.clone();
     goto.connect_clicked(move |_| s.input(GalleryInput::GoToItem(index)));
     actions.append(&goto);
@@ -2255,18 +2255,18 @@ pub(crate) fn icon_for(name: &str) -> &'static str {
     let lower = name.to_ascii_lowercase();
     let ext = lower.rsplit('.').next().unwrap_or("");
     match ext {
-        "pdf" => "co.hyprlab.Vireo-x-office-document-symbolic",
-        "doc" | "docx" | "odt" | "rtf" | "txt" | "md" => "co.hyprlab.Vireo-x-office-document-symbolic",
-        "xls" | "xlsx" | "ods" | "csv" => "co.hyprlab.Vireo-x-office-spreadsheet-symbolic",
-        "ppt" | "pptx" | "odp" => "co.hyprlab.Vireo-x-office-presentation-symbolic",
-        "zip" | "gz" | "tar" | "7z" | "rar" | "xz" | "bz2" => "co.hyprlab.Vireo-package-x-generic-symbolic",
-        "mp3" | "wav" | "flac" | "ogg" | "m4a" | "aac" => "co.hyprlab.Vireo-audio-x-generic-symbolic",
-        "mp4" | "mov" | "mkv" | "webm" | "avi" | "m4v" => "co.hyprlab.Vireo-video-x-generic-symbolic",
+        "pdf" => "co.hyprlab.Hylki-x-office-document-symbolic",
+        "doc" | "docx" | "odt" | "rtf" | "txt" | "md" => "co.hyprlab.Hylki-x-office-document-symbolic",
+        "xls" | "xlsx" | "ods" | "csv" => "co.hyprlab.Hylki-x-office-spreadsheet-symbolic",
+        "ppt" | "pptx" | "odp" => "co.hyprlab.Hylki-x-office-presentation-symbolic",
+        "zip" | "gz" | "tar" | "7z" | "rar" | "xz" | "bz2" => "co.hyprlab.Hylki-package-x-generic-symbolic",
+        "mp3" | "wav" | "flac" | "ogg" | "m4a" | "aac" => "co.hyprlab.Hylki-audio-x-generic-symbolic",
+        "mp4" | "mov" | "mkv" | "webm" | "avi" | "m4v" => "co.hyprlab.Hylki-video-x-generic-symbolic",
         "png" | "jpg" | "jpeg" | "gif" | "webp" | "bmp" | "heic" | "heif" | "avif" | "ico" => {
-            "co.hyprlab.Vireo-image-x-generic-symbolic"
+            "co.hyprlab.Hylki-image-x-generic-symbolic"
         }
-        "ics" => "co.hyprlab.Vireo-x-office-calendar-symbolic",
-        _ => "co.hyprlab.Vireo-text-x-generic-symbolic",
+        "ics" => "co.hyprlab.Hylki-x-office-calendar-symbolic",
+        _ => "co.hyprlab.Hylki-text-x-generic-symbolic",
     }
 }
 
@@ -2524,7 +2524,7 @@ fn create_private(
             use std::os::unix::fs::OpenOptionsExt;
             opts.mode(0o600);
             // Refuse to follow a symlink instead of racing to check for one.
-            // 0o400000 is O_NOFOLLOW on every Linux arch Vireo ships for; the
+            // 0o400000 is O_NOFOLLOW on every Linux arch Hylki ships for; the
             // wrong constant here once passed O_DIRECTORY (0o200000) instead,
             // which made this open() fail and every attachment click a no-op.
             opts.custom_flags(0o400000 /* O_NOFOLLOW */);
@@ -2538,7 +2538,7 @@ fn create_private(
 
 /// This process's real user ID.
 ///
-/// Vireo has no libc dependency; `getuid` is always available and cannot fail,
+/// Hylki has no libc dependency; `getuid` is always available and cannot fail,
 /// so declaring it directly is cheaper than taking one on.
 #[cfg(unix)]
 fn our_uid() -> u32 {
@@ -2553,7 +2553,7 @@ fn our_uid() -> u32 {
 /// Opened attachments used to accumulate in `/tmp` for the life of the machine —
 /// decrypted, readable, and long past the point the user considers them gone.
 /// Called once at startup, because the helper application the user opened a file
-/// with may still have it open while Vireo is running.
+/// with may still have it open while Hylki is running.
 pub fn purge_attachment_dir() {
     let dir = std::env::temp_dir().join("vireo-attachments");
     if !dir.exists() {
@@ -2595,7 +2595,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for RatioBox {
-        const NAME: &'static str = "VireoRatioBox";
+        const NAME: &'static str = "HylkiRatioBox";
         type Type = super::RatioBox;
         type ParentType = gtk::Widget;
     }

@@ -3,18 +3,18 @@
 //! GNOME has no system tray — the sanctioned equivalent is the **Background
 //! Apps** section of Quick Settings, which xdg-desktop-portal populates from
 //! sandboxed apps that are running without a window. So keeping the process
-//! alive after the last window closes is what puts Vireo there; nothing needs to
+//! alive after the last window closes is what puts Hylki there; nothing needs to
 //! draw an icon.
 //!
 //! Two portal calls make it a good citizen rather than a mystery process:
 //!
 //! * `RequestBackground` asks the user's permission to keep running, and can
-//!   register an autostart entry so Vireo is already watching for mail at login.
+//!   register an autostart entry so Hylki is already watching for mail at login.
 //! * `SetStatus` sets the line shown beside the app in that menu, so it says
 //!   what it is doing rather than merely existing.
 //!
 //! Both are best-effort. On a desktop with no portal — or with the permission
-//! refused — Vireo still runs; it just isn't listed, which is the desktop's
+//! refused — Hylki still runs; it just isn't listed, which is the desktop's
 //! decision to make, not ours.
 
 use zbus::zvariant::Value;
@@ -28,12 +28,12 @@ const IFACE_BACKGROUND: &str = "org.freedesktop.portal.Background";
 /// login when `autostart` is set.
 ///
 /// The portal replies asynchronously over a `Request` object; the answer is not
-/// waited for. Vireo behaves the same either way — the permission governs how
+/// waited for. Hylki behaves the same either way — the permission governs how
 /// the desktop *presents* a background app, not whether the process may run —
 /// and blocking a settings toggle on a dialog the user may leave sitting there
 /// would be worse than proceeding.
 pub fn request(autostart: bool) {
-    let reason = i18n("Vireo checks for new mail and shows notifications while its window is closed.");
+    let reason = i18n("Hylki checks for new mail and shows notifications while its window is closed.");
     if let Err(e) = call_request(&reason, autostart) {
         tracing::debug!("background portal request skipped: {e}");
     }
@@ -45,10 +45,10 @@ fn call_request(reason: &str, autostart: bool) -> Result<(), String> {
     options.insert("reason", Value::from(reason));
     options.insert("autostart", Value::from(autostart));
     // Autostart runs this rather than the desktop file's Exec line, so logging in
-    // leaves Vireo checking mail from the Background Apps menu instead of opening
+    // leaves Hylki checking mail from the Background Apps menu instead of opening
     // a window at you. Not `dbus-activatable`: that would autostart over D-Bus,
     // which needs DBusActivatable in the desktop file, and takes no arguments.
-    let commandline = vec!["vireo".to_string(), crate::HIDDEN_FLAG.to_string()];
+    let commandline = vec!["hylki".to_string(), crate::HIDDEN_FLAG.to_string()];
     options.insert("commandline", Value::from(commandline));
     conn.call_method(
         Some(PORTAL_DEST),
@@ -63,7 +63,7 @@ fn call_request(reason: &str, autostart: bool) -> Result<(), String> {
     Ok(())
 }
 
-/// Set the line GNOME shows beside Vireo in Background Apps.
+/// Set the line GNOME shows beside Hylki in Background Apps.
 ///
 /// Truncated to the portal's 96-character limit — an over-long status is
 /// rejected outright, which would leave no message at all.
@@ -90,7 +90,7 @@ pub fn set_status(message: &str) {
     }
 }
 
-/// The status line: what Vireo is doing for you while it has no window.
+/// The status line: what Hylki is doing for you while it has no window.
 pub fn status_text(unread: u32) -> String {
     match unread {
         0 => i18n("Checking for new mail"),

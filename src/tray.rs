@@ -15,7 +15,7 @@
 //!
 //! Icons are sent as pixel data rather than by name: the panel lives outside
 //! the sandbox and may not resolve our icon theme, and the dot has to be drawn
-//! on anyway. The Vireo icon is the app icon itself; the envelope variants are
+//! on anyway. The Hylki icon is the app icon itself; the envelope variants are
 //! the reader's `mail-unread-symbolic` in plain white or black, for panels
 //! that don't recolour symbolic icons. On Cinnamon the icon is drawn smaller
 //! inside the pixmap, see [`panel_fill`].
@@ -66,7 +66,7 @@ pub struct TrayMailList {
 pub type AppIconPng = &'static [u8];
 /// The envelope, as the reader draws it; its fill is swapped for the chosen colour.
 const ENVELOPE_SVG: &str =
-    include_str!("../resources/icons/scalable/actions/co.hyprlab.Vireo-mail-unread-symbolic.svg");
+    include_str!("../resources/icons/scalable/actions/co.hyprlab.Hylki-mail-unread-symbolic.svg");
 /// Panels ask for different sizes; a set covers them without upscaling blur.
 const SIZES: [i32; 6] = [16, 22, 24, 32, 48, 64];
 /// GNOME's red (`@error_color`).
@@ -75,7 +75,7 @@ const DOT_RGB: (f64, f64, f64) = (0xe0 as f64 / 255.0, 0x1b as f64 / 255.0, 0x24
 /// A running tray item. Dropping it does not remove the icon; call
 /// [`TrayHandle::stop`].
 pub struct TrayHandle {
-    handle: Handle<VireoTray>,
+    handle: Handle<HylkiTray>,
     last_unread: std::cell::Cell<u32>,
 }
 
@@ -90,7 +90,7 @@ impl TrayHandle {
         unread: u32,
         mail: Option<TrayMailList>,
     ) -> Option<Self> {
-        let tray = VireoTray {
+        let tray = HylkiTray {
             plain: render_set(icon, app_png, false),
             dotted: render_set(icon, app_png, true),
             unread,
@@ -135,7 +135,7 @@ impl TrayHandle {
     }
 }
 
-struct VireoTray {
+struct HylkiTray {
     plain: Vec<Icon>,
     dotted: Vec<Icon>,
     unread: u32,
@@ -144,13 +144,13 @@ struct VireoTray {
     sender: relm4::Sender<AppMsg>,
 }
 
-impl Tray for VireoTray {
+impl Tray for HylkiTray {
     fn id(&self) -> String {
         crate::APP_ID.to_string()
     }
 
     fn title(&self) -> String {
-        "Vireo".to_string()
+        "Hylki".to_string()
     }
 
     fn category(&self) -> Category {
@@ -167,7 +167,7 @@ impl Tray for VireoTray {
 
     fn tool_tip(&self) -> ToolTip {
         ToolTip {
-            title: "Vireo".to_string(),
+            title: "Hylki".to_string(),
             description: inbox_status_text(self.unread),
             ..Default::default()
         }
@@ -179,7 +179,7 @@ impl Tray for VireoTray {
 
     fn menu(&self) -> Vec<MenuItem<Self>> {
         let mut items: Vec<MenuItem<Self>> = vec![StandardItem {
-            label: i18n("Open Vireo"),
+            label: i18n("Open Hylki"),
             activate: Box::new(|t: &mut Self| {
                 let _ = t.sender.send(AppMsg::PresentWindow);
             }),
@@ -260,7 +260,7 @@ fn inbox_status_text(unread: u32) -> String {
 
 /// One message's row: the card as its label and picture; a click opens it
 /// in the reader, the same path a notification click takes.
-fn mail_item(m: &TrayMail) -> MenuItem<VireoTray> {
+fn mail_item(m: &TrayMail) -> MenuItem<HylkiTray> {
     let (account_id, folder_id, message_id) = (m.account_id, m.folder_id, m.message_id);
     let mut label = m.heading.clone();
     if !m.subject.is_empty() {
@@ -274,7 +274,7 @@ fn mail_item(m: &TrayMail) -> MenuItem<VireoTray> {
     StandardItem {
         label: menu_text(&label),
         icon_data: m.icon.clone(),
-        activate: Box::new(move |t: &mut VireoTray| {
+        activate: Box::new(move |t: &mut HylkiTray| {
             let _ = t.sender.send(AppMsg::PresentWindow);
             let _ = t.sender.send(AppMsg::OpenMessageFromNotification {
                 account_id,
@@ -440,7 +440,7 @@ fn render(icon: TrayIcon, app_png: AppIconPng, dotted: bool, size: i32, fill: f6
 /// envelope rasterised in the chosen colour.
 fn base_pixbuf(icon: TrayIcon, app_png: AppIconPng, size: i32) -> Option<Pixbuf> {
     match icon {
-        TrayIcon::Vireo => {
+        TrayIcon::Hylki => {
             let loader = PixbufLoader::with_type("png").ok()?;
             loader.write(app_png).ok()?;
             loader.close().ok()?;
@@ -496,7 +496,7 @@ mod tests {
 
     #[test]
     fn every_icon_renders_at_every_size() {
-        for icon in [TrayIcon::Vireo, TrayIcon::EnvelopeLight, TrayIcon::EnvelopeDark] {
+        for icon in [TrayIcon::Hylki, TrayIcon::EnvelopeLight, TrayIcon::EnvelopeDark] {
             for dotted in [false, true] {
                 let set = render_set(icon, crate::app_icon::png_for(crate::app_icon::DEFAULT_ID), dotted);
                 assert_eq!(set.len(), SIZES.len(), "{icon:?} dotted={dotted}");
@@ -544,7 +544,7 @@ mod tests {
     #[test]
     fn a_half_fill_leaves_a_clear_margin_and_moves_the_dot() {
         let size = 32usize;
-        let icon = render(TrayIcon::Vireo, crate::app_icon::png_for(crate::app_icon::DEFAULT_ID), true, size as i32, 0.5).unwrap();
+        let icon = render(TrayIcon::Hylki, crate::app_icon::png_for(crate::app_icon::DEFAULT_ID), true, size as i32, 0.5).unwrap();
         assert_eq!(icon.data.len(), size * size * 4);
         let at = |x: usize, y: usize| {
             let i = (y * size + x) * 4;

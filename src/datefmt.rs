@@ -1,13 +1,13 @@
 //! Dates and times in the format the system asks for (#32).
 //!
-//! Vireo's UI is English, but a date is not English: someone whose desktop is set
+//! Hylki's UI is English, but a date is not English: someone whose desktop is set
 //! to German expects 23.08.2026 and 14:03, not 08/23/2026 and 2:03 PM. Chrono
 //! formats dates by pattern only — it has no notion of a locale — so the patterns
 //! it was given were hard-coded American, whatever the machine was set to.
 //!
 //! GLib does know: `g_date_time_format` reads `LC_TIME`, so `%x` is the locale's
 //! own date, `%b` its month names, and `%p` empty wherever the clock is 24-hour.
-//! Those three are all it takes to follow the system while keeping Vireo's own
+//! Those three are all it takes to follow the system while keeping Hylki's own
 //! layout — the list still shows "23. Aug, 14:03" where it showed "Aug 23, 2:03
 //! PM", rather than surrendering the arrangement to `%c`.
 //!
@@ -80,7 +80,7 @@ fn system_day_first() -> bool {
 fn day_first_from_probe(probe: &str) -> bool {
     match (probe.find("25"), probe.find("12")) {
         (Some(day), Some(month)) => day < month,
-        // No recognisable date: keep the arrangement Vireo has always used.
+        // No recognisable date: keep the arrangement Hylki has always used.
         _ => false,
     }
 }
@@ -230,7 +230,7 @@ pub fn day_month(ts: i64) -> String {
 
 /// Day, month and year: "Aug 23, 2026" or "23. Aug 2026".
 ///
-/// Vireo's own arrangement, with the locale's field order and month names rather
+/// Hylki's own arrangement, with the locale's field order and month names rather
 /// than the locale's written date (`%x`, which is all digits). A date is read at
 /// a glance in a list of mail, and "Aug 23" is quicker to place than "08/23" —
 /// the point of #32 was that the *order* and the *clock* were American, not that
@@ -285,7 +285,7 @@ mod tests {
         assert!(day_first_from_probe("25/12/26"));
         assert!(!day_first_from_probe("12/25/2026"));
         assert!(!day_first_from_probe("2026-12-25"));
-        // Nothing recognisable: keep Vireo's own arrangement rather than guess.
+        // Nothing recognisable: keep Hylki's own arrangement rather than guess.
         assert!(!day_first_from_probe(""));
         assert!(!day_first_from_probe("Freitag"));
     }

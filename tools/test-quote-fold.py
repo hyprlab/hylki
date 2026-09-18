@@ -31,7 +31,7 @@ cases={
  'thunderbird_interleaved':('<div class="moz-cite-prefix">John wrote:</div><blockquote type="cite">q</blockquote><p>answer</p>',False),
  'text_node_after':('<p>r</p><blockquote>q</blockquote>plain reply text after',False),
 }
-frames=''.join(f'<iframe class="vireo-frame" id="{k}" srcdoc="{v[0].replace("&","&amp;").replace(chr(34),"&quot;")}"></iframe>' for k,v in cases.items())
+frames=''.join(f'<iframe class="hylki-frame" id="{k}" srcdoc="{v[0].replace("&","&amp;").replace(chr(34),"&quot;")}"></iframe>' for k,v in cases.items())
 html=f'<!doctype html><html><body>{frames}<script>{stubs}{js}</script></body></html>'
 
 app=Gtk.Application(application_id='co.hyprlab.QuoteTest')
@@ -40,7 +40,7 @@ def activate(a):
     def loaded(view,ev):
         if ev!=WebKit.LoadEvent.FINISHED: return
         def run():
-            v.evaluate_javascript("""(function(){var r={};var fs=document.querySelectorAll('iframe.vireo-frame');for(var i=0;i<fs.length;i++){var f=fs[i];quote(f);r[f.id]=!!(f.nextSibling&&f.nextSibling.className==='vireo-quote');}return JSON.stringify(r);})()""",-1,None,None,None,done)
+            v.evaluate_javascript("""(function(){var r={};var fs=document.querySelectorAll('iframe.hylki-frame');for(var i=0;i<fs.length;i++){var f=fs[i];quote(f);r[f.id]=!!(f.nextSibling&&f.nextSibling.className==='hylki-quote');}return JSON.stringify(r);})()""",-1,None,None,None,done)
         def done(view,res):
             val=view.evaluate_javascript_finish(res); r=json.loads(val.to_string()); bad=0
             for k,(h,exp) in cases.items():

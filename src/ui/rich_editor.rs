@@ -175,20 +175,20 @@ impl RichEditor {
         // The message handler carries the word under the caret out for a
         // mid-word spelling verdict (see the paste script's caretWord).
         let ucm = webkit6::UserContentManager::new();
-        ucm.register_script_message_handler("vireoSpell", None);
+        ucm.register_script_message_handler("hylkiSpell", None);
         // The block state under the caret (quote, bulleted or numbered list)
         // comes out through this one, to light the matching toolbar button.
-        ucm.register_script_message_handler("vireoFormat", None);
+        ucm.register_script_message_handler("hylkiFormat", None);
         let webview = webkit6::WebView::builder()
             .web_context(&super::message_view::shared_web_context())
             .user_content_manager(&ucm)
             .build();
         {
             let v = webview.clone();
-            ucm.connect_script_message_received(Some("vireoSpell"), move |_, value| {
+            ucm.connect_script_message_received(Some("hylkiSpell"), move |_, value| {
                 let word = value.to_str().to_string();
                 let bad = crate::spell::word_is_misspelled(&word);
-                exec(&v, &format!("window.__vireoSpellMark({bad})"));
+                exec(&v, &format!("window.__hylkiSpellMark({bad})"));
             });
         }
         let settings = webkit6::Settings::new();
@@ -224,7 +224,7 @@ impl RichEditor {
                 }
             });
         }
-        webview.load_html(&document(initial_html, &webview), Some("https://vireo.localhost/editor"));
+        webview.load_html(&document(initial_html, &webview), Some("https://hylki.localhost/editor"));
         // A live theme flip re-grounds the open document (#148): the scheme
         // and the ground are baked into the document at load, so without
         // this the editor stays in the scheme it was opened in. Deferred to
@@ -303,7 +303,7 @@ impl RichEditor {
         // behind the preference; the menu offers both, always, in its place.
         // Over an image the menu leads with image actions — cut, copy, and
         // demoting an inline picture to an ordinary attachment — acting on
-        // the exact node the right-click landed on (`__vireoCtxImg`).
+        // the exact node the right-click landed on (`__hylkiCtxImg`).
         let attach_cb: std::rc::Rc<std::cell::RefCell<Option<Box<dyn Fn(std::path::PathBuf)>>>> =
             std::rc::Rc::new(std::cell::RefCell::new(None));
         // Rich to begin with; [`RichEditor::set_source`] moves it.
@@ -361,7 +361,7 @@ impl RichEditor {
                         gtk::gio::SimpleAction::new(&format!("vireo-img-{kind}"), None);
                     let v = view.clone();
                     action.connect_activate(move |_, _| {
-                        exec(&v, &format!("window.__vireoSetImageSize('{kind}')"));
+                        exec(&v, &format!("window.__hylkiSetImageSize('{kind}')"));
                     });
                     menu.insert(
                         &webkit6::ContextMenuItem::from_gaction(&action, &label, None),
@@ -376,7 +376,7 @@ impl RichEditor {
                         "Will be recompressed to the size shown when this is sent",
                     ));
                     action.connect_activate(move |_, _| {
-                        exec(&v, &format!("window.__vireoToggleFit('{hint}')"));
+                        exec(&v, &format!("window.__hylkiToggleFit('{hint}')"));
                     });
                     menu.insert(
                         &webkit6::ContextMenuItem::from_gaction(
@@ -478,7 +478,7 @@ impl RichEditor {
         // caret sits in: `q` quote, `u` bulleted list, `o` numbered list.
         // A set toggle also means a click on it leaves that block instead of
         // opening another (issue #137, EmmanuelP's follow-up).
-        ucm.connect_script_message_received(Some("vireoFormat"), move |_, value| {
+        ucm.connect_script_message_received(Some("hylkiFormat"), move |_, value| {
             let state = value.to_str().to_string();
             for (key, button) in &block_buttons {
                 let on = state.contains(*key);
@@ -570,7 +570,7 @@ impl RichEditor {
         self.source.set(None);
         self.show_preview(None);
         self.webview
-            .load_html(&document(content, &self.webview), Some("https://vireo.localhost/editor"));
+            .load_html(&document(content, &self.webview), Some("https://hylki.localhost/editor"));
     }
 
     /// Put the editor into source mode holding `text`: a monospace
@@ -581,7 +581,7 @@ impl RichEditor {
         self.show_preview(None);
         self.webview.load_html(
             &source_document(text, &self.webview),
-            Some("https://vireo.localhost/editor"),
+            Some("https://hylki.localhost/editor"),
         );
     }
 
@@ -593,7 +593,7 @@ impl RichEditor {
     /// Read the source text back, exactly as typed.
     pub fn extract_source(&self, cb: impl FnOnce(String) + 'static) {
         self.webview.evaluate_javascript(
-            "window.__vireoSourceText ? window.__vireoSourceText() : ''",
+            "window.__hylkiSourceText ? window.__hylkiSourceText() : ''",
             None,
             None,
             gtk::gio::Cancellable::NONE,
@@ -628,7 +628,7 @@ impl RichEditor {
                 v
             }
         };
-        view.load_html(&preview_document(html, &view), Some("https://vireo.localhost/preview"));
+        view.load_html(&preview_document(html, &view), Some("https://hylki.localhost/preview"));
         self.stack.set_visible_child_name("preview");
     }
 
@@ -668,7 +668,7 @@ impl RichEditor {
     /// quote-only reply to Drafts when the reader navigates away.
     pub fn is_dirty(&self, cb: impl FnOnce(bool) + 'static) {
         self.webview.evaluate_javascript(
-            "String(!!window.__vireoDirty)",
+            "String(!!window.__hylkiDirty)",
             None,
             None,
             gtk::gio::Cancellable::NONE,
@@ -693,7 +693,7 @@ impl RichEditor {
     /// Read the current body HTML asynchronously.
     pub fn extract_html(&self, cb: impl FnOnce(String) + 'static) {
         self.webview.evaluate_javascript(
-            "window.__vireoBodyHtml()",
+            "window.__hylkiBodyHtml()",
             None,
             None,
             gtk::gio::Cancellable::NONE,
@@ -706,17 +706,17 @@ impl RichEditor {
     /// go through [`RichEditor::extract`], which never touches the pixels —
     /// a save must not cost quality.
     pub fn extract_for_send(&self, cb: impl FnOnce(String, String) + 'static) {
-        self.read_body("window.__vireoBodyHtmlForSend()", cb);
+        self.read_body("window.__hylkiBodyHtmlForSend()", cb);
     }
 
     /// Read the current body HTML and a plain-text rendering asynchronously.
     pub fn extract(&self, cb: impl FnOnce(String, String) + 'static) {
-        self.read_body("window.__vireoBodyHtml()", cb);
+        self.read_body("window.__hylkiBodyHtml()", cb);
     }
 
     fn read_body(&self, reader: &str, cb: impl FnOnce(String, String) + 'static) {
         self.webview.evaluate_javascript(
-            &format!("{reader} + '\\u0000' + window.__vireoBodyText()"),
+            &format!("{reader} + '\\u0000' + window.__hylkiBodyText()"),
             None,
             None,
             gtk::gio::Cancellable::NONE,
@@ -786,7 +786,7 @@ fn detach_ctx_image(
     cb: std::rc::Rc<std::cell::RefCell<Option<Box<dyn Fn(std::path::PathBuf)>>>>,
 ) {
     webview.evaluate_javascript(
-        "(function(){var n=window.__vireoCtxImg;\
+        "(function(){var n=window.__hylkiCtxImg;\
           if(!n){var sel=getSelection();\
             if(sel.rangeCount===1){var r=sel.getRangeAt(0);\
               if(r.startContainer===r.endContainer&&r.endOffset-r.startOffset===1){\
@@ -794,7 +794,7 @@ fn detach_ctx_image(
                 if(c&&c.tagName==='IMG')n=c;}}}\
           if(!n||n.tagName!=='IMG')return 'E:none';\
           var s=n.src;if(s.indexOf('data:image/')!==0)return 'E:src:'+s.slice(0,40);\
-          n.remove();window.__vireoCtxImg=null;return s;})()",
+          n.remove();window.__hylkiCtxImg=null;return s;})()",
         None,
         None,
         gtk::gio::Cancellable::NONE,
@@ -896,7 +896,7 @@ fn paste_into(
 fn paste_via_webkit(webview: &webkit6::WebView, rich: bool) {
     let v = webview.clone();
     webview.evaluate_javascript(
-        &format!("window.__vireoPasteOnce={rich};"),
+        &format!("window.__hylkiPasteOnce={rich};"),
         None,
         None,
         gtk::gio::Cancellable::NONE,
@@ -937,7 +937,7 @@ fn deliver_files(
                 exec(
                     webview,
                     &format!(
-                        "window.__vireoInsertImageURL(\
+                        "window.__hylkiInsertImageURL(\
                          'data:{mime};base64,{b64}','{mime}','{name}',{x},{y})"
                     ),
                 );
@@ -1019,21 +1019,21 @@ fn build_toolbar(
     // (icon, tooltip, execCommand snippet, block-state key). The three block
     // commands are toggles: the document reports whether the caret is inside
     // one, and each command both opens and leaves its block (the lists
-    // through execCommand's own toggling, the quote through __vireoQuote).
+    // through execCommand's own toggling, the quote through __hylkiQuote).
     let commands: &[(&str, &str, &str, Option<char>)] = &[
-        ("co.hyprlab.Vireo-format-text-bold-symbolic", i18n_noop("Bold"), "document.execCommand('bold')", None),
-        ("co.hyprlab.Vireo-format-text-italic-symbolic", i18n_noop("Italic"), "document.execCommand('italic')", None),
-        ("co.hyprlab.Vireo-format-text-underline-symbolic", i18n_noop("Underline"), "document.execCommand('underline')", None),
-        ("co.hyprlab.Vireo-format-text-strikethrough-symbolic", i18n_noop("Strikethrough"), "document.execCommand('strikeThrough')", None),
+        ("co.hyprlab.Hylki-format-text-bold-symbolic", i18n_noop("Bold"), "document.execCommand('bold')", None),
+        ("co.hyprlab.Hylki-format-text-italic-symbolic", i18n_noop("Italic"), "document.execCommand('italic')", None),
+        ("co.hyprlab.Hylki-format-text-underline-symbolic", i18n_noop("Underline"), "document.execCommand('underline')", None),
+        ("co.hyprlab.Hylki-format-text-strikethrough-symbolic", i18n_noop("Strikethrough"), "document.execCommand('strikeThrough')", None),
         ("SEP", "", "", None),
-        ("co.hyprlab.Vireo-view-list-bullet-symbolic", i18n_noop("Bulleted list"), "document.execCommand('insertUnorderedList')", Some('u')),
-        ("co.hyprlab.Vireo-view-list-ordered-symbolic", i18n_noop("Numbered list"), "document.execCommand('insertOrderedList')", Some('o')),
+        ("co.hyprlab.Hylki-view-list-bullet-symbolic", i18n_noop("Bulleted list"), "document.execCommand('insertUnorderedList')", Some('u')),
+        ("co.hyprlab.Hylki-view-list-ordered-symbolic", i18n_noop("Numbered list"), "document.execCommand('insertOrderedList')", Some('o')),
         // Adwaita has no blockquote glyph; the indent icon reads as "quote".
-        ("co.hyprlab.Vireo-format-indent-more-symbolic", i18n_noop("Quote"), "window.__vireoQuote()", Some('q')),
+        ("co.hyprlab.Hylki-format-indent-more-symbolic", i18n_noop("Quote"), "window.__hylkiQuote()", Some('q')),
         // `LINK` is a sentinel command (handled specially); the icon is real.
-        ("co.hyprlab.Vireo-insert-link-symbolic", i18n_noop("Insert link"), "LINK", None),
+        ("co.hyprlab.Hylki-insert-link-symbolic", i18n_noop("Insert link"), "LINK", None),
         ("SEP", "", "", None),
-        ("co.hyprlab.Vireo-edit-clear-symbolic", i18n_noop("Clear formatting"), "document.execCommand('removeFormat')", None),
+        ("co.hyprlab.Hylki-edit-clear-symbolic", i18n_noop("Clear formatting"), "document.execCommand('removeFormat')", None),
     ];
 
     let mut toggles = Vec::new();
@@ -1104,8 +1104,8 @@ fn prompt_link(webview: &webkit6::WebView, anchor: &gtk::Button) {
 
 /// The paste choke point: every paste — shortcut, context menu, editing
 /// command — raises a DOM `paste` event here, where the clipboard's flavours
-/// can be inspected. `__vireoPasteRich` is the standing mode (the user's
-/// preference, stamped at document build); `__vireoPasteOnce` overrides it for
+/// can be inspected. `__hylkiPasteRich` is the standing mode (the user's
+/// preference, stamped at document build); `__hylkiPasteOnce` overrides it for
 /// exactly one paste (Ctrl+V and the context-menu items set it just before
 /// running the Paste command, so a live preference change is honored).
 ///
@@ -1170,7 +1170,7 @@ const HISTORY_SCRIPT: &str = r#"<script>
 
 const PASTE_SCRIPT: &str = r#"<script>
 (function(){
-  window.__vireoPasteOnce = null;
+  window.__hylkiPasteOnce = null;
   var urlRe = /((?:https?:\/\/|www\.)[^\s<>()]+[^\s<>().,;:!?'"])/gi;
   function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
   /* Inline images (#113): a pasted or dropped image lands in the text as an
@@ -1214,7 +1214,7 @@ const PASTE_SCRIPT: &str = r#"<script>
      point and are given for the first of a batch only; the rest follow the
      caret the previous insert left behind. */
   var insertQ = Promise.resolve();
-  window.__vireoInsertImageURL = function(url, type, name, x, y){
+  window.__hylkiInsertImageURL = function(url, type, name, x, y){
     insertQ = insertQ.then(function(){
       return new Promise(function(done){
         if(x !== null && document.caretRangeFromPoint){
@@ -1288,7 +1288,7 @@ const PASTE_SCRIPT: &str = r#"<script>
     r.setStart(n, a); r.setEnd(n, b);
     return {range: r, word: s.slice(a, b)};
   }
-  window.__vireoSpellMark = function(bad){
+  window.__hylkiSpellMark = function(bad){
     if(!spellHl) return;
     spellHl.clear();
     if(bad && spellRange && spellRange.startContainer.isConnected){
@@ -1314,14 +1314,14 @@ const PASTE_SCRIPT: &str = r#"<script>
     var s = (q ? 'q' : '') + (ul ? 'u' : '') + (ol ? 'o' : '');
     if(s === lastFmt) return;
     lastFmt = s;
-    try{ window.webkit.messageHandlers.vireoFormat.postMessage(s); }catch(_){}
+    try{ window.webkit.messageHandlers.hylkiFormat.postMessage(s); }catch(_){}
   }
   document.addEventListener('selectionchange', fmtState);
   document.addEventListener('input', fmtState);
   /* The Quote button is a toggle (#137): inside a quote it steps the
      caret's paragraph out one level, the same move as Enter twice; anywhere
      else it quotes the paragraph. The list buttons toggle on their own. */
-  window.__vireoQuote = function(){
+  window.__hylkiQuote = function(){
     var el = caretBlock();
     if(el && el.closest && el.closest('blockquote')){
       document.execCommand('outdent');
@@ -1365,7 +1365,7 @@ const PASTE_SCRIPT: &str = r#"<script>
       var w = caretWord();
       if(!w) return;
       spellRange = w.range;
-      try{ window.webkit.messageHandlers.vireoSpell.postMessage(w.word); }catch(_){}
+      try{ window.webkit.messageHandlers.hylkiSpell.postMessage(w.word); }catch(_){}
     }, 600);
   });
   document.addEventListener('selectionchange', function(){
@@ -1383,7 +1383,7 @@ const PASTE_SCRIPT: &str = r#"<script>
   /* Resizing a picture. The frame and its corner handles are ordinary
      elements in this contenteditable document — there is nowhere else to
      put them — so they are marked `data-vireo-ui` and stripped from
-     everything the document hands back (see `__vireoBodyHtml`). They are
+     everything the document hands back (see `__hylkiBodyHtml`). They are
      also contenteditable=false, so the caret cannot wander into them. */
   var rsBox = null, rsImg = null;
   /* Blue is an ordinary selection; red says the picture will be recut when
@@ -1464,8 +1464,8 @@ const PASTE_SCRIPT: &str = r#"<script>
   /* The context menu's size entries. `original` drops the explicit width so
      the picture falls back to its natural size, still held to the writing
      width by the stylesheet. */
-  window.__vireoSetImageSize = function(kind){
-    var img = window.__vireoCtxImg || rsImg;
+  window.__hylkiSetImageSize = function(kind){
+    var img = window.__hylkiCtxImg || rsImg;
     if(!img) return;
     if(kind === 'original'){
       img.style.width = ''; img.style.height = '';
@@ -1482,8 +1482,8 @@ const PASTE_SCRIPT: &str = r#"<script>
      still save the original. Arming this asks for the bytes to be recut to
      the size shown, once, as the message is sent — irreversible, so it is
      off until asked for and marked on the picture while it is on. */
-  window.__vireoToggleFit = function(hint){
-    var img = window.__vireoCtxImg || rsImg;
+  window.__hylkiToggleFit = function(hint){
+    var img = window.__hylkiCtxImg || rsImg;
     if(!img) return;
     if(img.hasAttribute('data-vireo-fit')){
       img.removeAttribute('data-vireo-fit');
@@ -1518,7 +1518,7 @@ const PASTE_SCRIPT: &str = r#"<script>
   /* What the host reads instead of body.innerHTML: the same content with
      this script's own furniture taken out. The arming mark stays, so a
      draft reopened later still shows it and still honours it when sent. */
-  window.__vireoBodyHtml = function(){
+  window.__hylkiBodyHtml = function(){
     var c = document.body.cloneNode(true);
     Array.prototype.forEach.call(c.querySelectorAll('[data-vireo-ui]'),
       function(n){ n.remove(); });
@@ -1528,7 +1528,7 @@ const PASTE_SCRIPT: &str = r#"<script>
      and for a message composed as plain text (#180): quoted blocks carry
      "> " on every line, lists their dashes, links their address, and
      block boundaries become line breaks. innerText knew none of that. */
-  function vireoTxt(node, pre){
+  function hylkiTxt(node, pre){
     if(node.nodeType === 3){
       var v = node.nodeValue;
       return pre ? v : v.replace(/[ \t\r\n]+/g, ' ');
@@ -1541,7 +1541,7 @@ const PASTE_SCRIPT: &str = r#"<script>
     if(tag === 'style' || tag === 'script') return '';
     var s = '';
     var inPre = pre || tag === 'pre';
-    for(var i = 0; i < node.childNodes.length; i++) s += vireoTxt(node.childNodes[i], inPre);
+    for(var i = 0; i < node.childNodes.length; i++) s += hylkiTxt(node.childNodes[i], inPre);
     if(tag === 'a'){
       var h = node.getAttribute('href') || '';
       if(h && h !== s.trim() && h.indexOf('mailto:') !== 0) s += ' <' + h + '>';
@@ -1555,8 +1555,8 @@ const PASTE_SCRIPT: &str = r#"<script>
     if(/^(p|div|h[1-6]|pre|tr|ul|ol|table|section|article|header|footer)$/.test(tag)) return '\n' + s + '\n';
     return s;
   }
-  window.__vireoBodyText = function(){
-    return vireoTxt(document.body, false)
+  window.__hylkiBodyText = function(){
+    return hylkiTxt(document.body, false)
       .replace(/[ \t]+\n/g, '\n')
       .replace(/\n{3,}/g, '\n\n')
       .replace(/^\n+|\n+$/g, '');
@@ -1564,14 +1564,14 @@ const PASTE_SCRIPT: &str = r#"<script>
   /* Sending, and only sending: recut first, then read with the marks taken
      out. A draft is saved through the plain reader above, so quality is
      never lost to a save. */
-  window.__vireoBodyHtmlForSend = function(){
+  window.__hylkiBodyHtmlForSend = function(){
     rsFlatten();
     Array.prototype.forEach.call(
       document.querySelectorAll('img[data-vireo-fit]'), function(n){
         n.removeAttribute('data-vireo-fit'); n.removeAttribute('title');
       });
     rsTint();
-    return window.__vireoBodyHtml();
+    return window.__hylkiBodyHtml();
   };
   addEventListener('scroll', rsPlace, true);
   addEventListener('resize', rsPlace);
@@ -1597,12 +1597,12 @@ const PASTE_SCRIPT: &str = r#"<script>
   function rememberImg(e){
     var t = e.target;
     if(t && t.tagName === 'IMG'){
-      window.__vireoCtxImg = t;
+      window.__hylkiCtxImg = t;
       var r = document.createRange(); r.selectNode(t);
       var s = getSelection(); s.removeAllRanges(); s.addRange(r);
       rsShow(t);
     } else if(e.type === 'contextmenu'){
-      window.__vireoCtxImg = null;
+      window.__hylkiCtxImg = null;
     }
   }
   document.addEventListener('mousedown', function(e){ if(e.button === 2) rememberImg(e); }, true);
@@ -1655,8 +1655,8 @@ const PASTE_SCRIPT: &str = r#"<script>
         return;
       }
     }
-    var rich = window.__vireoPasteRich === true;
-    if(window.__vireoPasteOnce !== null){ rich = window.__vireoPasteOnce; window.__vireoPasteOnce = null; }
+    var rich = window.__hylkiPasteRich === true;
+    if(window.__hylkiPasteOnce !== null){ rich = window.__hylkiPasteOnce; window.__hylkiPasteOnce = null; }
     var html = cd.getData('text/html');
     var text = cd.getData('text/plain');
     if(rich){
@@ -1683,7 +1683,7 @@ fn document(content: &str, webview: &webkit6::WebView) -> String {
     let (ground, _, _) = crate::ui::message_view::theme_grounds_for(webview, dark);
     let paste_rich = !crate::config::load_paste_plain();
     let script = format!(
-        "<script>window.__vireoPasteRich={paste_rich};</script>{PASTE_SCRIPT}{HISTORY_SCRIPT}"
+        "<script>window.__hylkiPasteRich={paste_rich};</script>{PASTE_SCRIPT}{HISTORY_SCRIPT}"
     );
     format!(
         "<!doctype html><html><head><meta charset=\"utf-8\">\
@@ -1711,8 +1711,8 @@ fn document(content: &str, webview: &webkit6::WebView) -> String {
            .vireo-sig{{opacity:0.85;}}\
            a{{color:#3584e4;}}\
          </style>{script}\
-         <script>window.__vireoDirty=false;\
-           document.addEventListener('input',function(){{window.__vireoDirty=true;}},true);\
+         <script>window.__hylkiDirty=false;\
+           document.addEventListener('input',function(){{window.__hylkiDirty=true;}},true);\
          </script></head>\
          <body contenteditable=\"true\">{content}</body></html>"
     )
@@ -1745,9 +1745,9 @@ fn source_document(text: &str, webview: &webkit6::WebView) -> String {
          <script>\
          (function(){{\
            var t=document.getElementById('src');\
-           window.__vireoDirty=false;\
-           window.__vireoSourceText=function(){{return t.value;}};\
-           t.addEventListener('input',function(){{window.__vireoDirty=true;}});\
+           window.__hylkiDirty=false;\
+           window.__hylkiSourceText=function(){{return t.value;}};\
+           t.addEventListener('input',function(){{window.__hylkiDirty=true;}});\
            /* Tab indents instead of leaving the field: in a source view it\
               is a character, and there is nowhere else in the document to\
               tab to anyway. */\
@@ -1756,7 +1756,7 @@ fn source_document(text: &str, webview: &webkit6::WebView) -> String {
              e.preventDefault();\
              var a=t.selectionStart,b=t.selectionEnd;\
              t.setRangeText('  ',a,b,'end');\
-             window.__vireoDirty=true;\
+             window.__hylkiDirty=true;\
            }});\
            t.focus();t.setSelectionRange(0,0);\
          }})();\
@@ -2035,7 +2035,7 @@ mod signature_tests {
     /// A local image next to the file is embedded; a remote one is left alone.
     #[test]
     fn local_images_are_embedded_and_remote_ones_kept() {
-        let dir = std::env::temp_dir().join(format!("vireo-sig-test-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("hylki-sig-test-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         std::fs::write(dir.join("logo.png"), [0x89, b'P', b'N', b'G']).unwrap();
         let src = "<p><img src=\"logo.png\" width=\"80\"> <img src='https://x.example/a.png'>\

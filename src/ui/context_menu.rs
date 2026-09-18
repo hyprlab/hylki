@@ -134,10 +134,10 @@ pub fn show_context_menu_with_header(
     popover.connect_closed(|p| p.unparent());
     popover.popup();
 
-    // VIREO_SHOWCASE_MENU=main|<submenu label> captures the popover's page
+    // HYLKI_SHOWCASE_MENU=main|<submenu label> captures the popover's page
     // a second after it opens (the window snapshot never includes it).
-    if let Ok(which) = std::env::var("VIREO_SHOWCASE_MENU") {
-        if let Ok(path) = std::env::var("VIREO_SHOWCASE") {
+    if let Ok(which) = std::env::var("HYLKI_SHOWCASE_MENU") {
+        if let Ok(path) = std::env::var("HYLKI_SHOWCASE") {
             let stack = stack.clone();
             gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(400), move || {
                 if which != "main" {
@@ -171,7 +171,7 @@ fn build_page(
             // The way back: a row with a leading chevron and the submenu's
             // name, then a hairline before its entries.
             let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
-            let img = gtk::Image::from_icon_name("co.hyprlab.Vireo-go-previous-symbolic");
+            let img = gtk::Image::from_icon_name("co.hyprlab.Hylki-go-previous-symbolic");
             img.set_pixel_size(16);
             row.append(&img);
             let lbl = gtk::Label::new(Some(title));
@@ -248,7 +248,7 @@ fn build_page(
 
             if let Some(sections) = submenu {
                 // A trailing chevron says the row opens rather than acts.
-                let chevron = gtk::Image::from_icon_name("co.hyprlab.Vireo-pan-end-symbolic");
+                let chevron = gtk::Image::from_icon_name("co.hyprlab.Hylki-pan-end-symbolic");
                 chevron.set_pixel_size(16);
                 chevron.add_css_class("dim-label");
                 row.append(&chevron);

@@ -271,7 +271,7 @@ impl SimpleComponent for AttachmentDrawer {
                             set_orientation: gtk::Orientation::Horizontal,
                             set_spacing: 8,
                             gtk::Image {
-                                set_icon_name: Some("co.hyprlab.Vireo-mail-attachment-symbolic"),
+                                set_icon_name: Some("co.hyprlab.Hylki-mail-attachment-symbolic"),
                                 add_css_class: "dim-label",
                             },
                             gtk::Label {
@@ -286,9 +286,9 @@ impl SimpleComponent for AttachmentDrawer {
                             gtk::Image {
                                 #[watch]
                                 set_icon_name: Some(if model.collapsed {
-                                    "co.hyprlab.Vireo-pan-up-symbolic"
+                                    "co.hyprlab.Hylki-pan-up-symbolic"
                                 } else {
-                                    "co.hyprlab.Vireo-pan-down-symbolic"
+                                    "co.hyprlab.Hylki-pan-down-symbolic"
                                 }),
                                 add_css_class: "dim-label",
                                 set_pixel_size: 12,
@@ -297,7 +297,7 @@ impl SimpleComponent for AttachmentDrawer {
                     },
                     gtk::Box { set_hexpand: true },
                     gtk::Image {
-                        set_icon_name: Some("co.hyprlab.Vireo-image-x-generic-symbolic"),
+                        set_icon_name: Some("co.hyprlab.Hylki-image-x-generic-symbolic"),
                         add_css_class: "dim-label",
                         set_pixel_size: 12,
                         // The size slider is meaningless with the grid hidden
@@ -321,7 +321,7 @@ impl SimpleComponent for AttachmentDrawer {
                         },
                     },
                     gtk::Image {
-                        set_icon_name: Some("co.hyprlab.Vireo-image-x-generic-symbolic"),
+                        set_icon_name: Some("co.hyprlab.Hylki-image-x-generic-symbolic"),
                         add_css_class: "dim-label",
                         set_pixel_size: 22,
                         #[watch]
@@ -335,9 +335,9 @@ impl SimpleComponent for AttachmentDrawer {
                         set_visible: !model.collapsed && model.list_view,
                         #[watch]
                         set_icon_name: if model.sort_desc {
-                            "co.hyprlab.Vireo-view-sort-descending-symbolic"
+                            "co.hyprlab.Hylki-view-sort-descending-symbolic"
                         } else {
-                            "co.hyprlab.Vireo-view-sort-ascending-symbolic"
+                            "co.hyprlab.Hylki-view-sort-ascending-symbolic"
                         },
                         #[watch]
                         set_tooltip_text: Some(if model.sort_desc { i18n("Sorted Z to A — switch to A to Z") } else { i18n("Sorted A to Z — switch to Z to A") }.as_str()),
@@ -352,9 +352,9 @@ impl SimpleComponent for AttachmentDrawer {
                         set_visible: !model.collapsed,
                         #[watch]
                         set_icon_name: if model.list_view {
-                            "co.hyprlab.Vireo-view-grid-symbolic"
+                            "co.hyprlab.Hylki-view-grid-symbolic"
                         } else {
-                            "co.hyprlab.Vireo-view-list-bullet-symbolic"
+                            "co.hyprlab.Hylki-view-list-bullet-symbolic"
                         },
                         #[watch]
                         set_tooltip_text: Some(if model.list_view { i18n("Show as thumbnails") } else { i18n("Show as a list") }.as_str()),
@@ -560,10 +560,10 @@ impl SimpleComponent for AttachmentDrawer {
                 move |want| s2.input(AttachmentDrawerInput::PillDrag { want }),
             );
         }
-        // VIREO_SHOWCASE_DRAWER=N clicks the header's count button N times,
+        // HYLKI_SHOWCASE_DRAWER=N clicks the header's count button N times,
         // one a second from 6s — the real button press, so the capture proves
         // the click path and not just the input it sends.
-        if let Some(Ok(n)) = std::env::var("VIREO_SHOWCASE_DRAWER").ok().map(|v| v.parse::<u32>()) {
+        if let Some(Ok(n)) = std::env::var("HYLKI_SHOWCASE_DRAWER").ok().map(|v| v.parse::<u32>()) {
             let btn = widgets.count_btn.clone();
             for i in 0..n {
                 let btn = btn.clone();
@@ -1012,18 +1012,18 @@ impl AttachmentDrawer {
     fn show_context_menu(&self, index: usize, x: f64, y: f64, sender: &ComponentSender<Self>) {
         let s = sender.clone();
         let open = MenuEntry::new(i18n("Open"), move || s.input(AttachmentDrawerInput::Open(index)))
-            .icon("co.hyprlab.Vireo-document-open-symbolic");
+            .icon("co.hyprlab.Hylki-document-open-symbolic");
         let s = sender.clone();
         let download =
             MenuEntry::new(i18n("Download…"), move || s.input(AttachmentDrawerInput::Download(index)))
-                .icon("co.hyprlab.Vireo-folder-download-symbolic");
+                .icon("co.hyprlab.Hylki-folder-download-symbolic");
         // The drawer gathers the whole conversation's files; this finds the
         // message a file came with (#213).
         let s = sender.clone();
         let show = MenuEntry::new(i18n("Show in Message"), move || {
             s.input(AttachmentDrawerInput::ShowInMessage(index))
         })
-        .icon("co.hyprlab.Vireo-mail-unread-symbolic");
+        .icon("co.hyprlab.Hylki-mail-unread-symbolic");
 
         // Anchor on the clicked cell itself so the click point (already
         // relative to it) needs no coordinate translation.
@@ -1038,7 +1038,7 @@ impl AttachmentDrawer {
     /// Ask the app to show its full-window lightbox over the message's
     /// previewable attachments (images and PDFs), starting at `start`
     /// (attachments order). The overlay lives at the window level so it fills
-    /// Vireo itself — a separate preview window meant double chrome.
+    /// Hylki itself — a separate preview window meant double chrome.
     fn show_lightbox(&self, start: usize, sender: &ComponentSender<Self>) {
         let items: Vec<Attachment> =
             self.items.iter().filter(|a| previewable(a)).cloned().collect();
@@ -1132,17 +1132,17 @@ fn build_cell(
         b.set_tooltip_text(Some(tip));
         b
     };
-    let download = action_btn("co.hyprlab.Vireo-folder-download-symbolic", "Download");
+    let download = action_btn("co.hyprlab.Hylki-folder-download-symbolic", "Download");
     let s = sender.clone();
     download.connect_clicked(move |_| s.input(AttachmentDrawerInput::Download(index)));
     actions.append(&download);
-    let open = action_btn("co.hyprlab.Vireo-document-open-symbolic", "Open");
+    let open = action_btn("co.hyprlab.Hylki-document-open-symbolic", "Open");
     let s = sender.clone();
     open.connect_clicked(move |_| s.input(AttachmentDrawerInput::Open(index)));
     actions.append(&open);
     // An attached public key (#133): one click puts it in the keyring.
     if is_key_attachment(att) {
-        let import = action_btn("co.hyprlab.Vireo-channel-secure-symbolic", &i18n("Import OpenPGP key"));
+        let import = action_btn("co.hyprlab.Hylki-channel-secure-symbolic", &i18n("Import OpenPGP key"));
         let s = sender.clone();
         import.connect_clicked(move |_| s.input(AttachmentDrawerInput::ImportKey(index)));
         actions.append(&import);
@@ -1234,11 +1234,11 @@ fn build_list_row(
         b.set_tooltip_text(Some(tip));
         b
     };
-    let download = action_btn("co.hyprlab.Vireo-folder-download-symbolic", "Download");
+    let download = action_btn("co.hyprlab.Hylki-folder-download-symbolic", "Download");
     let s = sender.clone();
     download.connect_clicked(move |_| s.input(AttachmentDrawerInput::Download(index)));
     row.append(&download);
-    let open = action_btn("co.hyprlab.Vireo-document-open-symbolic", "Open");
+    let open = action_btn("co.hyprlab.Hylki-document-open-symbolic", "Open");
     let s = sender.clone();
     open.connect_clicked(move |_| s.input(AttachmentDrawerInput::Open(index)));
     row.append(&open);
@@ -1291,7 +1291,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for SquareBox {
-        const NAME: &'static str = "VireoSquareBox";
+        const NAME: &'static str = "HylkiSquareBox";
         type Type = super::SquareBox;
         type ParentType = gtk::Widget;
     }
