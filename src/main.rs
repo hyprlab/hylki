@@ -17,6 +17,7 @@ mod desktop;
 mod goa;
 mod i18n;
 mod logo;
+mod memory_report;
 mod markdown;
 mod models;
 mod mutf7;
@@ -50,6 +51,10 @@ pub const APP_NAME: &str = if cfg!(feature = "beta") { "Vireo (beta)" } else { "
 /// semver prerelease in Cargo.toml itself (e.g. "1.18.2-beta.2" on the beta
 /// branch), so no suffix is bolted on here.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
+/// Counts what Rust code holds, for the memory section of an exported log.
+#[global_allocator]
+static ALLOCATOR: memory_report::CountingAllocator = memory_report::CountingAllocator;
 
 /// Command-line flag for starting without a window (used by the autostart entry
 /// the background portal writes).

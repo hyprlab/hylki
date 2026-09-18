@@ -67,6 +67,13 @@ impl<'a> tracing_subscriber::fmt::MakeWriter<'a> for ConsoleWriter {
     }
 }
 
+/// How many lines the console holds and what they weigh, for the memory
+/// section of an export.
+pub fn stats() -> (usize, usize) {
+    let buf = BUF.lock().unwrap();
+    (buf.len(), buf.iter().map(|(_, l)| l.len()).sum())
+}
+
 /// Everything the console holds, oldest first.
 pub fn all_lines() -> Vec<String> {
     BUF.lock().unwrap().iter().map(|(_, l)| l.clone()).collect()
@@ -75,8 +82,9 @@ pub fn all_lines() -> Vec<String> {
 /// The log as a file for a bug report (#132): a header naming the build and
 /// the desktop it runs on, then every line the console has kept since the
 /// app started, with email addresses shortened to their domain so the file
-/// can be attached to an issue as it is.
-pub fn export_text() -> String {
+/// can be attached to an issue as it is. `memory` is the app's memory
+/// section (see `memory_report`), placed between the header and the lines.
+pub fn export_text(memory: &str) -> String {
     let os = std::fs::read_to_string("/etc/os-release")
         .ok()
         .and_then(|t| {
@@ -98,6 +106,13 @@ pub fn export_text() -> String {
         adw::micro_version(),
         chrono::Local::now().format("%Y-%m-%d %H:%M:%S %Z"),
     ));
+    if !memory.is_empty() {
+        out.push_str(memory);
+        if !memory.ends_with('\n') {
+            out.push('\n');
+        }
+        out.push('\n');
+    }
     for line in all_lines() {
         out.push_str(&redact_addresses(&line));
         out.push('\n');

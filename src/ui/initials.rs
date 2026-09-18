@@ -288,6 +288,25 @@ thread_local! {
     static PNG_CACHE: RefCell<HashMap<(String, String, i32), String>> = RefCell::new(HashMap::new());
 }
 
+/// The session's circle caches, for the memory section of an export: account
+/// pictures as textures and their pixel bytes, then the rendered `data:` URIs
+/// (account pictures and initials circles together) and their bytes.
+pub fn cache_stats() -> (usize, u64, usize, usize) {
+    let (pictures, picture_bytes) = AVATAR_TEXTURES.with(|c| {
+        let c = c.borrow();
+        (c.len(), c.values().map(crate::memory_report::texture_bytes).sum())
+    });
+    let (uris, uri_bytes) = PICTURE_URIS.with(|c| {
+        let c = c.borrow();
+        (c.len(), c.values().map(String::len).sum::<usize>())
+    });
+    let (pngs, png_bytes) = PNG_CACHE.with(|c| {
+        let c = c.borrow();
+        (c.len(), c.values().map(String::len).sum::<usize>())
+    });
+    (pictures, picture_bytes, uris + pngs, uri_bytes + png_bytes)
+}
+
 /// `text` on a flat `bg`, as a `data:` PNG for an `<img>` of `size` CSS
 /// pixels — rendered at the screen's scale, so it is as crisp as the
 /// document's own text. Drawn through the window's renderer; `None` before

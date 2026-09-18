@@ -3879,7 +3879,7 @@ impl ToolbarItem {
             ToolbarItem::Delete => "co.hyprlab.Vireo-user-trash-symbolic",
             ToolbarItem::Spam => "co.hyprlab.Vireo-mail-mark-junk-symbolic",
             ToolbarItem::ReadUnread => "co.hyprlab.Vireo-mail-unread-symbolic",
-            ToolbarItem::Tags => "co.hyprlab.Vireo-tag-symbolic",
+            ToolbarItem::Tags => "co.hyprlab.Vireo-tag-outline-symbolic",
             ToolbarItem::MoveTo => "co.hyprlab.Vireo-folder-symbolic",
             ToolbarItem::Find => "co.hyprlab.Vireo-loupe-with-arrow-symbolic",
             ToolbarItem::Print => "co.hyprlab.Vireo-printer-symbolic",

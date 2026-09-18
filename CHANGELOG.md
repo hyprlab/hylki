@@ -1,9 +1,48 @@
 # Changelog
 
-## 1.33.3-beta.1 — 2026-09-17
+## 1.33.4-beta.1 — 2026-09-18
 
-Catch-up release: the beta channel is brought level with stable 1.33.2. No
-changes of its own — see the 1.33.2 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.33.3. No
+changes of its own — see the 1.33.3 section below for what is in it.
+
+## 1.33.3 — 2026-09-18
+
+The exported log now says where the memory goes, and the tag icon is an
+outline.
+
+- **Memory section in the exported log.** Export log (Settings → System and
+  the notification centre) opens with a `== Memory ==` section, written for
+  the "Vireo is using N GB" report where the first question is always
+  whether it is the mail index, a session cache, WebKit or the graphics
+  driver. It lists the process tree as the kernel sees it (the app,
+  WebKit's web and network processes and the helpers, each with resident
+  size, proportional set size, heap and thread count, plus an honest total
+  that counts shared pages once); what the C allocator holds live versus
+  freed-but-held (`mallinfo2`); how much of that is Rust code (a counting
+  `#[global_allocator]` in `memory_report.rs`), how much is SQLite, and how
+  much is left to GTK, WebKit and the other libraries; the GTK renderer and
+  the graphics driver libraries loaded, flagged when a software Vulkan or GL
+  path is compiling shaders through LLVM inside the process; the mail index
+  by folder, unified slice, tag view and the list's own copies, as message
+  counts and bytes; and every session cache with its budget where it has
+  one and an "unbounded" marker where it does not (bodies, attachments,
+  conversations, undo, carried replies, sender checks, gallery thumbnails
+  and PDF pages, sender logos, contact photos, gravatars, account pictures,
+  rendered circles, console). Each cache module exposes a `cache_stats()`
+  for it; `RamCache` gained `len`/`bytes`/`budget`. Nothing in the section
+  is translated: it goes into the log file, which is English like every
+  other line in it. Measured on a VM with no GPU acceleration, this showed
+  the main process at 422 MB of live heap with 20 messages indexed, of
+  which Rust code held 2.8 MB and SQLite 3 MB: the rest was the software
+  rendering path, not mail.
+- **`VIREO_SHOWCASE_MEMORY=/path.txt`** writes that export there without the
+  file chooser, after `VIREO_SHOWCASE_MEMORY_AT` seconds (default 20) and
+  again every `VIREO_SHOWCASE_MEMORY_EVERY` seconds when set, on a real
+  mailbox as much as the demo, for watching a session grow.
+- **Tag icon: outline style.** The tag glyph in the reader toolbar, the Tags
+  submenus, the list rows, the sidebar and Settings is now the outline
+  `tag-outline-symbolic`; the filled icon is gone from the icon set and the
+  gresource.
 
 ## 1.33.2 — 2026-09-17
 

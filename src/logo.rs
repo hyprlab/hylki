@@ -61,6 +61,16 @@ thread_local! {
     static REFRESHED: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
+/// The session's logo cache: domains with a texture, their pixel bytes, and
+/// domains remembered as having none. For the memory section of an export.
+pub fn cache_stats() -> (usize, u64, usize) {
+    let (n, bytes) = CACHE.with(|c| {
+        let c = c.borrow();
+        (c.len(), c.values().map(crate::memory_report::texture_bytes).sum())
+    });
+    (n, bytes, MISSES.with(|m| m.borrow().len()))
+}
+
 /// How long a stored icon (or miss) is trusted before the domain is re-asked.
 const REFRESH_AFTER: std::time::Duration = std::time::Duration::from_secs(7 * 24 * 60 * 60);
 

@@ -71,6 +71,27 @@ fn key(email: &str) -> String {
     email.trim().to_lowercase()
 }
 
+/// The session's sender-face caches, for the memory section of an export:
+/// contact entries and the pixel bytes of their photos, then Gravatar
+/// entries (hits and misses alike) and the pixel bytes of the hits.
+pub fn cache_stats() -> (usize, u64, usize, u64) {
+    let (contacts, contact_bytes) = CONTACT_CACHE.with(|c| {
+        let c = c.borrow();
+        let bytes = c
+            .values()
+            .filter_map(|e| e.texture.as_ref())
+            .map(crate::memory_report::texture_bytes)
+            .sum();
+        (c.len(), bytes)
+    });
+    let (gravatars, gravatar_bytes) = GRAVATAR_CACHE.with(|c| {
+        let c = c.borrow();
+        let bytes = c.values().flatten().map(crate::memory_report::texture_bytes).sum();
+        (c.len(), bytes)
+    });
+    (contacts, contact_bytes, gravatars, gravatar_bytes)
+}
+
 /// One of the user's own mailboxes, as its account was set up in Accounts
 /// (#162): what its circle draws, in the order it is tried.
 #[derive(Debug, Clone, PartialEq, Eq)]

@@ -2,9 +2,15 @@
 
 Vireo is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.33.3-beta.1
+## What's new in 1.33.4-beta.1
 
-Catch-up release: the beta channel is level with stable 1.33.2. Everything below applies.
+Catch-up release: the beta channel is level with stable 1.33.3. Everything below applies.
+
+## What's new in 1.33.3
+
+**The exported log now reports memory use.** Export log, in Settings → System or from the notification centre, opens with a Memory section: how much each of Vireo's processes is using, how much of the main process is Vireo's own data as opposed to GTK, WebKit and the graphics driver, whether the graphics driver is rendering in software, and how large the mail index and each cache are. If Vireo looks large on your machine, that section says why, so please attach an exported log to any report about memory.
+
+**Tag icon.** The tag glyph in the reader toolbar, menus, list, sidebar and Settings is now an outline.
 
 ## What's new in 1.33.2
 

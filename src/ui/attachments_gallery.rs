@@ -1156,6 +1156,14 @@ impl Component for AttachmentsGallery {
 }
 
 impl AttachmentsGallery {
+    /// What the gallery holds in RAM, for the memory section of an export:
+    /// items listed, of which carrying their file bytes, and those bytes.
+    pub fn memory_stats(&self) -> (usize, usize, u64) {
+        let with_data = self.all_items.iter().filter(|i| i.data.is_some()).count();
+        let bytes = self.all_items.iter().filter_map(|i| i.data.as_ref()).map(|d| d.len() as u64).sum();
+        (self.all_items.len(), with_data, bytes)
+    }
+
     fn page(&self) -> &'static str {
         if self.loading && self.all_items.is_empty() {
             "loading"
@@ -1991,6 +1999,21 @@ thread_local! {
     /// (same key, much bigger pixels). Failures cache too.
     static PDF_PREVIEWS: std::cell::RefCell<std::collections::HashMap<u64, Option<gdk::Texture>>> =
         std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+/// The session's render caches, for the memory section of an export:
+/// thumbnails (entries, of which rendered, pixel bytes) then the lightbox
+/// PDF pages the same way.
+pub(crate) fn cache_stats() -> ((usize, usize, u64), (usize, usize, u64)) {
+    fn measure(c: &std::collections::HashMap<u64, Option<gdk::Texture>>) -> (usize, usize, u64) {
+        let rendered: Vec<&gdk::Texture> = c.values().flatten().collect();
+        let bytes = rendered.iter().map(|t| crate::memory_report::texture_bytes(t)).sum();
+        (c.len(), rendered.len(), bytes)
+    }
+    (
+        THUMB_CACHE.with(|c| measure(&c.borrow())),
+        PDF_PREVIEWS.with(|c| measure(&c.borrow())),
+    )
 }
 
 /// Whether a filename names a PDF (by extension).

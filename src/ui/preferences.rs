@@ -614,7 +614,7 @@ const SIDE_PAGES: &[(&str, &[SidePage])] = &[
         i18n_noop("Accounts"),
         &[
             SidePage { id: "accounts", title: i18n_noop("Mail Accounts"), icon: "co.hyprlab.Vireo-avatar-default-symbolic", accounts: true },
-            SidePage { id: "tags", title: i18n_noop("Tags"), icon: "co.hyprlab.Vireo-tag-symbolic", accounts: true },
+            SidePage { id: "tags", title: i18n_noop("Tags"), icon: "co.hyprlab.Vireo-tag-outline-symbolic", accounts: true },
             SidePage { id: "filters", title: i18n_noop("Filters"), icon: "co.hyprlab.Vireo-filter-folder-symbolic", accounts: true },
             SidePage { id: "senders", title: i18n_noop("Senders"), icon: "co.hyprlab.Vireo-contact-new-symbolic", accounts: true },
             SidePage { id: "openpgp", title: i18n_noop("OpenPGP"), icon: "co.hyprlab.Vireo-channel-secure-symbolic", accounts: false },

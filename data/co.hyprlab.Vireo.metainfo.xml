@@ -56,6 +56,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.33.3" date="2026-09-18">
+      <description>
+        <p>The exported log now opens with a Memory section that says how much each process uses and how much of it is Vireo's own data, WebKit or the graphics driver. The tag icon is now an outline.</p>
+      </description>
+    </release>
     <release version="1.33.2" date="2026-09-17">
       <description>
         <p>With more than one account, the message list could sit on "Loading more..." forever when one account could not answer. An account that cannot be reached now stops the spinner instead of pinning it over everyone's mail.</p>

@@ -47,6 +47,21 @@ impl<V: Weigh> RamCache<V> {
         RamCache { map: HashMap::new(), order: VecDeque::new(), bytes: 0, budget }
     }
 
+    /// How many entries are held.
+    pub fn len(&self) -> usize {
+        self.map.len()
+    }
+
+    /// What the entries weigh together, in bytes.
+    pub fn bytes(&self) -> usize {
+        self.bytes
+    }
+
+    /// The byte budget eviction keeps the cache under.
+    pub fn budget(&self) -> usize {
+        self.budget
+    }
+
     pub fn get(&self, key: &(u32, u32)) -> Option<&V> {
         self.map.get(key)
     }

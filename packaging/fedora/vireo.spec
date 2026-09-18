@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           vireo
-Version:        1.33.1
+Version:        1.33.2
 Release:        1%{?dist}
 Summary:        A clean, fast GNOME-native email client
 License:        AGPL-3.0-or-later

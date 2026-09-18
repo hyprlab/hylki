@@ -1420,6 +1420,10 @@ pub enum AppMsg {
     ExportSettings,
     /// Save the console's log to a file for a bug report (#132).
     ExportLog,
+    /// Write the exported log straight to `path`, no chooser: the
+    /// VIREO_SHOWCASE_MEMORY hook, for reading the memory section of a
+    /// running instance.
+    ExportLogTo(std::path::PathBuf),
     ImportSettings,
     /// The filter rules changed in Settings (#47).
     SetFilters(Vec<config::FilterRule>),
@@ -2641,7 +2645,7 @@ impl SimpleComponent for AppModel {
                 b
             },
             reader_tag_btn: {
-                let b = gtk::Button::from_icon_name("co.hyprlab.Vireo-tag-symbolic");
+                let b = gtk::Button::from_icon_name("co.hyprlab.Vireo-tag-outline-symbolic");
                 b.set_tooltip_text(Some(i18n("Tags").as_str()));
                 b.add_css_class("flat");
                 b
@@ -3681,6 +3685,28 @@ impl SimpleComponent for AppModel {
         // the demo the way the marketing shots want it — first row (the demo
         // conversation, expanded via the threads_expanded preference) selected,
         // one mid-thread card highlighted — then render the window to a PNG.
+        // VIREO_SHOWCASE_MEMORY=/path.txt writes the exported log (memory
+        // section included) there after VIREO_SHOWCASE_MEMORY_AT seconds
+        // (default 20), on a real mailbox as much as the demo: a memory
+        // reading is only worth having once the index has loaded. With
+        // VIREO_SHOWCASE_MEMORY_EVERY=N it is rewritten every N seconds
+        // after that, for watching a session grow.
+        if let Some(path) = std::env::var_os("VIREO_SHOWCASE_MEMORY") {
+            let secs = |name: &str| std::env::var(name).ok().and_then(|v| v.parse::<u32>().ok());
+            let at = secs("VIREO_SHOWCASE_MEMORY_AT").unwrap_or(20);
+            let every = secs("VIREO_SHOWCASE_MEMORY_EVERY").filter(|n| *n > 0);
+            let s = sender.clone();
+            let path = std::path::PathBuf::from(path);
+            gtk::glib::timeout_add_seconds_local_once(at, move || {
+                s.input(AppMsg::ExportLogTo(path.clone()));
+                if let Some(every) = every {
+                    gtk::glib::timeout_add_seconds_local(every, move || {
+                        s.input(AppMsg::ExportLogTo(path.clone()));
+                        gtk::glib::ControlFlow::Continue
+                    });
+                }
+            });
+        }
         // Timers leave room for the WebViews to load and settle between steps.
         if demo_mode() {
             if let Some(shot) = std::env::var("VIREO_SHOWCASE").ok() {
@@ -7684,10 +7710,13 @@ impl SimpleComponent for AppModel {
                     .build();
                 let win = self.window.clone();
                 let notif = self.notifications.sender().clone();
+                // Measured now, while the model is at hand: the chooser's
+                // callback runs later, without it.
+                let memory = self.memory_report();
                 dialog.save(Some(&win), gtk::gio::Cancellable::NONE, move |res| {
                     let Ok(file) = res else { return };
                     let Some(path) = file.path() else { return };
-                    let outcome = std::fs::write(&path, crate::console_log::export_text())
+                    let outcome = std::fs::write(&path, crate::console_log::export_text(&memory))
                         .map_err(|e| e.to_string());
                     let _ = notif.send(match outcome {
                         Ok(()) => NotifyInput::Push {
@@ -7702,6 +7731,14 @@ impl SimpleComponent for AppModel {
                         },
                     });
                 });
+            }
+
+            AppMsg::ExportLogTo(path) => {
+                let text = crate::console_log::export_text(&self.memory_report());
+                match std::fs::write(&path, text) {
+                    Ok(()) => tracing::info!("log exported to {}", path.display()),
+                    Err(e) => tracing::warn!("log export to {} failed: {e}", path.display()),
+                }
             }
 
             AppMsg::ImportSettings => {
@@ -8921,6 +8958,167 @@ const THREAD_LINK_LIMIT: usize = 20_000;
 
 
 impl AppModel {
+    /// The memory section of an exported log: the process tree as the
+    /// kernel sees it, then what the main process is holding — the mail
+    /// index (whose size follows the mailbox, not the session) apart from the
+    /// session caches (which follow use). Written so a "Vireo is using N GB"
+    /// report answers itself: a big index on a big mailbox is the accepted
+    /// cost of keeping everything in RAM; a big cache is something to fix.
+    fn memory_report(&self) -> String {
+        use crate::memory_report::{human_bytes, human_count, messages_bytes};
+        let count = |(n, b): (usize, usize)| format!("{} messages, {}", human_count(n), human_bytes(b as u64));
+        let mut out = String::new();
+        out.push_str("== Memory ==\n");
+        if let Some(up) = crate::memory_report::uptime() {
+            out.push_str(&format!("Running for {}\n", crate::memory_report::human_duration(up)));
+        }
+        out.push_str("Processes:\n");
+        for line in crate::memory_report::process_lines() {
+            out.push_str(&line);
+            out.push('\n');
+        }
+        let (rust_live, rust_peak) = crate::memory_report::rust_heap();
+        let (sql_live, sql_peak) = crate::memory_report::sqlite_heap();
+        out.push_str(&format!(
+            "  of which Rust code holds {} (peak {}); SQLite holds {} (peak {}); the rest is GTK, WebKit, the graphics driver and other libraries\n",
+            human_bytes(rust_live as u64),
+            human_bytes(rust_peak as u64),
+            human_bytes(sql_live),
+            human_bytes(sql_peak)
+        ));
+        // What GTK draws with. A software renderer path (lavapipe, llvmpipe)
+        // runs LLVM inside this process: hundreds of megabytes of heap on a
+        // VM or a machine whose GPU driver GTK could not use.
+        let renderer = gtk::prelude::NativeExt::renderer(&self.window)
+            .map(|r| r.type_().name().to_string())
+            .unwrap_or_else(|| "none yet".to_string());
+        let libs = crate::memory_report::graphics_libraries();
+        let software = libs.iter().any(|l| {
+            l.starts_with("libvulkan_lvp") || l.starts_with("libLLVM") || l.contains("swrast")
+        });
+        out.push_str(&format!(
+            "Graphics: {renderer}; driver libraries: {}{}\n",
+            if libs.is_empty() { "none loaded".to_string() } else { libs.join(", ") },
+            if software { " (SOFTWARE rendering: shaders compile through LLVM in this process)" } else { "" }
+        ));
+
+        out.push_str("Mail index (follows the mailbox size, kept in RAM by design):\n");
+        let folders = self.message_cache.len();
+        let index = messages_bytes(self.message_cache.values().flatten());
+        out.push_str(&format!(
+            "  {} accounts, {} folders indexed: {}\n",
+            self.accounts.len(),
+            human_count(folders),
+            count(index)
+        ));
+        let unified = messages_bytes(self.unified_slices.values().flatten());
+        out.push_str(&format!(
+            "  unified slices ({} folders): {}\n",
+            human_count(self.unified_slices.len()),
+            count(unified)
+        ));
+        let tags = messages_bytes(self.tag_view_cache.values().flatten());
+        out.push_str(&format!(
+            "  tag views ({}): {}\n",
+            human_count(self.tag_view_cache.len()),
+            count(tags)
+        ));
+        let [all, shown, pool] = self.message_list.model().memory_stats();
+        out.push_str(&format!(
+            "  list: folder {}; rows {}; search pool {}\n",
+            count(all),
+            count(shown),
+            count(pool)
+        ));
+
+        out.push_str("Session caches (follow use; each is bounded unless noted):\n");
+        out.push_str(&format!(
+            "  bodies: {} entries, {} of {} budget\n",
+            human_count(self.body_cache.len()),
+            human_bytes(self.body_cache.bytes() as u64),
+            human_bytes(self.body_cache.budget() as u64)
+        ));
+        out.push_str(&format!(
+            "  attachments: {} entries, {} of {} budget\n",
+            human_count(self.attachment_cache.len()),
+            human_bytes(self.attachment_cache.bytes() as u64),
+            human_bytes(self.attachment_cache.budget() as u64)
+        ));
+        let threads = messages_bytes(self.thread_cache.values().flatten());
+        out.push_str(&format!(
+            "  conversations: {} of {} kept, {}; open conversation {}\n",
+            self.thread_cache.len(),
+            Self::THREAD_CACHE_MAX,
+            count(threads),
+            count(messages_bytes(&self.current_thread))
+        ));
+        let undo = messages_bytes(self.undo_stack.iter().chain(&self.redo_stack).flat_map(|e| &e.rows));
+        out.push_str(&format!(
+            "  undo/redo: {} entries, {}\n",
+            human_count(self.undo_stack.len() + self.redo_stack.len()),
+            count(undo)
+        ));
+        let carried = messages_bytes(self.carried_threads.values().flatten());
+        let carried_bodies: usize = self.carried_bodies.values().map(String::len).sum();
+        out.push_str(&format!(
+            "  carried replies: {} threads ({}), {} bodies ({}) (unbounded)\n",
+            human_count(self.carried_threads.len()),
+            count(carried),
+            human_count(self.carried_bodies.len()),
+            human_bytes(carried_bodies as u64)
+        ));
+        out.push_str(&format!(
+            "  sender checks: {} (unbounded); pop-outs: {}\n",
+            human_count(self.sender_cache.len()),
+            self.popouts.len()
+        ));
+        let (items, with_data, data_bytes) = self.gallery.model().memory_stats();
+        let ((thumbs, thumbs_rendered, thumb_bytes), (pdfs, pdfs_rendered, pdf_bytes)) =
+            crate::ui::attachments_gallery::cache_stats();
+        out.push_str(&format!(
+            "  gallery: {} items listed, {} with file bytes ({}); thumbnails {} ({} rendered, {} of pixels), PDF pages {} ({} rendered, {} of pixels) (unbounded)\n",
+            human_count(items),
+            human_count(with_data),
+            human_bytes(data_bytes),
+            human_count(thumbs),
+            human_count(thumbs_rendered),
+            human_bytes(thumb_bytes),
+            human_count(pdfs),
+            human_count(pdfs_rendered),
+            human_bytes(pdf_bytes)
+        ));
+        let (logos, logo_bytes, logo_misses) = crate::logo::cache_stats();
+        out.push_str(&format!(
+            "  sender logos: {} ({} of pixels), {} domains without (unbounded)\n",
+            human_count(logos),
+            human_bytes(logo_bytes),
+            human_count(logo_misses)
+        ));
+        let (contacts, contact_bytes, gravatars, gravatar_bytes) = crate::avatar::cache_stats();
+        out.push_str(&format!(
+            "  contact photos: {} ({} of pixels); gravatars: {} ({} of pixels) (unbounded)\n",
+            human_count(contacts),
+            human_bytes(contact_bytes),
+            human_count(gravatars),
+            human_bytes(gravatar_bytes)
+        ));
+        let (pictures, picture_bytes, circles, circle_bytes) = crate::ui::initials::cache_stats();
+        out.push_str(&format!(
+            "  account pictures: {} ({} of pixels); rendered circles: {} ({}) (unbounded)\n",
+            human_count(pictures),
+            human_bytes(picture_bytes),
+            human_count(circles),
+            human_bytes(circle_bytes as u64)
+        ));
+        let (lines, line_bytes) = crate::console_log::stats();
+        out.push_str(&format!(
+            "  console: {} lines, {}\n",
+            human_count(lines),
+            human_bytes(line_bytes as u64)
+        ));
+        out
+    }
+
     /// Push the date and clock preference into the formatter and redraw whatever
     /// shows a date: every row carries one, as does the open message.
     fn apply_date_style(&self) {
@@ -10988,7 +11186,7 @@ impl AppModel {
                     T::Tags => {
                         if let Some(entries) = self.reader_tag_entries(sender) {
                             section.push(
-                                MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("co.hyprlab.Vireo-tag-symbolic"),
+                                MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("co.hyprlab.Vireo-tag-outline-symbolic"),
                             );
                         }
                     }
@@ -11368,7 +11566,7 @@ impl AppModel {
                     });
                 });
             sections.push(vec![
-                MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("co.hyprlab.Vireo-tag-symbolic"),
+                MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("co.hyprlab.Vireo-tag-outline-symbolic"),
             ]);
         }
         let mut acts = Vec::new();

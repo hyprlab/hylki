@@ -101,7 +101,7 @@ fn row_icon(row: UnifiedRow) -> &'static str {
     match row {
         UnifiedRow::Kind(kind) => kind.icon(),
         UnifiedRow::Filtered => "co.hyprlab.Vireo-filter-folder-symbolic",
-        UnifiedRow::Tags => "co.hyprlab.Vireo-tag-symbolic",
+        UnifiedRow::Tags => "co.hyprlab.Vireo-tag-outline-symbolic",
     }
 }
 
@@ -3316,7 +3316,7 @@ impl Sidebar {
         let hb = gtk::Box::new(gtk::Orientation::Horizontal, 8);
         hb.add_css_class("folder-row");
         if self.collapsed {
-            let icon = gtk::Image::from_icon_name("co.hyprlab.Vireo-tag-symbolic");
+            let icon = gtk::Image::from_icon_name("co.hyprlab.Vireo-tag-outline-symbolic");
             pin_icon_size(&icon);
             hb.set_halign(gtk::Align::Center);
             hb.append(&icon);
