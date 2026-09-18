@@ -152,6 +152,7 @@ relm4::new_action_group!(WindowActionGroup, "win");
 relm4::new_stateless_action!(AccountsAction, WindowActionGroup, "accounts");
 relm4::new_stateless_action!(PreferencesAction, WindowActionGroup, "preferences");
 relm4::new_stateless_action!(AboutAction, WindowActionGroup, "about");
+relm4::new_stateless_action!(RenameNoticeAction, WindowActionGroup, "rename-notice");
 relm4::new_stateless_action!(ShortcutsAction, WindowActionGroup, "shortcuts");
 relm4::new_stateless_action!(PrintAction, WindowActionGroup, "print");
 relm4::new_stateless_action!(PrintPreviewAction, WindowActionGroup, "print-preview");
@@ -1391,6 +1392,9 @@ pub enum AppMsg {
     /// Show the keyring / Secret Service setup help. `problem: true` when a save
     /// actually failed to persist; `false` for the proactive one-time tip.
     ShowKeyringHelp { problem: bool },
+    /// Open the notice that Vireo has become Hylki (`startup`: offered
+    /// "Remind Me Later" / "Don't Show Again" rather than a plain Close).
+    ShowRenameNotice { startup: bool },
     AccountRemoved { email: String },
     AccountEnabledChanged { email: String, enabled: bool },
     ImportGoaAccount(Box<AccountConfig>),
@@ -3481,6 +3485,10 @@ impl SimpleComponent for AppModel {
         group.add_action(RelmAction::<AboutAction>::new_stateless(move |_| {
             about_sender.input(AppMsg::OpenAbout);
         }));
+        let rename_sender = sender.clone();
+        group.add_action(RelmAction::<RenameNoticeAction>::new_stateless(move |_| {
+            rename_sender.input(AppMsg::ShowRenameNotice { startup: false });
+        }));
         let shortcuts_sender = sender.clone();
         group.add_action(RelmAction::<ShortcutsAction>::new_stateless(move |_| {
             shortcuts_sender.input(AppMsg::ShowShortcuts);
@@ -3628,6 +3636,12 @@ impl SimpleComponent for AppModel {
             && !config::mint_keyring_help_dismissed()
         {
             sender.input(AppMsg::ShowKeyringHelp { problem: false });
+        }
+
+        // 1.34.0 is the last Vireo release: say so at every start until the
+        // user asks not to, or until Hylki is on the machine.
+        if crate::ui::rename_notice::due_at_startup() {
+            sender.input(AppMsg::ShowRenameNotice { startup: true });
         }
 
         model.lightbox_picture = Some(widgets.lightbox_picture.clone());
@@ -7329,6 +7343,9 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::ShowKeyringHelp { problem } => self.show_keyring_help(problem),
+            AppMsg::ShowRenameNotice { startup } => {
+                crate::ui::rename_notice::show(&self.window, startup);
+            }
 
             AppMsg::AccountEnabledChanged { email, enabled } => {
                 if let Some(slot) = self.config.iter_mut().find(|c| c.email == email) {
@@ -9156,6 +9173,7 @@ impl AppModel {
             self.help_menu.append(Some(i18n("Console").as_str()), Some("win.console"));
         }
         self.help_menu.append(Some(i18n("Keyboard Shortcuts").as_str()), Some("win.shortcuts"));
+        self.help_menu.append(Some(i18n("Vireo Is Now Hylki…").as_str()), Some("win.rename-notice"));
         self.help_menu
             .append(Some(format!("{} {}", i18n("About"), crate::APP_NAME).as_str()), Some("win.about"));
     }
@@ -15175,6 +15193,19 @@ impl AppModel {
         info.add_css_class("boxed-list");
         info.set_selection_mode(gtk::SelectionMode::None);
         info.set_margin_top(20);
+
+        // The last Vireo release: where updates continue.
+        let rename_row = adw::ActionRow::builder()
+            .title(&i18n("Vireo is now Hylki"))
+            .subtitle(&i18n("This is the last Vireo release. Updates continue as Hylki."))
+            .activatable(true)
+            .build();
+        rename_row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Vireo-go-next-symbolic"));
+        {
+            let win = win.clone();
+            rename_row.connect_activated(move |_| crate::ui::rename_notice::show(&win, false));
+        }
+        info.append(&rename_row);
 
         let notes_row = adw::ActionRow::builder()
             .title(&i18n("Release Notes"))

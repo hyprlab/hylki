@@ -2,6 +2,14 @@
 
 Vireo is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.34.0
+
+**Vireo is now Hylki.** This is the last release under the Vireo name. Updates continue as Hylki, which installs alongside Vireo, and its first start carries your accounts, settings and cached mail across: nothing in Vireo is changed or removed, and there is nothing to set up again. Once Hylki is running, you can uninstall Vireo.
+
+A notice opens at every start with the website and the install command until you choose "Don't Show Again"; it stops opening by itself once Hylki is installed. You can reopen it any time from the main menu ("Vireo Is Now Hylki…") or the About window.
+
+Install Hylki: `flatpak install --from https://hylki.hyprlab.co/flatpak/co.hyprlab.Hylki.flatpakref`, or visit [hylki.hyprlab.co](https://hylki.hyprlab.co).
+
 ## What's new in 1.33.4
 
 **A background loop that could hold Vireo at several gigabytes is fixed.** When the newest messages in a folder included one the background attachment prefetch could not finish, an OpenPGP message in particular, Vireo downloaded that message again and again, several times a second, re-listing the folder each time. Memory climbed for as long as the message stayed near the top of the folder. Each message is now tried once per session. If Vireo has been large on your machine, this is the likely reason, and an exported log after updating will say so either way.

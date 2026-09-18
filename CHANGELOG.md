@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.34.0 — 2026-09-XX
+
+The last release under the Vireo name.
+
+- **Vireo is now Hylki.** Updates continue as Hylki (app ID
+  `co.hyprlab.Hylki`), a separate install whose first start carries this
+  install's accounts, settings and cached mail across; nothing in Vireo is
+  changed or removed. A notice opens at every start with the site and the
+  install command (Flatpak, beta and native package each get their own)
+  until "Don't Show Again", and stops opening by itself once Hylki is
+  installed. It stays reachable from the main menu ("Vireo Is Now Hylki…")
+  and the About window.
+- The Memory section of an exported log no longer reports software
+  rendering when lavapipe sits beside a hardware driver.
+
 ## 1.33.4 — 2026-09-18
 
 A background loop that could hold a mailbox at several gigabytes, the

@@ -19,6 +19,7 @@ pub mod notifications;
 pub mod pgp_keys;
 pub mod preferences;
 pub mod print_preview;
+pub mod rename_notice;
 pub mod rich_editor;
 pub mod sidebar;
 pub mod theme_picker;
