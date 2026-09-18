@@ -10,6 +10,9 @@ A notice opens at every start with the website and the install command until you
 
 Install Hylki: `flatpak install --from https://hylki.hyprlab.co/flatpak/co.hyprlab.Hylki.flatpakref`, or visit [hylki.hyprlab.co](https://hylki.hyprlab.co).
 
+**Memory that was freed is now given back to the system** (#221). A user's log showed the app at over 2 GB with only 270 MB actually in use. The allocator is tuned at startup, held memory is returned every 30 seconds when there is enough of it, the attachment gallery's thumbnail and PDF caches are bounded, and a preview retry no longer re-fetches the same rows on every sync.
+
+
 ## What's new in 1.33.4
 
 **A background loop that could hold Vireo at several gigabytes is fixed.** When the newest messages in a folder included one the background attachment prefetch could not finish, an OpenPGP message in particular, Vireo downloaded that message again and again, several times a second, re-listing the folder each time. Memory climbed for as long as the message stayed near the top of the folder. Each message is now tried once per session. If Vireo has been large on your machine, this is the likely reason, and an exported log after updating will say so either way.

@@ -12,6 +12,13 @@ The last release under the Vireo name.
   until "Don't Show Again", and stops opening by itself once Hylki is
   installed. It stays reachable from the main menu ("Vireo Is Now Hylki…")
   and the About window.
+- **Freed memory goes back to the system.** A log from 1.33.4 showed the
+  process at 2.17 GB with 270 MB in use: the rest had been freed but the
+  allocator held on to it. The allocator is now tuned before the first
+  allocation, an idle timer returns held memory every 30 seconds when there
+  is enough of it, the gallery's thumbnail and PDF caches are bounded, and a
+  preview retry remembers its answer instead of re-fetching the same rows on
+  every sync (#221).
 - The Memory section of an exported log no longer reports software
   rendering when lavapipe sits beside a hardware driver.
 
