@@ -85,16 +85,92 @@ impl MockBackend {
             folder(28, 3, "Orders", FolderKind::Custom, 1),
         ];
 
+        let mut messages = sample_messages();
+        // HYLKI_DEMO_SENT_THREAD=1: file the demo's own replies where a real
+        // client keeps them — in Sent — instead of beside the mail they answer.
+        // The sample thread is written entirely into the Inbox, which is tidy
+        // but is exactly the case #222 is about: the list can only count its
+        // own folder, so a conversation the user has answered wears a badge
+        // short by every reply they sent. With this on, the "Reader redesign"
+        // thread is 3 rows in the Inbox and 5 messages, which is what the chip
+        // should say.
+        if std::env::var("HYLKI_DEMO_SENT_THREAD").is_ok_and(|v| v == "1") {
+            const SENT: u32 = 3;
+            const ME: &str = "jason@hylki.hyprlab.co";
+            // Real mail carries the whole ancestry in References; the sample
+            // specs carry only the immediate parent (which is why the cache has
+            // a `refs_repair` pass at all). Thicken them first, or moving a
+            // reply out of the Inbox would cut the chain at that message and
+            // split one conversation into two rows — an artefact of the demo
+            // data, not of where the message is filed.
+            let parent: std::collections::HashMap<String, String> = messages
+                .iter()
+                .filter(|m| !m.message_id.is_empty() && !m.references.is_empty())
+                .map(|m| (m.message_id.clone(), m.references.clone()))
+                .collect();
+            for m in messages.iter_mut() {
+                let mut chain: Vec<String> = Vec::new();
+                let mut next = m.references.clone();
+                while !next.is_empty() && !chain.contains(&next) {
+                    chain.push(next.clone());
+                    next = parent.get(&next).cloned().unwrap_or_default();
+                }
+                chain.reverse();
+                m.references = chain.join(" ");
+            }
+            for m in messages.iter_mut() {
+                if m.account_id == 1 && m.folder_id == 1 && m.from_addr == ME {
+                    m.folder_id = SENT;
+                }
+            }
+        }
+
         Self {
             accounts,
             folders,
-            messages: sample_messages(),
+            messages,
         }
     }
 
     /// Look up a message by id across all folders (for body/source requests).
     pub fn message(&self, id: u32) -> Option<Message> {
         self.messages.iter().find(|m| m.id == id).cloned()
+    }
+
+    /// The demo's answer to the cache's `thread_counts` (#222): how big each
+    /// conversation is across the account's folders, so a thread row in the
+    /// demo wears the same badge it would against a real mailbox.
+    pub fn thread_counts(
+        &self,
+        account_id: u32,
+        groups: &[(String, Vec<String>)],
+    ) -> Vec<(String, usize)> {
+        use std::collections::HashSet;
+        let hidden: HashSet<u32> = self
+            .folders
+            .iter()
+            .filter(|f| f.account_id == account_id)
+            .filter(|f| matches!(f.kind, FolderKind::Trash | FolderKind::Junk))
+            .map(|f| f.id)
+            .collect();
+        groups
+            .iter()
+            .filter_map(|(tag, ids)| {
+                let want: HashSet<&str> = ids.iter().map(|s| s.as_str()).collect();
+                let mut seen: HashSet<&str> = HashSet::new();
+                for m in &self.messages {
+                    if m.account_id != account_id || hidden.contains(&m.folder_id) {
+                        continue;
+                    }
+                    let hit = want.contains(m.message_id.as_str())
+                        || m.references.split_whitespace().any(|r| want.contains(r));
+                    if hit && !m.message_id.is_empty() {
+                        seen.insert(m.message_id.as_str());
+                    }
+                }
+                (!seen.is_empty()).then(|| (tag.clone(), seen.len()))
+            })
+            .collect()
     }
 }
 

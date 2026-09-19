@@ -1,9 +1,27 @@
 # Changelog
 
-## 1.35.2-beta.1 — 2026-09-18
+## 1.35.3-beta.1 — 2026-09-18
 
-Catch-up release: the beta channel is brought level with stable 1.35.1. No
-changes of its own — see the 1.35.1 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.35.2. No
+changes of its own — see the 1.35.2 section below for what is in it.
+
+## 1.35.2 — 2026-09-18
+
+A conversation's message count now counts the whole conversation, not just
+the part filed in the folder you are looking at.
+
+- **The number on a conversation counts every message in it** (#222). The
+  chip on a thread row only ever counted the messages in the folder being
+  shown, so any conversation you had answered was short by exactly the
+  replies you sent. The count is now taken across the account's folders, so
+  it matches what the reader shows when the row is opened: replies from
+  Sent included, Trash and Junk left out, and a message filed under several
+  Gmail labels counted once rather than once per label. A conversation
+  whose other messages all live elsewhere now shows a count where it showed
+  none before; that chip has no caret, because there is nothing in this
+  folder to expand. The lookup runs on the account's own worker and never
+  touches the network, so the counts settle a moment after the list paints.
+  Reported by @p-mitana.
 
 ## 1.35.1 — 2026-09-18
 

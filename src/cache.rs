@@ -200,6 +200,18 @@ const THREAD_ID_LIMIT: usize = 24;
 /// inlined, so this bounds both the fetching and the rendering.
 const THREAD_MEMBER_LIMIT: usize = 100;
 
+/// Most Message-IDs one *batched* conversation count matches against, across
+/// every thread on the page put together (#222). The references half of the
+/// query is a scan, and batching exists precisely so a page of threads costs
+/// one scan instead of fifty — but a page of long mailing-list threads would
+/// otherwise put thousands of `instr` calls on every row, so the union is
+/// capped. Threads past the cap keep their folder-local count.
+const THREAD_COUNT_ID_LIMIT: usize = 256;
+
+/// Most rows one batched conversation count inspects. Counting is per-thread,
+/// so this is the whole page's budget, not one thread's.
+const THREAD_COUNT_ROW_LIMIT: i64 = 5_000;
+
 /// (Adding a *new* table needs no bump: `SCHEMA` runs `CREATE TABLE IF NOT
 /// EXISTS` on every open, so an existing cache gains it in place. A bump is for
 /// changing or invalidating what is already stored — it costs users a re-render
@@ -867,6 +879,164 @@ impl Cache {
             tracing::warn!("cache messages_by_thread_ids failed: {e}");
             Vec::new()
         })
+    }
+
+    /// How many messages each of `groups` really holds, counting the members
+    /// that live in the account's *other* folders (#222).
+    ///
+    /// The list can only count what it lists: a thread sitting in the Inbox
+    /// shows a badge of 2 when the conversation is 2 inbox messages and the
+    /// three replies you sent, because Sent is a different folder and often
+    /// isn't even loaded. [`messages_by_thread_ids`] is what the reader uses to
+    /// fill that gap when a conversation is *opened*; this answers the same
+    /// question for a whole page of threads at once, without hydrating a single
+    /// `Message`.
+    ///
+    /// Each group is `(tag, ids)` — an opaque tag echoed back, and the
+    /// Message-IDs its known members are threaded by. The answer holds one
+    /// entry per group that matched anything, and counts *distinct mail*: a
+    /// Gmail conversation filed under All Mail and a label is one message, not
+    /// two, the same trap `dedupe_label_copies` exists for. It dedupes on the
+    /// Message-ID alone where the reader also compares sender and time, so two
+    /// different mails sharing an id would be counted once and shown twice —
+    /// malformed, vanishingly rare, and erring low is the safe direction here
+    /// (the row never shows fewer than the messages under it). Trash and Junk
+    /// are left out, as they are for the reader.
+    pub fn thread_counts(
+        &self,
+        account_id: u32,
+        groups: &[(String, Vec<String>)],
+    ) -> Vec<(String, usize)> {
+        use std::collections::{HashMap, HashSet};
+
+        // The union of every group's ids, deduped and capped: one scan for the
+        // page. A group whose ids all fall past the cap simply gets no answer,
+        // and the row keeps the count the list worked out for itself.
+        let mut seen: HashSet<&str> = HashSet::new();
+        let mut ids: Vec<&String> = Vec::new();
+        for (_, group) in groups {
+            for id in group {
+                if id.is_empty() || !seen.insert(id.as_str()) {
+                    continue;
+                }
+                ids.push(id);
+                if ids.len() == THREAD_COUNT_ID_LIMIT {
+                    break;
+                }
+            }
+            if ids.len() == THREAD_COUNT_ID_LIMIT {
+                break;
+            }
+        }
+        if ids.is_empty() || groups.is_empty() {
+            return Vec::new();
+        }
+
+        // Same matching as `messages_by_thread_ids`: the id itself, or the id
+        // as a whole token inside someone's References. See that function for
+        // why the padded copies are bound where they are.
+        let slots = |offset: usize| -> String {
+            (0..ids.len()).map(|i| format!("?{}", offset + i + 1)).collect::<Vec<_>>().join(", ")
+        };
+        let refs_match = (0..ids.len())
+            .map(|i| format!("instr(' ' || references_ || ' ', ?{}) > 0", ids.len() + i + 1))
+            .collect::<Vec<_>>()
+            .join(" OR ");
+        let sql = format!(
+            "SELECT folder_path, message_id, references_ \
+             FROM messages \
+             WHERE account_id = ?{account} AND (message_id IN ({in_list}) OR {refs_match}) \
+             ORDER BY ts DESC LIMIT ?{limit}",
+            account = ids.len() * 2 + 1,
+            limit = ids.len() * 2 + 2,
+            in_list = slots(0),
+            refs_match = refs_match,
+        );
+
+        let run = || -> rusqlite::Result<Vec<(String, String, String)>> {
+            let mut stmt = self.conn.prepare(&sql)?;
+            let padded: Vec<String> = ids.iter().map(|i| format!(" {i} ")).collect();
+            let mut binds: Vec<&dyn rusqlite::ToSql> = Vec::new();
+            for i in &ids {
+                binds.push(*i as &dyn rusqlite::ToSql);
+            }
+            for p in &padded {
+                binds.push(p as &dyn rusqlite::ToSql);
+            }
+            binds.push(&account_id as &dyn rusqlite::ToSql);
+            binds.push(&THREAD_COUNT_ROW_LIMIT as &dyn rusqlite::ToSql);
+            let rows = stmt.query_map(binds.as_slice(), |row| {
+                Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?, row.get::<_, String>(2)?))
+            })?;
+            rows.collect()
+        };
+        let rows = run().unwrap_or_else(|e| {
+            tracing::warn!("cache thread_counts failed: {e}");
+            Vec::new()
+        });
+        if rows.is_empty() {
+            return Vec::new();
+        }
+
+        // A conversation the reader won't show isn't one the badge should
+        // promise: deleted and spam copies are dropped here as they are in
+        // `related_from_cache`.
+        let hidden: HashSet<String> = self
+            .load_folders(account_id)
+            .into_iter()
+            .filter(|f| matches!(f.kind, FolderKind::Trash | FolderKind::Junk))
+            .map(|f| f.path)
+            .collect();
+
+        // Which groups an id belongs to, so each row is placed by lookup
+        // rather than by walking every group.
+        let mut owners: HashMap<&str, Vec<usize>> = HashMap::new();
+        for (gi, (_, group)) in groups.iter().enumerate() {
+            for id in group {
+                if !id.is_empty() {
+                    owners.entry(id.as_str()).or_default().push(gi);
+                }
+            }
+        }
+
+        // Distinct mail per group. A message with no Message-ID can't be told
+        // apart from another one, so it is counted where it sits.
+        let mut named: Vec<HashSet<&str>> = vec![HashSet::new(); groups.len()];
+        let mut anonymous: Vec<usize> = vec![0; groups.len()];
+        for (path, message_id, references) in &rows {
+            if hidden.contains(path) {
+                continue;
+            }
+            let mut place = |gi: usize| {
+                if message_id.is_empty() {
+                    anonymous[gi] += 1;
+                } else {
+                    named[gi].insert(message_id.as_str());
+                }
+            };
+            let mut placed: HashSet<usize> = HashSet::new();
+            for gi in owners.get(message_id.as_str()).into_iter().flatten() {
+                if placed.insert(*gi) {
+                    place(*gi);
+                }
+            }
+            for r in references.split_whitespace() {
+                for gi in owners.get(r).into_iter().flatten() {
+                    if placed.insert(*gi) {
+                        place(*gi);
+                    }
+                }
+            }
+        }
+
+        groups
+            .iter()
+            .enumerate()
+            .filter_map(|(gi, (tag, _))| {
+                let n = named[gi].len() + anonymous[gi];
+                (n > 0).then(|| (tag.clone(), n))
+            })
+            .collect()
     }
 
     /// The next chunk of *replies* whose threading references are still the
@@ -2364,6 +2534,103 @@ mod tests {
         let found = c.messages_by_thread_ids(1, &["root@x".to_string()]);
         let ids: Vec<&str> = found.iter().map(|(_, m)| m.message_id.as_str()).collect();
         assert_eq!(ids, vec!["reply@x", "root@x"], "only the real conversation");
+    }
+
+    /// The badge on a thread row said how much of the conversation this folder
+    /// holds, which for anything you have answered is the wrong number: the
+    /// replies are in Sent (#222).
+    #[test]
+    fn a_conversation_is_counted_across_folders() {
+        let c = Cache::in_memory().unwrap();
+        add_folder(&c, "INBOX", FolderKind::Inbox);
+        add_folder(&c, "Sent", FolderKind::Sent);
+        add_threaded(&c, "INBOX", 1, 500, "root@x", "");
+        add_threaded(&c, "Sent", 2, 600, "mine@x", "root@x");
+        add_threaded(&c, "Sent", 3, 700, "mine2@x", "root@x mine@x");
+
+        let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
+        assert_eq!(c.thread_counts(1, &groups), vec![("t".to_string(), 3)]);
+    }
+
+    /// Each thread gets its own number, and threads share the one scan.
+    #[test]
+    fn batched_counts_stay_with_their_own_thread() {
+        let c = Cache::in_memory().unwrap();
+        add_folder(&c, "INBOX", FolderKind::Inbox);
+        add_folder(&c, "Sent", FolderKind::Sent);
+        add_threaded(&c, "INBOX", 1, 500, "a@x", "");
+        add_threaded(&c, "Sent", 2, 600, "a-reply@x", "a@x");
+        add_threaded(&c, "INBOX", 3, 550, "b@x", "");
+
+        let groups = vec![
+            ("a".to_string(), vec!["a@x".to_string()]),
+            ("b".to_string(), vec!["b@x".to_string()]),
+        ];
+        let mut got = c.thread_counts(1, &groups);
+        got.sort();
+        assert_eq!(got, vec![("a".to_string(), 2), ("b".to_string(), 1)]);
+    }
+
+    /// The reader leaves deleted and spam copies out of a conversation, so a
+    /// badge that counted them would promise cards that never appear.
+    #[test]
+    fn trash_and_junk_are_left_out_of_the_count() {
+        let c = Cache::in_memory().unwrap();
+        add_folder(&c, "INBOX", FolderKind::Inbox);
+        add_folder(&c, "Trash", FolderKind::Trash);
+        add_folder(&c, "Junk", FolderKind::Junk);
+        add_threaded(&c, "INBOX", 1, 500, "root@x", "");
+        add_threaded(&c, "Trash", 2, 600, "binned@x", "root@x");
+        add_threaded(&c, "Junk", 3, 700, "spam@x", "root@x");
+
+        let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
+        assert_eq!(c.thread_counts(1, &groups), vec![("t".to_string(), 1)]);
+    }
+
+    /// Gmail files one message under every label it carries, so counting rows
+    /// would say a two-message conversation has five. It is one mail per
+    /// Message-ID, which is how the reader merges them too.
+    #[test]
+    fn gmail_label_copies_count_once() {
+        let c = Cache::in_memory().unwrap();
+        add_folder(&c, "INBOX", FolderKind::Inbox);
+        add_folder(&c, "[Gmail]/All Mail", FolderKind::Archive);
+        add_folder(&c, "Work", FolderKind::Custom);
+        add_threaded(&c, "INBOX", 1, 500, "root@x", "");
+        add_threaded(&c, "[Gmail]/All Mail", 10, 500, "root@x", "");
+        add_threaded(&c, "Work", 20, 500, "root@x", "");
+        add_threaded(&c, "[Gmail]/All Mail", 11, 600, "reply@x", "root@x");
+        add_threaded(&c, "Work", 21, 600, "reply@x", "root@x");
+
+        let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
+        assert_eq!(c.thread_counts(1, &groups), vec![("t".to_string(), 2)]);
+    }
+
+    /// An id that matches nothing gets no entry at all, so the row keeps the
+    /// count the list worked out for itself rather than being told "0".
+    #[test]
+    fn a_thread_the_cache_does_not_know_gets_no_answer() {
+        let c = Cache::in_memory().unwrap();
+        add_folder(&c, "INBOX", FolderKind::Inbox);
+        add_threaded(&c, "INBOX", 1, 500, "root@x", "");
+
+        let groups = vec![("gone".to_string(), vec!["nothing@x".to_string()])];
+        assert!(c.thread_counts(1, &groups).is_empty());
+    }
+
+    /// The same off-by-a-slot bind bug `a_conversation_holds_only_messages_that_reference_it`
+    /// guards, in the batched query this time: an unrelated message whose
+    /// References merely contain the account id must not be counted.
+    #[test]
+    fn counting_does_not_sweep_in_unrelated_mail() {
+        let c = Cache::in_memory().unwrap();
+        add_folder(&c, "INBOX", FolderKind::Inbox);
+        add_folder(&c, "Archive", FolderKind::Archive);
+        add_threaded(&c, "INBOX", 1, 500, "root@x", "");
+        add_threaded(&c, "Archive", 3, 550, "other@x", "31337@elsewhere");
+
+        let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
+        assert_eq!(c.thread_counts(1, &groups), vec![("t".to_string(), 1)]);
     }
 
     /// Gmail stores one message under every label it carries, so INBOX, All Mail

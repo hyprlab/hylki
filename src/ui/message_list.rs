@@ -2260,6 +2260,26 @@ fn reader_conversation(emitted: &[(u32, u32)], merged: &[(u32, u32)]) -> Vec<(u3
     all
 }
 
+/// Which of the page's conversations still need their real size looked up
+/// (#222): the ones nobody has asked the cache about yet.
+///
+/// Every rebuild runs this, and rebuilds are cheap and frequent — a sync, a
+/// scroll, each keystroke of a search. Asking is not cheap: it is a scan of the
+/// account's message index. So a thread is asked about once and remembered.
+/// That is also what stops the loop, since the answer arrives as a rebuild:
+/// with every thread on the page already asked about, the next pass has nothing
+/// to send and the list settles.
+fn unasked_threads(
+    listed: &[(u32, String, Vec<String>)],
+    asked: &std::collections::HashSet<(u32, String)>,
+) -> Vec<(u32, String, Vec<String>)> {
+    listed
+        .iter()
+        .filter(|(aid, root, _)| !asked.contains(&(*aid, root.clone())))
+        .cloned()
+        .collect()
+}
+
 /// Group messages into conversations by their reply headers (Message-ID linked
 /// via In-Reply-To / References), scoped per account. Returns each message's
 /// thread key `(account_id, root)`. Messages with no reply relationship get a
@@ -2360,10 +2380,10 @@ pub struct MessageList {
     /// one, and it need not happen before the new page shows.
     retired: Vec<FactoryVecDeque<MessageRow>>,
     retire_scheduled: bool,
-    /// A per-row signature of the last page built (thread count, child,
-    /// last, expanded, unread, starred), so growing the page can tell that
-    /// its existing rows are unchanged and only append.
-    row_sigs: Vec<(usize, bool, bool, bool, bool, bool)>,
+    /// A per-row signature of the last page built (thread count, expandable,
+    /// child, last, expanded, unread, starred), so growing the page can tell
+    /// that its existing rows are unchanged and only append.
+    row_sigs: Vec<(usize, bool, bool, bool, bool, bool, bool)>,
     /// A rebuild asked for and not yet run: `Some(preserve_scroll)`. Several
     /// arrivals in one main-loop pass (a folder's cached copy, its synced
     /// copy, fresh thread links, a view switch's flag changes) collapse into
@@ -2428,6 +2448,21 @@ pub struct MessageList {
     /// screen — every reply in an Inbox answers something in Sent — so those
     /// links are needed to see that the replies belong together.
     thread_links: Vec<(u32, String, String)>,
+    /// How big each conversation really is, counted across the account's other
+    /// folders and handed down by the app (#222). The list can only see its own
+    /// folder, so a thread whose replies live in Sent would otherwise wear a
+    /// badge that undercounts it. Keyed by thread key, as `rebuild` groups them.
+    thread_counts: std::collections::HashMap<(u32, String), usize>,
+    /// The conversations the last rebuild put on screen, as
+    /// `(account, thread root, the Message-IDs it is threaded by)` — what the
+    /// app needs to look their real sizes up.
+    listed_threads: Vec<(u32, String, Vec<String>)>,
+    /// Which conversations have already been asked about. A rebuild runs on
+    /// every keystroke of a search and on every sync, and each ask is a scan of
+    /// the account's index — so a thread is asked about once and remembered,
+    /// not re-asked whenever its row is redrawn. Cleared per account by
+    /// [`MessageListInput::ForgetThreadCounts`] when that account's mail moves.
+    asked_threads: std::collections::HashSet<(u32, String)>,
     /// The shown rows' (account, folder, uid, id) keys, handed to every row so a
     /// drag can carry the whole selection (#23).
     drag_keys: DragKeys,
@@ -2585,6 +2620,11 @@ pub enum MessageListInput {
     /// Reply headers from the account's other folders, so a conversation joined
     /// through a message that isn't on screen still groups.
     SetThreadLinks(Vec<(u32, String, String)>),
+    /// True conversation sizes from the cache, keyed by thread key (#222).
+    SetThreadCounts(Vec<((u32, String), usize)>),
+    /// This account's mail changed, so what was counted may no longer be the
+    /// conversation: drop its counts and let the next rebuild ask again (#222).
+    ForgetThreadCounts(u32),
     /// Whether conversations start expanded (true) or collapsed (false).
     SetThreadsExpanded(bool),
     SetGravatar(bool),
@@ -2761,6 +2801,10 @@ pub enum MessageListOutput {
     /// The selected conversation gained a member since it was opened (a
     /// reply synced in): the head and the whole conversation as it now is.
     ThreadGrew { message: Message, thread: Vec<Message> },
+    /// The conversations now on screen and the Message-IDs each is threaded
+    /// by, so the app can ask the cache how big they really are (#222). Sent
+    /// only when the page's conversations actually change.
+    ThreadsListed { groups: Vec<(u32, String, Vec<String>)> },
     /// Delete requested on a lone selected row that heads a whole conversation:
     /// every member of the thread, for the app to confirm and delete.
     DeleteThread { messages: Vec<Message> },
@@ -3077,6 +3121,9 @@ impl SimpleComponent for MessageList {
                 crate::config::load_swipe_sensitivity(),
             )),
             thread_links: Vec::new(),
+            thread_counts: std::collections::HashMap::new(),
+            listed_threads: Vec::new(),
+            asked_threads: std::collections::HashSet::new(),
             drag_keys: DragKeys::default(),
             thread_drag: ThreadDragKeys::default(),
             selected_id: None,
@@ -3241,6 +3288,33 @@ impl SimpleComponent for MessageList {
                     if self.threading {
                         self.queue_rebuild(true);
                     }
+                }
+            }
+            MessageListInput::SetThreadCounts(counts) => {
+                // Counts arrive a beat after the page paints (the cache is the
+                // worker's, not ours), so this is a rebuild rather than part of
+                // one. Only the badge numbers move; the rows themselves, and
+                // which conversations are listed, do not — which is what keeps
+                // this from asking for counts again and looping.
+                let mut changed = false;
+                for (key, n) in counts {
+                    if self.thread_counts.get(&key) != Some(&n) {
+                        self.thread_counts.insert(key, n);
+                        changed = true;
+                    }
+                }
+                if changed && self.threading {
+                    self.queue_rebuild(true);
+                }
+            }
+            MessageListInput::ForgetThreadCounts(account_id) => {
+                let before = self.thread_counts.len();
+                self.thread_counts.retain(|(aid, _), _| *aid != account_id);
+                self.asked_threads.retain(|(aid, _)| *aid != account_id);
+                // Only rebuild if a badge actually loses its number; the
+                // re-ask itself rides on the rebuild the new mail causes.
+                if self.thread_counts.len() != before && self.threading {
+                    self.queue_rebuild(true);
                 }
             }
             MessageListInput::SetThreading(on) => {
@@ -4093,6 +4167,19 @@ impl SimpleComponent for MessageList {
             self.last_count = count.clone();
             let _ = sender.output(MessageListOutput::CountChanged(count));
         }
+        // And the conversations nobody has counted yet, so their real sizes
+        // can be looked up (#222). Only the unasked ones: the answer arrives as
+        // a rebuild, so asking again on the strength of it would never settle,
+        // and a search re-filters the page on every keystroke.
+        if self.threading {
+            let fresh = unasked_threads(&self.listed_threads, &self.asked_threads);
+            if !fresh.is_empty() {
+                for (aid, root, _) in &fresh {
+                    self.asked_threads.insert((*aid, root.clone()));
+                }
+                let _ = sender.output(MessageListOutput::ThreadsListed { groups: fresh });
+            }
+        }
 
     }
 }
@@ -4766,6 +4853,9 @@ impl MessageList {
         // Flatten back into display order, recording per-row thread metadata.
         struct RowMeta {
             count: usize,
+            /// Whether this row's chip can actually open anything: true only
+            /// when the folder holds more than one of the conversation (#222).
+            expandable: bool,
             is_child: bool,
             is_last: bool,
             /// Newest member's (from_name, from_addr) and preview, surfaced on
@@ -4784,6 +4874,7 @@ impl MessageList {
         let mut metas: Vec<RowMeta> = Vec::new();
         self.msg_thread.clear();
         self.thread_members.clear();
+        self.listed_threads.clear();
         for key in &order {
             let mut msgs = groups.remove(key).unwrap();
             // A conversation reads like a transcript: the message that started it
@@ -4793,6 +4884,26 @@ impl MessageList {
             // inside the thread, time only runs one way.
             msgs.sort_by(|a, b| a.timestamp.cmp(&b.timestamp).then(a.uid.cmp(&b.uid)));
             let count = msgs.len();
+            // What the badge says. `count` is what this folder holds and goes on
+            // steering the rows — which of them nest, what expands, whose unread
+            // dot shows — but the number on the chip is the size of the
+            // *conversation*, replies filed in Sent included (#222). Never less
+            // than what is on screen: a stale or partial answer from the cache
+            // must not make the badge contradict the rows under it.
+            let total = if self.threading {
+                self.thread_counts.get(key).copied().unwrap_or(0).max(count)
+            } else {
+                count
+            };
+            // Ask about anything that could be bigger than it looks. A thread of
+            // one is worth asking about too — a mail you answered twice is a
+            // conversation of three and shows no badge at all today.
+            if self.threading {
+                let ids = crate::models::thread_ids(&msgs);
+                if !ids.is_empty() {
+                    self.listed_threads.push((key.0, key.1.clone(), ids));
+                }
+            }
             // `expanded_threads` stores toggles away from the default state.
             // With expansion disabled no thread ever opens in the list; the
             // stored toggles survive for when it is re-enabled.
@@ -4832,7 +4943,11 @@ impl MessageList {
             let head = it.next().unwrap();
             shown.push(head);
             metas.push(RowMeta {
-                count,
+                count: total,
+                // Only this folder's copies can be nested under the head, so a
+                // conversation whose extra members are all elsewhere wears a
+                // bare count and no caret — there is nothing here to open.
+                expandable: count > 1,
                 is_child: false,
                 is_last: false,
                 from: latest_from,
@@ -4850,6 +4965,7 @@ impl MessageList {
                     shown.push(child);
                     metas.push(RowMeta {
                         count: 0,
+                        expandable: false,
                         is_child: true,
                         is_last: j + 1 == n,
                         from: None,
@@ -4868,9 +4984,11 @@ impl MessageList {
         // order, same conversation shape — and only the new rows get built.
         // Anything else (a switch, new mail at the top, a thread that took
         // in a newly listed member) rebuilds from the top.
-        let sigs: Vec<(usize, bool, bool, bool, bool, bool)> = metas
+        let sigs: Vec<(usize, bool, bool, bool, bool, bool, bool)> = metas
             .iter()
-            .map(|m| (m.count, m.is_child, m.is_last, m.expanded, m.unread, m.starred))
+            .map(|m| {
+                (m.count, m.expandable, m.is_child, m.is_last, m.expanded, m.unread, m.starred)
+            })
             .collect();
         let old_len = self.shown.len();
         let append_only = old_len > 0
@@ -4963,7 +5081,7 @@ impl MessageList {
                     is_thread_child: meta.is_child,
                     is_last_child: meta.is_last,
                     thread_expanded: meta.expanded,
-                    thread_expandable: self.thread_expansion,
+                    thread_expandable: self.thread_expansion && meta.expandable,
                     thread_key: meta.key,
                     thread_date: meta.latest,
                     thread_from: meta.from,
@@ -5411,8 +5529,8 @@ impl MessageList {
 #[cfg(test)]
 mod tests {
     use super::{
-        compute_thread_keys, reader_conversation, row_for_reader_key, swipe_progress_px, SWIPE_ARM,
-        SWIPE_MAX,
+        compute_thread_keys, reader_conversation, row_for_reader_key, swipe_progress_px,
+        unasked_threads, SWIPE_ARM, SWIPE_MAX,
     };
     use crate::models::Message;
 
@@ -5492,6 +5610,62 @@ mod tests {
         let root_key = keys.get(&(1, 1)).cloned().expect("the root is threaded");
         assert_eq!(keys.get(&(1, 2)), Some(&root_key), "first reply joins");
         assert_eq!(keys.get(&(1, 3)), Some(&root_key), "second reply joins");
+    }
+
+    fn listed(items: &[(u32, &str)]) -> Vec<(u32, String, Vec<String>)> {
+        items.iter().map(|(a, r)| (*a, r.to_string(), vec![format!("{r}@x")])).collect()
+    }
+
+    /// The counts come back as a rebuild, and a rebuild is what decides to ask.
+    /// If asking were driven by the page alone, that would be a loop; it is
+    /// driven by what has not been asked yet, so the second pass is silent.
+    #[test]
+    fn a_page_is_only_asked_about_once() {
+        let page = listed(&[(1, "a"), (1, "b")]);
+        let mut asked = std::collections::HashSet::new();
+
+        let first = unasked_threads(&page, &asked);
+        assert_eq!(first.len(), 2, "nothing counted yet, so ask about both");
+        for (aid, root, _) in &first {
+            asked.insert((*aid, root.clone()));
+        }
+        assert!(unasked_threads(&page, &asked).is_empty(), "the answer must not start another round");
+    }
+
+    /// A search re-filters the page on every keystroke, and each rebuild would
+    /// otherwise be a fresh scan of the message index.
+    #[test]
+    fn narrowing_the_page_asks_nothing_further() {
+        let page = listed(&[(1, "a"), (1, "b"), (1, "c")]);
+        let asked: std::collections::HashSet<(u32, String)> =
+            page.iter().map(|(a, r, _)| (*a, r.clone())).collect();
+
+        let narrowed = listed(&[(1, "b")]);
+        assert!(unasked_threads(&narrowed, &asked).is_empty());
+    }
+
+    /// New mail brings threads nobody has counted; only those are asked about.
+    #[test]
+    fn only_the_new_conversations_are_asked_about() {
+        let asked: std::collections::HashSet<(u32, String)> =
+            [(1u32, "a".to_string())].into_iter().collect();
+        let page = listed(&[(1, "a"), (1, "new")]);
+
+        let fresh = unasked_threads(&page, &asked);
+        assert_eq!(fresh.iter().map(|(_, r, _)| r.as_str()).collect::<Vec<_>>(), vec!["new"]);
+    }
+
+    /// Two accounts can root a thread at the same Message-ID (the unified
+    /// inbox shows both), and they are different conversations in different
+    /// caches — asking about one must not silence the other.
+    #[test]
+    fn the_same_thread_root_in_two_accounts_is_two_questions() {
+        let asked: std::collections::HashSet<(u32, String)> =
+            [(1u32, "shared".to_string())].into_iter().collect();
+        let page = listed(&[(1, "shared"), (2, "shared")]);
+
+        let fresh = unasked_threads(&page, &asked);
+        assert_eq!(fresh.iter().map(|(a, _, _)| *a).collect::<Vec<_>>(), vec![2]);
     }
 
     /// Links are evidence, not glue: unrelated mail must not be pulled in.

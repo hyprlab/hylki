@@ -57,6 +57,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.35.2" date="2026-09-18">
+      <description>
+        <p>A conversation's message count now counts the whole conversation, including the replies you sent and any other parts filed in different folders, so it matches what the reader shows.</p>
+      </description>
+    </release>
     <release version="1.35.1" date="2026-09-18">
       <description>
         <p>The welcome wizard, About window and carry-over notice follow the theme's light or dark colours, with a light-lettered wordmark in dark mode. The final icon set, with a full-size default and the classic icon at the end of the gallery. About shows this release's notes with a link to the full history.</p>

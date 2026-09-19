@@ -162,7 +162,7 @@ relm4::new_stateless_action!(UndoAction, WindowActionGroup, "undo");
 relm4::new_stateless_action!(RedoAction, WindowActionGroup, "redo");
 
 use crate::config::{self, split_identity, AccountConfig};
-use crate::models::{Account, Attachment, Folder, FolderKind, KeywordFinding, Message};
+use crate::models::{thread_ids, Account, Attachment, Folder, FolderKind, KeywordFinding, Message};
 use crate::ui::accounts::{AccountsOutput, AccountsWindow};
 use crate::ui::compose::{
     Compose, ComposeAccount, ComposeInit, ComposeInput, ComposeOutput, ComposePrefill,
@@ -1063,6 +1063,12 @@ pub enum AppMsg {
     PurgeMessages(Vec<Message>),
     /// The rest of an open message's conversation, found in other folders.
     Related { account_id: u32, message_id: u32, messages: Vec<Message> },
+    /// True sizes for the conversations the list is showing, counted across
+    /// the account's folders (#222). Tags are the list's own thread keys.
+    ThreadCounts { account_id: u32, counts: Vec<(String, usize)> },
+    /// The list rebuilt its rows: which conversations are on screen, and the
+    /// Message-IDs each is threaded by, so their real sizes can be looked up.
+    ThreadsListed { groups: Vec<(u32, String, Vec<String>)> },
     /// A row's palette or context-menu action. `conversation` holds the whole
     /// thread when the row stands for a collapsed conversation rather than for
     /// `message` alone — a reply started there answers the conversation's
@@ -2377,6 +2383,9 @@ impl SimpleComponent for AppModel {
                     }
                     MessageListOutput::ThreadGrew { message, thread } => {
                         AppMsg::ThreadGrew { message: Box::new(message), thread }
+                    }
+                    MessageListOutput::ThreadsListed { groups } => {
+                        AppMsg::ThreadsListed { groups }
                     }
                     MessageListOutput::CountChanged(text) => AppMsg::ListCount(text),
                     MessageListOutput::Activated { message, thread } => {
@@ -5504,6 +5513,18 @@ impl SimpleComponent for AppModel {
                 }
             }
 
+            AppMsg::ThreadsListed { groups } => {
+                self.request_thread_counts(groups);
+            }
+
+            AppMsg::ThreadCounts { account_id, counts } => {
+                let counts: Vec<((u32, String), usize)> =
+                    counts.into_iter().map(|(root, n)| ((account_id, root), n)).collect();
+                if !counts.is_empty() {
+                    self.message_list.emit(MessageListInput::SetThreadCounts(counts));
+                }
+            }
+
             AppMsg::PurgeMessages(messages) => {
                 self.purge_messages(messages);
             }
@@ -8365,6 +8386,11 @@ impl SimpleComponent for AppModel {
                     // the conversation.
                     self.forget_threads(account_id);
                     self.push_thread_links();
+                    // A sync that brought in a reply also changed how big the
+                    // conversations are; the badges have to be counted again
+                    // rather than kept from before it (#222).
+                    self.message_list
+                        .emit(MessageListInput::ForgetThreadCounts(account_id));
                 }
                 // After that sweep, not before it: a conversation carried over
                 // a move (#200) goes back under the id the message now has,
@@ -14302,6 +14328,30 @@ impl AppModel {
         self.message_list.emit(MessageListInput::SetThreadLinks(links));
     }
 
+    /// Ask each account's cache how big the conversations on the list's page
+    /// really are (#222).
+    ///
+    /// The list counts what it lists, which in a folder view is one folder; the
+    /// replies you sent are in Sent and the badge was short by exactly them.
+    /// The lookup is the reader's own (`thread_counts` mirrors what
+    /// `messages_by_thread_ids` would find), so the number on the chip is the
+    /// number of cards the reader will show when the row is opened.
+    ///
+    /// Nothing here blocks the page: the counts arrive as
+    /// [`AppMsg::ThreadCounts`] and settle the badges a beat later.
+    fn request_thread_counts(&mut self, groups: Vec<(u32, String, Vec<String>)>) {
+        if !self.threading || groups.is_empty() {
+            return;
+        }
+        let mut by_account: HashMap<u32, Vec<(String, Vec<String>)>> = HashMap::new();
+        for (account_id, root, ids) in groups {
+            by_account.entry(account_id).or_default().push((root, ids));
+        }
+        for (account_id, groups) in by_account {
+            self.send_to(account_id, MailRequest::LoadThreadCounts { groups });
+        }
+    }
+
     /// Push every account's inbox slice to the list as one date-sorted run. The
     /// slices arrive independently (cache seed, then each account's load), so the
     /// whole merged list is re-emitted each time one of them changes.
@@ -17514,6 +17564,7 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
         WorkerEvent::Related { message_id, messages } => {
             AppMsg::Related { account_id, message_id, messages }
         }
+        WorkerEvent::ThreadCounts { counts } => AppMsg::ThreadCounts { account_id, counts },
         WorkerEvent::Account(a) => AppMsg::SetAccount(a),
         WorkerEvent::Folders(folders) => AppMsg::SetFolders { account_id, folders },
         WorkerEvent::Messages { folder_id, messages } => {
@@ -18028,25 +18079,6 @@ fn kind_label(kind: FolderKind) -> String {
         FolderKind::Trash => "trash",
         _ => "destination",
     })
-}
-
-/// Every Message-ID that identifies a conversation: the messages' own ids plus
-/// the ones they reference. This is what the cache is searched by to find the
-/// parts of the thread filed in other folders.
-fn thread_ids(msgs: &[Message]) -> Vec<String> {
-    let mut ids: Vec<String> = Vec::new();
-    let mut push = |id: &str| {
-        if !id.is_empty() && !ids.iter().any(|x| x == id) {
-            ids.push(id.to_string());
-        }
-    };
-    for m in msgs {
-        push(&m.message_id);
-        for r in m.references.split_whitespace() {
-            push(r);
-        }
-    }
-    ids
 }
 
 /// Flatten every folder's indexed messages into one pool for cross-folder search.

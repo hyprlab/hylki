@@ -815,6 +815,26 @@ impl Message {
 
 }
 
+/// Every Message-ID that identifies a conversation: the messages' own ids plus
+/// the ones they reference. This is what the cache is searched by to find the
+/// parts of the thread filed in other folders — both to assemble a conversation
+/// the reader has opened and to count one the list is only showing a slice of.
+pub fn thread_ids(msgs: &[Message]) -> Vec<String> {
+    let mut ids: Vec<String> = Vec::new();
+    let mut push = |id: &str| {
+        if !id.is_empty() && !ids.iter().any(|x| x == id) {
+            ids.push(id.to_string());
+        }
+    };
+    for m in msgs {
+        push(&m.message_id);
+        for r in m.references.split_whitespace() {
+            push(r);
+        }
+    }
+    ids
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

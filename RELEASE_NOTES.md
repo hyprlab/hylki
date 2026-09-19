@@ -2,9 +2,13 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.35.2-beta.1
+## What's new in 1.35.3-beta.1
 
-Catch-up release: the beta channel is level with stable 1.35.1. Everything below applies.
+Catch-up release: the beta channel is brought level with stable 1.35.2. See the 1.35.2 notes below.
+
+## What's new in 1.35.2
+
+**A conversation's message count now counts all of it** (#222). The number on a thread counted only the messages in the folder you were looking at, so any conversation you had replied to was short by the replies you sent. It now counts across your folders, so it matches the messages the reader actually shows: your sent replies included, deleted and spam copies left out, and a Gmail message filed under several labels counted once. A conversation whose other messages are all in another folder now shows a count where it previously showed none. Reported by @p-mitana.
 
 ## What's new in 1.35.1
 
