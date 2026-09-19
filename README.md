@@ -18,7 +18,10 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshot.png" width="900" alt="Hylki showing a unified inbox in light mode">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshot-dark.png">
+    <img src="docs/screenshot.png" width="900" alt="Hylki showing a unified inbox">
+  </picture>
 </p>
 
 ---

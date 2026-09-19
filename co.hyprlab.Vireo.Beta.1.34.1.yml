@@ -1,26 +1,24 @@
-# Flatpak manifest for Hylki — builds the self-hosted Flatpak distributed from
-# hylki.hyprlab.co. (The GNOME runtime + SDK below come from the flathub *remote* — that
-# is just where the org.gnome.Platform runtime is hosted; Hylki itself is not on
-# Flathub.)
+# Flatpak manifest for the Vireo BETA channel — same self-hosted repo as stable
+# (vireo.hyprlab.co/flatpak), published under the ostree branch "beta" with app
+# ID co.hyprlab.Vireo.Beta so it installs alongside the stable app. Built with
+# the `beta` cargo feature: "Vireo (beta)" branding, a b-suffixed version, and
+# XDG dirs redirected into the stable app's ~/.var/app tree so both installs
+# share accounts, settings and the mail cache. x86_64 only — no ARM beta.
 #
-# Local test build (both tools are already installed):
-#   python3 flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
-#   flatpak install flathub org.gnome.Sdk//50 org.gnome.Platform//50 \
-#       org.freedesktop.Sdk.Extension.rust-stable//25.08
-#   flatpak-builder --user --install --force-clean build-dir co.hyprlab.Hylki.yml
-#   flatpak run co.hyprlab.Hylki
-id: co.hyprlab.Hylki
+# Ship it with (see the beta ship workflow):
+#   flatpak-builder --user --force-clean --disable-rofiles-fuse \
+#     --repo=dist/repo --default-branch=beta \
+#     --gpg-sign=$(cat dist/keyid.txt) --gpg-homedir=dist/gpg-home \
+#     --mirror-screenshots-url=https://dl.flathub.org/media \
+#     dist/build-dir-beta co.hyprlab.Vireo.Beta.yml
+id: co.hyprlab.Vireo.Beta
 runtime: org.gnome.Platform
 runtime-version: '50'
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
-command: hylki
-# Keep the message catalogues in the app itself. By default flatpak-builder
-# moves /app/share/locale into a .Locale extension of which Flatpak installs
-# only the user's configured languages, so a language chosen in Settings
-# (#179) had no catalogue unless it was also the system's (#183). The
-# catalogues are small; the spell-check dictionaries are unaffected.
+command: vireo
+# Keep the message catalogues in the app itself (see the stable manifest, #183).
 separate-locales: false
 
 finish-args:
@@ -36,13 +34,9 @@ finish-args:
   - --talk-name=org.gnome.Contacts                 # "Open GNOME Contacts" button (D-Bus activation)
   - --talk-name=org.kde.StatusNotifierWatcher      # optional tray icon (#116); absent on plain GNOME
   - --talk-name=org.gnome.Nautilus                 # "Restart Files" after installing the Files extension (#188)
-  # Deliberately NOT --talk-name=org.freedesktop.Flatpak: that permits
-  # `flatpak-spawn --host`, i.e. arbitrary command execution outside the
-  # sandbox, which would make every other restriction here advisory. The
-  # Contacts button reaches the host app by D-Bus-activating org.gnome.Contacts
-  # above; that is the path that actually runs.
-  # Read the host's Evolution Data Server address books (contacts list is read
-  # from these SQLite caches; the sandbox's own XDG dirs are empty).
+  # Deliberately NOT --talk-name=org.freedesktop.Flatpak — see the stable
+  # manifest for why (it would permit arbitrary host command execution).
+  # Read the host's Evolution Data Server address books.
   # OpenPGP (#133): the runtime's gpg reads the user's keyring and talks to
   # the host's gpg-agent (passphrases, pinentry) over its socket.
   - --filesystem=~/.gnupg
@@ -50,11 +44,30 @@ finish-args:
   - --filesystem=xdg-data/evolution:ro
   - --filesystem=xdg-cache/evolution:ro
   - --filesystem=xdg-config/evolution:ro
-  # Read the earlier names' sandbox data so accounts, settings and cached
-  # mail carry over on first start (Veem through 1.5.1, Vireo through
-  # 1.34.0); nothing there is written to. See src/legacy.rs.
-  - --filesystem=~/.var/app/co.hyprlab.Vireo:ro
+  # THE beta twist: read-write access to the stable app's sandbox tree. The
+  # beta binary redirects its config/cache/data base dirs there (see
+  # `shared_base` in src/config.rs), so beta testers keep their accounts,
+  # settings and cached mail without a second setup.
+  # :create makes flatpak create the stable app's directory on the HOST when
+  # it doesn't exist yet — without it the grant is silently skipped on
+  # beta-only installs and the shared home pointed at the sandbox's throwaway
+  # tmpfs, losing accounts on quit (issue #83). With it, a beta-first install
+  # establishes the standard persistent home that a later stable install picks
+  # up natively; install order no longer matters.
+  - --filesystem=~/.var/app/co.hyprlab.Vireo:create
+  # Read the old Veem app's data so first-run migration matches stable's.
   - --filesystem=~/.var/app/com.getveem.Veem:ro
+  # The GNOME Files right-click extension (#188) is a Python file Nautilus
+  # loads on the host; Settings → System installs the bundled copy there.
+  - --filesystem=xdg-data/nautilus-python/extensions:create
+  # A file manager's "Send by email" (#90) hands the files over as attach=
+  # paths inside a mailto: URI, which reach the sandbox as-is, so the app has
+  # to be able to read them where they are: the home directory and removable
+  # drives, read-only. Everything the app writes goes through portals or the
+  # narrower entries above (a more specific entry wins over this one).
+  - --filesystem=home:ro
+  - --filesystem=/run/media:ro
+  - --filesystem=/media:ro
   # The chosen app icon (Settings → App icon) is written over the app's icon
   # name in the user's icon directory, which every desktop searches before the
   # Flatpak export's — that is how the dock and app grid follow the choice.
@@ -62,35 +75,15 @@ finish-args:
   # …and the app's launcher is re-pointed at that icon through a per-user
   # copy of its .desktop entry (the desktop caches app icons by name).
   - --filesystem=xdg-data/applications:create
-  # The GNOME Files right-click extension (#188) is a Python file Nautilus
-  # loads on the host; Settings → System installs the bundled copy there.
-  - --filesystem=xdg-data/nautilus-python/extensions:create
-  # A file manager's "Send by email" (Nautilus, #90) hands the files over as
-  # attach= paths inside a mailto: URI. Flatpak's file forwarding only
-  # exports arguments that are themselves files, so those paths reach the
-  # sandbox as-is and the app has to be able to read them where they are:
-  # the home directory and removable drives, read-only. Everything the app
-  # writes goes through portals or the narrower entries above (a more
-  # specific entry wins over this one).
-  - --filesystem=home:ro
-  - --filesystem=/run/media:ro
-  - --filesystem=/media:ro
 
 build-options:
   append-path: /usr/lib/sdk/rust-stable/bin
   env:
-    CARGO_HOME: /run/build/hylki/cargo
-    # No Google OAuth client is bundled — Google sign-in goes through GNOME Online
-    # Accounts (the account editor guides users there). Microsoft's client ID is
-    # built into the source and works out of the box.
+    CARGO_HOME: /run/build/vireo/cargo
 
 modules:
-  # PDF attachment thumbnails (gallery + in-message drawer) render via
-  # poppler-glib, which the GNOME runtime doesn't ship — every other library it
-  # links against (cairo, glib, fontconfig, freetype, gdk-pixbuf) already is.
-  # Config lifted from flathub's org.gnome.Evince manifest, with
-  # ENABLE_LIBOPENJPEG turned off to avoid pulling in an openjpeg module too:
-  # thumbnails don't need JPEG2000 support, just the common image formats.
+  # PDF attachment thumbnails render via poppler-glib — same modules as the
+  # stable manifest; keep the two in sync.
   - name: popplerdata
     no-autogen: true
     make-install-args:
@@ -147,30 +140,30 @@ modules:
       - type: archive
         url: https://github.com/LibreOffice/dictionaries/archive/32b006a2c22a4ac7e8ed3f03346f7b3d85a970a4.tar.gz
         sha256: cbd790eca560de5e8ec8bd64117a00dfd0bc06b091c8f52d23e44ea00d3e8461
-  - name: hylki
+  - name: vireo
     buildsystem: simple
     build-commands:
       - cargo --offline fetch --manifest-path Cargo.toml --verbose
-      - cargo --offline build --release --verbose
-      - install -Dm755 target/release/hylki /app/bin/hylki
+      - cargo --offline build --release --features beta --verbose
+      - install -Dm755 target/release/vireo /app/bin/vireo
       # Translations: each po/<lang>.po becomes a message catalogue under
-      # /app/share/locale (kept in the app: separate-locales above),
+      # /app/share/locale (which Flatpak splits into the .Locale extension),
       # and the launcher and metainfo get their translated fields merged in
       # (see po/README.md).
-      - for po in po/*.po; do [ -e "$po" ] || continue; lang=$(basename "$po" .po); install -d /app/share/locale/$lang/LC_MESSAGES; msgfmt -o /app/share/locale/$lang/LC_MESSAGES/hylki.mo "$po"; done
-      - install -d /app/share/applications && msgfmt --desktop --template=data/co.hyprlab.Hylki.desktop -d po -o /app/share/applications/co.hyprlab.Hylki.desktop
-      - install -Dm644 data/icons/hicolor/256x256/apps/co.hyprlab.Hylki.png /app/share/icons/hicolor/256x256/apps/co.hyprlab.Hylki.png
-      - install -Dm644 data/icons/hicolor/512x512/apps/co.hyprlab.Hylki.png /app/share/icons/hicolor/512x512/apps/co.hyprlab.Hylki.png
-      - install -Dm644 data/icons/hicolor/scalable/apps/co.hyprlab.Hylki.svg /app/share/icons/hicolor/scalable/apps/co.hyprlab.Hylki.svg
+      - for po in po/*.po; do [ -e "$po" ] || continue; lang=$(basename "$po" .po); install -d /app/share/locale/$lang/LC_MESSAGES; msgfmt -o /app/share/locale/$lang/LC_MESSAGES/vireo.mo "$po"; done
+      - install -d /app/share/applications && msgfmt --desktop --template=data/co.hyprlab.Vireo.Beta.desktop -d po -o /app/share/applications/co.hyprlab.Vireo.Beta.desktop
+      - install -Dm644 data/icons/hicolor/256x256/apps/co.hyprlab.Vireo.Beta.png /app/share/icons/hicolor/256x256/apps/co.hyprlab.Vireo.Beta.png
+      - install -Dm644 data/icons/hicolor/512x512/apps/co.hyprlab.Vireo.Beta.png /app/share/icons/hicolor/512x512/apps/co.hyprlab.Vireo.Beta.png
+      - install -Dm644 data/icons/hicolor/scalable/apps/co.hyprlab.Vireo.Beta.svg /app/share/icons/hicolor/scalable/apps/co.hyprlab.Vireo.Beta.svg
       # The restart helper's D-Bus service (Settings → App icon → Restart Now):
       # exported by Flatpak, so the bus can start a fresh sandbox instance.
-      - install -Dm644 data/co.hyprlab.Hylki.Restart.service /app/share/dbus-1/services/co.hyprlab.Hylki.Restart.service
-      - install -d /app/share/metainfo && msgfmt --xml --template=data/co.hyprlab.Hylki.metainfo.xml -d po -o /app/share/metainfo/co.hyprlab.Hylki.metainfo.xml
+      - install -Dm644 data/co.hyprlab.Vireo.Beta.Restart.service /app/share/dbus-1/services/co.hyprlab.Vireo.Beta.Restart.service
+      - install -d /app/share/metainfo && msgfmt --xml --template=data/co.hyprlab.Vireo.Beta.metainfo.xml -d po -o /app/share/metainfo/co.hyprlab.Vireo.Beta.metainfo.xml
     sources:
       - type: git
-        url: https://github.com/hyprlab/hylki.git
-        tag: v1.35.1
-        commit: dd4cefdcfecc7942f0507a204259375d11a1754b
+        url: https://github.com/hyprlab/vireo.git
+        tag: v1.34.1-beta.1
+        commit: d4ced24691c5ef001e01cce02507e5bf818557c3
       # Vendored crate sources for the offline Flatpak build. Generate with:
       #   flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
       - cargo-sources.json

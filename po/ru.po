@@ -558,12 +558,6 @@ msgstr ""
 msgid "Release Notes"
 msgstr "Примечания к выпуску"
 
-msgid "Changelog"
-msgstr "Список изменений"
-
-msgid "Full version history"
-msgstr "Полная история версий"
-
 msgid "Keyring Setup Help"
 msgstr "Справка по настройке связки ключей"
 
@@ -579,9 +573,6 @@ msgstr "Веб-сайт"
 
 msgid "Report an issue or feature request"
 msgstr ""
-
-msgid "Contact — hyprlab@proton.me"
-msgstr "Контакт — hyprlab@proton.me"
 
 msgid "Source Code"
 msgstr "Исходный код"
@@ -686,6 +677,10 @@ msgstr[2] ""
 
 msgid "Filters Applied"
 msgstr "Фильтры применены"
+
+#, fuzzy
+msgid "Full Release Notes on GitHub"
+msgstr "Примечания к выпуску"
 
 msgid "Move around"
 msgstr "Перемещаться"
@@ -4663,6 +4658,15 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Changelog"
+#~ msgstr "Список изменений"
+
+#~ msgid "Full version history"
+#~ msgstr "Полная история версий"
+
+#~ msgid "Contact — hyprlab@proton.me"
+#~ msgstr "Контакт — hyprlab@proton.me"
 
 #~ msgid "Discord — Join the community"
 #~ msgstr "Discord — присоединиться к сообществу"

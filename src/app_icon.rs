@@ -53,17 +53,21 @@ macro_rules! alt {
 }
 
 /// The gallery, in display order: the build's own icon (the Hylki
-/// envelope, so it has no entry of its own), then the other envelopes.
+/// envelope, so it has no entry of its own), the plain envelopes, the two
+/// with the bird, the default drawn at full size rather than to the GNOME
+/// icon grid, and the classic icon last.
 const CATALOG: &[IconChoice] = &[
     IconChoice { id: DEFAULT_ID, label: i18n_noop("Default"), png: DEFAULT_PNG },
-    alt!("envelope-bird-blue", "Blue with bird"),
-    alt!("envelope-bird-yellow", "Yellow with bird"),
     alt!("envelope-blue", "Blue"),
     alt!("envelope-yellow", "Yellow"),
     alt!("envelope-white", "White"),
     alt!("envelope-manilla", "Manila"),
     alt!("envelope-faded-blue", "Faded blue"),
     alt!("envelope-starfield", "Starfield"),
+    alt!("envelope-bird-blue", "Blue with bird"),
+    alt!("envelope-bird-yellow", "Yellow with bird"),
+    alt!("non-hig", "Full size"),
+    alt!("classic", "Classic"),
 ];
 
 /// Every choice the gallery offers.

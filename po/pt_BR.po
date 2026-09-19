@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date:\n"
-"PO-Revision-Date: 2026-09-16 23:06+0100\n"
+"PO-Revision-Date: 2026-09-18 23:06+0100\n"
 "Last-Translator: Paulo Fino <somepaulo@duck.com>\n"
 "Language-Team: Portuguese (Brazil)\n"
 "Language: pt_BR\n"
@@ -555,12 +555,6 @@ msgstr ""
 msgid "Release Notes"
 msgstr "Notas de lançamento"
 
-msgid "Changelog"
-msgstr "Registro de alterações"
-
-msgid "Full version history"
-msgstr "Histórico completo de versões"
-
 msgid "Keyring Setup Help"
 msgstr "Ajuda para configurar o chaveiro"
 
@@ -576,9 +570,6 @@ msgstr "Website"
 
 msgid "Report an issue or feature request"
 msgstr "Relatar um problema ou sugerir um recurso"
-
-msgid "Contact — hyprlab@proton.me"
-msgstr "Contato — hyprlab@proton.me"
 
 msgid "Source Code"
 msgstr "Código fonte"
@@ -675,6 +666,10 @@ msgstr[1] ""
 
 msgid "Filters Applied"
 msgstr "Filtros aplicados"
+
+#, fuzzy
+msgid "Full Release Notes on GitHub"
+msgstr "Notas de lançamento"
 
 msgid "Move around"
 msgstr "Navegação"
@@ -1719,13 +1714,11 @@ msgstr ""
 "Incluir o email não lido da pasta na contagem de mensagens não lidas do "
 "ícone da área de notificação"
 
-#, fuzzy
 msgid "Show the attachments"
-msgstr "Sem anexos"
+msgstr "Mostrar os anexos"
 
-#, fuzzy
 msgid "Hide the attachments"
-msgstr "Sem anexos"
+msgstr "Ocultar os anexos"
 
 msgid "Thumbnail size"
 msgstr "Tamanho das miniaturas"
@@ -1767,9 +1760,8 @@ msgstr "Essa chave já tinha sido importada."
 msgid "Could not import the key"
 msgstr "Não foi possível importar a chave"
 
-#, fuzzy
 msgid "Show in Message"
-msgstr "Localizar na mensagem"
+msgstr "Mostrar na mensagem"
 
 msgid "Import OpenPGP key"
 msgstr "Importar chave OpenPGP"
@@ -1891,23 +1883,28 @@ msgstr "Carregando mais…"
 msgid "The file could not be opened"
 msgstr "Não foi possível abrir o arquivo"
 
-#, fuzzy
 msgid "Welcome to Hylki, formerly {old}"
-msgstr "Bem-vindo ao Hylki"
+msgstr "Bem-vindo ao Hylki, anteriormente {old}"
 
 msgid ""
 "Your accounts, settings and cached mail were carried over from {old}. There "
 "is nothing to set up again, and nothing in {old} was changed or removed. "
 "Once everything is here, you can remove {old}."
 msgstr ""
+"Suas contas, configurações e mensagens em cache foram transferidas do {old}. "
+"Não é necessário configurar nada novamente, e nada no {old} foi alterado ou "
+"removido. Quando tudo estiver aqui, você poderá remover o {old}."
 
 msgid ""
 "{old} is still the app your desktop opens email links with. To hand that to "
 "Hylki, choose it under Default Apps in Settings."
 msgstr ""
+"{old} ainda é o aplicativo usado pelo sistema para abrir links de email. "
+"Para passar essa função ao Hylki, escolha-o em Aplicativos padrão nas "
+"Configurações."
 
 msgid "To remove {old}, run:"
-msgstr ""
+msgstr "Para remover o {old}, execute:"
 
 msgid "Copy"
 msgstr "Copiar"
@@ -2580,9 +2577,8 @@ msgstr ""
 "Um resultado positivo prova que o endereço não foi falsificado — não que a "
 "mensagem seja segura."
 
-#, fuzzy
 msgid "Save…"
-msgstr "Salvar tudo…"
+msgstr "Salvar…"
 
 msgid "No draft selected"
 msgstr "Nenhum rascunho selecionado"
@@ -3524,33 +3520,37 @@ msgstr ""
 "leitura. Quando desativada, a leitura é feita de cima para baixo, da mais "
 "antiga para a mais recente."
 
-#, fuzzy
 msgid "Reply editor"
-msgstr "Responder a todos"
+msgstr "Editor de resposta"
 
 msgid ""
 "Where a reply or forward opens in the reading pane. Following the reading "
 "order puts it above the messages with newest first, and below them "
 "otherwise, so it continues the conversation where it ends."
 msgstr ""
+"Define onde uma resposta ou um encaminhamento é aberto no painel de leitura. "
+"Seguir a ordem de leitura o posiciona acima das mensagens quando as mais "
+"recentes vêm primeiro, e abaixo delas nos demais casos, para que a conversa "
+"continue de onde termina."
 
-#, fuzzy
 msgid "Attachments on each message"
-msgstr "Ações em uma mensagem"
+msgstr "Anexos em cada mensagem"
 
 msgid ""
 "List a message's attachments beneath it in a conversation, so which file "
 "came with which message is clear. Click one to open it."
 msgstr ""
+"Lista os anexos de uma mensagem abaixo dela em uma conversa, deixando claro "
+"qual arquivo veio com cada mensagem. Clique em um para abri-lo."
 
-#, fuzzy
 msgid "Attachment drawer"
-msgstr "Anexos"
+msgstr "Painel de anexos"
 
 msgid ""
 "Gather every attachment in the open conversation in a drawer beneath the "
 "messages."
 msgstr ""
+"Reúne todos os anexos da conversa aberta em um painel abaixo das mensagens."
 
 msgid "Confirm conversation deletion"
 msgstr "Confirmar a exclusão de conversas"
@@ -4064,17 +4064,14 @@ msgstr "Enviar para o armazenamento na nuvem e criar links"
 msgid "Account of the current folder"
 msgstr "Conta da pasta atual"
 
-#, fuzzy
 msgid "Above the messages"
-msgstr "Arquivar esta mensagem"
+msgstr "Acima das mensagens"
 
-#, fuzzy
 msgid "Below the messages"
-msgstr "Responder a esta mensagem"
+msgstr "Abaixo das mensagens"
 
-#, fuzzy
 msgid "Follows the reading order"
-msgstr "Permitir este remetente"
+msgstr "Segue a ordem de leitura"
 
 msgid "System language — {language}"
 msgstr "Idioma do sistema — {language}"
@@ -4678,3 +4675,12 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Changelog"
+#~ msgstr "Registro de alterações"
+
+#~ msgid "Full version history"
+#~ msgstr "Histórico completo de versões"
+
+#~ msgid "Contact — hyprlab@proton.me"
+#~ msgstr "Contato — hyprlab@proton.me"

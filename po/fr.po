@@ -560,12 +560,6 @@ msgstr ""
 msgid "Release Notes"
 msgstr "Notes de version"
 
-msgid "Changelog"
-msgstr "Journal des modifications"
-
-msgid "Full version history"
-msgstr "Historique complet des versions"
-
 msgid "Keyring Setup Help"
 msgstr "Aide à la configuration du trousseau de clés"
 
@@ -581,9 +575,6 @@ msgstr "Site web"
 
 msgid "Report an issue or feature request"
 msgstr "Signaler un problème ou une demande de fonctionnalité"
-
-msgid "Contact — hyprlab@proton.me"
-msgstr "Contact — hyprlab@proton.me"
 
 msgid "Source Code"
 msgstr "Code source"
@@ -675,6 +666,10 @@ msgstr[1] "Filtres marqués {tagged} et classés {filed} de {n} messages"
 
 msgid "Filters Applied"
 msgstr "Filtres appliqués"
+
+#, fuzzy
+msgid "Full Release Notes on GitHub"
+msgstr "Notes de version"
 
 msgid "Move around"
 msgstr "Se déplacer"
@@ -4726,6 +4721,15 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Changelog"
+#~ msgstr "Journal des modifications"
+
+#~ msgid "Full version history"
+#~ msgstr "Historique complet des versions"
+
+#~ msgid "Contact — hyprlab@proton.me"
+#~ msgstr "Contact — hyprlab@proton.me"
 
 #~ msgid "Discord — Join the community"
 #~ msgstr "Discord — Rejoindre la communauté"

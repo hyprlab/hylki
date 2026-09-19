@@ -1,10 +1,32 @@
 # Changelog
 
-## 1.35.1-beta.1 — 2026-09-18
+## 1.35.2-beta.1 — 2026-09-18
 
-Catch-up release: the beta channel is brought level with stable 1.35.0, the
-first Hylki release, under the new beta app ID co.hyprlab.Hylki.Beta. No
-changes of its own — see the 1.35.0 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.35.1. No
+changes of its own — see the 1.35.1 section below for what is in it.
+
+## 1.35.1 — 2026-09-18
+
+The brand assets in their final form, and a welcome wizard that follows
+the theme.
+
+- **The welcome wizard is on the theme's own ground.** The brand yellow
+  is gone: the window, cards, hints and the icon gallery take the light or
+  dark colours of the theme, and the wordmark switches to its light-lettered
+  version on a dark ground. The About window and the carry-over notice
+  follow the same rule; the About wordmark is wider, and the carry-over
+  notice carries the wordmark above its title.
+- **The final icon set.** Every app icon comes from the latest export, and
+  two entries join the end of the gallery: the default drawn at full size
+  rather than to the GNOME icon grid, and the classic yellow icon. The two
+  bird envelopes now come after the plain ones.
+- **About shows this release's notes only,** with a button to the full
+  history on GitHub; the Changelog page is gone, and the contact row is
+  just the address.
+- `HYLKI_SHOWCASE_CARRY_OVER=1` opens the carry-over notice on demand, for
+  checking it by hand.
+- README: current screenshots in light and dark.
+- Portuguese (pt_PT, pt_BR) translations brought up to date (#224, [@somepaulo](https://github.com/somepaulo)).
 
 ## 1.35.0 — 2026-09-18
 

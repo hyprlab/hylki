@@ -515,12 +515,6 @@ msgstr ""
 msgid "Release Notes"
 msgstr ""
 
-msgid "Changelog"
-msgstr ""
-
-msgid "Full version history"
-msgstr ""
-
 msgid "Keyring Setup Help"
 msgstr ""
 
@@ -535,9 +529,6 @@ msgid "Website"
 msgstr ""
 
 msgid "Report an issue or feature request"
-msgstr ""
-
-msgid "Contact — hyprlab@proton.me"
 msgstr ""
 
 msgid "Source Code"
@@ -624,6 +615,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Filters Applied"
+msgstr ""
+
+msgid "Full Release Notes on GitHub"
 msgstr ""
 
 msgid "Move around"

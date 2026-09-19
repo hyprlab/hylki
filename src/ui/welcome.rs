@@ -1,7 +1,7 @@
 //! First-run welcome wizard: a guided, five-step setup shown when Hylki starts
 //! with no accounts configured.
 //!
-//! The whole window wears the icon's yellow (#fec200) with the wordmark as the
+//! The whole window is the theme's own ground, light or dark, with the wordmark as the
 //! hero, and content floating on window-coloured cards — deliberate and warm,
 //! not a form dump. Steps: welcome → add an account (one-click GNOME Online
 //! Accounts imports + a manual IMAP form with provider presets) → privacy →
@@ -18,6 +18,8 @@ use crate::i18n::{i18n, i18n_f};
 
 /// Wordmark art, embedded so the wizard needs nothing on disk.
 const WORDMARK_SVG: &[u8] = include_bytes!("../../data/welcome/wordmark-black.svg");
+/// The same wordmark with white lettering, for a dark ground.
+const WORDMARK_DARK_SVG: &[u8] = include_bytes!("../../data/welcome/wordmark-white.svg");
 
 /// The settings chosen on the privacy + personalize pages, applied by the app
 /// through its normal Set* handlers when the wizard finishes.
@@ -121,21 +123,38 @@ fn wizard_providers() -> Vec<&'static Provider> {
 /// Render the wordmark at 2x for crisp HiDPI, displayed at `width` px.
 /// (Also used by the About window's identity block.)
 pub(crate) fn wordmark_picture(width: i32) -> gtk::Picture {
+    let pic = gtk::Picture::new();
+    pic.set_can_shrink(true);
+    pic.set_content_fit(gtk::ContentFit::Contain);
+    // Black lettering on a light ground, white on a dark one; follows the
+    // style manager while the window is open.
+    let style = adw::StyleManager::default();
+    let apply = move |pic: &gtk::Picture, dark: bool| {
+        if let Some(tex) = wordmark_texture(width, dark) {
+            pic.set_paintable(Some(&tex));
+        }
+    };
+    apply(&pic, style.is_dark());
+    let weak = pic.downgrade();
+    style.connect_dark_notify(move |s| {
+        if let Some(pic) = weak.upgrade() {
+            apply(&pic, s.is_dark());
+        }
+    });
+    pic
+}
+
+/// The wordmark rendered at 2x `width` for crisp HiDPI.
+fn wordmark_texture(width: i32, dark: bool) -> Option<gtk::gdk::Texture> {
     let loader = gtk::gdk_pixbuf::PixbufLoader::new();
-    // Render the SVG at the requested size (2x for crisp HiDPI).
     loader.connect_size_prepared(move |l, w, h| {
         let scale = (width * 2) as f64 / w.max(1) as f64;
         l.set_size(width * 2, (h as f64 * scale) as i32);
     });
-    let pic = gtk::Picture::new();
-    if loader.write(WORDMARK_SVG).is_ok() && loader.close().is_ok() {
-        if let Some(pb) = loader.pixbuf() {
-            pic.set_paintable(Some(&gtk::gdk::Texture::for_pixbuf(&pb)));
-        }
-    }
-    pic.set_can_shrink(true);
-    pic.set_content_fit(gtk::ContentFit::Contain);
-    pic
+    let svg = if dark { WORDMARK_DARK_SVG } else { WORDMARK_SVG };
+    loader.write(svg).ok()?;
+    loader.close().ok()?;
+    loader.pixbuf().map(|pb| gtk::gdk::Texture::for_pixbuf(&pb))
 }
 
 /// Wrap a page so a tall one scrolls instead of forcing the window taller
@@ -338,8 +357,6 @@ impl Component for Welcome {
         // 64px below the tagline: the hero's 18px spacing plus this.
         lang_row.set_margin_top(46);
         let lang_label = gtk::Label::new(Some(i18n("Language").as_str()));
-        // On the yellow, text is always dark (the theme's dim grey turns
-        // white in dark mode).
         lang_label.add_css_class("welcome-hint");
         lang_row.append(&lang_label);
         let choices = crate::ui::preferences::language_choices();

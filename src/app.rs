@@ -3641,6 +3641,10 @@ impl SimpleComponent for AppModel {
                 crate::background::request(true);
             }
             sender.input(AppMsg::ShowCarryOverNotice(from));
+        } else if std::env::var_os("HYLKI_SHOWCASE_CARRY_OVER").is_some() {
+            // Opens the notice as if Vireo's data had just come across, for
+            // checking it by hand.
+            sender.input(AppMsg::ShowCarryOverNotice(&crate::legacy::PREDECESSORS[0]));
         }
 
         model.lightbox_picture = Some(widgets.lightbox_picture.clone());
@@ -15150,12 +15154,12 @@ impl AppModel {
         page.set_margin_top(18);
         page.set_margin_bottom(12);
 
-        // Identity block: the blue wordmark on the brand yellow, wizard-style.
+        // Identity block: the wordmark, wizard-style.
         // Same Overlay-with-spacer cap as the wizard — a Picture's texture
         // wins over both width requests and clamps.
-        let wm_pic = crate::ui::welcome::wordmark_picture(120);
+        let wm_pic = crate::ui::welcome::wordmark_picture(182);
         let wm_frame = gtk::Box::new(gtk::Orientation::Vertical, 0);
-        wm_frame.set_size_request(120, crate::ui::welcome::wordmark_height(120.0));
+        wm_frame.set_size_request(182, crate::ui::welcome::wordmark_height(182.0));
         let wm = gtk::Overlay::new();
         wm.set_child(Some(&wm_frame));
         wm.add_overlay(&wm_pic);
@@ -15212,18 +15216,6 @@ impl AppModel {
         }
         info.append(&notes_row);
 
-        let changelog_row = adw::ActionRow::builder()
-            .title(&i18n("Changelog"))
-            .subtitle(&i18n("Full version history"))
-            .activatable(true)
-            .build();
-        changelog_row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Hylki-go-next-symbolic"));
-        {
-            let nav = nav.clone();
-            changelog_row.connect_activated(move |_| nav.push_by_tag("changelog"));
-        }
-        info.append(&changelog_row);
-
         // Linux Mint (Cinnamon): re-open the one-time keyring setup tip. Shown only
         // where that tip applies, so Mint users who dismissed it can find it again.
         if crate::platform::is_mint_cinnamon() {
@@ -15267,7 +15259,7 @@ impl AppModel {
             "https://github.com/hyprlab/hylki/issues",
         ));
         links.append(&mk_row("Discord", "https://discord.gg/YfEJ4b6PFW"));
-        links.append(&mk_row(&i18n("Contact — hyprlab@proton.me"), "mailto:hyprlab@proton.me"));
+        links.append(&mk_row("hyprlab@proton.me", "mailto:hyprlab@proton.me"));
         links.append(&mk_row(&i18n("Source Code"), "https://github.com/hyprlab/hylki"));
         links.append(&mk_row(&i18n("License (GNU AGPL v3)"), "https://www.gnu.org/licenses/agpl-3.0.html"));
 
@@ -15337,7 +15329,6 @@ impl AppModel {
                 .build(),
         );
         nav.add(&release_notes_page());
-        nav.add(&changelog_page());
 
         win.set_content(Some(&nav));
         win.present();
@@ -16446,17 +16437,39 @@ fn interface_font() -> String {
         .unwrap_or_else(|| "Cantarell 11".to_string())
 }
 
-/// The About window's "Release Notes" page, rendered from the single source of
-/// truth — `RELEASE_NOTES.md` at the repo root, which is also used verbatim for
-/// the GitHub release, so the notes stay identical everywhere.
-fn release_notes_page() -> adw::NavigationPage {
-    notes_page("Release Notes", "notes", include_str!("../RELEASE_NOTES.md"))
+/// Where the whole release history lives.
+const RELEASE_NOTES_URL: &str = "https://github.com/hyprlab/hylki/blob/main/RELEASE_NOTES.md";
+
+/// This release's section of `RELEASE_NOTES.md` — the same text the GitHub
+/// release carries — headed by the version.
+fn current_release_notes() -> String {
+    let md = include_str!("../RELEASE_NOTES.md");
+    let head = format!("## What's new in {}", crate::VERSION);
+    let mut out = String::new();
+    let mut on = false;
+    for line in md.lines() {
+        if line.starts_with("## ") {
+            if on {
+                break;
+            }
+            on = line == head || line.starts_with(&format!("{head} "));
+            if on {
+                out.push_str(&format!("## {}\n", crate::VERSION));
+            }
+            continue;
+        }
+        if on {
+            out.push_str(line);
+            out.push('\n');
+        }
+    }
+    out
 }
 
-/// The About window's "Changelog" page, from the centralized `CHANGELOG.md` — so
-/// the version history updates everywhere from one file.
-fn changelog_page() -> adw::NavigationPage {
-    notes_page("Changelog", "changelog", include_str!("../CHANGELOG.md"))
+/// The About window's "Release Notes" page: this release's notes, with the
+/// full history a button away on GitHub.
+fn release_notes_page() -> adw::NavigationPage {
+    notes_page("Release Notes", "notes", &current_release_notes(), Some((i18n("Full Release Notes on GitHub"), RELEASE_NOTES_URL)))
 }
 
 /// Inline Markdown → Pango markup: `**bold**`, `*italic*`, `` `code` `` and
@@ -16653,7 +16666,7 @@ fn md_column(md: &str) -> gtk::Box {
 /// Build a scrollable About sub-page from Markdown for the navigation stack,
 /// reachable by `tag`. Pushed pages get a back button and slide animation from
 /// the parent `NavigationView`.
-fn notes_page(title: &str, tag: &str, md: &str) -> adw::NavigationPage {
+fn notes_page(title: &str, tag: &str, md: &str, link: Option<(String, &'static str)>) -> adw::NavigationPage {
     let scroller = gtk::ScrolledWindow::builder()
         .hscrollbar_policy(gtk::PolicyType::Never)
         .vexpand(true)
@@ -16665,6 +16678,19 @@ fn notes_page(title: &str, tag: &str, md: &str) -> adw::NavigationPage {
     column.set_margin_bottom(24);
     column.set_margin_start(18);
     column.set_margin_end(18);
+    // A button at the foot, for the rest of the story elsewhere.
+    if let Some((label, url)) = link {
+        let button = gtk::Button::with_label(&label);
+        button.add_css_class("pill");
+        button.add_css_class("suggested-action");
+        button.set_halign(gtk::Align::Center);
+        button.set_margin_top(18);
+        button.connect_clicked(move |b| {
+            let parent = b.root().and_then(|r| r.downcast::<gtk::Window>().ok());
+            crate::ui::launch::open_link(url, parent.as_ref());
+        });
+        column.append(&button);
+    }
 
     clamp.set_child(Some(&column));
     scroller.set_child(Some(&clamp));
@@ -18562,6 +18588,13 @@ mod tests {
         // Unclosed markers stay the characters they are rather than eating the line.
         assert_eq!(md_inline("2 * 3 = 6"), "2 * 3 = 6");
         assert_eq!(md_inline("see [the docs"), "see [the docs");
+    }
+
+    #[test]
+    fn current_release_has_notes() {
+        let notes = current_release_notes();
+        assert!(notes.lines().count() > 2, "RELEASE_NOTES.md has no section for {}", crate::VERSION);
+        assert!(notes.starts_with(&format!("## {}\n", crate::VERSION)));
     }
 
     #[test]

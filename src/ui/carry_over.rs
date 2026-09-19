@@ -23,20 +23,45 @@ pub fn show(parent: &impl IsA<gtk::Window>, from: &'static Predecessor) {
             &[("old", from.name)],
         ));
     }
-    let dialog = adw::MessageDialog::new(Some(parent.as_ref()), Some(&heading), Some(&body));
+    // The wordmark sits above the title, so the whole content is one child
+    // rather than the dialog's own heading and body (which nothing can go
+    // above).
+    let dialog = adw::MessageDialog::new(Some(parent.as_ref()), None, None);
     dialog.set_size_request(480, -1);
 
+    let content = gtk::Box::new(gtk::Orientation::Vertical, 10);
+    let wm_pic = crate::ui::welcome::wordmark_picture(120);
+    let wm_frame = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    wm_frame.set_size_request(120, crate::ui::welcome::wordmark_height(120.0));
+    let wm = gtk::Overlay::new();
+    wm.set_child(Some(&wm_frame));
+    wm.add_overlay(&wm_pic);
+    wm.set_clip_overlay(&wm_pic, true);
+    wm.set_halign(gtk::Align::Center);
+    wm.set_margin_bottom(6);
+    content.append(&wm);
+
+    let title = gtk::Label::new(Some(&heading));
+    title.add_css_class("title-2");
+    title.set_wrap(true);
+    title.set_justify(gtk::Justification::Center);
+    content.append(&title);
+
+    let text = gtk::Label::new(Some(&body));
+    text.set_wrap(true);
+    text.set_justify(gtk::Justification::Center);
+    content.append(&text);
+
     if crate::platform::is_flatpak() {
-        let extra = gtk::Box::new(gtk::Orientation::Vertical, 6);
-        extra.set_margin_top(6);
         let caption = gtk::Label::new(Some(i18n_f("To remove {old}, run:", &[("old", from.name)]).as_str()));
         caption.set_xalign(0.0);
+        caption.set_margin_top(6);
         caption.add_css_class("dim-label");
         caption.add_css_class("caption");
-        extra.append(&caption);
-        extra.append(&command_row(&format!("flatpak uninstall {}", from.app_id)));
-        dialog.set_extra_child(Some(&extra));
+        content.append(&caption);
+        content.append(&command_row(&format!("flatpak uninstall {}", from.app_id)));
     }
+    dialog.set_extra_child(Some(&content));
 
     dialog.add_response("ok", &i18n("Got it"));
     dialog.set_default_response(Some("ok"));

@@ -553,12 +553,6 @@ msgstr ""
 msgid "Release Notes"
 msgstr "Kiadási megjegyzések"
 
-msgid "Changelog"
-msgstr "Változásnapló"
-
-msgid "Full version history"
-msgstr "Teljes verziótörténet"
-
 msgid "Keyring Setup Help"
 msgstr "Segítség a kulcstartó beállításához"
 
@@ -574,9 +568,6 @@ msgstr "Webhely"
 
 msgid "Report an issue or feature request"
 msgstr ""
-
-msgid "Contact — hyprlab@proton.me"
-msgstr "Kapcsolat — hyprlab@proton.me"
 
 msgid "Source Code"
 msgstr "Forráskód"
@@ -672,6 +663,10 @@ msgstr[1] ""
 #, fuzzy
 msgid "Filters Applied"
 msgstr "Szűrők"
+
+#, fuzzy
+msgid "Full Release Notes on GitHub"
+msgstr "Kiadási megjegyzések"
 
 msgid "Move around"
 msgstr "Navigáció"
@@ -4587,6 +4582,15 @@ msgstr "Az egységes beérkezett nézet világos módban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Changelog"
+#~ msgstr "Változásnapló"
+
+#~ msgid "Full version history"
+#~ msgstr "Teljes verziótörténet"
+
+#~ msgid "Contact — hyprlab@proton.me"
+#~ msgstr "Kapcsolat — hyprlab@proton.me"
 
 #~ msgid "Discord — Join the community"
 #~ msgstr "Discord — Csatlakozás a közösséghez"

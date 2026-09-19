@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.35.2-beta.1" date="2026-09-18" type="development">
+      <description>
+        <p>Catch-up with stable 1.35.1.</p>
+      </description>
+    </release>
     <release version="1.35.1-beta.1" date="2026-09-18" type="development">
       <description>
         <p>Catch-up with stable 1.35.0, the first Hylki release: the beta is now co.hyprlab.Hylki.Beta and carries a Vireo beta's accounts, settings and cached mail across on its first start.</p>

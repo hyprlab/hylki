@@ -1472,52 +1472,41 @@ headerbar.compose-toolbar button.image-button {
 
 /* ---- First-run welcome wizard (welcome.rs) ---- */
 
-/* The whole window wears the icon's yellow; every page floats on it. */
+/* The window is the theme's own ground, light or dark; every page floats
+   on it and the text takes the theme's foreground. */
 window.welcome-window,
 .welcome-window > * {
-  background-color: #fec200;
+  background-color: @window_bg_color;
 }
 .welcome-window headerbar {
   background: transparent;
   box-shadow: none;
   border: none;
 }
-.welcome-window headerbar button {
-  color: rgba(0, 0, 0, 0.75);
-}
 
 .welcome-title {
   font-size: 1.7em;
   font-weight: 800;
-  color: rgba(0, 0, 0, 0.85);
+  color: @window_fg_color;
 }
 
 .welcome-tagline {
   font-size: 1.02em;
-  color: rgba(0, 0, 0, 0.65);
+  color: alpha(@window_fg_color, 0.7);
 }
 
 .welcome-section {
   font-weight: 700;
   font-size: 0.9em;
-  color: rgba(0, 0, 0, 0.6);
+  color: alpha(@window_fg_color, 0.65);
   margin-left: 6px;
 }
 
-/* Content cards: an opaque surface of the theme's own, lifted off the
-   yellow — white in light, the popover grey in dark. The list's usual card
-   colour is translucent in dark mode and only tinted the yellow lighter. */
+/* Content cards: the theme's card surface, lifted a little. */
 .welcome-card {
   border-radius: 14px;
-  background-color: @popover_bg_color;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-}
-
-/* The first page's language drop-down: a field on the yellow, so the same
-   opaque surface as the cards rather than the theme's translucent button. */
-.welcome-window dropdown > button {
-  background-color: @popover_bg_color;
-  color: @window_fg_color;
+  background-color: @card_bg_color;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.10);
 }
 
 .welcome-pill {
@@ -1541,20 +1530,20 @@ window.welcome-window,
 
 .welcome-hint {
   font-size: 0.9em;
-  color: rgba(0, 0, 0, 0.6);
+  color: alpha(@window_fg_color, 0.65);
 }
 .welcome-hint.error {
-  color: #a51d2d;
+  color: @error_color;
   font-weight: 600;
 }
 .welcome-hint.success {
-  color: #1a5f2a;
+  color: @success_color;
   font-weight: 600;
 }
 
 .welcome-added {
   font-weight: 700;
-  color: rgba(0, 0, 0, 0.8);
+  color: @window_fg_color;
 }
 
 .welcome-check {
@@ -1563,11 +1552,11 @@ window.welcome-window,
 
 .welcome-link {
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.8);
+  color: @window_fg_color;
 }
 
 .welcome-window carouselindicatordots {
-  color: rgba(0, 0, 0, 0.8);
+  color: @window_fg_color;
 }
 
 /* ---- App icon gallery (icon_picker.rs): Settings + wizard ---- */
@@ -1613,16 +1602,16 @@ window.welcome-window,
     linear-gradient(to left, @card_bg_color, alpha(@card_bg_color, 0)),
     linear-gradient(to left, @window_bg_color, alpha(@window_bg_color, 0));
 }
-/* On the wizard's yellow the selection ring wears the wordmark blue. */
+/* In the wizard the selection ring wears the wordmark blue. */
 .welcome-window .icon-gallery flowboxchild:hover {
-  background-color: rgba(0, 0, 0, 0.06);
+  background-color: alpha(@window_fg_color, 0.06);
 }
 .welcome-window .icon-gallery flowboxchild:selected {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: alpha(@window_fg_color, 0.08);
   box-shadow: inset 0 0 0 2px #006dff;
 }
 .welcome-window .icon-gallery-label {
-  color: rgba(0, 0, 0, 0.7);
+  color: alpha(@window_fg_color, 0.75);
 }
 
 /* ---- Console mode (notifications.rs): dracula on an old tube ---- */

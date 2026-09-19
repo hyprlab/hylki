@@ -57,6 +57,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.35.1" date="2026-09-18">
+      <description>
+        <p>The welcome wizard, About window and carry-over notice follow the theme's light or dark colours, with a light-lettered wordmark in dark mode. The final icon set, with a full-size default and the classic icon at the end of the gallery. About shows this release's notes with a link to the full history.</p>
+      </description>
+    </release>
     <release version="1.35.0" date="2026-09-18">
       <description>
         <p>Vireo is now Hylki. Same app, new name and icon. The first start carries a Vireo install's accounts, settings and cached mail across, leaving Vireo untouched until you remove it. The app icon gallery is a new set of Hylki envelopes.</p>
