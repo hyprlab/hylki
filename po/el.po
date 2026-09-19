@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
-"PO-Revision-Date: 2026-09-19 11:30+0300\n"
+"PO-Revision-Date: 2026-09-19 18:58+0300\n"
 "Last-Translator: yiannis ioannides <git@yioannides.com>\n"
 "Language-Team: Greek\n"
 "Language: el\n"
@@ -669,7 +669,7 @@ msgid "Filters Applied"
 msgstr "Τα φίλτρα εφαρμόστηκαν"
 
 msgid "Full Release Notes on GitHub"
-msgstr ""
+msgstr "Όλες οι σημειώσεις έκδοσης στο GitHub"
 
 msgid "Move around"
 msgstr "Μετακίνηση"
@@ -2473,7 +2473,7 @@ msgid "New contact"
 msgstr "Νέα επαφή"
 
 msgid "Loading Contacts…"
-msgstr ""
+msgstr "Φόρτωση επαφών..."
 
 msgid "Contacts you add in GNOME Contacts appear here."
 msgstr "Οι επαφές που προσθέτετε στις Επαφές GNOME εμφανίζονται εδώ."
@@ -2658,6 +2658,14 @@ msgstr "Επόμενη αντιστοιχία"
 
 msgid "Close find"
 msgstr "Κλείσιμο εύρεσης"
+
+msgid ""
+"Reader View shows a message as its text alone, in one plain format, without "
+"the sender's layout, colours and fonts."
+msgstr ""
+
+msgid "Reader View"
+msgstr ""
 
 #. Dimming comes from the cover's own foreground, which
 #. is picked for the message theme — `dim-label` would
@@ -3718,6 +3726,21 @@ msgstr ""
 "κλικ στην ένδειξη παραληπτών. Με έναν παραλήπτη η ένδειξη παραλείπεται "
 "εντελώς."
 
+msgid "Reader View switch"
+msgstr ""
+
+msgid "Show the switch in the message header, beside the account name."
+msgstr ""
+
+#, fuzzy
+msgid "When a message is opened"
+msgstr "Σύνταξη μηνυμάτων σε"
+
+msgid ""
+"Keep the switch where it was last set, or start every message in Reader View "
+"or as sent. The switch still changes the message on screen."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr "Σύνταξη στο κύριο παράθυρο"
 
@@ -4089,6 +4112,16 @@ msgstr "Κατά την εμφάνιση"
 
 msgid "After two seconds"
 msgstr "Μετά από δύο δευτερόλεπτα"
+
+#, fuzzy
+msgid "Remember the last choice"
+msgstr "Απομνημόνευση διάταξης πλευρικής στήλης"
+
+msgid "Reader View on"
+msgstr ""
+
+msgid "Reader View off"
+msgstr ""
 
 msgid "Hidden behind a toggle"
 msgstr "Κρυμμένη πίσω από διακόπτη"
@@ -4524,6 +4557,7 @@ msgstr ""
 
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr ""
+"η απάντηση από τον διακομιστή δεν μπόρεσε να διαβαστεί (ξεκίνησε: {reply})"
 
 msgid "runtime error: {e}"
 msgstr "σφάλμα χρόνου εκτέλεσης: {e}"

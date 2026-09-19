@@ -1173,9 +1173,13 @@ impl Component for Compose {
         let s = sender.clone();
         let open = model.completion_open.clone();
         let editor = model.editor.clone();
-        let key_root = root.clone();
+        // Weak: the root owns this controller, so a strong root here would
+        // be a cycle that kept a closed composer's whole widget tree alive,
+        // its editor's WebKitWebProcess included (#221).
+        let key_root = root.downgrade();
         key.connect_key_pressed(move |_, keyval, _, state| {
             use gtk::glib::Propagation;
+            let Some(key_root) = key_root.upgrade() else { return Propagation::Proceed };
             // Ctrl+Z, Ctrl+Shift+Z and Ctrl+Y run the composer's own history
             // (#200): the body's typing and formatting with the attachments
             // in the same order. Caught here, in the capture phase above the

@@ -246,6 +246,11 @@ pub enum AccountsInput {
     SearchSenders(String),
     /// Leave the account editor without saving (the settings window moved on).
     CloseEditor,
+    /// Drop the signature editor's WebKit view when no account editor is
+    /// showing: it is rebuilt on the next visit, and its web process (a few
+    /// hundred MB, outside the sandbox's view) otherwise lives as long as
+    /// the hidden Settings window does, which is until the app exits (#221).
+    ReleaseSignatureEditor,
     /// The app's live folder lists per account email (for Special Folders).
     SetFolderChoices(std::collections::HashMap<String, Vec<(String, String)>>),
     AddAccount,
@@ -1540,6 +1545,16 @@ impl Component for AccountsWindow {
         // The editor's sixty-odd rows stay out of the widget tree until an
         // editor opens, so the Settings window's first layout skips them.
         widgets.nav.remove(&widgets.editor_page);
+        {
+            // Leaving the editor page (however it was left) lets its
+            // signature view go; see ReleaseSignatureEditor.
+            let s = sender.clone();
+            widgets.nav.connect_popped(move |_, page| {
+                if page.tag().is_some_and(|t| t == "editor") {
+                    s.input(AccountsInput::ReleaseSignatureEditor);
+                }
+            });
+        }
         tracing::debug!("settings window: accounts view built in {:?}", t_init.elapsed());
         model.filters_list = Some(widgets.filters_list.clone());
         {
@@ -1666,6 +1681,14 @@ impl Component for AccountsWindow {
                     .is_some_and(|t| t == "editor" || t == "filter" || t == "tag")
                 {
                     widgets.nav.pop();
+                }
+            }
+            AccountsInput::ReleaseSignatureEditor => {
+                let editing = widgets.nav.visible_page().and_then(|p| p.tag()).is_some_and(|t| t == "editor");
+                if !editing {
+                    if let Some(editor) = self.sig_editor.take() {
+                        widgets.sig_holder.remove(&editor.widget);
+                    }
                 }
             }
             AccountsInput::DebugEditLabel(text) => widgets.label_row.set_text(&text),

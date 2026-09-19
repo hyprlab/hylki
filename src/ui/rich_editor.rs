@@ -183,9 +183,17 @@ impl RichEditor {
             .web_context(&super::message_view::shared_web_context())
             .user_content_manager(&ucm)
             .build();
+        crate::memory_report::register_web_view(&webview, "editor");
+        // Everything the view itself owns (its content manager's handlers,
+        // its event controllers, its toolbar's buttons via the format-state
+        // handler) holds the view WEAKLY. A strong clone in any of those
+        // closures is a reference cycle GObject never breaks: the editor of
+        // a closed composer stayed alive that way, and with it its 300 MB
+        // WebKitWebProcess, for the rest of the session (#221).
         {
-            let v = webview.clone();
+            let weak = webview.downgrade();
             ucm.connect_script_message_received(Some("hylkiSpell"), move |_, value| {
+                let Some(v) = weak.upgrade() else { return };
                 let word = value.to_str().to_string();
                 let bad = crate::spell::word_is_misspelled(&word);
                 exec(&v, &format!("window.__hylkiSpellMark({bad})"));
@@ -282,8 +290,9 @@ impl RichEditor {
             // where capture reaches it first, and this never runs.
             let keys = gtk::EventControllerKey::new();
             keys.set_propagation_phase(gtk::PropagationPhase::Capture);
-            let v = webview.clone();
+            let weak = webview.downgrade();
             keys.connect_key_pressed(move |_, keyval, _, state| {
+                let Some(v) = weak.upgrade() else { return gtk::glib::Propagation::Proceed };
                 match history_key(keyval, state) {
                     Some(redo) => {
                         v.execute_editing_command(if redo {
@@ -457,10 +466,11 @@ impl RichEditor {
             let drop =
                 gtk::DropTarget::new(gtk::gdk::FileList::static_type(), gtk::gdk::DragAction::COPY);
             drop.set_propagation_phase(gtk::PropagationPhase::Capture);
-            let v = webview.clone();
+            let weak = webview.downgrade();
             let cb = attach_cb.clone();
             let src = source.clone();
             drop.connect_drop(move |_, value, x, y| {
+                let Some(v) = weak.upgrade() else { return false };
                 let Ok(list) = value.get::<gtk::gdk::FileList>() else { return false };
                 // Source mode has no document to hold a picture: everything
                 // dropped becomes an attachment, and the user writes the
@@ -622,6 +632,7 @@ impl RichEditor {
                     .web_context(&super::message_view::shared_web_context())
                     .settings(&settings)
                     .build();
+                crate::memory_report::register_web_view(&v, "editor preview");
                 v.set_background_color(&gtk::gdk::RGBA::new(0.0, 0.0, 0.0, 0.0));
                 self.stack.add_named(&v, Some("preview"));
                 *self.preview.borrow_mut() = Some(v.clone());
@@ -1058,13 +1069,23 @@ fn build_toolbar(
         // Don't take focus, so the editor keeps its selection.
         btn.set_can_focus(false);
         btn.add_css_class("flat");
+        // Weak: the format-state handler the view's content manager owns
+        // reaches these buttons, so a strong view here would be a cycle.
         if *cmd == "LINK" {
-            let wv = webview.clone();
-            btn.connect_clicked(move |b| prompt_link(&wv, b));
+            let weak = webview.downgrade();
+            btn.connect_clicked(move |b| {
+                if let Some(wv) = weak.upgrade() {
+                    prompt_link(&wv, b);
+                }
+            });
         } else {
-            let wv = webview.clone();
+            let weak = webview.downgrade();
             let cmd = cmd.to_string();
-            btn.connect_clicked(move |_| exec(&wv, &cmd));
+            btn.connect_clicked(move |_| {
+                if let Some(wv) = weak.upgrade() {
+                    exec(&wv, &cmd);
+                }
+            });
         }
         group.append(&btn);
     }
@@ -2047,5 +2068,28 @@ mod signature_tests {
         assert!(out.contains("src=\"https://x.example/a.png\""), "{out}");
         // A path that resolves to nothing is left as written.
         assert!(out.contains("src=\"missing.png\""), "{out}");
+    }
+}
+
+impl Drop for RichEditor {
+    /// The last handle takes the web process with it. A WebKit view keeps
+    /// internal references to itself after it is unparented (measured: two
+    /// on a bare view, one here), so it is never finalized by its owners
+    /// letting go, and its WebKitWebProcess — a few hundred MB, invisible
+    /// to the Flatpak sandbox's process tree — lived on for every composer
+    /// ever closed (#221: six of them in one user's session monitor).
+    /// Deferred past the composer's slide-out so the document does not
+    /// blank mid-animation.
+    fn drop(&mut self) {
+        if std::rc::Rc::strong_count(&self._theme_handler) != 1 {
+            return; // another handle still uses the view
+        }
+        let views: Vec<webkit6::WebView> =
+            std::iter::once(self.webview.clone()).chain(self.preview.borrow().clone()).collect();
+        gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(600), move || {
+            for v in &views {
+                crate::memory_report::release_web_view(v);
+            }
+        });
     }
 }

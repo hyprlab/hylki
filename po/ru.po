@@ -2619,6 +2619,14 @@ msgstr "Следующее совпадение"
 msgid "Close find"
 msgstr "Закрыть поиск"
 
+msgid ""
+"Reader View shows a message as its text alone, in one plain format, without "
+"the sender's layout, colours and fonts."
+msgstr ""
+
+msgid "Reader View"
+msgstr ""
+
 #. Dimming comes from the cover's own foreground, which
 #. is picked for the message theme — `dim-label` would
 #. fade it against the app's instead.
@@ -3658,6 +3666,21 @@ msgstr ""
 "Показывать получателей под именем отправителя без нажатия на метку. Если "
 "получатель один, метка скрывается."
 
+msgid "Reader View switch"
+msgstr ""
+
+msgid "Show the switch in the message header, beside the account name."
+msgstr ""
+
+#, fuzzy
+msgid "When a message is opened"
+msgstr "Составлять сообщения в"
+
+msgid ""
+"Keep the switch where it was last set, or start every message in Reader View "
+"or as sent. The switch still changes the message on screen."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr "Создание писем в основном окне"
 
@@ -4021,6 +4044,16 @@ msgstr "Условие отметки прочитанным"
 
 msgid "After two seconds"
 msgstr "Через две секунды"
+
+#, fuzzy
+msgid "Remember the last choice"
+msgstr "Запоминать состояние боковой панели"
+
+msgid "Reader View on"
+msgstr ""
+
+msgid "Reader View off"
+msgstr ""
 
 msgid "Hidden behind a toggle"
 msgstr "Скрыто за переключателем"

@@ -1,9 +1,53 @@
 # Changelog
 
-## 1.35.4-beta.1 — 2026-09-19
+## 1.35.5-beta.1 — 2026-09-19
 
-Catch-up release: the beta channel is brought level with stable 1.35.3. No
-changes of its own — see the 1.35.3 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.35.4. No
+changes of its own — see the 1.35.4 section below for what is in it.
+
+## 1.35.4 — 2026-09-19
+
+A Reader View shows any message as its content alone, and the web processes
+behind closed composers, pop-outs and prints now end with them instead of
+living on for the rest of the session.
+
+- **Reader View.** A labelled switch on the account chip's line of the
+  reader header rebuilds every message of the open conversation from its
+  content alone: headings, paragraphs, lists, quotes, links, real pictures
+  and data tables, set in one uniform sheet that follows the app's theme
+  and accent. The sender's stylesheets, layout tables, colours, fonts,
+  hidden preview text, tracking pixels and nested links are gone.
+  `src/reader.rs` parses the body with html5ever into a DOM and emits a
+  fresh minimal tree (layout tables become blocks, data tables are kept,
+  MJML's zero font sizes are not treated as hiding). The quote fold works
+  in the reader document as it does in the ordinary view. The choice
+  follows into popped-out windows and prints what it shows.
+- **Settings → Reading → Reader View** offers a switch to show or hide the
+  header's switch and a choice for what happens when a message is opened:
+  keep the switch where it was last set (the default), or start every
+  message in Reader View or as sent. Stored as `reader_switch` and
+  `reader_default` in privacy.toml.
+- **Web processes end with what used them** (#221). A session monitor
+  showed six WebKitWebProcess instances under Hylki after a few hours, 170
+  to 450 MB each, while the exported log's process tree said 481 MB: inside
+  the Flatpak sandbox WebKit starts its web processes through flatpak-spawn,
+  outside the sandbox's `/proc`, so the report only ever saw a 6 MB proxy
+  for each. Two things kept them alive. The composer's root held itself
+  through its key controller, and the editor's controllers, message
+  handlers and toolbar buttons held the view strongly, so a closed
+  composer's whole widget tree stayed for the session. And letting go of
+  every handle is not enough anyway: WebKitGTK keeps references of its own
+  to an unparented view, so it is never finalized and its process never
+  exits. The cycles are broken with weak references, and every owner that
+  is done with a view now ends its web process explicitly: the last editor
+  handle a beat after the composer's slide-out, the Settings signature
+  editor when its page is left or the window hides, pop-out windows, and
+  both print paths once the job is over. The Memory section of the exported
+  log lists the WebKit views alive by role and says that their processes
+  are outside its totals.
+- **Greek translation** updated (PR #231 by @yioannides): the three strings
+  1.35.3 added. After this release's template refresh (1247 strings, the
+  Reader View settings) Greek stands at 1237.
 
 ## 1.35.3 — 2026-09-19
 

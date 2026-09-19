@@ -57,6 +57,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.35.4" date="2026-09-19">
+      <description>
+        <p>Reader View shows any message as its content alone, the web processes behind closed composers, pop-outs and prints end with them, and the Greek translation is updated.</p>
+      </description>
+    </release>
     <release version="1.35.3" date="2026-09-19">
       <description>
         <p>Mailfence accounts show their mail, replies sent through Proton Bridge join their conversation, the theme chooser shows each theme as a window, new icon and wordmark art, and a Greek translation.</p>

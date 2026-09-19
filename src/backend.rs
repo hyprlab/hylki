@@ -527,7 +527,26 @@ fn sample_messages() -> Vec<Message> {
         Spec { id: 10, account_id: 1, folder_id: 1, from_name: "Rust Weekly", from_addr: "digest@this-week-in-rust.org", to: ME,
             subject: "This Week in Rust #612",
             preview: "Crate of the week, RFCs, and community updates. This issue: async closures stabilize, and a deep dive into…",
-            body: "Welcome to another issue of This Week in Rust!\n\nThis week: async closures stabilize on stable, a deep dive into zero-copy parsing, and 14 new crates worth your attention.\n\nRead online for the full digest.",
+            // A designed newsletter, as they come: a preheader hidden from
+            // the message, a layout table with its own colours and fonts, a
+            // button, a tracking pixel. The Reader View demo strips it to
+            // the words.
+            body: "<html><head><style>body{margin:0;background:#f4f1ea;font-family:Georgia,serif}.btn{background:#c0392b;color:#fff!important;padding:10px 18px;border-radius:4px;text-decoration:none;display:inline-block}</style></head>\
+                   <body><div style=\"display:none;max-height:0;overflow:hidden;font-size:1px;color:#f4f1ea\">Async closures land on stable, zero-copy parsing, 14 crates \u{200b}\u{200b}\u{200b}</div>\
+                   <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#f4f1ea\"><tr><td align=\"center\" style=\"padding:24px 12px\">\
+                   <table width=\"560\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#ffffff\" style=\"border:1px solid #e0d9c8\">\
+                   <tr><td bgcolor=\"#2c3e50\" style=\"padding:22px 28px;color:#ecf0f1;font-size:26px;font-weight:bold;letter-spacing:1px\">This Week in Rust <span style=\"color:#f39c12\">#612</span></td></tr>\
+                   <tr><td style=\"padding:24px 28px 8px;font-size:15px;line-height:1.5;color:#333\"><p style=\"margin:0 0 14px\">Welcome to another issue of <b>This Week in Rust</b>!</p>\
+                   <p style=\"margin:0 0 14px\">This week: async closures stabilize on stable, a deep dive into zero-copy parsing, and 14 new crates worth your attention.</p></td></tr>\
+                   <tr><td style=\"padding:0 28px\"><table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>\
+                   <td width=\"50%\" valign=\"top\" style=\"padding:12px;background:#fdf6e3;font-size:14px;color:#333\"><h3 style=\"margin:0 0 6px;color:#c0392b;font-size:16px\">Crate of the week</h3>zerocopy-parse: parse without copying a byte. <a href=\"https://example.com/crate\" style=\"color:#c0392b\">Read more</a></td>\
+                   <td width=\"50%\" valign=\"top\" style=\"padding:12px;background:#eef5fb;font-size:14px;color:#333\"><h3 style=\"margin:0 0 6px;color:#2980b9;font-size:16px\">RFCs</h3>Three RFCs entered final comment period this week, including the one on <i>async closures</i>.</td>\
+                   </tr></table></td></tr>\
+                   <tr><td style=\"padding:20px 28px;font-size:15px;color:#333\"><table cellpadding=\"0\" cellspacing=\"0\"><tr><th align=\"left\" style=\"padding:4px 12px 4px 0;border-bottom:2px solid #2c3e50\">Crate</th><th align=\"left\" style=\"padding:4px 0;border-bottom:2px solid #2c3e50\">Downloads</th></tr>\
+                   <tr><td style=\"padding:4px 12px 4px 0\">zerocopy-parse</td><td style=\"padding:4px 0\">41,200</td></tr><tr><td style=\"padding:4px 12px 4px 0\">tokio-tap</td><td style=\"padding:4px 0\">12,844</td></tr></table></td></tr>\
+                   <tr><td align=\"center\" style=\"padding:8px 28px 28px\"><a class=\"btn\" href=\"https://example.com/digest/612\">Read the full digest</a></td></tr>\
+                   <tr><td bgcolor=\"#ecf0f1\" style=\"padding:14px 28px;font-size:12px;color:#7f8c8d\">You are receiving this because you subscribed. <a href=\"https://example.com/unsubscribe\" style=\"color:#7f8c8d\">Unsubscribe</a></td></tr>\
+                   </table></td></tr></table><img src=\"https://example.com/open.gif\" width=\"1\" height=\"1\" alt=\"\"></body></html>",
             date: "Yesterday", unread: true, starred: false, keywords: &[], has_attachment: false, in_reply_to: None },
         Spec { id: 11, account_id: 1, folder_id: 1, from_name: "Apple", from_addr: "no-reply@apple.com", to: ME,
             subject: "Your receipt from Apple",

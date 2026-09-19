@@ -1,6 +1,6 @@
 [package]
 name = "hylki"
-version = "1.35.4-beta.1"
+version = "1.35.5-beta.1"
 edition = "2021"
 description = "A clean, fast GNOME-native email client"
 license = "AGPL-3.0-or-later"
@@ -74,6 +74,8 @@ ammonia = "4.1.4"
 ksni = { version = "0.3.6", default-features = false, features = ["tokio", "blocking"] }
 gettext-rs = { version = "0.8.0", features = ["gettext-system"] }
 pulldown-cmark = { version = "0.13.4", default-features = false, features = ["html"] }
+markup5ever_rcdom = "0.39.0"
+html5ever = "0.39"
 
 [build-dependencies]
 # Compiles resources/veem.gresource.xml (the bundled symbolic icons) into a

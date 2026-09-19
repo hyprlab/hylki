@@ -21,6 +21,18 @@ use crate::i18n::{i18n, i18n_f};
 /// callback, and WebKit prints with them. WebKit's own `run_dialog` spins a
 /// nested main loop, and polling a glib future inside one aborts the process.
 pub fn print_webview(webview: &webkit6::WebView, job_name: &str, parent: Option<gtk::Window>) {
+    print_webview_then(webview, job_name, parent, || {});
+}
+
+/// [`print_webview`], with `done` called once the job has finished, failed,
+/// or the dialog was dismissed — for a caller whose view exists only for
+/// this print (see [`print_html`]).
+fn print_webview_then(
+    webview: &webkit6::WebView,
+    job_name: &str,
+    parent: Option<gtk::Window>,
+    done: impl FnOnce() + 'static,
+) {
     let print = webkit6::PrintOperation::new(webview);
     let dialog = gtk::PrintDialog::new();
     dialog.set_title(&i18n("Print Message"));
@@ -31,6 +43,7 @@ pub fn print_webview(webview: &webkit6::WebView, job_name: &str, parent: Option<
     settings.set(gtk::PRINT_SETTINGS_OUTPUT_BASENAME, Some(job_name));
     dialog.set_print_settings(&settings);
 
+    let done = std::rc::Rc::new(std::cell::RefCell::new(Some(Box::new(done) as Box<dyn FnOnce()>)));
     dialog.setup(
         parent.as_ref(),
         gtk::gio::Cancellable::NONE,
@@ -42,16 +55,24 @@ pub fn print_webview(webview: &webkit6::WebView, job_name: &str, parent: Option<
                     tracing::warn!("printing failed: {error}");
                 });
                 // Keep the operation alive until WebKit says it is done; dropping
-                // it here would cancel the job.
+                // it here would cancel the job. `finished` follows `failed` too.
                 let keep = std::cell::RefCell::new(Some(print.clone()));
                 print.connect_finished(move |_| {
                     keep.borrow_mut().take();
+                    if let Some(f) = done.borrow_mut().take() {
+                        f();
+                    }
                 });
                 print.print();
             }
             // Dismissing the dialog arrives here as an error; it is the ordinary
             // way to change your mind, not a failure.
-            Err(e) => tracing::debug!("print dialog dismissed: {e}"),
+            Err(e) => {
+                tracing::debug!("print dialog dismissed: {e}");
+                if let Some(f) = done.borrow_mut().take() {
+                    f();
+                }
+            }
         },
     );
 }
@@ -75,7 +96,18 @@ pub fn print_html(html: &str, job_name: &str, parent: Option<gtk::Window>) {
         if event != webkit6::LoadEvent::Finished || done.replace(true) {
             return;
         }
-        print_webview(view, &job, parent.clone());
+        let view_done = view.clone();
+        print_webview_then(view, &job, parent.clone(), move || {
+            // The job is over: this view has nothing left to do, and its
+            // web process must not outlive it (#221).
+            PENDING.with(|slot| {
+                let mut slot = slot.borrow_mut();
+                if slot.as_ref() == Some(&view_done) {
+                    slot.take();
+                }
+            });
+            crate::memory_report::release_web_view(&view_done);
+        });
     });
     webview.load_html(html, Some("https://hylki.localhost/print"));
 }
@@ -190,6 +222,14 @@ pub fn open(parent: &adw::ApplicationWindow, html: &str, job_name: &str) {
     let webview = crate::ui::message_view::new_preview_webview();
     webview.set_vexpand(true);
     webview.load_html(html, Some("https://hylki.localhost/print-preview"));
+    {
+        // The preview's view goes with its window (#221).
+        let webview = webview.clone();
+        win.connect_close_request(move |_| {
+            crate::memory_report::release_web_view(&webview);
+            gtk::glib::Propagation::Proceed
+        });
+    }
 
     // Toasts confirm a save without stealing focus from the preview.
     let toasts = adw::ToastOverlay::new();

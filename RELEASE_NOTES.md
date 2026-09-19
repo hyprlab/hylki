@@ -2,9 +2,17 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.35.4-beta.1
+## What's new in 1.35.5-beta.1
 
-Catch-up release: the beta channel is level with stable 1.35.3. Everything below applies.
+Catch-up release: the beta channel is level with stable 1.35.4. Everything below applies.
+
+## What's new in 1.35.4
+
+**Reader View.** A switch on the account chip's line of the reader header shows every message of the open conversation as its content alone: headings, paragraphs, lists, quotes, links, pictures and real tables, set in one clean sheet that follows your theme. The sender's layout, colours, fonts, hidden preview text and tracking pixels are gone. The choice follows into popped-out windows and into printing. Settings → Reading lets you hide the switch, or choose whether a message opens the way it was sent, in Reader View, or however you last left the switch.
+
+**Memory no longer grows with every message you write** (#221). Each composer, pop-out window and print preview runs in a WebKit process of its own, and those processes were left running after their window closed, a few hundred MB each. They now end with what used them. The exported log's Memory section also lists how many of these views are alive, since inside Flatpak they run outside the log's own process tree.
+
+**Greek translation** updated (PR #231 by [@yioannides](https://github.com/yioannides)).
 
 ## What's new in 1.35.3
 

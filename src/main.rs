@@ -29,6 +29,7 @@ mod pgp;
 mod platform;
 mod power;
 mod ram_cache;
+mod reader;
 mod rng;
 mod spell;
 mod theme;

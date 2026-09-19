@@ -38,6 +38,10 @@ pub struct PrefInit {
     pub always_show_recipients: bool,
     /// Lone messages render as inset cards, like conversation messages.
     pub single_message_card: bool,
+    /// The Reader View switch is shown in the reader header.
+    pub reader_switch: bool,
+    /// What Reader View does when a message is opened.
+    pub reader_default: crate::config::ReaderDefault,
     /// Each conversation message lists its own attachments (#213).
     pub card_attachments: bool,
     /// The attachment drawer beneath the reader is shown (#213).
@@ -748,6 +752,8 @@ pub enum PrefInput {
     ToggleThreadNewestFirst(bool),
     ToggleAlwaysShowRecipients(bool),
     ToggleSingleMessageCard(bool),
+    ToggleReaderSwitch(bool),
+    ChangeReaderDefault(u32),
     ToggleCardAttachments(bool),
     ToggleAttachmentDrawer(bool),
     ToggleThreadExpansion(bool),
@@ -882,6 +888,8 @@ pub enum PrefOutput {
     SetThreadNewestFirst(bool),
     SetAlwaysShowRecipients(bool),
     SetSingleMessageCard(bool),
+    SetReaderSwitch(bool),
+    SetReaderDefault(crate::config::ReaderDefault),
     SetCardAttachments(bool),
     SetAttachmentDrawer(bool),
     SetThreadExpansion(bool),
@@ -1975,6 +1983,29 @@ impl Component for Preferences {
                                         },
                                     },
                                 },
+
+                                add = &adw::PreferencesGroup {
+                                    set_title: &i18n("Reader View"),
+                                    set_description: Some(&i18n("Reader View shows a message as its text alone, in one plain format, without the sender's layout, colours and fonts.")),
+
+                                    #[name = "reader_switch_row"]
+                                    adw::SwitchRow {
+                                        set_title: &i18n("Reader View switch"),
+                                        set_subtitle: &i18n("Show the switch in the message header, beside the account name."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleReaderSwitch(row.is_active()));
+                                        },
+                                    },
+
+                                    #[name = "reader_default_row"]
+                                    adw::ComboRow {
+                                        set_title: &i18n("When a message is opened"),
+                                        set_subtitle: &i18n("Keep the switch where it was last set, or start every message in Reader View or as sent. The switch still changes the message on screen."),
+                                        connect_selected_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ChangeReaderDefault(row.selected()));
+                                        },
+                                    },
+                                },
                             },
 
                             add_named[Some("composing")] = &adw::PreferencesPage {
@@ -2687,6 +2718,18 @@ impl Component for Preferences {
         widgets.thread_newest_first_row.set_active(init.thread_newest_first);
         widgets.always_show_recipients_row.set_active(init.always_show_recipients);
         widgets.single_message_card_row.set_active(init.single_message_card);
+        widgets.reader_switch_row.set_active(init.reader_switch);
+        widgets.reader_default_row.set_model(Some(&gtk::StringList::new(&[
+            &i18n("Remember the last choice"),
+            &i18n("Reader View on"),
+            &i18n("Reader View off"),
+        ])));
+        no_truncate(&widgets.reader_default_row);
+        widgets.reader_default_row.set_selected(match init.reader_default {
+            crate::config::ReaderDefault::Remember => 0,
+            crate::config::ReaderDefault::On => 1,
+            crate::config::ReaderDefault::Off => 2,
+        });
         widgets.card_attachments_row.set_active(init.card_attachments);
         widgets.attachment_drawer_row.set_active(init.attachment_drawer);
         widgets.thread_expansion_row.set_active(init.thread_expansion);
@@ -3185,6 +3228,17 @@ impl Component for Preferences {
             }
             PrefInput::ToggleSingleMessageCard(on) => {
                 let _ = sender.output(PrefOutput::SetSingleMessageCard(on));
+            }
+            PrefInput::ToggleReaderSwitch(on) => {
+                let _ = sender.output(PrefOutput::SetReaderSwitch(on));
+            }
+            PrefInput::ChangeReaderDefault(idx) => {
+                let policy = match idx {
+                    1 => crate::config::ReaderDefault::On,
+                    2 => crate::config::ReaderDefault::Off,
+                    _ => crate::config::ReaderDefault::Remember,
+                };
+                let _ = sender.output(PrefOutput::SetReaderDefault(policy));
             }
             PrefInput::ToggleCardAttachments(on) => {
                 let _ = sender.output(PrefOutput::SetCardAttachments(on));

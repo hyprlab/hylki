@@ -2611,6 +2611,14 @@ msgstr "Következő találat"
 msgid "Close find"
 msgstr "Keresés bezárása"
 
+msgid ""
+"Reader View shows a message as its text alone, in one plain format, without "
+"the sender's layout, colours and fonts."
+msgstr ""
+
+msgid "Reader View"
+msgstr ""
+
 #. Dimming comes from the cover's own foreground, which
 #. is picked for the message theme — `dim-label` would
 #. fade it against the app's instead.
@@ -3597,6 +3605,21 @@ msgstr ""
 "címzettjelvényre kattintás nélkül. Egy címzett esetén a jelvény teljesen "
 "elmarad."
 
+msgid "Reader View switch"
+msgstr ""
+
+msgid "Show the switch in the message header, beside the account name."
+msgstr ""
+
+#, fuzzy
+msgid "When a message is opened"
+msgstr "Üzenetek rendezése"
+
+msgid ""
+"Keep the switch where it was last set, or start every message in Reader View "
+"or as sent. The switch still changes the message on screen."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr "Levélírás a főablakban"
 
@@ -3938,6 +3961,15 @@ msgstr "Megjelenítés ideje"
 
 msgid "After two seconds"
 msgstr "Két másodperc után"
+
+msgid "Remember the last choice"
+msgstr ""
+
+msgid "Reader View on"
+msgstr ""
+
+msgid "Reader View off"
+msgstr ""
 
 msgid "Hidden behind a toggle"
 msgstr "Kapcsoló mögött rejtve"

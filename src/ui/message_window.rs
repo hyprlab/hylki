@@ -33,6 +33,12 @@ pub struct MessageWindowInit {
     pub content_dark: Option<bool>,
     /// The reader's own fonts and colours over the senders' (#56).
     pub reader_style: crate::config::ReaderStyle,
+    /// Reader View (the main window's header toggle), followed here too.
+    pub reader_mode: bool,
+    /// Whether the Reader View switch is shown at all.
+    pub reader_switch: bool,
+    /// What Reader View does when a message is opened.
+    pub reader_default: crate::config::ReaderDefault,
     /// The tags (#71), for the cards' chips.
     pub tags: Vec<crate::config::Tag>,
 }
@@ -79,6 +85,12 @@ pub enum MessageWindowInput {
     SetContentTheme(Option<bool>),
     /// The reader's own fonts and colours changed (#56).
     SetReaderStyle(crate::config::ReaderStyle),
+    SetReaderMode(bool),
+    SetReaderSwitchShown(bool),
+    SetReaderDefault(crate::config::ReaderDefault),
+    /// This window's own Reader View toggle was flipped: handed up to the
+    /// app, which owns the preference and pushes it back to every reader.
+    ReaderMode(bool),
     /// What one of the user's own mailboxes shows changed (#189).
     FacesChanged,
     // ---- toolbar actions ----
@@ -114,6 +126,8 @@ pub enum MessageWindowInput {
 
 #[derive(Debug)]
 pub enum MessageWindowOutput {
+    /// Reader View flipped from this window's subject block.
+    ReaderMode(bool),
     /// A per-message action handled exactly like a list/context-menu action.
     Action { action: RowAction, message: Box<Message> },
     /// Add this sender to Contacts.
@@ -298,6 +312,7 @@ impl Component for MessageWindow {
                 MessageViewOutput::ComposeTo(addr) => MessageWindowInput::ComposeTo(addr),
                 MessageViewOutput::ReloadBody(m) => MessageWindowInput::ReloadBody(m),
                 MessageViewOutput::Notice(text) => MessageWindowInput::Notice(text),
+                MessageViewOutput::ReaderMode(on) => MessageWindowInput::ReaderMode(on),
                 MessageViewOutput::AddContactAddr(addr) => {
                     MessageWindowInput::AddContactAddr(addr)
                 }
@@ -305,6 +320,9 @@ impl Component for MessageWindow {
         // Apply the message-content theme before the first render.
         view.emit(MessageViewInput::SetContentTheme(init.content_dark));
         view.emit(MessageViewInput::SetReaderStyle(init.reader_style.clone()));
+        view.emit(MessageViewInput::SetReaderMode(init.reader_mode));
+        view.emit(MessageViewInput::SetReaderSwitchShown(init.reader_switch));
+        view.emit(MessageViewInput::SetReaderDefault(init.reader_default));
         view.emit(MessageViewInput::SetTags(init.tags.clone()));
 
         let thread = if init.thread.is_empty() {
@@ -365,6 +383,18 @@ impl Component for MessageWindow {
             }
             MessageWindowInput::SetReaderStyle(style) => {
                 self.view.emit(MessageViewInput::SetReaderStyle(style));
+            }
+            MessageWindowInput::SetReaderMode(on) => {
+                self.view.emit(MessageViewInput::SetReaderMode(on));
+            }
+            MessageWindowInput::SetReaderSwitchShown(on) => {
+                self.view.emit(MessageViewInput::SetReaderSwitchShown(on));
+            }
+            MessageWindowInput::SetReaderDefault(policy) => {
+                self.view.emit(MessageViewInput::SetReaderDefault(policy));
+            }
+            MessageWindowInput::ReaderMode(on) => {
+                let _ = sender.output(MessageWindowOutput::ReaderMode(on));
             }
             MessageWindowInput::FacesChanged => {
                 self.view.emit(MessageViewInput::FacesChanged);

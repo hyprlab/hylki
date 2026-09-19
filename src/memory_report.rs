@@ -278,6 +278,79 @@ pub fn trim_if_worthwhile() -> Option<usize> {
     Some(held)
 }
 
+thread_local! {
+    /// Every WebKit view the app has created, by role, held weakly: the
+    /// list is pruned of dropped views whenever it is read.
+    static WEB_VIEWS: std::cell::RefCell<Vec<(&'static str, gtk::glib::WeakRef<webkit6::WebView>)>> =
+        const { std::cell::RefCell::new(Vec::new()) };
+}
+
+/// Note a WebKit view the app just built, so the report can count what is
+/// still alive. Each view runs in its own WebKitWebProcess (WebKitGTK gives
+/// unrelated views separate processes), and inside the Flatpak sandbox that
+/// process is started through `flatpak-spawn` and lives outside the
+/// sandbox's `/proc`: the process tree lists only a 6 MB proxy for it. A
+/// user's log at 563 MB while the system monitor said 1.5 GB was two such
+/// invisible web processes. Counting the views is the one measure of them
+/// this process has.
+pub fn register_web_view(view: &webkit6::WebView, role: &'static str) {
+    use gtk::glib::prelude::ObjectExt;
+    WEB_VIEWS.with(|v| v.borrow_mut().push((role, view.downgrade())));
+}
+
+/// Done with a view: end its web process and stop counting it. Letting go
+/// of every handle is NOT enough — WebKitGTK (2.52) keeps references of its
+/// own to an unparented view, so the view is never finalized and its
+/// WebKitWebProcess (170–450 MB each) runs on; a user's session monitor
+/// showed six of them under Hylki (#221). Every owner of a view that is
+/// finished with it calls this: closed composers, the released signature
+/// editor, closed pop-outs, finished prints.
+pub fn release_web_view(view: &webkit6::WebView) {
+    use webkit6::prelude::WebViewExt;
+    view.terminate_web_process();
+    WEB_VIEWS.with(|v| v.borrow_mut().retain(|(_, w)| w.upgrade().as_ref() != Some(view)));
+    tracing::debug!(target: "hylki::memory", "web view released, its web process ended");
+}
+
+/// The views still alive, as (role, count) pairs in first-created order.
+pub fn live_web_views() -> Vec<(&'static str, usize)> {
+    WEB_VIEWS.with(|v| {
+        let mut v = v.borrow_mut();
+        v.retain(|(_, w)| w.upgrade().is_some());
+        let mut out: Vec<(&'static str, usize)> = Vec::new();
+        for (role, _) in v.iter() {
+            match out.iter_mut().find(|(r, _)| r == role) {
+                Some((_, n)) => *n += 1,
+                None => out.push((role, 1)),
+            }
+        }
+        out
+    })
+}
+
+/// The report's lines about the web processes, which the process tree above
+/// cannot weigh from inside a Flatpak (see [`register_web_view`]).
+pub fn web_view_lines() -> Vec<String> {
+    let views = live_web_views();
+    let total: usize = views.iter().map(|(_, n)| n).sum();
+    let roles: Vec<String> = views
+        .iter()
+        .map(|(role, n)| if *n == 1 { (*role).to_string() } else { format!("{role} ×{n}") })
+        .collect();
+    let mut lines = vec![format!(
+        "  WebKit views alive: {} ({}); each one is its own WebKitWebProcess",
+        total,
+        if roles.is_empty() { "none".to_string() } else { roles.join(", ") }
+    )];
+    if crate::platform::is_flatpak() {
+        lines.push(
+            "  those web processes run outside the sandbox (started through flatpak-spawn, listed above only as its proxy), so their memory is NOT in the totals above: a system monitor shows them as WebKitWebProcess"
+                .to_string(),
+        );
+    }
+    lines
+}
+
 /// How long this process has been running, from the kernel's clock.
 pub fn uptime() -> Option<std::time::Duration> {
     let system: f64 =
