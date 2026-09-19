@@ -189,7 +189,7 @@ pub fn connect_changed(f: impl Fn() -> bool + 'static) {
 /// Load the active palette (or nothing at all) into the provider.
 fn repaint() {
     let dark = adw::StyleManager::default().is_dark();
-    let css = palette(dark).map(css).unwrap_or_default();
+    let css = palette(dark).map(|p| css(p, dark)).unwrap_or_default();
     PROVIDER.with(|p| {
         if let Some(provider) = p.borrow().as_ref() {
             provider.load_from_string(&css);
@@ -211,9 +211,23 @@ fn repaint() {
 /// Adwaita split view, and already follows `sidebar_border_color`.) The
 /// border and shadow resets are load-bearing: libadwaita draws the
 /// separator's hairline as a shadow, which would otherwise sit over the
-/// palette colour and lighten it. Because this string is empty under the
-/// stock look, none of it reaches an unthemed window.
-fn css(p: &Palette) -> String {
+/// palette colour and lighten it. It is painted a fifth darker than the
+/// palette's border role, which every theme pitches brighter than the list
+/// and the reader on either side of it. Because this string is empty under
+/// the stock look, none of it reaches an unthemed window.
+///
+/// The sidebar's divider keeps libadwaita's own values rather than the
+/// palette's `sidebar_border`: every theme's tint is lighter than the
+/// sidebar behind it, which drew a bright line down the window beside the
+/// rail. Black at the stock opacity reads as a shadow, the way the system
+/// look does.
+fn css(p: &Palette, dark: bool) -> String {
+    // libadwaita's sidebar-border/-shade colours, light and dark.
+    let (sidebar_border, sidebar_shade) = if dark {
+        ("rgba(0, 0, 0, 0.36)", "rgba(0, 0, 0, 0.25)")
+    } else {
+        ("rgba(0, 0, 0, 0.07)", "rgba(0, 0, 0, 0.07)")
+    };
     format!(
         "\
 @define-color window_bg_color {chrome};\
@@ -230,7 +244,7 @@ fn css(p: &Palette) -> String {
 @define-color sidebar_fg_color {sidebar_fg};\
 @define-color sidebar_backdrop_color {sidebar};\
 @define-color sidebar_border_color {sidebar_border};\
-@define-color sidebar_shade_color {sidebar_border};\
+@define-color sidebar_shade_color {sidebar_shade};\
 @define-color secondary_sidebar_bg_color {surface};\
 @define-color secondary_sidebar_fg_color {text};\
 @define-color secondary_sidebar_backdrop_color {surface};\
@@ -256,7 +270,7 @@ fn css(p: &Palette) -> String {
 @define-color warning_fg_color {on_warning};\
 @define-color shade_color {border};\
 @define-color scrollbar_outline_color {surface};\
-.mail-split > separator {{background-color: {border};\
+.mail-split > separator {{background-color: {separator};\
 border: none;box-shadow: none;outline: none;}}",
         chrome = p.chrome,
         text = p.text,
@@ -264,9 +278,9 @@ border: none;box-shadow: none;outline: none;}}",
         toolbar = p.toolbar,
         toolbar_fg = p.toolbar_foreground,
         border = p.border,
+        separator = crate::color::darken(p.border, 0.2),
         sidebar = p.sidebar,
         sidebar_fg = p.sidebar_foreground,
-        sidebar_border = p.sidebar_border,
         raised = p.surface_raised,
         overlay = p.surface_overlay,
         accent = p.accent,

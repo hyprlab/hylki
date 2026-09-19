@@ -593,7 +593,8 @@ upstream — their work ships in the app and is credited in the About window:
   (IPv6 included), pausing an account while its Mail service is off in GNOME
   Settings, OAuth-aware connection tests, and a timeout on stalled IMAP
   connections.
-- [**Yiannis Ioannides**](https://github.com/yioannides) ([#75](https://github.com/hyprlab/hylki/pull/75)) — the
+- [**Yiannis Ioannides**](https://github.com/yioannides) ([#75](https://github.com/hyprlab/hylki/pull/75),
+  [#227](https://github.com/hyprlab/hylki/pull/227)) — the Greek translation; the
   `--user` flag in the Flatpak install instructions, so a local install no
   longer asks for root; and a long run of requests and design feedback that
   shaped tags, split replies, the reader's own font and colours, Empty Trash

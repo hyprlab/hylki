@@ -16,10 +16,13 @@ use crate::ui::accounts::{Provider, PROVIDERS};
 use crate::worker::{self, ConnTest};
 use crate::i18n::{i18n, i18n_f};
 
-/// Wordmark art, embedded so the wizard needs nothing on disk.
-const WORDMARK_SVG: &[u8] = include_bytes!("../../data/welcome/wordmark-black.svg");
+/// Wordmark art, embedded so the wizard needs nothing on disk. A 1024px
+/// PNG master rather than the SVG the website uses: neither librsvg nor
+/// gdk-pixbuf draws the mark's soft shadow the way a browser does, and a
+/// raster export of the same artwork is the one thing both agree on.
+const WORDMARK_PNG: &[u8] = include_bytes!("../../data/welcome/wordmark-black.png");
 /// The same wordmark with white lettering, for a dark ground.
-const WORDMARK_DARK_SVG: &[u8] = include_bytes!("../../data/welcome/wordmark-white.svg");
+const WORDMARK_DARK_PNG: &[u8] = include_bytes!("../../data/welcome/wordmark-white.png");
 
 /// The settings chosen on the privacy + personalize pages, applied by the app
 /// through its normal Set* handlers when the wizard finishes.
@@ -151,8 +154,8 @@ fn wordmark_texture(width: i32, dark: bool) -> Option<gtk::gdk::Texture> {
         let scale = (width * 2) as f64 / w.max(1) as f64;
         l.set_size(width * 2, (h as f64 * scale) as i32);
     });
-    let svg = if dark { WORDMARK_DARK_SVG } else { WORDMARK_SVG };
-    loader.write(svg).ok()?;
+    let art = if dark { WORDMARK_DARK_PNG } else { WORDMARK_PNG };
+    loader.write(art).ok()?;
     loader.close().ok()?;
     loader.pixbuf().map(|pb| gtk::gdk::Texture::for_pixbuf(&pb))
 }
@@ -250,10 +253,10 @@ const HERO_TOP: i32 = 150;
 const HERO_SIZE: f64 = 240.0;
 const SMALL_TOP: f64 = 6.0;
 const SMALL_BOTTOM: f64 = 16.0;
-const SMALL_SIZE: f64 = 100.0;
+const SMALL_SIZE: f64 = 128.0;
 
-/// The wordmark art's aspect (its viewBox is 433x125).
-const WORDMARK_ASPECT: f64 = 125.0 / 433.0;
+/// The wordmark art's aspect (the PNG master is 1024x293).
+const WORDMARK_ASPECT: f64 = 293.0 / 1024.0;
 
 /// The wordmark's height for a given width.
 pub(crate) fn wordmark_height(width: f64) -> i32 {

@@ -4334,6 +4334,15 @@ impl SimpleComponent for AppModel {
             .emit(NotifyInput::SetConsoleEnabled(model.console_mode));
         // Screenshot/dev hook: open the status bar console shortly after
         // launch (pref permitting) so captures can show it.
+        // HYLKI_SHOWCASE_ABOUT=1 opens the About window a beat after
+        // launch; pair it with HYLKI_SHOWCASE_TOP=1 to capture that window
+        // instead of the main one.
+        if std::env::var("HYLKI_SHOWCASE_ABOUT").is_ok() {
+            let s = sender.clone();
+            gtk::glib::timeout_add_seconds_local_once(3, move || {
+                s.input(AppMsg::OpenAbout);
+            });
+        }
         if std::env::var("HYLKI_SHOWCASE_CONSOLE").is_ok() {
             let s = sender.clone();
             gtk::glib::timeout_add_seconds_local_once(3, move || {
@@ -8906,7 +8915,11 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::Error { account_id, text, connectivity } => {
+                // The log gets the whole error (a parser dump included, which
+                // is what diagnoses #226-style replies); the bar gets it
+                // readable.
                 tracing::error!("[account {account_id}] {text}");
+                let text = crate::worker::readable_error(&text);
                 let label = self.account_label(account_id);
                 // Desktop-notify only genuine failures (not transient connectivity
                 // blips that auto-recover), and only when unfocused — the in-app bar

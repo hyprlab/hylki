@@ -189,6 +189,7 @@ pub fn language_choices() -> Vec<(String, String)> {
 fn native_language_name(code: &str) -> &str {
     match code {
         "fr" => "Français",
+        "el" => "Ελληνικά",
         "hu" => "Magyar",
         "ru" => "Русский",
         "de" => "Deutsch",

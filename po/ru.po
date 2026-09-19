@@ -2435,6 +2435,10 @@ msgstr "Открыть «Контакты GNOME»"
 msgid "New contact"
 msgstr "Новый контакт"
 
+#, fuzzy
+msgid "Loading Contacts…"
+msgstr "Загрузка вложений…"
+
 msgid "Contacts you add in GNOME Contacts appear here."
 msgstr "Контакты, добавленные в «Контактах GNOME», появятся здесь."
 
@@ -4445,6 +4449,9 @@ msgstr "Уведомления о недоставке будут отправл
 
 msgid "The sender's name says \"{claimed}\" but the address is {from}"
 msgstr "В имени отправителя указано «{claimed}», но адрес — {from}"
+
+msgid "the server's reply could not be read (it began: {reply})"
+msgstr ""
 
 msgid "runtime error: {e}"
 msgstr "ошибка выполнения: {e}"

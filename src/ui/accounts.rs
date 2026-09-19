@@ -2641,17 +2641,21 @@ impl Component for AccountsWindow {
         &mut self,
         widgets: &mut Self::Widgets,
         result: AccountsCmd,
-        _sender: ComponentSender<Self>,
+        sender: ComponentSender<Self>,
         _root: &Self::Root,
     ) {
         match result {
             AccountsCmd::OwnGravatar { email, outcome } => {
                 // Cached for every other circle in the app as well; the
                 // preview only redraws while that address is still in the
-                // editor.
+                // editor, and the accounts list redraws its circles so one
+                // that landed after the list was built shows there too.
                 let found = crate::avatar::cache_own_gravatar(&email, outcome);
                 if found && trimmed(&widgets.email_row).eq_ignore_ascii_case(&email) {
                     self.refresh_preview(widgets);
+                }
+                if found {
+                    self.rebuild_account_list(&widgets.accounts_list, &sender);
                 }
             }
 
@@ -3133,12 +3137,19 @@ impl AccountsWindow {
                 .as_deref()
                 .and_then(crate::config::avatar_path)
                 .filter(|p| p.exists());
-            let glyph: gtk::Widget = match (&picture, acc.emoji.as_deref()) {
-                (Some(path), _) => {
+            // The Gravatar this address asked for and has (#189) comes first,
+            // as in the sidebar circle and the editor preview.
+            let gravatar = acc.gravatar.then(|| crate::avatar::own_gravatar(&acc.email)).flatten();
+            let glyph: gtk::Widget = match (&gravatar, &picture, acc.emoji.as_deref()) {
+                (Some(texture), ..) => {
+                    circle.set_overflow(gtk::Overflow::Hidden);
+                    crate::ui::initials::picture_from_texture(texture, 30).upcast()
+                }
+                (None, Some(path), _) => {
                     circle.set_overflow(gtk::Overflow::Hidden);
                     crate::ui::initials::avatar_picture(path, 30).upcast()
                 }
-                (None, Some(em)) if !em.is_empty() => {
+                (None, None, Some(em)) if !em.is_empty() => {
                     crate::ui::initials::glyph_picture(em, &color, 0.55, 30).upcast()
                 }
                 _ => crate::ui::initials::glyph_picture(

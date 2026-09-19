@@ -1,6 +1,6 @@
 [package]
 name = "hylki"
-version = "1.35.3-beta.1"
+version = "1.35.4-beta.1"
 edition = "2021"
 description = "A clean, fast GNOME-native email client"
 license = "AGPL-3.0-or-later"
@@ -19,7 +19,11 @@ beta = []
 # blocking one spins a nested main loop and glib's future executor aborts when
 # re-entered (see MessageViewInput::Print). The GNOME 50 runtime has GTK 4.20.
 gtk = { package = "gtk4", version = "0.9", features = ["v4_14"] }
-adw = { package = "libadwaita", version = "0.7", features = ["v1_4"] }
+# v1_6 for AdwStyleManager:accent-color: the System theme swatch paints the
+# accent the desktop is actually set to, and that property is the only thing
+# that reports it. libadwaita 1.6 is a 2024 release; the GNOME 50 runtime has
+# 1.9.
+adw = { package = "libadwaita", version = "0.7", features = ["v1_6"] }
 relm4 = { version = "0.9", features = ["macros", "libadwaita"] }
 relm4-components = "0.9"
 # v2_44 for WebKitEditorState::changed: the composer's undo (#200) has to know

@@ -147,7 +147,7 @@ impl Component for ContactsPage {
                 set_content = &adw::StatusPage {
                     set_icon_name: Some("co.hyprlab.Hylki-x-office-address-book-symbolic"),
                     #[watch]
-                    set_title: if model.loading { "Loading Contacts…" } else { "No Contacts" },
+                    set_title: &if model.loading { i18n("Loading Contacts…") } else { i18n("No Contacts") },
                     #[watch]
                     set_description: Some(if model.loading {
                         String::new()
@@ -576,6 +576,12 @@ impl Component for ContactsPage {
                 self.rebuild(widgets, &sender);
             }
         }
+        // Overriding `update_with_view` replaces the generated body that ran
+        // `update_view` after every message; without this the `#[watch]`
+        // bindings above (the "Loading Contacts…" / "No Contacts" face) only
+        // ever hold their `init` values, and an empty address book looked
+        // like a load that never finished.
+        self.update_view(widgets, sender);
     }
 }
 

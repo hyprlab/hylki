@@ -23,6 +23,10 @@ CREATE TABLE IF NOT EXISTS folders (
     ord        INTEGER NOT NULL,
     PRIMARY KEY (account_id, path)
 );
+CREATE TABLE IF NOT EXISTS msgid_case (
+    lower TEXT NOT NULL PRIMARY KEY,
+    exact TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS refs_repair (
     account_id  INTEGER NOT NULL,
     folder_path TEXT    NOT NULL,
@@ -224,6 +228,41 @@ const LAYOUT_VERSION: i64 = 6;
 
 pub struct Cache {
     conn: Connection,
+}
+
+/// Message-IDs are stored lowercased so a thread matches however a client
+/// spelt an id, but the wire is case-sensitive (RFC 5322): a reply whose
+/// In-Reply-To names the parent in the wrong case is a reply to nothing for
+/// any server that looks the parent up by its exact id. Proton Bridge does —
+/// it files the copy of a reply sent through it without In-Reply-To or
+/// References when the lookup misses, so the reply never joined its
+/// conversation. Every exact spelling seen while parsing headers is noted
+/// here and written to the cache with the next batch of messages, and a
+/// message about to be sent gets its ids spelt back the way they arrived
+/// ([`Cache::exact_msgids`]). Only ids that actually differ from their
+/// lowercase form are kept.
+static MSGID_CASE_PENDING: std::sync::OnceLock<std::sync::Mutex<std::collections::HashMap<String, String>>> =
+    std::sync::OnceLock::new();
+
+fn msgid_case_pending() -> &'static std::sync::Mutex<std::collections::HashMap<String, String>> {
+    MSGID_CASE_PENDING.get_or_init(|| std::sync::Mutex::new(std::collections::HashMap::new()))
+}
+
+/// The most a parse can note before a batch of messages carries it to disk;
+/// past this the notes are dropped rather than growing without bound.
+const MSGID_CASE_PENDING_CAP: usize = 50_000;
+
+/// Remember how `exact` (one Message-ID, no angle brackets) is spelt, when
+/// that differs from the lowercase form the cache stores.
+pub fn note_msgid_case(exact: &str) {
+    if exact.is_empty() || !exact.bytes().any(|b| b.is_ascii_uppercase()) {
+        return;
+    }
+    let mut pending = msgid_case_pending().lock().unwrap_or_else(|p| p.into_inner());
+    if pending.len() >= MSGID_CASE_PENDING_CAP {
+        return;
+    }
+    pending.entry(exact.to_ascii_lowercase()).or_insert_with(|| exact.to_string());
 }
 
 /// Narrow an existing path's permissions to `mode`, if it exists.
@@ -737,6 +776,18 @@ impl Cache {
     pub fn upsert_messages(&self, account_id: u32, folder_path: &str, messages: &[Message]) {
         let run = || -> rusqlite::Result<()> {
             let tx = self.conn.unchecked_transaction()?;
+            // The exact spellings noted while these (and any earlier) headers
+            // were parsed ride along in the same transaction.
+            let noted: Vec<(String, String)> = {
+                let mut pending = msgid_case_pending().lock().unwrap_or_else(|p| p.into_inner());
+                pending.drain().collect()
+            };
+            for (lower, exact) in &noted {
+                tx.execute(
+                    "INSERT OR REPLACE INTO msgid_case (lower, exact) VALUES (?1, ?2)",
+                    params![lower, exact],
+                )?;
+            }
             for m in messages {
                 // Upsert rather than REPLACE so an empty preview cannot erase one
                 // already stored: the background backfill re-fetches summaries
@@ -774,6 +825,34 @@ impl Cache {
         if let Err(e) = run() {
             tracing::warn!("cache upsert_messages failed: {e}");
         }
+    }
+
+    /// The exact spelling of one stored (lowercased) Message-ID, if a header
+    /// parsed so far spelt it with capitals; `None` means the lowercase form
+    /// is the spelling (or the only one known).
+    fn exact_msgid(&self, lower: &str) -> Option<String> {
+        if let Some(hit) = msgid_case_pending()
+            .lock()
+            .unwrap_or_else(|p| p.into_inner())
+            .get(lower)
+        {
+            return Some(hit.clone());
+        }
+        self.conn
+            .query_row("SELECT exact FROM msgid_case WHERE lower = ?1", params![lower], |r| {
+                r.get::<_, String>(0)
+            })
+            .ok()
+    }
+
+    /// A space-separated list of stored Message-IDs (In-Reply-To, References)
+    /// spelt the way each arrived, for a header about to go on the wire. Ids
+    /// never seen with capitals go out as stored.
+    pub fn exact_msgids(&self, ids: &str) -> String {
+        ids.split_whitespace()
+            .map(|id| self.exact_msgid(id).unwrap_or_else(|| id.to_string()))
+            .collect::<Vec<_>>()
+            .join(" ")
     }
 
     /// The set of message UIDs already cached for a folder (for backfill diffing).
@@ -2030,6 +2109,28 @@ mod tests {
 
         std::env::remove_var("XDG_DATA_HOME");
         let _ = std::fs::remove_dir_all(&base);
+    }
+
+    #[test]
+    fn message_ids_go_back_on_the_wire_in_the_case_they_arrived() {
+        let c = Cache::in_memory().unwrap();
+        note_msgid_case("vireo-12tPxIJKt7PhQVbIiO@gmail.com");
+        note_msgid_case("plain@example.com"); // all lowercase: nothing to note
+        // Known before it is on disk (noted, not yet carried by a batch).
+        assert_eq!(
+            c.exact_msgids("vireo-12tpxijkt7phqvbiio@gmail.com plain@example.com"),
+            "vireo-12tPxIJKt7PhQVbIiO@gmail.com plain@example.com"
+        );
+        // The next batch of messages writes it down; then it is on disk.
+        c.upsert_messages(1, "INBOX", &[]);
+        assert!(msgid_case_pending().lock().unwrap().is_empty(), "drained by the batch");
+        assert_eq!(
+            c.exact_msgids("vireo-12tpxijkt7phqvbiio@gmail.com"),
+            "vireo-12tPxIJKt7PhQVbIiO@gmail.com"
+        );
+        // An id never seen with capitals is left as stored.
+        assert_eq!(c.exact_msgids("unknown@x"), "unknown@x");
+        assert_eq!(c.exact_msgids(""), "");
     }
 
     #[test]

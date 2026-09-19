@@ -1,0 +1,4751 @@
+# Translation template for Hylki.
+# This file is distributed under the same license as the Hylki package.
+# yiannis ioannides <git@yioannides.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: hylki\n"
+"Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
+"PO-Revision-Date: 2026-09-19 11:30+0300\n"
+"Last-Translator: yiannis ioannides <git@yioannides.com>\n"
+"Language-Team: Greek\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 51.0\n"
+
+msgid "Refresh or long-press for Status Bar"
+msgstr "Ανανέωση ή παρατεταμένο πάτημα για τη γραμμή κατάστασης"
+
+msgid "Main Menu"
+msgstr "Κύριο μενού"
+
+msgid "Expand sidebar"
+msgstr "Ανάπτυξη πλευρικής στήλης"
+
+msgid "Collapse sidebar"
+msgstr "Σύμπτυξη πλευρικής στήλης"
+
+msgid "Search messages (Ctrl+F)"
+msgstr "Αναζήτηση μηνυμάτων (Ctrl+F)"
+
+msgid "Show only unread"
+msgstr "Εμφάνιση μόνο μη αναγνωσμένων"
+
+msgid "Show only starred"
+msgstr "Εμφάνιση μόνο μηνυμάτων με αστέρι"
+
+msgid "Sort messages"
+msgstr "Ταξινόμηση μηνυμάτων"
+
+msgid "Edit this message"
+msgstr "Επεξεργασία αυτού του μηνύματος"
+
+msgid "Try to send this message now"
+msgstr "Προσπάθεια αποστολής αυτού του μηνύματος τώρα"
+
+msgid "Send all"
+msgstr "Αποστολή όλων"
+
+msgid "Reply"
+msgstr "Απάντηση"
+
+msgid "Reply All"
+msgstr "Απάντηση σε όλους"
+
+msgid "Forward"
+msgstr "Προώθηση"
+
+msgid "Flag"
+msgstr "Επισήμανση"
+
+msgid "Archive"
+msgstr "Αρχειοθέτηση"
+
+msgid "Print Preview (Ctrl+Shift+P)"
+msgstr "Προεπισκόπηση εκτύπωσης (Ctrl+Shift+P)"
+
+msgid "Find in message (Ctrl+F)"
+msgstr "Εύρεση στο μήνυμα (Ctrl+F)"
+
+msgid "Not Spam"
+msgstr "Δεν είναι ανεπιθύμητο"
+
+msgid "Mark as Spam"
+msgstr "Σήμανση ως ανεπιθύμητο"
+
+msgid "Mark as Read"
+msgstr "Σήμανση ως αναγνωσμένο"
+
+msgid "Mark as Unread"
+msgstr "Σήμανση ως μη αναγνωσμένο"
+
+msgid "Downloading attachments…"
+msgstr "Λήψη συνημμένων…"
+
+msgid "Close"
+msgstr "Κλείσιμο"
+
+msgid "Previous"
+msgstr "Προηγούμενο"
+
+msgid "Next"
+msgstr "Επόμενο"
+
+msgid "Open"
+msgstr "Άνοιγμα"
+
+msgid "Download…"
+msgstr "Λήψη…"
+
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+msgid "Show Accounts"
+msgstr "Εμφάνιση λογαριασμών"
+
+msgid "Print Preview…"
+msgstr "Προεπισκόπηση εκτύπωσης…"
+
+msgid "Print Message…"
+msgstr "Εκτύπωση μηνύματος…"
+
+msgid "Quit"
+msgstr "Έξοδος"
+
+msgid "Actions"
+msgstr "Ενέργειες"
+
+msgid "Tags"
+msgstr "Ετικέτες"
+
+msgid "Move To…"
+msgstr "Μετακίνηση σε…"
+
+msgid "Attachments"
+msgstr "Συνημμένα"
+
+msgid "Toggle sidebar"
+msgstr "Εναλλαγή πλευρικής στήλης"
+
+msgid "Date (Newest first)"
+msgstr "Ημερομηνία (νεότερα πρώτα)"
+
+msgid "Date (Oldest first)"
+msgstr "Ημερομηνία (παλαιότερα πρώτα)"
+
+msgid "Sender (A–Z)"
+msgstr "Αποστολέας (Α–Ω)"
+
+msgid "Subject (A–Z)"
+msgstr "Θέμα (Α–Ω)"
+
+msgid "Unread first"
+msgstr "Μη αναγνωσμένα πρώτα"
+
+msgid "Flagged first"
+msgstr "Επισημασμένα πρώτα"
+
+msgid "Create Folder"
+msgstr "Δημιουργία φακέλου"
+
+msgid "Added to Contacts"
+msgstr "Προστέθηκε στις επαφές"
+
+msgid "Added email to {name}"
+msgstr "Το email προστέθηκε στην επαφή {name}"
+
+msgid "Already in Contacts ({name})"
+msgstr "Υπάρχει ήδη στις επαφές ({name})"
+
+msgid "Could not add contact: {e}"
+msgstr "Αδυναμία προσθήκης επαφής: {e}"
+
+msgid "The language applies the next time Hylki starts."
+msgstr "Η γλώσσα θα εφαρμοστεί την επόμενη φορά που θα εκκινηθεί το Hylki."
+
+msgid "Save Attachment"
+msgstr "Αποθήκευση συνημμένου"
+
+msgid ""
+"Couldn't restart automatically — quit and reopen Hylki to finish switching "
+"the icon."
+msgstr ""
+"Δεν ήταν δυνατή η αυτόματη επανεκκίνηση — κλείστε και ανοίξτε ξανά το Hylki "
+"για να ολοκληρωθεί η αλλαγή εικονιδίου."
+
+msgid "Open a message first, then print it."
+msgstr "Ανοίξτε πρώτα ένα μήνυμα και έπειτα εκτυπώστε το."
+
+msgid "Customize Toolbar…"
+msgstr "Προσαρμογή γραμμής εργαλείων…"
+
+msgid "No message with the ID {id} was found"
+msgstr "Δεν βρέθηκε μήνυμα με αναγνωριστικό {id}"
+
+msgid "No Drafts folder available for this account"
+msgstr "Δεν υπάρχει φάκελος Προχείρων για αυτόν τον λογαριασμό"
+
+msgid "Could not save account: {e}"
+msgstr "Αδυναμία αποθήκευσης λογαριασμού: {e}"
+
+msgid "Enable Console mode in Settings → System & Appearance"
+msgstr ""
+"Ενεργοποιήστε τη λειτουργία κονσόλας στις Ρυθμίσεις → Σύστημα και εμφάνιση"
+
+msgid "Export Settings"
+msgstr "Εξαγωγή ρυθμίσεων"
+
+msgid "Settings exported to {display}"
+msgstr "Οι ρυθμίσεις εξήχθησαν στο {display}"
+
+msgid "Export failed: {e}"
+msgstr "Η εξαγωγή απέτυχε: {e}"
+
+msgid "Export Log"
+msgstr "Εξαγωγή αρχείου καταγραφής"
+
+msgid "Log exported to {display}"
+msgstr "Το αρχείο καταγραφής εξήχθη στο {display}"
+
+msgid "Import Settings"
+msgstr "Εισαγωγή ρυθμίσεων"
+
+msgid "Settings Imported"
+msgstr "Οι ρυθμίσεις εισήχθησαν"
+
+msgid ""
+"{n} mail account(s), the cloud storage accounts and all preferences were "
+"imported. Restart Hylki to apply them. Passwords and sign-ins are not part "
+"of a backup; re-enter them on first use if this is a new machine."
+msgstr ""
+"Εισήχθησαν {n} λογαριασμοί αλληλογραφίας, οι λογαριασμοί αποθήκευσης στο "
+"cloud και όλες οι προτιμήσεις. Επανεκκινήστε το Hylki για να εφαρμοστούν. Οι "
+"κωδικοί πρόσβασης και οι συνδέσεις δεν περιλαμβάνονται στο αντίγραφο "
+"ασφαλείας· αν πρόκειται για νέο υπολογιστή, εισαγάγετέ τους ξανά κατά την "
+"πρώτη χρήση."
+
+msgid "Later"
+msgstr "Αργότερα"
+
+msgid "Restart Hylki"
+msgstr "Επανεκκίνηση Hylki"
+
+msgid "Import failed: {e}"
+msgstr "Η εισαγωγή απέτυχε: {e}"
+
+msgid "Could not import account: {e}"
+msgstr "Αδυναμία εισαγωγής λογαριασμού: {e}"
+
+msgid "No address book available"
+msgstr "Δεν υπάρχει διαθέσιμο βιβλίο διευθύνσεων"
+
+msgid "Could not update contact: {e}"
+msgstr "Αδυναμία ενημέρωσης επαφής: {e}"
+
+msgid "Reveal Status Bar"
+msgstr "Εμφάνιση γραμμής κατάστασης"
+
+msgid "Console"
+msgstr "Κονσόλα"
+
+msgid "Keyboard Shortcuts"
+msgstr "Συντομεύσεις πληκτρολογίου"
+
+msgid "About"
+msgstr "Σχετικά"
+
+msgid "Remove Tags"
+msgstr "Αφαίρεση ετικετών"
+
+msgid ""
+"Single-key shortcuts are switched off. Turn them on in Settings → System & "
+"Appearance."
+msgstr ""
+"Οι συντομεύσεις ενός πλήκτρου είναι απενεργοποιημένες. Ενεργοποιήστε τις "
+"στις Ρυθμίσεις → Σύστημα και εμφάνιση."
+
+msgid "Your tags"
+msgstr "Οι ετικέτες σας"
+
+msgid "Delete"
+msgstr "Διαγραφή"
+
+msgid "Move to {name}"
+msgstr "Μετακίνηση στο {name}"
+
+msgid "Add Tag {name}"
+msgstr "Προσθήκη ετικέτας {name}"
+
+msgid "Remove Tag {name}"
+msgstr "Αφαίρεση ετικέτας {name}"
+
+msgid "Undo"
+msgstr "Αναίρεση"
+
+msgid "Redo"
+msgstr "Επανάληψη"
+
+msgid "Restarting Hylki"
+msgstr "Επανεκκίνηση Hylki"
+
+msgid "Applying your new app icon. Hylki will close and reopen in a moment."
+msgstr ""
+"Εφαρμογή του νέου εικονιδίου εφαρμογής. Το Hylki θα κλείσει και θα ανοίξει "
+"ξανά σε λίγο."
+
+msgid "Restart to finish switching icons?"
+msgstr "Επανεκκίνηση για ολοκλήρωση της αλλαγής εικονιδίων;"
+
+msgid ""
+"The dock and Hylki's own windows keep the old icon until Hylki restarts."
+msgstr ""
+"Το dock και τα παράθυρα του Hylki διατηρούν το παλιό εικονίδιο μέχρι να "
+"επανεκκινηθεί το Hylki."
+
+msgid "Restart Now"
+msgstr "Επανεκκίνηση τώρα"
+
+msgid "View Source"
+msgstr "Προβολή πηγαίου κώδικα"
+
+msgid "Remove Flag"
+msgstr "Αφαίρεση επισήμανσης"
+
+msgid "Move to Inbox"
+msgstr "Μετακίνηση στα Εισερχόμενα"
+
+msgid "Find in Message"
+msgstr "Εύρεση στο μήνυμα"
+
+msgid "Print Preview"
+msgstr "Προεπισκόπηση εκτύπωσης"
+
+msgid "Message Source"
+msgstr "Πηγαίος κώδικας μηνύματος"
+
+msgid "Remove Star"
+msgstr "Αφαίρεση αστεριού"
+
+msgid "Star"
+msgstr "Προσθήκη αστεριού"
+
+msgid "Add Sender to Contacts"
+msgstr "Προσθήκη αποστολέα στις επαφές"
+
+msgid "Block Remote Content"
+msgstr "Αποκλεισμός απομακρυσμένου περιεχομένου"
+
+msgid "Show Remote Content"
+msgstr "Εμφάνιση απομακρυσμένου περιεχομένου"
+
+msgid "Delete {n} messages"
+msgstr "Διαγραφή {n} μηνυμάτων"
+
+msgid "New Message"
+msgstr "Νέο μήνυμα"
+
+msgid "Could not attach {names}: Hylki cannot read the file."
+msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
+msgstr[0] ""
+"Αδυναμία επισύναψης του {names}: το Hylki δεν μπορεί να διαβάσει το αρχείο."
+msgstr[1] ""
+"Αδυναμία επισύναψης {n} αρχείων (το Hylki δεν μπορεί να τα διαβάσει): {names}"
+
+msgid "Send {n} file with Hylki"
+msgid_plural "Send {n} files with Hylki"
+msgstr[0] "Αποστολή {n} αρχείου με το Hylki"
+msgstr[1] "Αποστολή {n} αρχείων με το Hylki"
+
+msgid "{names} ({size}). What should the files go into?"
+msgstr "{names} ({size}). Σε τι θέλετε να προστεθούν τα αρχεία;"
+
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+msgid "Reply to a Message…"
+msgstr "Απάντηση σε μήνυμα…"
+
+msgid "Continue a Draft…"
+msgstr "Συνέχιση προχείρου…"
+
+msgid "Reply to a Message"
+msgstr "Απάντηση σε μήνυμα"
+
+msgid "The files go into a reply to the message you pick."
+msgstr "Τα αρχεία θα προστεθούν σε απάντηση προς το μήνυμα που θα επιλέξετε."
+
+msgid "No messages to reply to yet."
+msgstr "Δεν υπάρχουν ακόμη μηνύματα για απάντηση."
+
+msgid "Reply With the Files"
+msgstr "Απάντηση με τα αρχεία"
+
+msgid "Large files"
+msgstr "Μεγάλα αρχεία"
+
+msgid ""
+"{names} is {size}, over the {limit} limit. Upload it to cloud storage and "
+"put a download link in the message instead?"
+msgid_plural ""
+"{names} add up to {size}, over the {limit} limit. Upload them to cloud "
+"storage and put download links in the message instead?"
+msgstr[0] ""
+"Το {names} έχει μέγεθος {size}, πάνω από το όριο των {limit}. Να "
+"μεταφορτωθεί σε αποθήκευση cloud και να προστεθεί σύνδεσμος λήψης στο μήνυμα;"
+msgstr[1] ""
+"Τα {names} έχουν συνολικό μέγεθος {size}, πάνω από το όριο των {limit}. Να "
+"μεταφορτωθούν σε αποθήκευση cloud και να προστεθούν σύνδεσμοι λήψης στο "
+"μήνυμα;"
+
+msgid "Attach Anyway"
+msgstr "Επισύναψη ούτως ή άλλως"
+
+msgid "Upload to Cloud Storage"
+msgstr "Μεταφόρτωση σε αποθήκευση cloud"
+
+msgid "Continue a Draft"
+msgstr "Συνέχιση προχείρου"
+
+msgid "The files go into the draft you pick."
+msgstr "Τα αρχεία θα προστεθούν στο πρόχειρο που θα επιλέξετε."
+
+msgid "No drafts to continue."
+msgstr "Δεν υπάρχουν πρόχειρα για συνέχιση."
+
+msgid "Attach to This Draft"
+msgstr "Επισύναψη σε αυτό το πρόχειρο"
+
+msgid "Delete this conversation?"
+msgstr "Διαγραφή αυτής της συνομιλίας;"
+
+msgid "Delete Conversation"
+msgstr "Διαγραφή συνομιλίας"
+
+msgid "Delete this message permanently?"
+msgid_plural "Delete {n} messages permanently?"
+msgstr[0] "Οριστική διαγραφή αυτού του μηνύματος;"
+msgstr[1] "Οριστική διαγραφή {n} μηνυμάτων;"
+
+msgid ""
+"It is already in Trash, so it will be erased from the server. This can’t be "
+"undone."
+msgstr ""
+"Βρίσκεται ήδη στον Κάδο, επομένως θα διαγραφεί από τον διακομιστή. Αυτή η "
+"ενέργεια δεν αναιρείται."
+
+msgid ""
+"They are already in Trash, so they will be erased from the server. This "
+"can’t be undone."
+msgstr ""
+"Βρίσκονται ήδη στον Κάδο, επομένως θα διαγραφούν από τον διακομιστή. Αυτή η "
+"ενέργεια δεν αναιρείται."
+
+msgid "No {v1} folder available"
+msgstr "Δεν υπάρχει διαθέσιμος φάκελος {v1}"
+
+msgid "One message stayed put — mail can't be moved between accounts"
+msgstr ""
+"Ένα μήνυμα παρέμεινε στη θέση του — η αλληλογραφία δεν μπορεί να μετακινηθεί "
+"μεταξύ λογαριασμών"
+
+msgid "{foreign} messages stayed put — mail can't be moved between accounts"
+msgstr ""
+"{foreign} μηνύματα παρέμειναν στη θέση τους — η αλληλογραφία δεν μπορεί να "
+"μετακινηθεί μεταξύ λογαριασμών"
+
+msgid "Move Folder"
+msgstr "Μετακίνηση φακέλου"
+
+msgid "Hylki couldn’t save your password"
+msgstr "Το Hylki δεν μπόρεσε να αποθηκεύσει τον κωδικό πρόσβασής σας"
+
+msgid "Keyring setup on Linux Mint"
+msgstr "Ρύθμιση κλειδοθήκης στο Linux Mint"
+
+msgid "Got it"
+msgstr "Κατάλαβα"
+
+msgid "New Folder"
+msgstr "Νέος φάκελος"
+
+msgid "Create a new folder for this account."
+msgstr "Δημιουργήστε έναν νέο φάκελο για αυτόν τον λογαριασμό."
+
+msgid "Create"
+msgstr "Δημιουργία"
+
+msgid "Folder name"
+msgstr "Όνομα φακέλου"
+
+msgid "Sub-folders keep their place under the new name."
+msgstr "Οι υποφάκελοι διατηρούν τη θέση τους κάτω από το νέο όνομα."
+
+msgid "Rename"
+msgstr "Μετονομασία"
+
+msgid "A folder named {new_name} is already there."
+msgstr "Υπάρχει ήδη φάκελος με όνομα {new_name}."
+
+msgid "Rename Folder"
+msgstr "Μετονομασία φακέλου"
+
+msgid ""
+"Its messages are moved to Trash and the folder is removed from the server. "
+"This cannot be undone."
+msgstr ""
+"Τα μηνύματά του μετακινούνται στον Κάδο και ο φάκελος αφαιρείται από τον "
+"διακομιστή. Αυτή η ενέργεια δεν αναιρείται."
+
+msgid "Empty “{name}”?"
+msgstr "Άδειασμα του «{name}»;"
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Κάθε μήνυμα σε αυτόν θα διαγραφεί από τον διακομιστή. Αυτή η ενέργεια δεν "
+"αναιρείται."
+
+msgid "Empty"
+msgstr "Άδειασμα"
+
+msgid "No Junk folder available for this account"
+msgstr "Δεν υπάρχει φάκελος Ανεπιθύμητων για αυτόν τον λογαριασμό"
+
+msgid "No Inbox folder available for this account"
+msgstr "Δεν υπάρχει φάκελος Εισερχομένων για αυτόν τον λογαριασμό"
+
+msgid "No address book available to add contacts"
+msgstr "Δεν υπάρχει διαθέσιμο βιβλίο διευθύνσεων για προσθήκη επαφών"
+
+msgid "Add to Contacts"
+msgstr "Προσθήκη στις επαφές"
+
+msgid "Add"
+msgstr "Προσθήκη"
+
+msgid "Name"
+msgstr "Όνομα"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Address book"
+msgstr "Βιβλίο διευθύνσεων"
+
+msgid "Remove Account?"
+msgstr "Αφαίρεση λογαριασμού;"
+
+msgid "Remove"
+msgstr "Αφαίρεση"
+
+#. One-sentence description, directly under the version chip.
+msgid "A fast, GNOME-native email client"
+msgstr "Μια γρήγορη εφαρμογή email, εγγενή στο GNOME"
+
+msgid ""
+"This is a beta build for trying upcoming changes early. Expect bugs and "
+"instability — please report anything broken on GitHub. It shares your "
+"accounts and mail with the stable Hylki install."
+msgstr ""
+"Αυτή είναι μια έκδοση beta για πρώιμη δοκιμή επερχόμενων αλλαγών. "
+"Αναμένονται σφάλματα και αστάθεια — αναφέρετε οτιδήποτε δεν λειτουργεί στο "
+"GitHub. Χρησιμοποιεί τους ίδιους λογαριασμούς και την ίδια αλληλογραφία με "
+"τη σταθερή εγκατάσταση του Hylki."
+
+msgid "Release Notes"
+msgstr "Σημειώσεις έκδοσης"
+
+msgid "Keyring Setup Help"
+msgstr "Βοήθεια ρύθμισης κλειδοθήκης"
+
+msgid "Make account passwords persist on Linux Mint"
+msgstr "Μόνιμη αποθήκευση κωδικών λογαριασμών στο Linux Mint"
+
+#. Project links. Each row shows its URL as a hover tooltip.
+msgid "Project"
+msgstr "Έργο"
+
+msgid "Website"
+msgstr "Ιστότοπος"
+
+msgid "Report an issue or feature request"
+msgstr "Αναφορά προβλήματος ή αίτημα λειτουργίας"
+
+msgid "Source Code"
+msgstr "Πηγαίος κώδικας"
+
+msgid "License (GNU AGPL v3)"
+msgstr "Άδεια (GNU AGPL v3)"
+
+msgid "Buy Me a Coffee"
+msgstr "Κεράστε με έναν καφέ"
+
+#. Contributors — people outside Hyprlab whose patches are in the app.
+msgid "Special thanks to these contributors"
+msgstr "Ιδιαίτερες ευχαριστίες σε αυτούς τους συντελεστές"
+
+#. Footer.
+msgid "© 2026 Hyprlab"
+msgstr "© 2026 Hyprlab"
+
+msgid "No {v1} folder available for some messages"
+msgstr "Δεν υπάρχει διαθέσιμος φάκελος {v1} για ορισμένα μηνύματα"
+
+msgid "No filters to apply here yet"
+msgstr "Δεν υπάρχουν ακόμη φίλτρα για εφαρμογή εδώ"
+
+msgid "Applying Filters"
+msgstr "Εφαρμογή φίλτρων"
+
+msgid "Run in Background"
+msgstr "Εκτέλεση στο παρασκήνιο"
+
+msgid "Looked at {n} message so far"
+msgid_plural "Looked at {n} messages so far"
+msgstr[0] "Εξετάστηκε {n} μήνυμα μέχρι στιγμής"
+msgstr[1] "Εξετάστηκαν {n} μηνύματα μέχρι στιγμής"
+
+msgid "Matched {n} message"
+msgid_plural "Matched {n} messages"
+msgstr[0] "Αντιστοιχίστηκε {n} μήνυμα"
+msgstr[1] "Αντιστοιχίστηκαν {n} μηνύματα"
+
+msgid "Tagged {n} message"
+msgid_plural "Tagged {n} messages"
+msgstr[0] "Προστέθηκε ετικέτα σε {n} μήνυμα"
+msgstr[1] "Προστέθηκαν ετικέτες σε {n} μηνύματα"
+
+msgid "Filed {n} message away"
+msgid_plural "Filed {n} messages away"
+msgstr[0] "Αρχειοθετήθηκε {n} μήνυμα σε φάκελο"
+msgstr[1] "Αρχειοθετήθηκαν {n} μηνύματα σε φακέλους"
+
+msgid "Folder {done} of {total}"
+msgstr "Φάκελος {done} από {total}"
+
+msgid "Filters looked at {n} message, and it matched nothing"
+msgid_plural "Filters looked at {n} messages, and none of them matched"
+msgstr[0] "Τα φίλτρα εξέτασαν {n} μήνυμα και δεν αντιστοιχίστηκε σε τίποτα"
+msgstr[1] "Τα φίλτρα εξέτασαν {n} μηνύματα και κανένα δεν αντιστοιχίστηκε"
+
+#. Matches that needed nothing: the rules had already done their
+#. work on an earlier sync (#201). Saying "none matched" here
+#. made working rules look broken.
+msgid ""
+"Filters matched {matched} of {n} message, and it was already tagged or filed"
+msgid_plural ""
+"Filters matched {matched} of {n} messages, and all of them were already "
+"tagged or filed"
+msgstr[0] ""
+"Τα φίλτρα αντιστοίχισαν {matched} από {n} μήνυμα και είχε ήδη ετικέτα ή "
+"αρχειοθετηθεί"
+msgstr[1] ""
+"Τα φίλτρα αντιστοίχισαν {matched} από {n} μηνύματα και όλα είχαν ήδη ετικέτα "
+"ή αρχειοθετηθεί"
+
+msgid "Filters tagged {tagged} of {n} message"
+msgid_plural "Filters tagged {tagged} of {n} messages"
+msgstr[0] "Τα φίλτρα πρόσθεσαν ετικέτα σε {tagged} από {n} μήνυμα"
+msgstr[1] "Τα φίλτρα πρόσθεσαν ετικέτες σε {tagged} από {n} μηνύματα"
+
+msgid "Filters filed {filed} of {n} message away"
+msgid_plural "Filters filed {filed} of {n} messages away"
+msgstr[0] "Τα φίλτρα αρχειοθέτησαν {filed} από {n} μήνυμα"
+msgstr[1] "Τα φίλτρα αρχειοθέτησαν {filed} από {n} μηνύματα"
+
+msgid "Filters tagged {tagged} and filed {filed} of {n} message"
+msgid_plural "Filters tagged {tagged} and filed {filed} of {n} messages"
+msgstr[0] ""
+"Τα φίλτρα πρόσθεσαν ετικέτα σε {tagged} και αρχειοθέτησαν {filed} από {n} "
+"μήνυμα"
+msgstr[1] ""
+"Τα φίλτρα πρόσθεσαν ετικέτες σε {tagged} και αρχειοθέτησαν {filed} από {n} "
+"μηνύματα"
+
+msgid "Filters Applied"
+msgstr "Τα φίλτρα εφαρμόστηκαν"
+
+msgid "Full Release Notes on GitHub"
+msgstr ""
+
+msgid "Move around"
+msgstr "Μετακίνηση"
+
+msgid "Next message"
+msgstr "Επόμενο μήνυμα"
+
+msgid "Previous message"
+msgstr "Προηγούμενο μήνυμα"
+
+msgid "Open the selected message"
+msgstr "Άνοιγμα επιλεγμένου μηνύματος"
+
+msgid "Back to the message list"
+msgstr "Επιστροφή στη λίστα μηνυμάτων"
+
+msgid "Next message in the conversation"
+msgstr "Επόμενο μήνυμα στη συνομιλία"
+
+msgid "Previous message in the conversation"
+msgstr "Προηγούμενο μήνυμα στη συνομιλία"
+
+msgid "Search"
+msgstr "Αναζήτηση"
+
+msgid "Act on a message"
+msgstr "Ενέργεια σε μήνυμα"
+
+msgid "Reply to all"
+msgstr "Απάντηση σε όλους"
+
+msgid "Mark as spam"
+msgstr "Σήμανση ως ανεπιθύμητο"
+
+msgid "Star or unstar"
+msgstr "Προσθήκη ή αφαίρεση αστεριού"
+
+msgid "Mark read or unread"
+msgstr "Σήμανση ως αναγνωσμένο ή μη αναγνωσμένο"
+
+msgid "Select this row (for a bulk action)"
+msgstr "Επιλογή αυτής της σειράς (για μαζική ενέργεια)"
+
+msgid "Add or remove a tag (the first nine, in Settings order)"
+msgstr ""
+"Προσθήκη ή αφαίρεση ετικέτας (οι πρώτες εννέα, με τη σειρά των Ρυθμίσεων)"
+
+msgid "Remove every tag"
+msgstr "Αφαίρεση όλων των ετικετών"
+
+msgid "Everything else"
+msgstr "Όλα τα υπόλοιπα"
+
+msgid "Compose"
+msgstr "Σύνταξη"
+
+msgid "Back out of a reply and return to the list"
+msgstr "Έξοδος από την απάντηση και επιστροφή στη λίστα"
+
+msgid "Undo the last action, or the last edit while you are writing"
+msgstr ""
+"Αναίρεση της τελευταίας ενέργειας ή της τελευταίας επεξεργασίας κατά τη "
+"σύνταξη"
+
+msgid "Redo it (Ctrl+Y does the same)"
+msgstr "Επανάληψη (το Ctrl+Y κάνει το ίδιο)"
+
+msgid "Print the message you are reading"
+msgstr "Εκτύπωση του μηνύματος που διαβάζετε"
+
+msgid "Preview it as a PDF first"
+msgstr "Προεπισκόπηση πρώτα ως PDF"
+
+msgid "Reveal the status bar (also: long-press Refresh)"
+msgstr ""
+"Εμφάνιση γραμμής κατάστασης (επίσης: παρατεταμένο πάτημα στην Ανανέωση)"
+
+msgid "Show or hide the accounts in the sidebar"
+msgstr "Εμφάνιση ή απόκρυψη λογαριασμών στην πλευρική στήλη"
+
+msgid "Console mode (when enabled in Settings)"
+msgstr "Λειτουργία κονσόλας (όταν είναι ενεργοποιημένη στις Ρυθμίσεις)"
+
+msgid "Close the window (background sync keeps running)"
+msgstr "Κλείσιμο παραθύρου (ο συγχρονισμός συνεχίζεται στο παρασκήνιο)"
+
+msgid "Quit Hylki entirely"
+msgstr "Πλήρης έξοδος από το Hylki"
+
+msgid "This list"
+msgstr "Αυτή η λίστα"
+
+msgid "Unstar"
+msgstr "Αφαίρεση αστεριού"
+
+msgid "Save All Attachments"
+msgstr "Αποθήκευση όλων των συνημμένων"
+
+msgid "Always do this (change it in Settings → System → GNOME Files)"
+msgstr ""
+"Να γίνεται πάντα αυτό (αλλάξτε το στις Ρυθμίσεις → Σύστημα → Αρχεία GNOME)"
+
+msgid "New Message Instead"
+msgstr "Νέο μήνυμα αντί αυτού"
+
+msgid "Search by sender, subject or account"
+msgstr "Αναζήτηση κατά αποστολέα, θέμα ή λογαριασμό"
+
+msgid "(no subject)"
+msgstr "(χωρίς θέμα)"
+
+msgid "Default"
+msgstr "Προεπιλογή"
+
+msgid ""
+"Hylki checks for new mail and shows notifications while its window is closed."
+msgstr ""
+"Το Hylki ελέγχει για νέα αλληλογραφία και εμφανίζει ειδοποιήσεις όσο το "
+"παράθυρό του είναι κλειστό."
+
+msgid "Checking for new mail"
+msgstr "Έλεγχος για νέα αλληλογραφία"
+
+msgid "{n} unread message"
+msgid_plural "{n} unread messages"
+msgstr[0] "{n} μη αναγνωσμένο μήνυμα"
+msgstr[1] "{n} μη αναγνωσμένα μηνύματα"
+
+msgid "Spam"
+msgstr "Ανεπιθύμητα"
+
+msgid "Read/Unread"
+msgstr "Αναγνωσμένο/Μη αναγνωσμένο"
+
+msgid "Move To"
+msgstr "Μετακίνηση σε"
+
+msgid "Find"
+msgstr "Εύρεση"
+
+msgid "Print"
+msgstr "Εκτύπωση"
+
+msgid "On This Computer"
+msgstr "Σε αυτόν τον υπολογιστή"
+
+msgid "CardDAV Address Book"
+msgstr "Βιβλίο διευθύνσεων CardDAV"
+
+msgid "Encrypted message"
+msgstr "Κρυπτογραφημένο μήνυμα"
+
+msgid "Encrypted with OpenPGP; could not be decrypted"
+msgstr "Κρυπτογραφημένο με OpenPGP· δεν ήταν δυνατή η αποκρυπτογράφηση"
+
+msgid "Encrypted with OpenPGP"
+msgstr "Κρυπτογραφημένο με OpenPGP"
+
+msgid "Encrypted, and signed by {signer}"
+msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer}"
+
+msgid ""
+"Encrypted; the signature does not match, the message may have been altered"
+msgstr ""
+"Κρυπτογραφημένο· η υπογραφή δεν ταιριάζει, το μήνυμα ενδέχεται να έχει "
+"αλλοιωθεί"
+
+msgid "Encrypted; signed with a key you don't have ({id})"
+msgstr "Κρυπτογραφημένο· υπογεγραμμένο με κλειδί που δεν διαθέτετε ({id})"
+
+msgid "Encrypted, and signed by {signer} with an expired key"
+msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer} με ληγμένο κλειδί"
+
+msgid "Encrypted, and signed by {signer} with a revoked key"
+msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer} με ανακληθέν κλειδί"
+
+msgid "Encrypted, and signed by {signer}; the signature has expired"
+msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer}· η υπογραφή έχει λήξει"
+
+msgid "OpenPGP-signed; the signature could not be checked"
+msgstr "Υπογεγραμμένο με OpenPGP· δεν ήταν δυνατός ο έλεγχος της υπογραφής"
+
+msgid "Signed by {signer}"
+msgstr "Υπογεγραμμένο από {signer}"
+
+msgid "The OpenPGP signature does not match; the message may have been altered"
+msgstr ""
+"Η υπογραφή OpenPGP δεν ταιριάζει· το μήνυμα ενδέχεται να έχει αλλοιωθεί"
+
+msgid "Signed with a key you don't have ({id})"
+msgstr "Υπογεγραμμένο με κλειδί που δεν διαθέτετε ({id})"
+
+msgid "Signed by {signer} with an expired key"
+msgstr "Υπογεγραμμένο από {signer} με ληγμένο κλειδί"
+
+msgid "Signed by {signer} with a revoked key"
+msgstr "Υπογεγραμμένο από {signer} με ανακληθέν κλειδί"
+
+msgid "Signed by {signer}; the signature has expired"
+msgstr "Υπογεγραμμένο από {signer}· η υπογραφή έχει λήξει"
+
+msgid "This message hasn't been checked."
+msgstr "Αυτό το μήνυμα δεν έχει ελεγχθεί."
+
+msgid "{n} hours ago"
+msgstr "Πριν από {n} ώρες"
+
+msgid "yesterday"
+msgstr "χθες"
+
+msgid "{n} days ago"
+msgstr "Πριν από {n} ημέρες"
+
+msgid "Waiting since {ago}"
+msgstr "Σε αναμονή από {ago}"
+
+msgid "Scheduled for {when}"
+msgstr "Προγραμματισμένο για {when}"
+
+msgid "New message"
+msgstr "Νέο μήνυμα"
+
+msgid "Message ready to send"
+msgstr "Το μήνυμα είναι έτοιμο για αποστολή"
+
+msgid "A new message is open in Hylki."
+msgstr "Ένα νέο μήνυμα είναι ανοικτό στο Hylki."
+
+msgid "A new message with {n} file attached is open in Hylki."
+msgid_plural "A new message with {n} files attached is open in Hylki."
+msgstr[0] "Ένα νέο μήνυμα με {n} συνημμένο αρχείο είναι ανοικτό στο Hylki."
+msgstr[1] "Ένα νέο μήνυμα με {n} συνημμένα αρχεία είναι ανοικτό στο Hylki."
+
+msgid "GnuPG (gpg) is not installed, so this message cannot be read."
+msgstr ""
+"Το GnuPG (gpg) δεν είναι εγκατεστημένο, επομένως αυτό το μήνυμα δεν μπορεί "
+"να διαβαστεί."
+
+msgid "Decrypted with your key."
+msgstr "Αποκρυπτογραφήθηκε με το κλειδί σας."
+
+msgid "Encrypted to key {id}, which is not in your keyring."
+msgstr ""
+"Κρυπτογραφήθηκε για το κλειδί {id}, το οποίο δεν βρίσκεται στην κλειδοθήκη "
+"σας."
+
+msgid "The encrypted block is damaged or not OpenPGP data."
+msgstr ""
+"Το κρυπτογραφημένο τμήμα είναι κατεστραμμένο ή δεν περιέχει δεδομένα OpenPGP."
+
+msgid "Signing key {id} is trusted in your keyring."
+msgstr "Το κλειδί υπογραφής {id} είναι έμπιστο στην κλειδοθήκη σας."
+
+msgid "Signing key {id} is only marginally trusted in your keyring."
+msgstr "Το κλειδί υπογραφής {id} θεωρείται οριακά έμπιστο στην κλειδοθήκη σας."
+
+msgid "Signing key {id} is marked as not trusted in your keyring."
+msgstr ""
+"Το κλειδί υπογραφής {id} έχει επισημανθεί ως μη έμπιστο στην κλειδοθήκη σας."
+
+msgid ""
+"Signing key {id} is in your keyring but not marked as trusted; check its "
+"fingerprint with the sender."
+msgstr ""
+"Το κλειδί υπογραφής {id} βρίσκεται στην κλειδοθήκη σας αλλά δεν έχει "
+"επισημανθεί ως έμπιστο· ελέγξτε το αποτύπωμά του με τον αποστολέα."
+
+msgid "Signed with key {id}."
+msgstr "Υπογεγραμμένο με το κλειδί {id}."
+
+msgid "Import the sender's public key to verify it."
+msgstr "Εισαγάγετε το δημόσιο κλειδί του αποστολέα για να το επαληθεύσετε."
+
+msgid "No key was found in that file."
+msgstr "Δεν βρέθηκε κλειδί σε αυτό το αρχείο."
+
+msgid "Nothing to export."
+msgstr "Δεν υπάρχει τίποτα για εξαγωγή."
+
+msgid "gpg did not create the key."
+msgstr "Το gpg δεν δημιούργησε το κλειδί."
+
+msgid "No key was found for that address."
+msgstr "Δεν βρέθηκε κλειδί για αυτήν τη διεύθυνση."
+
+msgid "gpg could not sign the key."
+msgstr "Το gpg δεν μπόρεσε να υπογράψει το κλειδί."
+
+msgid "gpg could not delete the key."
+msgstr "Το gpg δεν μπόρεσε να διαγράψει το κλειδί."
+
+msgid "gpg did not sign the message."
+msgstr "Το gpg δεν υπέγραψε το μήνυμα."
+
+msgid "gpg did not encrypt the message."
+msgstr "Το gpg δεν κρυπτογράφησε το μήνυμα."
+
+msgid "Open Hylki"
+msgstr "Άνοιγμα Hylki"
+
+msgid "View all {n} unread in Inboxes…"
+msgstr "Προβολή και των {n} μη αναγνωσμένων στα Εισερχόμενα…"
+
+msgid "Accounts"
+msgstr "Λογαριασμοί"
+
+msgid "No unread mail in Inboxes"
+msgstr "Δεν υπάρχει μη αναγνωσμένη αλληλογραφία στα Εισερχόμενα"
+
+msgid "{n} unread in Inboxes"
+msgid_plural "{n} unread in Inboxes"
+msgstr[0] "{n} μη αναγνωσμένο στα Εισερχόμενα"
+msgstr[1] "{n} μη αναγνωσμένα στα Εισερχόμενα"
+
+msgid "Requires an app-specific password (not your normal login password)."
+msgstr ""
+"Απαιτεί κωδικό πρόσβασης ειδικό για την εφαρμογή (όχι τον κανονικό κωδικό "
+"σύνδεσης)."
+
+msgid "Enter your server details manually."
+msgstr "Εισαγάγετε χειροκίνητα τα στοιχεία του διακομιστή σας."
+
+msgid "Sign in with your browser — no password needed."
+msgstr ""
+"Συνδεθείτε με το πρόγραμμα περιήγησης — δεν απαιτείται κωδικός πρόσβασης."
+
+msgid "Sign in through GNOME Online Accounts."
+msgstr "Συνδεθείτε μέσω των Διαδικτυακών λογαριασμών GNOME."
+
+msgid "Requires Proton Mail Bridge running locally."
+msgstr "Απαιτεί το Proton Mail Bridge να εκτελείται τοπικά."
+
+msgid "Enable POP/IMAP access in GMX settings first."
+msgstr "Ενεργοποιήστε πρώτα την πρόσβαση POP/IMAP στις ρυθμίσεις GMX."
+
+msgid "Enter your provider's OAuth endpoints, then sign in."
+msgstr ""
+"Εισαγάγετε τα τελικά σημεία OAuth του παρόχου σας και έπειτα συνδεθείτε."
+
+msgid "Mail Accounts"
+msgstr "Λογαριασμοί αλληλογραφίας"
+
+msgid "Drag to set the order they appear in the sidebar."
+msgstr "Σύρετε για να ορίσετε τη σειρά εμφάνισής τους στην πλευρική στήλη."
+
+msgid "Add Account…"
+msgstr "Προσθήκη λογαριασμού…"
+
+msgid "GNOME Online Accounts"
+msgstr "Διαδικτυακοί λογαριασμοί GNOME"
+
+msgid "Mail accounts from GNOME Settings. Toggle one on to use it in Hylki."
+msgstr ""
+"Λογαριασμοί αλληλογραφίας από τις ρυθμίσεις του GNOME. Ενεργοποιήστε έναν "
+"για να τον χρησιμοποιήσετε στο Hylki."
+
+msgid ""
+"Label messages with one or more coloured tags. Tags are stored on the mail "
+"server as IMAP keywords, so Thunderbird and other clients show the same "
+"tags.\n"
+"\n"
+"Drag a tag to reorder: the order here is the sidebar's, and the first nine "
+"answer to the 1–9 keys."
+msgstr ""
+"Προσθέστε μία ή περισσότερες έγχρωμες ετικέτες στα μηνύματα. Οι ετικέτες "
+"αποθηκεύονται στον διακομιστή αλληλογραφίας ως λέξεις-κλειδιά IMAP, ώστε το "
+"Thunderbird και άλλες εφαρμογές να εμφανίζουν τις ίδιες ετικέτες.\n"
+"\n"
+"Σύρετε μια ετικέτα για αλλαγή σειράς: εδώ ορίζεται η σειρά στην πλευρική "
+"στήλη και οι πρώτες εννέα αντιστοιχούν στα πλήκτρα 1–9."
+
+msgid "Add Tag…"
+msgstr "Προσθήκη ετικέτας…"
+
+msgid "Look through every mailbox for tags other clients have set"
+msgstr ""
+"Αναζήτηση σε όλα τα γραμματοκιβώτια για ετικέτες που έχουν ορίσει άλλες "
+"εφαρμογές"
+
+msgid "Find Tags…"
+msgstr "Εύρεση ετικετών…"
+
+msgid "Search filters"
+msgstr "Αναζήτηση φίλτρων"
+
+msgid "Filters"
+msgstr "Φίλτρα"
+
+msgid ""
+"File incoming mail into folders or tag it automatically, by sender, subject "
+"or recipients. Applied to each account's Inbox as Hylki syncs it, or to the "
+"mail already there with Apply Now; a folder's right-click menu runs them "
+"over that one folder."
+msgstr ""
+"Αρχειοθετήστε αυτόματα την εισερχόμενη αλληλογραφία σε φακέλους ή προσθέστε "
+"ετικέτες, ανά αποστολέα, θέμα ή παραλήπτες. Τα φίλτρα εφαρμόζονται στα "
+"Εισερχόμενα κάθε λογαριασμού κατά τον συγχρονισμό του Hylki ή στην ήδη "
+"υπάρχουσα αλληλογραφία με το «Εφαρμογή τώρα»· το μενού δεξιού κλικ ενός "
+"φακέλου τα εκτελεί μόνο σε αυτόν τον φάκελο."
+
+msgid "Add Filter…"
+msgstr "Προσθήκη φίλτρου…"
+
+msgid "Run every rule over the mail already in your inboxes"
+msgstr ""
+"Εκτέλεση όλων των κανόνων στην αλληλογραφία που υπάρχει ήδη στα Εισερχόμενά "
+"σας"
+
+msgid "Apply Now"
+msgstr "Εφαρμογή τώρα"
+
+msgid "Search senders"
+msgstr "Αναζήτηση αποστολέων"
+
+msgid "Allowed Senders"
+msgstr "Επιτρεπόμενοι αποστολείς"
+
+msgid "Messages from these senders load remote content automatically."
+msgstr ""
+"Τα μηνύματα από αυτούς τους αποστολείς φορτώνουν αυτόματα απομακρυσμένο "
+"περιεχόμενο."
+
+msgid "Email address"
+msgstr "Διεύθυνση email"
+
+msgid "Allow this sender"
+msgstr "Να επιτρέπεται αυτός ο αποστολέας"
+
+msgid "Blacklist"
+msgstr "Μαύρη λίστα"
+
+msgid ""
+"Incoming mail from these senders is deleted automatically (moved to Trash). "
+"Enter an email address, or a whole domain like \"example.com\" to block "
+"every sender there."
+msgstr ""
+"Η εισερχόμενη αλληλογραφία από αυτούς τους αποστολείς διαγράφεται αυτόματα "
+"(μετακινείται στον Κάδο). Εισαγάγετε μια διεύθυνση email ή έναν ολόκληρο "
+"τομέα, όπως «example.com», για να αποκλείσετε κάθε αποστολέα από αυτόν."
+
+msgid "Address or domain"
+msgstr "Διεύθυνση ή τομέας"
+
+msgid "Block this sender"
+msgstr "Αποκλεισμός αυτού του αποστολέα"
+
+msgid "Account"
+msgstr "Λογαριασμός"
+
+msgid "Save"
+msgstr "Αποθήκευση"
+
+msgid "GNOME Online Account"
+msgstr "Διαδικτυακός λογαριασμός GNOME"
+
+msgid "Show in Hylki"
+msgstr "Εμφάνιση στο Hylki"
+
+msgid ""
+"Switching this off returns the account to the import list — it stays in "
+"GNOME Online Accounts."
+msgstr ""
+"Η απενεργοποίηση επιστρέφει τον λογαριασμό στη λίστα εισαγωγής — παραμένει "
+"στους Διαδικτυακούς Λογαριασμούς GNOME."
+
+msgid ""
+"This account is managed by GNOME Online Accounts.\n"
+"Its address, servers and password are changed in Settings → Online Accounts."
+msgstr ""
+"Αυτός ο λογαριασμός διαχειρίζεται από τους Διαδικτυακούς λογαριασμούς "
+"GNOME.\n"
+"Η διεύθυνση, οι διακομιστές και ο κωδικός πρόσβασής του αλλάζουν στις "
+"Ρυθμίσεις → Διαδικτυακοί Λογαριασμοί."
+
+msgid "Open Online Accounts…"
+msgstr "Άνοιγμα Διαδικτυακών λογαριασμών…"
+
+msgid "Mail Account"
+msgstr "Λογαριασμός αλληλογραφίας"
+
+msgid "Provider"
+msgstr "Πάροχος"
+
+msgid "Choose your email provider."
+msgstr "Επιλέξτε τον πάροχο email σας."
+
+msgid "Display Name"
+msgstr "Εμφανιζόμενο όνομα"
+
+msgid "Email Address"
+msgstr "Διεύθυνση email"
+
+msgid "Incoming Protocol"
+msgstr "Πρωτόκολλο εισερχομένων"
+
+msgid "Incoming Server"
+msgstr "Διακομιστής εισερχομένων"
+
+msgid "Port (IMAP 993 / POP3 995)"
+msgstr "Θύρα (IMAP 993 / POP3 995)"
+
+msgid "SMTP Server (optional)"
+msgstr "Διακομιστής SMTP (προαιρετικό)"
+
+msgid "SMTP Port (default 587)"
+msgstr "Θύρα SMTP (προεπιλογή 587)"
+
+msgid "Username"
+msgstr "Όνομα χρήστη"
+
+msgid "Password"
+msgstr "Κωδικός πρόσβασης"
+
+msgid "OAuth Client ID"
+msgstr "Αναγνωριστικό πελάτη OAuth"
+
+msgid "OAuth Client Secret (optional)"
+msgstr "Μυστικό πελάτη OAuth (προαιρετικό)"
+
+msgid "Authorization URL"
+msgstr "URL εξουσιοδότησης"
+
+msgid "Token URL"
+msgstr "URL διακριτικού"
+
+msgid "Scopes (space-separated)"
+msgstr "Πεδία πρόσβασης (χωρισμένα με κενά)"
+
+msgid "Sign In with Browser"
+msgstr "Σύνδεση με πρόγραμμα περιήγησης"
+
+msgid ""
+"Google and Microsoft sign-in use GNOME Online Accounts.\n"
+"\n"
+"1. Open Online Accounts and sign in there.\n"
+"2. Come back to Hylki and reopen this window — the account then appears "
+"under “GNOME Online Accounts” at the top of this window. Enable it there."
+msgstr ""
+"Η σύνδεση Google και Microsoft χρησιμοποιεί τους Διαδικτυακούς λογαριασμούς "
+"GNOME.\n"
+"\n"
+"1. Ανοίξτε τους Διαδικτυακούς λογαριασμούς και συνδεθείτε εκεί.\n"
+"2. Επιστρέψτε στο Hylki και ανοίξτε ξανά αυτό το παράθυρο — ο λογαριασμός θα "
+"εμφανιστεί στους «Διαδικτυακούς λογαριασμούς GNOME» στο επάνω μέρος. "
+"Ενεργοποιήστε τον εκεί."
+
+msgid "Separate SMTP credentials"
+msgstr "Ξεχωριστά διαπιστευτήρια SMTP"
+
+msgid ""
+"Use a different username and password for sending. Off = use the credentials "
+"above."
+msgstr ""
+"Χρήση διαφορετικού ονόματος χρήστη και κωδικού πρόσβασης για αποστολή. "
+"Ανενεργό = χρήση των παραπάνω διαπιστευτηρίων."
+
+msgid "SMTP Username"
+msgstr "Όνομα χρήστη SMTP"
+
+msgid "SMTP Password"
+msgstr "Κωδικός πρόσβασης SMTP"
+
+msgid "Test Connection"
+msgstr "Δοκιμή σύνδεσης"
+
+#. Rendered as Pango markup — a bare "&" breaks it.
+msgid "Appearance"
+msgstr "Εμφάνιση"
+
+msgid "How this account is shown in the sidebar and the Inboxes view."
+msgstr ""
+"Πώς εμφανίζεται αυτός ο λογαριασμός στην πλευρική στήλη και στην προβολή "
+"Εισερχομένων."
+
+msgid "Label (defaults to email address)"
+msgstr "Ετικέτα (προεπιλογή η διεύθυνση email)"
+
+msgid "Account accent color"
+msgstr "Χρώμα έμφασης λογαριασμού"
+
+msgid ""
+"The account circle background, and this account's marks in the sidebar and "
+"lists"
+msgstr ""
+"Το φόντο του κύκλου λογαριασμού και τα σημάδια αυτού του λογαριασμού στην "
+"πλευρική στήλη και στις λίστες"
+
+msgid "Use my Gravatar"
+msgstr "Χρήση του Gravatar μου"
+
+msgid ""
+"Show the picture this address has at gravatar.com. Looking it up sends them "
+"a hash of the address, and if there is none, the circle falls back to the "
+"choice below."
+msgstr ""
+"Εμφάνιση της εικόνας που έχει αυτή η διεύθυνση στο gravatar.com. Η αναζήτηση "
+"στέλνει εκεί ένα hash της διεύθυνσης· αν δεν υπάρχει εικόνα, ο κύκλος "
+"χρησιμοποιεί την παρακάτω επιλογή."
+
+msgid "Circle shows"
+msgstr "Ο κύκλος εμφανίζει"
+
+msgid "Initials or emoji"
+msgstr "Αρχικά ή emoji"
+
+msgid "Picture"
+msgstr "Εικόνα"
+
+msgid "Emoji"
+msgstr "Emoji"
+
+msgid "Shown in the circle instead of the initials"
+msgstr "Εμφανίζεται στον κύκλο αντί για τα αρχικά"
+
+msgid "Choose…"
+msgstr "Επιλογή…"
+
+msgid "Use initials"
+msgstr "Χρήση αρχικών"
+
+msgid "A photo or logo from this computer"
+msgstr "Φωτογραφία ή λογότυπο από αυτόν τον υπολογιστή"
+
+msgid "Send-as aliases"
+msgstr "Ψευδώνυμα αποστολέα"
+
+msgid ""
+"Extra addresses this account can send as. An alias can use this account's "
+"SMTP server, or bring its own."
+msgstr ""
+"Πρόσθετες διευθύνσεις από τις οποίες μπορεί να στέλνει αυτός ο λογαριασμός. "
+"Ένα ψευδώνυμο μπορεί να χρησιμοποιεί τον διακομιστή SMTP αυτού του "
+"λογαριασμού ή δικό του."
+
+msgid "Add Alias…"
+msgstr "Προσθήκη ψευδωνύμου…"
+
+msgid "Syncing"
+msgstr "Συγχρονισμός"
+
+msgid "Instant new mail (IMAP push)"
+msgstr "Άμεση λήψη νέων μηνυμάτων (ώθηση IMAP)"
+
+msgid "Turn off for servers that stall on push connections."
+msgstr "Απενεργοποιήστε το για διακομιστές που κολλούν στις συνδέσεις ώθησης."
+
+msgid "Empty Junk automatically"
+msgstr "Αυτόματο άδειασμα ανεπιθύμητων"
+
+msgid "Delete junk mail older than this for good, checked at each sync."
+msgstr ""
+"Οριστική διαγραφή ανεπιθύμητων μηνυμάτων παλαιότερων από αυτό το διάστημα, "
+"με έλεγχο σε κάθε συγχρονισμό."
+
+msgid "Empty Trash automatically"
+msgstr "Αυτόματο άδειασμα κάδου"
+
+msgid ""
+"Delete mail in the Trash older than this for good, checked at each sync."
+msgstr ""
+"Οριστική διαγραφή μηνυμάτων στον Κάδο παλαιότερων από αυτό το διάστημα, με "
+"έλεγχο σε κάθε συγχρονισμό."
+
+msgid "Special Folders"
+msgstr "Ειδικοί φάκελοι"
+
+msgid ""
+"Which of this account's folders hold each role. Automatically follows the "
+"server's own markings; pick a folder when a role isn't detected or lands "
+"wrong. Nothing already on the server moves: a role says where mail goes from "
+"now on."
+msgstr ""
+"Ποιοι φάκελοι αυτού του λογαριασμού έχουν κάθε ρόλο. Ακολουθούνται αυτόματα "
+"οι σημάνσεις του διακομιστή· επιλέξτε φάκελο όταν ένας ρόλος δεν εντοπίζεται "
+"ή αντιστοιχίζεται λάθος. Τίποτα που βρίσκεται ήδη στον διακομιστή δεν "
+"μετακινείται: ο ρόλος ορίζει πού θα πηγαίνουν τα μηνύματα από εδώ και πέρα."
+
+msgid "Sent"
+msgstr "Απεσταλμένα"
+
+msgid "Save a copy of sent mail in"
+msgstr "Αποθήκευση αντιγράφου των απεσταλμένων στο"
+
+msgid "Server saves its own copy of sent mail"
+msgstr "Ο διακομιστής αποθηκεύει δικό του αντίγραφο των απεσταλμένων"
+
+msgid ""
+"For Gmail and others that file sent mail themselves. Disables above Save a "
+"copy."
+msgstr ""
+"Για το Gmail και άλλες υπηρεσίες που αρχειοθετούν μόνες τους τα απεσταλμένα. "
+"Απενεργοποιεί την παραπάνω αποθήκευση αντιγράφου."
+
+msgid "Drafts"
+msgstr "Πρόχειρα"
+
+msgid "Trash"
+msgstr "Κάδος"
+
+msgid "Junk"
+msgstr "Ανεπιθύμητα"
+
+msgid "OpenPGP"
+msgstr "OpenPGP"
+
+msgid ""
+"The key that signs mail sent from this account and opens what is encrypted "
+"to it. Keys are managed under OpenPGP in the sidebar."
+msgstr ""
+"Το κλειδί που υπογράφει τα μηνύματα αυτού του λογαριασμού και ανοίγει όσα "
+"είναι κρυπτογραφημένα για αυτόν. Η διαχείριση των κλειδιών γίνεται στην "
+"ενότητα OpenPGP της πλευρικής στήλης."
+
+msgid "Key"
+msgstr "Κλειδί"
+
+msgid "Automatic uses the key whose address matches."
+msgstr ""
+"Η αυτόματη επιλογή χρησιμοποιεί το κλειδί του οποίου η διεύθυνση ταιριάζει."
+
+msgid "Signature"
+msgstr "Υπογραφή"
+
+msgid "Appended to new messages sent from this account."
+msgstr ""
+"Προστίθεται στα νέα μηνύματα που αποστέλλονται από αυτόν τον λογαριασμό."
+
+msgid "Edit HTML…"
+msgstr "Επεξεργασία HTML…"
+
+msgid "Import File…"
+msgstr "Εισαγωγή αρχείου…"
+
+msgid ""
+"Your password is stored in the system keyring (secret-service), never in "
+"plain text on disk."
+msgstr ""
+"Ο κωδικός πρόσβασής σας αποθηκεύεται στην κλειδοθήκη του συστήματος (secret-"
+"service), ποτέ ως απλό κείμενο στον δίσκο."
+
+msgid "Follow Settings"
+msgstr "Ακολούθηση ρυθμίσεων"
+
+msgid "On"
+msgstr "Ενεργό"
+
+msgid "Off"
+msgstr "Ανενεργό"
+
+msgid "Choose a Picture"
+msgstr "Επιλογή εικόνας"
+
+msgid "Images"
+msgstr "Εικόνες"
+
+msgid "Testing…"
+msgstr "Δοκιμή…"
+
+msgid "Enter a client ID (and endpoints for a custom provider) first"
+msgstr ""
+"Εισαγάγετε πρώτα αναγνωριστικό πελάτη (και τελικά σημεία για προσαρμοσμένο "
+"πάροχο)"
+
+msgid "Opening browser… complete sign-in there."
+msgstr "Άνοιγμα προγράμματος περιήγησης… ολοκληρώστε τη σύνδεση εκεί."
+
+msgid "Signature HTML"
+msgstr "HTML υπογραφής"
+
+msgid ""
+"Paste or edit the signature's HTML. Scripts and style sheets are removed; "
+"inline styles, tables and images are kept."
+msgstr ""
+"Επικολλήστε ή επεξεργαστείτε τον κώδικα HTML της υπογραφής. Τα σενάρια και "
+"τα φύλλα στυλ αφαιρούνται· τα ενσωματωμένα στυλ, οι πίνακες και οι εικόνες "
+"διατηρούνται."
+
+msgid "Apply"
+msgstr "Εφαρμογή"
+
+msgid "Import Signature"
+msgstr "Εισαγωγή υπογραφής"
+
+msgid "HTML and text files"
+msgstr "Αρχεία HTML και κειμένου"
+
+msgid "Could Not Read the File"
+msgstr "Δεν ήταν δυνατή η ανάγνωση του αρχείου"
+
+msgid "OK"
+msgstr "Εντάξει"
+
+msgid "Enter a client ID and sign in before saving"
+msgstr "Εισαγάγετε αναγνωριστικό πελάτη και συνδεθείτε πριν από την αποθήκευση"
+
+msgid "✓ Signed in — save the account to finish"
+msgstr "✓ Έγινε σύνδεση — αποθηκεύστε τον λογαριασμό για ολοκλήρωση"
+
+msgid "Sign-in failed: {e}"
+msgstr "Η σύνδεση απέτυχε: {e}"
+
+msgid "✓ SMTP: connected"
+msgstr "✓ SMTP: συνδέθηκε"
+
+msgid "✗ SMTP: {e}"
+msgstr "✗ SMTP: {e}"
+
+msgid "Sends through {host}"
+msgstr "Αποστολή μέσω {host}"
+
+msgid "Sends through this account"
+msgstr "Αποστολή μέσω αυτού του λογαριασμού"
+
+msgid "Remove this alias"
+msgstr "Αφαίρεση αυτού του ψευδωνύμου"
+
+msgid "Display name (optional)"
+msgstr "Εμφανιζόμενο όνομα (προαιρετικό)"
+
+msgid "Sending"
+msgstr "Αποστολή"
+
+msgid "Own SMTP server"
+msgstr "Ιδιόκτητος διακομιστής SMTP"
+
+msgid "SMTP server"
+msgstr "Διακομιστής SMTP"
+
+msgid "SMTP port"
+msgstr "Θύρα SMTP"
+
+msgid "SMTP username"
+msgstr "Όνομα χρήστη SMTP"
+
+msgid "SMTP password"
+msgstr "Κωδικός πρόσβασης SMTP"
+
+msgid "Test SMTP"
+msgstr "Δοκιμή SMTP"
+
+msgid "Microsoft 365 files its own copy in Sent Items; this cannot be changed."
+msgstr ""
+"Το Microsoft 365 αρχειοθετεί δικό του αντίγραφο στα Απεσταλμένα· αυτό δεν "
+"μπορεί να αλλάξει."
+
+msgid "POP3 accounts have no server folders to save a copy in."
+msgstr ""
+"Οι λογαριασμοί POP3 δεν διαθέτουν φακέλους διακομιστή για την αποθήκευση "
+"αντιγράφου."
+
+msgid "GOA"
+msgstr "GOA"
+
+msgid "Hylki"
+msgstr "Hylki"
+
+msgid "Imported GNOME Online Account"
+msgstr "Εισηγμένος διαδικτυακός λογαριασμός GNOME"
+
+msgid "Added directly in Hylki"
+msgstr "Προστέθηκε απευθείας στο Hylki"
+
+msgid "Enable this account"
+msgstr "Ενεργοποίηση αυτού του λογαριασμού"
+
+msgid "Use this account in Hylki"
+msgstr "Χρήση αυτού του λογαριασμού στο Hylki"
+
+msgid "Automatic"
+msgstr "Αυτόματα"
+
+msgid "Never"
+msgstr "Ποτέ"
+
+msgid "After {n} day"
+msgid_plural "After {n} days"
+msgstr[0] "Μετά από {n} ημέρα"
+msgstr[1] "Μετά από {n} ημέρες"
+
+msgid "Google (Gmail)"
+msgstr "Google (Gmail)"
+
+msgid "Microsoft 365 / Outlook"
+msgstr "Microsoft 365 / Outlook"
+
+msgid "Proton Mail"
+msgstr "Proton Mail"
+
+msgid "Custom OAuth"
+msgstr "Προσαρμοσμένο OAuth"
+
+msgid "IMAP/POP3 account"
+msgstr "Λογαριασμός IMAP/POP3"
+
+msgid "IMAP/POP3 account on {host}"
+msgstr "Λογαριασμός IMAP/POP3 στο {host}"
+
+msgid "Mail account"
+msgstr "Λογαριασμός αλληλογραφίας"
+
+#. Every condition, joined the way the rule combines them (#192).
+msgid " or "
+msgstr " ή "
+
+#. Every condition, joined the way the rule combines them (#192).
+msgid " and "
+msgstr " και "
+
+msgid ", tagged {tag}"
+msgstr ", με ετικέτα {tag}"
+
+msgid "Remove filter"
+msgstr "Αφαίρεση φίλτρου"
+
+msgid "Applying…"
+msgstr "Εφαρμογή…"
+
+msgid "Searching…"
+msgstr "Αναζήτηση…"
+
+msgid "No New Tags"
+msgstr "Δεν υπάρχουν νέες ετικέτες"
+
+msgid "No tags were found in your mailboxes that are not already set up here."
+msgstr ""
+"Δεν βρέθηκαν στους φακέλους αλληλογραφίας σας ετικέτες που να μην έχουν ήδη "
+"ρυθμιστεί εδώ."
+
+msgid "Tags Found"
+msgstr "Βρέθηκαν ετικέτες"
+
+msgid ""
+"{n} tags are in use in your mailboxes but not set up here. Import them all, "
+"or choose which to add. Names and colours can be changed afterwards."
+msgstr ""
+"{n} ετικέτες χρησιμοποιούνται στους φακέλους αλληλογραφίας σας αλλά δεν "
+"έχουν ρυθμιστεί εδώ. Εισαγάγετέ τις όλες ή επιλέξτε ποιες θα προστεθούν. Τα "
+"ονόματα και τα χρώματα μπορούν να αλλάξουν αργότερα."
+
+msgid "Import Selected"
+msgstr "Εισαγωγή επιλεγμένων"
+
+msgid "Import All"
+msgstr "Εισαγωγή όλων"
+
+msgid "{n} messages"
+msgstr "{n} μηνύματα"
+
+msgid ""
+"Press this key on a message to add or remove the tag (with single-key "
+"shortcuts on)"
+msgstr ""
+"Πατήστε αυτό το πλήκτρο σε ένα μήνυμα για να προσθέσετε ή να αφαιρέσετε την "
+"ετικέτα (με ενεργές τις συντομεύσεις ενός πλήκτρου)"
+
+msgid "Remove tag"
+msgstr "Αφαίρεση ετικέτας"
+
+msgid "Edit Tag"
+msgstr "Επεξεργασία ετικέτας"
+
+msgid "Add Tag"
+msgstr "Προσθήκη ετικέτας"
+
+msgid "Keyword"
+msgstr "Λέξη-κλειδί"
+
+msgid ""
+"How the tag is stored on the server: letters, digits and most punctuation, "
+"no spaces. Thunderbird's built-in tags are $label1 to $label5."
+msgstr ""
+"Ο τρόπος αποθήκευσης της ετικέτας στον διακομιστή: γράμματα, ψηφία και τα "
+"περισσότερα σημεία στίξης, χωρίς διαστήματα. Οι ενσωματωμένες ετικέτες του "
+"Thunderbird είναι από $label1 έως $label5."
+
+msgid "Colour"
+msgstr "Χρώμα"
+
+msgid "Custom colour…"
+msgstr "Προσαρμοσμένο χρώμα…"
+
+msgid "Tag Colour"
+msgstr "Χρώμα ετικέτας"
+
+msgid "Edit Filter"
+msgstr "Επεξεργασία φίλτρου"
+
+msgid "Add Filter"
+msgstr "Προσθήκη φίλτρου"
+
+msgid "Name (optional)"
+msgstr "Όνομα (προαιρετικό)"
+
+msgid "Remove condition"
+msgstr "Αφαίρεση συνθήκης"
+
+msgid "Where"
+msgstr "Πού"
+
+msgid "Match"
+msgstr "Αντιστοίχιση"
+
+msgid "Commas separate alternatives; any one of them counts"
+msgstr ""
+"Τα κόμματα διαχωρίζουν εναλλακτικές επιλογές· αρκεί να ισχύει μία από αυτές"
+
+msgid "Text to match"
+msgstr "Κείμενο προς αντιστοίχιση"
+
+msgid "Searched on the server; nothing is downloaded"
+msgstr "Η αναζήτηση γίνεται στον διακομιστή· δεν γίνεται λήψη τίποτα"
+
+msgid "From address when no Reply-To is set"
+msgstr "Διεύθυνση αποστολέα όταν δεν έχει οριστεί Reply-To"
+
+msgid "Add Condition"
+msgstr "Προσθήκη συνθήκης"
+
+msgid "Condition matching"
+msgstr "Αντιστοίχιση συνθηκών"
+
+msgid "All must match"
+msgstr "Πρέπει να ισχύουν όλες"
+
+msgid "Any one may match"
+msgstr "Μπορεί να ισχύει οποιαδήποτε"
+
+msgid "Condition {n}"
+msgstr "Συνθήκη {n}"
+
+msgid "Or where"
+msgstr "Ή όπου"
+
+msgid "And where"
+msgstr "Και όπου"
+
+msgid "Then"
+msgstr "Τότε"
+
+msgid "Move to"
+msgstr "Μετακίνηση στο"
+
+msgid "Leave in Inbox to only tag matching mail"
+msgstr ""
+"Αφήστε στα Εισερχόμενα για να προστίθεται μόνο ετικέτα στα μηνύματα που "
+"ταιριάζουν"
+
+#. Entry 0 files nowhere (a tag-only rule, #71): its path is "".
+msgid "Leave in Inbox"
+msgstr "Παραμονή στα Εισερχόμενα"
+
+msgid "Tag with"
+msgstr "Προσθήκη ετικέτας"
+
+msgid "None"
+msgstr "Καμία"
+
+msgid "Count unread mail"
+msgstr "Καταμέτρηση μη αναγνωσμένων μηνυμάτων"
+
+msgid "Include the folder's unread mail in the tray icon's unread count"
+msgstr ""
+"Συμπερίληψη των μη αναγνωσμένων μηνυμάτων του φακέλου στην ένδειξη μη "
+"αναγνωσμένων του εικονιδίου περιοχής ειδοποιήσεων"
+
+msgid "Show the attachments"
+msgstr "Εμφάνιση συνημμένων"
+
+msgid "Hide the attachments"
+msgstr "Απόκρυψη συνημμένων"
+
+msgid "Thumbnail size"
+msgstr "Μέγεθος μικρογραφιών"
+
+msgid "Sorted Z to A — switch to A to Z"
+msgstr "Ταξινόμηση από Ω προς Α — αλλαγή σε Α προς Ω"
+
+msgid "Sorted A to Z — switch to Z to A"
+msgstr "Ταξινόμηση από Α προς Ω — αλλαγή σε Ω προς Α"
+
+msgid "Show as thumbnails"
+msgstr "Εμφάνιση ως μικρογραφίες"
+
+msgid "Show as a list"
+msgstr "Εμφάνιση ως λίστα"
+
+msgid "Save All…"
+msgstr "Αποθήκευση όλων…"
+
+msgid "Save every attachment to a folder"
+msgstr "Αποθήκευση κάθε συνημμένου σε φάκελο"
+
+msgid "Key imported"
+msgstr "Το κλειδί εισήχθη"
+
+msgid ""
+"The key is in your keyring now. Trust it under Settings, OpenPGP, once you "
+"have checked its fingerprint with its owner."
+msgstr ""
+"Το κλειδί βρίσκεται πλέον στην κλειδοθήκη σας. Αφού επαληθεύσετε το "
+"αποτύπωμά του με τον κάτοχό του, ορίστε το ως έμπιστο στις Ρυθμίσεις, στην "
+"ενότητα OpenPGP."
+
+msgid "Already in your keyring"
+msgstr "Υπάρχει ήδη στην κλειδοθήκη σας"
+
+msgid "That key was imported before."
+msgstr "Αυτό το κλειδί είχε εισαχθεί προηγουμένως."
+
+msgid "Could not import the key"
+msgstr "Δεν ήταν δυνατή η εισαγωγή του κλειδιού"
+
+msgid "Show in Message"
+msgstr "Εμφάνιση στο μήνυμα"
+
+msgid "Import OpenPGP key"
+msgstr "Εισαγωγή κλειδιού OpenPGP"
+
+msgid "Search by sender, subject, type, filename…"
+msgstr "Αναζήτηση κατά αποστολέα, θέμα, τύπο, όνομα αρχείου…"
+
+msgid "Loading attachments…"
+msgstr "Φόρτωση συνημμένων…"
+
+msgid "No attachments"
+msgstr "Δεν υπάρχουν συνημμένα"
+
+msgid "Attachments from your inboxes will appear here."
+msgstr "Τα συνημμένα από τα εισερχόμενά σας θα εμφανίζονται εδώ."
+
+msgid "No matching attachments"
+msgstr "Δεν υπάρχουν συνημμένα που να ταιριάζουν"
+
+msgid ""
+"Try a different search, or check which accounts and folders the footer is "
+"pulling from."
+msgstr ""
+"Δοκιμάστε διαφορετική αναζήτηση ή ελέγξτε από ποιους λογαριασμούς και "
+"φακέλους αντλεί στοιχεία το υποσέλιδο."
+
+msgid "Thumbnail grid"
+msgstr "Πλέγμα μικρογραφιών"
+
+msgid "Table"
+msgstr "Πίνακας"
+
+msgid "Show only this account"
+msgstr "Εμφάνιση μόνο αυτού του λογαριασμού"
+
+msgid "Folders to pull from"
+msgstr "Φάκελοι άντλησης"
+
+msgid "Include Archive"
+msgstr "Συμπερίληψη Αρχείου"
+
+msgid "Include other folders"
+msgstr "Συμπερίληψη άλλων φακέλων"
+
+msgid "Everything that is not an inbox or an archive"
+msgstr "Όλα όσα δεν βρίσκονται στα εισερχόμενα ή στο αρχείο"
+
+msgid "Pulling attachments from"
+msgstr "Άντληση συνημμένων από"
+
+msgid "Show only this type"
+msgstr "Εμφάνιση μόνο αυτού του τύπου"
+
+msgid "All types"
+msgstr "Όλοι οι τύποι"
+
+msgid "PDFs"
+msgstr "PDF"
+
+msgid "Documents"
+msgstr "Έγγραφα"
+
+msgid "Archives"
+msgstr "Αρχεία"
+
+msgid "Audio & Video"
+msgstr "Ήχος και βίντεο"
+
+msgid "Other"
+msgstr "Άλλα"
+
+msgid "Sort"
+msgstr "Ταξινόμηση"
+
+msgid "Newest first"
+msgstr "Νεότερα πρώτα"
+
+msgid "Oldest first"
+msgstr "Παλαιότερα πρώτα"
+
+msgid "Name (A–Z)"
+msgstr "Όνομα (Α–Ω)"
+
+msgid "Name (Z–A)"
+msgstr "Όνομα (Ω–Α)"
+
+msgid "Sender (Z–A)"
+msgstr "Αποστολέας (Ω–Α)"
+
+msgid "Largest first"
+msgstr "Μεγαλύτερα πρώτα"
+
+msgid "Smallest first"
+msgstr "Μικρότερα πρώτα"
+
+msgid "Type (A–Z)"
+msgstr "Τύπος (Α–Ω)"
+
+msgid "Type (Z–A)"
+msgstr "Τύπος (Ω–Α)"
+
+msgid "Open in the default app"
+msgstr "Άνοιγμα στην προεπιλεγμένη εφαρμογή"
+
+msgid "Go to Message"
+msgstr "Μετάβαση στο μήνυμα"
+
+msgid "All accounts"
+msgstr "Όλοι οι λογαριασμοί"
+
+#. Deliberately counts messages, not attachments: until a message has
+#. been described there is no telling how many files it holds.
+msgid "Indexing {n} messages…"
+msgstr "Ευρετηρίαση {n} μηνυμάτων…"
+
+msgid "Loading more…"
+msgstr "Φόρτωση περισσότερων…"
+
+msgid "The file could not be opened"
+msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
+
+msgid "Welcome to Hylki, formerly {old}"
+msgstr "Καλώς ορίσατε στο Hylki, πρώην {old}"
+
+msgid ""
+"Your accounts, settings and cached mail were carried over from {old}. There "
+"is nothing to set up again, and nothing in {old} was changed or removed. "
+"Once everything is here, you can remove {old}."
+msgstr ""
+"Οι λογαριασμοί, οι ρυθμίσεις και τα αποθηκευμένα στην κρυφή μνήμη μηνύματά "
+"σας μεταφέρθηκαν από το {old}. Δεν χρειάζεται να ρυθμίσετε τίποτα ξανά και "
+"τίποτα στο {old} δεν άλλαξε ούτε αφαιρέθηκε. Μόλις μεταφερθούν όλα εδώ, "
+"μπορείτε να αφαιρέσετε το {old}."
+
+msgid ""
+"{old} is still the app your desktop opens email links with. To hand that to "
+"Hylki, choose it under Default Apps in Settings."
+msgstr ""
+"Το {old} εξακολουθεί να είναι η εφαρμογή με την οποία η επιφάνεια εργασίας "
+"ανοίγει συνδέσμους email. Για να αναλάβει το Hylki, επιλέξτε το στις "
+"Προεπιλεγμένες εφαρμογές των Ρυθμίσεων."
+
+msgid "To remove {old}, run:"
+msgstr "Για να αφαιρέσετε το {old}, εκτελέστε:"
+
+msgid "Copy"
+msgstr "Αντιγραφή"
+
+msgid "Cloud Storage"
+msgstr "Αποθήκευση στο cloud"
+
+msgid "Cloud storage"
+msgstr "Αποθήκευση στο cloud"
+
+msgid ""
+"Connect your cloud storage provider to upload and share large files instead "
+"of an attachment. A cloud icon appears in the compose toolbar once a "
+"provider is added.\n"
+"\n"
+"Supported providers: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox and "
+"Seafile."
+msgstr ""
+"Συνδέστε τον πάροχο αποθήκευσης στο cloud για να ανεβάζετε και να "
+"κοινοποιείτε μεγάλα αρχεία αντί να τα επισυνάπτετε. Μόλις προστεθεί πάροχος, "
+"εμφανίζεται ένα εικονίδιο cloud στη γραμμή εργαλείων σύνταξης.\n"
+"\n"
+"Υποστηριζόμενοι πάροχοι: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox "
+"και Seafile."
+
+msgid "No cloud accounts yet."
+msgstr "Δεν υπάρχουν ακόμη λογαριασμοί cloud."
+
+msgid "Cloud Account"
+msgstr "Λογαριασμός cloud"
+
+msgid "Remove {name}?"
+msgstr "Αφαίρεση του {name};"
+
+msgid ""
+"Hylki forgets the account and its sign-in. Files already uploaded, and the "
+"links in messages you sent, stay where they are."
+msgstr ""
+"Το Hylki ξεχνά τον λογαριασμό και τα στοιχεία σύνδεσής του. Τα αρχεία που "
+"έχουν ήδη μεταφορτωθεί και οι σύνδεσμοι στα μηνύματα που στείλατε παραμένουν "
+"στη θέση τους."
+
+msgid "Removed {name}"
+msgstr "Αφαιρέθηκε το {name}"
+
+msgid "Could not store the sign-in in the keyring: {e}"
+msgstr ""
+"Δεν ήταν δυνατή η αποθήκευση των στοιχείων σύνδεσης στην κλειδοθήκη: {e}"
+
+msgid "Edit Cloud Account"
+msgstr "Επεξεργασία λογαριασμού cloud"
+
+msgid "Add Cloud Account"
+msgstr "Προσθήκη λογαριασμού cloud"
+
+msgid "links expire after {n} days"
+msgstr "οι σύνδεσμοι λήγουν μετά από {n} ημέρες"
+
+msgid "password-protected"
+msgstr "προστασία με κωδικό πρόσβασης"
+
+msgid "Offer this account in the composer"
+msgstr "Προσφορά αυτού του λογαριασμού στο παράθυρο σύνταξης"
+
+msgid "Service"
+msgstr "Υπηρεσία"
+
+msgid "Nickname (optional)"
+msgstr "Ψευδώνυμο (προαιρετικό)"
+
+msgid "Server URL"
+msgstr "URL διακομιστή"
+
+msgid "Two-step verification code, if the account uses it"
+msgstr "Κωδικός επαλήθευσης δύο βημάτων, αν τον χρησιμοποιεί ο λογαριασμός"
+
+msgid ""
+"Sign in with your Seafile password. If the account uses two-step "
+"verification, also enter the current code from your authenticator app: Hylki "
+"turns it into an API token once and keeps that instead of the password. A "
+"token obtained another way can be pasted in the password field."
+msgstr ""
+"Συνδεθείτε με τον κωδικό πρόσβασης του Seafile. Αν ο λογαριασμός "
+"χρησιμοποιεί επαλήθευση δύο βημάτων, εισαγάγετε επίσης τον τρέχοντα κωδικό "
+"από την εφαρμογή ελέγχου ταυτότητας: το Hylki τον μετατρέπει μία φορά σε "
+"διακριτικό API και αποθηκεύει αυτό αντί για τον κωδικό πρόσβασης. Ένα "
+"διακριτικό που αποκτήθηκε με άλλον τρόπο μπορεί να επικολληθεί στο πεδίο "
+"κωδικού πρόσβασης."
+
+msgid "Online account"
+msgstr "Διαδικτυακός λογαριασμός"
+
+msgid "Dropbox app key"
+msgstr "Κλειδί εφαρμογής Dropbox"
+
+msgid "Library"
+msgstr "Βιβλιοθήκη"
+
+msgid "Upload folder"
+msgstr "Φάκελος μεταφόρτωσης"
+
+msgid "Server is behind Cloudflare"
+msgstr "Ο διακομιστής βρίσκεται πίσω από το Cloudflare"
+
+msgid ""
+"Cloudflare's proxy refuses a request over 100 MB, so bigger files are "
+"uploaded in 90 MB pieces the server puts back together. For a self-hosted "
+"server on a Cloudflare domain or tunnel."
+msgstr ""
+"Ο διακομιστής μεσολάβησης του Cloudflare απορρίπτει αιτήματα άνω των 100 MB, "
+"επομένως τα μεγαλύτερα αρχεία μεταφορτώνονται σε τμήματα των 90 MB τα οποία "
+"επανενώνει ο διακομιστής. Για αυτοφιλοξενούμενο διακομιστή σε τομέα ή "
+"σήραγγα του Cloudflare."
+
+msgid "Links expire after"
+msgstr "Οι σύνδεσμοι λήγουν μετά από"
+
+msgid "Days; 0 keeps the link indefinitely"
+msgstr "Ημέρες· με 0 ο σύνδεσμος διατηρείται επ’ αόριστον"
+
+msgid "Protect links with a password"
+msgstr "Προστασία συνδέσμων με κωδικό πρόσβασης"
+
+msgid ""
+"A download password is made for each file and shown to you, to pass on "
+"separately"
+msgstr ""
+"Δημιουργείται κωδικός λήψης για κάθε αρχείο και σας εμφανίζεται, ώστε να τον "
+"στείλετε ξεχωριστά"
+
+msgid "Link defaults"
+msgstr "Προεπιλογές συνδέσμων"
+
+msgid ""
+"How share links from this account are made unless you choose otherwise for "
+"an email: the upload dialog in the composer shows these values and lets you "
+"change them for that upload alone."
+msgstr ""
+"Πώς δημιουργούνται οι σύνδεσμοι κοινοποίησης αυτού του λογαριασμού, εκτός αν "
+"επιλέξετε διαφορετικά για ένα email: το παράθυρο μεταφόρτωσης στη σύνταξη "
+"εμφανίζει αυτές τις τιμές και σας επιτρέπει να τις αλλάξετε μόνο για τη "
+"συγκεκριμένη μεταφόρτωση."
+
+msgid "Check Connection"
+msgstr "Έλεγχος σύνδεσης"
+
+msgid "{email} (Files is off)"
+msgstr "{email} (τα Αρχεία είναι ανενεργά)"
+
+msgid ""
+"No Microsoft 365 account in GNOME Online Accounts yet. Add one under "
+"Settings, Online Accounts; OneDrive then signs in through it, and nothing "
+"more is needed here."
+msgstr ""
+"Δεν υπάρχει ακόμη λογαριασμός Microsoft 365 στους Διαδικτυακούς λογαριασμούς "
+"GNOME. Προσθέστε έναν στις Ρυθμίσεις, Διαδικτυακοί λογαριασμοί· έπειτα το "
+"OneDrive συνδέεται μέσω αυτού και δεν χρειάζεται τίποτα άλλο εδώ."
+
+msgid ""
+"OneDrive signs in through the GNOME Online Accounts account chosen above; "
+"there is no password to enter. An account marked Files is off still works "
+"here, but you may want to turn Files on for it under Settings, Online "
+"Accounts."
+msgstr ""
+"Το OneDrive συνδέεται μέσω του λογαριασμού Διαδικτυακών λογαριασμών GNOME "
+"που επιλέχθηκε παραπάνω· δεν χρειάζεται κωδικός πρόσβασης. Ένας λογαριασμός "
+"όπου τα Αρχεία είναι ανενεργά εξακολουθεί να λειτουργεί εδώ, αλλά ίσως "
+"θελήσετε να τα ενεργοποιήσετε στις Ρυθμίσεις, Διαδικτυακοί λογαριασμοί."
+
+msgid ""
+"Uploads and plain share links work with any OneDrive. Link expiry and "
+"download passwords are a Microsoft 365 subscription or OneDrive for Business "
+"feature: on a free personal OneDrive the link is refused when either is set, "
+"so keep Links expire after at 0 and the password switch off there."
+msgstr ""
+"Οι μεταφορτώσεις και οι απλοί σύνδεσμοι κοινοποίησης λειτουργούν με κάθε "
+"OneDrive. Η λήξη συνδέσμων και οι κωδικοί λήψης απαιτούν συνδρομή Microsoft "
+"365 ή OneDrive για επιχειρήσεις: σε δωρεάν προσωπικό OneDrive ο σύνδεσμος "
+"απορρίπτεται όταν έχει οριστεί κάποιο από αυτά, γι’ αυτό διατηρήστε τη λήξη "
+"συνδέσμων στο 0 και απενεργοποιημένο τον διακόπτη κωδικού πρόσβασης."
+
+msgid ""
+"Days; 0 keeps the link indefinitely. Needs Microsoft 365 or OneDrive for "
+"Business"
+msgstr ""
+"Ημέρες· με 0 ο σύνδεσμος διατηρείται επ’ αόριστον. Απαιτεί Microsoft 365 ή "
+"OneDrive για επιχειρήσεις"
+
+msgid ""
+"A download password is made for each file and shown to you, to pass on "
+"separately. Needs Microsoft 365 or OneDrive for Business"
+msgstr ""
+"Δημιουργείται κωδικός λήψης για κάθε αρχείο και σας εμφανίζεται, ώστε να τον "
+"στείλετε ξεχωριστά. Απαιτεί Microsoft 365 ή OneDrive για επιχειρήσεις"
+
+msgid "User name"
+msgstr "Όνομα χρήστη"
+
+msgid "App password (leave empty to keep)"
+msgstr "Κωδικός εφαρμογής (αφήστε κενό για διατήρηση)"
+
+msgid "App password"
+msgstr "Κωδικός εφαρμογής"
+
+msgid "E-mail"
+msgstr "Email"
+
+msgid "Password (leave empty to keep)"
+msgstr "Κωδικός πρόσβασης (αφήστε κενό για διατήρηση)"
+
+msgid ""
+"A download password is made for each file and shown to you, to pass on "
+"separately. Dropbox allows link passwords and expiry dates on paid plans "
+"only."
+msgstr ""
+"Δημιουργείται κωδικός λήψης για κάθε αρχείο και σας εμφανίζεται, ώστε να τον "
+"στείλετε ξεχωριστά. Το Dropbox επιτρέπει κωδικούς συνδέσμων και ημερομηνίες "
+"λήξης μόνο σε προγράμματα επί πληρωμή."
+
+msgid "Connect with Dropbox…"
+msgstr "Σύνδεση με το Dropbox…"
+
+msgid ""
+"Dropbox only lets an app sign in when it is registered, so make one for "
+"yourself (it takes a minute and stays private):\n"
+"1. Open dropbox.com/developers/apps, signed in to your Dropbox, and press "
+"Create app.\n"
+"2. Choose Scoped access, then App folder (Hylki sees only its own folder "
+"under Apps) or Full Dropbox (uploads go to the folder named above).\n"
+"3. Give the app a name that no one else has used, such as Hylki for your "
+"name, and press Create app.\n"
+"4. On the Permissions tab, tick account_info.read, files.content.write and "
+"sharing.write, then press Submit.\n"
+"5. On the Settings tab, under OAuth 2, add the redirect URI {uri} and press "
+"Add.\n"
+"6. Copy the App key from the top of the Settings tab into the field above.\n"
+"The app may stay in Development status; that allows your own account. Leave "
+"the field empty to use the app key this build was made with, when it has one."
+msgstr ""
+"Το Dropbox επιτρέπει σε μια εφαρμογή να συνδεθεί μόνο αν είναι "
+"καταχωρισμένη, γι’ αυτό δημιουργήστε μία για εσάς (χρειάζεται ένα λεπτό και "
+"παραμένει ιδιωτική):\n"
+"1. Ανοίξτε το dropbox.com/developers/apps ενώ είστε συνδεδεμένοι στο Dropbox "
+"και πατήστε Create app.\n"
+"2. Επιλέξτε Scoped access και έπειτα App folder (το Hylki βλέπει μόνο τον "
+"δικό του φάκελο στις Εφαρμογές) ή Full Dropbox (οι μεταφορτώσεις πηγαίνουν "
+"στον φάκελο που ονομάστηκε παραπάνω).\n"
+"3. Δώστε στην εφαρμογή ένα όνομα που δεν έχει χρησιμοποιήσει κανείς άλλος, "
+"όπως Hylki για το όνομά σας, και πατήστε Create app.\n"
+"4. Στην καρτέλα Permissions, επιλέξτε account_info.read, files.content.write "
+"και sharing.write και έπειτα πατήστε Submit.\n"
+"5. Στην καρτέλα Settings, στην ενότητα OAuth 2, προσθέστε το URI "
+"ανακατεύθυνσης {uri} και πατήστε Add.\n"
+"6. Αντιγράψτε το App key από την κορυφή της καρτέλας Settings στο παραπάνω "
+"πεδίο.\n"
+"Η εφαρμογή μπορεί να παραμείνει σε κατάσταση Development· αυτό επιτρέπει τον "
+"δικό σας λογαριασμό. Αφήστε το πεδίο κενό για να χρησιμοποιήσετε το κλειδί "
+"εφαρμογής με το οποίο δημιουργήθηκε αυτή η έκδοση, όταν διαθέτει ένα."
+
+msgid "Connected as {who}."
+msgstr "Συνδέθηκε ως {who}."
+
+msgid "Choose an online account first."
+msgstr "Επιλέξτε πρώτα έναν διαδικτυακό λογαριασμό."
+
+msgid "Signing in…"
+msgstr "Σύνδεση…"
+
+msgid "Enter the app key of a Dropbox app first."
+msgstr "Εισαγάγετε πρώτα το κλειδί μιας εφαρμογής Dropbox."
+
+msgid "Waiting for the sign-in in your browser…"
+msgstr "Αναμονή για τη σύνδεση στο πρόγραμμα περιήγησής σας…"
+
+msgid "Fill in the server URL, e-mail and password first."
+msgstr ""
+"Συμπληρώστε πρώτα το URL διακομιστή, το email και τον κωδικό πρόσβασης."
+
+msgid "Fill in the server URL, user name and app password first."
+msgstr ""
+"Συμπληρώστε πρώτα το URL διακομιστή, το όνομα χρήστη και τον κωδικό "
+"εφαρμογής."
+
+msgid "Signed in as {who}."
+msgstr "Συνδεθήκατε ως {who}."
+
+msgid ""
+"You can upload files and share plain links with this OneDrive. Link expiry "
+"and download passwords are not available on a free personal OneDrive (they "
+"need a Microsoft 365 subscription), so both are turned off for this account."
+msgstr ""
+"Μπορείτε να μεταφορτώνετε αρχεία και να κοινοποιείτε απλούς συνδέσμους με "
+"αυτό το OneDrive. Η λήξη συνδέσμων και οι κωδικοί λήψης δεν διατίθενται σε "
+"δωρεάν προσωπικό OneDrive (απαιτούν συνδρομή Microsoft 365), επομένως και οι "
+"δύο επιλογές είναι απενεργοποιημένες για αυτόν τον λογαριασμό."
+
+msgid ""
+"You can upload files, share links and set an expiry with this OneDrive. "
+"Download passwords are not available on OneDrive for Business links, so that "
+"option is turned off for this account."
+msgstr ""
+"Μπορείτε να μεταφορτώνετε αρχεία, να κοινοποιείτε συνδέσμους και να ορίζετε "
+"λήξη με αυτό το OneDrive. Οι κωδικοί λήψης δεν διατίθενται σε συνδέσμους "
+"OneDrive για επιχειρήσεις, επομένως αυτή η επιλογή είναι απενεργοποιημένη "
+"για αυτόν τον λογαριασμό."
+
+msgid ""
+"You can upload files and share links with this OneDrive, with a download "
+"password. Link expiry is not available on it, so that option is turned off "
+"for this account."
+msgstr ""
+"Μπορείτε να μεταφορτώνετε αρχεία και να κοινοποιείτε συνδέσμους με αυτό το "
+"OneDrive, με κωδικό λήψης. Η λήξη συνδέσμων δεν διατίθεται σε αυτό, επομένως "
+"αυτή η επιλογή είναι απενεργοποιημένη για αυτόν τον λογαριασμό."
+
+msgid "Signed in as {who}. {terms}"
+msgstr "Συνδεθήκατε ως {who}. {terms}"
+
+msgid "Rich text"
+msgstr "Εμπλουτισμένο κείμενο"
+
+msgid "Markdown"
+msgstr "Markdown"
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Plain text"
+msgstr "Απλό κείμενο"
+
+msgid "Format as you type, with the toolbar"
+msgstr "Μορφοποίηση κατά την πληκτρολόγηση, με τη γραμμή εργαλείων"
+
+msgid "Write Markdown; it is sent as formatted mail"
+msgstr "Γράψτε Markdown· αποστέλλεται ως μορφοποιημένο μήνυμα"
+
+msgid "Write the message's HTML by hand"
+msgstr "Γράψτε τον κώδικα HTML του μηνύματος με το χέρι"
+
+msgid "No formatting at all"
+msgstr "Χωρίς καμία μορφοποίηση"
+
+msgid "Collapse into reader"
+msgstr "Σύμπτυξη στην προβολή ανάγνωσης"
+
+msgid "Open in window"
+msgstr "Άνοιγμα σε παράθυρο"
+
+msgid "Save Draft"
+msgstr "Αποθήκευση προχείρου"
+
+msgid "Save to Drafts"
+msgstr "Αποθήκευση στα Πρόχειρα"
+
+msgid "Delete Draft"
+msgstr "Διαγραφή προχείρου"
+
+msgid "Move this draft to Trash"
+msgstr "Μετακίνηση αυτού του προχείρου στον Κάδο"
+
+msgid "Schedule"
+msgstr "Προγραμματισμός"
+
+msgid "Send"
+msgstr "Αποστολή"
+
+msgid "Send later"
+msgstr "Αποστολή αργότερα"
+
+msgid "Send now"
+msgstr "Αποστολή τώρα"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Αύριο το πρωί ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Αύριο το απόγευμα ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "Δευτέρα πρωί ({time})"
+
+msgid "Pick a date and time…"
+msgstr "Επιλογή ημερομηνίας και ώρας…"
+
+msgid "Encrypt with OpenPGP to every recipient's key"
+msgstr "Κρυπτογράφηση με OpenPGP για το κλειδί κάθε παραλήπτη"
+
+msgid "Sign with your OpenPGP key"
+msgstr "Υπογραφή με το κλειδί OpenPGP σας"
+
+msgid "Attach files"
+msgstr "Επισύναψη αρχείων"
+
+msgid "Upload to cloud storage and share a link"
+msgstr "Μεταφόρτωση στον χώρο αποθήκευσης cloud και κοινοποίηση συνδέσμου"
+
+msgid "Open Contacts"
+msgstr "Άνοιγμα Επαφών"
+
+msgid "Show From, To and Subject"
+msgstr "Εμφάνιση Από, Προς και Θέμα"
+
+msgid "Send now instead"
+msgstr "Αποστολή τώρα αντί για αργότερα"
+
+msgid "Download password for {name}: {password}"
+msgstr "Κωδικός λήψης για {name}: {password}"
+
+msgid "From"
+msgstr "Από"
+
+msgid "To"
+msgstr "Προς"
+
+msgid "Cc"
+msgstr "Κοιν."
+
+msgid "Bcc"
+msgstr "Κρυφή κοιν."
+
+msgid "Reply-To"
+msgstr "Απάντηση προς"
+
+msgid "Subject"
+msgstr "Θέμα"
+
+msgid "Writing in {format}"
+msgstr "Σύνταξη σε {format}"
+
+#. The one label on the row goes when there is no width for it, the
+#. same trade the header makes when it folds.
+msgid "Preview"
+msgstr "Προεπισκόπηση"
+
+msgid "Show the message as it will be sent"
+msgstr "Εμφάνιση του μηνύματος όπως θα σταλεί"
+
+msgid "More"
+msgstr "Περισσότερα"
+
+msgid "Show Cc, Bcc and Reply-To"
+msgstr "Εμφάνιση Κοιν., Κρυφής κοιν. και Απάντησης προς"
+
+msgid "Not signed in"
+msgstr "Δεν έχει γίνει σύνδεση"
+
+msgid ""
+"The sign-in for {name} is not in the keyring. Open Settings, Cloud Storage, "
+"and enter it again."
+msgstr ""
+"Τα στοιχεία σύνδεσης για το {name} δεν βρίσκονται στην κλειδοθήκη. Ανοίξτε "
+"τις Ρυθμίσεις, Αποθήκευση στο cloud και εισαγάγετέ τα ξανά."
+
+msgid "link expires {date}"
+msgstr "ο σύνδεσμος λήγει στις {date}"
+
+msgid "Could not upload {name}"
+msgstr "Δεν ήταν δυνατή η μεταφόρτωση του {name}"
+
+msgid "Attach Files"
+msgstr "Επισύναψη αρχείων"
+
+msgid "Attach {name}"
+msgstr "Επισύναψη του {name}"
+
+msgid "Remove {name}"
+msgstr "Αφαίρεση του {name}"
+
+msgid "Typing"
+msgstr "Πληκτρολόγηση"
+
+msgid "Cannot send with OpenPGP"
+msgstr "Δεν είναι δυνατή η αποστολή με OpenPGP"
+
+msgid "{name} (link)"
+msgstr "{name} (σύνδεσμος)"
+
+msgid "Uploading…"
+msgstr "Μεταφόρτωση…"
+
+msgid "Upload {n} file and put its share link in the message."
+msgid_plural "Upload {n} files and put their share links in the message."
+msgstr[0] ""
+"Μεταφόρτωση {n} αρχείου και προσθήκη του συνδέσμου κοινοποίησής του στο "
+"μήνυμα."
+msgstr[1] ""
+"Μεταφόρτωση {n} αρχείων και προσθήκη των συνδέσμων κοινοποίησής τους στο "
+"μήνυμα."
+
+msgid "Upload"
+msgstr "Μεταφόρτωση"
+
+msgid "Protect with a password"
+msgstr "Προστασία με κωδικό πρόσβασης"
+
+msgid "Download password (empty: generated)"
+msgstr "Κωδικός λήψης (κενό: δημιουργείται αυτόματα)"
+
+msgid ""
+"There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
+"OpenPGP, or choose a key in the account's settings."
+msgstr ""
+"Δεν υπάρχει δικό σας κλειδί OpenPGP για τη διεύθυνση {addr}. Δημιουργήστε "
+"ένα στις Ρυθμίσεις, OpenPGP ή επιλέξτε κλειδί στις ρυθμίσεις του λογαριασμού."
+
+msgid ""
+"There is no OpenPGP key for {addr}. Ask them for their public key, or fetch "
+"it under Settings, OpenPGP."
+msgstr ""
+"Δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}. Ζητήστε το δημόσιο "
+"κλειδί ή ανακτήστε το στις Ρυθμίσεις, OpenPGP."
+
+msgid "That time has passed"
+msgstr "Αυτή η ώρα έχει παρέλθει"
+
+msgid "Choose a time later than now."
+msgstr "Επιλέξτε ώρα μεταγενέστερη από την τρέχουσα."
+
+msgid "{n} attachment"
+msgid_plural "{n} attachments"
+msgstr[0] "{n} συνημμένο"
+msgstr[1] "{n} συνημμένα"
+
+msgid "Contacts"
+msgstr "Επαφές"
+
+msgid "Open in GNOME Contacts"
+msgstr "Άνοιγμα στις Επαφές GNOME"
+
+msgid "Search contacts"
+msgstr "Αναζήτηση επαφών"
+
+msgid "No Contacts"
+msgstr "Δεν υπάρχουν επαφές"
+
+msgid "Add contacts in GNOME Contacts to see them here."
+msgstr "Προσθέστε επαφές στις Επαφές GNOME για να τις βλέπετε εδώ."
+
+msgid "Open GNOME Contacts"
+msgstr "Άνοιγμα Επαφών GNOME"
+
+msgid "New contact"
+msgstr "Νέα επαφή"
+
+msgid "Loading Contacts…"
+msgstr ""
+
+msgid "Contacts you add in GNOME Contacts appear here."
+msgstr "Οι επαφές που προσθέτετε στις Επαφές GNOME εμφανίζονται εδώ."
+
+msgid "Sort contacts"
+msgstr "Ταξινόμηση επαφών"
+
+msgid "Edit contact"
+msgstr "Επεξεργασία επαφής"
+
+msgid "First name"
+msgstr "Όνομα"
+
+msgid "Last name"
+msgstr "Επώνυμο"
+
+msgid "Delete Contact?"
+msgstr "Διαγραφή επαφής;"
+
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+msgid "Delete…"
+msgstr "Διαγραφή…"
+
+msgid "View photo"
+msgstr "Προβολή φωτογραφίας"
+
+msgid "Edit Contact"
+msgstr "Επεξεργασία επαφής"
+
+msgid "New Contact"
+msgstr "Νέα επαφή"
+
+msgid "Add email"
+msgstr "Προσθήκη email"
+
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+msgid "Add phone"
+msgstr "Προσθήκη τηλεφώνου"
+
+msgid "Add website"
+msgstr "Προσθήκη ιστοτόπου"
+
+msgid "Whole conversation"
+msgstr "Ολόκληρη συζήτηση"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} μήνυμα"
+msgstr[1] "{n} μηνύματα"
+
+msgid "Search folders"
+msgstr "Αναζήτηση φακέλων"
+
+msgid "the portal answered response code {code}"
+msgstr "η πύλη απάντησε με κωδικό απόκρισης {code}"
+
+msgid "The link could not be opened"
+msgstr "Δεν ήταν δυνατό το άνοιγμα του συνδέσμου"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Right-click the link, copy it, and open it in your browser\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix opening links "
+"directly"
+msgstr ""
+"Η πύλη της επιφάνειας εργασίας ανέφερε: {error}\n"
+"\n"
+"• Κάντε δεξί κλικ στον σύνδεσμο, αντιγράψτε τον και ανοίξτε τον στο "
+"πρόγραμμα περιήγησής σας\n"
+"• Η ενημέρωση του «xdg-desktop-portal» και η εκ νέου σύνδεση ενδέχεται να "
+"διορθώσουν το απευθείας άνοιγμα συνδέσμων"
+
+msgid "Mark as read"
+msgstr "Σήμανση ως αναγνωσμένο"
+
+msgid "Move to…"
+msgstr "Μετακίνηση σε…"
+
+msgid "Not spam"
+msgstr "Μη ανεπιθύμητο"
+
+msgid "Add sender to Contacts"
+msgstr "Προσθήκη αποστολέα στις Επαφές"
+
+msgid "Mark as unread"
+msgstr "Σήμανση ως μη αναγνωσμένο"
+
+msgid "Remove star"
+msgstr "Αφαίρεση αστεριού"
+
+msgid "Show conversation"
+msgstr "Εμφάνιση συζήτησης"
+
+msgid "Choose which folders to search"
+msgstr "Επιλέξτε τους φακέλους αναζήτησης"
+
+msgid "All folders"
+msgstr "Όλοι οι φάκελοι"
+
+msgid "This folder"
+msgstr "Αυτός ο φάκελος"
+
+msgid "Clear selection"
+msgstr "Εκκαθάριση επιλογής"
+
+msgid "No Messages"
+msgstr "Δεν υπάρχουν μηνύματα"
+
+msgid "There's nothing here right now."
+msgstr "Δεν υπάρχει τίποτα εδώ αυτήν τη στιγμή."
+
+msgid "Remove Stars"
+msgstr "Αφαίρεση αστεριών"
+
+msgid "Star Conversation"
+msgstr "Προσθήκη αστεριού στη συζήτηση"
+
+msgid "Mark All as Read"
+msgstr "Σήμανση όλων ως αναγνωσμένων"
+
+msgid "Mark All as Unread"
+msgstr "Σήμανση όλων ως μη αναγνωσμένων"
+
+msgid "Fetch the sender's key"
+msgstr "Ανάκτηση του κλειδιού του αποστολέα"
+
+msgid "Trust this key…"
+msgstr "Ορισμός αυτού του κλειδιού ως έμπιστου…"
+
+msgid "A pass proves the address wasn't forged — not that the message is safe."
+msgstr ""
+"Η επιτυχής επαλήθευση αποδεικνύει ότι η διεύθυνση δεν πλαστογραφήθηκε — όχι "
+"ότι το μήνυμα είναι ασφαλές."
+
+msgid "Save…"
+msgstr "Αποθήκευση…"
+
+msgid "No draft selected"
+msgstr "Δεν έχει επιλεγεί πρόχειρο"
+
+msgid "No message selected"
+msgstr "Δεν έχει επιλεγεί μήνυμα"
+
+msgid "Choose a draft from the list to edit it here."
+msgstr "Επιλέξτε ένα πρόχειρο από τη λίστα για να το επεξεργαστείτε εδώ."
+
+msgid "Choose a message from the list to read it here."
+msgstr "Επιλέξτε ένα μήνυμα από τη λίστα για να το διαβάσετε εδώ."
+
+msgid "Remote content (images, trackers) is blocked to protect your privacy."
+msgstr ""
+"Το απομακρυσμένο περιεχόμενο (εικόνες, ιχνηλάτες) αποκλείεται για την "
+"προστασία του απορρήτου σας."
+
+msgid "Load"
+msgstr "Φόρτωση"
+
+msgid "Always allow sender"
+msgstr "Να επιτρέπεται πάντα ο αποστολέας"
+
+msgid "Find in message"
+msgstr "Εύρεση στο μήνυμα"
+
+msgid "No matches"
+msgstr "Δεν υπάρχουν αντιστοιχίες"
+
+msgid "{cur} of {total}"
+msgstr "{cur} από {total}"
+
+msgid "Previous match"
+msgstr "Προηγούμενη αντιστοιχία"
+
+msgid "Next match"
+msgstr "Επόμενη αντιστοιχία"
+
+msgid "Close find"
+msgstr "Κλείσιμο εύρεσης"
+
+#. Dimming comes from the cover's own foreground, which
+#. is picked for the message theme — `dim-label` would
+#. fade it against the app's instead.
+msgid "Loading…"
+msgstr "Φόρτωση…"
+
+msgid "That key is no longer in your keyring."
+msgstr "Αυτό το κλειδί δεν βρίσκεται πλέον στην κλειδοθήκη σας."
+
+msgid "Trust this key?"
+msgstr "Να θεωρηθεί έμπιστο αυτό το κλειδί;"
+
+msgid ""
+"Compare the fingerprint with the one {uid} gives you in person or over "
+"another channel. Trusting a key you have not checked lets an impostor's "
+"signature pass as theirs."
+msgstr ""
+"Συγκρίνετε το αποτύπωμα με αυτό που σας δίνει ο/η {uid} αυτοπροσώπως ή μέσω "
+"άλλου καναλιού. Αν εμπιστευτείτε ένα κλειδί που δεν έχετε ελέγξει, η "
+"υπογραφή ενός απατεώνα μπορεί να θεωρηθεί δική του/της."
+
+msgid "Trust"
+msgstr "Ορισμός ως έμπιστου"
+
+msgid "Key trusted."
+msgstr "Το κλειδί ορίστηκε ως έμπιστο."
+
+msgid ""
+"Generate a key of your own first (Settings, OpenPGP): trusting a key means "
+"signing it with yours."
+msgstr ""
+"Δημιουργήστε πρώτα δικό σας κλειδί (Ρυθμίσεις, OpenPGP): η εμπιστοσύνη ενός "
+"κλειδιού σημαίνει ότι το υπογράφετε με το δικό σας."
+
+msgid "Copied"
+msgstr "Αντιγράφηκε"
+
+msgid "Double-click to open in a new window"
+msgstr "Διπλό κλικ για άνοιγμα σε νέο παράθυρο"
+
+#. Same order as the reader toolbar and the list's
+#. actions palette, View Source closing the line.
+msgid "Reply to this message"
+msgstr "Απάντηση σε αυτό το μήνυμα"
+
+msgid "Reply to everyone on this message"
+msgstr "Απάντηση σε όλους σε αυτό το μήνυμα"
+
+msgid "Forward this message"
+msgstr "Προώθηση αυτού του μηνύματος"
+
+msgid "Mark as read or unread"
+msgstr "Σήμανση ως αναγνωσμένο ή μη αναγνωσμένο"
+
+msgid "Flag this message"
+msgstr "Προσθήκη σημαίας σε αυτό το μήνυμα"
+
+msgid "Move this message to a folder"
+msgstr "Μετακίνηση αυτού του μηνύματος σε φάκελο"
+
+msgid "Archive this message"
+msgstr "Αρχειοθέτηση αυτού του μηνύματος"
+
+msgid "Delete this message"
+msgstr "Διαγραφή αυτού του μηνύματος"
+
+msgid "View source"
+msgstr "Προβολή πηγαίου κώδικα"
+
+msgid "Back to my fonts and colours"
+msgstr "Επιστροφή στις γραμματοσειρές και τα χρώματά μου"
+
+msgid "Show the sender's fonts and colours"
+msgstr "Εμφάνιση των γραμματοσειρών και των χρωμάτων του αποστολέα"
+
+msgid "Show remote content"
+msgstr "Εμφάνιση απομακρυσμένου περιεχομένου"
+
+msgid "Block remote content"
+msgstr "Αποκλεισμός απομακρυσμένου περιεχομένου"
+
+msgid "{n} recipient"
+msgid_plural "{n} recipients"
+msgstr[0] "{n} παραλήπτης"
+msgstr[1] "{n} παραλήπτες"
+
+msgid "Hide recipients"
+msgstr "Απόκρυψη παραληπτών"
+
+msgid "Show recipients"
+msgstr "Εμφάνιση παραληπτών"
+
+msgid "Save Image"
+msgstr "Αποθήκευση εικόνας"
+
+msgid "The sender's key was imported from the message."
+msgstr "Το κλειδί του αποστολέα εισήχθη από το μήνυμα."
+
+msgid "The sender's key was fetched and imported."
+msgstr "Το κλειδί του αποστολέα ανακτήθηκε και εισήχθη."
+
+msgid "The sender's key was already in your keyring."
+msgstr "Το κλειδί του αποστολέα υπήρχε ήδη στην κλειδοθήκη σας."
+
+msgid "Load attachments from server"
+msgstr "Φόρτωση συνημμένων από τον διακομιστή"
+
+msgid "Clear all"
+msgstr "Εκκαθάριση όλων"
+
+msgid "Collapse status bar"
+msgstr "Σύμπτυξη γραμμής κατάστασης"
+
+msgid "Export log"
+msgstr "Εξαγωγή αρχείου καταγραφής"
+
+msgid "Status bar ({n})"
+msgstr "Γραμμή κατάστασης ({n})"
+
+msgid "2 years"
+msgstr "2 έτη"
+
+msgid "1 year"
+msgstr "1 έτος"
+
+msgid "5 years"
+msgstr "5 έτη"
+
+msgid "GnuPG"
+msgstr "GnuPG"
+
+msgid ""
+"Hylki reads and writes the keyring of the GnuPG on this computer, the same "
+"one the gpg command and other mail programs use."
+msgstr ""
+"Το Hylki διαβάζει και γράφει στην κλειδοθήκη του GnuPG σε αυτόν τον "
+"υπολογιστή, την ίδια που χρησιμοποιούν η εντολή gpg και άλλα προγράμματα "
+"αλληλογραφίας."
+
+msgid "Your keys"
+msgstr "Τα κλειδιά σας"
+
+msgid ""
+"A key of your own signs what you send and opens what is encrypted to you. "
+"Send its public half to the people who should write to you encrypted."
+msgstr ""
+"Ένα δικό σας κλειδί υπογράφει όσα στέλνετε και ανοίγει όσα είναι "
+"κρυπτογραφημένα για εσάς. Στείλτε το δημόσιο μέρος του στα άτομα που θέλετε "
+"να σας γράφουν κρυπτογραφημένα."
+
+msgid "Import…"
+msgstr "Εισαγωγή…"
+
+msgid "Generate…"
+msgstr "Δημιουργία…"
+
+msgid "Other people's keys"
+msgstr "Κλειδιά άλλων ατόμων"
+
+msgid ""
+"The keys you encrypt to and check signatures with. A key is trusted once you "
+"have vouched for it; check its fingerprint with its owner first."
+msgstr ""
+"Τα κλειδιά με τα οποία κρυπτογραφείτε και ελέγχετε υπογραφές. Ένα κλειδί "
+"γίνεται έμπιστο όταν εγγυηθείτε για αυτό· ελέγξτε πρώτα το αποτύπωμά του με "
+"τον κάτοχό του."
+
+msgid "Fetch by address…"
+msgstr "Ανάκτηση κατά διεύθυνση…"
+
+msgid ""
+"GnuPG {version} found. Hylki reads and writes its keyring, the same one the "
+"gpg command and other mail programs use."
+msgstr ""
+"Βρέθηκε GnuPG {version}. Το Hylki διαβάζει και γράφει στην κλειδοθήκη του, "
+"την ίδια που χρησιμοποιούν η εντολή gpg και άλλα προγράμματα αλληλογραφίας."
+
+msgid ""
+"GnuPG was not found. Install the gnupg package to read encrypted mail and "
+"check signatures; the Flatpak build carries it."
+msgstr ""
+"Δεν βρέθηκε το GnuPG. Εγκαταστήστε το πακέτο gnupg για να διαβάζετε "
+"κρυπτογραφημένα μηνύματα και να ελέγχετε υπογραφές· η έκδοση Flatpak το "
+"περιλαμβάνει."
+
+msgid "No key of your own yet. Generate one for your address."
+msgstr ""
+"Δεν έχετε ακόμη δικό σας κλειδί. Δημιουργήστε ένα για τη διεύθυνσή σας."
+
+msgid "No keys from other people yet."
+msgstr "Δεν υπάρχουν ακόμη κλειδιά άλλων ατόμων."
+
+msgid "Generating the key…"
+msgstr "Δημιουργία κλειδιού…"
+
+msgid "Import Key"
+msgstr "Εισαγωγή κλειδιού"
+
+msgid "OpenPGP keys"
+msgstr "Κλειδιά OpenPGP"
+
+msgid "All files"
+msgstr "Όλα τα αρχεία"
+
+msgid "Could not import: {e}"
+msgstr "Δεν ήταν δυνατή η εισαγωγή: {e}"
+
+msgid "Export Public Key"
+msgstr "Εξαγωγή δημόσιου κλειδιού"
+
+msgid "Delete your key?"
+msgstr "Διαγραφή του κλειδιού σας;"
+
+msgid ""
+"{uid} will be removed, secret half included. Mail encrypted to it can never "
+"be read again, unless you have a backup of the key."
+msgstr ""
+"Το {uid} θα αφαιρεθεί, μαζί με το μυστικό μέρος. Τα μηνύματα που έχουν "
+"κρυπτογραφηθεί για αυτό δεν θα μπορούν να διαβαστούν ποτέ ξανά, εκτός αν "
+"έχετε αντίγραφο ασφαλείας του κλειδιού."
+
+msgid "Remove this key?"
+msgstr "Αφαίρεση αυτού του κλειδιού;"
+
+msgid ""
+"{uid} will be removed from your keyring. It can be imported or fetched again "
+"later."
+msgstr ""
+"Το {uid} θα αφαιρεθεί από την κλειδοθήκη σας. Μπορεί να εισαχθεί ή να "
+"ανακτηθεί ξανά αργότερα."
+
+msgid "Could not delete: {e}"
+msgstr "Δεν ήταν δυνατή η διαγραφή: {e}"
+
+msgid "Fetch a Key"
+msgstr "Ανάκτηση κλειδιού"
+
+msgid ""
+"Looks the address up where its provider publishes keys (WKD), then on the "
+"keyservers."
+msgstr ""
+"Αναζητά τη διεύθυνση στο σημείο όπου ο πάροχός της δημοσιεύει κλειδιά (WKD) "
+"και έπειτα στους διακομιστές κλειδιών."
+
+msgid "Fetch"
+msgstr "Ανάκτηση"
+
+msgid "Looking for a key for {addr}…"
+msgstr "Αναζήτηση κλειδιού για {addr}…"
+
+msgid ""
+"Generate a key of your own first: trusting a key means signing it with yours."
+msgstr ""
+"Δημιουργήστε πρώτα δικό σας κλειδί: η εμπιστοσύνη ενός κλειδιού σημαίνει ότι "
+"το υπογράφετε με το δικό σας."
+
+msgid "Could not sign the key: {e}"
+msgstr "Δεν ήταν δυνατή η υπογραφή του κλειδιού: {e}"
+
+msgid "Your key is ready."
+msgstr "Το κλειδί σας είναι έτοιμο."
+
+msgid "Could not generate the key: {e}"
+msgstr "Δεν ήταν δυνατή η δημιουργία του κλειδιού: {e}"
+
+msgid "No key found: {e}"
+msgstr "Δεν βρέθηκε κλειδί: {e}"
+
+msgid "Generate a Key"
+msgstr "Δημιουργία κλειδιού"
+
+msgid ""
+"A signing key with an encryption subkey, made by GnuPG and kept in its "
+"keyring. The passphrase is asked for when the key is used; the agent "
+"remembers it for a while."
+msgstr ""
+"Ένα κλειδί υπογραφής με δευτερεύον κλειδί κρυπτογράφησης, δημιουργημένο από "
+"το GnuPG και αποθηκευμένο στην κλειδοθήκη του. Η φράση πρόσβασης ζητείται "
+"όταν χρησιμοποιείται το κλειδί· ο πράκτορας τη θυμάται για λίγο."
+
+msgid "Generate"
+msgstr "Δημιουργία"
+
+msgid "Address"
+msgstr "Διεύθυνση"
+
+msgid "Expires"
+msgstr "Λήγει"
+
+msgid "Passphrase"
+msgstr "Φράση πρόσβασης"
+
+msgid "Confirm passphrase"
+msgstr "Επιβεβαίωση φράσης πρόσβασης"
+
+msgid "The passphrases differ"
+msgstr "Οι φράσεις πρόσβασης διαφέρουν"
+
+msgid "Type the same passphrase twice."
+msgstr "Πληκτρολογήστε την ίδια φράση πρόσβασης δύο φορές."
+
+msgid "expires {date}"
+msgstr "λήγει στις {date}"
+
+msgid "expired {date}"
+msgstr "έληξε στις {date}"
+
+msgid "signs and encrypts"
+msgstr "υπογράφει και κρυπτογραφεί"
+
+msgid "signs only: no encryption subkey"
+msgstr "μόνο υπογραφή: χωρίς δευτερεύον κλειδί κρυπτογράφησης"
+
+msgid "{n} more address"
+msgid_plural "{n} more addresses"
+msgstr[0] "{n} ακόμη διεύθυνση"
+msgstr[1] "{n} ακόμη διευθύνσεις"
+
+msgid "Export public key…"
+msgstr "Εξαγωγή δημόσιου κλειδιού…"
+
+msgid "Delete this key"
+msgstr "Διαγραφή αυτού του κλειδιού"
+
+msgid "Trusted"
+msgstr "Έμπιστο"
+
+msgid "Trust…"
+msgstr "Ορισμός ως έμπιστου…"
+
+msgid "Remove this key"
+msgstr "Αφαίρεση αυτού του κλειδιού"
+
+msgid "{n} key imported."
+msgid_plural "{n} keys imported."
+msgstr[0] "Εισήχθη {n} κλειδί."
+msgstr[1] "Εισήχθησαν {n} κλειδιά."
+
+msgid "That key was already in your keyring."
+msgstr "Αυτό το κλειδί υπήρχε ήδη στην κλειδοθήκη σας."
+
+msgid "Hylki icon"
+msgstr "Εικονίδιο Hylki"
+
+msgid "Envelope, white"
+msgstr "Φάκελος, λευκός"
+
+msgid "Envelope, black"
+msgstr "Φάκελος, μαύρος"
+
+msgid "Follow system"
+msgstr "Ακολούθηση συστήματος"
+
+msgid "Light"
+msgstr "Φωτεινό"
+
+msgid "Dark"
+msgstr "Σκοτεινό"
+
+msgid "Aug 23, 2026"
+msgstr "23 Αυγ 2026"
+
+msgid "23 Aug 2026"
+msgstr "23 Αυγ 2026"
+
+msgid "2026 Aug 23"
+msgstr "2026 Αυγ 23"
+
+msgid "System"
+msgstr "Σύστημα"
+
+msgid "12-hour (5:40 PM)"
+msgstr "12ωρη (5:40 μ.μ.)"
+
+msgid "24-hour (17:40)"
+msgstr "24ωρη (17:40)"
+
+msgid "Manually"
+msgstr "Χειροκίνητα"
+
+msgid "Every minute"
+msgstr "Κάθε λεπτό"
+
+msgid "Every 5 minutes"
+msgstr "Κάθε 5 λεπτά"
+
+msgid "Every 15 minutes"
+msgstr "Κάθε 15 λεπτά"
+
+msgid "Every 30 minutes"
+msgstr "Κάθε 30 λεπτά"
+
+msgid "Left group"
+msgstr "Αριστερή ομάδα"
+
+msgid "Always shown · up to 6"
+msgstr "Πάντα ορατή · έως 6"
+
+msgid "Right group"
+msgstr "Δεξιά ομάδα"
+
+msgid "Folds into ⋯ when narrow · up to 6"
+msgstr "Συμπτύσσεται στο ⋯ όταν είναι στενή · έως 6"
+
+msgid "Not shown"
+msgstr "Δεν εμφανίζεται"
+
+msgid "Drop a button here to hide it"
+msgstr "Αποθέστε ένα κουμπί εδώ για να το αποκρύψετε"
+
+msgid "Drag to move"
+msgstr "Σύρετε για μετακίνηση"
+
+msgid "Senders"
+msgstr "Αποστολείς"
+
+msgid "General"
+msgstr "Γενικά"
+
+msgid "Sidebar"
+msgstr "Πλευρική στήλη"
+
+msgid "Message List"
+msgstr "Λίστα μηνυμάτων"
+
+msgid "Conversations"
+msgstr "Συζητήσεις"
+
+msgid "Reading"
+msgstr "Ανάγνωση"
+
+msgid "Composing"
+msgstr "Σύνταξη"
+
+msgid "Privacy"
+msgstr "Απόρρητο"
+
+msgid "Date and Time"
+msgstr "Ημερομηνία και ώρα"
+
+msgid "Backup"
+msgstr "Αντίγραφο ασφαλείας"
+
+msgid "Not installed"
+msgstr "Δεν είναι εγκατεστημένο"
+
+msgid "Installed and loaded by Files"
+msgstr "Εγκατεστημένο και φορτωμένο από τα Αρχεία"
+
+msgid ""
+"Installed, but the nautilus-python package is missing, so Files cannot load "
+"it"
+msgstr ""
+"Εγκατεστημένο, αλλά λείπει το πακέτο nautilus-python, οπότε τα Αρχεία δεν "
+"μπορούν να το φορτώσουν"
+
+msgid ""
+"Installed. Files has not loaded it yet: restart Files, and make sure the "
+"nautilus-python package is installed"
+msgstr ""
+"Εγκατεστημένο. Τα Αρχεία δεν το έχουν φορτώσει ακόμη: επανεκκινήστε τα "
+"Αρχεία και βεβαιωθείτε ότι είναι εγκατεστημένο το πακέτο nautilus-python"
+
+msgid "Installed, but not this version's copy"
+msgstr "Εγκατεστημένο, αλλά όχι το αντίγραφο αυτής της έκδοσης"
+
+msgid "Save the filter?"
+msgstr "Αποθήκευση του φίλτρου;"
+
+msgid ""
+"The filter editor is open. Save what you changed, or discard it, before "
+"moving on."
+msgstr ""
+"Το πρόγραμμα επεξεργασίας φίλτρου είναι ανοικτό. Αποθηκεύστε τις αλλαγές σας "
+"ή απορρίψτε τις πριν συνεχίσετε."
+
+msgid "Save the tag?"
+msgstr "Αποθήκευση της ετικέτας;"
+
+msgid ""
+"The tag editor is open. Save what you changed, or discard it, before moving "
+"on."
+msgstr ""
+"Το πρόγραμμα επεξεργασίας ετικέτας είναι ανοικτό. Αποθηκεύστε τις αλλαγές "
+"σας ή απορρίψτε τις πριν συνεχίσετε."
+
+msgid "Save the account?"
+msgstr "Αποθήκευση του λογαριασμού;"
+
+msgid ""
+"The account editor is open. Save what you changed, or discard it, before "
+"moving on."
+msgstr ""
+"Το πρόγραμμα επεξεργασίας λογαριασμού είναι ανοικτό. Αποθηκεύστε τις αλλαγές "
+"σας ή απορρίψτε τις πριν συνεχίσετε."
+
+msgid "Discard"
+msgstr "Απόρριψη"
+
+msgid "Check for new mail"
+msgstr "Έλεγχος για νέα μηνύματα"
+
+msgid "Uses IMAP IDLE to receive messages the moment they arrive."
+msgstr "Χρησιμοποιεί IMAP IDLE για τη λήψη μηνυμάτων τη στιγμή που φτάνουν."
+
+msgid "Notifications"
+msgstr "Ειδοποιήσεις"
+
+msgid "Desktop notifications"
+msgstr "Ειδοποιήσεις επιφάνειας εργασίας"
+
+msgid ""
+"Show system notifications for new mail and error alerts when Hylki isn't "
+"focused."
+msgstr ""
+"Εμφάνιση ειδοποιήσεων συστήματος για νέα μηνύματα και προειδοποιήσεων "
+"σφαλμάτων όταν το Hylki δεν είναι στο προσκήνιο."
+
+msgid "Show sender and subject"
+msgstr "Εμφάνιση αποστολέα και θέματος"
+
+msgid "Style"
+msgstr "Εμφάνιση"
+
+msgid "The app itself. Message content has its own setting under Reading."
+msgstr ""
+"Η ίδια η εφαρμογή. Το περιεχόμενο μηνυμάτων έχει δική του ρύθμιση στην "
+"ενότητα Ανάγνωση."
+
+msgid "Theme"
+msgstr "Θέμα"
+
+msgid "App icon"
+msgstr "Εικονίδιο εφαρμογής"
+
+msgid "This window opens to"
+msgstr "Αυτό το παράθυρο ανοίγει στο"
+
+msgid "The view shown first when Settings is opened from the menu."
+msgstr ""
+"Η προβολή που εμφανίζεται πρώτη όταν ανοίγουν οι Ρυθμίσεις από το μενού."
+
+msgid "Toolbar"
+msgstr "Γραμμή εργαλείων"
+
+msgid ""
+"The buttons above the reading pane. Drag them between the groups and into "
+"the order you want. The left group always stays on the toolbar; the right "
+"group folds into a ⋯ menu when the reading pane is narrow. Changes apply at "
+"once."
+msgstr ""
+"Τα κουμπιά πάνω από το παράθυρο ανάγνωσης. Σύρετέ τα μεταξύ των ομάδων και "
+"στη σειρά που θέλετε. Η αριστερή ομάδα παραμένει πάντα στη γραμμή εργαλείων· "
+"η δεξιά ομάδα συμπτύσσεται σε μενού ⋯ όταν το παράθυρο ανάγνωσης είναι "
+"στενό. Οι αλλαγές εφαρμόζονται αμέσως."
+
+msgid "Restore Defaults"
+msgstr "Επαναφορά προεπιλογών"
+
+msgid "Accounts in the sidebar"
+msgstr "Λογαριασμοί στην πλευρική στήλη"
+
+msgid ""
+"Each account's own section: its folders, filtered folders and tags. Off "
+"leaves the unified section alone. Also in the main menu, and Ctrl+Shift+A."
+msgstr ""
+"Η ενότητα κάθε λογαριασμού: οι φάκελοι, οι φιλτραρισμένοι φάκελοι και οι "
+"ετικέτες του. Η απενεργοποίηση δεν επηρεάζει την ενοποιημένη ενότητα. "
+"Υπάρχει επίσης στο κύριο μενού και με Ctrl+Shift+A."
+
+msgid "Chevron placement"
+msgstr "Τοποθέτηση βέλους"
+
+msgid ""
+"Which side of Inboxes and the account rows their expand/collapse chevrons "
+"sit on."
+msgstr ""
+"Σε ποια πλευρά των Εισερχομένων και των σειρών λογαριασμών εμφανίζονται τα "
+"βέλη ανάπτυξης/σύμπτυξης."
+
+msgid "Attachments in the sidebar"
+msgstr "Συνημμένα στην πλευρική στήλη"
+
+msgid ""
+"A shortcut for browsing every account's attachments, pinned at the bottom of "
+"the sidebar."
+msgstr ""
+"Μια συντόμευση για περιήγηση στα συνημμένα όλων των λογαριασμών, "
+"καρφιτσωμένη στο κάτω μέρος της πλευρικής στήλης."
+
+msgid "Contacts in the sidebar"
+msgstr "Επαφές στην πλευρική στήλη"
+
+msgid ""
+"A shortcut that opens your contacts, pinned at the bottom of the sidebar."
+msgstr ""
+"Μια συντόμευση που ανοίγει τις επαφές σας, καρφιτσωμένη στο κάτω μέρος της "
+"πλευρικής στήλης."
+
+msgid "Expand the sidebar on hover"
+msgstr "Ανάπτυξη πλευρικής στήλης κατά την αιώρηση"
+
+msgid ""
+"Whenever the sidebar is collapsed to its icon rail, hovering it floats the "
+"full sidebar out over the panes; it stays out until you click outside it."
+msgstr ""
+"Όποτε η πλευρική στήλη συμπτύσσεται στη γραμμή εικονιδίων της, η αιώρηση "
+"επάνω της εμφανίζει την πλήρη πλευρική στήλη πάνω από τα παράθυρα· παραμένει "
+"ανοικτή μέχρι να κάνετε κλικ έξω από αυτήν."
+
+msgid "Remember the sidebar layout"
+msgstr "Απομνημόνευση διάταξης πλευρικής στήλης"
+
+msgid ""
+"Reopen with the accounts, folders and sections as you left them. Off starts "
+"every launch with everything folded up."
+msgstr ""
+"Εκ νέου άνοιγμα με τους λογαριασμούς, τους φακέλους και τις ενότητες όπως τα "
+"αφήσατε. Αν είναι ανενεργό, κάθε εκκίνηση αρχίζει με όλα συμπτυγμένα."
+
+msgid "Remember icon rail state"
+msgstr "Απομνημόνευση κατάστασης γραμμής εικονιδίων"
+
+msgid ""
+"Reopen with icon rail in the last used state. Off starts every launch with "
+"the full sidebar."
+msgstr ""
+"Εκ νέου άνοιγμα με τη γραμμή εικονιδίων στην τελευταία κατάσταση. Αν είναι "
+"ανενεργό, κάθε εκκίνηση αρχίζει με την πλήρη πλευρική στήλη."
+
+msgid "Unified"
+msgstr "Ενοποιημένα"
+
+msgid ""
+"The section at the top of the sidebar that combines every account. Only "
+"shown with more than one account."
+msgstr ""
+"Η ενότητα στην κορυφή της πλευρικής στήλης που συνδυάζει όλους τους "
+"λογαριασμούς. Εμφανίζεται μόνο με περισσότερους από έναν λογαριασμούς."
+
+msgid "Inboxes"
+msgstr "Εισερχόμενα"
+
+msgid ""
+"A unified inbox combining every account, at the top of the sidebar. Only "
+"shown with more than one account."
+msgstr ""
+"Ενοποιημένα εισερχόμενα που συνδυάζουν όλους τους λογαριασμούς, στην κορυφή "
+"της πλευρικής στήλης. Εμφανίζονται μόνο με περισσότερους από έναν "
+"λογαριασμούς."
+
+msgid "Starred"
+msgstr "Με αστέρι"
+
+msgid ""
+"Every account's starred folder as one list, opening to each account's own."
+msgstr ""
+"Οι φάκελοι με αστέρι όλων των λογαριασμών σε μία λίστα, με άνοιγμα στον "
+"αντίστοιχο φάκελο κάθε λογαριασμού."
+
+msgid "Every account's sent mail as one list, opening to each account's own."
+msgstr ""
+"Τα απεσταλμένα όλων των λογαριασμών σε μία λίστα, με άνοιγμα στον αντίστοιχο "
+"φάκελο κάθε λογαριασμού."
+
+msgid "Every account's drafts as one list, opening to each account's own."
+msgstr ""
+"Τα πρόχειρα όλων των λογαριασμών σε μία λίστα, με άνοιγμα στον αντίστοιχο "
+"φάκελο κάθε λογαριασμού."
+
+msgid "Every account's archive as one list, opening to each account's own."
+msgstr ""
+"Τα αρχεία όλων των λογαριασμών σε μία λίστα, με άνοιγμα στον αντίστοιχο "
+"φάκελο κάθε λογαριασμού."
+
+msgid ""
+"List every folder your filter rules file into in a collapsible section of "
+"the unified view."
+msgstr ""
+"Εμφάνιση κάθε φακέλου στον οποίο αρχειοθετούν μηνύματα οι κανόνες φίλτρων "
+"σας, σε μια πτυσσόμενη ενότητα της ενοποιημένης προβολής."
+
+msgid ""
+"The tags, each showing every account's mail with it. Each account keeps its "
+"own Tags section either way."
+msgstr ""
+"Οι ετικέτες, καθεμία από τις οποίες εμφανίζει τα μηνύματα όλων των "
+"λογαριασμών που τη φέρουν. Κάθε λογαριασμός διατηρεί τη δική του ενότητα "
+"Ετικέτες ούτως ή άλλως."
+
+msgid "Unread counts"
+msgstr "Πλήθος μη αναγνωσμένων"
+
+msgid ""
+"Which unified rows show their combined unread chip while folded up. "
+"Expanded, the rows beneath carry the counts. Sent never shows one."
+msgstr ""
+"Ποιες ενοποιημένες σειρές εμφανίζουν τη συνδυασμένη ένδειξη μη αναγνωσμένων "
+"όταν είναι συμπτυγμένες. Όταν αναπτυχθούν, οι υποκείμενες σειρές εμφανίζουν "
+"τα πλήθη. Τα Απεσταλμένα δεν εμφανίζουν ποτέ ένδειξη."
+
+msgid "Filters placement"
+msgstr "Τοποθέτηση φίλτρων"
+
+msgid ""
+"Choose between appearing in a unified section, or a list above or below the "
+"accounts."
+msgstr ""
+"Επιλέξτε αν θα εμφανίζονται σε ενοποιημένη ενότητα ή σε λίστα πάνω ή κάτω "
+"από τους λογαριασμούς."
+
+msgid "Tags placement"
+msgstr "Τοποθέτηση ετικετών"
+
+msgid "Icon rail"
+msgstr "Γραμμή εικονιδίων"
+
+msgid "The sidebar collapsed to icons, by its button or in a narrow window."
+msgstr ""
+"Η πλευρική στήλη συμπτυγμένη σε εικονίδια, μέσω του κουμπιού της ή σε στενό "
+"παράθυρο."
+
+msgid "Unread dots instead of counts"
+msgstr "Κουκκίδες αντί για πλήθος μη αναγνωσμένων"
+
+msgid ""
+"Mark folders and accounts that have unread mail with a dot in the accent "
+"colour rather than the number of messages. The count stays in the tooltip."
+msgstr ""
+"Σήμανση φακέλων και λογαριασμών που έχουν μη αναγνωσμένα μηνύματα με "
+"κουκκίδα στο χρώμα έμφασης αντί για τον αριθμό μηνυμάτων. Το πλήθος "
+"παραμένει στη συμβουλή εργαλείου."
+
+msgid "Fold up expanded items"
+msgstr "Σύμπτυξη ανεπτυγμένων στοιχείων"
+
+msgid ""
+"When the sidebar collapses to the icon rail, the items switched on below "
+"start folded up. A long-press in the rail still expands or collapses any of "
+"them, and the full sidebar comes back exactly as you left it."
+msgstr ""
+"Όταν η πλευρική στήλη συμπτύσσεται στη γραμμή εικονιδίων, τα παρακάτω "
+"ενεργοποιημένα στοιχεία ξεκινούν συμπτυγμένα. Ένα παρατεταμένο πάτημα στη "
+"γραμμή εξακολουθεί να αναπτύσσει ή να συμπτύσσει οποιοδήποτε από αυτά και η "
+"πλήρης πλευρική στήλη επιστρέφει ακριβώς όπως την αφήσατε."
+
+msgid "Every account's folder list."
+msgstr "Η λίστα φακέλων κάθε λογαριασμού."
+
+msgid "The account list under the unified Inboxes row."
+msgstr "Η λίστα λογαριασμών κάτω από την ενοποιημένη σειρά Εισερχόμενα."
+
+msgid "The account list under the unified Starred row."
+msgstr "Η λίστα λογαριασμών κάτω από την ενοποιημένη σειρά Με αστέρι."
+
+msgid "The account list under the unified Sent row."
+msgstr "Η λίστα λογαριασμών κάτω από την ενοποιημένη σειρά Απεσταλμένα."
+
+msgid "The account list under the unified Drafts row."
+msgstr "Η λίστα λογαριασμών κάτω από την ενοποιημένη σειρά Πρόχειρα."
+
+msgid "The account list under the unified Archive row."
+msgstr "Η λίστα λογαριασμών κάτω από την ενοποιημένη σειρά Αρχείο."
+
+msgid "The folders under the Filters row."
+msgstr "Οι φάκελοι κάτω από τη σειρά Φίλτρα."
+
+msgid "The tags under the Tags row."
+msgstr "Οι ετικέτες κάτω από τη σειρά Ετικέτες."
+
+msgid "Sender avatars"
+msgstr "Εικόνες αποστολέων"
+
+msgid ""
+"The sender's avatar beside each message, in the list and above the message. "
+"Turning it off gives the sender and subject more room."
+msgstr ""
+"Η εικόνα του αποστολέα δίπλα σε κάθε μήνυμα, στη λίστα και πάνω από το "
+"μήνυμα. Η απενεργοποίησή της δίνει περισσότερο χώρο στον αποστολέα και το "
+"θέμα."
+
+msgid "Sent mail uses your account circle"
+msgstr "Τα απεσταλμένα χρησιμοποιούν τον κύκλο του λογαριασμού σας"
+
+msgid ""
+"Messages you sent wear the account's Gravatar, picture or emoji, as its "
+"circle in the sidebar does."
+msgstr ""
+"Τα μηνύματα που στείλατε εμφανίζουν το Gravatar, την εικόνα ή το emoji του "
+"λογαριασμού, όπως ο κύκλος του στην πλευρική στήλη."
+
+msgid "Preview lines"
+msgstr "Γραμμές προεπισκόπησης"
+
+msgid ""
+"How much of each message to show under its subject. Off also stops previews "
+"being downloaded."
+msgstr ""
+"Πόσο από κάθε μήνυμα θα εμφανίζεται κάτω από το θέμα του. Η απενεργοποίηση "
+"σταματά επίσης τη λήψη προεπισκοπήσεων."
+
+msgid "Actions palette in the message list"
+msgstr "Παλέτα ενεργειών στη λίστα μηνυμάτων"
+
+msgid ""
+"The ⋯ action row under each message summary. Turning it off returns its "
+"space to the row; messages are still acted on from their cards and the right-"
+"click menu."
+msgstr ""
+"Η σειρά ενεργειών ⋯ κάτω από κάθε σύνοψη μηνύματος. Η απενεργοποίησή της "
+"επιστρέφει τον χώρο στη σειρά· οι ενέργειες στα μηνύματα παραμένουν "
+"διαθέσιμες από τις κάρτες τους και το μενού δεξιού κλικ."
+
+msgid "Open the actions palette on hover"
+msgstr "Άνοιγμα της παλέτας ενεργειών κατά την αιώρηση"
+
+msgid ""
+"The message list's ⋯ actions palette slides open by itself while the pointer "
+"rests on a row."
+msgstr ""
+"Η παλέτα ενεργειών ⋯ της λίστας μηνυμάτων ανοίγει μόνη της όσο ο δείκτης "
+"παραμένει πάνω σε μια σειρά."
+
+msgid "Swipe actions"
+msgstr "Ενέργειες σάρωσης"
+
+msgid ""
+"Drag a message sideways with the mouse, or swipe it with two fingers on a "
+"trackpad, to archive or delete it. Default is left to delete, right to "
+"archive."
+msgstr ""
+"Σύρετε ένα μήνυμα πλαγίως με το ποντίκι ή σαρώστε το με δύο δάχτυλα σε "
+"επιφάνεια αφής για να το αρχειοθετήσετε ή να το διαγράψετε. Η προεπιλογή "
+"είναι αριστερά για διαγραφή και δεξιά για αρχειοθέτηση."
+
+msgid "Reverse swipe directions"
+msgstr "Αντιστροφή κατευθύνσεων σάρωσης"
+
+msgid ""
+"Turning this on swaps the swipe actions to: left archives, right deletes."
+msgstr ""
+"Η ενεργοποίηση ανταλλάσσει τις ενέργειες σάρωσης: αριστερά για αρχειοθέτηση, "
+"δεξιά για διαγραφή."
+
+msgid "Trackpad swipe sensitivity"
+msgstr "Ευαισθησία σάρωσης επιφάνειας αφής"
+
+msgid ""
+"How readily a two-finger trackpad swipe moves a message. Raise it if a swipe "
+"never gets far enough to archive or delete, lower it if messages slide when "
+"you did not mean them to. Mouse drags are unaffected."
+msgstr ""
+"Πόσο εύκολα μετακινεί ένα μήνυμα η σάρωση με δύο δάχτυλα στην επιφάνεια "
+"αφής. Αυξήστε την αν η σάρωση δεν φτάνει ποτέ αρκετά μακριά για αρχειοθέτηση "
+"ή διαγραφή και μειώστε την αν τα μηνύματα ολισθαίνουν χωρίς να το θέλετε. Το "
+"σύρσιμο με το ποντίκι δεν επηρεάζεται."
+
+msgid "Actions palette timeout"
+msgstr "Χρόνος λήξης παλέτας ενεργειών"
+
+msgid ""
+"Seconds the message list's actions palette stays open after the cursor "
+"leaves it."
+msgstr ""
+"Για πόσα δευτερόλεπτα παραμένει ανοικτή η παλέτα ενεργειών της λίστας "
+"μηνυμάτων αφού φύγει ο δείκτης."
+
+msgid "Group messages by conversation"
+msgstr "Ομαδοποίηση μηνυμάτων κατά συζήτηση"
+
+msgid "Collapse replies into a single threaded conversation."
+msgstr "Σύμπτυξη απαντήσεων σε μία νηματική συζήτηση."
+
+msgid "Expandable conversations"
+msgstr "Αναπτυσσόμενες συζητήσεις"
+
+msgid ""
+"Allow a conversation to expand/collapse its messages in the list. When off, "
+"the row keeps its count chip but the messages are displayed only as cards in "
+"the reading pane."
+msgstr ""
+"Να επιτρέπεται η ανάπτυξη/σύμπτυξη των μηνυμάτων μιας συζήτησης στη λίστα. "
+"Όταν είναι ανενεργό, η σειρά διατηρεί την ένδειξη πλήθους, αλλά τα μηνύματα "
+"εμφανίζονται μόνο ως κάρτες στο παράθυρο ανάγνωσης."
+
+msgid "Expand conversations by default"
+msgstr "Ανάπτυξη συζητήσεων από προεπιλογή"
+
+msgid ""
+"Show every message of a conversation in the list. When off, conversations "
+"start collapsed to their newest message."
+msgstr ""
+"Εμφάνιση κάθε μηνύματος μιας συζήτησης στη λίστα. Όταν είναι ανενεργό, οι "
+"συζητήσεις ξεκινούν συμπτυγμένες στο νεότερο μήνυμα."
+
+msgid "Newest message first"
+msgstr "Νεότερο μήνυμα πρώτο"
+
+msgid ""
+"Show a conversation's latest message at the top of the reading pane. Off "
+"reads oldest to newest, downward."
+msgstr ""
+"Εμφάνιση του τελευταίου μηνύματος μιας συζήτησης στην κορυφή του παραθύρου "
+"ανάγνωσης. Όταν είναι ανενεργό, η ανάγνωση γίνεται προς τα κάτω από το "
+"παλαιότερο στο νεότερο."
+
+msgid "Reply editor"
+msgstr "Πρόγραμμα επεξεργασίας απάντησης"
+
+msgid ""
+"Where a reply or forward opens in the reading pane. Following the reading "
+"order puts it above the messages with newest first, and below them "
+"otherwise, so it continues the conversation where it ends."
+msgstr ""
+"Πού ανοίγει μια απάντηση ή προώθηση στο παράθυρο ανάγνωσης. Η ακολουθία της "
+"σειράς ανάγνωσης την τοποθετεί πάνω από τα μηνύματα όταν τα νεότερα "
+"εμφανίζονται πρώτα και κάτω από αυτά διαφορετικά, ώστε να συνεχίζει τη "
+"συζήτηση από εκεί που τελειώνει."
+
+msgid "Attachments on each message"
+msgstr "Συνημμένα σε κάθε μήνυμα"
+
+msgid ""
+"List a message's attachments beneath it in a conversation, so which file "
+"came with which message is clear. Click one to open it."
+msgstr ""
+"Εμφάνιση των συνημμένων ενός μηνύματος κάτω από αυτό σε μια συζήτηση, ώστε "
+"να είναι σαφές ποιο αρχείο συνόδευε ποιο μήνυμα. Κάντε κλικ σε ένα για να το "
+"ανοίξετε."
+
+msgid "Attachment drawer"
+msgstr "Συρτάρι συνημμένων"
+
+msgid ""
+"Gather every attachment in the open conversation in a drawer beneath the "
+"messages."
+msgstr ""
+"Συγκέντρωση όλων των συνημμένων της ανοικτής συζήτησης σε ένα συρτάρι κάτω "
+"από τα μηνύματα."
+
+msgid "Confirm conversation deletion"
+msgstr "Επιβεβαίωση διαγραφής συζήτησης"
+
+msgid ""
+"Warn before deleting when a whole conversation is selected, since every "
+"message in the thread goes with it."
+msgstr ""
+"Προειδοποίηση πριν από τη διαγραφή όταν έχει επιλεγεί ολόκληρη συζήτηση, "
+"καθώς διαγράφεται κάθε μήνυμα του νήματος."
+
+msgid ""
+"When an opened message counts as read. Conversations mark each message as it "
+"comes into view."
+msgstr ""
+"Πότε ένα ανοικτό μήνυμα θεωρείται αναγνωσμένο. Οι συζητήσεις σημειώνουν κάθε "
+"μήνυμα καθώς εμφανίζεται."
+
+msgid "Message appearance"
+msgstr "Εμφάνιση μηνυμάτων"
+
+msgid "Theme for email content only, not the app itself."
+msgstr "Θέμα μόνο για το περιεχόμενο email, όχι για την ίδια την εφαρμογή."
+
+msgid "Use my own font"
+msgstr "Χρήση δικής μου γραμματοσειράς"
+
+msgid ""
+"Show every message in the font and size chosen below instead of the "
+"sender's. Headings keep their relative size; code stays monospaced."
+msgstr ""
+"Εμφάνιση κάθε μηνύματος με τη γραμματοσειρά και το μέγεθος που επιλέγονται "
+"παρακάτω αντί για του αποστολέα. Οι επικεφαλίδες διατηρούν το σχετικό τους "
+"μέγεθος· ο κώδικας παραμένει σταθερού πλάτους."
+
+msgid "Message font"
+msgstr "Γραμματοσειρά μηνυμάτων"
+
+msgid "The interface font unless another is chosen."
+msgstr "Η γραμματοσειρά του περιβάλλοντος, εκτός αν επιλεγεί άλλη."
+
+msgid "Use my own colours"
+msgstr "Χρήση δικών μου χρωμάτων"
+
+msgid ""
+"Ignore the text and background colours senders set, so every message reads "
+"in the same black or white on the reader's ground. Pictures are kept; links "
+"take the accent colour."
+msgstr ""
+"Παράβλεψη των χρωμάτων κειμένου και φόντου που ορίζουν οι αποστολείς, ώστε "
+"κάθε μήνυμα να εμφανίζεται με το ίδιο μαύρο ή λευκό κείμενο στο φόντο της "
+"προβολής ανάγνωσης. Οι εικόνες διατηρούνται· οι σύνδεσμοι παίρνουν το χρώμα "
+"έμφασης."
+
+msgid "Plain-text messages in monospace"
+msgstr "Μηνύματα απλού κειμένου με γραμματοσειρά σταθερού πλάτους"
+
+msgid ""
+"Show messages sent as plain text in a fixed-width font, so columns and code "
+"line up. Formatted messages are not affected."
+msgstr ""
+"Εμφάνιση μηνυμάτων που στάλθηκαν ως απλό κείμενο με γραμματοσειρά σταθερού "
+"πλάτους, ώστε να στοιχίζονται οι στήλες και ο κώδικας. Τα μορφοποιημένα "
+"μηνύματα δεν επηρεάζονται."
+
+msgid "Monospace font"
+msgstr "Γραμματοσειρά σταθερού πλάτους"
+
+msgid "The system's monospace font unless another is chosen."
+msgstr ""
+"Η γραμματοσειρά σταθερού πλάτους του συστήματος, εκτός αν επιλεγεί άλλη."
+
+msgid "Message card actions palette"
+msgstr "Παλέτα ενεργειών κάρτας μηνύματος"
+
+msgid "How each message's action icons show in the reader, single or threaded."
+msgstr ""
+"Πώς εμφανίζονται τα εικονίδια ενεργειών κάθε μηνύματος στην προβολή "
+"ανάγνωσης, μεμονωμένου ή σε νήμα."
+
+msgid "Message card actions palette timeout"
+msgstr "Χρόνος λήξης παλέτας ενεργειών κάρτας μηνύματος"
+
+msgid "Seconds a card's actions palette stays open after the cursor leaves it."
+msgstr ""
+"Για πόσα δευτερόλεπτα παραμένει ανοικτή η παλέτα ενεργειών μιας κάρτας αφού "
+"φύγει ο δείκτης."
+
+msgid "Message card actions palette as a menu"
+msgstr "Παλέτα ενεργειών κάρτας μηνύματος ως μενού"
+
+msgid ""
+"The ⋯ opens the message's menu, the same one a right-click shows, instead of "
+"sliding the actions palette out."
+msgstr ""
+"Το ⋯ ανοίγει το μενού του μηνύματος, το ίδιο που εμφανίζει το δεξί κλικ, "
+"αντί να αναπτύσσει την παλέτα ενεργειών."
+
+msgid "Single messages as cards"
+msgstr "Μεμονωμένα μηνύματα ως κάρτες"
+
+msgid ""
+"Show a lone message as an inset card with the same border as a "
+"conversation's messages. Off fills the pane edge to edge."
+msgstr ""
+"Εμφάνιση ενός μεμονωμένου μηνύματος ως εσωτερικής κάρτας με το ίδιο "
+"περίγραμμα που έχουν τα μηνύματα μιας συζήτησης. Όταν είναι ανενεργό, "
+"γεμίζει το παράθυρο από άκρη σε άκρη."
+
+msgid "Always show recipients"
+msgstr "Να εμφανίζονται πάντα οι παραλήπτες"
+
+msgid ""
+"Show who each message went to under its sender, without clicking the "
+"recipients chip. With one recipient the chip is dropped entirely."
+msgstr ""
+"Εμφάνιση των παραληπτών κάθε μηνύματος κάτω από τον αποστολέα του, χωρίς "
+"κλικ στην ένδειξη παραληπτών. Με έναν παραλήπτη η ένδειξη παραλείπεται "
+"εντελώς."
+
+msgid "Compose in the main window"
+msgstr "Σύνταξη στο κύριο παράθυρο"
+
+msgid ""
+"New message slides down over the reading pane, like a reply — pop it out to "
+"a window from its header. Off = open a separate window directly."
+msgstr ""
+"Το νέο μήνυμα ολισθαίνει πάνω από το παράθυρο ανάγνωσης, όπως μια απάντηση — "
+"μπορείτε να το ανοίξετε σε ξεχωριστό παράθυρο από την κεφαλίδα του. Αν είναι "
+"ανενεργό, ανοίγει απευθείας ξεχωριστό παράθυρο."
+
+msgid "Show From, To and Subject in the reply panel"
+msgstr "Εμφάνιση Από, Προς και Θέματος στον πίνακα απάντησης"
+
+msgid ""
+"The inline reply opens with its address and subject rows showing. Off, they "
+"stay folded away behind a button in the panel's header."
+msgstr ""
+"Η ενσωματωμένη απάντηση ανοίγει με ορατές τις σειρές διεύθυνσης και θέματος. "
+"Όταν είναι ανενεργό, παραμένουν κρυμμένες πίσω από ένα κουμπί στην κεφαλίδα "
+"του πίνακα."
+
+msgid "Send new messages from"
+msgstr "Αποστολή νέων μηνυμάτων από"
+
+msgid "Replies still answer from the address the original was sent to."
+msgstr ""
+"Οι απαντήσεις εξακολουθούν να αποστέλλονται από τη διεύθυνση στην οποία "
+"στάλθηκε το αρχικό μήνυμα."
+
+msgid "Paste as plain text"
+msgstr "Επικόλληση ως απλό κείμενο"
+
+msgid ""
+"Pasting into a message strips the clipboard's formatting. Off, a paste keeps "
+"its formatting. Right-clicking the editor always offers both."
+msgstr ""
+"Η επικόλληση σε μήνυμα αφαιρεί τη μορφοποίηση του προχείρου. Όταν είναι "
+"ανενεργό, η επικόλληση διατηρεί τη μορφοποίηση. Το δεξί κλικ στο πρόγραμμα "
+"επεξεργασίας προσφέρει πάντα και τις δύο επιλογές."
+
+msgid "Write messages in"
+msgstr "Σύνταξη μηνυμάτων σε"
+
+msgid ""
+"What new messages, replies and forwards start as. Markdown and HTML are "
+"written as source and sent as formatted mail; plain text is sent without "
+"formatting. The composer's format button switches any one message."
+msgstr ""
+"Η αρχική μορφή νέων μηνυμάτων, απαντήσεων και προωθήσεων. Το Markdown και το "
+"HTML γράφονται ως πηγαίος κώδικας και αποστέλλονται ως μορφοποιημένα "
+"μηνύματα· το απλό κείμενο αποστέλλεται χωρίς μορφοποίηση. Το κουμπί μορφής "
+"της σύνταξης αλλάζει οποιοδήποτε μεμονωμένο μήνυμα."
+
+msgid "Spelling"
+msgstr "Ορθογραφία"
+
+msgid "Check spelling as you type"
+msgstr "Έλεγχος ορθογραφίας κατά την πληκτρολόγηση"
+
+msgid ""
+"Misspelled words in the message body are underlined; right-click a word for "
+"corrections."
+msgstr ""
+"Οι ανορθόγραφες λέξεις στο σώμα του μηνύματος υπογραμμίζονται· κάντε δεξί "
+"κλικ σε μια λέξη για διορθώσεις."
+
+msgid "Language"
+msgstr "Γλώσσα"
+
+msgid "Dictionaries the app can see"
+msgstr "Λεξικά που μπορεί να δει η εφαρμογή"
+
+msgid "Added words"
+msgstr "Λέξεις που προστέθηκαν"
+
+msgid ""
+"Words the spell checker was taught. The message body applies changes after a "
+"restart."
+msgstr ""
+"Λέξεις που διδάχτηκε ο ορθογραφικός έλεγχος. Οι αλλαγές εφαρμόζονται στο "
+"σώμα μηνυμάτων μετά από επανεκκίνηση."
+
+msgid ""
+"Hylki collects no telemetry and sends no analytics. Remote content (images, "
+"trackers) is blocked by default. Allow it per message, trust a sender to "
+"always load it, or turn on \"Always load remote content\" below."
+msgstr ""
+"Το Hylki δεν συλλέγει τηλεμετρία και δεν στέλνει αναλυτικά δεδομένα. Το "
+"απομακρυσμένο περιεχόμενο (εικόνες, ιχνηλάτες) αποκλείεται από προεπιλογή. "
+"Επιτρέψτε το ανά μήνυμα, ορίστε έναν αποστολέα ως έμπιστο για να φορτώνεται "
+"πάντα ή ενεργοποιήστε παρακάτω το «Να φορτώνεται πάντα το απομακρυσμένο "
+"περιεχόμενο»."
+
+msgid "Always load remote content"
+msgstr "Να φορτώνεται πάντα το απομακρυσμένο περιεχόμενο"
+
+msgid ""
+"Show images and other remote content in every new message without asking. "
+"Off by default, since remote content can be used to track when and where you "
+"read a message."
+msgstr ""
+"Εμφάνιση εικόνων και άλλου απομακρυσμένου περιεχομένου σε κάθε νέο μήνυμα "
+"χωρίς ερώτηση. Ανενεργό από προεπιλογή, καθώς το απομακρυσμένο περιεχόμενο "
+"μπορεί να χρησιμοποιηθεί για την παρακολούθηση του πότε και πού διαβάζετε "
+"ένα μήνυμα."
+
+msgid "Warn when remote content is blocked"
+msgstr "Προειδοποίηση όταν αποκλείεται απομακρυσμένο περιεχόμενο"
+
+msgid ""
+"Shows the banner offering to load it. Turning this off only hides the notice "
+"— remote content is still blocked just the same."
+msgstr ""
+"Εμφανίζει το πλαίσιο που προσφέρει τη φόρτωσή του. Η απενεργοποίηση "
+"αποκρύπτει μόνο την ειδοποίηση — το απομακρυσμένο περιεχόμενο εξακολουθεί να "
+"αποκλείεται με τον ίδιο τρόπο."
+
+msgid "Use Gravatar when a contact has no photo"
+msgstr "Χρήση Gravatar όταν μια επαφή δεν έχει φωτογραφία"
+
+msgid ""
+"Local GNOME Contacts photos are always preferred. Gravatar sends a hash of "
+"the sender's email."
+msgstr ""
+"Οι τοπικές φωτογραφίες των Επαφών GNOME προτιμώνται πάντα. Το Gravatar "
+"στέλνει έναν κατακερματισμό του email του αποστολέα."
+
+msgid "Show sender logos"
+msgstr "Εμφάνιση λογοτύπων αποστολέων"
+
+msgid ""
+"Fills the sender's avatar with the brand's logo: the one the sender "
+"publishes for mail (BIMI), one bundled with Hylki, or the site's own icon. "
+"All but the bundled ones are fetched from the sender's domain, which then "
+"learns your IP address, as blocking remote content otherwise avoids."
+msgstr ""
+"Γεμίζει την εικόνα του αποστολέα με το λογότυπο της επωνυμίας: αυτό που "
+"δημοσιεύει ο αποστολέας για την αλληλογραφία (BIMI), ένα που περιλαμβάνεται "
+"στο Hylki ή το εικονίδιο του ίδιου του ιστοτόπου. Όλα εκτός από τα "
+"ενσωματωμένα ανακτώνται από τον τομέα του αποστολέα, ο οποίος έτσι μαθαίνει "
+"τη διεύθυνση IP σας, κάτι που διαφορετικά αποφεύγει ο αποκλεισμός "
+"απομακρυσμένου περιεχομένου."
+
+msgid ""
+"By default dates follow the system's own arrangement — its field order, "
+"month names and clock. Choose a format here to override what your system is "
+"set to."
+msgstr ""
+"Από προεπιλογή, οι ημερομηνίες ακολουθούν τη διάταξη του συστήματος — τη "
+"σειρά πεδίων, τα ονόματα μηνών και το ρολόι. Επιλέξτε εδώ μορφή για να "
+"παρακάμψετε τη ρύθμιση του συστήματός σας."
+
+msgid "Date format"
+msgstr "Μορφή ημερομηνίας"
+
+msgid "Clock"
+msgstr "Ρολόι"
+
+msgid ""
+"The language Hylki is shown in. \"System\" follows the desktop, with English "
+"where no translation exists. A change applies the next time Hylki starts."
+msgstr ""
+"Η γλώσσα στην οποία εμφανίζεται το Hylki. Η επιλογή «Σύστημα» ακολουθεί την "
+"επιφάνεια εργασίας, με αγγλικά όπου δεν υπάρχει μετάφραση. Η αλλαγή "
+"εφαρμόζεται την επόμενη φορά που θα ξεκινήσει το Hylki."
+
+msgid "Keep running in the background"
+msgstr "Διατήρηση εκτέλεσης στο παρασκήνιο"
+
+msgid ""
+"Closing the window hides it instead of quitting, so new mail still arrives. "
+"Hylki then appears under Background Apps in the system menu, where it can be "
+"quit."
+msgstr ""
+"Το κλείσιμο του παραθύρου το αποκρύπτει αντί να τερματίζει την εφαρμογή, "
+"ώστε να συνεχίζουν να φτάνουν νέα μηνύματα. Το Hylki εμφανίζεται τότε στις "
+"Εφαρμογές παρασκηνίου στο μενού συστήματος, από όπου μπορεί να τερματιστεί."
+
+msgid "Start at login"
+msgstr "Εκκίνηση κατά τη σύνδεση"
+
+msgid ""
+"Start checking for mail when you log in. Hylki starts without a window and "
+"waits in the system menu."
+msgstr ""
+"Έναρξη ελέγχου αλληλογραφίας όταν συνδέεστε. Το Hylki ξεκινά χωρίς παράθυρο "
+"και περιμένει στο μενού συστήματος."
+
+msgid "Show a tray icon"
+msgstr "Εμφάνιση εικονιδίου περιοχής ειδοποιήσεων"
+
+msgid ""
+"An icon in the system tray, with a red dot while any inbox has unread mail. "
+"Click it to open Hylki. GNOME needs the AppIndicator extension; other "
+"desktops show it as they are."
+msgstr ""
+"Ένα εικονίδιο στην περιοχή ειδοποιήσεων του συστήματος, με κόκκινη κουκκίδα "
+"όταν κάποια εισερχόμενα έχουν μη αναγνωσμένα μηνύματα. Κάντε κλικ για να "
+"ανοίξετε το Hylki. Το GNOME χρειάζεται την επέκταση AppIndicator· άλλες "
+"επιφάνειες εργασίας το εμφανίζουν όπως είναι."
+
+msgid "Tray icon"
+msgstr "Εικονίδιο περιοχής ειδοποιήσεων"
+
+msgid ""
+"The Hylki icon, or a plain envelope in white or black to match the panel."
+msgstr ""
+"Το εικονίδιο του Hylki ή ένας απλός λευκός ή μαύρος φάκελος που ταιριάζει "
+"στον πίνακα."
+
+msgid "Unread mail in the tray menu"
+msgstr "Μη αναγνωσμένα μηνύματα στο μενού περιοχής ειδοποιήσεων"
+
+msgid ""
+"List the newest unread inbox messages in the icon's menu; click one to open "
+"it."
+msgstr ""
+"Εμφάνιση των νεότερων μη αναγνωσμένων μηνυμάτων εισερχομένων στο μενού του "
+"εικονιδίου· κάντε κλικ σε ένα για να το ανοίξετε."
+
+msgid "Single-key shortcuts"
+msgstr "Συντομεύσεις ενός πλήκτρου"
+
+msgid ""
+"Act on mail with one key and no modifier — j/k to move, r to reply, a to "
+"archive. Press Ctrl+? for the full list."
+msgstr ""
+"Εκτελέστε ενέργειες στην αλληλογραφία με ένα πλήκτρο χωρίς τροποποιητή — j/k "
+"για μετακίνηση, r για απάντηση, a για αρχειοθέτηση. Πατήστε Ctrl+? για την "
+"πλήρη λίστα."
+
+msgid "Console mode"
+msgstr "Λειτουργία κονσόλας"
+
+msgid ""
+"A verbose live console in the status bar showing everything Hylki is doing "
+"under the hood."
+msgstr ""
+"Μια λεπτομερής ζωντανή κονσόλα στη γραμμή κατάστασης που εμφανίζει όλα όσα "
+"κάνει το Hylki στο παρασκήνιο."
+
+msgid ""
+"Save everything the console has recorded since Hylki started, to attach to a "
+"bug report. Email addresses are shortened to their domain."
+msgstr ""
+"Αποθήκευση όλων όσων έχει καταγράψει η κονσόλα από την εκκίνηση του Hylki, "
+"για επισύναψη σε αναφορά σφάλματος. Οι διευθύνσεις email συντομεύονται στον "
+"τομέα τους."
+
+msgid "GNOME Files Integration"
+msgstr "Ενσωμάτωση με τα Αρχεία GNOME"
+
+msgid ""
+"Add \"Send with Hylki\" to the right-click menu in Files (Nautilus): the "
+"selected files open in a new message, attached. This installs a small "
+"extension in your home folder. It also needs the nautilus-python package "
+"(python3-nautilus on Debian and Ubuntu), and Files has to be restarted "
+"before the entry appears."
+msgstr ""
+"Προσθήκη του «Αποστολή με το Hylki» στο μενού δεξιού κλικ των Αρχείων "
+"(Nautilus): τα επιλεγμένα αρχεία ανοίγουν ως συνημμένα σε νέο μήνυμα. "
+"Εγκαθίσταται μια μικρή επέκταση στον προσωπικό σας φάκελο. Απαιτεί επίσης το "
+"πακέτο nautilus-python (python3-nautilus σε Debian και Ubuntu) και πρέπει να "
+"επανεκκινήσετε τα Αρχεία πριν εμφανιστεί η καταχώριση."
+
+msgid "Right-click menu entry"
+msgstr "Καταχώριση μενού δεξιού κλικ"
+
+msgid "Update"
+msgstr "Ενημέρωση"
+
+msgid "Install"
+msgstr "Εγκατάσταση"
+
+msgid "Install the nautilus-python package first: paste this in a terminal"
+msgstr ""
+"Εγκαταστήστε πρώτα το πακέτο nautilus-python: επικολλήστε αυτό σε τερματικό"
+
+msgid "Restart Files"
+msgstr "Επανεκκίνηση Αρχείων"
+
+msgid ""
+"Closes every Files window, the same as \"nautilus -q\". The next one opens "
+"with the entry, or without it once removed."
+msgstr ""
+"Κλείνει όλα τα παράθυρα των Αρχείων, όπως η εντολή «nautilus -q». Το επόμενο "
+"ανοίγει με την καταχώριση ή χωρίς αυτήν αφού αφαιρεθεί."
+
+msgid "Restart"
+msgstr "Επανεκκίνηση"
+
+msgid "Default Send with Hylki behavior"
+msgstr "Προεπιλεγμένη συμπεριφορά Αποστολής με το Hylki"
+
+msgid "Default large attachments behavior"
+msgstr "Προεπιλεγμένη συμπεριφορά μεγάλων συνημμένων"
+
+msgid ""
+"Upload to cloud storage needs a cloud storage account (Settings → Cloud "
+"Storage) otherwise the files are attached by default."
+msgstr ""
+"Η μεταφόρτωση στην αποθήκευση cloud απαιτεί λογαριασμό αποθήκευσης cloud "
+"(Ρυθμίσεις → Αποθήκευση στο cloud), διαφορετικά τα αρχεία επισυνάπτονται από "
+"προεπιλογή."
+
+msgid "Size limit"
+msgstr "Όριο μεγέθους"
+
+msgid "In MB, for all the files together."
+msgstr "Σε MB, για όλα τα αρχεία μαζί."
+
+msgid ""
+"Everything Hylki keeps, as one file: mail and cloud storage accounts, "
+"preferences, filters, tags, the sidebar and window layout, the app icon "
+"choice and the words taught to the spell checker. Passwords and sign-ins "
+"stay in the system keyring and are never exported; OpenPGP keys stay in "
+"GnuPG."
+msgstr ""
+"Όλα όσα διατηρεί το Hylki, σε ένα αρχείο: λογαριασμοί αλληλογραφίας και "
+"αποθήκευσης cloud, προτιμήσεις, φίλτρα, ετικέτες, διάταξη πλευρικής στήλης "
+"και παραθύρου, επιλογή εικονιδίου εφαρμογής και λέξεις που διδάχτηκε ο "
+"ορθογραφικός έλεγχος. Οι κωδικοί πρόσβασης και τα στοιχεία σύνδεσης "
+"παραμένουν στην κλειδοθήκη συστήματος και δεν εξάγονται ποτέ· τα κλειδιά "
+"OpenPGP παραμένουν στο GnuPG."
+
+msgid "Export settings"
+msgstr "Εξαγωγή ρυθμίσεων"
+
+msgid "Import settings"
+msgstr "Εισαγωγή ρυθμίσεων"
+
+msgid ""
+"Replaces the current accounts and preferences in place. Don't remove "
+"accounts first: removal also deletes their keyring passwords, which no "
+"backup carries."
+msgstr ""
+"Αντικαθιστά τους τρέχοντες λογαριασμούς και τις προτιμήσεις επιτόπου. Μην "
+"αφαιρέσετε πρώτα λογαριασμούς: η αφαίρεση διαγράφει επίσης τους κωδικούς "
+"τους από την κλειδοθήκη, τους οποίους δεν περιέχει κανένα αντίγραφο "
+"ασφαλείας."
+
+msgid "In the unified section"
+msgstr "Στην ενοποιημένη ενότητα"
+
+msgid "Above the accounts"
+msgstr "Πάνω από τους λογαριασμούς"
+
+msgid "Below the accounts"
+msgstr "Κάτω από τους λογαριασμούς"
+
+msgid "Left"
+msgstr "Αριστερά"
+
+msgid "Right"
+msgstr "Δεξιά"
+
+msgid "1 line"
+msgstr "1 γραμμή"
+
+msgid "2 lines"
+msgstr "2 γραμμές"
+
+msgid "3 lines"
+msgstr "3 γραμμές"
+
+msgid "When displayed"
+msgstr "Κατά την εμφάνιση"
+
+msgid "After two seconds"
+msgstr "Μετά από δύο δευτερόλεπτα"
+
+msgid "Hidden behind a toggle"
+msgstr "Κρυμμένη πίσω από διακόπτη"
+
+msgid "Shown while hovering"
+msgstr "Εμφάνιση κατά την αιώρηση"
+
+msgid "Always visible"
+msgstr "Πάντα ορατή"
+
+msgid "Ask each time"
+msgstr "Ερώτηση κάθε φορά"
+
+msgid "A new message"
+msgstr "Νέο μήνυμα"
+
+msgid "A draft you pick"
+msgstr "Πρόχειρο που επιλέγετε"
+
+msgid "A reply to a message you pick"
+msgstr "Απάντηση σε μήνυμα που επιλέγετε"
+
+msgid "Attach them anyway"
+msgstr "Επισύναψή τους ούτως ή άλλως"
+
+msgid "Upload to cloud storage and link them"
+msgstr "Μεταφόρτωση στην αποθήκευση cloud και προσθήκη συνδέσμων"
+
+msgid "Account of the current folder"
+msgstr "Λογαριασμός του τρέχοντος φακέλου"
+
+msgid "Above the messages"
+msgstr "Πάνω από τα μηνύματα"
+
+msgid "Below the messages"
+msgstr "Κάτω από τα μηνύματα"
+
+msgid "Follows the reading order"
+msgstr "Ακολουθεί τη σειρά ανάγνωσης"
+
+msgid "System language — {language}"
+msgstr "Γλώσσα συστήματος — {language}"
+
+msgid "Add a word"
+msgstr "Προσθήκη λέξης"
+
+msgid "Could not install the extension"
+msgstr "Δεν ήταν δυνατή η εγκατάσταση της επέκτασης"
+
+msgid "Could not remove the extension"
+msgstr "Δεν ήταν δυνατή η αφαίρεση της επέκτασης"
+
+msgid "Could not restart Files"
+msgstr "Δεν ήταν δυνατή η επανεκκίνηση των Αρχείων"
+
+msgid "Forget this word"
+msgstr "Να ξεχαστεί αυτή η λέξη"
+
+msgid "Print Message"
+msgstr "Εκτύπωση μηνύματος"
+
+msgid "Save as PDF"
+msgstr "Αποθήκευση ως PDF"
+
+msgid "Could not save the PDF: {error}"
+msgstr "Δεν ήταν δυνατή η αποθήκευση του PDF: {error}"
+
+msgid "Print…"
+msgstr "Εκτύπωση…"
+
+msgid "Save as PDF…"
+msgstr "Αποθήκευση ως PDF…"
+
+msgid "Send as Attachment Instead"
+msgstr "Αποστολή ως συνημμένο αντί για σύνδεσμο"
+
+msgid "Small"
+msgstr "Μικρό"
+
+msgid "Medium"
+msgstr "Μεσαίο"
+
+msgid "Large"
+msgstr "Μεγάλο"
+
+msgid "Original Size"
+msgstr "Αρχικό μέγεθος"
+
+msgid "Will be recompressed to the size shown when this is sent"
+msgstr "Θα επανασυμπιεστεί στο εμφανιζόμενο μέγεθος κατά την αποστολή"
+
+msgid "Recompress to This Size on Send"
+msgstr "Επανασυμπίεση σε αυτό το μέγεθος κατά την αποστολή"
+
+msgid "Paste with Formatting"
+msgstr "Επικόλληση με μορφοποίηση"
+
+msgid "Paste as Plain Text"
+msgstr "Επικόλληση ως απλό κείμενο"
+
+msgid "Bold"
+msgstr "Έντονα"
+
+msgid "Italic"
+msgstr "Πλάγια"
+
+msgid "Underline"
+msgstr "Υπογράμμιση"
+
+msgid "Strikethrough"
+msgstr "Διαγράμμιση"
+
+msgid "Bulleted list"
+msgstr "Λίστα με κουκκίδες"
+
+msgid "Numbered list"
+msgstr "Αριθμημένη λίστα"
+
+#. Adwaita has no blockquote glyph; the indent icon reads as "quote".
+msgid "Quote"
+msgstr "Παράθεση"
+
+#. `LINK` is a sentinel command (handled specially); the icon is real.
+msgid "Insert link"
+msgstr "Εισαγωγή συνδέσμου"
+
+msgid "Clear formatting"
+msgstr "Εκκαθάριση μορφοποίησης"
+
+msgid "Insert Link"
+msgstr "Εισαγωγή συνδέσμου"
+
+msgid "Insert"
+msgstr "Εισαγωγή"
+
+msgid "Folder"
+msgstr "Φάκελος"
+
+msgid "Add account"
+msgstr "Προσθήκη λογαριασμού"
+
+msgid "Add first account"
+msgstr "Προσθήκη πρώτου λογαριασμού"
+
+msgid "No accounts yet"
+msgstr "Δεν υπάρχουν ακόμη λογαριασμοί"
+
+msgid "Outbox"
+msgstr "Εξερχόμενα"
+
+msgid "Mark Inbox as Read"
+msgstr "Σήμανση Εισερχομένων ως αναγνωσμένων"
+
+msgid "Refresh"
+msgstr "Ανανέωση"
+
+msgid "New Folder…"
+msgstr "Νέος φάκελος…"
+
+msgid "Account Settings…"
+msgstr "Ρυθμίσεις λογαριασμού…"
+
+msgid "Remove Account…"
+msgstr "Αφαίρεση λογαριασμού…"
+
+msgid "Show or hide sub-folders"
+msgstr "Εμφάνιση ή απόκρυψη υποφακέλων"
+
+msgid "Folders"
+msgstr "Φάκελοι"
+
+msgid "Folders ({len})"
+msgstr "Φάκελοι ({len})"
+
+msgid "Add Folder"
+msgstr "Προσθήκη φακέλου"
+
+msgid "Show each inbox"
+msgstr "Εμφάνιση κάθε φακέλου εισερχομένων"
+
+msgid "Show each account"
+msgstr "Εμφάνιση κάθε λογαριασμού"
+
+msgid "Show each folder"
+msgstr "Εμφάνιση κάθε φακέλου"
+
+msgid "Show each tag"
+msgstr "Εμφάνιση κάθε ετικέτας"
+
+msgid "Long-press to expand or collapse"
+msgstr "Παρατεταμένο πάτημα για ανάπτυξη ή σύμπτυξη"
+
+msgid "Apply Filters"
+msgstr "Εφαρμογή φίλτρων"
+
+msgid "Edit Filter…"
+msgstr "Επεξεργασία φίλτρου…"
+
+msgid "Rename Folder…"
+msgstr "Μετονομασία φακέλου…"
+
+msgid "Delete Folder…"
+msgstr "Διαγραφή φακέλου…"
+
+msgid "Empty Trash…"
+msgstr "Άδειασμα κάδου…"
+
+msgid "Empty Junk…"
+msgstr "Άδειασμα ανεπιθύμητων…"
+
+msgid "Edit Tag…"
+msgstr "Επεξεργασία ετικέτας…"
+
+msgid "Welcome to Hylki"
+msgstr "Καλώς ορίσατε στο Hylki"
+
+msgid ""
+"A clean, fast home for your mail.\n"
+"Let's set things up — it takes about a minute."
+msgstr ""
+"Ένα καθαρό, γρήγορο σπίτι για την αλληλογραφία σας.\n"
+"Ας το ρυθμίσουμε — χρειάζεται περίπου ένα λεπτό."
+
+msgid ""
+"Choosing another language restarts Hylki: it closes for a moment and this "
+"wizard comes back in that language."
+msgstr ""
+"Η επιλογή άλλης γλώσσας επανεκκινεί το Hylki: κλείνει για λίγο και αυτός ο "
+"οδηγός επιστρέφει σε εκείνη τη γλώσσα."
+
+msgid "Get Started"
+msgstr "Έναρξη"
+
+msgid "Add your email account"
+msgstr "Προσθέστε τον λογαριασμό email σας"
+
+msgid "Found in GNOME Online Accounts"
+msgstr "Βρέθηκε στους Διαδικτυακούς λογαριασμούς GNOME"
+
+msgid "Your name"
+msgstr "Το όνομά σας"
+
+msgid "Server details"
+msgstr "Στοιχεία διακομιστή"
+
+msgid "Filled in for known providers"
+msgstr "Συμπληρώνονται για γνωστούς παρόχους"
+
+msgid "IMAP server"
+msgstr "Διακομιστής IMAP"
+
+msgid "IMAP port"
+msgstr "Θύρα IMAP"
+
+msgid "Test & Add"
+msgstr "Δοκιμή και προσθήκη"
+
+msgid ""
+"Google and Microsoft accounts sign in through GNOME Settings → Online "
+"Accounts, then appear above."
+msgstr ""
+"Οι λογαριασμοί Google και Microsoft συνδέονται μέσω Ρυθμίσεις GNOME → "
+"Διαδικτυακοί λογαριασμοί και έπειτα εμφανίζονται παραπάνω."
+
+msgid "Scan Again"
+msgstr "Νέα σάρωση"
+
+msgid "Privacy, your way"
+msgstr "Απόρρητο όπως το θέλετε"
+
+msgid ""
+"Hylki sends no telemetry, ever. These control what leaves your machine while "
+"you read."
+msgstr ""
+"Το Hylki δεν στέλνει ποτέ τηλεμετρία. Αυτές οι επιλογές ελέγχουν τι φεύγει "
+"από τη συσκευή σας ενώ διαβάζετε."
+
+msgid "Block remote images"
+msgstr "Αποκλεισμός απομακρυσμένων εικόνων"
+
+msgid "Stops senders tracking when and where you open mail"
+msgstr ""
+"Εμποδίζει τους αποστολείς να παρακολουθούν πότε και πού ανοίγετε μηνύματα"
+
+msgid "Fetch Gravatar portraits"
+msgstr "Ανάκτηση εικόνων Gravatar"
+
+msgid "Asks gravatar.com about each sender's address"
+msgstr "Ρωτά το gravatar.com για τη διεύθυνση κάθε αποστολέα"
+
+msgid "Fetch sender logos"
+msgstr "Ανάκτηση λογοτύπων αποστολέων"
+
+msgid "Looks up company icons for the message list"
+msgstr "Αναζητά εταιρικά εικονίδια για τη λίστα μηνυμάτων"
+
+msgid "Show message content in notifications"
+msgstr "Εμφάνιση περιεχομένου μηνυμάτων στις ειδοποιήσεις"
+
+msgid "Off keeps senders and subjects off the lock screen"
+msgstr ""
+"Η απενεργοποίηση αποκρύπτει αποστολείς και θέματα από την οθόνη κλειδώματος"
+
+msgid "Make it yours"
+msgstr "Κάντε το δικό σας"
+
+msgid "A few popular choices — everything can be changed later in Settings."
+msgstr ""
+"Μερικές δημοφιλείς επιλογές — όλα μπορούν να αλλάξουν αργότερα στις "
+"Ρυθμίσεις."
+
+msgid "Message text shown under each subject"
+msgstr "Κείμενο μηνύματος που εμφανίζεται κάτω από κάθε θέμα"
+
+msgid "Colourful initials beside each message"
+msgstr "Πολύχρωμα αρχικά δίπλα σε κάθε μήνυμα"
+
+msgid "Conversation view"
+msgstr "Προβολή συζητήσεων"
+
+msgid "Group messages into threads"
+msgstr "Ομαδοποίηση μηνυμάτων σε νήματα"
+
+#. The app icon: the whole set as one sideways-scrolling row on its
+#. own card, the default ringed.
+msgid "Pick your app icon"
+msgstr "Επιλέξτε το εικονίδιο της εφαρμογής σας"
+
+msgid "You're all set"
+msgstr "Είστε έτοιμοι"
+
+msgid ""
+"Enjoy! If you encounter an issue or have a feature request,\n"
+"please open an issue on our <a href=\"{url}\">Github</a>."
+msgstr ""
+"Καλή χρήση! Αν αντιμετωπίσετε κάποιο πρόβλημα ή έχετε πρόταση λειτουργίας,\n"
+"ανοίξτε ένα ζήτημα στο <a href=\"{url}\">Github</a> μας."
+
+msgid "Start Reading"
+msgstr "Έναρξη ανάγνωσης"
+
+#. Fixed footer: Continue lives with the dots so it never scrolls
+#. away with a tall page. Hidden on the hero and final pages, which
+#. carry their own calls to action.
+msgid "Continue"
+msgstr "Συνέχεια"
+
+msgid "Enter your email address and password first."
+msgstr "Εισαγάγετε πρώτα τη διεύθυνση email και τον κωδικό πρόσβασής σας."
+
+msgid "Checking the connection…"
+msgstr "Έλεγχος σύνδεσης…"
+
+msgid "✓ {email} — added"
+msgstr "✓ {email} — προστέθηκε"
+
+msgid "✓ {email} — connected and added"
+msgstr "✓ {email} — συνδέθηκε και προστέθηκε"
+
+msgid "{email} — mail server: {e}"
+msgstr "{email} — διακομιστής αλληλογραφίας: {e}"
+
+msgid "{email} — sending (SMTP): {e}"
+msgstr "{email} — αποστολή (SMTP): {e}"
+
+msgid "Your mail provider confirmed this really came from {from}."
+msgstr ""
+"Ο πάροχος αλληλογραφίας σας επιβεβαίωσε ότι αυτό προήλθε πράγματι από {from}."
+
+msgid ""
+"This message failed the checks that prove it came from {from}. Treat it as a "
+"forgery."
+msgstr ""
+"Αυτό το μήνυμα απέτυχε στους ελέγχους που αποδεικνύουν ότι προήλθε από "
+"{from}. Αντιμετωπίστε το ως πλαστό."
+
+msgid "This message carries a valid signature from {from}."
+msgstr "Αυτό το μήνυμα φέρει έγκυρη υπογραφή από {from}."
+
+msgid ""
+"This message couldn't be confirmed as coming from {from}, and the checks "
+"that ran on it failed."
+msgstr ""
+"Δεν ήταν δυνατό να επιβεβαιωθεί ότι αυτό το μήνυμα προήλθε από {from} και οι "
+"έλεγχοι που εκτελέστηκαν απέτυχαν."
+
+msgid "Your mail provider didn't report any sender checks for this message."
+msgstr ""
+"Ο πάροχος αλληλογραφίας σας δεν ανέφερε ελέγχους αποστολέα για αυτό το "
+"μήνυμα."
+
+msgid "Nothing here proves this came from {from} — or that it didn't."
+msgstr ""
+"Τίποτα εδώ δεν αποδεικνύει ότι αυτό προήλθε από {from} — ούτε ότι δεν "
+"προήλθε."
+
+msgid "{name}: passed"
+msgstr "{name}: επιτυχία"
+
+msgid "{name}: FAILED"
+msgstr "{name}: ΑΠΟΤΥΧΙΑ"
+
+msgid "{name}: inconclusive"
+msgstr "{name}: ασαφές αποτέλεσμα"
+
+msgid "DMARC (is the From: address genuine)"
+msgstr "DMARC (είναι γνήσια η διεύθυνση Από:)"
+
+msgid "DKIM (signature)"
+msgstr "DKIM (υπογραφή)"
+
+msgid "SPF (sending server)"
+msgstr "SPF (διακομιστής αποστολής)"
+
+msgid "Signed by: {d}"
+msgstr "Υπογράφηκε από: {d}"
+
+msgid "Checked by: {who}"
+msgstr "Ελέγχθηκε από: {who}"
+
+msgid "From: {from}"
+msgstr "Από: {from}"
+
+msgid "Replies would go to {reply}, not {from}"
+msgstr "Οι απαντήσεις θα πήγαιναν στη διεύθυνση {reply}, όχι στη {from}"
+
+msgid "Bounces would go to {rp}"
+msgstr "Οι επιστροφές θα πήγαιναν στη διεύθυνση {rp}"
+
+msgid "The sender's name says \"{claimed}\" but the address is {from}"
+msgstr ""
+"Το όνομα του αποστολέα αναφέρει «{claimed}», αλλά η διεύθυνση είναι {from}"
+
+msgid "the server's reply could not be read (it began: {reply})"
+msgstr ""
+
+msgid "runtime error: {e}"
+msgstr "σφάλμα χρόνου εκτέλεσης: {e}"
+
+msgid "Syncing…"
+msgstr "Συγχρονισμός…"
+
+msgid "Could not load {path}: {e}"
+msgstr "Δεν ήταν δυνατή η φόρτωση του {path}: {e}"
+
+msgid "Could not load message: {e}"
+msgstr "Δεν ήταν δυνατή η φόρτωση του μηνύματος: {e}"
+
+msgid "Could not load conversation: {e}"
+msgstr "Δεν ήταν δυνατή η φόρτωση της συζήτησης: {e}"
+
+msgid "Could not load source: {e}"
+msgstr "Δεν ήταν δυνατή η φόρτωση του πηγαίου κώδικα: {e}"
+
+msgid "Could not load attachments: {e}"
+msgstr "Δεν ήταν δυνατή η φόρτωση των συνημμένων: {e}"
+
+msgid "Could not update message: {e}"
+msgstr "Δεν ήταν δυνατή η ενημέρωση του μηνύματος: {e}"
+
+msgid "Could not flag message: {e}"
+msgstr "Δεν ήταν δυνατή η προσθήκη σημαίας στο μήνυμα: {e}"
+
+msgid ""
+"This server does not store tags, so Hylki keeps them on this computer only"
+msgstr ""
+"Αυτός ο διακομιστής δεν αποθηκεύει ετικέτες, επομένως το Hylki τις διατηρεί "
+"μόνο σε αυτόν τον υπολογιστή"
+
+msgid "Could not tag message: {e}"
+msgstr "Δεν ήταν δυνατή η προσθήκη ετικέτας στο μήνυμα: {e}"
+
+msgid "Could not mark folder read: {e}"
+msgstr "Δεν ήταν δυνατή η σήμανση του φακέλου ως αναγνωσμένου: {e}"
+
+msgid "Could not mark as spam: {e}"
+msgstr "Δεν ήταν δυνατή η σήμανση ως ανεπιθύμητου: {e}"
+
+msgid "Could not mark as not spam: {e}"
+msgstr "Δεν ήταν δυνατή η σήμανση ως επιθυμητού: {e}"
+
+msgid "Could not mark {len} messages as not spam: {e}"
+msgstr "Δεν ήταν δυνατή η σήμανση {len} μηνυμάτων ως επιθυμητών: {e}"
+
+msgid "Could not move message: {e}"
+msgstr "Δεν ήταν δυνατή η μετακίνηση του μηνύματος: {e}"
+
+msgid "Could not move {len} messages: {e}"
+msgstr "Δεν ήταν δυνατή η μετακίνηση {len} μηνυμάτων: {e}"
+
+msgid "Undo failed: {e}"
+msgstr "Η αναίρεση απέτυχε: {e}"
+
+msgid "Could not delete permanently: {e}"
+msgstr "Δεν ήταν δυνατή η οριστική διαγραφή: {e}"
+
+msgid "Could not empty the folder: {e}"
+msgstr "Δεν ήταν δυνατό το άδειασμα του φακέλου: {e}"
+
+msgid "Could not create folder: {e}"
+msgstr "Δεν ήταν δυνατή η δημιουργία φακέλου: {e}"
+
+msgid "Could not move folder: {e}"
+msgstr "Δεν ήταν δυνατή η μετακίνηση φακέλου: {e}"
+
+msgid "Could not delete folder: {e}"
+msgstr "Δεν ήταν δυνατή η διαγραφή φακέλου: {e}"
+
+msgid "Sending…"
+msgstr "Αποστολή…"
+
+msgid "Message sent, but saving to Sent failed: {e}"
+msgstr "Το μήνυμα στάλθηκε, αλλά η αποθήκευση στα Απεσταλμένα απέτυχε: {e}"
+
+msgid ""
+"Send failed: {e}. The message is in the Outbox and will be sent when the "
+"connection is back."
+msgstr ""
+"Η αποστολή απέτυχε: {e}. Το μήνυμα βρίσκεται στα Εξερχόμενα και θα σταλεί "
+"όταν αποκατασταθεί η σύνδεση."
+
+msgid "Send failed: {e}"
+msgstr "Η αποστολή απέτυχε: {e}"
+
+msgid "Saving draft…"
+msgstr "Αποθήκευση προχείρου…"
+
+msgid "Could not save draft: {e}"
+msgstr "Δεν ήταν δυνατή η αποθήκευση του προχείρου: {e}"
+
+msgid "Connecting to {host}…"
+msgstr "Σύνδεση στο {host}…"
+
+msgid "Could not list folders: {e}"
+msgstr "Δεν ήταν δυνατή η εμφάνιση των φακέλων: {e}"
+
+msgid "Connection failed: {e}"
+msgstr "Η σύνδεση απέτυχε: {e}"
+
+msgid "Downloading attachments… {n} remaining"
+msgid_plural "Downloading attachments… {n} remaining"
+msgstr[0] "Λήψη συνημμένων… απομένει {n}"
+msgstr[1] "Λήψη συνημμένων… απομένουν {n}"
+
+msgid "“{subject}” will be sent {when}"
+msgstr "Το «{subject}» θα σταλεί {when}"
+
+msgid "Could not schedule the message: there is no local store to keep it in."
+msgstr ""
+"Δεν ήταν δυνατός ο προγραμματισμός του μηνύματος: δεν υπάρχει τοπικός χώρος "
+"αποθήκευσης για τη διατήρησή του."
+
+msgid "Still could not send “{subject}”: {e}"
+msgstr "Εξακολουθεί να μην είναι δυνατή η αποστολή του «{subject}»: {e}"
+
+msgid ""
+"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
+msgstr ""
+"δεν υπάρχει δικό σας κλειδί OpenPGP για τη διεύθυνση {addr}· δημιουργήστε "
+"ένα στις Ρυθμίσεις, OpenPGP"
+
+msgid "no OpenPGP key for {addr}"
+msgstr "δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}"
+
+msgid "Could not fetch mail: {e}"
+msgstr "Δεν ήταν δυνατή η ανάκτηση αλληλογραφίας: {e}"
+
+msgid "Could not delete message: {e}"
+msgstr "Δεν ήταν δυνατή η διαγραφή του μηνύματος: {e}"
+
+msgid "POP3 accounts don't support folders"
+msgstr "Οι λογαριασμοί POP3 δεν υποστηρίζουν φακέλους"
+
+msgid "Inbox"
+msgstr "Εισερχόμενα"
+
+msgid "Could not move messages: {e}"
+msgstr "Δεν ήταν δυνατή η μετακίνηση μηνυμάτων: {e}"
+
+msgid "Could not rename folder: unknown folder"
+msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"
+
+msgid "Could not rename folder: {e}"
+msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: {e}"
+
+msgid "Could not delete folder: unknown folder"
+msgstr "Δεν ήταν δυνατή η διαγραφή φακέλου: άγνωστος φάκελος"
+
+msgid "Email Client"
+msgstr "Πρόγραμμα-πελάτης email"
+
+msgid "A clean, fast GNOME-native email client"
+msgstr "Μια καθαρή, γρήγορη εφαρμογή email, εγγενή στο GNOME"
+
+msgid "Email;Mail;IMAP;"
+msgstr "Email;Αλληλογραφία;IMAP;"
+
+msgid "Private, GNOME-native email client"
+msgstr "Ιδιωτική εφαρμογή email, εγγενή στο GNOME"
+
+msgid ""
+"Hylki is a desktop email client for Wayland that feels at home in GNOME. It "
+"talks IMAP and SMTP directly, keeps your mail and credentials on your "
+"machine, and blocks trackers by default — no telemetry, no analytics."
+msgstr ""
+"Το Hylki είναι μια εφαρμογή email για Wayland που ταιριάζει απόλυτα στο "
+"GNOME. Επικοινωνεί απευθείας μέσω IMAP και SMTP, διατηρεί την αλληλογραφία "
+"και τα διαπιστευτήριά σας στη συσκευή σας και αποκλείει τους ιχνηλάτες από "
+"προεπιλογή — χωρίς τηλεμετρία και αναλυτικά δεδομένα."
+
+msgid "Features:"
+msgstr "Δυνατότητες:"
+
+msgid "Multiple IMAP and POP3 accounts, with a unified Inboxes view"
+msgstr "Πολλοί λογαριασμοί IMAP και POP3, με ενοποιημένη προβολή Εισερχομένων"
+
+msgid ""
+"Google, Microsoft and custom OAuth 2.0 sign-in, plus GNOME Online Accounts "
+"import"
+msgstr ""
+"Σύνδεση μέσω Google, Microsoft και προσαρμοσμένου OAuth 2.0, καθώς και "
+"εισαγωγή από Διαδικτυακούς λογαριασμούς GNOME"
+
+msgid "Whole-mailbox sync and search with infinite scroll"
+msgstr ""
+"Συγχρονισμός και αναζήτηση ολόκληρου γραμματοκιβωτίου με ατέρμονη κύλιση"
+
+msgid "Deletions and moves made on other devices sync back automatically"
+msgstr ""
+"Οι διαγραφές και οι μετακινήσεις που γίνονται σε άλλες συσκευές "
+"συγχρονίζονται αυτόματα"
+
+msgid "Conversation threading, compose, reply, forward, and editable drafts"
+msgstr ""
+"Νηματικές συζητήσεις, σύνταξη, απάντηση, προώθηση και επεξεργάσιμα πρόχειρα"
+
+msgid "Remote content blocked by default; per-message light or dark reading"
+msgstr ""
+"Το απομακρυσμένο περιεχόμενο αποκλείεται από προεπιλογή· φωτεινή ή σκοτεινή "
+"ανάγνωση ανά μήνυμα"
+
+msgid "Passwords and OAuth tokens kept in the system keyring"
+msgstr ""
+"Οι κωδικοί πρόσβασης και τα διακριτικά OAuth διατηρούνται στην κλειδοθήκη "
+"συστήματος"
+
+msgid "The unified inbox in light mode"
+msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή λειτουργία"
+
+msgid "Hyprlab"
+msgstr "Hyprlab"
+
+#~ msgid "Changelog"
+#~ msgstr "Αρχείο αλλαγών"
+
+#~ msgid "Full version history"
+#~ msgstr "Πλήρες ιστορικό εκδόσεων"
+
+#~ msgid "Contact — hyprlab@proton.me"
+#~ msgstr "Επικοινωνία — hyprlab@proton.me"
