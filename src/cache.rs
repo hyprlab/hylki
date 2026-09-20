@@ -77,6 +77,8 @@ CREATE TABLE IF NOT EXISTS sender_checks (
     summary     TEXT NOT NULL,
     findings    TEXT NOT NULL,
     pgp         TEXT NOT NULL DEFAULT '',
+    unsubscribe TEXT NOT NULL DEFAULT '',
+    invite      TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (account_id, folder_path, uid)
 );
 CREATE TABLE IF NOT EXISTS attachments (
@@ -162,14 +164,26 @@ CREATE INDEX IF NOT EXISTS attachment_meta_by_folder
 /// holding nothing when several held files. Messages marked as scanned with
 /// nothing to show are re-queued once, to be asked about again by the scan that
 /// now isolates the one message at fault.
-const SCHEMA_VERSION: i64 = 15;
+/// v19: the message is also read for a meeting invitation (its
+/// `text/calendar` part, #223), which rides with the sender check — and a
+/// calendar part now counts as an attachment, which the stored attachment
+/// lists and "already scanned" marks predate.
+/// v18: the unsubscribe scan now reads the body as well as the headers
+/// (a footer link, a mailto link, "reply with UNSUBSCRIBE"), so a verdict
+/// stored by an earlier build knows only what its headers said.
+/// v17: the sender check now carries the message's unsubscribe handles
+/// (List-Unsubscribe, RFC 8058), read from the raw headers at the fetch. A
+/// check stored by an earlier build knows nothing of them, and a cached
+/// body is served without ever re-fetching — so the derived tables are
+/// dropped once and every message read again gains its Unsubscribe banner.
+const SCHEMA_VERSION: i64 = 19;
 
 /// The newest version whose change altered how bodies are *rendered* or how
 /// senders are checked. Opening a database older than this drops `bodies` and
 /// `sender_checks` so they rebuild; a later purely-additive bump must not,
 /// or every such release would cost users a full re-fetch of everything they
 /// had read. Raise this only when the rendering itself changes.
-const RENDER_VERSION: i64 = 13;
+const RENDER_VERSION: i64 = 19;
 
 /// A message's keywords as one column: the server's, then any tag kept
 /// locally for the same Message-ID (POP3, or an IMAP server that refuses
@@ -511,6 +525,10 @@ impl Cache {
         // message is fetched and verified afresh at its next open.
         let _ =
             conn.execute("ALTER TABLE sender_checks ADD COLUMN pgp TEXT NOT NULL DEFAULT ''", []);
+        // And the meeting invitation (#223) beside it, as JSON; empty for a
+        // message that carries none.
+        let _ = conn
+            .execute("ALTER TABLE sender_checks ADD COLUMN invite TEXT NOT NULL DEFAULT ''", []);
         for table in ["bodies", "attachments", "attachments_checked"] {
             let _ = conn.execute(
                 &format!(
@@ -550,6 +568,17 @@ impl Cache {
         // Re-queue the messages a batched parse failure wrote off. Messages
         // that really do hold nothing are simply asked about once more and
         // marked again, so this costs a rescan and settles.
+        // A message's `text/calendar` part is an attachment from v19 on, so
+        // every list drawn up before that is one part short and every
+        // "nothing to see here" mark was made under the old rule. Forget the
+        // marks rather than the lists: the scan re-describes each message
+        // from its BODYSTRUCTURE (no bytes downloaded) and replaces the list
+        // it finds, so nothing is lost while it works back.
+        if version < 19 {
+            let _ = conn.execute_batch(
+                "DELETE FROM attachment_scan; DELETE FROM attachments_checked;",
+            );
+        }
         if (14..15).contains(&version) {
             let _ = conn.execute(
                 "DELETE FROM attachment_scan WHERE NOT EXISTS (\
@@ -1286,7 +1315,7 @@ impl Cache {
     ) -> Option<crate::models::SenderCheck> {
         self.conn
             .query_row(
-                "SELECT trust, summary, findings, pgp FROM sender_checks \
+                "SELECT trust, summary, findings, pgp, unsubscribe, invite FROM sender_checks \
                  WHERE account_id = ?1 AND folder_path = ?2 AND uid = ?3",
                 params![account_id, folder_path, uid],
                 |row| {
@@ -1302,6 +1331,8 @@ impl Cache {
                         // The stored verdict is a marker only (see the
                         // cleanup in `open`): a served verdict must be fresh.
                         pgp: None,
+                        unsubscribe: serde_json::from_str(&row.get::<_, String>(4)?).ok(),
+                        invite: serde_json::from_str(&row.get::<_, String>(5)?).ok(),
                     })
                 },
             )
@@ -1317,8 +1348,8 @@ impl Cache {
     ) {
         if let Err(e) = self.conn.execute(
             "INSERT OR REPLACE INTO sender_checks \
-             (account_id, folder_path, uid, trust, summary, findings, pgp) \
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+             (account_id, folder_path, uid, trust, summary, findings, pgp, unsubscribe, invite) \
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
             params![
                 account_id,
                 folder_path,
@@ -1330,6 +1361,16 @@ impl Cache {
                     .pgp
                     .as_ref()
                     .and_then(|p| serde_json::to_string(p).ok())
+                    .unwrap_or_default(),
+                check
+                    .unsubscribe
+                    .as_ref()
+                    .and_then(|u| serde_json::to_string(u).ok())
+                    .unwrap_or_default(),
+                check
+                    .invite
+                    .as_ref()
+                    .and_then(|i| serde_json::to_string(i).ok())
                     .unwrap_or_default()
             ],
         ) {

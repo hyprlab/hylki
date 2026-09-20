@@ -4189,3 +4189,256 @@ mod files_prefs_tests {
         assert_eq!(prefs.limit_bytes(), 3_000_000);
     }
 }
+
+// ---- Focus Mode -----------------------------------------------------------
+
+/// Focus Mode: a distraction-free layout for reading, switched on from the
+/// main menu, Ctrl+Shift+F or Settings → Appearance. Each part can be left
+/// out, so it strips exactly what its owner finds distracting. Stored in
+/// focus.toml (like the toolbar layout) so the ordinary settings file and
+/// its long save call stay as they are.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct FocusMode {
+    /// The master switch: on, the parts below apply.
+    #[serde(default)]
+    pub enabled: bool,
+    /// Every button of the reading pane's toolbar folds into its ⋯ menu.
+    #[serde(default = "default_on")]
+    pub reader_toolbar: bool,
+    /// The message list's search, filters, count and sort fold into a ⋯
+    /// menu; only the sidebar toggle stays.
+    #[serde(default = "default_on")]
+    pub list_header: bool,
+    /// The sidebar's account sections are hidden.
+    #[serde(default = "default_on")]
+    pub hide_accounts: bool,
+    /// The sidebar's unified rows (Inboxes, Starred, …) fold up.
+    #[serde(default = "default_on")]
+    pub fold_unified: bool,
+    /// The message list's sender avatars are hidden.
+    #[serde(default = "default_on")]
+    pub hide_avatars: bool,
+    /// The message list shows at most one line of preview text.
+    #[serde(default = "default_on")]
+    pub one_preview_line: bool,
+    /// Every message opens in Reader View (the switch still works).
+    #[serde(default = "default_on")]
+    pub reader_view: bool,
+}
+
+impl Default for FocusMode {
+    fn default() -> Self {
+        FocusMode {
+            enabled: false,
+            reader_toolbar: true,
+            list_header: true,
+            hide_accounts: true,
+            fold_unified: true,
+            hide_avatars: true,
+            one_preview_line: true,
+            reader_view: true,
+        }
+    }
+}
+
+/// One switch of Focus Mode, for Settings rows that all set the same struct.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum FocusPart {
+    Enabled,
+    ReaderToolbar,
+    ListHeader,
+    HideAccounts,
+    FoldUnified,
+    HideAvatars,
+    OnePreviewLine,
+    ReaderView,
+}
+
+impl FocusMode {
+    pub fn get(&self, part: FocusPart) -> bool {
+        match part {
+            FocusPart::Enabled => self.enabled,
+            FocusPart::ReaderToolbar => self.reader_toolbar,
+            FocusPart::ListHeader => self.list_header,
+            FocusPart::HideAccounts => self.hide_accounts,
+            FocusPart::FoldUnified => self.fold_unified,
+            FocusPart::HideAvatars => self.hide_avatars,
+            FocusPart::OnePreviewLine => self.one_preview_line,
+            FocusPart::ReaderView => self.reader_view,
+        }
+    }
+
+    pub fn set(&mut self, part: FocusPart, on: bool) {
+        match part {
+            FocusPart::Enabled => self.enabled = on,
+            FocusPart::ReaderToolbar => self.reader_toolbar = on,
+            FocusPart::ListHeader => self.list_header = on,
+            FocusPart::HideAccounts => self.hide_accounts = on,
+            FocusPart::FoldUnified => self.fold_unified = on,
+            FocusPart::HideAvatars => self.hide_avatars = on,
+            FocusPart::OnePreviewLine => self.one_preview_line = on,
+            FocusPart::ReaderView => self.reader_view = on,
+        }
+    }
+
+    /// Whether `part` is in force: Focus Mode is on and the part is ticked.
+    pub fn active(&self, part: FocusPart) -> bool {
+        self.enabled && self.get(part)
+    }
+}
+
+/// A mailing list the user has unsubscribed from through the reader's
+/// button, so a later message from the same list can say so.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct UnsubscribedList {
+    /// [`crate::models::Unsubscribe::key`]: the List-Id, or the From address.
+    pub key: String,
+    /// Who the mail came from, for the record.
+    #[serde(default)]
+    pub name: String,
+    /// Unix seconds of the request.
+    #[serde(default)]
+    pub at: i64,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+struct UnsubscribedFile {
+    #[serde(default)]
+    lists: Vec<UnsubscribedList>,
+}
+
+fn unsubscribed_path() -> Option<PathBuf> {
+    Some(config_base()?.join("hylki").join("unsubscribed.toml"))
+}
+
+/// The lists left through the reader's Unsubscribe button, newest last.
+pub fn load_unsubscribed() -> Vec<UnsubscribedList> {
+    let Some(text) = unsubscribed_path().and_then(|p| std::fs::read_to_string(p).ok()) else {
+        return Vec::new();
+    };
+    toml::from_str::<UnsubscribedFile>(&text).unwrap_or_default().lists
+}
+
+pub fn save_unsubscribed(lists: &[UnsubscribedList]) {
+    let Some(path) = unsubscribed_path() else {
+        return;
+    };
+    if let Some(dir) = path.parent() {
+        let _ = std::fs::create_dir_all(dir);
+    }
+    let file = UnsubscribedFile { lists: lists.to_vec() };
+    if let Ok(toml) = toml::to_string_pretty(&file) {
+        let _ = std::fs::write(&path, toml);
+    }
+}
+
+/// How many answered invitations are remembered. An invitation is
+/// answered far more often than a mailing list is left, and the file is
+/// read at every start — the oldest fall off rather than growing it
+/// without end. A meeting whose answer has been forgotten simply offers
+/// the buttons again.
+const INVITE_ANSWER_LIMIT: usize = 500;
+
+/// A meeting invitation answered through the reader's buttons (#223), so
+/// the card says so when the message is opened again. The organizer's
+/// calendar is the record that counts; this is only what the reader shows.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InviteAnswer {
+    /// [`crate::models::Invite::key`]: the event's UID, plus the occurrence
+    /// when the answer was to one of a series.
+    pub key: String,
+    /// The `PARTSTAT` sent: ACCEPTED, TENTATIVE or DECLINED.
+    pub status: String,
+    /// Unix seconds of the answer.
+    #[serde(default)]
+    pub at: i64,
+    /// What the meeting was called, for the record.
+    #[serde(default)]
+    pub summary: String,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+struct InviteAnswerFile {
+    #[serde(default)]
+    answers: Vec<InviteAnswer>,
+}
+
+fn invites_path() -> Option<PathBuf> {
+    Some(config_base()?.join("hylki").join("invites.toml"))
+}
+
+/// The invitations answered through the reader, newest last.
+pub fn load_invite_answers() -> Vec<InviteAnswer> {
+    let Some(text) = invites_path().and_then(|p| std::fs::read_to_string(p).ok()) else {
+        return Vec::new();
+    };
+    toml::from_str::<InviteAnswerFile>(&text).unwrap_or_default().answers
+}
+
+pub fn save_invite_answers(answers: &[InviteAnswer]) {
+    let Some(path) = invites_path() else {
+        return;
+    };
+    if let Some(dir) = path.parent() {
+        let _ = std::fs::create_dir_all(dir);
+    }
+    let kept = answers.len().saturating_sub(INVITE_ANSWER_LIMIT);
+    let file = InviteAnswerFile { answers: answers[kept..].to_vec() };
+    if let Ok(toml) = toml::to_string_pretty(&file) {
+        let _ = std::fs::write(&path, toml);
+    }
+}
+
+fn focus_path() -> Option<PathBuf> {
+    Some(config_base()?.join("hylki").join("focus.toml"))
+}
+
+/// The saved Focus Mode settings, or the defaults (off) when there are none.
+pub fn load_focus_mode() -> FocusMode {
+    let Some(text) = focus_path().and_then(|p| std::fs::read_to_string(p).ok()) else {
+        return FocusMode::default();
+    };
+    toml::from_str::<FocusMode>(&text).unwrap_or_default()
+}
+
+pub fn save_focus_mode(focus: &FocusMode) {
+    let Some(path) = focus_path() else {
+        return;
+    };
+    if let Some(dir) = path.parent() {
+        let _ = std::fs::create_dir_all(dir);
+    }
+    if let Ok(toml) = toml::to_string_pretty(focus) {
+        let _ = std::fs::write(&path, toml);
+    }
+}
+
+#[cfg(test)]
+mod focus_tests {
+    use super::*;
+
+    #[test]
+    fn focus_defaults_off_with_every_part_ticked() {
+        let f = FocusMode::default();
+        assert!(!f.enabled);
+        assert!(f.reader_toolbar && f.list_header && f.hide_accounts && f.fold_unified);
+        assert!(f.hide_avatars && f.one_preview_line && f.reader_view);
+        // Off, no part is in force whatever its switch says.
+        assert!(!f.active(FocusPart::ReaderView));
+    }
+
+    #[test]
+    fn focus_round_trips_and_fills_missing_parts() {
+        let mut f = FocusMode::default();
+        f.set(FocusPart::Enabled, true);
+        f.set(FocusPart::HideAvatars, false);
+        let text = toml::to_string(&f).unwrap();
+        let back: FocusMode = toml::from_str(&text).unwrap();
+        assert_eq!(back, f);
+        assert!(back.active(FocusPart::ReaderToolbar));
+        assert!(!back.active(FocusPart::HideAvatars));
+        // A file from before a part existed reads it as ticked.
+        let partial: FocusMode = toml::from_str("enabled = true").unwrap();
+        assert!(partial.enabled && partial.fold_unified);
+    }
+}

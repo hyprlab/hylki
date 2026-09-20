@@ -31,6 +31,10 @@ msgstr "Σύμπτυξη πλευρικής στήλης"
 msgid "Search messages (Ctrl+F)"
 msgstr "Αναζήτηση μηνυμάτων (Ctrl+F)"
 
+#, fuzzy
+msgid "Search, filters and sort"
+msgstr "Αναζήτηση φίλτρων"
+
 msgid "Show only unread"
 msgstr "Εμφάνιση μόνο μη αναγνωσμένων"
 
@@ -106,6 +110,9 @@ msgstr "Ρυθμίσεις"
 msgid "Show Accounts"
 msgstr "Εμφάνιση λογαριασμών"
 
+msgid "Focus Mode"
+msgstr ""
+
 msgid "Print Preview…"
 msgstr "Προεπισκόπηση εκτύπωσης…"
 
@@ -162,6 +169,12 @@ msgstr "Υπάρχει ήδη στις επαφές ({name})"
 
 msgid "Could not add contact: {e}"
 msgstr "Αδυναμία προσθήκης επαφής: {e}"
+
+msgid "Unsubscribed from {name}."
+msgstr ""
+
+msgid "The list's unsubscribe page is open in your browser."
+msgstr ""
 
 msgid "The language applies the next time Hylki starts."
 msgstr "Η γλώσσα θα εφαρμοστεί την επόμενη φορά που θα εκκινηθεί το Hylki."
@@ -322,6 +335,13 @@ msgstr "Εύρεση στο μήνυμα"
 
 msgid "Print Preview"
 msgstr "Προεπισκόπηση εκτύπωσης"
+
+#, fuzzy
+msgid "Search Messages…"
+msgstr "Εκτύπωση μηνύματος…"
+
+msgid "Sort"
+msgstr "Ταξινόμηση"
 
 msgid "Message Source"
 msgstr "Πηγαίος κώδικας μηνύματος"
@@ -668,6 +688,73 @@ msgstr[1] ""
 msgid "Filters Applied"
 msgstr "Τα φίλτρα εφαρμόστηκαν"
 
+#, fuzzy
+msgid "This message carries no calendar file to open."
+msgstr "Αυτό το μήνυμα φέρει έγκυρη υπογραφή από {from}."
+
+msgid "This invitation names no organiser to answer."
+msgstr ""
+
+msgid "Accepted: {subject}"
+msgstr ""
+
+msgid "Tentative: {subject}"
+msgstr ""
+
+msgid "Declined: {subject}"
+msgstr ""
+
+msgid "{name} has accepted this invitation."
+msgstr ""
+
+msgid "{name} has tentatively accepted this invitation."
+msgstr ""
+
+msgid "{name} has declined this invitation."
+msgstr ""
+
+msgid "Your answer has been sent: accepted."
+msgstr ""
+
+msgid "Your answer has been sent: maybe."
+msgstr ""
+
+msgid "Your answer has been sent: declined."
+msgstr ""
+
+msgid "Unsubscribe from {name}?"
+msgstr ""
+
+msgid ""
+"Hylki will ask the list to stop sending you mail. A list can take a few days "
+"to act on the request."
+msgstr ""
+
+msgid ""
+"An unsubscribe request will be sent to {addr} from {from}. A list can take a "
+"few days to act on it."
+msgstr ""
+
+msgid ""
+"This list offers no direct way to unsubscribe. Its unsubscribe page will "
+"open in your browser."
+msgstr ""
+
+msgid ""
+"This message carries no unsubscribe header, so Hylki is going by the link in "
+"it."
+msgstr ""
+
+msgid "Unsubscribe"
+msgstr ""
+
+msgid "the message offers no way to unsubscribe"
+msgstr ""
+
+#, fuzzy
+msgid "the list's mail address could not be read"
+msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
+
 msgid "Full Release Notes on GitHub"
 msgstr "Όλες οι σημειώσεις έκδοσης στο GitHub"
 
@@ -749,6 +836,9 @@ msgstr ""
 
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Εμφάνιση ή απόκρυψη λογαριασμών στην πλευρική στήλη"
+
+msgid "Focus Mode on or off"
+msgstr ""
 
 msgid "Console mode (when enabled in Settings)"
 msgstr "Λειτουργία κονσόλας (όταν είναι ενεργοποιημένη στις Ρυθμίσεις)"
@@ -1855,9 +1945,6 @@ msgstr "Ήχος και βίντεο"
 msgid "Other"
 msgstr "Άλλα"
 
-msgid "Sort"
-msgstr "Ταξινόμηση"
-
 msgid "Newest first"
 msgstr "Νεότερα πρώτα"
 
@@ -2604,6 +2691,116 @@ msgstr "Σήμανση όλων ως αναγνωσμένων"
 msgid "Mark All as Unread"
 msgstr "Σήμανση όλων ως μη αναγνωσμένων"
 
+#, fuzzy
+msgid "Unsubscribing…"
+msgstr "Συγχρονισμός…"
+
+msgid "Unsubscribing didn't work: {why}"
+msgstr ""
+
+#, fuzzy
+msgid "Try Again"
+msgstr "Νέα σάρωση"
+
+msgid "You unsubscribed from this list on {date}."
+msgstr ""
+
+#. A message that said so in its headers is from a list;
+#. one whose footer link gave it away only has a link.
+msgid "This message is from a mailing list."
+msgstr ""
+
+#, fuzzy
+msgid "This message has an unsubscribe link."
+msgstr "Αυτό το μήνυμα δεν έχει ελεγχθεί."
+
+msgid "Asks the list to stop sending you mail"
+msgstr ""
+
+msgid "Sends an unsubscribe request by email"
+msgstr ""
+
+#. Nothing but a web page on offer: the button says so.
+msgid "Unsubscribe…"
+msgstr ""
+
+#. Nothing but a web page on offer: the button says so.
+msgid "Opens the list's unsubscribe page in your browser"
+msgstr ""
+
+#, fuzzy
+msgid "Meeting"
+msgstr "Ρυθμίσεις"
+
+#, fuzzy
+msgid "Cancelled"
+msgstr "Ακύρωση"
+
+msgid "Updated invitation"
+msgstr ""
+
+#, fuzzy
+msgid "Invitation"
+msgstr "Συζητήσεις"
+
+#, fuzzy
+msgid "Organised by {name}"
+msgstr "Υπογεγραμμένο από {signer}"
+
+#, fuzzy
+msgid "{n} guest"
+msgid_plural "{n} guests"
+msgstr[0] "{n} μηνύματα"
+msgstr[1] "{n} μηνύματα"
+
+#, fuzzy
+msgid "This meeting has been called off."
+msgstr "Αυτό το μήνυμα δεν έχει ελεγχθεί."
+
+msgid "You accepted this invitation."
+msgstr ""
+
+msgid "You accepted this invitation on {date}."
+msgstr ""
+
+msgid "You answered maybe to this invitation."
+msgstr ""
+
+msgid "You answered maybe to this invitation on {date}."
+msgstr ""
+
+msgid "You declined this invitation."
+msgstr ""
+
+msgid "You declined this invitation on {date}."
+msgstr ""
+
+msgid "Accept"
+msgstr ""
+
+msgid "Tells the organiser you will be there"
+msgstr ""
+
+msgid "Maybe"
+msgstr ""
+
+msgid "Tells the organiser you might be there"
+msgstr ""
+
+#, fuzzy
+msgid "Decline"
+msgstr "Υπογράμμιση"
+
+msgid "Tells the organiser you will not be there"
+msgstr ""
+
+msgid "Opens the meeting in your calendar application"
+msgstr ""
+
+#, fuzzy
+msgid "Add to Calendar"
+msgstr "Προσθήκη στις επαφές"
+
 msgid "Fetch the sender's key"
 msgstr "Ανάκτηση του κλειδιού του αποστολέα"
 
@@ -2614,6 +2811,46 @@ msgid "A pass proves the address wasn't forged — not that the message is safe.
 msgstr ""
 "Η επιτυχής επαλήθευση αποδεικνύει ότι η διεύθυνση δεν πλαστογραφήθηκε — όχι "
 "ότι το μήνυμα είναι ασφαλές."
+
+msgid "Repeats daily"
+msgstr ""
+
+#, fuzzy
+msgid "Repeats every {n} days"
+msgstr "οι σύνδεσμοι λήγουν μετά από {n} ημέρες"
+
+msgid "Repeats weekly"
+msgstr ""
+
+msgid "Repeats every {n} weeks"
+msgstr ""
+
+msgid "Repeats monthly"
+msgstr ""
+
+msgid "Repeats every {n} months"
+msgstr ""
+
+msgid "Repeats yearly"
+msgstr ""
+
+msgid "Repeats every {n} years"
+msgstr ""
+
+msgid "Repeats"
+msgstr ""
+
+msgid "Somebody answered this invitation."
+msgstr ""
+
+msgid "{name} accepted this invitation."
+msgstr ""
+
+msgid "{name} answered maybe to this invitation."
+msgstr ""
+
+msgid "{name} declined this invitation."
+msgstr ""
 
 msgid "Save…"
 msgstr "Αποθήκευση…"
@@ -3225,6 +3462,66 @@ msgstr ""
 
 msgid "Restore Defaults"
 msgstr "Επαναφορά προεπιλογών"
+
+msgid ""
+"A quieter layout for reading. The parts ticked below slide away when Focus "
+"Mode is on and come back when it is off. Also in the main menu, and "
+"Ctrl+Shift+F."
+msgstr ""
+
+msgid "Strip the parts below away for reading."
+msgstr ""
+
+#, fuzzy
+msgid "Fold the reading pane's toolbar"
+msgstr "Ακολουθεί τη σειρά ανάγνωσης"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr ""
+
+#, fuzzy
+msgid "Fold the message list's header"
+msgstr "Επιστροφή στη λίστα μηνυμάτων"
+
+msgid ""
+"Search, the unread and starred filters, the count and the sort order go into "
+"a ⋯ menu. Only the sidebar toggle stays."
+msgstr ""
+
+#, fuzzy
+msgid "Hide the accounts in the sidebar"
+msgstr "Εμφάνιση ή απόκρυψη λογαριασμών στην πλευρική στήλη"
+
+#, fuzzy
+msgid "Only the unified section stays."
+msgstr "Στην ενοποιημένη ενότητα"
+
+#, fuzzy
+msgid "Fold up the unified rows"
+msgstr "Στην ενοποιημένη ενότητα"
+
+msgid ""
+"Inboxes, Starred and the rest show folded. A click still opens one for the "
+"while; the full layout comes back as you left it."
+msgstr ""
+
+#, fuzzy
+msgid "Hide sender avatars"
+msgstr "Εικόνες αποστολέων"
+
+msgid "The message list's circles go, and the room they took comes back."
+msgstr ""
+
+msgid "One line of preview text"
+msgstr ""
+
+msgid "Rows show at most one line of a message's text."
+msgstr ""
+
+msgid ""
+"Every message opens in Reader View. The header's switch still changes the "
+"one on screen."
+msgstr ""
 
 msgid "Accounts in the sidebar"
 msgstr "Λογαριασμοί στην πλευρική στήλη"

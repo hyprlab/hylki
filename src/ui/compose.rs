@@ -2063,6 +2063,7 @@ impl Compose {
             outbox_origin: self.outbox_origin,
             sign: self.sign,
             encrypt: self.encrypt,
+            calendar: None,
             send_at: self.send_at,
         }
     }

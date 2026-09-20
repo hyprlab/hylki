@@ -1,9 +1,87 @@
 # Changelog
 
-## 1.35.5-beta.1 — 2026-09-19
+## 1.36.1-beta.1 — 2026-09-19
 
-Catch-up release: the beta channel is brought level with stable 1.35.4. No
-changes of its own — see the 1.35.4 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.36.0. No
+changes of its own — see the 1.36.0 section below for what is in it.
+
+## 1.36.0 — 2026-09-19
+
+Three features: meeting invitations are read and answered from the reader, a
+mailing list can be left with one button, and Focus Mode strips the window
+down to what is being read.
+
+- **Meeting invitations** (#223). A message carrying a `text/calendar` part
+  now shows the meeting at the top of its card rather than only the prose
+  the sender's calendar wrote for clients that cannot read the part: the
+  event's name, when it runs (in the reader's own clock and zone, with
+  "Repeats weekly" for a series), where it is, who organised it and how
+  many are invited — with **Accept**, **Maybe**, **Decline** and **Add to
+  Calendar** beneath. An answer is the reply RFC 5546 asks for: the same
+  event sent back with `METHOD:REPLY` and one attendee, the reader, with
+  their `PARTSTAT` — mailed to the organiser as the `text/calendar` half of
+  a two-part message, from the address that was invited (the alias, when it
+  was one). `SEQUENCE` and `RECURRENCE-ID` ride along, so an answer to a
+  moved meeting or to one occurrence of a series lands on the right thing.
+  No copy is filed in Sent; a send that fails queues in the Outbox like any
+  other. Answers are remembered in `invites.toml`, so the meeting opened
+  again says "You accepted this invitation on <date>" and marks the button;
+  a meeting answered elsewhere reads its standing off the invitation's own
+  attendee line. A cancellation says so and offers nothing to answer; a
+  reply from somebody else says who answered and how. "Add to Calendar"
+  hands the part, as it arrived, to whatever application opens calendar
+  files, through the attachment launcher chain.
+- **The calendar reader** (`src/invite.rs`) is the app's own: unfolding,
+  quoted parameters, text escapes, a `VALARM`'s fields kept out of the
+  event, times as UTC, as a wall time in a named zone, as a bare all-day
+  date or floating, and `DURATION` where there is no `DTEND`. A `TZID`
+  GLib knows goes through the zone database; one it does not — Exchange
+  writes Windows names like "W. Europe Standard Time" — falls back to the
+  `VTIMEZONE` in the same document, whose `STANDARD`/`DAYLIGHT` offsets and
+  yearly rules are evaluated for the event's own date. It runs with the
+  sender check, off the raw message at the fetch, so IMAP, Graph and POP3
+  all get it, and rides with it into the cache.
+- **A calendar part counts as an attachment** now, on both paths that
+  decide that (BODYSTRUCTURE and the parsed message), and an unnamed one is
+  named `.ics` for its type — so a meeting request shows a paperclip and
+  its file can be saved or opened like any other.
+  SCHEMA/RENDER_VERSION go to 19: checks stored by earlier builds know
+  nothing of invitations, and the attachment lists and "already scanned"
+  marks were made under the old rule.
+- **One-click Unsubscribe.** A message whose headers offer a way off its
+  list (RFC 2369 `List-Unsubscribe`, RFC 8058 `List-Unsubscribe-Post`)
+  carries a banner between its card header and body with an Unsubscribe
+  button. After a confirmation the app leaves the list itself, with no
+  browser wherever the list allows it: the RFC 8058 one-click POST first;
+  failing that, or for a `mailto:` handle, a short request mailed from the
+  account the message arrived in, as the alias it was addressed to, with no
+  Sent copy; only a list that offers nothing but a web page opens the
+  browser, and the button says so. Lists left are remembered in
+  `unsubscribed.toml` by `List-Id` (or the From address), so a later
+  message from the same list says when it was left and still offers the
+  button.
+- **The unsubscribe scan reads the body too**, for the great deal of bulk
+  mail that carries no header at all: an anchor whose text, URL or
+  surrounding sentence says unsubscribe (in any of eleven languages), an
+  image link with alt text, a `mailto:` link, and in plain text a URL on
+  the line of the word, "send an email to X" and "reply with UNSUBSCRIBE" —
+  the last two needing no browser either. A handle written without its
+  angle brackets, without a scheme, or with the header on a MIME part is
+  read as well. Proven over a corpus of 275 real messages (45 by header, 96
+  by body alone).
+- **Focus Mode** (Ctrl+Shift+F, the main menu, Settings → Appearance). The
+  reading pane's toolbar folds into its ⋯ menu, the message list's search,
+  filters, count and sort fold into a ⋯ of their own, the sidebar's
+  accounts go and its unified rows fold up, the list's avatars go and
+  previews drop to one line, and every message opens in Reader View. Each
+  part is a switch of its own; the set is saved in `focus.toml` and applied
+  over the ordinary settings, which it never changes. Everything slides and
+  fades over 320ms and comes back the same way.
+- **A change to how list rows look now reaches the rows already drawn.**
+  Avatars, logos, Gravatar, preview lines, the date style, the recipient
+  column and colouring were all kept by the page-growing shortcut in the
+  list's rebuild whenever the messages themselves had not changed; a
+  `rows_stale` flag now forces those rebuilds.
 
 ## 1.35.4 — 2026-09-19
 

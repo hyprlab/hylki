@@ -2,9 +2,19 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.35.5-beta.1
+## What's new in 1.36.1-beta.1
 
-Catch-up release: the beta channel is level with stable 1.35.4. Everything below applies.
+Catch-up release: the beta channel is level with stable 1.36.0. Everything below applies.
+
+## What's new in 1.36.0
+
+**Meeting invitations** (#223). A message that carries a meeting now shows it at the top of the card, instead of only the note the sender's calendar wrote for clients that cannot read the invitation: what the meeting is, when it runs in your own clock and time zone, where it is, who organised it and how many are invited — with **Accept**, **Maybe**, **Decline** and **Add to Calendar** underneath. Your answer goes to the organiser as a proper reply their calendar understands, sent from the address that was invited, so their guest list updates. Answer a meeting that has been moved, or one date out of a repeating series, and the answer lands on the right one. Reopen the message later and it says what you answered and when; a meeting you answered in another program shows that too. A cancelled meeting says so, and a reply from somebody else says who answered and how. **Add to Calendar** opens the invitation in your calendar application. The calendar file is also listed as an attachment now, so you can save it like any other. Reported by [@EmmanuelP](https://github.com/EmmanuelP).
+
+**Leave a mailing list with one button.** A message from a list now carries an Unsubscribe banner above it. Hylki leaves the list for you: for lists that support it, one request and it is done, with no browser and no web form; for others, a short email sent in your name from the address the list writes to. Only a list that offers nothing but a web page sends you to the browser, and the button says so first. Plenty of bulk mail carries no unsubscribe header at all, so the footer of the message is read too — the link, the address to write to, or the "reply with UNSUBSCRIBE" instruction. Lists you have left are remembered, so the next message from one says when you left instead of pretending nothing happened.
+
+**Focus Mode.** Press Ctrl+Shift+F (or pick it from the main menu) and the window gets out of the way: toolbars fold into their ⋯ menus, the sidebar's accounts and unified rows fold up, the list drops to one preview line without avatars, and every message opens in Reader View. Everything slides away and comes back the same way. Settings → Appearance lets you choose which parts it does, and Focus Mode never changes your ordinary settings.
+
+**Smaller fixes.** Changing how message rows look — avatars, logos, preview lines, the date style, the recipient column, colouring — now redraws the rows already on screen instead of waiting for the next folder.
 
 ## What's new in 1.35.4
 

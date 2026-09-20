@@ -713,7 +713,7 @@ fn discover(domain: &str) -> Vec<(u32, String)> {
 
 /// The browser-ish identity sites see: plenty answer a bare library
 /// identity with a challenge page instead of their icon.
-const USER_AGENT: &str = "Mozilla/5.0 (X11; Linux) Hylki";
+pub(crate) const USER_AGENT: &str = "Mozilla/5.0 (X11; Linux) Hylki";
 
 /// A page or manifest as text, with the URL it was finally served from (so
 /// relative links resolve against where redirects landed). Capped: the head

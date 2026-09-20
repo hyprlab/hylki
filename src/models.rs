@@ -380,6 +380,216 @@ impl PgpStatus {
     }
 }
 
+/// How a mailing list lets its readers leave (RFC 2369, RFC 8058): read out
+/// of the message's headers with the sender check, kept in the cache beside
+/// it, and drawn as the card's Unsubscribe banner. See [`crate::unsubscribe`].
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct Unsubscribe {
+    /// The https handle that takes a one-click POST (RFC 8058), when the
+    /// message promised one. The route the button prefers: no browser, no
+    /// page, no mail.
+    #[serde(default)]
+    pub one_click: Option<String>,
+    /// A `mailto:` handle: a short message to the list from the account the
+    /// message arrived in.
+    #[serde(default)]
+    pub mailto: Option<String>,
+    /// A "reply with UNSUBSCRIBE" instruction read out of the body: where
+    /// to answer and the word to put in the subject.
+    #[serde(default)]
+    pub reply: Option<ReplyRoute>,
+    /// A web page to visit — the browser, only when nothing better is on
+    /// offer or the better routes failed.
+    #[serde(default)]
+    pub web: Option<String>,
+    /// The list's own identifier (`List-Id`, lowercased, without the
+    /// brackets); empty when the message named none.
+    #[serde(default)]
+    pub list_id: String,
+    /// Whether the message's own headers said any of this. False means it
+    /// was read out of the body, which is a guess — a good one, but the
+    /// banner says "looks like" rather than stating it.
+    #[serde(default)]
+    pub in_headers: bool,
+}
+
+/// "Reply to this email with UNSUBSCRIBE in the subject": the oldest
+/// mechanism of all, and still in use by hand-run lists.
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct ReplyRoute {
+    /// The address to answer (Reply-To, else From).
+    pub to: String,
+    /// The word the list asked for, as the subject (UNSUBSCRIBE, STOP, …).
+    pub subject: String,
+}
+
+impl Unsubscribe {
+    /// Whether the button can unsubscribe without a browser.
+    pub fn direct(&self) -> bool {
+        self.one_click.is_some() || self.mailto.is_some() || self.reply.is_some()
+    }
+
+    /// What a list is remembered by once left: its List-Id, or failing
+    /// that the address its mail comes from.
+    pub fn key(&self, from_addr: &str) -> String {
+        if self.list_id.is_empty() {
+            format!("from:{}", from_addr.trim().to_ascii_lowercase())
+        } else {
+            format!("list:{}", self.list_id)
+        }
+    }
+}
+
+/// A meeting invitation read out of a message's `text/calendar` part
+/// (#223), kept beside the sender check and drawn as the card's invitation
+/// banner. See [`crate::invite`].
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct Invite {
+    /// The iTIP method, upper-cased: REQUEST (an invitation), REPLY
+    /// (someone answering one), CANCEL, PUBLISH, COUNTER.
+    #[serde(default)]
+    pub method: String,
+    /// The event's identity, the same in every message about it. What a
+    /// remembered answer is filed under.
+    #[serde(default)]
+    pub uid: String,
+    /// Which revision of the event this is: an organizer who moves a
+    /// meeting sends it again with a higher number.
+    #[serde(default)]
+    pub sequence: i64,
+    #[serde(default)]
+    pub summary: String,
+    #[serde(default)]
+    pub location: String,
+    /// Start and end in unix seconds; 0 when the event named no readable
+    /// time (the banner then leaves the line out rather than inventing one).
+    #[serde(default)]
+    pub start: i64,
+    #[serde(default)]
+    pub end: i64,
+    /// A whole-day event, which has a date but no time of day.
+    #[serde(default)]
+    pub all_day: bool,
+    /// `RECURRENCE-ID` as written, when the message is about one occurrence
+    /// of a series rather than the series itself. Carried into the reply.
+    #[serde(default)]
+    pub recurrence_id: String,
+    /// The `RRULE` as written, when the event repeats; empty for a one-off.
+    #[serde(default)]
+    pub repeats: String,
+    #[serde(default)]
+    pub organizer: Option<InvitePerson>,
+    #[serde(default)]
+    pub attendees: Vec<InvitePerson>,
+    /// The event has been called off (`STATUS:CANCELLED`).
+    #[serde(default)]
+    pub cancelled: bool,
+    /// The calendar part as it arrived, so the event can be handed to a
+    /// calendar application without going back to the server.
+    #[serde(default)]
+    pub ics: String,
+}
+
+/// Someone named on an invitation: the organizer, or one of the invited.
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct InvitePerson {
+    #[serde(default)]
+    pub name: String,
+    #[serde(default)]
+    pub email: String,
+    /// `PARTSTAT`: NEEDS-ACTION, ACCEPTED, TENTATIVE, DECLINED.
+    #[serde(default)]
+    pub status: String,
+    /// The organizer asked this person for an answer.
+    #[serde(default)]
+    pub rsvp: bool,
+    /// A room or a piece of equipment rather than a person.
+    #[serde(default)]
+    pub resource: bool,
+}
+
+impl InvitePerson {
+    /// What to call them: their name if the invitation gave one, else the
+    /// address.
+    pub fn label(&self) -> &str {
+        if self.name.trim().is_empty() {
+            &self.email
+        } else {
+            &self.name
+        }
+    }
+}
+
+/// An answer to an invitation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub enum Rsvp {
+    Accepted,
+    Tentative,
+    Declined,
+}
+
+impl Rsvp {
+    /// The `PARTSTAT` value that says this.
+    pub fn partstat(self) -> &'static str {
+        match self {
+            Rsvp::Accepted => "ACCEPTED",
+            Rsvp::Tentative => "TENTATIVE",
+            Rsvp::Declined => "DECLINED",
+        }
+    }
+
+    /// The word a `PARTSTAT` stands for, or `None` for one that is not an
+    /// answer (NEEDS-ACTION, DELEGATED).
+    pub fn from_partstat(value: &str) -> Option<Rsvp> {
+        match value.trim().to_ascii_uppercase().as_str() {
+            "ACCEPTED" => Some(Rsvp::Accepted),
+            "TENTATIVE" => Some(Rsvp::Tentative),
+            "DECLINED" => Some(Rsvp::Declined),
+            _ => None,
+        }
+    }
+}
+
+impl Invite {
+    /// What an answer to this event is remembered by: the event's UID, plus
+    /// the occurrence when the message is about one of a series.
+    pub fn key(&self) -> String {
+        if self.recurrence_id.is_empty() {
+            self.uid.clone()
+        } else {
+            format!("{}#{}", self.uid, self.recurrence_id)
+        }
+    }
+
+    /// Whether this message is asking the reader to answer: an invitation
+    /// (or a re-invitation) that has not been called off, from an organizer
+    /// there is somewhere to answer to.
+    pub fn asks_for_an_answer(&self) -> bool {
+        !self.cancelled
+            && matches!(self.method.as_str(), "REQUEST" | "COUNTER")
+            && !self.uid.is_empty()
+            && self.organizer.as_ref().is_some_and(|o| o.email.contains('@'))
+    }
+
+    /// The attendee entry for whoever is reading, matched against the
+    /// addresses this account answers to.
+    pub fn me<'a>(&'a self, addresses: &[String]) -> Option<&'a InvitePerson> {
+        self.attendees.iter().find(|a| {
+            addresses.iter().any(|mine| mine.eq_ignore_ascii_case(&a.email))
+        })
+    }
+
+    /// The people invited: not the rooms and the equipment, and not the
+    /// organizer, whom several calendars put on the attendee list as well
+    /// and who is named in their own right.
+    pub fn guests(&self) -> impl Iterator<Item = &InvitePerson> {
+        let chair = self.organizer.as_ref().map(|o| o.email.to_ascii_lowercase());
+        self.attendees.iter().filter(move |a| {
+            !a.resource && chair.as_deref() != Some(a.email.to_ascii_lowercase().as_str())
+        })
+    }
+}
+
 /// The result of checking whether a message's From: address was forged.
 #[derive(Debug, Clone)]
 pub struct SenderCheck {
@@ -390,6 +600,13 @@ pub struct SenderCheck {
     pub findings: Vec<String>,
     /// The OpenPGP verdict (#133), when the message carried any.
     pub pgp: Option<PgpStatus>,
+    /// How to leave the list this came from, when it is from one. Read with
+    /// the verdict: both come out of the raw headers at the one fetch.
+    pub unsubscribe: Option<Unsubscribe>,
+    /// The meeting this message invites the reader to (#223), when it
+    /// carries a `text/calendar` part. Read in the same pass, for the same
+    /// reason: the raw message is in hand exactly once.
+    pub invite: Option<Box<Invite>>,
 }
 
 impl Default for SenderCheck {
@@ -399,6 +616,8 @@ impl Default for SenderCheck {
             summary: i18n("This message hasn't been checked."),
             findings: Vec::new(),
             pgp: None,
+            unsubscribe: None,
+            invite: None,
         }
     }
 }

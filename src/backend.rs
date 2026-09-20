@@ -207,6 +207,81 @@ fn folder(id: u32, account_id: u32, name: &str, kind: FolderKind, unread: u32) -
     }
 }
 
+/// Raw header blocks for the demo messages that come from a mailing list:
+/// run through the real sender check when the body is served, so the
+/// newsletter's card wears a verdict and the Unsubscribe banner exactly as
+/// a fetched message would. Keyed by message id.
+const DEMO_HEADERS: &[(u32, &str, &str)] = &[
+    // No List-Unsubscribe at all: the route is the link in the footer,
+    // which is how a great deal of real bulk mail is written.
+    (
+        7,
+        "From: GNOME Foundation <news@gnome.org>\r\n\
+         Authentication-Results: mx.hylki.local; dkim=pass header.d=gnome.org; \
+         spf=pass smtp.mailfrom=gnome.org; dmarc=pass header.from=gnome.org\r\n\
+         Subject: GNOME 49 release candidate is here\r\n\
+         Content-Type: text/plain; charset=utf-8\r\n\r\n",
+        "",
+    ),
+    (
+    10,
+    "From: Rust Weekly <digest@this-week-in-rust.org>\r\n\
+     Authentication-Results: mx.hylki.local; dkim=pass header.d=this-week-in-rust.org; \
+     spf=pass smtp.mailfrom=this-week-in-rust.org; dmarc=pass header.from=this-week-in-rust.org\r\n\
+     List-Id: This Week in Rust <digest.this-week-in-rust.org>\r\n\
+     List-Unsubscribe: <mailto:leave@this-week-in-rust.org?subject=unsubscribe>, \
+     <https://this-week-in-rust.org/unsubscribe/612/abc>\r\n\
+     List-Unsubscribe-Post: List-Unsubscribe=One-Click\r\n\
+     Subject: This Week in Rust #612\r\n\r\n",
+        "",
+    ),
+    // A meeting request, as a calendar sends one: the readable half that
+    // every client shows, and the `text/calendar` part that is the meeting
+    // (#223). The event floats — no TZID — so it reads 2:00 PM wherever the
+    // demo runs.
+    (
+        13,
+        "From: Calendar <calendar@hylki.hyprlab.co>\r\n\
+         Subject: Invitation: Architecture sync @ Thu 2:00 PM\r\n\
+         MIME-Version: 1.0\r\n\
+         Content-Type: multipart/alternative; boundary=\"hylki-demo-invite\"\r\n\r\n\
+         --hylki-demo-invite\r\n\
+         Content-Type: text/plain; charset=utf-8\r\n\r\n",
+        "\r\n--hylki-demo-invite\r\n\
+         Content-Type: text/calendar; charset=utf-8; method=REQUEST; name=invite.ics\r\n\r\n\
+         BEGIN:VCALENDAR\r\n\
+         PRODID:-//Studio//Calendar//EN\r\n\
+         VERSION:2.0\r\n\
+         METHOD:REQUEST\r\n\
+         BEGIN:VEVENT\r\n\
+         UID:demo-architecture-sync@hylki.hyprlab.co\r\n\
+         SEQUENCE:0\r\n\
+         SUMMARY:Architecture sync\r\n\
+         LOCATION:Conference Room B / video link\r\n\
+         DTSTART:20261105T140000\r\n\
+         DTEND:20261105T150000\r\n\
+         RRULE:FREQ=WEEKLY\r\n\
+         ORGANIZER;CN=Priya Sharma:mailto:priya@studio.dev\r\n\
+         ATTENDEE;CN=Jason M.;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:mailto:jason@hylki.hyprlab.co\r\n\
+         ATTENDEE;CN=Marcus Chen;PARTSTAT=ACCEPTED:mailto:marcus@studio.dev\r\n\
+         ATTENDEE;CN=Sophie Turner;PARTSTAT=NEEDS-ACTION:mailto:sophie@studio.dev\r\n\
+         ATTENDEE;CUTYPE=ROOM;CN=Conference Room B:mailto:room-b@studio.dev\r\n\
+         END:VEVENT\r\n\
+         END:VCALENDAR\r\n\
+         --hylki-demo-invite--\r\n",
+    ),
+];
+
+/// A demo message as raw RFC 822: its header block (see [`DEMO_HEADERS`])
+/// followed by its body, so the real sender check and the real unsubscribe
+/// scan can be run over it exactly as they are over fetched mail.
+pub fn demo_raw(id: u32) -> Option<String> {
+    let (headers, tail) =
+        DEMO_HEADERS.iter().find(|(i, _, _)| *i == id).map(|(_, h, t)| (*h, *t))?;
+    let body = MockBackend::new().message(id).map(|m| m.body).unwrap_or_default();
+    Some(format!("{headers}{body}{tail}"))
+}
+
 /// Compact spec for a sample message; expanded into a [`Message`] by [`build`].
 struct Spec {
     id: u32,
@@ -494,7 +569,7 @@ fn sample_messages() -> Vec<Message> {
         Spec { id: 7, account_id: 1, folder_id: 1, from_name: "GNOME Foundation", from_addr: "news@gnome.org", to: ME,
             subject: "GNOME 49 release candidate is here",
             preview: "The release candidate for GNOME 49 is now available for testing. This cycle brings major performance work…",
-            body: "Hi Jason,\n\nThe release candidate for GNOME 49 is now available for testing. This cycle brings major performance work across the shell and a refreshed libadwaita with new adaptive widgets.\n\nHighlights:\n  • Faster startup and lower memory use\n  • New AdwMultiLayoutView for responsive layouts\n  • Improved Wayland fractional scaling\n\nPlease help us test and file issues before the final release.\n\n— The GNOME Release Team",
+            body: "Hi Jason,\n\nThe release candidate for GNOME 49 is now available for testing. This cycle brings major performance work across the shell and a refreshed libadwaita with new adaptive widgets.\n\nHighlights:\n  • Faster startup and lower memory use\n  • New AdwMultiLayoutView for responsive layouts\n  • Improved Wayland fractional scaling\n\nPlease help us test and file issues before the final release.\n\n— The GNOME Release Team\n\n---\nYou are receiving this because you signed up for GNOME news.\nTo unsubscribe, visit https://mail.gnome.org/list/news/unsubscribe/j7Kq2",
             date: "9:42 AM", unread: true, starred: true, keywords: &["Personal"], has_attachment: false, in_reply_to: None },
         // ---- Account 1 · Inbox · the Q3 roadmap thread (ids 23 → 8, oldest = 23).
         // Sophie's original is the oldest (id 23, yesterday); the newest reply
@@ -558,11 +633,13 @@ fn sample_messages() -> Vec<Message> {
             preview: "The design token pipeline is finally merged into main. Dark mode now derives entirely from the token set…",
             body: "Hey,\n\nThe design token pipeline is finally merged into main. Dark mode now derives entirely from the token set, so we no longer maintain two stylesheets. Pull main when you get a chance.\n\nMarcus",
             date: "Wed", unread: true, starred: false, keywords: &[], has_attachment: false, in_reply_to: None },
+        // The readable half of a meeting request; the calendar part that
+        // goes with it is in DEMO_HEADERS (#223).
         Spec { id: 13, account_id: 1, folder_id: 1, from_name: "Calendar", from_addr: "calendar@hylki.hyprlab.co", to: ME,
             subject: "Invitation: Architecture sync @ Thu 2:00 PM",
             preview: "You have been invited to Architecture sync. Thursday 2:00 PM – 3:00 PM. Conference Room B / video link…",
-            body: "You have been invited to: Architecture sync\n\nWhen: Thursday 2:00 PM – 3:00 PM\nWhere: Conference Room B / video link\n\nAccept · Decline · Maybe",
-            date: "Wed", unread: false, starred: false, keywords: &[], has_attachment: false, in_reply_to: None },
+            body: "You have been invited to: Architecture sync\n\nWhen: Thursday 2:00 PM – 3:00 PM\nWhere: Conference Room B / video link\nOrganiser: Priya Sharma\n\nAccept · Decline · Maybe",
+            date: "Wed", unread: false, starred: false, keywords: &[], has_attachment: true, in_reply_to: None },
         Spec { id: 14, account_id: 1, folder_id: 1, from_name: "Emma Wright", from_addr: "emma@example.com", to: ME,
             subject: "Lunch this weekend?",
             preview: "It's been ages! Are you free Saturday for lunch at that new place downtown? Let me know what works…",

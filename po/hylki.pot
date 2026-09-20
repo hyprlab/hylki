@@ -25,6 +25,9 @@ msgstr ""
 msgid "Search messages (Ctrl+F)"
 msgstr ""
 
+msgid "Search, filters and sort"
+msgstr ""
+
 msgid "Show only unread"
 msgstr ""
 
@@ -100,6 +103,9 @@ msgstr ""
 msgid "Show Accounts"
 msgstr ""
 
+msgid "Focus Mode"
+msgstr ""
+
 msgid "Print Preview…"
 msgstr ""
 
@@ -155,6 +161,12 @@ msgid "Already in Contacts ({name})"
 msgstr ""
 
 msgid "Could not add contact: {e}"
+msgstr ""
+
+msgid "Unsubscribed from {name}."
+msgstr ""
+
+msgid "The list's unsubscribe page is open in your browser."
 msgstr ""
 
 msgid "The language applies the next time Hylki starts."
@@ -301,6 +313,12 @@ msgid "Find in Message"
 msgstr ""
 
 msgid "Print Preview"
+msgstr ""
+
+msgid "Search Messages…"
+msgstr ""
+
+msgid "Sort"
 msgstr ""
 
 msgid "Message Source"
@@ -617,6 +635,71 @@ msgstr[1] ""
 msgid "Filters Applied"
 msgstr ""
 
+msgid "This message carries no calendar file to open."
+msgstr ""
+
+msgid "This invitation names no organiser to answer."
+msgstr ""
+
+msgid "Accepted: {subject}"
+msgstr ""
+
+msgid "Tentative: {subject}"
+msgstr ""
+
+msgid "Declined: {subject}"
+msgstr ""
+
+msgid "{name} has accepted this invitation."
+msgstr ""
+
+msgid "{name} has tentatively accepted this invitation."
+msgstr ""
+
+msgid "{name} has declined this invitation."
+msgstr ""
+
+msgid "Your answer has been sent: accepted."
+msgstr ""
+
+msgid "Your answer has been sent: maybe."
+msgstr ""
+
+msgid "Your answer has been sent: declined."
+msgstr ""
+
+msgid "Unsubscribe from {name}?"
+msgstr ""
+
+msgid ""
+"Hylki will ask the list to stop sending you mail. A list can take a few days "
+"to act on the request."
+msgstr ""
+
+msgid ""
+"An unsubscribe request will be sent to {addr} from {from}. A list can take a "
+"few days to act on it."
+msgstr ""
+
+msgid ""
+"This list offers no direct way to unsubscribe. Its unsubscribe page will "
+"open in your browser."
+msgstr ""
+
+msgid ""
+"This message carries no unsubscribe header, so Hylki is going by the link in "
+"it."
+msgstr ""
+
+msgid "Unsubscribe"
+msgstr ""
+
+msgid "the message offers no way to unsubscribe"
+msgstr ""
+
+msgid "the list's mail address could not be read"
+msgstr ""
+
 msgid "Full Release Notes on GitHub"
 msgstr ""
 
@@ -693,6 +776,9 @@ msgid "Reveal the status bar (also: long-press Refresh)"
 msgstr ""
 
 msgid "Show or hide the accounts in the sidebar"
+msgstr ""
+
+msgid "Focus Mode on or off"
 msgstr ""
 
 msgid "Console mode (when enabled in Settings)"
@@ -1689,9 +1775,6 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-msgid "Sort"
-msgstr ""
-
 msgid "Newest first"
 msgstr ""
 
@@ -2337,6 +2420,105 @@ msgstr ""
 msgid "Mark All as Unread"
 msgstr ""
 
+msgid "Unsubscribing…"
+msgstr ""
+
+msgid "Unsubscribing didn't work: {why}"
+msgstr ""
+
+msgid "Try Again"
+msgstr ""
+
+msgid "You unsubscribed from this list on {date}."
+msgstr ""
+
+#. A message that said so in its headers is from a list;
+#. one whose footer link gave it away only has a link.
+msgid "This message is from a mailing list."
+msgstr ""
+
+msgid "This message has an unsubscribe link."
+msgstr ""
+
+msgid "Asks the list to stop sending you mail"
+msgstr ""
+
+msgid "Sends an unsubscribe request by email"
+msgstr ""
+
+#. Nothing but a web page on offer: the button says so.
+msgid "Unsubscribe…"
+msgstr ""
+
+#. Nothing but a web page on offer: the button says so.
+msgid "Opens the list's unsubscribe page in your browser"
+msgstr ""
+
+msgid "Meeting"
+msgstr ""
+
+msgid "Cancelled"
+msgstr ""
+
+msgid "Updated invitation"
+msgstr ""
+
+msgid "Invitation"
+msgstr ""
+
+msgid "Organised by {name}"
+msgstr ""
+
+msgid "{n} guest"
+msgid_plural "{n} guests"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "This meeting has been called off."
+msgstr ""
+
+msgid "You accepted this invitation."
+msgstr ""
+
+msgid "You accepted this invitation on {date}."
+msgstr ""
+
+msgid "You answered maybe to this invitation."
+msgstr ""
+
+msgid "You answered maybe to this invitation on {date}."
+msgstr ""
+
+msgid "You declined this invitation."
+msgstr ""
+
+msgid "You declined this invitation on {date}."
+msgstr ""
+
+msgid "Accept"
+msgstr ""
+
+msgid "Tells the organiser you will be there"
+msgstr ""
+
+msgid "Maybe"
+msgstr ""
+
+msgid "Tells the organiser you might be there"
+msgstr ""
+
+msgid "Decline"
+msgstr ""
+
+msgid "Tells the organiser you will not be there"
+msgstr ""
+
+msgid "Opens the meeting in your calendar application"
+msgstr ""
+
+msgid "Add to Calendar"
+msgstr ""
+
 msgid "Fetch the sender's key"
 msgstr ""
 
@@ -2344,6 +2526,45 @@ msgid "Trust this key…"
 msgstr ""
 
 msgid "A pass proves the address wasn't forged — not that the message is safe."
+msgstr ""
+
+msgid "Repeats daily"
+msgstr ""
+
+msgid "Repeats every {n} days"
+msgstr ""
+
+msgid "Repeats weekly"
+msgstr ""
+
+msgid "Repeats every {n} weeks"
+msgstr ""
+
+msgid "Repeats monthly"
+msgstr ""
+
+msgid "Repeats every {n} months"
+msgstr ""
+
+msgid "Repeats yearly"
+msgstr ""
+
+msgid "Repeats every {n} years"
+msgstr ""
+
+msgid "Repeats"
+msgstr ""
+
+msgid "Somebody answered this invitation."
+msgstr ""
+
+msgid "{name} accepted this invitation."
+msgstr ""
+
+msgid "{name} answered maybe to this invitation."
+msgstr ""
+
+msgid "{name} declined this invitation."
 msgstr ""
 
 msgid "Save…"
@@ -2902,6 +3123,60 @@ msgid ""
 msgstr ""
 
 msgid "Restore Defaults"
+msgstr ""
+
+msgid ""
+"A quieter layout for reading. The parts ticked below slide away when Focus "
+"Mode is on and come back when it is off. Also in the main menu, and "
+"Ctrl+Shift+F."
+msgstr ""
+
+msgid "Strip the parts below away for reading."
+msgstr ""
+
+msgid "Fold the reading pane's toolbar"
+msgstr ""
+
+msgid "Every button goes into its ⋯ menu."
+msgstr ""
+
+msgid "Fold the message list's header"
+msgstr ""
+
+msgid ""
+"Search, the unread and starred filters, the count and the sort order go into "
+"a ⋯ menu. Only the sidebar toggle stays."
+msgstr ""
+
+msgid "Hide the accounts in the sidebar"
+msgstr ""
+
+msgid "Only the unified section stays."
+msgstr ""
+
+msgid "Fold up the unified rows"
+msgstr ""
+
+msgid ""
+"Inboxes, Starred and the rest show folded. A click still opens one for the "
+"while; the full layout comes back as you left it."
+msgstr ""
+
+msgid "Hide sender avatars"
+msgstr ""
+
+msgid "The message list's circles go, and the room they took comes back."
+msgstr ""
+
+msgid "One line of preview text"
+msgstr ""
+
+msgid "Rows show at most one line of a message's text."
+msgstr ""
+
+msgid ""
+"Every message opens in Reader View. The header's switch still changes the "
+"one on screen."
 msgstr ""
 
 msgid "Accounts in the sidebar"

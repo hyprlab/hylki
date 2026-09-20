@@ -57,6 +57,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.36.0" date="2026-09-19">
+      <description>
+        <p>Meeting invitations are shown and answered from the reader, a mailing list can be left with one button, and Focus Mode strips the window down to what you are reading.</p>
+      </description>
+    </release>
     <release version="1.35.4" date="2026-09-19">
       <description>
         <p>Reader View shows any message as its content alone, the web processes behind closed composers, pop-outs and prints end with them, and the Greek translation is updated.</p>

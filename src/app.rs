@@ -122,6 +122,8 @@ struct FilterRunDialog {
 /// layout; this value only stands in if that measurement comes back empty.
 const READER_ACTIONS_BREAKPOINT: f64 = 490.0;
 
+use crate::ui::FOCUS_ANIM_MS;
+
 const SIDEBAR_RAIL_WIDTH: f64 = 80.0;
 
 /// Byte budgets for the in-RAM body and attachment caches (issue #106). Bodies
@@ -134,8 +136,22 @@ const ATTACHMENT_CACHE_BUDGET: usize = 128 << 20;
 
 /// The reader header's action buttons and fold breakpoint, kept for
 /// re-packing when the layout changes (see relayout_reader_toolbar).
+/// The message list header's controls that Focus Mode folds into a ⋯ menu:
+/// each sits in a revealer so it can slide away, and the toggles are kept so
+/// the menu can flip them (their own handlers then do the filtering).
+struct ListHeaderWidgets {
+    revealers: Vec<gtk::Revealer>,
+    overflow: gtk::Revealer,
+    unread: gtk::ToggleButton,
+    starred: gtk::ToggleButton,
+    sort: gtk::gio::SimpleAction,
+}
+
 struct ReaderToolbarWidgets {
+    /// Each action button inside its Focus Mode revealer.
     buttons: Vec<(config::ToolbarItem, gtk::Widget)>,
+    /// The Outbox's own buttons' revealers (Edit, Send, Send all).
+    outbox: Vec<gtk::Revealer>,
     spinner: gtk::Widget,
     bin: adw::BreakpointBin,
     breakpoint: adw::Breakpoint,
@@ -146,6 +162,17 @@ struct ReaderToolbarWidgets {
     /// The window controls' width (re-measured when the decoration layout
     /// changes).
     controls: std::cell::Cell<i32>,
+}
+
+/// Slide a Focus Mode revealer's content away (and fade it, through the
+/// `away` class's opacity transition) or bring it back.
+fn focus_reveal(r: &gtk::Revealer, shown: bool) {
+    if shown {
+        r.remove_css_class("away");
+    } else {
+        r.add_css_class("away");
+    }
+    r.set_reveal_child(shown);
 }
 
 relm4::new_action_group!(WindowActionGroup, "win");
@@ -179,7 +206,7 @@ use crate::ui::attachments_gallery::{
 const GALLERY_DATA_CAP: i64 = 6 * 1024 * 1024;
 use crate::ui::contacts_page::{ContactsPage, ContactsPageInput, ContactsPageOutput};
 use crate::ui::attachment_drawer::{AttachmentDrawer, AttachmentDrawerInput};
-use crate::ui::message_view::{MessageView, MessageViewInput, MessageViewOutput};
+use crate::ui::message_view::{MessageView, MessageViewInput, MessageViewOutput, UnsubState};
 use crate::ui::message_window::{
     MessageWindow, MessageWindowInit, MessageWindowInput, MessageWindowOutput,
 };
@@ -596,6 +623,13 @@ pub struct AppModel {
     current: Option<Message>,
     /// Sender addresses allowed to auto-load remote content (lowercased).
     allowed_senders: Vec<String>,
+    /// The mailing lists left through the reader's Unsubscribe button
+    /// (unsubscribed.toml), so a later message from one says so.
+    unsubscribed: Vec<config::UnsubscribedList>,
+    /// The meeting invitations answered through the reader's buttons
+    /// (invites.toml, #223), so a meeting opened again says where it
+    /// stands.
+    invite_answers: Vec<config::InviteAnswer>,
     /// Whether remote content is auto-loaded for every new message.
     auto_remote_content: bool,
     /// Whether the blocked-remote-content banner is shown at all. Hiding it changes nothing about what
@@ -721,6 +755,15 @@ pub struct AppModel {
     /// The main menu's "Show Accounts" check item, kept in step with the
     /// setting wherever it is changed.
     show_accounts_action: gtk::gio::SimpleAction,
+    /// Focus Mode (main menu, Ctrl+Shift+F, Settings → Appearance): the
+    /// master switch and the parts it strips. Applied on top of the ordinary
+    /// settings, which it never changes — off, everything comes back.
+    focus: config::FocusMode,
+    /// The main menu's "Focus Mode" check item.
+    focus_action: gtk::gio::SimpleAction,
+    /// The message list header's foldable controls and the ⋯ that stands in
+    /// for them in Focus Mode (set in init).
+    list_header_widgets: std::cell::OnceCell<ListHeaderWidgets>,
     /// Whether the sidebar's disclosure chevrons lead their rows.
     chevrons_left: bool,
     /// Console mode offered in the status bar (Settings → System & Appearance).
@@ -1105,6 +1148,24 @@ pub enum AppMsg {
     AllowSender(String),
     AddSender(String),
     RemoveSender(String),
+    /// A card's Unsubscribe button: confirm, then leave the list the message
+    /// came from by the handles its headers offered.
+    Unsubscribe { message: Box<Message>, info: Box<crate::models::Unsubscribe> },
+    /// Confirmed: send the request.
+    UnsubscribeGo { message: Box<Message>, info: Box<crate::models::Unsubscribe> },
+    /// The one-click route failed (or was not offered): write to the list's
+    /// `mailto:` handle instead, from the account the message arrived in.
+    UnsubscribeByMail { message: Box<Message>, info: Box<crate::models::Unsubscribe> },
+    /// The request is over: `Ok(true)` left the list, `Ok(false)` only opened
+    /// the list's web page, `Err` says what went wrong.
+    UnsubscribeDone { message: Box<Message>, result: Result<bool, String> },
+    /// A card's invitation button (#223): answer the organiser, or hand the
+    /// meeting to whatever application opens calendar files.
+    InviteAction {
+        message: Box<Message>,
+        invite: Box<crate::models::Invite>,
+        action: crate::ui::message_view::InviteAction,
+    },
     AddBlacklist(String),
     RemoveBlacklist(String),
     MarkSpam,
@@ -1240,6 +1301,12 @@ pub enum AppMsg {
     SetUnifiedTags(bool),
     /// Whether the account sections are shown at all.
     SetShowAccounts(bool),
+    /// Focus Mode's settings changed (the master switch or a part): apply
+    /// whatever differs, animated, and save.
+    SetFocusMode(config::FocusMode),
+    /// The ⋯ of the message list header (Focus Mode): search, filters and
+    /// sort as a menu.
+    ListOverflowMenu,
     /// An account's own Filtered Folders / Tags section was opened or
     /// folded — record it with the layout.
     ToggleAccountFiltered(u32),
@@ -1813,12 +1880,18 @@ impl SimpleComponent for AppModel {
                                 },
                                 // Search lives behind this button (#102);
                                 // Ctrl+F and / open it too.
-                                pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Hylki-system-search-symbolic",
-                                    set_tooltip_text: Some(i18n("Search messages (Ctrl+F)").as_str()),
-                                    add_css_class: "flat",
-                                    connect_clicked[sender] => move |_| {
-                                        sender.input(AppMsg::OpenListSearch);
+                                #[name = "lh_search"]
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-system-search-symbolic",
+                                        set_tooltip_text: Some(i18n("Search messages (Ctrl+F)").as_str()),
+                                        add_css_class: "flat",
+                                        connect_clicked[sender] => move |_| {
+                                            sender.input(AppMsg::OpenListSearch);
+                                        },
                                     },
                                 },
                                 // Across from the sidebar toggle: the visible
@@ -1827,37 +1900,78 @@ impl SimpleComponent for AppModel {
                                 // pack_end packs right-to-left: sort rightmost.
                                 // Quick filters (#97): unread / starred only.
                                 // Session state, like Mail.app's filter bar.
-                                pack_end = &gtk::ToggleButton {
-                                    set_icon_name: "co.hyprlab.Hylki-mail-unread-symbolic",
-                                    set_tooltip_text: Some(i18n("Show only unread").as_str()),
-                                    set_valign: gtk::Align::Center,
-                                    add_css_class: "flat",
-                                    connect_toggled[sender] => move |btn| {
-                                        sender.input(AppMsg::SetUnreadFilter(btn.is_active()));
+                                // Focus Mode: the ⋯ that stands in for the
+                                // search, filters, count and sort while they
+                                // are folded away. Rightmost, so packed first.
+                                #[name = "lh_overflow"]
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    set_reveal_child: false,
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-view-more-horizontal-symbolic",
+                                        set_tooltip_text: Some(i18n("Search, filters and sort").as_str()),
+                                        set_valign: gtk::Align::Center,
+                                        add_css_class: "flat",
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::ListOverflowMenu),
                                     },
                                 },
-                                pack_end = &gtk::ToggleButton {
-                                    set_icon_name: "co.hyprlab.Hylki-starred-symbolic",
-                                    set_tooltip_text: Some(i18n("Show only starred").as_str()),
-                                    set_valign: gtk::Align::Center,
-                                    add_css_class: "flat",
-                                    connect_toggled[sender] => move |btn| {
-                                        sender.input(AppMsg::SetStarredFilter(btn.is_active()));
+                                #[name = "lh_unread"]
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::ToggleButton {
+                                        set_icon_name: "co.hyprlab.Hylki-mail-unread-symbolic",
+                                        set_tooltip_text: Some(i18n("Show only unread").as_str()),
+                                        set_valign: gtk::Align::Center,
+                                        add_css_class: "flat",
+                                        connect_toggled[sender] => move |btn| {
+                                            sender.input(AppMsg::SetUnreadFilter(btn.is_active()));
+                                        },
+                                    },
+                                },
+                                #[name = "lh_starred"]
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::ToggleButton {
+                                        set_icon_name: "co.hyprlab.Hylki-starred-symbolic",
+                                        set_tooltip_text: Some(i18n("Show only starred").as_str()),
+                                        set_valign: gtk::Align::Center,
+                                        add_css_class: "flat",
+                                        connect_toggled[sender] => move |btn| {
+                                            sender.input(AppMsg::SetStarredFilter(btn.is_active()));
+                                        },
                                     },
                                 },
 
-                                #[name = "list_sort_btn"]
-                                pack_end = &gtk::MenuButton {
-                                    set_icon_name: "co.hyprlab.Hylki-view-sort-descending-symbolic",
-                                    set_tooltip_text: Some(i18n("Sort messages").as_str()),
-                                    set_valign: gtk::Align::Center,
-                                    add_css_class: "flat",
+                                #[name = "lh_sort"]
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    #[name = "list_sort_btn"]
+                                    gtk::MenuButton {
+                                        set_icon_name: "co.hyprlab.Hylki-view-sort-descending-symbolic",
+                                        set_tooltip_text: Some(i18n("Sort messages").as_str()),
+                                        set_valign: gtk::Align::Center,
+                                        add_css_class: "flat",
+                                    },
                                 },
-                                pack_end = &gtk::Label {
-                                    #[watch]
-                                    set_label: &model.list_count,
-                                    set_valign: gtk::Align::Center,
-                                    add_css_class: "list-count",
+                                #[name = "lh_count"]
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Label {
+                                        #[watch]
+                                        set_label: &model.list_count,
+                                        set_valign: gtk::Align::Center,
+                                        add_css_class: "list-count",
+                                    },
                                 },
                             },
                             #[wrap(Some)]
@@ -1897,35 +2011,53 @@ impl SimpleComponent for AppModel {
                                 // a message that hasn't been sent can't be replied
                                 // to, and the questions worth asking about it are
                                 // whether to edit, send or bin it.
-                                pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Hylki-document-edit-symbolic",
-                                    set_tooltip_text: Some(i18n("Edit this message").as_str()),
-                                    add_css_class: "flat",
-                                    #[watch]
-                                    set_visible: model.showing_outbox
-                                        && model.reader_compose.is_none(),
-                                    #[watch]
-                                    set_sensitive: model.current.is_some(),
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::EditCurrentOutbox),
+                                #[name = "tb_outbox_edit"]
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-document-edit-symbolic",
+                                        set_tooltip_text: Some(i18n("Edit this message").as_str()),
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: model.showing_outbox
+                                            && model.reader_compose.is_none(),
+                                        #[watch]
+                                        set_sensitive: model.current.is_some(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::EditCurrentOutbox),
+                                    },
                                 },
-                                pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Hylki-mail-send-symbolic",
-                                    set_tooltip_text: Some(i18n("Try to send this message now").as_str()),
-                                    add_css_class: "flat",
-                                    #[watch]
-                                    set_visible: model.showing_outbox
-                                        && model.reader_compose.is_none(),
-                                    #[watch]
-                                    set_sensitive: model.current.is_some(),
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::SendCurrentOutbox),
+                                #[name = "tb_outbox_send"]
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-mail-send-symbolic",
+                                        set_tooltip_text: Some(i18n("Try to send this message now").as_str()),
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: model.showing_outbox
+                                            && model.reader_compose.is_none(),
+                                        #[watch]
+                                        set_sensitive: model.current.is_some(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::SendCurrentOutbox),
+                                    },
                                 },
-                                pack_start = &gtk::Button {
-                                    set_label: &i18n("Send all"),
-                                    add_css_class: "flat",
-                                    #[watch]
-                                    set_visible: model.showing_outbox
-                                        && model.reader_compose.is_none(),
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::RetryAllOutbox),
+                                #[name = "tb_outbox_send_all"]
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_label: &i18n("Send all"),
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: model.showing_outbox
+                                            && model.reader_compose.is_none(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::RetryAllOutbox),
+                                    },
                                 },
                                 // ---- The action buttons. Declared here in the
                                 // default order, then re-packed in init (and on
@@ -1935,85 +2067,115 @@ impl SimpleComponent for AppModel {
                                 // the ⋯ overflow. Default left group: Reply,
                                 // Reply All, Forward, Star, Archive, Delete.
                                 #[name = "tb_reply"]
-                                pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Hylki-mail-reply-sender-symbolic",
-                                    set_tooltip_text: Some(i18n("Reply").as_str()),
-                                    add_css_class: "flat",
-                                    #[watch]
-                                    set_visible: model.toolbar_visible(config::ToolbarItem::Reply),
-                                    // In a conversation these act on the one
-                                    // highlighted card; with none (or several)
-                                    // highlighted they grey out — no way to say
-                                    // which message they'd mean.
-                                    #[watch]
-                                    set_sensitive: model.reply_target().is_some(),
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::Reply),
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-mail-reply-sender-symbolic",
+                                        set_tooltip_text: Some(i18n("Reply").as_str()),
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: model.toolbar_visible(config::ToolbarItem::Reply),
+                                        // In a conversation these act on the one
+                                        // highlighted card; with none (or several)
+                                        // highlighted they grey out — no way to say
+                                        // which message they'd mean.
+                                        #[watch]
+                                        set_sensitive: model.reply_target().is_some(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::Reply),
+                                    },
                                 },
                                 #[name = "tb_reply_all"]
-                                pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Hylki-mail-reply-all-symbolic",
-                                    set_tooltip_text: Some(i18n("Reply All").as_str()),
-                                    add_css_class: "flat",
-                                    #[watch]
-                                    set_visible: model.toolbar_visible(config::ToolbarItem::ReplyAll),
-                                    #[watch]
-                                    set_sensitive: model.reply_target().is_some(),
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::ReplyAll),
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-mail-reply-all-symbolic",
+                                        set_tooltip_text: Some(i18n("Reply All").as_str()),
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: model.toolbar_visible(config::ToolbarItem::ReplyAll),
+                                        #[watch]
+                                        set_sensitive: model.reply_target().is_some(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::ReplyAll),
+                                    },
                                 },
                                 #[name = "tb_forward"]
-                                pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Hylki-mail-forward-symbolic",
-                                    set_tooltip_text: Some(i18n("Forward").as_str()),
-                                    add_css_class: "flat",
-                                    #[watch]
-                                    set_visible: model.toolbar_visible(config::ToolbarItem::Forward),
-                                    #[watch]
-                                    set_sensitive: model.reply_target().is_some(),
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::Forward),
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-mail-forward-symbolic",
+                                        set_tooltip_text: Some(i18n("Forward").as_str()),
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: model.toolbar_visible(config::ToolbarItem::Forward),
+                                        #[watch]
+                                        set_sensitive: model.reply_target().is_some(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::Forward),
+                                    },
                                 },
                                 #[name = "tb_star"]
-                                pack_start = &gtk::Button {
-                                    set_tooltip_text: Some(i18n("Flag").as_str()),
-                                    // One glyph in both states, like every other
-                                    // icon; the flagged state carries colour only.
-                                    set_icon_name: "co.hyprlab.Hylki-non-starred-symbolic",
-                                    #[watch]
-                                    set_css_classes: if model.toolbar_star_lit() {
-                                        &["flat", "star-active"]
-                                    } else {
-                                        &["flat"]
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_tooltip_text: Some(i18n("Flag").as_str()),
+                                        // One glyph in both states, like every other
+                                        // icon; the flagged state carries colour only.
+                                        set_icon_name: "co.hyprlab.Hylki-non-starred-symbolic",
+                                        #[watch]
+                                        set_css_classes: if model.toolbar_star_lit() {
+                                            &["flat", "star-active"]
+                                        } else {
+                                            &["flat"]
+                                        },
+                                        #[watch]
+                                        set_visible: model.toolbar_visible(config::ToolbarItem::Star),
+                                        #[watch]
+                                        set_sensitive: model.reply_target().is_some(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::ToggleStar),
                                     },
-                                    #[watch]
-                                    set_visible: model.toolbar_visible(config::ToolbarItem::Star),
-                                    #[watch]
-                                    set_sensitive: model.reply_target().is_some(),
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::ToggleStar),
                                 },
                                 #[name = "tb_archive"]
-                                pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Hylki-mail-archive-symbolic",
-                                    set_tooltip_text: Some(i18n("Archive").as_str()),
-                                    add_css_class: "flat",
-                                    #[watch]
-                                    set_visible: model.toolbar_visible(config::ToolbarItem::Archive),
-                                    #[watch]
-                                    set_sensitive: model.reply_target().is_some(),
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::Archive),
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-mail-archive-symbolic",
+                                        set_tooltip_text: Some(i18n("Archive").as_str()),
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: model.toolbar_visible(config::ToolbarItem::Archive),
+                                        #[watch]
+                                        set_sensitive: model.reply_target().is_some(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::Archive),
+                                    },
                                 },
                                 #[name = "tb_delete"]
-                                pack_start = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Hylki-user-trash-symbolic",
-                                    #[watch]
-                                    set_tooltip_text: Some(&model.delete_tooltip()),
-                                    add_css_class: "flat",
-                                    // Shown for the Outbox too (a queued message
-                                    // can still be binned) — see toolbar_visible.
-                                    #[watch]
-                                    set_visible: model.toolbar_visible(config::ToolbarItem::Delete),
-                                    #[watch]
-                                    set_sensitive: model.reply_target().is_some()
-                                        || model.list_selection.len() > 1,
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::Delete),
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-user-trash-symbolic",
+                                        #[watch]
+                                        set_tooltip_text: Some(&model.delete_tooltip()),
+                                        add_css_class: "flat",
+                                        // Shown for the Outbox too (a queued message
+                                        // can still be binned) — see toolbar_visible.
+                                        #[watch]
+                                        set_visible: model.toolbar_visible(config::ToolbarItem::Delete),
+                                        #[watch]
+                                        set_sensitive: model.reply_target().is_some()
+                                            || model.list_selection.len() > 1,
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::Delete),
+                                    },
                                 },
                                 // ---- Default right group, left to right: Tags,
                                 // Read/Unread, Spam, Move To, Find, Print.
@@ -2022,95 +2184,125 @@ impl SimpleComponent for AppModel {
                                 // button either: right-click any address in a
                                 // message header.)
                                 #[name = "tb_print"]
-                                pack_end = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Hylki-printer-symbolic",
-                                    set_tooltip_text: Some(i18n("Print Preview (Ctrl+Shift+P)").as_str()),
-                                    add_css_class: "flat",
-                                    #[watch]
-                                    set_visible: model.toolbar_visible(config::ToolbarItem::Print),
-                                    #[watch]
-                                    set_sensitive: model.current.is_some(),
-                                    // The preview, not the print dialog: the button
-                                    // shows what will come out and prints from
-                                    // there, so nobody spends paper to find out.
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::PrintPreview),
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-printer-symbolic",
+                                        set_tooltip_text: Some(i18n("Print Preview (Ctrl+Shift+P)").as_str()),
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: model.toolbar_visible(config::ToolbarItem::Print),
+                                        #[watch]
+                                        set_sensitive: model.current.is_some(),
+                                        // The preview, not the print dialog: the button
+                                        // shows what will come out and prints from
+                                        // there, so nobody spends paper to find out.
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::PrintPreview),
+                                    },
                                 },
                                 // In-message find (#103).
                                 #[name = "tb_find"]
-                                pack_end = &gtk::Button {
-                                    set_icon_name: "co.hyprlab.Hylki-loupe-with-arrow-symbolic",
-                                    set_tooltip_text: Some(i18n("Find in message (Ctrl+F)").as_str()),
-                                    add_css_class: "flat",
-                                    // Greyed out, not hidden, with no message
-                                    // open: the toolbar must not shift.
-                                    #[watch]
-                                    set_visible: model.toolbar_visible(config::ToolbarItem::Find),
-                                    #[watch]
-                                    set_sensitive: model.current.is_some(),
-                                    connect_clicked[sender] => move |_| {
-                                        sender.input(AppMsg::OpenReaderFind);
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "co.hyprlab.Hylki-loupe-with-arrow-symbolic",
+                                        set_tooltip_text: Some(i18n("Find in message (Ctrl+F)").as_str()),
+                                        add_css_class: "flat",
+                                        // Greyed out, not hidden, with no message
+                                        // open: the toolbar must not shift.
+                                        #[watch]
+                                        set_visible: model.toolbar_visible(config::ToolbarItem::Find),
+                                        #[watch]
+                                        set_sensitive: model.current.is_some(),
+                                        connect_clicked[sender] => move |_| {
+                                            sender.input(AppMsg::OpenReaderFind);
+                                        },
                                     },
                                 },
                                 // Move To… (#164): a folder picker for the
                                 // target, or the whole list selection.
                                 #[name = "tb_move"]
-                                pack_end = &gtk::Box {
-                                    #[local_ref]
-                                    reader_move_btn -> gtk::Button {
-                                        #[watch]
-                                        set_visible: model.toolbar_visible(config::ToolbarItem::MoveTo),
-                                        #[watch]
-                                        set_sensitive: model.reply_target().is_some()
-                                            || model.list_selection.len() > 1,
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Box {
+                                        #[local_ref]
+                                        reader_move_btn -> gtk::Button {
+                                            #[watch]
+                                            set_visible: model.toolbar_visible(config::ToolbarItem::MoveTo),
+                                            #[watch]
+                                            set_sensitive: model.reply_target().is_some()
+                                                || model.list_selection.len() > 1,
+                                        },
                                     },
                                 },
                                 #[name = "tb_spam"]
-                                pack_end = &gtk::Button {
-                                    #[watch]
-                                    set_icon_name: if model.target_in_junk() {
-                                        "co.hyprlab.Hylki-mail-mark-notjunk-symbolic"
-                                    } else {
-                                        "co.hyprlab.Hylki-mail-mark-junk-symbolic"
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        #[watch]
+                                        set_icon_name: if model.target_in_junk() {
+                                            "co.hyprlab.Hylki-mail-mark-notjunk-symbolic"
+                                        } else {
+                                            "co.hyprlab.Hylki-mail-mark-junk-symbolic"
+                                        },
+                                        #[watch]
+                                        set_tooltip_text: Some(if model.target_in_junk() { i18n("Not Spam") } else { i18n("Mark as Spam") }.as_str()),
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: model.toolbar_visible(config::ToolbarItem::Spam),
+                                        #[watch]
+                                        set_sensitive: model.reply_target().is_some(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::MarkSpam),
                                     },
-                                    #[watch]
-                                    set_tooltip_text: Some(if model.target_in_junk() { i18n("Not Spam") } else { i18n("Mark as Spam") }.as_str()),
-                                    add_css_class: "flat",
-                                    #[watch]
-                                    set_visible: model.toolbar_visible(config::ToolbarItem::Spam),
-                                    #[watch]
-                                    set_sensitive: model.reply_target().is_some(),
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::MarkSpam),
                                 },
                                 #[name = "tb_read"]
-                                pack_end = &gtk::Button {
-                                    add_css_class: "flat",
-                                    #[watch]
-                                    set_visible: !model.showing_outbox && !model.reader_actions_collapsed
-                                        && model.reader_compose.is_none(),
-                                    // The icon shows the ACTION (read envelope =
-                                    // "mark as read"), matching the menus.
-                                    #[watch]
-                                    set_icon_name: if model.reply_target().is_some_and(|m| m.unread) {
-                                        "co.hyprlab.Hylki-mail-read-symbolic"
-                                    } else {
-                                        "co.hyprlab.Hylki-mail-unread-symbolic"
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: !model.showing_outbox && !model.reader_actions_collapsed
+                                            && model.reader_compose.is_none(),
+                                        // The icon shows the ACTION (read envelope =
+                                        // "mark as read"), matching the menus.
+                                        #[watch]
+                                        set_icon_name: if model.reply_target().is_some_and(|m| m.unread) {
+                                            "co.hyprlab.Hylki-mail-read-symbolic"
+                                        } else {
+                                            "co.hyprlab.Hylki-mail-unread-symbolic"
+                                        },
+                                        #[watch]
+                                        set_tooltip_text: Some(if model.reply_target().is_some_and(|m| m.unread) { i18n("Mark as Read") } else { i18n("Mark as Unread") }.as_str()),
+                                        #[watch]
+                                        set_sensitive: model.reply_target().is_some(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::ToggleReadCurrent),
                                     },
-                                    #[watch]
-                                    set_tooltip_text: Some(if model.reply_target().is_some_and(|m| m.unread) { i18n("Mark as Read") } else { i18n("Mark as Unread") }.as_str()),
-                                    #[watch]
-                                    set_sensitive: model.reply_target().is_some(),
-                                    connect_clicked[sender] => move |_| sender.input(AppMsg::ToggleReadCurrent),
                                 },
                                 // Tags (#71): a menu of the tags, ticked where
                                 // the target carries them. Only once a tag exists.
                                 #[name = "tb_tags"]
-                                pack_end = &gtk::Box {
-                                    #[local_ref]
-                                    reader_tag_btn -> gtk::Button {
-                                        #[watch]
-                                        set_visible: model.toolbar_visible(config::ToolbarItem::Tags) && !model.tags.is_empty(),
-                                        #[watch]
-                                        set_sensitive: model.reply_target().is_some(),
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Box {
+                                        #[local_ref]
+                                        reader_tag_btn -> gtk::Button {
+                                            #[watch]
+                                            set_visible: model.toolbar_visible(config::ToolbarItem::Tags) && !model.tags.is_empty(),
+                                            #[watch]
+                                            set_sensitive: model.reply_target().is_some(),
+                                        },
                                     },
                                 },
                                 #[name = "tb_spinner"]
@@ -2460,6 +2652,12 @@ impl SimpleComponent for AppModel {
                     MessageViewOutput::ReloadBody(m) => AppMsg::ReloadBody(m),
                     MessageViewOutput::Notice(text) => AppMsg::Notice(text),
                     MessageViewOutput::ReaderMode(on) => AppMsg::SetReaderMode(on),
+                    MessageViewOutput::Unsubscribe { message, info } => {
+                        AppMsg::Unsubscribe { message, info }
+                    }
+                    MessageViewOutput::InviteAction { message, invite, action } => {
+                        AppMsg::InviteAction { message, invite, action }
+                    }
                 });
 
         // The drawer owns a Paned whose top pane is the reader body, so hand it
@@ -2554,6 +2752,9 @@ impl SimpleComponent for AppModel {
             // unified section alone (also Settings → Sidebar).
             let sidebar = gtk::gio::Menu::new();
             sidebar.append(Some(i18n("Show Accounts").as_str()), Some("app.show-accounts"));
+            // Focus Mode: the distraction-free layout (also Ctrl+Shift+F
+            // and Settings → Appearance, where its parts are chosen).
+            sidebar.append(Some(i18n("Focus Mode").as_str()), Some("app.focus-mode"));
             menu.append_section(None, &sidebar);
 
             let printing = gtk::gio::Menu::new();
@@ -2581,6 +2782,24 @@ impl SimpleComponent for AppModel {
                 if let Some(on) = value.and_then(|v| v.get::<bool>()) {
                     action.set_state(&on.to_variant());
                     s.input(AppMsg::SetShowAccounts(on));
+                }
+            });
+        }
+
+        let focus = config::load_focus_mode();
+        let focus_action = gtk::gio::SimpleAction::new_stateful(
+            "focus-mode",
+            None,
+            &focus.enabled.to_variant(),
+        );
+        {
+            let s = sender.clone();
+            focus_action.connect_change_state(move |action, value| {
+                if let Some(on) = value.and_then(|v| v.get::<bool>()) {
+                    action.set_state(&on.to_variant());
+                    let mut focus = config::load_focus_mode();
+                    focus.enabled = on;
+                    s.input(AppMsg::SetFocusMode(focus));
                 }
             });
         }
@@ -2762,6 +2981,8 @@ impl SimpleComponent for AppModel {
             theme: config::load_theme(),
             current: None,
             allowed_senders: config::load_allowed_senders(),
+            unsubscribed: config::load_unsubscribed(),
+            invite_answers: config::load_invite_answers(),
             auto_remote_content: config::load_auto_remote_content(),
             show_remote_banner: config::load_show_remote_banner(),
             blacklist: config::load_blacklist(),
@@ -2818,6 +3039,9 @@ impl SimpleComponent for AppModel {
             unified_tags: config::load_unified_tags(),
             show_accounts,
             show_accounts_action,
+            focus,
+            focus_action,
+            list_header_widgets: std::cell::OnceCell::new(),
             chevrons_left: config::load_chevrons_left(),
             console_mode: config::load_console_mode(),
             read_mark: config::load_read_mark(),
@@ -2982,7 +3206,7 @@ impl SimpleComponent for AppModel {
             .emit(MessageListInput::SetGravatar(model.gravatar));
         model
             .message_list
-            .emit(MessageListInput::SetAvatars(model.avatars));
+            .emit(MessageListInput::SetAvatars(model.list_avatars()));
         // The formatter is a free function, so the preference has to be handed to
         // it before anything draws a date.
         model
@@ -2991,7 +3215,12 @@ impl SimpleComponent for AppModel {
         crate::datefmt::set_style(model.date_style, model.clock_style);
         model
             .message_list
-            .emit(MessageListInput::SetPreviewLines(model.preview_lines));
+            .emit(MessageListInput::SetPreviewLines(model.list_preview_lines()));
+        model.sidebars_emit(SidebarInput::SetFocus {
+            hide_accounts: model.focus.active(config::FocusPart::HideAccounts),
+            fold_unified: model.focus.active(config::FocusPart::FoldUnified),
+            animate: false,
+        });
         model
             .message_list
             .emit(MessageListInput::SetThreading(model.threading));
@@ -3017,15 +3246,20 @@ impl SimpleComponent for AppModel {
         model
             .message_view
             .emit(MessageViewInput::SetSingleMessageCard(model.single_message_card));
-        model.message_view.emit(MessageViewInput::SetReaderMode(model.reader_mode));
+        model.message_view.emit(MessageViewInput::SetReaderMode(model.effective_reader_mode()));
         model.message_view.emit(MessageViewInput::SetReaderSwitchShown(model.reader_switch));
-        model.message_view.emit(MessageViewInput::SetReaderDefault(model.reader_default));
+        model.message_view.emit(MessageViewInput::SetReaderDefault(model.effective_reader_default()));
         model
             .message_view
             .emit(MessageViewInput::SetCardAttachmentsShown(model.card_attachments));
         model
             .message_view
             .emit(MessageViewInput::SetAttachmentDrawer(model.drawer_enabled));
+        model.message_view.emit(MessageViewInput::SetUnsubscribed(model.unsubscribed_map()));
+        model.message_view.emit(MessageViewInput::SetIdentities(model.identities_map()));
+        model
+            .message_view
+            .emit(MessageViewInput::SetInviteAnswers(model.invite_answers_map()));
         model.arm_auto_fetch(&sender);
 
         // The app-wide theme choice must be in force before the first frame.
@@ -3111,7 +3345,10 @@ impl SimpleComponent for AppModel {
             let mut visible_sum = 0;
             let mut button_w = 0;
             for (_, w) in &buttons {
-                let nat = w.measure(gtk::Orientation::Horizontal, -1).1;
+                // Each button sits in a Focus Mode revealer; the button is
+                // what has a width worth knowing.
+                let inner = w.downcast_ref::<gtk::Revealer>().and_then(|r| r.child()).unwrap_or_else(|| w.clone());
+                let nat = inner.measure(gtk::Orientation::Horizontal, -1).1;
                 if nat > 0 {
                     visible_sum += nat;
                     button_w = button_w.max(nat);
@@ -3134,6 +3371,11 @@ impl SimpleComponent for AppModel {
             widgets.reader_bin.add_breakpoint(bp.clone());
             let _ = model.reader_toolbar_widgets.set(ReaderToolbarWidgets {
                 buttons,
+                outbox: vec![
+                    widgets.tb_outbox_edit.clone(),
+                    widgets.tb_outbox_send.clone(),
+                    widgets.tb_outbox_send_all.clone(),
+                ],
                 spinner: widgets.tb_spinner.clone().upcast(),
                 bin: widgets.reader_bin.clone(),
                 breakpoint: bp,
@@ -3449,6 +3691,7 @@ impl SimpleComponent for AppModel {
         {
             let app = relm4::main_application();
             app.add_action(&model.show_accounts_action);
+            app.add_action(&model.focus_action);
             let window = root.clone();
             let quit = gtk::gio::SimpleAction::new("quit", None);
             quit.connect_activate(move |_, _| {
@@ -3474,6 +3717,12 @@ impl SimpleComponent for AppModel {
                 &app,
                 "app.show-accounts",
                 &["<Ctrl><Shift>a"],
+            );
+            // Ctrl+Shift+F switches Focus Mode on and off.
+            gtk::prelude::GtkApplicationExt::set_accels_for_action(
+                &app,
+                "app.focus-mode",
+                &["<Ctrl><Shift>f"],
             );
             // Ctrl+W closes the window only (issue #64): with "run in the
             // background" on, mail keeps arriving — unlike Ctrl+Q, which
@@ -3904,6 +4153,36 @@ impl SimpleComponent for AppModel {
                         }
                     });
                 }
+                // HYLKI_SHOWCASE_UNSUB=ask|go presses the open card's
+                // Unsubscribe button at 7s (after HYLKI_SHOWCASE_ROW opened
+                // it): `ask` stops at the confirmation, `go` skips it.
+                if std::env::var("HYLKI_SHOWCASE_UNSUB").is_ok() {
+                    let view = model.message_view.sender().clone();
+                    gtk::glib::timeout_add_seconds_local_once(7, move || {
+                        let _ = view.send(MessageViewInput::Unsubscribe { account_id: 1, id: 10 });
+                    });
+                }
+                // HYLKI_SHOWCASE_INVITE=accept|maybe|decline|calendar presses
+                // that button on the open card's invitation banner at 7s
+                // (after HYLKI_SHOWCASE_ROW=8 opened the meeting request).
+                if let Ok(which) = std::env::var("HYLKI_SHOWCASE_INVITE") {
+                    use crate::models::Rsvp;
+                    use crate::ui::message_view::InviteAction;
+                    let action = match which.as_str() {
+                        "maybe" => InviteAction::Answer(Rsvp::Tentative),
+                        "decline" => InviteAction::Answer(Rsvp::Declined),
+                        "calendar" => InviteAction::AddToCalendar,
+                        _ => InviteAction::Answer(Rsvp::Accepted),
+                    };
+                    let view = model.message_view.sender().clone();
+                    gtk::glib::timeout_add_seconds_local_once(7, move || {
+                        let _ = view.send(MessageViewInput::InviteAction {
+                            account_id: 1,
+                            id: 13,
+                            action,
+                        });
+                    });
+                }
                 // HYLKI_SHOWCASE_UNIFIED=sent|starred|drafts opens that unified
                 // row at 3s, All Inboxes at 6s and the row again at 9s, so the
                 // timing logs show a cold and a warm open.
@@ -4074,6 +4353,21 @@ impl SimpleComponent for AppModel {
                 // HYLKI_SHOWCASE_FOLDER=drafts|sent|archive|junk|trash switches
                 // to that folder at 2 s, before the staging's 3 s selection
                 // moves onto its first row.
+                // HYLKI_SHOWCASE_FOCUS=<seconds> switches Focus Mode on at
+                // that moment (its parts as saved in focus.toml), so a
+                // capture a little later catches the slide, and one later
+                // still the settled layout. HYLKI_SHOWCASE_FOCUS_OFF=<seconds>
+                // switches it off again.
+                for (var, on) in [("HYLKI_SHOWCASE_FOCUS", true), ("HYLKI_SHOWCASE_FOCUS_OFF", false)] {
+                    if let Some(at) = std::env::var(var).ok().and_then(|v| v.parse::<f64>().ok()) {
+                        let s = sender.clone();
+                        gtk::glib::timeout_add_local_once(std::time::Duration::from_millis((at * 1000.0) as u64), move || {
+                            let mut focus = config::load_focus_mode();
+                            focus.enabled = on;
+                            s.input(AppMsg::SetFocusMode(focus));
+                        });
+                    }
+                }
                 if let Ok(kind) = std::env::var("HYLKI_SHOWCASE_FOLDER") {
                     let kind = match kind.as_str() {
                         "drafts" => Some(FolderKind::Drafts),
@@ -4309,7 +4603,13 @@ impl SimpleComponent for AppModel {
                 }
                 let win = root.clone();
                 let top = std::env::var_os("HYLKI_SHOWCASE_TOP").is_some();
-                gtk::glib::timeout_add_seconds_local_once(delay, move || {
+                // HYLKI_SHOWCASE_DELAY_MS names the moment to the
+                // millisecond instead (a frame inside an animation).
+                let delay_ms: u64 = std::env::var("HYLKI_SHOWCASE_DELAY_MS")
+                    .ok()
+                    .and_then(|v| v.parse().ok())
+                    .unwrap_or(u64::from(delay) * 1000);
+                gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(delay_ms), move || {
                     let target = settings
                         .as_ref()
                         .map(|_| ())
@@ -4354,6 +4654,24 @@ impl SimpleComponent for AppModel {
                 menu.append(Some(&i18n(label)), Some(&format!("sortmenu.order::{key}")));
             }
             widgets.list_sort_btn.set_menu_model(Some(&menu));
+
+            let _ = model.list_header_widgets.set(ListHeaderWidgets {
+                revealers: vec![
+                    widgets.lh_search.clone(),
+                    widgets.lh_unread.clone(),
+                    widgets.lh_starred.clone(),
+                    widgets.lh_sort.clone(),
+                    widgets.lh_count.clone(),
+                ],
+                overflow: widgets.lh_overflow.clone(),
+                unread: widgets.lh_unread.child().and_downcast::<gtk::ToggleButton>().expect("unread toggle"),
+                starred: widgets.lh_starred.child().and_downcast::<gtk::ToggleButton>().expect("starred toggle"),
+                sort: sort_action,
+            });
+            // Focus Mode's chrome as saved: nothing is mapped yet, so the
+            // revealers jump to their state without animating.
+            model.sync_focus_chrome();
+            model.reader_overflow_btn.set_visible(model.reader_overflow_wanted());
         }
 
         // mailto: URIs can arrive (via GApplication `open`) before this init
@@ -5881,6 +6199,52 @@ impl SimpleComponent for AppModel {
                 }
             }
 
+            AppMsg::Unsubscribe { message, info } => {
+                if std::env::var("HYLKI_SHOWCASE_UNSUB").is_ok_and(|v| v == "go" || v == "fail") {
+                    self.unsubscribe_go(*message, *info, &sender);
+                } else {
+                    self.confirm_unsubscribe(*message, *info, &sender);
+                }
+            }
+            AppMsg::UnsubscribeGo { message, info } => {
+                self.unsubscribe_go(*message, *info, &sender);
+            }
+            AppMsg::UnsubscribeByMail { message, info } => {
+                self.unsubscribe_by_mail(*message, &info, &sender);
+            }
+            AppMsg::InviteAction { message, invite, action } => {
+                self.invite_action(*message, *invite, action);
+            }
+            AppMsg::UnsubscribeDone { message, result } => {
+                let key = (message.account_id, message.id);
+                match result {
+                    Ok(left) => {
+                        if left {
+                            self.record_unsubscribed(&message);
+                            self.notifications.emit(NotifyInput::Push {
+                                text: i18n_f(
+                                    "Unsubscribed from {name}.",
+                                    &[("name", &sender_label(&message))],
+                                ),
+                                error: false,
+                                connectivity: false,
+                            });
+                        } else {
+                            self.notifications.emit(NotifyInput::Push {
+                                text: i18n("The list's unsubscribe page is open in your browser."),
+                                error: false,
+                                connectivity: false,
+                            });
+                        }
+                        self.push_unsubscribe_state(key, None);
+                    }
+                    Err(why) => {
+                        tracing::warn!("unsubscribe failed for {}: {why}", message.from_addr);
+                        self.push_unsubscribe_state(key, Some(UnsubState::Failed(why)));
+                    }
+                }
+            }
+
             AppMsg::RemoveSender(addr) => {
                 let addr = addr.to_lowercase();
                 self.allowed_senders.retain(|s| *s != addr);
@@ -5919,9 +6283,13 @@ impl SimpleComponent for AppModel {
                 if self.avatars != on {
                     self.avatars = on;
                     self.save_settings();
-                    self.message_list.emit(MessageListInput::SetAvatars(on));
+                    self.push_list_look(false);
                 }
             }
+
+            AppMsg::SetFocusMode(focus) => self.set_focus_mode(focus),
+
+            AppMsg::ListOverflowMenu => self.show_list_overflow_menu(&sender),
 
             AppMsg::SetOwnMailboxFace(on) => {
                 if self.own_mailbox_face != on {
@@ -6347,7 +6715,7 @@ impl SimpleComponent for AppModel {
                     let was_off = self.preview_lines == 0;
                     self.preview_lines = lines;
                     self.save_settings();
-                    self.message_list.emit(MessageListInput::SetPreviewLines(lines));
+                    self.push_list_look(false);
                     // Previews switched back on: IMAP summaries fetched while
                     // they were off carry no preview text (the setting also
                     // stops the body slice being downloaded), so nothing would
@@ -6627,7 +6995,12 @@ impl SimpleComponent for AppModel {
                 }
             }
             AppMsg::SetReaderMode(on) => {
-                if self.reader_mode != on {
+                // In Focus Mode with Reader View on, the switch changes the
+                // message on screen alone: the saved choice is the ordinary
+                // one, and it comes back with the rest of the layout.
+                if self.focus.active(config::FocusPart::ReaderView) {
+                    // Nothing to remember.
+                } else if self.reader_mode != on {
                     self.reader_mode = on;
                     self.save_settings();
                 }
@@ -6654,6 +7027,8 @@ impl SimpleComponent for AppModel {
                 if self.reader_default != policy {
                     self.reader_default = policy;
                     self.save_settings();
+                    // Focus Mode's Reader View outranks it while on.
+                    let policy = self.effective_reader_default();
                     self.message_view.emit(MessageViewInput::SetReaderDefault(policy));
                     for p in self.popouts.values() {
                         p.controller.emit(MessageWindowInput::SetReaderDefault(policy));
@@ -11308,11 +11683,24 @@ impl AppModel {
         }
 
         let has_current = self.current.is_some();
+        let focus = self.focus.active(config::FocusPart::ReaderToolbar);
         let sections = if self.showing_outbox {
             // The Outbox's own buttons (Edit, Send, Send all, Delete) sit in
             // the always-visible left group; only View Source is left to
-            // fold here (queued rows have no context menu to carry it).
-            vec![vec![entry!(i18n("View Source"), "code", AppMsg::ViewSource, has_current)]]
+            // fold here (queued rows have no context menu to carry it) —
+            // unless Focus Mode folded that group too.
+            let mut sections = Vec::new();
+            if focus {
+                let many = has_current || self.list_selection.len() > 1;
+                sections.push(vec![
+                    entry!(i18n("Edit this message"), "document-edit", AppMsg::EditCurrentOutbox, has_current),
+                    entry!(i18n("Try to send this message now"), "mail-send", AppMsg::SendCurrentOutbox, has_current),
+                    entry!(i18n("Send all"), "mail-send", AppMsg::RetryAllOutbox, true),
+                    entry!(i18n("Delete"), "user-trash", AppMsg::Delete, many),
+                ]);
+            }
+            sections.push(vec![entry!(i18n("View Source"), "code", AppMsg::ViewSource, has_current)]);
+            sections
         } else {
             // Only the right group folds in here, in its own order; the left
             // group stays on the bar at every width. Per-message actions act
@@ -11329,8 +11717,17 @@ impl AppModel {
                 self.folder_kind(m.account_id, m.folder_id)
                     .is_some_and(|k| matches!(k, FolderKind::Trash | FolderKind::Junk))
             });
+            // Focus Mode folds the left group in as well, as a section of
+            // its own ahead of the right group.
+            let groups: Vec<&[T]> = if focus {
+                vec![&self.reader_toolbar.left, &self.reader_toolbar.right]
+            } else {
+                vec![&self.reader_toolbar.right]
+            };
+            let mut sections = Vec::new();
+            for group in groups {
             let mut section = Vec::new();
-            for item in &self.reader_toolbar.right {
+            for item in group {
                 match item {
                     T::Reply => section.push(entry!(i18n("Reply"), "mail-reply-sender", AppMsg::Reply, acts)),
                     T::ReplyAll => section.push(entry!(i18n("Reply All"), "mail-reply-all", AppMsg::ReplyAll, acts)),
@@ -11379,11 +11776,188 @@ impl AppModel {
                     T::Print => section.push(entry!(i18n("Print Preview"), "printer", AppMsg::PrintPreview, has_current)),
                 }
             }
-            vec![section]
+            if !section.is_empty() {
+                sections.push(section);
+            }
+            }
+            sections
         };
 
         let btn = &self.reader_overflow_btn;
         show_context_menu(btn, (btn.width() / 2) as f64, btn.height() as f64, sections);
+    }
+
+    /// The message list's search, filters, count and sort as a menu: what
+    /// the ⋯ in its header offers while Focus Mode has them folded away.
+    /// The toggles are flipped through their own buttons, so the filtering
+    /// happens where it always does.
+    fn show_list_overflow_menu(&self, sender: &ComponentSender<Self>) {
+        use crate::ui::context_menu::{show_context_menu_with_header, MenuEntry};
+        let Some(lh) = self.list_header_widgets.get() else {
+            return;
+        };
+        let s = sender.input_sender().clone();
+        let search = MenuEntry::new(i18n("Search Messages…"), move || {
+            let _ = s.send(AppMsg::OpenListSearch);
+        })
+        .icon("co.hyprlab.Hylki-system-search-symbolic");
+        let unread = lh.unread.clone();
+        let unread_on = unread.is_active();
+        let unread_entry = MenuEntry::new(i18n("Show only unread"), move || {
+            unread.set_active(!unread.is_active());
+        })
+        .icon("co.hyprlab.Hylki-mail-unread-symbolic")
+        .selected(unread_on);
+        let starred = lh.starred.clone();
+        let starred_on = starred.is_active();
+        let starred_entry = MenuEntry::new(i18n("Show only starred"), move || {
+            starred.set_active(!starred.is_active());
+        })
+        .icon("co.hyprlab.Hylki-starred-symbolic")
+        .selected(starred_on);
+        let current = lh.sort.state().and_then(|v| v.str().map(String::from)).unwrap_or_default();
+        let orders: Vec<MenuEntry> = [
+            (i18n_noop("Date (Newest first)"), "date_newest"),
+            (i18n_noop("Date (Oldest first)"), "date_oldest"),
+            (i18n_noop("Sender (A–Z)"), "sender"),
+            (i18n_noop("Subject (A–Z)"), "subject"),
+            (i18n_noop("Unread first"), "unread"),
+            (i18n_noop("Flagged first"), "flagged"),
+        ]
+        .into_iter()
+        .map(|(label, key)| {
+            let action = lh.sort.clone();
+            // The same route the sort menu takes, so the list and the
+            // action's own state both follow.
+            MenuEntry::new(i18n(label), move || action.activate(Some(&key.to_variant()))).selected(current == key)
+        })
+        .collect();
+        let sort = MenuEntry::submenu(i18n("Sort"), vec![orders])
+            .icon("co.hyprlab.Hylki-view-sort-descending-symbolic");
+        let sections = vec![vec![search], vec![unread_entry, starred_entry], vec![sort]];
+        // The message count heads the menu, where the header showed it.
+        let header = (!self.list_count.is_empty()).then(|| self.list_count.clone());
+        let btn = lh.overflow.clone();
+        show_context_menu_with_header(&btn, (btn.width() / 2) as f64, btn.height() as f64, header.as_deref(), sections);
+    }
+
+    /// Focus Mode changed (the menu, the shortcut or Settings): save it,
+    /// and animate whichever parts differ from what is on screen.
+    fn set_focus_mode(&mut self, focus: config::FocusMode) {
+        use config::FocusPart as F;
+        let prev = self.focus;
+        if prev != focus {
+            self.focus = focus;
+            config::save_focus_mode(&focus);
+            let changed = |part: F| prev.active(part) != focus.active(part);
+            if changed(F::ReaderToolbar) || changed(F::ListHeader) {
+                self.sync_focus_chrome();
+                // Not while the inline composer covers the header: that
+                // path hides the ⋯ by hand and restores it on close.
+                if !self.reader_compose.as_ref().is_some_and(|r| r.window.is_none()) {
+                    self.reader_overflow_btn.set_visible(self.reader_overflow_wanted());
+                }
+            }
+            if changed(F::HideAccounts) || changed(F::FoldUnified) {
+                self.sidebars_emit(SidebarInput::SetFocus {
+                    hide_accounts: focus.active(F::HideAccounts),
+                    fold_unified: focus.active(F::FoldUnified),
+                    animate: true,
+                });
+            }
+            if changed(F::HideAvatars) || changed(F::OnePreviewLine) {
+                self.push_list_look(true);
+            }
+            if changed(F::ReaderView) {
+                self.push_reader_focus();
+            }
+        }
+        // The menu's check item and Settings stay in step wherever the
+        // change came from.
+        if self.focus_action.state().and_then(|v| v.get::<bool>()) != Some(focus.enabled) {
+            self.focus_action.set_state(&focus.enabled.to_variant());
+        }
+        if let Some(p) = &self.prefs {
+            p.emit(PrefInput::SetFocusMode(focus));
+        }
+    }
+
+    /// Slide the reader toolbar's buttons and the list header's controls
+    /// away or back, as Focus Mode has them. Unmapped widgets (at launch)
+    /// jump straight to the state.
+    fn sync_focus_chrome(&self) {
+        use config::FocusPart as F;
+        let shown = !self.focus.active(F::ReaderToolbar);
+        if let Some(tb) = self.reader_toolbar_widgets.get() {
+            for (_, w) in &tb.buttons {
+                if let Some(r) = w.downcast_ref::<gtk::Revealer>() {
+                    focus_reveal(r, shown);
+                }
+            }
+            for r in &tb.outbox {
+                focus_reveal(r, shown);
+            }
+        }
+        let shown = !self.focus.active(F::ListHeader);
+        if let Some(lh) = self.list_header_widgets.get() {
+            for r in &lh.revealers {
+                focus_reveal(r, shown);
+            }
+            focus_reveal(&lh.overflow, !shown);
+        }
+    }
+
+    /// The avatars the list draws: the setting, unless Focus Mode hides them.
+    fn list_avatars(&self) -> bool {
+        self.avatars && !self.focus.active(config::FocusPart::HideAvatars)
+    }
+
+    /// The preview lines the list shows: the setting, capped at one by
+    /// Focus Mode (previews switched off stay off).
+    fn list_preview_lines(&self) -> u32 {
+        if self.focus.active(config::FocusPart::OnePreviewLine) {
+            self.preview_lines.min(1)
+        } else {
+            self.preview_lines
+        }
+    }
+
+    /// Hand the list its look; `animate` slides the avatars away or back
+    /// (a Focus Mode toggle) rather than rebuilding the rows outright.
+    fn push_list_look(&self, animate: bool) {
+        self.message_list.emit(MessageListInput::SetLook {
+            avatars: self.list_avatars(),
+            preview_lines: self.list_preview_lines(),
+            animate,
+        });
+    }
+
+    /// What Reader View does on each open: Focus Mode's "on" while it holds,
+    /// else the setting.
+    fn effective_reader_default(&self) -> config::ReaderDefault {
+        if self.focus.active(config::FocusPart::ReaderView) {
+            config::ReaderDefault::On
+        } else {
+            self.reader_default
+        }
+    }
+
+    /// Reader View for the message on screen: on in Focus Mode, else as saved.
+    fn effective_reader_mode(&self) -> bool {
+        self.reader_mode || self.focus.active(config::FocusPart::ReaderView)
+    }
+
+    /// Focus Mode's Reader View came or went: every reader follows, the
+    /// message on screen included.
+    fn push_reader_focus(&self) {
+        let policy = self.effective_reader_default();
+        let mode = self.effective_reader_mode();
+        self.message_view.emit(MessageViewInput::SetReaderDefault(policy));
+        self.message_view.emit(MessageViewInput::SetReaderMode(mode));
+        for p in self.popouts.values() {
+            p.controller.emit(MessageWindowInput::SetReaderDefault(policy));
+            p.controller.emit(MessageWindowInput::SetReaderMode(mode));
+        }
     }
 
     fn sync_attachment_drawer(&self) {
@@ -12124,9 +12698,9 @@ impl AppModel {
             attachments_loading: atts_loading,
             content_dark: self.message_theme.dark_override(),
             reader_style: self.reader_style(),
-            reader_mode: self.reader_mode,
+            reader_mode: self.effective_reader_mode(),
             reader_switch: self.reader_switch,
-            reader_default: self.reader_default,
+            reader_default: self.effective_reader_default(),
             tags: self.tags.clone(),
         };
 
@@ -12147,6 +12721,12 @@ impl AppModel {
                 MessageWindowOutput::ReloadBody(m) => AppMsg::ReloadBody(m),
                 MessageWindowOutput::Notice(text) => AppMsg::Notice(text),
                 MessageWindowOutput::ReaderMode(on) => AppMsg::SetReaderMode(on),
+                MessageWindowOutput::Unsubscribe { message, info } => {
+                    AppMsg::Unsubscribe { message, info }
+                }
+                MessageWindowOutput::InviteAction { message, invite, action } => {
+                    AppMsg::InviteAction { message, invite, action }
+                }
                 MessageWindowOutput::ComposeTo(addr) => AppMsg::ComposeTo(addr),
                 MessageWindowOutput::Closed => AppMsg::PopoutClosed(key),
             });
@@ -12154,6 +12734,9 @@ impl AppModel {
         let window = controller.widget().clone();
         window.set_transient_for(Some(&self.window));
         window.present();
+        controller.emit(MessageWindowInput::SetUnsubscribed(self.unsubscribed_map()));
+        controller.emit(MessageWindowInput::SetIdentities(self.identities_map()));
+        controller.emit(MessageWindowInput::SetInviteAnswers(self.invite_answers_map()));
 
         self.popouts.insert(key, PopOut { window, controller });
     }
@@ -12202,6 +12785,10 @@ impl AppModel {
     /// collapsed, and only when that group has something to offer (the
     /// Outbox keeps View Source there regardless).
     fn reader_overflow_wanted(&self) -> bool {
+        // Focus Mode folds the whole row in, so the ⋯ is the toolbar.
+        if self.focus.active(config::FocusPart::ReaderToolbar) {
+            return true;
+        }
         self.reader_actions_collapsed && (self.showing_outbox || !self.reader_toolbar.right.is_empty())
     }
 
@@ -12223,13 +12810,23 @@ impl AppModel {
             header.remove(&tb.spinner);
         }
         let find = |item: config::ToolbarItem| tb.buttons.iter().find(|(i, _)| *i == item).map(|(_, w)| w);
+        // Each button's Focus Mode revealer slides towards the edge its
+        // group sits against: GTK's SlideRight moves a folding child off to
+        // the left, SlideLeft keeps it anchored and shrinks it from its
+        // right, which is what an end-packed group needs.
         for item in &self.reader_toolbar.left {
             if let Some(w) = find(*item) {
+                if let Some(r) = w.downcast_ref::<gtk::Revealer>() {
+                    r.set_transition_type(gtk::RevealerTransitionType::SlideRight);
+                }
                 header.pack_start(w);
             }
         }
         for item in self.reader_toolbar.right.iter().rev() {
             if let Some(w) = find(*item) {
+                if let Some(r) = w.downcast_ref::<gtk::Revealer>() {
+                    r.set_transition_type(gtk::RevealerTransitionType::SlideLeft);
+                }
                 header.pack_end(w);
             }
         }
@@ -14849,6 +15446,7 @@ impl AppModel {
             rail_dots: self.rail_dots,
             rail_fold: self.rail_fold,
             reader_toolbar: self.reader_toolbar.clone(),
+            focus: self.focus,
             card_actions_hover: self.card_actions_hover,
             card_actions_auto: self.card_actions_auto,
             list_palette: self.list_palette,
@@ -14962,6 +15560,7 @@ impl AppModel {
                 PrefOutput::SetRememberRail(on) => AppMsg::SetRememberRail(on),
                 PrefOutput::SetRailDots(on) => AppMsg::SetRailDots(on),
                 PrefOutput::SetReaderToolbar(layout) => AppMsg::SetReaderToolbar(layout),
+                PrefOutput::SetFocusMode(focus) => AppMsg::SetFocusMode(focus),
                 PrefOutput::SetRailFold(fold) => AppMsg::SetRailFold(fold),
                 PrefOutput::SetAppTheme(theme) => AppMsg::SetAppTheme(theme),
                 PrefOutput::SetTheme(id) => AppMsg::SetTheme(id),
@@ -16357,6 +16956,479 @@ impl AppModel {
     /// Where a copy of outgoing mail is filed (#199): the folder chosen in the
     /// account editor if it still exists, else the Sent folder. `None` when
     /// the account has neither — the message is sent without a copy.
+    /// The lists left, as the readers take them: key → when.
+    fn unsubscribed_map(&self) -> HashMap<String, i64> {
+        self.unsubscribed.iter().map(|l| (l.key.clone(), l.at)).collect()
+    }
+
+    /// Tell every reader (the main one and the pop-outs) where a card's
+    /// unsubscribe request stands.
+    fn push_unsubscribe_state(&self, key: (u32, u32), state: Option<UnsubState>) {
+        self.message_view.emit(MessageViewInput::UnsubscribeState {
+            account_id: key.0,
+            id: key.1,
+            state: state.clone(),
+        });
+        for p in self.popouts.values() {
+            p.controller.emit(MessageWindowInput::UnsubscribeState {
+                account_id: key.0,
+                id: key.1,
+                state: state.clone(),
+            });
+        }
+    }
+
+    /// Remember that this message's list was left, and tell the readers.
+    fn record_unsubscribed(&mut self, message: &Message) {
+        let Some(info) = self
+            .sender_cache
+            .get(&(message.account_id, message.id))
+            .and_then(|c| c.unsubscribe.as_ref())
+        else {
+            return;
+        };
+        let key = info.key(&message.from_addr);
+        self.unsubscribed.retain(|l| l.key != key);
+        self.unsubscribed.push(config::UnsubscribedList {
+            key,
+            name: sender_label(message),
+            at: crate::datefmt::now(),
+        });
+        config::save_unsubscribed(&self.unsubscribed);
+        let map = self.unsubscribed_map();
+        self.message_view.emit(MessageViewInput::SetUnsubscribed(map.clone()));
+        for p in self.popouts.values() {
+            p.controller.emit(MessageWindowInput::SetUnsubscribed(map.clone()));
+        }
+    }
+
+    /// The addresses each account answers to: its own and every send-as
+    /// alias, lowercased. What an invitation's attendee list is matched
+    /// against, so the card can say where the reader's own answer stands
+    /// (#223).
+    fn identities_map(&self) -> HashMap<u32, Vec<String>> {
+        let mut out: HashMap<u32, Vec<String>> = HashMap::new();
+        for (i, cfg) in self.effective_config().iter().enumerate() {
+            let mut addresses = vec![cfg.email.trim().to_lowercase()];
+            for alias in &cfg.aliases {
+                if let Some((_, addr)) =
+                    crate::worker::parse_recipients(&alias.identity).into_iter().next()
+                {
+                    addresses.push(addr.to_lowercase());
+                }
+            }
+            addresses.retain(|a| !a.is_empty());
+            out.insert(i as u32 + 1, addresses);
+        }
+        out
+    }
+
+    /// The invitations answered so far, as the readers take them: event key
+    /// → the PARTSTAT sent and when.
+    fn invite_answers_map(&self) -> HashMap<String, (String, i64)> {
+        self.invite_answers
+            .iter()
+            .map(|a| (a.key.clone(), (a.status.clone(), a.at)))
+            .collect()
+    }
+
+    /// One of a card's invitation buttons (#223).
+    fn invite_action(
+        &mut self,
+        message: Message,
+        invite: crate::models::Invite,
+        action: crate::ui::message_view::InviteAction,
+    ) {
+        use crate::ui::message_view::InviteAction;
+        match action {
+            InviteAction::AddToCalendar => self.open_invite_in_calendar(&invite),
+            InviteAction::Answer(rsvp) => self.answer_invite(&message, &invite, rsvp),
+        }
+    }
+
+    /// "Add to Calendar": hand the event, as it arrived, to whatever
+    /// application opens calendar files — the same road an attachment takes
+    /// (`.ics` and all its portal handling), because that is exactly what
+    /// this is.
+    fn open_invite_in_calendar(&self, invite: &crate::models::Invite) {
+        if invite.ics.is_empty() {
+            self.notifications.emit(NotifyInput::Push {
+                text: i18n("This message carries no calendar file to open."),
+                error: true,
+                connectivity: false,
+            });
+            return;
+        }
+        // Named for the meeting so the calendar's import dialog says what it
+        // is about, rather than "invite.ics".
+        let stem: String = invite
+            .summary
+            .chars()
+            .filter(|c| c.is_alphanumeric() || matches!(c, ' ' | '-' | '_'))
+            .collect();
+        let name = match stem.trim() {
+            "" => "invite.ics".to_string(),
+            s => format!("{}.ics", &s[..s.len().min(60)]),
+        };
+        crate::ui::attachments_gallery::open_bytes(
+            &name,
+            invite.ics.as_bytes(),
+            Some(self.window.upcast_ref::<gtk::Window>()),
+        );
+    }
+
+    /// Accept, Maybe or Decline: the answer RFC 5546 asks for, mailed to the
+    /// organizer from the address that was invited.
+    ///
+    /// No copy is filed in Sent — an RSVP is machinery, not correspondence,
+    /// and the same is true of the unsubscribe requests the reader sends. A
+    /// send that fails is reported and queued in the Outbox like any other.
+    fn answer_invite(
+        &mut self,
+        message: &Message,
+        invite: &crate::models::Invite,
+        rsvp: crate::models::Rsvp,
+    ) {
+        let Some(organizer) = invite.organizer.as_ref().map(|o| o.email.clone()) else {
+            self.notifications.emit(NotifyInput::Push {
+                text: i18n("This invitation names no organiser to answer."),
+                error: true,
+                connectivity: false,
+            });
+            return;
+        };
+        let (from_alias, name, address) = self.invite_identity(message, invite);
+        let ics = crate::invite::reply_ics(invite, &name, &address, rsvp.partstat());
+        let subject = match rsvp {
+            crate::models::Rsvp::Accepted => {
+                i18n_f("Accepted: {subject}", &[("subject", &invite.summary)])
+            }
+            crate::models::Rsvp::Tentative => {
+                i18n_f("Tentative: {subject}", &[("subject", &invite.summary)])
+            }
+            crate::models::Rsvp::Declined => {
+                i18n_f("Declined: {subject}", &[("subject", &invite.summary)])
+            }
+        };
+        let who = if name.trim().is_empty() { address.clone() } else { name.clone() };
+        let body = match rsvp {
+            crate::models::Rsvp::Accepted => {
+                i18n_f("{name} has accepted this invitation.", &[("name", &who)])
+            }
+            crate::models::Rsvp::Tentative => {
+                i18n_f("{name} has tentatively accepted this invitation.", &[("name", &who)])
+            }
+            crate::models::Rsvp::Declined => {
+                i18n_f("{name} has declined this invitation.", &[("name", &who)])
+            }
+        };
+        let out = crate::worker::OutgoingMessage {
+            from_account_id: message.account_id,
+            from_alias,
+            to: organizer,
+            cc: String::new(),
+            bcc: String::new(),
+            reply_to: String::new(),
+            subject,
+            body,
+            html: String::new(),
+            attachments: Vec::new(),
+            // An answer belongs to the conversation the invitation started,
+            // so the organizer's client files it with the request.
+            in_reply_to: message.message_id.clone(),
+            references: String::new(),
+            draft_origin: None,
+            outbox_origin: None,
+            sign: false,
+            encrypt: false,
+            send_at: None,
+            calendar: Some(crate::worker::CalendarPart {
+                ics,
+                method: "REPLY".to_string(),
+            }),
+        };
+        self.send_to(
+            message.account_id,
+            MailRequest::Send { message: Box::new(out), sent_path: None },
+        );
+        self.record_invite_answer(invite, rsvp);
+        self.notifications.emit(NotifyInput::Push {
+            text: match rsvp {
+                crate::models::Rsvp::Accepted => i18n("Your answer has been sent: accepted."),
+                crate::models::Rsvp::Tentative => i18n("Your answer has been sent: maybe."),
+                crate::models::Rsvp::Declined => i18n("Your answer has been sent: declined."),
+            },
+            error: false,
+            connectivity: false,
+        });
+    }
+
+    /// The identity an answer leaves under: the address on the invitation's
+    /// attendee list that belongs to this account (a calendar knows its
+    /// guest by the address it invited), else the alias the message was
+    /// addressed to, else the account itself. Returns the send-as alias for
+    /// the wire (`None` for the account), the name to put on the attendee
+    /// line, and the bare address.
+    fn invite_identity(
+        &self,
+        message: &Message,
+        invite: &crate::models::Invite,
+    ) -> (Option<String>, String, String) {
+        let cfg = self.effective_config();
+        let Some(cfg) = cfg.get(message.account_id.saturating_sub(1) as usize) else {
+            return (None, String::new(), String::new());
+        };
+        let invited: Vec<String> =
+            invite.attendees.iter().map(|a| a.email.to_lowercase()).collect();
+        for alias in &cfg.aliases {
+            if let Some((name, addr)) =
+                crate::worker::parse_recipients(&alias.identity).into_iter().next()
+            {
+                if invited.iter().any(|i| *i == addr.to_lowercase()) {
+                    return (Some(alias.identity.clone()), name, addr);
+                }
+            }
+        }
+        if invited.iter().any(|i| *i == cfg.email.to_lowercase()) {
+            return (None, cfg.name.clone(), cfg.email.clone());
+        }
+        // Not on the list under any address we know: answer as whoever the
+        // message was addressed to, which is the unsubscribe rule and the
+        // best guess there is.
+        match self.unsubscribe_from(message) {
+            (Some(alias), addr) => {
+                let name = crate::worker::parse_recipients(&alias)
+                    .into_iter()
+                    .next()
+                    .map(|(n, _)| n)
+                    .unwrap_or_default();
+                (Some(alias), name, addr)
+            }
+            (None, addr) => (None, cfg.name.clone(), addr),
+        }
+    }
+
+    /// Remember an answer, and tell the readers so the banner says so.
+    fn record_invite_answer(
+        &mut self,
+        invite: &crate::models::Invite,
+        rsvp: crate::models::Rsvp,
+    ) {
+        let key = invite.key();
+        if key.is_empty() {
+            return;
+        }
+        self.invite_answers.retain(|a| a.key != key);
+        self.invite_answers.push(config::InviteAnswer {
+            key,
+            status: rsvp.partstat().to_string(),
+            at: crate::datefmt::now(),
+            summary: invite.summary.clone(),
+        });
+        config::save_invite_answers(&self.invite_answers);
+        let map = self.invite_answers_map();
+        self.message_view.emit(MessageViewInput::SetInviteAnswers(map.clone()));
+        for p in self.popouts.values() {
+            p.controller.emit(MessageWindowInput::SetInviteAnswers(map.clone()));
+        }
+    }
+
+    /// The identity an unsubscribe mail leaves under: the alias the message
+    /// was addressed to when it was one (a list knows its subscriber by the
+    /// address it writes to), else the account itself. Returns the send-as
+    /// alias for the wire (`None` for the account) and the bare address.
+    fn unsubscribe_from(&self, message: &Message) -> (Option<String>, String) {
+        let cfg = self.effective_config();
+        let Some(cfg) = cfg.get(message.account_id.saturating_sub(1) as usize) else {
+            return (None, String::new());
+        };
+        let recipients: Vec<String> = [&message.to, &message.cc]
+            .into_iter()
+            .flat_map(|f| crate::worker::parse_recipients(f))
+            .map(|(_, e)| e.to_lowercase())
+            .collect();
+        for alias in &cfg.aliases {
+            if let Some((_, addr)) = crate::worker::parse_recipients(&alias.identity).into_iter().next() {
+                if recipients.iter().any(|r| *r == addr.to_lowercase()) {
+                    return (Some(alias.identity.clone()), addr);
+                }
+            }
+        }
+        (None, cfg.email.clone())
+    }
+
+    /// Where an unsubscribe mail goes: the list's `mailto:` handle when it
+    /// gave one, else the "reply with UNSUBSCRIBE" it asked for. `None`
+    /// when the message offers neither.
+    fn unsubscribe_mail_target(
+        info: &crate::models::Unsubscribe,
+    ) -> Option<crate::unsubscribe::MailtoTarget> {
+        if let Some(t) = info.mailto.as_deref().and_then(crate::unsubscribe::parse_mailto) {
+            return Some(t);
+        }
+        info.reply.as_ref().map(|r| crate::unsubscribe::MailtoTarget {
+            to: r.to.clone(),
+            subject: r.subject.clone(),
+            body: r.subject.clone(),
+        })
+    }
+
+    /// Ask before leaving a list: what will happen depends on the route the
+    /// list offers, and a mail sent in the user's name is said so up front.
+    fn confirm_unsubscribe(
+        &self,
+        message: Message,
+        info: crate::models::Unsubscribe,
+        sender: &ComponentSender<Self>,
+    ) {
+        let heading = i18n_f("Unsubscribe from {name}?", &[("name", &sender_label(&message))]);
+        let mut body = if info.one_click.is_some() {
+            i18n("Hylki will ask the list to stop sending you mail. A list can take a few days to act on the request.")
+        } else if let Some(t) = Self::unsubscribe_mail_target(&info) {
+            let (_, from) = self.unsubscribe_from(&message);
+            i18n_f(
+                "An unsubscribe request will be sent to {addr} from {from}. A list can take a few days to act on it.",
+                &[("addr", &t.to), ("from", &from)],
+            )
+        } else {
+            i18n("This list offers no direct way to unsubscribe. Its unsubscribe page will open in your browser.")
+        };
+        // Read out of the message's words rather than its headers: a good
+        // guess, but the user should know it is one before anything is sent.
+        if !info.in_headers {
+            body.push(' ');
+            body.push_str(&i18n("This message carries no unsubscribe header, so Hylki is going by the link in it."));
+        }
+        let parent = relm4::main_application()
+            .active_window()
+            .unwrap_or_else(|| self.window.clone().upcast());
+        let dialog = adw::MessageDialog::new(Some(&parent), Some(&heading), Some(body.as_str()));
+        dialog.add_response("cancel", &i18n("Cancel"));
+        dialog.add_response("unsub", &i18n("Unsubscribe"));
+        dialog.set_default_response(Some("unsub"));
+        dialog.set_close_response("cancel");
+        dialog.set_response_appearance("unsub", adw::ResponseAppearance::Suggested);
+        let s = sender.clone();
+        let message = Box::new(message);
+        let info = Box::new(info);
+        dialog.connect_response(None, move |_, resp| {
+            if resp == "unsub" {
+                s.input(AppMsg::UnsubscribeGo { message: message.clone(), info: info.clone() });
+            }
+        });
+        dialog.present();
+        // HYLKI_SHOWCASE_UNSUB=ask: the dialog is its own surface, so the
+        // main window's capture never shows it — take one of it too.
+        if std::env::var("HYLKI_SHOWCASE_UNSUB").is_ok_and(|v| v == "ask") {
+            if let Ok(path) = std::env::var("HYLKI_SHOWCASE") {
+                let d = dialog.clone();
+                gtk::glib::timeout_add_seconds_local_once(1, move || {
+                    showcase_capture(d.upcast_ref::<gtk::Widget>(), &format!("{path}.dialog.png"));
+                });
+            }
+        }
+    }
+
+    /// Leave the list, by the best route it offers: the one-click POST
+    /// (RFC 8058), falling back to its `mailto:` handle when that fails or
+    /// is not there, and only then the web page in the browser.
+    fn unsubscribe_go(
+        &mut self,
+        message: Message,
+        info: crate::models::Unsubscribe,
+        sender: &ComponentSender<Self>,
+    ) {
+        let key = (message.account_id, message.id);
+        self.push_unsubscribe_state(key, Some(UnsubState::Working));
+        let message = Box::new(message);
+        if demo_mode() {
+            // The demo has no list to ask: the request succeeds after a beat
+            // (or fails, for a look at that banner: HYLKI_SHOWCASE_UNSUB=fail).
+            let s = sender.clone();
+            let fail = std::env::var("HYLKI_SHOWCASE_UNSUB").is_ok_and(|v| v == "fail");
+            gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(900), move || {
+                let result = if fail {
+                    Err("the list's server answered 503".to_string())
+                } else {
+                    Ok(true)
+                };
+                s.input(AppMsg::UnsubscribeDone { message, result });
+            });
+            return;
+        }
+        if let Some(url) = info.one_click.clone() {
+            let s = sender.clone();
+            let info = Box::new(info);
+            std::thread::spawn(move || match crate::unsubscribe::one_click_post(&url) {
+                Ok(()) => s.input(AppMsg::UnsubscribeDone { message, result: Ok(true) }),
+                Err(why) if info.mailto.is_some() || info.reply.is_some() => {
+                    tracing::warn!("one-click unsubscribe failed ({why}); writing to the list instead");
+                    s.input(AppMsg::UnsubscribeByMail { message, info });
+                }
+                Err(why) => s.input(AppMsg::UnsubscribeDone { message, result: Err(why) }),
+            });
+            return;
+        }
+        if info.mailto.is_some() || info.reply.is_some() {
+            self.unsubscribe_by_mail(*message, &info, sender);
+            return;
+        }
+        match info.web.as_deref() {
+            Some(url) => {
+                crate::ui::launch::open_link(url, Some(self.window.upcast_ref()));
+                sender.input(AppMsg::UnsubscribeDone { message, result: Ok(false) });
+            }
+            None => sender.input(AppMsg::UnsubscribeDone {
+                message,
+                result: Err(i18n("the message offers no way to unsubscribe")),
+            }),
+        }
+    }
+
+    /// The `mailto:` route: a short message to the list's handle, sent
+    /// through the account the message arrived in (as the alias it was
+    /// addressed to, when it was one). No copy is filed in Sent. A send that
+    /// fails is reported and queued in the Outbox like any other.
+    fn unsubscribe_by_mail(
+        &mut self,
+        message: Message,
+        info: &crate::models::Unsubscribe,
+        sender: &ComponentSender<Self>,
+    ) {
+        let Some(target) = Self::unsubscribe_mail_target(info) else {
+            sender.input(AppMsg::UnsubscribeDone {
+                message: Box::new(message),
+                result: Err(i18n("the list's mail address could not be read")),
+            });
+            return;
+        };
+        let (from_alias, _) = self.unsubscribe_from(&message);
+        let out = crate::worker::OutgoingMessage {
+            from_account_id: message.account_id,
+            from_alias,
+            to: target.to,
+            cc: String::new(),
+            bcc: String::new(),
+            reply_to: String::new(),
+            subject: target.subject,
+            body: target.body,
+            html: String::new(),
+            attachments: Vec::new(),
+            // A "reply with UNSUBSCRIBE" is a reply: the list matches it to
+            // the message it sent. A `mailto:` handle is a fresh message.
+            in_reply_to: if info.mailto.is_some() { String::new() } else { message.message_id.clone() },
+            references: String::new(),
+            draft_origin: None,
+            outbox_origin: None,
+            sign: false,
+            encrypt: false,
+            calendar: None,
+            send_at: None,
+        };
+        self.send_to(message.account_id, MailRequest::Send { message: Box::new(out), sent_path: None });
+        sender.input(AppMsg::UnsubscribeDone { message: Box::new(message), result: Ok(true) });
+    }
+
     fn sent_copy_path(&self, account_id: u32) -> Option<String> {
         let cfg = self.effective_config().get(account_id.saturating_sub(1) as usize);
         // The server files its own copy: appending a second one is what makes
@@ -16973,6 +18045,7 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ("Ctrl+Shift+P", i18n_noop("Preview it as a PDF first")),
             ("Ctrl+Shift+S", i18n_noop("Reveal the status bar (also: long-press Refresh)")),
             ("Ctrl+Shift+A", i18n_noop("Show or hide the accounts in the sidebar")),
+            ("Ctrl+Shift+F", i18n_noop("Focus Mode on or off")),
             ("Ctrl+Shift+C", i18n_noop("Console mode (when enabled in Settings)")),
             ("Ctrl+W", i18n_noop("Close the window (background sync keeps running)")),
             ("Ctrl+Q", i18n_noop("Quit Hylki entirely")),
@@ -17164,6 +18237,12 @@ fn star_label(starred: bool) -> String {
 /// The same for a read/unread change.
 fn read_label(read: bool) -> String {
     if read { i18n("Mark as Read") } else { i18n("Mark as Unread") }
+}
+
+/// A sender as a dialog or toast names them: the display name, else the address.
+fn sender_label(message: &Message) -> String {
+    let name = message.from_name.trim();
+    if name.is_empty() { message.from_addr.clone() } else { name.to_string() }
 }
 
 fn demo_mode() -> bool {

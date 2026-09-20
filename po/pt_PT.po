@@ -32,6 +32,10 @@ msgstr "Recolher a barra lateral"
 msgid "Search messages (Ctrl+F)"
 msgstr "Pesquisar mensagens (Ctrl+F)"
 
+#, fuzzy
+msgid "Search, filters and sort"
+msgstr "Pesquisar filtros"
+
 msgid "Show only unread"
 msgstr "Mostrar apenas as não lidas"
 
@@ -107,6 +111,9 @@ msgstr "Definições"
 msgid "Show Accounts"
 msgstr "Mostrar contas"
 
+msgid "Focus Mode"
+msgstr ""
+
 msgid "Print Preview…"
 msgstr "Pré-visualizar impressão…"
 
@@ -163,6 +170,12 @@ msgstr "Já existe nos contactos ({name})"
 
 msgid "Could not add contact: {e}"
 msgstr "Não foi possível adicionar o contacto: {e}"
+
+msgid "Unsubscribed from {name}."
+msgstr ""
+
+msgid "The list's unsubscribe page is open in your browser."
+msgstr ""
 
 msgid "The language applies the next time Hylki starts."
 msgstr "O idioma será aplicado da próxima vez que o Hylki for iniciado."
@@ -322,6 +335,13 @@ msgstr "Localizar na mensagem"
 
 msgid "Print Preview"
 msgstr "Pré-visualizar impressão"
+
+#, fuzzy
+msgid "Search Messages…"
+msgstr "Imprimir mensagem…"
+
+msgid "Sort"
+msgstr "Ordenar"
 
 msgid "Message Source"
 msgstr "Código fonte da mensagem"
@@ -671,6 +691,73 @@ msgid "Filters Applied"
 msgstr "Filtros aplicados"
 
 #, fuzzy
+msgid "This message carries no calendar file to open."
+msgstr "Esta mensagem contém uma assinatura válida de {from}."
+
+msgid "This invitation names no organiser to answer."
+msgstr ""
+
+msgid "Accepted: {subject}"
+msgstr ""
+
+msgid "Tentative: {subject}"
+msgstr ""
+
+msgid "Declined: {subject}"
+msgstr ""
+
+msgid "{name} has accepted this invitation."
+msgstr ""
+
+msgid "{name} has tentatively accepted this invitation."
+msgstr ""
+
+msgid "{name} has declined this invitation."
+msgstr ""
+
+msgid "Your answer has been sent: accepted."
+msgstr ""
+
+msgid "Your answer has been sent: maybe."
+msgstr ""
+
+msgid "Your answer has been sent: declined."
+msgstr ""
+
+msgid "Unsubscribe from {name}?"
+msgstr ""
+
+msgid ""
+"Hylki will ask the list to stop sending you mail. A list can take a few days "
+"to act on the request."
+msgstr ""
+
+msgid ""
+"An unsubscribe request will be sent to {addr} from {from}. A list can take a "
+"few days to act on it."
+msgstr ""
+
+msgid ""
+"This list offers no direct way to unsubscribe. Its unsubscribe page will "
+"open in your browser."
+msgstr ""
+
+msgid ""
+"This message carries no unsubscribe header, so Hylki is going by the link in "
+"it."
+msgstr ""
+
+msgid "Unsubscribe"
+msgstr ""
+
+msgid "the message offers no way to unsubscribe"
+msgstr ""
+
+#, fuzzy
+msgid "the list's mail address could not be read"
+msgstr "Não foi possível abrir o ficheiro"
+
+#, fuzzy
 msgid "Full Release Notes on GitHub"
 msgstr "Notas de lançamento"
 
@@ -750,6 +837,9 @@ msgstr "Mostrar a barra de estado (também: premir sem soltar Atualizar)"
 
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Mostrar ou ocultar as contas na barra lateral"
+
+msgid "Focus Mode on or off"
+msgstr ""
 
 msgid "Console mode (when enabled in Settings)"
 msgstr "Modo de consola (quando ativado nas Definições)"
@@ -1844,9 +1934,6 @@ msgstr "Áudio e vídeo"
 msgid "Other"
 msgstr "Outro"
 
-msgid "Sort"
-msgstr "Ordenar"
-
 msgid "Newest first"
 msgstr "Mais recentes primeiro"
 
@@ -2590,6 +2677,116 @@ msgstr "Marcar tudo como lido"
 msgid "Mark All as Unread"
 msgstr "Marcar tudo como não lido"
 
+#, fuzzy
+msgid "Unsubscribing…"
+msgstr "A sincronizar…"
+
+msgid "Unsubscribing didn't work: {why}"
+msgstr ""
+
+#, fuzzy
+msgid "Try Again"
+msgstr "Procurar novamente"
+
+msgid "You unsubscribed from this list on {date}."
+msgstr ""
+
+#. A message that said so in its headers is from a list;
+#. one whose footer link gave it away only has a link.
+msgid "This message is from a mailing list."
+msgstr ""
+
+#, fuzzy
+msgid "This message has an unsubscribe link."
+msgstr "Esta mensagem não foi verificada."
+
+msgid "Asks the list to stop sending you mail"
+msgstr ""
+
+msgid "Sends an unsubscribe request by email"
+msgstr ""
+
+#. Nothing but a web page on offer: the button says so.
+msgid "Unsubscribe…"
+msgstr ""
+
+#. Nothing but a web page on offer: the button says so.
+msgid "Opens the list's unsubscribe page in your browser"
+msgstr ""
+
+#, fuzzy
+msgid "Meeting"
+msgstr "Definições"
+
+#, fuzzy
+msgid "Cancelled"
+msgstr "Cancelar"
+
+msgid "Updated invitation"
+msgstr ""
+
+#, fuzzy
+msgid "Invitation"
+msgstr "Conversas"
+
+#, fuzzy
+msgid "Organised by {name}"
+msgstr "Assinada por {signer}"
+
+#, fuzzy
+msgid "{n} guest"
+msgid_plural "{n} guests"
+msgstr[0] "Mensagens: {n}"
+msgstr[1] "Mensagens: {n}"
+
+#, fuzzy
+msgid "This meeting has been called off."
+msgstr "Esta mensagem não foi verificada."
+
+msgid "You accepted this invitation."
+msgstr ""
+
+msgid "You accepted this invitation on {date}."
+msgstr ""
+
+msgid "You answered maybe to this invitation."
+msgstr ""
+
+msgid "You answered maybe to this invitation on {date}."
+msgstr ""
+
+msgid "You declined this invitation."
+msgstr ""
+
+msgid "You declined this invitation on {date}."
+msgstr ""
+
+msgid "Accept"
+msgstr ""
+
+msgid "Tells the organiser you will be there"
+msgstr ""
+
+msgid "Maybe"
+msgstr ""
+
+msgid "Tells the organiser you might be there"
+msgstr ""
+
+#, fuzzy
+msgid "Decline"
+msgstr "Sublinhado"
+
+msgid "Tells the organiser you will not be there"
+msgstr ""
+
+msgid "Opens the meeting in your calendar application"
+msgstr ""
+
+#, fuzzy
+msgid "Add to Calendar"
+msgstr "Adicionar aos contactos"
+
 msgid "Fetch the sender's key"
 msgstr "Obter a chave do remetente"
 
@@ -2600,6 +2797,46 @@ msgid "A pass proves the address wasn't forged — not that the message is safe.
 msgstr ""
 "Um resultado positivo prova que o endereço não foi falsificado — não que a "
 "mensagem seja segura."
+
+msgid "Repeats daily"
+msgstr ""
+
+#, fuzzy
+msgid "Repeats every {n} days"
+msgstr "as ligações expiram ao fim de {n} dias"
+
+msgid "Repeats weekly"
+msgstr ""
+
+msgid "Repeats every {n} weeks"
+msgstr ""
+
+msgid "Repeats monthly"
+msgstr ""
+
+msgid "Repeats every {n} months"
+msgstr ""
+
+msgid "Repeats yearly"
+msgstr ""
+
+msgid "Repeats every {n} years"
+msgstr ""
+
+msgid "Repeats"
+msgstr ""
+
+msgid "Somebody answered this invitation."
+msgstr ""
+
+msgid "{name} accepted this invitation."
+msgstr ""
+
+msgid "{name} answered maybe to this invitation."
+msgstr ""
+
+msgid "{name} declined this invitation."
+msgstr ""
 
 msgid "Save…"
 msgstr "Guardar…"
@@ -3209,6 +3446,66 @@ msgstr ""
 
 msgid "Restore Defaults"
 msgstr "Restaurar predefinições"
+
+msgid ""
+"A quieter layout for reading. The parts ticked below slide away when Focus "
+"Mode is on and come back when it is off. Also in the main menu, and "
+"Ctrl+Shift+F."
+msgstr ""
+
+msgid "Strip the parts below away for reading."
+msgstr ""
+
+#, fuzzy
+msgid "Fold the reading pane's toolbar"
+msgstr "Segue a ordem de leitura"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr ""
+
+#, fuzzy
+msgid "Fold the message list's header"
+msgstr "Voltar à lista de mensagens"
+
+msgid ""
+"Search, the unread and starred filters, the count and the sort order go into "
+"a ⋯ menu. Only the sidebar toggle stays."
+msgstr ""
+
+#, fuzzy
+msgid "Hide the accounts in the sidebar"
+msgstr "Mostrar ou ocultar as contas na barra lateral"
+
+#, fuzzy
+msgid "Only the unified section stays."
+msgstr "Na secção unificada"
+
+#, fuzzy
+msgid "Fold up the unified rows"
+msgstr "Na secção unificada"
+
+msgid ""
+"Inboxes, Starred and the rest show folded. A click still opens one for the "
+"while; the full layout comes back as you left it."
+msgstr ""
+
+#, fuzzy
+msgid "Hide sender avatars"
+msgstr "Avatares dos remetentes"
+
+msgid "The message list's circles go, and the room they took comes back."
+msgstr ""
+
+msgid "One line of preview text"
+msgstr ""
+
+msgid "Rows show at most one line of a message's text."
+msgstr ""
+
+msgid ""
+"Every message opens in Reader View. The header's switch still changes the "
+"one on screen."
+msgstr ""
 
 msgid "Accounts in the sidebar"
 msgstr "Contas na barra lateral"

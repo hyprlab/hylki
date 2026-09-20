@@ -360,6 +360,18 @@ pub struct Sidebar {
     /// Where the two sections sit (Settings → Sidebar).
     filtered_placement: crate::config::SectionPlacement,
     tags_placement: crate::config::SectionPlacement,
+    /// Focus Mode: the account sections are hidden.
+    focus_hide_accounts: bool,
+    /// Focus Mode: the unified rows show folded, whatever their saved
+    /// state; a click opens one for the mode alone (`rail_open`), the way
+    /// the icon rail does.
+    focus_fold_unified: bool,
+    /// The revealer holding every account section, so Focus Mode can slide
+    /// them away as one and bring them back the same way.
+    accounts_revealer: Option<gtk::Revealer>,
+    /// The next rebuild draws the accounts folded away and slides them in
+    /// (Focus Mode has just given them back).
+    reveal_accounts_late: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -388,6 +400,12 @@ pub enum SidebarInput {
         filtered_placement: crate::config::SectionPlacement,
         tags_placement: crate::config::SectionPlacement,
     },
+    /// Focus Mode's sidebar parts: hide the accounts, fold the unified
+    /// rows. `animate` slides what goes (or comes back) and rebuilds once it
+    /// has gone; off, the rebuild is immediate (launch).
+    SetFocus { hide_accounts: bool, fold_unified: bool, animate: bool },
+    /// The Focus Mode slide finished: draw the sidebar as it now is.
+    FocusSettled,
     /// A tag row in a Tags section was chosen.
     TagRowSelected { slot: Slot, index: i32 },
     /// Toggle a Tags section.
@@ -713,6 +731,10 @@ impl Component for Sidebar {
             show_accounts: true,
             filtered_placement: crate::config::SectionPlacement::default(),
             tags_placement: crate::config::SectionPlacement::default(),
+            focus_hide_accounts: false,
+            focus_fold_unified: false,
+            accounts_revealer: None,
+            reveal_accounts_late: false,
         };
 
         let widgets = view_output!();
@@ -1323,6 +1345,62 @@ impl Sidebar {
                 }
             }
 
+
+            SidebarInput::SetFocus { hide_accounts, fold_unified, animate } => {
+                let hiding = hide_accounts && !self.focus_hide_accounts;
+                let showing = !hide_accounts && self.focus_hide_accounts;
+                let folding = fold_unified && !self.focus_fold_unified;
+                if !hiding && !showing && fold_unified == self.focus_fold_unified {
+                    return;
+                }
+                self.focus_hide_accounts = hide_accounts;
+                self.focus_fold_unified = fold_unified;
+                // Whatever was opened for the mode alone goes with it.
+                self.rail_open.clear();
+                self.rail_open_accounts.clear();
+                if animate && (hiding || folding) {
+                    // Slide what goes: the accounts up and away, every open
+                    // unified row shut. The rebuild that draws the sidebar
+                    // without them follows once they have gone — the pixels
+                    // it replaces are then the ones it draws.
+                    if hiding {
+                        // SlideDown folding: the block slides up under the
+                        // unified section, the way a folder list folds.
+                        if let Some(r) = &self.accounts_revealer {
+                            r.set_transition_duration(crate::ui::FOCUS_ANIM_MS);
+                            r.set_reveal_child(false);
+                        }
+                    }
+                    if folding {
+                        self.fold_unified_rows_now();
+                    }
+                    let s = sender.clone();
+                    gtk::glib::timeout_add_local_once(
+                        std::time::Duration::from_millis(u64::from(crate::ui::FOCUS_ANIM_MS) + 40),
+                        move || s.input(SidebarInput::FocusSettled),
+                    );
+                } else {
+                    // Accounts coming back slide in after the rebuild.
+                    self.reveal_accounts_late = animate && showing;
+                    self.rebuild_normal(
+                        &widgets.pinned_box,
+                        &widgets.normal_box,
+                        &widgets.footer_box,
+                        &sender,
+                    );
+                    self.restore_selection();
+                }
+            }
+
+            SidebarInput::FocusSettled => {
+                self.rebuild_normal(
+                    &widgets.pinned_box,
+                    &widgets.normal_box,
+                    &widgets.footer_box,
+                    &sender,
+                );
+                self.restore_selection();
+            }
 
             SidebarInput::SetCollapsed(collapsed) => {
                 // Driven by the app's narrow-window breakpoint: same visual
@@ -2019,7 +2097,16 @@ impl Sidebar {
         // The account sections — unless Settings (or the main menu) has
         // them off, for those who work from the unified section alone.
         let account_sections: Vec<&SectionData> =
-            if self.show_accounts { sections.iter().collect() } else { Vec::new() };
+            if self.show_accounts && !self.focus_hide_accounts { sections.iter().collect() } else { Vec::new() };
+        // Every account section goes in one revealer, so Focus Mode can
+        // slide them all away together (and back).
+        let accounts_box = gtk::Box::new(gtk::Orientation::Vertical, 0);
+        let accounts_revealer = gtk::Revealer::new();
+        accounts_revealer.set_transition_type(gtk::RevealerTransitionType::SlideDown);
+        accounts_revealer.set_transition_duration(0);
+        accounts_revealer.set_reveal_child(!self.reveal_accounts_late);
+        accounts_revealer.set_child(Some(&accounts_box));
+        let any_accounts = !account_sections.is_empty();
         for (section_idx, section) in account_sections.into_iter().enumerate() {
             let id = section.account.id;
 
@@ -2220,7 +2307,7 @@ impl Sidebar {
             if section_idx == 0 && container.first_child().is_some() {
                 header.set_margin_top(10);
             }
-            container.append(&header);
+            accounts_box.append(&header);
 
             // Animated folder list.
             let revealer = gtk::Revealer::new();
@@ -2497,7 +2584,7 @@ impl Sidebar {
             }
             wrap.append(&add_btn);
             revealer.set_child(Some(&wrap));
-            container.append(&revealer);
+            accounts_box.append(&revealer);
 
             self.revealers.insert(id, revealer);
             self.chevrons.insert(id, chevron);
@@ -2506,6 +2593,20 @@ impl Sidebar {
             self.custom_revealers.insert(id, custom_revealer);
             self.custom_chevrons.insert(id, custom_chevron);
         }
+
+        if any_accounts {
+            container.append(&accounts_revealer);
+            if std::mem::take(&mut self.reveal_accounts_late) {
+                // Slide them in once the rebuild's freeze-frame has lifted
+                // (80ms), so the whole of the motion is seen.
+                let r = accounts_revealer.clone();
+                gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(90), move || {
+                    r.set_transition_duration(crate::ui::FOCUS_ANIM_MS);
+                    r.set_reveal_child(true);
+                });
+            }
+        }
+        self.accounts_revealer = any_accounts.then_some(accounts_revealer);
 
         // And the sections placed after the last account.
         let filtered_below =
@@ -2983,12 +3084,20 @@ impl Sidebar {
     /// the sidebar is the icon rail and the row's switch is on. Such a row
     /// keeps its own rail-only open state (`rail_open`).
     fn locked_row(&self, row: UnifiedRow) -> bool {
-        self.collapsed
-            && match row {
-                UnifiedRow::Kind(kind) => self.rail_fold.folds_kind(kind),
-                UnifiedRow::Filtered => self.rail_fold.folds_filtered(),
-                UnifiedRow::Tags => self.rail_fold.folds_tags(),
-            }
+        // Focus Mode folds every unified row the same way.
+        self.focus_fold_unified
+            || self.collapsed
+                && match row {
+                    UnifiedRow::Kind(kind) => self.rail_fold.folds_kind(kind),
+                    UnifiedRow::Filtered => self.rail_fold.folds_filtered(),
+                    UnifiedRow::Tags => self.rail_fold.folds_tags(),
+                }
+    }
+
+    /// Whether the unified rows' open states are the temporary kind: the
+    /// icon rail's, or Focus Mode's. Either keeps the saved state untouched.
+    fn rows_temporary(&self) -> bool {
+        self.collapsed || self.focus_fold_unified
     }
 
     /// Whether "Fold up expanded items" holds the accounts folded.
@@ -3000,7 +3109,7 @@ impl Sidebar {
     /// last set to there, else folded when "Fold up expanded items" covers
     /// it, else its saved state. In the full sidebar: its saved state.
     fn row_shown_open(&self, row: UnifiedRow) -> bool {
-        if !self.collapsed {
+        if !self.rows_temporary() {
             return self.row_open(row);
         }
         match self.rail_open.get(&row) {
@@ -3032,6 +3141,28 @@ impl Sidebar {
         }
     }
 
+    /// Focus Mode is folding the unified rows: shut every open one on
+    /// screen, animated, with its chevron turned. The rebuild that follows
+    /// draws them folded for good (see `locked_row`).
+    fn fold_unified_rows_now(&self) {
+        if let Some(rev) = &self.unified_revealer {
+            rev.set_reveal_child(false);
+        }
+        if let Some(ch) = &self.unified_chevron {
+            ch.set_icon_name(Some(chevron_icon(false)));
+        }
+        for w in self.kind_widgets.values() {
+            w.revealer.set_reveal_child(false);
+            if let Some(ch) = &w.chevron {
+                ch.set_icon_name(Some(chevron_icon(false)));
+            }
+        }
+        for w in self.filtered_sections.get(&Slot::Unified).into_iter().chain(self.tag_sections.get(&Slot::Unified)) {
+            w.revealer.set_reveal_child(false);
+            w.chevron.set_icon_name(Some(chevron_icon(false)));
+        }
+    }
+
     /// The unread total a unified row's folded chip shows.
     fn row_unread(&self, row: UnifiedRow) -> u32 {
         match row {
@@ -3046,7 +3177,7 @@ impl Sidebar {
     /// a double-click on the row), and report the section states.
     fn toggle_row(&mut self, row: UnifiedRow, sender: &ComponentSender<Self>) {
         let open = !self.row_shown_open(row);
-        if self.collapsed {
+        if self.rows_temporary() {
             // Opened or folded for the rail alone: the saved state is
             // untouched, and the full sidebar comes back as it was left.
             self.rail_open.insert(row, open);
@@ -3663,7 +3794,7 @@ impl Sidebar {
                     .iter()
                     .find(|s| !s.folders.is_empty())
                     .map(|s| s.account.id)
-                    .filter(|_| self.show_accounts)
+                    .filter(|_| self.show_accounts && !self.focus_hide_accounts)
                 {
                     self.select_folder_index(acc, 0);
                 }

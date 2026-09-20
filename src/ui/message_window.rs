@@ -122,10 +122,41 @@ pub enum MessageWindowInput {
     ComposeTo(String),
     /// "Add to Contacts" from an address's right-click menu.
     AddContactAddr(String),
+    /// A card's Unsubscribe button — handed to the app, which owns the
+    /// request.
+    Unsubscribe { message: Box<Message>, info: Box<crate::models::Unsubscribe> },
+    /// The lists left so far, for the cards' banners.
+    SetUnsubscribed(std::collections::HashMap<String, i64>),
+    /// Where a card's unsubscribe request stands.
+    UnsubscribeState {
+        account_id: u32,
+        id: u32,
+        state: Option<crate::ui::message_view::UnsubState>,
+    },
+    /// A card's invitation button — handed to the app, which owns the
+    /// answer (#223).
+    InviteAction {
+        message: Box<Message>,
+        invite: Box<crate::models::Invite>,
+        action: crate::ui::message_view::InviteAction,
+    },
+    /// The addresses each account answers to, for the invitation banners.
+    SetIdentities(std::collections::HashMap<u32, Vec<String>>),
+    /// The invitations answered so far, for those banners.
+    SetInviteAnswers(std::collections::HashMap<String, (String, i64)>),
 }
 
 #[derive(Debug)]
 pub enum MessageWindowOutput {
+    /// A card's Unsubscribe button: leave the list, by these handles.
+    Unsubscribe { message: Box<Message>, info: Box<crate::models::Unsubscribe> },
+    /// A card's invitation button: answer the organiser, or hand the
+    /// meeting to a calendar application (#223).
+    InviteAction {
+        message: Box<Message>,
+        invite: Box<crate::models::Invite>,
+        action: crate::ui::message_view::InviteAction,
+    },
     /// Reader View flipped from this window's subject block.
     ReaderMode(bool),
     /// A per-message action handled exactly like a list/context-menu action.
@@ -313,6 +344,12 @@ impl Component for MessageWindow {
                 MessageViewOutput::ReloadBody(m) => MessageWindowInput::ReloadBody(m),
                 MessageViewOutput::Notice(text) => MessageWindowInput::Notice(text),
                 MessageViewOutput::ReaderMode(on) => MessageWindowInput::ReaderMode(on),
+                MessageViewOutput::Unsubscribe { message, info } => {
+                    MessageWindowInput::Unsubscribe { message, info }
+                }
+                MessageViewOutput::InviteAction { message, invite, action } => {
+                    MessageWindowInput::InviteAction { message, invite, action }
+                }
                 MessageViewOutput::AddContactAddr(addr) => {
                     MessageWindowInput::AddContactAddr(addr)
                 }
@@ -395,6 +432,24 @@ impl Component for MessageWindow {
             }
             MessageWindowInput::ReaderMode(on) => {
                 let _ = sender.output(MessageWindowOutput::ReaderMode(on));
+            }
+            MessageWindowInput::Unsubscribe { message, info } => {
+                let _ = sender.output(MessageWindowOutput::Unsubscribe { message, info });
+            }
+            MessageWindowInput::SetUnsubscribed(lists) => {
+                self.view.emit(MessageViewInput::SetUnsubscribed(lists));
+            }
+            MessageWindowInput::InviteAction { message, invite, action } => {
+                let _ = sender.output(MessageWindowOutput::InviteAction { message, invite, action });
+            }
+            MessageWindowInput::SetIdentities(identities) => {
+                self.view.emit(MessageViewInput::SetIdentities(identities));
+            }
+            MessageWindowInput::SetInviteAnswers(answers) => {
+                self.view.emit(MessageViewInput::SetInviteAnswers(answers));
+            }
+            MessageWindowInput::UnsubscribeState { account_id, id, state } => {
+                self.view.emit(MessageViewInput::UnsubscribeState { account_id, id, state });
             }
             MessageWindowInput::FacesChanged => {
                 self.view.emit(MessageViewInput::FacesChanged);

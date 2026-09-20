@@ -24,3 +24,8 @@ pub mod rich_editor;
 pub mod sidebar;
 pub mod theme_picker;
 pub mod welcome;
+
+/// How long Focus Mode's parts take to slide and fade away (and back), in
+/// milliseconds: the reader toolbar, the list header, the sidebar's
+/// accounts and the list's avatars all move on this one clock.
+pub const FOCUS_ANIM_MS: u32 = 320;

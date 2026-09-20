@@ -257,6 +257,53 @@ pub fn date_time(ts: i64) -> String {
     format!("{} at {}", day_month_year(ts), time(ts))
 }
 
+/// The day an event falls on, with its weekday: "Monday, 2 Nov 2026".
+/// An appointment is placed by its weekday more than by its date, which is
+/// why a calendar invitation names it and a message list does not.
+pub fn weekday_date(ts: i64) -> String {
+    let Some(dt) = local(ts) else {
+        return String::new();
+    };
+    let day = day_month_year(ts);
+    match fmt(&dt, "%A") {
+        w if w.is_empty() => day,
+        w => format!("{w}, {day}"),
+    }
+}
+
+/// When an event runs: "Monday, 2 Nov 2026 · 09:00 – 10:00", or the two
+/// dates when it spans days, or the day alone when it takes all of one.
+///
+/// `end` at or before `start` (an event written with no end) shows the
+/// start alone rather than a range that goes backwards.
+pub fn event_span(start: i64, end: i64, all_day: bool) -> String {
+    if local(start).is_none() {
+        return String::new();
+    }
+    if all_day {
+        // An all-day event ends at midnight on the day *after* the last one
+        // it covers, so a single day arrives as a 24-hour range.
+        let last = end - 86_400;
+        if last > start && day_key(last) != day_key(start) {
+            return format!("{} – {}", weekday_date(start), weekday_date(last));
+        }
+        return weekday_date(start);
+    }
+    if end <= start {
+        return format!("{} · {}", weekday_date(start), time(start));
+    }
+    if day_key(end) == day_key(start) {
+        return format!("{} · {} – {}", weekday_date(start), time(start), time(end));
+    }
+    format!(
+        "{} {} – {} {}",
+        weekday_date(start),
+        time(start),
+        weekday_date(end),
+        time(end)
+    )
+}
+
 /// The year a timestamp falls in, locally.
 pub fn year(ts: i64) -> i32 {
     local(ts).map(|dt| dt.year()).unwrap_or_default()
@@ -277,6 +324,47 @@ pub fn now() -> i64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// An event's line says the weekday, and only shows a range when there
+    /// is one to show. The wording is the locale's; the shape is not.
+    #[test]
+    fn an_events_span_reads_as_one_line() {
+        // Nine in the morning, local, whatever zone the test runs in: the
+        // arithmetic below then stays inside the day it started in.
+        let day = glib::DateTime::from_unix_local(1_793_600_000).expect("a date");
+        let start = glib::DateTime::new(
+            &glib::TimeZone::local(),
+            day.year(),
+            day.month(),
+            day.day_of_month(),
+            9,
+            0,
+            0.0,
+        )
+        .expect("nine o'clock")
+        .to_unix();
+
+        let hour = event_span(start, start + 3600, false);
+        assert!(hour.contains('–'), "a range within one day: {hour}");
+        assert!(hour.contains('·'), "date and times are separated: {hour}");
+        assert_eq!(hour.matches('·').count(), 1, "{hour}");
+
+        // No end at all: the start, and no range that goes backwards.
+        let point = event_span(start, 0, false);
+        assert!(!point.contains('–'), "{point}");
+
+        // All day: the date alone, even though the event runs to midnight.
+        let day = event_span(start, start + 86_400, true);
+        assert!(!day.contains('–'), "{day}");
+        assert!(!day.contains('·'), "no time of day on an all-day event: {day}");
+
+        // Two days: both dates.
+        let two = event_span(start, start + 2 * 86_400, true);
+        assert!(two.contains('–'), "{two}");
+
+        // Unreadable: nothing rather than a made-up date.
+        assert_eq!(event_span(i64::MAX, i64::MAX, false), "");
+    }
 
     #[test]
     fn the_locales_field_order_is_read_from_its_own_date() {

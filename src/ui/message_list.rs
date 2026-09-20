@@ -146,6 +146,9 @@ pub struct RowInit {
     pub gravatar: bool,
     /// Whether the avatar is drawn at all (#29).
     pub avatars: bool,
+    /// Build the avatar folded away and slide it in a moment later (Focus
+    /// Mode has just given the avatars back).
+    pub avatar_late: bool,
     /// Whether a sender's site icon may fill it (#30).
     pub sender_logos: bool,
     /// How many lines of the message's text the row shows (1–3).
@@ -335,6 +338,10 @@ pub struct MessageRow {
     palette_anim: std::cell::RefCell<Option<adw::TimedAnimation>>,
     gravatar: bool,
     avatars: bool,
+    /// The avatar's revealer state: down while Focus Mode slides it away
+    /// (the row is rebuilt without it once it has gone), or up from folded
+    /// when the avatars come back.
+    avatar_shown: bool,
     sender_logos: bool,
     preview_lines: u32,
     avatar_texture: Option<gtk::gdk::Texture>,
@@ -428,6 +435,11 @@ pub struct MessageRow {
 
 #[derive(Debug)]
 pub enum MessageRowInput {
+    /// Slide the avatar away or back (Focus Mode).
+    SetAvatarShown(bool),
+    /// Show this many lines of preview in place (Focus Mode; the rebuild
+    /// that follows makes it permanent).
+    SetPreviewLines(u32),
     SetRead(bool),
     SetStarred(bool),
     SetKeywords(Vec<String>),
@@ -1133,19 +1145,33 @@ impl FactoryComponent for MessageRow {
             // painted across the divider into the reader.
             set_overflow: gtk::Overflow::Hidden,
 
-            adw::Avatar {
-                set_size: 38,
-                set_valign: gtk::Align::Center,
-                set_show_initials: true,
+            // The circle sits in a revealer so Focus Mode can slide it away
+            // (and back) before the rows are rebuilt without (or with) it.
+            gtk::Revealer {
+                // SlideRight: folding, the circle moves off past the row's
+                // left edge (GTK names the transition for the reveal).
+                set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                set_transition_duration: crate::ui::FOCUS_ANIM_MS,
+                add_css_class: "focus-fade",
                 // Hidden, not faded: the point of turning these off is to get the
                 // width back, so the row must give up the slot entirely (#29).
                 set_visible: self.avatars,
-                // Account colour ring (unified view only).
-                set_css_classes: &self.ring_classes(),
                 #[watch]
-                set_text: Some(&self.face_name()),
+                set_reveal_child: self.avatar_shown,
                 #[watch]
-                set_custom_image: self.avatar_image().as_ref(),
+                set_css_classes: if self.avatar_shown { &["focus-fade"] } else { &["focus-fade", "away"] },
+
+                adw::Avatar {
+                    set_size: 38,
+                    set_valign: gtk::Align::Center,
+                    set_show_initials: true,
+                    // Account colour ring (unified view only).
+                    set_css_classes: &self.ring_classes(),
+                    #[watch]
+                    set_text: Some(&self.face_name()),
+                    #[watch]
+                    set_custom_image: self.avatar_image().as_ref(),
+                },
             },
 
             // Faded rather than hidden: a hidden widget gives up its slot in
@@ -1300,12 +1326,14 @@ impl FactoryComponent for MessageRow {
                     // ellipsize is the combination that detaches the "…" from
                     // the text; a plain ellipsized line keeps it attached and
                     // tracks the pane width continuously.
+                    #[watch]
                     set_wrap: self.preview_lines > 1,
                     set_wrap_mode: gtk::pango::WrapMode::WordChar,
                     set_ellipsize: gtk::pango::EllipsizeMode::End,
                     // A ceiling, not a reservation: a short message keeps a short
                     // row, so the list stays scannable and only long messages use
                     // the extra lines.
+                    #[watch]
                     set_lines: self.preview_lines.max(1) as i32,
                     add_css_class: "message-preview",
                 },
@@ -1491,6 +1519,7 @@ impl FactoryComponent for MessageRow {
             msg,
             gravatar,
             avatars,
+            avatar_late,
             sender_logos,
             preview_lines,
             ring_class,
@@ -1526,6 +1555,7 @@ impl FactoryComponent for MessageRow {
             show_recipient,
             gravatar,
             avatars,
+            avatar_shown: !avatar_late,
             sender_logos,
             preview_lines,
             avatar_texture: None,
@@ -1583,6 +1613,15 @@ impl FactoryComponent for MessageRow {
         // starting from an already-final state.
         if !model.revealed {
             sender.input(MessageRowInput::SetRevealed(true));
+        }
+        // An avatar built folded away (Focus Mode just ended) slides in once
+        // the row is on screen: a moment after mounting, not the next
+        // iteration, so the revealer is mapped and animates.
+        if avatar_late {
+            let s = sender.clone();
+            gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(60), move || {
+                s.input(MessageRowInput::SetAvatarShown(true));
+            });
         }
 
         model
@@ -1670,6 +1709,8 @@ impl FactoryComponent for MessageRow {
                         .output(MessageRowOutput::PaletteOpened(self.index.current_index()));
                 }
             }
+            MessageRowInput::SetAvatarShown(on) => self.avatar_shown = on,
+            MessageRowInput::SetPreviewLines(lines) => self.preview_lines = lines.clamp(1, 3),
             MessageRowInput::ClosePalette => {
                 if self.palette_open {
                     self.palette_open = false;
@@ -2419,6 +2460,9 @@ pub struct MessageList {
     preview_lines: u32,
     /// Whether the coloured avatars are drawn (#29).
     avatars: bool,
+    /// The next rebuild draws the avatars folded away and slides them in
+    /// (Focus Mode has just given them back).
+    reveal_avatars_late: bool,
     /// Whether a sender's site icon may fill one (#30).
     sender_logos: bool,
     /// Tint each row by its account (used in the unified inbox view).
@@ -2512,6 +2556,11 @@ pub struct MessageList {
     /// Messages actually rendered (after the render limit), independent of how
     /// many rows are visible once threads are collapsed.
     rendered_count: usize,
+    /// The rows on screen were built for a look that has changed (avatars,
+    /// logos, preview lines, date style…): the next rebuild must build
+    /// them again even though the messages are the same. Without this the
+    /// page-growing shortcut in `rebuild` keeps them as they are.
+    rows_stale: bool,
     /// How many messages to render — grows by `RENDER_CAP` each time the user
     /// scrolls to the bottom (infinite scroll). Reset on folder switch / search.
     render_limit: usize,
@@ -2636,6 +2685,13 @@ pub enum MessageListInput {
     SetShowRecipient(bool),
     /// Show or hide the coloured avatars (#29).
     SetAvatars(bool),
+    /// The avatars and preview lines together, as the settings and Focus
+    /// Mode leave them. `animate` (a Focus Mode toggle) slides the avatars
+    /// away before the rows are rebuilt without them, or builds them folded
+    /// and slides them in.
+    SetLook { avatars: bool, preview_lines: u32, animate: bool },
+    /// The Focus Mode slide finished: rebuild the rows as they now are.
+    LookSettled,
     /// Fill them with senders' own site icons, or stop (#30).
     SetSenderLogos(bool),
     /// The date or clock preference changed: every row's date is built with the
@@ -3101,6 +3157,8 @@ impl SimpleComponent for MessageList {
             query: String::new(),
             gravatar: false,
             avatars: true,
+            reveal_avatars_late: false,
+            rows_stale: false,
             sender_logos: false,
             preview_lines: 1,
             colorize: false,
@@ -3382,32 +3440,67 @@ impl SimpleComponent for MessageList {
                     self.rebuild();
                 }
             }
-            MessageListInput::RefreshDates => self.rebuild_preserving_scroll(),
+            MessageListInput::RefreshDates => self.rebuild_rows_preserving_scroll(),
             MessageListInput::SetSenderLogos(on) => {
                 if self.sender_logos != on {
                     self.sender_logos = on;
                     // The circle is filled when the row is built.
-                    self.rebuild_preserving_scroll();
+                    self.rebuild_rows_preserving_scroll();
                 }
             }
+            MessageListInput::SetLook { avatars, preview_lines, animate } => {
+                let preview_lines = preview_lines.min(3);
+                let avatars_changed = self.avatars != avatars;
+                let lines_changed = self.preview_lines != preview_lines;
+                if !avatars_changed && !lines_changed {
+                    return;
+                }
+                if animate && avatars_changed && !avatars {
+                    // Slide every circle away (and the preview to its new
+                    // height in place); the rebuild that takes the slot
+                    // back follows once they have gone, so the rows it
+                    // draws are the ones on screen.
+                    self.avatars = false;
+                    self.preview_lines = preview_lines;
+                    for i in 0..self.rows.len() {
+                        self.rows.send(i, MessageRowInput::SetAvatarShown(false));
+                        if lines_changed {
+                            self.rows.send(i, MessageRowInput::SetPreviewLines(preview_lines));
+                        }
+                    }
+                    let s = sender.clone();
+                    gtk::glib::timeout_add_local_once(
+                        std::time::Duration::from_millis(u64::from(crate::ui::FOCUS_ANIM_MS) + 40),
+                        move || s.input(MessageListInput::LookSettled),
+                    );
+                } else {
+                    // Circles coming back are built folded and slide in.
+                    self.reveal_avatars_late = animate && avatars_changed && avatars;
+                    self.avatars = avatars;
+                    self.preview_lines = preview_lines;
+                    self.rebuild_rows_preserving_scroll();
+                    self.reveal_avatars_late = false;
+                }
+            }
+            MessageListInput::LookSettled => self.rebuild_rows_preserving_scroll(),
             MessageListInput::SetAvatars(on) => {
                 if self.avatars != on {
                     self.avatars = on;
                     // The circle is built with the row, so the rows have to be
                     // built again for the width to come back.
-                    self.rebuild_preserving_scroll();
-
+                    self.rebuild_rows_preserving_scroll();
                 }
             }
             MessageListInput::SetGravatar(on) => {
                 if self.gravatar != on {
                     self.gravatar = on;
-                    self.rebuild();
+                    self.rebuild_rows();
                 }
             }
             MessageListInput::SetShowRecipient(on) => {
                 if self.show_recipient != on {
                     self.show_recipient = on;
+                    self.rows_stale = true;
                     self.queue_rebuild(true);
                 }
             }
@@ -3418,7 +3511,7 @@ impl SimpleComponent for MessageList {
                 // Pointless when the circles aren't drawn; rows check the
                 // fresh index as they are rebuilt.
                 if self.avatars {
-                    self.rebuild_preserving_scroll();
+                    self.rebuild_rows_preserving_scroll();
                 }
             }
             MessageListInput::SetPreviewLines(lines) => {
@@ -3427,18 +3520,19 @@ impl SimpleComponent for MessageList {
                     self.preview_lines = lines;
                     // Row height is set when the row is built, so the list has to
                     // be rebuilt rather than nudged.
-                    self.rebuild();
+                    self.rebuild_rows();
                 }
             }
             MessageListInput::SetColorize(on) => {
                 if self.colorize != on {
                     self.colorize = on;
+                    self.rows_stale = true;
                     self.queue_rebuild(true);
                 }
             }
             MessageListInput::DayChanged => {
                 // Re-render so relative labels like "Today" reflect the new date.
-                self.rebuild();
+                self.rebuild_rows();
                 schedule_midnight_refresh(&sender);
             }
             MessageListInput::SetAccountColors(colors) => {
@@ -4548,6 +4642,19 @@ impl MessageList {
         self.preserving_scroll(Self::rebuild);
     }
 
+    /// Build every row again, scroll kept: for a change to how rows look
+    /// rather than which messages they show (see `rows_stale`).
+    fn rebuild_rows_preserving_scroll(&mut self) {
+        self.rows_stale = true;
+        self.rebuild_preserving_scroll();
+    }
+
+    /// Build every row again from the top (see `rows_stale`).
+    fn rebuild_rows(&mut self) {
+        self.rows_stale = true;
+        self.rebuild();
+    }
+
     /// A message's read state changed: recompute its conversation's aggregate
     /// unread flag and push it to the head row, so a collapsed thread's heavy
     /// highlight clears exactly when its last unread message is read.
@@ -4694,6 +4801,7 @@ impl MessageList {
                         msg: msg.clone(),
                         gravatar: self.gravatar,
                         avatars: self.avatars,
+                        avatar_late: false,
                         sender_logos: self.sender_logos,
                         preview_lines: self.preview_lines,
                         ring_class,
@@ -4991,7 +5099,8 @@ impl MessageList {
             })
             .collect();
         let old_len = self.shown.len();
-        let append_only = old_len > 0
+        let append_only = !std::mem::take(&mut self.rows_stale)
+            && old_len > 0
             && self.pending_rows.is_empty()
             && self.rows.len() == old_len
             && shown.len() >= old_len
@@ -5068,6 +5177,7 @@ impl MessageList {
                     msg: m.clone(),
                     gravatar: self.gravatar,
                     avatars: self.avatars,
+                    avatar_late: self.reveal_avatars_late,
                     sender_logos: self.sender_logos,
                     preview_lines: self.preview_lines,
                     ring_class,

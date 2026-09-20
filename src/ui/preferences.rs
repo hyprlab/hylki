@@ -118,6 +118,8 @@ pub struct PrefInit {
     pub rail_fold: crate::config::RailFold,
     /// The reader header's buttons, per side and in order.
     pub reader_toolbar: ReaderToolbar,
+    /// Focus Mode: the master switch and the parts it strips.
+    pub focus: crate::config::FocusMode,
     pub preview_lines: u32,
     pub single_key_shortcuts: bool,
     pub run_in_background: bool,
@@ -293,6 +295,9 @@ pub struct Preferences {
     rail_fold: crate::config::RailFold,
     /// The reader toolbar layout being edited (the app applies every drop).
     toolbar: ReaderToolbar,
+    /// Focus Mode's switches, kept whole so each toggle hands the app the
+    /// full set (the main menu and Ctrl+Shift+F flip the master switch too).
+    focus: crate::config::FocusMode,
     /// The three drop zones of the toolbar editor, filled from `toolbar`.
     toolbar_editor: Option<ToolbarEditor>,
     /// Whether swipe actions are on (the reverse switch follows it).
@@ -792,6 +797,10 @@ pub enum PrefInput {
     ToggleUnifiedArchive(bool),
     ToggleUnifiedTags(bool),
     ToggleShowAccounts(bool),
+    /// One of Focus Mode's switches.
+    ToggleFocus(crate::config::FocusPart, bool),
+    /// The app's Focus Mode changed elsewhere (menu, shortcut): follow.
+    SetFocusMode(crate::config::FocusMode),
     /// The main menu flipped "Show Accounts": the switch follows.
     SetShowAccounts(bool),
     ChangeChevronSide(u32),
@@ -933,6 +942,7 @@ pub enum PrefOutput {
     SetRememberRail(bool),
     SetRailDots(bool),
     SetReaderToolbar(ReaderToolbar),
+    SetFocusMode(crate::config::FocusMode),
     SetRailFold(crate::config::RailFold),
     SetAppTheme(AppTheme),
     /// A theme was picked in the gallery (its id, or "system").
@@ -1292,6 +1302,101 @@ impl Component for Preferences {
                                     gtk::Box {
                                         set_orientation: gtk::Orientation::Vertical,
                                         set_spacing: 12,
+                                    },
+                                },
+
+                                // Focus Mode: the master switch and its parts.
+                                // Every row applies at once, animated.
+                                add = &adw::PreferencesGroup {
+                                    set_title: &i18n("Focus Mode"),
+                                    set_description: Some(
+                                        &i18n("A quieter layout for reading. The parts ticked below slide away \
+                                               when Focus Mode is on and come back when it is off. Also in the \
+                                               main menu, and Ctrl+Shift+F."),
+                                    ),
+
+                                    #[name = "focus_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.enabled,
+                                        set_title: &i18n("Focus Mode"),
+                                        set_subtitle: &i18n("Strip the parts below away for reading."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::Enabled, row.is_active()));
+                                        },
+                                    },
+                                    #[name = "focus_toolbar_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.reader_toolbar,
+                                        set_title: &i18n("Fold the reading pane's toolbar"),
+                                        set_subtitle: &i18n("Every button goes into its ⋯ menu."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::ReaderToolbar, row.is_active()));
+                                        },
+                                    },
+                                    #[name = "focus_list_header_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.list_header,
+                                        set_title: &i18n("Fold the message list's header"),
+                                        set_subtitle: &i18n("Search, the unread and starred filters, the count and the sort \
+                                                       order go into a ⋯ menu. Only the sidebar toggle stays."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::ListHeader, row.is_active()));
+                                        },
+                                    },
+                                    #[name = "focus_accounts_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.hide_accounts,
+                                        set_title: &i18n("Hide the accounts in the sidebar"),
+                                        set_subtitle: &i18n("Only the unified section stays."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::HideAccounts, row.is_active()));
+                                        },
+                                    },
+                                    #[name = "focus_unified_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.fold_unified,
+                                        set_title: &i18n("Fold up the unified rows"),
+                                        set_subtitle: &i18n("Inboxes, Starred and the rest show folded. A click still opens \
+                                                       one for the while; the full layout comes back as you left it."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::FoldUnified, row.is_active()));
+                                        },
+                                    },
+                                    #[name = "focus_avatars_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.hide_avatars,
+                                        set_title: &i18n("Hide sender avatars"),
+                                        set_subtitle: &i18n("The message list's circles go, and the room they took comes back."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::HideAvatars, row.is_active()));
+                                        },
+                                    },
+                                    #[name = "focus_preview_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.one_preview_line,
+                                        set_title: &i18n("One line of preview text"),
+                                        set_subtitle: &i18n("Rows show at most one line of a message's text."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::OnePreviewLine, row.is_active()));
+                                        },
+                                    },
+                                    #[name = "focus_reader_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.reader_view,
+                                        set_title: &i18n("Reader View"),
+                                        set_subtitle: &i18n("Every message opens in Reader View. The header's switch still \
+                                                       changes the one on screen."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::ReaderView, row.is_active()));
+                                        },
                                     },
                                 },
                             },
@@ -2461,6 +2566,7 @@ impl Component for Preferences {
             files_rows: None,
             notifications: init.notifications,
             toolbar: init.reader_toolbar.clone(),
+            focus: init.focus,
             toolbar_editor: None,
             show_unified: init.show_unified,
             unified_kinds: init.unified_kinds,
@@ -3379,6 +3485,15 @@ impl Component for Preferences {
                     self.show_accounts = on;
                     let _ = sender.output(PrefOutput::SetShowAccounts(on));
                 }
+            }
+            PrefInput::ToggleFocus(part, on) => {
+                if self.focus.get(part) != on {
+                    self.focus.set(part, on);
+                    let _ = sender.output(PrefOutput::SetFocusMode(self.focus));
+                }
+            }
+            PrefInput::SetFocusMode(focus) => {
+                self.focus = focus;
             }
             PrefInput::SetShowAccounts(on) => {
                 self.show_accounts = on;

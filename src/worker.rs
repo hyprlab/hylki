@@ -471,6 +471,22 @@ pub struct OutgoingMessage {
     /// Send Later (#145): unix seconds to send at. `None` sends now. A time
     /// already past sends now too.
     pub send_at: Option<i64>,
+    /// An answer to a meeting invitation (#223): the iCalendar document and
+    /// its iTIP method, sent as a `text/calendar` alternative beside the
+    /// plain text so a calendar reads the answer and a person reads the
+    /// sentence.
+    pub calendar: Option<CalendarPart>,
+}
+
+/// The calendar half of an outgoing message (#223).
+#[derive(Debug, Clone)]
+pub struct CalendarPart {
+    /// The iCalendar document.
+    pub ics: String,
+    /// The iTIP method, which belongs on the part's own Content-Type as
+    /// well as in the document: a recipient's calendar reads it there
+    /// first, and Exchange ignores a part that does not carry it.
+    pub method: String,
 }
 
 /// An event pushed from the worker back to the UI.
@@ -3409,8 +3425,17 @@ fn extract_attachments(raw: &[u8]) -> Vec<crate::models::Attachment> {
         {
             continue;
         }
-        let name = attachment_name_of(part, raw)
-            .unwrap_or_else(|| format!("attachment-{}", i + 1));
+        let name = attachment_name_of(part, raw).unwrap_or_else(|| {
+            // Unnamed, as a meeting request's calendar part often is (#223):
+            // give it the suffix its type implies, or nothing opens it.
+            let ext = part
+                .content_type()
+                .map(|c| {
+                    mime_extension(c.ctype(), c.subtype().unwrap_or_default())
+                })
+                .unwrap_or_default();
+            format!("attachment-{}{ext}", i + 1)
+        });
         out.push(crate::models::Attachment {
             name,
             data: part.contents().to_vec(),
@@ -3521,6 +3546,7 @@ fn guess_mime(name: &str) -> &'static str {
         "txt" | "log" => "text/plain",
         "html" | "htm" => "text/html",
         "csv" => "text/csv",
+        "ics" => "text/calendar",
         "zip" => "application/zip",
         "doc" | "docx" => "application/msword",
         "xls" | "xlsx" => "application/vnd.ms-excel",
@@ -4031,6 +4057,19 @@ fn build_message(
     }
 
     use lettre::message::{header::ContentType, Attachment, MultiPart, SinglePart};
+    // An answer to an invitation (#223): plain text for the person,
+    // text/calendar for their calendar, as alternatives of one another —
+    // the shape Evolution, Outlook and Google Calendar all send.
+    if let Some(cal) = &msg.calendar {
+        let ctype = format!("text/calendar; charset=utf-8; method={}", cal.method);
+        let part = SinglePart::builder()
+            .header(ContentType::parse(&ctype).unwrap_or(ContentType::TEXT_PLAIN))
+            .body(cal.ics.clone());
+        let alt = MultiPart::alternative()
+            .singlepart(SinglePart::plain(msg.body.clone()))
+            .singlepart(part);
+        return Ok(builder.multipart(alt)?);
+    }
     let has_html = !msg.html.trim().is_empty();
     // The message's readable half: alternative(plain, html) — wrapped in
     // related() carrying an inline part per image the composer embedded as a
@@ -7561,13 +7600,24 @@ fn structure_has_attachment(bs: &async_imap::imap_proto::types::BodyStructure) -
 
     match bs {
         Bs::Multipart { bodies, .. } => bodies.iter().any(structure_has_attachment),
-        Bs::Text { common, .. } => is_attachment(common),
+        // A text part is an attachment only when it says so — except a
+        // calendar part, which a meeting request sends as a plain
+        // alternative with no disposition at all (#223). That part is the
+        // meeting: it has to be listed, and the reader has to know the
+        // message carries files before it will ask for them.
+        Bs::Text { common, .. } => is_attachment(common) || is_calendar(common),
         Bs::Basic { common, other, .. } | Bs::Message { common, other, .. } => {
             is_attachment(common)
                 || other.id.is_none()
                 || decoded_size(other) >= INLINE_ATTACHMENT_MIN
         }
     }
+}
+
+/// Whether a BODYSTRUCTURE part is a `text/calendar` one (#223).
+fn is_calendar(common: &async_imap::imap_proto::types::BodyContentCommon) -> bool {
+    common.ty.ty.eq_ignore_ascii_case("text")
+        && common.ty.subtype.eq_ignore_ascii_case("calendar")
 }
 
 /// Every attachment in a BODYSTRUCTURE, with what it is called, how big it is
@@ -7623,7 +7673,7 @@ fn structure_attachments(
                 // the rest, an inline part with a Content-ID is decoration
                 // unless it is big enough to be content (see the constant).
                 let counts = if is_text {
-                    declared
+                    declared || is_calendar(common)
                 } else {
                     declared || other.id.is_none() || size as usize >= INLINE_ATTACHMENT_MIN
                 };
@@ -7668,6 +7718,11 @@ fn structure_attachments(
 /// the types that actually turn up without a filename are worth listing; the
 /// rest get none, and show as a generic file.
 fn mime_extension(ty: &str, subtype: &str) -> &'static str {
+    // A meeting request's calendar part often arrives with no name at all
+    // (Outlook sends one); without the suffix nothing would open it (#223).
+    if ty.eq_ignore_ascii_case("text") && subtype.eq_ignore_ascii_case("calendar") {
+        return ".ics";
+    }
     if !ty.eq_ignore_ascii_case("image") {
         return "";
     }
@@ -8408,6 +8463,16 @@ fn demo_attachment_files() -> Vec<crate::models::Attachment> {
     ]
 }
 
+/// The demo's sender verdict for a message that has a header block: the
+/// real check, run over those headers, so the card's seal and the
+/// Unsubscribe banner appear as they would for fetched mail.
+fn mock_sender_check(message_id: u32, emit: &impl Fn(WorkerEvent)) {
+    if let Some(raw) = crate::backend::demo_raw(message_id) {
+        let check = crate::verify::check_sender(raw.as_bytes());
+        emit(WorkerEvent::SenderChecked { message_id, check });
+    }
+}
+
 async fn run_mock(
     account_id: u32,
     mut rx: mpsc::UnboundedReceiver<MailRequest>,
@@ -8478,10 +8543,15 @@ async fn run_mock(
             }
             MailRequest::LoadMessages { folder_id, .. }
             | MailRequest::SyncFolder { folder_id, .. } => {
-                emit(WorkerEvent::Messages {
-                    folder_id,
-                    messages: backend.messages(folder_id),
-                });
+                let messages = backend.messages(folder_id);
+                // Demo messages carry their bodies in the listing, so the
+                // app never asks for one: the verdicts that would come with
+                // a fetched body are served with the listing instead.
+                let ids: Vec<u32> = messages.iter().map(|m| m.id).collect();
+                emit(WorkerEvent::Messages { folder_id, messages });
+                for id in ids {
+                    mock_sender_check(id, &emit);
+                }
                 // HYLKI_DEMO_SYNC_DELAY=<secs> holds the "been to the server"
                 // signal back, so the progress a long sync shows (the manual
                 // filter run's dialog, #198) can be watched here.
@@ -8502,6 +8572,7 @@ async fn run_mock(
             MailRequest::LoadBody { message_id, ref path, .. } => {
                 let body = backend.message(message_id).map(|m| m.body).unwrap_or_default();
                 emit(WorkerEvent::Body { message_id, path: path.clone(), body });
+                mock_sender_check(message_id, &emit);
             }
             MailRequest::LoadBodies { ref items, ref path } => {
                 for (message_id, _) in items {
@@ -8511,6 +8582,7 @@ async fn run_mock(
                         path: path.clone(),
                         body,
                     });
+                    mock_sender_check(*message_id, &emit);
                 }
             }
             MailRequest::LoadSource { message_id, .. } => {
@@ -8521,7 +8593,16 @@ async fn run_mock(
                 // A demo message flagged as carrying attachments gets two
                 // small files, so the reader's per-card rows and the drawer
                 // have something to show (#213).
-                let items = if backend.message(message_id).is_some_and(|m| m.has_attachment) {
+                // A meeting request carries its own calendar part and
+                // nothing else (#223).
+                let invite = crate::backend::demo_raw(message_id)
+                    .and_then(|raw| crate::invite::detect_raw(raw.as_bytes()));
+                let items = if let Some(inv) = invite {
+                    vec![crate::models::Attachment {
+                        name: "invite.ics".to_string(),
+                        data: inv.ics.into_bytes(),
+                    }]
+                } else if backend.message(message_id).is_some_and(|m| m.has_attachment) {
                     demo_attachment_files()
                 } else {
                     Vec::new()
@@ -10872,6 +10953,7 @@ mod tests {
             sign: false,
             encrypt: false,
             send_at: None,
+            calendar: None,
         }
     }
 
@@ -12507,6 +12589,72 @@ mod tests {
             " \"ALTERNATIVE\" (\"BOUNDARY\" \"a\") NIL NIL NIL))\r\n",
         ));
         assert!(!structure_has_attachment(&bs));
+    }
+
+    /// A meeting request's calendar part is an attachment, however the
+    /// sender labelled it (#223): it arrives as a plain alternative with no
+    /// disposition at all, which is the one text part that still counts.
+    #[test]
+    fn a_calendar_part_counts_as_an_attachment() {
+        let bs = bodystructure(concat!(
+            "* 1 FETCH (BODYSTRUCTURE (",
+            "(\"TEXT\" \"PLAIN\" (\"CHARSET\" \"utf-8\") NIL NIL \"7BIT\" 10 1 NIL NIL NIL NIL)",
+            "(\"TEXT\" \"HTML\" (\"CHARSET\" \"utf-8\") NIL NIL \"7BIT\" 20 1 NIL NIL NIL NIL)",
+            "(\"TEXT\" \"CALENDAR\" (\"CHARSET\" \"utf-8\" \"METHOD\" \"REQUEST\") NIL NIL ",
+            "\"7BIT\" 900 20 NIL NIL NIL NIL)",
+            " \"ALTERNATIVE\" (\"BOUNDARY\" \"a\") NIL NIL NIL))\r\n",
+        ));
+        assert!(structure_has_attachment(&bs));
+        let metas = structure_attachments(&bs);
+        assert_eq!(metas.len(), 1, "only the calendar part: {metas:?}");
+        assert_eq!(metas[0].mime, "text/calendar");
+        assert_eq!(metas[0].section, "3");
+        // Unnamed by the sender, as Outlook sends it: named for its type, so
+        // something will open it.
+        assert!(metas[0].name.ends_with(".ics"), "{}", metas[0].name);
+    }
+
+    /// The same part, read out of the raw message rather than described by
+    /// the server, and named the same way.
+    #[test]
+    fn an_unnamed_calendar_part_is_still_a_file() {
+        let raw = concat!(
+            "Content-Type: multipart/alternative; boundary=B\r\n",
+            "Subject: Invitation\r\n\r\n",
+            "--B\r\nContent-Type: text/plain; charset=utf-8\r\n\r\nYou are invited.\r\n",
+            "--B\r\nContent-Type: text/calendar; charset=utf-8; method=REQUEST\r\n\r\n",
+            "BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n--B--\r\n",
+        );
+        let found = extract_attachments(raw.as_bytes());
+        assert_eq!(found.len(), 1);
+        assert!(found[0].name.ends_with(".ics"), "{}", found[0].name);
+    }
+
+    /// An answer to an invitation goes out as plain text beside a
+    /// `text/calendar` part that carries the iTIP method (#223) — a
+    /// calendar that cannot find the method ignores the answer.
+    #[test]
+    fn an_invitation_answer_carries_its_calendar_part() {
+        let account = sample_account();
+        let msg = OutgoingMessage {
+            to: "chair@example.org".into(),
+            subject: "Accepted: Architecture sync".into(),
+            body: "Jason has accepted this invitation.".into(),
+            calendar: Some(CalendarPart {
+                ics: "BEGIN:VCALENDAR\r\nMETHOD:REPLY\r\nEND:VCALENDAR\r\n".into(),
+                method: "REPLY".into(),
+            }),
+            ..sample_outgoing()
+        };
+        let raw = build_message(&account, &msg, false).expect("builds").formatted();
+        let text = String::from_utf8_lossy(&raw);
+        assert!(text.contains("multipart/alternative"), "{text}");
+        assert!(
+            text.contains("text/calendar; charset=utf-8; method=REPLY"),
+            "the method rides on the part: {text}"
+        );
+        assert!(text.contains("METHOD:REPLY"), "{text}");
+        assert!(text.contains("Jason has accepted this invitation."), "{text}");
     }
 
     #[test]
