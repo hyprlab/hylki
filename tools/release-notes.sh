@@ -49,10 +49,19 @@ fi
 
 printf '%s\n' "$notes" | trim
 
-# The release before this one, in version order, ignoring betas: what the
-# generated list is measured against.
+# The release before this one, in version order, and of the same kind: a beta
+# is measured against the previous beta, a stable against the previous stable.
+# (Measuring a catch-up beta against the stable it catches up with would list
+# nothing, which is how this was found.) Betas are vX.Y.Z-beta.N, or the older
+# vX.Y.Zb.
+beta_re='-beta\.|[0-9]b$'
+if printf '%s' "v${ver}" | grep -Eq "$beta_re"; then
+  kind() { grep -E -- "$beta_re"; }
+else
+  kind() { grep -Ev -- "$beta_re"; }
+fi
 prev=$(git tag --list 'v*' --sort=-v:refname \
-  | grep -v -- '-beta' \
+  | kind \
   | awk -v cur="v${ver}" 'seen { print; exit } $0 == cur { seen = 1 }')
 
 # GitHub's own list, which names every merged pull request and its author.
