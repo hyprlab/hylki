@@ -15,9 +15,16 @@
 //! one does not, and whose "always open with" sticks in the permission
 //! store. The same request plumbing opens attachments (`portal_open_file` in
 //! the gallery), which is where the chooser retry was first worked out.
+//!
+//! On top of all that sits the user's own choice (#232): Settings names the
+//! browser links open in, and it is launched by its desktop entry before any
+//! of the above is reached. A sandbox cannot see the host's browsers, so
+//! there the choice is between the desktop's default and the portal's
+//! chooser, which remembers what it is told.
 
 use crate::i18n::{i18n, i18n_f};
 use gtk::gio;
+use gtk::gio::prelude::AppInfoExt;
 use gtk::glib;
 use gtk::glib::prelude::*;
 use std::cell::RefCell;
@@ -28,15 +35,95 @@ pub fn in_flatpak() -> bool {
     std::path::Path::new("/.flatpak-info").exists()
 }
 
-/// Open a web or mail link in the app the desktop has for it.
+/// The stored choice that means "let the desktop's app chooser ask, every
+/// time" rather than naming one browser (#232).
+pub const ASK: &str = "ask";
+
+thread_local! {
+    /// Settings → System → Links: empty for the desktop's default handler,
+    /// [`ASK`] for the chooser, otherwise the desktop entry id of the browser
+    /// links open in. Kept here rather than read from disk per click, and
+    /// updated by the app whenever the setting changes.
+    static BROWSER: RefCell<String> = const { RefCell::new(String::new()) };
+}
+
+/// Point every following link at `choice` (see [`BROWSER`]).
+pub fn set_browser(choice: &str) {
+    BROWSER.with(|b| *b.borrow_mut() = choice.to_string());
+}
+
+/// One browser the user can send links to: the desktop entry that launches
+/// it, and the name to show.
+#[derive(Debug, Clone)]
+pub struct Browser {
+    pub id: String,
+    pub name: String,
+}
+
+/// The browsers this process can actually launch — the desktop entries
+/// registered for `https`, minus Hylki itself.
+///
+/// Inside the Flatpak sandbox this is empty: the host's desktop entries are
+/// not visible there, and nothing in them could be run from inside anyway.
+/// Links then go out through the portal, which is what the "Ask each time"
+/// choice is for.
+pub fn browsers() -> Vec<Browser> {
+    let mut found: Vec<Browser> = Vec::new();
+    for info in gio::AppInfo::all_for_type("x-scheme-handler/https") {
+        let Some(id) = info.id().map(|s| s.to_string()) else { continue };
+        if id.starts_with(crate::APP_ID) || !info.should_show() {
+            continue;
+        }
+        if found.iter().any(|b| b.id == id) {
+            continue;
+        }
+        found.push(Browser { id, name: info.display_name().to_string() });
+    }
+    found.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    found
+}
+
+/// Open a web or mail link in the app the desktop has for it — or, when one
+/// was chosen in Settings, in that browser (#232).
 pub fn open_link(uri: &str, parent: Option<&gtk::Window>) {
     tracing::info!("link: opening {}", describe(uri));
+    let choice = BROWSER.with(|b| b.borrow().clone());
+    // A mailto: link is not a browser's business: it goes to whatever the
+    // desktop opens mail with, whichever browser was chosen for the web.
+    let web = !uri.split(':').next().unwrap_or("").eq_ignore_ascii_case("mailto");
+    if web && choice == ASK {
+        portal_open_uri(uri.to_string(), true, parent.cloned());
+        return;
+    }
+    if web && !choice.is_empty() {
+        match gio::DesktopAppInfo::new(&choice) {
+            Some(info) => {
+                match info.launch_uris(&[uri], gio::AppLaunchContext::NONE) {
+                    Ok(()) => return,
+                    Err(e) => tracing::warn!(
+                        "link: {choice} could not be launched ({e}); falling back to the default"
+                    ),
+                }
+            }
+            // The chosen browser is not here: a sandbox that cannot see the
+            // host's applications, or an entry that has since been removed.
+            None => tracing::warn!("link: {choice} is not available here; using the default"),
+        }
+    }
+    default_open(uri, parent.cloned());
+}
+
+/// The road out when no browser was chosen: the desktop's own default
+/// handler, GIO first outside the sandbox and the portal within it.
+fn default_open(uri: &str, parent: Option<gtk::Window>) {
     if in_flatpak() {
-        portal_open_uri(uri.to_string(), false, parent.cloned());
-    } else if let Err(e) = gio::AppInfo::launch_default_for_uri(uri, gio::AppLaunchContext::NONE) {
+        portal_open_uri(uri.to_string(), false, parent);
+        return;
+    }
+    if let Err(e) = gio::AppInfo::launch_default_for_uri(uri, gio::AppLaunchContext::NONE) {
         tracing::warn!("link: gio launch failed ({e}), trying the portal");
-        let owned = parent.cloned();
-        gtk::UriLauncher::new(uri).launch(parent, gio::Cancellable::NONE, move |res| {
+        let owned = parent.clone();
+        gtk::UriLauncher::new(uri).launch(parent.as_ref(), gio::Cancellable::NONE, move |res| {
             if let Err(e) = res {
                 tracing::warn!("link: portal launch also failed: {e}");
                 link_failed_dialog(owned.as_ref(), &e.to_string());
@@ -75,7 +162,14 @@ fn portal_open_uri(uri: String, ask: bool, parent: Option<gtk::Window>) {
     portal_request("OpenURI", None, params, move |res| match res {
         Err(e) => {
             tracing::warn!("link: portal OpenURI call failed: {e}");
-            link_failed_dialog(retry_parent.as_ref(), &e);
+            // Outside the sandbox the portal is a convenience, not the only
+            // road: an "Ask each time" that finds no portal still opens the
+            // link, in the desktop's default handler.
+            if in_flatpak() {
+                link_failed_dialog(retry_parent.as_ref(), &e);
+            } else {
+                default_open(&retry_uri, retry_parent.clone());
+            }
         }
         Ok(0) | Ok(1) => {}
         Ok(code) if !ask => {

@@ -1,0 +1,23 @@
+# Hylki contributors — people outside Hyprlab whose work is in the app.
+#
+# One per line: display name, then the GitHub handle in angle brackets.
+# Blank lines and lines starting with # are ignored. The About window reads
+# this file (src/app.rs, at build time), so keep the format.
+#
+# What each person contributed is credited in docs/CREDITS.md and the
+# changelog, not here.
+
+Alfonso Lizárraga <alfonsolzrg>
+Chris Pouliot <chrispouliot>
+Isaac <thecalamityjoe87>
+Alexander Lubovenko <typedev>
+Anton Palgunov <Toxblh>
+frenchy82 <frenchy82>
+Yiannis Ioannides <yioannides>
+p-mitana <p-mitana>
+Laszlo Lang <7system7>
+Ilya Semenkovich <iliasen>
+Paulo Fino <somepaulo>
+taprobane99 <taprobane99>
+Peter Weiss <peterweissdk>
+EmmanuelP <EmmanuelP>

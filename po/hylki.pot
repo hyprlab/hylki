@@ -324,6 +324,9 @@ msgstr ""
 msgid "Message Source"
 msgstr ""
 
+msgid "Edit as New Message"
+msgstr ""
+
 msgid "Remove Star"
 msgstr ""
 
@@ -560,6 +563,10 @@ msgstr ""
 
 #. Contributors — people outside Hyprlab whose patches are in the app.
 msgid "Special thanks to these contributors"
+msgstr ""
+
+#. Translators — the same list, with the languages each one carried.
+msgid "Translated by"
 msgstr ""
 
 #. Footer.
@@ -3028,6 +3035,18 @@ msgstr ""
 msgid "Backup"
 msgstr ""
 
+msgid ""
+"Which browser a link in a message opens in. Inside its Flatpak sandbox Hylki "
+"cannot see the applications installed on the system, so links leave through "
+"the desktop portal: choose \"Ask each time\" to pick the browser as each "
+"link is opened — the desktop's chooser can remember the choice."
+msgstr ""
+
+msgid ""
+"Which browser a link in a message opens in. \"System default\" follows the "
+"desktop's own choice; \"Ask each time\" lets the desktop ask before each one."
+msgstr ""
+
 msgid "Not installed"
 msgstr ""
 
@@ -3134,6 +3153,14 @@ msgstr ""
 msgid "Strip the parts below away for reading."
 msgstr ""
 
+msgid "Start in Focus Mode"
+msgstr ""
+
+msgid ""
+"Every launch opens in the mode. Off, the app opens as normal, whichever way "
+"the last session was left."
+msgstr ""
+
 msgid "Fold the reading pane's toolbar"
 msgstr ""
 
@@ -3168,10 +3195,34 @@ msgstr ""
 msgid "The message list's circles go, and the room they took comes back."
 msgstr ""
 
+msgid "Hide the preview text"
+msgstr ""
+
+msgid ""
+"Rows show the sender, the subject and the date alone. The preview is only "
+"hidden: it is back the moment Focus Mode ends."
+msgstr ""
+
 msgid "One line of preview text"
 msgstr ""
 
 msgid "Rows show at most one line of a message's text."
+msgstr ""
+
+msgid "Hide the subject"
+msgstr ""
+
+msgid ""
+"Rows show who wrote and when, and nothing else. Tag chips ride on the "
+"subject line, so they go with it."
+msgstr ""
+
+msgid "Fold the sidebar to the icon rail"
+msgstr ""
+
+msgid ""
+"The sidebar shows as icons, with a dot for unread mail in place of the "
+"counts. Hovering it still slides the full sidebar out."
 msgstr ""
 
 msgid ""
@@ -3813,6 +3864,12 @@ msgstr ""
 msgid "In MB, for all the files together."
 msgstr ""
 
+msgid "Links"
+msgstr ""
+
+msgid "Open links in"
+msgstr ""
+
 msgid ""
 "Everything Hylki keeps, as one file: mail and cloud storage accounts, "
 "preferences, filters, tags, the sidebar and window layout, the app icon "
@@ -3897,6 +3954,9 @@ msgid "Attach them anyway"
 msgstr ""
 
 msgid "Upload to cloud storage and link them"
+msgstr ""
+
+msgid "System default"
 msgstr ""
 
 msgid "Account of the current folder"

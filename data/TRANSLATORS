@@ -1,0 +1,12 @@
+# Hylki translators — the people who put the app in other languages.
+#
+# One per line: display name, the GitHub handle in angle brackets, then the
+# language after a dash. Blank lines and lines starting with # are ignored.
+# The About window reads this file (src/app.rs, at build time), so keep the
+# format. See po/README.md to add a language.
+
+frenchy82 <frenchy82> - French
+Yiannis Ioannides <yioannides> - Greek
+Laszlo Lang <7system7> - Hungarian
+Paulo Fino <somepaulo> - Portuguese, Brazilian Portuguese
+Ilya Semenkovich <iliasen> - Russian

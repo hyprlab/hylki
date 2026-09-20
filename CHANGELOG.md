@@ -1,9 +1,100 @@
 # Changelog
 
-## 1.36.1-beta.1 — 2026-09-19
+## 1.37.1-beta.1 — 2026-09-20
 
-Catch-up release: the beta channel is brought level with stable 1.36.0. No
-changes of its own — see the 1.36.0 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.37.0. No
+changes of its own — see the 1.37.0 section below for what is in it.
+
+## 1.37.0 — 2026-09-20
+
+Two things asked for in #232 — the browser a link opens in, and editing a
+message as a new one — four more parts for Focus Mode, two fixes it exposed,
+and the repository itself rebuilt around #230.
+
+- **The browser links open in** (#232). **Settings → System → Links** names
+  it: the desktop's own default, "Ask each time" (the desktop's app chooser,
+  which can be told to remember), or any browser registered for `https`,
+  launched by its desktop entry. A chosen browser that is no longer installed
+  falls back to the default road out rather than swallowing the click, and a
+  `mailto:` link still goes to whatever opens mail. Inside the Flatpak sandbox
+  the host's applications cannot be seen, let alone launched, so the list is
+  empty there and the group says so: the choice is between the default and the
+  chooser, which is what the portal offers. Stored as `link_browser` in
+  `privacy.toml`. The combo's handler is connected after its list is filled —
+  giving a `ComboRow` a model moves the selection to the first row, and read as
+  a choice that wiped a stored browser the moment the pre-warmed Settings
+  window was built.
+- **Edit as New Message** (#232), in a message row's context menu and a reader
+  card's. A copy of the message opens in the composer — the same recipients,
+  subject, body and attachments, none of the threading headers and no tie to
+  what it was copied from — so sending it sends a new message and the original
+  stays where it is. The body is the message's own HTML, sanitized the way a
+  forward's is, not a quote of it. Body and attachments are fetched first when
+  they are not cached, and attachments are staged to a private temp directory
+  the way a queued message's are (that staging is now shared).
+- **Focus Mode: four more switches**, in Settings → Appearance with the rest of
+  the mode's parts. **Hide the preview text** (on by default) makes
+  `list_preview_lines()` return 0 while it holds — only the drawing changes, so
+  the workers keep fetching preview text and it is back the instant the mode
+  ends, unlike switching previews off in Settings. **Hide the subject** (off
+  unless asked for) leaves rows as the sender, the date and their own marks;
+  the tag chips share the subject's line and go with it. **Fold the sidebar to
+  the icon rail** (on by default) shows unread dots in place of counts whatever
+  the Sidebar preference says: the rail is now wanted by three things — a
+  narrow window, this part, or the user's own collapse (`rail_wanted()` /
+  `sync_rail()`) — and only the last is ever saved, with the sidebar's layout
+  borrowed while the part holds (`sidebar_layout_borrowed()`) so the mode hands
+  back exactly the sidebar it took over. **Start in Focus Mode** (off) decides
+  what `enabled` starts each launch as, written back at once so the file, the
+  menu's check item and the window agree from the first frame. A new part is
+  ticked by default in `Default` *and* in serde, so an existing `focus.toml`
+  picks it up on upgrade; "Hide the subject" is the deliberate exception.
+- **Fixed: the reading pane's right-hand actions fold into the ⋯ menu again.**
+  The threshold is measured once at startup — the headerbar's natural width,
+  less the window controls, less the buttons — but Focus Mode wraps every
+  action button in a revealer, and an unrevealed revealer measures 0. The
+  header's width no longer counted the buttons while their widths were still
+  subtracted, so the base came out at -268px, the breakpoint at 222px, and the
+  pane's own 400px floor kept it out of reach for good. What is taken off the
+  row is now what the row counted for it at that moment — the revealer — and
+  the base is floored at 0. Watch the `reader toolbar: … → collapse below Tpx`
+  line at startup: base ≈ 142px, threshold ≈ 630px.
+- **Fixed: the hovering sidebar dims the window behind it.** With a theme on,
+  sliding the sidebar out over a narrow window covered everything behind it in
+  a flat sheet of colour: libadwaita paints the scrim as
+  `overlay-split-view > dimming { background: var(--shade-color) }`, and the
+  themes were handing `shade_color` the palette's opaque `border` role. It
+  keeps libadwaita's own translucent black now (7% light, 25% dark).
+- **The repository, rebuilt** (#230, reported by @yioannides). The README is
+  the front door again at 152 lines instead of 667, and what it carried is in
+  `docs/`: FEATURES, DOCUMENTATION (accounts, OAuth, cloud attachments,
+  Markdown and HTML, OpenPGP, the Files entry, privacy, and what is kept on
+  disk), KEYBOARD_SHORTCUTS, INSTALLING, BUILDING, MANIFESTO, CONTRIBUTING,
+  CREDITS, LICENSE and RELEASING, with `docs/README.md` as the index. The
+  README's artwork moved to `data/repo/` (the metainfo screenshot URL and
+  `tools/gen-app-icons.py` follow it).
+- **Contributors are data, not source.** `data/CONTRIBUTORS` and
+  `data/TRANSLATORS` hold the names, one per line as `Display Name <handle>`
+  with a translator's languages after a dash; `src/app.rs` reads them with
+  `include_str!`, so crediting somebody is a line in a file. **About gains a
+  "Translated by" list** from the second file. What each person did stays in
+  `docs/CREDITS.md`. EmmanuelP joins the names shown in About, having been
+  credited in the README's prose for several releases.
+- **Release pages carry three parts now**: the highlights, the pull requests
+  GitHub generates for the tag (or the release's own commits where the work
+  landed without one), and the compare link. `tools/release-notes.sh`
+  assembles all three; the format is `docs/RELEASING.md`.
+- **`tools/check-docs.py`** keeps the above from drifting back: it fails on a
+  broken relative link or anchor anywhere in the repository, a README over its
+  180-line budget, a `docs/*.md` missing from the index or linked from nowhere,
+  artwork under `docs/`, unexpected top-level Markdown, a "Vireo" outside the
+  changelog, and a CONTRIBUTORS or TRANSLATORS line About would silently drop.
+  Where each kind of writing goes is a placement table in the new `CLAUDE.md`
+  and in `docs/CONTRIBUTING.md`, and the check is a step before a tag.
+- `HYLKI_SHOWCASE_SCROLL` now scrolls the About window too, and
+  `HYLKI_SHOWCASE_PEEK` takes a list of seconds (`=7,10`), working the sidebar
+  toggle at each — how the borrowed-layout paths were checked without input
+  injection.
 
 ## 1.36.0 — 2026-09-19
 

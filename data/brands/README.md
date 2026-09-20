@@ -1,13 +1,13 @@
 # Service marks
 
-The logos in this folder identify the cloud storage services Vireo can
+The logos in this folder identify the cloud storage services Hylki can
 upload to. They are shown next to a service's name in Settings (the Service
 picker, the Cloud Storage list, the account editor) to say "this works with
 that service", and for nothing else.
 
-**They are not covered by Vireo's licence.** Each is a trademark of its
+**They are not covered by Hylki's licence.** Each is a trademark of its
 owner and is used under that owner's brand guidelines, unmodified apart
-from being rendered to PNG at the size shown. Vireo is not affiliated with
+from being rendered to PNG at the size shown. Hylki is not affiliated with
 or endorsed by any of them. Section 7(e) of the AGPLv3 lets the project
 decline to grant trademark rights, and it does: nothing here may be reused
 as if it were part of the AGPL-licensed work.
@@ -31,8 +31,8 @@ as if it were part of the AGPL-licensed work.
 | `gmx` | 1&1 Mail & Media GmbH | the GMX logo as published on Wikimedia Commons (`GMX-Logo (2018-).svg`) |
 | `yandex` | Yandex LLC | the Yandex Mail icon as published on Wikimedia Commons (`Yandex Mail icon.svg`) |
 | `mailcom` | 1&1 Mail & Media Inc. | mail.com's own touch icon, https://www.mail.com/apple-touch-icon.png |
-| `mail` | Vireo's own blue envelope (not a third-party mark): manual IMAP/POP3 and any account on a server the app does not recognise | drawn for the app, `src/mail.svg` |
-| `mail-oauth` | Vireo's own yellow envelope (not a third-party mark): custom OAuth accounts | drawn for the app, `src/mail-oauth.svg` |
+| `mail` | Hylki's own blue envelope (not a third-party mark): manual IMAP/POP3 and any account on a server the app does not recognise | drawn for the app, `src/mail.svg` |
+| `mail-oauth` | Hylki's own yellow envelope (not a third-party mark): custom OAuth accounts | drawn for the app, `src/mail-oauth.svg` |
 
 `src/` keeps the files as fetched; the 128 px PNGs beside this file are
 what the binary embeds (`src/brand.rs`). To refresh one, replace the source

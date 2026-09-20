@@ -1145,6 +1145,12 @@ struct PrivacyFile {
     files_large: FilesLarge,
     #[serde(default = "default_files_limit_mb")]
     files_limit_mb: u32,
+    /// Which browser a link in a message opens in (#232). Empty = whatever
+    /// the desktop opens links with; `"ask"` = the system's app chooser,
+    /// every time; anything else is a desktop entry id
+    /// ("brave-browser.desktop") launched directly.
+    #[serde(default)]
+    link_browser: String,
 }
 
 fn default_chevrons_left() -> bool {
@@ -1293,6 +1299,7 @@ impl Default for PrivacyFile {
             files_action: FilesAction::default(),
             files_large: FilesLarge::default(),
             files_limit_mb: default_files_limit_mb(),
+            link_browser: String::new(),
             gravatar: false,
             avatars: default_avatars(),
             own_mailbox_face: default_own_mailbox_face(),
@@ -1701,6 +1708,11 @@ impl FilesPrefs {
 
 fn default_files_limit_mb() -> u32 {
     20
+}
+
+/// Which browser links open in (#232): see `PrivacyFile::link_browser`.
+pub fn load_link_browser() -> String {
+    load_privacy().link_browser
 }
 
 pub fn load_files_prefs() -> FilesPrefs {
@@ -2731,6 +2743,7 @@ pub fn save_privacy(
     console_mode: bool,
     read_mark: ReadMark,
     files: FilesPrefs,
+    link_browser: String,
 ) {
     let Some(path) = privacy_path() else {
         return;
@@ -2825,6 +2838,7 @@ pub fn save_privacy(
         files_action: files.action,
         files_large: files.large,
         files_limit_mb: files.limit_mb,
+        link_browser,
     };
     match toml::to_string_pretty(&file) {
         Ok(toml) => {
@@ -4202,6 +4216,12 @@ pub struct FocusMode {
     /// The master switch: on, the parts below apply.
     #[serde(default)]
     pub enabled: bool,
+    /// Whether the app opens in Focus Mode. Not a part — it strips nothing
+    /// itself, it decides what [`Self::enabled`] starts each launch as, so
+    /// the mode is a deliberate choice rather than whatever the last
+    /// session happened to leave behind.
+    #[serde(default)]
+    pub start_focused: bool,
     /// Every button of the reading pane's toolbar folds into its ⋯ menu.
     #[serde(default = "default_on")]
     pub reader_toolbar: bool,
@@ -4221,6 +4241,21 @@ pub struct FocusMode {
     /// The message list shows at most one line of preview text.
     #[serde(default = "default_on")]
     pub one_preview_line: bool,
+    /// The message list shows no preview text at all. Wins over
+    /// [`Self::one_preview_line`], which has nothing left to cap.
+    #[serde(default = "default_on")]
+    pub hide_preview: bool,
+    /// The message list shows no subject either: the sender, the date and
+    /// the row's own marks, and nothing else. Off unless it is asked for —
+    /// the subject is how most people find a message again, so this one is
+    /// a step past what the mode does by default.
+    #[serde(default)]
+    pub hide_subject: bool,
+    /// The sidebar shows as the icon rail, with unread dots in place of the
+    /// counts. The user's own rail choice is untouched: this is on screen
+    /// for as long as Focus Mode is, and the sidebar comes back as it was.
+    #[serde(default = "default_on")]
+    pub rail_sidebar: bool,
     /// Every message opens in Reader View (the switch still works).
     #[serde(default = "default_on")]
     pub reader_view: bool,
@@ -4230,12 +4265,16 @@ impl Default for FocusMode {
     fn default() -> Self {
         FocusMode {
             enabled: false,
+            start_focused: false,
             reader_toolbar: true,
             list_header: true,
             hide_accounts: true,
             fold_unified: true,
             hide_avatars: true,
             one_preview_line: true,
+            hide_preview: true,
+            hide_subject: false,
+            rail_sidebar: true,
             reader_view: true,
         }
     }
@@ -4245,12 +4284,19 @@ impl Default for FocusMode {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum FocusPart {
     Enabled,
+    /// Not a layout part: the launch switch (see [`FocusMode::start_focused`]).
+    /// It rides here so Settings can set it the same way as the rest;
+    /// [`FocusMode::active`] is meaningless for it and nothing asks.
+    StartFocused,
     ReaderToolbar,
     ListHeader,
     HideAccounts,
     FoldUnified,
     HideAvatars,
     OnePreviewLine,
+    HidePreview,
+    HideSubject,
+    RailSidebar,
     ReaderView,
 }
 
@@ -4258,12 +4304,16 @@ impl FocusMode {
     pub fn get(&self, part: FocusPart) -> bool {
         match part {
             FocusPart::Enabled => self.enabled,
+            FocusPart::StartFocused => self.start_focused,
             FocusPart::ReaderToolbar => self.reader_toolbar,
             FocusPart::ListHeader => self.list_header,
             FocusPart::HideAccounts => self.hide_accounts,
             FocusPart::FoldUnified => self.fold_unified,
             FocusPart::HideAvatars => self.hide_avatars,
             FocusPart::OnePreviewLine => self.one_preview_line,
+            FocusPart::HidePreview => self.hide_preview,
+            FocusPart::HideSubject => self.hide_subject,
+            FocusPart::RailSidebar => self.rail_sidebar,
             FocusPart::ReaderView => self.reader_view,
         }
     }
@@ -4271,12 +4321,16 @@ impl FocusMode {
     pub fn set(&mut self, part: FocusPart, on: bool) {
         match part {
             FocusPart::Enabled => self.enabled = on,
+            FocusPart::StartFocused => self.start_focused = on,
             FocusPart::ReaderToolbar => self.reader_toolbar = on,
             FocusPart::ListHeader => self.list_header = on,
             FocusPart::HideAccounts => self.hide_accounts = on,
             FocusPart::FoldUnified => self.fold_unified = on,
             FocusPart::HideAvatars => self.hide_avatars = on,
             FocusPart::OnePreviewLine => self.one_preview_line = on,
+            FocusPart::HidePreview => self.hide_preview = on,
+            FocusPart::HideSubject => self.hide_subject = on,
+            FocusPart::RailSidebar => self.rail_sidebar = on,
             FocusPart::ReaderView => self.reader_view = on,
         }
     }
@@ -4421,8 +4475,13 @@ mod focus_tests {
     fn focus_defaults_off_with_every_part_ticked() {
         let f = FocusMode::default();
         assert!(!f.enabled);
+        // The app opens out of the mode until it is asked to do otherwise.
+        assert!(!f.start_focused);
         assert!(f.reader_toolbar && f.list_header && f.hide_accounts && f.fold_unified);
         assert!(f.hide_avatars && f.one_preview_line && f.reader_view);
+        assert!(f.hide_preview && f.rail_sidebar);
+        // The exception: the subject stays until it is asked for.
+        assert!(!f.hide_subject);
         // Off, no part is in force whatever its switch says.
         assert!(!f.active(FocusPart::ReaderView));
     }
@@ -4437,8 +4496,13 @@ mod focus_tests {
         assert_eq!(back, f);
         assert!(back.active(FocusPart::ReaderToolbar));
         assert!(!back.active(FocusPart::HideAvatars));
-        // A file from before a part existed reads it as ticked.
+        // A file from before a part existed reads it as ticked — the
+        // preview and rail parts included, so an upgrade gets the whole
+        // mode without anyone going looking for the new switches.
         let partial: FocusMode = toml::from_str("enabled = true").unwrap();
         assert!(partial.enabled && partial.fold_unified);
+        assert!(partial.hide_preview && partial.rail_sidebar);
+        // Except the subject, which is off wherever it comes from.
+        assert!(!partial.hide_subject);
     }
 }

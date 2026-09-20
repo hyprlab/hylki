@@ -221,9 +221,17 @@ fn repaint() {
 /// sidebar behind it, which drew a bright line down the window beside the
 /// rail. Black at the stock opacity reads as a shadow, the way the system
 /// look does.
+///
+/// `shade_color` is black at libadwaita's own opacity for the same reason,
+/// and it is not optional: it is not a line colour at all but the colour
+/// libadwaita dims and shadows *with*. It paints the scrim behind the
+/// hovering sidebar (`overlay-split-view > dimming`) and that panel's drop
+/// shadow, so a palette's opaque `border` there slid a solid sheet over the
+/// whole window instead of letting it show through.
 fn css(p: &Palette, dark: bool) -> String {
-    // libadwaita's sidebar-border/-shade colours, light and dark.
-    let (sidebar_border, sidebar_shade) = if dark {
+    // libadwaita's sidebar-border and shade colours, light and dark. The
+    // sidebar's shade and the general one happen to share a value.
+    let (sidebar_border, shade) = if dark {
         ("rgba(0, 0, 0, 0.36)", "rgba(0, 0, 0, 0.25)")
     } else {
         ("rgba(0, 0, 0, 0.07)", "rgba(0, 0, 0, 0.07)")
@@ -244,7 +252,7 @@ fn css(p: &Palette, dark: bool) -> String {
 @define-color sidebar_fg_color {sidebar_fg};\
 @define-color sidebar_backdrop_color {sidebar};\
 @define-color sidebar_border_color {sidebar_border};\
-@define-color sidebar_shade_color {sidebar_shade};\
+@define-color sidebar_shade_color {shade};\
 @define-color secondary_sidebar_bg_color {surface};\
 @define-color secondary_sidebar_fg_color {text};\
 @define-color secondary_sidebar_backdrop_color {surface};\
@@ -268,7 +276,7 @@ fn css(p: &Palette, dark: bool) -> String {
 @define-color error_fg_color {on_error};\
 @define-color warning_bg_color {warning};\
 @define-color warning_fg_color {on_warning};\
-@define-color shade_color {border};\
+@define-color shade_color {shade};\
 @define-color scrollbar_outline_color {surface};\
 .mail-split > separator {{background-color: {separator};\
 border: none;box-shadow: none;outline: none;}}",

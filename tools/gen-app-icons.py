@@ -5,7 +5,7 @@ Every gallery entry is a 512² PNG in data/icons/alt/<id>.png, embedded into
 the binary by src/app_icon.rs. `default.svg` (and its `default.Devel.svg`
 twin for the beta) becomes the hicolor icon each build installs under its
 app ID (512 and 256 PNG, plus the SVG itself as the scalable icon), and
-refreshes docs/logo.png.
+refreshes data/repo/logo.png (the README artwork).
 
 Sources are either an SVG (rendered with librsvg, the same renderer GNOME
 uses, so what ships matches what the desktop would draw) or a PNG master
@@ -71,5 +71,5 @@ for src in sorted(SRC.iterdir()):
             scalable.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(src, scalable)
         if app_id == "co.hyprlab.Hylki":
-            shutil.copyfile(HICOLOR / "512x512/apps/co.hyprlab.Hylki.png", ROOT / "docs/logo.png")
+            shutil.copyfile(HICOLOR / "512x512/apps/co.hyprlab.Hylki.png", ROOT / "data/repo/logo.png")
     print(f"{name:<28} <- {src.name}")

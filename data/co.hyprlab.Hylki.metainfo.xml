@@ -40,7 +40,7 @@
 
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/hyprlab/hylki/main/docs/screenshot.png</image>
+      <image>https://raw.githubusercontent.com/hyprlab/hylki/main/data/repo/screenshot.png</image>
       <caption>The unified inbox in light mode</caption>
     </screenshot>
   </screenshots>
@@ -57,6 +57,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.37.0" date="2026-09-20">
+      <description>
+        <p>Links can be opened in a browser of your choosing, any message can be edited as a new one, and Focus Mode gains four parts: hidden previews, hidden subjects, a folded sidebar and a launch straight into the mode.</p>
+      </description>
+    </release>
     <release version="1.36.0" date="2026-09-19">
       <description>
         <p>Meeting invitations are shown and answered from the reader, a mailing list can be left with one button, and Focus Mode strips the window down to what you are reading.</p>

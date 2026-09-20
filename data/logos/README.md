@@ -7,9 +7,9 @@ showing one makes no network request; the sender's own BIMI logo, when it
 publishes one, is preferred over them, and the site's own icon is the
 fallback when there is neither (see `src/logo.rs`).
 
-**They are not covered by Vireo's licence.** Each is a trademark of its
+**They are not covered by Hylki's licence.** Each is a trademark of its
 owner, used only to identify mail from that sender, exactly as the mail
-provider marks in `data/brands/` are. Vireo is not affiliated with or
+provider marks in `data/brands/` are. Hylki is not affiliated with or
 endorsed by any of them, and section 7(e) of the AGPLv3 lets the project
 decline to grant trademark rights, which it does.
 

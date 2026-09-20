@@ -72,6 +72,10 @@ pub struct PrefInit {
     pub reply_fields: bool,
     /// Settings → System → GNOME Files: what handed-in files open into.
     pub files: crate::config::FilesPrefs,
+    /// Settings → System → Links: the browser links open in (#232). Empty =
+    /// the desktop's default, `ask` = its app chooser, otherwise a desktop
+    /// entry id.
+    pub link_browser: String,
     /// The identity new messages are sent from (#157); empty = the open
     /// folder's account. One of `identities`' addresses.
     pub compose_default_from: String,
@@ -293,6 +297,9 @@ pub struct Preferences {
     /// The icon rail's fold-up switches, kept whole so each toggle can hand
     /// the app the full set.
     rail_fold: crate::config::RailFold,
+    /// The browsers the links combo offers, in the order it lists them
+    /// (empty inside the Flatpak sandbox, which cannot see them).
+    browsers: Vec<crate::ui::launch::Browser>,
     /// The reader toolbar layout being edited (the app applies every drop).
     toolbar: ReaderToolbar,
     /// Focus Mode's switches, kept whole so each toggle hands the app the
@@ -661,6 +668,38 @@ fn files_action_index(a: crate::config::FilesAction) -> u32 {
     }
 }
 
+/// The links combo's position for a stored choice: 0 the desktop's default,
+/// 1 the chooser, otherwise the browser's place in the list. A browser that
+/// is no longer installed (or cannot be seen from inside the sandbox) reads
+/// as the default, which is what its links will do.
+fn link_browser_index(browsers: &[crate::ui::launch::Browser], choice: &str) -> u32 {
+    if choice.is_empty() {
+        return 0;
+    }
+    if choice == crate::ui::launch::ASK {
+        return 1;
+    }
+    browsers.iter().position(|b| b.id == choice).map(|i| i as u32 + 2).unwrap_or(0)
+}
+
+/// What the Links group says above the combo — which depends on whether
+/// there are any browsers to name.
+fn link_group_description(browsers: &[crate::ui::launch::Browser]) -> String {
+    if browsers.is_empty() {
+        i18n(
+            "Which browser a link in a message opens in. Inside its Flatpak sandbox Hylki \
+             cannot see the applications installed on the system, so links leave through \
+             the desktop portal: choose \"Ask each time\" to pick the browser as each link \
+             is opened — the desktop's chooser can remember the choice.",
+        )
+    } else {
+        i18n(
+            "Which browser a link in a message opens in. \"System default\" follows the \
+             desktop's own choice; \"Ask each time\" lets the desktop ask before each one.",
+        )
+    }
+}
+
 fn files_large_index(l: crate::config::FilesLarge) -> u32 {
     use crate::config::FilesLarge as L;
     match l {
@@ -747,6 +786,8 @@ pub enum PrefInput {
     ChangeFilesAction(u32),
     ChangeFilesLarge(u32),
     ChangeFilesLimit(u32),
+    /// Settings → System → Links: the browser row moved (#232).
+    ChangeLinkBrowser(u32),
     /// The app changed the Files preferences (a dialog's "always do this").
     SetFilesPrefs(crate::config::FilesPrefs),
     /// Re-read the extension's state (the System page came into view; Files
@@ -913,6 +954,9 @@ pub enum PrefOutput {
     SetComposeInline(bool),
     SetReplyFields(bool),
     SetFilesPrefs(crate::config::FilesPrefs),
+    /// The browser links open in (#232): "" = the desktop's default,
+    /// "ask" = its app chooser, otherwise a desktop entry id.
+    SetLinkBrowser(String),
     SetComposeDefaultFrom(String),
     SetPastePlain(bool),
     SetSpellcheck(bool),
@@ -1325,6 +1369,17 @@ impl Component for Preferences {
                                             sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::Enabled, row.is_active()));
                                         },
                                     },
+                                    #[name = "focus_start_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.start_focused,
+                                        set_title: &i18n("Start in Focus Mode"),
+                                        set_subtitle: &i18n("Every launch opens in the mode. Off, the app opens as normal, \
+                                                       whichever way the last session was left."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::StartFocused, row.is_active()));
+                                        },
+                                    },
                                     #[name = "focus_toolbar_row"]
                                     adw::SwitchRow {
                                         #[watch]
@@ -1377,14 +1432,51 @@ impl Component for Preferences {
                                             sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::HideAvatars, row.is_active()));
                                         },
                                     },
+                                    #[name = "focus_hide_preview_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.hide_preview,
+                                        set_title: &i18n("Hide the preview text"),
+                                        set_subtitle: &i18n("Rows show the sender, the subject and the date alone. The preview \
+                                                       is only hidden: it is back the moment Focus Mode ends."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::HidePreview, row.is_active()));
+                                        },
+                                    },
                                     #[name = "focus_preview_row"]
                                     adw::SwitchRow {
                                         #[watch]
                                         set_active: model.focus.one_preview_line,
+                                        // Nothing left to cap once the preview
+                                        // text is hidden altogether.
+                                        #[watch]
+                                        set_sensitive: !model.focus.hide_preview,
                                         set_title: &i18n("One line of preview text"),
                                         set_subtitle: &i18n("Rows show at most one line of a message's text."),
                                         connect_active_notify[sender] => move |row| {
                                             sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::OnePreviewLine, row.is_active()));
+                                        },
+                                    },
+                                    #[name = "focus_subject_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.hide_subject,
+                                        set_title: &i18n("Hide the subject"),
+                                        set_subtitle: &i18n("Rows show who wrote and when, and nothing else. Tag chips ride \
+                                                       on the subject line, so they go with it."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::HideSubject, row.is_active()));
+                                        },
+                                    },
+                                    #[name = "focus_rail_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_active: model.focus.rail_sidebar,
+                                        set_title: &i18n("Fold the sidebar to the icon rail"),
+                                        set_subtitle: &i18n("The sidebar shows as icons, with a dot for unread mail in place \
+                                                       of the counts. Hovering it still slides the full sidebar out."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleFocus(crate::config::FocusPart::RailSidebar, row.is_active()));
                                         },
                                     },
                                     #[name = "focus_reader_row"]
@@ -2510,6 +2602,23 @@ impl Component for Preferences {
                                         },
                                     },
                                 },
+
+                                // Where a link in a message goes (#232).
+                                add = &adw::PreferencesGroup {
+                                    set_title: &i18n("Links"),
+                                    set_description: Some(link_group_description(&model.browsers).as_str()),
+
+                                    // Its handler is connected after the list
+                                    // is filled below, not here: giving a
+                                    // ComboRow its model moves the selection
+                                    // to the first item, and that notification
+                                    // would read as the user choosing
+                                    // "System default".
+                                    #[name = "link_browser_row"]
+                                    adw::ComboRow {
+                                        set_title: &i18n("Open links in"),
+                                    },
+                                },
                             },
 
                             add_named[Some("backup")] = &adw::PreferencesPage {
@@ -2564,6 +2673,7 @@ impl Component for Preferences {
             nautilus_cmd: crate::platform::nautilus_python_install_command(),
             files: init.files,
             files_rows: None,
+            browsers: crate::ui::launch::browsers(),
             notifications: init.notifications,
             toolbar: init.reader_toolbar.clone(),
             focus: init.focus,
@@ -2880,6 +2990,24 @@ impl Component for Preferences {
             widgets.files_large_row.clone(),
             widgets.files_limit_row.clone(),
         ));
+        // The links combo: the desktop's own default, the chooser, then every
+        // browser this process can launch.
+        {
+            let mut labels: Vec<String> =
+                vec![i18n("System default"), i18n("Ask each time")];
+            labels.extend(model.browsers.iter().map(|b| b.name.clone()));
+            let refs: Vec<&str> = labels.iter().map(String::as_str).collect();
+            widgets.link_browser_row.set_model(Some(&gtk::StringList::new(&refs)));
+            no_truncate(&widgets.link_browser_row);
+            widgets
+                .link_browser_row
+                .set_selected(link_browser_index(&model.browsers, &init.link_browser));
+            widen_combo_value(&widgets.link_browser_row, 50);
+            let s = sender.clone();
+            widgets.link_browser_row.connect_selected_notify(move |row| {
+                s.input(PrefInput::ChangeLinkBrowser(row.selected()));
+            });
+        }
         // "Send new messages from": the open folder's account, then every
         // enabled account and alias, labelled as the composer's From row
         // labels them. Only meaningful with more than one identity.
@@ -3271,6 +3399,18 @@ impl Component for Preferences {
                     self.files.large = large;
                     let _ = sender.output(PrefOutput::SetFilesPrefs(self.files));
                 }
+            }
+            PrefInput::ChangeLinkBrowser(idx) => {
+                let choice = match idx {
+                    0 => String::new(),
+                    1 => crate::ui::launch::ASK.to_string(),
+                    n => self
+                        .browsers
+                        .get(n as usize - 2)
+                        .map(|b| b.id.clone())
+                        .unwrap_or_default(),
+                };
+                let _ = sender.output(PrefOutput::SetLinkBrowser(choice));
             }
             PrefInput::ChangeFilesLimit(mb) => {
                 let mb = mb.max(1);

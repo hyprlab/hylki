@@ -342,6 +342,10 @@ msgstr "Сортировка"
 msgid "Message Source"
 msgstr "Исходный код сообщения"
 
+#, fuzzy
+msgid "Edit as New Message"
+msgstr "Новое сообщение"
+
 msgid "Remove Star"
 msgstr "Снять звёздочку"
 
@@ -606,6 +610,10 @@ msgstr "Поддержать проект"
 #. Contributors — people outside Hyprlab whose patches are in the app.
 msgid "Special thanks to these contributors"
 msgstr "Отдельная благодарность участникам разработки"
+
+#. Translators — the same list, with the languages each one carried.
+msgid "Translated by"
+msgstr ""
 
 #. Footer.
 msgid "© 2026 Hyprlab"
@@ -3307,6 +3315,18 @@ msgstr "Дата и время"
 msgid "Backup"
 msgstr "Резервное копирование"
 
+msgid ""
+"Which browser a link in a message opens in. Inside its Flatpak sandbox Hylki "
+"cannot see the applications installed on the system, so links leave through "
+"the desktop portal: choose \"Ask each time\" to pick the browser as each "
+"link is opened — the desktop's chooser can remember the choice."
+msgstr ""
+
+msgid ""
+"Which browser a link in a message opens in. \"System default\" follows the "
+"desktop's own choice; \"Ask each time\" lets the desktop ask before each one."
+msgstr ""
+
 msgid "Not installed"
 msgstr "Не установлено"
 
@@ -3431,6 +3451,14 @@ msgstr ""
 msgid "Strip the parts below away for reading."
 msgstr ""
 
+msgid "Start in Focus Mode"
+msgstr ""
+
+msgid ""
+"Every launch opens in the mode. Off, the app opens as normal, whichever way "
+"the last session was left."
+msgstr ""
+
 #, fuzzy
 msgid "Fold the reading pane's toolbar"
 msgstr "Разрешить этого отправителя"
@@ -3471,10 +3499,36 @@ msgstr "Аватары отправителей"
 msgid "The message list's circles go, and the room they took comes back."
 msgstr ""
 
+msgid "Hide the preview text"
+msgstr ""
+
+msgid ""
+"Rows show the sender, the subject and the date alone. The preview is only "
+"hidden: it is back the moment Focus Mode ends."
+msgstr ""
+
 msgid "One line of preview text"
 msgstr ""
 
 msgid "Rows show at most one line of a message's text."
+msgstr ""
+
+#, fuzzy
+msgid "Hide the subject"
+msgstr "Нет вложений"
+
+msgid ""
+"Rows show who wrote and when, and nothing else. Tag chips ride on the "
+"subject line, so they go with it."
+msgstr ""
+
+#, fuzzy
+msgid "Fold the sidebar to the icon rail"
+msgstr "Раскрывать боковую панель при наведении"
+
+msgid ""
+"The sidebar shows as icons, with a dot for unread mail in place of the "
+"counts. Hovering it still slides the full sidebar out."
 msgstr ""
 
 msgid ""
@@ -4285,6 +4339,13 @@ msgstr "Ограничение по размеру"
 msgid "In MB, for all the files together."
 msgstr "В МБ, суммарно для всех файлов."
 
+msgid "Links"
+msgstr ""
+
+#, fuzzy
+msgid "Open links in"
+msgstr "Открыть в отдельном окне"
+
 msgid ""
 "Everything Hylki keeps, as one file: mail and cloud storage accounts, "
 "preferences, filters, tags, the sidebar and window layout, the app icon "
@@ -4379,6 +4440,10 @@ msgstr "Всё равно прикрепить"
 
 msgid "Upload to cloud storage and link them"
 msgstr "Загрузить в облачное хранилище и добавить ссылки"
+
+#, fuzzy
+msgid "System default"
+msgstr "Восстановить по умолчанию"
 
 msgid "Account of the current folder"
 msgstr "Учётная запись текущей папки"

@@ -8,24 +8,32 @@ use relm4::actions::{AccelsPlus, RelmAction, RelmActionGroup};
 use relm4::prelude::*;
 use tokio::sync::mpsc::UnboundedSender;
 
-/// Contributors whose work is in the app, shown in the About window's "Thanks"
-/// list: display name and GitHub handle (which is also the link). What each
-/// person contributed is credited in the README and the changelog.
-const CONTRIBUTORS: &[(&str, &str)] = &[
-    ("Alfonso Lizárraga", "alfonsolzrg"),
-    ("Chris Pouliot", "chrispouliot"),
-    ("Isaac", "thecalamityjoe87"),
-    ("Alexander Lubovenko", "typedev"),
-    ("Anton Palgunov", "Toxblh"),
-    ("frenchy82", "frenchy82"),
-    ("Yiannis Ioannides", "yioannides"),
-    ("p-mitana", "p-mitana"),
-    ("Laszlo Lang", "7system7"),
-    ("Ilya Semenkovich", "iliasen"),
-    ("Paulo Fino", "somepaulo"),
-    ("taprobane99", "taprobane99"),
-    ("Peter Weiss", "peterweissdk"),
-];
+/// The contributors and translators shown in the About window's thanks lists.
+/// Both come from the repository's metafiles, read in at build time: one
+/// person per line, `Display Name <github-handle>`, with a translator's
+/// languages after a dash. What each person contributed is credited in
+/// `docs/CREDITS.md` and the changelog, not in the files.
+const CONTRIBUTORS: &str = include_str!("../data/CONTRIBUTORS");
+const TRANSLATORS: &str = include_str!("../data/TRANSLATORS");
+
+/// One of those files as (display name, GitHub handle, note) rows. Comments,
+/// blank lines and any line without a handle are skipped, so a typo in the
+/// file costs that one row rather than the list.
+fn credits(file: &'static str) -> Vec<(&'static str, &'static str, &'static str)> {
+    file.lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty() && !line.starts_with('#'))
+        .filter_map(|line| {
+            let (name, rest) = line.split_once('<')?;
+            let (handle, note) = rest.split_once('>')?;
+            Some((
+                name.trim(),
+                handle.trim(),
+                note.trim().trim_start_matches('-').trim(),
+            ))
+        })
+        .collect()
+}
 
 // The message list's opening width now comes from config (the remembered pane
 // width, #28); its floor lives with the pane in message_list.rs
@@ -968,6 +976,13 @@ pub struct AppModel {
     /// Settings → System → GNOME Files: what handed-in files open into and
     /// what happens over the size limit.
     files_prefs: config::FilesPrefs,
+    /// "Edit as New Message" (#232) waiting on the body, or the attachments,
+    /// it is to be copied from.
+    pending_edit_as_new: Option<Message>,
+    /// Settings → System → Links: which browser a link in a message opens in
+    /// (#232). Empty = the desktop's default, "ask" = its app chooser,
+    /// otherwise a desktop entry id.
+    link_browser: String,
     /// Outstanding bulk MoveMessages requests awaiting a worker `BulkComplete`.
     /// Outstanding server-side bulk operations; while > 0 the refresh spinner
     /// spins and the status bar narrates.
@@ -1256,6 +1271,10 @@ pub enum AppMsg {
     SetReplyFields(bool),
     /// Settings → System → GNOME Files changed.
     SetFilesPrefs(config::FilesPrefs),
+    /// Settings → System → Links: the browser links open in (#232).
+    SetLinkBrowser(String),
+    /// Copy the message the reader is on into a new one (#232).
+    EditAsNewCurrent,
     /// A hand-off's files have a destination (the dialog answered, or the
     /// preference decided); `remember` writes the choice to Settings.
     HandOffAction { hand_off: FileHandOff, action: config::FilesAction, remember: bool },
@@ -2493,6 +2512,19 @@ impl SimpleComponent for AppModel {
         let remember_sidebar = config::load_remember_sidebar();
         let remember_rail = config::load_remember_rail();
         let icon_only = remember_rail && sidebar_state.icon_only;
+        // Read here, ahead of the sidebar itself: Focus Mode's rail part
+        // decides what the sidebar is built as. `icon_only` stays the user's
+        // own choice — the one that is saved and the one that comes back
+        // when Focus Mode ends.
+        let mut focus = config::load_focus_mode();
+        // "Start in Focus Mode" decides how the app opens, whatever the last
+        // session left on. Written back at once so the file, the menu's check
+        // item and the window all say the same thing from the first frame.
+        if focus.enabled != focus.start_focused {
+            focus.enabled = focus.start_focused;
+            config::save_focus_mode(&focus);
+        }
+        let rail_now = icon_only || focus.active(config::FocusPart::RailSidebar);
         if !remember_sidebar {
             sidebar_state = config::SidebarState { order: sidebar_state.order, ..Default::default() };
         }
@@ -2549,7 +2581,7 @@ impl SimpleComponent for AppModel {
         let show_contacts = config::load_show_contacts();
         let sidebar = Sidebar::builder()
             .launch(SidebarInit {
-                collapsed: icon_only,
+                collapsed: rail_now,
                 mirror: false,
                 unified_expanded,
                 filtered_expanded,
@@ -2786,7 +2818,6 @@ impl SimpleComponent for AppModel {
             });
         }
 
-        let focus = config::load_focus_mode();
         let focus_action = gtk::gio::SimpleAction::new_stateful(
             "focus-mode",
             None,
@@ -2916,7 +2947,15 @@ impl SimpleComponent for AppModel {
             pending_draft: None,
             pending_reply: None,
             pending_draft_pick: None,
+            pending_edit_as_new: None,
             files_prefs: config::load_files_prefs(),
+            link_browser: {
+                // The launcher reads its choice from here, not from disk, so
+                // it is handed over before the first link can be clicked.
+                let choice = config::load_link_browser();
+                crate::ui::launch::set_browser(&choice);
+                choice
+            },
             popouts: HashMap::new(),
             current_thread: Vec::new(),
             list_selection: Vec::new(),
@@ -2953,7 +2992,7 @@ impl SimpleComponent for AppModel {
             sidebar_collapsed: icon_only,
             sidebar_anim: None,
             auto_rail: false,
-            rail_active: icon_only,
+            rail_active: rail_now,
             sidebar_peek: false,
             peek_transition: std::rc::Rc::new(std::cell::Cell::new(false)),
             peek_split: None,
@@ -3213,9 +3252,12 @@ impl SimpleComponent for AppModel {
             .message_list
             .emit(MessageListInput::SetSenderLogos(model.sender_logos));
         crate::datefmt::set_style(model.date_style, model.clock_style);
-        model
-            .message_list
-            .emit(MessageListInput::SetPreviewLines(model.list_preview_lines()));
+        model.message_list.emit(MessageListInput::SetLook {
+            avatars: model.list_avatars(),
+            preview_lines: model.list_preview_lines(),
+            subject: model.list_show_subject(),
+            animate: false,
+        });
         model.sidebars_emit(SidebarInput::SetFocus {
             hide_accounts: model.focus.active(config::FocusPart::HideAccounts),
             fold_unified: model.focus.active(config::FocusPart::FoldUnified),
@@ -3342,19 +3384,28 @@ impl SimpleComponent for AppModel {
             // One button's cost, from the buttons themselves (a hidden one —
             // Tags before any tag exists — measures 0 and is skipped); what
             // is left of the row after them and the controls is the base.
-            let mut visible_sum = 0;
+            //
+            // Two different widths, and the difference is load-bearing. Each
+            // button sits in a Focus Mode revealer, and a revealer that has
+            // not been revealed yet measures 0 however wide its child is —
+            // which is exactly the state this runs in, before
+            // `sync_focus_chrome` opens them. So a button's own cost comes
+            // from the button inside the revealer, while what is taken off
+            // `full` is what the row counted for it *just now*: the revealer.
+            // Subtracting the buttons from a row that never included them is
+            // how the base went negative (and the fold stopped happening) the
+            // moment Focus Mode wrapped the row in revealers.
+            let mut packed_sum = 0;
             let mut button_w = 0;
             for (_, w) in &buttons {
-                // Each button sits in a Focus Mode revealer; the button is
-                // what has a width worth knowing.
+                packed_sum += w.measure(gtk::Orientation::Horizontal, -1).1;
                 let inner = w.downcast_ref::<gtk::Revealer>().and_then(|r| r.child()).unwrap_or_else(|| w.clone());
                 let nat = inner.measure(gtk::Orientation::Horizontal, -1).1;
                 if nat > 0 {
-                    visible_sum += nat;
                     button_w = button_w.max(nat);
                 }
             }
-            let base = if full <= 0 { 0 } else { full - controls - visible_sum };
+            let base = if full <= 0 { 0 } else { (full - controls - packed_sum).max(0) };
             let bp = adw::Breakpoint::new(adw::BreakpointCondition::new_length(
                 adw::BreakpointConditionLengthType::MaxWidth,
                 READER_ACTIONS_BREAKPOINT,
@@ -3673,7 +3724,7 @@ impl SimpleComponent for AppModel {
                 .add_named(&model.peek_refresh_spinner, Some("spinner"));
             model.peek_refresh_stack.set_visible_child_name("icon");
         }
-        if model.sidebar_collapsed {
+        if model.rail_active {
             widgets.sidebar_split.set_min_sidebar_width(SIDEBAR_RAIL_WIDTH);
             widgets.sidebar_split.set_max_sidebar_width(SIDEBAR_RAIL_WIDTH);
             set_sidebar_header_compact(
@@ -4267,6 +4318,14 @@ impl SimpleComponent for AppModel {
                         let _ = s.send(AppMsg::ReaderOverflowMenu);
                     });
                 }
+                // HYLKI_SHOWCASE_EDIT_AS_NEW=1 copies the open message into
+                // the composer at 6s (#232), as its menu entry does.
+                if std::env::var("HYLKI_SHOWCASE_EDIT_AS_NEW").is_ok() {
+                    let s = sender.input_sender().clone();
+                    gtk::glib::timeout_add_seconds_local_once(6, move || {
+                        let _ = s.send(AppMsg::EditAsNewCurrent);
+                    });
+                }
                 // HYLKI_SHOWCASE_MOVE=1 opens the Move To… picker at 5s
                 // (it captures itself a second later).
                 if std::env::var("HYLKI_SHOWCASE_MOVE").is_ok() {
@@ -4323,6 +4382,54 @@ impl SimpleComponent for AppModel {
                     gtk::glib::timeout_add_seconds_local_once(3, move || {
                         let _ = sb.send(SidebarInput::ToggleCollapsed);
                     });
+                }
+                // HYLKI_SHOWCASE_PEEK=<seconds>[,<seconds>…] works the header's
+                // sidebar toggle at each of those moments (1 or anything
+                // unparseable means 8 s), with the window raised first so the
+                // slide really animates; HYLKI_SHOWCASE_BURST writes stills
+                // through the first one. In a narrow window (a window.toml
+                // under the 1094px breakpoint) that is the floating peek; at
+                // full width, or under Focus Mode's rail, it is the rail
+                // expanding and folding again.
+                if let Ok(spec) = std::env::var("HYLKI_SHOWCASE_PEEK") {
+                    let mut at: Vec<f64> =
+                        spec.split(',').filter_map(|p| p.trim().parse::<f64>().ok()).filter(|s| *s > 1.5).collect();
+                    if at.is_empty() {
+                        at.push(8.0);
+                    }
+                    let burst = std::env::var("HYLKI_SHOWCASE_BURST").ok();
+                    let win = root.clone();
+                    {
+                        let win = win.clone();
+                        let first = at[0];
+                        gtk::glib::timeout_add_local_once(
+                            std::time::Duration::from_millis(((first - 1.5) * 1000.0) as u64),
+                            move || win.present(),
+                        );
+                    }
+                    for (n, secs) in at.into_iter().enumerate() {
+                        let s = sender.clone();
+                        let win = win.clone();
+                        let burst = (n == 0).then(|| burst.clone()).flatten();
+                        gtk::glib::timeout_add_local_once(
+                            std::time::Duration::from_millis((secs * 1000.0) as u64),
+                            move || {
+                                s.input(AppMsg::ToggleSidebar);
+                                if let Some(base) = burst {
+                                    for (i, ms) in [60u64, 120, 200, 400].iter().enumerate() {
+                                        let win = win.clone();
+                                        let path = format!("{base}.{i}.png");
+                                        gtk::glib::timeout_add_local_once(
+                                            std::time::Duration::from_millis(*ms),
+                                            move || {
+                                                showcase_capture(win.upcast_ref::<gtk::Widget>(), &path);
+                                            },
+                                        );
+                                    }
+                                }
+                            },
+                        );
+                    }
                 }
                 // HYLKI_SHOWCASE_TOGGLE=starred|sent|drafts toggles that
                 // unified row's list at 5s (what a long-press does).
@@ -5067,11 +5174,18 @@ impl SimpleComponent for AppModel {
                     self.rail_active = true;
                     self.set_sidebar_peek(!collapsed, true);
                 } else {
-                    self.sidebar_collapsed = collapsed;
+                    // Focus Mode holding the rail borrows the sidebar's
+                    // layout: expanding it for a moment is a look, not a
+                    // choice, so only what is on screen moves.
+                    if !self.sidebar_layout_borrowed() {
+                        self.sidebar_collapsed = collapsed;
+                    }
                     self.rail_active = collapsed;
                     self.animate_sidebar(collapsed);
                     self.compact_sidebar_header(collapsed);
-                    self.save_sidebar_state();
+                    if !self.sidebar_layout_borrowed() {
+                        self.save_sidebar_state();
+                    }
                 }
             }
 
@@ -5087,7 +5201,7 @@ impl SimpleComponent for AppModel {
                 // The rail wins while the window is narrow; the user's own
                 // choice comes back the moment there is room again. Nothing is
                 // persisted here — this is the window's shape, not a preference.
-                let want = on || self.sidebar_collapsed;
+                let want = self.rail_wanted();
                 if want != self.rail_active {
                     self.rail_active = want;
                     self.sidebar.emit(SidebarInput::SetCollapsed(want));
@@ -5163,7 +5277,7 @@ impl SimpleComponent for AppModel {
                 // the narrow-window breakpoint or the user's own collapse.
                 // The same peek the expand button opens, dismissed the same
                 // ways (navigation, or a click outside the panel).
-                let rail_up = self.auto_rail || self.sidebar_collapsed;
+                let rail_up = self.rail_wanted();
                 if self.sidebar_hover_expand && rail_up && !self.sidebar_peek {
                     self.rail_active = false;
                     self.set_sidebar_peek(true, true);
@@ -5981,6 +6095,12 @@ impl SimpleComponent for AppModel {
                         let m = self.newest_to_answer(&conversation, m);
                         let m = self.with_cached_body(m);
                         self.open_compose(m.account_id, forward_prefill(&m), &sender);
+                    }
+                    // A conversation row stands for its newest message here
+                    // too: that is the one the row is showing.
+                    RowAction::EditAsNew => {
+                        let m = self.newest_to_answer(&conversation, m);
+                        self.edit_as_new(m, &sender);
                     }
                     RowAction::ToggleStar => {
                         let starred = !m.starred;
@@ -7163,6 +7283,20 @@ impl SimpleComponent for AppModel {
             AppMsg::SetFilesPrefs(prefs) => {
                 if self.files_prefs != prefs {
                     self.files_prefs = prefs;
+                    self.save_settings();
+                }
+            }
+
+            AppMsg::EditAsNewCurrent => {
+                if let Some(m) = self.compose_target() {
+                    self.edit_as_new(m, &sender);
+                }
+            }
+
+            AppMsg::SetLinkBrowser(choice) => {
+                if self.link_browser != choice {
+                    self.link_browser = choice;
+                    crate::ui::launch::set_browser(&self.link_browser);
                     self.save_settings();
                 }
             }
@@ -9043,6 +9177,15 @@ impl SimpleComponent for AppModel {
                     }
                     self.pending_draft = Some((pd, inline, extra));
                 }
+                // Likewise a copy being edited as a new message: the body is
+                // in the cache now, so the second pass finds it there.
+                if let Some(pending) = self.pending_edit_as_new.take() {
+                    if pending.account_id == account_id && pending.id == message_id {
+                        self.edit_as_new(pending, &sender);
+                        return;
+                    }
+                    self.pending_edit_as_new = Some(pending);
+                }
                 // Likewise a reply picked for handed-in files.
                 if let Some((mut m, extra)) = self.pending_reply.take() {
                     if m.account_id == account_id && m.id == message_id {
@@ -9255,6 +9398,15 @@ impl SimpleComponent for AppModel {
                 if let Some(p) = self.popouts.get(&(account_id, message_id)) {
                     p.controller.emit(MessageWindowInput::SetAttachments(items));
                 }
+                // These files were fetched to be carried into a copy of the
+                // message; they are cached now, so the second pass stages them.
+                if let Some(pending) = self.pending_edit_as_new.take() {
+                    if pending.account_id == account_id && pending.id == message_id {
+                        self.edit_as_new(pending, &sender);
+                    } else {
+                        self.pending_edit_as_new = Some(pending);
+                    }
+                }
             }
 
             AppMsg::AttachmentsPending { account_id, message_id } => {
@@ -9308,6 +9460,16 @@ impl SimpleComponent for AppModel {
                 }
                 self.message_list
                     .emit(MessageListInput::SetHasAttachment { id: message_id, has: false });
+                // A copy waiting on files that do not exist: open it anyway,
+                // rather than leave the menu entry looking dead.
+                if let Some(mut pending) = self.pending_edit_as_new.take() {
+                    if pending.account_id == account_id && pending.id == message_id {
+                        pending.has_attachment = false;
+                        self.edit_as_new(pending, &sender);
+                    } else {
+                        self.pending_edit_as_new = Some(pending);
+                    }
+                }
             }
 
             AppMsg::HasAttachments { account_id, message_id } => {
@@ -9796,6 +9958,7 @@ impl AppModel {
             self.console_mode,
             self.read_mark,
             self.files_prefs,
+            self.link_browser.clone(),
         );
     }
 
@@ -11134,7 +11297,9 @@ impl AppModel {
     fn pin_sidebar_from_peek(&mut self) {
         tracing::info!("peek: pinned to side-by-side");
         self.sidebar_peek = false;
-        self.sidebar_collapsed = false;
+        if !self.sidebar_layout_borrowed() {
+            self.sidebar_collapsed = false;
+        }
         self.rail_active = false;
         if let Some(peek) = self.peek_split.clone() {
             self.peek_transition.set(true);
@@ -11145,7 +11310,9 @@ impl AppModel {
         // Side-by-side again: settle at the normal expanded width.
         self.animate_sidebar(false);
         self.compact_sidebar_header(false);
-        self.save_sidebar_state();
+        if !self.sidebar_layout_borrowed() {
+            self.save_sidebar_state();
+        }
     }
 
     /// Close the floating sidebar overlay if it is open — navigation picked in
@@ -11512,7 +11679,7 @@ impl AppModel {
             show_accounts: self.show_accounts,
             unified_chips: self.unified_chips,
             chevrons_left: self.chevrons_left,
-            rail_dots: self.rail_dots,
+            rail_dots: self.rail_dots_now(),
             rail_fold: self.rail_fold,
             unified_unread,
             unified_folders,
@@ -11865,8 +12032,18 @@ impl AppModel {
                     animate: true,
                 });
             }
-            if changed(F::HideAvatars) || changed(F::OnePreviewLine) {
+            if changed(F::HideAvatars)
+                || changed(F::OnePreviewLine)
+                || changed(F::HidePreview)
+                || changed(F::HideSubject)
+            {
                 self.push_list_look(true);
+            }
+            if changed(F::RailSidebar) {
+                // The dots (or counts) are drawn with the rows, so the
+                // sidebar is rebuilt before it folds.
+                self.rebuild_sidebar();
+                self.sync_rail();
             }
             if changed(F::ReaderView) {
                 self.push_reader_focus();
@@ -11912,13 +12089,65 @@ impl AppModel {
         self.avatars && !self.focus.active(config::FocusPart::HideAvatars)
     }
 
-    /// The preview lines the list shows: the setting, capped at one by
-    /// Focus Mode (previews switched off stay off).
+    /// The preview lines the list shows: the setting, hidden outright or
+    /// capped at one by Focus Mode (previews switched off stay off).
+    ///
+    /// Only what is *drawn* changes — the setting itself, and with it what
+    /// the workers fetch, is left alone. So the preview text is in hand the
+    /// moment Focus Mode ends, rather than waiting for the next sync the way
+    /// switching previews off in Settings does.
     fn list_preview_lines(&self) -> u32 {
-        if self.focus.active(config::FocusPart::OnePreviewLine) {
+        if self.focus.active(config::FocusPart::HidePreview) {
+            0
+        } else if self.focus.active(config::FocusPart::OnePreviewLine) {
             self.preview_lines.min(1)
         } else {
             self.preview_lines
+        }
+    }
+
+    /// Whether the list draws subject lines: always, unless Focus Mode's
+    /// subject part is in force (then a row is its sender and its date).
+    fn list_show_subject(&self) -> bool {
+        !self.focus.active(config::FocusPart::HideSubject)
+    }
+
+    /// Whether the icon rail marks unread folders with a dot instead of a
+    /// count: the preference, or Focus Mode's rail part while it holds.
+    fn rail_dots_now(&self) -> bool {
+        self.rail_dots || self.focus.active(config::FocusPart::RailSidebar)
+    }
+
+    /// Whether the rail belongs on screen: the window is too narrow for the
+    /// full sidebar, Focus Mode has folded it, or the user collapsed it
+    /// themselves. Only the last of those is ever saved.
+    fn rail_wanted(&self) -> bool {
+        self.auto_rail || self.focus.active(config::FocusPart::RailSidebar) || self.sidebar_collapsed
+    }
+
+    /// Whether the sidebar's layout is Focus Mode's for the while: the rail
+    /// part is in force, so collapsing or expanding it is a look for as long
+    /// as the mode lasts and never the layout the user keeps. Nothing is
+    /// saved while this holds, and ending the mode gives back exactly the
+    /// sidebar it took over — whatever was done to it meanwhile.
+    fn sidebar_layout_borrowed(&self) -> bool {
+        self.focus.active(config::FocusPart::RailSidebar)
+    }
+
+    /// Put the rail up or take it down to match [`Self::rail_wanted`],
+    /// animating the split the way the toggle does. Persists nothing.
+    fn sync_rail(&mut self) {
+        let want = self.rail_wanted();
+        // A floating peek is the expanded sidebar by another name: fold it
+        // before the rail goes up under it.
+        if want && self.sidebar_peek {
+            self.set_sidebar_peek(false, true);
+        }
+        if want != self.rail_active {
+            self.rail_active = want;
+            self.sidebar.emit(SidebarInput::SetCollapsed(want));
+            self.animate_sidebar(want);
+            self.compact_sidebar_header(want);
         }
     }
 
@@ -11928,6 +12157,7 @@ impl AppModel {
         self.message_list.emit(MessageListInput::SetLook {
             avatars: self.list_avatars(),
             preview_lines: self.list_preview_lines(),
+            subject: self.list_show_subject(),
             animate,
         });
     }
@@ -12285,6 +12515,7 @@ impl AppModel {
                 item(RowAction::Reply, i18n("Reply"), "mail-reply-sender"),
                 item(RowAction::ReplyAll, i18n("Reply All"), "mail-reply-all"),
                 item(RowAction::Forward, i18n("Forward"), "mail-forward"),
+                item(RowAction::EditAsNew, i18n("Edit as New Message"), "document-edit"),
             ],
             vec![
                 if m.starred {
@@ -12941,27 +13172,8 @@ impl AppModel {
         };
         let editable = crate::worker::editable_from_raw(&item.raw, &item.rcpts);
 
-        let mut attachments = Vec::new();
-        if !editable.attachments.is_empty() {
-            let dir = std::env::temp_dir().join(format!("hylki-outbox-{account_id}-{id}"));
-            if std::fs::create_dir_all(&dir).is_ok() {
-                for (i, att) in editable.attachments.iter().enumerate() {
-                    // The name came out of a message header; keep it to a single
-                    // path component.
-                    let safe = att.name.replace(['/', '\\'], "_");
-                    let name = if safe.trim().is_empty() {
-                        format!("attachment-{}", i + 1)
-                    } else {
-                        safe
-                    };
-                    let path = dir.join(&name);
-                    match std::fs::write(&path, &att.data) {
-                        Ok(()) => attachments.push(path),
-                        Err(e) => tracing::warn!("could not stage {name} for editing: {e}"),
-                    }
-                }
-            }
-        }
+        let attachments =
+            stage_attachments(&format!("hylki-outbox-{account_id}-{id}"), &editable.attachments);
 
         let prefill = ComposePrefill {
             to: editable.to,
@@ -13024,6 +13236,70 @@ impl AppModel {
             self.current = None;
             self.current_thread.clear();
             self.show_message(None, false);
+            self.open_inline_reply(m.account_id, prefill, None, sender);
+        } else {
+            self.open_compose(m.account_id, prefill, sender);
+        }
+    }
+
+    /// "Edit as New Message" (#232): the message opened in the composer as a
+    /// message of its own — the same recipients, subject, body and
+    /// attachments, with none of the threading headers and no tie to what it
+    /// was copied from. Sending it sends a new message; the original is left
+    /// exactly where it was.
+    ///
+    /// The body and the attachments may still be on the server. Each is
+    /// fetched at most once, and the reply re-enters here: the message is
+    /// held in `pending_edit_as_new` meanwhile, so nothing opens until what
+    /// is being copied is actually in hand.
+    fn edit_as_new(&mut self, m: Message, sender: &ComponentSender<Self>) {
+        let m = self.with_cached_body(m);
+        let key = (m.account_id, m.id);
+        if m.body.is_empty() {
+            if let Some(path) = self.resolve_folder_path(&m) {
+                self.send_to(
+                    m.account_id,
+                    MailRequest::LoadBody { message_id: m.id, path, uid: m.uid },
+                );
+                self.pending_edit_as_new = Some(m);
+                return;
+            }
+        }
+        if m.has_attachment && !self.attachment_cache.contains_key(&key) {
+            if let Some(path) = self.resolve_folder_path(&m) {
+                self.send_to(m.account_id, MailRequest::LoadAttachments {
+                    message_id: m.id,
+                    path,
+                    uid: m.uid,
+                    download: true,
+                });
+                self.pending_edit_as_new = Some(m);
+                return;
+            }
+        }
+        let attachments = self
+            .attachment_cache
+            .get(&key)
+            .map(|items| {
+                stage_attachments(&format!("hylki-copy-{}-{}", m.account_id, m.id), items)
+            })
+            .unwrap_or_default();
+        tracing::info!(
+            "edit as new: copying {}:{} ({} attachment(s))",
+            m.account_id,
+            m.id,
+            attachments.len()
+        );
+        let prefill = ComposePrefill {
+            to: m.to.clone(),
+            cc: m.cc.clone(),
+            subject: m.subject.clone(),
+            body_html: editable_copy_html(&m.body),
+            attachments,
+            ..Default::default()
+        };
+        // A new message, so it opens where a new message opens.
+        if self.compose_inline {
             self.open_inline_reply(m.account_id, prefill, None, sender);
         } else {
             self.open_compose(m.account_id, prefill, sender);
@@ -15458,6 +15734,7 @@ impl AppModel {
             compose_inline: self.compose_inline,
             reply_fields: self.reply_fields,
             files: self.files_prefs,
+            link_browser: self.link_browser.clone(),
             compose_default_from: self.compose_default_from.clone(),
             paste_plain: self.paste_plain,
             spellcheck: self.spellcheck,
@@ -15526,6 +15803,7 @@ impl AppModel {
                 PrefOutput::SetComposeInline(on) => AppMsg::SetComposeInline(on),
                 PrefOutput::SetReplyFields(on) => AppMsg::SetReplyFields(on),
                 PrefOutput::SetFilesPrefs(p) => AppMsg::SetFilesPrefs(p),
+                PrefOutput::SetLinkBrowser(id) => AppMsg::SetLinkBrowser(id),
                 PrefOutput::SetComposeDefaultFrom(addr) => AppMsg::SetComposeDefaultFrom(addr),
                 PrefOutput::SetPastePlain(on) => AppMsg::SetPastePlain(on),
                 PrefOutput::SetSpellcheck(on) => AppMsg::SetSpellcheck(on),
@@ -16042,22 +16320,39 @@ impl AppModel {
         thanks_title.set_margin_bottom(6);
         page.append(&thanks_title);
 
-        let thanks = gtk::ListBox::new();
-        thanks.add_css_class("boxed-list");
-        thanks.set_selection_mode(gtk::SelectionMode::None);
-        for (name, handle) in CONTRIBUTORS {
-            let row = adw::ActionRow::builder()
-                .title(*name)
-                .subtitle(format!("@{handle}"))
-                .activatable(true)
-                .build();
-            let url = format!("https://github.com/{handle}");
-            row.set_tooltip_text(Some(&url));
-            row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Hylki-adw-external-link-symbolic"));
-            row.connect_activated(move |_| crate::oauth::open_uri(&url));
-            thanks.append(&row);
-        }
-        page.append(&thanks);
+        let people = |rows: Vec<(&'static str, &'static str, &'static str)>| {
+            let list = gtk::ListBox::new();
+            list.add_css_class("boxed-list");
+            list.set_selection_mode(gtk::SelectionMode::None);
+            for (name, handle, note) in rows {
+                let subtitle = if note.is_empty() {
+                    format!("@{handle}")
+                } else {
+                    format!("{note} · @{handle}")
+                };
+                let row = adw::ActionRow::builder()
+                    .title(name)
+                    .subtitle(subtitle)
+                    .activatable(true)
+                    .build();
+                let url = format!("https://github.com/{handle}");
+                row.set_tooltip_text(Some(&url));
+                row.add_suffix(&gtk::Image::from_icon_name("co.hyprlab.Hylki-adw-external-link-symbolic"));
+                row.connect_activated(move |_| crate::oauth::open_uri(&url));
+                list.append(&row);
+            }
+            list
+        };
+        page.append(&people(credits(CONTRIBUTORS)));
+
+        // Translators — the same list, with the languages each one carried.
+        let translators_title = gtk::Label::new(Some(i18n("Translated by").as_str()));
+        translators_title.add_css_class("heading");
+        translators_title.set_halign(gtk::Align::Start);
+        translators_title.set_margin_top(20);
+        translators_title.set_margin_bottom(6);
+        page.append(&translators_title);
+        page.append(&people(credits(TRANSLATORS)));
 
         // Footer.
         let footer = gtk::Label::new(Some(i18n("© 2026 Hyprlab").as_str()));
@@ -16089,6 +16384,20 @@ impl AppModel {
 
         win.set_content(Some(&nav));
         win.present();
+
+        // Screenshot hook: HYLKI_SHOWCASE_SCROLL runs the page down by that
+        // fraction once it has been laid out, so a capture can show the
+        // thanks lists at the bottom (the same variable does this for
+        // Settings).
+        if let Some(frac) = std::env::var("HYLKI_SHOWCASE_SCROLL")
+            .ok()
+            .map(|v| v.parse::<f64>().unwrap_or(1.0))
+        {
+            let vadj = scroller.vadjustment();
+            gtk::glib::timeout_add_seconds_local_once(2, move || {
+                vadj.set_value(vadj.lower() + (vadj.upper() - vadj.page_size()) * frac);
+            });
+        }
     }
 
     /// Star/unstar a message, updating the server, the list, and the reader.
@@ -19100,6 +19409,50 @@ fn reply_all_prefill(m: &Message, self_email: &str) -> ComposePrefill {
     prefill
 }
 
+/// Write attachments out to a private temp directory: the composer attaches
+/// files by path, and these exist only as bytes — in a queued message's
+/// stored MIME, or in a cached message being copied.
+fn stage_attachments(dir_name: &str, items: &[crate::models::Attachment]) -> Vec<std::path::PathBuf> {
+    if items.is_empty() {
+        return Vec::new();
+    }
+    let dir = std::env::temp_dir().join(dir_name);
+    if std::fs::create_dir_all(&dir).is_err() {
+        return Vec::new();
+    }
+    let mut staged = Vec::new();
+    for (i, att) in items.iter().enumerate() {
+        // The name came out of a message header; keep it to a single
+        // path component.
+        let safe = att.name.replace(['/', '\\'], "_");
+        let name = if safe.trim().is_empty() { format!("attachment-{}", i + 1) } else { safe };
+        let path = dir.join(&name);
+        match std::fs::write(&path, &att.data) {
+            Ok(()) => staged.push(path),
+            Err(e) => tracing::warn!("could not stage {name} for editing: {e}"),
+        }
+    }
+    staged
+}
+
+/// A message's own content, ready to be edited rather than quoted: the HTML
+/// sanitized exactly as a forward's is (#52, it is the same untrusted mail),
+/// or the plain text escaped into it.
+fn editable_copy_html(body: &str) -> String {
+    if body.contains('<') {
+        sanitize_forward_html(body)
+    } else {
+        let text = message_text(body);
+        format!(
+            "<p>{}</p>",
+            text.replace('&', "&amp;")
+                .replace('<', "&lt;")
+                .replace('>', "&gt;")
+                .replace('\n', "<br>")
+        )
+    }
+}
+
 fn forward_prefill(m: &Message) -> ComposePrefill {
     let subject = if m.subject.to_lowercase().starts_with("fwd:") {
         m.subject.clone()
@@ -19374,6 +19727,20 @@ fn next_after_vanish(
 
 #[cfg(test)]
 mod tests {
+    /// A copy to edit carries the message's own content, not a quote of it:
+    /// the HTML survives its sanitizing, and plain text becomes a paragraph
+    /// with its line breaks kept.
+    #[test]
+    fn a_copy_keeps_the_body_unquoted() {
+        let html = super::editable_copy_html("<p>Hi <b>there</b></p><script>steal()</script>");
+        assert!(html.contains("<b>there</b>"), "{html}");
+        assert!(!html.contains("script"), "{html}");
+        assert!(!html.contains("blockquote"), "{html}");
+
+        let html = super::editable_copy_html("Line one\nLine two");
+        assert_eq!(html, "<p>Line one<br>Line two</p>");
+    }
+
     /// A `mid:` link names a Message-ID the way the cache stores it: no
     /// brackets, lowercase, percent-decoded, without a `/cid` part.
     #[test]
@@ -19936,4 +20303,34 @@ mod tests {
     fn search_pool_is_empty_when_nothing_indexed() {
         assert!(build_search_pool(&HashMap::new()).is_empty());
     }
+
+    /// The credits metafiles are read at build time and shown in About, so a
+    /// line that stops parsing loses a real person from the list silently.
+    #[test]
+    fn credits_files_parse() {
+        for file in [CONTRIBUTORS, TRANSLATORS] {
+            let rows = credits(file);
+            let lines = file
+                .lines()
+                .filter(|l| !l.trim().is_empty() && !l.trim_start().starts_with('#'))
+                .count();
+            assert_eq!(rows.len(), lines, "every non-comment line must parse");
+            for (name, handle, _) in rows {
+                assert!(!name.is_empty() && !handle.is_empty(), "{name}/{handle}");
+                assert!(
+                    !handle.contains(char::is_whitespace),
+                    "{handle} is not a GitHub handle"
+                );
+            }
+        }
+    }
+
+    /// Translators carry their languages after the dash; contributors carry
+    /// nothing after the handle.
+    #[test]
+    fn credits_notes_are_translator_languages() {
+        assert!(credits(CONTRIBUTORS).iter().all(|(_, _, note)| note.is_empty()));
+        assert!(credits(TRANSLATORS).iter().all(|(_, _, note)| !note.is_empty()));
+    }
 }
+
