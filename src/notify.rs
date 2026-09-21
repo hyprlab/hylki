@@ -18,6 +18,11 @@ pub const OPEN_MESSAGE_ACTION: &str = "open-message";
 /// raising the window. Same `(uuu)` target as [`OPEN_MESSAGE_ACTION`].
 pub const MARK_READ_ACTION: &str = "notify-mark-read";
 pub const ARCHIVE_ACTION: &str = "notify-archive";
+pub const DELETE_ACTION: &str = "notify-delete";
+/// These two raise the window as well: a composer needs it.
+pub const REPLY_ACTION: &str = "notify-reply";
+pub const FORWARD_ACTION: &str = "notify-forward";
+pub const SPAM_ACTION: &str = "notify-spam";
 /// App action (bare name) that raises the window and the newest composer:
 /// the click on a "message ready" alert ([`compose_ready`]).
 pub const PRESENT_COMPOSE_ACTION: &str = "present-compose";
@@ -100,18 +105,22 @@ pub fn new_mail(
     // Action buttons (#38), only when the notification covers exactly one
     // message — on a "3 new messages" summary, "Mark as Read" acting on just
     // the newest would do less than it says — and only when that message is
-    // still where the buttons will look for it.
+    // still where the buttons will look for it. Which appear, up to three,
+    // is the user's choice (#244).
     if others == 0 && in_place {
-        n.add_button_with_target_value(
-            &i18n("Mark as Read"),
-            &format!("app.{MARK_READ_ACTION}"),
-            Some(&target),
-        );
-        n.add_button_with_target_value(
-            &i18n("Archive"),
-            &format!("app.{ARCHIVE_ACTION}"),
-            Some(&target),
-        );
+        use crate::config::NotificationButton;
+        let buttons = crate::config::load_notification_buttons();
+        for button in NotificationButton::ALL.into_iter().filter(|b| buttons.get(*b)) {
+            let (label, action) = match button {
+                NotificationButton::MarkRead => (i18n("Mark as Read"), MARK_READ_ACTION),
+                NotificationButton::Archive => (i18n("Archive"), ARCHIVE_ACTION),
+                NotificationButton::Delete => (i18n("Delete"), DELETE_ACTION),
+                NotificationButton::Reply => (i18n("Reply"), REPLY_ACTION),
+                NotificationButton::Forward => (i18n("Forward"), FORWARD_ACTION),
+                NotificationButton::Spam => (i18n("Mark as Spam"), SPAM_ACTION),
+            };
+            n.add_button_with_target_value(&label, &format!("app.{action}"), Some(&target));
+        }
     }
     send(&mail_id(account_id), &n);
 }

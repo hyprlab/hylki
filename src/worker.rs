@@ -28,6 +28,9 @@ use crate::config::AccountConfig;
 use crate::models::{Account, Folder, FolderKind, KeywordFinding, Message};
 use crate::i18n::{i18n, i18n_f, ni18n_f};
 
+/// The JMAP path (#245), a child module so it shares this file's helpers.
+mod jmap;
+
 /// Number of most-recent messages to fetch attachment info (BODYSTRUCTURE) for;
 /// older messages get an envelope-only index row and resolve attachments on open.
 const PAGE_SIZE: u32 = 50;
@@ -130,14 +133,52 @@ static PREVIEW_ITEMS_REJECTED: std::sync::LazyLock<
     std::sync::Mutex<std::collections::HashSet<u32>>,
 > = std::sync::LazyLock::new(Default::default);
 
+/// Whether the server has rejected the preview items for this account.
+fn previews_rejected(account_id: u32) -> bool {
+    PREVIEW_ITEMS_REJECTED
+        .lock()
+        .map(|r| r.contains(&account_id))
+        .unwrap_or(false)
+}
+
 /// Whether the account's fetches should read list previews at all: the
 /// setting is on and the server has not rejected the preview items.
 fn inline_previews_wanted(account_id: u32) -> bool {
-    crate::config::load_preview_lines() > 0
-        && !PREVIEW_ITEMS_REJECTED
-            .lock()
-            .map(|r| r.contains(&account_id))
-            .unwrap_or(false)
+    crate::config::load_preview_lines() > 0 && !previews_rejected(account_id)
+}
+
+/// Start the account at the summary-fetch mode that worked last time
+/// (#226), so a server that rejects the default is not failed against on
+/// every launch: two unreadable fetches and two reconnects before the list
+/// appeared, in the Mailfence log. Returns the `use_envelope` to begin with.
+fn seed_fetch_mode(account_id: u32, email: &str) -> bool {
+    let (use_envelope, rejected) = crate::config::load_fetch_mode(email);
+    if rejected {
+        if let Ok(mut r) = PREVIEW_ITEMS_REJECTED.lock() {
+            r.insert(account_id);
+        }
+    }
+    if !use_envelope || rejected {
+        tracing::info!(
+            target: "hylki::imap",
+            "summary fetch: starting with envelope={use_envelope} previews={} (remembered)",
+            !rejected
+        );
+    }
+    use_envelope
+}
+
+/// A parser error with its byte-array dump cut out: the same reply follows
+/// as text, which is the readable half, and the numbers were most of a
+/// 160 KB log for one user (#226).
+pub fn compact_parse_error(text: &str) -> String {
+    let Some(start) = text.find("input: [") else {
+        return text.to_string();
+    };
+    let Some(end) = text[start..].find(']').map(|i| start + i + 1) else {
+        return text.to_string();
+    };
+    format!("{}input: [{} bytes]{}", &text[..start], text[start + 8..end - 1].split(',').count(), &text[end..])
 }
 
 /// Whether the error is the IMAP parser giving up on a server's reply, as
@@ -762,6 +803,11 @@ fn serve_cached_body(
     let Some(body) = cache.load_body(account_id, path, uid) else {
         return false;
     };
+    // A blank cached by an earlier build for a message the server would not
+    // hand over (#226) is a miss, so the message is asked for again.
+    if body == "(empty message)" {
+        return false;
+    }
     emit(WorkerEvent::Body { message_id, path: path.to_string(), body });
     if let Some(check) = cache.load_sender_check(account_id, path, uid) {
         emit(WorkerEvent::SenderChecked { message_id, check });
@@ -806,6 +852,9 @@ async fn run(
         }
         Some(account) if account.protocol == crate::config::Protocol::Graph => {
             run_graph(account_id, account, rx, emit).await
+        }
+        Some(account) if account.protocol == crate::config::Protocol::Jmap => {
+            jmap::run_jmap(account_id, account, rx, emit).await
         }
         Some(account) => run_imap(account_id, account, rx, emit).await,
         None => run_mock(account_id, rx, emit).await,
@@ -1018,8 +1067,9 @@ async fn run_imap(
     let mut pending_resync = false;
     // Whether to use IMAP's structured ENVELOPE/BODYSTRUCTURE. Disabled for the
     // session (falling back to raw-header parsing) if the server sends responses
-    // our IMAP parser can't handle (e.g. iCloud).
-    let mut use_envelope = true;
+    // our IMAP parser can't handle (e.g. iCloud), and remembered across
+    // sessions once a way of asking has worked (#226).
+    let mut use_envelope = seed_fetch_mode(account_id, &account.email);
     // Whether the Outbox has been retried since this connection came up. A queued
     // message is almost always waiting on the network, so having a session again
     // is the moment worth retrying — not a timer.
@@ -2630,11 +2680,13 @@ async fn load_messages_retry(
     // moves the account one step down the [`step_fetch_mode`] ladder for the
     // rest of the session, until a way works or the ladder runs out. Any
     // other error is retried once as it was.
+    let mut stepped = false;
     for _ in 0..4 {
         if let Err(e) = &result {
             if is_parse_error(e) && !step_fetch_mode(account_id, use_envelope) {
                 return result;
             }
+            stepped |= is_parse_error(e);
         }
         match connect(account).await {
             Ok(fresh) => s = fresh,
@@ -2649,6 +2701,11 @@ async fn load_messages_retry(
         match &result {
             Ok(_) => {
                 *session = Some(s);
+                // A mode reached by stepping has now loaded a folder: the
+                // next launch starts here.
+                if stepped {
+                    crate::config::save_fetch_mode(&account.email, *use_envelope, previews_rejected(account_id));
+                }
                 return result;
             }
             Err(e) if is_parse_error(e) => continue,
@@ -2730,19 +2787,8 @@ async fn load_source(
     uid: u32,
 ) -> Result<String, async_imap::error::Error> {
     sel(session, path).await?;
-
-    let fetches: Vec<Fetch> = fetch_uids(session, uid.to_string(), "(BODY.PEEK[])")
-        .await?
-        .try_collect()
-        .await?;
-
-    let raw = fetches
-        .iter()
-        .find_map(|f| f.body())
-        .map(|b| String::from_utf8_lossy(b).into_owned())
-        .unwrap_or_else(|| "(empty message)".to_string());
-
-    Ok(raw)
+    let raw = fetch_raw_message(session, uid).await?.ok_or_else(|| no_content_error(uid))?;
+    Ok(String::from_utf8_lossy(&raw).into_owned())
 }
 
 /// Result of an IDLE wait: a request to handle, a folder that was refreshed
@@ -3316,21 +3362,75 @@ async fn load_raw_retry(
 }
 
 /// Fetch the raw RFC 822 bytes of a message (binary-safe, for attachments).
+/// The whole message out of one FETCH item, however the server labelled
+/// it: `BODY[]` or `RFC822` as asked, or the header and text as two items,
+/// which is what a server that will not hand over `BODY[]` (#226) can
+/// still be asked for, joined back into one message.
+fn raw_of(f: &Fetch) -> Option<Vec<u8>> {
+    if let Some(b) = f.body() {
+        return Some(b.to_vec());
+    }
+    match (f.header(), f.text()) {
+        (Some(h), Some(t)) => {
+            let mut raw = h.to_vec();
+            if !raw.ends_with(b"\r\n\r\n") {
+                if raw.ends_with(b"\r\n") {
+                    raw.extend_from_slice(b"\r\n");
+                } else {
+                    raw.extend_from_slice(b"\r\n\r\n");
+                }
+            }
+            raw.extend_from_slice(t);
+            Some(raw)
+        }
+        (None, Some(t)) => Some(t.to_vec()),
+        _ => None,
+    }
+}
+
+/// Fetch one message's raw bytes, asking three ways before giving up: the
+/// usual `BODY.PEEK[]`, then `RFC822`, then the header and text as two
+/// items. Mailfence answered the first with a FETCH that carried no
+/// message at all (#226), which read as an empty message and was shown,
+/// and cached, as one. `None` means the server would not hand it over any
+/// way; the reply's shape is logged so the export says what came back.
+async fn fetch_raw_message(
+    session: &mut ImapSession,
+    uid: u32,
+) -> Result<Option<Vec<u8>>, async_imap::error::Error> {
+    for (n, items) in ["(BODY.PEEK[])", "(RFC822)", "(BODY.PEEK[HEADER] BODY.PEEK[TEXT])"].iter().enumerate() {
+        let fetches: Vec<Fetch> = fetch_uids(session, uid.to_string(), items).await?.try_collect().await?;
+        if let Some(raw) = fetches.iter().find_map(raw_of) {
+            if n > 0 {
+                tracing::info!(target: "hylki::imap", "message {uid}: content came with {items}");
+            }
+            return Ok(Some(raw));
+        }
+        tracing::warn!(
+            target: "hylki::imap",
+            "message {uid}: {} FETCH item(s) came back for {items}, none carrying the message: {}",
+            fetches.len(),
+            fetches.iter().map(|f| format!("{f:?}")).collect::<Vec<_>>().join(" | ").chars().take(600).collect::<String>()
+        );
+    }
+    Ok(None)
+}
+
+/// The error for a message the server would not hand over (#226): surfaced
+/// rather than shown as empty, and never cached.
+fn no_content_error(uid: u32) -> async_imap::error::Error {
+    async_imap::error::Error::Bad(format!(
+        "the server sent no content for message {uid} (asked as BODY.PEEK[], RFC822, and header plus text)"
+    ))
+}
+
 async fn load_raw(
     session: &mut ImapSession,
     path: &str,
     uid: u32,
 ) -> Result<Vec<u8>, async_imap::error::Error> {
     sel(session, path).await?;
-    let fetches: Vec<Fetch> = fetch_uids(session, uid.to_string(), "(BODY.PEEK[])")
-        .await?
-        .try_collect()
-        .await?;
-    Ok(fetches
-        .iter()
-        .find_map(|f| f.body())
-        .map(|b| b.to_vec())
-        .unwrap_or_default())
+    fetch_raw_message(session, uid).await?.ok_or_else(|| no_content_error(uid))
 }
 
 /// Decoded size at or above which a part carrying a Content-ID counts as an
@@ -4379,14 +4479,20 @@ fn bracketed(ids: &str) -> String {
 }
 
 /// TLS settings for an SMTP connection, matching [`tls_connector`]: a local
-/// bridge's self-signed certificate is accepted, every other host is verified.
+/// bridge's self-signed certificate is accepted, a certificate in another
+/// name where the account asks for it (#246), every other host is verified.
 fn smtp_tls_parameters(
     host: &str,
+    accept_hostname_mismatch: bool,
 ) -> Result<lettre::transport::smtp::client::TlsParameters, lettre::transport::smtp::Error> {
     use lettre::transport::smtp::client::TlsParameters;
     if is_loopback_host(host) {
         TlsParameters::builder(host.to_string())
             .dangerous_accept_invalid_certs(true)
+            .dangerous_accept_invalid_hostnames(true)
+            .build()
+    } else if accept_hostname_mismatch {
+        TlsParameters::builder(host.to_string())
             .dangerous_accept_invalid_hostnames(true)
             .build()
     } else {
@@ -4415,10 +4521,11 @@ fn alias_with_own_smtp<'a>(
 fn smtp_transport_builder(
     host: &str,
     port: u16,
+    accept_hostname_mismatch: bool,
 ) -> Result<lettre::transport::smtp::AsyncSmtpTransportBuilder, SmtpError> {
     let implicit_tls = port == 465;
-    let builder = if is_loopback_host(host) {
-        let tls = smtp_tls_parameters(host)?;
+    let builder = if is_loopback_host(host) || accept_hostname_mismatch {
+        let tls = smtp_tls_parameters(host, accept_hostname_mismatch)?;
         let mode = if implicit_tls {
             lettre::transport::smtp::client::Tls::Wrapper(tls)
         } else {
@@ -4457,12 +4564,12 @@ async fn smtp_transport(
         } else {
             alias.smtp_password.clone()
         };
-        return Ok(smtp_transport_builder(alias.smtp_host.trim(), alias.smtp_port)?
+        return Ok(smtp_transport_builder(alias.smtp_host.trim(), alias.smtp_port, account.tls_accept_hostname_mismatch)?
             .credentials(Credentials::new(alias.smtp_username.clone(), password))
             .build());
     }
     let host = smtp_host(account);
-    let mut builder = smtp_transport_builder(&host, account.smtp_port)?;
+    let mut builder = smtp_transport_builder(&host, account.smtp_port, account.tls_accept_hostname_mismatch)?;
     if account.oauth {
         // XOAUTH2: the "password" is a fresh OAuth token from GOA.
         let token = fetch_oauth_token(account).await.ok_or_else(|| -> SmtpError {
@@ -4708,7 +4815,7 @@ fn wire(cmd: &str) {
 fn wired<T>(cmd: &str, r: &Result<T, async_imap::error::Error>) {
     match r {
         Ok(_) => tracing::debug!(target: "hylki::imap", "< OK ({})", cmd_head(cmd)),
-        Err(e) => tracing::warn!(target: "hylki::imap", "< {e} ({cmd})"),
+        Err(e) => tracing::warn!(target: "hylki::imap", "< {} ({cmd})", compact_parse_error(&e.to_string())),
     }
 }
 
@@ -5207,15 +5314,32 @@ fn is_loopback_host(host: &str) -> bool {
 }
 
 /// A TLS connector for a mail server: it tolerates a local bridge’s self-signed
-/// certificate and verifies everything else normally.
-fn tls_connector(host: &str) -> async_native_tls::TlsConnector {
+/// certificate, waives the name check alone where the account asks for it
+/// (#246: a valid certificate in another name, as shared hosting serves),
+/// and verifies everything else normally.
+fn tls_connector(host: &str, accept_hostname_mismatch: bool) -> async_native_tls::TlsConnector {
     let tls = async_native_tls::TlsConnector::new();
     if is_loopback_host(host) {
         tls.danger_accept_invalid_certs(true)
             .danger_accept_invalid_hostnames(true)
+    } else if accept_hostname_mismatch {
+        tls.danger_accept_invalid_hostnames(true)
     } else {
         tls
     }
+}
+
+/// Whether a connection error is the certificate's name not matching the
+/// host (#246), which the account's "Accept a certificate for another
+/// name" switch is for. The wording is OpenSSL's, via native-tls.
+pub fn is_hostname_mismatch(error: &str) -> bool {
+    let e = error.to_ascii_lowercase();
+    e.contains("hostname mismatch")
+        || e.contains("host name mismatch")
+        || e.contains("certificate name does not match")
+        || e.contains("does not match the")
+        || e.contains("invalid for name")
+        || e.contains("notvalidforname")
 }
 
 /// Whether the IMAP connection opens in plaintext and upgrades with STARTTLS
@@ -5246,7 +5370,7 @@ async fn connect(account: &AccountConfig) -> Result<ImapSession, Box<dyn std::er
 
 async fn connect_inner(account: &AccountConfig) -> Result<ImapSession, Box<dyn std::error::Error>> {
     let tcp = TcpStream::connect((account.imap_host.as_str(), account.imap_port)).await?;
-    let tls = tls_connector(&account.imap_host);
+    let tls = tls_connector(&account.imap_host, account.tls_accept_hostname_mismatch);
     let client = if imap_uses_starttls(account) {
         let mut plain = async_imap::Client::new(tcp);
         // Consume the plaintext greeting before issuing STARTTLS. Nothing secret
@@ -5306,15 +5430,19 @@ pub struct ConnTest {
 
 /// Test that the account's servers accept the given credentials (no mail sent).
 pub async fn test_connection(account: &AccountConfig) -> ConnTest {
-    let incoming = if account.protocol == crate::config::Protocol::Pop3 {
-        test_pop3(account).await
-    } else {
-        test_imap(account).await
+    let incoming = match account.protocol {
+        crate::config::Protocol::Pop3 => test_pop3(account).await,
+        crate::config::Protocol::Jmap => jmap::test_jmap(account).await,
+        _ => test_imap(account).await,
     };
-    ConnTest {
-        incoming,
-        smtp: test_smtp(account).await,
-    }
+    // A JMAP account sends through the server itself: there is no SMTP to
+    // test, and the Accounts window leaves that line out.
+    let smtp = if account.protocol == crate::config::Protocol::Jmap {
+        Ok(())
+    } else {
+        test_smtp(account).await
+    };
+    ConnTest { incoming, smtp }
 }
 
 async fn test_pop3(account: &AccountConfig) -> Result<(), String> {
@@ -5369,7 +5497,7 @@ async fn test_smtp(account: &AccountConfig) -> Result<(), String> {
             &[Mechanism::Plain, Mechanism::Login],
         )
     };
-    smtp_auth_check(&host, account.smtp_port, &creds, mechanisms).await
+    smtp_auth_check(&host, account.smtp_port, &creds, mechanisms, account.tls_accept_hostname_mismatch).await
 }
 
 /// Test a send-as alias's own SMTP server and credentials (#34): connect,
@@ -5393,8 +5521,19 @@ pub async fn test_alias_smtp(
         alias.smtp_port,
         &creds,
         &[Mechanism::Plain, Mechanism::Login],
+        account_accepts_hostname_mismatch(account_email),
     )
     .await
+}
+
+/// The account's name-check waiver (#246), by its address: the alias test
+/// is handed the address alone.
+fn account_accepts_hostname_mismatch(account_email: &str) -> bool {
+    crate::config::load()
+        .unwrap_or_default()
+        .iter()
+        .find(|a| a.email.eq_ignore_ascii_case(account_email))
+        .is_some_and(|a| a.tls_accept_hostname_mismatch)
 }
 
 /// Blocking wrapper around [`test_alias_smtp`] — call from `spawn_blocking`,
@@ -5416,12 +5555,13 @@ async fn smtp_auth_check(
     port: u16,
     creds: &Credentials,
     mechanisms: &[lettre::transport::smtp::authentication::Mechanism],
+    accept_hostname_mismatch: bool,
 ) -> Result<(), String> {
     use lettre::transport::smtp::client::AsyncSmtpConnection;
     use lettre::transport::smtp::extension::ClientId;
 
     let hello = ClientId::default();
-    let tls = smtp_tls_parameters(host).map_err(|e| e.to_string())?;
+    let tls = smtp_tls_parameters(host, accept_hostname_mismatch).map_err(|e| e.to_string())?;
     // A (host, port) pair resolves bare IPv6 addresses correctly; a "host:port"
     // string would mis-parse their colons.
     let addr = (host, port);
@@ -6165,7 +6305,7 @@ async fn fetch_window(
         let query = format!(
             "(UID ENVELOPE FLAGS BODYSTRUCTURE INTERNALDATE{REFS_FETCH_ITEM}{preview_part})"
         );
-        let fetches: Vec<Fetch> = session.fetch(&range, query).await?.try_collect().await?;
+        let fetches = logged_fetch(session, &range, &query).await?;
         fetches
             .iter()
             .map(|f| {
@@ -6176,7 +6316,7 @@ async fn fetch_window(
             .collect()
     } else {
         let query = format!("(UID FLAGS BODY.PEEK[HEADER] INTERNALDATE{preview_part})");
-        let fetches: Vec<Fetch> = session.fetch(&range, query).await?.try_collect().await?;
+        let fetches = logged_fetch(session, &range, &query).await?;
         fetches
             .iter()
             .map(|f| {
@@ -6200,6 +6340,24 @@ async fn fetch_window(
     }
     messages.reverse(); // IMAP returns oldest-first; show newest at the top.
     Ok(messages)
+}
+
+/// A sequence-number FETCH through the conversation log, like the UID
+/// wrappers: the summary fetch is the one a server rejects (#226), and its
+/// command and verdict were the two lines missing from the export.
+async fn logged_fetch(
+    session: &mut ImapSession,
+    range: &str,
+    query: &str,
+) -> Result<Vec<Fetch>, async_imap::error::Error> {
+    let cmd = format!("FETCH {range} {query}");
+    wire(&cmd);
+    let r: Result<Vec<Fetch>, async_imap::error::Error> = async {
+        session.fetch(range, query).await?.try_collect().await
+    }
+    .await;
+    wired(&cmd, &r);
+    r
 }
 
 /// The preview snippet from a fetch that asked for `BODY.PEEK[1]` together with
@@ -7275,21 +7433,17 @@ async fn load_body(
     // mail-parser. We deliberately avoid a BODYSTRUCTURE-based "text part only"
     // fast path: some servers (iCloud) return structures our IMAP parser rejects,
     // which would fail the fetch and corrupt the session.
-    let fetches: Vec<Fetch> = fetch_uids(session, uid.to_string(), "(BODY.PEEK[])")
-        .await?
-        .try_collect()
-        .await?;
     // The whole message is in hand, so the sender check rides along for free
-    // rather than costing a second fetch.
-    let raw = fetches.iter().find_map(|f| f.body());
-    // The paperclip is guessed from BODYSTRUCTURE (or, on servers whose structure
-    // we can't parse, from the top-level Content-Type), and both guesses miss
-    // shapes like Apple Mail's inline PDF nested under an alternative (issue #9).
-    // The whole message is in hand here, so the guess can be replaced with fact
-    // — at no extra network cost.
-    Ok(raw
-        .map(render_raw)
-        .unwrap_or_else(|| ("(empty message)".to_string(), Default::default(), false)))
+    // rather than costing a second fetch. The paperclip is guessed from
+    // BODYSTRUCTURE (or, on servers whose structure we can't parse, from the
+    // top-level Content-Type), and both guesses miss shapes like Apple Mail's
+    // inline PDF nested under an alternative (issue #9). The whole message is
+    // in hand here, so the guess can be replaced with fact, at no extra
+    // network cost. A server that hands nothing over is an error, not an
+    // empty message (#226): shown as one, it read as the message being
+    // blank, and was cached as such.
+    let raw = fetch_raw_message(session, uid).await?.ok_or_else(|| no_content_error(uid))?;
+    Ok(render_raw(&raw))
 }
 
 /// Fetch several messages' bodies from one folder in a single `uid_fetch`.
@@ -7325,10 +7479,10 @@ async fn load_bodies(
         // message, just not the part carrying one, so it is skipped: leaving the
         // UID out of the map means the caller shows "(empty message)" without
         // writing that over a real body in the cache.
-        let (Some(uid), Some(raw)) = (last_uid, f.body()) else {
+        let (Some(uid), Some(raw)) = (last_uid, raw_of(f)) else {
             continue;
         };
-        out.entry(uid).or_insert_with(|| render_raw(raw));
+        out.entry(uid).or_insert_with(|| render_raw(&raw));
     }
     Ok(out)
 }
@@ -7834,7 +7988,7 @@ impl Pop3 {
         let tcp = TcpStream::connect((host, port))
             .await
             .map_err(|e| e.to_string())?;
-        let tls = tls_connector(host);
+        let tls = tls_connector(host, account.tls_accept_hostname_mismatch);
 
         let stream = if port == 995 {
             tls.connect(host, tcp).await.map_err(|e| e.to_string())?
@@ -10911,6 +11065,80 @@ async fn graph_flush_outbox(
 }
 
 #[cfg(test)]
+mod compact_parse_error_tests {
+    use super::compact_parse_error;
+
+    #[test]
+    fn drops_the_byte_dump_and_keeps_the_text() {
+        let e = "io: Error(Error { input: [42, 32, 55, 57, 56], code: Tag }) during parsing of \"* 798 FETCH\"";
+        assert_eq!(
+            compact_parse_error(e),
+            "io: Error(Error { input: [5 bytes], code: Tag }) during parsing of \"* 798 FETCH\""
+        );
+        assert_eq!(compact_parse_error("connection lost"), "connection lost");
+    }
+}
+
+#[cfg(test)]
+mod hostname_mismatch_tests {
+    use super::is_hostname_mismatch;
+
+    #[test]
+    fn names_the_name_check_only() {
+        assert!(is_hostname_mismatch(
+            "error:0A000086:SSL routines:tls_post_process_server_certificate:certificate verify failed: Hostname mismatch"
+        ));
+        assert!(is_hostname_mismatch("The certificate's CN name does not match the passed value"));
+        assert!(!is_hostname_mismatch("certificate verify failed: self-signed certificate"));
+        assert!(!is_hostname_mismatch("connecting to imap.example.org timed out after 30 seconds"));
+    }
+}
+
+/// A plain IMAP account for the tests here and in the child modules.
+#[cfg(test)]
+pub(super) fn sample_account() -> AccountConfig {
+    AccountConfig {
+        folder_roles: Default::default(),
+        hidden_folders: Vec::new(),
+        folders_seeded: false,
+        sent_copy_path: None,
+        server_saves_sent: false,
+        empty_junk_days: 0,
+        empty_trash_days: 0,
+        pgp_key: None,
+        push: None,
+        name: String::new(),
+        email: "me@example.com".into(),
+        protocol: crate::config::Protocol::Imap,
+        imap_host: "imap.example.com".into(),
+        imap_port: 993,
+        smtp_host: String::new(),
+        smtp_port: 587,
+        username: "me@example.com".into(),
+        password: String::new(),
+        smtp_separate: false,
+        tls_accept_hostname_mismatch: false,
+        smtp_username: String::new(),
+        smtp_password: String::new(),
+        color: None,
+        emoji: None,
+        avatar: None,
+        gravatar: false,
+        signature: None,
+        signature_html: false,
+        label: None,
+        aliases: Vec::new(),
+        enabled: true,
+        goa_id: None,
+        goa_mail_disabled: false,
+        goa_enabled_before_mail_disabled: true,
+        oauth: false,
+        oauth_settings: None,
+        oauth_refresh: String::new(),
+    }
+}
+
+#[cfg(test)]
 mod tests {
 
     use super::*;
@@ -10965,46 +11193,6 @@ mod tests {
         assert!(!attachment_prefetch_tried(8, "INBOX", 2383));
     }
 
-    fn sample_account() -> AccountConfig {
-        AccountConfig {
-            folder_roles: Default::default(),
-            hidden_folders: Vec::new(),
-            folders_seeded: false,
-            sent_copy_path: None,
-            server_saves_sent: false,
-            empty_junk_days: 0,
-            empty_trash_days: 0,
-            pgp_key: None,
-            push: None,
-            name: String::new(),
-            email: "me@example.com".into(),
-            protocol: crate::config::Protocol::Imap,
-            imap_host: "imap.example.com".into(),
-            imap_port: 993,
-            smtp_host: String::new(),
-            smtp_port: 587,
-            username: "me@example.com".into(),
-            password: String::new(),
-            smtp_separate: false,
-            smtp_username: String::new(),
-            smtp_password: String::new(),
-            color: None,
-            emoji: None,
-            avatar: None,
-            gravatar: false,
-            signature: None,
-            signature_html: false,
-            label: None,
-            aliases: Vec::new(),
-            enabled: true,
-            goa_id: None,
-            goa_mail_disabled: false,
-            goa_enabled_before_mail_disabled: true,
-            oauth: false,
-            oauth_settings: None,
-            oauth_refresh: String::new(),
-        }
-    }
 
     fn sample_outgoing() -> OutgoingMessage {
         OutgoingMessage {

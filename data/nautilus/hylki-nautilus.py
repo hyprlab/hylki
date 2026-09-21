@@ -143,6 +143,23 @@ def _desktop_app_info(desktop_id):
         return Gio.DesktopAppInfo.new(desktop_id)
 
 
+def _appimage_path():
+    """The AppImage Hylki last ran from, which the app records for us.
+
+    An AppImage installs no `hylki` command and lives wherever the user
+    keeps it, so there is nothing to find on PATH; the app writes the
+    bundle's own path where we can read it. Returns None for a bundle that
+    has since been moved or deleted.
+    """
+    path = os.path.join(GLib.get_user_config_dir(), "hylki", "launcher")
+    try:
+        with open(path, encoding="utf-8") as handle:
+            bundle = handle.read().strip()
+    except OSError:
+        return None
+    return bundle if bundle and os.access(bundle, os.X_OK) else None
+
+
 def _launch(uris):
     for app_id in APP_IDS:
         info = _desktop_app_info(app_id + ".desktop")
@@ -153,9 +170,12 @@ def _launch(uris):
             return
         except GLib.Error as error:
             _log("could not launch", app_id + ":", error)
-    # No desktop entry found: the command line, native or Flatpak.
+    # No desktop entry found: the command line, native, AppImage or Flatpak.
+    appimage = _appimage_path()
     if GLib.find_program_in_path("hylki"):
         argv = ["hylki"] + uris
+    elif appimage:
+        argv = [appimage] + uris
     elif GLib.find_program_in_path("flatpak"):
         argv = ["flatpak", "run", "--file-forwarding", APP_IDS[0], "@@u"] + uris + ["@@"]
     else:

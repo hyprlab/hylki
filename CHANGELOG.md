@@ -1,9 +1,115 @@
 # Changelog
 
-## 1.38.1-beta.1 — 2026-09-21
+## 1.39.1-beta.1 — 2026-09-21
 
-Catch-up release: the beta channel is brought level with stable 1.38.0. No
-changes of its own: see the 1.38.0 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.39.0. No
+changes of its own: see the 1.39.0 section below for what is in it.
+
+## 1.39.0 — 2026-09-21
+
+JMAP accounts with Stalwart in the provider list (#245), a message zoom for
+the reading pane, a certificate-name waiver for shared hosting (#246), the
+Mailfence log read and answered (#226), notification buttons chosen in
+Settings (#244), the mailto: registration surviving an app icon (#242), the
+software-centre listing rewritten, and the French translation brought up to
+date.
+
+- **JMAP** (#245). A fourth protocol beside IMAP, POP3 and Graph, for
+  Stalwart, Fastmail and any other JMAP server (RFC 8620 and 8621): one
+  server address, no SMTP settings. The worker's JMAP path is a child module
+  of `worker.rs` (`src/worker/jmap.rs`) so it shares the parsing pipeline:
+  a message's raw bytes come from the blob download and go through
+  `render_raw` and `extract_attachments` like an IMAP fetch. Mailboxes
+  arrive with their roles, read state, stars and tags are the server's own
+  keywords, a message keeps its id across a move, and threading uses the
+  Message-ID, In-Reply-To and References the listing carries. Sending goes
+  through `EmailSubmission` after an import into the Sent folder, so the
+  copy is cached before the send is reported done (#199); a refused
+  submission takes the import back out. Marking spam or not spam sets
+  `$junk` and `$notjunk`, which Stalwart's filter learns from. New mail
+  arrives over the server's EventSource channel when push is on for the
+  account, with the poll as the fallback. The session resource is read at
+  `/.well-known/jmap`, following the redirect by hand because ureq drops
+  the Authorization header when it follows one; a server names itself in
+  that session with the host it was set up with, so an address typed as a
+  URL with its scheme stands in for that origin (a server on a private
+  network or behind a tunnel), while a URL on another host (Fastmail's
+  blob host) is left as advertised. Locate looks in the cache first, since
+  Stalwart's full-text index does not answer a header filter on
+  Message-ID. Settings gets JMAP in the Incoming Protocol row, which hides
+  the SMTP rows, and a Stalwart (JMAP) provider entry with its mark; the
+  wizard follows; Test Connection checks the session only. Proven against
+  a Stalwart v0.16 container, folder management included; an ignored live
+  test (`JMAP_LIVE=url,user,pw`) runs the wire path against any server.
+  Requested by [@vieira-temes](https://github.com/vieira-temes).
+- **Message zoom.** Ctrl++ and Ctrl+- step the reading pane's message
+  through 50% to 250% (the = key and the keypad count too), Ctrl+0 goes
+  back to the default. CSS `zoom` on the root of each sandboxed frame, so
+  px-sized text in a sender's HTML grows with the rest while the card
+  headers, the subject and the toolbar keep their size; a running reader
+  applies it in place through the wrapper script and re-fits the frames, a
+  fresh render carries it in the frame's injected sheet. The keys last the
+  session and carry into pop-out windows; **Settings → Reading → Default
+  zoom** is where every launch starts, stored as `reader_zoom` in
+  `privacy.toml`, and applies at once when changed. A chip beside the
+  Reader View switch shows the percentage while it is away from the
+  default, answers the pointer like a button, and a click on it returns to
+  the default. Reader View keeps its 44em measure.
+- **Accept a certificate for another name** (#246). Shared hosting serves
+  mail for many domains under one certificate in the host's own name, so
+  the address a person is given fails the name check while the certificate
+  itself is sound. The account editor's new switch waives that one check
+  for the account's IMAP, POP3 and SMTP connections (an alias with its own
+  SMTP included); the chain is verified as before. Stored as
+  `tls_accept_hostname_mismatch` in `accounts.toml`; hidden for JMAP,
+  which runs over rustls. The connection test names the switch when the
+  failure is the name check. The test's result and the notification cards
+  can be selected and copied, which until now took a screenshot. Requested
+  by [@SoloRobo](https://github.com/SoloRobo).
+- **Mailfence, from the log** (#226). The 1.35.3 ladder was right: the
+  summary fetch is unreadable with the preview items along, in both the
+  ENVELOPE and the raw-header form, and loads the moment they are left
+  out. Two things follow. The mode a stepped-to fetch actually loads a
+  folder with is now remembered per account in the state file
+  (`fetch_modes`), so a launch starts there instead of spending two failed
+  fetches and two reconnects first; only a mode that has loaded something
+  is remembered. And the bodies: the log had the person's clicks answered
+  with a FETCH carrying no message, which `load_body` took for an empty
+  message, showed as one, and cached. A message is now asked for three
+  ways before the fetch gives up (`BODY.PEEK[]`, `RFC822`, then the header
+  and text as two items joined back into one), each empty reply logged
+  with its shape; if none works the open fails with an error naming the
+  message rather than showing a blank, nothing is cached, and a blank an
+  earlier build cached reads as a miss. The summary FETCH itself now goes
+  through the conversation log, and a parser error's byte-array dump is
+  cut to its length there.
+- **Notification buttons** (#244). A new-mail notification about one
+  message carried Mark as Read and Archive; Delete, Reply, Forward and Mark
+  as Spam join them, and Settings → General → Notification Buttons picks
+  which appear: three at most, which is what the desktop shows anyway, so
+  once three are on the other switches grey out until one is turned off.
+  Delete goes to Trash by the same path as the Delete key, with the usual
+  undo; Reply and Forward open the message and then the composer. Stored
+  as `notification_buttons` in `privacy.toml`.
+- **Fixed: choosing an app icon lost the mailto: registration** (#242).
+  The icon chooser writes a copy of the launcher into the user's
+  applications directory, and from then on GIO consults only that
+  directory's `mimeinfo.cache` for the app id, which masked the Flatpak
+  export's entry; the sandbox cannot run the host's
+  `update-desktop-database`. The app now rebuilds that cache itself, in
+  the tool's own format, whenever its launcher copy is written, found
+  unchanged at startup, or removed; an install that already has the copy
+  is repaired on its next start. Reported by
+  [@Adidiii](https://github.com/Adidiii).
+- **The software-centre listing** (`metainfo.xml`) says what the app is
+  today: the summary reads as the README's subheading, the description
+  names the protocols and groups the features the way `docs/FEATURES.md`
+  does. The desktop file's comment matches.
+- **AppImage build, not shipped** (#235). `tools/build-appimage.sh` and a
+  `workflow_dispatch`-only workflow produce one; the Flatpak and the RPM
+  remain the two packages that ship.
+- **French translation** brought up to date for the 1.38 strings
+  ([@frenchy82](https://github.com/frenchy82), PR #243).
 
 ## 1.38.0 — 2026-09-21
 

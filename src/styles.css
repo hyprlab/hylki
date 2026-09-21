@@ -1777,3 +1777,21 @@ textview.console-view text selection {
 .focus-fade.away {
   opacity: 0;
 }
+
+/* Message zoom chip on the reader header's account line: shown only away
+   from the default, and a click goes back there, so it answers the pointer
+   like a button. */
+.vireo-zoom-chip {
+  padding: 1px 8px;
+  border-radius: 99px;
+  background: alpha(currentColor, 0.1);
+  font-weight: 600;
+  transition: background 150ms ease-out, color 150ms ease-out;
+}
+.vireo-zoom-chip:hover {
+  background: alpha(@accent_bg_color, 0.2);
+  color: @accent_color;
+}
+.vireo-zoom-chip:active {
+  background: alpha(@accent_bg_color, 0.35);
+}

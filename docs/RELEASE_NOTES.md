@@ -2,9 +2,28 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.38.1-beta.1
+## What's new in 1.39.1-beta.1
 
-Catch-up release: the beta channel is level with stable 1.38.0. Everything below applies.
+Catch-up release: the beta channel is level with stable 1.39.0. Everything below applies.
+
+## What's new in 1.39.0
+
+- **JMAP accounts** (#245): Stalwart, Fastmail or any JMAP server, with
+  **Stalwart (JMAP)** in the provider list. One address, no SMTP settings,
+  push included.
+- **Message zoom:** Ctrl++ and Ctrl+- scale the message in the reading pane,
+  Reader View or not; Ctrl+0 returns to the default set in Settings →
+  Reading. A chip beside the Reader View switch shows the percentage.
+- **Accept a certificate for another name** (#246): a per-account switch
+  for servers on shared hosting whose certificate is in the host's name.
+  Connection-test and notification text can now be copied.
+- **Mailfence** (#226): the working way of asking for mail is remembered
+  between launches, and a message the server hands over under another item
+  is fetched rather than shown blank.
+- **Notification buttons** (#244): choose any three of Mark as Read,
+  Archive, Delete, Reply, Forward and Mark as Spam in Settings → General.
+- **Fixed: choosing an app icon lost the mailto: registration** (#242).
+- **French translation** up to date ([@frenchy82](https://github.com/frenchy82)).
 
 ## What's new in 1.38.0
 

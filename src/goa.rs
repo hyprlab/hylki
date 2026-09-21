@@ -84,6 +84,7 @@ impl GoaMailAccount {
             },
             password,
             smtp_separate: self.smtp_separate,
+            tls_accept_hostname_mismatch: false,
             smtp_username: self.smtp_user.clone(),
             smtp_password: String::new(),
             color: None,

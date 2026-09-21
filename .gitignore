@@ -17,6 +17,10 @@ cargo-sources.json
 # Native package build output (tools/build-packages.sh)
 /packaging/out/
 
+# The AppImage's staging tree, when the build runs in the checkout itself
+# (CI, or an Arch host) rather than in its container
+/AppDir/
+
 # Local Claude Code settings
 .claude/
 

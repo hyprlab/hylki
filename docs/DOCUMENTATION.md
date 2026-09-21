@@ -23,6 +23,51 @@ account you only need the server and an app-specific password. See
 passwords you enter there are migrated into the system keyring on first run and
 removed from the file.
 
+### A certificate in another name
+
+Shared hosting often serves mail for many domains under one certificate in
+the host's own name, so `mail.example.org` answers with a certificate for
+`server12.hostingcompany.net` and the connection test reports that the names
+differ. **Settings → Accounts → the account → Accept a certificate for
+another name** waives that one check for the account's IMAP, POP3 and SMTP
+connections; the certificate must still be valid and signed by a trusted
+authority. Leave it off unless the test names this problem, and prefer
+entering the host the certificate is actually for when you know it. Stored
+on the account as `tls_accept_hostname_mismatch` in `accounts.toml`. The
+connection test's text can be selected and copied.
+
+### JMAP (Stalwart, Fastmail)
+
+A JMAP account (RFC 8620 and 8621) reads and sends mail over HTTPS, so it
+needs one server address and no SMTP settings. Pick **Stalwart (JMAP)** in
+the Provider list, or any provider and **JMAP** as the Incoming Protocol,
+and enter the server: a host name (`mail.example.org`, reached over HTTPS
+on 443, or the port in the Port row) or a full URL. Hylki reads the session
+resource at `/.well-known/jmap` and takes the API, download, upload and
+push addresses from it.
+
+A server names itself in that session, with the host it was set up with.
+When the address is entered as a URL with its scheme (`http://10.0.0.5:8080`,
+say, for a server on a private network or behind a tunnel), Hylki uses that
+origin in place of the one the server advertises for itself; a URL on a
+different host, such as the separate one Fastmail serves attachments from,
+is left as advertised.
+
+Folders come with their roles from the server, so Sent, Drafts, Junk and
+Trash need no detection. Read state, stars and tags are the server's own
+keywords, a message keeps its id when it moves, and threading uses the
+Message-ID, In-Reply-To and References headers the listing carries. Sending
+goes through the server's `EmailSubmission`, which files the copy in Sent
+(or the folder chosen under Sent copies) before the send is reported done.
+New mail arrives over the server's EventSource push channel when push is
+on for the account, with a poll as the fallback. Marking a message as spam
+or not spam sets the `$junk` and `$notjunk` keywords the server's filter
+learns from.
+
+Tested against Stalwart; Fastmail speaks the same standard but has not been
+tried by hand. In `accounts.toml` the account has `protocol = "jmap"` and
+the server in `imap_host`.
+
 ### Hiding folders
 
 Right-click a folder in the sidebar and choose **Hide Folder** to take it out
@@ -361,6 +406,17 @@ message instead. Each dialog has an *Always do this* box, and **Settings →
 System → GNOME Files** holds the same choices, so the questions can be
 skipped: what the files go into, what happens over the limit, and the limit
 itself.
+
+### Notifications
+
+A new-mail notification opens the message when clicked. When it is about a
+single message it also carries up to three buttons. **Mark as Read**,
+**Archive**, **Delete** (to Trash, with the usual undo in the window) and
+**Mark as Spam** act on the message without raising the window; **Reply**
+and **Forward** open the message with the composer started. Settings →
+General → Notification Buttons picks any three of the six (Mark as Read,
+Archive and Delete to begin with); a notification that sums up several new
+messages carries none. Stored as `notification_buttons` in `privacy.toml`.
 
 ## Privacy
 

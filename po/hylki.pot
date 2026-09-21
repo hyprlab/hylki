@@ -791,6 +791,12 @@ msgstr ""
 msgid "Focus Mode on or off"
 msgstr ""
 
+msgid "Message zoom in or out"
+msgstr ""
+
+msgid "Message zoom back to the default"
+msgstr ""
+
 msgid "Console mode (when enabled in Settings)"
 msgstr ""
 
@@ -1026,6 +1032,11 @@ msgstr ""
 msgid "Requires Proton Mail Bridge running locally."
 msgstr ""
 
+msgid ""
+"Enter your Stalwart server's address. Mail is read and sent over JMAP; no "
+"SMTP settings are needed."
+msgstr ""
+
 msgid "Enable POP/IMAP access in GMX settings first."
 msgstr ""
 
@@ -1219,6 +1230,15 @@ msgid "SMTP Username"
 msgstr ""
 
 msgid "SMTP Password"
+msgstr ""
+
+msgid "Accept a certificate for another name"
+msgstr ""
+
+msgid ""
+"The server's certificate must still be valid and signed, but may be issued "
+"for a different host name than the one entered, as on shared hosting. Turn "
+"on only when the connection test says the names differ."
 msgstr ""
 
 msgid "Test Connection"
@@ -1431,6 +1451,11 @@ msgstr ""
 msgid "Enter a client ID and sign in before saving"
 msgstr ""
 
+msgid ""
+"The certificate is for another name. If this server is the right one, turn "
+"on “Accept a certificate for another name” above and test again."
+msgstr ""
+
 msgid "✓ Signed in — save the account to finish"
 msgstr ""
 
@@ -1516,6 +1541,14 @@ msgid "After {n} day"
 msgid_plural "After {n} days"
 msgstr[0] ""
 msgstr[1] ""
+
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
+msgid "Server (host name or URL)"
+msgstr ""
+
+msgid "Port (default 443)"
+msgstr ""
 
 msgid "Google (Gmail)"
 msgstr ""
@@ -2638,6 +2671,11 @@ msgid "Close find"
 msgstr ""
 
 msgid ""
+"Message zoom. Ctrl+ and Ctrl- change it; a click here, or Ctrl+0, puts it "
+"back to the default from Settings."
+msgstr ""
+
+msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colours and fonts."
 msgstr ""
@@ -3134,6 +3172,24 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr ""
 
+msgid "Notification Buttons"
+msgstr ""
+
+msgid "Up to three buttons on a notification about one message."
+msgstr ""
+
+msgid "Moves the message to Trash."
+msgstr ""
+
+msgid "Opens the message with a reply started."
+msgstr ""
+
+msgid "Opens the message with a forward started."
+msgstr ""
+
+msgid "Moves the message to Junk."
+msgstr ""
+
 msgid "Style"
 msgstr ""
 
@@ -3561,6 +3617,14 @@ msgid "Message appearance"
 msgstr ""
 
 msgid "Theme for email content only, not the app itself."
+msgstr ""
+
+msgid "Default zoom"
+msgstr ""
+
+msgid ""
+"How large every message is shown. Ctrl+ and Ctrl- change it until Hylki is "
+"next started; Ctrl+0 comes back to this."
 msgstr ""
 
 msgid "Use my own font"
@@ -4215,6 +4279,8 @@ msgstr ""
 msgid "Filled in for known providers"
 msgstr ""
 
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
 msgid "IMAP server"
 msgstr ""
 
@@ -4304,6 +4370,9 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
+msgid "Port"
+msgstr ""
+
 msgid "Enter your email address and password first."
 msgstr ""
 
@@ -4380,28 +4449,96 @@ msgstr ""
 msgid "The sender's name says \"{claimed}\" but the address is {from}"
 msgstr ""
 
-msgid "the server's reply could not be read (it began: {reply})"
+msgid "Could not reach the JMAP server: {e}"
 msgstr ""
 
-msgid "runtime error: {e}"
+msgid "Could not list folders: {e}"
 msgstr ""
 
-msgid "Syncing…"
+msgid "Sending…"
 msgstr ""
 
-msgid "Could not load {path}: {e}"
+msgid "Still could not send “{subject}”: {e}"
 msgstr ""
 
 msgid "Could not load message: {e}"
 msgstr ""
 
-msgid "Could not load conversation: {e}"
+msgid "Syncing…"
+msgstr ""
+
+msgid "Could not fetch mail: {e}"
 msgstr ""
 
 msgid "Could not load source: {e}"
 msgstr ""
 
 msgid "Could not load attachments: {e}"
+msgstr ""
+
+msgid "Could not move message: {e}"
+msgstr ""
+
+msgid "Could not mark as spam: {e}"
+msgstr ""
+
+msgid "Could not mark as not spam: {e}"
+msgstr ""
+
+msgid "Could not mark {len} messages as not spam: {e}"
+msgstr ""
+
+msgid "Could not move messages: {e}"
+msgstr ""
+
+msgid "Could not empty the folder: {e}"
+msgstr ""
+
+msgid "Undo failed: {e}"
+msgstr ""
+
+msgid "Could not create folder: {e}"
+msgstr ""
+
+msgid "Could not rename folder: unknown folder"
+msgstr ""
+
+msgid "Could not rename folder: {e}"
+msgstr ""
+
+msgid "Could not delete folder: unknown folder"
+msgstr ""
+
+msgid "Could not delete folder: {e}"
+msgstr ""
+
+msgid "Saving draft…"
+msgstr ""
+
+msgid "Could not save draft: {e}"
+msgstr ""
+
+msgid "Could not save draft: unknown folder"
+msgstr ""
+
+msgid ""
+"Send failed: {e}. The message is in the Outbox and will be sent when the "
+"connection is back."
+msgstr ""
+
+msgid "Send failed: {e}"
+msgstr ""
+
+msgid "the server's reply could not be read (it began: {reply})"
+msgstr ""
+
+msgid "runtime error: {e}"
+msgstr ""
+
+msgid "Could not load {path}: {e}"
+msgstr ""
+
+msgid "Could not load conversation: {e}"
 msgstr ""
 
 msgid "Could not update message: {e}"
@@ -4420,63 +4557,19 @@ msgstr ""
 msgid "Could not mark folder read: {e}"
 msgstr ""
 
-msgid "Could not mark as spam: {e}"
-msgstr ""
-
-msgid "Could not mark as not spam: {e}"
-msgstr ""
-
-msgid "Could not mark {len} messages as not spam: {e}"
-msgstr ""
-
-msgid "Could not move message: {e}"
-msgstr ""
-
 msgid "Could not move {len} messages: {e}"
-msgstr ""
-
-msgid "Undo failed: {e}"
 msgstr ""
 
 msgid "Could not delete permanently: {e}"
 msgstr ""
 
-msgid "Could not empty the folder: {e}"
-msgstr ""
-
-msgid "Could not create folder: {e}"
-msgstr ""
-
 msgid "Could not move folder: {e}"
-msgstr ""
-
-msgid "Could not delete folder: {e}"
-msgstr ""
-
-msgid "Sending…"
 msgstr ""
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 
-msgid ""
-"Send failed: {e}. The message is in the Outbox and will be sent when the "
-"connection is back."
-msgstr ""
-
-msgid "Send failed: {e}"
-msgstr ""
-
-msgid "Saving draft…"
-msgstr ""
-
-msgid "Could not save draft: {e}"
-msgstr ""
-
 msgid "Connecting to {host}…"
-msgstr ""
-
-msgid "Could not list folders: {e}"
 msgstr ""
 
 msgid "Connection failed: {e}"
@@ -4493,17 +4586,11 @@ msgstr ""
 msgid "Could not schedule the message: there is no local store to keep it in."
 msgstr ""
 
-msgid "Still could not send “{subject}”: {e}"
-msgstr ""
-
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 
 msgid "no OpenPGP key for {addr}"
-msgstr ""
-
-msgid "Could not fetch mail: {e}"
 msgstr ""
 
 msgid "Could not delete message: {e}"
@@ -4515,60 +4602,98 @@ msgstr ""
 msgid "Inbox"
 msgstr ""
 
-msgid "Could not move messages: {e}"
-msgstr ""
-
-msgid "Could not rename folder: unknown folder"
-msgstr ""
-
-msgid "Could not rename folder: {e}"
-msgstr ""
-
-msgid "Could not delete folder: unknown folder"
-msgstr ""
-
 msgid "Email Client"
 msgstr ""
 
-msgid "A clean, fast GNOME-native email client"
+msgid ""
+"A fast, GNOME-native email client, built with Rust and libadwaita. Open "
+"source and private by default."
 msgstr ""
 
 msgid "Email;Mail;IMAP;"
 msgstr ""
 
-msgid "Private, GNOME-native email client"
+msgid ""
+"Hylki is a desktop email client for GNOME on Wayland, written in Rust with "
+"libadwaita. Your mail and credentials stay on your machine, remote content "
+"is blocked until you allow it, and there is no telemetry. It works with "
+"IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to "
+"Proton Bridge to a Stalwart of your own."
+msgstr ""
+
+msgid "Accounts and mail:"
 msgstr ""
 
 msgid ""
-"Hylki is a desktop email client for Wayland that feels at home in GNOME. It "
-"talks IMAP and SMTP directly, keeps your mail and credentials on your "
-"machine, and blocks trackers by default — no telemetry, no analytics."
-msgstr ""
-
-msgid "Features:"
-msgstr ""
-
-msgid "Multiple IMAP and POP3 accounts, with a unified Inboxes view"
+"Multiple accounts with a unified Inboxes view; Google, Microsoft and custom "
+"OAuth sign-in, or an account imported from GNOME Online Accounts"
 msgstr ""
 
 msgid ""
-"Google, Microsoft and custom OAuth 2.0 sign-in, plus GNOME Online Accounts "
-"import"
+"Whole-mailbox sync and search, conversation threading, and changes made on "
+"other devices synced back"
 msgstr ""
 
-msgid "Whole-mailbox sync and search with infinite scroll"
+msgid ""
+"Folder management, filters, tags, unified and filtered folders, and Trash "
+"and Junk emptied by hand or on a schedule"
 msgstr ""
 
-msgid "Deletions and moves made on other devices sync back automatically"
+msgid "An attachment gallery, an Outbox for sends that fail, and Send Later"
 msgstr ""
 
-msgid "Conversation threading, compose, reply, forward, and editable drafts"
+msgid "Writing:"
 msgstr ""
 
-msgid "Remote content blocked by default; per-message light or dark reading"
+msgid ""
+"Rich text, Markdown, HTML or plain text, with HTML signatures, inline "
+"images, spell check and undo"
 msgstr ""
 
-msgid "Passwords and OAuth tokens kept in the system keyring"
+msgid ""
+"Drafts, quote folding, split replies, and forwarding that keeps the "
+"attachments"
+msgstr ""
+
+msgid ""
+"Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a "
+"Send with Hylki entry in GNOME Files"
+msgstr ""
+
+msgid "Reading:"
+msgstr ""
+
+msgid ""
+"Reader View, your own font and colours, and per-message light or dark "
+"rendering"
+msgstr ""
+
+msgid ""
+"OpenPGP signing, encryption and reading; DKIM, SPF and DMARC checked on "
+"arrival"
+msgstr ""
+
+msgid ""
+"Meeting invitations answered in place, and one-click unsubscribe from list "
+"mail"
+msgstr ""
+
+msgid "The app:"
+msgstr ""
+
+msgid ""
+"Adaptive three-pane layout, five appearance themes, Focus Mode, a "
+"customizable toolbar and swipe actions"
+msgstr ""
+
+msgid ""
+"Gmail-style single-key shortcuts, notifications with actions, an optional "
+"tray icon and background running"
+msgstr ""
+
+msgid ""
+"GNOME Contacts integration, your choice of language and clock, and passwords "
+"kept in the system keyring"
 msgstr ""
 
 msgid "The unified inbox in light mode"

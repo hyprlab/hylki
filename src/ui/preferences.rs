@@ -42,6 +42,8 @@ pub struct PrefInit {
     pub reader_switch: bool,
     /// What Reader View does when a message is opened.
     pub reader_default: crate::config::ReaderDefault,
+    /// The message zoom every launch starts at, in percent.
+    pub reader_zoom: u32,
     /// Each conversation message lists its own attachments (#213).
     pub card_attachments: bool,
     /// The attachment drawer beneath the reader is shown (#213).
@@ -104,6 +106,7 @@ pub struct PrefInit {
     pub theme: String,
     pub notifications: bool,
     pub notification_content: bool,
+    pub notification_buttons: crate::config::NotificationButtons,
     pub show_attachments: bool,
     pub show_contacts: bool,
     pub show_unified: bool,
@@ -287,6 +290,9 @@ pub struct Preferences {
     /// Mirrors the notifications switch, so the "show sender and subject" row
     /// below it can grey out when nothing is being posted at all.
     notifications: bool,
+    /// The notification buttons, kept whole so each switch can hand the
+    /// app the full set (#244).
+    notification_buttons: crate::config::NotificationButtons,
     show_unified: bool,
     /// The unified Starred / Sent / Drafts switches, kept whole so each
     /// toggle can hand the app the full set.
@@ -802,6 +808,7 @@ pub enum PrefInput {
     ToggleSingleMessageCard(bool),
     ToggleReaderSwitch(bool),
     ChangeReaderDefault(u32),
+    ChangeReaderZoom(u32),
     ToggleCardAttachments(bool),
     ToggleAttachmentDrawer(bool),
     ToggleThreadExpansion(bool),
@@ -825,6 +832,7 @@ pub enum PrefInput {
     TogglePush(bool),
     ToggleNotifications(bool),
     ToggleNotificationContent(bool),
+    ToggleNotificationButton(crate::config::NotificationButton, bool),
     ToggleAttachmentsRow(bool),
     ToggleContactsRow(bool),
     ToggleShowUnified(bool),
@@ -943,6 +951,7 @@ pub enum PrefOutput {
     SetSingleMessageCard(bool),
     SetReaderSwitch(bool),
     SetReaderDefault(crate::config::ReaderDefault),
+    SetReaderZoom(u32),
     SetCardAttachments(bool),
     SetAttachmentDrawer(bool),
     SetThreadExpansion(bool),
@@ -968,6 +977,7 @@ pub enum PrefOutput {
     SetPush(bool),
     SetNotifications(bool),
     SetNotificationContent(bool),
+    SetNotificationButtons(crate::config::NotificationButtons),
     SetAttachmentsRow(bool),
     SetContactsRow(bool),
     SetShowUnified(bool),
@@ -1129,6 +1139,14 @@ impl Preferences {
     }
 }
 
+impl Preferences {
+    /// Whether a notification-button switch can be used: notifications are
+    /// on, and either this button is on already or there is room for it.
+    fn button_row_sensitive(&self, button: crate::config::NotificationButton) -> bool {
+        self.notifications && (self.notification_buttons.get(button) || !self.notification_buttons.full())
+    }
+}
+
 #[relm4::component(pub)]
 impl Component for Preferences {
     type Init = PrefInit;
@@ -1275,6 +1293,80 @@ impl Component for Preferences {
                                         set_title: &i18n("Show sender and subject"),
                                         connect_active_notify[sender] => move |row| {
                                             sender.input(PrefInput::ToggleNotificationContent(row.is_active()));
+                                        },
+                                    },
+
+                                },
+
+                                // The buttons a single-message notification
+                                // carries (#244); a summary of several has none.
+                                // Three at most: once three are on, the rest
+                                // grey out until one is switched off.
+                                add = &adw::PreferencesGroup {
+                                    set_title: &i18n("Notification Buttons"),
+                                    set_description: Some(&i18n("Up to three buttons on a notification about one message.")),
+
+                                    #[name = "notify_mark_read_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_sensitive: model.button_row_sensitive(crate::config::NotificationButton::MarkRead),
+                                        set_title: &i18n("Mark as Read"),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleNotificationButton(crate::config::NotificationButton::MarkRead, row.is_active()));
+                                        },
+                                    },
+
+                                    #[name = "notify_archive_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_sensitive: model.button_row_sensitive(crate::config::NotificationButton::Archive),
+                                        set_title: &i18n("Archive"),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleNotificationButton(crate::config::NotificationButton::Archive, row.is_active()));
+                                        },
+                                    },
+
+                                    #[name = "notify_delete_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_sensitive: model.button_row_sensitive(crate::config::NotificationButton::Delete),
+                                        set_title: &i18n("Delete"),
+                                        set_subtitle: &i18n("Moves the message to Trash."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleNotificationButton(crate::config::NotificationButton::Delete, row.is_active()));
+                                        },
+                                    },
+
+                                    #[name = "notify_reply_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_sensitive: model.button_row_sensitive(crate::config::NotificationButton::Reply),
+                                        set_title: &i18n("Reply"),
+                                        set_subtitle: &i18n("Opens the message with a reply started."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleNotificationButton(crate::config::NotificationButton::Reply, row.is_active()));
+                                        },
+                                    },
+
+                                    #[name = "notify_forward_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_sensitive: model.button_row_sensitive(crate::config::NotificationButton::Forward),
+                                        set_title: &i18n("Forward"),
+                                        set_subtitle: &i18n("Opens the message with a forward started."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleNotificationButton(crate::config::NotificationButton::Forward, row.is_active()));
+                                        },
+                                    },
+
+                                    #[name = "notify_spam_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_sensitive: model.button_row_sensitive(crate::config::NotificationButton::Spam),
+                                        set_title: &i18n("Mark as Spam"),
+                                        set_subtitle: &i18n("Moves the message to Junk."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleNotificationButton(crate::config::NotificationButton::Spam, row.is_active()));
                                         },
                                     },
                                 },
@@ -2052,6 +2144,15 @@ impl Component for Preferences {
                                         },
                                     },
 
+                                    #[name = "reader_zoom_row"]
+                                    adw::ComboRow {
+                                        set_title: &i18n("Default zoom"),
+                                        set_subtitle: &i18n("How large every message is shown. Ctrl+ and Ctrl- change it until Hylki is next started; Ctrl+0 comes back to this."),
+                                        connect_selected_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ChangeReaderZoom(row.selected()));
+                                        },
+                                    },
+
                                     #[name = "override_fonts_row"]
                                     adw::SwitchRow {
                                         set_title: &i18n("Use my own font"),
@@ -2691,6 +2792,7 @@ impl Component for Preferences {
             files_rows: None,
             browsers: crate::ui::launch::browsers(),
             notifications: init.notifications,
+            notification_buttons: init.notification_buttons,
             toolbar: init.reader_toolbar.clone(),
             focus: init.focus,
             toolbar_editor: None,
@@ -2796,6 +2898,12 @@ impl Component for Preferences {
         widgets.push_row.set_active(init.push);
         widgets.notifications_row.set_active(init.notifications);
         widgets.notification_content_row.set_active(init.notification_content);
+        widgets.notify_mark_read_row.set_active(init.notification_buttons.mark_read);
+        widgets.notify_archive_row.set_active(init.notification_buttons.archive);
+        widgets.notify_delete_row.set_active(init.notification_buttons.delete);
+        widgets.notify_reply_row.set_active(init.notification_buttons.reply);
+        widgets.notify_forward_row.set_active(init.notification_buttons.forward);
+        widgets.notify_spam_row.set_active(init.notification_buttons.spam);
         widgets.show_attachments_row.set_active(init.show_attachments);
         widgets.show_contacts_row.set_active(init.show_contacts);
         widgets.show_unified_row.set_active(init.show_unified);
@@ -2962,6 +3070,14 @@ impl Component for Preferences {
             crate::config::ReaderDefault::On => 1,
             crate::config::ReaderDefault::Off => 2,
         });
+        let zoom_labels: Vec<String> =
+            crate::config::READER_ZOOM_STEPS.iter().map(|z| format!("{z}%")).collect();
+        let zoom_labels: Vec<&str> = zoom_labels.iter().map(String::as_str).collect();
+        widgets.reader_zoom_row.set_model(Some(&gtk::StringList::new(&zoom_labels)));
+        no_truncate(&widgets.reader_zoom_row);
+        widgets.reader_zoom_row.set_selected(
+            crate::config::READER_ZOOM_STEPS.iter().position(|&z| z == init.reader_zoom).unwrap_or(5) as u32,
+        );
         widgets.card_attachments_row.set_active(init.card_attachments);
         widgets.attachment_drawer_row.set_active(init.attachment_drawer);
         widgets.thread_expansion_row.set_active(init.thread_expansion);
@@ -3511,6 +3627,11 @@ impl Component for Preferences {
                 };
                 let _ = sender.output(PrefOutput::SetReaderDefault(policy));
             }
+            PrefInput::ChangeReaderZoom(idx) => {
+                if let Some(&z) = crate::config::READER_ZOOM_STEPS.get(idx as usize) {
+                    let _ = sender.output(PrefOutput::SetReaderZoom(z));
+                }
+            }
             PrefInput::ToggleCardAttachments(on) => {
                 let _ = sender.output(PrefOutput::SetCardAttachments(on));
             }
@@ -3588,6 +3709,15 @@ impl Component for Preferences {
             }
             PrefInput::ToggleNotificationContent(on) => {
                 let _ = sender.output(PrefOutput::SetNotificationContent(on));
+            }
+            PrefInput::ToggleNotificationButton(button, on) => {
+                // A greyed-out row cannot be switched, so a fourth never
+                // arrives here; the guard is for the belt and braces.
+                if on && !self.notification_buttons.get(button) && self.notification_buttons.full() {
+                    return;
+                }
+                self.notification_buttons.set(button, on);
+                let _ = sender.output(PrefOutput::SetNotificationButtons(self.notification_buttons));
             }
             PrefInput::ToggleAttachmentsRow(on) => {
                 let _ = sender.output(PrefOutput::SetAttachmentsRow(on));

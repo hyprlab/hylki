@@ -12,6 +12,7 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 use crate::config::AccountConfig;
+use crate::config::Protocol;
 use crate::ui::accounts::{Provider, PROVIDERS};
 use crate::worker::{self, ConnTest};
 use crate::i18n::{i18n, i18n_f};
@@ -772,6 +773,7 @@ impl Component for Welcome {
                 let sel = widgets.provider_row.selected() as usize;
                 if let Some(p) = wizard_providers().get(sel) {
                     let (ih, ip, sh, sp) = p.wizard_servers();
+                    let jmap = p.wizard_protocol() == Protocol::Jmap;
                     if !ih.is_empty() {
                         widgets.host_row.set_text(ih);
                         widgets.port_row.set_text(&ip.to_string());
@@ -781,8 +783,15 @@ impl Component for Welcome {
                     } else {
                         widgets.host_row.set_text("");
                         widgets.smtp_row.set_text("");
+                        widgets.port_row.set_text(if jmap { "443" } else { "993" });
                         widgets.server_exp.set_expanded(true);
                     }
+                    // A JMAP server is one address, and it sends the mail
+                    // itself: no SMTP rows.
+                    widgets.host_row.set_title(&if jmap { i18n("Server (host name or URL)") } else { i18n("IMAP server") });
+                    widgets.port_row.set_title(&if jmap { i18n("Port") } else { i18n("IMAP port") });
+                    widgets.smtp_row.set_visible(!jmap);
+                    widgets.smtp_port_row.set_visible(!jmap);
                     let hint = p.wizard_hint();
                     widgets.hint_lbl.set_visible(!hint.is_empty());
                     widgets.hint_lbl.set_text(hint);
@@ -793,14 +802,20 @@ impl Component for Welcome {
                 let password = widgets.pass_row.text().to_string();
                 // Derive missing servers from the address's domain — the common
                 // convention, and the expander is right there to correct it.
+                let protocol = wizard_providers()
+                    .get(widgets.provider_row.selected() as usize)
+                    .map(|p| p.wizard_protocol())
+                    .unwrap_or_default();
                 let domain = email.split('@').nth(1).unwrap_or("").to_string();
                 let mut host = widgets.host_row.text().trim().to_string();
-                if host.is_empty() && !domain.is_empty() {
+                // A JMAP server's address is the user's to give; imap.<domain>
+                // is the convention only for IMAP.
+                if host.is_empty() && !domain.is_empty() && protocol != Protocol::Jmap {
                     host = format!("imap.{domain}");
                     widgets.host_row.set_text(&host);
                 }
                 let mut smtp = widgets.smtp_row.text().trim().to_string();
-                if smtp.is_empty() && !domain.is_empty() {
+                if smtp.is_empty() && !domain.is_empty() && protocol != Protocol::Jmap {
                     smtp = format!("smtp.{domain}");
                     widgets.smtp_row.set_text(&smtp);
                 }
@@ -814,8 +829,9 @@ impl Component for Welcome {
                 let account = AccountConfig {
                     name: widgets.name_row.text().trim().to_string(),
                     email: email.clone(),
+                    protocol,
                     imap_host: host,
-                    imap_port: widgets.port_row.text().trim().parse().unwrap_or(993),
+                    imap_port: widgets.port_row.text().trim().parse().unwrap_or(if protocol == Protocol::Jmap { 443 } else { 993 }),
                     smtp_host: smtp,
                     smtp_port: widgets.smtp_port_row.text().trim().parse().unwrap_or(587),
                     username: email,
@@ -960,7 +976,7 @@ fn rebuild_goa_rows(
 }
 
 /// A fully-defaulted account for the wizard's manual form to build on.
-fn blank_account() -> AccountConfig {
+pub(crate) fn blank_account() -> AccountConfig {
     AccountConfig {
         name: String::new(),
         email: String::new(),
@@ -972,6 +988,7 @@ fn blank_account() -> AccountConfig {
         username: String::new(),
         password: String::new(),
         smtp_separate: false,
+        tls_accept_hostname_mismatch: false,
         smtp_username: String::new(),
         smtp_password: String::new(),
         color: None,

@@ -115,6 +115,32 @@ fn status_at(path: &std::path::Path) -> Status {
     }
 }
 
+/// Where the extension reads the path of the AppImage to launch (#235).
+fn launcher_record() -> Option<PathBuf> {
+    crate::config::config_base().map(|b| b.join("hylki").join("launcher"))
+}
+
+/// Leave the extension a way to start Hylki when Hylki is an AppImage.
+/// Files launches the app by desktop id, and failing that by name on PATH,
+/// and a bundle answers to neither: it installs nothing and sits wherever
+/// the user put it. So the path is written down on every start, which also
+/// follows a bundle that has been moved or replaced, and cleared whenever
+/// Hylki runs as anything else, so a later packaged install does not leave
+/// the extension chasing a bundle that is gone.
+pub fn record_launcher() {
+    let Some(path) = launcher_record() else { return };
+    let Some(bundle) = crate::platform::appimage() else {
+        let _ = std::fs::remove_file(&path);
+        return;
+    };
+    if let Some(dir) = path.parent() {
+        let _ = std::fs::create_dir_all(dir);
+    }
+    if let Err(e) = std::fs::write(&path, bundle.as_os_str().as_encoded_bytes()) {
+        tracing::warn!("could not record the AppImage path at {}: {e}", path.display());
+    }
+}
+
 /// Write (or overwrite) this build's copy of the extension.
 pub fn install() -> Result<PathBuf, String> {
     let path = path().ok_or_else(|| "no home directory".to_string())?;

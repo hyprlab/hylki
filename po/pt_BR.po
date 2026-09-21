@@ -850,6 +850,14 @@ msgstr "Mostrar ou ocultar as contas na barra lateral"
 msgid "Focus Mode on or off"
 msgstr ""
 
+#, fuzzy
+msgid "Message zoom in or out"
+msgstr "Fonte das mensagens"
+
+#, fuzzy
+msgid "Message zoom back to the default"
+msgstr "Fonte das mensagens"
+
 msgid "Console mode (when enabled in Settings)"
 msgstr "Modo de console (quando ativado nas Configurações)"
 
@@ -1097,6 +1105,11 @@ msgstr "Entre pelas Contas online do GNOME."
 msgid "Requires Proton Mail Bridge running locally."
 msgstr "Requer que o Proton Mail Bridge esteja em execução localmente."
 
+msgid ""
+"Enter your Stalwart server's address. Mail is read and sent over JMAP; no "
+"SMTP settings are needed."
+msgstr ""
+
 msgid "Enable POP/IMAP access in GMX settings first."
 msgstr "Ative primeiro o acesso POP/IMAP nas configurações do GMX."
 
@@ -1326,6 +1339,15 @@ msgstr "Nome de usuário SMTP"
 
 msgid "SMTP Password"
 msgstr "Senha SMTP"
+
+msgid "Accept a certificate for another name"
+msgstr ""
+
+msgid ""
+"The server's certificate must still be valid and signed, but may be issued "
+"for a different host name than the one entered, as on shared hosting. Turn "
+"on only when the connection test says the names differ."
+msgstr ""
 
 msgid "Test Connection"
 msgstr "Testar conexão"
@@ -1567,6 +1589,11 @@ msgstr "OK"
 msgid "Enter a client ID and sign in before saving"
 msgstr "Digite um ID de cliente e entre antes de salvar"
 
+msgid ""
+"The certificate is for another name. If this server is the right one, turn "
+"on “Accept a certificate for another name” above and test again."
+msgstr ""
+
 msgid "✓ Signed in — save the account to finish"
 msgstr "✓ Sessão iniciada — salve a conta para concluir"
 
@@ -1655,6 +1682,15 @@ msgid "After {n} day"
 msgid_plural "After {n} days"
 msgstr[0] "Após {n} dia"
 msgstr[1] "Após {n} dias"
+
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
+msgid "Server (host name or URL)"
+msgstr ""
+
+#, fuzzy
+msgid "Port (default 443)"
+msgstr "Porta SMTP (padrão: 587)"
 
 msgid "Google (Gmail)"
 msgstr "Google (Gmail)"
@@ -2899,6 +2935,11 @@ msgid "Close find"
 msgstr "Fechar pesquisa"
 
 msgid ""
+"Message zoom. Ctrl+ and Ctrl- change it; a click here, or Ctrl+0, puts it "
+"back to the default from Settings."
+msgstr ""
+
+msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colours and fonts."
 msgstr ""
@@ -3436,6 +3477,29 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr "Mostrar remetente e assunto"
 
+#, fuzzy
+msgid "Notification Buttons"
+msgstr "Notificações"
+
+msgid "Up to three buttons on a notification about one message."
+msgstr ""
+
+#, fuzzy
+msgid "Moves the message to Trash."
+msgstr "Mover esta mensagem para uma pasta"
+
+#, fuzzy
+msgid "Opens the message with a reply started."
+msgstr "Imprimir a mensagem que você está lendo"
+
+#, fuzzy
+msgid "Opens the message with a forward started."
+msgstr "Mover esta mensagem para uma pasta"
+
+#, fuzzy
+msgid "Moves the message to Junk."
+msgstr "Mover esta mensagem para uma pasta"
+
 msgid "Style"
 msgstr "Estilo"
 
@@ -3966,6 +4030,15 @@ msgstr "Aparência das mensagens"
 msgid "Theme for email content only, not the app itself."
 msgstr ""
 "Tema somente para o conteúdo das mensagens, não para o próprio aplicativo."
+
+#, fuzzy
+msgid "Default zoom"
+msgstr "Padrão"
+
+msgid ""
+"How large every message is shown. Ctrl+ and Ctrl- change it until Hylki is "
+"next started; Ctrl+0 comes back to this."
+msgstr ""
 
 msgid "Use my own font"
 msgstr "Usar minha própria fonte"
@@ -4731,6 +4804,8 @@ msgstr "Dados do servidor"
 msgid "Filled in for known providers"
 msgstr "Preenchidos para os provedores conhecidos"
 
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
 msgid "IMAP server"
 msgstr "Servidor IMAP"
 
@@ -4830,6 +4905,9 @@ msgstr "Começar a ler"
 msgid "Continue"
 msgstr "Continuar"
 
+msgid "Port"
+msgstr ""
+
 msgid "Enter your email address and password first."
 msgstr "Digite primeiro seu endereço de email e a senha."
 
@@ -4913,29 +4991,101 @@ msgstr "As mensagens devolvidas seriam enviadas para {rp}"
 msgid "The sender's name says \"{claimed}\" but the address is {from}"
 msgstr "O nome do remetente indica «{claimed}», mas o endereço é {from}"
 
-msgid "the server's reply could not be read (it began: {reply})"
-msgstr ""
+#, fuzzy
+msgid "Could not reach the JMAP server: {e}"
+msgstr "Não foi possível criar a pasta: {e}"
 
-msgid "runtime error: {e}"
-msgstr "erro de execução: {e}"
+msgid "Could not list folders: {e}"
+msgstr "Não foi possível listar as pastas: {e}"
 
-msgid "Syncing…"
-msgstr "Sincronizando…"
+msgid "Sending…"
+msgstr "Enviando…"
 
-msgid "Could not load {path}: {e}"
-msgstr "Não foi possível carregar {path}: {e}"
+msgid "Still could not send “{subject}”: {e}"
+msgstr "Continuou a não ser possível enviar «{subject}»: {e}"
 
 msgid "Could not load message: {e}"
 msgstr "Não foi possível carregar a mensagem: {e}"
 
-msgid "Could not load conversation: {e}"
-msgstr "Não foi possível carregar a conversa: {e}"
+msgid "Syncing…"
+msgstr "Sincronizando…"
+
+msgid "Could not fetch mail: {e}"
+msgstr "Não foi possível obter o email: {e}"
 
 msgid "Could not load source: {e}"
 msgstr "Não foi possível carregar o código fonte: {e}"
 
 msgid "Could not load attachments: {e}"
 msgstr "Não foi possível carregar os anexos: {e}"
+
+msgid "Could not move message: {e}"
+msgstr "Não foi possível mover a mensagem: {e}"
+
+msgid "Could not mark as spam: {e}"
+msgstr "Não foi possível marcar como spam: {e}"
+
+msgid "Could not mark as not spam: {e}"
+msgstr "Não foi possível marcar como não sendo spam: {e}"
+
+msgid "Could not mark {len} messages as not spam: {e}"
+msgstr "Não foi possível marcar {len} mensagens como não sendo spam: {e}"
+
+msgid "Could not move messages: {e}"
+msgstr "Não foi possível mover as mensagens: {e}"
+
+msgid "Could not empty the folder: {e}"
+msgstr "Não foi possível esvaziar a pasta: {e}"
+
+msgid "Undo failed: {e}"
+msgstr "Falha ao desfazer: {e}"
+
+msgid "Could not create folder: {e}"
+msgstr "Não foi possível criar a pasta: {e}"
+
+msgid "Could not rename folder: unknown folder"
+msgstr "Não foi possível renomear a pasta: pasta desconhecida"
+
+msgid "Could not rename folder: {e}"
+msgstr "Não foi possível renomear a pasta: {e}"
+
+msgid "Could not delete folder: unknown folder"
+msgstr "Não foi possível excluir a pasta: pasta desconhecida"
+
+msgid "Could not delete folder: {e}"
+msgstr "Não foi possível excluir a pasta: {e}"
+
+msgid "Saving draft…"
+msgstr "Salvando o rascunho…"
+
+msgid "Could not save draft: {e}"
+msgstr "Não foi possível salvar o rascunho: {e}"
+
+#, fuzzy
+msgid "Could not save draft: unknown folder"
+msgstr "Não foi possível renomear a pasta: pasta desconhecida"
+
+msgid ""
+"Send failed: {e}. The message is in the Outbox and will be sent when the "
+"connection is back."
+msgstr ""
+"Falha ao enviar: {e}. A mensagem está na Caixa de saída e será enviada "
+"quando a conexão for restabelecida."
+
+msgid "Send failed: {e}"
+msgstr "Falha ao enviar: {e}"
+
+msgid "the server's reply could not be read (it began: {reply})"
+msgstr ""
+
+msgid "runtime error: {e}"
+msgstr "erro de execução: {e}"
+
+msgid "Could not load {path}: {e}"
+msgstr "Não foi possível carregar {path}: {e}"
+
+msgid "Could not load conversation: {e}"
+msgstr "Não foi possível carregar a conversa: {e}"
 
 msgid "Could not update message: {e}"
 msgstr "Não foi possível atualizar a mensagem: {e}"
@@ -4955,66 +5105,20 @@ msgstr "Não foi possível atribuir uma etiqueta à mensagem: {e}"
 msgid "Could not mark folder read: {e}"
 msgstr "Não foi possível marcar a pasta como lida: {e}"
 
-msgid "Could not mark as spam: {e}"
-msgstr "Não foi possível marcar como spam: {e}"
-
-msgid "Could not mark as not spam: {e}"
-msgstr "Não foi possível marcar como não sendo spam: {e}"
-
-msgid "Could not mark {len} messages as not spam: {e}"
-msgstr "Não foi possível marcar {len} mensagens como não sendo spam: {e}"
-
-msgid "Could not move message: {e}"
-msgstr "Não foi possível mover a mensagem: {e}"
-
 msgid "Could not move {len} messages: {e}"
 msgstr "Não foi possível mover {len} mensagens: {e}"
-
-msgid "Undo failed: {e}"
-msgstr "Falha ao desfazer: {e}"
 
 msgid "Could not delete permanently: {e}"
 msgstr "Não foi possível excluir permanentemente: {e}"
 
-msgid "Could not empty the folder: {e}"
-msgstr "Não foi possível esvaziar a pasta: {e}"
-
-msgid "Could not create folder: {e}"
-msgstr "Não foi possível criar a pasta: {e}"
-
 msgid "Could not move folder: {e}"
 msgstr "Não foi possível mover a pasta: {e}"
-
-msgid "Could not delete folder: {e}"
-msgstr "Não foi possível excluir a pasta: {e}"
-
-msgid "Sending…"
-msgstr "Enviando…"
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "A mensagem foi enviada, mas não foi possível salvá-la em Enviadas: {e}"
 
-msgid ""
-"Send failed: {e}. The message is in the Outbox and will be sent when the "
-"connection is back."
-msgstr ""
-"Falha ao enviar: {e}. A mensagem está na Caixa de saída e será enviada "
-"quando a conexão for restabelecida."
-
-msgid "Send failed: {e}"
-msgstr "Falha ao enviar: {e}"
-
-msgid "Saving draft…"
-msgstr "Salvando o rascunho…"
-
-msgid "Could not save draft: {e}"
-msgstr "Não foi possível salvar o rascunho: {e}"
-
 msgid "Connecting to {host}…"
 msgstr "Conectando a {host}…"
-
-msgid "Could not list folders: {e}"
-msgstr "Não foi possível listar as pastas: {e}"
 
 msgid "Connection failed: {e}"
 msgstr "Falha na conexão: {e}"
@@ -5032,9 +5136,6 @@ msgstr ""
 "Não foi possível agendar a mensagem: não existe armazenamento local onde a "
 "salvar."
 
-msgid "Still could not send “{subject}”: {e}"
-msgstr "Continuou a não ser possível enviar «{subject}»: {e}"
-
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
@@ -5042,9 +5143,6 @@ msgstr ""
 
 msgid "no OpenPGP key for {addr}"
 msgstr "não existe uma chave OpenPGP para {addr}"
-
-msgid "Could not fetch mail: {e}"
-msgstr "Não foi possível obter o email: {e}"
 
 msgid "Could not delete message: {e}"
 msgstr "Não foi possível excluir a mensagem: {e}"
@@ -5055,79 +5153,164 @@ msgstr "As contas POP3 não suportam pastas"
 msgid "Inbox"
 msgstr "Caixa de entrada"
 
-msgid "Could not move messages: {e}"
-msgstr "Não foi possível mover as mensagens: {e}"
-
-msgid "Could not rename folder: unknown folder"
-msgstr "Não foi possível renomear a pasta: pasta desconhecida"
-
-msgid "Could not rename folder: {e}"
-msgstr "Não foi possível renomear a pasta: {e}"
-
-msgid "Could not delete folder: unknown folder"
-msgstr "Não foi possível excluir a pasta: pasta desconhecida"
-
 msgid "Email Client"
 msgstr "Cliente de email"
 
-msgid "A clean, fast GNOME-native email client"
-msgstr "Um cliente de email simples, rápido e nativo do GNOME"
+msgid ""
+"A fast, GNOME-native email client, built with Rust and libadwaita. Open "
+"source and private by default."
+msgstr ""
 
 msgid "Email;Mail;IMAP;"
 msgstr "Email;Email;IMAP;"
 
-msgid "Private, GNOME-native email client"
-msgstr "Cliente de email privado e nativo do GNOME"
-
 msgid ""
-"Hylki is a desktop email client for Wayland that feels at home in GNOME. It "
-"talks IMAP and SMTP directly, keeps your mail and credentials on your "
-"machine, and blocks trackers by default — no telemetry, no analytics."
+"Hylki is a desktop email client for GNOME on Wayland, written in Rust with "
+"libadwaita. Your mail and credentials stay on your machine, remote content "
+"is blocked until you allow it, and there is no telemetry. It works with "
+"IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to "
+"Proton Bridge to a Stalwart of your own."
 msgstr ""
-"O Hylki é um cliente de email para Wayland que se integra naturalmente ao "
-"GNOME. Comunica-se diretamente por IMAP e SMTP, mantém suas mensagens e "
-"credenciais no computador e bloqueia rastreadores por padrão — sem "
-"telemetria nem dados analíticos."
 
-msgid "Features:"
-msgstr "Recursos:"
+#, fuzzy
+msgid "Accounts and mail:"
+msgstr "Contar email não lido"
 
-msgid "Multiple IMAP and POP3 accounts, with a unified Inboxes view"
-msgstr ""
-"Várias contas IMAP e POP3, com uma vista unificada das Caixas de entrada"
-
+#, fuzzy
 msgid ""
-"Google, Microsoft and custom OAuth 2.0 sign-in, plus GNOME Online Accounts "
-"import"
+"Multiple accounts with a unified Inboxes view; Google, Microsoft and custom "
+"OAuth sign-in, or an account imported from GNOME Online Accounts"
 msgstr ""
 "Acesso no Google, Microsoft e serviços OAuth 2.0 personalizados, além da "
 "importação das Contas online do GNOME"
 
-msgid "Whole-mailbox sync and search with infinite scroll"
-msgstr "Sincronização e pesquisa de toda a caixa de email com rolagem infinita"
-
-msgid "Deletions and moves made on other devices sync back automatically"
+msgid ""
+"Whole-mailbox sync and search, conversation threading, and changes made on "
+"other devices synced back"
 msgstr ""
-"Exclusões e movimentações feitas em outros dispositivos são sincronizadas "
-"automaticamente"
 
-msgid "Conversation threading, compose, reply, forward, and editable drafts"
+msgid ""
+"Folder management, filters, tags, unified and filtered folders, and Trash "
+"and Junk emptied by hand or on a schedule"
 msgstr ""
-"Organização por conversas, composição, resposta, encaminhamento e rascunhos "
-"editáveis"
 
-msgid "Remote content blocked by default; per-message light or dark reading"
+msgid "An attachment gallery, an Outbox for sends that fail, and Send Later"
+msgstr ""
+
+msgid "Writing:"
+msgstr ""
+
+msgid ""
+"Rich text, Markdown, HTML or plain text, with HTML signatures, inline "
+"images, spell check and undo"
+msgstr ""
+
+msgid ""
+"Drafts, quote folding, split replies, and forwarding that keeps the "
+"attachments"
+msgstr ""
+
+msgid ""
+"Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a "
+"Send with Hylki entry in GNOME Files"
+msgstr ""
+
+#, fuzzy
+msgid "Reading:"
+msgstr "Leitura"
+
+#, fuzzy
+msgid ""
+"Reader View, your own font and colours, and per-message light or dark "
+"rendering"
 msgstr ""
 "Conteúdo remoto bloqueado por padrão; leitura clara ou escura por mensagem"
 
-msgid "Passwords and OAuth tokens kept in the system keyring"
-msgstr "Senhas e tokens OAuth salvos no chaveiro do sistema"
+msgid ""
+"OpenPGP signing, encryption and reading; DKIM, SPF and DMARC checked on "
+"arrival"
+msgstr ""
+
+msgid ""
+"Meeting invitations answered in place, and one-click unsubscribe from list "
+"mail"
+msgstr ""
+
+msgid "The app:"
+msgstr ""
+
+msgid ""
+"Adaptive three-pane layout, five appearance themes, Focus Mode, a "
+"customizable toolbar and swipe actions"
+msgstr ""
+
+msgid ""
+"Gmail-style single-key shortcuts, notifications with actions, an optional "
+"tray icon and background running"
+msgstr ""
+
+msgid ""
+"GNOME Contacts integration, your choice of language and clock, and passwords "
+"kept in the system keyring"
+msgstr ""
 
 msgid "The unified inbox in light mode"
 msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "A clean, fast GNOME-native email client"
+#~ msgstr "Um cliente de email simples, rápido e nativo do GNOME"
+
+#~ msgid "Private, GNOME-native email client"
+#~ msgstr "Cliente de email privado e nativo do GNOME"
+
+#~ msgid ""
+#~ "Hylki is a desktop email client for Wayland that feels at home in GNOME. "
+#~ "It talks IMAP and SMTP directly, keeps your mail and credentials on your "
+#~ "machine, and blocks trackers by default — no telemetry, no analytics."
+#~ msgstr ""
+#~ "O Hylki é um cliente de email para Wayland que se integra naturalmente ao "
+#~ "GNOME. Comunica-se diretamente por IMAP e SMTP, mantém suas mensagens e "
+#~ "credenciais no computador e bloqueia rastreadores por padrão — sem "
+#~ "telemetria nem dados analíticos."
+
+#~ msgid "Features:"
+#~ msgstr "Recursos:"
+
+#~ msgid "Multiple IMAP and POP3 accounts, with a unified Inboxes view"
+#~ msgstr ""
+#~ "Várias contas IMAP e POP3, com uma vista unificada das Caixas de entrada"
+
+#~ msgid "Whole-mailbox sync and search with infinite scroll"
+#~ msgstr ""
+#~ "Sincronização e pesquisa de toda a caixa de email com rolagem infinita"
+
+#~ msgid "Deletions and moves made on other devices sync back automatically"
+#~ msgstr ""
+#~ "Exclusões e movimentações feitas em outros dispositivos são sincronizadas "
+#~ "automaticamente"
+
+#~ msgid "Conversation threading, compose, reply, forward, and editable drafts"
+#~ msgstr ""
+#~ "Organização por conversas, composição, resposta, encaminhamento e "
+#~ "rascunhos editáveis"
+
+#~ msgid "Passwords and OAuth tokens kept in the system keyring"
+#~ msgstr "Senhas e tokens OAuth salvos no chaveiro do sistema"
+
+#, fuzzy
+#~ msgid "Mark as Read button"
+#~ msgstr "Marcar como lida"
+
+#, fuzzy
+#~ msgid "Archive button"
+#~ msgstr "Arquivar"
+
+#, fuzzy
+#~ msgid "Delete button"
+#~ msgstr "Excluir contato?"
 
 #~ msgid "Label (defaults to email address)"
 #~ msgstr "Etiqueta (por padrão, o endereço de email)"

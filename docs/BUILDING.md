@@ -44,6 +44,24 @@ which has to be regenerated whenever `Cargo.lock` changes:
 python3 flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
 ```
 
+## AppImage
+
+Hylki does not ship an AppImage: the packages it distributes are the Flatpak
+and the RPM. The build exists all the same, so the option stays open and
+does not rot (#235).
+
+`tools/build-appimage.sh` produces `packaging/out/Hylki-<arch>.AppImage` and
+the `.zsync` file that goes with it. It runs inside an Arch container (the
+script starts one with podman; in CI it is already in one), because the
+bundle carries every library down to the C library and those have to be
+current. The library collecting is [pkgforge's
+`quick-sharun`](https://github.com/pkgforge-dev/Anylinux-AppImages), fetched
+by the script rather than vendored.
+
+`.github/workflows/build-appimage.yml` builds it for x86_64 and aarch64, by
+hand only: no tag starts it and nothing it produces is published. What
+turning that around would take is written at the top of the workflow.
+
 ## Your own OAuth client
 
 Google and Dropbox clients can be compiled in at build time; see

@@ -852,6 +852,14 @@ msgstr "Εμφάνιση ή απόκρυψη λογαριασμών στην π�
 msgid "Focus Mode on or off"
 msgstr ""
 
+#, fuzzy
+msgid "Message zoom in or out"
+msgstr "Γραμματοσειρά μηνυμάτων"
+
+#, fuzzy
+msgid "Message zoom back to the default"
+msgstr "Γραμματοσειρά μηνυμάτων"
+
 msgid "Console mode (when enabled in Settings)"
 msgstr "Λειτουργία κονσόλας (όταν είναι ενεργοποιημένη στις Ρυθμίσεις)"
 
@@ -1104,6 +1112,11 @@ msgstr "Συνδεθείτε μέσω των Διαδικτυακών λογαρ
 msgid "Requires Proton Mail Bridge running locally."
 msgstr "Απαιτεί το Proton Mail Bridge να εκτελείται τοπικά."
 
+msgid ""
+"Enter your Stalwart server's address. Mail is read and sent over JMAP; no "
+"SMTP settings are needed."
+msgstr ""
+
 msgid "Enable POP/IMAP access in GMX settings first."
 msgstr "Ενεργοποιήστε πρώτα την πρόσβαση POP/IMAP στις ρυθμίσεις GMX."
 
@@ -1339,6 +1352,15 @@ msgstr "Όνομα χρήστη SMTP"
 
 msgid "SMTP Password"
 msgstr "Κωδικός πρόσβασης SMTP"
+
+msgid "Accept a certificate for another name"
+msgstr ""
+
+msgid ""
+"The server's certificate must still be valid and signed, but may be issued "
+"for a different host name than the one entered, as on shared hosting. Turn "
+"on only when the connection test says the names differ."
+msgstr ""
 
 msgid "Test Connection"
 msgstr "Δοκιμή σύνδεσης"
@@ -1584,6 +1606,11 @@ msgstr "Εντάξει"
 msgid "Enter a client ID and sign in before saving"
 msgstr "Εισαγάγετε αναγνωριστικό πελάτη και συνδεθείτε πριν από την αποθήκευση"
 
+msgid ""
+"The certificate is for another name. If this server is the right one, turn "
+"on “Accept a certificate for another name” above and test again."
+msgstr ""
+
 msgid "✓ Signed in — save the account to finish"
 msgstr "✓ Έγινε σύνδεση — αποθηκεύστε τον λογαριασμό για ολοκλήρωση"
 
@@ -1674,6 +1701,15 @@ msgid "After {n} day"
 msgid_plural "After {n} days"
 msgstr[0] "Μετά από {n} ημέρα"
 msgstr[1] "Μετά από {n} ημέρες"
+
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
+msgid "Server (host name or URL)"
+msgstr ""
+
+#, fuzzy
+msgid "Port (default 443)"
+msgstr "Θύρα SMTP (προεπιλογή 587)"
 
 msgid "Google (Gmail)"
 msgstr "Google (Gmail)"
@@ -2933,6 +2969,11 @@ msgid "Close find"
 msgstr "Κλείσιμο εύρεσης"
 
 msgid ""
+"Message zoom. Ctrl+ and Ctrl- change it; a click here, or Ctrl+0, puts it "
+"back to the default from Settings."
+msgstr ""
+
+msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colours and fonts."
 msgstr ""
@@ -3473,6 +3514,29 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr "Εμφάνιση αποστολέα και θέματος"
 
+#, fuzzy
+msgid "Notification Buttons"
+msgstr "Ειδοποιήσεις"
+
+msgid "Up to three buttons on a notification about one message."
+msgstr ""
+
+#, fuzzy
+msgid "Moves the message to Trash."
+msgstr "Μετακίνηση αυτού του μηνύματος σε φάκελο"
+
+#, fuzzy
+msgid "Opens the message with a reply started."
+msgstr "Εκτύπωση του μηνύματος που διαβάζετε"
+
+#, fuzzy
+msgid "Opens the message with a forward started."
+msgstr "Μετακίνηση αυτού του μηνύματος σε φάκελο"
+
+#, fuzzy
+msgid "Moves the message to Junk."
+msgstr "Μετακίνηση αυτού του μηνύματος σε φάκελο"
+
 msgid "Style"
 msgstr "Εμφάνιση"
 
@@ -4008,6 +4072,15 @@ msgstr "Εμφάνιση μηνυμάτων"
 
 msgid "Theme for email content only, not the app itself."
 msgstr "Θέμα μόνο για το περιεχόμενο email, όχι για την ίδια την εφαρμογή."
+
+#, fuzzy
+msgid "Default zoom"
+msgstr "Προεπιλογή"
+
+msgid ""
+"How large every message is shown. Ctrl+ and Ctrl- change it until Hylki is "
+"next started; Ctrl+0 comes back to this."
+msgstr ""
 
 msgid "Use my own font"
 msgstr "Χρήση δικής μου γραμματοσειράς"
@@ -4783,6 +4856,8 @@ msgstr "Στοιχεία διακομιστή"
 msgid "Filled in for known providers"
 msgstr "Συμπληρώνονται για γνωστούς παρόχους"
 
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
 msgid "IMAP server"
 msgstr "Διακομιστής IMAP"
 
@@ -4882,6 +4957,9 @@ msgstr "Έναρξη ανάγνωσης"
 msgid "Continue"
 msgstr "Συνέχεια"
 
+msgid "Port"
+msgstr ""
+
 msgid "Enter your email address and password first."
 msgstr "Εισαγάγετε πρώτα τη διεύθυνση email και τον κωδικό πρόσβασής σας."
 
@@ -4968,6 +5046,90 @@ msgid "The sender's name says \"{claimed}\" but the address is {from}"
 msgstr ""
 "Το όνομα του αποστολέα αναφέρει «{claimed}», αλλά η διεύθυνση είναι {from}"
 
+#, fuzzy
+msgid "Could not reach the JMAP server: {e}"
+msgstr "Δεν ήταν δυνατή η δημιουργία φακέλου: {e}"
+
+msgid "Could not list folders: {e}"
+msgstr "Δεν ήταν δυνατή η εμφάνιση των φακέλων: {e}"
+
+msgid "Sending…"
+msgstr "Αποστολή…"
+
+msgid "Still could not send “{subject}”: {e}"
+msgstr "Εξακολουθεί να μην είναι δυνατή η αποστολή του «{subject}»: {e}"
+
+msgid "Could not load message: {e}"
+msgstr "Δεν ήταν δυνατή η φόρτωση του μηνύματος: {e}"
+
+msgid "Syncing…"
+msgstr "Συγχρονισμός…"
+
+msgid "Could not fetch mail: {e}"
+msgstr "Δεν ήταν δυνατή η ανάκτηση αλληλογραφίας: {e}"
+
+msgid "Could not load source: {e}"
+msgstr "Δεν ήταν δυνατή η φόρτωση του πηγαίου κώδικα: {e}"
+
+msgid "Could not load attachments: {e}"
+msgstr "Δεν ήταν δυνατή η φόρτωση των συνημμένων: {e}"
+
+msgid "Could not move message: {e}"
+msgstr "Δεν ήταν δυνατή η μετακίνηση του μηνύματος: {e}"
+
+msgid "Could not mark as spam: {e}"
+msgstr "Δεν ήταν δυνατή η σήμανση ως ανεπιθύμητου: {e}"
+
+msgid "Could not mark as not spam: {e}"
+msgstr "Δεν ήταν δυνατή η σήμανση ως επιθυμητού: {e}"
+
+msgid "Could not mark {len} messages as not spam: {e}"
+msgstr "Δεν ήταν δυνατή η σήμανση {len} μηνυμάτων ως επιθυμητών: {e}"
+
+msgid "Could not move messages: {e}"
+msgstr "Δεν ήταν δυνατή η μετακίνηση μηνυμάτων: {e}"
+
+msgid "Could not empty the folder: {e}"
+msgstr "Δεν ήταν δυνατό το άδειασμα του φακέλου: {e}"
+
+msgid "Undo failed: {e}"
+msgstr "Η αναίρεση απέτυχε: {e}"
+
+msgid "Could not create folder: {e}"
+msgstr "Δεν ήταν δυνατή η δημιουργία φακέλου: {e}"
+
+msgid "Could not rename folder: unknown folder"
+msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"
+
+msgid "Could not rename folder: {e}"
+msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: {e}"
+
+msgid "Could not delete folder: unknown folder"
+msgstr "Δεν ήταν δυνατή η διαγραφή φακέλου: άγνωστος φάκελος"
+
+msgid "Could not delete folder: {e}"
+msgstr "Δεν ήταν δυνατή η διαγραφή φακέλου: {e}"
+
+msgid "Saving draft…"
+msgstr "Αποθήκευση προχείρου…"
+
+msgid "Could not save draft: {e}"
+msgstr "Δεν ήταν δυνατή η αποθήκευση του προχείρου: {e}"
+
+#, fuzzy
+msgid "Could not save draft: unknown folder"
+msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"
+
+msgid ""
+"Send failed: {e}. The message is in the Outbox and will be sent when the "
+"connection is back."
+msgstr ""
+"Η αποστολή απέτυχε: {e}. Το μήνυμα βρίσκεται στα Εξερχόμενα και θα σταλεί "
+"όταν αποκατασταθεί η σύνδεση."
+
+msgid "Send failed: {e}"
+msgstr "Η αποστολή απέτυχε: {e}"
+
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr ""
 "η απάντηση από τον διακομιστή δεν μπόρεσε να διαβαστεί (ξεκίνησε: {reply})"
@@ -4975,23 +5137,11 @@ msgstr ""
 msgid "runtime error: {e}"
 msgstr "σφάλμα χρόνου εκτέλεσης: {e}"
 
-msgid "Syncing…"
-msgstr "Συγχρονισμός…"
-
 msgid "Could not load {path}: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση του {path}: {e}"
 
-msgid "Could not load message: {e}"
-msgstr "Δεν ήταν δυνατή η φόρτωση του μηνύματος: {e}"
-
 msgid "Could not load conversation: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση της συζήτησης: {e}"
-
-msgid "Could not load source: {e}"
-msgstr "Δεν ήταν δυνατή η φόρτωση του πηγαίου κώδικα: {e}"
-
-msgid "Could not load attachments: {e}"
-msgstr "Δεν ήταν δυνατή η φόρτωση των συνημμένων: {e}"
 
 msgid "Could not update message: {e}"
 msgstr "Δεν ήταν δυνατή η ενημέρωση του μηνύματος: {e}"
@@ -5011,66 +5161,20 @@ msgstr "Δεν ήταν δυνατή η προσθήκη ετικέτας στο
 msgid "Could not mark folder read: {e}"
 msgstr "Δεν ήταν δυνατή η σήμανση του φακέλου ως αναγνωσμένου: {e}"
 
-msgid "Could not mark as spam: {e}"
-msgstr "Δεν ήταν δυνατή η σήμανση ως ανεπιθύμητου: {e}"
-
-msgid "Could not mark as not spam: {e}"
-msgstr "Δεν ήταν δυνατή η σήμανση ως επιθυμητού: {e}"
-
-msgid "Could not mark {len} messages as not spam: {e}"
-msgstr "Δεν ήταν δυνατή η σήμανση {len} μηνυμάτων ως επιθυμητών: {e}"
-
-msgid "Could not move message: {e}"
-msgstr "Δεν ήταν δυνατή η μετακίνηση του μηνύματος: {e}"
-
 msgid "Could not move {len} messages: {e}"
 msgstr "Δεν ήταν δυνατή η μετακίνηση {len} μηνυμάτων: {e}"
-
-msgid "Undo failed: {e}"
-msgstr "Η αναίρεση απέτυχε: {e}"
 
 msgid "Could not delete permanently: {e}"
 msgstr "Δεν ήταν δυνατή η οριστική διαγραφή: {e}"
 
-msgid "Could not empty the folder: {e}"
-msgstr "Δεν ήταν δυνατό το άδειασμα του φακέλου: {e}"
-
-msgid "Could not create folder: {e}"
-msgstr "Δεν ήταν δυνατή η δημιουργία φακέλου: {e}"
-
 msgid "Could not move folder: {e}"
 msgstr "Δεν ήταν δυνατή η μετακίνηση φακέλου: {e}"
-
-msgid "Could not delete folder: {e}"
-msgstr "Δεν ήταν δυνατή η διαγραφή φακέλου: {e}"
-
-msgid "Sending…"
-msgstr "Αποστολή…"
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Το μήνυμα στάλθηκε, αλλά η αποθήκευση στα Απεσταλμένα απέτυχε: {e}"
 
-msgid ""
-"Send failed: {e}. The message is in the Outbox and will be sent when the "
-"connection is back."
-msgstr ""
-"Η αποστολή απέτυχε: {e}. Το μήνυμα βρίσκεται στα Εξερχόμενα και θα σταλεί "
-"όταν αποκατασταθεί η σύνδεση."
-
-msgid "Send failed: {e}"
-msgstr "Η αποστολή απέτυχε: {e}"
-
-msgid "Saving draft…"
-msgstr "Αποθήκευση προχείρου…"
-
-msgid "Could not save draft: {e}"
-msgstr "Δεν ήταν δυνατή η αποθήκευση του προχείρου: {e}"
-
 msgid "Connecting to {host}…"
 msgstr "Σύνδεση στο {host}…"
-
-msgid "Could not list folders: {e}"
-msgstr "Δεν ήταν δυνατή η εμφάνιση των φακέλων: {e}"
 
 msgid "Connection failed: {e}"
 msgstr "Η σύνδεση απέτυχε: {e}"
@@ -5088,9 +5192,6 @@ msgstr ""
 "Δεν ήταν δυνατός ο προγραμματισμός του μηνύματος: δεν υπάρχει τοπικός χώρος "
 "αποθήκευσης για τη διατήρησή του."
 
-msgid "Still could not send “{subject}”: {e}"
-msgstr "Εξακολουθεί να μην είναι δυνατή η αποστολή του «{subject}»: {e}"
-
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
@@ -5099,9 +5200,6 @@ msgstr ""
 
 msgid "no OpenPGP key for {addr}"
 msgstr "δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}"
-
-msgid "Could not fetch mail: {e}"
-msgstr "Δεν ήταν δυνατή η ανάκτηση αλληλογραφίας: {e}"
 
 msgid "Could not delete message: {e}"
 msgstr "Δεν ήταν δυνατή η διαγραφή του μηνύματος: {e}"
@@ -5112,81 +5210,167 @@ msgstr "Οι λογαριασμοί POP3 δεν υποστηρίζουν φακ�
 msgid "Inbox"
 msgstr "Εισερχόμενα"
 
-msgid "Could not move messages: {e}"
-msgstr "Δεν ήταν δυνατή η μετακίνηση μηνυμάτων: {e}"
-
-msgid "Could not rename folder: unknown folder"
-msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"
-
-msgid "Could not rename folder: {e}"
-msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: {e}"
-
-msgid "Could not delete folder: unknown folder"
-msgstr "Δεν ήταν δυνατή η διαγραφή φακέλου: άγνωστος φάκελος"
-
 msgid "Email Client"
 msgstr "Πρόγραμμα-πελάτης email"
 
-msgid "A clean, fast GNOME-native email client"
-msgstr "Μια καθαρή, γρήγορη εφαρμογή email, εγγενή στο GNOME"
+msgid ""
+"A fast, GNOME-native email client, built with Rust and libadwaita. Open "
+"source and private by default."
+msgstr ""
 
 msgid "Email;Mail;IMAP;"
 msgstr "Email;Αλληλογραφία;IMAP;"
 
-msgid "Private, GNOME-native email client"
-msgstr "Ιδιωτική εφαρμογή email, εγγενή στο GNOME"
-
 msgid ""
-"Hylki is a desktop email client for Wayland that feels at home in GNOME. It "
-"talks IMAP and SMTP directly, keeps your mail and credentials on your "
-"machine, and blocks trackers by default — no telemetry, no analytics."
+"Hylki is a desktop email client for GNOME on Wayland, written in Rust with "
+"libadwaita. Your mail and credentials stay on your machine, remote content "
+"is blocked until you allow it, and there is no telemetry. It works with "
+"IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to "
+"Proton Bridge to a Stalwart of your own."
 msgstr ""
-"Το Hylki είναι μια εφαρμογή email για Wayland που ταιριάζει απόλυτα στο "
-"GNOME. Επικοινωνεί απευθείας μέσω IMAP και SMTP, διατηρεί την αλληλογραφία "
-"και τα διαπιστευτήριά σας στη συσκευή σας και αποκλείει τους ιχνηλάτες από "
-"προεπιλογή — χωρίς τηλεμετρία και αναλυτικά δεδομένα."
 
-msgid "Features:"
-msgstr "Δυνατότητες:"
+#, fuzzy
+msgid "Accounts and mail:"
+msgstr "Καταμέτρηση μη αναγνωσμένων μηνυμάτων"
 
-msgid "Multiple IMAP and POP3 accounts, with a unified Inboxes view"
-msgstr "Πολλοί λογαριασμοί IMAP και POP3, με ενοποιημένη προβολή Εισερχομένων"
-
+#, fuzzy
 msgid ""
-"Google, Microsoft and custom OAuth 2.0 sign-in, plus GNOME Online Accounts "
-"import"
+"Multiple accounts with a unified Inboxes view; Google, Microsoft and custom "
+"OAuth sign-in, or an account imported from GNOME Online Accounts"
 msgstr ""
 "Σύνδεση μέσω Google, Microsoft και προσαρμοσμένου OAuth 2.0, καθώς και "
 "εισαγωγή από Διαδικτυακούς λογαριασμούς GNOME"
 
-msgid "Whole-mailbox sync and search with infinite scroll"
+msgid ""
+"Whole-mailbox sync and search, conversation threading, and changes made on "
+"other devices synced back"
 msgstr ""
-"Συγχρονισμός και αναζήτηση ολόκληρου γραμματοκιβωτίου με ατέρμονη κύλιση"
 
-msgid "Deletions and moves made on other devices sync back automatically"
+msgid ""
+"Folder management, filters, tags, unified and filtered folders, and Trash "
+"and Junk emptied by hand or on a schedule"
 msgstr ""
-"Οι διαγραφές και οι μετακινήσεις που γίνονται σε άλλες συσκευές "
-"συγχρονίζονται αυτόματα"
 
-msgid "Conversation threading, compose, reply, forward, and editable drafts"
+msgid "An attachment gallery, an Outbox for sends that fail, and Send Later"
 msgstr ""
-"Νηματικές συζητήσεις, σύνταξη, απάντηση, προώθηση και επεξεργάσιμα πρόχειρα"
 
-msgid "Remote content blocked by default; per-message light or dark reading"
+msgid "Writing:"
+msgstr ""
+
+msgid ""
+"Rich text, Markdown, HTML or plain text, with HTML signatures, inline "
+"images, spell check and undo"
+msgstr ""
+
+msgid ""
+"Drafts, quote folding, split replies, and forwarding that keeps the "
+"attachments"
+msgstr ""
+
+msgid ""
+"Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a "
+"Send with Hylki entry in GNOME Files"
+msgstr ""
+
+#, fuzzy
+msgid "Reading:"
+msgstr "Ανάγνωση"
+
+#, fuzzy
+msgid ""
+"Reader View, your own font and colours, and per-message light or dark "
+"rendering"
 msgstr ""
 "Το απομακρυσμένο περιεχόμενο αποκλείεται από προεπιλογή· φωτεινή ή σκοτεινή "
 "ανάγνωση ανά μήνυμα"
 
-msgid "Passwords and OAuth tokens kept in the system keyring"
+msgid ""
+"OpenPGP signing, encryption and reading; DKIM, SPF and DMARC checked on "
+"arrival"
 msgstr ""
-"Οι κωδικοί πρόσβασης και τα διακριτικά OAuth διατηρούνται στην κλειδοθήκη "
-"συστήματος"
+
+msgid ""
+"Meeting invitations answered in place, and one-click unsubscribe from list "
+"mail"
+msgstr ""
+
+msgid "The app:"
+msgstr ""
+
+msgid ""
+"Adaptive three-pane layout, five appearance themes, Focus Mode, a "
+"customizable toolbar and swipe actions"
+msgstr ""
+
+msgid ""
+"Gmail-style single-key shortcuts, notifications with actions, an optional "
+"tray icon and background running"
+msgstr ""
+
+msgid ""
+"GNOME Contacts integration, your choice of language and clock, and passwords "
+"kept in the system keyring"
+msgstr ""
 
 msgid "The unified inbox in light mode"
 msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή λειτουργία"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "A clean, fast GNOME-native email client"
+#~ msgstr "Μια καθαρή, γρήγορη εφαρμογή email, εγγενή στο GNOME"
+
+#~ msgid "Private, GNOME-native email client"
+#~ msgstr "Ιδιωτική εφαρμογή email, εγγενή στο GNOME"
+
+#~ msgid ""
+#~ "Hylki is a desktop email client for Wayland that feels at home in GNOME. "
+#~ "It talks IMAP and SMTP directly, keeps your mail and credentials on your "
+#~ "machine, and blocks trackers by default — no telemetry, no analytics."
+#~ msgstr ""
+#~ "Το Hylki είναι μια εφαρμογή email για Wayland που ταιριάζει απόλυτα στο "
+#~ "GNOME. Επικοινωνεί απευθείας μέσω IMAP και SMTP, διατηρεί την "
+#~ "αλληλογραφία και τα διαπιστευτήριά σας στη συσκευή σας και αποκλείει τους "
+#~ "ιχνηλάτες από προεπιλογή — χωρίς τηλεμετρία και αναλυτικά δεδομένα."
+
+#~ msgid "Features:"
+#~ msgstr "Δυνατότητες:"
+
+#~ msgid "Multiple IMAP and POP3 accounts, with a unified Inboxes view"
+#~ msgstr ""
+#~ "Πολλοί λογαριασμοί IMAP και POP3, με ενοποιημένη προβολή Εισερχομένων"
+
+#~ msgid "Whole-mailbox sync and search with infinite scroll"
+#~ msgstr ""
+#~ "Συγχρονισμός και αναζήτηση ολόκληρου γραμματοκιβωτίου με ατέρμονη κύλιση"
+
+#~ msgid "Deletions and moves made on other devices sync back automatically"
+#~ msgstr ""
+#~ "Οι διαγραφές και οι μετακινήσεις που γίνονται σε άλλες συσκευές "
+#~ "συγχρονίζονται αυτόματα"
+
+#~ msgid "Conversation threading, compose, reply, forward, and editable drafts"
+#~ msgstr ""
+#~ "Νηματικές συζητήσεις, σύνταξη, απάντηση, προώθηση και επεξεργάσιμα "
+#~ "πρόχειρα"
+
+#~ msgid "Passwords and OAuth tokens kept in the system keyring"
+#~ msgstr ""
+#~ "Οι κωδικοί πρόσβασης και τα διακριτικά OAuth διατηρούνται στην κλειδοθήκη "
+#~ "συστήματος"
+
+#, fuzzy
+#~ msgid "Mark as Read button"
+#~ msgstr "Σήμανση ως αναγνωσμένο"
+
+#, fuzzy
+#~ msgid "Archive button"
+#~ msgstr "Αρχειοθέτηση"
+
+#, fuzzy
+#~ msgid "Delete button"
+#~ msgstr "Διαγραφή επαφής;"
 
 #~ msgid "Label (defaults to email address)"
 #~ msgstr "Ετικέτα (προεπιλογή η διεύθυνση email)"

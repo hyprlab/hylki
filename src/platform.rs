@@ -7,10 +7,33 @@
 //! session is read from the standard XDG env vars, which Flatpak passes through.
 
 use std::fs;
+use std::path::PathBuf;
 
 /// Whether Hylki is running inside a Flatpak sandbox.
 pub fn is_flatpak() -> bool {
     std::path::Path::new("/.flatpak-info").exists()
+}
+
+/// The AppImage this process was launched from (#235), if it was one. The
+/// runtime sets `APPIMAGE` to the bundle's own path, which is the only
+/// lasting one: the binary runs from a temporary mount that is gone the
+/// moment the app exits, so anything that has to name Hylki *later* — a
+/// restart, a launcher, the GNOME Files entry — has to name the bundle.
+/// `APPIMAGE` alone does not mean *this* app is one: the runtime exports it
+/// into the environment, and a child process started from an AppImage (a
+/// terminal, an editor, a launcher) inherits it and would take its parent's
+/// bundle for its own. The pair with `APPDIR` is what settles it — our own
+/// binary has to be running from inside that mount.
+pub fn appimage() -> Option<PathBuf> {
+    let bundle = PathBuf::from(std::env::var_os("APPIMAGE")?);
+    let mount = PathBuf::from(std::env::var_os("APPDIR")?);
+    let exe = std::env::current_exe().ok()?;
+    (bundle.is_file() && exe.starts_with(&mount)).then_some(bundle)
+}
+
+/// Whether Hylki runs from an AppImage.
+pub fn is_appimage() -> bool {
+    appimage().is_some()
 }
 
 /// Contents of the *host* os-release (falls back to the local one natively).

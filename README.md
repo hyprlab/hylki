@@ -41,8 +41,8 @@ for GNOME first, and it would rather be beautiful *and* complete than pick one
 
 ## Features
 
-- **Multiple accounts:** IMAP and POP3, each on its own background worker,
-  with a unified *Inboxes* view. OAuth for Google and Microsoft.
+- **Multiple accounts:** IMAP, POP3 and JMAP, each on its own background
+  worker, with a unified *Inboxes* view. OAuth for Google and Microsoft.
 - **Whole-mailbox sync and search:** no message-count cap. The first page is
   instant; the rest indexes in the background.
 - **Two-way sync:** deletions, moves and flags from your phone or another

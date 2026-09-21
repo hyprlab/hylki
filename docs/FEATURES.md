@@ -4,8 +4,10 @@ The full list. The [README](../README.md) carries a shorter one.
 
 ## Accounts
 
-- **Multiple accounts:** IMAP and POP3, each on its own background worker,
-  with a unified *Inboxes* view across all of them.
+- **Multiple accounts:** IMAP, POP3 and JMAP, each on its own background
+  worker, with a unified *Inboxes* view across all of them.
+- **JMAP:** a Stalwart or Fastmail mailbox over the JSON mail protocol,
+  including push. See [Configuration](DOCUMENTATION.md#jmap-stalwart-fastmail).
 - **OAuth 2.0 sign-in:** Google, Microsoft and custom providers over
   XOAUTH2. See [Configuration](DOCUMENTATION.md#oauth-google--microsoft).
 - **GNOME Online Accounts:** import an account already set up in GNOME
@@ -14,8 +16,9 @@ The full list. The [README](../README.md) carries a shorter one.
 - **Per-alias SMTP:** each address on an account can send through its own
   server and credentials.
 - **Proton Bridge, Zimbra, iCloud, Mailfence and other awkward servers:**
-  STARTTLS with locally signed certificates, servers without MOVE, and
-  non-compliant fetch replies are all handled.
+  STARTTLS with locally signed certificates, a certificate in the hosting
+  company's name rather than yours, servers without MOVE, and non-compliant
+  fetch replies are all handled.
 
 ## Mail
 
@@ -86,6 +89,10 @@ The full list. The [README](../README.md) carries a shorter one.
   text and tracking pixels are stripped, and what is left is set in one
   uniform sheet that follows the app's theme.
 - **Your own font and colours** for message bodies, overriding the sender's.
+- **Message zoom:** Ctrl++ and Ctrl+- scale the message alone, in Reader
+  View or out of it, with the percentage shown beside the Reader View switch
+  while it is away from the default. Settings → Reading sets the zoom every
+  launch starts at; Ctrl+0, or a click on the chip, returns to it.
 - **Meeting invitations:** what the meeting is, when it runs in your own
   clock and time zone, where it is and who organised it, with Accept, Maybe,
   Decline and Add to Calendar.
@@ -119,7 +126,9 @@ The full list. The [README](../README.md) carries a shorter one.
   and can start at login without opening a window.
 - **Tray icon** (optional): a StatusNotifierItem with a count of the folders
   you choose.
-- **Notifications** that open the message they are about.
+- **Notifications** that open the message they are about, with up to three
+  buttons of your choice: Mark as Read, Archive, Delete, Reply, Forward or
+  Mark as Spam.
 - **GNOME Contacts:** names and photos from your address book, optional.
 - **Your language:** the desktop's, or one you pick; a 12- or 24-hour clock
   following the desktop setting.

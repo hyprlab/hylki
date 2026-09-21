@@ -1,0 +1,82 @@
+name: Build AppImage
+
+# The AppImage (#235) carries every library down to glibc, so it has to be
+# built against current GTK and WebKitGTK inside Arch rather than on the
+# maintainer's Fedora machine. That is what the container below is, and it is
+# the same one pkgforge builds theirs in.
+#
+# **Hylki does not ship an AppImage.** The distributed packages are the
+# Flatpak and the RPM. This job is here, working and kept building, for the
+# day that changes; until then it runs only when started by hand, and nothing
+# it produces goes near a release page.
+#
+# Turning it on means: adding the tag trigger back
+#
+#   push:
+#     tags: ['v*', '!v*b', '!v*-beta.*']
+#
+# and, at ship time, attaching BOTH the bundle and its .zsync file to the
+# release. The .zsync is what the updater in AppImageUpdate, AppManager and
+# Gear Lever resolves from the release tagged `latest`, so a bundle published
+# without one never updates itself. Betas would stay Flatpak only: an
+# AppImage runs unsandboxed and so would share the stable app's accounts and
+# mail cache, which is not what a beta channel is for. See src/config.rs, and
+# docs/BUILDING.md for the build itself.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Tag, branch or SHA to build'
+        required: false
+        default: 'main'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.arch }}
+    runs-on: ${{ matrix.runs-on }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: x86_64,  runs-on: ubuntu-latest }
+          - { arch: aarch64, runs-on: ubuntu-24.04-arm }
+
+    container: ghcr.io/pkgforge-dev/archlinux:latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Build
+        # The script notices it is already inside Arch and builds in place.
+        run: ./tools/build-appimage.sh
+
+      - name: Check the result is the right app and architecture
+        # `appinfo` is written beside the bundle by quick-sharun; the same
+        # fields are inside the bundle's launcher, which is compressed and so
+        # cannot simply be grepped for.
+        run: |
+          file packaging/out/Hylki-${{ matrix.arch }}.AppImage | tee /dev/stderr
+          cat packaging/out/appinfo
+          want="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
+          grep -qx "X-AppImage-Version=$want" packaging/out/appinfo \
+            || { echo "built app is not $want" >&2; exit 1; }
+          grep -qx "X-AppImage-Arch=${{ matrix.arch }}" packaging/out/appinfo \
+            || { echo "built app is not ${{ matrix.arch }}" >&2; exit 1; }
+          test -s packaging/out/Hylki-${{ matrix.arch }}.AppImage.zsync
+          echo "built Hylki $want for ${{ matrix.arch }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hylki-appimage-${{ matrix.arch }}
+          path: |
+            packaging/out/Hylki-${{ matrix.arch }}.AppImage
+            packaging/out/Hylki-${{ matrix.arch }}.AppImage.zsync
+          retention-days: 30
+          if-no-files-found: error

@@ -169,18 +169,24 @@ pub enum Protocol {
     /// (issue #36). No servers to configure; everything runs over
     /// graph.microsoft.com with the GOA token.
     Graph,
+    /// JMAP (RFC 8620/8621) over HTTPS (issue #245): Stalwart, Fastmail. The
+    /// server is `imap_host` (a host, or a URL with its scheme) and the
+    /// session resource is found at `/.well-known/jmap`; sending goes
+    /// through the server too, so the SMTP fields are unused.
+    Jmap,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct AccountConfig {
     pub name: String,
     pub email: String,
-    /// Incoming-mail protocol (IMAP or POP3).
+    /// Incoming-mail protocol (IMAP, POP3, Graph or JMAP).
     #[serde(default)]
     pub protocol: Protocol,
-    /// Incoming server host (IMAP or POP3, per `protocol`).
+    /// Incoming server host (IMAP, POP3 or JMAP, per `protocol`; a JMAP
+    /// account may give a URL with its scheme).
     pub imap_host: String,
-    /// Incoming server port (IMAP or POP3, per `protocol`).
+    /// Incoming server port (IMAP, POP3 or JMAP, per `protocol`).
     #[serde(default = "default_imap_port")]
     pub imap_port: u16,
     /// SMTP server. If empty, derived from `imap_host` (imap.* → smtp.*).
@@ -196,6 +202,14 @@ pub struct AccountConfig {
     /// Use distinct SMTP credentials instead of the IMAP ones.
     #[serde(default)]
     pub smtp_separate: bool,
+    /// Accept a TLS certificate issued for a different host name than the
+    /// one connected to (#246): shared hosting serves mail for many domains
+    /// under one certificate in the host's own name. The chain is still
+    /// verified; only the name check is waived, for this account's IMAP,
+    /// POP3 and SMTP alike. Off unless the connection test says the names
+    /// differ.
+    #[serde(default)]
+    pub tls_accept_hostname_mismatch: bool,
     /// SMTP username (used only when `smtp_separate`).
     #[serde(default)]
     pub smtp_username: String,
@@ -912,6 +926,11 @@ struct PrivacyFile {
     /// or start every message on or off.
     #[serde(default)]
     reader_default: ReaderDefault,
+    /// The message zoom every launch starts at, in percent (Settings →
+    /// Reading). Ctrl+ and Ctrl- move away from it for the session; the
+    /// next launch is back here.
+    #[serde(default = "default_reader_zoom")]
+    reader_zoom: u32,
     /// Each conversation message lists its own attachments beneath its body
     /// (#213), so which file came with which message is never in doubt.
     #[serde(default = "default_card_attachments")]
@@ -952,6 +971,11 @@ struct PrivacyFile {
     /// on the lock screen, so turning it off is worth offering.
     #[serde(default = "default_notification_content")]
     notification_content: bool,
+    /// Which action buttons a new-mail notification carries (#244), by
+    /// name: `mark_read`, `archive`, `delete`, `reply`, `forward`, `spam`;
+    /// at most three count. Absent = mark_read, archive, delete.
+    #[serde(default = "default_notification_buttons")]
+    notification_buttons: Vec<String>,
     /// Whether the sidebar's pinned footer shows the "Attachments" row (the
     /// gallery of every account's attachments).
     #[serde(default = "default_show_attachments")]
@@ -1246,6 +1270,10 @@ fn default_notification_content() -> bool {
     true
 }
 
+fn default_notification_buttons() -> Vec<String> {
+    NotificationButtons::default().to_list()
+}
+
 fn default_notifications() -> bool {
     true
 }
@@ -1334,6 +1362,7 @@ impl Default for PrivacyFile {
             reader_mode: false,
             reader_switch: default_reader_switch(),
             reader_default: ReaderDefault::default(),
+            reader_zoom: default_reader_zoom(),
             card_attachments: default_card_attachments(),
             attachment_drawer: default_attachment_drawer(),
             confirm_thread_delete: default_confirm_thread_delete(),
@@ -1345,6 +1374,7 @@ impl Default for PrivacyFile {
             plain_font: String::new(),
             notifications: default_notifications(),
             notification_content: default_notification_content(),
+            notification_buttons: default_notification_buttons(),
             show_attachments: default_show_attachments(),
             show_contacts: default_show_contacts(),
             settings_open_accounts: false,
@@ -2304,6 +2334,20 @@ pub fn load_reader_default() -> ReaderDefault {
     load_privacy().reader_default
 }
 
+/// The zoom steps Ctrl+ and Ctrl- walk, and Settings offers, in percent.
+pub const READER_ZOOM_STEPS: [u32; 12] = [50, 60, 70, 80, 90, 100, 110, 125, 150, 175, 200, 250];
+
+fn default_reader_zoom() -> u32 {
+    100
+}
+
+/// The message zoom a launch starts at; anything off the step list reads
+/// as 100.
+pub fn load_reader_zoom() -> u32 {
+    let z = load_privacy().reader_zoom;
+    if READER_ZOOM_STEPS.contains(&z) { z } else { 100 }
+}
+
 /// What Reader View does each time a message is opened.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -2437,6 +2481,134 @@ pub fn load_notifications() -> bool {
 /// Whether new-mail notifications may name the sender and subject.
 pub fn load_notification_content() -> bool {
     load_privacy().notification_content
+}
+
+/// One of the action buttons a new-mail notification can carry (#244).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum NotificationButton {
+    MarkRead,
+    Archive,
+    Delete,
+    Reply,
+    Forward,
+    Spam,
+}
+
+impl NotificationButton {
+    /// Every button, in the order they appear on a notification.
+    pub const ALL: [NotificationButton; 6] = [
+        NotificationButton::MarkRead,
+        NotificationButton::Archive,
+        NotificationButton::Delete,
+        NotificationButton::Reply,
+        NotificationButton::Forward,
+        NotificationButton::Spam,
+    ];
+
+    /// The name the setting is stored under.
+    fn key(self) -> &'static str {
+        match self {
+            NotificationButton::MarkRead => "mark_read",
+            NotificationButton::Archive => "archive",
+            NotificationButton::Delete => "delete",
+            NotificationButton::Reply => "reply",
+            NotificationButton::Forward => "forward",
+            NotificationButton::Spam => "spam",
+        }
+    }
+}
+
+/// Which action buttons a new-mail notification carries (#244): any three
+/// of the six, chosen in Settings → General → Notifications. Three is what
+/// GNOME's notification portal shows; a fourth would be dropped anyway.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct NotificationButtons {
+    pub mark_read: bool,
+    pub archive: bool,
+    pub delete: bool,
+    pub reply: bool,
+    pub forward: bool,
+    pub spam: bool,
+}
+
+impl NotificationButtons {
+    pub const MAX: usize = 3;
+
+    const NONE: Self = Self {
+        mark_read: false,
+        archive: false,
+        delete: false,
+        reply: false,
+        forward: false,
+        spam: false,
+    };
+}
+
+impl Default for NotificationButtons {
+    fn default() -> Self {
+        Self { mark_read: true, archive: true, delete: true, ..Self::NONE }
+    }
+}
+
+impl NotificationButtons {
+    pub fn get(self, button: NotificationButton) -> bool {
+        match button {
+            NotificationButton::MarkRead => self.mark_read,
+            NotificationButton::Archive => self.archive,
+            NotificationButton::Delete => self.delete,
+            NotificationButton::Reply => self.reply,
+            NotificationButton::Forward => self.forward,
+            NotificationButton::Spam => self.spam,
+        }
+    }
+
+    pub fn set(&mut self, button: NotificationButton, on: bool) {
+        match button {
+            NotificationButton::MarkRead => self.mark_read = on,
+            NotificationButton::Archive => self.archive = on,
+            NotificationButton::Delete => self.delete = on,
+            NotificationButton::Reply => self.reply = on,
+            NotificationButton::Forward => self.forward = on,
+            NotificationButton::Spam => self.spam = on,
+        }
+    }
+
+    /// How many are on.
+    pub fn count(self) -> usize {
+        NotificationButton::ALL.into_iter().filter(|b| self.get(*b)).count()
+    }
+
+    /// Whether the set is full, so another button cannot be switched on.
+    pub fn full(self) -> bool {
+        self.count() >= Self::MAX
+    }
+
+    /// The setting as stored: the names of the buttons that are on. A name
+    /// the file has that this version does not know is dropped, and past
+    /// the third button (in [`NotificationButton::ALL`] order) so are the
+    /// rest.
+    fn from_list(names: &[String]) -> Self {
+        let mut b = Self::NONE;
+        for button in NotificationButton::ALL {
+            if !b.full() && names.iter().any(|n| n == button.key()) {
+                b.set(button, true);
+            }
+        }
+        b
+    }
+
+    fn to_list(self) -> Vec<String> {
+        NotificationButton::ALL
+            .into_iter()
+            .filter(|b| self.get(*b))
+            .map(|b| b.key().to_string())
+            .collect()
+    }
+}
+
+/// Which action buttons a new-mail notification carries (#244).
+pub fn load_notification_buttons() -> NotificationButtons {
+    NotificationButtons::from_list(&load_privacy().notification_buttons)
 }
 
 /// Whether the sidebar shows the "Attachments" row.
@@ -2717,6 +2889,7 @@ pub fn save_privacy(
     reader_mode: bool,
     reader_switch: bool,
     reader_default: ReaderDefault,
+    reader_zoom: u32,
     card_attachments: bool,
     attachment_drawer: bool,
     confirm_thread_delete: bool,
@@ -2728,6 +2901,7 @@ pub fn save_privacy(
     plain_font: String,
     notifications: bool,
     notification_content: bool,
+    notification_buttons: NotificationButtons,
     show_attachments: bool,
     show_contacts: bool,
     settings_open_accounts: bool,
@@ -2806,6 +2980,7 @@ pub fn save_privacy(
         reader_mode,
         reader_switch,
         reader_default,
+        reader_zoom,
         card_attachments,
         attachment_drawer,
         confirm_thread_delete,
@@ -2817,6 +2992,7 @@ pub fn save_privacy(
         plain_font,
         notifications,
         notification_content,
+        notification_buttons: notification_buttons.to_list(),
         show_attachments,
         show_contacts,
         settings_open_accounts,
@@ -3083,6 +3259,13 @@ struct StateFile {
     /// In-message attachment drawer: collapsed (showing only its header).
     #[serde(default)]
     drawer_collapsed: bool,
+    /// The way of asking for message summaries that worked for an account
+    /// whose server rejects the default (#226), by email: "headers",
+    /// "no-previews" or "headers-no-previews". Absent = the default. Written
+    /// only once a stepped-to mode has actually loaded a folder, so a
+    /// launch starts there instead of failing its way down the ladder.
+    #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
+    fetch_modes: std::collections::BTreeMap<String, String>,
     /// Expanded attachment-drawer height in px (the dragged split).
     #[serde(default = "default_drawer_height")]
     drawer_height: i32,
@@ -3288,6 +3471,43 @@ pub fn load_drawer_state() -> DrawerState {
 }
 
 /// Persist whether the attachment drawer is collapsed.
+/// The remembered summary-fetch mode for an account (#226), as
+/// (use ENVELOPE, preview items rejected). The default when nothing is known.
+pub fn load_fetch_mode(email: &str) -> (bool, bool) {
+    match load_state().fetch_modes.get(&email.to_ascii_lowercase()).map(String::as_str) {
+        Some("headers") => (false, false),
+        Some("no-previews") => (true, true),
+        Some("headers-no-previews") => (false, true),
+        _ => (true, false),
+    }
+}
+
+/// Remember the summary-fetch mode that worked for an account (#226); the
+/// default is remembered by forgetting.
+pub fn save_fetch_mode(email: &str, use_envelope: bool, previews_rejected: bool) {
+    let mode = match (use_envelope, previews_rejected) {
+        (true, false) => None,
+        (false, false) => Some("headers"),
+        (true, true) => Some("no-previews"),
+        (false, true) => Some("headers-no-previews"),
+    };
+    let key = email.to_ascii_lowercase();
+    let mut s = load_state();
+    let current = s.fetch_modes.get(&key).map(String::as_str);
+    if current == mode {
+        return;
+    }
+    match mode {
+        Some(m) => {
+            s.fetch_modes.insert(key, m.to_string());
+        }
+        None => {
+            s.fetch_modes.remove(&key);
+        }
+    }
+    save_state(&s);
+}
+
 pub fn save_drawer_collapsed(collapsed: bool) {
     let mut s = load_state();
     s.drawer_collapsed = collapsed;
@@ -3582,6 +3802,39 @@ mod tests {
     }
 
     #[test]
+    fn notification_buttons_default_to_all_and_round_trip() {
+        // An older privacy.toml with no key carries every button.
+        let p: PrivacyFile = toml::from_str("").unwrap();
+        assert_eq!(super::NotificationButtons::from_list(&p.notification_buttons), super::NotificationButtons::default());
+        // An empty list is no buttons at all, not the default.
+        let p: PrivacyFile = toml::from_str("notification_buttons = []").unwrap();
+        let none = super::NotificationButtons::NONE;
+        assert_eq!(super::NotificationButtons::from_list(&p.notification_buttons), none);
+        let p: PrivacyFile =
+            toml::from_str(r#"notification_buttons = ["delete", "bogus", "mark_read"]"#).unwrap();
+        let b = super::NotificationButtons::from_list(&p.notification_buttons);
+        assert_eq!(b, super::NotificationButtons { mark_read: true, delete: true, ..none });
+        assert_eq!(b.to_list(), vec!["mark_read".to_string(), "delete".to_string()]);
+    }
+
+    #[test]
+    fn notification_buttons_stop_at_three() {
+        // A hand-edited file naming more than three keeps the first three
+        // in button order, whatever order the file lists them in.
+        let p: PrivacyFile = toml::from_str(
+            r#"notification_buttons = ["spam", "forward", "reply", "delete", "archive"]"#,
+        )
+        .unwrap();
+        let b = super::NotificationButtons::from_list(&p.notification_buttons);
+        assert_eq!(
+            b,
+            super::NotificationButtons { archive: true, delete: true, reply: true, ..super::NotificationButtons::NONE }
+        );
+        assert!(b.full());
+        assert_eq!(b.count(), 3);
+    }
+
+    #[test]
     fn notifications_can_be_disabled() {
         let p: PrivacyFile = toml::from_str("notifications = false").unwrap();
         assert!(!p.notifications);
@@ -3823,6 +4076,7 @@ dest_path = "Lists"
             username: "a@b.c".into(),
             password: "SECRET".into(),
             smtp_separate: false,
+            tls_accept_hostname_mismatch: false,
             smtp_username: String::new(),
             smtp_password: String::new(),
             color: None,

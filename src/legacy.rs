@@ -232,7 +232,10 @@ fn tidy_launchers() {
             continue;
         }
         match std::fs::remove_file(&launcher) {
-            Ok(()) => tracing::info!("removed {}", launcher.display()),
+            Ok(()) => {
+                tracing::info!("removed {}", launcher.display());
+                crate::app_icon::sync_mime_cache(&share.join("applications"));
+            }
             Err(e) => tracing::warn!("could not remove {}: {e}", launcher.display()),
         }
         let prefix = format!("{}-", pred.app_id);

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Hylki
 GenericName=Email Client
-Comment=A clean, fast GNOME-native email client
+Comment=A fast, GNOME-native email client, built with Rust and libadwaita. Open source and private by default.
 # %U, not %u: a file manager hands every selected file to one launch, so
 # they all land in the same message ("Send with Hylki" from GNOME Files).
 Exec=hylki %U

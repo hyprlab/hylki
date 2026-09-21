@@ -57,6 +57,8 @@ impl FactoryComponent for NotificationCard {
             gtk::Label {
                 set_label: &self.note.text,
                 set_wrap: true,
+                // Copyable (#246): an error is something to paste into a report.
+                set_selectable: true,
                 set_xalign: 0.0,
                 set_hexpand: true,
                 set_halign: gtk::Align::Start,

@@ -24,6 +24,7 @@ macro_rules! brands {
 brands!(
     "nextcloud", "owncloud", "opencloud", "onedrive", "dropbox", "seafile",
     "gmail", "outlook", "icloud", "yahoo", "proton", "fastmail", "aol", "zoho", "gmx", "yandex", "mailcom",
+    "stalwart",
     "mail", "mail-oauth",
 );
 

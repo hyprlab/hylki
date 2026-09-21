@@ -11,23 +11,40 @@
   <project_license>AGPL-3.0-or-later</project_license>
 
   <name>Hylki</name>
-  <summary>Private, GNOME-native email client</summary>
+  <summary>A fast, GNOME-native email client, built with Rust and libadwaita. Open source and private by default.</summary>
 
   <description>
     <p>
-      Hylki is a desktop email client for Wayland that feels at home in GNOME. It
-      talks IMAP and SMTP directly, keeps your mail and credentials on your
-      machine, and blocks trackers by default — no telemetry, no analytics.
+      Hylki is a desktop email client for GNOME on Wayland, written in Rust with
+      libadwaita. Your mail and credentials stay on your machine, remote content
+      is blocked until you allow it, and there is no telemetry. It works with
+      IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to
+      Proton Bridge to a Stalwart of your own.
     </p>
-    <p>Features:</p>
+    <p>Accounts and mail:</p>
     <ul>
-      <li>Multiple IMAP and POP3 accounts, with a unified Inboxes view</li>
-      <li>Google, Microsoft and custom OAuth 2.0 sign-in, plus GNOME Online Accounts import</li>
-      <li>Whole-mailbox sync and search with infinite scroll</li>
-      <li>Deletions and moves made on other devices sync back automatically</li>
-      <li>Conversation threading, compose, reply, forward, and editable drafts</li>
-      <li>Remote content blocked by default; per-message light or dark reading</li>
-      <li>Passwords and OAuth tokens kept in the system keyring</li>
+      <li>Multiple accounts with a unified Inboxes view; Google, Microsoft and custom OAuth sign-in, or an account imported from GNOME Online Accounts</li>
+      <li>Whole-mailbox sync and search, conversation threading, and changes made on other devices synced back</li>
+      <li>Folder management, filters, tags, unified and filtered folders, and Trash and Junk emptied by hand or on a schedule</li>
+      <li>An attachment gallery, an Outbox for sends that fail, and Send Later</li>
+    </ul>
+    <p>Writing:</p>
+    <ul>
+      <li>Rich text, Markdown, HTML or plain text, with HTML signatures, inline images, spell check and undo</li>
+      <li>Drafts, quote folding, split replies, and forwarding that keeps the attachments</li>
+      <li>Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a Send with Hylki entry in GNOME Files</li>
+    </ul>
+    <p>Reading:</p>
+    <ul>
+      <li>Reader View, your own font and colours, and per-message light or dark rendering</li>
+      <li>OpenPGP signing, encryption and reading; DKIM, SPF and DMARC checked on arrival</li>
+      <li>Meeting invitations answered in place, and one-click unsubscribe from list mail</li>
+    </ul>
+    <p>The app:</p>
+    <ul>
+      <li>Adaptive three-pane layout, five appearance themes, Focus Mode, a customizable toolbar and swipe actions</li>
+      <li>Gmail-style single-key shortcuts, notifications with actions, an optional tray icon and background running</li>
+      <li>GNOME Contacts integration, your choice of language and clock, and passwords kept in the system keyring</li>
     </ul>
   </description>
 
@@ -57,6 +74,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.39.0" date="2026-09-21">
+      <description>
+        <p>JMAP accounts with Stalwart in the provider list, a zoom for the reading pane, a per-account waiver for a certificate in another name, notification buttons chosen in Settings, and a Mailfence mailbox that loads without blank messages.</p>
+      </description>
+    </release>
     <release version="1.38.0" date="2026-09-21">
       <description>
         <p>Ctrl+Enter sends, the signature sits above the quoted message, a forward carries the original's attachments, folders can be hidden from the sidebar, and a conversation opened from Inboxes shows every reply again.</p>

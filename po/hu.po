@@ -846,6 +846,14 @@ msgstr ""
 msgid "Focus Mode on or off"
 msgstr ""
 
+#, fuzzy
+msgid "Message zoom in or out"
+msgstr "Üzenet betűtípusa"
+
+#, fuzzy
+msgid "Message zoom back to the default"
+msgstr "Üzenet betűtípusa"
+
 msgid "Console mode (when enabled in Settings)"
 msgstr "Konzolmód (ha engedélyezve van a Beállításokban)"
 
@@ -1096,6 +1104,11 @@ msgstr "Bejelentkezés a GNOME Online-fiókokon keresztül."
 msgid "Requires Proton Mail Bridge running locally."
 msgstr "A Proton Mail Bridge helyi futtatása szükséges."
 
+msgid ""
+"Enter your Stalwart server's address. Mail is read and sent over JMAP; no "
+"SMTP settings are needed."
+msgstr ""
+
 msgid "Enable POP/IMAP access in GMX settings first."
 msgstr "Először engedélyezze a POP/IMAP-hozzáférést a GMX beállításaiban."
 
@@ -1316,6 +1329,15 @@ msgstr "SMTP-felhasználónév"
 
 msgid "SMTP Password"
 msgstr "SMTP-jelszó"
+
+msgid "Accept a certificate for another name"
+msgstr ""
+
+msgid ""
+"The server's certificate must still be valid and signed, but may be issued "
+"for a different host name than the one entered, as on shared hosting. Turn "
+"on only when the connection test says the names differ."
+msgstr ""
 
 msgid "Test Connection"
 msgstr "Kapcsolat tesztelése"
@@ -1549,6 +1571,11 @@ msgstr "OK"
 msgid "Enter a client ID and sign in before saving"
 msgstr "Mentés előtt adja meg az ügyfélazonosítót és jelentkezzen be"
 
+msgid ""
+"The certificate is for another name. If this server is the right one, turn "
+"on “Accept a certificate for another name” above and test again."
+msgstr ""
+
 msgid "✓ Signed in — save the account to finish"
 msgstr "✓ Bejelentkezve — a befejezéshez mentse a fiókot"
 
@@ -1636,6 +1663,15 @@ msgid "After {n} day"
 msgid_plural "After {n} days"
 msgstr[0] "{n} nap múlva"
 msgstr[1] "{n} nap múlva"
+
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
+msgid "Server (host name or URL)"
+msgstr ""
+
+#, fuzzy
+msgid "Port (default 443)"
+msgstr "SMTP-port (alapértelmezett: 587)"
 
 msgid "Google (Gmail)"
 msgstr ""
@@ -2883,6 +2919,11 @@ msgid "Close find"
 msgstr "Keresés bezárása"
 
 msgid ""
+"Message zoom. Ctrl+ and Ctrl- change it; a click here, or Ctrl+0, puts it "
+"back to the default from Settings."
+msgstr ""
+
+msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colours and fonts."
 msgstr ""
@@ -3416,6 +3457,29 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr "Feladó és tárgy megjelenítése"
 
+#, fuzzy
+msgid "Notification Buttons"
+msgstr "Értesítések"
+
+msgid "Up to three buttons on a notification about one message."
+msgstr ""
+
+#, fuzzy
+msgid "Moves the message to Trash."
+msgstr "Minden melléklet mentése egy mappába"
+
+#, fuzzy
+msgid "Opens the message with a reply started."
+msgstr "Olvasott üzenet nyomtatása"
+
+#, fuzzy
+msgid "Opens the message with a forward started."
+msgstr "Minden melléklet mentése egy mappába"
+
+#, fuzzy
+msgid "Moves the message to Junk."
+msgstr "Minden melléklet mentése egy mappába"
+
 msgid "Style"
 msgstr "Stílus"
 
@@ -3885,6 +3949,15 @@ msgstr "Üzenet megjelenése"
 
 msgid "Theme for email content only, not the app itself."
 msgstr "Csak az e-mail-tartalom témája, nem magának az alkalmazásnak a témája."
+
+#, fuzzy
+msgid "Default zoom"
+msgstr "Alapértelmezett"
+
+msgid ""
+"How large every message is shown. Ctrl+ and Ctrl- change it until Hylki is "
+"next started; Ctrl+0 comes back to this."
+msgstr ""
 
 msgid "Use my own font"
 msgstr "Saját betűtípus használata"
@@ -4635,6 +4708,8 @@ msgstr "Kiszolgáló adatai"
 msgid "Filled in for known providers"
 msgstr "Ismert szolgáltatókhoz kitöltve"
 
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
 msgid "IMAP server"
 msgstr "IMAP-kiszolgáló"
 
@@ -4732,6 +4807,9 @@ msgstr "Olvasás megkezdése"
 msgid "Continue"
 msgstr "Folytatás"
 
+msgid "Port"
+msgstr ""
+
 msgid "Enter your email address and password first."
 msgstr "Először adja meg az e-mail-címét és a jelszavát."
 
@@ -4817,29 +4895,101 @@ msgstr "A visszapattanó levelek ide mennének: {rp}"
 msgid "The sender's name says \"{claimed}\" but the address is {from}"
 msgstr "A feladó neve „{claimed}”, de a cím: {from}"
 
-msgid "the server's reply could not be read (it began: {reply})"
-msgstr ""
+#, fuzzy
+msgid "Could not reach the JMAP server: {e}"
+msgstr "A mappa nem hozható létre: {e}"
 
-msgid "runtime error: {e}"
-msgstr "futásidejű hiba: {e}"
+msgid "Could not list folders: {e}"
+msgstr "A mappák nem listázhatók: {e}"
 
-msgid "Syncing…"
-msgstr "Szinkronizálás…"
+msgid "Sending…"
+msgstr "Küldés…"
 
-msgid "Could not load {path}: {e}"
-msgstr "Nem tölthető be: {path}: {e}"
+msgid "Still could not send “{subject}”: {e}"
+msgstr "A(z) „{subject}” továbbra sem küldhető el: {e}"
 
 msgid "Could not load message: {e}"
 msgstr "Az üzenet nem tölthető be: {e}"
 
-msgid "Could not load conversation: {e}"
-msgstr "A beszélgetés nem tölthető be: {e}"
+msgid "Syncing…"
+msgstr "Szinkronizálás…"
+
+msgid "Could not fetch mail: {e}"
+msgstr "A levelek nem kérhetők le: {e}"
 
 msgid "Could not load source: {e}"
 msgstr "A forrás nem tölthető be: {e}"
 
 msgid "Could not load attachments: {e}"
 msgstr "A mellékletek nem tölthetők be: {e}"
+
+msgid "Could not move message: {e}"
+msgstr "Az üzenet nem helyezhető át: {e}"
+
+msgid "Could not mark as spam: {e}"
+msgstr "Nem jelölhető levélszemétként: {e}"
+
+msgid "Could not mark as not spam: {e}"
+msgstr ""
+
+msgid "Could not mark {len} messages as not spam: {e}"
+msgstr ""
+
+msgid "Could not move messages: {e}"
+msgstr "Az üzenetek nem helyezhetők át: {e}"
+
+msgid "Could not empty the folder: {e}"
+msgstr "A mappa nem üríthető ki: {e}"
+
+msgid "Undo failed: {e}"
+msgstr "A visszavonás sikertelen: {e}"
+
+msgid "Could not create folder: {e}"
+msgstr "A mappa nem hozható létre: {e}"
+
+msgid "Could not rename folder: unknown folder"
+msgstr "A mappa nem nevezhető át: ismeretlen mappa"
+
+msgid "Could not rename folder: {e}"
+msgstr "A mappa nem nevezhető át: {e}"
+
+msgid "Could not delete folder: unknown folder"
+msgstr "A mappa nem törölhető: ismeretlen mappa"
+
+msgid "Could not delete folder: {e}"
+msgstr "A mappa nem törölhető: {e}"
+
+msgid "Saving draft…"
+msgstr "Piszkozat mentése…"
+
+msgid "Could not save draft: {e}"
+msgstr "A piszkozat nem menthető: {e}"
+
+#, fuzzy
+msgid "Could not save draft: unknown folder"
+msgstr "A mappa nem nevezhető át: ismeretlen mappa"
+
+msgid ""
+"Send failed: {e}. The message is in the Outbox and will be sent when the "
+"connection is back."
+msgstr ""
+"A küldés sikertelen: {e}. Az üzenet a Kimenőben van, és a kapcsolat "
+"helyreállásakor elküldésre kerül."
+
+msgid "Send failed: {e}"
+msgstr "A küldés sikertelen: {e}"
+
+msgid "the server's reply could not be read (it began: {reply})"
+msgstr ""
+
+msgid "runtime error: {e}"
+msgstr "futásidejű hiba: {e}"
+
+msgid "Could not load {path}: {e}"
+msgstr "Nem tölthető be: {path}: {e}"
+
+msgid "Could not load conversation: {e}"
+msgstr "A beszélgetés nem tölthető be: {e}"
 
 msgid "Could not update message: {e}"
 msgstr "Az üzenet nem frissíthető: {e}"
@@ -4859,66 +5009,20 @@ msgstr "Az üzenet nem címkézhető: {e}"
 msgid "Could not mark folder read: {e}"
 msgstr "A mappa nem jelölhető olvasottként: {e}"
 
-msgid "Could not mark as spam: {e}"
-msgstr "Nem jelölhető levélszemétként: {e}"
-
-msgid "Could not mark as not spam: {e}"
-msgstr ""
-
-msgid "Could not mark {len} messages as not spam: {e}"
-msgstr ""
-
-msgid "Could not move message: {e}"
-msgstr "Az üzenet nem helyezhető át: {e}"
-
 msgid "Could not move {len} messages: {e}"
 msgstr "{len} üzenet nem helyezhető át: {e}"
-
-msgid "Undo failed: {e}"
-msgstr "A visszavonás sikertelen: {e}"
 
 msgid "Could not delete permanently: {e}"
 msgstr "Nem törölhető véglegesen: {e}"
 
-msgid "Could not empty the folder: {e}"
-msgstr "A mappa nem üríthető ki: {e}"
-
-msgid "Could not create folder: {e}"
-msgstr "A mappa nem hozható létre: {e}"
-
 msgid "Could not move folder: {e}"
 msgstr "A mappa nem helyezhető át: {e}"
-
-msgid "Could not delete folder: {e}"
-msgstr "A mappa nem törölhető: {e}"
-
-msgid "Sending…"
-msgstr "Küldés…"
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Az üzenet elküldve, de az Elküldött mappába mentés sikertelen: {e}"
 
-msgid ""
-"Send failed: {e}. The message is in the Outbox and will be sent when the "
-"connection is back."
-msgstr ""
-"A küldés sikertelen: {e}. Az üzenet a Kimenőben van, és a kapcsolat "
-"helyreállásakor elküldésre kerül."
-
-msgid "Send failed: {e}"
-msgstr "A küldés sikertelen: {e}"
-
-msgid "Saving draft…"
-msgstr "Piszkozat mentése…"
-
-msgid "Could not save draft: {e}"
-msgstr "A piszkozat nem menthető: {e}"
-
 msgid "Connecting to {host}…"
 msgstr "Kapcsolódás ehhez: {host}…"
-
-msgid "Could not list folders: {e}"
-msgstr "A mappák nem listázhatók: {e}"
 
 msgid "Connection failed: {e}"
 msgstr "A kapcsolat sikertelen: {e}"
@@ -4934,9 +5038,6 @@ msgstr "A(z) „{subject}” küldése ekkor történik: {when}"
 msgid "Could not schedule the message: there is no local store to keep it in."
 msgstr "Az üzenet nem ütemezhető: nincs helyi tároló a megőrzéséhez."
 
-msgid "Still could not send “{subject}”: {e}"
-msgstr "A(z) „{subject}” továbbra sem küldhető el: {e}"
-
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
@@ -4945,9 +5046,6 @@ msgstr ""
 
 msgid "no OpenPGP key for {addr}"
 msgstr "nincs OpenPGP-kulcs ehhez: {addr}"
-
-msgid "Could not fetch mail: {e}"
-msgstr "A levelek nem kérhetők le: {e}"
 
 msgid "Could not delete message: {e}"
 msgstr "Az üzenet nem törölhető: {e}"
@@ -4958,78 +5056,160 @@ msgstr "A POP3-fiókok nem támogatják a mappákat"
 msgid "Inbox"
 msgstr "Beérkezett üzenetek"
 
-msgid "Could not move messages: {e}"
-msgstr "Az üzenetek nem helyezhetők át: {e}"
-
-msgid "Could not rename folder: unknown folder"
-msgstr "A mappa nem nevezhető át: ismeretlen mappa"
-
-msgid "Could not rename folder: {e}"
-msgstr "A mappa nem nevezhető át: {e}"
-
-msgid "Could not delete folder: unknown folder"
-msgstr "A mappa nem törölhető: ismeretlen mappa"
-
 msgid "Email Client"
 msgstr "Levelezőkliens"
 
-msgid "A clean, fast GNOME-native email client"
-msgstr "Tiszta, gyors, GNOME-ba illeszkedő levelezőkliens"
+msgid ""
+"A fast, GNOME-native email client, built with Rust and libadwaita. Open "
+"source and private by default."
+msgstr ""
 
 msgid "Email;Mail;IMAP;"
 msgstr "E-mail;Levél;IMAP;"
 
-msgid "Private, GNOME-native email client"
-msgstr "Privát, GNOME-ba illeszkedő levelezőkliens"
-
 msgid ""
-"Hylki is a desktop email client for Wayland that feels at home in GNOME. It "
-"talks IMAP and SMTP directly, keeps your mail and credentials on your "
-"machine, and blocks trackers by default — no telemetry, no analytics."
-msgstr ""
-"A Hylki egy Waylandhez készült asztali levelezőkliens, amely otthonosan érzi "
-"magát a GNOME-ban. Közvetlenül IMAP-pal és SMTP-vel kommunikál, a leveleket "
-"és hitelesítő adatokat a gépén tartja, és alapértelmezés szerint blokkolja a "
-"követőket — nincs telemetria, nincs elemzés."
-
-msgid "Features:"
-msgstr "Funkciók:"
-
-msgid "Multiple IMAP and POP3 accounts, with a unified Inboxes view"
+"Hylki is a desktop email client for GNOME on Wayland, written in Rust with "
+"libadwaita. Your mail and credentials stay on your machine, remote content "
+"is blocked until you allow it, and there is no telemetry. It works with "
+"IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to "
+"Proton Bridge to a Stalwart of your own."
 msgstr ""
 
+#, fuzzy
+msgid "Accounts and mail:"
+msgstr "Olvasatlan levelek számlálása"
+
+#, fuzzy
 msgid ""
-"Google, Microsoft and custom OAuth 2.0 sign-in, plus GNOME Online Accounts "
-"import"
+"Multiple accounts with a unified Inboxes view; Google, Microsoft and custom "
+"OAuth sign-in, or an account imported from GNOME Online Accounts"
 msgstr ""
 "Google-, Microsoft- és egyéni OAuth 2.0-bejelentkezés, valamint GNOME Online-"
 "fiókok importálása"
 
-msgid "Whole-mailbox sync and search with infinite scroll"
-msgstr "Teljes postafiók-szinkronizálás és keresés végtelen görgetéssel"
-
-msgid "Deletions and moves made on other devices sync back automatically"
+msgid ""
+"Whole-mailbox sync and search, conversation threading, and changes made on "
+"other devices synced back"
 msgstr ""
-"A más eszközökön végzett törlések és áthelyezések automatikusan "
-"visszaszinkronizálódnak"
 
-msgid "Conversation threading, compose, reply, forward, and editable drafts"
+msgid ""
+"Folder management, filters, tags, unified and filtered folders, and Trash "
+"and Junk emptied by hand or on a schedule"
 msgstr ""
-"Beszélgetésszálak, levélírás, válasz, továbbítás és szerkeszthető piszkozatok"
 
-msgid "Remote content blocked by default; per-message light or dark reading"
+msgid "An attachment gallery, an Outbox for sends that fail, and Send Later"
+msgstr ""
+
+msgid "Writing:"
+msgstr ""
+
+msgid ""
+"Rich text, Markdown, HTML or plain text, with HTML signatures, inline "
+"images, spell check and undo"
+msgstr ""
+
+msgid ""
+"Drafts, quote folding, split replies, and forwarding that keeps the "
+"attachments"
+msgstr ""
+
+msgid ""
+"Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a "
+"Send with Hylki entry in GNOME Files"
+msgstr ""
+
+#, fuzzy
+msgid "Reading:"
+msgstr "Olvasás"
+
+#, fuzzy
+msgid ""
+"Reader View, your own font and colours, and per-message light or dark "
+"rendering"
 msgstr ""
 "A távoli tartalom alapértelmezés szerint blokkolva; üzenetenként világos "
 "vagy sötét olvasás"
 
-msgid "Passwords and OAuth tokens kept in the system keyring"
-msgstr "A jelszavak és OAuth-tokenek a rendszer kulcstartóján tárolódnak"
+msgid ""
+"OpenPGP signing, encryption and reading; DKIM, SPF and DMARC checked on "
+"arrival"
+msgstr ""
+
+msgid ""
+"Meeting invitations answered in place, and one-click unsubscribe from list "
+"mail"
+msgstr ""
+
+msgid "The app:"
+msgstr ""
+
+msgid ""
+"Adaptive three-pane layout, five appearance themes, Focus Mode, a "
+"customizable toolbar and swipe actions"
+msgstr ""
+
+msgid ""
+"Gmail-style single-key shortcuts, notifications with actions, an optional "
+"tray icon and background running"
+msgstr ""
+
+msgid ""
+"GNOME Contacts integration, your choice of language and clock, and passwords "
+"kept in the system keyring"
+msgstr ""
 
 msgid "The unified inbox in light mode"
 msgstr "Az egységes beérkezett nézet világos módban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "A clean, fast GNOME-native email client"
+#~ msgstr "Tiszta, gyors, GNOME-ba illeszkedő levelezőkliens"
+
+#~ msgid "Private, GNOME-native email client"
+#~ msgstr "Privát, GNOME-ba illeszkedő levelezőkliens"
+
+#~ msgid ""
+#~ "Hylki is a desktop email client for Wayland that feels at home in GNOME. "
+#~ "It talks IMAP and SMTP directly, keeps your mail and credentials on your "
+#~ "machine, and blocks trackers by default — no telemetry, no analytics."
+#~ msgstr ""
+#~ "A Hylki egy Waylandhez készült asztali levelezőkliens, amely otthonosan "
+#~ "érzi magát a GNOME-ban. Közvetlenül IMAP-pal és SMTP-vel kommunikál, a "
+#~ "leveleket és hitelesítő adatokat a gépén tartja, és alapértelmezés "
+#~ "szerint blokkolja a követőket — nincs telemetria, nincs elemzés."
+
+#~ msgid "Features:"
+#~ msgstr "Funkciók:"
+
+#~ msgid "Whole-mailbox sync and search with infinite scroll"
+#~ msgstr "Teljes postafiók-szinkronizálás és keresés végtelen görgetéssel"
+
+#~ msgid "Deletions and moves made on other devices sync back automatically"
+#~ msgstr ""
+#~ "A más eszközökön végzett törlések és áthelyezések automatikusan "
+#~ "visszaszinkronizálódnak"
+
+#~ msgid "Conversation threading, compose, reply, forward, and editable drafts"
+#~ msgstr ""
+#~ "Beszélgetésszálak, levélírás, válasz, továbbítás és szerkeszthető "
+#~ "piszkozatok"
+
+#~ msgid "Passwords and OAuth tokens kept in the system keyring"
+#~ msgstr "A jelszavak és OAuth-tokenek a rendszer kulcstartóján tárolódnak"
+
+#, fuzzy
+#~ msgid "Mark as Read button"
+#~ msgstr "Megjelölés olvasottként"
+
+#, fuzzy
+#~ msgid "Archive button"
+#~ msgstr "Archiválás"
+
+#, fuzzy
+#~ msgid "Delete button"
+#~ msgstr "Törli a névjegyet?"
 
 #~ msgid "Label (defaults to email address)"
 #~ msgstr "Címke (alapértelmezés szerint az e-mail-cím)"

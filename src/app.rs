@@ -672,6 +672,8 @@ pub struct AppModel {
     notifications_enabled: bool,
     /// Whether new-mail notifications may name the sender and subject.
     notification_content: bool,
+    /// Which action buttons a new-mail notification carries (#244).
+    notification_buttons: config::NotificationButtons,
     /// Whether the sidebar's footer shows the "Attachments" row.
     show_attachments: bool,
     /// Whether the sidebar's footer shows the "Contacts" shortcut row.
@@ -821,6 +823,11 @@ pub struct AppModel {
     /// Reader View: every message in the reader shown as its content alone,
     /// in the reader's own sheet (see `crate::reader`). The toggle sits in
     /// the reader's subject block; the choice is remembered across runs.
+    /// The message zoom this session is at (Ctrl+ / Ctrl-). Starts at
+    /// `zoom_default` and is not saved: a launch begins at the setting.
+    zoom: u32,
+    /// Settings → Reading: the zoom every launch starts at, in percent.
+    zoom_default: u32,
     reader_mode: bool,
     /// The Reader View switch is shown in the reader header.
     reader_switch: bool,
@@ -986,6 +993,9 @@ pub struct AppModel {
     /// A forward (#240) waiting on the body, or the attachments, it is to
     /// carry, and whether it opens inline or in a window.
     pending_forward: Option<(Message, bool)>,
+    /// A reply started from a notification's button (#244), waiting for
+    /// the body it quotes.
+    pending_notified_reply: Option<Message>,
     /// Settings → System → Links: which browser a link in a message opens in
     /// (#232). Empty = the desktop's default, "ask" = its app chooser,
     /// otherwise a desktop entry id.
@@ -1105,6 +1115,10 @@ pub enum AppMsg {
     /// archive it, without raising the window.
     NotificationMarkRead { account_id: u32, folder_id: u32, message_id: u32 },
     NotificationArchive { account_id: u32, folder_id: u32, message_id: u32 },
+    NotificationDelete { account_id: u32, folder_id: u32, message_id: u32 },
+    NotificationReply { account_id: u32, folder_id: u32, message_id: u32 },
+    NotificationForward { account_id: u32, folder_id: u32, message_id: u32 },
+    NotificationSpam { account_id: u32, folder_id: u32, message_id: u32 },
     /// The search field became active/inactive — supply or drop the cross-folder
     /// search pool (every folder's messages, so search can span the mailbox).
     SearchActive(bool),
@@ -1262,6 +1276,11 @@ pub enum AppMsg {
     SetSingleMessageCard(bool),
     /// Reader View on or off (the header's switch).
     SetReaderMode(bool),
+    /// Message zoom (Ctrl+ / Ctrl- / Ctrl+0): a step up, a step down, or
+    /// back to the default, for this session.
+    ZoomMessage(i8),
+    /// Settings → Reading: the zoom every launch starts at.
+    SetZoomDefault(u32),
     /// Settings: show the Reader View switch in the reader header.
     SetReaderSwitchShown(bool),
     /// Settings: what Reader View does when a message is opened.
@@ -1316,6 +1335,7 @@ pub enum AppMsg {
     SetPush(bool),
     SetNotifications(bool),
     SetNotificationContent(bool),
+    SetNotificationButtons(config::NotificationButtons),
     SetAttachmentsRow(bool),
     SetContactsRow(bool),
     SetShowUnified(bool),
@@ -2697,6 +2717,7 @@ impl SimpleComponent for AppModel {
                     MessageViewOutput::ReloadBody(m) => AppMsg::ReloadBody(m),
                     MessageViewOutput::Notice(text) => AppMsg::Notice(text),
                     MessageViewOutput::ReaderMode(on) => AppMsg::SetReaderMode(on),
+                    MessageViewOutput::ZoomReset => AppMsg::ZoomMessage(0),
                     MessageViewOutput::Unsubscribe { message, info } => {
                         AppMsg::Unsubscribe { message, info }
                     }
@@ -2963,6 +2984,7 @@ impl SimpleComponent for AppModel {
             pending_draft_pick: None,
             pending_edit_as_new: None,
             pending_forward: None,
+            pending_notified_reply: None,
             files_prefs: config::load_files_prefs(),
             link_browser: {
                 // The launcher reads its choice from here, not from disk, so
@@ -3052,6 +3074,7 @@ impl SimpleComponent for AppModel {
             push: config::load_push(),
             notifications_enabled: config::load_notifications(),
             notification_content: config::load_notification_content(),
+            notification_buttons: config::load_notification_buttons(),
             show_attachments,
             show_contacts,
             settings_open_accounts: config::load_settings_open_accounts(),
@@ -3134,6 +3157,8 @@ impl SimpleComponent for AppModel {
             body_hits: Default::default(),
             single_message_card: config::load_single_message_card(),
             reader_mode: config::load_reader_mode(),
+            zoom: config::load_reader_zoom(),
+            zoom_default: config::load_reader_zoom(),
             reader_switch: config::load_reader_switch(),
             reader_default: config::load_reader_default(),
             card_attachments: config::load_card_attachments(),
@@ -3305,6 +3330,8 @@ impl SimpleComponent for AppModel {
             .message_view
             .emit(MessageViewInput::SetSingleMessageCard(model.single_message_card));
         model.message_view.emit(MessageViewInput::SetReaderMode(model.effective_reader_mode()));
+        model.message_view.emit(MessageViewInput::SetZoomDefault(model.zoom_default));
+        model.message_view.emit(MessageViewInput::SetZoom(model.zoom));
         model.message_view.emit(MessageViewInput::SetReaderSwitchShown(model.reader_switch));
         model.message_view.emit(MessageViewInput::SetReaderDefault(model.effective_reader_default()));
         model
@@ -3619,6 +3646,12 @@ impl SimpleComponent for AppModel {
                 (crate::notify::ARCHIVE_ACTION, &|account_id, folder_id, message_id| {
                     AppMsg::NotificationArchive { account_id, folder_id, message_id }
                 }),
+                (crate::notify::DELETE_ACTION, &|account_id, folder_id, message_id| {
+                    AppMsg::NotificationDelete { account_id, folder_id, message_id }
+                }),
+                (crate::notify::SPAM_ACTION, &|account_id, folder_id, message_id| {
+                    AppMsg::NotificationSpam { account_id, folder_id, message_id }
+                }),
             ] {
                 let act = gtk::gio::SimpleAction::new(name, Some(ty));
                 let asender = sender.clone();
@@ -3626,6 +3659,41 @@ impl SimpleComponent for AppModel {
                     if let Some((account_id, folder_id, message_id)) =
                         param.and_then(|v| v.get::<(u32, u32, u32)>())
                     {
+                        asender.input(mk(account_id, folder_id, message_id));
+                    }
+                });
+                app.add_action(&act);
+            }
+            // Reply and Forward (#244) need the window: the message opens
+            // as a click on the notification would open it, and the
+            // composer follows once its body is in.
+            for (name, mk) in [
+                (
+                    crate::notify::REPLY_ACTION,
+                    (&|account_id, folder_id, message_id| AppMsg::NotificationReply {
+                        account_id,
+                        folder_id,
+                        message_id,
+                    }) as &dyn Fn(u32, u32, u32) -> AppMsg,
+                ),
+                (crate::notify::FORWARD_ACTION, &|account_id, folder_id, message_id| {
+                    AppMsg::NotificationForward { account_id, folder_id, message_id }
+                }),
+            ] {
+                let act = gtk::gio::SimpleAction::new(name, Some(ty));
+                let win = model.window.clone();
+                let asender = sender.clone();
+                act.connect_activate(move |_, param| {
+                    win.set_visible(true);
+                    win.present();
+                    if let Some((account_id, folder_id, message_id)) =
+                        param.and_then(|v| v.get::<(u32, u32, u32)>())
+                    {
+                        asender.input(AppMsg::OpenMessageFromNotification {
+                            account_id,
+                            folder_id,
+                            message_id,
+                        });
                         asender.input(mk(account_id, folder_id, message_id));
                     }
                 });
@@ -3791,6 +3859,20 @@ impl SimpleComponent for AppModel {
                 "app.focus-mode",
                 &["<Ctrl><Shift>f"],
             );
+            // Ctrl+ / Ctrl- / Ctrl+0: message zoom, the bodies alone. The
+            // = key stands in for + on layouts where + needs Shift, and the
+            // keypad's keys count too, as in every browser.
+            for (name, step, keys) in [
+                ("zoom-in", 1i8, &["<Ctrl>plus", "<Ctrl>equal", "<Ctrl>KP_Add"][..]),
+                ("zoom-out", -1, &["<Ctrl>minus", "<Ctrl>KP_Subtract"][..]),
+                ("zoom-reset", 0, &["<Ctrl>0", "<Ctrl>KP_0"][..]),
+            ] {
+                let action = gtk::gio::SimpleAction::new(name, None);
+                let s = sender.clone();
+                action.connect_activate(move |_, _| s.input(AppMsg::ZoomMessage(step)));
+                app.add_action(&action);
+                gtk::prelude::GtkApplicationExt::set_accels_for_action(&app, &format!("app.{name}"), keys);
+            }
             // Ctrl+W closes the window only (issue #64): with "run in the
             // background" on, mail keeps arriving — unlike Ctrl+Q, which
             // quits outright. GTK's built-in window.close action does
@@ -4088,6 +4170,16 @@ impl SimpleComponent for AppModel {
         // or the head of its conversation, real accounts included: a way to
         // open a conversation the reader assembles from the cache without a
         // pointer, so its log can be read (#236).
+        // HYLKI_SHOWCASE_ZOOM=N presses Ctrl+ N times (Ctrl- for a negative
+        // N) at 8 s, so the live zoom path can be captured.
+        if let Some(n) = std::env::var("HYLKI_SHOWCASE_ZOOM").ok().and_then(|v| v.parse::<i8>().ok()) {
+            let s = sender.clone();
+            gtk::glib::timeout_add_seconds_local_once(8, move || {
+                for _ in 0..n.unsigned_abs() {
+                    s.input(AppMsg::ZoomMessage(n.signum()));
+                }
+            });
+        }
         if let Some((a, id)) = std::env::var("HYLKI_SHOWCASE_SELECT").ok().and_then(|v| {
             let (a, id) = v.split_once(':')?;
             Some((a.parse::<u32>().ok()?, id.parse::<u32>().ok()?))
@@ -5177,6 +5269,51 @@ impl SimpleComponent for AppModel {
                 {
                     self.move_to(m, FolderKind::Archive);
                     crate::notify::withdraw_mail(account_id);
+                }
+            }
+
+            AppMsg::NotificationDelete { account_id, folder_id, message_id } => {
+                if let Some(m) = notified_message(account_id, folder_id, message_id, &self.folders)
+                {
+                    // The same path as the Delete key: to Trash, with the
+                    // usual undo; a message already there asks first.
+                    self.delete_messages(vec![m], &sender);
+                    crate::notify::withdraw_mail(account_id);
+                }
+            }
+
+            AppMsg::NotificationSpam { account_id, folder_id, message_id } => {
+                if let Some(m) = notified_message(account_id, folder_id, message_id, &self.folders)
+                {
+                    self.mark_spam_msg(m);
+                    crate::notify::withdraw_mail(account_id);
+                }
+            }
+
+            // The message is opening in the reader (the action sent
+            // OpenMessageFromNotification first); the composer waits for
+            // the body it quotes when that is still on its way.
+            AppMsg::NotificationReply { account_id, folder_id, message_id } => {
+                if let Some(m) = notified_message(account_id, folder_id, message_id, &self.folders)
+                {
+                    let m = self.with_cached_body(m);
+                    if m.body.is_empty() {
+                        self.pending_notified_reply = Some(m);
+                    } else {
+                        self.open_inline_reply(
+                            m.account_id,
+                            self.reply_pgp(&m, reply_prefill(&m)),
+                            Some((m.account_id, m.id)),
+                            &sender,
+                        );
+                    }
+                }
+            }
+
+            AppMsg::NotificationForward { account_id, folder_id, message_id } => {
+                if let Some(m) = notified_message(account_id, folder_id, message_id, &self.folders)
+                {
+                    self.forward(m, true, &sender);
                 }
             }
 
@@ -6753,6 +6890,13 @@ impl SimpleComponent for AppModel {
                 }
             }
 
+            AppMsg::SetNotificationButtons(buttons) => {
+                if self.notification_buttons != buttons {
+                    self.notification_buttons = buttons;
+                    self.save_settings();
+                }
+            }
+
             AppMsg::SetRunInBackground(on) => {
                 if self.run_in_background.get() != on {
                     self.run_in_background.set(on);
@@ -7194,6 +7338,27 @@ impl SimpleComponent for AppModel {
                     self.message_view
                         .emit(MessageViewInput::ScrollToAttachments { account_id, id });
                 }
+            }
+            AppMsg::ZoomMessage(step) => {
+                use config::READER_ZOOM_STEPS as STEPS;
+                let at = STEPS.iter().position(|&z| z == self.zoom).unwrap_or(5) as i32;
+                let zoom = match step {
+                    0 => self.zoom_default,
+                    s => STEPS[(at + i32::from(s.signum())).clamp(0, STEPS.len() as i32 - 1) as usize],
+                };
+                self.set_zoom(zoom);
+            }
+            AppMsg::SetZoomDefault(zoom) => {
+                if self.zoom_default != zoom {
+                    self.zoom_default = zoom;
+                    self.save_settings();
+                    self.message_view.emit(MessageViewInput::SetZoomDefault(zoom));
+                    for p in self.popouts.values() {
+                        p.controller.emit(MessageWindowInput::SetZoomDefault(zoom));
+                    }
+                }
+                // The setting is also what the user wants to see now.
+                self.set_zoom(zoom);
             }
             AppMsg::SetReaderMode(on) => {
                 // In Focus Mode with Reader View on, the switch changes the
@@ -9337,6 +9502,22 @@ impl SimpleComponent for AppModel {
                     }
                     self.pending_forward = Some((pending, inline));
                 }
+                // A reply from a notification's button (#244): the message
+                // is opening in the reader too, so the body goes on to be
+                // shown as usual.
+                if let Some(mut m) = self.pending_notified_reply.take() {
+                    if m.account_id == account_id && m.id == message_id {
+                        m.body = body.clone();
+                        self.open_inline_reply(
+                            m.account_id,
+                            self.reply_pgp(&m, reply_prefill(&m)),
+                            Some((m.account_id, m.id)),
+                            &sender,
+                        );
+                    } else {
+                        self.pending_notified_reply = Some(m);
+                    }
+                }
                 // Likewise a reply picked for handed-in files.
                 if let Some((mut m, extra)) = self.pending_reply.take() {
                     if m.account_id == account_id && m.id == message_id {
@@ -10068,6 +10249,7 @@ impl AppModel {
             self.reader_mode,
             self.reader_switch,
             self.reader_default,
+            self.zoom_default,
             self.card_attachments,
             self.drawer_enabled,
             self.confirm_thread_delete,
@@ -10079,6 +10261,7 @@ impl AppModel {
             self.plain_font.clone(),
             self.notifications_enabled,
             self.notification_content,
+            self.notification_buttons,
             self.show_attachments,
             self.show_contacts,
             self.settings_open_accounts,
@@ -12332,6 +12515,18 @@ impl AppModel {
 
     /// What Reader View does on each open: Focus Mode's "on" while it holds,
     /// else the setting.
+    /// The session's message zoom: every reader on screen follows.
+    fn set_zoom(&mut self, zoom: u32) {
+        if zoom == self.zoom {
+            return;
+        }
+        self.zoom = zoom;
+        self.message_view.emit(MessageViewInput::SetZoom(zoom));
+        for p in self.popouts.values() {
+            p.controller.emit(MessageWindowInput::SetZoom(zoom));
+        }
+    }
+
     fn effective_reader_default(&self) -> config::ReaderDefault {
         if self.focus.active(config::FocusPart::ReaderView) {
             config::ReaderDefault::On
@@ -13098,6 +13293,8 @@ impl AppModel {
             content_dark: self.message_theme.dark_override(),
             reader_style: self.reader_style(),
             reader_mode: self.effective_reader_mode(),
+            zoom: self.zoom,
+            zoom_default: self.zoom_default,
             reader_switch: self.reader_switch,
             reader_default: self.effective_reader_default(),
             tags: self.tags.clone(),
@@ -13120,6 +13317,7 @@ impl AppModel {
                 MessageWindowOutput::ReloadBody(m) => AppMsg::ReloadBody(m),
                 MessageWindowOutput::Notice(text) => AppMsg::Notice(text),
                 MessageWindowOutput::ReaderMode(on) => AppMsg::SetReaderMode(on),
+                MessageWindowOutput::ZoomReset => AppMsg::ZoomMessage(0),
                 MessageWindowOutput::Unsubscribe { message, info } => {
                     AppMsg::Unsubscribe { message, info }
                 }
@@ -15956,6 +16154,7 @@ impl AppModel {
             single_message_card: self.single_message_card,
             reader_switch: self.reader_switch,
             reader_default: self.reader_default,
+            reader_zoom: self.zoom_default,
             card_attachments: self.card_attachments,
             attachment_drawer: self.drawer_enabled,
             thread_expansion: self.thread_expansion,
@@ -15971,6 +16170,7 @@ impl AppModel {
             signature_position: self.signature_position,
             notifications: self.notifications_enabled,
             notification_content: self.notification_content,
+            notification_buttons: self.notification_buttons,
             show_attachments: self.show_attachments,
             show_contacts: self.show_contacts,
             show_unified: self.show_unified_pref,
@@ -16058,6 +16258,7 @@ impl AppModel {
                 PrefOutput::SetSingleMessageCard(on) => AppMsg::SetSingleMessageCard(on),
                 PrefOutput::SetReaderSwitch(on) => AppMsg::SetReaderSwitchShown(on),
                 PrefOutput::SetReaderDefault(p) => AppMsg::SetReaderDefault(p),
+                PrefOutput::SetReaderZoom(z) => AppMsg::SetZoomDefault(z),
                 PrefOutput::SetCardAttachments(on) => AppMsg::SetCardAttachments(on),
                 PrefOutput::SetAttachmentDrawer(on) => AppMsg::SetAttachmentDrawer(on),
                 PrefOutput::SetCardActionsMode { hover_toggle, hover_auto } => {
@@ -16083,6 +16284,7 @@ impl AppModel {
                 PrefOutput::SetNotificationContent(on) => {
                     AppMsg::SetNotificationContent(on)
                 }
+                PrefOutput::SetNotificationButtons(b) => AppMsg::SetNotificationButtons(b),
                 PrefOutput::SetAttachmentsRow(show) => AppMsg::SetAttachmentsRow(show),
                 PrefOutput::SetContactsRow(show) => AppMsg::SetContactsRow(show),
                 PrefOutput::SetShowUnified(show) => AppMsg::SetShowUnified(show),
@@ -18666,6 +18868,8 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ("Ctrl+Shift+S", i18n_noop("Reveal the status bar (also: long-press Refresh)")),
             ("Ctrl+Shift+A", i18n_noop("Show or hide the accounts in the sidebar")),
             ("Ctrl+Shift+F", i18n_noop("Focus Mode on or off")),
+            ("Ctrl++  /  Ctrl+-", i18n_noop("Message zoom in or out")),
+            ("Ctrl+0", i18n_noop("Message zoom back to the default")),
             ("Ctrl+Shift+C", i18n_noop("Console mode (when enabled in Settings)")),
             ("Ctrl+W", i18n_noop("Close the window (background sync keeps running)")),
             ("Ctrl+Q", i18n_noop("Quit Hylki entirely")),
@@ -18776,6 +18980,7 @@ fn demo_account_configs() -> Vec<AccountConfig> {
         // without one, and the demo's private bus has no keyring to ask.
         password: "demo".into(),
         smtp_separate: false,
+        tls_accept_hostname_mismatch: false,
         smtp_username: String::new(),
         smtp_password: String::new(),
         color: Some(color.into()),

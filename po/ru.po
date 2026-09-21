@@ -860,6 +860,14 @@ msgstr "Показывать или скрывать учётные записи
 msgid "Focus Mode on or off"
 msgstr ""
 
+#, fuzzy
+msgid "Message zoom in or out"
+msgstr "Шрифт сообщений"
+
+#, fuzzy
+msgid "Message zoom back to the default"
+msgstr "Шрифт сообщений"
+
 msgid "Console mode (when enabled in Settings)"
 msgstr "Консольный режим (если включен в Настройках)"
 
@@ -1105,6 +1113,11 @@ msgstr "Войдите через «Сетевые учётные записи G
 msgid "Requires Proton Mail Bridge running locally."
 msgstr "Требуется локально запущенный Proton Mail Bridge."
 
+msgid ""
+"Enter your Stalwart server's address. Mail is read and sent over JMAP; no "
+"SMTP settings are needed."
+msgstr ""
+
 msgid "Enable POP/IMAP access in GMX settings first."
 msgstr "Сначала включите доступ по POP/IMAP в настройках GMX."
 
@@ -1332,6 +1345,15 @@ msgstr "Имя пользователя SMTP"
 
 msgid "SMTP Password"
 msgstr "Пароль SMTP"
+
+msgid "Accept a certificate for another name"
+msgstr ""
+
+msgid ""
+"The server's certificate must still be valid and signed, but may be issued "
+"for a different host name than the one entered, as on shared hosting. Turn "
+"on only when the connection test says the names differ."
+msgstr ""
 
 msgid "Test Connection"
 msgstr "Проверить соединение"
@@ -1567,6 +1589,11 @@ msgstr "ОК"
 msgid "Enter a client ID and sign in before saving"
 msgstr "Введите идентификатор клиента и войдите перед сохранением"
 
+msgid ""
+"The certificate is for another name. If this server is the right one, turn "
+"on “Accept a certificate for another name” above and test again."
+msgstr ""
+
 msgid "✓ Signed in — save the account to finish"
 msgstr "✓ Вход выполнен — сохраните учётную запись для завершения"
 
@@ -1654,6 +1681,15 @@ msgid_plural "After {n} days"
 msgstr[0] "Через {n} день"
 msgstr[1] "Через {n} дня"
 msgstr[2] "Через {n} дней"
+
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
+msgid "Server (host name or URL)"
+msgstr ""
+
+#, fuzzy
+msgid "Port (default 443)"
+msgstr "Порт SMTP (по умолчанию 587)"
 
 msgid "Google (Gmail)"
 msgstr "Google (Gmail)"
@@ -2893,6 +2929,11 @@ msgid "Close find"
 msgstr "Закрыть поиск"
 
 msgid ""
+"Message zoom. Ctrl+ and Ctrl- change it; a click here, or Ctrl+0, puts it "
+"back to the default from Settings."
+msgstr ""
+
+msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colours and fonts."
 msgstr ""
@@ -3432,6 +3473,29 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr "Показывать отправителя и тему"
 
+#, fuzzy
+msgid "Notification Buttons"
+msgstr "Уведомления"
+
+msgid "Up to three buttons on a notification about one message."
+msgstr ""
+
+#, fuzzy
+msgid "Moves the message to Trash."
+msgstr "Переместить это сообщение в папку"
+
+#, fuzzy
+msgid "Opens the message with a reply started."
+msgstr "Печать открытого сообщения"
+
+#, fuzzy
+msgid "Opens the message with a forward started."
+msgstr "Переместить это сообщение в папку"
+
+#, fuzzy
+msgid "Moves the message to Junk."
+msgstr "Переместить это сообщение в папку"
+
 msgid "Style"
 msgstr "Стиль оформления"
 
@@ -3953,6 +4017,15 @@ msgstr "Оформление сообщений"
 
 msgid "Theme for email content only, not the app itself."
 msgstr "Тема только для содержимого писем, не для самого приложения."
+
+#, fuzzy
+msgid "Default zoom"
+msgstr "По умолчанию"
+
+msgid ""
+"How large every message is shown. Ctrl+ and Ctrl- change it until Hylki is "
+"next started; Ctrl+0 comes back to this."
+msgstr ""
 
 msgid "Use my own font"
 msgstr "Использовать свой шрифт"
@@ -4718,6 +4791,8 @@ msgstr "Данные сервера"
 msgid "Filled in for known providers"
 msgstr "Заполняется автоматически для известных провайдеров"
 
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
 msgid "IMAP server"
 msgstr "Сервер IMAP"
 
@@ -4814,6 +4889,9 @@ msgstr "Начать работу"
 msgid "Continue"
 msgstr "Продолжить"
 
+msgid "Port"
+msgstr ""
+
 msgid "Enter your email address and password first."
 msgstr "Сначала введите адрес электронной почты и пароль."
 
@@ -4896,29 +4974,101 @@ msgstr "Уведомления о недоставке будут отправл
 msgid "The sender's name says \"{claimed}\" but the address is {from}"
 msgstr "В имени отправителя указано «{claimed}», но адрес — {from}"
 
-msgid "the server's reply could not be read (it began: {reply})"
-msgstr ""
+#, fuzzy
+msgid "Could not reach the JMAP server: {e}"
+msgstr "Не удалось создать папку: {e}"
 
-msgid "runtime error: {e}"
-msgstr "ошибка выполнения: {e}"
+msgid "Could not list folders: {e}"
+msgstr "Не удалось получить список папок: {e}"
 
-msgid "Syncing…"
-msgstr "Синхронизация…"
+msgid "Sending…"
+msgstr "Отправка…"
 
-msgid "Could not load {path}: {e}"
-msgstr "Не удалось загрузить {path}: {e}"
+msgid "Still could not send “{subject}”: {e}"
+msgstr "Всё ещё не удаётся отправить «{subject}»: {e}"
 
 msgid "Could not load message: {e}"
 msgstr "Не удалось загрузить сообщение: {e}"
 
-msgid "Could not load conversation: {e}"
-msgstr "Не удалось загрузить обсуждение: {e}"
+msgid "Syncing…"
+msgstr "Синхронизация…"
+
+msgid "Could not fetch mail: {e}"
+msgstr "Не удалось получить почту: {e}"
 
 msgid "Could not load source: {e}"
 msgstr "Не удалось загрузить исходный код: {e}"
 
 msgid "Could not load attachments: {e}"
 msgstr "Не удалось загрузить вложения: {e}"
+
+msgid "Could not move message: {e}"
+msgstr "Не удалось переместить сообщение: {e}"
+
+msgid "Could not mark as spam: {e}"
+msgstr "Не удалось отметить как спам: {e}"
+
+msgid "Could not mark as not spam: {e}"
+msgstr "Не удалось отметить как не спам: {e}"
+
+msgid "Could not mark {len} messages as not spam: {e}"
+msgstr "Не удалось отметить {len} сообщений как не спам: {e}"
+
+msgid "Could not move messages: {e}"
+msgstr "Не удалось переместить сообщения: {e}"
+
+msgid "Could not empty the folder: {e}"
+msgstr "Не удалось очистить папку: {e}"
+
+msgid "Undo failed: {e}"
+msgstr "Не удалось отменить действие: {e}"
+
+msgid "Could not create folder: {e}"
+msgstr "Не удалось создать папку: {e}"
+
+msgid "Could not rename folder: unknown folder"
+msgstr "Не удалось переименовать папку: неизвестная папка"
+
+msgid "Could not rename folder: {e}"
+msgstr "Не удалось переименовать папку: {e}"
+
+msgid "Could not delete folder: unknown folder"
+msgstr "Не удалось удалить папку: неизвестная папка"
+
+msgid "Could not delete folder: {e}"
+msgstr "Не удалось удалить папку: {e}"
+
+msgid "Saving draft…"
+msgstr "Сохранение черновика…"
+
+msgid "Could not save draft: {e}"
+msgstr "Не удалось сохранить черновик: {e}"
+
+#, fuzzy
+msgid "Could not save draft: unknown folder"
+msgstr "Не удалось переименовать папку: неизвестная папка"
+
+msgid ""
+"Send failed: {e}. The message is in the Outbox and will be sent when the "
+"connection is back."
+msgstr ""
+"Не удалось отправить: {e}. Сообщение находится в папке «Исходящие» и будет "
+"отправлено при восстановлении соединения."
+
+msgid "Send failed: {e}"
+msgstr "Не удалось отправить: {e}"
+
+msgid "the server's reply could not be read (it began: {reply})"
+msgstr ""
+
+msgid "runtime error: {e}"
+msgstr "ошибка выполнения: {e}"
+
+msgid "Could not load {path}: {e}"
+msgstr "Не удалось загрузить {path}: {e}"
+
+msgid "Could not load conversation: {e}"
+msgstr "Не удалось загрузить обсуждение: {e}"
 
 msgid "Could not update message: {e}"
 msgstr "Не удалось обновить сообщение: {e}"
@@ -4938,67 +5088,21 @@ msgstr "Не удалось добавить тег к сообщению: {e}"
 msgid "Could not mark folder read: {e}"
 msgstr "Не удалось отметить папку прочитанной: {e}"
 
-msgid "Could not mark as spam: {e}"
-msgstr "Не удалось отметить как спам: {e}"
-
-msgid "Could not mark as not spam: {e}"
-msgstr "Не удалось отметить как не спам: {e}"
-
-msgid "Could not mark {len} messages as not spam: {e}"
-msgstr "Не удалось отметить {len} сообщений как не спам: {e}"
-
-msgid "Could not move message: {e}"
-msgstr "Не удалось переместить сообщение: {e}"
-
 msgid "Could not move {len} messages: {e}"
 msgstr "Не удалось переместить сообщения ({len}): {e}"
-
-msgid "Undo failed: {e}"
-msgstr "Не удалось отменить действие: {e}"
 
 msgid "Could not delete permanently: {e}"
 msgstr "Не удалось удалить безвозвратно: {e}"
 
-msgid "Could not empty the folder: {e}"
-msgstr "Не удалось очистить папку: {e}"
-
-msgid "Could not create folder: {e}"
-msgstr "Не удалось создать папку: {e}"
-
 msgid "Could not move folder: {e}"
 msgstr "Не удалось переместить папку: {e}"
-
-msgid "Could not delete folder: {e}"
-msgstr "Не удалось удалить папку: {e}"
-
-msgid "Sending…"
-msgstr "Отправка…"
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "Сообщение отправлено, но сохранить его в «Отправленные» не удалось: {e}"
 
-msgid ""
-"Send failed: {e}. The message is in the Outbox and will be sent when the "
-"connection is back."
-msgstr ""
-"Не удалось отправить: {e}. Сообщение находится в папке «Исходящие» и будет "
-"отправлено при восстановлении соединения."
-
-msgid "Send failed: {e}"
-msgstr "Не удалось отправить: {e}"
-
-msgid "Saving draft…"
-msgstr "Сохранение черновика…"
-
-msgid "Could not save draft: {e}"
-msgstr "Не удалось сохранить черновик: {e}"
-
 msgid "Connecting to {host}…"
 msgstr "Подключение к {host}…"
-
-msgid "Could not list folders: {e}"
-msgstr "Не удалось получить список папок: {e}"
 
 msgid "Connection failed: {e}"
 msgstr "Ошибка подключения: {e}"
@@ -5016,9 +5120,6 @@ msgid "Could not schedule the message: there is no local store to keep it in."
 msgstr ""
 "Не удалось отложить отправку сообщения: нет локального хранилища для него."
 
-msgid "Still could not send “{subject}”: {e}"
-msgstr "Всё ещё не удаётся отправить «{subject}»: {e}"
-
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
@@ -5027,9 +5128,6 @@ msgstr ""
 
 msgid "no OpenPGP key for {addr}"
 msgstr "нет ключа OpenPGP для {addr}"
-
-msgid "Could not fetch mail: {e}"
-msgstr "Не удалось получить почту: {e}"
 
 msgid "Could not delete message: {e}"
 msgstr "Не удалось удалить сообщение: {e}"
@@ -5040,77 +5138,162 @@ msgstr "Учётные записи POP3 не поддерживают папк�
 msgid "Inbox"
 msgstr "Входящие"
 
-msgid "Could not move messages: {e}"
-msgstr "Не удалось переместить сообщения: {e}"
-
-msgid "Could not rename folder: unknown folder"
-msgstr "Не удалось переименовать папку: неизвестная папка"
-
-msgid "Could not rename folder: {e}"
-msgstr "Не удалось переименовать папку: {e}"
-
-msgid "Could not delete folder: unknown folder"
-msgstr "Не удалось удалить папку: неизвестная папка"
-
 msgid "Email Client"
 msgstr "Почтовый клиент"
 
-msgid "A clean, fast GNOME-native email client"
-msgstr "Простой и быстрый почтовый клиент для GNOME"
+msgid ""
+"A fast, GNOME-native email client, built with Rust and libadwaita. Open "
+"source and private by default."
+msgstr ""
 
 msgid "Email;Mail;IMAP;"
 msgstr "Email;Mail;IMAP;Почта;Электронная почта;Письма;"
 
-msgid "Private, GNOME-native email client"
-msgstr "Конфиденциальный почтовый клиент для GNOME"
-
 msgid ""
-"Hylki is a desktop email client for Wayland that feels at home in GNOME. It "
-"talks IMAP and SMTP directly, keeps your mail and credentials on your "
-"machine, and blocks trackers by default — no telemetry, no analytics."
+"Hylki is a desktop email client for GNOME on Wayland, written in Rust with "
+"libadwaita. Your mail and credentials stay on your machine, remote content "
+"is blocked until you allow it, and there is no telemetry. It works with "
+"IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to "
+"Proton Bridge to a Stalwart of your own."
 msgstr ""
-"Hylki — это почтовый клиент для Wayland, созданный в стиле среды GNOME. "
-"Приложение работает напрямую по протоколам IMAP и SMTP, хранит вашу почту и "
-"учётные данные на устройстве и блокирует трекеры по умолчанию: никакой "
-"телеметрии и аналитики."
 
-msgid "Features:"
-msgstr "Возможности:"
+#, fuzzy
+msgid "Accounts and mail:"
+msgstr "Учитывать непрочитанную почту"
 
-msgid "Multiple IMAP and POP3 accounts, with a unified Inboxes view"
-msgstr "Несколько учётных записей IMAP и POP3 с общим списком «Входящие»"
-
+#, fuzzy
 msgid ""
-"Google, Microsoft and custom OAuth 2.0 sign-in, plus GNOME Online Accounts "
-"import"
+"Multiple accounts with a unified Inboxes view; Google, Microsoft and custom "
+"OAuth sign-in, or an account imported from GNOME Online Accounts"
 msgstr ""
 "Авторизация через Google, Microsoft и пользовательский OAuth 2.0, а также "
 "импорт из «Сетевых учётных записей GNOME»"
 
-msgid "Whole-mailbox sync and search with infinite scroll"
-msgstr "Синхронизация всего почтового ящика и поиск с бесконечной прокруткой"
-
-msgid "Deletions and moves made on other devices sync back automatically"
+msgid ""
+"Whole-mailbox sync and search, conversation threading, and changes made on "
+"other devices synced back"
 msgstr ""
-"Удаления и перемещения, сделанные на других устройствах, автоматически "
-"синхронизируются"
 
-msgid "Conversation threading, compose, reply, forward, and editable drafts"
-msgstr "Ветки бесед, создание, ответ, пересылка и редактируемые черновики"
+msgid ""
+"Folder management, filters, tags, unified and filtered folders, and Trash "
+"and Junk emptied by hand or on a schedule"
+msgstr ""
 
-msgid "Remote content blocked by default; per-message light or dark reading"
+msgid "An attachment gallery, an Outbox for sends that fail, and Send Later"
+msgstr ""
+
+msgid "Writing:"
+msgstr ""
+
+msgid ""
+"Rich text, Markdown, HTML or plain text, with HTML signatures, inline "
+"images, spell check and undo"
+msgstr ""
+
+msgid ""
+"Drafts, quote folding, split replies, and forwarding that keeps the "
+"attachments"
+msgstr ""
+
+msgid ""
+"Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a "
+"Send with Hylki entry in GNOME Files"
+msgstr ""
+
+#, fuzzy
+msgid "Reading:"
+msgstr "Чтение"
+
+#, fuzzy
+msgid ""
+"Reader View, your own font and colours, and per-message light or dark "
+"rendering"
 msgstr ""
 "Удалённое содержимое блокируется по умолчанию; чтение каждого письма в "
 "светлой или тёмной теме"
 
-msgid "Passwords and OAuth tokens kept in the system keyring"
-msgstr "Пароли и токены OAuth хранятся в системной связке ключей"
+msgid ""
+"OpenPGP signing, encryption and reading; DKIM, SPF and DMARC checked on "
+"arrival"
+msgstr ""
+
+msgid ""
+"Meeting invitations answered in place, and one-click unsubscribe from list "
+"mail"
+msgstr ""
+
+msgid "The app:"
+msgstr ""
+
+msgid ""
+"Adaptive three-pane layout, five appearance themes, Focus Mode, a "
+"customizable toolbar and swipe actions"
+msgstr ""
+
+msgid ""
+"Gmail-style single-key shortcuts, notifications with actions, an optional "
+"tray icon and background running"
+msgstr ""
+
+msgid ""
+"GNOME Contacts integration, your choice of language and clock, and passwords "
+"kept in the system keyring"
+msgstr ""
 
 msgid "The unified inbox in light mode"
 msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "A clean, fast GNOME-native email client"
+#~ msgstr "Простой и быстрый почтовый клиент для GNOME"
+
+#~ msgid "Private, GNOME-native email client"
+#~ msgstr "Конфиденциальный почтовый клиент для GNOME"
+
+#~ msgid ""
+#~ "Hylki is a desktop email client for Wayland that feels at home in GNOME. "
+#~ "It talks IMAP and SMTP directly, keeps your mail and credentials on your "
+#~ "machine, and blocks trackers by default — no telemetry, no analytics."
+#~ msgstr ""
+#~ "Hylki — это почтовый клиент для Wayland, созданный в стиле среды GNOME. "
+#~ "Приложение работает напрямую по протоколам IMAP и SMTP, хранит вашу почту "
+#~ "и учётные данные на устройстве и блокирует трекеры по умолчанию: никакой "
+#~ "телеметрии и аналитики."
+
+#~ msgid "Features:"
+#~ msgstr "Возможности:"
+
+#~ msgid "Multiple IMAP and POP3 accounts, with a unified Inboxes view"
+#~ msgstr "Несколько учётных записей IMAP и POP3 с общим списком «Входящие»"
+
+#~ msgid "Whole-mailbox sync and search with infinite scroll"
+#~ msgstr ""
+#~ "Синхронизация всего почтового ящика и поиск с бесконечной прокруткой"
+
+#~ msgid "Deletions and moves made on other devices sync back automatically"
+#~ msgstr ""
+#~ "Удаления и перемещения, сделанные на других устройствах, автоматически "
+#~ "синхронизируются"
+
+#~ msgid "Conversation threading, compose, reply, forward, and editable drafts"
+#~ msgstr "Ветки бесед, создание, ответ, пересылка и редактируемые черновики"
+
+#~ msgid "Passwords and OAuth tokens kept in the system keyring"
+#~ msgstr "Пароли и токены OAuth хранятся в системной связке ключей"
+
+#, fuzzy
+#~ msgid "Mark as Read button"
+#~ msgstr "Отметить как прочитанное"
+
+#, fuzzy
+#~ msgid "Archive button"
+#~ msgstr "Архив"
+
+#, fuzzy
+#~ msgid "Delete button"
+#~ msgstr "Удалить контакт?"
 
 #~ msgid "Label (defaults to email address)"
 #~ msgstr "Метка (по умолчанию адрес электронной почты)"

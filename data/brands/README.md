@@ -26,6 +26,7 @@ as if it were part of the AGPL-licensed work.
 | `yahoo` | Yahoo Inc. | Yahoo's own touch icon, https://www.yahoo.com/apple-touch-icon.png |
 | `proton` | Proton AG | Proton's own touch icon, https://proton.me/favicons/apple-touch-icon.png |
 | `fastmail` | Fastmail Pty Ltd | the Fastmail icon as published on Wikimedia Commons (`Fastmail icon 2019.svg`) |
+| `stalwart` | Stalwart Labs LLC | Stalwart's own site icon, https://stalw.art/favicon.svg (fetched 2026-09-21) |
 | `aol` | Yahoo Inc. | AOL's own touch icon, https://www.aol.com/apple-touch-icon.png |
 | `zoho` | Zoho Corporation | the Zoho Mail icon as published on Wikimedia Commons (`Zoho Mail-256.png`) |
 | `gmx` | 1&1 Mail & Media GmbH | the GMX logo as published on Wikimedia Commons (`GMX-Logo (2018-).svg`) |

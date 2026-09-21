@@ -109,6 +109,9 @@ fn main() {
 
     legacy::migrate_dirs();
     legacy::tidy_host();
+    // An AppImage has no fixed path for the GNOME Files extension to launch,
+    // so it leaves one behind (#235).
+    nautilus_ext::record_launcher();
     // Attachments the user opened in a previous session were decrypted to a temp
     // directory and left there. Clear it before anything else runs.
     ui::attachments_gallery::purge_attachment_dir();

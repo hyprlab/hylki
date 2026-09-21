@@ -92,7 +92,13 @@ pub fn export_text(memory: &str) -> String {
                 .find_map(|l| l.strip_prefix("PRETTY_NAME=").map(|v| v.trim_matches('"').to_string()))
         })
         .unwrap_or_else(|| "unknown OS".to_string());
-    let host = if std::path::Path::new("/.flatpak-info").exists() { "Flatpak" } else { "host build" };
+    let host = if crate::platform::is_flatpak() {
+        "Flatpak"
+    } else if crate::platform::is_appimage() {
+        "AppImage"
+    } else {
+        "host build"
+    };
     let mut out = String::new();
     out.push_str(&format!(
         "Hylki {} ({}), {host}\n{os}, GTK {}.{}.{}, libadwaita {}.{}.{}\nExported {}\nEmail addresses are shortened to their domain.\n\n",
