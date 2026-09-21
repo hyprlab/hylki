@@ -764,6 +764,9 @@ msgstr ""
 msgid "Compose"
 msgstr ""
 
+msgid "Send the message you are writing"
+msgstr ""
+
 msgid "Back out of a reply and return to the list"
 msgstr ""
 
@@ -1142,6 +1145,9 @@ msgstr ""
 msgid "Mail Account"
 msgstr ""
 
+msgid "Nickname (shown in the sidebar and the Mail Accounts list)"
+msgstr ""
+
 msgid "Provider"
 msgstr ""
 
@@ -1223,9 +1229,6 @@ msgid "Appearance"
 msgstr ""
 
 msgid "How this account is shown in the sidebar and the Inboxes view."
-msgstr ""
-
-msgid "Label (defaults to email address)"
 msgstr ""
 
 msgid "Account accent color"
@@ -1335,6 +1338,18 @@ msgstr ""
 msgid "Junk"
 msgstr ""
 
+msgid "Hidden Folders"
+msgstr ""
+
+msgid ""
+"Folders kept out of the sidebar and left unsynced. Hide one from its right-"
+"click menu in the sidebar; Show brings it back. An Exchange server's "
+"calendar, contacts and task folders are hidden here from the start."
+msgstr ""
+
+msgid "No hidden folders."
+msgstr ""
+
 msgid "OpenPGP"
 msgstr ""
 
@@ -1426,6 +1441,12 @@ msgid "✓ SMTP: connected"
 msgstr ""
 
 msgid "✗ SMTP: {e}"
+msgstr ""
+
+msgid "Show"
+msgstr ""
+
+msgid "Bring this folder back to the sidebar"
 msgstr ""
 
 msgid "Sends through {host}"
@@ -3668,6 +3689,14 @@ msgid ""
 "formatting. The composer's format button switches any one message."
 msgstr ""
 
+msgid "Signature in replies"
+msgstr ""
+
+msgid ""
+"Where the signature goes in a reply or forward. Above the quoted message it "
+"closes what you wrote; below, it follows the whole conversation."
+msgstr ""
+
 msgid "Spelling"
 msgstr ""
 
@@ -3962,6 +3991,12 @@ msgstr ""
 msgid "Account of the current folder"
 msgstr ""
 
+msgid "Above the quoted message"
+msgstr ""
+
+msgid "Below the quoted message"
+msgstr ""
+
 msgid "Above the messages"
 msgstr ""
 
@@ -4133,6 +4168,11 @@ msgid "Rename Folder…"
 msgstr ""
 
 msgid "Delete Folder…"
+msgstr ""
+
+#. And hidden (#239): only a plain folder, since a role folder out
+#. of sight would still be where mail is filed to.
+msgid "Hide Folder"
 msgstr ""
 
 msgid "Empty Trash…"

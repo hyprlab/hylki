@@ -201,6 +201,9 @@ pub struct AccountsWindow {
     /// The send-as aliases being edited for the account in the editor (#34).
     /// Committed to the account on Save.
     alias_edits: Vec<AliasConfig>,
+    /// The account's hidden folders (#239) as the editor holds them: the
+    /// saved list, less whatever the user has brought back since opening.
+    hidden_edits: Vec<String>,
     /// Index into `alias_edits` open in the alias dialog; `None` while adding.
     alias_editing: Option<usize>,
     /// The open alias editor dialog and its fields, if any.
@@ -309,6 +312,8 @@ pub enum AccountsInput {
     AliasEdit(usize),
     /// Remove an alias from the list being edited.
     AliasRemove(usize),
+    /// Bring a hidden folder back (#239): the row's index in the list.
+    UnhideFolder(usize),
     /// The alias dialog's Save button.
     AliasDialogSave,
     /// The alias dialog's Test button: try its SMTP server and credentials.
@@ -984,7 +989,18 @@ impl Component for AccountsWindow {
                             add = &adw::PreferencesGroup {
                                 set_title: &i18n("Mail Account"),
 
-                                // Pick the provider first; the rest of the form
+                                // The nickname first: it is the one thing
+                                // most edits are for, and it names the
+                                // account wherever it is listed, the address
+                                // standing in while there is none. Where it
+                                // shows up is said in the title, the way the
+                                // other rows carry their hints.
+                                #[name = "label_row"]
+                                adw::EntryRow {
+                                    set_title: &i18n("Nickname (shown in the sidebar and the Mail Accounts list)"),
+                                },
+
+                                // Then the provider; the rest of the form
                                 // adapts (server fields vs. OAuth sign-in).
                                 #[name = "provider_row"]
                                 adw::ComboRow {
@@ -1163,11 +1179,6 @@ impl Component for AccountsWindow {
                                             set_overflow: gtk::Overflow::Hidden,
                                         },
                                     },
-                                },
-
-                                #[name = "label_row"]
-                                adw::EntryRow {
-                                    set_title: &i18n("Label (defaults to email address)"),
                                 },
 
                                 // The accent stands on its own: it colours
@@ -1387,6 +1398,30 @@ impl Component for AccountsWindow {
                                 adw::ComboRow { set_title: &i18n("Archive") },
                             },
 
+                            // Hidden folders (#239): what "Hide Folder" in the
+                            // sidebar took out of sight, each with the way back.
+                            #[name = "hidden_group"]
+                            adw::PreferencesGroup {
+                                set_title: &i18n("Hidden Folders"),
+                                set_description: Some(
+                                    i18n("Folders kept out of the sidebar and left unsynced. Hide one \
+                                          from its right-click menu in the sidebar; Show brings it \
+                                          back. An Exchange server's calendar, contacts and task \
+                                          folders are hidden here from the start.").as_str()
+                                ),
+                                #[name = "hidden_list"]
+                                gtk::ListBox {
+                                    add_css_class: "boxed-list",
+                                    set_selection_mode: gtk::SelectionMode::None,
+                                },
+                                #[name = "hidden_empty"]
+                                gtk::Label {
+                                    set_label: &i18n("No hidden folders."),
+                                    add_css_class: "dim-label",
+                                    set_xalign: 0.0,
+                                },
+                            },
+
                             // OpenPGP (#133): which of the user's keys this
                             // account signs and decrypts with.
                             add = &adw::PreferencesGroup {
@@ -1488,6 +1523,7 @@ impl Component for AccountsWindow {
             goa,
             pending_oauth_refresh: None,
             alias_edits: Vec::new(),
+            hidden_edits: Vec::new(),
             alias_editing: None,
             alias_dialog: None,
             folders_by_email: std::collections::HashMap::new(),
@@ -1806,6 +1842,8 @@ impl Component for AccountsWindow {
                 self.close_alias_dialog();
                 self.alias_edits = acc.aliases.clone();
                 self.rebuild_alias_list(&widgets.aliases_list, &sender);
+                self.hidden_edits = acc.hidden_folders.clone();
+                self.rebuild_hidden_list(widgets, &sender);
                 fill_editor(widgets, &acc);
                 // The secrets come from the keyring now, off the main thread,
                 // and land in the fields when they arrive (Save reads the
@@ -2219,6 +2257,7 @@ impl Component for AccountsWindow {
                 widgets.host_row.remove_css_class("error");
                 let mut account = read_account(widgets, self.saved_emoji(), self.saved_avatar());
                 account.aliases = self.alias_edits.clone();
+                account.hidden_folders = self.hidden_edits.clone();
                 account.folder_roles = self.read_folder_roles(widgets);
                 account.sent_copy_path = self.read_sent_copy_path(widgets);
                 account.server_saves_sent = widgets.server_saves_row.is_active();
@@ -2235,6 +2274,10 @@ impl Component for AccountsWindow {
                 let editing_orig = self.editing.and_then(|i| self.accounts.get(i)).cloned();
                 if let Some(orig) = &editing_orig {
                     account.enabled = orig.enabled;
+                    // The one-time look for Exchange's non-mail folders
+                    // (#239) stays done, or a folder brought back here
+                    // would be hidden again at the next listing.
+                    account.folders_seeded = orig.folders_seeded;
                     account.goa_id = orig.goa_id.clone();
                     account.goa_mail_disabled = orig.goa_mail_disabled;
                     account.goa_enabled_before_mail_disabled =
@@ -2408,6 +2451,12 @@ impl Component for AccountsWindow {
                 self.open_alias_dialog(root, &alias, &sender);
             }
 
+            AccountsInput::UnhideFolder(i) => {
+                if i < self.hidden_edits.len() {
+                    self.hidden_edits.remove(i);
+                    self.rebuild_hidden_list(widgets, &sender);
+                }
+            }
             AccountsInput::AliasRemove(i) => {
                 if i < self.alias_edits.len() {
                     // The keyring entry (if the alias had its own SMTP) is
@@ -2780,6 +2829,32 @@ impl AccountsWindow {
             self.sig_editor = Some(editor);
         }
         self.sig_editor.as_ref().expect("created above")
+    }
+
+    /// Fill the Hidden Folders list (#239): one row per hidden path, with
+    /// a Show button that takes it off the list (Save makes it so).
+    fn rebuild_hidden_list(&self, widgets: &AccountsWindowWidgets, sender: &ComponentSender<Self>) {
+        let list = &widgets.hidden_list;
+        while let Some(child) = list.first_child() {
+            list.remove(&child);
+        }
+        // An empty boxed-list draws as a bare frame; say "none" instead.
+        list.set_visible(!self.hidden_edits.is_empty());
+        widgets.hidden_empty.set_visible(self.hidden_edits.is_empty());
+        for (i, path) in self.hidden_edits.iter().enumerate() {
+            let row = adw::ActionRow::new();
+            row.set_title(&gtk::glib::markup_escape_text(&crate::mutf7::decode(path)));
+            let show = gtk::Button::with_label(&i18n("Show"));
+            show.set_valign(gtk::Align::Center);
+            show.add_css_class("flat");
+            show.set_tooltip_text(Some(i18n("Bring this folder back to the sidebar").as_str()));
+            let s = sender.input_sender().clone();
+            show.connect_clicked(move |_| {
+                let _ = s.send(AccountsInput::UnhideFolder(i));
+            });
+            row.add_suffix(&show);
+            list.append(&row);
+        }
     }
 
     fn rebuild_alias_list(&self, list: &gtk::ListBox, sender: &ComponentSender<Self>) {
@@ -3189,14 +3264,25 @@ impl AccountsWindow {
             let vbox = gtk::Box::new(gtk::Orientation::Vertical, 0);
             vbox.set_hexpand(true);
             vbox.set_valign(gtk::Align::Center);
-            let name = gtk::Label::new(Some(&display_name(acc)));
+            // The nickname, as the sidebar names the account, over the
+            // address. With no nickname the address is the first line, and
+            // the second carries the sender name instead of repeating it,
+            // or nothing when there is no name either.
+            let title = acc.display_label();
+            let second = if title == acc.email {
+                acc.name.trim().to_string()
+            } else {
+                acc.email.clone()
+            };
+            let name = gtk::Label::new(Some(&title));
             name.set_halign(gtk::Align::Start);
             name.set_ellipsize(gtk::pango::EllipsizeMode::End);
             name.add_css_class("account-name");
-            let email = gtk::Label::new(Some(&acc.email));
+            let email = gtk::Label::new(Some(&second));
             email.set_halign(gtk::Align::Start);
             email.set_ellipsize(gtk::pango::EllipsizeMode::End);
             email.add_css_class("account-email");
+            email.set_visible(!second.is_empty());
             vbox.append(&name);
             vbox.append(&email);
             hbox.append(&vbox);
@@ -3594,8 +3680,9 @@ impl AccountsWindow {
     fn editor_fingerprint(&self, widgets: &AccountsWindowWidgets) -> String {
         let account = read_account(widgets, self.saved_emoji(), self.saved_avatar());
         format!(
-            "{account:?}|{:?}|{:?}|{:?}|{}|{}|{}",
+            "{account:?}|{:?}|{:?}|{:?}|{:?}|{}|{}|{}",
             self.alias_edits,
+            self.hidden_edits,
             self.read_folder_roles(widgets),
             self.read_sent_copy_path(widgets),
             widgets.server_saves_row.is_active(),
@@ -3759,6 +3846,10 @@ fn read_account(
         },
         // Assigned by SaveWithSig from the Special Folders combos.
         folder_roles: Default::default(),
+        // Likewise from the Hidden Folders list, and carried over from
+        // the account being edited.
+        hidden_folders: Vec::new(),
+        folders_seeded: false,
         sent_copy_path: None,
         server_saves_sent: false,
         empty_junk_days: AUTO_EMPTY_DAYS

@@ -4,8 +4,8 @@
 #
 # The body has three parts (#230):
 #
-#   Highlights   the version's section of RELEASE_NOTES.md (the user-facing
-#                overview), or of CHANGELOG.md when it has none.
+#   Highlights   the version's section of docs/RELEASE_NOTES.md (the
+#                user-facing overview), or of CHANGELOG.md when it has none.
 #   What's changed   the list GitHub generates for the tag: every merged pull
 #                request and commit, with its author, since the previous
 #                release. Skipped when gh or the tag is missing.
@@ -35,7 +35,7 @@ trim() { # drop leading and trailing blank lines
 
 # "## What's new in X.Y.Z" (newest) or "## In X.Y.Z" (older), with optional
 # suffixes like " — security release".
-notes=$(section RELEASE_NOTES.md \
+notes=$(section docs/RELEASE_NOTES.md \
   "^## (What.s new in|In) ${ver}($| )" \
   "^## ")
 if [ -z "${notes//[[:space:]]/}" ]; then
@@ -43,7 +43,7 @@ if [ -z "${notes//[[:space:]]/}" ]; then
   notes=$(section CHANGELOG.md "^## ${ver} " "^## ")
 fi
 if [ -z "${notes//[[:space:]]/}" ]; then
-  echo "no notes found for ${ver} in RELEASE_NOTES.md or CHANGELOG.md" >&2
+  echo "no notes found for ${ver} in docs/RELEASE_NOTES.md or CHANGELOG.md" >&2
   exit 1
 fi
 
@@ -88,5 +88,5 @@ if [ -n "$prev" ]; then
     "$repo" "$prev" "$ver"
 fi
 
-printf '\n---\n_Every release is listed in [RELEASE_NOTES.md](https://github.com/%s/blob/main/RELEASE_NOTES.md), commit by commit in [CHANGELOG.md](https://github.com/%s/blob/main/CHANGELOG.md)._\n' \
+printf '\n---\n_Every release is listed in [RELEASE_NOTES.md](https://github.com/%s/blob/main/docs/RELEASE_NOTES.md), commit by commit in [CHANGELOG.md](https://github.com/%s/blob/main/CHANGELOG.md)._\n' \
   "$repo" "$repo"

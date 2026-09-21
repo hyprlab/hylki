@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Keep AI tool attribution, and the writing that comes with it, out of the
+# history (#230).
+#
+# The README's AI notice declares how Hylki is built, once, for the whole
+# repository; a trailer repeating it on every commit only makes the log harder
+# to read and attributes the work to a tool rather than to the maintainer.
+# A Co-Authored-By line for a person is fine, and is how contributors are
+# credited.
+#
+# The em dash is refused for the same reason the release notes avoid it: a
+# commit message should read as something a person typed. A colon, a comma or
+# a full stop says the same thing.
+#
+# Point a clone at this hook with:
+#
+#   git config core.hooksPath tools/git-hooks
+#
+set -euo pipefail
+
+msg="${1:?usage: commit-msg <file>}"
+
+# Git's own comment lines are not part of the message.
+body=$(grep -v '^#' "$msg" || true)
+
+fail=0
+report() { # heading, matching lines
+  printf '%s\n' "$1" >&2
+  printf '%s\n' "$2" | sed 's/^/    /' >&2
+  fail=1
+}
+
+attribution=$(printf '%s\n' "$body" \
+  | grep -nEi 'co-authored-by:.*(claude|anthropic)|noreply@anthropic\.com|generated with .*claude|co-authored-by:.*\[bot\]' \
+  || true)
+if [ -n "$attribution" ]; then
+  report "commit-msg: this history carries no AI tool attribution (#230).
+  Commits are the maintainer's own, and the README's AI notice says how the
+  app is built. Drop these lines:" "$attribution"
+fi
+
+emdash=$(printf '%s\n' "$body" | grep -n '—' || true)
+if [ -n "$emdash" ]; then
+  report "commit-msg: no em dashes in commit messages (#230).
+  Use a colon, a comma or a full stop:" "$emdash"
+fi
+
+[ "$fail" -eq 0 ]

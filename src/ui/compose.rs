@@ -5,7 +5,7 @@ use relm4::prelude::*;
 
 use crate::contacts::Suggestion;
 use crate::models::DraftOrigin;
-use crate::config::ComposeFormat;
+use crate::config::{ComposeFormat, SignaturePosition};
 use crate::ui::rich_editor::{self, RichEditor, SourceKind, js_escape};
 use crate::worker::OutgoingMessage;
 use crate::i18n::{i18n, i18n_f, i18n_noop};
@@ -227,6 +227,8 @@ pub struct ComposeInit {
     /// What the message is written in: rich text, Markdown, HTML
     /// source, or plain text.
     pub format: ComposeFormat,
+    /// Where the signature goes against a quoted original (#237).
+    pub signature_position: SignaturePosition,
 }
 
 pub struct Compose {
@@ -235,6 +237,9 @@ pub struct Compose {
     editor: RichEditor,
     /// Signature currently appended to the body (so it can be swapped out).
     current_sig: String,
+    /// Where that signature sits against a quoted original (#237), so a
+    /// signature added on an account switch lands in the same place.
+    signature_position: SignaturePosition,
     /// Files to attach.
     attachments: Vec<std::path::PathBuf>,
     /// When editing a queued Outbox message, the row this replaces once sent.
@@ -435,6 +440,9 @@ pub enum ComposeInput {
     /// Showcase only (HYLKI_SHOWCASE_COMPOSE_UNDO): one step of the scripted
     /// history check. See [`Compose::showcase_history`].
     ShowcaseHistory(u8),
+    /// Showcase only (HYLKI_SHOWCASE_COMPOSE_FROM): pick the From row's
+    /// entry `n`, as a click would, so the signature swap can be captured.
+    ShowcaseFrom(u32),
 }
 
 #[derive(Debug)]
@@ -810,6 +818,7 @@ impl Component for Compose {
             compact,
             decorations,
             format,
+            signature_position,
         } = init;
         let in_reply_to = prefill.in_reply_to.clone();
         let references = prefill.references.clone();
@@ -826,15 +835,25 @@ impl Component for Compose {
         completion.set_position(gtk::PositionType::Bottom);
         completion.add_css_class("menu");
 
-        // Initial editor content: a blank line to type on, the quoted
-        // reply/forward (if any), then the signature.
+        // Initial editor content: a blank line to type on, then the
+        // signature and the quoted reply/forward (if any), in the order
+        // the setting says (#237). A draft already contains its signature;
+        // don't add another.
         let mut content = String::from("<div><br></div>");
-        if !prefill.body_html.is_empty() {
-            content.push_str(&prefill.body_html);
-        }
-        // A draft already contains its signature; don't add another.
-        if draft_origin.is_none() && !current_sig.is_empty() {
-            content.push_str(&sig_html(&current_sig));
+        let sig = if draft_origin.is_none() && !current_sig.is_empty() {
+            sig_html(&current_sig)
+        } else {
+            String::new()
+        };
+        match signature_position {
+            SignaturePosition::AboveQuote => {
+                content.push_str(&sig);
+                content.push_str(&prefill.body_html);
+            }
+            SignaturePosition::BelowQuote => {
+                content.push_str(&prefill.body_html);
+                content.push_str(&sig);
+            }
         }
         let editor = RichEditor::new(&content);
         editor.set_formatting_visible(format == ComposeFormat::Rich);
@@ -914,6 +933,7 @@ impl Component for Compose {
             accounts,
             editor,
             current_sig,
+            signature_position,
             attachments: prefill_attachments,
             suggestions,
             completion,
@@ -1205,6 +1225,17 @@ impl Component for Compose {
                 && editor.has_focus()
             {
                 editor.paste(!crate::config::load_paste_plain());
+                return Propagation::Stop;
+            }
+            // Ctrl+Enter sends (#238), as it does in Gmail, Apple Mail and
+            // Thunderbird. Ahead of the suggestion list's own Enter, so a
+            // press with the list open never both accepts a name and sends.
+            // Send itself refuses an unaddressed message, so the shortcut
+            // cannot post what the button would not.
+            if state.contains(gtk::gdk::ModifierType::CONTROL_MASK)
+                && (keyval == gtk::gdk::Key::Return || keyval == gtk::gdk::Key::KP_Enter)
+            {
+                s.input(ComposeInput::Send);
                 return Propagation::Stop;
             }
             if !open.get() {
@@ -1646,6 +1677,10 @@ impl Component for Compose {
                 self.showcase_history(step, widgets, &sender);
             }
 
+            ComposeInput::ShowcaseFrom(n) => {
+                widgets.from_row.set_selected(n);
+            }
+
             ComposeInput::BodyHistory(can_undo) => {
                 // A fresh edit takes its place in the order — one marker
                 // covers a whole run of typing, since the editor coalesces
@@ -1670,11 +1705,31 @@ impl Component for Compose {
                 if let Some(kind) = self.editor.source_kind() {
                     let old = sig_source(kind, &self.current_sig);
                     let new = sig_source(kind, &new_sig);
+                    // With no old block to replace (the previous account had
+                    // none), the new one goes where the setting puts it: at
+                    // the end, or above the quoted original (#237), which
+                    // in source is found by its text. HTML keeps the quote's
+                    // tags; Markdown has the `> ` lines, with the attribution
+                    // line ("On …, X wrote:" or the forward header) above.
+                    let place = match (self.signature_position, kind) {
+                        (SignaturePosition::BelowQuote, _) => "v=v+n;",
+                        (SignaturePosition::AboveQuote, SourceKind::Html) => {
+                            "var q=v.search(/<p class=\"vireo-quote-attr\"|<blockquote/);\
+                             if(q<0){v=v+n;}else{v=v.slice(0,q).replace(/\\s*$/,'')+n+v.slice(q);}"
+                        }
+                        (SignaturePosition::AboveQuote, SourceKind::Markdown) => {
+                            "var L=v.split('\\n');var qi=-1;\
+                             for(var k=0;k<L.length;k++){if(L[k]==='>'||L[k].indexOf('> ')===0){qi=k;break;}}\
+                             if(qi<0){v=v+n;}else{var a=qi-1;while(a>=0&&L[a].trim()==='')a--;\
+                             if(a>=0&&(/wrote:\\s*$/.test(L[a])||/^-{5,} Forwarded message/.test(L[a])))qi=a;\
+                             v=L.slice(0,qi).join('\\n').replace(/\\s*$/,'')+n+'\\n'+L.slice(qi).join('\\n');}"
+                        }
+                    };
                     self.editor.run_js(&format!(
                         "(function(){{var t=document.getElementById('src');if(!t)return;\
                          var o='{}',n='{}';var v=t.value;\
                          var i=o?v.lastIndexOf(o):-1;\
-                         if(i>=0){{v=v.slice(0,i)+n+v.slice(i+o.length);}}else{{v=v+n;}}\
+                         if(i>=0){{v=v.slice(0,i)+n+v.slice(i+o.length);}}else{{{place}}}\
                          t.value=v;window.__hylkiDirty=true;}})()",
                         js_escape(&old),
                         js_escape(&new)
@@ -1688,11 +1743,27 @@ impl Component for Compose {
                     } else {
                         sig_html(&new_sig)
                     };
+                    // No signature block to replace (the previous account
+                    // had none): a new one goes where the setting puts it,
+                    // above the quoted original or at the end (#237).
+                    let anchor = match self.signature_position {
+                        SignaturePosition::AboveQuote => {
+                            "var b=document.body;var q=null;\
+                             var cands=b.querySelectorAll('.vireo-quote-attr,blockquote');\
+                             for(var i=0;i<cands.length;i++){{var t=cands[i];\
+                             while(t.parentNode&&t.parentNode!==b)t=t.parentNode;\
+                             if(t.parentNode===b&&(!q||(t.compareDocumentPosition(q)&Node.DOCUMENT_POSITION_FOLLOWING)))q=t;}}\
+                             if(q){{q.insertAdjacentHTML('beforebegin',h);}}else{{b.insertAdjacentHTML('beforeend',h);}}"
+                        }
+                        SignaturePosition::BelowQuote => {
+                            "document.body.insertAdjacentHTML('beforeend',h);"
+                        }
+                    };
                     let js = format!(
                         "(function(){{var s=document.querySelector('.vireo-sig');\
                          var h='{}';\
                          if(s){{if(h){{s.outerHTML=h;}}else{{s.remove();}}}}\
-                         else if(h){{document.body.insertAdjacentHTML('beforeend',h);}}}})()",
+                         else if(h){{{anchor}}}}})()",
                         rich_editor::js_escape(&replacement)
                     );
                     self.editor.run_js(&js);

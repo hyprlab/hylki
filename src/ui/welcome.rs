@@ -991,6 +991,8 @@ fn blank_account() -> AccountConfig {
         oauth_refresh: String::new(),
         push: None,
         folder_roles: Default::default(),
+        hidden_folders: Vec::new(),
+        folders_seeded: false,
         sent_copy_path: None,
         server_saves_sent: false,
         empty_junk_days: 0,

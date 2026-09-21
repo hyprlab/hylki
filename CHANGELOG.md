@@ -1,9 +1,93 @@
 # Changelog
 
-## 1.37.1-beta.1 — 2026-09-20
+## 1.38.1-beta.1 — 2026-09-21
 
-Catch-up release: the beta channel is brought level with stable 1.37.0. No
-changes of its own — see the 1.37.0 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.38.0. No
+changes of its own: see the 1.38.0 section below for what is in it.
+
+## 1.38.0 — 2026-09-21
+
+Four requests from one Exchange user (#237, #238, #239, #240), the cause of
+the unified-inbox conversations that showed one message (#236), a list
+preview that showed a zip file's bytes (#241), the French translation
+brought up to date, and accounts named by their nickname.
+
+- **Ctrl+Enter sends** (#238). Caught in the composer's capture-phase key
+  handler, so it works with focus in the body's web view as well as in the
+  address and subject rows, and ahead of the recipient list's own Enter so
+  one press never both accepts a suggestion and sends. It goes through the
+  same Send input as the button: an unaddressed message is refused, a
+  scheduled one is queued. Listed in the shortcuts window. Requested by
+  [@rferrali](https://github.com/rferrali).
+- **The signature sits above the quoted message** in a reply or forward
+  (#237), as Apple Mail and Thunderbird place it; **Settings → Composing →
+  Signature in replies** puts it below again, which is what Hylki did before.
+  Stored as `signature_position` in `privacy.toml`. The composer assembles
+  its opening content in that order for every format; a signature added on
+  a From switch, where the previous account had none, is inserted above the
+  quote too, in rich text by the DOM and in the Markdown and HTML sources by
+  finding the quote in the text (the quote's tags in HTML; the first `> `
+  line and the attribution above it in Markdown). Drafts keep their
+  signature where it was saved. Requested by [@rferrali](https://github.com/rferrali).
+- **Forwarding carries the attachments** (#240). Every forward goes through
+  one path, built like Edit as New: the body and the attachments may still
+  be on the server, so each is fetched at most once with the message held
+  in `pending_forward`, and the reply re-enters. The files are staged to a
+  private temp directory and handed to the composer as paths, where they
+  appear as attachment chips. A reply deliberately does not do this: the
+  sender already has what they sent. Requested by [@rferrali](https://github.com/rferrali).
+- **Hidden folders** (#239). Any plain folder can be hidden from its
+  context menu in the sidebar. The paths are kept on the account
+  (`hidden_folders` in `accounts.toml`) and the worker leaves them out of
+  every listing, so the sweep, the watchers, the counts and the index all
+  stop at once; a running worker is told through `SetHiddenFolders` and
+  lists again. A sub-folder follows its parent; role folders cannot be
+  hidden, since mail is filed into them. The account editor lists the
+  hidden folders under Special Folders, each with a Show button. An
+  Exchange server lists its calendar, contacts, tasks, notes and journal
+  folders over IMAP as if they held mail, with Outbox, Sync Issues,
+  Conversation History, Scheduled and Snoozed: these are hidden once, the
+  first time such an account is listed, and only when the listing looks
+  like Exchange (at least two of Calendar, Contacts, Tasks and Journal at
+  the top level), so a lone Notes folder elsewhere is left alone. The look
+  is noted on the account as done, so a folder brought back stays back.
+  Requested by [@rferrali](https://github.com/rferrali).
+- **Fixed: a conversation opened from Inboxes showed only its newest
+  message** (#236). The list groups its rows over the rendered window, so
+  a collapsed row carries the oldest member within that window, but the
+  click handling decided head-ness over everything the list holds. When a
+  conversation's start lay past the window, the row was taken for a reply
+  picked out of an opened-up thread and shown alone, with no look in the
+  cache for the rest. Five inboxes merged newest first push a
+  conversation's start past the window within days, which is why the
+  unified view hit this and a single folder rarely did. Head-ness is now
+  judged over the grouping the rows were built from, the window is 500
+  rows rather than 200, and every account's Sent folder is indexed at
+  startup rather than on its first visit, so replies sent from another
+  client join a conversation without the folder being opened by hand.
+  Reported by [@aia832003](https://github.com/aia832003).
+- **Fixed: a message whose whole body is a file showed the file's bytes as
+  its preview** (#241). The summary fetch already left the preview blank
+  for a non-text first part, but the deeper `BODY[TEXT]` re-read had no
+  such check and decoded the base64 body. That read now applies the same
+  rule, taking a preview from a file-first message only when its body is a
+  multipart with a text part inside, and a decoded preview that reads as
+  binary is dropped on every path. Rows already cached with the garbage
+  carry replacement characters, so the garbled-row re-read clears them.
+  Reported by [@7system7](https://github.com/7system7).
+- **Fixed: conversation members are marked read as they scroll into view
+  again.** The rename changed the reader script's dataset reads from
+  `vireo*` to `hylki*` while the body attributes stayed `data-vireo-*`, so
+  the viewport observer behind "When displayed" and "After two seconds"
+  was never installed, and the open-scroll anchor, the newest-message
+  landing, the card palette's delay and the "Copied" label were silenced
+  with it.
+- **Accounts are named by their nickname** in the Mail Accounts list, as
+  the sidebar names them, with the address beneath; the editor's field is
+  called Nickname, says where the name shows up, and comes first.
+- **French** ([#234](https://github.com/hyprlab/hylki/pull/234),
+  [@frenchy82](https://github.com/frenchy82)): the 1.35 to 1.37 strings,
+  115 in all; 1345 of 1356, with the strings this release adds left.
 
 ## 1.37.0 — 2026-09-20
 

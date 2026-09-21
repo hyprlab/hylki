@@ -2,9 +2,26 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.37.1-beta.1
+## What's new in 1.38.1-beta.1
 
-Catch-up release: the beta channel is level with stable 1.37.0. Everything below applies.
+Catch-up release: the beta channel is level with stable 1.38.0. Everything below applies.
+
+## What's new in 1.38.0
+
+- **Ctrl+Enter sends** the message you are writing (#238).
+- **The signature goes above the quoted message** in replies and forwards
+  (#237); Settings → Composing puts it below again if you prefer.
+- **Forwarding keeps the attachments** (#240). A reply still does not repeat
+  them.
+- **Hide folders you never open** from a folder's right-click menu (#239);
+  the account editor brings them back. An Exchange server's calendar,
+  contacts and task folders are hidden from the start.
+- **Fixed: a conversation opened from Inboxes shows every reply** (#236),
+  not only the newest message. The list now renders 500 rows at a time.
+- **Fixed: a message that is only a file** shows no garbage preview (#241).
+- **Fixed: messages are marked read as they scroll into view** again.
+- **Accounts go by their nickname** in the Mail Accounts list, and the
+  French translation is up to date ([@frenchy82](https://github.com/frenchy82)).
 
 ## What's new in 1.37.0
 

@@ -97,6 +97,8 @@ pub struct PrefInit {
     pub compose_format: crate::config::ComposeFormat,
     /// Where the split reply opens in the reading pane (#212).
     pub reply_position: crate::config::ReplyPosition,
+    /// Where the signature sits in a reply or forward (#237).
+    pub signature_position: crate::config::SignaturePosition,
     pub app_theme: AppTheme,
     /// The appearance theme's id ("system" for the stock GNOME colours).
     pub theme: String,
@@ -890,6 +892,7 @@ pub enum PrefInput {
     ChangePlainFont(String),
     ChangeComposeFormat(u32),
     ChangeReplyPosition(u32),
+    ChangeSignaturePosition(u32),
     ChangeAppTheme(u32),
     ChangeTheme(String),
     ChangeSettingsOpen(u32),
@@ -1011,6 +1014,7 @@ pub enum PrefOutput {
     SetPlainFont(String),
     SetComposeFormat(crate::config::ComposeFormat),
     SetReplyPosition(crate::config::ReplyPosition),
+    SetSignaturePosition(crate::config::SignaturePosition),
     Closed,
 }
 
@@ -2265,6 +2269,18 @@ impl Component for Preferences {
                                             sender.input(PrefInput::ChangeComposeFormat(row.selected()));
                                         },
                                     },
+
+                                    #[name = "signature_position_row"]
+                                    adw::ComboRow {
+                                        set_title: &i18n("Signature in replies"),
+                                        set_subtitle: &i18n("Where the signature goes in a reply or \
+                                                       forward. Above the quoted message it closes \
+                                                       what you wrote; below, it follows the whole \
+                                                       conversation."),
+                                        connect_selected_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ChangeSignaturePosition(row.selected()));
+                                        },
+                                    },
                                 },
 
                                 #[name = "spelling_group"]
@@ -3046,6 +3062,15 @@ impl Component for Preferences {
             crate::config::ComposeFormat::Markdown => 1,
             crate::config::ComposeFormat::Html => 2,
             crate::config::ComposeFormat::Plain => 3,
+        });
+        widgets.signature_position_row.set_model(Some(&gtk::StringList::new(&[
+            &i18n("Above the quoted message"),
+            &i18n("Below the quoted message"),
+        ])));
+        no_truncate(&widgets.signature_position_row);
+        widgets.signature_position_row.set_selected(match init.signature_position {
+            crate::config::SignaturePosition::AboveQuote => 0,
+            crate::config::SignaturePosition::BelowQuote => 1,
         });
         widgets.reply_position_row.set_model(Some(&gtk::StringList::new(&[
             &i18n("Above the messages"),
@@ -3886,6 +3911,13 @@ impl Component for Preferences {
                     _ => crate::config::ReplyPosition::Top,
                 };
                 let _ = sender.output(PrefOutput::SetReplyPosition(position));
+            }
+            PrefInput::ChangeSignaturePosition(idx) => {
+                let position = match idx {
+                    1 => crate::config::SignaturePosition::BelowQuote,
+                    _ => crate::config::SignaturePosition::AboveQuote,
+                };
+                let _ = sender.output(PrefOutput::SetSignaturePosition(position));
             }
         }
     }

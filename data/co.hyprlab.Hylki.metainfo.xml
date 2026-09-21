@@ -57,6 +57,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.38.0" date="2026-09-21">
+      <description>
+        <p>Ctrl+Enter sends, the signature sits above the quoted message, a forward carries the original's attachments, folders can be hidden from the sidebar, and a conversation opened from Inboxes shows every reply again.</p>
+      </description>
+    </release>
     <release version="1.37.0" date="2026-09-20">
       <description>
         <p>Links can be opened in a browser of your choosing, any message can be edited as a new one, and Focus Mode gains four parts: hidden previews, hidden subjects, a folded sidebar and a launch straight into the mode.</p>

@@ -825,6 +825,10 @@ msgstr "Tudo o resto"
 msgid "Compose"
 msgstr "Compor"
 
+#, fuzzy
+msgid "Send the message you are writing"
+msgstr "Imprimir a mensagem que está a ler"
+
 msgid "Back out of a reply and return to the list"
 msgstr "Cancelar uma resposta e voltar à lista"
 
@@ -1244,6 +1248,12 @@ msgstr "Abrir Contas online…"
 msgid "Mail Account"
 msgstr "Conta de correio"
 
+#, fuzzy
+msgid "Nickname (shown in the sidebar and the Mail Accounts list)"
+msgstr ""
+"A forma como esta conta é apresentada na barra lateral e na vista Caixas de "
+"entrada."
+
 msgid "Provider"
 msgstr "Fornecedor"
 
@@ -1336,9 +1346,6 @@ msgid "How this account is shown in the sidebar and the Inboxes view."
 msgstr ""
 "A forma como esta conta é apresentada na barra lateral e na vista Caixas de "
 "entrada."
-
-msgid "Label (defaults to email address)"
-msgstr "Etiqueta (por predefinição, o endereço de e-mail)"
 
 msgid "Account accent color"
 msgstr "Cor de destaque da conta"
@@ -1467,6 +1474,20 @@ msgstr "Lixo"
 msgid "Junk"
 msgstr "Lixo eletrónico"
 
+#, fuzzy
+msgid "Hidden Folders"
+msgstr "Adicionar pasta"
+
+msgid ""
+"Folders kept out of the sidebar and left unsynced. Hide one from its right-"
+"click menu in the sidebar; Show brings it back. An Exchange server's "
+"calendar, contacts and task folders are hidden here from the start."
+msgstr ""
+
+#, fuzzy
+msgid "No hidden folders."
+msgstr "Mostrar ou ocultar subpastas"
+
 msgid "OpenPGP"
 msgstr "OpenPGP"
 
@@ -1567,6 +1588,13 @@ msgstr "✓ SMTP: ligado"
 
 msgid "✗ SMTP: {e}"
 msgstr "✗ SMTP: {e}"
+
+msgid "Show"
+msgstr ""
+
+#, fuzzy
+msgid "Bring this folder back to the sidebar"
+msgstr "Mostrar ou ocultar as contas na barra lateral"
 
 msgid "Sends through {host}"
 msgstr "Envia através de {host}"
@@ -4126,6 +4154,15 @@ msgstr ""
 "formatado; o texto simples é enviado sem formatação. O botão de formato do "
 "compositor alterna o formato de cada mensagem."
 
+#, fuzzy
+msgid "Signature in replies"
+msgstr "Assinatura"
+
+msgid ""
+"Where the signature goes in a reply or forward. Above the quoted message it "
+"closes what you wrote; below, it follows the whole conversation."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Ortografia"
 
@@ -4488,6 +4525,14 @@ msgstr "Restaurar predefinições"
 msgid "Account of the current folder"
 msgstr "Conta da pasta atual"
 
+#, fuzzy
+msgid "Above the quoted message"
+msgstr "Acima das mensagens"
+
+#, fuzzy
+msgid "Below the quoted message"
+msgstr "Abaixo das mensagens"
+
 msgid "Above the messages"
 msgstr "Acima das mensagens"
 
@@ -4660,6 +4705,12 @@ msgstr "Renomear pasta…"
 
 msgid "Delete Folder…"
 msgstr "Eliminar pasta…"
+
+#. And hidden (#239): only a plain folder, since a role folder out
+#. of sight would still be where mail is filed to.
+#, fuzzy
+msgid "Hide Folder"
+msgstr "Nova pasta"
 
 msgid "Empty Trash…"
 msgstr "Esvaziar lixo…"
@@ -5105,6 +5156,9 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Label (defaults to email address)"
+#~ msgstr "Etiqueta (por predefinição, o endereço de e-mail)"
 
 #~ msgid "Changelog"
 #~ msgstr "Registo de alterações"

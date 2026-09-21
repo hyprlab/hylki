@@ -570,6 +570,9 @@ pub enum CtxAction {
     RenameFolder { account_id: u32, name: String, path: String },
     /// Erase everything in Trash or Junk (#152).
     EmptyFolder { account_id: u32, folder_id: u32, name: String, path: String },
+    /// Take a folder out of the sidebar and out of syncing (#239). The
+    /// account editor's Hidden Folders list brings it back.
+    HideFolder { account_id: u32, path: String },
     /// Open Settings on the filter rule that files into this folder.
     EditFilter { account_id: u32, path: String },
     /// Run this account's filter rules over the mail already in this
@@ -4012,6 +4015,12 @@ fn folder_menu_items(
         items.push((i18n_noop("Delete Folder…"), CtxAction::DeleteFolder {
             account_id: id,
             name: f.name.clone(),
+            path: f.path.clone(),
+        }));
+        // And hidden (#239): only a plain folder, since a role folder out
+        // of sight would still be where mail is filed to.
+        items.push((i18n_noop("Hide Folder"), CtxAction::HideFolder {
+            account_id: id,
             path: f.path.clone(),
         }));
     }

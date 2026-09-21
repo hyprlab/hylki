@@ -18,8 +18,8 @@ file has to be touched.
    `.po` file and use the editor's "update from template" (or
    `msgmerge --update fr.po hylki.pot`); new strings show up untranslated
    and changed ones as "fuzzy".
-3. Translate. Keep the `{placeholders}` exactly as they are — they are
-   filled in at runtime — but move them around freely to suit the
+3. Translate. Keep the `{placeholders}` exactly as they are (they are
+   filled in at runtime), but move them around freely to suit the
    language. Strings with two forms are plurals: give the singular and the
    plural your language uses.
 4. Add the language code to `LINGUAS` (one per line) if it is new.

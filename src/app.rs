@@ -529,6 +529,8 @@ pub struct AppModel {
     /// Accounts whose inbox has been requested for the unified view since
     /// launch (the cache-primed slices still need their catch-up sync).
     unified_boot_requested: HashSet<u32>,
+    /// Accounts whose sent mail has been asked for this run (#236).
+    sent_index_requested: HashSet<u32>,
     /// (account_id, folder_id) → last-seen message list, shown instantly on
     /// revisit while a fresh sync runs in the background.
     message_cache: HashMap<(u32, u32), Vec<Message>>,
@@ -867,6 +869,8 @@ pub struct AppModel {
     compose_format: crate::config::ComposeFormat,
     /// Where the split reply opens in the reading pane (#212).
     reply_position: config::ReplyPosition,
+    /// Where the signature sits in a reply or forward (#237).
+    signature_position: config::SignaturePosition,
     spellcheck: bool,
     spellcheck_langs: String,
     /// How email content is themed (message content only, not the app UI).
@@ -979,6 +983,9 @@ pub struct AppModel {
     /// "Edit as New Message" (#232) waiting on the body, or the attachments,
     /// it is to be copied from.
     pending_edit_as_new: Option<Message>,
+    /// A forward (#240) waiting on the body, or the attachments, it is to
+    /// carry, and whether it opens inline or in a window.
+    pending_forward: Option<(Message, bool)>,
     /// Settings → System → Links: which browser a link in a message opens in
     /// (#232). Empty = the desktop's default, "ask" = its app chooser,
     /// otherwise a desktop entry id.
@@ -1412,6 +1419,7 @@ pub enum AppMsg {
     SetComposeFormat(crate::config::ComposeFormat),
     /// Settings: where the split reply opens in the reading pane (#212).
     SetReplyPosition(config::ReplyPosition),
+    SetSignaturePosition(config::SignaturePosition),
     /// Settings: each conversation message lists its own attachments (#213).
     SetCardAttachments(bool),
     /// Settings: the attachment drawer beneath the reader is shown (#213).
@@ -1423,6 +1431,11 @@ pub enum AppMsg {
     ShowAttachmentInMessage(Attachment),
     /// Showcase only: turn the inline composer's preview on.
     ShowcaseComposePreview,
+    /// Pick entry `n` of the inline composer's From row (#237 capture).
+    ShowcaseComposeFrom(u32),
+    /// Forward one message of the open conversation by its id (#240), as
+    /// its card's Forward button would.
+    ShowcaseForward { account_id: u32, id: u32 },
     /// Showcase only (HYLKI_SHOWCASE_COMPOSE_CLOSE): cancel the inline
     /// composer, to check its web process goes with it.
     ShowcaseComposeClose,
@@ -1445,7 +1458,7 @@ pub enum AppMsg {
     ComposeTo(String),
     /// Showcase only (HYLKI_SHOWCASE_FOLDER): switch to the first account's
     /// folder of this kind, so a capture can start from Drafts, Sent, etc.
-    ShowcaseFolder(FolderKind),
+    ShowcaseFolder { kind: FolderKind, account: Option<u32> },
     /// Showcase only (HYLKI_SHOWCASE_EDITOR_DIRTY): change the open account
     /// editor, so leaving an edited one can be captured.
     ShowcaseDirtyEditor,
@@ -2940,6 +2953,7 @@ impl SimpleComponent for AppModel {
             unified_view: UnifiedView::Kind(FolderKind::Inbox),
             unified_slices: HashMap::new(),
             unified_boot_requested: HashSet::new(),
+            sent_index_requested: HashSet::new(),
             message_cache: HashMap::new(),
             indexed_folders: HashSet::new(),
             body_cache: crate::ram_cache::RamCache::new(BODY_CACHE_BUDGET),
@@ -2948,6 +2962,7 @@ impl SimpleComponent for AppModel {
             pending_reply: None,
             pending_draft_pick: None,
             pending_edit_as_new: None,
+            pending_forward: None,
             files_prefs: config::load_files_prefs(),
             link_browser: {
                 // The launcher reads its choice from here, not from disk, so
@@ -3140,6 +3155,7 @@ impl SimpleComponent for AppModel {
             paste_plain: config::load_paste_plain(),
             compose_format: config::load_compose_format(),
             reply_position: config::load_reply_position(),
+            signature_position: config::load_signature_position(),
             spellcheck: config::load_spellcheck(),
             spellcheck_langs: config::load_spellcheck_langs(),
             message_theme: config::load_message_theme(),
@@ -4067,6 +4083,34 @@ impl SimpleComponent for AppModel {
                 }
             });
         }
+        // HYLKI_SHOWCASE_SELECT=<account>:<id> opens that message at 5 s
+        // (HYLKI_SHOWCASE_SELECT_AT overrides the seconds) through its row,
+        // or the head of its conversation, real accounts included: a way to
+        // open a conversation the reader assembles from the cache without a
+        // pointer, so its log can be read (#236).
+        if let Some((a, id)) = std::env::var("HYLKI_SHOWCASE_SELECT").ok().and_then(|v| {
+            let (a, id) = v.split_once(':')?;
+            Some((a.parse::<u32>().ok()?, id.parse::<u32>().ok()?))
+        }) {
+            let at: u32 = std::env::var("HYLKI_SHOWCASE_SELECT_AT")
+                .ok()
+                .and_then(|v| v.parse().ok())
+                .unwrap_or(5);
+            let list = model.message_list.sender().clone();
+            gtk::glib::timeout_add_seconds_local_once(at, move || {
+                let _ = list.send(MessageListInput::SelectAndLoad((a, id)));
+            });
+        }
+        // HYLKI_SHOWCASE_INBOX=<account> switches to that account's Inbox
+        // at 3 s (the first account's when it is not a number), real
+        // accounts included, for the same probe from a folder view.
+        if let Ok(v) = std::env::var("HYLKI_SHOWCASE_INBOX") {
+            let account = v.parse::<u32>().ok().filter(|a| *a > 0);
+            let s = sender.clone();
+            gtk::glib::timeout_add_seconds_local_once(3, move || {
+                s.input(AppMsg::ShowcaseFolder { kind: FolderKind::Inbox, account });
+            });
+        }
         // Timers leave room for the WebViews to load and settle between steps.
         if demo_mode() {
             if let Some(shot) = std::env::var("HYLKI_SHOWCASE").ok() {
@@ -4487,7 +4531,7 @@ impl SimpleComponent for AppModel {
                     if let Some(kind) = kind {
                         let s = sender.clone();
                         gtk::glib::timeout_add_seconds_local_once(2, move || {
-                            s.input(AppMsg::ShowcaseFolder(kind));
+                            s.input(AppMsg::ShowcaseFolder { kind, account: None });
                         });
                     }
                 }
@@ -4495,6 +4539,26 @@ impl SimpleComponent for AppModel {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(4, move || {
                         s.input(AppMsg::Reply);
+                    });
+                }
+                // HYLKI_SHOWCASE_FORWARD=<seconds> does the same with
+                // Forward at that moment (4 s unless it parses), to check
+                // the original's attachments come along (#240). As
+                // <seconds>:<account>:<id> it forwards that message of the
+                // open conversation, the way its card's button would, so a
+                // message that is not the conversation's newest can be
+                // picked.
+                if let Ok(v) = std::env::var("HYLKI_SHOWCASE_FORWARD") {
+                    let mut parts = v.split(':');
+                    let at = parts.next().and_then(|p| p.parse::<u32>().ok()).unwrap_or(4);
+                    let target = parts
+                        .next()
+                        .zip(parts.next())
+                        .and_then(|(a, id)| Some((a.parse::<u32>().ok()?, id.parse::<u32>().ok()?)));
+                    let s = sender.clone();
+                    gtk::glib::timeout_add_seconds_local_once(at, move || match target {
+                        Some((account_id, id)) => s.input(AppMsg::ShowcaseForward { account_id, id }),
+                        None => s.input(AppMsg::Forward),
                     });
                 }
                 // HYLKI_SHOWCASE_COMPOSE_PREVIEW=1 turns the inline
@@ -4515,6 +4579,15 @@ impl SimpleComponent for AppModel {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(6, move || {
                         s.input(AppMsg::ShowcaseComposePreview);
+                    });
+                }
+                // HYLKI_SHOWCASE_COMPOSE_FROM=N picks the inline composer's
+                // From entry N at 7 s, to check where the new account's
+                // signature lands (#237).
+                if let Some(Ok(n)) = std::env::var("HYLKI_SHOWCASE_COMPOSE_FROM").ok().map(|v| v.parse::<u32>()) {
+                    let s = sender.clone();
+                    gtk::glib::timeout_add_seconds_local_once(7, move || {
+                        s.input(AppMsg::ShowcaseComposeFrom(n));
                     });
                 }
                 // HYLKI_SHOWCASE_COMPOSE_CLOSE=N cancels the inline composer
@@ -5470,6 +5543,9 @@ impl SimpleComponent for AppModel {
                 CtxAction::EmptyFolder { account_id, folder_id, name, path } => {
                     self.confirm_empty_folder(account_id, folder_id, name, path, &sender);
                 }
+                CtxAction::HideFolder { account_id, path } => {
+                    self.hide_folders(account_id, vec![path]);
+                }
             },
 
             AppMsg::DropMoveMessages { dest_account, dest, items } => {
@@ -5977,7 +6053,13 @@ impl SimpleComponent for AppModel {
                 {
                     self.thread_related_pending = false;
                 }
+                let found = messages.len();
                 self.merge_related(account_id, message_id, messages);
+                tracing::debug!(
+                    target: "hylki::undo",
+                    "related for {account_id}:{message_id}: {found} in the cache, conversation now {}",
+                    self.current_thread.len(),
+                );
                 // One render for the settled conversation, rather than one here
                 // and another for whatever this brought with it.
                 if self.current_thread.len() > 1 {
@@ -6028,7 +6110,7 @@ impl SimpleComponent for AppModel {
                         );
                     }
                     RowAction::Forward => {
-                        self.open_inline_reply(m.account_id, forward_prefill(&m), Some((m.account_id, m.id)), &sender);
+                        self.forward(m, true, &sender);
                     }
                     // Cards only carry the three above; anything else falls
                     // through to the ordinary row behaviour.
@@ -6093,8 +6175,7 @@ impl SimpleComponent for AppModel {
                     }
                     RowAction::Forward => {
                         let m = self.newest_to_answer(&conversation, m);
-                        let m = self.with_cached_body(m);
-                        self.open_compose(m.account_id, forward_prefill(&m), &sender);
+                        self.forward(m, false, &sender);
                     }
                     // A conversation row stands for its newest message here
                     // too: that is the one the row is showing.
@@ -6221,8 +6302,8 @@ impl SimpleComponent for AppModel {
                 self.sync_tag_keywords();
             }
 
-            AppMsg::ShowcaseFolder(kind) => {
-                let account = self.active_account();
+            AppMsg::ShowcaseFolder { kind, account } => {
+                let account = account.unwrap_or_else(|| self.active_account());
                 let found = self
                     .folders
                     .get(&account)
@@ -6266,7 +6347,7 @@ impl SimpleComponent for AppModel {
 
             AppMsg::Forward => {
                 if let Some(m) = self.compose_target() {
-                    self.open_inline_reply(m.account_id, forward_prefill(&m), Some((m.account_id, m.id)), &sender);
+                    self.forward(m, true, &sender);
                 }
             }
 
@@ -7463,6 +7544,29 @@ impl SimpleComponent for AppModel {
                     r.controller.emit(ComposeInput::TogglePreview(true));
                 }
             }
+            AppMsg::ShowcaseComposeFrom(n) => {
+                if let Some(r) = self.reader_compose.as_ref() {
+                    r.controller.emit(ComposeInput::ShowcaseFrom(n));
+                }
+            }
+            AppMsg::ShowcaseForward { account_id, id } => {
+                let found = self
+                    .current_thread
+                    .iter()
+                    .find(|m| m.account_id == account_id && m.id == id)
+                    .cloned()
+                    .or_else(|| {
+                        self.message_cache
+                            .values()
+                            .flatten()
+                            .find(|m| m.account_id == account_id && m.id == id)
+                            .cloned()
+                    });
+                match found {
+                    Some(m) => self.forward(m, true, &sender),
+                    None => tracing::warn!("showcase forward: {account_id}:{id} is not loaded"),
+                }
+            }
             AppMsg::ShowcaseComposeUndo => {
                 if let Some(r) = self.reader_compose.as_ref() {
                     r.controller.emit(ComposeInput::ShowcaseHistory(0));
@@ -7504,6 +7608,14 @@ impl SimpleComponent for AppModel {
                 // one opens in the new place.
                 if self.reply_position != position {
                     self.reply_position = position;
+                    self.save_settings();
+                }
+            }
+            AppMsg::SetSignaturePosition(position) => {
+                // Composers already open keep their signature where it is;
+                // the next reply or forward opens with the new placement.
+                if self.signature_position != position {
+                    self.signature_position = position;
                     self.save_settings();
                 }
             }
@@ -8687,9 +8799,39 @@ impl SimpleComponent for AppModel {
                 {
                     return;
                 }
+                let mut folders = folders;
+                // The first listing of an account is looked over once for
+                // Exchange's non-mail folders (#239), which are hidden the
+                // way any folder is: the account editor lists them, and can
+                // bring any of them back. Noted as done either way, so a
+                // folder brought back stays back.
+                let seed = self
+                    .config
+                    .get(account_id as usize - 1)
+                    .filter(|cfg| !cfg.folders_seeded)
+                    .map(|_| crate::models::exchange_non_mail_folders(&folders));
+                if let Some(seed) = seed {
+                    if let Some(cfg) = self.config.get_mut(account_id as usize - 1) {
+                        cfg.folders_seeded = true;
+                        if let Err(e) = config::save(&self.config) {
+                            tracing::warn!("could not note the folder look-over: {e}");
+                        }
+                    }
+                    if !seed.is_empty() {
+                        tracing::info!("account {account_id}: hiding Exchange's non-mail folders {seed:?}");
+                        self.hide_folders(account_id, seed);
+                    }
+                }
+                // A listing from before a hide (the cache at startup, an
+                // answer already on its way) still carries what is hidden.
+                if let Some(cfg) = self.config.get(account_id as usize - 1) {
+                    if !cfg.hidden_folders.is_empty() {
+                        let hidden = cfg.hidden_folders.clone();
+                        folders.retain(|f| !crate::models::folder_is_hidden(&f.path, None, &hidden));
+                    }
+                }
                 // Manual special-folder assignments (#82) ride over whatever
                 // the worker detected.
-                let mut folders = folders;
                 if let Some(cfg) = self.config.get(account_id as usize - 1) {
                     apply_folder_roles(&cfg.folder_roles.clone(), &mut folders);
                 }
@@ -8762,6 +8904,7 @@ impl SimpleComponent for AppModel {
                         self.send_to(account_id, MailRequest::LoadMessages { folder_id, path });
                     }
                 }
+                self.index_sent_folders(account_id);
                 // A unified view merges one folder per account, and this
                 // account's folders may only now have arrived — so the set the
                 // completeness flag is measured over just changed. It is
@@ -9186,6 +9329,14 @@ impl SimpleComponent for AppModel {
                     }
                     self.pending_edit_as_new = Some(pending);
                 }
+                // And a forward waiting on the body it quotes.
+                if let Some((pending, inline)) = self.pending_forward.take() {
+                    if pending.account_id == account_id && pending.id == message_id {
+                        self.forward(pending, inline, &sender);
+                        return;
+                    }
+                    self.pending_forward = Some((pending, inline));
+                }
                 // Likewise a reply picked for handed-in files.
                 if let Some((mut m, extra)) = self.pending_reply.take() {
                     if m.account_id == account_id && m.id == message_id {
@@ -9407,6 +9558,14 @@ impl SimpleComponent for AppModel {
                         self.pending_edit_as_new = Some(pending);
                     }
                 }
+                // The same for a forward that carries them (#240).
+                if let Some((pending, inline)) = self.pending_forward.take() {
+                    if pending.account_id == account_id && pending.id == message_id {
+                        self.forward(pending, inline, &sender);
+                    } else {
+                        self.pending_forward = Some((pending, inline));
+                    }
+                }
             }
 
             AppMsg::AttachmentsPending { account_id, message_id } => {
@@ -9468,6 +9627,14 @@ impl SimpleComponent for AppModel {
                         self.edit_as_new(pending, &sender);
                     } else {
                         self.pending_edit_as_new = Some(pending);
+                    }
+                }
+                if let Some((mut pending, inline)) = self.pending_forward.take() {
+                    if pending.account_id == account_id && pending.id == message_id {
+                        pending.has_attachment = false;
+                        self.forward(pending, inline, &sender);
+                    } else {
+                        self.pending_forward = Some((pending, inline));
                     }
                 }
             }
@@ -9929,6 +10096,7 @@ impl AppModel {
             self.paste_plain,
             self.compose_format,
             self.reply_position,
+            self.signature_position,
             self.spellcheck,
             self.spellcheck_langs.clone(),
             self.preview_lines,
@@ -13242,6 +13410,61 @@ impl AppModel {
         }
     }
 
+    /// Forward a message with its attachments (#240): the quoted original
+    /// in the body, and every file that came with it attached to the new
+    /// message, as Thunderbird, Apple Mail and Gmail do. Much of what gets
+    /// forwarded is forwarded for the file. A reply deliberately does not
+    /// do this: the sender already has what they sent.
+    ///
+    /// Built like `edit_as_new`: the body and the attachments may still be
+    /// on the server, so each is fetched at most once with the message held
+    /// in `pending_forward`, and the reply re-enters here. `inline` says
+    /// where the composer opens, over the reading pane or in a window.
+    fn forward(&mut self, m: Message, inline: bool, sender: &ComponentSender<Self>) {
+        let m = self.with_cached_body(m);
+        let key = (m.account_id, m.id);
+        if m.body.is_empty() {
+            if let Some(path) = self.resolve_folder_path(&m) {
+                self.send_to(
+                    m.account_id,
+                    MailRequest::LoadBody { message_id: m.id, path, uid: m.uid },
+                );
+                self.pending_forward = Some((m, inline));
+                return;
+            }
+        }
+        if m.has_attachment && !self.attachment_cache.contains_key(&key) {
+            if let Some(path) = self.resolve_folder_path(&m) {
+                self.send_to(m.account_id, MailRequest::LoadAttachments {
+                    message_id: m.id,
+                    path,
+                    uid: m.uid,
+                    download: true,
+                });
+                self.pending_forward = Some((m, inline));
+                return;
+            }
+        }
+        let attachments = self
+            .attachment_cache
+            .get(&key)
+            .map(|items| stage_attachments(&format!("hylki-forward-{}-{}", m.account_id, m.id), items))
+            .unwrap_or_default();
+        tracing::info!(
+            "forward: {}:{} with {} attachment(s)",
+            m.account_id,
+            m.id,
+            attachments.len()
+        );
+        let mut prefill = forward_prefill(&m);
+        prefill.attachments = attachments;
+        if inline {
+            self.open_inline_reply(m.account_id, prefill, Some((m.account_id, m.id)), sender);
+        } else {
+            self.open_compose(m.account_id, prefill, sender);
+        }
+    }
+
     /// "Edit as New Message" (#232): the message opened in the composer as a
     /// message of its own — the same recipients, subject, body and
     /// attachments, with none of the threading headers and no tie to what it
@@ -13322,15 +13545,18 @@ impl AppModel {
         // (Nautilus's "Send by email", #105) the composer opens before any
         // worker has connected, and the live list is still empty — which
         // hid the From row entirely.
+        // The demo's stand-in accounts count here too, so a demo reply
+        // carries a signature like a real one.
+        let config = self.effective_config();
         let mut emails: Vec<String> = Vec::new();
         for email in &self.account_order {
-            if self.config.iter().any(|c| c.enabled && &c.email == email)
+            if config.iter().any(|c| c.enabled && &c.email == email)
                 && !emails.contains(email)
             {
                 emails.push(email.clone());
             }
         }
-        for c in self.config.iter().filter(|c| c.enabled) {
+        for c in config.iter().filter(|c| c.enabled) {
             if !emails.contains(&c.email) {
                 emails.push(c.email.clone());
             }
@@ -13339,7 +13565,7 @@ impl AppModel {
             .iter()
             .flat_map(|email| {
                 let Some((idx, cfg)) =
-                    self.config.iter().enumerate().find(|(_, c)| &c.email == email)
+                    config.iter().enumerate().find(|(_, c)| &c.email == email)
                 else {
                     return Vec::new();
                 };
@@ -13426,6 +13652,7 @@ impl AppModel {
             compact: false,
             decorations: true,
             format: self.compose_format,
+            signature_position: self.signature_position,
         };
         (id, init)
     }
@@ -14660,6 +14887,47 @@ impl AppModel {
 
     /// Remove a folder, its messages going to Trash first so nothing is lost
     /// even when this is undoing a folder someone has since filed mail into.
+    /// Hide folders (#239): remembered on the account, taken off the
+    /// sidebar at once, and the worker told so its next listing, and every
+    /// sync after it, leaves them out. A hidden folder that was open gives
+    /// way to nothing, like a deleted one.
+    fn hide_folders(&mut self, account_id: u32, paths: Vec<String>) {
+        let Some(cfg) = self.config.get_mut(account_id as usize - 1) else { return };
+        let mut changed = false;
+        for path in paths {
+            if !cfg.hidden_folders.contains(&path) {
+                cfg.hidden_folders.push(path);
+                changed = true;
+            }
+        }
+        if !changed {
+            return;
+        }
+        let hidden = cfg.hidden_folders.clone();
+        if let Err(e) = config::save(&self.config) {
+            self.notifications.emit(NotifyInput::Push {
+                text: i18n_f("Could not save account: {e}", &[("e", &(e).to_string())]),
+                error: true,
+                connectivity: false,
+            });
+        }
+        if self
+            .selected
+            .as_ref()
+            .is_some_and(|s| s.account_id == account_id && crate::models::folder_is_hidden(&s.path, None, &hidden))
+        {
+            self.current = None;
+            self.current_thread.clear();
+            self.show_message(None, false);
+            self.message_list.emit(MessageListInput::SetLoading);
+        }
+        if let Some(folders) = self.folders.get_mut(&account_id) {
+            folders.retain(|f| !crate::models::folder_is_hidden(&f.path, None, &hidden));
+        }
+        self.rebuild_sidebar();
+        self.send_to(account_id, MailRequest::SetHiddenFolders { paths: hidden });
+    }
+
     fn delete_folder(&mut self, account_id: u32, path: String) {
         let trash = self
             .folders
@@ -15700,6 +15968,7 @@ impl AppModel {
             plain_font: self.plain_font.clone(),
             compose_format: self.compose_format,
             reply_position: self.reply_position,
+            signature_position: self.signature_position,
             notifications: self.notifications_enabled,
             notification_content: self.notification_content,
             show_attachments: self.show_attachments,
@@ -15863,6 +16132,7 @@ impl AppModel {
                 PrefOutput::SetPlainFont(font) => AppMsg::SetPlainFont(font),
                 PrefOutput::SetComposeFormat(f) => AppMsg::SetComposeFormat(f),
                 PrefOutput::SetReplyPosition(p) => AppMsg::SetReplyPosition(p),
+                PrefOutput::SetSignaturePosition(p) => AppMsg::SetSignaturePosition(p),
                 PrefOutput::Closed => AppMsg::ClosePreferences,
             });
         accounts.emit(crate::ui::accounts::AccountsInput::SetFolderChoices(
@@ -17924,6 +18194,46 @@ impl AppModel {
     }
 
     /// Counted folders (#116) whose lists have never been loaded this run:
+    /// Index an account's sent mail without waiting for its folder to be
+    /// opened (#236). A conversation pulls the user's own replies in from
+    /// the cache, and the cache only held a folder once that folder had been
+    /// shown: a reply sent from another client stayed out of every
+    /// conversation until Sent was visited by hand. Asked once per account
+    /// per run, as soon as its folders are known; the worker lists the first
+    /// page and indexes the rest behind it. Both the folder the server files
+    /// sent mail in and the one Hylki copies to, when they differ.
+    fn index_sent_folders(&mut self, account_id: u32) {
+        if self.sent_index_requested.contains(&account_id) {
+            return;
+        }
+        let mut targets: Vec<(u32, String)> = self
+            .folder_of_kind(account_id, FolderKind::Sent)
+            .map(|f| (f.id, f.path.clone()))
+            .into_iter()
+            .collect();
+        if let Some(path) = self.sent_copy_path(account_id) {
+            let copy = self
+                .folders
+                .get(&account_id)
+                .and_then(|fs| fs.iter().find(|f| f.path == path))
+                .map(|f| (f.id, f.path.clone()));
+            if let Some(copy) = copy {
+                if !targets.iter().any(|(id, _)| *id == copy.0) {
+                    targets.push(copy);
+                }
+            }
+        }
+        // No sent folder listed yet: ask again when the next folder list
+        // arrives rather than never.
+        if targets.is_empty() {
+            return;
+        }
+        self.sent_index_requested.insert(account_id);
+        for (folder_id, path) in targets {
+            self.send_to(account_id, MailRequest::SyncFolder { folder_id, path });
+        }
+    }
+
     /// fetch them quietly, so the tray menu can show their unread mail
     /// without waiting for their counts to move.
     fn sync_unloaded_counted_folders(&self) {
@@ -17977,12 +18287,12 @@ fn interface_font() -> String {
 }
 
 /// Where the whole release history lives.
-const RELEASE_NOTES_URL: &str = "https://github.com/hyprlab/hylki/blob/main/RELEASE_NOTES.md";
+const RELEASE_NOTES_URL: &str = "https://github.com/hyprlab/hylki/blob/main/docs/RELEASE_NOTES.md";
 
 /// This release's section of `RELEASE_NOTES.md` — the same text the GitHub
 /// release carries — headed by the version.
 fn current_release_notes() -> String {
-    let md = include_str!("../RELEASE_NOTES.md");
+    let md = include_str!("../docs/RELEASE_NOTES.md");
     let head = format!("## What's new in {}", crate::VERSION);
     let mut out = String::new();
     let mut on = false;
@@ -18347,6 +18657,7 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
         i18n_noop("Everything else"),
         &[
             ("c", i18n_noop("Compose")),
+            ("Ctrl+Enter", i18n_noop("Send the message you are writing")),
             ("Esc", i18n_noop("Back out of a reply and return to the list")),
             ("Ctrl+Z", i18n_noop("Undo the last action, or the last edit while you are writing")),
             ("Ctrl+Shift+Z", i18n_noop("Redo it (Ctrl+Y does the same)")),
@@ -18484,6 +18795,8 @@ fn demo_account_configs() -> Vec<AccountConfig> {
         oauth_refresh: String::new(),
         push: None,
         folder_roles: Default::default(),
+        hidden_folders: Vec::new(),
+        folders_seeded: false,
         sent_copy_path: None,
         server_saves_sent: false,
         empty_junk_days: 0,
@@ -20204,7 +20517,7 @@ mod tests {
 
         for md in [
             include_str!("../CHANGELOG.md"),
-            include_str!("../RELEASE_NOTES.md"),
+            include_str!("../docs/RELEASE_NOTES.md"),
         ] {
             for line in md.lines() {
                 let markup = md_inline(line);

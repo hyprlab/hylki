@@ -29,7 +29,7 @@ Download the `.rpm` from the
 sudo dnf install ./hylki-*.x86_64.rpm
 ```
 
-The RPM targets current Fedora releases (44+) on x86_64 only — on ARM, or on
+The RPM targets current Fedora releases (44+) on x86_64 only. On ARM, or on
 anything older, use the Flatpak or [build from source](BUILDING.md).
 
 ## Gentoo
@@ -62,7 +62,7 @@ Betas install alongside the stable app as a separate application
 
 ## Other distributions
 
-Arch, Debian/Ubuntu and Snap packages were discontinued after 1.7.0 — use the
+Arch, Debian/Ubuntu and Snap packages were discontinued after 1.7.0. Use the
 Flatpak (it works on every distribution) or [build from source](BUILDING.md).
 
 ## Runtime requirements

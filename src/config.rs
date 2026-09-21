@@ -273,6 +273,16 @@ pub struct AccountConfig {
     /// "archive". Empty = fully automatic.
     #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
     pub folder_roles: std::collections::BTreeMap<String, String>,
+    /// Folders kept out of the sidebar and out of every sync (#239), as
+    /// full paths; a sub-folder follows its parent. Managed from a folder's
+    /// context menu and the account editor's Hidden Folders list.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub hidden_folders: Vec<String>,
+    /// Whether the first folder listing has been looked over for Exchange's
+    /// non-mail folders (#239), which are hidden once, on that look. Kept
+    /// so a folder the user brought back is not hidden again.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub folders_seeded: bool,
     /// Where copies of sent mail are filed (#199): a full folder path, or
     /// `None` for the Sent folder. This is only a destination, not a role —
     /// the folder keeps whatever it already is, so the Inbox can be chosen
@@ -1024,6 +1034,10 @@ struct PrivacyFile {
     /// Where the split reply opens in the reading pane (#212).
     #[serde(default)]
     reply_position: ReplyPosition,
+    /// Where the signature sits in a reply or forward (#237): above the
+    /// quoted original, or below it.
+    #[serde(default)]
+    signature_position: SignaturePosition,
     /// Whether the composer underlines misspelled words as you type.
     #[serde(default = "default_spellcheck")]
     spellcheck: bool,
@@ -1350,6 +1364,7 @@ impl Default for PrivacyFile {
             compose_plain: false,
             compose_format: None,
             reply_position: ReplyPosition::default(),
+            signature_position: SignaturePosition::default(),
             spellcheck: default_spellcheck(),
             spellcheck_langs: String::new(),
             sidebar_hover_expand: false,
@@ -2387,6 +2402,22 @@ pub fn load_reply_position() -> ReplyPosition {
     load_privacy().reply_position
 }
 
+/// Where the signature goes in a reply or forward (#237). Above the quoted
+/// original is what Apple Mail and Thunderbird do, and what a reader
+/// expects: the signature closes the words above it, not the words
+/// somebody else wrote. Below is the placement Hylki had before.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SignaturePosition {
+    #[default]
+    AboveQuote,
+    BelowQuote,
+}
+
+pub fn load_signature_position() -> SignaturePosition {
+    load_privacy().signature_position
+}
+
 /// What new messages start out as, falling back to the plain-text
 /// switch this setting replaced (#180).
 pub fn load_compose_format() -> ComposeFormat {
@@ -2714,6 +2745,7 @@ pub fn save_privacy(
     paste_plain: bool,
     compose_format: ComposeFormat,
     reply_position: ReplyPosition,
+    signature_position: SignaturePosition,
     spellcheck: bool,
     spellcheck_langs: String,
     preview_lines: u32,
@@ -2804,6 +2836,7 @@ pub fn save_privacy(
         compose_plain: compose_format == ComposeFormat::Plain,
         compose_format: Some(compose_format),
         reply_position,
+        signature_position,
         spellcheck,
         // Every save is after the first load, which applied it.
         single_card_default_applied: true,
@@ -3809,6 +3842,8 @@ dest_path = "Lists"
             oauth_refresh: "TOKEN".into(),
             push: None,
             folder_roles: Default::default(),
+            hidden_folders: Vec::new(),
+            folders_seeded: false,
             sent_copy_path: None,
             server_saves_sent: false,
             empty_junk_days: 0,

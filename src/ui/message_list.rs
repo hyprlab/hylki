@@ -12,7 +12,11 @@ use crate::i18n::i18n;
 
 /// Max rows rendered at once. GtkListBox isn't virtualized, so the full folder
 /// index is kept in memory for search but only this many rows are built.
-const RENDER_CAP: usize = 200;
+/// Raised from 200 (#236): the unified Inboxes merge every account newest
+/// first, and a conversation's older messages fell past the window within
+/// days; a wider window keeps more of a conversation on the same page, and
+/// the rows past the first paint are built in idle-time chunks anyway.
+const RENDER_CAP: usize = 500;
 
 /// Rows built synchronously when the list is (re)built — enough to fill the
 /// pane — before the rest of the page arrives in idle-time chunks. Building
@@ -2313,6 +2317,31 @@ fn reader_conversation(emitted: &[(u32, u32)], merged: &[(u32, u32)]) -> Vec<(u3
     let mut all = emitted.to_vec();
     all.extend(merged.iter().filter(|k| !emitted.contains(k)).copied());
     all
+}
+
+/// Whether the message at `key` is the row its conversation collapses to:
+/// the oldest member among those the rows were grouped from, or a message
+/// grouped with nothing there (#236).
+///
+/// Judged over `msg_thread` and `thread_members`, which the rebuild fills
+/// from the rendered window, and not over everything the list holds. The
+/// two differ exactly when a conversation's older messages sit past the
+/// window: the row on screen is then the oldest member *shown*, while the
+/// conversation's true head is further down, unrendered. Asked against the
+/// whole list, that row failed the head test, was taken for a reply picked
+/// out of an opened-up thread, and was shown alone in the reader, with no
+/// look in the cache for the rest. The unified Inboxes hit this constantly:
+/// several inboxes merged, newest first, put a conversation's start past
+/// the rendered window within days, while one folder rarely does.
+fn heads_its_row(
+    key: (u32, u32),
+    msg_thread: &std::collections::HashMap<(u32, u32), (u32, String)>,
+    thread_members: &std::collections::HashMap<(u32, String), Vec<(u32, u32)>>,
+) -> bool {
+    match msg_thread.get(&key) {
+        None => true,
+        Some(thread) => thread_members.get(thread).and_then(|m| m.first()) == Some(&key),
+    }
 }
 
 /// Which of the page's conversations still need their real size looked up
@@ -5499,10 +5528,9 @@ impl MessageList {
     /// expandable conversations off, it never is.
     fn row_conversation(&self, m: &Message) -> Vec<Message> {
         let members = self.thread_members(m);
-        let is_head = members
-            .first()
-            .is_some_and(|h| (h.account_id, h.id) == (m.account_id, m.id));
-        if !is_head {
+        if members.is_empty()
+            || !heads_its_row((m.account_id, m.id), &self.msg_thread, &self.thread_members)
+        {
             return Vec::new();
         }
         let expanded = self.thread_expansion
@@ -5567,10 +5595,10 @@ impl MessageList {
         // Oldest first, matching the rows: the head is the message that opened
         // the conversation, and opening it shows the whole thread in order.
         members.sort_by(|a, b| a.timestamp.cmp(&b.timestamp).then(a.uid.cmp(&b.uid)));
-        let is_head = members
-            .first()
-            .is_some_and(|h| (h.account_id, h.id) == (m.account_id, m.id));
-        if is_head {
+        // Whether `m` is the row, judged over the window the rows came from
+        // (#236): a conversation whose start lies past the rendered window is
+        // still one row, and that row stands for all of it.
+        if heads_its_row((m.account_id, m.id), &self.msg_thread, &self.thread_members) {
             (members, false)
         } else {
             // A reply picked out of a conversation that is on screen: show it by
@@ -5667,10 +5695,33 @@ impl MessageList {
 #[cfg(test)]
 mod tests {
     use super::{
-        compute_thread_keys, reader_conversation, row_for_reader_key, swipe_progress_px,
-        unasked_threads, SWIPE_ARM, SWIPE_MAX,
+        compute_thread_keys, heads_its_row, reader_conversation, row_for_reader_key,
+        swipe_progress_px, unasked_threads, SWIPE_ARM, SWIPE_MAX,
     };
     use crate::models::Message;
+
+    /// #236: the row a conversation collapses to is judged over the rendered
+    /// window's grouping, so a conversation whose oldest message lies past
+    /// the window still opens whole from its row.
+    #[test]
+    fn a_row_heads_its_conversation_within_the_rendered_window() {
+        use std::collections::HashMap;
+        let key = (1u32, "root@x".to_string());
+        // The window holds uids 30 and 40 of the conversation; uid 10, its
+        // real start, is past the window and so in neither map.
+        let mut msg_thread = HashMap::new();
+        msg_thread.insert((1, 30), key.clone());
+        msg_thread.insert((1, 40), key.clone());
+        let mut thread_members = HashMap::new();
+        thread_members.insert(key, vec![(1, 30), (1, 40)]);
+
+        assert!(heads_its_row((1, 30), &msg_thread, &thread_members), "the oldest shown is the row");
+        assert!(!heads_its_row((1, 40), &msg_thread, &thread_members), "a child row is not");
+        // A message grouped with nothing in the window is its own row, and the
+        // reader is still free to look for the rest of it in the cache.
+        assert!(heads_its_row((1, 10), &msg_thread, &thread_members));
+        assert!(heads_its_row((2, 7), &msg_thread, &thread_members));
+    }
 
     fn msg(id: u32, message_id: &str, references: &str) -> Message {
         Message {

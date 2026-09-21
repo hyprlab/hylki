@@ -4,7 +4,7 @@ What a Hylki release page says, and where each part comes from (#230).
 
 ## The three parts
 
-1. **Highlights** — a short bulletin of what is worth knowing, one line each,
+1. **Highlights:** a short bulletin of what is worth knowing, one line each,
    newest and biggest first. A release usually has three to six:
 
    ```
@@ -14,17 +14,17 @@ What a Hylki release page says, and where each part comes from (#230).
    - Fixed: message rows redraw when you change how they look
    ```
 
-   This is the version's section of [RELEASE_NOTES.md](../RELEASE_NOTES.md),
+   This is the version's section of [RELEASE_NOTES.md](RELEASE_NOTES.md),
    which is also what the app's About window shows. Write for somebody
    deciding whether to update, not for somebody auditing the diff: name the
    thing and what it does, and leave the reasoning to the changelog.
 
-2. **What's changed** — the list of merged pull requests with their authors, as
+2. **What's changed:** the list of merged pull requests with their authors, as
    GitHub generates it, or the release's commit subjects where the work landed
    without a pull request. Generated, never hand-written.
 
-3. **Full changelog** — the compare link, plus
-   [RELEASE_NOTES.md](../RELEASE_NOTES.md) and
+3. **Full changelog:** the compare link, plus
+   [RELEASE_NOTES.md](RELEASE_NOTES.md) and
    [CHANGELOG.md](../CHANGELOG.md), which hold the detail and the history.
 
 ## Building the body
@@ -36,7 +36,7 @@ tools/release-notes.sh 1.36.0 > /tmp/notes.md
 gh release create v1.36.0 --title "Hylki 1.36.0" --notes-file /tmp/notes.md ...
 ```
 
-Part 2 is asked of GitHub, so the tag has to be pushed first — the order the
+Part 2 is asked of GitHub, so the tag has to be pushed first, which is the order the
 ship steps already run in. Without `gh`, or before the tag is up, the script
 still emits parts 1 and 3 and says on stderr what it left out.
 

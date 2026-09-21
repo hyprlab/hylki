@@ -10,6 +10,7 @@ the rules that keep it, and docs/, from drifting back:
   * docs/ holds documentation, not artwork (that is data/repo/)
   * the top level holds only the files GitHub looks for there
   * nothing but the changelog still calls the app Vireo or Veem
+  * the documentation is free of em dashes (#230)
   * data/CONTRIBUTORS and data/TRANSLATORS parse the way About reads them
 
 Run it after touching any .md, and before a release. It prints what is wrong
@@ -23,19 +24,25 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 # not a formality: what pushed it over probably belongs in docs/.
 README_MAX_LINES = 180
 
-# The Markdown allowed at the top level: what GitHub looks for there, plus
-# CLAUDE.md, which is read by whoever works on the repository rather than by
-# anyone reading it. Everything else is documentation and lives in docs/.
+# The Markdown allowed at the top level: the front page, the history GitHub
+# and the About page both read from here, and CLAUDE.md, which is read by
+# whoever works on the repository rather than by anyone reading it. Everything
+# else is documentation and lives in docs/ (SECURITY.md included: GitHub finds
+# a security policy in docs/ as readily as at the top).
 TOP_LEVEL_MD = {
     "README.md",
     "CHANGELOG.md",
-    "RELEASE_NOTES.md",
-    "SECURITY.md",
     "CLAUDE.md",
 }
 
 # The files whose Vireo/Veem mentions are history rather than staleness.
 OLD_NAME_OK = {"CHANGELOG.md", "RELEASE_NOTES.md"}
+
+# An em dash is a colon, a comma or a full stop that has not decided which it
+# is, and the documentation reads better without one (#230). The changelog and
+# the release notes are a record of what was published and keep theirs;
+# CLAUDE.md is a working agreement rather than documentation.
+EM_DASH_OK = {"CHANGELOG.md", "RELEASE_NOTES.md", "CLAUDE.md"}
 
 problems: list[str] = []
 
@@ -150,6 +157,18 @@ def check_old_names() -> None:
                 problem(f"{f.relative_to(ROOT)}:{n}", "still says Vireo/Veem")
 
 
+def check_em_dashes() -> None:
+    for f in markdown_files():
+        if not f.exists() or f.name in EM_DASH_OK:
+            continue
+        for n, line in enumerate(f.read_text().splitlines(), 1):
+            if "\u2014" in line:
+                problem(
+                    f"{f.relative_to(ROOT)}:{n}",
+                    "em dash: a colon, a comma or a full stop replaces it",
+                )
+
+
 def check_credits_files() -> None:
     for name, note in (("CONTRIBUTORS", False), ("TRANSLATORS", True)):
         path = ROOT / "data" / name
@@ -176,6 +195,7 @@ for check in (
     check_docs_index,
     check_docs_holds_only_docs,
     check_old_names,
+    check_em_dashes,
     check_credits_files,
 ):
     check()

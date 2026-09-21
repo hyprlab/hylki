@@ -821,6 +821,10 @@ msgstr "Όλα τα υπόλοιπα"
 msgid "Compose"
 msgstr "Σύνταξη"
 
+#, fuzzy
+msgid "Send the message you are writing"
+msgstr "Εκτύπωση του μηνύματος που διαβάζετε"
+
 msgid "Back out of a reply and return to the list"
 msgstr "Έξοδος από την απάντηση και επιστροφή στη λίστα"
 
@@ -1248,6 +1252,12 @@ msgstr "Άνοιγμα Διαδικτυακών λογαριασμών…"
 msgid "Mail Account"
 msgstr "Λογαριασμός αλληλογραφίας"
 
+#, fuzzy
+msgid "Nickname (shown in the sidebar and the Mail Accounts list)"
+msgstr ""
+"Πώς εμφανίζεται αυτός ο λογαριασμός στην πλευρική στήλη και στην προβολή "
+"Εισερχομένων."
+
 msgid "Provider"
 msgstr "Πάροχος"
 
@@ -1341,9 +1351,6 @@ msgid "How this account is shown in the sidebar and the Inboxes view."
 msgstr ""
 "Πώς εμφανίζεται αυτός ο λογαριασμός στην πλευρική στήλη και στην προβολή "
 "Εισερχομένων."
-
-msgid "Label (defaults to email address)"
-msgstr "Ετικέτα (προεπιλογή η διεύθυνση email)"
 
 msgid "Account accent color"
 msgstr "Χρώμα έμφασης λογαριασμού"
@@ -1470,6 +1477,20 @@ msgstr "Κάδος"
 msgid "Junk"
 msgstr "Ανεπιθύμητα"
 
+#, fuzzy
+msgid "Hidden Folders"
+msgstr "Προσθήκη φακέλου"
+
+msgid ""
+"Folders kept out of the sidebar and left unsynced. Hide one from its right-"
+"click menu in the sidebar; Show brings it back. An Exchange server's "
+"calendar, contacts and task folders are hidden here from the start."
+msgstr ""
+
+#, fuzzy
+msgid "No hidden folders."
+msgstr "Εμφάνιση ή απόκρυψη υποφακέλων"
+
 msgid "OpenPGP"
 msgstr "OpenPGP"
 
@@ -1574,6 +1595,13 @@ msgstr "✓ SMTP: συνδέθηκε"
 
 msgid "✗ SMTP: {e}"
 msgstr "✗ SMTP: {e}"
+
+msgid "Show"
+msgstr ""
+
+#, fuzzy
+msgid "Bring this folder back to the sidebar"
+msgstr "Εμφάνιση ή απόκρυψη λογαριασμών στην πλευρική στήλη"
 
 msgid "Sends through {host}"
 msgstr "Αποστολή μέσω {host}"
@@ -4146,6 +4174,15 @@ msgstr ""
 "μηνύματα· το απλό κείμενο αποστέλλεται χωρίς μορφοποίηση. Το κουμπί μορφής "
 "της σύνταξης αλλάζει οποιοδήποτε μεμονωμένο μήνυμα."
 
+#, fuzzy
+msgid "Signature in replies"
+msgstr "Υπογραφή"
+
+msgid ""
+"Where the signature goes in a reply or forward. Above the quoted message it "
+"closes what you wrote; below, it follows the whole conversation."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Ορθογραφία"
 
@@ -4515,6 +4552,14 @@ msgstr "Επαναφορά προεπιλογών"
 msgid "Account of the current folder"
 msgstr "Λογαριασμός του τρέχοντος φακέλου"
 
+#, fuzzy
+msgid "Above the quoted message"
+msgstr "Πάνω από τα μηνύματα"
+
+#, fuzzy
+msgid "Below the quoted message"
+msgstr "Κάτω από τα μηνύματα"
+
 msgid "Above the messages"
 msgstr "Πάνω από τα μηνύματα"
 
@@ -4687,6 +4732,12 @@ msgstr "Μετονομασία φακέλου…"
 
 msgid "Delete Folder…"
 msgstr "Διαγραφή φακέλου…"
+
+#. And hidden (#239): only a plain folder, since a role folder out
+#. of sight would still be where mail is filed to.
+#, fuzzy
+msgid "Hide Folder"
+msgstr "Νέος φάκελος"
 
 msgid "Empty Trash…"
 msgstr "Άδειασμα κάδου…"
@@ -5136,6 +5187,9 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Label (defaults to email address)"
+#~ msgstr "Ετικέτα (προεπιλογή η διεύθυνση email)"
 
 #~ msgid "Changelog"
 #~ msgstr "Αρχείο αλλαγών"

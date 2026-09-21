@@ -388,6 +388,9 @@ pub enum MailRequest {
     RenameFolder { old_path: String, new_path: String },
     /// Delete a mailbox, first moving its contents to `trash` (if set).
     DeleteFolder { path: String, trash: Option<String> },
+    /// The account's hidden folders changed (#239): list again without
+    /// them, so they leave the sidebar and every sync at once.
+    SetHiddenFolders { paths: Vec<String> },
     /// Send a new message over SMTP, optionally APPENDing a copy to `sent_path`.
     Send {
         message: Box<OutgoingMessage>,
@@ -1920,7 +1923,7 @@ async fn run_imap(
                 // Hylki has never listed.
                 let sess = session.as_mut().unwrap();
                 let mut hit: Option<(String, u32)> = None;
-                match list_folders(account_id, sess, &account.folder_roles).await {
+                match list_folders(account_id, sess, &account.folder_roles, &account.hidden_folders).await {
                     Ok(folders) => {
                         for f in folders {
                             if sel(sess, &f.path).await.is_err() {
@@ -2055,7 +2058,7 @@ async fn run_imap(
                 // unused one is dropped here).
                 let sess = session.as_mut().unwrap();
                 let mut found: Vec<KeywordFinding> = Vec::new();
-                match list_folders(account_id, sess, &account.folder_roles).await {
+                match list_folders(account_id, sess, &account.folder_roles, &account.hidden_folders).await {
                     Ok(folders) => {
                         for f in &folders {
                             let Ok(mb) = exam(sess, &f.path).await else { continue };
@@ -2285,6 +2288,12 @@ async fn run_imap(
                         lost = true;
                     }
                 }
+            }
+
+            MailRequest::SetHiddenFolders { paths } => {
+                account.hidden_folders = paths;
+                let sess = session.as_mut().unwrap();
+                refresh_folders(account_id, &account, sess, cache.as_ref(), &emit).await;
             }
 
             MailRequest::DeleteFolder { path, trash } => {
@@ -2554,7 +2563,7 @@ async fn connect_and_list(
                 label: account.display_label(),
                 accent: accent_for(account_id).into(),
             }));
-            match list_folders(account_id, &mut session, &account.folder_roles).await {
+            match list_folders(account_id, &mut session, &account.folder_roles, &account.hidden_folders).await {
                 // An empty LIST can't be right — INBOX always exists (RFC
                 // 3501). Keep whatever the cache has instead of wiping it.
                 Ok(folders) if folders.is_empty() => {}
@@ -5439,6 +5448,7 @@ async fn list_folders(
     account_id: u32,
     session: &mut ImapSession,
     roles: &std::collections::BTreeMap<String, String>,
+    hidden: &[String],
 ) -> Result<Vec<Folder>, async_imap::error::Error> {
     let names: Vec<async_imap::types::Name> = session
         .list(Some(""), Some("*"))
@@ -5454,6 +5464,11 @@ async fn list_folders(
             continue;
         }
         let path = name.name().to_string();
+        // A hidden folder (#239) is left out here, ahead of everything
+        // that walks the listing: the sweep, the watchers, the counts.
+        if crate::models::folder_is_hidden(&path, name.delimiter(), hidden) {
+            continue;
+        }
         let (kind, by_special_use) = classify_with_source(&path, name.attributes());
         special_use.push(by_special_use);
         folders.push(Folder {
@@ -5719,7 +5734,7 @@ async fn refresh_folders(
     cache: Option<&Cache>,
     emit: &impl Fn(WorkerEvent),
 ) {
-    if let Ok(folders) = list_folders(account_id, session, &account.folder_roles).await {
+    if let Ok(folders) = list_folders(account_id, session, &account.folder_roles, &account.hidden_folders).await {
         // A mailbox always has at least INBOX (RFC 3501): an empty LIST is a
         // wedged or throttled session answering nonsense, not the truth.
         // Trusting one once wiped an account's whole folder list — cached,
@@ -6196,9 +6211,7 @@ fn preview_of(fetch: &Fetch) -> String {
     // file — has no text to show. An empty preview here lets the BODY[TEXT]
     // retry look further into the message for the text part, instead of the
     // row wearing the file's first bytes.
-    if ctype.as_deref().is_some_and(|t| {
-        !(t.starts_with("text/") || t.starts_with("multipart/") || t.starts_with("message/"))
-    }) {
+    if ctype.as_deref().is_some_and(|t| !text_like(t)) {
         return String::new();
     }
     let charset = ctype.as_deref().and_then(charset_param);
@@ -6217,6 +6230,29 @@ fn preview_of(fetch: &Fetch) -> String {
     // GTK labels abort on interior NULs, and decoded message text can carry
     // them.
     if p.contains('\0') { p.replace('\0', " ") } else { p }
+}
+
+/// Whether a (lowercased) Content-Type can hold text to preview, or contain
+/// a part that does: text itself, a multipart, or an enclosed message. An
+/// image, an archive or a document is a file, whatever its bytes decode to.
+fn text_like(ctype: &str) -> bool {
+    ctype.starts_with("text/") || ctype.starts_with("multipart/") || ctype.starts_with("message/")
+}
+
+/// Whether decoded body bytes are a file rather than text: control
+/// characters that no text carries (a zip opens `PK\x03\x04`, a PDF's
+/// streams are full of them). A row showing such bytes as letters is worse
+/// than a row showing nothing.
+fn looks_binary(bytes: &[u8]) -> bool {
+    let sample = &bytes[..bytes.len().min(512)];
+    if sample.is_empty() {
+        return false;
+    }
+    let control = sample
+        .iter()
+        .filter(|&&b| b < 0x20 && !matches!(b, b'\t' | b'\n' | b'\r' | 0x0c) || b == 0x7f)
+        .count();
+    control > 0 && (sample.contains(&0) || control * 20 > sample.len())
 }
 
 /// The lowercased Content-Type section 1 declares, read from the
@@ -6398,9 +6434,21 @@ async fn retry_missing_previews_now(session: &mut ImapSession, messages: &mut [M
                 // section 1 is the body and they describe it exactly.
                 let charset = section_charset(f);
                 let encoding = section_encoding(f);
+                // Section 1 is a file, not text (#241: a DMARC report that is
+                // nothing but a zip). The summary fetch blanked the preview
+                // for that reason, and this read must not undo it by decoding
+                // the file: only a multipart body with a text part inside
+                // has anything to show.
+                let binary_first = section_content_type(f).is_some_and(|t| !text_like(&t));
                 let p = f
                     .section(&SectionPath::Full(MessageSection::Text))
-                    .map(|b| preview_from_part(b, charset.as_deref(), encoding.as_deref()))
+                    .map(|b| {
+                        if binary_first {
+                            text_in_multipart(b, 0).map(finish_preview).unwrap_or_default()
+                        } else {
+                            preview_from_part(b, charset.as_deref(), encoding.as_deref())
+                        }
+                    })
                     .unwrap_or_default()
                     .replace('\0', " ");
                 if p.is_empty() {
@@ -6442,7 +6490,11 @@ fn preview_from_part(bytes: &[u8], charset: Option<&str>, encoding: Option<&str>
             || e.starts_with("quoted-printable")
             || matches!(*e, "7bit" | "8bit" | "binary")
     }) {
-        return finish_preview(decode_mime_body(bytes, e, charset));
+        let text = decode_mime_body(bytes, e, charset);
+        if looks_binary(text.as_bytes()) {
+            return String::new();
+        }
+        return finish_preview(text);
     }
     let decoded = if looks_like_base64(bytes) {
         decode_base64_prefix(bytes)
@@ -6451,6 +6503,11 @@ fn preview_from_part(bytes: &[u8], charset: Option<&str>, encoding: Option<&str>
     } else {
         bytes.to_vec()
     };
+    // Whatever the headers said or failed to say, a file's bytes are not a
+    // preview (#241).
+    if looks_binary(&decoded) {
+        return String::new();
+    }
 
     finish_preview(decode_text(&decoded, charset))
 }
@@ -8273,6 +8330,7 @@ async fn run_pop3(
             | MailRequest::RenameFolder { .. }
             | MailRequest::UndoMove { .. }
             | MailRequest::DeleteFolder { .. }
+            | MailRequest::SetHiddenFolders { .. }
             | MailRequest::SaveDraft { .. } => {
                 emit(WorkerEvent::Error {
                     text: i18n("POP3 accounts don't support folders"),
@@ -8621,6 +8679,7 @@ async fn run_mock(
             | MailRequest::CreateFolder { .. }
             | MailRequest::RenameFolder { .. }
             | MailRequest::DeleteFolder { .. }
+            | MailRequest::SetHiddenFolders { .. }
             | MailRequest::FlushOutbox { .. }
             | MailRequest::DeleteOutbox { .. }
             | MailRequest::RefreshUnread
@@ -9584,6 +9643,8 @@ struct GraphState {
     /// The account's manual Special Folders assignments (#82), applied to
     /// every listing.
     roles: std::collections::BTreeMap<String, String>,
+    /// The account's hidden folders (#239), left out of every listing.
+    hidden: Vec<String>,
 }
 
 impl GraphState {
@@ -9643,6 +9704,7 @@ async fn run_graph(
         drafts: None,
         inbox: None,
         roles: account.folder_roles.clone(),
+        hidden: account.hidden_folders.clone(),
     };
 
     // Fetch a token and the folder list. A GOA token failure here is the one
@@ -10176,6 +10238,12 @@ async fn run_graph(
                 }
             }
 
+            MailRequest::SetHiddenFolders { paths } => {
+                state.hidden = paths;
+                let Some(token) = graph_token(&account, &emit).await else { continue };
+                refresh_graph_folders(&token, account_id, cache.as_ref(), &mut state, &emit).await;
+            }
+
             MailRequest::DeleteFolder { path, trash: _ } => {
                 // Graph's folder delete moves the folder (contents included) to
                 // Deleted Items itself; no separate content move needed.
@@ -10565,7 +10633,9 @@ async fn refresh_graph_folders(
         .await
         .unwrap_or_else(|_| Err("task failed".into()));
     match r {
-        Ok(list) => {
+        Ok(mut list) => {
+            // Hidden folders (#239) leave here, before the ids settle.
+            list.retain(|f| !crate::models::folder_is_hidden(&f.folder.path, Some("/"), &state.hidden));
             state.adopt_folders(&list);
             let folders: Vec<Folder> = list.into_iter().map(|f| f.folder).collect();
             if let Some(c) = cache {
@@ -10898,6 +10968,8 @@ mod tests {
     fn sample_account() -> AccountConfig {
         AccountConfig {
             folder_roles: Default::default(),
+            hidden_folders: Vec::new(),
+            folders_seeded: false,
             sent_copy_path: None,
             server_saves_sent: false,
             empty_junk_days: 0,
@@ -11246,6 +11318,21 @@ mod tests {
         let preview = preview_from_part(part.as_bytes(), None, None);
         assert!(preview.starts_with("Hi Camp crystal clear,"), "{preview}");
         assert!(!preview.contains("utm_campaign"), "{preview}");
+    }
+
+    #[test]
+    fn a_zip_as_the_whole_body_yields_no_preview() {
+        // #241: a DMARC report is a single application/zip part. Base64 or
+        // not, its bytes are a file, not a snippet.
+        let zip = b"PK\x03\x04\x14\x00\x00\x00\x08\x00\x8a\x1eGoogle report\x00\x00\x12\x03\x00PK\x01\x02";
+        let b64 = crate::oauth::base64_encode(zip);
+        assert_eq!(preview_from_part(b64.as_bytes(), None, Some("base64")), "");
+        assert_eq!(preview_from_part(b64.as_bytes(), None, None), "");
+        assert_eq!(preview_from_part(zip, None, Some("binary")), "");
+        // Ordinary text with a tab and line breaks is not "binary".
+        assert_eq!(preview_from_part(b"Hello\tthere\r\nSecond line", None, None), "Hello there Second line");
+        assert!(!text_like("application/zip"));
+        assert!(text_like("multipart/mixed; boundary=x"));
     }
 
     #[test]

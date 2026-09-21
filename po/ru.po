@@ -831,6 +831,10 @@ msgstr "Всё остальное"
 msgid "Compose"
 msgstr "Написать"
 
+#, fuzzy
+msgid "Send the message you are writing"
+msgstr "Печать открытого сообщения"
+
 msgid "Back out of a reply and return to the list"
 msgstr "Отменить ответ и вернуться к списку"
 
@@ -1243,6 +1247,11 @@ msgstr "Открыть «Сетевые учётные записи»…"
 msgid "Mail Account"
 msgstr "Почтовая учётная запись"
 
+#, fuzzy
+msgid "Nickname (shown in the sidebar and the Mail Accounts list)"
+msgstr ""
+"Как эта учётная запись отображается на боковой панели и во «Всех входящих»."
+
 msgid "Provider"
 msgstr "Провайдер"
 
@@ -1334,9 +1343,6 @@ msgstr "Внешний вид"
 msgid "How this account is shown in the sidebar and the Inboxes view."
 msgstr ""
 "Как эта учётная запись отображается на боковой панели и во «Всех входящих»."
-
-msgid "Label (defaults to email address)"
-msgstr "Метка (по умолчанию адрес электронной почты)"
 
 msgid "Account accent color"
 msgstr "Цвет учётной записи"
@@ -1457,6 +1463,20 @@ msgstr "Корзина"
 msgid "Junk"
 msgstr "Спам"
 
+#, fuzzy
+msgid "Hidden Folders"
+msgstr "Добавить папку"
+
+msgid ""
+"Folders kept out of the sidebar and left unsynced. Hide one from its right-"
+"click menu in the sidebar; Show brings it back. An Exchange server's "
+"calendar, contacts and task folders are hidden here from the start."
+msgstr ""
+
+#, fuzzy
+msgid "No hidden folders."
+msgstr "Показать или скрыть вложенные папки"
+
 msgid "OpenPGP"
 msgstr "OpenPGP"
 
@@ -1558,6 +1578,13 @@ msgstr "✓ SMTP: подключено"
 
 msgid "✗ SMTP: {e}"
 msgstr "✗ SMTP: {e}"
+
+msgid "Show"
+msgstr ""
+
+#, fuzzy
+msgid "Bring this folder back to the sidebar"
+msgstr "Показывать или скрывать учётные записи на боковой панели"
 
 msgid "Sends through {host}"
 msgstr "Отправляет через {host}"
@@ -4086,6 +4113,15 @@ msgstr ""
 "письмо; обычный текст отправляется без форматирования. Кнопка формата в "
 "редакторе позволяет переключить режим для отдельного сообщения."
 
+#, fuzzy
+msgid "Signature in replies"
+msgstr "Подпись"
+
+msgid ""
+"Where the signature goes in a reply or forward. Above the quoted message it "
+"closes what you wrote; below, it follows the whole conversation."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Орфография"
 
@@ -4449,6 +4485,14 @@ msgid "Account of the current folder"
 msgstr "Учётная запись текущей папки"
 
 #, fuzzy
+msgid "Above the quoted message"
+msgstr "Архивировать это сообщение"
+
+#, fuzzy
+msgid "Below the quoted message"
+msgstr "Ответить на это сообщение"
+
+#, fuzzy
 msgid "Above the messages"
 msgstr "Архивировать это сообщение"
 
@@ -4623,6 +4667,12 @@ msgstr "Переименовать папку…"
 
 msgid "Delete Folder…"
 msgstr "Удалить папку…"
+
+#. And hidden (#239): only a plain folder, since a role folder out
+#. of sight would still be where mail is filed to.
+#, fuzzy
+msgid "Hide Folder"
+msgstr "Новая папка"
 
 msgid "Empty Trash…"
 msgstr "Очистить корзину…"
@@ -5061,6 +5111,9 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Label (defaults to email address)"
+#~ msgstr "Метка (по умолчанию адрес электронной почты)"
 
 #~ msgid "Changelog"
 #~ msgstr "Список изменений"

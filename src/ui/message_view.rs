@@ -5579,7 +5579,7 @@ var fs=all();var pend=fs.length,rdy=false;\
 function ready(){if(rdy)return;rdy=true;\
 try{window.webkit.messageHandlers.hylki.postMessage('ready:0:0');}catch(_){}\
 var bd=document.body.dataset;\
-if(bd.hylkiNoscroll){var a=(bd.hylkiAnchor||'').split(':');\
+if(bd.vireoNoscroll){var a=(bd.vireoAnchor||'').split(':');\
 if(a.length>=3){var el=document.querySelector('.vireo-msg[data-key=\"'+a[0]+':'+a[1]+'\"]');\
 if(el){hold={el:el,off:parseInt(a[2],10)||0,g:a[3]==='g'};\
 if(el.querySelector('.vireo-dot'))follow=el;\
@@ -5588,8 +5588,8 @@ var ds=document.querySelectorAll('.vireo-msg .vireo-dot');\
 var d=ds.length?ds[0]:null;\
 if(d){var m=d.closest('.vireo-msg');\
 if(m)setTimeout(function(){try{follow=m;reveal(m);}catch(_){}},0);}\
-else if(bd.hylkiNewest){\
-var nm=document.querySelector('.vireo-msg[data-key=\"'+bd.hylkiNewest+'\"]');\
+else if(bd.vireoNewest){\
+var nm=document.querySelector('.vireo-msg[data-key=\"'+bd.vireoNewest+'\"]');\
 if(nm)setTimeout(function(){try{follow=nm;reveal(nm);}catch(_){}},0);}}\
 setTimeout(markClipped,0);setTimeout(markClipped,400);\
 if(!pend)ready();\
@@ -5602,8 +5602,8 @@ var hs=document.querySelectorAll('.vireo-msg-hdr');\
 for(var j=0;j<hs.length;j++){hs[j].addEventListener('dblclick',function(){\
 try{window.webkit.messageHandlers.hylki.postMessage('open:'+this.dataset.key);}catch(_){}});}\
 var rbd=document.body.dataset;\
-if(rbd.hylkiReadmark&&document.body.classList.contains('vireo-conv')){\
-var rdel=parseInt(rbd.hylkiReadmark,10)||250;var rt={};\
+if(rbd.vireoReadmark&&document.body.classList.contains('vireo-conv')){\
+var rdel=parseInt(rbd.vireoReadmark,10)||250;var rt={};\
 var rio=new IntersectionObserver(function(es){es.forEach(function(en){\
 var el=en.target,k=el.dataset.key;\
 var vis=en.intersectionRatio>=0.5||en.intersectionRect.height>window.innerHeight*0.6;\
@@ -5684,9 +5684,9 @@ try{window.webkit.messageHandlers.hylki.postMessage(verb+':'+t.dataset.key+':'+t
 var ms=document.querySelectorAll('.vireo-msg');\
 for(var q=0;q<ms.length;q++){ms[q].addEventListener('click',function(e){\
 var k=this.dataset.key;if(k)pick(k,e);});}\
-var actsDelay=parseInt(document.body.dataset.hylkiActsdelay||'0',10)||1200;\
+var actsDelay=parseInt(document.body.dataset.vireoActsdelay||'0',10)||1200;\
 document.documentElement.style.setProperty('--acts-delay',actsDelay+'ms');\
-var actsMenu=document.body.dataset.hylkiActsmenu==='1';\
+var actsMenu=document.body.dataset.vireoActsmenu==='1';\
 var ts=document.querySelectorAll('.vireo-acts-toggle');\
 for(var t=0;t<ts.length;t++){ts[t].addEventListener('click',function(e){\
 e.stopPropagation();e.preventDefault();\
@@ -5798,7 +5798,7 @@ if(window.__hylkiCopySel()){e.preventDefault();e.stopPropagation();}}\
 function showCopied(){var b=document.body;if(!b)return;\
 var p=document.getElementById('vireo-copied');\
 if(!p){p=document.createElement('div');p.id='vireo-copied';p.className='vireo-copied';b.appendChild(p);}\
-p.textContent=b.dataset.hylkiCopied||'Copied';\
+p.textContent=b.dataset.vireoCopied||'Copied';\
 void p.offsetHeight;p.classList.add('on');clearTimeout(p._t);\
 p._t=setTimeout(function(){p.classList.remove('on');},1400);}\
 window.addEventListener('keydown',copySel,true);\

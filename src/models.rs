@@ -75,6 +75,58 @@ pub struct Folder {
     pub unread: u32,
 }
 
+/// Whether `path` is one of an account's hidden folders (#239), or lies
+/// under one: hiding a folder hides its sub-folders with it. `delimiter`
+/// is the server's, when known; otherwise any of the usual three counts.
+pub fn folder_is_hidden(path: &str, delimiter: Option<&str>, hidden: &[String]) -> bool {
+    hidden.iter().any(|h| {
+        if h == path {
+            return true;
+        }
+        let Some(rest) = path.strip_prefix(h.as_str()) else { return false };
+        match delimiter {
+            Some(d) if !d.is_empty() => rest.starts_with(d),
+            _ => rest.starts_with(['/', '.', '\\']),
+        }
+    })
+}
+
+/// The folders an Exchange server lists over IMAP that hold no mail
+/// (#239): the calendar, the address book, the task list and the rest of
+/// what its own webmail keeps out of sight. Only claimed when the listing
+/// looks like Exchange, which is when at least two of Calendar, Contacts,
+/// Tasks and Journal sit at the top level; a lone "Notes" folder on any
+/// other server is somebody's mail. Top-level paths only: a sub-folder
+/// follows its parent through [`folder_is_hidden`].
+pub fn exchange_non_mail_folders(folders: &[Folder]) -> Vec<String> {
+    const MARKERS: [&str; 4] = ["calendar", "contacts", "tasks", "journal"];
+    const HIDDEN: [&str; 10] = [
+        "calendar",
+        "contacts",
+        "tasks",
+        "journal",
+        "notes",
+        "outbox",
+        "sync issues",
+        "conversation history",
+        "scheduled",
+        "snoozed",
+    ];
+    let top: Vec<(&Folder, String)> = folders
+        .iter()
+        .filter(|f| !f.path.contains(['/', '\\']))
+        .map(|f| (f, f.name.trim().to_lowercase()))
+        .collect();
+    let markers = top.iter().filter(|(_, n)| MARKERS.contains(&n.as_str())).count();
+    if markers < 2 {
+        return Vec::new();
+    }
+    top.into_iter()
+        .filter(|(f, n)| f.kind == FolderKind::Custom && HIDDEN.contains(&n.as_str()))
+        .map(|(f, _)| f.path.clone())
+        .collect()
+}
+
 /// The [`FolderKind`] behind a Special Folders role key (#82).
 pub fn role_kind(role: &str) -> Option<FolderKind> {
     match role {
@@ -1156,5 +1208,62 @@ mod tests {
         // Positions and ids are untouched: the worker's cache keys ids by order.
         assert_eq!(folders.iter().map(|f| f.id).collect::<Vec<_>>(), vec![1, 2, 3]);
         assert_eq!(folders[1].path, "Brouillons");
+    }
+
+    fn plain_folder(path: &str, kind: FolderKind) -> Folder {
+        Folder {
+            id: 0,
+            account_id: 1,
+            name: path.rsplit('/').next().unwrap_or(path).to_string(),
+            path: path.to_string(),
+            kind,
+            unread: 0,
+        }
+    }
+
+    #[test]
+    fn a_hidden_folder_takes_its_sub_folders_with_it() {
+        let hidden = vec!["Sync Issues".to_string()];
+        assert!(folder_is_hidden("Sync Issues", Some("/"), &hidden));
+        assert!(folder_is_hidden("Sync Issues/Conflicts", Some("/"), &hidden));
+        assert!(!folder_is_hidden("Sync Issues Archive", Some("/"), &hidden));
+        assert!(!folder_is_hidden("INBOX/Sync Issues", Some("/"), &hidden));
+        // Without a known delimiter, the usual three all count.
+        assert!(folder_is_hidden("Sync Issues.Conflicts", None, &hidden));
+        assert!(!folder_is_hidden("Sync Issues Archive", None, &hidden));
+    }
+
+    #[test]
+    fn exchange_non_mail_folders_need_an_exchange_looking_listing() {
+        let exchange: Vec<Folder> = [
+            ("INBOX", FolderKind::Inbox),
+            ("Calendar", FolderKind::Custom),
+            ("Calendar/Birthdays", FolderKind::Custom),
+            ("Contacts", FolderKind::Custom),
+            ("Tasks", FolderKind::Custom),
+            ("Notes", FolderKind::Custom),
+            ("Sync Issues", FolderKind::Custom),
+            ("Sync Issues/Conflicts", FolderKind::Custom),
+            ("Conversation History", FolderKind::Custom),
+            ("Projects", FolderKind::Custom),
+            ("Sent Items", FolderKind::Sent),
+        ]
+        .iter()
+        .map(|(p, k)| plain_folder(p, *k))
+        .collect();
+        let mut hidden = exchange_non_mail_folders(&exchange);
+        hidden.sort();
+        assert_eq!(
+            hidden,
+            vec!["Calendar", "Contacts", "Conversation History", "Notes", "Sync Issues", "Tasks"]
+        );
+
+        // Apple Notes keeps a "Notes" folder on ordinary IMAP servers; that
+        // alone is no reason to hide anything.
+        let plain: Vec<Folder> = [("INBOX", FolderKind::Inbox), ("Notes", FolderKind::Custom)]
+            .iter()
+            .map(|(p, k)| plain_folder(p, *k))
+            .collect();
+        assert!(exchange_non_mail_folders(&plain).is_empty());
     }
 }

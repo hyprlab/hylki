@@ -19,16 +19,38 @@ keyboard.
 
 Add accounts from **Settings → Accounts** in the app. For a plain IMAP/SMTP
 account you only need the server and an app-specific password. See
-[`accounts.toml.example`](../accounts.toml.example) for the on-disk format —
+[`accounts.toml.example`](../accounts.toml.example) for the on-disk format:
 passwords you enter there are migrated into the system keyring on first run and
 removed from the file.
 
+### Hiding folders
+
+Right-click a folder in the sidebar and choose **Hide Folder** to take it out
+of the sidebar and out of syncing: the folder is not listed, its unread count
+is not fetched, and its mail is not indexed until it is shown again. Only
+plain folders can be hidden; the folders holding a role (Sent, Drafts,
+Trash, Junk, Archive) stay, since mail is filed into them. Hiding a folder
+hides its sub-folders with it.
+
+The hidden folders are listed under **Settings → Accounts → the account →
+Hidden Folders**, each with a **Show** button that brings it back on Save.
+They are stored on the account as `hidden_folders` in `accounts.toml`.
+
+An Exchange server lists its calendar, contacts, tasks, notes and journal
+folders over IMAP as if they were mail folders, along with Outbox, Sync
+Issues, Conversation History, Scheduled and Snoozed. Hylki hides these the
+first time it lists such an account, and only when the listing looks like
+Exchange (at least two of Calendar, Contacts, Tasks and Journal at the top
+level), so a "Notes" folder on any other server is left alone. The look is
+taken once per account; a folder brought back from the Hidden Folders list
+stays back.
+
 ### OAuth (Google / Microsoft)
 
-**Microsoft** works out of the box — pick *Microsoft* in the account editor and
+**Microsoft** works out of the box: pick *Microsoft* in the account editor and
 sign in.
 
-**Google** signs in through **GNOME Online Accounts** — add your Google account in
+**Google** signs in through **GNOME Online Accounts**. Add your Google account in
 *GNOME Settings → Online Accounts*, then import it in Hylki. Official builds don't
 bundle a Google OAuth client (Google's secret can't live in a public repo), so
 GNOME Online Accounts is the standard path. You can also use your own OAuth client
@@ -53,7 +75,7 @@ or via the `HYLKI_GOOGLE_CLIENT_ID` / `HYLKI_GOOGLE_CLIENT_SECRET`,
 `HYLKI_MICROSOFT_CLIENT_ID` / `HYLKI_MICROSOFT_CLIENT_SECRET` and
 `HYLKI_DROPBOX_CLIENT_ID` environment variables.
 
-**Bundling a Google client at build time** (for maintainers) — set the env vars
+**Bundling a Google client at build time** (for maintainers): set the env vars
 during the build and they're compiled in via `option_env!`:
 
 ```sh
@@ -72,7 +94,7 @@ shows them for each upload, where the expiry can be changed or removed,
 the password turned on or off, and a password of your own typed in place
 of the generated one.
 
-- **OneDrive** — through GNOME Online Accounts: add your Microsoft 365
+- **OneDrive:** through GNOME Online Accounts: add your Microsoft 365
   account under Settings → Online Accounts, then pick it in the cloud
   account's editor. GOA holds the sign-in and refreshes the token, so Hylki
   stores no password or key. Uploads go into the upload folder (made when
@@ -86,17 +108,17 @@ of the generated one.
   OneDrive. Google Drive is not offered: GNOME Online Accounts
   does not ask Google for Drive access on every system, and Hylki carries
   no Google client of its own.
-- **Nextcloud, ownCloud, OpenCloud** — the server URL, your user name and an
+- **Nextcloud, ownCloud, OpenCloud:** the server URL, your user name and an
   app password (made under *Security* in the server's personal settings).
   Uploads go over WebDAV; links come from the files-sharing API.
-- **Behind Cloudflare** (Nextcloud-kind and Seafile accounts) — a
+- **Behind Cloudflare** (Nextcloud-kind and Seafile accounts): a
   self-hosted server reached through a Cloudflare domain or tunnel cannot
   take a request over 100 MB, Cloudflare's proxy limit. Switch on *Server
   is behind Cloudflare* in the account's editor and files bigger than 90 MB
   go up in 90 MB pieces the server stitches back together (Nextcloud's
   chunked-upload endpoint, Seafile's resumable upload); smaller files go
   as one request as before.
-- **Seafile** — the server URL, your e-mail and your password. If the
+- **Seafile:** the server URL, your e-mail and your password. If the
   account uses two-step verification, also enter the current code from your
   authenticator app: Hylki signs in with it once, gets an API token from the
   server and keeps that in the keyring instead of the password (Seafile's
@@ -104,7 +126,7 @@ of the generated one.
   from the `api2/auth-token/` endpoint, can be pasted in the password
   field). Uploads go into a library (made when missing, "Hylki" by default)
   and a folder inside it.
-- **Dropbox** — sign in through your browser. Dropbox only lets a registered
+- **Dropbox:** sign in through your browser. Dropbox only lets a registered
   app sign in, so make one for yourself; it takes a minute and stays private:
   1. Open [dropbox.com/developers/apps](https://www.dropbox.com/developers/apps)
      signed in to your Dropbox and press **Create app**.
@@ -130,6 +152,14 @@ of the generated one.
   empty. Link passwords and expiry dates are a paid Dropbox feature; on a
   Basic plan leave both off, or the share step reports it.
 
+### Where the signature goes
+
+In a reply or forward the account's signature is placed above the quoted
+message, so it closes what you wrote rather than what the other person did.
+**Settings → Composing → Signature in replies** moves it below the quoted
+message instead, the placement Hylki had before 1.38. The setting applies
+when a composer opens; a draft keeps its signature wherever it was saved.
+
 ### Writing in Markdown or HTML
 
 A message can be written in any of four formats, chosen in **Settings →
@@ -138,16 +168,16 @@ message with the format button at the right-hand end of the composer's
 formatting row, which wears the icon of the format it is set to and lists
 the others, the current one in your accent colour:
 
-- **Rich text** — the WYSIWYG editor with its formatting toolbar. The default.
-- **Markdown** — you write Markdown, the recipient gets formatted mail.
-- **HTML** — you write the message's HTML by hand.
-- **Plain text** — no formatting at all, sent as `text/plain` only.
+- **Rich text:** the WYSIWYG editor with its formatting toolbar. The default.
+- **Markdown:** you write Markdown, the recipient gets formatted mail.
+- **HTML:** you write the message's HTML by hand.
+- **Plain text:** no formatting at all, sent as `text/plain` only.
 
 Markdown and HTML are written as *source*: a monospace field, the formatting
 buttons gone from the row above it (they would go nowhere), and a **Preview**
 toggle beside the format chooser that swaps the source for the message as it
 will be sent. Nothing
-is sent as source — Markdown is rendered to HTML when the message goes out,
+is sent as source. Markdown is rendered to HTML when the message goes out,
 and the Markdown you wrote travels as the plain-text alternative, so a
 recipient whose client shows plain text gets something that still reads as
 itself. Hand-written HTML gets a readable plain-text alternative made for it
@@ -158,7 +188,7 @@ reply in rich text and finish it in Markdown; the quoted original comes
 across as `>` lines.
 
 **The Markdown Hylki understands** is the dialect documented at
-[markdownguide.org](https://www.markdownguide.org/) — all of the basic
+[markdownguide.org](https://www.markdownguide.org/): all of the basic
 syntax, and all of the extended syntax:
 
 | | |
@@ -168,7 +198,7 @@ syntax, and all of the extended syntax:
 
 Two notes on what that means in mail. The HTML Hylki writes carries its
 styling as `style` attributes on the tags themselves, because a `<style>`
-block is the first thing most webmail clients throw away — so tables really
+block is the first thing most webmail clients throw away, so tables really
 do arrive with their borders. And anything you send, in Markdown or in HTML,
 passes through a sanitizer on the way out: scripts, event handlers and style
 sheets are removed, while tables, inline styles, images and everything

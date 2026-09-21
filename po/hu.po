@@ -817,6 +817,10 @@ msgstr "Minden egyéb"
 msgid "Compose"
 msgstr "Levélírás"
 
+#, fuzzy
+msgid "Send the message you are writing"
+msgstr "Olvasott üzenet nyomtatása"
+
 msgid "Back out of a reply and return to the list"
 msgstr "Kilépés a válaszból és visszatérés a listához"
 
@@ -1228,6 +1232,10 @@ msgstr "Online-fiókok megnyitása…"
 msgid "Mail Account"
 msgstr "Levelezési fiók"
 
+#, fuzzy
+msgid "Nickname (shown in the sidebar and the Mail Accounts list)"
+msgstr "A fiók megjelenése az oldalsávban és az Összes Beérkezett nézetben."
+
 msgid "Provider"
 msgstr "Szolgáltató"
 
@@ -1318,9 +1326,6 @@ msgstr "Megjelenés"
 
 msgid "How this account is shown in the sidebar and the Inboxes view."
 msgstr ""
-
-msgid "Label (defaults to email address)"
-msgstr "Címke (alapértelmezés szerint az e-mail-cím)"
 
 msgid "Account accent color"
 msgstr ""
@@ -1439,6 +1444,20 @@ msgstr "Kuka"
 msgid "Junk"
 msgstr "Levélszemét"
 
+#, fuzzy
+msgid "Hidden Folders"
+msgstr "Mappa hozzáadása"
+
+msgid ""
+"Folders kept out of the sidebar and left unsynced. Hide one from its right-"
+"click menu in the sidebar; Show brings it back. An Exchange server's "
+"calendar, contacts and task folders are hidden here from the start."
+msgstr ""
+
+#, fuzzy
+msgid "No hidden folders."
+msgstr "Almappák megjelenítése vagy elrejtése"
+
 msgid "OpenPGP"
 msgstr "OpenPGP"
 
@@ -1541,6 +1560,13 @@ msgstr "✓ SMTP: kapcsolódva"
 
 msgid "✗ SMTP: {e}"
 msgstr "✗ SMTP: {e}"
+
+msgid "Show"
+msgstr ""
+
+#, fuzzy
+msgid "Bring this folder back to the sidebar"
+msgstr "Névjegyek az oldalsávban"
 
 msgid "Sends through {host}"
 msgstr "Küldés ezen keresztül: {host}"
@@ -4016,6 +4042,15 @@ msgid ""
 "formatting. The composer's format button switches any one message."
 msgstr ""
 
+#, fuzzy
+msgid "Signature in replies"
+msgstr "Aláírás"
+
+msgid ""
+"Where the signature goes in a reply or forward. Above the quoted message it "
+"closes what you wrote; below, it follows the whole conversation."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Helyesírás"
 
@@ -4365,6 +4400,14 @@ msgid "Account of the current folder"
 msgstr ""
 
 #, fuzzy
+msgid "Above the quoted message"
+msgstr "Üzenet archiválása"
+
+#, fuzzy
+msgid "Below the quoted message"
+msgstr "Válasz erre az üzenetre"
+
+#, fuzzy
 msgid "Above the messages"
 msgstr "Üzenet archiválása"
 
@@ -4543,6 +4586,12 @@ msgstr "Mappa átnevezése…"
 
 msgid "Delete Folder…"
 msgstr "Mappa törlése…"
+
+#. And hidden (#239): only a plain folder, since a role folder out
+#. of sight would still be where mail is filed to.
+#, fuzzy
+msgid "Hide Folder"
+msgstr "Új mappa"
 
 msgid "Empty Trash…"
 msgstr "Kuka kiürítése…"
@@ -4982,6 +5031,9 @@ msgstr "Az egységes beérkezett nézet világos módban"
 msgid "Hyprlab"
 msgstr "Hyprlab"
 
+#~ msgid "Label (defaults to email address)"
+#~ msgstr "Címke (alapértelmezés szerint az e-mail-cím)"
+
 #~ msgid "Changelog"
 #~ msgstr "Változásnapló"
 
@@ -5105,9 +5157,6 @@ msgstr "Hyprlab"
 #~ "Üzenetek címkézése egy vagy több színes címkével. A címkék IMAP-"
 #~ "kulcsszóként tárolódnak a levelezőkiszolgálón, így a Thunderbird és más "
 #~ "kliensek ugyanazokat a címkéket jelenítik meg."
-
-#~ msgid "How this account is shown in the sidebar and the All Inboxes view."
-#~ msgstr "A fiók megjelenése az oldalsávban és az Összes Beérkezett nézetben."
 
 #~ msgid "Circle color"
 #~ msgstr "Kör színe"

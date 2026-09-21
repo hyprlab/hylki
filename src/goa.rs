@@ -53,6 +53,8 @@ impl GoaMailAccount {
     pub fn to_config(&self, password: String, oauth: bool) -> AccountConfig {
         AccountConfig {
             folder_roles: Default::default(),
+            hidden_folders: Vec::new(),
+            folders_seeded: false,
             sent_copy_path: None,
             server_saves_sent: false,
             empty_junk_days: 0,
