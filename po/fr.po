@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-09-20 16:26+0200\n"
+"PO-Revision-Date: 2026-09-21 18:36+0200\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -826,7 +826,7 @@ msgid "Compose"
 msgstr "Rédiger"
 
 msgid "Send the message you are writing"
-msgstr ""
+msgstr "Envoyer le message en cours de rédaction"
 
 msgid "Back out of a reply and return to the list"
 msgstr "Quitter la réponse et revenir à la liste"
@@ -1255,11 +1255,8 @@ msgstr "Ouvrir Comptes en ligne…"
 msgid "Mail Account"
 msgstr "Compte e-mail"
 
-#, fuzzy
 msgid "Nickname (shown in the sidebar and the Mail Accounts list)"
-msgstr ""
-"Comment ce compte est affiché dans la barre latérale et dans la vue Toutes "
-"les boîtes de réception."
+msgstr "Surnom (affiché dans la barre latérale et la liste Comptes e-mail)"
 
 msgid "Provider"
 msgstr "Fournisseur"
@@ -1479,16 +1476,20 @@ msgid "Junk"
 msgstr "Indésirables"
 
 msgid "Hidden Folders"
-msgstr ""
+msgstr "Dossiers masqués"
 
 msgid ""
 "Folders kept out of the sidebar and left unsynced. Hide one from its right-"
 "click menu in the sidebar; Show brings it back. An Exchange server's "
 "calendar, contacts and task folders are hidden here from the start."
 msgstr ""
+"Dossiers écartés de la barre latérale et non synchronisés. Masquer-en un "
+"depuis son menu contextuel (clic droit) dans la barre latérale ; Afficher le "
+"fait réapparaître. Les dossiers calendrier, contacts et tâches d'un serveur "
+"Exchange sont masqués ici dès le départ."
 
 msgid "No hidden folders."
-msgstr ""
+msgstr "Aucun dossier masqué."
 
 msgid "OpenPGP"
 msgstr "OpenPGP"
@@ -1594,10 +1595,10 @@ msgid "✗ SMTP: {e}"
 msgstr "✗ SMTP : {e}"
 
 msgid "Show"
-msgstr ""
+msgstr "Afficher"
 
 msgid "Bring this folder back to the sidebar"
-msgstr ""
+msgstr "Ramener ce dossier dans la barre latérale"
 
 msgid "Sends through {host}"
 msgstr "Envoie via {host}"
@@ -4183,12 +4184,15 @@ msgstr ""
 "bouton de format du compositeur permet de changer pour un message donné."
 
 msgid "Signature in replies"
-msgstr ""
+msgstr "Signature dans les réponses"
 
 msgid ""
 "Where the signature goes in a reply or forward. Above the quoted message it "
 "closes what you wrote; below, it follows the whole conversation."
 msgstr ""
+"Où placer la signature dans une réponse ou un transfert. Au-dessus du "
+"message cité, elle clôt ce que vous avez écrit ; en dessous, elle suit "
+"l'ensemble de la conversation."
 
 msgid "Spelling"
 msgstr "Orthographe"
@@ -4552,10 +4556,10 @@ msgid "Account of the current folder"
 msgstr "Informations sur le dossier actuel"
 
 msgid "Above the quoted message"
-msgstr ""
+msgstr "Au-dessus du message cité"
 
 msgid "Below the quoted message"
-msgstr ""
+msgstr "En dessous du message cité"
 
 msgid "Above the messages"
 msgstr "Au-dessus des messages"
@@ -4733,7 +4737,7 @@ msgstr "Supprimer le dossier…"
 #. And hidden (#239): only a plain folder, since a role folder out
 #. of sight would still be where mail is filed to.
 msgid "Hide Folder"
-msgstr ""
+msgstr "Masquer le dossier"
 
 msgid "Empty Trash…"
 msgstr "Vider la Corbeille…"
