@@ -55,7 +55,9 @@ def make(src: pathlib.Path, png: pathlib.Path, size: int) -> None:
 
 
 # Outputs are rebuilt from scratch, so a removed source leaves nothing behind.
-for stale in list(ALT.glob("*.png")) + list(HICOLOR.glob("*/apps/*")):
+# The symbolic app icon (hicolor/symbolic/apps) is drawn by hand, not
+# generated, so it is left alone.
+for stale in list(ALT.glob("*.png")) + list(HICOLOR.glob("[0-9s][0-9c]*/apps/*")):
     stale.unlink()
 for src in sorted(SRC.iterdir()):
     # `<id>.Devel.svg` has two suffixes; keep ".Devel" as part of the id.

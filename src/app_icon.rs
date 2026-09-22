@@ -1,6 +1,6 @@
 //! The app icon the user chose, and how it reaches the desktop.
 //!
-//! The app ships one icon (the Hylki envelope, `data/icons/src/default.svg`)
+//! The app ships one icon (the opened envelope, `data/icons/src/default.svg`)
 //! and carries a gallery of alternative envelopes inside the binary. The
 //! beta ships the default's `.Devel` twin, GNOME's development-build
 //! styling (the hazard stripe). A choice is applied by writing that artwork
@@ -30,10 +30,11 @@ pub struct IconChoice {
 pub const DEFAULT_ID: &str = "default";
 /// Bumped when a release's new default icon is to replace every existing
 /// choice once (1.23's blue bird envelope was generation 1; the Hylki
-/// envelope of 1.35, the first release under the new name, is 2): the
-/// first start on such a release resets the stored choice to the default,
-/// and records the generation so a choice made afterwards stands.
-pub const ICON_GENERATION: u32 = 2;
+/// envelope of 1.35, the first release under the new name, was 2; the
+/// opened envelope of 1.40 is 3): the first start on such a release resets
+/// the stored choice to the default, and records the generation so a
+/// choice made afterwards stands.
+pub const ICON_GENERATION: u32 = 3;
 
 /// The icon this build installs under its app ID.
 #[cfg(not(feature = "beta"))]
@@ -52,12 +53,14 @@ macro_rules! alt {
     };
 }
 
-/// The gallery, in display order: the build's own icon (the Hylki
-/// envelope, so it has no entry of its own), the plain envelopes, the two
-/// with the bird, the default drawn at full size rather than to the GNOME
+/// The gallery, in display order: the build's own icon (the opened
+/// envelope, so it has no entry of its own), the two-tone wave envelope
+/// that was the default from 1.35 to 1.39, the plain envelopes, the two
+/// with the bird, the wave drawn at full size rather than to the GNOME
 /// icon grid, and the classic icon last.
 const CATALOG: &[IconChoice] = &[
     IconChoice { id: DEFAULT_ID, label: i18n_noop("Default"), png: DEFAULT_PNG },
+    alt!("envelope-wave", "Wave"),
     alt!("envelope-blue", "Blue"),
     alt!("envelope-yellow", "Yellow"),
     alt!("envelope-white", "White"),
@@ -66,7 +69,7 @@ const CATALOG: &[IconChoice] = &[
     alt!("envelope-starfield", "Starfield"),
     alt!("envelope-bird-blue", "Blue with bird"),
     alt!("envelope-bird-yellow", "Yellow with bird"),
-    alt!("non-hig", "Full size"),
+    alt!("non-hig", "Wave, full size"),
     alt!("classic", "Classic"),
 ];
 
@@ -77,7 +80,7 @@ pub fn catalog() -> impl Iterator<Item = &'static IconChoice> {
 
 /// Normalise a stored id to one this build offers. Every id from the
 /// Hylki galleries (birds, colours, patterns, the classic envelope) is
-/// gone; a stored one falls back to the default, which generation 2 puts
+/// gone; a stored one falls back to the default, which generation 3 puts
 /// on every install once anyway.
 fn effective(id: &str) -> &'static str {
     catalog().find(|c| c.id == id).map(|c| c.id).unwrap_or(DEFAULT_ID)

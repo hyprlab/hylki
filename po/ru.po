@@ -3957,14 +3957,6 @@ msgstr ""
 "Показывать каждое письмо из цепочки прямо в списке. Если отключено, "
 "обсуждения отображаются свёрнутыми до самого свежего сообщения."
 
-#, fuzzy
-msgid "Show your own replies in the message list"
-msgstr "Палитра действий в списке сообщений"
-
-#, fuzzy
-msgid "Off shows the last message that arrived."
-msgstr "Переместить это сообщение в папку"
-
 msgid "Newest message first"
 msgstr "Сначала новые сообщения"
 
@@ -3974,6 +3966,14 @@ msgid ""
 msgstr ""
 "Показывать последнее письмо цепочки в самом верху панели чтения. Если "
 "отключено, порядок чтения будет хронологическим — от старых к новым."
+
+#, fuzzy
+msgid "Show your own replies in the message list"
+msgstr "Палитра действий в списке сообщений"
+
+#, fuzzy
+msgid "Off shows the last message that arrived."
+msgstr "Переместить это сообщение в папку"
 
 #, fuzzy
 msgid "Reply editor"

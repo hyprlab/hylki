@@ -162,6 +162,7 @@ modules:
       - install -Dm644 data/icons/hicolor/256x256/apps/co.hyprlab.Hylki.png /app/share/icons/hicolor/256x256/apps/co.hyprlab.Hylki.png
       - install -Dm644 data/icons/hicolor/512x512/apps/co.hyprlab.Hylki.png /app/share/icons/hicolor/512x512/apps/co.hyprlab.Hylki.png
       - install -Dm644 data/icons/hicolor/scalable/apps/co.hyprlab.Hylki.svg /app/share/icons/hicolor/scalable/apps/co.hyprlab.Hylki.svg
+      - install -Dm644 data/icons/hicolor/symbolic/apps/co.hyprlab.Hylki-symbolic.svg /app/share/icons/hicolor/symbolic/apps/co.hyprlab.Hylki-symbolic.svg
       # The restart helper's D-Bus service (Settings → App icon → Restart Now):
       # exported by Flatpak, so the bus can start a fresh sandbox instance.
       - install -Dm644 data/co.hyprlab.Hylki.Restart.service /app/share/dbus-1/services/co.hyprlab.Hylki.Restart.service
@@ -169,8 +170,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/hyprlab/hylki.git
-        tag: v1.39.3
-        commit: a31cfa1f5db1a0b42c90766e9b2a10445b631d2a
+        tag: v1.40.0
+        commit: 5aa55cf4e0d21e260decc4169751a3aff409fb8f
       # Vendored crate sources for the offline Flatpak build. Generate with:
       #   flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
       - cargo-sources.json

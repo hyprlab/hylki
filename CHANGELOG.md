@@ -1,9 +1,32 @@
 # Changelog
 
-## 1.39.4-beta.1 — 2026-09-22
+## 1.40.1-beta.1 — 2026-09-22
 
-Catch-up release: the beta channel is brought level with stable 1.39.3. No
-changes of its own: see the 1.39.3 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.40.0. No
+changes of its own: see the 1.40.0 section below for what is in it.
+
+## 1.40.0 — 2026-09-22
+
+A new app icon, drawn by Yiannis Ioannides (#249).
+
+- **New: the app icon is an opened envelope** (#249, closes #229). The
+  icon Yiannis Ioannides drew for Hylki is an airmail envelope with a
+  letter showing, on the GNOME icon grid, with a hazard-striped twin for
+  the beta. Every install shows it once on the first start of 1.40, as
+  the 1.23 and 1.35 icons did; a choice made afterwards in Settings →
+  Appearance → App icon stands. The two-tone envelope that was the default
+  since 1.35 stays in the gallery as "Wave", and its full-size drawing is
+  labelled "Wave, full size".
+- **New: a symbolic app icon.** The same drawing as a 16px symbolic icon,
+  installed by the Flatpak, the RPM and install.sh under
+  `co.hyprlab.Hylki-symbolic`. The tray icon's white and black options
+  now draw it instead of the reader's unread-mail glyph; the three tray
+  choices are unchanged.
+- **Changed: the About window shows the new wordmark,** the script
+  lettering with the icon beside it, in black or white to match the
+  theme.
+- The README, the repository credits and the website name Yiannis
+  Ioannides for the icon and the wordmark.
 
 ## 1.39.3 — 2026-09-22
 

@@ -118,8 +118,9 @@ development tool:
   trailer on every commit.
 - **Text:** documentation, release notes, and website copy are largely
   AI-drafted and human-edited.
-- **Artwork:** the app icon and other visual assets are human-made, without
-  generative AI.
+- **Artwork:** the app icon, its symbolic twin and the wordmark are drawn by
+  [Yiannis Ioannides](https://github.com/yioannides); the other visual assets
+  are human-made too, without generative AI.
 - **The app itself contains no AI.** Hylki has no AI features, makes no
   requests to AI services, and never sends your mail or any other data to one:
   AI was used to *build* the app, not to run it.

@@ -3889,14 +3889,6 @@ msgstr ""
 "A beszélgetés minden üzenetének megjelenítése a listában. Kikapcsolva a "
 "beszélgetések a legújabb üzenetükre összecsukva indulnak."
 
-#, fuzzy
-msgid "Show your own replies in the message list"
-msgstr "Műveletpaletta az üzenetlistában"
-
-#, fuzzy
-msgid "Off shows the last message that arrived."
-msgstr "Minden melléklet mentése egy mappába"
-
 msgid "Newest message first"
 msgstr "Legújabb üzenet elöl"
 
@@ -3906,6 +3898,14 @@ msgid ""
 msgstr ""
 "A beszélgetés legújabb üzenetének megjelenítése az olvasópanel tetején. "
 "Kikapcsolva a legrégebbitől a legújabb felé, lefelé olvas."
+
+#, fuzzy
+msgid "Show your own replies in the message list"
+msgstr "Műveletpaletta az üzenetlistában"
+
+#, fuzzy
+msgid "Off shows the last message that arrived."
+msgstr "Minden melléklet mentése egy mappába"
 
 #, fuzzy
 msgid "Reply editor"

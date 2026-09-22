@@ -74,6 +74,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.40.0" date="2026-09-22">
+      <description>
+        <p>A new app icon: an opened envelope drawn by Yiannis Ioannides, with a symbolic twin for the tray. The earlier envelope stays in the icon gallery as "Wave".</p>
+      </description>
+    </release>
     <release version="1.39.3" date="2026-09-22">
       <description>
         <p>A conversation's row can show your own replies, so the message list says when the last word in a conversation was yours. New in Settings, Conversations, off by default.</p>

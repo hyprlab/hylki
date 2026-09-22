@@ -3964,14 +3964,6 @@ msgstr ""
 "Mostrar na lista todas as mensagens de uma conversa. Quando desativada, as "
 "conversas começam recolhidas na mensagem mais recente."
 
-#, fuzzy
-msgid "Show your own replies in the message list"
-msgstr "Paleta de ações na lista de mensagens"
-
-#, fuzzy
-msgid "Off shows the last message that arrived."
-msgstr "Mover esta mensagem para uma pasta"
-
 msgid "Newest message first"
 msgstr "Mensagem mais recente primeiro"
 
@@ -3982,6 +3974,14 @@ msgstr ""
 "Mostrar a mensagem mais recente de uma conversa no topo do painel de "
 "leitura. Quando desativada, a leitura é feita de cima para baixo, da mais "
 "antiga para a mais recente."
+
+#, fuzzy
+msgid "Show your own replies in the message list"
+msgstr "Paleta de ações na lista de mensagens"
+
+#, fuzzy
+msgid "Off shows the last message that arrived."
+msgstr "Mover esta mensagem para uma pasta"
 
 msgid "Reply editor"
 msgstr "Editor de resposta"

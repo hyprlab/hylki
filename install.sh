@@ -25,6 +25,8 @@ for size in 256x256 512x512; do
 done
 install -Dm644 "$ROOT/data/icons/hicolor/scalable/apps/$APP_ID.svg" \
     "$PREFIX/share/icons/hicolor/scalable/apps/$APP_ID.svg"
+install -Dm644 "$ROOT/data/icons/hicolor/symbolic/apps/co.hyprlab.Hylki-symbolic.svg" \
+    "$PREFIX/share/icons/hicolor/symbolic/apps/$APP_ID-symbolic.svg"
 # (Symbolic UI icons are embedded in the binary as a GResource, so nothing to
 # install here — they render identically regardless of the host icon theme.)
 

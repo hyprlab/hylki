@@ -50,6 +50,8 @@ build_rpm() {
         cp "$ROOT/data/icons/hicolor/$size/apps/$APP_ID.png" "$stage/icons/$size/$APP_ID.png"
     done
     cp "$ROOT/data/icons/hicolor/scalable/apps/$APP_ID.svg" "$stage/icons/scalable/$APP_ID.svg"
+    mkdir -p "$stage/icons/symbolic"
+    cp "$ROOT/data/icons/hicolor/symbolic/apps/co.hyprlab.Hylki-symbolic.svg" "$stage/icons/symbolic/$APP_ID-symbolic.svg"
     mkdir -p "$work/rpmbuild/SOURCES"
     tar -C "$work" -cf "$work/rpmbuild/SOURCES/hylki-$VERSION-bin.tar" "hylki-$VERSION-bin"
 

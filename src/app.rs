@@ -4810,19 +4810,22 @@ impl SimpleComponent for AppModel {
                     });
                 }
                 // HYLKI_SHOWCASE_SETTINGS=accounts|prefs opens the Settings
-                // window on that panel and captures it instead of the main
-                // window, so its pages can be checked in stills too.
+                // window on that panel (about: the About window) and
+                // captures it instead of the main window, so its pages can
+                // be checked in stills too.
                 let settings = std::env::var("HYLKI_SHOWCASE_SETTINGS").ok();
                 if let Some(panel) = settings.clone() {
                     let s = sender.clone();
                     gtk::glib::timeout_add_seconds_local_once(3, move || {
                         s.input(if panel == "accounts" {
                             AppMsg::OpenAccounts
+                        } else if panel == "about" {
+                            AppMsg::OpenAbout
                         } else {
                             AppMsg::OpenPreferences
                         });
                         // Any other value names a sidebar category (#141).
-                        if panel != "accounts" && panel != "prefs" {
+                        if panel != "accounts" && panel != "prefs" && panel != "about" {
                             let s = s.clone();
                             gtk::glib::timeout_add_seconds_local_once(1, move || {
                                 s.input(AppMsg::ShowSettingsPage(panel));
@@ -16680,12 +16683,17 @@ impl AppModel {
         page.set_margin_top(18);
         page.set_margin_bottom(12);
 
-        // Identity block: the wordmark, wizard-style.
-        // Same Overlay-with-spacer cap as the wizard — a Picture's texture
-        // wins over both width requests and clamps.
-        let wm_pic = crate::ui::welcome::wordmark_picture(182);
+        // Identity block: the wordmark with the app icon beside it,
+        // wizard-style. Same Overlay-with-spacer cap as the wizard: a
+        // Picture's texture wins over both width requests and clamps.
+        use crate::ui::welcome::Wordmark;
+        const ABOUT_WORDMARK: i32 = 220;
+        let wm_pic = crate::ui::welcome::wordmark_picture_of(Wordmark::WithIcon, ABOUT_WORDMARK);
         let wm_frame = gtk::Box::new(gtk::Orientation::Vertical, 0);
-        wm_frame.set_size_request(182, crate::ui::welcome::wordmark_height(182.0));
+        wm_frame.set_size_request(
+            ABOUT_WORDMARK,
+            crate::ui::welcome::wordmark_height_of(Wordmark::WithIcon, f64::from(ABOUT_WORDMARK)),
+        );
         let wm = gtk::Overlay::new();
         wm.set_child(Some(&wm_frame));
         wm.add_overlay(&wm_pic);

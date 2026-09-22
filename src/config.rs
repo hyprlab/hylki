@@ -757,9 +757,9 @@ pub enum TrayIcon {
     /// The app icon.
     #[default]
     Hylki,
-    /// `mail-unread-symbolic` in white, for dark panels.
+    /// The app's symbolic icon in white, for dark panels.
     EnvelopeLight,
-    /// `mail-unread-symbolic` in black, for light panels.
+    /// The app's symbolic icon in black, for light panels.
     EnvelopeDark,
 }
 

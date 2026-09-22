@@ -62,7 +62,10 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   Settings, OAuth-aware connection tests, and a timeout on stalled IMAP
   connections.
 - [**Yiannis Ioannides**](https://github.com/yioannides) ([#75](https://github.com/hyprlab/hylki/pull/75),
-  [#227](https://github.com/hyprlab/hylki/pull/227)): the Greek translation; the
+  [#227](https://github.com/hyprlab/hylki/pull/227),
+  [#249](https://github.com/hyprlab/hylki/pull/249)): the app icon, its
+  symbolic twin and the wordmark that the About window and the website
+  carry since 1.40; the Greek translation; the
   `--user` flag in the Flatpak install instructions, so a local install no
   longer asks for root; and a long run of requests and design feedback that
   shaped tags, split replies, the reader's own font and colours, Empty Trash

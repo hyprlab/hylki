@@ -4010,14 +4010,6 @@ msgstr ""
 "Afficher chaque message d'une conversation dans la liste. Désactivé, les "
 "conversations apparaissent réduites à leur message le plus récent."
 
-#, fuzzy
-msgid "Show your own replies in the message list"
-msgstr "Palette d'actions dans la liste des messages"
-
-#, fuzzy
-msgid "Off shows the last message that arrived."
-msgstr "Déplacer ce message vers un dossier"
-
 msgid "Newest message first"
 msgstr "Message le plus récent en premier"
 
@@ -4028,6 +4020,14 @@ msgstr ""
 "Afficher le dernier message d'une conversation en haut du panneau de "
 "lecture. Désactivé, la lecture se fait du plus ancien au plus récent vers le "
 "bas."
+
+#, fuzzy
+msgid "Show your own replies in the message list"
+msgstr "Palette d'actions dans la liste des messages"
+
+#, fuzzy
+msgid "Off shows the last message that arrived."
+msgstr "Déplacer ce message vers un dossier"
 
 msgid "Reply editor"
 msgstr "Éditeur de réponses"

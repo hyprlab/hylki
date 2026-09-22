@@ -16,8 +16,8 @@
 //! Icons are sent as pixel data rather than by name: the panel lives outside
 //! the sandbox and may not resolve our icon theme, and the dot has to be drawn
 //! on anyway. The Hylki icon is the app icon itself; the envelope variants are
-//! the reader's `mail-unread-symbolic` in plain white or black, for panels
-//! that don't recolour symbolic icons. On Cinnamon the icon is drawn smaller
+//! the app's own symbolic icon in plain white or black, for panels that
+//! don't recolour symbolic icons. On Cinnamon the icon is drawn smaller
 //! inside the pixmap, see [`panel_fill`].
 
 use gtk::cairo;
@@ -64,9 +64,10 @@ pub struct TrayMailList {
 /// The app icon the tray shows: the one the user chose for the app (see
 /// `app_icon.rs`), passed in as PNG bytes so a change follows live.
 pub type AppIconPng = &'static [u8];
-/// The envelope, as the reader draws it; its fill is swapped for the chosen colour.
+/// The app's symbolic icon (the opened envelope, drawn in black); its
+/// fill is swapped for the chosen colour.
 const ENVELOPE_SVG: &str =
-    include_str!("../resources/icons/scalable/actions/co.hyprlab.Hylki-mail-unread-symbolic.svg");
+    include_str!("../data/icons/hicolor/symbolic/apps/co.hyprlab.Hylki-symbolic.svg");
 /// Panels ask for different sizes; a set covers them without upscaling blur.
 const SIZES: [i32; 6] = [16, 22, 24, 32, 48, 64];
 /// GNOME's red (`@error_color`).
@@ -437,7 +438,7 @@ fn render(icon: TrayIcon, app_png: AppIconPng, dotted: bool, size: i32, fill: f6
 }
 
 /// The icon's pixels before any dot: the app icon scaled down, or the
-/// envelope rasterised in the chosen colour.
+/// symbolic envelope rasterised in the chosen colour.
 fn base_pixbuf(icon: TrayIcon, app_png: AppIconPng, size: i32) -> Option<Pixbuf> {
     match icon {
         TrayIcon::Hylki => {
@@ -448,7 +449,7 @@ fn base_pixbuf(icon: TrayIcon, app_png: AppIconPng, size: i32) -> Option<Pixbuf>
         }
         TrayIcon::EnvelopeLight | TrayIcon::EnvelopeDark => {
             let fill = if icon == TrayIcon::EnvelopeLight { "#ffffff" } else { "#000000" };
-            let svg = ENVELOPE_SVG.replace("#2e3436", fill);
+            let svg = ENVELOPE_SVG.replace("#000000", fill);
             let loader = PixbufLoader::with_type("svg").ok()?;
             loader.set_size(size, size);
             loader.write(svg.as_bytes()).ok()?;
