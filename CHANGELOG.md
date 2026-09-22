@@ -1,9 +1,27 @@
 # Changelog
 
-## 1.39.1-beta.1 — 2026-09-21
+## 1.39.2-beta.1 — 2026-09-21
 
-Catch-up release: the beta channel is brought level with stable 1.39.0. No
-changes of its own: see the 1.39.0 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.39.1. No
+changes of its own: see the 1.39.1 section below for what is in it.
+
+## 1.39.1 — 2026-09-21
+
+A window opened from the tray icon comes to the front (#247).
+
+- **Fixed: the window opened behind the other apps** (#247). Asked for from
+  the tray icon, the window was drawn but left under whatever was in front of
+  it. An X11 window manager drops an activation request whose timestamp is
+  older than the last thing the user did, which is how an app that takes its
+  time starting is kept from stealing the focus; GTK takes that timestamp
+  from the last input event the app itself saw, and a tray click belongs to
+  the panel, so the request always lost. Hylki now sends the activation by
+  hand with the timestamp that means "now", which muffin, mutter, xfwm4 and
+  their kin answer by raising the window. X11 and Xwayland only: Wayland has
+  no such message, and there the window already comes forward. Every raise
+  that answers a click from outside the app goes the same way: the tray item
+  and its menu, a notification, a second launch. Reported by
+  [@mfreeman72](https://github.com/mfreeman72).
 
 ## 1.39.0 — 2026-09-21
 

@@ -3592,8 +3592,7 @@ impl SimpleComponent for AppModel {
             let present = gtk::gio::SimpleAction::new(crate::notify::PRESENT_ACTION, None);
             let win = model.window.clone();
             present.connect_activate(move |_, _| {
-                win.set_visible(true);
-                win.present();
+                crate::desktop::present_window(&win);
             });
             app.add_action(&present);
 
@@ -3618,8 +3617,7 @@ impl SimpleComponent for AppModel {
             let win = model.window.clone();
             let osender = sender.clone();
             open.connect_activate(move |_, param| {
-                win.set_visible(true);
-                win.present();
+                crate::desktop::present_window(&win);
                 if let Some((account_id, folder_id, message_id)) =
                     param.and_then(|v| v.get::<(u32, u32, u32)>())
                 {
@@ -3684,8 +3682,7 @@ impl SimpleComponent for AppModel {
                 let win = model.window.clone();
                 let asender = sender.clone();
                 act.connect_activate(move |_, param| {
-                    win.set_visible(true);
-                    win.present();
+                    crate::desktop::present_window(&win);
                     if let Some((account_id, folder_id, message_id)) =
                         param.and_then(|v| v.get::<(u32, u32, u32)>())
                     {
@@ -3896,8 +3893,7 @@ impl SimpleComponent for AppModel {
                 if pending_hidden_start.replace(false) {
                     return;
                 }
-                window.set_visible(true);
-                window.present();
+                crate::desktop::present_window(&window);
             });
         }
 
@@ -7994,12 +7990,11 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::PresentComposers => {
-                self.window.set_visible(true);
-                self.window.present();
+                crate::desktop::present_window(&self.window);
                 // The newest standalone composer is the one the alert was
                 // about; transient for the main window, it sits above it.
                 if let Some(h) = self.composers.last() {
-                    h.window.present();
+                    crate::desktop::present_window(&h.window);
                 }
             }
 
@@ -8265,8 +8260,7 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::PresentWindow => {
-                self.window.set_visible(true);
-                self.window.present();
+                crate::desktop::present_window(&self.window);
             }
 
             AppMsg::OpenConsole => {

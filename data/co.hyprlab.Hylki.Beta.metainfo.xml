@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.39.2-beta.1" date="2026-09-21" type="development">
+      <description>
+        <p>Catch-up with stable 1.39.1.</p>
+      </description>
+    </release>
     <release version="1.39.1-beta.1" date="2026-09-21" type="development">
       <description>
         <p>Catch-up with stable 1.39.0.</p>
