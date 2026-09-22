@@ -3957,6 +3957,14 @@ msgstr ""
 "Показывать каждое письмо из цепочки прямо в списке. Если отключено, "
 "обсуждения отображаются свёрнутыми до самого свежего сообщения."
 
+#, fuzzy
+msgid "Show your own replies in the message list"
+msgstr "Палитра действий в списке сообщений"
+
+#, fuzzy
+msgid "Off shows the last message that arrived."
+msgstr "Переместить это сообщение в папку"
+
 msgid "Newest message first"
 msgstr "Сначала новые сообщения"
 

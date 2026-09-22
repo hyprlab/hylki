@@ -4005,6 +4005,14 @@ msgstr ""
 "Εμφάνιση κάθε μηνύματος μιας συζήτησης στη λίστα. Όταν είναι ανενεργό, οι "
 "συζητήσεις ξεκινούν συμπτυγμένες στο νεότερο μήνυμα."
 
+#, fuzzy
+msgid "Show your own replies in the message list"
+msgstr "Παλέτα ενεργειών στη λίστα μηνυμάτων"
+
+#, fuzzy
+msgid "Off shows the last message that arrived."
+msgstr "Μετακίνηση αυτού του μηνύματος σε φάκελο"
+
 msgid "Newest message first"
 msgstr "Νεότερο μήνυμα πρώτο"
 

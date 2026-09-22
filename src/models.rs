@@ -1067,23 +1067,60 @@ impl Message {
     /// Compact date + time for list rows: always shows the time, with the day
     /// (and year, if not this year).
     pub fn datetime_list(&self) -> String {
-        if self.timestamp <= 0 {
-            return self.date.clone();
-        }
-        let now = crate::datefmt::now();
-        let time = crate::datefmt::time(self.timestamp);
-        if time.is_empty() {
-            return self.date.clone();
-        }
-        if crate::datefmt::day_key(self.timestamp) == crate::datefmt::day_key(now) {
-            format!("Today, {time}")
-        } else if crate::datefmt::year(self.timestamp) == crate::datefmt::year(now) {
-            format!("{}, {time}", crate::datefmt::day_month(self.timestamp))
-        } else {
-            format!("{}, {time}", crate::datefmt::day_month_year(self.timestamp))
-        }
+        datetime_list_at(self.timestamp, &self.date)
     }
 
+}
+
+/// [`Message::datetime_list`] for a time the app holds without a message:
+/// the newest member of a conversation that lives in another folder (#236),
+/// which the cache answers with as a timestamp and the header it was sent
+/// with. `date` is the fallback for a mail whose date could not be parsed.
+pub fn datetime_list_at(timestamp: i64, date: &str) -> String {
+    if timestamp <= 0 {
+        return date.to_string();
+    }
+    let now = crate::datefmt::now();
+    let time = crate::datefmt::time(timestamp);
+    if time.is_empty() {
+        return date.to_string();
+    }
+    if crate::datefmt::day_key(timestamp) == crate::datefmt::day_key(now) {
+        format!("Today, {time}")
+    } else if crate::datefmt::year(timestamp) == crate::datefmt::year(now) {
+        format!("{}, {time}", crate::datefmt::day_month(timestamp))
+    } else {
+        format!("{}, {time}", crate::datefmt::day_month_year(timestamp))
+    }
+}
+
+/// The newest message of a conversation, as the cache sees it across the
+/// whole account (#236).
+///
+/// A list shows one folder, so the newest thing it knows about a conversation
+/// is the last mail that *arrived*. The reply you sent went to Sent, and the
+/// row went on quoting the other side — nothing on screen said you had
+/// answered. This is that missing message, summarised.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ThreadLatest {
+    pub from_name: String,
+    pub from_addr: String,
+    pub preview: String,
+    /// Unix seconds, for deciding whether this really is newer than what the
+    /// folder itself holds.
+    pub timestamp: i64,
+    /// The Date header as it was displayed, for a message with no usable
+    /// timestamp.
+    pub date: String,
+}
+
+/// What the list cannot work out about a conversation on its own: how big it
+/// really is (#222) and which message moved it last (#236). Both are answered
+/// in one pass of the cache, for a whole page of rows at a time.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct ThreadSummary {
+    pub count: usize,
+    pub latest: Option<ThreadLatest>,
 }
 
 /// Every Message-ID that identifies a conversation: the messages' own ids plus

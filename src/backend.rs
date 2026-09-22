@@ -6,7 +6,7 @@
 //! app is fully navigable offline — used for the demo mode (launch with no
 //! accounts configured, e.g. an empty `XDG_CONFIG_HOME`).
 
-use crate::models::{Account, Folder, FolderKind, Message};
+use crate::models::{Account, Folder, FolderKind, Message, ThreadLatest, ThreadSummary};
 
 /// Read access to mail data.
 pub trait MailBackend {
@@ -137,14 +137,15 @@ impl MockBackend {
         self.messages.iter().find(|m| m.id == id).cloned()
     }
 
-    /// The demo's answer to the cache's `thread_counts` (#222): how big each
-    /// conversation is across the account's folders, so a thread row in the
-    /// demo wears the same badge it would against a real mailbox.
-    pub fn thread_counts(
+    /// The demo's answer to the cache's `thread_summaries` (#222, #236): how
+    /// big each conversation is across the account's folders and which message
+    /// moved it last, so a thread row in the demo reads as it would against a
+    /// real mailbox.
+    pub fn thread_summaries(
         &self,
         account_id: u32,
         groups: &[(String, Vec<String>)],
-    ) -> Vec<(String, usize)> {
+    ) -> Vec<(String, ThreadSummary)> {
         use std::collections::HashSet;
         let hidden: HashSet<u32> = self
             .folders
@@ -153,22 +154,52 @@ impl MockBackend {
             .filter(|f| matches!(f.kind, FolderKind::Trash | FolderKind::Junk))
             .map(|f| f.id)
             .collect();
+        let unsent: HashSet<u32> = self
+            .folders
+            .iter()
+            .filter(|f| f.account_id == account_id)
+            .filter(|f| matches!(f.kind, FolderKind::Drafts))
+            .map(|f| f.id)
+            .collect();
         groups
             .iter()
             .filter_map(|(tag, ids)| {
                 let want: HashSet<&str> = ids.iter().map(|s| s.as_str()).collect();
                 let mut seen: HashSet<&str> = HashSet::new();
+                let mut newest: Option<&Message> = None;
                 for m in &self.messages {
                     if m.account_id != account_id || hidden.contains(&m.folder_id) {
                         continue;
                     }
                     let hit = want.contains(m.message_id.as_str())
                         || m.references.split_whitespace().any(|r| want.contains(r));
-                    if hit && !m.message_id.is_empty() {
+                    if !hit {
+                        continue;
+                    }
+                    if !m.message_id.is_empty() {
                         seen.insert(m.message_id.as_str());
                     }
+                    if !unsent.contains(&m.folder_id)
+                        && newest.is_none_or(|n| m.timestamp > n.timestamp)
+                    {
+                        newest = Some(m);
+                    }
                 }
-                (!seen.is_empty()).then(|| (tag.clone(), seen.len()))
+                (!seen.is_empty()).then(|| {
+                    (
+                        tag.clone(),
+                        ThreadSummary {
+                            count: seen.len(),
+                            latest: newest.map(|m| ThreadLatest {
+                                from_name: m.from_name.clone(),
+                                from_addr: m.from_addr.clone(),
+                                preview: m.preview.clone(),
+                                timestamp: m.timestamp,
+                                date: m.date.clone(),
+                            }),
+                        },
+                    )
+                })
             })
             .collect()
     }

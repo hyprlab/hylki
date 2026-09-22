@@ -11,7 +11,9 @@ use std::time::Duration;
 
 use rusqlite::{params, Connection};
 
-use crate::models::{Attachment, Folder, FolderKind, GallerySort, Message};
+use crate::models::{
+    Attachment, Folder, FolderKind, GallerySort, Message, ThreadLatest, ThreadSummary,
+};
 
 const SCHEMA: &str = "
 CREATE TABLE IF NOT EXISTS folders (
@@ -989,16 +991,18 @@ impl Cache {
         })
     }
 
-    /// How many messages each of `groups` really holds, counting the members
-    /// that live in the account's *other* folders (#222).
+    /// What each of `groups` looks like across the account's *other* folders:
+    /// how many messages it really holds (#222) and which of them is the
+    /// newest (#236).
     ///
     /// The list can only count what it lists: a thread sitting in the Inbox
     /// shows a badge of 2 when the conversation is 2 inbox messages and the
     /// three replies you sent, because Sent is a different folder and often
-    /// isn't even loaded. [`messages_by_thread_ids`] is what the reader uses to
-    /// fill that gap when a conversation is *opened*; this answers the same
-    /// question for a whole page of threads at once, without hydrating a single
-    /// `Message`.
+    /// isn't even loaded. For the same reason the row reads as though the
+    /// other side spoke last, whatever you answered. [`messages_by_thread_ids`]
+    /// is what the reader uses to fill that gap when a conversation is
+    /// *opened*; this answers the same question for a whole page of threads at
+    /// once, without hydrating a single `Message`.
     ///
     /// Each group is `(tag, ids)` — an opaque tag echoed back, and the
     /// Message-IDs its known members are threaded by. The answer holds one
@@ -1009,13 +1013,24 @@ impl Cache {
     /// different mails sharing an id would be counted once and shown twice —
     /// malformed, vanishingly rare, and erring low is the safe direction here
     /// (the row never shows fewer than the messages under it). Trash and Junk
-    /// are left out, as they are for the reader.
-    pub fn thread_counts(
+    /// are left out, as they are for the reader; a draft is left out of the
+    /// newest message too, since a reply you have not sent is not one the
+    /// other side has heard.
+    pub fn thread_summaries(
         &self,
         account_id: u32,
         groups: &[(String, Vec<String>)],
-    ) -> Vec<(String, usize)> {
+    ) -> Vec<(String, ThreadSummary)> {
         use std::collections::{HashMap, HashSet};
+
+        /// One matched message: what it is threaded by, and what it would
+        /// look like on a row.
+        struct Row {
+            folder_path: String,
+            message_id: String,
+            references: String,
+            latest: ThreadLatest,
+        }
 
         // The union of every group's ids, deduped and capped: one scan for the
         // page. A group whose ids all fall past the cap simply gets no answer,
@@ -1051,7 +1066,7 @@ impl Cache {
             .collect::<Vec<_>>()
             .join(" OR ");
         let sql = format!(
-            "SELECT folder_path, message_id, references_ \
+            "SELECT folder_path, message_id, references_, from_name, from_addr, preview, date, ts \
              FROM messages \
              WHERE account_id = ?{account} AND (message_id IN ({in_list}) OR {refs_match}) \
              ORDER BY ts DESC LIMIT ?{limit}",
@@ -1061,7 +1076,7 @@ impl Cache {
             refs_match = refs_match,
         );
 
-        let run = || -> rusqlite::Result<Vec<(String, String, String)>> {
+        let run = || -> rusqlite::Result<Vec<Row>> {
             let mut stmt = self.conn.prepare(&sql)?;
             let padded: Vec<String> = ids.iter().map(|i| format!(" {i} ")).collect();
             let mut binds: Vec<&dyn rusqlite::ToSql> = Vec::new();
@@ -1074,12 +1089,23 @@ impl Cache {
             binds.push(&account_id as &dyn rusqlite::ToSql);
             binds.push(&THREAD_COUNT_ROW_LIMIT as &dyn rusqlite::ToSql);
             let rows = stmt.query_map(binds.as_slice(), |row| {
-                Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?, row.get::<_, String>(2)?))
+                Ok(Row {
+                    folder_path: row.get(0)?,
+                    message_id: row.get(1)?,
+                    references: row.get(2)?,
+                    latest: ThreadLatest {
+                        from_name: row.get(3)?,
+                        from_addr: row.get(4)?,
+                        preview: row.get(5)?,
+                        date: row.get(6)?,
+                        timestamp: row.get(7)?,
+                    },
+                })
             })?;
             rows.collect()
         };
         let rows = run().unwrap_or_else(|e| {
-            tracing::warn!("cache thread_counts failed: {e}");
+            tracing::warn!("cache thread_summaries failed: {e}");
             Vec::new()
         });
         if rows.is_empty() {
@@ -1089,11 +1115,18 @@ impl Cache {
         // A conversation the reader won't show isn't one the badge should
         // promise: deleted and spam copies are dropped here as they are in
         // `related_from_cache`.
-        let hidden: HashSet<String> = self
-            .load_folders(account_id)
-            .into_iter()
+        let folders = self.load_folders(account_id);
+        let hidden: HashSet<String> = folders
+            .iter()
             .filter(|f| matches!(f.kind, FolderKind::Trash | FolderKind::Junk))
-            .map(|f| f.path)
+            .map(|f| f.path.clone())
+            .collect();
+        // Counted, but never the message a row is shown as: a draft is a
+        // reply you are still writing.
+        let unsent: HashSet<String> = folders
+            .iter()
+            .filter(|f| matches!(f.kind, FolderKind::Drafts))
+            .map(|f| f.path.clone())
             .collect();
 
         // Which groups an id belongs to, so each row is placed by lookup
@@ -1111,15 +1144,23 @@ impl Cache {
         // apart from another one, so it is counted where it sits.
         let mut named: Vec<HashSet<&str>> = vec![HashSet::new(); groups.len()];
         let mut anonymous: Vec<usize> = vec![0; groups.len()];
-        for (path, message_id, references) in &rows {
-            if hidden.contains(path) {
+        // The scan is newest-first, so the first row a group accepts for
+        // display is its newest message and later ones are ignored.
+        let mut latest: Vec<Option<&ThreadLatest>> = vec![None; groups.len()];
+        for row in &rows {
+            let Row { folder_path, message_id, references, latest: this } = row;
+            if hidden.contains(folder_path) {
                 continue;
             }
+            let showable = !unsent.contains(folder_path);
             let mut place = |gi: usize| {
                 if message_id.is_empty() {
                     anonymous[gi] += 1;
                 } else {
                     named[gi].insert(message_id.as_str());
+                }
+                if showable && latest[gi].is_none() {
+                    latest[gi] = Some(this);
                 }
             };
             let mut placed: HashSet<usize> = HashSet::new();
@@ -1142,7 +1183,9 @@ impl Cache {
             .enumerate()
             .filter_map(|(gi, (tag, _))| {
                 let n = named[gi].len() + anonymous[gi];
-                (n > 0).then(|| (tag.clone(), n))
+                (n > 0).then(|| {
+                    (tag.clone(), ThreadSummary { count: n, latest: latest[gi].cloned() })
+                })
             })
             .collect()
     }
@@ -2592,6 +2635,32 @@ mod tests {
             .unwrap();
     }
 
+    /// Just the sizes, for the tests that predate the newest-message half of
+    /// the answer.
+    fn counts(c: &Cache, groups: &[(String, Vec<String>)]) -> Vec<(String, usize)> {
+        c.thread_summaries(1, groups).into_iter().map(|(tag, s)| (tag, s.count)).collect()
+    }
+
+    /// As [`add_threaded`], with the sender and preview a row would show.
+    fn add_shown(
+        c: &Cache,
+        folder: &str,
+        uid: u32,
+        ts: i64,
+        msgid: &str,
+        refs: &str,
+        from: &str,
+        preview: &str,
+    ) {
+        c.conn
+            .execute(
+                "INSERT INTO messages (account_id, folder_path, uid, from_name, from_addr, subject, date, ts, unread, starred, has_attachment, message_id, references_, preview) \
+                 VALUES (1, ?1, ?2, ?6, ?6, 'S', '', ?3, 0, 0, 0, ?4, ?5, ?7)",
+                params![folder, uid, ts, msgid, refs, from, preview],
+            )
+            .unwrap();
+    }
+
     fn add_threaded(c: &Cache, folder: &str, uid: u32, ts: i64, msgid: &str, refs: &str) {
         c.conn
             .execute(
@@ -2691,7 +2760,7 @@ mod tests {
         add_threaded(&c, "Sent", 3, 700, "mine2@x", "root@x mine@x");
 
         let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
-        assert_eq!(c.thread_counts(1, &groups), vec![("t".to_string(), 3)]);
+        assert_eq!(counts(&c, &groups), vec![("t".to_string(), 3)]);
     }
 
     /// Each thread gets its own number, and threads share the one scan.
@@ -2708,7 +2777,7 @@ mod tests {
             ("a".to_string(), vec!["a@x".to_string()]),
             ("b".to_string(), vec!["b@x".to_string()]),
         ];
-        let mut got = c.thread_counts(1, &groups);
+        let mut got = counts(&c, &groups);
         got.sort();
         assert_eq!(got, vec![("a".to_string(), 2), ("b".to_string(), 1)]);
     }
@@ -2726,7 +2795,7 @@ mod tests {
         add_threaded(&c, "Junk", 3, 700, "spam@x", "root@x");
 
         let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
-        assert_eq!(c.thread_counts(1, &groups), vec![("t".to_string(), 1)]);
+        assert_eq!(counts(&c, &groups), vec![("t".to_string(), 1)]);
     }
 
     /// Gmail files one message under every label it carries, so counting rows
@@ -2745,7 +2814,7 @@ mod tests {
         add_threaded(&c, "Work", 21, 600, "reply@x", "root@x");
 
         let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
-        assert_eq!(c.thread_counts(1, &groups), vec![("t".to_string(), 2)]);
+        assert_eq!(counts(&c, &groups), vec![("t".to_string(), 2)]);
     }
 
     /// An id that matches nothing gets no entry at all, so the row keeps the
@@ -2757,7 +2826,57 @@ mod tests {
         add_threaded(&c, "INBOX", 1, 500, "root@x", "");
 
         let groups = vec![("gone".to_string(), vec!["nothing@x".to_string()])];
-        assert!(c.thread_counts(1, &groups).is_empty());
+        assert!(counts(&c, &groups).is_empty());
+    }
+
+    /// The row said the other side spoke last however recently you had
+    /// answered: the reply is in Sent and the Inbox list cannot see it (#236).
+    #[test]
+    fn the_newest_message_of_a_conversation_is_found_in_sent() {
+        let c = Cache::in_memory().unwrap();
+        add_folder(&c, "INBOX", FolderKind::Inbox);
+        add_folder(&c, "Sent", FolderKind::Sent);
+        add_shown(&c, "INBOX", 1, 500, "root@x", "", "Ada", "Can you take a look?");
+        add_shown(&c, "Sent", 2, 600, "mine@x", "root@x", "Me", "Looked, all good");
+
+        let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
+        let got = c.thread_summaries(1, &groups);
+        let latest = got[0].1.latest.as_ref().expect("the reply is the newest");
+        assert_eq!(latest.from_name, "Me");
+        assert_eq!(latest.preview, "Looked, all good");
+        assert_eq!(latest.timestamp, 600);
+    }
+
+    /// A reply still being written is not one the row should speak for, so
+    /// drafts are counted but never shown.
+    #[test]
+    fn a_draft_is_not_the_newest_message() {
+        let c = Cache::in_memory().unwrap();
+        add_folder(&c, "INBOX", FolderKind::Inbox);
+        add_folder(&c, "Drafts", FolderKind::Drafts);
+        add_shown(&c, "INBOX", 1, 500, "root@x", "", "Ada", "Can you take a look?");
+        add_shown(&c, "Drafts", 2, 900, "draft@x", "root@x", "Me", "Half an answ");
+
+        let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
+        let got = c.thread_summaries(1, &groups);
+        let latest = got[0].1.latest.as_ref().expect("the received mail is left");
+        assert_eq!(latest.from_name, "Ada");
+        assert_eq!(latest.timestamp, 500);
+    }
+
+    /// What the reader leaves out of a conversation, the row must not quote.
+    #[test]
+    fn a_binned_reply_is_not_the_newest_message() {
+        let c = Cache::in_memory().unwrap();
+        add_folder(&c, "INBOX", FolderKind::Inbox);
+        add_folder(&c, "Trash", FolderKind::Trash);
+        add_shown(&c, "INBOX", 1, 500, "root@x", "", "Ada", "Can you take a look?");
+        add_shown(&c, "Trash", 2, 900, "binned@x", "root@x", "Ada", "Never mind");
+
+        let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
+        let got = c.thread_summaries(1, &groups);
+        let latest = got[0].1.latest.as_ref().expect("the received mail is left");
+        assert_eq!(latest.preview, "Can you take a look?");
     }
 
     /// The same off-by-a-slot bind bug `a_conversation_holds_only_messages_that_reference_it`
@@ -2772,7 +2891,7 @@ mod tests {
         add_threaded(&c, "Archive", 3, 550, "other@x", "31337@elsewhere");
 
         let groups = vec![("t".to_string(), vec!["root@x".to_string()])];
-        assert_eq!(c.thread_counts(1, &groups), vec![("t".to_string(), 1)]);
+        assert_eq!(counts(&c, &groups), vec![("t".to_string(), 1)]);
     }
 
     /// Gmail stores one message under every label it carries, so INBOX, All Mail

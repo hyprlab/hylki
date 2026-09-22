@@ -1322,7 +1322,7 @@ checksum = "df3b46402a9d5adb4c86a0cf463f42e19994e3ee891101b1841f30a545cb49a9"
 
 [[package]]
 name = "hylki"
-version = "1.39.3-beta.1"
+version = "1.39.4-beta.1"
 dependencies = [
  "ammonia",
  "async-imap",

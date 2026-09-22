@@ -25,7 +25,7 @@ use tokio::sync::mpsc;
 use crate::backend::{MailBackend, MockBackend};
 use crate::cache::Cache;
 use crate::config::AccountConfig;
-use crate::models::{Account, Folder, FolderKind, KeywordFinding, Message};
+use crate::models::{Account, Folder, FolderKind, KeywordFinding, Message, ThreadSummary};
 use crate::i18n::{i18n, i18n_f, ni18n_f};
 
 /// The JMAP path (#245), a child module so it shares this file's helpers.
@@ -404,11 +404,13 @@ pub enum MailRequest {
     /// been described, recording what each one holds without downloading it.
     ScanAttachments { folder_path: String },
     LoadRelated { message_id: u32, ids: Vec<String> },
-    /// How big each of these conversations really is, counting the members in
-    /// the account's other folders (#222). One `(tag, Message-IDs)` per thread
-    /// on the list's page; answers with [`WorkerEvent::ThreadCounts`] and, like
-    /// [`MailRequest::LoadRelated`], never touches the network.
-    LoadThreadCounts { groups: Vec<(String, Vec<String>)> },
+    /// What each of these conversations looks like whole: how big it really
+    /// is, counting the members in the account's other folders (#222), and
+    /// which message moved it last, the replies in Sent included (#236). One
+    /// `(tag, Message-IDs)` per thread on the list's page; answers with
+    /// [`WorkerEvent::ThreadSummaries`] and, like [`MailRequest::LoadRelated`],
+    /// never touches the network.
+    LoadThreadSummaries { groups: Vec<(String, Vec<String>)> },
     /// Permanently erase messages from `path` (flag `\Deleted` + EXPUNGE), used
     /// when "delete" is asked for in Trash, where there is nowhere left to move to.
     PurgeMessages { path: String, uids: Vec<u32> },
@@ -555,10 +557,11 @@ pub enum WorkerEvent {
     /// message it was asked for, so a late answer to a message the user has
     /// already moved on from can be ignored.
     Related { message_id: u32, messages: Vec<Message> },
-    /// True conversation sizes for the threads the list asked about, tagged as
-    /// it tagged them (#222). Only threads the cache found something for are
-    /// listed; the rest keep the count the list worked out from its own page.
-    ThreadCounts { counts: Vec<(String, usize)> },
+    /// What the whole conversation looks like for the threads the list asked
+    /// about, tagged as it tagged them (#222, #236). Only threads the cache
+    /// found something for are listed; the rest keep the count, the sender and
+    /// the preview the list worked out from its own page.
+    ThreadSummaries { summaries: Vec<(String, ThreadSummary)> },
     /// An undone move put these messages back in `folder_id`; sent after the
     /// folder's fresh [`WorkerEvent::Messages`] so the app can land the user
     /// on the restored message instead of wherever the reload left the list.
@@ -774,10 +777,12 @@ fn cache_lane(
                 });
                 None
             }
-            MailRequest::LoadThreadCounts { groups }
+            MailRequest::LoadThreadSummaries { groups }
                 if protocol != Some(crate::config::Protocol::Pop3) =>
             {
-                emit(WorkerEvent::ThreadCounts { counts: c.thread_counts(account_id, &groups) });
+                emit(WorkerEvent::ThreadSummaries {
+                    summaries: c.thread_summaries(account_id, &groups),
+                });
                 None
             }
             other => Some(other),
@@ -1408,12 +1413,12 @@ async fn run_imap(
                 emit(WorkerEvent::Related { message_id: *message_id, messages });
                 continue; // cache-only, never hits the network
             }
-            MailRequest::LoadThreadCounts { groups } => {
-                let counts = cache
+            MailRequest::LoadThreadSummaries { groups } => {
+                let summaries = cache
                     .as_ref()
-                    .map(|c| c.thread_counts(account_id, groups))
+                    .map(|c| c.thread_summaries(account_id, groups))
                     .unwrap_or_default();
-                emit(WorkerEvent::ThreadCounts { counts });
+                emit(WorkerEvent::ThreadSummaries { summaries });
                 continue; // cache-only, never hits the network
             }
             MailRequest::LoadBody {
@@ -1495,7 +1500,7 @@ async fn run_imap(
 
         match req {
             // Served from cache before this network match; never reached here.
-            MailRequest::LoadRelated { .. } | MailRequest::LoadThreadCounts { .. } => {}
+            MailRequest::LoadRelated { .. } | MailRequest::LoadThreadSummaries { .. } => {}
             MailRequest::LoadMessages { folder_id, path }
             | MailRequest::SyncFolder { folder_id, path } => {
                 if !background {
@@ -8282,8 +8287,8 @@ async fn run_pop3(
             }
             // Same reason: everything is in the inbox, so the list's own count
             // is already the whole conversation (#222).
-            MailRequest::LoadThreadCounts { .. } => {
-                emit(WorkerEvent::ThreadCounts { counts: Vec::new() });
+            MailRequest::LoadThreadSummaries { .. } => {
+                emit(WorkerEvent::ThreadSummaries { summaries: Vec::new() });
             }
             MailRequest::LoadMessages { folder_id, path }
             | MailRequest::SyncFolder { folder_id, path } => {
@@ -8748,9 +8753,9 @@ async fn run_mock(
             MailRequest::LoadRelated { message_id, .. } => {
                 emit(WorkerEvent::Related { message_id, messages: Vec::new() });
             }
-            MailRequest::LoadThreadCounts { groups } => {
-                emit(WorkerEvent::ThreadCounts {
-                    counts: backend.thread_counts(account_id, &groups),
+            MailRequest::LoadThreadSummaries { groups } => {
+                emit(WorkerEvent::ThreadSummaries {
+                    summaries: backend.thread_summaries(account_id, &groups),
                 });
             }
             MailRequest::LoadMessages { folder_id, .. }
@@ -9968,12 +9973,12 @@ async fn run_graph(
                     .unwrap_or_default();
                 emit(WorkerEvent::Related { message_id, messages });
             }
-            MailRequest::LoadThreadCounts { groups } => {
-                let counts = cache
+            MailRequest::LoadThreadSummaries { groups } => {
+                let summaries = cache
                     .as_ref()
-                    .map(|c| c.thread_counts(account_id, &groups))
+                    .map(|c| c.thread_summaries(account_id, &groups))
                     .unwrap_or_default();
-                emit(WorkerEvent::ThreadCounts { counts });
+                emit(WorkerEvent::ThreadSummaries { summaries });
             }
 
             MailRequest::LoadMessages { folder_id, path }

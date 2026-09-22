@@ -3567,6 +3567,12 @@ msgid ""
 "start collapsed to their newest message."
 msgstr ""
 
+msgid "Show your own replies in the message list"
+msgstr ""
+
+msgid "Off shows the last message that arrived."
+msgstr ""
+
 msgid "Newest message first"
 msgstr ""
 

@@ -905,6 +905,12 @@ struct PrivacyFile {
     /// thread itself opens only in the reading pane's cards.
     #[serde(default = "default_thread_expansion")]
     thread_expansion: bool,
+    /// Whether a conversation's row in the message list speaks for the newest
+    /// message anywhere in the account rather than the newest one the folder
+    /// itself holds: the reply you sent, which is filed in Sent (#236). Off by
+    /// default, so the row goes on describing the last mail that arrived.
+    #[serde(default)]
+    thread_row_newest: bool,
     /// Whether the reading pane shows a conversation newest-message-first.
     #[serde(default)]
     thread_newest_first: bool,
@@ -1356,6 +1362,7 @@ impl Default for PrivacyFile {
             threading: default_threading(),
             threads_expanded: false,
             thread_expansion: default_thread_expansion(),
+            thread_row_newest: false,
             thread_newest_first: false,
             always_show_recipients: false,
             single_message_card: default_single_message_card(),
@@ -2387,6 +2394,12 @@ pub fn load_thread_expansion() -> bool {
     load_privacy().thread_expansion
 }
 
+/// Whether a conversation's row says who spoke last across the whole account,
+/// the replies you sent included (#236).
+pub fn load_thread_row_newest() -> bool {
+    load_privacy().thread_row_newest
+}
+
 /// Whether deleting a whole selected conversation asks for confirmation.
 pub fn load_confirm_thread_delete() -> bool {
     load_privacy().confirm_thread_delete
@@ -2883,6 +2896,7 @@ pub fn save_privacy(
     threading: bool,
     threads_expanded: bool,
     thread_expansion: bool,
+    thread_row_newest: bool,
     thread_newest_first: bool,
     always_show_recipients: bool,
     single_message_card: bool,
@@ -2974,6 +2988,7 @@ pub fn save_privacy(
         threading,
         threads_expanded,
         thread_expansion,
+        thread_row_newest,
         thread_newest_first,
         always_show_recipients,
         single_message_card,

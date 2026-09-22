@@ -74,6 +74,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.39.3" date="2026-09-22">
+      <description>
+        <p>A conversation's row can show your own replies, so the message list says when the last word in a conversation was yours. New in Settings, Conversations, off by default.</p>
+      </description>
+    </release>
     <release version="1.39.2" date="2026-09-22">
       <description>
         <p>A reply quotes the message it answers as it was written, keeping every level of quoting and the line breaks of plain-text mail.</p>

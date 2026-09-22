@@ -6,7 +6,7 @@ use gtk::glib;
 use relm4::factory::FactoryVecDeque;
 use relm4::prelude::*;
 
-use crate::models::Message;
+use crate::models::{Message, ThreadSummary};
 use crate::ui::context_menu::{show_context_menu, show_context_menu_with_header, MenuEntry};
 use crate::i18n::i18n;
 
@@ -2344,6 +2344,24 @@ fn heads_its_row(
     }
 }
 
+/// The message a conversation's row should speak for when it is not one this
+/// folder holds: the cache's newest member, if it is later than anything on
+/// screen (#236).
+///
+/// A mail you answered is a single row in the Inbox, with the answer filed in
+/// Sent. The row goes on showing the other side's last word and its time, so
+/// nothing short of opening the conversation says you have replied. `None`
+/// keeps the row exactly as the folder describes it: the cache knows of
+/// nothing newer, or knows of nothing at all yet. Whether it is asked at all
+/// is the "Show your own replies in the message list" setting, off by
+/// default.
+fn latest_elsewhere(
+    summary: Option<&crate::models::ThreadSummary>,
+    newest_here: i64,
+) -> Option<crate::models::ThreadLatest> {
+    summary.and_then(|s| s.latest.as_ref()).filter(|l| l.timestamp > newest_here).cloned()
+}
+
 /// Which of the page's conversations still need their real size looked up
 /// (#222): the ones nobody has asked the cache about yet.
 ///
@@ -2537,11 +2555,17 @@ pub struct MessageList {
     /// screen — every reply in an Inbox answers something in Sent — so those
     /// links are needed to see that the replies belong together.
     thread_links: Vec<(u32, String, String)>,
-    /// How big each conversation really is, counted across the account's other
-    /// folders and handed down by the app (#222). The list can only see its own
-    /// folder, so a thread whose replies live in Sent would otherwise wear a
-    /// badge that undercounts it. Keyed by thread key, as `rebuild` groups them.
-    thread_counts: std::collections::HashMap<(u32, String), usize>,
+    /// What each conversation really is, read across the account's other
+    /// folders and handed down by the app: its size (#222) and its newest
+    /// message (#236). The list can only see its own folder, so a thread whose
+    /// replies live in Sent would otherwise wear a badge that undercounts it
+    /// and a row that never mentions your answer. Keyed by thread key, as
+    /// `rebuild` groups them.
+    thread_summaries: std::collections::HashMap<(u32, String), ThreadSummary>,
+    /// Whether a row may speak for a message in another folder at all (#236).
+    /// Off by default: the row describes the newest message this folder holds,
+    /// as it always has. The sizes on the badges are not affected either way.
+    thread_row_newest: bool,
     /// The conversations the last rebuild put on screen, as
     /// `(account, thread root, the Message-IDs it is threaded by)` — what the
     /// app needs to look their real sizes up.
@@ -2550,7 +2574,7 @@ pub struct MessageList {
     /// every keystroke of a search and on every sync, and each ask is a scan of
     /// the account's index — so a thread is asked about once and remembered,
     /// not re-asked whenever its row is redrawn. Cleared per account by
-    /// [`MessageListInput::ForgetThreadCounts`] when that account's mail moves.
+    /// [`MessageListInput::ForgetThreadSummaries`] when that account's mail moves.
     asked_threads: std::collections::HashSet<(u32, String)>,
     /// The shown rows' (account, folder, uid, id) keys, handed to every row so a
     /// drag can carry the whole selection (#23).
@@ -2714,11 +2738,16 @@ pub enum MessageListInput {
     /// Reply headers from the account's other folders, so a conversation joined
     /// through a message that isn't on screen still groups.
     SetThreadLinks(Vec<(u32, String, String)>),
-    /// True conversation sizes from the cache, keyed by thread key (#222).
-    SetThreadCounts(Vec<((u32, String), usize)>),
-    /// This account's mail changed, so what was counted may no longer be the
-    /// conversation: drop its counts and let the next rebuild ask again (#222).
-    ForgetThreadCounts(u32),
+    /// What the whole conversations look like from the cache, keyed by thread
+    /// key (#222, #236).
+    SetThreadSummaries(Vec<((u32, String), ThreadSummary)>),
+    /// This account's mail changed, so what was read may no longer be the
+    /// conversation: drop its summaries and let the next rebuild ask again
+    /// (#222).
+    ForgetThreadSummaries(u32),
+    /// Whether a conversation's row speaks for the newest message anywhere in
+    /// the account, the replies you sent included (#236).
+    SetThreadRowNewest(bool),
     /// Whether conversations start expanded (true) or collapsed (false).
     SetThreadsExpanded(bool),
     SetGravatar(bool),
@@ -3225,7 +3254,8 @@ impl SimpleComponent for MessageList {
                 crate::config::load_swipe_sensitivity(),
             )),
             thread_links: Vec::new(),
-            thread_counts: std::collections::HashMap::new(),
+            thread_summaries: std::collections::HashMap::new(),
+            thread_row_newest: false,
             listed_threads: Vec::new(),
             asked_threads: std::collections::HashSet::new(),
             drag_keys: DragKeys::default(),
@@ -3394,16 +3424,16 @@ impl SimpleComponent for MessageList {
                     }
                 }
             }
-            MessageListInput::SetThreadCounts(counts) => {
-                // Counts arrive a beat after the page paints (the cache is the
+            MessageListInput::SetThreadSummaries(summaries) => {
+                // They arrive a beat after the page paints (the cache is the
                 // worker's, not ours), so this is a rebuild rather than part of
-                // one. Only the badge numbers move; the rows themselves, and
-                // which conversations are listed, do not — which is what keeps
-                // this from asking for counts again and looping.
+                // one. Only what a row says moves; which conversations are
+                // listed does not — which is what keeps this from asking again
+                // and looping.
                 let mut changed = false;
-                for (key, n) in counts {
-                    if self.thread_counts.get(&key) != Some(&n) {
-                        self.thread_counts.insert(key, n);
+                for (key, summary) in summaries {
+                    if self.thread_summaries.get(&key) != Some(&summary) {
+                        self.thread_summaries.insert(key, summary);
                         changed = true;
                     }
                 }
@@ -3411,14 +3441,22 @@ impl SimpleComponent for MessageList {
                     self.queue_rebuild(true);
                 }
             }
-            MessageListInput::ForgetThreadCounts(account_id) => {
-                let before = self.thread_counts.len();
-                self.thread_counts.retain(|(aid, _), _| *aid != account_id);
+            MessageListInput::ForgetThreadSummaries(account_id) => {
+                let before = self.thread_summaries.len();
+                self.thread_summaries.retain(|(aid, _), _| *aid != account_id);
                 self.asked_threads.retain(|(aid, _)| *aid != account_id);
-                // Only rebuild if a badge actually loses its number; the
+                // Only rebuild if a row actually loses what it was told; the
                 // re-ask itself rides on the rebuild the new mail causes.
-                if self.thread_counts.len() != before && self.threading {
+                if self.thread_summaries.len() != before && self.threading {
                     self.queue_rebuild(true);
+                }
+            }
+            MessageListInput::SetThreadRowNewest(on) => {
+                if self.thread_row_newest != on {
+                    self.thread_row_newest = on;
+                    if self.threading {
+                        self.queue_rebuild(true);
+                    }
                 }
             }
             MessageListInput::SetThreading(on) => {
@@ -5054,11 +5092,21 @@ impl MessageList {
             // *conversation*, replies filed in Sent included (#222). Never less
             // than what is on screen: a stale or partial answer from the cache
             // must not make the badge contradict the rows under it.
+            let summary = self.threading.then(|| self.thread_summaries.get(key)).flatten();
             let total = if self.threading {
-                self.thread_counts.get(key).copied().unwrap_or(0).max(count)
+                summary.map(|s| s.count).unwrap_or(0).max(count)
             } else {
                 count
             };
+            // The newest member this folder holds, and the newer one the cache
+            // found in another folder — the reply you sent, filed in Sent
+            // (#236). Cloned here so the row can be described without holding
+            // a borrow of the summaries across the inserts below.
+            let newest_here = msgs.last().expect("a group holds at least one message");
+            let elsewhere = self
+                .thread_row_newest
+                .then(|| latest_elsewhere(summary, newest_here.timestamp))
+                .flatten();
             // Ask about anything that could be bigger than it looks. A thread of
             // one is worth asking about too — a mail you answered twice is a
             // conversation of three and shows no badge at all today.
@@ -5085,22 +5133,31 @@ impl MessageList {
                 self.thread_members.insert(key.clone(), members);
             }
             // The head is the thread's *oldest* message (see the sort above),
-            // but its row should say when the conversation last moved — so the
-            // newest member's time is carried alongside for display.
-            let latest = (count > 1)
-                .then(|| msgs.last().map(|m| m.datetime_list()))
-                .flatten();
-            // The row surfaces the conversation's NEWEST message — its
-            // sender and preview — instead of re-showing the opener each
-            // time a reply lands.
-            let (latest_from, latest_preview) = if count > 1 {
-                let m = msgs.last().unwrap();
+            // but its row speaks for the conversation's NEWEST one: its sender,
+            // its preview and the time it landed, rather than the opener
+            // re-shown every time a reply arrives.
+            //
+            // Which message that is can depend on more than this folder. A
+            // mail you answered is one row in the Inbox and the answer is in
+            // Sent, so the row quotes the other side however recently you
+            // wrote back. With "Show your own replies in the message list"
+            // turned on, the cache's newest wins whenever it is later than
+            // anything on screen (#236); off, which is how Hylki has always
+            // behaved, the folder has the last word.
+            let (latest, latest_from, latest_preview) = if let Some(l) = &elsewhere {
                 (
-                    Some((m.from_name.clone(), m.from_addr.clone())),
-                    Some(m.preview.clone()),
+                    Some(crate::models::datetime_list_at(l.timestamp, &l.date)),
+                    Some((l.from_name.clone(), l.from_addr.clone())),
+                    Some(l.preview.clone()),
+                )
+            } else if count > 1 {
+                (
+                    Some(newest_here.datetime_list()),
+                    Some((newest_here.from_name.clone(), newest_here.from_addr.clone())),
+                    Some(newest_here.preview.clone()),
                 )
             } else {
-                (None, None)
+                (None, None, None)
             };
             let any_starred = count > 1 && msgs.iter().any(|m| m.starred);
             let mut it = msgs.into_iter();
@@ -5695,8 +5752,8 @@ impl MessageList {
 #[cfg(test)]
 mod tests {
     use super::{
-        compute_thread_keys, heads_its_row, reader_conversation, row_for_reader_key,
-        swipe_progress_px, unasked_threads, SWIPE_ARM, SWIPE_MAX,
+        compute_thread_keys, heads_its_row, latest_elsewhere, reader_conversation,
+        row_for_reader_key, swipe_progress_px, unasked_threads, SWIPE_ARM, SWIPE_MAX,
     };
     use crate::models::Message;
 
@@ -5721,6 +5778,36 @@ mod tests {
         // reader is still free to look for the rest of it in the cache.
         assert!(heads_its_row((1, 10), &msg_thread, &thread_members));
         assert!(heads_its_row((2, 7), &msg_thread, &thread_members));
+    }
+
+    /// #236 again, the second half: the row for a mail you have answered says
+    /// so, because the cache hands down a reply this folder does not hold.
+    #[test]
+    fn a_row_speaks_for_the_reply_filed_in_sent() {
+        use crate::models::{ThreadLatest, ThreadSummary};
+        let reply = ThreadLatest {
+            from_name: "Me".into(),
+            from_addr: "me@example.com".into(),
+            preview: "Looked, all good".into(),
+            timestamp: 600,
+            date: String::new(),
+        };
+        let summary = ThreadSummary { count: 2, latest: Some(reply.clone()) };
+
+        // The Inbox holds the message that came in at 500; the answer is later.
+        assert_eq!(latest_elsewhere(Some(&summary), 500), Some(reply));
+        // Once the folder itself holds something at least as new — the reply
+        // is in this folder too, or a newer mail has arrived — the row keeps
+        // describing what it can see.
+        assert_eq!(latest_elsewhere(Some(&summary), 600), None);
+        assert_eq!(latest_elsewhere(Some(&summary), 900), None);
+        // A conversation the cache has said nothing about, or nothing but a
+        // size, leaves the row alone.
+        assert_eq!(latest_elsewhere(None, 500), None);
+        assert_eq!(
+            latest_elsewhere(Some(&ThreadSummary { count: 3, latest: None }), 500),
+            None
+        );
     }
 
     fn msg(id: u32, message_id: &str, references: &str) -> Message {

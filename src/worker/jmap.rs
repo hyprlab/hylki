@@ -1686,9 +1686,10 @@ pub(super) async fn run_jmap(
                 let messages = cache.as_ref().map(|c| related_from_cache(c, account_id, &ids)).unwrap_or_default();
                 emit(WorkerEvent::Related { message_id, messages });
             }
-            MailRequest::LoadThreadCounts { groups } => {
-                let counts = cache.as_ref().map(|c| c.thread_counts(account_id, &groups)).unwrap_or_default();
-                emit(WorkerEvent::ThreadCounts { counts });
+            MailRequest::LoadThreadSummaries { groups } => {
+                let summaries =
+                    cache.as_ref().map(|c| c.thread_summaries(account_id, &groups)).unwrap_or_default();
+                emit(WorkerEvent::ThreadSummaries { summaries });
             }
 
             MailRequest::LoadMessages { folder_id, path } | MailRequest::SyncFolder { folder_id, path } => {

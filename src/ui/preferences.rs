@@ -50,6 +50,9 @@ pub struct PrefInit {
     pub attachment_drawer: bool,
     /// Conversation rows may expand into their members in the message list.
     pub thread_expansion: bool,
+    /// A conversation's row speaks for the newest message anywhere in the
+    /// account, the replies you sent included (#236).
+    pub thread_row_newest: bool,
     /// Deleting a whole selected conversation asks for confirmation.
     pub confirm_thread_delete: bool,
     /// Conversation card actions hide until the card is hovered.
@@ -812,6 +815,7 @@ pub enum PrefInput {
     ToggleCardAttachments(bool),
     ToggleAttachmentDrawer(bool),
     ToggleThreadExpansion(bool),
+    ToggleThreadRowNewest(bool),
     ToggleConfirmThreadDelete(bool),
     ChangeCardActionsMode(u32),
     ToggleListPalette(bool),
@@ -955,6 +959,7 @@ pub enum PrefOutput {
     SetCardAttachments(bool),
     SetAttachmentDrawer(bool),
     SetThreadExpansion(bool),
+    SetThreadRowNewest(bool),
     SetConfirmThreadDelete(bool),
     SetCardActionsMode { hover_toggle: bool, hover_auto: bool },
     SetListPalette(bool),
@@ -2074,6 +2079,17 @@ impl Component for Preferences {
                                         },
                                     },
 
+                                    #[name = "thread_row_newest_row"]
+                                    adw::SwitchRow {
+                                        #[watch]
+                                        set_sensitive: model.threading,
+                                        set_title: &i18n("Show your own replies in the message list"),
+                                        set_subtitle: &i18n("Off shows the last message that arrived."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleThreadRowNewest(row.is_active()));
+                                        },
+                                    },
+
                                     #[name = "reply_position_row"]
                                     adw::ComboRow {
                                         set_title: &i18n("Reply editor"),
@@ -3081,6 +3097,7 @@ impl Component for Preferences {
         widgets.card_attachments_row.set_active(init.card_attachments);
         widgets.attachment_drawer_row.set_active(init.attachment_drawer);
         widgets.thread_expansion_row.set_active(init.thread_expansion);
+        widgets.thread_row_newest_row.set_active(init.thread_row_newest);
         widgets.confirm_thread_delete_row.set_active(init.confirm_thread_delete);
         widgets.card_actions_row.set_model(Some(&gtk::StringList::new(&[
             i18n("Hidden behind a toggle").as_str(),
@@ -3600,6 +3617,9 @@ impl Component for Preferences {
             PrefInput::ToggleThreadExpansion(on) => {
                 self.thread_expansion = on;
                 let _ = sender.output(PrefOutput::SetThreadExpansion(on));
+            }
+            PrefInput::ToggleThreadRowNewest(on) => {
+                let _ = sender.output(PrefOutput::SetThreadRowNewest(on));
             }
             PrefInput::ToggleConfirmThreadDelete(on) => {
                 let _ = sender.output(PrefOutput::SetConfirmThreadDelete(on));

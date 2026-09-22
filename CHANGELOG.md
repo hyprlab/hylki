@@ -1,9 +1,28 @@
 # Changelog
 
-## 1.39.3-beta.1 — 2026-09-22
+## 1.39.4-beta.1 — 2026-09-22
 
-Catch-up release: the beta channel is brought level with stable 1.39.2. No
-changes of its own: see the 1.39.2 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.39.3. No
+changes of its own: see the 1.39.3 section below for what is in it.
+
+## 1.39.3 — 2026-09-22
+
+A conversation's row can say when the last word in it was yours (#236).
+
+- **New: "Show your own replies in the message list"** (#236, Settings →
+  Conversations, off by default). A row in the Inbox describes the last
+  message that arrived, because that is all the folder holds: the reply you
+  sent is filed in Sent, so a conversation you had answered minutes ago
+  still showed the other side's words, their name and their time, and only
+  opening it said otherwise. With the setting on, the row speaks for the
+  conversation's newest message wherever it is filed: sender, preview and
+  time. The lookup that counts a conversation across folders (#222) now
+  returns that message in the same scan, so a page of rows asks the cache
+  no more often than before. Drafts are counted but never shown that way,
+  since a reply still being written is not one the other side has heard,
+  and Trash and Junk stay out as they do for the reader. Off, which is how
+  Hylki has always behaved, remains the default: the folder has the last
+  word. Suggested by [@aia832003](https://github.com/aia832003).
 
 ## 1.39.2 — 2026-09-22
 
