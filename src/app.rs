@@ -19862,7 +19862,6 @@ fn reply_prefill(m: &Message) -> ComposePrefill {
     } else {
         format!("Re: {}", m.subject)
     };
-    let text = message_text(&m.body);
     let attribution = format!("On {}, {} wrote:", m.date, m.from_name);
     ComposePrefill {
         // A Reply-To header is the sender saying "answer me here instead" —
@@ -19874,7 +19873,11 @@ fn reply_prefill(m: &Message) -> ComposePrefill {
         // Who the original went to, so a mail addressed to one of the
         // account's send-as aliases is answered from that alias (#34).
         reply_addressed_to: format!("{}, {}", m.to, m.cc),
-        body_html: quote_block(&attribution, &text),
+        // The original is quoted as it was written, the way a forward quotes
+        // it (#52). Flattening it to text collapsed every level of quoting
+        // into one bar, so an answer to an answer lost the shape of the
+        // conversation it was answering (#248).
+        body_html: quoted_original(&attribution, &m.body),
         // What makes this a reply rather than a new conversation: In-Reply-To
         // names the parent, References carries the chain it belongs to.
         in_reply_to: m.message_id.clone(),
@@ -19952,7 +19955,7 @@ fn stage_attachments(dir_name: &str, items: &[crate::models::Attachment]) -> Vec
 /// or the plain text escaped into it.
 fn editable_copy_html(body: &str) -> String {
     if body.contains('<') {
-        sanitize_forward_html(body)
+        sanitize_forward_html(&hard_wrap_plain_regions(body))
     } else {
         let text = message_text(body);
         format!(
@@ -19975,17 +19978,9 @@ fn forward_prefill(m: &Message) -> ComposePrefill {
         "---------- Forwarded message ----------\nFrom: {} <{}>\nDate: {}\nSubject: {}",
         m.from_name, m.from_addr, m.date, m.subject
     );
-    // Forward the body with its formatting, sanitized (issue #52): the
-    // original HTML is attacker-controlled, so it goes through ammonia —
-    // scripts, event handlers, styles and dangerous URLs are stripped; the
-    // structure (tables, links, headings, images) survives, so a forwarded
-    // invoice still looks like the invoice. Plain-text bodies keep the old
-    // escaped-text path.
-    let body_html = if m.body.contains('<') {
-        quote_block_html(&header, &sanitize_forward_html(&m.body))
-    } else {
-        quote_block(&header, &message_text(&m.body))
-    };
+    // Forward the body with its formatting, sanitized (issue #52), so a
+    // forwarded invoice still looks like the invoice.
+    let body_html = quoted_original(&header, &m.body);
     ComposePrefill {
         to: String::new(),
         cc: String::new(),
@@ -20014,6 +20009,100 @@ fn sanitize_forward_html(html: &str) -> String {
         .add_tag_attributes("img", ["src", "width", "height", "alt"])
         .url_schemes(HashSet::from(["http", "https", "mailto"]));
     b.clean(html).to_string()
+}
+
+/// The quoted block a reply or a forward opens with: the attribution line,
+/// then the original body as it was written.
+///
+/// The body is untrusted mail, so it goes through the same sanitizer a
+/// forward has used since #52. A body that is plain text through and through
+/// keeps the escaped-text path.
+fn quoted_original(attribution: &str, body: &str) -> String {
+    if !body.contains('<') {
+        return quote_block(attribution, &message_text(body));
+    }
+    let quoted = sanitize_forward_html(&hard_wrap_plain_regions(body));
+    quote_block_html(attribution, trim_empty_blocks(&quoted))
+}
+
+/// Line breaks that live in CSS, written out as `<br>`.
+///
+/// A plain-text part is rendered under `white-space: pre-wrap`, where its own
+/// newlines *are* its line breaks. The sanitizer keeps no styling, so those
+/// breaks have to be in the markup before it runs or the quote arrives in the
+/// composer as one run-on paragraph.
+fn hard_wrap_plain_regions(html: &str) -> String {
+    // A whole document of plain text (the worker's `wrap_plain`): the rule is
+    // on `body`, so every newline in it is a break.
+    if body_is_pre_wrap(html) {
+        let open = html.find("<body").and_then(|i| html[i..].find('>').map(|j| i + j + 1));
+        let close = html.rfind("</body>");
+        return match (open, close) {
+            (Some(open), Some(close)) if open <= close => format!(
+                "{}{}{}",
+                &html[..open],
+                html[open..close].replace('\n', "<br>"),
+                &html[close..]
+            ),
+            _ => html.replace('\n', "<br>"),
+        };
+    }
+    // A message of mixed parts (`wrap_fragment`): only its text parts are
+    // pre-wrap, each one a `.vireo-plain` div the worker writes itself, with
+    // nothing but escaped text and links inside it.
+    let mut out = String::with_capacity(html.len());
+    let mut rest = html;
+    while let Some(at) = rest.find("class=\"vireo-plain\"") {
+        let Some(open) = rest[at..].find('>').map(|i| at + i + 1) else { break };
+        let Some(close) = rest[open..].find("</div>").map(|i| open + i) else { break };
+        out.push_str(&rest[..open]);
+        out.push_str(&rest[open..close].replace('\n', "<br>"));
+        rest = &rest[close..];
+    }
+    out.push_str(rest);
+    out
+}
+
+/// Does this document set `white-space: pre-wrap` on `body` itself?
+fn body_is_pre_wrap(html: &str) -> bool {
+    let mut rest = html;
+    while let Some(at) = rest.find("<style") {
+        let Some(open) = rest[at..].find('>').map(|i| at + i + 1) else { return false };
+        let close = rest[open..].find("</style>").map(|i| open + i).unwrap_or(rest.len());
+        let css: String = rest[open..close].chars().filter(|c| !c.is_whitespace()).collect();
+        for rule in css.split('}') {
+            let Some((selectors, decls)) = rule.split_once('{') else { continue };
+            if selectors.split(',').any(|s| s == "body") && decls.contains("white-space:pre-wrap") {
+                return true;
+            }
+        }
+        rest = &rest[close..];
+    }
+    false
+}
+
+/// Drop the empty blocks a quoted body opens or closes with. Every message
+/// written in the composer starts on a blank line, and quoting one used to
+/// carry that blank line in as the first line of the quote.
+fn trim_empty_blocks(html: &str) -> &str {
+    const EMPTY: [&str; 8] = [
+        "<br>", "<br/>", "<br />", "<p></p>", "<div></div>", "<p><br></p>", "<div><br></div>",
+        "&nbsp;",
+    ];
+    let mut out = html.trim();
+    'again: loop {
+        for empty in EMPTY {
+            if let Some(rest) = out.strip_prefix(empty) {
+                out = rest.trim_start();
+                continue 'again;
+            }
+            if let Some(rest) = out.strip_suffix(empty) {
+                out = rest.trim_end();
+                continue 'again;
+            }
+        }
+        return out;
+    }
 }
 
 /// Like [`quote_block`], but the quoted body is already-sanitized HTML.
@@ -20438,6 +20527,53 @@ mod tests {
                 std::path::PathBuf::from("/tmp/c.png"),
             ],
         );
+    }
+
+    #[test]
+    fn quoted_reply_keeps_the_levels_of_quoting() {
+        // An answer to an answer: the inner quote has to stay one level in
+        // (#248), not be flattened into the outer one.
+        let body = "<!doctype html><html><head></head><body><div>yada yada</div>\
+            <p class=\"vireo-quote-attr\">On Monday, Ada wrote:</p>\
+            <blockquote><div>tagada</div></blockquote></body></html>";
+        let quoted = super::quoted_original("On Tuesday, Bo wrote:", body);
+        let inner = quoted.split_once("</p>").expect("attribution line").1;
+        assert!(inner.contains("<blockquote><div>tagada</div></blockquote>"), "{quoted}");
+        assert_eq!(inner.matches("<blockquote>").count(), 2, "{quoted}");
+    }
+
+    #[test]
+    fn quoted_plain_text_keeps_its_line_breaks() {
+        // A plain-text part's breaks live in `white-space: pre-wrap`, which
+        // the sanitizer strips: they have to become <br> first.
+        let doc = "<!doctype html><html><head><meta charset=\"utf-8\"><style>\
+            body{margin:0;font:14px/1.5 system-ui,sans-serif;\
+            white-space:pre-wrap;word-wrap:break-word}\
+            </style></head><body>Hi,\n\nTwo lines.\n</body></html>";
+        let quoted = super::quoted_original("hdr", doc);
+        assert!(quoted.contains("Hi,<br><br>Two lines."), "{quoted}");
+        assert!(!quoted.contains('\n'), "{quoted}");
+
+        // The same in a message of several parts, where only the text part
+        // is pre-wrap and the HTML part's source newlines are not breaks.
+        let mixed = "<!doctype html><html><head><style>.vireo-plain{white-space:pre-wrap}\
+            </style></head><body><div class=\"vireo-plain\">One\nTwo</div>\
+            <div>\n<b>Three</b>\n</div></body></html>";
+        let quoted = super::quoted_original("hdr", mixed);
+        assert!(quoted.contains("One<br>Two"), "{quoted}");
+        assert!(quoted.contains("<b>Three</b>"), "{quoted}");
+        assert!(!quoted.contains("<br>\n<b>"), "{quoted}");
+    }
+
+    #[test]
+    fn quoted_body_drops_the_blank_line_it_starts_on() {
+        // Every message written in the composer opens on a blank line; the
+        // quote should not begin with it.
+        let body = "<html><body><div><br></div><div>yada yada</div><br></body></html>";
+        let quoted = super::quoted_original("hdr", body);
+        let inner = quoted.split_once("</p>").expect("attribution line").1;
+        assert!(inner.starts_with("<blockquote><div>yada yada</div>"), "{quoted}");
+        assert!(!inner.contains("<br></blockquote>"), "{quoted}");
     }
 
     #[test]

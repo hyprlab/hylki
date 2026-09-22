@@ -74,6 +74,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.39.2" date="2026-09-22">
+      <description>
+        <p>A reply quotes the message it answers as it was written, keeping every level of quoting and the line breaks of plain-text mail.</p>
+      </description>
+    </release>
     <release version="1.39.1" date="2026-09-21">
       <description>
         <p>A window opened from the tray icon comes to the front instead of staying behind the other apps.</p>

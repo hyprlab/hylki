@@ -2,9 +2,19 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
-## What's new in 1.39.2-beta.1
+## What's new in 1.39.3-beta.1
 
-Catch-up release: the beta channel is level with stable 1.39.1. Everything below applies.
+Catch-up release: the beta channel is level with stable 1.39.2. Everything below applies.
+
+## What's new in 1.39.2
+
+- **Fixed: replying flattened the message you were answering** (#248). A
+  reply now quotes it as it was written, with every level of quoting kept,
+  the way a forward already did. Reported by
+  [@EmmanuelP](https://github.com/EmmanuelP).
+- **Fixed: a quoted plain-text message ran its lines together,** in a reply,
+  a forward and Edit as New Message.
+- **Fixed: a quote no longer opens on a blank line.**
 
 ## What's new in 1.39.1
 

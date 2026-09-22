@@ -1,9 +1,34 @@
 # Changelog
 
-## 1.39.2-beta.1 — 2026-09-21
+## 1.39.3-beta.1 — 2026-09-22
 
-Catch-up release: the beta channel is brought level with stable 1.39.1. No
-changes of its own: see the 1.39.1 section below for what is in it.
+Catch-up release: the beta channel is brought level with stable 1.39.2. No
+changes of its own: see the 1.39.2 section below for what is in it.
+
+## 1.39.2 — 2026-09-22
+
+A reply quotes the message it answers as it was written (#248).
+
+- **Fixed: a reply flattened the message it answered** (#248). The original
+  was turned into plain text before being quoted, so every level of quoting
+  in it collapsed into a single bar: an answer to an answer lost the shape
+  of the conversation, and the block tags dropped on the way left a blank
+  line behind. A forward has kept the original's formatting since #52, and
+  a reply now takes the same path: the body goes through the same
+  sanitizer, which strips scripts, event handlers, styles and dangerous
+  URLs and keeps the structure. Reported by
+  [@EmmanuelP](https://github.com/EmmanuelP).
+- **Fixed: quoted plain-text mail arrived as one paragraph.** The line
+  breaks of a plain-text message live in its styling (`white-space:
+  pre-wrap`), which the sanitizer removes along with everything else it
+  does not keep. They are now written into the markup before it runs,
+  whether the whole message is plain text or only some of its parts are.
+  This was true of a forward and of Edit as New Message before this
+  release, and is fixed for them too.
+- **Fixed: a quote opened on a blank line.** Every message written in the
+  composer starts on one, and quoting such a message carried it in as the
+  first line of the quote. Empty blocks at the start and the end of a
+  quoted body are now dropped.
 
 ## 1.39.1 — 2026-09-21
 
