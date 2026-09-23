@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-09-22 17:58+0200\n"
+"PO-Revision-Date: 2026-09-23 17:46+0200\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -321,7 +321,7 @@ msgid "Restart Now"
 msgstr "Redémarrer maintenant"
 
 msgid "{name} · {current} of {total}"
-msgstr ""
+msgstr "{name} · {current} sur {total}"
 
 msgid "View Source"
 msgstr "Afficher le code source"
@@ -1003,7 +1003,7 @@ msgid "Scheduled for {when}"
 msgstr "Programmé pour {when}"
 
 msgid "Today, {time}"
-msgstr ""
+msgstr "Aujourd'hui, {time}"
 
 msgid "New message"
 msgstr "Nouveau message"
@@ -2073,7 +2073,7 @@ msgstr[0] "{n} pièce jointe"
 msgstr[1] "{n} pièces jointes"
 
 msgid "{shown} of {total}"
-msgstr ""
+msgstr "{shown} sur {total}"
 
 msgid "The file could not be opened"
 msgstr "Le fichier n'a pas pu être ouvert"
@@ -4601,6 +4601,8 @@ msgstr "3 lignes"
 msgid ""
 "The launcher shows an icon set outside Hylki. Picking one here replaces it."
 msgstr ""
+"Le lanceur affiche une icône définie en dehors de Hylki. En choisir une ici "
+"la remplace."
 
 msgid "When displayed"
 msgstr "Lors de l'affichage"
@@ -4893,6 +4895,9 @@ msgid ""
 "Accounts added in GNOME Settings → Online Accounts appear above, IMAP and "
 "SMTP ones included. Google and Microsoft sign in only that way."
 msgstr ""
+"Les comptes ajoutés dans Paramètres GNOME → Comptes en ligne apparaissent ci-"
+"dessus, IMAP et SMTP compris. Google et Microsoft ne peuvent se connecter "
+"que de cette façon."
 
 msgid "Scan Again"
 msgstr "Analyser à nouveau"
@@ -5414,18 +5419,6 @@ msgstr "Hyprlab"
 #~ msgstr ""
 #~ "Mots de passe et jetons OAuth conservés en sécurité dans le trousseau de "
 #~ "clés système"
-
-#, fuzzy
-#~ msgid "Mark as Read button"
-#~ msgstr "Marquer comme lu"
-
-#, fuzzy
-#~ msgid "Archive button"
-#~ msgstr "Archiver"
-
-#, fuzzy
-#~ msgid "Delete button"
-#~ msgstr "Supprimer le contact ?"
 
 #~ msgid "Label (defaults to email address)"
 #~ msgstr "Étiquette (adresse e-mail par défaut)"
