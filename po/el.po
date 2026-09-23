@@ -321,6 +321,10 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Επανεκκίνηση τώρα"
 
+#, fuzzy
+msgid "{name} · {current} of {total}"
+msgstr "{cur} από {total}"
+
 msgid "View Source"
 msgstr "Προβολή πηγαίου κώδικα"
 
@@ -998,6 +1002,10 @@ msgstr "Σε αναμονή από {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Προγραμματισμένο για {when}"
+
+#, fuzzy
+msgid "Today, {time}"
+msgstr "Δευτέρα πρωί ({time})"
 
 msgid "New message"
 msgstr "Νέο μήνυμα"
@@ -2061,6 +2069,15 @@ msgstr "Ευρετηρίαση {n} μηνυμάτων…"
 msgid "Loading more…"
 msgstr "Φόρτωση περισσότερων…"
 
+msgid "{n} attachment"
+msgid_plural "{n} attachments"
+msgstr[0] "{n} συνημμένο"
+msgstr[1] "{n} συνημμένα"
+
+#, fuzzy
+msgid "{shown} of {total}"
+msgstr "{cur} από {total}"
+
 msgid "The file could not be opened"
 msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
 
@@ -2604,11 +2621,6 @@ msgstr "Αυτή η ώρα έχει παρέλθει"
 
 msgid "Choose a time later than now."
 msgstr "Επιλέξτε ώρα μεταγενέστερη από την τρέχουσα."
-
-msgid "{n} attachment"
-msgid_plural "{n} attachments"
-msgstr[0] "{n} συνημμένο"
-msgstr[1] "{n} συνημμένα"
 
 msgid "Contacts"
 msgstr "Επαφές"
@@ -4583,6 +4595,10 @@ msgstr "2 γραμμές"
 msgid "3 lines"
 msgstr "3 γραμμές"
 
+msgid ""
+"The launcher shows an icon set outside Hylki. Picking one here replaces it."
+msgstr ""
+
 msgid "When displayed"
 msgstr "Κατά την εμφάνιση"
 
@@ -4876,11 +4892,9 @@ msgid "Test & Add"
 msgstr "Δοκιμή και προσθήκη"
 
 msgid ""
-"Google and Microsoft accounts sign in through GNOME Settings → Online "
-"Accounts, then appear above."
+"Accounts added in GNOME Settings → Online Accounts appear above, IMAP and "
+"SMTP ones included. Google and Microsoft sign in only that way."
 msgstr ""
-"Οι λογαριασμοί Google και Microsoft συνδέονται μέσω Ρυθμίσεις GNOME → "
-"Διαδικτυακοί λογαριασμοί και έπειτα εμφανίζονται παραπάνω."
 
 msgid "Scan Again"
 msgstr "Νέα σάρωση"
@@ -5325,6 +5339,13 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Google and Microsoft accounts sign in through GNOME Settings → Online "
+#~ "Accounts, then appear above."
+#~ msgstr ""
+#~ "Οι λογαριασμοί Google και Microsoft συνδέονται μέσω Ρυθμίσεις GNOME → "
+#~ "Διαδικτυακοί λογαριασμοί και έπειτα εμφανίζονται παραπάνω."
 
 #~ msgid "A clean, fast GNOME-native email client"
 #~ msgstr "Μια καθαρή, γρήγορη εφαρμογή email, εγγενή στο GNOME"

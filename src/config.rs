@@ -176,6 +176,32 @@ pub enum Protocol {
     Jmap,
 }
 
+/// How an account's servers are secured, as GNOME Online Accounts records
+/// it for the accounts it holds (#254). Hylki otherwise infers the TLS mode
+/// from the port (993 and 465 open with TLS, the rest upgrade), which a
+/// server on a port of its own defeats, and verifies every certificate,
+/// which a home server's self-signed one fails even after the user
+/// accepted it in GNOME Settings.
+#[derive(Debug, Clone, Default, PartialEq, Deserialize, Serialize)]
+pub struct ServerSecurity {
+    /// IMAP starts in plain text and upgrades with STARTTLS.
+    #[serde(default)]
+    pub imap_starttls: bool,
+    /// SMTP starts in plain text and upgrades with STARTTLS.
+    #[serde(default)]
+    pub smtp_starttls: bool,
+    /// The IMAP server's certificate was accepted in GNOME Settings though
+    /// it does not verify.
+    #[serde(default)]
+    pub imap_accept_invalid_certs: bool,
+    /// The same for the SMTP server.
+    #[serde(default)]
+    pub smtp_accept_invalid_certs: bool,
+    /// The SMTP server takes mail without signing in.
+    #[serde(default)]
+    pub smtp_no_auth: bool,
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct AccountConfig {
     pub name: String,
@@ -210,6 +236,11 @@ pub struct AccountConfig {
     /// differ.
     #[serde(default)]
     pub tls_accept_hostname_mismatch: bool,
+    /// How the servers are secured, where GNOME Online Accounts says so
+    /// (#254); `None` goes by the port numbers, as for every account set
+    /// up in Hylki.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub security: Option<ServerSecurity>,
     /// SMTP username (used only when `smtp_separate`).
     #[serde(default)]
     pub smtp_username: String,
@@ -4092,6 +4123,7 @@ dest_path = "Lists"
             password: "SECRET".into(),
             smtp_separate: false,
             tls_accept_hostname_mismatch: false,
+            security: None,
             smtp_username: String::new(),
             smtp_password: String::new(),
             color: None,

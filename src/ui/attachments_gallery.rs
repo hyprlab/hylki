@@ -15,7 +15,7 @@ use std::collections::HashMap;
 
 use crate::models::{ext_of, is_image_name, FolderKind, GalleryItem, GallerySort};
 use crate::ui::context_menu::{show_context_menu, MenuEntry};
-use crate::i18n::{i18n, i18n_f};
+use crate::i18n::{i18n, i18n_f, ni18n_f};
 
 /// Width of the table's trailing quick-actions column (three icon buttons);
 /// the header carries a spacer of the same width so the columns line up.
@@ -1933,9 +1933,20 @@ fn scan_text(loading_more: bool, scan_remaining: u32) -> String {
 /// The footer's item count: what's shown of what's there.
 fn count_text(shown: usize, total: usize) -> String {
     if shown == total {
-        format!("{total} attachment{}", if total == 1 { "" } else { "s" })
+        ni18n_f(
+            "{n} attachment",
+            "{n} attachments",
+            total as u32,
+            &[("n", &total.to_string())],
+        )
     } else {
-        format!("{shown} of {total}")
+        i18n_f(
+            "{shown} of {total}",
+            &[
+                ("shown", &shown.to_string()),
+                ("total", &total.to_string()),
+            ],
+        )
     }
 }
 

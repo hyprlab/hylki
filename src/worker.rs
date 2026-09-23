@@ -954,24 +954,26 @@ async fn run_imap(
             account.smtp_password = pw;
         }
     }
-    // Still nothing, and the account came from GNOME Online Accounts? Ask GOA.
-    // The import may have read it before GOA could unlock the keyring, and since
-    // an imported account no longer exposes its password field there would
-    // otherwise be no way to fix it (issue #17). Storing what comes back means a
-    // later run works even if GOA is slow to start.
-    if account.password.is_empty() && !account.oauth {
+    // An account from GNOME Online Accounts takes its password from GOA at
+    // every connect, so one changed in GNOME Settings reaches Hylki without
+    // being typed again (#254). The keyring copy is kept for a GOA that
+    // cannot answer yet; an imported account shows no password field, so
+    // without GOA there would be no way to fix a missing one (#17).
+    if !account.oauth {
         if let Some(goa_id) = account.goa_id.clone() {
             let (imap, smtp) =
                 tokio::task::spawn_blocking(move || crate::goa::mail_passwords(&goa_id))
                     .await
                     .unwrap_or((None, None));
-            if let Some(pw) = imap {
+            if let Some(pw) = imap.filter(|pw| *pw != account.password) {
                 let _ = crate::config::store_password(&account.email, &pw);
                 account.password = pw;
             }
             if let (true, Some(pw)) = (account.smtp_separate, smtp) {
-                let _ = crate::config::store_smtp_password(&account.email, &pw);
-                account.smtp_password = pw;
+                if pw != account.smtp_password {
+                    let _ = crate::config::store_smtp_password(&account.email, &pw);
+                    account.smtp_password = pw;
+                }
             }
             if account.password.is_empty() {
                 emit(WorkerEvent::Error {
@@ -4483,15 +4485,48 @@ fn bracketed(ids: &str) -> String {
         .join(" ")
 }
 
+/// How one SMTP endpoint is secured: TLS from the first byte or a STARTTLS
+/// upgrade, and how far its certificate is checked.
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct SmtpTls {
+    implicit: bool,
+    accept_hostname_mismatch: bool,
+    accept_invalid_certs: bool,
+}
+
+impl SmtpTls {
+    /// By the port alone: 465 is implicit TLS, everything else (587, etc.)
+    /// STARTTLS.
+    fn by_port(port: u16, accept_hostname_mismatch: bool) -> Self {
+        SmtpTls { implicit: port == 465, accept_hostname_mismatch, accept_invalid_certs: false }
+    }
+
+    /// The account's own server: as GNOME Online Accounts records it where
+    /// it does (#254), else by the port.
+    fn for_account(account: &AccountConfig) -> Self {
+        let by_port = SmtpTls::by_port(account.smtp_port, account.tls_accept_hostname_mismatch);
+        match &account.security {
+            Some(sec) => SmtpTls {
+                implicit: !sec.smtp_starttls,
+                accept_invalid_certs: sec.smtp_accept_invalid_certs,
+                ..by_port
+            },
+            None => by_port,
+        }
+    }
+}
+
 /// TLS settings for an SMTP connection, matching [`tls_connector`]: a local
-/// bridge's self-signed certificate is accepted, a certificate in another
-/// name where the account asks for it (#246), every other host is verified.
+/// bridge's self-signed certificate is accepted, and one the user accepted
+/// in GNOME Settings (#254), a certificate in another name where the
+/// account asks for it (#246), every other host is verified.
 fn smtp_tls_parameters(
     host: &str,
-    accept_hostname_mismatch: bool,
+    tls: SmtpTls,
 ) -> Result<lettre::transport::smtp::client::TlsParameters, lettre::transport::smtp::Error> {
     use lettre::transport::smtp::client::TlsParameters;
-    if is_loopback_host(host) {
+    let accept_hostname_mismatch = tls.accept_hostname_mismatch;
+    if is_loopback_host(host) || tls.accept_invalid_certs {
         TlsParameters::builder(host.to_string())
             .dangerous_accept_invalid_certs(true)
             .dangerous_accept_invalid_hostnames(true)
@@ -4518,19 +4553,19 @@ fn alias_with_own_smtp<'a>(
         .find(|a| a.has_own_smtp() && a.address().eq_ignore_ascii_case(addr.trim()))
 }
 
-/// A TLS-configured transport builder for one SMTP endpoint. Port 465 is
-/// implicit TLS; everything else (587, etc.) uses STARTTLS. A loopback bridge
-/// signs its own certificate (see `is_loopback_host`), so the relay builders'
-/// verification would reject it — TLS stays required, only the certificate
-/// checks are relaxed.
+/// A TLS-configured transport builder for one SMTP endpoint. A loopback
+/// bridge signs its own certificate (see `is_loopback_host`), so the relay
+/// builders' verification would reject it — TLS stays required, only the
+/// certificate checks are relaxed.
 fn smtp_transport_builder(
     host: &str,
     port: u16,
-    accept_hostname_mismatch: bool,
+    smtp_tls: SmtpTls,
 ) -> Result<lettre::transport::smtp::AsyncSmtpTransportBuilder, SmtpError> {
-    let implicit_tls = port == 465;
-    let builder = if is_loopback_host(host) || accept_hostname_mismatch {
-        let tls = smtp_tls_parameters(host, accept_hostname_mismatch)?;
+    let implicit_tls = smtp_tls.implicit;
+    let relaxed = smtp_tls.accept_hostname_mismatch || smtp_tls.accept_invalid_certs;
+    let builder = if is_loopback_host(host) || relaxed {
+        let tls = smtp_tls_parameters(host, smtp_tls)?;
         let mode = if implicit_tls {
             lettre::transport::smtp::client::Tls::Wrapper(tls)
         } else {
@@ -4569,12 +4604,13 @@ async fn smtp_transport(
         } else {
             alias.smtp_password.clone()
         };
-        return Ok(smtp_transport_builder(alias.smtp_host.trim(), alias.smtp_port, account.tls_accept_hostname_mismatch)?
+        let tls = SmtpTls::by_port(alias.smtp_port, account.tls_accept_hostname_mismatch);
+        return Ok(smtp_transport_builder(alias.smtp_host.trim(), alias.smtp_port, tls)?
             .credentials(Credentials::new(alias.smtp_username.clone(), password))
             .build());
     }
     let host = smtp_host(account);
-    let mut builder = smtp_transport_builder(&host, account.smtp_port, account.tls_accept_hostname_mismatch)?;
+    let mut builder = smtp_transport_builder(&host, account.smtp_port, SmtpTls::for_account(account))?;
     if account.oauth {
         // XOAUTH2: the "password" is a fresh OAuth token from GOA.
         let token = fetch_oauth_token(account).await.ok_or_else(|| -> SmtpError {
@@ -4584,6 +4620,9 @@ async fn smtp_transport(
         builder = builder
             .credentials(Credentials::new(user, token))
             .authentication(vec![lettre::transport::smtp::authentication::Mechanism::Xoauth2]);
+    } else if account.security.as_ref().is_some_and(|s| s.smtp_no_auth) {
+        // GNOME Online Accounts says this server takes mail without a
+        // sign-in (#254); offering one it does not advertise would fail.
     } else {
         // Use the separate SMTP credentials when configured, else the IMAP ones.
         let creds = if account.smtp_separate {
@@ -5319,12 +5358,17 @@ fn is_loopback_host(host: &str) -> bool {
 }
 
 /// A TLS connector for a mail server: it tolerates a local bridge’s self-signed
-/// certificate, waives the name check alone where the account asks for it
-/// (#246: a valid certificate in another name, as shared hosting serves),
-/// and verifies everything else normally.
-fn tls_connector(host: &str, accept_hostname_mismatch: bool) -> async_native_tls::TlsConnector {
+/// certificate and one the user accepted in GNOME Settings (#254), waives the
+/// name check alone where the account asks for it (#246: a valid certificate
+/// in another name, as shared hosting serves), and verifies everything else
+/// normally.
+fn tls_connector(
+    host: &str,
+    accept_hostname_mismatch: bool,
+    accept_invalid_certs: bool,
+) -> async_native_tls::TlsConnector {
     let tls = async_native_tls::TlsConnector::new();
-    if is_loopback_host(host) {
+    if is_loopback_host(host) || accept_invalid_certs {
         tls.danger_accept_invalid_certs(true)
             .danger_accept_invalid_hostnames(true)
     } else if accept_hostname_mismatch {
@@ -5351,7 +5395,11 @@ pub fn is_hostname_mismatch(error: &str) -> bool {
 /// instead of negotiating TLS from the first byte. 993 is always implicit TLS
 /// and 143 is the conventional STARTTLS port; a local bridge listens on a port
 /// of its own (Proton Bridge defaults to 1143) and speaks STARTTLS there.
+/// GNOME Online Accounts records which it is, and is followed (#254).
 fn imap_uses_starttls(account: &AccountConfig) -> bool {
+    if let Some(sec) = &account.security {
+        return sec.imap_starttls;
+    }
     account.imap_port != 993
         && (account.imap_port == 143 || is_loopback_host(&account.imap_host))
 }
@@ -5375,7 +5423,8 @@ async fn connect(account: &AccountConfig) -> Result<ImapSession, Box<dyn std::er
 
 async fn connect_inner(account: &AccountConfig) -> Result<ImapSession, Box<dyn std::error::Error>> {
     let tcp = TcpStream::connect((account.imap_host.as_str(), account.imap_port)).await?;
-    let tls = tls_connector(&account.imap_host, account.tls_accept_hostname_mismatch);
+    let accept_invalid = account.security.as_ref().is_some_and(|s| s.imap_accept_invalid_certs);
+    let tls = tls_connector(&account.imap_host, account.tls_accept_hostname_mismatch, accept_invalid);
     let client = if imap_uses_starttls(account) {
         let mut plain = async_imap::Client::new(tcp);
         // Consume the plaintext greeting before issuing STARTTLS. Nothing secret
@@ -5486,6 +5535,9 @@ async fn test_smtp(account: &AccountConfig) -> Result<(), String> {
     let host = smtp_host(account);
     // Authenticate the same way the send path does: XOAUTH2 with a fresh token
     // for OAuth accounts, otherwise the password (SMTP-specific if configured).
+    if !account.oauth && account.security.as_ref().is_some_and(|s| s.smtp_no_auth) {
+        return smtp_auth_check(&host, account.smtp_port, None, &[], SmtpTls::for_account(account)).await;
+    }
     let (creds, mechanisms): (Credentials, &[Mechanism]) = if account.oauth {
         let token = fetch_oauth_token(account)
             .await
@@ -5502,7 +5554,7 @@ async fn test_smtp(account: &AccountConfig) -> Result<(), String> {
             &[Mechanism::Plain, Mechanism::Login],
         )
     };
-    smtp_auth_check(&host, account.smtp_port, &creds, mechanisms, account.tls_accept_hostname_mismatch).await
+    smtp_auth_check(&host, account.smtp_port, Some(&creds), mechanisms, SmtpTls::for_account(account)).await
 }
 
 /// Test a send-as alias's own SMTP server and credentials (#34): connect,
@@ -5524,9 +5576,9 @@ pub async fn test_alias_smtp(
     smtp_auth_check(
         alias.smtp_host.trim(),
         alias.smtp_port,
-        &creds,
+        Some(&creds),
         &[Mechanism::Plain, Mechanism::Login],
-        account_accepts_hostname_mismatch(account_email),
+        SmtpTls::by_port(alias.smtp_port, account_accepts_hostname_mismatch(account_email)),
     )
     .await
 }
@@ -5553,27 +5605,26 @@ pub fn test_alias_smtp_blocking(
     }
 }
 
-/// Shared SMTP credential check: connect (implicit TLS on 465, STARTTLS
-/// otherwise), authenticate, quit.
+/// Shared SMTP credential check: connect (implicit TLS or STARTTLS, as
+/// `smtp_tls` says), authenticate unless there are no credentials to, quit.
 async fn smtp_auth_check(
     host: &str,
     port: u16,
-    creds: &Credentials,
+    creds: Option<&Credentials>,
     mechanisms: &[lettre::transport::smtp::authentication::Mechanism],
-    accept_hostname_mismatch: bool,
+    smtp_tls: SmtpTls,
 ) -> Result<(), String> {
     use lettre::transport::smtp::client::AsyncSmtpConnection;
     use lettre::transport::smtp::extension::ClientId;
 
     let hello = ClientId::default();
-    let tls = smtp_tls_parameters(host, accept_hostname_mismatch).map_err(|e| e.to_string())?;
+    let tls = smtp_tls_parameters(host, smtp_tls).map_err(|e| e.to_string())?;
     // A (host, port) pair resolves bare IPv6 addresses correctly; a "host:port"
     // string would mis-parse their colons.
     let addr = (host, port);
     let timeout = Some(std::time::Duration::from_secs(20));
 
-    // Port 465 is implicit TLS; everything else uses STARTTLS.
-    let mut conn = if port == 465 {
+    let mut conn = if smtp_tls.implicit {
         AsyncSmtpConnection::connect_tokio1(addr, timeout, &hello, Some(tls), None)
             .await
             .map_err(|e| e.to_string())?
@@ -5584,7 +5635,10 @@ async fn smtp_auth_check(
         conn.starttls(tls, &hello).await.map_err(|e| e.to_string())?;
         conn
     };
-    let result = conn.auth(mechanisms, creds).await.map(|_| ()).map_err(|e| e.to_string());
+    let result = match creds {
+        Some(creds) => conn.auth(mechanisms, creds).await.map(|_| ()).map_err(|e| e.to_string()),
+        None => Ok(()),
+    };
     let _ = conn.quit().await;
     result
 }
@@ -7993,7 +8047,7 @@ impl Pop3 {
         let tcp = TcpStream::connect((host, port))
             .await
             .map_err(|e| e.to_string())?;
-        let tls = tls_connector(host, account.tls_accept_hostname_mismatch);
+        let tls = tls_connector(host, account.tls_accept_hostname_mismatch, false);
 
         let stream = if port == 995 {
             tls.connect(host, tcp).await.map_err(|e| e.to_string())?
@@ -11123,6 +11177,7 @@ pub(super) fn sample_account() -> AccountConfig {
         password: String::new(),
         smtp_separate: false,
         tls_accept_hostname_mismatch: false,
+        security: None,
         smtp_username: String::new(),
         smtp_password: String::new(),
         color: None,
@@ -12244,6 +12299,50 @@ mod tests {
         for host in ["imap.gmail.com", "127.0.0.1.example.com", "localhost.evil.com", "10.0.1.14"] {
             assert!(!is_loopback_host(host), "{host} should not be loopback");
         }
+    }
+
+    #[test]
+    fn goa_security_wins_over_the_port() {
+        let sec = |imap_starttls, smtp_starttls| crate::config::ServerSecurity {
+            imap_starttls,
+            smtp_starttls,
+            ..Default::default()
+        };
+        // STARTTLS on a port of the server's own, and TLS from the first
+        // byte on the ports the guess would upgrade on.
+        let account = AccountConfig {
+            imap_host: "mail.example.com".into(),
+            imap_port: 1143,
+            smtp_port: 2525,
+            security: Some(sec(true, false)),
+            ..sample_account()
+        };
+        assert!(imap_uses_starttls(&account));
+        assert!(SmtpTls::for_account(&account).implicit);
+        let account = AccountConfig {
+            imap_port: 143,
+            smtp_port: 587,
+            security: Some(sec(false, false)),
+            ..account
+        };
+        assert!(!imap_uses_starttls(&account));
+        assert!(SmtpTls::for_account(&account).implicit);
+        // Without GOA's word, the ports decide as before.
+        let account = AccountConfig { security: None, ..account };
+        assert!(imap_uses_starttls(&account));
+        assert!(!SmtpTls::for_account(&account).implicit);
+        // An accepted certificate reaches SMTP; the name waiver stays the
+        // account's own.
+        let account = AccountConfig {
+            tls_accept_hostname_mismatch: true,
+            security: Some(crate::config::ServerSecurity {
+                smtp_accept_invalid_certs: true,
+                ..Default::default()
+            }),
+            ..account
+        };
+        let tls = SmtpTls::for_account(&account);
+        assert!(tls.accept_invalid_certs && tls.accept_hostname_mismatch);
     }
 
     #[test]

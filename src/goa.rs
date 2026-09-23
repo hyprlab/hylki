@@ -44,6 +44,8 @@ pub struct GoaMailAccount {
     /// Microsoft 365 (`ms_graph`) provider serves no IMAP — its token is scoped
     /// to the Graph API only, so mail runs over Graph (issue #36).
     pub provider_type: String,
+    /// The TLS modes and certificate choices GOA holds for the servers.
+    pub security: crate::config::ServerSecurity,
 }
 
 impl GoaMailAccount {
@@ -85,6 +87,7 @@ impl GoaMailAccount {
             password,
             smtp_separate: self.smtp_separate,
             tls_accept_hostname_mismatch: false,
+            security: Some(self.security.clone()),
             smtp_username: self.smtp_user.clone(),
             smtp_password: String::new(),
             color: None,
@@ -104,6 +107,46 @@ impl GoaMailAccount {
             oauth_refresh: String::new(),
         push: None,
         }
+    }
+}
+
+impl GoaMailAccount {
+    /// Bring an imported account's servers in line with GOA's: what is
+    /// changed in GNOME Settings reaches Hylki, and an import from before
+    /// GOA's security settings were read picks them up (#254). Returns
+    /// whether anything changed. The protocol stays as it is: a Microsoft
+    /// 365 account runs over Graph whatever GOA lists.
+    pub fn apply_servers(&self, account: &mut AccountConfig) -> bool {
+        let fresh = self.to_config(String::new(), account.oauth);
+        let before = (
+            account.imap_host.clone(),
+            account.imap_port,
+            account.smtp_host.clone(),
+            account.smtp_port,
+            account.username.clone(),
+            account.smtp_separate,
+            account.smtp_username.clone(),
+            account.security.clone(),
+        );
+        account.imap_host = fresh.imap_host;
+        account.imap_port = fresh.imap_port;
+        account.smtp_host = fresh.smtp_host;
+        account.smtp_port = fresh.smtp_port;
+        account.username = fresh.username;
+        account.smtp_separate = fresh.smtp_separate;
+        account.smtp_username = fresh.smtp_username;
+        account.security = fresh.security;
+        before
+            != (
+                account.imap_host.clone(),
+                account.imap_port,
+                account.smtp_host.clone(),
+                account.smtp_port,
+                account.username.clone(),
+                account.smtp_separate,
+                account.smtp_username.clone(),
+                account.security.clone(),
+            )
     }
 }
 
@@ -169,66 +212,78 @@ fn try_list() -> Result<Vec<GoaMailAccount>, String> {
         .map_err(|e| e.to_string())?;
     let (objects,): (ManagedObjects,) = reply.body().deserialize().map_err(|e| e.to_string())?;
 
-    let mut out = Vec::new();
-    for ifaces in objects.values() {
-        let (Some(account), Some(mail)) =
-            (ifaces.get(IFACE_ACCOUNT), ifaces.get(IFACE_MAIL))
-        else {
-            continue;
-        };
-        // Skip accounts whose Mail service is turned off in GNOME Settings.
-        if get_bool(account, "MailDisabled") {
-            continue;
-        }
+    Ok(objects.values().filter_map(mail_account).collect())
+}
 
-        let imap_ssl = get_bool(mail, "ImapUseSsl");
-        let smtp_ssl = get_bool(mail, "SmtpUseSsl");
-        let email = {
-            let e = get_str(mail, "EmailAddress");
-            if e.is_empty() {
+/// The mail account one GOA object describes, if it is one and its Mail
+/// service is on.
+fn mail_account(ifaces: &HashMap<String, HashMap<String, OwnedValue>>) -> Option<GoaMailAccount> {
+    let (Some(account), Some(mail)) = (ifaces.get(IFACE_ACCOUNT), ifaces.get(IFACE_MAIL)) else {
+        return None;
+    };
+    // Skip accounts whose Mail service is turned off in GNOME Settings.
+    if get_bool(account, "MailDisabled") {
+        return None;
+    }
+    // `UseSsl` is TLS from the first byte, `UseTls` a STARTTLS upgrade. GOA
+    // never lets a mail account go unencrypted: with neither set, its own
+    // sign-in check opens with TLS, and so does Hylki.
+    let imap_ssl = get_bool(mail, "ImapUseSsl");
+    let imap_starttls = !imap_ssl && get_bool(mail, "ImapUseTls");
+    let smtp_ssl = get_bool(mail, "SmtpUseSsl");
+    let smtp_starttls = !smtp_ssl && get_bool(mail, "SmtpUseTls");
+    let email = {
+        let e = get_str(mail, "EmailAddress");
+        if e.is_empty() {
+            get_str(account, "PresentationIdentity")
+        } else {
+            e
+        }
+    };
+    if email.is_empty() {
+        return None;
+    }
+    let imap_user = get_str(mail, "ImapUserName");
+    let smtp_user = get_str(mail, "SmtpUserName");
+    // The host strings may carry a custom port ("host:1143"); without one,
+    // the conventional port for the advertised transport applies (143 for
+    // STARTTLS IMAP, else 993; 587 for STARTTLS SMTP, else 465).
+    let (imap_host, imap_port) =
+        host_and_port(get_str(mail, "ImapHost"), if imap_starttls { 143 } else { 993 });
+    let (smtp_host, smtp_port) =
+        host_and_port(get_str(mail, "SmtpHost"), if smtp_starttls { 587 } else { 465 });
+    let oauth2 = ifaces.contains_key(IFACE_OAUTH2);
+    Some(GoaMailAccount {
+        id: get_str(account, "Id"),
+        email,
+        name: {
+            let n = get_str(mail, "Name");
+            if n.is_empty() {
                 get_str(account, "PresentationIdentity")
             } else {
-                e
+                n
             }
-        };
-        if email.is_empty() {
-            continue;
-        }
-        let imap_user = get_str(mail, "ImapUserName");
-        let smtp_user = get_str(mail, "SmtpUserName");
-        // The host strings may carry a custom port ("host:1143"); without one,
-        // the conventional port for the advertised transport applies (993/143
-        // for IMAP, 465 for implicit-TLS SMTP, 587 for STARTTLS).
-        let (imap_host, imap_port) =
-            host_and_port(get_str(mail, "ImapHost"), if imap_ssl { 993 } else { 143 });
-        let (smtp_host, smtp_port) =
-            host_and_port(get_str(mail, "SmtpHost"), if smtp_ssl { 465 } else { 587 });
-
-        out.push(GoaMailAccount {
-            id: get_str(account, "Id"),
-            email,
-            name: {
-                let n = get_str(mail, "Name");
-                if n.is_empty() {
-                    get_str(account, "PresentationIdentity")
-                } else {
-                    n
-                }
-            },
-            provider: get_str(account, "ProviderName"),
-            imap_host,
-            imap_port,
-            imap_user: imap_user.clone(),
-            smtp_host,
-            smtp_port,
-            smtp_user: smtp_user.clone(),
-            smtp_separate: !smtp_user.is_empty() && smtp_user != imap_user,
-            password_based: ifaces.contains_key(IFACE_PASSWORD),
-            oauth2: ifaces.contains_key(IFACE_OAUTH2),
-            provider_type: get_str(account, "ProviderType"),
-        });
-    }
-    Ok(out)
+        },
+        provider: get_str(account, "ProviderName"),
+        imap_host,
+        imap_port,
+        imap_user: imap_user.clone(),
+        smtp_host,
+        smtp_port,
+        smtp_user: smtp_user.clone(),
+        smtp_separate: !smtp_user.is_empty() && smtp_user != imap_user,
+        password_based: ifaces.contains_key(IFACE_PASSWORD),
+        oauth2,
+        provider_type: get_str(account, "ProviderType"),
+        security: crate::config::ServerSecurity {
+            imap_starttls,
+            smtp_starttls,
+            imap_accept_invalid_certs: get_bool(mail, "ImapAcceptSslErrors"),
+            smtp_accept_invalid_certs: get_bool(mail, "SmtpAcceptSslErrors"),
+            // An OAuth provider always signs in with its token.
+            smtp_no_auth: !oauth2 && mail.contains_key("SmtpUseAuth") && !get_bool(mail, "SmtpUseAuth"),
+        },
+    })
 }
 
 /// A GNOME Online Accounts account whose token can reach the provider's
@@ -310,6 +365,8 @@ pub struct GoaLiveState {
     pub account_ids: HashSet<String>,
     /// Ids whose Mail service is explicitly disabled in GNOME Settings.
     pub disabled_mail_ids: HashSet<String>,
+    /// The mail accounts, by id, with their current server settings.
+    pub mail: HashMap<String, GoaMailAccount>,
 }
 
 /// Snapshot the live GOA account state in one `GetManagedObjects` call. Returns
@@ -328,8 +385,11 @@ pub fn live_state() -> Option<GoaLiveState> {
         )
         .ok()?;
     let (objects,): (ManagedObjects,) = reply.body().deserialize().ok()?;
-    let mut state =
-        GoaLiveState { account_ids: HashSet::new(), disabled_mail_ids: HashSet::new() };
+    let mut state = GoaLiveState {
+        account_ids: HashSet::new(),
+        disabled_mail_ids: HashSet::new(),
+        mail: objects.values().filter_map(mail_account).map(|m| (m.id.clone(), m)).collect(),
+    };
     for account in objects.values().filter_map(|ifaces| ifaces.get(IFACE_ACCOUNT)) {
         let id = get_str(account, "Id");
         if id.is_empty() {
@@ -505,10 +565,14 @@ pub fn mail_passwords(goa_id: &str) -> (Option<String>, Option<String>) {
         return (None, None);
     };
     let path = format!("/org/gnome/OnlineAccounts/Accounts/{goa_id}");
-    ensure_credentials(&conn, &path);
-
     let first = |ids: &[&str]| ids.iter().find_map(|id| password_by_id(&conn, &path, id));
-    let imap = first(&["imap-password", "password", goa_id]);
+    // This runs at every connect (#254), and EnsureCredentials signs in to
+    // both servers to check: only ask for it when GOA had nothing to give.
+    let mut imap = first(&["imap-password", "password", goa_id]);
+    if imap.is_none() {
+        ensure_credentials(&conn, &path);
+        imap = first(&["imap-password", "password", goa_id]);
+    }
     // Most servers use one password for both; only look for a separate SMTP one,
     // and fall back to the incoming password rather than sending none.
     let smtp = first(&["smtp-password"]).or_else(|| imap.clone());
@@ -521,6 +585,62 @@ pub fn mail_passwords(goa_id: &str) -> (Option<String>, Option<String>) {
 #[cfg(test)]
 mod tests {
     use super::host_and_port;
+
+    fn mail_object(imap_host: &str, imap_tls: &str, accept: bool) -> super::HashMap<String, super::HashMap<String, super::OwnedValue>> {
+        use zbus::zvariant::{OwnedValue, Str};
+        let s = |v: &str| OwnedValue::from(Str::from(v.to_string()));
+        let mut account = super::HashMap::new();
+        account.insert("Id".to_string(), s("account_1"));
+        account.insert("ProviderType".to_string(), s("imap_smtp"));
+        account.insert("MailDisabled".to_string(), OwnedValue::from(false));
+        let mut mail = super::HashMap::new();
+        mail.insert("EmailAddress".to_string(), s("me@example.org"));
+        mail.insert("ImapHost".to_string(), s(imap_host));
+        mail.insert("ImapUserName".to_string(), s("me"));
+        mail.insert("ImapUseSsl".to_string(), OwnedValue::from(imap_tls == "ssl"));
+        mail.insert("ImapUseTls".to_string(), OwnedValue::from(imap_tls == "starttls"));
+        mail.insert("ImapAcceptSslErrors".to_string(), OwnedValue::from(accept));
+        mail.insert("SmtpHost".to_string(), s("mail.example.org"));
+        mail.insert("SmtpUserName".to_string(), s("me"));
+        mail.insert("SmtpUseAuth".to_string(), OwnedValue::from(true));
+        mail.insert("SmtpUseSsl".to_string(), OwnedValue::from(false));
+        mail.insert("SmtpUseTls".to_string(), OwnedValue::from(true));
+        let mut ifaces = super::HashMap::new();
+        ifaces.insert(super::IFACE_ACCOUNT.to_string(), account);
+        ifaces.insert(super::IFACE_MAIL.to_string(), mail);
+        ifaces.insert(super::IFACE_PASSWORD.to_string(), super::HashMap::new());
+        ifaces
+    }
+
+    #[test]
+    fn a_generic_imap_account_carries_its_security() {
+        let g = super::mail_account(&mail_object("mail.example.org", "starttls", true)).unwrap();
+        assert_eq!((g.imap_host.as_str(), g.imap_port), ("mail.example.org", 143));
+        assert_eq!((g.smtp_host.as_str(), g.smtp_port), ("mail.example.org", 587));
+        assert!(g.security.imap_starttls && g.security.smtp_starttls);
+        assert!(g.security.imap_accept_invalid_certs && !g.security.smtp_accept_invalid_certs);
+        assert!(!g.security.smtp_no_auth && g.password_based);
+        // Neither flag: GOA itself opens with TLS, on 993.
+        let g = super::mail_account(&mail_object("mail.example.org", "none", false)).unwrap();
+        assert_eq!(g.imap_port, 993);
+        assert!(!g.security.imap_starttls);
+    }
+
+    #[test]
+    fn an_edit_in_gnome_settings_reaches_the_imported_account() {
+        let g = super::mail_account(&mail_object("mail.example.org", "ssl", false)).unwrap();
+        let mut account = g.to_config(String::new(), false);
+        account.security = None; // imported before the security was read
+        account.label = Some("Work".into());
+        assert!(g.apply_servers(&mut account));
+        assert_eq!(account.security.as_ref(), Some(&g.security));
+        assert!(!g.apply_servers(&mut account), "nothing new the second time");
+        let moved = super::mail_account(&mail_object("imap.example.net:1143", "starttls", true)).unwrap();
+        assert!(moved.apply_servers(&mut account));
+        assert_eq!((account.imap_host.as_str(), account.imap_port), ("imap.example.net", 1143));
+        assert!(account.security.as_ref().is_some_and(|s| s.imap_starttls));
+        assert_eq!(account.label.as_deref(), Some("Work"), "Hylki's own settings stay");
+    }
 
     #[test]
     fn goa_host_may_include_a_custom_port() {
@@ -556,3 +676,25 @@ mod tests {
 }
 
 
+
+/// Import the first generic IMAP/SMTP account from a GOA daemon and test its
+/// servers. Needs a session bus with one (`GOA_LIVE=1`, and
+/// DBUS_SESSION_BUS_ADDRESS pointed at it).
+#[cfg(test)]
+mod live {
+    #[test]
+    #[ignore]
+    fn import_and_connect() {
+        if std::env::var("GOA_LIVE").is_err() {
+            return;
+        }
+        let all = super::list_mail_accounts();
+        eprintln!("listed: {all:#?}");
+        let g = all.iter().find(|g| g.provider_type == "imap_smtp").expect("an imap_smtp account");
+        let (imap, _smtp) = super::mail_passwords(&g.id);
+        let config = g.to_config(imap.expect("a password"), false);
+        let result = crate::worker::test_connection_blocking(config);
+        eprintln!("incoming: {:?}\nsmtp: {:?}", result.incoming, result.smtp);
+        assert!(result.incoming.is_ok() && result.smtp.is_ok());
+    }
+}

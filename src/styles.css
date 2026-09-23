@@ -1472,41 +1472,46 @@ headerbar.compose-toolbar button.image-button {
 
 /* ---- First-run welcome wizard (welcome.rs) ---- */
 
-/* The window is the theme's own ground, light or dark; every page floats
-   on it and the text takes the theme's foreground. */
+/* The window is the brand blue, the website hero's own #005bff; every page
+   floats on it and the text on the ground is white. The wizard is always
+   light (app.rs holds the scheme while it is open). */
 window.welcome-window,
 .welcome-window > * {
-  background-color: @window_bg_color;
+  background-color: #005bff;
 }
 .welcome-window headerbar {
   background: transparent;
   box-shadow: none;
   border: none;
+  color: #ffffff;
 }
 
 .welcome-title {
   font-size: 1.7em;
   font-weight: 800;
-  color: @window_fg_color;
+  color: #ffffff;
 }
 
 .welcome-tagline {
   font-size: 1.02em;
-  color: alpha(@window_fg_color, 0.7);
+  color: alpha(#ffffff, 0.85);
+}
+.welcome-tagline link {
+  color: #ffffff;
 }
 
 .welcome-section {
   font-weight: 700;
   font-size: 0.9em;
-  color: alpha(@window_fg_color, 0.65);
+  color: alpha(#ffffff, 0.8);
   margin-left: 6px;
 }
 
-/* Content cards: the theme's card surface, lifted a little. */
+/* Content cards: the theme's card surface, lifted off the blue. */
 .welcome-card {
   border-radius: 14px;
   background-color: @card_bg_color;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
 }
 
 .welcome-pill {
@@ -1515,48 +1520,62 @@ window.welcome-window,
   font-weight: 700;
 }
 
-/* Wizard action buttons wear the wordmark's own blue (#006dff), not the
-   theme accent, so button and lettering read as one design. */
+/* Wizard action buttons are the icon's amber with dark brown lettering,
+   like the website's primary buttons on the same blue. */
 .welcome-window button.suggested-action {
-  background-color: #006dff;
-  color: #ffffff;
+  background-color: #fec11e;
+  color: #3a2b00;
 }
 .welcome-window button.suggested-action:hover {
-  background-color: shade(#006dff, 1.12);
+  background-color: shade(#fec11e, 1.06);
 }
 .welcome-window button.suggested-action:active {
-  background-color: shade(#006dff, 0.9);
+  background-color: shade(#fec11e, 0.92);
+}
+
+/* The language picker sits on the ground: a white wash, white text. Only
+   the button, so the popover list keeps the theme's colours. */
+.welcome-window dropdown > button {
+  background-color: alpha(#ffffff, 0.16);
+  color: #ffffff;
+}
+.welcome-window dropdown > button:hover {
+  background-color: alpha(#ffffff, 0.24);
 }
 
 .welcome-hint {
   font-size: 0.9em;
-  color: alpha(@window_fg_color, 0.65);
+  color: alpha(#ffffff, 0.8);
 }
+/* The theme's red and green are lost on the blue: lighter tints of them. */
 .welcome-hint.error {
-  color: @error_color;
+  color: #ffc4c4;
   font-weight: 600;
 }
 .welcome-hint.success {
-  color: @success_color;
+  color: #bdf5d2;
   font-weight: 600;
+}
+.welcome-window spinner {
+  color: #ffffff;
 }
 
 .welcome-added {
   font-weight: 700;
-  color: @window_fg_color;
+  color: #ffffff;
 }
 
 .welcome-check {
-  color: #006dff;
+  color: #ffffff;
 }
 
 .welcome-link {
   font-weight: 600;
-  color: @window_fg_color;
+  color: #ffffff;
 }
 
 .welcome-window carouselindicatordots {
-  color: @window_fg_color;
+  color: #ffffff;
 }
 
 /* ---- App icon gallery (icon_picker.rs): Settings + wizard ---- */

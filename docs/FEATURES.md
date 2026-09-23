@@ -11,7 +11,8 @@ The full list. The [README](../README.md) carries a shorter one.
 - **OAuth 2.0 sign-in:** Google, Microsoft and custom providers over
   XOAUTH2. See [Configuration](DOCUMENTATION.md#oauth-google--microsoft).
 - **GNOME Online Accounts:** import an account already set up in GNOME
-  Settings, including Microsoft 365 over Graph. Pausing an account's Mail
+  Settings, IMAP and SMTP accounts and Microsoft 365 over Graph included.
+  See [Configuration](DOCUMENTATION.md#gnome-online-accounts). Pausing an account's Mail
   service in GNOME Settings pauses it here.
 - **Per-alias SMTP:** each address on an account can send through its own
   server and credentials.

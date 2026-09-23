@@ -320,6 +320,10 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Reiniciar agora"
 
+#, fuzzy
+msgid "{name} · {current} of {total}"
+msgstr "{cur} de {total}"
+
 msgid "View Source"
 msgstr "Ver fonte"
 
@@ -996,6 +1000,10 @@ msgstr "Em espera desde {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Agendada para {when}"
+
+#, fuzzy
+msgid "Today, {time}"
+msgstr "Segunda-feira de manhã ({time})"
 
 msgid "New message"
 msgstr "Nova mensagem"
@@ -2039,6 +2047,15 @@ msgstr "Indexando {n} mensagens…"
 msgid "Loading more…"
 msgstr "Carregando mais…"
 
+msgid "{n} attachment"
+msgid_plural "{n} attachments"
+msgstr[0] "{n} anexo"
+msgstr[1] "{n} anexos"
+
+#, fuzzy
+msgid "{shown} of {total}"
+msgstr "{cur} de {total}"
+
 msgid "The file could not be opened"
 msgstr "Não foi possível abrir o arquivo"
 
@@ -2570,11 +2587,6 @@ msgstr "Essa hora já passou"
 
 msgid "Choose a time later than now."
 msgstr "Escolha uma hora posterior à atual."
-
-msgid "{n} attachment"
-msgid_plural "{n} attachments"
-msgstr[0] "{n} anexo"
-msgstr[1] "{n} anexos"
 
 msgid "Contacts"
 msgstr "Contatos"
@@ -4531,6 +4543,10 @@ msgstr "2 linhas"
 msgid "3 lines"
 msgstr "3 linhas"
 
+msgid ""
+"The launcher shows an icon set outside Hylki. Picking one here replaces it."
+msgstr ""
+
 msgid "When displayed"
 msgstr "Quando apresentado"
 
@@ -4824,11 +4840,9 @@ msgid "Test & Add"
 msgstr "Testar e adicionar"
 
 msgid ""
-"Google and Microsoft accounts sign in through GNOME Settings → Online "
-"Accounts, then appear above."
+"Accounts added in GNOME Settings → Online Accounts appear above, IMAP and "
+"SMTP ones included. Google and Microsoft sign in only that way."
 msgstr ""
-"As contas do Google e da Microsoft entram pelas Configurações do GNOME → "
-"Contas online e depois aparecem acima."
 
 msgid "Scan Again"
 msgstr "Procurar novamente"
@@ -5267,6 +5281,13 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Google and Microsoft accounts sign in through GNOME Settings → Online "
+#~ "Accounts, then appear above."
+#~ msgstr ""
+#~ "As contas do Google e da Microsoft entram pelas Configurações do GNOME → "
+#~ "Contas online e depois aparecem acima."
 
 #~ msgid "A clean, fast GNOME-native email client"
 #~ msgstr "Um cliente de email simples, rápido e nativo do GNOME"

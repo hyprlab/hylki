@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-09-21 18:36+0200\n"
+"PO-Revision-Date: 2026-09-22 17:58+0200\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -319,6 +319,9 @@ msgstr ""
 
 msgid "Restart Now"
 msgstr "Redémarrer maintenant"
+
+msgid "{name} · {current} of {total}"
+msgstr ""
 
 msgid "View Source"
 msgstr "Afficher le code source"
@@ -854,13 +857,11 @@ msgstr "Afficher ou masquer les comptes dans la barre latérale"
 msgid "Focus Mode on or off"
 msgstr "Activer ou désactiver le mode Focus"
 
-#, fuzzy
 msgid "Message zoom in or out"
-msgstr "Police du message"
+msgstr "Zoom avant ou arrière sur le message"
 
-#, fuzzy
 msgid "Message zoom back to the default"
-msgstr "Police du message"
+msgstr "Rétablir le zoom du message par défaut"
 
 msgid "Console mode (when enabled in Settings)"
 msgstr "Mode console (si activé dans les paramètres)"
@@ -918,7 +919,7 @@ msgid "Read/Unread"
 msgstr "Lu/Non lu"
 
 msgid "Move To"
-msgstr "Passer à"
+msgstr "Déplacer vers"
 
 msgid "Find"
 msgstr "Trouver"
@@ -1000,6 +1001,9 @@ msgstr "En attente depuis {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Programmé pour {when}"
+
+msgid "Today, {time}"
+msgstr ""
 
 msgid "New message"
 msgstr "Nouveau message"
@@ -1119,6 +1123,8 @@ msgid ""
 "Enter your Stalwart server's address. Mail is read and sent over JMAP; no "
 "SMTP settings are needed."
 msgstr ""
+"Saisissez l'adresse de votre serveur Stalwart. Le courrier est lu et envoyé "
+"via JMAP ; aucun paramètre SMTP n'est nécessaire."
 
 msgid "Enable POP/IMAP access in GMX settings first."
 msgstr "Activez d'abord l'accès POP/IMAP dans les paramètres GMX."
@@ -1352,13 +1358,17 @@ msgid "SMTP Password"
 msgstr "Mot de passe SMTP"
 
 msgid "Accept a certificate for another name"
-msgstr ""
+msgstr "Accepter un certificat pour un autre nom"
 
 msgid ""
 "The server's certificate must still be valid and signed, but may be issued "
 "for a different host name than the one entered, as on shared hosting. Turn "
 "on only when the connection test says the names differ."
 msgstr ""
+"Le certificat du serveur doit toujours être valide et signé, mais peut avoir "
+"été délivré pour un nom d'hôte différent de celui saisi, comme c'est le cas "
+"sur un hébergement mutualisé. Activez cette option uniquement si le test de "
+"connexion signale que les noms diffèrent."
 
 msgid "Test Connection"
 msgstr "Tester la connexion"
@@ -1608,6 +1618,8 @@ msgid ""
 "The certificate is for another name. If this server is the right one, turn "
 "on “Accept a certificate for another name” above and test again."
 msgstr ""
+"Le certificat concerne un autre nom. Si ce serveur est bien le bon, activez "
+"« Accepter un certificat pour un autre nom » ci-dessus puis testez à nouveau."
 
 msgid "✓ Signed in — save the account to finish"
 msgstr "✓ Connecté — enregistrez le compte pour terminer"
@@ -1701,11 +1713,10 @@ msgstr[1] "Au bout de {n} jours"
 #. A JMAP server is one address, and it sends the mail
 #. itself: no SMTP rows.
 msgid "Server (host name or URL)"
-msgstr ""
+msgstr "Serveur (nom d'hôte ou URL)"
 
-#, fuzzy
 msgid "Port (default 443)"
-msgstr "Port SMTP (par défaut 587)"
+msgstr "Port (par défaut 443)"
 
 msgid "Google (Gmail)"
 msgstr "Google (Gmail)"
@@ -2055,6 +2066,14 @@ msgstr "Indexation de {n} messages…"
 
 msgid "Loading more…"
 msgstr "Chargement en cours…"
+
+msgid "{n} attachment"
+msgid_plural "{n} attachments"
+msgstr[0] "{n} pièce jointe"
+msgstr[1] "{n} pièces jointes"
+
+msgid "{shown} of {total}"
+msgstr ""
 
 msgid "The file could not be opened"
 msgstr "Le fichier n'a pas pu être ouvert"
@@ -2599,11 +2618,6 @@ msgstr "Cette heure est déjà passée"
 msgid "Choose a time later than now."
 msgstr "Choisissez une heure ultérieure à maintenant."
 
-msgid "{n} attachment"
-msgid_plural "{n} attachments"
-msgstr[0] "{n} pièce jointe"
-msgstr[1] "{n} pièces jointes"
-
 msgid "Contacts"
 msgstr "Contacts"
 
@@ -2954,6 +2968,8 @@ msgid ""
 "Message zoom. Ctrl+ and Ctrl- change it; a click here, or Ctrl+0, puts it "
 "back to the default from Settings."
 msgstr ""
+"Zoom du message. Ctrl+ et Ctrl- le modifient ; un clic ici, ou Ctrl+0, le "
+"ramène à la valeur par défaut des paramètres."
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -3508,28 +3524,23 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr "Afficher l'expéditeur et l'objet"
 
-#, fuzzy
 msgid "Notification Buttons"
-msgstr "Notifications"
+msgstr "Boutons de notification"
 
 msgid "Up to three buttons on a notification about one message."
-msgstr ""
+msgstr "Jusqu'à trois boutons sur une notification concernant un message."
 
-#, fuzzy
 msgid "Moves the message to Trash."
-msgstr "Déplacer ce message vers un dossier"
+msgstr "Déplace le message vers la corbeille."
 
-#, fuzzy
 msgid "Opens the message with a reply started."
-msgstr "Imprimer le message en cours de lecture"
+msgstr "Ouvre le message en démarrant une réponse."
 
-#, fuzzy
 msgid "Opens the message with a forward started."
-msgstr "Déplacer ce message vers un dossier"
+msgstr "Ouvre le message en démarrant un transfert."
 
-#, fuzzy
 msgid "Moves the message to Junk."
-msgstr "Déplacer ce message vers un dossier"
+msgstr "Déplace le message vers les indésirables."
 
 msgid "Style"
 msgstr "Style"
@@ -4021,13 +4032,11 @@ msgstr ""
 "lecture. Désactivé, la lecture se fait du plus ancien au plus récent vers le "
 "bas."
 
-#, fuzzy
 msgid "Show your own replies in the message list"
-msgstr "Palette d'actions dans la liste des messages"
+msgstr "Afficher vos propres réponses dans la liste des messages"
 
-#, fuzzy
 msgid "Off shows the last message that arrived."
-msgstr "Déplacer ce message vers un dossier"
+msgstr "Désactivé, affiche le dernier message reçu."
 
 msgid "Reply editor"
 msgstr "Éditeur de réponses"
@@ -4087,14 +4096,15 @@ msgid "Theme for email content only, not the app itself."
 msgstr ""
 "Thème s'appliquant au contenu des e-mails uniquement, pas à l'application."
 
-#, fuzzy
 msgid "Default zoom"
-msgstr "Par défaut"
+msgstr "Zoom par défaut"
 
 msgid ""
 "How large every message is shown. Ctrl+ and Ctrl- change it until Hylki is "
 "next started; Ctrl+0 comes back to this."
 msgstr ""
+"Taille d'affichage de chaque message. Ctrl+ et Ctrl- la modifient jusqu'au "
+"prochain démarrage de Hylki ; Ctrl+0 revient à cette valeur."
 
 msgid "Use my own font"
 msgstr "Utiliser ma propre police"
@@ -4588,6 +4598,10 @@ msgstr "2 lignes"
 msgid "3 lines"
 msgstr "3 lignes"
 
+msgid ""
+"The launcher shows an icon set outside Hylki. Picking one here replaces it."
+msgstr ""
+
 msgid "When displayed"
 msgstr "Lors de l'affichage"
 
@@ -4876,11 +4890,9 @@ msgid "Test & Add"
 msgstr "Tester et ajouter"
 
 msgid ""
-"Google and Microsoft accounts sign in through GNOME Settings → Online "
-"Accounts, then appear above."
+"Accounts added in GNOME Settings → Online Accounts appear above, IMAP and "
+"SMTP ones included. Google and Microsoft sign in only that way."
 msgstr ""
-"Les comptes Google et Microsoft se connectent via Paramètres GNOME → Comptes "
-"en ligne, puis apparaissent ci-dessus."
 
 msgid "Scan Again"
 msgstr "Analyser à nouveau"
@@ -4967,7 +4979,7 @@ msgid "Continue"
 msgstr "Continuer"
 
 msgid "Port"
-msgstr ""
+msgstr "Port"
 
 msgid "Enter your email address and password first."
 msgstr "Saisissez d'abord votre adresse e-mail et votre mot de passe."
@@ -5054,9 +5066,8 @@ msgstr "Les rejets iront à {rp}"
 msgid "The sender's name says \"{claimed}\" but the address is {from}"
 msgstr "Le nom de l'expéditeur indique « {claimed} » mais l'adresse est {from}"
 
-#, fuzzy
 msgid "Could not reach the JMAP server: {e}"
-msgstr "Impossible de créer le dossier : {e}"
+msgstr "Impossible de contacter le serveur JMAP : {e}"
 
 msgid "Could not list folders: {e}"
 msgstr "Impossible de lister les dossiers : {e}"
@@ -5124,9 +5135,8 @@ msgstr "Enregistrement du brouillon…"
 msgid "Could not save draft: {e}"
 msgstr "Impossible d'enregistrer le brouillon : {e}"
 
-#, fuzzy
 msgid "Could not save draft: unknown folder"
-msgstr "Impossible de renommer le dossier : dossier inconnu"
+msgstr "Impossible d'enregistrer le brouillon : dossier inconnu"
 
 msgid ""
 "Send failed: {e}. The message is in the Outbox and will be sent when the "
@@ -5225,6 +5235,8 @@ msgid ""
 "A fast, GNOME-native email client, built with Rust and libadwaita. Open "
 "source and private by default."
 msgstr ""
+"Un client e-mail rapide et natif pour GNOME, conçu avec Rust et libadwaita. "
+"Open source et respectueux de la vie privée par défaut."
 
 msgid "Email;Mail;IMAP;"
 msgstr "Email;Mail;Courrier;Messagerie;IMAP;"
@@ -5236,95 +5248,129 @@ msgid ""
 "IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to "
 "Proton Bridge to a Stalwart of your own."
 msgstr ""
+"Hylki est un client e-mail de bureau pour GNOME sous Wayland, écrit en Rust "
+"avec libadwaita. Votre courrier et vos identifiants restent sur votre "
+"machine, le contenu distant est bloqué tant que vous ne l'autorisez pas, et "
+"il n'y a aucune télémétrie. Il fonctionne avec IMAP, POP3, JMAP et Microsoft "
+"365, et avec n'importe quel serveur, d'iCloud à Proton Bridge en passant par "
+"votre propre Stalwart."
 
-#, fuzzy
 msgid "Accounts and mail:"
-msgstr "Compter les messages non lus"
+msgstr "Comptes et messagerie :"
 
-#, fuzzy
 msgid ""
 "Multiple accounts with a unified Inboxes view; Google, Microsoft and custom "
 "OAuth sign-in, or an account imported from GNOME Online Accounts"
 msgstr ""
-"Connexion OAuth 2.0 pour Google, Microsoft et fournisseurs personnalisés, "
-"avec importation depuis Comptes en ligne de GNOME"
+"Plusieurs comptes avec une vue Boîtes de réception unifiée ; connexion OAuth "
+"à Google, Microsoft et fournisseurs personnalisés, ou compte importé depuis "
+"Comptes en ligne GNOME"
 
 msgid ""
 "Whole-mailbox sync and search, conversation threading, and changes made on "
 "other devices synced back"
 msgstr ""
+"Synchronisation et recherche sur l'ensemble de la boîte aux lettres, "
+"regroupement des conversations, et synchronisation des modifications faites "
+"sur d'autres appareils"
 
 msgid ""
 "Folder management, filters, tags, unified and filtered folders, and Trash "
 "and Junk emptied by hand or on a schedule"
 msgstr ""
+"Gestion des dossiers, filtres, étiquettes, dossiers unifiés et filtrés, et "
+"vidage de la Corbeille et des Indésirables à la demande ou selon une "
+"planification"
 
 msgid "An attachment gallery, an Outbox for sends that fail, and Send Later"
 msgstr ""
+"Une galerie de pièces jointes, une Boîte d'envoi pour les envois échoués, et "
+"l'envoi différé"
 
 msgid "Writing:"
-msgstr ""
+msgstr "Écriture :"
 
 msgid ""
 "Rich text, Markdown, HTML or plain text, with HTML signatures, inline "
 "images, spell check and undo"
 msgstr ""
+"Texte enrichi, Markdown, HTML ou texte brut, avec signatures HTML, images "
+"intégrées, correction orthographique et annulation"
 
 msgid ""
 "Drafts, quote folding, split replies, and forwarding that keeps the "
 "attachments"
 msgstr ""
+"Brouillons, masquage des citations, réponses partielles, et transfert "
+"conservant les pièces jointes"
 
 msgid ""
 "Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a "
 "Send with Hylki entry in GNOME Files"
 msgstr ""
+"Fichiers volumineux envoyés vers votre propre Nextcloud, OneDrive, Dropbox "
+"ou Seafile ; une entrée « Envoyer avec Hylki » dans Fichiers GNOME"
 
-#, fuzzy
 msgid "Reading:"
-msgstr "Lecture"
+msgstr "Lecture :"
 
-#, fuzzy
 msgid ""
 "Reader View, your own font and colours, and per-message light or dark "
 "rendering"
 msgstr ""
-"Contenu distant bloqué par défaut ; lecture en mode clair ou sombre par "
-"message"
+"Vue Lecteur, votre propre police et vos couleurs, et un rendu clair ou "
+"sombre par message"
 
 msgid ""
 "OpenPGP signing, encryption and reading; DKIM, SPF and DMARC checked on "
 "arrival"
 msgstr ""
+"Signature, chiffrement et lecture OpenPGP ; vérification DKIM, SPF et DMARC "
+"à la réception"
 
 msgid ""
 "Meeting invitations answered in place, and one-click unsubscribe from list "
 "mail"
 msgstr ""
+"Réponse aux invitations de réunion directement dans le message, et "
+"désabonnement en un clic des listes de diffusion"
 
 msgid "The app:"
-msgstr ""
+msgstr "L'application :"
 
 msgid ""
 "Adaptive three-pane layout, five appearance themes, Focus Mode, a "
 "customizable toolbar and swipe actions"
 msgstr ""
+"Disposition adaptative à trois volets, cinq thèmes d'apparence, mode Focus, "
+"une barre d'outils personnalisable et des actions par glissement"
 
 msgid ""
 "Gmail-style single-key shortcuts, notifications with actions, an optional "
 "tray icon and background running"
 msgstr ""
+"Raccourcis à touche unique façon Gmail, notifications avec actions, icône de "
+"zone de notification facultative et exécution en arrière-plan"
 
 msgid ""
 "GNOME Contacts integration, your choice of language and clock, and passwords "
 "kept in the system keyring"
 msgstr ""
+"Intégration avec Contacts GNOME, choix de la langue et de l'affichage de "
+"l'heure, et mots de passe conservés dans le trousseau système"
 
 msgid "The unified inbox in light mode"
 msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Google and Microsoft accounts sign in through GNOME Settings → Online "
+#~ "Accounts, then appear above."
+#~ msgstr ""
+#~ "Les comptes Google et Microsoft se connectent via Paramètres GNOME → "
+#~ "Comptes en ligne, puis apparaissent ci-dessus."
 
 #~ msgid "A clean, fast GNOME-native email client"
 #~ msgstr "Un client e-mail épuré, rapide et natif pour GNOME"

@@ -2,6 +2,23 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.40.2-beta.1
+
+Catch-up release: the beta channel is level with stable 1.40.1. Everything below applies.
+
+## What's new in 1.40.1
+
+- **GNOME Online Accounts IMAP accounts connect** (#254): Hylki uses the
+  TLS settings and the certificate choice made in GNOME Settings, takes the
+  password from GNOME each time, and follows server changes made there.
+- **Your own launcher icon stays** (#252): an icon set with a menu editor
+  or an icon pack is no longer replaced when Hylki starts, only when you
+  pick one in Settings.
+- **Spanish**, by [@danielmigueltejedor](https://github.com/danielmigueltejedor)
+  (#251), and an updated French translation by
+  [@frenchy82](https://github.com/frenchy82) (#250).
+- **The first-run wizard** is on the brand blue with the new wordmark.
+
 ## What's new in 1.40.1-beta.1
 
 Catch-up release: the beta channel is level with stable 1.40.0. Everything below applies.

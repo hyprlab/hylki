@@ -75,6 +75,37 @@ pub struct Folder {
     pub unread: u32,
 }
 
+/// Show the special folders under the app's own names for them in a language
+/// other than English (#251), where the server calls them by one of the
+/// usual English names. The folder a server or the user named otherwise
+/// keeps that name, and so does every folder in English: "Deleted Items"
+/// stays "Deleted Items" rather than becoming "Trash". Only the label
+/// changes; the path the server knows the folder by is left alone.
+pub fn localize_special_folder_names(folders: &mut [Folder]) {
+    for f in folders {
+        let (label, english): (&str, &[&str]) = match f.kind {
+            FolderKind::Inbox => ("Inbox", &["inbox"]),
+            FolderKind::Sent => ("Sent", &["sent", "sent items", "sent mail", "sent messages"]),
+            FolderKind::Drafts => ("Drafts", &["drafts", "draft"]),
+            FolderKind::Trash => ("Trash", &["trash", "deleted items", "deleted messages", "bin"]),
+            FolderKind::Junk => (
+                "Junk",
+                &["junk", "junk mail", "junk e-mail", "junk email", "spam", "bulk mail"],
+            ),
+            FolderKind::Archive => ("Archive", &["archive", "archives"]),
+            FolderKind::Starred => ("Starred", &["starred"]),
+            FolderKind::Custom => continue,
+        };
+        if !english.iter().any(|e| f.name.eq_ignore_ascii_case(e)) {
+            continue;
+        }
+        let translated = i18n(label);
+        if translated != label {
+            f.name = translated;
+        }
+    }
+}
+
 /// Whether `path` is one of an account's hidden folders (#239), or lies
 /// under one: hiding a folder hides its sub-folders with it. `delimiter`
 /// is the server's, when known; otherwise any of the usual three counts.
@@ -1086,7 +1117,7 @@ pub fn datetime_list_at(timestamp: i64, date: &str) -> String {
         return date.to_string();
     }
     if crate::datefmt::day_key(timestamp) == crate::datefmt::day_key(now) {
-        format!("Today, {time}")
+        i18n_f("Today, {time}", &[("time", &time)])
     } else if crate::datefmt::year(timestamp) == crate::datefmt::year(now) {
         format!("{}, {time}", crate::datefmt::day_month(timestamp))
     } else {
@@ -1146,6 +1177,28 @@ pub fn thread_ids(msgs: &[Message]) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn english_folder_names_stay_as_the_server_has_them() {
+        let folder = |name: &str, kind| Folder {
+            id: 1,
+            account_id: 1,
+            name: name.into(),
+            path: name.into(),
+            kind,
+            unread: 0,
+        };
+        let mut folders = vec![
+            folder("Deleted Items", FolderKind::Trash),
+            folder("Junk Mail", FolderKind::Junk),
+            folder("Old Stuff", FolderKind::Archive),
+            folder("Sent", FolderKind::Custom),
+        ];
+        let before: Vec<String> = folders.iter().map(|f| f.name.clone()).collect();
+        // The tests run without a catalogue, as English does.
+        localize_special_folder_names(&mut folders);
+        assert_eq!(folders.iter().map(|f| f.name.clone()).collect::<Vec<_>>(), before);
+    }
 
     fn item() -> OutboxItem {
         OutboxItem {

@@ -1498,6 +1498,9 @@ impl Component for AccountsWindow {
                             // Hylki only — it stays in GNOME Online Accounts and
                             // returns to the import list.
                             add = &adw::PreferencesGroup {
+                                // Not for a GNOME Online Account: GNOME holds its
+                                // sign-in, and Google and Microsoft have no password.
+                                #[name = "keyring_note"]
                                 gtk::Label {
                                     set_wrap: true,
                                     set_xalign: 0.0,
@@ -1825,6 +1828,7 @@ impl Component for AccountsWindow {
                 self.populate_folder_combos(widgets, None);
                 set_connection_editable(widgets, true);
                 widgets.goa_banner.set_visible(false);
+                widgets.keyring_note.set_visible(true);
                 self.apply_provider(widgets);
                 self.sig_editor(widgets).set_html("");
                 widgets.color_btn.set_rgba(&parse_color(DEFAULT_COLOR));
@@ -1911,6 +1915,7 @@ impl Component for AccountsWindow {
                 let is_goa = acc.goa_id.is_some();
                 set_connection_editable(widgets, !is_goa);
                 widgets.goa_banner.set_visible(is_goa);
+                widgets.keyring_note.set_visible(!is_goa);
                 // GOA accounts get the same Remove flow — it removes the account
                 // from Hylki only (back to the import list); GNOME keeps it.
                 widgets.remove_btn.set_visible(true);
@@ -2325,6 +2330,7 @@ impl Component for AccountsWindow {
                         account.smtp_separate = orig.smtp_separate;
                         account.smtp_username = orig.smtp_username.clone();
                         account.smtp_password = orig.smtp_password.clone();
+                        account.security = orig.security.clone();
                     }
                 }
 
@@ -3857,6 +3863,8 @@ fn read_account(
         password: widgets.pass_row.text().to_string(),
         smtp_separate: widgets.smtp_separate_row.is_active(),
         tls_accept_hostname_mismatch: widgets.tls_mismatch_row.is_active(),
+        // GNOME Online Accounts' own, carried over from the account edited.
+        security: None,
         smtp_username: trimmed(&widgets.smtp_user_row),
         smtp_password: widgets.smtp_pass_row.text().to_string(),
         color: Some(crate::color::to_hex(&widgets.color_btn.rgba())),

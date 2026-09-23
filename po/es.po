@@ -1,0 +1,5321 @@
+# Translation template for Hylki.
+# This file is distributed under the same license as the Hylki package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: hylki\n"
+"Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
+"PO-Revision-Date: 2026-09-22 18:28+0200\n"
+"Last-Translator: Daniel Miguel <danielmigueltejedor@icloud.com>\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Refresh or long-press for Status Bar"
+msgstr "Actualizar o mantener pulsado para mostrar la barra de estado"
+
+msgid "Main Menu"
+msgstr "Menú principal"
+
+msgid "Expand sidebar"
+msgstr "Expandir barra lateral"
+
+msgid "Collapse sidebar"
+msgstr "Contraer barra lateral"
+
+msgid "Search messages (Ctrl+F)"
+msgstr "Buscar mensajes (Ctrl+F)"
+
+msgid "Search, filters and sort"
+msgstr "Buscar, filtrar y ordenar"
+
+msgid "Show only unread"
+msgstr "Mostrar solo no leídos"
+
+msgid "Show only starred"
+msgstr "Mostrar solo destacados"
+
+msgid "Sort messages"
+msgstr "Ordenar mensajes"
+
+msgid "Edit this message"
+msgstr "Editar este mensaje"
+
+msgid "Try to send this message now"
+msgstr "Intentar enviar este mensaje ahora"
+
+msgid "Send all"
+msgstr "Enviar todo"
+
+msgid "Reply"
+msgstr "Responder"
+
+msgid "Reply All"
+msgstr "Responder a todos"
+
+msgid "Forward"
+msgstr "Reenviar"
+
+msgid "Flag"
+msgstr "Marcar"
+
+msgid "Archive"
+msgstr "Archivar"
+
+msgid "Print Preview (Ctrl+Shift+P)"
+msgstr "Vista previa de impresión (Ctrl+Shift+P)"
+
+msgid "Find in message (Ctrl+F)"
+msgstr "Buscar en el mensaje (Ctrl+F)"
+
+msgid "Not Spam"
+msgstr "No es spam"
+
+msgid "Mark as Spam"
+msgstr "Marcar como spam"
+
+msgid "Mark as Read"
+msgstr "Marcar como leído"
+
+msgid "Mark as Unread"
+msgstr "Marcar como no leído"
+
+msgid "Downloading attachments…"
+msgstr "Descargando archivos adjuntos…"
+
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Previous"
+msgstr "Anterior"
+
+msgid "Next"
+msgstr "Siguiente"
+
+msgid "Open"
+msgstr "Abrir"
+
+msgid "Download…"
+msgstr "Descargar…"
+
+msgid "Settings"
+msgstr "Ajustes"
+
+msgid "Show Accounts"
+msgstr "Mostrar cuentas"
+
+msgid "Focus Mode"
+msgstr "Modo de concentración"
+
+msgid "Print Preview…"
+msgstr "Vista previa de impresión…"
+
+msgid "Print Message…"
+msgstr "Imprimir mensaje…"
+
+msgid "Quit"
+msgstr "Salir"
+
+msgid "Actions"
+msgstr "Acciones"
+
+msgid "Tags"
+msgstr "Etiquetas"
+
+msgid "Move To…"
+msgstr "Mover a…"
+
+msgid "Attachments"
+msgstr "Archivos adjuntos"
+
+msgid "Toggle sidebar"
+msgstr "Mostrar/ocultar barra lateral"
+
+msgid "Date (Newest first)"
+msgstr "Fecha (más recientes primero)"
+
+msgid "Date (Oldest first)"
+msgstr "Fecha (más antiguos primero)"
+
+msgid "Sender (A–Z)"
+msgstr "Remitente (A–Z)"
+
+msgid "Subject (A–Z)"
+msgstr "Asunto (A–Z)"
+
+msgid "Unread first"
+msgstr "No leídos primero"
+
+msgid "Flagged first"
+msgstr "Marcados primero"
+
+msgid "Create Folder"
+msgstr "Crear carpeta"
+
+msgid "Added to Contacts"
+msgstr "Añadido a Contactos"
+
+msgid "Added email to {name}"
+msgstr "Correo añadido a {name}"
+
+msgid "Already in Contacts ({name})"
+msgstr "Ya está en Contactos ({name})"
+
+msgid "Could not add contact: {e}"
+msgstr "No se pudo añadir el contacto: {e}"
+
+msgid "Unsubscribed from {name}."
+msgstr "Suscripción cancelada de {name}."
+
+msgid "The list's unsubscribe page is open in your browser."
+msgstr ""
+"La página para cancelar la suscripción de la lista está abierta en tu "
+"navegador."
+
+msgid "The language applies the next time Hylki starts."
+msgstr "El idioma se aplicará la próxima vez que se inicie Hylki."
+
+msgid "Save Attachment"
+msgstr "Guardar archivo adjunto"
+
+msgid ""
+"Couldn't restart automatically — quit and reopen Hylki to finish switching "
+"the icon."
+msgstr ""
+"No se pudo reiniciar automáticamente. Cierra y vuelve a abrir Hylki para "
+"terminar de cambiar el icono."
+
+msgid "Open a message first, then print it."
+msgstr "Abre primero un mensaje y después imprímelo."
+
+msgid "Customize Toolbar…"
+msgstr "Personalizar barra de herramientas…"
+
+msgid "No message with the ID {id} was found"
+msgstr "No se encontró ningún mensaje con el ID {id}"
+
+msgid "No Drafts folder available for this account"
+msgstr "No hay ninguna carpeta de borradores disponible para esta cuenta"
+
+msgid "Could not save account: {e}"
+msgstr "No se pudo guardar la cuenta: {e}"
+
+msgid "Enable Console mode in Settings → System & Appearance"
+msgstr "Activa el modo Consola en Ajustes → Sistema y apariencia"
+
+msgid "Export Settings"
+msgstr "Exportar ajustes"
+
+msgid "Settings exported to {display}"
+msgstr "Ajustes exportados a {display}"
+
+msgid "Export failed: {e}"
+msgstr "Error al exportar: {e}"
+
+msgid "Export Log"
+msgstr "Exportar registro"
+
+msgid "Log exported to {display}"
+msgstr "Registro exportado a {display}"
+
+msgid "Import Settings"
+msgstr "Importar ajustes"
+
+msgid "Settings Imported"
+msgstr "Ajustes importados"
+
+msgid ""
+"{n} mail account(s), the cloud storage accounts and all preferences were "
+"imported. Restart Hylki to apply them. Passwords and sign-ins are not part "
+"of a backup; re-enter them on first use if this is a new machine."
+msgstr ""
+"Se importaron {n} cuenta(s) de correo, las cuentas de almacenamiento en la "
+"nube y todas las preferencias. Reinicia Hylki para aplicarlas. Las "
+"contraseñas y los inicios de sesión no forman parte de la copia de "
+"seguridad; vuelve a introducirlos al usarla por primera vez si este es un "
+"equipo nuevo."
+
+msgid "Later"
+msgstr "Más tarde"
+
+msgid "Restart Hylki"
+msgstr "Reiniciar Hylki"
+
+msgid "Import failed: {e}"
+msgstr "Error al importar: {e}"
+
+msgid "Could not import account: {e}"
+msgstr "No se pudo importar la cuenta: {e}"
+
+msgid "No address book available"
+msgstr "No hay ninguna libreta de direcciones disponible"
+
+msgid "Could not update contact: {e}"
+msgstr "No se pudo actualizar el contacto: {e}"
+
+msgid "Reveal Status Bar"
+msgstr "Mostrar barra de estado"
+
+msgid "Console"
+msgstr "Consola"
+
+msgid "Keyboard Shortcuts"
+msgstr "Atajos de teclado"
+
+msgid "About"
+msgstr "Acerca de"
+
+msgid "Remove Tags"
+msgstr "Eliminar etiquetas"
+
+msgid ""
+"Single-key shortcuts are switched off. Turn them on in Settings → System & "
+"Appearance."
+msgstr ""
+"Los atajos de una sola tecla están desactivados. Actívalos en Ajustes → "
+"Sistema y apariencia."
+
+msgid "Your tags"
+msgstr "Tus etiquetas"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Move to {name}"
+msgstr "Mover a {name}"
+
+msgid "Add Tag {name}"
+msgstr "Añadir etiqueta {name}"
+
+msgid "Remove Tag {name}"
+msgstr "Eliminar etiqueta {name}"
+
+msgid "Undo"
+msgstr "Deshacer"
+
+msgid "Redo"
+msgstr "Rehacer"
+
+msgid "Restarting Hylki"
+msgstr "Reiniciando Hylki"
+
+msgid "Applying your new app icon. Hylki will close and reopen in a moment."
+msgstr ""
+"Aplicando el nuevo icono de la aplicación. Hylki se cerrará y volverá a "
+"abrirse en unos instantes."
+
+msgid "Restart to finish switching icons?"
+msgstr "¿Reiniciar para terminar de cambiar los iconos?"
+
+msgid ""
+"The dock and Hylki's own windows keep the old icon until Hylki restarts."
+msgstr ""
+"El dock y las propias ventanas de Hylki mantendrán el icono anterior hasta "
+"que Hylki se reinicie."
+
+msgid "Restart Now"
+msgstr "Reiniciar ahora"
+
+msgid "{name} · {current} of {total}"
+msgstr "{name} · {current} de {total}"
+
+msgid "View Source"
+msgstr "Ver código fuente"
+
+msgid "Remove Flag"
+msgstr "Quitar marca"
+
+msgid "Move to Inbox"
+msgstr "Mover a Bandeja de entrada"
+
+msgid "Find in Message"
+msgstr "Buscar en el mensaje"
+
+msgid "Print Preview"
+msgstr "Vista previa de impresión"
+
+msgid "Search Messages…"
+msgstr "Buscar mensajes…"
+
+msgid "Sort"
+msgstr "Ordenar"
+
+msgid "Message Source"
+msgstr "Código fuente del mensaje"
+
+msgid "Edit as New Message"
+msgstr "Editar como mensaje nuevo"
+
+msgid "Remove Star"
+msgstr "Quitar destacado"
+
+msgid "Star"
+msgstr "Destacar"
+
+msgid "Add Sender to Contacts"
+msgstr "Añadir remitente a Contactos"
+
+msgid "Block Remote Content"
+msgstr "Bloquear contenido remoto"
+
+msgid "Show Remote Content"
+msgstr "Mostrar contenido remoto"
+
+msgid "Delete {n} messages"
+msgstr "Eliminar {n} mensajes"
+
+msgid "New Message"
+msgstr "Mensaje nuevo"
+
+msgid "Could not attach {names}: Hylki cannot read the file."
+msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
+msgstr[0] "No se pudo adjuntar {names}: Hylki no puede leer el archivo."
+msgstr[1] ""
+"No se pudieron adjuntar {n} archivos (Hylki no puede leerlos): {names}"
+
+msgid "Send {n} file with Hylki"
+msgid_plural "Send {n} files with Hylki"
+msgstr[0] "Enviar {n} archivo con Hylki"
+msgstr[1] "Enviar {n} archivos con Hylki"
+
+msgid "{names} ({size}). What should the files go into?"
+msgstr "{names} ({size}). ¿Dónde quieres añadir los archivos?"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Reply to a Message…"
+msgstr "Responder a un mensaje…"
+
+msgid "Continue a Draft…"
+msgstr "Continuar un borrador…"
+
+msgid "Reply to a Message"
+msgstr "Responder a un mensaje"
+
+msgid "The files go into a reply to the message you pick."
+msgstr "Los archivos se añadirán a una respuesta al mensaje que elijas."
+
+msgid "No messages to reply to yet."
+msgstr "Todavía no hay mensajes a los que responder."
+
+msgid "Reply With the Files"
+msgstr "Responder con los archivos"
+
+msgid "Large files"
+msgstr "Archivos grandes"
+
+msgid ""
+"{names} is {size}, over the {limit} limit. Upload it to cloud storage and "
+"put a download link in the message instead?"
+msgid_plural ""
+"{names} add up to {size}, over the {limit} limit. Upload them to cloud "
+"storage and put download links in the message instead?"
+msgstr[0] ""
+"{names} ocupa {size}, por encima del límite de {limit}. ¿Quieres subirlo al "
+"almacenamiento en la nube e incluir en su lugar un enlace de descarga en el "
+"mensaje?"
+msgstr[1] ""
+"{names} ocupan en total {size}, por encima del límite de {limit}. ¿Quieres "
+"subirlos al almacenamiento en la nube e incluir en su lugar enlaces de "
+"descarga en el mensaje?"
+
+msgid "Attach Anyway"
+msgstr "Adjuntar de todos modos"
+
+msgid "Upload to Cloud Storage"
+msgstr "Subir al almacenamiento en la nube"
+
+msgid "Continue a Draft"
+msgstr "Continuar un borrador"
+
+msgid "The files go into the draft you pick."
+msgstr "Los archivos se añadirán al borrador que elijas."
+
+msgid "No drafts to continue."
+msgstr "No hay borradores que continuar."
+
+msgid "Attach to This Draft"
+msgstr "Adjuntar a este borrador"
+
+msgid "Delete this conversation?"
+msgstr "¿Eliminar esta conversación?"
+
+msgid "Delete Conversation"
+msgstr "Eliminar conversación"
+
+msgid "Delete this message permanently?"
+msgid_plural "Delete {n} messages permanently?"
+msgstr[0] "¿Eliminar este mensaje permanentemente?"
+msgstr[1] "¿Eliminar {n} mensajes permanentemente?"
+
+msgid ""
+"It is already in Trash, so it will be erased from the server. This can’t be "
+"undone."
+msgstr ""
+"Ya está en la Papelera, por lo que se eliminará del servidor. Esta acción no "
+"se puede deshacer."
+
+msgid ""
+"They are already in Trash, so they will be erased from the server. This "
+"can’t be undone."
+msgstr ""
+"Ya están en la Papelera, por lo que se eliminarán del servidor. Esta acción "
+"no se puede deshacer."
+
+msgid "No {v1} folder available"
+msgstr "No hay ninguna carpeta {v1} disponible"
+
+msgid "One message stayed put — mail can't be moved between accounts"
+msgstr "Un mensaje no se movió: el correo no se puede mover entre cuentas"
+
+msgid "{foreign} messages stayed put — mail can't be moved between accounts"
+msgstr ""
+"{foreign} mensajes no se movieron: el correo no se puede mover entre cuentas"
+
+msgid "Move Folder"
+msgstr "Mover carpeta"
+
+msgid "Hylki couldn’t save your password"
+msgstr "Hylki no pudo guardar tu contraseña"
+
+msgid "Keyring setup on Linux Mint"
+msgstr "Configuración del llavero en Linux Mint"
+
+msgid "Got it"
+msgstr "Entendido"
+
+msgid "New Folder"
+msgstr "Carpeta nueva"
+
+msgid "Create a new folder for this account."
+msgstr "Crea una nueva carpeta para esta cuenta."
+
+msgid "Create"
+msgstr "Crear"
+
+msgid "Folder name"
+msgstr "Nombre de la carpeta"
+
+msgid "Sub-folders keep their place under the new name."
+msgstr "Las subcarpetas conservarán su ubicación con el nuevo nombre."
+
+msgid "Rename"
+msgstr "Renombrar"
+
+msgid "A folder named {new_name} is already there."
+msgstr "Ya existe una carpeta llamada {new_name}."
+
+msgid "Rename Folder"
+msgstr "Renombrar carpeta"
+
+msgid ""
+"Its messages are moved to Trash and the folder is removed from the server. "
+"This cannot be undone."
+msgstr ""
+"Sus mensajes se moverán a la Papelera y la carpeta se eliminará del "
+"servidor. Esta acción no se puede deshacer."
+
+msgid "Empty “{name}”?"
+msgstr "¿Vaciar «{name}»?"
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Todos los mensajes que contiene se eliminarán del servidor. Esta acción no "
+"se puede deshacer."
+
+msgid "Empty"
+msgstr "Vaciar"
+
+msgid "No Junk folder available for this account"
+msgstr ""
+"No hay ninguna carpeta de correo no deseado disponible para esta cuenta"
+
+msgid "No Inbox folder available for this account"
+msgstr "No hay ninguna Bandeja de entrada disponible para esta cuenta"
+
+msgid "No address book available to add contacts"
+msgstr "No hay ninguna libreta de direcciones disponible para añadir contactos"
+
+msgid "Add to Contacts"
+msgstr "Añadir a Contactos"
+
+msgid "Add"
+msgstr "Añadir"
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Email"
+msgstr "Correo electrónico"
+
+msgid "Address book"
+msgstr "Libreta de direcciones"
+
+msgid "Remove Account?"
+msgstr "¿Eliminar cuenta?"
+
+msgid "Remove"
+msgstr "Eliminar"
+
+#. One-sentence description, directly under the version chip.
+msgid "A fast, GNOME-native email client"
+msgstr "Un cliente de correo rápido y nativo de GNOME"
+
+msgid ""
+"This is a beta build for trying upcoming changes early. Expect bugs and "
+"instability — please report anything broken on GitHub. It shares your "
+"accounts and mail with the stable Hylki install."
+msgstr ""
+"Esta es una versión beta para probar anticipadamente los próximos cambios. "
+"Es posible que haya errores e inestabilidad; informa en GitHub de cualquier "
+"problema. Comparte tus cuentas y correos con la instalación estable de Hylki."
+
+msgid "Release Notes"
+msgstr "Notas de la versión"
+
+msgid "Keyring Setup Help"
+msgstr "Ayuda para configurar el llavero"
+
+msgid "Make account passwords persist on Linux Mint"
+msgstr "Conservar las contraseñas de las cuentas en Linux Mint"
+
+#. Project links. Each row shows its URL as a hover tooltip.
+msgid "Project"
+msgstr "Proyecto"
+
+msgid "Website"
+msgstr "Sitio web"
+
+msgid "Report an issue or feature request"
+msgstr "Informar de un problema o solicitar una función"
+
+msgid "Source Code"
+msgstr "Código fuente"
+
+msgid "License (GNU AGPL v3)"
+msgstr "Licencia (GNU AGPL v3)"
+
+msgid "Buy Me a Coffee"
+msgstr "Invítame a un café"
+
+#. Contributors — people outside Hyprlab whose patches are in the app.
+msgid "Special thanks to these contributors"
+msgstr "Agradecimientos especiales a estos colaboradores"
+
+#. Translators — the same list, with the languages each one carried.
+msgid "Translated by"
+msgstr "Traducido por"
+
+#. Footer.
+msgid "© 2026 Hyprlab"
+msgstr "© 2026 Hyprlab"
+
+msgid "No {v1} folder available for some messages"
+msgstr "No hay ninguna carpeta {v1} disponible para algunos mensajes"
+
+msgid "No filters to apply here yet"
+msgstr "Todavía no hay filtros que aplicar aquí"
+
+msgid "Applying Filters"
+msgstr "Aplicando filtros"
+
+msgid "Run in Background"
+msgstr "Ejecutar en segundo plano"
+
+msgid "Looked at {n} message so far"
+msgid_plural "Looked at {n} messages so far"
+msgstr[0] "Se ha revisado {n} mensaje hasta ahora"
+msgstr[1] "Se han revisado {n} mensajes hasta ahora"
+
+msgid "Matched {n} message"
+msgid_plural "Matched {n} messages"
+msgstr[0] "Coincidió {n} mensaje"
+msgstr[1] "Coincidieron {n} mensajes"
+
+msgid "Tagged {n} message"
+msgid_plural "Tagged {n} messages"
+msgstr[0] "Se etiquetó {n} mensaje"
+msgstr[1] "Se etiquetaron {n} mensajes"
+
+msgid "Filed {n} message away"
+msgid_plural "Filed {n} messages away"
+msgstr[0] "Se archivó {n} mensaje"
+msgstr[1] "Se archivaron {n} mensajes"
+
+msgid "Folder {done} of {total}"
+msgstr "Carpeta {done} de {total}"
+
+msgid "Filters looked at {n} message, and it matched nothing"
+msgid_plural "Filters looked at {n} messages, and none of them matched"
+msgstr[0] ""
+"Los filtros revisaron {n} mensaje y no encontraron ninguna coincidencia"
+msgstr[1] ""
+"Los filtros revisaron {n} mensajes y no encontraron ninguna coincidencia"
+
+#. Matches that needed nothing: the rules had already done their
+#. work on an earlier sync (#201). Saying "none matched" here
+#. made working rules look broken.
+msgid ""
+"Filters matched {matched} of {n} message, and it was already tagged or filed"
+msgid_plural ""
+"Filters matched {matched} of {n} messages, and all of them were already "
+"tagged or filed"
+msgstr[0] ""
+"Los filtros encontraron coincidencia en {matched} de {n} mensaje, pero ya "
+"estaba etiquetado o archivado"
+msgstr[1] ""
+"Los filtros encontraron coincidencias en {matched} de {n} mensajes, pero ya "
+"estaban etiquetados o archivados"
+
+msgid "Filters tagged {tagged} of {n} message"
+msgid_plural "Filters tagged {tagged} of {n} messages"
+msgstr[0] "Los filtros etiquetaron {tagged} de {n} mensaje"
+msgstr[1] "Los filtros etiquetaron {tagged} de {n} mensajes"
+
+msgid "Filters filed {filed} of {n} message away"
+msgid_plural "Filters filed {filed} of {n} messages away"
+msgstr[0] "Los filtros archivaron {filed} de {n} mensaje"
+msgstr[1] "Los filtros archivaron {filed} de {n} mensajes"
+
+msgid "Filters tagged {tagged} and filed {filed} of {n} message"
+msgid_plural "Filters tagged {tagged} and filed {filed} of {n} messages"
+msgstr[0] ""
+"Los filtros etiquetaron {tagged} y archivaron {filed} de {n} mensaje"
+msgstr[1] ""
+"Los filtros etiquetaron {tagged} y archivaron {filed} de {n} mensajes"
+
+msgid "Filters Applied"
+msgstr "Filtros aplicados"
+
+msgid "This message carries no calendar file to open."
+msgstr "Este mensaje no contiene ningún archivo de calendario que abrir."
+
+msgid "This invitation names no organiser to answer."
+msgstr "Esta invitación no indica ningún organizador al que responder."
+
+msgid "Accepted: {subject}"
+msgstr "Aceptada: {subject}"
+
+msgid "Tentative: {subject}"
+msgstr "Provisional: {subject}"
+
+msgid "Declined: {subject}"
+msgstr "Rechazada: {subject}"
+
+msgid "{name} has accepted this invitation."
+msgstr "{name} ha aceptado esta invitación."
+
+msgid "{name} has tentatively accepted this invitation."
+msgstr "{name} ha aceptado provisionalmente esta invitación."
+
+msgid "{name} has declined this invitation."
+msgstr "{name} ha rechazado esta invitación."
+
+msgid "Your answer has been sent: accepted."
+msgstr "Tu respuesta se ha enviado: aceptada."
+
+msgid "Your answer has been sent: maybe."
+msgstr "Tu respuesta se ha enviado: quizás."
+
+msgid "Your answer has been sent: declined."
+msgstr "Tu respuesta se ha enviado: rechazada."
+
+msgid "Unsubscribe from {name}?"
+msgstr "¿Cancelar la suscripción a {name}?"
+
+msgid ""
+"Hylki will ask the list to stop sending you mail. A list can take a few days "
+"to act on the request."
+msgstr ""
+"Hylki solicitará a la lista que deje de enviarte correo. La lista puede "
+"tardar unos días en procesar la solicitud."
+
+msgid ""
+"An unsubscribe request will be sent to {addr} from {from}. A list can take a "
+"few days to act on it."
+msgstr ""
+"Se enviará una solicitud para cancelar la suscripción a {addr} desde {from}. "
+"La lista puede tardar unos días en procesarla."
+
+msgid ""
+"This list offers no direct way to unsubscribe. Its unsubscribe page will "
+"open in your browser."
+msgstr ""
+"Esta lista no ofrece una forma directa de cancelar la suscripción. Su página "
+"de cancelación se abrirá en el navegador."
+
+msgid ""
+"This message carries no unsubscribe header, so Hylki is going by the link in "
+"it."
+msgstr ""
+"Este mensaje no incluye una cabecera para cancelar la suscripción, por lo "
+"que Hylki utilizará el enlace incluido en él."
+
+msgid "Unsubscribe"
+msgstr "Cancelar suscripción"
+
+msgid "the message offers no way to unsubscribe"
+msgstr "el mensaje no ofrece ninguna forma de cancelar la suscripción"
+
+msgid "the list's mail address could not be read"
+msgstr "no se pudo leer la dirección de correo de la lista"
+
+msgid "Full Release Notes on GitHub"
+msgstr "Notas completas de la versión en GitHub"
+
+msgid "Move around"
+msgstr "Navegación"
+
+msgid "Next message"
+msgstr "Mensaje siguiente"
+
+msgid "Previous message"
+msgstr "Mensaje anterior"
+
+msgid "Open the selected message"
+msgstr "Abrir el mensaje seleccionado"
+
+msgid "Back to the message list"
+msgstr "Volver a la lista de mensajes"
+
+msgid "Next message in the conversation"
+msgstr "Mensaje siguiente de la conversación"
+
+msgid "Previous message in the conversation"
+msgstr "Mensaje anterior de la conversación"
+
+msgid "Search"
+msgstr "Buscar"
+
+msgid "Act on a message"
+msgstr "Acciones sobre un mensaje"
+
+msgid "Reply to all"
+msgstr "Responder a todos"
+
+msgid "Mark as spam"
+msgstr "Marcar como spam"
+
+msgid "Star or unstar"
+msgstr "Destacar o quitar destacado"
+
+msgid "Mark read or unread"
+msgstr "Marcar como leído o no leído"
+
+msgid "Select this row (for a bulk action)"
+msgstr "Seleccionar esta fila (para una acción en lote)"
+
+msgid "Add or remove a tag (the first nine, in Settings order)"
+msgstr ""
+"Añadir o eliminar una etiqueta (las nueve primeras, según el orden de "
+"Ajustes)"
+
+msgid "Remove every tag"
+msgstr "Eliminar todas las etiquetas"
+
+msgid "Everything else"
+msgstr "Todo lo demás"
+
+msgid "Compose"
+msgstr "Redactar"
+
+msgid "Send the message you are writing"
+msgstr "Enviar el mensaje que estás escribiendo"
+
+msgid "Back out of a reply and return to the list"
+msgstr "Salir de la respuesta y volver a la lista"
+
+msgid "Undo the last action, or the last edit while you are writing"
+msgstr "Deshacer la última acción o la última edición mientras escribes"
+
+msgid "Redo it (Ctrl+Y does the same)"
+msgstr "Rehacer (Ctrl+Y hace lo mismo)"
+
+msgid "Print the message you are reading"
+msgstr "Imprimir el mensaje que estás leyendo"
+
+msgid "Preview it as a PDF first"
+msgstr "Mostrar primero una vista previa en PDF"
+
+msgid "Reveal the status bar (also: long-press Refresh)"
+msgstr "Mostrar la barra de estado (también: mantener pulsado Actualizar)"
+
+msgid "Show or hide the accounts in the sidebar"
+msgstr "Mostrar u ocultar las cuentas en la barra lateral"
+
+msgid "Focus Mode on or off"
+msgstr "Activar o desactivar el modo de concentración"
+
+msgid "Message zoom in or out"
+msgstr "Acercar o alejar el mensaje"
+
+msgid "Message zoom back to the default"
+msgstr "Restablecer el zoom del mensaje"
+
+msgid "Console mode (when enabled in Settings)"
+msgstr "Modo Consola (cuando está activado en Ajustes)"
+
+msgid "Close the window (background sync keeps running)"
+msgstr ""
+"Cerrar la ventana (la sincronización seguirá ejecutándose en segundo plano)"
+
+msgid "Quit Hylki entirely"
+msgstr "Salir completamente de Hylki"
+
+msgid "This list"
+msgstr "Esta lista"
+
+msgid "Unstar"
+msgstr "Quitar destacado"
+
+msgid "Save All Attachments"
+msgstr "Guardar todos los archivos adjuntos"
+
+msgid "Always do this (change it in Settings → System → GNOME Files)"
+msgstr ""
+"Hacer siempre esto (puedes cambiarlo en Ajustes → Sistema → Archivos de "
+"GNOME)"
+
+msgid "New Message Instead"
+msgstr "Crear un mensaje nuevo"
+
+msgid "Search by sender, subject or account"
+msgstr "Buscar por remitente, asunto o cuenta"
+
+msgid "(no subject)"
+msgstr "(sin asunto)"
+
+msgid "Default"
+msgstr "Predeterminado"
+
+msgid ""
+"Hylki checks for new mail and shows notifications while its window is closed."
+msgstr ""
+"Hylki comprueba si hay correo nuevo y muestra notificaciones mientras su "
+"ventana está cerrada."
+
+msgid "Checking for new mail"
+msgstr "Buscando correo nuevo"
+
+msgid "{n} unread message"
+msgid_plural "{n} unread messages"
+msgstr[0] "{n} mensaje sin leer"
+msgstr[1] "{n} mensajes sin leer"
+
+msgid "Spam"
+msgstr "Correo no deseado"
+
+msgid "Read/Unread"
+msgstr "Leído/No leído"
+
+msgid "Move To"
+msgstr "Mover a"
+
+msgid "Find"
+msgstr "Buscar"
+
+msgid "Print"
+msgstr "Imprimir"
+
+msgid "On This Computer"
+msgstr "En este equipo"
+
+msgid "CardDAV Address Book"
+msgstr "Libreta de direcciones CardDAV"
+
+msgid "Encrypted message"
+msgstr "Mensaje cifrado"
+
+msgid "Encrypted with OpenPGP; could not be decrypted"
+msgstr "Cifrado con OpenPGP; no se pudo descifrar"
+
+msgid "Encrypted with OpenPGP"
+msgstr "Cifrado con OpenPGP"
+
+msgid "Encrypted, and signed by {signer}"
+msgstr "Cifrado y firmado por {signer}"
+
+msgid ""
+"Encrypted; the signature does not match, the message may have been altered"
+msgstr ""
+"Cifrado; la firma no coincide y es posible que el mensaje haya sido "
+"modificado"
+
+msgid "Encrypted; signed with a key you don't have ({id})"
+msgstr "Cifrado; firmado con una clave que no tienes ({id})"
+
+msgid "Encrypted, and signed by {signer} with an expired key"
+msgstr "Cifrado y firmado por {signer} con una clave caducada"
+
+msgid "Encrypted, and signed by {signer} with a revoked key"
+msgstr "Cifrado y firmado por {signer} con una clave revocada"
+
+msgid "Encrypted, and signed by {signer}; the signature has expired"
+msgstr "Cifrado y firmado por {signer}; la firma ha caducado"
+
+msgid "OpenPGP-signed; the signature could not be checked"
+msgstr "Firmado con OpenPGP; no se pudo comprobar la firma"
+
+msgid "Signed by {signer}"
+msgstr "Firmado por {signer}"
+
+msgid "The OpenPGP signature does not match; the message may have been altered"
+msgstr ""
+"La firma OpenPGP no coincide; es posible que el mensaje haya sido modificado"
+
+msgid "Signed with a key you don't have ({id})"
+msgstr "Firmado con una clave que no tienes ({id})"
+
+msgid "Signed by {signer} with an expired key"
+msgstr "Firmado por {signer} con una clave caducada"
+
+msgid "Signed by {signer} with a revoked key"
+msgstr "Firmado por {signer} con una clave revocada"
+
+msgid "Signed by {signer}; the signature has expired"
+msgstr "Firmado por {signer}; la firma ha caducado"
+
+msgid "This message hasn't been checked."
+msgstr "Este mensaje no se ha comprobado."
+
+msgid "{n} hours ago"
+msgstr "hace {n} horas"
+
+msgid "yesterday"
+msgstr "ayer"
+
+msgid "{n} days ago"
+msgstr "hace {n} días"
+
+msgid "Waiting since {ago}"
+msgstr "Esperando desde {ago}"
+
+msgid "Scheduled for {when}"
+msgstr "Programado para {when}"
+
+msgid "Today, {time}"
+msgstr "Hoy, {time}"
+
+msgid "New message"
+msgstr "Mensaje nuevo"
+
+msgid "Message ready to send"
+msgstr "Mensaje listo para enviar"
+
+msgid "A new message is open in Hylki."
+msgstr "Hay un mensaje nuevo abierto en Hylki."
+
+msgid "A new message with {n} file attached is open in Hylki."
+msgid_plural "A new message with {n} files attached is open in Hylki."
+msgstr[0] "Hay un mensaje nuevo con {n} archivo adjunto abierto en Hylki."
+msgstr[1] "Hay un mensaje nuevo con {n} archivos adjuntos abierto en Hylki."
+
+msgid "GnuPG (gpg) is not installed, so this message cannot be read."
+msgstr ""
+"GnuPG (gpg) no está instalado, por lo que no se puede leer este mensaje."
+
+msgid "Decrypted with your key."
+msgstr "Descifrado con tu clave."
+
+msgid "Encrypted to key {id}, which is not in your keyring."
+msgstr "Cifrado para la clave {id}, que no está en tu llavero."
+
+msgid "The encrypted block is damaged or not OpenPGP data."
+msgstr "El bloque cifrado está dañado o no contiene datos OpenPGP."
+
+msgid "Signing key {id} is trusted in your keyring."
+msgstr "La clave de firma {id} es de confianza en tu llavero."
+
+msgid "Signing key {id} is only marginally trusted in your keyring."
+msgstr "La clave de firma {id} tiene una confianza limitada en tu llavero."
+
+msgid "Signing key {id} is marked as not trusted in your keyring."
+msgstr "La clave de firma {id} está marcada como no fiable en tu llavero."
+
+msgid ""
+"Signing key {id} is in your keyring but not marked as trusted; check its "
+"fingerprint with the sender."
+msgstr ""
+"La clave de firma {id} está en tu llavero, pero no está marcada como fiable; "
+"comprueba su huella con el remitente."
+
+msgid "Signed with key {id}."
+msgstr "Firmado con la clave {id}."
+
+msgid "Import the sender's public key to verify it."
+msgstr "Importa la clave pública del remitente para verificarla."
+
+msgid "No key was found in that file."
+msgstr "No se encontró ninguna clave en ese archivo."
+
+msgid "Nothing to export."
+msgstr "No hay nada que exportar."
+
+msgid "gpg did not create the key."
+msgstr "gpg no creó la clave."
+
+msgid "No key was found for that address."
+msgstr "No se encontró ninguna clave para esa dirección."
+
+msgid "gpg could not sign the key."
+msgstr "gpg no pudo firmar la clave."
+
+msgid "gpg could not delete the key."
+msgstr "gpg no pudo eliminar la clave."
+
+msgid "gpg did not sign the message."
+msgstr "gpg no firmó el mensaje."
+
+msgid "gpg did not encrypt the message."
+msgstr "gpg no cifró el mensaje."
+
+msgid "Open Hylki"
+msgstr "Abrir Hylki"
+
+msgid "View all {n} unread in Inboxes…"
+msgstr "Ver los {n} mensajes sin leer en las bandejas de entrada…"
+
+msgid "Accounts"
+msgstr "Cuentas"
+
+msgid "No unread mail in Inboxes"
+msgstr "No hay correo sin leer en las bandejas de entrada"
+
+msgid "{n} unread in Inboxes"
+msgid_plural "{n} unread in Inboxes"
+msgstr[0] "{n} mensaje sin leer en las bandejas de entrada"
+msgstr[1] "{n} mensajes sin leer en las bandejas de entrada"
+
+msgid "Requires an app-specific password (not your normal login password)."
+msgstr ""
+"Requiere una contraseña específica de aplicación (no tu contraseña de inicio "
+"de sesión habitual)."
+
+msgid "Enter your server details manually."
+msgstr "Introduce manualmente los datos del servidor."
+
+msgid "Sign in with your browser — no password needed."
+msgstr "Inicia sesión con el navegador; no se necesita contraseña."
+
+msgid "Sign in through GNOME Online Accounts."
+msgstr "Inicia sesión mediante Cuentas en línea de GNOME."
+
+msgid "Requires Proton Mail Bridge running locally."
+msgstr "Requiere que Proton Mail Bridge se esté ejecutando localmente."
+
+msgid ""
+"Enter your Stalwart server's address. Mail is read and sent over JMAP; no "
+"SMTP settings are needed."
+msgstr ""
+"Introduce la dirección de tu servidor Stalwart. El correo se recibe y se "
+"envía mediante JMAP; no se necesita configuración SMTP."
+
+msgid "Enable POP/IMAP access in GMX settings first."
+msgstr "Activa primero el acceso POP/IMAP en los ajustes de GMX."
+
+msgid "Enter your provider's OAuth endpoints, then sign in."
+msgstr "Introduce los endpoints OAuth de tu proveedor y después inicia sesión."
+
+msgid "Mail Accounts"
+msgstr "Cuentas de correo"
+
+msgid "Drag to set the order they appear in the sidebar."
+msgstr ""
+"Arrastra para establecer el orden en el que aparecen en la barra lateral."
+
+msgid "Add Account…"
+msgstr "Añadir cuenta…"
+
+msgid "GNOME Online Accounts"
+msgstr "Cuentas en línea de GNOME"
+
+msgid "Mail accounts from GNOME Settings. Toggle one on to use it in Hylki."
+msgstr ""
+"Cuentas de correo de los Ajustes de GNOME. Activa una para utilizarla en "
+"Hylki."
+
+msgid ""
+"Label messages with one or more coloured tags. Tags are stored on the mail "
+"server as IMAP keywords, so Thunderbird and other clients show the same "
+"tags.\n"
+"\n"
+"Drag a tag to reorder: the order here is the sidebar's, and the first nine "
+"answer to the 1–9 keys."
+msgstr ""
+"Etiqueta los mensajes con una o varias etiquetas de colores. Las etiquetas "
+"se almacenan en el servidor como palabras clave IMAP, por lo que Thunderbird "
+"y otros clientes muestran las mismas etiquetas. Arrastra una etiqueta para "
+"reordenarla: este es el orden de la barra lateral y las nueve primeras "
+"corresponden a las teclas 1–9."
+
+msgid "Add Tag…"
+msgstr "Añadir etiqueta…"
+
+msgid "Look through every mailbox for tags other clients have set"
+msgstr "Buscar en todos los buzones etiquetas creadas por otros clientes"
+
+msgid "Find Tags…"
+msgstr "Buscar etiquetas…"
+
+msgid "Search filters"
+msgstr "Buscar filtros"
+
+msgid "Filters"
+msgstr "Filtros"
+
+msgid ""
+"File incoming mail into folders or tag it automatically, by sender, subject "
+"or recipients. Applied to each account's Inbox as Hylki syncs it, or to the "
+"mail already there with Apply Now; a folder's right-click menu runs them "
+"over that one folder."
+msgstr ""
+"Archiva automáticamente el correo entrante en carpetas o etiquétalo según el "
+"remitente, el asunto o los destinatarios. Se aplica a la Bandeja de entrada "
+"de cada cuenta durante la sincronización de Hylki, o al correo que ya "
+"contiene mediante Aplicar ahora; el menú contextual de una carpeta permite "
+"ejecutar los filtros solo sobre esa carpeta."
+
+msgid "Add Filter…"
+msgstr "Añadir filtro…"
+
+msgid "Run every rule over the mail already in your inboxes"
+msgstr ""
+"Ejecutar todas las reglas sobre el correo que ya está en tus bandejas de "
+"entrada"
+
+msgid "Apply Now"
+msgstr "Aplicar ahora"
+
+msgid "Search senders"
+msgstr "Buscar remitentes"
+
+msgid "Allowed Senders"
+msgstr "Remitentes permitidos"
+
+msgid "Messages from these senders load remote content automatically."
+msgstr ""
+"Los mensajes de estos remitentes cargan automáticamente el contenido remoto."
+
+msgid "Email address"
+msgstr "Dirección de correo electrónico"
+
+msgid "Allow this sender"
+msgstr "Permitir este remitente"
+
+msgid "Blacklist"
+msgstr "Lista de bloqueados"
+
+msgid ""
+"Incoming mail from these senders is deleted automatically (moved to Trash). "
+"Enter an email address, or a whole domain like \"example.com\" to block "
+"every sender there."
+msgstr ""
+"El correo entrante de estos remitentes se elimina automáticamente (se mueve "
+"a la Papelera). Introduce una dirección de correo electrónico o un dominio "
+"completo como \"example.com\" para bloquear a todos sus remitentes."
+
+msgid "Address or domain"
+msgstr "Dirección o dominio"
+
+msgid "Block this sender"
+msgstr "Bloquear este remitente"
+
+msgid "Account"
+msgstr "Cuenta"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "GNOME Online Account"
+msgstr "Cuenta en línea de GNOME"
+
+msgid "Show in Hylki"
+msgstr "Mostrar en Hylki"
+
+msgid ""
+"Switching this off returns the account to the import list — it stays in "
+"GNOME Online Accounts."
+msgstr ""
+"Al desactivarlo, la cuenta volverá a la lista de importación; seguirá "
+"estando en Cuentas en línea de GNOME."
+
+msgid ""
+"This account is managed by GNOME Online Accounts.\n"
+"Its address, servers and password are changed in Settings → Online Accounts."
+msgstr ""
+"Esta cuenta está gestionada por Cuentas en línea de GNOME. Su dirección, "
+"servidores y contraseña se modifican en Ajustes → Cuentas en línea."
+
+msgid "Open Online Accounts…"
+msgstr "Abrir Cuentas en línea…"
+
+msgid "Mail Account"
+msgstr "Cuenta de correo"
+
+msgid "Nickname (shown in the sidebar and the Mail Accounts list)"
+msgstr ""
+"Alias (se muestra en la barra lateral y en la lista de cuentas de correo)"
+
+msgid "Provider"
+msgstr "Proveedor"
+
+msgid "Choose your email provider."
+msgstr "Elige tu proveedor de correo."
+
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+msgid "Email Address"
+msgstr "Dirección de correo electrónico"
+
+msgid "Incoming Protocol"
+msgstr "Protocolo de entrada"
+
+msgid "Incoming Server"
+msgstr "Servidor de entrada"
+
+msgid "Port (IMAP 993 / POP3 995)"
+msgstr "Puerto (IMAP 993 / POP3 995)"
+
+msgid "SMTP Server (optional)"
+msgstr "Servidor SMTP (opcional)"
+
+msgid "SMTP Port (default 587)"
+msgstr "Puerto SMTP (predeterminado: 587)"
+
+msgid "Username"
+msgstr "Nombre de usuario"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "OAuth Client ID"
+msgstr "ID de cliente OAuth"
+
+msgid "OAuth Client Secret (optional)"
+msgstr "Secreto de cliente OAuth (opcional)"
+
+msgid "Authorization URL"
+msgstr "URL de autorización"
+
+msgid "Token URL"
+msgstr "URL del token"
+
+msgid "Scopes (space-separated)"
+msgstr "Ámbitos (separados por espacios)"
+
+msgid "Sign In with Browser"
+msgstr "Iniciar sesión con el navegador"
+
+msgid ""
+"Google and Microsoft sign-in use GNOME Online Accounts.\n"
+"\n"
+"1. Open Online Accounts and sign in there.\n"
+"2. Come back to Hylki and reopen this window — the account then appears "
+"under “GNOME Online Accounts” at the top of this window. Enable it there."
+msgstr ""
+"El inicio de sesión de Google y Microsoft utiliza Cuentas en línea de GNOME. "
+"1. Abre Cuentas en línea e inicia sesión allí. 2. Vuelve a Hylki y abre de "
+"nuevo esta ventana; la cuenta aparecerá en «Cuentas en línea de GNOME» en la "
+"parte superior. Actívala allí."
+
+msgid "Separate SMTP credentials"
+msgstr "Credenciales SMTP independientes"
+
+msgid ""
+"Use a different username and password for sending. Off = use the credentials "
+"above."
+msgstr ""
+"Usar un nombre de usuario y una contraseña diferentes para enviar. "
+"Desactivado = usar las credenciales anteriores."
+
+msgid "SMTP Username"
+msgstr "Nombre de usuario SMTP"
+
+msgid "SMTP Password"
+msgstr "Contraseña SMTP"
+
+msgid "Accept a certificate for another name"
+msgstr "Aceptar un certificado para otro nombre"
+
+msgid ""
+"The server's certificate must still be valid and signed, but may be issued "
+"for a different host name than the one entered, as on shared hosting. Turn "
+"on only when the connection test says the names differ."
+msgstr ""
+"El certificado del servidor debe seguir siendo válido y estar firmado, pero "
+"puede haberse emitido para un nombre de host distinto del introducido, como "
+"ocurre en alojamientos compartidos. Actívalo solo si la prueba de conexión "
+"indica que los nombres son diferentes."
+
+msgid "Test Connection"
+msgstr "Probar conexión"
+
+#. Rendered as Pango markup — a bare "&" breaks it.
+msgid "Appearance"
+msgstr "Apariencia"
+
+msgid "How this account is shown in the sidebar and the Inboxes view."
+msgstr ""
+"Cómo se muestra esta cuenta en la barra lateral y en la vista de bandejas de "
+"entrada."
+
+msgid "Account accent color"
+msgstr "Color de acento de la cuenta"
+
+msgid ""
+"The account circle background, and this account's marks in the sidebar and "
+"lists"
+msgstr ""
+"El fondo del círculo de la cuenta y sus marcas en la barra lateral y las "
+"listas"
+
+msgid "Use my Gravatar"
+msgstr "Usar mi Gravatar"
+
+msgid ""
+"Show the picture this address has at gravatar.com. Looking it up sends them "
+"a hash of the address, and if there is none, the circle falls back to the "
+"choice below."
+msgstr ""
+"Mostrar la imagen asociada a esta dirección en gravatar.com. Al buscarla se "
+"envía un hash de la dirección y, si no existe ninguna imagen, el círculo "
+"usará la opción seleccionada abajo."
+
+msgid "Circle shows"
+msgstr "El círculo muestra"
+
+msgid "Initials or emoji"
+msgstr "Iniciales o emoji"
+
+msgid "Picture"
+msgstr "Imagen"
+
+msgid "Emoji"
+msgstr "Emoji"
+
+msgid "Shown in the circle instead of the initials"
+msgstr "Se muestra en el círculo en lugar de las iniciales"
+
+msgid "Choose…"
+msgstr "Elegir…"
+
+msgid "Use initials"
+msgstr "Usar iniciales"
+
+msgid "A photo or logo from this computer"
+msgstr "Una foto o logotipo de este equipo"
+
+msgid "Send-as aliases"
+msgstr "Alias de envío"
+
+msgid ""
+"Extra addresses this account can send as. An alias can use this account's "
+"SMTP server, or bring its own."
+msgstr ""
+"Direcciones adicionales desde las que puede enviar esta cuenta. Un alias "
+"puede usar el servidor SMTP de esta cuenta o utilizar uno propio."
+
+msgid "Add Alias…"
+msgstr "Añadir alias…"
+
+msgid "Syncing"
+msgstr "Sincronización"
+
+msgid "Instant new mail (IMAP push)"
+msgstr "Correo nuevo instantáneo (push IMAP)"
+
+msgid "Turn off for servers that stall on push connections."
+msgstr "Desactívalo en servidores que se bloqueen con conexiones push."
+
+msgid "Empty Junk automatically"
+msgstr "Vaciar automáticamente el correo no deseado"
+
+msgid "Delete junk mail older than this for good, checked at each sync."
+msgstr ""
+"Eliminar definitivamente el correo no deseado que supere esta antigüedad; se "
+"comprueba en cada sincronización."
+
+msgid "Empty Trash automatically"
+msgstr "Vaciar automáticamente la Papelera"
+
+msgid ""
+"Delete mail in the Trash older than this for good, checked at each sync."
+msgstr ""
+"Eliminar definitivamente el correo de la Papelera que supere esta "
+"antigüedad; se comprueba en cada sincronización."
+
+msgid "Special Folders"
+msgstr "Carpetas especiales"
+
+msgid ""
+"Which of this account's folders hold each role. Automatically follows the "
+"server's own markings; pick a folder when a role isn't detected or lands "
+"wrong. Nothing already on the server moves: a role says where mail goes from "
+"now on."
+msgstr ""
+"Indica qué carpetas de esta cuenta cumplen cada función. Se siguen "
+"automáticamente las indicaciones del servidor; elige una carpeta si una "
+"función no se detecta o se asigna incorrectamente. Nada de lo que ya está en "
+"el servidor se moverá: la función solo indica dónde irá el correo a partir "
+"de ahora."
+
+msgid "Sent"
+msgstr "Enviados"
+
+msgid "Save a copy of sent mail in"
+msgstr "Guardar una copia del correo enviado en"
+
+msgid "Server saves its own copy of sent mail"
+msgstr "El servidor guarda su propia copia del correo enviado"
+
+msgid ""
+"For Gmail and others that file sent mail themselves. Disables above Save a "
+"copy."
+msgstr ""
+"Para Gmail y otros servicios que archivan por sí mismos el correo enviado. "
+"Desactiva la opción anterior de guardar una copia."
+
+msgid "Drafts"
+msgstr "Borradores"
+
+msgid "Trash"
+msgstr "Papelera"
+
+msgid "Junk"
+msgstr "Correo no deseado"
+
+msgid "Hidden Folders"
+msgstr "Carpetas ocultas"
+
+msgid ""
+"Folders kept out of the sidebar and left unsynced. Hide one from its right-"
+"click menu in the sidebar; Show brings it back. An Exchange server's "
+"calendar, contacts and task folders are hidden here from the start."
+msgstr ""
+"Carpetas ocultas de la barra lateral y que no se sincronizan. Puedes ocultar "
+"una desde su menú contextual en la barra lateral; Mostrar la recuperará. Las "
+"carpetas de calendario, contactos y tareas de un servidor Exchange se "
+"ocultan aquí de forma predeterminada."
+
+msgid "No hidden folders."
+msgstr "No hay carpetas ocultas."
+
+msgid "OpenPGP"
+msgstr "OpenPGP"
+
+msgid ""
+"The key that signs mail sent from this account and opens what is encrypted "
+"to it. Keys are managed under OpenPGP in the sidebar."
+msgstr ""
+"La clave que firma el correo enviado desde esta cuenta y descifra lo que se "
+"haya cifrado para ella. Las claves se gestionan desde OpenPGP en la barra "
+"lateral."
+
+msgid "Key"
+msgstr "Clave"
+
+msgid "Automatic uses the key whose address matches."
+msgstr "Automático utiliza la clave cuya dirección coincida."
+
+msgid "Signature"
+msgstr "Firma"
+
+msgid "Appended to new messages sent from this account."
+msgstr "Se añade a los mensajes nuevos enviados desde esta cuenta."
+
+msgid "Edit HTML…"
+msgstr "Editar HTML…"
+
+msgid "Import File…"
+msgstr "Importar archivo…"
+
+msgid ""
+"Your password is stored in the system keyring (secret-service), never in "
+"plain text on disk."
+msgstr ""
+"Tu contraseña se almacena en el llavero del sistema (Secret Service), nunca "
+"como texto sin cifrar en el disco."
+
+msgid "Follow Settings"
+msgstr "Seguir Ajustes"
+
+msgid "On"
+msgstr "Activado"
+
+msgid "Off"
+msgstr "Desactivado"
+
+msgid "Choose a Picture"
+msgstr "Elegir una imagen"
+
+msgid "Images"
+msgstr "Imágenes"
+
+msgid "Testing…"
+msgstr "Probando…"
+
+msgid "Enter a client ID (and endpoints for a custom provider) first"
+msgstr ""
+"Introduce primero un ID de cliente (y los endpoints si es un proveedor "
+"personalizado)"
+
+msgid "Opening browser… complete sign-in there."
+msgstr "Abriendo el navegador… completa allí el inicio de sesión."
+
+msgid "Signature HTML"
+msgstr "HTML de la firma"
+
+msgid ""
+"Paste or edit the signature's HTML. Scripts and style sheets are removed; "
+"inline styles, tables and images are kept."
+msgstr ""
+"Pega o edita el HTML de la firma. Se eliminan los scripts y las hojas de "
+"estilo; se conservan los estilos en línea, las tablas y las imágenes."
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "Import Signature"
+msgstr "Importar firma"
+
+msgid "HTML and text files"
+msgstr "Archivos HTML y de texto"
+
+msgid "Could Not Read the File"
+msgstr "No se pudo leer el archivo"
+
+msgid "OK"
+msgstr "Aceptar"
+
+msgid "Enter a client ID and sign in before saving"
+msgstr "Introduce un ID de cliente e inicia sesión antes de guardar"
+
+msgid ""
+"The certificate is for another name. If this server is the right one, turn "
+"on “Accept a certificate for another name” above and test again."
+msgstr ""
+"El certificado corresponde a otro nombre. Si este es el servidor correcto, "
+"activa «Aceptar un certificado para otro nombre» arriba y vuelve a probar."
+
+msgid "✓ Signed in — save the account to finish"
+msgstr "✓ Sesión iniciada — guarda la cuenta para terminar"
+
+msgid "Sign-in failed: {e}"
+msgstr "Error al iniciar sesión: {e}"
+
+msgid "✓ SMTP: connected"
+msgstr "✓ SMTP: conectado"
+
+msgid "✗ SMTP: {e}"
+msgstr "✗ SMTP: {e}"
+
+msgid "Show"
+msgstr "Mostrar"
+
+msgid "Bring this folder back to the sidebar"
+msgstr "Volver a mostrar esta carpeta en la barra lateral"
+
+msgid "Sends through {host}"
+msgstr "Envía mediante {host}"
+
+msgid "Sends through this account"
+msgstr "Envía mediante esta cuenta"
+
+msgid "Remove this alias"
+msgstr "Eliminar este alias"
+
+msgid "Display name (optional)"
+msgstr "Nombre para mostrar (opcional)"
+
+msgid "Sending"
+msgstr "Envío"
+
+msgid "Own SMTP server"
+msgstr "Servidor SMTP propio"
+
+msgid "SMTP server"
+msgstr "Servidor SMTP"
+
+msgid "SMTP port"
+msgstr "Puerto SMTP"
+
+msgid "SMTP username"
+msgstr "Nombre de usuario SMTP"
+
+msgid "SMTP password"
+msgstr "Contraseña SMTP"
+
+msgid "Test SMTP"
+msgstr "Probar SMTP"
+
+msgid "Microsoft 365 files its own copy in Sent Items; this cannot be changed."
+msgstr ""
+"Microsoft 365 guarda su propia copia en Elementos enviados; esto no se puede "
+"cambiar."
+
+msgid "POP3 accounts have no server folders to save a copy in."
+msgstr ""
+"Las cuentas POP3 no tienen carpetas en el servidor donde guardar una copia."
+
+msgid "GOA"
+msgstr "GOA"
+
+msgid "Hylki"
+msgstr "Hylki"
+
+msgid "Imported GNOME Online Account"
+msgstr "Cuenta importada de Cuentas en línea de GNOME"
+
+msgid "Added directly in Hylki"
+msgstr "Añadida directamente en Hylki"
+
+msgid "Enable this account"
+msgstr "Activar esta cuenta"
+
+msgid "Use this account in Hylki"
+msgstr "Usar esta cuenta en Hylki"
+
+msgid "Automatic"
+msgstr "Automático"
+
+msgid "Never"
+msgstr "Nunca"
+
+msgid "After {n} day"
+msgid_plural "After {n} days"
+msgstr[0] "Después de {n} día"
+msgstr[1] "Después de {n} días"
+
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
+msgid "Server (host name or URL)"
+msgstr "Servidor (nombre de host o URL)"
+
+msgid "Port (default 443)"
+msgstr "Puerto (predeterminado: 443)"
+
+msgid "Google (Gmail)"
+msgstr "Google (Gmail)"
+
+msgid "Microsoft 365 / Outlook"
+msgstr "Microsoft 365 / Outlook"
+
+msgid "Proton Mail"
+msgstr "Proton Mail"
+
+msgid "Custom OAuth"
+msgstr "OAuth personalizado"
+
+msgid "IMAP/POP3 account"
+msgstr "Cuenta IMAP/POP3"
+
+msgid "IMAP/POP3 account on {host}"
+msgstr "Cuenta IMAP/POP3 en {host}"
+
+msgid "Mail account"
+msgstr "Cuenta de correo"
+
+#. Every condition, joined the way the rule combines them (#192).
+msgid " or "
+msgstr " o "
+
+#. Every condition, joined the way the rule combines them (#192).
+msgid " and "
+msgstr " y "
+
+msgid ", tagged {tag}"
+msgstr ", etiquetado con {tag}"
+
+msgid "Remove filter"
+msgstr "Eliminar filtro"
+
+msgid "Applying…"
+msgstr "Aplicando…"
+
+msgid "Searching…"
+msgstr "Buscando…"
+
+msgid "No New Tags"
+msgstr "No hay etiquetas nuevas"
+
+msgid "No tags were found in your mailboxes that are not already set up here."
+msgstr ""
+"No se encontraron en tus buzones etiquetas que no estén ya configuradas aquí."
+
+msgid "Tags Found"
+msgstr "Etiquetas encontradas"
+
+msgid ""
+"{n} tags are in use in your mailboxes but not set up here. Import them all, "
+"or choose which to add. Names and colours can be changed afterwards."
+msgstr ""
+"Hay {n} etiquetas en uso en tus buzones que no están configuradas aquí. "
+"Impórtalas todas o elige cuáles añadir. Después podrás cambiar sus nombres y "
+"colores."
+
+msgid "Import Selected"
+msgstr "Importar seleccionadas"
+
+msgid "Import All"
+msgstr "Importar todas"
+
+msgid "{n} messages"
+msgstr "{n} mensajes"
+
+msgid ""
+"Press this key on a message to add or remove the tag (with single-key "
+"shortcuts on)"
+msgstr ""
+"Pulsa esta tecla sobre un mensaje para añadir o quitar la etiqueta (con los "
+"atajos de una sola tecla activados)"
+
+msgid "Remove tag"
+msgstr "Eliminar etiqueta"
+
+msgid "Edit Tag"
+msgstr "Editar etiqueta"
+
+msgid "Add Tag"
+msgstr "Añadir etiqueta"
+
+msgid "Keyword"
+msgstr "Palabra clave"
+
+msgid ""
+"How the tag is stored on the server: letters, digits and most punctuation, "
+"no spaces. Thunderbird's built-in tags are $label1 to $label5."
+msgstr ""
+"Cómo se almacena la etiqueta en el servidor: letras, dígitos y la mayoría de "
+"signos de puntuación, sin espacios. Las etiquetas integradas de Thunderbird "
+"son $label1 a $label5."
+
+msgid "Colour"
+msgstr "Color"
+
+msgid "Custom colour…"
+msgstr "Color personalizado…"
+
+msgid "Tag Colour"
+msgstr "Color de la etiqueta"
+
+msgid "Edit Filter"
+msgstr "Editar filtro"
+
+msgid "Add Filter"
+msgstr "Añadir filtro"
+
+msgid "Name (optional)"
+msgstr "Nombre (opcional)"
+
+msgid "Remove condition"
+msgstr "Eliminar condición"
+
+msgid "Where"
+msgstr "Dónde"
+
+msgid "Match"
+msgstr "Coincidencia"
+
+msgid "Commas separate alternatives; any one of them counts"
+msgstr "Las comas separan alternativas; cualquiera de ellas cuenta"
+
+msgid "Text to match"
+msgstr "Texto que debe coincidir"
+
+msgid "Searched on the server; nothing is downloaded"
+msgstr "Se busca en el servidor; no se descarga nada"
+
+msgid "From address when no Reply-To is set"
+msgstr "Dirección del remitente cuando no se define Reply-To"
+
+msgid "Add Condition"
+msgstr "Añadir condición"
+
+msgid "Condition matching"
+msgstr "Coincidencia de condiciones"
+
+msgid "All must match"
+msgstr "Deben coincidir todas"
+
+msgid "Any one may match"
+msgstr "Puede coincidir cualquiera"
+
+msgid "Condition {n}"
+msgstr "Condición {n}"
+
+msgid "Or where"
+msgstr "O donde"
+
+msgid "And where"
+msgstr "Y donde"
+
+msgid "Then"
+msgstr "Entonces"
+
+msgid "Move to"
+msgstr "Mover a"
+
+msgid "Leave in Inbox to only tag matching mail"
+msgstr ""
+"Dejar en la Bandeja de entrada para solo etiquetar el correo coincidente"
+
+#. Entry 0 files nowhere (a tag-only rule, #71): its path is "".
+msgid "Leave in Inbox"
+msgstr "Dejar en la Bandeja de entrada"
+
+msgid "Tag with"
+msgstr "Etiquetar con"
+
+msgid "None"
+msgstr "Ninguna"
+
+msgid "Count unread mail"
+msgstr "Contar correo sin leer"
+
+msgid "Include the folder's unread mail in the tray icon's unread count"
+msgstr ""
+"Incluir el correo sin leer de la carpeta en el contador del icono de la "
+"bandeja"
+
+msgid "Show the attachments"
+msgstr "Mostrar los archivos adjuntos"
+
+msgid "Hide the attachments"
+msgstr "Ocultar los archivos adjuntos"
+
+msgid "Thumbnail size"
+msgstr "Tamaño de miniatura"
+
+msgid "Sorted Z to A — switch to A to Z"
+msgstr "Ordenado de Z a A — cambiar a A a Z"
+
+msgid "Sorted A to Z — switch to Z to A"
+msgstr "Ordenado de A a Z — cambiar a Z a A"
+
+msgid "Show as thumbnails"
+msgstr "Mostrar como miniaturas"
+
+msgid "Show as a list"
+msgstr "Mostrar como lista"
+
+msgid "Save All…"
+msgstr "Guardar todo…"
+
+msgid "Save every attachment to a folder"
+msgstr "Guardar todos los archivos adjuntos en una carpeta"
+
+msgid "Key imported"
+msgstr "Clave importada"
+
+msgid ""
+"The key is in your keyring now. Trust it under Settings, OpenPGP, once you "
+"have checked its fingerprint with its owner."
+msgstr ""
+"La clave ya está en tu llavero. Márcala como fiable en Ajustes → OpenPGP "
+"cuando hayas comprobado su huella con su propietario."
+
+msgid "Already in your keyring"
+msgstr "Ya está en tu llavero"
+
+msgid "That key was imported before."
+msgstr "Esa clave ya se había importado."
+
+msgid "Could not import the key"
+msgstr "No se pudo importar la clave"
+
+msgid "Show in Message"
+msgstr "Mostrar en el mensaje"
+
+msgid "Import OpenPGP key"
+msgstr "Importar clave OpenPGP"
+
+msgid "Search by sender, subject, type, filename…"
+msgstr "Buscar por remitente, asunto, tipo, nombre de archivo…"
+
+msgid "Loading attachments…"
+msgstr "Cargando archivos adjuntos…"
+
+msgid "No attachments"
+msgstr "No hay archivos adjuntos"
+
+msgid "Attachments from your inboxes will appear here."
+msgstr "Los archivos adjuntos de tus bandejas de entrada aparecerán aquí."
+
+msgid "No matching attachments"
+msgstr "No hay archivos adjuntos coincidentes"
+
+msgid ""
+"Try a different search, or check which accounts and folders the footer is "
+"pulling from."
+msgstr ""
+"Prueba otra búsqueda o comprueba de qué cuentas y carpetas se están "
+"obteniendo los archivos."
+
+msgid "Thumbnail grid"
+msgstr "Cuadrícula de miniaturas"
+
+msgid "Table"
+msgstr "Tabla"
+
+msgid "Show only this account"
+msgstr "Mostrar solo esta cuenta"
+
+msgid "Folders to pull from"
+msgstr "Carpetas de origen"
+
+msgid "Include Archive"
+msgstr "Incluir Archivo"
+
+msgid "Include other folders"
+msgstr "Incluir otras carpetas"
+
+msgid "Everything that is not an inbox or an archive"
+msgstr "Todo lo que no sea una bandeja de entrada ni un archivo"
+
+msgid "Pulling attachments from"
+msgstr "Obteniendo archivos adjuntos de"
+
+msgid "Show only this type"
+msgstr "Mostrar solo este tipo"
+
+msgid "All types"
+msgstr "Todos los tipos"
+
+msgid "PDFs"
+msgstr "PDF"
+
+msgid "Documents"
+msgstr "Documentos"
+
+msgid "Archives"
+msgstr "Archivos comprimidos"
+
+msgid "Audio & Video"
+msgstr "Audio y vídeo"
+
+msgid "Other"
+msgstr "Otros"
+
+msgid "Newest first"
+msgstr "Más recientes primero"
+
+msgid "Oldest first"
+msgstr "Más antiguos primero"
+
+msgid "Name (A–Z)"
+msgstr "Nombre (A–Z)"
+
+msgid "Name (Z–A)"
+msgstr "Nombre (Z–A)"
+
+msgid "Sender (Z–A)"
+msgstr "Remitente (Z–A)"
+
+msgid "Largest first"
+msgstr "Más grandes primero"
+
+msgid "Smallest first"
+msgstr "Más pequeños primero"
+
+msgid "Type (A–Z)"
+msgstr "Tipo (A–Z)"
+
+msgid "Type (Z–A)"
+msgstr "Tipo (Z–A)"
+
+msgid "Open in the default app"
+msgstr "Abrir en la aplicación predeterminada"
+
+msgid "Go to Message"
+msgstr "Ir al mensaje"
+
+msgid "All accounts"
+msgstr "Todas las cuentas"
+
+#. Deliberately counts messages, not attachments: until a message has
+#. been described there is no telling how many files it holds.
+msgid "Indexing {n} messages…"
+msgstr "Indexando {n} mensajes…"
+
+msgid "Loading more…"
+msgstr "Cargando más…"
+
+msgid "{n} attachment"
+msgid_plural "{n} attachments"
+msgstr[0] "{n} archivo adjunto"
+msgstr[1] "{n} archivos adjuntos"
+
+msgid "{shown} of {total}"
+msgstr "{shown} de {total}"
+
+msgid "The file could not be opened"
+msgstr "No se pudo abrir el archivo"
+
+msgid "Welcome to Hylki, formerly {old}"
+msgstr "Te damos la bienvenida a Hylki, antes {old}"
+
+msgid ""
+"Your accounts, settings and cached mail were carried over from {old}. There "
+"is nothing to set up again, and nothing in {old} was changed or removed. "
+"Once everything is here, you can remove {old}."
+msgstr ""
+"Tus cuentas, ajustes y correo en caché se han trasladado desde {old}. No "
+"tienes que configurar nada de nuevo y no se ha modificado ni eliminado nada "
+"en {old}. Cuando compruebes que todo está aquí, puedes eliminar {old}."
+
+msgid ""
+"{old} is still the app your desktop opens email links with. To hand that to "
+"Hylki, choose it under Default Apps in Settings."
+msgstr ""
+"{old} sigue siendo la aplicación que abre los enlaces de correo en tu "
+"escritorio. Para usar Hylki en su lugar, selecciónalo en Aplicaciones "
+"predeterminadas dentro de Ajustes."
+
+msgid "To remove {old}, run:"
+msgstr "Para eliminar {old}, ejecuta:"
+
+msgid "Copy"
+msgstr "Copiar"
+
+msgid "Cloud Storage"
+msgstr "Almacenamiento en la nube"
+
+msgid "Cloud storage"
+msgstr "Almacenamiento en la nube"
+
+msgid ""
+"Connect your cloud storage provider to upload and share large files instead "
+"of an attachment. A cloud icon appears in the compose toolbar once a "
+"provider is added.\n"
+"\n"
+"Supported providers: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox and "
+"Seafile."
+msgstr ""
+"Conecta tu proveedor de almacenamiento en la nube para subir y compartir "
+"archivos grandes en lugar de adjuntarlos. Al añadir un proveedor aparecerá "
+"un icono de nube en la barra de redacción. Proveedores compatibles: "
+"Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox y Seafile."
+
+msgid "No cloud accounts yet."
+msgstr "Todavía no hay cuentas en la nube."
+
+msgid "Cloud Account"
+msgstr "Cuenta en la nube"
+
+msgid "Remove {name}?"
+msgstr "¿Eliminar {name}?"
+
+msgid ""
+"Hylki forgets the account and its sign-in. Files already uploaded, and the "
+"links in messages you sent, stay where they are."
+msgstr ""
+"Hylki olvidará la cuenta y su inicio de sesión. Los archivos ya subidos y "
+"los enlaces incluidos en mensajes enviados permanecerán donde están."
+
+msgid "Removed {name}"
+msgstr "{name} eliminada"
+
+msgid "Could not store the sign-in in the keyring: {e}"
+msgstr "No se pudo guardar el inicio de sesión en el llavero: {e}"
+
+msgid "Edit Cloud Account"
+msgstr "Editar cuenta en la nube"
+
+msgid "Add Cloud Account"
+msgstr "Añadir cuenta en la nube"
+
+msgid "links expire after {n} days"
+msgstr "los enlaces caducan después de {n} días"
+
+msgid "password-protected"
+msgstr "protegido con contraseña"
+
+msgid "Offer this account in the composer"
+msgstr "Ofrecer esta cuenta en el redactor"
+
+msgid "Service"
+msgstr "Servicio"
+
+msgid "Nickname (optional)"
+msgstr "Alias (opcional)"
+
+msgid "Server URL"
+msgstr "URL del servidor"
+
+msgid "Two-step verification code, if the account uses it"
+msgstr "Código de verificación en dos pasos, si la cuenta lo utiliza"
+
+msgid ""
+"Sign in with your Seafile password. If the account uses two-step "
+"verification, also enter the current code from your authenticator app: Hylki "
+"turns it into an API token once and keeps that instead of the password. A "
+"token obtained another way can be pasted in the password field."
+msgstr ""
+"Inicia sesión con tu contraseña de Seafile. Si la cuenta utiliza "
+"verificación en dos pasos, introduce también el código actual de tu "
+"aplicación de autenticación: Hylki lo convertirá una sola vez en un token de "
+"API y guardará ese token en lugar de la contraseña. También puedes pegar en "
+"el campo de contraseña un token obtenido por otro medio."
+
+msgid "Online account"
+msgstr "Cuenta en línea"
+
+msgid "Dropbox app key"
+msgstr "Clave de aplicación de Dropbox"
+
+msgid "Library"
+msgstr "Biblioteca"
+
+msgid "Upload folder"
+msgstr "Carpeta de subida"
+
+msgid "Server is behind Cloudflare"
+msgstr "El servidor está detrás de Cloudflare"
+
+msgid ""
+"Cloudflare's proxy refuses a request over 100 MB, so bigger files are "
+"uploaded in 90 MB pieces the server puts back together. For a self-hosted "
+"server on a Cloudflare domain or tunnel."
+msgstr ""
+"El proxy de Cloudflare rechaza solicitudes de más de 100 MB, por lo que los "
+"archivos grandes se suben en fragmentos de 90 MB que el servidor vuelve a "
+"unir. Para servidores propios alojados tras un dominio o túnel de Cloudflare."
+
+msgid "Links expire after"
+msgstr "Los enlaces caducan después de"
+
+msgid "Days; 0 keeps the link indefinitely"
+msgstr "Días; 0 mantiene el enlace indefinidamente"
+
+msgid "Protect links with a password"
+msgstr "Proteger los enlaces con una contraseña"
+
+msgid ""
+"A download password is made for each file and shown to you, to pass on "
+"separately"
+msgstr ""
+"Se genera una contraseña de descarga para cada archivo y se te muestra para "
+"que la envíes por separado"
+
+msgid "Link defaults"
+msgstr "Valores predeterminados de los enlaces"
+
+msgid ""
+"How share links from this account are made unless you choose otherwise for "
+"an email: the upload dialog in the composer shows these values and lets you "
+"change them for that upload alone."
+msgstr ""
+"Cómo se crean de forma predeterminada los enlaces compartidos de esta "
+"cuenta. El diálogo de subida del redactor muestra estos valores y permite "
+"cambiarlos solo para esa subida."
+
+msgid "Check Connection"
+msgstr "Comprobar conexión"
+
+msgid "{email} (Files is off)"
+msgstr "{email} (Archivos está desactivado)"
+
+msgid ""
+"No Microsoft 365 account in GNOME Online Accounts yet. Add one under "
+"Settings, Online Accounts; OneDrive then signs in through it, and nothing "
+"more is needed here."
+msgstr ""
+"Todavía no hay ninguna cuenta de Microsoft 365 en Cuentas en línea de GNOME. "
+"Añade una en Ajustes → Cuentas en línea; OneDrive iniciará sesión mediante "
+"ella y no será necesario configurar nada más aquí."
+
+msgid ""
+"OneDrive signs in through the GNOME Online Accounts account chosen above; "
+"there is no password to enter. An account marked Files is off still works "
+"here, but you may want to turn Files on for it under Settings, Online "
+"Accounts."
+msgstr ""
+"OneDrive inicia sesión mediante la cuenta de Cuentas en línea de GNOME "
+"seleccionada arriba; no hay que introducir ninguna contraseña. Una cuenta "
+"con Archivos desactivado seguirá funcionando aquí, aunque puedes activarlo "
+"en Ajustes → Cuentas en línea."
+
+msgid ""
+"Uploads and plain share links work with any OneDrive. Link expiry and "
+"download passwords are a Microsoft 365 subscription or OneDrive for Business "
+"feature: on a free personal OneDrive the link is refused when either is set, "
+"so keep Links expire after at 0 and the password switch off there."
+msgstr ""
+"Las subidas y los enlaces compartidos normales funcionan con cualquier "
+"OneDrive. La caducidad de enlaces y las contraseñas de descarga requieren "
+"Microsoft 365 o OneDrive para la Empresa; en una cuenta personal gratuita se "
+"rechazará el enlace si se activa cualquiera de estas opciones, así que deja "
+"la caducidad en 0 y la contraseña desactivada."
+
+msgid ""
+"Days; 0 keeps the link indefinitely. Needs Microsoft 365 or OneDrive for "
+"Business"
+msgstr ""
+"Días; 0 mantiene el enlace indefinidamente. Requiere Microsoft 365 o "
+"OneDrive para la Empresa"
+
+msgid ""
+"A download password is made for each file and shown to you, to pass on "
+"separately. Needs Microsoft 365 or OneDrive for Business"
+msgstr ""
+"Se genera una contraseña de descarga para cada archivo y se te muestra para "
+"enviarla por separado. Requiere Microsoft 365 o OneDrive para la Empresa"
+
+msgid "User name"
+msgstr "Nombre de usuario"
+
+msgid "App password (leave empty to keep)"
+msgstr "Contraseña de aplicación (déjala vacía para conservarla)"
+
+msgid "App password"
+msgstr "Contraseña de aplicación"
+
+msgid "E-mail"
+msgstr "Correo electrónico"
+
+msgid "Password (leave empty to keep)"
+msgstr "Contraseña (déjala vacía para conservarla)"
+
+msgid ""
+"A download password is made for each file and shown to you, to pass on "
+"separately. Dropbox allows link passwords and expiry dates on paid plans "
+"only."
+msgstr ""
+"Se genera una contraseña de descarga para cada archivo y se te muestra para "
+"enviarla por separado. Dropbox solo permite contraseñas y fechas de "
+"caducidad en planes de pago."
+
+msgid "Connect with Dropbox…"
+msgstr "Conectar con Dropbox…"
+
+msgid ""
+"Dropbox only lets an app sign in when it is registered, so make one for "
+"yourself (it takes a minute and stays private):\n"
+"1. Open dropbox.com/developers/apps, signed in to your Dropbox, and press "
+"Create app.\n"
+"2. Choose Scoped access, then App folder (Hylki sees only its own folder "
+"under Apps) or Full Dropbox (uploads go to the folder named above).\n"
+"3. Give the app a name that no one else has used, such as Hylki for your "
+"name, and press Create app.\n"
+"4. On the Permissions tab, tick account_info.read, files.content.write and "
+"sharing.write, then press Submit.\n"
+"5. On the Settings tab, under OAuth 2, add the redirect URI {uri} and press "
+"Add.\n"
+"6. Copy the App key from the top of the Settings tab into the field above.\n"
+"The app may stay in Development status; that allows your own account. Leave "
+"the field empty to use the app key this build was made with, when it has one."
+msgstr ""
+"Dropbox solo permite que una aplicación inicie sesión si está registrada, "
+"así que crea una para ti (tarda aproximadamente un minuto y permanece "
+"privada): 1. Abre dropbox.com/developers/apps con tu sesión de Dropbox "
+"iniciada y pulsa Crear aplicación. 2. Elige acceso con ámbito y después "
+"Carpeta de aplicación (Hylki solo verá su propia carpeta dentro de Apps) o "
+"Dropbox completo (las subidas irán a la carpeta indicada arriba). 3. Asigna "
+"a la aplicación un nombre que nadie haya usado, por ejemplo Hylki seguido de "
+"tu nombre, y pulsa Crear aplicación. 4. En la pestaña Permisos, marca "
+"account_info.read, files.content.write y sharing.write, y pulsa Enviar. 5. "
+"En la pestaña Ajustes, dentro de OAuth 2, añade la URI de redirección {uri} "
+"y pulsa Añadir. 6. Copia la clave de la aplicación desde la parte superior "
+"de la pestaña Ajustes al campo de arriba. La aplicación puede permanecer en "
+"estado Desarrollo; eso permite utilizar tu propia cuenta. Deja el campo "
+"vacío para usar la clave integrada en esta compilación, si dispone de una."
+
+msgid "Connected as {who}."
+msgstr "Conectado como {who}."
+
+msgid "Choose an online account first."
+msgstr "Elige primero una cuenta en línea."
+
+msgid "Signing in…"
+msgstr "Iniciando sesión…"
+
+msgid "Enter the app key of a Dropbox app first."
+msgstr "Introduce primero la clave de una aplicación de Dropbox."
+
+msgid "Waiting for the sign-in in your browser…"
+msgstr "Esperando a que completes el inicio de sesión en el navegador…"
+
+msgid "Fill in the server URL, e-mail and password first."
+msgstr ""
+"Introduce primero la URL del servidor, el correo electrónico y la contraseña."
+
+msgid "Fill in the server URL, user name and app password first."
+msgstr ""
+"Introduce primero la URL del servidor, el nombre de usuario y la contraseña "
+"de aplicación."
+
+msgid "Signed in as {who}."
+msgstr "Sesión iniciada como {who}."
+
+msgid ""
+"You can upload files and share plain links with this OneDrive. Link expiry "
+"and download passwords are not available on a free personal OneDrive (they "
+"need a Microsoft 365 subscription), so both are turned off for this account."
+msgstr ""
+"Puedes subir archivos y compartir enlaces normales con este OneDrive. La "
+"caducidad de enlaces y las contraseñas de descarga no están disponibles en "
+"una cuenta personal gratuita de OneDrive (requieren una suscripción a "
+"Microsoft 365), por lo que ambas opciones están desactivadas para esta "
+"cuenta."
+
+msgid ""
+"You can upload files, share links and set an expiry with this OneDrive. "
+"Download passwords are not available on OneDrive for Business links, so that "
+"option is turned off for this account."
+msgstr ""
+"Puedes subir archivos, compartir enlaces y establecer una fecha de caducidad "
+"con este OneDrive. Las contraseñas de descarga no están disponibles para "
+"enlaces de OneDrive para la Empresa, por lo que esa opción está desactivada "
+"para esta cuenta."
+
+msgid ""
+"You can upload files and share links with this OneDrive, with a download "
+"password. Link expiry is not available on it, so that option is turned off "
+"for this account."
+msgstr ""
+"Puedes subir archivos y compartir enlaces con este OneDrive, incluyendo una "
+"contraseña de descarga. La caducidad de enlaces no está disponible, por lo "
+"que esa opción está desactivada para esta cuenta."
+
+msgid "Signed in as {who}. {terms}"
+msgstr "Sesión iniciada como {who}. {terms}"
+
+msgid "Rich text"
+msgstr "Texto enriquecido"
+
+msgid "Markdown"
+msgstr "Markdown"
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Plain text"
+msgstr "Texto sin formato"
+
+msgid "Format as you type, with the toolbar"
+msgstr "Aplicar formato mientras escribes mediante la barra de herramientas"
+
+msgid "Write Markdown; it is sent as formatted mail"
+msgstr "Escribe en Markdown; se enviará como correo con formato"
+
+msgid "Write the message's HTML by hand"
+msgstr "Escribe manualmente el HTML del mensaje"
+
+msgid "No formatting at all"
+msgstr "Sin ningún formato"
+
+msgid "Collapse into reader"
+msgstr "Contraer en el lector"
+
+msgid "Open in window"
+msgstr "Abrir en una ventana"
+
+msgid "Save Draft"
+msgstr "Guardar borrador"
+
+msgid "Save to Drafts"
+msgstr "Guardar en Borradores"
+
+msgid "Delete Draft"
+msgstr "Eliminar borrador"
+
+msgid "Move this draft to Trash"
+msgstr "Mover este borrador a la Papelera"
+
+msgid "Schedule"
+msgstr "Programar"
+
+msgid "Send"
+msgstr "Enviar"
+
+msgid "Send later"
+msgstr "Enviar más tarde"
+
+msgid "Send now"
+msgstr "Enviar ahora"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Mañana por la mañana ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Mañana por la tarde ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "El lunes por la mañana ({time})"
+
+msgid "Pick a date and time…"
+msgstr "Elegir fecha y hora…"
+
+msgid "Encrypt with OpenPGP to every recipient's key"
+msgstr "Cifrar con OpenPGP usando la clave de cada destinatario"
+
+msgid "Sign with your OpenPGP key"
+msgstr "Firmar con tu clave OpenPGP"
+
+msgid "Attach files"
+msgstr "Adjuntar archivos"
+
+msgid "Upload to cloud storage and share a link"
+msgstr "Subir al almacenamiento en la nube y compartir un enlace"
+
+msgid "Open Contacts"
+msgstr "Abrir Contactos"
+
+msgid "Show From, To and Subject"
+msgstr "Mostrar De, Para y Asunto"
+
+msgid "Send now instead"
+msgstr "Enviar ahora en su lugar"
+
+msgid "Download password for {name}: {password}"
+msgstr "Contraseña de descarga para {name}: {password}"
+
+msgid "From"
+msgstr "De"
+
+msgid "To"
+msgstr "Para"
+
+msgid "Cc"
+msgstr "Cc"
+
+msgid "Bcc"
+msgstr "Cco"
+
+msgid "Reply-To"
+msgstr "Responder a"
+
+msgid "Subject"
+msgstr "Asunto"
+
+msgid "Writing in {format}"
+msgstr "Escribiendo en {format}"
+
+#. The one label on the row goes when there is no width for it, the
+#. same trade the header makes when it folds.
+msgid "Preview"
+msgstr "Vista previa"
+
+msgid "Show the message as it will be sent"
+msgstr "Mostrar el mensaje tal como se enviará"
+
+msgid "More"
+msgstr "Más"
+
+msgid "Show Cc, Bcc and Reply-To"
+msgstr "Mostrar Cc, Cco y Responder a"
+
+msgid "Not signed in"
+msgstr "Sesión no iniciada"
+
+msgid ""
+"The sign-in for {name} is not in the keyring. Open Settings, Cloud Storage, "
+"and enter it again."
+msgstr ""
+"El inicio de sesión de {name} no está en el llavero. Abre Ajustes → "
+"Almacenamiento en la nube e introdúcelo de nuevo."
+
+msgid "link expires {date}"
+msgstr "el enlace caduca el {date}"
+
+msgid "Could not upload {name}"
+msgstr "No se pudo subir {name}"
+
+msgid "Attach Files"
+msgstr "Adjuntar archivos"
+
+msgid "Attach {name}"
+msgstr "Adjuntar {name}"
+
+msgid "Remove {name}"
+msgstr "Eliminar {name}"
+
+msgid "Typing"
+msgstr "Escribiendo"
+
+msgid "Cannot send with OpenPGP"
+msgstr "No se puede enviar con OpenPGP"
+
+msgid "{name} (link)"
+msgstr "{name} (enlace)"
+
+msgid "Uploading…"
+msgstr "Subiendo…"
+
+msgid "Upload {n} file and put its share link in the message."
+msgid_plural "Upload {n} files and put their share links in the message."
+msgstr[0] "Subir {n} archivo e incluir su enlace compartido en el mensaje."
+msgstr[1] "Subir {n} archivos e incluir sus enlaces compartidos en el mensaje."
+
+msgid "Upload"
+msgstr "Subir"
+
+msgid "Protect with a password"
+msgstr "Proteger con una contraseña"
+
+msgid "Download password (empty: generated)"
+msgstr "Contraseña de descarga (vacío: se genera automáticamente)"
+
+msgid ""
+"There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
+"OpenPGP, or choose a key in the account's settings."
+msgstr ""
+"No tienes ninguna clave OpenPGP propia para {addr}. Genera una en Ajustes → "
+"OpenPGP o selecciona una clave en los ajustes de la cuenta."
+
+msgid ""
+"There is no OpenPGP key for {addr}. Ask them for their public key, or fetch "
+"it under Settings, OpenPGP."
+msgstr ""
+"No hay ninguna clave OpenPGP para {addr}. Pide su clave pública o búscala "
+"desde Ajustes → OpenPGP."
+
+msgid "That time has passed"
+msgstr "Esa hora ya ha pasado"
+
+msgid "Choose a time later than now."
+msgstr "Elige una hora posterior a la actual."
+
+msgid "Contacts"
+msgstr "Contactos"
+
+msgid "Open in GNOME Contacts"
+msgstr "Abrir en Contactos de GNOME"
+
+msgid "Search contacts"
+msgstr "Buscar contactos"
+
+msgid "No Contacts"
+msgstr "No hay contactos"
+
+msgid "Add contacts in GNOME Contacts to see them here."
+msgstr "Añade contactos en Contactos de GNOME para verlos aquí."
+
+msgid "Open GNOME Contacts"
+msgstr "Abrir Contactos de GNOME"
+
+msgid "New contact"
+msgstr "Contacto nuevo"
+
+msgid "Loading Contacts…"
+msgstr "Cargando contactos…"
+
+msgid "Contacts you add in GNOME Contacts appear here."
+msgstr "Los contactos que añadas en Contactos de GNOME aparecerán aquí."
+
+msgid "Sort contacts"
+msgstr "Ordenar contactos"
+
+msgid "Edit contact"
+msgstr "Editar contacto"
+
+msgid "First name"
+msgstr "Nombre"
+
+msgid "Last name"
+msgstr "Apellidos"
+
+msgid "Delete Contact?"
+msgstr "¿Eliminar contacto?"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Delete…"
+msgstr "Eliminar…"
+
+msgid "View photo"
+msgstr "Ver foto"
+
+msgid "Edit Contact"
+msgstr "Editar contacto"
+
+msgid "New Contact"
+msgstr "Contacto nuevo"
+
+msgid "Add email"
+msgstr "Añadir correo electrónico"
+
+msgid "Phone"
+msgstr "Teléfono"
+
+msgid "Add phone"
+msgstr "Añadir teléfono"
+
+msgid "Add website"
+msgstr "Añadir sitio web"
+
+msgid "Whole conversation"
+msgstr "Conversación completa"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} mensaje"
+msgstr[1] "{n} mensajes"
+
+msgid "Search folders"
+msgstr "Buscar carpetas"
+
+msgid "the portal answered response code {code}"
+msgstr "el portal respondió con el código {code}"
+
+msgid "The link could not be opened"
+msgstr "No se pudo abrir el enlace"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Right-click the link, copy it, and open it in your browser\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix opening links "
+"directly"
+msgstr ""
+"El portal del escritorio informó de: {error} • Haz clic derecho en el "
+"enlace, cópialo y ábrelo en el navegador • Actualizar «xdg-desktop-portal» y "
+"volver a iniciar sesión puede solucionar la apertura directa de enlaces"
+
+msgid "Mark as read"
+msgstr "Marcar como leído"
+
+msgid "Move to…"
+msgstr "Mover a…"
+
+msgid "Not spam"
+msgstr "No es correo no deseado"
+
+msgid "Add sender to Contacts"
+msgstr "Añadir remitente a Contactos"
+
+msgid "Mark as unread"
+msgstr "Marcar como no leído"
+
+msgid "Remove star"
+msgstr "Quitar destacado"
+
+msgid "Show conversation"
+msgstr "Mostrar conversación"
+
+msgid "Choose which folders to search"
+msgstr "Elegir las carpetas en las que buscar"
+
+msgid "All folders"
+msgstr "Todas las carpetas"
+
+msgid "This folder"
+msgstr "Esta carpeta"
+
+msgid "Clear selection"
+msgstr "Borrar selección"
+
+msgid "No Messages"
+msgstr "No hay mensajes"
+
+msgid "There's nothing here right now."
+msgstr "Ahora mismo no hay nada aquí."
+
+msgid "Remove Stars"
+msgstr "Quitar destacados"
+
+msgid "Star Conversation"
+msgstr "Destacar conversación"
+
+msgid "Mark All as Read"
+msgstr "Marcar todo como leído"
+
+msgid "Mark All as Unread"
+msgstr "Marcar todo como no leído"
+
+msgid "Unsubscribing…"
+msgstr "Cancelando suscripción…"
+
+msgid "Unsubscribing didn't work: {why}"
+msgstr "No se pudo cancelar la suscripción: {why}"
+
+msgid "Try Again"
+msgstr "Intentar de nuevo"
+
+msgid "You unsubscribed from this list on {date}."
+msgstr "Cancelaste la suscripción a esta lista el {date}."
+
+#. A message that said so in its headers is from a list;
+#. one whose footer link gave it away only has a link.
+msgid "This message is from a mailing list."
+msgstr "Este mensaje procede de una lista de correo."
+
+msgid "This message has an unsubscribe link."
+msgstr "Este mensaje contiene un enlace para cancelar la suscripción."
+
+msgid "Asks the list to stop sending you mail"
+msgstr "Solicita a la lista que deje de enviarte correo"
+
+msgid "Sends an unsubscribe request by email"
+msgstr "Envía por correo una solicitud para cancelar la suscripción"
+
+#. Nothing but a web page on offer: the button says so.
+msgid "Unsubscribe…"
+msgstr "Cancelar suscripción…"
+
+#. Nothing but a web page on offer: the button says so.
+msgid "Opens the list's unsubscribe page in your browser"
+msgstr ""
+"Abre en el navegador la página para cancelar la suscripción de la lista"
+
+msgid "Meeting"
+msgstr "Reunión"
+
+msgid "Cancelled"
+msgstr "Cancelada"
+
+msgid "Updated invitation"
+msgstr "Invitación actualizada"
+
+msgid "Invitation"
+msgstr "Invitación"
+
+msgid "Organised by {name}"
+msgstr "Organizada por {name}"
+
+msgid "{n} guest"
+msgid_plural "{n} guests"
+msgstr[0] "{n} invitado"
+msgstr[1] "{n} invitados"
+
+msgid "This meeting has been called off."
+msgstr "Esta reunión ha sido cancelada."
+
+msgid "You accepted this invitation."
+msgstr "Has aceptado esta invitación."
+
+msgid "You accepted this invitation on {date}."
+msgstr "Aceptaste esta invitación el {date}."
+
+msgid "You answered maybe to this invitation."
+msgstr "Has respondido «quizás» a esta invitación."
+
+msgid "You answered maybe to this invitation on {date}."
+msgstr "Respondiste «quizás» a esta invitación el {date}."
+
+msgid "You declined this invitation."
+msgstr "Has rechazado esta invitación."
+
+msgid "You declined this invitation on {date}."
+msgstr "Rechazaste esta invitación el {date}."
+
+msgid "Accept"
+msgstr "Aceptar"
+
+msgid "Tells the organiser you will be there"
+msgstr "Indica al organizador que asistirás"
+
+msgid "Maybe"
+msgstr "Quizás"
+
+msgid "Tells the organiser you might be there"
+msgstr "Indica al organizador que quizá asistas"
+
+msgid "Decline"
+msgstr "Rechazar"
+
+msgid "Tells the organiser you will not be there"
+msgstr "Indica al organizador que no asistirás"
+
+msgid "Opens the meeting in your calendar application"
+msgstr "Abre la reunión en tu aplicación de calendario"
+
+msgid "Add to Calendar"
+msgstr "Añadir al calendario"
+
+msgid "Fetch the sender's key"
+msgstr "Obtener la clave del remitente"
+
+msgid "Trust this key…"
+msgstr "Confiar en esta clave…"
+
+msgid "A pass proves the address wasn't forged — not that the message is safe."
+msgstr ""
+"Una verificación demuestra que la dirección no fue falsificada, no que el "
+"mensaje sea seguro."
+
+msgid "Repeats daily"
+msgstr "Se repite diariamente"
+
+msgid "Repeats every {n} days"
+msgstr "Se repite cada {n} días"
+
+msgid "Repeats weekly"
+msgstr "Se repite semanalmente"
+
+msgid "Repeats every {n} weeks"
+msgstr "Se repite cada {n} semanas"
+
+msgid "Repeats monthly"
+msgstr "Se repite mensualmente"
+
+msgid "Repeats every {n} months"
+msgstr "Se repite cada {n} meses"
+
+msgid "Repeats yearly"
+msgstr "Se repite anualmente"
+
+msgid "Repeats every {n} years"
+msgstr "Se repite cada {n} años"
+
+msgid "Repeats"
+msgstr "Se repite"
+
+msgid "Somebody answered this invitation."
+msgstr "Alguien ha respondido a esta invitación."
+
+msgid "{name} accepted this invitation."
+msgstr "{name} ha aceptado esta invitación."
+
+msgid "{name} answered maybe to this invitation."
+msgstr "{name} ha respondido «quizás» a esta invitación."
+
+msgid "{name} declined this invitation."
+msgstr "{name} ha rechazado esta invitación."
+
+msgid "Save…"
+msgstr "Guardar…"
+
+msgid "No draft selected"
+msgstr "No hay ningún borrador seleccionado"
+
+msgid "No message selected"
+msgstr "No hay ningún mensaje seleccionado"
+
+msgid "Choose a draft from the list to edit it here."
+msgstr "Elige un borrador de la lista para editarlo aquí."
+
+msgid "Choose a message from the list to read it here."
+msgstr "Elige un mensaje de la lista para leerlo aquí."
+
+msgid "Remote content (images, trackers) is blocked to protect your privacy."
+msgstr ""
+"El contenido remoto (imágenes y rastreadores) está bloqueado para proteger "
+"tu privacidad."
+
+msgid "Load"
+msgstr "Cargar"
+
+msgid "Always allow sender"
+msgstr "Permitir siempre al remitente"
+
+msgid "Find in message"
+msgstr "Buscar en el mensaje"
+
+msgid "No matches"
+msgstr "Sin coincidencias"
+
+msgid "{cur} of {total}"
+msgstr "{cur} de {total}"
+
+msgid "Previous match"
+msgstr "Coincidencia anterior"
+
+msgid "Next match"
+msgstr "Coincidencia siguiente"
+
+msgid "Close find"
+msgstr "Cerrar búsqueda"
+
+msgid ""
+"Message zoom. Ctrl+ and Ctrl- change it; a click here, or Ctrl+0, puts it "
+"back to the default from Settings."
+msgstr ""
+"Zoom del mensaje. Ctrl+ y Ctrl- lo modifican; un clic aquí, o Ctrl+0, lo "
+"restablece al valor predeterminado de Ajustes."
+
+msgid ""
+"Reader View shows a message as its text alone, in one plain format, without "
+"the sender's layout, colours and fonts."
+msgstr ""
+"La Vista de lectura muestra únicamente el texto del mensaje con un formato "
+"uniforme, sin el diseño, colores ni fuentes del remitente."
+
+msgid "Reader View"
+msgstr "Vista de lectura"
+
+#. Dimming comes from the cover's own foreground, which
+#. is picked for the message theme — `dim-label` would
+#. fade it against the app's instead.
+msgid "Loading…"
+msgstr "Cargando…"
+
+msgid "That key is no longer in your keyring."
+msgstr "Esa clave ya no está en tu llavero."
+
+msgid "Trust this key?"
+msgstr "¿Confiar en esta clave?"
+
+msgid ""
+"Compare the fingerprint with the one {uid} gives you in person or over "
+"another channel. Trusting a key you have not checked lets an impostor's "
+"signature pass as theirs."
+msgstr ""
+"Compara la huella con la que {uid} te proporcione en persona o mediante otro "
+"canal. Confiar en una clave que no hayas comprobado podría hacer pasar la "
+"firma de un impostor como si fuera suya."
+
+msgid "Trust"
+msgstr "Confiar"
+
+msgid "Key trusted."
+msgstr "Clave marcada como fiable."
+
+msgid ""
+"Generate a key of your own first (Settings, OpenPGP): trusting a key means "
+"signing it with yours."
+msgstr ""
+"Genera primero una clave propia (Ajustes → OpenPGP): confiar en una clave "
+"significa firmarla con la tuya."
+
+msgid "Copied"
+msgstr "Copiado"
+
+msgid "Double-click to open in a new window"
+msgstr "Haz doble clic para abrir en una ventana nueva"
+
+#. Same order as the reader toolbar and the list's
+#. actions palette, View Source closing the line.
+msgid "Reply to this message"
+msgstr "Responder a este mensaje"
+
+msgid "Reply to everyone on this message"
+msgstr "Responder a todos en este mensaje"
+
+msgid "Forward this message"
+msgstr "Reenviar este mensaje"
+
+msgid "Mark as read or unread"
+msgstr "Marcar como leído o no leído"
+
+msgid "Flag this message"
+msgstr "Marcar este mensaje"
+
+msgid "Move this message to a folder"
+msgstr "Mover este mensaje a una carpeta"
+
+msgid "Archive this message"
+msgstr "Archivar este mensaje"
+
+msgid "Delete this message"
+msgstr "Eliminar este mensaje"
+
+msgid "View source"
+msgstr "Ver código fuente"
+
+msgid "Back to my fonts and colours"
+msgstr "Volver a mis fuentes y colores"
+
+msgid "Show the sender's fonts and colours"
+msgstr "Mostrar las fuentes y colores del remitente"
+
+msgid "Show remote content"
+msgstr "Mostrar contenido remoto"
+
+msgid "Block remote content"
+msgstr "Bloquear contenido remoto"
+
+msgid "{n} recipient"
+msgid_plural "{n} recipients"
+msgstr[0] "{n} destinatario"
+msgstr[1] "{n} destinatarios"
+
+msgid "Hide recipients"
+msgstr "Ocultar destinatarios"
+
+msgid "Show recipients"
+msgstr "Mostrar destinatarios"
+
+msgid "Save Image"
+msgstr "Guardar imagen"
+
+msgid "The sender's key was imported from the message."
+msgstr "La clave del remitente se ha importado desde el mensaje."
+
+msgid "The sender's key was fetched and imported."
+msgstr "La clave del remitente se ha obtenido e importado."
+
+msgid "The sender's key was already in your keyring."
+msgstr "La clave del remitente ya estaba en tu llavero."
+
+msgid "Load attachments from server"
+msgstr "Cargar archivos adjuntos desde el servidor"
+
+msgid "Clear all"
+msgstr "Borrar todo"
+
+msgid "Collapse status bar"
+msgstr "Contraer barra de estado"
+
+msgid "Export log"
+msgstr "Exportar registro"
+
+msgid "Status bar ({n})"
+msgstr "Barra de estado ({n})"
+
+msgid "2 years"
+msgstr "2 años"
+
+msgid "1 year"
+msgstr "1 año"
+
+msgid "5 years"
+msgstr "5 años"
+
+msgid "GnuPG"
+msgstr "GnuPG"
+
+msgid ""
+"Hylki reads and writes the keyring of the GnuPG on this computer, the same "
+"one the gpg command and other mail programs use."
+msgstr ""
+"Hylki lee y modifica el llavero de GnuPG de este equipo, el mismo que "
+"utilizan el comando gpg y otros programas de correo."
+
+msgid "Your keys"
+msgstr "Tus claves"
+
+msgid ""
+"A key of your own signs what you send and opens what is encrypted to you. "
+"Send its public half to the people who should write to you encrypted."
+msgstr ""
+"Una clave propia firma lo que envías y descifra lo que se haya cifrado para "
+"ti. Envía su parte pública a las personas que deban escribirte de forma "
+"cifrada."
+
+msgid "Import…"
+msgstr "Importar…"
+
+msgid "Generate…"
+msgstr "Generar…"
+
+msgid "Other people's keys"
+msgstr "Claves de otras personas"
+
+msgid ""
+"The keys you encrypt to and check signatures with. A key is trusted once you "
+"have vouched for it; check its fingerprint with its owner first."
+msgstr ""
+"Las claves que utilizas para cifrar y comprobar firmas. Una clave pasa a ser "
+"fiable cuando respondes por ella; comprueba primero su huella con su "
+"propietario."
+
+msgid "Fetch by address…"
+msgstr "Obtener por dirección…"
+
+msgid ""
+"GnuPG {version} found. Hylki reads and writes its keyring, the same one the "
+"gpg command and other mail programs use."
+msgstr ""
+"Se ha encontrado GnuPG {version}. Hylki lee y modifica su llavero, el mismo "
+"que utilizan el comando gpg y otros programas de correo."
+
+msgid ""
+"GnuPG was not found. Install the gnupg package to read encrypted mail and "
+"check signatures; the Flatpak build carries it."
+msgstr ""
+"No se encontró GnuPG. Instala el paquete gnupg para leer correo cifrado y "
+"comprobar firmas; la versión Flatpak ya lo incluye."
+
+msgid "No key of your own yet. Generate one for your address."
+msgstr "Todavía no tienes ninguna clave propia. Genera una para tu dirección."
+
+msgid "No keys from other people yet."
+msgstr "Todavía no hay claves de otras personas."
+
+msgid "Generating the key…"
+msgstr "Generando la clave…"
+
+msgid "Import Key"
+msgstr "Importar clave"
+
+msgid "OpenPGP keys"
+msgstr "Claves OpenPGP"
+
+msgid "All files"
+msgstr "Todos los archivos"
+
+msgid "Could not import: {e}"
+msgstr "No se pudo importar: {e}"
+
+msgid "Export Public Key"
+msgstr "Exportar clave pública"
+
+msgid "Delete your key?"
+msgstr "¿Eliminar tu clave?"
+
+msgid ""
+"{uid} will be removed, secret half included. Mail encrypted to it can never "
+"be read again, unless you have a backup of the key."
+msgstr ""
+"Se eliminará {uid}, incluida la parte privada. El correo cifrado para esta "
+"clave no podrá volver a leerse, salvo que dispongas de una copia de "
+"seguridad."
+
+msgid "Remove this key?"
+msgstr "¿Eliminar esta clave?"
+
+msgid ""
+"{uid} will be removed from your keyring. It can be imported or fetched again "
+"later."
+msgstr ""
+"{uid} se eliminará de tu llavero. Podrás volver a importarla u obtenerla "
+"posteriormente."
+
+msgid "Could not delete: {e}"
+msgstr "No se pudo eliminar: {e}"
+
+msgid "Fetch a Key"
+msgstr "Obtener una clave"
+
+msgid ""
+"Looks the address up where its provider publishes keys (WKD), then on the "
+"keyservers."
+msgstr ""
+"Busca la dirección donde su proveedor publica claves (WKD) y después en los "
+"servidores de claves."
+
+msgid "Fetch"
+msgstr "Obtener"
+
+msgid "Looking for a key for {addr}…"
+msgstr "Buscando una clave para {addr}…"
+
+msgid ""
+"Generate a key of your own first: trusting a key means signing it with yours."
+msgstr ""
+"Genera primero una clave propia: confiar en una clave significa firmarla con "
+"la tuya."
+
+msgid "Could not sign the key: {e}"
+msgstr "No se pudo firmar la clave: {e}"
+
+msgid "Your key is ready."
+msgstr "Tu clave está lista."
+
+msgid "Could not generate the key: {e}"
+msgstr "No se pudo generar la clave: {e}"
+
+msgid "No key found: {e}"
+msgstr "No se encontró ninguna clave: {e}"
+
+msgid "Generate a Key"
+msgstr "Generar una clave"
+
+msgid ""
+"A signing key with an encryption subkey, made by GnuPG and kept in its "
+"keyring. The passphrase is asked for when the key is used; the agent "
+"remembers it for a while."
+msgstr ""
+"Una clave de firma con una subclave de cifrado, creada por GnuPG y "
+"almacenada en su llavero. Se solicitará la frase de contraseña al utilizar "
+"la clave; el agente la recordará durante un tiempo."
+
+msgid "Generate"
+msgstr "Generar"
+
+msgid "Address"
+msgstr "Dirección"
+
+msgid "Expires"
+msgstr "Caduca"
+
+msgid "Passphrase"
+msgstr "Frase de contraseña"
+
+msgid "Confirm passphrase"
+msgstr "Confirmar frase de contraseña"
+
+msgid "The passphrases differ"
+msgstr "Las frases de contraseña no coinciden"
+
+msgid "Type the same passphrase twice."
+msgstr "Escribe la misma frase de contraseña dos veces."
+
+msgid "expires {date}"
+msgstr "caduca el {date}"
+
+msgid "expired {date}"
+msgstr "caducó el {date}"
+
+msgid "signs and encrypts"
+msgstr "firma y cifra"
+
+msgid "signs only: no encryption subkey"
+msgstr "solo firma: sin subclave de cifrado"
+
+msgid "{n} more address"
+msgid_plural "{n} more addresses"
+msgstr[0] "{n} dirección más"
+msgstr[1] "{n} direcciones más"
+
+msgid "Export public key…"
+msgstr "Exportar clave pública…"
+
+msgid "Delete this key"
+msgstr "Eliminar esta clave"
+
+msgid "Trusted"
+msgstr "Fiable"
+
+msgid "Trust…"
+msgstr "Confiar…"
+
+msgid "Remove this key"
+msgstr "Eliminar esta clave"
+
+msgid "{n} key imported."
+msgid_plural "{n} keys imported."
+msgstr[0] "Se ha importado {n} clave."
+msgstr[1] "Se han importado {n} claves."
+
+msgid "That key was already in your keyring."
+msgstr "Esa clave ya estaba en tu llavero."
+
+msgid "Hylki icon"
+msgstr "Icono de Hylki"
+
+msgid "Envelope, white"
+msgstr "Sobre, blanco"
+
+msgid "Envelope, black"
+msgstr "Sobre, negro"
+
+msgid "Follow system"
+msgstr "Seguir el sistema"
+
+msgid "Light"
+msgstr "Claro"
+
+msgid "Dark"
+msgstr "Oscuro"
+
+msgid "Aug 23, 2026"
+msgstr "23 ago 2026"
+
+msgid "23 Aug 2026"
+msgstr "23 ago 2026"
+
+msgid "2026 Aug 23"
+msgstr "2026 ago 23"
+
+msgid "System"
+msgstr "Sistema"
+
+msgid "12-hour (5:40 PM)"
+msgstr "12 horas (5:40 PM)"
+
+msgid "24-hour (17:40)"
+msgstr "24 horas (17:40)"
+
+msgid "Manually"
+msgstr "Manualmente"
+
+msgid "Every minute"
+msgstr "Cada minuto"
+
+msgid "Every 5 minutes"
+msgstr "Cada 5 minutos"
+
+msgid "Every 15 minutes"
+msgstr "Cada 15 minutos"
+
+msgid "Every 30 minutes"
+msgstr "Cada 30 minutos"
+
+msgid "Left group"
+msgstr "Grupo izquierdo"
+
+msgid "Always shown · up to 6"
+msgstr "Siempre visible · hasta 6"
+
+msgid "Right group"
+msgstr "Grupo derecho"
+
+msgid "Folds into ⋯ when narrow · up to 6"
+msgstr "Se agrupa en ⋯ cuando hay poco espacio · hasta 6"
+
+msgid "Not shown"
+msgstr "No visible"
+
+msgid "Drop a button here to hide it"
+msgstr "Suelta aquí un botón para ocultarlo"
+
+msgid "Drag to move"
+msgstr "Arrastra para mover"
+
+msgid "Senders"
+msgstr "Remitentes"
+
+msgid "General"
+msgstr "General"
+
+msgid "Sidebar"
+msgstr "Barra lateral"
+
+msgid "Message List"
+msgstr "Lista de mensajes"
+
+msgid "Conversations"
+msgstr "Conversaciones"
+
+msgid "Reading"
+msgstr "Lectura"
+
+msgid "Composing"
+msgstr "Redacción"
+
+msgid "Privacy"
+msgstr "Privacidad"
+
+msgid "Date and Time"
+msgstr "Fecha y hora"
+
+msgid "Backup"
+msgstr "Copia de seguridad"
+
+msgid ""
+"Which browser a link in a message opens in. Inside its Flatpak sandbox Hylki "
+"cannot see the applications installed on the system, so links leave through "
+"the desktop portal: choose \"Ask each time\" to pick the browser as each "
+"link is opened — the desktop's chooser can remember the choice."
+msgstr ""
+"Qué navegador abre los enlaces de los mensajes. Dentro de su sandbox de "
+"Flatpak, Hylki no puede ver las aplicaciones instaladas en el sistema, por "
+"lo que los enlaces se abren mediante el portal del escritorio: elige "
+"«Preguntar cada vez» para seleccionar el navegador al abrir cada enlace; el "
+"selector del escritorio puede recordar la elección."
+
+msgid ""
+"Which browser a link in a message opens in. \"System default\" follows the "
+"desktop's own choice; \"Ask each time\" lets the desktop ask before each one."
+msgstr ""
+"Qué navegador abre los enlaces de los mensajes. «Predeterminado del sistema» "
+"sigue la elección del escritorio; «Preguntar cada vez» permite que el "
+"escritorio pregunte antes de abrir cada enlace."
+
+msgid "Not installed"
+msgstr "No instalado"
+
+msgid "Installed and loaded by Files"
+msgstr "Instalado y cargado por Archivos"
+
+msgid ""
+"Installed, but the nautilus-python package is missing, so Files cannot load "
+"it"
+msgstr ""
+"Instalado, pero falta el paquete nautilus-python, por lo que Archivos no "
+"puede cargarlo"
+
+msgid ""
+"Installed. Files has not loaded it yet: restart Files, and make sure the "
+"nautilus-python package is installed"
+msgstr ""
+"Instalado. Archivos aún no lo ha cargado: reinicia Archivos y asegúrate de "
+"que el paquete nautilus-python esté instalado"
+
+msgid "Installed, but not this version's copy"
+msgstr "Instalado, pero no corresponde a esta versión"
+
+msgid "Save the filter?"
+msgstr "¿Guardar el filtro?"
+
+msgid ""
+"The filter editor is open. Save what you changed, or discard it, before "
+"moving on."
+msgstr ""
+"El editor de filtros está abierto. Guarda los cambios o descártalos antes de "
+"continuar."
+
+msgid "Save the tag?"
+msgstr "¿Guardar la etiqueta?"
+
+msgid ""
+"The tag editor is open. Save what you changed, or discard it, before moving "
+"on."
+msgstr ""
+"El editor de etiquetas está abierto. Guarda los cambios o descártalos antes "
+"de continuar."
+
+msgid "Save the account?"
+msgstr "¿Guardar la cuenta?"
+
+msgid ""
+"The account editor is open. Save what you changed, or discard it, before "
+"moving on."
+msgstr ""
+"El editor de cuentas está abierto. Guarda los cambios o descártalos antes de "
+"continuar."
+
+msgid "Discard"
+msgstr "Descartar"
+
+msgid "Check for new mail"
+msgstr "Comprobar correo nuevo"
+
+msgid "Uses IMAP IDLE to receive messages the moment they arrive."
+msgstr "Utiliza IMAP IDLE para recibir los mensajes en cuanto llegan."
+
+msgid "Notifications"
+msgstr "Notificaciones"
+
+msgid "Desktop notifications"
+msgstr "Notificaciones del escritorio"
+
+msgid ""
+"Show system notifications for new mail and error alerts when Hylki isn't "
+"focused."
+msgstr ""
+"Mostrar notificaciones del sistema para correo nuevo y alertas de error "
+"cuando Hylki no tenga el foco."
+
+msgid "Show sender and subject"
+msgstr "Mostrar remitente y asunto"
+
+msgid "Notification Buttons"
+msgstr "Botones de notificación"
+
+msgid "Up to three buttons on a notification about one message."
+msgstr "Hasta tres botones en una notificación de un mensaje."
+
+msgid "Moves the message to Trash."
+msgstr "Mueve el mensaje a la Papelera."
+
+msgid "Opens the message with a reply started."
+msgstr "Abre el mensaje con una respuesta iniciada."
+
+msgid "Opens the message with a forward started."
+msgstr "Abre el mensaje con un reenvío iniciado."
+
+msgid "Moves the message to Junk."
+msgstr "Mueve el mensaje a Correo no deseado."
+
+msgid "Style"
+msgstr "Estilo"
+
+msgid "The app itself. Message content has its own setting under Reading."
+msgstr ""
+"La propia aplicación. El contenido de los mensajes tiene su propio ajuste en "
+"Lectura."
+
+msgid "Theme"
+msgstr "Tema"
+
+msgid "App icon"
+msgstr "Icono de la aplicación"
+
+msgid "This window opens to"
+msgstr "Esta ventana se abre en"
+
+msgid "The view shown first when Settings is opened from the menu."
+msgstr "La vista que se muestra primero al abrir Ajustes desde el menú."
+
+msgid "Toolbar"
+msgstr "Barra de herramientas"
+
+msgid ""
+"The buttons above the reading pane. Drag them between the groups and into "
+"the order you want. The left group always stays on the toolbar; the right "
+"group folds into a ⋯ menu when the reading pane is narrow. Changes apply at "
+"once."
+msgstr ""
+"Los botones situados sobre el panel de lectura. Arrástralos entre los grupos "
+"y colócalos en el orden que quieras. El grupo izquierdo permanece siempre en "
+"la barra de herramientas; el derecho se agrupa en un menú ⋯ cuando el panel "
+"de lectura es estrecho. Los cambios se aplican inmediatamente."
+
+msgid "Restore Defaults"
+msgstr "Restaurar valores predeterminados"
+
+msgid ""
+"A quieter layout for reading. The parts ticked below slide away when Focus "
+"Mode is on and come back when it is off. Also in the main menu, and "
+"Ctrl+Shift+F."
+msgstr ""
+"Un diseño más limpio para leer. Las partes marcadas abajo se ocultan cuando "
+"el modo de concentración está activado y vuelven al desactivarlo. También "
+"está disponible en el menú principal y con Ctrl+Shift+F."
+
+msgid "Strip the parts below away for reading."
+msgstr "Ocultar las partes indicadas abajo durante la lectura."
+
+msgid "Start in Focus Mode"
+msgstr "Iniciar en modo de concentración"
+
+msgid ""
+"Every launch opens in the mode. Off, the app opens as normal, whichever way "
+"the last session was left."
+msgstr ""
+"Cada inicio abre la aplicación en este modo. Si está desactivado, la "
+"aplicación se abre normalmente según el estado en que quedó la sesión "
+"anterior."
+
+msgid "Fold the reading pane's toolbar"
+msgstr "Contraer la barra de herramientas del panel de lectura"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "Todos los botones pasan a su menú ⋯."
+
+msgid "Fold the message list's header"
+msgstr "Contraer la cabecera de la lista de mensajes"
+
+msgid ""
+"Search, the unread and starred filters, the count and the sort order go into "
+"a ⋯ menu. Only the sidebar toggle stays."
+msgstr ""
+"La búsqueda, los filtros de no leídos y destacados, el contador y el orden "
+"pasan a un menú ⋯. Solo permanece el botón de la barra lateral."
+
+msgid "Hide the accounts in the sidebar"
+msgstr "Ocultar las cuentas en la barra lateral"
+
+msgid "Only the unified section stays."
+msgstr "Solo permanece la sección unificada."
+
+msgid "Fold up the unified rows"
+msgstr "Contraer las filas unificadas"
+
+msgid ""
+"Inboxes, Starred and the rest show folded. A click still opens one for the "
+"while; the full layout comes back as you left it."
+msgstr ""
+"Bandejas de entrada, Destacados y el resto se muestran contraídos. Un clic "
+"sigue abriendo temporalmente una sección; el diseño completo vuelve como lo "
+"dejaste."
+
+msgid "Hide sender avatars"
+msgstr "Ocultar avatares de remitentes"
+
+msgid "The message list's circles go, and the room they took comes back."
+msgstr ""
+"Desaparecen los círculos de la lista de mensajes y se recupera el espacio "
+"que ocupaban."
+
+msgid "Hide the preview text"
+msgstr "Ocultar texto de vista previa"
+
+msgid ""
+"Rows show the sender, the subject and the date alone. The preview is only "
+"hidden: it is back the moment Focus Mode ends."
+msgstr ""
+"Las filas muestran solo el remitente, el asunto y la fecha. La vista previa "
+"únicamente se oculta y vuelve en cuanto termina el modo de concentración."
+
+msgid "One line of preview text"
+msgstr "Una línea de texto de vista previa"
+
+msgid "Rows show at most one line of a message's text."
+msgstr "Las filas muestran como máximo una línea del texto del mensaje."
+
+msgid "Hide the subject"
+msgstr "Ocultar el asunto"
+
+msgid ""
+"Rows show who wrote and when, and nothing else. Tag chips ride on the "
+"subject line, so they go with it."
+msgstr ""
+"Las filas muestran únicamente quién escribió y cuándo. Las etiquetas "
+"aparecen en la línea del asunto, por lo que también se ocultan."
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "Contraer la barra lateral a la barra de iconos"
+
+msgid ""
+"The sidebar shows as icons, with a dot for unread mail in place of the "
+"counts. Hovering it still slides the full sidebar out."
+msgstr ""
+"La barra lateral se muestra como iconos, con un punto para el correo sin "
+"leer en lugar de los contadores. Al pasar el cursor por encima, seguirá "
+"apareciendo la barra lateral completa."
+
+msgid ""
+"Every message opens in Reader View. The header's switch still changes the "
+"one on screen."
+msgstr ""
+"Todos los mensajes se abren en Vista de lectura. El interruptor de la "
+"cabecera sigue permitiendo cambiar el mensaje mostrado."
+
+msgid "Accounts in the sidebar"
+msgstr "Cuentas en la barra lateral"
+
+msgid ""
+"Each account's own section: its folders, filtered folders and tags. Off "
+"leaves the unified section alone. Also in the main menu, and Ctrl+Shift+A."
+msgstr ""
+"La sección propia de cada cuenta: sus carpetas, carpetas filtradas y "
+"etiquetas. Al desactivarlo solo permanece la sección unificada. También está "
+"disponible en el menú principal y con Ctrl+Shift+A."
+
+msgid "Chevron placement"
+msgstr "Posición de los indicadores"
+
+msgid ""
+"Which side of Inboxes and the account rows their expand/collapse chevrons "
+"sit on."
+msgstr ""
+"En qué lado de las Bandejas de entrada y de las filas de cuentas aparecen "
+"los indicadores para expandir o contraer."
+
+msgid "Attachments in the sidebar"
+msgstr "Archivos adjuntos en la barra lateral"
+
+msgid ""
+"A shortcut for browsing every account's attachments, pinned at the bottom of "
+"the sidebar."
+msgstr ""
+"Un acceso directo para explorar los archivos adjuntos de todas las cuentas, "
+"fijado en la parte inferior de la barra lateral."
+
+msgid "Contacts in the sidebar"
+msgstr "Contactos en la barra lateral"
+
+msgid ""
+"A shortcut that opens your contacts, pinned at the bottom of the sidebar."
+msgstr ""
+"Un acceso directo que abre tus contactos, fijado en la parte inferior de la "
+"barra lateral."
+
+msgid "Expand the sidebar on hover"
+msgstr "Expandir la barra lateral al pasar el cursor"
+
+msgid ""
+"Whenever the sidebar is collapsed to its icon rail, hovering it floats the "
+"full sidebar out over the panes; it stays out until you click outside it."
+msgstr ""
+"Cuando la barra lateral está contraída a la barra de iconos, al pasar el "
+"cursor se muestra completa sobre los paneles y permanece visible hasta que "
+"hagas clic fuera."
+
+msgid "Remember the sidebar layout"
+msgstr "Recordar el diseño de la barra lateral"
+
+msgid ""
+"Reopen with the accounts, folders and sections as you left them. Off starts "
+"every launch with everything folded up."
+msgstr ""
+"Volver a abrir con las cuentas, carpetas y secciones como las dejaste. Si "
+"está desactivado, cada inicio comienza con todo contraído."
+
+msgid "Remember icon rail state"
+msgstr "Recordar el estado de la barra de iconos"
+
+msgid ""
+"Reopen with icon rail in the last used state. Off starts every launch with "
+"the full sidebar."
+msgstr ""
+"Volver a abrir la barra de iconos en el último estado utilizado. Si está "
+"desactivado, cada inicio muestra la barra lateral completa."
+
+msgid "Unified"
+msgstr "Unificado"
+
+msgid ""
+"The section at the top of the sidebar that combines every account. Only "
+"shown with more than one account."
+msgstr ""
+"La sección de la parte superior de la barra lateral que combina todas las "
+"cuentas. Solo se muestra cuando hay más de una cuenta."
+
+msgid "Inboxes"
+msgstr "Bandejas de entrada"
+
+msgid ""
+"A unified inbox combining every account, at the top of the sidebar. Only "
+"shown with more than one account."
+msgstr ""
+"Una bandeja de entrada unificada que combina todas las cuentas, situada en "
+"la parte superior de la barra lateral. Solo se muestra con más de una cuenta."
+
+msgid "Starred"
+msgstr "Destacados"
+
+msgid ""
+"Every account's starred folder as one list, opening to each account's own."
+msgstr ""
+"Las carpetas de destacados de todas las cuentas como una sola lista, "
+"abriendo cada mensaje en su cuenta correspondiente."
+
+msgid "Every account's sent mail as one list, opening to each account's own."
+msgstr ""
+"El correo enviado de todas las cuentas como una sola lista, abriendo cada "
+"mensaje en su cuenta correspondiente."
+
+msgid "Every account's drafts as one list, opening to each account's own."
+msgstr ""
+"Los borradores de todas las cuentas como una sola lista, abriendo cada "
+"mensaje en su cuenta correspondiente."
+
+msgid "Every account's archive as one list, opening to each account's own."
+msgstr ""
+"Los archivos de todas las cuentas como una sola lista, abriendo cada mensaje "
+"en su cuenta correspondiente."
+
+msgid ""
+"List every folder your filter rules file into in a collapsible section of "
+"the unified view."
+msgstr ""
+"Mostrar todas las carpetas donde archivan correo las reglas de filtros en "
+"una sección desplegable de la vista unificada."
+
+msgid ""
+"The tags, each showing every account's mail with it. Each account keeps its "
+"own Tags section either way."
+msgstr ""
+"Las etiquetas, cada una mostrando el correo de todas las cuentas que la "
+"utilizan. Cada cuenta mantiene igualmente su propia sección de Etiquetas."
+
+msgid "Unread counts"
+msgstr "Contadores de no leídos"
+
+msgid ""
+"Which unified rows show their combined unread chip while folded up. "
+"Expanded, the rows beneath carry the counts. Sent never shows one."
+msgstr ""
+"Qué filas unificadas muestran su contador combinado de no leídos cuando "
+"están contraídas. Al expandirlas, las filas inferiores muestran los "
+"contadores. Enviados nunca muestra uno."
+
+msgid "Filters placement"
+msgstr "Posición de los filtros"
+
+msgid ""
+"Choose between appearing in a unified section, or a list above or below the "
+"accounts."
+msgstr ""
+"Elige entre mostrarlos en una sección unificada o en una lista encima o "
+"debajo de las cuentas."
+
+msgid "Tags placement"
+msgstr "Posición de las etiquetas"
+
+msgid "Icon rail"
+msgstr "Barra de iconos"
+
+msgid "The sidebar collapsed to icons, by its button or in a narrow window."
+msgstr ""
+"La barra lateral contraída a iconos, mediante su botón o en una ventana "
+"estrecha."
+
+msgid "Unread dots instead of counts"
+msgstr "Puntos de no leídos en lugar de contadores"
+
+msgid ""
+"Mark folders and accounts that have unread mail with a dot in the accent "
+"colour rather than the number of messages. The count stays in the tooltip."
+msgstr ""
+"Marcar las carpetas y cuentas con correo sin leer mediante un punto del "
+"color de acento en lugar del número de mensajes. El contador seguirá "
+"apareciendo en la información emergente."
+
+msgid "Fold up expanded items"
+msgstr "Contraer elementos expandidos"
+
+msgid ""
+"When the sidebar collapses to the icon rail, the items switched on below "
+"start folded up. A long-press in the rail still expands or collapses any of "
+"them, and the full sidebar comes back exactly as you left it."
+msgstr ""
+"Cuando la barra lateral se contrae a la barra de iconos, los elementos "
+"activados abajo comienzan contraídos. Una pulsación prolongada sobre la "
+"barra permite expandir o contraer cualquiera de ellos, y la barra lateral "
+"completa vuelve exactamente como la dejaste."
+
+msgid "Every account's folder list."
+msgstr "La lista de carpetas de cada cuenta."
+
+msgid "The account list under the unified Inboxes row."
+msgstr "La lista de cuentas bajo la fila unificada Bandejas de entrada."
+
+msgid "The account list under the unified Starred row."
+msgstr "La lista de cuentas bajo la fila unificada Destacados."
+
+msgid "The account list under the unified Sent row."
+msgstr "La lista de cuentas bajo la fila unificada Enviados."
+
+msgid "The account list under the unified Drafts row."
+msgstr "La lista de cuentas bajo la fila unificada Borradores."
+
+msgid "The account list under the unified Archive row."
+msgstr "La lista de cuentas bajo la fila unificada Archivo."
+
+msgid "The folders under the Filters row."
+msgstr "Las carpetas bajo la fila Filtros."
+
+msgid "The tags under the Tags row."
+msgstr "Las etiquetas bajo la fila Etiquetas."
+
+msgid "Sender avatars"
+msgstr "Avatares de remitentes"
+
+msgid ""
+"The sender's avatar beside each message, in the list and above the message. "
+"Turning it off gives the sender and subject more room."
+msgstr ""
+"El avatar del remitente junto a cada mensaje, tanto en la lista como sobre "
+"el mensaje. Al desactivarlo se deja más espacio para el remitente y el "
+"asunto."
+
+msgid "Sent mail uses your account circle"
+msgstr "El correo enviado usa el círculo de tu cuenta"
+
+msgid ""
+"Messages you sent wear the account's Gravatar, picture or emoji, as its "
+"circle in the sidebar does."
+msgstr ""
+"Los mensajes que envías muestran el Gravatar, imagen o emoji de la cuenta, "
+"igual que su círculo en la barra lateral."
+
+msgid "Preview lines"
+msgstr "Líneas de vista previa"
+
+msgid ""
+"How much of each message to show under its subject. Off also stops previews "
+"being downloaded."
+msgstr ""
+"Cuánto contenido de cada mensaje mostrar bajo su asunto. Desactivarlo "
+"también evita que se descarguen las vistas previas."
+
+msgid "Actions palette in the message list"
+msgstr "Paleta de acciones en la lista de mensajes"
+
+msgid ""
+"The ⋯ action row under each message summary. Turning it off returns its "
+"space to the row; messages are still acted on from their cards and the right-"
+"click menu."
+msgstr ""
+"La fila de acciones ⋯ situada bajo el resumen de cada mensaje. Al "
+"desactivarla se recupera ese espacio; los mensajes siguen pudiendo "
+"gestionarse desde sus tarjetas y el menú contextual."
+
+msgid "Open the actions palette on hover"
+msgstr "Abrir la paleta de acciones al pasar el cursor"
+
+msgid ""
+"The message list's ⋯ actions palette slides open by itself while the pointer "
+"rests on a row."
+msgstr ""
+"La paleta de acciones ⋯ de la lista de mensajes se abre automáticamente "
+"mientras el cursor permanece sobre una fila."
+
+msgid "Swipe actions"
+msgstr "Acciones al deslizar"
+
+msgid ""
+"Drag a message sideways with the mouse, or swipe it with two fingers on a "
+"trackpad, to archive or delete it. Default is left to delete, right to "
+"archive."
+msgstr ""
+"Arrastra un mensaje lateralmente con el ratón o deslízalo con dos dedos en "
+"el panel táctil para archivarlo o eliminarlo. De forma predeterminada, "
+"izquierda elimina y derecha archiva."
+
+msgid "Reverse swipe directions"
+msgstr "Invertir direcciones de deslizamiento"
+
+msgid ""
+"Turning this on swaps the swipe actions to: left archives, right deletes."
+msgstr ""
+"Al activarlo se intercambian las acciones: izquierda archiva y derecha "
+"elimina."
+
+msgid "Trackpad swipe sensitivity"
+msgstr "Sensibilidad del deslizamiento del panel táctil"
+
+msgid ""
+"How readily a two-finger trackpad swipe moves a message. Raise it if a swipe "
+"never gets far enough to archive or delete, lower it if messages slide when "
+"you did not mean them to. Mouse drags are unaffected."
+msgstr ""
+"Determina cuánto mueve un mensaje un deslizamiento con dos dedos en el panel "
+"táctil. Auméntala si nunca llega lo bastante lejos para archivar o eliminar; "
+"redúcela si los mensajes se deslizan sin querer. Los arrastres con ratón no "
+"se ven afectados."
+
+msgid "Actions palette timeout"
+msgstr "Tiempo de espera de la paleta de acciones"
+
+msgid ""
+"Seconds the message list's actions palette stays open after the cursor "
+"leaves it."
+msgstr ""
+"Segundos que permanece abierta la paleta de acciones de la lista tras "
+"retirar el cursor."
+
+msgid "Group messages by conversation"
+msgstr "Agrupar mensajes por conversación"
+
+msgid "Collapse replies into a single threaded conversation."
+msgstr "Agrupar las respuestas en una única conversación en hilo."
+
+msgid "Expandable conversations"
+msgstr "Conversaciones expandibles"
+
+msgid ""
+"Allow a conversation to expand/collapse its messages in the list. When off, "
+"the row keeps its count chip but the messages are displayed only as cards in "
+"the reading pane."
+msgstr ""
+"Permitir expandir o contraer los mensajes de una conversación en la lista. "
+"Al desactivarlo, la fila mantiene su contador, pero los mensajes solo se "
+"muestran como tarjetas en el panel de lectura."
+
+msgid "Expand conversations by default"
+msgstr "Expandir conversaciones de forma predeterminada"
+
+msgid ""
+"Show every message of a conversation in the list. When off, conversations "
+"start collapsed to their newest message."
+msgstr ""
+"Mostrar todos los mensajes de una conversación en la lista. Al desactivarlo, "
+"las conversaciones comienzan contraídas mostrando solo el mensaje más "
+"reciente."
+
+msgid "Newest message first"
+msgstr "Mensaje más reciente primero"
+
+msgid ""
+"Show a conversation's latest message at the top of the reading pane. Off "
+"reads oldest to newest, downward."
+msgstr ""
+"Mostrar el mensaje más reciente de una conversación en la parte superior del "
+"panel de lectura. Desactivado muestra de más antiguo a más reciente, hacia "
+"abajo."
+
+msgid "Show your own replies in the message list"
+msgstr "Mostrar tus propias respuestas en la lista de mensajes"
+
+msgid "Off shows the last message that arrived."
+msgstr "Desactivado muestra el último mensaje recibido."
+
+msgid "Reply editor"
+msgstr "Editor de respuesta"
+
+msgid ""
+"Where a reply or forward opens in the reading pane. Following the reading "
+"order puts it above the messages with newest first, and below them "
+"otherwise, so it continues the conversation where it ends."
+msgstr ""
+"Dónde se abre una respuesta o reenvío en el panel de lectura. Siguiendo el "
+"orden de lectura, aparece encima de los mensajes si se muestran primero los "
+"más recientes y debajo en caso contrario, continuando la conversación donde "
+"termina."
+
+msgid "Attachments on each message"
+msgstr "Archivos adjuntos en cada mensaje"
+
+msgid ""
+"List a message's attachments beneath it in a conversation, so which file "
+"came with which message is clear. Click one to open it."
+msgstr ""
+"Mostrar los archivos adjuntos de cada mensaje debajo de él dentro de una "
+"conversación, para que quede claro qué archivo pertenece a cada mensaje. Haz "
+"clic en uno para abrirlo."
+
+msgid "Attachment drawer"
+msgstr "Panel de archivos adjuntos"
+
+msgid ""
+"Gather every attachment in the open conversation in a drawer beneath the "
+"messages."
+msgstr ""
+"Reunir todos los archivos adjuntos de la conversación abierta en un panel "
+"situado debajo de los mensajes."
+
+msgid "Confirm conversation deletion"
+msgstr "Confirmar eliminación de conversaciones"
+
+msgid ""
+"Warn before deleting when a whole conversation is selected, since every "
+"message in the thread goes with it."
+msgstr ""
+"Avisar antes de eliminar una conversación completa, ya que se eliminarán "
+"todos los mensajes del hilo."
+
+msgid ""
+"When an opened message counts as read. Conversations mark each message as it "
+"comes into view."
+msgstr ""
+"Cuándo se considera leído un mensaje abierto. En las conversaciones, cada "
+"mensaje se marca como leído al aparecer en pantalla."
+
+msgid "Message appearance"
+msgstr "Apariencia de los mensajes"
+
+msgid "Theme for email content only, not the app itself."
+msgstr "Tema solo para el contenido del correo, no para la aplicación."
+
+msgid "Default zoom"
+msgstr "Zoom predeterminado"
+
+msgid ""
+"How large every message is shown. Ctrl+ and Ctrl- change it until Hylki is "
+"next started; Ctrl+0 comes back to this."
+msgstr ""
+"Tamaño con el que se muestra cada mensaje. Ctrl+ y Ctrl- lo cambian hasta el "
+"próximo inicio de Hylki; Ctrl+0 vuelve a este valor."
+
+msgid "Use my own font"
+msgstr "Usar mi propia fuente"
+
+msgid ""
+"Show every message in the font and size chosen below instead of the "
+"sender's. Headings keep their relative size; code stays monospaced."
+msgstr ""
+"Mostrar todos los mensajes con la fuente y tamaño elegidos abajo en lugar de "
+"los del remitente. Los encabezados mantienen su tamaño relativo y el código "
+"sigue siendo monoespaciado."
+
+msgid "Message font"
+msgstr "Fuente de los mensajes"
+
+msgid "The interface font unless another is chosen."
+msgstr "La fuente de la interfaz, salvo que se elija otra."
+
+msgid "Use my own colours"
+msgstr "Usar mis propios colores"
+
+msgid ""
+"Ignore the text and background colours senders set, so every message reads "
+"in the same black or white on the reader's ground. Pictures are kept; links "
+"take the accent colour."
+msgstr ""
+"Ignorar los colores de texto y fondo establecidos por los remitentes para "
+"mostrar todos los mensajes con el mismo negro o blanco sobre el fondo del "
+"lector. Las imágenes se conservan y los enlaces usan el color de acento."
+
+msgid "Plain-text messages in monospace"
+msgstr "Mensajes de texto sin formato en monoespaciado"
+
+msgid ""
+"Show messages sent as plain text in a fixed-width font, so columns and code "
+"line up. Formatted messages are not affected."
+msgstr ""
+"Mostrar los mensajes enviados como texto sin formato con una fuente de ancho "
+"fijo para alinear columnas y código. Los mensajes con formato no se ven "
+"afectados."
+
+msgid "Monospace font"
+msgstr "Fuente monoespaciada"
+
+msgid "The system's monospace font unless another is chosen."
+msgstr "La fuente monoespaciada del sistema, salvo que se elija otra."
+
+msgid "Message card actions palette"
+msgstr "Paleta de acciones de las tarjetas de mensaje"
+
+msgid "How each message's action icons show in the reader, single or threaded."
+msgstr ""
+"Cómo se muestran en el lector los iconos de acciones de cada mensaje, tanto "
+"individual como en hilo."
+
+msgid "Message card actions palette timeout"
+msgstr "Tiempo de espera de la paleta de acciones de las tarjetas"
+
+msgid "Seconds a card's actions palette stays open after the cursor leaves it."
+msgstr ""
+"Segundos que permanece abierta la paleta de acciones de una tarjeta tras "
+"retirar el cursor."
+
+msgid "Message card actions palette as a menu"
+msgstr "Paleta de acciones de las tarjetas como menú"
+
+msgid ""
+"The ⋯ opens the message's menu, the same one a right-click shows, instead of "
+"sliding the actions palette out."
+msgstr ""
+"El botón ⋯ abre el menú del mensaje, el mismo que aparece al hacer clic "
+"derecho, en lugar de desplegar la paleta de acciones."
+
+msgid "Single messages as cards"
+msgstr "Mensajes individuales como tarjetas"
+
+msgid ""
+"Show a lone message as an inset card with the same border as a "
+"conversation's messages. Off fills the pane edge to edge."
+msgstr ""
+"Mostrar un mensaje individual como una tarjeta con el mismo borde que los "
+"mensajes de una conversación. Desactivado ocupa el panel de lado a lado."
+
+msgid "Always show recipients"
+msgstr "Mostrar siempre los destinatarios"
+
+msgid ""
+"Show who each message went to under its sender, without clicking the "
+"recipients chip. With one recipient the chip is dropped entirely."
+msgstr ""
+"Mostrar bajo el remitente a quién se envió cada mensaje sin tener que pulsar "
+"la etiqueta de destinatarios. Con un solo destinatario, la etiqueta "
+"desaparece por completo."
+
+msgid "Reader View switch"
+msgstr "Interruptor de Vista de lectura"
+
+msgid "Show the switch in the message header, beside the account name."
+msgstr ""
+"Mostrar el interruptor en la cabecera del mensaje junto al nombre de la "
+"cuenta."
+
+msgid "When a message is opened"
+msgstr "Al abrir un mensaje"
+
+msgid ""
+"Keep the switch where it was last set, or start every message in Reader View "
+"or as sent. The switch still changes the message on screen."
+msgstr ""
+"Mantener el interruptor en su último estado o iniciar cada mensaje en Vista "
+"de lectura o tal como fue enviado. El interruptor sigue permitiendo cambiar "
+"el mensaje mostrado."
+
+msgid "Compose in the main window"
+msgstr "Redactar en la ventana principal"
+
+msgid ""
+"New message slides down over the reading pane, like a reply — pop it out to "
+"a window from its header. Off = open a separate window directly."
+msgstr ""
+"El mensaje nuevo se despliega sobre el panel de lectura como una respuesta; "
+"puedes separarlo en una ventana desde su cabecera. Desactivado = abrir "
+"directamente una ventana independiente."
+
+msgid "Show From, To and Subject in the reply panel"
+msgstr "Mostrar De, Para y Asunto en el panel de respuesta"
+
+msgid ""
+"The inline reply opens with its address and subject rows showing. Off, they "
+"stay folded away behind a button in the panel's header."
+msgstr ""
+"La respuesta integrada se abre mostrando las filas de direcciones y asunto. "
+"Al desactivarlo permanecen ocultas detrás de un botón en la cabecera del "
+"panel."
+
+msgid "Send new messages from"
+msgstr "Enviar mensajes nuevos desde"
+
+msgid "Replies still answer from the address the original was sent to."
+msgstr ""
+"Las respuestas seguirán enviándose desde la dirección a la que llegó el "
+"mensaje original."
+
+msgid "Paste as plain text"
+msgstr "Pegar como texto sin formato"
+
+msgid ""
+"Pasting into a message strips the clipboard's formatting. Off, a paste keeps "
+"its formatting. Right-clicking the editor always offers both."
+msgstr ""
+"Al pegar en un mensaje se elimina el formato del portapapeles. Desactivado "
+"conserva el formato. El menú contextual del editor siempre ofrece ambas "
+"opciones."
+
+msgid "Write messages in"
+msgstr "Escribir mensajes en"
+
+msgid ""
+"What new messages, replies and forwards start as. Markdown and HTML are "
+"written as source and sent as formatted mail; plain text is sent without "
+"formatting. The composer's format button switches any one message."
+msgstr ""
+"Formato inicial de los mensajes nuevos, respuestas y reenvíos. Markdown y "
+"HTML se escriben como código fuente y se envían con formato; el texto sin "
+"formato se envía sin formato. El botón de formato del redactor permite "
+"cambiarlo para cada mensaje."
+
+msgid "Signature in replies"
+msgstr "Firma en las respuestas"
+
+msgid ""
+"Where the signature goes in a reply or forward. Above the quoted message it "
+"closes what you wrote; below, it follows the whole conversation."
+msgstr ""
+"Dónde se coloca la firma en una respuesta o reenvío. Sobre el mensaje citado "
+"cierra lo que escribiste; debajo aparece tras toda la conversación."
+
+msgid "Spelling"
+msgstr "Ortografía"
+
+msgid "Check spelling as you type"
+msgstr "Comprobar ortografía mientras escribes"
+
+msgid ""
+"Misspelled words in the message body are underlined; right-click a word for "
+"corrections."
+msgstr ""
+"Las palabras mal escritas del cuerpo del mensaje aparecen subrayadas; haz "
+"clic derecho sobre una palabra para ver correcciones."
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Dictionaries the app can see"
+msgstr "Diccionarios disponibles para la aplicación"
+
+msgid "Added words"
+msgstr "Palabras añadidas"
+
+msgid ""
+"Words the spell checker was taught. The message body applies changes after a "
+"restart."
+msgstr ""
+"Palabras aprendidas por el corrector ortográfico. Los cambios se aplican al "
+"cuerpo de los mensajes tras reiniciar."
+
+msgid ""
+"Hylki collects no telemetry and sends no analytics. Remote content (images, "
+"trackers) is blocked by default. Allow it per message, trust a sender to "
+"always load it, or turn on \"Always load remote content\" below."
+msgstr ""
+"Hylki no recopila telemetría ni envía datos de análisis. El contenido remoto "
+"(imágenes y rastreadores) se bloquea de forma predeterminada. Puedes "
+"permitirlo en cada mensaje, confiar en un remitente para cargarlo siempre o "
+"activar «Cargar siempre contenido remoto» abajo."
+
+msgid "Always load remote content"
+msgstr "Cargar siempre contenido remoto"
+
+msgid ""
+"Show images and other remote content in every new message without asking. "
+"Off by default, since remote content can be used to track when and where you "
+"read a message."
+msgstr ""
+"Mostrar imágenes y otros contenidos remotos en todos los mensajes nuevos sin "
+"preguntar. Está desactivado de forma predeterminada, ya que el contenido "
+"remoto puede utilizarse para rastrear cuándo y dónde lees un mensaje."
+
+msgid "Warn when remote content is blocked"
+msgstr "Avisar cuando se bloquee contenido remoto"
+
+msgid ""
+"Shows the banner offering to load it. Turning this off only hides the notice "
+"— remote content is still blocked just the same."
+msgstr ""
+"Muestra el aviso que permite cargarlo. Desactivar esta opción solo oculta el "
+"aviso; el contenido remoto seguirá bloqueado."
+
+msgid "Use Gravatar when a contact has no photo"
+msgstr "Usar Gravatar cuando un contacto no tenga foto"
+
+msgid ""
+"Local GNOME Contacts photos are always preferred. Gravatar sends a hash of "
+"the sender's email."
+msgstr ""
+"Siempre se prefieren las fotos locales de Contactos de GNOME. Gravatar "
+"recibe un hash del correo electrónico del remitente."
+
+msgid "Show sender logos"
+msgstr "Mostrar logotipos de remitentes"
+
+msgid ""
+"Fills the sender's avatar with the brand's logo: the one the sender "
+"publishes for mail (BIMI), one bundled with Hylki, or the site's own icon. "
+"All but the bundled ones are fetched from the sender's domain, which then "
+"learns your IP address, as blocking remote content otherwise avoids."
+msgstr ""
+"Rellena el avatar del remitente con el logotipo de la marca: el publicado "
+"por el remitente para correo (BIMI), uno incluido con Hylki o el icono del "
+"propio sitio. Todos salvo los incluidos con Hylki se descargan desde el "
+"dominio del remitente, que conocerá tu dirección IP, algo que normalmente "
+"evita el bloqueo de contenido remoto."
+
+msgid ""
+"By default dates follow the system's own arrangement — its field order, "
+"month names and clock. Choose a format here to override what your system is "
+"set to."
+msgstr ""
+"De forma predeterminada, las fechas siguen la configuración del sistema: "
+"orden de campos, nombres de meses y reloj. Elige aquí un formato para "
+"sustituir la configuración del sistema."
+
+msgid "Date format"
+msgstr "Formato de fecha"
+
+msgid "Clock"
+msgstr "Reloj"
+
+msgid ""
+"The language Hylki is shown in. \"System\" follows the desktop, with English "
+"where no translation exists. A change applies the next time Hylki starts."
+msgstr ""
+"El idioma en el que se muestra Hylki. «Sistema» sigue el idioma del "
+"escritorio y utiliza inglés cuando no existe traducción. Los cambios se "
+"aplican la próxima vez que se inicie Hylki."
+
+msgid "Keep running in the background"
+msgstr "Mantener en ejecución en segundo plano"
+
+msgid ""
+"Closing the window hides it instead of quitting, so new mail still arrives. "
+"Hylki then appears under Background Apps in the system menu, where it can be "
+"quit."
+msgstr ""
+"Cerrar la ventana la oculta en lugar de salir, por lo que seguirá llegando "
+"correo nuevo. Hylki aparecerá entonces en Aplicaciones en segundo plano del "
+"menú del sistema, desde donde puede cerrarse."
+
+msgid "Start at login"
+msgstr "Iniciar al iniciar sesión"
+
+msgid ""
+"Start checking for mail when you log in. Hylki starts without a window and "
+"waits in the system menu."
+msgstr ""
+"Empezar a comprobar el correo al iniciar sesión. Hylki se inicia sin ventana "
+"y permanece en el menú del sistema."
+
+msgid "Show a tray icon"
+msgstr "Mostrar icono en la bandeja del sistema"
+
+msgid ""
+"An icon in the system tray, with a red dot while any inbox has unread mail. "
+"Click it to open Hylki. GNOME needs the AppIndicator extension; other "
+"desktops show it as they are."
+msgstr ""
+"Un icono en la bandeja del sistema, con un punto rojo mientras alguna "
+"bandeja de entrada tenga correo sin leer. Haz clic para abrir Hylki. GNOME "
+"necesita la extensión AppIndicator; otros escritorios lo muestran "
+"directamente."
+
+msgid "Tray icon"
+msgstr "Icono de bandeja"
+
+msgid ""
+"The Hylki icon, or a plain envelope in white or black to match the panel."
+msgstr ""
+"El icono de Hylki o un sobre sencillo blanco o negro que combine con el "
+"panel."
+
+msgid "Unread mail in the tray menu"
+msgstr "Correo sin leer en el menú de la bandeja"
+
+msgid ""
+"List the newest unread inbox messages in the icon's menu; click one to open "
+"it."
+msgstr ""
+"Mostrar los mensajes sin leer más recientes de las bandejas de entrada en el "
+"menú del icono; haz clic en uno para abrirlo."
+
+msgid "Single-key shortcuts"
+msgstr "Atajos de una sola tecla"
+
+msgid ""
+"Act on mail with one key and no modifier — j/k to move, r to reply, a to "
+"archive. Press Ctrl+? for the full list."
+msgstr ""
+"Realizar acciones sobre el correo con una sola tecla y sin modificadores: j/"
+"k para moverse, r para responder y a para archivar. Pulsa Ctrl+? para ver la "
+"lista completa."
+
+msgid "Console mode"
+msgstr "Modo consola"
+
+msgid ""
+"A verbose live console in the status bar showing everything Hylki is doing "
+"under the hood."
+msgstr ""
+"Una consola detallada en tiempo real en la barra de estado que muestra todo "
+"lo que Hylki está haciendo internamente."
+
+msgid ""
+"Save everything the console has recorded since Hylki started, to attach to a "
+"bug report. Email addresses are shortened to their domain."
+msgstr ""
+"Guardar todo lo que haya registrado la consola desde que se inició Hylki "
+"para adjuntarlo a un informe de error. Las direcciones de correo se reducen "
+"a su dominio."
+
+msgid "GNOME Files Integration"
+msgstr "Integración con Archivos de GNOME"
+
+msgid ""
+"Add \"Send with Hylki\" to the right-click menu in Files (Nautilus): the "
+"selected files open in a new message, attached. This installs a small "
+"extension in your home folder. It also needs the nautilus-python package "
+"(python3-nautilus on Debian and Ubuntu), and Files has to be restarted "
+"before the entry appears."
+msgstr ""
+"Añadir «Enviar con Hylki» al menú contextual de Archivos (Nautilus): los "
+"archivos seleccionados se abren adjuntos en un mensaje nuevo. Esto instala "
+"una pequeña extensión en tu carpeta personal. También necesita el paquete "
+"nautilus-python (python3-nautilus en Debian y Ubuntu), y Archivos debe "
+"reiniciarse antes de que aparezca la opción."
+
+msgid "Right-click menu entry"
+msgstr "Entrada del menú contextual"
+
+msgid "Update"
+msgstr "Actualizar"
+
+msgid "Install"
+msgstr "Instalar"
+
+msgid "Install the nautilus-python package first: paste this in a terminal"
+msgstr "Instala primero el paquete nautilus-python: pega esto en un terminal"
+
+msgid "Restart Files"
+msgstr "Reiniciar Archivos"
+
+msgid ""
+"Closes every Files window, the same as \"nautilus -q\". The next one opens "
+"with the entry, or without it once removed."
+msgstr ""
+"Cierra todas las ventanas de Archivos, igual que «nautilus -q». La siguiente "
+"se abrirá con la entrada o sin ella si se ha eliminado."
+
+msgid "Restart"
+msgstr "Reiniciar"
+
+msgid "Default Send with Hylki behavior"
+msgstr "Comportamiento predeterminado de Enviar con Hylki"
+
+msgid "Default large attachments behavior"
+msgstr "Comportamiento predeterminado de archivos adjuntos grandes"
+
+msgid ""
+"Upload to cloud storage needs a cloud storage account (Settings → Cloud "
+"Storage) otherwise the files are attached by default."
+msgstr ""
+"Subir al almacenamiento en la nube requiere una cuenta configurada en "
+"Ajustes → Almacenamiento en la nube; de lo contrario, los archivos se "
+"adjuntan de forma predeterminada."
+
+msgid "Size limit"
+msgstr "Límite de tamaño"
+
+msgid "In MB, for all the files together."
+msgstr "En MB, para todos los archivos en conjunto."
+
+msgid "Links"
+msgstr "Enlaces"
+
+msgid "Open links in"
+msgstr "Abrir enlaces en"
+
+msgid ""
+"Everything Hylki keeps, as one file: mail and cloud storage accounts, "
+"preferences, filters, tags, the sidebar and window layout, the app icon "
+"choice and the words taught to the spell checker. Passwords and sign-ins "
+"stay in the system keyring and are never exported; OpenPGP keys stay in "
+"GnuPG."
+msgstr ""
+"Todo lo que Hylki guarda, en un solo archivo: cuentas de correo y "
+"almacenamiento en la nube, preferencias, filtros, etiquetas, diseño de la "
+"barra lateral y las ventanas, elección del icono de la aplicación y palabras "
+"añadidas al corrector ortográfico. Las contraseñas y sesiones permanecen en "
+"el llavero del sistema y nunca se exportan; las claves OpenPGP permanecen en "
+"GnuPG."
+
+msgid "Export settings"
+msgstr "Exportar ajustes"
+
+msgid "Import settings"
+msgstr "Importar ajustes"
+
+msgid ""
+"Replaces the current accounts and preferences in place. Don't remove "
+"accounts first: removal also deletes their keyring passwords, which no "
+"backup carries."
+msgstr ""
+"Sustituye directamente las cuentas y preferencias actuales. No elimines "
+"antes las cuentas: al eliminarlas también se borran sus contraseñas del "
+"llavero, que no se incluyen en ninguna copia de seguridad."
+
+msgid "In the unified section"
+msgstr "En la sección unificada"
+
+msgid "Above the accounts"
+msgstr "Encima de las cuentas"
+
+msgid "Below the accounts"
+msgstr "Debajo de las cuentas"
+
+msgid "Left"
+msgstr "Izquierda"
+
+msgid "Right"
+msgstr "Derecha"
+
+msgid "1 line"
+msgstr "1 línea"
+
+msgid "2 lines"
+msgstr "2 líneas"
+
+msgid "3 lines"
+msgstr "3 líneas"
+
+msgid ""
+"The launcher shows an icon set outside Hylki. Picking one here replaces it."
+msgstr ""
+
+msgid "When displayed"
+msgstr "Al mostrarse"
+
+msgid "After two seconds"
+msgstr "Después de dos segundos"
+
+msgid "Remember the last choice"
+msgstr "Recordar la última opción"
+
+msgid "Reader View on"
+msgstr "Vista de lectura activada"
+
+msgid "Reader View off"
+msgstr "Vista de lectura desactivada"
+
+msgid "Hidden behind a toggle"
+msgstr "Oculto tras un interruptor"
+
+msgid "Shown while hovering"
+msgstr "Mostrar al pasar el cursor"
+
+msgid "Always visible"
+msgstr "Siempre visible"
+
+msgid "Ask each time"
+msgstr "Preguntar cada vez"
+
+msgid "A new message"
+msgstr "Un mensaje nuevo"
+
+msgid "A draft you pick"
+msgstr "Un borrador que elijas"
+
+msgid "A reply to a message you pick"
+msgstr "Una respuesta a un mensaje que elijas"
+
+msgid "Attach them anyway"
+msgstr "Adjuntarlos de todos modos"
+
+msgid "Upload to cloud storage and link them"
+msgstr "Subirlos al almacenamiento en la nube y enlazarlos"
+
+msgid "System default"
+msgstr "Predeterminado del sistema"
+
+msgid "Account of the current folder"
+msgstr "Cuenta de la carpeta actual"
+
+msgid "Above the quoted message"
+msgstr "Encima del mensaje citado"
+
+msgid "Below the quoted message"
+msgstr "Debajo del mensaje citado"
+
+msgid "Above the messages"
+msgstr "Encima de los mensajes"
+
+msgid "Below the messages"
+msgstr "Debajo de los mensajes"
+
+msgid "Follows the reading order"
+msgstr "Seguir el orden de lectura"
+
+msgid "System language — {language}"
+msgstr "Idioma del sistema — {language}"
+
+msgid "Add a word"
+msgstr "Añadir una palabra"
+
+msgid "Could not install the extension"
+msgstr "No se pudo instalar la extensión"
+
+msgid "Could not remove the extension"
+msgstr "No se pudo eliminar la extensión"
+
+msgid "Could not restart Files"
+msgstr "No se pudo reiniciar Archivos"
+
+msgid "Forget this word"
+msgstr "Olvidar esta palabra"
+
+msgid "Print Message"
+msgstr "Imprimir mensaje"
+
+msgid "Save as PDF"
+msgstr "Guardar como PDF"
+
+msgid "Could not save the PDF: {error}"
+msgstr "No se pudo guardar el PDF: {error}"
+
+msgid "Print…"
+msgstr "Imprimir…"
+
+msgid "Save as PDF…"
+msgstr "Guardar como PDF…"
+
+msgid "Send as Attachment Instead"
+msgstr "Enviar como archivo adjunto en su lugar"
+
+msgid "Small"
+msgstr "Pequeño"
+
+msgid "Medium"
+msgstr "Mediano"
+
+msgid "Large"
+msgstr "Grande"
+
+msgid "Original Size"
+msgstr "Tamaño original"
+
+msgid "Will be recompressed to the size shown when this is sent"
+msgstr "Se volverá a comprimir al tamaño mostrado cuando se envíe"
+
+msgid "Recompress to This Size on Send"
+msgstr "Recomprimir a este tamaño al enviar"
+
+msgid "Paste with Formatting"
+msgstr "Pegar con formato"
+
+msgid "Paste as Plain Text"
+msgstr "Pegar como texto sin formato"
+
+msgid "Bold"
+msgstr "Negrita"
+
+msgid "Italic"
+msgstr "Cursiva"
+
+msgid "Underline"
+msgstr "Subrayado"
+
+msgid "Strikethrough"
+msgstr "Tachado"
+
+msgid "Bulleted list"
+msgstr "Lista con viñetas"
+
+msgid "Numbered list"
+msgstr "Lista numerada"
+
+#. Adwaita has no blockquote glyph; the indent icon reads as "quote".
+msgid "Quote"
+msgstr "Cita"
+
+#. `LINK` is a sentinel command (handled specially); the icon is real.
+msgid "Insert link"
+msgstr "Insertar enlace"
+
+msgid "Clear formatting"
+msgstr "Borrar formato"
+
+msgid "Insert Link"
+msgstr "Insertar enlace"
+
+msgid "Insert"
+msgstr "Insertar"
+
+msgid "Folder"
+msgstr "Carpeta"
+
+msgid "Add account"
+msgstr "Añadir cuenta"
+
+msgid "Add first account"
+msgstr "Añadir primera cuenta"
+
+msgid "No accounts yet"
+msgstr "Todavía no hay cuentas"
+
+msgid "Outbox"
+msgstr "Bandeja de salida"
+
+msgid "Mark Inbox as Read"
+msgstr "Marcar Bandeja de entrada como leída"
+
+msgid "Refresh"
+msgstr "Actualizar"
+
+msgid "New Folder…"
+msgstr "Nueva carpeta…"
+
+msgid "Account Settings…"
+msgstr "Ajustes de la cuenta…"
+
+msgid "Remove Account…"
+msgstr "Eliminar cuenta…"
+
+msgid "Show or hide sub-folders"
+msgstr "Mostrar u ocultar subcarpetas"
+
+msgid "Folders"
+msgstr "Carpetas"
+
+msgid "Folders ({len})"
+msgstr "Carpetas ({len})"
+
+msgid "Add Folder"
+msgstr "Añadir carpeta"
+
+msgid "Show each inbox"
+msgstr "Mostrar cada bandeja de entrada"
+
+msgid "Show each account"
+msgstr "Mostrar cada cuenta"
+
+msgid "Show each folder"
+msgstr "Mostrar cada carpeta"
+
+msgid "Show each tag"
+msgstr "Mostrar cada etiqueta"
+
+msgid "Long-press to expand or collapse"
+msgstr "Mantén pulsado para expandir o contraer"
+
+msgid "Apply Filters"
+msgstr "Aplicar filtros"
+
+msgid "Edit Filter…"
+msgstr "Editar filtro…"
+
+msgid "Rename Folder…"
+msgstr "Renombrar carpeta…"
+
+msgid "Delete Folder…"
+msgstr "Eliminar carpeta…"
+
+#. And hidden (#239): only a plain folder, since a role folder out
+#. of sight would still be where mail is filed to.
+msgid "Hide Folder"
+msgstr "Ocultar carpeta"
+
+msgid "Empty Trash…"
+msgstr "Vaciar Papelera…"
+
+msgid "Empty Junk…"
+msgstr "Vaciar Correo no deseado…"
+
+msgid "Edit Tag…"
+msgstr "Editar etiqueta…"
+
+msgid "Welcome to Hylki"
+msgstr "Te damos la bienvenida a Hylki"
+
+msgid ""
+"A clean, fast home for your mail.\n"
+"Let's set things up — it takes about a minute."
+msgstr ""
+"Un hogar limpio y rápido para tu correo. Vamos a configurarlo; solo llevará "
+"aproximadamente un minuto."
+
+msgid ""
+"Choosing another language restarts Hylki: it closes for a moment and this "
+"wizard comes back in that language."
+msgstr ""
+"Al elegir otro idioma, Hylki se reinicia: se cerrará durante un momento y "
+"este asistente volverá a aparecer en ese idioma."
+
+msgid "Get Started"
+msgstr "Comenzar"
+
+msgid "Add your email account"
+msgstr "Añade tu cuenta de correo"
+
+msgid "Found in GNOME Online Accounts"
+msgstr "Encontrada en Cuentas en línea de GNOME"
+
+msgid "Your name"
+msgstr "Tu nombre"
+
+msgid "Server details"
+msgstr "Datos del servidor"
+
+msgid "Filled in for known providers"
+msgstr "Se completa automáticamente para proveedores conocidos"
+
+#. A JMAP server is one address, and it sends the mail
+#. itself: no SMTP rows.
+msgid "IMAP server"
+msgstr "Servidor IMAP"
+
+msgid "IMAP port"
+msgstr "Puerto IMAP"
+
+msgid "Test & Add"
+msgstr "Probar y añadir"
+
+msgid ""
+"Accounts added in GNOME Settings → Online Accounts appear above, IMAP and "
+"SMTP ones included. Google and Microsoft sign in only that way."
+msgstr ""
+
+msgid "Scan Again"
+msgstr "Buscar de nuevo"
+
+msgid "Privacy, your way"
+msgstr "Privacidad a tu manera"
+
+msgid ""
+"Hylki sends no telemetry, ever. These control what leaves your machine while "
+"you read."
+msgstr ""
+"Hylki nunca envía telemetría. Estas opciones controlan qué datos salen de tu "
+"equipo mientras lees."
+
+msgid "Block remote images"
+msgstr "Bloquear imágenes remotas"
+
+msgid "Stops senders tracking when and where you open mail"
+msgstr "Evita que los remitentes rastreen cuándo y dónde abres el correo"
+
+msgid "Fetch Gravatar portraits"
+msgstr "Obtener imágenes de Gravatar"
+
+msgid "Asks gravatar.com about each sender's address"
+msgstr "Consulta en gravatar.com la dirección de cada remitente"
+
+msgid "Fetch sender logos"
+msgstr "Obtener logotipos de remitentes"
+
+msgid "Looks up company icons for the message list"
+msgstr "Busca iconos de empresas para la lista de mensajes"
+
+msgid "Show message content in notifications"
+msgstr "Mostrar el contenido del mensaje en las notificaciones"
+
+msgid "Off keeps senders and subjects off the lock screen"
+msgstr ""
+"Desactivado evita mostrar remitentes y asuntos en la pantalla de bloqueo"
+
+msgid "Make it yours"
+msgstr "Hazlo tuyo"
+
+msgid "A few popular choices — everything can be changed later in Settings."
+msgstr ""
+"Algunas opciones populares; todo puede cambiarse más adelante en Ajustes."
+
+msgid "Message text shown under each subject"
+msgstr "Texto del mensaje mostrado bajo cada asunto"
+
+msgid "Colourful initials beside each message"
+msgstr "Iniciales de colores junto a cada mensaje"
+
+msgid "Conversation view"
+msgstr "Vista de conversación"
+
+msgid "Group messages into threads"
+msgstr "Agrupar mensajes en hilos"
+
+#. The app icon: the whole set as one sideways-scrolling row on its
+#. own card, the default ringed.
+msgid "Pick your app icon"
+msgstr "Elige el icono de la aplicación"
+
+msgid "You're all set"
+msgstr "Todo está listo"
+
+msgid ""
+"Enjoy! If you encounter an issue or have a feature request,\n"
+"please open an issue on our <a href=\"{url}\">Github</a>."
+msgstr ""
+"¡Disfruta! Si encuentras algún problema o quieres solicitar una función, "
+"abre una incidencia en nuestro <a href=\"{url}\">GitHub</a>."
+
+msgid "Start Reading"
+msgstr "Empezar a leer"
+
+#. Fixed footer: Continue lives with the dots so it never scrolls
+#. away with a tall page. Hidden on the hero and final pages, which
+#. carry their own calls to action.
+msgid "Continue"
+msgstr "Continuar"
+
+msgid "Port"
+msgstr "Puerto"
+
+msgid "Enter your email address and password first."
+msgstr "Introduce primero tu dirección de correo electrónico y contraseña."
+
+msgid "Checking the connection…"
+msgstr "Comprobando la conexión…"
+
+msgid "✓ {email} — added"
+msgstr "✓ {email} — añadida"
+
+msgid "✓ {email} — connected and added"
+msgstr "✓ {email} — conectada y añadida"
+
+msgid "{email} — mail server: {e}"
+msgstr "{email} — servidor de correo: {e}"
+
+msgid "{email} — sending (SMTP): {e}"
+msgstr "{email} — envío (SMTP): {e}"
+
+msgid "Your mail provider confirmed this really came from {from}."
+msgstr ""
+"Tu proveedor de correo ha confirmado que este mensaje procede realmente de "
+"{from}."
+
+msgid ""
+"This message failed the checks that prove it came from {from}. Treat it as a "
+"forgery."
+msgstr ""
+"Este mensaje no ha superado las comprobaciones que demuestran que procede de "
+"{from}. Trátalo como una falsificación."
+
+msgid "This message carries a valid signature from {from}."
+msgstr "Este mensaje contiene una firma válida de {from}."
+
+msgid ""
+"This message couldn't be confirmed as coming from {from}, and the checks "
+"that ran on it failed."
+msgstr ""
+"No se pudo confirmar que este mensaje proceda de {from} y las comprobaciones "
+"realizadas fallaron."
+
+msgid "Your mail provider didn't report any sender checks for this message."
+msgstr ""
+"Tu proveedor de correo no informó de ninguna comprobación del remitente para "
+"este mensaje."
+
+msgid "Nothing here proves this came from {from} — or that it didn't."
+msgstr ""
+"Nada de esto demuestra que el mensaje proceda de {from}, ni tampoco que no "
+"lo haga."
+
+msgid "{name}: passed"
+msgstr "{name}: superada"
+
+msgid "{name}: FAILED"
+msgstr "{name}: FALLIDA"
+
+msgid "{name}: inconclusive"
+msgstr "{name}: no concluyente"
+
+msgid "DMARC (is the From: address genuine)"
+msgstr "DMARC (¿es auténtica la dirección De:?)"
+
+msgid "DKIM (signature)"
+msgstr "DKIM (firma)"
+
+msgid "SPF (sending server)"
+msgstr "SPF (servidor de envío)"
+
+msgid "Signed by: {d}"
+msgstr "Firmado por: {d}"
+
+msgid "Checked by: {who}"
+msgstr "Comprobado por: {who}"
+
+msgid "From: {from}"
+msgstr "De: {from}"
+
+msgid "Replies would go to {reply}, not {from}"
+msgstr "Las respuestas irían a {reply}, no a {from}"
+
+msgid "Bounces would go to {rp}"
+msgstr "Los mensajes rebotados irían a {rp}"
+
+msgid "The sender's name says \"{claimed}\" but the address is {from}"
+msgstr ""
+"El nombre del remitente indica «{claimed}», pero la dirección es {from}"
+
+msgid "Could not reach the JMAP server: {e}"
+msgstr "No se pudo contactar con el servidor JMAP: {e}"
+
+msgid "Could not list folders: {e}"
+msgstr "No se pudieron listar las carpetas: {e}"
+
+msgid "Sending…"
+msgstr "Enviando…"
+
+msgid "Still could not send “{subject}”: {e}"
+msgstr "Todavía no se pudo enviar «{subject}»: {e}"
+
+msgid "Could not load message: {e}"
+msgstr "No se pudo cargar el mensaje: {e}"
+
+msgid "Syncing…"
+msgstr "Sincronizando…"
+
+msgid "Could not fetch mail: {e}"
+msgstr "No se pudo obtener el correo: {e}"
+
+msgid "Could not load source: {e}"
+msgstr "No se pudo cargar el código fuente: {e}"
+
+msgid "Could not load attachments: {e}"
+msgstr "No se pudieron cargar los archivos adjuntos: {e}"
+
+msgid "Could not move message: {e}"
+msgstr "No se pudo mover el mensaje: {e}"
+
+msgid "Could not mark as spam: {e}"
+msgstr "No se pudo marcar como correo no deseado: {e}"
+
+msgid "Could not mark as not spam: {e}"
+msgstr "No se pudo marcar como correo legítimo: {e}"
+
+msgid "Could not mark {len} messages as not spam: {e}"
+msgstr "No se pudieron marcar {len} mensajes como correo legítimo: {e}"
+
+msgid "Could not move messages: {e}"
+msgstr "No se pudieron mover los mensajes: {e}"
+
+msgid "Could not empty the folder: {e}"
+msgstr "No se pudo vaciar la carpeta: {e}"
+
+msgid "Undo failed: {e}"
+msgstr "No se pudo deshacer: {e}"
+
+msgid "Could not create folder: {e}"
+msgstr "No se pudo crear la carpeta: {e}"
+
+msgid "Could not rename folder: unknown folder"
+msgstr "No se pudo renombrar la carpeta: carpeta desconocida"
+
+msgid "Could not rename folder: {e}"
+msgstr "No se pudo renombrar la carpeta: {e}"
+
+msgid "Could not delete folder: unknown folder"
+msgstr "No se pudo eliminar la carpeta: carpeta desconocida"
+
+msgid "Could not delete folder: {e}"
+msgstr "No se pudo eliminar la carpeta: {e}"
+
+msgid "Saving draft…"
+msgstr "Guardando borrador…"
+
+msgid "Could not save draft: {e}"
+msgstr "No se pudo guardar el borrador: {e}"
+
+msgid "Could not save draft: unknown folder"
+msgstr "No se pudo guardar el borrador: carpeta desconocida"
+
+msgid ""
+"Send failed: {e}. The message is in the Outbox and will be sent when the "
+"connection is back."
+msgstr ""
+"El envío ha fallado: {e}. El mensaje está en la Bandeja de salida y se "
+"enviará cuando vuelva la conexión."
+
+msgid "Send failed: {e}"
+msgstr "El envío ha fallado: {e}"
+
+msgid "the server's reply could not be read (it began: {reply})"
+msgstr "no se pudo leer la respuesta del servidor (comenzaba por: {reply})"
+
+msgid "runtime error: {e}"
+msgstr "error en tiempo de ejecución: {e}"
+
+msgid "Could not load {path}: {e}"
+msgstr "No se pudo cargar {path}: {e}"
+
+msgid "Could not load conversation: {e}"
+msgstr "No se pudo cargar la conversación: {e}"
+
+msgid "Could not update message: {e}"
+msgstr "No se pudo actualizar el mensaje: {e}"
+
+msgid "Could not flag message: {e}"
+msgstr "No se pudo marcar el mensaje: {e}"
+
+msgid ""
+"This server does not store tags, so Hylki keeps them on this computer only"
+msgstr ""
+"Este servidor no almacena etiquetas, por lo que Hylki las guarda únicamente "
+"en este equipo"
+
+msgid "Could not tag message: {e}"
+msgstr "No se pudo etiquetar el mensaje: {e}"
+
+msgid "Could not mark folder read: {e}"
+msgstr "No se pudo marcar la carpeta como leída: {e}"
+
+msgid "Could not move {len} messages: {e}"
+msgstr "No se pudieron mover {len} mensajes: {e}"
+
+msgid "Could not delete permanently: {e}"
+msgstr "No se pudo eliminar definitivamente: {e}"
+
+msgid "Could not move folder: {e}"
+msgstr "No se pudo mover la carpeta: {e}"
+
+msgid "Message sent, but saving to Sent failed: {e}"
+msgstr "Mensaje enviado, pero no se pudo guardar en Enviados: {e}"
+
+msgid "Connecting to {host}…"
+msgstr "Conectando con {host}…"
+
+msgid "Connection failed: {e}"
+msgstr "La conexión ha fallado: {e}"
+
+msgid "Downloading attachments… {n} remaining"
+msgid_plural "Downloading attachments… {n} remaining"
+msgstr[0] "Descargando archivos adjuntos… queda {n}"
+msgstr[1] "Descargando archivos adjuntos… quedan {n}"
+
+msgid "“{subject}” will be sent {when}"
+msgstr "«{subject}» se enviará {when}"
+
+msgid "Could not schedule the message: there is no local store to keep it in."
+msgstr ""
+"No se pudo programar el mensaje: no hay ningún almacenamiento local donde "
+"conservarlo."
+
+msgid ""
+"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
+msgstr ""
+"no tienes ninguna clave OpenPGP propia para {addr}; genera una en Ajustes → "
+"OpenPGP"
+
+msgid "no OpenPGP key for {addr}"
+msgstr "no hay ninguna clave OpenPGP para {addr}"
+
+msgid "Could not delete message: {e}"
+msgstr "No se pudo eliminar el mensaje: {e}"
+
+msgid "POP3 accounts don't support folders"
+msgstr "Las cuentas POP3 no admiten carpetas"
+
+msgid "Inbox"
+msgstr "Bandeja de entrada"
+
+msgid "Email Client"
+msgstr "Cliente de correo electrónico"
+
+msgid ""
+"A fast, GNOME-native email client, built with Rust and libadwaita. Open "
+"source and private by default."
+msgstr ""
+"Un cliente de correo rápido y nativo de GNOME, desarrollado con Rust y "
+"libadwaita. De código abierto y privado de forma predeterminada."
+
+msgid "Email;Mail;IMAP;"
+msgstr "Correo electrónico;Correo;Email;Mail;IMAP;"
+
+msgid ""
+"Hylki is a desktop email client for GNOME on Wayland, written in Rust with "
+"libadwaita. Your mail and credentials stay on your machine, remote content "
+"is blocked until you allow it, and there is no telemetry. It works with "
+"IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to "
+"Proton Bridge to a Stalwart of your own."
+msgstr ""
+"Hylki es un cliente de correo de escritorio para GNOME sobre Wayland, "
+"escrito en Rust con libadwaita. Tu correo y tus credenciales permanecen en "
+"tu equipo, el contenido remoto se bloquea hasta que lo permitas y no existe "
+"telemetría. Funciona con IMAP, POP3, JMAP y Microsoft 365, así como con "
+"servidores desde iCloud y Proton Bridge hasta tu propio Stalwart."
+
+msgid "Accounts and mail:"
+msgstr "Cuentas y correo:"
+
+msgid ""
+"Multiple accounts with a unified Inboxes view; Google, Microsoft and custom "
+"OAuth sign-in, or an account imported from GNOME Online Accounts"
+msgstr ""
+"Varias cuentas con una vista unificada de Bandejas de entrada; inicio de "
+"sesión con Google, Microsoft y OAuth personalizado, o cuentas importadas "
+"desde Cuentas en línea de GNOME"
+
+msgid ""
+"Whole-mailbox sync and search, conversation threading, and changes made on "
+"other devices synced back"
+msgstr ""
+"Sincronización y búsqueda de buzones completos, conversaciones en hilos y "
+"sincronización de los cambios realizados en otros dispositivos"
+
+msgid ""
+"Folder management, filters, tags, unified and filtered folders, and Trash "
+"and Junk emptied by hand or on a schedule"
+msgstr ""
+"Gestión de carpetas, filtros, etiquetas, carpetas unificadas y filtradas, y "
+"vaciado manual o programado de Papelera y Correo no deseado"
+
+msgid "An attachment gallery, an Outbox for sends that fail, and Send Later"
+msgstr ""
+"Una galería de archivos adjuntos, una Bandeja de salida para los envíos "
+"fallidos y la opción Enviar más tarde"
+
+msgid "Writing:"
+msgstr "Redacción:"
+
+msgid ""
+"Rich text, Markdown, HTML or plain text, with HTML signatures, inline "
+"images, spell check and undo"
+msgstr ""
+"Texto enriquecido, Markdown, HTML o texto sin formato, con firmas HTML, "
+"imágenes integradas, corrección ortográfica y deshacer"
+
+msgid ""
+"Drafts, quote folding, split replies, and forwarding that keeps the "
+"attachments"
+msgstr ""
+"Borradores, citas plegables, respuestas separadas y reenvíos que conservan "
+"los archivos adjuntos"
+
+msgid ""
+"Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a "
+"Send with Hylki entry in GNOME Files"
+msgstr ""
+"Archivos grandes subidos a tu propio Nextcloud, OneDrive, Dropbox o Seafile; "
+"además de una opción Enviar con Hylki en Archivos de GNOME"
+
+msgid "Reading:"
+msgstr "Lectura:"
+
+msgid ""
+"Reader View, your own font and colours, and per-message light or dark "
+"rendering"
+msgstr ""
+"Vista de lectura, tus propias fuentes y colores y representación clara u "
+"oscura para cada mensaje"
+
+msgid ""
+"OpenPGP signing, encryption and reading; DKIM, SPF and DMARC checked on "
+"arrival"
+msgstr ""
+"Firma, cifrado y lectura con OpenPGP; comprobación de DKIM, SPF y DMARC al "
+"recibir los mensajes"
+
+msgid ""
+"Meeting invitations answered in place, and one-click unsubscribe from list "
+"mail"
+msgstr ""
+"Respuesta directa a invitaciones de reuniones y cancelación de suscripciones "
+"a listas de correo con un solo clic"
+
+msgid "The app:"
+msgstr "La aplicación:"
+
+msgid ""
+"Adaptive three-pane layout, five appearance themes, Focus Mode, a "
+"customizable toolbar and swipe actions"
+msgstr ""
+"Diseño adaptable de tres paneles, cinco temas de apariencia, modo de "
+"concentración, barra de herramientas personalizable y acciones al deslizar"
+
+msgid ""
+"Gmail-style single-key shortcuts, notifications with actions, an optional "
+"tray icon and background running"
+msgstr ""
+"Atajos de una sola tecla al estilo de Gmail, notificaciones con acciones, "
+"icono opcional en la bandeja del sistema y ejecución en segundo plano"
+
+msgid ""
+"GNOME Contacts integration, your choice of language and clock, and passwords "
+"kept in the system keyring"
+msgstr ""
+"Integración con Contactos de GNOME, elección de idioma y formato horario, y "
+"contraseñas almacenadas en el llavero del sistema"
+
+msgid "The unified inbox in light mode"
+msgstr "La bandeja de entrada unificada en modo claro"
+
+msgid "Hyprlab"
+msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Google and Microsoft accounts sign in through GNOME Settings → Online "
+#~ "Accounts, then appear above."
+#~ msgstr ""
+#~ "Las cuentas de Google y Microsoft inician sesión mediante Ajustes de "
+#~ "GNOME → Cuentas en línea y después aparecen arriba."

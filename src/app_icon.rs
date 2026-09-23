@@ -95,7 +95,9 @@ pub fn png_for(id: &str) -> &'static [u8] {
 /// The choice in force, settling it on the first start that finds none
 /// (the default; the wizard lets a fresh install pick). The override on
 /// disk is brought in line either way, so a reinstall (or a changed
-/// default) never silently swaps the icon someone chose.
+/// default) never silently swaps the icon someone chose, unless the
+/// launcher carries an icon set outside Hylki: that one is left alone
+/// until a pick in the app replaces it (#252).
 pub fn init_on_startup() -> String {
     if std::env::var("HYLKI_DEMO").is_ok() {
         return DEFAULT_ID.to_string();
@@ -116,18 +118,45 @@ pub fn init_on_startup() -> String {
         }
     };
     let id = effective(&id).to_string();
-    apply(&id);
+    apply(&id, false);
     id
 }
 
-/// Persist a choice and put it on the desktop.
+/// Persist a choice and put it on the desktop, over an icon set outside
+/// Hylki too: this is the user picking one in the app.
 pub fn set(id: &str) -> String {
     let id = effective(id).to_string();
     crate::config::save_app_icon(&id);
     if std::env::var("HYLKI_DEMO").is_err() {
-        apply(&id);
+        apply(&id, true);
     }
     id
+}
+
+/// The icon the app's launcher names when somebody other than Hylki put it
+/// there: a menu editor, a hand edit, an icon theme's name (#252). Hylki
+/// only ever writes the app's own icon name or the file of a gallery
+/// choice, so anything else was the user's doing.
+pub fn custom_icon() -> Option<String> {
+    if std::env::var("HYLKI_DEMO").is_ok() {
+        return None;
+    }
+    Launcher::find().custom_icon()
+}
+
+/// Whether a launcher's `Icon=` value is one Hylki puts there: the name the
+/// build installs its icon under, or the file a choice is written to.
+fn icon_is_ours(value: &str) -> bool {
+    if value == crate::APP_ID {
+        return true;
+    }
+    let path = std::path::Path::new(value);
+    let prefix = format!("{}-", crate::APP_ID);
+    path.is_absolute()
+        && path
+            .file_name()
+            .map(|n| n.to_string_lossy())
+            .is_some_and(|n| n.starts_with(&prefix) && n.ends_with(".png"))
 }
 
 /// The icon name a choice is written under: `<APP_ID>-<choice>`, the
@@ -179,10 +208,22 @@ const SIZES: [i32; 2] = [512, 256];
 /// stays unknown for seconds, and a removed file keeps resolving to its
 /// old path (drawn as a blank) until the next re-scan. A changed path also
 /// counts as a changed launcher, so the dock rebuilds the icon at once.
-fn apply(id: &str) {
+///
+/// At startup (`replace_custom` false) a launcher whose icon the user set
+/// themselves is left as it is, file and all.
+fn apply(id: &str, replace_custom: bool) {
     let name = icon_name(id);
     let Some(hicolor) = hicolor_dir() else { return };
     let launcher = Launcher::find();
+    if !replace_custom {
+        if let Some(icon) = launcher.custom_icon() {
+            tracing::info!("the launcher's icon ({icon}) was set outside Hylki, leaving it");
+            // A theme name serves the windows too; a file path cannot.
+            let window_icon = if icon.contains('/') { crate::APP_ID } else { icon.as_str() };
+            gtk::Window::set_default_icon_name(window_icon);
+            return;
+        }
+    }
     let is_default = id == DEFAULT_ID;
     // The default needs no file of its own where the install's launcher
     // can simply be restored (the copy is removed); a launcher the user's
@@ -337,7 +378,8 @@ enum Launcher {
         flatpak: bool,
     },
     /// A launcher the user's own install put there (install.sh, a source
-    /// tree): only its `Icon=` line is ever touched.
+    /// tree), or a copy the user made of the installed one (a menu editor
+    /// writes one): only its `Icon=` line is ever touched.
     Owned(PathBuf),
     /// No installed launcher at all.
     None,
@@ -354,13 +396,16 @@ impl Launcher {
             .map(|t| t.contains(LAUNCHER_MARK))
             .unwrap_or(false);
 
+        // A copy without our mark is the user's (or their install's), under
+        // the Flatpak too: rewriting it whole would lose whatever else they
+        // changed in it.
+        if user_path.exists() && !ours {
+            return Launcher::Owned(user_path);
+        }
         if in_flatpak() {
             let base = PathBuf::from("/app/share/applications").join(&file);
             let Some((exec, try_exec)) = flatpak_exec() else { return Launcher::None };
             return Launcher::Shadow { base, user_path, ours, exec: Some(exec), try_exec, flatpak: true };
-        }
-        if user_path.exists() && !ours {
-            return Launcher::Owned(user_path);
         }
         // An AppImage installs nothing (#235): the only launcher is the one
         // the integrator wrote (AppManager, Gear Lever), under a name of its
@@ -395,6 +440,20 @@ impl Launcher {
             return Launcher::Shadow { base, user_path, ours, exec: None, try_exec, flatpak: false };
         }
         Launcher::None
+    }
+
+    /// The launcher's `Icon=` value, when Hylki did not write it. A menu
+    /// editor keeps our mark when it edits our copy, so the value is what
+    /// is judged, not the mark.
+    fn custom_icon(&self) -> Option<String> {
+        let path = match self {
+            Launcher::Shadow { user_path, .. } => user_path,
+            Launcher::Owned(path) => path,
+            Launcher::None => return None,
+        };
+        let text = std::fs::read_to_string(path).ok()?;
+        let icon = desktop_value(&text, "Icon")?;
+        (!icon.is_empty() && !icon_is_ours(&icon)).then_some(icon)
     }
 
     /// Point the launcher at `icon` (an absolute path); `restore` instead
@@ -904,6 +963,33 @@ mod tests {
         // A missing directory is nothing to write into.
         sync_mime_cache(&dir.join("absent"));
         assert!(!dir.join("absent").exists());
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn only_icons_hylki_writes_count_as_its_own() {
+        let id = crate::APP_ID;
+        assert!(icon_is_ours(id));
+        assert!(icon_is_ours(&format!("/home/u/.local/share/icons/hicolor/512x512/apps/{id}-envelope-wave.png")));
+        assert!(icon_is_ours(&format!("/home/u/.local/share/icons/hicolor/512x512/apps/{id}-default.png")));
+        // A theme's name, the symbolic, another app's file, a relative path.
+        assert!(!icon_is_ours("mail-client"));
+        assert!(!icon_is_ours(&format!("{id}-symbolic")));
+        assert!(!icon_is_ours("/home/u/icons/hylki-square.svg"));
+        assert!(!icon_is_ours(&format!("{id}-default.png")));
+    }
+
+    #[test]
+    fn a_launcher_edited_outside_hylki_reports_its_icon() {
+        let dir = std::env::temp_dir().join(format!("hylki-custom-icon-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("launcher.desktop");
+        // A menu editor keeps our mark when it edits our copy.
+        std::fs::write(&path, format!("[Desktop Entry]\nName=Hylki\nIcon=Papirus-mail\n{LAUNCHER_MARK}=1\n")).unwrap();
+        assert_eq!(Launcher::Owned(path.clone()).custom_icon().as_deref(), Some("Papirus-mail"));
+        std::fs::write(&path, format!("[Desktop Entry]\nName=Hylki\nIcon={}\n", crate::APP_ID)).unwrap();
+        assert_eq!(Launcher::Owned(path.clone()).custom_icon(), None);
+        assert_eq!(Launcher::None.custom_icon(), None);
         let _ = std::fs::remove_dir_all(&dir);
     }
 }

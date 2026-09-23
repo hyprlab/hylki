@@ -3012,17 +3012,35 @@ impl Component for Preferences {
             title.set_halign(gtk::Align::Start);
             title.set_xalign(0.0);
             body.append(&title);
+            // An icon set outside Hylki stays until a pick here (#252): say
+            // so, and ring no tile, since none of them is what shows.
+            let custom = crate::app_icon::custom_icon().is_some();
+            let note = gtk::Label::new(Some(
+                i18n("The launcher shows an icon set outside Hylki. Picking one here replaces it.")
+                    .as_str(),
+            ));
+            note.add_css_class("dim-label");
+            note.add_css_class("caption");
+            note.set_halign(gtk::Align::Start);
+            note.set_xalign(0.0);
+            note.set_wrap(true);
+            note.set_visible(custom);
+            body.append(&note);
             widgets.app_icon_row.set_child(Some(&body));
             // The icon gallery decodes the whole catalogue; it fills in a
             // moment after the window is up rather than holding it back.
             let s = sender.clone();
-            let app_icon = init.app_icon.clone();
+            let app_icon = if custom { String::new() } else { init.app_icon.clone() };
             gtk::glib::idle_add_local_full(gtk::glib::Priority::LOW, move || {
                 let s = s.clone();
+                let note = note.clone();
                 let strip = crate::ui::icon_picker::strip(
                     &app_icon,
                     56,
-                    std::rc::Rc::new(move |id: &str| s.input(PrefInput::ChangeAppIcon(id.to_string()))),
+                    std::rc::Rc::new(move |id: &str| {
+                        note.set_visible(false);
+                        s.input(PrefInput::ChangeAppIcon(id.to_string()))
+                    }),
                 );
                 strip.set_margin_top(6);
                 body.append(&strip);

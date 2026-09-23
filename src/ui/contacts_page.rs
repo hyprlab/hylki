@@ -13,7 +13,7 @@ use relm4::prelude::*;
 
 use crate::contacts::{ContactDetails, ContactEdit, Labeled};
 use crate::ui::context_menu::{show_context_menu, MenuEntry};
-use crate::i18n::{i18n, i18n_noop};
+use crate::i18n::{i18n, i18n_f, i18n_noop};
 
 /// How the contact list is ordered.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -639,7 +639,13 @@ impl ContactsPage {
         widgets.count_label.set_label(&if self.query.is_empty() {
             self.contacts.len().to_string()
         } else {
-            format!("{} of {}", self.row_map.len(), self.contacts.len())
+            i18n_f(
+                "{shown} of {total}",
+                &[
+                    ("shown", &self.row_map.len().to_string()),
+                    ("total", &self.contacts.len().to_string()),
+                ],
+            )
         });
         for &idx in &self.row_map {
             let c = &self.contacts[idx];

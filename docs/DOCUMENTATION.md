@@ -8,6 +8,7 @@ keyboard.
 **Contents**
 
 - [Configuration](#configuration)
+- [GNOME Online Accounts](#gnome-online-accounts)
 - [OAuth (Google / Microsoft)](#oauth-google--microsoft)
 - [Cloud attachments (Nextcloud, OneDrive, Dropbox, Seafile)](#cloud-attachments-nextcloud-onedrive-dropbox-seafile)
 - [Writing in Markdown or HTML](#writing-in-markdown-or-html)
@@ -35,6 +36,22 @@ authority. Leave it off unless the test names this problem, and prefer
 entering the host the certificate is actually for when you know it. Stored
 on the account as `tls_accept_hostname_mismatch` in `accounts.toml`. The
 connection test's text can be selected and copied.
+
+### GNOME Online Accounts
+
+Any mail account set up in *GNOME Settings → Online Accounts* can be
+imported: Google, Microsoft 365 and plain **IMAP and SMTP** accounts alike.
+They are listed in the first-run wizard and under **Settings → Accounts →
+GNOME Online Accounts**, where a switch brings one into Hylki.
+
+GNOME keeps such an account's address, servers and password, and Hylki
+follows it. The password is read from GNOME Online Accounts each time the
+account connects, and server changes made in GNOME Settings are picked up
+while Hylki runs, so nothing is typed twice. For an IMAP and SMTP account
+Hylki also uses what GNOME records about each server: TLS from the start or
+a STARTTLS upgrade, whatever the port, and a certificate accepted in GNOME
+Settings although it does not verify, as a home server's self-signed one
+does not. Stored on the account as the `security` table in `accounts.toml`.
 
 ### JMAP (Stalwart, Fastmail)
 
@@ -406,6 +423,13 @@ message instead. Each dialog has an *Always do this* box, and **Settings →
 System → GNOME Files** holds the same choices, so the questions can be
 skipped: what the files go into, what happens over the limit, and the limit
 itself.
+
+### App icon
+
+**Settings → Appearance → App icon** puts one of the gallery's icons on the
+app's launcher. An icon set on the launcher some other way, with a menu
+editor or by editing its `.desktop` file, is left alone when Hylki starts;
+Settings says so above the gallery, and picking an icon there replaces it.
 
 ### Notifications
 

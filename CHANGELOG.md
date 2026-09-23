@@ -1,5 +1,44 @@
 # Changelog
 
+## 1.40.2-beta.1 — 2026-09-22
+
+Catch-up release: the beta channel is brought level with stable 1.40.1. No
+changes of its own: see the 1.40.1 section below for what is in it.
+
+## 1.40.1 — 2026-09-22
+
+GNOME Online Accounts IMAP accounts connect, custom launcher icons stay,
+and Hylki speaks Spanish.
+
+- **Fixed: IMAP and SMTP accounts from GNOME Online Accounts did not
+  connect** (#254). They were listed and imported, but Hylki chose the TLS
+  mode from the port number and verified every certificate, so a server on
+  a port of its own, or a home server whose self-signed certificate was
+  accepted in GNOME Settings, was refused. The TLS mode of each server, the
+  certificate choice and whether SMTP signs in now come from GOA and are
+  stored on the account (`[accounts.security]`). The password is read from
+  GOA at every connect, and server changes made in GNOME Settings reach the
+  account at startup and while Hylki runs, which also brings accounts
+  imported earlier up to date. The wizard's hint names IMAP and SMTP
+  accounts, and a GOA account's editor no longer claims its password is in
+  Hylki's keyring.
+- **Fixed: a launcher icon set outside Hylki was replaced at every start**
+  (#252). An icon set with a menu editor, by hand or from an icon pack now
+  stays until an icon is picked in Settings or the first-run wizard.
+  Settings says when the launcher shows such an icon, and the wizard only
+  applies an icon that was actually picked. A launcher copy the user made
+  is edited in its `Icon` line alone under the Flatpak too.
+- **New: Spanish,** by Daniel Miguel (#251). "Today, {time}", the
+  "{shown} of {total}" counters, the lightbox caption and the attachment
+  count can now be translated, the count with a proper plural. In a
+  language other than English, a special folder the server calls by the
+  usual English name ("Sent Items", "Junk Mail") shows the translated name;
+  English and folders named otherwise are unchanged.
+- **Updated: French,** by frenchy82 (#250).
+- **Changed: the first-run wizard is on the brand blue,** with the
+  Cantarell wordmark and amber buttons, and holds the light scheme while it
+  is open. The About window's wordmark is set in Cantarell, 180px wide.
+
 ## 1.40.1-beta.1 — 2026-09-22
 
 Catch-up release: the beta channel is brought level with stable 1.40.0. No

@@ -55,6 +55,9 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   [#194](https://github.com/hyprlab/hylki/pull/194)): the Portuguese (Portugal)
   and Brazilian Portuguese translations, the request for a language chooser, and
   the report that the chosen language never reached the Flatpak.
+- [**Daniel Miguel**](https://github.com/danielmigueltejedor) ([#251](https://github.com/hyprlab/hylki/pull/251)): the
+  Spanish translation, and the counters, today's date and special folder
+  names that could not be translated.
 - [**Anton Palgunov**](https://github.com/Toxblh) ([#7](https://github.com/hyprlab/hylki/pull/7),
   [#8](https://github.com/hyprlab/hylki/pull/8)): sender avatars from GNOME
   Contacts photos, and GNOME Online Accounts refinements: custom server ports
@@ -126,6 +129,7 @@ Every language Hylki speaks was given to it by somebody:
 - **Hungarian:** [Laszlo Lang](https://github.com/7system7)
 - **Portuguese (Portugal and Brazil):** [Paulo Fino](https://github.com/somepaulo)
 - **Russian:** [Ilya Semenkovich](https://github.com/iliasen)
+- **Spanish:** [Daniel Miguel](https://github.com/danielmigueltejedor)
 
 Adding or updating one is the easiest way in: see [po/README.md](../po/README.md).
 

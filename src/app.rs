@@ -2604,7 +2604,7 @@ impl SimpleComponent for AppModel {
             sidebar_state.tags_expanded_accounts.retain(|e| !goa_removed.contains(e));
             config::save_sidebar_state(&sidebar_state);
         }
-        if !goa_removed.is_empty() || goa_outcome.paused_changed {
+        if !goa_removed.is_empty() || goa_outcome.paused_changed || goa_outcome.servers_changed {
             let _ = config::save(&config);
         }
         let order = sidebar_state.order;
@@ -6954,8 +6954,11 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::SetAppIcon(id) => {
+                // Picking the stored choice again still changes the desktop
+                // when it replaces an icon set outside Hylki (#252).
+                let replaces_custom = crate::app_icon::custom_icon().is_some();
                 let id = crate::app_icon::set(&id);
-                if self.app_icon != id {
+                if self.app_icon != id || replaces_custom {
                     self.app_icon = id;
                     if let Some(tray) = &self.tray {
                         tray.set_icon(self.tray_icon, crate::app_icon::png_for(&self.app_icon));
@@ -8769,7 +8772,9 @@ impl SimpleComponent for AppModel {
                 sender.input(AppMsg::SetPreviewLines(p.preview_lines));
                 sender.input(AppMsg::SetAvatars(p.avatars));
                 sender.input(AppMsg::SetThreading(p.threading));
-                sender.input(AppMsg::SetAppIcon(p.app_icon));
+                if !p.app_icon.is_empty() {
+                    sender.input(AppMsg::SetAppIcon(p.app_icon));
+                }
                 self.welcome = None;
             }
 
@@ -8851,7 +8856,7 @@ impl SimpleComponent for AppModel {
                     }
                     self.save_sidebar_state();
                 }
-                if !outcome.removed.is_empty() || outcome.paused_changed {
+                if !outcome.removed.is_empty() || outcome.paused_changed || outcome.servers_changed {
                     if let Err(e) = config::save(&self.config) {
                         tracing::error!("could not save config after GOA change: {e}");
                     }
@@ -9018,6 +9023,8 @@ impl SimpleComponent for AppModel {
                 if let Some(cfg) = self.config.get(account_id as usize - 1) {
                     apply_folder_roles(&cfg.folder_roles.clone(), &mut folders);
                 }
+                // After the look-over above, which goes by the English names.
+                crate::models::localize_special_folder_names(&mut folders);
                 // Keep the settings editor's folder choices current while open.
                 if let Some(acc) = &self.accounts_win {
                     acc.emit(crate::ui::accounts::AccountsInput::SetFolderChoices(
@@ -10678,10 +10685,11 @@ impl AppModel {
                 continue;
             }
             let account_id = (i + 1) as u32;
-            let folders = cache.load_folders(account_id);
+            let mut folders = cache.load_folders(account_id);
             if folders.is_empty() {
                 continue;
             }
+            crate::models::localize_special_folder_names(&mut folders);
             if let Some(inbox) = folders.iter().find(|f| f.kind == FolderKind::Inbox) {
                 let messages = cache.load_messages(account_id, &inbox.path, inbox.id);
                 if !messages.is_empty() {
@@ -11534,6 +11542,14 @@ impl AppModel {
             });
         welcome.widget().set_transient_for(Some(&self.window));
         welcome.widget().set_modal(true);
+        // Light only while it is up; the preference returns when it goes,
+        // however it goes (finished, closed, or replaced on a restart).
+        WIZARD_HOLDS_LIGHT.store(true, std::sync::atomic::Ordering::Relaxed);
+        apply_app_theme(self.app_theme);
+        welcome.widget().connect_unmap(|_| {
+            WIZARD_HOLDS_LIGHT.store(false, std::sync::atomic::Ordering::Relaxed);
+            apply_app_theme(config::load_app_theme());
+        });
         // On a true first run the main window stays hidden (see main.rs)
         // until the wizard finishes — or is dismissed.
         {
@@ -12088,11 +12104,13 @@ impl AppModel {
     /// "name · n of m" for the lightbox's bottom bar.
     fn lightbox_caption(&self) -> String {
         match self.lightbox_items.get(self.lightbox_pos) {
-            Some(att) => format!(
-                "{} \u{b7} {} of {}",
-                att.name,
-                self.lightbox_pos + 1,
-                self.lightbox_items.len()
+            Some(att) => i18n_f(
+                "{name} · {current} of {total}",
+                &[
+                    ("name", &att.name),
+                    ("current", &(self.lightbox_pos + 1).to_string()),
+                    ("total", &self.lightbox_items.len().to_string()),
+                ],
             ),
             None => String::new(),
         }
@@ -16687,7 +16705,7 @@ impl AppModel {
         // wizard-style. Same Overlay-with-spacer cap as the wizard: a
         // Picture's texture wins over both width requests and clamps.
         use crate::ui::welcome::Wordmark;
-        const ABOUT_WORDMARK: i32 = 220;
+        const ABOUT_WORDMARK: i32 = 180;
         let wm_pic = crate::ui::welcome::wordmark_picture_of(Wordmark::WithIcon, ABOUT_WORDMARK);
         let wm_frame = gtk::Box::new(gtk::Orientation::Vertical, 0);
         wm_frame.set_size_request(
@@ -16699,7 +16717,7 @@ impl AppModel {
         wm.add_overlay(&wm_pic);
         wm.set_clip_overlay(&wm_pic, true);
         wm.set_halign(gtk::Align::Center);
-        wm.set_margin_bottom(10);
+        wm.set_margin_bottom(16);
         page.append(&wm);
 
         let version = gtk::Label::new(Some(crate::VERSION));
@@ -19008,6 +19026,7 @@ fn demo_account_configs() -> Vec<AccountConfig> {
         password: "demo".into(),
         smtp_separate: false,
         tls_accept_hostname_mismatch: false,
+        security: None,
         smtp_username: String::new(),
         smtp_password: String::new(),
         color: Some(color.into()),
@@ -19381,13 +19400,16 @@ pub(crate) fn showcase_capture(win: &gtk::Widget, path: &str) {
 struct GoaReconcile {
     removed: Vec<String>,
     paused_changed: bool,
+    /// An account's servers or their security changed in GNOME Settings.
+    servers_changed: bool,
 }
 
 /// Reconcile imported accounts against GNOME Online Accounts: drop the ones
 /// whose GOA account no longer exists, and pause — rather than remove — the ones
 /// whose Mail service is switched off there, restoring their previous enabled
 /// state when it comes back on. Pausing keeps every local setting (label,
-/// colour, signature, sidebar state) intact. `live` is a snapshot the caller
+/// colour, signature, sidebar state) intact. The servers follow GOA's too,
+/// so an edit in GNOME Settings needs no re-import (#254). `live` is a snapshot the caller
 /// obtained while GOA was reachable — when it isn't, skip reconciliation
 /// entirely, so a momentarily-unavailable GOA never wipes imported accounts.
 fn reconcile_goa(config: &mut Vec<AccountConfig>, live: &crate::goa::GoaLiveState) -> GoaReconcile {
@@ -19400,8 +19422,14 @@ fn reconcile_goa(config: &mut Vec<AccountConfig>, live: &crate::goa::GoaLiveStat
         _ => true,
     });
     for c in config.iter_mut() {
-        let Some(id) = &c.goa_id else { continue };
-        let mail_disabled = live.disabled_mail_ids.contains(id);
+        let Some(id) = c.goa_id.clone() else { continue };
+        if let Some(g) = live.mail.get(&id) {
+            if g.apply_servers(c) {
+                tracing::info!("servers for {} updated from GNOME Online Accounts", c.email);
+                outcome.servers_changed = true;
+            }
+        }
+        let mail_disabled = live.disabled_mail_ids.contains(&id);
         if mail_disabled && !c.goa_mail_disabled {
             c.goa_mail_disabled = true;
             c.goa_enabled_before_mail_disabled = c.enabled;
@@ -19553,14 +19581,23 @@ fn save_all_attachments(atts: Vec<Attachment>, parent: Option<adw::ApplicationWi
     });
 }
 
+/// Set while the welcome wizard is open. Its blue ground is designed for the
+/// light scheme only, and libadwaita has no per-window scheme, so the whole
+/// app is held light until the wizard closes.
+static WIZARD_HOLDS_LIGHT: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
 /// Force (or release) the app-wide colour scheme per the appearance
 /// preference — the whole chrome, not just message content, which has its own
 /// setting.
 fn apply_app_theme(theme: config::AppTheme) {
-    let scheme = match theme {
-        config::AppTheme::System => adw::ColorScheme::Default,
-        config::AppTheme::Light => adw::ColorScheme::ForceLight,
-        config::AppTheme::Dark => adw::ColorScheme::ForceDark,
+    let scheme = if WIZARD_HOLDS_LIGHT.load(std::sync::atomic::Ordering::Relaxed) {
+        adw::ColorScheme::ForceLight
+    } else {
+        match theme {
+            config::AppTheme::System => adw::ColorScheme::Default,
+            config::AppTheme::Light => adw::ColorScheme::ForceLight,
+            config::AppTheme::Dark => adw::ColorScheme::ForceDark,
+        }
     };
     adw::StyleManager::default().set_color_scheme(scheme);
 }

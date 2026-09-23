@@ -8,7 +8,7 @@ use relm4::prelude::*;
 
 use crate::models::{Message, ThreadSummary};
 use crate::ui::context_menu::{show_context_menu, show_context_menu_with_header, MenuEntry};
-use crate::i18n::i18n;
+use crate::i18n::{i18n, i18n_f};
 
 /// Max rows rendered at once. GtkListBox isn't virtualized, so the full folder
 /// index is kept in memory for search but only this many rows are built.
@@ -4679,7 +4679,13 @@ impl MessageList {
     /// Toolbar count: total matches, noting when more exist than are shown.
     fn count_label(&self) -> String {
         if self.total_matches > self.rendered_count {
-            format!("{} of {}", self.rendered_count, self.total_matches)
+            i18n_f(
+                "{shown} of {total}",
+                &[
+                    ("shown", &self.rendered_count.to_string()),
+                    ("total", &self.total_matches.to_string()),
+                ],
+            )
         } else {
             format!("{}", self.total_matches)
         }

@@ -8,7 +8,7 @@ use gtk::prelude::*;
 use crate::i18n::i18n;
 
 /// Build the gallery as a fixed six-wide grid (three even rows) with
-/// `selected` ringed; `on_pick` runs for every change the user makes (not
+/// `selected` ringed (none when it is empty); `on_pick` runs for every change the user makes (not
 /// for the initial selection).
 pub fn gallery(selected: &str, tile: i32, on_pick: Rc<dyn Fn(&str)>) -> gtk::FlowBox {
     build(selected, tile, 6, on_pick)
@@ -139,7 +139,10 @@ fn build(selected: &str, tile: i32, per_line: u32, on_pick: Rc<dyn Fn(&str)>) ->
             to_select = Some(child);
         }
     }
-    if let Some(child) = to_select.or_else(|| grid.child_at_index(0)) {
+    // An empty `selected` rings nothing: the launcher shows an icon set
+    // outside Hylki (#252), and every tile, the default's too, is a pick.
+    let fallback = || if selected.is_empty() { None } else { grid.child_at_index(0) };
+    if let Some(child) = to_select.or_else(fallback) {
         grid.select_child(&child);
     }
 

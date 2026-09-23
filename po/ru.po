@@ -317,6 +317,10 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Перезапустить сейчас"
 
+#, fuzzy
+msgid "{name} · {current} of {total}"
+msgstr "{cur} из {total}"
+
 msgid "View Source"
 msgstr "Просмотр исходного кода"
 
@@ -1006,6 +1010,10 @@ msgstr "Ожидает с {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Запланировано на {when}"
+
+#, fuzzy
+msgid "Today, {time}"
+msgstr "В понедельник утром ({time})"
 
 msgid "New message"
 msgstr "Новое сообщение"
@@ -2040,6 +2048,16 @@ msgstr "Индексация {n} сообщений…"
 msgid "Loading more…"
 msgstr "Загрузка остальных…"
 
+msgid "{n} attachment"
+msgid_plural "{n} attachments"
+msgstr[0] "{n} вложение"
+msgstr[1] "{n} вложения"
+msgstr[2] "{n} вложений"
+
+#, fuzzy
+msgid "{shown} of {total}"
+msgstr "{cur} из {total}"
+
 msgid "The file could not be opened"
 msgstr "Не удалось открыть файл"
 
@@ -2565,12 +2583,6 @@ msgstr "Это время уже прошло"
 
 msgid "Choose a time later than now."
 msgstr "Выберите время позже текущего."
-
-msgid "{n} attachment"
-msgid_plural "{n} attachments"
-msgstr[0] "{n} вложение"
-msgstr[1] "{n} вложения"
-msgstr[2] "{n} вложений"
 
 msgid "Contacts"
 msgstr "Контакты"
@@ -4515,6 +4527,10 @@ msgstr "2 строки"
 msgid "3 lines"
 msgstr "3 строки"
 
+msgid ""
+"The launcher shows an icon set outside Hylki. Picking one here replaces it."
+msgstr ""
+
 msgid "When displayed"
 msgstr "Условие отметки прочитанным"
 
@@ -4811,11 +4827,9 @@ msgid "Test & Add"
 msgstr "Проверить и добавить"
 
 msgid ""
-"Google and Microsoft accounts sign in through GNOME Settings → Online "
-"Accounts, then appear above."
+"Accounts added in GNOME Settings → Online Accounts appear above, IMAP and "
+"SMTP ones included. Google and Microsoft sign in only that way."
 msgstr ""
-"Учётные записи Google и Microsoft подключаются через Параметры GNOME → "
-"Сетевые учётные записи, после чего отображаются выше."
 
 msgid "Scan Again"
 msgstr "Повторить поиск"
@@ -5253,6 +5267,13 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Google and Microsoft accounts sign in through GNOME Settings → Online "
+#~ "Accounts, then appear above."
+#~ msgstr ""
+#~ "Учётные записи Google и Microsoft подключаются через Параметры GNOME → "
+#~ "Сетевые учётные записи, после чего отображаются выше."
 
 #~ msgid "A clean, fast GNOME-native email client"
 #~ msgstr "Простой и быстрый почтовый клиент для GNOME"

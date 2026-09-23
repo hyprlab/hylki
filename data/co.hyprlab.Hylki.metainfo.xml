@@ -74,6 +74,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.40.1" date="2026-09-22">
+      <description>
+        <p>IMAP and SMTP accounts from GNOME Online Accounts connect with the settings made in GNOME. A launcher icon you set yourself is no longer replaced at startup. New Spanish translation and updated French.</p>
+      </description>
+    </release>
     <release version="1.40.0" date="2026-09-22">
       <description>
         <p>A new app icon: an opened envelope drawn by Yiannis Ioannides, with a symbolic twin for the tray. The earlier envelope stays in the icon gallery as "Wave".</p>

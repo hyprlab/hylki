@@ -318,6 +318,10 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Újraindítás most"
 
+#, fuzzy
+msgid "{name} · {current} of {total}"
+msgstr "{cur} / {total}"
+
 msgid "View Source"
 msgstr "Forrás megtekintése"
 
@@ -992,6 +996,10 @@ msgstr "Várakozás {ago} óta"
 
 msgid "Scheduled for {when}"
 msgstr "Ütemezve ekkorra: {when}"
+
+#, fuzzy
+msgid "Today, {time}"
+msgstr "Hétfő délelőtt (8:00)"
 
 msgid "New message"
 msgstr "Új üzenet"
@@ -2025,6 +2033,16 @@ msgstr "{n} üzenet törlése"
 msgid "Loading more…"
 msgstr "Továbbiak betöltése…"
 
+#, fuzzy
+msgid "{n} attachment"
+msgid_plural "{n} attachments"
+msgstr[0] "Nincsenek mellékletek"
+msgstr[1] "Nincsenek mellékletek"
+
+#, fuzzy
+msgid "{shown} of {total}"
+msgstr "{cur} / {total}"
+
 msgid "The file could not be opened"
 msgstr "A fájl nem nyitható meg"
 
@@ -2552,12 +2570,6 @@ msgstr "Ez az időpont már elmúlt"
 
 msgid "Choose a time later than now."
 msgstr "Válasszon a jelenleginél későbbi időpontot."
-
-#, fuzzy
-msgid "{n} attachment"
-msgid_plural "{n} attachments"
-msgstr[0] "Nincsenek mellékletek"
-msgstr[1] "Nincsenek mellékletek"
 
 msgid "Contacts"
 msgstr "Névjegyek"
@@ -4428,6 +4440,10 @@ msgstr "2 sor"
 msgid "3 lines"
 msgstr "3 sor"
 
+msgid ""
+"The launcher shows an icon set outside Hylki. Picking one here replaces it."
+msgstr ""
+
 msgid "When displayed"
 msgstr "Megjelenítés ideje"
 
@@ -4728,11 +4744,9 @@ msgid "Test & Add"
 msgstr "Tesztelés és hozzáadás"
 
 msgid ""
-"Google and Microsoft accounts sign in through GNOME Settings → Online "
-"Accounts, then appear above."
+"Accounts added in GNOME Settings → Online Accounts appear above, IMAP and "
+"SMTP ones included. Google and Microsoft sign in only that way."
 msgstr ""
-"A Google- és Microsoft-fiókok a GNOME Beállítások → Online-fiókok menüjén "
-"keresztül jelentkeznek be, majd fent jelennek meg."
 
 msgid "Scan Again"
 msgstr "Újraellenőrzés"
@@ -5171,6 +5185,13 @@ msgstr "Az egységes beérkezett nézet világos módban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Google and Microsoft accounts sign in through GNOME Settings → Online "
+#~ "Accounts, then appear above."
+#~ msgstr ""
+#~ "A Google- és Microsoft-fiókok a GNOME Beállítások → Online-fiókok menüjén "
+#~ "keresztül jelentkeznek be, majd fent jelennek meg."
 
 #~ msgid "A clean, fast GNOME-native email client"
 #~ msgstr "Tiszta, gyors, GNOME-ba illeszkedő levelezőkliens"

@@ -36,7 +36,8 @@ pub struct WelcomePrefs {
     pub preview_lines: u32,
     pub avatars: bool,
     pub threading: bool,
-    /// The app icon picked from the gallery (an `app_icon::catalog` id).
+    /// The app icon picked from the gallery (an `app_icon::catalog` id), or
+    /// empty when nothing was picked over an icon set outside Hylki.
     pub app_icon: String,
 }
 
@@ -124,19 +125,24 @@ fn wizard_providers() -> Vec<&'static Provider> {
     PROVIDERS.iter().filter(|p| p.wizard_password_provider()).collect()
 }
 
-/// The wordmark with the app icon beside it, for the About window: the
-/// script lettering, black or white, as an SVG on a 249x133 box (the
-/// pixbuf loader tells the formats apart by their bytes).
+/// The wordmark with the app icon beside it, for the About window and the
+/// wizard: "Hylki" set in Cantarell, dark or white, as an SVG on a 128x42
+/// box (the pixbuf loader tells the formats apart by their bytes). The
+/// wizard always takes the white one, on its blue ground.
 const ABOUT_WORDMARK_SVG: &[u8] = include_bytes!("../../data/about/wordmark-black.svg");
 const ABOUT_WORDMARK_DARK_SVG: &[u8] = include_bytes!("../../data/about/wordmark-white.svg");
 
 /// Which wordmark art a picture shows.
 #[derive(Clone, Copy)]
 pub(crate) enum Wordmark {
-    /// The lettering alone (the wizard's floating wordmark).
+    /// The script lettering alone (the carry-over notice).
     Plain,
-    /// The lettering with the app icon beside it (the About window).
+    /// The Cantarell lettering with the app icon beside it, dark or white
+    /// by scheme (the About window).
     WithIcon,
+    /// The same art, always with white lettering (the wizard's floating
+    /// wordmark, on the blue ground).
+    WithIconWhite,
 }
 
 impl Wordmark {
@@ -145,7 +151,7 @@ impl Wordmark {
             (Wordmark::Plain, false) => WORDMARK_PNG,
             (Wordmark::Plain, true) => WORDMARK_DARK_PNG,
             (Wordmark::WithIcon, false) => ABOUT_WORDMARK_SVG,
-            (Wordmark::WithIcon, true) => ABOUT_WORDMARK_DARK_SVG,
+            (Wordmark::WithIcon, true) | (Wordmark::WithIconWhite, _) => ABOUT_WORDMARK_DARK_SVG,
         }
     }
 
@@ -153,12 +159,13 @@ impl Wordmark {
     fn aspect(self) -> f64 {
         match self {
             Wordmark::Plain => 293.0 / 1024.0,
-            Wordmark::WithIcon => 133.0 / 249.0,
+            Wordmark::WithIcon | Wordmark::WithIconWhite => 42.0 / 128.0,
         }
     }
 }
 
-/// Render the wordmark at 2x for crisp HiDPI, displayed at `width` px.
+/// Render the script lettering at 2x for crisp HiDPI, displayed at
+/// `width` px.
 pub(crate) fn wordmark_picture(width: i32) -> gtk::Picture {
     wordmark_picture_of(Wordmark::Plain, width)
 }
@@ -294,7 +301,7 @@ const SMALL_TOP: f64 = 6.0;
 const SMALL_BOTTOM: f64 = 16.0;
 const SMALL_SIZE: f64 = 128.0;
 
-/// The wizard wordmark's height for a given width.
+/// The script lettering's height for a given width.
 pub(crate) fn wordmark_height(width: f64) -> i32 {
     wordmark_height_of(Wordmark::Plain, width)
 }
@@ -314,7 +321,7 @@ fn bind_wordmark_to_position(carousel: &adw::Carousel, frame: &gtk::Box, holder:
     carousel.connect_position_notify(move |car| {
         let p = car.position().clamp(0.0, 1.0);
         let s = HERO_SIZE + (SMALL_SIZE - HERO_SIZE) * p;
-        frame.set_size_request(s as i32, wordmark_height(s));
+        frame.set_size_request(s as i32, wordmark_height_of(Wordmark::WithIconWhite, s));
         holder
             .set_margin_top((HERO_TOP as f64 + (SMALL_TOP - HERO_TOP as f64) * p) as i32);
         // The small form also keeps 16px of air below itself; the hero's
@@ -375,9 +382,12 @@ impl Component for Welcome {
         // natural size is exactly its size request, so the animation drives
         // the spacer and the clipped Picture simply fills whatever the
         // overlay was given.
-        let wordmark_pic = wordmark_picture(300);
+        let wordmark_pic = wordmark_picture_of(Wordmark::WithIconWhite, 300);
         let wordmark_frame = gtk::Box::new(gtk::Orientation::Vertical, 0);
-        wordmark_frame.set_size_request(HERO_SIZE as i32, wordmark_height(HERO_SIZE));
+        wordmark_frame.set_size_request(
+            HERO_SIZE as i32,
+            wordmark_height_of(Wordmark::WithIconWhite, HERO_SIZE),
+        );
         let wordmark_overlay = gtk::Overlay::new();
         wordmark_overlay.set_child(Some(&wordmark_frame));
         wordmark_overlay.add_overlay(&wordmark_pic);
@@ -545,7 +555,7 @@ impl Component for Welcome {
         status_box.append(&status_lbl);
         acct.append(&status_box);
 
-        let goa_note = tagline(&i18n("Google and Microsoft accounts sign in through GNOME Settings → Online Accounts, then appear above."));
+        let goa_note = tagline(&i18n("Accounts added in GNOME Settings → Online Accounts appear above, IMAP and SMTP ones included. Google and Microsoft sign in only that way."));
         goa_note.add_css_class("welcome-hint");
         let rescan = gtk::Button::with_label(&i18n("Scan Again"));
         rescan.add_css_class("flat");
@@ -621,9 +631,13 @@ impl Component for Welcome {
         icon_hdr.set_halign(gtk::Align::Start);
         icon_hdr.set_margin_top(6);
         pers.append(&icon_hdr);
-        let icon_choice = std::rc::Rc::new(std::cell::RefCell::new(
-            crate::config::load_app_icon().unwrap_or_else(|| crate::app_icon::DEFAULT_ID.to_string()),
-        ));
+        // With an icon set outside Hylki on the launcher (#252), nothing is
+        // preselected, and only an actual pick replaces it.
+        let icon_choice = std::rc::Rc::new(std::cell::RefCell::new(if crate::app_icon::custom_icon().is_some() {
+            String::new()
+        } else {
+            crate::config::load_app_icon().unwrap_or_else(|| crate::app_icon::DEFAULT_ID.to_string())
+        }));
         let icon_card = card();
         let icon_row = gtk::ListBoxRow::new();
         icon_row.set_activatable(false);
@@ -1029,6 +1043,7 @@ pub(crate) fn blank_account() -> AccountConfig {
         password: String::new(),
         smtp_separate: false,
         tls_accept_hostname_mismatch: false,
+        security: None,
         smtp_username: String::new(),
         smtp_password: String::new(),
         color: None,

@@ -300,6 +300,9 @@ msgstr ""
 msgid "Restart Now"
 msgstr ""
 
+msgid "{name} · {current} of {total}"
+msgstr ""
+
 msgid "View Source"
 msgstr ""
 
@@ -928,6 +931,9 @@ msgid "Waiting since {ago}"
 msgstr ""
 
 msgid "Scheduled for {when}"
+msgstr ""
+
+msgid "Today, {time}"
 msgstr ""
 
 msgid "New message"
@@ -1880,6 +1886,14 @@ msgstr ""
 msgid "Loading more…"
 msgstr ""
 
+msgid "{n} attachment"
+msgid_plural "{n} attachments"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{shown} of {total}"
+msgstr ""
+
 msgid "The file could not be opened"
 msgstr ""
 
@@ -2328,11 +2342,6 @@ msgstr ""
 
 msgid "Choose a time later than now."
 msgstr ""
-
-msgid "{n} attachment"
-msgid_plural "{n} attachments"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid "Contacts"
 msgstr ""
@@ -4013,6 +4022,10 @@ msgstr ""
 msgid "3 lines"
 msgstr ""
 
+msgid ""
+"The launcher shows an icon set outside Hylki. Picking one here replaces it."
+msgstr ""
+
 msgid "When displayed"
 msgstr ""
 
@@ -4297,8 +4310,8 @@ msgid "Test & Add"
 msgstr ""
 
 msgid ""
-"Google and Microsoft accounts sign in through GNOME Settings → Online "
-"Accounts, then appear above."
+"Accounts added in GNOME Settings → Online Accounts appear above, IMAP and "
+"SMTP ones included. Google and Microsoft sign in only that way."
 msgstr ""
 
 msgid "Scan Again"

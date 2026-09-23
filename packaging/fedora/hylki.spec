@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           hylki
-Version:        1.39.3
+Version:        1.40.0
 Release:        1%{?dist}
 Summary:        A clean, fast GNOME-native email client
 License:        AGPL-3.0-or-later
@@ -42,7 +42,6 @@ for size in 256x256 512x512; do
 done
 install -Dm644 icons/scalable/%{appid}.svg \
     %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
-%{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 install -Dm644 icons/symbolic/%{appid}-symbolic.svg \
     %{buildroot}%{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 # Message catalogues, staged by tools/build-packages.sh as
@@ -61,6 +60,7 @@ done
 %{_datadir}/metainfo/%{appid}.metainfo.xml
 %{_datadir}/icons/hicolor/*/apps/%{appid}.png
 %{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
+%{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 
 %changelog
 * Fri Sep 18 2026 Hyprlab <hyprlab@proton.me> - 1.35.0-1
