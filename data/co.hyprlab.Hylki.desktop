@@ -19,5 +19,4 @@ X-Flatpak-RenamedFrom=co.hyprlab.Vireo.desktop;com.getveem.Veem.desktop;
 
 [Desktop Action new-message]
 Name=New Message
-Name[de]=Neue Nachricht
 Exec=hylki mailto:
