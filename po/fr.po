@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-09-23 17:46+0200\n"
+"PO-Revision-Date: 2026-09-24 18:30+0200\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -475,20 +475,24 @@ msgstr "Aucun dossier {v1} disponible"
 
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Un message n'a pas pu être déplacé vers {account} : {error}"
+msgstr[1] "{n} messages n'ont pas pu être déplacés vers {account} : {error}"
 
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Déplacement d'un message vers {account}…"
+msgstr[1] "Déplacement de {n} messages vers {account}…"
 
 msgid "One message stayed put: this account can't take mail from another"
 msgstr ""
+"Un message n'a pas été déplacé : ce compte ne peut pas recevoir de courrier "
+"d'un autre compte"
 
 msgid ""
 "{foreign} messages stayed put: this account can't take mail from another"
 msgstr ""
+"{foreign} messages n'ont pas été déplacés : ce compte ne peut pas recevoir "
+"de courrier d'un autre compte"
 
 msgid "Move Folder"
 msgstr "Déplacer le dossier"
@@ -906,16 +910,16 @@ msgid "Default"
 msgstr "Par défaut"
 
 msgid "Blue square"
-msgstr ""
+msgstr "Carré bleu"
 
 msgid "Navy square"
-msgstr ""
+msgstr "Carré bleu marine"
 
 msgid "Yellow square"
-msgstr ""
+msgstr "Carré jaune"
 
 msgid "Classic"
-msgstr ""
+msgstr "Classique"
 
 msgid ""
 "Hylki checks for new mail and shows notifications while its window is closed."
@@ -952,9 +956,8 @@ msgstr "Sur cet ordinateur"
 msgid "CardDAV Address Book"
 msgstr "Carnet d'adresses CardDAV"
 
-#, fuzzy
 msgid "{date} at {time}"
-msgstr "Aujourd'hui, {time}"
+msgstr "{date} à {time}"
 
 msgid "Encrypted message"
 msgstr "Message chiffré"
@@ -1451,14 +1454,16 @@ msgstr "Utiliser les initiales"
 msgid "A photo or logo from this computer"
 msgstr "Une photo ou un logo depuis cet ordinateur"
 
-#, fuzzy
 msgid "Show in All Inboxes"
-msgstr "Afficher sous Toutes les boîtes"
+msgstr "Afficher dans Toutes les boîtes de réception"
 
 msgid ""
 "Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
 "and Archive, and in the unified Filters and Tags."
 msgstr ""
+"Inclure le courrier de ce compte dans les boîtes de réception, favoris, "
+"envoyés, brouillons et archives unifiés, ainsi que dans les filtres et "
+"étiquettes unifiés."
 
 msgid "Send-as aliases"
 msgstr "Alias d'expédition"
@@ -1584,12 +1589,13 @@ msgstr "Clé"
 msgid "Automatic uses the key whose address matches."
 msgstr "La fonction « Automatique » utilise la clé dont l'adresse correspond."
 
-#, fuzzy
 msgid "Sign messages by default"
-msgstr "Messages isolés sous forme de cartes"
+msgstr "Signer les messages par défaut"
 
 msgid "New messages, replies and forwards start with signing on."
 msgstr ""
+"Les nouveaux messages, réponses et transferts démarrent avec la signature "
+"activée."
 
 msgid ""
 "Your password is stored in the system keyring (secret-service), never in "
@@ -1719,7 +1725,7 @@ msgstr "Automatique"
 #. override that is either set or not, and unset means the Sent folder
 #. above keeps taking the copies as it always has.
 msgid "Disabled"
-msgstr ""
+msgstr "Désactivé"
 
 msgid "Microsoft 365 files its own copy in Sent Items; this cannot be changed."
 msgstr ""
@@ -3374,7 +3380,7 @@ msgid "App icon"
 msgstr "Icône de l'application"
 
 msgid "Symbolic"
-msgstr ""
+msgstr "Symbolique"
 
 msgid "Follow system"
 msgstr "Suivre le système"
@@ -3513,13 +3519,13 @@ msgid "Installed, but not this version's copy"
 msgstr "Installée, mais pas la copie de cette version"
 
 msgid "Search Settings"
-msgstr ""
+msgstr "Rechercher des paramètres"
 
 msgid "Search settings"
-msgstr ""
+msgstr "Rechercher des paramètres"
 
 msgid "No Results"
-msgstr ""
+msgstr "Aucun résultat"
 
 msgid "Save the filter?"
 msgstr "Enregistrer le filtre ?"
@@ -3603,12 +3609,14 @@ msgstr ""
 "réglage sous « Lecture »."
 
 msgid "Text size"
-msgstr ""
+msgstr "Taille du texte"
 
 msgid ""
 "All of Hylki's text, messages included, against the desktop's text size. "
 "Icons keep their size."
 msgstr ""
+"Tout le texte de Hylki, messages compris, par rapport à la taille du texte "
+"du bureau. Les icônes conservent leur taille."
 
 msgid "Theme"
 msgstr "Thème"
@@ -3746,10 +3754,10 @@ msgstr ""
 "toujours de changer celui affiché à l'écran."
 
 msgid "Open at startup"
-msgstr ""
+msgstr "Ouvrir au démarrage"
 
 msgid "What the window shows when Hylki starts."
-msgstr ""
+msgstr "Ce que la fenêtre affiche au démarrage de Hylki."
 
 msgid "Accounts in the sidebar"
 msgstr "Comptes dans la barre latérale"
@@ -4410,13 +4418,17 @@ msgstr ""
 "uniquement l'avertissement — le contenu distant reste tout autant bloqué."
 
 msgid "Warn when the addressing doesn't match"
-msgstr ""
+msgstr "Avertir lorsque l'adressage ne correspond pas"
 
 msgid ""
 "Shows the red banner over a message marked \"Check this sender\", such as "
 "one whose replies go to another domain. The badge beside the sender still "
 "marks it, and a possible forgery always shows the banner."
 msgstr ""
+"Affiche la bannière rouge au-dessus d'un message marqué « Vérifiez cet "
+"expéditeur », par exemple lorsque les réponses partent vers un autre "
+"domaine. Le badge à côté de l'expéditeur continue de le signaler, et une "
+"éventuelle usurpation affiche toujours la bannière."
 
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Utiliser Gravatar quand un contact n'a pas de photo"
@@ -4508,6 +4520,8 @@ msgid ""
 "The app icon in full color, or its symbolic outline, which the panel draws "
 "in its own color."
 msgstr ""
+"L'icône de l'application en couleur, ou son contour symbolique, que le "
+"panneau dessine dans sa propre couleur."
 
 msgid "Unread mail in the tray menu"
 msgstr "Courrier non lu dans le menu de notification"
@@ -4519,15 +4533,17 @@ msgstr ""
 "Lister les plus récents messages non lus dans le menu de l'icône ; cliquez "
 "sur l'un d'eux pour l'ouvrir."
 
-#, fuzzy
 msgid "Unread count on the app icon"
-msgstr "Puces de non-lus au lieu des nombres"
+msgstr "Nombre de messages non lus sur l'icône de l'application"
 
 msgid ""
 "The number of unread inbox messages on Hylki's icon in the dock or task "
 "manager. KDE Plasma shows it; GNOME needs a dock extension such as Dash to "
 "Dock."
 msgstr ""
+"Le nombre de messages non lus de la boîte de réception sur l'icône de Hylki "
+"dans le dock ou le gestionnaire de tâches. KDE Plasma l'affiche ; GNOME "
+"nécessite une extension de dock telle que Dash to Dock."
 
 msgid "Single-key shortcuts"
 msgstr "Raccourcis à touche unique"
@@ -4668,10 +4684,10 @@ msgid "All Inboxes"
 msgstr "Toutes les boîtes"
 
 msgid "The last account's inbox"
-msgstr ""
+msgstr "La boîte de réception du dernier compte"
 
 msgid "The last folder"
-msgstr ""
+msgstr "Le dernier dossier"
 
 msgid "Left"
 msgstr "Gauche"
@@ -4764,7 +4780,7 @@ msgid "Add a word"
 msgstr "Ajouter un mot"
 
 msgid "{percent}%"
-msgstr ""
+msgstr "{percent} %"
 
 msgid "Could not install the extension"
 msgstr "Impossible d'installer l'extension"
@@ -5076,20 +5092,22 @@ msgstr "Commencer la lecture"
 msgid "Continue"
 msgstr "Continuer"
 
-#, fuzzy
 msgid "Set Up in Settings"
-msgstr "Paramètres"
+msgstr "Configurer dans les paramètres"
 
 msgid ""
 "An OAuth account needs your provider's sign-in details. Settings opens on it "
 "when you finish here."
 msgstr ""
+"Un compte OAuth nécessite les identifiants de connexion de votre "
+"fournisseur. Les paramètres s'ouvriront dessus une fois que vous aurez "
+"terminé ici."
 
 msgid "Port"
 msgstr "Port"
 
 msgid "✓ Settings opens on your OAuth account at the end"
-msgstr ""
+msgstr "✓ Les paramètres s'ouvrent sur votre compte OAuth à la fin"
 
 msgid "Enter your email address and password first."
 msgstr "Saisissez d'abord votre adresse e-mail et votre mot de passe."
@@ -5179,6 +5197,8 @@ msgstr "Le nom de l'expéditeur indique « {claimed} » mais l'adresse est {from
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
 msgstr ""
+"{from} est vérifié, mais l'adressage ne correspond pas au nom indiqué sur le "
+"message."
 
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Impossible de contacter le serveur JMAP : {e}"
@@ -5263,10 +5283,10 @@ msgid "Send failed: {e}"
 msgstr "Échec de l'envoi : {e}"
 
 msgid "Could not reach the server"
-msgstr ""
+msgstr "Impossible de joindre le serveur"
 
 msgid "That folder is not on the server"
-msgstr ""
+msgstr "Ce dossier n'existe pas sur le serveur"
 
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr ""
@@ -5346,13 +5366,13 @@ msgid "POP3 accounts don't support folders"
 msgstr "Les comptes POP3 ne prennent pas en charge les dossiers"
 
 msgid "A POP3 account can't receive mail from another account"
-msgstr ""
+msgstr "Un compte POP3 ne peut pas recevoir de courrier d'un autre compte"
 
 msgid "Inbox"
 msgstr "Boîte de réception"
 
 msgid "A Microsoft account can't receive mail from another account"
-msgstr ""
+msgstr "Un compte Microsoft ne peut pas recevoir de courrier d'un autre compte"
 
 msgid "Email Client"
 msgstr "Client e-mail"
