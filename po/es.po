@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
-"PO-Revision-Date: 2026-09-22 18:28+0200\n"
+"PO-Revision-Date: 2026-09-24 23:28+0200\n"
 "Last-Translator: Daniel Miguel <danielmigueltejedor@icloud.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -469,27 +469,22 @@ msgstr ""
 msgid "No {v1} folder available"
 msgstr "No hay ninguna carpeta {v1} disponible"
 
-#, fuzzy
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
-msgstr[0] "Un mensaje no se movió: el correo no se puede mover entre cuentas"
-msgstr[1] "Un mensaje no se movió: el correo no se puede mover entre cuentas"
+msgstr[0] "No se pudo mover un mensaje a {account}: {error}"
+msgstr[1] "No se pudieron mover {n} mensajes a {account}: {error}"
 
-#, fuzzy
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
-msgstr[0] "Mueve el mensaje a Correo no deseado."
-msgstr[1] "Mueve el mensaje a Correo no deseado."
+msgstr[0] "Moviendo un mensaje a {account}…"
+msgstr[1] "Moviendo {n} mensajes a {account}…"
 
-#, fuzzy
 msgid "One message stayed put: this account can't take mail from another"
-msgstr "Un mensaje no se movió: el correo no se puede mover entre cuentas"
+msgstr "Un mensaje no se movió: esta cuenta no puede recibir correo de otra cuenta"
 
-#, fuzzy
 msgid ""
 "{foreign} messages stayed put: this account can't take mail from another"
-msgstr ""
-"{foreign} mensajes no se movieron: el correo no se puede mover entre cuentas"
+msgstr "{foreign} mensajes no se movieron: esta cuenta no puede recibir correo de otra cuenta"
 
 msgid "Move Folder"
 msgstr "Mover carpeta"
@@ -909,16 +904,16 @@ msgid "Default"
 msgstr "Predeterminado"
 
 msgid "Blue square"
-msgstr ""
+msgstr "Cuadrado azul"
 
 msgid "Navy square"
-msgstr ""
+msgstr "Cuadrado azul marino"
 
 msgid "Yellow square"
-msgstr ""
+msgstr "Cuadrado amarillo"
 
 msgid "Classic"
-msgstr ""
+msgstr "Clásico"
 
 msgid ""
 "Hylki checks for new mail and shows notifications while its window is closed."
@@ -955,9 +950,8 @@ msgstr "En este equipo"
 msgid "CardDAV Address Book"
 msgstr "Libreta de direcciones CardDAV"
 
-#, fuzzy
 msgid "{date} at {time}"
-msgstr "Hoy, {time}"
+msgstr "{date} a las {time}"
 
 msgid "Encrypted message"
 msgstr "Mensaje cifrado"
@@ -1442,14 +1436,13 @@ msgstr "Usar iniciales"
 msgid "A photo or logo from this computer"
 msgstr "Una foto o logotipo de este equipo"
 
-#, fuzzy
 msgid "Show in All Inboxes"
-msgstr "Bandejas de entrada"
+msgstr "Mostrar en todas las bandejas de entrada"
 
 msgid ""
 "Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
 "and Archive, and in the unified Filters and Tags."
-msgstr ""
+msgstr "Incluye el correo de esta cuenta en las vistas unificadas de Bandejas de entrada, Destacados, Enviados, Borradores y Archivo, y en los Filtros y Etiquetas unificados."
 
 msgid "Send-as aliases"
 msgstr "Alias de envío"
@@ -1575,12 +1568,11 @@ msgstr "Clave"
 msgid "Automatic uses the key whose address matches."
 msgstr "Automático utiliza la clave cuya dirección coincida."
 
-#, fuzzy
 msgid "Sign messages by default"
-msgstr "Mensajes individuales como tarjetas"
+msgstr "Firmar mensajes de forma predeterminada"
 
 msgid "New messages, replies and forwards start with signing on."
-msgstr ""
+msgstr "Los mensajes nuevos, las respuestas y los reenvíos empiezan con la firma criptográfica activada."
 
 msgid ""
 "Your password is stored in the system keyring (secret-service), never in "
@@ -3339,7 +3331,7 @@ msgid "App icon"
 msgstr "Icono de la aplicación"
 
 msgid "Symbolic"
-msgstr ""
+msgstr "Simbólico"
 
 msgid "Follow system"
 msgstr "Seguir el sistema"
@@ -3477,16 +3469,14 @@ msgstr ""
 msgid "Installed, but not this version's copy"
 msgstr "Instalado, pero no corresponde a esta versión"
 
-#, fuzzy
 msgid "Search Settings"
-msgstr "Ajustes"
+msgstr "Buscar en Ajustes"
 
-#, fuzzy
 msgid "Search settings"
-msgstr "Buscar remitentes"
+msgstr "Buscar ajustes"
 
 msgid "No Results"
-msgstr ""
+msgstr "Sin resultados"
 
 msgid "Save the filter?"
 msgstr "¿Guardar el filtro?"
@@ -3570,12 +3560,12 @@ msgstr ""
 "Lectura."
 
 msgid "Text size"
-msgstr ""
+msgstr "Tamaño del texto"
 
 msgid ""
 "All of Hylki's text, messages included, against the desktop's text size. "
 "Icons keep their size."
-msgstr ""
+msgstr "Ajusta todo el texto de Hylki, incluidos los mensajes, con respecto al tamaño del texto del escritorio. Los iconos mantienen su tamaño."
 
 msgid "Theme"
 msgstr "Tema"
@@ -3712,10 +3702,10 @@ msgstr ""
 "cabecera sigue permitiendo cambiar el mensaje mostrado."
 
 msgid "Open at startup"
-msgstr ""
+msgstr "Abrir al iniciar"
 
 msgid "What the window shows when Hylki starts."
-msgstr ""
+msgstr "Lo que muestra la ventana cuando se inicia Hylki."
 
 msgid "Accounts in the sidebar"
 msgstr "Cuentas en la barra lateral"
@@ -4374,13 +4364,13 @@ msgstr ""
 "aviso; el contenido remoto seguirá bloqueado."
 
 msgid "Warn when the addressing doesn't match"
-msgstr ""
+msgstr "Avisar cuando las direcciones no coincidan"
 
 msgid ""
 "Shows the red banner over a message marked \"Check this sender\", such as "
 "one whose replies go to another domain. The badge beside the sender still "
 "marks it, and a possible forgery always shows the banner."
-msgstr ""
+msgstr "Muestra el aviso rojo sobre un mensaje marcado como «Comprueba este remitente», por ejemplo cuando las respuestas van a otro dominio. El indicador junto al remitente sigue señalándolo y una posible falsificación siempre muestra el aviso."
 
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Usar Gravatar cuando un contacto no tenga foto"
@@ -4471,7 +4461,7 @@ msgstr "Icono de bandeja"
 msgid ""
 "The app icon in full color, or its symbolic outline, which the panel draws "
 "in its own color."
-msgstr ""
+msgstr "El icono de la aplicación a todo color o su contorno simbólico, que el panel dibuja con su propio color."
 
 msgid "Unread mail in the tray menu"
 msgstr "Correo sin leer en el menú de la bandeja"
@@ -4483,15 +4473,14 @@ msgstr ""
 "Mostrar los mensajes sin leer más recientes de las bandejas de entrada en el "
 "menú del icono; haz clic en uno para abrirlo."
 
-#, fuzzy
 msgid "Unread count on the app icon"
-msgstr "Puntos de no leídos en lugar de contadores"
+msgstr "Contador de no leídos en el icono de la aplicación"
 
 msgid ""
 "The number of unread inbox messages on Hylki's icon in the dock or task "
 "manager. KDE Plasma shows it; GNOME needs a dock extension such as Dash to "
 "Dock."
-msgstr ""
+msgstr "El número de mensajes sin leer de las bandejas de entrada en el icono de Hylki del dock o gestor de tareas. KDE Plasma lo muestra; GNOME necesita una extensión de dock como Dash to Dock."
 
 msgid "Single-key shortcuts"
 msgstr "Atajos de una sola tecla"
@@ -4627,16 +4616,14 @@ msgstr "Encima de las cuentas"
 msgid "Below the accounts"
 msgstr "Debajo de las cuentas"
 
-#, fuzzy
 msgid "All Inboxes"
-msgstr "Bandejas de entrada"
+msgstr "Todas las bandejas de entrada"
 
 msgid "The last account's inbox"
-msgstr ""
+msgstr "La bandeja de entrada de la última cuenta"
 
-#, fuzzy
 msgid "The last folder"
-msgstr "Esta carpeta"
+msgstr "La última carpeta"
 
 msgid "Left"
 msgstr "Izquierda"
@@ -4729,7 +4716,7 @@ msgid "Add a word"
 msgstr "Añadir una palabra"
 
 msgid "{percent}%"
-msgstr ""
+msgstr "{percent}%"
 
 msgid "Could not install the extension"
 msgstr "No se pudo instalar la extensión"
@@ -4923,22 +4910,17 @@ msgstr ""
 msgid "Get Started"
 msgstr "Comenzar"
 
-#, fuzzy
 msgid "Import your online accounts"
-msgstr "Cuenta importada de Cuentas en línea de GNOME"
+msgstr "Importa tus cuentas en línea"
 
-#, fuzzy
 msgid ""
 "Mail accounts signed in under GNOME Settings → Online Accounts can be added "
 "here in one click. Google and Microsoft accounts are only supported through "
 "Online Accounts."
-msgstr ""
-"Las cuentas añadidas en Ajustes de GNOME → Cuentas en línea aparecen arriba, "
-"incluidas las cuentas IMAP y SMTP. Google y Microsoft solo inician sesión de "
-"esa forma."
+msgstr "Las cuentas de correo con sesión iniciada en Ajustes de GNOME → Cuentas en línea se pueden añadir aquí con un solo clic. Las cuentas de Google y Microsoft solo son compatibles mediante Cuentas en línea."
 
 msgid "No mail accounts were found in Online Accounts."
-msgstr ""
+msgstr "No se encontraron cuentas de correo en Cuentas en línea."
 
 msgid "Scan Again"
 msgstr "Buscar de nuevo"
@@ -5036,13 +5018,13 @@ msgstr ""
 "abre una incidencia en nuestro <a href=\"{url}\">GitHub</a>."
 
 msgid "Finish"
-msgstr ""
+msgstr "Finalizar"
 
 msgid "Continue"
 msgstr "Continuar"
 
 msgid "Sign In & Add"
-msgstr ""
+msgstr "Iniciar sesión y añadir"
 
 msgid "Port"
 msgstr "Puerto"
@@ -5056,9 +5038,8 @@ msgstr "Comprobando la conexión…"
 msgid "✓ {email} — added"
 msgstr "✓ {email} — añadida"
 
-#, fuzzy
 msgid "Add another email account"
-msgstr "Añade tu cuenta de correo"
+msgstr "Añade otra cuenta de correo"
 
 msgid "✓ {email} — connected and added"
 msgstr "✓ {email} — conectada y añadida"
@@ -5069,16 +5050,14 @@ msgstr "{email} — servidor de correo: {e}"
 msgid "{email} — sending (SMTP): {e}"
 msgstr "{email} — envío (SMTP): {e}"
 
-#, fuzzy
 msgid "✓ {email} — signed in and added"
-msgstr "✓ {email} — conectada y añadida"
+msgstr "✓ {email} — sesión iniciada y cuenta añadida"
 
 msgid "Skip"
-msgstr ""
+msgstr "Omitir"
 
-#, fuzzy
 msgid "Enter your email address, the client ID and both OAuth URLs first."
-msgstr "Introduce primero tu dirección de correo electrónico y contraseña."
+msgstr "Introduce primero tu dirección de correo electrónico, el ID de cliente y las dos URL de OAuth."
 
 msgid "Your mail provider confirmed this really came from {from}."
 msgstr ""
@@ -5151,7 +5130,7 @@ msgstr ""
 
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
-msgstr ""
+msgstr "Se ha verificado {from}, pero las direcciones no coinciden con el nombre que aparece en el mensaje."
 
 msgid "Could not reach the JMAP server: {e}"
 msgstr "No se pudo contactar con el servidor JMAP: {e}"
@@ -5235,13 +5214,11 @@ msgstr ""
 msgid "Send failed: {e}"
 msgstr "El envío ha fallado: {e}"
 
-#, fuzzy
 msgid "Could not reach the server"
-msgstr "No se pudo contactar con el servidor JMAP: {e}"
+msgstr "No se pudo contactar con el servidor"
 
-#, fuzzy
 msgid "That folder is not on the server"
-msgstr "Las carpetas bajo la fila Filtros."
+msgstr "Esa carpeta no está en el servidor"
 
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr "no se pudo leer la respuesta del servidor (comenzaba por: {reply})"
@@ -5320,13 +5297,13 @@ msgid "POP3 accounts don't support folders"
 msgstr "Las cuentas POP3 no admiten carpetas"
 
 msgid "A POP3 account can't receive mail from another account"
-msgstr ""
+msgstr "Una cuenta POP3 no puede recibir correo de otra cuenta"
 
 msgid "Inbox"
 msgstr "Bandeja de entrada"
 
 msgid "A Microsoft account can't receive mail from another account"
-msgstr ""
+msgstr "Una cuenta de Microsoft no puede recibir correo de otra cuenta"
 
 msgid "Email Client"
 msgstr "Cliente de correo electrónico"

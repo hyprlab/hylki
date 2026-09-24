@@ -43,6 +43,10 @@ _STRINGS = {
 }
 
 _TRANSLATIONS = {
+    "es": {
+        "label": "Enviar con Hylki",
+        "tip": "Adjuntar los archivos seleccionados a un nuevo mensaje en Hylki",
+    },
     "fr": {
         "label": "Envoyer avec Hylki",
         "tip": "Joindre les fichiers sélectionnés à un nouveau message dans Hylki",
