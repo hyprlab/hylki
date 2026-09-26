@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-09-24 18:30+0200\n"
+"PO-Revision-Date: 2026-09-26 15:13+0200\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -257,9 +257,8 @@ msgstr "Aucun carnet d'adresses disponible"
 msgid "Could not update contact: {e}"
 msgstr "Impossible de mettre à jour le contact : {e}"
 
-#, fuzzy
 msgid "Hide Status Bar"
-msgstr "Afficher la barre d'état"
+msgstr "Masquer la barre d'état"
 
 msgid "Reveal Status Bar"
 msgstr "Afficher la barre d'état"
@@ -455,14 +454,15 @@ msgstr "Supprimer cette conversation ?"
 msgid "Delete Conversation"
 msgstr "Supprimer la conversation"
 
-#, fuzzy
 msgid "Delete the attachment from the server?"
-msgstr "Charger les pièces jointes depuis le serveur"
+msgstr "Supprimer la pièce jointe du serveur ?"
 
 msgid ""
 "“{name}” will be removed from the message on the server. The rest of the "
 "message stays. This can’t be undone."
 msgstr ""
+"« {name} » sera retiré du message sur le serveur. Le reste du message est "
+"conservé. Cette action est irréversible."
 
 msgid "Delete this message permanently?"
 msgid_plural "Delete {n} messages permanently?"
@@ -2023,9 +2023,8 @@ msgstr "Impossible d'importer la clé"
 msgid "Show in Message"
 msgstr "Afficher dans le message"
 
-#, fuzzy
 msgid "Delete from Server…"
-msgstr "Supprimer le dossier…"
+msgstr "Supprimer du serveur…"
 
 msgid "Import OpenPGP key"
 msgstr "Importer une clé OpenPGP"
@@ -2133,9 +2132,8 @@ msgstr "Aller au message"
 msgid "All accounts"
 msgstr "Tous les comptes"
 
-#, fuzzy
 msgid "Deleting…"
-msgstr "Supprimer…"
+msgstr "Suppression…"
 
 #. Deliberately counts messages, not attachments: until a message has
 #. been described there is no telling how many files it holds.
@@ -2654,16 +2652,16 @@ msgstr "{name} (lien)"
 msgid "Uploading…"
 msgstr "Téléversement…"
 
-#, fuzzy
 msgid "Save the message?"
-msgstr "Au-dessus des messages"
+msgstr "Enregistrer le message ?"
 
 msgid "It has not been sent. Save it to Drafts to finish later, or discard it."
 msgstr ""
+"Il n'a pas été envoyé. Enregistrez-le dans Brouillons pour le terminer plus "
+"tard, ou abandonnez-le."
 
-#, fuzzy
 msgid "Keep Editing"
-msgstr "Réunion"
+msgstr "Continuer la modification"
 
 msgid "Discard"
 msgstr "Ignorer"
@@ -2774,83 +2772,77 @@ msgstr "Ajouter un numéro de téléphone"
 msgid "Add website"
 msgstr "Ajouter un site web"
 
-#, fuzzy
 msgid "Attach"
-msgstr "Pièces jointes"
+msgstr "Joindre"
 
-#, fuzzy
 msgid "Insert in Text"
-msgstr "Insérer un lien"
+msgstr "Insérer dans le texte"
 
-#, fuzzy
 msgid "Upload to Cloud"
-msgstr "Téléverser vers un stockage en ligne"
+msgstr "Téléverser vers le stockage en ligne"
 
-#, fuzzy
 msgid "Attach to New Message"
-msgstr "Pièces jointes à chaque message"
+msgstr "Joindre à un nouveau message"
 
-#, fuzzy
 msgid "Insert in New Message"
-msgstr "Modifier en tant que nouveau message"
+msgstr "Insérer dans un nouveau message"
 
-#, fuzzy
 msgid "Share Link in New Message"
 msgid_plural "Share Links in New Message"
-msgstr[0] "Rechercher dans le message"
-msgstr[1] "Rechercher dans le message"
+msgstr[0] "Partager un lien dans un nouveau message"
+msgstr[1] "Partager des liens dans un nouveau message"
 
 msgid "{n} file · {size}"
 msgid_plural "{n} files · {size}"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} fichier · {size}"
+msgstr[1] "{n} fichiers · {size}"
 
-#, fuzzy
 msgid "Send as a normal attachment"
 msgid_plural "Send as normal attachments"
-msgstr[0] "Envoyer plutôt en pièce jointe"
-msgstr[1] "Envoyer plutôt en pièce jointe"
+msgstr[0] "Envoyer comme une pièce jointe normale"
+msgstr[1] "Envoyer comme des pièces jointes normales"
 
-#, fuzzy
 msgid "Place the picture where the cursor is"
 msgid_plural "Place the pictures where the cursor is"
-msgstr[0] "Palette d'actions dans la liste des messages"
-msgstr[1] "Palette d'actions dans la liste des messages"
+msgstr[0] "Placer l'image à l'emplacement du curseur"
+msgstr[1] "Placer les images à l'emplacement du curseur"
 
 msgid "Pictures insert where the cursor is placed, other files attach normally"
 msgstr ""
+"Les images s'insèrent à l'emplacement du curseur, les autres fichiers sont "
+"joints normalement"
 
 msgid "Share a download link from {name}"
-msgstr ""
+msgstr "Partager un lien de téléchargement depuis {name}"
 
 msgid "Share a download link"
-msgstr ""
+msgstr "Partager un lien de téléchargement"
 
-#, fuzzy
 msgid "Start a message with the file attached"
 msgid_plural "Start a message with the files attached"
-msgstr[0] "Un nouveau message avec {n} fichier joint est ouvert dans Hylki."
-msgstr[1] "Un nouveau message avec {n} fichiers joints est ouvert dans Hylki."
+msgstr[0] "Rédiger un message avec le fichier joint"
+msgstr[1] "Rédiger un message avec les fichiers joints"
 
-#, fuzzy
 msgid "Start a message with the picture in the text"
 msgid_plural "Start a message with the pictures in the text"
-msgstr[0] "Ouvrez d'abord un message, puis imprimez-le."
-msgstr[1] "Ouvrez d'abord un message, puis imprimez-le."
+msgstr[0] "Rédiger un message avec l'image dans le texte"
+msgstr[1] "Rédiger un message avec les images dans le texte"
 
 msgid ""
 "Start a message with the pictures in the text and the other files attached"
 msgstr ""
+"Rédiger un message avec les images dans le texte et les autres fichiers "
+"joints"
 
 msgid "Start a message with a download link from {name}"
 msgid_plural "Start a message with download links from {name}"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Rédiger un message avec un lien de téléchargement depuis {name}"
+msgstr[1] "Rédiger un message avec des liens de téléchargement depuis {name}"
 
 msgid "Start a message with a download link"
 msgid_plural "Start a message with download links"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Rédiger un message avec un lien de téléchargement"
+msgstr[1] "Rédiger un message avec des liens de téléchargement"
 
 msgid "Whole conversation"
 msgstr "Conversation entière"
@@ -2951,6 +2943,8 @@ msgstr "Réessayer"
 #. "unsubscribed" over the proof that it was not.
 msgid "You unsubscribed on {date}, but this list is still sending mail."
 msgstr ""
+"Vous vous êtes désabonné le {date}, mais cette liste continue d'envoyer des "
+"messages."
 
 msgid "You unsubscribed from this list on {date}."
 msgstr "Vous vous êtes désabonné(e) de cette liste le {date}."
@@ -3699,19 +3693,17 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr "Afficher l'expéditeur et l'objet"
 
-#, fuzzy
 msgid "Sound for new mail"
-msgstr "Vérifier s'il y a de nouveaux messages"
+msgstr "Son pour les nouveaux messages"
 
 msgid "Sound"
-msgstr ""
+msgstr "Son"
 
 msgid "Play"
-msgstr ""
+msgstr "Lire"
 
-#, fuzzy
 msgid "Sound file"
-msgstr "Vérifier s'il y a de nouveaux messages"
+msgstr "Fichier son"
 
 msgid "Notification Buttons"
 msgstr "Boutons de notification"
@@ -4464,13 +4456,16 @@ msgstr ""
 "l'éditeur propose toujours les deux options."
 
 msgid "Return starts a new paragraph"
-msgstr ""
+msgstr "Entrée démarre un nouveau paragraphe"
 
 msgid ""
 "Return ends the paragraph with a hard return and leaves space before the "
 "next. Off, Return starts a new line in the same paragraph. Shift+Return "
 "always does the other."
 msgstr ""
+"Entrée termine le paragraphe par un retour à la ligne forcé et laisse un "
+"espace avant le suivant. Désactivé, Entrée commence une nouvelle ligne dans "
+"le même paragraphe. Maj+Entrée fait toujours l'autre action."
 
 msgid "Write messages in"
 msgstr "Rédiger les messages en"
@@ -4931,35 +4926,33 @@ msgstr "Impossible de supprimer l'extension"
 msgid "Could not restart Files"
 msgstr "Impossible de redémarrer Fichiers"
 
-#, fuzzy
 msgid "Choose a Sound"
-msgstr "Choisir une photo"
+msgstr "Choisir un son"
 
 msgid "Sounds"
-msgstr ""
+msgstr "Sons"
 
 msgid "Forget this word"
 msgstr "Oublier ce mot"
 
 #. GNOME Settings' own names for its alert sounds.
 msgid "Click"
-msgstr ""
+msgstr "Clic"
 
 #. GNOME Settings' own names for its alert sounds.
 msgid "Hum"
-msgstr ""
+msgstr "Bourdonnement"
 
 #. GNOME Settings' own names for its alert sounds.
 msgid "String"
-msgstr ""
+msgstr "Chaîne"
 
 #. GNOME Settings' own names for its alert sounds.
 msgid "Swing"
-msgstr ""
+msgstr "Balançoire"
 
-#, fuzzy
 msgid "Custom File"
-msgstr "Couleur personnalisée…"
+msgstr "Fichier personnalisé"
 
 msgid "Print Message"
 msgstr "Imprimer le message"
@@ -5142,16 +5135,19 @@ msgid "Get Started"
 msgstr "Commencer"
 
 msgid "Import your online accounts"
-msgstr ""
+msgstr "Importer vos comptes en ligne"
 
 msgid ""
 "Mail accounts signed in under GNOME Settings → Online Accounts can be added "
 "here in one click. Google and Microsoft accounts are only supported through "
 "Online Accounts."
 msgstr ""
+"Les comptes de messagerie connectés dans Paramètres GNOME → Comptes en ligne "
+"peuvent être ajoutés ici en un clic. Les comptes Google et Microsoft ne sont "
+"pris en charge que via Comptes en ligne."
 
 msgid "No mail accounts were found in Online Accounts."
-msgstr ""
+msgstr "Aucun compte de messagerie n'a été trouvé dans Comptes en ligne."
 
 msgid "Scan Again"
 msgstr "Analyser à nouveau"
@@ -5255,7 +5251,7 @@ msgid "Continue"
 msgstr "Continuer"
 
 msgid "Sign In & Add"
-msgstr ""
+msgstr "Se connecter et ajouter"
 
 msgid "Port"
 msgstr "Port"
@@ -5270,7 +5266,7 @@ msgid "✓ {email} — added"
 msgstr "✓ {email} — ajouté"
 
 msgid "Add another email account"
-msgstr ""
+msgstr "Ajouter un autre compte de messagerie"
 
 msgid "✓ {email} — connected and added"
 msgstr "✓ {email} — connecté et ajouté"
@@ -5282,16 +5278,17 @@ msgid "{email} — sending (SMTP): {e}"
 msgstr "{email} — envoi (SMTP) : {e}"
 
 msgid "✓ {email} — signed in and added"
-msgstr ""
+msgstr "✓ {email} — connecté et ajouté"
 
 msgid "Finish"
-msgstr ""
+msgstr "Terminer"
 
 msgid "Skip"
-msgstr ""
+msgstr "Passer"
 
 msgid "Enter your email address, the client ID and both OAuth URLs first."
 msgstr ""
+"Saisissez d'abord votre adresse e-mail, l'ID client et les deux URL OAuth."
 
 msgid "Your mail provider confirmed this really came from {from}."
 msgstr ""
@@ -5378,9 +5375,8 @@ msgstr "Envoi en cours…"
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Impossible d'envoyer « {subject} » : {e}"
 
-#, fuzzy
 msgid "The attachment is no longer in the message on the server"
-msgstr "Ce dossier n'existe pas sur le serveur"
+msgstr "La pièce jointe ne se trouve plus dans le message sur le serveur"
 
 msgid "Could not load message: {e}"
 msgstr "Impossible de charger le message : {e}"
@@ -5455,30 +5451,28 @@ msgstr "Échec de l'envoi : {e}"
 msgid "Could not reach the server"
 msgstr "Impossible de joindre le serveur"
 
-#, fuzzy
 msgid "Removing the attachment…"
-msgstr "Chargement des pièces jointes…"
+msgstr "Suppression de la pièce jointe…"
 
-#, fuzzy
 msgid "Could not remove the attachment: {e}"
-msgstr "Impossible de charger les pièces jointes : {e}"
+msgstr "Impossible de supprimer la pièce jointe : {e}"
 
 msgid "That folder is not on the server"
 msgstr "Ce dossier n'existe pas sur le serveur"
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
+"Le message est signé ou chiffré, et supprimer un fichier le rendrait invalide"
 
-#, fuzzy
 msgid "The attachment is the whole message; delete the message instead"
-msgstr ""
-"Regroupez toutes les pièces jointes de la conversation ouverte dans un "
-"dossier situé sous les messages."
+msgstr "La pièce jointe est le message entier ; supprimez plutôt le message"
 
 msgid ""
 "You deleted an attachment from this message. The original MIME headers for "
 "the attachment were:"
 msgstr ""
+"Vous avez supprimé une pièce jointe de ce message. Les en-têtes MIME "
+"d'origine de la pièce jointe étaient :"
 
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr ""
@@ -5515,6 +5509,8 @@ msgid ""
 "Gmail keeps a copy of every message in All Mail, so Hylki cannot remove an "
 "attachment there"
 msgstr ""
+"Gmail conserve une copie de chaque message dans Tous les messages, Hylki ne "
+"peut donc pas y supprimer de pièce jointe"
 
 msgid "Could not move {len} messages: {e}"
 msgstr "Impossible de déplacer {len} messages : {e}"
@@ -5568,6 +5564,8 @@ msgstr "Un compte POP3 ne peut pas recevoir de courrier d'un autre compte"
 msgid ""
 "POP3 cannot change a message on the server, so the attachment was not removed"
 msgstr ""
+"Le POP3 ne permet pas de modifier un message sur le serveur, la pièce jointe "
+"n'a donc pas été supprimée"
 
 msgid "Inbox"
 msgstr "Boîte de réception"
