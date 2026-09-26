@@ -31,10 +31,10 @@ The full list. The [README](../README.md) carries a shorter one.
   across folders, not just the folder you are looking at.
 - **Moving mail between accounts:** Move To lists every account's folders,
   and mail dragged onto another account's folder goes there too.
-- **Full folder management:** create, rename, move and delete folders,
-  assign the special roles (Drafts, Sent, Junk, Trash, Archive), and hide the
-  ones you never open. An Exchange server's calendar, contacts and task
-  folders are hidden from the start.
+- **Full folder management:** create, rename, move, reorder and delete
+  folders, assign the special roles (Drafts, Sent, Junk, Trash, Archive),
+  and hide the ones you never open. An Exchange server's calendar, contacts
+  and task folders are hidden from the start.
 - **Filters:** multi-condition rules on sender, recipient, subject, body and
   Reply-To, with comma-separated alternatives; they tag mail, file it away, or
   both, and can be run over mail that is already in a folder.

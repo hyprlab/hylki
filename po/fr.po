@@ -948,6 +948,21 @@ msgid_plural "{n} unread messages"
 msgstr[0] "{n} message non lu"
 msgstr[1] "{n} messages non lus"
 
+#, fuzzy
+msgid "Custom Order"
+msgstr "Couleur personnalisée…"
+
+#, fuzzy
+msgid "Name (A to Z)"
+msgstr "Nom (A–Z)"
+
+#, fuzzy
+msgid "Name (Z to A)"
+msgstr "Nom (Z–A)"
+
+msgid "Full Path"
+msgstr ""
+
 msgid "Spam"
 msgstr "Spam"
 
@@ -1409,6 +1424,17 @@ msgstr ""
 "sur un hébergement mutualisé. Activez cette option uniquement si le test de "
 "connexion signale que les noms diffèrent."
 
+msgid "Show in All Inboxes"
+msgstr "Afficher dans Toutes les boîtes de réception"
+
+msgid ""
+"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
+"and Archive, and in the unified Filters and Tags."
+msgstr ""
+"Inclure le courrier de ce compte dans les boîtes de réception, favoris, "
+"envoyés, brouillons et archives unifiés, ainsi que dans les filtres et "
+"étiquettes unifiés."
+
 msgid "Test Connection"
 msgstr "Tester la connexion"
 
@@ -1467,17 +1493,6 @@ msgstr "Utiliser les initiales"
 msgid "A photo or logo from this computer"
 msgstr "Une photo ou un logo depuis cet ordinateur"
 
-msgid "Show in All Inboxes"
-msgstr "Afficher dans Toutes les boîtes de réception"
-
-msgid ""
-"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
-"and Archive, and in the unified Filters and Tags."
-msgstr ""
-"Inclure le courrier de ce compte dans les boîtes de réception, favoris, "
-"envoyés, brouillons et archives unifiés, ainsi que dans les filtres et "
-"étiquettes unifiés."
-
 msgid "Send-as aliases"
 msgstr "Alias d'expédition"
 
@@ -1528,6 +1543,19 @@ msgid ""
 msgstr ""
 "Supprimer définitivement les e-mails de la corbeille datant d'avant cette "
 "date, vérification à chaque synchronisation."
+
+#, fuzzy
+msgid "Folder Order"
+msgstr "Renommer le dossier"
+
+msgid ""
+"How this account's folders are sorted in the sidebar. Also in the right-"
+"click menu of its Folders heading."
+msgstr ""
+
+#, fuzzy
+msgid "Sort by"
+msgstr "Trier"
 
 msgid "Special Folders"
 msgstr "Dossiers spéciaux"
@@ -3901,6 +3929,16 @@ msgstr ""
 "ses tags. Désactivé, seule la section unifiée reste affichée. Également "
 "disponible dans le menu principal, et via Ctrl+Maj+A."
 
+#, fuzzy
+msgid "Folder order"
+msgstr "Renommer le dossier"
+
+msgid ""
+"How each account's folders are sorted. Dragging a folder puts that account "
+"in Custom Order. An account can choose its own in its settings, or from the "
+"right-click menu of its Folders heading."
+msgstr ""
+
 msgid "Chevron placement"
 msgstr "Emplacement des chevrons"
 
@@ -4432,6 +4470,15 @@ msgstr ""
 "Un nouveau message s'affiche en bas de la fenêtre de lecture, comme une "
 "réponse — détachez-le dans une fenêtre distincte depuis son en-tête. "
 "Désactivé = ouvre directement une fenêtre séparée."
+
+#, fuzzy
+msgid "Reply and forward in the main window"
+msgstr "Rédiger dans la fenêtre principale"
+
+msgid ""
+"A reply or a forward opens in the reading pane, beside the message it "
+"answers. Off = open a separate window."
+msgstr ""
 
 msgid "Show From, To and Subject in the reply panel"
 msgstr ""
@@ -5062,6 +5109,10 @@ msgstr "Actualiser"
 msgid "New Folder…"
 msgstr "Nouveau dossier…"
 
+#, fuzzy
+msgid "Reset Folder Order"
+msgstr "Renommer le dossier"
+
 msgid "Account Settings…"
 msgstr "Paramètres du compte…"
 
@@ -5071,11 +5122,19 @@ msgstr "Supprimer le compte…"
 msgid "Show or hide sub-folders"
 msgstr "Afficher ou masquer les sous-dossiers"
 
-msgid "Folders"
-msgstr "Dossiers"
+#, fuzzy
+msgid "Show or hide folders"
+msgstr "Afficher ou masquer les sous-dossiers"
 
 msgid "Folders ({len})"
 msgstr "Dossiers ({len})"
+
+msgid "Folders"
+msgstr "Dossiers"
+
+#, fuzzy
+msgid "Sort Folders"
+msgstr "Dossiers"
 
 msgid "Add Folder"
 msgstr "Ajouter un dossier"
@@ -5094,6 +5153,18 @@ msgstr "Afficher chaque tag"
 
 msgid "Long-press to expand or collapse"
 msgstr "Appui long pour déplier ou replier"
+
+#, fuzzy
+msgid "Show or hide filters"
+msgstr "Afficher ou masquer les sous-dossiers"
+
+#, fuzzy
+msgid "Show or hide tags"
+msgstr "Afficher ou masquer les sous-dossiers"
+
+#, fuzzy
+msgid "Follow Settings: {sort}"
+msgstr "Suivre les paramètres"
 
 msgid "Apply Filters"
 msgstr "Appliquer des filtres"
@@ -5711,6 +5782,14 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Déplacer vers"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Déplacer vers"
 
 #, fuzzy
 #~ msgid "Remove Sound"

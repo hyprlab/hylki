@@ -5,6 +5,33 @@
 The second beta previewing 1.42.0, with what main has gained since
 1.42.0-beta.1.
 
+- **Fixed: messages stuck on "Loading…" and a composer that takes no
+  typing on some systems** (#296, reported by Christian Lauinger). On some
+  hosts the fonts the Flatpak lends WebKit send its web process into a loop
+  in the first font lookup, so no message ever displays and the composer
+  body never takes a key, while mail syncs normally. When a message has not
+  displayed after 8 seconds, Hylki now loads a small test page in a
+  separate web process. If that hangs as well, it tries again with only the
+  runtime's own fonts, and once that loads, it restarts the stuck views on
+  them. The choice is kept until the Flatpak runtime is updated, when the
+  host's fonts are tried again. Only message bodies and the composer lose
+  the host's fonts; the rest of the window keeps them.
+- **Changed: a reply or a forward quotes the message as it looks** (#295,
+  reported by urkos101). The quote keeps the original's colors,
+  backgrounds, fonts and spacing, including those set in a `<style>` block,
+  which are written onto the elements they apply to, and the pictures the
+  message carries inside itself. Before, every style was dropped, so a
+  designed message (an order confirmation, a newsletter) lost its layout,
+  and its embedded pictures showed as empty boxes. Pictures on the sender's
+  server now load in the composer only when the reader loads them for that
+  message; before, the composer loaded them whatever the remote content
+  setting said. Nothing in a quote can fetch a resource through CSS or
+  cover the composer. In dark mode a quote that sets its own colors sits on
+  a light ground. See [Replies and forwards](docs/DOCUMENTATION.md#replies-and-forwards).
+- **New: replies and forwards can open in a window** (#295). **Settings →
+  Composing → Reply and forward in the main window**, switched off, opens
+  Reply, Reply All and Forward in a window of their own. It is on by
+  default, which keeps them in the reading pane as before.
 - **New: a choice of what Return does in the composer.** In rich text,
   Return starts a new line in the same paragraph and Shift+Return starts a
   new paragraph, sent as a `<p>` with space before the next one. **Settings
@@ -48,6 +75,47 @@ The second beta previewing 1.42.0, with what main has gained since
   Refused on Gmail (All Mail would keep the original), POP3, signed or
   encrypted messages, and a message that is only the file. See
   [Deleting an attachment from the server](docs/DOCUMENTATION.md#deleting-an-attachment-from-the-server).
+- **New: folders can be put in your own order in the sidebar** by dragging
+  them. While a folder is dragged, a line in the accent color shows the gap
+  between folders where it will land, indented to the level it lands at.
+  Dropped in a gap at its own level, the folder only changes places. In a
+  gap at another level, it is moved there on the server first, as dropping
+  it on a folder does, and then takes that place. Over the middle third of
+  a folder, the folder is outlined and the dragged one moves inside it.
+  Inbox, Sent, Drafts and the other main folders reorder among themselves.
+  A folder never dragged, such as one created later, goes just after the
+  sibling before it by name. The order is kept on this computer only.
+  **Reset Folder Order**, in the right-click menu of the account's header
+  or its Folders heading, forgets it. See
+  [Folder order](docs/DOCUMENTATION.md#folder-order).
+- **New: a choice of folder order.** **Settings → Sidebar → Folder order**
+  sorts every account's custom folders by Custom Order (the default: by
+  name, with dragged folders where they were put), Name (A to Z), Name (Z
+  to A) or Full Path (the whole path on the server, as Gmail on the web
+  lists labels). An account can choose its own under **Folder Order** in
+  its settings, or from the right-click menu of its Folders heading in the
+  sidebar. Dragging a custom folder puts its account in Custom Order.
+- **Changed: only the chevrons open and close sidebar items.** Clicking a
+  folder that has sub-folders opens the folder and leaves its sub-folders
+  as they were; the arrow beside it shows or hides them. The Folders,
+  Filters and Tags headings open and close from their chevron alone, not
+  their name. Double-clicking or long-pressing Inboxes, Starred, Sent,
+  Drafts, Archive, Filters or Tags no longer opens or closes the list under
+  it; its chevron does. In the icon rail, which has no chevrons, a click on
+  a heading's icon and a long press on a unified row still do.
+- **Changed: custom folders sort by the name shown in the sidebar**, not
+  by their path on the server, as Thunderbird sorts them. Gmail's
+  `[Gmail]/Important` and `[Gmail]/Test` sorted by the bracket, ahead of
+  every folder named with a letter, and now sort as "Important" and
+  "Test". Full Path keeps the old order.
+- **Fixed: a folder another client added, renamed or moved stayed as it
+  was until Hylki was restarted.** Refresh, and each automatic check for
+  mail, now reads the folder list again as well as the unread counts.
+- **Fixed: moving a folder left its sub-folders unsubscribed on some
+  servers.** The server moves the sub-folders with it, but Dovecot keeps
+  their subscriptions at the old names, so a client showing subscribed
+  folders only (Thunderbird's default) lost sight of them. Hylki now moves
+  each sub-folder's subscription too.
 - **Fixed: the menu offered to reveal a status bar already showing** (#294,
   reported by frenchy82). The menu item reads *Hide Status Bar* while the
   bar is down, an error message passing through it included, and hides it.
@@ -64,6 +132,21 @@ The second beta previewing 1.42.0, with what main has gained since
   to the mail route or, failing that, opens the list's page in the browser.
   Mail from a list dated more than two days after you unsubscribed now says
   the list is still sending, instead of labelling it as from a list you left.
+- **Fixed: a notification button left the busy pointer up for 15 seconds**
+  on GNOME Wayland. GNOME Shell runs a button as a launch of the app and
+  shows the busy pointer until a window of the app appears. Mark as Read,
+  Archive, Delete and Spam show none, and GTK has no way to end a launch on
+  Wayland without one, so the pointer stayed until the shell gave up. Hylki
+  now tells the shell the launch is over as the button is handled.
+- **Fixed: the reading pane flashed black between messages** on graphics
+  hardware (not in a virtual machine). When opening a message changed the
+  pane's size, as the attachment drawer came or went, WebKit's GPU renderer
+  showed an empty frame before the new message was drawn. The message now
+  loads once the pane has been redrawn at its new size.
+- **Changed: messages and the attachment drawer crossfade.** Opening a
+  message dissolves the one before into it over 80 ms instead of cutting,
+  and the attachment drawer fades in, fades out, or dissolves from one
+  message's files to the next's on the same beat.
 - **Translations:** French (PR #281 by frenchy82), Spanish (PR #287 by
   Daniel Miguel), Portuguese and Brazilian Portuguese (PR #280 by Paulo
   Fino) and Greek (PR #291 by Yiannis Ioannides) brought up to date.

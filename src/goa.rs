@@ -63,6 +63,7 @@ impl GoaMailAccount {
             empty_trash_days: 0,
             pgp_key: None,
             in_unified: true,
+            folder_sort: None,
             sign_by_default: false,
             name: if self.name.trim().is_empty() {
                 self.email.clone()

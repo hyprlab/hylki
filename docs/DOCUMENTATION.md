@@ -86,6 +86,63 @@ Tested against Stalwart; Fastmail speaks the same standard but has not been
 tried by hand. In `accounts.toml` the account has `protocol = "jmap"` and
 the server in `imap_host`.
 
+### Folder order
+
+An account's main folders (Inbox, Drafts, Sent, Archive, Junk, Trash) come
+first, in that order, then its custom folders, each under its parent. How
+the custom folders are sorted is chosen in **Settings → Sidebar → Folder
+order**, for every account:
+
+- **Custom Order** (the default): by the name shown, with any folder you
+  dragged kept where you put it. A folder that was never dragged, such as
+  one created later, goes just after the sibling that comes before it by
+  name.
+- **Name (A to Z)** and **Name (Z to A)**: by the name shown, whatever was
+  dragged. Gmail's `[Gmail]/Important` sorts as "Important", as it does in
+  Thunderbird.
+- **Full Path**: by the whole path on the server, the way Gmail on the web
+  lists labels.
+
+An account can have its own: **Folder Order → Sort by** in the account's
+settings (Settings → Mail Accounts → the account), or the right-click menu
+of the account's **Folders** heading in the sidebar. **Follow Settings** goes back
+to the choice in Settings → Sidebar.
+
+To put folders in an order of your own, drag them up or down the list.
+While a folder is dragged, a line in the accent color shows the gap
+between folders where it will land, indented to the level it lands at.
+Dragging a custom folder puts its account in Custom Order, every other
+folder staying where the previous sort showed it.
+
+- In a gap among its own siblings, the folder only changes places.
+- In a gap at another level, the folder is moved to that level on the
+  server, the same move as dropping it on a folder, and then takes that
+  place. Its sub-folders go with it.
+- Over the middle third of a folder, that folder is outlined, and the
+  dragged folder is moved inside it on the server.
+
+The main folders only change places among themselves, and keep their order
+whichever sort is chosen. Gmail lists some folders inside `[Gmail]`, which
+is not a folder of its own; they are drawn at the top level, and only
+folders already inside `[Gmail]` can be dropped among them. Renaming a
+folder keeps its place.
+
+The order is kept on this computer, in `sidebar.toml`, and an account's
+own sort in `accounts.toml` as `folder_sort`; only a move to another level
+changes anything on the server. IMAP has no folder order, so other mail
+apps and Gmail on the web each keep their own. **Reset Folder Order**, in
+the right-click menu of the account's header or its Folders heading, forgets
+what was dragged. The item is there only once something has been.
+
+Only the chevrons open and close the items in the sidebar. Clicking a
+folder opens it and leaves its sub-folders as they were. Clicking the name
+of the Folders, Filters or Tags heading does nothing; the chevron beside it
+opens or closes the section. Clicking Inboxes, Starred, Sent, Drafts,
+Archive, Filters or Tags in the unified section opens the combined list
+without showing each account's folder under it. In the icon rail, which
+has no chevrons, a click on a section's icon opens or closes it, and a
+long press opens or closes the unified rows.
+
 ### Hiding folders
 
 Right-click a folder in the sidebar and choose **Hide Folder** to take it out
@@ -286,6 +343,21 @@ message, so it closes what you wrote rather than what the other person did.
 **Settings → Composing → Signature in replies** moves it below the quoted
 message instead, the placement Hylki had before 1.38. The setting applies
 when a composer opens; a draft keeps its signature wherever it was saved.
+
+### Replies and forwards
+
+A reply or a forward opens in the reading pane, beside the message it
+answers. **Settings → Composing → Reply and forward in the main window**,
+switched off, opens them in a window of their own instead, as **Compose in
+the main window** does for a new message.
+
+The quoted message keeps its layout: its colors, fonts, tables and the
+pictures it carries inside itself look as they do in the reader, and go to
+the recipient that way. Pictures on the sender's server show only when the
+reader shows them for that message, so answering a message does not load
+anything reading it did not. The recipient still gets them. In dark mode a
+quoted message that sets its own colors keeps the light ground it was
+designed for.
 
 ### Return and Shift+Return
 

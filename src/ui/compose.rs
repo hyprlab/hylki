@@ -206,6 +206,9 @@ pub struct ComposePrefill {
     /// Files dropped on the main window's Insert in New Message card: the
     /// pictures go in the text once the editor is up, the rest attached.
     pub inline_files: Vec<std::path::PathBuf>,
+    /// The quoted original's remote content was not loaded in the reader,
+    /// so the editor does not load its pictures either (#295).
+    pub block_remote_images: bool,
 }
 
 /// Everything the compose pane needs to open.
@@ -897,7 +900,15 @@ impl Component for Compose {
                 content.push_str(&sig);
             }
         }
-        let editor = RichEditor::new(&content);
+        // Blocking the quote's pictures must not blank the user's own
+        // signature, whichever identity it ends up sent from.
+        let remote_images = prefill.block_remote_images.then(|| {
+            accounts
+                .iter()
+                .flat_map(|a| super::rich_editor::remote_image_urls(&a.signature))
+                .collect::<Vec<_>>()
+        });
+        let editor = RichEditor::new(&content, remote_images.as_deref());
         editor.set_formatting_visible(format == ComposeFormat::Rich);
         // A source format starts from the same content, written out as
         // source: a reply's quoted original becomes `> ` lines in Markdown,

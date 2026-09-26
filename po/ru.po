@@ -970,6 +970,21 @@ msgstr[0] "{n} непрочитанное сообщение"
 msgstr[1] "{n} непрочитанных сообщения"
 msgstr[2] "{n} непрочитанных сообщений"
 
+#, fuzzy
+msgid "Custom Order"
+msgstr "Другой цвет…"
+
+#, fuzzy
+msgid "Name (A to Z)"
+msgstr "По имени (А–Я)"
+
+#, fuzzy
+msgid "Name (Z to A)"
+msgstr "По имени (Я–А)"
+
+msgid "Full Path"
+msgstr ""
+
 msgid "Spam"
 msgstr "Спам"
 
@@ -1415,6 +1430,15 @@ msgid ""
 "on only when the connection test says the names differ."
 msgstr ""
 
+#, fuzzy
+msgid "Show in All Inboxes"
+msgstr "Все входящие"
+
+msgid ""
+"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
+"and Archive, and in the unified Filters and Tags."
+msgstr ""
+
 msgid "Test Connection"
 msgstr "Проверить соединение"
 
@@ -1470,15 +1494,6 @@ msgstr "Использовать инициалы"
 msgid "A photo or logo from this computer"
 msgstr "Фотография или логотип с этого компьютера"
 
-#, fuzzy
-msgid "Show in All Inboxes"
-msgstr "Все входящие"
-
-msgid ""
-"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
-"and Archive, and in the unified Filters and Tags."
-msgstr ""
-
 msgid "Send-as aliases"
 msgstr "Псевдонимы для отправки"
 
@@ -1527,6 +1542,19 @@ msgid ""
 msgstr ""
 "Безвозвратно удалять письма из «Корзины» старше этого срока при каждой "
 "синхронизации."
+
+#, fuzzy
+msgid "Folder Order"
+msgstr "Переименовать папку…"
+
+msgid ""
+"How this account's folders are sorted in the sidebar. Also in the right-"
+"click menu of its Folders heading."
+msgstr ""
+
+#, fuzzy
+msgid "Sort by"
+msgstr "Сортировка"
 
 msgid "Special Folders"
 msgstr "Специальные папки"
@@ -3871,6 +3899,16 @@ msgstr ""
 "и теги. Если отключено, остаётся только общий раздел. Переключить также "
 "можно в основном меню или комбинацией клавиш Ctrl+Shift+A."
 
+#, fuzzy
+msgid "Folder order"
+msgstr "Переименовать папку…"
+
+msgid ""
+"How each account's folders are sorted. Dragging a folder puts that account "
+"in Custom Order. An account can choose its own in its settings, or from the "
+"right-click menu of its Folders heading."
+msgstr ""
+
 msgid "Chevron placement"
 msgstr "Расположение стрелок сворачивания"
 
@@ -4384,6 +4422,15 @@ msgstr ""
 "Новое письмо выезжает поверх панели чтения, как ответ (его можно отделить в "
 "отдельное окно через заголовок). Если отключено — сразу открывается "
 "отдельное окно."
+
+#, fuzzy
+msgid "Reply and forward in the main window"
+msgstr "Создание писем в основном окне"
+
+msgid ""
+"A reply or a forward opens in the reading pane, beside the message it "
+"answers. Off = open a separate window."
+msgstr ""
 
 msgid "Show From, To and Subject in the reply panel"
 msgstr "Показывать поля «От», «Кому» и «Тема» в панели ответа"
@@ -5010,6 +5057,10 @@ msgstr "Обновить"
 msgid "New Folder…"
 msgstr "Создать папку…"
 
+#, fuzzy
+msgid "Reset Folder Order"
+msgstr "Переименовать папку…"
+
 msgid "Account Settings…"
 msgstr "Параметры учётной записи…"
 
@@ -5019,11 +5070,19 @@ msgstr "Удалить учётную запись…"
 msgid "Show or hide sub-folders"
 msgstr "Показать или скрыть вложенные папки"
 
-msgid "Folders"
-msgstr "Папки"
+#, fuzzy
+msgid "Show or hide folders"
+msgstr "Показать или скрыть вложенные папки"
 
 msgid "Folders ({len})"
 msgstr "Папки ({len})"
+
+msgid "Folders"
+msgstr "Папки"
+
+#, fuzzy
+msgid "Sort Folders"
+msgstr "Папки"
 
 msgid "Add Folder"
 msgstr "Добавить папку"
@@ -5042,6 +5101,18 @@ msgstr "Показывать каждую метку"
 
 msgid "Long-press to expand or collapse"
 msgstr "Долгое нажатие — развернуть или свернуть"
+
+#, fuzzy
+msgid "Show or hide filters"
+msgstr "Показать или скрыть вложенные папки"
+
+#, fuzzy
+msgid "Show or hide tags"
+msgstr "Показать или скрыть вложенные папки"
+
+#, fuzzy
+msgid "Follow Settings: {sort}"
+msgstr "Из системных настроек"
 
 msgid "Apply Filters"
 msgstr "Применить фильтры"
@@ -5630,6 +5701,14 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Переместить в"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Переместить в"
 
 #, fuzzy
 #~ msgid "Remove Sound"

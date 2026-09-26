@@ -951,6 +951,21 @@ msgid_plural "{n} unread messages"
 msgstr[0] "{n} olvasatlan üzenet"
 msgstr[1] "{n} olvasatlan üzenet"
 
+#, fuzzy
+msgid "Custom Order"
+msgstr "Egyéni szín…"
+
+#, fuzzy
+msgid "Name (A to Z)"
+msgstr "Név (A–Z)"
+
+#, fuzzy
+msgid "Name (Z to A)"
+msgstr "Név (Z–A)"
+
+msgid "Full Path"
+msgstr ""
+
 msgid "Spam"
 msgstr ""
 
@@ -1393,6 +1408,15 @@ msgid ""
 "on only when the connection test says the names differ."
 msgstr ""
 
+#, fuzzy
+msgid "Show in All Inboxes"
+msgstr "Megjelenítés az Összes beérkezett között"
+
+msgid ""
+"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
+"and Archive, and in the unified Filters and Tags."
+msgstr ""
+
 msgid "Test Connection"
 msgstr "Kapcsolat tesztelése"
 
@@ -1442,15 +1466,6 @@ msgid "Use initials"
 msgstr "Monogram használata"
 
 msgid "A photo or logo from this computer"
-msgstr ""
-
-#, fuzzy
-msgid "Show in All Inboxes"
-msgstr "Megjelenítés az Összes beérkezett között"
-
-msgid ""
-"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
-"and Archive, and in the unified Filters and Tags."
 msgstr ""
 
 msgid "Send-as aliases"
@@ -1503,6 +1518,19 @@ msgid ""
 msgstr ""
 "Az ennél régebbi, Kukában lévő levelek végleges törlése, minden "
 "szinkronizáláskor ellenőrizve."
+
+#, fuzzy
+msgid "Folder Order"
+msgstr "Mappa átnevezése…"
+
+msgid ""
+"How this account's folders are sorted in the sidebar. Also in the right-"
+"click menu of its Folders heading."
+msgstr ""
+
+#, fuzzy
+msgid "Sort by"
+msgstr "Rendezés"
 
 msgid "Special Folders"
 msgstr "Speciális mappák"
@@ -3831,6 +3859,16 @@ msgid ""
 "leaves the unified section alone. Also in the main menu, and Ctrl+Shift+A."
 msgstr ""
 
+#, fuzzy
+msgid "Folder order"
+msgstr "Mappa átnevezése…"
+
+msgid ""
+"How each account's folders are sorted. Dragging a folder puts that account "
+"in Custom Order. An account can choose its own in its settings, or from the "
+"right-click menu of its Folders heading."
+msgstr ""
+
 msgid "Chevron placement"
 msgstr "Nyíl elhelyezése"
 
@@ -4303,6 +4341,15 @@ msgid ""
 msgstr ""
 "Az új üzenet válaszhoz hasonlóan lecsúszik az olvasópanelre — a fejlécéből "
 "külön ablakba emelhető. Kikapcsolva közvetlenül külön ablakban nyílik meg."
+
+#, fuzzy
+msgid "Reply and forward in the main window"
+msgstr "Levélírás a főablakban"
+
+msgid ""
+"A reply or a forward opens in the reading pane, beside the message it "
+"answers. Off = open a separate window."
+msgstr ""
 
 msgid "Show From, To and Subject in the reply panel"
 msgstr "Feladó, címzett és tárgy megjelenítése a válaszpanelen"
@@ -4912,6 +4959,10 @@ msgstr "Frissítés"
 msgid "New Folder…"
 msgstr "Új mappa…"
 
+#, fuzzy
+msgid "Reset Folder Order"
+msgstr "Mappa átnevezése…"
+
 msgid "Account Settings…"
 msgstr "Fiókbeállítások…"
 
@@ -4921,11 +4972,19 @@ msgstr "Fiók eltávolítása…"
 msgid "Show or hide sub-folders"
 msgstr "Almappák megjelenítése vagy elrejtése"
 
-msgid "Folders"
-msgstr "Mappák"
+#, fuzzy
+msgid "Show or hide folders"
+msgstr "Almappák megjelenítése vagy elrejtése"
 
 msgid "Folders ({len})"
 msgstr "Mappák ({len})"
+
+msgid "Folders"
+msgstr "Mappák"
+
+#, fuzzy
+msgid "Sort Folders"
+msgstr "Mappák"
 
 msgid "Add Folder"
 msgstr "Mappa hozzáadása"
@@ -4944,6 +5003,18 @@ msgstr ""
 
 msgid "Long-press to expand or collapse"
 msgstr ""
+
+#, fuzzy
+msgid "Show or hide filters"
+msgstr "Almappák megjelenítése vagy elrejtése"
+
+#, fuzzy
+msgid "Show or hide tags"
+msgstr "Almappák megjelenítése vagy elrejtése"
+
+#, fuzzy
+msgid "Follow Settings: {sort}"
+msgstr "Beállítások követése"
 
 #, fuzzy
 msgid "Apply Filters"
@@ -5530,6 +5601,14 @@ msgstr "Az egységes beérkezett nézet világos módban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Áthelyezés ide"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Áthelyezés ide"
 
 #, fuzzy
 #~ msgid "Remove Sound"

@@ -493,6 +493,9 @@ pub struct AppModel {
     /// Collapsed folder-tree nodes ("email\tpath") — the sidebar's custom
     /// folders render as a collapsible hierarchy (#51).
     tree_collapsed: Vec<String>,
+    /// The folders the user has put in order in the sidebar ("email\tpath"):
+    /// each sorts among its siblings by its place in this list.
+    folder_order: Vec<String>,
     selected: Option<SelectedFolder>,
     /// Attachments of the currently-open message (shown in the drawer).
     attachments: Vec<Attachment>,
@@ -823,6 +826,9 @@ pub struct AppModel {
     chevrons_left: bool,
     /// What the window shows at launch (#256).
     start_view: config::StartView,
+    /// How accounts' folders are sorted, unless an account chooses
+    /// (Settings → Sidebar).
+    folder_sort: config::FolderSort,
     /// Console mode offered in the status bar (Settings → System & Appearance).
     console_mode: bool,
     /// Read-marking policy (#100).
@@ -915,6 +921,8 @@ pub struct AppModel {
     swipe_sensitivity: f64,
     /// "New message" composes inline over the reading pane (vs a window).
     compose_inline: bool,
+    /// Reply, Reply All and Forward open in the reading pane (vs a window, #295).
+    reply_inline: bool,
     reply_fields: bool,
     /// The identity new messages are sent from (#157); empty = the open
     /// folder's account.
@@ -1132,6 +1140,15 @@ pub enum AppMsg {
     ToggleCollapse(u32),
     /// A sidebar folder-tree node was collapsed/expanded (#51) — persist it.
     FolderNodeCollapsed { account_id: u32, path: String, collapsed: bool },
+    /// A run of sibling folders was put in a new order in the sidebar.
+    ReorderFolders { account_id: u32, paths: Vec<String> },
+    /// A folder was dropped beside one at another level: move it there on
+    /// the server, then put it just before or after `target`.
+    PlaceFolder { account_id: u32, path: String, dest: String, target: String, after: bool },
+    /// An account's own folder order, chosen from its Folders heading.
+    SetAccountFolderSort { account_id: u32, sort: Option<config::FolderSort> },
+    /// Settings → Sidebar → Folder order: every account without its own.
+    SetFolderSort(config::FolderSort),
     ToggleCustomFolders(u32),
     SidebarCollapsed(bool),
     /// The message-pane header's sidebar button: flip the sidebar between the
@@ -1363,6 +1380,7 @@ pub enum AppMsg {
     SetSwipeReversed(bool),
     SetSwipeSensitivity(f64),
     SetComposeInline(bool),
+    SetReplyInline(bool),
     /// Reply panel shows its From/To/Subject rows from the start (#154).
     SetReplyFields(bool),
     /// Settings → System → GNOME Files changed.
@@ -2646,6 +2664,9 @@ impl SimpleComponent for AppModel {
         // connection order, so the palette has to be in place first.
         crate::theme::install(&config::load_theme());
         install_scheme_css(&root);
+        // Before any web view loads: a font fallback WebKit needed under
+        // this runtime has to be in place for its first web process (#296).
+        crate::web_fonts::startup(&root);
 
         let mut sidebar_state = config::load_sidebar_state();
         // Settings → Sidebar: "Remember the icon rail" off starts every
@@ -2670,7 +2691,12 @@ impl SimpleComponent for AppModel {
         }
         let rail_now = icon_only || focus.active(config::FocusPart::RailSidebar);
         if !remember_sidebar {
-            sidebar_state = config::SidebarState { order: sidebar_state.order, ..Default::default() };
+            // The layout starts fresh; the order things were put in stays.
+            sidebar_state = config::SidebarState {
+                order: sidebar_state.order,
+                folder_order: sidebar_state.folder_order,
+                ..Default::default()
+            };
         }
         let unified_expanded = sidebar_state.unified_expanded;
         let filtered_expanded = sidebar_state.filtered_expanded;
@@ -2717,6 +2743,7 @@ impl SimpleComponent for AppModel {
         let filtered_expanded_accounts = sidebar_state.filtered_expanded_accounts;
         let tags_expanded_accounts = sidebar_state.tags_expanded_accounts;
         let tree_collapsed = sidebar_state.tree_collapsed;
+        let folder_order = sidebar_state.folder_order;
 
         // Whether this run serves the built-in sample data (see spawn_workers):
         // decided after the GOA reconcile, which can add accounts.
@@ -3087,6 +3114,7 @@ impl SimpleComponent for AppModel {
             collapsed,
             folders_expanded,
             tree_collapsed,
+            folder_order,
             selected: None,
             attachments: Vec::new(),
             lightbox_items: Vec::new(),
@@ -3282,6 +3310,7 @@ impl SimpleComponent for AppModel {
             list_header_widgets: std::cell::OnceCell::new(),
             chevrons_left: config::load_chevrons_left(),
             start_view,
+            folder_sort: config::load_folder_sort(),
             console_mode: config::load_console_mode(),
             read_mark: config::load_read_mark(),
             // The demo (no accounts of its own) ships with tags and filter
@@ -3338,6 +3367,7 @@ impl SimpleComponent for AppModel {
             swipe_reversed: config::load_swipe_reversed(),
             swipe_sensitivity: config::load_swipe_sensitivity(),
             compose_inline: config::load_compose_inline(),
+            reply_inline: config::load_reply_inline(),
             reply_fields: config::load_reply_fields(),
             compose_default_from: config::load_compose_default_from(),
             paste_plain: config::load_paste_plain(),
@@ -3822,6 +3852,9 @@ impl SimpleComponent for AppModel {
                 let act = gtk::gio::SimpleAction::new(name, Some(ty));
                 let asender = sender.clone();
                 act.connect_activate(move |_, param| {
+                    // No window will spend the shell's launch token, so
+                    // end the launch here, or the busy pointer stays up.
+                    crate::startup::complete();
                     if let Some((account_id, folder_id, message_id)) =
                         param.and_then(|v| v.get::<(u32, u32, u32)>())
                     {
@@ -5568,10 +5601,10 @@ impl SimpleComponent for AppModel {
                     if m.body.is_empty() {
                         self.pending_notified_reply = Some(m);
                     } else {
-                        self.open_inline_reply(
+                        self.open_reply(
                             m.account_id,
-                            self.reply_pgp(&m, reply_prefill(&m)),
-                            Some((m.account_id, m.id)),
+                            self.reply_context(&m, reply_prefill(&m)),
+                            (m.account_id, m.id),
                             &sender,
                         );
                     }
@@ -5609,6 +5642,47 @@ impl SimpleComponent for AppModel {
                         self.folders_expanded.push(email);
                     }
                     self.save_sidebar_state();
+                }
+            }
+
+            AppMsg::ReorderFolders { account_id, paths } => {
+                let custom = self.folders.get(&account_id).is_some_and(|fs| {
+                    fs.iter().any(|f| f.kind == FolderKind::Custom && paths.contains(&f.path))
+                });
+                if custom {
+                    self.adopt_custom_order(account_id);
+                }
+                self.keep_folder_order(account_id, &paths);
+            }
+
+            AppMsg::PlaceFolder { account_id, path, dest, target, after } => {
+                self.adopt_custom_order(account_id);
+                // Moved on the server first (the same move as a drop on a
+                // folder, with its checks and its undo); only once that has
+                // gone ahead does it take its place beside `target`.
+                let Some(new_path) = self.move_folder(account_id, path, dest) else { return };
+                let shown = self.shown_folders(account_id);
+                let hierarchy = crate::ui::sidebar::Hierarchy {
+                    delimiter: self.folder_delimiter(account_id),
+                    namespace: self.folder_namespace(account_id),
+                };
+                if let Some(paths) =
+                    crate::ui::sidebar::placed_run(&shown, &hierarchy, &new_path, &target, after)
+                {
+                    self.keep_folder_order(account_id, &paths);
+                }
+            }
+
+            AppMsg::SetAccountFolderSort { account_id, sort } => {
+                self.set_account_folder_sort(account_id, sort);
+                self.rebuild_sidebar();
+            }
+
+            AppMsg::SetFolderSort(sort) => {
+                if self.folder_sort != sort {
+                    self.folder_sort = sort;
+                    self.save_settings();
+                    self.rebuild_sidebar();
                 }
             }
 
@@ -5962,6 +6036,14 @@ impl SimpleComponent for AppModel {
                 CtxAction::HideFolder { account_id, path } => {
                     self.hide_folders(account_id, vec![path]);
                 }
+                CtxAction::ResetFolderOrder(account_id) => {
+                    if let Some(email) = self.email_of(account_id) {
+                        let prefix = format!("{email}\t");
+                        self.folder_order.retain(|k| !k.starts_with(&prefix));
+                        self.save_sidebar_state();
+                        self.rebuild_sidebar();
+                    }
+                }
             },
 
             AppMsg::DropMoveMessages { dest_account, dest, items } => {
@@ -5989,7 +6071,7 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::MoveFolder { account_id, path, dest } => {
-                self.move_folder(account_id, path, dest);
+                let _ = self.move_folder(account_id, path, dest);
             }
 
             AppMsg::RenameFolderTo { account_id, path, new_name } => {
@@ -6529,14 +6611,14 @@ impl SimpleComponent for AppModel {
                 );
                 match action {
                     RowAction::Reply => {
-                        self.open_inline_reply(m.account_id, self.reply_pgp(&m, reply_prefill(&m)), Some((m.account_id, m.id)), &sender);
+                        self.open_reply(m.account_id, self.reply_context(&m, reply_prefill(&m)), (m.account_id, m.id), &sender);
                     }
                     RowAction::ReplyAll => {
                         let self_email = self.email_of(m.account_id).unwrap_or_default();
-                        self.open_inline_reply(
+                        self.open_reply(
                             m.account_id,
-                            self.reply_pgp(&m, reply_all_prefill(&m, &self_email)),
-                            Some((m.account_id, m.id)),
+                            self.reply_context(&m, reply_all_prefill(&m, &self_email)),
+                            (m.account_id, m.id),
                             &sender,
                         );
                     }
@@ -6592,7 +6674,7 @@ impl SimpleComponent for AppModel {
                     RowAction::Reply => {
                         let m = self.newest_to_answer(&conversation, m);
                         let m = self.with_cached_body(m);
-                        self.open_compose(m.account_id, self.reply_pgp(&m, reply_prefill(&m)), &sender);
+                        self.open_compose(m.account_id, self.reply_context(&m, reply_prefill(&m)), &sender);
                     }
                     RowAction::ReplyAll => {
                         let m = self.newest_to_answer(&conversation, m);
@@ -6600,7 +6682,7 @@ impl SimpleComponent for AppModel {
                         let self_email = self.email_of(m.account_id).unwrap_or_default();
                         self.open_compose(
                             m.account_id,
-                            self.reply_pgp(&m, reply_all_prefill(&m, &self_email)),
+                            self.reply_context(&m, reply_all_prefill(&m, &self_email)),
                             &sender,
                         );
                     }
@@ -6760,17 +6842,17 @@ impl SimpleComponent for AppModel {
 
             AppMsg::Reply => {
                 if let Some(m) = self.compose_target() {
-                    self.open_inline_reply(m.account_id, self.reply_pgp(&m, reply_prefill(&m)), Some((m.account_id, m.id)), &sender);
+                    self.open_reply(m.account_id, self.reply_context(&m, reply_prefill(&m)), (m.account_id, m.id), &sender);
                 }
             }
 
             AppMsg::ReplyAll => {
                 if let Some(m) = self.compose_target() {
                     let self_email = self.email_of(m.account_id).unwrap_or_default();
-                    self.open_inline_reply(
+                    self.open_reply(
                         m.account_id,
-                        self.reply_pgp(&m, reply_all_prefill(&m, &self_email)),
-                        Some((m.account_id, m.id)),
+                        self.reply_context(&m, reply_all_prefill(&m, &self_email)),
+                        (m.account_id, m.id),
                         &sender,
                     );
                 }
@@ -7956,6 +8038,13 @@ impl SimpleComponent for AppModel {
             AppMsg::SetComposeInline(on) => {
                 if self.compose_inline != on {
                     self.compose_inline = on;
+                    self.save_settings();
+                }
+            }
+
+            AppMsg::SetReplyInline(on) => {
+                if self.reply_inline != on {
+                    self.reply_inline = on;
                     self.save_settings();
                 }
             }
@@ -9562,6 +9651,39 @@ impl SimpleComponent for AppModel {
                                 && a.name == b.name
                         })
                 });
+                // Ids are list positions, so a folder another client added,
+                // renamed or removed shifts them (a refresh re-lists the
+                // folders). The open folder and the cached lists follow their
+                // folder by path; a list whose folder is gone is dropped.
+                // The first listing has nothing to follow from.
+                if !unchanged && self.folders.get(&account_id).is_some_and(|old| !old.is_empty()) {
+                    let old_paths: HashMap<u32, String> = self
+                        .folders
+                        .get(&account_id)
+                        .map(|old| old.iter().map(|f| (f.id, f.path.clone())).collect())
+                        .unwrap_or_default();
+                    let new_ids: HashMap<&str, u32> =
+                        folders.iter().map(|f| (f.path.as_str(), f.id)).collect();
+                    let cached = std::mem::take(&mut self.message_cache);
+                    for ((a, fid), mut list) in cached {
+                        if a != account_id {
+                            self.message_cache.insert((a, fid), list);
+                            continue;
+                        }
+                        let Some(&id) = old_paths.get(&fid).and_then(|p| new_ids.get(p.as_str())) else {
+                            continue;
+                        };
+                        for m in &mut list {
+                            m.folder_id = id;
+                        }
+                        self.message_cache.insert((a, id), list);
+                    }
+                    if let Some(sel) = self.selected.as_mut().filter(|s| s.account_id == account_id) {
+                        if let Some(&id) = new_ids.get(sel.path.as_str()) {
+                            sel.folder_id = id;
+                        }
+                    }
+                }
                 self.folders.insert(account_id, folders);
                 if unchanged {
                     self.push_unread_counts();
@@ -10065,10 +10187,10 @@ impl SimpleComponent for AppModel {
                 if let Some(mut m) = self.pending_notified_reply.take() {
                     if m.account_id == account_id && m.id == message_id {
                         m.body = body.clone();
-                        self.open_inline_reply(
+                        self.open_reply(
                             m.account_id,
-                            self.reply_pgp(&m, reply_prefill(&m)),
-                            Some((m.account_id, m.id)),
+                            self.reply_context(&m, reply_prefill(&m)),
+                            (m.account_id, m.id),
                             &sender,
                         );
                     } else {
@@ -10876,6 +10998,7 @@ impl AppModel {
             self.swipe_reversed,
             self.swipe_sensitivity,
             self.compose_inline,
+            self.reply_inline,
             self.reply_fields,
             &self.compose_default_from,
             self.paste_plain,
@@ -10917,6 +11040,7 @@ impl AppModel {
             self.files_prefs,
             self.link_browser.clone(),
             self.start_view,
+            self.folder_sort,
         );
     }
 
@@ -12313,6 +12437,7 @@ impl AppModel {
             folders_expanded: self.folders_expanded.clone(),
             icon_only: self.sidebar_collapsed,
             tree_collapsed: self.tree_collapsed.clone(),
+            folder_order: self.folder_order.clone(),
             unified_expanded: self.unified_expanded,
             filtered_expanded: self.filtered_expanded,
             tags_expanded: self.tags_expanded,
@@ -12323,6 +12448,94 @@ impl AppModel {
             filtered_expanded_accounts: self.filtered_expanded_accounts.clone(),
             tags_expanded_accounts: self.tags_expanded_accounts.clone(),
         });
+    }
+
+    /// Keep a run of sibling folders in its new order. The run goes to the
+    /// end of the list; only the order within a run counts, so the others
+    /// stand as they were.
+    fn keep_folder_order(&mut self, account_id: u32, paths: &[String]) {
+        self.store_folder_order(account_id, paths);
+        self.save_sidebar_state();
+        self.rebuild_sidebar();
+    }
+
+    fn store_folder_order(&mut self, account_id: u32, paths: &[String]) {
+        let Some(email) = self.email_of(account_id) else { return };
+        let keys: Vec<String> = paths.iter().map(|p| format!("{email}\t{p}")).collect();
+        self.folder_order.retain(|k| !keys.contains(k));
+        self.folder_order.extend(keys);
+    }
+
+    /// The folder order an account chose for itself, if any.
+    fn own_folder_sort(&self, account_id: u32) -> Option<config::FolderSort> {
+        self.effective_config()
+            .get(account_id.saturating_sub(1) as usize)
+            .and_then(|c| c.folder_sort)
+    }
+
+    /// How an account's custom folders are sorted: its own choice, or
+    /// Settings'.
+    fn folder_sort_of(&self, account_id: u32) -> config::FolderSort {
+        self.own_folder_sort(account_id).unwrap_or(self.folder_sort)
+    }
+
+    /// An account's folders in the order the sidebar shows them.
+    fn shown_folders(&self, account_id: u32) -> Vec<Folder> {
+        let prefix = self.email_of(account_id).map(|e| format!("{e}\t")).unwrap_or_default();
+        let order: Vec<String> =
+            self.folder_order.iter().filter_map(|k| k.strip_prefix(&prefix).map(String::from)).collect();
+        crate::ui::sidebar::order_folders(
+            self.folders.get(&account_id).cloned().unwrap_or_default(),
+            &order,
+            self.folder_sort_of(account_id),
+        )
+    }
+
+    /// Give an account its own folder order (`None` follows Settings), in
+    /// the file and in the Settings window's copy of the account, which
+    /// would otherwise put the old one back when its editor is saved.
+    fn set_account_folder_sort(&mut self, account_id: u32, sort: Option<config::FolderSort>) {
+        let demo = self.config.is_empty() && demo_mode();
+        let accounts = if demo { &mut self.demo_config } else { &mut self.config };
+        let Some(cfg) = accounts.get_mut(account_id.saturating_sub(1) as usize) else { return };
+        if cfg.folder_sort == sort {
+            return;
+        }
+        cfg.folder_sort = sort;
+        let email = cfg.email.clone();
+        let saved = if demo {
+            config::save_demo_accounts(&self.demo_config).map_err(|e| e.to_string())
+        } else {
+            config::save(&self.config).map_err(|e| e.to_string())
+        };
+        if let Err(e) = saved {
+            self.notifications.emit(NotifyInput::Push {
+                text: i18n_f("Could not save account: {e}", &[("e", &e)]),
+                error: true,
+                connectivity: false,
+            });
+        }
+        if let Some(acc) = &self.accounts_win {
+            acc.emit(crate::ui::accounts::AccountsInput::SetFolderSort { email, sort });
+        }
+    }
+
+    /// Dragging a custom folder is arranging them by hand, so an account
+    /// sorted another way switches to Custom Order, every custom folder kept
+    /// first where the old sort showed it: only the dragged one moves.
+    fn adopt_custom_order(&mut self, account_id: u32) {
+        if self.folder_sort_of(account_id) == config::FolderSort::Custom {
+            return;
+        }
+        let shown: Vec<String> = self
+            .shown_folders(account_id)
+            .into_iter()
+            .filter(|f| f.kind == FolderKind::Custom)
+            .map(|f| f.path)
+            .collect();
+        self.store_folder_order(account_id, &shown);
+        let sort = (self.folder_sort != config::FolderSort::Custom).then_some(config::FolderSort::Custom);
+        self.set_account_folder_sort(account_id, sort);
     }
 
     /// Account emails in display order: those listed in `account_order` first
@@ -12701,6 +12914,17 @@ impl AppModel {
                     .iter()
                     .filter_map(|k| k.strip_prefix(&prefix).map(String::from))
                     .collect();
+                let folder_order = self
+                    .folder_order
+                    .iter()
+                    .filter_map(|k| k.strip_prefix(&prefix).map(String::from))
+                    .collect();
+                let folder_sort = self.folder_sort_of(account.id);
+                let own_folder_sort = self.own_folder_sort(account.id);
+                let hierarchy = crate::ui::sidebar::Hierarchy {
+                    delimiter: self.folder_delimiter(account.id),
+                    namespace: self.folder_namespace(account.id),
+                };
                 let filtered = self.account_filtered_folders(account.id);
                 let has_filters = self
                     .filters
@@ -12720,6 +12944,11 @@ impl AppModel {
                     folders,
                     filtered,
                     tree_collapsed,
+                    folder_order,
+                    hierarchy,
+                    folder_sort,
+                    own_folder_sort,
+                    default_folder_sort: self.folder_sort,
                 })
             })
             .collect();
@@ -14309,6 +14538,7 @@ impl AppModel {
             send_at: item.send_at,
             cloud_uploads: Vec::new(),
             inline_files: Vec::new(),
+            block_remote_images: false,
         };
         // The Outbox stays the folder on screen: its list is still what's listed,
         // so its toolbar has to stay too. Leaving it would strand the user in a
@@ -14367,7 +14597,7 @@ impl AppModel {
     /// Built like `edit_as_new`: the body and the attachments may still be
     /// on the server, so each is fetched at most once with the message held
     /// in `pending_forward`, and the reply re-enters here. `inline` says
-    /// where the composer opens, over the reading pane or in a window.
+    /// the composer opens where a reply does; otherwise in a window.
     fn forward(&mut self, m: Message, inline: bool, sender: &ComponentSender<Self>) {
         let m = self.with_cached_body(m);
         let key = (m.account_id, m.id);
@@ -14404,10 +14634,10 @@ impl AppModel {
             m.id,
             attachments.len()
         );
-        let mut prefill = forward_prefill(&m);
+        let mut prefill = self.quoting(&m, forward_prefill(&m));
         prefill.attachments = attachments;
         if inline {
-            self.open_inline_reply(m.account_id, prefill, Some((m.account_id, m.id)), sender);
+            self.open_reply(m.account_id, prefill, (m.account_id, m.id), sender);
         } else {
             self.open_compose(m.account_id, prefill, sender);
         }
@@ -14461,14 +14691,17 @@ impl AppModel {
             m.id,
             attachments.len()
         );
-        let prefill = ComposePrefill {
-            to: m.to.clone(),
-            cc: m.cc.clone(),
-            subject: m.subject.clone(),
-            body_html: editable_copy_html(&m.body),
-            attachments,
-            ..Default::default()
-        };
+        let prefill = self.quoting(
+            &m,
+            ComposePrefill {
+                to: m.to.clone(),
+                cc: m.cc.clone(),
+                subject: m.subject.clone(),
+                body_html: editable_copy_html(&m.body),
+                attachments,
+                ..Default::default()
+            },
+        );
         // A new message, so it opens where a new message opens.
         if self.compose_inline {
             self.open_inline_reply(m.account_id, prefill, None, sender);
@@ -14930,7 +15163,7 @@ impl AppModel {
     /// message picked from elsewhere gets its reply in a window, the pane
     /// left as it was.
     fn open_hand_off_reply(&mut self, m: Message, files: HandOffFiles, sender: &ComponentSender<Self>) {
-        let mut prefill = self.reply_pgp(&m, reply_prefill(&m));
+        let mut prefill = self.reply_context(&m, reply_prefill(&m));
         prefill.attachments = files.attach;
         prefill.cloud_uploads = files.cloud;
         let on_screen = self
@@ -14939,7 +15172,7 @@ impl AppModel {
             .is_some_and(|c| c.account_id == m.account_id && c.id == m.id)
             || self.current_thread.iter().any(|t| t.account_id == m.account_id && t.id == m.id);
         if on_screen {
-            self.open_inline_reply(m.account_id, prefill, Some((m.account_id, m.id)), sender);
+            self.open_reply(m.account_id, prefill, (m.account_id, m.id), sender);
         } else {
             self.open_compose(m.account_id, prefill, sender);
         }
@@ -15273,6 +15506,23 @@ impl AppModel {
             config::ReplyPosition::Top => false,
             config::ReplyPosition::Bottom => true,
             config::ReplyPosition::Follow => !self.thread_newest_first,
+        }
+    }
+
+    /// Where a reply or a forward opens: the reading pane, beside the
+    /// message it answers, or a window of its own when Settings says so
+    /// (#295).
+    fn open_reply(
+        &mut self,
+        account_id: u32,
+        prefill: ComposePrefill,
+        answering: (u32, u32),
+        sender: &ComponentSender<Self>,
+    ) {
+        if self.reply_inline {
+            self.open_inline_reply(account_id, prefill, Some(answering), sender);
+        } else {
+            self.open_compose(account_id, prefill, sender);
         }
     }
 
@@ -16191,7 +16441,9 @@ impl AppModel {
         self.send_to(account_id, MailRequest::DeleteFolder { path, trash });
     }
 
-    fn move_folder(&mut self, account_id: u32, path: String, dest: String) {
+    /// Move a folder under `dest` ("" for the top level). Returns its new
+    /// path when the move went ahead, `None` when it was refused.
+    fn move_folder(&mut self, account_id: u32, path: String, dest: String) -> Option<String> {
         let complain = |me: &Self, text: &str| {
             me.notifications.emit(NotifyInput::Push {
                 text: text.to_string(),
@@ -16203,7 +16455,7 @@ impl AppModel {
         // Into itself or its own subtree: there is no such place.
         if dest == path || dest.starts_with(&format!("{path}{delim}")) {
             complain(self, "A folder can't be moved into itself.");
-            return;
+            return None;
         }
         let folders = self.folders.get(&account_id).cloned().unwrap_or_default();
         // Only your own folders (or the top level) can hold other folders —
@@ -16211,7 +16463,7 @@ impl AppModel {
         if !dest.is_empty()
             && !folders.iter().any(|f| f.path == dest && f.kind == FolderKind::Custom)
         {
-            return;
+            return None;
         }
         let leaf = path.rsplit(delim).next().unwrap_or(&path).to_string();
         let new_path = if dest.is_empty() {
@@ -16220,13 +16472,14 @@ impl AppModel {
             format!("{dest}{delim}{leaf}")
         };
         if new_path == path {
-            return;
+            return None;
         }
         if folders.iter().any(|f| f.path == new_path) {
             complain(self, &format!("A folder named {leaf:?} is already there."));
-            return;
+            return None;
         }
-        self.apply_folder_rename(account_id, path, new_path, Some(i18n("Move Folder")));
+        self.apply_folder_rename(account_id, path, new_path.clone(), Some(i18n("Move Folder")));
+        Some(new_path)
     }
 
     /// Bring an account's local folder list back to exactly the shape the
@@ -16320,6 +16573,24 @@ impl AppModel {
         {
             let key_prefix = format!("{email}\t");
             for k in self.tree_collapsed.iter_mut() {
+                if let Some(rest) = k.strip_prefix(&key_prefix) {
+                    if rest == path {
+                        *k = format!("{key_prefix}{new_path}");
+                    } else if let Some(r) = rest.strip_prefix(&old_prefix) {
+                        *k = format!("{key_prefix}{new_prefix}{r}");
+                    }
+                }
+            }
+            // So does the folder order. A renamed folder keeps its place; one
+            // moved under another parent has left the siblings it was placed
+            // among, and joins its new ones at the end.
+            let parent = |p: &str| p.rsplit_once(delim).map(|(head, _)| head.to_string());
+            let moved = parent(&path) != parent(&new_path);
+            let own_key = format!("{key_prefix}{path}");
+            if moved {
+                self.folder_order.retain(|k| *k != own_key);
+            }
+            for k in self.folder_order.iter_mut() {
                 if let Some(rest) = k.strip_prefix(&key_prefix) {
                     if rest == path {
                         *k = format!("{key_prefix}{new_path}");
@@ -17240,6 +17511,7 @@ impl AppModel {
             tags_placement: self.tags_placement,
             chevrons_left: self.chevrons_left,
             start_view: self.start_view,
+            folder_sort: self.folder_sort,
             console_mode: self.console_mode,
             read_mark: self.read_mark,
             settings_open_accounts: self.settings_open_accounts,
@@ -17259,6 +17531,7 @@ impl AppModel {
             swipe_reversed: self.swipe_reversed,
             swipe_sensitivity: self.swipe_sensitivity,
             compose_inline: self.compose_inline,
+            reply_inline: self.reply_inline,
             reply_fields: self.reply_fields,
             files: self.files_prefs,
             link_browser: self.link_browser.clone(),
@@ -17339,6 +17612,7 @@ impl AppModel {
                 PrefOutput::SetSwipeReversed(on) => AppMsg::SetSwipeReversed(on),
                 PrefOutput::SetSwipeSensitivity(v) => AppMsg::SetSwipeSensitivity(v),
                 PrefOutput::SetComposeInline(on) => AppMsg::SetComposeInline(on),
+                PrefOutput::SetReplyInline(on) => AppMsg::SetReplyInline(on),
                 PrefOutput::SetReplyFields(on) => AppMsg::SetReplyFields(on),
                 PrefOutput::SetFilesPrefs(p) => AppMsg::SetFilesPrefs(p),
                 PrefOutput::SetLinkBrowser(id) => AppMsg::SetLinkBrowser(id),
@@ -17366,6 +17640,7 @@ impl AppModel {
                 PrefOutput::SetTagsPlacement(p) => AppMsg::SetTagsPlacement(p),
                 PrefOutput::SetChevronsLeft(left) => AppMsg::SetChevronsLeft(left),
                 PrefOutput::SetStartView(view) => AppMsg::SetStartView(view),
+                PrefOutput::SetFolderSort(sort) => AppMsg::SetFolderSort(sort),
                 PrefOutput::SetConsoleMode(on) => AppMsg::SetConsoleMode(on),
                 PrefOutput::SetReadMark(policy) => AppMsg::SetReadMark(policy),
                 PrefOutput::ExportSettings => AppMsg::ExportSettings,
@@ -18787,14 +19062,22 @@ impl AppModel {
     }
 
     /// The IMAP folder path a message lives in (its account's folder by id).
-    /// A reply to an encrypted message starts with Encrypt on (#133): the
+    /// What a reply takes over from how the reader showed the original. A
+    /// reply to an encrypted message starts with Encrypt on (#133): the
     /// verdict the reader had for the original says whether it was.
-    fn reply_pgp(&self, m: &Message, mut prefill: ComposePrefill) -> ComposePrefill {
+    fn reply_context(&self, m: &Message, mut prefill: ComposePrefill) -> ComposePrefill {
         prefill.encrypt = self
             .sender_cache
             .get(&(m.account_id, m.id))
             .and_then(|c| c.pgp.as_ref())
             .is_some_and(|p| p.encrypted);
+        self.quoting(m, prefill)
+    }
+
+    /// A composer quoting or copying `m` loads its remote pictures only
+    /// when the reader would (#295).
+    fn quoting(&self, m: &Message, mut prefill: ComposePrefill) -> ComposePrefill {
+        prefill.block_remote_images = !self.remote_allowed(m);
         prefill
     }
 
@@ -20122,6 +20405,7 @@ fn demo_account_configs() -> Vec<AccountConfig> {
         empty_trash_days: 0,
         pgp_key: None,
         in_unified: true,
+        folder_sort: None,
         sign_by_default: false,
     };
     vec![
@@ -20616,6 +20900,15 @@ fn sidebar_output_msg(out: SidebarOutput) -> AppMsg {
         }
         SidebarOutput::MoveFolder { account_id, path, dest } => {
             AppMsg::MoveFolder { account_id, path, dest }
+        }
+        SidebarOutput::ReorderFolders { account_id, paths } => {
+            AppMsg::ReorderFolders { account_id, paths }
+        }
+        SidebarOutput::PlaceFolder { account_id, path, dest, target, after } => {
+            AppMsg::PlaceFolder { account_id, path, dest, target, after }
+        }
+        SidebarOutput::SetFolderSort { account_id, sort } => {
+            AppMsg::SetAccountFolderSort { account_id, sort }
         }
     }
 }
@@ -21285,25 +21578,170 @@ fn forward_prefill(m: &Message) -> ComposePrefill {
     }
 }
 
-/// Sanitize untrusted message HTML for the editable composer. Ammonia's
-/// (conservative) defaults, widened with the structural tags and presentation
-/// attributes mail bodies lean on — tables above all. No style attributes, no
-/// scripts/handlers ever, URLs limited to http/https/mailto.
+/// Sanitize untrusted message HTML for the editable composer.
+///
+/// A designed message (an order confirmation, a newsletter) is laid out by
+/// its styles, most of them in a `<style>` block. That block cannot come
+/// into the composer, where it would restyle everything the user writes, so
+/// its rules are first written onto the elements they match, and the body's
+/// own look moves onto a wrapper. The quote then looks as the reader shows
+/// it (#295).
+///
+/// Only presentation survives: the tags and attributes mail layout uses,
+/// inline styles limited to [`QUOTE_STYLE_PROPERTIES`] with no `url()` or
+/// other resource in them, and URLs limited to http/https/mailto plus
+/// images already embedded in the message. No scripts or handlers, ever.
 fn sanitize_forward_html(html: &str) -> String {
     use std::collections::HashSet;
+    let inliner = css_inline::CSSInliner::options()
+        .load_remote_stylesheets(false)
+        .keep_style_tags(false)
+        .keep_link_tags(false)
+        .keep_at_rules(false)
+        .build();
+    let inlined = inliner.inline(html).unwrap_or_else(|e| {
+        tracing::debug!("quote: could not inline the message's styles: {e}");
+        html.to_string()
+    });
     let mut b = ammonia::Builder::default();
-    b.add_tags(["table", "thead", "tbody", "tfoot", "tr", "td", "th", "font", "center", "u"])
-        .add_tag_attributes("table", ["width", "border", "cellpadding", "cellspacing", "align", "bgcolor"])
-        .add_tag_attributes("td", ["width", "height", "align", "valign", "colspan", "rowspan", "bgcolor"])
-        .add_tag_attributes("th", ["width", "height", "align", "valign", "colspan", "rowspan", "bgcolor"])
-        .add_tag_attributes("tr", ["align", "valign", "bgcolor"])
-        .add_tag_attributes("font", ["face", "size", "color"])
-        .add_tag_attributes("p", ["align"])
-        .add_tag_attributes("div", ["align"])
-        .add_tags(["img"])
-        .add_tag_attributes("img", ["src", "width", "height", "alt"])
-        .url_schemes(HashSet::from(["http", "https", "mailto"]));
-    b.clean(html).to_string()
+    b.add_tags(["table", "thead", "tbody", "tfoot", "tr", "td", "th", "font", "center", "u", "span", "img"])
+        .add_generic_attributes([
+            "style", "width", "height", "align", "valign", "bgcolor", "border", "cellpadding",
+            "cellspacing", "color", "face", "size", "colspan", "rowspan", "dir",
+        ])
+        .add_tag_attributes("img", ["src", "alt"])
+        // A document's title is not part of its body.
+        .add_clean_content_tags(["title"])
+        .url_schemes(HashSet::from(["http", "https", "mailto", "data"]))
+        .attribute_filter(|element, attribute, value| match (element, attribute) {
+            (_, "style") => quote_style(value).map(Into::into),
+            // `data:` for the pictures the message carried inside itself,
+            // and nowhere else.
+            (_, "href" | "src") if starts_with_ignore_case(value.trim_start(), "data:") => {
+                (element == "img" && starts_with_ignore_case(value.trim_start(), "data:image/"))
+                    .then(|| value.into())
+            }
+            _ => Some(value.into()),
+        });
+    let inner = b.clean(&inlined).to_string();
+    let inner = trim_empty_blocks(&inner);
+    // The body's own background, font and spacing, which the sanitizer
+    // would otherwise drop with the body tag.
+    let Some(body) = body_look(&inlined) else { return inner.to_string() };
+    let wrapper = b.clean(&format!("<div style=\"{body}\"></div>")).to_string();
+    match wrapper.strip_suffix("</div>") {
+        Some(open) if open != "<div>" => format!("{open}{inner}</div>"),
+        _ => inner.to_string(),
+    }
+}
+
+/// The CSS a quoted message may keep: what lays out and colors mail.
+/// Positioning is left out, so nothing quoted can cover the composer, and
+/// so is anything that takes an image.
+const QUOTE_STYLE_PROPERTIES: &[&str] = &[
+    "background-color", "background", "border", "border-bottom", "border-bottom-color",
+    "border-bottom-left-radius", "border-bottom-right-radius", "border-bottom-style",
+    "border-bottom-width", "border-collapse", "border-color", "border-left", "border-left-color",
+    "border-left-style", "border-left-width", "border-radius", "border-right",
+    "border-right-color", "border-right-style", "border-right-width", "border-spacing",
+    "border-style", "border-top", "border-top-color", "border-top-left-radius",
+    "border-top-right-radius", "border-top-style", "border-top-width", "border-width",
+    "box-sizing", "clear", "color", "direction", "display", "float", "font", "font-family",
+    "font-size", "font-style", "font-variant", "font-weight", "height", "letter-spacing",
+    "line-height", "list-style", "list-style-position", "list-style-type", "margin",
+    "margin-bottom", "margin-left", "margin-right", "margin-top", "max-height", "max-width",
+    "min-height", "min-width", "opacity", "overflow", "overflow-wrap", "padding",
+    "padding-bottom", "padding-left", "padding-right", "padding-top", "table-layout",
+    "text-align", "text-decoration", "text-indent", "text-transform", "vertical-align",
+    "visibility", "white-space", "width", "word-break", "word-spacing", "word-wrap",
+];
+
+/// A quoted element's `style`, cut down to [`QUOTE_STYLE_PROPERTIES`].
+///
+/// A value may call color and arithmetic functions and nothing else: that
+/// keeps out `url()`, `image-set()` and the rest, whichever property they
+/// hide in, so opening a reply fetches nothing from the sender's servers.
+/// Escapes are refused outright rather than decoded.
+fn quote_style(style: &str) -> Option<String> {
+    const FUNCTIONS: [&str; 5] = ["rgb", "rgba", "hsl", "hsla", "calc"];
+    let mut kept = String::new();
+    for declaration in style.split(';') {
+        let Some((name, value)) = declaration.split_once(':') else { continue };
+        let name = name.trim().to_ascii_lowercase();
+        let value = value.trim();
+        if value.is_empty() || value.contains(['\\', '<', '>']) {
+            continue;
+        }
+        if !QUOTE_STYLE_PROPERTIES.contains(&name.as_str()) {
+            continue;
+        }
+        let lower = value.to_ascii_lowercase();
+        let calls_only_allowed = lower.match_indices('(').all(|(at, _)| {
+            let head = &lower[..at];
+            let start = head
+                .rfind(|c: char| !(c.is_ascii_alphanumeric() || c == '-'))
+                .map_or(0, |i| i + 1);
+            FUNCTIONS.contains(&&head[start..])
+        });
+        if calls_only_allowed {
+            kept.push_str(&format!("{name}:{value};"));
+        }
+    }
+    (!kept.is_empty()).then_some(kept)
+}
+
+fn starts_with_ignore_case(s: &str, prefix: &str) -> bool {
+    s.get(..prefix.len()).is_some_and(|head| head.eq_ignore_ascii_case(prefix))
+}
+
+/// The inline style of a document's `<body>`, with its `bgcolor` folded in,
+/// still escaped as it was in the markup. `html` is what the inliner wrote,
+/// so the attributes are double-quoted.
+fn body_look(html: &str) -> Option<String> {
+    let lower = html.to_ascii_lowercase();
+    let start = lower.find("<body")? + "<body".len();
+    let mut attrs: Vec<(String, String)> = Vec::new();
+    let mut rest = &html[start..];
+    loop {
+        rest = rest.trim_start();
+        if rest.is_empty() || rest.starts_with('>') || rest.starts_with("/>") {
+            break;
+        }
+        let name_end = rest.find(|c: char| c == '=' || c == '>' || c.is_whitespace()).unwrap_or(rest.len());
+        let name = rest[..name_end].to_ascii_lowercase();
+        rest = rest[name_end..].trim_start();
+        let Some(after_eq) = rest.strip_prefix('=') else {
+            if name.is_empty() {
+                break;
+            }
+            continue;
+        };
+        let after_eq = after_eq.trim_start();
+        let (value, tail) = match after_eq.chars().next() {
+            Some(q @ ('"' | '\'')) => {
+                let body = &after_eq[1..];
+                let end = body.find(q)?;
+                (&body[..end], &body[end + 1..])
+            }
+            _ => {
+                let end = after_eq.find(|c: char| c == '>' || c.is_whitespace()).unwrap_or(after_eq.len());
+                (&after_eq[..end], &after_eq[end..])
+            }
+        };
+        attrs.push((name, value.to_string()));
+        rest = tail;
+    }
+    let get = |n: &str| attrs.iter().find(|(k, _)| k == n).map(|(_, v)| v.trim().to_string());
+    let mut look = get("style").unwrap_or_default();
+    if let Some(bg) = get("bgcolor").filter(|v| !v.is_empty()) {
+        if !look.is_empty() && !look.ends_with(';') {
+            look.push(';');
+        }
+        // Ahead of the style, so a background the style sets still wins,
+        // as it does over `bgcolor` in the reader.
+        look = format!("background-color:{bg};{look}");
+    }
+    (!look.trim().is_empty()).then_some(look)
 }
 
 /// The quoted block a reply or a forward opens with: the attribution line,
@@ -21401,6 +21839,10 @@ fn trim_empty_blocks(html: &str) -> &str {
 }
 
 /// Like [`quote_block`], but the quoted body is already-sanitized HTML.
+///
+/// A body that sets its own colors is marked `vireo-quote-mail`: the editor
+/// lays it on the light ground it was designed for, where a dark composer
+/// would leave its dark text unreadable.
 fn quote_block_html(attribution: &str, inner_html: &str) -> String {
     let esc = |s: &str| {
         s.replace('&', "&amp;")
@@ -21408,9 +21850,11 @@ fn quote_block_html(attribution: &str, inner_html: &str) -> String {
             .replace('>', "&gt;")
             .replace('\n', "<br>")
     };
+    let colored = ["color:", "color=\"", "background:"].iter().any(|c| inner_html.contains(c));
     format!(
-        "<p class=\"vireo-quote-attr\">{}</p><blockquote>{}</blockquote>",
+        "<p class=\"vireo-quote-attr\">{}</p><blockquote{}>{}</blockquote>",
         esc(attribution),
+        if colored { " class=\"vireo-quote-mail\"" } else { "" },
         inner_html
     )
 }
@@ -21900,6 +22344,54 @@ mod tests {
                      "color=\"#333333\"", "src=\"https://example.com/logo.png\""] {
             assert!(clean.contains(keep), "missing {keep} in {clean}");
         }
+    }
+
+    #[test]
+    fn quoted_message_keeps_its_stylesheet_look() {
+        // A designed message styles itself from a <style> block the
+        // composer cannot take; the rules come in on the elements (#295).
+        let html = "<html><head><title>Your order</title><style>\
+            .bar{background-color:#34495e;color:#ffffff;padding:20px}\
+            @media (max-width:600px){.bar{padding:4px}}</style></head>\
+            <body bgcolor=\"#eeeeee\" style=\"margin:0\"><div class=\"bar\">Order placed</div></body></html>";
+        let clean = super::sanitize_forward_html(html);
+        assert!(!clean.contains("<style") && !clean.contains("class="), "{clean}");
+        assert!(!clean.contains("Your order"), "{clean}");
+        assert!(clean.contains("background-color:#34495e;"), "{clean}");
+        assert!(clean.contains("color:#ffffff;"), "{clean}");
+        // The body's ground moves onto a wrapper.
+        assert!(
+            clean.starts_with("<div style=\"background-color:#eeeeee;margin:0;\">"),
+            "{clean}"
+        );
+    }
+
+    #[test]
+    fn quoted_styles_fetch_nothing_and_cover_nothing() {
+        use super::quote_style;
+        assert_eq!(
+            quote_style("position:fixed; top:0; color:red; background:#fff url(https://t.example/p.gif)"),
+            Some("color:red;".into())
+        );
+        assert_eq!(quote_style("background-image:url(x)"), None);
+        assert_eq!(quote_style("background:u\\72l(x)"), None);
+        assert_eq!(quote_style("width:-webkit-image-set(x 1x)"), None);
+        assert_eq!(
+            quote_style("color: rgb(1, 2, 3); width: calc(100% - 20px)"),
+            Some("color:rgb(1, 2, 3);width:calc(100% - 20px);".into())
+        );
+    }
+
+    #[test]
+    fn quoted_message_keeps_its_embedded_pictures() {
+        // The reader's copy has its cid: parts as data: URIs; the quote keeps
+        // them, and the send path turns them back into parts.
+        let html = r#"<img src="data:image/png;base64,iVBORw0KGgo=" alt="logo">
+            <img src="data:text/html;base64,PHNjcmlwdD4=">
+            <a href="data:text/html,hi">x</a>"#;
+        let clean = super::sanitize_forward_html(html);
+        assert!(clean.contains(r#"src="data:image/png;base64,iVBORw0KGgo=""#), "{clean}");
+        assert!(!clean.contains("data:text"), "{clean}");
     }
 
     #[test]

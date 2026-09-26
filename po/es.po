@@ -945,6 +945,21 @@ msgid_plural "{n} unread messages"
 msgstr[0] "{n} mensaje sin leer"
 msgstr[1] "{n} mensajes sin leer"
 
+#, fuzzy
+msgid "Custom Order"
+msgstr "Color personalizado…"
+
+#, fuzzy
+msgid "Name (A to Z)"
+msgstr "Nombre (A–Z)"
+
+#, fuzzy
+msgid "Name (Z to A)"
+msgstr "Nombre (Z–A)"
+
+msgid "Full Path"
+msgstr ""
+
 msgid "Spam"
 msgstr "Correo no deseado"
 
@@ -1394,6 +1409,17 @@ msgstr ""
 "ocurre en alojamientos compartidos. Actívalo solo si la prueba de conexión "
 "indica que los nombres son diferentes."
 
+msgid "Show in All Inboxes"
+msgstr "Mostrar en todas las bandejas de entrada"
+
+msgid ""
+"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
+"and Archive, and in the unified Filters and Tags."
+msgstr ""
+"Incluye el correo de esta cuenta en las vistas unificadas de Bandejas de "
+"entrada, Destacados, Enviados, Borradores y Archivo, y en los Filtros y "
+"Etiquetas unificados."
+
 msgid "Test Connection"
 msgstr "Probar conexión"
 
@@ -1452,17 +1478,6 @@ msgstr "Usar iniciales"
 msgid "A photo or logo from this computer"
 msgstr "Una foto o logotipo de este equipo"
 
-msgid "Show in All Inboxes"
-msgstr "Mostrar en todas las bandejas de entrada"
-
-msgid ""
-"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
-"and Archive, and in the unified Filters and Tags."
-msgstr ""
-"Incluye el correo de esta cuenta en las vistas unificadas de Bandejas de "
-"entrada, Destacados, Enviados, Borradores y Archivo, y en los Filtros y "
-"Etiquetas unificados."
-
 msgid "Send-as aliases"
 msgstr "Alias de envío"
 
@@ -1513,6 +1528,19 @@ msgid ""
 msgstr ""
 "Eliminar definitivamente el correo de la Papelera que supere esta "
 "antigüedad; se comprueba en cada sincronización."
+
+#, fuzzy
+msgid "Folder Order"
+msgstr "Renombrar carpeta"
+
+msgid ""
+"How this account's folders are sorted in the sidebar. Also in the right-"
+"click menu of its Folders heading."
+msgstr ""
+
+#, fuzzy
+msgid "Sort by"
+msgstr "Ordenar"
 
 msgid "Special Folders"
 msgstr "Carpetas especiales"
@@ -3859,6 +3887,16 @@ msgstr ""
 "etiquetas. Al desactivarlo solo permanece la sección unificada. También está "
 "disponible en el menú principal y con Ctrl+Shift+A."
 
+#, fuzzy
+msgid "Folder order"
+msgstr "Renombrar carpeta"
+
+msgid ""
+"How each account's folders are sorted. Dragging a folder puts that account "
+"in Custom Order. An account can choose its own in its settings, or from the "
+"right-click menu of its Folders heading."
+msgstr ""
+
 msgid "Chevron placement"
 msgstr "Posición de los indicadores"
 
@@ -4389,6 +4427,15 @@ msgstr ""
 "El mensaje nuevo se despliega sobre el panel de lectura como una respuesta; "
 "puedes separarlo en una ventana desde su cabecera. Desactivado = abrir "
 "directamente una ventana independiente."
+
+#, fuzzy
+msgid "Reply and forward in the main window"
+msgstr "Redactar en la ventana principal"
+
+msgid ""
+"A reply or a forward opens in the reading pane, beside the message it "
+"answers. Off = open a separate window."
+msgstr ""
 
 msgid "Show From, To and Subject in the reply panel"
 msgstr "Mostrar De, Para y Asunto en el panel de respuesta"
@@ -5017,6 +5064,10 @@ msgstr "Actualizar"
 msgid "New Folder…"
 msgstr "Nueva carpeta…"
 
+#, fuzzy
+msgid "Reset Folder Order"
+msgstr "Renombrar carpeta"
+
 msgid "Account Settings…"
 msgstr "Ajustes de la cuenta…"
 
@@ -5026,11 +5077,19 @@ msgstr "Eliminar cuenta…"
 msgid "Show or hide sub-folders"
 msgstr "Mostrar u ocultar subcarpetas"
 
-msgid "Folders"
-msgstr "Carpetas"
+#, fuzzy
+msgid "Show or hide folders"
+msgstr "Mostrar u ocultar subcarpetas"
 
 msgid "Folders ({len})"
 msgstr "Carpetas ({len})"
+
+msgid "Folders"
+msgstr "Carpetas"
+
+#, fuzzy
+msgid "Sort Folders"
+msgstr "Carpetas"
 
 msgid "Add Folder"
 msgstr "Añadir carpeta"
@@ -5049,6 +5108,18 @@ msgstr "Mostrar cada etiqueta"
 
 msgid "Long-press to expand or collapse"
 msgstr "Mantén pulsado para expandir o contraer"
+
+#, fuzzy
+msgid "Show or hide filters"
+msgstr "Mostrar u ocultar subcarpetas"
+
+#, fuzzy
+msgid "Show or hide tags"
+msgstr "Mostrar u ocultar subcarpetas"
+
+#, fuzzy
+msgid "Follow Settings: {sort}"
+msgstr "Seguir Ajustes"
 
 msgid "Apply Filters"
 msgstr "Aplicar filtros"
@@ -5666,6 +5737,14 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Mover a"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Mover a"
 
 #, fuzzy
 #~ msgid "Remove Sound"

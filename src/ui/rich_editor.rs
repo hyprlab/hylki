@@ -48,6 +48,9 @@ pub struct RichEditor {
     /// on a live theme flip; disconnected when the last clone of the editor
     /// goes (the editor is a cloneable handle, so the guard is shared).
     _theme_handler: std::rc::Rc<ThemeHandlerGuard>,
+    /// The Content-Security-Policy `<meta>` every document this editor loads
+    /// carries, or empty when any picture may load. See [`RichEditor::new`].
+    image_policy: std::rc::Rc<str>,
 }
 
 /// What a source-mode editor is holding. Rich text is the absence of
@@ -170,7 +173,14 @@ pub fn installed_dictionaries() -> Vec<String> {
 }
 
 impl RichEditor {
-    pub fn new(initial_html: &str) -> Self {
+    /// `remote_images` is `None` when the editor may load any picture. A
+    /// quoted original whose remote content the reader has not loaded gives
+    /// the list the editor is limited to instead (the user's own signature
+    /// pictures): opening a reply must not fetch what reading the message
+    /// did not (#295). The markup keeps every address, so the recipient
+    /// gets the quote whole.
+    pub fn new(initial_html: &str, remote_images: Option<&[String]>) -> Self {
+        let image_policy: std::rc::Rc<str> = image_policy_meta(remote_images).into();
         // The shared document-viewer context (issue #106): a default-context
         // view would bring up a second web process with browser-sized caches.
         // Spell checking rides the same context; refreshing it here keeps a
@@ -242,7 +252,11 @@ impl RichEditor {
                 }
             });
         }
-        webview.load_html(&document(initial_html, &webview), Some("https://hylki.localhost/editor"));
+        crate::web_fonts::load_html(
+            &webview,
+            &document(initial_html, &webview, &image_policy),
+            Some("https://hylki.localhost/editor"),
+        );
         // A live theme flip re-grounds the open document (#148): the scheme
         // and the ground are baked into the document at load, so without
         // this the editor stays in the scheme it was opened in. Deferred to
@@ -562,6 +576,7 @@ impl RichEditor {
             text_history,
             history_cb,
             _theme_handler: std::rc::Rc::new(ThemeHandlerGuard(Some(theme_handler))),
+            image_policy,
         }
     }
 
@@ -612,8 +627,11 @@ impl RichEditor {
     pub fn set_html(&self, content: &str) {
         self.source.set(None);
         self.show_preview(None);
-        self.webview
-            .load_html(&document(content, &self.webview), Some("https://hylki.localhost/editor"));
+        crate::web_fonts::load_html(
+            &self.webview,
+            &document(content, &self.webview, &self.image_policy),
+            Some("https://hylki.localhost/editor"),
+        );
     }
 
     /// Put the editor into source mode holding `text`: a monospace
@@ -622,7 +640,8 @@ impl RichEditor {
     pub fn set_source(&self, kind: SourceKind, text: &str) {
         self.source.set(Some(kind));
         self.show_preview(None);
-        self.webview.load_html(
+        crate::web_fonts::load_html(
+            &self.webview,
             &source_document(text, &self.webview),
             Some("https://hylki.localhost/editor"),
         );
@@ -672,7 +691,11 @@ impl RichEditor {
                 v
             }
         };
-        view.load_html(&preview_document(html, &view), Some("https://hylki.localhost/preview"));
+        crate::web_fonts::load_html(
+            &view,
+            &preview_document(html, &view, &self.image_policy),
+            Some("https://hylki.localhost/preview"),
+        );
         self.stack.set_visible_child_name("preview");
     }
 
@@ -1807,7 +1830,7 @@ const PASTE_SCRIPT: &str = r#"<script>
 /// the theme's own view background (#148), read through `webview`, so a
 /// custom GNOME theme reaches the editor as it does the reader — `Canvas`
 /// would be WebKit's stock shade whatever the theme says.
-fn document(content: &str, webview: &webkit6::WebView) -> String {
+fn document(content: &str, webview: &webkit6::WebView, image_policy: &str) -> String {
     let dark = adw::StyleManager::default().is_dark();
     let scheme = if dark { "dark" } else { "light" };
     let (ground, _, _) = crate::ui::message_view::theme_grounds_for(webview, dark);
@@ -1819,7 +1842,7 @@ fn document(content: &str, webview: &webkit6::WebView) -> String {
     );
     format!(
         "<!doctype html><html><head><meta charset=\"utf-8\">\
-         <meta name=\"color-scheme\" content=\"{scheme}\">\
+         <meta name=\"color-scheme\" content=\"{scheme}\">{image_policy}\
          <style>\
            :root{{color-scheme:{scheme};}}\
            html,body{{height:100%;box-sizing:border-box;}}\
@@ -1843,6 +1866,10 @@ fn document(content: &str, webview: &webkit6::WebView) -> String {
               message sits where it would in a <div>. */\
            body>p:first-child{{margin-top:0;}}\
            .vireo-quote-attr{{opacity:0.7;margin:10px 0 4px;}}\
+           /* A quoted message that sets its own colors, on the light\
+              ground it was designed for. */\
+           blockquote.vireo-quote-mail{{background:#ffffff;color:#1e1e1e;\
+             color-scheme:light;}}\
            .vireo-sig{{opacity:0.85;}}\
            a{{color:#3584e4;}}\
          </style>{script}\
@@ -1902,13 +1929,13 @@ fn source_document(text: &str, webview: &webkit6::WebView) -> String {
 
 /// The preview document: the message as the recipient would see it, on the
 /// editor's own ground.
-fn preview_document(html: &str, webview: &webkit6::WebView) -> String {
+fn preview_document(html: &str, webview: &webkit6::WebView, image_policy: &str) -> String {
     let dark = adw::StyleManager::default().is_dark();
     let scheme = if dark { "dark" } else { "light" };
     let (ground, _, _) = crate::ui::message_view::theme_grounds_for(webview, dark);
     format!(
         "<!doctype html><html><head><meta charset=\"utf-8\">\
-         <meta name=\"color-scheme\" content=\"{scheme}\">\
+         <meta name=\"color-scheme\" content=\"{scheme}\">{image_policy}\
          <style>\
            :root{{color-scheme:{scheme};}}\
            html,body{{height:100%;box-sizing:border-box;}}\
@@ -1918,6 +1945,47 @@ fn preview_document(html: &str, webview: &webkit6::WebView) -> String {
            a{{color:#3584e4;}}\
          </style></head><body>{html}</body></html>"
     )
+}
+
+/// The `<meta>` that limits the pictures a document loads to embedded ones
+/// and `allowed`, or nothing when `allowed` is `None`. Only `img-src` is
+/// set: the editor's own scripts are inline and have to keep running.
+fn image_policy_meta(allowed: Option<&[String]>) -> String {
+    let Some(allowed) = allowed else { return String::new() };
+    let mut sources = String::from("data: blob:");
+    for url in allowed {
+        // A source expression names a path, never a query, and must not
+        // break the policy's own syntax.
+        let url = url.split(['?', '#']).next().unwrap_or_default();
+        let lower = url.to_ascii_lowercase();
+        let usable = (lower.starts_with("https://") || lower.starts_with("http://"))
+            && !url.contains(|c: char| c.is_whitespace() || matches!(c, ';' | ',' | '"' | '\'' | '<' | '>' | '&'));
+        if usable {
+            sources.push(' ');
+            sources.push_str(url);
+        }
+    }
+    format!("<meta http-equiv=\"Content-Security-Policy\" content=\"img-src {sources}\">")
+}
+
+/// Every remote picture `html` shows, by its `src` address.
+pub fn remote_image_urls(html: &str) -> Vec<String> {
+    let mut urls = Vec::new();
+    let mut rest = html;
+    while let Some(at) = find_src_attr(rest) {
+        let tail = &rest[at..];
+        match quoted_value(tail) {
+            Some((prefix, value)) => {
+                let lower = value.trim().to_ascii_lowercase();
+                if lower.starts_with("https://") || lower.starts_with("http://") {
+                    urls.push(value.trim().replace("&amp;", "&"));
+                }
+                rest = &tail[prefix.len() + value.len()..];
+            }
+            None => rest = &tail[4..],
+        }
+    }
+    urls
 }
 
 /// Escape text for a textarea's contents.
@@ -2143,6 +2211,23 @@ fn reground(weak: &gtk::glib::WeakRef<webkit6::WebView>, dark: bool) -> bool {
 #[cfg(test)]
 mod signature_tests {
     use super::*;
+
+    /// A reply to a message whose remote content is blocked still shows the
+    /// user's own signature logo, and nothing else from the web (#295).
+    #[test]
+    fn blocked_images_spare_the_signature() {
+        let sig = r#"<p>Jo</p><img src="https://cdn.example/logo.png?v=2&amp;x=1" alt="">
+            <img src="data:image/png;base64,AAAA">"#;
+        let urls = remote_image_urls(sig);
+        assert_eq!(urls, vec!["https://cdn.example/logo.png?v=2&x=1".to_string()]);
+        assert_eq!(
+            image_policy_meta(Some(&urls)),
+            "<meta http-equiv=\"Content-Security-Policy\" \
+             content=\"img-src data: blob: https://cdn.example/logo.png\">"
+        );
+        assert_eq!(image_policy_meta(Some(&["https://x.example/a;b".to_string()])).matches("x.example").count(), 0);
+        assert_eq!(image_policy_meta(None), "");
+    }
 
     /// Plain text stays a typed signature: escaped, line breaks kept.
     #[test]

@@ -246,6 +246,10 @@ struct AliasDialog {
 
 #[derive(Debug)]
 pub enum AccountsInput {
+    /// An account's folder order was changed from the sidebar: this copy of
+    /// the account, and its editor if open, follow, so saving the editor
+    /// later doesn't put the old order back.
+    SetFolderSort { email: String, sort: Option<crate::config::FolderSort> },
     /// The editor's "Use my Gravatar" switch moved (#189).
     SetOwnGravatar(bool),
     /// The "Server saves its own copy of sent mail" switch: with it on there is
@@ -1148,6 +1152,18 @@ impl Component for AccountsWindow {
                                     set_subtitle: &i18n("The server's certificate must still be valid and signed, but may be issued for a different host name than the one entered, as on shared hosting. Turn on only when the connection test says the names differ."),
                                 },
 
+                                // Off keeps a mailbox read on its own out of
+                                // the merged lists (#267); its own section,
+                                // the tray and notifications are unchanged.
+                                #[name = "in_unified_row"]
+                                adw::SwitchRow {
+                                    set_title: &i18n("Show in All Inboxes"),
+                                    set_subtitle: &i18n("Include this account's mail in the unified Inboxes, \
+                                                   Starred, Sent, Drafts and Archive, and in the unified \
+                                                   Filters and Tags."),
+                                    set_active: true,
+                                },
+
                                 gtk::Box {
                                     set_orientation: gtk::Orientation::Vertical,
                                     set_spacing: 6,
@@ -1312,18 +1328,6 @@ impl Component for AccountsWindow {
                                         connect_clicked => AccountsInput::ClearGlyph,
                                     },
                                 },
-
-                                // Off keeps a mailbox read on its own out of
-                                // the merged lists (#267); its own section,
-                                // the tray and notifications are unchanged.
-                                #[name = "in_unified_row"]
-                                adw::SwitchRow {
-                                    set_title: &i18n("Show in All Inboxes"),
-                                    set_subtitle: &i18n("Include this account's mail in the unified Inboxes, \
-                                                   Starred, Sent, Drafts and Archive, and in the unified \
-                                                   Filters and Tags."),
-                                    set_active: true,
-                                },
                             },
 
                             // Send-as aliases (#34): extra From identities the
@@ -1421,6 +1425,20 @@ impl Component for AccountsWindow {
                                     set_title: &i18n("Empty Trash automatically"),
                                     set_subtitle: &i18n("Delete mail in the Trash older than this for \
                                                    good, checked at each sync."),
+                                },
+                            },
+
+                            // Its own folder order, or Settings → Sidebar's.
+                            add = &adw::PreferencesGroup {
+                                set_title: &i18n("Folder Order"),
+                                set_description: Some(
+                                    i18n("How this account's folders are sorted in the sidebar. Also \
+                                          in the right-click menu of its Folders heading.").as_str()
+                                ),
+
+                                #[name = "folder_sort_row"]
+                                adw::ComboRow {
+                                    set_title: &i18n("Sort by"),
                                 },
                             },
 
@@ -1686,6 +1704,14 @@ impl Component for AccountsWindow {
             .push_row
             .set_model(Some(&gtk::StringList::new(&[i18n("Follow Settings").as_str(), i18n("On").as_str(), i18n("Off").as_str()])));
         widgets.push_row.set_list_factory(Some(&non_ellipsizing_factory()));
+        let sort_labels: Vec<String> = std::iter::once(i18n("Follow Settings"))
+            .chain(crate::config::FolderSort::ALL.iter().map(|s| s.label()))
+            .collect();
+        let sort_labels: Vec<&str> = sort_labels.iter().map(String::as_str).collect();
+        widgets.folder_sort_row.set_model(Some(&gtk::StringList::new(&sort_labels)));
+        widgets.folder_sort_row.set_list_factory(Some(&non_ellipsizing_factory()));
+        // The chosen value whole: "Follow Settings" cut to "Follow …" says nothing.
+        widgets.folder_sort_row.set_factory(Some(&non_ellipsizing_factory()));
         let empty_labels = auto_empty_labels();
         let empty_labels: Vec<&str> = empty_labels.iter().map(String::as_str).collect();
         for row in [&widgets.empty_junk_row, &widgets.empty_trash_row] {
@@ -2090,6 +2116,15 @@ impl Component for AccountsWindow {
 
             AccountsInput::SetServerSavesSent(on) => {
                 widgets.folder_sent_copy_row.set_sensitive(!on);
+            }
+
+            AccountsInput::SetFolderSort { email, sort } => {
+                if let Some(i) = self.accounts.iter().position(|a| a.email == email) {
+                    self.accounts[i].folder_sort = sort;
+                    if self.editing == Some(i) {
+                        widgets.folder_sort_row.set_selected(sort.map_or(0, |s| s.index() + 1));
+                    }
+                }
             }
 
             AccountsInput::SetOwnGravatar(on) => {
@@ -2899,7 +2934,7 @@ impl AccountsWindow {
     /// build, for a field most visits never reach.
     fn sig_editor(&mut self, widgets: &AccountsWindowWidgets) -> &RichEditor {
         if self.sig_editor.is_none() {
-            let editor = RichEditor::new("");
+            let editor = RichEditor::new("", None);
             widgets.sig_holder.append(&editor.widget);
             self.sig_editor = Some(editor);
         }
@@ -3968,6 +4003,12 @@ fn read_account(
             sel.checked_sub(1).and_then(|i| c.borrow().get(i).map(|k| k.fingerprint.clone()))
         }),
         in_unified: widgets.in_unified_row.is_active(),
+        // Row 0 follows Settings; the rest follow FolderSort::ALL.
+        folder_sort: widgets
+            .folder_sort_row
+            .selected()
+            .checked_sub(1)
+            .and_then(|i| crate::config::FolderSort::ALL.get(i as usize).copied()),
         sign_by_default: widgets.sign_default_row.is_active(),
     }
 }
@@ -4094,6 +4135,7 @@ fn fill_editor(widgets: &AccountsWindowWidgets, acc: &AccountConfig) {
     widgets.empty_trash_row.set_selected(auto_empty_index(acc.empty_trash_days));
     fill_pgp_key_row(widgets, acc.pgp_key.as_deref());
     widgets.in_unified_row.set_active(acc.in_unified);
+    widgets.folder_sort_row.set_selected(acc.folder_sort.map_or(0, |s| s.index() + 1));
     widgets.sign_default_row.set_active(acc.sign_by_default);
     // Show the effective label (custom, or the email address).
     widgets
@@ -4178,6 +4220,7 @@ fn clear_editor(widgets: &AccountsWindowWidgets) {
     widgets.empty_trash_row.set_selected(0);
     fill_pgp_key_row(widgets, None);
     widgets.in_unified_row.set_active(true);
+    widgets.folder_sort_row.set_selected(0);
     widgets.sign_default_row.set_active(false);
     widgets.smtp_user_row.set_text("");
     widgets.smtp_pass_row.set_text("");

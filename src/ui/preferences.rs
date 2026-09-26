@@ -75,6 +75,8 @@ pub struct PrefInit {
     pub swipe_sensitivity: f64,
     /// "New message" composes inline over the reading pane (vs a window).
     pub compose_inline: bool,
+    /// Reply, Reply All and Forward open in the reading pane (vs a window).
+    pub reply_inline: bool,
     pub reply_fields: bool,
     /// Settings → System → GNOME Files: what handed-in files open into.
     pub files: crate::config::FilesPrefs,
@@ -125,6 +127,7 @@ pub struct PrefInit {
     pub tags_placement: crate::config::SectionPlacement,
     pub chevrons_left: bool,
     pub start_view: crate::config::StartView,
+    pub folder_sort: crate::config::FolderSort,
     pub console_mode: bool,
     pub read_mark: crate::config::ReadMark,
     pub sidebar_hover_expand: bool,
@@ -836,6 +839,7 @@ pub enum PrefInput {
     ToggleSwipeReversed(bool),
     ChangeSwipeSensitivity(f64),
     ToggleComposeInline(bool),
+    ToggleReplyInline(bool),
     ToggleReplyFields(bool),
     /// The "Send new messages from" combo: 0 = the open folder's account,
     /// then `identities` in order.
@@ -879,6 +883,7 @@ pub enum PrefInput {
     SetShowAccounts(bool),
     ChangeChevronSide(u32),
     ChangeStartView(u32),
+    ChangeFolderSort(u32),
     ChangeFilteredPlacement(u32),
     ChangeTagsPlacement(u32),
     ToggleSidebarHoverExpand(bool),
@@ -997,6 +1002,7 @@ pub enum PrefOutput {
     SetSwipeReversed(bool),
     SetSwipeSensitivity(f64),
     SetComposeInline(bool),
+    SetReplyInline(bool),
     SetReplyFields(bool),
     SetFilesPrefs(crate::config::FilesPrefs),
     /// The browser links open in (#232): "" = the desktop's default,
@@ -1022,6 +1028,7 @@ pub enum PrefOutput {
     SetShowAccounts(bool),
     SetChevronsLeft(bool),
     SetStartView(crate::config::StartView),
+    SetFolderSort(crate::config::FolderSort),
     SetFilteredPlacement(crate::config::SectionPlacement),
     SetTagsPlacement(crate::config::SectionPlacement),
     SetConsoleMode(bool),
@@ -2057,6 +2064,18 @@ impl Component for Preferences {
                                         },
                                     },
 
+                                    #[name = "folder_sort_row"]
+                                    adw::ComboRow {
+                                        set_title: &i18n("Folder order"),
+                                        set_subtitle: &i18n("How each account's folders are sorted. Dragging a folder \
+                                                       puts that account in Custom Order. An account can choose \
+                                                       its own in its settings, or from the right-click menu of \
+                                                       its Folders heading."),
+                                        connect_selected_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ChangeFolderSort(row.selected()));
+                                        },
+                                    },
+
                                     #[name = "chevron_side_row"]
                                     adw::ComboRow {
                                         set_title: &i18n("Chevron placement"),
@@ -2787,6 +2806,17 @@ impl Component for Preferences {
                                         },
                                     },
 
+                                    #[name = "reply_inline_row"]
+                                    adw::SwitchRow {
+                                        set_title: &i18n("Reply and forward in the main window"),
+                                        set_subtitle: &i18n("A reply or a forward opens in the reading pane, \
+                                                       beside the message it answers. Off = open a \
+                                                       separate window."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ToggleReplyInline(row.is_active()));
+                                        },
+                                    },
+
                                     #[name = "reply_fields_row"]
                                     adw::SwitchRow {
                                         set_title: &i18n("Show From, To and Subject in the reply panel"),
@@ -3376,6 +3406,7 @@ impl Component for Preferences {
             &widgets.language_row,
             &widgets.chevron_side_row,
             &widgets.start_view_row,
+            &widgets.folder_sort_row,
         ] {
             no_truncate(row);
         }
@@ -3460,6 +3491,10 @@ impl Component for Preferences {
             crate::config::StartView::AccountInbox => 1,
             crate::config::StartView::LastFolder => 2,
         });
+        let sort_labels: Vec<String> = crate::config::FolderSort::ALL.iter().map(|s| s.label()).collect();
+        let sort_labels: Vec<&str> = sort_labels.iter().map(String::as_str).collect();
+        widgets.folder_sort_row.set_model(Some(&gtk::StringList::new(&sort_labels)));
+        widgets.folder_sort_row.set_selected(init.folder_sort.index());
         widgets.chevron_side_row.set_model(Some(&gtk::StringList::new(&[i18n("Left").as_str(), i18n("Right").as_str()])));
         widgets.chevron_side_row.set_selected(if init.chevrons_left { 0 } else { 1 });
         widgets.sidebar_hover_expand_row.set_active(init.sidebar_hover_expand);
@@ -3651,6 +3686,7 @@ impl Component for Preferences {
         widgets.swipe_enabled_row.set_active(init.swipe_enabled);
         widgets.swipe_reversed_row.set_active(init.swipe_reversed);
         widgets.compose_inline_row.set_active(init.compose_inline);
+        widgets.reply_inline_row.set_active(init.reply_inline);
         widgets.reply_fields_row.set_active(init.reply_fields);
         widgets.files_action_row.set_model(Some(&gtk::StringList::new(&[
             i18n("Ask each time").as_str(),
@@ -4285,6 +4321,9 @@ impl Component for Preferences {
             PrefInput::ToggleComposeInline(on) => {
                 let _ = sender.output(PrefOutput::SetComposeInline(on));
             }
+            PrefInput::ToggleReplyInline(on) => {
+                let _ = sender.output(PrefOutput::SetReplyInline(on));
+            }
             PrefInput::TogglePastePlain(on) => {
                 let _ = sender.output(PrefOutput::SetPastePlain(on));
             }
@@ -4488,6 +4527,10 @@ impl Component for Preferences {
                     _ => StartView::AllInboxes,
                 };
                 let _ = sender.output(PrefOutput::SetStartView(view));
+            }
+            PrefInput::ChangeFolderSort(idx) => {
+                let sort = crate::config::FolderSort::ALL.get(idx as usize).copied().unwrap_or_default();
+                let _ = sender.output(PrefOutput::SetFolderSort(sort));
             }
             PrefInput::ChangeChevronSide(idx) => {
                 let _ = sender.output(PrefOutput::SetChevronsLeft(idx == 0));

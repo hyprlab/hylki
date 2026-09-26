@@ -467,6 +467,15 @@ button.star-active {
   margin: 0 6px;
   border-radius: 9px;
 }
+/* In the full sidebar only a heading's chevron folds its section, as a
+   parent folder's arrow does, so the heading is a plain box
+   (ui/sidebar.rs `section_heading`) laid out like the button it is in the
+   rail: Adwaita's button padding, height floor and weight. */
+.folders-toggle.heading-box {
+  min-height: 24px;
+  padding: 5px 10px;
+  font-weight: bold;
+}
 .folders-toggle label {
   font-weight: 600;
   opacity: 0.65;
@@ -500,6 +509,9 @@ button.star-active {
   margin-top: 2px;
   /* The button's 24px content floor would centre the now-shorter row
      inside it and push the text down: the row's own height rules. */
+  min-height: 0;
+}
+.folders-toggle.heading-box.unified-folders-toggle {
   min-height: 0;
 }
 .unified-folders-toggle .folder-row {
@@ -1433,6 +1445,12 @@ headerbar.compose-toolbar button.image-button {
   /* Matches the 6px grab strip above, so the drawer reads evenly spaced. */
   padding-bottom: 6px;
 }
+/* The still of a drawer on its way out: the drawer's own tint is in the
+   picture, but not the window ground it sits on, without which the reader
+   behind shows through (see fade_out_drawer). */
+.attachment-drawer-still {
+  background: @window_bg_color;
+}
 /* The drawer's divider draws no line or grip of its own: it wears the
    drawer's exact tint, so the grabbable strip reads as the drawer's own top
    edge rather than a band of window ground showing through. Dragging resizes
@@ -1548,6 +1566,22 @@ headerbar.compose-toolbar button.image-button {
   background: alpha(@window_bg_color, 0.9);
   border-radius: 999px;
   padding: 2px 10px;
+}
+
+/* Dragging a folder among its siblings: an accent line in the gap it will
+   land in (ui/sidebar.rs draws it over the list). The list takes the drop
+   as a whole, so it drops the outline GTK draws around a drop target; a
+   folder being moved into, or taking mail, is outlined on its own. */
+.folder-drop-line {
+  background-color: @accent_color;
+  border-radius: 1px;
+  min-height: 2px;
+}
+.navigation-sidebar.folder-drop-list:drop(active) {
+  box-shadow: none;
+}
+.navigation-sidebar > row.drop-into {
+  box-shadow: inset 0 0 0 1px @accent_bg_color;
 }
 
 /* Folder-tree expander (#51): a chevron sized to exactly the leaf spacer's

@@ -941,6 +941,21 @@ msgid_plural "{n} unread messages"
 msgstr[0] "{n} ungelesene Nachricht"
 msgstr[1] "{n} ungelesene Nachrichten"
 
+#, fuzzy
+msgid "Custom Order"
+msgstr "Benutzerdefinierte Farbe..."
+
+#, fuzzy
+msgid "Name (A to Z)"
+msgstr "Name (A–Z)"
+
+#, fuzzy
+msgid "Name (Z to A)"
+msgstr "Name (Z–A)"
+
+msgid "Full Path"
+msgstr ""
+
 msgid "Spam"
 msgstr "Spam"
 
@@ -1408,6 +1423,14 @@ msgstr ""
 "aber für einen anderen Hostnamen als den eingegebenen ausgestellt werden, "
 "wie beim Shared Hosting."
 
+msgid "Show in All Inboxes"
+msgstr ""
+
+msgid ""
+"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
+"and Archive, and in the unified Filters and Tags."
+msgstr ""
+
 msgid "Test Connection"
 msgstr "Verbindung testen"
 
@@ -1466,14 +1489,6 @@ msgstr "Initialen verwenden"
 msgid "A photo or logo from this computer"
 msgstr "Ein Foto oder Logo von diesem Computer"
 
-msgid "Show in All Inboxes"
-msgstr ""
-
-msgid ""
-"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
-"and Archive, and in the unified Filters and Tags."
-msgstr ""
-
 msgid "Send-as aliases"
 msgstr "Absender-Aliasse"
 
@@ -1524,6 +1539,19 @@ msgid ""
 msgstr ""
 "Ältere Nachrichten im Papierkorb endgültig löschen; wird bei jeder "
 "Synchronisierung geprüft."
+
+#, fuzzy
+msgid "Folder Order"
+msgstr "Ordner umbenennen"
+
+msgid ""
+"How this account's folders are sorted in the sidebar. Also in the right-"
+"click menu of its Folders heading."
+msgstr ""
+
+#, fuzzy
+msgid "Sort by"
+msgstr "Sortieren"
 
 msgid "Special Folders"
 msgstr "Spezielle Ordner"
@@ -3881,6 +3909,16 @@ msgstr ""
 "und Tags. Off lässt den einheitlichen Bereich in Ruhe. Auch im Hauptmenü und "
 "Strg+Shift+A."
 
+#, fuzzy
+msgid "Folder order"
+msgstr "Ordner umbenennen"
+
+msgid ""
+"How each account's folders are sorted. Dragging a folder puts that account "
+"in Custom Order. An account can choose its own in its settings, or from the "
+"right-click menu of its Folders heading."
+msgstr ""
+
 msgid "Chevron placement"
 msgstr "Position der Ausklapp-Pfeile"
 
@@ -4405,6 +4443,15 @@ msgstr ""
 "Eine neue Nachricht rutscht wie eine Antwort über den Lesebereich nach unten "
 "— knallen Sie sie aus der Kopfzeile in ein Fenster. Aus = öffnen Sie direkt "
 "ein separates Fenster."
+
+#, fuzzy
+msgid "Reply and forward in the main window"
+msgstr "Im Hauptfenster verfassen"
+
+msgid ""
+"A reply or a forward opens in the reading pane, beside the message it "
+"answers. Off = open a separate window."
+msgstr ""
 
 msgid "Show From, To and Subject in the reply panel"
 msgstr "Von, An und Betreff im Antwortbereich anzeigen"
@@ -5026,6 +5073,10 @@ msgstr "Aktualisieren"
 msgid "New Folder…"
 msgstr "Neuer Ordner…"
 
+#, fuzzy
+msgid "Reset Folder Order"
+msgstr "Ordner umbenennen"
+
 msgid "Account Settings…"
 msgstr "Kontoeinstellungen…"
 
@@ -5035,11 +5086,19 @@ msgstr "Konto entfernen…"
 msgid "Show or hide sub-folders"
 msgstr "Unterordner ein- oder ausblenden"
 
-msgid "Folders"
-msgstr "Ordner"
+#, fuzzy
+msgid "Show or hide folders"
+msgstr "Unterordner ein- oder ausblenden"
 
 msgid "Folders ({len})"
 msgstr "Ordner ({len})"
+
+msgid "Folders"
+msgstr "Ordner"
+
+#, fuzzy
+msgid "Sort Folders"
+msgstr "Ordner"
 
 msgid "Add Folder"
 msgstr "Ordner hinzufügen"
@@ -5058,6 +5117,18 @@ msgstr "Jedes Tag anzeigen"
 
 msgid "Long-press to expand or collapse"
 msgstr "Lange drücken, um aus- oder einzuklappen"
+
+#, fuzzy
+msgid "Show or hide filters"
+msgstr "Unterordner ein- oder ausblenden"
+
+#, fuzzy
+msgid "Show or hide tags"
+msgstr "Unterordner ein- oder ausblenden"
+
+#, fuzzy
+msgid "Follow Settings: {sort}"
+msgstr "Einstellungen folgen"
 
 msgid "Apply Filters"
 msgstr "Filter anwenden"
@@ -5677,6 +5748,14 @@ msgstr "Der einheitliche Posteingang im Lichtmodus"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Verschieben nach"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Verschieben nach"
 
 #, fuzzy
 #~ msgid "Remove Sound"

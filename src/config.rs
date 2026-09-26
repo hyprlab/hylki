@@ -474,6 +474,10 @@ pub struct AccountConfig {
     /// off, so older files read the same.
     #[serde(default = "default_enabled", skip_serializing_if = "is_true")]
     pub in_unified: bool,
+    /// This account's own folder order in the sidebar; `None` follows
+    /// Settings → Sidebar.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub folder_sort: Option<FolderSort>,
     /// New messages, replies and forwards from this account open with
     /// OpenPGP signing on (#267); the composer's toggle still turns it off
     /// for one message.
@@ -1193,6 +1197,10 @@ struct PrivacyFile {
     /// reply) rather than in its own window.
     #[serde(default = "default_compose_inline")]
     compose_inline: bool,
+    /// Whether Reply, Reply All and Forward open in the reading pane (#86)
+    /// rather than in a window of their own (#295).
+    #[serde(default = "default_compose_inline")]
+    reply_inline: bool,
     /// Whether the inline reply panel shows its From, To and Subject rows
     /// from the start (#154); off, a button in its header reveals them.
     #[serde(default)]
@@ -1376,6 +1384,9 @@ struct PrivacyFile {
     /// What the main window shows at launch (#256).
     #[serde(default)]
     start_view: StartView,
+    /// How accounts' folders are sorted, unless an account chooses.
+    #[serde(default)]
+    folder_sort: FolderSort,
 }
 
 fn default_chevrons_left() -> bool {
@@ -1535,6 +1546,7 @@ impl Default for PrivacyFile {
             files_limit_mb: default_files_limit_mb(),
             link_browser: String::new(),
             start_view: StartView::default(),
+            folder_sort: FolderSort::default(),
             gravatar: false,
             avatars: default_avatars(),
             own_mailbox_face: default_own_mailbox_face(),
@@ -1581,6 +1593,7 @@ impl Default for PrivacyFile {
             swipe_reversed: false,
             swipe_sensitivity: default_swipe_sensitivity(),
             compose_inline: default_compose_inline(),
+            reply_inline: default_compose_inline(),
             reply_fields: false,
             compose_default_from: String::new(),
             single_card_default_applied: false,
@@ -1887,6 +1900,47 @@ pub enum StartView {
     AccountInbox,
     /// Whichever folder was open last, All Inboxes included.
     LastFolder,
+}
+
+/// How an account's custom folders are ordered in the sidebar: Settings →
+/// Sidebar sets it for every account, and an account can choose its own
+/// (`AccountConfig::folder_sort`). The main folders (Inbox, Sent…) keep
+/// their order whichever is chosen.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum FolderSort {
+    /// By name, with the folders the user dragged kept where they were put.
+    #[default]
+    Custom,
+    /// By the name shown, A to Z, ignoring any dragging.
+    NameAsc,
+    /// By the name shown, Z to A.
+    NameDesc,
+    /// By the whole path on the server, as Gmail on the web lists labels.
+    Path,
+}
+
+impl FolderSort {
+    pub const ALL: [FolderSort; 4] =
+        [FolderSort::Custom, FolderSort::NameAsc, FolderSort::NameDesc, FolderSort::Path];
+
+    pub fn label(self) -> String {
+        match self {
+            FolderSort::Custom => crate::i18n::i18n("Custom Order"),
+            FolderSort::NameAsc => crate::i18n::i18n("Name (A to Z)"),
+            FolderSort::NameDesc => crate::i18n::i18n("Name (Z to A)"),
+            FolderSort::Path => crate::i18n::i18n("Full Path"),
+        }
+    }
+
+    /// Its place in [`FolderSort::ALL`], for combo rows.
+    pub fn index(self) -> u32 {
+        FolderSort::ALL.iter().position(|s| *s == self).unwrap_or(0) as u32
+    }
+}
+
+pub fn load_folder_sort() -> FolderSort {
+    load_privacy().folder_sort
 }
 
 pub fn load_start_view() -> StartView {
@@ -2916,6 +2970,11 @@ pub fn load_compose_inline() -> bool {
     load_privacy().compose_inline
 }
 
+/// Whether a reply or a forward opens in the reading pane.
+pub fn load_reply_inline() -> bool {
+    load_privacy().reply_inline
+}
+
 /// Whether pasting into the composer strips the clipboard's formatting.
 pub fn load_paste_plain() -> bool {
     load_privacy().paste_plain
@@ -3165,6 +3224,7 @@ pub fn save_privacy(
     swipe_reversed: bool,
     swipe_sensitivity: f64,
     compose_inline: bool,
+    reply_inline: bool,
     reply_fields: bool,
     compose_default_from: &str,
     paste_plain: bool,
@@ -3206,6 +3266,7 @@ pub fn save_privacy(
     files: FilesPrefs,
     link_browser: String,
     start_view: StartView,
+    folder_sort: FolderSort,
 ) {
     let Some(path) = privacy_path() else {
         return;
@@ -3262,6 +3323,7 @@ pub fn save_privacy(
         swipe_reversed,
         swipe_sensitivity,
         compose_inline,
+        reply_inline,
         reply_fields,
         compose_default_from: compose_default_from.to_string(),
         paste_plain,
@@ -3310,6 +3372,7 @@ pub fn save_privacy(
         files_limit_mb: files.limit_mb,
         link_browser,
         start_view,
+        folder_sort,
     };
     match toml::to_string_pretty(&file) {
         Ok(toml) => {
@@ -3342,6 +3405,10 @@ struct SidebarFile {
     /// Collapsed folder-tree nodes, as "email\tpath" entries.
     #[serde(default)]
     tree_collapsed: Vec<String>,
+    /// Folders the user has put in an order of their own, as "email\tpath"
+    /// entries: a folder sorts among its siblings by where it stands here.
+    #[serde(default)]
+    folder_order: Vec<String>,
     /// The three sections' open state; open when the file predates them,
     /// which is how they always started.
     #[serde(default = "default_on")]
@@ -3385,6 +3452,8 @@ pub struct SidebarState {
     pub icon_only: bool,
     /// Collapsed folder-tree nodes, as "email\tpath" entries.
     pub tree_collapsed: Vec<String>,
+    /// The user's folder order, as "email\tpath" entries.
+    pub folder_order: Vec<String>,
     /// Whether the per-account inbox list under All Inboxes is open.
     pub unified_expanded: bool,
     /// Whether the Filtered Folders section is open.
@@ -3415,6 +3484,7 @@ pub fn load_sidebar_state() -> SidebarState {
             folders_expanded: s.folders_expanded,
             icon_only: s.icon_only,
             tree_collapsed: s.tree_collapsed,
+            folder_order: s.folder_order,
             unified_expanded: s.unified_expanded,
             filtered_expanded: s.filtered_expanded,
             tags_expanded: s.tags_expanded,
@@ -3441,6 +3511,7 @@ pub fn save_sidebar_state(state: &SidebarState) {
         folders_expanded: state.folders_expanded.clone(),
         icon_only: state.icon_only,
         tree_collapsed: state.tree_collapsed.clone(),
+        folder_order: state.folder_order.clone(),
         unified_expanded: state.unified_expanded,
         filtered_expanded: state.filtered_expanded,
         tags_expanded: state.tags_expanded,
@@ -3579,6 +3650,11 @@ struct StateFile {
     /// restart right after the wizard, for the app icon, must not loop.
     #[serde(default)]
     wizard_completed: bool,
+    /// The Flatpak runtime commit under which WebKit hung on the host's
+    /// fonts and was given the runtime's own instead (#296). Kept per
+    /// commit, so a runtime update gets another try with every font.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    web_font_fallback: Option<String>,
     /// The mail view open last (#256): an account's folder, or All Inboxes
     /// when `email` is empty. Accounts are named by address, which stays
     /// true across launches where an account's number may not.
@@ -3690,6 +3766,20 @@ pub fn mark_wizard_completed() {
     let mut s = load_state();
     if !s.wizard_completed {
         s.wizard_completed = true;
+        save_state(&s);
+    }
+}
+
+/// The runtime commit WebKit's font fallback was settled under (#296).
+pub fn load_web_font_fallback() -> Option<String> {
+    load_state().web_font_fallback.filter(|s| !s.is_empty())
+}
+
+pub fn save_web_font_fallback(runtime: Option<&str>) {
+    let mut s = load_state();
+    let runtime = runtime.map(str::to_string);
+    if s.web_font_fallback != runtime {
+        s.web_font_fallback = runtime;
         save_state(&s);
     }
 }
@@ -4418,6 +4508,7 @@ dest_path = "Lists"
             empty_trash_days: 0,
             pgp_key: None,
             in_unified: true,
+            folder_sort: None,
             sign_by_default: false,
         };
         acc.aliases = Vec::new();

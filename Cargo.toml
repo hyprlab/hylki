@@ -76,6 +76,14 @@ gettext-rs = { version = "0.8.0", features = ["gettext-system"] }
 pulldown-cmark = { version = "0.13.4", default-features = false, features = ["html"] }
 markup5ever_rcdom = "0.39.0"
 html5ever = "0.39"
+css-inline = { version = "0.21.2", default-features = false }
+# A notification button that shows no window has to tell GNOME Shell its
+# launch is over (see src/startup.rs). On Wayland that takes gtk_shell1, which
+# GTK binds but keeps private, so a second binding is made on GTK's own
+# connection. client_system: share libwayland's display rather than open one.
+wayland-client = "0.31"
+wayland-backend = { version = "0.3", features = ["client_system"] }
+wayland-scanner = "0.31"
 
 [build-dependencies]
 # Compiles resources/veem.gresource.xml (the bundled symbolic icons) into a

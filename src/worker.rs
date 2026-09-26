@@ -1882,6 +1882,10 @@ async fn run_imap(
 
             MailRequest::RefreshUnread => {
                 let sess = session.as_mut().unwrap();
+                // The folder list too: a folder another client created, renamed
+                // or moved was otherwise only seen at the next connect. An
+                // unchanged list repaints nothing.
+                refresh_folders(account_id, &account, sess, cache.as_ref(), &emit).await;
                 let (changed, complete) = refresh_unread_counts(
                     account_id,
                     sess,
@@ -5596,9 +5600,35 @@ async fn rename_folder(
     old_path: &str,
     new_path: &str,
 ) -> Result<(), async_imap::error::Error> {
+    // Sub-folders go along with the RENAME, but their subscriptions are the
+    // client's to move: Dovecot leaves them at the old names, and a client
+    // that shows subscribed folders only (Thunderbird's default) would lose
+    // them. So they are listed first, and each one's subscription is moved too.
+    // async-imap sends the pattern as given: quoted here, names have spaces.
+    let pattern = quote_mailbox(&format!("{old_path}*"));
+    let children: Vec<String> = match session.list(Some(""), Some(&pattern)).await {
+        Ok(stream) => stream
+            .try_collect::<Vec<async_imap::types::Name>>()
+            .await
+            .unwrap_or_default()
+            .iter()
+            .map(|n| n.name().to_string())
+            .filter(|p| {
+                p.len() > old_path.len() + 1
+                    && p.starts_with(old_path)
+                    && matches!(p.as_bytes()[old_path.len()], b'/' | b'.' | b'\\')
+            })
+            .collect(),
+        Err(_) => Vec::new(),
+    };
     rename_box(session, old_path, new_path).await?;
     let _ = unsubscribe_box(session, old_path).await;
     let _ = subscribe_box(session, new_path).await;
+    for child in children {
+        let moved = format!("{new_path}{}", &child[old_path.len()..]);
+        let _ = unsubscribe_box(session, &child).await;
+        let _ = subscribe_box(session, &moved).await;
+    }
     Ok(())
 }
 
@@ -11651,6 +11681,7 @@ pub(super) fn sample_account() -> AccountConfig {
         empty_trash_days: 0,
         pgp_key: None,
         in_unified: true,
+        folder_sort: None,
         sign_by_default: false,
         push: None,
         name: String::new(),
@@ -11750,6 +11781,69 @@ mod tests {
             assert_eq!(names, vec!["data.csv"]);
             purge_messages(sess, "INBOX", &[new_uid]).await.expect("clean up");
         });
+    }
+
+    /// A folder moved with a sub-folder keeps both subscribed at their new
+    /// names, so a client showing subscribed folders only still sees them.
+    /// `IMAP_LIVE=host,port,user,password cargo test --bin hylki
+    /// worker::tests::live_rename_moves_subscriptions -- --ignored`
+    #[test]
+    #[ignore]
+    fn live_rename_moves_subscriptions() {
+        let Ok(spec) = std::env::var("IMAP_LIVE") else { return };
+        let p: Vec<&str> = spec.splitn(4, ',').collect();
+        let account = AccountConfig {
+            imap_host: p[0].into(),
+            imap_port: p[1].parse().expect("port"),
+            username: p[2].into(),
+            password: p[3].into(),
+            security: Some(crate::config::ServerSecurity {
+                imap_starttls: false,
+                imap_accept_invalid_certs: true,
+                ..Default::default()
+            }),
+            ..sample_account()
+        };
+        let rt = tokio::runtime::Builder::new_current_thread().enable_all().build().unwrap();
+        rt.block_on(async {
+            let mut sess = connect(&account).await.expect("connect");
+            let delim = session_delimiter(&mut sess).await;
+            let (old, sub) = ("Hylki Rig".to_string(), format!("Hylki Rig{delim}Sub one"));
+            let (new, new_sub) = ("Hylki Rig Moved".to_string(), format!("Hylki Rig Moved{delim}Sub one"));
+            for f in [&old, &sub] {
+                create_box(&mut sess, f).await.expect("create");
+                subscribe_box(&mut sess, f).await.expect("subscribe");
+            }
+            rename_folder(&mut sess, &old, &new).await.expect("rename");
+            let subscribed: Vec<String> = sess
+                .lsub(Some(""), Some("*"))
+                .await
+                .expect("lsub")
+                .try_collect::<Vec<async_imap::types::Name>>()
+                .await
+                .expect("lsub")
+                .iter()
+                .map(|n| n.name().to_string())
+                .collect();
+            let _ = delete_box(&mut sess, &new_sub).await;
+            let _ = delete_box(&mut sess, &new).await;
+            println!("subscribed: {subscribed:?}");
+            assert!(subscribed.contains(&new) && subscribed.contains(&new_sub));
+            assert!(!subscribed.contains(&old) && !subscribed.contains(&sub));
+        });
+    }
+
+    /// The hierarchy delimiter the server answers `LIST "" ""` with.
+    async fn session_delimiter(sess: &mut ImapSession) -> String {
+        sess.list(Some(""), Some("\"\""))
+            .await
+            .expect("list")
+            .try_collect::<Vec<async_imap::types::Name>>()
+            .await
+            .expect("list")
+            .first()
+            .and_then(|n| n.delimiter().map(String::from))
+            .unwrap_or_else(|| "/".into())
     }
 
     /// A message moved in from another account keeps its read and starred

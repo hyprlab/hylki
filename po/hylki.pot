@@ -879,6 +879,18 @@ msgid_plural "{n} unread messages"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Custom Order"
+msgstr ""
+
+msgid "Name (A to Z)"
+msgstr ""
+
+msgid "Name (Z to A)"
+msgstr ""
+
+msgid "Full Path"
+msgstr ""
+
 msgid "Spam"
 msgstr ""
 
@@ -1284,6 +1296,14 @@ msgid ""
 "on only when the connection test says the names differ."
 msgstr ""
 
+msgid "Show in All Inboxes"
+msgstr ""
+
+msgid ""
+"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
+"and Archive, and in the unified Filters and Tags."
+msgstr ""
+
 msgid "Test Connection"
 msgstr ""
 
@@ -1335,14 +1355,6 @@ msgstr ""
 msgid "A photo or logo from this computer"
 msgstr ""
 
-msgid "Show in All Inboxes"
-msgstr ""
-
-msgid ""
-"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
-"and Archive, and in the unified Filters and Tags."
-msgstr ""
-
 msgid "Send-as aliases"
 msgstr ""
 
@@ -1386,6 +1398,17 @@ msgstr ""
 
 msgid ""
 "Delete mail in the Trash older than this for good, checked at each sync."
+msgstr ""
+
+msgid "Folder Order"
+msgstr ""
+
+msgid ""
+"How this account's folders are sorted in the sidebar. Also in the right-"
+"click menu of its Folders heading."
+msgstr ""
+
+msgid "Sort by"
 msgstr ""
 
 msgid "Special Folders"
@@ -3501,6 +3524,15 @@ msgid ""
 "leaves the unified section alone. Also in the main menu, and Ctrl+Shift+A."
 msgstr ""
 
+msgid "Folder order"
+msgstr ""
+
+msgid ""
+"How each account's folders are sorted. Dragging a folder puts that account "
+"in Custom Order. An account can choose its own in its settings, or from the "
+"right-click menu of its Folders heading."
+msgstr ""
+
 msgid "Chevron placement"
 msgstr ""
 
@@ -3912,6 +3944,14 @@ msgstr ""
 msgid ""
 "New message slides down over the reading pane, like a reply — pop it out to "
 "a window from its header. Off = open a separate window directly."
+msgstr ""
+
+msgid "Reply and forward in the main window"
+msgstr ""
+
+msgid ""
+"A reply or a forward opens in the reading pane, beside the message it "
+"answers. Off = open a separate window."
 msgstr ""
 
 msgid "Show From, To and Subject in the reply panel"
@@ -4450,6 +4490,9 @@ msgstr ""
 msgid "New Folder…"
 msgstr ""
 
+msgid "Reset Folder Order"
+msgstr ""
+
 msgid "Account Settings…"
 msgstr ""
 
@@ -4459,10 +4502,16 @@ msgstr ""
 msgid "Show or hide sub-folders"
 msgstr ""
 
-msgid "Folders"
+msgid "Show or hide folders"
 msgstr ""
 
 msgid "Folders ({len})"
+msgstr ""
+
+msgid "Folders"
+msgstr ""
+
+msgid "Sort Folders"
 msgstr ""
 
 msgid "Add Folder"
@@ -4481,6 +4530,15 @@ msgid "Show each tag"
 msgstr ""
 
 msgid "Long-press to expand or collapse"
+msgstr ""
+
+msgid "Show or hide filters"
+msgstr ""
+
+msgid "Show or hide tags"
+msgstr ""
+
+msgid "Follow Settings: {sort}"
 msgstr ""
 
 msgid "Apply Filters"

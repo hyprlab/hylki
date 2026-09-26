@@ -948,6 +948,21 @@ msgid_plural "{n} unread messages"
 msgstr[0] "{n} μη αναγνωσμένο μήνυμα"
 msgstr[1] "{n} μη αναγνωσμένα μηνύματα"
 
+#, fuzzy
+msgid "Custom Order"
+msgstr "Προσαρμοσμένο χρώμα…"
+
+#, fuzzy
+msgid "Name (A to Z)"
+msgstr "Όνομα (Α–Ω)"
+
+#, fuzzy
+msgid "Name (Z to A)"
+msgstr "Όνομα (Ω–Α)"
+
+msgid "Full Path"
+msgstr ""
+
 msgid "Spam"
 msgstr "Ανεπιθύμητα"
 
@@ -1413,6 +1428,17 @@ msgstr ""
 "αυτό που εισαγάγατε, όπως σε κοινόχρηστη φιλοξενία. Ενεργοποιήστε το μόνο "
 "όταν η δοκιμή σύνδεσης αναφέρει ότι τα ονόματα διαφέρουν."
 
+msgid "Show in All Inboxes"
+msgstr "Εμφάνιση σε όλα τα Εισερχόμενα"
+
+msgid ""
+"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
+"and Archive, and in the unified Filters and Tags."
+msgstr ""
+"Συμπερίληψη της αλληλογραφίας αυτού του λογαριασμού στα ενοποιημένα "
+"Εισερχόμενα, Επισημασμένα, Απεσταλμένα, Πρόχειρα και Αρχειοθήκη, καθώς και "
+"στα ενοποιημένα Φίλτρα και τις Ετικέτες."
+
 msgid "Test Connection"
 msgstr "Δοκιμή σύνδεσης"
 
@@ -1471,17 +1497,6 @@ msgstr "Χρήση αρχικών"
 msgid "A photo or logo from this computer"
 msgstr "Φωτογραφία ή λογότυπο από αυτόν τον υπολογιστή"
 
-msgid "Show in All Inboxes"
-msgstr "Εμφάνιση σε όλα τα Εισερχόμενα"
-
-msgid ""
-"Include this account's mail in the unified Inboxes, Starred, Sent, Drafts "
-"and Archive, and in the unified Filters and Tags."
-msgstr ""
-"Συμπερίληψη της αλληλογραφίας αυτού του λογαριασμού στα ενοποιημένα "
-"Εισερχόμενα, Επισημασμένα, Απεσταλμένα, Πρόχειρα και Αρχειοθήκη, καθώς και "
-"στα ενοποιημένα Φίλτρα και τις Ετικέτες."
-
 msgid "Send-as aliases"
 msgstr "Ψευδώνυμα αποστολέα"
 
@@ -1534,6 +1549,19 @@ msgid ""
 msgstr ""
 "Οριστική διαγραφή μηνυμάτων στον Κάδο παλαιότερων από αυτό το διάστημα, με "
 "έλεγχο σε κάθε συγχρονισμό."
+
+#, fuzzy
+msgid "Folder Order"
+msgstr "Μετονομασία φακέλου"
+
+msgid ""
+"How this account's folders are sorted in the sidebar. Also in the right-"
+"click menu of its Folders heading."
+msgstr ""
+
+#, fuzzy
+msgid "Sort by"
+msgstr "Ταξινόμηση"
 
 msgid "Special Folders"
 msgstr "Ειδικοί φάκελοι"
@@ -3913,6 +3941,16 @@ msgstr ""
 "ετικέτες του. Η απενεργοποίηση δεν επηρεάζει την ενοποιημένη ενότητα. "
 "Υπάρχει επίσης στο κύριο μενού και με Ctrl+Shift+A."
 
+#, fuzzy
+msgid "Folder order"
+msgstr "Μετονομασία φακέλου"
+
+msgid ""
+"How each account's folders are sorted. Dragging a folder puts that account "
+"in Custom Order. An account can choose its own in its settings, or from the "
+"right-click menu of its Folders heading."
+msgstr ""
+
 msgid "Chevron placement"
 msgstr "Τοποθέτηση βέλους"
 
@@ -4447,6 +4485,15 @@ msgstr ""
 "Το νέο μήνυμα ολισθαίνει πάνω από το παράθυρο ανάγνωσης, όπως μια απάντηση — "
 "μπορείτε να το ανοίξετε σε ξεχωριστό παράθυρο από την κεφαλίδα του. Αν είναι "
 "ανενεργό, ανοίγει απευθείας ξεχωριστό παράθυρο."
+
+#, fuzzy
+msgid "Reply and forward in the main window"
+msgstr "Σύνταξη στο κύριο παράθυρο"
+
+msgid ""
+"A reply or a forward opens in the reading pane, beside the message it "
+"answers. Off = open a separate window."
+msgstr ""
 
 msgid "Show From, To and Subject in the reply panel"
 msgstr "Εμφάνιση Από, Προς και Θέματος στον πίνακα απάντησης"
@@ -5082,6 +5129,10 @@ msgstr "Ανανέωση"
 msgid "New Folder…"
 msgstr "Νέος φάκελος…"
 
+#, fuzzy
+msgid "Reset Folder Order"
+msgstr "Μετονομασία φακέλου"
+
 msgid "Account Settings…"
 msgstr "Ρυθμίσεις λογαριασμού…"
 
@@ -5091,11 +5142,19 @@ msgstr "Αφαίρεση λογαριασμού…"
 msgid "Show or hide sub-folders"
 msgstr "Εμφάνιση ή απόκρυψη υποφακέλων"
 
-msgid "Folders"
-msgstr "Φάκελοι"
+#, fuzzy
+msgid "Show or hide folders"
+msgstr "Εμφάνιση ή απόκρυψη υποφακέλων"
 
 msgid "Folders ({len})"
 msgstr "Φάκελοι ({len})"
+
+msgid "Folders"
+msgstr "Φάκελοι"
+
+#, fuzzy
+msgid "Sort Folders"
+msgstr "Φάκελοι"
 
 msgid "Add Folder"
 msgstr "Προσθήκη φακέλου"
@@ -5114,6 +5173,18 @@ msgstr "Εμφάνιση κάθε ετικέτας"
 
 msgid "Long-press to expand or collapse"
 msgstr "Παρατεταμένο πάτημα για ανάπτυξη ή σύμπτυξη"
+
+#, fuzzy
+msgid "Show or hide filters"
+msgstr "Εμφάνιση ή απόκρυψη υποφακέλων"
+
+#, fuzzy
+msgid "Show or hide tags"
+msgstr "Εμφάνιση ή απόκρυψη υποφακέλων"
+
+#, fuzzy
+msgid "Follow Settings: {sort}"
+msgstr "Ακολούθηση ρυθμίσεων"
 
 msgid "Apply Filters"
 msgstr "Εφαρμογή φίλτρων"
@@ -5735,6 +5806,14 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Μετακίνηση σε"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Μετακίνηση σε"
 
 #, fuzzy
 #~ msgid "Remove Sound"
