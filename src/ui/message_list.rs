@@ -8,15 +8,36 @@ use relm4::prelude::*;
 
 use crate::models::{Message, ThreadSummary};
 use crate::ui::context_menu::{show_context_menu, show_context_menu_with_header, MenuEntry};
-use crate::i18n::{i18n, i18n_f};
+use crate::i18n::i18n;
 
-/// Max rows rendered at once. GtkListBox isn't virtualized, so the full folder
-/// index is kept in memory for search but only this many rows are built.
-/// Raised from 200 (#236): the unified Inboxes merge every account newest
-/// first, and a conversation's older messages fell past the window within
-/// days; a wider window keeps more of a conversation on the same page, and
-/// the rows past the first paint are built in idle-time chunks anyway.
-const RENDER_CAP: usize = 500;
+/// At most this many message widgets are mounted. The filtered/sorted index
+/// remains available for searching and for jumping to any part of the folder.
+const RENDER_CAP: usize = 100;
+const WINDOW_STEP: usize = 25;
+const ESTIMATED_ROW_HEIGHT: f64 = 88.0;
+
+/// Keep a buffer on either side of the viewport. The buffer must be larger
+/// than the shift threshold, otherwise moving upward by one viewport can
+/// repeatedly request a shift that is too small to perform.
+fn window_start(first: usize, total: usize) -> usize {
+    first.saturating_sub(RENDER_CAP / 3)
+        .min(total.saturating_sub(RENDER_CAP))
+}
+
+/// Map the viewport into the full match index, including the empty spacer
+/// above the mounted rows. Clamping to `page_start` here traps upward scrolling
+/// in the spacer: no earlier window can ever be requested.
+fn first_visible_match(pos: f64, top: f64, page_start: usize, row_height: f64) -> usize {
+    if pos < top {
+        (pos.max(0.0) / row_height) as usize
+    } else {
+        page_start.saturating_add(((pos - top) / row_height) as usize)
+    }
+}
+
+fn needs_window_shift(start: usize, desired: usize, outside_rows: bool) -> bool {
+    desired != start && (outside_rows || desired.abs_diff(start) >= WINDOW_STEP)
+}
 
 /// Rows built synchronously when the list is (re)built — enough to fill the
 /// pane — before the rest of the page arrives in idle-time chunks. Building
@@ -2519,6 +2540,16 @@ pub struct MessageList {
     shown: Vec<Message>,
     /// Total messages matching the current filter (may exceed what's rendered).
     total_matches: usize,
+    /// First match in the mounted scroll window.
+    page_start: usize,
+    /// Sorted indices into `active_source`, retained for cheap window shifts.
+    sorted_matches: Vec<usize>,
+    /// A window shift reuses the filtered index instead of sorting the mailbox.
+    shifting_window: bool,
+    /// Current estimated height of a match (updated from mounted rows).
+    row_height: f64,
+    top_spacer: Option<gtk::Box>,
+    bottom_spacer: Option<gtk::Box>,
     query: String,
     gravatar: bool,
     /// Lines of preview text per row (1–3), from Preferences.
@@ -2634,8 +2665,7 @@ pub struct MessageList {
     /// them again even though the messages are the same. Without this the
     /// page-growing shortcut in `rebuild` keeps them as they are.
     rows_stale: bool,
-    /// How many messages to render — grows by `RENDER_CAP` each time the user
-    /// scrolls to the bottom (infinite scroll). Reset on folder switch / search.
+    /// Maximum messages mounted on one page; reset on folder switch / search.
     render_limit: usize,
     /// Whether the folder's background index is fully loaded. When false, more
     /// rows may still stream in, so hitting the bottom shows a loading spinner.
@@ -2876,8 +2906,8 @@ pub enum MessageListInput {
     /// Folder switch: reset infinite-scroll paging back to the first page and
     /// scroll to the top (a plain `SetMessages` now preserves paging for refreshes).
     ResetPaging,
-    /// The list was scrolled to the bottom — render the next page of messages.
-    LoadMore,
+    /// Recenter the mounted window when scrolling approaches its edge.
+    ShiftWindow,
     /// Whether the current folder's background index is fully loaded.
     SetIndexComplete(bool),
     /// Build the next chunk of the current page's rows (scheduled at idle).
@@ -3138,22 +3168,20 @@ impl SimpleComponent for MessageList {
                 // indent while a conversation is expanded — see the rebuild.)
                 set_size_request: (LIST_MIN_WIDTH, -1),
 
-                // Reaching the bottom pulls in the next page (and, if the index is
-                // still loading, shows the spinner below until more arrive).
-                connect_edge_reached[sender] => move |_, pos| {
-                    if pos == gtk::PositionType::Bottom {
-                        sender.input(MessageListInput::LoadMore);
-                    }
-                },
-
                 gtk::Box {
                     set_orientation: gtk::Orientation::Vertical,
+
+                    #[name = "top_spacer"]
+                    gtk::Box {},
 
                     // Wired by `wire_list` (shared with the lists that
                     // replace this one on a folder switch — see
                     // `discard_rows`).
                     #[local_ref]
                     row_box -> gtk::ListBox {},
+
+                    #[name = "bottom_spacer"]
+                    gtk::Box {},
 
                     // Bottom loading indicator while the rest of the folder streams in.
                     #[name = "loading_box"]
@@ -3231,6 +3259,12 @@ impl SimpleComponent for MessageList {
             search_closed_at: None,
             shown: Vec::new(),
             total_matches: 0,
+            page_start: 0,
+            sorted_matches: Vec::new(),
+            shifting_window: false,
+            row_height: ESTIMATED_ROW_HEIGHT,
+            top_spacer: None,
+            bottom_spacer: None,
             render_limit: RENDER_CAP,
             index_complete: true,
             loaded: false,
@@ -3299,6 +3333,21 @@ impl SimpleComponent for MessageList {
 
         let widgets = view_output!();
         model.scroller = Some(widgets.scroller.clone());
+        model.top_spacer = Some(widgets.top_spacer.clone());
+        model.bottom_spacer = Some(widgets.bottom_spacer.clone());
+        {
+            let input = sender.input_sender().clone();
+            let adj = widgets.scroller.vadjustment();
+            let s = input.clone();
+            adj.connect_value_changed(move |_| {
+                let _ = s.send(MessageListInput::ShiftWindow);
+            });
+            // The adjustment's value can stay put while a row rebuild changes
+            // the list's height. Recheck after GTK has laid the new rows out.
+            adj.connect_changed(move |_| {
+                let _ = input.send(MessageListInput::ShiftWindow);
+            });
+        }
 
         // A spinning spinner redraws every frame for as long as it is mapped,
         // and a scrolled window keeps the one under the rows mapped when it
@@ -3392,15 +3441,9 @@ impl SimpleComponent for MessageList {
                         self.all.push(m);
                     }
                 }
-                // Re-render when it could change what's visible: an active search, a
-                // sort where older messages can surface at the top, or the user is
-                // waiting at the bottom for more rows to fill the raised limit.
-                let waiting_for_more = self.render_limit > self.rendered_count;
-                if self.all.len() != before
-                    && (!self.query.is_empty()
-                        || self.sort != SortOrder::DateNewest
-                        || waiting_for_more)
-                {
+                // The sorted index and spacers cover the whole folder even when
+                // the new messages fall outside the mounted window.
+                if self.all.len() != before {
                     self.queue_rebuild(true);
                 }
             }
@@ -3408,6 +3451,7 @@ impl SimpleComponent for MessageList {
                 self.all.clear();
                 self.loaded = false;
                 self.clear_search();
+                self.page_start = 0;
                 self.render_limit = RENDER_CAP;
                 // Queued: when the folder's list follows in the same pass
                 // (served from cache), the old rows are torn down once, for
@@ -3419,19 +3463,13 @@ impl SimpleComponent for MessageList {
                 // scrolled to the top.
                 self.clear_search();
                 self.emitted_thread.clear();
+                self.page_start = 0;
                 self.render_limit = RENDER_CAP;
                 if let Some(s) = &self.scroller {
                     s.vadjustment().set_value(0.0);
                 }
             }
-            MessageListInput::LoadMore => {
-                // Show more if the index already has more, or if it's still loading
-                // (the spinner covers the wait, and appended rows fill in).
-                if self.rendered_count < self.total_matches || !self.index_complete {
-                    self.render_limit = self.render_limit.saturating_add(RENDER_CAP);
-                    self.rebuild_preserving_scroll();
-                }
-            }
+            MessageListInput::ShiftWindow => self.shift_window(),
             MessageListInput::SetIndexComplete(complete) => {
                 self.index_complete = complete;
             }
@@ -3678,6 +3716,7 @@ impl SimpleComponent for MessageList {
                 if was_active != now_active {
                     let _ = sender.output(MessageListOutput::SearchActive(now_active));
                 }
+                self.page_start = 0;
                 self.render_limit = RENDER_CAP;
                 self.rebuild();
             }
@@ -3686,6 +3725,7 @@ impl SimpleComponent for MessageList {
                     self.scope = scope;
                     // Scope only affects the view while a query is present.
                     if self.searching() {
+                        self.page_start = 0;
                         self.render_limit = RENDER_CAP;
                         self.rebuild();
                     }
@@ -3694,6 +3734,7 @@ impl SimpleComponent for MessageList {
             MessageListInput::SetSearchPool(pool) => {
                 self.search_pool = pool;
                 if self.searching() && self.scope == SearchScope::AllFolders {
+                    self.page_start = 0;
                     self.render_limit = RENDER_CAP;
                     self.rebuild_preserving_scroll();
                 }
@@ -4125,6 +4166,10 @@ impl SimpleComponent for MessageList {
                     self.rendered_count = self.shown.len();
                 }
 
+                // Keep the retained index in sync after any surgical removal.
+                self.sorted_matches.clear();
+                self.queue_rebuild(true);
+
                 if was_viewed {
                     match removed_idx {
                         // Advance in the direction the user was triaging: the
@@ -4196,15 +4241,9 @@ impl SimpleComponent for MessageList {
                 self.total_matches =
                     self.total_matches.saturating_sub(shown_before - self.shown.len());
                 self.rendered_count = self.shown.len();
-                // Backfill the rendered window: a bulk removal can empty it
-                // while `all` still holds messages beyond the render cap (a
-                // folder larger than one page). Re-derive `shown` so what
-                // remains appears immediately, instead of the list sitting
-                // empty until the server finishes the move and pushes fresh
-                // messages.
-                if self.shown.len() < self.render_limit && self.all.len() > self.shown.len() {
-                    self.rebuild_preserving_scroll();
-                }
+                // Removals change source indices even when no mounted row was
+                // removed. Recompute the filtered model once after this batch.
+                self.queue_rebuild(true);
                 if was_viewed {
                     match first_removed {
                         Some(idx) if !self.shown.is_empty() => {
@@ -4408,6 +4447,62 @@ impl SimpleComponent for MessageList {
 }
 
 impl MessageList {
+    /// Empty spacers represent the rows outside the mounted window. GTK lays
+    /// out only the bounded ListBox, while the adjustment still spans the folder.
+    fn update_spacers(&self) {
+        let height = self.row_height;
+        if let Some(top) = &self.top_spacer {
+            top.set_height_request(((self.page_start as f64 * height).min(i32::MAX as f64)) as i32);
+        }
+        if let Some(bottom) = &self.bottom_spacer {
+            let remaining = self.total_matches.saturating_sub(self.page_start + self.rendered_count);
+            bottom.set_height_request(((remaining as f64 * height).min(i32::MAX as f64)) as i32);
+        }
+    }
+
+    fn shift_window(&mut self) {
+        if !self.pending_rows.is_empty() || self.rebuild_queued.is_some()
+            || self.total_matches <= RENDER_CAP {
+            return;
+        }
+        let Some(scroller) = &self.scroller else { return };
+        let adj = scroller.vadjustment();
+        let pos = adj.value();
+        // Use the mounted list's actual geometry, not a fixed row-height
+        // guess: previews, palettes and expanded threads all alter its height.
+        // The spacer estimate only determines the size of off-screen space.
+        let list = self.rows.widget();
+        if list.height() <= 0 {
+            return;
+        }
+        let count = self.rendered_count.max(1) as f64;
+        let row_height = (list.height() as f64 / count).max(1.0);
+        // Spacer heights must use the same scale as the mounted list. A fixed
+        // estimate can put the next window *below* the viewport (particularly
+        // when threads collapse many messages into one row), leaving a blank
+        // gap that no further scroll event can recover from.
+        if (self.row_height - row_height).abs() > 0.5 {
+            self.row_height = row_height;
+            self.update_spacers();
+        }
+        let top = self.top_spacer.as_ref().map_or(0.0, |w| w.height() as f64);
+        let first = first_visible_match(pos, top, self.page_start, row_height);
+        let desired = window_start(first, self.total_matches);
+        // A fast fling can land in a spacer while the replacement rows are
+        // mounting. Once mounted, do not apply the usual hysteresis if the
+        // viewport is still outside them: even a small index difference can
+        // otherwise leave a permanent blank region.
+        let outside_rows = pos < top || pos >= top + list.height() as f64;
+        if !needs_window_shift(self.page_start, desired, outside_rows) {
+            return;
+        }
+        self.flush_rows();
+        self.page_start = desired;
+        self.shifting_window = true;
+        self.preserving_scroll(Self::rebuild);
+    }
+
+
     /// What the list holds in RAM, for the memory section of an export: the
     /// folder's index, the rows built from it, and the whole-mailbox search
     /// pool (empty unless a search is open), each as (messages, bytes).
@@ -4717,26 +4812,14 @@ impl MessageList {
             .map_or((x, y), |p| (p.x() as f64, p.y() as f64))
     }
 
-    /// Toolbar count: total matches, noting when more exist than are shown.
+    /// Toolbar count reflects the entire filtered model, not the mounted rows.
     fn count_label(&self) -> String {
-        if self.total_matches > self.rendered_count {
-            i18n_f(
-                "{shown} of {total}",
-                &[
-                    ("shown", &self.rendered_count.to_string()),
-                    ("total", &self.total_matches.to_string()),
-                ],
-            )
-        } else {
-            format!("{}", self.total_matches)
-        }
+        self.total_matches.to_string()
     }
 
-    /// Whether the bottom loading spinner should show: the user has scrolled past
-    /// what's loaded (`render_limit` exceeds the indexed count) and the folder's
-    /// index is still streaming in.
+    /// Show the backfill indicator only at the end of the indexed messages.
     fn is_loading_more(&self) -> bool {
-        self.render_limit > self.total_matches && !self.index_complete
+        !self.index_complete && self.page_start + self.rendered_count >= self.total_matches
     }
 
     /// Whether to show the empty-folder placeholder: the folder has loaded,
@@ -5044,33 +5127,44 @@ impl MessageList {
 
     fn rebuild(&mut self) {
         let q = self.query.to_lowercase();
-        // Filter and sort by reference, and clone only the page that is actually
-        // rendered. A folder's index holds every message ever synced, while
-        // `render_limit` is a few hundred — cloning the whole match set first put
-        // a copy of the entire mailbox through the allocator on every keystroke
-        // and on the cache-backed load at startup.
-        let mut matches: Vec<&Message> = self
-            .active_source()
-            .iter()
-            .filter(|m| !self.unread_only || m.unread)
-            .filter(|m| !self.starred_only || m.starred)
-            .filter(|m| {
-                q.is_empty()
-                    || m.subject.to_lowercase().contains(&q)
-                    || m.from_name.to_lowercase().contains(&q)
-                    || m.from_addr.to_lowercase().contains(&q)
-                    || m.preview.to_lowercase().contains(&q)
-            })
-            .collect();
-        let sort = self.sort;
+        // Keep the sorted model independent of the mounted widgets. Scrolling
+        // only slices this index; filtering/sorting happens on data changes.
+        if !std::mem::take(&mut self.shifting_window) {
+            let source = self.active_source();
+            let mut matches: Vec<usize> = source
+                .iter()
+                .enumerate()
+                .filter(|(_, m)| !self.unread_only || m.unread)
+                .filter(|(_, m)| !self.starred_only || m.starred)
+                .filter(|(_, m)| {
+                    q.is_empty()
+                        || m.subject.to_lowercase().contains(&q)
+                        || m.from_name.to_lowercase().contains(&q)
+                        || m.from_addr.to_lowercase().contains(&q)
+                        || m.preview.to_lowercase().contains(&q)
+                })
+                .map(|(idx, _)| idx)
+                .collect();
+            matches.sort_by(|a, b| message_cmp(&source[*a], &source[*b], self.sort));
+            self.sorted_matches = matches;
+        }
         let t_rebuild = std::time::Instant::now();
-        matches.sort_by(|a, b| message_cmp(a, b, sort));
-        let total_matches = matches.len();
-        // Render up to the current limit; the rest stay indexed (for search) until
-        // the user scrolls further and `LoadMore` raises the limit.
-        let capped: Vec<Message> = matches.into_iter().take(self.render_limit).cloned().collect();
+        let total_matches = self.sorted_matches.len();
+        let page_start = if self.page_start >= total_matches {
+            total_matches.saturating_sub(1) / RENDER_CAP * RENDER_CAP
+        } else {
+            self.page_start
+        };
+        let capped: Vec<Message> = self.sorted_matches
+            .iter()
+            .skip(page_start)
+            .take(self.render_limit)
+            .map(|&idx| self.active_source()[idx].clone())
+            .collect();
+        self.page_start = page_start;
         self.total_matches = total_matches;
         self.rendered_count = capped.len();
+        self.update_spacers();
 
         // Group into conversations by reply headers (Message-ID / In-Reply-To /
         // References), preserving newest-first order. Each thread shows its newest
@@ -5478,7 +5572,10 @@ impl MessageList {
         let fresh = Self::new_rows(&self.input);
         Self::wire_list(fresh.widget(), &self.input);
         if let Some(parent) = old_list.parent().and_downcast::<gtk::Box>() {
-            parent.insert_child_after(fresh.widget(), None::<&gtk::Widget>);
+            // The virtual top spacer must stay before every row list. Inserting
+            // at the beginning put it *after* the replacement list, leaving a
+            // blank stretch where the next messages should have appeared.
+            parent.insert_child_after(fresh.widget(), self.top_spacer.as_ref());
         }
         // Hidden now, unparented once its rows are gone: unparenting a full
         // list box is itself a slow step, and it can wait with the rest.
@@ -5541,6 +5638,11 @@ impl MessageList {
                 }
                 guard.push_back(init);
             }
+        }
+        if self.pending_rows.is_empty() {
+            // Adjustment changes during incremental mounting can arrive before
+            // the window is ready to shift; reconsider the settled viewport.
+            let _ = self.input.send(MessageListInput::ShiftWindow);
         }
         self.select_current();
         // Only while focus is still on the list: anything focused since
@@ -5861,6 +5963,30 @@ mod tests {
         row_for_reader_key, swipe_progress_px, unasked_threads, SWIPE_ARM, SWIPE_MAX,
     };
     use crate::models::Message;
+
+    #[test]
+    fn scroll_window_shifts_in_both_directions() {
+        use super::{first_visible_match, needs_window_shift, window_start, RENDER_CAP, WINDOW_STEP};
+        let total = 1_000;
+        let start = window_start(300, total);
+        assert_eq!(start, 300 - RENDER_CAP / 3);
+        // A viewport just above the mounted rows must move the window upward.
+        assert!(start.abs_diff(window_start(start, total)) >= WINDOW_STEP);
+        // Scrolling below the buffered range must move it forward too.
+        assert!(window_start(start + RENDER_CAP, total).abs_diff(start) >= WINDOW_STEP);
+        // Scrolling into the top spacer maps to an earlier index, not the
+        // first message of the currently mounted window.
+        assert_eq!(first_visible_match(9_000.0, 20_000.0, 200, 100.0), 90);
+        assert_eq!(first_visible_match(21_000.0, 20_000.0, 200, 100.0), 210);
+        assert_eq!(first_visible_match(0.0, 20_000.0, 200, 100.0), 0);
+        // Landing outside mounted rows bypasses hysteresis in either direction.
+        assert!(needs_window_shift(200, 190, true));
+        assert!(needs_window_shift(200, 210, true));
+        assert!(!needs_window_shift(200, 210, false));
+        assert!(!needs_window_shift(200, 200, true));
+
+    }
+
 
     /// #236: the row a conversation collapses to is judged over the rendered
     /// window's grouping, so a conversation whose oldest message lies past
