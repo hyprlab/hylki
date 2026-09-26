@@ -2,6 +2,26 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.42.0-beta.3
+
+The third beta previewing 1.42.0.
+
+- **Messages stuck on "Loading…"** (#296): on systems where WebKit hangs
+  on the fonts the Flatpak lends it, Hylki now notices, switches message
+  display and the composer to the Flatpak's own fonts, and loads them
+  again.
+- **Replies and forwards quote the message as it looks** (#295): colors,
+  fonts, spacing and the pictures the message carries are kept. Settings >
+  Composing can open replies and forwards in a window of their own.
+- **Folder order:** drag folders in the sidebar to put them in your own
+  order, or pick an order in Settings > Sidebar > Folder order. Only the
+  chevrons open and close sidebar items now.
+- **Fixed:** folders another client added, renamed or moved now update
+  without a restart, moving a folder keeps its sub-folders subscribed, the
+  reading pane no longer flashes black between messages (they crossfade
+  instead), and a notification button no longer leaves the busy pointer up
+  on GNOME Wayland.
+
 ## What's new in 1.42.0-beta.2
 
 The second beta previewing 1.42.0.

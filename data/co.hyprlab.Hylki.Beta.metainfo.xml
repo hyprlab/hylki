@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.42.0-beta.3" date="2026-09-26" type="development">
+      <description>
+        <p>Third preview of 1.42.0: recovery when WebKit hangs on the system's fonts, replies that quote a message as it looks, your own folder order, and fixes.</p>
+      </description>
+    </release>
     <release version="1.42.0-beta.2" date="2026-09-25" type="development">
       <description>
         <p>Second preview of 1.42.0: a sound for new mail, files dragged onto the window, deleting an attachment from the server, a choice of what Return does, and fixes.</p>
