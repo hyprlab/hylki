@@ -252,7 +252,8 @@ impl RichEditor {
                 }
             });
         }
-        webview.load_html(
+        crate::web_fonts::load_html(
+            &webview,
             &document(initial_html, &webview, &image_policy),
             Some("https://hylki.localhost/editor"),
         );
@@ -626,8 +627,11 @@ impl RichEditor {
     pub fn set_html(&self, content: &str) {
         self.source.set(None);
         self.show_preview(None);
-        self.webview
-            .load_html(&document(content, &self.webview, &self.image_policy), Some("https://hylki.localhost/editor"));
+        crate::web_fonts::load_html(
+            &self.webview,
+            &document(content, &self.webview, &self.image_policy),
+            Some("https://hylki.localhost/editor"),
+        );
     }
 
     /// Put the editor into source mode holding `text`: a monospace
@@ -636,7 +640,8 @@ impl RichEditor {
     pub fn set_source(&self, kind: SourceKind, text: &str) {
         self.source.set(Some(kind));
         self.show_preview(None);
-        self.webview.load_html(
+        crate::web_fonts::load_html(
+            &self.webview,
             &source_document(text, &self.webview),
             Some("https://hylki.localhost/editor"),
         );
@@ -686,7 +691,8 @@ impl RichEditor {
                 v
             }
         };
-        view.load_html(
+        crate::web_fonts::load_html(
+            &view,
             &preview_document(html, &view, &self.image_policy),
             Some("https://hylki.localhost/preview"),
         );

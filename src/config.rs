@@ -3650,6 +3650,11 @@ struct StateFile {
     /// restart right after the wizard, for the app icon, must not loop.
     #[serde(default)]
     wizard_completed: bool,
+    /// The Flatpak runtime commit under which WebKit hung on the host's
+    /// fonts and was given the runtime's own instead (#296). Kept per
+    /// commit, so a runtime update gets another try with every font.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    web_font_fallback: Option<String>,
     /// The mail view open last (#256): an account's folder, or All Inboxes
     /// when `email` is empty. Accounts are named by address, which stays
     /// true across launches where an account's number may not.
@@ -3761,6 +3766,20 @@ pub fn mark_wizard_completed() {
     let mut s = load_state();
     if !s.wizard_completed {
         s.wizard_completed = true;
+        save_state(&s);
+    }
+}
+
+/// The runtime commit WebKit's font fallback was settled under (#296).
+pub fn load_web_font_fallback() -> Option<String> {
+    load_state().web_font_fallback.filter(|s| !s.is_empty())
+}
+
+pub fn save_web_font_fallback(runtime: Option<&str>) {
+    let mut s = load_state();
+    let runtime = runtime.map(str::to_string);
+    if s.web_font_fallback != runtime {
+        s.web_font_fallback = runtime;
         save_state(&s);
     }
 }

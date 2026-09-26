@@ -167,6 +167,9 @@ modules:
       # The restart helper's D-Bus service (Settings → App icon → Restart Now):
       # exported by Flatpak, so the bus can start a fresh sandbox instance.
       - install -Dm644 data/co.hyprlab.Hylki.Restart.service /app/share/dbus-1/services/co.hyprlab.Hylki.Restart.service
+      # WebKit's fonts for a host whose own fonts hang it (#296): used only
+      # once a probe page has shown the fallback is what loads.
+      - install -Dm644 data/fontconfig/fallback.conf /app/share/hylki/fontconfig/fallback.conf
       - install -d /app/share/metainfo && msgfmt --xml --template=data/co.hyprlab.Hylki.metainfo.xml -d po -o /app/share/metainfo/co.hyprlab.Hylki.metainfo.xml
     sources:
       - type: git

@@ -3246,9 +3246,11 @@ impl MessageView {
                     drop(s);
                     if fade {
                         let view = view.clone();
-                        page_fade.hold(&view.clone(), move || view.load_html(&html, Some(&uri)));
+                        page_fade.hold(&view.clone(), move || {
+                            crate::web_fonts::load_html(&view, &html, Some(&uri))
+                        });
                     } else {
-                        view.load_html(&html, Some(&uri));
+                        crate::web_fonts::load_html(&view, &html, Some(&uri));
                     }
                 }
             }

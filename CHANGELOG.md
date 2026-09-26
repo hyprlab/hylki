@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Fixed: messages stuck on "Loading…" and a composer that takes no
+  typing on some systems** (#296, reported by Christian Lauinger). On some
+  hosts the fonts the Flatpak lends WebKit send its web process into a loop
+  in the first font lookup, so no message ever displays and the composer
+  body never takes a key, while mail syncs normally. When a message has not
+  displayed after 8 seconds, Hylki now loads a small test page in a
+  separate web process. If that hangs as well, it tries again with only the
+  runtime's own fonts, and once that loads, it restarts the stuck views on
+  them. The choice is kept until the Flatpak runtime is updated, when the
+  host's fonts are tried again. Only message bodies and the composer lose
+  the host's fonts; the rest of the window keeps them.
 - **Changed: a reply or a forward quotes the message as it looks** (#295,
   reported by urkos101). The quote keeps the original's colors,
   backgrounds, fonts and spacing, including those set in a `<style>` block,

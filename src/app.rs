@@ -2664,6 +2664,9 @@ impl SimpleComponent for AppModel {
         // connection order, so the palette has to be in place first.
         crate::theme::install(&config::load_theme());
         install_scheme_css(&root);
+        // Before any web view loads: a font fallback WebKit needed under
+        // this runtime has to be in place for its first web process (#296).
+        crate::web_fonts::startup(&root);
 
         let mut sidebar_state = config::load_sidebar_state();
         // Settings → Sidebar: "Remember the icon rail" off starts every

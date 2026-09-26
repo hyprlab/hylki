@@ -43,6 +43,7 @@ mod tray;
 mod unsubscribe;
 mod ui;
 mod verify;
+mod web_fonts;
 mod worker;
 
 use relm4::RelmApp;
