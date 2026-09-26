@@ -108,21 +108,13 @@ cache. There is more in [Documentation](docs/DOCUMENTATION.md#privacy).
 ## AI notice
 
 Hylki is built by a human maintainer who uses generative AI as a development
-tool.
+tool. The maintainer decides what gets built, reviews the results, tests every
+release and signs off on everything that ships. The app itself contains no AI
+and makes no requests to AI services.
 
-- **Code:** most of the Rust code in this repository was written by Anthropic's
-  Claude, through Claude Code, following the maintainer's direction. The
-  maintainer decides what gets built, reviews the results, tests every release
-  and signs off on everything that ships. Commits are made under the
-  maintainer's name; the tool is declared here once instead of in a trailer on
-  every commit.
-- **Text:** documentation, release notes and website copy are mostly drafted
-  with AI and edited by the maintainer.
-- **Artwork:** the app icon, its symbolic version and the wordmark were drawn
-  by [Yiannis Ioannides](https://github.com/yioannides). The other visual
-  assets were also made by people, without generative AI.
-- **The app contains no AI.** It has no AI features, makes no requests to AI
-  services, and never sends your mail or any other data to one.
+The app icon, its symbolic version and the wordmark were drawn by
+[Yiannis Ioannides](https://github.com/yioannides). The other visual assets
+were also made by the maintainer without generative AI.
 
 Bug reports and pull requests are welcome whether or not AI tools were
 involved, and everything merged is reviewed by a person.
