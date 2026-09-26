@@ -124,6 +124,15 @@
   Archive, Delete and Spam show none, and GTK has no way to end a launch on
   Wayland without one, so the pointer stayed until the shell gave up. Hylki
   now tells the shell the launch is over as the button is handled.
+- **Fixed: the reading pane flashed black between messages** on graphics
+  hardware (not in a virtual machine). When opening a message changed the
+  pane's size, as the attachment drawer came or went, WebKit's GPU renderer
+  showed an empty frame before the new message was drawn. The message now
+  loads once the pane has been redrawn at its new size.
+- **Changed: messages and the attachment drawer crossfade.** Opening a
+  message dissolves the one before into it over 80 ms instead of cutting,
+  and the attachment drawer fades in, fades out, or dissolves from one
+  message's files to the next's on the same beat.
 - **Translations:** French (PR #281 by frenchy82), Spanish (PR #287 by
   Daniel Miguel), Portuguese and Brazilian Portuguese (PR #280 by Paulo
   Fino) and Greek (PR #291 by Yiannis Ioannides) brought up to date.

@@ -1445,6 +1445,12 @@ headerbar.compose-toolbar button.image-button {
   /* Matches the 6px grab strip above, so the drawer reads evenly spaced. */
   padding-bottom: 6px;
 }
+/* The still of a drawer on its way out: the drawer's own tint is in the
+   picture, but not the window ground it sits on, without which the reader
+   behind shows through (see fade_out_drawer). */
+.attachment-drawer-still {
+  background: @window_bg_color;
+}
 /* The drawer's divider draws no line or grip of its own: it wears the
    drawer's exact tint, so the grabbable strip reads as the drawer's own top
    edge rather than a band of window ground showing through. Dragging resizes
