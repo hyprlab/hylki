@@ -15,7 +15,7 @@ sudo dnf install gtk4-devel libadwaita-devel webkitgtk6.0-devel poppler-glib-dev
 **Debian / Ubuntu**
 
 ```sh
-sudo apt install libgtk-4-dev libadwaita-1-dev libwebkitgtk-6.0-dev libpoppler-glib-dev
+sudo apt install libgtk-4-dev libadwaita-1-dev libwebkitgtk-6.0-dev libpoppler-glib-dev libdbus-1-dev libssl-dev
 ```
 
 ## Build and install
@@ -31,8 +31,24 @@ cargo build --release
 ## Translations
 
 `tools/build-locale.sh` compiles `po/*.po` so a source-tree run picks them up;
-the Flatpak, the RPM and `install.sh` all do it as part of their own build.
+the Flatpak, the RPM, the DEB and `install.sh` all do it as part of their own build.
 See [po/README.md](../po/README.md).
+
+## Native packages
+
+On a Fedora build host, run `tools/build-packages.sh` (or pass `rpm`). On a Debian or
+Ubuntu build host, run `tools/build-packages.sh deb`. The resulting packages
+are written to `packaging/out/`; the Debian file is named
+`hylki-<version>-<architecture>.deb` (for example,
+`hylki-1.41.1-amd64.deb`). `tools/build-packages.sh all` builds both from one
+release binary when both packaging tools are available. Build on the oldest
+distribution release you intend to support, since native binaries use the
+host's shared libraries. The DEB records its shared-library dependencies from
+the binary with `dpkg-shlibdeps`.
+
+`.github/workflows/build-deb.yml` builds and checks the amd64 DEB on Debian 13
+for pull requests, stable release tags and manual runs. It uploads the package
+as a CI artifact; the maintainer attaches reviewed packages to releases.
 
 ## Flatpak
 
@@ -46,8 +62,8 @@ python3 flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
 
 ## AppImage
 
-Hylki does not ship an AppImage: the packages it distributes are the Flatpak
-and the RPM. The build exists all the same, so the option stays open and
+Hylki does not ship an AppImage: the packages it distributes are the Flatpak,
+RPM and DEB. The build exists all the same, so the option stays open and
 does not rot (#235).
 
 `tools/build-appimage.sh` produces `packaging/out/Hylki-<arch>.AppImage` and

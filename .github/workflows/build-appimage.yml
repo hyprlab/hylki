@@ -49,7 +49,7 @@ jobs:
     container: ghcr.io/pkgforge-dev/archlinux:latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
 
@@ -72,7 +72,7 @@ jobs:
           test -s packaging/out/Hylki-${{ matrix.arch }}.AppImage.zsync
           echo "built Hylki $want for ${{ matrix.arch }}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: hylki-appimage-${{ matrix.arch }}
           path: |

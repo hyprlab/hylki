@@ -34,7 +34,7 @@ From a source checkout:
     LANG=fr_FR.UTF-8 ./target/debug/hylki
 
 The app follows the desktop's language. Installs pick up translations
-through their normal build: the Flatpak, the RPM and `install.sh` all
+through their normal build: the Flatpak, the RPM, the DEB and `install.sh` all
 compile `po/*.po` into their `share/locale` and merge the translated
 launcher and metainfo fields.
 

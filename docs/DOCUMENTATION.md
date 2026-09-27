@@ -437,8 +437,8 @@ here needs a terminal.
 
 **What you need**
 
-- The Flatpak build carries GnuPG and is set up already. A source or RPM
-  install needs the `gnupg2` package (on Fedora it is installed by default).
+- The Flatpak build carries GnuPG and is set up already. A native install
+  needs GnuPG (`gnupg2` on Fedora, `gnupg` on Debian/Ubuntu).
 - Hylki never stores a decrypted message on disk: an encrypted message is
   decrypted for the reading pane each time you open it, and its body and
   attachments are kept out of the cache.

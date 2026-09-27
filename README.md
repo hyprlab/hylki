@@ -83,6 +83,12 @@ On Fedora you can install the `.rpm` from the
 sudo dnf install ./hylki-*.x86_64.rpm
 ```
 
+On Debian or Ubuntu, install the `.deb` when available on the same release:
+
+```sh
+sudo apt install ./hylki-*-amd64.deb
+```
+
 Community packages for Gentoo and Nix, direct `.flatpak` downloads and the beta
 channel are covered in [docs/INSTALLING.md](docs/INSTALLING.md). To build Hylki
 yourself, see [docs/BUILDING.md](docs/BUILDING.md).

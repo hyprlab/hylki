@@ -1,0 +1,75 @@
+name: Build Debian package
+
+# Build on Debian 13 so the binary and dpkg-shlibdeps agree on the oldest
+# Debian release this package targets. The artifact is for release review;
+# publishing it to a GitHub release remains a maintainer action.
+on:
+  pull_request:
+  push:
+    tags:
+      - 'v*'
+      - '!v*b'
+      - '!v*-beta.*'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Tag, branch or SHA to build'
+        required: false
+        default: 'main'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: amd64 (Debian 13)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    container: rust:1-trixie
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential dpkg-dev file gettext libadwaita-1-dev \
+            libdbus-1-dev \
+            libgtk-4-dev libpoppler-glib-dev libssl-dev \
+            libwebkitgtk-6.0-dev pkg-config
+
+      - name: Build package
+        run: tools/build-packages.sh deb
+
+      - name: Check package
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
+          package="packaging/out/hylki-${version}-amd64.deb"
+          test -s "$package"
+          test "$(dpkg-deb -f "$package" Package)" = hylki
+          test "$(dpkg-deb -f "$package" Version)" = "$version"
+          test "$(dpkg-deb -f "$package" Architecture)" = amd64
+          test -n "$(dpkg-deb -f "$package" Depends)"
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            test "$GITHUB_REF_NAME" = "v$version"
+          fi
+          mkdir -p /tmp/hylki-package-check
+          dpkg-deb -x "$package" /tmp/hylki-package-check
+          file /tmp/hylki-package-check/usr/bin/hylki | grep -q 'ELF 64-bit.*x86-64'
+          test -s /tmp/hylki-package-check/usr/share/applications/co.hyprlab.Hylki.desktop
+          test -s /tmp/hylki-package-check/usr/share/metainfo/co.hyprlab.Hylki.metainfo.xml
+          # This catches missing or unsatisfiable runtime dependencies on
+          # the distribution used to build the package.
+          apt-get -s install "./$package"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: hylki-deb-amd64
+          path: packaging/out/hylki-*-amd64.deb
+          retention-days: 30
+          if-no-files-found: error

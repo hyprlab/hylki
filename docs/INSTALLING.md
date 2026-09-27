@@ -41,6 +41,19 @@ sudo dnf install ./hylki-*.x86_64.rpm
 The RPM targets current Fedora releases (44+) on x86_64 only. On ARM, or on
 anything older, use the Flatpak or [build from source](BUILDING.md).
 
+## Debian / Ubuntu
+
+If a release includes a `.deb` for your architecture, download it from the
+[release page](https://github.com/hyprlab/hylki/releases/latest) and install it:
+
+```sh
+sudo apt install ./hylki-*-amd64.deb
+```
+
+Native packages depend on the libraries provided by the distribution where
+they were built. If your release cannot satisfy those dependencies, use the
+Flatpak or [build from source](BUILDING.md).
+
 ## Gentoo
 
 A community-maintained ebuild lives in
@@ -71,13 +84,13 @@ Betas install alongside the stable app as a separate application
 
 ## Other distributions
 
-Arch, Debian/Ubuntu and Snap packages were discontinued after 1.7.0. Use the
+Arch and Snap packages were discontinued after 1.7.0. Use the
 Flatpak (it works on every distribution) or [build from source](BUILDING.md).
 
 ## Runtime requirements
 
 A Secret Service provider (e.g. gnome-keyring, preinstalled on GNOME) is needed
-for password storage. Everything else the Flatpak carries; a source or RPM
-install also wants `gnupg2` for [OpenPGP](DOCUMENTATION.md#openpgp-encrypted-and-signed-mail)
-and `nautilus-python` for the
+for password storage. Everything else the Flatpak carries; a native install
+also wants GnuPG for [OpenPGP](DOCUMENTATION.md#openpgp-encrypted-and-signed-mail)
+and the Nautilus Python extension for the
 [Files entry](DOCUMENTATION.md#send-with-hylki-from-gnome-files).
