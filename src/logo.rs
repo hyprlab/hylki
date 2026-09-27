@@ -533,7 +533,8 @@ fn bundled_entry(email: &str) -> Option<&'static LogoEntry> {
 }
 
 /// Whether a sender has a bundled mark (shown with no request made).
-pub fn has_bundled(email: &str) -> bool {
+#[cfg(test)]
+fn has_bundled(email: &str) -> bool {
     !is_mailbox_host(email) && bundled_entry(email).is_some()
 }
 
@@ -732,51 +733,26 @@ fn get_text(url: &str) -> Option<(String, String)> {
     Some((final_url, String::from_utf8_lossy(&buf).into_owned()))
 }
 
-/// The `<link>` tags of a page, each as its attributes (names lowercased,
-/// entity `&amp;` unescaped in values). A tolerant scan, not a parser: enough
-/// for the `rel`/`href`/`sizes`/`type` of icon links.
+/// The `<link>` tags of a page, each as its attributes, as html5ever reads
+/// them (names lowercased, every entity decoded). The page may be cut short
+/// at 512 KiB; the parser takes what is there.
 fn link_tags(html: &str) -> Vec<Vec<(String, String)>> {
-    let lower = html.to_ascii_lowercase();
-    let mut tags = Vec::new();
-    let mut at = 0;
-    while let Some(i) = lower[at..].find("<link") {
-        let start = at + i + 5;
-        let Some(len) = html[start..].find('>') else { break };
-        let tag = &html[start..start + len];
-        at = start + len;
-        if !tag.starts_with(|c: char| c.is_whitespace()) {
-            continue;
-        }
-        let mut attrs = Vec::new();
-        let mut rest = tag.trim();
-        while !rest.is_empty() {
-            let name_len = rest
-                .find(|c: char| c == '=' || c.is_whitespace() || c == '/')
-                .unwrap_or(rest.len());
-            let name = rest[..name_len].to_ascii_lowercase();
-            rest = rest[name_len..].trim_start();
-            let mut value = String::new();
-            if let Some(r) = rest.strip_prefix('=') {
-                let r = r.trim_start();
-                if let Some(q) = r.chars().next().filter(|c| *c == '"' || *c == '\'') {
-                    let inner = &r[1..];
-                    let end = inner.find(q).unwrap_or(inner.len());
-                    value = inner[..end].to_string();
-                    rest = inner[end..].strip_prefix(q).unwrap_or("").trim_start();
-                } else {
-                    let end = r.find(|c: char| c.is_whitespace()).unwrap_or(r.len());
-                    value = r[..end].to_string();
-                    rest = r[end..].trim_start();
-                }
-            } else {
-                rest = rest.trim_start_matches('/').trim_start();
-            }
-            if !name.is_empty() {
-                attrs.push((name, value.replace("&amp;", "&")));
+    use html5ever::tendril::TendrilSink;
+    use markup5ever_rcdom::{Handle, NodeData, RcDom};
+
+    fn walk(node: &Handle, tags: &mut Vec<Vec<(String, String)>>) {
+        if let NodeData::Element { name, attrs, .. } = &node.data {
+            if name.local.as_ref() == "link" {
+                tags.push(attrs.borrow().iter().map(|a| (a.name.local.to_string(), a.value.to_string())).collect());
             }
         }
-        tags.push(attrs);
+        for child in node.children.borrow().iter() {
+            walk(child, tags);
+        }
     }
+    let dom = html5ever::parse_document(RcDom::default(), Default::default()).one(html);
+    let mut tags = Vec::new();
+    walk(&dom.document, &mut tags);
     tags
 }
 
@@ -863,51 +839,14 @@ fn manifest_icons(json: &str, base: &str) -> Vec<(u32, String)> {
         .collect()
 }
 
-/// `href` as seen from `base` (an absolute URL): absolute, scheme-relative,
-/// root-relative or relative to the base's directory. Only `http(s)`.
+/// `href` as seen from `base` (an absolute URL), by RFC 3986's rules; only
+/// an `http(s)` result counts. Parsed relaxed, since sites write links by
+/// hand.
 fn resolve_url(base: &str, href: &str) -> Option<String> {
-    let href = href.trim();
-    let lower = href.to_ascii_lowercase();
-    if lower.starts_with("https://") || lower.starts_with("http://") {
-        return Some(href.to_string());
-    }
-    if lower.starts_with("//") {
-        return Some(format!("https:{href}"));
-    }
-    if href.contains(':') && !href.starts_with('/') && !href.starts_with('.') {
-        // data:, mailto: and the like.
-        return None;
-    }
-    let scheme_end = base.find("://")? + 3;
-    let host_end = base[scheme_end..].find('/').map(|i| scheme_end + i).unwrap_or(base.len());
-    let origin = &base[..host_end];
-    if let Some(rest) = href.strip_prefix('/') {
-        return Some(format!("{origin}/{rest}"));
-    }
-    let path = &base[host_end..];
-    let dir = match path.rfind('/') {
-        Some(i) => &path[..=i],
-        None => "/",
-    };
-    let mut segments: Vec<&str> = dir.split('/').filter(|s| !s.is_empty()).collect();
-    let mut tail = href;
-    loop {
-        if let Some(r) = tail.strip_prefix("../") {
-            segments.pop();
-            tail = r;
-        } else if let Some(r) = tail.strip_prefix("./") {
-            tail = r;
-        } else {
-            break;
-        }
-    }
-    let mut url = format!("{origin}/");
-    for seg in segments {
-        url.push_str(seg);
-        url.push('/');
-    }
-    url.push_str(tail);
-    Some(url)
+    use gtk::glib::{Uri, UriFlags};
+    let url = Uri::resolve_relative(Some(base), href.trim(), UriFlags::PARSE_RELAXED).ok()?;
+    let lower = url.to_ascii_lowercase();
+    (lower.starts_with("https://") || lower.starts_with("http://")).then(|| url.to_string())
 }
 
 fn get(url: &str) -> Option<Vec<u8>> {
@@ -1130,6 +1069,12 @@ mod tests {
         assert_eq!(largest_size(Some("16x16 48x48 32x32")), Some(48));
         assert_eq!(resolve_url("https://example.com", "favicon.ico").as_deref(), Some("https://example.com/favicon.ico"));
         assert_eq!(resolve_url("https://example.com/", "data:image/png;base64,AAAA"), None);
+        let base = "https://www.example.com/a/b/page.html";
+        assert_eq!(resolve_url(base, "../i.png").as_deref(), Some("https://www.example.com/a/i.png"));
+        assert_eq!(resolve_url(base, "./i.png").as_deref(), Some("https://www.example.com/a/b/i.png"));
+        assert_eq!(resolve_url(base, "/i.png").as_deref(), Some("https://www.example.com/i.png"));
+        assert_eq!(resolve_url(base, "//cdn.example.net/i.png").as_deref(), Some("https://cdn.example.net/i.png"));
+        assert_eq!(resolve_url(base, "mailto:x@example.com"), None);
     }
 
     #[test]

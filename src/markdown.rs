@@ -42,17 +42,7 @@ pub fn to_html(src: &str) -> String {
 
 /// Escape text for an HTML attribute or body.
 fn esc(s: &str) -> String {
-    let mut out = String::with_capacity(s.len());
-    for c in s.chars() {
-        match c {
-            '&' => out.push_str("&amp;"),
-            '<' => out.push_str("&lt;"),
-            '>' => out.push_str("&gt;"),
-            '"' => out.push_str("&quot;"),
-            _ => out.push(c),
-        }
-    }
-    out
+    gtk::glib::markup_escape_text(s).into()
 }
 
 /// The three extended items pulldown-cmark leaves to the host, applied to
@@ -489,92 +479,31 @@ const EMOJI: &[(&str, &str)] = &[
     ("arrow_down", "\u{2B07}\u{FE0F}"), ("link", "\u{1F517}"), ("bookmark", "\u{1F516}"),
 ];
 
-/// Every presentational rule the finished HTML needs, as `style`
-/// attributes. A `<style>` block would be stripped by most webmail clients
-/// before the recipient ever saw it, so the styling has to ride on the tags
-/// themselves.
-///
-/// An attribute the writer already produced (a table cell's alignment) is
-/// kept and wins, since it is appended after ours.
-fn inline_styles(html: &str) -> String {
-    // The code inside a fence needs none of the inline-code treatment; hide
-    // those pairs while `code` is styled, then put them back styled as a
-    // block.
-    const FENCE: &str = "\u{0}FENCE\u{0}";
-    let mut out = html.replace("<pre><code", FENCE);
-    for (tag, css) in [
-        ("code", "background:rgba(128,128,128,0.12);padding:1px 4px;border-radius:4px;\
-                  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:0.95em"),
-        ("table", "border-collapse:collapse;margin:8px 0"),
-        ("th", "border:1px solid rgba(128,128,128,0.45);padding:6px 10px;\
-                background:rgba(128,128,128,0.12);text-align:left"),
-        ("td", "border:1px solid rgba(128,128,128,0.45);padding:6px 10px"),
-        ("blockquote", "margin:0 0 0 8px;padding-left:10px;\
-                        border-left:3px solid rgba(128,128,128,0.4)"),
-        ("hr", "border:none;border-top:1px solid rgba(128,128,128,0.4);margin:14px 0"),
-        ("img", "max-width:100%;height:auto"),
-        ("dt", "font-weight:600;margin-top:6px"),
-        ("dd", "margin:0 0 4px 20px"),
-        ("kbd", "border:1px solid rgba(128,128,128,0.5);border-radius:4px;padding:0 4px;\
-                 font-family:ui-monospace,monospace;font-size:0.9em"),
-    ] {
-        out = add_style(&out, tag, css);
-    }
-    out = out.replace(
-        FENCE,
-        "<pre style=\"background:rgba(128,128,128,0.12);padding:10px 12px;border-radius:6px;\
-         overflow:auto;white-space:pre-wrap;word-wrap:break-word\"><code \
-         style=\"font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:0.95em\"",
-    );
-    out = out.replace("<input disabled=\"\" type=\"checkbox\"", "<input disabled=\"\" type=\"checkbox\" style=\"margin-right:6px\"");
-    out = out.replace(
-        "<div class=\"footnote-definition\"",
-        "<div class=\"footnote-definition\" style=\"font-size:0.92em;opacity:0.85\"",
-    );
-    out
-}
+/// The look of what Markdown produces, written onto each element with
+/// css-inline, since mail clients drop `<style>` blocks. Fenced code is a
+/// block: `pre code` takes back the inline-code treatment.
+const SHEET: &str = "\
+    code{background:rgba(128,128,128,0.12);padding:1px 4px;border-radius:4px;\
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:0.95em}\
+    pre{background:rgba(128,128,128,0.12);padding:10px 12px;border-radius:6px;\
+      overflow:auto;white-space:pre-wrap;word-wrap:break-word}\
+    pre code{background:none;padding:0;border-radius:0}\
+    table{border-collapse:collapse;margin:8px 0}\
+    th{border:1px solid rgba(128,128,128,0.45);padding:6px 10px;\
+      background:rgba(128,128,128,0.12);text-align:left}\
+    td{border:1px solid rgba(128,128,128,0.45);padding:6px 10px}\
+    blockquote{margin:0 0 0 8px;padding-left:10px;border-left:3px solid rgba(128,128,128,0.4)}\
+    hr{border:none;border-top:1px solid rgba(128,128,128,0.4);margin:14px 0}\
+    img{max-width:100%;height:auto}\
+    dt{font-weight:600;margin-top:6px}\
+    dd{margin:0 0 4px 20px}\
+    kbd{border:1px solid rgba(128,128,128,0.5);border-radius:4px;padding:0 4px;\
+      font-family:ui-monospace,monospace;font-size:0.9em}\
+    input[type=checkbox]{margin-right:6px}\
+    div.footnote-definition{font-size:0.92em;opacity:0.85}";
 
-/// Give every `<tag>` and `<tag …>` in `html` a `style`, merged with one the
-/// tag already carries.
-fn add_style(html: &str, tag: &str, css: &str) -> String {
-    let open = format!("<{tag}");
-    let mut out = String::with_capacity(html.len() + 64);
-    let mut rest = html;
-    while let Some(at) = rest.find(&open) {
-        out.push_str(&rest[..at]);
-        let after = &rest[at + open.len()..];
-        out.push_str(&open);
-        // `<code` must not match `<codepoint`, and a tag with no `>` is not
-        // a tag at all.
-        let boundary = after.starts_with('>') || after.starts_with(' ') || after.starts_with('/');
-        let close = after.find('>');
-        let (Some(close), true) = (close, boundary) else {
-            rest = after;
-            continue;
-        };
-        let attrs = &after[..close];
-        match attrs.find("style=\"") {
-            // Merged, not appended: HTML keeps the *first* of two attributes
-            // with the same name, so a second `style` would be dropped
-            // whole. Ours goes at the front of the existing value, where the
-            // tag's own rules still override it.
-            Some(p) => {
-                let head = p + "style=\"".len();
-                out.push_str(&attrs[..head]);
-                out.push_str(css);
-                out.push(';');
-                out.push_str(&attrs[head..]);
-            }
-            None => {
-                out.push_str(&format!(" style=\"{css}\""));
-                out.push_str(attrs);
-            }
-        }
-        out.push('>');
-        rest = &after[close + 1..];
-    }
-    out.push_str(rest);
-    out
+fn inline_styles(html: &str) -> String {
+    css_inline::inline_fragment(html, SHEET).unwrap_or_else(|_| html.to_string())
 }
 
 // ---------------------------------------------------------------------------
@@ -601,241 +530,43 @@ impl Elem {
     }
 }
 
-/// Tags that never have children.
-const VOID: &[&str] = &[
-    "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source",
-    "track", "wbr",
-];
-
-/// Tags that close an open `<p>` (and each other, for list and table parts).
-fn closes(open: &str, incoming: &str) -> bool {
-    match open {
-        "p" => matches!(
-            incoming,
-            "p" | "div" | "ul" | "ol" | "li" | "table" | "blockquote" | "pre" | "hr" | "h1" | "h2"
-                | "h3" | "h4" | "h5" | "h6" | "dl" | "section" | "article" | "header" | "footer"
-        ),
-        "li" => matches!(incoming, "li"),
-        "dt" | "dd" => matches!(incoming, "dt" | "dd"),
-        "td" | "th" => matches!(incoming, "td" | "th" | "tr"),
-        "tr" => matches!(incoming, "tr"),
-        _ => false,
-    }
-}
-
-/// Parse HTML into a forest. Deliberately forgiving: unknown tags, unclosed
-/// tags and stray closers are all survivable, because this runs over mail
-/// bodies and hand-written source, not validated documents.
+/// Parse HTML into a forest the way a browser would (html5ever): unknown
+/// tags, unclosed tags and stray closers are all survivable, because this
+/// runs over mail bodies and hand-written source, not validated documents.
+/// Only the body's content is kept; `<script>`, `<style>` and comments never
+/// become text.
 fn parse(html: &str) -> Vec<Node> {
-    let mut roots: Vec<Node> = Vec::new();
-    let mut stack: Vec<Elem> = Vec::new();
-    let b = html.as_bytes();
-    let mut i = 0usize;
-    let mut text = String::new();
+    use html5ever::tendril::TendrilSink;
+    use markup5ever_rcdom::{Handle, NodeData, RcDom};
 
-    macro_rules! push_node {
-        ($node:expr) => {{
-            let node = $node;
-            match stack.last_mut() {
-                Some(top) => top.children.push(node),
-                None => roots.push(node),
-            }
-        }};
+    fn element_named(parent: &Handle, tag: &str) -> Option<Handle> {
+        parent.children.borrow().iter().find(|c| {
+            matches!(&c.data, NodeData::Element { name, .. } if name.local.as_ref() == tag)
+        }).cloned()
     }
-    macro_rules! flush_text {
-        () => {
-            if !text.is_empty() {
-                let t = std::mem::take(&mut text);
-                push_node!(Node::Text(decode_entities(&t)));
-            }
-        };
+    fn children(parent: &Handle) -> Vec<Node> {
+        parent.children.borrow().iter().filter_map(convert).collect()
     }
-
-    while i < b.len() {
-        if b[i] != b'<' {
-            let next = html[i..].find('<').map(|p| i + p).unwrap_or(html.len());
-            text.push_str(&html[i..next]);
-            i = next;
-            continue;
-        }
-        let rest = &html[i..];
-        if rest.starts_with("<!--") {
-            i += rest.find("-->").map(|p| p + 3).unwrap_or(rest.len());
-            continue;
-        }
-        if rest.starts_with("<!") || rest.starts_with("<?") {
-            i += rest.find('>').map(|p| p + 1).unwrap_or(rest.len());
-            continue;
-        }
-        if rest.starts_with("</") {
-            let Some(gt) = rest.find('>') else { break };
-            let name = rest[2..gt].trim().to_ascii_lowercase();
-            flush_text!();
-            // Close up to the matching tag; a closer with nothing open to
-            // match is simply dropped.
-            if let Some(pos) = stack.iter().rposition(|e| e.name == name) {
-                while stack.len() > pos {
-                    let done = stack.pop().unwrap();
-                    push_node!(Node::Elem(done));
+    fn convert(handle: &Handle) -> Option<Node> {
+        match &handle.data {
+            NodeData::Text { contents } => Some(Node::Text(contents.borrow().to_string())),
+            NodeData::Element { name, attrs, .. } => {
+                let tag = name.local.to_string();
+                if tag == "script" || tag == "style" {
+                    return None;
                 }
+                let attrs = attrs.borrow().iter().map(|a| (a.name.local.to_string(), a.value.to_string())).collect();
+                Some(Node::Elem(Elem { name: tag, attrs, children: children(handle) }))
             }
-            i += gt + 1;
-            continue;
-        }
-        // An opening tag, or a lone `<` that is just text.
-        let Some((name, attrs, self_closing, len)) = parse_tag(rest) else {
-            text.push('<');
-            i += 1;
-            continue;
-        };
-        flush_text!();
-        while stack.last().is_some_and(|top| closes(&top.name, &name)) {
-            let done = stack.pop().unwrap();
-            push_node!(Node::Elem(done));
-        }
-        let elem = Elem { name: name.clone(), attrs, children: Vec::new() };
-        if self_closing || VOID.contains(&name.as_str()) {
-            push_node!(Node::Elem(elem));
-        } else if name == "script" || name == "style" {
-            // Their contents are never text: skip to the matching close.
-            let close = format!("</{name}");
-            let after = &html[i + len..];
-            let end = after.to_ascii_lowercase().find(&close).unwrap_or(after.len());
-            i += len + end;
-            i += html[i..].find('>').map(|p| p + 1).unwrap_or(html.len() - i);
-            continue;
-        } else {
-            stack.push(elem);
-        }
-        i += len;
-    }
-    flush_text!();
-    while let Some(done) = stack.pop() {
-        match stack.last_mut() {
-            Some(top) => top.children.push(Node::Elem(done)),
-            None => roots.push(Node::Elem(done)),
+            _ => None,
         }
     }
-    roots
-}
 
-/// `(name, attributes, self-closing, byte length)` of the tag starting at
-/// `rest`, or `None` when this `<` does not open one.
-fn parse_tag(rest: &str) -> Option<(String, Vec<(String, String)>, bool, usize)> {
-    let b = rest.as_bytes();
-    if b.len() < 2 || !(b[1].is_ascii_alphabetic()) {
-        return None;
-    }
-    let mut i = 1usize;
-    while i < b.len() && (b[i].is_ascii_alphanumeric() || b[i] == b'-' || b[i] == b':') {
-        i += 1;
-    }
-    let name = rest[1..i].to_ascii_lowercase();
-    let mut attrs = Vec::new();
-    let mut self_closing = false;
-    loop {
-        while i < b.len() && (b[i] as char).is_whitespace() {
-            i += 1;
-        }
-        if i >= b.len() {
-            return Some((name, attrs, self_closing, i));
-        }
-        if b[i] == b'>' {
-            return Some((name, attrs, self_closing, i + 1));
-        }
-        if b[i] == b'/' {
-            self_closing = true;
-            i += 1;
-            continue;
-        }
-        let start = i;
-        while i < b.len() && !matches!(b[i], b'=' | b'>' | b'/') && !(b[i] as char).is_whitespace() {
-            i += 1;
-        }
-        let key = rest[start..i].to_ascii_lowercase();
-        while i < b.len() && (b[i] as char).is_whitespace() {
-            i += 1;
-        }
-        let mut value = String::new();
-        if i < b.len() && b[i] == b'=' {
-            i += 1;
-            while i < b.len() && (b[i] as char).is_whitespace() {
-                i += 1;
-            }
-            if i < b.len() && (b[i] == b'"' || b[i] == b'\'') {
-                let quote = b[i];
-                i += 1;
-                let vstart = i;
-                while i < b.len() && b[i] != quote {
-                    i += 1;
-                }
-                value = decode_entities(&rest[vstart..i]);
-                i = (i + 1).min(b.len());
-            } else {
-                let vstart = i;
-                while i < b.len() && b[i] != b'>' && !(b[i] as char).is_whitespace() {
-                    i += 1;
-                }
-                value = decode_entities(&rest[vstart..i]);
-            }
-        }
-        if !key.is_empty() {
-            attrs.push((key, value));
-        }
-    }
-}
-
-/// The handful of entities a mail body actually carries, plus numeric ones.
-fn decode_entities(s: &str) -> String {
-    if !s.contains('&') {
-        return s.to_string();
-    }
-    let mut out = String::with_capacity(s.len());
-    let mut rest = s;
-    while let Some(at) = rest.find('&') {
-        out.push_str(&rest[..at]);
-        let tail = &rest[at + 1..];
-        let Some(end) = tail.find(';').filter(|e| *e <= 10) else {
-            out.push('&');
-            rest = tail;
-            continue;
-        };
-        let name = &tail[..end];
-        let ch = match name {
-            "amp" => Some('&'),
-            "lt" => Some('<'),
-            "gt" => Some('>'),
-            "quot" => Some('"'),
-            "apos" | "#39" => Some('\''),
-            "nbsp" => Some('\u{a0}'),
-            "hellip" => Some('\u{2026}'),
-            "mdash" => Some('\u{2014}'),
-            "ndash" => Some('\u{2013}'),
-            "lsquo" => Some('\u{2018}'),
-            "rsquo" => Some('\u{2019}'),
-            "ldquo" => Some('\u{201c}'),
-            "rdquo" => Some('\u{201d}'),
-            _ => name
-                .strip_prefix('#')
-                .and_then(|n| match n.strip_prefix(['x', 'X']) {
-                    Some(hex) => u32::from_str_radix(hex, 16).ok(),
-                    None => n.parse::<u32>().ok(),
-                })
-                .and_then(char::from_u32),
-        };
-        match ch {
-            Some(c) => {
-                out.push(c);
-                rest = &tail[end + 1..];
-            }
-            None => {
-                out.push('&');
-                rest = tail;
-            }
-        }
-    }
-    out.push_str(rest);
-    out
+    let dom = html5ever::parse_document(RcDom::default(), Default::default()).one(html);
+    element_named(&dom.document, "html")
+        .and_then(|root| element_named(&root, "body"))
+        .map(|body| children(&body))
+        .unwrap_or_default()
 }
 
 /// HTML to Markdown source. Used when the composer switches format, and to
@@ -850,6 +581,57 @@ pub fn from_html(html: &str) -> String {
 /// The plain-text alternative for an HTML body.
 pub fn html_to_text(html: &str) -> String {
     from_html(html)
+}
+
+/// An HTML body as plain text, for list previews: its words, a line break
+/// for each block and `<br>`, whitespace collapsed as a browser does
+/// outside `<pre>`, each line trimmed, and at most one blank line in a row.
+pub fn plain_text(html: &str) -> String {
+    fn walk(nodes: &[Node], pre: bool, out: &mut String) {
+        for node in nodes {
+            match node {
+                Node::Text(t) if pre => out.push_str(t),
+                Node::Text(t) => {
+                    let mut last_space = out.ends_with([' ', '\n']);
+                    for c in t.chars() {
+                        let space = c.is_whitespace();
+                        if !(space && last_space) {
+                            out.push(if space { ' ' } else { c });
+                        }
+                        last_space = space;
+                    }
+                }
+                Node::Elem(e) if e.name == "br" => out.push('\n'),
+                Node::Elem(e) => {
+                    let block = is_block(&e.name);
+                    if block && !out.is_empty() && !out.ends_with('\n') {
+                        out.push('\n');
+                    }
+                    walk(&e.children, pre || e.name == "pre", out);
+                    if block {
+                        out.push_str(if e.name == "p" { "\n\n" } else { "\n" });
+                    }
+                }
+            }
+        }
+    }
+    let mut text = String::new();
+    walk(&parse(html), false, &mut text);
+    let mut out = String::new();
+    let mut blank = false;
+    for line in text.lines().map(|l| l.trim_matches(|c: char| c == ' ' || c == '\u{a0}')) {
+        if line.is_empty() {
+            if !blank && !out.is_empty() {
+                out.push('\n');
+            }
+            blank = true;
+        } else {
+            out.push_str(line);
+            out.push('\n');
+            blank = false;
+        }
+    }
+    out.trim().to_string()
 }
 
 /// Is this element a block, as far as the Markdown writer is concerned?
@@ -1220,7 +1002,9 @@ fn inline(e: &Elem) -> String {
             let href = e.attr("href").unwrap_or("").to_string();
             let text = inner();
             let bare = text.trim();
-            if href.is_empty() {
+            // A link with nothing to click (an empty anchor, or the outer
+            // half of the <a><a> Outlook writes) is not worth writing.
+            if href.is_empty() || bare.is_empty() {
                 text
             } else if bare == href || href == format!("mailto:{bare}") {
                 // An autolink reads better as itself than as a link whose
@@ -1345,6 +1129,25 @@ pub fn pretty_html(html: &str) -> String {
 mod tests {
     use super::*;
 
+    /// A preview is the body's words: no head, no styles, and a `<header>`
+    /// element is content like any other.
+    #[test]
+    fn plain_text_keeps_the_words_and_the_breaks() {
+        let html = "<html><head><title>T</title><style>p{}</style></head><body>\
+                    <header>Hello   <b>there</b></header><p>One<br>two &amp; three</p>\
+                    <p></p><p></p><div>After</div><pre>a  b\n c</pre></body></html>";
+        assert_eq!(plain_text(html), "Hello there\nOne\ntwo & three\n\nAfter\na  b\nc");
+    }
+
+    /// Outlook nests a link in a link; a browser closes the first, leaving
+    /// it empty. Only the one with text is written.
+    #[test]
+    fn nested_links_leave_no_empty_link() {
+        let html = r#"<p>Em: <a href="mailto:j@x.example"><a href="mailto:j@x.example">j@x.example</a></a></p>"#;
+        assert_eq!(from_html(html), "Em: j@x.example");
+        assert_eq!(from_html(r#"<p><a href="https://x.example/"></a>text</p>"#), "text");
+    }
+
     /// Assert `html` contains `needle`, with the whole rendering in the
     /// failure so a broken case reads itself.
     fn has(html: &str, needle: &str) {
@@ -1393,7 +1196,7 @@ mod tests {
 
     #[test]
     fn hard_break_and_escapes() {
-        has(&to_html("one  \ntwo"), "<br />");
+        has(&to_html("one  \ntwo"), "<br>");
         has(&to_html(r"\*not emphasis\*"), "*not emphasis*");
     }
 
@@ -1475,13 +1278,26 @@ mod tests {
         // The writer's own alignment survives the merge into one attribute
         // — two `style`s on a tag and the second is thrown away.
         let aligned = to_html("| a |\n| ---: |\n| 1 |");
-        has(&aligned, "text-align: right");
-        has(&aligned, "padding:6px 10px;text-align: right");
+        has(&aligned, "padding: 6px 10px;text-align: right");
+        assert!(!aligned.contains("text-align: left"), "the sheet's left gave way: {aligned}");
         for tag in ["<th ", "<td "] {
             let at = aligned.find(tag).unwrap();
             let open = &aligned[at..at + aligned[at..].find('>').unwrap()];
             assert_eq!(open.matches("style=").count(), 1, "{open}");
         }
+    }
+
+    /// A fence is a block: the `pre` carries the ground, and the `code`
+    /// inside does not get inline code's own ground and padding as well.
+    #[test]
+    fn fenced_code_is_not_inline_code() {
+        let html = to_html("```\nlet a = 1;\n```\n\nand `b`");
+        let pre = &html[html.find("<pre").unwrap()..html.find("</pre>").unwrap()];
+        let inner = &pre[pre.find("<code").unwrap()..];
+        assert!(pre.starts_with("<pre style=\"background: rgba(128,128,128,0.12)"), "{html}");
+        assert!(inner.contains("background: none") && inner.contains("padding: 0"), "{html}");
+        let inline = &html[html.rfind("<code").unwrap()..];
+        assert!(inline.contains("padding: 1px 4px"), "{html}");
     }
 
     #[test]

@@ -727,23 +727,18 @@ fn utc_offset(text: &str) -> Option<i32> {
 }
 
 fn days_in_month(year: i32, month: i32) -> i32 {
-    match month {
-        1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
-        4 | 6 | 9 | 11 => 30,
-        2 if (year % 4 == 0 && year % 100 != 0) || year % 400 == 0 => 29,
-        2 => 28,
-        _ => 30,
-    }
+    use chrono::Datelike;
+    let (y, m) = if month >= 12 { (year + 1, 1) } else { (year, month + 1) };
+    chrono::NaiveDate::from_ymd_opt(y, m as u32, 1)
+        .and_then(|first| first.pred_opt())
+        .map_or(30, |last| last.day() as i32)
 }
 
-/// Day of the week (1 = Monday … 7 = Sunday), by Zeller's congruence.
+/// ISO weekday, Monday 1 to Sunday 7.
 fn weekday_of(year: i32, month: i32, day: i32) -> i32 {
-    let (m, y) = if month < 3 { (month + 12, year - 1) } else { (month, year) };
-    let k = y % 100;
-    let j = y / 100;
-    let h = (day + (13 * (m + 1)) / 5 + k + k / 4 + j / 4 + 5 * j) % 7;
-    // Zeller counts Saturday as 0.
-    ((h + 5) % 7) + 1
+    use chrono::Datelike;
+    chrono::NaiveDate::from_ymd_opt(year, month as u32, day as u32)
+        .map_or(0, |d| d.weekday().number_from_monday() as i32)
 }
 
 // ---------------------------------------------------------------------------

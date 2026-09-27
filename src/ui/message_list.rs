@@ -2775,8 +2775,6 @@ pub enum MessageListInput {
     /// The date or clock preference changed: every row's date is built with the
     /// row, so they are built again (#32).
     RefreshDates,
-    /// How many lines of preview text each row shows (1–3).
-    SetPreviewLines(u32),
     SetColorize(bool),
     /// The local day rolled over — re-render rows so "Today" stays accurate.
     DayChanged,
@@ -3249,13 +3247,13 @@ impl SimpleComponent for MessageList {
             tags: std::rc::Rc::new(std::cell::RefCell::new(Vec::new())),
             palette_collapse_secs: std::rc::Rc::new(std::cell::Cell::new(5)),
             palette_hover: std::rc::Rc::new(std::cell::Cell::new(
-                crate::config::load_list_palette_hover(),
+                crate::config::load_privacy().list_palette_hover,
             )),
             swipe_reversed: std::rc::Rc::new(std::cell::Cell::new(
-                crate::config::load_swipe_reversed(),
+                crate::config::load_privacy().swipe_reversed,
             )),
             swipe_enabled: std::rc::Rc::new(std::cell::Cell::new(
-                crate::config::load_swipe_enabled(),
+                crate::config::load_privacy().swipe_enabled,
             )),
             swipe_sensitivity: std::rc::Rc::new(std::cell::Cell::new(
                 crate::config::load_swipe_sensitivity(),
@@ -3641,15 +3639,6 @@ impl SimpleComponent for MessageList {
                 // fresh index as they are rebuilt.
                 if self.avatars {
                     self.rebuild_rows_preserving_scroll();
-                }
-            }
-            MessageListInput::SetPreviewLines(lines) => {
-                let lines = lines.min(3);
-                if self.preview_lines != lines {
-                    self.preview_lines = lines;
-                    // Row height is set when the row is built, so the list has to
-                    // be rebuilt rather than nudged.
-                    self.rebuild_rows();
                 }
             }
             MessageListInput::SetColorize(on) => {

@@ -886,12 +886,12 @@ impl Component for Compose {
         // the setting says (#237). A draft already contains its signature;
         // don't add another. With Return set to start paragraphs the line
         // is a paragraph too, so the first Return splits it into two.
-        let mut content = String::from(if crate::config::load_return_paragraph() {
+        let mut content = String::from(if crate::config::load_privacy().return_paragraph {
             "<p><br></p>"
         } else {
             "<div><br></div>"
         });
-        let sig_dashes = crate::config::load_signature_dashes();
+        let sig_dashes = crate::config::load_privacy().signature_dashes;
         let sig = if draft_origin.is_none() && !current_sig.is_empty() {
             sig_html(&current_sig, sig_dashes)
         } else {
@@ -1014,7 +1014,7 @@ impl Component for Compose {
             // addressed: replies arrive with To filled, forwards do not.
             compact: compact && !prefill.to.trim().is_empty(),
             decorations,
-            fields_shown: crate::config::load_reply_fields(),
+            fields_shown: crate::config::load_privacy().reply_fields,
             narrow: false,
             fields_dirty: false,
             asking_discard: false,
@@ -1322,7 +1322,7 @@ impl Component for Compose {
                 && keyval == gtk::gdk::Key::v
                 && editor.has_focus()
             {
-                editor.paste(!crate::config::load_paste_plain());
+                editor.paste(!crate::config::load_privacy().paste_plain);
                 return Propagation::Stop;
             }
             // Ctrl+Enter sends (#238), as it does in Gmail, Apple Mail and
@@ -1541,7 +1541,7 @@ impl Component for Compose {
                 match result {
                     Ok(share) => {
                         let id = format!("vireo-cloud-{}", crate::rng::token(8).unwrap_or_else(|_| share.size.to_string()));
-                        let mut caption = crate::cloud::human_size(share.size);
+                        let mut caption = crate::models::human_size(share.size);
                         if let Some(d) = &share.expires {
                             caption.push_str(&format!(", {}", i18n_f("link expires {date}", &[("date", d)])));
                         }
@@ -1721,13 +1721,8 @@ impl Component for Compose {
                 };
                 let to_row = widgets.to_row.clone();
                 crate::ui::contacts_browser::present(&win, move |contact| {
-                    let display = if contact.name.trim().is_empty()
-                        || contact.name == contact.email
-                    {
-                        contact.email.clone()
-                    } else {
-                        format!("{} <{}>", contact.name, contact.email)
-                    };
+                    let display =
+                        crate::worker::format_recipient(&contact.name, &contact.email);
                     let cur = to_row.text().to_string();
                     let trimmed = cur.trim_end();
                     let sep = if trimmed.is_empty() {
@@ -2779,7 +2774,7 @@ fn confirm_discard_dialog(parent: Option<&gtk::Window>, sender: relm4::Sender<Co
 }
 
 fn html_escape(s: &str) -> String {
-    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;")
+    gtk::glib::markup_escape_text(s).into()
 }
 
 /// Which account to upload to, and how the links are made this time:
@@ -2911,9 +2906,8 @@ fn pgp_send_check(from: &str, chosen_key: Option<&str>, fields: &[&str], encrypt
     }
     if encrypt {
         for field in fields {
-            for part in field.split(',') {
-                let (_, addr) = crate::config::split_identity(part.trim());
-                let addr = addr.trim();
+            for (_, addr) in crate::worker::parse_recipients(field) {
+                let addr = addr.as_str();
                 if addr.is_empty() {
                     continue;
                 }

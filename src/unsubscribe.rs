@@ -38,7 +38,8 @@ use crate::models::{ReplyRoute, Unsubscribe};
 const ONE_CLICK: &str = "list-unsubscribe=one-click";
 
 /// Read everything a raw message offers, headers and body.
-pub fn detect_raw(raw: &[u8]) -> Option<Unsubscribe> {
+#[cfg(test)]
+fn detect_raw(raw: &[u8]) -> Option<Unsubscribe> {
     let parsed = mail_parser::MessageParser::default().parse(raw)?;
     detect(&parsed)
 }
@@ -772,7 +773,7 @@ pub fn parse_mailto(uri: &str) -> Option<MailtoTarget> {
     };
     let mut to: Vec<String> = addr_part
         .split(',')
-        .map(percent_decode)
+        .map(|a| crate::percent::decode(a, false))
         .map(|a| a.trim().to_string())
         .filter(|a| a.contains('@'))
         .collect();
@@ -780,8 +781,11 @@ pub fn parse_mailto(uri: &str) -> Option<MailtoTarget> {
     let mut body = String::new();
     for pair in query.split('&').filter(|p| !p.is_empty()) {
         let (k, v) = pair.split_once('=').unwrap_or((pair, ""));
-        let v = percent_decode(v);
-        match k.to_ascii_lowercase().as_str() {
+        let key = k.to_ascii_lowercase();
+        // An address keeps its `+` (plus-addressing, `list+token@…`); only
+        // the text fields read it as a space, as form-encoded links write it.
+        let v = crate::percent::decode(v, !matches!(key.as_str(), "to" | "cc"));
+        match key.as_str() {
             "subject" => subject = v,
             "body" => body = v,
             "to" | "cc" => {
@@ -808,27 +812,6 @@ fn strip_scheme<'a>(uri: &'a str, scheme: &str) -> Option<&'a str> {
     let uri = uri.trim();
     (uri.len() >= scheme.len() && uri[..scheme.len()].eq_ignore_ascii_case(scheme))
         .then(|| &uri[scheme.len()..])
-}
-
-/// `%20` and `+` back to characters, for a mailto query.
-fn percent_decode(s: &str) -> String {
-    let bytes = s.as_bytes();
-    let mut out = Vec::with_capacity(bytes.len());
-    let mut i = 0;
-    while i < bytes.len() {
-        if bytes[i] == b'%' && i + 2 < bytes.len() {
-            if let Ok(h) =
-                u8::from_str_radix(std::str::from_utf8(&bytes[i + 1..i + 3]).unwrap_or("zz"), 16)
-            {
-                out.push(h);
-                i += 3;
-                continue;
-            }
-        }
-        out.push(if bytes[i] == b'+' { b' ' } else { bytes[i] });
-        i += 1;
-    }
-    String::from_utf8_lossy(&out).into_owned()
 }
 
 /// Send the RFC 8058 one-click request: a POST of `List-Unsubscribe=One-Click`
@@ -958,6 +941,10 @@ mod tests {
         // LISTSERV: the command in the body, no subject.
         let t = parse_mailto("mailto:LISTSERV@lists.example?body=SIGNOFF%20MYLIST").unwrap();
         assert_eq!(t.body, "SIGNOFF MYLIST");
+        // Plus-addressed handles keep their `+`: it is part of the address.
+        let t = parse_mailto("mailto:list+abc123@x.example?cc=b+1@x.example&subject=go+away").unwrap();
+        assert_eq!(t.to, "list+abc123@x.example, b+1@x.example");
+        assert_eq!(t.subject, "go away");
         assert_eq!(parse_mailto("mailto:?subject=x"), None, "no address, no target");
         assert_eq!(parse_mailto("https://x.example"), None);
     }

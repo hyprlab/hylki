@@ -4926,12 +4926,7 @@ impl AccountsWindow {
                     None::<&gtk::gio::Cancellable>,
                     move |res| match res {
                         Ok(rgba) => {
-                            let hex = format!(
-                                "#{:02x}{:02x}{:02x}",
-                                (rgba.red() * 255.0).round() as u8,
-                                (rgba.green() * 255.0).round() as u8,
-                                (rgba.blue() * 255.0).round() as u8,
-                            );
+                            let hex = crate::color::to_hex(&rgba);
                             t.set_child(Some(&custom_swatch_widget(Some(&hex))));
                             *custom.borrow_mut() = Some(hex.clone());
                             *chosen.borrow_mut() = hex;

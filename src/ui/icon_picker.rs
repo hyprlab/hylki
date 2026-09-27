@@ -1,18 +1,11 @@
-//! The app-icon gallery: a grid of every icon in `app_icon::catalog`, with
-//! the current choice ringed. Shared by Settings (System & Appearance) and
+//! The app-icon gallery: every icon in `app_icon::catalog` in a scrolling
+//! row, with the current choice ringed. Shared by Settings (System & Appearance) and
 //! the welcome wizard's personalize page; the caller hears each pick.
 
 use std::rc::Rc;
 
 use gtk::prelude::*;
 use crate::i18n::i18n;
-
-/// Build the gallery as a fixed six-wide grid (three even rows) with
-/// `selected` ringed (none when it is empty); `on_pick` runs for every change the user makes (not
-/// for the initial selection).
-pub fn gallery(selected: &str, tile: i32, on_pick: Rc<dyn Fn(&str)>) -> gtk::FlowBox {
-    build(selected, tile, 6, on_pick)
-}
 
 /// The gallery as one row that scrolls sideways, its edges fading into the
 /// card wherever there is more to scroll to.

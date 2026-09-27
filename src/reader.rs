@@ -162,7 +162,7 @@ impl Out {
                     into.push(' ');
                     into.push_str(k);
                     into.push_str("=\"");
-                    into.push_str(&escape_attr(v));
+                    into.push_str(&escape_text(v));
                     into.push('"');
                 }
                 into.push('>');
@@ -213,12 +213,9 @@ fn is_blank(t: &str) -> bool {
     })
 }
 
+/// Escape text for HTML: element content or a quoted attribute alike.
 fn escape_text(s: &str) -> String {
-    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
-}
-
-fn escape_attr(s: &str) -> String {
-    escape_text(s).replace('"', "&quot;")
+    gtk::glib::markup_escape_text(s).into()
 }
 
 // ---------------------------------------------------------------------------

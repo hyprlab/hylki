@@ -84,7 +84,7 @@ impl Drop for ThemeHandlerGuard {
 /// nothing.
 pub fn apply_spellcheck() {
     let ctx = super::message_view::shared_web_context();
-    let on = crate::config::load_spellcheck();
+    let on = crate::config::load_privacy().spellcheck;
     ctx.set_spell_checking_enabled(on);
     if !on {
         return;
@@ -96,7 +96,7 @@ pub fn apply_spellcheck() {
 /// The language checking actually runs with: the configured one, else the
 /// session locale, either mapped onto an installed dictionary.
 pub fn resolved_spell_language() -> String {
-    let configured = crate::config::load_spellcheck_langs();
+    let configured = crate::config::load_privacy().spellcheck_langs;
     let want = configured
         .split([',', ';', ' '])
         .map(str::trim)
@@ -1834,8 +1834,8 @@ fn document(content: &str, webview: &webkit6::WebView, image_policy: &str) -> St
     let dark = adw::StyleManager::default().is_dark();
     let scheme = if dark { "dark" } else { "light" };
     let (ground, _, _) = crate::ui::message_view::theme_grounds_for(webview, dark);
-    let paste_rich = !crate::config::load_paste_plain();
-    let return_paragraph = crate::config::load_return_paragraph();
+    let paste_rich = !crate::config::load_privacy().paste_plain;
+    let return_paragraph = crate::config::load_privacy().return_paragraph;
     let script = format!(
         "<script>window.__hylkiPasteRich={paste_rich};\
          window.__hylkiReturnParagraph={return_paragraph};</script>{PASTE_SCRIPT}{HISTORY_SCRIPT}"
@@ -1923,7 +1923,7 @@ fn source_document(text: &str, webview: &webkit6::WebView) -> String {
            t.focus();t.setSelectionRange(0,0);\
          }})();\
          </script>{HISTORY_SCRIPT}</body></html>",
-        text = html_escape_text(text)
+        text = gtk::glib::markup_escape_text(text)
     )
 }
 
@@ -1988,11 +1988,6 @@ pub fn remote_image_urls(html: &str) -> Vec<String> {
     urls
 }
 
-/// Escape text for a textarea's contents.
-fn html_escape_text(s: &str) -> String {
-    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
-}
-
 /// Every dropped file straight onto the attachment list.
 fn attach_all(
     files: &[gtk::gio::File],
@@ -2035,10 +2030,7 @@ pub fn signature_to_html(sig: &str) -> String {
     if sig.contains('<') {
         sig.to_string()
     } else {
-        sig.replace('&', "&amp;")
-            .replace('<', "&lt;")
-            .replace('>', "&gt;")
-            .replace('\n', "<br>")
+        gtk::glib::markup_escape_text(sig).replace('\n', "<br>")
     }
 }
 
@@ -2129,12 +2121,12 @@ fn local_image_data_uri(value: &str, base: Option<&std::path::Path>, max: u64) -
     let v = value.trim();
     let lower = v.to_ascii_lowercase();
     let path = if let Some(rest) = lower.strip_prefix("file://") {
-        std::path::PathBuf::from(percent_decode(&v[v.len() - rest.len()..]))
+        std::path::PathBuf::from(crate::percent::decode(&v[v.len() - rest.len()..], false))
     } else if lower.contains(':') && !lower.starts_with('/') && !lower.starts_with('.') {
         // Some other scheme (http, https, data, cid, mailto…): not ours.
         return None;
     } else {
-        let p = std::path::PathBuf::from(percent_decode(v));
+        let p = std::path::PathBuf::from(crate::percent::decode(v, false));
         if p.is_absolute() {
             p
         } else {
@@ -2157,25 +2149,6 @@ fn local_image_data_uri(value: &str, base: Option<&std::path::Path>, max: u64) -
     }
     let data = std::fs::read(&path).ok()?;
     Some(format!("data:{mime};base64,{}", crate::oauth::base64_encode(&data)))
-}
-
-/// `%20` and friends back to characters, for a path or id that came as a URL.
-pub(crate) fn percent_decode(s: &str) -> String {
-    let bytes = s.as_bytes();
-    let mut out = Vec::with_capacity(bytes.len());
-    let mut i = 0;
-    while i < bytes.len() {
-        if bytes[i] == b'%' && i + 2 < bytes.len() {
-            if let Ok(h) = u8::from_str_radix(std::str::from_utf8(&bytes[i + 1..i + 3]).unwrap_or("zz"), 16) {
-                out.push(h);
-                i += 3;
-                continue;
-            }
-        }
-        out.push(bytes[i]);
-        i += 1;
-    }
-    String::from_utf8_lossy(&out).into_owned()
 }
 
 /// Re-ground an open editor document (#148): the color scheme and the page

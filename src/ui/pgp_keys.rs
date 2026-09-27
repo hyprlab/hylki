@@ -550,7 +550,7 @@ fn key_row(key: &KeyInfo, own: bool, sender: &ComponentSender<PgpKeys>) -> adw::
         let date = chrono::DateTime::from_timestamp(exp, 0)
             .map(|d| d.format("%Y-%m-%d").to_string())
             .unwrap_or_default();
-        parts.push(if exp > now_secs() {
+        parts.push(if exp > crate::datefmt::now() {
             i18n_f("expires {date}", &[("date", &date)])
         } else {
             i18n_f("expired {date}", &[("date", &date)])
@@ -620,13 +620,6 @@ fn import_message(s: &ImportSummary) -> String {
     } else {
         i18n("That key was already in your keyring.")
     }
-}
-
-fn now_secs() -> i64 {
-    std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map(|d| d.as_secs() as i64)
-        .unwrap_or(0)
 }
 
 /// "2.4.9", from `gpg --version`'s first line.

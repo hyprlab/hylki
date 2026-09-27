@@ -27,17 +27,12 @@ pub enum Status {
     Outdated,
 }
 
-/// The user's home — the host's, from inside the sandbox too.
-fn home() -> Option<PathBuf> {
-    std::env::var_os("HOME").map(PathBuf::from).or_else(dirs::home_dir)
-}
-
 /// The per-user extension directory as Nautilus sees it. Inside Flatpak
 /// XDG_DATA_HOME is the sandbox's private dir, so the host's default is
 /// used (where the manifest mounts `xdg-data/nautilus-python/extensions`).
 pub fn dir() -> Option<PathBuf> {
     let base = if crate::platform::is_flatpak() {
-        home()?.join(".local/share")
+        crate::platform::home()?.join(".local/share")
     } else {
         dirs::data_dir()?
     };

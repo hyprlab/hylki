@@ -3,7 +3,6 @@ use crate::i18n::{i18n, i18n_f};
 
 /// A configured mail account (one IMAP/SMTP identity).
 #[derive(Debug, Clone)]
-#[allow(dead_code)] // `id` and `accent` are used once multi-account lands.
 pub struct Account {
     pub id: u32,
     pub name: String,
@@ -316,12 +315,6 @@ impl SenderTrust {
             SenderTrust::Suspicious => "trust-suspicious",
             SenderTrust::Fail => "trust-fail",
         }
-    }
-
-    /// Whether this verdict deserves a banner across the top of the message
-    /// rather than just a badge beside the sender.
-    pub fn is_alarming(self) -> bool {
-        matches!(self, SenderTrust::Suspicious | SenderTrust::Fail)
     }
 }
 
@@ -842,14 +835,7 @@ impl Attachment {
 
 /// Human-readable byte size, e.g. "12.3 KB".
 pub fn human_size(bytes: u64) -> String {
-    let b = bytes as f64;
-    if b >= 1_048_576.0 {
-        format!("{:.1} MB", b / 1_048_576.0)
-    } else if b >= 1024.0 {
-        format!("{:.1} KB", b / 1024.0)
-    } else {
-        format!("{bytes} B")
-    }
+    gtk::glib::format_size(bytes).into()
 }
 
 /// Whether a filename looks like a raster image we can thumbnail/preview inline.

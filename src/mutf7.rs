@@ -69,40 +69,20 @@ pub fn decode(name: &str) -> String {
     out
 }
 
+/// Modified BASE64: `,` for `/`, no padding, and no stray bits after the last
+/// whole character.
+const MODIFIED_BASE64: base64::engine::GeneralPurpose = base64::engine::GeneralPurpose::new(
+    &base64::alphabet::IMAP_MUTF7,
+    base64::engine::general_purpose::NO_PAD
+        .with_decode_padding_mode(base64::engine::DecodePaddingMode::RequireNone),
+);
+
 /// Decode one `&…-` run: modified BASE64 of UTF-16BE.
 fn decode_run(run: &str) -> Option<String> {
-    if run.is_empty() {
-        return None;
-    }
-    let mut bits: u32 = 0;
-    let mut nbits = 0;
-    let mut units: Vec<u16> = Vec::new();
-    for b in run.bytes() {
-        let six = base64_value(b)?;
-        bits = (bits << 6) | u32::from(six);
-        nbits += 6;
-        if nbits >= 16 {
-            nbits -= 16;
-            units.push((bits >> nbits) as u16);
-        }
-    }
-    // Whatever is left must be zero padding, and never a whole unit's worth.
-    if nbits >= 6 || bits & ((1 << nbits) - 1) != 0 {
-        return None;
-    }
+    use base64::Engine;
+    let bytes = MODIFIED_BASE64.decode(run).ok().filter(|b| !b.is_empty() && b.len() % 2 == 0)?;
+    let units: Vec<u16> = bytes.chunks_exact(2).map(|p| u16::from_be_bytes([p[0], p[1]])).collect();
     String::from_utf16(&units).ok()
-}
-
-/// Value of one modified BASE64 digit (`,` where BASE64 has `/`).
-fn base64_value(b: u8) -> Option<u8> {
-    match b {
-        b'A'..=b'Z' => Some(b - b'A'),
-        b'a'..=b'z' => Some(b - b'a' + 26),
-        b'0'..=b'9' => Some(b - b'0' + 52),
-        b'+' => Some(62),
-        b',' => Some(63),
-        _ => None,
-    }
 }
 
 /// Encode a name the user typed into the form the server expects, so a folder
@@ -136,21 +116,10 @@ pub fn encode(name: &str) -> String {
 
 /// Append one `&…-` run for a stretch of non-ASCII characters.
 fn push_run(out: &mut String, units: &[u16]) {
-    const DIGITS: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+,";
+    use base64::Engine;
+    let bytes: Vec<u8> = units.iter().flat_map(|u| u.to_be_bytes()).collect();
     out.push('&');
-    let mut bits: u32 = 0;
-    let mut nbits = 0;
-    for unit in units {
-        bits = (bits << 16) | u32::from(*unit);
-        nbits += 16;
-        while nbits >= 6 {
-            nbits -= 6;
-            out.push(DIGITS[((bits >> nbits) & 0x3f) as usize] as char);
-        }
-    }
-    if nbits > 0 {
-        out.push(DIGITS[((bits << (6 - nbits)) & 0x3f) as usize] as char);
-    }
+    out.push_str(&MODIFIED_BASE64.encode(bytes));
     out.push('-');
 }
 

@@ -93,7 +93,7 @@ pub fn new_mail(
         from,
         subject,
         others,
-        crate::config::load_notification_content(),
+        crate::config::load_privacy().notification_content,
     );
     let n = gio::Notification::new(&title);
     if !body.is_empty() {

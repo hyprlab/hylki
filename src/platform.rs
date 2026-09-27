@@ -14,6 +14,26 @@ pub fn is_flatpak() -> bool {
     std::path::Path::new("/.flatpak-info").exists()
 }
 
+/// The user's home: the host's, from inside the sandbox too.
+pub fn home() -> Option<PathBuf> {
+    std::env::var_os("HOME").map(PathBuf::from).or_else(dirs::home_dir)
+}
+
+/// A key file (a `.desktop` entry, an EDS `.source`, a D-Bus `.service`,
+/// `/.flatpak-info`), or `None` if it does not parse.
+pub fn keyfile(data: &str) -> Option<gtk::glib::KeyFile> {
+    let kf = gtk::glib::KeyFile::new();
+    kf.load_from_data(data, gtk::glib::KeyFileFlags::NONE).ok()?;
+    Some(kf)
+}
+
+/// One non-empty value from a key file's group.
+pub fn keyfile_value(data: &str, group: &str, key: &str) -> Option<String> {
+    let v = keyfile(data)?.string(group, key).ok()?;
+    let v = v.trim();
+    (!v.is_empty()).then(|| v.to_string())
+}
+
 /// The AppImage this process was launched from (#235), if it was one. The
 /// runtime sets `APPIMAGE` to the bundle's own path, which is the only
 /// lasting one: the binary runs from a temporary mount that is gone the

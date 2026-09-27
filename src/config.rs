@@ -395,7 +395,7 @@ pub struct AccountConfig {
     pub aliases: Vec<AliasConfig>,
     /// Whether the account is active. Disabled accounts stay configured but don't
     /// connect, sync, or appear in the sidebar.
-    #[serde(default = "default_enabled")]
+    #[serde(default = "default_on")]
     pub enabled: bool,
     /// When imported from GNOME Online Accounts, the GOA account id (so its
     /// settings/credentials trace back to the system account).
@@ -407,7 +407,7 @@ pub struct AccountConfig {
     #[serde(default)]
     pub goa_mail_disabled: bool,
     /// What `enabled` was when the Mail pause began; restored when it ends.
-    #[serde(default = "default_enabled")]
+    #[serde(default = "default_on")]
     pub goa_enabled_before_mail_disabled: bool,
     /// Authenticate with OAuth2 (XOAUTH2) instead of a stored password. The token
     /// comes from GOA (`goa_id`) or, for accounts added directly in Hylki, from
@@ -472,7 +472,7 @@ pub struct AccountConfig {
     /// Off keeps it to its own section; the tray and new-mail notifications
     /// still count it, as they answer for every account. Written only when
     /// off, so older files read the same.
-    #[serde(default = "default_enabled", skip_serializing_if = "is_true")]
+    #[serde(default = "default_on", skip_serializing_if = "is_true")]
     pub in_unified: bool,
     /// This account's own folder order in the sidebar; `None` follows
     /// Settings → Sidebar.
@@ -589,9 +589,6 @@ pub struct OAuthSettings {
     pub scopes: String,
 }
 
-fn default_enabled() -> bool {
-    true
-}
 
 impl AccountConfig {
     /// The account's UI label: the custom label, or the email address.
@@ -1008,390 +1005,390 @@ pub enum ClockStyle {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-struct PrivacyFile {
+pub(crate) struct PrivacyFile {
     #[serde(default)]
-    allowed_senders: Vec<String>,
+    pub(crate) allowed_senders: Vec<String>,
     /// Whether remote content (images, trackers) is auto-loaded for every new
     /// message, not just those from allowed senders. Off by default, since
     /// remote content can be used to track when and where a message is read.
     #[serde(default)]
-    auto_remote_content: bool,
+    pub(crate) auto_remote_content: bool,
     /// Whether to load sender avatars from Gravatar (off by default — it sends
     /// a hash of each sender's email to a third party).
     #[serde(default)]
-    gravatar: bool,
+    pub(crate) gravatar: bool,
     /// Whether the colored avatars are drawn in the message list and the
     /// reader (#29 — they cost horizontal room on a small screen).
-    #[serde(default = "default_avatars")]
-    avatars: bool,
+    #[serde(default = "default_on")]
+    pub(crate) avatars: bool,
     /// Whether a sender's site icon may be fetched to fill their circle (#30).
     #[serde(default)]
-    sender_logos: bool,
+    pub(crate) sender_logos: bool,
     /// Whether the mail you sent wears its mailbox's face — the account's
     /// Gravatar, picture or emoji (#189) — instead of the circle any other
     /// sender would get.
-    #[serde(default = "default_own_mailbox_face")]
-    own_mailbox_face: bool,
+    #[serde(default = "default_on")]
+    pub(crate) own_mailbox_face: bool,
     /// How dates are written (#32).
     #[serde(default)]
-    date_style: DateStyle,
+    pub(crate) date_style: DateStyle,
     /// Whether the clock runs to 12 or 24 (#32).
     #[serde(default)]
-    clock_style: ClockStyle,
+    pub(crate) clock_style: ClockStyle,
     /// Seconds between automatic mail checks; 0 = manual only.
     #[serde(default = "default_fetch_interval")]
-    fetch_interval_secs: u64,
+    pub(crate) fetch_interval_secs: u64,
     /// Whether to use IMAP IDLE push for instant new-mail delivery.
-    #[serde(default = "default_push")]
-    push: bool,
+    #[serde(default = "default_on")]
+    pub(crate) push: bool,
     /// Addresses or whole domains whose incoming mail is auto-deleted (to Trash).
     /// Stored lowercased; a bare domain like "spam.com" matches any sender there.
     #[serde(default)]
-    blacklist: Vec<String>,
+    pub(crate) blacklist: Vec<String>,
     /// Seconds the message-list actions palette stays open after the cursor
     /// leaves it before auto-collapsing. (A prior `palette_delay_ms` setting in
     /// milliseconds is intentionally not migrated — its meaning has changed.)
     #[serde(default = "default_palette_collapse")]
-    palette_collapse_secs: u64,
+    pub(crate) palette_collapse_secs: u64,
     /// Seconds a message card's actions palette stays open after the cursor
     /// leaves it. Separate from the list's: cards are read at a different
     /// pace from a list being skimmed.
     #[serde(default = "default_palette_collapse")]
-    card_palette_collapse_secs: u64,
+    pub(crate) card_palette_collapse_secs: u64,
     /// Group messages into conversation threads in the list.
-    #[serde(default = "default_threading")]
-    threading: bool,
+    #[serde(default = "default_on")]
+    pub(crate) threading: bool,
     /// Whether conversation threads start expanded in the message list
     /// (collapsed to their newest message by default).
     #[serde(default)]
-    threads_expanded: bool,
+    pub(crate) threads_expanded: bool,
     /// Whether a conversation row can expand into its member rows in the
     /// message list. Off: the row keeps its count chip and chevron, but the
     /// thread itself opens only in the reading pane's cards.
     #[serde(default = "default_thread_expansion")]
-    thread_expansion: bool,
+    pub(crate) thread_expansion: bool,
     /// Whether a conversation's row in the message list speaks for the newest
     /// message anywhere in the account rather than the newest one the folder
     /// itself holds: the reply you sent, which is filed in Sent (#236). Off by
     /// default, so the row goes on describing the last mail that arrived.
     #[serde(default)]
-    thread_row_newest: bool,
+    pub(crate) thread_row_newest: bool,
     /// Whether the reading pane shows a conversation newest-message-first.
     #[serde(default)]
-    thread_newest_first: bool,
+    pub(crate) thread_newest_first: bool,
     /// Whether the reader always shows the recipients line under the sender.
     #[serde(default)]
-    always_show_recipients: bool,
+    pub(crate) always_show_recipients: bool,
     /// Whether a lone message renders as an inset card like a conversation's
     /// messages (#57); off keeps the full-bleed view.
     #[serde(default = "default_single_message_card")]
-    single_message_card: bool,
+    pub(crate) single_message_card: bool,
     /// Reader View (the reader header's toggle): every message shown as its
     /// content alone, in the reader's own sheet.
     #[serde(default)]
-    reader_mode: bool,
+    pub(crate) reader_mode: bool,
     /// Whether the Reader View switch is shown in the reader header at all.
-    #[serde(default = "default_reader_switch")]
-    reader_switch: bool,
+    #[serde(default = "default_on")]
+    pub(crate) reader_switch: bool,
     /// What Reader View does when a message is opened: keep the last choice,
     /// or start every message on or off.
     #[serde(default)]
-    reader_default: ReaderDefault,
+    pub(crate) reader_default: ReaderDefault,
     /// The message zoom every launch starts at, in percent (Settings →
     /// Reading). Ctrl+ and Ctrl- move away from it for the session; the
     /// next launch is back here.
     #[serde(default = "default_reader_zoom")]
-    reader_zoom: u32,
+    pub(crate) reader_zoom: u32,
     /// Each conversation message lists its own attachments beneath its body
     /// (#213), so which file came with which message is never in doubt.
-    #[serde(default = "default_card_attachments")]
-    card_attachments: bool,
+    #[serde(default = "default_on")]
+    pub(crate) card_attachments: bool,
     /// The attachment drawer beneath the reader, gathering every attachment
     /// in the open conversation (#213).
-    #[serde(default = "default_attachment_drawer")]
-    attachment_drawer: bool,
+    #[serde(default = "default_on")]
+    pub(crate) attachment_drawer: bool,
     /// Whether deleting a whole selected conversation asks for confirmation
     /// first.
-    #[serde(default = "default_confirm_thread_delete")]
-    confirm_thread_delete: bool,
+    #[serde(default = "default_on")]
+    pub(crate) confirm_thread_delete: bool,
     /// How email content is themed (independent of the app UI theme).
     #[serde(default)]
-    message_theme: MessageTheme,
+    pub(crate) message_theme: MessageTheme,
     /// Set every message in the reader's own font instead of the sender's
     /// (#56).
     #[serde(default)]
-    override_fonts: bool,
+    pub(crate) override_fonts: bool,
     /// That font, as a Pango description ("Cantarell 11"); empty = the
     /// interface font.
     #[serde(default)]
-    reader_font: String,
+    pub(crate) reader_font: String,
     /// Ignore the sender's text and background colors (#56).
     #[serde(default)]
-    override_colors: bool,
+    pub(crate) override_colors: bool,
     /// Show plain-text messages in a monospace font (#181).
     #[serde(default)]
-    plain_monospace: bool,
+    pub(crate) plain_monospace: bool,
     /// That font, as a Pango description; empty = the desktop's monospace font.
     #[serde(default)]
-    plain_font: String,
+    pub(crate) plain_font: String,
     /// Whether to post desktop notifications (new mail, error alerts).
-    #[serde(default = "default_notifications")]
-    notifications: bool,
+    #[serde(default = "default_on")]
+    pub(crate) notifications: bool,
     /// Whether new-mail notifications name the sender and subject. On by
     /// default — that is what makes them useful — but GNOME draws notifications
     /// on the lock screen, so turning it off is worth offering.
-    #[serde(default = "default_notification_content")]
-    notification_content: bool,
+    #[serde(default = "default_on")]
+    pub(crate) notification_content: bool,
     /// Which action buttons a new-mail notification carries (#244), by
     /// name: `mark_read`, `archive`, `delete`, `reply`, `forward`, `spam`;
     /// at most three count. Absent = mark_read, archive, delete.
     #[serde(default = "default_notification_buttons")]
-    notification_buttons: Vec<String>,
+    pub(crate) notification_buttons: Vec<String>,
     /// Whether the sidebar's pinned footer shows the "Attachments" row (the
     /// gallery of every account's attachments).
-    #[serde(default = "default_show_attachments")]
-    show_attachments: bool,
+    #[serde(default = "default_on")]
+    pub(crate) show_attachments: bool,
     /// Whether the sidebar's pinned footer shows the "Contacts" shortcut row
     /// (above Attachments); it opens the app-wide contacts browser.
-    #[serde(default = "default_show_contacts")]
-    show_contacts: bool,
+    #[serde(default = "default_on")]
+    pub(crate) show_contacts: bool,
     /// Whether the combined Accounts & Preferences window opens showing the
     /// Accounts view instead of Preferences (the default).
     #[serde(default)]
-    settings_open_accounts: bool,
+    pub(crate) settings_open_accounts: bool,
     /// Whether a conversation card's action icons stay hidden until the card
     /// is hovered (expanded via their ⋯ toggle). Off = always shown, unless
     /// `card_actions_auto` shows them automatically on hover.
-    #[serde(default = "default_card_actions_hover")]
-    card_actions_hover: bool,
+    #[serde(default = "default_on")]
+    pub(crate) card_actions_hover: bool,
     /// With the ⋯ toggle off: show the action icons automatically while the
     /// card is hovered (rather than always).
     #[serde(default = "default_card_actions_auto")]
-    card_actions_auto: bool,
+    pub(crate) card_actions_auto: bool,
     /// Whether the message list rows carry an actions palette at all. Off
     /// removes the ⋯ line entirely, returning its space to the row.
-    #[serde(default = "default_list_palette")]
-    list_palette: bool,
+    #[serde(default = "default_on")]
+    pub(crate) list_palette: bool,
     /// Whether the message list's actions palette opens on row hover, without
     /// needing the ⋯ click.
     #[serde(default)]
-    list_palette_hover: bool,
+    pub(crate) list_palette_hover: bool,
     /// Whether the ⋯ on a message card opens the card's menu in place of
     /// sliding its actions palette out.
     #[serde(default)]
-    card_palette_menu: bool,
+    pub(crate) card_palette_menu: bool,
     /// Whether message rows take a sideways swipe at all (#92, PR #135).
-    #[serde(default = "default_swipe_enabled")]
-    swipe_enabled: bool,
+    #[serde(default = "default_on")]
+    pub(crate) swipe_enabled: bool,
     /// Swap the message list's swipe-gesture sides: off (default) swipes
     /// left to delete and right to archive, on reverses them.
     #[serde(default)]
-    swipe_reversed: bool,
+    pub(crate) swipe_reversed: bool,
     /// How far a trackpad's two-finger swipe has to travel before a row
     /// commits (higher = shorter swipe). Trackpads differ enough that one
     /// fixed figure suits nobody, hence the knob; mouse and touchscreen
     /// drags follow the finger 1:1 and ignore this.
     #[serde(default = "default_swipe_sensitivity")]
-    swipe_sensitivity: f64,
+    pub(crate) swipe_sensitivity: f64,
     /// Whether "New message" opens inline over the reading pane (like a
     /// reply) rather than in its own window.
-    #[serde(default = "default_compose_inline")]
-    compose_inline: bool,
+    #[serde(default = "default_on")]
+    pub(crate) compose_inline: bool,
     /// Whether Reply, Reply All and Forward open in the reading pane (#86)
     /// rather than in a window of their own (#295).
-    #[serde(default = "default_compose_inline")]
-    reply_inline: bool,
+    #[serde(default = "default_on")]
+    pub(crate) reply_inline: bool,
     /// Whether the inline reply panel shows its From, To and Subject rows
     /// from the start (#154); off, a button in its header reveals them.
     #[serde(default)]
-    reply_fields: bool,
+    pub(crate) reply_fields: bool,
     /// The identity new messages are sent from (#157): an account's or
     /// alias's address, or empty for the account of the open folder (the
     /// original behaviour). Replies keep answering from the address the
     /// original was sent to, whatever this says.
     #[serde(default)]
-    compose_default_from: String,
+    pub(crate) compose_default_from: String,
     /// The inset-card default for lone messages (#57, #153) was applied
     /// once to installs that predate it. Set on the first load that did so.
     #[serde(default)]
-    single_card_default_applied: bool,
+    pub(crate) single_card_default_applied: bool,
     /// Whether pasting into the composer strips the clipboard's formatting
     /// (the default). Off, a paste keeps its formatting. The editor's context
     /// menu always offers both, whichever way this is set.
-    #[serde(default = "default_paste_plain")]
-    paste_plain: bool,
+    #[serde(default = "default_on")]
+    pub(crate) paste_plain: bool,
     /// Whether Return in the composer starts a new paragraph (a hard
     /// return) rather than breaking the line (the default). Shift+Return
     /// does whichever this does not.
     #[serde(default)]
-    return_paragraph: bool,
+    pub(crate) return_paragraph: bool,
     /// New messages start as plain text, without formatting (#180). Kept
     /// written so a version that predates `compose_format` still opens its
     /// composer the way this one was left.
     #[serde(default)]
-    compose_plain: bool,
+    pub(crate) compose_plain: bool,
     /// What new messages are written in: rich text, Markdown, HTML
     /// source, or plain text. Absent on installs that predate the choice,
     /// where `compose_plain` above still says which of the two it is.
     #[serde(default)]
-    compose_format: Option<ComposeFormat>,
+    pub(crate) compose_format: Option<ComposeFormat>,
     /// Where the split reply opens in the reading pane (#212).
     #[serde(default)]
-    reply_position: ReplyPosition,
+    pub(crate) reply_position: ReplyPosition,
     /// Where the signature sits in a reply or forward (#237): above the
     /// quoted original, or below it.
     #[serde(default)]
-    signature_position: SignaturePosition,
+    pub(crate) signature_position: SignaturePosition,
     /// Whether the signature follows a `-- ` line, the delimiter some mail
     /// programs use to dim a signature and leave it out of their quotes.
     /// Off by default, as in most mail programs today.
     #[serde(default)]
-    signature_dashes: bool,
+    pub(crate) signature_dashes: bool,
     /// Whether the composer underlines misspelled words as you type.
-    #[serde(default = "default_spellcheck")]
-    spellcheck: bool,
+    #[serde(default = "default_on")]
+    pub(crate) spellcheck: bool,
     /// Languages to check against, comma-separated (e.g. "en_US, de_DE").
     /// Empty = follow the session locale (WebKit's own default).
     #[serde(default)]
-    spellcheck_langs: String,
+    pub(crate) spellcheck_langs: String,
     /// Hovering the icon rail (narrow-window or user-collapsed) floats the
     /// full sidebar out over the panes without needing the expand button.
     #[serde(default)]
-    sidebar_hover_expand: bool,
+    pub(crate) sidebar_hover_expand: bool,
     /// Reopen with the accounts, folders and sections as they were left.
     /// Off starts every launch with everything folded up.
     #[serde(default = "default_on")]
-    remember_sidebar: bool,
+    pub(crate) remember_sidebar: bool,
     /// Reopen collapsed to the icon rail if that is how it was left. Off
     /// starts every launch with the full sidebar.
     #[serde(default = "default_on")]
-    remember_rail: bool,
+    pub(crate) remember_rail: bool,
     /// Icon rail: a dot for unread mail in place of the count. On by
     /// default, as are the fold-ups below.
     #[serde(default = "default_on")]
-    rail_dots: bool,
+    pub(crate) rail_dots: bool,
     /// Icon rail: the sections folded up by themselves when the sidebar
     /// collapses, one switch each.
     #[serde(default)]
-    rail_fold: RailFold,
+    pub(crate) rail_fold: RailFold,
     /// The app chrome's theme: follow the system, or force light/dark.
     #[serde(default)]
-    app_theme: AppTheme,
+    pub(crate) app_theme: AppTheme,
     /// The app's text size, in percent of the desktop's (#267).
     #[serde(default = "default_text_scale")]
-    text_scale: u32,
+    pub(crate) text_scale: u32,
     /// The appearance theme's id: a bundled palette (see `theme.rs`) painted
     /// over libadwaita's colors, or "system" for the stock GNOME look.
     /// Empty — a file written before themes existed — means the same.
     #[serde(default)]
-    theme: String,
+    pub(crate) theme: String,
     /// Lines of message text shown under the subject in the list: 0 turns the
     /// preview off entirely, and stops it being fetched.
     #[serde(default = "default_preview_lines")]
-    preview_lines: u32,
+    pub(crate) preview_lines: u32,
     /// Single-key shortcuts (j/k, r, a, d…) without a modifier. Off by default:
     /// a stray keystroke shouldn't archive mail for someone who never asked.
     #[serde(default)]
-    single_key_shortcuts: bool,
+    pub(crate) single_key_shortcuts: bool,
     /// Keep running after the window is closed, so new mail still arrives and
     /// notifies. Off by default: closing a window is expected to quit.
     #[serde(default)]
-    run_in_background: bool,
+    pub(crate) run_in_background: bool,
     /// Start at login (only meaningful with `run_in_background`).
     #[serde(default)]
-    autostart: bool,
+    pub(crate) autostart: bool,
     /// Publish a tray icon (StatusNotifierItem) for desktops that draw one
     /// (issue #116). Off by default: GNOME has no tray without an extension.
     #[serde(default)]
-    tray: bool,
+    pub(crate) tray: bool,
     /// Which icon the tray item shows.
     #[serde(default)]
-    tray_icon: TrayIcon,
+    pub(crate) tray_icon: TrayIcon,
     /// Whether the tray menu lists unread inbox mail, each a row that opens
     /// the message.
-    #[serde(default = "default_tray_mail")]
-    tray_mail: bool,
+    #[serde(default = "default_on")]
+    pub(crate) tray_mail: bool,
     /// Whether the launcher icon in a dock or task manager shows the unread
     /// count (#271).
-    #[serde(default = "default_launcher_count")]
-    launcher_count: bool,
+    #[serde(default = "default_on")]
+    pub(crate) launcher_count: bool,
     /// Whether to say anything at all when remote content is blocked. Off hides
     /// the banner; it never changes what is blocked, only whether you're told.
-    #[serde(default = "default_show_remote_banner")]
-    show_remote_banner: bool,
+    #[serde(default = "default_on")]
+    pub(crate) show_remote_banner: bool,
     /// Whether a "Check this sender" verdict (the addressing points somewhere
     /// the From: line doesn't) puts the red banner over the message. The badge
     /// still shows the verdict, and a failed check always gets the banner.
-    #[serde(default = "default_show_spoof_banner")]
-    show_spoof_banner: bool,
+    #[serde(default = "default_on")]
+    pub(crate) show_spoof_banner: bool,
     /// Whether the sidebar offers the unified "All Inboxes" section at all
     /// (it only ever appears with more than one enabled account).
-    #[serde(default = "default_show_unified")]
-    show_unified: bool,
+    #[serde(default = "default_on")]
+    pub(crate) show_unified: bool,
     /// The old single switch for All Inboxes' unread chip, kept so a file
     /// written before `unified_chips` still reads as it was set.
-    #[serde(default = "default_unified_chip")]
-    unified_chip: bool,
+    #[serde(default = "default_on")]
+    pub(crate) unified_chip: bool,
     /// Which unified rows wear their total-unread chip while folded up
     /// (expanded, the rows beneath carry the counts and the total is never
     /// shown). One switch per row: All Inboxes, Starred, Drafts, Archive,
     /// Filtered Folders. Sent never counts.
     #[serde(default)]
-    unified_chips: UnifiedChips,
+    pub(crate) unified_chips: UnifiedChips,
     /// Whether the unified section lists the folders that filter rules file
     /// into, in a Filtered Folders section of its own. Off hides the section.
-    #[serde(default = "default_unified_filtered")]
-    unified_filtered: bool,
+    #[serde(default = "default_on")]
+    pub(crate) unified_filtered: bool,
     /// The unified section's Starred / Sent / Drafts rows, one switch each
     /// (All Inboxes is `show_unified` above).
     #[serde(default)]
-    unified_kinds: UnifiedKinds,
+    pub(crate) unified_kinds: UnifiedKinds,
     /// Whether the unified section lists the tags (every account's mail with
     /// the tag). Off hides that section; each account keeps its own.
     #[serde(default = "default_on")]
-    unified_tags: bool,
+    pub(crate) unified_tags: bool,
     /// Whether the account sections are shown at all. Off leaves the unified
     /// section alone, for those who only ever work from it.
     #[serde(default = "default_on")]
-    show_accounts: bool,
+    pub(crate) show_accounts: bool,
     /// Where the Filtered Folders section sits (#71 follow-up): inside All
     /// Inboxes, or in the scrolling sidebar above or below the accounts.
     #[serde(default)]
-    filtered_placement: SectionPlacement,
+    pub(crate) filtered_placement: SectionPlacement,
     /// Where the Tags section sits, the same three choices.
     #[serde(default)]
-    tags_placement: SectionPlacement,
+    pub(crate) tags_placement: SectionPlacement,
     /// Whether the sidebar's disclosure chevrons (All Inboxes, account
     /// headers) LEAD their rows; off puts them back at the row's end.
     #[serde(default = "default_chevrons_left")]
-    chevrons_left: bool,
+    pub(crate) chevrons_left: bool,
     /// Console mode (#status-bar): the verbose activity console is offered in
     /// the status bar. Off by default.
     #[serde(default)]
-    console_mode: bool,
+    pub(crate) console_mode: bool,
     /// Read-marking policy (#100).
     #[serde(default)]
-    read_mark: ReadMark,
+    pub(crate) read_mark: ReadMark,
     /// GNOME Files hand-off (#188 follow-up): what the files open into,
     /// what happens over the size limit, and the limit itself in MB.
     #[serde(default)]
-    files_action: FilesAction,
+    pub(crate) files_action: FilesAction,
     #[serde(default)]
-    files_large: FilesLarge,
+    pub(crate) files_large: FilesLarge,
     #[serde(default = "default_files_limit_mb")]
-    files_limit_mb: u32,
+    pub(crate) files_limit_mb: u32,
     /// Which browser a link in a message opens in (#232). Empty = whatever
     /// the desktop opens links with; `"ask"` = the system's app chooser,
     /// every time; anything else is a desktop entry id
     /// ("brave-browser.desktop") launched directly.
     #[serde(default)]
-    link_browser: String,
+    pub(crate) link_browser: String,
     /// What the main window shows at launch (#256).
     #[serde(default)]
-    start_view: StartView,
+    pub(crate) start_view: StartView,
     /// How accounts' folders are sorted, unless an account chooses.
     #[serde(default)]
-    folder_sort: FolderSort,
+    pub(crate) folder_sort: FolderSort,
 }
 
 fn default_chevrons_left() -> bool {
@@ -1401,29 +1398,14 @@ fn default_chevrons_left() -> bool {
     false
 }
 
-fn default_show_unified() -> bool {
-    true
-}
 
-fn default_unified_chip() -> bool {
-    true
-}
 
-fn default_unified_filtered() -> bool {
-    true
-}
 
 fn default_fetch_interval() -> u64 {
     300
 }
 
-fn default_push() -> bool {
-    true
-}
 
-fn default_threading() -> bool {
-    true
-}
 
 fn default_thread_expansion() -> bool {
     // Off for new installs (2026-08-30): conversations expand in the reading
@@ -1433,17 +1415,8 @@ fn default_thread_expansion() -> bool {
     false
 }
 
-fn default_card_attachments() -> bool {
-    true
-}
 
-fn default_attachment_drawer() -> bool {
-    true
-}
 
-fn default_reader_switch() -> bool {
-    true
-}
 
 fn default_single_message_card() -> bool {
     // On for new installs (Jason, 2026-08-31): lone messages get the same
@@ -1453,49 +1426,22 @@ fn default_single_message_card() -> bool {
     true
 }
 
-fn default_confirm_thread_delete() -> bool {
-    true
-}
 
-fn default_list_palette() -> bool {
-    true
-}
 
-fn default_show_remote_banner() -> bool {
-    true
-}
 
-fn default_show_spoof_banner() -> bool {
-    true
-}
 
 fn default_palette_collapse() -> u64 {
     5
 }
 
-fn default_notification_content() -> bool {
-    true
-}
 
 fn default_notification_buttons() -> Vec<String> {
     NotificationButtons::default().to_list()
 }
 
-fn default_notifications() -> bool {
-    true
-}
 
-fn default_show_contacts() -> bool {
-    true
-}
 
-fn default_show_attachments() -> bool {
-    true
-}
 
-fn default_card_actions_hover() -> bool {
-    true
-}
 
 fn default_card_actions_auto() -> bool {
     // Off for new installs (2026-08-30): card actions wait behind the ⋯
@@ -1503,41 +1449,26 @@ fn default_card_actions_auto() -> bool {
     false
 }
 
-fn default_paste_plain() -> bool {
-    true
-}
 
-fn default_spellcheck() -> bool {
-    true
-}
 
-fn default_compose_inline() -> bool {
-    true
-}
 
 fn default_preview_lines() -> u32 {
     1
 }
 
-fn default_own_mailbox_face() -> bool {
-    true
-}
 
-fn default_avatars() -> bool {
-    true
-}
 
 impl Default for PrivacyFile {
     fn default() -> Self {
         Self {
             allowed_senders: Vec::new(),
             auto_remote_content: false,
-            show_remote_banner: default_show_remote_banner(),
-            show_spoof_banner: default_show_spoof_banner(),
-            show_unified: default_show_unified(),
-            unified_chip: default_unified_chip(),
+            show_remote_banner: true,
+            show_spoof_banner: true,
+            show_unified: true,
+            unified_chip: true,
             unified_chips: UnifiedChips::default(),
-            unified_filtered: default_unified_filtered(),
+            unified_filtered: true,
             unified_kinds: UnifiedKinds::default(),
             unified_tags: true,
             show_accounts: true,
@@ -1553,17 +1484,17 @@ impl Default for PrivacyFile {
             start_view: StartView::default(),
             folder_sort: FolderSort::default(),
             gravatar: false,
-            avatars: default_avatars(),
-            own_mailbox_face: default_own_mailbox_face(),
+            avatars: true,
+            own_mailbox_face: true,
             sender_logos: false,
             date_style: DateStyle::default(),
             clock_style: ClockStyle::default(),
             fetch_interval_secs: default_fetch_interval(),
-            push: default_push(),
+            push: true,
             blacklist: Vec::new(),
             palette_collapse_secs: default_palette_collapse(),
             card_palette_collapse_secs: default_palette_collapse(),
-            threading: default_threading(),
+            threading: true,
             threads_expanded: false,
             thread_expansion: default_thread_expansion(),
             thread_row_newest: false,
@@ -1571,45 +1502,45 @@ impl Default for PrivacyFile {
             always_show_recipients: false,
             single_message_card: default_single_message_card(),
             reader_mode: false,
-            reader_switch: default_reader_switch(),
+            reader_switch: true,
             reader_default: ReaderDefault::default(),
             reader_zoom: default_reader_zoom(),
-            card_attachments: default_card_attachments(),
-            attachment_drawer: default_attachment_drawer(),
-            confirm_thread_delete: default_confirm_thread_delete(),
+            card_attachments: true,
+            attachment_drawer: true,
+            confirm_thread_delete: true,
             message_theme: MessageTheme::default(),
             override_fonts: false,
             reader_font: String::new(),
             override_colors: false,
             plain_monospace: false,
             plain_font: String::new(),
-            notifications: default_notifications(),
-            notification_content: default_notification_content(),
+            notifications: true,
+            notification_content: true,
             notification_buttons: default_notification_buttons(),
-            show_attachments: default_show_attachments(),
-            show_contacts: default_show_contacts(),
+            show_attachments: true,
+            show_contacts: true,
             settings_open_accounts: false,
-            card_actions_hover: default_card_actions_hover(),
+            card_actions_hover: true,
             card_actions_auto: default_card_actions_auto(),
-            list_palette: default_list_palette(),
+            list_palette: true,
             list_palette_hover: false,
             card_palette_menu: false,
-            swipe_enabled: default_swipe_enabled(),
+            swipe_enabled: true,
             swipe_reversed: false,
             swipe_sensitivity: default_swipe_sensitivity(),
-            compose_inline: default_compose_inline(),
-            reply_inline: default_compose_inline(),
+            compose_inline: true,
+            reply_inline: true,
             reply_fields: false,
             compose_default_from: String::new(),
             single_card_default_applied: false,
-            paste_plain: default_paste_plain(),
+            paste_plain: true,
             return_paragraph: false,
             compose_plain: false,
             compose_format: None,
             reply_position: ReplyPosition::default(),
             signature_position: SignaturePosition::default(),
             signature_dashes: false,
-            spellcheck: default_spellcheck(),
+            spellcheck: true,
             spellcheck_langs: String::new(),
             sidebar_hover_expand: false,
             remember_sidebar: true,
@@ -1625,8 +1556,8 @@ impl Default for PrivacyFile {
             autostart: false,
             tray: false,
             tray_icon: TrayIcon::default(),
-            tray_mail: default_tray_mail(),
-            launcher_count: default_launcher_count(),
+            tray_mail: true,
+            launcher_count: true,
         }
     }
 }
@@ -1635,7 +1566,7 @@ fn privacy_path() -> Option<PathBuf> {
     Some(config_base()?.join("hylki").join("privacy.toml"))
 }
 
-fn load_privacy() -> PrivacyFile {
+pub(crate) fn load_privacy() -> PrivacyFile {
     let Some(path) = privacy_path() else {
         return PrivacyFile::default();
     };
@@ -1657,53 +1588,15 @@ fn load_privacy() -> PrivacyFile {
     file
 }
 
-/// Whether the inline reply panel shows From, To and Subject from the start (#154).
-pub fn load_reply_fields() -> bool {
-    load_privacy().reply_fields
-}
 
-/// The address new messages are sent from; empty = the open folder's account.
-pub fn load_compose_default_from() -> String {
-    load_privacy().compose_default_from
-}
 
-/// Senders whose messages may auto-load remote content. Stored lowercased.
-pub fn load_allowed_senders() -> Vec<String> {
-    load_privacy().allowed_senders
-}
 
-/// Whether remote content is auto-loaded for every new message.
-pub fn load_auto_remote_content() -> bool {
-    load_privacy().auto_remote_content
-}
 
-pub fn load_show_remote_banner() -> bool {
-    load_privacy().show_remote_banner
-}
 
-pub fn load_show_spoof_banner() -> bool {
-    load_privacy().show_spoof_banner
-}
 
-/// Whether Gravatar avatar loading is enabled.
-pub fn load_gravatar() -> bool {
-    load_privacy().gravatar
-}
 
-/// Whether the avatars are shown in the list and the reader.
-pub fn load_avatars() -> bool {
-    load_privacy().avatars
-}
 
-/// Whether your own messages wear their mailbox's face (#189).
-pub fn load_own_mailbox_face() -> bool {
-    load_privacy().own_mailbox_face
-}
 
-/// Whether sender logos are fetched from senders' own domains.
-pub fn load_sender_logos() -> bool {
-    load_privacy().sender_logos
-}
 
 /// How dates are written, and on what clock.
 pub fn load_date_format() -> (DateStyle, ClockStyle) {
@@ -1711,55 +1604,15 @@ pub fn load_date_format() -> (DateStyle, ClockStyle) {
     (p.date_style, p.clock_style)
 }
 
-/// Seconds between automatic mail checks (0 = manual only).
-pub fn load_fetch_interval() -> u64 {
-    load_privacy().fetch_interval_secs
-}
 
-/// Whether IMAP IDLE push is enabled.
-pub fn load_push() -> bool {
-    load_privacy().push
-}
 
-/// Senders/domains whose incoming mail is auto-deleted. Stored lowercased.
-pub fn load_blacklist() -> Vec<String> {
-    load_privacy().blacklist
-}
 
-/// Seconds the message list's actions palette stays open after the cursor
-/// leaves it.
-pub fn load_palette_collapse() -> u64 {
-    load_privacy().palette_collapse_secs
-}
 
-/// Seconds a message card's actions palette stays open after the cursor
-/// leaves it.
-pub fn load_card_palette_collapse() -> u64 {
-    load_privacy().card_palette_collapse_secs
-}
 
-/// Whether messages are grouped into conversation threads.
-pub fn load_threading() -> bool {
-    load_privacy().threading
-}
 
-/// Whether conversation threads start expanded (collapsed by default).
-pub fn load_threads_expanded() -> bool {
-    load_privacy().threads_expanded
-}
 
-/// Whether conversation rows can expand into their members in the list.
-pub fn load_thread_newest_first() -> bool {
-    load_privacy().thread_newest_first
-}
 
-pub fn load_always_show_recipients() -> bool {
-    load_privacy().always_show_recipients
-}
 
-pub fn load_show_unified() -> bool {
-    load_privacy().show_unified
-}
 
 /// The unified rows' unread-chip switches. A file from before the
 /// per-row switches carried one switch, for All Inboxes; it still counts.
@@ -1770,21 +1623,9 @@ pub fn load_unified_chips() -> UnifiedChips {
     chips
 }
 
-pub fn load_unified_filtered() -> bool {
-    load_privacy().unified_filtered
-}
 
-pub fn load_unified_kinds() -> UnifiedKinds {
-    load_privacy().unified_kinds
-}
 
-pub fn load_unified_tags() -> bool {
-    load_privacy().unified_tags
-}
 
-pub fn load_show_accounts() -> bool {
-    load_privacy().show_accounts
-}
 
 /// Which of the unified section's folder rows are shown besides All
 /// Inboxes: each combines that folder across every account, and opens to
@@ -1872,13 +1713,7 @@ impl UnifiedKinds {
     }
 }
 
-pub fn load_filtered_placement() -> SectionPlacement {
-    load_privacy().filtered_placement
-}
 
-pub fn load_tags_placement() -> SectionPlacement {
-    load_privacy().tags_placement
-}
 
 /// Where a sidebar section (Filtered Folders, Tags) is drawn.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
@@ -1945,21 +1780,9 @@ impl FolderSort {
     }
 }
 
-pub fn load_folder_sort() -> FolderSort {
-    load_privacy().folder_sort
-}
 
-pub fn load_start_view() -> StartView {
-    load_privacy().start_view
-}
 
-pub fn load_chevrons_left() -> bool {
-    load_privacy().chevrons_left
-}
 
-pub fn load_console_mode() -> bool {
-    load_privacy().console_mode
-}
 
 /// When an opened message is marked read (#100).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
@@ -1974,9 +1797,6 @@ pub enum ReadMark {
     Manual,
 }
 
-pub fn load_read_mark() -> ReadMark {
-    load_privacy().read_mark
-}
 
 /// What a hand-off of files from GNOME Files ("Send with Hylki", "Open
 /// With Hylki", "Email…") opens them into.
@@ -2034,10 +1854,6 @@ fn default_files_limit_mb() -> u32 {
     20
 }
 
-/// Which browser links open in (#232): see `PrivacyFile::link_browser`.
-pub fn load_link_browser() -> String {
-    load_privacy().link_browser
-}
 
 pub fn load_files_prefs() -> FilesPrefs {
     let f = load_privacy();
@@ -2597,21 +2413,9 @@ pub fn import_bundle(text: &str) -> Result<usize, String> {
     Ok(bundle.accounts.len())
 }
 
-pub fn load_single_message_card() -> bool {
-    load_privacy().single_message_card
-}
 
-pub fn load_reader_mode() -> bool {
-    load_privacy().reader_mode
-}
 
-pub fn load_reader_switch() -> bool {
-    load_privacy().reader_switch
-}
 
-pub fn load_reader_default() -> ReaderDefault {
-    load_privacy().reader_default
-}
 
 /// The zoom steps Ctrl+ and Ctrl- walk, and Settings offers, in percent.
 pub const READER_ZOOM_STEPS: [u32; 12] = [50, 60, 70, 80, 90, 100, 110, 125, 150, 175, 200, 250];
@@ -2654,33 +2458,11 @@ impl ReaderDefault {
     }
 }
 
-pub fn load_card_attachments() -> bool {
-    load_privacy().card_attachments
-}
 
-pub fn load_attachment_drawer() -> bool {
-    load_privacy().attachment_drawer
-}
 
-pub fn load_thread_expansion() -> bool {
-    load_privacy().thread_expansion
-}
 
-/// Whether a conversation's row says who spoke last across the whole account,
-/// the replies you sent included (#236).
-pub fn load_thread_row_newest() -> bool {
-    load_privacy().thread_row_newest
-}
 
-/// Whether deleting a whole selected conversation asks for confirmation.
-pub fn load_confirm_thread_delete() -> bool {
-    load_privacy().confirm_thread_delete
-}
 
-/// How email message content is themed.
-pub fn load_message_theme() -> MessageTheme {
-    load_privacy().message_theme
-}
 
 /// The three reader-override preferences (#56): font switch, font, color switch.
 pub fn load_reader_override() -> (bool, String, bool) {
@@ -2727,9 +2509,6 @@ pub enum ReplyPosition {
     Follow,
 }
 
-pub fn load_reply_position() -> ReplyPosition {
-    load_privacy().reply_position
-}
 
 /// Where the signature goes in a reply or forward (#237). Above the quoted
 /// original is what Apple Mail and Thunderbird do, and what a reader
@@ -2743,14 +2522,7 @@ pub enum SignaturePosition {
     BelowQuote,
 }
 
-pub fn load_signature_position() -> SignaturePosition {
-    load_privacy().signature_position
-}
 
-/// Whether the composer puts a `-- ` line above the signature.
-pub fn load_signature_dashes() -> bool {
-    load_privacy().signature_dashes
-}
 
 /// What new messages start out as, falling back to the plain-text
 /// switch this setting replaced (#180).
@@ -2763,15 +2535,7 @@ pub fn load_compose_format() -> ComposeFormat {
     })
 }
 
-/// Whether desktop notifications (new mail, error alerts) are enabled.
-pub fn load_notifications() -> bool {
-    load_privacy().notifications
-}
 
-/// Whether new-mail notifications may name the sender and subject.
-pub fn load_notification_content() -> bool {
-    load_privacy().notification_content
-}
 
 /// One of the action buttons a new-mail notification can carry (#244).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -2887,7 +2651,7 @@ impl NotificationButtons {
         b
     }
 
-    fn to_list(self) -> Vec<String> {
+    pub(crate) fn to_list(self) -> Vec<String> {
         NotificationButton::ALL
             .into_iter()
             .filter(|b| self.get(*b))
@@ -2901,59 +2665,16 @@ pub fn load_notification_buttons() -> NotificationButtons {
     NotificationButtons::from_list(&load_privacy().notification_buttons)
 }
 
-/// Whether the sidebar shows the "Attachments" row.
-pub fn load_show_attachments() -> bool {
-    load_privacy().show_attachments
-}
 
-pub fn load_show_contacts() -> bool {
-    load_privacy().show_contacts
-}
 
-/// Whether the settings window opens on the Accounts view (vs Preferences).
-pub fn load_settings_open_accounts() -> bool {
-    load_privacy().settings_open_accounts
-}
 
-/// Whether conversation card actions hide until hovered.
-pub fn load_card_actions_hover() -> bool {
-    load_privacy().card_actions_hover
-}
 
-/// With the ⋯ toggle off: whether card actions appear automatically on hover.
-pub fn load_card_actions_auto() -> bool {
-    load_privacy().card_actions_auto
-}
 
-/// Whether the message list rows carry an actions palette at all.
-pub fn load_list_palette() -> bool {
-    load_privacy().list_palette
-}
 
-/// Whether the list's actions palette opens on row hover (no ⋯ click).
-pub fn load_list_palette_hover() -> bool {
-    load_privacy().list_palette_hover
-}
 
-/// Whether a message card's ⋯ opens the card menu instead of sliding its
-/// actions palette out.
-pub fn load_card_palette_menu() -> bool {
-    load_privacy().card_palette_menu
-}
 
-fn default_swipe_enabled() -> bool {
-    true
-}
 
-/// Whether message rows take a sideways swipe (archive / delete).
-pub fn load_swipe_enabled() -> bool {
-    load_privacy().swipe_enabled
-}
 
-/// Whether the message list's swipe-gesture sides are swapped.
-pub fn load_swipe_reversed() -> bool {
-    load_privacy().swipe_reversed
-}
 
 /// The narrowest and widest trackpad swipe sensitivity the setting offers,
 /// also the clamp a hand-edited file is held to (0 would divide by zero).
@@ -2976,55 +2697,16 @@ pub fn load_swipe_sensitivity() -> f64 {
         .clamp(SWIPE_SENSITIVITY_MIN, SWIPE_SENSITIVITY_MAX)
 }
 
-/// Whether "New message" composes inline over the reading pane.
-pub fn load_compose_inline() -> bool {
-    load_privacy().compose_inline
-}
 
-/// Whether a reply or a forward opens in the reading pane.
-pub fn load_reply_inline() -> bool {
-    load_privacy().reply_inline
-}
 
-/// Whether pasting into the composer strips the clipboard's formatting.
-pub fn load_paste_plain() -> bool {
-    load_privacy().paste_plain
-}
 
-/// Whether Return in the composer starts a new paragraph rather than a line.
-pub fn load_return_paragraph() -> bool {
-    load_privacy().return_paragraph
-}
 
-/// Whether the composer checks spelling as you type.
-pub fn load_spellcheck() -> bool {
-    load_privacy().spellcheck
-}
 
-/// The configured spell-checking languages (comma-separated; empty = locale).
-pub fn load_spellcheck_langs() -> String {
-    load_privacy().spellcheck_langs
-}
 
-pub fn load_sidebar_hover_expand() -> bool {
-    load_privacy().sidebar_hover_expand
-}
 
-pub fn load_remember_sidebar() -> bool {
-    load_privacy().remember_sidebar
-}
 
-pub fn load_remember_rail() -> bool {
-    load_privacy().remember_rail
-}
 
-pub fn load_rail_dots() -> bool {
-    load_privacy().rail_dots
-}
 
-pub fn load_rail_fold() -> RailFold {
-    load_privacy().rail_fold
-}
 
 /// "Fold up expanded items" (Settings → Sidebar → Icon rail): while the
 /// sidebar is collapsed to its icon rail, the items ticked here show folded
@@ -3109,9 +2791,6 @@ impl RailFold {
     }
 }
 
-pub fn load_app_theme() -> AppTheme {
-    load_privacy().app_theme
-}
 
 fn default_text_scale() -> u32 {
     100
@@ -3140,15 +2819,7 @@ pub fn load_preview_lines() -> u32 {
     load_privacy().preview_lines.min(3)
 }
 
-/// Whether single-key (modifier-free) shortcuts are enabled.
-pub fn load_single_key_shortcuts() -> bool {
-    load_privacy().single_key_shortcuts
-}
 
-/// Whether Hylki keeps running once its window is closed.
-pub fn load_run_in_background() -> bool {
-    load_privacy().run_in_background
-}
 
 /// Whether Hylki starts at login (background running only).
 pub fn load_autostart() -> bool {
@@ -3156,237 +2827,20 @@ pub fn load_autostart() -> bool {
     p.run_in_background && p.autostart
 }
 
-/// Whether Hylki publishes a tray icon.
-pub fn load_tray() -> bool {
-    load_privacy().tray
-}
 
-/// Which icon the tray item shows.
-pub fn load_tray_icon() -> TrayIcon {
-    load_privacy().tray_icon
-}
 
-fn default_tray_mail() -> bool {
-    true
-}
 
-/// Whether the tray menu lists unread inbox mail.
-pub fn load_tray_mail() -> bool {
-    load_privacy().tray_mail
-}
 
-fn default_launcher_count() -> bool {
-    true
-}
 
-/// Whether the launcher icon shows the unread count.
-pub fn load_launcher_count() -> bool {
-    load_privacy().launcher_count
-}
 
 /// Persist all app settings together (so no field is clobbered).
-#[allow(clippy::too_many_arguments)]
-pub fn save_privacy(
-    senders: &[String],
-    auto_remote_content: bool,
-    gravatar: bool,
-    avatars: bool,
-    own_mailbox_face: bool,
-    sender_logos: bool,
-    date_style: DateStyle,
-    clock_style: ClockStyle,
-    fetch_interval_secs: u64,
-    push: bool,
-    blacklist: &[String],
-    palette_collapse_secs: u64,
-    card_palette_collapse_secs: u64,
-    threading: bool,
-    threads_expanded: bool,
-    thread_expansion: bool,
-    thread_row_newest: bool,
-    thread_newest_first: bool,
-    always_show_recipients: bool,
-    single_message_card: bool,
-    reader_mode: bool,
-    reader_switch: bool,
-    reader_default: ReaderDefault,
-    reader_zoom: u32,
-    card_attachments: bool,
-    attachment_drawer: bool,
-    confirm_thread_delete: bool,
-    message_theme: MessageTheme,
-    override_fonts: bool,
-    reader_font: String,
-    override_colors: bool,
-    plain_monospace: bool,
-    plain_font: String,
-    notifications: bool,
-    notification_content: bool,
-    notification_buttons: NotificationButtons,
-    show_attachments: bool,
-    show_contacts: bool,
-    settings_open_accounts: bool,
-    card_actions_hover: bool,
-    card_actions_auto: bool,
-    list_palette: bool,
-    list_palette_hover: bool,
-    card_palette_menu: bool,
-    swipe_enabled: bool,
-    swipe_reversed: bool,
-    swipe_sensitivity: f64,
-    compose_inline: bool,
-    reply_inline: bool,
-    reply_fields: bool,
-    compose_default_from: &str,
-    paste_plain: bool,
-    return_paragraph: bool,
-    compose_format: ComposeFormat,
-    reply_position: ReplyPosition,
-    signature_position: SignaturePosition,
-    signature_dashes: bool,
-    spellcheck: bool,
-    spellcheck_langs: String,
-    preview_lines: u32,
-    single_key_shortcuts: bool,
-    run_in_background: bool,
-    autostart: bool,
-    tray: bool,
-    tray_icon: TrayIcon,
-    tray_mail: bool,
-    launcher_count: bool,
-    show_remote_banner: bool,
-    show_spoof_banner: bool,
-    sidebar_hover_expand: bool,
-    remember_sidebar: bool,
-    remember_rail: bool,
-    rail_dots: bool,
-    rail_fold: RailFold,
-    app_theme: AppTheme,
-    text_scale: u32,
-    theme: String,
-    show_unified: bool,
-    unified_chips: UnifiedChips,
-    unified_filtered: bool,
-    unified_kinds: UnifiedKinds,
-    unified_tags: bool,
-    show_accounts: bool,
-    filtered_placement: SectionPlacement,
-    tags_placement: SectionPlacement,
-    chevrons_left: bool,
-    console_mode: bool,
-    read_mark: ReadMark,
-    files: FilesPrefs,
-    link_browser: String,
-    start_view: StartView,
-    folder_sort: FolderSort,
-) {
+pub fn save_privacy(file: PrivacyFile) {
     let Some(path) = privacy_path() else {
         return;
     };
     if let Some(dir) = path.parent() {
         let _ = std::fs::create_dir_all(dir);
     }
-    let file = PrivacyFile {
-        allowed_senders: senders.to_vec(),
-        auto_remote_content,
-        gravatar,
-        avatars,
-        own_mailbox_face,
-        sender_logos,
-        date_style,
-        clock_style,
-        fetch_interval_secs,
-        push,
-        blacklist: blacklist.to_vec(),
-        palette_collapse_secs,
-        card_palette_collapse_secs,
-        threading,
-        threads_expanded,
-        thread_expansion,
-        thread_row_newest,
-        thread_newest_first,
-        always_show_recipients,
-        single_message_card,
-        reader_mode,
-        reader_switch,
-        reader_default,
-        reader_zoom,
-        card_attachments,
-        attachment_drawer,
-        confirm_thread_delete,
-        message_theme,
-        override_fonts,
-        reader_font,
-        override_colors,
-        plain_monospace,
-        plain_font,
-        notifications,
-        notification_content,
-        notification_buttons: notification_buttons.to_list(),
-        show_attachments,
-        show_contacts,
-        settings_open_accounts,
-        card_actions_hover,
-        card_actions_auto,
-        list_palette,
-        list_palette_hover,
-        card_palette_menu,
-        swipe_enabled,
-        swipe_reversed,
-        swipe_sensitivity,
-        compose_inline,
-        reply_inline,
-        reply_fields,
-        compose_default_from: compose_default_from.to_string(),
-        paste_plain,
-        return_paragraph,
-        // Both are written: the boolean is what an older version reads.
-        compose_plain: compose_format == ComposeFormat::Plain,
-        compose_format: Some(compose_format),
-        reply_position,
-        signature_position,
-        signature_dashes,
-        spellcheck,
-        // Every save is after the first load, which applied it.
-        single_card_default_applied: true,
-        spellcheck_langs,
-        preview_lines,
-        single_key_shortcuts,
-        run_in_background,
-        autostart,
-        tray,
-        tray_icon,
-        tray_mail,
-        launcher_count,
-        show_remote_banner,
-        show_spoof_banner,
-        sidebar_hover_expand,
-        remember_sidebar,
-        remember_rail,
-        rail_dots,
-        rail_fold,
-        app_theme,
-        text_scale,
-        theme,
-        show_unified,
-        unified_chip: unified_chips.all_inboxes,
-        unified_chips,
-        unified_filtered,
-        unified_kinds,
-        unified_tags,
-        show_accounts,
-        filtered_placement,
-        tags_placement,
-        chevrons_left,
-        console_mode,
-        read_mark,
-        files_action: files.action,
-        files_large: files.large,
-        files_limit_mb: files.limit_mb,
-        link_browser,
-        start_view,
-        folder_sort,
-    };
     match toml::to_string_pretty(&file) {
         Ok(toml) => {
             if let Err(e) = write_private(&path, &toml) {
@@ -3728,6 +3182,13 @@ fn load_state() -> StateFile {
         .unwrap_or_default()
 }
 
+/// Change one thing in state.toml.
+fn update_state(change: impl FnOnce(&mut StateFile)) {
+    let mut s = load_state();
+    change(&mut s);
+    save_state(&s);
+}
+
 fn save_state(state: &StateFile) {
     let Some(path) = state_path() else {
         return;
@@ -3807,24 +3268,11 @@ pub fn load_app_icon_generation() -> u32 {
 }
 
 pub fn save_app_icon_generation(generation: u32) {
-    let mut s = load_state();
-    s.app_icon_generation = generation;
-    save_state(&s);
+    update_state(|s| s.app_icon_generation = generation);
 }
 
 pub fn save_app_icon(id: &str) {
-    let mut s = load_state();
-    s.app_icon = Some(id.to_string());
-    save_state(&s);
-}
-
-/// Whether this install has any settings on disk at all — how a build that
-/// changes a default tells an existing install from a fresh one.
-pub fn settings_on_disk() -> bool {
-    let Some(dir) = config_base().map(|b| b.join("hylki")) else { return false };
-    ["accounts.toml", "privacy.toml", "state.toml", "sidebar.toml", "window.toml"]
-        .iter()
-        .any(|f| dir.join(f).exists())
+    update_state(|s| s.app_icon = Some(id.to_string()));
 }
 
 /// Whether the one-time Mint keyring setup tip has already been dismissed.
@@ -3913,30 +3361,22 @@ pub fn save_fetch_mode(email: &str, use_envelope: bool, previews_rejected: bool)
 }
 
 pub fn save_drawer_collapsed(collapsed: bool) {
-    let mut s = load_state();
-    s.drawer_collapsed = collapsed;
-    save_state(&s);
+    update_state(|s| s.drawer_collapsed = collapsed);
 }
 
 /// Persist the attachment drawer's expanded (dragged) height.
 pub fn save_drawer_height(height: i32) {
-    let mut s = load_state();
-    s.drawer_height = height.clamp(96, 4000);
-    save_state(&s);
+    update_state(|s| s.drawer_height = height.clamp(96, 4000));
 }
 
 /// Persist the attachment drawer's view mode (list vs. thumbnail grid).
 pub fn save_drawer_list_view(list_view: bool) {
-    let mut s = load_state();
-    s.drawer_list_view = list_view;
-    save_state(&s);
+    update_state(|s| s.drawer_list_view = list_view);
 }
 
 /// Persist the attachment drawer's list sort direction.
 pub fn save_drawer_sort_desc(desc: bool) {
-    let mut s = load_state();
-    s.drawer_sort_desc = desc;
-    save_state(&s);
+    update_state(|s| s.drawer_sort_desc = desc);
 }
 
 /// The attachments gallery's remembered view settings:
@@ -3952,23 +3392,17 @@ pub fn load_gallery_view() -> (bool, i32, u32) {
 
 /// Persist whether the attachments gallery shows the table view.
 pub fn save_gallery_table_view(table: bool) {
-    let mut s = load_state();
-    s.gallery_table_view = table;
-    save_state(&s);
+    update_state(|s| s.gallery_table_view = table);
 }
 
 /// Persist the attachments gallery's thumbnail width.
 pub fn save_gallery_thumb_width(width: i32) {
-    let mut s = load_state();
-    s.gallery_thumb_width = width;
-    save_state(&s);
+    update_state(|s| s.gallery_thumb_width = width);
 }
 
 /// Persist the attachments gallery's sort criterion (dropdown row index).
 pub fn save_gallery_sort(sort: u32) {
-    let mut s = load_state();
-    s.gallery_sort = sort;
-    save_state(&s);
+    update_state(|s| s.gallery_sort = sort);
 }
 
 /// One per-folder gallery override as it is stored: "<account id>\t<path>\t<0|1>".
@@ -4024,9 +3458,7 @@ pub fn load_split_reply_height() -> i32 {
 }
 
 pub fn save_split_reply_height(height: i32) {
-    let mut s = load_state();
-    s.split_reply_height = height.clamp(220, 4000);
-    save_state(&s);
+    update_state(|s| s.split_reply_height = height.clamp(220, 4000));
 }
 
 pub fn load_about_height() -> i32 {
@@ -4034,9 +3466,7 @@ pub fn load_about_height() -> i32 {
 }
 
 pub fn save_about_height(height: i32) {
-    let mut s = load_state();
-    s.about_height = height.clamp(400, 4000);
-    save_state(&s);
+    update_state(|s| s.about_height = height.clamp(400, 4000));
 }
 
 /// The message-list pane's remembered width (clamped to something sane).
@@ -4046,9 +3476,7 @@ pub fn load_list_pane_width() -> i32 {
 
 /// Persist the message-list pane's width (#28).
 pub fn save_list_pane_width(width: i32) {
-    let mut s = load_state();
-    s.list_pane_width = width.clamp(324, 4000);
-    save_state(&s);
+    update_state(|s| s.list_pane_width = width.clamp(324, 4000));
 }
 
 /// The contacts view's remembered list-pane width (280 is also its floor).
@@ -4057,9 +3485,7 @@ pub fn load_contacts_pane_width() -> i32 {
 }
 
 pub fn save_contacts_pane_width(width: i32) {
-    let mut s = load_state();
-    s.contacts_pane_width = width.clamp(280, 4000);
-    save_state(&s);
+    update_state(|s| s.contacts_pane_width = width.clamp(280, 4000));
 }
 
 

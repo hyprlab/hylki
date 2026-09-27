@@ -275,7 +275,7 @@ fn checkable_words(text: &str) -> Vec<(usize, usize, &str)> {
 /// Whether one word is misspelled under the current preference and language.
 /// `false` whenever checking is off or unavailable.
 pub fn word_is_misspelled(word: &str) -> bool {
-    if !crate::config::load_spellcheck() {
+    if !crate::config::load_privacy().spellcheck {
         return false;
     }
     let lang = crate::ui::rich_editor::resolved_spell_language();
@@ -289,7 +289,7 @@ pub fn word_is_misspelled(word: &str) -> bool {
 /// half-word on every keystroke reads as nagging. Pass `None` (after a
 /// typing pause) to check the cursor's word too.
 pub fn error_attrs(text: &str, cursor: Option<usize>) -> Option<gtk::pango::AttrList> {
-    if !crate::config::load_spellcheck() {
+    if !crate::config::load_privacy().spellcheck {
         return None;
     }
     let lang = crate::ui::rich_editor::resolved_spell_language();

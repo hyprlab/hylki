@@ -684,12 +684,6 @@ fn jmap_destroy_all(s: &JmapSession, ids: &[String]) -> Result<(), String> {
 // Async glue
 // ---------------------------------------------------------------------------
 
-async fn blocking<T: Send + 'static>(
-    f: impl FnOnce() -> Result<T, String> + Send + 'static,
-) -> Result<T, String> {
-    tokio::task::spawn_blocking(f).await.unwrap_or_else(|_| Err("task failed".into()))
-}
-
 /// The session, connecting on first use (and after a reconnect dropped it).
 /// A failure is reported through `emit` and leaves the state untouched, so
 /// the next request tries again.
@@ -708,10 +702,7 @@ async fn jmap_session(
             Some(s)
         }
         Err(e) => {
-            emit(WorkerEvent::Error {
-                text: i18n_f("Could not reach the JMAP server: {e}", &[("e", &e)]),
-                connectivity: true,
-            });
+            emit(WorkerEvent::net_error(i18n_f("Could not reach the JMAP server: {e}", &[("e", &e)])));
             None
         }
     }
@@ -737,10 +728,7 @@ async fn refresh_jmap_folders(
             }
             emit(WorkerEvent::Folders(folders));
         }
-        Err(e) => emit(WorkerEvent::Error {
-            text: i18n_f("Could not list folders: {e}", &[("e", &e)]),
-            connectivity: true,
-        }),
+        Err(e) => emit(WorkerEvent::net_error(i18n_f("Could not list folders: {e}", &[("e", &e)]))),
     }
 }
 
@@ -1297,13 +1285,10 @@ async fn jmap_flush_outbox(
             }
             Err(e) => {
                 cache.record_outbox_failure(item.id, &e);
-                emit(WorkerEvent::Error {
-                    text: i18n_f(
+                emit(WorkerEvent::error(i18n_f(
                         "Still could not send “{subject}”: {e}",
                         &[("subject", &item.subject), ("e", &e)],
-                    ),
-                    connectivity: false,
-                });
+                    )));
             }
         }
     }
@@ -1550,10 +1535,7 @@ async fn jmap_deliver_body(
             emit(WorkerEvent::Body { message_id, path: path.to_string(), body });
             emit(WorkerEvent::SenderChecked { message_id, check });
         }
-        Err(e) => emit(WorkerEvent::Error {
-            text: i18n_f("Could not load message: {e}", &[("e", &e)]),
-            connectivity: true,
-        }),
+        Err(e) => emit(WorkerEvent::net_error(i18n_f("Could not load message: {e}", &[("e", &e)]))),
     }
 }
 
@@ -1601,7 +1583,7 @@ pub(super) async fn run_jmap(
     };
 
     let (push_tx, mut push_rx) = mpsc::unbounded_channel::<()>();
-    let push_enabled = account.push.unwrap_or_else(crate::config::load_push);
+    let push_enabled = account.push.unwrap_or_else(|| crate::config::load_privacy().push);
     let mut push_started = false;
 
     if let Some(s) = jmap_session(&account, &mut state, &emit).await {
@@ -1614,7 +1596,7 @@ pub(super) async fn run_jmap(
 
     // The poll is the fallback for a server without push (or with it off):
     // the auto-fetch cadence when set, otherwise a quiet couple of minutes.
-    let poll_secs = match crate::config::load_fetch_interval() {
+    let poll_secs = match crate::config::load_privacy().fetch_interval_secs {
         0 => 120,
         s => s.max(60),
     };
@@ -1775,10 +1757,7 @@ pub(super) async fn run_jmap(
                         emit(WorkerEvent::BackfillDone { folder_id });
                     }
                     Err(e) => {
-                        emit(WorkerEvent::Error {
-                            text: i18n_f("Could not fetch mail: {e}", &[("e", &e)]),
-                            connectivity: true,
-                        });
+                        emit(WorkerEvent::net_error(i18n_f("Could not fetch mail: {e}", &[("e", &e)])));
                         emit(WorkerEvent::BackfillDone { folder_id });
                     }
                 }
@@ -1807,10 +1786,7 @@ pub(super) async fn run_jmap(
                 let Some(s) = jmap_session(&account, &mut state, &emit).await else { continue };
                 match jmap_fetch_raw(&s, &mut state, &path, uid).await {
                     Ok(raw) => emit(WorkerEvent::Source { text: String::from_utf8_lossy(&raw).into_owned() }),
-                    Err(e) => emit(WorkerEvent::Error {
-                        text: i18n_f("Could not load source: {e}", &[("e", &e)]),
-                        connectivity: true,
-                    }),
+                    Err(e) => emit(WorkerEvent::net_error(i18n_f("Could not load source: {e}", &[("e", &e)]))),
                 }
             }
 
@@ -1835,10 +1811,7 @@ pub(super) async fn run_jmap(
                         }
                         emit(WorkerEvent::Attachments { message_id, items });
                     }
-                    Err(e) => emit(WorkerEvent::Error {
-                        text: i18n_f("Could not load attachments: {e}", &[("e", &e)]),
-                        connectivity: true,
-                    }),
+                    Err(e) => emit(WorkerEvent::net_error(i18n_f("Could not load attachments: {e}", &[("e", &e)]))),
                 }
             }
 
@@ -1896,10 +1869,7 @@ pub(super) async fn run_jmap(
             MailRequest::MoveMessage { path, uid, dest } => {
                 let Some(s) = jmap_session(&account, &mut state, &emit).await else { continue };
                 if let Err(e) = jmap_move_uids(&s, account_id, &mut state, &path, &[uid], &dest, serde_json::json!({}), cache.as_ref()).await {
-                    emit(WorkerEvent::Error {
-                        text: i18n_f("Could not move message: {e}", &[("e", &e)]),
-                        connectivity: false,
-                    });
+                    emit(WorkerEvent::error(i18n_f("Could not move message: {e}", &[("e", &e)])));
                 }
             }
 
@@ -1907,10 +1877,7 @@ pub(super) async fn run_jmap(
                 let Some(s) = jmap_session(&account, &mut state, &emit).await else { continue };
                 let verdict = serde_json::json!({ "keywords/$junk": true, "keywords/$notjunk": null });
                 if let Err(e) = jmap_move_uids(&s, account_id, &mut state, &path, &[uid], &dest, verdict, cache.as_ref()).await {
-                    emit(WorkerEvent::Error {
-                        text: i18n_f("Could not mark as spam: {e}", &[("e", &e)]),
-                        connectivity: false,
-                    });
+                    emit(WorkerEvent::error(i18n_f("Could not mark as spam: {e}", &[("e", &e)])));
                 }
             }
 
@@ -1918,20 +1885,14 @@ pub(super) async fn run_jmap(
                 let Some(s) = jmap_session(&account, &mut state, &emit).await else { continue };
                 let verdict = serde_json::json!({ "keywords/$junk": null, "keywords/$notjunk": true });
                 if let Err(e) = jmap_move_uids(&s, account_id, &mut state, &path, &[uid], &dest, verdict, cache.as_ref()).await {
-                    emit(WorkerEvent::Error {
-                        text: i18n_f("Could not mark as not spam: {e}", &[("e", &e)]),
-                        connectivity: false,
-                    });
+                    emit(WorkerEvent::error(i18n_f("Could not mark as not spam: {e}", &[("e", &e)])));
                 }
             }
             MailRequest::MarkHamMany { path, uids, dest } => {
                 if let Some(s) = jmap_session(&account, &mut state, &emit).await {
                     let verdict = serde_json::json!({ "keywords/$junk": null, "keywords/$notjunk": true });
                     if let Err(e) = jmap_move_uids(&s, account_id, &mut state, &path, &uids, &dest, verdict, cache.as_ref()).await {
-                        emit(WorkerEvent::Error {
-                            text: i18n_f("Could not mark {len} messages as not spam: {e}", &[("len", &uids.len().to_string()), ("e", &e)]),
-                            connectivity: false,
-                        });
+                        emit(WorkerEvent::error(i18n_f("Could not mark {len} messages as not spam: {e}", &[("len", &uids.len().to_string()), ("e", &e)])));
                     }
                 }
                 emit(WorkerEvent::BulkComplete);
@@ -1940,10 +1901,7 @@ pub(super) async fn run_jmap(
             MailRequest::MoveMessages { path, uids, dest } => {
                 if let Some(s) = jmap_session(&account, &mut state, &emit).await {
                     if let Err(e) = jmap_move_uids(&s, account_id, &mut state, &path, &uids, &dest, serde_json::json!({}), cache.as_ref()).await {
-                        emit(WorkerEvent::Error {
-                            text: i18n_f("Could not move messages: {e}", &[("e", &e)]),
-                            connectivity: false,
-                        });
+                        emit(WorkerEvent::error(i18n_f("Could not move messages: {e}", &[("e", &e)])));
                     }
                 }
                 emit(WorkerEvent::BulkComplete);
@@ -1979,10 +1937,7 @@ pub(super) async fn run_jmap(
                         emit(WorkerEvent::Messages { folder_id, messages: Vec::new() });
                         emit(WorkerEvent::FolderUnread { folder_id, unread: 0 });
                     }
-                    Err(e) => emit(WorkerEvent::Error {
-                        text: i18n_f("Could not empty the folder: {e}", &[("e", &e)]),
-                        connectivity: false,
-                    }),
+                    Err(e) => emit(WorkerEvent::error(i18n_f("Could not empty the folder: {e}", &[("e", &e)]))),
                 }
             }
 
@@ -2000,10 +1955,7 @@ pub(super) async fn run_jmap(
                             emit(WorkerEvent::FolderUnread { folder_id: dest_folder_id, unread });
                         }
                     }
-                    Err(e) => emit(WorkerEvent::Error {
-                        text: i18n_f("Undo failed: {e}", &[("e", &e)]),
-                        connectivity: false,
-                    }),
+                    Err(e) => emit(WorkerEvent::error(i18n_f("Undo failed: {e}", &[("e", &e)]))),
                 }
                 // The app spins its busy indicator until an undo answers.
                 emit(WorkerEvent::BulkComplete);
@@ -2040,17 +1992,14 @@ pub(super) async fn run_jmap(
                 .await;
                 match r {
                     Ok(()) => refresh_jmap_folders(&s, account_id, cache.as_ref(), &mut state, &emit).await,
-                    Err(e) => emit(WorkerEvent::Error {
-                        text: i18n_f("Could not create folder: {e}", &[("e", &e)]),
-                        connectivity: false,
-                    }),
+                    Err(e) => emit(WorkerEvent::error(i18n_f("Could not create folder: {e}", &[("e", &e)]))),
                 }
             }
 
             MailRequest::RenameFolder { old_path, new_path } => {
                 let Some(s) = jmap_session(&account, &mut state, &emit).await else { continue };
                 let Some((_, id)) = state.folders.get(&old_path).cloned() else {
-                    emit(WorkerEvent::Error { text: i18n("Could not rename folder: unknown folder"), connectivity: false });
+                    emit(WorkerEvent::error(i18n("Could not rename folder: unknown folder")));
                     continue;
                 };
                 let leaf = new_path.rsplit('/').next().unwrap_or(&new_path).to_string();
@@ -2074,10 +2023,7 @@ pub(super) async fn run_jmap(
                 .await;
                 match r {
                     Ok(()) => refresh_jmap_folders(&s, account_id, cache.as_ref(), &mut state, &emit).await,
-                    Err(e) => emit(WorkerEvent::Error {
-                        text: i18n_f("Could not rename folder: {e}", &[("e", &e)]),
-                        connectivity: false,
-                    }),
+                    Err(e) => emit(WorkerEvent::error(i18n_f("Could not rename folder: {e}", &[("e", &e)]))),
                 }
             }
 
@@ -2090,7 +2036,7 @@ pub(super) async fn run_jmap(
             MailRequest::DeleteFolder { path, trash } => {
                 let Some(s) = jmap_session(&account, &mut state, &emit).await else { continue };
                 let Some((_, id)) = state.folders.get(&path).cloned() else {
-                    emit(WorkerEvent::Error { text: i18n("Could not delete folder: unknown folder"), connectivity: false });
+                    emit(WorkerEvent::error(i18n("Could not delete folder: unknown folder")));
                     continue;
                 };
                 // The contents go to Trash first when the app names one, as
@@ -2121,10 +2067,7 @@ pub(super) async fn run_jmap(
                 .await;
                 match r {
                     Ok(()) => refresh_jmap_folders(&s, account_id, cache.as_ref(), &mut state, &emit).await,
-                    Err(e) => emit(WorkerEvent::Error {
-                        text: i18n_f("Could not delete folder: {e}", &[("e", &e)]),
-                        connectivity: false,
-                    }),
+                    Err(e) => emit(WorkerEvent::error(i18n_f("Could not delete folder: {e}", &[("e", &e)]))),
                 }
             }
 
@@ -2151,23 +2094,14 @@ pub(super) async fn run_jmap(
                                             }
                                             saved = true;
                                         }
-                                        Err(e) => emit(WorkerEvent::Error {
-                                            text: i18n_f("Could not save draft: {e}", &[("e", &e)]),
-                                            connectivity: false,
-                                        }),
+                                        Err(e) => emit(WorkerEvent::error(i18n_f("Could not save draft: {e}", &[("e", &e)]))),
                                     }
                                 }
-                                None => emit(WorkerEvent::Error {
-                                    text: i18n("Could not save draft: unknown folder"),
-                                    connectivity: false,
-                                }),
+                                None => emit(WorkerEvent::error(i18n("Could not save draft: unknown folder"))),
                             }
                         }
                     }
-                    Err(e) => emit(WorkerEvent::Error {
-                        text: i18n_f("Could not save draft: {e}", &[("e", &e.to_string())]),
-                        connectivity: false,
-                    }),
+                    Err(e) => emit(WorkerEvent::error(i18n_f("Could not save draft: {e}", &[("e", &e.to_string())]))),
                 }
                 emit(WorkerEvent::Status(String::new()));
                 if saved {
@@ -2216,38 +2150,18 @@ pub(super) async fn run_jmap(
                                 }
                             }
                         }
-                        if let (Some(queued), Some(c)) = (message.outbox_origin, cache.as_ref()) {
-                            c.delete_outbox(queued);
-                            emit_outbox(cache.as_ref(), account_id, &emit);
-                        }
+                        drop_superseded_outbox(cache.as_ref(), account_id, &message, &emit);
                         emit(WorkerEvent::Sent);
                     }
                     Err(e) => {
-                        let queued = queue_failed_send(cache.as_ref(), account_id, &account, &message, sent_path.as_deref(), &e);
-                        if let (true, Some(old), Some(c)) = (queued, message.outbox_origin, cache.as_ref()) {
-                            c.delete_outbox(old);
-                        }
-                        emit(WorkerEvent::Error {
-                            text: if queued {
-                                i18n_f("Send failed: {e}. The message is in the Outbox and will be sent when the connection is back.", &[("e", &e)])
-                            } else {
-                                i18n_f("Send failed: {e}", &[("e", &e)])
-                            },
-                            connectivity: false,
-                        });
-                        emit_outbox(cache.as_ref(), account_id, &emit);
+                        send_failed(cache.as_ref(), account_id, &account, &message, sent_path.as_deref(), &e, &emit);
                     }
                 }
             }
 
             MailRequest::LoadOutbox => emit_outbox(cache.as_ref(), account_id, &emit),
 
-            MailRequest::DeleteOutbox { id } => {
-                if let Some(c) = cache.as_ref() {
-                    c.delete_outbox(id);
-                }
-                emit_outbox(cache.as_ref(), account_id, &emit);
-            }
+            MailRequest::DeleteOutbox { id } => delete_queued(cache.as_ref(), account_id, id, &emit),
 
             MailRequest::FlushOutbox { id } => {
                 if let Some(s) = jmap_session(&account, &mut state, &emit).await {

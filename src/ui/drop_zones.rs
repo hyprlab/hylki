@@ -270,7 +270,7 @@ impl DropZones {
         let n = paths.len() as u32;
         let pictures = paths.iter().filter(|p| crate::ui::rich_editor::is_inline_image(p)).count() as u32;
         let size: u64 = paths.iter().filter_map(|p| std::fs::metadata(p).ok()).map(|m| m.len()).sum();
-        let size = crate::cloud::human_size(size);
+        let size = crate::models::human_size(size);
         let names = self.cloud_names.borrow();
 
         self.summary.set_label(&if n == 1 {

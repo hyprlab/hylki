@@ -95,10 +95,7 @@ fn fallback_conf() -> Option<String> {
 fn runtime_key() -> String {
     std::fs::read_to_string("/.flatpak-info")
         .ok()
-        .and_then(|info| {
-            info.lines()
-                .find_map(|l| l.strip_prefix("runtime-commit=").map(|c| c.trim().to_string()))
-        })
+        .and_then(|info| crate::platform::keyfile_value(&info, "Instance", "runtime-commit"))
         .unwrap_or_else(|| "host".to_string())
 }
 

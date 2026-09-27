@@ -1730,12 +1730,12 @@ impl Component for MessageView {
             zoom_default: 100,
             reader_default: crate::config::ReaderDefault::Remember,
             read_mark: crate::config::ReadMark::default(),
-            show_banner: crate::config::load_show_remote_banner(),
-            show_spoof_banner: crate::config::load_show_spoof_banner(),
-            card_actions_hover: crate::config::load_card_actions_hover(),
-            card_actions_auto: crate::config::load_card_actions_auto(),
-            palette_collapse_secs: crate::config::load_card_palette_collapse(),
-            card_palette_menu: crate::config::load_card_palette_menu(),
+            show_banner: crate::config::load_privacy().show_remote_banner,
+            show_spoof_banner: crate::config::load_privacy().show_spoof_banner,
+            card_actions_hover: crate::config::load_privacy().card_actions_hover,
+            card_actions_auto: crate::config::load_privacy().card_actions_auto,
+            palette_collapse_secs: crate::config::load_privacy().card_palette_collapse_secs,
+            card_palette_menu: crate::config::load_privacy().card_palette_menu,
             remote_allowed: false,
             account_name: None,
             chip_provider,
@@ -5781,14 +5781,7 @@ pub fn theme_grounds_for(widget: &impl IsA<gtk::Widget>, dark: bool) -> (String,
     let style = widget.style_context();
     if dark == adw::StyleManager::default().is_dark() {
         if let Some(c) = style.lookup_color("view_bg_color") {
-            let hex = |r: f32, g: f32, b: f32| {
-                format!(
-                    "#{:02x}{:02x}{:02x}",
-                    (r * 255.0).round() as u8,
-                    (g * 255.0).round() as u8,
-                    (b * 255.0).round() as u8,
-                )
-            };
+            let hex = |r: f32, g: f32, b: f32| crate::color::to_hex(&gtk::gdk::RGBA::new(r, g, b, 1.0));
             // The stock pairs' own ratios: #1e1e1e→#141414 and #fff→#f1f1f1.
             let f = if dark { 0.667 } else { 0.945 };
             let ground = hex(c.red(), c.green(), c.blue());
@@ -6521,9 +6514,7 @@ fn print_header_html(message: Option<&Message>) -> String {
 /// Escape text for HTML content: a subject or an address that contains `<` must
 /// not become a tag.
 fn escape_text(s: &str) -> String {
-    s.replace('&', "&amp;")
-        .replace('<', "&lt;")
-        .replace('>', "&gt;")
+    gtk::glib::markup_escape_text(s).into()
 }
 
 /// Escape a string for use inside a double-quoted HTML **attribute** value
@@ -6548,7 +6539,7 @@ fn body_html(body: &str) -> String {
              body{{margin:0;padding:20px;font:14px/1.5 system-ui,sans-serif;\
              white-space:pre-wrap;word-wrap:break-word}}\
              </style></head><body class=\"vireo-plain\">{}</body></html>",
-            body.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
+            escape_text(body)
         )
     }
 }
@@ -6691,7 +6682,7 @@ mod tests {
         assert!(row.contains("class=\"vireo-attc ftype-pdf\" data-key=\"1:7\" data-idx=\"0\""), "{row}");
         assert!(row.contains("class=\"vireo-attc ftype-image\" data-key=\"1:7\" data-idx=\"1\""), "{row}");
         assert!(row.contains("class=\"vireo-attsave\" data-key=\"1:7\" data-idx=\"1\""), "{row}");
-        assert!(row.contains("2.0 KB"), "{row}");
+        assert!(row.contains(&crate::models::human_size(2048)), "{row}");
         assert!(!row.contains("<b>x</b>"), "filename is escaped: {row}");
         assert!(row.contains("&lt;b&gt;x&lt;/b&gt;.png"), "{row}");
         // Nothing attached: the row is there, and empty.

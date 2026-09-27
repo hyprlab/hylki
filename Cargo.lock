@@ -1417,6 +1417,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+ "siphasher",
  "tokio",
  "toml 0.8.23",
  "tracing",

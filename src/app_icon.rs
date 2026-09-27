@@ -198,27 +198,17 @@ pub fn icon_name(id: &str) -> String {
     format!("{}-{id}", crate::APP_ID)
 }
 
-/// Whether this process runs inside a Flatpak sandbox.
-fn in_flatpak() -> bool {
-    std::path::Path::new("/.flatpak-info").exists()
-}
-
-/// The user's home — the host's, from inside the sandbox too.
-fn home() -> Option<PathBuf> {
-    std::env::var_os("HOME").map(PathBuf::from).or_else(dirs::home_dir)
-}
-
 /// The user's share directory as the *desktop* sees it. Inside Flatpak
 /// XDG_DATA_HOME is the sandbox's private dir, so the host's default is
 /// used (that is where the manifest mounts `xdg-data/icons/hicolor` and
 /// `xdg-data/applications`).
 fn host_data_home() -> Option<PathBuf> {
-    if !in_flatpak() {
+    if !crate::platform::is_flatpak() {
         if let Some(d) = dirs::data_dir() {
             return Some(d);
         }
     }
-    Some(home()?.join(".local/share"))
+    Some(crate::platform::home()?.join(".local/share"))
 }
 
 fn hicolor_dir() -> Option<PathBuf> {
@@ -432,7 +422,7 @@ impl Launcher {
         if user_path.exists() && !ours {
             return Launcher::Owned(user_path);
         }
-        if in_flatpak() {
+        if crate::platform::is_flatpak() {
             let base = PathBuf::from("/app/share/applications").join(&file);
             let Some((exec, try_exec)) = flatpak_exec() else { return Launcher::None };
             return Launcher::Shadow { base, user_path, ours, exec: Some(exec), try_exec, flatpak: true };
@@ -449,12 +439,8 @@ impl Launcher {
                 None => Launcher::None,
             };
         }
-        let dirs = std::env::var("XDG_DATA_DIRS")
-            .ok()
-            .filter(|s| !s.is_empty())
-            .unwrap_or_else(|| "/usr/local/share:/usr/share".into());
-        for dir in dirs.split(':') {
-            let base = PathBuf::from(dir).join("applications").join(&file);
+        for dir in gtk::glib::system_data_dirs() {
+            let base = dir.join("applications").join(&file);
             if !base.is_file() {
                 continue;
             }
@@ -546,11 +532,9 @@ fn flatpak_exec() -> Option<(String, String)> {
     Some((exec, format!("{root}/exports/bin/{}", crate::APP_ID)))
 }
 
-/// One key's value from a desktop file's main group.
+/// One key's value from a desktop file's main group (not an action's).
 fn desktop_value(text: &str, key: &str) -> Option<String> {
-    text.lines()
-        .find_map(|l| l.strip_prefix(key).and_then(|r| r.strip_prefix('=')))
-        .map(|v| v.trim().to_string())
+    crate::platform::keyfile_value(text, "Desktop Entry", key)
 }
 
 /// Returns whether the user's directory holds a copy of ours afterwards,
@@ -750,32 +734,14 @@ fn collect_mime_types(
 /// The `MimeType` list of a desktop entry's main group; empty for an entry
 /// that has none or is `Hidden`.
 fn desktop_mime_types(text: &str) -> Vec<String> {
-    let mut in_main = false;
-    let mut hidden = false;
-    let mut types = Vec::new();
-    for line in text.lines() {
-        let line = line.trim();
-        if line.starts_with('[') {
-            in_main = line == "[Desktop Entry]";
-            continue;
-        }
-        if !in_main || line.starts_with('#') {
-            continue;
-        }
-        let Some((key, value)) = line.split_once('=') else { continue };
-        match key.trim() {
-            "Hidden" => hidden = value.trim() == "true",
-            "MimeType" => {
-                types = value.split(';').map(str::trim).filter(|t| !t.is_empty()).map(String::from).collect()
-            }
-            _ => {}
-        }
+    const MAIN: &str = "Desktop Entry";
+    let Some(kf) = crate::platform::keyfile(text) else { return Vec::new() };
+    if kf.boolean(MAIN, "Hidden").unwrap_or(false) {
+        return Vec::new();
     }
-    if hidden {
-        Vec::new()
-    } else {
-        types
-    }
+    kf.string_list(MAIN, "MimeType")
+        .map(|types| types.iter().map(|t| t.trim().to_string()).filter(|t| !t.is_empty()).collect())
+        .unwrap_or_default()
 }
 
 /// Replace the `Icon=` line of a launcher the user's own install owns.
@@ -845,7 +811,7 @@ pub fn restart_service_name() -> String {
 /// in place. The caller quits only on `Ok`, so a failed attempt leaves the
 /// app running rather than gone.
 pub fn launch_restart_helper() -> Result<(), String> {
-    if in_flatpak() {
+    if crate::platform::is_flatpak() {
         activate_restart_service()
     } else {
         spawn_restart_helper()
@@ -989,6 +955,17 @@ pub const DRAG_ICON_SIZE: i32 = 16;
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A launcher's actions have `Exec` lines of their own; only the main
+    /// entry's counts, and a hidden entry claims no types.
+    #[test]
+    fn desktop_entries_are_read_from_the_main_group() {
+        let entry = "[Desktop Action compose]\nExec=other --compose\n\n\
+                     [Desktop Entry]\nExec=hylki %U\nMimeType=x-scheme-handler/mailto;message/rfc822;\n";
+        assert_eq!(super::desktop_value(entry, "Exec").as_deref(), Some("hylki %U"));
+        assert_eq!(super::desktop_mime_types(entry), ["x-scheme-handler/mailto", "message/rfc822"]);
+        assert!(super::desktop_mime_types(&format!("{entry}Hidden=true\n")).is_empty());
+    }
 
     /// The same fixture `update-desktop-database` was run over by hand:
     /// its output is what the expectation below is copied from.

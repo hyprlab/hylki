@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- **Fixed: empty message previews.** A message whose HTML has a `<header>`
+  element showed an empty or cut-short preview in the message list,
+  because everything after that element was dropped. Previews also no
+  longer run the lines of a signature together, and show characters
+  written as entities (`&bull;`, `&zwnj;`) as the characters themselves.
+- **Changed: attachment sizes use decimal units**, as Files does (2.0 kB
+  rather than 2.0 KB), in your language.
+- **Fixed: a recipient whose name has a comma in it** ("Martin, Jason").
+  The name was split at the comma, so the send was refused as having an
+  invalid address, and with encryption on Hylki asked for a key for
+  "Martin". A contact chosen from the suggestions or the contacts list is now
+  inserted with its name in quotes, and a name typed or pasted without them
+  is read whole.
+- **Fixed: unsubscribing by email from a plus-addressed handle.** A list
+  whose unsubscribe address has a `+` in it (`list+token@example.com`) was
+  sent the request at an address with a space in place of the `+`.
+- **Fixed: the type of an attached Word or Excel file.** A `.docx` or
+  `.xlsx` was sent labelled as the old `.doc` or `.xls` format. Attachments
+  are now typed from the same table the desktop opens files by.
+- **Fixed: birthdays in Contacts are written in your language and date
+  format**, as mail dates are, rather than always in English as "April 12,
+  1985".
 - **Changed: no `-- ` line above the signature.** New messages, replies and
   forwards put the signature after a blank line only. **Settings → Composing
   → Separator line above the signature** brings the line back for anyone who

@@ -40,8 +40,6 @@ pub enum CloudKind {
 }
 
 impl CloudKind {
-    pub const ALL: [CloudKind; 4] = [CloudKind::Nextcloud, CloudKind::OneDrive, CloudKind::Dropbox, CloudKind::Seafile];
-
     /// Signed in through GNOME Online Accounts: no secret of ours.
     pub fn via_goa(self) -> bool {
         self == CloudKind::OneDrive
@@ -418,23 +416,6 @@ fn expiry(account: &CloudAccount) -> Option<String> {
     })
 }
 
-/// Percent-encode one path segment for a URL.
-fn seg(s: &str) -> String {
-    let mut out = String::new();
-    for b in s.bytes() {
-        match b {
-            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => out.push(b as char),
-            _ => out.push_str(&format!("%{b:02X}")),
-        }
-    }
-    out
-}
-
-/// Percent-encode a whole path, keeping its slashes.
-fn pct_path(p: &str) -> String {
-    p.split('/').map(seg).collect::<Vec<_>>().join("/")
-}
-
 fn http_err(what: &str, e: ureq::Error) -> String {
     match e {
         ureq::Error::Status(401, _) | ureq::Error::Status(403, _) => {
@@ -482,24 +463,24 @@ fn cloudflare_hint(
     }
     let switch = format!(
         "Turn on \"Server is behind Cloudflare\" for this account under Settings → Cloud Storage and try again: the file is then uploaded in {} pieces.",
-        human_size(CLOUDFLARE_CHUNK)
+        crate::models::human_size(CLOUDFLARE_CHUNK)
     );
     match (status, via_cloudflare) {
         (Some(413), true) => Some(format!(
             "{what}: {name} is {}, and Cloudflare, which sits in front of this server, refuses uploads over 100 MB (HTTP 413). {switch}",
-            human_size(size)
+            crate::models::human_size(size)
         )),
         (Some(code), true) if (500..600).contains(&code) => Some(format!(
             "{what}: Cloudflare, which sits in front of this server, cut off the upload of {name} ({}, HTTP {code}); it refuses uploads over 100 MB. {switch}",
-            human_size(size)
+            crate::models::human_size(size)
         )),
         (Some(413), false) => Some(format!(
             "{what}: the server refused {name} as too large ({}, HTTP 413). If it is reached through Cloudflare, that is the proxy's 100 MB limit: {switch}",
-            human_size(size)
+            crate::models::human_size(size)
         )),
         (None, _) => Some(format!(
             "{what}: the connection was cut while uploading {name} ({}). If the server is reached through Cloudflare, that is the proxy's 100 MB limit: {switch}",
-            human_size(size)
+            crate::models::human_size(size)
         )),
         _ => None,
     }
@@ -603,13 +584,13 @@ pub fn upload_and_share(
 
 /// The link's download password: none unless the account (as handed in)
 /// wants one; then the fixed one when given, else a fresh one.
-fn share_password(account: &CloudAccount, fixed: Option<&str>) -> Option<String> {
+fn share_password(account: &CloudAccount, fixed: Option<&str>) -> Result<Option<String>, String> {
     if !account.password {
-        return None;
+        return Ok(None);
     }
     match fixed.map(str::trim).filter(|p| !p.is_empty()) {
-        Some(p) => Some(p.to_string()),
-        None => Some(generate_password()),
+        Some(p) => Ok(Some(p.to_string())),
+        None => generate_password().map(Some),
     }
 }
 
@@ -623,7 +604,7 @@ fn auth(account: &CloudAccount, password: &str) -> String {
 }
 
 fn dav_root(account: &CloudAccount) -> String {
-    format!("{}/remote.php/dav/files/{}", account.base(), seg(account.user.trim()))
+    format!("{}/remote.php/dav/files/{}", account.base(), crate::percent::encode(account.user.trim()))
 }
 
 /// The OCS user endpoint answers with the display name.
@@ -666,7 +647,7 @@ fn nextcloud_upload_and_share(
     let mut dir = String::new();
     for part in folder.split('/').filter(|p| !p.is_empty()) {
         dir.push('/');
-        dir.push_str(&seg(part));
+        dir.push_str(&crate::percent::encode(part));
         let r = ureq::request("MKCOL", &format!("{root}{dir}"))
             .set("Authorization", &authz)
             .call();
@@ -679,7 +660,7 @@ fn nextcloud_upload_and_share(
     // A name that is free.
     let mut remote = name.clone();
     let exists = |n: &str| {
-        ureq::head(&format!("{root}{dir}/{}", seg(n)))
+        ureq::head(&format!("{root}{dir}/{}", crate::percent::encode(n)))
             .set("Authorization", &authz)
             .call()
             .is_ok()
@@ -688,7 +669,7 @@ fn nextcloud_upload_and_share(
         remote = stamped_name(&name);
     }
 
-    let target = format!("{root}{dir}/{}", seg(&remote));
+    let target = format!("{root}{dir}/{}", crate::percent::encode(&remote));
     if account.cloudflare && size > CLOUDFLARE_CHUNK {
         // Chunked upload (the "uploads" DAV endpoint): the pieces go into a
         // one-off folder, numbered so they sort in order, and a MOVE of its
@@ -698,7 +679,7 @@ fn nextcloud_upload_and_share(
         let upload = format!(
             "{}/remote.php/dav/uploads/{}/hylki-{}",
             account.base(),
-            seg(account.user.trim()),
+            crate::percent::encode(account.user.trim()),
             crate::rng::token(12).map_err(|e| e.to_string())?
         );
         ureq::request("MKCOL", &upload)
@@ -741,7 +722,7 @@ fn nextcloud_upload_and_share(
     // The public link.
     let share_path = format!("/{folder}/{remote}");
     let expires = expiry(account);
-    let pw = share_password(account, fixed);
+    let pw = share_password(account, fixed)?;
     let mut form: Vec<(&str, String)> = vec![
         ("path", share_path),
         ("shareType", "3".to_string()),
@@ -998,7 +979,7 @@ fn dropbox_upload_and_share(
     // The public link. Passwords and expiry are settings only paid plans
     // may set; Dropbox says so with a settings_error.
     let expires = expiry(account);
-    let pw = share_password(account, fixed);
+    let pw = share_password(account, fixed)?;
     let mut settings = serde_json::json!({"audience": "public", "access": "viewer"});
     if let Some(p) = &pw {
         settings["requested_visibility"] = "password".into();
@@ -1210,7 +1191,7 @@ fn seafile_upload_and_share(
     for part in folder.split('/').filter(|p| !p.is_empty()) {
         dir.push('/');
         dir.push_str(part);
-        let url = format!("{base}/api2/repos/{repo}/dir/?p={}", pct_path(&dir));
+        let url = format!("{base}/api2/repos/{repo}/dir/?p={}", crate::percent::encode_path(&dir));
         let there = ureq::get(&url).set("Authorization", &authz).timeout(Duration::from_secs(60)).call();
         match there {
             Ok(_) => {}
@@ -1227,7 +1208,7 @@ fn seafile_upload_and_share(
     let parent = if dir.is_empty() { "/".to_string() } else { dir.clone() };
 
     // The upload goes to a one-off link from the file server.
-    let link: serde_json::Value = ureq::get(&format!("{base}/api2/repos/{repo}/upload-link/?p={}", pct_path(&parent)))
+    let link: serde_json::Value = ureq::get(&format!("{base}/api2/repos/{repo}/upload-link/?p={}", crate::percent::encode_path(&parent)))
         .set("Authorization", &authz)
         .timeout(Duration::from_secs(60))
         .call()
@@ -1291,7 +1272,7 @@ fn seafile_upload_and_share(
     // The share link.
     let file_path = if dir.is_empty() { format!("/{remote}") } else { format!("{dir}/{remote}") };
     let expires = expiry(account);
-    let pw = share_password(account, fixed);
+    let pw = share_password(account, fixed)?;
     let days = account.expire_days.to_string();
     let mut form: Vec<(&str, &str)> = vec![("repo_id", repo.as_str()), ("path", file_path.as_str())];
     if let Some(p) = &pw {
@@ -1396,7 +1377,7 @@ fn onedrive_item(path: &str) -> String {
     if path.is_empty() {
         format!("{GRAPH}/me/drive/root")
     } else {
-        format!("{GRAPH}/me/drive/root:/{}", pct_path(path))
+        format!("{GRAPH}/me/drive/root:/{}", crate::percent::encode_path(path))
     }
 }
 
@@ -1509,7 +1490,7 @@ fn onedrive_upload_and_share(account: &CloudAccount, path: &Path, fixed: Option<
     // The public link. Expiry and passwords take a OneDrive for Business
     // or Microsoft 365 subscription; a personal account says no.
     let expires = expiry(account);
-    let pw = share_password(account, fixed);
+    let pw = share_password(account, fixed)?;
     let mut body = serde_json::json!({"type": "view", "scope": "anonymous"});
     if let Some(d) = &expires {
         body["expirationDateTime"] = format!("{d}T00:00:00Z").into();
@@ -1544,33 +1525,9 @@ fn onedrive_upload_and_share(account: &CloudAccount, path: &Path, fixed: Option<
 
 /// A download password people can read out: letters and digits, no
 /// look-alikes, twelve long.
-fn generate_password() -> String {
-    const ALPHABET: &[u8] = b"abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let mut buf = [0u8; 12];
-    if crate::rng::fill(&mut buf).is_err() {
-        // A clock-seeded fallback is still a password, if a weaker one.
-        let t = crate::datefmt::now() as u64;
-        for (i, b) in buf.iter_mut().enumerate() {
-            *b = (t.rotate_left(i as u32 * 5) & 0xff) as u8;
-        }
-    }
-    buf.iter().map(|b| ALPHABET[(*b as usize) % ALPHABET.len()] as char).collect()
-}
-
-/// "2.3 MB" for a link's caption.
-pub fn human_size(bytes: u64) -> String {
-    const UNITS: &[&str] = &["B", "kB", "MB", "GB", "TB"];
-    let mut v = bytes as f64;
-    let mut i = 0;
-    while v >= 1000.0 && i < UNITS.len() - 1 {
-        v /= 1000.0;
-        i += 1;
-    }
-    if i == 0 {
-        format!("{bytes} B")
-    } else {
-        format!("{v:.1} {}", UNITS[i])
-    }
+fn generate_password() -> Result<String, String> {
+    crate::rng::from_alphabet(12, b"abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789")
+        .map_err(|e| format!("Could not make a link password: {e}"))
 }
 
 #[cfg(test)]
@@ -1587,21 +1544,14 @@ mod tests {
     }
 
     #[test]
-    fn dav_segments_are_encoded() {
-        assert_eq!(seg("Q3 report.pdf"), "Q3%20report.pdf");
-        assert_eq!(seg("caf\u{e9}"), "caf%C3%A9");
-        assert_eq!(pct_path("/Hylki/Q3 report.pdf"), "/Hylki/Q3%20report.pdf");
-    }
-
-    #[test]
     fn sizes_read_well() {
-        assert_eq!(human_size(512), "512 B");
-        assert_eq!(human_size(2_300_000), "2.3 MB");
+        // GLib's, as Files writes sizes: decimal units, a no-break space.
+        assert_eq!(crate::models::human_size(2_300_000), "2.3\u{a0}MB");
     }
 
     #[test]
     fn passwords_are_readable_and_long_enough() {
-        let p = generate_password();
+        let p = generate_password().unwrap();
         assert_eq!(p.len(), 12);
         assert!(p.chars().all(|c| c.is_ascii_alphanumeric()));
     }
@@ -1624,7 +1574,7 @@ mod tests {
         // Cloudflare's own 413: unmistakable.
         let m = cloudflare_hint(&a, "Upload failed", "big.iso", big, Some(413), true).unwrap();
         assert!(m.contains("Cloudflare") && m.contains("100 MB") && m.contains("Server is behind Cloudflare"), "{m}");
-        assert!(m.contains("90.0 MB pieces"), "{m}");
+        assert!(m.contains(&format!("{} pieces", crate::models::human_size(90_000_000))), "{m}");
         // A 502 with Cloudflare's headers: the proxy cut it off.
         assert!(cloudflare_hint(&a, "Upload failed", "big.iso", big, Some(502), true).unwrap().contains("cut off"));
         // Connection dropped, no headers to go by: a "possibly" hint.
@@ -1691,11 +1641,11 @@ mod tests {
     #[test]
     fn the_link_password_follows_the_choice() {
         let mut a = CloudAccount::empty();
-        assert_eq!(share_password(&a, Some("typed")), None);
+        assert_eq!(share_password(&a, Some("typed")), Ok(None));
         a.password = true;
-        assert_eq!(share_password(&a, Some(" typed ")).as_deref(), Some("typed"));
-        assert_eq!(share_password(&a, Some("  ")).map(|p| p.len()), Some(12));
-        assert_eq!(share_password(&a, None).map(|p| p.len()), Some(12));
+        assert_eq!(share_password(&a, Some(" typed ")).unwrap().as_deref(), Some("typed"));
+        assert_eq!(share_password(&a, Some("  ")).unwrap().map(|p| p.len()), Some(12));
+        assert_eq!(share_password(&a, None).unwrap().map(|p| p.len()), Some(12));
     }
 
     #[test]

@@ -78,13 +78,6 @@ impl Shape {
     }
 }
 
-/// Whether the message is OpenPGP-encrypted (either form). Cheap: no gpg.
-/// The prefetcher asks this so it never triggers a passphrase prompt on its
-/// own; only an open decrypts.
-pub fn is_encrypted(raw: &[u8]) -> bool {
-    detect(raw).is_some_and(|s| s.is_encrypted())
-}
-
 /// Find the OpenPGP structure in a raw message.
 pub fn detect(raw: &[u8]) -> Option<Shape> {
     use mail_parser::{MessageParser, MimeHeaders, PartType};
@@ -585,7 +578,7 @@ impl KeyInfo {
     pub fn usable(&self) -> bool {
         !self.disabled
             && !matches!(self.validity, KeyValidity::Revoked | KeyValidity::Expired)
-            && self.expires.is_none_or(|e| e > now_secs())
+            && self.expires.is_none_or(|e| e > crate::datefmt::now())
     }
 
     /// The fingerprint in readable groups of four.
@@ -597,13 +590,6 @@ impl KeyInfo {
             .collect::<Vec<_>>()
             .join(" ")
     }
-}
-
-fn now_secs() -> i64 {
-    std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map(|d| d.as_secs() as i64)
-        .unwrap_or(0)
 }
 
 /// The keys in the keyring: the user's own (`secret`) or everyone's.
@@ -993,8 +979,8 @@ Content-Type: multipart/encrypted; protocol=\"application/pgp-encrypted\"; bound
             }
             other => panic!("{other:?}"),
         }
-        assert!(is_encrypted(ENCRYPTED.as_bytes()));
-        assert!(!is_encrypted(SIGNED.as_bytes()));
+        assert!(detect(ENCRYPTED.as_bytes()).is_some_and(|s| s.is_encrypted()));
+        assert!(!detect(SIGNED.as_bytes()).is_some_and(|s| s.is_encrypted()));
 
         let inline = "From: a@b.c\r\nContent-Type: text/plain\r\n\r\nSee below\r\n\
 -----BEGIN PGP MESSAGE-----\r\n\r\nhQEMA\r\n-----END PGP MESSAGE-----\r\n";

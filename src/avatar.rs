@@ -326,9 +326,8 @@ fn gravatar_url(email: &str) -> String {
     // SHA-256, not MD5: Gravatar accepts either, and an MD5 of an address is
     // trivially reversed by dictionary. d=404 → no image when the sender has no
     // Gravatar, so the caller can fall through to the next tier.
-    let digest = sha2::Sha256::digest(key(email).as_bytes());
-    let hash: String = digest.iter().map(|b| format!("{b:02x}")).collect();
-    format!("https://www.gravatar.com/avatar/{hash}?s=160&d=404")
+    let hash = sha2::Sha256::digest(key(email).as_bytes());
+    format!("https://www.gravatar.com/avatar/{hash:x}?s=160&d=404")
 }
 
 /// Blocking sender-avatar lookup. The chain is local vCard PHOTO, optional

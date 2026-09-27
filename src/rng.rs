@@ -37,7 +37,7 @@ pub fn nonce(len: usize) -> Result<String, getrandom::Error> {
 /// Rejection sampling, not `% alphabet.len()` — the modulo is biased whenever
 /// 256 is not a multiple of the alphabet size. It makes no practical difference
 /// at these lengths; getting it right costs one comparison.
-fn from_alphabet(len: usize, alphabet: &[u8]) -> Result<String, getrandom::Error> {
+pub fn from_alphabet(len: usize, alphabet: &[u8]) -> Result<String, getrandom::Error> {
     let mut out = String::with_capacity(len);
     let mut buf = [0u8; 64];
     // The largest multiple of the alphabet size that fits in a byte; bytes at or

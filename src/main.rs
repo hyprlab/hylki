@@ -28,6 +28,7 @@ mod mutf7;
 mod nautilus_ext;
 mod notify;
 mod oauth;
+mod percent;
 mod pgp;
 mod platform;
 mod power;
