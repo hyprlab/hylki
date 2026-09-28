@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-09-26 17:02+0200\n"
+"PO-Revision-Date: 2026-09-28 17:02+0200\n"
 "Last-Translator: Christian Lauinger <christian@lauinger-clan.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -983,6 +983,23 @@ msgstr "CardDAV-Adressbuch"
 msgid "{date} at {time}"
 msgstr "{date} um {time}"
 
+msgid "Evolution Data Server is not available"
+msgstr "Evolution Data Server ist nicht verfügbar"
+
+msgid "The directory needs a password. Add it in Settings → LDAP Directories."
+msgstr ""
+"Für das Verzeichnis ist ein Passwort erforderlich. Fügen Sie es unter "
+"Einstellungen → LDAP-Verzeichnisse hinzu."
+
+msgid "The directory did not accept the password."
+msgstr "Das Verzeichnis hat das Passwort nicht akzeptiert."
+
+msgid "{used} of {limit} used"
+msgstr "{used} von {limit} verwendet"
+
+msgid "{free} free ({pct}%)"
+msgstr "{free} frei ({pct} %)"
+
 msgid "Encrypted message"
 msgstr "Verschlüsselte Nachricht"
 
@@ -1038,6 +1055,39 @@ msgstr "Unterzeichnet von {signer} mit einem widerrufenen Schlüssel"
 
 msgid "Signed by {signer}; the signature has expired"
 msgstr "Unterzeichnet von {signer}; die Unterschrift ist abgelaufen"
+
+msgid "Not decrypted"
+msgstr "Nicht entschlüsselt"
+
+msgid "Encrypted"
+msgstr "Verschlüsselt"
+
+msgid "Signature not checked"
+msgstr "Signatur nicht überprüft"
+
+msgid "Encrypted and signed"
+msgstr "Verschlüsselt und signiert"
+
+msgid "Signed"
+msgstr "Unterzeichnet"
+
+msgid "Signed, key not trusted"
+msgstr "Signiert, Schlüssel nicht vertrauenswürdig"
+
+msgid "Bad signature"
+msgstr "Falsche Unterschrift"
+
+msgid "Signed, unknown key"
+msgstr "Signiert, unbekannter Schlüssel"
+
+msgid "Signed, key expired"
+msgstr "Signiert, Schlüssel abgelaufen"
+
+msgid "Signed, key revoked"
+msgstr "Signiert, Schlüssel widerrufen"
+
+msgid "Signature expired"
+msgstr "Signatur abgelaufen"
 
 msgid "This message hasn't been checked."
 msgstr "Diese Nachricht wurde nicht überprüft."
@@ -1324,6 +1374,9 @@ msgstr ""
 
 msgid "Open Online Accounts…"
 msgstr "Online-Konten öffnen…"
+
+msgid "Storage"
+msgstr "Speicher"
 
 msgid "Mail Account"
 msgstr "E-Mail-Konto"
@@ -2790,6 +2843,103 @@ msgstr "Telefonnummer hinzufügen"
 msgid "Add website"
 msgstr "Website hinzufügen"
 
+msgid "LDAP Directories"
+msgstr "LDAP-Verzeichnisse"
+
+msgid "LDAP directories"
+msgstr "LDAP-Verzeichnisse"
+
+msgid ""
+"The composer looks up recipients in these directories as you type an "
+"address. They are kept by Evolution Data Server, so a directory set up in "
+"Evolution is listed here too."
+msgstr ""
+"Der Komponist sucht während der Eingabe einer Adresse in diesen "
+"Verzeichnissen nach Empfängern. Diese werden vom Evolution Data Server "
+"verwaltet, sodass auch ein in Evolution eingerichtetes Verzeichnis hier "
+"aufgeführt wird."
+
+msgid "Add Directory…"
+msgstr "Verzeichnis hinzufügen..."
+
+msgid "No directories yet."
+msgstr "Noch keine Verzeichnisse vorhanden."
+
+msgid "LDAP Directory"
+msgstr "LDAP-Verzeichnis"
+
+msgid ""
+"Evolution Data Server, which keeps the directories, is not available on this "
+"system."
+msgstr ""
+"Evolution Data Server, der die Verzeichnisse verwaltet, ist auf diesem "
+"System nicht verfügbar."
+
+msgid ""
+"The directory is removed from Evolution Data Server, so Evolution and other "
+"apps that use it stop seeing it too. Nothing on the server changes."
+msgstr ""
+"Das Verzeichnis wird aus Evolution Data Server entfernt. Dadurch ist es auch "
+"in Evolution und anderen Anwendungen, die ihn verwenden, nicht mehr sichtbar. "
+"Auf dem Server ändert sich nichts."
+
+msgid "Connected to {name}"
+msgstr "Verbunden mit {name}"
+
+msgid "{name} did not answer: {error}"
+msgstr "{name} hat nicht geantwortet: {error}"
+
+msgid "Edit Directory"
+msgstr "Verzeichnis bearbeiten"
+
+msgid "Add Directory"
+msgstr "Verzeichnis hinzufügen"
+
+msgid "Look up recipients in this directory"
+msgstr "Empfänger in diesem Verzeichnis suchen"
+
+msgid "Server"
+msgstr "Server"
+
+msgid "Encryption"
+msgstr "Verschlüsselung"
+
+msgid "StartTLS"
+msgstr "StartTLS"
+
+msgid "TLS (LDAPS)"
+msgstr "TLS (LDAPS)"
+
+msgid "Port"
+msgstr "Port"
+
+msgid "Search base, such as dc=example,dc=com"
+msgstr "Suchbasis, z. B. dc=example,dc=com"
+
+msgid "Whole tree"
+msgstr "Gesamter Verzeichnisbaum"
+
+msgid "First level"
+msgstr "Oberste Ebene"
+
+msgid "Sign-in"
+msgstr "Anmelden"
+
+msgid ""
+"Leave these empty for a directory that can be searched without signing in."
+msgstr ""
+"Lassen Sie diese Felder leer, wenn das Verzeichnis ohne Anmeldung durchsucht "
+"werden kann."
+
+msgid "Sign in as, such as cn=jane,ou=people,dc=example,dc=com"
+msgstr "Anmelden als, z. B. cn=jane,ou=people,dc=example,dc=com"
+
+msgid "Password (saved; type to replace it)"
+msgstr "Passwort (gespeichert; zum Ändern eingeben)"
+
+msgid "Enter the directory's server."
+msgstr "Geben Sie den Server des Verzeichnisses ein."
+
 msgid "Attach"
 msgstr "Anhängen"
 
@@ -3270,6 +3420,24 @@ msgstr "Der Schlüssel des Absenders wurde abgeholt und importiert."
 msgid "The sender's key was already in your keyring."
 msgstr "Der Schlüssel des Absenders war bereits in Ihrem Schlüsselring."
 
+msgid "Open Link"
+msgstr "Link öffnen"
+
+msgid "Copy Email Address"
+msgstr "E-Mail-Adresse kopieren"
+
+msgid "Copy Link Address"
+msgstr "Link-Adresse kopieren"
+
+msgid "Save Image As…"
+msgstr "Bild speichern unter…"
+
+msgid "Copy Image"
+msgstr "Bild kopieren"
+
+msgid "Copy Image Address"
+msgstr "Bildadresse kopieren"
+
 msgid "Load attachments from server"
 msgstr "Anhänge vom Server laden"
 
@@ -3676,6 +3844,16 @@ msgid ""
 msgstr ""
 "Der Tag-Editor ist geöffnet. Speichern Sie, was Sie geändert haben, oder "
 "verwerfen Sie es, bevor Sie fortfahren."
+
+msgid "Save the directory?"
+msgstr "Verzeichnis speichern?"
+
+msgid ""
+"The directory editor is open. Save what you changed, or discard it, before "
+"moving on."
+msgstr ""
+"Der Verzeichniseditor ist geöffnet. Speichern oder verwerfen Sie Ihre "
+"Änderungen, bevor Sie fortfahren."
 
 msgid "Save the account?"
 msgstr "Konto speichern?"
@@ -4418,6 +4596,17 @@ msgstr ""
 "Zeigen Sie, an wen jede Nachricht unter ihrem Absender ging, ohne auf den "
 "Empfängerchip zu klicken."
 
+msgid "Name the OpenPGP result"
+msgstr "OpenPGP-Ergebnis in Worten anzeigen"
+
+msgid ""
+"Beside the sender, say in words whether a message is signed or encrypted and "
+"whether it checks out. Off shows the lock and shield icons alone."
+msgstr ""
+"Neben dem Absender in Worten anzeigen, ob eine Nachricht signiert oder "
+"verschlüsselt ist und ob die Prüfung erfolgreich war. Wenn diese Option "
+"deaktiviert ist, werden nur die Schloss- und Schildsymbole angezeigt."
+
 msgid "Reader View switch"
 msgstr "Schalter für die Leseansicht"
 
@@ -4520,6 +4709,18 @@ msgid ""
 msgstr ""
 "Oberhalb der zitierten Nachricht schließt es, was Sie geschrieben haben; "
 "unten folgt es dem gesamten Gespräch."
+
+msgid "Separator line above the signature"
+msgstr "Trennzeile oberhalb der Signatur"
+
+msgid ""
+"Puts the standard “-- ” line above the signature. Thunderbird, Evolution and "
+"Mutt use it to dim the signature and to leave it out when they quote your "
+"message."
+msgstr ""
+"Fügt die standardmäßige Zeile „-- “ oberhalb der Signatur ein. Thunderbird, "
+"Evolution und Mutt verwenden sie, um die Signatur abgeschwächt darzustellen "
+"und beim Zitieren Ihrer Nachricht auszulassen."
 
 msgid "Spelling"
 msgstr "Rechtschreibung"
@@ -5301,9 +5502,6 @@ msgstr "Weiter"
 msgid "Sign In & Add"
 msgstr "Anmelden und hinzufügen"
 
-msgid "Port"
-msgstr "Port"
-
 msgid "Enter your email address and password first."
 msgstr "Geben Sie zuerst Ihre E-Mail-Adresse und Ihr Passwort ein."
 
@@ -5409,29 +5607,14 @@ msgstr ""
 "{from} wurde bestätigt, aber die Adressangaben passen nicht zum Namen in der "
 "Nachricht."
 
-msgid "Could not reach the JMAP server: {e}"
-msgstr "Konnte den JMAP-Server nicht erreichen: {e}"
-
-msgid "Could not list folders: {e}"
-msgstr "Ordner konnten nicht aufgelistet werden: {e}"
-
-msgid "Sending…"
-msgstr "Wird gesendet…"
-
-msgid "Still could not send “{subject}”: {e}"
-msgstr "„{subject}“ konnte immer noch nicht gesendet werden: {e}"
-
-msgid "The attachment is no longer in the message on the server"
-msgstr "Der Anhang ist nicht mehr in der Nachricht auf dem Server vorhanden"
-
-msgid "Could not load message: {e}"
-msgstr "Nachricht konnte nicht geladen werden: {e}"
-
 msgid "Syncing…"
 msgstr "Wird synchronisiert…"
 
 msgid "Could not fetch mail: {e}"
 msgstr "Konnte keine Post abrufen: {e}"
+
+msgid "Could not load message: {e}"
+msgstr "Nachricht konnte nicht geladen werden: {e}"
 
 msgid "Could not load source: {e}"
 msgstr "Quelltext konnte nicht geladen werden: {e}"
@@ -5481,27 +5664,36 @@ msgstr "Entwurf wird gespeichert…"
 msgid "Could not save draft: {e}"
 msgstr "Konnte den Entwurf nicht speichern: {e}"
 
-msgid "Could not save draft: unknown folder"
-msgstr "Entwurf konnte nicht gespeichert werden: unbekannter Ordner"
+msgid "Sending…"
+msgstr "Wird gesendet…"
 
-msgid ""
-"Send failed: {e}. The message is in the Outbox and will be sent when the "
-"connection is back."
+msgid "A Microsoft account can't receive mail from another account"
 msgstr ""
-"Senden fehlgeschlagen: {e}. Die Nachricht liegt im Postausgang und wird "
-"gesendet, sobald die Verbindung wiederhergestellt ist."
-
-msgid "Send failed: {e}"
-msgstr "Senden fehlgeschlagen: {e}"
-
-msgid "Could not reach the server"
-msgstr "Server konnte nicht erreicht werden"
+"Ein Microsoft-Konto kann keine E-Mails von einem anderen Konto übernehmen"
 
 msgid "Removing the attachment…"
 msgstr "Anhang wird entfernt…"
 
 msgid "Could not remove the attachment: {e}"
 msgstr "Anhang konnte nicht entfernt werden: {e}"
+
+msgid "Could not list folders: {e}"
+msgstr "Ordner konnten nicht aufgelistet werden: {e}"
+
+msgid "The attachment is no longer in the message on the server"
+msgstr "Der Anhang ist nicht mehr in der Nachricht auf dem Server vorhanden"
+
+msgid "Still could not send “{subject}”: {e}"
+msgstr "„{subject}“ konnte immer noch nicht gesendet werden: {e}"
+
+msgid "Could not reach the JMAP server: {e}"
+msgstr "Konnte den JMAP-Server nicht erreichen: {e}"
+
+msgid "Could not save draft: unknown folder"
+msgstr "Entwurf konnte nicht gespeichert werden: unbekannter Ordner"
+
+msgid "Could not reach the server"
+msgstr "Server konnte nicht erreicht werden"
 
 msgid "That folder is not on the server"
 msgstr "Dieser Ordner ist nicht auf dem Server vorhanden"
@@ -5585,6 +5777,16 @@ msgid_plural "Downloading attachments… {n} remaining"
 msgstr[0] "Anhänge werden heruntergeladen… {n} verbleibend"
 msgstr[1] "Anhänge werden heruntergeladen… {n} verbleibend"
 
+msgid ""
+"Send failed: {e}. The message is in the Outbox and will be sent when the "
+"connection is back."
+msgstr ""
+"Senden fehlgeschlagen: {e}. Die Nachricht liegt im Postausgang und wird "
+"gesendet, sobald die Verbindung wiederhergestellt ist."
+
+msgid "Send failed: {e}"
+msgstr "Senden fehlgeschlagen: {e}"
+
 msgid "“{subject}” will be sent {when}"
 msgstr "„{subject}“ wird {when} gesendet"
 
@@ -5619,10 +5821,6 @@ msgstr ""
 
 msgid "Inbox"
 msgstr "Posteingang"
-
-msgid "A Microsoft account can't receive mail from another account"
-msgstr ""
-"Ein Microsoft-Konto kann keine E-Mails von einem anderen Konto übernehmen"
 
 msgid "Email Client"
 msgstr "E-Mail-Client"
