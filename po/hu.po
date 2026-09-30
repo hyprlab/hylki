@@ -477,7 +477,7 @@ msgstr[1] "{n} üzeneteket nem sikerült áthelyezni a {account} fiókba: {error
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
 msgstr[0] "Egy üzenet áthelyezése a {account} fiókba…"
-msgstr[1] "Üzenetek áthelyezése a {account} fiókba…"
+msgstr[1] "{n} üzenet áthelyezése a {account} fiókba…"
 
 msgid "One message stayed put: this account can't take mail from another"
 msgstr ""
@@ -690,8 +690,8 @@ msgstr[1] "{n} üzenetből {tagged} felcímkézése"
 
 msgid "Filters filed {filed} of {n} message away"
 msgid_plural "Filters filed {filed} of {n} messages away"
-msgstr[0] "A szűrők a {n} üzenetből {n} darabot elrejtettek"
-msgstr[1] "A szűrők a {n} üzenetből {n} darabot elrejtettek"
+msgstr[0] "A szűrők a {n} üzenetből {filed} darabot elrejtettek"
+msgstr[1] "A szűrők a {n} üzenetből {filed} darabot elrejtettek"
 
 msgid "Filters tagged {tagged} and filed {filed} of {n} message"
 msgid_plural "Filters tagged {tagged} and filed {filed} of {n} messages"
