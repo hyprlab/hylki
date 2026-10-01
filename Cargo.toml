@@ -95,6 +95,9 @@ wayland-scanner = "0.31"
 # .gresource blob embedded in the binary. See build.rs.
 glib-build-tools = "0.20"
 
+[dev-dependencies]
+tokio = { version = "1", features = ["test-util"] }
+
 [profile.dev]
 opt-level = 1
 

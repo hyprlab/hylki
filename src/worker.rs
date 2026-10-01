@@ -30,8 +30,10 @@ use crate::i18n::{i18n, i18n_f, ni18n_f};
 
 /// The JMAP path (#245), a child module so it shares this file's helpers.
 mod graph;
+mod imap_io;
 mod jmap;
 use graph::*;
+use imap_io::ImapIo;
 mod strip;
 
 /// Number of most-recent messages to fetch attachment info (BODYSTRUCTURE) for;
@@ -698,7 +700,7 @@ impl WorkerEvent {
     }
 }
 
-type ImapSession = Session<TlsStream<TcpStream>>;
+type ImapSession = Session<ImapIo<TlsStream<TcpStream>>>;
 
 /// Run blocking work (an HTTP request, a cache query) off the async
 /// threads; a task that panicked reads as an error.
@@ -3181,8 +3183,9 @@ async fn recv_one(rx: &mut mpsc::UnboundedReceiver<MailRequest>) -> IdleOutcome 
 /// next request reconnects (#91: an unbounded await here swallowed the very
 /// request that interrupted the IDLE).
 async fn idle_done(
-    handle: async_imap::extensions::idle::Handle<TlsStream<TcpStream>>,
+    mut handle: async_imap::extensions::idle::Handle<ImapIo<TlsStream<TcpStream>>>,
 ) -> Option<ImapSession> {
+    handle.as_mut().set_idle(false);
     match tokio::time::timeout(IDLE_DONE_TIMEOUT, handle.done()).await {
         Ok(res) => res.ok(),
         Err(_) => {
@@ -3235,6 +3238,7 @@ async fn idle_wait(
         Request(Option<MailRequest>),
     }
     let wake = {
+        handle.as_mut().set_idle(true);
         let (idle_fut, stop) = handle.wait_with_timeout(Duration::from_secs(timeout_secs));
         tokio::select! {
             r = idle_fut => Wake::Idle(r),
@@ -3466,6 +3470,7 @@ async fn watch_folder(
                 _ => break, // error or wedged; drop the connection and redial
             }
             let woke = {
+                handle.as_mut().set_idle(true);
                 let (idle_fut, _stop) = handle.wait_with_timeout(Duration::from_secs(timeout));
                 matches!(
                     idle_fut.await,
@@ -5834,10 +5839,10 @@ async fn connect_inner(account: &AccountConfig) -> Result<ImapSession, Box<dyn s
         plain.run_command_and_check_ok("STARTTLS", None).await?;
         let stream = tls.connect(account.imap_host.as_str(), plain.into_inner()).await?;
         // A server that accepted STARTTLS does not send a second greeting.
-        async_imap::Client::new(stream)
+        async_imap::Client::new(ImapIo::new(stream))
     } else {
         let stream = tls.connect(account.imap_host.as_str(), tcp).await?;
-        let mut client = async_imap::Client::new(stream);
+        let mut client = async_imap::Client::new(ImapIo::new(stream));
         // Consume the server greeting before issuing commands. LOGIN tolerates an
         // unread greeting, but the AUTHENTICATE handshake reads it as the command
         // reply and deadlocks — so read it explicitly here.

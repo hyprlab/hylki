@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fixed: mail syncing could wait forever on a silent IMAP connection.**
+  Reads and writes now fail after 60 seconds without progress, including
+  reads inside a FETCH response, so the worker can reconnect instead of
+  leaving later refreshes queued behind it. Downloads that keep receiving
+  data can take longer, and quiet IMAP push waits keep their own deadlines.
 - **Added: recipients from LDAP directories** (#307, requested by Isak
   Samsten, whose branch the composer's lookup is based on). Settings → LDAP
   Directories adds a company directory: server, encryption, search base and,
