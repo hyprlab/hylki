@@ -5667,6 +5667,9 @@ msgstr "Папки под строкой «Фильтры»."
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Всё ещё не удаётся отправить «{subject}»: {e}"
 
+msgid "IMAP connection stopped making progress"
+msgstr ""
+
 #, fuzzy
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Не удалось создать папку: {e}"

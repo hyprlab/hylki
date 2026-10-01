@@ -5697,6 +5697,9 @@ msgstr "La pièce jointe ne se trouve plus dans le message sur le serveur"
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Impossible d'envoyer « {subject} » : {e}"
 
+msgid "IMAP connection stopped making progress"
+msgstr ""
+
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Impossible de contacter le serveur JMAP : {e}"
 

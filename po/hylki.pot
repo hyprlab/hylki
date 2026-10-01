@@ -5037,6 +5037,9 @@ msgstr ""
 msgid "Still could not send “{subject}”: {e}"
 msgstr ""
 
+msgid "IMAP connection stopped making progress"
+msgstr ""
+
 msgid "Could not reach the JMAP server: {e}"
 msgstr ""
 

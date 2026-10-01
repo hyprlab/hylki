@@ -5681,6 +5681,9 @@ msgstr "Der Anhang ist nicht mehr in der Nachricht auf dem Server vorhanden"
 msgid "Still could not send “{subject}”: {e}"
 msgstr "„{subject}“ konnte immer noch nicht gesendet werden: {e}"
 
+msgid "IMAP connection stopped making progress"
+msgstr ""
+
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Konnte den JMAP-Server nicht erreichen: {e}"
 

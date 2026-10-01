@@ -5648,6 +5648,9 @@ msgstr "El archivo adjunto ya no está en el mensaje del servidor"
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Todavía no se pudo enviar «{subject}»: {e}"
 
+msgid "IMAP connection stopped making progress"
+msgstr ""
+
 msgid "Could not reach the JMAP server: {e}"
 msgstr "No se pudo contactar con el servidor JMAP: {e}"
 

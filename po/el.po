@@ -5695,6 +5695,9 @@ msgstr "Το συνημμένο δεν υπάρχει πλέον στο μήνυ
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Εξακολουθεί να μην είναι δυνατή η αποστολή του «{subject}»: {e}"
 
+msgid "IMAP connection stopped making progress"
+msgstr ""
+
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Δεν ήταν δυνατή η επικοινωνία με τον διακομιστή JMAP: {e}"
 

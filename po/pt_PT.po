@@ -5708,6 +5708,9 @@ msgstr "Essa pasta não existe no servidor"
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Continuou a não ser possível enviar «{subject}»: {e}"
 
+msgid "IMAP connection stopped making progress"
+msgstr ""
+
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Não foi possível aceder ao servidor JMAP: {e}"
 

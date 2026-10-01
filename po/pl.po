@@ -5696,6 +5696,9 @@ msgstr "Załącznika nie ma już w wiadomości na serwerze"
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Nadal nie udało się wysłać wiadomości „{subject}”: {e}"
 
+msgid "IMAP connection stopped making progress"
+msgstr ""
+
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Nie udało się połączyć z serwerem JMAP: {e}"
 

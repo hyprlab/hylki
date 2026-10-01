@@ -10,6 +10,8 @@ use std::time::Duration;
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 use tokio::time::Sleep;
 
+use crate::i18n::i18n;
+
 pub(super) const IO_TIMEOUT: Duration = Duration::from_secs(60);
 
 #[derive(Debug)]
@@ -44,7 +46,7 @@ impl<S> ImapIo<S> {
     fn timed_out() -> io::Error {
         io::Error::new(
             io::ErrorKind::TimedOut,
-            "IMAP connection stopped making progress",
+            i18n("IMAP connection stopped making progress"),
         )
     }
 }
