@@ -29,10 +29,38 @@ fn connection() -> Option<&'static zbus::blocking::Connection> {
     .as_ref()
 }
 
+/// The value last sent, so repeats can be skipped.
+static LAST: Mutex<Option<u32>> = Mutex::new(None);
+
+/// Forget what was last sent, so the next [`set_count`] goes out even if the
+/// count has not changed. The dock can lose a badge without our connection
+/// going away: GNOME Shell disables extensions like Dash to Dock while the
+/// screen is locked and enables them afresh on unlock, and a restarted
+/// Plasma shell starts empty. Neither asks for the count again.
+pub fn resend() {
+    *LAST.lock().unwrap_or_else(|e| e.into_inner()) = None;
+}
+
+/// Invoke `on_back` each time a dock starts listening for badges. Dash to
+/// Dock and Ubuntu Dock own `com.canonical.Unity` for exactly as long as
+/// they keep badges, and start empty each time they take it: after an
+/// unlock (GNOME Shell disables them on the lock screen), after Do Not
+/// Disturb, after the shell restarts. Must be called on the GTK main thread.
+pub fn watch_dock<F: Fn() + Send + Sync + 'static>(on_back: F) {
+    let id = gtk::gio::bus_watch_name(
+        gtk::gio::BusType::Session,
+        "com.canonical.Unity",
+        gtk::gio::BusNameWatcherFlags::NONE,
+        move |_, _, _| on_back(),
+        |_, _| {},
+    );
+    // Watched for the life of the process.
+    std::mem::forget(id);
+}
+
 /// Show `count` on the launcher icon; 0 hides the badge. Repeats of the
 /// value last sent are skipped, since this runs on every unread change.
 pub fn set_count(count: u32) {
-    static LAST: Mutex<Option<u32>> = Mutex::new(None);
     {
         let mut last = LAST.lock().unwrap_or_else(|e| e.into_inner());
         if *last == Some(count) {

@@ -1696,6 +1696,8 @@ pub enum AppMsg {
     /// The system resumed from sleep — worker IMAP sockets are stale, so
     /// reconnect every account and reload the visible folder.
     SystemResumed,
+    /// The dock may have dropped the launcher badge; send it again.
+    LauncherCountLost,
     /// The network came back after being down: the same reconnect as a wake.
     NetworkBack,
     /// Open the settings window on the user's preferred view (the menu entry).
@@ -3438,6 +3440,13 @@ impl SimpleComponent for AppModel {
                 let _ = s.send(AppMsg::SystemResumed);
             }
         });
+        // A dock that has just (re)started holds no badge until we send it.
+        crate::launcher_badge::watch_dock({
+            let s = sender.input_sender().clone();
+            move || {
+                let _ = s.send(AppMsg::LauncherCountLost);
+            }
+        });
         crate::power::watch_network({
             let s = sender.input_sender().clone();
             move || {
@@ -3805,9 +3814,13 @@ impl SimpleComponent for AppModel {
                 psender.input(AppMsg::PresentComposers);
             });
             app.add_action(&present_compose);
-            model.window.connect_is_active_notify(|w| {
+            let fsender = sender.clone();
+            model.window.connect_is_active_notify(move |w| {
                 if w.is_active() {
                     crate::notify::withdraw_compose_ready();
+                    // Focus comes back after an unlock, when the dock has
+                    // just been rebuilt without the badge.
+                    fsender.input(AppMsg::LauncherCountLost);
                 }
             });
 
@@ -6852,6 +6865,7 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::Refresh => {
+                self.resend_launcher_count();
                 if self.unified {
                     let reqs = self.unified_targets();
                     for (account_id, folder_id, path) in reqs {
@@ -9465,6 +9479,9 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::SystemResumed => {
+                // The dock may have come back from the lock screen without
+                // the badge; nothing else would send it again.
+                self.resend_launcher_count();
                 // logind and the clock check both report the same wake.
                 let now = std::time::Instant::now();
                 if self.last_wake.is_some_and(|t| now - t < std::time::Duration::from_secs(30)) {
@@ -9490,6 +9507,8 @@ impl SimpleComponent for AppModel {
             }
 
             AppMsg::NetworkBack => self.reconnect_workers(&sender),
+
+            AppMsg::LauncherCountLost => self.resend_launcher_count(),
 
             AppMsg::OpenSettings => {
                 // The "opens to" preference decides the first open of the
@@ -12812,6 +12831,13 @@ impl AppModel {
     fn push_launcher_count(&self) {
         let count = if self.launcher_count { self.inboxes_unread() } else { 0 };
         crate::launcher_badge::set_count(count);
+    }
+
+    /// Send the launcher badge again even though the count is unchanged, for
+    /// when the dock may have dropped it (a lock, a wake).
+    fn resend_launcher_count(&self) {
+        crate::launcher_badge::resend();
+        self.push_launcher_count();
     }
 
     /// Publish the tray item with the current icon, unread total and mail list.

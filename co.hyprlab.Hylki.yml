@@ -36,6 +36,7 @@ finish-args:
   - --talk-name=org.gnome.evolution.dataserver.*  # GNOME Contacts (Evolution Data Server)
   - --talk-name=org.gnome.Contacts                 # "Open GNOME Contacts" button (D-Bus activation)
   - --talk-name=org.kde.StatusNotifierWatcher      # optional tray icon (#116); absent on plain GNOME
+  - --see-name=com.canonical.Unity                 # notice Dash/Ubuntu Dock coming back, to resend the badge (#271)
   - --talk-name=org.gnome.Nautilus                 # "Restart Files" after installing the Files extension (#188)
   # Deliberately NOT --talk-name=org.freedesktop.Flatpak: that permits
   # `flatpak-spawn --host`, i.e. arbitrary command execution outside the
