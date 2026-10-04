@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-03 11:39+0200\n"
+"PO-Revision-Date: 2026-10-04 17:34+0200\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -154,9 +154,8 @@ msgstr "Objet (A–Z)"
 msgid "Unread first"
 msgstr "Non lus en premier"
 
-#, fuzzy
 msgid "Starred first"
-msgstr "Non lus en premier"
+msgstr "Favoris en premier"
 
 msgid "Create Folder"
 msgstr "Créer un dossier"
@@ -961,36 +960,32 @@ msgstr "Nom (Z à A)"
 msgid "Full Path"
 msgstr "Chemin complet"
 
-#, fuzzy
 msgid "Sender"
-msgstr "Expéditeurs"
+msgstr "Expéditeur"
 
-#, fuzzy
 msgid "Recipients"
-msgstr "Masquer les destinataires"
+msgstr "Destinataires"
 
 msgid "Correspondents"
-msgstr ""
+msgstr "Correspondants"
 
 msgid "Subject"
 msgstr "Objet"
 
-#, fuzzy
 msgid "Attachment"
-msgstr "Pièces jointes"
+msgstr "Pièce jointe"
 
-#, fuzzy
 msgid "Importance"
-msgstr "Importer la clé"
+msgstr "Importance"
 
 msgid "Account"
 msgstr "Compte"
 
 msgid "Due Date"
-msgstr ""
+msgstr "Date d'échéance"
 
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 msgid "Spam"
 msgstr "Spam"
@@ -2872,14 +2867,16 @@ msgstr "Écrivez d'abord quelque chose, ou sélectionnez le texte à traduire."
 msgid "Could not translate"
 msgstr "Impossible de traduire"
 
-#, fuzzy
 msgid "An attachment is missing"
-msgstr "{n} pièce jointe"
+msgstr "Une pièce jointe est manquante"
 
 msgid ""
 "Hylki cannot read {names}. It was moved or deleted after it was attached. "
 "Remove it, or attach it again from where it is now."
 msgstr ""
+"Hylki ne peut pas lire {names}. Le fichier a été déplacé ou supprimé après "
+"avoir été joint. Retirez-le, ou joignez-le à nouveau depuis son emplacement "
+"actuel."
 
 msgid "Cannot send with OpenPGP"
 msgstr "Impossible d'envoyer avec OpenPGP"
@@ -2943,10 +2940,11 @@ msgstr "Choisissez une heure ultérieure à maintenant."
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
+"Le fichier a été déplacé ou supprimé. Joignez-le à nouveau depuis son "
+"emplacement actuel."
 
-#, fuzzy
 msgid "Not found"
-msgstr "Non affiché"
+msgstr "Non trouvé"
 
 msgid "Contacts"
 msgstr "Contacts"
@@ -3214,9 +3212,8 @@ msgstr ""
 "• Mettre à jour « xdg-desktop-portal » et vous reconnecter peut résoudre "
 "l'ouverture directe des liens"
 
-#, fuzzy
 msgid "me"
-msgstr "Nom"
+msgstr "moi"
 
 msgid "Choose which folders to search"
 msgstr "Choisir les dossiers dans lesquels rechercher"
@@ -3249,17 +3246,17 @@ msgid "Mark All as Unread"
 msgstr "Marquer tout comme non lu"
 
 msgid "Due"
-msgstr ""
+msgstr "Échéance"
 
 msgid "Drag to resize, double-click for the usual width"
 msgstr ""
+"Faites glisser pour redimensionner, double-cliquez pour la largeur habituelle"
 
 msgid "High importance"
-msgstr ""
+msgstr "Importance haute"
 
-#, fuzzy
 msgid "Low importance"
-msgstr "Clé importée"
+msgstr "Importance basse"
 
 msgid "Mark as read"
 msgstr "Marquer comme lu"
@@ -3987,16 +3984,14 @@ msgstr "Non affiché"
 msgid "Drop a button here to hide it"
 msgstr "Déposez un bouton ici pour le masquer"
 
-#, fuzzy
 msgid "Shown"
-msgstr "Afficher"
+msgstr "Affiché"
 
 msgid "Left to right"
-msgstr ""
+msgstr "De gauche à droite"
 
-#, fuzzy
 msgid "Drop a column here to hide it"
-msgstr "Déposez un bouton ici pour le masquer"
+msgstr "Déposez une colonne ici pour la masquer"
 
 msgid "Senders"
 msgstr "Expéditeurs"
@@ -4658,7 +4653,7 @@ msgstr ""
 "messages reste ouverte après que le curseur l'a quittée."
 
 msgid "Columns"
-msgstr ""
+msgstr "Colonnes"
 
 msgid ""
 "What a message shows when the list is on one line, from left to right. Drag "
@@ -4666,14 +4661,22 @@ msgid ""
 "stays. Due Date appears only in lists with Microsoft 365 mail. Changes apply "
 "at once."
 msgstr ""
+"Ce que montre un message lorsque la liste tient sur une seule ligne, de "
+"gauche à droite. Faites glisser les colonnes dans l'ordre souhaité, ou hors "
+"de la liste. L'objet reste toujours affiché. La date d'échéance n'apparaît "
+"que dans les listes avec une messagerie Microsoft 365. Les modifications "
+"s'appliquent immédiatement."
 
 msgid "Column headings"
-msgstr ""
+msgstr "En-têtes de colonnes"
 
 msgid ""
 "Names the columns above the list. Click one to sort the list by it, and "
 "again to reverse the order."
 msgstr ""
+"Nomme les colonnes au-dessus de la liste. Cliquez sur l'une d'elles pour "
+"trier la liste selon cette colonne, et cliquez à nouveau pour inverser "
+"l'ordre."
 
 msgid "Group messages by conversation"
 msgstr "Grouper les messages par conversation"
@@ -6102,9 +6105,8 @@ msgstr "Échec de l'envoi : {e}"
 msgid "“{subject}” will be sent {when}"
 msgstr "« {subject} » sera envoyé {when}"
 
-#, fuzzy
 msgid "Could not schedule the message."
-msgstr "Impossible de supprimer le message : {e}"
+msgstr "Impossible de programmer le message."
 
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
