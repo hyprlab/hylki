@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date:\n"
-"PO-Revision-Date: 2026-10-05 15:09+0000\n"
+"PO-Revision-Date: 2026-10-05 16:28+0000\n"
 "Last-Translator: Paulo Fino <somepaulo@duck.com>\n"
 "Language-Team: Portuguese (Brazil)\n"
 "Language: pt_BR\n"
@@ -1256,11 +1256,27 @@ msgid "Requires Proton Mail Bridge running locally."
 msgstr "Requer que o Proton Mail Bridge esteja em execução localmente."
 
 msgid ""
+"Signs in with an API token, not your password. Make one in Fastmail's "
+"settings, under Privacy & Security, with access to mail and to sending it. "
+"Mail is read and sent over JMAP."
+msgstr ""
+"Entra com um token de API em vez de sua senha. Crie um nas configurações do "
+"Fastmail, em Privacidade e segurança, com acesso aos emails e ao envio de mensagens. Os "
+"emails são lidos e enviados por JMAP."
+
+msgid ""
 "Enter your Stalwart server's address. Mail is read and sent over JMAP; no "
 "SMTP settings are needed."
 msgstr ""
 "Digite o endereço do seu servidor Stalwart. Os emails são lidos e enviados por JMAP; não "
 "é necessário configurar o SMTP."
+
+msgid ""
+"Enter your JMAP server's address, or the URL of its session resource. Mail "
+"is read and sent over JMAP; no SMTP settings are needed."
+msgstr ""
+"Digite o endereço de seu servidor JMAP ou a URL de seu recurso de sessão. Os emails são "
+"lidos e enviados por JMAP; não são necessárias configurações de SMTP."
 
 msgid "Enable POP/IMAP access in GMX settings first."
 msgstr "Ative primeiro o acesso POP/IMAP nas configurações do GMX."
@@ -1430,6 +1446,14 @@ msgstr "Nome de usuário"
 
 msgid "Password"
 msgstr "Senha"
+
+msgid "Sign in with an API token"
+msgstr "Entrar com um token de API"
+
+msgid ""
+"For servers that take a token in place of the password, as Fastmail does."
+msgstr ""
+"Para servidores que aceitam um token no lugar da senha, como o Fastmail."
 
 msgid "OAuth Client ID"
 msgstr "ID de cliente OAuth"
@@ -1804,6 +1828,11 @@ msgstr "Envia através desta conta"
 msgid "Remove this alias"
 msgstr "Remover este endereço alternativo"
 
+msgid ""
+"Kept on the server; change it through your provider's webmail interface."
+msgstr ""
+"Mantido no servidor; altere-o pela interface de webmail de seu provedor."
+
 msgid "Display name (optional)"
 msgstr "Nome de exibição (opcional)"
 
@@ -1869,6 +1898,9 @@ msgid "After {n} day"
 msgid_plural "After {n} days"
 msgstr[0] "Após {n} dia"
 msgstr[1] "Após {n} dias"
+
+msgid "API Token"
+msgstr "Token de API"
 
 #. A JMAP server is one address, and it sends the mail
 #. itself: no SMTP rows.
@@ -2801,6 +2833,9 @@ msgstr "Escreva primeiro alguma coisa ou selecione o texto a traduzir."
 msgid "Could not translate"
 msgstr "Não foi possível traduzir"
 
+msgid "Cannot send with OpenPGP"
+msgstr "Não é possível enviar com OpenPGP"
+
 msgid "An attachment is missing"
 msgstr "Falta um anexo"
 
@@ -2810,9 +2845,6 @@ msgid ""
 msgstr ""
 "O Hylki não consegue ler {names}. O arquivo foi movido ou excluído depois de ser anexado. "
 "Remova-o ou anexe-o novamente a partir de sua localização atual."
-
-msgid "Cannot send with OpenPGP"
-msgstr "Não é possível enviar com OpenPGP"
 
 msgid "Check the From address"
 msgstr "Verificar o endereço do campo De"
@@ -3469,21 +3501,6 @@ msgstr "A mensagem ainda não foi carregada."
 msgid "That key is no longer in your keyring."
 msgstr "Essa chave não está mais no seu chaveiro."
 
-msgid "Trust this key?"
-msgstr "Confiar nesta chave?"
-
-msgid ""
-"Compare the fingerprint with the one {uid} gives you in person or over "
-"another channel. Trusting a key you have not checked lets an impostor's "
-"signature pass as theirs."
-msgstr ""
-"Compare a impressão digital com a fornecida por {uid} pessoalmente ou por outro canal. "
-"Confiar em uma chave que você não verificou permite que a assinatura de um impostor seja aceita "
-"como pertencente a essa pessoa."
-
-msgid "Trust"
-msgstr "Confiar"
-
 msgid "Key trusted."
 msgstr "Chave considerada confiável."
 
@@ -3565,6 +3582,21 @@ msgstr "Ocultar texto citado"
 
 msgid "Save Image"
 msgstr "Salvar imagem"
+
+msgid "Trust this key?"
+msgstr "Confiar nesta chave?"
+
+msgid ""
+"Compare the fingerprint with the one {uid} gives you in person or over "
+"another channel. Trusting a key you have not checked lets an impostor's "
+"signature pass as theirs."
+msgstr ""
+"Compare a impressão digital com a fornecida por {uid} pessoalmente ou por outro canal. "
+"Confiar em uma chave que você não verificou permite que a assinatura de um impostor seja aceita "
+"como pertencente a essa pessoa."
+
+msgid "Trust"
+msgstr "Confiar"
 
 msgid "The sender's key was imported from the message."
 msgstr "A chave do remetente foi importada da mensagem."
@@ -6103,3 +6135,4 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
