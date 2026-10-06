@@ -317,12 +317,23 @@ fn row_widget() -> gtk::Box {
     icon.add_css_class("folder-icon");
     row.append(&icon);
     row.append(&adw::Avatar::new(28, None, true));
+    // The name, and under it the address: the message list beside it
+    // leaves names out, and two people can share one.
+    let text = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    text.set_hexpand(true);
+    text.set_valign(gtk::Align::Center);
     let name = gtk::Label::new(None);
-    name.set_hexpand(true);
     name.set_halign(gtk::Align::Start);
     name.set_ellipsize(gtk::pango::EllipsizeMode::End);
     name.add_css_class("account-name");
-    row.append(&name);
+    text.append(&name);
+    let address = gtk::Label::new(None);
+    address.set_halign(gtk::Align::Start);
+    address.set_ellipsize(gtk::pango::EllipsizeMode::End);
+    address.add_css_class("caption");
+    address.add_css_class("dim-label");
+    text.append(&address);
+    row.append(&text);
     let badge = gtk::Label::new(None);
     style_badge(&badge, 5);
     row.append(&badge);
@@ -333,21 +344,31 @@ fn row_widget() -> gtk::Box {
 fn fill(row: &gtk::Box, address: &str, shown: &Shown) {
     let Some(icon) = row.first_child() else { return };
     let Some(avatar) = icon.next_sibling().and_downcast::<adw::Avatar>() else { return };
-    let Some(name) = avatar.next_sibling().and_downcast::<gtk::Label>() else { return };
-    let Some(badge) = name.next_sibling().and_downcast::<gtk::Label>() else { return };
+    let Some(text) = avatar.next_sibling() else { return };
+    let Some(name) = text.first_child().and_downcast::<gtk::Label>() else { return };
+    let Some(line) = name.next_sibling().and_downcast::<gtk::Label>() else { return };
+    let Some(badge) = text.next_sibling().and_downcast::<gtk::Label>() else { return };
     let all = address.is_empty();
     icon.set_visible(all);
     avatar.set_visible(!all);
+    // Without a name the address is the title, and not said twice.
     let (label, unread) = match shown.people.get(address) {
         _ if all => (i18n("All People"), shown.all_unread),
-        Some(p) => (p.display_name().to_string(), p.unread),
+        Some(p) if !p.name.is_empty() => (p.name.clone(), p.unread),
+        Some(p) => (address.to_string(), p.unread),
         None => (address.to_string(), 0),
     };
     if name.label() != label {
         name.set_label(&label);
     }
-    if !all && avatar.text().as_deref() != Some(label.as_str()) {
-        avatar.set_text(Some(&label));
+    let second = if all || label == address { "" } else { address };
+    line.set_visible(!second.is_empty());
+    if line.label() != second {
+        line.set_label(second);
+    }
+    let initials = shown.people.get(address).map_or(label.as_str(), |p| p.display_name());
+    if !all && avatar.text().as_deref() != Some(initials) {
+        avatar.set_text(Some(initials));
     }
     row.set_tooltip_text((!all).then_some(address));
     badge.set_visible(unread > 0);

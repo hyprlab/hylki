@@ -212,8 +212,8 @@ the key an account is included.
 ### The People view
 
 The **People** button in the sidebar header swaps the folder list for the
-people you exchange mail with, newest exchange first, each with a count of
-their unread mail. Picking a person shows the mail between the two of you
+people you exchange mail with, newest exchange first, each with their
+address under the name and a count of their unread mail. Picking a person shows the mail between the two of you
 in one list: what they sent you and what you sent them, from the Inbox,
 Sent, Archive and every other folder except Trash, Junk and Drafts, across
 the accounts in All Inboxes. **All People** at the top shows all of that
