@@ -3351,6 +3351,9 @@ msgstr ""
 msgid "Low importance"
 msgstr "Kulcs importálva"
 
+msgid "You: {text}"
+msgstr ""
+
 msgid "Mark as read"
 msgstr "Megjelölés olvasottként"
 

@@ -3351,6 +3351,9 @@ msgstr ""
 msgid "Low importance"
 msgstr "Ключ импортирован"
 
+msgid "You: {text}"
+msgstr ""
+
 msgid "Mark as read"
 msgstr "Отметить как прочитанное"
 

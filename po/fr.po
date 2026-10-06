@@ -3359,6 +3359,9 @@ msgstr "Importance haute"
 msgid "Low importance"
 msgstr "Importance basse"
 
+msgid "You: {text}"
+msgstr ""
+
 msgid "Mark as read"
 msgstr "Marquer comme lu"
 

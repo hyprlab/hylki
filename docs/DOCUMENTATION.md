@@ -217,7 +217,9 @@ their unread mail. Picking a person shows the mail between the two of you
 in one list: what they sent you and what you sent them, from the Inbox,
 Sent, Archive and every other folder except Trash, Junk and Drafts, across
 the accounts in All Inboxes. **All People** at the top shows all of that
-mail together.
+mail together. A person's rows lead with the subject and leave out their
+name and picture, which the list beside them already shows; when the
+newest message in a row is yours, its text starts with "You:".
 
 Mail you receive belongs to its sender, and mail you send belongs to each
 of its To and Cc recipients. Your account addresses and their aliases are

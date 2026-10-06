@@ -3371,6 +3371,9 @@ msgstr ""
 msgid "Low importance"
 msgstr "Schlüssel importiert"
 
+msgid "You: {text}"
+msgstr ""
+
 msgid "Mark as read"
 msgstr "Als gelesen markieren"
 

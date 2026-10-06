@@ -16,7 +16,7 @@ use gtk::glib;
 use gtk::subclass::prelude::ObjectSubclassIsExt;
 
 use crate::config::ListColumn;
-use crate::i18n::i18n;
+use crate::i18n::{i18n, i18n_f};
 use crate::models::{Importance, Message};
 use crate::ui::column_bin::ColumnBin;
 use crate::ui::context_menu::{show_context_menu, MenuEntry};
@@ -481,6 +481,11 @@ pub struct RowLook {
     pub in_drafts: bool,
     /// Sent-folder rows name the recipient, not the sender (#27).
     pub show_recipient: bool,
+    /// The list is one person's mail (the People view), which the People
+    /// pane already names: a card leads with the subject, without the name
+    /// or the circle, and mail the user wrote says so. Holds the user's
+    /// addresses.
+    pub one_person: Option<std::rc::Rc<crate::people::Own>>,
     /// The accounts whose avatars wear their color as a ring (unified view).
     pub ringed: std::collections::HashSet<u32>,
     /// Whether conversations open out in the list at all.
@@ -507,6 +512,7 @@ impl Default for RowLook {
             in_junk: false,
             in_drafts: false,
             show_recipient: false,
+            one_person: None,
             ringed: Default::default(),
             thread_expansion: true,
             face_gen: 0,
@@ -1723,7 +1729,9 @@ impl Row {
         w.text.set_valign(if look.avatars { gtk::Align::Center } else { gtk::Align::Start });
 
         w.name_col.set_visible(col(ListColumn::Sender));
-        w.name.set_label(&self.name_line(&data, &look));
+        let one_person = look.one_person.is_some() && !single;
+        let name = if one_person { msg.subject.clone() } else { self.name_line(&data, &look) };
+        w.name.set_label(&name);
         w.name.set_css_classes(if unread { &["message-sender", "unread"] } else { &["message-sender"] });
         // On one line an icon keeps its column whether lit or not, so the
         // columns after it line up.
@@ -1764,12 +1772,12 @@ impl Row {
             &["thread-toggle-icon"]
         });
 
-        w.subject_line.set_visible(look.show_subject);
+        w.subject.set_visible(!one_person);
         // One line: the subject, then its text dimmed after it, in one label,
         // so the subject is cut only once the text has gone (#334).
         if single {
             let esc = |t: &str| gtk::glib::markup_escape_text(t).to_string();
-            let text = crate::models::preview_display(meta.preview.as_deref().unwrap_or(&msg.preview));
+            let text = self.preview_text(&data, &look, meta.preview.as_deref().unwrap_or(&msg.preview));
             let markup = if look.preview_lines > 0 && !text.is_empty() {
                 format!("{} <span weight=\"normal\" alpha=\"55%\">— {}</span>", esc(&msg.subject), esc(&text))
             } else {
@@ -1783,11 +1791,13 @@ impl Row {
         w.subject.set_css_classes(if unread { &["message-subject", "unread"] } else { &["message-subject"] });
         w.tags_box.set_visible(col(ListColumn::Tags));
         self.render_tags(msg, &shared, &look);
+        // With the subject moved up, the line is left for the tags.
+        w.subject_line.set_visible(look.show_subject && (!one_person || w.tags_box.first_child().is_some()));
 
         let preview = meta.preview.as_deref().unwrap_or(&msg.preview);
         w.preview_line.set_visible(look.preview_lines > 0);
         w.lock.set_visible(crate::models::preview_is_encrypted(preview));
-        let shown = crate::models::preview_display(preview);
+        let shown = self.preview_text(&data, &look, preview);
         if single {
             // Carried by the subject's label on one line.
             w.preview.set_visible(false);
@@ -1906,6 +1916,19 @@ impl Row {
     }
 
     // ── Names and faces ──
+
+    /// The preview as shown. In one person's mail, where no names are
+    /// shown, the user's own newest message starts with "You:".
+    fn preview_text(&self, data: &RowData, look: &RowLook, preview: &str) -> String {
+        let text = crate::models::preview_display(preview);
+        let Some(own) = &look.one_person else { return text };
+        let from = data.meta.from.as_ref().map_or(data.msg.from_addr.as_str(), |(_, addr)| addr.as_str());
+        if own.contains(&from.trim().to_lowercase()) {
+            i18n_f("You: {text}", &[("text", &text)])
+        } else {
+            text
+        }
+    }
 
     /// The row's name line: the sender — or, in a Sent folder, who the
     /// message went to, since every sender there is you (#27).

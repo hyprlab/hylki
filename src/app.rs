@@ -5611,6 +5611,7 @@ impl SimpleComponent for AppModel {
                 self.showing_contacts = false;
                 self.unified = false;
                 self.index_view = None;
+                self.message_list.emit(MessageListInput::SetOnePerson(None));
                 self.selected = None;
                 self.current = None;
                 self.current_thread.clear();
@@ -6423,6 +6424,8 @@ impl SimpleComponent for AppModel {
                     self.message_list.emit(MessageListInput::SetSearchPool(
                         build_search_pool(&self.message_cache),
                     ));
+                    // Results come from anyone: their rows name them.
+                    self.message_list.emit(MessageListInput::SetOnePerson(None));
                     // Results span accounts; tint rows by account (as in the unified
                     // inbox) so their origin is legible.
                     if self.accounts.len() > 1 {
@@ -6434,6 +6437,7 @@ impl SimpleComponent for AppModel {
                     // Restore the tint state the underlying view wants.
                     self.message_list
                         .emit(MessageListInput::SetColorize(self.unified));
+                    self.sync_one_person();
                 }
             }
             AppMsg::MessageSelected { message: m, thread, solo } => {
@@ -14390,6 +14394,7 @@ impl AppModel {
         self.message_list.emit(MessageListInput::SetShowRecipient(
             view == UnifiedView::Kind(FolderKind::Sent),
         ));
+        self.message_list.emit(MessageListInput::SetOnePerson(None));
         self.message_list.emit(MessageListInput::SetRestorable(false));
         self.message_list.emit(MessageListInput::SetInJunk(false));
         self.message_list
@@ -14697,6 +14702,7 @@ impl AppModel {
             .and_then(|fs| fs.iter().find(|f| f.id == folder_id))
             .is_some_and(|f| f.kind == FolderKind::Sent);
         self.message_list.emit(MessageListInput::SetShowRecipient(is_sent));
+        self.message_list.emit(MessageListInput::SetOnePerson(None));
         // Trash and Junk offer the way back to the Inbox (#138); Junk's is
         // "Not Spam" (#168).
         let kind = self.folder_kind(account_id, folder_id);
@@ -18133,6 +18139,7 @@ impl AppModel {
         self.message_list.emit(MessageListInput::SetColorize(true));
         self.message_list.emit(MessageListInput::ResetPaging);
         self.message_list.emit(MessageListInput::SetShowRecipient(false));
+        self.sync_one_person();
         self.message_list.emit(MessageListInput::SetRestorable(false));
         self.message_list.emit(MessageListInput::SetInJunk(false));
         self.message_list.emit(MessageListInput::SetInDrafts(false));
@@ -18190,6 +18197,13 @@ impl AppModel {
         p.unread = if unread { p.unread + 1 } else { p.unread.saturating_sub(1) };
         let unread = p.unread;
         self.people_panes_emit(PeoplePaneInput::SetUnread { address, unread });
+    }
+
+    /// Tell the message list whether it shows one person's mail, whose
+    /// name its rows can then leave out.
+    fn sync_one_person(&self) {
+        let one = matches!(self.index_view, Some(IndexView::People(Some(_))));
+        self.message_list.emit(MessageListInput::SetOnePerson(one.then(|| self.own_addresses())));
     }
 
     /// The first account's inbox: where leaving the People view lands when

@@ -3368,6 +3368,9 @@ msgstr ""
 msgid "Low importance"
 msgstr "Το κλειδί εισήχθη"
 
+msgid "You: {text}"
+msgstr ""
+
 msgid "Mark as read"
 msgstr "Σήμανση ως αναγνωσμένο"
 

@@ -596,6 +596,9 @@ pub struct MessageList {
     default_expanded: bool,
     /// The open folder is Sent: rows name recipients instead of senders (#27).
     show_recipient: bool,
+    /// The list is one person's mail (the People view), with the user's
+    /// addresses: rows leave out the name the People pane already shows.
+    one_person: Option<Rc<crate::people::Own>>,
     /// The list shows Trash or Junk, where menus offer "Move to Inbox" (#138).
     restorable: bool,
     /// The list shows Junk: "Not Spam" stands where "Mark as Spam" would.
@@ -839,6 +842,9 @@ pub enum MessageListInput {
     /// The open folder is (or stopped being) a Sent folder — rows name the
     /// recipient there instead of the sender (#27).
     SetShowRecipient(bool),
+    /// The list is (or stopped being) one person's mail, given the user's
+    /// addresses: rows leave the person's name out.
+    SetOnePerson(Option<crate::people::Own>),
     /// Show or hide the colored avatars (#29).
     SetAvatars(bool),
     /// The avatars and preview lines together, as the settings and Focus
@@ -1409,6 +1415,7 @@ impl SimpleComponent for MessageList {
             reader_keys: Vec::new(),
             expanded_threads: std::collections::HashSet::new(),
             show_recipient: false,
+            one_person: None,
             restorable: false,
             in_junk: false,
             in_drafts: false,
@@ -1845,6 +1852,12 @@ impl SimpleComponent for MessageList {
             MessageListInput::SetShowRecipient(on) => {
                 if self.show_recipient != on {
                     self.show_recipient = on;
+                    self.sync_look();
+                }
+            }
+            MessageListInput::SetOnePerson(own) => {
+                if self.one_person.is_some() || own.is_some() {
+                    self.one_person = own.map(Rc::new);
                     self.sync_look();
                 }
             }
@@ -3019,7 +3032,8 @@ impl MessageList {
         {
             let mut look = self.shared.look.borrow_mut();
             look.gravatar = self.gravatar;
-            look.avatars = self.avatars;
+            // One person's mail: every circle would be theirs or the user's.
+            look.avatars = self.avatars && self.one_person.is_none();
             look.sender_logos = self.sender_logos;
             look.preview_lines = self.preview_lines;
             look.show_subject = self.show_subject;
@@ -3027,15 +3041,11 @@ impl MessageList {
             // it, so actions come from the menu, swipes and keys there.
             look.show_palette = self.list_palette && !self.single_line;
             look.single_line = self.single_line;
-            look.columns = self
-                .columns
-                .iter()
-                .copied()
-                .filter(|c| *c != crate::config::ListColumn::Due || self.graph_in_view)
-                .collect();
+            look.columns = self.shown_columns();
             look.in_junk = self.in_junk;
             look.in_drafts = self.in_drafts;
             look.show_recipient = self.show_recipient;
+            look.one_person = self.one_person.clone();
             look.thread_expansion = self.thread_expansion;
             look.ringed = if self.colorize { self.account_colors.keys().copied().collect() } else { Default::default() };
             look.face_gen = self.face_gen;
@@ -3044,6 +3054,18 @@ impl MessageList {
         }
         self.shared.refresh_all();
         self.sync_headings();
+    }
+
+    /// The single line's columns as set, less Due in a list without
+    /// Microsoft 365 mail and the sender in one person's mail.
+    fn shown_columns(&self) -> Vec<crate::config::ListColumn> {
+        use crate::config::ListColumn as C;
+        self.columns
+            .iter()
+            .copied()
+            .filter(|c| *c != C::Due || self.graph_in_view)
+            .filter(|c| *c != C::Sender || self.one_person.is_none())
+            .collect()
     }
 
     /// The columns' widths as the rows and the headings draw them (#334):
@@ -3063,11 +3085,10 @@ impl MessageList {
         if self.pane_width <= 0 {
             return widths;
         }
-        let columns: Vec<C> =
-            self.columns.iter().copied().filter(|c| *c != C::Due || self.graph_in_view).collect();
+        let columns = self.shown_columns();
         // The pill's margins and padding, the unread dot and the spacing.
         let mut fixed = 12 + 18 + 18 + 8 * columns.len().saturating_sub(1) as i32;
-        if self.avatars {
+        if self.avatars && self.one_person.is_none() {
             fixed += 16 + 8;
         }
         let mut wanted: Vec<(C, i32)> = Vec::new();
