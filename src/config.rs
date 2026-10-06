@@ -1202,8 +1202,10 @@ pub(crate) struct PrivacyFile {
     #[serde(default)]
     pub(crate) list_palette_hover: bool,
     /// Whether the ⋯ on a message card opens the card's menu in place of
-    /// sliding its actions palette out.
-    #[serde(default)]
+    /// sliding its actions palette out. On for new installs (2026-10-06);
+    /// an install that saved its settings before then keeps its own value,
+    /// since every save writes every key.
+    #[serde(default = "default_on")]
     pub(crate) card_palette_menu: bool,
     /// Whether message rows take a sideways swipe at all (#92, PR #135).
     #[serde(default = "default_on")]
@@ -1442,6 +1444,9 @@ pub(crate) struct PrivacyFile {
     /// How accounts' folders are sorted, unless an account chooses.
     #[serde(default)]
     pub(crate) folder_sort: FolderSort,
+    /// What a printed page carries besides the message (#359).
+    #[serde(default)]
+    pub(crate) print: PrintOptions,
 }
 
 fn default_chevrons_left() -> bool {
@@ -1580,7 +1585,7 @@ impl Default for PrivacyFile {
             card_actions_auto: default_card_actions_auto(),
             list_palette: true,
             list_palette_hover: false,
-            card_palette_menu: false,
+            card_palette_menu: true,
             swipe_enabled: true,
             swipe_reversed: false,
             swipe_sensitivity: default_swipe_sensitivity(),
@@ -1620,6 +1625,7 @@ impl Default for PrivacyFile {
             tray_icon: TrayIcon::default(),
             tray_mail: true,
             launcher_count: true,
+            print: PrintOptions::default(),
         }
     }
 }
@@ -1707,6 +1713,27 @@ pub struct UnifiedKinds {
 impl Default for UnifiedKinds {
     fn default() -> Self {
         UnifiedKinds { starred: true, sent: true, drafts: true, archive: true }
+    }
+}
+
+/// What a printed page carries besides the message (#359), from Settings →
+/// Reading → Printing.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct PrintOptions {
+    /// "Page 2 of 5" at the foot of every page.
+    #[serde(default = "default_on")]
+    pub page_numbers: bool,
+    /// The date and time it was printed, at the foot of every page.
+    #[serde(default)]
+    pub date: bool,
+    /// A wider left margin, so a hole punch misses the text.
+    #[serde(default)]
+    pub punch_margin: bool,
+}
+
+impl Default for PrintOptions {
+    fn default() -> Self {
+        PrintOptions { page_numbers: true, date: false, punch_margin: false }
     }
 }
 

@@ -1860,10 +1860,11 @@ impl Component for MessageView {
                                 set_valign: gtk::Align::Center,
                                 #[watch]
                                 set_active: model.reader_mode,
-                                // The app owns the preference: it saves the
-                                // choice and hands it back to every reader
-                                // (this one included), so a flip here never
-                                // renders on its own.
+                                // The owner decides what a flip does, so it
+                                // never renders on its own: the main window
+                                // saves the choice and hands it back to every
+                                // reader, a message's own window applies it
+                                // to itself alone.
                                 connect_active_notify[sender] => move |sw| {
                                     let _ = sender.output(MessageViewOutput::ReaderMode(sw.is_active()));
                                 },
@@ -2577,18 +2578,15 @@ impl Component for MessageView {
                 // whatever the desktop opens PDFs with: that route is a temporary
                 // file, a URI, the document portal and an external viewer, each
                 // able to fail without saying anything — and it did.
-                let Some(parent) = self
-                    .webview
-                    .root()
-                    .and_downcast::<adw::ApplicationWindow>()
-                else {
+                // A pop-out reader's window is not an application window,
+                // and asking for one there showed nothing (#359).
+                let Some(parent) = self.webview.root().and_downcast::<gtk::Window>() else {
                     tracing::warn!("no window to attach the preview to");
                     return;
                 };
-                let html = self.preview_html();
                 crate::ui::print_preview::open(
                     &parent,
-                    &html,
+                    &self.print_document_html(),
                     &sanitize_filename(&self.job_name()),
                 );
             }
@@ -4783,19 +4781,6 @@ impl MessageView {
             })
             .collect();
         print_document(&self.print_header_html(), &messages, self.remote_allowed)
-    }
-
-    /// That same document, dressed as a page for the preview window.
-    fn preview_html(&self) -> String {
-        let doc = self.print_document_html();
-        let extra = format!(
-            "<style>{}</style></head>",
-            crate::ui::print_preview::PREVIEW_STYLES
-        );
-        let doc = doc.replacen("</head>", &extra, 1);
-        // Wrap the content in the sheet the styles above draw.
-        doc.replacen("<body>", "<body><div class=\"vireo-print-sheet\">", 1)
-            .replacen("</body>", "</div></body>", 1)
     }
 
     /// The header block that only appears on paper (see [`print_header_html`]).

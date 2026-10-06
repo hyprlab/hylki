@@ -2397,17 +2397,21 @@ const THUMB_RENDER_WIDTH: f64 = 360.0;
 /// tripping the decoder's pixel ceiling (A4 portrait at 1600 ≈ 3.6M pixels).
 const PREVIEW_RENDER_WIDTH: f64 = 1600.0;
 
+/// One PDF render at a time, process-wide: every poppler call holds this.
+/// Poppler's color management (lcms2) shares state across documents: two
+/// thumbnail threads rendering concurrently crashed with heap corruption, one
+/// thread tearing down its Gfx (cmsCloseProfile) while the other still
+/// rendered. Printing (#359) renders with poppler too, on the main thread.
+pub(crate) fn pdf_render_lock() -> std::sync::MutexGuard<'static, ()> {
+    static PDF_RENDER: std::sync::Mutex<()> = std::sync::Mutex::new(());
+    PDF_RENDER.lock().unwrap_or_else(|poisoned| poisoned.into_inner())
+}
+
 /// Render a PDF's first page to a texture at `target_width`, by way of an
 /// in-memory PNG — the same route every other thumbnail here already goes
 /// through, so cropping, caching, and format all stay uniform.
 pub(crate) fn pdf_page_texture(data: &[u8], target_width: f64) -> Option<gdk::Texture> {
-    // One PDF render at a time, process-wide. Poppler's color management
-    // (lcms2) shares state across documents: two thumbnail threads rendering
-    // concurrently crashed with heap corruption — one thread tearing down its
-    // Gfx (cmsCloseProfile) while the other still rendered. This is the sole
-    // poppler entry point, so serialising here covers every caller.
-    static PDF_RENDER: std::sync::Mutex<()> = std::sync::Mutex::new(());
-    let _guard = PDF_RENDER.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+    let _guard = pdf_render_lock();
     let doc = poppler::Document::from_bytes(&glib::Bytes::from(data), None).ok()?;
     let page = doc.page(0)?;
     let (w, h) = page.size();

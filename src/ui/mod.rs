@@ -20,6 +20,7 @@ pub mod grab_pill;
 pub mod icon_picker;
 pub mod initials;
 pub mod launch;
+pub mod lightbox;
 pub mod message_list;
 pub mod message_row;
 pub mod message_view;

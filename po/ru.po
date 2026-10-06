@@ -62,6 +62,8 @@ msgstr "Переслать"
 msgid "Remove Star"
 msgstr "Убрать из избранного"
 
+#. One glyph in both states, as in the main window; the
+#. starred state carries color only.
 msgid "Star"
 msgstr "Добавить в избранное"
 
@@ -89,21 +91,6 @@ msgstr "Отметить как непрочитанное"
 msgid "Downloading attachments…"
 msgstr "Загрузка вложений…"
 
-msgid "Close"
-msgstr "Закрыть"
-
-msgid "Previous"
-msgstr "Назад"
-
-msgid "Next"
-msgstr "Вперёд"
-
-msgid "Open"
-msgstr "Открыть"
-
-msgid "Download…"
-msgstr "Скачать…"
-
 msgid "People"
 msgstr ""
 
@@ -125,6 +112,7 @@ msgstr "Печать сообщения…"
 msgid "Quit"
 msgstr "Выйти"
 
+#. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
 msgstr "Действия"
 
@@ -185,9 +173,6 @@ msgstr "Страница отписки этого списка рассылки
 
 msgid "The language applies the next time Hylki starts."
 msgstr "Язык изменится при следующем запуске Hylki."
-
-msgid "Save Attachment"
-msgstr "Сохранить вложение"
 
 msgid ""
 "Couldn't restart automatically — quit and reopen Hylki to finish switching "
@@ -326,9 +311,6 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Перезапустить сейчас"
 
-msgid "{name} · {current} of {total}"
-msgstr "{name} · {current} из {total}"
-
 msgid "View Source"
 msgstr "Просмотр исходного кода"
 
@@ -367,6 +349,9 @@ msgstr "Развернуть все сообщения"
 
 msgid "Collapse All Messages"
 msgstr "Свернуть все сообщения"
+
+msgid "Print…"
+msgstr "Печать…"
 
 msgid "Delete {n} messages"
 msgstr "Удалить {n} сообщений"
@@ -735,6 +720,9 @@ msgstr[2] ""
 msgid "Filters Applied"
 msgstr "Фильтры применены"
 
+msgid "Close"
+msgstr "Закрыть"
+
 msgid "This message carries no calendar file to open."
 msgstr "В этом сообщении нет файла календаря для открытия."
 
@@ -939,6 +927,9 @@ msgstr "Этот список"
 
 msgid "Unstar"
 msgstr "Убрать из избранного"
+
+msgid "Save Attachment"
+msgstr "Сохранить вложение"
 
 msgid "Save All Attachments"
 msgstr "Сохранить все вложения"
@@ -2240,6 +2231,12 @@ msgstr "Этот ключ был импортирован ранее."
 msgid "Could not import the key"
 msgstr "Не удалось импортировать ключ"
 
+msgid "Open"
+msgstr "Открыть"
+
+msgid "Download…"
+msgstr "Скачать…"
+
 msgid "Show in Message"
 msgstr "Показать в сообщении"
 
@@ -2342,6 +2339,12 @@ msgstr "По типу (А–Я)"
 
 msgid "Type (Z–A)"
 msgstr "По типу (Я–А)"
+
+msgid "Previous"
+msgstr "Назад"
+
+msgid "Next"
+msgstr "Вперёд"
 
 msgid "Open in the default app"
 msgstr "Открыть в приложении по умолчанию"
@@ -3304,6 +3307,9 @@ msgstr ""
 "• Обновление пакета «xdg-desktop-portal» и повторный вход в систему могут "
 "исправить прямое открытие ссылок"
 
+msgid "{name} · {current} of {total}"
+msgstr "{name} · {current} из {total}"
+
 #, fuzzy
 msgid "me"
 msgstr "Имя"
@@ -3765,9 +3771,6 @@ msgstr "Копировать изображение"
 
 msgid "Copy Image Address"
 msgstr "Копировать адрес изображения"
-
-msgid "Load attachments from server"
-msgstr "Загрузить вложения с сервера"
 
 msgid "Clear all"
 msgstr "Очистить всё"
@@ -5015,6 +5018,30 @@ msgstr ""
 "в режиме чтения или в исходном виде. Переключатель по-прежнему позволяет "
 "изменить режим отображения на экране."
 
+#, fuzzy
+msgid "Printing"
+msgstr "Составление писем:"
+
+msgid "Page numbers"
+msgstr ""
+
+msgid ""
+"Print the page number and the number of pages at the foot of every page."
+msgstr ""
+
+#, fuzzy
+msgid "Date printed"
+msgstr "Формат даты"
+
+msgid "Print the date and time of printing at the foot of every page."
+msgstr ""
+
+msgid "Wider left margin"
+msgstr ""
+
+msgid "Leave 25 mm at the left of every page, so punched holes miss the text."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr "Создание писем в основном окне"
 
@@ -5607,17 +5634,29 @@ msgstr "Другой файл"
 msgid "Print Message"
 msgstr "Печать сообщения"
 
-msgid "Save as PDF"
-msgstr "Сохранить как PDF"
+#, fuzzy
+msgid "No PDF writer is available on this system"
+msgstr "Для этой учётной записи недоступна папка «Черновики»"
 
-msgid "Could not save the PDF: {error}"
-msgstr "Не удалось сохранить PDF: {error}"
-
-msgid "Print…"
-msgstr "Печать…"
+msgid "Page {page} of {pages}"
+msgstr ""
 
 msgid "Save as PDF…"
 msgstr "Сохранить как PDF…"
+
+#, fuzzy
+msgid "No Preview"
+msgstr "Предпросмотр печати"
+
+msgid "Save as PDF"
+msgstr "Сохранить как PDF"
+
+#, fuzzy
+msgid "Saved {name}"
+msgstr "Удалено: {name}"
+
+msgid "Could not save the PDF: {error}"
+msgstr "Не удалось сохранить PDF: {error}"
 
 msgid "Send as Attachment Instead"
 msgstr "Отправить вложением"
@@ -6449,6 +6488,9 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Load attachments from server"
+#~ msgstr "Загрузить вложения с сервера"
 
 #~ msgid ""
 #~ "Each message on lines of its own, or on one line in columns. Automatic "

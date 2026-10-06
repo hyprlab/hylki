@@ -64,6 +64,8 @@ msgstr "Transférer"
 msgid "Remove Star"
 msgstr "Retirer l'étoile"
 
+#. One glyph in both states, as in the main window; the
+#. starred state carries color only.
 msgid "Star"
 msgstr "Ajouter une étoile"
 
@@ -91,21 +93,6 @@ msgstr "Marquer comme non lu"
 msgid "Downloading attachments…"
 msgstr "Téléchargement des pièces jointes…"
 
-msgid "Close"
-msgstr "Fermer"
-
-msgid "Previous"
-msgstr "Précédent"
-
-msgid "Next"
-msgstr "Suivant"
-
-msgid "Open"
-msgstr "Ouvrir"
-
-msgid "Download…"
-msgstr "Télécharger…"
-
 msgid "People"
 msgstr ""
 
@@ -127,6 +114,7 @@ msgstr "Imprimer le message…"
 msgid "Quit"
 msgstr "Quitter"
 
+#. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
 msgstr "Actions"
 
@@ -187,9 +175,6 @@ msgstr ""
 
 msgid "The language applies the next time Hylki starts."
 msgstr "La langue s'appliquera au prochain démarrage de Hylki."
-
-msgid "Save Attachment"
-msgstr "Enregistrer la pièce jointe"
 
 msgid ""
 "Couldn't restart automatically — quit and reopen Hylki to finish switching "
@@ -329,9 +314,6 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Redémarrer maintenant"
 
-msgid "{name} · {current} of {total}"
-msgstr "{name} · {current} sur {total}"
-
 msgid "View Source"
 msgstr "Afficher le code source"
 
@@ -370,6 +352,9 @@ msgstr "Déployer tous les messages"
 
 msgid "Collapse All Messages"
 msgstr "Réduire tous les messages"
+
+msgid "Print…"
+msgstr "Imprimer…"
 
 msgid "Delete {n} messages"
 msgstr "Supprimer {n} messages"
@@ -723,6 +708,9 @@ msgstr[1] "Filtres marqués {tagged} et classés {filed} de {n} messages"
 msgid "Filters Applied"
 msgstr "Filtres appliqués"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "This message carries no calendar file to open."
 msgstr "Ce message ne contient aucun fichier de calendrier à ouvrir."
 
@@ -930,6 +918,9 @@ msgstr "Cette liste"
 
 msgid "Unstar"
 msgstr "Retirer l'étoile"
+
+msgid "Save Attachment"
+msgstr "Enregistrer la pièce jointe"
 
 msgid "Save All Attachments"
 msgstr "Enregistrer toutes les pièces jointes"
@@ -2245,6 +2236,12 @@ msgstr "Cette clé avait déjà été importée."
 msgid "Could not import the key"
 msgstr "Impossible d'importer la clé"
 
+msgid "Open"
+msgstr "Ouvrir"
+
+msgid "Download…"
+msgstr "Télécharger…"
+
 msgid "Show in Message"
 msgstr "Afficher dans le message"
 
@@ -2347,6 +2344,12 @@ msgstr "Type (A–Z)"
 
 msgid "Type (Z–A)"
 msgstr "Type (Z–A)"
+
+msgid "Previous"
+msgstr "Précédent"
+
+msgid "Next"
+msgstr "Suivant"
 
 msgid "Open in the default app"
 msgstr "Ouvrir dans l'application par défaut"
@@ -3313,6 +3316,9 @@ msgstr ""
 "• Mettre à jour « xdg-desktop-portal » et vous reconnecter peut résoudre "
 "l'ouverture directe des liens"
 
+msgid "{name} · {current} of {total}"
+msgstr "{name} · {current} sur {total}"
+
 msgid "me"
 msgstr "moi"
 
@@ -3775,9 +3781,6 @@ msgstr "Copier l'image"
 
 msgid "Copy Image Address"
 msgstr "Copier l'adresse de l'image"
-
-msgid "Load attachments from server"
-msgstr "Charger les pièces jointes depuis le serveur"
 
 msgid "Clear all"
 msgstr "Tout effacer"
@@ -5036,6 +5039,30 @@ msgstr ""
 "messages en mode Lecture ou tel qu'envoyé. Le commutateur permet toujours de "
 "changer le message affiché à l'écran."
 
+#, fuzzy
+msgid "Printing"
+msgstr "Écriture :"
+
+msgid "Page numbers"
+msgstr ""
+
+msgid ""
+"Print the page number and the number of pages at the foot of every page."
+msgstr ""
+
+#, fuzzy
+msgid "Date printed"
+msgstr "Format de date"
+
+msgid "Print the date and time of printing at the foot of every page."
+msgstr ""
+
+msgid "Wider left margin"
+msgstr ""
+
+msgid "Leave 25 mm at the left of every page, so punched holes miss the text."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr "Rédiger dans la fenêtre principale"
 
@@ -5631,17 +5658,29 @@ msgstr "Fichier personnalisé"
 msgid "Print Message"
 msgstr "Imprimer le message"
 
-msgid "Save as PDF"
-msgstr "Enregistrer au format PDF"
+#, fuzzy
+msgid "No PDF writer is available on this system"
+msgstr "Aucun dossier Brouillons disponible pour ce compte"
 
-msgid "Could not save the PDF: {error}"
-msgstr "Impossible d'enregistrer le PDF : {error}"
-
-msgid "Print…"
-msgstr "Imprimer…"
+msgid "Page {page} of {pages}"
+msgstr ""
 
 msgid "Save as PDF…"
 msgstr "Enregistrer au format PDF…"
+
+#, fuzzy
+msgid "No Preview"
+msgstr "Aperçu"
+
+msgid "Save as PDF"
+msgstr "Enregistrer au format PDF"
+
+#, fuzzy
+msgid "Saved {name}"
+msgstr "{name} supprimé"
+
+msgid "Could not save the PDF: {error}"
+msgstr "Impossible d'enregistrer le PDF : {error}"
 
 msgid "Send as Attachment Instead"
 msgstr "Envoyer plutôt en pièce jointe"
@@ -6477,6 +6516,9 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Load attachments from server"
+#~ msgstr "Charger les pièces jointes depuis le serveur"
 
 #~ msgid ""
 #~ "Each message on lines of its own, or on one line in columns. Automatic "

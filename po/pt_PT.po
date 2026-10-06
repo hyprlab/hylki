@@ -65,6 +65,8 @@ msgstr "Reencaminhar"
 msgid "Remove Star"
 msgstr "Remover estrela"
 
+#. One glyph in both states, as in the main window; the
+#. starred state carries color only.
 msgid "Star"
 msgstr "Adicionar estrela"
 
@@ -92,21 +94,6 @@ msgstr "Marcar como não lida"
 msgid "Downloading attachments…"
 msgstr "A transferir anexos…"
 
-msgid "Close"
-msgstr "Fechar"
-
-msgid "Previous"
-msgstr "Anterior"
-
-msgid "Next"
-msgstr "Seguinte"
-
-msgid "Open"
-msgstr "Abrir"
-
-msgid "Download…"
-msgstr "Transferir…"
-
 msgid "People"
 msgstr ""
 
@@ -128,6 +115,7 @@ msgstr "Imprimir mensagem…"
 msgid "Quit"
 msgstr "Sair"
 
+#. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
 msgstr "Ações"
 
@@ -187,9 +175,6 @@ msgstr "A página para cancelar a subscrição da lista está aberta no navegado
 
 msgid "The language applies the next time Hylki starts."
 msgstr "O idioma será aplicado da próxima vez que o Hylki for iniciado."
-
-msgid "Save Attachment"
-msgstr "Guardar anexo"
 
 msgid ""
 "Couldn't restart automatically — quit and reopen Hylki to finish switching "
@@ -326,9 +311,6 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Reiniciar agora"
 
-msgid "{name} · {current} of {total}"
-msgstr "{name} · {current} de {total}"
-
 msgid "View Source"
 msgstr "Ver fonte"
 
@@ -367,6 +349,9 @@ msgstr "Expandir todas as mensagens"
 
 msgid "Collapse All Messages"
 msgstr "Recolher todas as mensagens"
+
+msgid "Print…"
+msgstr "Imprimir…"
 
 msgid "Delete {n} messages"
 msgstr "Eliminar {n} mensagens"
@@ -722,6 +707,9 @@ msgstr[1] ""
 msgid "Filters Applied"
 msgstr "Filtros aplicados"
 
+msgid "Close"
+msgstr "Fechar"
+
 msgid "This message carries no calendar file to open."
 msgstr "Esta mensagem não contém nenhum ficheiro de calendário para abrir."
 
@@ -925,6 +913,9 @@ msgstr "Esta lista"
 
 msgid "Unstar"
 msgstr "Remover estrela"
+
+msgid "Save Attachment"
+msgstr "Guardar anexo"
 
 msgid "Save All Attachments"
 msgstr "Guardar todos os anexos"
@@ -2238,6 +2229,12 @@ msgstr "Essa chave já tinha sido importada."
 msgid "Could not import the key"
 msgstr "Não foi possível importar a chave"
 
+msgid "Open"
+msgstr "Abrir"
+
+msgid "Download…"
+msgstr "Transferir…"
+
 msgid "Show in Message"
 msgstr "Mostrar na mensagem"
 
@@ -2339,6 +2336,12 @@ msgstr "Tipo (A–Z)"
 
 msgid "Type (Z–A)"
 msgstr "Tipo (Z–A)"
+
+msgid "Previous"
+msgstr "Anterior"
+
+msgid "Next"
+msgstr "Seguinte"
 
 msgid "Open in the default app"
 msgstr "Abrir na aplicação predefinida"
@@ -3302,6 +3305,9 @@ msgstr ""
 "• Atualizar o “xdg-desktop-portal” e terminar e voltar a iniciar a sessão "
 "poderá corrigir a abertura direta das ligações"
 
+msgid "{name} · {current} of {total}"
+msgstr "{name} · {current} de {total}"
+
 msgid "me"
 msgstr "eu"
 
@@ -3761,9 +3767,6 @@ msgstr "Copiar imagem"
 
 msgid "Copy Image Address"
 msgstr "Copiar endereço da imagem"
-
-msgid "Load attachments from server"
-msgstr "Carregar anexos do servidor"
 
 msgid "Clear all"
 msgstr "Limpar tudo"
@@ -5032,6 +5035,30 @@ msgstr ""
 "de leitura ou tal como foram enviadas. O interruptor continua a alterar a "
 "mensagem apresentada."
 
+#, fuzzy
+msgid "Printing"
+msgstr "Imprimir"
+
+msgid "Page numbers"
+msgstr ""
+
+msgid ""
+"Print the page number and the number of pages at the foot of every page."
+msgstr ""
+
+#, fuzzy
+msgid "Date printed"
+msgstr "Formato da data"
+
+msgid "Print the date and time of printing at the foot of every page."
+msgstr ""
+
+msgid "Wider left margin"
+msgstr ""
+
+msgid "Leave 25 mm at the left of every page, so punched holes miss the text."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr "Compor na janela principal"
 
@@ -5625,17 +5652,29 @@ msgstr "Ficheiro personalizado"
 msgid "Print Message"
 msgstr "Imprimir mensagem"
 
-msgid "Save as PDF"
-msgstr "Guardar como PDF"
+#, fuzzy
+msgid "No PDF writer is available on this system"
+msgstr "Não existe uma pasta Rascunhos disponível para esta conta"
 
-msgid "Could not save the PDF: {error}"
-msgstr "Não foi possível guardar o PDF: {error}"
-
-msgid "Print…"
-msgstr "Imprimir…"
+msgid "Page {page} of {pages}"
+msgstr ""
 
 msgid "Save as PDF…"
 msgstr "Guardar como PDF…"
+
+#, fuzzy
+msgid "No Preview"
+msgstr "Pré-visualizar"
+
+msgid "Save as PDF"
+msgstr "Guardar como PDF"
+
+#, fuzzy
+msgid "Saved {name}"
+msgstr "Conta {name} removida"
+
+msgid "Could not save the PDF: {error}"
+msgstr "Não foi possível guardar o PDF: {error}"
 
 msgid "Send as Attachment Instead"
 msgstr "Enviar como anexo em alternativa"
@@ -6465,6 +6504,9 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Load attachments from server"
+#~ msgstr "Carregar anexos do servidor"
 
 #~ msgid ""
 #~ "Single-key shortcuts are switched off. Turn them on in Settings → System "

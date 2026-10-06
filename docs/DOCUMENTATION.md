@@ -856,6 +856,40 @@ conversation offers **Expand All Messages** and **Collapse All Messages**.
 What you fold or open stays that way while the conversation is on screen.
 Printing shows every message in full.
 
+### A message in its own window
+
+Double-clicking a message in the list, or a message's header in a
+conversation, opens it in a window of its own. Its toolbar is the reader's:
+the same buttons in the order **Settings → Appearance → Toolbar** gives
+them, and in a narrow window the right-hand group folds into a ⋯ menu as it
+does in the main window. Its files are in the attachment drawer under the
+message, and on each message's card when those are switched on, and images
+and PDFs open in the same full-window preview. A conversation's window
+gathers the files of every message in it. Its Reader View switch changes
+that window alone; the main window and the choice Hylki remembers stay as
+they were. **Ctrl+F** finds in the message and **Ctrl+P** prints it.
+
+### Printing
+
+**Ctrl+P** prints the message or conversation in the reader, and
+**Ctrl+Shift+P**, the printer button in the reader's toolbar or **Print
+Preview** in the message's right-click menu shows it first, page by page,
+as it will come out. The preview prints from its **Print…** button and
+saves a PDF from **Save as PDF…**. A message opened in a window of its own
+has the same printer button, menu entries and keys.
+
+The printed page starts with the subject, sender, recipients and date, and
+has a 15 mm margin on every side. **Settings → Reading → Printing** adds to
+it:
+
+- **Page numbers**, on by default: "Page 2 of 5" at the foot of every page.
+- **Date printed**: the date and time of printing at the foot of every
+  page, at the left.
+- **Wider left margin**: 25 mm at the left, so punched holes miss the text.
+
+The preview is laid out on the paper chosen the last time you printed, or
+your language's default paper size before that.
+
 ### Message list layout
 
 **Settings → Message List → Layout** sets how the list shows a message.

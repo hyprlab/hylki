@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+- **Added: page numbers, the date printed and a wider left margin on
+  printed mail** (#359, requested by rsx-xp). **Settings → Reading →
+  Printing** puts "Page 2 of 5" (on by default) and the date and time of
+  printing at the foot of every page, and can widen the left margin to
+  25 mm for hole punching. Pages now have a 15 mm margin all round, where
+  they had the paper's quarter inch. Hylki makes the PDF itself and adds
+  the footer to it, so the preview shows each page exactly as it will
+  print, footer and margins included, and Save as PDF saves that file.
+- **Added: printing from a message's own window** (#359). The window has
+  the printer button for the preview, and the right-click menu in any
+  message, in the main window or its own, offers **Print Preview** and
+  **Print…**. Ctrl+Shift+P in a message's own window opened no preview;
+  it now does.
+- **Changed: a message's own window has the reader's toolbar and
+  attachment drawer.** The toolbar shows the same buttons in the order
+  **Settings → Appearance → Toolbar** gives them, Tags, Read/Unread, Move
+  To and Find among them, and folds its right-hand group into a ⋯ menu when
+  the window is narrow. Add sender to Contacts and View Source left the
+  toolbar for the right-click menu, which already had them, and the subject
+  is no longer repeated in the window's header. The attachments button and
+  its list are gone: the files are in the drawer under the message, and on
+  the cards when those are on, for every message of a conversation, with
+  the same full-window preview for images and PDFs. Changes to the toolbar
+  and to the attachment settings reach open windows at once.
+- **Fixed: Reader View switched on in a message's own window switched it
+  on in the main window too.** The window's switch now changes that window
+  alone, and the remembered choice is left as it was.
+- **Changed: a message card's ⋯ opens the message's menu by default.**
+  **Settings → Reading → Message card actions palette as a menu** is on
+  for new installs; an existing install keeps its setting.
+- **Fixed: a message could print as thousands of blank pages** where the
+  desktop sets no font resolution (no settings portal or XSettings).
+
 - **Added: more formatting tools in the composer** (#358, requested by
   urkos101). A chevron at the end of the formatting toolbar shows paragraph
   styles (headings and preformatted text), fonts, text and highlight colors,

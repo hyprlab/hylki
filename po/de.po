@@ -64,6 +64,8 @@ msgstr "Weiterleiten"
 msgid "Remove Star"
 msgstr "Stern entfernen"
 
+#. One glyph in both states, as in the main window; the
+#. starred state carries color only.
 msgid "Star"
 msgstr "Stern"
 
@@ -91,21 +93,6 @@ msgstr "Als ungelesen markieren"
 msgid "Downloading attachments…"
 msgstr "Anhänge werden heruntergeladen…"
 
-msgid "Close"
-msgstr "Schließen"
-
-msgid "Previous"
-msgstr "Vorherige"
-
-msgid "Next"
-msgstr "Nächste"
-
-msgid "Open"
-msgstr "Öffnen"
-
-msgid "Download…"
-msgstr "Herunterladen…"
-
 msgid "People"
 msgstr ""
 
@@ -127,6 +114,7 @@ msgstr "Nachricht drucken…"
 msgid "Quit"
 msgstr "Beenden"
 
+#. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -187,9 +175,6 @@ msgstr "Die Abmeldeseite der Liste ist in Ihrem Browser geöffnet."
 
 msgid "The language applies the next time Hylki starts."
 msgstr "Die Sprache wird beim nächsten Start von Hylki übernommen."
-
-msgid "Save Attachment"
-msgstr "Anhang speichern"
 
 msgid ""
 "Couldn't restart automatically — quit and reopen Hylki to finish switching "
@@ -329,9 +314,6 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Jetzt neu starten"
 
-msgid "{name} · {current} of {total}"
-msgstr "{name} · {current} von {total}"
-
 msgid "View Source"
 msgstr "Quelltext anzeigen"
 
@@ -372,6 +354,9 @@ msgstr "In Nachricht suchen"
 #, fuzzy
 msgid "Collapse All Messages"
 msgstr "Im Lesebereich einklappen"
+
+msgid "Print…"
+msgstr "Drucken…"
 
 msgid "Delete {n} messages"
 msgstr "{n} Nachrichten löschen"
@@ -728,6 +713,9 @@ msgstr[1] ""
 msgid "Filters Applied"
 msgstr "Filter angewendet"
 
+msgid "Close"
+msgstr "Schließen"
+
 msgid "This message carries no calendar file to open."
 msgstr "Diese Nachricht enthält keine Kalenderdatei zum Öffnen."
 
@@ -933,6 +921,9 @@ msgstr "Diese Liste"
 
 msgid "Unstar"
 msgstr "Stern entfernen"
+
+msgid "Save Attachment"
+msgstr "Anhang speichern"
 
 msgid "Save All Attachments"
 msgstr "Alle Anhänge speichern"
@@ -2257,6 +2248,12 @@ msgstr "Dieser Schlüssel wurde zuvor importiert."
 msgid "Could not import the key"
 msgstr "Schlüssel konnte nicht importiert werden"
 
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Download…"
+msgstr "Herunterladen…"
+
 msgid "Show in Message"
 msgstr "In Nachricht anzeigen"
 
@@ -2359,6 +2356,12 @@ msgstr "Typ (A–Z)"
 
 msgid "Type (Z–A)"
 msgstr "Typ (Z–A)"
+
+msgid "Previous"
+msgstr "Vorherige"
+
+msgid "Next"
+msgstr "Nächste"
 
 msgid "Open in the default app"
 msgstr "Mit der Standardanwendung öffnen"
@@ -3324,6 +3327,9 @@ msgstr ""
 "• Aktualisieren von \"xdg-desktop-portal\" und Wiedereinloggen können das "
 "Öffnen von Links direkt beheben"
 
+msgid "{name} · {current} of {total}"
+msgstr "{name} · {current} von {total}"
+
 #, fuzzy
 msgid "me"
 msgstr "Name"
@@ -3799,9 +3805,6 @@ msgstr "Bild kopieren"
 
 msgid "Copy Image Address"
 msgstr "Bildadresse kopieren"
-
-msgid "Load attachments from server"
-msgstr "Anhänge vom Server laden"
 
 msgid "Clear all"
 msgstr "Alles löschen"
@@ -5052,6 +5055,30 @@ msgstr ""
 "Sie jede Nachricht in der Reader-Ansicht oder wie gesendet. Der Schalter "
 "ändert die Nachricht weiterhin auf dem Bildschirm."
 
+#, fuzzy
+msgid "Printing"
+msgstr "Schreiben:"
+
+msgid "Page numbers"
+msgstr ""
+
+msgid ""
+"Print the page number and the number of pages at the foot of every page."
+msgstr ""
+
+#, fuzzy
+msgid "Date printed"
+msgstr "Datumsformat"
+
+msgid "Print the date and time of printing at the foot of every page."
+msgstr ""
+
+msgid "Wider left margin"
+msgstr ""
+
+msgid "Leave 25 mm at the left of every page, so punched holes miss the text."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr "Im Hauptfenster verfassen"
 
@@ -5649,17 +5676,29 @@ msgstr "Eigene Datei"
 msgid "Print Message"
 msgstr "Nachricht drucken"
 
-msgid "Save as PDF"
-msgstr "Als PDF speichern"
+#, fuzzy
+msgid "No PDF writer is available on this system"
+msgstr "Für dieses Konto ist kein Entwurfsordner verfügbar"
 
-msgid "Could not save the PDF: {error}"
-msgstr "PDF konnte nicht gespeichert werden: {error}"
-
-msgid "Print…"
-msgstr "Drucken…"
+msgid "Page {page} of {pages}"
+msgstr ""
 
 msgid "Save as PDF…"
 msgstr "Als PDF speichern…"
+
+#, fuzzy
+msgid "No Preview"
+msgstr "Vorschau"
+
+msgid "Save as PDF"
+msgstr "Als PDF speichern"
+
+#, fuzzy
+msgid "Saved {name}"
+msgstr "{name} entfernt"
+
+msgid "Could not save the PDF: {error}"
+msgstr "PDF konnte nicht gespeichert werden: {error}"
 
 msgid "Send as Attachment Instead"
 msgstr "Stattdessen als Anhang senden"
@@ -6499,6 +6538,9 @@ msgstr "Der einheitliche Posteingang im Lichtmodus"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Load attachments from server"
+#~ msgstr "Anhänge vom Server laden"
 
 #~ msgid "Could not save draft: unknown folder"
 #~ msgstr "Entwurf konnte nicht gespeichert werden: unbekannter Ordner"

@@ -63,6 +63,8 @@ msgstr "Przekaż dalej"
 msgid "Remove Star"
 msgstr "Usuń gwiazdkę"
 
+#. One glyph in both states, as in the main window; the
+#. starred state carries color only.
 msgid "Star"
 msgstr "Oznacz gwiazdką"
 
@@ -90,21 +92,6 @@ msgstr "Oznacz jako nieprzeczytane"
 msgid "Downloading attachments…"
 msgstr "Pobieranie załączników…"
 
-msgid "Close"
-msgstr "Zamknij"
-
-msgid "Previous"
-msgstr "Poprzedni"
-
-msgid "Next"
-msgstr "Następny"
-
-msgid "Open"
-msgstr "Otwórz"
-
-msgid "Download…"
-msgstr "Pobierz…"
-
 msgid "People"
 msgstr ""
 
@@ -126,6 +113,7 @@ msgstr "Drukuj wiadomość…"
 msgid "Quit"
 msgstr "Zakończ"
 
+#. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
 msgstr "Działania"
 
@@ -186,9 +174,6 @@ msgstr "Otwarto w przeglądarce stronę wypisania z listy."
 
 msgid "The language applies the next time Hylki starts."
 msgstr "Język zostanie zmieniony przy następnym uruchomieniu aplikacji Hylki."
-
-msgid "Save Attachment"
-msgstr "Zapisz załącznik"
 
 msgid ""
 "Couldn't restart automatically — quit and reopen Hylki to finish switching "
@@ -326,9 +311,6 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Uruchom ponownie teraz"
 
-msgid "{name} · {current} of {total}"
-msgstr "{name} · {current} z {total}"
-
 msgid "View Source"
 msgstr "Wyświetl źródło"
 
@@ -369,6 +351,9 @@ msgstr "Znajdź w wiadomości"
 #, fuzzy
 msgid "Collapse All Messages"
 msgstr "Zwiń do panelu czytania"
+
+msgid "Print…"
+msgstr "Drukuj…"
 
 msgid "Delete {n} messages"
 msgstr "Usuń wiadomości ({n})"
@@ -743,6 +728,9 @@ msgstr[2] ""
 msgid "Filters Applied"
 msgstr "Zastosowano filtry"
 
+msgid "Close"
+msgstr "Zamknij"
+
 msgid "This message carries no calendar file to open."
 msgstr "Ta wiadomość nie zawiera pliku kalendarza do otwarcia."
 
@@ -946,6 +934,9 @@ msgstr "Ta lista"
 
 msgid "Unstar"
 msgstr "Usuń gwiazdkę"
+
+msgid "Save Attachment"
+msgstr "Zapisz załącznik"
 
 msgid "Save All Attachments"
 msgstr "Zapisz wszystkie załączniki"
@@ -2266,6 +2257,12 @@ msgstr "Ten klucz został już wcześniej zaimportowany."
 msgid "Could not import the key"
 msgstr "Nie udało się zaimportować klucza"
 
+msgid "Open"
+msgstr "Otwórz"
+
+msgid "Download…"
+msgstr "Pobierz…"
+
 msgid "Show in Message"
 msgstr "Wyświetl w wiadomości"
 
@@ -2368,6 +2365,12 @@ msgstr "Typ (A–Z)"
 
 msgid "Type (Z–A)"
 msgstr "Typ (Z–A)"
+
+msgid "Previous"
+msgstr "Poprzedni"
+
+msgid "Next"
+msgstr "Następny"
 
 msgid "Open in the default app"
 msgstr "Otwórz w domyślnej aplikacji"
@@ -3342,6 +3345,9 @@ msgstr ""
 "• Zaktualizowanie pakietu „xdg-desktop-portal” i ponowne zalogowanie się "
 "może rozwiązać problem z bezpośrednim otwieraniem odnośników"
 
+msgid "{name} · {current} of {total}"
+msgstr "{name} · {current} z {total}"
+
 #, fuzzy
 msgid "me"
 msgstr "Nazwa"
@@ -3822,9 +3828,6 @@ msgstr "Obrazy"
 #, fuzzy
 msgid "Copy Image Address"
 msgstr "Adres e-mail"
-
-msgid "Load attachments from server"
-msgstr "Pobierz załączniki z serwera"
 
 msgid "Clear all"
 msgstr "Wyczyść wszystko"
@@ -5071,6 +5074,30 @@ msgstr ""
 "jest otwierana w widoku czytania lub w oryginalnej postaci. Przełącznik "
 "nadal zmienia widok bieżącej wiadomości."
 
+#, fuzzy
+msgid "Printing"
+msgstr "Pisanie:"
+
+msgid "Page numbers"
+msgstr ""
+
+msgid ""
+"Print the page number and the number of pages at the foot of every page."
+msgstr ""
+
+#, fuzzy
+msgid "Date printed"
+msgstr "Format daty"
+
+msgid "Print the date and time of printing at the foot of every page."
+msgstr ""
+
+msgid "Wider left margin"
+msgstr ""
+
+msgid "Leave 25 mm at the left of every page, so punched holes miss the text."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr "Pisanie w oknie głównym"
 
@@ -5664,17 +5691,29 @@ msgstr "Własny plik"
 msgid "Print Message"
 msgstr "Drukuj wiadomość"
 
-msgid "Save as PDF"
-msgstr "Zapisz jako PDF"
+#, fuzzy
+msgid "No PDF writer is available on this system"
+msgstr "To konto nie ma katalogu szkiców"
 
-msgid "Could not save the PDF: {error}"
-msgstr "Nie udało się zapisać pliku PDF: {error}"
-
-msgid "Print…"
-msgstr "Drukuj…"
+msgid "Page {page} of {pages}"
+msgstr ""
 
 msgid "Save as PDF…"
 msgstr "Zapisz jako PDF…"
+
+#, fuzzy
+msgid "No Preview"
+msgstr "Podgląd"
+
+msgid "Save as PDF"
+msgstr "Zapisz jako PDF"
+
+#, fuzzy
+msgid "Saved {name}"
+msgstr "Usunięto konto {name}"
+
+msgid "Could not save the PDF: {error}"
+msgstr "Nie udało się zapisać pliku PDF: {error}"
 
 msgid "Send as Attachment Instead"
 msgstr "Wyślij jako załącznik"
@@ -6510,6 +6549,9 @@ msgstr "Zbiorcza skrzynka odbiorcza w jasnym motywie"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Load attachments from server"
+#~ msgstr "Pobierz załączniki z serwera"
 
 #~ msgid "Could not save draft: unknown folder"
 #~ msgstr "Nie udało się zapisać szkicu: nieznany katalog"

@@ -94,6 +94,8 @@ pub struct PrefInit {
     pub paste_plain: bool,
     pub return_paragraph: bool,
     pub toolbar_expanded: bool,
+    /// Settings → Reading → Printing (#359).
+    pub print_options: crate::config::PrintOptions,
     pub spellcheck: bool,
     pub spellcheck_langs: String,
     pub message_theme: MessageTheme,
@@ -323,6 +325,9 @@ pub struct Preferences {
     unified_kinds: crate::config::UnifiedKinds,
     /// The unified rows' unread-chip switches, likewise kept whole.
     unified_chips: crate::config::UnifiedChips,
+    /// The Printing switches, kept whole so each toggle can hand the app
+    /// the full set (#359).
+    print_options: crate::config::PrintOptions,
     /// Mirrors the "Accounts in the sidebar" switch, which the main menu
     /// can flip too.
     show_accounts: bool,
@@ -1023,6 +1028,9 @@ pub enum PrefInput {
     PlaySound,
     ToggleShowUnified(bool),
     ToggleUnifiedChipAllInboxes(bool),
+    TogglePrintPageNumbers(bool),
+    TogglePrintDate(bool),
+    TogglePrintPunchMargin(bool),
     ToggleUnifiedChipStarred(bool),
     ToggleUnifiedChipDrafts(bool),
     ToggleUnifiedChipArchive(bool),
@@ -1170,6 +1178,7 @@ pub enum PrefOutput {
     SetContactsRow(bool),
     SetShowUnified(bool),
     SetUnifiedChips(crate::config::UnifiedChips),
+    SetPrintOptions(crate::config::PrintOptions),
     SetUnifiedFiltered(bool),
     SetUnifiedKinds(crate::config::UnifiedKinds),
     SetUnifiedTags(bool),
@@ -3050,6 +3059,37 @@ impl Component for Preferences {
                                         },
                                     },
                                 },
+
+                                add = &adw::PreferencesGroup {
+                                    set_title: &i18n("Printing"),
+
+                                    #[name = "print_page_numbers_row"]
+                                    adw::SwitchRow {
+                                        set_title: &i18n("Page numbers"),
+                                        set_subtitle: &i18n("Print the page number and the number of pages at the foot of every page."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::TogglePrintPageNumbers(row.is_active()));
+                                        },
+                                    },
+
+                                    #[name = "print_date_row"]
+                                    adw::SwitchRow {
+                                        set_title: &i18n("Date printed"),
+                                        set_subtitle: &i18n("Print the date and time of printing at the foot of every page."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::TogglePrintDate(row.is_active()));
+                                        },
+                                    },
+
+                                    #[name = "print_punch_margin_row"]
+                                    adw::SwitchRow {
+                                        set_title: &i18n("Wider left margin"),
+                                        set_subtitle: &i18n("Leave 25 mm at the left of every page, so punched holes miss the text."),
+                                        connect_active_notify[sender] => move |row| {
+                                            sender.input(PrefInput::TogglePrintPunchMargin(row.is_active()));
+                                        },
+                                    },
+                                },
                             },
 
                             add_named[Some("composing")] = &adw::PreferencesPage {
@@ -3623,6 +3663,7 @@ impl Component for Preferences {
             show_unified: init.show_unified,
             unified_kinds: init.unified_kinds,
             unified_chips: init.unified_chips,
+            print_options: init.print_options,
             show_accounts: init.show_accounts,
             rail_fold: init.rail_fold,
             swipe_enabled: init.swipe_enabled,
@@ -3961,6 +4002,9 @@ impl Component for Preferences {
         });
         widgets.always_show_recipients_row.set_active(init.always_show_recipients);
         widgets.pgp_labels_row.set_active(init.pgp_labels);
+        widgets.print_page_numbers_row.set_active(init.print_options.page_numbers);
+        widgets.print_date_row.set_active(init.print_options.date);
+        widgets.print_punch_margin_row.set_active(init.print_options.punch_margin);
         widgets.single_message_card_row.set_active(init.single_message_card);
         widgets.reader_switch_row.set_active(init.reader_switch);
         widgets.reader_default_row.set_model(Some(&gtk::StringList::new(&[
@@ -4671,6 +4715,18 @@ impl Component for Preferences {
             PrefInput::ToggleShowUnified(on) => {
                 self.show_unified = on;
                 let _ = sender.output(PrefOutput::SetShowUnified(on));
+            }
+            PrefInput::TogglePrintPageNumbers(on) => {
+                self.print_options.page_numbers = on;
+                let _ = sender.output(PrefOutput::SetPrintOptions(self.print_options));
+            }
+            PrefInput::TogglePrintDate(on) => {
+                self.print_options.date = on;
+                let _ = sender.output(PrefOutput::SetPrintOptions(self.print_options));
+            }
+            PrefInput::TogglePrintPunchMargin(on) => {
+                self.print_options.punch_margin = on;
+                let _ = sender.output(PrefOutput::SetPrintOptions(self.print_options));
             }
             PrefInput::ToggleUnifiedChipAllInboxes(on) => {
                 self.unified_chips.all_inboxes = on;

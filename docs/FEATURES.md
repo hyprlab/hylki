@@ -58,8 +58,9 @@ The full list. The [README](../README.md) carries a shorter one.
   deep archive scan that finds old attachments without downloading them.
 - **Delete an attachment from the server:** take a large file out of a
   message and keep the rest of it, on IMAP, JMAP and Microsoft 365.
-- **Printing:** a message with its sender, recipients and date, with an
-  in-app preview that also saves straight to PDF.
+- **Printing:** a message with its sender, recipients and date, page
+  numbers and an optional wider margin for hole punching, with an in-app
+  preview that also saves straight to PDF.
 - **Outbox:** a send that fails is kept and retried when the connection
   returns, not lost. Queued messages can be edited, sent by hand or discarded.
 - **Send later:** schedule a message for tomorrow morning, Monday, or any

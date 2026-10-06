@@ -2113,3 +2113,13 @@ textview.console-view text selection {
 .format-bar .on-highlight {
   color: rgba(0, 0, 0, 0.85);
 }
+
+/* The print preview (#359): each page as paper on a desk a shade darker
+   than the window, in either theme. */
+.print-desk {
+  background-color: shade(@window_bg_color, 0.85);
+}
+.print-page {
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}

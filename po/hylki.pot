@@ -58,6 +58,8 @@ msgstr ""
 msgid "Remove Star"
 msgstr ""
 
+#. One glyph in both states, as in the main window; the
+#. starred state carries color only.
 msgid "Star"
 msgstr ""
 
@@ -85,21 +87,6 @@ msgstr ""
 msgid "Downloading attachments…"
 msgstr ""
 
-msgid "Close"
-msgstr ""
-
-msgid "Previous"
-msgstr ""
-
-msgid "Next"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Download…"
-msgstr ""
-
 msgid "People"
 msgstr ""
 
@@ -121,6 +108,7 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
+#. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
 msgstr ""
 
@@ -179,9 +167,6 @@ msgid "The list's unsubscribe page is open in your browser."
 msgstr ""
 
 msgid "The language applies the next time Hylki starts."
-msgstr ""
-
-msgid "Save Attachment"
 msgstr ""
 
 msgid ""
@@ -308,9 +293,6 @@ msgstr ""
 msgid "Restart Now"
 msgstr ""
 
-msgid "{name} · {current} of {total}"
-msgstr ""
-
 msgid "View Source"
 msgstr ""
 
@@ -348,6 +330,9 @@ msgid "Expand All Messages"
 msgstr ""
 
 msgid "Collapse All Messages"
+msgstr ""
+
+msgid "Print…"
 msgstr ""
 
 msgid "Delete {n} messages"
@@ -669,6 +654,9 @@ msgstr[1] ""
 msgid "Filters Applied"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "This message carries no calendar file to open."
 msgstr ""
 
@@ -861,6 +849,9 @@ msgid "This list"
 msgstr ""
 
 msgid "Unstar"
+msgstr ""
+
+msgid "Save Attachment"
 msgstr ""
 
 msgid "Save All Attachments"
@@ -2042,6 +2033,12 @@ msgstr ""
 msgid "Could not import the key"
 msgstr ""
 
+msgid "Open"
+msgstr ""
+
+msgid "Download…"
+msgstr ""
+
 msgid "Show in Message"
 msgstr ""
 
@@ -2141,6 +2138,12 @@ msgid "Type (A–Z)"
 msgstr ""
 
 msgid "Type (Z–A)"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Next"
 msgstr ""
 
 msgid "Open in the default app"
@@ -2981,6 +2984,9 @@ msgid ""
 "directly"
 msgstr ""
 
+msgid "{name} · {current} of {total}"
+msgstr ""
+
 msgid "me"
 msgstr ""
 
@@ -3424,9 +3430,6 @@ msgid "Copy Image"
 msgstr ""
 
 msgid "Copy Image Address"
-msgstr ""
-
-msgid "Load attachments from server"
 msgstr ""
 
 msgid "Clear all"
@@ -4475,6 +4478,28 @@ msgid ""
 "or as sent. The switch still changes the message on screen."
 msgstr ""
 
+msgid "Printing"
+msgstr ""
+
+msgid "Page numbers"
+msgstr ""
+
+msgid ""
+"Print the page number and the number of pages at the foot of every page."
+msgstr ""
+
+msgid "Date printed"
+msgstr ""
+
+msgid "Print the date and time of printing at the foot of every page."
+msgstr ""
+
+msgid "Wider left margin"
+msgstr ""
+
+msgid "Leave 25 mm at the left of every page, so punched holes miss the text."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr ""
 
@@ -4965,16 +4990,25 @@ msgstr ""
 msgid "Print Message"
 msgstr ""
 
-msgid "Save as PDF"
+msgid "No PDF writer is available on this system"
 msgstr ""
 
-msgid "Could not save the PDF: {error}"
-msgstr ""
-
-msgid "Print…"
+msgid "Page {page} of {pages}"
 msgstr ""
 
 msgid "Save as PDF…"
+msgstr ""
+
+msgid "No Preview"
+msgstr ""
+
+msgid "Save as PDF"
+msgstr ""
+
+msgid "Saved {name}"
+msgstr ""
+
+msgid "Could not save the PDF: {error}"
 msgstr ""
 
 msgid "Send as Attachment Instead"

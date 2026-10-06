@@ -1,5 +1,6 @@
-//! A message popped out into its own top-level window: a standalone reader that
-//! carries the exact same toolbar actions as the main window's reader pane.
+//! A message popped out into its own top-level window: a standalone reader with
+//! the main window's reader toolbar, in the layout Settings gives it, and the
+//! same attachment drawer and lightbox.
 //!
 //! The window owns its own [`MessageView`] and attachment state, but defers the
 //! real work (reply, move, load attachments, …) back to the app via outputs so
@@ -8,7 +9,11 @@
 use adw::prelude::*;
 use relm4::prelude::*;
 
+use crate::config::{ReaderToolbar, Tag, ToolbarItem};
 use crate::models::{Attachment, Message};
+use crate::ui::attachment_drawer::{AttachmentDrawer, AttachmentDrawerInput, DrawerInit, DrawerOutput};
+use crate::ui::context_menu::{show_context_menu, MenuEntry};
+use crate::ui::lightbox::{Lightbox, LightboxInput};
 use crate::ui::message_list::RowAction;
 use crate::ui::message_view::{MessageView, MessageViewInput, MessageViewOutput};
 use crate::i18n::i18n;
@@ -25,10 +30,20 @@ pub struct MessageWindowInit {
     pub allow_remote: bool,
     /// The body is still being fetched — show a spinner.
     pub loading: bool,
-    pub attachments: Vec<Attachment>,
-    /// Attachments exist on the server but aren't downloaded yet.
-    pub attachments_available: bool,
-    pub attachments_loading: bool,
+    /// Each member's files, as far as they are in hand, by (account, id).
+    pub attachments: Vec<((u32, u32), Vec<Attachment>)>,
+    /// The members whose files are on their way.
+    pub attachments_loading: Vec<(u32, u32)>,
+    /// The attachment drawer is on (Settings, #213); off, the files show on
+    /// the message's card instead, when that is on.
+    pub drawer_enabled: bool,
+    pub card_attachments: bool,
+    /// The reader toolbar's layout, as the main window has it.
+    pub toolbar: ReaderToolbar,
+    /// The message is in Junk (Spam reads Not Spam), or in Junk or Trash
+    /// (Move to Inbox is offered).
+    pub in_junk: bool,
+    pub restorable: bool,
     /// Message-content theme override (`None` follows the system).
     pub content_dark: Option<bool>,
     /// The reader's own fonts and colors over the senders' (#56).
@@ -58,17 +73,41 @@ pub struct MessageWindow {
     account_color: Option<String>,
     allow_remote: bool,
     loading: bool,
-    attachments: Vec<Attachment>,
-    attachments_available: bool,
-    attachments_loading: bool,
-    attach_list: gtk::Box,
+    /// Each member's files, in the order they arrived.
+    attachments: Vec<((u32, u32), Vec<Attachment>)>,
+    /// The members whose files are on their way.
+    attachments_loading: std::collections::HashSet<(u32, u32)>,
+    drawer_enabled: bool,
+    drawer: Controller<AttachmentDrawer>,
+    lightbox: Controller<Lightbox>,
+    tags: Vec<Tag>,
+    toolbar: ReaderToolbar,
+    in_junk: bool,
+    restorable: bool,
+    /// The right group is folded into the ⋯ menu: the window is too narrow
+    /// for the whole row.
+    collapsed: bool,
+    /// The window and what fills it, for keeping the window's minimum
+    /// width at its content's (see [`MessageWindow::fit_min_width`]).
+    window: adw::Window,
+    content: gtk::Overlay,
+    bar: Toolbar,
+}
+
+/// The header's buttons, one per toolbar item, packed in the saved order.
+struct Toolbar {
+    header: adw::HeaderBar,
+    buttons: Vec<(ToolbarItem, gtk::Button)>,
+    overflow: gtk::Button,
+    spinner: gtk::Spinner,
+    breakpoint: adw::Breakpoint,
 }
 
 #[derive(Debug)]
 pub enum MessageWindowInput {
     /// Print this message (Ctrl+P), the same as in the main window.
     Print,
-    /// Preview it as a PDF (Ctrl+Shift+P).
+    /// Preview it as it will print (Ctrl+Shift+P).
     PrintPreview,
     /// No-op (unreachable output mapping).
     Ignore,
@@ -87,10 +126,28 @@ pub enum MessageWindowInput {
     SetKeywords(Vec<String>),
     /// The tag definitions changed.
     SetTags(Vec<crate::config::Tag>),
-    /// Downloaded attachments are now available.
-    SetAttachments(Vec<Attachment>),
-    /// Attachments exist but need an explicit download.
-    AttachmentsPending,
+    /// A member's downloaded attachments are now available.
+    SetAttachments { account_id: u32, id: u32, items: Vec<Attachment> },
+    /// A member's attachments exist but were not on disk: fetch them.
+    AttachmentsPending { account_id: u32, id: u32 },
+    /// Reflect a read/unread change that happened elsewhere.
+    SetUnread(bool),
+    /// Settings changed the reader toolbar's layout.
+    SetToolbar(ReaderToolbar),
+    SetAttachmentDrawer(bool),
+    SetCardAttachmentsShown(bool),
+    /// The window crossed the width the whole toolbar needs.
+    SetCollapsed(bool),
+    /// Hand this to the attachment drawer (a deletion's progress, #289).
+    Drawer(AttachmentDrawerInput),
+    /// Show the lightbox over these previewable attachments.
+    Lightbox { items: Vec<Attachment>, start: usize },
+    /// A card's attachment row: open or save that member's file at `index`.
+    CardAttachment { account_id: u32, id: u32, index: usize, save: bool },
+    /// The drawer's Delete from Server.
+    DeleteAttachment(Attachment),
+    /// The drawer's Show in Message.
+    ShowAttachment(Attachment),
     /// Update the message-content theme (`None` follows the system).
     SetContentTheme(Option<bool>),
     /// The reader's own fonts and colors changed (#56).
@@ -102,8 +159,9 @@ pub enum MessageWindowInput {
     ZoomReset,
     SetReaderSwitchShown(bool),
     SetReaderDefault(crate::config::ReaderDefault),
-    /// This window's own Reader View toggle was flipped: handed up to the
-    /// app, which owns the preference and pushes it back to every reader.
+    /// This window's own Reader View switch was flipped. It changes this
+    /// window alone: the main window and the saved choice are left as they
+    /// were.
     ReaderMode(bool),
     /// What one of the user's own mailboxes shows changed (#189).
     FacesChanged,
@@ -111,15 +169,20 @@ pub enum MessageWindowInput {
     Reply,
     ReplyAll,
     Forward,
-    AddToContacts,
     ToggleStar,
+    ToggleRead,
     Delete,
     Archive,
+    /// Spam, or Not Spam in Junk.
     Spam,
-    ViewSource,
-    LoadAttachmentsNow,
-    OpenAttachment(usize),
-    SaveAllAttachments,
+    MoveToInbox,
+    /// The folder picker, under the Move To button (or the ⋯).
+    MoveTo,
+    /// The folder picker at a window point (a card's Move to…).
+    MoveToAt { message: Box<Message>, x: f64, y: f64 },
+    TagMenu,
+    OverflowMenu,
+    Find,
     // ---- from the embedded reader ----
     /// Fetch a message's body again (its OpenPGP verdict changed, #133).
     ReloadBody(Box<Message>),
@@ -173,8 +236,6 @@ pub enum MessageWindowOutput {
         invite: Box<crate::models::Invite>,
         action: crate::ui::message_view::InviteAction,
     },
-    /// Reader View flipped from this window's subject block.
-    ReaderMode(bool),
     /// The zoom chip was clicked in this window: back to the default.
     ZoomReset,
     /// A per-message action handled exactly like a list/context-menu action.
@@ -183,10 +244,12 @@ pub enum MessageWindowOutput {
     AddToContacts { name: String, email: String },
     /// Download this message's attachments from the server.
     LoadAttachments(Box<Message>),
-    /// Open a single attachment.
-    OpenAttachment(Box<Attachment>),
-    /// Save every attachment.
-    SaveAllAttachments(Vec<Attachment>),
+    /// The folder picker for this message, at window point (x, y).
+    MoveTo { message: Box<Message>, x: f64, y: f64 },
+    /// Put a tag on this message, or take it off (#71).
+    SetTag { message: Box<Message>, keyword: String, add: bool },
+    /// Take this attachment out of the message on the server (#289).
+    DeleteAttachment { message: Box<Message>, attachment: Box<Attachment> },
     /// Persist a remote-content allowlist entry.
     /// Fetch a message's body again (its OpenPGP verdict changed, #133).
     ReloadBody(Box<Message>),
@@ -221,112 +284,25 @@ impl Component for MessageWindow {
 
             #[wrap(Some)]
             set_content = &adw::ToolbarView {
+                // The main window's reader toolbar: its buttons are packed
+                // in `init`, in the order Settings gives them.
+                #[name = "header"]
                 add_top_bar = &adw::HeaderBar {
                     add_css_class: "flat",
+                    add_css_class: "reader-toolbar",
                     #[wrap(Some)]
                     set_title_widget = &gtk::Label {
-                        #[watch]
-                        set_label: &title_text(&model.msg),
-                        add_css_class: "pane-title",
-                        set_ellipsize: gtk::pango::EllipsizeMode::End,
-                    },
-                    pack_start = &gtk::Button {
-                        set_icon_name: "mail-reply-sender-symbolic",
-                        set_tooltip_text: Some(i18n("Reply").as_str()),
-                        add_css_class: "flat",
-                        connect_clicked => MessageWindowInput::Reply,
-                    },
-                    pack_start = &gtk::Button {
-                        set_icon_name: "mail-reply-all-symbolic",
-                        set_tooltip_text: Some(i18n("Reply All").as_str()),
-                        add_css_class: "flat",
-                        connect_clicked => MessageWindowInput::ReplyAll,
-                    },
-                    pack_start = &gtk::Button {
-                        set_icon_name: "mail-forward-symbolic",
-                        set_tooltip_text: Some(i18n("Forward").as_str()),
-                        add_css_class: "flat",
-                        connect_clicked => MessageWindowInput::Forward,
-                    },
-                    pack_start = &gtk::Button {
-                        set_icon_name: "contact-new-symbolic",
-                        set_tooltip_text: Some(i18n("Add sender to Contacts").as_str()),
-                        add_css_class: "flat",
-                        connect_clicked => MessageWindowInput::AddToContacts,
-                    },
-                    pack_start = &gtk::Button {
-                        #[watch]
-                        set_tooltip_text: Some(if model.msg.starred { i18n("Remove Star") } else { i18n("Star") }.as_str()),
-                        set_icon_name: "hylki-non-starred-symbolic",
-                        #[watch]
-                        set_css_classes: if model.msg.starred {
-                            &["flat", "star-active"]
-                        } else {
-                            &["flat"]
-                        },
-                        connect_clicked => MessageWindowInput::ToggleStar,
-                    },
-                    pack_end = &gtk::Button {
-                        set_icon_name: "user-trash-symbolic",
-                        set_tooltip_text: Some(i18n("Delete").as_str()),
-                        add_css_class: "flat",
-                        connect_clicked => MessageWindowInput::Delete,
-                    },
-                    pack_end = &gtk::Button {
-                        set_icon_name: "code-symbolic",
-                        set_tooltip_text: Some(i18n("View Source").as_str()),
-                        add_css_class: "flat",
-                        connect_clicked => MessageWindowInput::ViewSource,
-                    },
-                    pack_end = &gtk::Button {
-                        set_icon_name: "mail-mark-junk-symbolic",
-                        set_tooltip_text: Some(i18n("Mark as Spam").as_str()),
-                        add_css_class: "flat",
-                        connect_clicked => MessageWindowInput::Spam,
-                    },
-                    pack_end = &gtk::Button {
-                        set_icon_name: "mail-archive-symbolic",
-                        set_tooltip_text: Some(i18n("Archive").as_str()),
-                        add_css_class: "flat",
-                        connect_clicked => MessageWindowInput::Archive,
-                    },
-                    pack_end = &gtk::Spinner {
-                        set_valign: gtk::Align::Center,
-                        set_tooltip_text: Some(i18n("Downloading attachments…").as_str()),
-                        #[watch]
-                        set_spinning: model.attachments_loading,
-                        #[watch]
-                        set_visible: model.attachments_loading,
-                    },
-                    pack_end = &gtk::Button {
-                        set_icon_name: "folder-download-symbolic",
-                        set_tooltip_text: Some(i18n("Load attachments from server").as_str()),
-                        add_css_class: "flat",
-                        add_css_class: "attach-present",
-                        #[watch]
-                        set_visible: model.attachments_available && !model.attachments_loading,
-                        connect_clicked => MessageWindowInput::LoadAttachmentsNow,
-                    },
-                    pack_end = &gtk::MenuButton {
-                        set_icon_name: "mail-attachment-symbolic",
-                        set_tooltip_text: Some(i18n("Attachments").as_str()),
-                        add_css_class: "flat",
-                        add_css_class: "attach-present",
-                        #[watch]
-                        set_visible: !model.attachments.is_empty(),
-                        #[wrap(Some)]
-                        set_popover = &gtk::Popover {
-                            #[local_ref]
-                            attach_list -> gtk::Box {
-                                set_orientation: gtk::Orientation::Vertical,
-                                set_spacing: 4,
-                                set_width_request: 260,
-                            },
-                        },
+                        set_label: "",
                     },
                 },
+                // The drawer holds the reader above its own footer; the
+                // lightbox covers both.
                 #[wrap(Some)]
-                set_content = model.view.widget(),
+                #[name = "content"]
+                set_content = &gtk::Overlay {
+                    set_child: Some(model.drawer.widget()),
+                    add_overlay: model.lightbox.widget(),
+                },
             },
         }
     }
@@ -354,11 +330,13 @@ impl Component for MessageWindow {
                 MessageViewOutput::CardMenu { message, x, y, hit } => {
                     MessageWindowInput::CardMenu { message, x, y, hit }
                 }
-                // The standalone window has no folder picker.
-                MessageViewOutput::CardMoveTo { .. } => MessageWindowInput::Ignore,
+                MessageViewOutput::CardMoveTo { message, x, y } => {
+                    MessageWindowInput::MoveToAt { message, x, y }
+                }
                 MessageViewOutput::SelectCards(_) => MessageWindowInput::Ignore,
-                // A window's cards are never given attachment rows (#213).
-                MessageViewOutput::AttachmentAction { .. } => MessageWindowInput::Ignore,
+                MessageViewOutput::AttachmentAction { account_id, id, index, save } => {
+                    MessageWindowInput::CardAttachment { account_id, id, index, save }
+                }
                 // The pop-out keeps its own view's state; the main window's
                 // per-message record is not its to write.
                 MessageViewOutput::SetRemote { .. } => MessageWindowInput::Ignore,
@@ -387,13 +365,28 @@ impl Component for MessageWindow {
         view.emit(MessageViewInput::SetPgpLabels(init.pgp_labels));
         view.emit(MessageViewInput::SetReaderDefault(init.reader_default));
         view.emit(MessageViewInput::SetTags(init.tags.clone()));
+        view.emit(MessageViewInput::SetAttachmentDrawer(init.drawer_enabled));
+        view.emit(MessageViewInput::SetCardAttachmentsShown(init.card_attachments));
+
+        // The drawer docks beneath the reader, as in the main window.
+        let drawer = AttachmentDrawer::builder()
+            .launch(DrawerInit {
+                state: crate::config::load_drawer_state(),
+                reader: view.widget().clone().upcast(),
+            })
+            .forward(sender.input_sender(), |out| match out {
+                DrawerOutput::ShowLightbox { items, start } => MessageWindowInput::Lightbox { items, start },
+                DrawerOutput::ShowInMessage(att) => MessageWindowInput::ShowAttachment(att),
+                DrawerOutput::DeleteFromServer(att) => MessageWindowInput::DeleteAttachment(att),
+            });
+        let lightbox = Lightbox::builder().launch(()).detach();
 
         let thread = if init.thread.is_empty() {
             vec![init.message.clone()]
         } else {
             init.thread
         };
-        let model = MessageWindow {
+        let mut model = MessageWindow {
             msg: init.message,
             thread,
             view,
@@ -402,16 +395,50 @@ impl Component for MessageWindow {
             allow_remote: init.allow_remote,
             loading: init.loading,
             attachments: init.attachments,
-            attachments_available: init.attachments_available,
-            attachments_loading: init.attachments_loading,
-            attach_list: gtk::Box::new(gtk::Orientation::Vertical, 0),
+            attachments_loading: init.attachments_loading.into_iter().collect(),
+            drawer_enabled: init.drawer_enabled,
+            drawer,
+            lightbox,
+            tags: init.tags,
+            toolbar: init.toolbar,
+            in_junk: init.in_junk,
+            restorable: init.restorable,
+            collapsed: false,
+            window: root.clone(),
+            content: gtk::Overlay::new(),
+            bar: Toolbar {
+                header: adw::HeaderBar::new(),
+                buttons: Vec::new(),
+                overflow: gtk::Button::new(),
+                spinner: gtk::Spinner::new(),
+                breakpoint: adw::Breakpoint::new(adw::BreakpointCondition::new_length(
+                    adw::BreakpointConditionLengthType::MaxWidth,
+                    0.0,
+                    adw::LengthUnit::Px,
+                )),
+            },
         };
 
-        let attach_list = model.attach_list.clone();
         let widgets = view_output!();
+        model.bar = build_toolbar(&widgets.header, &sender);
+        model.content = widgets.content.clone();
+        {
+            let s = sender.input_sender().clone();
+            model.bar.breakpoint.connect_apply(move |_| {
+                let _ = s.send(MessageWindowInput::SetCollapsed(true));
+            });
+            let s = sender.input_sender().clone();
+            model.bar.breakpoint.connect_unapply(move |_| {
+                let _ = s.send(MessageWindowInput::SetCollapsed(false));
+            });
+            root.add_breakpoint(model.bar.breakpoint.clone());
+        }
+        model.relayout_toolbar();
+        model.sync_toolbar();
 
-        // Ctrl+P prints, matching the main window. This window has no menu bar to
-        // hang an action off, so the accelerator is wired directly.
+        // Ctrl+P prints and Ctrl+F finds, matching the main window. This
+        // window has no menu bar to hang an action off, so the accelerators
+        // are wired directly.
         {
             let keys = gtk::EventControllerKey::new();
             let s = sender.clone();
@@ -426,6 +453,10 @@ impl Component for MessageWindow {
                         s.input(MessageWindowInput::Print);
                         return gtk::glib::Propagation::Stop;
                     }
+                    if keyval == gtk::gdk::Key::f {
+                        s.input(MessageWindowInput::Find);
+                        return gtk::glib::Propagation::Stop;
+                    }
                 }
                 gtk::glib::Propagation::Proceed
             });
@@ -433,7 +464,7 @@ impl Component for MessageWindow {
         }
 
         model.render_body();
-        model.rebuild_attach_popover(&sender);
+        model.sync_attachments();
 
         ComponentParts { model, widgets }
     }
@@ -466,7 +497,7 @@ impl Component for MessageWindow {
                 self.view.emit(MessageViewInput::SetReaderDefault(policy));
             }
             MessageWindowInput::ReaderMode(on) => {
-                let _ = sender.output(MessageWindowOutput::ReaderMode(on));
+                self.view.emit(MessageViewInput::SetReaderMode(on));
             }
             MessageWindowInput::Unsubscribe { message, info } => {
                 let _ = sender.output(MessageWindowOutput::Unsubscribe { message, info });
@@ -522,6 +553,11 @@ impl Component for MessageWindow {
             }
             MessageWindowInput::SetStarred(starred) => {
                 self.msg.starred = starred;
+                self.sync_toolbar();
+            }
+            MessageWindowInput::SetUnread(unread) => {
+                self.msg.unread = unread;
+                self.sync_toolbar();
             }
             MessageWindowInput::SetKeywords(keywords) => {
                 self.msg.keywords = keywords.clone();
@@ -537,28 +573,95 @@ impl Component for MessageWindow {
                 });
             }
             MessageWindowInput::SetTags(tags) => {
+                self.tags = tags.clone();
                 self.view.emit(MessageViewInput::SetTags(tags));
+                self.sync_toolbar();
             }
-            MessageWindowInput::SetAttachments(items) => {
-                self.attachments = items;
-                self.attachments_available = false;
-                self.attachments_loading = false;
-                self.rebuild_attach_popover(&sender);
+            MessageWindowInput::SetAttachments { account_id, id, items } => {
+                let key = (account_id, id);
+                self.attachments.retain(|(k, _)| *k != key);
+                self.attachments.push((key, items));
+                self.attachments_loading.remove(&key);
+                self.sync_attachments();
+                self.sync_toolbar();
             }
-            MessageWindowInput::AttachmentsPending => {
-                self.attachments_available = true;
-                self.attachments_loading = false;
+            MessageWindowInput::AttachmentsPending { account_id, id } => {
+                // Opening the message was the request: fetch them, as the
+                // main reader does, rather than wait for a click.
+                let Some(m) = self.member(account_id, id).cloned() else { return };
+                self.attachments_loading.insert((account_id, id));
+                let _ = sender.output(MessageWindowOutput::LoadAttachments(Box::new(m)));
+                self.sync_toolbar();
+            }
+            MessageWindowInput::SetToolbar(layout) => {
+                if self.toolbar != layout {
+                    self.toolbar = layout;
+                    self.relayout_toolbar();
+                    self.sync_toolbar();
+                }
+            }
+            MessageWindowInput::SetAttachmentDrawer(on) => {
+                self.drawer_enabled = on;
+                self.view.emit(MessageViewInput::SetAttachmentDrawer(on));
+                self.sync_attachments();
+            }
+            MessageWindowInput::SetCardAttachmentsShown(on) => {
+                self.view.emit(MessageViewInput::SetCardAttachmentsShown(on));
+            }
+            MessageWindowInput::SetCollapsed(on) => {
+                self.collapsed = on;
+                self.sync_toolbar();
+            }
+            MessageWindowInput::Drawer(input) => self.drawer.emit(input),
+            MessageWindowInput::Lightbox { items, start } => {
+                self.lightbox.emit(LightboxInput::Show { items, start });
+            }
+            MessageWindowInput::CardAttachment { account_id, id, index, save } => {
+                let Some(files) = self.attachments.iter().find(|(k, _)| *k == (account_id, id)).map(|(_, f)| f)
+                else {
+                    return;
+                };
+                let Some(att) = files.get(index).cloned() else { return };
+                if save {
+                    save_attachment(att, root);
+                } else if crate::ui::attachment_drawer::previewable(&att) {
+                    // The lightbox pages through this message's previewable
+                    // files, starting at the one clicked.
+                    let previewable = |a: &&Attachment| crate::ui::attachment_drawer::previewable(a);
+                    let items: Vec<Attachment> = files.iter().filter(previewable).cloned().collect();
+                    let start = files[..=index].iter().filter(previewable).count().saturating_sub(1);
+                    self.lightbox.emit(LightboxInput::Show { items, start });
+                } else {
+                    crate::ui::attachments_gallery::open_bytes(&att.name, &att.data, Some(root.upcast_ref()));
+                }
+            }
+            MessageWindowInput::DeleteAttachment(att) => {
+                let Some(message) = self.owner(&att).cloned() else { return };
+                let _ = sender.output(MessageWindowOutput::DeleteAttachment {
+                    message: Box::new(message),
+                    attachment: Box::new(att),
+                });
+            }
+            MessageWindowInput::ShowAttachment(att) => {
+                if let Some(m) = self.owner(&att) {
+                    self.view.emit(MessageViewInput::ScrollToAttachments { account_id: m.account_id, id: m.id });
+                }
             }
             MessageWindowInput::Reply => self.emit_action(RowAction::Reply, &sender),
             MessageWindowInput::ReplyAll => self.emit_action(RowAction::ReplyAll, &sender),
             MessageWindowInput::Forward => self.emit_action(RowAction::Forward, &sender),
             MessageWindowInput::ToggleStar => self.emit_action(RowAction::ToggleStar, &sender),
-            MessageWindowInput::ViewSource => self.emit_action(RowAction::ViewSource, &sender),
-            // Moving the message away — let the app handle it, then close.
+            MessageWindowInput::ToggleRead => {
+                self.emit_action(RowAction::ToggleRead, &sender);
+                // The app tells the window back too (SetUnread); flipping it
+                // here keeps a quick second click from repeating the first.
+                self.msg.unread = !self.msg.unread;
+                self.sync_toolbar();
+            }
             MessageWindowInput::Print => self.view.emit(MessageViewInput::Print),
-
             MessageWindowInput::PrintPreview => self.view.emit(MessageViewInput::PrintPreview),
-
+            MessageWindowInput::Find => self.view.emit(MessageViewInput::OpenFind),
+            // Moving the message away: let the app handle it, then close.
             MessageWindowInput::Delete => {
                 self.emit_action(RowAction::Delete, &sender);
                 root.close();
@@ -568,28 +671,35 @@ impl Component for MessageWindow {
                 root.close();
             }
             MessageWindowInput::Spam => {
-                self.emit_action(RowAction::Spam, &sender);
+                let action = if self.in_junk { RowAction::NotSpam } else { RowAction::Spam };
+                self.emit_action(action, &sender);
                 root.close();
             }
-            MessageWindowInput::AddToContacts => {
-                let _ = sender.output(MessageWindowOutput::AddToContacts {
-                    name: self.msg.from_name.clone(),
-                    email: self.msg.from_addr.clone(),
+            MessageWindowInput::MoveToInbox => {
+                self.emit_action(RowAction::MoveToInbox, &sender);
+                root.close();
+            }
+            MessageWindowInput::MoveTo => {
+                // Under the Move To button, or under the ⋯ that stands in
+                // for it while the toolbar is folded.
+                let button = self.button(ToolbarItem::MoveTo).filter(|b| b.is_mapped()).unwrap_or(&self.bar.overflow);
+                let Some(point) = button.compute_point(root, &gtk::graphene::Point::new(
+                    button.width() as f32 / 2.0,
+                    button.height() as f32,
+                )) else {
+                    return;
+                };
+                let _ = sender.output(MessageWindowOutput::MoveTo {
+                    message: Box::new(self.msg.clone()),
+                    x: point.x().into(),
+                    y: point.y().into(),
                 });
             }
-            MessageWindowInput::LoadAttachmentsNow => {
-                self.attachments_available = false;
-                self.attachments_loading = true;
-                let _ = sender.output(MessageWindowOutput::LoadAttachments(Box::new(self.msg.clone())));
+            MessageWindowInput::MoveToAt { message, x, y } => {
+                let _ = sender.output(MessageWindowOutput::MoveTo { message, x, y });
             }
-            MessageWindowInput::OpenAttachment(i) => {
-                if let Some(att) = self.attachments.get(i) {
-                    let _ = sender.output(MessageWindowOutput::OpenAttachment(Box::new(att.clone())));
-                }
-            }
-            MessageWindowInput::SaveAllAttachments => {
-                let _ = sender.output(MessageWindowOutput::SaveAllAttachments(self.attachments.clone()));
-            }
+            MessageWindowInput::TagMenu => self.show_tag_menu(&sender),
+            MessageWindowInput::OverflowMenu => self.show_overflow_menu(&sender),
             MessageWindowInput::AllowSender(addr) => {
                 let _ = sender.output(MessageWindowOutput::AllowSender(addr));
             }
@@ -647,51 +757,312 @@ impl MessageWindow {
         });
     }
 
-    /// Rebuild the attachments popover (a row per attachment + "Save All").
-    fn rebuild_attach_popover(&self, sender: &ComponentSender<Self>) {
-        while let Some(child) = self.attach_list.first_child() {
-            self.attach_list.remove(&child);
-        }
-        for (i, att) in self.attachments.iter().enumerate() {
-            let row = gtk::Box::new(gtk::Orientation::Horizontal, 8);
-            row.add_css_class("attach-row");
-
-            let info = gtk::Box::new(gtk::Orientation::Vertical, 0);
-            info.set_hexpand(true);
-            let name = gtk::Label::new(Some(&att.name));
-            name.set_halign(gtk::Align::Start);
-            name.set_ellipsize(gtk::pango::EllipsizeMode::Middle);
-            name.set_max_width_chars(28);
-            let size = gtk::Label::new(Some(&att.human_size()));
-            size.set_halign(gtk::Align::Start);
-            size.add_css_class("dim-label");
-            size.add_css_class("caption");
-            info.append(&name);
-            info.append(&size);
-            row.append(&info);
-
-            let open = gtk::Button::with_label(&i18n("Open"));
-            open.add_css_class("flat");
-            open.set_valign(gtk::Align::Center);
-            let s = sender.input_sender().clone();
-            open.connect_clicked(move |_| {
-                let _ = s.send(MessageWindowInput::OpenAttachment(i));
-            });
-            row.append(&open);
-            self.attach_list.append(&row);
-        }
-        if !self.attachments.is_empty() {
-            self.attach_list
-                .append(&gtk::Separator::new(gtk::Orientation::Horizontal));
-            let save = gtk::Button::with_label(&i18n("Save All…"));
-            save.add_css_class("flat");
-            let s = sender.input_sender().clone();
-            save.connect_clicked(move |_| {
-                let _ = s.send(MessageWindowInput::SaveAllAttachments);
-            });
-            self.attach_list.append(&save);
-        }
+    /// A member of the window's conversation (or the lone message).
+    fn member(&self, account_id: u32, id: u32) -> Option<&Message> {
+        self.thread.iter().find(|m| m.account_id == account_id && m.id == id)
     }
+
+    /// The message a file of the drawer came with: the first carrying one
+    /// of that name and size, since the drawer shows such a pair once.
+    fn owner(&self, att: &Attachment) -> Option<&Message> {
+        let (key, _) = self.attachments.iter().find(|(_, files)| {
+            files.iter().any(|a| a.name == att.name && a.data.len() == att.data.len())
+        })?;
+        self.member(key.0, key.1)
+    }
+
+    /// The files on the drawer and on each card. The drawer spans the whole
+    /// conversation, as the main window's does; a reply pulled in from Sent
+    /// can repeat what it was sent with, so a (name, size) pair shows once.
+    fn sync_attachments(&self) {
+        let mut seen = std::collections::HashSet::new();
+        let mut merged = Vec::new();
+        let mut rows = std::collections::HashMap::new();
+        for m in &self.thread {
+            let key = (m.account_id, m.id);
+            let Some((_, files)) = self.attachments.iter().find(|(k, _)| *k == key) else { continue };
+            for a in files {
+                if seen.insert((a.name.clone(), a.data.len())) {
+                    merged.push(a.clone());
+                }
+            }
+            if !files.is_empty() {
+                let row = files
+                    .iter()
+                    .map(|a| crate::ui::message_view::CardAttachment { name: a.name.clone(), size: a.data.len() as u64 })
+                    .collect::<Vec<_>>();
+                rows.insert(key, row);
+            }
+        }
+        // Switched off (#213), the drawer is simply never given anything:
+        // empty hides it, seam and all.
+        self.drawer.emit(AttachmentDrawerInput::SetItems(if self.drawer_enabled { merged } else { Vec::new() }));
+        self.view.emit(MessageViewInput::SetCardAttachments(rows));
+        self.fit_min_width();
+    }
+
+    /// With breakpoints a window's minimum width is its own size request,
+    /// not its content's, and narrower content is cut off at the right. The
+    /// toolbar folds to fit, but the reader and the drawer's header cannot,
+    /// so the window is kept at least as wide as they need. Measured once
+    /// the drawer has taken in its files.
+    fn fit_min_width(&self) {
+        let window = self.window.clone();
+        let content = self.content.clone();
+        gtk::glib::idle_add_local_once(move || {
+            let need = content.measure(gtk::Orientation::Horizontal, -1).0;
+            window.set_size_request(need.max(360), 294);
+        });
+    }
+
+    fn button(&self, item: ToolbarItem) -> Option<&gtk::Button> {
+        self.bar.buttons.iter().find(|(i, _)| *i == item).map(|(_, b)| b)
+    }
+
+    /// Pack the buttons in the saved order, as the main window does: the
+    /// left group from the start, the right group from the end (which fills
+    /// right to left, so in reverse), then the attachments spinner as the
+    /// innermost of the right group. Buttons on neither side stay unpacked.
+    /// The fold point is measured afresh for the new row.
+    fn relayout_toolbar(&self) {
+        let header = &self.bar.header;
+        for (_, b) in &self.bar.buttons {
+            if b.parent().is_some() {
+                header.remove(b);
+            }
+        }
+        if self.bar.spinner.parent().is_some() {
+            header.remove(&self.bar.spinner);
+        }
+        for item in &self.toolbar.left {
+            if let Some(b) = self.button(*item) {
+                header.pack_start(b);
+            }
+        }
+        for item in self.toolbar.right.iter().rev() {
+            if let Some(b) = self.button(*item) {
+                header.pack_end(b);
+            }
+        }
+        header.pack_end(&self.bar.spinner);
+
+        // The width the whole row needs: every packed button shown, the
+        // folded state's ⋯ hidden, plus a little slack so the fold comes a
+        // step ahead of a squeeze. Tags without any tag counts too.
+        let shown: Vec<(gtk::Button, bool)> = self
+            .bar
+            .buttons
+            .iter()
+            .map(|(_, b)| (b.clone(), b.is_visible()))
+            .collect();
+        for (b, _) in &shown {
+            b.set_visible(b.parent().is_some());
+        }
+        let overflow = self.bar.overflow.is_visible();
+        self.bar.overflow.set_visible(false);
+        let need = header.measure(gtk::Orientation::Horizontal, -1).1;
+        for (b, visible) in shown {
+            b.set_visible(visible);
+        }
+        self.bar.overflow.set_visible(overflow);
+        self.bar.breakpoint.set_condition(Some(&adw::BreakpointCondition::new_length(
+            adw::BreakpointConditionLengthType::MaxWidth,
+            f64::from(need + 24),
+            adw::LengthUnit::Px,
+        )));
+    }
+
+    /// The buttons' state: which show (the right group only while the row
+    /// fits), and the ones that say the message's state.
+    fn sync_toolbar(&self) {
+        for (item, b) in &self.bar.buttons {
+            let right = self.toolbar.right.contains(item);
+            let mut visible = !(right && self.collapsed);
+            if *item == ToolbarItem::Tags {
+                visible &= !self.tags.is_empty();
+            }
+            b.set_visible(visible);
+            match item {
+                ToolbarItem::Star => {
+                    b.set_tooltip_text(Some(&if self.msg.starred { i18n("Remove Star") } else { i18n("Star") }));
+                    if self.msg.starred {
+                        b.add_css_class("star-active");
+                    } else {
+                        b.remove_css_class("star-active");
+                    }
+                }
+                // The icon shows the ACTION (read envelope = "mark as
+                // read"), matching the menus.
+                ToolbarItem::ReadUnread => {
+                    b.set_icon_name(if self.msg.unread { "hylki-mail-read-symbolic" } else { "mail-unread-symbolic" });
+                    b.set_tooltip_text(Some(&if self.msg.unread { i18n("Mark as Read") } else { i18n("Mark as Unread") }));
+                }
+                ToolbarItem::Spam => {
+                    b.set_icon_name(if self.in_junk { "mail-mark-notjunk-symbolic" } else { "mail-mark-junk-symbolic" });
+                    b.set_tooltip_text(Some(&if self.in_junk { i18n("Not Spam") } else { i18n("Mark as Spam") }));
+                }
+                _ => {}
+            }
+        }
+        self.bar.overflow.set_visible(self.collapsed && !self.toolbar.right.is_empty());
+        let loading = !self.attachments_loading.is_empty();
+        self.bar.spinner.set_spinning(loading);
+        self.bar.spinner.set_visible(loading);
+    }
+
+    /// The tags (#71), ticked where the message carries them.
+    fn tag_entries(&self, sender: &ComponentSender<Self>) -> Vec<MenuEntry> {
+        let s = sender.output_sender().clone();
+        let message = self.msg.clone();
+        crate::ui::message_list::tag_menu_entries(&self.tags, &self.msg, move |keyword, add| {
+            let _ = s.send(MessageWindowOutput::SetTag { message: Box::new(message.clone()), keyword, add });
+        })
+    }
+
+    fn show_tag_menu(&self, sender: &ComponentSender<Self>) {
+        if self.tags.is_empty() {
+            return;
+        }
+        let Some(b) = self.button(ToolbarItem::Tags) else { return };
+        show_context_menu(b, f64::from(b.width() / 2), f64::from(b.height()), vec![self.tag_entries(sender)]);
+    }
+
+    /// The folded toolbar's ⋯ menu: the right group, in its own order, with
+    /// the main window's labels and icons.
+    fn show_overflow_menu(&self, sender: &ComponentSender<Self>) {
+        let entry = |label: String, icon: &str, msg: fn() -> MessageWindowInput| {
+            let s = sender.input_sender().clone();
+            MenuEntry::new(label, move || {
+                let _ = s.send(msg());
+            })
+            .icon(format!("{icon}-symbolic"))
+        };
+        let mut section = Vec::new();
+        for item in &self.toolbar.right {
+            match item {
+                ToolbarItem::Reply => section.push(entry(i18n("Reply"), "mail-reply-sender", || MessageWindowInput::Reply)),
+                ToolbarItem::ReplyAll => {
+                    section.push(entry(i18n("Reply All"), "mail-reply-all", || MessageWindowInput::ReplyAll))
+                }
+                ToolbarItem::Forward => section.push(entry(i18n("Forward"), "mail-forward", || MessageWindowInput::Forward)),
+                ToolbarItem::Star => section.push(if self.msg.starred {
+                    entry(i18n("Remove Star"), "hylki-non-starred", || MessageWindowInput::ToggleStar)
+                } else {
+                    entry(i18n("Star"), "starred", || MessageWindowInput::ToggleStar)
+                }),
+                ToolbarItem::Archive => section.push(entry(i18n("Archive"), "mail-archive", || MessageWindowInput::Archive)),
+                ToolbarItem::Delete => section.push(entry(i18n("Delete"), "user-trash", || MessageWindowInput::Delete)),
+                ToolbarItem::Spam => section.push(if self.in_junk {
+                    entry(i18n("Not Spam"), "mail-mark-notjunk", || MessageWindowInput::Spam)
+                } else {
+                    entry(i18n("Mark as Spam"), "mail-mark-junk", || MessageWindowInput::Spam)
+                }),
+                ToolbarItem::ReadUnread => section.push(if self.msg.unread {
+                    entry(i18n("Mark as Read"), "hylki-mail-read", || MessageWindowInput::ToggleRead)
+                } else {
+                    entry(i18n("Mark as Unread"), "mail-unread", || MessageWindowInput::ToggleRead)
+                }),
+                ToolbarItem::Tags => {
+                    if !self.tags.is_empty() {
+                        section.push(
+                            MenuEntry::submenu(i18n("Tags"), vec![self.tag_entries(sender)]).icon("tag-outline-symbolic"),
+                        );
+                    }
+                }
+                ToolbarItem::MoveTo => {
+                    if self.restorable {
+                        section.push(entry(i18n("Move to Inbox"), "mail-inbox", || MessageWindowInput::MoveToInbox));
+                    }
+                    section.push(entry(i18n("Move To…"), "folder", || MessageWindowInput::MoveTo));
+                }
+                ToolbarItem::Find => {
+                    section.push(entry(i18n("Find in Message"), "loupe-with-arrow", || MessageWindowInput::Find))
+                }
+                ToolbarItem::Print => {
+                    section.push(entry(i18n("Print Preview"), "printer", || MessageWindowInput::PrintPreview))
+                }
+            }
+        }
+        let b = &self.bar.overflow;
+        show_context_menu(b, f64::from(b.width() / 2), f64::from(b.height()), vec![section]);
+    }
+}
+
+/// One flat icon button for each toolbar item, with the main window's icons
+/// and tooltips, and the ⋯ and spinner the row also needs.
+fn build_toolbar(header: &adw::HeaderBar, sender: &ComponentSender<MessageWindow>) -> Toolbar {
+    let button = |icon: &str, tooltip: String, msg: fn() -> MessageWindowInput| {
+        let b = gtk::Button::from_icon_name(icon);
+        b.set_tooltip_text(Some(&tooltip));
+        b.add_css_class("flat");
+        let s = sender.input_sender().clone();
+        b.connect_clicked(move |_| {
+            let _ = s.send(msg());
+        });
+        b
+    };
+    let buttons = ToolbarItem::ALL
+        .iter()
+        .map(|item| {
+            let b = match item {
+                ToolbarItem::Reply => button("mail-reply-sender-symbolic", i18n("Reply"), || MessageWindowInput::Reply),
+                ToolbarItem::ReplyAll => {
+                    button("mail-reply-all-symbolic", i18n("Reply All"), || MessageWindowInput::ReplyAll)
+                }
+                ToolbarItem::Forward => button("mail-forward-symbolic", i18n("Forward"), || MessageWindowInput::Forward),
+                // One glyph in both states, as in the main window; the
+                // starred state carries color only.
+                ToolbarItem::Star => button("hylki-non-starred-symbolic", i18n("Star"), || MessageWindowInput::ToggleStar),
+                ToolbarItem::Archive => button("mail-archive-symbolic", i18n("Archive"), || MessageWindowInput::Archive),
+                ToolbarItem::Delete => button("user-trash-symbolic", i18n("Delete"), || MessageWindowInput::Delete),
+                ToolbarItem::Spam => button("mail-mark-junk-symbolic", i18n("Mark as Spam"), || MessageWindowInput::Spam),
+                ToolbarItem::ReadUnread => {
+                    button("mail-unread-symbolic", i18n("Mark as Unread"), || MessageWindowInput::ToggleRead)
+                }
+                ToolbarItem::Tags => button("tag-outline-symbolic", i18n("Tags"), || MessageWindowInput::TagMenu),
+                ToolbarItem::MoveTo => button("folder-symbolic", i18n("Move To…"), || MessageWindowInput::MoveTo),
+                ToolbarItem::Find => {
+                    button("loupe-with-arrow-symbolic", i18n("Find in message (Ctrl+F)"), || MessageWindowInput::Find)
+                }
+                // The preview, not the print dialog: it shows what will come
+                // out and prints from there (#359).
+                ToolbarItem::Print => {
+                    button("printer-symbolic", i18n("Print Preview (Ctrl+Shift+P)"), || MessageWindowInput::PrintPreview)
+                }
+            };
+            (*item, b)
+        })
+        .collect();
+    // Rightmost, beside the window controls, as in the main window.
+    let overflow = button("view-more-horizontal-symbolic", i18n("Actions"), || MessageWindowInput::OverflowMenu);
+    overflow.set_visible(false);
+    header.pack_end(&overflow);
+    let spinner = gtk::Spinner::new();
+    spinner.set_valign(gtk::Align::Center);
+    spinner.set_tooltip_text(Some(&i18n("Downloading attachments…")));
+    Toolbar {
+        header: header.clone(),
+        buttons,
+        overflow,
+        spinner,
+        breakpoint: adw::Breakpoint::new(adw::BreakpointCondition::new_length(
+            adw::BreakpointConditionLengthType::MaxWidth,
+            0.0,
+            adw::LengthUnit::Px,
+        )),
+    }
+}
+
+/// Save one attachment where the user picks.
+fn save_attachment(att: Attachment, parent: &adw::Window) {
+    let dialog = gtk::FileDialog::builder().initial_name(&att.name).title(&i18n("Save Attachment")).build();
+    dialog.save(Some(parent), gtk::gio::Cancellable::NONE, move |res| {
+        if let Ok(file) = res {
+            if let Some(path) = file.path() {
+                let _ = std::fs::write(path, &att.data);
+            }
+        }
+    });
 }
 
 /// The window/title text for a message (its subject, or a placeholder).

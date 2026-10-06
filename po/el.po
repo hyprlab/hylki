@@ -64,6 +64,8 @@ msgstr "Προώθηση"
 msgid "Remove Star"
 msgstr "Αφαίρεση αστεριού"
 
+#. One glyph in both states, as in the main window; the
+#. starred state carries color only.
 msgid "Star"
 msgstr "Προσθήκη αστεριού"
 
@@ -91,21 +93,6 @@ msgstr "Σήμανση ως μη αναγνωσμένο"
 msgid "Downloading attachments…"
 msgstr "Λήψη συνημμένων…"
 
-msgid "Close"
-msgstr "Κλείσιμο"
-
-msgid "Previous"
-msgstr "Προηγούμενο"
-
-msgid "Next"
-msgstr "Επόμενο"
-
-msgid "Open"
-msgstr "Άνοιγμα"
-
-msgid "Download…"
-msgstr "Λήψη…"
-
 msgid "People"
 msgstr ""
 
@@ -127,6 +114,7 @@ msgstr "Εκτύπωση μηνύματος…"
 msgid "Quit"
 msgstr "Έξοδος"
 
+#. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
 msgstr "Ενέργειες"
 
@@ -188,9 +176,6 @@ msgstr ""
 
 msgid "The language applies the next time Hylki starts."
 msgstr "Η γλώσσα θα εφαρμοστεί την επόμενη φορά που θα εκκινηθεί το Hylki."
-
-msgid "Save Attachment"
-msgstr "Αποθήκευση συνημμένου"
 
 msgid ""
 "Couldn't restart automatically — quit and reopen Hylki to finish switching "
@@ -331,9 +316,6 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Επανεκκίνηση τώρα"
 
-msgid "{name} · {current} of {total}"
-msgstr "{name} · {current} από {total}"
-
 msgid "View Source"
 msgstr "Προβολή πηγαίου κώδικα"
 
@@ -374,6 +356,9 @@ msgstr "Εύρεση στο μήνυμα"
 #, fuzzy
 msgid "Collapse All Messages"
 msgstr "Σύμπτυξη στην προβολή ανάγνωσης"
+
+msgid "Print…"
+msgstr "Εκτύπωση…"
 
 msgid "Delete {n} messages"
 msgstr "Διαγραφή {n} μηνυμάτων"
@@ -727,6 +712,9 @@ msgstr[1] ""
 msgid "Filters Applied"
 msgstr "Τα φίλτρα εφαρμόστηκαν"
 
+msgid "Close"
+msgstr "Κλείσιμο"
+
 msgid "This message carries no calendar file to open."
 msgstr "Αυτό το μήνυμα δεν περιέχει αρχείο ημερολογίου για άνοιγμα."
 
@@ -934,6 +922,9 @@ msgstr "Αυτή η λίστα"
 
 msgid "Unstar"
 msgstr "Αφαίρεση αστεριού"
+
+msgid "Save Attachment"
+msgstr "Αποθήκευση συνημμένου"
 
 msgid "Save All Attachments"
 msgstr "Αποθήκευση όλων των συνημμένων"
@@ -2257,6 +2248,12 @@ msgstr "Αυτό το κλειδί είχε εισαχθεί προηγουμέ�
 msgid "Could not import the key"
 msgstr "Δεν ήταν δυνατή η εισαγωγή του κλειδιού"
 
+msgid "Open"
+msgstr "Άνοιγμα"
+
+msgid "Download…"
+msgstr "Λήψη…"
+
 msgid "Show in Message"
 msgstr "Εμφάνιση στο μήνυμα"
 
@@ -2359,6 +2356,12 @@ msgstr "Τύπος (Α–Ω)"
 
 msgid "Type (Z–A)"
 msgstr "Τύπος (Ω–Α)"
+
+msgid "Previous"
+msgstr "Προηγούμενο"
+
+msgid "Next"
+msgstr "Επόμενο"
 
 msgid "Open in the default app"
 msgstr "Άνοιγμα στην προεπιλεγμένη εφαρμογή"
@@ -3321,6 +3324,9 @@ msgstr ""
 "• Η ενημέρωση του «xdg-desktop-portal» και η εκ νέου σύνδεση ενδέχεται να "
 "διορθώσουν το απευθείας άνοιγμα συνδέσμων"
 
+msgid "{name} · {current} of {total}"
+msgstr "{name} · {current} από {total}"
+
 #, fuzzy
 msgid "me"
 msgstr "Όνομα"
@@ -3795,9 +3801,6 @@ msgstr ""
 
 msgid "Copy Image Address"
 msgstr ""
-
-msgid "Load attachments from server"
-msgstr "Φόρτωση συνημμένων από τον διακομιστή"
 
 msgid "Clear all"
 msgstr "Εκκαθάριση όλων"
@@ -5055,6 +5058,30 @@ msgstr ""
 "Προβολή ανάγνωσης ή όπως απεστάλη. Ο διακόπτης εξακολουθεί να αλλάζει το "
 "μήνυμα στην οθόνη."
 
+#, fuzzy
+msgid "Printing"
+msgstr "Σύνταξη:"
+
+msgid "Page numbers"
+msgstr ""
+
+msgid ""
+"Print the page number and the number of pages at the foot of every page."
+msgstr ""
+
+#, fuzzy
+msgid "Date printed"
+msgstr "Μορφή ημερομηνίας"
+
+msgid "Print the date and time of printing at the foot of every page."
+msgstr ""
+
+msgid "Wider left margin"
+msgstr ""
+
+msgid "Leave 25 mm at the left of every page, so punched holes miss the text."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr "Σύνταξη στο κύριο παράθυρο"
 
@@ -5653,17 +5680,29 @@ msgstr "Προσαρμοσμένο αρχείο"
 msgid "Print Message"
 msgstr "Εκτύπωση μηνύματος"
 
-msgid "Save as PDF"
-msgstr "Αποθήκευση ως PDF"
+#, fuzzy
+msgid "No PDF writer is available on this system"
+msgstr "Δεν υπάρχει φάκελος Προχείρων για αυτόν τον λογαριασμό"
 
-msgid "Could not save the PDF: {error}"
-msgstr "Δεν ήταν δυνατή η αποθήκευση του PDF: {error}"
-
-msgid "Print…"
-msgstr "Εκτύπωση…"
+msgid "Page {page} of {pages}"
+msgstr ""
 
 msgid "Save as PDF…"
 msgstr "Αποθήκευση ως PDF…"
+
+#, fuzzy
+msgid "No Preview"
+msgstr "Προεπισκόπηση"
+
+msgid "Save as PDF"
+msgstr "Αποθήκευση ως PDF"
+
+#, fuzzy
+msgid "Saved {name}"
+msgstr "Αφαιρέθηκε το {name}"
+
+msgid "Could not save the PDF: {error}"
+msgstr "Δεν ήταν δυνατή η αποθήκευση του PDF: {error}"
 
 msgid "Send as Attachment Instead"
 msgstr "Αποστολή ως συνημμένο αντί για σύνδεσμο"
@@ -6515,6 +6554,9 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Load attachments from server"
+#~ msgstr "Φόρτωση συνημμένων από τον διακομιστή"
 
 #~ msgid "Could not save draft: unknown folder"
 #~ msgstr "Δεν ήταν δυνατή η αποθήκευση του προχείρου: άγνωστος φάκελος"

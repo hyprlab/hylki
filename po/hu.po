@@ -64,6 +64,8 @@ msgstr "Továbbítás"
 msgid "Remove Star"
 msgstr "Csillag eltávolítása"
 
+#. One glyph in both states, as in the main window; the
+#. starred state carries color only.
 msgid "Star"
 msgstr "Csillagozás"
 
@@ -91,21 +93,6 @@ msgstr "Megjelölés olvasatlanként"
 msgid "Downloading attachments…"
 msgstr "Mellékletek letöltése…"
 
-msgid "Close"
-msgstr "Bezárás"
-
-msgid "Previous"
-msgstr "Előző"
-
-msgid "Next"
-msgstr "Következő"
-
-msgid "Open"
-msgstr "Megnyitás"
-
-msgid "Download…"
-msgstr "Letöltés…"
-
 msgid "People"
 msgstr ""
 
@@ -127,6 +114,7 @@ msgstr "Nyomtatás…"
 msgid "Quit"
 msgstr "Kilépés"
 
+#. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
 msgstr "Műveletek"
 
@@ -187,9 +175,6 @@ msgstr "A lista leiratkozási oldala megnyílik a böngészőben."
 
 msgid "The language applies the next time Hylki starts."
 msgstr "A nyelvi módosítások a Hylki következő indításakor lépnek életbe."
-
-msgid "Save Attachment"
-msgstr "Melléklet mentése"
 
 msgid ""
 "Couldn't restart automatically — quit and reopen Hylki to finish switching "
@@ -326,9 +311,6 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Újraindítás most"
 
-msgid "{name} · {current} of {total}"
-msgstr "{name} · {current} / {total}"
-
 msgid "View Source"
 msgstr "Forrás megtekintése"
 
@@ -369,6 +351,9 @@ msgstr "Keresés az üzenetben"
 #, fuzzy
 msgid "Collapse All Messages"
 msgstr "Olvasói nézetre váltás"
+
+msgid "Print…"
+msgstr "Nyomtatás…"
 
 msgid "Delete {n} messages"
 msgstr "{n} üzenet törlése"
@@ -713,6 +698,9 @@ msgstr[1] "Az {tagged} címkével ellátott szűrők, {n} üzenetből {filed}. �
 msgid "Filters Applied"
 msgstr "Alkalmazott szűrők"
 
+msgid "Close"
+msgstr "Bezárás"
+
 msgid "This message carries no calendar file to open."
 msgstr "Ez az üzenet nem tartalmaz megnyitható naptárfájlt."
 
@@ -920,6 +908,9 @@ msgstr "Ez a lista"
 
 msgid "Unstar"
 msgstr "Csillagozás törlése"
+
+msgid "Save Attachment"
+msgstr "Melléklet mentése"
 
 msgid "Save All Attachments"
 msgstr "Összes melléklet mentése"
@@ -2230,6 +2221,12 @@ msgstr "Ezt a kulcsot korábban már importálták."
 msgid "Could not import the key"
 msgstr "A kulcs nem importálható"
 
+msgid "Open"
+msgstr "Megnyitás"
+
+msgid "Download…"
+msgstr "Letöltés…"
+
 msgid "Show in Message"
 msgstr "Megjelenítés az üzenetben"
 
@@ -2332,6 +2329,12 @@ msgstr "Típus (A–Z)"
 
 msgid "Type (Z–A)"
 msgstr "Típus (Z–A)"
+
+msgid "Previous"
+msgstr "Előző"
+
+msgid "Next"
+msgstr "Következő"
 
 msgid "Open in the default app"
 msgstr "Megnyitás az alapértelmezett alkalmazásban"
@@ -3304,6 +3307,9 @@ msgstr ""
 "• Az „xdg-desktop-portal” frissítése és az újbóli bejelentkezés megoldhatja "
 "a hivatkozások közvetlen megnyitásának problémáját"
 
+msgid "{name} · {current} of {total}"
+msgstr "{name} · {current} / {total}"
+
 #, fuzzy
 msgid "me"
 msgstr "Név"
@@ -3777,9 +3783,6 @@ msgstr "Kép másolása"
 
 msgid "Copy Image Address"
 msgstr "Kép címének másolása"
-
-msgid "Load attachments from server"
-msgstr "Mellékletek betöltése a kiszolgálóról"
 
 msgid "Clear all"
 msgstr "Összes törlése"
@@ -5038,6 +5041,30 @@ msgstr ""
 "nézetben vagy elküldött formában indítson el. A kapcsoló továbbra is "
 "megváltoztatja a képernyőn megjelenő üzenetet."
 
+#, fuzzy
+msgid "Printing"
+msgstr "Írás:"
+
+msgid "Page numbers"
+msgstr ""
+
+msgid ""
+"Print the page number and the number of pages at the foot of every page."
+msgstr ""
+
+#, fuzzy
+msgid "Date printed"
+msgstr "Dátumformátum"
+
+msgid "Print the date and time of printing at the foot of every page."
+msgstr ""
+
+msgid "Wider left margin"
+msgstr ""
+
+msgid "Leave 25 mm at the left of every page, so punched holes miss the text."
+msgstr ""
+
 msgid "Compose in the main window"
 msgstr "Levélírás a főablakban"
 
@@ -5638,17 +5665,29 @@ msgstr "Egyéni fájl"
 msgid "Print Message"
 msgstr "Üzenet nyomtatása"
 
-msgid "Save as PDF"
-msgstr "Mentés PDF-ként"
+#, fuzzy
+msgid "No PDF writer is available on this system"
+msgstr "Ehhez a fiókhoz nem érhető el Piszkozatok mappa"
 
-msgid "Could not save the PDF: {error}"
-msgstr "A PDF nem menthető: {error}"
-
-msgid "Print…"
-msgstr "Nyomtatás…"
+msgid "Page {page} of {pages}"
+msgstr ""
 
 msgid "Save as PDF…"
 msgstr "Mentés PDF-ként…"
+
+#, fuzzy
+msgid "No Preview"
+msgstr "Előnézet"
+
+msgid "Save as PDF"
+msgstr "Mentés PDF-ként"
+
+#, fuzzy
+msgid "Saved {name}"
+msgstr "Eltávolítva: {name}"
+
+msgid "Could not save the PDF: {error}"
+msgstr "A PDF nem menthető: {error}"
 
 msgid "Send as Attachment Instead"
 msgstr "Küldés inkább mellékletként"
@@ -6489,6 +6528,9 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Load attachments from server"
+#~ msgstr "Mellékletek betöltése a kiszolgálóról"
 
 #~ msgid "Could not save draft: unknown folder"
 #~ msgstr "A piszkozat mentése nem sikerült: ismeretlen mappa"

@@ -35,7 +35,10 @@ webkit6 = { version = "0.4", features = ["v2_44"] }
 poppler-rs = { version = "0.24", features = ["v20_9"] }
 # "png": only to enable cairo-rs's `ImageSurface::write_to_png`, used to hand a
 # rendered PDF page to gdk::Texture the same way every other thumbnail loads.
-cairo-rs = { version = "0.20", features = ["png"] }
+# "pdf": printing writes the page footer onto WebKit's PDF (#359).
+cairo-rs = { version = "0.20", features = ["png", "pdf"] }
+# The printed page footer's text, laid out by Pango so any script prints (#359).
+pangocairo = "0.20"
 keyring = { version = "3", default-features = false, features = ["sync-secret-service", "crypto-rust"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
