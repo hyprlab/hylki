@@ -104,6 +104,9 @@ msgstr "Открыть"
 msgid "Download…"
 msgstr "Скачать…"
 
+msgid "People"
+msgstr ""
+
 msgid "Settings"
 msgstr "Настройки"
 
@@ -3774,6 +3777,21 @@ msgstr "Экспортировать журнал"
 
 msgid "Status bar ({n})"
 msgstr "Строка состояния ({n})"
+
+#, fuzzy
+msgid "Filter People"
+msgstr "Фильтры применены"
+
+msgid "Write To"
+msgstr ""
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Копировать адрес ссылки"
+
+#, fuzzy
+msgid "All People"
+msgstr "Все папки"
 
 msgid "2 years"
 msgstr "2 года"

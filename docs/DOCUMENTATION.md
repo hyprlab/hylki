@@ -209,6 +209,25 @@ first account's Inbox instead.
 Stored on the account as `in_unified = false` in `accounts.toml`; without
 the key an account is included.
 
+### The People view
+
+The **People** button in the sidebar header swaps the folder list for the
+people you exchange mail with, newest exchange first, each with a count of
+their unread mail. Picking a person shows the mail between the two of you
+in one list: what they sent you and what you sent them, from the Inbox,
+Sent, Archive and every other folder except Trash, Junk and Drafts, across
+the accounts in All Inboxes. **All People** at the top shows all of that
+mail together.
+
+Mail you receive belongs to its sender, and mail you send belongs to each
+of its To and Cc recipients. Your account addresses and their aliases are
+never listed. The field above the list filters it by name or address, and
+right-clicking a person offers **Write To** and **Copy Address**.
+
+While the list is shown, clicking a new-mail notification opens the
+sender's mail in it. The button brings the folders back, and the choice is
+kept for the next start. The list is off until switched on.
+
 ### Moving mail to another account
 
 **Move To** lists the folders of the account the mail is in first, then those

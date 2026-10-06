@@ -34,6 +34,10 @@ The full list. The [README](../README.md) carries a shorter one.
 - **Conversation threading** across folders: the count covers the whole
   conversation, and an expanded conversation shows your replies from Sent
   and its archived messages alongside the folder's own.
+- **People view:** the sidebar can list the people you exchange mail with
+  in place of the folders, newest first with their unread counts. Picking
+  someone shows what they sent you and what you sent them, from every folder
+  and account, in one list.
 - **Moving mail between accounts:** Move To lists every account's folders,
   and mail dragged onto another account's folder goes there too.
 - **Full folder management:** create, rename, move, reorder and delete

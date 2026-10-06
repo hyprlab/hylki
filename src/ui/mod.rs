@@ -25,6 +25,7 @@ pub mod message_row;
 pub mod message_view;
 pub mod message_window;
 pub mod notifications;
+pub mod people_pane;
 pub mod pgp_keys;
 pub mod preferences;
 pub mod print_preview;

@@ -210,6 +210,9 @@ pub struct SidebarInit {
     pub show_contacts: bool,
     /// Where the first pick lands instead of All Inboxes (#256).
     pub start: Option<StartTarget>,
+    /// The People pane is shown at launch: the People view is the opening
+    /// view, so the sidebar picks none of its own.
+    pub people: bool,
 }
 
 /// A view to open at launch (#256), by account address: an account's
@@ -229,6 +232,9 @@ pub enum Sel {
     Attachments,
     /// The in-app contacts view.
     Contacts,
+    /// The People view: picked in the People pane, so no row here is lit
+    /// (and the sidebar does not pick a view of its own meanwhile).
+    People,
     Outbox,
     Folder(u32, String),
     /// An account's inbox selected via the "All Inboxes" sub-list.
@@ -747,7 +753,7 @@ impl Component for Sidebar {
             busy: false,
             outbox_list: None,
             color_provider,
-            selected: Sel::None,
+            selected: if init.people { Sel::People } else { Sel::None },
             collapsed: init.collapsed,
             quiet: std::rc::Rc::new(std::cell::Cell::new(false)),
             mirror: init.mirror,
@@ -4009,6 +4015,7 @@ impl Sidebar {
             Sel::Unified => self.select_unified(),
             Sel::Attachments => self.select_attachments(),
             Sel::Contacts => self.select_contacts(),
+            Sel::People => {}
             Sel::Outbox => self.select_outbox(),
             Sel::Folder(acc, path) => self.select_folder(acc, &path),
             Sel::UnifiedInbox(acc) => self.select_unified_inbox(acc),
@@ -5158,7 +5165,7 @@ fn build_unified_sub_row(
 /// `set_size_request` — `Align::Center` then centres that slightly-off box
 /// exactly as asked, reading as the icon column drifting right of the
 /// avatar column (PR #95).
-fn pin_icon_size(icon: &gtk::Image) {
+pub(crate) fn pin_icon_size(icon: &gtk::Image) {
     icon.set_pixel_size(16);
     icon.set_halign(gtk::Align::Center);
     icon.set_valign(gtk::Align::Center);
@@ -5260,7 +5267,7 @@ fn filtered_folder_icon(folder: &Folder, account_id: u32) -> gtk::Image {
 
 /// An unread chip: the count in a pill that never pushes its row wider
 /// than the sidebar — past `max_chars` digits it ends in an ellipsis.
-fn style_badge(badge: &gtk::Label, max_chars: i32) {
+pub(crate) fn style_badge(badge: &gtk::Label, max_chars: i32) {
     badge.add_css_class("unread-badge");
     badge.set_valign(gtk::Align::Center);
     badge.set_ellipsize(gtk::pango::EllipsizeMode::End);

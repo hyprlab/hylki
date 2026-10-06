@@ -106,6 +106,9 @@ msgstr "Megnyitás"
 msgid "Download…"
 msgstr "Letöltés…"
 
+msgid "People"
+msgstr ""
+
 msgid "Settings"
 msgstr "Beállítások"
 
@@ -3786,6 +3789,21 @@ msgstr "Napló exportálása"
 
 msgid "Status bar ({n})"
 msgstr "Állapotsáv ({n})"
+
+#, fuzzy
+msgid "Filter People"
+msgstr "Alkalmazott szűrők"
+
+msgid "Write To"
+msgstr ""
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Hivatkozás másolása"
+
+#, fuzzy
+msgid "All People"
+msgstr "Minden mappa"
 
 msgid "2 years"
 msgstr "2 év"

@@ -1175,6 +1175,11 @@ pub(crate) struct PrivacyFile {
     /// (above Attachments); it opens the app-wide contacts browser.
     #[serde(default = "default_on")]
     pub(crate) show_contacts: bool,
+    /// Whether the sidebar shows the People pane (everyone the user
+    /// exchanges mail with) instead of the folders; the button in its
+    /// header switches between the two. Off until switched on.
+    #[serde(default)]
+    pub(crate) show_people: bool,
     /// Whether the combined Accounts & Preferences window opens showing the
     /// Accounts view instead of Preferences (the default).
     #[serde(default)]
@@ -1569,6 +1574,7 @@ impl Default for PrivacyFile {
             notification_buttons: default_notification_buttons(),
             show_attachments: true,
             show_contacts: true,
+            show_people: false,
             settings_open_accounts: false,
             card_actions_hover: true,
             card_actions_auto: default_card_actions_auto(),

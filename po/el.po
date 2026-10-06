@@ -106,6 +106,9 @@ msgstr "Άνοιγμα"
 msgid "Download…"
 msgstr "Λήψη…"
 
+msgid "People"
+msgstr ""
+
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
@@ -3804,6 +3807,21 @@ msgstr "Εξαγωγή αρχείου καταγραφής"
 
 msgid "Status bar ({n})"
 msgstr "Γραμμή κατάστασης ({n})"
+
+#, fuzzy
+msgid "Filter People"
+msgstr "Τα φίλτρα εφαρμόστηκαν"
+
+msgid "Write To"
+msgstr ""
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Διεύθυνση"
+
+#, fuzzy
+msgid "All People"
+msgstr "Όλοι οι φάκελοι"
 
 msgid "2 years"
 msgstr "2 έτη"

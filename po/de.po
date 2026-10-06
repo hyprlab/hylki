@@ -106,6 +106,9 @@ msgstr "Öffnen"
 msgid "Download…"
 msgstr "Herunterladen…"
 
+msgid "People"
+msgstr ""
+
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -3808,6 +3811,21 @@ msgstr "Protokoll exportieren"
 
 msgid "Status bar ({n})"
 msgstr "Statusleiste ({n})"
+
+#, fuzzy
+msgid "Filter People"
+msgstr "Filter angewendet"
+
+msgid "Write To"
+msgstr ""
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Link-Adresse kopieren"
+
+#, fuzzy
+msgid "All People"
+msgstr "Alle Ordner"
 
 msgid "2 years"
 msgstr "2 Jahre"

@@ -107,6 +107,9 @@ msgstr "Abrir"
 msgid "Download…"
 msgstr "Transferir…"
 
+msgid "People"
+msgstr ""
+
 msgid "Settings"
 msgstr "Definições"
 
@@ -3770,6 +3773,21 @@ msgstr "Exportar registo"
 
 msgid "Status bar ({n})"
 msgstr "Barra de estado ({n})"
+
+#, fuzzy
+msgid "Filter People"
+msgstr "Filtros aplicados"
+
+msgid "Write To"
+msgstr ""
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Copiar endereço da ligação"
+
+#, fuzzy
+msgid "All People"
+msgstr "Todas as pastas"
 
 msgid "2 years"
 msgstr "2 anos"

@@ -105,6 +105,9 @@ msgstr "Otwórz"
 msgid "Download…"
 msgstr "Pobierz…"
 
+msgid "People"
+msgstr ""
+
 msgid "Settings"
 msgstr "Ustawienia"
 
@@ -3831,6 +3834,21 @@ msgstr "Eksportuj dziennik"
 
 msgid "Status bar ({n})"
 msgstr "Pasek stanu ({n})"
+
+#, fuzzy
+msgid "Filter People"
+msgstr "Zastosowano filtry"
+
+msgid "Write To"
+msgstr ""
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Adres e-mail"
+
+#, fuzzy
+msgid "All People"
+msgstr "Wszystkie katalogi"
 
 msgid "2 years"
 msgstr "2 lata"
