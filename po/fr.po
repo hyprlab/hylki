@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-04 17:34+0200\n"
+"PO-Revision-Date: 2026-10-07 18:29+0200\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -192,9 +192,8 @@ msgstr "Aucun message portant l'identifiant {id} n'a été trouvé"
 msgid "No Drafts folder available for this account"
 msgstr "Aucun dossier Brouillons disponible pour ce compte"
 
-#, fuzzy
 msgid "No Templates folder available for this account"
-msgstr "Aucun dossier Brouillons disponible pour ce compte"
+msgstr "Aucun dossier Modèles disponible pour ce compte"
 
 msgid "Could not save account: {e}"
 msgstr "Impossible d'enregistrer le compte : {e}"
@@ -267,12 +266,11 @@ msgstr "À propos"
 msgid "Remove Tags"
 msgstr "Supprimer les tags"
 
-#, fuzzy
 msgid ""
 "Single-key shortcuts are switched off. Turn them on in Settings → System."
 msgstr ""
 "Les raccourcis à touche unique sont désactivés. Activez-les dans Paramètres "
-"→ Système et apparence."
+"→ Système."
 
 msgid "Your tags"
 msgstr "Vos balises"
@@ -337,11 +335,10 @@ msgid "Message Source"
 msgstr "Code source du message"
 
 msgid "Use Template"
-msgstr ""
+msgstr "Utiliser le modèle"
 
-#, fuzzy
 msgid "Edit Template"
-msgstr "Modifier la balise"
+msgstr "Modifier le modèle"
 
 msgid "Edit as New Message"
 msgstr "Modifier en tant que nouveau message"
@@ -432,18 +429,18 @@ msgstr "Joindre quand même"
 msgid "Upload to Cloud Storage"
 msgstr "Téléverser vers un stockage en ligne"
 
-#, fuzzy
 msgid "New Message from Template"
-msgstr "Nouveau message à la place"
+msgstr "Nouveau message à partir d'un modèle"
 
-#, fuzzy
 msgid "The new message starts as a copy of the template you pick."
 msgstr ""
-"Les fichiers seront joints à une réponse au message que vous choisissez."
+"Le nouveau message démarre comme une copie du modèle que vous choisissez."
 
 msgid ""
 "No templates yet. Save one from the composer's ⋯ menu with Save as Template."
 msgstr ""
+"Aucun modèle pour le moment. Enregistrez-en un depuis le menu ⋯ du "
+"compositeur avec « Enregistrer comme modèle »."
 
 msgid "Continue a Draft"
 msgstr "Continuer un brouillon"
@@ -864,16 +861,14 @@ msgstr "Imprimer le message en cours de lecture"
 msgid "Preview it as a PDF first"
 msgstr "Commencez par le prévisualiser au format PDF"
 
-#, fuzzy
 msgid "Writing"
-msgstr "Écriture :"
+msgstr "Rédaction"
 
 msgid "Compose"
 msgstr "Rédiger"
 
-#, fuzzy
 msgid "New message from a template"
-msgstr "Message le plus récent en premier"
+msgstr "Nouveau message à partir d'un modèle"
 
 msgid "Send the message you are writing"
 msgstr "Envoyer le message en cours de rédaction"
@@ -882,23 +877,24 @@ msgid "Back out of a reply and return to the list"
 msgstr "Quitter la réponse et revenir à la liste"
 
 msgid "Emoji chooser, at the cursor"
-msgstr ""
+msgstr "Sélecteur d'émojis, au niveau du curseur"
 
 msgid "New paragraph (Return starts a new line, unless Settings swaps them)"
 msgstr ""
+"Nouveau paragraphe (Entrée commence une nouvelle ligne, sauf si les "
+"paramètres les permutent)"
 
 msgid "Bold, italic, underline"
-msgstr ""
+msgstr "Gras, italique, souligné"
 
-#, fuzzy
 msgid "Preview the highlighted attachment"
-msgstr "Masquer les pièces jointes"
+msgstr "Prévisualiser la pièce jointe sélectionnée"
 
 msgid "Previous or next in the gallery's preview"
-msgstr ""
+msgstr "Précédent ou suivant dans l'aperçu de la galerie"
 
 msgid "Close the gallery's preview"
-msgstr ""
+msgstr "Fermer l'aperçu de la galerie"
 
 msgid "Everything else"
 msgstr "Tout le reste"
@@ -927,7 +923,7 @@ msgid "Message zoom back to the default"
 msgstr "Rétablir le zoom du message par défaut"
 
 msgid "Search the Settings window, when it is open"
-msgstr ""
+msgstr "Rechercher dans la fenêtre des Paramètres, lorsqu'elle est ouverte"
 
 msgid "Console mode (when enabled in Settings)"
 msgstr "Mode console (si activé dans les paramètres)"
@@ -1337,13 +1333,13 @@ msgstr ""
 "Saisissez les points de terminaison OAuth de votre fournisseur, puis "
 "connectez-vous."
 
-#, fuzzy
 msgid ""
 "Enter your JMAP server's address, or the URL of its session resource. Mail "
 "is read and sent over JMAP; no SMTP settings are needed."
 msgstr ""
-"Saisissez l'adresse de votre serveur Stalwart. Le courrier est lu et envoyé "
-"via JMAP ; aucun paramètre SMTP n'est nécessaire."
+"Saisissez l'adresse de votre serveur JMAP ou l'URL de sa ressource de "
+"session. Le courrier est lu et envoyé via JMAP ; aucun paramètre SMTP n'est "
+"nécessaire."
 
 msgid "Sign in with your browser — no password needed."
 msgstr "Connectez-vous via votre navigateur — aucun mot de passe requis."
@@ -1356,8 +1352,10 @@ msgid ""
 "settings, under Privacy & Security, with access to mail and to sending it. "
 "Mail is read and sent over JMAP."
 msgstr ""
+"Se connecte avec un jeton d'API et non avec votre mot de passe. Créez-en un "
+"dans les paramètres de Fastmail, sous Confidentialité et sécurité, avec "
+"accès à la messagerie et à l'envoi. Le courrier est lu et envoyé via JMAP."
 
-#, fuzzy
 msgid ""
 "Enter your Stalwart server's address. Mail is read and sent over JMAP; no "
 "SMTP settings are needed."
@@ -1544,13 +1542,14 @@ msgstr "Nom d'utilisateur"
 msgid "Password"
 msgstr "Mot de passe"
 
-#, fuzzy
 msgid "Sign in with an API token"
-msgstr "Se connecter via le navigateur"
+msgstr "Se connecter avec un jeton d'API"
 
 msgid ""
 "For servers that take a token in place of the password, as Fastmail does."
 msgstr ""
+"Pour les serveurs qui acceptent un jeton à la place du mot de passe, comme "
+"Fastmail."
 
 msgid "OAuth Client ID"
 msgstr "ID client OAuth"
@@ -1568,25 +1567,25 @@ msgid "Scopes (space-separated)"
 msgstr "Scopes (séparées par un espace)"
 
 msgid "Advanced"
-msgstr ""
+msgstr "Avancé"
 
 msgid "Sign in with another app registration"
-msgstr ""
+msgstr "Se connecter avec un autre enregistrement d'application"
 
 msgid "Client ID"
-msgstr ""
+msgstr "ID client"
 
 msgid "Tenant (common, organizations, consumers or an ID)"
-msgstr ""
+msgstr "Tenant (common, organisations, consumers ou un ID)"
 
 msgid "Redirect URI"
-msgstr ""
+msgstr "URI de redirection"
 
 msgid "Sign In with Browser"
 msgstr "Se connecter via le navigateur"
 
 msgid "Sign In"
-msgstr ""
+msgstr "Se connecter"
 
 msgid ""
 "Google and Microsoft sign-in use GNOME Online Accounts.\n"
@@ -1798,7 +1797,7 @@ msgid "Drafts"
 msgstr "Brouillons"
 
 msgid "Templates"
-msgstr ""
+msgstr "Modèles"
 
 msgid "Trash"
 msgstr "Corbeille"
@@ -1875,7 +1874,7 @@ msgstr ""
 "fournisseur personnalisé)"
 
 msgid "Complete the sign-in in the window that opened."
-msgstr ""
+msgstr "Terminez la connexion dans la fenêtre qui s'est ouverte."
 
 msgid "Opening browser… complete sign-in there."
 msgstr "Ouverture du navigateur… terminez la connexion à partir de là."
@@ -1946,6 +1945,8 @@ msgstr "Supprimer cet alias"
 msgid ""
 "Kept on the server; change it through your provider's webmail interface."
 msgstr ""
+"Conservé sur le serveur ; modifiez-le via l'interface webmail de votre "
+"fournisseur."
 
 msgid "Display name (optional)"
 msgstr "Nom d'affichage (optionnel)"
@@ -2017,7 +2018,7 @@ msgstr[0] "Au bout de {n} jour"
 msgstr[1] "Au bout de {n} jours"
 
 msgid "API Token"
-msgstr ""
+msgstr "Jeton d'API"
 
 #. A JMAP server is one address, and it sends the mail
 #. itself: no SMTP rows.
@@ -2831,29 +2832,26 @@ msgstr "Réduire dans le lecteur"
 msgid "Open in window"
 msgstr "Ouvrir dans une fenêtre"
 
-#, fuzzy
 msgid "Save Template"
-msgstr "Enregistrer l'image"
+msgstr "Enregistrer le modèle"
 
 msgid "Save Draft"
 msgstr "Enregistrer le brouillon"
 
-#, fuzzy
 msgid "Save to Templates"
-msgstr "Enregistrer dans les brouillons"
+msgstr "Enregistrer dans les modèles"
 
 msgid "Save to Drafts"
 msgstr "Enregistrer dans les brouillons"
 
 msgid "More ways to save"
-msgstr ""
+msgstr "Autres façons d'enregistrer"
 
 msgid "Keep a copy in Templates to start new messages from"
-msgstr ""
+msgstr "Conserver une copie dans Modèles pour démarrer de nouveaux messages"
 
-#, fuzzy
 msgid "Save as Template"
-msgstr "Envoyer en texte brut"
+msgstr "Enregistrer comme modèle"
 
 msgid "Delete Draft"
 msgstr "Supprimer le brouillon"
@@ -2945,10 +2943,10 @@ msgid "Show Cc, Bcc and Reply-To"
 msgstr "Afficher Cc, Cci et Répondre à"
 
 msgid "Type a From address"
-msgstr ""
+msgstr "Saisir une adresse d'expéditeur"
 
 msgid "Choose from your addresses"
-msgstr ""
+msgstr "Choisir parmi vos adresses"
 
 msgid "Not signed in"
 msgstr "Non connecté"
@@ -3023,13 +3021,15 @@ msgstr ""
 "actuel."
 
 msgid "Check the From address"
-msgstr ""
+msgstr "Vérifiez l'adresse d'expéditeur"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
+"Le champ De doit contenir une seule adresse, par exemple Anne "
+"<anne@example.com>."
 
 msgid "“{address}” is not an email address."
-msgstr ""
+msgstr "« {address} » n'est pas une adresse e-mail."
 
 msgid "{name} (link)"
 msgstr "{name} (lien)"
@@ -3037,16 +3037,14 @@ msgstr "{name} (lien)"
 msgid "Uploading…"
 msgstr "Téléversement…"
 
-#, fuzzy
 msgid "Save the template?"
-msgstr "Enregistrer le tag ?"
+msgstr "Enregistrer le modèle ?"
 
-#, fuzzy
 msgid ""
 "Its changes have not been saved. Save them to the template, or discard them."
 msgstr ""
-"Il n'a pas été envoyé. Enregistrez-le dans Brouillons pour le terminer plus "
-"tard, ou abandonnez-le."
+"Ses modifications n'ont pas été enregistrées. Enregistrez-les dans le modèle "
+"ou abandonnez-les."
 
 msgid "Save the message?"
 msgstr "Enregistrer le message ?"
@@ -3595,16 +3593,14 @@ msgstr ""
 "Une validation prouve que l'adresse n'a pas été falsifiée, mais ne garantit "
 "pas que le message soit sans danger."
 
-#, fuzzy
 msgid "This message is a template."
-msgstr "Ce message est rédigé en {language}."
+msgstr "Ce message est un modèle."
 
 msgid "Change the template itself"
-msgstr ""
+msgstr "Modifier le modèle lui-même"
 
-#, fuzzy
 msgid "Start a new message from a copy of the template"
-msgstr "Rédiger un message avec l'image dans le texte"
+msgstr "Démarrer un nouveau message à partir d'une copie du modèle"
 
 msgid "Repeats daily"
 msgstr "Se répète chaque jour"
@@ -4575,12 +4571,16 @@ msgstr ""
 "chaque lancement démarre avec la barre latérale complète."
 
 msgid "Highlight only new unread mail"
-msgstr ""
+msgstr "Mettre en évidence uniquement les nouveaux messages non lus"
 
 msgid ""
 "A folder's unread count is in the accent color while mail has arrived since "
 "you last looked at it, and grey once you have, however much is still unread."
 msgstr ""
+"Le nombre de messages non lus d'un dossier s'affiche dans la couleur "
+"d'accentuation tant que du courrier est arrivé depuis votre dernière "
+"consultation, puis en gris une fois que vous l'avez consulté, quel que soit "
+"le nombre de messages encore non lus."
 
 msgid "Unified"
 msgstr "Unifié"
@@ -4745,6 +4745,9 @@ msgid ""
 "Cards or single lines. Automatic shows cards at narrow widths and single "
 "lines in columns at wider widths."
 msgstr ""
+"Cartes ou lignes simples. Le mode Automatique affiche des cartes dans les "
+"largeurs étroites et des lignes simples en colonnes dans les largeurs plus "
+"grandes."
 
 msgid "Preview lines"
 msgstr "Lignes d'aperçu"
@@ -4831,6 +4834,11 @@ msgid ""
 "stays. Due Date appears only in lists with Microsoft 365 mail. Changes apply "
 "at once."
 msgstr ""
+"Ce qu'affiche un message lorsque la disposition est en mode une ligne. "
+"Faites glisser les colonnes dans l'ordre souhaité, ou hors de la liste. "
+"L'objet reste toujours affiché. La date d'échéance n'apparaît que dans les "
+"listes avec le courrier Microsoft 365. Les modifications s'appliquent "
+"immédiatement."
 
 msgid "Column headings"
 msgstr "En-têtes de colonnes"
@@ -4889,6 +4897,9 @@ msgid ""
 "Which messages of a conversation open folded to their sender and first "
 "lines. The newest always opens, and a click on a folded message opens it."
 msgstr ""
+"Quels messages d'une conversation s'ouvrent repliés sur leur expéditeur et "
+"leurs premières lignes. Le plus récent est toujours ouvert, et un clic sur "
+"un message replié l'ouvre."
 
 msgid "Show your own replies in the message list"
 msgstr "Afficher vos propres réponses dans la liste des messages"
@@ -5089,29 +5100,30 @@ msgstr ""
 "messages en mode Lecture ou tel qu'envoyé. Le commutateur permet toujours de "
 "changer le message affiché à l'écran."
 
-#, fuzzy
 msgid "Printing"
-msgstr "Écriture :"
+msgstr "Impression"
 
 msgid "Page numbers"
-msgstr ""
+msgstr "Numéros de page"
 
 msgid ""
 "Print the page number and the number of pages at the foot of every page."
 msgstr ""
+"Imprimer le numéro de page et le nombre de pages en pied de chaque page."
 
-#, fuzzy
 msgid "Date printed"
-msgstr "Format de date"
+msgstr "Date d'impression"
 
 msgid "Print the date and time of printing at the foot of every page."
-msgstr ""
+msgstr "Imprimer la date et l'heure d'impression en pied de chaque page."
 
 msgid "Wider left margin"
-msgstr ""
+msgstr "Marge gauche plus large"
 
 msgid "Leave 25 mm at the left of every page, so punched holes miss the text."
 msgstr ""
+"Laisser 25 mm à gauche de chaque page, pour que les trous de perforation ne "
+"touchent pas le texte."
 
 msgid "Compose in the main window"
 msgstr "Rédiger dans la fenêtre principale"
@@ -5176,23 +5188,23 @@ msgstr ""
 "espace avant le suivant. Désactivé, Entrée commence une nouvelle ligne dans "
 "le même paragraphe. Maj+Entrée fait toujours l'autre action."
 
-#, fuzzy
 msgid "Formatting toolbar"
-msgstr "Aucune mise en forme"
+msgstr "Barre d'outils de mise en forme"
 
 msgid ""
 "Whether a new message shows the extra tools (paragraph styles, fonts, "
 "colors, indents, emoji and pictures). The chevron in the toolbar shows or "
 "hides them at any time."
 msgstr ""
+"Indique si un nouveau message affiche les outils supplémentaires (styles de "
+"paragraphe, polices, couleurs, retraits, émojis et images). Le chevron de la "
+"barre d'outils permet de les afficher ou de les masquer à tout moment."
 
-#, fuzzy
 msgid "Always collapsed"
-msgstr "Toujours autoriser cet expéditeur"
+msgstr "Toujours réduite"
 
-#, fuzzy
 msgid "Always expanded"
-msgstr "Toujours autoriser cet expéditeur"
+msgstr "Toujours déployée"
 
 msgid "Write messages in"
 msgstr "Rédiger les messages en"
@@ -5708,26 +5720,23 @@ msgstr "Fichier personnalisé"
 msgid "Print Message"
 msgstr "Imprimer le message"
 
-#, fuzzy
 msgid "No PDF writer is available on this system"
-msgstr "Aucun dossier Brouillons disponible pour ce compte"
+msgstr "Aucun outil de création de PDF n'est disponible sur ce système"
 
 msgid "Page {page} of {pages}"
-msgstr ""
+msgstr "Page {page} sur {pages}"
 
 msgid "Save as PDF…"
 msgstr "Enregistrer au format PDF…"
 
-#, fuzzy
 msgid "No Preview"
-msgstr "Aperçu"
+msgstr "Aucun aperçu"
 
 msgid "Save as PDF"
 msgstr "Enregistrer au format PDF"
 
-#, fuzzy
 msgid "Saved {name}"
-msgstr "{name} supprimé"
+msgstr "{name} enregistré"
 
 msgid "Could not save the PDF: {error}"
 msgstr "Impossible d'enregistrer le PDF : {error}"
@@ -5760,39 +5769,34 @@ msgid "Paste as Plain Text"
 msgstr "Coller comme texte brut"
 
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
-#, fuzzy
 msgid "Heading 1"
-msgstr "Lecture"
+msgstr "Titre 1"
 
-#, fuzzy
 msgid "Heading 2"
-msgstr "Lecture"
+msgstr "Titre 2"
 
-#, fuzzy
 msgid "Heading 3"
-msgstr "Lecture"
+msgstr "Titre 3"
 
-#, fuzzy
 msgid "Preformatted"
-msgstr "Format de date"
+msgstr "Préformaté"
 
 msgid "Sans Serif"
-msgstr ""
+msgstr "Sans Serif"
 
 msgid "Serif"
-msgstr ""
+msgstr "Serif"
 
-#, fuzzy
 msgid "Monospace"
-msgstr "Police monospace"
+msgstr "Monospace"
 
 msgid "Paragraph style"
-msgstr ""
+msgstr "Style de paragraphe"
 
 msgid "Font"
-msgstr ""
+msgstr "Police"
 
 msgid "Bold"
 msgstr "Gras"
@@ -5806,15 +5810,14 @@ msgstr "Souligné"
 msgid "Strikethrough"
 msgstr "Barré"
 
-#, fuzzy
 msgid "Text color"
-msgstr "Couleur du cercle"
+msgstr "Couleur du texte"
 
 msgid "Highlight"
-msgstr ""
+msgstr "Surligner"
 
 msgid "No highlight"
-msgstr ""
+msgstr "Aucun surlignage"
 
 msgid "Bulleted list"
 msgstr "Liste à puces"
@@ -5823,10 +5826,10 @@ msgid "Numbered list"
 msgstr "Liste numérotée"
 
 msgid "Decrease indent"
-msgstr ""
+msgstr "Diminuer le retrait"
 
 msgid "Increase indent"
-msgstr ""
+msgstr "Augmenter le retrait"
 
 #. Adwaita has no blockquote glyph; the bubble with its quote marks
 #. reads as one.
@@ -5836,32 +5839,26 @@ msgstr "Citation"
 msgid "Insert link"
 msgstr "Insérer un lien"
 
-#, fuzzy
 msgid "Insert emoji"
-msgstr "Insérer un lien"
+msgstr "Insérer un émoji"
 
-#, fuzzy
 msgid "Insert picture"
-msgstr "Insérer dans le texte"
+msgstr "Insérer une image"
 
 msgid "Clear formatting"
 msgstr "Effacer la mise en forme"
 
-#, fuzzy
 msgid "Fewer formatting tools"
-msgstr "Effacer la mise en forme"
+msgstr "Moins d'outils de mise en forme"
 
-#, fuzzy
 msgid "More formatting tools"
-msgstr "Aucune mise en forme"
+msgstr "Plus d'outils de mise en forme"
 
-#, fuzzy
 msgid "Pictures"
-msgstr "Photo"
+msgstr "Images"
 
-#, fuzzy
 msgid "Insert Picture"
-msgstr "Choisir une photo"
+msgstr "Insérer une image"
 
 msgid "Insert Link"
 msgstr "Insérer un lien"
@@ -5882,7 +5879,7 @@ msgid "No accounts yet"
 msgstr "Aucun compte pour le moment"
 
 msgid "New Message from Template…"
-msgstr ""
+msgstr "Nouveau message à partir d'un modèle…"
 
 msgid "Outbox"
 msgstr "Boîte d'envoi"
@@ -5974,7 +5971,7 @@ msgid "Edit Tag…"
 msgstr "Modifier le tag…"
 
 msgid "The sign-in window was closed."
-msgstr ""
+msgstr "La fenêtre de connexion a été fermée."
 
 msgid "Welcome to Hylki"
 msgstr "Bienvenue dans Hylki"
@@ -6274,7 +6271,7 @@ msgid "Could not delete folder: {e}"
 msgstr "Impossible de supprimer le dossier : {e}"
 
 msgid "unknown folder"
-msgstr ""
+msgstr "dossier inconnu"
 
 msgid "Could not reach the server"
 msgstr "Impossible de joindre le serveur"
@@ -6400,16 +6397,14 @@ msgstr "« {subject} » sera envoyé {when}"
 msgid "Could not schedule the message."
 msgstr "Impossible de programmer le message."
 
-#, fuzzy
 msgid "Could not save template: {e}"
-msgstr "Impossible d'enregistrer le brouillon : {e}"
+msgstr "Impossible d'enregistrer le modèle : {e}"
 
 msgid "Could not save draft: {e}"
 msgstr "Impossible d'enregistrer le brouillon : {e}"
 
-#, fuzzy
 msgid "Saving template…"
-msgstr "Enregistrement du brouillon…"
+msgstr "Enregistrement du modèle…"
 
 msgid "Saving draft…"
 msgstr "Enregistrement du brouillon…"
