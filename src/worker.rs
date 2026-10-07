@@ -1045,6 +1045,12 @@ fn is_list_load(req: &MailRequest) -> bool {
     matches!(req, MailRequest::LoadMessages { .. } | MailRequest::SyncFolder { .. })
 }
 
+/// Refresh ticks now only schedule idle work, so they are no longer a
+/// barrier between a reader and a folder sync already in the backlog.
+fn can_yield_to_reader(req: &MailRequest) -> bool {
+    is_list_load(req) || matches!(req, MailRequest::RefreshUnread)
+}
+
 /// Take everything else already queued behind `first` and move the reader's
 /// loads ahead of the list syncs they sit behind, keeping every other order.
 ///
@@ -1053,8 +1059,8 @@ fn is_list_load(req: &MailRequest) -> bool {
 /// asks every account for its inbox, then opens the mail) waited for the
 /// whole list fetch — and the IDLE hand-off before it — before its body was
 /// even asked for. The body is what the user is looking at; the list can
-/// follow. A reader load only overtakes list fetches: it never passes a
-/// move, a flag change or a reconnect, so what it reads is what the
+/// follow. A reader load overtakes lists and deferred refresh ticks, never a
+/// move, flag change or reconnect, so what it reads is what the
 /// requests before it left.
 fn reorder_reader_loads(
     first: MailRequest,
@@ -1071,9 +1077,9 @@ fn reorder_reader_loads(
         let mut ordered: Vec<MailRequest> = Vec::with_capacity(queue.len());
         for req in queue {
             if is_reader_load(&req) {
-                // Slot in ahead of the run of list fetches at the tail.
+                // Slot in ahead of list fetches and deferred refresh ticks.
                 let mut at = ordered.len();
-                while at > 0 && is_list_load(&ordered[at - 1]) {
+                while at > 0 && can_yield_to_reader(&ordered[at - 1]) {
                     at -= 1;
                 }
                 ordered.insert(at, req);
@@ -1106,7 +1112,7 @@ async fn interrupt_read_for_reader<F: std::future::Future>(
             req = rx.recv(), if !closed => {
                 let Some(req) = req else { closed = true; continue; };
                 let interrupt = is_reader_load(&req) && backlog.iter().all(|r| {
-                    is_reader_load(r) || is_list_load(r) || matches!(r, MailRequest::RefreshUnread)
+                    is_reader_load(r) || can_yield_to_reader(r)
                 });
                 backlog.push_back(req);
                 if interrupt {
@@ -13038,6 +13044,42 @@ mod reader_preemption_tests {
 
     fn body() -> MailRequest {
         MailRequest::LoadBody { message_id: 42, path: "INBOX".into(), uid: 42 }
+    }
+
+    #[test]
+    fn a_refresh_tick_does_not_leave_a_folder_sync_ahead_of_the_reader() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(MailRequest::RefreshUnread).unwrap();
+        tx.send(MailRequest::LoadMessages { folder_id: 1, path: "INBOX".into() }).unwrap();
+        tx.send(body()).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(
+            MailRequest::SyncFolder { folder_id: 1, path: "INBOX".into() }, &mut rx, &mut backlog,
+        );
+        assert!(matches!(first, MailRequest::LoadBody { .. }));
+        assert!(matches!(backlog.pop_front(), Some(MailRequest::SyncFolder { .. })));
+        assert!(matches!(backlog.pop_front(), Some(MailRequest::RefreshUnread)));
+        assert!(matches!(backlog.pop_front(), Some(MailRequest::LoadMessages { .. })));
+    }
+
+    #[test]
+    fn overtaking_refresh_ticks_still_preserves_mutation_order() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(MailRequest::RefreshUnread).unwrap();
+        tx.send(MailRequest::SetSeen { path: "INBOX".into(), uid: 42, seen: true }).unwrap();
+        tx.send(MailRequest::LoadMessages { folder_id: 1, path: "INBOX".into() }).unwrap();
+        tx.send(MailRequest::RefreshUnread).unwrap();
+        tx.send(body()).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(
+            MailRequest::SyncFolder { folder_id: 1, path: "INBOX".into() }, &mut rx, &mut backlog,
+        );
+        assert!(matches!(first, MailRequest::SyncFolder { .. }));
+        assert!(matches!(backlog.pop_front(), Some(MailRequest::RefreshUnread)));
+        assert!(matches!(backlog.pop_front(), Some(MailRequest::SetSeen { .. })));
+        assert!(matches!(backlog.pop_front(), Some(MailRequest::LoadBody { .. })));
+        assert!(matches!(backlog.pop_front(), Some(MailRequest::LoadMessages { .. })));
+        assert!(matches!(backlog.pop_front(), Some(MailRequest::RefreshUnread)));
     }
 
     #[tokio::test(start_paused = true)]
