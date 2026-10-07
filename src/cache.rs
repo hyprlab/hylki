@@ -462,6 +462,17 @@ impl Cache {
         Ok(Cache { conn })
     }
 
+    /// A separate WAL reader over an already-initialized cache. Background
+    /// lookups need another connection, not another migration and cleanup pass.
+    pub fn read_connection(&self) -> rusqlite::Result<Cache> {
+        let path = self.conn.path().ok_or_else(|| rusqlite::Error::InvalidPath(
+            std::path::PathBuf::from("cache has no database file")
+        ))?;
+        let conn = Connection::open_with_flags(path, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)?;
+        conn.busy_timeout(Duration::from_secs(5))?;
+        Ok(Cache { conn })
+    }
+
     pub fn open() -> rusqlite::Result<Cache> {
         // No `temp_dir` fallback: this database holds message bodies, attachment
         // bytes and the harvested address book, and a shared world-writable
@@ -2322,6 +2333,27 @@ mod tests {
         }
     }
     use super::*;
+
+    #[test]
+    fn background_reader_sees_wal_updates_without_writing() {
+        let path = std::env::temp_dir().join(format!("hylki-cache-reader-{}-{}.db",
+            std::process::id(), std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+        std::fs::OpenOptions::new().write(true).create_new(true).open(&path).unwrap();
+        let cache = Cache { conn: Connection::open(&path).unwrap() };
+        cache.conn.execute_batch(SCHEMA).unwrap();
+        cache.conn.pragma_update(None, "journal_mode", "WAL").unwrap();
+        cache.save_body(1, "INBOX", 42, "first");
+        let reader = cache.read_connection().unwrap();
+        assert_eq!(reader.load_body(1, "INBOX", 42).as_deref(), Some("first"));
+        cache.save_body(1, "INBOX", 42, "updated");
+        assert_eq!(reader.load_body(1, "INBOX", 42).as_deref(), Some("updated"));
+        let error = reader.conn.execute("DELETE FROM bodies", []).unwrap_err();
+        assert_eq!(error.sqlite_error_code(), Some(rusqlite::ErrorCode::ReadOnly));
+        drop(reader);
+        drop(cache);
+        std::fs::remove_file(path).unwrap();
+    }
 
     /// The cache holds message bodies, attachment bytes and the address book, so
     /// it should be no more readable than `accounts.toml` is.

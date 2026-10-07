@@ -22,6 +22,7 @@ pub(super) struct ImapIo<S> {
     write_timer: Option<Pin<Box<Sleep>>>,
     idle: bool,
     failed: bool,
+    selected_folder: Option<String>,
 }
 
 impl<S> ImapIo<S> {
@@ -33,6 +34,7 @@ impl<S> ImapIo<S> {
             write_timer: None,
             idle: false,
             failed: false,
+            selected_folder: None,
         }
     }
 
@@ -41,6 +43,14 @@ impl<S> ImapIo<S> {
     pub(super) fn set_idle(&mut self, idle: bool) {
         self.idle = idle;
         self.read_timer = None;
+    }
+
+    pub(super) fn is_selected(&self, path: &str) -> bool {
+        !self.failed && self.selected_folder.as_deref() == Some(path)
+    }
+
+    pub(super) fn set_selected_folder(&mut self, path: Option<&str>) {
+        self.selected_folder = path.map(str::to_owned);
     }
 
     fn timed_out() -> io::Error {
