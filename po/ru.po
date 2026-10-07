@@ -143,9 +143,8 @@ msgstr "Тема (А–Я)"
 msgid "Unread first"
 msgstr "Сначала непрочитанные"
 
-#, fuzzy
 msgid "Starred first"
-msgstr "Сначала непрочитанные"
+msgstr "Сначала из избранного"
 
 msgid "Create Folder"
 msgstr "Создать папку"
@@ -190,9 +189,8 @@ msgstr "Ни одного сообщения с ID {id} не найдено"
 msgid "No Drafts folder available for this account"
 msgstr "Для этой учётной записи недоступна папка «Черновики»"
 
-#, fuzzy
 msgid "No Templates folder available for this account"
-msgstr "Для этой учётной записи недоступна папка «Черновики»"
+msgstr "Для этой учётной записи недоступна папка «Шаблоны»"
 
 msgid "Could not save account: {e}"
 msgstr "Не удалось сохранить учетную запись: {e}"
@@ -264,12 +262,10 @@ msgstr "О программе"
 msgid "Remove Tags"
 msgstr "Удалить теги"
 
-#, fuzzy
 msgid ""
 "Single-key shortcuts are switched off. Turn them on in Settings → System."
 msgstr ""
-"Одноклавишные сочетания отключены. Включите их в меню «Настройки» → «Система "
-"и внешний вид»."
+"Одноклавишные сочетания отключены. Включите их в меню «Параметры» → «Система»."
 
 msgid "Your tags"
 msgstr "Ваши теги"
@@ -334,11 +330,10 @@ msgid "Message Source"
 msgstr "Исходный текст сообщения"
 
 msgid "Use Template"
-msgstr ""
+msgstr "Использовать шаблон"
 
-#, fuzzy
 msgid "Edit Template"
-msgstr "Редактировать тег"
+msgstr "Редактировать шаблон"
 
 msgid "Edit as New Message"
 msgstr "Изменить как новое сообщение"
@@ -430,17 +425,17 @@ msgstr "Всё равно прикрепить"
 msgid "Upload to Cloud Storage"
 msgstr "Загрузить в облачное хранилище"
 
-#, fuzzy
 msgid "New Message from Template"
-msgstr "Написать новое письмо"
+msgstr "Новое сообщение из шаблона"
 
-#, fuzzy
 msgid "The new message starts as a copy of the template you pick."
-msgstr "Файлы будут добавлены в ответ на выбранное письмо."
+msgstr "Новое сообщение будет создано на основе выбранного шаблона."
 
 msgid ""
 "No templates yet. Save one from the composer's ⋯ menu with Save as Template."
 msgstr ""
+"Шаблонов пока нет. Сохраните письмо как шаблон через меню «⋯» в окне "
+"редактора."
 
 msgid "Continue a Draft"
 msgstr "Продолжить черновик"
@@ -873,16 +868,14 @@ msgstr "Печать открытого сообщения"
 msgid "Preview it as a PDF first"
 msgstr "Предпросмотр в формате PDF"
 
-#, fuzzy
 msgid "Writing"
-msgstr "Составление писем:"
+msgstr "Составление писем"
 
 msgid "Compose"
 msgstr "Написать"
 
-#, fuzzy
 msgid "New message from a template"
-msgstr "Сначала новые сообщения"
+msgstr "Новое сообщение из шаблона"
 
 msgid "Send the message you are writing"
 msgstr "Отправить создаваемое сообщение"
@@ -891,23 +884,24 @@ msgid "Back out of a reply and return to the list"
 msgstr "Отменить ответ и вернуться к списку"
 
 msgid "Emoji chooser, at the cursor"
-msgstr ""
+msgstr "Выбор эмодзи в месте указателя"
 
 msgid "New paragraph (Return starts a new line, unless Settings swaps them)"
 msgstr ""
+"Новый абзац (клавиша Return начинает новую строку, если в «Параметрах» не "
+"настроено иначе)"
 
 msgid "Bold, italic, underline"
-msgstr ""
+msgstr "Полужирный, курсив, подчёркнутый"
 
-#, fuzzy
 msgid "Preview the highlighted attachment"
-msgstr "Скрыть вложения"
+msgstr "Предпросмотр выделенного вложения"
 
 msgid "Previous or next in the gallery's preview"
-msgstr ""
+msgstr "Предыдущее или следующее в окне предпросмотра галереи"
 
 msgid "Close the gallery's preview"
-msgstr ""
+msgstr "Закрыть предпросмотр галереи"
 
 msgid "Everything else"
 msgstr "Всё остальное"
@@ -935,7 +929,7 @@ msgid "Message zoom back to the default"
 msgstr "Сбросить масштаб сообщения к исходному"
 
 msgid "Search the Settings window, when it is open"
-msgstr ""
+msgstr "Поиск в окне «Параметры», когда оно открыто"
 
 msgid "Console mode (when enabled in Settings)"
 msgstr "Консольный режим (если включен в Настройках)"
@@ -1014,36 +1008,32 @@ msgstr "По имени (Я–А)"
 msgid "Full Path"
 msgstr "Полный путь"
 
-#, fuzzy
 msgid "Sender"
-msgstr "Отправители"
+msgstr "Отправитель"
 
-#, fuzzy
 msgid "Recipients"
-msgstr "Скрыть получателей"
+msgstr "Получатели"
 
 msgid "Correspondents"
-msgstr ""
+msgstr "Корреспонденты"
 
 msgid "Subject"
 msgstr "Тема"
 
-#, fuzzy
 msgid "Attachment"
-msgstr "Вложения"
+msgstr "Вложение"
 
-#, fuzzy
 msgid "Importance"
-msgstr "Импортировать ключ"
+msgstr "Важность"
 
 msgid "Account"
 msgstr "Учётная запись"
 
 msgid "Due Date"
-msgstr ""
+msgstr "Срок исполнения"
 
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 msgid "Spam"
 msgstr "Спам"
@@ -1337,13 +1327,13 @@ msgstr "Введите параметры сервера вручную."
 msgid "Enter your provider's OAuth endpoints, then sign in."
 msgstr "Укажите конечные точки OAuth вашего провайдера и войдите."
 
-#, fuzzy
 msgid ""
 "Enter your JMAP server's address, or the URL of its session resource. Mail "
 "is read and sent over JMAP; no SMTP settings are needed."
 msgstr ""
-"Введите адрес вашего сервера Stalwart. Чтение и отправка почты выполняются "
-"по протоколу JMAP, поэтому параметры SMTP не требуются."
+"Введите адрес вашего сервера JMAP или URL-адрес его сессионного ресурса. "
+"Почта читается и отправляется по протоколу JMAP, поэтому параметры SMTP "
+"не требуются."
 
 msgid "Sign in with your browser — no password needed."
 msgstr "Войдите через браузер — пароль не требуется."
@@ -1356,8 +1346,11 @@ msgid ""
 "settings, under Privacy & Security, with access to mail and to sending it. "
 "Mail is read and sent over JMAP."
 msgstr ""
+"Вход выполняется с помощью токена API, а не пароля. Создайте его в "
+"параметрах Fastmail в разделе «Конфиденциальность и безопасность» с "
+"доступом к почте и её отправке. Почта читается и отправляется по протоколу "
+"JMAP."
 
-#, fuzzy
 msgid ""
 "Enter your Stalwart server's address. Mail is read and sent over JMAP; no "
 "SMTP settings are needed."
@@ -1542,13 +1535,13 @@ msgstr "Имя пользователя"
 msgid "Password"
 msgstr "Пароль"
 
-#, fuzzy
 msgid "Sign in with an API token"
-msgstr "Войти через браузер"
+msgstr "Войти с помощью токена API"
 
 msgid ""
 "For servers that take a token in place of the password, as Fastmail does."
 msgstr ""
+"Для серверов, использующих токен вместо пароля, например, для Fastmail."
 
 msgid "OAuth Client ID"
 msgstr "Идентификатор клиента OAuth (Client ID)"
@@ -1566,27 +1559,25 @@ msgid "Scopes (space-separated)"
 msgstr "Области доступа (через пробел)"
 
 msgid "Advanced"
-msgstr ""
+msgstr "Дополнительно"
 
 msgid "Sign in with another app registration"
-msgstr ""
+msgstr "Войти с помощью другой регистрации приложения"
 
-#, fuzzy
 msgid "Client ID"
-msgstr "Идентификатор клиента OAuth (Client ID)"
+msgstr "Идентификатор клиента (Client ID)"
 
 msgid "Tenant (common, organizations, consumers or an ID)"
-msgstr ""
+msgstr "Тенант (common, organizations, consumers или ID)"
 
 msgid "Redirect URI"
-msgstr ""
+msgstr "URI перенаправления"
 
 msgid "Sign In with Browser"
 msgstr "Войти через браузер"
 
-#, fuzzy
 msgid "Sign In"
-msgstr "Авторизация"
+msgstr "Войти"
 
 msgid ""
 "Google and Microsoft sign-in use GNOME Online Accounts.\n"
@@ -1794,7 +1785,7 @@ msgid "Drafts"
 msgstr "Черновики"
 
 msgid "Templates"
-msgstr ""
+msgstr "Шаблоны"
 
 msgid "Trash"
 msgstr "Корзина"
@@ -1870,9 +1861,8 @@ msgstr ""
 "Сначала введите идентификатор клиента (и адреса серверов для нестандартного "
 "провайдера)"
 
-#, fuzzy
 msgid "Complete the sign-in in the window that opened."
-msgstr "Не удалось сохранить данные входа в связке ключей: {e}"
+msgstr "Завершите вход в открывшемся окне."
 
 msgid "Opening browser… complete sign-in there."
 msgstr "Открытие браузера… завершите вход в нём."
@@ -1942,6 +1932,7 @@ msgstr "Удалить этот псевдоним"
 msgid ""
 "Kept on the server; change it through your provider's webmail interface."
 msgstr ""
+"Хранится на сервере; измените через веб-интерфейс почтового провайдера."
 
 msgid "Display name (optional)"
 msgstr "Необязательно. Отображается вместо инициалов."
@@ -2013,7 +2004,7 @@ msgstr[1] "Через {n} дня"
 msgstr[2] "Через {n} дней"
 
 msgid "API Token"
-msgstr ""
+msgstr "API токен"
 
 #. A JMAP server is one address, and it sends the mail
 #. itself: no SMTP rows.
@@ -2816,30 +2807,31 @@ msgstr "Свернуть в область чтения"
 msgid "Open in window"
 msgstr "Открыть в отдельном окне"
 
-#, fuzzy
+msgid ""
+"Kept on the server; change it through your provider's webmail interface."
+msgstr ""
+"Хранится на сервере; измените через веб-интерфейс почтового провайдера."
+
 msgid "Save Template"
-msgstr "Сохранить изображение"
+msgstr "Сохранить шаблон"
 
 msgid "Save Draft"
 msgstr "Сохранить черновик"
 
-#, fuzzy
 msgid "Save to Templates"
-msgstr "Сохранить в «Черновики»"
+msgstr "Сохранить в «Шаблоны»"
 
 msgid "Save to Drafts"
 msgstr "Сохранить в «Черновики»"
 
 msgid "More ways to save"
-msgstr ""
+msgstr "Другие способы сохранения"
 
 msgid "Keep a copy in Templates to start new messages from"
-msgstr ""
+msgstr "Сохранять копию в «Шаблонах» для создания новых сообщений"
 
-#, fuzzy
 msgid "Save as Template"
-msgstr "Отправлять как обычный текст"
-
+msgstr "Сохранить как шаблон"
 msgid "Delete Draft"
 msgstr "Удалить черновик"
 
@@ -2929,12 +2921,11 @@ msgstr "Ещё"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Показать «Копия», «Скрытая копия» и «Адрес для ответа»"
 
-#, fuzzy
 msgid "Type a From address"
-msgstr "Адрес отправителя"
+msgstr "Введите адрес отправителя"
 
 msgid "Choose from your addresses"
-msgstr ""
+msgstr "Выберите из ваших адресов"
 
 msgid "Not signed in"
 msgstr "Вход не выполнен"
@@ -2997,24 +2988,25 @@ msgstr "Не удалось перевести"
 msgid "Cannot send with OpenPGP"
 msgstr "Невозможно отправить с помощью OpenPGP"
 
-#, fuzzy
 msgid "An attachment is missing"
-msgstr "{n} вложение"
+msgstr "Отсутствует вложение"
 
 msgid ""
 "Hylki cannot read {names}. It was moved or deleted after it was attached. "
 "Remove it, or attach it again from where it is now."
 msgstr ""
+"Hylki не удаётся прочитать {names}. Файл был перемещён или удалён после "
+"прикрепления. Удалите его или прикрепите повторно из нового расположения."
 
-#, fuzzy
 msgid "Check the From address"
-msgstr "Адрес отправителя"
+msgstr "Проверьте адрес отправителя"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
+"В поле «От кого» должен быть указан один адрес, например, Ann <ann@example.com>."
 
 msgid "“{address}” is not an email address."
-msgstr ""
+msgstr "«{address}» не является адресом электронной почты."
 
 msgid "{name} (link)"
 msgstr "{name} (ссылка)"
@@ -3022,16 +3014,13 @@ msgstr "{name} (ссылка)"
 msgid "Uploading…"
 msgstr "Загрузка…"
 
-#, fuzzy
 msgid "Save the template?"
-msgstr "Сохранить метку?"
+msgstr "Сохранить шаблон?"
 
-#, fuzzy
 msgid ""
 "Its changes have not been saved. Save them to the template, or discard them."
 msgstr ""
-"Сообщение не было отправлено. Сохраните его в «Черновики», чтобы завершить "
-"позже, или удалите его."
+"Изменения не сохранены. Сохраните их в шаблон или отмените их."
 
 msgid "Save the message?"
 msgstr "Сохранить сообщение?"
@@ -3084,10 +3073,11 @@ msgstr "Выберите время позже текущего."
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
+"Файл был перемещён или удалён. Прикрепите его повторно из нового "
+"расположения."
 
-#, fuzzy
 msgid "Not found"
-msgstr "Скрыты"
+msgstr "Не найдено"
 
 msgid "Contacts"
 msgstr "Контакты"
@@ -3366,9 +3356,8 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} из {total}"
 
-#, fuzzy
 msgid "me"
-msgstr "Имя"
+msgstr "я"
 
 msgid "Choose which folders to search"
 msgstr "Выберите папки для поиска"
@@ -3401,17 +3390,18 @@ msgid "Mark All as Unread"
 msgstr "Отметить все как непрочитанные"
 
 msgid "Due"
-msgstr ""
+msgstr "Срок"
 
 msgid "Drag to resize, double-click for the usual width"
 msgstr ""
+"Потяните, чтобы изменить размер, или дважды нажмите для восстановления "
+"обычной ширины"
 
 msgid "High importance"
-msgstr ""
+msgstr "Высокая важность"
 
-#, fuzzy
 msgid "Low importance"
-msgstr "Ключ импортирован"
+msgstr "Низкая важность"
 
 msgid "Mark as read"
 msgstr "Отметить как прочитанное"
@@ -3585,16 +3575,14 @@ msgstr ""
 "Пройденная проверка доказывает лишь, что адрес не подделан, — но не "
 "безопасность письма."
 
-#, fuzzy
 msgid "This message is a template."
-msgstr "Это сообщение написано на языке «{language}»."
+msgstr "Это сообщение является шаблоном."
 
 msgid "Change the template itself"
-msgstr ""
+msgstr "Изменить сам шаблон"
 
-#, fuzzy
 msgid "Start a new message from a copy of the template"
-msgstr "Написать письмо с изображением в тексте"
+msgstr "Создать новое сообщение на основе копии шаблона"
 
 msgid "Repeats daily"
 msgstr "Повторяется ежедневно"
@@ -4137,16 +4125,14 @@ msgstr "Скрыты"
 msgid "Drop a button here to hide it"
 msgstr "Перетащите кнопку сюда, чтобы скрыть её"
 
-#, fuzzy
 msgid "Shown"
-msgstr "Показать"
+msgstr "Отображается"
 
 msgid "Left to right"
-msgstr ""
+msgstr "Слева направо"
 
-#, fuzzy
 msgid "Drop a column here to hide it"
-msgstr "Перетащите кнопку сюда, чтобы скрыть её"
+msgstr "Перетащите столбец сюда, чтобы скрыть его"
 
 msgid "Senders"
 msgstr "Отправители"
@@ -4561,12 +4547,15 @@ msgstr ""
 "запуске откроется полная боковая панель."
 
 msgid "Highlight only new unread mail"
-msgstr ""
+msgstr "Выделять только новые непрочитанные письма"
 
 msgid ""
 "A folder's unread count is in the accent color while mail has arrived since "
 "you last looked at it, and grey once you have, however much is still unread."
 msgstr ""
+"Счётчик непрочитанных писем в папке выделяется акцентным цветом, если с "
+"момента последнего просмотра поступили новые письма, и становится серым "
+"после просмотра, независимо от количества оставшихся непрочитанных писем."
 
 msgid "Unified"
 msgstr "Общие"
@@ -4729,6 +4718,8 @@ msgid ""
 "Cards or single lines. Automatic shows cards at narrow widths and single "
 "lines in columns at wider widths."
 msgstr ""
+"Карточки или однострочный список. При значении «Автоматически» при малой "
+"ширине отображаются карточки, а при большей ширине — столбцы с одной строкой."
 
 msgid "Preview lines"
 msgstr "Строки предпросмотра"
@@ -4807,7 +4798,7 @@ msgstr ""
 "остаётся открытой после того, как курсор покинул её."
 
 msgid "Columns"
-msgstr ""
+msgstr "Столбцы"
 
 msgid ""
 "What a message shows when the layout is displayed in one line format. Drag "
@@ -4815,14 +4806,21 @@ msgid ""
 "stays. Due Date appears only in lists with Microsoft 365 mail. Changes apply "
 "at once."
 msgstr ""
+"Данные, отображаемые в сообщении при использовании однострочного формата. "
+"Перетаскивайте столбцы, чтобы изменить их порядок или удалить из списка. "
+"Тема отображается всегда. Срок исполнения показывается только в списках "
+"почты Microsoft 365. Изменения применяются мгновенно."
 
 msgid "Column headings"
-msgstr ""
+msgstr "Заголовки столбцов"
 
 msgid ""
 "Names the columns above the list. Click one to sort the list by it, and "
 "again to reverse the order."
 msgstr ""
+"Отображает названия столбцов над списком. Нажмите на заголовок для "
+"сортировки списка, и нажмите ещё раз, чтобы изменить порядок сортировки на "
+"противоположный."
 
 msgid "Group messages by conversation"
 msgstr "Группировать сообщения по обсуждениям"
@@ -4865,14 +4863,13 @@ msgstr ""
 msgid "Fold earlier messages"
 msgstr "Сворачивать предыдущие сообщения"
 
-#, fuzzy
 msgid ""
 "Which messages of a conversation open folded to their sender and first "
 "lines. The newest always opens, and a click on a folded message opens it."
 msgstr ""
-"Какие сообщения в обсуждении открываются свёрнутыми в одну строку. Самое "
-"новое сообщение всегда открывается полностью, а нажатие на свёрнутое "
-"сообщение разворачивает его."
+"Какие сообщения в обсуждении открываются свёрнутыми до имени отправителя и "
+"первых строк. Самое новое сообщение всегда открывается полностью, а нажатие "
+"на свёрнутое сообщение разворачивает его."
 
 msgid "Show your own replies in the message list"
 msgstr "Отображать ваши ответы в списке сообщений"
@@ -5067,29 +5064,30 @@ msgstr ""
 "в режиме чтения или в исходном виде. Переключатель по-прежнему позволяет "
 "изменить режим отображения на экране."
 
-#, fuzzy
 msgid "Printing"
-msgstr "Составление писем:"
+msgstr "Печать"
 
 msgid "Page numbers"
-msgstr ""
+msgstr "Номера страниц"
 
 msgid ""
 "Print the page number and the number of pages at the foot of every page."
 msgstr ""
+"Печатать номер страницы и общее количество страниц внизу каждой страницы."
 
-#, fuzzy
 msgid "Date printed"
-msgstr "Формат даты"
+msgstr "Дата печати"
 
 msgid "Print the date and time of printing at the foot of every page."
-msgstr ""
+msgstr "Печатать дату и время печати внизу каждой страницы."
 
 msgid "Wider left margin"
-msgstr ""
+msgstr "Увеличенное левое поле"
 
 msgid "Leave 25 mm at the left of every page, so punched holes miss the text."
 msgstr ""
+"Оставлять отступ 25 мм слева на каждой странице, чтобы отверстия дырокола не "
+"заслоняли текст."
 
 msgid "Compose in the main window"
 msgstr "Создание писем в основном окне"
@@ -5153,23 +5151,23 @@ msgstr ""
 "параметр отключён, Enter выполняет перенос на новую строку в рамках того же "
 "абзаца. Сочетание Shift+Enter всегда выполняет противоположное действие."
 
-#, fuzzy
 msgid "Formatting toolbar"
-msgstr "Без форматирования"
+msgstr "Панель форматирования"
 
 msgid ""
 "Whether a new message shows the extra tools (paragraph styles, fonts, "
 "colors, indents, emoji and pictures). The chevron in the toolbar shows or "
 "hides them at any time."
 msgstr ""
+"Определяет, отображаются ли в новом сообщении дополнительные инструменты "
+"(стили абзацев, шрифты, цвета, отступы, эмодзи и изображения). Стрелка на "
+"панели инструментов позволяет скрыть или показать их в любой момент."
 
-#, fuzzy
 msgid "Always collapsed"
-msgstr "Всегда разрешать для этого отправителя"
+msgstr "Всегда свёрнута"
 
-#, fuzzy
 msgid "Always expanded"
-msgstr "Всегда разрешать для этого отправителя"
+msgstr "Всегда развёрнута"
 
 msgid "Write messages in"
 msgstr "Составлять сообщения в"
@@ -5683,26 +5681,23 @@ msgstr "Другой файл"
 msgid "Print Message"
 msgstr "Печать сообщения"
 
-#, fuzzy
 msgid "No PDF writer is available on this system"
-msgstr "Для этой учётной записи недоступна папка «Черновики»"
+msgstr "В системе отсутствует доступное средство виртуальной печати в PDF"
 
 msgid "Page {page} of {pages}"
-msgstr ""
+msgstr "Страница {page} из {pages}"
 
 msgid "Save as PDF…"
 msgstr "Сохранить как PDF…"
 
-#, fuzzy
 msgid "No Preview"
-msgstr "Предпросмотр печати"
+msgstr "Предпросмотр недоступен"
 
 msgid "Save as PDF"
 msgstr "Сохранить как PDF"
 
-#, fuzzy
 msgid "Saved {name}"
-msgstr "Удалено: {name}"
+msgstr "Сохранено: {name}"
 
 msgid "Could not save the PDF: {error}"
 msgstr "Не удалось сохранить PDF: {error}"
@@ -5735,39 +5730,34 @@ msgid "Paste as Plain Text"
 msgstr "Вставить как обычный текст"
 
 msgid "Normal"
-msgstr ""
+msgstr "Обычный"
 
-#, fuzzy
 msgid "Heading 1"
-msgstr "Чтение"
+msgstr "Заголовок 1"
 
-#, fuzzy
 msgid "Heading 2"
-msgstr "Чтение"
+msgstr "Заголовок 2"
 
-#, fuzzy
 msgid "Heading 3"
-msgstr "Чтение"
+msgstr "Заголовок 3"
 
-#, fuzzy
 msgid "Preformatted"
-msgstr "Формат даты"
+msgstr "Отформатированный"
 
 msgid "Sans Serif"
-msgstr ""
+msgstr "Без засечек"
 
 msgid "Serif"
-msgstr ""
+msgstr "С засечками"
 
-#, fuzzy
 msgid "Monospace"
-msgstr "Моноширинный шрифт"
+msgstr "Моноширинный"
 
 msgid "Paragraph style"
-msgstr ""
+msgstr "Стиль абзаца"
 
 msgid "Font"
-msgstr ""
+msgstr "Шрифт"
 
 msgid "Bold"
 msgstr "Полужирный"
@@ -5781,15 +5771,14 @@ msgstr "Подчёркнутый"
 msgid "Strikethrough"
 msgstr "Зачёркнутый"
 
-#, fuzzy
 msgid "Text color"
-msgstr "Цвет тега"
+msgstr "Цвет текста"
 
 msgid "Highlight"
-msgstr ""
+msgstr "Выделение цветом"
 
 msgid "No highlight"
-msgstr ""
+msgstr "Без выделения"
 
 msgid "Bulleted list"
 msgstr "Маркированный список"
@@ -5798,10 +5787,10 @@ msgid "Numbered list"
 msgstr "Нумерованный список"
 
 msgid "Decrease indent"
-msgstr ""
+msgstr "Уменьшить отступ"
 
 msgid "Increase indent"
-msgstr ""
+msgstr "Увеличить отступ"
 
 #. Adwaita has no blockquote glyph; the bubble with its quote marks
 #. reads as one.
@@ -5811,32 +5800,26 @@ msgstr "Цитата"
 msgid "Insert link"
 msgstr "Вставить ссылку"
 
-#, fuzzy
 msgid "Insert emoji"
-msgstr "Вставить ссылку"
+msgstr "Вставить эмодзи"
 
-#, fuzzy
 msgid "Insert picture"
-msgstr "Вставить в текст"
+msgstr "Вставить изображение"
 
 msgid "Clear formatting"
 msgstr "Очистить форматирование"
 
-#, fuzzy
 msgid "Fewer formatting tools"
-msgstr "Очистить форматирование"
+msgstr "Меньше инструментов форматирования"
 
-#, fuzzy
 msgid "More formatting tools"
-msgstr "Без форматирования"
+msgstr "Больше инструментов форматирования"
 
-#, fuzzy
 msgid "Pictures"
-msgstr "Картинка"
+msgstr "Изображения"
 
-#, fuzzy
 msgid "Insert Picture"
-msgstr "Выбрать картинку"
+msgstr "Вставить изображение"
 
 msgid "Insert Link"
 msgstr "Вставить ссылку"
@@ -5857,7 +5840,7 @@ msgid "No accounts yet"
 msgstr "Учётные записи пока не добавлены"
 
 msgid "New Message from Template…"
-msgstr ""
+msgstr "Новое сообщение из шаблона…"
 
 msgid "Outbox"
 msgstr "Исходящие"
@@ -5949,7 +5932,7 @@ msgid "Edit Tag…"
 msgstr "Редактировать метку…"
 
 msgid "The sign-in window was closed."
-msgstr ""
+msgstr "Окно входа было закрыто."
 
 msgid "Welcome to Hylki"
 msgstr "Добро пожаловать в Hylki"
@@ -6242,9 +6225,8 @@ msgstr "Не удалось удалить папку: неизвестная п
 msgid "Could not delete folder: {e}"
 msgstr "Не удалось удалить папку: {e}"
 
-#, fuzzy
 msgid "unknown folder"
-msgstr "Показывать каждую папку"
+msgstr "неизвестная папка"
 
 msgid "Could not reach the server"
 msgstr "Не удалось связаться с сервером"
@@ -6369,20 +6351,17 @@ msgstr "Не удалось отправить: {e}"
 msgid "“{subject}” will be sent {when}"
 msgstr "Письмо «{subject}» будет отправлено {when}"
 
-#, fuzzy
 msgid "Could not schedule the message."
-msgstr "Не удалось удалить сообщение: {e}"
+msgstr "Не удалось запланировать отправку сообщения."
 
-#, fuzzy
 msgid "Could not save template: {e}"
-msgstr "Не удалось сохранить черновик: {e}"
+msgstr "Не удалось сохранить шаблон: {e}"
 
 msgid "Could not save draft: {e}"
 msgstr "Не удалось сохранить черновик: {e}"
 
-#, fuzzy
 msgid "Saving template…"
-msgstr "Сохранение черновика…"
+msgstr "Сохранение шаблона…"
 
 msgid "Saving draft…"
 msgstr "Сохранение черновика…"
