@@ -36,7 +36,7 @@ msgid "Show only unread"
 msgstr "Только непрочитанные"
 
 msgid "Show only starred"
-msgstr "Только избранные"
+msgstr "Только отмеченные"
 
 msgid "Sort messages"
 msgstr "Сортировка сообщений"
@@ -60,12 +60,12 @@ msgid "Forward"
 msgstr "Переслать"
 
 msgid "Remove Star"
-msgstr "Убрать из избранного"
+msgstr "Снять отметку"
 
 #. One glyph in both states, as in the main window; the
 #. starred state carries color only.
 msgid "Star"
-msgstr "Добавить в избранное"
+msgstr "Отметить"
 
 msgid "Archive"
 msgstr "Архив"
@@ -144,7 +144,7 @@ msgid "Unread first"
 msgstr "Сначала непрочитанные"
 
 msgid "Starred first"
-msgstr "Сначала из избранного"
+msgstr "Сначала отмеченные"
 
 msgid "Create Folder"
 msgstr "Создать папку"
@@ -849,7 +849,7 @@ msgid "Mark as spam"
 msgstr "Отметить как спам"
 
 msgid "Star or unstar"
-msgstr "Добавить/убрать из избранного"
+msgstr "Поставить или снять отметку"
 
 msgid "Mark read or unread"
 msgstr "Отметить прочитанным/непрочитанным"
@@ -945,7 +945,7 @@ msgid "This list"
 msgstr "Этот список"
 
 msgid "Unstar"
-msgstr "Убрать из избранного"
+msgstr "Снять отметку"
 
 msgid "Save Attachment"
 msgstr "Сохранить вложение"
@@ -1717,7 +1717,7 @@ msgid "Syncing"
 msgstr "Синхронизация"
 
 msgid "Instant new mail (push)"
-msgstr ""
+msgstr "Мгновенное получение почты (push)"
 
 msgid "Turn off for servers that stall on push connections."
 msgstr "Отключите для серверов, которые зависают при push-подключениях."
@@ -2985,10 +2985,10 @@ msgid "Cannot send with OpenPGP"
 msgstr "Невозможно отправить с помощью OpenPGP"
 
 msgid "Check the address"
-msgstr ""
+msgstr "Проверьте адрес"
 
 msgid "“{addr}” is not an email address."
-msgstr ""
+msgstr "«{addr}» не является адресом электронной почты."
 
 msgid "An attachment is missing"
 msgstr "Отсутствует вложение"
@@ -3380,10 +3380,10 @@ msgid "There's nothing here right now."
 msgstr "Здесь пока ничего нет."
 
 msgid "Remove Stars"
-msgstr "Убрать из избранного"
+msgstr "Снять отметки"
 
 msgid "Star Conversation"
-msgstr "Добавить обсуждение в избранное"
+msgstr "Отметить обсуждение"
 
 msgid "Mark All as Read"
 msgstr "Отметить все как прочитанные"
@@ -3421,7 +3421,7 @@ msgid "Mark as unread"
 msgstr "Отметить как непрочитанное"
 
 msgid "Remove star"
-msgstr "Снять звёздочку"
+msgstr "Снять отметку"
 
 msgid "Show conversation"
 msgstr "Показать обсуждение"
@@ -3489,7 +3489,7 @@ msgid "Translate"
 msgstr "Перевести"
 
 msgid "Starred"
-msgstr "Избранное"
+msgstr "Отмеченные"
 
 msgid "Received"
 msgstr "Получено"
@@ -3732,7 +3732,7 @@ msgid "Mark as read or unread"
 msgstr "Отметить как прочитанное или непрочитанное"
 
 msgid "Star this message"
-msgstr "Добавить сообщение в избранное"
+msgstr "Отметить это сообщение"
 
 msgid "Move this message to a folder"
 msgstr "Переместить это сообщение в папку"
@@ -4268,6 +4268,8 @@ msgid ""
 "Receives messages the moment they arrive. Microsoft 365 accounts check at "
 "the interval above."
 msgstr ""
+"Сообщения поступают сразу после их отправки. Учётные записи Microsoft 365 "
+"проверяются с интервалом, указанным выше."
 
 msgid "Notifications"
 msgstr "Уведомления"
@@ -4605,16 +4607,14 @@ msgstr ""
 "Архив всех учётных записей одним списком, раскрывающимся по своим учётным "
 "записям."
 
-#, fuzzy
 msgid "Every account's junk mail as one list, opening to each account's own."
 msgstr ""
-"Почта из «Отправленных» всех учётных записей одним списком, раскрывающимся "
-"по своим учётным записям."
+"Нежелательная почта всех учётных записей одним списком, раскрывающимся по "
+"своим учётным записям."
 
-#, fuzzy
 msgid "Every account's trash as one list, opening to each account's own."
 msgstr ""
-"Черновики всех учётных записей одним списком, раскрывающимся по своим "
+"Корзина всех учётных записей одним списком, раскрывающимся по своим "
 "учётным записям."
 
 msgid ""
@@ -4704,13 +4704,11 @@ msgstr "Список учётных записей под общей строк�
 msgid "The account list under the unified Archive row."
 msgstr "Список учётных записей под общей строкой «Архив»."
 
-#, fuzzy
 msgid "The account list under the unified Junk row."
-msgstr "Список учётных записей под общей строкой «Отправленные»."
+msgstr "Список учётных записей под общей строкой «Спам»."
 
-#, fuzzy
 msgid "The account list under the unified Trash row."
-msgstr "Список учётных записей под общей строкой «Черновики»."
+msgstr "Список учётных записей под общей строкой «Корзина»."
 
 msgid "The folders under the Filters row."
 msgstr "Папки под строкой «Фильтры»."
@@ -5245,9 +5243,8 @@ msgstr ""
 "Слова с ошибками в тексте письма подчёркиваются; нажмите правой кнопкой мыши "
 "на слово для просмотра вариантов исправления."
 
-#, fuzzy
 msgid "Languages"
-msgstr "Язык"
+msgstr "Языки"
 
 msgid "Added words"
 msgstr "Добавленные слова"
@@ -5660,9 +5657,8 @@ msgstr "Под сообщениями"
 msgid "Follows the reading order"
 msgstr "Соответствует порядку чтения"
 
-#, fuzzy
 msgid "System language"
-msgstr "Системный язык — {language}"
+msgstr "Системный язык"
 
 msgid "Add a word"
 msgstr "Добавить слово"
@@ -5731,9 +5727,8 @@ msgstr "Сохранено: {name}"
 msgid "Could not save the PDF: {error}"
 msgstr "Не удалось сохранить PDF: {error}"
 
-#, fuzzy
 msgid "Spelling Language"
-msgstr "Орфография"
+msgstr "Язык проверки орфографии"
 
 msgid "Send as Attachment Instead"
 msgstr "Отправить вложением"
@@ -5861,7 +5856,7 @@ msgid "Insert"
 msgstr "Вставить"
 
 msgid "Favorites"
-msgstr ""
+msgstr "Избранное"
 
 msgid "Folder"
 msgstr "Папка"
@@ -5947,13 +5942,11 @@ msgstr "Показать или скрыть метки"
 msgid "Follow Settings: {sort}"
 msgstr "Из параметров: {sort}"
 
-#, fuzzy
 msgid "Remove from Favorites"
-msgstr "Удалить фильтр"
+msgstr "Удалить из избранного"
 
-#, fuzzy
 msgid "Add to Favorites"
-msgstr "Добавить в Контакты"
+msgstr "Добавить в избранное"
 
 msgid "Apply Filters"
 msgstr "Применить фильтры"
@@ -6336,7 +6329,7 @@ msgid "Could not update message: {e}"
 msgstr "Не удалось обновить сообщение: {e}"
 
 msgid "Could not change the star: {e}"
-msgstr "Не удалось изменить отметку избранного: {e}"
+msgstr "Не удалось изменить отметку: {e}"
 
 msgid ""
 "This server does not store tags, so Hylki keeps them on this computer only"
@@ -6423,11 +6416,16 @@ msgid ""
 "Could not read the password for {email} from the keyring ({e}). Hylki tries "
 "again at the next connection."
 msgstr ""
+"Не удалось прочитать пароль для {email} из связки ключей ({e}). Hylki повторит "
+"попытку при следующем подключении."
 
 msgid ""
 "This account has no IMAP server. Hylki can't use Exchange accounts from "
 "Online Accounts: remove it and add it as an IMAP or Microsoft 365 account."
 msgstr ""
+"У этой учётной записи нет сервера IMAP. Hylki не может использовать "
+"учётные записи Exchange из сетевых учётных записей: удалите её и добавьте "
+"как учётную запись IMAP или Microsoft 365."
 
 msgid "Could not delete message: {e}"
 msgstr "Не удалось удалить сообщение: {e}"
