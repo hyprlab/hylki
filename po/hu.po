@@ -170,6 +170,40 @@ msgstr "Leiratkozva innen: {name}."
 msgid "The list's unsubscribe page is open in your browser."
 msgstr "A lista leiratkozási oldala megnyílik a böngészőben."
 
+#, fuzzy
+msgid "Export Contacts"
+msgstr "Névjegyek rendezése"
+
+#, fuzzy
+msgid "{n} contact exported to {path}"
+msgid_plural "{n} contacts exported to {path}"
+msgstr[0] "A napló exportálva ide: {display}"
+msgstr[1] "A napló exportálva ide: {display}"
+
+#, fuzzy
+msgid "Could not export contacts: {e}"
+msgstr "A fiók nem importálható: {e}"
+
+#, fuzzy
+msgid "Delete All Contacts?"
+msgstr "Törli a névjegyet?"
+
+msgid ""
+"The {n} contact in the Hylki address book is deleted. This cannot be undone; "
+"export the book first to keep a copy."
+msgid_plural ""
+"The {n} contacts in the Hylki address book are deleted. This cannot be "
+"undone; export the book first to keep a copy."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Cancel"
+msgstr "Mégse"
+
+#, fuzzy
+msgid "Delete All"
+msgstr "Törlés"
+
 msgid "The language applies the next time Hylki starts."
 msgstr "A nyelvi módosítások a Hylki következő indításakor lépnek életbe."
 
@@ -250,6 +284,26 @@ msgstr "Nem érhető el címjegyzék"
 
 msgid "Could not update contact: {e}"
 msgstr "A névjegy nem frissíthető: {e}"
+
+#, fuzzy
+msgid "Could not import contacts: {e}"
+msgstr "A fiók nem importálható: {e}"
+
+#, fuzzy
+msgid "Could not read: {files}"
+msgstr "A alkalmazás újraindítása nem sikerült"
+
+#, fuzzy
+msgid "No contacts were found in the selected files"
+msgstr "A fájlban nem található kulcs."
+
+msgid ""
+"Contacts imported: {added} new, {updated} updated, {skipped} skipped, "
+"{errors} damaged"
+msgstr ""
+
+msgid "Contacts imported: {added} new, {updated} updated"
+msgstr ""
 
 msgid "Hide Status Bar"
 msgstr "Állapotsáv elrejtése"
@@ -382,9 +436,6 @@ msgstr[1] "{n} fájl küldése a Hylkivel"
 
 msgid "{names} ({size}). What should the files go into?"
 msgstr "{names} ({size}). Melyik helyre kerüljenek a fájlok?"
-
-msgid "Cancel"
-msgstr "Mégse"
 
 msgid "Reply to a Message…"
 msgstr "Válasz írása…"
@@ -1040,6 +1091,10 @@ msgstr "Keresés"
 msgid "Print"
 msgstr "Nyomtatás"
 
+#, fuzzy
+msgid "Hylki Address Book"
+msgstr "Címjegyzék"
+
 msgid "On This Computer"
 msgstr "Ezen a számítógépen"
 
@@ -1059,6 +1114,22 @@ msgstr ""
 
 msgid "The directory did not accept the password."
 msgstr "A könyvtár nem fogadta el a jelszót."
+
+msgid "A contact needs a name or an email address"
+msgstr ""
+
+msgid "The contact is too large"
+msgstr ""
+
+msgid "UTF-16 files are not supported"
+msgstr ""
+
+#, fuzzy
+msgid "The file is not a text file"
+msgstr "A mappa nincs a kiszolgálón"
+
+msgid "The file is larger than {size} MB"
+msgstr ""
 
 msgid "{used} of {limit} used"
 msgstr "{used} / {limit} felhasználva"
@@ -2033,6 +2104,45 @@ msgstr "IMAP/POP3 fiók: {host}"
 msgid "Mail account"
 msgstr "E-mail fiók"
 
+#, fuzzy
+msgid "From address"
+msgstr "Feladó címe"
+
+msgid "From name"
+msgstr "Feladó neve"
+
+#, fuzzy
+msgid "To or Cc"
+msgstr " vagy "
+
+#, fuzzy
+msgid "Reply-To address"
+msgstr "Válaszcím"
+
+#, fuzzy
+msgid "Message body"
+msgstr "Üzenet betűtípusa"
+
+#, fuzzy
+msgid "Sender is in Contacts"
+msgstr "Feladó hozzáadása a névjegyekhez"
+
+#, fuzzy
+msgid "Sender is not in Contacts"
+msgstr "Feladó hozzáadása a névjegyekhez"
+
+msgid "contains"
+msgstr "tartalmazza"
+
+msgid "is exactly"
+msgstr "pontosan ez"
+
+msgid "starts with"
+msgstr "ezzel kezdődik"
+
+msgid "ends with"
+msgstr "ezzel végződik"
+
 #. Every condition, joined the way the rule combines them (#192).
 msgid " or "
 msgstr " vagy "
@@ -2147,6 +2257,9 @@ msgstr "Keresés a kiszolgálón; semmi sem töltődött le"
 
 msgid "From address when no Reply-To is set"
 msgstr "Feladó cím, ha nincs megadva „Válaszcím” mező"
+
+msgid "Looks in the system address books and the Hylki book"
+msgstr ""
 
 msgid "Add Condition"
 msgstr "Feltétel hozzáadása"
@@ -3123,11 +3236,17 @@ msgstr "GNOME Névjegyek megnyitása"
 msgid "New contact"
 msgstr "Új névjegy"
 
+msgid "Import vCard files into the Hylki address book"
+msgstr ""
+
 msgid "Loading Contacts…"
 msgstr "Névjegyek betöltése…"
 
-msgid "Contacts you add in GNOME Contacts appear here."
-msgstr "A GNOME Névjegyekben hozzáadott névjegyek itt jelennek meg."
+msgid ""
+"Add a contact with the + button, or import vCard files. Contacts are kept in "
+"Hylki's own address book, and the address books of GNOME Contacts are listed "
+"here too."
+msgstr ""
 
 msgid "Sort contacts"
 msgstr "Névjegyek rendezése"
@@ -3143,6 +3262,15 @@ msgstr "Vezetéknév"
 
 msgid "Delete Contact?"
 msgstr "Törli a névjegyet?"
+
+msgid ""
+"{name} is removed from your address book, and for a synced book, from the "
+"server too."
+msgstr ""
+
+#, fuzzy
+msgid "All Address Books"
+msgstr "Címjegyzék"
 
 msgid "Edit"
 msgstr "Szerkesztés"
@@ -3170,6 +3298,17 @@ msgstr "Telefonszám hozzáadása"
 
 msgid "Add website"
 msgstr "Webhely hozzáadása"
+
+#, fuzzy
+msgid "Import Contacts"
+msgstr "Névjegyek rendezése"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "Nagy fájlok"
+
+msgid "All files"
+msgstr "Minden fájl"
 
 msgid "LDAP Directories"
 msgstr "LDAP Mappák"
@@ -3703,6 +3842,14 @@ msgstr ""
 "visszaáll a Beállítások menüben megadott alapértelmezett értékre."
 
 msgid ""
+"Shows this message dark or light, whatever the message theme. Other messages "
+"are not affected."
+msgstr ""
+
+msgid "Light / Dark Mode"
+msgstr ""
+
+msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
 msgstr ""
@@ -3946,9 +4093,6 @@ msgstr "Kulcs importálása"
 
 msgid "OpenPGP keys"
 msgstr "OpenPGP-kulcsok"
-
-msgid "All files"
-msgstr "Minden fájl"
 
 msgid "Could not import: {e}"
 msgstr "Nem importálható: {e}"
@@ -4292,6 +4436,54 @@ msgid ""
 msgstr ""
 "A fiókszerkesztő megnyílt. Mielőtt továbbmenne, mentse el a módosításokat, "
 "vagy törölje azokat."
+
+msgid ""
+"Contacts Hylki keeps itself, in its own data folder. They are listed in "
+"Contacts beside the address books of GNOME Contacts, and work without GNOME."
+msgstr ""
+
+#, fuzzy
+msgid "Contacts in the Hylki book"
+msgstr "Névjegyek az oldalsávban"
+
+#, fuzzy
+msgid "Import vCard files"
+msgstr "Nagy fájlok"
+
+msgid ""
+"Adds the contacts in .vcf files to the Hylki book. Importing a file again "
+"updates its contacts."
+msgstr ""
+
+#, fuzzy
+msgid "Export as a vCard file"
+msgstr "Nagy fájlok"
+
+msgid ""
+"Saves every contact in the Hylki book in one .vcf file, which other apps can "
+"import."
+msgstr ""
+
+#, fuzzy
+msgid "Delete all contacts"
+msgstr "Törli a névjegyet?"
+
+msgid ""
+"Empties the Hylki book. The address books of GNOME Contacts are not touched."
+msgstr ""
+
+#, fuzzy
+msgid "New Contacts"
+msgstr "Új névjegy"
+
+#, fuzzy
+msgid "Save new contacts in"
+msgstr "Új névjegy"
+
+msgid ""
+"The address book a contact made in Hylki goes to, unless another is picked "
+"when it is made."
+msgstr ""
 
 msgid "Check for new mail"
 msgstr "Új levelek keresése"
@@ -4801,6 +4993,13 @@ msgstr ""
 "Az egyes üzenetekből a tárgy alatt megjelenő mennyiség. Kikapcsolva az "
 "előnézetek letöltése is leáll."
 
+#, fuzzy
+msgid "Tint tagged messages"
+msgstr "{n} db üzenet címkézve"
+
+msgid "Wash the row of a tagged message with the color of its first tag."
+msgstr ""
+
 msgid "Actions palette in the message list"
 msgstr "Műveletpaletta az üzenetlistában"
 
@@ -4995,6 +5194,14 @@ msgstr "Üzenet megjelenése"
 
 msgid "Theme for email content only, not the app itself."
 msgstr "Csak az e-mail tartalom témája, nem magának az alkalmazásnak a témája."
+
+msgid "Light / Dark Mode switch"
+msgstr ""
+
+msgid ""
+"Show a switch in the message header that draws the message on screen light "
+"or dark, for that message alone."
+msgstr ""
 
 msgid "Default zoom"
 msgstr "Alapértelmezett nagyítás"
@@ -6655,6 +6862,13 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 msgid "Hyprlab"
 msgstr "Hyprlab"
 
+#, fuzzy
+#~ msgid "Import contacts…"
+#~ msgstr "Névjegyek rendezése"
+
+#~ msgid "Contacts you add in GNOME Contacts appear here."
+#~ msgstr "A GNOME Névjegyekben hozzáadott névjegyek itt jelennek meg."
+
 #~ msgid "Dictionaries the app can see"
 #~ msgstr "Az alkalmazás által elérhető szótárak"
 
@@ -6868,21 +7082,6 @@ msgstr "Hyprlab"
 #~ msgstr ""
 #~ "Az egyező levelek helye; vagy hagyja őket a Beérkezett üzenetek között, "
 #~ "és csak címkézze őket"
-
-#~ msgid "From name"
-#~ msgstr "Feladó neve"
-
-#~ msgid "contains"
-#~ msgstr "tartalmazza"
-
-#~ msgid "is exactly"
-#~ msgstr "pontosan ez"
-
-#~ msgid "starts with"
-#~ msgstr "ezzel kezdődik"
-
-#~ msgid "ends with"
-#~ msgstr "ezzel végződik"
 
 #~ msgid "Send Now"
 #~ msgstr "Küldés most"

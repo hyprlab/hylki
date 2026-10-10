@@ -216,6 +216,16 @@ impl RowItem {
         self.imp().data.borrow().clone().expect("a row item always holds its data")
     }
 
+    /// Data for another message: the row showing this item, if any, starts
+    /// over as a new binding would (#401).
+    fn rebind(&self, data: Rc<RowData>) {
+        self.imp().data.replace(Some(data));
+        let row = self.imp().row.borrow().upgrade();
+        if let Some(row) = row {
+            row.rebind();
+        }
+    }
+
     /// New data for the same message: the row showing it, if any, follows.
     fn set_data(&self, data: Rc<RowData>) {
         let old = self.imp().data.replace(Some(data.clone()));
@@ -340,6 +350,49 @@ pub fn row_edits<K: std::hash::Hash + Eq + Copy>(old: &[K], new: &[K]) -> (Vec<R
     (edits, i)
 }
 
+/// How many changes past which the view is better told of one swap: each
+/// change costs it a pass over its rows, and the row widgets for anything
+/// put in.
+const SWAP_RUNS: usize = 8;
+
+/// Whether the view is better told of one swap than of `edits`: nothing is
+/// kept, or what is kept is in scattered pieces.
+pub fn swap_wanted(edits: &[RowEdit], old_len: usize, tail: usize, new_len: usize) -> bool {
+    old_len > 0
+        && new_len > 0
+        && (!edits.contains(&RowEdit::Keep) || change_runs(edits, old_len, tail, new_len) > SWAP_RUNS)
+}
+
+/// The separate changes `edits` come to, as `MessageModel::replace` tells
+/// the view of them: each run of puts and takes between kept rows, then what
+/// is left of either list at the end.
+fn change_runs(edits: &[RowEdit], old_len: usize, tail: usize, new_len: usize) -> usize {
+    let mut runs = 0;
+    let mut in_run = false;
+    let mut taken = 0;
+    for edit in edits {
+        match edit {
+            RowEdit::Keep => {
+                in_run = false;
+                taken += 1;
+            }
+            RowEdit::Insert(_) => {
+                runs += usize::from(!in_run);
+                in_run = true;
+            }
+            RowEdit::Remove => {
+                runs += usize::from(!in_run);
+                in_run = true;
+                taken += 1;
+            }
+        }
+    }
+    if taken < old_len || tail < new_len {
+        runs += 1;
+    }
+    runs
+}
+
 impl Default for MessageModel {
     fn default() -> Self {
         glib::Object::new()
@@ -359,10 +412,17 @@ impl MessageModel {
     /// rows that show the same message keep their place (and their bound
     /// widget, refreshed with the new data), and the rest are put in or
     /// taken out in runs.
-    pub fn replace(&self, new: Vec<Rc<RowData>>) {
+    /// `stale`: the list's look changed since the rows on screen were
+    /// filled, so a swap fills again the ones it keeps. Returns whether it
+    /// was a swap, which leaves nothing on screen stale.
+    pub fn replace(&self, new: Vec<Rc<RowData>>, stale: bool) -> bool {
         let old: Vec<Slot> = self.imp().rows.borrow().iter().map(|r| r.slot()).collect();
         let keys: Vec<Slot> = new.iter().map(|r| r.slot()).collect();
         let (edits, tail) = row_edits(&old, &keys);
+        if swap_wanted(&edits, old.len(), tail, new.len()) {
+            self.swap(new, stale);
+            return true;
+        }
         // A run of inserts and removals at `start`, applied as one change.
         let mut start = 0usize;
         let mut removed = 0usize;
@@ -419,6 +479,7 @@ impl MessageModel {
         removed = left;
         flush(pos, &mut removed, &mut added);
         self.imp().items.borrow_mut().retain(|_, w| w.upgrade().is_some());
+        false
     }
 
     /// New data for the row at `pos`, showing the same message.
@@ -437,6 +498,45 @@ impl MessageModel {
         let live = self.imp().items.borrow().get(&slot).and_then(|w| w.upgrade());
         if let Some(item) = live {
             item.set_data(data);
+        }
+    }
+
+    /// Put `new` in place of the rows by position, for a list that is
+    /// mostly or wholly another (a folder switch). The view keeps the items
+    /// it holds, each now standing for the new row at its place, so it keeps
+    /// its row widgets too: new items would have it destroy every one and
+    /// build and style them again, a third of a second at a folder's size
+    /// (#401).
+    fn swap(&self, new: Vec<Rc<RowData>>, stale: bool) {
+        let imp = self.imp();
+        let old = imp.rows.replace(new.clone());
+        let held = imp.items.take();
+        let mut moved = Vec::new();
+        {
+            let mut items = imp.items.borrow_mut();
+            for (was, now) in old.iter().zip(&new) {
+                if let Some(item) = held.get(&was.slot()).and_then(|w| w.upgrade()) {
+                    items.insert(now.slot(), item.downgrade());
+                    moved.push((item, now.clone()));
+                }
+            }
+        }
+        // Outside the borrows: a row being filled reads the model.
+        for (item, data) in moved {
+            let was = item.data();
+            if was.slot() != data.slot() {
+                item.rebind(data);
+            } else if stale || *was != *data {
+                item.set_data(data);
+            } else {
+                item.imp().data.replace(Some(data));
+            }
+        }
+        let kept = old.len().min(new.len()) as u32;
+        if old.len() > new.len() {
+            self.items_changed(kept, old.len() as u32 - kept, 0);
+        } else if new.len() > old.len() {
+            self.items_changed(kept, 0, new.len() as u32 - kept);
         }
     }
 
@@ -1471,6 +1571,19 @@ impl Row {
         }
         self.w.host.add_controller(drag);
 
+        // The unread dot marks the message read (PR #380). The press is
+        // claimed so the row is neither selected nor opened by it.
+        {
+            let click = gtk::GestureClick::new();
+            click.set_button(gtk::gdk::BUTTON_PRIMARY);
+            click.connect_pressed(|g, _, _, _| {
+                g.set_state(gtk::EventSequenceState::Claimed);
+            });
+            let mark = on(|r| r.act(RowAction::ToggleRead));
+            click.connect_released(move |_, _, _, _| mark());
+            self.w.dot.add_controller(click);
+            self.w.dot.set_cursor_from_name(Some("pointer"));
+        }
         // The ⋯ and the palette.
         {
             let toggle = on(Row::toggle_palette);
@@ -1547,39 +1660,59 @@ impl Row {
     fn bind(self: &Rc<Self>, item: &RowItem) {
         let fresh = self.st.borrow().item.as_ref() != Some(item);
         if fresh {
-            self.reset();
-            {
-                let mut st = self.st.borrow_mut();
-                st.item = Some(item.clone());
-                st.gen += 1;
-            }
-            item.imp().row.replace(Rc::downgrade(self));
+            self.adopt(item);
         }
         self.refresh();
         if fresh {
-            let data = item.data();
-            if data.meta.appear {
-                // A reply just put in by opening its conversation: shown
-                // folded, then slid open once it has been measured.
-                self.w.revealer.set_transition_duration(0);
-                self.w.revealer.set_reveal_child(false);
-                self.w.revealer.set_transition_duration(200);
-                let weak = Rc::downgrade(self);
-                let gen = self.st.borrow().gen;
-                glib::idle_add_local_once(move || {
-                    let Some(row) = weak.upgrade() else { return };
-                    if row.st.borrow().gen != gen {
-                        return;
-                    }
-                    if let (Some(shared), Some(pos)) = (row.shared(), row.position()) {
-                        shared.model.update_row(pos, |d| d.meta.appear = false);
-                    }
-                    row.w.revealer.set_reveal_child(true);
-                });
-            }
-            if let (Some(group), Some(shared)) = (data.meta.group.clone(), self.shared()) {
-                shared.want(group);
-            }
+            self.begin(item);
+        }
+    }
+
+    /// Show another message in the item already bound, from the start, as
+    /// binding would: a folder switch hands the row on rather than having
+    /// the view build a new one (#401).
+    fn rebind(self: &Rc<Self>) {
+        let Some(item) = self.st.borrow().item.clone() else { return };
+        self.adopt(&item);
+        self.refresh();
+        self.begin(&item);
+    }
+
+    fn adopt(self: &Rc<Self>, item: &RowItem) {
+        self.reset();
+        {
+            let mut st = self.st.borrow_mut();
+            st.item = Some(item.clone());
+            st.gen += 1;
+        }
+        item.imp().row.replace(Rc::downgrade(self));
+    }
+
+    /// What a message newly on the row starts: a reply sliding open, and the
+    /// question of how large its conversation is.
+    fn begin(self: &Rc<Self>, item: &RowItem) {
+        let data = item.data();
+        if data.meta.appear {
+            // A reply just put in by opening its conversation: shown
+            // folded, then slid open once it has been measured.
+            self.w.revealer.set_transition_duration(0);
+            self.w.revealer.set_reveal_child(false);
+            self.w.revealer.set_transition_duration(200);
+            let weak = Rc::downgrade(self);
+            let gen = self.st.borrow().gen;
+            glib::idle_add_local_once(move || {
+                let Some(row) = weak.upgrade() else { return };
+                if row.st.borrow().gen != gen {
+                    return;
+                }
+                if let (Some(shared), Some(pos)) = (row.shared(), row.position()) {
+                    shared.model.update_row(pos, |d| d.meta.appear = false);
+                }
+                row.w.revealer.set_reveal_child(true);
+            });
+        }
+        if let (Some(group), Some(shared)) = (data.meta.group.clone(), self.shared()) {
+            shared.want(group);
         }
     }
 
@@ -1727,6 +1860,11 @@ impl Row {
         let unread = msg.unread || meta.unread;
         w.dot.set_valign(if look.avatars || single { gtk::Align::Center } else { gtk::Align::Start });
         w.dot.set_opacity(if unread { 1.0 } else { 0.0 });
+        // Only a dot for the message's own unread state takes a click: on a
+        // thread head lit by an unread reply, it would mark the head unread.
+        let clickable = msg.unread && !look.in_drafts;
+        w.dot.set_can_target(clickable);
+        w.dot.set_tooltip_text(clickable.then(|| i18n("Mark as Read")).as_deref());
         w.text.set_valign(if look.avatars { gtk::Align::Center } else { gtk::Align::Start });
 
         w.name_col.set_visible(col(ListColumn::Sender));
@@ -1865,8 +2003,17 @@ impl Row {
     /// The row's own classes, on the item widget the view wraps it in.
     fn sync_host_classes(&self) {
         let Some(data) = self.data() else { return };
+        // The first tag (in tag order) the message carries tints its row.
+        let tint = self.shared().and_then(|shared| {
+            let tags = shared.tags.borrow();
+            let tag = tags.iter().find(|t| data.msg.has_keyword(&t.keyword))?;
+            Some(format!("rowtint-{}", tag.css_class()))
+        });
         let st = self.st.borrow();
         let mut v = vec!["message-item"];
+        if let Some(class) = tint.as_deref() {
+            v.push(class);
+        }
         if data.msg.unread {
             v.push("message-unread");
         }

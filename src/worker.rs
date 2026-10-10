@@ -152,7 +152,7 @@ fn previews_rejected(account_id: u32) -> bool {
 /// Whether the account's fetches should read list previews at all: the
 /// setting is on and the server has not rejected the preview items.
 fn inline_previews_wanted(account_id: u32) -> bool {
-    crate::config::load_preview_lines() > 0 && !previews_rejected(account_id)
+    (cfg!(test) || crate::config::load_preview_lines() > 0) && !previews_rejected(account_id)
 }
 
 /// Start the account at the summary-fetch mode that worked last time
@@ -6833,18 +6833,41 @@ async fn refresh_keywords(
         if exam(session, &f.path).await.is_err() {
             continue;
         }
-        let mut touched = false;
+        // Where the search and the index disagree, the message's own flags
+        // decide. iCloud answers SEARCH from an index that lags behind STORE
+        // and FETCH, so trusting the search took a tag just set off again
+        // until the folder's next sync put it back, and round again: tags
+        // came and went in the tag view.
+        let mut disputed: Vec<(u32, &str, bool)> = Vec::new();
         for kw in keywords {
             let Ok(server) = search_uids(session, format!("KEYWORD {kw}")).await else { continue };
             let cached: std::collections::HashSet<u32> =
                 cache.uids_with_keyword(account_id, &f.path, kw).into_iter().collect();
-            // A uid the index does not hold is new mail: the write hits
-            // nothing, and the folder's own sync brings it with its flags.
-            for uid in server.difference(&cached) {
-                touched |= cache.set_keyword(account_id, &f.path, *uid, kw, true);
-            }
-            for uid in cached.difference(&server) {
-                touched |= cache.set_keyword(account_id, &f.path, *uid, kw, false);
+            disputed.extend(server.symmetric_difference(&cached).map(|uid| (*uid, kw.as_str(), cached.contains(uid))));
+        }
+        if disputed.is_empty() {
+            continue;
+        }
+        let uids: Vec<u32> = disputed.iter().map(|(uid, _, _)| *uid).collect();
+        let flags: std::collections::HashMap<u32, Vec<String>> =
+            match fetch_uids(session, uid_set(&uids), "(UID FLAGS)").await {
+                Ok(stream) => match stream.try_collect::<Vec<Fetch>>().await {
+                    Ok(fetches) => fetches
+                        .iter()
+                        .filter_map(|f| Some((f.uid?, custom_flags(&f.flags().collect::<Vec<_>>()))))
+                        .collect(),
+                    Err(_) => continue,
+                },
+                Err(_) => continue,
+            };
+        let mut touched = false;
+        for (uid, kw, indexed) in disputed {
+            // A uid the server did not return is gone, or new mail the index
+            // does not hold yet: the folder's own sync deals with both.
+            let Some(has) = flags.get(&uid) else { continue };
+            let on = has.iter().any(|k| k.eq_ignore_ascii_case(kw));
+            if on != indexed {
+                touched |= cache.set_keyword(account_id, &f.path, uid, kw, on);
             }
         }
         if touched {

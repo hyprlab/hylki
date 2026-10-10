@@ -170,6 +170,40 @@ msgstr "Von {name} abgemeldet."
 msgid "The list's unsubscribe page is open in your browser."
 msgstr "Die Abmeldeseite der Liste ist in Ihrem Browser geöffnet."
 
+#, fuzzy
+msgid "Export Contacts"
+msgstr "Kontakte sortieren"
+
+#, fuzzy
+msgid "{n} contact exported to {path}"
+msgid_plural "{n} contacts exported to {path}"
+msgstr[0] "Protokoll nach {display} exportiert"
+msgstr[1] "Protokoll nach {display} exportiert"
+
+#, fuzzy
+msgid "Could not export contacts: {e}"
+msgstr "Konnte kein Konto importieren: {e}"
+
+#, fuzzy
+msgid "Delete All Contacts?"
+msgstr "Kontakt löschen?"
+
+msgid ""
+"The {n} contact in the Hylki address book is deleted. This cannot be undone; "
+"export the book first to keep a copy."
+msgid_plural ""
+"The {n} contacts in the Hylki address book are deleted. This cannot be "
+"undone; export the book first to keep a copy."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#, fuzzy
+msgid "Delete All"
+msgstr "Löschen"
+
 msgid "The language applies the next time Hylki starts."
 msgstr "Die Sprache wird beim nächsten Start von Hylki übernommen."
 
@@ -251,6 +285,26 @@ msgstr "Kein Adressbuch verfügbar"
 
 msgid "Could not update contact: {e}"
 msgstr "Kontakt konnte nicht aktualisiert werden: {e}"
+
+#, fuzzy
+msgid "Could not import contacts: {e}"
+msgstr "Konnte kein Konto importieren: {e}"
+
+#, fuzzy
+msgid "Could not read: {files}"
+msgstr "Es konnten keine Dateien neu gestartet werden"
+
+#, fuzzy
+msgid "No contacts were found in the selected files"
+msgstr "In dieser Datei wurde kein Schlüssel gefunden."
+
+msgid ""
+"Contacts imported: {added} new, {updated} updated, {skipped} skipped, "
+"{errors} damaged"
+msgstr ""
+
+msgid "Contacts imported: {added} new, {updated} updated"
+msgstr ""
 
 msgid "Hide Status Bar"
 msgstr "Statusleiste ausblenden"
@@ -387,9 +441,6 @@ msgstr[1] "{n} Dateien mit Hylki senden"
 
 msgid "{names} ({size}). What should the files go into?"
 msgstr "{names} ({size}). Wo sollen die Dateien eingefügt werden?"
-
-msgid "Cancel"
-msgstr "Abbrechen"
 
 msgid "Reply to a Message…"
 msgstr "Auf eine Nachricht antworten…"
@@ -1053,6 +1104,10 @@ msgstr "Suchen"
 msgid "Print"
 msgstr "Drucken"
 
+#, fuzzy
+msgid "Hylki Address Book"
+msgstr "Adressbuch"
+
 msgid "On This Computer"
 msgstr "Auf diesem Computer"
 
@@ -1072,6 +1127,22 @@ msgstr ""
 
 msgid "The directory did not accept the password."
 msgstr "Das Verzeichnis hat das Passwort nicht akzeptiert."
+
+msgid "A contact needs a name or an email address"
+msgstr ""
+
+msgid "The contact is too large"
+msgstr ""
+
+msgid "UTF-16 files are not supported"
+msgstr ""
+
+#, fuzzy
+msgid "The file is not a text file"
+msgstr "Dieser Ordner ist nicht auf dem Server vorhanden"
+
+msgid "The file is larger than {size} MB"
+msgstr ""
 
 msgid "{used} of {limit} used"
 msgstr "{used} von {limit} verwendet"
@@ -2064,6 +2135,48 @@ msgstr "IMAP / POP3-Konto auf {host}"
 msgid "Mail account"
 msgstr "E-Mail-Konto"
 
+#, fuzzy
+msgid "From address"
+msgstr "E-Mail-Adresse"
+
+#, fuzzy
+msgid "From name"
+msgstr "Vorname"
+
+#, fuzzy
+msgid "To or Cc"
+msgstr " oder "
+
+#, fuzzy
+msgid "Reply-To address"
+msgstr "Antwort an"
+
+#, fuzzy
+msgid "Message body"
+msgstr "Schriftart der Nachricht"
+
+#, fuzzy
+msgid "Sender is in Contacts"
+msgstr "Absender zu Kontakten hinzufügen"
+
+#, fuzzy
+msgid "Sender is not in Contacts"
+msgstr "Absender zu Kontakten hinzufügen"
+
+#, fuzzy
+msgid "contains"
+msgstr "Kontakte"
+
+msgid "is exactly"
+msgstr ""
+
+#, fuzzy
+msgid "starts with"
+msgstr "Jetzt neu starten"
+
+msgid "ends with"
+msgstr ""
+
 #. Every condition, joined the way the rule combines them (#192).
 msgid " or "
 msgstr " oder "
@@ -2177,6 +2290,9 @@ msgstr "Auf dem Server gesucht; nichts wird heruntergeladen"
 
 msgid "From address when no Reply-To is set"
 msgstr "Von der Adresse, wenn kein Reply-To gesetzt ist"
+
+msgid "Looks in the system address books and the Hylki book"
+msgstr ""
 
 msgid "Add Condition"
 msgstr "Bedingung hinzufügen"
@@ -3145,11 +3261,17 @@ msgstr "GNOME Kontakte öffnen"
 msgid "New contact"
 msgstr "Neuer Kontakt"
 
+msgid "Import vCard files into the Hylki address book"
+msgstr ""
+
 msgid "Loading Contacts…"
 msgstr "Kontakte werden geladen…"
 
-msgid "Contacts you add in GNOME Contacts appear here."
-msgstr "Kontakte, die Sie in GNOME-Kontakte hinzufügen, werden hier angezeigt."
+msgid ""
+"Add a contact with the + button, or import vCard files. Contacts are kept in "
+"Hylki's own address book, and the address books of GNOME Contacts are listed "
+"here too."
+msgstr ""
 
 msgid "Sort contacts"
 msgstr "Kontakte sortieren"
@@ -3165,6 +3287,15 @@ msgstr "Nachname"
 
 msgid "Delete Contact?"
 msgstr "Kontakt löschen?"
+
+msgid ""
+"{name} is removed from your address book, and for a synced book, from the "
+"server too."
+msgstr ""
+
+#, fuzzy
+msgid "All Address Books"
+msgstr "Adressbuch"
 
 msgid "Edit"
 msgstr "Bearbeiten"
@@ -3192,6 +3323,17 @@ msgstr "Telefonnummer hinzufügen"
 
 msgid "Add website"
 msgstr "Website hinzufügen"
+
+#, fuzzy
+msgid "Import Contacts"
+msgstr "Kontakte sortieren"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "Große Dateien"
+
+msgid "All files"
+msgstr "Alle Dateien"
 
 msgid "LDAP Directories"
 msgstr "LDAP-Verzeichnisse"
@@ -3725,6 +3867,14 @@ msgstr ""
 "die Standardeinstellungen."
 
 msgid ""
+"Shows this message dark or light, whatever the message theme. Other messages "
+"are not affected."
+msgstr ""
+
+msgid "Light / Dark Mode"
+msgstr ""
+
+msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
 msgstr ""
@@ -3970,9 +4120,6 @@ msgstr "Schlüssel importieren"
 
 msgid "OpenPGP keys"
 msgstr "OpenPGP-Schlüssel"
-
-msgid "All files"
-msgstr "Alle Dateien"
 
 msgid "Could not import: {e}"
 msgstr "Konnte nicht importieren: {e}"
@@ -4316,6 +4463,54 @@ msgid ""
 msgstr ""
 "Der Kontoeditor ist geöffnet. Speichern oder verwerfen Sie Ihre Änderungen, "
 "bevor Sie fortfahren."
+
+msgid ""
+"Contacts Hylki keeps itself, in its own data folder. They are listed in "
+"Contacts beside the address books of GNOME Contacts, and work without GNOME."
+msgstr ""
+
+#, fuzzy
+msgid "Contacts in the Hylki book"
+msgstr "Kontakte in der Seitenleiste"
+
+#, fuzzy
+msgid "Import vCard files"
+msgstr "Große Dateien"
+
+msgid ""
+"Adds the contacts in .vcf files to the Hylki book. Importing a file again "
+"updates its contacts."
+msgstr ""
+
+#, fuzzy
+msgid "Export as a vCard file"
+msgstr "Große Dateien"
+
+msgid ""
+"Saves every contact in the Hylki book in one .vcf file, which other apps can "
+"import."
+msgstr ""
+
+#, fuzzy
+msgid "Delete all contacts"
+msgstr "Kontakt löschen?"
+
+msgid ""
+"Empties the Hylki book. The address books of GNOME Contacts are not touched."
+msgstr ""
+
+#, fuzzy
+msgid "New Contacts"
+msgstr "Neuer Kontakt"
+
+#, fuzzy
+msgid "Save new contacts in"
+msgstr "Neuer Kontakt"
+
+msgid ""
+"The address book a contact made in Hylki goes to, unless another is picked "
+"when it is made."
+msgstr ""
 
 msgid "Check for new mail"
 msgstr "Auf neue Nachrichten prüfen"
@@ -4817,6 +5012,13 @@ msgstr ""
 "Wie viel von jeder Nachricht unter ihrem Betreff angezeigt werden soll. "
 "Ausgeschaltet werden auch Vorschauen, die heruntergeladen werden."
 
+#, fuzzy
+msgid "Tint tagged messages"
+msgstr "{n} Nachricht mit Tag versehen"
+
+msgid "Wash the row of a tagged message with the color of its first tag."
+msgstr ""
+
 msgid "Actions palette in the message list"
 msgstr "Aktionspalette in der Nachrichtenliste"
 
@@ -5011,6 +5213,14 @@ msgstr "Darstellung der Nachricht"
 
 msgid "Theme for email content only, not the app itself."
 msgstr "Thema nur für e-mail-inhalte, nicht die app selbst."
+
+msgid "Light / Dark Mode switch"
+msgstr ""
+
+msgid ""
+"Show a switch in the message header that draws the message on screen light "
+"or dark, for that message alone."
+msgstr ""
 
 msgid "Default zoom"
 msgstr "Standard-Zoom"
@@ -6665,6 +6875,14 @@ msgstr "Der einheitliche Posteingang im Lichtmodus"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Import contacts…"
+#~ msgstr "Kontakte sortieren"
+
+#~ msgid "Contacts you add in GNOME Contacts appear here."
+#~ msgstr ""
+#~ "Kontakte, die Sie in GNOME-Kontakte hinzufügen, werden hier angezeigt."
 
 #~ msgid "Dictionaries the app can see"
 #~ msgstr "Verfügbare Wörterbücher"

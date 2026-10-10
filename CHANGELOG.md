@@ -18,6 +18,72 @@ The first beta previewing 1.43.2.
   playing, ready, finished, skipped because the previous one was still
   playing, switched off, or held back by Do Not Disturb. A sound that still
   says it is playing after ten seconds no longer silences the ones after it.
+- **Fixed: an empty search closed when its folder scope was clicked**
+  (PR #383 by Fabio Rotondo). The search closed as soon as it lost focus
+  while empty, so the All folders picker beside it could not be opened. It
+  now stays open while focus moves within its own row; Find in Message
+  behaves the same.
+- **Added: tagged messages can tint their row** (PR #383 by Fabio Rotondo).
+  **Settings → Message List → Tint tagged messages** washes the row of a
+  tagged message with its first tag's color; on unless switched off.
+- **Added: clicking the unread dot marks a message read** (PR #380 by Fabio
+  Rotondo), without selecting or opening it.
+- **Added: one message can be drawn light or dark** (PR #386 by Fabio
+  Rotondo). With **Settings → Reading → Light / Dark Mode switch** on, a
+  switch beside Reader View draws the message on screen in the other
+  scheme, for that message alone, until Hylki is closed; off by default.
+- **Added: a Hylki address book, and importing vCard files** (PR #379 by
+  Fabio Rotondo). A book called **Hylki** sits beside the ones Evolution
+  Data Server keeps, so the Contacts view works without GNOME or EDS. Its
+  contacts are created, edited and deleted like any other, and their
+  addresses and photos feed suggestions and avatars. **Import contacts…** in
+  the Contacts view reads `.vcf` files (vCard 2.1, 3.0 or 4.0) into it;
+  importing a file twice updates its contacts instead of adding them again.
+  The book is `local_contacts.db` in Hylki's data folder, apart from the
+  mail cache. In the Contacts view, Delete asks to delete the contact shown.
+- **Fixed: confirming a contact's deletion could delete another one**, when
+  the list was re-read while the dialog was open. The dialog now names the
+  contact it deletes rather than its place in the list.
+- **Added: filters on whether the sender is in Contacts** (PR #384 by Fabio
+  Rotondo). **Sender is in Contacts** and **Sender is not in Contacts** look
+  the address up in the Evolution Data Server books and the Hylki book,
+  leaving out the books that collect addresses from mail. While a book
+  cannot be read, neither matches. An older Hylki reads these conditions as
+  an empty From address match instead of losing every rule.
+- **Fixed: closing a menu in the message list scrolled it to the top**,
+  tagging from the right-click menu included. Focus went back to the list
+  as a whole, which moved to its first row; it now goes back to the row it
+  came from, and the list stays where it was scrolled.
+- **Fixed: tags came and went in the Tags view**, most of all for iCloud.
+  The keyword check that runs with a tag view open trusted the server's
+  search, which on iCloud lags behind the tags just set, and took them off
+  until the folder's next sync put them back. Where the search and the
+  index disagree, the message's own flags now decide. A folder list fetched
+  just before a tag reached the server no longer takes it off the row.
+- **Added: the Hylki address book is easier to find and manage.** A menu
+  above the Contacts list shows every address book or one of them, the
+  Hylki Address Book included. A new contact's form has an **Address book**
+  row that picks where it is saved. **Settings → Contacts** shows how many
+  contacts the Hylki book holds, imports and exports vCard files, deletes
+  them all, and sets the default book for new contacts.
+- **Changed: account circles are ringed in the account's color**, as the
+  message list's avatars are in All Inboxes: in the sidebar's account
+  headers and the rows under All Inboxes, in Settings → Mail Accounts and
+  in the account editor's preview. A picture or Gravatar covered the color
+  the circle otherwise shows. The ring stands a pixel off the circle, so
+  every account looks the same, picture or not.
+- **Fixed: the view on screen stayed empty after saving an account.**
+  Saving reconnects every account, which let go of the folder or view
+  shown while the sidebar still showed it selected, so it came back only
+  after clicking elsewhere and back. The sidebar now picks it again, by the
+  account's address, once that account has listed its folders, and falls
+  back to the usual first view if it does not within a few seconds.
+- **Fixed: switching folders paused the window** (#401, reported by
+  rzeigler). With thousands of messages in a folder, opening another one
+  held everything, the sidebar's highlight and the refresh spinner included,
+  for a third to half a second: the message list threw away its rows and
+  built new ones. It now hands the rows it has to the new folder, the
+  highlight moves at once, and the list follows a frame later.
 
 ## 1.43.1 — 2026-10-09
 

@@ -41,8 +41,10 @@ The full list. The [README](../README.md) carries a shorter one.
   and hide the ones you never open. An Exchange server's calendar, contacts
   and task folders are hidden from the start.
 - **Filters:** multi-condition rules on sender, recipient, subject, body and
-  Reply-To, with comma-separated alternatives; they tag mail, file it away, or
-  both, and can be run over mail that is already in a folder.
+  Reply-To, with comma-separated alternatives, or on whether the sender is in
+  your Contacts (the system address books and the Hylki book, not addresses
+  collected from mail); they tag mail, file it away, or both, and can be run
+  over mail that is already in a folder.
 - **Tags:** IMAP keywords, Graph categories, or a local fallback where the
   server has neither; custom colours, drag to reorder, and number-key
   shortcuts.
@@ -161,6 +163,8 @@ The full list. The [README](../README.md) carries a shorter one.
   buttons of your choice: Mark as Read, Archive, Delete, Reply, Forward or
   Mark as Spam, and a sound if you want one: built in, or a file of your own.
 - **GNOME Contacts:** names and photos from your address book, optional.
+- **Hylki address book:** a book of your own, beside the ones Evolution Data
+  Server keeps, with vCard (`.vcf`) import. It works without GNOME.
 - **LDAP directories:** recipients looked up in a company directory as you
   type, through Evolution Data Server.
 - **Your language:** the desktop's, or one you pick; a 12- or 24-hour clock

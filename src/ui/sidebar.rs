@@ -268,6 +268,36 @@ pub enum Sel {
     Tag(Option<u32>, String),
 }
 
+impl Sel {
+    /// The account the selection belongs to, if it belongs to one.
+    fn account(&self) -> Option<u32> {
+        match self {
+            Sel::Folder(acc, _)
+            | Sel::UnifiedInbox(acc)
+            | Sel::UnifiedFolder(acc, _)
+            | Sel::AccountFiltered(acc, _)
+            | Sel::Tag(Some(acc), _)
+            | Sel::Favorite(acc, _)
+            | Sel::UnifiedKindRow(_, acc) => Some(*acc),
+            _ => None,
+        }
+    }
+
+    /// The same selection for the account now numbered `id`.
+    fn with_account(self, id: u32) -> Sel {
+        match self {
+            Sel::Folder(_, p) => Sel::Folder(id, p),
+            Sel::UnifiedInbox(_) => Sel::UnifiedInbox(id),
+            Sel::UnifiedFolder(_, p) => Sel::UnifiedFolder(id, p),
+            Sel::AccountFiltered(_, p) => Sel::AccountFiltered(id, p),
+            Sel::Tag(Some(_), k) => Sel::Tag(Some(id), k),
+            Sel::Favorite(_, p) => Sel::Favorite(id, p),
+            Sel::UnifiedKindRow(kind, _) => Sel::UnifiedKindRow(kind, id),
+            other => other,
+        }
+    }
+}
+
 pub struct Sidebar {
     /// Last sections received, in display order.
     sections: Vec<SectionData>,
@@ -349,6 +379,12 @@ pub struct Sidebar {
     /// The launch view still to be picked (#256): kept until the account
     /// it names has its folders listed, then taken by the first pick.
     start: Option<StartTarget>,
+    /// The view to pick again, and announce, once its account is listed
+    /// again: the app dropped what it showed when the accounts reconnected
+    /// (an account saved), while this list still showed it selected. The
+    /// account is held by address: ids follow the account order, which a
+    /// removal shifts.
+    reannounce: Option<(Sel, Option<String>)>,
     /// Whether the "Attachments" row is shown (in the pinned footer).
     show_attachments: bool,
     /// Whether the "Contacts" row is shown (in the pinned footer).
@@ -518,6 +554,10 @@ pub enum SidebarInput {
     /// Stop waiting for the launch view's account (#256): its folders did
     /// not arrive in time, so the usual first view is picked instead.
     DropStart,
+    /// The accounts are reconnecting and the app has let go of the view on
+    /// screen: forget the selection, and pick it again (telling the app)
+    /// once its account has listed its folders.
+    Reannounce,
     /// Toggle the collapsible "Folders" (custom folders) section for an account.
     ToggleCustomFoldersLocal(u32),
     /// Collapse/expand one folder-tree node (a parent folder's chevron, #51).
@@ -785,6 +825,7 @@ impl Component for Sidebar {
             quiet: std::rc::Rc::new(std::cell::Cell::new(false)),
             mirror: init.mirror,
             start: if init.mirror { None } else { init.start },
+            reannounce: None,
             show_attachments: init.show_attachments,
             show_contacts: init.show_contacts,
             outbox_count: 0,
@@ -869,9 +910,30 @@ impl Sidebar {
     ) {
         match msg {
             SidebarInput::DropStart => {
-                if self.start.take().is_some() && self.selected == Sel::None {
+                let waited = self.start.take().is_some() | self.reannounce.take().is_some();
+                if waited && self.selected == Sel::None {
                     self.restore_selection();
                 }
+            }
+
+            SidebarInput::Reannounce => {
+                if self.mirror || self.selected == Sel::None {
+                    return;
+                }
+                let sel = std::mem::replace(&mut self.selected, Sel::None);
+                let email = sel.account().and_then(|acc| {
+                    self.sections.iter().find(|s| s.account.id == acc).map(|s| s.account.email.clone())
+                });
+                self.reannounce = Some((sel, email));
+                self.quiet.set(true);
+                self.clear_other_selections(Sel::None);
+                self.quiet.set(false);
+                // An account that never comes back online must not leave
+                // the list without a view.
+                let s = sender.input_sender().clone();
+                gtk::glib::timeout_add_seconds_local_once(8, move || {
+                    let _ = s.send(SidebarInput::DropStart);
+                });
             }
 
             SidebarInput::MirrorSelection(sel) => {
@@ -2372,6 +2434,9 @@ impl Sidebar {
             let circle = gtk::Box::new(gtk::Orientation::Horizontal, 0);
             circle.add_css_class("account-circle");
             circle.add_css_class(&format!("acct-color-{id}"));
+            // Ringed in the account's color, as the list's avatars are in
+            // All Inboxes: a picture covers the color the disc would show.
+            circle.add_css_class(&format!("acct-ring-{id}"));
             circle.set_valign(gtk::Align::Center);
             // Keep it a perfect circle: a fixed square that never stretches with
             // the row. (Without this the glyph's hexpand propagates up and the
@@ -2962,14 +3027,18 @@ impl Sidebar {
             self.build_tags_section(container, Slot::Unified, filtered_below, sender);
         }
 
-        // Per-account avatar colors (background + readable text).
+        // Per-account avatar colors (background + readable text), and the
+        // ring every account circle wears. The ring stands a pixel off the
+        // disc: flush against a disc of its own color it would only make
+        // the disc bigger.
         let mut css = String::new();
         for s in &sections {
             let text = crate::color::readable_text(&s.color);
             css.push_str(&format!(
                 ".acct-color-{0} {{ background-color: {1}; }} \
                  .acct-color-{0} label {{ color: {2}; }} \
-                 .acct-tint-{0} {{ color: {1}; }}\n",
+                 .acct-tint-{0} {{ color: {1}; }} \
+                 .acct-ring-{0} {{ outline: 2px solid {1}; outline-offset: 1px; }}\n",
                 s.account.id, s.color, text
             ));
         }
@@ -4254,8 +4323,68 @@ impl Sidebar {
         // with, whichever it was.
         if self.selected != Sel::None {
             self.start = None;
+            self.reannounce = None;
         }
-        match self.selected.clone() {
+        let selected = self.selected.clone();
+        if selected != Sel::None {
+            return self.select_sel(selected);
+        }
+        // A view to pick again after a reconnect, once its account is back.
+        if let Some((sel, email)) = self.reannounce.clone() {
+            let sel = match email {
+                Some(email) => match self.sections.iter().find(|s| s.account.email.eq_ignore_ascii_case(&email)) {
+                    Some(section) => sel.with_account(section.account.id),
+                    // Not listed (yet, or removed): wait, and the timeout
+                    // falls back to the usual first view.
+                    None => return,
+                },
+                None => sel,
+            };
+            if !self.sel_ready(&sel) {
+                return;
+            }
+            // The row's handler takes the pick up (a queued message). Until
+            // it has, the pick stays pending and nothing else is picked: a
+            // pass in between would queue the first view behind it. It is
+            // announced whatever pass this is: the app is waiting for it.
+            let quiet = self.quiet.replace(false);
+            self.select_sel(sel);
+            self.quiet.set(quiet);
+            return;
+        }
+        // The launch view (#256) is picked again on every pass until
+        // one sticks: the sections are rebuilt as each account's
+        // folders arrive, and a pick only takes once its row's
+        // selection has been handled. Until the account it names is
+        // listed with its folders, nothing else is picked, or All
+        // Inboxes would be on screen first and stay.
+        let start = self.start.clone();
+        if let Some(target) = start {
+            match self.resolve_start(&target) {
+                Some(Sel::UnifiedInbox(acc)) => return self.select_unified_inbox(acc),
+                Some(Sel::Folder(acc, path)) => return self.select_folder(acc, &path),
+                _ if !self.start_account_ready(&target) => return,
+                // Listed, but with nowhere to land: the usual view.
+                _ => self.start = None,
+            }
+        }
+        if self.show_unified {
+            self.select_unified();
+        } else if let Some(acc) = self
+            .sections
+            .iter()
+            .find(|s| !s.folders.is_empty())
+            .map(|s| s.account.id)
+            .filter(|_| self.show_accounts && !self.focus_hide_accounts)
+        {
+            self.select_folder_index(acc, 0);
+        }
+    }
+
+    /// Select the row for `sel`. While the list holds no selection, the
+    /// row's own handler takes it up and tells the app.
+    fn select_sel(&self, sel: Sel) {
+        match sel {
             Sel::Unified => self.select_unified(),
             Sel::Attachments => self.select_attachments(),
             Sel::Contacts => self.select_contacts(),
@@ -4286,36 +4415,17 @@ impl Sidebar {
                     }
                 }
             }
-            Sel::None => {
-                // The launch view (#256) is picked again on every pass until
-                // one sticks: the sections are rebuilt as each account's
-                // folders arrive, and a pick only takes once its row's
-                // selection has been handled. Until the account it names is
-                // listed with its folders, nothing else is picked, or All
-                // Inboxes would be on screen first and stay.
-                let start = self.start.clone();
-                if let Some(target) = start {
-                    match self.resolve_start(&target) {
-                        Some(Sel::UnifiedInbox(acc)) => return self.select_unified_inbox(acc),
-                        Some(Sel::Folder(acc, path)) => return self.select_folder(acc, &path),
-                        _ if !self.start_account_ready(&target) => return,
-                        // Listed, but with nowhere to land: the usual view.
-                        _ => self.start = None,
-                    }
-                }
-                if self.show_unified {
-                    self.select_unified();
-                } else if let Some(acc) = self
-                    .sections
-                    .iter()
-                    .find(|s| !s.folders.is_empty())
-                    .map(|s| s.account.id)
-                    .filter(|_| self.show_accounts && !self.focus_hide_accounts)
-                {
-                    self.select_folder_index(acc, 0);
-                }
-            }
+            Sel::None => {}
         }
+    }
+
+    /// Whether the row for `sel` can be picked: its account (or, for the
+    /// views across accounts, any account) has listed its folders.
+    fn sel_ready(&self, sel: &Sel) -> bool {
+        let account = sel.account();
+        self.sections
+            .iter()
+            .any(|s| account.is_none_or(|acc| s.account.id == acc) && !s.folders.is_empty())
     }
 
     /// The row a launch view names, if it is on screen: an inbox in the
@@ -5351,6 +5461,7 @@ fn build_unified_inbox_row(
     let circle = gtk::Box::new(gtk::Orientation::Horizontal, 0);
     circle.add_css_class("account-circle-sm");
     circle.add_css_class(&format!("acct-color-{id}"));
+    circle.add_css_class(&format!("acct-ring-{id}"));
     circle.set_valign(gtk::Align::Center);
     circle.set_halign(gtk::Align::Center);
     circle.set_hexpand(false);

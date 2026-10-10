@@ -12,6 +12,8 @@ the rules that keep it, and docs/, from drifting back:
   * nothing but the changelog still calls the app Vireo or Veem
   * the documentation is free of em dashes (#230)
   * data/CONTRIBUTORS and data/TRANSLATORS parse the way About reads them
+  * the newest release notes keep their shape: grouped one-line items, no
+    bold, no prose (docs/RELEASING.md)
 
 Run it after touching any .md, and before a release. It prints what is wrong
 and exits non-zero, or says everything is in order.
@@ -206,6 +208,58 @@ def check_credits_files() -> None:
             problem(f"data/{name}", "empty")
 
 
+# The release notes slid back into paragraphs of bold run-on text more than
+# once, so the shape in docs/RELEASING.md is checked rather than remembered.
+# Only the newest section: the older ones are a record of what was published.
+NOTES_GROUPS = ["New features:", "Fixes:", "Translations:"]
+NOTES_ITEM_MAX = 90
+
+
+def check_release_notes() -> None:
+    path = ROOT / "docs" / "RELEASE_NOTES.md"
+    lines = path.read_text().splitlines()
+    start = next(
+        (i for i, l in enumerate(lines) if l.startswith("## What's new in ")), None
+    )
+    if start is None:
+        problem("docs/RELEASE_NOTES.md", "no \"## What's new in\" section")
+        return
+    where = lambda i: f"docs/RELEASE_NOTES.md:{i + 1}"
+    seen: list[str] = []
+    items = 0
+    for i in range(start + 1, len(lines)):
+        line = lines[i]
+        if line.startswith("## "):
+            break
+        if not line.strip():
+            continue
+        if "**" in line or "__" in line:
+            problem(where(i), "no bold in the release notes")
+        if line in NOTES_GROUPS:
+            if line in seen or any(
+                NOTES_GROUPS.index(g) > NOTES_GROUPS.index(line) for g in seen
+            ):
+                problem(where(i), f"groups go once each, in the order {NOTES_GROUPS}")
+            seen.append(line)
+        elif line.startswith("- "):
+            if not seen:
+                problem(where(i), f"an item goes under one of {NOTES_GROUPS}")
+            if len(line) > NOTES_ITEM_MAX:
+                problem(
+                    where(i),
+                    f"item longer than {NOTES_ITEM_MAX} characters: name the "
+                    "thing, the detail is for CHANGELOG.md",
+                )
+            items += 1
+        else:
+            problem(
+                where(i),
+                f"only {NOTES_GROUPS} and one-line \"- \" items: {line[:40]}",
+            )
+    if items == 0:
+        problem(where(start), "the newest release notes list nothing")
+
+
 for check in (
     check_links,
     check_readme_length,
@@ -214,6 +268,7 @@ for check in (
     check_old_names,
     check_em_dashes,
     check_credits_files,
+    check_release_notes,
 ):
     check()
 

@@ -40,6 +40,28 @@ pub mod welcome;
 /// accounts and the list's avatars all move on this one clock.
 pub const FOCUS_ANIM_MS: u32 = 320;
 
+/// Run `close` when `entry` lost focus, was left empty, and focus did not
+/// move to another widget of its own row (the scope dropdown, a button, the
+/// popover a dropdown opens). The check waits for an idle turn because the
+/// new focus widget is not set yet while the leave event runs.
+pub fn close_if_focus_left_row(entry: &gtk::SearchEntry, close: impl Fn() + 'static) {
+    use gtk::prelude::*;
+    if !entry.text().trim().is_empty() {
+        return;
+    }
+    let entry = entry.clone();
+    gtk::glib::idle_add_local_once(move || {
+        let Some(row) = entry.parent() else { return };
+        let Some(root) = entry.root() else { return };
+        let focus = root.focus();
+        let entry_widget: &gtk::Widget = entry.upcast_ref();
+        let in_row = focus.is_some_and(|f| f != *entry_widget && (f == row || f.is_ancestor(&row)));
+        if !in_row {
+            close();
+        }
+    });
+}
+
 /// A style provider for the whole display that is loaded only when what it
 /// holds changes. Loading one restyles every widget in every window, the
 /// message list's rows included, and with hundreds of rows that takes longer

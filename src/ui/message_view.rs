@@ -65,6 +65,12 @@ pub struct MessageView {
     reader_mode: bool,
     /// Whether the header's Reader View switch is shown (Settings).
     reader_switch_shown: bool,
+    /// Whether the header's Light / Dark Mode switch is shown (Settings).
+    theme_switch_shown: bool,
+    /// Messages the user asked to see in the other light/dark scheme than
+    /// the message theme would give them (the header's Light / Dark Mode
+    /// switch). Kept for the session, so a message reopened keeps the choice.
+    theme_flips: std::collections::HashSet<(u32, u32)>,
     /// Message zoom in percent (Ctrl+ / Ctrl-): the bodies alone are
     /// scaled, in Reader View and out of it; the chrome keeps its size.
     zoom: u32,
@@ -1008,12 +1014,17 @@ pub enum MessageViewInput {
     /// Reader View on or off (the header's toggle): re-renders the whole
     /// conversation stripped to its content, or back as sent.
     SetReaderMode(bool),
+    /// The header's Light / Dark Mode switch: show the message on screen
+    /// dark (`true`) or light, for that message alone.
+    SetMessageDark(bool),
     /// Message zoom in percent; the bodies on screen rescale in place.
     SetZoom(u32),
     /// The zoom Settings starts at, which the chip measures against.
     SetZoomDefault(u32),
     /// Settings: show the Reader View switch in the header at all.
     SetReaderSwitchShown(bool),
+    /// Whether the header's Light / Dark Mode switch is shown (Settings).
+    SetThemeSwitchShown(bool),
     /// Settings: what Reader View does when a conversation is opened. A
     /// per-message default applies to what is on screen right away.
     SetReaderDefault(crate::config::ReaderDefault),
@@ -1759,13 +1770,9 @@ impl Component for MessageView {
                             },
                             add_controller = gtk::EventControllerFocus {
                                 connect_leave[sender] => move |ctl| {
-                                    let empty = ctl
-                                        .widget()
-                                        .and_downcast_ref::<gtk::SearchEntry>()
-                                        .is_some_and(|e| e.text().trim().is_empty());
-                                    if empty {
-                                        sender.input(MessageViewInput::CloseFind);
-                                    }
+                                    let Some(entry) = ctl.widget().and_downcast::<gtk::SearchEntry>() else { return };
+                                    let sender = sender.clone();
+                                    crate::ui::close_if_focus_left_row(&entry, move || sender.input(MessageViewInput::CloseFind));
                                 },
                             },
                         },
@@ -1861,6 +1868,36 @@ impl Component for MessageView {
                             add_controller = gtk::GestureClick {
                                 connect_released[sender] => move |_, _, _, _| {
                                     let _ = sender.output(MessageViewOutput::ZoomReset);
+                                },
+                            },
+                        },
+
+                        // Light / Dark Mode: the message on screen in the
+                        // other scheme, for that message alone. Sits just
+                        // before the Reader View switch.
+                        gtk::Box {
+                            set_orientation: gtk::Orientation::Horizontal,
+                            set_spacing: 8,
+                            set_halign: gtk::Align::End,
+                            set_valign: gtk::Align::Center,
+                            add_css_class: "reader-toggle",
+                            set_tooltip_text: Some(i18n("Shows this message dark or light, whatever the message theme. Other messages are not affected.").as_str()),
+                            #[watch]
+                            set_visible: model.current.is_some() && model.theme_switch_shown,
+
+                            gtk::Label {
+                                set_label: &i18n("Light / Dark Mode"),
+                                add_css_class: "caption",
+                                add_css_class: "dim-label",
+                            },
+                            gtk::Switch {
+                                set_valign: gtk::Align::Center,
+                                #[watch]
+                                set_active: model.effective_dark(),
+                                // Setting it to what is already shown (a new
+                                // message, a theme change) does nothing.
+                                connect_active_notify[sender] => move |sw| {
+                                    sender.input(MessageViewInput::SetMessageDark(sw.is_active()));
                                 },
                             },
                         },
@@ -2020,6 +2057,8 @@ impl Component for MessageView {
             sender_style: std::collections::HashSet::new(),
             reader_mode: false,
             reader_switch_shown: true,
+            theme_switch_shown: false,
+            theme_flips: std::collections::HashSet::new(),
             zoom: 100,
             zoom_default: 100,
             reader_default: crate::config::ReaderDefault::Remember,
@@ -2753,6 +2792,19 @@ impl Component for MessageView {
             MessageViewInput::SetReaderMode(on) => {
                 self.set_reader_mode(on);
             }
+            MessageViewInput::SetMessageDark(dark) => {
+                if self.effective_dark() == dark {
+                    return;
+                }
+                let Some(key) = self.current.as_ref().map(|m| (m.account_id, m.id)) else { return };
+                if !self.theme_flips.remove(&key) {
+                    self.theme_flips.insert(key);
+                }
+                self.apply_webview_bg(dark);
+                if !self.loading {
+                    self.render();
+                }
+            }
             MessageViewInput::SetZoomDefault(percent) => {
                 self.zoom_default = percent;
             }
@@ -2771,6 +2823,9 @@ impl Component for MessageView {
             }
             MessageViewInput::SetReaderSwitchShown(on) => {
                 self.reader_switch_shown = on;
+            }
+            MessageViewInput::SetThemeSwitchShown(on) => {
+                self.theme_switch_shown = on;
             }
             MessageViewInput::SetReaderDefault(policy) => {
                 self.reader_default = policy;
@@ -3568,9 +3623,17 @@ impl MessageView {
             .evaluate_javascript(&js, None, None, None::<&gtk::gio::Cancellable>, |_| {});
     }
 
+    /// Whether the message on screen is drawn dark: the message theme (or
+    /// the system's), turned over when the user flipped it for this message.
     fn effective_dark(&self) -> bool {
-        self.content_dark
-            .unwrap_or_else(|| adw::StyleManager::default().is_dark())
+        let base = self
+            .content_dark
+            .unwrap_or_else(|| adw::StyleManager::default().is_dark());
+        let flipped = self
+            .current
+            .as_ref()
+            .is_some_and(|m| self.theme_flips.contains(&(m.account_id, m.id)));
+        base != flipped
     }
 
     /// Whether cards list their own attachments (#213): by preference, and

@@ -56,6 +56,8 @@ pub struct MessageWindowInit {
     pub zoom_default: u32,
     /// Whether the Reader View switch is shown at all.
     pub reader_switch: bool,
+    /// Whether the Light / Dark Mode switch is shown (PR #386).
+    pub theme_switch: bool,
     /// What Reader View does when a message is opened.
     pub reader_default: crate::config::ReaderDefault,
     /// The tags (#71), for the cards' chips.
@@ -158,6 +160,7 @@ pub enum MessageWindowInput {
     /// The zoom chip was clicked in this window.
     ZoomReset,
     SetReaderSwitchShown(bool),
+    SetThemeSwitchShown(bool),
     SetReaderDefault(crate::config::ReaderDefault),
     /// This window's own Reader View switch was flipped. It changes this
     /// window alone: the main window and the saved choice are left as they
@@ -362,6 +365,7 @@ impl Component for MessageWindow {
         view.emit(MessageViewInput::SetZoomDefault(init.zoom_default));
         view.emit(MessageViewInput::SetZoom(init.zoom));
         view.emit(MessageViewInput::SetReaderSwitchShown(init.reader_switch));
+        view.emit(MessageViewInput::SetThemeSwitchShown(init.theme_switch));
         view.emit(MessageViewInput::SetPgpLabels(init.pgp_labels));
         view.emit(MessageViewInput::SetReaderDefault(init.reader_default));
         view.emit(MessageViewInput::SetTags(init.tags.clone()));
@@ -492,6 +496,9 @@ impl Component for MessageWindow {
             }
             MessageWindowInput::SetReaderSwitchShown(on) => {
                 self.view.emit(MessageViewInput::SetReaderSwitchShown(on));
+            }
+            MessageWindowInput::SetThemeSwitchShown(on) => {
+                self.view.emit(MessageViewInput::SetThemeSwitchShown(on));
             }
             MessageWindowInput::SetReaderDefault(policy) => {
                 self.view.emit(MessageViewInput::SetReaderDefault(policy));

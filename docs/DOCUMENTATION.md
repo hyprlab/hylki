@@ -419,6 +419,61 @@ of the generated one.
   empty. Link passwords and expiry dates are a paid Dropbox feature; on a
   Basic plan leave both off, or the share step reports it.
 
+### The Hylki address book
+
+Hylki keeps an address book of its own, the **Hylki Address Book**, beside
+the address books of GNOME Contacts, which Evolution Data Server (EDS)
+holds. It is there whether EDS is installed or not. Its contacts are
+created, edited and deleted like any other, and their addresses and photos
+are used for suggestions and avatars.
+
+In the Contacts view, the menu above the list shows **All Address Books** or
+one of them, the Hylki book included. The menu is hidden while there is only
+one book. A new contact, made with the **+** button, has an **Address
+book** row at the top of its form that picks where it is saved; it starts on
+the book the list shows, or on the default book when the list shows them
+all. A contact being edited stays in its book, which the form names.
+
+**Settings → Contacts** manages the Hylki book: how many contacts it holds,
+**Import vCard files**, **Export as a vCard file** (one `.vcf` file with every
+contact, which other apps can import) and **Delete all contacts**, which asks
+first and leaves the GNOME Contacts books alone. **Save new contacts in**
+sets the default book for contacts made in Hylki, from the Contacts view or
+with **Add Sender to Contacts**. Until it is set, a new contact goes to the
+first writable EDS book, or to the Hylki book when there is none.
+
+Importing reads `.vcf` files into the Hylki book, from Settings or from the
+import button in the Contacts view's header. A file can hold many contacts,
+in vCard 2.1, 3.0 or 4.0. A contact with the same ID as one already in the
+book updates it, and one without an ID is matched by its content, so
+importing a file twice adds nothing new. Entries with neither a name nor an
+address, and mailing lists, are skipped; truncated or oversized entries
+(over 5 MB) are counted as damaged; a second card with the same ID in one
+file is skipped, so the first is kept. Files over 50 MB are refused, and
+photos are used only when they are inside the file: nothing is fetched from
+the web. A person who is in both an EDS book and the Hylki book appears in
+each, with the book named, and once in the composer's suggestions.
+
+The book is the file `local_contacts.db` in Hylki's data folder, kept apart
+from the mail cache, so clearing the cache leaves it alone.
+
+### Filtering on Contacts
+
+A filter condition can be **Sender is in Contacts** or **Sender is not in
+Contacts**, under **Settings → Filters**. They take no text. The sender's
+address is looked up in the address books Evolution Data Server keeps and
+in the Hylki book. Books that fill themselves from mail you exchange are
+left out, so writing to someone once does not make them a contact: they are
+recognised by an English name such as "Collected Addresses", "Recently
+contacted" or "Other contacts", and a book named in another language may
+still count. While any book cannot be read, or all of them are empty,
+neither condition matches, so mail is not filed as coming from a stranger
+by mistake. The books are read again in the background at most once a
+minute and after a contact changes.
+
+A version of Hylki from before these conditions reads them as a From
+address condition with no text, which matches nothing.
+
 ### LDAP directories
 
 Settings → LDAP Directories holds the directories the composer looks
@@ -931,6 +986,15 @@ gathers the files of every message in it. Its Reader View switch changes
 that window alone; the main window and the choice Hylki remembers stay as
 they were. **Ctrl+F** finds in the message and **Ctrl+P** prints it.
 
+### One message light or dark
+
+**Settings → Reading → Message appearance** draws every message light, dark
+or as the system is. With **Light / Dark Mode switch**, in the same group,
+the message header gets a switch that draws the message on screen in the
+other scheme, for that message alone, until Hylki is closed. In a
+conversation the choice follows the message the conversation was opened on.
+It works in a message's own window too. The switch is off by default.
+
 ### Printing
 
 **Ctrl+P** prints the message or conversation in the reader, and
@@ -1000,6 +1064,15 @@ edge of one right of it. A double click on that line puts the column back
 to its usual width, and **Restore Defaults** puts every column back. When
 the list is too narrow for the widths set, the name columns give way in
 proportion and the dates keep theirs.
+
+**Settings → Message List → Tint tagged messages** washes the row of a
+tagged message with its tag's color, in both layouts. A message with more
+than one tag takes the color of the one listed first in **Settings → Tags**.
+A selected row keeps the selection color. It is on unless switched off.
+
+Clicking the unread dot on a row marks that message read without selecting
+or opening it. A conversation's dot that is lit only for an unread reply
+does not take the click.
 
 ### Text size
 

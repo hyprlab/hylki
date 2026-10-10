@@ -17,7 +17,7 @@ use serde::{Deserialize, Serialize};
 /// disk with whatever the umask allowed — brief, but these files carry
 /// hostnames, usernames, OAuth client secrets and correspondent lists. Creating
 /// with the mode already set closes it.
-fn write_private(path: &std::path::Path, contents: &str) -> std::io::Result<()> {
+pub(crate) fn write_private(path: &std::path::Path, contents: &str) -> std::io::Result<()> {
     use std::io::Write;
     let mut opts = std::fs::OpenOptions::new();
     opts.write(true).create(true).truncate(true);
@@ -1075,6 +1075,14 @@ pub(crate) struct PrivacyFile {
     /// sender would get.
     #[serde(default = "default_on")]
     pub(crate) own_mailbox_face: bool,
+    /// Whether a tagged message's row in the list is washed with its first
+    /// tag's color (PR #383). On unless switched off.
+    #[serde(default = "default_on")]
+    pub(crate) tag_row_tint: bool,
+    /// The address book new contacts go to: an EDS source UID, or the
+    /// Hylki book's. Empty picks the first writable EDS book, else Hylki.
+    #[serde(default)]
+    pub(crate) contact_book: String,
     /// How dates are written (#32).
     #[serde(default)]
     pub(crate) date_style: DateStyle,
@@ -1143,6 +1151,10 @@ pub(crate) struct PrivacyFile {
     /// Whether the Reader View switch is shown in the reader header at all.
     #[serde(default = "default_on")]
     pub(crate) reader_switch: bool,
+    /// Whether the Light / Dark Mode switch, which draws one message in the
+    /// other scheme, is shown in the reader header (PR #386).
+    #[serde(default)]
+    pub(crate) theme_switch: bool,
     /// What Reader View does when a message is opened: keep the last choice,
     /// or start every message on or off.
     #[serde(default)]
@@ -1569,6 +1581,8 @@ impl Default for PrivacyFile {
             gravatar: false,
             avatars: true,
             own_mailbox_face: true,
+            tag_row_tint: true,
+            contact_book: String::new(),
             sender_logos: false,
             date_style: DateStyle::default(),
             clock_style: ClockStyle::default(),
@@ -1588,6 +1602,7 @@ impl Default for PrivacyFile {
             single_message_card: default_single_message_card(),
             reader_mode: false,
             reader_switch: true,
+            theme_switch: false,
             reader_default: ReaderDefault::default(),
             reader_zoom: default_reader_zoom(),
             card_attachments: true,
@@ -2003,6 +2018,7 @@ pub fn load_files_prefs() -> FilesPrefs {
 /// one condition read it, so a filters file written here still loads there
 /// (with the rest of the conditions ignored); `more` holds the others.
 #[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
+#[serde(from = "FilterRuleDisk", into = "FilterRuleDisk")]
 pub struct FilterRule {
     /// What to call the rule (#197). Optional: an unnamed rule is still
     /// listed by its conditions, the way every rule was before names
@@ -2052,11 +2068,125 @@ fn is_false(b: &bool) -> bool {
 
 /// One condition of a [`FilterRule`]: what to look at, how, and for what.
 #[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
+#[serde(from = "FilterConditionDisk", into = "FilterConditionDisk")]
 pub struct FilterCondition {
     pub field: FilterField,
     pub matcher: FilterMatch,
     /// Commas separate alternatives; any one of them matching is a match.
     pub value: String,
+}
+
+/// How `filters.toml` writes a sender-in-Contacts condition (PR #384). An
+/// older Hylki knows no such field and would drop the whole file over one,
+/// so the condition goes to disk as an empty From address match, which
+/// matches nothing there, with `contacts` beside it saying what it is.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+enum ContactCheck {
+    InContacts,
+    NotInContacts,
+}
+
+/// The field as written to disk, and the `contacts` key that goes with it.
+fn field_to_disk(field: FilterField) -> (FilterField, Option<ContactCheck>) {
+    match field {
+        FilterField::FromInContacts => (FilterField::FromAddress, Some(ContactCheck::InContacts)),
+        FilterField::FromNotInContacts => (FilterField::FromAddress, Some(ContactCheck::NotInContacts)),
+        other => (other, None),
+    }
+}
+
+/// The field a condition read from disk stands for.
+fn field_from_disk(field: FilterField, contacts: Option<ContactCheck>) -> FilterField {
+    match contacts {
+        Some(ContactCheck::InContacts) => FilterField::FromInContacts,
+        Some(ContactCheck::NotInContacts) => FilterField::FromNotInContacts,
+        None => field,
+    }
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
+struct FilterConditionDisk {
+    field: FilterField,
+    matcher: FilterMatch,
+    value: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    contacts: Option<ContactCheck>,
+}
+
+impl From<FilterConditionDisk> for FilterCondition {
+    fn from(d: FilterConditionDisk) -> Self {
+        FilterCondition { field: field_from_disk(d.field, d.contacts), matcher: d.matcher, value: d.value }
+    }
+}
+
+impl From<FilterCondition> for FilterConditionDisk {
+    fn from(c: FilterCondition) -> Self {
+        let (field, contacts) = field_to_disk(c.field);
+        let value = if contacts.is_some() { String::new() } else { c.value };
+        FilterConditionDisk { field, matcher: c.matcher, value, contacts }
+    }
+}
+
+/// [`FilterRule`] as `filters.toml` holds it: the same keys, plus `contacts`
+/// for a first condition that checks the address books.
+#[derive(serde::Serialize, serde::Deserialize)]
+struct FilterRuleDisk {
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    name: String,
+    account_email: String,
+    field: FilterField,
+    matcher: FilterMatch,
+    value: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    contacts: Option<ContactCheck>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    more: Vec<FilterCondition>,
+    #[serde(default, skip_serializing_if = "is_false")]
+    any: bool,
+    #[serde(default)]
+    dest_path: String,
+    #[serde(default)]
+    tag: String,
+    #[serde(default = "count_unread_default")]
+    count_unread: bool,
+}
+
+impl From<FilterRuleDisk> for FilterRule {
+    fn from(d: FilterRuleDisk) -> Self {
+        FilterRule {
+            name: d.name,
+            account_email: d.account_email,
+            field: field_from_disk(d.field, d.contacts),
+            matcher: d.matcher,
+            value: d.value,
+            more: d.more,
+            any: d.any,
+            dest_path: d.dest_path,
+            tag: d.tag,
+            count_unread: d.count_unread,
+        }
+    }
+}
+
+impl From<FilterRule> for FilterRuleDisk {
+    fn from(r: FilterRule) -> Self {
+        let (field, contacts) = field_to_disk(r.field);
+        let value = if contacts.is_some() { String::new() } else { r.value };
+        FilterRuleDisk {
+            name: r.name,
+            account_email: r.account_email,
+            field,
+            matcher: r.matcher,
+            value,
+            contacts,
+            more: r.more,
+            any: r.any,
+            dest_path: r.dest_path,
+            tag: r.tag,
+            count_unread: r.count_unread,
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
@@ -2074,17 +2204,32 @@ pub enum FilterField {
     /// too. Always a "contains" match, whatever the matcher says: that is
     /// the only search a server offers.
     Body,
+    /// The sender's address is in the address books: EDS and the local Hylki
+    /// book. Takes no text and ignores the matcher. Never matches while the
+    /// address books are unreadable or empty, so a book that failed to load
+    /// cannot make every sender look unknown.
+    FromInContacts,
+    /// The opposite of [`FilterField::FromInContacts`], with the same guard.
+    /// Neither is ever written under its own name: see [`ContactCheck`].
+    FromNotInContacts,
 }
 
 impl FilterField {
+    /// Whether the field needs no text and no matcher.
+    pub fn is_contact_check(self) -> bool {
+        matches!(self, FilterField::FromInContacts | FilterField::FromNotInContacts)
+    }
+
     /// Every field, in the order the editor lists them.
-    pub const ALL: [FilterField; 6] = [
+    pub const ALL: [FilterField; 8] = [
         FilterField::FromAddress,
         FilterField::FromName,
         FilterField::Subject,
         FilterField::Recipients,
         FilterField::ReplyTo,
         FilterField::Body,
+        FilterField::FromInContacts,
+        FilterField::FromNotInContacts,
     ];
 }
 
@@ -2119,6 +2264,9 @@ pub struct FilterInput<'a> {
     /// The body alternatives the server confirmed for this message (#191),
     /// lowercased as [`FilterCondition::alternatives`] hands them out.
     pub body_hits: &'a [String],
+    /// Lowercased addresses from the address books, or `None` when they are
+    /// unknown (unread, empty, or no rule asked for them).
+    pub contacts: Option<&'a std::collections::HashSet<String>>,
 }
 
 impl FilterCondition {
@@ -2135,6 +2283,11 @@ impl FilterCondition {
 
     /// Case-insensitive match against one message.
     pub fn matches(&self, input: &FilterInput) -> bool {
+        if self.field.is_contact_check() {
+            let Some(contacts) = input.contacts else { return false };
+            let known = contacts.contains(&input.from_addr.trim().to_lowercase());
+            return known == (self.field == FilterField::FromInContacts);
+        }
         let alts = Self::alternatives(&self.value);
         if alts.is_empty() {
             return false;
@@ -2154,7 +2307,9 @@ impl FilterCondition {
             FilterField::Recipients => input.recipients,
             FilterField::ReplyTo if input.reply_to.trim().is_empty() => input.from_addr,
             FilterField::ReplyTo => input.reply_to,
-            FilterField::Body => unreachable!(),
+            FilterField::Body | FilterField::FromInContacts | FilterField::FromNotInContacts => {
+                unreachable!()
+            }
         }
         .to_lowercase();
         // The recipients are a list. "Contains" reads it whole, names
@@ -2232,6 +2387,11 @@ impl FilterRule {
             .map(|c| format!("{:?} {:?} {}", c.field, c.matcher, c.value))
             .collect::<Vec<_>>()
             .join(if self.any { " or " } else { " and " })
+    }
+
+    /// Whether any condition looks the sender up in the address books.
+    pub fn needs_contacts(&self) -> bool {
+        self.conditions().iter().any(|c| c.field.is_contact_check())
     }
 
     /// The body alternatives this rule needs a server search for (#191).
@@ -3140,6 +3300,11 @@ pub fn load_preview_lines() -> u32 {
 }
 
 
+
+/// The address book chosen for new contacts (empty: automatic).
+pub fn load_contact_book() -> String {
+    load_privacy().contact_book
+}
 
 /// Whether Hylki starts at login (background running only).
 pub fn load_autostart() -> bool {
@@ -4188,6 +4353,69 @@ mod filter_tests {
         assert!(!r.matches(&headers("x", "x", "x", "x")));
         let r = rule(FilterField::Subject, FilterMatch::Contains, " , ,");
         assert!(!r.matches(&headers("x", "x", "x", "x")));
+    }
+
+    #[test]
+    fn contact_conditions_reach_disk_in_a_form_older_versions_read() {
+        let mut r = rule(FilterField::FromNotInContacts, FilterMatch::Contains, "");
+        r.more.push(cond(FilterField::FromInContacts, FilterMatch::Contains, ""));
+        r.more.push(cond(FilterField::Subject, FilterMatch::Contains, "sale"));
+        let text = toml::to_string_pretty(&FiltersFile { rules: vec![r.clone()] }).unwrap();
+        assert!(!text.contains("from_in_contacts") && !text.contains("from_not_in_contacts"), "{text}");
+        assert!(text.contains("contacts = \"not_in_contacts\""), "{text}");
+        let back: FiltersFile = toml::from_str(&text).unwrap();
+        assert_eq!(back.rules, vec![r]);
+
+        // What a version without the conditions reads: the same file, with
+        // `contacts` an unknown key it skips, is a From match on nothing.
+        #[derive(serde::Deserialize)]
+        struct OldCondition {
+            field: String,
+            value: String,
+        }
+        #[derive(serde::Deserialize)]
+        struct OldRule {
+            field: String,
+            value: String,
+            more: Vec<OldCondition>,
+        }
+        #[derive(serde::Deserialize)]
+        struct OldFile {
+            rules: Vec<OldRule>,
+        }
+        let old: OldFile = toml::from_str(&text).unwrap();
+        assert_eq!((old.rules[0].field.as_str(), old.rules[0].value.as_str()), ("from_address", ""));
+        assert_eq!(old.rules[0].more[0].field, "from_address");
+        assert_eq!(old.rules[0].more[0].value, "");
+        assert_eq!(old.rules[0].more[1].field, "subject");
+    }
+
+    #[test]
+    fn filters_check_the_sender_against_the_address_books() {
+        let book: std::collections::HashSet<String> =
+            ["ann@x.org".to_string()].into_iter().collect();
+        let with_book = |from_addr| FilterInput { from_addr, contacts: Some(&book), ..Default::default() };
+
+        let inside = rule(FilterField::FromInContacts, FilterMatch::Contains, "");
+        let outside = rule(FilterField::FromNotInContacts, FilterMatch::Contains, "");
+        assert!(inside.matches(&with_book("Ann@X.org ")));
+        assert!(!inside.matches(&with_book("bob@x.org")));
+        assert!(outside.matches(&with_book("bob@x.org")));
+        assert!(!outside.matches(&with_book("ann@x.org")));
+
+        // Unknown address books match neither way, so a book that failed to
+        // load cannot make every sender look unknown.
+        let none = FilterInput { from_addr: "bob@x.org", ..Default::default() };
+        assert!(!inside.matches(&none));
+        assert!(!outside.matches(&none));
+
+        // Combined with another condition, and reported to the caller.
+        let mut mixed = rule(FilterField::FromNotInContacts, FilterMatch::Contains, "");
+        mixed.more.push(cond(FilterField::Subject, FilterMatch::Contains, "sale"));
+        let input = FilterInput { from_addr: "bob@x.org", subject: "Big SALE", contacts: Some(&book), ..Default::default() };
+        assert!(mixed.matches(&input));
+        assert!(mixed.needs_contacts());
+        assert!(!rule(FilterField::Subject, FilterMatch::Contains, "x").needs_contacts());
     }
 
     #[test]

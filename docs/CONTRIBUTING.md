@@ -99,5 +99,5 @@ same rule applies either way: you are responsible for what your patch does.
 
 ## Releases
 
-Notes for each release are written as short highlights plus the generated list
-of what changed; the format is in [RELEASING.md](RELEASING.md).
+Notes for each release are a short list of new features, fixes and
+translations, one line each; the format is in [RELEASING.md](RELEASING.md).

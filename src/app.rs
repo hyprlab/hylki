@@ -590,6 +590,10 @@ pub struct AppModel {
     /// ahead of the STORE still shows the old state; while an entry is
     /// young the app's own state for that message and folder wins over it.
     pending_seen: HashMap<(u32, String, u32), (bool, std::time::Instant)>,
+    /// (account, folder path, uid, lower-cased keyword) → (on, when sent):
+    /// the same for tags. A folder list fetched ahead of the STORE took a
+    /// tag just set off the row until the next sync put it back.
+    pending_tags: HashMap<(u32, String, u32, String), (bool, std::time::Instant, String)>,
     /// Folders (account, folder) whose server unread count arrived while a
     /// read mark or a move was on its way and was set aside: synced again
     /// once those are stored. The count may also have been the only word of
@@ -726,6 +730,10 @@ pub struct AppModel {
     avatars: bool,
     /// Whether the mail you sent wears its mailbox's face rather than the
     /// circle any other sender would get (#189).
+    /// Whether tagged rows wear their tag's color (PR #383).
+    tag_row_tint: bool,
+    /// The address book new contacts go to (empty: automatic).
+    contact_book: String,
     own_mailbox_face: bool,
     /// Whether a sender's site icon may fill their circle (#30).
     sender_logos: bool,
@@ -880,6 +888,9 @@ pub struct AppModel {
     read_mark: config::ReadMark,
     /// Mail filter rules (#47), applied to inbox syncs.
     filters: Vec<config::FilterRule>,
+    /// The saved contacts' addresses, for rules on whether a sender is in
+    /// Contacts (PR #384).
+    saved_addresses: crate::contacts::SavedAddresses,
     /// Tags (#71): a name and color per keyword.
     tags: Vec<config::Tag>,
     /// The tag view, if that is the view — alongside `unified` and
@@ -927,6 +938,8 @@ pub struct AppModel {
     reader_mode: bool,
     /// The Reader View switch is shown in the reader header.
     reader_switch: bool,
+    /// The Light / Dark Mode switch is shown in the reader header (PR #386).
+    theme_switch: bool,
     /// What Reader View does when a message is opened (Settings).
     reader_default: config::ReaderDefault,
     /// Each conversation message lists its own attachments (#213).
@@ -1416,6 +1429,8 @@ pub enum AppMsg {
     /// Settings → Reading: the zoom every launch starts at.
     SetZoomDefault(u32),
     /// Settings: show the Reader View switch in the reader header.
+    /// Settings: show the Light / Dark Mode switch in the reader header.
+    SetThemeSwitchShown(bool),
     SetReaderSwitchShown(bool),
     /// Copy the message the reader is on into a new one (#232).
     EditAsNewCurrent,
@@ -1806,14 +1821,23 @@ pub enum AppMsg {
     OpenContacts,
     /// The background EDS read for the contacts view finished.
     ContactsLoaded(Vec<crate::contacts::ContactDetails>),
+    /// Read with the contacts: the books new contacts can go to, chosen one
+    /// first, and how many contacts the Hylki book holds.
+    ContactBooksLoaded { books: Vec<crate::contacts::Book>, local_count: usize },
     /// Right-click on the sidebar's Contacts row: the external app.
     LaunchGnomeContacts,
     /// Contact editor writes (run on a background thread against EDS).
     SaveContact { book_uid: String, vcard: String },
-    CreateContact(String),
+    /// A new contact, into the book picked in the editor (`None`: the
+    /// default one).
+    CreateContact { book_uid: Option<String>, vcard: String },
     DeleteContact { book_uid: String, uid: String },
     /// A contact write finished (`Some` = the error to show).
     ContactWriteDone(Option<String>),
+    /// `.vcf` files chosen in the Contacts page, to import into the Hylki book.
+    ImportContacts(Vec<std::path::PathBuf>),
+    /// The import finished.
+    ContactsImported(Result<crate::local_contacts::ImportOutcome, String>),
 }
 
 #[relm4::component(pub)]
@@ -2835,12 +2859,13 @@ impl SimpleComponent for AppModel {
                     ContactsPageOutput::SaveContact { book_uid, vcard } => {
                         AppMsg::SaveContact { book_uid, vcard }
                     }
-                    ContactsPageOutput::CreateContact { vcard } => {
-                        AppMsg::CreateContact(vcard)
+                    ContactsPageOutput::CreateContact { book_uid, vcard } => {
+                        AppMsg::CreateContact { book_uid, vcard }
                     }
                     ContactsPageOutput::DeleteContact { book_uid, uid } => {
                         AppMsg::DeleteContact { book_uid, uid }
                     }
+                    ContactsPageOutput::ImportContacts(paths) => AppMsg::ImportContacts(paths),
                     ContactsPageOutput::ShowPhoto { name, data } => {
                         // The lightbox routes by extension — a bare contact
                         // name sent the JPEG down the PDF path, where poppler
@@ -3070,6 +3095,7 @@ impl SimpleComponent for AppModel {
             related_ids: HashMap::new(),
             folder_unread: HashMap::new(),
             pending_seen: HashMap::new(),
+            pending_tags: HashMap::new(),
             dropped_unread: Default::default(),
             pending_moves: std::cell::RefCell::new(HashMap::new()),
             transfers: HashMap::new(),
@@ -3141,6 +3167,8 @@ impl SimpleComponent for AppModel {
             gravatar: prefs.gravatar,
             avatars: prefs.avatars,
             own_mailbox_face: prefs.own_mailbox_face,
+            tag_row_tint: prefs.tag_row_tint,
+            contact_book: prefs.contact_book.clone(),
             sender_logos: prefs.sender_logos,
             date_style: config::load_date_format().0,
             clock_style: config::load_date_format().1,
@@ -3211,6 +3239,7 @@ impl SimpleComponent for AppModel {
             // The demo (no accounts of its own) ships with tags and filter
             // rules, so its sidebar shows the Tags and Filtered Folders
             // sections; a staged tags.toml / filters.toml still wins.
+            saved_addresses: crate::contacts::SavedAddresses::default(),
             filters: {
                 let filters = config::load_filters();
                 if filters.is_empty() && demo_data { demo_filters() } else { filters }
@@ -3246,6 +3275,7 @@ impl SimpleComponent for AppModel {
             zoom: config::load_reader_zoom(),
             zoom_default: config::load_reader_zoom(),
             reader_switch: prefs.reader_switch,
+            theme_switch: prefs.theme_switch,
             reader_default: prefs.reader_default,
             card_attachments: prefs.card_attachments,
             drawer_enabled: prefs.attachment_drawer,
@@ -3308,6 +3338,9 @@ impl SimpleComponent for AppModel {
         };
         model.prime_from_cache();
         model.refresh_tag_css();
+        if model.filters.iter().any(|r| r.needs_contacts()) {
+            model.saved_addresses.refresh();
+        }
         model.message_list.emit(MessageListInput::SetTags(model.tags.clone()));
         model.message_view.emit(MessageViewInput::SetTags(model.tags.clone()));
         // What each mailbox of the user's own shows (#189), before the first
@@ -3461,6 +3494,7 @@ impl SimpleComponent for AppModel {
         model.message_view.emit(MessageViewInput::SetZoomDefault(model.zoom_default));
         model.message_view.emit(MessageViewInput::SetZoom(model.zoom));
         model.message_view.emit(MessageViewInput::SetReaderSwitchShown(model.reader_switch));
+        model.message_view.emit(MessageViewInput::SetThemeSwitchShown(model.theme_switch));
         model.message_view.emit(MessageViewInput::SetReaderDefault(model.effective_reader_default()));
         model
             .message_view
@@ -5043,6 +5077,18 @@ impl SimpleComponent for AppModel {
                         }
                     });
                 }
+                // HYLKI_SHOWCASE_CONTACTS=list|new opens Contacts at 3s,
+                // and with "new" its editor for a new contact at 5s.
+                if let Ok(which) = std::env::var("HYLKI_SHOWCASE_CONTACTS") {
+                    let s = sender.clone();
+                    gtk::glib::timeout_add_seconds_local_once(3, move || s.input(AppMsg::OpenContacts));
+                    if which == "new" {
+                        let page = model.contacts_page.sender().clone();
+                        gtk::glib::timeout_add_seconds_local_once(5, move || {
+                            let _ = page.send(ContactsPageInput::NewContact);
+                        });
+                    }
+                }
                 // HYLKI_SHOWCASE_SETTINGS=accounts|prefs opens the Settings
                 // window on that panel (about: the About window) and
                 // captures it instead of the main window, so its pages can
@@ -5325,8 +5371,8 @@ impl SimpleComponent for AppModel {
                 self.attachments_loading = false;
                 self.sync_attachment_drawer();
                 self.message_list.emit(MessageListInput::SetSelected(None));
-                self.message_list.emit(MessageListInput::SetColorize(self.accounts.len() > 1));
                 self.message_list.emit(MessageListInput::ResetPaging);
+                self.message_list.emit(MessageListInput::SetColorize(self.accounts.len() > 1));
                 self.show_message(None, false);
                 self.push_outbox();
             }
@@ -7122,6 +7168,93 @@ impl SimpleComponent for AppModel {
 
             AppMsg::ListOverflowMenu => self.show_list_overflow_menu(&sender),
 
+            AppMsg::Pref(PrefOutput::SetContactBook(uid)) => {
+                if pref!(self.contact_book = uid) && self.showing_contacts {
+                    reload_contacts(&sender, 0);
+                }
+            }
+            AppMsg::Pref(PrefOutput::LoadContactBooks) => {
+                if demo_mode() {
+                    sender.input(AppMsg::ContactBooksLoaded { books: crate::contacts::demo_books(), local_count: 1 });
+                    return;
+                }
+                let s = sender.clone();
+                std::thread::spawn(move || {
+                    s.input(AppMsg::ContactBooksLoaded {
+                        books: crate::contacts::writable_books(),
+                        local_count: crate::local_contacts::count(),
+                    });
+                });
+            }
+            AppMsg::Pref(PrefOutput::ImportLocalContacts) => {
+                let s = sender.clone();
+                crate::ui::contacts_page::choose_vcf_files(self.dialog_parent().as_ref(), move |paths| {
+                    s.input(AppMsg::ImportContacts(paths));
+                });
+            }
+            AppMsg::Pref(PrefOutput::ExportLocalContacts) => {
+                let dialog = gtk::FileDialog::builder()
+                    .title(&i18n("Export Contacts"))
+                    .initial_name("hylki-contacts.vcf")
+                    .build();
+                let notif = self.notifications.sender().clone();
+                dialog.save(self.dialog_parent().as_ref(), gtk::gio::Cancellable::NONE, move |res| {
+                    let Ok(file) = res else { return };
+                    let Some(path) = file.path() else { return };
+                    let notif = notif.clone();
+                    std::thread::spawn(move || {
+                        let _ = notif.send(match crate::local_contacts::export_to(&path) {
+                            Ok(n) => NotifyInput::SetStatus(ni18n_f(
+                                "{n} contact exported to {path}",
+                                "{n} contacts exported to {path}",
+                                n as u32,
+                                &[("n", &n.to_string()), ("path", &path.display().to_string())],
+                            )),
+                            Err(e) => NotifyInput::Push {
+                                text: i18n_f("Could not export contacts: {e}", &[("e", &e)]),
+                                error: true,
+                                connectivity: false,
+                            },
+                        });
+                    });
+                });
+            }
+            AppMsg::Pref(PrefOutput::DeleteAllLocalContacts) => {
+                let n = crate::local_contacts::count();
+                let dialog = adw::MessageDialog::new(
+                    self.dialog_parent().as_ref(),
+                    Some(i18n("Delete All Contacts?").as_str()),
+                    Some(&ni18n_f(
+                        "The {n} contact in the Hylki address book is deleted. This cannot be undone; export the book first to keep a copy.",
+                        "The {n} contacts in the Hylki address book are deleted. This cannot be undone; export the book first to keep a copy.",
+                        n as u32,
+                        &[("n", &n.to_string())],
+                    )),
+                );
+                dialog.add_response("cancel", &i18n("Cancel"));
+                dialog.add_response("delete", &i18n("Delete All"));
+                dialog.set_response_appearance("delete", adw::ResponseAppearance::Destructive);
+                dialog.set_default_response(Some("cancel"));
+                dialog.set_close_response("cancel");
+                let s = sender.clone();
+                dialog.connect_response(None, move |_, resp| {
+                    if resp != "delete" {
+                        return;
+                    }
+                    let s = s.clone();
+                    std::thread::spawn(move || {
+                        let err = crate::local_contacts::delete_all().err();
+                        crate::contacts::local_changed();
+                        s.input(AppMsg::ContactWriteDone(err));
+                    });
+                });
+                dialog.present();
+            }
+            AppMsg::Pref(PrefOutput::SetTagRowTint(on)) => {
+                if pref!(self.tag_row_tint = on) {
+                    self.refresh_tag_css();
+                }
+            }
             AppMsg::Pref(PrefOutput::SetOwnMailboxFace(on)) => {
                 if pref!(self.own_mailbox_face = on) {
                     self.refresh_own_faces();
@@ -7961,6 +8094,14 @@ impl SimpleComponent for AppModel {
                     self.message_view.emit(MessageViewInput::SetReaderSwitchShown(on));
                     for p in self.popouts.values() {
                         p.controller.emit(MessageWindowInput::SetReaderSwitchShown(on));
+                    }
+                }
+            }
+            AppMsg::SetThemeSwitchShown(on) => {
+                if pref!(self.theme_switch = on) {
+                    self.message_view.emit(MessageViewInput::SetThemeSwitchShown(on));
+                    for p in self.popouts.values() {
+                        p.controller.emit(MessageWindowInput::SetThemeSwitchShown(on));
                     }
                 }
             }
@@ -8999,6 +9140,9 @@ impl SimpleComponent for AppModel {
             AppMsg::SetFilters(rules) => {
                 config::save_filters(&rules);
                 let listed_before = self.unified_folder_keys();
+                if rules.iter().any(|r| r.needs_contacts()) {
+                    self.saved_addresses.refresh();
+                }
                 self.filters = rules;
                 // A rule opting its folder in or out of All Inboxes changes
                 // the sidebar's Filtered Folders section; nothing else
@@ -9071,8 +9215,8 @@ impl SimpleComponent for AppModel {
                 self.sync_attachment_drawer();
                 self.show_message(None, false);
                 self.message_list.emit(MessageListInput::SetSelected(None));
-                self.message_list.emit(MessageListInput::SetColorize(true));
                 self.message_list.emit(MessageListInput::ResetPaging);
+                self.message_list.emit(MessageListInput::SetColorize(true));
                 self.message_list.emit(MessageListInput::SetShowRecipient(false));
                 self.message_list.emit(MessageListInput::SetRestorable(false));
                 self.message_list.emit(MessageListInput::SetInJunk(false));
@@ -10025,6 +10169,7 @@ impl SimpleComponent for AppModel {
                 // A list fetched ahead of a read mark still in the worker's
                 // queue shows the message unread again; keep the app's state.
                 let messages = self.apply_pending_seen(account_id, folder_id, messages);
+                let messages = self.apply_pending_tags(account_id, folder_id, messages);
                 // A message a move has just brought home arrives with a new
                 // UID — that is what a move does — which leaves its body filed
                 // under the id the old one became. Move the body across before
@@ -10851,19 +10996,24 @@ impl SimpleComponent for AppModel {
                 // Read EDS off the UI thread (SQLite + photo decoding); the
                 // page shows its loading face until the list lands.
                 self.contacts_page.emit(ContactsPageInput::SetLoading);
-                let s = sender.clone();
-                std::thread::spawn(move || {
-                    let contacts = if demo_mode() {
-                        crate::contacts::demo_contacts()
-                    } else {
-                        crate::contacts::read_contact_details()
-                    };
-                    s.input(AppMsg::ContactsLoaded(contacts));
-                });
+                reload_contacts(&sender, 0);
+            }
+
+            AppMsg::ContactBooksLoaded { books, local_count } => {
+                if let Some(p) = &self.prefs {
+                    p.emit(PrefInput::SetContactBooks(books.clone()));
+                    p.emit(PrefInput::SetLocalContactCount(local_count));
+                }
+                self.contacts_page.emit(ContactsPageInput::SetBooks(books));
             }
 
             AppMsg::ContactsLoaded(contacts) => {
                 self.contacts_page.emit(ContactsPageInput::SetContacts(contacts));
+                // A contact was saved, deleted or imported: the rules on
+                // whether a sender is in Contacts should know.
+                if self.filters.iter().any(|r| r.needs_contacts()) {
+                    self.saved_addresses.refresh();
+                }
             }
 
             AppMsg::LaunchGnomeContacts => crate::ui::contacts_browser::launch_gnome_contacts(),
@@ -10876,11 +11026,16 @@ impl SimpleComponent for AppModel {
                 });
             }
 
-            AppMsg::CreateContact(vcard) => {
+            AppMsg::CreateContact { book_uid, vcard } => {
                 let s = sender.clone();
                 std::thread::spawn(move || {
-                    let result = match crate::contacts::writable_books().first() {
-                        Some(book) => crate::contacts::create_contact(&book.uid, &vcard),
+                    // No book picked (none was listed yet): the default one.
+                    let book_uid = match book_uid {
+                        Some(uid) => Some(uid),
+                        None => crate::contacts::writable_books().first().map(|b| b.uid.clone()),
+                    };
+                    let result = match book_uid {
+                        Some(uid) => crate::contacts::create_contact(&uid, &vcard),
                         None => Err(i18n("No address book available")),
                     };
                     s.input(AppMsg::ContactWriteDone(result.err()));
@@ -10906,12 +11061,41 @@ impl SimpleComponent for AppModel {
                 // Success or not, re-read so the card shows what EDS holds.
                 // A short pause lets EDS flush the write to its SQLite cache
                 // (that is what the read goes through).
+                reload_contacts(&sender, 500);
+            }
+
+            AppMsg::ImportContacts(paths) => {
                 let s = sender.clone();
                 std::thread::spawn(move || {
-                    std::thread::sleep(std::time::Duration::from_millis(500));
-                    let contacts = crate::contacts::read_contact_details();
-                    s.input(AppMsg::ContactsLoaded(contacts));
+                    s.input(AppMsg::ContactsImported(crate::contacts::import_vcf_files(&paths)));
                 });
+            }
+
+            AppMsg::ContactsImported(result) => {
+                let (text, error) = match &result {
+                    Err(e) => (i18n_f("Could not import contacts: {e}", &[("e", e)]), true),
+                    Ok(o) => import_summary(o),
+                };
+                // The bar opens for errors only; a good import shows in the
+                // list, and its counts wait in the bar for whoever opens it.
+                if error {
+                    self.notifications.emit(NotifyInput::Push { text, error, connectivity: false });
+                } else {
+                    self.notifications.emit(NotifyInput::SetStatus(text));
+                }
+                if let Ok(o) = &result {
+                    if !o.failed_files.is_empty() {
+                        self.notifications.emit(NotifyInput::Push {
+                            text: i18n_f(
+                                "Could not read: {files}",
+                                &[("files", &o.failed_files.join("; "))],
+                            ),
+                            error: true,
+                            connectivity: false,
+                        });
+                    }
+                }
+                reload_contacts(&sender, 0);
             }
 
             // The rest of Preferences' outputs are mapped to their own
@@ -10919,6 +11103,49 @@ impl SimpleComponent for AppModel {
             AppMsg::Pref(_) => {}
         }
     }
+}
+
+/// Read the contacts, the books new ones can go to and the Hylki book's
+/// size off the main thread, after `delay_ms` (EDS takes a moment to flush
+/// a write to the cache the read goes through).
+fn reload_contacts(sender: &ComponentSender<AppModel>, delay_ms: u64) {
+    let s = sender.clone();
+    std::thread::spawn(move || {
+        std::thread::sleep(std::time::Duration::from_millis(delay_ms));
+        if demo_mode() {
+            s.input(AppMsg::ContactsLoaded(crate::contacts::demo_contacts()));
+            s.input(AppMsg::ContactBooksLoaded { books: crate::contacts::demo_books(), local_count: 1 });
+            return;
+        }
+        s.input(AppMsg::ContactsLoaded(crate::contacts::read_contact_details()));
+        s.input(AppMsg::ContactBooksLoaded {
+            books: crate::contacts::writable_books(),
+            local_count: crate::local_contacts::count(),
+        });
+    });
+}
+
+/// The notification text for a finished contacts import, and whether it is an error.
+fn import_summary(o: &crate::local_contacts::ImportOutcome) -> (String, bool) {
+    if o.added + o.updated == 0 {
+        return (i18n("No contacts were found in the selected files"), o.errors > 0);
+    }
+    let counts = [
+        ("added", o.added.to_string()),
+        ("updated", o.updated.to_string()),
+        ("skipped", o.skipped.to_string()),
+        ("errors", o.errors.to_string()),
+    ];
+    let args: Vec<(&str, &str)> = counts.iter().map(|(k, v)| (*k, v.as_str())).collect();
+    let text = if o.skipped + o.errors > 0 {
+        i18n_f(
+            "Contacts imported: {added} new, {updated} updated, {skipped} skipped, {errors} damaged",
+            &args,
+        )
+    } else {
+        i18n_f("Contacts imported: {added} new, {updated} updated", &args)
+    };
+    (text, false)
 }
 
 /// How long a conversation waits for its outstanding bodies before painting what
@@ -11178,6 +11405,8 @@ impl AppModel {
             gravatar: self.gravatar,
             avatars: self.avatars,
             own_mailbox_face: self.own_mailbox_face,
+            contact_book: self.contact_book.clone(),
+            tag_row_tint: self.tag_row_tint,
             sender_logos: self.sender_logos,
             date_style: self.date_style,
             clock_style: self.clock_style,
@@ -11197,6 +11426,7 @@ impl AppModel {
             single_message_card: self.single_message_card,
             reader_mode: self.reader_mode,
             reader_switch: self.reader_switch,
+            theme_switch: self.theme_switch,
             reader_default: self.reader_default,
             reader_zoom: self.zoom_default,
             card_attachments: self.card_attachments,
@@ -11810,6 +12040,11 @@ impl AppModel {
         self.update_busy_indicator();
         self.show_message(None, false);
         self.message_list.emit(MessageListInput::SetLoading);
+        // The sidebar still shows the view selected; it picks it again, and
+        // says so, once the account behind it has listed its folders.
+        // Without this the list stayed empty until another folder was
+        // clicked and the first one clicked again.
+        self.sidebar.emit(SidebarInput::Reannounce);
         self.rebuild_sidebar();
         self.spawn_workers(sender);
     }
@@ -14082,8 +14317,8 @@ impl AppModel {
         self.sync_attachment_drawer();
         self.show_message(None, false);
         self.message_list.emit(MessageListInput::SetSelected(None));
-        self.message_list.emit(MessageListInput::SetColorize(true));
         self.message_list.emit(MessageListInput::ResetPaging);
+        self.message_list.emit(MessageListInput::SetColorize(true));
         // A Sent view's rows all come from you — name the recipients.
         self.message_list.emit(MessageListInput::SetShowRecipient(
             view == UnifiedView::Kind(FolderKind::Sent),
@@ -14392,6 +14627,34 @@ impl AppModel {
         messages
     }
 
+    /// [`apply_pending_seen`] for tags: a list fetched before a tag reached
+    /// the server keeps the tag as the user just set it.
+    fn apply_pending_tags(&mut self, account_id: u32, folder_id: u32, mut messages: Vec<Message>) -> Vec<Message> {
+        self.pending_tags.retain(|_, (_, at, _)| at.elapsed() < PENDING_SEEN_MAX);
+        if !self.pending_tags.keys().any(|(a, _, _, _)| *a == account_id) {
+            return messages;
+        }
+        let Some(path) = self
+            .folders
+            .get(&account_id)
+            .and_then(|fs| fs.iter().find(|f| f.id == folder_id))
+            .map(|f| f.path.clone())
+        else {
+            return messages;
+        };
+        for ((a, p, uid, _), (on, _, kw)) in &self.pending_tags {
+            if *a != account_id || *p != path {
+                continue;
+            }
+            for m in messages.iter_mut().filter(|m| m.uid == *uid) {
+                if m.has_keyword(kw) != *on {
+                    m.set_keyword(kw, *on);
+                }
+            }
+        }
+        messages
+    }
+
     /// Switch the message list to a folder: reset the view, show its cached
     /// messages instantly (if any), and kick off a background sync. Shared by the
     /// sidebar selection and the "open message from notification" flow.
@@ -14417,8 +14680,8 @@ impl AppModel {
         self.sync_attachment_drawer();
         self.attachments_loading = false;
         self.message_list.emit(MessageListInput::SetSelected(None));
-        self.message_list.emit(MessageListInput::SetColorize(false));
         self.message_list.emit(MessageListInput::ResetPaging);
+        self.message_list.emit(MessageListInput::SetColorize(false));
         // A Sent folder's rows all come from you — name the recipients (#27).
         let is_sent = self
             .folders
@@ -14718,6 +14981,7 @@ impl AppModel {
             zoom: self.zoom,
             zoom_default: self.zoom_default,
             reader_switch: self.reader_switch,
+            theme_switch: self.theme_switch,
             reader_default: self.effective_reader_default(),
             tags: self.tags.clone(),
             pgp_labels: self.pgp_labels,
@@ -18091,8 +18355,9 @@ impl AppModel {
         messages
     }
 
-    /// The tag colors as CSS: `.tag-<keyword>` fills (chips), and the same
-    /// class on a `.tag-tint` widget colors its glyph instead.
+    /// The tag colors as CSS: `.tag-<keyword>` fills (chips), the same
+    /// class on a `.tag-tint` widget colors its glyph instead, and with the
+    /// setting on, `.rowtint-tag-<keyword>` washes a message row.
     fn refresh_tag_css(&self) {
         let mut css = String::new();
         for t in &self.tags {
@@ -18104,6 +18369,17 @@ impl AppModel {
                  .tag-tint.{class} {{ color: {color}; background-color: transparent; }}\n",
                 color = t.color,
             ));
+            // Rows carry their `rowtint-` class whatever the setting; only
+            // the rules come and go, so switching it restyles no row by hand.
+            if self.tag_row_tint {
+                css.push_str(&format!(
+                    ".message-list > row:not(:selected) > .message-item.rowtint-{class}:not(.swiping) .message-row {{ \
+                       background-color: alpha({color}, 0.18); }} \
+                     .message-list > row:hover:not(:selected) > .message-item.rowtint-{class}:not(.swiping) .message-row {{ \
+                       background-color: alpha({color}, 0.28); }}\n",
+                    color = t.color,
+                ));
+            }
         }
         self.tag_provider.load(css);
     }
@@ -18116,6 +18392,10 @@ impl AppModel {
             return;
         }
         let Some(path) = self.resolve_folder_path(m) else { return };
+        self.pending_tags.insert(
+            (m.account_id, path.clone(), m.uid, keyword.to_lowercase()),
+            (add, std::time::Instant::now(), keyword.to_string()),
+        );
         self.send_to(m.account_id, MailRequest::SetKeyword {
             path,
             uid: m.uid,
@@ -18174,6 +18454,13 @@ impl AppModel {
                 self.message_list.emit(MessageListInput::SetMessages { messages: msgs.clone() });
             }
         }
+    }
+
+    /// The window a dialog opened from Settings belongs to: Settings while
+    /// it is open, else the main window.
+    fn dialog_parent(&self) -> Option<gtk::Window> {
+        let prefs = self.prefs.as_ref().map(|p| p.widget().clone().upcast::<gtk::Window>());
+        prefs.filter(|w| w.is_visible()).or_else(|| Some(self.window.clone().upcast()))
     }
 
     /// Dialog to add an email to GNOME Contacts (choosing the address book).
@@ -18281,6 +18568,7 @@ impl AppModel {
             gravatar: self.gravatar,
             avatars: self.avatars,
             own_mailbox_face: self.own_mailbox_face,
+            tag_row_tint: self.tag_row_tint,
             sender_logos: self.sender_logos,
             date_style: self.date_style,
             clock_style: self.clock_style,
@@ -18297,6 +18585,7 @@ impl AppModel {
             pgp_labels: self.pgp_labels,
             single_message_card: self.single_message_card,
             reader_switch: self.reader_switch,
+            theme_switch: self.theme_switch,
             reader_default: self.reader_default,
             reader_zoom: self.zoom_default,
             card_attachments: self.card_attachments,
@@ -18402,6 +18691,7 @@ impl AppModel {
             .launch(init)
             .forward(sender.input_sender(), |out| match out {
                 PrefOutput::SetReaderSwitch(on) => AppMsg::SetReaderSwitchShown(on),
+                PrefOutput::SetThemeSwitch(on) => AppMsg::SetThemeSwitchShown(on),
                 PrefOutput::SetReaderZoom(z) => AppMsg::SetZoomDefault(z),
                 PrefOutput::PageShown(id) => AppMsg::SettingsPageShown(id),
                 PrefOutput::Closed => AppMsg::ClosePreferences,
@@ -19344,6 +19634,9 @@ impl AppModel {
             Vec::new()
         };
         let hits = self.body_hits.get(&(account_id, folder_id));
+        // The address books are read once per pass, and only when a rule asks
+        // for them. An empty read counts as unknown: see FilterField::FromInContacts.
+        let contacts = if rules.iter().any(|r| r.needs_contacts()) { self.saved_addresses.get() } else { None };
         for mut m in messages {
             if own.iter().any(|a| a.eq_ignore_ascii_case(&m.from_addr)) {
                 kept.push(m);
@@ -19365,6 +19658,7 @@ impl AppModel {
                 // preview is what a sync brings for every message.
                 body: if m.body.is_empty() { &m.preview } else { &m.body },
                 body_hits,
+                contacts: contacts.as_deref(),
             };
             let matching: Vec<&&config::FilterRule> = rules
                 .iter()

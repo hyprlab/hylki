@@ -79,6 +79,9 @@ In the attachment drawer, <kbd>Space</kbd> or <kbd>Enter</kbd> previews the
 highlighted attachment. In the attachments gallery's preview, <kbd>←</kbd> and
 <kbd>→</kbd> step to the previous and next one, and <kbd>Esc</kbd> closes it.
 
+In the Contacts view, <kbd>Delete</kbd> asks to delete the contact shown,
+while the contact list has the focus.
+
 <kbd>Ctrl+F</kbd> in the Settings window opens its search, and closes it
 again. <kbd>Esc</kbd> closes it too, wherever the focus is in the window,
 including after you have picked a result.

@@ -8,7 +8,7 @@ use gtk::glib;
 use relm4::prelude::*;
 
 use crate::models::{Message, ThreadSummary};
-use crate::ui::context_menu::{show_context_menu, show_context_menu_with_header, MenuEntry};
+use crate::ui::context_menu::{show_context_menu_popover, MenuEntry};
 use crate::i18n::i18n;
 use crate::ui::message_row::{RowData, RowMeta, RowShared};
 pub use crate::ui::message_row::{tag_menu_entries, RowAction};
@@ -452,6 +452,27 @@ pub struct SourceThreads {
     members: std::collections::HashMap<(u32, String), Vec<usize>>,
 }
 
+/// Run `f` once, when `clock` has painted its next frame, or after a short
+/// wait for a window that is not drawing.
+fn after_next_paint(clock: &gtk::gdk::FrameClock, f: impl FnOnce() + 'static) {
+    let f = Rc::new(std::cell::Cell::new(Some(Box::new(f) as Box<dyn FnOnce()>)));
+    let handler = Rc::new(std::cell::Cell::new(None::<glib::SignalHandlerId>));
+    let once = {
+        let (f, handler, clock) = (f.clone(), handler.clone(), clock.clone());
+        move || {
+            if let Some(id) = handler.take() {
+                clock.disconnect(id);
+            }
+            if let Some(f) = f.take() {
+                f();
+            }
+        }
+    };
+    let on_paint = once.clone();
+    handler.set(Some(clock.connect_after_paint(move |_| on_paint())));
+    glib::timeout_add_local_once(std::time::Duration::from_millis(100), once);
+}
+
 /// Where [`compute_thread_keys`] files a message: its account, folder and id.
 /// The id alone is a UID, which only means something inside one folder, and a
 /// search over every folder holds the same UID many times; keyed without the
@@ -474,6 +495,12 @@ pub struct MessageList {
     /// copy, fresh thread links, a view switch's flag changes) collapse into
     /// one rebuild instead of one each.
     rebuild_queued: Option<bool>,
+    /// Another view was opened: its first rebuild waits for a frame, and
+    /// fills the rows for the new look in passing (#401).
+    switched: bool,
+    /// The look changed during a switch and the rows on screen were left
+    /// for the rebuild to fill.
+    look_stale: std::cell::Cell<bool>,
     /// A `SelectAndLoad` that arrived while a rebuild was queued: the rows it
     /// must find are not there yet, so it waits for that rebuild and runs
     /// after it (a notification click follows the folder's list into the
@@ -1120,13 +1147,9 @@ impl SimpleComponent for MessageList {
                         // Leaving an empty entry closes too.
                         add_controller = gtk::EventControllerFocus {
                             connect_leave[sender] => move |ctl| {
-                                let empty = ctl
-                                    .widget()
-                                    .and_downcast_ref::<gtk::SearchEntry>()
-                                    .is_some_and(|e| e.text().trim().is_empty());
-                                if empty {
-                                    sender.input(MessageListInput::CloseSearch);
-                                }
+                                let Some(entry) = ctl.widget().and_downcast::<gtk::SearchEntry>() else { return };
+                                let sender = sender.clone();
+                                crate::ui::close_if_focus_left_row(&entry, move || sender.input(MessageListInput::CloseSearch));
                             },
                         },
                     },
@@ -1367,6 +1390,8 @@ impl SimpleComponent for MessageList {
             shared,
             input: sender.input_sender().clone(),
             rebuild_queued: None,
+            switched: false,
+            look_stale: Default::default(),
             pending_select: None,
             late_select: None,
             all: Vec::new(),
@@ -1557,11 +1582,14 @@ impl SimpleComponent for MessageList {
             }
             MessageListInput::ResetPaging => {
                 // Folder switch: drop any active search, scrolled to the top.
+                self.switched = true;
                 self.window = LIST_WINDOW;
                 self.late_select = None;
                 self.clear_search();
                 self.emitted_thread.clear();
-                self.scroll_top();
+                // However the new view's list arrives, a rebuild follows, and
+                // the top is scrolled to then, not over the old rows first.
+                self.queue_rebuild(false);
             }
             MessageListInput::SetIndexComplete(complete) => {
                 self.index_complete = complete;
@@ -1605,6 +1633,7 @@ impl SimpleComponent for MessageList {
                 }
             }
             MessageListInput::RunQueuedRebuild => {
+                self.switched = false;
                 if let Some(preserve) = self.rebuild_queued.take() {
                     self.rebuild();
                     if !preserve {
@@ -2805,7 +2834,30 @@ impl MessageList {
             vec![item(RowAction::ViewSource, &i18n("View Source"), "code-symbolic")],
         ];
 
-        show_context_menu(&self.list_view, x, y, sections);
+        self.popup_menu(x, y, None, sections);
+    }
+
+    /// Open a menu on the list, keeping the list where it was scrolled. The
+    /// popover hands focus back to the list view as it closes, and the list
+    /// view then scrolls to the row its focus starts from, the first one:
+    /// every right-click menu, tagging included, sent the list to the top.
+    fn popup_menu(&self, x: f64, y: f64, header: Option<&str>, sections: Vec<Vec<MenuEntry>>) {
+        let before = self.list_view.root().and_then(|r| gtk::prelude::RootExt::focus(&r));
+        let popover = show_context_menu_popover(&self.list_view, x, y, header, sections);
+        let Some(scroller) = self.scroller.clone() else { return };
+        let adj = scroller.vadjustment();
+        let pos = adj.value();
+        popover.connect_closed(move |_| {
+            // Focus goes back where it was, and the list to where it was
+            // scrolled, once GTK has done its own focus hand-back.
+            let (adj, before) = (adj.clone(), before.clone());
+            gtk::glib::idle_add_local_once(move || {
+                if let Some(w) = before.filter(|w| w.root().is_some() && w.is_mapped()) {
+                    w.grab_focus();
+                }
+                adj.set_value(pos);
+            });
+        });
     }
 
     /// The messages of the selected rows.
@@ -2909,13 +2961,7 @@ impl MessageList {
             },
         ];
 
-        show_context_menu_with_header(
-            &self.list_view,
-            x,
-            y,
-            Some(&format!("{} selected", self.selection_count)),
-            sections,
-        );
+        self.popup_menu(x, y, Some(&format!("{} selected", self.selection_count)), sections);
     }
 
     /// After a rebuild: a lone selected conversation head whose thread has
@@ -3024,6 +3070,13 @@ impl MessageList {
         if let Some(s) = &self.scroller {
             s.vadjustment().set_value(0.0);
         }
+        // The view keeps its place by a row. A list that grows under it
+        // before it is laid out (another folder in kept rows, #401) would
+        // keep the old last row in view, and the adjustment does not reach
+        // past the old size yet: move the view's own anchor too.
+        if self.shared.model.len() > 0 {
+            self.list_view.scroll_to(0, gtk::ListScrollFlags::NONE, None);
+        }
     }
 
     /// The list's settings as every row reads them, pushed to the rows on
@@ -3055,7 +3108,12 @@ impl MessageList {
             look.tags_gen = self.tags_gen;
             look.widths = self.fitted_widths();
         }
-        self.shared.refresh_all();
+        // The rows on screen are about to be another view's, filled anyway.
+        if self.switched {
+            self.look_stale.set(true);
+        } else {
+            self.shared.refresh_all();
+        }
         self.sync_headings();
     }
 
@@ -3800,7 +3858,10 @@ impl MessageList {
         // Only what changed reaches the view: rows that show the same message
         // stay where they are, with whatever they were doing (#323).
         let t_rows = std::time::Instant::now();
-        self.shared.model.replace(rows);
+        let stale = self.look_stale.take();
+        if !self.shared.model.replace(rows, stale) && stale {
+            self.shared.refresh_all();
+        }
         self.select_current();
 
         // Expanded conversations indent their member cards; give the pane the
@@ -3860,15 +3921,29 @@ impl MessageList {
         let first = self.rebuild_queued.is_none();
         let preserve = self.rebuild_queued.map_or(preserve_scroll, |p| p && preserve_scroll);
         self.rebuild_queued = Some(preserve);
-        if first {
-            // Ahead of GTK's layout and paint, so the old rows are never
-            // laid out one more time for nothing before they go.
-            let input = self.input.clone();
+        if !first {
+            return;
+        }
+        let input = self.input.clone();
+        let run = move || {
             glib::idle_add_local_full(glib::Priority::HIGH, move || {
                 let _ = input.send(MessageListInput::RunQueuedRebuild);
                 glib::ControlFlow::Break
             });
+        };
+        // Another view: the frame that moves the sidebar's highlight is
+        // drawn first, and the new rows a frame later, so the click shows at
+        // once rather than after the list is filled and laid out (#401).
+        if self.switched || !preserve_scroll {
+            if let Some(clock) = self.list_view.frame_clock() {
+                after_next_paint(&clock, run);
+                self.list_view.queue_draw();
+                return;
+            }
         }
+        // Otherwise ahead of GTK's layout and paint, so the old rows are
+        // never laid out one more time for nothing before they go.
+        run();
     }
 
     /// The shown row (a thread head) whose conversation holds the message
@@ -4060,7 +4135,7 @@ mod tests {
         column_sort, compute_thread_keys, correspondents, heads_its_row, message_cmp, SortOrder, latest_elsewhere, nested_members, reader_conversation,
         row_for_reader_key, thread_slot, unasked_threads,
     };
-    use crate::ui::message_row::{row_edits, swipe_progress_px, RowEdit, SWIPE_ARM, SWIPE_MAX};
+    use crate::ui::message_row::{row_edits, swap_wanted, swipe_progress_px, RowEdit, SWIPE_ARM, SWIPE_MAX};
     use crate::models::Message;
 
     /// Apply `row_edits` to `old` the way the model applies them, then add
@@ -4118,6 +4193,34 @@ mod tests {
         let (rows, cost) = apply_edits(&old, &other);
         assert_eq!(rows, other);
         assert!(cost >= 1000);
+    }
+
+    /// #401: a list that is mostly another goes to the view as one swap, so
+    /// it keeps its row widgets; small changes still go row by row.
+    #[test]
+    fn another_list_is_swapped_in_whole() {
+        let swaps = |old: &[u32], new: &[u32]| {
+            let (edits, tail) = row_edits(old, new);
+            swap_wanted(&edits, old.len(), tail, new.len())
+        };
+        let old: Vec<u32> = (0..1000).collect();
+        let mut fresh = vec![5000, 5001];
+        fresh.extend(0..1000);
+        assert!(!swaps(&old, &fresh));
+        let mut lifted = vec![700];
+        lifted.extend((0..1000).filter(|&n| n != 700));
+        assert!(!swaps(&old, &lifted));
+        let gone: Vec<u32> = (0..1000).filter(|n| ![10, 11, 500].contains(n)).collect();
+        assert!(!swaps(&old, &gone));
+        assert!(!swaps(&old, &old));
+        assert!(!swaps(&old, &(0..1500).collect::<Vec<_>>()));
+        assert!(!swaps(&[], &old));
+        assert!(!swaps(&old, &[]));
+        // Another account's folder.
+        assert!(swaps(&old, &(2000..3000).collect::<Vec<_>>()));
+        // All Inboxes to one of its accounts: every other row goes.
+        let one: Vec<u32> = (0..1000).filter(|n| n % 2 == 0).collect();
+        assert!(swaps(&old, &one));
     }
 
     /// #236: the row a conversation collapses to is judged over the rendered

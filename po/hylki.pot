@@ -163,6 +163,35 @@ msgstr ""
 msgid "The list's unsubscribe page is open in your browser."
 msgstr ""
 
+msgid "Export Contacts"
+msgstr ""
+
+msgid "{n} contact exported to {path}"
+msgid_plural "{n} contacts exported to {path}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not export contacts: {e}"
+msgstr ""
+
+msgid "Delete All Contacts?"
+msgstr ""
+
+msgid ""
+"The {n} contact in the Hylki address book is deleted. This cannot be undone; "
+"export the book first to keep a copy."
+msgid_plural ""
+"The {n} contacts in the Hylki address book are deleted. This cannot be "
+"undone; export the book first to keep a copy."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Delete All"
+msgstr ""
+
 msgid "The language applies the next time Hylki starts."
 msgstr ""
 
@@ -235,6 +264,23 @@ msgid "No address book available"
 msgstr ""
 
 msgid "Could not update contact: {e}"
+msgstr ""
+
+msgid "Could not import contacts: {e}"
+msgstr ""
+
+msgid "Could not read: {files}"
+msgstr ""
+
+msgid "No contacts were found in the selected files"
+msgstr ""
+
+msgid ""
+"Contacts imported: {added} new, {updated} updated, {skipped} skipped, "
+"{errors} damaged"
+msgstr ""
+
+msgid "Contacts imported: {added} new, {updated} updated"
 msgstr ""
 
 msgid "Hide Status Bar"
@@ -358,9 +404,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "{names} ({size}). What should the files go into?"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
 
 msgid "Reply to a Message…"
@@ -969,6 +1012,9 @@ msgstr ""
 msgid "Print"
 msgstr ""
 
+msgid "Hylki Address Book"
+msgstr ""
+
 msgid "On This Computer"
 msgstr ""
 
@@ -985,6 +1031,21 @@ msgid "The directory needs a password. Add it in Settings → LDAP Directories."
 msgstr ""
 
 msgid "The directory did not accept the password."
+msgstr ""
+
+msgid "A contact needs a name or an email address"
+msgstr ""
+
+msgid "The contact is too large"
+msgstr ""
+
+msgid "UTF-16 files are not supported"
+msgstr ""
+
+msgid "The file is not a text file"
+msgstr ""
+
+msgid "The file is larger than {size} MB"
 msgstr ""
 
 msgid "{used} of {limit} used"
@@ -1856,6 +1917,39 @@ msgstr ""
 msgid "Mail account"
 msgstr ""
 
+msgid "From address"
+msgstr ""
+
+msgid "From name"
+msgstr ""
+
+msgid "To or Cc"
+msgstr ""
+
+msgid "Reply-To address"
+msgstr ""
+
+msgid "Message body"
+msgstr ""
+
+msgid "Sender is in Contacts"
+msgstr ""
+
+msgid "Sender is not in Contacts"
+msgstr ""
+
+msgid "contains"
+msgstr ""
+
+msgid "is exactly"
+msgstr ""
+
+msgid "starts with"
+msgstr ""
+
+msgid "ends with"
+msgstr ""
+
 #. Every condition, joined the way the rule combines them (#192).
 msgid " or "
 msgstr ""
@@ -1958,6 +2052,9 @@ msgid "Searched on the server; nothing is downloaded"
 msgstr ""
 
 msgid "From address when no Reply-To is set"
+msgstr ""
+
+msgid "Looks in the system address books and the Hylki book"
 msgstr ""
 
 msgid "Add Condition"
@@ -2808,10 +2905,16 @@ msgstr ""
 msgid "New contact"
 msgstr ""
 
+msgid "Import vCard files into the Hylki address book"
+msgstr ""
+
 msgid "Loading Contacts…"
 msgstr ""
 
-msgid "Contacts you add in GNOME Contacts appear here."
+msgid ""
+"Add a contact with the + button, or import vCard files. Contacts are kept in "
+"Hylki's own address book, and the address books of GNOME Contacts are listed "
+"here too."
 msgstr ""
 
 msgid "Sort contacts"
@@ -2827,6 +2930,14 @@ msgid "Last name"
 msgstr ""
 
 msgid "Delete Contact?"
+msgstr ""
+
+msgid ""
+"{name} is removed from your address book, and for a synced book, from the "
+"server too."
+msgstr ""
+
+msgid "All Address Books"
 msgstr ""
 
 msgid "Edit"
@@ -2854,6 +2965,15 @@ msgid "Add phone"
 msgstr ""
 
 msgid "Add website"
+msgstr ""
+
+msgid "Import Contacts"
+msgstr ""
+
+msgid "vCard files"
+msgstr ""
+
+msgid "All files"
 msgstr ""
 
 msgid "LDAP Directories"
@@ -3347,6 +3467,14 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Shows this message dark or light, whatever the message theme. Other messages "
+"are not affected."
+msgstr ""
+
+msgid "Light / Dark Mode"
+msgstr ""
+
+msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
 msgstr ""
@@ -3565,9 +3693,6 @@ msgid "Import Key"
 msgstr ""
 
 msgid "OpenPGP keys"
-msgstr ""
-
-msgid "All files"
 msgstr ""
 
 msgid "Could not import: {e}"
@@ -3876,6 +4001,48 @@ msgstr ""
 msgid ""
 "The account editor is open. Save what you changed, or discard it, before "
 "moving on."
+msgstr ""
+
+msgid ""
+"Contacts Hylki keeps itself, in its own data folder. They are listed in "
+"Contacts beside the address books of GNOME Contacts, and work without GNOME."
+msgstr ""
+
+msgid "Contacts in the Hylki book"
+msgstr ""
+
+msgid "Import vCard files"
+msgstr ""
+
+msgid ""
+"Adds the contacts in .vcf files to the Hylki book. Importing a file again "
+"updates its contacts."
+msgstr ""
+
+msgid "Export as a vCard file"
+msgstr ""
+
+msgid ""
+"Saves every contact in the Hylki book in one .vcf file, which other apps can "
+"import."
+msgstr ""
+
+msgid "Delete all contacts"
+msgstr ""
+
+msgid ""
+"Empties the Hylki book. The address books of GNOME Contacts are not touched."
+msgstr ""
+
+msgid "New Contacts"
+msgstr ""
+
+msgid "Save new contacts in"
+msgstr ""
+
+msgid ""
+"The address book a contact made in Hylki goes to, unless another is picked "
+"when it is made."
 msgstr ""
 
 msgid "Check for new mail"
@@ -4287,6 +4454,12 @@ msgid ""
 "being downloaded."
 msgstr ""
 
+msgid "Tint tagged messages"
+msgstr ""
+
+msgid "Wash the row of a tagged message with the color of its first tag."
+msgstr ""
+
 msgid "Actions palette in the message list"
 msgstr ""
 
@@ -4442,6 +4615,14 @@ msgid "Message appearance"
 msgstr ""
 
 msgid "Theme for email content only, not the app itself."
+msgstr ""
+
+msgid "Light / Dark Mode switch"
+msgstr ""
+
+msgid ""
+"Show a switch in the message header that draws the message on screen light "
+"or dark, for that message alone."
 msgstr ""
 
 msgid "Default zoom"

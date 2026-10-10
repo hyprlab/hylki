@@ -20,6 +20,8 @@ pub struct PrefInit {
     pub avatars: bool,
     /// Your own mail wears its mailbox's face, not a sender's circle (#189).
     pub own_mailbox_face: bool,
+    /// Tagged rows are washed with their tag's color (PR #383).
+    pub tag_row_tint: bool,
     pub sender_logos: bool,
     pub date_style: DateStyle,
     pub clock_style: ClockStyle,
@@ -43,6 +45,8 @@ pub struct PrefInit {
     pub pgp_labels: bool,
     /// Lone messages render as inset cards, like conversation messages.
     pub single_message_card: bool,
+    /// The Light / Dark Mode switch is shown in the reader header (PR #386).
+    pub theme_switch: bool,
     /// The Reader View switch is shown in the reader header.
     pub reader_switch: bool,
     /// What Reader View does when a message is opened.
@@ -309,6 +313,14 @@ impl FactoryComponent for SenderRow {
 // ---- Preferences window -----------------------------------------------------
 
 pub struct Preferences {
+    /// The Contacts page: how many contacts the Hylki book holds, and the
+    /// books new contacts can go to (read off the main thread), chosen
+    /// book first.
+    local_contact_count: usize,
+    contact_books: Vec<crate::contacts::Book>,
+    contact_book_row: Option<adw::ComboRow>,
+    /// Set while the row's model is replaced, which fires selected-notify.
+    contact_book_guard: std::cell::Cell<bool>,
     /// Mirrors the notifications switch, so the "show sender and subject" row
     /// below it can grey out when nothing is being posted at all.
     notifications: bool,
@@ -925,6 +937,7 @@ const SIDE_PAGES: &[(&str, &[SidePage])] = &[
             SidePage { id: "cloud", title: i18n_noop("Cloud Storage"), icon: "cloud-symbolic", accounts: false },
             SidePage { id: "translation", title: i18n_noop("Translation"), icon: "translate-symbolic", accounts: false },
             SidePage { id: "directories", title: i18n_noop("LDAP Directories"), icon: "x-office-address-book-symbolic", accounts: false },
+            SidePage { id: "contacts", title: i18n_noop("Contacts"), icon: "avatar-default-symbolic", accounts: false },
         ],
     ),
     (
@@ -1056,6 +1069,11 @@ fn side_page(id: &str) -> Option<&'static SidePage> {
 
 #[derive(Debug)]
 pub enum PrefInput {
+    /// The Contacts page: the books new contacts can go to, freshly read.
+    SetContactBooks(Vec<crate::contacts::Book>),
+    /// The Hylki book's size changed (an import, a deletion).
+    SetLocalContactCount(usize),
+    ChangeContactBook(u32),
     ToggleAvatars(bool),
     ChangeDateStyle(u32),
     ChangeClockStyle(u32),
@@ -1201,6 +1219,15 @@ pub enum PrefInput {
 
 #[derive(Debug)]
 pub enum PrefOutput {
+    /// The Contacts page's buttons: the app opens the file dialogs and the
+    /// confirmation, and does the work off the main thread.
+    ImportLocalContacts,
+    ExportLocalContacts,
+    DeleteAllLocalContacts,
+    SetContactBook(String),
+    /// The Contacts page is showing: read the books new contacts can go to
+    /// (D-Bus, so off the main thread) and send them back.
+    LoadContactBooks,
     /// A category was shown, so the app can reopen the window on it.
     PageShown(String),
     SetAutoRemoteContent(bool),
@@ -1209,6 +1236,7 @@ pub enum PrefOutput {
     SetGravatar(bool),
     SetAvatars(bool),
     SetOwnMailboxFace(bool),
+    SetTagRowTint(bool),
     SetSenderLogos(bool),
     SetDateStyle(DateStyle),
     SetClockStyle(ClockStyle),
@@ -1222,6 +1250,7 @@ pub enum PrefOutput {
     SetPgpLabels(bool),
     SetSingleMessageCard(bool),
     SetReaderSwitch(bool),
+    SetThemeSwitch(bool),
     SetReaderDefault(crate::config::ReaderDefault),
     SetReaderZoom(u32),
     SetCardAttachments(bool),
@@ -1904,6 +1933,83 @@ impl Component for Preferences {
                             // LDAP directories (#307), their own component.
                             #[name = "directories_slot"]
                             add_named[Some("directories")] = &adw::Bin {},
+
+                            add_named[Some("contacts")] = &adw::PreferencesPage {
+                                // The books are read again each time the page
+                                // shows: one may have been added in GNOME
+                                // Contacts meanwhile.
+                                connect_map[sender] => move |_| {
+                                    let _ = sender.output(PrefOutput::LoadContactBooks);
+                                },
+
+                                add = &adw::PreferencesGroup {
+                                    set_title: &i18n("Hylki Address Book"),
+                                    set_description: Some(&i18n("Contacts Hylki keeps itself, in its own data folder. They are listed in Contacts beside the address books of GNOME Contacts, and work without GNOME.")),
+
+                                    adw::ActionRow {
+                                        set_title: &i18n("Contacts in the Hylki book"),
+                                        add_suffix = &gtk::Label {
+                                            add_css_class: "dim-label",
+                                            #[watch]
+                                            set_label: &model.local_contact_count.to_string(),
+                                        },
+                                    },
+
+                                    adw::ActionRow {
+                                        set_title: &i18n("Import vCard files"),
+                                        set_subtitle: &i18n("Adds the contacts in .vcf files to the Hylki book. Importing a file again updates its contacts."),
+                                        set_activatable: true,
+                                        connect_activated[sender] => move |_| {
+                                            let _ = sender.output(PrefOutput::ImportLocalContacts);
+                                        },
+                                        add_suffix = &gtk::Image {
+                                            set_icon_name: Some("go-next-symbolic"),
+                                        },
+                                    },
+
+                                    adw::ActionRow {
+                                        set_title: &i18n("Export as a vCard file"),
+                                        set_subtitle: &i18n("Saves every contact in the Hylki book in one .vcf file, which other apps can import."),
+                                        set_activatable: true,
+                                        #[watch]
+                                        set_sensitive: model.local_contact_count > 0,
+                                        connect_activated[sender] => move |_| {
+                                            let _ = sender.output(PrefOutput::ExportLocalContacts);
+                                        },
+                                        add_suffix = &gtk::Image {
+                                            set_icon_name: Some("go-next-symbolic"),
+                                        },
+                                    },
+
+                                    adw::ActionRow {
+                                        set_title: &i18n("Delete all contacts"),
+                                        set_subtitle: &i18n("Empties the Hylki book. The address books of GNOME Contacts are not touched."),
+                                        add_css_class: "error",
+                                        set_activatable: true,
+                                        #[watch]
+                                        set_sensitive: model.local_contact_count > 0,
+                                        connect_activated[sender] => move |_| {
+                                            let _ = sender.output(PrefOutput::DeleteAllLocalContacts);
+                                        },
+                                        add_suffix = &gtk::Image {
+                                            set_icon_name: Some("go-next-symbolic"),
+                                        },
+                                    },
+                                },
+
+                                add = &adw::PreferencesGroup {
+                                    set_title: &i18n("New Contacts"),
+
+                                    #[name = "contact_book_row"]
+                                    adw::ComboRow {
+                                        set_title: &i18n("Save new contacts in"),
+                                        set_subtitle: &i18n("The address book a contact made in Hylki goes to, unless another is picked when it is made."),
+                                        connect_selected_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ChangeContactBook(row.selected()));
+                                        },
+                                    },
+                                },
+                            },
 
                             add_named[Some("general")] = &adw::PreferencesPage {
                                 add = &adw::PreferencesGroup {
@@ -2770,6 +2876,16 @@ impl Component for Preferences {
                                         },
                                     },
 
+                                    #[name = "tag_row_tint_row"]
+                                    adw::SwitchRow {
+                                        set_title: &i18n("Tint tagged messages"),
+                                        set_subtitle: &i18n("Wash the row of a tagged message with the color of \
+                                                       its first tag."),
+                                        connect_active_notify[sender] => move |row| {
+                                            let _ = sender.output(PrefOutput::SetTagRowTint(row.is_active()));
+                                        },
+                                    },
+
                                     #[name = "list_palette_row"]
                                     adw::SwitchRow {
                                         set_title: &i18n("Actions palette in the message list"),
@@ -3023,6 +3139,15 @@ impl Component for Preferences {
                                         set_subtitle: &i18n("Theme for email content only, not the app itself."),
                                         connect_selected_notify[sender] => move |row| {
                                             sender.input(PrefInput::ChangeMessageTheme(row.selected()));
+                                        },
+                                    },
+
+                                    #[name = "theme_switch_row"]
+                                    adw::SwitchRow {
+                                        set_title: &i18n("Light / Dark Mode switch"),
+                                        set_subtitle: &i18n("Show a switch in the message header that draws the message on screen light or dark, for that message alone."),
+                                        connect_active_notify[sender] => move |row| {
+                                            let _ = sender.output(PrefOutput::SetThemeSwitch(row.is_active()));
                                         },
                                     },
 
@@ -3789,6 +3914,10 @@ impl Component for Preferences {
     ) -> ComponentParts<Self> {
         let t_init = std::time::Instant::now();
         let mut model = Preferences {
+            local_contact_count: crate::local_contacts::count(),
+            contact_books: Vec::new(),
+            contact_book_row: None,
+            contact_book_guard: std::cell::Cell::new(false),
             nautilus: crate::nautilus_ext::State::read(),
             nautilus_cmd: crate::platform::nautilus_python_install_command(),
             files: init.files,
@@ -3909,6 +4038,7 @@ impl Component for Preferences {
         widgets.gravatar_row.set_active(init.gravatar);
         widgets.avatars_row.set_active(init.avatars);
         widgets.own_mailbox_face_row.set_active(init.own_mailbox_face);
+        widgets.tag_row_tint_row.set_active(init.tag_row_tint);
         widgets.sender_logos_row.set_active(init.sender_logos);
 
         // Mail-check interval combo.
@@ -4159,6 +4289,7 @@ impl Component for Preferences {
         widgets.print_punch_margin_row.set_active(init.print_options.punch_margin);
         widgets.single_message_card_row.set_active(init.single_message_card);
         widgets.reader_switch_row.set_active(init.reader_switch);
+        widgets.theme_switch_row.set_active(init.theme_switch);
         widgets.reader_default_row.set_model(Some(&gtk::StringList::new(&[
             &i18n("Remember the last choice"),
             &i18n("Reader View on"),
@@ -4576,6 +4707,7 @@ impl Component for Preferences {
         narrow.add_setter(&widgets.split, "collapsed", Some(&true.to_value()));
         root.add_breakpoint(narrow);
         model.panels_stack = Some(widgets.panels_stack.clone());
+        model.contact_book_row = Some(widgets.contact_book_row.clone());
         model.accounts_slot = Some(widgets.accounts_slot.clone());
         model.toolbar_editor = Some(ToolbarEditor::build(&widgets.toolbar_editor_box, &sender));
         // The toolbar editor's zones want a row of six chips: the page's
@@ -5133,6 +5265,31 @@ impl Component for Preferences {
             }
             PrefInput::ExportLog => {
                 let _ = sender.output(PrefOutput::ExportLog);
+            }
+            PrefInput::SetContactBooks(books) => {
+                self.contact_books = books;
+                let labels: Vec<String> = self.contact_books.iter().map(|b| b.name.clone()).collect();
+                let labels: Vec<&str> = labels.iter().map(String::as_str).collect();
+                // The book list arrives in default-first order, so what the
+                // row shows is the book a new contact would go to.
+                if let Some(row) = &self.contact_book_row {
+                    self.contact_book_guard.set(true);
+                    row.set_model(Some(&gtk::StringList::new(&labels)));
+                    row.set_selected(0);
+                    row.set_sensitive(self.contact_books.len() > 1);
+                    self.contact_book_guard.set(false);
+                }
+            }
+            PrefInput::SetLocalContactCount(n) => {
+                self.local_contact_count = n;
+            }
+            PrefInput::ChangeContactBook(index) => {
+                if self.contact_book_guard.get() {
+                    return;
+                }
+                if let Some(book) = self.contact_books.get(index as usize) {
+                    let _ = sender.output(PrefOutput::SetContactBook(book.uid.clone()));
+                }
             }
             PrefInput::ExportSettings => {
                 let _ = sender.output(PrefOutput::ExportSettings);
