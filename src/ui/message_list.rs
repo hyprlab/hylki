@@ -3682,7 +3682,19 @@ impl MessageList {
         }
     }
 
+    /// `rebuild_rows`, keeping a list read from the very top at the top.
+    /// The view holds its place by a row, so a new message put in above the
+    /// first one landed out of sight, just above the view (#400). Scrolled
+    /// down, the view keeps the row it has, as before.
     fn rebuild(&mut self) {
+        let at_top = self.scroller.as_ref().is_some_and(|s| s.vadjustment().value() < 1.0);
+        self.rebuild_rows();
+        if at_top {
+            self.scroll_top();
+        }
+    }
+
+    fn rebuild_rows(&mut self) {
         let t_rebuild = std::time::Instant::now();
         let passes = self.filter();
         let source_len = self.active_source().len();
