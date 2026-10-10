@@ -11983,6 +11983,7 @@ impl AppModel {
 
     fn spawn_workers(&mut self, sender: &ComponentSender<Self>) {
         self.workers.clear();
+        self.message_list.emit(MessageListInput::SetOwnAddresses(self.own_addresses()));
         // account_id is the config index + 1 (a load-bearing invariant), so we keep
         // every account's slot but only spawn a worker for enabled ones — disabled
         // accounts simply have no worker (no sync, no sidebar presence). With no
@@ -12087,6 +12088,20 @@ impl AppModel {
     /// still there.
     /// The configs the UI describes accounts from: the real ones, or the
     /// demo's in-memory stand-ins while no account is configured.
+    /// Every address the accounts send from, their aliases included, lower
+    /// case.
+    fn own_addresses(&self) -> std::collections::HashSet<String> {
+        self.effective_config()
+            .iter()
+            .flat_map(|a| {
+                std::iter::once(a.email.clone())
+                    .chain(a.aliases.iter().map(|alias| config::split_identity(&alias.identity).1))
+            })
+            .map(|e| e.trim().to_lowercase())
+            .filter(|e| !e.is_empty())
+            .collect()
+    }
+
     fn effective_config(&self) -> &[AccountConfig] {
         if self.config.is_empty() && demo_mode() {
             &self.demo_config

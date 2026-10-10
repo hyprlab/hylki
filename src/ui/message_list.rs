@@ -577,6 +577,10 @@ pub struct MessageList {
     /// Off by default: the row describes the newest message this folder holds,
     /// as it always has. The sizes on the badges are not affected either way.
     thread_row_newest: bool,
+    /// Every address you send from, lower case: with `thread_row_newest`
+    /// off, the mail you sent is not nested under a conversation's row
+    /// either (#388).
+    own_addresses: std::collections::HashSet<String>,
     /// Each conversation the last rebuild listed, with the folder's own
     /// members: what the app needs to look its real size up when a row
     /// showing it comes on screen.
@@ -860,6 +864,9 @@ pub enum MessageListInput {
     /// Whether a conversation's row speaks for the newest message anywhere in
     /// the account, the replies you sent included (#236).
     SetThreadRowNewest(bool),
+    /// The addresses you send from, for leaving your own replies out of a
+    /// conversation's nested rows (#388).
+    SetOwnAddresses(std::collections::HashSet<String>),
     /// Whether conversations start expanded (true) or collapsed (false).
     SetThreadsExpanded(bool),
     SetGravatar(bool),
@@ -1425,6 +1432,7 @@ impl SimpleComponent for MessageList {
             source_threads: std::cell::RefCell::new(None),
             thread_summaries: std::collections::HashMap::new(),
             thread_row_newest: false,
+            own_addresses: Default::default(),
             groups: std::collections::HashMap::new(),
             listed_folders: std::collections::HashSet::new(),
             asked_threads: std::collections::HashSet::new(),
@@ -1719,6 +1727,14 @@ impl SimpleComponent for MessageList {
                 if self.thread_row_newest != on {
                     self.thread_row_newest = on;
                     if self.threading {
+                        self.queue_rebuild(true);
+                    }
+                }
+            }
+            MessageListInput::SetOwnAddresses(addresses) => {
+                if self.own_addresses != addresses {
+                    self.own_addresses = addresses;
+                    if self.threading && self.thread_expansion && !self.thread_row_newest {
                         self.queue_rebuild(true);
                     }
                 }
@@ -3539,11 +3555,17 @@ impl MessageList {
         let mut msgs = own.to_vec();
         let summary = self.threading.then(|| self.thread_summaries.get(key)).flatten();
         // The parts of the conversation filed elsewhere, which the row opens
-        // out into along with this folder's own (#309).
+        // out into along with this folder's own (#309). What you sent comes
+        // with them only when "Show your own replies in the message list" is
+        // on: off, an Inbox row opened out into nothing but your answers
+        // from Sent (#388). Gmail's All Mail copy of them goes too.
+        let own = (!self.thread_row_newest).then_some(&self.own_addresses);
         let extras: Vec<Rc<Message>> = match summary {
-            Some(s) if self.thread_expansion => {
-                nested_members(&s.members, &msgs, &self.listed_folders, passes).into_iter().map(Rc::new).collect()
-            }
+            Some(s) if self.thread_expansion => nested_members(&s.members, &msgs, &self.listed_folders, passes)
+                .into_iter()
+                .filter(|m| !own.is_some_and(|own| own.contains(&m.from_addr.to_lowercase())))
+                .map(Rc::new)
+                .collect(),
             _ => Vec::new(),
         };
         let count = msgs.len() + extras.len();
