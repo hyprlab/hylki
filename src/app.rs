@@ -9014,6 +9014,13 @@ impl SimpleComponent for AppModel {
                 }
                 let open_unified = self.unified.then_some(self.unified_view);
                 let new_email = account.email.clone();
+                // An edit that only changes how the account looks or signs
+                // (#382) is applied in place: reconnecting every account for
+                // it emptied the list and the reader until they had synced.
+                let display_only = original_email
+                    .as_ref()
+                    .and_then(|orig| self.config.iter().find(|c| &c.email == orig))
+                    .is_some_and(|old| display_only_change(old, &account));
                 // Remember the secret we expect to persist, so we can verify the
                 // keyring actually stored it (a silent keyring failure would
                 // otherwise leave the account unable to log in after a restart).
@@ -9088,7 +9095,11 @@ impl SimpleComponent for AppModel {
                         // changed with this edit (#189).
                         self.warm_own_gravatars(&sender);
                         self.refresh_faces();
-                        self.reconnect_all(&sender);
+                        if display_only {
+                            tracing::info!("{new_email}: saved without reconnecting, only its look or signature changed");
+                        } else {
+                            self.reconnect_all(&sender);
+                        }
                         if unified_changed {
                             self.reload_unified_views(open_unified, &sender);
                         }
@@ -21460,6 +21471,48 @@ fn set_split_shrink(split: &gtk::Paned, bottom: bool, shrink: bool) {
 /// The demo's stand-in accounts as last edited in the Accounts panel, or
 /// the stock ones. The stand-in secret is not serialised, so it is put
 /// back on load (the editor will not save an account without one).
+/// Whether saving `new` over `old` changes only what the app itself draws
+/// or puts in the composer: the signature, the color, emoji or picture, the
+/// Gravatar switch, the label, or a place in the unified section. Workers
+/// never read those, so the account need not reconnect for them (#382). A
+/// password counts as changed unless it is the one already stored.
+fn display_only_change(old: &AccountConfig, new: &AccountConfig) -> bool {
+    let mut probe = new.clone();
+    probe.signature = old.signature.clone();
+    probe.signature_html = old.signature_html;
+    probe.color = old.color.clone();
+    probe.emoji = old.emoji.clone();
+    probe.avatar = old.avatar.clone();
+    probe.gravatar = old.gravatar;
+    probe.label = old.label.clone();
+    probe.in_unified = old.in_unified;
+    // Compared as values: a map's order on the way out is no change.
+    let same = match (toml::Value::try_from(&probe), toml::Value::try_from(old)) {
+        (Ok(a), Ok(b)) => a == b,
+        _ => false,
+    };
+    if !same {
+        return false;
+    }
+    // The editor hands every secret back, read from the keyring, while the
+    // config in hand may hold none: compare with what is stored.
+    let kept = |new: &str, old: &str, stored: &dyn Fn() -> Option<String>| {
+        new.is_empty() || new == old || stored().as_deref() == Some(new)
+    };
+    kept(&new.password, &old.password, &|| config::load_password(&old.email))
+        && kept(&new.smtp_password, &old.smtp_password, &|| config::load_smtp_password(&old.email))
+        && kept(&new.oauth_refresh, &old.oauth_refresh, &|| config::load_oauth_refresh(&old.email))
+        && new.aliases.iter().all(|alias| {
+            let addr = alias.address();
+            let before = old
+                .aliases
+                .iter()
+                .find(|a| a.address().eq_ignore_ascii_case(&addr))
+                .map_or("", |a| a.smtp_password.as_str());
+            kept(&alias.smtp_password, before, &|| config::load_alias_smtp_password(&old.email, &addr))
+        })
+}
+
 fn demo_account_configs_saved() -> Vec<AccountConfig> {
     match config::load_demo_accounts() {
         Some(mut saved) => {
@@ -23207,6 +23260,29 @@ fn next_after_vanish(
 
 #[cfg(test)]
 mod tests {
+    /// Saving a new signature or color leaves the account connected (#382);
+    /// a server, a name or a new password reconnects it.
+    #[test]
+    fn display_only_account_edits() {
+        let old = super::demo_account_configs().remove(0);
+        let mut new = old.clone();
+        new.signature = Some("Jason".into());
+        new.color = Some("#ff0000".into());
+        new.in_unified = !old.in_unified;
+        // The editor hands the secret back; the same one is no change.
+        new.password = old.password.clone();
+        assert!(super::display_only_change(&old, &new));
+        let mut host = new.clone();
+        host.imap_host = "imap.elsewhere.org".into();
+        assert!(!super::display_only_change(&old, &host));
+        let mut name = new.clone();
+        name.name = "Someone Else".into();
+        assert!(!super::display_only_change(&old, &name));
+        let mut alias = new.clone();
+        alias.aliases.push(crate::config::AliasConfig { identity: "me@alias.org".into(), ..Default::default() });
+        assert!(!super::display_only_change(&old, &alias));
+    }
+
     /// A copy to edit carries the message's own content, not a quote of it:
     /// the HTML survives its sanitizing, and plain text becomes a paragraph
     /// with its line breaks kept.
