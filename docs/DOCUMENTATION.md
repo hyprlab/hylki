@@ -1146,8 +1146,9 @@ live in the system keyring (secret-service), never in plain files.
 
 **Where things live.** Settings are TOML files in `~/.config/hylki/`
 (`accounts.toml`, `privacy.toml`, `filters.toml`, `tags.toml` and friends), the
-mail index and cached messages in `~/.cache/hylki/`, and account avatars in
-`~/.local/share/hylki/`. A Flatpak install keeps the same layout under
+mail index and cached messages in `~/.local/share/hylki/cache.db`, the web
+views' caches in `~/.cache/hylki/`, and account pictures in
+`~/.local/share/avatars/`. A Flatpak install keeps the same layout under
 `~/.var/app/co.hyprlab.Hylki/`. Nothing else on the computer is written to, and
 `./uninstall.sh --purge` (or removing those directories) takes it all away.
 

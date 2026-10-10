@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+- **Fixed: choosing an MP3 as the new-mail sound crashed Hylki** (#397,
+  reported by JavierLopezBravo). An MP3 that starts with an ID3v2 tag made
+  GStreamer abort the app when the sound was chosen, previewed or played for
+  new mail. The tag is taken off when the file is copied in, and off a sound
+  chosen with an earlier version before it next plays.
+- **Fixed: docs on X11 showed Hylki twice** (#402, reported by narcarsiss).
+  The window's class was `hylki` while the launcher names the app ID, so a
+  pinned launcher and the open window did not group. Wayland was not affected.
+- **Fixed: new mail landed just above the top of the list** (#400, reported
+  by yioannides). A list read from the very top now stays at the top when a
+  message arrives; scrolled down, it keeps its place.
+- **Fixed: Edit as New added a second signature** (#385, reported by
+  urkos101). The copy keeps the signature it already has. **Insert
+  Signature** in the composer's menu adds the account's signature by hand.
+- **Fixed: an opened conversation showed your own replies with "Show your own
+  replies in the message list" off** (#388, reported by amadeusp). Mail sent
+  from your addresses now nests under a conversation only when the setting is
+  on; received mail filed in other folders still does.
+- **Fixed: saving a signature emptied the list and the reader** (#382,
+  reported by urkos101). Changing an account's signature, color, emoji,
+  picture, Gravatar switch, label or place in the unified section no longer
+  reconnects every account.
+- **Fixed: removing an account showed its mail under the next one.** The
+  accounts after a removed one keep their own folders and mail.
+- **Changed: the documentation gives the mail cache's real location**,
+  `~/.local/share/hylki/cache.db`.
+
 - **Added: the new-mail sound while Hylki is in front** (#337, reported by
   yioannides). Like the notification, the sound came only while the window
   was in the background or closed, as GNOME shows no notification for the
