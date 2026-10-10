@@ -3038,6 +3038,10 @@ msgstr "Введите адрес отправителя"
 msgid "Choose from your addresses"
 msgstr "Выберите из ваших адресов"
 
+#, fuzzy
+msgid "Insert Signature"
+msgstr "Импортировать подпись"
+
 msgid "Not signed in"
 msgstr "Вход не выполнен"
 

@@ -236,6 +236,10 @@ pub struct ComposePrefill {
     /// worker handed back unsent): it already has its blank line and its
     /// signature. Drafts and queued messages count as this without it.
     pub resumed: bool,
+    /// The body is a copy of a whole message (Edit as New), which carries
+    /// its own signature: a second one is not put in (#385). Insert
+    /// Signature in the menu adds one by hand.
+    pub no_signature: bool,
     /// Editing a template (#360): `draft_origin` is where it is kept, and
     /// saving puts it back there rather than in Drafts.
     pub template: bool,
@@ -514,6 +518,8 @@ pub enum ComposeInput {
     SaveDraft,
     /// Save a copy of the message as a template (#360), and go on writing.
     SaveAsTemplate,
+    /// The From account's signature into a message that has none (#385).
+    InsertSignature,
     /// The editor content came back — finish saving the draft, or the copy
     /// kept as a template.
     SaveDraftBody { html: String, text: String, to: String, cc: String, bcc: String, reply_to: String, subject: String, from_account_id: u32, from_alias: Option<String>, as_template: bool },
@@ -1054,7 +1060,7 @@ impl Component for Compose {
             (false, false) => "<div><br></div>",
         });
         let sig_dashes = crate::config::load_privacy().signature_dashes;
-        let sig = if !resumed && !current_sig.is_empty() {
+        let sig = if !resumed && !prefill.no_signature && !current_sig.is_empty() {
             sig_html(&current_sig, sig_dashes)
         } else {
             String::new()
@@ -1776,6 +1782,10 @@ impl Component for Compose {
                     );
                 }
                 attach.push(entry(i18n("Open Contacts"), "x-office-address-book", || ComposeInput::OpenContacts));
+                let idx = widgets.from_row.selected() as usize;
+                if self.accounts.get(idx).is_some_and(|a| !a.signature.is_empty()) {
+                    attach.push(entry(i18n("Insert Signature"), "document-edit", || ComposeInput::InsertSignature));
+                }
                 // The OpenPGP toggles go through their buttons so the
                 // toggled handlers keep the model and the buttons agreeing.
                 let mut pgp = Vec::new();
@@ -2171,81 +2181,17 @@ impl Component for Compose {
                 if new_sig == self.current_sig {
                     break 'handle;
                 }
-                // Source mode holds the signature as text, so the swap is a
-                // text replacement in the field rather than a DOM one.
-                if let Some(kind) = self.editor.source_kind() {
-                    // The old block is looked for with and without its
-                    // `-- ` line: a draft keeps the form it was written in,
-                    // whatever the setting says now.
-                    let old = sig_source(kind, &self.current_sig, self.sig_dashes);
-                    let old_other = sig_source(kind, &self.current_sig, !self.sig_dashes);
-                    let new = sig_source(kind, &new_sig, self.sig_dashes);
-                    // With no old block to replace (the previous account had
-                    // none), the new one goes where the setting puts it: at
-                    // the end, or above the quoted original (#237), which
-                    // in source is found by its text. HTML keeps the quote's
-                    // tags; Markdown has the `> ` lines, with the attribution
-                    // line ("On …, X wrote:" or the forward header) above.
-                    let place = match (self.signature_position, kind) {
-                        (SignaturePosition::BelowQuote, _) => "v=v+n;",
-                        (SignaturePosition::AboveQuote, SourceKind::Html) => {
-                            "var q=v.search(/<p class=\"vireo-quote-attr\"|<blockquote/);\
-                             if(q<0){v=v+n;}else{v=v.slice(0,q).replace(/\\s*$/,'')+n+v.slice(q);}"
-                        }
-                        (SignaturePosition::AboveQuote, SourceKind::Markdown) => {
-                            "var L=v.split('\\n');var qi=-1;\
-                             for(var k=0;k<L.length;k++){if(L[k]==='>'||L[k].indexOf('> ')===0){qi=k;break;}}\
-                             if(qi<0){v=v+n;}else{var a=qi-1;while(a>=0&&L[a].trim()==='')a--;\
-                             if(a>=0&&(/wrote:\\s*$/.test(L[a])||/^-{5,} Forwarded message/.test(L[a])))qi=a;\
-                             v=L.slice(0,qi).join('\\n').replace(/\\s*$/,'')+n+'\\n'+L.slice(qi).join('\\n');}"
-                        }
-                    };
-                    self.editor.run_js(&format!(
-                        "(function(){{var t=document.getElementById('src');if(!t)return;\
-                         var o='{}',p='{}',n='{}';var v=t.value;\
-                         var i=o?v.lastIndexOf(o):-1;\
-                         if(i<0&&p){{i=v.lastIndexOf(p);if(i>=0)o=p;}}\
-                         if(i>=0){{v=v.slice(0,i)+n+v.slice(i+o.length);}}else{{{place}}}\
-                         t.value=v;window.__hylkiDirty=true;}})()",
-                        js_escape(&old),
-                        js_escape(&old_other),
-                        js_escape(&new)
-                    ));
-                    self.current_sig = new_sig;
-                    break 'handle;
-                }
-                {
-                    let replacement = if new_sig.is_empty() {
-                        String::new()
-                    } else {
-                        sig_html(&new_sig, self.sig_dashes)
-                    };
-                    // No signature block to replace (the previous account
-                    // had none): a new one goes where the setting puts it,
-                    // above the quoted original or at the end (#237).
-                    let anchor = match self.signature_position {
-                        SignaturePosition::AboveQuote => {
-                            "var b=document.body;var q=null;\
-                             var cands=b.querySelectorAll('.vireo-quote-attr,blockquote');\
-                             for(var i=0;i<cands.length;i++){{var t=cands[i];\
-                             while(t.parentNode&&t.parentNode!==b)t=t.parentNode;\
-                             if(t.parentNode===b&&(!q||(t.compareDocumentPosition(q)&Node.DOCUMENT_POSITION_FOLLOWING)))q=t;}}\
-                             if(q){{q.insertAdjacentHTML('beforebegin',h);}}else{{b.insertAdjacentHTML('beforeend',h);}}"
-                        }
-                        SignaturePosition::BelowQuote => {
-                            "document.body.insertAdjacentHTML('beforeend',h);"
-                        }
-                    };
-                    let js = format!(
-                        "(function(){{var s=document.querySelector('.vireo-sig');\
-                         var h='{}';\
-                         if(s){{if(h){{s.outerHTML=h;}}else{{s.remove();}}}}\
-                         else if(h){{{anchor}}}}})()",
-                        rich_editor::js_escape(&replacement)
-                    );
-                    self.editor.run_js(&js);
-                    self.current_sig = new_sig;
-                }
+                self.put_signature(new_sig);
+            }
+
+            ComposeInput::InsertSignature => {
+                // The From account's signature, where the setting puts it,
+                // for a message that opened without one (Edit as New, #385).
+                // A block already there is replaced, not doubled.
+                let idx = widgets.from_row.selected() as usize;
+                let sig = self.accounts.get(idx).map(|a| a.signature.clone()).unwrap_or_default();
+                self.current_sig.clear();
+                self.put_signature(sig);
             }
 
             ComposeInput::Suggest(field) => {
@@ -3001,6 +2947,86 @@ impl Compose {
     /// Put Sign where the From account's default has it (#267), until the
     /// user has set it by hand. While encrypting it stays on: encrypted
     /// mail is always signed.
+    /// Put `new_sig` in the editor in place of the current signature block,
+    /// or where the setting puts a signature when there is none.
+    fn put_signature(&mut self, new_sig: String) {
+        // Source mode holds the signature as text, so the swap is a
+        // text replacement in the field rather than a DOM one.
+        if let Some(kind) = self.editor.source_kind() {
+            // The old block is looked for with and without its
+            // `-- ` line: a draft keeps the form it was written in,
+            // whatever the setting says now.
+            let old = sig_source(kind, &self.current_sig, self.sig_dashes);
+            let old_other = sig_source(kind, &self.current_sig, !self.sig_dashes);
+            let new = sig_source(kind, &new_sig, self.sig_dashes);
+            // With no old block to replace (the previous account had
+            // none), the new one goes where the setting puts it: at
+            // the end, or above the quoted original (#237), which
+            // in source is found by its text. HTML keeps the quote's
+            // tags; Markdown has the `> ` lines, with the attribution
+            // line ("On …, X wrote:" or the forward header) above.
+            let place = match (self.signature_position, kind) {
+                (SignaturePosition::BelowQuote, _) => "v=v+n;",
+                (SignaturePosition::AboveQuote, SourceKind::Html) => {
+                    "var q=v.search(/<p class=\"vireo-quote-attr\"|<blockquote/);\
+                     if(q<0){v=v+n;}else{v=v.slice(0,q).replace(/\\s*$/,'')+n+v.slice(q);}"
+                }
+                (SignaturePosition::AboveQuote, SourceKind::Markdown) => {
+                    "var L=v.split('\\n');var qi=-1;\
+                     for(var k=0;k<L.length;k++){if(L[k]==='>'||L[k].indexOf('> ')===0){qi=k;break;}}\
+                     if(qi<0){v=v+n;}else{var a=qi-1;while(a>=0&&L[a].trim()==='')a--;\
+                     if(a>=0&&(/wrote:\\s*$/.test(L[a])||/^-{5,} Forwarded message/.test(L[a])))qi=a;\
+                     v=L.slice(0,qi).join('\\n').replace(/\\s*$/,'')+n+'\\n'+L.slice(qi).join('\\n');}"
+                }
+            };
+            self.editor.run_js(&format!(
+                "(function(){{var t=document.getElementById('src');if(!t)return;\
+                 var o='{}',p='{}',n='{}';var v=t.value;\
+                 var i=o?v.lastIndexOf(o):-1;\
+                 if(i<0&&p){{i=v.lastIndexOf(p);if(i>=0)o=p;}}\
+                 if(i>=0){{v=v.slice(0,i)+n+v.slice(i+o.length);}}else{{{place}}}\
+                 t.value=v;window.__hylkiDirty=true;}})()",
+                js_escape(&old),
+                js_escape(&old_other),
+                js_escape(&new)
+            ));
+            self.current_sig = new_sig;
+            return;
+        }
+        {
+            let replacement = if new_sig.is_empty() {
+                String::new()
+            } else {
+                sig_html(&new_sig, self.sig_dashes)
+            };
+            // No signature block to replace (the previous account
+            // had none): a new one goes where the setting puts it,
+            // above the quoted original or at the end (#237).
+            let anchor = match self.signature_position {
+                SignaturePosition::AboveQuote => {
+                    "var b=document.body;var q=null;\
+                     var cands=b.querySelectorAll('.vireo-quote-attr,blockquote');\
+                     for(var i=0;i<cands.length;i++){{var t=cands[i];\
+                     while(t.parentNode&&t.parentNode!==b)t=t.parentNode;\
+                     if(t.parentNode===b&&(!q||(t.compareDocumentPosition(q)&Node.DOCUMENT_POSITION_FOLLOWING)))q=t;}}\
+                     if(q){{q.insertAdjacentHTML('beforebegin',h);}}else{{b.insertAdjacentHTML('beforeend',h);}}"
+                }
+                SignaturePosition::BelowQuote => {
+                    "document.body.insertAdjacentHTML('beforeend',h);"
+                }
+            };
+            let js = format!(
+                "(function(){{var s=document.querySelector('.vireo-sig');\
+                 var h='{}';\
+                 if(s){{if(h){{s.outerHTML=h;}}else{{s.remove();}}}}\
+                 else if(h){{{anchor}}}}})()",
+                rich_editor::js_escape(&replacement)
+            );
+            self.editor.run_js(&js);
+            self.current_sig = new_sig;
+        }
+    }
+
     fn follow_account_signing(&mut self, widgets: &ComposeWidgets) {
         if self.sign_touched || self.encrypt || !crate::pgp::available() {
             return;

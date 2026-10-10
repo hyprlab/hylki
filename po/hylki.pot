@@ -2743,6 +2743,9 @@ msgstr ""
 msgid "Choose from your addresses"
 msgstr ""
 
+msgid "Insert Signature"
+msgstr ""
+
 msgid "Not signed in"
 msgstr ""
 

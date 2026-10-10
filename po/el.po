@@ -3073,6 +3073,10 @@ msgstr "Πληκτρολογήστε μια διεύθυνση αποστολέ�
 msgid "Choose from your addresses"
 msgstr "Επιλέξτε από τις διευθύνσεις σας"
 
+#, fuzzy
+msgid "Insert Signature"
+msgstr "Εισαγωγή υπογραφής"
+
 msgid "Not signed in"
 msgstr "Δεν έχει γίνει σύνδεση"
 

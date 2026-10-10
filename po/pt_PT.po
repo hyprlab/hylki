@@ -3053,6 +3053,10 @@ msgstr "Introduzir um endereço no campo De"
 msgid "Choose from your addresses"
 msgstr "Escolher entre os seus endereços"
 
+#, fuzzy
+msgid "Insert Signature"
+msgstr "Importar assinatura"
+
 msgid "Not signed in"
 msgstr "Sessão não iniciada"
 

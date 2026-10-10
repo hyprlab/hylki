@@ -3028,6 +3028,10 @@ msgstr "Escribir una dirección de remitente"
 msgid "Choose from your addresses"
 msgstr "Elegir entre tus direcciones"
 
+#, fuzzy
+msgid "Insert Signature"
+msgstr "Importar firma"
+
 msgid "Not signed in"
 msgstr "Sesión no iniciada"
 

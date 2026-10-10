@@ -15337,6 +15337,7 @@ impl AppModel {
             inline_files: Vec::new(),
             block_remote_images: false,
             resumed: false,
+            no_signature: false,
             template: false,
         };
         // The Outbox stays the folder on screen: its list is still what's listed,
@@ -15393,6 +15394,7 @@ impl AppModel {
             inline_files: Vec::new(),
             block_remote_images: false,
             resumed: true,
+            no_signature: false,
             // A template that failed to save comes back cut loose from it.
             template: false,
         };
@@ -15607,6 +15609,7 @@ impl AppModel {
                 attachments,
                 from_address: if template { m.from_addr.clone() } else { String::new() },
                 resumed: template,
+                no_signature: true,
                 ..Default::default()
             },
         );

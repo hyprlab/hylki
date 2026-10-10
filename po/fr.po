@@ -3045,6 +3045,10 @@ msgstr "Saisir une adresse d'expéditeur"
 msgid "Choose from your addresses"
 msgstr "Choisir parmi vos adresses"
 
+#, fuzzy
+msgid "Insert Signature"
+msgstr "Importer la signature"
+
 msgid "Not signed in"
 msgstr "Non connecté"
 

@@ -3072,6 +3072,10 @@ msgstr ""
 msgid "Choose from your addresses"
 msgstr ""
 
+#, fuzzy
+msgid "Insert Signature"
+msgstr "Signatur importieren"
+
 msgid "Not signed in"
 msgstr "Nicht angemeldet"
 
