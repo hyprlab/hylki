@@ -17715,6 +17715,10 @@ impl AppModel {
         let Some(folders) = self.folders.get(&account_id) else {
             return String::new();
         };
+        Self::infer_folder_namespace(folders)
+    }
+
+    fn infer_folder_namespace(folders: &[Folder]) -> String {
         let delim = folders
             .iter()
             .find_map(|f| f.path.chars().find(|c| matches!(c, '/' | '.' | '\\')))
@@ -17724,7 +17728,9 @@ impl AppModel {
             folders.iter().filter(|f| f.kind == FolderKind::Custom).collect();
         if !customs.is_empty()
             && customs.iter().all(|f| {
-                f.path.len() >= root.len() && f.path[..root.len()].eq_ignore_ascii_case(&root)
+                f.path
+                    .get(..root.len())
+                    .is_some_and(|prefix| prefix.eq_ignore_ascii_case(&root))
             })
         {
             root
@@ -23222,6 +23228,48 @@ mod tests {
         assert_eq!(super::parse_mid("mid:"), None);
         assert_eq!(super::parse_mid("mid:not-an-id"), None);
         assert_eq!(super::parse_mid("mailto:a@b.c"), None);
+    }
+
+    #[test]
+    fn folder_namespace_handles_utf8_paths() {
+        use crate::models::{Folder, FolderKind};
+        let custom = |path: &str| Folder {
+            id: 1,
+            account_id: 1,
+            name: path.to_string(),
+            path: path.to_string(),
+            kind: FolderKind::Custom,
+            unread: 0,
+        };
+        // Byte six falls inside a character in these top-level paths.
+        for path in ["abcd摘要", "a收摘要", "📧摘要", "é日語"] {
+            assert_eq!(super::AppModel::infer_folder_namespace(&[custom(path)]), "", "{path}");
+        }
+        for (path, expected) in [
+            ("INBOX/中文", "INBOX/"),
+            ("inbox/中文", "INBOX/"),
+            ("INBOX.中文", "INBOX."),
+            ("INBOX\\中文", "INBOX\\"),
+            ("INBOX/Projects/Nested", "INBOX/"),
+            ("Other/中文", ""),
+            ("收件摘要", ""),
+            ("INBOX", ""),
+            ("", ""),
+        ] {
+            assert_eq!(super::AppModel::infer_folder_namespace(&[custom(path)]), expected, "{path}");
+        }
+        assert_eq!(
+            super::AppModel::infer_folder_namespace(&[custom("INBOX/中文"), custom("abcd摘要")]),
+            ""
+        );
+        assert_eq!(super::AppModel::infer_folder_namespace(&[]), "");
+        let mut inbox = custom("INBOX");
+        inbox.kind = FolderKind::Inbox;
+        assert_eq!(super::AppModel::infer_folder_namespace(&[inbox.clone()]), "");
+        assert_eq!(
+            super::AppModel::infer_folder_namespace(&[inbox, custom("INBOX/中文")]),
+            "INBOX/"
+        );
     }
 
     #[test]
