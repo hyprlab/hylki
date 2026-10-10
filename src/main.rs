@@ -146,6 +146,14 @@ fn main() {
     args.retain(|a| a != HIDDEN_FLAG);
     HIDDEN_START.store(hidden, std::sync::atomic::Ordering::Relaxed);
 
+    // On X11 the window class is the program name, which defaults to the
+    // binary's, "hylki"; docks match it against the launcher's
+    // StartupWMClass, the app ID, and showed a second icon without it (#402).
+    // Wayland takes the app ID from the application, so nothing changes there.
+    // The display name keeps sound mixers from showing the app ID instead.
+    gtk::glib::set_prgname(Some(APP_ID));
+    gtk::glib::set_application_name("Hylki");
+
     let adw_app = adw::Application::builder()
         .application_id(APP_ID)
         // mailto: links land here (the desktop file registers the scheme) —
