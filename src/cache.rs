@@ -142,7 +142,28 @@ CREATE TABLE IF NOT EXISTS attachment_scan (
 );
 CREATE INDEX IF NOT EXISTS attachment_meta_by_folder
     ON attachment_meta (account_id, folder_path);
+CREATE TABLE IF NOT EXISTS account_owner (
+    account_id INTEGER PRIMARY KEY,
+    email      TEXT    NOT NULL
+);
 ";
+
+/// Every table whose rows belong to one account, by `account_id`. An account's
+/// id is its place in the account list, so `Cache::claim_accounts` moves
+/// these rows when the places change.
+const ACCOUNT_TABLES: [&str; 11] = [
+    "folders",
+    "refs_repair",
+    "messages",
+    "local_tags",
+    "bodies",
+    "sender_checks",
+    "attachments",
+    "outbox",
+    "attachments_checked",
+    "attachment_meta",
+    "attachment_scan",
+];
 
 /// Bump when the table layout changes; older rows are dropped on open.
 /// v8: bodies are re-rendered with clickable links, so cached bodies (which
@@ -460,6 +481,52 @@ impl Cache {
         conn.execute_batch(SCHEMA)?;
         let _ = conn.execute_batch(&format!("PRAGMA user_version = {SCHEMA_VERSION};"));
         Ok(Cache { conn })
+    }
+
+    /// Make the cached rows follow the accounts they belong to: `accounts` is
+    /// every configured account's id and address. An account's id is its
+    /// place in the list, so removing one moves every account after it up a
+    /// place, and the next one took over the removed account's mail, folders
+    /// and bodies. Each account's rows now move with it, and the rows of an
+    /// account that is gone, or whose address changed, are dropped. Run
+    /// before the workers start, in one transaction.
+    ///
+    /// A cache from before this knew no owners: it is taken as it stands.
+    pub fn claim_accounts(&self, accounts: &[(u32, String)]) -> rusqlite::Result<()> {
+        let tx = self.conn.unchecked_transaction()?;
+        let owners: std::collections::HashMap<u32, String> = {
+            let mut stmt = tx.prepare("SELECT account_id, email FROM account_owner")?;
+            let rows = stmt.query_map([], |r| Ok((r.get::<_, u32>(0)?, r.get::<_, String>(1)?)))?;
+            rows.collect::<rusqlite::Result<_>>()?
+        };
+        let wanted: Vec<(u32, String)> = accounts.iter().map(|(id, e)| (*id, e.trim().to_lowercase())).collect();
+        // Two accounts on one address could not be told apart by it.
+        let distinct = wanted.iter().map(|(_, e)| e).collect::<std::collections::HashSet<_>>().len() == wanted.len();
+        let moved = wanted.iter().any(|(id, e)| owners.get(id) != Some(e)) || owners.len() > wanted.len();
+        if !owners.is_empty() && distinct && moved {
+            let keep: Vec<u32> = wanted.iter().filter(|(id, e)| owners.get(id) == Some(e)).map(|(id, _)| *id).collect();
+            let moves: Vec<(u32, u32)> = wanted
+                .iter()
+                .filter(|(id, _)| !keep.contains(id))
+                .filter_map(|(id, e)| owners.iter().find(|(_, o)| *o == e).map(|(from, _)| (*from, *id)))
+                .collect();
+            let keep_list = keep.iter().map(u32::to_string).collect::<Vec<_>>().join(",");
+            for table in ACCOUNT_TABLES {
+                // Through negative ids, so a move never meets rows still
+                // waiting to leave the place it goes to.
+                for (from, to) in &moves {
+                    tx.execute(&format!("UPDATE {table} SET account_id = ?1 WHERE account_id = ?2"), params![-i64::from(*to), from])?;
+                }
+                tx.execute(&format!("DELETE FROM {table} WHERE account_id > 0 AND account_id NOT IN ({keep_list})"), [])?;
+                tx.execute(&format!("UPDATE {table} SET account_id = -account_id WHERE account_id < 0"), [])?;
+            }
+            tracing::info!(?moves, kept = ?keep, "cache: rows follow the accounts to their new places");
+        }
+        tx.execute("DELETE FROM account_owner", [])?;
+        for (id, email) in &wanted {
+            tx.execute("INSERT INTO account_owner (account_id, email) VALUES (?1, ?2)", params![id, email])?;
+        }
+        tx.commit()
     }
 
     /// A separate WAL reader over an already-initialized cache. Background
@@ -2289,6 +2356,44 @@ fn kind_from_i64(v: i64) -> FolderKind {
 
 #[cfg(test)]
 mod tests {
+
+    /// Removing an account moves the ones after it up a place; their cached
+    /// rows move with them, and the removed account's go.
+    #[test]
+    fn cached_rows_follow_their_accounts() {
+        let c = Cache::in_memory().unwrap();
+        let put = |id: u32, path: &str| {
+            c.conn.execute("INSERT INTO folders (account_id, path, name, kind, unread, ord) VALUES (?1, ?2, ?2, 0, 0, 0)", params![id, path]).unwrap();
+            c.conn.execute("INSERT INTO bodies (account_id, folder_path, uid, body) VALUES (?1, ?2, 1, ?2)", params![id, path]).unwrap();
+        };
+        let paths = |id: u32| -> Vec<String> {
+            let mut stmt = c.conn.prepare("SELECT path FROM folders WHERE account_id = ?1 ORDER BY path").unwrap();
+            stmt.query_map([id], |r| r.get(0)).unwrap().map(Result::unwrap).collect()
+        };
+        let body = |id: u32| -> Option<String> {
+            c.conn.query_row("SELECT body FROM bodies WHERE account_id = ?1", [id], |r| r.get(0)).ok()
+        };
+        put(1, "a-inbox");
+        put(2, "b-inbox");
+        put(3, "c-inbox");
+        let all = |v: &[(u32, &str)]| v.iter().map(|(i, e)| (*i, e.to_string())).collect::<Vec<_>>();
+        // A cache from before owners were kept is taken as it is.
+        c.claim_accounts(&all(&[(1, "a@x"), (2, "b@x"), (3, "C@x")])).unwrap();
+        assert_eq!(paths(1), ["a-inbox"]);
+        // The first account goes.
+        c.claim_accounts(&all(&[(1, "b@x"), (2, "c@x")])).unwrap();
+        assert_eq!(paths(1), ["b-inbox"]);
+        assert_eq!(paths(2), ["c-inbox"]);
+        assert!(paths(3).is_empty());
+        assert_eq!(body(1).as_deref(), Some("b-inbox"));
+        // Nothing changed: nothing moves.
+        c.claim_accounts(&all(&[(1, "b@x"), (2, "c@x")])).unwrap();
+        assert_eq!(paths(2), ["c-inbox"]);
+        // The last account goes, and another address takes the first place.
+        c.claim_accounts(&all(&[(1, "d@x")])).unwrap();
+        assert!(paths(1).is_empty() && paths(2).is_empty());
+        assert_eq!(body(2), None);
+    }
 
     /// How long the conversation lookups take on a real cache (#259):
     /// `HYLKI_CACHE_TIMING=<copy of cache.db> cargo test --release --bin hylki

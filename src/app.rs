@@ -11942,6 +11942,20 @@ impl AppModel {
 
     /// Spawn one worker per configured account (or a single mock worker when no
     /// account is configured).
+    /// Before anything reads the cache on disk: an account removed since the
+    /// last start has moved the ones after it up a place, and their cached
+    /// mail has to move with them (see `Cache::claim_accounts`).
+    fn claim_cached_accounts(&self) {
+        if self.config.is_empty() {
+            return;
+        }
+        let owners: Vec<(u32, String)> =
+            self.config.iter().enumerate().map(|(i, a)| (i as u32 + 1, a.email.clone())).collect();
+        if let Err(e) = crate::cache::Cache::open().and_then(|cache| cache.claim_accounts(&owners)) {
+            tracing::warn!("cache: could not match the cached mail to the accounts: {e}");
+        }
+    }
+
     /// Paint the mail panes straight from the disk cache, before any worker
     /// has spoken: every enabled account's folder list and inbox slice is
     /// loaded synchronously at startup, so "All Inboxes" (the launch view) is
@@ -11949,6 +11963,7 @@ impl AppModel {
     /// loads and syncs then replace each slice with whatever changed since
     /// the app last ran.
     fn prime_from_cache(&mut self) {
+        self.claim_cached_accounts();
         let Ok(cache) = crate::cache::Cache::open() else { return };
         for (i, c) in self.config.iter().enumerate() {
             if !c.enabled {
@@ -12008,6 +12023,7 @@ impl AppModel {
                 }
             }
         } else {
+            self.claim_cached_accounts();
             for (i, account) in self.config.iter().enumerate() {
                 if !account.enabled {
                     continue;
