@@ -2,6 +2,33 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.44.0-beta.2
+
+New features:
+
+- A Hylki address book, with vCard import and export - (#379)
+- Settings → Contacts to manage the Hylki address book - (#379)
+- Filters on whether the sender is in Contacts - (#384)
+- Tagged messages tint their row, on unless switched off - (#383)
+- Clicking the unread dot marks a message read - (#380)
+- A switch to draw one message light or dark - (#386)
+- Account circles ringed in the account's color
+
+Fixes:
+
+- switching folders pausing the window - (#401)
+- an empty search closing when its folder scope was clicked - (#383)
+- the message list scrolling to the top when a menu closed
+- tags coming and going in the Tags view
+- the open folder not coming back after an account was saved
+- confirming a contact's deletion deleting another contact
+
+Translations:
+
+- Portuguese and Brazilian Portuguese by @somepaulo
+- Spanish by @danielmigueltejedor
+- French by @frenchy82
+
 ## What's new in 1.44.0-beta.1
 
 The first beta previewing 1.44.0.

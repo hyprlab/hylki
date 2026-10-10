@@ -1,23 +1,9 @@
 # Changelog
 
-## 1.44.0-beta.1 — 2026-10-09
+## 1.44.0-beta.2 — 2026-10-10
 
-The first beta previewing 1.44.0.
+The second beta previewing 1.44.0.
 
-- **Added: the new-mail sound while Hylki is in front** (#337, reported by
-  yioannides). Like the notification, the sound came only while the window
-  was in the background or closed, as GNOME shows no notification for the
-  app in front. **Settings → General → Also play while Hylki is in front**
-  plays it then as well, without a notification; off by default.
-
-## 1.43.2-beta.1 — 2026-10-09
-
-The first beta previewing 1.43.2.
-
-- **Changed: the exported log records what the new-mail sound did** (#337):
-  playing, ready, finished, skipped because the previous one was still
-  playing, switched off, or held back by Do Not Disturb. A sound that still
-  says it is playing after ten seconds no longer silences the ones after it.
 - **Fixed: an empty search closed when its folder scope was clicked**
   (PR #383 by Fabio Rotondo). The search closed as soon as it lost focus
   while empty, so the All folders picker beside it could not be opened. It
@@ -84,6 +70,28 @@ The first beta previewing 1.43.2.
   for a third to half a second: the message list threw away its rows and
   built new ones. It now hands the rows it has to the new folder, the
   highlight moves at once, and the list follows a frame later.
+- **Translations:** Portuguese for Portugal and Brazil (PR #393 by Paulo
+  Fino), Spanish (PR #387 by Daniel Miguel) and French (PR #405 by
+  frenchy82) brought up to date.
+
+## 1.44.0-beta.1 — 2026-10-09
+
+The first beta previewing 1.44.0.
+
+- **Added: the new-mail sound while Hylki is in front** (#337, reported by
+  yioannides). Like the notification, the sound came only while the window
+  was in the background or closed, as GNOME shows no notification for the
+  app in front. **Settings → General → Also play while Hylki is in front**
+  plays it then as well, without a notification; off by default.
+
+## 1.43.2-beta.1 — 2026-10-09
+
+The first beta previewing 1.43.2.
+
+- **Changed: the exported log records what the new-mail sound did** (#337):
+  playing, ready, finished, skipped because the previous one was still
+  playing, switched off, or held back by Do Not Disturb. A sound that still
+  says it is playing after ten seconds no longer silences the ones after it.
 
 ## 1.43.1 — 2026-10-09
 
