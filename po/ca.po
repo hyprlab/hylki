@@ -1113,17 +1113,14 @@ msgstr "Cerca per remitent, assumpte o compte"
 msgid "(no subject)"
 msgstr "(sense assumpte)"
 
-#, fuzzy
 msgid "archive"
 msgstr "Arxiva"
 
-#, fuzzy
 msgid "trash"
 msgstr "Paperera"
 
-#, fuzzy
 msgid "destination"
-msgstr "Invitació actualitzada"
+msgstr "Destinació"
 
 msgid "Default"
 msgstr "Per defecte"
@@ -1223,29 +1220,33 @@ msgstr "L'Evolution Data Server no està disponible"
 msgid "The directory did not accept the password."
 msgstr "El directori no ha acceptat la contrasenya."
 
-#, fuzzy
 msgid "The directory's certificate could not be verified."
-msgstr "No s'ha pogut llegir la resposta del servei."
+msgstr "No s'ha pogut verificar el certificat del directori."
 
-#, fuzzy
 msgid "The directory's certificate could not be verified: {error}"
-msgstr "No s'ha pogut contactar amb el servei: {e}"
+msgstr "No s'ha pogut verificar el certificat del directori: {error}"
 
 msgid ""
 "Could not connect to {server} over TLS. Check the server, the port and that "
 "it takes LDAPS."
 msgstr ""
+"No s'ha pogut connectar a {server} per TLS. Comprova el servidor, el port i "
+"que accepti LDAPS."
 
 msgid "Could not connect to {server}. Check the server and the port."
-msgstr ""
+msgstr "No s'ha pogut connectar a {server}. Comprova el servidor i el port."
 
 msgid ""
 "Could not start StartTLS with {server}: the server does not offer it, or its "
 "certificate is not trusted."
 msgstr ""
+"No s'ha pogut iniciar StartTLS amb {server}: el servidor no l'ofereix, o el "
+"seu certificat no és de confiança."
 
 msgid "Could not reach {server}. Check the server's name and the network."
 msgstr ""
+"No s'ha pogut contactar amb {server}. Comprova el nom del servidor i la "
+"xarxa."
 
 msgid "The directory needs a password. Add it in Settings → LDAP Directories."
 msgstr ""
@@ -1273,20 +1274,17 @@ msgstr "{used} de {limit} utilitzats"
 msgid "{free} free ({pct}%)"
 msgstr "{free} lliures ({pct}%)"
 
-#, fuzzy
 msgid "Verified sender"
-msgstr "Cerca remitents"
+msgstr "Remitent verificat"
 
-#, fuzzy
 msgid "Sender not verified"
-msgstr "Envia-ho ara"
+msgstr "Remitent no verificat"
 
-#, fuzzy
 msgid "Check this sender"
-msgstr "Bloca aquest remitent"
+msgstr "Comprova aquest remitent"
 
 msgid "Possible forgery"
-msgstr ""
+msgstr "Possible falsificació"
 
 msgid "Encrypted message"
 msgstr "Missatge xifrat"
@@ -1378,15 +1376,13 @@ msgid "This message hasn't been checked."
 msgstr "Aquest missatge no s'ha comprovat."
 
 msgid "just now"
-msgstr ""
+msgstr "fa un moment"
 
-#, fuzzy
 msgid "{n} minutes ago"
-msgstr "fa {n} hores"
+msgstr "fa {n} minuts"
 
-#, fuzzy
 msgid "an hour ago"
-msgstr "fa {n} hores"
+msgstr "fa una hora"
 
 msgid "{n} hours ago"
 msgstr "fa {n} hores"
@@ -1467,30 +1463,25 @@ msgid "Import the sender's public key to verify it."
 msgstr "Importa la clau pública del remitent per verificar-ho."
 
 msgid "Revoked"
-msgstr ""
+msgstr "Revocada"
 
-#, fuzzy
 msgid "Expired"
-msgstr "Caduca"
+msgstr "Caducada"
 
-#, fuzzy
 msgid "Not trusted yet"
-msgstr "No traduït"
+msgstr "Encara no és de confiança"
 
-#, fuzzy
 msgid "Marked as not trusted"
-msgstr "Marca com a no llegit"
+msgstr "Marcada com a no confiable"
 
-#, fuzzy
 msgid "Marginally trusted"
-msgstr "Clau de confiança."
+msgstr "Marginalment de confiança"
 
 msgid "Trusted"
 msgstr "De confiança"
 
-#, fuzzy
 msgid "Your own key"
-msgstr "Les teves claus"
+msgstr "La teva pròpia clau"
 
 msgid "No key was found in that file."
 msgstr "No s'ha trobat cap clau en aquest fitxer."
@@ -2207,13 +2198,11 @@ msgstr ""
 "Es conserva al servidor; canvia-la a través de la interfície de correu web "
 "del teu proveïdor."
 
-#, fuzzy
 msgid "Edit Alias"
-msgstr "Edita l'etiqueta"
+msgstr "Edita l'àlies"
 
-#, fuzzy
 msgid "Add Alias"
-msgstr "Afegeix un àlies…"
+msgstr "Afegeix un àlies"
 
 msgid "Display name (optional)"
 msgstr "Nom visible (opcional)"
@@ -2271,12 +2260,14 @@ msgstr "Afegit directament a l'Hylki"
 
 msgid "Paused: Mail is switched off for this account in GNOME Settings"
 msgstr ""
+"En pausa: el correu està desactivat per a aquest compte als paràmetres del "
+"GNOME"
 
 msgid "Enable this account"
 msgstr "Activa aquest compte"
 
 msgid "Mail"
-msgstr ""
+msgstr "Correu"
 
 msgid "Use this account in Hylki"
 msgstr "Utilitza aquest compte a l'Hylki"
@@ -2583,9 +2574,8 @@ msgstr "Mostra al missatge"
 msgid "Delete from Server…"
 msgstr "Suprimeix del servidor…"
 
-#, fuzzy
 msgid "Download"
-msgstr "Baixa…"
+msgstr "Baixa"
 
 msgid "Import OpenPGP key"
 msgstr "Importa una clau OpenPGP"
@@ -2613,10 +2603,10 @@ msgstr ""
 "extraient el peu de pàgina."
 
 msgid "Type"
-msgstr ""
+msgstr "Tipus"
 
 msgid "Size"
-msgstr ""
+msgstr "Mida"
 
 msgid "Thumbnail grid"
 msgstr "Graella de miniatures"
@@ -2706,10 +2696,10 @@ msgid "Deleting…"
 msgstr "S'està suprimint…"
 
 msgid "Unknown"
-msgstr ""
+msgstr "Desconegut"
 
 msgid "File"
-msgstr ""
+msgstr "Fitxer"
 
 #. Deliberately counts messages, not attachments: until a message has
 #. been described there is no telling how many files it holds.
@@ -3501,18 +3491,17 @@ msgid "Address"
 msgstr "Adreça"
 
 msgid "Birthday"
-msgstr ""
+msgstr "Aniversari"
 
 #. ---- note ----
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
-#, fuzzy
 msgid "Address Book"
 msgstr "Llibreta d'adreces"
 
 msgid "Details"
-msgstr ""
+msgstr "Detalls"
 
 msgid "Edit Contact"
 msgstr "Edita el contacte"
@@ -3522,17 +3511,16 @@ msgstr "Contacte nou"
 
 #. ---- identity fields ----
 msgid "Identity"
-msgstr ""
+msgstr "Identitat"
 
 msgid "Nickname"
-msgstr ""
+msgstr "Àlies"
 
-#, fuzzy
 msgid "Organization"
-msgstr "Traducció"
+msgstr "Organització"
 
 msgid "Title"
-msgstr ""
+msgstr "Càrrec"
 
 msgid "Add email"
 msgstr "Afegeix un correu"
@@ -3598,7 +3586,7 @@ msgid "{name} did not answer: {error}"
 msgstr "{name} no ha respost: {error}"
 
 msgid "The server took too long to answer."
-msgstr ""
+msgstr "El servidor ha trigat massa a respondre."
 
 msgid "Edit Directory"
 msgstr "Edita el directori"
@@ -3787,13 +3775,11 @@ msgstr "Marca-ho tot com a llegit"
 msgid "Mark All as Unread"
 msgstr "Marca-ho tot com a no llegit"
 
-#, fuzzy
 msgid "Search all folders"
-msgstr "Cerca carpetes"
+msgstr "Cerca a totes les carpetes"
 
-#, fuzzy
 msgid "Search this folder"
-msgstr "Cerca carpetes"
+msgstr "Cerca en aquesta carpeta"
 
 msgid "Due"
 msgstr "Venciment"
@@ -4075,6 +4061,8 @@ msgstr ""
 msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
 msgstr ""
+"Mostra aquest missatge en mode clar o fosc. Els altres missatges no es veuen "
+"afectats."
 
 msgid "Light / Dark Mode"
 msgstr "Mode clar / fosc"
@@ -4183,9 +4171,8 @@ msgstr "Mostra el text citat"
 msgid "Hide quoted text"
 msgstr "Amaga el text citat"
 
-#, fuzzy
 msgid "Message"
-msgstr "Missatges"
+msgstr "Missatge"
 
 msgid "Save Image"
 msgstr "Desa la imatge"
@@ -4232,21 +4219,17 @@ msgstr "Copia la imatge"
 msgid "Copy Image Address"
 msgstr "Copia l'adreça de la imatge"
 
-#, fuzzy
 msgid "From:"
-msgstr "De"
+msgstr "De:"
 
-#, fuzzy
 msgid "To:"
-msgstr "A"
+msgstr "A:"
 
-#, fuzzy
 msgid "Cc:"
-msgstr "Cc"
+msgstr "Cc:"
 
-#, fuzzy
 msgid "Date:"
-msgstr "Data"
+msgstr "Data:"
 
 msgid "Clear all"
 msgstr "Neteja-ho tot"
@@ -4822,12 +4805,15 @@ msgid "Theme"
 msgstr "Tema"
 
 msgid "Use the desktop's icons"
-msgstr ""
+msgstr "Utilitza les icones de l'escriptori"
 
 msgid ""
 "Draw icons from the desktop's icon theme instead of Hylki's own, so the app "
 "may look different on another desktop."
 msgstr ""
+"Dibuixa les icones del tema d'icones de l'escriptori en lloc de les pròpies "
+"de l'Hylki, de manera que l'aplicació pot semblar diferent en un altre "
+"escriptori."
 
 msgid "This window opens to"
 msgstr "Aquesta finestra s'obre a"
