@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-10 06:24+0200\n"
+"PO-Revision-Date: 2026-10-11 11:54+0200\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -171,18 +171,18 @@ msgstr ""
 "La page de désabonnement de la liste est ouverte dans votre navigateur."
 
 msgid "Export Contacts"
-msgstr ""
+msgstr "Exporter les contacts"
 
 msgid "{n} contact exported to {path}"
 msgid_plural "{n} contacts exported to {path}"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} contact exporté vers {path}"
+msgstr[1] "{n} contacts exportés vers {path}"
 
 msgid "Could not export contacts: {e}"
-msgstr ""
+msgstr "Impossible d'exporter les contacts : {e}"
 
 msgid "Delete All Contacts?"
-msgstr ""
+msgstr "Supprimer tous les contacts ?"
 
 msgid ""
 "The {n} contact in the Hylki address book is deleted. This cannot be undone; "
@@ -191,17 +191,20 @@ msgid_plural ""
 "The {n} contacts in the Hylki address book are deleted. This cannot be "
 "undone; export the book first to keep a copy."
 msgstr[0] ""
+"{n} contact du carnet d'adresses Hylki sera supprimé. Cette action est "
+"irréversible ; exportez d'abord le carnet pour en conserver une copie."
 msgstr[1] ""
+"{n} contacts du carnet d'adresses Hylki seront supprimés. Cette action est "
+"irréversible ; exportez d'abord le carnet pour en conserver une copie."
 
 msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Delete All"
-msgstr ""
+msgstr "Tout supprimer"
 
-#, fuzzy
 msgid "The renderer applies the next time Hylki starts."
-msgstr "La langue s'appliquera au prochain démarrage de Hylki."
+msgstr "Le moteur de rendu s'appliquera au prochain démarrage de Hylki."
 
 msgid "The language applies the next time Hylki starts."
 msgstr "La langue s'appliquera au prochain démarrage de Hylki."
@@ -278,9 +281,8 @@ msgstr "Échec de l'importation : {e}"
 msgid "Could not import account: {e}"
 msgstr "Impossible d'importer le compte : {e}"
 
-#, fuzzy
 msgid "Could not save the message: {e}"
-msgstr "Impossible de mettre à jour le message : {e}"
+msgstr "Impossible d'enregistrer le message : {e}"
 
 msgid "No address book available"
 msgstr "Aucun carnet d'adresses disponible"
@@ -289,21 +291,23 @@ msgid "Could not update contact: {e}"
 msgstr "Impossible de mettre à jour le contact : {e}"
 
 msgid "Could not import contacts: {e}"
-msgstr ""
+msgstr "Impossible d'importer les contacts : {e}"
 
 msgid "Could not read: {files}"
-msgstr ""
+msgstr "Impossible de lire : {files}"
 
 msgid "No contacts were found in the selected files"
-msgstr ""
+msgstr "Aucun contact trouvé dans les fichiers sélectionnés"
 
 msgid ""
 "Contacts imported: {added} new, {updated} updated, {skipped} skipped, "
 "{errors} damaged"
 msgstr ""
+"Contacts importés : {added} nouveaux, {updated} mis à jour, {skipped} "
+"ignorés, {errors} endommagés"
 
 msgid "Contacts imported: {added} new, {updated} updated"
-msgstr ""
+msgstr "Contacts importés : {added} nouveaux, {updated} mis à jour"
 
 msgid "Hide Status Bar"
 msgstr "Masquer la barre d'état"
@@ -320,9 +324,8 @@ msgstr "À propos"
 msgid "Remove Tags"
 msgstr "Supprimer les tags"
 
-#, fuzzy
 msgid "Action"
-msgstr "Actions"
+msgstr "Action"
 
 msgid "New Message"
 msgstr "Nouveau message"
@@ -330,7 +333,6 @@ msgstr "Nouveau message"
 msgid "New Message from Template"
 msgstr "Nouveau message à partir d'un modèle"
 
-#, fuzzy
 msgid "Reply to All"
 msgstr "Répondre à tous"
 
@@ -352,21 +354,17 @@ msgstr "Rechercher dans le message"
 msgid "Delete"
 msgstr "Supprimer"
 
-#, fuzzy
 msgid "Star or Remove Star"
-msgstr "Retirer l'étoile"
+msgstr "Ajouter ou retirer l'étoile"
 
-#, fuzzy
 msgid "Mark as Read or Unread"
 msgstr "Marquer comme lu ou non lu"
 
-#, fuzzy
 msgid "Move to Folder"
-msgstr "Déplacer le dossier"
+msgstr "Déplacer vers un dossier"
 
-#, fuzzy
 msgid "Open Message File…"
-msgstr "Imprimer le message…"
+msgstr "Ouvrir un fichier de message…"
 
 msgid "Undo"
 msgstr "Annuler"
@@ -374,35 +372,29 @@ msgstr "Annuler"
 msgid "Redo"
 msgstr "Rétablir"
 
-#, fuzzy
 msgid "Check for New Mail"
-msgstr "Vérifier s'il y a de nouveaux messages"
+msgstr "Vérifier les nouveaux messages"
 
-#, fuzzy
 msgid "Search Messages"
-msgstr "Rechercher des messages…"
+msgstr "Rechercher des messages"
 
-#, fuzzy
 msgid "Show or Hide the Sidebar"
-msgstr "Afficher ou masquer les comptes dans la barre latérale"
+msgstr "Afficher ou masquer la barre latérale"
 
 msgid "Mail Accounts"
 msgstr "Comptes e-mail"
 
-#, fuzzy
 msgid "About Hylki"
-msgstr "À propos"
+msgstr "À propos de Hylki"
 
-#, fuzzy
 msgid "Turn Focus Mode On"
-msgstr "Mode Focus"
+msgstr "Activer le mode Focus"
 
-#, fuzzy
 msgid "Turn Focus Mode Off"
-msgstr "Mode Focus"
+msgstr "Désactiver le mode Focus"
 
 msgid "View"
-msgstr ""
+msgstr "Affichage"
 
 msgid "All accounts"
 msgstr "Tous les comptes"
@@ -413,9 +405,8 @@ msgstr "Contacts"
 msgid "Outbox"
 msgstr "Boîte d'envoi"
 
-#, fuzzy
 msgid "Tag"
-msgstr "Tags"
+msgstr "Tag"
 
 msgid ""
 "Single-key shortcuts are switched off. Turn them on in Settings → System."
@@ -488,33 +479,27 @@ msgstr "Déplier tous les messages"
 msgid "Collapse All Messages"
 msgstr "Réduire tous les messages"
 
-#, fuzzy
 msgid "Save as File…"
-msgstr "Enregistrer au format PDF…"
+msgstr "Enregistrer dans un fichier…"
 
 msgid "Print…"
 msgstr "Imprimer…"
 
-#, fuzzy
 msgid "Save Message"
-msgstr "Nouveau message"
+msgstr "Enregistrer le message"
 
-#, fuzzy
 msgid "Open Message File"
-msgstr "Nouveau message"
+msgstr "Ouvrir un fichier de message"
 
-#, fuzzy
 msgid "Email messages"
-msgstr "{n} messages"
+msgstr "Messages électroniques"
 
 #. Other programs name files .msg too (Tcl's catalogues).
-#, fuzzy
 msgid "it is not an Outlook message"
-msgstr "gpg n'a pas signé le message."
+msgstr "ce n'est pas un message Outlook"
 
-#, fuzzy
 msgid "Could not open {file}: {e}"
-msgstr "Impossible de déplacer le dossier : {e}"
+msgstr "Impossible d'ouvrir {file} : {e}"
 
 msgid "Delete {n} messages"
 msgstr "Supprimer {n} messages"
@@ -942,11 +927,10 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr "Se désabonner"
 
-#, fuzzy
 msgid "Also delete the message from {addr}"
 msgid_plural "Also delete the {n} messages from {addr}"
-msgstr[0] "Impossible de supprimer le message : {e}"
-msgstr[1] "Impossible de supprimer le message : {e}"
+msgstr[0] "Supprimer aussi le message de {addr}"
+msgstr[1] "Supprimer aussi les {n} messages de {addr}"
 
 msgid "the message offers no way to unsubscribe"
 msgstr "le message ne propose aucun moyen de se désabonner"
@@ -961,25 +945,24 @@ msgid "Move around"
 msgstr "Se déplacer"
 
 msgid "Move down or up the list without opening"
-msgstr ""
+msgstr "Descendre ou monter dans la liste sans ouvrir"
 
-#, fuzzy
 msgid "Open the message the cursor is on"
-msgstr "Ouvre le message en démarrant un transfert."
+msgstr "Ouvrir le message sur lequel se trouve le curseur"
 
 msgid "Back to the message list"
 msgstr "Retour à la liste des messages"
 
-#, fuzzy
 msgid "Next or previous message in the conversation"
-msgstr "Message précédent dans la conversation"
+msgstr "Message suivant ou précédent dans la conversation"
 
 msgid "Go to Inbox, Starred, Sent, Drafts or Archive"
 msgstr ""
+"Aller à la boîte de réception, aux favoris, aux envoyés, aux brouillons ou "
+"aux archives"
 
-#, fuzzy
 msgid "Go to Contacts"
-msgstr "Ajouter aux contacts"
+msgstr "Aller aux contacts"
 
 msgid "Search"
 msgstr "Rechercher"
@@ -1006,15 +989,13 @@ msgid "Select this row (for a bulk action)"
 msgstr "Sélectionner cette ligne (pour une action groupée)"
 
 msgid "Select every row, or none"
-msgstr ""
+msgstr "Sélectionner toutes les lignes, ou aucune"
 
-#, fuzzy
 msgid "Move to a folder"
-msgstr "Déplacer le dossier"
+msgstr "Déplacer vers un dossier"
 
-#, fuzzy
 msgid "Undo the last action"
-msgstr "Annuler le dernier déplacement ou la dernière suppression"
+msgstr "Annuler la dernière action"
 
 msgid "Add or remove a tag (the first nine, in Settings order)"
 msgstr ""
@@ -1123,6 +1104,7 @@ msgstr "Quitter complètement Hylki"
 
 msgid "Command palette: search actions, folders and tags"
 msgstr ""
+"Palette de commandes : rechercher des actions, des dossiers et des tags"
 
 msgid "This list"
 msgstr "Cette liste"
@@ -1231,7 +1213,7 @@ msgid "Find"
 msgstr "Rechercher"
 
 msgid "Hylki Address Book"
-msgstr ""
+msgstr "Carnet d'adresses Hylki"
 
 msgid "On This Computer"
 msgstr "Sur cet ordinateur"
@@ -1254,19 +1236,19 @@ msgid "The directory did not accept the password."
 msgstr "L'annuaire n'a pas accepté le mot de passe."
 
 msgid "A contact needs a name or an email address"
-msgstr ""
+msgstr "Un contact doit avoir un nom ou une adresse e-mail"
 
 msgid "The contact is too large"
-msgstr ""
+msgstr "Le contact est trop volumineux"
 
 msgid "UTF-16 files are not supported"
-msgstr ""
+msgstr "Les fichiers UTF-16 ne sont pas pris en charge"
 
 msgid "The file is not a text file"
-msgstr ""
+msgstr "Le fichier n'est pas un fichier texte"
 
 msgid "The file is larger than {size} MB"
-msgstr ""
+msgstr "Le fichier dépasse {size} Mo"
 
 msgid "{used} of {limit} used"
 msgstr "{used} sur {limit} utilisés"
@@ -1574,9 +1556,8 @@ msgid "Drag to set the order they appear in the sidebar."
 msgstr ""
 "Faites glisser pour modifier l'ordre d'affichage dans la barre latérale."
 
-#, fuzzy
 msgid "Check GNOME Online Accounts for new accounts"
-msgstr "Comptes en ligne de GNOME"
+msgstr "Rechercher de nouveaux comptes dans les Comptes en ligne de GNOME"
 
 msgid "Add Account…"
 msgstr "Ajouter un compte…"
@@ -1954,14 +1935,16 @@ msgstr ""
 "Supprimer définitivement les messages de la corbeille plus anciens que ce "
 "délai, vérification à chaque synchronisation."
 
-#, fuzzy
 msgid "Move list mail to Trash"
-msgstr "Déplacer ce brouillon vers la Corbeille"
+msgstr "Déplacer les messages de listes de diffusion vers la Corbeille"
 
 msgid ""
 "Inbox mail from mailing lists and newsletters (anything with an unsubscribe "
 "link) older than this, unless starred. Checked at each sync."
 msgstr ""
+"Messages de la boîte de réception issus de listes de diffusion et de lettres "
+"d'information (tout ce qui comporte un lien de désabonnement) plus anciens "
+"que ce délai, sauf s'ils sont en favoris. Vérifié à chaque synchronisation."
 
 msgid "Folder Order"
 msgstr "Ordre des dossiers"
@@ -2270,19 +2253,19 @@ msgid "From name"
 msgstr "Nom de l'expéditeur"
 
 msgid "To or Cc"
-msgstr ""
+msgstr "À ou Cc"
 
 msgid "Reply-To address"
-msgstr ""
+msgstr "Adresse de réponse"
 
 msgid "Message body"
-msgstr ""
+msgstr "Corps du message"
 
 msgid "Sender is in Contacts"
-msgstr ""
+msgstr "L'expéditeur figure dans les contacts"
 
 msgid "Sender is not in Contacts"
-msgstr ""
+msgstr "L'expéditeur ne figure pas dans les contacts"
 
 msgid "contains"
 msgstr "contient"
@@ -2412,6 +2395,7 @@ msgstr "Adresse d'expéditeur utilisée en l'absence de Reply-To"
 
 msgid "Looks in the system address books and the Hylki book"
 msgstr ""
+"Recherche dans les carnets d'adresses du système et dans le carnet Hylki"
 
 msgid "Add Condition"
 msgstr "Ajouter une condition"
@@ -2680,10 +2664,10 @@ msgid "Copy"
 msgstr "Copier"
 
 msgid "Command Palette"
-msgstr ""
+msgstr "Palette de commandes"
 
 msgid "Type an action, a folder or a tag"
-msgstr ""
+msgstr "Saisissez une action, un dossier ou un tag"
 
 msgid "Cloud Storage"
 msgstr "Stockage en ligne"
@@ -3190,9 +3174,8 @@ msgstr "Afficher le message tel qu'il sera envoyé"
 msgid "Translate what you wrote"
 msgstr "Traduire ce que vous avez écrit"
 
-#, fuzzy
 msgid "Insert Signature"
-msgstr "Importer la signature"
+msgstr "Insérer la signature"
 
 msgid "More"
 msgstr "Plus"
@@ -3234,13 +3217,11 @@ msgstr "Supprimer {name}"
 msgid "Typing"
 msgstr "Saisie"
 
-#, fuzzy
 msgid "Insert Before the Text"
-msgstr "Insérer dans le texte"
+msgstr "Insérer avant le texte"
 
-#, fuzzy
 msgid "Insert After the Text"
-msgstr "Insérer dans le texte"
+msgstr "Insérer après le texte"
 
 msgid "Show Original"
 msgstr "Afficher l'original"
@@ -3396,7 +3377,7 @@ msgid "New contact"
 msgstr "Nouveau contact"
 
 msgid "Import vCard files into the Hylki address book"
-msgstr ""
+msgstr "Importer des fichiers vCard dans le carnet d'adresses Hylki"
 
 msgid "Loading Contacts…"
 msgstr "Chargement des contacts…"
@@ -3406,6 +3387,9 @@ msgid ""
 "Hylki's own address book, and the address books of GNOME Contacts are listed "
 "here too."
 msgstr ""
+"Ajoutez un contact avec le bouton +, ou importez des fichiers vCard. Les "
+"contacts sont conservés dans le carnet d'adresses propre à Hylki, et les "
+"carnets d'adresses de Contacts GNOME sont également listés ici."
 
 msgid "Sort contacts"
 msgstr "Trier les contacts"
@@ -3426,9 +3410,11 @@ msgid ""
 "{name} is removed from your address book, and for a synced book, from the "
 "server too."
 msgstr ""
+"{name} est supprimé de votre carnet d'adresses et, pour un carnet "
+"synchronisé, du serveur également."
 
 msgid "All Address Books"
-msgstr ""
+msgstr "Tous les carnets d'adresses"
 
 msgid "Edit"
 msgstr "Modifier"
@@ -3458,10 +3444,10 @@ msgid "Add website"
 msgstr "Ajouter un site web"
 
 msgid "Import Contacts"
-msgstr ""
+msgstr "Importer des contacts"
 
 msgid "vCard files"
-msgstr ""
+msgstr "Fichiers vCard"
 
 msgid "All files"
 msgstr "Tous les fichiers"
@@ -3983,9 +3969,11 @@ msgid ""
 "Shows this message dark or light, whatever the message theme. Other messages "
 "are not affected."
 msgstr ""
+"Affiche ce message en mode sombre ou clair, quel que soit le thème des "
+"messages. Les autres messages ne sont pas affectés."
 
 msgid "Light / Dark Mode"
-msgstr ""
+msgstr "Mode clair / sombre"
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -4523,14 +4511,15 @@ msgstr ""
 msgid "Installed, but not this version's copy"
 msgstr "Installée, mais pas la copie de cette version"
 
-#, fuzzy
 msgid "Measuring…"
-msgstr "Recherche…"
+msgstr "Mesure en cours…"
 
 msgid ""
 "Messages {bodies}, attachments {files}. The cache, message list included, is "
 "{total}."
 msgstr ""
+"Messages : {bodies}, pièces jointes : {files}. Le cache, liste des messages "
+"comprise, occupe {total}."
 
 msgid "Search Settings"
 msgstr "Rechercher des paramètres"
@@ -4585,43 +4574,54 @@ msgid ""
 "Contacts Hylki keeps itself, in its own data folder. They are listed in "
 "Contacts beside the address books of GNOME Contacts, and work without GNOME."
 msgstr ""
+"Contacts que Hylki conserve lui-même, dans son propre dossier de données. "
+"Ils sont listés dans Contacts à côté des carnets d'adresses de Contacts "
+"GNOME et fonctionnent sans GNOME."
 
 msgid "Contacts in the Hylki book"
-msgstr ""
+msgstr "Contacts du carnet Hylki"
 
 msgid "Import vCard files"
-msgstr ""
+msgstr "Importer des fichiers vCard"
 
 msgid ""
 "Adds the contacts in .vcf files to the Hylki book. Importing a file again "
 "updates its contacts."
 msgstr ""
+"Ajoute au carnet Hylki les contacts des fichiers .vcf. Réimporter un fichier "
+"met à jour ses contacts."
 
 msgid "Export as a vCard file"
-msgstr ""
+msgstr "Exporter en fichier vCard"
 
 msgid ""
 "Saves every contact in the Hylki book in one .vcf file, which other apps can "
 "import."
 msgstr ""
+"Enregistre tous les contacts du carnet Hylki dans un seul fichier .vcf, que "
+"d'autres applications peuvent importer."
 
 msgid "Delete all contacts"
-msgstr ""
+msgstr "Supprimer tous les contacts"
 
 msgid ""
 "Empties the Hylki book. The address books of GNOME Contacts are not touched."
 msgstr ""
+"Vide le carnet Hylki. Les carnets d'adresses de Contacts GNOME ne sont pas "
+"touchés."
 
 msgid "New Contacts"
-msgstr ""
+msgstr "Nouveaux contacts"
 
 msgid "Save new contacts in"
-msgstr ""
+msgstr "Enregistrer les nouveaux contacts dans"
 
 msgid ""
 "The address book a contact made in Hylki goes to, unless another is picked "
 "when it is made."
 msgstr ""
+"Le carnet d'adresses où est enregistré un contact créé dans Hylki, sauf si "
+"un autre est choisi lors de sa création."
 
 msgid "Check for new mail"
 msgstr "Vérifier s'il y a de nouveaux messages"
@@ -5136,10 +5136,11 @@ msgstr ""
 "cette option stoppe aussi le téléchargement des aperçus."
 
 msgid "Tint tagged messages"
-msgstr ""
+msgstr "Teinter les messages avec tag"
 
 msgid "Wash the row of a tagged message with the color of its first tag."
 msgstr ""
+"Teinte la ligne d'un message avec tag de la couleur de son premier tag."
 
 msgid "Actions palette in the message list"
 msgstr "Palette d'actions dans la liste des messages"
@@ -5348,12 +5349,14 @@ msgstr ""
 "Thème s'appliquant au contenu des e-mails uniquement, pas à l'application."
 
 msgid "Light / Dark Mode switch"
-msgstr ""
+msgstr "Commutateur de mode clair / sombre"
 
 msgid ""
 "Show a switch in the message header that draws the message on screen light "
 "or dark, for that message alone."
 msgstr ""
+"Affiche dans l'en-tête du message un commutateur pour l'afficher en mode "
+"clair ou sombre, pour ce message uniquement."
 
 msgid "Default zoom"
 msgstr "Zoom par défaut"
@@ -5755,15 +5758,17 @@ msgstr ""
 "l'anglais là où aucune traduction n'existe. Un changement s'appliquera au "
 "prochain démarrage de Hylki."
 
-#, fuzzy
 msgid "Renderer"
-msgstr "Expéditeur"
+msgstr "Moteur de rendu"
 
 msgid ""
 "How the windows are drawn. OpenGL or Software can help on older graphics "
 "hardware where Vulkan is incomplete. A change applies the next time Hylki "
 "starts."
 msgstr ""
+"Façon dont les fenêtres sont dessinées. OpenGL ou Logiciel peuvent aider sur "
+"du matériel graphique ancien où Vulkan est incomplet. Un changement "
+"s'applique au prochain démarrage de Hylki."
 
 msgid "Keep running in the background"
 msgstr "Rester actif en arrière-plan"
@@ -5843,14 +5848,16 @@ msgstr ""
 "k pour se déplacer, r pour répondre, a pour archiver. Pressez Ctrl+? pour la "
 "liste complète."
 
-#, fuzzy
 msgid "Gmail keys"
-msgstr "Adresse e-mail"
+msgstr "Raccourcis Gmail"
 
 msgid ""
 "Single-key shortcuts as Gmail has them: j/k move without opening, o opens, e "
 "archives, # deletes, g then a letter goes to a folder."
 msgstr ""
+"Raccourcis à une touche comme dans Gmail : j/k pour se déplacer sans ouvrir, "
+"o pour ouvrir, e pour archiver, # pour supprimer, g puis une lettre pour "
+"aller à un dossier."
 
 msgid "Console mode"
 msgstr "Mode console"
@@ -5870,21 +5877,21 @@ msgstr ""
 "afin de le joindre à un rapport de bug. Les adresses e-mail sont raccourcies "
 "à leur domaine."
 
-#, fuzzy
 msgid "Downloaded mail"
-msgstr "Télécharger…"
+msgstr "Courrier téléchargé"
 
-#, fuzzy
 msgid "Remove…"
-msgstr "Supprimer"
+msgstr "Supprimer…"
 
 msgid "Keep downloaded mail"
-msgstr ""
+msgstr "Conserver le courrier téléchargé"
 
 msgid ""
 "Older messages and their attachments are removed from this computer and "
 "fetched again when opened."
 msgstr ""
+"Les messages plus anciens et leurs pièces jointes sont supprimés de cet "
+"ordinateur et téléchargés de nouveau à l'ouverture."
 
 msgid "GNOME Files Integration"
 msgstr "Intégration avec Fichiers de GNOME"
@@ -5984,7 +5991,7 @@ msgstr ""
 "du trousseau, qu'aucune sauvegarde ne contient."
 
 msgid "Software"
-msgstr ""
+msgstr "Logiciel"
 
 msgid "In the unified section"
 msgstr "Dans la section unifiée"
@@ -6031,19 +6038,17 @@ msgstr ""
 "Le lanceur affiche une icône définie en dehors de Hylki. En choisir une ici "
 "la remplace."
 
-#, fuzzy
 msgid "Always"
-msgstr "Toujours visible"
+msgstr "Toujours"
 
-#, fuzzy
 msgid "A year"
-msgstr "1 an"
+msgstr "Un an"
 
 msgid "90 days"
-msgstr ""
+msgstr "90 jours"
 
 msgid "30 days"
-msgstr ""
+msgstr "30 jours"
 
 msgid "When displayed"
 msgstr "Lors de l'affichage"
@@ -6127,12 +6132,15 @@ msgid "Could not install the extension"
 msgstr "Impossible d'installer l'extension"
 
 msgid "Remove downloaded mail?"
-msgstr ""
+msgstr "Supprimer le courrier téléchargé ?"
 
 msgid ""
 "Every message and attachment kept on this computer is removed, and fetched "
 "again from the server when it is opened. Nothing on the server changes."
 msgstr ""
+"Tous les messages et pièces jointes conservés sur cet ordinateur sont "
+"supprimés, puis téléchargés de nouveau depuis le serveur à leur ouverture. "
+"Rien ne change sur le serveur."
 
 msgid "Could not remove the extension"
 msgstr "Impossible de supprimer l'extension"
