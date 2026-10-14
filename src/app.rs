@@ -532,8 +532,10 @@ const CARRIED_BODY_LIMIT: usize = 64;
 /// One entry on the undo (or redo) stack: the step to apply, and what the
 /// user called the action it belongs to, so the menu can say "Undo Archive"
 /// rather than just "Undo".
-/// Most messages one smart folder (#417) lists per account.
-const SMART_VIEW_LIMIT: usize = 5000;
+/// How many messages per account a tag view or smart folder (#417) shows
+/// at once; the rest of what it holds is read straight after and replaces
+/// the first look, so a large view opens quickly and is still complete.
+const VIEW_FIRST_PAGE: usize = 5000;
 
 /// What a smart folder's conditions need besides the message itself, made
 /// on the main thread and taken to the one that reads the index.
@@ -792,6 +794,9 @@ pub struct AppModel {
     message_cache: HashMap<(u32, u32), Vec<Message>>,
     /// The search under way, if any (see `search_changed`).
     search: SearchState,
+    /// The open tag view or smart folder shows its first page, and the rest
+    /// is being read.
+    view_partial: bool,
     /// (account_id, folder_id) whose background backfill has fully finished, so the
     /// message list knows no more rows will stream in for them.
     indexed_folders: HashSet<(u32, u32)>,
@@ -1815,7 +1820,8 @@ pub enum AppMsg {
     },
     /// A tag view's rows, read from the index off the main thread: the
     /// view they answer and, per message, its account and folder path.
-    TagViewLoaded { key: (Option<u32>, Option<String>), rows: Vec<(u32, String, Message)> },
+    /// `complete` is false for the first page, which the whole follows.
+    TagViewLoaded { key: (Option<u32>, Option<String>), rows: Vec<(u32, String, Message)>, complete: bool },
     /// The cursor entered the sidebar pane — open the hover peek (rail +
     /// preference permitting).
     SidebarHoverEnter,
@@ -2058,8 +2064,9 @@ pub enum AppMsg {
     TagSelected { keyword: Option<String>, account: Option<u32> },
     /// A smart folder (#417) was picked, by id.
     SmartSelected(String),
-    /// A smart folder's rows, read from the index off the main thread.
-    SmartViewLoaded { id: String, rows: Vec<(u32, String, Message)> },
+    /// A smart folder's rows, read from the index off the main thread;
+    /// `complete` as for [`AppMsg::TagViewLoaded`].
+    SmartViewLoaded { id: String, rows: Vec<(u32, String, Message)>, complete: bool },
     /// Count every smart folder's unread mail now (the debounce ran out).
     CountSmartFolders,
     SmartCounts(HashMap<String, u32>),
@@ -3413,6 +3420,7 @@ impl SimpleComponent for AppModel {
             sent_index_requested: HashSet::new(),
             message_cache: HashMap::new(),
             search: SearchState::default(),
+            view_partial: false,
             indexed_folders: HashSet::new(),
             body_cache: crate::ram_cache::RamCache::new(BODY_CACHE_BUDGET),
             sender_cache: HashMap::new(),
@@ -10164,8 +10172,10 @@ impl SimpleComponent for AppModel {
                 self.push_index_complete();
             }
 
-            AppMsg::SmartViewLoaded { id, rows } => {
-                self.smart_view_loading = false;
+            AppMsg::SmartViewLoaded { id, rows, complete } => {
+                self.smart_view_loading = !complete;
+                self.view_partial = !complete && self.smart_view.as_ref() == Some(&id);
+                self.push_index_complete();
                 if let Some(folder) = self.smart_folders.iter().find(|f| f.id == id).cloned() {
                     let out = self.assemble_smart_view(&folder, rows);
                     let changed = self.smart_view_cache.get(&id) != Some(&out);
@@ -10176,7 +10186,7 @@ impl SimpleComponent for AppModel {
                         self.message_list.emit(MessageListInput::SetMessages { messages: out });
                     }
                 }
-                if std::mem::take(&mut self.smart_view_dirty) {
+                if complete && std::mem::take(&mut self.smart_view_dirty) {
                     self.refresh_smart_view(&sender);
                 }
             }
@@ -10230,8 +10240,10 @@ impl SimpleComponent for AppModel {
                 }
             }
 
-            AppMsg::TagViewLoaded { key, rows } => {
-                self.tag_view_loading = false;
+            AppMsg::TagViewLoaded { key, rows, complete } => {
+                self.tag_view_loading = !complete;
+                self.view_partial = !complete && self.tag_view.as_ref() == Some(&key);
+                self.push_index_complete();
                 let out = self.assemble_tag_view(&key, rows);
                 let changed = self.tag_view_cache.get(&key) != Some(&out);
                 if changed {
@@ -10240,7 +10252,7 @@ impl SimpleComponent for AppModel {
                 if self.tag_view.as_ref() == Some(&key) && changed {
                     self.message_list.emit(MessageListInput::SetMessages { messages: out });
                 }
-                if std::mem::take(&mut self.tag_view_dirty) {
+                if complete && std::mem::take(&mut self.tag_view_dirty) {
                     self.refresh_tag_view(&sender);
                 }
             }
@@ -13115,7 +13127,8 @@ impl AppModel {
         } else if let Some(sel) = &self.selected {
             self.indexed_folders.contains(&(sel.account_id, sel.folder_id))
         } else {
-            true
+            // A tag view or smart folder showing its first page only.
+            !self.view_partial
         }
     }
 
@@ -20263,17 +20276,26 @@ impl AppModel {
             .collect();
         let s = sender.clone();
         std::thread::spawn(move || {
-            let mut rows: Vec<(u32, String, Message)> = Vec::new();
-            if let Ok(cache) = crate::cache::Cache::open() {
-                for account_id in accounts {
+            let Ok(cache) = crate::cache::Cache::open() else {
+                return s.input(AppMsg::TagViewLoaded { key, rows: Vec::new(), complete: true });
+            };
+            let read = |limit: Option<usize>| {
+                let mut rows: Vec<(u32, String, Message)> = Vec::new();
+                let mut full = false;
+                for &account_id in &accounts {
                     for (kw, name) in &keywords {
-                        for (path, m) in cache.messages_with_keyword(account_id, kw, name) {
-                            rows.push((account_id, path, m));
-                        }
+                        let found = cache.messages_with_keyword(account_id, kw, name, limit);
+                        full |= limit.is_some_and(|l| found.len() >= l);
+                        rows.extend(found.into_iter().map(|(path, m)| (account_id, path, m)));
                     }
                 }
+                (rows, full)
+            };
+            let (rows, more) = read(Some(VIEW_FIRST_PAGE));
+            s.input(AppMsg::TagViewLoaded { key: key.clone(), rows, complete: !more });
+            if more {
+                s.input(AppMsg::TagViewLoaded { key, rows: read(None).0, complete: true });
             }
-            s.input(AppMsg::TagViewLoaded { key, rows });
         });
     }
 
@@ -20562,21 +20584,31 @@ impl AppModel {
         let ctx = self.smart_context(&folder);
         let s = sender.clone();
         std::thread::spawn(move || {
-            let mut rows: Vec<(u32, String, Message)> = Vec::new();
-            if let Ok(cache) = crate::cache::Cache::open() {
-                for (account_id, include, exclude) in scope {
+            let Ok(cache) = crate::cache::Cache::open() else {
+                return s.input(AppMsg::SmartViewLoaded { id: folder.id, rows: Vec::new(), complete: true });
+            };
+            let read = |limit: usize| {
+                let mut rows: Vec<(u32, String, Message)> = Vec::new();
+                let mut full = false;
+                for (account_id, include, exclude) in &scope {
                     let found = cache.smart_scan(
-                        account_id,
+                        *account_id,
                         include.as_deref(),
-                        &exclude,
+                        exclude,
                         folder.prefilter(),
-                        SMART_VIEW_LIMIT,
+                        limit,
                         |m| ctx.matches(&folder, m),
                     );
-                    rows.extend(found.into_iter().map(|(path, m)| (account_id, path, m)));
+                    full |= found.len() >= limit;
+                    rows.extend(found.into_iter().map(|(path, m)| (*account_id, path, m)));
                 }
+                (rows, full)
+            };
+            let (rows, more) = read(VIEW_FIRST_PAGE);
+            s.input(AppMsg::SmartViewLoaded { id: folder.id.clone(), rows, complete: !more });
+            if more {
+                s.input(AppMsg::SmartViewLoaded { id: folder.id.clone(), rows: read(usize::MAX).0, complete: true });
             }
-            s.input(AppMsg::SmartViewLoaded { id: folder.id, rows });
         });
     }
 

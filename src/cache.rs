@@ -259,8 +259,6 @@ fn split_labels(col: String) -> Vec<String> {
     col.split(LABEL_SEP).filter(|l| !l.is_empty()).map(str::to_string).collect()
 }
 
-/// Most messages one tag view lists per account; the list pages within it.
-const TAG_VIEW_LIMIT: i64 = 5000;
 
 /// Rowids written into a query as a literal list: they are integers, and a
 /// conversation can match more rows than a statement takes bound values.
@@ -2579,8 +2577,15 @@ impl Cache {
     /// sidebar's tag views (#71); the caller maps paths to folder ids and
     /// drops the copies Gmail keeps per label. `name` is the tag's name: on
     /// Gmail a label named like the tag (or like its keyword) counts as the
-    /// tag too (#374).
-    pub fn messages_with_keyword(&self, account_id: u32, keyword: &str, name: &str) -> Vec<(String, Message)> {
+    /// tag too (#374). `limit` reads only the newest so many, for a first
+    /// look while the rest is read; `None` reads them all.
+    pub fn messages_with_keyword(
+        &self,
+        account_id: u32,
+        keyword: &str,
+        name: &str,
+        limit: Option<usize>,
+    ) -> Vec<(String, Message)> {
         let needle = format!(" {} ", keyword.to_ascii_lowercase());
         let label = |s: &str| format!("{sep}{}{sep}", crate::mutf7::encode(s).to_lowercase(), sep = LABEL_SEP);
         let sql = format!(
@@ -2594,7 +2599,7 @@ impl Cache {
         );
         let run = || -> rusqlite::Result<Vec<(String, Message)>> {
             let mut stmt = self.conn.prepare(&sql)?;
-            let rows = stmt.query_map(params![account_id, needle, TAG_VIEW_LIMIT, LABEL_SEP.to_string(), label(keyword), label(name)], |row| {
+            let rows = stmt.query_map(params![account_id, needle, limit.map_or(-1, |l| l as i64), LABEL_SEP.to_string(), label(keyword), label(name)], |row| {
                 let uid: u32 = row.get(1)?;
                 let mut m = Message {
                     id: uid,
@@ -3194,14 +3199,14 @@ mod tests {
         };
         c.upsert_messages(1, "INBOX", std::slice::from_ref(&m));
         assert_eq!(c.load_messages(1, "INBOX", 1), [m.clone()]);
-        let (_, by_keyword) = c.messages_with_keyword(1, "$label1", "Urgent").pop().unwrap();
+        let (_, by_keyword) = c.messages_with_keyword(1, "$label1", "Urgent", None).pop().unwrap();
         assert_eq!(by_keyword.labels, m.labels);
         // A label named like a tag finds the message for that tag (#374),
         // whatever its case, the non-ASCII one included.
-        assert_eq!(c.messages_with_keyword(1, "work-kw", "my label").len(), 1);
-        assert_eq!(c.messages_with_keyword(1, "x", "été").len(), 1);
-        assert_eq!(c.messages_with_keyword(1, "x", "Work").len(), 0, "a nested label is its own name");
-        assert_eq!(c.messages_with_keyword(1, "nothing", "Nothing").len(), 0);
+        assert_eq!(c.messages_with_keyword(1, "work-kw", "my label", None).len(), 1);
+        assert_eq!(c.messages_with_keyword(1, "x", "été", None).len(), 1);
+        assert_eq!(c.messages_with_keyword(1, "x", "Work", None).len(), 0, "a nested label is its own name");
+        assert_eq!(c.messages_with_keyword(1, "nothing", "Nothing", None).len(), 0);
 
         // A label taken off in Gmail comes off here at the next sync.
         m.labels.clear();
@@ -3357,6 +3362,32 @@ mod tests {
         assert_eq!(items.len(), 1);
         assert_eq!(items[0].name, "in.png");
         assert_eq!(c.gallery_total(&q), 1, "the count follows the same scope");
+    }
+
+    /// A tag view's first look is the newest `limit`; without one every
+    /// tagged message is read, just under, at and just over the old cap of
+    /// 5,000 alike.
+    #[test]
+    fn a_tag_view_reads_past_its_first_page() {
+        for n in [4999u32, 5000, 5001] {
+            let c = Cache::in_memory().unwrap();
+            {
+                let tx = c.conn.unchecked_transaction().unwrap();
+                for uid in 1..=n {
+                    tx.execute(
+                        "INSERT INTO messages (account_id, folder_path, uid, from_name, from_addr, subject, date, ts, \
+                         unread, starred, has_attachment, keywords) VALUES (1, 'INBOX', ?1, '', '', '', '', ?1, 0, 0, 0, '$label1')",
+                        [uid],
+                    )
+                    .unwrap();
+                }
+                tx.commit().unwrap();
+            }
+            let first = c.messages_with_keyword(1, "$label1", "Red", Some(5000));
+            assert_eq!(first.len(), n.min(5000) as usize);
+            assert_eq!(first[0].1.uid, n, "newest first");
+            assert_eq!(c.messages_with_keyword(1, "$label1", "Red", None).len(), n as usize, "{n} tagged");
+        }
     }
 
     /// Search matches the filename, the sender, the subject and the type words
