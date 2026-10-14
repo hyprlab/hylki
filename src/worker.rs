@@ -821,6 +821,47 @@ pub fn spawn(
     ui_tx
 }
 
+/// The largest raw message downloaded over HTTP (Microsoft 365, JMAP), in
+/// bytes. Exchange Online takes messages of up to 150 MB, so the default is
+/// above that; `HYLKI_MAX_MESSAGE_MB` sets another.
+fn raw_message_limit() -> u64 {
+    std::env::var("HYLKI_MAX_MESSAGE_MB")
+        .ok()
+        .and_then(|v| v.trim().parse::<u64>().ok())
+        .filter(|mb| *mb > 0)
+        .unwrap_or(RAW_MESSAGE_DEFAULT_MB)
+        * 1024
+        * 1024
+}
+
+const RAW_MESSAGE_DEFAULT_MB: u64 = 256;
+
+/// Read a whole message, or fail: a message cut short at a limit would
+/// otherwise be parsed, rendered and cached as if it were all there, with
+/// its end and its attachments silently missing. One byte past the limit is
+/// read to tell "exactly the limit" from "more".
+fn read_capped(reader: impl std::io::Read, declared: Option<u64>, limit: u64) -> Result<Vec<u8>, String> {
+    use std::io::Read;
+    let too_large = || {
+        i18n_f(
+            "The message is larger than {n} MB, the most Hylki downloads, so it was not opened",
+            &[("n", &(limit / (1024 * 1024)).max(1).to_string())],
+        )
+    };
+    if declared.is_some_and(|len| len > limit) {
+        return Err(too_large());
+    }
+    let mut out = Vec::new();
+    reader.take(limit + 1).read_to_end(&mut out).map_err(|e| e.to_string())?;
+    if out.len() as u64 > limit {
+        return Err(too_large());
+    }
+    if declared.is_some_and(|len| (out.len() as u64) < len) {
+        return Err(i18n("The message ended early while it was downloading; try again"));
+    }
+    Ok(out)
+}
+
 /// The fast lane in front of an account's worker: everything the disk cache
 /// can answer is answered here, at once, and only what needs the network goes
 /// on to the worker.

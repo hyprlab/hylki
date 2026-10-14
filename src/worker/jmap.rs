@@ -544,7 +544,7 @@ fn fill_template(template: &str, slots: &[(&str, &str)]) -> String {
     out
 }
 
-/// The raw bytes of a blob, capped well above any sane message (64 MB).
+/// The raw bytes of a blob: all of them, or an error (see [`read_capped`]).
 fn jmap_download(s: &JmapSession, blob_id: &str) -> Result<Vec<u8>, String> {
     let url = fill_template(
         &s.download_url,
@@ -554,13 +554,8 @@ fn jmap_download(s: &JmapSession, blob_id: &str) -> Result<Vec<u8>, String> {
     let resp = agent().get(&url).set("Authorization", &s.auth).call().map_err(jmap_err);
     jmap_wired("GET blob", &resp);
     let resp = resp?;
-    let mut out = Vec::new();
-    use std::io::Read;
-    resp.into_reader()
-        .take(64 * 1024 * 1024)
-        .read_to_end(&mut out)
-        .map_err(|e| e.to_string())?;
-    Ok(out)
+    let declared = resp.header("Content-Length").and_then(|v| v.trim().parse::<u64>().ok());
+    read_capped(resp.into_reader(), declared, raw_message_limit())
 }
 
 /// Upload raw bytes; the blob id to import or attach.

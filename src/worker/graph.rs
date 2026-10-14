@@ -130,15 +130,11 @@ fn graph_get_bytes(token: &str, url: &str) -> Result<Vec<u8>, String> {
     let resp = graph_get(token, url);
     graph_wired("GET", url, &resp);
     let resp = resp?;
-    let mut out = Vec::new();
-    use std::io::Read;
-    // Raw MIME can be large; cap well above any sane message (64 MB).
-    resp.into_reader()
-        .take(64 * 1024 * 1024)
-        .read_to_end(&mut out)
-        .map_err(|e| e.to_string())?;
-    Ok(out)
+    let limit = raw_message_limit();
+    let declared = resp.header("Content-Length").and_then(|v| v.trim().parse::<u64>().ok());
+    read_capped(resp.into_reader(), declared, limit)
 }
+
 
 /// POST/PATCH a JSON body; an empty 2xx response comes back as `Null`.
 fn graph_send_json(
@@ -2514,6 +2510,26 @@ mod tests {
     }
 
     /// #429: a throttled request waits as asked and goes again.
+    /// A raw message is read whole or refused, never cut at the limit and
+    /// passed on as if complete.
+    #[test]
+    fn a_raw_message_is_read_whole_or_refused() {
+        let limit = 1000u64;
+        for (len, ok) in [(999usize, true), (1000, true), (1001, false)] {
+            let data = vec![b'x'; len];
+            let undeclared = read_capped(&data[..], None, limit);
+            assert_eq!(undeclared.is_ok(), ok, "{len} bytes, no length given");
+            if ok {
+                assert_eq!(undeclared.unwrap().len(), len);
+            }
+            assert_eq!(read_capped(&data[..], Some(len as u64), limit).is_ok(), ok, "{len} bytes, length given");
+        }
+        // Too large by the header alone: nothing is read.
+        assert!(read_capped(&b""[..], Some(5000), limit).is_err());
+        // A body shorter than it said is a broken download.
+        assert!(read_capped(&b"abc"[..], Some(10), limit).is_err());
+    }
+
     #[test]
     fn a_throttled_request_is_retried() {
         let (origin, server) = serve(vec![
