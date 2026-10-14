@@ -4396,6 +4396,15 @@ impl MessageList {
             let _ = sender.output(MessageListOutput::SearchActive(false));
         }
         self.query.clear();
+        // The entry's own change signal comes later and finds nothing to
+        // change, so the app hears here that the search is over: its pool
+        // goes, and any search on a server stops.
+        let _ = sender.output(MessageListOutput::SearchActive(false));
+        let _ = sender.output(MessageListOutput::SearchChanged {
+            text: String::new(),
+            scope: self.scope,
+            server: self.server_search,
+        });
         self.parsed = Ok(Rc::new(crate::mail_search::Query::default()));
         self.content_hits = Rc::new(ContentHits::new());
         self.search_extra.clear();

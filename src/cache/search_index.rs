@@ -144,19 +144,26 @@ pub(super) fn ensure_schema(conn: &rusqlite::Connection) {
         tracing::warn!("search index unavailable: {e}");
         return;
     }
-    let version: Option<i64> = conn
-        .query_row("SELECT value FROM search_state WHERE key = 'version'", [], |r| r.get(0))
-        .optional()
-        .ok()
-        .flatten();
-    if version == Some(SEARCH_INDEX_VERSION) {
+    let version = || -> Option<i64> {
+        conn.query_row("SELECT value FROM search_state WHERE key = 'version'", [], |r| r.get(0)).optional().ok().flatten()
+    };
+    if version() == Some(SEARCH_INDEX_VERSION) {
+        return;
+    }
+    // Several threads open the cache at start-up; the first to take the
+    // write lock builds the index, and the others find it built.
+    let _ = conn.busy_timeout(std::time::Duration::from_secs(10));
+    if conn.execute_batch("BEGIN IMMEDIATE;").is_err() {
+        return;
+    }
+    if version() == Some(SEARCH_INDEX_VERSION) {
+        let _ = conn.execute_batch("COMMIT;");
         return;
     }
     // Everything is indexed again: every stored message gets a fresh row,
     // marked out of date, for the background indexer to fill.
     let rebuilt = conn.execute_batch(&format!(
-        "BEGIN;
-         DELETE FROM search_fts;
+        "DELETE FROM search_fts;
          DELETE FROM search_docs;
          INSERT INTO search_docs (account_id, folder_path, uid, dirty)
              SELECT account_id, folder_path, uid, 1 FROM messages;
