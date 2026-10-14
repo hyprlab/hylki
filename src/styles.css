@@ -750,6 +750,45 @@ flowbox.attach-flow > flowboxchild {
   padding: 0 12px 8px 12px;
 }
 
+/* The conditions chosen from the search suggestions, as pills under the
+   field, in line with it. */
+.search-chips {
+  padding: 0 12px 8px 12px;
+}
+
+.search-chip {
+  border-radius: 999px;
+  background: alpha(currentColor, 0.08);
+  padding: 0 2px 0 4px;
+}
+
+.search-chip > menubutton > button,
+.search-chip > label {
+  min-height: 26px;
+  padding: 0 6px;
+  font-size: 0.9em;
+}
+
+.search-chip > menubutton > button {
+  border-radius: 999px;
+}
+
+.search-chip > button.circular {
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0;
+}
+
+/* The suggestions under the search field. */
+.search-suggestions {
+  background: none;
+  min-width: 260px;
+}
+
+.search-hint {
+  padding: 6px 10px 4px 10px;
+}
+
 .list-title {
   font-size: 1.25em;
   font-weight: 800;

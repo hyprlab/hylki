@@ -527,6 +527,99 @@ fn thread_slot(m: &Message) -> (u32, u32, u32) {
     (m.account_id, m.folder_id, m.id)
 }
 
+/// One row of the search suggestions: an icon for what it is, its text, and
+/// a person's address under their name.
+fn suggestion_row(s: &crate::search_assist::Suggestion) -> gtk::ListBoxRow {
+    use crate::search_assist::Token;
+    let icon = match &s.token {
+        Token::Person { .. } => "avatar-default-symbolic",
+        Token::Text { .. } => "edit-find-symbolic",
+        Token::Date { .. } => "x-office-calendar-symbolic",
+        Token::HasAttachment => "mail-attachment-symbolic",
+    };
+    let row_box = gtk::Box::new(gtk::Orientation::Horizontal, 10);
+    row_box.set_margin_top(4);
+    row_box.set_margin_bottom(4);
+    row_box.set_margin_start(4);
+    row_box.set_margin_end(4);
+    row_box.append(&gtk::Image::from_icon_name(icon));
+    let text = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    let title = gtk::Label::new(Some(&s.title));
+    title.set_xalign(0.0);
+    title.set_ellipsize(gtk::pango::EllipsizeMode::End);
+    text.append(&title);
+    if !s.detail.is_empty() {
+        let detail = gtk::Label::new(Some(&s.detail));
+        detail.set_xalign(0.0);
+        detail.add_css_class("dim-label");
+        detail.add_css_class("caption");
+        detail.set_ellipsize(gtk::pango::EllipsizeMode::End);
+        text.append(&detail);
+    }
+    row_box.append(&text);
+    let row = gtk::ListBoxRow::new();
+    row.set_child(Some(&row_box));
+    row
+}
+
+/// One chip under the search field: its condition (a menu to move it to
+/// another field, where it has one) and a button that takes it away.
+fn search_chip(i: usize, token: &crate::search_assist::Token, input: &relm4::Sender<MessageListInput>) -> gtk::Box {
+    let chip = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    chip.add_css_class("search-chip");
+    let label = token.label();
+    if token.fields().is_empty() {
+        let l = gtk::Label::new(Some(&label));
+        l.add_css_class("search-chip-label");
+        chip.append(&l);
+    } else {
+        let menu = gtk::Box::new(gtk::Orientation::Vertical, 0);
+        let pop = gtk::Popover::new();
+        pop.add_css_class("menu");
+        for field in token.fields() {
+            let b = gtk::Button::with_label(&crate::search_assist::field_name(*field));
+            b.add_css_class("flat");
+            if let Some(l) = b.child().and_downcast::<gtk::Label>() {
+                l.set_xalign(0.0);
+            }
+            let (input, field, pop) = (input.clone(), *field, pop.clone());
+            b.connect_clicked(move |_| {
+                pop.popdown();
+                let _ = input.send(MessageListInput::SetTokenField(i, field));
+            });
+            menu.append(&b);
+        }
+        pop.set_child(Some(&menu));
+        let button = gtk::MenuButton::new();
+        button.set_label(&label);
+        button.set_popover(Some(&pop));
+        button.add_css_class("flat");
+        button.set_tooltip_text(Some(&i18n("Search in another field")));
+        chip.append(&button);
+    }
+    let remove = gtk::Button::from_icon_name("window-close-symbolic");
+    remove.add_css_class("flat");
+    remove.add_css_class("circular");
+    remove.set_valign(gtk::Align::Center);
+    remove.set_tooltip_text(Some(&i18n("Remove this condition")));
+    let input = input.clone();
+    remove.connect_clicked(move |_| {
+        let _ = input.send(MessageListInput::RemoveToken(i));
+    });
+    chip.append(&remove);
+    chip
+}
+
+/// The line under the suggestions: how to search by hand, with the keywords
+/// as the interface language spells them.
+fn search_hint() -> String {
+    use crate::mail_search::Field;
+    use crate::search_assist::localized_keyword;
+    i18n("Tip: {from}name, {subject}word, \"exact words\", OR, -word")
+        .replace("{from}", &format!("{}:", localized_keyword(Field::From)))
+        .replace("{subject}", &format!("{}:", localized_keyword(Field::Subject)))
+}
+
 pub struct MessageList {
     /// The rows: a `ListView` builds only the ones on screen, so a folder
     /// of any size is one list (#323).
@@ -589,6 +682,19 @@ pub struct MessageList {
     search_entry: Option<gtk::SearchEntry>,
     /// The scope picker, for the showcase to set.
     scope_dropdown: Option<gtk::DropDown>,
+    /// The conditions chosen from the suggestions, shown as chips under the
+    /// field; the search is these and the typed text (`search_assist`).
+    tokens: Vec<crate::search_assist::Token>,
+    /// The text in the field, after the chips.
+    typed: String,
+    /// Known people, most used first, for the suggestions.
+    people: std::sync::Arc<Vec<(String, String)>>,
+    /// What the suggestion list offers, in its order.
+    suggestions: Vec<crate::search_assist::Suggestion>,
+    /// The suggestion popover under the field, its rows and the chip row.
+    suggest_popover: Option<gtk::Popover>,
+    suggest_list: Option<gtk::ListBox>,
+    chip_row: Option<adw::WrapBox>,
     /// The search toolbar is hidden until asked for (#102).
     search_open: bool,
     /// When the search closed itself (empty entry losing focus): the button
@@ -1223,9 +1329,19 @@ pub enum MessageListInput {
     SetServerSearch(bool),
     /// The status line's Load More button.
     MoreServerResults,
+    /// A suggestion under the search field was chosen, by its place.
+    AcceptSuggestion(usize),
+    /// A chip's ✕.
+    RemoveToken(usize),
+    /// A chip's field menu: the same condition on another field.
+    SetTokenField(usize, crate::mail_search::Field),
+    /// Known people, most used first, for the suggestions.
+    SetPeople(std::sync::Arc<Vec<(String, String)>>),
+    /// The field took the focus: offer what fits what is in it.
+    RefreshSuggestions,
     /// Showcase only (HYLKI_SHOWCASE_SEARCH): open the search and type
     /// `text` into it, looking in `scope`.
-    ShowcaseSearch { text: String, scope: SearchScope },
+    ShowcaseSearch { text: String, scope: SearchScope, accept: Vec<usize> },
     /// The reader's selection: mirror whichever of these the list has rows for,
     /// so everything that acts on the list's selection acts on the messages the
     /// user pointed at. The reader is already showing them, so this must not
@@ -1523,6 +1639,15 @@ impl SimpleComponent for MessageList {
                 },
                 },
 
+                // The chosen conditions, as chips (search_assist).
+                #[name = "chip_row"]
+                adw::WrapBox {
+                    add_css_class: "search-chips",
+                    set_child_spacing: 4,
+                    set_line_spacing: 4,
+                    set_visible: false,
+                },
+
                 gtk::Revealer {
                     set_transition_type: gtk::RevealerTransitionType::SlideDown,
                     #[watch]
@@ -1809,6 +1934,13 @@ impl SimpleComponent for MessageList {
             search_more: false,
             search_entry: None,
             scope_dropdown: None,
+            tokens: Vec::new(),
+            typed: String::new(),
+            people: std::sync::Arc::new(Vec::new()),
+            suggestions: Vec::new(),
+            suggest_popover: None,
+            suggest_list: None,
+            chip_row: None,
             search_open: false,
             search_closed_at: None,
             search_pinned: false,
@@ -1957,6 +2089,102 @@ impl SimpleComponent for MessageList {
         model.sync_look();
         model.search_entry = Some(widgets.search_entry.clone());
         model.scope_dropdown = Some(widgets.scope_dropdown.clone());
+        {
+            // Suggestions under the field while it is typed into (#search
+            // assistant): a popover that leaves the keyboard with the field.
+            let entry = widgets.search_entry.clone();
+            let list = gtk::ListBox::new();
+            list.set_selection_mode(gtk::SelectionMode::Single);
+            list.add_css_class("search-suggestions");
+            let s = sender.clone();
+            list.connect_row_activated(move |_, row| {
+                if let Ok(i) = usize::try_from(row.index()) {
+                    s.input(MessageListInput::AcceptSuggestion(i));
+                }
+            });
+            let pop = gtk::Popover::new();
+            pop.set_autohide(false);
+            pop.set_has_arrow(false);
+            pop.set_can_focus(false);
+            pop.set_position(gtk::PositionType::Bottom);
+            pop.set_halign(gtk::Align::Start);
+            pop.add_css_class("menu");
+            let content = gtk::Box::new(gtk::Orientation::Vertical, 0);
+            content.append(&list);
+            let hint = gtk::Label::new(Some(&search_hint()));
+            hint.add_css_class("dim-label");
+            hint.add_css_class("caption");
+            hint.add_css_class("search-hint");
+            hint.set_wrap(true);
+            hint.set_xalign(0.0);
+            hint.set_max_width_chars(40);
+            content.append(&hint);
+            pop.set_child(Some(&content));
+            pop.set_parent(&entry);
+            // The arrows walk the list, Return takes the chosen row, Esc
+            // closes the list before it closes the search, and Backspace at
+            // the start of an empty field takes the last chip back.
+            let keys = gtk::EventControllerKey::new();
+            keys.set_propagation_phase(gtk::PropagationPhase::Capture);
+            let (s, l, p, e) = (sender.clone(), list.clone(), pop.clone(), entry.clone());
+            keys.connect_key_pressed(move |_, key, _, _| {
+                use gtk::gdk::Key;
+                let shown = p.is_visible();
+                let rows = {
+                    let mut n = 0;
+                    while l.row_at_index(n).is_some() {
+                        n += 1;
+                    }
+                    n
+                };
+                let at = l.selected_row().map(|r| r.index()).unwrap_or(-1);
+                match key {
+                    Key::Down if shown && rows > 0 => {
+                        let next = (at + 1).min(rows - 1);
+                        l.select_row(l.row_at_index(next).as_ref());
+                        glib::Propagation::Stop
+                    }
+                    Key::Up if shown && at >= 0 => {
+                        if at == 0 {
+                            l.unselect_all();
+                        } else {
+                            l.select_row(l.row_at_index(at - 1).as_ref());
+                        }
+                        glib::Propagation::Stop
+                    }
+                    Key::Return | Key::KP_Enter | Key::ISO_Enter if shown && at >= 0 => {
+                        s.input(MessageListInput::AcceptSuggestion(at as usize));
+                        glib::Propagation::Stop
+                    }
+                    // Return with nothing chosen searches for the text as typed.
+                    Key::Return | Key::KP_Enter | Key::ISO_Enter if shown => {
+                        p.popdown();
+                        glib::Propagation::Proceed
+                    }
+                    Key::Escape if shown => {
+                        p.popdown();
+                        glib::Propagation::Stop
+                    }
+                    Key::BackSpace if e.text().is_empty() && e.position() == 0 => {
+                        s.input(MessageListInput::RemoveToken(usize::MAX));
+                        glib::Propagation::Proceed
+                    }
+                    _ => glib::Propagation::Proceed,
+                }
+            });
+            entry.add_controller(keys);
+            let p = pop.clone();
+            let focus = gtk::EventControllerFocus::new();
+            focus.connect_leave(move |_| p.popdown());
+            entry.add_controller(focus);
+            let s = sender.clone();
+            let focus = gtk::EventControllerFocus::new();
+            focus.connect_enter(move |_| s.input(MessageListInput::RefreshSuggestions));
+            entry.add_controller(focus);
+            model.suggest_popover = Some(pop);
+            model.suggest_list = Some(list);
+            model.chip_row = Some(widgets.chip_row.clone());
+        }
 
         // The scope picker sizes itself to its widest entry ("All folders"), which
         // made it — not the messages — the narrowest the list could ever be (#29).
@@ -2392,31 +2620,51 @@ impl SimpleComponent for MessageList {
                 self.refresh_tint_css();
                 self.sync_look();
             }
-            MessageListInput::Search(q) => {
-                if q == self.query {
-                    return;
+            MessageListInput::Search(typed) => {
+                self.typed = typed;
+                self.refresh_suggestions();
+                let q = crate::search_assist::compose(&self.tokens, &self.typed);
+                self.set_query(q, &sender);
+            }
+            MessageListInput::AcceptSuggestion(i) => {
+                let Some(s) = self.suggestions.get(i).cloned() else { return };
+                if !self.tokens.contains(&s.token) {
+                    self.tokens.push(s.token);
                 }
-                let was_active = self.searching();
-                self.query = q;
-                let now_active = self.searching();
-                self.parsed = crate::mail_search::Query::parse(&self.query).map(Rc::new);
-                // What the server found answered the old words.
-                self.search_extra.clear();
-                self.server_hits = Rc::new(std::collections::HashSet::new());
-                self.search_more = false;
-                self.search_status = match &self.parsed {
-                    Err(e) if now_active => e.text(),
-                    _ => String::new(),
-                };
-                self.recompute_pool();
-                // On the empty↔non-empty edge, tell the app to supply or drop the
-                // cross-folder pool.
-                if was_active != now_active {
-                    let _ = sender.output(MessageListOutput::SearchActive(now_active));
+                self.typed.clear();
+                if let Some(e) = &self.search_entry {
+                    e.set_text("");
                 }
-                self.announce_search(&sender);
-                self.rebuild();
-                self.scroll_top();
+                self.rebuild_chips();
+                self.refresh_suggestions();
+                let q = crate::search_assist::compose(&self.tokens, &self.typed);
+                self.set_query(q, &sender);
+            }
+            MessageListInput::RemoveToken(i) => {
+                // usize::MAX is Backspace on an empty field: the last chip.
+                let i = if i == usize::MAX { self.tokens.len().wrapping_sub(1) } else { i };
+                if i < self.tokens.len() {
+                    self.tokens.remove(i);
+                    self.rebuild_chips();
+                    let q = crate::search_assist::compose(&self.tokens, &self.typed);
+                    self.set_query(q, &sender);
+                    if let Some(e) = &self.search_entry {
+                        e.grab_focus();
+                    }
+                }
+            }
+            MessageListInput::SetTokenField(i, field) => {
+                if let Some(t) = self.tokens.get_mut(i) {
+                    *t = t.with_field(field);
+                    self.rebuild_chips();
+                    let q = crate::search_assist::compose(&self.tokens, &self.typed);
+                    self.set_query(q, &sender);
+                }
+            }
+            MessageListInput::RefreshSuggestions => self.refresh_suggestions(),
+            MessageListInput::SetPeople(people) => {
+                self.people = people;
+                self.refresh_suggestions();
             }
             MessageListInput::SetScope(scope) => {
                 if self.scope != scope {
@@ -2489,8 +2737,11 @@ impl SimpleComponent for MessageList {
                     self.announce_search(&sender);
                 }
             }
-            MessageListInput::ShowcaseSearch { text, scope } => {
+            MessageListInput::ShowcaseSearch { text, scope, accept } => {
                 self.search_open = true;
+                if let Some(e) = &self.search_entry {
+                    e.grab_focus();
+                }
                 if let Some(dd) = &self.scope_dropdown {
                     dd.set_selected(match scope {
                         SearchScope::AllFolders => 0,
@@ -2500,6 +2751,25 @@ impl SimpleComponent for MessageList {
                 }
                 if let Some(e) = &self.search_entry {
                     e.set_text(&text);
+                }
+                // HYLKI_SHOWCASE_SUGGEST=<path> captures the suggestions,
+                // which are a popover of their own and not in the window's
+                // capture.
+                if let (Ok(path), Some(pop)) = (std::env::var("HYLKI_SHOWCASE_SUGGEST"), self.suggest_popover.clone()) {
+                    glib::timeout_add_local_once(std::time::Duration::from_millis(600), move || {
+                        match pop.child() {
+                            Some(child) if pop.is_visible() => crate::app::showcase_capture(&child, &path),
+                            _ => tracing::warn!("showcase: the suggestions are not showing"),
+                        }
+                    });
+                }
+                // Then take these suggestions, one after the other, each a
+                // moment after the field caught up with the typing.
+                for (n, i) in accept.into_iter().enumerate() {
+                    let s = sender.clone();
+                    glib::timeout_add_local_once(std::time::Duration::from_millis(700 * (n as u64 + 1)), move || {
+                        s.input(MessageListInput::AcceptSuggestion(i));
+                    });
                 }
             }
             MessageListInput::MoreServerResults => {
@@ -4373,6 +4643,83 @@ impl MessageList {
         self.drop_threads();
     }
 
+    /// Search for `q`, the whole search text (chips and typing).
+    fn set_query(&mut self, q: String, sender: &ComponentSender<Self>) {
+        if q == self.query {
+            return;
+        }
+        let was_active = self.searching();
+        self.query = q;
+        self.parsed = crate::mail_search::Query::parse(&self.query).map(Rc::new);
+        let now_active = self.searching();
+        // What the server found answered the old words.
+        self.search_extra.clear();
+        self.server_hits = Rc::new(std::collections::HashSet::new());
+        self.search_more = false;
+        self.search_status = match &self.parsed {
+            Err(e) if now_active => e.text(),
+            _ => String::new(),
+        };
+        self.recompute_pool();
+        // On the empty↔non-empty edge, tell the app to supply or drop the
+        // cross-folder pool.
+        if was_active != now_active {
+            let _ = sender.output(MessageListOutput::SearchActive(now_active));
+        }
+        self.announce_search(sender);
+        self.rebuild();
+        self.scroll_top();
+    }
+
+    /// Fill the suggestion list for what is typed, and show or hide it.
+    fn refresh_suggestions(&mut self) {
+        let (Some(pop), Some(list), Some(entry)) = (&self.suggest_popover, &self.suggest_list, &self.search_entry) else {
+            return;
+        };
+        let vocab = crate::search_assist::Vocab::current();
+        let today = chrono::Local::now().date_naive();
+        self.suggestions = crate::search_assist::suggest(&self.typed, &self.people, &vocab, today);
+        // The starting points of an empty field are offered only before
+        // any condition is chosen.
+        if self.typed.trim().is_empty() && !self.tokens.is_empty() {
+            self.suggestions.clear();
+        }
+        while let Some(row) = list.first_child() {
+            list.remove(&row);
+        }
+        for s in &self.suggestions {
+            list.append(&suggestion_row(s));
+        }
+        // The entry's own text takes the focus, not the entry.
+        let focused = entry
+            .root()
+            .and_then(|r| gtk::prelude::RootExt::focus(&r))
+            .is_some_and(|f| f == *entry.upcast_ref::<gtk::Widget>() || f.is_ancestor(entry));
+        let wanted = self.search_open && focused && !self.suggestions.is_empty();
+        if wanted {
+            // Nothing is chosen until the arrow keys say so: Return alone
+            // searches for the text as typed.
+            list.unselect_all();
+            if !pop.is_visible() {
+                pop.popup();
+            }
+        } else if pop.is_visible() {
+            pop.popdown();
+        }
+    }
+
+    /// Put the chips under the field back together from `tokens`.
+    fn rebuild_chips(&self) {
+        let Some(row) = &self.chip_row else { return };
+        while let Some(child) = row.first_child() {
+            row.remove(&child);
+        }
+        for (i, token) in self.tokens.iter().enumerate() {
+            row.append(&search_chip(i, token, &self.input));
+        }
+        row.set_visible(!self.tokens.is_empty());
+    }
+
     /// Tell the app what to search for now.
     fn announce_search(&self, sender: &ComponentSender<Self>) {
         let text = if self.searching() && self.parsed.is_ok() { self.query.clone() } else { String::new() };
@@ -4422,6 +4769,12 @@ impl MessageList {
             server: self.server_search,
         });
         self.parsed = Ok(Rc::new(crate::mail_search::Query::default()));
+        self.tokens.clear();
+        self.typed.clear();
+        self.rebuild_chips();
+        if let Some(pop) = &self.suggest_popover {
+            pop.popdown();
+        }
         self.content_hits = Rc::new(ContentHits::new());
         self.search_extra.clear();
         self.server_hits = Rc::new(std::collections::HashSet::new());

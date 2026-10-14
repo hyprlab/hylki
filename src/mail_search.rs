@@ -160,7 +160,7 @@ fn tokenize(input: &str) -> Result<Vec<Token>, ParseError> {
         let mut key = None;
         let mut quoted_value = quoted;
         if !quoted && chars.get(i) == Some(&':') && is_known_key(&word) {
-            key = Some(word.to_ascii_lowercase());
+            key = canonical_key(&word);
             i += 1;
             if chars.get(i) == Some(&'"') {
                 let (s, next) = quoted_at(&chars, i)?;
@@ -204,7 +204,30 @@ fn tokenize(input: &str) -> Result<Vec<Token>, ParseError> {
 }
 
 fn is_known_key(word: &str) -> bool {
-    Field::from_key(word).is_some() || matches!(word.to_ascii_lowercase().as_str(), "before" | "after" | "has")
+    canonical_key(word).is_some()
+}
+
+/// The English keyword a typed one stands for: itself, or a keyword of the
+/// interface language (`von` in German, see `search_assist::Vocab`).
+fn canonical_key(word: &str) -> Option<String> {
+    let lower = word.to_lowercase();
+    if Field::from_key(&lower).is_some() || matches!(lower.as_str(), "before" | "after" | "has") {
+        return Some(lower);
+    }
+    use crate::search_assist::KeyWord;
+    let english = match crate::search_assist::Vocab::current().field_key(&lower)? {
+        KeyWord::Field(Field::From) => "from",
+        KeyWord::Field(Field::To) => "to",
+        KeyWord::Field(Field::Cc) => "cc",
+        KeyWord::Field(Field::ReplyTo) => "replyto",
+        KeyWord::Field(Field::Subject) => "subject",
+        KeyWord::Field(Field::Body) => "body",
+        KeyWord::Field(Field::Attachment) => "attachment",
+        KeyWord::Field(Field::Any) => return None,
+        KeyWord::Before => "before",
+        KeyWord::After => "after",
+    };
+    Some(english.to_string())
 }
 
 /// The phrase that starts with the quote at `start`, and the index past its

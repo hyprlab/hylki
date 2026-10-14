@@ -797,6 +797,8 @@ pub struct AppModel {
     /// The open tag view or smart folder shows its first page, and the rest
     /// is being read.
     view_partial: bool,
+    /// When the search field's people were last read.
+    search_people_at: Option<std::time::Instant>,
     /// (account_id, folder_id) whose background backfill has fully finished, so the
     /// message list knows no more rows will stream in for them.
     indexed_folders: HashSet<(u32, u32)>,
@@ -1603,6 +1605,8 @@ pub enum AppMsg {
     ServerSearch { gen: u64, account_id: u32, event: crate::worker::ServerSearchEvent },
     /// Load More under the search field.
     SearchMore,
+    /// The people the search field suggests, most used first.
+    SearchPeople(Vec<(String, String)>),
     /// The message list has no selection to show (e.g. the last message was
     /// removed), so the reader should clear.
     ClearReader,
@@ -3421,6 +3425,7 @@ impl SimpleComponent for AppModel {
             message_cache: HashMap::new(),
             search: SearchState::default(),
             view_partial: false,
+            search_people_at: None,
             indexed_folders: HashSet::new(),
             body_cache: crate::ram_cache::RamCache::new(BODY_CACHE_BUDGET),
             sender_cache: HashMap::new(),
@@ -5318,9 +5323,14 @@ impl SimpleComponent for AppModel {
                         Ok("folder") => SearchScope::ThisFolder,
                         _ => SearchScope::AllFolders,
                     };
+                    // HYLKI_SHOWCASE_SEARCH_ACCEPT=0,2 then takes those
+                    // suggestions, as the arrows and Return would.
+                    let accept: Vec<usize> = std::env::var("HYLKI_SHOWCASE_SEARCH_ACCEPT")
+                        .map(|v| v.split(',').filter_map(|n| n.trim().parse().ok()).collect())
+                        .unwrap_or_default();
                     let (list, text) = (model.message_list.sender().clone(), text.to_string());
                     gtk::glib::timeout_add_seconds_local_once(at, move || {
-                        let _ = list.send(MessageListInput::ShowcaseSearch { text, scope });
+                        let _ = list.send(MessageListInput::ShowcaseSearch { text, scope, accept });
                     });
                 }
                 // Two seconds on, it logs where focus landed (#266).
@@ -6768,6 +6778,10 @@ impl SimpleComponent for AppModel {
                     self.server_search_event(account_id, event);
                 }
             }
+            AppMsg::SearchPeople(people) => {
+                self.search_people_at = Some(std::time::Instant::now());
+                self.message_list.emit(MessageListInput::SetPeople(std::sync::Arc::new(people)));
+            }
             AppMsg::SearchMore => {
                 let more: Vec<u32> = self.search.more.drain().collect();
                 for account_id in more {
@@ -6780,6 +6794,7 @@ impl SimpleComponent for AppModel {
             }
             AppMsg::SearchActive(active) => {
                 if active {
+                    self.load_search_people(&sender);
                     // Results span accounts; tint rows by account (as in the unified
                     // inbox) so their origin is legible.
                     if self.accounts.len() > 1 {
@@ -20412,6 +20427,34 @@ impl AppModel {
         } else {
             self.show_search_status();
         }
+    }
+
+    /// Read the people the search field suggests, off the main thread: the
+    /// address book and everyone in stored mail, most used first, the way
+    /// the composer suggests recipients. Read again after a while, as mail
+    /// brings new names.
+    fn load_search_people(&mut self, sender: &ComponentSender<Self>) {
+        if self.search_people_at.is_some_and(|at| at.elapsed() < std::time::Duration::from_secs(600)) {
+            return;
+        }
+        self.search_people_at = Some(std::time::Instant::now());
+        if demo_mode() && self.config.is_empty() {
+            // The demo's mail is in memory: its senders are the people.
+            let mut seen = std::collections::HashSet::new();
+            let people: Vec<(String, String)> = build_search_pool(&self.message_cache)
+                .into_iter()
+                .filter(|m| seen.insert(m.from_addr.to_lowercase()))
+                .map(|m| (m.from_name, m.from_addr))
+                .collect();
+            sender.input(AppMsg::SearchPeople(people));
+            return;
+        }
+        let own: Vec<(String, String)> = self.config.iter().map(|c| (c.name.clone(), c.email.clone())).collect();
+        let s = sender.clone();
+        std::thread::spawn(move || {
+            let people = crate::contacts::suggestions(&own).into_iter().map(|p| (p.name, p.email)).collect();
+            s.input(AppMsg::SearchPeople(people));
+        });
     }
 
     fn start_local_search(&mut self, sender: &ComponentSender<Self>) {

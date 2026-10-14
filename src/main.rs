@@ -25,6 +25,7 @@ mod local_contacts;
 mod legacy;
 mod logo;
 mod mail_search;
+mod search_assist;
 mod memory_report;
 mod markdown;
 mod models;
