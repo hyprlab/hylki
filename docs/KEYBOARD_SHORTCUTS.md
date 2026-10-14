@@ -143,6 +143,8 @@ These work with or without single-key shortcuts too:
 | <kbd>Ctrl+Shift+K</kbd> | Command palette with `>` already typed: actions only |
 | <kbd>Delete</kbd> <kbd>Backspace</kbd> | Delete the selected messages, with the list focused |
 | <kbd>Ctrl+F</kbd> | Search the message list |
+| <kbd>↓</kbd> <kbd>↑</kbd> <kbd>Return</kbd> | In the search field: choose and take a suggestion ([details](DOCUMENTATION.md#searching-mail)) |
+| <kbd>Backspace</kbd> | In an empty search field: remove the last search chip |
 | <kbd>Ctrl+P</kbd> | Print the message you are reading |
 | <kbd>Ctrl+Shift+P</kbd> | Preview it as a PDF first |
 | <kbd>Ctrl+Z</kbd> | Undo the last action (a move, a delete, a star) |

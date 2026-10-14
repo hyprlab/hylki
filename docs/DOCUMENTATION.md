@@ -1426,6 +1426,20 @@ and DOCX attachments that are stored on this computer is searched as well;
 nothing is downloaded for it, and a scanned PDF without a text layer has no
 text to find, as Hylki does not read text out of images.
 
+While you type, a list under the field suggests what the text could mean: a
+person you have mail from or to (from the address book and stored mail), the
+text in the subject, the message or an attachment's name, and dates. Dates
+can be written as words in the interface language ("yesterday", "last week",
+"September", "2025"; in German "gestern", "letzte Woche") or as a day
+("1.10." or 2026-10-01), which offers that day, since it and before it.
+<kbd>↓</kbd> and <kbd>↑</kbd> choose a suggestion and <kbd>Return</kbd> takes
+it; <kbd>Return</kbd> with none chosen searches for the text as typed. A taken
+suggestion becomes a chip under the field. Its menu moves it to another field
+(From, To, Cc, Reply-To; or Subject, Message text, Attachment, Anywhere), ✕
+removes it, and <kbd>Backspace</kbd> in an empty field removes the last one.
+An empty field suggests a few starting points: today, this week, last month
+and mail with an attachment.
+
 The words of a search must all match, in any order and in any field, so
 `invoice march` finds a message whose subject says "invoice" and whose body
 says "March". A search can also use:
@@ -1444,6 +1458,9 @@ says "March". A search can also use:
 | `-word` or `NOT word` | leaves out mail that has the word |
 | `(a OR b) c` | parentheses group |
 
+The field names can also be typed in the interface language: in German
+`von:`, `an:`, `betreff:`, `anhang:`, `seit:` and `vor:` work as well as the
+English ones, and translators can add more spellings.
 `AND`, `OR` and `NOT` are written in capitals; in lower case they are ordinary
 words. A field name Hylki does not know, such as `re:` or a web address, is
 searched for as typed. A search that cannot be read, such as an unclosed quote
