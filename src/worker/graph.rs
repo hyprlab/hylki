@@ -35,9 +35,9 @@ const GRAPH_RELIST_AFTER: Duration = Duration::from_secs(15 * 60);
 const GRAPH_BACKFILL_BACKOFF: Duration = Duration::from_secs(60);
 
 /// One Graph mail folder, flattened out of the tree.
-struct GraphFolder {
-    graph_id: String,
-    folder: Folder,
+pub(super) struct GraphFolder {
+    pub(super) graph_id: String,
+    pub(super) folder: Folder,
 }
 
 fn graph_auth(token: &str) -> String {
@@ -108,7 +108,7 @@ fn graph_get(token: &str, url: &str) -> Result<ureq::Response, String> {
     }
 }
 
-fn graph_get_json(token: &str, url: &str) -> Result<serde_json::Value, String> {
+pub(super) fn graph_get_json(token: &str, url: &str) -> Result<serde_json::Value, String> {
     graph_wire("GET", url);
     let r = graph_get(token, url).and_then(|resp| resp.into_json().map_err(|e| e.to_string()));
     graph_wired("GET", url, &r);
@@ -223,7 +223,7 @@ fn graph_paged_more(
 
 /// List the account's mail folders (tree flattened, well-known roles mapped),
 /// sorted and id-numbered exactly like the IMAP path's folder list.
-fn graph_list_folders(
+pub(super) fn graph_list_folders(
     token: &str,
     account_id: u32,
     assignments: &std::collections::BTreeMap<String, String>,
@@ -332,7 +332,7 @@ fn graph_addrs(v: &serde_json::Value) -> String {
 
 /// Map one Graph message summary to a [`Message`]. Returns the Graph id too so
 /// the caller can index it.
-fn graph_message(v: &serde_json::Value, account_id: u32, folder_id: u32) -> Option<(Message, String)> {
+pub(super) fn graph_message(v: &serde_json::Value, account_id: u32, folder_id: u32) -> Option<(Message, String)> {
     let gid = v["id"].as_str()?.to_string();
     let uid = hash_uid(&gid);
     let ts = v["receivedDateTime"]
@@ -392,7 +392,7 @@ fn graph_message(v: &serde_json::Value, account_id: u32, folder_id: u32) -> Opti
     Some((msg, gid))
 }
 
-const GRAPH_MSG_SELECT: &str = "$select=id,internetMessageId,conversationId,subject,bodyPreview,\
+pub(super) const GRAPH_MSG_SELECT: &str = "$select=id,internetMessageId,conversationId,subject,bodyPreview,\
                                 from,replyTo,toRecipients,ccRecipients,receivedDateTime,isRead,\
                                 flag,hasAttachments,categories,importance";
 
@@ -1636,7 +1636,7 @@ async fn graph_purge_uids(
 }
 
 /// A fresh GOA token, or a user-actionable error.
-async fn graph_token(account: &AccountConfig, emit: &impl Fn(WorkerEvent)) -> Option<String> {
+pub(super) async fn graph_token(account: &AccountConfig, emit: &impl Fn(WorkerEvent)) -> Option<String> {
     match fetch_oauth_token(account).await {
         Some(t) => Some(t),
         None => {
@@ -1910,6 +1910,30 @@ async fn graph_drop_draft_origin(
     }
 }
 
+/// Graph ids of messages a search on the server found (see
+/// `server_search.rs`), by account address and uid: such a message may be in no
+/// listing this worker has made, and opening it needs its id.
+static SEARCH_IDS: std::sync::OnceLock<std::sync::Mutex<std::collections::HashMap<(String, u32), String>>> =
+    std::sync::OnceLock::new();
+
+/// Most search ids kept; past it the oldest searches' ids are forgotten,
+/// and those messages are found by listing their folder as before.
+const SEARCH_IDS_CAP: usize = 20_000;
+
+pub(super) fn remember_search_id(account: &str, uid: u32, gid: &str) {
+    let map = SEARCH_IDS.get_or_init(Default::default);
+    if let Ok(mut m) = map.lock() {
+        if m.len() >= SEARCH_IDS_CAP {
+            m.clear();
+        }
+        m.insert((account.to_lowercase(), uid), gid.to_string());
+    }
+}
+
+fn search_id(account: &str, uid: u32) -> Option<String> {
+    SEARCH_IDS.get()?.lock().ok()?.get(&(account.to_lowercase(), uid)).cloned()
+}
+
 /// Resolve a message uid to (token, Graph id), re-listing the folder once if
 /// the uid isn't in the map (fresh start from cache, or a moved message).
 async fn graph_resolve(
@@ -1922,6 +1946,10 @@ async fn graph_resolve(
     let token = graph_token(account, emit).await?;
     if let Some(gid) = state.uids.get(&uid) {
         return Some((token, gid.clone()));
+    }
+    if let Some(gid) = search_id(&account.email, uid) {
+        state.uids.insert(uid, gid.clone());
+        return Some((token, gid));
     }
     // Not indexed yet: list the folder (fills the uid map) and try again. The
     // account/folder ids only label the discarded summaries, so zeros are fine.

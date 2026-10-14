@@ -35,6 +35,8 @@ mod jmap;
 use graph::*;
 use imap_io::ImapIo;
 mod strip;
+mod server_search;
+pub use server_search::{spawn_server_search, ServerSearchEvent, ServerSearchHandle};
 
 /// Number of most-recent messages to fetch attachment info (BODYSTRUCTURE) for;
 /// older messages get an envelope-only index row and resolve attachments on open.
