@@ -789,6 +789,12 @@ msgstr "Kein Posteingangsordner für dieses Konto verfügbar"
 msgid "Searching on the server…"
 msgstr "Suche auf dem Server …"
 
+#. A unified, tag or smart view is no one folder on any server.
+msgid ""
+"This view is not one folder on a server; choose This account or All accounts "
+"to search the servers"
+msgstr ""
+
 msgid "{account} is searched on this computer only"
 msgstr "{account} wird nur auf diesem Computer durchsucht"
 

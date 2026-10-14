@@ -20479,6 +20479,14 @@ impl AppModel {
         let Ok(query) = crate::mail_search::Query::parse(&self.search.text) else { return };
         let gen = self.search.gen;
         let folder = self.search.folder.clone();
+        if self.search.scope == Some(SearchScope::ThisFolder) && folder.is_none() {
+            // A unified, tag or smart view is no one folder on any server.
+            self.search.notes.push(i18n(
+                "This view is not one folder on a server; choose This account or All accounts to search the servers",
+            ));
+            self.show_search_status();
+            return;
+        }
         for account_id in self.search.accounts.clone() {
             let Some(account) = self.config.get(account_id as usize - 1).filter(|a| a.enabled).cloned() else { continue };
             if !matches!(account.protocol, crate::config::Protocol::Imap | crate::config::Protocol::Graph) {

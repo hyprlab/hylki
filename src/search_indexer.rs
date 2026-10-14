@@ -90,15 +90,19 @@ fn extract_some(cache: &crate::cache::Cache) -> bool {
     if pending.is_empty() {
         return false;
     }
+    let mut saved = false;
     for a in &pending {
         let (status, text) = if a.data.is_empty() {
             (crate::cache::ExtractStatus::Failed, String::new())
         } else {
             crate::text_extract::extract(&a.name, &a.data)
         };
-        if let Err(e) = cache.save_attachment_text(a, status, &text) {
-            tracing::debug!("search index: attachment text not saved: {e}");
+        match cache.save_attachment_text(a, status, &text) {
+            Ok(()) => saved = true,
+            Err(e) => tracing::debug!("search index: attachment text not saved: {e}"),
         }
     }
-    true
+    // Nothing could be written (a full disk, say): rest before trying again
+    // rather than extract the same files over and over.
+    saved
 }

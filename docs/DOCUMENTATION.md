@@ -1455,7 +1455,9 @@ accents.
 The menu beside the field chooses where to look: **All accounts**, **This
 account** (every folder of the account the open folder belongs to) or **This
 folder**. A unified view such as All Inboxes belongs to no single account, so
-its search covers every account.
+its search covers every account. Searching the servers from such a view
+needs **This account** or **All accounts**, as the view is no one folder on a
+server.
 
 The text of messages is searched by an index that Hylki builds on this
 computer as mail is stored, in the background and a batch at a time. On a
@@ -1482,7 +1484,9 @@ What a server can search sets the limits:
   `after:` by the day the server received the message. It cannot tell whether
   a message has an attachment, so `has:attachment` is checked locally only,
   and `attachment:` searches the whole message text. Folders are opened
-  read-only for a search.
+  read-only for a search. Words beyond plain ASCII are sent as UTF-8 in a
+  quoted string, as Hylki's filter rules have always sent them; most servers
+  accept that, and one that does not answers the search with an error.
 - **Microsoft 365** returns at most 1,000 results for one search and offers no
   way to page past them; when a search reaches that number, the line under the
   field says so, and a narrower search finds the rest. It cannot search

@@ -574,6 +574,10 @@ pub struct MessageList {
     search_base: Vec<Rc<Message>>,
     /// Messages a search on the server found that the local pool lacks.
     search_extra: Vec<Rc<Message>>,
+    /// Every message the servers found, as `(account_id, folder_id, uid)`:
+    /// they match on the server's word whatever the list can check itself,
+    /// as their body may be nowhere on this computer.
+    server_hits: Rc<std::collections::HashSet<(u32, u32, u32)>>,
     /// Whether the search also asks the mail servers.
     server_search: bool,
     /// The line under the search field: a syntax error, or how a search on
@@ -1799,6 +1803,7 @@ impl SimpleComponent for MessageList {
             content_hits: Rc::new(ContentHits::new()),
             search_base: Vec::new(),
             search_extra: Vec::new(),
+            server_hits: Rc::new(std::collections::HashSet::new()),
             server_search: false,
             search_status: String::new(),
             search_more: false,
@@ -2397,6 +2402,7 @@ impl SimpleComponent for MessageList {
                 self.parsed = crate::mail_search::Query::parse(&self.query).map(Rc::new);
                 // What the server found answered the old words.
                 self.search_extra.clear();
+                self.server_hits = Rc::new(std::collections::HashSet::new());
                 self.search_more = false;
                 self.search_status = match &self.parsed {
                     Err(e) if now_active => e.text(),
@@ -2416,6 +2422,7 @@ impl SimpleComponent for MessageList {
                 if self.scope != scope {
                     self.scope = scope;
                     self.search_extra.clear();
+                    self.server_hits = Rc::new(std::collections::HashSet::new());
                     self.search_more = false;
                     self.recompute_pool();
                     self.announce_search(&sender);
@@ -2445,16 +2452,16 @@ impl SimpleComponent for MessageList {
                 }
                 let mut known: std::collections::HashSet<(u32, u32, u32)> =
                     self.search_extra.iter().map(|m| thread_slot(m)).collect();
-                let before = self.search_extra.len();
+                let mut hits = (*self.server_hits).clone();
                 for m in found {
+                    hits.insert((m.account_id, m.folder_id, m.uid));
                     if known.insert(thread_slot(&m)) {
                         self.search_extra.push(Rc::new(m));
                     }
                 }
-                if self.search_extra.len() != before {
-                    self.recompute_pool();
-                    self.rebuild();
-                }
+                self.server_hits = Rc::new(hits);
+                self.recompute_pool();
+                self.rebuild();
             }
             MessageListInput::SetSearchStatus { text, more } => {
                 // A syntax error outranks anything the app says about the
@@ -2469,6 +2476,7 @@ impl SimpleComponent for MessageList {
                     self.server_search = on;
                     if !on {
                         self.search_extra.clear();
+                        self.server_hits = Rc::new(std::collections::HashSet::new());
                         self.search_more = false;
                         if self.parsed.is_ok() {
                             self.search_status.clear();
@@ -3125,6 +3133,9 @@ impl SimpleComponent for MessageList {
                 }
                 self.selected_ids.retain(|(_, i)| *i != id);
                 self.all.retain(|m| m.id != id);
+                for pool in [&mut self.search_pool, &mut self.search_base, &mut self.search_extra] {
+                    pool.retain(|m| m.id != id);
+                }
                 self.drop_threads();
                 self.tail.retain(|r| r.msg.id != id);
                 let removed_idx = self.shown.iter().position(|m| m.id == id);
@@ -3181,6 +3192,9 @@ impl SimpleComponent for MessageList {
                 }
                 self.selected_ids.retain(|(_, i)| !set.contains(i));
                 self.all.retain(|m| !set.contains(&m.id));
+                for pool in [&mut self.search_pool, &mut self.search_base, &mut self.search_extra] {
+                    pool.retain(|m| !set.contains(&m.id));
+                }
                 self.drop_threads();
                 self.tail.retain(|r| !set.contains(&r.msg.id));
                 // Where the first removed row sat, so we can re-select in its place.
@@ -4271,7 +4285,9 @@ impl MessageList {
 
     /// Whether a search is currently active (the query is non-empty).
     fn searching(&self) -> bool {
-        !self.query.trim().is_empty()
+        // `""` or `()` parse to nothing to look for: no search, rather than
+        // one that matches every message there is.
+        !self.query.trim().is_empty() && !self.parsed.as_ref().is_ok_and(|q| q.root.is_none())
     }
 
     /// The message set the search filters over: the cross-folder pool while an
@@ -4408,6 +4424,7 @@ impl MessageList {
         self.parsed = Ok(Rc::new(crate::mail_search::Query::default()));
         self.content_hits = Rc::new(ContentHits::new());
         self.search_extra.clear();
+        self.server_hits = Rc::new(std::collections::HashSet::new());
         self.search_status.clear();
         self.search_more = false;
         self.recompute_pool();
@@ -4430,6 +4447,7 @@ impl MessageList {
         // under the field says why.
         let query = if self.searching() { self.parsed.clone().map(Some) } else { Ok(None) };
         let hits = self.content_hits.clone();
+        let server_hits = self.server_hits.clone();
         move |m: &Message| {
             if !quick.passes(m) {
                 return false;
@@ -4441,6 +4459,9 @@ impl MessageList {
             };
             let fields = |f: Field| crate::mail_search::message_field(m, f);
             let slot = (m.account_id, m.folder_id, m.uid);
+            if server_hits.contains(&slot) {
+                return true;
+            }
             let content = |f: Field, t: &str| hits.get(&(f, t.to_string())).is_some_and(|s| s.contains(&slot));
             query.matches(m.timestamp, m.has_attachment, &fields, &content)
         }

@@ -793,6 +793,12 @@ msgstr "To konto nie ma skrzynki odbiorczej"
 msgid "Searching on the server…"
 msgstr "Wyszukiwanie…"
 
+#. A unified, tag or smart view is no one folder on any server.
+msgid ""
+"This view is not one folder on a server; choose This account or All accounts "
+"to search the servers"
+msgstr ""
+
 msgid "{account} is searched on this computer only"
 msgstr ""
 

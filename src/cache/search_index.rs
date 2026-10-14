@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS search_state (
     value INTEGER NOT NULL
 );
 CREATE TABLE IF NOT EXISTS search_docs (
-    docid       INTEGER PRIMARY KEY,
+    docid       INTEGER PRIMARY KEY AUTOINCREMENT,
     account_id  INTEGER NOT NULL,
     folder_path TEXT    NOT NULL,
     uid         INTEGER NOT NULL,
@@ -62,9 +62,10 @@ CREATE TRIGGER IF NOT EXISTS search_msg_ins AFTER INSERT ON messages BEGIN
     INSERT INTO search_docs (account_id, folder_path, uid) VALUES (new.account_id, new.folder_path, new.uid)
     ON CONFLICT (account_id, folder_path, uid) DO UPDATE SET dirty = dirty + 1;
 END;
-CREATE TRIGGER IF NOT EXISTS search_msg_upd AFTER UPDATE OF subject, from_name, from_addr, recipients, cc, reply_to ON messages
+CREATE TRIGGER IF NOT EXISTS search_msg_upd AFTER UPDATE OF subject, from_name, from_addr, recipients, cc, reply_to, preview ON messages
 WHEN old.subject IS NOT new.subject OR old.from_name IS NOT new.from_name OR old.from_addr IS NOT new.from_addr
-  OR old.recipients IS NOT new.recipients OR old.cc IS NOT new.cc OR old.reply_to IS NOT new.reply_to BEGIN
+  OR old.recipients IS NOT new.recipients OR old.cc IS NOT new.cc OR old.reply_to IS NOT new.reply_to
+  OR old.preview IS NOT new.preview BEGIN
     UPDATE search_docs SET dirty = dirty + 1
     WHERE account_id = new.account_id AND folder_path = new.folder_path AND uid = new.uid;
 END;
@@ -145,7 +146,10 @@ pub(super) fn ensure_schema(conn: &rusqlite::Connection) {
         return;
     }
     let version = || -> Option<i64> {
-        conn.query_row("SELECT value FROM search_state WHERE key = 'version'", [], |r| r.get(0)).optional().ok().flatten()
+        conn.query_row("SELECT value FROM search_state WHERE key = 'version'", [], |r| r.get(0))
+            .optional()
+            .ok()
+            .flatten()
     };
     if version() == Some(SEARCH_INDEX_VERSION) {
         return;
@@ -229,27 +233,40 @@ impl Cache {
             return Ok(0);
         }
         // `None` for a row whose message is gone: its index entry goes too.
-        let mut columns: Vec<(i64, i64, Option<[String; 7]>)> = Vec::with_capacity(docs.len());
+        let mut columns: Vec<(&Doc, Option<[String; 7]>)> = Vec::with_capacity(docs.len());
         for d in &docs {
-            columns.push((d.docid, d.dirty, self.index_columns(d.account_id, &d.folder_path, d.uid)?));
+            columns.push((d, self.index_columns(d.account_id, &d.folder_path, d.uid)?));
         }
         let tx = self.conn.unchecked_transaction()?;
-        for (docid, dirty, cols) in &columns {
-            tx.execute("DELETE FROM search_fts WHERE rowid = ?1", [docid])?;
+        for (d, cols) in &columns {
+            // The row must still be the one that was read, unchanged since: a
+            // docid is never reused (AUTOINCREMENT), and a row marked again
+            // meanwhile keeps its mark for the next batch, so nothing older
+            // is written over newer work.
+            let current = tx
+                .query_row(
+                    "SELECT 1 FROM search_docs WHERE docid = ?1 AND account_id = ?2 AND folder_path = ?3 \
+                     AND uid = ?4 AND dirty = ?5",
+                    params![d.docid, d.account_id, d.folder_path, d.uid, d.dirty],
+                    |_| Ok(()),
+                )
+                .optional()?
+                .is_some();
+            if !current {
+                continue;
+            }
+            tx.execute("DELETE FROM search_fts WHERE rowid = ?1", [d.docid])?;
             match cols {
                 Some(c) => {
                     tx.execute(
                         "INSERT INTO search_fts (rowid, subject, sender, to_, cc, reply_to, body, attachments) \
                          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
-                        params![docid, c[0], c[1], c[2], c[3], c[4], c[5], c[6]],
+                        params![d.docid, c[0], c[1], c[2], c[3], c[4], c[5], c[6]],
                     )?;
-                    tx.execute(
-                        "UPDATE search_docs SET dirty = 0 WHERE docid = ?1 AND dirty = ?2",
-                        params![docid, dirty],
-                    )?;
+                    tx.execute("UPDATE search_docs SET dirty = 0 WHERE docid = ?1", [d.docid])?;
                 }
                 None => {
-                    tx.execute("DELETE FROM search_docs WHERE docid = ?1", [docid])?;
+                    tx.execute("DELETE FROM search_docs WHERE docid = ?1", [d.docid])?;
                 }
             }
         }
@@ -574,6 +591,34 @@ mod tests {
         assert_eq!(c.index_backlog(), 0);
     }
 
+    /// A message deleted and another stored straight after never share an
+    /// index row, so a batch read before the change cannot write the old
+    /// message's words onto the new one.
+    #[test]
+    fn an_index_row_is_never_reused() {
+        let c = cache();
+        add(&c, "INBOX", 1, "First", "", "", "", "");
+        let first: i64 = c.conn.query_row("SELECT docid FROM search_docs", [], |r| r.get(0)).unwrap();
+        c.delete_message(1, "INBOX", 1);
+        add(&c, "Archive", 2, "Second", "", "", "", "");
+        let second: i64 = c.conn.query_row("SELECT docid FROM search_docs", [], |r| r.get(0)).unwrap();
+        assert_ne!(first, second);
+    }
+
+    /// The preview stands in for a body not stored, so a new preview is
+    /// indexed again, and an old one's words stop matching.
+    #[test]
+    fn a_new_preview_is_indexed_again() {
+        let c = cache();
+        add(&c, "INBOX", 1, "Hi", "", "", "", "about the walrus");
+        index_all(&c);
+        assert_eq!(hits(&c, Field::Body, "walrus"), vec![1]);
+        c.conn.execute("UPDATE messages SET preview = ?1 WHERE uid = 1", [crate::models::ENCRYPTED_PREVIEW]).unwrap();
+        assert_eq!(c.index_backlog(), 1);
+        index_all(&c);
+        assert!(hits(&c, Field::Body, "walrus").is_empty());
+    }
+
     #[test]
     fn a_resync_with_the_same_headers_leaves_the_index_alone() {
         let c = cache();
@@ -691,8 +736,11 @@ mod tests {
                 )
                 .unwrap();
                 let body = format!("<p>{}</p><p>token{uid} {w}</p>", "lorem ipsum dolor sit amet ".repeat(80));
-                tx.execute("INSERT INTO bodies (account_id, folder_path, uid, body) VALUES (1, 'INBOX', ?1, ?2)", params![uid, body])
-                    .unwrap();
+                tx.execute(
+                    "INSERT INTO bodies (account_id, folder_path, uid, body) VALUES (1, 'INBOX', ?1, ?2)",
+                    params![uid, body],
+                )
+                .unwrap();
             }
             tx.commit().unwrap();
         }

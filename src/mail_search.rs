@@ -477,11 +477,12 @@ pub fn search_cache(
 pub fn local_midnight(day: NaiveDate) -> i64 {
     use chrono::TimeZone;
     let naive = day.and_hms_opt(0, 0, 0).expect("midnight exists");
-    chrono::Local
-        .from_local_datetime(&naive)
-        .earliest()
-        // A day that starts inside a DST gap starts at the first instant
-        // that exists.
+    // A day that starts inside a DST gap (clocks going forward at midnight)
+    // starts at the first local time that exists.
+    (0..=24 * 4)
+        .find_map(|quarter| {
+            chrono::Local.from_local_datetime(&(naive + chrono::Duration::minutes(15 * quarter))).earliest()
+        })
         .unwrap_or_else(|| chrono::Local.from_utc_datetime(&naive))
         .timestamp()
 }

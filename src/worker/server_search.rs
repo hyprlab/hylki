@@ -300,6 +300,7 @@ async fn imap_search<F: Fn(ServerSearchEvent)>(
                 in_page = 0;
                 // The connection may have sat idle; the folder is opened again.
                 if exam(&mut sess, &path).await.is_err() {
+                    skipped.push(path.clone());
                     break;
                 }
             }
@@ -469,10 +470,18 @@ mod tests {
         let second: Vec<_> = (600..1000).map(|i| result(i, "F2")).collect();
         let mut answers = role_answers();
         answers.extend([
-            answer("/me/mailFolders?$top=100", 200, serde_json::json!({
-                "value": [folder_json("F1", "Inbox", 0), folder_json("F2", "Archive", 0)] })),
-            answer("/me/messages?$search=", 200, serde_json::json!({
-                "value": first, "@odata.nextLink": "{origin}/me/messages?$search=x&$skiptoken=2" })),
+            answer(
+                "/me/mailFolders?$top=100",
+                200,
+                serde_json::json!({
+                "value": [folder_json("F1", "Inbox", 0), folder_json("F2", "Archive", 0)] }),
+            ),
+            answer(
+                "/me/messages?$search=",
+                200,
+                serde_json::json!({
+                "value": first, "@odata.nextLink": "{origin}/me/messages?$search=x&$skiptoken=2" }),
+            ),
             answer("$skiptoken=2", 200, serde_json::json!({ "value": second })),
         ]);
         let (origin, server) = serve(answers);
@@ -490,7 +499,10 @@ mod tests {
         let events = events.into_inner().unwrap();
         let found: Vec<&(String, Message)> = events
             .iter()
-            .filter_map(|e| match e { ServerSearchEvent::Found(v) => Some(v), _ => None })
+            .filter_map(|e| match e {
+                ServerSearchEvent::Found(v) => Some(v),
+                _ => None,
+            })
             .flatten()
             .collect();
         assert_eq!(found.len(), 999, "all but the one in a hidden folder");
