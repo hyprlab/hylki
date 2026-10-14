@@ -1536,6 +1536,8 @@ pub enum MessageListOutput {
     SearchChanged { text: String, scope: SearchScope, server: bool },
     /// The status line's Load More button: the next results from the server.
     SearchMore,
+    /// The search field took the focus: the people it suggests are wanted.
+    SearchFocused,
     /// A column heading changed the sort (#334), by its key: the sort
     /// menus follow.
     SortChanged(&'static str),
@@ -2661,7 +2663,12 @@ impl SimpleComponent for MessageList {
                     self.set_query(q, &sender);
                 }
             }
-            MessageListInput::RefreshSuggestions => self.refresh_suggestions(),
+            MessageListInput::RefreshSuggestions => {
+                if self.people.is_empty() {
+                    let _ = sender.output(MessageListOutput::SearchFocused);
+                }
+                self.refresh_suggestions();
+            }
             MessageListInput::SetPeople(people) => {
                 self.people = people;
                 self.refresh_suggestions();

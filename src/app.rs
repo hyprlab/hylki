@@ -1607,6 +1607,8 @@ pub enum AppMsg {
     SearchMore,
     /// The people the search field suggests, most used first.
     SearchPeople(Vec<(String, String)>),
+    /// The search field took the focus.
+    SearchFocused,
     /// The message list has no selection to show (e.g. the last message was
     /// removed), so the reader should clear.
     ClearReader,
@@ -3104,6 +3106,7 @@ impl SimpleComponent for AppModel {
                         AppMsg::SearchChanged { text, scope, server }
                     }
                     MessageListOutput::SearchMore => AppMsg::SearchMore,
+                    MessageListOutput::SearchFocused => AppMsg::SearchFocused,
                     MessageListOutput::SortChanged(key) => AppMsg::ListSortChanged(key),
                     MessageListOutput::ColumnWidths(widths) => AppMsg::ListColumnWidths(widths),
                     MessageListOutput::CustomizeColumns => AppMsg::CustomizeColumns,
@@ -6778,6 +6781,7 @@ impl SimpleComponent for AppModel {
                     self.server_search_event(account_id, event);
                 }
             }
+            AppMsg::SearchFocused => self.load_search_people(&sender),
             AppMsg::SearchPeople(people) => {
                 self.search_people_at = Some(std::time::Instant::now());
                 self.message_list.emit(MessageListInput::SetPeople(std::sync::Arc::new(people)));

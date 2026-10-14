@@ -369,6 +369,27 @@ pub fn suggest(typed: &str, people: &[(String, String)], vocab: &Vocab, today: N
         None => (None, typed),
     };
     if value.is_empty() {
+        // Only a keyword so far: what it can be followed by.
+        match key {
+            Some(KeyWord::Field(f)) if PERSON_FIELDS.contains(&f) => {
+                for (name, email) in people.iter().take(PEOPLE) {
+                    let token = Token::Person { field: f, name: name.clone(), email: email.clone() };
+                    let detail = if name.trim().is_empty() || name == email { String::new() } else { email.clone() };
+                    out.push(Suggestion { title: token.label(), token, detail });
+                }
+            }
+            Some(k @ (KeyWord::Before | KeyWord::After)) => {
+                for word in [DateWord::Today, DateWord::LastWeek, DateWord::LastMonth, DateWord::LastYear] {
+                    let (start, _) = date_range(word, today);
+                    let token = match k {
+                        KeyWord::Before => Token::Date { after: None, before: Some(start) },
+                        _ => Token::Date { after: Some(start), before: None },
+                    };
+                    out.push(Suggestion { title: token.label(), detail: word_title(word, start), token });
+                }
+            }
+            _ => {}
+        }
         return out;
     }
     let lower = value.to_lowercase();
@@ -696,6 +717,19 @@ mod tests {
         // With a keyword typed, only that side.
         let s = suggest("seit:1.10.2026", &[], &german(), today);
         assert_eq!(s[0].token, Token::Date { after: Some(day(2026, 10, 1)), before: None });
+    }
+
+    /// A keyword typed on its own offers what can follow it: the people
+    /// most mailed for an address field, starting points for a date.
+    #[test]
+    fn a_keyword_alone_offers_what_follows_it() {
+        let s = suggest("von:", &people(), &german(), day(2026, 10, 14));
+        assert_eq!(s.len(), 3);
+        assert!(s.iter().all(|x| matches!(x.token, Token::Person { field: Field::From, .. })));
+        let s = suggest("seit:", &[], &german(), day(2026, 10, 14));
+        assert!(!s.is_empty());
+        assert!(s.iter().all(|x| matches!(x.token, Token::Date { after: Some(_), before: None })));
+        assert!(suggest("betreff:", &people(), &german(), day(2026, 10, 14)).is_empty());
     }
 
     #[test]

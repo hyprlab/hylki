@@ -105,6 +105,10 @@ enum Token {
     /// A word or quoted phrase, with the `key:` in front of it if any.
     Word {
         key: Option<String>,
+        /// The key as it was typed (`von:`, `FROM:`), for what an error says.
+        typed_key: String,
+        /// Nothing follows the key yet: the value is still being typed.
+        at_end: bool,
         text: String,
         quoted: bool,
         negated: bool,
@@ -158,10 +162,14 @@ fn tokenize(input: &str) -> Result<Vec<Token>, ParseError> {
             (chars[start..i].iter().collect::<String>(), false)
         };
         let mut key = None;
+        let mut typed_key = String::new();
+        let mut at_end = false;
         let mut quoted_value = quoted;
         if !quoted && chars.get(i) == Some(&':') && is_known_key(&word) {
             key = canonical_key(&word);
+            typed_key = format!("{word}:");
             i += 1;
+            at_end = i >= chars.len();
             if chars.get(i) == Some(&'"') {
                 let (s, next) = quoted_at(&chars, i)?;
                 i = next;
@@ -198,7 +206,7 @@ fn tokenize(input: &str) -> Result<Vec<Token>, ParseError> {
                 _ => {}
             }
         }
-        out.push(Token::Word { key, text: word, quoted: quoted_value, negated });
+        out.push(Token::Word { key, typed_key, at_end, text: word, quoted: quoted_value, negated });
     }
     Ok(out)
 }
@@ -340,8 +348,8 @@ impl Parser {
                 Ok(inner.map(|n| if negated { Node::Not(Box::new(n)) } else { n }))
             }
             Token::Close => Err(ParseError::UnexpectedParen),
-            Token::Word { key, text, quoted, negated } => {
-                let node = word_node(key.as_deref(), &text, quoted)?;
+            Token::Word { key, typed_key, at_end, text, quoted, negated } => {
+                let node = word_node(key.as_deref(), &typed_key, at_end, &text, quoted)?;
                 Ok(node.map(|n| if negated { Node::Not(Box::new(n)) } else { n }))
             }
             Token::And | Token::Or => unreachable!("handled by the callers"),
@@ -349,8 +357,19 @@ impl Parser {
     }
 }
 
-fn word_node(key: Option<&str>, text: &str, quoted: bool) -> Result<Option<Node>, ParseError> {
+fn word_node(
+    key: Option<&str>,
+    typed_key: &str,
+    at_end: bool,
+    text: &str,
+    quoted: bool,
+) -> Result<Option<Node>, ParseError> {
     let value = text.trim();
+    // A key at the very end with nothing after it is still being typed:
+    // it asks for nothing yet, rather than being an error.
+    if key.is_some() && at_end && value.is_empty() && !quoted {
+        return Ok(None);
+    }
     match key {
         None => {
             if value.is_empty() {
@@ -360,7 +379,7 @@ fn word_node(key: Option<&str>, text: &str, quoted: bool) -> Result<Option<Node>
             Ok(Some(Node::Term { field: Field::Any, text: value.to_lowercase() }))
         }
         Some(k @ ("before" | "after")) => {
-            let date = parse_date(value).ok_or_else(|| ParseError::BadDate(format!("{k}:")))?;
+            let date = parse_date(value).ok_or_else(|| ParseError::BadDate(typed_key.to_string()))?;
             Ok(Some(if k == "before" { Node::Before(date) } else { Node::After(date) }))
         }
         Some("has") => match value.to_ascii_lowercase().as_str() {
@@ -370,7 +389,7 @@ fn word_node(key: Option<&str>, text: &str, quoted: bool) -> Result<Option<Node>
         },
         Some(k) => {
             if value.is_empty() && !quoted {
-                return Err(ParseError::EmptyValue(format!("{k}:")));
+                return Err(ParseError::EmptyValue(typed_key.to_string()));
             }
             let field = Field::from_key(k).expect("only known keys reach here");
             Ok(Some(Node::Term { field, text: value.to_lowercase() }))
@@ -604,7 +623,14 @@ pub(crate) mod tests {
         assert_eq!(Query::parse("\"open"), Err(ParseError::UnclosedQuote));
         assert_eq!(Query::parse("(a OR b"), Err(ParseError::UnclosedParen));
         assert_eq!(Query::parse("a)"), Err(ParseError::UnexpectedParen));
-        assert_eq!(Query::parse("from:"), Err(ParseError::EmptyValue("from:".into())));
+        // A key typed last with nothing after it yet is no error, and asks
+        // for nothing; one followed by more is.
+        assert!(Query::parse("from:").unwrap().root.is_none());
+        assert!(Query::parse("invoice from:").unwrap().root.is_some());
+        assert_eq!(Query::parse("from: anna"), Err(ParseError::EmptyValue("from:".into())));
+        // Errors name the key as it was typed.
+        assert_eq!(Query::parse("FROM: anna"), Err(ParseError::EmptyValue("FROM:".into())));
+        assert_eq!(Query::parse("After:tomorrow"), Err(ParseError::BadDate("After:".into())));
         assert_eq!(Query::parse("OR a"), Err(ParseError::DanglingOperator("OR".into())));
         assert_eq!(Query::parse("a OR"), Err(ParseError::DanglingOperator("OR".into())));
         assert_eq!(Query::parse("a AND"), Err(ParseError::DanglingOperator("AND".into())));
