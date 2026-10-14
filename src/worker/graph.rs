@@ -530,6 +530,19 @@ fn graph_index_plan(
     (gone, runs)
 }
 
+/// The second after a listing's `receivedDateTime`. Graph lists times to
+/// the whole second while Exchange keeps fractions of one, so a range that
+/// ends `le` the newest listed time leaves that newest message out: against
+/// a live Microsoft 365 mailbox every dated run lost exactly its newest
+/// message that way, which is where a backfilled folder came up one short per
+/// run. Ending `lt` the next second takes it in. A time that does not parse is
+/// handed back as it was.
+fn next_second(at: &str) -> String {
+    chrono::DateTime::parse_from_rfc3339(at)
+        .map(|t| (t.to_utc() + chrono::Duration::seconds(1)).format("%Y-%m-%dT%H:%M:%SZ").to_string())
+        .unwrap_or_else(|_| at.to_string())
+}
+
 /// The summaries of one run of missing mail. A long run is one listing of
 /// the folder between its dates (which may bring a cached neighbour sharing
 /// a date along, harmlessly); a short one, or one without dates, is asked
@@ -546,10 +559,10 @@ fn graph_fetch_run(
     let items = if dated {
         let url = format!(
             "{base}/me/mailFolders/{folder_graph_id}/messages\
-             ?$filter=receivedDateTime%20ge%20{}%20and%20receivedDateTime%20le%20{}\
+             ?$filter=receivedDateTime%20ge%20{}%20and%20receivedDateTime%20lt%20{}\
              &$orderby=receivedDateTime%20desc&$top={GRAPH_BACKFILL_CHUNK}&{GRAPH_MSG_SELECT}",
             crate::percent::encode(&run.oldest),
-            crate::percent::encode(&run.newest),
+            crate::percent::encode(&next_second(&run.newest)),
         );
         // Bounded, should many messages share the run's end dates.
         let mut items = graph_paged(token, &url, run.ids.len() + GRAPH_BACKFILL_CHUNK)?;
@@ -2768,6 +2781,14 @@ mod tests {
         assert_eq!(found.unchecked_before, Some(end_of_day));
     }
 
+    #[test]
+    fn a_run_ends_just_past_its_newest_second() {
+        assert_eq!(next_second("2026-09-03T09:00:00Z"), "2026-09-03T09:00:01Z");
+        assert_eq!(next_second("2026-12-31T23:59:59Z"), "2027-01-01T00:00:00Z");
+        assert_eq!(next_second("2026-09-03T09:00:00.5+02:00"), "2026-09-03T07:00:01Z");
+        assert_eq!(next_second("not a date"), "not a date");
+    }
+
     /// A raw message is read whole or refused, never cut at the limit and
     /// passed on as if complete.
     #[test]
@@ -2878,7 +2899,7 @@ mod tests {
         let seen = server.join().expect("server");
         assert_eq!(seen.len(), 5);
         assert!(
-            seen[4].contains("ge%202026-09-01T09%3A00%3A00Z%20and%20receivedDateTime%20le%202026-09-03T09%3A00%3A00Z"),
+            seen[4].contains("ge%202026-09-01T09%3A00%3A00Z%20and%20receivedDateTime%20lt%202026-09-03T09%3A00%3A01Z"),
             "{}",
             seen[4]
         );
