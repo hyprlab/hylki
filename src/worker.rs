@@ -9337,9 +9337,11 @@ fn mime_extension(ty: &str, subtype: &str) -> &'static str {
 // POP3 path
 // ---------------------------------------------------------------------------
 
-/// Cap on how many messages a POP3 sync downloads in full (POP3 has no partial
-/// fetch; mailboxes are usually small). Older messages aren't indexed.
-const POP3_LIMIT: usize = 200;
+/// How many new messages one POP3 pass downloads in full (POP3 has no
+/// partial fetch). The newest come first; when more are waiting, the next
+/// pass follows straight on, between the user's own requests, until the
+/// mailbox is all here.
+const POP3_BATCH: usize = 200;
 
 /// A minimal async POP3 client over TLS (implicit on 995, STLS otherwise).
 /// The POP3 conversation for the console, like the IMAP one: the command
@@ -9649,7 +9651,24 @@ async fn run_pop3(
     }
     emit(WorkerEvent::Folders(folders));
 
-    while let Some(req) = rx.recv().await {
+    // The inbox's folder id while older mail is still being downloaded: a
+    // batch at a time, whenever no request is waiting.
+    let mut backlog: Option<u32> = None;
+    loop {
+        let req = match backlog {
+            Some(folder_id) => match rx.try_recv() {
+                Ok(req) => req,
+                Err(mpsc::error::TryRecvError::Empty) => {
+                    backlog = pop3_continue(account_id, &account, folder_id, inbox_id, cache.as_ref(), &emit).await;
+                    continue;
+                }
+                Err(mpsc::error::TryRecvError::Disconnected) => break,
+            },
+            None => match rx.recv().await {
+                Some(req) => req,
+                None => break,
+            },
+        };
         match req {
             MailRequest::Locate { message_id } => {
                 // No folders to search here beyond what the cache already
@@ -9692,13 +9711,22 @@ async fn run_pop3(
                     }
                 }
                 emit(WorkerEvent::Status(i18n("Syncing…")));
-                match pop3_sync(account_id, &account, inbox_id, cache.as_ref()).await {
-                    Ok(messages) => {
+                match pop3_sync(account_id, &account, inbox_id, cache.as_ref(), POP3_BATCH).await {
+                    Ok(pass) => {
+                        let messages = match cache.as_ref() {
+                            Some(c) => c.load_messages(account_id, INBOX, inbox_id),
+                            None => pass.fetched,
+                        };
                         let unread = messages.iter().filter(|m| m.unread).count() as u32;
                         emit(WorkerEvent::Messages { folder_id, messages });
                         emit(WorkerEvent::FolderUnread { folder_id: inbox_id, unread });
-                        // POP3 syncs the whole mailbox in one pass; no backfill
-                        // follows, so the index is complete (see the Graph path).
+                        if pass.remaining > 0 && cache.is_some() {
+                            // Older mail follows, a batch at a time.
+                            emit(WorkerEvent::Status(pop3_progress(pass.remaining)));
+                            backlog = Some(folder_id);
+                            continue;
+                        }
+                        backlog = None;
                         emit(WorkerEvent::BackfillDone { folder_id });
                     }
                     Err(e) => {
@@ -9936,57 +9964,124 @@ async fn run_pop3(
 
 /// Connect, download summaries/bodies for new messages, return the inbox list
 /// (newest first), merging server UIDs with the local cache (for read state).
+/// What one POP3 pass did: the messages it downloaded, and how many new ones
+/// still wait on the server.
+struct Pop3Pass {
+    fetched: Vec<Message>,
+    remaining: usize,
+}
+
+/// The status line while older POP3 mail is downloading.
+fn pop3_progress(remaining: usize) -> String {
+    i18n_f("Downloading older messages: {n} left", &[("n", &remaining.to_string())])
+}
+
+/// The next batch of older POP3 mail, appended to the list. The inbox's
+/// folder id again while more wait, `None` once the mailbox is all here
+/// (or the server stopped answering, which the next sync takes up).
+async fn pop3_continue(
+    account_id: u32,
+    account: &AccountConfig,
+    folder_id: u32,
+    inbox_id: u32,
+    cache: Option<&Cache>,
+    emit: &impl Fn(WorkerEvent),
+) -> Option<u32> {
+    match pop3_sync(account_id, account, inbox_id, cache, POP3_BATCH).await {
+        Ok(pass) => {
+            if !pass.fetched.is_empty() {
+                emit(WorkerEvent::MessagesAppend { folder_id, messages: pass.fetched });
+                if let Some(c) = cache {
+                    let unread = c.load_messages(account_id, "INBOX", inbox_id).iter().filter(|m| m.unread).count();
+                    emit(WorkerEvent::FolderUnread { folder_id: inbox_id, unread: unread as u32 });
+                }
+            }
+            if pass.remaining > 0 {
+                emit(WorkerEvent::Status(pop3_progress(pass.remaining)));
+                return Some(folder_id);
+            }
+        }
+        Err(e) => emit(WorkerEvent::net_error(i18n_f("Could not fetch mail: {e}", &[("e", &e)]))),
+    }
+    emit(WorkerEvent::Status(String::new()));
+    emit(WorkerEvent::BackfillDone { folder_id });
+    None
+}
+
+/// One pass over the POP3 inbox: drop what the server no longer has, then
+/// download up to `budget` of the messages not yet here, newest first (by
+/// message number, the order the server keeps). Each is stored as soon as it
+/// is in, so a pass cut short by a dropped connection is taken up where it
+/// stopped. Nothing is deleted on the server: that only happens when the
+/// user deletes or moves a message.
 async fn pop3_sync(
     account_id: u32,
     account: &AccountConfig,
     inbox_id: u32,
     cache: Option<&Cache>,
-) -> Result<Vec<Message>, String> {
+    budget: usize,
+) -> Result<Pop3Pass, String> {
     const INBOX: &str = "INBOX";
     let mut pop = Pop3::connect(account).await?;
     pop.login(&account.username, &sign_in_password(account, false).await?).await?;
     let mut entries = pop.uidl().await?;
-    // Newest first; bound how many we index.
     entries.sort_by(|a, b| b.0.cmp(&a.0));
-    entries.truncate(POP3_LIMIT);
 
-    let cached: std::collections::HashMap<u32, Message> = cache
-        .map(|c| c.load_messages(account_id, INBOX, inbox_id))
-        .unwrap_or_default()
-        .into_iter()
-        .map(|m| (m.uid, m))
-        .collect();
-
-    let mut messages = Vec::with_capacity(entries.len());
-    for (num, uid_str) in &entries {
-        let uid = hash_uid(uid_str);
-        if let Some(existing) = cached.get(&uid) {
-            messages.push(existing.clone()); // keep read/star state; already downloaded
-            continue;
+    let cached: std::collections::HashSet<u32> = cache
+        .map(|c| c.cached_uid_times(account_id, INBOX).into_keys().collect())
+        .unwrap_or_default();
+    let (gone, new) = pop3_plan(&entries, &cached);
+    if let Some(c) = cache {
+        for uid in gone {
+            c.delete_message(account_id, INBOX, uid);
         }
-        // New message: download in full, cache its body + attachments.
-        let raw = pop.retr(*num).await?;
-        let msg = summary_from_raw(account_id, inbox_id, uid, &raw);
-        // OpenPGP mail (#133) is neither rendered nor cached here: it is
-        // decrypted or verified, in the reader only, when opened.
-        if let Some(c) = cache.filter(|_| crate::pgp::detect(&raw).is_none()) {
-            let (body, check, _) = render_raw(&raw);
-            c.save_body(account_id, INBOX, uid, &body);
-            c.save_sender_check(account_id, INBOX, uid, &check);
-            let (items, _) = attachments_of(&raw);
-            if !items.is_empty() {
-                c.save_attachments(account_id, INBOX, uid, &items);
+    }
+    let waiting = new.len();
+    let mut fetched = Vec::new();
+    for (num, uid) in new.into_iter().take(budget) {
+        let raw = match pop.retr(num).await {
+            Ok(raw) => raw,
+            Err(e) if fetched.is_empty() => return Err(e),
+            Err(e) => {
+                // What came in is stored; the next pass goes on from here.
+                tracing::warn!("[account {account_id}] POP3: download stopped: {e}");
+                break;
             }
+        };
+        let msg = summary_from_raw(account_id, inbox_id, uid, &raw);
+        if let Some(c) = cache {
+            // OpenPGP mail (#133) is neither rendered nor cached here: it is
+            // decrypted or verified, in the reader only, when opened.
+            if crate::pgp::detect(&raw).is_none() {
+                let (body, check, _) = render_raw(&raw);
+                c.save_body(account_id, INBOX, uid, &body);
+                c.save_sender_check(account_id, INBOX, uid, &check);
+                let (items, _) = attachments_of(&raw);
+                if !items.is_empty() {
+                    c.save_attachments(account_id, INBOX, uid, &items);
+                }
+            }
+            c.upsert_messages(account_id, INBOX, std::slice::from_ref(&msg));
         }
-        messages.push(msg);
+        fetched.push(msg);
     }
     pop.quit().await;
+    Ok(Pop3Pass { remaining: waiting - fetched.len(), fetched })
+}
 
-    messages.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
-    if let Some(c) = cache {
-        c.save_messages(account_id, INBOX, &messages);
-    }
-    Ok(messages)
+/// From a UIDL listing (message number, unique id) sorted newest first and
+/// the uids stored locally: the stored ones the server no longer has, and
+/// the ones still to download, newest first.
+fn pop3_plan(entries: &[(u32, String)], cached: &std::collections::HashSet<u32>) -> (Vec<u32>, Vec<(u32, u32)>) {
+    let on_server: std::collections::HashSet<u32> = entries.iter().map(|(_, u)| hash_uid(u)).collect();
+    let mut gone: Vec<u32> = cached.iter().copied().filter(|u| !on_server.contains(u)).collect();
+    gone.sort_unstable();
+    let new = entries
+        .iter()
+        .map(|(num, u)| (*num, hash_uid(u)))
+        .filter(|(_, uid)| !cached.contains(uid))
+        .collect();
+    (gone, new)
 }
 
 /// Fetch one message's raw bytes by its hashed UID (reconnects + maps UID→num).
@@ -13645,6 +13740,57 @@ NIL NIL NIL NIL NIL NIL NIL))\r\n";
         let parsed = mail_parser::MessageParser::default().parse(raw.as_slice()).unwrap();
         let part = parsed.html_bodies().next().unwrap();
         assert!(image_mime(part).is_none());
+    }
+}
+
+#[cfg(test)]
+mod pop3_tests {
+    use super::*;
+
+    fn listing(n: u32) -> Vec<(u32, String)> {
+        // Newest first, as pop3_sync sorts it.
+        (1..=n).rev().map(|num| (num, format!("uidl-{num}"))).collect()
+    }
+
+    /// Every message reaches the index, newest first and a batch at a time,
+    /// just under, at and over the old cap of 200, and passes that follow
+    /// one another take up where the last stopped.
+    #[test]
+    fn older_pop3_mail_is_downloaded_in_batches_until_none_is_left() {
+        for n in [199u32, 200, 201, 650] {
+            let entries = listing(n);
+            let mut cached = std::collections::HashSet::new();
+            let mut passes = 0;
+            let mut order = Vec::new();
+            loop {
+                let (gone, new) = pop3_plan(&entries, &cached);
+                assert!(gone.is_empty());
+                if new.is_empty() {
+                    break;
+                }
+                passes += 1;
+                for (num, uid) in new.into_iter().take(POP3_BATCH) {
+                    order.push(num);
+                    cached.insert(uid);
+                }
+            }
+            assert_eq!(cached.len(), n as usize, "{n} messages");
+            assert_eq!(passes, (n as usize).div_ceil(POP3_BATCH));
+            assert!(order.windows(2).all(|w| w[0] > w[1]), "newest first");
+        }
+    }
+
+    /// Mail deleted on the server leaves the index; mail kept locally
+    /// beyond the newest 200 does not.
+    #[test]
+    fn only_what_the_server_lost_leaves_the_index() {
+        let entries = listing(300);
+        let mut cached: std::collections::HashSet<u32> = entries.iter().map(|(_, u)| hash_uid(u)).collect();
+        let deleted = hash_uid("uidl-deleted-elsewhere");
+        cached.insert(deleted);
+        let (gone, new) = pop3_plan(&entries, &cached);
+        assert_eq!(gone, vec![deleted]);
+        assert!(new.is_empty());
     }
 }
 
