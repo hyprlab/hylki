@@ -8708,7 +8708,8 @@ async fn backfill_worklist(
 /// background index's to reconcile.
 fn window_gone(cached: &std::collections::HashMap<u32, i64>, listed: &[Message], complete: bool) -> Vec<u32> {
     let seen: std::collections::HashSet<u32> = listed.iter().map(|m| m.uid).collect();
-    let oldest = listed.iter().map(|m| m.timestamp).min();
+    // An undated row (0) says nothing about where the window ends.
+    let oldest = listed.iter().map(|m| m.timestamp).filter(|ts| *ts > 0).min();
     let mut gone: Vec<u32> = cached
         .iter()
         .filter(|(uid, ts)| {
@@ -13740,6 +13741,24 @@ NIL NIL NIL NIL NIL NIL NIL))\r\n";
         let parsed = mail_parser::MessageParser::default().parse(raw.as_slice()).unwrap();
         let part = parsed.html_bodies().next().unwrap();
         assert!(image_mime(part).is_none());
+    }
+}
+
+#[cfg(test)]
+mod window_tests {
+    use super::*;
+
+    /// A listed message without a date (Graph left out receivedDateTime)
+    /// must not make every older cached row look deleted.
+    #[test]
+    fn an_undated_listing_row_does_not_empty_the_folder() {
+        let cached: std::collections::HashMap<u32, i64> = [(1, 900), (2, 500), (3, 100)].into_iter().collect();
+        let mut listed = vec![crate::mail_search::tests::test_message(1, "", "", "")];
+        listed[0].timestamp = 900;
+        let mut undated = crate::mail_search::tests::test_message(4, "", "", "");
+        undated.timestamp = 0;
+        listed.push(undated);
+        assert!(window_gone(&cached, &listed, false).is_empty(), "older rows are outside the window");
     }
 }
 

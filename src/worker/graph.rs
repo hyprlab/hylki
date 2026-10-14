@@ -551,7 +551,22 @@ fn graph_fetch_run(
             crate::percent::encode(&run.newest),
         );
         // Bounded, should many messages share the run's end dates.
-        graph_paged(token, &url, run.ids.len() + GRAPH_BACKFILL_CHUNK)?
+        let mut items = graph_paged(token, &url, run.ids.len() + GRAPH_BACKFILL_CHUNK)?;
+        // The range is the listing's dates, which Graph prints to the whole
+        // second; a message stored with a fraction past `le`, one without a
+        // date, or one past the bound above is not in it. Each one asked for
+        // and not returned is fetched by its id, so the folder is never
+        // called indexed with mail missing.
+        let got: std::collections::HashSet<&str> = items.iter().filter_map(|v| v["id"].as_str()).collect();
+        let missing: Vec<String> = run.ids.iter().filter(|id| !got.contains(id.as_str())).cloned().collect();
+        if !missing.is_empty() {
+            tracing::info!("graph: a dated fetch left out {} of {} messages; fetching them by id", missing.len(), run.ids.len());
+        }
+        for id in missing {
+            let url = format!("{base}/me/messages/{id}?{GRAPH_MSG_SELECT}");
+            items.extend(graph_get_json_opt(token, &url)?);
+        }
+        items
     } else {
         let mut items = Vec::new();
         for id in &run.ids {
@@ -1806,16 +1821,28 @@ async fn graph_backfill_step(
         return;
     }
     state.backfill_wait = Some(std::time::Instant::now() + GRAPH_BACKFILL_BACKOFF);
-    if let Some(job) = state.backfill.front_mut() {
-        job.failures += 1;
-        // Offline, or refused: after a few tries the list stops promising
-        // more (#218), and the index carries on when it can.
-        if job.failures >= 3 && !job.told {
-            job.told = true;
-            if let Some((folder_id, _)) = state.folders.get(&job.path) {
-                emit(WorkerEvent::BackfillDone { folder_id: *folder_id });
-            }
+    note_backfill_failure(state, emit);
+}
+
+/// A step of the folder at the front of the index queue failed. Offline, or
+/// refused: after a few tries the list stops promising more (#218), and the
+/// folder goes to the back of the queue, so one folder the server keeps
+/// refusing does not hold up every other folder's index behind it.
+fn note_backfill_failure(state: &mut GraphState, emit: &impl Fn(WorkerEvent)) {
+    let Some(job) = state.backfill.front_mut() else { return };
+    job.failures += 1;
+    if job.failures < 3 {
+        return;
+    }
+    if !job.told {
+        job.told = true;
+        if let Some((folder_id, _)) = state.folders.get(&job.path) {
+            emit(WorkerEvent::BackfillDone { folder_id: *folder_id });
         }
+    }
+    job.failures = 0;
+    if let Some(job) = state.backfill.pop_front() {
+        state.backfill.push_back(job);
     }
 }
 
@@ -2845,6 +2872,55 @@ mod tests {
             "{}",
             seen[4]
         );
+    }
+
+    /// A folder the server keeps refusing moves to the back of the queue
+    /// after three tries, so the others are indexed meanwhile.
+    #[test]
+    fn a_failing_folder_does_not_hold_up_the_others() {
+        let mut state = state_for("http://unused", "Archive", 4, "F-archive");
+        state.folders.insert("Sent".into(), (2, "F-sent".into()));
+        state.queue_backfill("Archive", false, false);
+        state.queue_backfill("Sent", false, false);
+        let events = std::cell::RefCell::new(Vec::new());
+        let emit = |e: WorkerEvent| events.borrow_mut().push(e);
+        for _ in 0..2 {
+            note_backfill_failure(&mut state, &emit);
+            assert_eq!(state.backfill.front().map(|j| j.path.as_str()), Some("Archive"));
+        }
+        note_backfill_failure(&mut state, &emit);
+        assert_eq!(state.backfill.front().map(|j| j.path.as_str()), Some("Sent"), "the next folder's turn");
+        assert_eq!(state.backfill.back().map(|j| j.path.as_str()), Some("Archive"), "still queued");
+        assert!(events.borrow().iter().any(|e| matches!(e, WorkerEvent::BackfillDone { folder_id: 4 })));
+    }
+
+    /// A date-range fetch that leaves out a message it was asked for (the
+    /// newest of a run whose time Exchange keeps to a fraction of a second,
+    /// while the listing prints whole seconds, falls outside `le`) must not
+    /// let the folder's index be marked done with that message missing.
+    #[tokio::test]
+    async fn a_range_that_misses_a_message_does_not_complete_the_index() {
+        let listed: Vec<serde_json::Value> = (1..=5).map(|i| graph_id(&format!("M{i}"), &day(9 - i))).collect();
+        let ranged: Vec<serde_json::Value> = (2..=5).map(|i| graph_msg(&format!("M{i}"), &day(9 - i))).collect();
+        let (origin, _server) = serve(vec![
+            answer("$select=id,receivedDateTime", 200, serde_json::json!({ "value": listed })),
+            answer("$filter=receivedDateTime%20ge%20", 200, serde_json::json!({ "value": ranged })),
+            answer("/me/messages/M1?", 200, graph_msg("M1", &day(8))),
+        ]);
+        let cache = Cache::in_memory().expect("cache");
+        let mut state = state_for(&origin, "Archive", 4, "F-archive");
+        state.queue_backfill("Archive", true, false);
+        let events = std::cell::RefCell::new(Vec::new());
+        let emit = |e: WorkerEvent| events.borrow_mut().push(e);
+        for _ in 0..2 {
+            assert!(graph_backfill_with("t", 1, Some(&cache), &mut state, &emit).await);
+        }
+        assert!(state.backfill.is_empty());
+        assert!(events.borrow().iter().any(|e| matches!(e, WorkerEvent::BackfillDone { folder_id: 4 })));
+        let have = cache.cached_uids(1, "Archive");
+        for i in 1..=5 {
+            assert!(have.contains(&hash_uid(&format!("M{i}"))), "M{i} is indexed before the folder is called done");
+        }
     }
 
     /// #429: re-listing the newest page leaves the older cached mail be,
