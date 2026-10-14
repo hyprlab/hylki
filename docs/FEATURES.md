@@ -29,6 +29,11 @@ The full list. The [README](../README.md) carries a shorter one.
 
 - **Whole-mailbox sync and search:** no message-count cap. A fast first page
   loads instantly; the rest indexes in the background with infinite scroll.
+- **Full-text search:** the whole stored message, the recipients, and the
+  text of stored PDF and DOCX attachments, with `from:`, `to:`, `subject:`,
+  `before:`, `after:`, `OR` and phrases, over one folder, one account or all
+  of them, and on the IMAP or Microsoft 365 server when you ask
+  ([details](DOCUMENTATION.md#searching-mail)).
 - **Two-way sync:** deletions, moves and flag changes from your phone or
   another client sync back automatically (IMAP IDLE plus reconciliation).
 - **Conversation threading** across folders: the count covers the whole

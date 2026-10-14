@@ -12,6 +12,7 @@ keyboard.
 - [OAuth (Google / Microsoft)](#oauth-google--microsoft)
 - [Cloud attachments (Nextcloud, OneDrive, Dropbox, Seafile)](#cloud-attachments-nextcloud-onedrive-dropbox-seafile)
 - [LDAP directories](#ldap-directories)
+- [Searching mail](#searching-mail)
 - [Translating messages](#translating-messages)
 - [Writing in Markdown or HTML](#writing-in-markdown-or-html)
 - [OpenPGP (encrypted and signed mail)](#openpgp-encrypted-and-signed-mail)
@@ -1415,6 +1416,104 @@ is older than 30, 60, 90 or 180 days goes to the Trash, checked at each sync
 and at most every six hours. Starred mail stays, and so does anything without
 the header, however old. It works for IMAP and JMAP accounts; Microsoft 365
 offers no way to search for the header, so the choice is not shown there.
+
+### Searching mail
+
+The search field above the message list (<kbd>/</kbd> or <kbd>Ctrl+F</kbd>)
+looks in the subject, the sender, To, Cc and Reply-To, the whole text of every
+message stored on this computer, and the names of attachments. The text of PDF
+and DOCX attachments that are stored on this computer is searched as well;
+nothing is downloaded for it, and a scanned PDF without a text layer has no
+text to find, as Hylki does not read text out of images.
+
+The words of a search must all match, in any order and in any field, so
+`invoice march` finds a message whose subject says "invoice" and whose body
+says "March". A search can also use:
+
+| Typed | Finds |
+| --- | --- |
+| `"exact phrase"` | the words together, in this order |
+| `from:anna` | `anna` in the sender's name or address |
+| `to:`, `cc:`, `replyto:` | the recipients, the Cc and the Reply-To addresses |
+| `subject:`, `body:` | only the subject, only the message text |
+| `attachment:budget` | an attachment's name, or the text of a stored PDF or DOCX |
+| `after:2026-10-01` | mail dated on or after that day (also `2026/10/01` or `01.10.2026`) |
+| `before:2026-10-14` | mail dated before that day |
+| `has:attachment` | mail with an attachment |
+| `a OR b` | either word; `OR` binds looser than the space between words |
+| `-word` or `NOT word` | leaves out mail that has the word |
+| `(a OR b) c` | parentheses group |
+
+`AND`, `OR` and `NOT` are written in capitals; in lower case they are ordinary
+words. A field name Hylki does not know, such as `re:` or a web address, is
+searched for as typed. A search that cannot be read, such as an unclosed quote
+or a date that does not exist, says what is wrong under the field. The list's
+fields match any part of a word; the stored message text and attachments match
+whole words and the beginnings of words, ignoring case and, for Latin letters,
+accents.
+
+The menu beside the field chooses where to look: **All accounts**, **This
+account** (every folder of the account the open folder belongs to) or **This
+folder**. A unified view such as All Inboxes belongs to no single account, so
+its search covers every account.
+
+The text of messages is searched by an index that Hylki builds on this
+computer as mail is stored, in the background and a batch at a time. On a
+large mailbox the first build takes a while; the line under the search field
+says how many messages are still to be read, and those are found by their
+subject, sender and recipients meanwhile. The index follows every change to
+the stored mail, and a message whose stored copy is removed (see Storage) is
+searched by its preview again. An OpenPGP message is searched by its headers
+only: its text is never stored, decrypted or not.
+
+#### Searching on the server
+
+The server button beside the menu also asks the mail servers. Nothing is sent
+to a server until it is on. IMAP and Microsoft 365 accounts can be searched;
+JMAP and POP3 accounts are searched on this computer only, which the line
+under the field says. Results come a page at a time, with **Load More** for
+the next, are added to the local ones and are shown once even when the
+message is also on this computer. A result that is not stored here opens like
+any other message.
+
+What a server can search sets the limits:
+
+- **IMAP** compares every word as part of a field (`SEARCH`), `before:` and
+  `after:` by the day the server received the message. It cannot tell whether
+  a message has an attachment, so `has:attachment` is checked locally only,
+  and `attachment:` searches the whole message text. Folders are opened
+  read-only for a search.
+- **Microsoft 365** returns at most 1,000 results for one search and offers no
+  way to page past them; when a search reaches that number, the line under the
+  field says so, and a narrower search finds the rest. It cannot search
+  Reply-To. `attachment:` matches the names of attachments.
+
+#### Filter rules on the message text
+
+A filter condition on the message body is checked by the server for the whole
+Inbox. JMAP servers are read page by page. Microsoft 365 is asked again for
+older mail whenever a search fills its 1,000 results, which reaches every
+match unless more than 1,000 matching messages were sent on one day; Hylki
+then says how many older messages it could not check.
+
+### Large mailboxes
+
+- **Tag views and smart folders** show the newest 5,000 messages of each
+  account at once and then the rest, read straight after; the loading row at
+  the end of the list shows until it is all there.
+- **Conversations** gather every message that answers or is answered by the
+  one opened, across the account's folders, however long the thread; bodies
+  load a batch at a time as the conversation shows. Trash, Junk and Templates
+  are left out.
+- **POP3** downloads 200 new messages per pass, newest first, then the next 200
+  until the whole inbox is here, with the count left in the status bar. A pass
+  that is cut short is taken up where it stopped. Messages are only removed
+  from the server when you delete or move them.
+- **Microsoft 365** lists every folder, however many and however deep. A
+  message is opened whole or not at all: one larger than 256 MB (above
+  Exchange Online's own 150 MB) is refused with a message, and the
+  `HYLKI_MAX_MESSAGE_MB` environment variable sets another limit. The same
+  limit applies to JMAP.
 
 ### Storage
 
