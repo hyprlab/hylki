@@ -82,7 +82,7 @@ const SCAN_SPLIT_BUDGET: u32 = 64;
 /// How many messages one body fetch asks for.
 ///
 /// `BODY.PEEK[]` returns whole messages, attachments included, so a whole
-/// conversation in one command — up to `THREAD_MEMBER_LIMIT` members — can be
+/// conversation in one command, which has no upper size, could be
 /// tens of megabytes arriving as a single response: nothing on screen until all
 /// of it lands, and nothing to show for it if the connection drops on the way.
 /// Ten still cuts the round trips to a fifth of what asking one at a time cost,
@@ -13645,6 +13645,53 @@ NIL NIL NIL NIL NIL NIL NIL))\r\n";
         let parsed = mail_parser::MessageParser::default().parse(raw.as_slice()).unwrap();
         let part = parsed.html_bodies().next().unwrap();
         assert!(image_mime(part).is_none());
+    }
+}
+
+#[cfg(test)]
+mod conversation_tests {
+    use super::*;
+
+    fn folder(id: u32, path: &str, kind: FolderKind) -> Folder {
+        Folder { id, account_id: 1, name: path.into(), path: path.into(), kind, unread: 0 }
+    }
+
+    /// A conversation gathers its members from Archive, Sent and Drafts as
+    /// well as the folder it was opened in, and leaves out what was binned,
+    /// marked as spam or kept as a template, however many members it has.
+    #[test]
+    fn a_conversation_spans_the_account_but_not_the_bin() {
+        let cache = Cache::in_memory().unwrap();
+        let folders = [
+            folder(1, "INBOX", FolderKind::Inbox),
+            folder(2, "Sent", FolderKind::Sent),
+            folder(3, "Archive", FolderKind::Archive),
+            folder(4, "Drafts", FolderKind::Drafts),
+            folder(5, "Trash", FolderKind::Trash),
+            folder(6, "Junk", FolderKind::Junk),
+            folder(7, "Templates", FolderKind::Templates),
+        ];
+        cache.save_folders(1, &folders);
+        let mut ids = vec!["root@x".to_string()];
+        for (i, f) in folders.iter().enumerate() {
+            for n in 0..30u32 {
+                let uid = (i as u32 + 1) * 100 + n;
+                let mut m = crate::mail_search::tests::test_message(uid, "Re: plan", "", "");
+                m.message_id = format!("m{uid}@x");
+                m.references = "root@x".into();
+                cache.upsert_messages(1, &f.path, &[m]);
+                ids.push(format!("m{uid}@x"));
+            }
+        }
+        let found = related_from_cache(&cache, 1, &ids);
+        let per_folder = |id: u32| found.iter().filter(|m| m.folder_id == id).count();
+        assert_eq!(found.len(), 4 * 30, "every member outside the bin, spam and templates");
+        for id in 1..=4 {
+            assert_eq!(per_folder(id), 30);
+        }
+        for id in 5..=7 {
+            assert_eq!(per_folder(id), 0);
+        }
     }
 }
 

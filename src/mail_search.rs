@@ -497,7 +497,7 @@ pub fn local_midnight(day: NaiveDate) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
 
     fn term(field: Field, text: &str) -> Node {

@@ -26956,6 +26956,39 @@ mod tests {
         assert_eq!(kept.len(), 2);
     }
 
+    /// A conversation past the old 100-member cap: Gmail's label copies of
+    /// one mail count once, every member's body is asked for, and none twice.
+    #[test]
+    fn a_long_conversation_loads_every_body_once() {
+        let mut found: Vec<Message> = Vec::new();
+        for i in 0..150u32 {
+            let mut m = msg(1, 1 + i % 3, 1_000 + i);
+            m.message_id = format!("m{i}@x");
+            m.from_addr = "a@x".into();
+            m.timestamp = i64::from(i);
+            found.push(m);
+        }
+        // The same 40 mails again under another label.
+        for i in 0..40u32 {
+            let mut copy = found[i as usize].clone();
+            copy.folder_id = 9;
+            copy.uid += 10_000;
+            copy.id += 10_000;
+            found.push(copy);
+        }
+        let members = dedupe_label_copies(found, &[], 1);
+        assert_eq!(members.len(), 150);
+        let paths = ["INBOX", "Sent", "Archive"];
+        let missing: Vec<MissingBody> =
+            members.iter().map(|m| (m.account_id, m.id, m.uid, paths[(m.folder_id as usize - 1) % 3].to_string())).collect();
+        let batches = batch_bodies_by_folder(missing);
+        assert_eq!(batches.len(), 3);
+        let mut asked: Vec<u32> = batches.iter().flat_map(|(_, items)| items.iter().map(|(id, _)| *id)).collect();
+        asked.sort_unstable();
+        asked.dedup();
+        assert_eq!(asked.len(), 150, "every member, once");
+    }
+
     #[test]
     fn a_conversation_in_one_folder_becomes_a_single_fetch() {
         let batches = batch_bodies_by_folder(vec![

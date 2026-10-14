@@ -296,8 +296,8 @@ fn unasked_threads(
 /// Age plays no part: a message threads because its headers say what it answers,
 /// and those are indexed with every message. Grouping runs over the rendered
 /// window, so covering the whole mailbox costs no more than covering a day of
-/// it; what a conversation costs to *open* is bounded separately, by
-/// `THREAD_MEMBER_LIMIT`.
+/// it; opening a conversation loads its members' bodies a batch at a time
+/// (`BODY_FETCH_BATCH` in worker.rs).
 /// How many rows a large list puts on screen at once, and adds each time it
 /// is scrolled near the end of them.
 const LIST_WINDOW: usize = 1200;

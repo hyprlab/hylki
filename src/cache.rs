@@ -266,17 +266,6 @@ fn rowid_list(rowids: &[i64]) -> String {
     rowids.iter().map(i64::to_string).collect::<Vec<_>>().join(",")
 }
 
-/// Most Message-IDs one cross-folder conversation lookup matches against. A
-/// thread's ancestry is short in practice, and the references half of that query
-/// is a scan — this keeps a pathological References header (some mailing lists
-/// accumulate hundreds) from turning a message-open into a long one.
-const THREAD_ID_LIMIT: usize = 24;
-
-/// How many messages one conversation may pull in from other folders. A
-/// conversation is rendered as a single document with every member's body
-/// inlined, so this bounds both the fetching and the rendering.
-const THREAD_MEMBER_LIMIT: usize = 100;
-
 /// Most Message-IDs one *batched* conversation count matches against, across
 /// every thread on the page put together (#222). The references half of the
 /// lookup is a scan, and batching exists precisely so a page of threads costs
@@ -1192,17 +1181,21 @@ impl Cache {
     fn thread_member_rowids(&self, account_id: u32, ids: &[&String]) -> rusqlite::Result<Vec<i64>> {
         let wanted: std::collections::HashSet<&str> = ids.iter().map(|i| i.as_str()).collect();
         let mut rowids: Vec<i64> = Vec::new();
-        let slots = (0..ids.len()).map(|i| format!("?{}", i + 2)).collect::<Vec<_>>().join(", ");
-        let mut stmt = self.conn.prepare(&format!(
-            "SELECT rowid FROM messages WHERE account_id = ?1 AND message_id IN ({slots})"
-        ))?;
-        let mut binds: Vec<&dyn rusqlite::ToSql> = vec![&account_id];
-        for i in ids {
-            binds.push(*i as &dyn rusqlite::ToSql);
-        }
-        let own = stmt.query_map(binds.as_slice(), |row| row.get::<_, i64>(0))?;
-        for rowid in own {
-            rowids.push(rowid?);
+        // A statement takes only so many bound values; a long References
+        // chain is asked about in parts.
+        for part in ids.chunks(500) {
+            let slots = (0..part.len()).map(|i| format!("?{}", i + 2)).collect::<Vec<_>>().join(", ");
+            let mut stmt = self.conn.prepare(&format!(
+                "SELECT rowid FROM messages WHERE account_id = ?1 AND message_id IN ({slots})"
+            ))?;
+            let mut binds: Vec<&dyn rusqlite::ToSql> = vec![&account_id];
+            for i in part {
+                binds.push(*i as &dyn rusqlite::ToSql);
+            }
+            let own = stmt.query_map(binds.as_slice(), |row| row.get::<_, i64>(0))?;
+            for rowid in own {
+                rowids.push(rowid?);
+            }
         }
         let mut stmt = self.conn.prepare_cached(
             "SELECT rowid, references_ FROM messages WHERE account_id = ?1 AND references_ <> ''",
@@ -1228,15 +1221,19 @@ impl Cache {
     /// needs that both to label it and to fetch its body. Cache-only: the point
     /// is to assemble a conversation without going near the network (#21).
     /// A message's age is not a factor — what it answers is written in its
-    /// headers whenever it was sent. [`THREAD_MEMBER_LIMIT`] caps what one
-    /// conversation can drag in, which is the bound that matters: every member
-    /// found is a body the reader will load and render.
+    /// headers whenever it was sent. Neither is its length: every id of the
+    /// chain is matched and every member found is returned, newest first, and
+    /// the reader loads their bodies a batch at a time as it shows them. The
+    /// references half of the lookup reads the account's rows once whatever
+    /// the number of ids, so a long chain costs no more than a short one.
     pub fn messages_by_thread_ids(
         &self,
         account_id: u32,
         ids: &[String],
     ) -> Vec<(String, Message)> {
-        let ids: Vec<&String> = ids.iter().filter(|i| !i.is_empty()).take(THREAD_ID_LIMIT).collect();
+        let mut ids: Vec<&String> = ids.iter().filter(|i| !i.is_empty()).collect();
+        ids.sort_unstable();
+        ids.dedup();
         if ids.is_empty() {
             return Vec::new();
         }
@@ -1248,12 +1245,12 @@ impl Cache {
             let sql = format!(
                 "SELECT folder_path, uid, from_name, from_addr, subject, date, ts, unread, starred, \
                         has_attachment, recipients, cc, message_id, references_, preview, reply_to, {keywords}, importance, due, gmail_labels \
-                 FROM messages WHERE rowid IN ({members}) ORDER BY ts DESC LIMIT ?1",
+                 FROM messages WHERE rowid IN ({members}) ORDER BY ts DESC, rowid DESC",
                 keywords = KEYWORDS_COL,
                 members = rowid_list(&members),
             );
             let mut stmt = self.conn.prepare(&sql)?;
-            let rows = stmt.query_map([THREAD_MEMBER_LIMIT as i64], |row| {
+            let rows = stmt.query_map([], |row| {
                 let uid: u32 = row.get(1)?;
                 let mut m = Message {
                         id: uid,
@@ -3707,6 +3704,46 @@ mod tests {
 
         c.set_refs_repair_state(1, "INBOX", 0, true);
         assert!(c.refs_repair_state(1, "INBOX").1, "and it finishes");
+    }
+
+    /// A conversation is found whole however long it grows: just under, at
+    /// and over the old caps of 24 ids and 100 members, across folders.
+    #[test]
+    fn a_long_conversation_is_found_whole() {
+        for members in [99u32, 100, 101, 250] {
+            let c = Cache::in_memory().unwrap();
+            let mut refs = String::new();
+            for i in 0..members {
+                let folder = ["INBOX", "Sent", "Archive"][i as usize % 3];
+                add_threaded(&c, folder, i + 1, 1_000 + i64::from(i), &format!("m{i}@x"), refs.trim());
+                refs.push_str(&format!(" m{i}@x"));
+            }
+            // Ask with the newest message's own ancestry, as the reader does.
+            let mut ids: Vec<String> = vec![format!("m{}@x", members - 1)];
+            ids.extend(refs.split_whitespace().rev().map(str::to_string));
+            let found = c.messages_by_thread_ids(1, &ids);
+            assert_eq!(found.len(), members as usize, "{members} members");
+            assert!(found.windows(2).all(|w| w[0].1.timestamp >= w[1].1.timestamp), "newest first");
+        }
+        for asked in [23usize, 24, 25] {
+            // Only the oldest id names the one member that matters: past the
+            // old cap of 24 ids it was never looked for.
+            let c = Cache::in_memory().unwrap();
+            add_threaded(&c, "Archive", 1, 100, "root@x", "");
+            let mut ids: Vec<String> = (0..asked - 1).map(|i| format!("unknown{i}@x")).collect();
+            ids.push("root@x".to_string());
+            assert_eq!(c.messages_by_thread_ids(1, &ids).len(), 1, "{asked} ids");
+        }
+    }
+
+    /// Messages that share a subject and nothing else are not one conversation.
+    #[test]
+    fn a_shared_subject_does_not_make_a_conversation() {
+        let c = Cache::in_memory().unwrap();
+        add_threaded(&c, "INBOX", 1, 500, "a@x", "");
+        add_threaded(&c, "INBOX", 2, 600, "b@x", "");
+        c.conn.execute("UPDATE messages SET subject = 'Re: Lunch'", []).unwrap();
+        assert_eq!(c.messages_by_thread_ids(1, &["a@x".to_string()]).len(), 1);
     }
 
     #[test]
