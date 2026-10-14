@@ -1733,6 +1733,13 @@ msgstr "Ten katalog"
 msgid "Last year"
 msgstr "Nazwisko"
 
+#, fuzzy
+msgid "Before:"
+msgstr "wygasa {date}"
+
+msgid "Since:"
+msgstr ""
+
 msgid "{used} of {limit} used"
 msgstr ""
 

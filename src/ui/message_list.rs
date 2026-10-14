@@ -537,12 +537,13 @@ fn suggestion_row(s: &crate::search_assist::Suggestion) -> gtk::ListBoxRow {
         Token::Date { .. } => "x-office-calendar-symbolic",
         Token::HasAttachment => "mail-attachment-symbolic",
     };
-    let row_box = gtk::Box::new(gtk::Orientation::Horizontal, 10);
-    row_box.set_margin_top(4);
-    row_box.set_margin_bottom(4);
-    row_box.set_margin_start(4);
-    row_box.set_margin_end(4);
-    row_box.append(&gtk::Image::from_icon_name(icon));
+    let row_box = gtk::Box::new(gtk::Orientation::Horizontal, 8);
+    row_box.add_css_class("search-suggestion");
+    // On the line of the title, not between it and the address under it.
+    let image = gtk::Image::from_icon_name(icon);
+    image.set_valign(gtk::Align::Start);
+    image.add_css_class("search-suggestion-icon");
+    row_box.append(&image);
     let text = gtk::Box::new(gtk::Orientation::Vertical, 0);
     let title = gtk::Label::new(Some(&s.title));
     title.set_xalign(0.0);
@@ -558,6 +559,8 @@ fn suggestion_row(s: &crate::search_assist::Suggestion) -> gtk::ListBoxRow {
     }
     row_box.append(&text);
     let row = gtk::ListBoxRow::new();
+    // A click takes the row without taking the focus from the field.
+    row.set_focusable(false);
     row.set_child(Some(&row_box));
     row
 }
@@ -687,6 +690,11 @@ pub struct MessageList {
     tokens: Vec<crate::search_assist::Token>,
     /// The text in the field, after the chips.
     typed: String,
+    /// A field keyword typed at the start of the field ("from:"), shown as a
+    /// badge in it; what is typed after it is that field's value.
+    pending: Option<crate::search_assist::KeyWord>,
+    /// The search row, for telling whether the focus is still in it.
+    search_row: Option<gtk::Widget>,
     /// Known people, most used first, for the suggestions.
     people: std::sync::Arc<Vec<(String, String)>>,
     /// What the suggestion list offers, in its order.
@@ -1339,6 +1347,10 @@ pub enum MessageListInput {
     SetPeople(std::sync::Arc<Vec<(String, String)>>),
     /// The field took the focus: offer what fits what is in it.
     RefreshSuggestions,
+    /// The keyword badge in the field was removed.
+    RemovePending,
+    /// The focus left the search field.
+    SearchFocusLeft,
     /// Showcase only (HYLKI_SHOWCASE_SEARCH): open the search and type
     /// `text` into it, looking in `scope`.
     ShowcaseSearch { text: String, scope: SearchScope, accept: Vec<usize> },
@@ -1571,9 +1583,40 @@ impl SimpleComponent for MessageList {
                     #[watch]
                     set_reveal_child: model.search_open || model.search_pinned,
 
+                #[name = "search_row"]
                 gtk::Box {
                     set_spacing: 6,
                     add_css_class: "list-search-row",
+
+                    // The field: a keyword badge ("From:") once one is typed,
+                    // then the entry for its value or the free text.
+                    gtk::Box {
+                        add_css_class: "search-field",
+                        set_hexpand: true,
+                        #[watch]
+                        set_class_active: ("with-prefix", model.pending.is_some()),
+
+                    // The entry's own magnifier is hidden while a badge is
+                    // in the field (see `sync_badge`): this one stands
+                    // before the badge instead, where it belongs.
+                    gtk::Image {
+                        set_icon_name: Some("system-search-symbolic"),
+                        add_css_class: "search-prefix-icon",
+                        #[watch]
+                        set_visible: model.pending.is_some(),
+                    },
+
+                    gtk::Button {
+                        add_css_class: "search-prefix",
+                        set_valign: gtk::Align::Center,
+                        set_focusable: false,
+                        set_tooltip_text: Some(i18n("Remove this condition").as_str()),
+                        #[watch]
+                        set_visible: model.pending.is_some(),
+                        #[watch]
+                        set_label: &model.pending.map(crate::search_assist::keyword_badge).unwrap_or_default(),
+                        connect_clicked => MessageListInput::RemovePending,
+                    },
 
                     #[name = "search_entry"]
                     gtk::SearchEntry {
@@ -1596,12 +1639,11 @@ impl SimpleComponent for MessageList {
                         },
                         // Leaving an empty entry closes too.
                         add_controller = gtk::EventControllerFocus {
-                            connect_leave[sender] => move |ctl| {
-                                let Some(entry) = ctl.widget().and_downcast::<gtk::SearchEntry>() else { return };
-                                let sender = sender.clone();
-                                crate::ui::close_if_focus_left_row(&entry, move || sender.input(MessageListInput::CloseSearch));
+                            connect_leave[sender] => move |_| {
+                                sender.input(MessageListInput::SearchFocusLeft);
                             },
                         },
+                    },
                     },
 
                     // Scope picker: 0 = All accounts (default), 1 = This
@@ -1938,6 +1980,8 @@ impl SimpleComponent for MessageList {
             scope_dropdown: None,
             tokens: Vec::new(),
             typed: String::new(),
+            pending: None,
+            search_row: None,
             people: std::sync::Arc::new(Vec::new()),
             suggestions: Vec::new(),
             suggest_popover: None,
@@ -2109,8 +2153,7 @@ impl SimpleComponent for MessageList {
             pop.set_has_arrow(false);
             pop.set_can_focus(false);
             pop.set_position(gtk::PositionType::Bottom);
-            pop.set_halign(gtk::Align::Start);
-            pop.add_css_class("menu");
+            pop.add_css_class("search-suggestions-popover");
             let content = gtk::Box::new(gtk::Orientation::Vertical, 0);
             content.append(&list);
             let hint = gtk::Label::new(Some(&search_hint()));
@@ -2119,10 +2162,15 @@ impl SimpleComponent for MessageList {
             hint.add_css_class("search-hint");
             hint.set_wrap(true);
             hint.set_xalign(0.0);
-            hint.set_max_width_chars(40);
+            hint.set_max_width_chars(1);
             content.append(&hint);
             pop.set_child(Some(&content));
-            pop.set_parent(&entry);
+            // Under the whole field (badge and entry), as wide as it, so it
+            // lines up with both of its edges.
+            match entry.parent() {
+                Some(field) => pop.set_parent(&field),
+                None => pop.set_parent(&entry),
+            }
             // The arrows walk the list, Return takes the chosen row, Esc
             // closes the list before it closes the search, and Backspace at
             // the start of an empty field takes the last chip back.
@@ -2175,10 +2223,6 @@ impl SimpleComponent for MessageList {
                 }
             });
             entry.add_controller(keys);
-            let p = pop.clone();
-            let focus = gtk::EventControllerFocus::new();
-            focus.connect_leave(move |_| p.popdown());
-            entry.add_controller(focus);
             let s = sender.clone();
             let focus = gtk::EventControllerFocus::new();
             focus.connect_enter(move |_| s.input(MessageListInput::RefreshSuggestions));
@@ -2186,6 +2230,7 @@ impl SimpleComponent for MessageList {
             model.suggest_popover = Some(pop);
             model.suggest_list = Some(list);
             model.chip_row = Some(widgets.chip_row.clone());
+            model.search_row = Some(widgets.search_row.clone().upcast());
         }
 
         // The scope picker sizes itself to its widest entry ("All folders"), which
@@ -2623,24 +2668,75 @@ impl SimpleComponent for MessageList {
                 self.sync_look();
             }
             MessageListInput::Search(typed) => {
+                // A keyword typed at the start becomes the badge, and the
+                // entry keeps only what follows it.
+                if self.pending.is_none() {
+                    let vocab = crate::search_assist::Vocab::current();
+                    if let Some((key, rest)) = crate::search_assist::leading_keyword(&typed, &vocab) {
+                        self.pending = Some(key);
+                        self.typed = rest.clone();
+                        if let Some(e) = &self.search_entry {
+                            e.set_text(&rest);
+                            e.set_position(-1);
+                        }
+                        self.refresh_suggestions();
+                        let q = self.composed_query();
+                        self.set_query(q, &sender);
+                        return;
+                    }
+                }
                 self.typed = typed;
                 self.refresh_suggestions();
-                let q = crate::search_assist::compose(&self.tokens, &self.typed);
+                let q = self.composed_query();
                 self.set_query(q, &sender);
+            }
+            MessageListInput::RemovePending => {
+                if self.pending.take().is_some() {
+                    self.refresh_suggestions();
+                    let q = self.composed_query();
+                    self.set_query(q, &sender);
+                    if let Some(e) = &self.search_entry {
+                        e.grab_focus();
+                    }
+                }
+            }
+            MessageListInput::SearchFocusLeft => {
+                // Only an empty search closes when the focus leaves it: a
+                // chip or a badge is a search, and its menu takes the focus.
+                if !self.typed.trim().is_empty() || !self.tokens.is_empty() || self.pending.is_some() {
+                    if let Some(pop) = &self.suggest_popover {
+                        pop.popdown();
+                    }
+                    return;
+                }
+                let (row, entry, input) = (self.search_row.clone(), self.search_entry.clone(), self.input.clone());
+                glib::idle_add_local_once(move || {
+                    let (Some(row), Some(entry)) = (row, entry) else { return };
+                    let focus = entry.root().and_then(|r| gtk::prelude::RootExt::focus(&r));
+                    let in_row = focus.is_some_and(|f| f == row || f.is_ancestor(&row));
+                    if !in_row {
+                        let _ = input.send(MessageListInput::CloseSearch);
+                    }
+                });
             }
             MessageListInput::AcceptSuggestion(i) => {
                 let Some(s) = self.suggestions.get(i).cloned() else { return };
                 if !self.tokens.contains(&s.token) {
                     self.tokens.push(s.token);
                 }
+                self.pending = None;
                 self.typed.clear();
                 if let Some(e) = &self.search_entry {
                     e.set_text("");
                 }
                 self.rebuild_chips();
                 self.refresh_suggestions();
-                let q = crate::search_assist::compose(&self.tokens, &self.typed);
+                let q = self.composed_query();
                 self.set_query(q, &sender);
+            }
+            MessageListInput::RemoveToken(usize::MAX) if self.pending.is_some() => {
+                // Backspace on an empty field takes the badge first.
+                sender.input(MessageListInput::RemovePending);
             }
             MessageListInput::RemoveToken(i) => {
                 // usize::MAX is Backspace on an empty field: the last chip.
@@ -2648,7 +2744,7 @@ impl SimpleComponent for MessageList {
                 if i < self.tokens.len() {
                     self.tokens.remove(i);
                     self.rebuild_chips();
-                    let q = crate::search_assist::compose(&self.tokens, &self.typed);
+                    let q = self.composed_query();
                     self.set_query(q, &sender);
                     if let Some(e) = &self.search_entry {
                         e.grab_focus();
@@ -2659,7 +2755,7 @@ impl SimpleComponent for MessageList {
                 if let Some(t) = self.tokens.get_mut(i) {
                     *t = t.with_field(field);
                     self.rebuild_chips();
-                    let q = crate::search_assist::compose(&self.tokens, &self.typed);
+                    let q = self.composed_query();
                     self.set_query(q, &sender);
                 }
             }
@@ -4678,6 +4774,28 @@ impl MessageList {
         self.scroll_top();
     }
 
+    /// Hide the entry's own magnifier while a badge stands in the field,
+    /// whose own icon then comes first.
+    fn sync_badge(&self) {
+        if let Some(icon) = self.search_entry.as_ref().and_then(|e| e.first_child()).filter(|c| c.is::<gtk::Image>()) {
+            icon.set_visible(self.pending.is_none());
+        }
+    }
+
+    /// The whole search: the chips, then the badge with its value, or the
+    /// free text.
+    fn composed_query(&self) -> String {
+        self.sync_badge();
+        match self.pending {
+            Some(key) => {
+                let today = chrono::Local::now().date_naive();
+                let tail = crate::search_assist::pending_query(key, &self.typed, today);
+                crate::search_assist::compose(&self.tokens, &tail)
+            }
+            None => crate::search_assist::compose(&self.tokens, &self.typed),
+        }
+    }
+
     /// Fill the suggestion list for what is typed, and show or hide it.
     fn refresh_suggestions(&mut self) {
         let (Some(pop), Some(list), Some(entry)) = (&self.suggest_popover, &self.suggest_list, &self.search_entry) else {
@@ -4685,10 +4803,13 @@ impl MessageList {
         };
         let vocab = crate::search_assist::Vocab::current();
         let today = chrono::Local::now().date_naive();
-        self.suggestions = crate::search_assist::suggest(&self.typed, &self.people, &vocab, today);
+        self.suggestions = match self.pending {
+            Some(key) => crate::search_assist::suggest_for(Some(key), &self.typed, &self.people, &vocab, today),
+            None => crate::search_assist::suggest(&self.typed, &self.people, &vocab, today),
+        };
         // The starting points of an empty field are offered only before
         // any condition is chosen.
-        if self.typed.trim().is_empty() && !self.tokens.is_empty() {
+        if self.pending.is_none() && self.typed.trim().is_empty() && !self.tokens.is_empty() {
             self.suggestions.clear();
         }
         while let Some(row) = list.first_child() {
@@ -4707,7 +4828,17 @@ impl MessageList {
             // Nothing is chosen until the arrow keys say so: Return alone
             // searches for the text as typed.
             list.unselect_all();
-            if !pop.is_visible() {
+            // As wide as the field it hangs from (the popover's own padding
+            // is styled away, see .search-suggestions-popover).
+            if let Some(field) = pop.parent() {
+                if let Some(content) = pop.child() {
+                    content.set_size_request(field.width().max(240), -1);
+                }
+            }
+            if pop.is_visible() {
+                // Fewer rows than before: shrink to them.
+                pop.present();
+            } else {
                 pop.popup();
             }
         } else if pop.is_visible() {
@@ -4757,6 +4888,18 @@ impl MessageList {
     /// switch doesn't leave a stale term filtering the new folder.
     fn clear_search(&mut self, sender: &ComponentSender<Self>) {
         if self.query.is_empty() {
+            // A badge or chips without a value yet are no search, but they
+            // go with the field all the same.
+            if self.pending.is_some() || !self.tokens.is_empty() || !self.typed.is_empty() {
+                self.pending = None;
+                self.tokens.clear();
+                self.typed.clear();
+                self.rebuild_chips();
+                self.sync_badge();
+                if let Some(e) = &self.search_entry {
+                    e.set_text("");
+                }
+            }
             return;
         }
         // The entry's own change arrives with the query already empty, too
@@ -4778,7 +4921,9 @@ impl MessageList {
         self.parsed = Ok(Rc::new(crate::mail_search::Query::default()));
         self.tokens.clear();
         self.typed.clear();
+        self.pending = None;
         self.rebuild_chips();
+        self.sync_badge();
         if let Some(pop) = &self.suggest_popover {
             pop.popdown();
         }

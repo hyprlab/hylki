@@ -1653,6 +1653,13 @@ msgstr "Esta carpeta"
 msgid "Last year"
 msgstr "Apellidos"
 
+#, fuzzy
+msgid "Before:"
+msgstr "caduca el {date}"
+
+msgid "Since:"
+msgstr ""
+
 msgid "{used} of {limit} used"
 msgstr "{used} de {limit} usados"
 

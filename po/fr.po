@@ -1649,6 +1649,13 @@ msgstr "Ce dossier"
 msgid "Last year"
 msgstr "Nom"
 
+#, fuzzy
+msgid "Before:"
+msgstr "expire le {date}"
+
+msgid "Since:"
+msgstr ""
+
 msgid "{used} of {limit} used"
 msgstr "{used} sur {limit} utilisés"
 

@@ -1668,6 +1668,13 @@ msgstr "Questa cartella"
 msgid "Last year"
 msgstr "Cognome"
 
+#, fuzzy
+msgid "Before:"
+msgstr "scade il {date}"
+
+msgid "Since:"
+msgstr ""
+
 msgid "{used} of {limit} used"
 msgstr "{used} di {limit} utilizzati"
 

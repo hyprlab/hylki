@@ -1529,6 +1529,12 @@ msgstr ""
 msgid "Last year"
 msgstr ""
 
+msgid "Before:"
+msgstr ""
+
+msgid "Since:"
+msgstr ""
+
 msgid "{used} of {limit} used"
 msgstr ""
 

@@ -1710,6 +1710,13 @@ msgstr "Esta pasta"
 msgid "Last year"
 msgstr "Apelido"
 
+#, fuzzy
+msgid "Before:"
+msgstr "expira em {date}"
+
+msgid "Since:"
+msgstr ""
+
 msgid "{used} of {limit} used"
 msgstr "{used} de {limit} utilizados"
 

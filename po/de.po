@@ -1698,6 +1698,12 @@ msgstr "Dieses Jahr"
 msgid "Last year"
 msgstr "Letztes Jahr"
 
+msgid "Before:"
+msgstr "Vor:"
+
+msgid "Since:"
+msgstr "Seit:"
+
 msgid "{used} of {limit} used"
 msgstr "{used} von {limit} verwendet"
 

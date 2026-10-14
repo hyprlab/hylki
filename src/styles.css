@@ -779,14 +779,73 @@ flowbox.attach-flow > flowboxchild {
   padding: 0;
 }
 
-/* The suggestions under the search field. */
+/* The search field with a keyword badge in it ("From:"), the magnifier, the
+   badge and the entry drawn as one field, the way an entry is drawn, with
+   the entry's own spacing between its parts. */
+.search-field.with-prefix {
+  background-color: alpha(currentColor, 0.1);
+  border-radius: 9px;
+}
+
+.search-field.with-prefix:focus-within {
+  outline: 2px solid alpha(@accent_color, 0.5);
+  outline-offset: -2px;
+}
+
+.search-field.with-prefix > entry.search,
+.search-field.with-prefix > entry.search:focus-within {
+  background: none;
+  outline: none;
+  box-shadow: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.search-prefix-icon {
+  margin-left: 9px;
+  margin-right: 6px;
+  opacity: 0.7;
+}
+
+.search-prefix {
+  border-radius: 999px;
+  min-height: 22px;
+  padding: 0 8px;
+  background: alpha(@accent_bg_color, 0.18);
+  color: @accent_color;
+  font-weight: bold;
+}
+
+/* The suggestions under the search field: rows and the tip below them share
+   one inset, so their icons and text start on the same lines. */
+.search-suggestions-popover > contents {
+  padding: 6px 0;
+}
+
 .search-suggestions {
   background: none;
-  min-width: 260px;
+}
+
+.search-suggestions > row {
+  padding: 0;
+  margin: 0 6px;
+  border-radius: 6px;
+}
+
+.search-suggestion {
+  padding: 6px 10px;
+  min-height: 28px;
+}
+
+/* A 16px icon centred on the title's line: the line is about 20px high. */
+.search-suggestion-icon {
+  margin-top: 2px;
 }
 
 .search-hint {
-  padding: 6px 10px 4px 10px;
+  padding: 8px 16px 4px 16px;
+  margin-top: 4px;
+  border-top: 1px solid alpha(currentColor, 0.1);
 }
 
 .list-title {

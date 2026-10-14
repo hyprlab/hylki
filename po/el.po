@@ -1657,6 +1657,13 @@ msgstr "Αυτός ο φάκελος"
 msgid "Last year"
 msgstr "Επώνυμο"
 
+#, fuzzy
+msgid "Before:"
+msgstr "λήγει στις {date}"
+
+msgid "Since:"
+msgstr ""
+
 msgid "{used} of {limit} used"
 msgstr "Χρησιμοποιούνται {used} από {limit}"
 

@@ -1723,6 +1723,13 @@ msgstr "Эта папка"
 msgid "Last year"
 msgstr "Фамилия"
 
+#, fuzzy
+msgid "Before:"
+msgstr "срок действия истекает {date}"
+
+msgid "Since:"
+msgstr ""
+
 msgid "{used} of {limit} used"
 msgstr "Использовано {used} из {limit}"
 

@@ -368,6 +368,20 @@ pub fn suggest(typed: &str, people: &[(String, String)], vocab: &Vocab, today: N
         },
         None => (None, typed),
     };
+    suggest_for(key, value, people, vocab, today)
+}
+
+/// What to suggest for `value` in the field `key` stands for (a keyword
+/// badge in the search field), or in any field when there is none.
+pub fn suggest_for(
+    key: Option<KeyWord>,
+    value: &str,
+    people: &[(String, String)],
+    vocab: &Vocab,
+    today: NaiveDate,
+) -> Vec<Suggestion> {
+    let value = value.trim();
+    let mut out = Vec::new();
     if value.is_empty() {
         // Only a keyword so far: what it can be followed by.
         match key {
@@ -551,6 +565,50 @@ fn parse_short_date(s: &str, today: NaiveDate) -> Option<NaiveDate> {
     }
 }
 
+/// A field keyword at the start of the text, and the text after it: what
+/// the search field turns into a badge as it is typed ("from:", "von:").
+/// Quoted text and unknown keys are left as they are.
+pub fn leading_keyword(typed: &str, vocab: &Vocab) -> Option<(KeyWord, String)> {
+    let trimmed = typed.trim_start();
+    let (key, rest) = trimmed.split_once(':')?;
+    if key.is_empty() || key.contains(|c: char| c.is_whitespace() || c == '"' || c == '(') {
+        return None;
+    }
+    let word = vocab.field_key(key.trim_start_matches('-'))?;
+    if key.starts_with('-') {
+        return None;
+    }
+    Some((word, rest.trim_start().to_string()))
+}
+
+/// What a keyword badge and its value add to the search: nothing until a
+/// value is typed, and for a date only once the value reads as one.
+pub fn pending_query(key: KeyWord, value: &str, today: NaiveDate) -> String {
+    let value = value.trim();
+    if value.is_empty() {
+        return String::new();
+    }
+    match key {
+        KeyWord::Field(field) => Token::Text { field, text: value.to_string() }.to_query(),
+        KeyWord::Before | KeyWord::After => match parse_date(value).or_else(|| parse_short_date(value, today)) {
+            Some(d) => {
+                let (after, before) = if key == KeyWord::After { (Some(d), None) } else { (None, Some(d)) };
+                Token::Date { after, before }.to_query()
+            }
+            None => String::new(),
+        },
+    }
+}
+
+/// The badge's text: the field as the interface language calls it.
+pub fn keyword_badge(key: KeyWord) -> String {
+    match key {
+        KeyWord::Field(f) => format!("{}:", field_name(f)),
+        KeyWord::Before => i18n("Before:"),
+        KeyWord::After => i18n("Since:"),
+    }
+}
+
 /// The whole search text: the chips, then what is still typed.
 pub fn compose(tokens: &[Token], typed: &str) -> String {
     let mut parts: Vec<String> = tokens.iter().map(Token::to_query).filter(|q| !q.is_empty()).collect();
@@ -730,6 +788,35 @@ mod tests {
         assert!(!s.is_empty());
         assert!(s.iter().all(|x| matches!(x.token, Token::Date { after: Some(_), before: None })));
         assert!(suggest("betreff:", &people(), &german(), day(2026, 10, 14)).is_empty());
+    }
+
+    #[test]
+    fn a_leading_keyword_becomes_a_badge() {
+        let v = german();
+        assert_eq!(leading_keyword("from:", &v), Some((KeyWord::Field(Field::From), String::new())));
+        assert_eq!(leading_keyword("von: jo", &v), Some((KeyWord::Field(Field::From), "jo".into())));
+        assert_eq!(leading_keyword("Seit:1.10.", &v), Some((KeyWord::After, "1.10.".into())));
+        assert_eq!(leading_keyword("re: hello", &v), None, "not a keyword");
+        assert_eq!(leading_keyword("\"from:x\"", &v), None, "quoted");
+        assert_eq!(leading_keyword("-from:x", &v), None, "a negation stays syntax");
+        assert_eq!(leading_keyword("invoice from:x", &v), None, "only at the start");
+    }
+
+    #[test]
+    fn a_badge_adds_its_value_once_there_is_one() {
+        let today = day(2026, 10, 14);
+        assert_eq!(pending_query(KeyWord::Field(Field::From), "", today), "");
+        assert_eq!(pending_query(KeyWord::Field(Field::From), "jo", today), "from:jo");
+        assert_eq!(pending_query(KeyWord::Field(Field::Subject), "q3 plan", today), "subject:\"q3 plan\"");
+        assert_eq!(pending_query(KeyWord::After, "1.10.", today), "after:2026-10-01");
+        assert_eq!(pending_query(KeyWord::Before, "next tuesday", today), "", "not a date yet");
+    }
+
+    #[test]
+    fn suggestions_for_a_badge_keep_to_its_field() {
+        let s = suggest_for(Some(KeyWord::Field(Field::To)), "hann", &people(), &english(), day(2026, 10, 14));
+        assert!(matches!(&s[0].token, Token::Person { field: Field::To, email, .. } if email == "hb@example.org"));
+        assert!(s.iter().all(|x| !matches!(x.token, Token::Text { field: Field::Subject, .. })));
     }
 
     #[test]
