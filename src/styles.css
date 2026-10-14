@@ -744,6 +744,12 @@ flowbox.attach-flow > flowboxchild {
   padding: 8px 12px 10px 12px;
 }
 
+/* The line under the search field (a syntax error, or how the search on the
+   server went), in line with the field above it. */
+.list-search-status {
+  padding: 0 12px 8px 12px;
+}
+
 .list-title {
   font-size: 1.25em;
   font-weight: 800;
