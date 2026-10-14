@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
-"PO-Revision-Date: 2026-10-11 08:12+0200\n"
+"PO-Revision-Date: 2026-10-14 12:00+0200\n"
 "Last-Translator: jolupa <jolupa@canpavon.cat>\n"
 "Language-Team: Catalan\n"
 "Language: ca\n"
@@ -381,7 +381,7 @@ msgid "Mail Accounts"
 msgstr "Comptes de correu"
 
 msgid "New Smart Folder…"
-msgstr ""
+msgstr "Carpeta intel·ligent nova…"
 
 msgid "About Hylki"
 msgstr "Quant a l'Hylki"
@@ -408,15 +408,14 @@ msgid "Tag"
 msgstr "Etiqueta"
 
 msgid "Smart Folder"
-msgstr ""
+msgstr "Carpeta intel·ligent"
 
-#, fuzzy
 msgid ""
 "Single-key shortcuts are switched off, and Gmail keys with them. Turn them "
 "on in Settings → System."
 msgstr ""
-"Les dreceres d'una sola tecla estan desactivades. Activa-les a Paràmetres → "
-"Sistema."
+"Les dreceres d'una sola tecla estan desactivades, i les tecles del Gmail "
+"amb elles. Activa-les a Paràmetres → Sistema."
 
 msgid ""
 "Single-key shortcuts are switched off. Turn them on in Settings → System."
@@ -478,7 +477,7 @@ msgid "Add Sender to Contacts"
 msgstr "Afegeix el remitent a contactes"
 
 msgid "Create Filter from Message…"
-msgstr ""
+msgstr "Crea un filtre a partir del missatge…"
 
 msgid "Block Remote Content"
 msgstr "Bloca el contingut remot"
@@ -706,14 +705,16 @@ msgid "Empty"
 msgstr "Buida"
 
 msgid "Empty Trash in Every Account?"
-msgstr ""
+msgstr "Vols buidar la paperera de tots els comptes?"
 
 msgid "Empty Junk in Every Account?"
-msgstr ""
+msgstr "Vols buidar la brossa de tots els comptes?"
 
 msgid ""
 "Every message in them will be erased from the server. This can’t be undone."
 msgstr ""
+"Tots els missatges que contenen s'esborraran del servidor. Això no es pot "
+"desfer."
 
 msgid "No Junk folder available for this account"
 msgstr "No hi ha cap carpeta de brossa disponible per a aquest compte"
@@ -722,11 +723,13 @@ msgid "No Inbox folder available for this account"
 msgstr "No hi ha cap bústia d'entrada disponible per a aquest compte"
 
 msgid "Delete “{name}”?"
-msgstr ""
+msgstr "Vols suprimir «{name}»?"
 
 msgid ""
 "The smart folder goes from the sidebar. The mail it shows stays where it is."
 msgstr ""
+"La carpeta intel·ligent desapareixerà de la barra lateral. El correu que "
+"mostra es queda on és."
 
 msgid "No address book available to add contacts"
 msgstr "No hi ha cap llibreta d'adreces disponible per afegir contactes"
@@ -971,6 +974,8 @@ msgid ""
 "Move down or up the list without opening; while reading, open the next or "
 "previous conversation"
 msgstr ""
+"Mou-te avall o amunt per la llista sense obrir; mentre llegeixes, obre la "
+"conversa següent o anterior"
 
 msgid "Open the message the cursor is on"
 msgstr "Obre el missatge on és el cursor"
@@ -981,29 +986,23 @@ msgstr "Torna a la llista de missatges"
 msgid "Next or previous message in the conversation"
 msgstr "Missatge següent o anterior de la conversa"
 
-#, fuzzy
 msgid "Expand or collapse every message of the conversation"
-msgstr "Missatge següent o anterior de la conversa"
+msgstr "Expandeix o replega tots els missatges de la conversa"
 
-#, fuzzy
 msgid "Go to Inbox"
-msgstr "Mou a la bústia d'entrada"
+msgstr "Ves a la bústia d'entrada"
 
-#, fuzzy
 msgid "Go to Starred"
-msgstr "Comença"
+msgstr "Ves a destacats"
 
-#, fuzzy
 msgid "Go to Sent"
-msgstr "Ves a contactes"
+msgstr "Ves a enviats"
 
-#, fuzzy
 msgid "Go to Drafts"
-msgstr "Desa a esborranys"
+msgstr "Ves a esborranys"
 
-#, fuzzy
 msgid "Go to Archive"
-msgstr "Arxiva"
+msgstr "Ves a l'arxiu"
 
 msgid "Go to Contacts"
 msgstr "Ves a contactes"
@@ -1017,9 +1016,8 @@ msgstr "Actua sobre un missatge"
 msgid "Reply to all"
 msgstr "Respon a tots"
 
-#, fuzzy
 msgid "Archive the conversation"
-msgstr "Conversa sencera"
+msgstr "Arxiva la conversa"
 
 msgid "Mark as spam"
 msgstr "Marca com a brossa"
@@ -1027,17 +1025,14 @@ msgstr "Marca com a brossa"
 msgid "Star or unstar"
 msgstr "Destaca o treu la destacat"
 
-#, fuzzy
 msgid "Mark the conversation as read"
-msgstr "Conversa sencera"
+msgstr "Marca la conversa com a llegida"
 
-#, fuzzy
 msgid "Mark the conversation as unread"
-msgstr "Marca com a llegit o no llegit"
+msgstr "Marca la conversa com a no llegida"
 
-#, fuzzy
 msgid "Mark as unread from this message on"
-msgstr "Intenta enviar aquest missatge ara"
+msgstr "Marca com a no llegit a partir d'aquest missatge"
 
 msgid "Select this row (for a bulk action)"
 msgstr "Selecciona aquesta fila (per a una acció massiva)"
@@ -1156,9 +1151,8 @@ msgstr "Surt de l'Hylki completament"
 msgid "Command palette: search actions, folders and tags"
 msgstr "Paleta d'ordres: cerca accions, carpetes i etiquetes"
 
-#, fuzzy
 msgid "Command palette, actions only"
-msgstr "Paleta d'ordres: cerca accions, carpetes i etiquetes"
+msgstr "Paleta d'ordres, només accions"
 
 msgid "This list"
 msgstr "Aquesta llista"
@@ -1288,13 +1282,12 @@ msgstr "{date} a les {time}"
 msgid "Evolution Data Server is not available"
 msgstr "L'Evolution Data Server no està disponible"
 
-#, fuzzy
 msgid ""
 "The directory cannot be searched without signing in. Add a sign-in in "
 "Settings → LDAP Directories."
 msgstr ""
-"El directori necessita una contrasenya. Afegeix-la a Paràmetres → Directoris "
-"LDAP."
+"El directori no es pot cercar sense iniciar sessió. Afegeix un inici de "
+"sessió a Paràmetres → Directoris LDAP."
 
 msgid "The directory did not accept the password."
 msgstr "El directori no ha acceptat la contrasenya."
@@ -1631,29 +1624,33 @@ msgstr ""
 "Introdueix l'adreça del servidor LibreTranslate a Paràmetres → Traducció."
 
 msgid "Labeled"
-msgstr ""
+msgstr "Etiquetat"
 
 msgid "Personal"
-msgstr ""
+msgstr "Personal"
 
 msgid "Private"
-msgstr ""
+msgstr "Privat"
 
 msgid "Confidential"
-msgstr ""
+msgstr "Confidencial"
 
 msgid "The sender marked this message “{label}”."
-msgstr ""
+msgstr "El remitent ha marcat aquest missatge com a «{label}»."
 
 msgid ""
 "The sender's organization labeled this message, without saying the label's "
 "name. Hylki shows the label but does not apply its rules."
 msgstr ""
+"L'organització del remitent ha etiquetat aquest missatge, sense dir el nom "
+"de l'etiqueta. L'Hylki mostra l'etiqueta però no n'aplica les regles."
 
 msgid ""
 "The sender's organization labeled this message “{label}”. Hylki shows the "
 "label but does not apply its rules."
 msgstr ""
+"L'organització del remitent ha etiquetat aquest missatge com a «{label}». "
+"L'Hylki mostra l'etiqueta però no n'aplica les regles."
 
 msgid "Open Hylki"
 msgstr "Obre l'Hylki"
@@ -1758,16 +1755,20 @@ msgid "Find Tags…"
 msgstr "Troba etiquetes…"
 
 msgid "Smart Folders"
-msgstr ""
+msgstr "Carpetes intel·ligents"
 
 msgid ""
 "A smart folder lists the messages that match its conditions, from every "
 "folder or one kind of folder, in one account or all of them. It searches the "
 "mail on this computer and appears in the sidebar under the unified rows."
 msgstr ""
+"Una carpeta intel·ligent llista els missatges que compleixen les seves "
+"condicions, de totes les carpetes o d'un tipus de carpeta, en un compte o en "
+"tots. Cerca el correu d'aquest ordinador i apareix a la barra lateral sota "
+"les files unificades."
 
 msgid "Add Smart Folder…"
-msgstr ""
+msgstr "Afegeix una carpeta intel·ligent…"
 
 msgid "Search filters"
 msgstr "Cerca filtres"
@@ -2122,7 +2123,7 @@ msgstr ""
 "Comprovat a cada sincronització."
 
 msgid "Search the organization directory"
-msgstr ""
+msgstr "Cerca al directori de l'organització"
 
 msgid "Folder Order"
 msgstr "Ordre de carpetes"
@@ -2253,10 +2254,10 @@ msgid "Opening browser… complete sign-in there."
 msgstr "S'està obrint el navegador… completa-hi l'inici de sessió."
 
 msgid "Opening browser… approve access to the directory there."
-msgstr ""
+msgstr "S'està obrint el navegador… aprova-hi l'accés al directori."
 
 msgid "Approve access to the directory in the window that opened."
-msgstr ""
+msgstr "Aprova l'accés al directori a la finestra que s'ha obert."
 
 msgid "Signature HTML"
 msgstr "HTML de la signatura"
@@ -2300,13 +2301,13 @@ msgid "Sign-in failed: {e}"
 msgstr "L'inici de sessió ha fallat: {e}"
 
 msgid "Signed in as {address}, not {email}."
-msgstr ""
+msgstr "Sessió iniciada com a {address}, no com a {email}."
 
 msgid "Access to the directory approved. Save the account to finish."
-msgstr ""
+msgstr "Accés al directori aprovat. Desa el compte per acabar."
 
 msgid "Access to the directory was not approved: {e}"
-msgstr ""
+msgstr "No s'ha aprovat l'accés al directori: {e}"
 
 msgid "✓ SMTP: connected"
 msgstr "✓ SMTP: connectat"
@@ -2414,12 +2415,18 @@ msgid ""
 "Microsoft 365 / Outlook as the provider, instead of from GNOME Online "
 "Accounts."
 msgstr ""
+"Només per a un compte amb sessió iniciada dins de l'Hylki. Per utilitzar-lo, "
+"afegeix aquest compte amb Microsoft 365 / Outlook com a proveïdor, en lloc "
+"de des dels comptes en línia del GNOME."
 
 msgid ""
 "Suggest people from your organization as you type a recipient. Turning this "
 "on asks Microsoft for access to the directory; some organizations need an "
 "administrator to approve it."
 msgstr ""
+"Suggereix persones de la teva organització mentre escrius un destinatari. "
+"Activar-ho demana a Microsoft accés al directori; algunes organitzacions "
+"necessiten que un administrador ho aprovi."
 
 msgid "Never"
 msgstr "Mai"
@@ -2543,10 +2550,10 @@ msgid "{n} messages"
 msgstr "{n} missatges"
 
 msgid "All but Trash and Junk"
-msgstr ""
+msgstr "Totes menys la paperera i la brossa"
 
 msgid "Remove smart folder"
-msgstr ""
+msgstr "Elimina la carpeta intel·ligent"
 
 msgid "Inbox"
 msgstr "Bústia d'entrada"
@@ -2555,37 +2562,37 @@ msgid "Starred"
 msgstr "Destacats"
 
 msgid "Not starred"
-msgstr ""
+msgstr "No destacat"
 
 msgid "Unread"
-msgstr ""
+msgstr "No llegit"
 
 msgid "Read"
-msgstr ""
+msgstr "Llegit"
 
 msgid "Has attachments"
 msgstr "Té adjunts"
 
 msgid "Tagged"
-msgstr ""
+msgstr "Etiquetat"
 
 msgid "Message preview"
-msgstr ""
+msgstr "Previsualització del missatge"
 
 msgid "Edit Smart Folder"
-msgstr ""
+msgstr "Edita la carpeta intel·ligent"
 
 msgid "Add Smart Folder"
-msgstr ""
+msgstr "Afegeix una carpeta intel·ligent"
 
 msgid "All accounts means those in the unified section"
-msgstr ""
+msgstr "Tots els comptes vol dir els de la secció unificada"
 
 msgid "Folders"
 msgstr "Carpetes"
 
 msgid "Any tag"
-msgstr ""
+msgstr "Qualsevol etiqueta"
 
 msgid "Remove condition"
 msgstr "Elimina la condició"
@@ -2603,7 +2610,7 @@ msgid "Text to match"
 msgstr "Text a fer coincidir"
 
 msgid "The preview each message has in the list"
-msgstr ""
+msgstr "La previsualització que cada missatge té a la llista"
 
 msgid "From address when no Reply-To is set"
 msgstr "Adreça del remitent quan no s'ha definit cap Reply-To"
@@ -2942,7 +2949,7 @@ msgid "Command Palette"
 msgstr "Paleta d'ordres"
 
 msgid "Type an action, a folder or a tag, or > for actions only"
-msgstr ""
+msgstr "Escriu una acció, una carpeta o una etiqueta, o > per a només accions"
 
 msgid "Cloud Storage"
 msgstr "Emmagatzematge al núvol"
@@ -3523,15 +3530,14 @@ msgstr "Escriu alguna cosa primer, o selecciona el text per traduir."
 msgid "Could not translate"
 msgstr "No s'ha pogut traduir"
 
-#, fuzzy
 msgid "Switch to plain text?"
-msgstr "Enganxa com a text pla"
+msgstr "Vols canviar a text pla?"
 
 msgid "Formatting, images and links are removed."
-msgstr ""
+msgstr "El format, les imatges i els enllaços s'eliminen."
 
 msgid "Switch"
-msgstr ""
+msgstr "Canvia"
 
 msgid "Cannot send with OpenPGP"
 msgstr "No es pot enviar amb OpenPGP"
@@ -3672,9 +3678,8 @@ msgstr "Nom"
 msgid "Last name"
 msgstr "Cognom"
 
-#, fuzzy
 msgid "In Directories"
-msgstr "Directoris LDAP"
+msgstr "Als directoris"
 
 msgid "Delete Contact?"
 msgstr "Vols suprimir el contacte?"
@@ -3711,9 +3716,8 @@ msgstr "Aniversari"
 msgid "Note"
 msgstr "Nota"
 
-#, fuzzy
 msgid "Directory"
-msgstr "Afegeix un directori"
+msgstr "Directori"
 
 msgid "Address Book"
 msgstr "Llibreta d'adreces"
@@ -3764,15 +3768,15 @@ msgstr "Directoris LDAP"
 msgid "LDAP directories"
 msgstr "Directoris LDAP"
 
-#, fuzzy
 msgid ""
 "The composer looks up recipients in these directories as you type an "
 "address, and a search in Contacts looks in them too. They are kept by "
 "Evolution Data Server, so a directory set up in Evolution is listed here too."
 msgstr ""
 "El redactor cerca els destinataris en aquests directoris mentre escrius una "
-"adreça. Els manté l'Evolution Data Server, així que un directori configurat "
-"a l'Evolution també es llista aquí."
+"adreça, i una cerca a Contactes també els consulta. Els manté l'Evolution "
+"Data Server, així que un directori configurat a l'Evolution també es llista "
+"aquí."
 
 msgid "Add Directory…"
 msgstr "Afegeix un directori…"
@@ -3979,9 +3983,8 @@ msgstr "No hi ha missatges"
 msgid "There's nothing here right now."
 msgstr "Ara mateix no hi ha res aquí."
 
-#, fuzzy
 msgid "Customize Columns…"
-msgstr "Personalitza la barra d'eines…"
+msgstr "Personalitza les columnes…"
 
 msgid "Remove Stars"
 msgstr "Treu les destacats"
@@ -4002,22 +4005,19 @@ msgid "Search this folder"
 msgstr "Cerca en aquesta carpeta"
 
 msgid "Today"
-msgstr ""
+msgstr "Avui"
 
-#, fuzzy
 msgid "Yesterday"
-msgstr "ahir"
+msgstr "Ahir"
 
-#, fuzzy
 msgid "Last 7 days"
-msgstr "Cognom"
+msgstr "Últims 7 dies"
 
 msgid "Last 14 days"
-msgstr ""
+msgstr "Últims 14 dies"
 
-#, fuzzy
 msgid "Older"
-msgstr "Carpeta"
+msgstr "Més antics"
 
 msgid "Due"
 msgstr "Venciment"
@@ -4695,12 +4695,11 @@ msgstr "Icona de l'aplicació"
 msgid "Symbolic"
 msgstr "Simbòlica"
 
-#, fuzzy
 msgid "All unread inbox mail"
-msgstr "Compta el correu no llegit"
+msgstr "Tot el correu no llegit de les bústies d'entrada"
 
 msgid "New since last in front"
-msgstr ""
+msgstr "Nou des de la darrera vegada al davant"
 
 msgid "Follow system"
 msgstr "Segueix el sistema"
@@ -4880,12 +4879,14 @@ msgstr ""
 "de continuar."
 
 msgid "Save the smart folder?"
-msgstr ""
+msgstr "Vols desar la carpeta intel·ligent?"
 
 msgid ""
 "The smart folder editor is open. Save what you changed, or discard it, "
 "before moving on."
 msgstr ""
+"L'editor de carpetes intel·ligents és obert. Desa el que has canviat, o "
+"descarta-ho, abans de continuar."
 
 msgid "Save the tag?"
 msgstr "Vols desar l'etiqueta?"
@@ -5490,12 +5491,14 @@ msgstr ""
 "atura la baixada de previsualitzacions."
 
 msgid "Group by date"
-msgstr ""
+msgstr "Agrupa per data"
 
 msgid ""
 "Headings divide a list sorted by date into Today, Yesterday, Last 7 days, "
 "Last 14 days and Older."
 msgstr ""
+"Els encapçalaments divideixen una llista ordenada per data en Avui, Ahir, "
+"Últims 7 dies, Últims 14 dies i Més antics."
 
 msgid "Tint tagged messages"
 msgstr "Acoloreix els missatges etiquetats"
@@ -5595,14 +5598,16 @@ msgstr ""
 "Anomena les columnes a sobre de la llista. Fes clic en una per ordenar la "
 "llista per ella, i de nou per invertir l'ordre."
 
-#, fuzzy
 msgid "Fit columns to the list"
-msgstr "Deixa anar una columna aquí per amagar-la"
+msgstr "Ajusta les columnes a la llista"
 
 msgid ""
 "The name and tag columns narrow as the list does. Off, every column keeps "
 "its width and a list too narrow for them scrolls sideways."
 msgstr ""
+"Les columnes de nom i etiqueta s'estrenyen com ho fa la llista. Desactivat, "
+"cada columna manté la seva amplada i una llista massa estreta per a elles es "
+"desplaça lateralment."
 
 msgid "Group messages by conversation"
 msgstr "Agrupa els missatges per conversa"
@@ -5981,21 +5986,26 @@ msgid ""
 "The font rich-text messages are written and sent in. Default leaves it to "
 "the recipient's own font."
 msgstr ""
+"La font amb què s'escriuen i s'envien els missatges de text enriquit. Per "
+"defecte deixa la font del destinatari."
 
 msgid "Font size"
-msgstr ""
+msgstr "Mida de la font"
 
 msgid "The size, in points, rich-text messages are written and sent in."
 msgstr ""
+"La mida, en punts, amb què s'escriuen i s'envien els missatges de text "
+"enriquit."
 
-#, fuzzy
 msgid "Reply in the original's format"
-msgstr "Respon amb els fitxers"
+msgstr "Respon en el format de l'original"
 
 msgid ""
 "Replies to and forwards of mail sent as plain text are written in plain "
 "text. Other mail starts in the format above."
 msgstr ""
+"Les respostes i els reenviament del correu enviat com a text pla s'escriuen "
+"en text pla. Els altres correus comencen en el format de dalt."
 
 msgid "Signature in replies"
 msgstr "Signatura a les respostes"
@@ -6211,15 +6221,15 @@ msgstr ""
 msgid "Unread count on the app icon"
 msgstr "Recompte de no llegits a la icona de l'aplicació"
 
-#, fuzzy
 msgid ""
 "A number on Hylki's icon in the dock or task manager: every unread inbox "
 "message, or only those that arrived while Hylki was not in front. KDE Plasma "
 "shows it; GNOME needs a dock extension such as Dash to Dock."
 msgstr ""
-"El nombre de missatges no llegits a la bústia d'entrada a la icona de "
-"l'Hylki al dock o gestor de tasques. El KDE Plasma ho mostra; el GNOME "
-"necessita una extensió de dock com ara Dash to Dock."
+"Un nombre a la icona de l'Hylki al dock o gestor de tasques: tots els "
+"missatges no llegits de la bústia d'entrada, o només els que han arribat "
+"mentre l'Hylki no era al davant. El KDE Plasma ho mostra; el GNOME necessita "
+"una extensió de dock com ara Dash to Dock."
 
 msgid "Single-key shortcuts"
 msgstr "Dreceres d'una sola tecla"
@@ -6234,20 +6244,19 @@ msgstr ""
 msgid "Gmail keys"
 msgstr "Tecles del Gmail"
 
-#, fuzzy
 msgid ""
 "Needs single-key shortcuts on. Swaps in the keys Gmail has: j/k move without "
 "opening, o opens, e archives, # deletes, g then a letter goes to a folder."
 msgstr ""
-"Dreceres d'una sola tecla com les té el Gmail: j/k es mouen sense obrir, o "
-"obre, e arxiva, # suprimeix, g i després una lletra va a una carpeta."
+"Necessita les dreceres d'una sola tecla activades. Substitueix les tecles "
+"del Gmail: j/k es mouen sense obrir, o obre, e arxiva, # suprimeix, g i "
+"després una lletra va a una carpeta."
 
-#, fuzzy
 msgid "Status bar"
-msgstr "Barra d'estat ({n})"
+msgstr "Barra d'estat"
 
 msgid "Where the bar with errors and the console opens"
-msgstr ""
+msgstr "On s'obre la barra amb errors i la consola"
 
 msgid "Console mode"
 msgstr "Mode de consola"
@@ -6440,13 +6449,11 @@ msgstr "90 dies"
 msgid "30 days"
 msgstr "30 dies"
 
-#, fuzzy
 msgid "Bottom of the window"
-msgstr "Redacta a la finestra principal"
+msgstr "A la part inferior de la finestra"
 
-#, fuzzy
 msgid "Top of the window"
-msgstr "Redacta a la finestra principal"
+msgstr "A la part superior de la finestra"
 
 msgid "When displayed"
 msgstr "Quan es mostra"
@@ -6574,7 +6581,7 @@ msgid "Custom File"
 msgstr "Fitxer personalitzat"
 
 msgid "Other Font…"
-msgstr ""
+msgstr "Una altra font…"
 
 msgid "Print Message"
 msgstr "Imprimeix el missatge"
@@ -6655,7 +6662,7 @@ msgid "Monospace"
 msgstr "Monoespaiada"
 
 msgid "Custom…"
-msgstr ""
+msgstr "Personalitzada…"
 
 msgid "Paragraph style"
 msgstr "Estil de paràgraf"
@@ -6768,19 +6775,19 @@ msgid "Show or hide sub-folders"
 msgstr "Mostra o amaga les subcarpetes"
 
 msgid "Show or hide labels"
-msgstr ""
+msgstr "Mostra o amaga les etiquetes del servidor"
 
 msgid "Show or hide folders"
 msgstr "Mostra o amaga les carpetes"
 
 msgid "Labels ({len})"
-msgstr ""
+msgstr "Etiquetes del servidor ({len})"
 
 msgid "Folders ({len})"
 msgstr "Carpetes ({len})"
 
 msgid "Labels"
-msgstr ""
+msgstr "Etiquetes del servidor"
 
 msgid "Sort Folders"
 msgstr "Ordena les carpetes"
@@ -6801,7 +6808,7 @@ msgid "Show each tag"
 msgstr "Mostra cada etiqueta"
 
 msgid "Show each smart folder"
-msgstr ""
+msgstr "Mostra cada carpeta intel·ligent"
 
 msgid "Long-press to expand or collapse"
 msgstr "Mantén premut per expandir o replegar"
@@ -6813,10 +6820,10 @@ msgid "Empty Junk…"
 msgstr "Buida la brossa…"
 
 msgid "Edit Smart Folder…"
-msgstr ""
+msgstr "Edita la carpeta intel·ligent…"
 
 msgid "Delete Smart Folder…"
-msgstr ""
+msgstr "Suprimeix la carpeta intel·ligent…"
 
 msgid "Show or hide filters"
 msgstr "Mostra o amaga els filtres"
