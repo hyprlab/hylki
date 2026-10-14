@@ -746,6 +746,32 @@ msgstr "Δεν υπάρχει φάκελος Ανεπιθύμητων για α�
 msgid "No Inbox folder available for this account"
 msgstr "Δεν υπάρχει φάκελος Εισερχομένων για αυτόν τον λογαριασμό"
 
+#, fuzzy
+msgid "Searching on the server…"
+msgstr "Αναζήτηση…"
+
+msgid "{account} is searched on this computer only"
+msgstr ""
+
+#, fuzzy
+msgid "{account} could not be searched on the server: {error}"
+msgstr "Δεν ήταν δυνατή η επικοινωνία με τον διακομιστή JMAP: {e}"
+
+#, fuzzy
+msgid "Searching on the server… {n} found so far"
+msgstr "Η αναζήτηση γίνεται στον διακομιστή· δεν γίνεται λήψη τίποτα"
+
+msgid "The server found {n} so far; more are available"
+msgstr ""
+
+msgid "The server search is complete: {n} found"
+msgstr ""
+
+msgid ""
+"Still indexing {n} messages on this computer; they are found by their list "
+"fields until then"
+msgstr ""
+
 msgid "Delete “{name}”?"
 msgstr "Διαγραφή του «{name}»;"
 
@@ -1405,6 +1431,24 @@ msgstr "Το αρχείο δεν είναι αρχείο κειμένου"
 
 msgid "The file is larger than {size} MB"
 msgstr "Το αρχείο είναι μεγαλύτερο από {size} MB"
+
+msgid "A quotation mark is not closed"
+msgstr ""
+
+msgid "A parenthesis is not closed"
+msgstr ""
+
+msgid "A closing parenthesis has no opening one"
+msgstr ""
+
+msgid "“{key}” needs a date, such as 2026-10-14"
+msgstr ""
+
+msgid "“{key}” needs something to search for"
+msgstr ""
+
+msgid "“{op}” needs a search term on both sides"
+msgstr ""
 
 msgid "{used} of {limit} used"
 msgstr "Χρησιμοποιούνται {used} από {limit}"
@@ -4123,14 +4167,32 @@ msgstr ""
 msgid "Today"
 msgstr "Σήμερα"
 
+msgid ""
+"Every word must match. from: to: cc: replyto: subject: body: attachment: "
+"search one field; before:2026-10-14 and after:2026-10-14 bound the date; "
+"has:attachment; OR between words; -word leaves out; \"exact phrase\""
+msgstr ""
+
 msgid "Choose which folders to search"
 msgstr "Επιλέξτε τους φακέλους αναζήτησης"
 
-msgid "All folders"
-msgstr "Όλοι οι φάκελοι"
+#, fuzzy
+msgid "This account"
+msgstr "Λογαριασμός αλληλογραφίας"
 
 msgid "This folder"
 msgstr "Αυτός ο φάκελος"
+
+msgid "Also search on the mail server (IMAP and Microsoft 365)"
+msgstr ""
+
+#, fuzzy
+msgid "Load More"
+msgstr "Φόρτωση περισσότερων…"
+
+#, fuzzy
+msgid "Load the next results from the server"
+msgstr "Φόρτωση συνημμένων από τον διακομιστή"
 
 msgid "Clear selection"
 msgstr "Εκκαθάριση επιλογής"
@@ -4162,8 +4224,13 @@ msgstr "Σήμανση όλων ως αναγνωσμένων"
 msgid "Mark All as Unread"
 msgstr "Σήμανση όλων ως μη αναγνωσμένων"
 
-msgid "Search all folders"
-msgstr "Αναζήτηση σε όλους τους φακέλους"
+#, fuzzy
+msgid "Search all accounts"
+msgstr "Εμφάνιση κάθε λογαριασμού"
+
+#, fuzzy
+msgid "Search this account"
+msgstr "Αποστολή μέσω αυτού του λογαριασμού"
 
 msgid "Search this folder"
 msgstr "Αναζήτηση σε αυτόν τον φάκελο"
@@ -7328,6 +7395,9 @@ msgstr ""
 "Το {from} είναι έγκυρο, αλλά οι διευθύνσεις δεν ταιριάζουν με το όνομα στο "
 "μήνυμα."
 
+msgid "The server's folder list is deeper or larger than any mailbox can be"
+msgstr ""
+
 msgid "Syncing…"
 msgstr "Συγχρονισμός…"
 
@@ -7408,6 +7478,11 @@ msgstr "Το συνημμένο δεν υπάρχει πλέον στο μήνυ
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Εξακολουθεί να μην είναι δυνατή η αποστολή του «{subject}»: {e}"
 
+msgid ""
+"Message-body filter rules could not be checked against {n} older Inbox "
+"messages: Microsoft 365 returns at most 1,000 search results per day searched"
+msgstr ""
+
 msgid "IMAP connection stopped making progress"
 msgstr "Η σύνδεση IMAP σταμάτησε να προχωρά"
 
@@ -7433,6 +7508,42 @@ msgstr ""
 "Διαγράψατε ένα συνημμένο από αυτό το μήνυμα. Οι αρχικές κεφαλίδες MIME του "
 "συνημμένου ήταν:"
 
+msgid "This account's server cannot be searched from Hylki"
+msgstr ""
+
+msgid ""
+"has:attachment cannot be searched on an IMAP server; it is checked locally "
+"only"
+msgstr ""
+
+#, fuzzy
+msgid "Nothing to search for"
+msgstr "Δεν υπάρχει τίποτα για εξαγωγή."
+
+msgid ""
+"Microsoft 365 cannot search Reply-To on the server; it is checked locally "
+"only"
+msgstr ""
+
+#, fuzzy
+msgid "These folders could not be searched: {folders}"
+msgstr "Δεν ήταν δυνατή η πρόσβαση στην υπηρεσία: {e}"
+
+msgid "Microsoft 365 did not give Hylki a sign-in token"
+msgstr ""
+
+#, fuzzy
+msgid "The folder was not found on the server"
+msgstr "Αυτός ο φάκελος δεν υπάρχει στον διακομιστή"
+
+msgid ""
+"Microsoft 365 returns at most {n} results for one search; narrow the search "
+"to find older ones"
+msgstr ""
+
+msgid "{n} results are in folders Hylki does not show"
+msgstr ""
+
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr ""
 "η απάντηση του διακομιστή δεν ήταν δυνατό να αναγνωστεί (ξεκινούσε με: "
@@ -7440,6 +7551,14 @@ msgstr ""
 
 msgid "runtime error: {e}"
 msgstr "σφάλμα χρόνου εκτέλεσης: {e}"
+
+msgid ""
+"The message is larger than {n} MB, the most Hylki downloads, so it was not "
+"opened"
+msgstr ""
+
+msgid "The message ended early while it was downloading; try again"
+msgstr ""
 
 msgid "Could not load {path}: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση του {path}: {e}"
@@ -7563,6 +7682,10 @@ msgid ""
 msgstr ""
 "Το POP3 δεν μπορεί να τροποποιήσει ένα μήνυμα στον διακομιστή, επομένως το "
 "συνημμένο δεν αφαιρέθηκε."
+
+#, fuzzy
+msgid "Downloading older messages: {n} left"
+msgstr "Δεν ήταν δυνατή η μετακίνηση μηνυμάτων: {e}"
 
 msgid "Email Client"
 msgstr "Πρόγραμμα-πελάτης email"
@@ -7701,6 +7824,12 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 msgid "Hyprlab"
 msgstr "Hyprlab"
 
+#~ msgid "All folders"
+#~ msgstr "Όλοι οι φάκελοι"
+
+#~ msgid "Search all folders"
+#~ msgstr "Αναζήτηση σε όλους τους φακέλους"
+
 #~ msgid "Show only unread"
 #~ msgstr "Εμφάνιση μόνο μη αναγνωσμένων"
 
@@ -7804,9 +7933,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Uses IMAP IDLE to receive messages the moment they arrive."
 #~ msgstr "Χρησιμοποιεί IMAP IDLE για τη λήψη μηνυμάτων τη στιγμή που φτάνουν."
-
-#~ msgid "Load attachments from server"
-#~ msgstr "Φόρτωση συνημμένων από τον διακομιστή"
 
 #~ msgid "Could not save draft: unknown folder"
 #~ msgstr "Δεν ήταν δυνατή η αποθήκευση του προχείρου: άγνωστος φάκελος"

@@ -688,6 +688,29 @@ msgstr ""
 msgid "No Inbox folder available for this account"
 msgstr ""
 
+msgid "Searching on the server…"
+msgstr ""
+
+msgid "{account} is searched on this computer only"
+msgstr ""
+
+msgid "{account} could not be searched on the server: {error}"
+msgstr ""
+
+msgid "Searching on the server… {n} found so far"
+msgstr ""
+
+msgid "The server found {n} so far; more are available"
+msgstr ""
+
+msgid "The server search is complete: {n} found"
+msgstr ""
+
+msgid ""
+"Still indexing {n} messages on this computer; they are found by their list "
+"fields until then"
+msgstr ""
+
 msgid "Delete “{name}”?"
 msgstr ""
 
@@ -1304,6 +1327,24 @@ msgid "The file is not a text file"
 msgstr ""
 
 msgid "The file is larger than {size} MB"
+msgstr ""
+
+msgid "A quotation mark is not closed"
+msgstr ""
+
+msgid "A parenthesis is not closed"
+msgstr ""
+
+msgid "A closing parenthesis has no opening one"
+msgstr ""
+
+msgid "“{key}” needs a date, such as 2026-10-14"
+msgstr ""
+
+msgid "“{key}” needs something to search for"
+msgstr ""
+
+msgid "“{op}” needs a search term on both sides"
 msgstr ""
 
 msgid "{used} of {limit} used"
@@ -3728,13 +3769,28 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
+msgid ""
+"Every word must match. from: to: cc: replyto: subject: body: attachment: "
+"search one field; before:2026-10-14 and after:2026-10-14 bound the date; "
+"has:attachment; OR between words; -word leaves out; \"exact phrase\""
+msgstr ""
+
 msgid "Choose which folders to search"
 msgstr ""
 
-msgid "All folders"
+msgid "This account"
 msgstr ""
 
 msgid "This folder"
+msgstr ""
+
+msgid "Also search on the mail server (IMAP and Microsoft 365)"
+msgstr ""
+
+msgid "Load More"
+msgstr ""
+
+msgid "Load the next results from the server"
 msgstr ""
 
 msgid "Clear selection"
@@ -3767,7 +3823,10 @@ msgstr ""
 msgid "Mark All as Unread"
 msgstr ""
 
-msgid "Search all folders"
+msgid "Search all accounts"
+msgstr ""
+
+msgid "Search this account"
 msgstr ""
 
 msgid "Search this folder"
@@ -6488,6 +6547,9 @@ msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
 msgstr ""
 
+msgid "The server's folder list is deeper or larger than any mailbox can be"
+msgstr ""
+
 msgid "Syncing…"
 msgstr ""
 
@@ -6566,6 +6628,11 @@ msgstr ""
 msgid "Still could not send “{subject}”: {e}"
 msgstr ""
 
+msgid ""
+"Message-body filter rules could not be checked against {n} older Inbox "
+"messages: Microsoft 365 returns at most 1,000 search results per day searched"
+msgstr ""
+
 msgid "IMAP connection stopped making progress"
 msgstr ""
 
@@ -6586,10 +6653,51 @@ msgid ""
 "the attachment were:"
 msgstr ""
 
+msgid "This account's server cannot be searched from Hylki"
+msgstr ""
+
+msgid ""
+"has:attachment cannot be searched on an IMAP server; it is checked locally "
+"only"
+msgstr ""
+
+msgid "Nothing to search for"
+msgstr ""
+
+msgid ""
+"Microsoft 365 cannot search Reply-To on the server; it is checked locally "
+"only"
+msgstr ""
+
+msgid "These folders could not be searched: {folders}"
+msgstr ""
+
+msgid "Microsoft 365 did not give Hylki a sign-in token"
+msgstr ""
+
+msgid "The folder was not found on the server"
+msgstr ""
+
+msgid ""
+"Microsoft 365 returns at most {n} results for one search; narrow the search "
+"to find older ones"
+msgstr ""
+
+msgid "{n} results are in folders Hylki does not show"
+msgstr ""
+
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr ""
 
 msgid "runtime error: {e}"
+msgstr ""
+
+msgid ""
+"The message is larger than {n} MB, the most Hylki downloads, so it was not "
+"opened"
+msgstr ""
+
+msgid "The message ended early while it was downloading; try again"
 msgstr ""
 
 msgid "Could not load {path}: {e}"
@@ -6696,6 +6804,9 @@ msgstr ""
 
 msgid ""
 "POP3 cannot change a message on the server, so the attachment was not removed"
+msgstr ""
+
+msgid "Downloading older messages: {n} left"
 msgstr ""
 
 msgid "Email Client"

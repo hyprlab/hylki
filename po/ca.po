@@ -734,6 +734,32 @@ msgstr "No hi ha cap carpeta de brossa disponible per a aquest compte"
 msgid "No Inbox folder available for this account"
 msgstr "No hi ha cap bústia d'entrada disponible per a aquest compte"
 
+#, fuzzy
+msgid "Searching on the server…"
+msgstr "S'està cercant…"
+
+msgid "{account} is searched on this computer only"
+msgstr ""
+
+#, fuzzy
+msgid "{account} could not be searched on the server: {error}"
+msgstr "No s'ha pogut contactar amb el servidor JMAP: {e}"
+
+#, fuzzy
+msgid "Searching on the server… {n} found so far"
+msgstr "Es cerca al servidor; no es baixa res"
+
+msgid "The server found {n} so far; more are available"
+msgstr ""
+
+msgid "The server search is complete: {n} found"
+msgstr ""
+
+msgid ""
+"Still indexing {n} messages on this computer; they are found by their list "
+"fields until then"
+msgstr ""
+
 msgid "Delete “{name}”?"
 msgstr "Vols suprimir «{name}»?"
 
@@ -1387,6 +1413,24 @@ msgstr "El fitxer no és un fitxer de text"
 
 msgid "The file is larger than {size} MB"
 msgstr "El fitxer és més gran de {size} MB"
+
+msgid "A quotation mark is not closed"
+msgstr ""
+
+msgid "A parenthesis is not closed"
+msgstr ""
+
+msgid "A closing parenthesis has no opening one"
+msgstr ""
+
+msgid "“{key}” needs a date, such as 2026-10-14"
+msgstr ""
+
+msgid "“{key}” needs something to search for"
+msgstr ""
+
+msgid "“{op}” needs a search term on both sides"
+msgstr ""
 
 msgid "{used} of {limit} used"
 msgstr "{used} de {limit} utilitzats"
@@ -4062,14 +4106,32 @@ msgstr ""
 msgid "Today"
 msgstr "Avui"
 
+msgid ""
+"Every word must match. from: to: cc: replyto: subject: body: attachment: "
+"search one field; before:2026-10-14 and after:2026-10-14 bound the date; "
+"has:attachment; OR between words; -word leaves out; \"exact phrase\""
+msgstr ""
+
 msgid "Choose which folders to search"
 msgstr "Tria quines carpetes cercar"
 
-msgid "All folders"
-msgstr "Totes les carpetes"
+#, fuzzy
+msgid "This account"
+msgstr "Compte de correu"
 
 msgid "This folder"
 msgstr "Aquesta carpeta"
+
+msgid "Also search on the mail server (IMAP and Microsoft 365)"
+msgstr ""
+
+#, fuzzy
+msgid "Load More"
+msgstr "S'està carregant més…"
+
+#, fuzzy
+msgid "Load the next results from the server"
+msgstr "Vols suprimir l'adjunt del servidor?"
 
 msgid "Clear selection"
 msgstr "Desselecciona-ho tot"
@@ -4101,8 +4163,13 @@ msgstr "Marca-ho tot com a llegit"
 msgid "Mark All as Unread"
 msgstr "Marca-ho tot com a no llegit"
 
-msgid "Search all folders"
-msgstr "Cerca a totes les carpetes"
+#, fuzzy
+msgid "Search all accounts"
+msgstr "Mostra cada compte"
+
+#, fuzzy
+msgid "Search this account"
+msgstr "Envia a través d'aquest compte"
 
 msgid "Search this folder"
 msgstr "Cerca en aquesta carpeta"
@@ -7220,6 +7287,9 @@ msgid ""
 msgstr ""
 "{from} és correcte, però l'adreçament no coincideix amb el nom del missatge."
 
+msgid "The server's folder list is deeper or larger than any mailbox can be"
+msgstr ""
+
 msgid "Syncing…"
 msgstr "S'està sincronitzant…"
 
@@ -7298,6 +7368,11 @@ msgstr "L'adjunt ja no és al missatge del servidor"
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Encara no s'ha pogut enviar «{subject}»: {e}"
 
+msgid ""
+"Message-body filter rules could not be checked against {n} older Inbox "
+"messages: Microsoft 365 returns at most 1,000 search results per day searched"
+msgstr ""
+
 msgid "IMAP connection stopped making progress"
 msgstr "La connexió IMAP ha deixat de progressar"
 
@@ -7320,11 +7395,55 @@ msgstr ""
 "Has suprimit un adjunt d'aquest missatge. Les capçaleres MIME originals de "
 "l'adjunt eren:"
 
+msgid "This account's server cannot be searched from Hylki"
+msgstr ""
+
+msgid ""
+"has:attachment cannot be searched on an IMAP server; it is checked locally "
+"only"
+msgstr ""
+
+#, fuzzy
+msgid "Nothing to search for"
+msgstr "No hi ha res per exportar."
+
+msgid ""
+"Microsoft 365 cannot search Reply-To on the server; it is checked locally "
+"only"
+msgstr ""
+
+#, fuzzy
+msgid "These folders could not be searched: {folders}"
+msgstr "No s'ha pogut contactar amb el servei: {e}"
+
+msgid "Microsoft 365 did not give Hylki a sign-in token"
+msgstr ""
+
+#, fuzzy
+msgid "The folder was not found on the server"
+msgstr "Aquesta carpeta no és al servidor"
+
+msgid ""
+"Microsoft 365 returns at most {n} results for one search; narrow the search "
+"to find older ones"
+msgstr ""
+
+msgid "{n} results are in folders Hylki does not show"
+msgstr ""
+
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr "no s'ha pogut llegir la resposta del servidor (començava: {reply})"
 
 msgid "runtime error: {e}"
 msgstr "error en temps d'execució: {e}"
+
+msgid ""
+"The message is larger than {n} MB, the most Hylki downloads, so it was not "
+"opened"
+msgstr ""
+
+msgid "The message ended early while it was downloading; try again"
+msgstr ""
 
 msgid "Could not load {path}: {e}"
 msgstr "No s'ha pogut carregar {path}: {e}"
@@ -7446,6 +7565,10 @@ msgid ""
 msgstr ""
 "El POP3 no pot modificar un missatge al servidor, així que l'adjunt no s'ha "
 "eliminat"
+
+#, fuzzy
+msgid "Downloading older messages: {n} left"
+msgstr "No s'han pogut moure els missatges: {e}"
 
 msgid "Email Client"
 msgstr "Client de correu"
@@ -7580,6 +7703,12 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "All folders"
+#~ msgstr "Totes les carpetes"
+
+#~ msgid "Search all folders"
+#~ msgstr "Cerca a totes les carpetes"
 
 #~ msgid "Show only unread"
 #~ msgstr "Mostra només els no llegits"

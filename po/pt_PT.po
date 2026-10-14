@@ -775,6 +775,32 @@ msgid "No Inbox folder available for this account"
 msgstr "Não existe uma pasta Caixa de entrada disponível para esta conta"
 
 #, fuzzy
+msgid "Searching on the server…"
+msgstr "A pesquisar…"
+
+msgid "{account} is searched on this computer only"
+msgstr ""
+
+#, fuzzy
+msgid "{account} could not be searched on the server: {error}"
+msgstr "Não foi possível aceder ao servidor JMAP: {e}"
+
+#, fuzzy
+msgid "Searching on the server… {n} found so far"
+msgstr "Pesquisa no servidor; nada é transferido"
+
+msgid "The server found {n} so far; more are available"
+msgstr ""
+
+msgid "The server search is complete: {n} found"
+msgstr ""
+
+msgid ""
+"Still indexing {n} messages on this computer; they are found by their list "
+"fields until then"
+msgstr ""
+
+#, fuzzy
 msgid "Delete “{name}”?"
 msgstr "Esvaziar «{name}»?"
 
@@ -1457,6 +1483,24 @@ msgid "The file is not a text file"
 msgstr "Essa pasta não existe no servidor"
 
 msgid "The file is larger than {size} MB"
+msgstr ""
+
+msgid "A quotation mark is not closed"
+msgstr ""
+
+msgid "A parenthesis is not closed"
+msgstr ""
+
+msgid "A closing parenthesis has no opening one"
+msgstr ""
+
+msgid "“{key}” needs a date, such as 2026-10-14"
+msgstr ""
+
+msgid "“{key}” needs something to search for"
+msgstr ""
+
+msgid "“{op}” needs a search term on both sides"
 msgstr ""
 
 msgid "{used} of {limit} used"
@@ -4200,14 +4244,32 @@ msgstr "Importância alta"
 msgid "Today"
 msgstr ""
 
+msgid ""
+"Every word must match. from: to: cc: replyto: subject: body: attachment: "
+"search one field; before:2026-10-14 and after:2026-10-14 bound the date; "
+"has:attachment; OR between words; -word leaves out; \"exact phrase\""
+msgstr ""
+
 msgid "Choose which folders to search"
 msgstr "Escolher as pastas a pesquisar"
 
-msgid "All folders"
-msgstr "Todas as pastas"
+#, fuzzy
+msgid "This account"
+msgstr "Conta de correio"
 
 msgid "This folder"
 msgstr "Esta pasta"
+
+msgid "Also search on the mail server (IMAP and Microsoft 365)"
+msgstr ""
+
+#, fuzzy
+msgid "Load More"
+msgstr "A carregar mais…"
+
+#, fuzzy
+msgid "Load the next results from the server"
+msgstr "Eliminar o anexo do servidor?"
 
 msgid "Clear selection"
 msgstr "Limpar seleção"
@@ -4243,8 +4305,12 @@ msgid "Mark All as Unread"
 msgstr "Marcar tudo como não lido"
 
 #, fuzzy
-msgid "Search all folders"
-msgstr "Pesquisar pastas"
+msgid "Search all accounts"
+msgstr "Mostrar cada conta"
+
+#, fuzzy
+msgid "Search this account"
+msgstr "Envia através desta conta"
 
 #, fuzzy
 msgid "Search this folder"
@@ -7378,6 +7444,9 @@ msgstr ""
 "A identidade de {from} foi confirmada, mas os endereços não correspondem ao "
 "nome apresentado na mensagem."
 
+msgid "The server's folder list is deeper or larger than any mailbox can be"
+msgstr ""
+
 msgid "Syncing…"
 msgstr "A sincronizar…"
 
@@ -7457,6 +7526,11 @@ msgstr "O anexo já não está na mensagem no servidor"
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Continuou a não ser possível enviar «{subject}»: {e}"
 
+msgid ""
+"Message-body filter rules could not be checked against {n} older Inbox "
+"messages: Microsoft 365 returns at most 1,000 search results per day searched"
+msgstr ""
+
 msgid "IMAP connection stopped making progress"
 msgstr "A ligação IMAP deixou de progredir"
 
@@ -7480,11 +7554,55 @@ msgid ""
 msgstr ""
 "Eliminou um anexo desta mensagem. Os cabeçalhos MIME originais do anexo eram:"
 
+msgid "This account's server cannot be searched from Hylki"
+msgstr ""
+
+msgid ""
+"has:attachment cannot be searched on an IMAP server; it is checked locally "
+"only"
+msgstr ""
+
+#, fuzzy
+msgid "Nothing to search for"
+msgstr "Nada para exportar."
+
+msgid ""
+"Microsoft 365 cannot search Reply-To on the server; it is checked locally "
+"only"
+msgstr ""
+
+#, fuzzy
+msgid "These folders could not be searched: {folders}"
+msgstr "Não foi possível contactar o serviço: {e}"
+
+msgid "Microsoft 365 did not give Hylki a sign-in token"
+msgstr ""
+
+#, fuzzy
+msgid "The folder was not found on the server"
+msgstr "Essa pasta não existe no servidor"
+
+msgid ""
+"Microsoft 365 returns at most {n} results for one search; narrow the search "
+"to find older ones"
+msgstr ""
+
+msgid "{n} results are in folders Hylki does not show"
+msgstr ""
+
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr "não foi possível ler a resposta do servidor (começava por: {reply})"
 
 msgid "runtime error: {e}"
 msgstr "erro de execução: {e}"
+
+msgid ""
+"The message is larger than {n} MB, the most Hylki downloads, so it was not "
+"opened"
+msgstr ""
+
+msgid "The message ended early while it was downloading; try again"
+msgstr ""
 
 msgid "Could not load {path}: {e}"
 msgstr "Não foi possível carregar {path}: {e}"
@@ -7606,6 +7724,10 @@ msgid ""
 msgstr ""
 "O POP3 não pode alterar uma mensagem no servidor, pelo que o anexo não foi "
 "removido"
+
+#, fuzzy
+msgid "Downloading older messages: {n} left"
+msgstr "Não foi possível mover as mensagens: {e}"
 
 msgid "Email Client"
 msgstr "Cliente de correio eletrónico"
@@ -7740,6 +7862,13 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "All folders"
+#~ msgstr "Todas as pastas"
+
+#, fuzzy
+#~ msgid "Search all folders"
+#~ msgstr "Pesquisar pastas"
 
 #, fuzzy
 #~ msgid ""
