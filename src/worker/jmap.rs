@@ -781,6 +781,39 @@ fn jmap_query_ids(s: &JmapSession, filter: serde_json::Value, limit: usize) -> R
         .unwrap_or_default())
 }
 
+/// Every id a query matches, `page` at a time by `position` (RFC 8621
+/// §4.4): a filter rule must see every message its body condition matches,
+/// not the first page. A server may answer with fewer than asked for, so the
+/// pages go on until one comes back empty.
+fn jmap_query_all_ids(s: &JmapSession, filter: serde_json::Value, page: usize) -> Result<Vec<String>, String> {
+    let mut out: Vec<String> = Vec::new();
+    loop {
+        let responses = jmap_call(
+            s,
+            &[CAP_CORE, CAP_MAIL],
+            vec![call(
+                0,
+                "Email/query",
+                serde_json::json!({
+                    "accountId": s.account,
+                    "filter": filter,
+                    "sort": [{ "property": "receivedAt", "isAscending": false }],
+                    "position": out.len(),
+                    "limit": page,
+                }),
+            )],
+        )?;
+        let ids: Vec<String> = args(&responses, 0)["ids"]
+            .as_array()
+            .map(|a| a.iter().filter_map(|v| v.as_str().map(str::to_string)).collect())
+            .unwrap_or_default();
+        if ids.is_empty() || out.len() > 1_000_000 {
+            return Ok(out);
+        }
+        out.extend(ids);
+    }
+}
+
 /// Summaries for a set of ids.
 fn jmap_get_messages(
     s: &JmapSession,
@@ -1498,7 +1531,7 @@ async fn emit_jmap_body_hits(
         let mid = mailbox_id.clone();
         let n = needle.clone();
         let found = blocking(move || {
-            jmap_query_ids(&sess, serde_json::json!({ "inMailbox": mid, "body": n }), 250)
+            jmap_query_all_ids(&sess, serde_json::json!({ "inMailbox": mid, "body": n }), 250)
         })
         .await;
         match found {
@@ -3079,6 +3112,29 @@ mod tests {
 
     /// #429: the whole background pass over a folder: the ids in two
     /// pages, the missing mail in one get; the cache keeps what it had and
+    /// A body search pages through every match, including a server that
+    /// hands back fewer per page than asked: past the old cap of 250 none
+    /// is lost to a filter rule.
+    #[test]
+    fn a_body_search_reads_every_page() {
+        let ids: Vec<String> = (0..251).map(|i| format!("M{i}")).collect();
+        let page = |from: usize, to: usize| {
+            let ids: Vec<&str> = ids[from..to].iter().map(String::as_str).collect();
+            query_page(&ids, "q1", 251, from)
+        };
+        // The server caps a page at 200, then gives the last 51, then nothing.
+        let (s, server) = serve_api(vec![page(0, 200), page(200, 251), query_page(&[], "q1", 251, 251)]);
+        let found = jmap_query_all_ids(&s, serde_json::json!({ "body": "x" }), 250).unwrap();
+        assert_eq!(found.len(), 251);
+        let positions: Vec<u64> = server
+            .join()
+            .unwrap()
+            .iter()
+            .map(|b| b["methodCalls"][0][1]["position"].as_u64().unwrap())
+            .collect();
+        assert_eq!(positions, vec![0, 200, 251]);
+    }
+
     /// loses what the server lost.
     #[tokio::test]
     async fn the_background_index_fills_and_prunes_a_mailbox() {
