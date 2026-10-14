@@ -361,8 +361,22 @@ async fn graph_search<F: Fn(ServerSearchEvent)>(
     let Some(token) = graph_token(account, &|_: WorkerEvent| {}).await else {
         return (pager.emit)(ServerSearchEvent::Failed(i18n("Microsoft 365 did not give Hylki a sign-in token")));
     };
-    let (t, roles) = (token.clone(), account.folder_roles.clone());
-    let folders = match blocking(move || graph_list_folders(&t, account_id, &roles)).await {
+    graph_search_with(&token, GRAPH_BASE, account_id, account, &kql, folder, pager).await
+}
+
+/// [`graph_search`] with its token, against `base` (a test's own server).
+async fn graph_search_with<F: Fn(ServerSearchEvent)>(
+    token: &str,
+    base: &str,
+    account_id: u32,
+    account: &AccountConfig,
+    kql: &str,
+    folder: Option<String>,
+    pager: &mut Pager<'_, F>,
+) {
+    let token = token.to_string();
+    let (t, b, roles) = (token.clone(), base.to_string(), account.folder_roles.clone());
+    let folders = match blocking(move || graph_list_folders_at(&t, &b, account_id, &roles)).await {
         Ok(f) => f,
         Err(e) => return (pager.emit)(ServerSearchEvent::Failed(e)),
     };
@@ -377,7 +391,7 @@ async fn graph_search<F: Fn(ServerSearchEvent)>(
     };
     let search = crate::percent::encode(&format!("\"{kql}\""));
     let mut url = Some(format!(
-        "{GRAPH_BASE}{scope}/messages?$search={search}&$top={GRAPH_SEARCH_TOP}&{GRAPH_MSG_SELECT},parentFolderId"
+        "{base}{scope}/messages?$search={search}&$top={GRAPH_SEARCH_TOP}&{GRAPH_MSG_SELECT},parentFolderId"
     ));
     let cache = Cache::open().ok();
     let (mut total, mut in_page, mut elsewhere) = (0usize, 0usize, 0usize);
@@ -439,6 +453,57 @@ mod tests {
 
     fn kql(q: &str) -> Result<String, String> {
         graph_kql(&Query::parse(q).unwrap())
+    }
+
+    /// A Graph search pages through `@odata.nextLink`, files each result
+    /// under its folder, skips the ones in folders Hylki does not list, and
+    /// says when the server's 1,000-result limit was reached.
+    #[tokio::test]
+    async fn a_graph_search_pages_files_and_reports_its_limit() {
+        use super::graph::tests_support::{answer, folder_json, role_answers, serve};
+        let result = |i: usize, parent: &str| {
+            serde_json::json!({ "id": format!("S{i}"), "subject": format!("Hit {i}"), "parentFolderId": parent,
+                                "receivedDateTime": "2026-10-01T10:00:00Z", "from": { "emailAddress": { "address": "a@x" } } })
+        };
+        let first: Vec<_> = (0..600).map(|i| result(i, if i == 7 { "HIDDEN" } else { "F1" })).collect();
+        let second: Vec<_> = (600..1000).map(|i| result(i, "F2")).collect();
+        let mut answers = role_answers();
+        answers.extend([
+            answer("/me/mailFolders?$top=100", 200, serde_json::json!({
+                "value": [folder_json("F1", "Inbox", 0), folder_json("F2", "Archive", 0)] })),
+            answer("/me/messages?$search=", 200, serde_json::json!({
+                "value": first, "@odata.nextLink": "{origin}/me/messages?$search=x&$skiptoken=2" })),
+            answer("$skiptoken=2", 200, serde_json::json!({ "value": second })),
+        ]);
+        let (origin, server) = serve(answers);
+        let events = std::sync::Mutex::new(Vec::new());
+        let emit = |e: ServerSearchEvent| events.lock().unwrap().push(e);
+        let (more_tx, more_rx) = tokio::sync::mpsc::unbounded_channel();
+        let mut pager = Pager { cancelled: Arc::new(AtomicBool::new(false)), more: more_rx, emit: &emit };
+        // Every page past RESULT_PAGE waits for Load More; ask ahead.
+        for _ in 0..10 {
+            more_tx.send(()).unwrap();
+        }
+        let account = super::super::sample_account();
+        graph_search_with("t", &origin, 1, &account, "subject:hit", None, &mut pager).await;
+        drop(server);
+        let events = events.into_inner().unwrap();
+        let found: Vec<&(String, Message)> = events
+            .iter()
+            .filter_map(|e| match e { ServerSearchEvent::Found(v) => Some(v), _ => None })
+            .flatten()
+            .collect();
+        assert_eq!(found.len(), 999, "all but the one in a hidden folder");
+        assert_eq!(found.iter().filter(|(p, _)| p == "Archive").count(), 400);
+        assert!(found.iter().all(|(_, m)| m.uid == hash_uid(&format!("S{}", m.subject.trim_start_matches("Hit ")))));
+        let last = events.last().unwrap();
+        match last {
+            ServerSearchEvent::Done { more: false, note: Some(note) } => {
+                assert!(note.contains("1000"), "{note}");
+                assert!(note.contains("1 results are in folders"), "{note}");
+            }
+            other => panic!("ended with {other:?}"),
+        }
     }
 
     #[test]

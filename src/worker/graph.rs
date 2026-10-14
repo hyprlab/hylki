@@ -239,7 +239,7 @@ const GRAPH_FOLDER_COUNT_LIMIT: usize = 100_000;
 /// of every level is read; a level that cannot be read fails the whole
 /// listing, so a partial tree is never taken for the whole one, which would
 /// make the folders it misses disappear from the sidebar.
-fn graph_list_folders_at(
+pub(super) fn graph_list_folders_at(
     token: &str,
     base: &str,
     account_id: u32,
@@ -2459,6 +2459,18 @@ async fn emit_graph_body_hits(
     emit(WorkerEvent::BodyHits { folder_id, hits });
 }
 
+/// The loopback server the Graph tests answer from, for the other worker
+/// modules' tests too.
+#[cfg(test)]
+pub(super) mod tests_support {
+    pub(in crate::worker) use super::tests::{answer, role_answers, serve};
+
+    pub(in crate::worker) fn folder_json(id: &str, name: &str, children: usize) -> serde_json::Value {
+        serde_json::json!({ "id": id, "displayName": name, "childFolderCount": children,
+                            "unreadItemCount": 0, "totalItemCount": 0 })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::graph_due;
@@ -2510,21 +2522,21 @@ mod tests {
 
     /// One answer of the loopback server: the first unused one whose `key`
     /// is part of the request's path and query.
-    struct Answer {
+    pub(in crate::worker) struct Answer {
         key: String,
         status: u16,
         headers: &'static str,
         body: String,
     }
 
-    fn answer(key: &str, status: u16, body: serde_json::Value) -> Answer {
+    pub(in crate::worker) fn answer(key: &str, status: u16, body: serde_json::Value) -> Answer {
         Answer { key: key.to_string(), status, headers: "", body: body.to_string() }
     }
 
     /// An HTTP server on loopback for `answers.len()` requests, as in the
     /// JMAP tests; hands back the request targets it was sent. Each body is
     /// formatted with `{origin}` replaced, for the next-page links.
-    fn serve(answers: Vec<Answer>) -> (String, std::thread::JoinHandle<Vec<String>>) {
+    pub(in crate::worker) fn serve(answers: Vec<Answer>) -> (String, std::thread::JoinHandle<Vec<String>>) {
         use std::io::{BufRead, BufReader, Write};
         let listener = std::net::TcpListener::bind("127.0.0.1:0").expect("bind");
         let origin = format!("http://{}", listener.local_addr().expect("addr"));
@@ -2629,7 +2641,7 @@ mod tests {
     }
 
     /// The answers for the six role lookups the listing starts with.
-    fn role_answers() -> Vec<Answer> {
+    pub(in crate::worker) fn role_answers() -> Vec<Answer> {
         ["inbox", "sentitems", "drafts", "deleteditems", "junkemail", "archive"]
             .iter()
             .map(|wk| {
