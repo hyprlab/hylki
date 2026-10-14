@@ -463,6 +463,7 @@ mod tests {
         c
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn add(c: &Cache, folder: &str, uid: u32, subject: &str, to: &str, cc: &str, reply_to: &str, preview: &str) {
         c.conn
             .execute(
@@ -661,6 +662,46 @@ mod tests {
         assert_eq!(fts_expression(Field::Any, "-"), None);
         assert_eq!(fts_expression(Field::Any, "a\"b"), Some("\"a\"\"b\"*".into()));
         assert_eq!(fts_expression(Field::Cc, "x"), Some("{cc} : \"x\"*".into()));
+    }
+
+    /// How long a large mailbox takes to index and to search, for checking
+    /// by hand: `cargo test --release index_timing -- --ignored --nocapture`.
+    #[test]
+    #[ignore]
+    fn index_timing() {
+        let c = cache();
+        let words = ["budget", "meeting", "invoice", "travel", "review", "launch", "zebra", "report"];
+        let n = 100_000u32;
+        let t = std::time::Instant::now();
+        {
+            let tx = c.conn.unchecked_transaction().unwrap();
+            for uid in 1..=n {
+                let w = words[uid as usize % words.len()];
+                tx.execute(
+                    "INSERT INTO messages (account_id, folder_path, uid, from_name, from_addr, recipients, cc, subject, date, ts, \
+                     unread, starred, has_attachment, preview) VALUES (1, 'INBOX', ?1, 'Ann', 'ann@x', 'bob@x', '', ?2, '', ?1, 0, 0, 0, '')",
+                    params![uid, format!("Subject {uid} {w}")],
+                )
+                .unwrap();
+                let body = format!("<p>{}</p><p>token{uid} {w}</p>", "lorem ipsum dolor sit amet ".repeat(80));
+                tx.execute("INSERT INTO bodies (account_id, folder_path, uid, body) VALUES (1, 'INBOX', ?1, ?2)", params![uid, body])
+                    .unwrap();
+            }
+            tx.commit().unwrap();
+        }
+        eprintln!("stored {n} messages with ~2 KB bodies in {:?}", t.elapsed());
+        let t = std::time::Instant::now();
+        while c.index_pending(200).unwrap() > 0 {}
+        eprintln!("indexed in {:?}", t.elapsed());
+        for q in ["zebra", "token99999", "lorem", "nothingatall"] {
+            let t = std::time::Instant::now();
+            let n = c.search_hits(&[(Field::Any, q.to_string())], &[], None).values().map(|s| s.len()).sum::<usize>();
+            eprintln!("{q:>12}: {n} hits in {:?}", t.elapsed());
+        }
+        let q = crate::mail_search::Query::parse("zebra from:ann").unwrap();
+        let t = std::time::Instant::now();
+        let (rows, _) = crate::mail_search::search_cache(&c, &q, &[1], None, true);
+        eprintln!("whole-cache search 'zebra from:ann': {} rows in {:?}", rows.len(), t.elapsed());
     }
 
     #[test]

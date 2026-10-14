@@ -250,30 +250,20 @@ impl Parser {
 
     /// or := and (OR and)*
     fn or(&mut self) -> Result<Option<Node>, ParseError> {
-        let mut parts = Vec::new();
         let first = self.and()?;
-        loop {
-            match self.peek() {
-                Some(Token::Or) => {
-                    self.pos += 1;
-                    let Some(left) = first.clone().filter(|_| parts.is_empty()).or(parts.last().cloned()) else {
-                        return Err(ParseError::DanglingOperator("OR".into()));
-                    };
-                    if parts.is_empty() {
-                        parts.push(left);
-                    }
-                    match self.and()? {
-                        Some(right) => parts.push(right),
-                        None => return Err(ParseError::DanglingOperator("OR".into())),
-                    }
-                }
-                _ => break,
+        if self.peek() != Some(&Token::Or) {
+            return Ok(first);
+        }
+        let Some(first) = first else { return Err(ParseError::DanglingOperator("OR".into())) };
+        let mut parts = vec![first];
+        while let Some(Token::Or) = self.peek() {
+            self.pos += 1;
+            match self.and()? {
+                Some(right) => parts.push(right),
+                None => return Err(ParseError::DanglingOperator("OR".into())),
             }
         }
-        Ok(match parts.len() {
-            0 => first,
-            _ => Some(Node::Or(parts)),
-        })
+        Ok(Some(Node::Or(parts)))
     }
 
     /// and := unary ((AND)? unary)*
