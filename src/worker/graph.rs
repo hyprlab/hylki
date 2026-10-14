@@ -12,6 +12,7 @@
 //! available from list queries.
 
 use super::*;
+use super::server_search::GRAPH_SEARCH_MAYBE_CUT;
 
 pub(super) const GRAPH_BASE: &str = "https://graph.microsoft.com/v1.0";
 /// The newest summaries a folder load lists, for a quick first paint; the
@@ -2360,17 +2361,18 @@ pub(super) struct BodySearch {
     pub(super) unchecked_before: Option<i64>,
 }
 
-/// Every message in a folder whose body holds `needle`. Graph returns at most
-/// 1,000 results for one `$search`, newest sent first, and cannot page past
-/// them. When a search fills that limit, it is asked again for the messages
-/// sent on or before the day of the oldest result, and so on back, which
-/// reaches every match unless more than 1,000 were sent on one day; then
-/// what lies on and before that day is reported as unchecked.
+/// Every message in a folder whose body holds `needle`. Graph cuts a
+/// `$search` short without saying so (see [`GRAPH_SEARCH_MAYBE_CUT`]),
+/// newest sent first, and cannot page past that. When a search may have been
+/// cut, it is asked again for the messages sent on or before the day of the
+/// oldest result, and so on back, which reaches every match unless more were
+/// sent on one day than Graph returns at once; then what lies on and before
+/// that day is reported as unchecked.
 pub(super) fn graph_body_search(token: &str, base: &str, folder_gid: &str, needle: &str) -> Result<BodySearch, String> {
     let mut ids = std::collections::HashSet::new();
     let mut window: Option<chrono::NaiveDate> = None;
-    // Each round moves back by at least a day; a mailbox's history is
-    // not longer than this many rounds of 1,000 results.
+    // Each round moves back by at least a day, so this bounds the rounds
+    // by the length of a mailbox's history.
     for _ in 0..1000 {
         // KQL, as the rule search has always sent it: the term in quotes;
         // a quote inside it would end the term.
@@ -2384,15 +2386,10 @@ pub(super) fn graph_body_search(token: &str, base: &str, folder_gid: &str, needl
         );
         let items = graph_paged(token, &url, super::server_search::GRAPH_SEARCH_LIMIT)?;
         ids.extend(items.iter().filter_map(|v| v["id"].as_str().map(str::to_string)));
-        if items.len() < super::server_search::GRAPH_SEARCH_LIMIT {
+        if items.len() < GRAPH_SEARCH_MAYBE_CUT {
             return Ok(BodySearch { ids, unchecked_before: None });
         }
-        let oldest = items
-            .iter()
-            .filter_map(|v| v["sentDateTime"].as_str())
-            .filter_map(|t| chrono::DateTime::parse_from_rfc3339(t).ok())
-            .map(|t| t.with_timezone(&chrono::Utc).date_naive())
-            .min();
+        let oldest = super::server_search::oldest_sent_day(&items);
         match oldest {
             Some(day) if window != Some(day) => window = Some(day),
             // A full day of results, or no dates to go by: the rest cannot
@@ -2451,7 +2448,7 @@ async fn emit_graph_body_hits(
     }
     if unchecked > 0 {
         emit(WorkerEvent::Notice(i18n_f(
-            "Message-body filter rules could not be checked against {n} older Inbox messages: Microsoft 365 returns at most 1,000 search results per day searched",
+            "Message-body filter rules could not be checked against {n} older Inbox messages: Microsoft 365 returned only part of the matches for one day",
             &[("n", &unchecked.to_string())],
         )));
     }
@@ -2722,50 +2719,51 @@ mod tests {
         serde_json::json!({ "id": format!("M{id}"), "sentDateTime": format!("2026-10-{day:02}T12:00:00Z") })
     }
 
-    /// Under, at and over the old cap of 250, every match is found; past
-    /// Graph's own limit of 1,000 the search moves back a day at a time.
+    /// Fewer than 250 results is a whole answer; 250 or more may have been
+    /// cut short, so the search goes on with older mail. Live, Microsoft 365
+    /// answered every search with at most 275 results (250 by date and 25 top
+    /// results), never the 1,000 its documentation gives.
     #[test]
-    fn a_body_search_finds_matches_past_the_old_cap() {
-        for n in [249usize, 250, 251] {
-            let page: Vec<_> = (0..n).map(|i| sent(i, 14)).collect();
-            let mut answers = vec![answer("/messages?$search=", 200, serde_json::json!({
-                "value": page[..n.min(250)], "@odata.nextLink": "{origin}/next?p=2" }))];
-            answers.push(answer("/next?p=2", 200, serde_json::json!({ "value": page[n.min(250)..] })));
+    fn a_body_search_below_the_cut_is_complete() {
+        let page: Vec<_> = (0..249).map(|i| sent(i, 14)).collect();
+        let (origin, server) = serve(vec![answer("/messages?$search=", 200, serde_json::json!({ "value": page }))]);
+        let found = graph_body_search("t", &origin, "F", "invoice").unwrap();
+        assert_eq!(found.ids.len(), 249);
+        assert_eq!(found.unchecked_before, None);
+        assert_eq!(server.join().unwrap().len(), 1, "no second search");
+    }
+
+    #[test]
+    fn a_body_search_cut_short_goes_back_by_date() {
+        for first_len in [250usize, 251, 275] {
+            // The newest matches, the oldest of them sent on the 10th...
+            let first: Vec<_> = (0..first_len).map(|i| sent(i, if i < first_len - 20 { 14 } else { 10 })).collect();
+            // ...then everything sent on or before the 10th: the same 20 and
+            // 300 older, itself cut short, and then the last of them.
+            let second: Vec<_> = (first_len - 20..first_len + 280).map(|i| sent(i, if i < first_len { 10 } else { 5 })).collect();
+            let third: Vec<_> = (first_len + 200..first_len + 330).map(|i| sent(i, if i < first_len + 280 { 5 } else { 2 })).collect();
+            let answers = vec![
+                answer("sent%3C%3D2026-10-05", 200, serde_json::json!({ "value": third })),
+                answer("sent%3C%3D2026-10-10", 200, serde_json::json!({ "value": second })),
+                answer("/messages?$search=", 200, serde_json::json!({ "value": first })),
+            ];
             let (origin, _server) = serve(answers);
             let found = graph_body_search("t", &origin, "F", "invoice").unwrap();
-            assert_eq!(found.ids.len(), n, "{n} matches");
+            assert_eq!(found.ids.len(), first_len + 330, "every match after {first_len} at first");
             assert_eq!(found.unchecked_before, None);
         }
     }
 
     #[test]
-    fn a_body_search_past_graphs_limit_goes_back_by_date() {
-        // First search: 1,000 results, the oldest sent on the 10th.
-        let first: Vec<_> = (0..1000).map(|i| sent(i, if i < 990 { 14 } else { 10 })).collect();
-        // Second, for mail sent on or before the 10th: the rest.
-        let second: Vec<_> = (990..1300).map(|i| sent(i, if i < 1000 { 10 } else { 3 })).collect();
-        let answers = vec![
-            answer("sent%3C%3D2026-10-10", 200, serde_json::json!({ "value": second })),
-            answer("/messages?$search=", 200, serde_json::json!({ "value": first })),
-        ];
-        let (origin, server) = serve(answers);
-        let found = graph_body_search("t", &origin, "F", "invoice").unwrap();
-        assert_eq!(found.ids.len(), 1300);
-        assert_eq!(found.unchecked_before, None);
-        let seen = server.join().unwrap();
-        assert!(seen[1].contains("sent%3C%3D2026-10-10"), "{seen:?}");
-    }
-
-    #[test]
     fn a_full_day_of_results_is_reported_not_skipped() {
-        let day: Vec<_> = (0..1000).map(|i| sent(i, 10)).collect();
+        let day: Vec<_> = (0..275).map(|i| sent(i, 10)).collect();
         let answers = vec![
             answer("sent%3C%3D2026-10-10", 200, serde_json::json!({ "value": day.clone() })),
             answer("/messages?$search=", 200, serde_json::json!({ "value": day })),
         ];
         let (origin, _server) = serve(answers);
         let found = graph_body_search("t", &origin, "F", "invoice").unwrap();
-        assert_eq!(found.ids.len(), 1000);
+        assert_eq!(found.ids.len(), 275);
         let end_of_day = chrono::NaiveDate::from_ymd_opt(2026, 10, 11).unwrap().and_hms_opt(0, 0, 0).unwrap().and_utc().timestamp();
         assert_eq!(found.unchecked_before, Some(end_of_day));
     }

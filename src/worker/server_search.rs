@@ -30,9 +30,28 @@ const FETCH_CHUNK: usize = 50;
 /// Graph's own page size for a `$search`.
 const GRAPH_SEARCH_TOP: usize = 50;
 
-/// The most results Microsoft Graph returns for one `$search` request
-/// (learn.microsoft.com/graph/search-query-parameter).
+/// The most results one Microsoft Graph `$search` is read for. The
+/// documentation says up to 1,000 (learn.microsoft.com/graph/search-query-parameter).
 pub(super) const GRAPH_SEARCH_LIMIT: usize = 1000;
+
+/// A `$search` that brought this many results may have been cut short. A
+/// Microsoft 365 mailbox searched live answered every search with at most 275
+/// (250 by date, and up to 25 it ranks as top results), whatever the page
+/// size, and said nothing of the rest; so a search is taken as complete only
+/// below this. Past it, the same search is asked again for mail sent on or
+/// before the day of its oldest result, which is not paging Graph lacks but
+/// a narrower question it answers in full.
+pub(super) const GRAPH_SEARCH_MAYBE_CUT: usize = 250;
+
+/// The day of the oldest `sentDateTime` among search results.
+pub(super) fn oldest_sent_day(items: &[serde_json::Value]) -> Option<chrono::NaiveDate> {
+    items
+        .iter()
+        .filter_map(|v| v["sentDateTime"].as_str())
+        .filter_map(|t| chrono::DateTime::parse_from_rfc3339(t).ok())
+        .map(|t| t.with_timezone(&chrono::Utc).date_naive())
+        .min()
+}
 
 /// What a search on the server reports.
 #[derive(Debug)]
@@ -390,52 +409,80 @@ async fn graph_search_with<F: Fn(ServerSearchEvent)>(
         },
         None => "/me".to_string(),
     };
-    let search = crate::percent::encode(&format!("\"{kql}\""));
-    let mut url = Some(format!(
-        "{base}{scope}/messages?$search={search}&$top={GRAPH_SEARCH_TOP}&{GRAPH_MSG_SELECT},parentFolderId"
-    ));
     let cache = Cache::open().ok();
-    let (mut total, mut in_page, mut elsewhere) = (0usize, 0usize, 0usize);
-    while let Some(next) = url.take() {
-        if pager.cancelled() {
-            return;
-        }
-        if in_page >= RESULT_PAGE {
-            if !pager.page_done().await {
+    let (mut in_page, mut elsewhere) = (0usize, 0usize);
+    let mut seen: std::collections::HashSet<String> = Default::default();
+    let mut window: Option<chrono::NaiveDate> = None;
+    let mut cut_at: Option<chrono::NaiveDate> = None;
+    // One round per window of dates, newest first; see GRAPH_SEARCH_MAYBE_CUT.
+    for _ in 0..1000 {
+        let query = match window {
+            None => kql.to_string(),
+            Some(day) => format!("({kql}) AND sent<={}", day.format("%Y-%m-%d")),
+        };
+        let search = crate::percent::encode(&format!("\"{query}\""));
+        let mut url = Some(format!(
+            "{base}{scope}/messages?$search={search}&$top={GRAPH_SEARCH_TOP}&{GRAPH_MSG_SELECT},sentDateTime,parentFolderId"
+        ));
+        let mut round: Vec<serde_json::Value> = Vec::new();
+        while let Some(next) = url.take() {
+            if pager.cancelled() {
                 return;
             }
-            in_page = 0;
-        }
-        let t = token.clone();
-        let page = match blocking(move || graph_get_json(&t, &next)).await {
-            Ok(p) => p,
-            Err(e) => return (pager.emit)(ServerSearchEvent::Failed(e)),
-        };
-        let mut found = Vec::new();
-        for v in page["value"].as_array().into_iter().flatten() {
-            total += 1;
-            // A folder Hylki does not list (hidden, or not mail) cannot open
-            // the message.
-            let Some(path) = v["parentFolderId"].as_str().and_then(|g| by_gid.get(g)) else {
-                elsewhere += 1;
-                continue;
+            if in_page >= RESULT_PAGE {
+                if !pager.page_done().await {
+                    return;
+                }
+                in_page = 0;
+            }
+            let t = token.clone();
+            let page = match blocking(move || graph_get_json(&t, &next)).await {
+                Ok(p) => p,
+                Err(e) => return (pager.emit)(ServerSearchEvent::Failed(e)),
             };
-            let Some((m, gid)) = graph_message(v, account_id, 0) else { continue };
-            remember_search_id(&account.email, m.uid, &gid);
-            let m = cache.as_ref().and_then(|c| c.messages_by_uid(account_id, path, &[m.uid]).pop()).unwrap_or(m);
-            found.push((path.clone(), m));
+            let mut found = Vec::new();
+            for v in page["value"].as_array().into_iter().flatten() {
+                round.push(v.clone());
+                let Some(id) = v["id"].as_str() else { continue };
+                if !seen.insert(id.to_string()) {
+                    continue;
+                }
+                // A folder Hylki does not list (hidden, or not mail) cannot
+                // open the message.
+                let Some(path) = v["parentFolderId"].as_str().and_then(|g| by_gid.get(g)) else {
+                    elsewhere += 1;
+                    continue;
+                };
+                let Some((m, gid)) = graph_message(v, account_id, 0) else { continue };
+                remember_search_id(&account.email, m.uid, &gid);
+                let m =
+                    cache.as_ref().and_then(|c| c.messages_by_uid(account_id, path, &[m.uid]).pop()).unwrap_or(m);
+                found.push((path.clone(), m));
+            }
+            in_page += found.len();
+            if !found.is_empty() {
+                (pager.emit)(ServerSearchEvent::Found(found));
+            }
+            url = page["@odata.nextLink"].as_str().map(str::to_string);
         }
-        in_page += found.len();
-        if !found.is_empty() {
-            (pager.emit)(ServerSearchEvent::Found(found));
+        if round.len() < GRAPH_SEARCH_MAYBE_CUT {
+            break;
         }
-        url = page["@odata.nextLink"].as_str().map(str::to_string);
+        match oldest_sent_day(&round) {
+            Some(day) if window != Some(day) => window = Some(day),
+            // A whole day the server will not answer in full: the rest of it,
+            // and what lies before, cannot be reached by narrowing further.
+            day => {
+                cut_at = day.or(window);
+                break;
+            }
+        }
     }
     let mut notes = Vec::new();
-    if total >= GRAPH_SEARCH_LIMIT {
+    if let Some(day) = cut_at {
         notes.push(i18n_f(
-            "Microsoft 365 returns at most {n} results for one search; narrow the search to find older ones",
-            &[("n", &GRAPH_SEARCH_LIMIT.to_string())],
+            "Microsoft 365 did not return every result sent on or before {day}; narrow the search to find them",
+            &[("day", &day.format("%Y-%m-%d").to_string())],
         ));
     }
     if elsewhere > 0 {
@@ -457,32 +504,31 @@ mod tests {
     }
 
     /// A Graph search pages through `@odata.nextLink`, files each result
-    /// under its folder, skips the ones in folders Hylki does not list, and
-    /// says when the server's 1,000-result limit was reached.
+    /// under its folder, skips the ones in folders Hylki does not list, and,
+    /// when the server cut a search short (it answered with 250 or more),
+    /// asks again for older mail and hands over only what is new.
     #[tokio::test]
-    async fn a_graph_search_pages_files_and_reports_its_limit() {
+    async fn a_graph_search_pages_files_and_goes_back_by_date() {
         use super::graph::tests_support::{answer, folder_json, role_answers, serve};
-        let result = |i: usize, parent: &str| {
+        let result = |i: usize, parent: &str, day: u32| {
             serde_json::json!({ "id": format!("S{i}"), "subject": format!("Hit {i}"), "parentFolderId": parent,
-                                "receivedDateTime": "2026-10-01T10:00:00Z", "from": { "emailAddress": { "address": "a@x" } } })
+                                "receivedDateTime": format!("2026-10-{day:02}T10:00:00Z"),
+                                "sentDateTime": format!("2026-10-{day:02}T10:00:00Z"),
+                                "from": { "emailAddress": { "address": "a@x" } } })
         };
-        let first: Vec<_> = (0..600).map(|i| result(i, if i == 7 { "HIDDEN" } else { "F1" })).collect();
-        let second: Vec<_> = (600..1000).map(|i| result(i, "F2")).collect();
+        // 275 newest (one in a hidden folder), the last 25 sent on the 10th.
+        let first: Vec<_> =
+            (0..275).map(|i| result(i, if i == 7 { "HIDDEN" } else { "F1" }, if i < 250 { 14 } else { 10 })).collect();
+        // Then on or before the 10th: those 25 again and 100 older, in Archive.
+        let older: Vec<_> = (250..375).map(|i| result(i, if i < 275 { "F1" } else { "F2" }, if i < 275 { 10 } else { 3 })).collect();
         let mut answers = role_answers();
         answers.extend([
-            answer(
-                "/me/mailFolders?$top=100",
-                200,
-                serde_json::json!({
-                "value": [folder_json("F1", "Inbox", 0), folder_json("F2", "Archive", 0)] }),
-            ),
-            answer(
-                "/me/messages?$search=",
-                200,
-                serde_json::json!({
-                "value": first, "@odata.nextLink": "{origin}/me/messages?$search=x&$skiptoken=2" }),
-            ),
-            answer("$skiptoken=2", 200, serde_json::json!({ "value": second })),
+            answer("/me/mailFolders?$top=100", 200, serde_json::json!({
+                "value": [folder_json("F1", "Inbox", 0), folder_json("F2", "Archive", 0)] })),
+            answer("sent%3C%3D2026-10-10", 200, serde_json::json!({ "value": older })),
+            answer("/me/messages?$search=", 200, serde_json::json!({
+                "value": first[..200], "@odata.nextLink": "{origin}/me/messages?$search=x&$skiptoken=2" })),
+            answer("$skiptoken=2", 200, serde_json::json!({ "value": first[200..] })),
         ]);
         let (origin, server) = serve(answers);
         let events = std::sync::Mutex::new(Vec::new());
@@ -499,20 +545,19 @@ mod tests {
         let events = events.into_inner().unwrap();
         let found: Vec<&(String, Message)> = events
             .iter()
-            .filter_map(|e| match e {
-                ServerSearchEvent::Found(v) => Some(v),
-                _ => None,
-            })
+            .filter_map(|e| match e { ServerSearchEvent::Found(v) => Some(v), _ => None })
             .flatten()
             .collect();
-        assert_eq!(found.len(), 999, "all but the one in a hidden folder");
-        assert_eq!(found.iter().filter(|(p, _)| p == "Archive").count(), 400);
-        assert!(found.iter().all(|(_, m)| m.uid == hash_uid(&format!("S{}", m.subject.trim_start_matches("Hit ")))));
-        let last = events.last().unwrap();
-        match last {
+        assert_eq!(found.len(), 374, "every result once, but the one in a hidden folder");
+        assert_eq!(found.iter().filter(|(p, _)| p == "Archive").count(), 100);
+        let mut uids: Vec<u32> = found.iter().map(|(_, m)| m.uid).collect();
+        uids.sort_unstable();
+        uids.dedup();
+        assert_eq!(uids.len(), 374, "no duplicates");
+        match events.last().unwrap() {
             ServerSearchEvent::Done { more: false, note: Some(note) } => {
-                assert!(note.contains("1000"), "{note}");
                 assert!(note.contains("1 results are in folders"), "{note}");
+                assert!(!note.contains("did not return"), "{note}");
             }
             other => panic!("ended with {other:?}"),
         }
