@@ -1487,6 +1487,9 @@ What a server can search sets the limits:
   read-only for a search. Words beyond plain ASCII are sent as UTF-8 in a
   quoted string, as Hylki's filter rules have always sent them; most servers
   accept that, and one that does not answers the search with an error.
+  How a server matches is its own: Gmail matches whole words (`größe` does not
+  find "Größenordnung"), and iCloud leaves very common words such as "the"
+  out of its search altogether. The local search matches parts of words.
 - **Microsoft 365** answers one search with a few hundred results at most
   (Microsoft documents up to 1,000; a mailbox tested gave 275), newest first,
   with no way to page past them. When a search comes back that full, Hylki

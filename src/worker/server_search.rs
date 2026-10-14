@@ -102,10 +102,17 @@ pub fn spawn_server_search(
             Err(e) => return emit(ServerSearchEvent::Failed(e.to_string())),
         };
         let mut pager = Pager { cancelled: flag, more: rx, emit: &emit };
+        // To hand over a result Hylki already stores as it stores it.
+        let cache = Cache::open().ok();
+        let cache = cache.as_ref();
         rt.block_on(async {
             match account.protocol {
-                crate::config::Protocol::Imap => imap_search(account_id, &account, &query, folder, &mut pager).await,
-                crate::config::Protocol::Graph => graph_search(account_id, &account, &query, folder, &mut pager).await,
+                crate::config::Protocol::Imap => {
+                    imap_search(account_id, &account, &query, folder, cache, &mut pager).await
+                }
+                crate::config::Protocol::Graph => {
+                    graph_search(account_id, &account, &query, folder, cache, &mut pager).await
+                }
                 _ => {
                     (pager.emit)(ServerSearchEvent::Failed(i18n("This account's server cannot be searched from Hylki")))
                 }
@@ -252,6 +259,7 @@ async fn imap_search<F: Fn(ServerSearchEvent)>(
     account: &AccountConfig,
     query: &Query,
     folder: Option<String>,
+    cache: Option<&Cache>,
     pager: &mut Pager<'_, F>,
 ) {
     let criteria = match imap_criteria(query) {
@@ -269,7 +277,6 @@ async fn imap_search<F: Fn(ServerSearchEvent)>(
             Err(e) => return (pager.emit)(ServerSearchEvent::Failed(e.to_string())),
         },
     };
-    let cache = Cache::open().ok();
     let mut skipped = Vec::new();
     // Every folder is searched first (one round trip each); what is cached
     // is handed over at once, and what is not is read a page at a time.
@@ -295,7 +302,7 @@ async fn imap_search<F: Fn(ServerSearchEvent)>(
         }
         let mut uids: Vec<u32> = found.into_iter().collect();
         uids.sort_unstable_by(|a, b| b.cmp(a));
-        let local = cache.as_ref().map(|c| c.messages_by_uid(account_id, &path, &uids)).unwrap_or_default();
+        let local = cache.map(|c| c.messages_by_uid(account_id, &path, &uids)).unwrap_or_default();
         let have: std::collections::HashSet<u32> = local.iter().map(|m| m.uid).collect();
         if !local.is_empty() {
             (pager.emit)(ServerSearchEvent::Found(local.into_iter().map(|m| (path.clone(), m)).collect()));
@@ -306,6 +313,9 @@ async fn imap_search<F: Fn(ServerSearchEvent)>(
         }
     }
     let mut in_page = 0usize;
+    // Some servers (iCloud) send an ENVELOPE the parser refuses, and the
+    // connection is no use after that: a new one reads the raw headers.
+    let mut use_envelope = true;
     for (path, uids) in to_fetch {
         if exam(&mut sess, &path).await.is_err() {
             skipped.push(path);
@@ -326,12 +336,36 @@ async fn imap_search<F: Fn(ServerSearchEvent)>(
             if pager.cancelled() {
                 return;
             }
-            match imap_summaries(account_id, &mut sess, chunk).await {
+            let mut read = imap_summaries(account_id, &mut sess, chunk, use_envelope).await;
+            if let Err(e) = &read {
+                tracing::info!("[account {account_id}] server search: reading results in {path} failed ({e}); reconnecting");
+                use_envelope = false;
+                read = match connect(account).await {
+                    Ok(fresh) => {
+                        sess = fresh;
+                        match exam(&mut sess, &path).await {
+                            Ok(_) => imap_summaries(account_id, &mut sess, chunk, false).await,
+                            Err(e) => Err(e),
+                        }
+                    }
+                    Err(e) => {
+                        tracing::warn!("[account {account_id}] server search: reconnect failed: {e}");
+                        return (pager.emit)(ServerSearchEvent::Failed(e.to_string()));
+                    }
+                };
+            }
+            match read {
                 Ok(found) => {
                     in_page += found.len();
                     (pager.emit)(ServerSearchEvent::Found(found.into_iter().map(|m| (path.clone(), m)).collect()));
                 }
-                Err(e) => tracing::warn!("[account {account_id}] server search: reading results in {path} failed: {e}"),
+                Err(e) => {
+                    // Said in the note, not swallowed: these results are missing.
+                    tracing::warn!("[account {account_id}] server search: reading results in {path} failed: {e}");
+                    if !skipped.contains(&path) {
+                        skipped.push(path.clone());
+                    }
+                }
             }
         }
     }
@@ -342,28 +376,22 @@ async fn imap_search<F: Fn(ServerSearchEvent)>(
 }
 
 /// The summaries of `uids` in the folder just examined, as a folder listing
-/// would build them. Falls back to the raw headers for servers whose
-/// ENVELOPE the parser refuses (iCloud).
+/// would build them: from ENVELOPE, or from the raw headers for servers whose
+/// ENVELOPE the parser refuses (iCloud), as the folder sync does.
 async fn imap_summaries(
     account_id: u32,
     sess: &mut ImapSession,
     uids: &[u32],
+    use_envelope: bool,
 ) -> Result<Vec<Message>, async_imap::error::Error> {
     let set = uid_set(uids);
-    let items = format!("(UID ENVELOPE FLAGS BODYSTRUCTURE INTERNALDATE{REFS_FETCH_ITEM})");
-    let envelope: Result<Vec<Fetch>, _> = match fetch_uids(sess, &set, &items).await {
-        Ok(stream) => stream.try_collect().await,
-        Err(e) => Err(e),
-    };
-    let fetches = match envelope {
-        Ok(f) => return Ok(f.iter().map(|f| build_summary(account_id, f, 0)).collect()),
-        Err(_) => {
-            fetch_uids(sess, &set, "(UID FLAGS BODY.PEEK[HEADER] INTERNALDATE)")
-                .await?
-                .try_collect::<Vec<Fetch>>()
-                .await?
-        }
-    };
+    if use_envelope {
+        let items = format!("(UID ENVELOPE FLAGS BODYSTRUCTURE INTERNALDATE{REFS_FETCH_ITEM})");
+        let fetches: Vec<Fetch> = fetch_uids(sess, &set, &items).await?.try_collect().await?;
+        return Ok(fetches.iter().map(|f| build_summary(account_id, f, 0)).collect());
+    }
+    let fetches: Vec<Fetch> =
+        fetch_uids(sess, &set, "(UID FLAGS BODY.PEEK[HEADER] INTERNALDATE)").await?.try_collect().await?;
     Ok(fetches.iter().map(|f| summary_from_headers(account_id, f, 0)).collect())
 }
 
@@ -372,6 +400,7 @@ async fn graph_search<F: Fn(ServerSearchEvent)>(
     account: &AccountConfig,
     query: &Query,
     folder: Option<String>,
+    cache: Option<&Cache>,
     pager: &mut Pager<'_, F>,
 ) {
     let kql = match graph_kql(query) {
@@ -381,10 +410,11 @@ async fn graph_search<F: Fn(ServerSearchEvent)>(
     let Some(token) = graph_token(account, &|_: WorkerEvent| {}).await else {
         return (pager.emit)(ServerSearchEvent::Failed(i18n("Microsoft 365 did not give Hylki a sign-in token")));
     };
-    graph_search_with(&token, GRAPH_BASE, account_id, account, &kql, folder, pager).await
+    graph_search_with(&token, GRAPH_BASE, account_id, account, &kql, folder, cache, pager).await
 }
 
 /// [`graph_search`] with its token, against `base` (a test's own server).
+#[allow(clippy::too_many_arguments)]
 async fn graph_search_with<F: Fn(ServerSearchEvent)>(
     token: &str,
     base: &str,
@@ -392,6 +422,7 @@ async fn graph_search_with<F: Fn(ServerSearchEvent)>(
     account: &AccountConfig,
     kql: &str,
     folder: Option<String>,
+    cache: Option<&Cache>,
     pager: &mut Pager<'_, F>,
 ) {
     let token = token.to_string();
@@ -409,7 +440,6 @@ async fn graph_search_with<F: Fn(ServerSearchEvent)>(
         },
         None => "/me".to_string(),
     };
-    let cache = Cache::open().ok();
     let (mut in_page, mut elsewhere) = (0usize, 0usize);
     let mut seen: std::collections::HashSet<String> = Default::default();
     let mut window: Option<chrono::NaiveDate> = None;
@@ -456,7 +486,7 @@ async fn graph_search_with<F: Fn(ServerSearchEvent)>(
                 let Some((m, gid)) = graph_message(v, account_id, 0) else { continue };
                 remember_search_id(&account.email, m.uid, &gid);
                 let m =
-                    cache.as_ref().and_then(|c| c.messages_by_uid(account_id, path, &[m.uid]).pop()).unwrap_or(m);
+                    cache.and_then(|c| c.messages_by_uid(account_id, path, &[m.uid]).pop()).unwrap_or(m);
                 found.push((path.clone(), m));
             }
             in_page += found.len();
@@ -540,7 +570,7 @@ mod tests {
             more_tx.send(()).unwrap();
         }
         let account = super::super::sample_account();
-        graph_search_with("t", &origin, 1, &account, "subject:hit", None, &mut pager).await;
+        graph_search_with("t", &origin, 1, &account, "subject:hit", None, None, &mut pager).await;
         drop(server);
         let events = events.into_inner().unwrap();
         let found: Vec<&(String, Message)> = events
