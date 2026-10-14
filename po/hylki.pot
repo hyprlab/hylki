@@ -1353,6 +1353,182 @@ msgstr ""
 msgid "“{op}” needs a search term on both sides"
 msgstr ""
 
+msgid "Has an attachment"
+msgstr ""
+
+msgid "From: {value}"
+msgstr ""
+
+msgid "To: {value}"
+msgstr ""
+
+msgid "Cc: {value}"
+msgstr ""
+
+msgid "Reply-To: {value}"
+msgstr ""
+
+msgid "Subject: {value}"
+msgstr ""
+
+msgid "Message: {value}"
+msgstr ""
+
+msgid "Attachment: {value}"
+msgstr ""
+
+msgid "Anywhere: {value}"
+msgstr ""
+
+msgid "From"
+msgstr ""
+
+msgid "To"
+msgstr ""
+
+msgid "Cc"
+msgstr ""
+
+msgid "Reply-To"
+msgstr ""
+
+msgid "Message text"
+msgstr ""
+
+msgid "Anywhere"
+msgstr ""
+
+msgid "On {date}"
+msgstr ""
+
+msgid "From {start} to {end}"
+msgstr ""
+
+msgid "Since {date}"
+msgstr ""
+
+msgid "Before {date}"
+msgstr ""
+
+msgid "Any date"
+msgstr ""
+
+#. Translators: a keyword of the search field, typed before a colon
+#. ("from:anna"). Give the word only; several spellings may be given,
+#. separated by commas. The English word always works too.
+msgid "search keyword|from"
+msgstr ""
+
+msgid "search keyword|to"
+msgstr ""
+
+msgid "search keyword|cc"
+msgstr ""
+
+msgid "search keyword|replyto"
+msgstr ""
+
+msgid "search keyword|subject"
+msgstr ""
+
+msgid "search keyword|body"
+msgstr ""
+
+msgid "search keyword|attachment"
+msgstr ""
+
+msgid "search keyword|before"
+msgstr ""
+
+msgid "search keyword|after"
+msgstr ""
+
+#. Translators: a word the search field reads as a date. Give the
+#. word only; several spellings may be given, separated by commas.
+msgid "search date|today"
+msgstr ""
+
+msgid "search date|yesterday"
+msgstr ""
+
+msgid "search date|this week"
+msgstr ""
+
+msgid "search date|last week"
+msgstr ""
+
+msgid "search date|this month"
+msgstr ""
+
+msgid "search date|last month"
+msgstr ""
+
+msgid "search date|this year"
+msgstr ""
+
+msgid "search date|last year"
+msgstr ""
+
+msgid "search month|january,jan"
+msgstr ""
+
+msgid "search month|february,feb"
+msgstr ""
+
+msgid "search month|march,mar"
+msgstr ""
+
+msgid "search month|april,apr"
+msgstr ""
+
+msgid "search month|may"
+msgstr ""
+
+msgid "search month|june,jun"
+msgstr ""
+
+msgid "search month|july,jul"
+msgstr ""
+
+msgid "search month|august,aug"
+msgstr ""
+
+msgid "search month|september,sep,sept"
+msgstr ""
+
+msgid "search month|october,oct"
+msgstr ""
+
+msgid "search month|november,nov"
+msgstr ""
+
+msgid "search month|december,dec"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Yesterday"
+msgstr ""
+
+msgid "This week"
+msgstr ""
+
+msgid "Last week"
+msgstr ""
+
+msgid "This month"
+msgstr ""
+
+msgid "Last month"
+msgstr ""
+
+msgid "This year"
+msgstr ""
+
+msgid "Last year"
+msgstr ""
+
 msgid "{used} of {limit} used"
 msgstr ""
 
@@ -3248,19 +3424,7 @@ msgstr ""
 msgid "Download password for {name}: {password}"
 msgstr ""
 
-msgid "From"
-msgstr ""
-
-msgid "To"
-msgstr ""
-
-msgid "Cc"
-msgstr ""
-
 msgid "Bcc"
-msgstr ""
-
-msgid "Reply-To"
 msgstr ""
 
 msgid "Writing in {format}"
@@ -3757,6 +3921,15 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr ""
 
+msgid "Search in another field"
+msgstr ""
+
+msgid "Remove this condition"
+msgstr ""
+
+msgid "Tip: {from}name, {subject}word, \"exact words\", OR, -word"
+msgstr ""
+
 msgid "me"
 msgstr ""
 
@@ -3770,9 +3943,6 @@ msgid "From Contacts"
 msgstr ""
 
 msgid "High Importance"
-msgstr ""
-
-msgid "Today"
 msgstr ""
 
 msgid ""
@@ -3836,9 +4006,6 @@ msgid "Search this account"
 msgstr ""
 
 msgid "Search this folder"
-msgstr ""
-
-msgid "Yesterday"
 msgstr ""
 
 msgid "Last 7 days"

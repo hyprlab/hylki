@@ -1438,6 +1438,207 @@ msgstr ""
 msgid "“{op}” needs a search term on both sides"
 msgstr ""
 
+#, fuzzy
+msgid "Has an attachment"
+msgstr "Té adjunts"
+
+#, fuzzy
+msgid "From: {value}"
+msgstr "De: {from}"
+
+msgid "To: {value}"
+msgstr ""
+
+msgid "Cc: {value}"
+msgstr ""
+
+#, fuzzy
+msgid "Reply-To: {value}"
+msgstr "Adreça de resposta"
+
+#, fuzzy
+msgid "Subject: {value}"
+msgstr "Assumpte"
+
+#, fuzzy
+msgid "Message: {value}"
+msgstr "Codi font del missatge"
+
+#, fuzzy
+msgid "Attachment: {value}"
+msgstr "Calaix d'adjunts"
+
+msgid "Anywhere: {value}"
+msgstr ""
+
+msgid "From"
+msgstr "De"
+
+msgid "To"
+msgstr "A"
+
+msgid "Cc"
+msgstr "Cc"
+
+msgid "Reply-To"
+msgstr "Respon a"
+
+#, fuzzy
+msgid "Message text"
+msgstr "Llista de missatges"
+
+#, fuzzy
+msgid "Anywhere"
+msgstr "I on"
+
+#, fuzzy
+msgid "On {date}"
+msgstr "caduca el {date}"
+
+msgid "From {start} to {end}"
+msgstr ""
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "caduca el {date}"
+
+#, fuzzy
+msgid "Before {date}"
+msgstr "caduca el {date}"
+
+#, fuzzy
+msgid "Any date"
+msgstr "Qualsevol etiqueta"
+
+#. Translators: a keyword of the search field, typed before a colon
+#. ("from:anna"). Give the word only; several spellings may be given,
+#. separated by commas. The English word always works too.
+msgid "search keyword|from"
+msgstr ""
+
+msgid "search keyword|to"
+msgstr ""
+
+msgid "search keyword|cc"
+msgstr ""
+
+msgid "search keyword|replyto"
+msgstr ""
+
+msgid "search keyword|subject"
+msgstr ""
+
+msgid "search keyword|body"
+msgstr ""
+
+#, fuzzy
+msgid "search keyword|attachment"
+msgstr "Té adjunts"
+
+#, fuzzy
+msgid "search keyword|before"
+msgstr "Aquesta clau ja s'havia importat abans."
+
+msgid "search keyword|after"
+msgstr ""
+
+#. Translators: a word the search field reads as a date. Give the
+#. word only; several spellings may be given, separated by commas.
+msgid "search date|today"
+msgstr ""
+
+#, fuzzy
+msgid "search date|yesterday"
+msgstr "ahir"
+
+#, fuzzy
+msgid "search date|this week"
+msgstr "Cerca en aquesta carpeta"
+
+msgid "search date|last week"
+msgstr ""
+
+#, fuzzy
+msgid "search date|this month"
+msgstr "Envia a través d'aquest compte"
+
+msgid "search date|last month"
+msgstr ""
+
+#, fuzzy
+msgid "search date|this year"
+msgstr "Cerca en aquesta carpeta"
+
+msgid "search date|last year"
+msgstr ""
+
+msgid "search month|january,jan"
+msgstr ""
+
+msgid "search month|february,feb"
+msgstr ""
+
+msgid "search month|march,mar"
+msgstr ""
+
+msgid "search month|april,apr"
+msgstr ""
+
+#, fuzzy
+msgid "search month|may"
+msgstr "Cerca contactes"
+
+msgid "search month|june,jun"
+msgstr ""
+
+msgid "search month|july,jul"
+msgstr ""
+
+msgid "search month|august,aug"
+msgstr ""
+
+msgid "search month|september,sep,sept"
+msgstr ""
+
+msgid "search month|october,oct"
+msgstr ""
+
+msgid "search month|november,nov"
+msgstr ""
+
+msgid "search month|december,dec"
+msgstr ""
+
+msgid "Today"
+msgstr "Avui"
+
+msgid "Yesterday"
+msgstr "Ahir"
+
+#, fuzzy
+msgid "This week"
+msgstr "Aquesta carpeta"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Cognom"
+
+#, fuzzy
+msgid "This month"
+msgstr "Compte de correu"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Es repeteix mensualment"
+
+#, fuzzy
+msgid "This year"
+msgstr "Aquesta carpeta"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Cognom"
+
 msgid "{used} of {limit} used"
 msgstr "{used} de {limit} utilitzats"
 
@@ -3550,20 +3751,8 @@ msgstr "Envia-ho ara"
 msgid "Download password for {name}: {password}"
 msgstr "Contrasenya de descàrrega per a {name}: {password}"
 
-msgid "From"
-msgstr "De"
-
-msgid "To"
-msgstr "A"
-
-msgid "Cc"
-msgstr "Cc"
-
 msgid "Bcc"
 msgstr "Cco"
-
-msgid "Reply-To"
-msgstr "Respon a"
 
 msgid "Writing in {format}"
 msgstr "S'està escrivint en {format}"
@@ -4094,6 +4283,17 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} de {total}"
 
+#, fuzzy
+msgid "Search in another field"
+msgstr "Cerca en aquesta carpeta"
+
+#, fuzzy
+msgid "Remove this condition"
+msgstr "Elimina la condició"
+
+msgid "Tip: {from}name, {subject}word, \"exact words\", OR, -word"
+msgstr ""
+
 msgid "me"
 msgstr "jo"
 
@@ -4108,9 +4308,6 @@ msgstr ""
 
 msgid "High Importance"
 msgstr ""
-
-msgid "Today"
-msgstr "Avui"
 
 msgid ""
 "Every word must match. from: to: cc: replyto: subject: body: attachment: "
@@ -4179,9 +4376,6 @@ msgstr "Envia a través d'aquest compte"
 
 msgid "Search this folder"
 msgstr "Cerca en aquesta carpeta"
-
-msgid "Yesterday"
-msgstr "Ahir"
 
 msgid "Last 7 days"
 msgstr "Últims 7 dies"

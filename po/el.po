@@ -1456,6 +1456,207 @@ msgstr ""
 msgid "“{op}” needs a search term on both sides"
 msgstr ""
 
+#, fuzzy
+msgid "Has an attachment"
+msgstr "Έχει συνημμένα"
+
+#, fuzzy
+msgid "From: {value}"
+msgstr "Από: {from}"
+
+msgid "To: {value}"
+msgstr ""
+
+msgid "Cc: {value}"
+msgstr ""
+
+#, fuzzy
+msgid "Reply-To: {value}"
+msgstr "Διεύθυνση απάντησης"
+
+#, fuzzy
+msgid "Subject: {value}"
+msgstr "Θέμα"
+
+#, fuzzy
+msgid "Message: {value}"
+msgstr "Πηγαίος κώδικας μηνύματος"
+
+#, fuzzy
+msgid "Attachment: {value}"
+msgstr "Συρτάρι συνημμένων"
+
+msgid "Anywhere: {value}"
+msgstr ""
+
+msgid "From"
+msgstr "Από"
+
+msgid "To"
+msgstr "Προς"
+
+msgid "Cc"
+msgstr "Κοιν."
+
+msgid "Reply-To"
+msgstr "Απάντηση προς"
+
+#, fuzzy
+msgid "Message text"
+msgstr "Λίστα μηνυμάτων"
+
+#, fuzzy
+msgid "Anywhere"
+msgstr "Και όπου"
+
+#, fuzzy
+msgid "On {date}"
+msgstr "λήγει στις {date}"
+
+msgid "From {start} to {end}"
+msgstr ""
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "λήγει στις {date}"
+
+#, fuzzy
+msgid "Before {date}"
+msgstr "λήγει στις {date}"
+
+#, fuzzy
+msgid "Any date"
+msgstr "Οποιαδήποτε ετικέτα"
+
+#. Translators: a keyword of the search field, typed before a colon
+#. ("from:anna"). Give the word only; several spellings may be given,
+#. separated by commas. The English word always works too.
+msgid "search keyword|from"
+msgstr ""
+
+msgid "search keyword|to"
+msgstr ""
+
+msgid "search keyword|cc"
+msgstr ""
+
+msgid "search keyword|replyto"
+msgstr ""
+
+msgid "search keyword|subject"
+msgstr ""
+
+msgid "search keyword|body"
+msgstr ""
+
+#, fuzzy
+msgid "search keyword|attachment"
+msgstr "Έχει συνημμένα"
+
+#, fuzzy
+msgid "search keyword|before"
+msgstr "Αυτό το κλειδί είχε εισαχθεί προηγουμένως."
+
+msgid "search keyword|after"
+msgstr ""
+
+#. Translators: a word the search field reads as a date. Give the
+#. word only; several spellings may be given, separated by commas.
+msgid "search date|today"
+msgstr ""
+
+#, fuzzy
+msgid "search date|yesterday"
+msgstr "χθες"
+
+#, fuzzy
+msgid "search date|this week"
+msgstr "Αναζήτηση σε αυτόν τον φάκελο"
+
+msgid "search date|last week"
+msgstr ""
+
+#, fuzzy
+msgid "search date|this month"
+msgstr "Αποστολή μέσω αυτού του λογαριασμού"
+
+msgid "search date|last month"
+msgstr ""
+
+#, fuzzy
+msgid "search date|this year"
+msgstr "Αναζήτηση σε αυτόν τον φάκελο"
+
+msgid "search date|last year"
+msgstr ""
+
+msgid "search month|january,jan"
+msgstr ""
+
+msgid "search month|february,feb"
+msgstr ""
+
+msgid "search month|march,mar"
+msgstr ""
+
+msgid "search month|april,apr"
+msgstr ""
+
+#, fuzzy
+msgid "search month|may"
+msgstr "Αναζήτηση επαφών"
+
+msgid "search month|june,jun"
+msgstr ""
+
+msgid "search month|july,jul"
+msgstr ""
+
+msgid "search month|august,aug"
+msgstr ""
+
+msgid "search month|september,sep,sept"
+msgstr ""
+
+msgid "search month|october,oct"
+msgstr ""
+
+msgid "search month|november,nov"
+msgstr ""
+
+msgid "search month|december,dec"
+msgstr ""
+
+msgid "Today"
+msgstr "Σήμερα"
+
+msgid "Yesterday"
+msgstr "Χθες"
+
+#, fuzzy
+msgid "This week"
+msgstr "Αυτός ο φάκελος"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Επώνυμο"
+
+#, fuzzy
+msgid "This month"
+msgstr "Λογαριασμός αλληλογραφίας"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Επαναλαμβάνεται μηνιαία"
+
+#, fuzzy
+msgid "This year"
+msgstr "Αυτός ο φάκελος"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Επώνυμο"
+
 msgid "{used} of {limit} used"
 msgstr "Χρησιμοποιούνται {used} από {limit}"
 
@@ -3600,20 +3801,8 @@ msgstr "Αποστολή τώρα αντί για αργότερα"
 msgid "Download password for {name}: {password}"
 msgstr "Κωδικός λήψης για {name}: {password}"
 
-msgid "From"
-msgstr "Από"
-
-msgid "To"
-msgstr "Προς"
-
-msgid "Cc"
-msgstr "Κοιν."
-
 msgid "Bcc"
 msgstr "Κρυφή κοιν."
-
-msgid "Reply-To"
-msgstr "Απάντηση προς"
 
 msgid "Writing in {format}"
 msgstr "Σύνταξη σε {format}"
@@ -4155,6 +4344,17 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} από {total}"
 
+#, fuzzy
+msgid "Search in another field"
+msgstr "Αναζήτηση σε αυτόν τον φάκελο"
+
+#, fuzzy
+msgid "Remove this condition"
+msgstr "Αφαίρεση συνθήκης"
+
+msgid "Tip: {from}name, {subject}word, \"exact words\", OR, -word"
+msgstr ""
+
 msgid "me"
 msgstr "εγώ"
 
@@ -4169,9 +4369,6 @@ msgstr ""
 
 msgid "High Importance"
 msgstr ""
-
-msgid "Today"
-msgstr "Σήμερα"
 
 msgid ""
 "Every word must match. from: to: cc: replyto: subject: body: attachment: "
@@ -4240,9 +4437,6 @@ msgstr "Αποστολή μέσω αυτού του λογαριασμού"
 
 msgid "Search this folder"
 msgstr "Αναζήτηση σε αυτόν τον φάκελο"
-
-msgid "Yesterday"
-msgstr "Χθες"
 
 msgid "Last 7 days"
 msgstr "Τελευταίες 7 ημέρες"

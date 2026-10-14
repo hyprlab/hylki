@@ -1522,6 +1522,182 @@ msgstr "„{key}“ braucht einen Suchbegriff"
 msgid "“{op}” needs a search term on both sides"
 msgstr "„{op}“ braucht auf beiden Seiten einen Suchbegriff"
 
+msgid "Has an attachment"
+msgstr "Mit Anhang"
+
+msgid "From: {value}"
+msgstr "Von: {value}"
+
+msgid "To: {value}"
+msgstr "An: {value}"
+
+msgid "Cc: {value}"
+msgstr "Cc: {value}"
+
+msgid "Reply-To: {value}"
+msgstr "Antwort an: {value}"
+
+msgid "Subject: {value}"
+msgstr "Betreff: {value}"
+
+msgid "Message: {value}"
+msgstr "Nachricht: {value}"
+
+msgid "Attachment: {value}"
+msgstr "Anhang: {value}"
+
+msgid "Anywhere: {value}"
+msgstr "Überall: {value}"
+
+msgid "From"
+msgstr "Von"
+
+msgid "To"
+msgstr "An"
+
+msgid "Cc"
+msgstr "Cc"
+
+msgid "Reply-To"
+msgstr "Antwort an"
+
+msgid "Message text"
+msgstr "Nachrichtentext"
+
+msgid "Anywhere"
+msgstr "Überall"
+
+msgid "On {date}"
+msgstr "Am {date}"
+
+msgid "From {start} to {end}"
+msgstr "Vom {start} bis {end}"
+
+msgid "Since {date}"
+msgstr "Seit {date}"
+
+msgid "Before {date}"
+msgstr "Vor dem {date}"
+
+msgid "Any date"
+msgstr "Beliebiges Datum"
+
+#. Translators: a keyword of the search field, typed before a colon
+#. ("from:anna"). Give the word only; several spellings may be given,
+#. separated by commas. The English word always works too.
+msgid "search keyword|from"
+msgstr "von"
+
+msgid "search keyword|to"
+msgstr "an"
+
+msgid "search keyword|cc"
+msgstr "cc"
+
+msgid "search keyword|replyto"
+msgstr "antwortan"
+
+msgid "search keyword|subject"
+msgstr "betreff"
+
+msgid "search keyword|body"
+msgstr "text,inhalt"
+
+msgid "search keyword|attachment"
+msgstr "anhang"
+
+msgid "search keyword|before"
+msgstr "vor,bis"
+
+msgid "search keyword|after"
+msgstr "seit,nach,ab"
+
+#. Translators: a word the search field reads as a date. Give the
+#. word only; several spellings may be given, separated by commas.
+msgid "search date|today"
+msgstr "heute"
+
+msgid "search date|yesterday"
+msgstr "gestern"
+
+msgid "search date|this week"
+msgstr "diese woche"
+
+msgid "search date|last week"
+msgstr "letzte woche,vorige woche"
+
+msgid "search date|this month"
+msgstr "dieser monat,diesen monat"
+
+msgid "search date|last month"
+msgstr "letzter monat,letzten monat,voriger monat"
+
+msgid "search date|this year"
+msgstr "dieses jahr"
+
+msgid "search date|last year"
+msgstr "letztes jahr,voriges jahr"
+
+msgid "search month|january,jan"
+msgstr "januar,jan,jänner"
+
+msgid "search month|february,feb"
+msgstr "februar,feb"
+
+msgid "search month|march,mar"
+msgstr "märz,mär,maerz"
+
+msgid "search month|april,apr"
+msgstr "april,apr"
+
+msgid "search month|may"
+msgstr "mai"
+
+msgid "search month|june,jun"
+msgstr "juni,jun"
+
+msgid "search month|july,jul"
+msgstr "juli,jul"
+
+msgid "search month|august,aug"
+msgstr "august,aug"
+
+msgid "search month|september,sep,sept"
+msgstr "september,sep,sept"
+
+msgid "search month|october,oct"
+msgstr "oktober,okt"
+
+msgid "search month|november,nov"
+msgstr "november,nov"
+
+msgid "search month|december,dec"
+msgstr "dezember,dez"
+
+msgid "Today"
+msgstr "Heute"
+
+msgid "Yesterday"
+msgstr "Gestern"
+
+msgid "This week"
+msgstr "Diese Woche"
+
+msgid "Last week"
+msgstr "Letzte Woche"
+
+msgid "This month"
+msgstr "Dieser Monat"
+
+msgid "Last month"
+msgstr "Letzter Monat"
+
+msgid "This year"
+msgstr "Dieses Jahr"
+
+msgid "Last year"
+msgstr "Letztes Jahr"
+
 msgid "{used} of {limit} used"
 msgstr "{used} von {limit} verwendet"
 
@@ -3653,20 +3829,8 @@ msgstr "Stattdessen jetzt senden"
 msgid "Download password for {name}: {password}"
 msgstr "Download-Passwort für {name}: {password}"
 
-msgid "From"
-msgstr "Von"
-
-msgid "To"
-msgstr "An"
-
-msgid "Cc"
-msgstr "Cc"
-
 msgid "Bcc"
 msgstr "Bcc"
-
-msgid "Reply-To"
-msgstr "Antwort an"
 
 msgid "Writing in {format}"
 msgstr "Schreiben in {format}"
@@ -4221,6 +4385,15 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} von {total}"
 
+msgid "Search in another field"
+msgstr "In einem anderen Feld suchen"
+
+msgid "Remove this condition"
+msgstr "Diese Bedingung entfernen"
+
+msgid "Tip: {from}name, {subject}word, \"exact words\", OR, -word"
+msgstr "Tipp: {from}Name, {subject}Wort, „genaue Wörter“, OR, -Wort"
+
 #, fuzzy
 msgid "me"
 msgstr "Name"
@@ -4240,9 +4413,6 @@ msgstr "Keine Kontakte"
 #, fuzzy
 msgid "High Importance"
 msgstr "Schlüssel importieren"
-
-msgid "Today"
-msgstr "Heute"
 
 msgid ""
 "Every word must match. from: to: cc: replyto: subject: body: attachment: "
@@ -4313,9 +4483,6 @@ msgstr "Dieses Konto durchsuchen"
 #, fuzzy
 msgid "Search this folder"
 msgstr "Ordner durchsuchen"
-
-msgid "Yesterday"
-msgstr "Gestern"
 
 #, fuzzy
 msgid "Last 7 days"

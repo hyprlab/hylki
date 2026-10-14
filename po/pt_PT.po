@@ -1509,6 +1509,207 @@ msgstr ""
 msgid "“{op}” needs a search term on both sides"
 msgstr ""
 
+#, fuzzy
+msgid "Has an attachment"
+msgstr "Tem anexos"
+
+#, fuzzy
+msgid "From: {value}"
+msgstr "De: {from}"
+
+msgid "To: {value}"
+msgstr ""
+
+msgid "Cc: {value}"
+msgstr ""
+
+#, fuzzy
+msgid "Reply-To: {value}"
+msgstr "Responder a"
+
+#, fuzzy
+msgid "Subject: {value}"
+msgstr "Assunto"
+
+#, fuzzy
+msgid "Message: {value}"
+msgstr "Código fonte da mensagem"
+
+#, fuzzy
+msgid "Attachment: {value}"
+msgstr "Painel de anexos"
+
+msgid "Anywhere: {value}"
+msgstr ""
+
+msgid "From"
+msgstr "De"
+
+msgid "To"
+msgstr "Para"
+
+msgid "Cc"
+msgstr "Cc"
+
+msgid "Reply-To"
+msgstr "Responder a"
+
+#, fuzzy
+msgid "Message text"
+msgstr "Lista de mensagens"
+
+#, fuzzy
+msgid "Anywhere"
+msgstr "E onde"
+
+#, fuzzy
+msgid "On {date}"
+msgstr "expira em {date}"
+
+msgid "From {start} to {end}"
+msgstr ""
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "expira em {date}"
+
+#, fuzzy
+msgid "Before {date}"
+msgstr "expira em {date}"
+
+msgid "Any date"
+msgstr ""
+
+#. Translators: a keyword of the search field, typed before a colon
+#. ("from:anna"). Give the word only; several spellings may be given,
+#. separated by commas. The English word always works too.
+msgid "search keyword|from"
+msgstr ""
+
+msgid "search keyword|to"
+msgstr ""
+
+msgid "search keyword|cc"
+msgstr ""
+
+msgid "search keyword|replyto"
+msgstr ""
+
+msgid "search keyword|subject"
+msgstr ""
+
+msgid "search keyword|body"
+msgstr ""
+
+#, fuzzy
+msgid "search keyword|attachment"
+msgstr "Tem anexos"
+
+#, fuzzy
+msgid "search keyword|before"
+msgstr "Essa chave já tinha sido importada."
+
+msgid "search keyword|after"
+msgstr ""
+
+#. Translators: a word the search field reads as a date. Give the
+#. word only; several spellings may be given, separated by commas.
+msgid "search date|today"
+msgstr ""
+
+#, fuzzy
+msgid "search date|yesterday"
+msgstr "ontem"
+
+#, fuzzy
+msgid "search date|this week"
+msgstr "Pesquisar pastas"
+
+msgid "search date|last week"
+msgstr ""
+
+#, fuzzy
+msgid "search date|this month"
+msgstr "Envia através desta conta"
+
+msgid "search date|last month"
+msgstr ""
+
+#, fuzzy
+msgid "search date|this year"
+msgstr "Pesquisar pastas"
+
+msgid "search date|last year"
+msgstr ""
+
+msgid "search month|january,jan"
+msgstr ""
+
+msgid "search month|february,feb"
+msgstr ""
+
+msgid "search month|march,mar"
+msgstr ""
+
+msgid "search month|april,apr"
+msgstr ""
+
+#, fuzzy
+msgid "search month|may"
+msgstr "Pesquisar contactos"
+
+msgid "search month|june,jun"
+msgstr ""
+
+msgid "search month|july,jul"
+msgstr ""
+
+msgid "search month|august,aug"
+msgstr ""
+
+msgid "search month|september,sep,sept"
+msgstr ""
+
+msgid "search month|october,oct"
+msgstr ""
+
+msgid "search month|november,nov"
+msgstr ""
+
+msgid "search month|december,dec"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+#, fuzzy
+msgid "Yesterday"
+msgstr "ontem"
+
+#, fuzzy
+msgid "This week"
+msgstr "Esta pasta"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Apelido"
+
+#, fuzzy
+msgid "This month"
+msgstr "Conta de correio"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Repete-se mensalmente"
+
+#, fuzzy
+msgid "This year"
+msgstr "Esta pasta"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Apelido"
+
 msgid "{used} of {limit} used"
 msgstr "{used} de {limit} utilizados"
 
@@ -3670,20 +3871,8 @@ msgstr "Enviar agora em alternativa"
 msgid "Download password for {name}: {password}"
 msgstr "Palavra-passe de transferência de {name}: {password}"
 
-msgid "From"
-msgstr "De"
-
-msgid "To"
-msgstr "Para"
-
-msgid "Cc"
-msgstr "Cc"
-
 msgid "Bcc"
 msgstr "Bcc"
-
-msgid "Reply-To"
-msgstr "Responder a"
 
 msgid "Writing in {format}"
 msgstr "A escrever em {format}"
@@ -4228,6 +4417,17 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} de {total}"
 
+#, fuzzy
+msgid "Search in another field"
+msgstr "Pesquisar pastas"
+
+#, fuzzy
+msgid "Remove this condition"
+msgstr "Remover condição"
+
+msgid "Tip: {from}name, {subject}word, \"exact words\", OR, -word"
+msgstr ""
+
 msgid "me"
 msgstr "eu"
 
@@ -4246,9 +4446,6 @@ msgstr "Sem contactos"
 #, fuzzy
 msgid "High Importance"
 msgstr "Importância alta"
-
-msgid "Today"
-msgstr ""
 
 msgid ""
 "Every word must match. from: to: cc: replyto: subject: body: attachment: "
@@ -4321,10 +4518,6 @@ msgstr "Envia através desta conta"
 #, fuzzy
 msgid "Search this folder"
 msgstr "Pesquisar pastas"
-
-#, fuzzy
-msgid "Yesterday"
-msgstr "ontem"
 
 #, fuzzy
 msgid "Last 7 days"

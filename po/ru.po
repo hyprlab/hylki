@@ -1522,6 +1522,207 @@ msgstr ""
 msgid "“{op}” needs a search term on both sides"
 msgstr ""
 
+#, fuzzy
+msgid "Has an attachment"
+msgstr "Есть вложения"
+
+#, fuzzy
+msgid "From: {value}"
+msgstr "От: {from}"
+
+msgid "To: {value}"
+msgstr ""
+
+msgid "Cc: {value}"
+msgstr ""
+
+#, fuzzy
+msgid "Reply-To: {value}"
+msgstr "Адрес для ответа"
+
+#, fuzzy
+msgid "Subject: {value}"
+msgstr "Тема"
+
+#, fuzzy
+msgid "Message: {value}"
+msgstr "Исходный текст сообщения"
+
+#, fuzzy
+msgid "Attachment: {value}"
+msgstr "Панель вложений"
+
+msgid "Anywhere: {value}"
+msgstr ""
+
+msgid "From"
+msgstr "От"
+
+msgid "To"
+msgstr "Кому"
+
+msgid "Cc"
+msgstr "Копия"
+
+msgid "Reply-To"
+msgstr "Адрес для ответа"
+
+#, fuzzy
+msgid "Message text"
+msgstr "Список сообщений"
+
+#, fuzzy
+msgid "Anywhere"
+msgstr "И где"
+
+#, fuzzy
+msgid "On {date}"
+msgstr "срок действия истекает {date}"
+
+msgid "From {start} to {end}"
+msgstr ""
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "срок действия истекает {date}"
+
+#, fuzzy
+msgid "Before {date}"
+msgstr "срок действия истекает {date}"
+
+msgid "Any date"
+msgstr ""
+
+#. Translators: a keyword of the search field, typed before a colon
+#. ("from:anna"). Give the word only; several spellings may be given,
+#. separated by commas. The English word always works too.
+msgid "search keyword|from"
+msgstr ""
+
+msgid "search keyword|to"
+msgstr ""
+
+msgid "search keyword|cc"
+msgstr ""
+
+msgid "search keyword|replyto"
+msgstr ""
+
+msgid "search keyword|subject"
+msgstr ""
+
+msgid "search keyword|body"
+msgstr ""
+
+#, fuzzy
+msgid "search keyword|attachment"
+msgstr "Есть вложения"
+
+#, fuzzy
+msgid "search keyword|before"
+msgstr "Этот ключ был импортирован ранее."
+
+msgid "search keyword|after"
+msgstr ""
+
+#. Translators: a word the search field reads as a date. Give the
+#. word only; several spellings may be given, separated by commas.
+msgid "search date|today"
+msgstr ""
+
+#, fuzzy
+msgid "search date|yesterday"
+msgstr "вчера"
+
+#, fuzzy
+msgid "search date|this week"
+msgstr "Папки поиска"
+
+msgid "search date|last week"
+msgstr ""
+
+#, fuzzy
+msgid "search date|this month"
+msgstr "Отправляет через эту учётную запись"
+
+msgid "search date|last month"
+msgstr ""
+
+#, fuzzy
+msgid "search date|this year"
+msgstr "Папки поиска"
+
+msgid "search date|last year"
+msgstr ""
+
+msgid "search month|january,jan"
+msgstr ""
+
+msgid "search month|february,feb"
+msgstr ""
+
+msgid "search month|march,mar"
+msgstr ""
+
+msgid "search month|april,apr"
+msgstr ""
+
+#, fuzzy
+msgid "search month|may"
+msgstr "Поиск контактов"
+
+msgid "search month|june,jun"
+msgstr ""
+
+msgid "search month|july,jul"
+msgstr ""
+
+msgid "search month|august,aug"
+msgstr ""
+
+msgid "search month|september,sep,sept"
+msgstr ""
+
+msgid "search month|october,oct"
+msgstr ""
+
+msgid "search month|november,nov"
+msgstr ""
+
+msgid "search month|december,dec"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+#, fuzzy
+msgid "Yesterday"
+msgstr "вчера"
+
+#, fuzzy
+msgid "This week"
+msgstr "Эта папка"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Фамилия"
+
+#, fuzzy
+msgid "This month"
+msgstr "Почтовая учётная запись"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Повторяется ежемесячно"
+
+#, fuzzy
+msgid "This year"
+msgstr "Эта папка"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Фамилия"
+
 msgid "{used} of {limit} used"
 msgstr "Использовано {used} из {limit}"
 
@@ -3656,20 +3857,8 @@ msgstr "Отправить сейчас вместо запланированн�
 msgid "Download password for {name}: {password}"
 msgstr "Пароль для скачивания {name}: {password}"
 
-msgid "From"
-msgstr "От"
-
-msgid "To"
-msgstr "Кому"
-
-msgid "Cc"
-msgstr "Копия"
-
 msgid "Bcc"
 msgstr "Скрытая копия"
-
-msgid "Reply-To"
-msgstr "Адрес для ответа"
 
 msgid "Writing in {format}"
 msgstr "Формат письма: {format}"
@@ -4222,6 +4411,17 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} из {total}"
 
+#, fuzzy
+msgid "Search in another field"
+msgstr "Папки поиска"
+
+#, fuzzy
+msgid "Remove this condition"
+msgstr "Удалить условие"
+
+msgid "Tip: {from}name, {subject}word, \"exact words\", OR, -word"
+msgstr ""
+
 msgid "me"
 msgstr "я"
 
@@ -4240,9 +4440,6 @@ msgstr "Нет контактов"
 #, fuzzy
 msgid "High Importance"
 msgstr "Высокая важность"
-
-msgid "Today"
-msgstr ""
 
 msgid ""
 "Every word must match. from: to: cc: replyto: subject: body: attachment: "
@@ -4315,10 +4512,6 @@ msgstr "Отправляет через эту учётную запись"
 #, fuzzy
 msgid "Search this folder"
 msgstr "Папки поиска"
-
-#, fuzzy
-msgid "Yesterday"
-msgstr "вчера"
 
 #, fuzzy
 msgid "Last 7 days"

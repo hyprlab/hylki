@@ -1508,6 +1508,207 @@ msgstr ""
 msgid "“{op}” needs a search term on both sides"
 msgstr ""
 
+#, fuzzy
+msgid "Has an attachment"
+msgstr "Nincsenek mellékletek"
+
+#, fuzzy
+msgid "From: {value}"
+msgstr "Feladó: {from}"
+
+msgid "To: {value}"
+msgstr ""
+
+msgid "Cc: {value}"
+msgstr ""
+
+#, fuzzy
+msgid "Reply-To: {value}"
+msgstr "Válaszcím"
+
+#, fuzzy
+msgid "Subject: {value}"
+msgstr "Tárgy"
+
+#, fuzzy
+msgid "Message: {value}"
+msgstr "Üzenetforrás"
+
+#, fuzzy
+msgid "Attachment: {value}"
+msgstr "Csatolmány tároló"
+
+msgid "Anywhere: {value}"
+msgstr ""
+
+msgid "From"
+msgstr "Feladó"
+
+msgid "To"
+msgstr "Címzett"
+
+msgid "Cc"
+msgstr "Másolat (Cc)"
+
+msgid "Reply-To"
+msgstr "Válaszcím"
+
+#, fuzzy
+msgid "Message text"
+msgstr "Üzenetlista"
+
+#, fuzzy
+msgid "Anywhere"
+msgstr "És ahol"
+
+#, fuzzy
+msgid "On {date}"
+msgstr "lejár: {date}"
+
+msgid "From {start} to {end}"
+msgstr ""
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "lejár: {date}"
+
+#, fuzzy
+msgid "Before {date}"
+msgstr "lejár: {date}"
+
+msgid "Any date"
+msgstr ""
+
+#. Translators: a keyword of the search field, typed before a colon
+#. ("from:anna"). Give the word only; several spellings may be given,
+#. separated by commas. The English word always works too.
+msgid "search keyword|from"
+msgstr ""
+
+msgid "search keyword|to"
+msgstr ""
+
+msgid "search keyword|cc"
+msgstr ""
+
+msgid "search keyword|replyto"
+msgstr ""
+
+msgid "search keyword|subject"
+msgstr ""
+
+msgid "search keyword|body"
+msgstr ""
+
+#, fuzzy
+msgid "search keyword|attachment"
+msgstr "Nincsenek mellékletek"
+
+#, fuzzy
+msgid "search keyword|before"
+msgstr "Ezt a kulcsot korábban már importálták."
+
+msgid "search keyword|after"
+msgstr ""
+
+#. Translators: a word the search field reads as a date. Give the
+#. word only; several spellings may be given, separated by commas.
+msgid "search date|today"
+msgstr ""
+
+#, fuzzy
+msgid "search date|yesterday"
+msgstr "tegnap"
+
+#, fuzzy
+msgid "search date|this week"
+msgstr "Keresés a mappákban"
+
+msgid "search date|last week"
+msgstr ""
+
+#, fuzzy
+msgid "search date|this month"
+msgstr "Küldés ezen a fiókon keresztül"
+
+msgid "search date|last month"
+msgstr ""
+
+#, fuzzy
+msgid "search date|this year"
+msgstr "Keresés a mappákban"
+
+msgid "search date|last year"
+msgstr ""
+
+msgid "search month|january,jan"
+msgstr ""
+
+msgid "search month|february,feb"
+msgstr ""
+
+msgid "search month|march,mar"
+msgstr ""
+
+msgid "search month|april,apr"
+msgstr ""
+
+#, fuzzy
+msgid "search month|may"
+msgstr "Névjegyek keresése"
+
+msgid "search month|june,jun"
+msgstr ""
+
+msgid "search month|july,jul"
+msgstr ""
+
+msgid "search month|august,aug"
+msgstr ""
+
+msgid "search month|september,sep,sept"
+msgstr ""
+
+msgid "search month|october,oct"
+msgstr ""
+
+msgid "search month|november,nov"
+msgstr ""
+
+msgid "search month|december,dec"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+#, fuzzy
+msgid "Yesterday"
+msgstr "tegnap"
+
+#, fuzzy
+msgid "This week"
+msgstr "Ez a mappa"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Vezetéknév"
+
+#, fuzzy
+msgid "This month"
+msgstr "E-mail fiók"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Havonta ismétlődik"
+
+#, fuzzy
+msgid "This year"
+msgstr "Ez a mappa"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Vezetéknév"
+
 msgid "{used} of {limit} used"
 msgstr "{used} / {limit} felhasználva"
 
@@ -3663,20 +3864,8 @@ msgstr "Küldés inkább most"
 msgid "Download password for {name}: {password}"
 msgstr "Letöltési jelszó ehhez: {name}: {password}"
 
-msgid "From"
-msgstr "Feladó"
-
-msgid "To"
-msgstr "Címzett"
-
-msgid "Cc"
-msgstr "Másolat (Cc)"
-
 msgid "Bcc"
 msgstr "Titkos másolat (Bcc)"
-
-msgid "Reply-To"
-msgstr "Válaszcím"
 
 msgid "Writing in {format}"
 msgstr "{format} formátumben írás"
@@ -4236,6 +4425,17 @@ msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} / {total}"
 
 #, fuzzy
+msgid "Search in another field"
+msgstr "Keresés a mappákban"
+
+#, fuzzy
+msgid "Remove this condition"
+msgstr "Feltétel eltávolítása"
+
+msgid "Tip: {from}name, {subject}word, \"exact words\", OR, -word"
+msgstr ""
+
+#, fuzzy
 msgid "me"
 msgstr "Név"
 
@@ -4254,9 +4454,6 @@ msgstr "Nincsenek névjegyek"
 #, fuzzy
 msgid "High Importance"
 msgstr "Kulcs importálása"
-
-msgid "Today"
-msgstr ""
 
 msgid ""
 "Every word must match. from: to: cc: replyto: subject: body: attachment: "
@@ -4329,10 +4526,6 @@ msgstr "Küldés ezen a fiókon keresztül"
 #, fuzzy
 msgid "Search this folder"
 msgstr "Keresés a mappákban"
-
-#, fuzzy
-msgid "Yesterday"
-msgstr "tegnap"
 
 #, fuzzy
 msgid "Last 7 days"
