@@ -347,7 +347,8 @@ use crate::ui::compose::{
     Compose, ComposeAccount, ComposeInit, ComposeInput, ComposeOutput, ComposePrefill,
 };
 use crate::ui::message_list::{
-    BulkAction, CheckFilter, MessageList, MessageListInput, MessageListOutput, QuickFilter, QuickFilters, RowAction,
+    BulkAction, CheckFilter, ContentHits, MessageList, MessageListInput, MessageListOutput, QuickFilter, QuickFilters,
+    RowAction, SearchScope,
 };
 use crate::ui::attachments_gallery::{
     AttachmentsGallery, GalleryAccount, GalleryFolder, GalleryInput, GalleryOutput, GalleryRequest,
@@ -376,6 +377,31 @@ struct SelectedFolder {
     account_id: u32,
     folder_id: u32,
     path: String,
+}
+
+/// The search the list is showing: what it is, where it looks, and how the
+/// searches on the servers are getting on. `gen` grows with every change,
+/// so an answer to an older search is recognised and dropped.
+#[derive(Default)]
+struct SearchState {
+    gen: u64,
+    text: String,
+    scope: Option<SearchScope>,
+    server: bool,
+    /// The accounts searched, and the folder for a one-folder search.
+    accounts: Vec<u32>,
+    folder: Option<(u32, String)>,
+    /// One handle per account whose server is being searched; dropping it
+    /// ends that search.
+    handles: HashMap<u32, crate::worker::ServerSearchHandle>,
+    /// Accounts still working on a page, and those with more to give.
+    pending: std::collections::HashSet<u32>,
+    more: std::collections::HashSet<u32>,
+    /// Messages the servers found, and what they said they could not do.
+    found: usize,
+    notes: Vec<String>,
+    /// Messages the background indexer still has to read.
+    backlog: usize,
 }
 
 /// A standalone compose window (New Message, compose-to, edit-draft, or a
@@ -764,6 +790,8 @@ pub struct AppModel {
     /// (account_id, folder_id) → last-seen message list, shown instantly on
     /// revisit while a fresh sync runs in the background.
     message_cache: HashMap<(u32, u32), Vec<Message>>,
+    /// The search under way, if any (see `search_changed`).
+    search: SearchState,
     /// (account_id, folder_id) whose background backfill has fully finished, so the
     /// message list knows no more rows will stream in for them.
     indexed_folders: HashSet<(u32, u32)>,
@@ -1558,6 +1586,18 @@ pub enum AppMsg {
     /// The search field became active/inactive — supply or drop the cross-folder
     /// search pool (every folder's messages, so search can span the mailbox).
     SearchActive(bool),
+    /// What is searched for, where, and whether the servers are asked too.
+    SearchChanged { text: String, scope: SearchScope, server: bool },
+    /// The typing paused: run search `gen` against the local cache.
+    LocalSearchStart(u64),
+    /// Search `gen` against the local cache finished.
+    LocalSearchDone { gen: u64, rows: Option<Vec<(u32, String, Message)>>, hits: crate::cache::TermHits, backlog: usize },
+    /// The typing paused: ask the servers about search `gen`.
+    ServerSearchStart(u64),
+    /// A search on one account's server reported back.
+    ServerSearch { gen: u64, account_id: u32, event: crate::worker::ServerSearchEvent },
+    /// Load More under the search field.
+    SearchMore,
     /// The message list has no selection to show (e.g. the last message was
     /// removed), so the reader should clear.
     ClearReader,
@@ -3049,6 +3089,10 @@ impl SimpleComponent for AppModel {
                     MessageListOutput::SelectionCleared => AppMsg::ClearReader,
                     MessageListOutput::OpenedByKey { already_open } => AppMsg::OpenedByKey { already_open },
                     MessageListOutput::SearchActive(active) => AppMsg::SearchActive(active),
+                    MessageListOutput::SearchChanged { text, scope, server } => {
+                        AppMsg::SearchChanged { text, scope, server }
+                    }
+                    MessageListOutput::SearchMore => AppMsg::SearchMore,
                     MessageListOutput::SortChanged(key) => AppMsg::ListSortChanged(key),
                     MessageListOutput::ColumnWidths(widths) => AppMsg::ListColumnWidths(widths),
                     MessageListOutput::CustomizeColumns => AppMsg::CustomizeColumns,
@@ -3368,6 +3412,7 @@ impl SimpleComponent for AppModel {
             unified_boot_requested: HashSet::new(),
             sent_index_requested: HashSet::new(),
             message_cache: HashMap::new(),
+            search: SearchState::default(),
             indexed_folders: HashSet::new(),
             body_cache: crate::ram_cache::RamCache::new(BODY_CACHE_BUDGET),
             sender_cache: HashMap::new(),
@@ -5255,6 +5300,21 @@ impl SimpleComponent for AppModel {
                         s.input(AppMsg::ShowcaseCopy);
                     });
                 }
+                // HYLKI_SHOWCASE_SEARCH=<text>[@<s>] types a search at 4 s,
+                // or at the time given; HYLKI_SHOWCASE_SEARCH_SCOPE=account or
+                // folder picks where it looks.
+                if let Ok(v) = std::env::var("HYLKI_SHOWCASE_SEARCH") {
+                    let (text, at) = showcase_at(&v, 4);
+                    let scope = match std::env::var("HYLKI_SHOWCASE_SEARCH_SCOPE").as_deref() {
+                        Ok("account") => SearchScope::ThisAccount,
+                        Ok("folder") => SearchScope::ThisFolder,
+                        _ => SearchScope::AllFolders,
+                    };
+                    let (list, text) = (model.message_list.sender().clone(), text.to_string());
+                    gtk::glib::timeout_add_seconds_local_once(at, move || {
+                        let _ = list.send(MessageListInput::ShowcaseSearch { text, scope });
+                    });
+                }
                 // Two seconds on, it logs where focus landed (#266).
                 if let Ok(v) = std::env::var("HYLKI_SHOWCASE_REPLY") {
                     // A number is the moment, in seconds (4 otherwise).
@@ -6677,13 +6737,41 @@ impl SimpleComponent for AppModel {
                 self.sync_attachment_drawer();
                 self.show_message(None, false);
             }
+            AppMsg::SearchChanged { text, scope, server } => {
+                self.search_changed(text, scope, server, &sender);
+            }
+            AppMsg::LocalSearchStart(gen) => {
+                if gen == self.search.gen {
+                    self.start_local_search(&sender);
+                }
+            }
+            AppMsg::LocalSearchDone { gen, rows, hits, backlog } => {
+                if gen == self.search.gen {
+                    self.local_search_done(rows, hits, backlog);
+                }
+            }
+            AppMsg::ServerSearchStart(gen) => {
+                if gen == self.search.gen {
+                    self.start_server_search(&sender);
+                }
+            }
+            AppMsg::ServerSearch { gen, account_id, event } => {
+                if gen == self.search.gen {
+                    self.server_search_event(account_id, event);
+                }
+            }
+            AppMsg::SearchMore => {
+                let more: Vec<u32> = self.search.more.drain().collect();
+                for account_id in more {
+                    if let Some(h) = self.search.handles.get(&account_id) {
+                        self.search.pending.insert(account_id);
+                        h.more();
+                    }
+                }
+                self.show_search_status();
+            }
             AppMsg::SearchActive(active) => {
                 if active {
-                    // Snapshot every folder's indexed messages so the search can
-                    // span the whole mailbox.
-                    self.message_list.emit(MessageListInput::SetSearchPool(
-                        build_search_pool(&self.message_cache),
-                    ));
                     // Results span accounts; tint rows by account (as in the unified
                     // inbox) so their origin is legible.
                     if self.accounts.len() > 1 {
@@ -20241,6 +20329,216 @@ impl AppModel {
             }
             None => self.message_list.emit(MessageListInput::SetLoading),
         }
+    }
+
+    /// The search field changed. The list filters what it holds at once;
+    /// this works out which accounts and folder the search covers, hands
+    /// the list a first pool from the folders loaded so far, and, once the
+    /// typing pauses, asks the local cache (the whole index, every stored
+    /// body and attachment) and, when the user turned it on, the servers.
+    fn search_changed(&mut self, text: String, scope: SearchScope, server: bool, sender: &ComponentSender<Self>) {
+        let scope_changed = self.search.scope != Some(scope) || self.search.text.is_empty();
+        self.search.gen += 1;
+        // Dropping the handles ends the servers' searches for the old text.
+        self.search.handles.clear();
+        self.search.pending.clear();
+        self.search.more.clear();
+        self.search.found = 0;
+        self.search.notes.clear();
+        self.search.text = text;
+        self.search.scope = Some(scope);
+        self.search.server = server;
+        if self.search.text.is_empty() {
+            self.search.accounts.clear();
+            self.search.folder = None;
+            return;
+        }
+        let current = self.selected.as_ref().map(|s| (s.account_id, s.path.clone()));
+        let all: Vec<u32> = self.accounts.iter().map(|a| a.id).collect();
+        let (accounts, folder) = match (scope, current) {
+            (SearchScope::ThisFolder, Some((a, path))) => (vec![a], Some((a, path))),
+            (SearchScope::ThisAccount, Some((a, _))) => (vec![a], None),
+            // A unified view belongs to no one account or folder: its search
+            // spans every account.
+            _ => (all, None),
+        };
+        self.search.accounts = accounts;
+        self.search.folder = folder;
+        if scope_changed && scope != SearchScope::ThisFolder {
+            // What the list can search before the cache answers: the folders
+            // loaded so far.
+            let accounts = self.search.accounts.clone();
+            let pool: Vec<Message> =
+                build_search_pool(&self.message_cache).into_iter().filter(|m| accounts.contains(&m.account_id)).collect();
+            self.message_list.emit(MessageListInput::SetSearchPool(pool));
+        }
+        let gen = self.search.gen;
+        let s = sender.clone();
+        gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(200), move || {
+            s.input(AppMsg::LocalSearchStart(gen));
+        });
+        if server {
+            self.message_list.emit(MessageListInput::SetSearchStatus {
+                text: i18n("Searching on the server…"),
+                more: false,
+            });
+            // The servers are asked once the typing has stopped for a moment.
+            let s = sender.clone();
+            gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(700), move || {
+                s.input(AppMsg::ServerSearchStart(gen));
+            });
+        } else {
+            self.show_search_status();
+        }
+    }
+
+    fn start_local_search(&mut self, sender: &ComponentSender<Self>) {
+        let Ok(query) = crate::mail_search::Query::parse(&self.search.text) else { return };
+        let gen = self.search.gen;
+        let accounts = self.search.accounts.clone();
+        let folder = self.search.folder.as_ref().map(|(_, p)| p.clone());
+        // One folder is the list's own: only the index's hits are wanted.
+        let rows = self.search.scope != Some(SearchScope::ThisFolder);
+        if demo_mode() && self.config.is_empty() {
+            // The demo's cache is in memory, on this thread.
+            if let Some(cache) = self.cache.as_ref() {
+                let (found, hits) = crate::mail_search::search_cache(cache, &query, &accounts, folder.as_deref(), rows);
+                sender.input(AppMsg::LocalSearchDone { gen, rows: rows.then_some(found), hits, backlog: 0 });
+            }
+            return;
+        }
+        let s = sender.clone();
+        std::thread::spawn(move || {
+            let Ok(cache) = crate::cache::Cache::open() else { return };
+            let t = std::time::Instant::now();
+            let (found, hits) = crate::mail_search::search_cache(&cache, &query, &accounts, folder.as_deref(), rows);
+            tracing::debug!("search: {} local matches in {:?}", found.len(), t.elapsed());
+            let backlog = cache.index_backlog();
+            s.input(AppMsg::LocalSearchDone { gen, rows: rows.then_some(found), hits, backlog });
+        });
+    }
+
+    /// The folder id a cached row's path has now, if the folder is shown.
+    fn folder_id_of(&self, account_id: u32, path: &str) -> Option<u32> {
+        self.folders.get(&account_id)?.iter().find(|f| f.path == path).map(|f| f.id)
+    }
+
+    fn local_search_done(
+        &mut self,
+        rows: Option<Vec<(u32, String, Message)>>,
+        hits: crate::cache::TermHits,
+        backlog: usize,
+    ) {
+        let mut ids: HashMap<(u32, String), Option<u32>> = HashMap::new();
+        let mut id_of = |this: &Self, a: u32, p: &str| -> Option<u32> {
+            *ids.entry((a, p.to_string())).or_insert_with(|| this.folder_id_of(a, p))
+        };
+        let mut content = ContentHits::new();
+        for (term, set) in hits {
+            let mapped = set.into_iter().filter_map(|(a, p, uid)| id_of(self, a, &p).map(|f| (a, f, uid))).collect();
+            content.insert(term, mapped);
+        }
+        if let Some(rows) = rows {
+            let pool: Vec<Message> = rows
+                .into_iter()
+                .filter_map(|(a, p, mut m)| {
+                    m.folder_id = id_of(self, a, &p)?;
+                    Some(m)
+                })
+                .collect();
+            self.message_list.emit(MessageListInput::SetSearchPool(pool));
+        }
+        self.message_list.emit(MessageListInput::SetContentHits(content));
+        self.search.backlog = backlog;
+        self.show_search_status();
+    }
+
+    fn start_server_search(&mut self, sender: &ComponentSender<Self>) {
+        let Ok(query) = crate::mail_search::Query::parse(&self.search.text) else { return };
+        let gen = self.search.gen;
+        let folder = self.search.folder.clone();
+        for account_id in self.search.accounts.clone() {
+            let Some(account) = self.config.get(account_id as usize - 1).filter(|a| a.enabled).cloned() else { continue };
+            if !matches!(account.protocol, crate::config::Protocol::Imap | crate::config::Protocol::Graph) {
+                self.search.notes.push(i18n_f(
+                    "{account} is searched on this computer only",
+                    &[("account", &self.account_label(account_id))],
+                ));
+                continue;
+            }
+            let path = folder.as_ref().filter(|(a, _)| *a == account_id).map(|(_, p)| p.clone());
+            let input = sender.input_sender().clone();
+            let handle = crate::worker::spawn_server_search(account_id, account, query.clone(), path, move |event| {
+                let _ = input.send(AppMsg::ServerSearch { gen, account_id, event });
+            });
+            self.search.handles.insert(account_id, handle);
+            self.search.pending.insert(account_id);
+        }
+        self.show_search_status();
+    }
+
+    fn server_search_event(&mut self, account_id: u32, event: crate::worker::ServerSearchEvent) {
+        use crate::worker::ServerSearchEvent;
+        match event {
+            ServerSearchEvent::Found(rows) => {
+                let found: Vec<Message> = rows
+                    .into_iter()
+                    .filter_map(|(path, mut m)| {
+                        m.folder_id = self.folder_id_of(account_id, &path)?;
+                        Some(m)
+                    })
+                    .collect();
+                self.search.found += found.len();
+                self.message_list.emit(MessageListInput::AddServerResults(found));
+            }
+            ServerSearchEvent::Done { more, note } => {
+                self.search.pending.remove(&account_id);
+                if more {
+                    self.search.more.insert(account_id);
+                } else {
+                    self.search.handles.remove(&account_id);
+                }
+                if let Some(note) = note {
+                    self.search.notes.push(format!("{}: {note}", self.account_label(account_id)));
+                }
+            }
+            ServerSearchEvent::Failed(e) => {
+                self.search.pending.remove(&account_id);
+                self.search.handles.remove(&account_id);
+                self.search.notes.push(i18n_f(
+                    "{account} could not be searched on the server: {error}",
+                    &[("account", &self.account_label(account_id)), ("error", &e)],
+                ));
+            }
+        }
+        self.show_search_status();
+    }
+
+    /// The line under the search field: how the servers are getting on, what
+    /// they could not do, and whether the index is still being built.
+    fn show_search_status(&self) {
+        let mut parts: Vec<String> = Vec::new();
+        if self.search.server && !self.search.text.is_empty() {
+            let n = self.search.found.to_string();
+            if !self.search.pending.is_empty() {
+                parts.push(i18n_f("Searching on the server… {n} found so far", &[("n", &n)]));
+            } else if !self.search.more.is_empty() {
+                parts.push(i18n_f("The server found {n} so far; more are available", &[("n", &n)]));
+            } else {
+                parts.push(i18n_f("The server search is complete: {n} found", &[("n", &n)]));
+            }
+        }
+        parts.extend(self.search.notes.iter().cloned());
+        if self.search.backlog > 0 && !self.search.text.is_empty() {
+            parts.push(i18n_f(
+                "Still indexing {n} messages on this computer; they are found by their list fields until then",
+                &[("n", &self.search.backlog.to_string())],
+            ));
+        }
+        self.message_list.emit(MessageListInput::SetSearchStatus {
+            text: parts.join(". "),
+            more: self.search.pending.is_empty() && !self.search.more.is_empty(),
+        });
     }
 
     /// Read the open smart folder's rows from the on-disk index off the main

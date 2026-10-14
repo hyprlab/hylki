@@ -565,8 +565,26 @@ pub struct MessageList {
     search_pool: Vec<Rc<Message>>,
     /// Which messages the search field filters over.
     scope: SearchScope,
+    /// The search as parsed (see `mail_search`), or why it could not be.
+    parsed: Result<Rc<crate::mail_search::Query>, crate::mail_search::ParseError>,
+    /// What the local full-text index found for each term of the search.
+    content_hits: Rc<ContentHits>,
+    /// The pool the app built for an account-wide or all-accounts search,
+    /// before server results are added to it.
+    search_base: Vec<Rc<Message>>,
+    /// Messages a search on the server found that the local pool lacks.
+    search_extra: Vec<Rc<Message>>,
+    /// Whether the search also asks the mail servers.
+    server_search: bool,
+    /// The line under the search field: a syntax error, or how a search on
+    /// the server went. Empty hides it.
+    search_status: String,
+    /// The server has more results than it has handed over so far.
+    search_more: bool,
     /// The search field widget, kept so a folder switch can clear its text.
     search_entry: Option<gtk::SearchEntry>,
+    /// The scope picker, for the showcase to set.
+    scope_dropdown: Option<gtk::DropDown>,
     /// The search toolbar is hidden until asked for (#102).
     search_open: bool,
     /// When the search closed itself (empty entry losing focus): the button
@@ -873,9 +891,18 @@ impl SortOrder {
 pub enum SearchScope {
     /// Every folder of every account (the merged `search_pool`).
     AllFolders,
+    /// Every folder of the account the current folder belongs to.
+    ThisAccount,
     /// Only the folder currently shown (the local `all` index).
     ThisFolder,
 }
+
+/// For each term of a search, the messages whose locally stored text holds
+/// it: `(account_id, folder_id, uid)`.
+pub type ContentHits = std::collections::HashMap<
+    (crate::mail_search::Field, String),
+    std::collections::HashSet<(u32, u32, u32)>,
+>;
 
 /// A bulk action applied to every selected message at once.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1181,6 +1208,20 @@ pub enum MessageListInput {
     /// Replace the cross-folder search pool (all folders, all accounts). Sent by
     /// the app when a search begins; cleared to empty when it ends.
     SetSearchPool(Vec<Message>),
+    /// What the local full-text index found for the search's terms.
+    SetContentHits(ContentHits),
+    /// Messages a search on the server found. Ones the list already holds
+    /// are not added twice.
+    AddServerResults(Vec<Message>),
+    /// The line under the search field, and whether the server has more.
+    SetSearchStatus { text: String, more: bool },
+    /// Search on the mail servers too, or locally only.
+    SetServerSearch(bool),
+    /// The status line's Load More button.
+    MoreServerResults,
+    /// Showcase only (HYLKI_SHOWCASE_SEARCH): open the search and type
+    /// `text` into it, looking in `scope`.
+    ShowcaseSearch { text: String, scope: SearchScope },
     /// The reader's selection: mirror whichever of these the list has rows for,
     /// so everything that acts on the list's selection acts on the messages the
     /// user pointed at. The reader is already showing them, so this must not
@@ -1370,6 +1411,11 @@ pub enum MessageListOutput {
     /// The search field became active (non-empty) or inactive (empty), so the app
     /// can supply or drop the cross-folder search pool.
     SearchActive(bool),
+    /// What is searched for changed: the text, where, and whether the
+    /// servers are asked too. Empty text ends the search.
+    SearchChanged { text: String, scope: SearchScope, server: bool },
+    /// The status line's Load More button: the next results from the server.
+    SearchMore,
     /// A column heading changed the sort (#334), by its key: the sort
     /// menus follow.
     SortChanged(&'static str),
@@ -1414,6 +1460,11 @@ impl SimpleComponent for MessageList {
                         set_width_chars: 3,
                         #[watch]
                         set_placeholder_text: Some(model.search_placeholder().as_str()),
+                        set_tooltip_text: Some(i18n(
+                            "Every word must match. from: to: cc: replyto: subject: body: attachment: search one field; \
+                             before:2026-10-14 and after:2026-10-14 bound the date; has:attachment; OR between words; \
+                             -word leaves out; \"exact phrase\""
+                        ).as_str()),
                         connect_search_changed[sender] => move |entry| {
                             sender.input(MessageListInput::Search(entry.text().to_string()));
                         },
@@ -1431,23 +1482,73 @@ impl SimpleComponent for MessageList {
                         },
                     },
 
-                    // Scope picker: 0 = All folders (default), 1 = This folder.
+                    // Scope picker: 0 = All accounts (default), 1 = This
+                    // account, 2 = This folder.
                     #[name = "scope_dropdown"]
                     gtk::DropDown {
                         set_valign: gtk::Align::Center,
                         set_tooltip_text: Some(i18n("Choose which folders to search").as_str()),
-                        set_model: Some(&gtk::StringList::new(&[i18n("All folders").as_str(), i18n("This folder").as_str()])),
+                        set_model: Some(&gtk::StringList::new(&[
+                            i18n("All accounts").as_str(),
+                            i18n("This account").as_str(),
+                            i18n("This folder").as_str(),
+                        ])),
                         set_selected: 0,
                         connect_selected_notify[sender] => move |dd| {
-                            let scope = if dd.selected() == 0 {
-                                SearchScope::AllFolders
-                            } else {
-                                SearchScope::ThisFolder
+                            let scope = match dd.selected() {
+                                0 => SearchScope::AllFolders,
+                                1 => SearchScope::ThisAccount,
+                                _ => SearchScope::ThisFolder,
                             };
                             sender.input(MessageListInput::SetScope(scope));
                         },
                     },
+
+                    // Off by default: a search stays on this computer until
+                    // the user asks the servers too.
+                    gtk::ToggleButton {
+                        set_valign: gtk::Align::Center,
+                        set_icon_name: "network-server-symbolic",
+                        set_tooltip_text: Some(i18n("Also search on the mail server (IMAP and Microsoft 365)").as_str()),
+                        #[watch]
+                        set_active: model.server_search,
+                        connect_toggled[sender] => move |b| {
+                            sender.input(MessageListInput::SetServerSearch(b.is_active()));
+                        },
+                    },
                 },
+                },
+
+                gtk::Revealer {
+                    set_transition_type: gtk::RevealerTransitionType::SlideDown,
+                    #[watch]
+                    set_reveal_child: model.search_open && !model.search_status.is_empty(),
+
+                    gtk::Box {
+                        set_spacing: 6,
+                        add_css_class: "list-search-status",
+
+                        gtk::Label {
+                            set_hexpand: true,
+                            set_xalign: 0.0,
+                            set_wrap: true,
+                            set_wrap_mode: gtk::pango::WrapMode::WordChar,
+                            add_css_class: "dim-label",
+                            add_css_class: "caption",
+                            #[watch]
+                            set_label: &model.search_status,
+                        },
+                        gtk::Button {
+                            set_valign: gtk::Align::Center,
+                            add_css_class: "flat",
+                            add_css_class: "caption",
+                            set_label: &i18n("Load More"),
+                            set_tooltip_text: Some(i18n("Load the next results from the server").as_str()),
+                            #[watch]
+                            set_visible: model.search_more,
+                            connect_clicked => MessageListInput::MoreServerResults,
+                        },
+                    },
                 },
             },
 
@@ -1694,7 +1795,15 @@ impl SimpleComponent for MessageList {
             all: Vec::new(),
             search_pool: Vec::new(),
             scope: SearchScope::AllFolders,
+            parsed: Ok(Rc::new(crate::mail_search::Query::default())),
+            content_hits: Rc::new(ContentHits::new()),
+            search_base: Vec::new(),
+            search_extra: Vec::new(),
+            server_search: false,
+            search_status: String::new(),
+            search_more: false,
             search_entry: None,
+            scope_dropdown: None,
             search_open: false,
             search_closed_at: None,
             search_pinned: false,
@@ -1842,6 +1951,7 @@ impl SimpleComponent for MessageList {
         }
         model.sync_look();
         model.search_entry = Some(widgets.search_entry.clone());
+        model.scope_dropdown = Some(widgets.scope_dropdown.clone());
 
         // The scope picker sizes itself to its widest entry ("All folders"), which
         // made it — not the messages — the narrowest the list could ever be (#29).
@@ -1883,6 +1993,9 @@ impl SimpleComponent for MessageList {
                 let n = messages.len();
                 self.all = messages.into_iter().map(Rc::new).collect();
                 self.drop_threads();
+                if self.scope == SearchScope::ThisFolder && !self.search_extra.is_empty() {
+                    self.recompute_pool();
+                }
                 self.loaded = true;
                 // Keep any active search query: this also fires for a background
                 // re-sync of the folder you're viewing, which shouldn't drop your
@@ -1903,6 +2016,9 @@ impl SimpleComponent for MessageList {
                 }
                 // The list holds the whole folder, so what arrives joins it.
                 if self.all.len() != before {
+                    if self.scope == SearchScope::ThisFolder && !self.search_extra.is_empty() {
+                        self.recompute_pool();
+                    }
                     self.drop_threads();
                     self.queue_rebuild(true);
                 }
@@ -2272,20 +2388,37 @@ impl SimpleComponent for MessageList {
                 self.sync_look();
             }
             MessageListInput::Search(q) => {
+                if q == self.query {
+                    return;
+                }
                 let was_active = self.searching();
                 self.query = q;
                 let now_active = self.searching();
+                self.parsed = crate::mail_search::Query::parse(&self.query).map(Rc::new);
+                // What the server found answered the old words.
+                self.search_extra.clear();
+                self.search_more = false;
+                self.search_status = match &self.parsed {
+                    Err(e) if now_active => e.text(),
+                    _ => String::new(),
+                };
+                self.recompute_pool();
                 // On the empty↔non-empty edge, tell the app to supply or drop the
                 // cross-folder pool.
                 if was_active != now_active {
                     let _ = sender.output(MessageListOutput::SearchActive(now_active));
                 }
+                self.announce_search(&sender);
                 self.rebuild();
                 self.scroll_top();
             }
             MessageListInput::SetScope(scope) => {
                 if self.scope != scope {
                     self.scope = scope;
+                    self.search_extra.clear();
+                    self.search_more = false;
+                    self.recompute_pool();
+                    self.announce_search(&sender);
                     // Scope only affects the view while a query is present.
                     if self.searching() {
                         self.rebuild();
@@ -2294,11 +2427,76 @@ impl SimpleComponent for MessageList {
                 }
             }
             MessageListInput::SetSearchPool(pool) => {
-                self.search_pool = pool.into_iter().map(Rc::new).collect();
-                self.drop_threads();
-                if self.searching() && self.scope == SearchScope::AllFolders {
+                self.search_base = pool.into_iter().map(Rc::new).collect();
+                self.recompute_pool();
+                if self.searching() && self.scope != SearchScope::ThisFolder {
                     self.rebuild();
                 }
+            }
+            MessageListInput::SetContentHits(hits) => {
+                self.content_hits = Rc::new(hits);
+                if self.searching() {
+                    self.rebuild();
+                }
+            }
+            MessageListInput::AddServerResults(found) => {
+                if !self.searching() || found.is_empty() {
+                    return;
+                }
+                let mut known: std::collections::HashSet<(u32, u32, u32)> =
+                    self.search_extra.iter().map(|m| thread_slot(m)).collect();
+                let before = self.search_extra.len();
+                for m in found {
+                    if known.insert(thread_slot(&m)) {
+                        self.search_extra.push(Rc::new(m));
+                    }
+                }
+                if self.search_extra.len() != before {
+                    self.recompute_pool();
+                    self.rebuild();
+                }
+            }
+            MessageListInput::SetSearchStatus { text, more } => {
+                // A syntax error outranks anything the app says about the
+                // search it could not run.
+                if self.parsed.is_ok() {
+                    self.search_status = text;
+                    self.search_more = more;
+                }
+            }
+            MessageListInput::SetServerSearch(on) => {
+                if self.server_search != on {
+                    self.server_search = on;
+                    if !on {
+                        self.search_extra.clear();
+                        self.search_more = false;
+                        if self.parsed.is_ok() {
+                            self.search_status.clear();
+                        }
+                        self.recompute_pool();
+                        if self.searching() {
+                            self.rebuild();
+                        }
+                    }
+                    self.announce_search(&sender);
+                }
+            }
+            MessageListInput::ShowcaseSearch { text, scope } => {
+                self.search_open = true;
+                if let Some(dd) = &self.scope_dropdown {
+                    dd.set_selected(match scope {
+                        SearchScope::AllFolders => 0,
+                        SearchScope::ThisAccount => 1,
+                        SearchScope::ThisFolder => 2,
+                    });
+                }
+                if let Some(e) = &self.search_entry {
+                    e.set_text(&text);
+                }
+            }
+            MessageListInput::MoreServerResults => {
+                self.search_more = false;
+                let _ = sender.output(MessageListOutput::SearchMore);
             }
             MessageListInput::SelectFromReader { keys, conversation } => {
                 // An empty set means the reader cleared its card selection (a
@@ -4135,7 +4333,34 @@ impl MessageList {
     }
 
     fn searching_pool(&self) -> bool {
-        self.searching() && self.scope == SearchScope::AllFolders && !self.search_pool.is_empty()
+        self.searching() && !self.search_pool.is_empty()
+    }
+
+    /// Put the pool back together: the app's pool (or, for one folder, the
+    /// folder itself) and whatever the server found besides. A message the
+    /// local pool already holds is not added again, so a server hit for mail
+    /// that is also cached shows once.
+    fn recompute_pool(&mut self) {
+        let base: &[Rc<Message>] = match self.scope {
+            SearchScope::ThisFolder => &self.all,
+            _ => &self.search_base,
+        };
+        self.search_pool = if self.scope == SearchScope::ThisFolder && self.search_extra.is_empty() {
+            // The folder's own list serves, as it always has.
+            Vec::new()
+        } else {
+            let known: std::collections::HashSet<(u32, u32, u32)> = base.iter().map(|m| thread_slot(m)).collect();
+            let mut pool = base.to_vec();
+            pool.extend(self.search_extra.iter().filter(|m| !known.contains(&thread_slot(m))).cloned());
+            pool
+        };
+        self.drop_threads();
+    }
+
+    /// Tell the app what to search for now.
+    fn announce_search(&self, sender: &ComponentSender<Self>) {
+        let text = if self.searching() && self.parsed.is_ok() { self.query.clone() } else { String::new() };
+        let _ = sender.output(MessageListOutput::SearchChanged { text, scope: self.scope, server: self.server_search });
     }
 
     /// The conversations of `active_source`, from the kept copy while the
@@ -4152,7 +4377,8 @@ impl MessageList {
 
     fn search_placeholder(&self) -> String {
         match self.scope {
-            SearchScope::AllFolders => i18n("Search all folders"),
+            SearchScope::AllFolders => i18n("Search all accounts"),
+            SearchScope::ThisAccount => i18n("Search this account"),
             SearchScope::ThisFolder => i18n("Search this folder"),
         }
     }
@@ -4170,6 +4396,12 @@ impl MessageList {
             let _ = sender.output(MessageListOutput::SearchActive(false));
         }
         self.query.clear();
+        self.parsed = Ok(Rc::new(crate::mail_search::Query::default()));
+        self.content_hits = Rc::new(ContentHits::new());
+        self.search_extra.clear();
+        self.search_status.clear();
+        self.search_more = false;
+        self.recompute_pool();
         if let Some(e) = &self.search_entry {
             e.set_text("");
         }
@@ -4177,7 +4409,7 @@ impl MessageList {
 
     /// What the search field and the quick filters let through.
     fn filter(&self) -> impl Fn(&Message) -> bool {
-        let q = self.query.to_lowercase();
+        use crate::mail_search::Field;
         let quick = QuickFilterContext {
             filters: self.quick,
             own: if self.quick.has(QuickFilter::ToMe) { self.own_addresses.clone() } else { Default::default() },
@@ -4185,13 +4417,23 @@ impl MessageList {
             tags: if self.quick.has(QuickFilter::Tagged) { self.shared.tags.borrow().clone() } else { Vec::new() },
             today: if self.quick.has(QuickFilter::Today) { start_of_today() } else { 0 },
         };
+        // A search that could not be read lets nothing through; the line
+        // under the field says why.
+        let query = if self.searching() { self.parsed.clone().map(Some) } else { Ok(None) };
+        let hits = self.content_hits.clone();
         move |m: &Message| {
-            quick.passes(m)
-                && (q.is_empty()
-                    || m.subject.to_lowercase().contains(&q)
-                    || m.from_name.to_lowercase().contains(&q)
-                    || m.from_addr.to_lowercase().contains(&q)
-                    || m.preview.to_lowercase().contains(&q))
+            if !quick.passes(m) {
+                return false;
+            }
+            let query = match &query {
+                Ok(None) => return true,
+                Ok(Some(q)) => q,
+                Err(_) => return false,
+            };
+            let fields = |f: Field| crate::mail_search::message_field(m, f);
+            let slot = (m.account_id, m.folder_id, m.uid);
+            let content = |f: Field, t: &str| hits.get(&(f, t.to_string())).is_some_and(|s| s.contains(&slot));
+            query.matches(m.timestamp, m.has_attachment, &fields, &content)
         }
     }
 
