@@ -1487,18 +1487,22 @@ What a server can search sets the limits:
   read-only for a search. Words beyond plain ASCII are sent as UTF-8 in a
   quoted string, as Hylki's filter rules have always sent them; most servers
   accept that, and one that does not answers the search with an error.
-- **Microsoft 365** returns at most 1,000 results for one search and offers no
-  way to page past them; when a search reaches that number, the line under the
-  field says so, and a narrower search finds the rest. It cannot search
-  Reply-To. `attachment:` matches the names of attachments.
+- **Microsoft 365** answers one search with a few hundred results at most
+  (Microsoft documents up to 1,000; a mailbox tested gave 275), newest first,
+  with no way to page past them. When a search comes back that full, Hylki
+  asks again for mail sent on or before the day of the oldest result, and
+  Load More works back through the mailbox that way. Only a day with more
+  matches than one search returns stays out of reach, and the line under the
+  field says from which day. It cannot search Reply-To. `attachment:` matches
+  the names of attachments.
 
 #### Filter rules on the message text
 
 A filter condition on the message body is checked by the server for the whole
 Inbox. JMAP servers are read page by page. Microsoft 365 is asked again for
-older mail whenever a search fills its 1,000 results, which reaches every
-match unless more than 1,000 matching messages were sent on one day; Hylki
-then says how many older messages it could not check.
+older mail, a day at a time, whenever a search may have been cut short, which
+reaches every match unless more were sent on one day than one search returns;
+Hylki then says how many older messages it could not check.
 
 ### Large mailboxes
 

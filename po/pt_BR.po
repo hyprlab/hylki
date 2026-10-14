@@ -7505,7 +7505,7 @@ msgstr "Continuou a não ser possível enviar «{subject}»: {e}"
 
 msgid ""
 "Message-body filter rules could not be checked against {n} older Inbox "
-"messages: Microsoft 365 returns at most 1,000 search results per day searched"
+"messages: Microsoft 365 returned only part of the matches for one day"
 msgstr ""
 
 msgid "IMAP connection stopped making progress"
@@ -7561,8 +7561,8 @@ msgid "The folder was not found on the server"
 msgstr "Essa pasta não está no servidor"
 
 msgid ""
-"Microsoft 365 returns at most {n} results for one search; narrow the search "
-"to find older ones"
+"Microsoft 365 did not return every result sent on or before {day}; narrow "
+"the search to find them"
 msgstr ""
 
 msgid "{n} results are in folders Hylki does not show"
