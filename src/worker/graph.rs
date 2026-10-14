@@ -224,6 +224,27 @@ pub(super) fn graph_list_folders(
     account_id: u32,
     assignments: &std::collections::BTreeMap<String, String>,
 ) -> Result<Vec<GraphFolder>, String> {
+    graph_list_folders_at(token, GRAPH_BASE, account_id, assignments)
+}
+
+/// Deeper than any folder tree Exchange allows (300 levels): a tree that
+/// goes further is answered wrongly, and is refused rather than walked.
+const GRAPH_FOLDER_DEPTH_LIMIT: usize = 300;
+
+/// More folders than an Exchange mailbox holds; a listing past it is
+/// refused rather than cut short.
+const GRAPH_FOLDER_COUNT_LIMIT: usize = 100_000;
+
+/// [`graph_list_folders`] against `base` (a test's own server). Every page
+/// of every level is read; a level that cannot be read fails the whole
+/// listing, so a partial tree is never taken for the whole one, which would
+/// make the folders it misses disappear from the sidebar.
+fn graph_list_folders_at(
+    token: &str,
+    base: &str,
+    account_id: u32,
+    assignments: &std::collections::BTreeMap<String, String>,
+) -> Result<Vec<GraphFolder>, String> {
     // Well-known folders name the roles; everything else is Custom. A role
     // folder some account type lacks (e.g. archive) just 404s — skip it.
     let mut roles: std::collections::HashMap<String, FolderKind> = Default::default();
@@ -235,32 +256,40 @@ pub(super) fn graph_list_folders(
         ("junkemail", FolderKind::Junk),
         ("archive", FolderKind::Archive),
     ] {
-        if let Ok(v) = graph_get_json(token, &format!("{GRAPH_BASE}/me/mailFolders/{wk}?$select=id"))
-        {
-            if let Some(id) = v["id"].as_str() {
-                roles.insert(id.to_string(), kind);
+        match graph_get_json(token, &format!("{base}/me/mailFolders/{wk}?$select=id")) {
+            Ok(v) => {
+                if let Some(id) = v["id"].as_str() {
+                    roles.insert(id.to_string(), kind);
+                }
             }
+            // A role only names a folder the listing finds anyway.
+            Err(e) => tracing::debug!("graph: no {wk} folder: {e}"),
         }
     }
 
     const SELECT: &str =
         "$select=id,displayName,childFolderCount,unreadItemCount,totalItemCount";
-    let roots = graph_paged(
-        token,
-        &format!("{GRAPH_BASE}/me/mailFolders?$top=100&{SELECT}"),
-        200,
-    )?;
+    let roots = graph_paged(token, &format!("{base}/me/mailFolders?$top=100&{SELECT}"), usize::MAX)?;
 
-    // Flatten the tree breadth-first; paths join with '/' like the sidebar's
-    // hierarchy expects. Depth and total are capped defensively.
+    // Flatten the tree depth-first; paths join with '/' like the sidebar's
+    // hierarchy expects. A folder met twice (a server answering a child
+    // listing with an ancestor) is walked once, so a loop ends.
     let mut out: Vec<GraphFolder> = Vec::new();
+    let mut seen: std::collections::HashSet<String> = Default::default();
     // Graph folder id → (every message, unread): the chip picks one once the
     // kinds are final (a manual Drafts assignment counts every draft).
     let mut counts: std::collections::HashMap<String, (u32, u32)> = Default::default();
-    let mut queue: Vec<(serde_json::Value, String, u8)> =
-        roots.into_iter().map(|v| (v, String::new(), 0u8)).collect();
+    let mut queue: Vec<(serde_json::Value, String, usize)> =
+        roots.into_iter().map(|v| (v, String::new(), 0)).collect();
     while let Some((v, prefix, depth)) = queue.pop() {
         let Some(gid) = v["id"].as_str() else { continue };
+        if !seen.insert(gid.to_string()) {
+            tracing::warn!("graph: folder {gid} listed twice; walked once");
+            continue;
+        }
+        if depth > GRAPH_FOLDER_DEPTH_LIMIT || out.len() >= GRAPH_FOLDER_COUNT_LIMIT {
+            return Err(i18n("The server's folder list is deeper or larger than any mailbox can be"));
+        }
         let name = v["displayName"].as_str().unwrap_or("?").to_string();
         let path = if prefix.is_empty() { name.clone() } else { format!("{prefix}/{name}") };
         let kind = match roles.get(gid) {
@@ -270,14 +299,13 @@ pub(super) fn graph_list_folders(
             None if prefix.is_empty() && crate::models::is_templates_name(&name) => FolderKind::Templates,
             None => FolderKind::Custom,
         };
-        if v["childFolderCount"].as_i64().unwrap_or(0) > 0 && depth < 4 && out.len() < 400 {
-            if let Ok(children) = graph_paged(
+        if v["childFolderCount"].as_i64().unwrap_or(0) > 0 {
+            let children = graph_paged(
                 token,
-                &format!("{GRAPH_BASE}/me/mailFolders/{gid}/childFolders?$top=100&{SELECT}"),
-                200,
-            ) {
-                queue.extend(children.into_iter().map(|c| (c, path.clone(), depth + 1)));
-            }
+                &format!("{base}/me/mailFolders/{gid}/childFolders?$top=100&{SELECT}"),
+                usize::MAX,
+            )?;
+            queue.extend(children.into_iter().map(|c| (c, path.clone(), depth + 1)));
         }
         let count = |field: &str| v[field].as_i64().unwrap_or(0).max(0) as u32;
         counts.insert(gid.to_string(), (count("totalItemCount"), count("unreadItemCount")));
@@ -2510,6 +2538,89 @@ mod tests {
     }
 
     /// #429: a throttled request waits as asked and goes again.
+    fn folder(id: &str, name: &str, children: usize) -> serde_json::Value {
+        serde_json::json!({ "id": id, "displayName": name, "childFolderCount": children,
+                            "unreadItemCount": 0, "totalItemCount": 0 })
+    }
+
+    /// The answers for the six role lookups the listing starts with.
+    fn role_answers() -> Vec<Answer> {
+        ["inbox", "sentitems", "drafts", "deleteditems", "junkemail", "archive"]
+            .iter()
+            .map(|wk| {
+                if *wk == "inbox" {
+                    answer(&format!("mailFolders/{wk}?"), 200, serde_json::json!({ "id": "R0" }))
+                } else {
+                    answer(&format!("mailFolders/{wk}?"), 404, serde_json::json!({}))
+                }
+            })
+            .collect()
+    }
+
+    /// More top-level folders than one page and than the old 200 cap, a
+    /// chain deeper than the old four levels, and one folder with more
+    /// children than the old cap: every one of them is listed.
+    #[test]
+    fn a_large_deep_folder_tree_is_listed_whole() {
+        let mut answers = role_answers();
+        // 201 roots over three pages: R0 (the inbox) .. R200.
+        let roots: Vec<serde_json::Value> = (0..=200)
+            .map(|i| folder(&format!("R{i}"), &format!("Root {i:03}"), usize::from(i == 1 || i == 2)))
+            .collect();
+        answers.push(answer("/me/mailFolders?$top=100", 200, serde_json::json!({
+            "value": roots[..100], "@odata.nextLink": "{origin}/me/mailFolders?page=2" })));
+        answers.push(answer("/me/mailFolders?page=2", 200, serde_json::json!({
+            "value": roots[100..200], "@odata.nextLink": "{origin}/me/mailFolders?page=3" })));
+        answers.push(answer("/me/mailFolders?page=3", 200, serde_json::json!({ "value": roots[200..] })));
+        // R1 holds a chain six deep.
+        for d in 0..6 {
+            let parent = if d == 0 { "R1".to_string() } else { format!("D{}", d - 1) };
+            let children = usize::from(d < 5);
+            answers.push(answer(&format!("mailFolders/{parent}/childFolders"), 200,
+                serde_json::json!({ "value": [folder(&format!("D{d}"), &format!("Level {}", d + 1), children)] })));
+        }
+        // R2 holds 201 children over two pages.
+        let kids: Vec<serde_json::Value> = (0..201).map(|i| folder(&format!("K{i}"), &format!("Kid {i:03}"), 0)).collect();
+        answers.push(answer("mailFolders/R2/childFolders", 200, serde_json::json!({
+            "value": kids[..200], "@odata.nextLink": "{origin}/me/mailFolders/R2/kids?page=2" })));
+        answers.push(answer("mailFolders/R2/kids?page=2", 200, serde_json::json!({ "value": kids[200..] })));
+        let (origin, server) = serve(answers);
+
+        let folders = graph_list_folders_at("t", &origin, 1, &Default::default()).expect("listed");
+        drop(server);
+        assert_eq!(folders.len(), 201 + 6 + 201);
+        let paths: std::collections::HashSet<&str> = folders.iter().map(|f| f.folder.path.as_str()).collect();
+        assert!(paths.contains("Root 001/Level 1/Level 2/Level 3/Level 4/Level 5/Level 6"));
+        assert!(paths.contains("Root 002/Kid 200"));
+        assert!(paths.contains("Root 200"));
+        assert_eq!(folders.iter().find(|f| f.graph_id == "R0").unwrap().folder.kind, FolderKind::Inbox);
+    }
+
+    /// A child listing that fails fails the listing: the sidebar keeps the
+    /// folders it had rather than losing the ones that could not be read.
+    #[test]
+    fn a_folder_level_that_cannot_be_read_fails_the_listing() {
+        let mut answers = role_answers();
+        answers.push(answer("/me/mailFolders?$top=100", 200,
+            serde_json::json!({ "value": [folder("R0", "Inbox", 0), folder("R1", "Projects", 2)] })));
+        answers.push(answer("mailFolders/R1/childFolders", 500, serde_json::json!({ "error": { "code": "x" } })));
+        let (origin, _server) = serve(answers);
+        assert!(graph_list_folders_at("t", &origin, 1, &Default::default()).is_err());
+    }
+
+    /// A server that names an ancestor among a folder's children does not
+    /// send the listing round in circles.
+    #[test]
+    fn a_folder_loop_is_walked_once() {
+        let mut answers = role_answers();
+        answers.push(answer("/me/mailFolders?$top=100", 200, serde_json::json!({ "value": [folder("R1", "A", 1)] })));
+        answers.push(answer("mailFolders/R1/childFolders", 200, serde_json::json!({ "value": [folder("C1", "B", 1)] })));
+        answers.push(answer("mailFolders/C1/childFolders", 200, serde_json::json!({ "value": [folder("R1", "A", 1)] })));
+        let (origin, _server) = serve(answers);
+        let folders = graph_list_folders_at("t", &origin, 1, &Default::default()).expect("listed");
+        assert_eq!(folders.iter().map(|f| f.folder.path.as_str()).collect::<Vec<_>>(), vec!["A", "A/B"]);
+    }
+
     /// A raw message is read whole or refused, never cut at the limit and
     /// passed on as if complete.
     #[test]
