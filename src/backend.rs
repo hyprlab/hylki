@@ -405,6 +405,11 @@ pub fn seed_demo_cache(cache: &crate::cache::Cache) {
                 .collect();
             if !messages.is_empty() {
                 cache.save_messages(account.id, &folder.path, &messages);
+                // The sample bodies too, so the search finds what they say
+                // past their previews, as it does for downloaded mail.
+                for m in messages.iter().filter(|m| !m.body.is_empty()) {
+                    cache.save_body(account.id, &folder.path, m.uid, &m.body);
+                }
             }
         }
     }

@@ -24,6 +24,7 @@ mod launcher_badge;
 mod local_contacts;
 mod legacy;
 mod logo;
+mod mail_search;
 mod memory_report;
 mod markdown;
 mod models;
@@ -48,6 +49,8 @@ mod theme_palettes;
 mod translate;
 mod sensitivity;
 mod tray;
+mod text_extract;
+mod search_indexer;
 mod unsubscribe;
 mod ui;
 mod verify;
@@ -109,6 +112,16 @@ fn apply_renderer() {
 }
 
 fn main() {
+    // An attachment-text extractor (see text_extract.rs) is this binary run
+    // by the app itself: it reads a file, prints its text and leaves, before
+    // any of the app's own start-up runs.
+    {
+        let mut args = std::env::args().skip(1);
+        if args.next().as_deref() == Some(text_extract::EXTRACT_FLAG) {
+            text_extract::child_main(&args.next().unwrap_or_default());
+        }
+    }
+
     // The allocator's tunables before the first allocation that matters (see
     // memory_report::tune_allocator).
     memory_report::tune_allocator();

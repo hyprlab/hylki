@@ -96,6 +96,12 @@ wayland-scanner = "0.31"
 # offline, so a Translate offer sends nothing until it is clicked.
 whatlang = "0.18"
 cfb = "0.15.0"
+# Search (see src/text_extract.rs): a DOCX is a zip whose parts are deflated,
+# and the extractor process gets resource limits before it runs. Both crates
+# are already in the graph (flate2 through ureq, libc through tokio), so the
+# Flatpak's cargo sources need nothing new.
+flate2 = "1"
+libc = "0.2"
 
 [build-dependencies]
 # Compiles resources/veem.gresource.xml (the bundled symbolic icons) into a

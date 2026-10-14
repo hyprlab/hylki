@@ -15,6 +15,9 @@ use crate::models::{
     Attachment, Folder, FolderKind, GallerySort, Message, ThreadLatest, ThreadSummary,
 };
 
+mod search_index;
+pub use search_index::{ExtractStatus, TermHits};
+
 const SCHEMA: &str = "
 CREATE TABLE IF NOT EXISTS folders (
     account_id INTEGER NOT NULL,
@@ -160,7 +163,7 @@ CREATE TABLE IF NOT EXISTS account_owner (
 /// Every table whose rows belong to one account, by `account_id`. An account's
 /// id is its place in the account list, so `Cache::claim_accounts` moves
 /// these rows when the places change.
-const ACCOUNT_TABLES: [&str; 11] = [
+const ACCOUNT_TABLES: [&str; 13] = [
     "folders",
     "refs_repair",
     "messages",
@@ -172,6 +175,8 @@ const ACCOUNT_TABLES: [&str; 11] = [
     "attachments_checked",
     "attachment_meta",
     "attachment_scan",
+    "search_docs",
+    "attachment_text",
 ];
 
 /// Bump when the table layout changes; older rows are dropped on open.
@@ -500,6 +505,7 @@ impl Cache {
     pub fn in_memory() -> rusqlite::Result<Cache> {
         let conn = Connection::open_in_memory()?;
         conn.execute_batch(SCHEMA)?;
+        search_index::ensure_schema(&conn);
         let _ = conn.execute_batch(&format!("PRAGMA user_version = {SCHEMA_VERSION};"));
         Ok(Cache { conn })
     }
@@ -594,7 +600,8 @@ impl Cache {
                  DROP TABLE IF EXISTS bodies;\
                  DROP TABLE IF EXISTS sender_checks;\
                  DROP TABLE IF EXISTS attachments;\
-                 DROP TABLE IF EXISTS attachments_checked;",
+                 DROP TABLE IF EXISTS attachments_checked;\
+                 DROP TABLE IF EXISTS search_state;",
             );
         } else if version < RENDER_VERSION {
             // The layout is current but `bodies` holds HTML rendered by an older
@@ -654,6 +661,14 @@ impl Cache {
         // its message shows its label once it is fetched again.
         let _ = conn
             .execute("ALTER TABLE sender_checks ADD COLUMN label TEXT NOT NULL DEFAULT ''", []);
+        // The search index (see search_index.rs) after every column it reads
+        // exists, and before the clean-ups below, so what they remove leaves
+        // the index too. Bodies dropped by an upgrade above went without
+        // their triggers, so the index is rebuilt in that case.
+        if version < RENDER_VERSION {
+            let _ = conn.execute_batch("DROP TABLE IF EXISTS search_state;");
+        }
+        search_index::ensure_schema(&conn);
         for table in ["bodies", "attachments", "attachments_checked"] {
             let _ = conn.execute(
                 &format!(
@@ -2431,6 +2446,66 @@ impl Cache {
             .unwrap_or(0)
     }
 
+    /// The cached messages of one folder with these uids (any not cached are
+    /// simply absent). Their folder id is left at 0 for the caller.
+    pub fn messages_by_uid(&self, account_id: u32, folder_path: &str, uids: &[u32]) -> Vec<Message> {
+        let mut out = Vec::new();
+        for chunk in uids.chunks(500) {
+            let list = chunk.iter().map(u32::to_string).collect::<Vec<_>>().join(",");
+            let run = || -> rusqlite::Result<Vec<Message>> {
+                let mut stmt = self.conn.prepare(&format!(
+                    "SELECT folder_path, uid, from_name, from_addr, subject, date, ts, unread, starred, \
+                            has_attachment, recipients, cc, message_id, references_, preview, reply_to, {KEYWORDS_COL}, importance, due, gmail_labels \
+                     FROM messages WHERE account_id = ?1 AND folder_path = ?2 AND uid IN ({list})"
+                ))?;
+                let mut rows = stmt.query(params![account_id, folder_path])?;
+                let mut v = Vec::new();
+                while let Some(row) = rows.next()? {
+                    v.push(scanned_message(row, account_id)?);
+                }
+                Ok(v)
+            };
+            match run() {
+                Ok(v) => out.extend(v),
+                Err(e) => tracing::warn!("cache messages_by_uid failed: {e}"),
+            }
+        }
+        out
+    }
+
+    /// The account's cached messages a search keeps, newest first with the
+    /// folder each sits in: every folder, or only `folder`. `keep` is asked
+    /// about each row with its folder's path, which is what the full-text
+    /// index's hits are keyed by.
+    pub fn search_scan(
+        &self,
+        account_id: u32,
+        folder: Option<&str>,
+        mut keep: impl FnMut(&str, &Message) -> bool,
+    ) -> Vec<(String, Message)> {
+        let mut run = || -> rusqlite::Result<Vec<(String, Message)>> {
+            let mut stmt = self.conn.prepare(&format!(
+                "SELECT folder_path, uid, from_name, from_addr, subject, date, ts, unread, starred, \
+                        has_attachment, recipients, cc, message_id, references_, preview, reply_to, {KEYWORDS_COL}, importance, due, gmail_labels \
+                 FROM messages WHERE account_id = ?1 AND (?2 IS NULL OR folder_path = ?2) ORDER BY ts DESC"
+            ))?;
+            let mut rows = stmt.query(params![account_id, folder])?;
+            let mut out = Vec::new();
+            while let Some(row) = rows.next()? {
+                let path: String = row.get(0)?;
+                let m = scanned_message(row, account_id)?;
+                if keep(&path, &m) {
+                    out.push((path, m));
+                }
+            }
+            Ok(out)
+        };
+        run().unwrap_or_else(|e| {
+            tracing::warn!("cache search_scan failed: {e}");
+            Vec::new()
+        })
+    }
+
     /// The account's cached messages a smart folder (#417) keeps, newest
     /// first with the folder each sits in: those in `include` (every folder
     /// when `None`) and not in `exclude`, past what `pre` rules out, for
@@ -2483,33 +2558,7 @@ impl Cache {
             let mut rows = stmt.query(rusqlite::params_from_iter(args.iter()))?;
             let mut out = Vec::new();
             while let Some(row) = rows.next()? {
-                let uid: u32 = row.get(1)?;
-                let mut m = Message {
-                    id: uid,
-                    account_id,
-                    folder_id: 0, // filled in by the caller, which knows the ids
-                    uid,
-                    from_name: row.get(2)?,
-                    from_addr: row.get(3)?,
-                    reply_to: row.get(15)?,
-                    to: row.get(10)?,
-                    cc: row.get(11)?,
-                    subject: row.get(4)?,
-                    preview: row.get(14)?,
-                    body: String::new(),
-                    date: row.get(5)?,
-                    timestamp: row.get(6)?,
-                    unread: row.get(7)?,
-                    starred: row.get(8)?,
-                    keywords: split_keywords(row.get(16)?),
-                    has_attachment: row.get(9)?,
-                    message_id: row.get(12)?,
-                    references: row.get(13)?,
-                    importance: crate::models::Importance::from_i64(row.get(17)?),
-                    due: row.get(18)?,
-                    labels: split_labels(row.get(19)?),
-                };
-                m.scrub_nuls();
+                let m = scanned_message(row, account_id)?;
                 if keep(&m) {
                     out.push((row.get::<_, String>(0)?, m));
                     if out.len() >= limit {
@@ -2657,6 +2706,39 @@ pub fn folders_equal(a: &[Folder], b: &[Folder]) -> bool {
         && a.iter().zip(b).all(|(x, y)| {
             x.path == y.path && x.name == y.name && x.kind == y.kind && x.unread == y.unread
         })
+}
+
+/// A row of the scans' shared column list as a message; its folder id is
+/// left for the caller, which knows the ids.
+fn scanned_message(row: &rusqlite::Row<'_>, account_id: u32) -> rusqlite::Result<Message> {
+    let uid: u32 = row.get(1)?;
+    let mut m = Message {
+        id: uid,
+        account_id,
+        folder_id: 0,
+        uid,
+        from_name: row.get(2)?,
+        from_addr: row.get(3)?,
+        reply_to: row.get(15)?,
+        to: row.get(10)?,
+        cc: row.get(11)?,
+        subject: row.get(4)?,
+        preview: row.get(14)?,
+        body: String::new(),
+        date: row.get(5)?,
+        timestamp: row.get(6)?,
+        unread: row.get(7)?,
+        starred: row.get(8)?,
+        keywords: split_keywords(row.get(16)?),
+        has_attachment: row.get(9)?,
+        message_id: row.get(12)?,
+        references: row.get(13)?,
+        importance: crate::models::Importance::from_i64(row.get(17)?),
+        due: row.get(18)?,
+        labels: split_labels(row.get(19)?),
+    };
+    m.scrub_nuls();
+    Ok(m)
 }
 
 fn kind_to_i64(kind: FolderKind) -> i64 {

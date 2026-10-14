@@ -3594,6 +3594,7 @@ impl SimpleComponent for AppModel {
                 let c = crate::cache::Cache::in_memory().ok();
                 if let Some(c) = c.as_ref() {
                     crate::backend::seed_demo_cache(c);
+                    while c.index_pending(500).is_ok_and(|n| n > 0) {}
                 }
                 c
             } else {
@@ -13254,6 +13255,9 @@ impl AppModel {
             }
         } else {
             self.claim_cached_accounts();
+            // After the rows follow their accounts, so the index never reads
+            // a row that is about to move.
+            crate::search_indexer::start();
             for (i, account) in self.config.iter().enumerate() {
                 if !account.enabled {
                     continue;
