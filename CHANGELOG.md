@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: a message from another folder stayed on "Loading…" in a
+  conversation.** A conversation is kept for a quick return, and one put
+  away before the body of a member from another folder (Archive, Sent)
+  came in kept that card empty: going back showed "Loading…" for good,
+  though the body was on disk. The missing bodies are filled in or asked
+  for again when the conversation is shown.
+
 - **Changed: a reply sent from the reading pane becomes its card in the
   conversation.** The editor lifts out of the composer and moves to where
   the reply now sits in the conversation, turning into its card on the
