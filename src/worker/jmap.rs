@@ -1268,33 +1268,45 @@ async fn jmap_resolve(
     path: &str,
     uid: u32,
 ) -> Option<(String, String)> {
+    jmap_lookup(s, state, path, uid).await.ok().flatten()
+}
+
+/// [`jmap_resolve`] telling "not there" (`Ok(None)`) from "could not look"
+/// (`Err`: a listing or a get that failed), which the offline queue (#442)
+/// takes differently.
+async fn jmap_lookup(
+    s: &JmapSession,
+    state: &mut JmapState,
+    path: &str,
+    uid: u32,
+) -> Result<Option<(String, String)>, String> {
     if let Some(ids) = state.uids.get(&uid) {
-        return Some(ids.clone());
+        return Ok(Some(ids.clone()));
     }
-    let _ = jmap_load_folder(s, 0, 0, path, None, state).await;
+    let listed = jmap_load_folder(s, 0, 0, path, None, state).await;
     if let Some(ids) = state.uids.get(&uid) {
-        return Some(ids.clone());
+        return Ok(Some(ids.clone()));
     }
+    listed?;
     // Older than the first page (#429), from an earlier session's index:
     // an id listing names it (the background index's, or one made now, once
     // a while), and a get gives its blob.
     if !state.listed_ids.contains_key(&uid)
         && state.looked_up.get(path).is_none_or(|at| at.elapsed() >= JMAP_RELIST_AFTER)
     {
-        let (_, mailbox_id) = state.folders.get(path).cloned()?;
-        state.looked_up.insert(path.to_string(), std::time::Instant::now());
+        let Some((_, mailbox_id)) = state.folders.get(path).cloned() else { return Ok(None) };
         let sess = s.clone();
-        if let Ok(ids) = blocking(move || jmap_all_ids_in(&sess, &mailbox_id, serde_json::json!({}))).await {
-            state.listed_ids.extend(ids.into_iter().map(|id| (hash_uid(&id), id)));
-        }
+        let ids = blocking(move || jmap_all_ids_in(&sess, &mailbox_id, serde_json::json!({}))).await?;
+        state.looked_up.insert(path.to_string(), std::time::Instant::now());
+        state.listed_ids.extend(ids.into_iter().map(|id| (hash_uid(&id), id)));
     }
-    let hit = vec![state.listed_ids.get(&uid)?.clone()];
+    let Some(id) = state.listed_ids.get(&uid).cloned() else { return Ok(None) };
     let sess = s.clone();
-    let found = blocking(move || jmap_get_messages(&sess, &hit, 0, 0)).await.ok()?;
+    let found = blocking(move || jmap_get_messages(&sess, &[id], 0, 0)).await?;
     for (m, id, blob) in found {
         state.uids.insert(m.uid, (id, blob));
     }
-    state.uids.get(&uid).cloned()
+    Ok(state.uids.get(&uid).cloned())
 }
 
 /// Fetch a message's raw RFC 5322 bytes.
@@ -1321,12 +1333,234 @@ async fn jmap_patch_message(
     uid: u32,
     patch: serde_json::Value,
 ) {
-    let Some((id, _)) = jmap_resolve(s, state, path, uid).await else { return };
-    let sess = s.clone();
-    let update = serde_json::json!({ id: patch });
-    if let Err(e) = blocking(move || jmap_set_emails(&sess, update, &[])).await {
+    if let Err(e) = jmap_try_patch(s, state, path, uid, patch).await {
         tracing::warn!("jmap: could not update message: {e}");
     }
+}
+
+/// [`jmap_patch_message`], answering how it went. A message that cannot be
+/// found is no failure: it has gone elsewhere, and there is nothing to patch.
+async fn jmap_try_patch(
+    s: &JmapSession,
+    state: &mut JmapState,
+    path: &str,
+    uid: u32,
+    patch: serde_json::Value,
+) -> Result<(), String> {
+    let Some((id, _)) = jmap_resolve(s, state, path, uid).await else {
+        tracing::debug!("jmap: no message {uid} in {path} to update");
+        return Ok(());
+    };
+    let sess = s.clone();
+    let update = serde_json::json!({ id: patch });
+    blocking(move || jmap_set_emails(&sess, update, &[])).await.map(|_| ())
+}
+
+/// The mailboxes each of `ids` is in now, by JMAP id; one the server no
+/// longer has is left out.
+fn jmap_mailboxes_of(s: &JmapSession, ids: &[String]) -> Result<HashMap<String, HashSet<String>>, String> {
+    let get = serde_json::json!({ "accountId": s.account, "ids": ids, "properties": ["mailboxIds"] });
+    let responses = jmap_call(s, &[CAP_CORE, CAP_MAIL], vec![call(0, "Email/get", get)])?;
+    Ok(args(&responses, 0)["list"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(|e| {
+            let id = e["id"].as_str()?.to_string();
+            let boxes = e["mailboxIds"]
+                .as_object()
+                .map(|m| m.iter().filter(|(_, v)| v.as_bool() == Some(true)).map(|(k, _)| k.clone()).collect())
+                .unwrap_or_default();
+            Some((id, boxes))
+        })
+        .collect())
+}
+
+/// The ids among `ids` an `Email/set` answer says it did not update or
+/// destroy: each with the error's type and the server's reason.
+fn jmap_not_done(r: &serde_json::Value, ids: &[String]) -> Vec<(String, String, String)> {
+    ["notUpdated", "notDestroyed"]
+        .iter()
+        .filter_map(|key| r[*key].as_object())
+        .flat_map(|m| m.iter())
+        .filter(|(id, _)| ids.contains(id))
+        .map(|(id, why)| {
+            let kind = why["type"].as_str().unwrap_or("").to_string();
+            let text = why["description"].as_str().or(why["type"].as_str()).unwrap_or("refused");
+            (id.clone(), kind, text.to_string())
+        })
+        .collect()
+}
+
+/// Send the changes made while there was no network (#442), oldest first:
+/// the JMAP side of [`replay_pending`], which has the details.
+///
+/// A message keeps its JMAP id wherever it goes, so it is asked where it is
+/// now before a move or deletion: one no longer in the folder the change
+/// was made in (moved elsewhere on another device, deleted) takes the change
+/// with it, quietly. A move takes the message out of that one folder and into
+/// the destination, leaving any other mailbox it is in alone. A failure
+/// without an answer, or one that says "not now", keeps the change for the
+/// next try ([`pending::classify_http`]); a refusal is reported and dropped.
+/// Answers how many changes still wait.
+async fn jmap_replay_pending(
+    account: &AccountConfig,
+    account_id: u32,
+    state: &mut JmapState,
+    cache: Option<&Cache>,
+    emit: &impl Fn(WorkerEvent),
+) -> usize {
+    use crate::models::PendingChange;
+    let Some(c) = cache else { return 0 };
+    let queue = c.pending_actions(account_id);
+    let session = if queue.is_empty() { None } else { jmap_session(account, state, emit).await };
+    let Some(s) = session else { return pending::report(cache, account_id, emit) };
+    if state.folders.is_empty() {
+        refresh_jmap_folders(&s, account_id, cache, state, emit).await;
+    }
+    // Without the folder list a folder that is gone can't be told from one
+    // not listed yet: everything waits.
+    if state.folders.is_empty() {
+        pending::folders_unknown(c, &queue, emit);
+        return pending::report(cache, account_id, emit);
+    }
+    tracing::info!(account_id, count = queue.len(), "sending the changes made offline");
+    let flag = |on: bool| if on { serde_json::Value::Bool(true) } else { serde_json::Value::Null };
+    for step in pending::batches(&queue) {
+        let path = step.path.as_str();
+        let Some((_, source)) = state.folders.get(path).cloned() else {
+            tracing::debug!(account_id, path, "queued changes dropped: the folder is gone");
+            c.drop_pending(&step.ids);
+            continue;
+        };
+        // The message ids, and where each message is now.
+        let mut found: Vec<(i64, u32, String)> = Vec::new();
+        let mut looked = Ok(());
+        for (i, uid) in step.uids.iter().enumerate() {
+            match jmap_lookup(&s, state, path, *uid).await {
+                Ok(Some((id, _))) => found.push((step.ids[i], *uid, id)),
+                Ok(None) => {
+                    tracing::debug!(account_id, path, uid, "queued change dropped: the message is gone");
+                    c.drop_pending(&[step.ids[i]]);
+                }
+                // Could not look: the step waits for the next run.
+                Err(e) => {
+                    looked = Err(e);
+                    break;
+                }
+            }
+        }
+        if let Err(e) = looked {
+            pending::attempt_failed(c, &step.change, &step.ids, &e, emit);
+            break;
+        }
+        if found.is_empty() {
+            continue;
+        }
+        let ids: Vec<String> = found.iter().map(|(_, _, id)| id.clone()).collect();
+        let sess = s.clone();
+        let boxes = match blocking(move || jmap_mailboxes_of(&sess, &ids)).await {
+            Ok(boxes) => boxes,
+            Err(e) => {
+                if pending::classify_http(&e) == pending::Failure::Keep {
+                    let row_ids: Vec<i64> = found.iter().map(|(row, _, _)| *row).collect();
+                    pending::attempt_failed(c, &step.change, &row_ids, &e, emit);
+                    break;
+                }
+                emit(WorkerEvent::error(pending::refused_text(&step.change, found.len(), &e)));
+                c.drop_pending(&found.iter().map(|(row, _, _)| *row).collect::<Vec<_>>());
+                continue;
+            }
+        };
+        // Still there, and for a move or deletion still in this folder.
+        let (here, gone): (Vec<_>, Vec<_>) = found.into_iter().partition(|(_, _, id)| {
+            boxes.get(id).is_some_and(|b| !step.change.takes_away() || b.contains(&source))
+        });
+        for (row, uid, _) in &gone {
+            tracing::debug!(account_id, path, uid, "queued change dropped: the message has left the folder");
+            c.drop_pending(&[*row]);
+            if step.change.takes_away() {
+                c.delete_message(account_id, path, *uid);
+            }
+        }
+        if here.is_empty() {
+            continue;
+        }
+        let patch = match &step.change {
+            PendingChange::Seen(on) => Some(serde_json::json!({ "keywords/$seen": flag(*on) })),
+            PendingChange::Flagged(on) => Some(serde_json::json!({ "keywords/$flagged": flag(*on) })),
+            PendingChange::Keyword { keyword, add } => {
+                Some(serde_json::json!({ format!("keywords/{keyword}"): flag(*add) }))
+            }
+            PendingChange::Move { dest } => match state.folders.get(dest) {
+                Some((_, target)) => Some(serde_json::json!({
+                    format!("mailboxIds/{source}"): serde_json::Value::Null,
+                    format!("mailboxIds/{target}"): true,
+                })),
+                None => {
+                    tracing::debug!(account_id, dest, "queued move dropped: its destination is gone");
+                    c.drop_pending(&here.iter().map(|(row, _, _)| *row).collect::<Vec<_>>());
+                    continue;
+                }
+            },
+            PendingChange::Purge => None,
+        };
+        let ids: Vec<String> = here.iter().map(|(_, _, id)| id.clone()).collect();
+        let sess = s.clone();
+        let sent = ids.clone();
+        let result = blocking(move || match patch {
+            Some(patch) => {
+                let update: serde_json::Map<String, serde_json::Value> =
+                    sent.iter().map(|id| (id.clone(), patch.clone())).collect();
+                jmap_set_emails(&sess, serde_json::Value::Object(update), &[])
+            }
+            None => jmap_set_emails(&sess, serde_json::json!({}), &sent),
+        })
+        .await;
+        let r = match result {
+            Ok(r) => r,
+            Err(e) => {
+                let rows: Vec<i64> = here.iter().map(|(row, _, _)| *row).collect();
+                if pending::classify_http(&e) == pending::Failure::Keep {
+                    pending::attempt_failed(c, &step.change, &rows, &e, emit);
+                    break;
+                }
+                emit(WorkerEvent::error(pending::refused_text(&step.change, rows.len(), &e)));
+                c.drop_pending(&rows);
+                continue;
+            }
+        };
+        // Not done for now (the server busy, a rate limit): those wait.
+        // Otherwise refused: reported, and dropped with the rest.
+        let (later, refused): (Vec<_>, Vec<_>) =
+            jmap_not_done(&r, &ids).into_iter().partition(|(_, kind, _)| pending::jmap_error_keeps(kind));
+        if let Some((_, _, why)) = refused.first() {
+            emit(WorkerEvent::error(pending::refused_text(&step.change, refused.len(), why)));
+        }
+        for (row, uid, id) in &here {
+            if let Some((_, _, why)) = later.iter().find(|(r, _, _)| r == id) {
+                pending::attempt_failed(c, &step.change, &[*row], why, emit);
+                continue;
+            }
+            c.drop_pending(&[*row]);
+            if refused.iter().any(|(r, _, _)| r == id) {
+                continue;
+            }
+            match &step.change {
+                PendingChange::Seen(on) => c.set_unread(account_id, path, *uid, !on),
+                PendingChange::Flagged(on) => c.set_starred(account_id, path, *uid, *on),
+                PendingChange::Keyword { keyword, add } => {
+                    c.set_keyword(account_id, path, *uid, keyword, *add);
+                }
+                PendingChange::Move { .. } => c.delete_message(account_id, path, *uid),
+                PendingChange::Purge => {
+                    state.uids.remove(uid);
+                    c.delete_message(account_id, path, *uid);
+                }
+            }
+        }
+    }
+    pending::report(cache, account_id, emit)
 }
 
 /// Move messages to another folder (a message keeps its id across a move,
@@ -1436,6 +1670,7 @@ async fn jmap_undo_move(
 }
 
 /// Delete messages for good; the cache and the uid map forget every one.
+/// A message that cannot be found is already gone; a failure is answered.
 async fn jmap_purge_uids(
     s: &JmapSession,
     account_id: u32,
@@ -1443,7 +1678,7 @@ async fn jmap_purge_uids(
     path: &str,
     uids: Vec<u32>,
     cache: Option<&Cache>,
-) {
+) -> Result<(), String> {
     let mut ids = Vec::new();
     let mut gone = Vec::new();
     for uid in uids {
@@ -1453,17 +1688,17 @@ async fn jmap_purge_uids(
         }
     }
     if ids.is_empty() {
-        return;
+        return Ok(());
     }
     let sess = s.clone();
-    if blocking(move || jmap_destroy_all(&sess, &ids)).await.is_ok() {
-        for uid in gone {
-            state.uids.remove(&uid);
-            if let Some(c) = cache {
-                c.delete_message(account_id, path, uid);
-            }
+    blocking(move || jmap_destroy_all(&sess, &ids)).await?;
+    for uid in gone {
+        state.uids.remove(&uid);
+        if let Some(c) = cache {
+            c.delete_message(account_id, path, uid);
         }
     }
+    Ok(())
 }
 
 /// Everything in a mailbox, in pages, for a bulk operation.
@@ -2259,7 +2494,10 @@ pub(super) async fn run_jmap(
     let push_enabled = account.push.unwrap_or_else(|| crate::config::load_privacy().push);
     let mut push_started = false;
 
-    if let Some(s) = jmap_session(&account, &mut state, &emit).await {
+    // Started with no network: the cached folders stand, and the network
+    // coming back sends a Reconnect that lists them (#442).
+    let session = if jmap_may_connect(&account) { jmap_session(&account, &mut state, &emit).await } else { None };
+    if let Some(s) = session {
         refresh_jmap_folders(&s, account_id, cache.as_ref(), &mut state, &emit).await;
         emit_jmap_identities(&s, &emit);
         if push_enabled {
@@ -2278,7 +2516,19 @@ pub(super) async fn run_jmap(
     poll.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     poll.tick().await;
 
+    // Changes made while there was no network (#442), tried as on Graph: at
+    // start, when the network or the connection comes back, and when
+    // another change joins them.
+    pending::claim(cache.as_ref(), account_id, &account, &emit);
+    let mut pending_len = pending::report(cache.as_ref(), account_id, &emit);
+    let mut replay_clock = pending::ReplayClock::new(true);
+
     loop {
+        let now = std::time::Instant::now();
+        if pending_len > 0 && jmap_may_connect(&account) && replay_clock.should_run(now) {
+            pending_len = jmap_replay_pending(&account, account_id, &mut state, cache.as_ref(), &emit).await;
+            replay_clock.ran(std::time::Instant::now(), pending_len);
+        }
         // The background index (#429) runs only while nothing else is
         // asked, a single request a step. Neither it nor the poll runs with
         // no network, and the index waits out a metered one too (#442); a
@@ -2292,6 +2542,9 @@ pub(super) async fn run_jmap(
                 None => break,
             },
             _ = poll.tick() => {
+                // Changes the server put off (throttled, unavailable) get
+                // another try once the clock's pause is over, which the
+                // loop's next turn sees.
                 if !jmap_may_connect(&account) {
                     continue;
                 }
@@ -2320,6 +2573,33 @@ pub(super) async fn run_jmap(
                 continue;
             }
         };
+        // A change made with no network, or while earlier ones wait, joins
+        // the queue (#442), applied to the cache at once. As on Graph, a
+        // change made with the network up goes straight to the server; one
+        // that fails then is reported as before.
+        let queued = if pending_len > 0 || !jmap_may_connect(&account) {
+            pending::queue_request(cache.as_ref(), account_id, &req, &emit)
+        } else {
+            None
+        };
+        if let Some(n) = queued {
+            pending_len = n;
+            replay_clock.changed();
+            continue;
+        }
+        // Undoing a waiting move forgets it; the server's side of the undo
+        // still runs, in case the move went out just before, unless there
+        // is no network for it to have gone out over.
+        if let Some(n) = pending::undo_queued_move(cache.as_ref(), account_id, &req, &emit) {
+            pending_len = n;
+            if !jmap_may_connect(&account) {
+                emit(WorkerEvent::BulkComplete);
+                continue;
+            }
+        }
+        if matches!(req, MailRequest::Reconnect | MailRequest::NetworkChanged) {
+            replay_clock.wake();
+        }
         // A folder the user opened, rather than a background refresh.
         let user = matches!(req, MailRequest::LoadMessages { .. });
         match req {
@@ -2628,7 +2908,9 @@ pub(super) async fn run_jmap(
 
             MailRequest::PurgeMessages { path, uids } => {
                 if let Some(s) = jmap_session(&account, &mut state, &emit).await {
-                    jmap_purge_uids(&s, account_id, &mut state, &path, uids, cache.as_ref()).await;
+                    if let Err(e) = jmap_purge_uids(&s, account_id, &mut state, &path, uids, cache.as_ref()).await {
+                        emit(WorkerEvent::error(i18n_f("Could not delete permanently: {e}", &[("e", &e)])));
+                    }
                 }
                 emit(WorkerEvent::BulkComplete);
             }

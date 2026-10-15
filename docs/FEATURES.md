@@ -74,6 +74,9 @@ The full list. The [README](../README.md) carries a shorter one.
 - **Network aware:** no connection attempts while offline, a reconnect the
   moment the network is back, and no downloading ahead on a metered
   connection. See [Working offline](DOCUMENTATION.md#working-offline).
+- **Offline changes:** read, star, tag, move, archive and delete without a
+  connection; the changes wait, folded together where they cancel out, and
+  reach the server in order once it is back.
 
 ## Writing
 

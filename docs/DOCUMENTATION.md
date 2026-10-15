@@ -1479,6 +1479,41 @@ mail server on the computer itself, such as Proton Mail Bridge, counts as
 reachable either way. When the network comes back, every account reconnects
 and the open folder refreshes.
 
+Marking mail read or unread, starring it, tagging, moving, archiving and
+deleting it all work offline too. The change shows in the list at once and is
+kept in the cache (the `pending_actions` table of `cache.db`), so it survives
+a restart; the status bar says how many changes are waiting, such as **3
+changes waiting to sync**, until they have reached the server. They are sent
+in the order they were made as soon as there is a connection again, before
+any folder is synced. Changes that cancel out are never sent: a message
+marked read and then unread again, or moved twice, costs at most one change,
+and a star or tag given to a message after archiving it goes with it to the
+archive. **Undo** on a move that is still waiting forgets it.
+
+A change only ever reaches the message it was made to. Before a move or a
+deletion is sent, the server is asked what its folder holds now, and the
+message must still be there under the same Message-ID; on JMAP, it must
+still be in the folder the change was made in. A message that was moved or
+deleted on another device in the meantime drops its waiting changes without
+a word, and so does a move into a folder deleted since: the folder is not
+made again for it. Pointing the account at another server (its host or its
+kind) in Settings drops whatever was waiting for the old one, and Hylki says
+how many changes it discarded; a new port or user name keeps them. A change
+the server refuses is reported then, as it would have been when it was made.
+One the server puts off (a folder in use, throttling, the server busy) or
+that the connection drops under is tried again with the next connection, or
+a minute later; after five such tries it is reported and given up, so it
+cannot hold the rest back.
+
+On IMAP a change also waits when the connection drops while it is being
+made. Microsoft 365 and JMAP accounts keep changes while the network monitor
+reports no network and send them once it reports one; with the network up, a
+change goes straight to the server and a failure is reported as before.
+Marking a folder read and **Spam** and **Not Spam** still need a connection.
+Sending is covered by the Outbox; a message scheduled with **Send Later**
+while offline takes its draft out of Drafts as it would online, and the
+server's copy of the draft is deleted once the connection is back.
+
 On a metered connection, such as a phone's hotspot or mobile data, Hylki
 downloads only what is asked for: new mail is listed and what you open loads
 as usual, but nothing is fetched ahead (the newest messages' bodies and

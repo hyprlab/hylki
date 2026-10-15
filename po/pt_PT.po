@@ -159,6 +159,11 @@ msgstr "Alternar barra lateral"
 msgid "Keyboard Shortcuts"
 msgstr "Atalhos de teclado"
 
+msgid "{n} change waiting to sync"
+msgid_plural "{n} changes waiting to sync"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Create Folder"
 msgstr "Criar pasta"
 
@@ -7409,6 +7414,9 @@ msgstr ""
 msgid "Could not move messages: {e}"
 msgstr "Não foi possível mover as mensagens: {e}"
 
+msgid "Could not delete permanently: {e}"
+msgstr "Não foi possível eliminar permanentemente: {e}"
+
 msgid "Could not empty the folder: {e}"
 msgstr "Não foi possível esvaziar a pasta: {e}"
 
@@ -7466,6 +7474,25 @@ msgstr "Não foi possível aceder ao servidor JMAP: {e}"
 msgid "That folder is not on the server"
 msgstr "Essa pasta não existe no servidor"
 
+msgid ""
+"{n} change waiting for {account} was discarded because the server changed"
+msgid_plural ""
+"{n} changes waiting for {account} were discarded because the server changed"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not update message: {e}"
+msgstr "Não foi possível atualizar a mensagem: {e}"
+
+msgid "Could not change the star: {e}"
+msgstr "Não foi possível alterar a estrela: {e}"
+
+msgid "Could not tag message: {e}"
+msgstr "Não foi possível atribuir uma etiqueta à mensagem: {e}"
+
+msgid "Could not move {len} messages: {e}"
+msgstr "Não foi possível mover {len} mensagens: {e}"
+
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
 "A mensagem está assinada ou encriptada, e remover um ficheiro comprometeria "
@@ -7492,21 +7519,6 @@ msgstr "Não foi possível carregar {path}: {e}"
 msgid "Could not load conversation: {e}"
 msgstr "Não foi possível carregar a conversa: {e}"
 
-msgid "Could not update message: {e}"
-msgstr "Não foi possível atualizar a mensagem: {e}"
-
-msgid "Could not change the star: {e}"
-msgstr "Não foi possível alterar a estrela: {e}"
-
-msgid ""
-"This server does not store tags, so Hylki keeps them on this computer only"
-msgstr ""
-"Este servidor não guarda etiquetas, pelo que o Hylki as mantém apenas neste "
-"computador"
-
-msgid "Could not tag message: {e}"
-msgstr "Não foi possível atribuir uma etiqueta à mensagem: {e}"
-
 msgid "Could not mark folder read: {e}"
 msgstr "Não foi possível marcar a pasta como lida: {e}"
 
@@ -7517,18 +7529,18 @@ msgstr ""
 "O Gmail mantém uma cópia de cada mensagem em Todo o correio, pelo que o "
 "Hylki não consegue remover um anexo nessa pasta"
 
-msgid "Could not move {len} messages: {e}"
-msgstr "Não foi possível mover {len} mensagens: {e}"
-
-msgid "Could not delete permanently: {e}"
-msgstr "Não foi possível eliminar permanentemente: {e}"
-
 msgid "Could not move folder: {e}"
 msgstr "Não foi possível mover a pasta: {e}"
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "A mensagem foi enviada, mas não foi possível guardá-la em Enviadas: {e}"
+
+msgid ""
+"This server does not store tags, so Hylki keeps them on this computer only"
+msgstr ""
+"Este servidor não guarda etiquetas, pelo que o Hylki as mantém apenas neste "
+"computador"
 
 msgid "Connecting to {host}…"
 msgstr "A ligar a {host}…"

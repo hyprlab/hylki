@@ -10,9 +10,16 @@
   nothing is downloaded ahead: bodies and attachments of new mail load
   when opened, and the background index of each mailbox waits until the
   connection is no longer metered.
+- **Added: changes made offline wait for the server** (#442). Marking
+  mail read or unread, starring, tagging, moving, archiving and deleting
+  it no longer fail with "Could not move message" when there is no
+  connection: the change shows at once, waits in the cache across
+  restarts, and is sent in order once the server can be reached, with
+  changes that cancel out folded away. The status bar says how many are
+  waiting, such as "3 changes waiting to sync".
 - **Fixed: a message sent while an IMAP account was offline was lost.**
-  The send was dropped, composer closed, when the IMAP server could not
-  be reached, instead of being kept like a failed one. It now goes to the
+  With the IMAP server out of reach the send was dropped after its
+  composer had closed, where a failed send is kept. It now goes to the
   Outbox, which sends it once the connection is back, and one scheduled
   with Send Later waits there as usual.
 

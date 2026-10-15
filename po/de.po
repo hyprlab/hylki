@@ -159,6 +159,11 @@ msgstr "Seitenleiste ein- oder ausblenden"
 msgid "Keyboard Shortcuts"
 msgstr "Tastenkombinationen"
 
+msgid "{n} change waiting to sync"
+msgid_plural "{n} changes waiting to sync"
+msgstr[0] "{n} Änderung wartet auf Synchronisierung"
+msgstr[1] "{n} Änderungen warten auf Synchronisierung"
+
 msgid "Create Folder"
 msgstr "Ordner erstellen"
 
@@ -7460,6 +7465,9 @@ msgstr "{len} Nachrichten konnten nicht als „Kein Spam“ markiert werden: {e}
 msgid "Could not move messages: {e}"
 msgstr "Nachrichten konnten nicht verschoben werden: {e}"
 
+msgid "Could not delete permanently: {e}"
+msgstr "Nachricht konnte nicht endgültig gelöscht werden: {e}"
+
 msgid "Could not empty the folder: {e}"
 msgstr "Konnte den Ordner nicht leeren: {e}"
 
@@ -7519,6 +7527,30 @@ msgstr "Konnte den JMAP-Server nicht erreichen: {e}"
 msgid "That folder is not on the server"
 msgstr "Dieser Ordner ist nicht auf dem Server vorhanden"
 
+msgid ""
+"{n} change waiting for {account} was discarded because the server changed"
+msgid_plural ""
+"{n} changes waiting for {account} were discarded because the server changed"
+msgstr[0] ""
+"{n} wartende Änderung für {account} wurde verworfen, weil sich der Server "
+"geändert hat"
+msgstr[1] ""
+"{n} wartende Änderungen für {account} wurden verworfen, weil sich der Server "
+"geändert hat"
+
+msgid "Could not update message: {e}"
+msgstr "Nachricht konnte nicht aktualisiert werden: {e}"
+
+#, fuzzy
+msgid "Could not change the star: {e}"
+msgstr "Nachricht konnte nicht mit Tag versehen werden: {e}"
+
+msgid "Could not tag message: {e}"
+msgstr "Nachricht konnte nicht mit Tag versehen werden: {e}"
+
+msgid "Could not move {len} messages: {e}"
+msgstr "{len} Nachrichten konnten nicht verschoben werden: {e}"
+
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
 "Die Nachricht ist signiert oder verschlüsselt; das Entfernen einer Datei "
@@ -7549,22 +7581,6 @@ msgstr "{path} konnte nicht geladen werden: {e}"
 msgid "Could not load conversation: {e}"
 msgstr "Konnte die Konversation nicht laden: {e}"
 
-msgid "Could not update message: {e}"
-msgstr "Nachricht konnte nicht aktualisiert werden: {e}"
-
-#, fuzzy
-msgid "Could not change the star: {e}"
-msgstr "Nachricht konnte nicht mit Tag versehen werden: {e}"
-
-msgid ""
-"This server does not store tags, so Hylki keeps them on this computer only"
-msgstr ""
-"Dieser Server speichert keine Tags, daher hält Hylki sie nur auf diesem "
-"Computer"
-
-msgid "Could not tag message: {e}"
-msgstr "Nachricht konnte nicht mit Tag versehen werden: {e}"
-
 msgid "Could not mark folder read: {e}"
 msgstr "Ordner konnte nicht als gelesen markiert werden: {e}"
 
@@ -7575,18 +7591,18 @@ msgstr ""
 "Gmail bewahrt unter „Alle Nachrichten“ eine Kopie jeder Nachricht auf. Daher "
 "kann Hylki dort keine Anhänge entfernen"
 
-msgid "Could not move {len} messages: {e}"
-msgstr "{len} Nachrichten konnten nicht verschoben werden: {e}"
-
-msgid "Could not delete permanently: {e}"
-msgstr "Nachricht konnte nicht endgültig gelöscht werden: {e}"
-
 msgid "Could not move folder: {e}"
 msgstr "Ordner konnte nicht verschoben werden: {e}"
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "Nachricht gesendet, aber Speichern im Ordner „Gesendet“ fehlgeschlagen: {e}"
+
+msgid ""
+"This server does not store tags, so Hylki keeps them on this computer only"
+msgstr ""
+"Dieser Server speichert keine Tags, daher hält Hylki sie nur auf diesem "
+"Computer"
 
 msgid "Connecting to {host}…"
 msgstr "Verbinde zu {host}..."

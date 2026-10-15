@@ -154,6 +154,11 @@ msgstr "Εναλλαγή πλευρικής στήλης"
 msgid "Keyboard Shortcuts"
 msgstr "Συντομεύσεις πληκτρολογίου"
 
+msgid "{n} change waiting to sync"
+msgid_plural "{n} changes waiting to sync"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Create Folder"
 msgstr "Δημιουργία φακέλου"
 
@@ -7358,6 +7363,9 @@ msgstr "Δεν ήταν δυνατή η σήμανση {len} μηνυμάτων 
 msgid "Could not move messages: {e}"
 msgstr "Δεν ήταν δυνατή η μετακίνηση μηνυμάτων: {e}"
 
+msgid "Could not delete permanently: {e}"
+msgstr "Δεν ήταν δυνατή η οριστική διαγραφή: {e}"
+
 msgid "Could not empty the folder: {e}"
 msgstr "Δεν ήταν δυνατό το άδειασμα του φακέλου: {e}"
 
@@ -7417,6 +7425,25 @@ msgstr "Δεν ήταν δυνατή η επικοινωνία με τον δι�
 msgid "That folder is not on the server"
 msgstr "Αυτός ο φάκελος δεν υπάρχει στον διακομιστή"
 
+msgid ""
+"{n} change waiting for {account} was discarded because the server changed"
+msgid_plural ""
+"{n} changes waiting for {account} were discarded because the server changed"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not update message: {e}"
+msgstr "Δεν ήταν δυνατή η ενημέρωση του μηνύματος: {e}"
+
+msgid "Could not change the star: {e}"
+msgstr "Δεν ήταν δυνατή η αλλαγή του αστεριού: {e}"
+
+msgid "Could not tag message: {e}"
+msgstr "Δεν ήταν δυνατή η προσθήκη ετικέτας στο μήνυμα: {e}"
+
+msgid "Could not move {len} messages: {e}"
+msgstr "Δεν ήταν δυνατή η μετακίνηση {len} μηνυμάτων: {e}"
+
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
 "Το μήνυμα είναι υπογεγραμμένο ή κρυπτογραφημένο και η αφαίρεση ενός αρχείου "
@@ -7447,21 +7474,6 @@ msgstr "Δεν ήταν δυνατή η φόρτωση του {path}: {e}"
 msgid "Could not load conversation: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση της συζήτησης: {e}"
 
-msgid "Could not update message: {e}"
-msgstr "Δεν ήταν δυνατή η ενημέρωση του μηνύματος: {e}"
-
-msgid "Could not change the star: {e}"
-msgstr "Δεν ήταν δυνατή η αλλαγή του αστεριού: {e}"
-
-msgid ""
-"This server does not store tags, so Hylki keeps them on this computer only"
-msgstr ""
-"Αυτός ο διακομιστής δεν αποθηκεύει ετικέτες, επομένως το Hylki τις διατηρεί "
-"μόνο σε αυτόν τον υπολογιστή"
-
-msgid "Could not tag message: {e}"
-msgstr "Δεν ήταν δυνατή η προσθήκη ετικέτας στο μήνυμα: {e}"
-
 msgid "Could not mark folder read: {e}"
 msgstr "Δεν ήταν δυνατή η σήμανση του φακέλου ως αναγνωσμένου: {e}"
 
@@ -7472,17 +7484,17 @@ msgstr ""
 "Το Gmail διατηρεί ένα αντίγραφο κάθε μηνύματος στην «Όλη η αλληλογραφία», "
 "επομένως το Hylki δεν μπορεί να αφαιρέσει ένα συνημμένο από εκεί."
 
-msgid "Could not move {len} messages: {e}"
-msgstr "Δεν ήταν δυνατή η μετακίνηση {len} μηνυμάτων: {e}"
-
-msgid "Could not delete permanently: {e}"
-msgstr "Δεν ήταν δυνατή η οριστική διαγραφή: {e}"
-
 msgid "Could not move folder: {e}"
 msgstr "Δεν ήταν δυνατή η μετακίνηση φακέλου: {e}"
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Το μήνυμα στάλθηκε, αλλά η αποθήκευση στα Απεσταλμένα απέτυχε: {e}"
+
+msgid ""
+"This server does not store tags, so Hylki keeps them on this computer only"
+msgstr ""
+"Αυτός ο διακομιστής δεν αποθηκεύει ετικέτες, επομένως το Hylki τις διατηρεί "
+"μόνο σε αυτόν τον υπολογιστή"
 
 msgid "Connecting to {host}…"
 msgstr "Σύνδεση στο {host}…"

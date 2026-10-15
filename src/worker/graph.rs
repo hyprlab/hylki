@@ -761,7 +761,10 @@ pub(super) async fn run_graph(
 
     // Fetch a token and the folder list. A GOA token failure here is the one
     // users actually hit (signed out in GNOME Settings), so say that.
-    if let Some(token) = graph_token(&account, &emit).await {
+    // Started with no network, the cached folders stand: the network coming
+    // back sends a Reconnect that lists them (#442).
+    let token = if crate::power::online() { graph_token(&account, &emit).await } else { None };
+    if let Some(token) = token {
         refresh_graph_folders(&token, account_id, cache.as_ref(), &mut state, &emit).await;
     }
 
@@ -776,7 +779,21 @@ pub(super) async fn run_graph(
     poll.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     poll.tick().await; // consume the interval's immediate first tick
 
+    // Changes made while there was no network (#442): how many wait, and
+    // whether to try sending them before the next request. Tried at start,
+    // when the network or the connection comes back, and when another
+    // change joins them, not on every turn: with a sign-in that fails,
+    // every try would report it again.
+    pending::claim(cache.as_ref(), account_id, &account, &emit);
+    let mut pending_len = pending::report(cache.as_ref(), account_id, &emit);
+    let mut replay_clock = pending::ReplayClock::new(true);
+
     loop {
+        let now = std::time::Instant::now();
+        if pending_len > 0 && crate::power::online() && replay_clock.should_run(now) {
+            pending_len = graph_replay_pending(&account, account_id, &mut state, cache.as_ref(), &emit).await;
+            replay_clock.ran(std::time::Instant::now(), pending_len);
+        }
         // The background index (#429) only runs while nothing else is
         // asked: a request, then the poll, come first, and each step is a
         // single request so neither waits long behind one.
@@ -795,6 +812,9 @@ pub(super) async fn run_graph(
                 if crate::power::online() {
                     graph_poll_inbox(account_id, &account, cache.as_ref(), &mut state, &emit).await;
                 }
+                // Changes the server put off (throttled, unavailable) get
+                // another try once the clock's pause is over, which the
+                // loop's next turn sees.
                 continue;
             }
             _ = backfill_pause(wait), if indexing => {
@@ -802,6 +822,33 @@ pub(super) async fn run_graph(
                 continue;
             }
         };
+        // A change made with no network, or while earlier ones wait, joins
+        // the queue (#442), applied to the cache at once. Graph's failures
+        // do not tell a dropped connection from a refusal, so a change made
+        // with the network up goes straight to the server as before.
+        let queued = if pending_len > 0 || !crate::power::online() {
+            pending::queue_request(cache.as_ref(), account_id, &req, &emit)
+        } else {
+            None
+        };
+        if let Some(n) = queued {
+            pending_len = n;
+            replay_clock.changed();
+            continue;
+        }
+        // Undoing a waiting move forgets it; the server's side of the undo
+        // still runs, in case the move went out just before, unless there
+        // is no network for it to have gone out over.
+        if let Some(n) = pending::undo_queued_move(cache.as_ref(), account_id, &req, &emit) {
+            pending_len = n;
+            if !crate::power::online() {
+                emit(WorkerEvent::BulkComplete);
+                continue;
+            }
+        }
+        if matches!(req, MailRequest::Reconnect | MailRequest::NetworkChanged) {
+            replay_clock.wake();
+        }
         // A folder the user opened, rather than a background refresh.
         let user = matches!(req, MailRequest::LoadMessages { .. });
         match req {
@@ -1154,7 +1201,9 @@ pub(super) async fn run_graph(
             }
 
             MailRequest::PurgeMessages { path, uids } => {
-                graph_purge_uids(&account, account_id, &mut state, &path, uids, cache.as_ref(), &emit).await;
+                if let Err(e) = graph_purge_uids(&account, account_id, &mut state, &path, uids, cache.as_ref(), &emit).await {
+                    emit(WorkerEvent::error(i18n_f("Could not delete permanently: {e}", &[("e", &e)])));
+                }
                 emit(WorkerEvent::BulkComplete);
             }
 
@@ -1182,7 +1231,11 @@ pub(super) async fn run_graph(
                             })
                             .collect();
                         let n = uids.len();
-                        graph_purge_uids(&account, account_id, &mut state, &path, uids, cache.as_ref(), &emit).await;
+                        if let Err(e) =
+                            graph_purge_uids(&account, account_id, &mut state, &path, uids, cache.as_ref(), &emit).await
+                        {
+                            emit(WorkerEvent::error(i18n_f("Could not empty the folder: {e}", &[("e", &e)])));
+                        }
                         tracing::info!("emptied {path}: {n} message(s) erased");
                         emit(WorkerEvent::Messages { folder_id, messages: Vec::new() });
                         emit(WorkerEvent::FolderUnread { folder_id, unread: 0 });
@@ -1615,7 +1668,8 @@ pub(super) async fn graph_refresh_unread(
 }
 
 /// Delete messages for good, one Graph request each; the cache and the uid
-/// map forget every one that went.
+/// map forget every one that went. A message that cannot be found is gone
+/// already; the first failure is answered, after the rest were tried.
 async fn graph_purge_uids(
     account: &AccountConfig,
     account_id: u32,
@@ -1624,23 +1678,34 @@ async fn graph_purge_uids(
     uids: Vec<u32>,
     cache: Option<&Cache>,
     emit: &impl Fn(WorkerEvent),
-) {
+) -> Result<(), String> {
+    if graph_token(account, emit).await.is_none() {
+        return Err(i18n("Could not reach the server"));
+    }
+    let mut failed = None;
     for uid in uids {
-        let deleted = match graph_resolve(account, state, path, uid, emit).await {
-            Some((token, gid)) => {
-                let url = format!("{GRAPH_BASE}/me/messages/{gid}");
-                blocking(move || graph_delete_req(&token, &url)).await
-                    .is_ok()
+        let (token, gid) = match graph_lookup(account, state, path, uid, emit).await {
+            Ok(Some(found)) => found,
+            Ok(None) => continue,
+            Err(e) => {
+                failed.get_or_insert(e);
+                continue;
             }
-            None => false,
         };
-        if deleted {
-            state.uids.remove(&uid);
-            if let Some(c) = cache {
-                c.delete_message(account_id, path, uid);
+        let url = format!("{GRAPH_BASE}/me/messages/{gid}");
+        match blocking(move || graph_delete_req(&token, &url)).await {
+            Ok(()) => {
+                state.uids.remove(&uid);
+                if let Some(c) = cache {
+                    c.delete_message(account_id, path, uid);
+                }
+            }
+            Err(e) => {
+                failed.get_or_insert(e);
             }
         }
     }
+    failed.map_or(Ok(()), Err)
 }
 
 /// A fresh GOA token, or a user-actionable error.
@@ -1933,31 +1998,47 @@ async fn graph_resolve(
     uid: u32,
     emit: &impl Fn(WorkerEvent),
 ) -> Option<(String, String)> {
-    let token = graph_token(account, emit).await?;
+    graph_lookup(account, state, path, uid, emit).await.ok().flatten()
+}
+
+/// [`graph_resolve`] telling "not there" (`Ok(None)`: a message gone, or a
+/// folder no longer listed) from "could not look" (`Err`: no sign-in, or a
+/// listing that failed), which the offline queue (#442) takes differently.
+async fn graph_lookup(
+    account: &AccountConfig,
+    state: &mut GraphState,
+    path: &str,
+    uid: u32,
+    emit: &impl Fn(WorkerEvent),
+) -> Result<Option<(String, String)>, String> {
+    let token = graph_token(account, emit).await.ok_or_else(|| i18n("Could not reach the server"))?;
     if let Some(gid) = state.uids.get(&uid) {
-        return Some((token, gid.clone()));
+        return Ok(Some((token, gid.clone())));
+    }
+    if !state.folders.is_empty() && !state.folders.contains_key(path) {
+        return Ok(None);
     }
     // Not indexed yet: list the folder (fills the uid map) and try again. The
     // account/folder ids only label the discarded summaries, so zeros are fine.
-    let _ = graph_load_folder(&token, 0, 0, path, None, state).await;
+    let listed = graph_load_folder(&token, 0, 0, path, None, state).await;
     if let Some(gid) = state.uids.get(&uid) {
-        return Some((token, gid.clone()));
+        return Ok(Some((token, gid.clone())));
     }
+    listed?;
     // Older than the first page (#429), from an earlier session's index:
     // the folder's id listing names every message in it, once a while.
     let recent = |at: Option<&std::time::Instant>| at.is_some_and(|at| at.elapsed() < GRAPH_RELIST_AFTER);
     if !recent(state.listed.get(path)) && !recent(state.looked_up.get(path)) {
         if let Some((_, folder_gid)) = state.folders.get(path).cloned() {
             let (t, base) = (token.clone(), state.base.clone());
-            if let Ok(ids) = blocking(move || graph_list_ids(&t, &base, &folder_gid)).await {
-                for (id, _) in ids {
-                    state.uids.insert(hash_uid(&id), id);
-                }
-                state.looked_up.insert(path.to_string(), std::time::Instant::now());
+            let ids = blocking(move || graph_list_ids(&t, &base, &folder_gid)).await?;
+            for (id, _) in ids {
+                state.uids.insert(hash_uid(&id), id);
             }
+            state.looked_up.insert(path.to_string(), std::time::Instant::now());
         }
     }
-    state.uids.get(&uid).map(|gid| (token, gid.clone()))
+    Ok(state.uids.get(&uid).map(|gid| (token, gid.clone())))
 }
 
 /// Delete the attachment called `name` (nearest `size` among namesakes)
@@ -2015,14 +2096,136 @@ async fn graph_patch_message(
     body: serde_json::Value,
     emit: &impl Fn(WorkerEvent),
 ) {
-    let Some((token, gid)) = graph_resolve(account, state, path, uid, emit).await else {
-        return;
-    };
-    let url = format!("{GRAPH_BASE}/me/messages/{gid}");
-    let r = blocking(move || graph_send_json(&token, "PATCH", &url, &body)).await;
-    if let Err(e) = r {
+    if let Err(e) = graph_try_patch(account, state, path, uid, body, emit).await {
         tracing::warn!("graph: could not update message flags: {e}");
     }
+}
+
+/// [`graph_patch_message`], answering how it went: `Ok(true)` patched,
+/// `Ok(false)` when the message cannot be found, having gone elsewhere,
+/// and `Err` when the patch failed (no sign-in among the reasons).
+async fn graph_try_patch(
+    account: &AccountConfig,
+    state: &mut GraphState,
+    path: &str,
+    uid: u32,
+    body: serde_json::Value,
+    emit: &impl Fn(WorkerEvent),
+) -> Result<bool, String> {
+    let Some((token, gid)) = graph_lookup(account, state, path, uid, emit).await? else {
+        tracing::debug!("graph: no message {uid} in {path} to update");
+        return Ok(false);
+    };
+    let url = format!("{GRAPH_BASE}/me/messages/{gid}");
+    blocking(move || graph_send_json(&token, "PATCH", &url, &body)).await.map(|_| true)
+}
+
+/// Send the changes made while there was no network (#442), oldest first:
+/// the Graph side of [`replay_pending`], which has the details. A message
+/// that cannot be found, or that Graph answers 404 for (moved elsewhere,
+/// which gives it a new id, or deleted), takes its change with it, quietly,
+/// as does a move into a folder that is gone. A failure without an answer,
+/// or one that says "not now", keeps the change for the next try
+/// ([`pending::classify_http`]); a refusal is reported and dropped. Answers
+/// how many still wait.
+async fn graph_replay_pending(
+    account: &AccountConfig,
+    account_id: u32,
+    state: &mut GraphState,
+    cache: Option<&Cache>,
+    emit: &impl Fn(WorkerEvent),
+) -> usize {
+    use crate::models::PendingChange;
+    let Some(c) = cache else { return 0 };
+    let queue = c.pending_actions(account_id);
+    // Without a sign-in nothing goes; the changes wait for one.
+    if queue.is_empty() || graph_token(account, emit).await.is_none() {
+        return pending::report(cache, account_id, emit);
+    }
+    if state.folders.is_empty() {
+        if let Some(token) = graph_token(account, emit).await {
+            refresh_graph_folders(&token, account_id, cache, state, emit).await;
+        }
+    }
+    // Without the folder list a destination that is gone can't be told from
+    // one not listed yet: everything waits.
+    if state.folders.is_empty() {
+        pending::folders_unknown(c, &queue, emit);
+        return pending::report(cache, account_id, emit);
+    }
+    tracing::info!(account_id, count = queue.len(), "sending the changes made offline");
+    for step in pending::batches(&queue) {
+        let path = step.path.as_str();
+        let uid = step.uids[0];
+        let result = match &step.change {
+            PendingChange::Seen(on) => {
+                graph_try_patch(account, state, path, uid, serde_json::json!({ "isRead": on }), emit).await
+            }
+            PendingChange::Flagged(on) => {
+                let status = if *on { "flagged" } else { "notFlagged" };
+                let body = serde_json::json!({ "flag": { "flagStatus": status } });
+                graph_try_patch(account, state, path, uid, body, emit).await
+            }
+            // Categories travel as the whole list: the cached row has the
+            // queued change on it already.
+            PendingChange::Keyword { .. } => {
+                let body = serde_json::json!({ "categories": c.keywords_of(account_id, path, uid) });
+                graph_try_patch(account, state, path, uid, body, emit).await
+            }
+            PendingChange::Move { dest } if !state.folders.contains_key(dest) => {
+                tracing::debug!(account_id, dest, "queued move dropped: its destination is gone");
+                Ok(false)
+            }
+            PendingChange::Move { dest } => {
+                // The move goes by the ids a listing learnt, which a
+                // session started since the change was made may not have.
+                // One that cannot be looked up for now keeps the step
+                // waiting; one not there is skipped by the move.
+                let mut looked = Ok(None);
+                for &uid in &step.uids {
+                    looked = graph_lookup(account, state, path, uid, emit).await;
+                    if looked.is_err() {
+                        break;
+                    }
+                }
+                match looked {
+                    Err(e) => Err(e),
+                    Ok(_) => graph_move_uids(account, account_id, state, path, &step.uids, dest, cache)
+                        .await
+                        .map(|()| true),
+                }
+            }
+            PendingChange::Purge => {
+                graph_purge_uids(account, account_id, state, path, step.uids.clone(), cache, emit)
+                    .await
+                    .map(|()| true)
+            }
+        };
+        match result {
+            Ok(done) => {
+                c.drop_pending(&step.ids);
+                // Put back on the row in case a listing since took it off.
+                match &step.change {
+                    PendingChange::Seen(on) if done => c.set_unread(account_id, path, uid, !on),
+                    PendingChange::Flagged(on) if done => c.set_starred(account_id, path, uid, *on),
+                    _ => {}
+                }
+            }
+            Err(e) if e.contains("returned 404") => {
+                tracing::debug!(account_id, path, "queued change dropped: the message is gone ({e})");
+                c.drop_pending(&step.ids);
+            }
+            Err(e) if pending::classify_http(&e) == pending::Failure::Keep => {
+                pending::attempt_failed(c, &step.change, &step.ids, &e, emit);
+                break;
+            }
+            Err(e) => {
+                emit(WorkerEvent::error(pending::refused_text(&step.change, step.uids.len(), &e)));
+                c.drop_pending(&step.ids);
+            }
+        }
+    }
+    pending::report(cache, account_id, emit)
 }
 
 /// Move messages to another folder. The Graph id changes in transit; the moved

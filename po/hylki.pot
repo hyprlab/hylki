@@ -148,6 +148,11 @@ msgstr ""
 msgid "Keyboard Shortcuts"
 msgstr ""
 
+msgid "{n} change waiting to sync"
+msgid_plural "{n} changes waiting to sync"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Create Folder"
 msgstr ""
 
@@ -6518,6 +6523,9 @@ msgstr ""
 msgid "Could not move messages: {e}"
 msgstr ""
 
+msgid "Could not delete permanently: {e}"
+msgstr ""
+
 msgid "Could not empty the folder: {e}"
 msgstr ""
 
@@ -6575,6 +6583,25 @@ msgstr ""
 msgid "That folder is not on the server"
 msgstr ""
 
+msgid ""
+"{n} change waiting for {account} was discarded because the server changed"
+msgid_plural ""
+"{n} changes waiting for {account} were discarded because the server changed"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not update message: {e}"
+msgstr ""
+
+msgid "Could not change the star: {e}"
+msgstr ""
+
+msgid "Could not tag message: {e}"
+msgstr ""
+
+msgid "Could not move {len} messages: {e}"
+msgstr ""
+
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
 
@@ -6598,19 +6625,6 @@ msgstr ""
 msgid "Could not load conversation: {e}"
 msgstr ""
 
-msgid "Could not update message: {e}"
-msgstr ""
-
-msgid "Could not change the star: {e}"
-msgstr ""
-
-msgid ""
-"This server does not store tags, so Hylki keeps them on this computer only"
-msgstr ""
-
-msgid "Could not tag message: {e}"
-msgstr ""
-
 msgid "Could not mark folder read: {e}"
 msgstr ""
 
@@ -6619,16 +6633,14 @@ msgid ""
 "attachment there"
 msgstr ""
 
-msgid "Could not move {len} messages: {e}"
-msgstr ""
-
-msgid "Could not delete permanently: {e}"
-msgstr ""
-
 msgid "Could not move folder: {e}"
 msgstr ""
 
 msgid "Message sent, but saving to Sent failed: {e}"
+msgstr ""
+
+msgid ""
+"This server does not store tags, so Hylki keeps them on this computer only"
 msgstr ""
 
 msgid "Connecting to {host}…"

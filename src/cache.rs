@@ -12,7 +12,8 @@ use std::time::Duration;
 use rusqlite::{params, Connection};
 
 use crate::models::{
-    Attachment, Folder, FolderKind, GallerySort, Message, ThreadLatest, ThreadSummary,
+    Attachment, Folder, FolderKind, GallerySort, Message, PendingAction, PendingChange, ThreadLatest,
+    ThreadSummary,
 };
 
 const SCHEMA: &str = "
@@ -155,12 +156,32 @@ CREATE TABLE IF NOT EXISTS account_owner (
     account_id INTEGER PRIMARY KEY,
     email      TEXT    NOT NULL
 );
+CREATE TABLE IF NOT EXISTS pending_actions (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_id  INTEGER NOT NULL,
+    folder_path TEXT    NOT NULL,
+    uid         INTEGER NOT NULL,
+    kind        TEXT    NOT NULL,
+    arg         TEXT    NOT NULL DEFAULT '',
+    value       INTEGER NOT NULL DEFAULT 0,
+    was         INTEGER,
+    message_id  TEXT    NOT NULL DEFAULT '',
+    queued_at   INTEGER NOT NULL,
+    attempts    INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS pending_actions_by_message
+    ON pending_actions (account_id, folder_path, uid);
+CREATE TABLE IF NOT EXISTS pending_server (
+    account_id INTEGER PRIMARY KEY,
+    server     TEXT    NOT NULL
+);
 ";
 
 /// Every table whose rows belong to one account, by `account_id`. An account's
 /// id is its place in the account list, so `Cache::claim_accounts` moves
 /// these rows when the places change.
-const ACCOUNT_TABLES: [&str; 11] = [
+const ACCOUNT_TABLES: [&str; 13] = [
+    "pending_server",
     "folders",
     "refs_repair",
     "messages",
@@ -172,6 +193,7 @@ const ACCOUNT_TABLES: [&str; 11] = [
     "attachments_checked",
     "attachment_meta",
     "attachment_scan",
+    "pending_actions",
 ];
 
 /// Bump when the table layout changes; older rows are dropped on open.
@@ -942,8 +964,16 @@ impl Cache {
     pub fn load_messages(&self, account_id: u32, folder_path: &str, folder_id: u32) -> Vec<Message> {
         let run = || -> rusqlite::Result<Vec<Message>> {
             let mut stmt = self.conn.prepare(&format!(
+                // A message with a move or deletion waiting for the server
+                // (#442) has left the folder as far as the user knows. Its row
+                // stays until the server has done it, so a move that is undone
+                // or refused simply shows the message again.
                 "SELECT uid, from_name, from_addr, subject, date, ts, unread, starred, has_attachment, recipients, cc, message_id, references_, preview, reply_to, {KEYWORDS_COL}, importance, due, gmail_labels
-                 FROM messages WHERE account_id = ?1 AND folder_path = ?2 ORDER BY uid DESC",
+                 FROM messages WHERE account_id = ?1 AND folder_path = ?2
+                   AND NOT EXISTS (SELECT 1 FROM pending_actions p WHERE p.account_id = messages.account_id
+                       AND p.folder_path = messages.folder_path AND p.uid = messages.uid
+                       AND p.kind IN ('move', 'purge'))
+                 ORDER BY uid DESC",
             ))?;
             let rows = stmt.query_map(params![account_id, folder_path], |row| {
                 let uid: u32 = row.get(0)?;
@@ -1203,6 +1233,20 @@ impl Cache {
         }
         rowids.sort_unstable();
         rowids.dedup();
+        // A message with a move or deletion waiting for the server (#442)
+        // has left its folder as far as the user knows: a conversation must
+        // not show it there either. The queue is short, so this is one
+        // small join, not a filter on the scan above.
+        if !rowids.is_empty() {
+            let mut stmt = self.conn.prepare_cached(
+                "SELECT m.rowid FROM pending_actions p JOIN messages m ON m.account_id = p.account_id \
+                 AND m.folder_path = p.folder_path AND m.uid = p.uid \
+                 WHERE p.account_id = ?1 AND p.kind IN ('move', 'purge')",
+            )?;
+            let hidden: std::collections::HashSet<i64> =
+                stmt.query_map([account_id], |row| row.get(0))?.collect::<rusqlite::Result<_>>()?;
+            rowids.retain(|r| !hidden.contains(r));
+        }
         Ok(rowids)
     }
 
@@ -2195,6 +2239,195 @@ impl Cache {
         }
     }
 
+    // -----------------------------------------------------------------------
+    // Changes made offline, waiting for the server (#442)
+    // -----------------------------------------------------------------------
+
+    /// Queue a change. Returns its place in the queue.
+    pub fn queue_pending(&self, account_id: u32, action: &PendingAction) -> Option<i64> {
+        let (kind, arg, value) = pending_columns(&action.change);
+        let queued_at = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_secs() as i64)
+            .unwrap_or(0);
+        self.conn
+            .execute(
+                "INSERT INTO pending_actions(account_id, folder_path, uid, kind, arg, value, was, \
+                 message_id, queued_at) VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+                params![account_id, action.path, action.uid, kind, arg, value, action.was, action.message_id, queued_at],
+            )
+            .map_err(|e| tracing::warn!("could not queue a change: {e}"))
+            .ok()?;
+        Some(self.conn.last_insert_rowid())
+    }
+
+    /// Everything waiting for this account, in the order it was done.
+    pub fn pending_actions(&self, account_id: u32) -> Vec<PendingAction> {
+        let run = || -> rusqlite::Result<(Vec<PendingAction>, Vec<i64>)> {
+            let mut stmt = self.conn.prepare(
+                "SELECT id, folder_path, uid, kind, arg, value, was, message_id, attempts FROM pending_actions \
+                 WHERE account_id = ?1 ORDER BY id",
+            )?;
+            let rows = stmt.query_map(params![account_id], |r| {
+                let kind: String = r.get(3)?;
+                let arg: String = r.get(4)?;
+                let value: bool = r.get(5)?;
+                Ok((kind, arg, value, PendingAction {
+                    id: r.get(0)?,
+                    path: r.get(1)?,
+                    uid: r.get(2)?,
+                    change: PendingChange::Purge,
+                    was: r.get(6)?,
+                    message_id: r.get(7)?,
+                    attempts: r.get(8)?,
+                }))
+            })?;
+            let mut known = Vec::new();
+            let mut unknown = Vec::new();
+            for row in rows {
+                let (kind, arg, value, mut action) = row?;
+                match pending_change(&kind, arg, value) {
+                    Some(change) => {
+                        action.change = change;
+                        known.push(action);
+                    }
+                    None => {
+                        tracing::debug!(account_id, kind, "queued change of a kind this build does not know dropped");
+                        unknown.push(action.id);
+                    }
+                }
+            }
+            Ok((known, unknown))
+        };
+        match run() {
+            // A kind written by a newer build cannot be sent by this one,
+            // and would otherwise be counted as waiting for good.
+            Ok((known, unknown)) => {
+                self.drop_pending(&unknown);
+                known
+            }
+            Err(e) => {
+                tracing::warn!("could not read the queued changes: {e}");
+                Vec::new()
+            }
+        }
+    }
+
+    /// Note the server an account's queue is for: its protocol, host and
+    /// user. A queue made for another server (the account was pointed
+    /// elsewhere) is dropped, since its folders and message numbers mean
+    /// nothing there. Answers how many changes were dropped.
+    pub fn claim_pending(&self, account_id: u32, server: &str) -> usize {
+        let before: Option<String> = self
+            .conn
+            .query_row("SELECT server FROM pending_server WHERE account_id = ?1", params![account_id], |r| r.get(0))
+            .ok();
+        let mut dropped = 0;
+        if before.as_deref().is_some_and(|s| s != server) {
+            dropped = self
+                .conn
+                .execute("DELETE FROM pending_actions WHERE account_id = ?1", params![account_id])
+                .unwrap_or(0);
+        }
+        let _ = self.conn.execute(
+            "INSERT OR REPLACE INTO pending_server(account_id, server) VALUES(?1, ?2)",
+            params![account_id, server],
+        );
+        dropped
+    }
+
+    /// The connection itself, for tests elsewhere that set up rows no API
+    /// writes (one from a newer build, say).
+    #[cfg(test)]
+    pub fn conn_for_tests(&self) -> &Connection {
+        &self.conn
+    }
+
+    /// Count a failed attempt at sending these changes. Answers the ones
+    /// that have now failed `limit` times, for the caller to give up on.
+    pub fn fail_pending(&self, ids: &[i64], limit: u32) -> Vec<i64> {
+        if ids.is_empty() {
+            return Vec::new();
+        }
+        let list = rowid_list(ids);
+        let _ = self
+            .conn
+            .execute(&format!("UPDATE pending_actions SET attempts = attempts + 1 WHERE id IN ({list})"), []);
+        let run = || -> rusqlite::Result<Vec<i64>> {
+            let mut stmt =
+                self.conn.prepare(&format!("SELECT id FROM pending_actions WHERE id IN ({list}) AND attempts >= ?1"))?;
+            let rows = stmt.query_map([limit], |r| r.get(0))?;
+            rows.collect()
+        };
+        run().unwrap_or_default()
+    }
+
+    /// How many changes are waiting for this account.
+    pub fn pending_count(&self, account_id: u32) -> usize {
+        self.conn
+            .query_row(
+                "SELECT COUNT(*) FROM pending_actions WHERE account_id = ?1",
+                params![account_id],
+                |r| r.get::<_, i64>(0),
+            )
+            .map(|n| n as usize)
+            .unwrap_or(0)
+    }
+
+    /// Replace the account's queue with `actions`, in order of their ids:
+    /// the queue after changes that cancel out were folded together.
+    pub fn replace_pending(&self, account_id: u32, actions: &[PendingAction]) {
+        let run = || -> rusqlite::Result<()> {
+            let tx = self.conn.unchecked_transaction()?;
+            let queued_at: std::collections::HashMap<i64, i64> = {
+                let mut stmt = tx.prepare("SELECT id, queued_at FROM pending_actions WHERE account_id = ?1")?;
+                let rows = stmt.query_map(params![account_id], |r| Ok((r.get(0)?, r.get(1)?)))?;
+                rows.collect::<rusqlite::Result<_>>()?
+            };
+            tx.execute("DELETE FROM pending_actions WHERE account_id = ?1", params![account_id])?;
+            for a in actions {
+                let (kind, arg, value) = pending_columns(&a.change);
+                tx.execute(
+                    "INSERT INTO pending_actions(id, account_id, folder_path, uid, kind, arg, value, was, \
+                     message_id, queued_at, attempts) VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+                    params![
+                        a.id, account_id, a.path, a.uid, kind, arg, value, a.was, a.message_id,
+                        queued_at.get(&a.id).copied().unwrap_or(0), a.attempts,
+                    ],
+                )?;
+            }
+            tx.commit()
+        };
+        if let Err(e) = run() {
+            tracing::warn!("could not rewrite the queued changes: {e}");
+        }
+    }
+
+    /// Take changes out of the queue: done, or no longer possible.
+    pub fn drop_pending(&self, ids: &[i64]) {
+        if ids.is_empty() {
+            return;
+        }
+        let _ = self.conn.execute(
+            &format!("DELETE FROM pending_actions WHERE id IN ({})", rowid_list(ids)),
+            [],
+        );
+    }
+
+    /// What a queued change needs to know of a cached message: whether it is
+    /// unread and starred, its server-side keywords, and its Message-ID.
+    /// `None` when the cache does not hold it.
+    pub fn marks_of(&self, account_id: u32, folder_path: &str, uid: u32) -> Option<(bool, bool, Vec<String>, String)> {
+        self.conn
+            .query_row(
+                "SELECT unread, starred, keywords, message_id FROM messages \
+                 WHERE account_id = ?1 AND folder_path = ?2 AND uid = ?3",
+                params![account_id, folder_path, uid],
+                |r| Ok((r.get(0)?, r.get(1)?, split_keywords(r.get(2)?), r.get(3)?)),
+            )
+            .ok()
+    }
+
     /// Correct a message's attachment flag once its body has proved the answer,
     /// so the paperclip survives a restart rather than being re-guessed.
     pub fn set_has_attachment(&self, account_id: u32, folder_path: &str, uid: u32, has: bool) {
@@ -2657,6 +2890,30 @@ pub fn folders_equal(a: &[Folder], b: &[Folder]) -> bool {
         && a.iter().zip(b).all(|(x, y)| {
             x.path == y.path && x.name == y.name && x.kind == y.kind && x.unread == y.unread
         })
+}
+
+/// A queued change as its `pending_actions` columns: kind, argument (a tag
+/// or a destination folder) and value (the mark's state).
+fn pending_columns(change: &PendingChange) -> (&'static str, &str, bool) {
+    match change {
+        PendingChange::Seen(on) => ("seen", "", *on),
+        PendingChange::Flagged(on) => ("flagged", "", *on),
+        PendingChange::Keyword { keyword, add } => ("keyword", keyword, *add),
+        PendingChange::Move { dest } => ("move", dest, false),
+        PendingChange::Purge => ("purge", "", false),
+    }
+}
+
+/// The other way: `None` for a kind this build does not know.
+fn pending_change(kind: &str, arg: String, value: bool) -> Option<PendingChange> {
+    Some(match kind {
+        "seen" => PendingChange::Seen(value),
+        "flagged" => PendingChange::Flagged(value),
+        "keyword" => PendingChange::Keyword { keyword: arg, add: value },
+        "move" => PendingChange::Move { dest: arg },
+        "purge" => PendingChange::Purge,
+        _ => return None,
+    })
 }
 
 fn kind_to_i64(kind: FolderKind) -> i64 {

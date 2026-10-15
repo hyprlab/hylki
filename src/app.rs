@@ -1289,6 +1289,9 @@ pub struct AppModel {
     showing_outbox: bool,
     /// Messages waiting to be sent, per account, as last reported by its worker.
     outbox_by_account: HashMap<u32, Vec<crate::models::OutboxItem>>,
+    /// Changes made while an account's server could not be reached (#442),
+    /// waiting to be sent, as last reported by its worker.
+    pending_changes: HashMap<u32, usize>,
     /// The sending identities a JMAP server keeps, per account (#346):
     /// offered as From addresses beside the account's own aliases.
     server_identities: HashMap<u32, Vec<(String, String)>>,
@@ -1467,6 +1470,8 @@ pub enum AppMsg {
     ShowOutbox,
     /// A worker reported its queue: replaces that account's entries.
     OutboxItems { account_id: u32, items: Vec<crate::models::OutboxItem> },
+    /// How many changes made offline wait for an account's server (#442).
+    PendingChanges { account_id: u32, count: usize },
     /// A worker reported something noteworthy that isn't a failure.
     Notice(String),
     /// Edit the queued message currently open in the reader.
@@ -3668,6 +3673,7 @@ impl SimpleComponent for AppModel {
             showing_contacts: false,
             showing_outbox: false,
             outbox_by_account: HashMap::new(),
+            pending_changes: HashMap::new(),
             server_identities: HashMap::new(),
             unified_emit_queued: std::cell::Cell::new(false),
             unified_dirty: std::cell::Cell::new(false),
@@ -5840,6 +5846,34 @@ impl SimpleComponent for AppModel {
             AppMsg::OutboxItems { account_id, items } => {
                 self.outbox_by_account.insert(account_id, items);
                 self.push_outbox();
+            }
+
+            AppMsg::PendingChanges { account_id, count } => {
+                if count == 0 {
+                    self.pending_changes.remove(&account_id);
+                } else {
+                    self.pending_changes.insert(account_id, count);
+                }
+                // Only accounts still configured: a removed one's worker
+                // has gone with its queue.
+                let total: usize = self
+                    .pending_changes
+                    .iter()
+                    .filter(|(id, _)| self.workers.contains_key(id))
+                    .map(|(_, n)| n)
+                    .sum();
+                let text = if total == 0 {
+                    String::new()
+                } else {
+                    let n = total.min(u32::MAX as usize) as u32;
+                    ni18n_f(
+                        "{n} change waiting to sync",
+                        "{n} changes waiting to sync",
+                        n,
+                        &[("n", &n.to_string())],
+                    )
+                };
+                self.notifications.emit(NotifyInput::SetPending(text));
             }
 
 
@@ -25109,6 +25143,7 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
         WorkerEvent::Sent => AppMsg::Sent { account_id },
         WorkerEvent::Unsent(message) => AppMsg::Unsent { account_id, message },
         WorkerEvent::Outbox { items } => AppMsg::OutboxItems { account_id, items },
+        WorkerEvent::PendingChanges { count } => AppMsg::PendingChanges { account_id, count },
         WorkerEvent::Notice(text) => AppMsg::Notice(text),
         WorkerEvent::DraftSaved { autosave, message_id } => {
             AppMsg::DraftSaved { account_id, autosave, message_id }

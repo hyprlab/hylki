@@ -159,6 +159,11 @@ msgstr "Oldalsáv ki/bekapcsolása"
 msgid "Keyboard Shortcuts"
 msgstr "Billentyűparancsok"
 
+msgid "{n} change waiting to sync"
+msgid_plural "{n} changes waiting to sync"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Create Folder"
 msgstr "Mappa létrehozása"
 
@@ -7449,6 +7454,9 @@ msgstr "Nem sikerült {len} üzenetet levélszemétnek jelölni: {e}"
 msgid "Could not move messages: {e}"
 msgstr "Az üzenetek nem helyezhetők át: {e}"
 
+msgid "Could not delete permanently: {e}"
+msgstr "Nem törölhető véglegesen: {e}"
+
 msgid "Could not empty the folder: {e}"
 msgstr "A mappa nem üríthető ki: {e}"
 
@@ -7507,6 +7515,25 @@ msgstr "Nem sikerült elérni a JMAP kiszolgálót: {e}"
 msgid "That folder is not on the server"
 msgstr "A mappa nincs a kiszolgálón"
 
+msgid ""
+"{n} change waiting for {account} was discarded because the server changed"
+msgid_plural ""
+"{n} changes waiting for {account} were discarded because the server changed"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not update message: {e}"
+msgstr "Az üzenet nem frissíthető: {e}"
+
+msgid "Could not change the star: {e}"
+msgstr "Nem sikerült a csillagozás: {e}"
+
+msgid "Could not tag message: {e}"
+msgstr "Az üzenet nem címkézhető: {e}"
+
+msgid "Could not move {len} messages: {e}"
+msgstr "{len} üzenet nem helyezhető át: {e}"
+
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
 "Az üzenet vagy alá van írva, vagy titkosítva van, és egy fájl eltávolítása "
@@ -7534,21 +7561,6 @@ msgstr "Nem tölthető be: {path}: {e}"
 msgid "Could not load conversation: {e}"
 msgstr "A beszélgetés nem tölthető be: {e}"
 
-msgid "Could not update message: {e}"
-msgstr "Az üzenet nem frissíthető: {e}"
-
-msgid "Could not change the star: {e}"
-msgstr "Nem sikerült a csillagozás: {e}"
-
-msgid ""
-"This server does not store tags, so Hylki keeps them on this computer only"
-msgstr ""
-"Ez a kiszolgáló nem tárol címkéket, ezért a Hylki csak ezen a számítógépen "
-"őrzi őket"
-
-msgid "Could not tag message: {e}"
-msgstr "Az üzenet nem címkézhető: {e}"
-
 msgid "Could not mark folder read: {e}"
 msgstr "A mappa nem jelölhető olvasottként: {e}"
 
@@ -7559,17 +7571,17 @@ msgstr ""
 "A Gmail minden üzenetről másolatot tárol az „Összes levél” mappában, ezért a "
 "Hylki onnan nem tudja eltávolítani a mellékleteket"
 
-msgid "Could not move {len} messages: {e}"
-msgstr "{len} üzenet nem helyezhető át: {e}"
-
-msgid "Could not delete permanently: {e}"
-msgstr "Nem törölhető véglegesen: {e}"
-
 msgid "Could not move folder: {e}"
 msgstr "A mappa nem helyezhető át: {e}"
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Az üzenet elküldve, de az Elküldött mappába mentés sikertelen: {e}"
+
+msgid ""
+"This server does not store tags, so Hylki keeps them on this computer only"
+msgstr ""
+"Ez a kiszolgáló nem tárol címkéket, ezért a Hylki csak ezen a számítógépen "
+"őrzi őket"
 
 msgid "Connecting to {host}…"
 msgstr "Kapcsolódás ehhez: {host}…"

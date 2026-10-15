@@ -158,6 +158,12 @@ msgstr "Przełącz panel boczny"
 msgid "Keyboard Shortcuts"
 msgstr "Skróty klawiszowe"
 
+msgid "{n} change waiting to sync"
+msgid_plural "{n} changes waiting to sync"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
 msgid "Create Folder"
 msgstr "Utwórz katalog"
 
@@ -7478,6 +7484,9 @@ msgstr "Nie udało się usunąć oznaczenia spamu z wiadomości ({len}): {e}"
 msgid "Could not move messages: {e}"
 msgstr "Nie udało się przenieść wiadomości: {e}"
 
+msgid "Could not delete permanently: {e}"
+msgstr "Nie udało się trwale usunąć: {e}"
+
 msgid "Could not empty the folder: {e}"
 msgstr "Nie udało się opróżnić katalogu: {e}"
 
@@ -7536,6 +7545,27 @@ msgstr "Nie udało się połączyć z serwerem JMAP: {e}"
 msgid "That folder is not on the server"
 msgstr "Tego katalogu nie ma na serwerze"
 
+msgid ""
+"{n} change waiting for {account} was discarded because the server changed"
+msgid_plural ""
+"{n} changes waiting for {account} were discarded because the server changed"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Could not update message: {e}"
+msgstr "Nie udało się zaktualizować wiadomości: {e}"
+
+#, fuzzy
+msgid "Could not change the star: {e}"
+msgstr "Nie udało się oznaczyć wiadomości etykietą: {e}"
+
+msgid "Could not tag message: {e}"
+msgstr "Nie udało się oznaczyć wiadomości etykietą: {e}"
+
+msgid "Could not move {len} messages: {e}"
+msgstr "Nie udało się przenieść wiadomości ({len}): {e}"
+
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
 "Wiadomość jest podpisana lub zaszyfrowana, a usunięcie pliku by ją uszkodziło"
@@ -7561,22 +7591,6 @@ msgstr "Nie udało się wczytać pliku {path}: {e}"
 msgid "Could not load conversation: {e}"
 msgstr "Nie udało się wczytać rozmowy: {e}"
 
-msgid "Could not update message: {e}"
-msgstr "Nie udało się zaktualizować wiadomości: {e}"
-
-#, fuzzy
-msgid "Could not change the star: {e}"
-msgstr "Nie udało się oznaczyć wiadomości etykietą: {e}"
-
-msgid ""
-"This server does not store tags, so Hylki keeps them on this computer only"
-msgstr ""
-"Ten serwer nie przechowuje etykiet, dlatego aplikacja Hylki przechowuje je "
-"tylko na tym komputerze"
-
-msgid "Could not tag message: {e}"
-msgstr "Nie udało się oznaczyć wiadomości etykietą: {e}"
-
 msgid "Could not mark folder read: {e}"
 msgstr "Nie udało się oznaczyć katalogu jako przeczytanego: {e}"
 
@@ -7587,18 +7601,18 @@ msgstr ""
 "Usługa Gmail przechowuje kopię każdej wiadomości w katalogu „Wszystkie”, "
 "dlatego aplikacja Hylki nie może tam usunąć załącznika"
 
-msgid "Could not move {len} messages: {e}"
-msgstr "Nie udało się przenieść wiadomości ({len}): {e}"
-
-msgid "Could not delete permanently: {e}"
-msgstr "Nie udało się trwale usunąć: {e}"
-
 msgid "Could not move folder: {e}"
 msgstr "Nie udało się przenieść katalogu: {e}"
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "Wysłano wiadomość, ale nie udało się jej zapisać w katalogu „Wysłane”: {e}"
+
+msgid ""
+"This server does not store tags, so Hylki keeps them on this computer only"
+msgstr ""
+"Ten serwer nie przechowuje etykiet, dlatego aplikacja Hylki przechowuje je "
+"tylko na tym komputerze"
 
 msgid "Connecting to {host}…"
 msgstr "Łączenie z serwerem {host}…"

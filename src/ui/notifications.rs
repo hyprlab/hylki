@@ -94,6 +94,13 @@ pub struct NotificationCenter {
     /// Current ongoing activity (connecting/syncing). Never auto-shown; only
     /// visible when the user opens the panel.
     status_text: String,
+    /// Changes waiting to be sent (#442). Unlike the activity above this
+    /// keeps the bar down, since it is something the user did that has not
+    /// happened yet on the server; empty when nothing waits.
+    pending_text: String,
+    /// The bar was put away (its toggle, Ctrl+Shift+S) while changes were
+    /// waiting: it stays away until the queue empties and fills again.
+    pending_hidden: bool,
     panel_open: bool,
     /// Console mode (verbose live log): offered at all (Settings), and open.
     console_enabled: bool,
@@ -141,6 +148,10 @@ pub enum NotifyInput {
     },
     /// Updates the ongoing-activity text without auto-showing anything.
     SetStatus(String),
+    /// Changes made offline waiting to be sent (#442), as the bar should say
+    /// it ("3 changes waiting to sync"); empty once there are none. The bar
+    /// stays down with it while it is not empty.
+    SetPending(String),
     /// Connectivity restored: drop any connection/sync error cards.
     ClearConnectivity,
     TogglePanel,
@@ -189,7 +200,7 @@ impl SimpleComponent for NotificationCenter {
             #[watch]
             set_transition_type: model.slide(),
             #[watch]
-            set_reveal_child: model.transient_visible || model.panel_open,
+            set_reveal_child: model.shown(),
 
             #[name = "area"]
             gtk::Box {
@@ -367,6 +378,8 @@ impl SimpleComponent for NotificationCenter {
             transient_error: false,
             transient_visible: false,
             status_text: String::new(),
+            pending_text: String::new(),
+            pending_hidden: false,
             panel_open: false,
             console_enabled: false,
             console_open: false,
@@ -618,6 +631,13 @@ impl NotificationCenter {
                 self.status_text = text;
             }
 
+            NotifyInput::SetPending(text) => {
+                if text.is_empty() {
+                    self.pending_hidden = false;
+                }
+                self.pending_text = text;
+            }
+
             NotifyInput::ClearConnectivity => {
                 let before = self.ids.len();
                 self.remove_connectivity_cards();
@@ -650,6 +670,7 @@ impl NotificationCenter {
                     self.transient_visible = false;
                     self.console_open = false;
                     self.console_theme = false;
+                    self.pending_hidden = !self.pending_text.is_empty();
                 } else {
                     self.panel_open = true;
                 }
@@ -769,9 +790,15 @@ impl NotificationCenter {
         }
     }
 
-    /// Whether the bar is down: a passing message, or the panel.
+    /// Whether the bar is down: a passing message, the panel, or changes
+    /// waiting to be sent.
     fn shown(&self) -> bool {
-        self.transient_visible || self.panel_open
+        self.transient_visible || self.panel_open || self.pending_shown()
+    }
+
+    /// Whether the bar is down for the changes waiting to be sent (#442).
+    fn pending_shown(&self) -> bool {
+        !self.pending_text.is_empty() && !self.pending_hidden
     }
 
     /// Remove every connectivity-flagged error card (newest-first indices).
@@ -819,6 +846,10 @@ impl NotificationCenter {
     fn bar_icon(&self) -> &'static str {
         if self.is_error_state() {
             "dialog-warning-symbolic"
+        } else if !self.panel_open && !self.transient_visible && !self.pending_text.is_empty() {
+            // The Refresh button's arrows: these changes sync when the
+            // server is reached again.
+            "view-refresh-symbolic"
         } else {
             // The bell — the same icon as the toolbar button that opens this
             // panel, so the two read as one feature.
@@ -831,10 +862,16 @@ impl NotificationCenter {
             // Reveal the current activity when the user opens the panel.
             if !self.status_text.is_empty() {
                 self.status_text.clone()
+            } else if !self.pending_text.is_empty() {
+                self.pending_text.clone()
             } else {
                 i18n_f("Status bar ({n})", &[("n", &self.ids.len().to_string())])
             }
+        } else if !self.transient_visible && self.pending_shown() {
+            // Down only for the changes waiting.
+            self.pending_text.clone()
         } else {
+            // A passing message, or the last one as the bar slides away.
             self.transient_text.clone()
         }
     }

@@ -847,6 +847,74 @@ impl Default for SenderCheck {
     }
 }
 
+/// What a change made while the server could not be reached does to a
+/// message (#442). The Outbox keeps what was sent; this keeps the rest.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PendingChange {
+    /// Read (`true`) or unread.
+    Seen(bool),
+    /// Starred or not.
+    Flagged(bool),
+    /// A tag put on (`add`) or taken off.
+    Keyword { keyword: String, add: bool },
+    /// Moved to another folder: archived, binned, filed.
+    Move { dest: String },
+    /// Erased for good, as deleting does in Trash.
+    Purge,
+}
+
+impl PendingChange {
+    /// Whether the message is no longer in its folder afterwards.
+    pub fn takes_away(&self) -> bool {
+        matches!(self, PendingChange::Move { .. } | PendingChange::Purge)
+    }
+
+    /// For a mark (read, star, tag), the state it sets; `None` for the rest.
+    pub fn mark(&self) -> Option<bool> {
+        match self {
+            PendingChange::Seen(on) | PendingChange::Flagged(on) => Some(*on),
+            PendingChange::Keyword { add, .. } => Some(*add),
+            PendingChange::Move { .. } | PendingChange::Purge => None,
+        }
+    }
+
+    /// Whether `other` sets the same mark as this one, whichever way: both
+    /// read state, both the star, or both the same tag.
+    pub fn same_mark(&self, other: &PendingChange) -> bool {
+        match (self, other) {
+            (PendingChange::Seen(_), PendingChange::Seen(_))
+            | (PendingChange::Flagged(_), PendingChange::Flagged(_)) => true,
+            (PendingChange::Keyword { keyword: a, .. }, PendingChange::Keyword { keyword: b, .. }) => {
+                a.eq_ignore_ascii_case(b)
+            }
+            _ => false,
+        }
+    }
+}
+
+/// A change to one message waiting for the server, in the order it was made
+/// (`id`). Already applied to the cache, so the lists show it meanwhile.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PendingAction {
+    /// Its place in the queue; 0 until stored.
+    pub id: i64,
+    pub path: String,
+    pub uid: u32,
+    pub change: PendingChange,
+    /// For a mark, whether the message had it before the first queued change
+    /// to it, as the cache knew it; `None` when the cache did not know the
+    /// message. A mark set and cleared again comes back to this, and then the
+    /// server has nothing to be told.
+    pub was: Option<bool>,
+    /// The message's Message-ID: checked against the server's before a move
+    /// or deletion is sent, and used for a tag the server will not keep and
+    /// for undoing a queued move.
+    pub message_id: String,
+    /// How many times sending it failed without an answer from the server;
+    /// past a few it is given up on, so it cannot hold the queue for good.
+    pub attempts: u32,
+}
+
 /// A message that could not be sent and is waiting in the Outbox.
 ///
 /// The built MIME bytes are stored rather than the composed fields: a retry has

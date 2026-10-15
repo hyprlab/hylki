@@ -34,6 +34,7 @@ mod imap_io;
 mod jmap;
 use graph::*;
 use imap_io::ImapIo;
+mod pending;
 mod strip;
 
 /// Number of most-recent messages to fetch attachment info (BODYSTRUCTURE) for;
@@ -227,6 +228,13 @@ fn is_parse_error(e: &async_imap::error::Error) -> bool {
         async_imap::error::Error::Io(io) => io.to_string().contains(" during parsing of "),
         _ => false,
     }
+}
+
+/// Whether the error is the connection failing, as opposed to the server
+/// answering NO or BAD or the parser giving up: the kind of failure a change
+/// waits out in the queue (#442) instead of being reported.
+fn is_connection_error(e: &async_imap::error::Error) -> bool {
+    matches!(e, async_imap::error::Error::Io(_) | async_imap::error::Error::ConnectionLost) && !is_parse_error(e)
 }
 
 /// After a summary fetch whose reply the parser rejected, move to the next
@@ -734,6 +742,9 @@ pub enum WorkerEvent {
     /// The account's Outbox, whenever it changes (queued, retried, sent or
     /// discarded). Empty means nothing is waiting.
     Outbox { items: Vec<crate::models::OutboxItem> },
+    /// How many changes made while the server could not be reached (#442)
+    /// are waiting to be sent, whenever that changes. Zero: none.
+    PendingChanges { count: usize },
     /// A draft was saved to the Drafts folder, under this Message-ID
     /// (`None`: an automatic save that did not go through). `autosave`
     /// echoes the request's.
@@ -1357,6 +1368,15 @@ async fn run_imap(
     // Whether the user has been told this account's server keeps no tags
     // (one notice per session, not one per tagged message).
     let mut local_tags_noticed = false;
+    // Changes made while the server could not be reached (#442), kept in
+    // the cache across restarts: how many wait, and whether one more
+    // connection should be tried for them without waiting for a request.
+    pending::claim(cache.as_ref(), account_id, &account, &emit);
+    let mut pending_len = pending::report(cache.as_ref(), account_id, &emit);
+    let mut pending_retry = pending_len > 0;
+    // When they are next sent: with each new connection, and a minute after
+    // a run that left some waiting, not on every pass of this loop.
+    let mut replay_clock = pending::ReplayClock::new(true);
     loop {
         // Back online with something queued: send it before anything else, so a
         // message the user thinks they sent doesn't sit behind a mailbox sync.
@@ -1371,6 +1391,18 @@ async fn run_imap(
             }
         } else {
             outbox_flushed = false;
+            // The next connection sends the queue straight away.
+            replay_clock.wake();
+        }
+        // The changes made offline go next, ahead of any sync: a folder
+        // listed before them would bring back, from the server, the read
+        // state and the messages they change.
+        if session.is_some() && pending_len > 0 && replay_clock.should_run(std::time::Instant::now()) {
+            pending_len = replay_pending(
+                &mut session, &account, account_id, cache.as_ref(), &mut local_tags_noticed, &emit,
+            )
+            .await;
+            replay_clock.ran(std::time::Instant::now(), pending_len);
         }
 
         if !inbox_watch_spawned && session.is_some() {
@@ -1414,7 +1446,34 @@ async fn run_imap(
                 // and a NetworkChanged request wakes this loop when that
                 // changes.
                 let preload = may_preload(&account.imap_host);
-                if !body_prefetch.is_empty() && preload {
+                if pending_retry && pending_len > 0 && session.is_none() {
+                    // Changes are waiting and nothing else would connect
+                    // for them: one try, sent by the loop's head if it
+                    // works. Failing, they wait for a request, a reconnect
+                    // or the network to come back, not for a timer. Tried
+                    // even when the network monitor says there is no
+                    // network, which it can say of a server on the local
+                    // network or behind a VPN; then a failure stays quiet.
+                    // A request beats the handshake, as for the index below.
+                    pending_retry = false;
+                    let online = may_connect(&account.imap_host);
+                    let quiet = |ev: WorkerEvent| {
+                        if online || !matches!(ev, WorkerEvent::Error { .. }) {
+                            emit(ev);
+                        }
+                    };
+                    tokio::select! {
+                        biased;
+                        req = rx.recv() => match req {
+                            Some(req) => req,
+                            None => break,
+                        },
+                        connected = connect_and_list(account_id, &account, cache.as_ref(), &quiet) => {
+                            session = connected;
+                            continue;
+                        }
+                    }
+                } else if !body_prefetch.is_empty() && preload {
                     // Highest priority: get new mail's body cached so opening it is
                     // instant (no network wait).
                     let interrupted_body = body_prefetch.front().cloned();
@@ -1652,6 +1711,7 @@ async fn run_imap(
         if matches!(req, MailRequest::Reconnect) {
             session = connect_and_list(account_id, &account, cache.as_ref(), &emit).await;
             sweep_due = true;
+            replay_clock.wake();
             continue;
         }
         // Mostly a wake: the idle chain above reads the network afresh. A
@@ -1659,7 +1719,10 @@ async fn run_imap(
         // its socket says; dropped now, a change made offline is queued at
         // once rather than after a read timeout.
         if matches!(req, MailRequest::NetworkChanged) {
-            if !may_connect(&account.imap_host) {
+            if may_connect(&account.imap_host) {
+                pending_retry = true;
+                replay_clock.wake();
+            } else {
                 session = None;
             }
             continue;
@@ -1669,6 +1732,36 @@ async fn run_imap(
             emit(WorkerEvent::MovesSettled { path, uids });
             continue;
         }
+
+        // A read mark, star, tag, move or deletion (#442) joins the queue
+        // when there is no network to send it over, and whenever earlier
+        // ones are still waiting, so the server gets them in the order they
+        // were made. Either way the cache has it at once.
+        let queued = if pending_len > 0 || (session.is_none() && !may_connect(&account.imap_host)) {
+            pending::queue_request(cache.as_ref(), account_id, &req, &emit)
+        } else {
+            None
+        };
+        if let Some(n) = queued {
+            pending_len = n;
+            pending_retry = true;
+            replay_clock.changed();
+            continue;
+        }
+        // Undoing a move that is still waiting forgets it. The server's
+        // side of the undo runs as well: the move may have gone out just
+        // before, and when it did not, there is nothing there to move back.
+        if let Some(n) = pending::undo_queued_move(cache.as_ref(), account_id, &req, &emit) {
+            pending_len = n;
+            // With no session and no network, nothing went out to undo.
+            if session.is_none() && !may_connect(&account.imap_host) {
+                emit(WorkerEvent::BulkComplete);
+                continue;
+            }
+        }
+        // What the request changes, for keeping if the connection fails
+        // under it.
+        let parkable = pending::changes_of(&req);
 
         // Bodies of a `LoadBodies` batch that the disk cache couldn't answer, so
         // the network arm below fetches only those.
@@ -1760,6 +1853,22 @@ async fn run_imap(
         // Everything below needs a live session.
         if session.is_none() {
             session = connect_and_list(account_id, &account, cache.as_ref(), &emit).await;
+            // Changes made offline go first here too (#442): this request
+            // may list a folder they change.
+            if session.is_some() && pending_len > 0 && replay_clock.should_run(std::time::Instant::now()) {
+                pending_len = replay_pending(
+                    &mut session, &account, account_id, cache.as_ref(), &mut local_tags_noticed, &emit,
+                )
+                .await;
+                replay_clock.ran(std::time::Instant::now(), pending_len);
+                // The connection went while the queue was being sent. One
+                // more try serves this request, which should not wait on a
+                // queued change that keeps failing; the rest of the queue
+                // has its turn again after the clock's pause.
+                if session.is_none() {
+                    session = connect_and_list(account_id, &account, cache.as_ref(), &emit).await;
+                }
+            }
             if session.is_none() {
                 // Still offline; cached data (if any) was already sent. Close
                 // the folder's index anyway (#218): "we tried and could not
@@ -1773,6 +1882,21 @@ async fn run_imap(
                 {
                     emit(WorkerEvent::BackfillDone { folder_id: *folder_id });
                 }
+                // A change waits for the server in the queue (#442) rather
+                // than going nowhere.
+                if let Some(n) = pending::queue_request(cache.as_ref(), account_id, &req, &emit) {
+                    pending_len = n;
+                    continue;
+                }
+                // The refresh indicator spins until an undo or a bulk move
+                // says it is done, done or not.
+                if matches!(
+                    req,
+                    MailRequest::UndoMove { .. } | MailRequest::MoveMessages { .. }
+                        | MailRequest::MarkHamMany { .. } | MailRequest::PurgeMessages { .. }
+                ) {
+                    emit(WorkerEvent::BulkComplete);
+                }
                 // A message sent now has a closed composer behind it: this
                 // is its only copy. Into the Outbox with it, as a failed
                 // send would be, rather than dropped with the request; the
@@ -1780,9 +1904,25 @@ async fn run_imap(
                 if let MailRequest::Send { mut message, sent_path } = req {
                     restore_msgid_case(cache.as_ref(), &mut message);
                     match message.send_at.filter(|t| *t > crate::datefmt::now()) {
-                        Some(at) => schedule_send(
-                            cache.as_ref(), account_id, &account, &message, sent_path.as_deref(), at, &emit,
-                        ),
+                        Some(at) => {
+                            schedule_send(
+                                cache.as_ref(), account_id, &account, &message, sent_path.as_deref(), at, &emit,
+                            );
+                            // As online, the queued copy supersedes the
+                            // draft it was opened from: gone from Drafts
+                            // now, and from the server once it can be
+                            // reached, as a deletion made offline (#442).
+                            if let Some(o) = message.draft_origin.as_ref().filter(|o| o.account_id == account_id) {
+                                let draft = MailRequest::PurgeMessages { path: o.path.clone(), uids: vec![o.uid] };
+                                if pending::park(cache.as_ref(), account_id, pending::changes_of(&draft)) {
+                                    pending_len = pending::report(cache.as_ref(), account_id, &emit);
+                                    if let Some(c) = cache.as_ref() {
+                                        let messages = c.load_messages(account_id, &o.path, o.folder_id);
+                                        emit(WorkerEvent::Messages { folder_id: o.folder_id, messages });
+                                    }
+                                }
+                            }
+                        }
                         None => {
                             let why = if may_connect(&account.imap_host) {
                                 i18n("Could not reach the server")
@@ -1801,6 +1941,8 @@ async fn run_imap(
         }
         // On a connection-shaped failure we drop the session to force a reconnect.
         let mut lost = false;
+        // The connection failed under a change, kept for later (#442).
+        let mut parked = false;
         // A background resync keeps quiet and leaves IDLE/watching alone.
         let background = matches!(req, MailRequest::SyncFolder { .. });
         let invalidates_selection = matches!(&req,
@@ -2060,7 +2202,11 @@ async fn run_imap(
             MailRequest::SetSeen { path, uid, seen } => {
                 let sess = session.as_mut().unwrap();
                 if let Err(e) = store_flag(sess, &path, uid, "\\Seen", seen).await {
-                    emit(WorkerEvent::error(i18n_f("Could not update message: {e}", &[("e", &(e).to_string())])));
+                    if keep_for_later(&e, cache.as_ref(), account_id, &parkable) {
+                        parked = true;
+                    } else {
+                        emit(WorkerEvent::error(i18n_f("Could not update message: {e}", &[("e", &(e).to_string())])));
+                    }
                     lost = true;
                 } else if let Some(c) = cache.as_ref() {
                     c.set_unread(account_id, &path, uid, !seen);
@@ -2075,7 +2221,11 @@ async fn run_imap(
             } => {
                 let sess = session.as_mut().unwrap();
                 if let Err(e) = store_flag(sess, &path, uid, "\\Flagged", flagged).await {
-                    emit(WorkerEvent::error(i18n_f("Could not change the star: {e}", &[("e", &(e).to_string())])));
+                    if keep_for_later(&e, cache.as_ref(), account_id, &parkable) {
+                        parked = true;
+                    } else {
+                        emit(WorkerEvent::error(i18n_f("Could not change the star: {e}", &[("e", &(e).to_string())])));
+                    }
                     lost = true;
                 } else if let Some(c) = cache.as_ref() {
                     c.set_starred(account_id, &path, uid, flagged);
@@ -2084,49 +2234,20 @@ async fn run_imap(
 
             MailRequest::SetKeyword { path, uid, message_id, keyword, add } => {
                 let sess = session.as_mut().unwrap();
-                let stored = store_keyword(sess, &path, uid, &keyword, add).await;
-                // On Gmail a tag is a label too (#374), so Gmail's own apps
-                // show it; the keyword stays for other IMAP clients.
-                if stored.is_ok() && gmail_labels_wanted(account_id) {
-                    let labels = tag_labels(&keyword, add);
-                    match store_gmail_labels(sess, uid, &labels, add).await {
-                        Ok(()) => {
-                            if let Some(c) = cache.as_ref() {
-                                c.set_gmail_label(account_id, &path, uid, &labels, add);
-                            }
-                            // A new label is a new folder on Gmail.
-                            if add {
-                                folder_refresh_due = true;
-                            }
-                        }
-                        Err(e) => tracing::warn!("[account {account_id}] could not set Gmail label: {e}"),
-                    }
-                }
-                match stored {
-                    Ok(true) => {
-                        if let Some(c) = cache.as_ref() {
-                            c.set_keyword(account_id, &path, uid, &keyword, add);
-                        }
-                    }
-                    Ok(false) => {
-                        // The mailbox takes no custom keywords: keep the tag
-                        // in Hylki, and say so once per session.
-                        if let Some(c) = cache.as_ref() {
-                            if message_id.is_empty() {
-                                c.set_keyword(account_id, &path, uid, &keyword, add);
-                            } else {
-                                c.set_local_tag(account_id, &message_id, &keyword, add);
-                            }
-                        }
-                        if !local_tags_noticed {
-                            local_tags_noticed = true;
-                            emit(WorkerEvent::Notice(i18n(
-                                "This server does not store tags, so Hylki keeps them on this computer only",
-                            )));
+                match store_tag(sess, account_id, cache.as_ref(), &path, uid, &message_id, &keyword, add).await {
+                    Ok(stored) => {
+                        // A new label is a new folder on Gmail.
+                        folder_refresh_due |= stored.new_label;
+                        if !stored.on_server {
+                            notice_local_tags(&mut local_tags_noticed, &emit);
                         }
                     }
                     Err(e) => {
-                        emit(WorkerEvent::error(i18n_f("Could not tag message: {e}", &[("e", &(e).to_string())])));
+                        if keep_for_later(&e, cache.as_ref(), account_id, &parkable) {
+                            parked = true;
+                        } else {
+                            emit(WorkerEvent::error(i18n_f("Could not tag message: {e}", &[("e", &(e).to_string())])));
+                        }
                         lost = true;
                     }
                 }
@@ -2289,7 +2410,11 @@ async fn run_imap(
                         }
                     }
                     Err(e) => {
-                        emit(WorkerEvent::error(i18n_f("Could not move message: {e}", &[("e", &(e).to_string())])));
+                        if keep_for_later(&e, cache.as_ref(), account_id, &parkable) {
+                            parked = true;
+                        } else {
+                            emit(WorkerEvent::error(i18n_f("Could not move message: {e}", &[("e", &(e).to_string())])));
+                        }
                         lost = true;
                     }
                 }
@@ -2314,7 +2439,11 @@ async fn run_imap(
                             "move failed: {path:?} -> {dest:?} set={} ({e})",
                             uid_set(&uids)
                         );
-                        emit(WorkerEvent::error(i18n_f("Could not move {len} messages: {e}", &[("len", &(uids.len()).to_string()), ("e", &(e).to_string())])));
+                        if keep_for_later(&e, cache.as_ref(), account_id, &parkable) {
+                            parked = true;
+                        } else {
+                            emit(WorkerEvent::error(i18n_f("Could not move {len} messages: {e}", &[("len", &(uids.len()).to_string()), ("e", &(e).to_string())])));
+                        }
                         lost = true;
                     }
                 }
@@ -2639,7 +2768,11 @@ async fn run_imap(
                         }
                     }
                     Err(e) => {
-                        emit(WorkerEvent::error(i18n_f("Could not delete permanently: {e}", &[("e", &(e).to_string())])));
+                        if keep_for_later(&e, cache.as_ref(), account_id, &parkable) {
+                            parked = true;
+                        } else {
+                            emit(WorkerEvent::error(i18n_f("Could not delete permanently: {e}", &[("e", &(e).to_string())])));
+                        }
                         lost = true;
                     }
                 }
@@ -2904,11 +3037,311 @@ async fn run_imap(
         if lost {
             session = None;
         }
+        // The connection went under a change, which now waits in the queue
+        // (#442). One more connection is worth trying at once: a server
+        // that dropped an idle session usually takes a new one.
+        if parked {
+            pending_len = pending::report(cache.as_ref(), account_id, &emit);
+            pending_retry = true;
+        }
     }
 
     if let Some(mut session) = session {
         let _ = session.logout().await;
     }
+}
+
+/// A change the connection failed under: keep it for later (#442), which
+/// takes a cache to keep it in. Answers whether it was kept; when not, the
+/// caller reports the failure as it always has.
+fn keep_for_later(
+    e: &async_imap::error::Error,
+    cache: Option<&Cache>,
+    account_id: u32,
+    changes: &[crate::models::PendingAction],
+) -> bool {
+    is_connection_error(e) && pending::park(cache, account_id, changes.to_vec())
+}
+
+/// Say once per session that the server keeps no tags, so Hylki does.
+fn notice_local_tags(noticed: &mut bool, emit: &impl Fn(WorkerEvent)) {
+    if !*noticed {
+        *noticed = true;
+        emit(WorkerEvent::Notice(i18n(
+            "This server does not store tags, so Hylki keeps them on this computer only",
+        )));
+    }
+}
+
+/// What became of a tag stored with [`store_tag`].
+struct TagStored {
+    /// The server keeps it; when not, Hylki keeps it alone.
+    on_server: bool,
+    /// A Gmail label was put on, possibly a new one: a new folder.
+    new_label: bool,
+}
+
+/// Put a tag on a message or take it off (#71), and record it in the cache:
+/// as a keyword on the server, on Gmail as a label as well (#374), so Gmail's
+/// own apps show it, and in Hylki alone where the mailbox takes no custom
+/// keywords. The change made as it happens and the one sent from the offline
+/// queue (#442) both come through here.
+#[allow(clippy::too_many_arguments)]
+async fn store_tag(
+    sess: &mut ImapSession,
+    account_id: u32,
+    cache: Option<&Cache>,
+    path: &str,
+    uid: u32,
+    message_id: &str,
+    keyword: &str,
+    add: bool,
+) -> Result<TagStored, async_imap::error::Error> {
+    let on_server = store_keyword(sess, path, uid, keyword, add).await?;
+    let mut new_label = false;
+    if gmail_labels_wanted(account_id) {
+        let labels = tag_labels(keyword, add);
+        match store_gmail_labels(sess, uid, &labels, add).await {
+            Ok(()) => {
+                if let Some(c) = cache {
+                    c.set_gmail_label(account_id, path, uid, &labels, add);
+                }
+                new_label = add;
+            }
+            Err(e) => tracing::warn!("[account {account_id}] could not set Gmail label: {e}"),
+        }
+    }
+    if let Some(c) = cache {
+        if on_server || message_id.is_empty() {
+            c.set_keyword(account_id, path, uid, keyword, add);
+        } else {
+            // Kept against the Message-ID instead. A queued change put the
+            // keyword on the row to show it meanwhile; off it comes, or the
+            // tag would be listed twice.
+            c.set_keyword(account_id, path, uid, keyword, false);
+            c.set_local_tag(account_id, message_id, keyword, add);
+        }
+    }
+    Ok(TagStored { on_server, new_label })
+}
+
+/// What sending the queue found of one folder on the server.
+enum QueuedFolder {
+    /// Its messages by UID, each with its Message-ID.
+    Holds(std::collections::HashMap<u32, String>),
+    /// No such folder any more: its changes go with it.
+    Gone,
+    /// The server would not open it for now (in use, unavailable): its
+    /// changes wait.
+    Busy(String),
+    /// Its answer would not parse: marks still go by the UID, but moves and
+    /// deletions, which must be sure of the message, wait.
+    Unknown(String),
+}
+
+/// Ask the server what `path` holds under `uids`, Message-IDs included.
+/// `Err` is the connection failing.
+async fn queued_folder(
+    sess: &mut ImapSession,
+    account_id: u32,
+    cache: &Cache,
+    path: &str,
+    uids: &[u32],
+) -> Result<QueuedFolder, async_imap::error::Error> {
+    match sel(sess, path).await {
+        Ok(_) => {}
+        Err(e) if is_connection_error(&e) => return Err(e),
+        // Only a folder the server says is not there, or that its listing
+        // (refreshed by the connect this runs after) no longer has, is
+        // gone. A folder in use or unavailable for now keeps its changes.
+        Err(e) => {
+            let text = e.to_string();
+            let listed = cache.load_folders(account_id).iter().any(|f| f.path == path);
+            return Ok(if text.contains("NONEXISTENT") || !listed {
+                QueuedFolder::Gone
+            } else {
+                QueuedFolder::Busy(text)
+            });
+        }
+    }
+    let fetched: Result<Vec<Fetch>, _> =
+        match fetch_uids(sess, uid_set(uids), "(UID BODY.PEEK[HEADER.FIELDS (MESSAGE-ID)])").await {
+            Ok(stream) => stream.try_collect().await,
+            Err(e) => Err(e),
+        };
+    match fetched {
+        Ok(fetches) => Ok(QueuedFolder::Holds(
+            fetches.iter().filter_map(|f| Some((f.uid?, message_id_of(f)))).collect(),
+        )),
+        Err(e) if is_connection_error(&e) => Err(e),
+        Err(e) => Ok(QueuedFolder::Unknown(e.to_string())),
+    }
+}
+
+/// Move queued messages: [`move_messages`] without its creating the
+/// destination. A folder deleted elsewhere since the move was made is not
+/// brought back for it.
+async fn move_queued(
+    session: &mut ImapSession,
+    path: &str,
+    uids: &[u32],
+    dest: &str,
+) -> Result<(), async_imap::error::Error> {
+    sel(session, path).await?;
+    for chunk in uids.chunks(300) {
+        uid_move(session, &uid_set(chunk), dest).await?;
+    }
+    Ok(())
+}
+
+/// Send the changes made while the server could not be reached (#442),
+/// oldest first, over `session`.
+///
+/// Each folder is asked once what it holds under the queued UIDs, with each
+/// message's Message-ID. A change goes only to the message it was made to
+/// ([`pending::same_message`]): a UID now holding another message, a message
+/// gone from its folder, or a folder gone altogether takes its changes with
+/// it, quietly, since whatever happened elsewhere (another client moved or
+/// deleted it) is the newer word. So does a move into a folder deleted since.
+/// A change the server refuses is reported as it would have been when it was
+/// made, and dropped; the next sync shows the message as the server has it.
+/// If the connection fails on the way, the session goes and the rest waits
+/// for the next one, the change it failed under counting an attempt
+/// ([`pending::attempt_failed`]). Answers how many changes are still waiting.
+async fn replay_pending(
+    session: &mut Option<ImapSession>,
+    account: &AccountConfig,
+    account_id: u32,
+    cache: Option<&Cache>,
+    local_tags_noticed: &mut bool,
+    emit: &impl Fn(WorkerEvent),
+) -> usize {
+    use crate::models::PendingChange;
+    let Some(c) = cache else { return 0 };
+    let queue = c.pending_actions(account_id);
+    if queue.is_empty() {
+        return pending::report(cache, account_id, emit);
+    }
+    tracing::info!(account_id, count = queue.len(), "sending the changes made offline");
+    let mut created = false;
+    let mut held: std::collections::HashMap<String, QueuedFolder> = std::collections::HashMap::new();
+    for step in pending::batches(&queue) {
+        let Some(sess) = session.as_mut() else { break };
+        if !held.contains_key(&step.path) {
+            let uids: Vec<u32> = queue.iter().filter(|a| a.path == step.path).map(|a| a.uid).collect();
+            match queued_folder(sess, account_id, c, &step.path, &uids).await {
+                Ok(state) => {
+                    held.insert(step.path.clone(), state);
+                }
+                Err(e) => {
+                    tracing::info!(account_id, "the connection went while sending queued changes: {e}");
+                    pending::attempt_failed(c, &step.change, &step.ids, &e.to_string(), emit);
+                    *session = None;
+                    break;
+                }
+            }
+        }
+        let mut ids = Vec::new();
+        let mut uids = Vec::new();
+        let mut gone = Vec::new();
+        match &held[&step.path] {
+            QueuedFolder::Gone => {
+                tracing::debug!(account_id, path = step.path, "queued changes dropped: the folder is gone");
+                gone.extend(&step.ids);
+            }
+            QueuedFolder::Busy(why) => {
+                tracing::info!(account_id, path = step.path, "queued changes wait: {why}");
+                pending::attempt_failed(c, &step.change, &step.ids, why, emit);
+                continue;
+            }
+            QueuedFolder::Unknown(why) if step.change.takes_away() => {
+                tracing::info!(account_id, path = step.path, "queued move or deletion waits: {why}");
+                pending::attempt_failed(c, &step.change, &step.ids, why, emit);
+                continue;
+            }
+            QueuedFolder::Unknown(_) => {
+                ids.extend(&step.ids);
+                uids.extend(&step.uids);
+            }
+            QueuedFolder::Holds(found) => {
+                for (i, uid) in step.uids.iter().enumerate() {
+                    let server = found.get(uid).map(String::as_str);
+                    if pending::same_message(&step.message_ids[i], server, &step.change) {
+                        ids.push(step.ids[i]);
+                        uids.push(*uid);
+                        continue;
+                    }
+                    tracing::debug!(account_id, path = step.path, uid, change = ?step.change,
+                        "queued change dropped: that message is no longer there");
+                    gone.push(step.ids[i]);
+                    if server.is_none() && step.change.takes_away() {
+                        c.delete_message(account_id, &step.path, *uid);
+                    }
+                }
+            }
+        }
+        c.drop_pending(&gone);
+        let Some(&uid) = uids.first() else { continue };
+        let Some(sess) = session.as_mut() else { break };
+        let path = step.path.as_str();
+        let result = match &step.change {
+            PendingChange::Seen(on) => store_flag(sess, path, uid, "\\Seen", *on).await.map(|()| {
+                c.set_unread(account_id, path, uid, !on);
+            }),
+            PendingChange::Flagged(on) => store_flag(sess, path, uid, "\\Flagged", *on).await.map(|()| {
+                c.set_starred(account_id, path, uid, *on);
+            }),
+            PendingChange::Keyword { keyword, add } => {
+                let message_id = step.message_ids.first().map(String::as_str).unwrap_or_default();
+                store_tag(sess, account_id, cache, path, uid, message_id, keyword, *add).await.map(|stored| {
+                    created |= stored.new_label;
+                    if !stored.on_server {
+                        notice_local_tags(local_tags_noticed, emit);
+                    }
+                })
+            }
+            PendingChange::Move { dest } => move_queued(sess, path, &uids, dest).await.map(|()| {
+                drop_gmail_label_copies(c, account_id, account, path, &uids, dest);
+                for uid in &uids {
+                    c.delete_message(account_id, path, *uid);
+                }
+            }),
+            PendingChange::Purge => purge_messages(sess, path, &uids).await.map(|()| {
+                for uid in &uids {
+                    c.delete_message(account_id, path, *uid);
+                }
+            }),
+        };
+        match result {
+            Ok(()) => c.drop_pending(&ids),
+            Err(e) if is_connection_error(&e) => {
+                tracing::info!(account_id, "the connection went while sending queued changes: {e}");
+                pending::attempt_failed(c, &step.change, &ids, &e.to_string(), emit);
+                *session = None;
+                break;
+            }
+            // The destination is gone (deleted on another device since):
+            // the move goes with it rather than making the folder again.
+            Err(e) if matches!(&step.change, PendingChange::Move { dest }
+                if e.to_string().contains("TRYCREATE")
+                    || !c.load_folders(account_id).iter().any(|f| f.path == *dest)) =>
+            {
+                tracing::debug!(account_id, path, "queued move dropped: its destination is gone ({e})");
+                c.drop_pending(&ids);
+            }
+            Err(e) => {
+                emit(WorkerEvent::error(pending::refused_text(&step.change, uids.len(), &e.to_string())));
+                c.drop_pending(&ids);
+            }
+        }
+    }
+    // A new Gmail label: the sidebar gains a folder.
+    if created {
+        if let Some(sess) = session.as_mut() {
+            refresh_folders(account_id, account, sess, cache, emit).await;
+        }
+    }
+    pending::report(cache, account_id, emit)
 }
 
 /// Connect, announce the account, and list folders, updating the cache. Emits a

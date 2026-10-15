@@ -156,6 +156,12 @@ msgstr "Показать/скрыть боковую панель"
 msgid "Keyboard Shortcuts"
 msgstr "Сочетания клавиш"
 
+msgid "{n} change waiting to sync"
+msgid_plural "{n} changes waiting to sync"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
 msgid "Create Folder"
 msgstr "Создать папку"
 
@@ -7390,6 +7396,9 @@ msgstr "Не удалось отметить {len} сообщений как н�
 msgid "Could not move messages: {e}"
 msgstr "Не удалось переместить сообщения: {e}"
 
+msgid "Could not delete permanently: {e}"
+msgstr "Не удалось удалить безвозвратно: {e}"
+
 msgid "Could not empty the folder: {e}"
 msgstr "Не удалось очистить папку: {e}"
 
@@ -7448,6 +7457,26 @@ msgstr "Не удалось связаться с сервером JMAP: {e}"
 msgid "That folder is not on the server"
 msgstr "Эта папка отсутствует на сервере"
 
+msgid ""
+"{n} change waiting for {account} was discarded because the server changed"
+msgid_plural ""
+"{n} changes waiting for {account} were discarded because the server changed"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Could not update message: {e}"
+msgstr "Не удалось обновить сообщение: {e}"
+
+msgid "Could not change the star: {e}"
+msgstr "Не удалось изменить отметку: {e}"
+
+msgid "Could not tag message: {e}"
+msgstr "Не удалось добавить тег к сообщению: {e}"
+
+msgid "Could not move {len} messages: {e}"
+msgstr "Не удалось переместить сообщения ({len}): {e}"
+
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
 "Сообщение подписано или зашифровано, поэтому удаление файла нарушит его "
@@ -7474,21 +7503,6 @@ msgstr "Не удалось загрузить {path}: {e}"
 msgid "Could not load conversation: {e}"
 msgstr "Не удалось загрузить обсуждение: {e}"
 
-msgid "Could not update message: {e}"
-msgstr "Не удалось обновить сообщение: {e}"
-
-msgid "Could not change the star: {e}"
-msgstr "Не удалось изменить отметку: {e}"
-
-msgid ""
-"This server does not store tags, so Hylki keeps them on this computer only"
-msgstr ""
-"Этот сервер не поддерживает хранение тегов, поэтому Hylki сохраняет их "
-"только на этом компьютере"
-
-msgid "Could not tag message: {e}"
-msgstr "Не удалось добавить тег к сообщению: {e}"
-
 msgid "Could not mark folder read: {e}"
 msgstr "Не удалось отметить папку прочитанной: {e}"
 
@@ -7499,18 +7513,18 @@ msgstr ""
 "Gmail хранит копию каждого сообщения в разделе «Вся почта», поэтому Hylki не "
 "может удалить вложение оттуда"
 
-msgid "Could not move {len} messages: {e}"
-msgstr "Не удалось переместить сообщения ({len}): {e}"
-
-msgid "Could not delete permanently: {e}"
-msgstr "Не удалось удалить безвозвратно: {e}"
-
 msgid "Could not move folder: {e}"
 msgstr "Не удалось переместить папку: {e}"
 
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "Сообщение отправлено, но сохранить его в «Отправленные» не удалось: {e}"
+
+msgid ""
+"This server does not store tags, so Hylki keeps them on this computer only"
+msgstr ""
+"Этот сервер не поддерживает хранение тегов, поэтому Hylki сохраняет их "
+"только на этом компьютере"
 
 msgid "Connecting to {host}…"
 msgstr "Подключение к {host}…"
