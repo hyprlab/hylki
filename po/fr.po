@@ -5125,9 +5125,10 @@ msgstr ""
 "Le carnet d'adresses où est enregistré un contact créé dans Hylki, sauf si "
 "un autre est choisi lors de sa création."
 
+#, fuzzy
 msgid ""
-"Receives messages the moment they arrive. Microsoft 365 accounts check at "
-"the interval above."
+"Receives messages the moment they arrive. Microsoft 365 accounts check every "
+"30 seconds."
 msgstr ""
 "Reçoit les messages dès leur arrivée. Les comptes Microsoft 365 vérifient à "
 "l'intervalle indiqué ci-dessus."

@@ -5207,9 +5207,10 @@ msgid ""
 "when it is made."
 msgstr ""
 
+#, fuzzy
 msgid ""
-"Receives messages the moment they arrive. Microsoft 365 accounts check at "
-"the interval above."
+"Receives messages the moment they arrive. Microsoft 365 accounts check every "
+"30 seconds."
 msgstr ""
 "Recebe mensagens assim que chegam. As contas Microsoft 365 verificam se há "
 "novas mensagens no intervalo indicado acima."

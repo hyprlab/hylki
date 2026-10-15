@@ -11,6 +11,10 @@ The full list. The [README](../README.md) carries a shorter one.
 - **OAuth 2.0 sign-in:** Microsoft with Hylki's own app (no GNOME Online
   Accounts needed), Google through GNOME Online Accounts, and custom
   providers over XOAUTH2. See [Configuration](DOCUMENTATION.md#oauth-google--microsoft).
+- **Microsoft 365 new mail by delta query:** with push on, the Inbox, the
+  folders opened last and the favorites are asked every 30 seconds what
+  changed, one request each while nothing did. See
+  [New mail on Microsoft 365](DOCUMENTATION.md#new-mail-on-microsoft-365).
 - **GNOME Online Accounts:** import an account already set up in GNOME
   Settings, IMAP and SMTP accounts and Microsoft 365 over Graph included.
   See [Configuration](DOCUMENTATION.md#gnome-online-accounts). Pausing an account's Mail

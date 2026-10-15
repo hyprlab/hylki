@@ -2039,7 +2039,7 @@ impl Component for Preferences {
                                     #[name = "push_row"]
                                     adw::SwitchRow {
                                         set_title: &i18n("Instant new mail (push)"),
-                                        set_subtitle: &i18n("Receives messages the moment they arrive. Microsoft 365 accounts check at the interval above."),
+                                        set_subtitle: &i18n("Receives messages the moment they arrive. Microsoft 365 accounts check every 30 seconds."),
                                         connect_active_notify[sender] => move |row| {
                                             let _ = sender.output(PrefOutput::SetPush(row.is_active()));
                                         },

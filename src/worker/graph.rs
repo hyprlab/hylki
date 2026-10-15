@@ -9,7 +9,8 @@
 //! uid → Graph-id map is rebuilt from every folder listing. Threading uses a
 //! synthetic `graph-conv:<conversationId>` reference token (stripped before any
 //! wire header in `build_email`) because the real References header isn't
-//! available from list queries.
+//! available from list queries. New mail arrives on a poll that asks the
+//! Inbox and a few other folders what changed, by delta query.
 
 use super::*;
 
@@ -33,6 +34,21 @@ const GRAPH_THROTTLE_TRIES: u32 = 4;
 const GRAPH_RELIST_AFTER: Duration = Duration::from_secs(15 * 60);
 /// The pause after a background step fails, before the next try.
 const GRAPH_BACKFILL_BACKOFF: Duration = Duration::from_secs(60);
+/// How often a Graph account asks what changed in the folders it follows,
+/// with push on: a delta query costs one request when nothing did.
+const GRAPH_DELTA_POLL: Duration = Duration::from_secs(30);
+/// Most folders followed by delta query at once: the Inbox, the folders
+/// opened last and the account's favorites.
+const GRAPH_DELTA_FOLDERS: usize = 6;
+/// How many of the folders opened last are followed.
+const GRAPH_DELTA_OPENED: usize = 2;
+/// Messages asked for per page of a delta round.
+const GRAPH_DELTA_PAGE: usize = 100;
+/// Most pages one delta round follows before the folder is listed instead.
+const GRAPH_DELTA_MAX_PAGES: usize = 30;
+/// Starts in a row that may fail before a folder other than the Inbox is
+/// no longer followed, for the session.
+const GRAPH_DELTA_GIVE_UP: u32 = 3;
 
 /// One Graph mail folder, flattened out of the tree.
 struct GraphFolder {
@@ -94,9 +110,19 @@ fn graph_throttle_wait(e: &ureq::Error) -> Option<Duration> {
 /// The background index (#429) is what makes this matter: it is the first
 /// thing here to send many requests in a row.
 fn graph_get(token: &str, url: &str) -> Result<ureq::Response, String> {
+    graph_get_prefer(token, url, None)
+}
+
+/// [`graph_get`] with a `Prefer` header, such as the page size a delta
+/// round asks for.
+fn graph_get_prefer(token: &str, url: &str, prefer: Option<&str>) -> Result<ureq::Response, String> {
     let mut tries = 0;
     loop {
-        match ureq::get(url).set("Authorization", &graph_auth(token)).call() {
+        let mut req = ureq::get(url).set("Authorization", &graph_auth(token));
+        if let Some(prefer) = prefer {
+            req = req.set("Prefer", prefer);
+        }
+        match req.call() {
             Err(e) if tries < GRAPH_THROTTLE_TRIES => {
                 let Some(wait) = graph_throttle_wait(&e) else { return Err(graph_err(e)) };
                 tries += 1;
@@ -109,8 +135,12 @@ fn graph_get(token: &str, url: &str) -> Result<ureq::Response, String> {
 }
 
 fn graph_get_json(token: &str, url: &str) -> Result<serde_json::Value, String> {
+    graph_get_json_prefer(token, url, None)
+}
+
+fn graph_get_json_prefer(token: &str, url: &str, prefer: Option<&str>) -> Result<serde_json::Value, String> {
     graph_wire("GET", url);
-    let r = graph_get(token, url).and_then(|resp| resp.into_json().map_err(|e| e.to_string()));
+    let r = graph_get_prefer(token, url, prefer).and_then(|resp| resp.into_json().map_err(|e| e.to_string()));
     graph_wired("GET", url, &r);
     r
 }
@@ -558,6 +588,221 @@ fn graph_find_by_msgid(
     Ok(items.iter().filter_map(|v| graph_message(v, 0, 0)).collect())
 }
 
+/// One change a delta round reports for a folder's messages.
+#[derive(Debug, PartialEq)]
+enum GraphDeltaItem {
+    /// A message new to the folder, or changed in it, with its whole
+    /// summary: Graph answers a mail delta with every property selected.
+    Summary(Box<Message>, String),
+    /// A changed message that came with only some of its properties: its
+    /// read state and flag, where given, go onto the cached row.
+    Flags { gid: String, unread: Option<bool>, starred: Option<bool> },
+    /// A message gone from the folder (`@removed`): deleted, or moved out.
+    Removed(String),
+}
+
+/// What one page of a delta round holds: its changes, then either the
+/// link to the next page or, on the last page, the deltaLink the next
+/// round starts from.
+fn graph_delta_page(
+    page: &serde_json::Value,
+    account_id: u32,
+    folder_id: u32,
+) -> (Vec<GraphDeltaItem>, Option<String>, Option<String>) {
+    let items = page["value"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(|v| {
+            let gid = v["id"].as_str()?.to_string();
+            if !v["@removed"].is_null() {
+                return Some(GraphDeltaItem::Removed(gid));
+            }
+            // A summary has its arrival time: it is in the `$select`, and
+            // every message has one.
+            if v.get("receivedDateTime").is_some() {
+                return graph_message(v, account_id, folder_id)
+                    .map(|(m, gid)| GraphDeltaItem::Summary(Box::new(m), gid));
+            }
+            let unread = v["isRead"].as_bool().map(|read| !read);
+            let starred = v["flag"]["flagStatus"].as_str().map(|s| s == "flagged");
+            Some(GraphDeltaItem::Flags { gid, unread, starred })
+        })
+        .collect();
+    let next = page["@odata.nextLink"].as_str().map(str::to_string);
+    let delta = page["@odata.deltaLink"].as_str().map(str::to_string);
+    (items, next, delta)
+}
+
+/// A complete delta round: every change since the link it began from, and
+/// the deltaLink for the next one.
+#[derive(Debug)]
+struct GraphDeltaRound {
+    items: Vec<GraphDeltaItem>,
+    link: String,
+}
+
+/// Follow a delta round from `url` (a deltaLink, or the start of a new
+/// round) through its pages to the deltaLink at its end. A round longer
+/// than [`GRAPH_DELTA_MAX_PAGES`], or a page with neither link, fails:
+/// the folder is then listed instead.
+fn graph_delta_round(token: &str, url: &str, account_id: u32, folder_id: u32) -> Result<GraphDeltaRound, String> {
+    let prefer = format!("odata.maxpagesize={GRAPH_DELTA_PAGE}");
+    let mut items = Vec::new();
+    let mut url = url.to_string();
+    for _ in 0..GRAPH_DELTA_MAX_PAGES {
+        let page = graph_get_json_prefer(token, &url, Some(&prefer))?;
+        let (got, next, delta) = graph_delta_page(&page, account_id, folder_id);
+        items.extend(got);
+        match (delta, next) {
+            (Some(link), _) => return Ok(GraphDeltaRound { items, link }),
+            (None, Some(next)) => url = next,
+            (None, None) => return Err("the delta round ended without a deltaLink".to_string()),
+        }
+    }
+    Err(format!("the delta round ran past {GRAPH_DELTA_MAX_PAGES} pages"))
+}
+
+/// Where a new delta round starts: the arrival time of the oldest message
+/// a listing of the folder's newest page shows, from what the cache holds.
+/// The round names every message since then, which the listing has just
+/// put in the cache, and after that the folder's changes from that time
+/// on, new mail included, as far back as the poll's listing looked. With
+/// nothing cached it starts a little before `now`, for the server's clock.
+fn graph_delta_since(cached: &std::collections::HashMap<u32, i64>, now: i64) -> i64 {
+    let mut times: Vec<i64> = cached.values().copied().filter(|t| *t > 0).collect();
+    times.sort_unstable_by(|a, b| b.cmp(a));
+    match times.get(GRAPH_FIRST_PAGE - 1).or(times.last()) {
+        Some(t) => (*t).min(now),
+        None => now - 600,
+    }
+}
+
+/// The start of a new delta round over a folder, from `since` on, asking
+/// for the same summary a folder listing does.
+fn graph_delta_url(base: &str, folder_graph_id: &str, since: i64) -> String {
+    let at = chrono::DateTime::from_timestamp(since, 0)
+        .unwrap_or_default()
+        .to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
+    format!(
+        "{base}/me/mailFolders/{folder_graph_id}/messages/delta\
+         ?$filter=receivedDateTime%20ge%20{}&{GRAPH_MSG_SELECT}",
+        crate::percent::encode(&at)
+    )
+}
+
+/// What a delta round did to the cache.
+#[derive(Debug, Default, PartialEq)]
+struct GraphDeltaApplied {
+    /// Anything changed: the folder is worth sending to the list again.
+    changed: bool,
+    /// A summary came, new or changed: the body filters look again.
+    arrived: bool,
+    /// A change named a message the cache does not hold, without its
+    /// summary: only a listing can bring it.
+    relist: bool,
+}
+
+/// Apply a delta round's changes to a folder's cached rows and to the uid
+/// map, in the order the round gave them.
+fn graph_apply_delta(
+    c: &Cache,
+    account_id: u32,
+    path: &str,
+    items: Vec<GraphDeltaItem>,
+    uids: &mut std::collections::HashMap<u32, String>,
+) -> GraphDeltaApplied {
+    let mut out = GraphDeltaApplied::default();
+    let mut summaries: Vec<Message> = Vec::new();
+    let mut cached: Option<std::collections::HashSet<u32>> = None;
+    for item in items {
+        match item {
+            GraphDeltaItem::Summary(m, gid) => {
+                uids.insert(m.uid, gid);
+                summaries.retain(|s| s.uid != m.uid);
+                summaries.push(*m);
+            }
+            GraphDeltaItem::Removed(gid) => {
+                let uid = hash_uid(&gid);
+                summaries.retain(|m| m.uid != uid);
+                c.delete_message(account_id, path, uid);
+                uids.remove(&uid);
+                out.changed = true;
+            }
+            GraphDeltaItem::Flags { gid, unread, starred } => {
+                let uid = hash_uid(&gid);
+                // A summary from earlier in the round is not in the cache yet.
+                if let Some(m) = summaries.iter_mut().find(|m| m.uid == uid) {
+                    m.unread = unread.unwrap_or(m.unread);
+                    m.starred = starred.unwrap_or(m.starred);
+                    continue;
+                }
+                let cached = cached.get_or_insert_with(|| c.cached_uids(account_id, path));
+                if !cached.contains(&uid) || (unread.is_none() && starred.is_none()) {
+                    out.relist = true;
+                    continue;
+                }
+                uids.insert(uid, gid);
+                if let Some(unread) = unread {
+                    c.set_unread(account_id, path, uid, unread);
+                }
+                if let Some(starred) = starred {
+                    c.set_starred(account_id, path, uid, starred);
+                }
+                out.changed = true;
+            }
+        }
+    }
+    if !summaries.is_empty() {
+        c.upsert_messages(account_id, path, &summaries);
+        out.changed = true;
+        out.arrived = true;
+    }
+    out
+}
+
+/// A folder followed by delta query (Graph's "what changed since"), for a
+/// poll that costs one request while nothing happens. The link lives in
+/// memory only: the folder's listing stays the source of truth, a new
+/// session lists the folder and starts a round of its own, and nothing is
+/// stored that could go stale.
+#[derive(Debug, Default)]
+struct GraphDelta {
+    /// The Graph folder the link was made for: a folder renamed, or made
+    /// again under the same path, is another folder.
+    gid: String,
+    /// The deltaLink of the last complete round, the next round's start.
+    link: Option<String>,
+    /// No new round before this, after a start that failed.
+    retry_at: Option<std::time::Instant>,
+    /// Starts that failed in a row.
+    failures: u32,
+}
+
+/// What a poll does for one followed folder.
+#[derive(Debug, PartialEq)]
+enum GraphDeltaStep {
+    /// Ask for what changed since the last round.
+    Follow(String),
+    /// Start a new round, listing the folder first unless it was listed
+    /// just now.
+    Start { list: bool },
+    /// Nothing yet: the last start failed, and the next waits its turn.
+    Wait,
+}
+
+/// The step a poll takes for a folder, from its delta state, whether the
+/// folder's newest mail was listed lately, and the time.
+fn graph_delta_step(d: &GraphDelta, listed_lately: bool, now: std::time::Instant) -> GraphDeltaStep {
+    if let Some(link) = &d.link {
+        return GraphDeltaStep::Follow(link.clone());
+    }
+    if d.retry_at.is_some_and(|at| now < at) {
+        return GraphDeltaStep::Wait;
+    }
+    GraphDeltaStep::Start { list: !listed_lately }
+}
+
 /// The background index of one folder (#429): its id-only listing a page a
 /// step, then its runs of missing mail a run a step.
 struct GraphBackfill {
@@ -614,6 +859,14 @@ pub(super) struct GraphState {
     looked_up: std::collections::HashMap<String, std::time::Instant>,
     /// No background step before this, after one failed.
     backfill_wait: Option<std::time::Instant>,
+    /// The folders the poll follows by delta query, by path.
+    delta: std::collections::HashMap<String, GraphDelta>,
+    /// The folders the user opened last, the latest first.
+    opened: Vec<String>,
+    /// The account's favorite folders (#367), as of the last full poll.
+    favorites: Option<Vec<String>>,
+    /// When each folder's newest mail was last listed, by path.
+    synced: std::collections::HashMap<String, std::time::Instant>,
 }
 
 impl GraphState {
@@ -630,7 +883,42 @@ impl GraphState {
             listed: Default::default(),
             looked_up: Default::default(),
             backfill_wait: None,
+            delta: Default::default(),
+            opened: Vec::new(),
+            favorites: None,
+            synced: Default::default(),
         }
+    }
+
+    /// Remember a folder the user opened, for the poll to follow.
+    fn note_opened(&mut self, path: &str) {
+        self.opened.retain(|p| p != path);
+        self.opened.insert(0, path.to_string());
+        self.opened.truncate(GRAPH_DELTA_OPENED);
+    }
+
+    /// The folders the poll follows, in order: the Inbox, the folders
+    /// opened last, then the favorites, each once and only while listed
+    /// and not hidden, at most [`GRAPH_DELTA_FOLDERS`]. A folder other
+    /// than the Inbox whose rounds keep failing to start is left out.
+    fn delta_targets(&self) -> Vec<String> {
+        let inbox = self.inbox.as_ref().map(|(_, p)| p.clone());
+        let mut out: Vec<String> = Vec::new();
+        for path in inbox.iter().chain(&self.opened).chain(self.favorites.iter().flatten()) {
+            let failing = self.delta.get(path).is_some_and(|d| d.failures >= GRAPH_DELTA_GIVE_UP);
+            if out.contains(path)
+                || !self.folders.contains_key(path)
+                || crate::models::folder_is_hidden(path, Some("/"), &self.hidden)
+                || (failing && Some(path) != inbox.as_ref())
+            {
+                continue;
+            }
+            out.push(path.clone());
+            if out.len() == GRAPH_DELTA_FOLDERS {
+                break;
+            }
+        }
+        out
     }
 
     /// Queue a folder's background index unless it is queued already.
@@ -765,16 +1053,17 @@ pub(super) async fn run_graph(
         refresh_graph_folders(&token, account_id, cache.as_ref(), &mut state, &emit).await;
     }
 
-    // Graph has no push channel (nothing like IMAP IDLE is available to this
-    // token), so new mail arrives on a poll. The auto-fetch preference sets the
-    // cadence when it's on; otherwise a quiet couple of minutes.
-    let poll_secs = match crate::config::load_privacy().fetch_interval_secs {
-        0 => 120,
-        s => s.max(60),
-    };
-    let mut poll = tokio::time::interval(Duration::from_secs(poll_secs));
+    // Graph has no push channel a desktop app can use (change notifications
+    // need a public HTTPS endpoint), so new mail arrives on a poll: see
+    // graph_poll_cadence.
+    let privacy = crate::config::load_privacy();
+    let push = account.push.unwrap_or(privacy.push);
+    let (every, full) = graph_poll_cadence(privacy.fetch_interval_secs, push);
+    let mut poll = tokio::time::interval(every);
     poll.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     poll.tick().await; // consume the interval's immediate first tick
+    // The folders were listed just now, above.
+    let mut last_full = std::time::Instant::now();
 
     loop {
         // The background index (#429) only runs while nothing else is
@@ -789,7 +1078,13 @@ pub(super) async fn run_graph(
                 None => break,
             },
             _ = poll.tick() => {
-                graph_poll_inbox(account_id, &account, cache.as_ref(), &mut state, &emit).await;
+                // A tick may come a moment early or late: a little slack
+                // keeps a full poll from slipping a whole tick.
+                let due = last_full.elapsed() + Duration::from_secs(5) >= full;
+                if due {
+                    last_full = std::time::Instant::now();
+                }
+                graph_poll(account_id, &account, cache.as_ref(), &mut state, due, full, &emit).await;
                 continue;
             }
             _ = backfill_pause(wait), if indexing => {
@@ -799,6 +1094,9 @@ pub(super) async fn run_graph(
         };
         // A folder the user opened, rather than a background refresh.
         let user = matches!(req, MailRequest::LoadMessages { .. });
+        if let MailRequest::LoadMessages { path, .. } = &req {
+            state.note_opened(path);
+        }
         match req {
             MailRequest::Locate { message_id } => {
                 // No folders to search here beyond what the cache already
@@ -1538,15 +1836,47 @@ pub(super) async fn run_graph(
     }
 }
 
-/// One poll tick: refresh the Inbox and emit it. The app diffs the arriving
-/// list against its cache, so this drives both the visible refresh and the
-/// desktop notification for genuinely new mail. Token failures stay quiet here
-/// — a signed-out account already errors on every interactive action.
-async fn graph_poll_inbox(
+/// How often the poll runs, and how often a full one: Graph offers a
+/// desktop app no push channel. With push on, the poll asks every
+/// [`GRAPH_DELTA_POLL`] what changed in the folders it follows, a delta
+/// query that costs one request each while nothing did; the folder list's
+/// unread counts, and the listings a delta round falls back on, keep the
+/// cadence the poll had before (the auto-fetch interval, at least a
+/// minute, or two minutes when mail is fetched by hand). With push off,
+/// everything runs at that cadence, as before.
+fn graph_poll_cadence(fetch_interval_secs: u64, push: bool) -> (Duration, Duration) {
+    let full = Duration::from_secs(match fetch_interval_secs {
+        0 => 120,
+        s => s.max(60),
+    });
+    let every = if push { GRAPH_DELTA_POLL.min(full) } else { full };
+    (every, full)
+}
+
+/// The account's favorite folders (#367), from the sidebar's saved state.
+fn graph_favorites(email: &str) -> Vec<String> {
+    let prefix = format!("{email}\t");
+    crate::config::load_sidebar_state()
+        .favorites
+        .iter()
+        .filter_map(|f| f.strip_prefix(&prefix).map(str::to_string))
+        .collect()
+}
+
+/// One poll tick. The followed folders (the Inbox, the folders opened
+/// last, the favorites) are asked what changed by delta query, and what
+/// changed is emitted as the folder now stands. The app diffs the arriving
+/// list against its own, so this drives both the visible refresh and the
+/// desktop notification for genuinely new mail, once. A `full` tick also
+/// re-lists the folders for their unread counts. Token failures stay quiet
+/// here: a signed-out account already errors on every interactive action.
+async fn graph_poll(
     account_id: u32,
     account: &AccountConfig,
     cache: Option<&Cache>,
     state: &mut GraphState,
+    full: bool,
+    every_full: Duration,
     emit: &impl Fn(WorkerEvent),
 ) {
     let quiet = |_: WorkerEvent| {};
@@ -1555,19 +1885,164 @@ async fn graph_poll_inbox(
         // The startup folder listing may have failed (offline launch).
         refresh_graph_folders(&token, account_id, cache, state, emit).await;
     }
-    let Some((folder_id, path)) = state.inbox.clone() else { return };
-    if let Ok(messages) =
-        graph_load_folder(&token, account_id, folder_id, &path, cache, state).await
-    {
-        let unread = messages.iter().filter(|m| m.unread).count() as u32;
-        emit_graph_body_hits(&token, account, folder_id, &path, &messages, state, emit).await;
+    match cache {
+        Some(c) => {
+            if full || state.favorites.is_none() {
+                state.favorites = Some(graph_favorites(&account.email));
+            }
+            let targets = state.delta_targets();
+            state.delta.retain(|path, _| targets.contains(path));
+            for path in targets {
+                graph_delta_folder(&token, account_id, account, c, state, &path, every_full, emit).await;
+            }
+        }
+        // Without a cache there is nothing to apply a change to: the
+        // Inbox is listed on the full poll, as it always was.
+        None if full => {
+            if let Some((folder_id, path)) = state.inbox.clone() {
+                graph_list_and_emit(&token, account_id, account, folder_id, &path, None, state, emit).await;
+            }
+        }
+        None => {}
+    }
+    // Mail filed by server-side rules lands in folders the poll may not
+    // follow. Re-list for every folder's unreadItemCount so their chips
+    // keep pace too.
+    if full {
+        graph_refresh_unread(&token, account_id, cache, state, emit).await;
+    }
+}
+
+/// List a folder's newest mail as a folder load does and emit it, with its
+/// chip and, for the Inbox, the body filters' hits.
+#[allow(clippy::too_many_arguments)]
+async fn graph_list_and_emit(
+    token: &str,
+    account_id: u32,
+    account: &AccountConfig,
+    folder_id: u32,
+    path: &str,
+    cache: Option<&Cache>,
+    state: &mut GraphState,
+    emit: &impl Fn(WorkerEvent),
+) -> bool {
+    match graph_load_folder(token, account_id, folder_id, path, cache, state).await {
+        Ok(messages) => {
+            let unread = state.chip_count(folder_id, &messages);
+            emit_graph_body_hits(token, account, folder_id, path, &messages, state, emit).await;
+            emit(WorkerEvent::Messages { folder_id, messages });
+            emit(WorkerEvent::FolderUnread { folder_id, unread });
+            true
+        }
+        Err(e) => {
+            tracing::warn!("[account {account_id}] poll: could not list {path}: {e}");
+            false
+        }
+    }
+}
+
+/// One followed folder's turn in the poll: its changes since the last
+/// delta round, applied to the cache and emitted if there were any. A
+/// round that fails drops its link, and the folder falls back on what the
+/// poll did before delta: a listing of its newest mail, the source of
+/// truth, after which a new round starts. A start that fails is tried
+/// again after `every_full`, so a folder delta cannot follow costs no more
+/// than the listing did.
+#[allow(clippy::too_many_arguments)]
+async fn graph_delta_folder(
+    token: &str,
+    account_id: u32,
+    account: &AccountConfig,
+    c: &Cache,
+    state: &mut GraphState,
+    path: &str,
+    every_full: Duration,
+    emit: &impl Fn(WorkerEvent),
+) {
+    let Some((folder_id, gid)) = state.folders.get(path).cloned() else { return };
+    let d = state.delta.entry(path.to_string()).or_default();
+    if d.gid != gid {
+        *d = GraphDelta { gid: gid.clone(), ..Default::default() };
+    }
+    // A link that failed sends the folder round once more, to be listed.
+    let mut dropped = false;
+    let (round, before) = loop {
+        let lately = !dropped && state.synced.get(path).is_some_and(|at| at.elapsed() < every_full);
+        let step = state.delta.get(path).map(|d| graph_delta_step(d, lately, std::time::Instant::now()));
+        let (url, started) = match step {
+            Some(GraphDeltaStep::Follow(link)) => (link, false),
+            Some(GraphDeltaStep::Start { list }) => {
+                if list
+                    && !graph_list_and_emit(token, account_id, account, folder_id, path, Some(c), state, emit).await
+                {
+                    graph_delta_failed(state, path, every_full);
+                    return;
+                }
+                let since = graph_delta_since(&c.cached_uid_times(account_id, path), crate::datefmt::now());
+                (graph_delta_url(&state.base, &gid, since), true)
+            }
+            Some(GraphDeltaStep::Wait) | None => return,
+        };
+        let t = token.to_string();
+        match blocking(move || graph_delta_round(&t, &url, account_id, folder_id)).await {
+            // A new round names every message in its window, which the
+            // listing just put in the cache: only what differs from the
+            // folder as it was is worth sending on.
+            Ok(round) if started => break (round, Some(c.load_messages(account_id, path, folder_id))),
+            Ok(round) => break (round, None),
+            Err(e) if started => {
+                tracing::info!("[account {account_id}] {path}: no delta round: {e}");
+                graph_delta_failed(state, path, every_full);
+                return;
+            }
+            Err(e) => {
+                // The link is spent (expired, or the server lost the state
+                // behind it: 410 Gone, syncStateNotFound) or the request
+                // failed. The folder is listed again and a new round begins.
+                tracing::info!("[account {account_id}] {path}: delta link dropped: {e}");
+                if let Some(d) = state.delta.get_mut(path) {
+                    d.link = None;
+                }
+                dropped = true;
+            }
+        }
+    };
+    if let Some(d) = state.delta.get_mut(path) {
+        d.link = Some(round.link);
+        d.retry_at = None;
+        d.failures = 0;
+    }
+    let n = round.items.len();
+    let mut applied = graph_apply_delta(c, account_id, path, round.items, &mut state.uids);
+    if n > 0 {
+        tracing::debug!(target: "hylki::graph", "{path}: {n} change(s) by delta, {applied:?}");
+    }
+    if let Some(before) = before {
+        let changed = c.load_messages(account_id, path, folder_id) != before;
+        applied.changed &= changed;
+        applied.arrived &= changed;
+    }
+    if applied.relist {
+        graph_list_and_emit(token, account_id, account, folder_id, path, Some(c), state, emit).await;
+    } else if applied.changed {
+        let messages = c.load_messages(account_id, path, folder_id);
+        let unread = state.chip_count(folder_id, &messages);
+        if applied.arrived {
+            emit_graph_body_hits(token, account, folder_id, path, &messages, state, emit).await;
+        }
         emit(WorkerEvent::Messages { folder_id, messages });
         emit(WorkerEvent::FolderUnread { folder_id, unread });
     }
-    // The poll only re-syncs the inbox; mail filed by server-side rules lands
-    // in other folders without passing through it. Re-list for every folder's
-    // unreadItemCount so their chips keep pace too.
-    graph_refresh_unread(&token, account_id, cache, state, emit).await;
+}
+
+/// A new delta round over a folder could not start: no link, and no new
+/// try until the next full poll's time.
+fn graph_delta_failed(state: &mut GraphState, path: &str, every_full: Duration) {
+    if let Some(d) = state.delta.get_mut(path) {
+        d.link = None;
+        d.failures += 1;
+        d.retry_at = Some(std::time::Instant::now() + every_full);
+    }
 }
 
 /// Re-list the folders for their server-side unread counts and push them, but
@@ -1737,6 +2212,8 @@ async fn graph_sync_folder(
         messages.push(m);
     }
     let Some(c) = cache else { return Ok((messages, !more)) };
+    // What a delta round over the folder may start from (see graph_poll).
+    state.synced.insert(path.to_string(), std::time::Instant::now());
     // Merged over the cached folder rather than replacing it, which kept
     // only the newest page (#429): the listing speaks for what it covers,
     // the background index for the rest.
@@ -1764,7 +2241,9 @@ async fn backfill_pause(wait: Option<std::time::Instant>) {
 /// The id listing, rather than a delta query, is what tells the cache what
 /// the server no longer has: it is the listing every folder load already
 /// makes, asked for ids alone, and keeps no sync state to store, expire or
-/// recover from.
+/// recover from. The poll's delta query ([`graph_delta_folder`]) is a
+/// shortcut beside it, for the few folders the poll follows: its links
+/// live in memory, and one that fails sends the folder back to a listing.
 async fn graph_backfill_step(
     account: &AccountConfig,
     account_id: u32,
@@ -2401,11 +2880,16 @@ mod tests {
                 let mut line = String::new();
                 reader.read_line(&mut line).expect("request line");
                 let target = line.split_whitespace().nth(1).unwrap_or("").to_string();
+                // The headers ride after the target, a line each, for a
+                // test to look for one.
+                let mut sent = String::new();
                 loop {
                     let mut h = String::new();
                     if reader.read_line(&mut h).unwrap_or(0) == 0 || h.trim().is_empty() {
                         break;
                     }
+                    sent.push('\n');
+                    sent.push_str(h.trim_end());
                 }
                 let hit = answers
                     .iter_mut()
@@ -2421,7 +2905,7 @@ mod tests {
                     "HTTP/1.1 {status} X\r\nContent-Type: application/json\r\n{headers}Content-Length: {}\r\nConnection: close\r\n\r\n{body}",
                     body.len()
                 );
-                seen.push(target);
+                seen.push(format!("{target}{sent}"));
             }
             seen
         });
@@ -2647,6 +3131,337 @@ mod tests {
         assert_eq!(hits[0].1, "M9");
         let seen = server.join().expect("server");
         assert!(seen[0].contains("$filter=internetMessageId%20eq%20%27%3CM9%40Example.com%3E%27"), "{}", seen[0]);
+    }
+
+    /// A delta page as Graph sends it: the changes, then a next-page link
+    /// or, on the last page, the deltaLink.
+    fn delta_page(items: Vec<serde_json::Value>, next: Option<&str>, delta: Option<&str>) -> serde_json::Value {
+        let mut page = serde_json::json!({
+            "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#Collection(message)",
+            "value": items,
+        });
+        if let Some(next) = next {
+            page["@odata.nextLink"] = serde_json::json!(next);
+        }
+        if let Some(delta) = delta {
+            page["@odata.deltaLink"] = serde_json::json!(delta);
+        }
+        page
+    }
+
+    /// A message gone from the folder, as a delta round names it.
+    fn removed(id: &str) -> serde_json::Value {
+        serde_json::json!({ "@odata.type": "#microsoft.graph.message", "id": id, "@removed": { "reason": "deleted" } })
+    }
+
+    /// A delta page's items: a whole summary, a change that came with
+    /// only its read state and flag, a removal; and its links.
+    #[test]
+    fn a_delta_page_reads_summaries_flags_and_removals() {
+        let mut fresh = graph_msg("N1", &day(10));
+        fresh["isRead"] = serde_json::json!(false);
+        let page = delta_page(
+            vec![
+                fresh,
+                serde_json::json!({ "id": "A", "isRead": true, "flag": { "flagStatus": "flagged" } }),
+                serde_json::json!({ "id": "B", "isRead": false }),
+                removed("C"),
+                serde_json::json!({ "@odata.etag": "W/\"x\"" }),
+            ],
+            Some("https://graph.microsoft.com/v1.0/me/mailFolders/F/messages/delta?$skiptoken=P2"),
+            None,
+        );
+        let (items, next, delta) = graph_delta_page(&page, 1, 7);
+        assert_eq!(items.len(), 4, "an item without an id is skipped");
+        match &items[0] {
+            GraphDeltaItem::Summary(m, gid) => {
+                assert_eq!(gid, "N1");
+                assert_eq!((m.uid, m.folder_id, m.unread), (hash_uid("N1"), 7, true));
+                assert_eq!(m.subject, "Subject N1");
+            }
+            other => panic!("not a summary: {other:?}"),
+        }
+        assert_eq!(items[1], GraphDeltaItem::Flags { gid: "A".into(), unread: Some(false), starred: Some(true) });
+        assert_eq!(items[2], GraphDeltaItem::Flags { gid: "B".into(), unread: Some(true), starred: None });
+        assert_eq!(items[3], GraphDeltaItem::Removed("C".into()));
+        assert!(next.is_some_and(|n| n.ends_with("$skiptoken=P2")));
+        assert_eq!(delta, None);
+
+        let last = delta_page(Vec::new(), None, Some("https://graph.microsoft.com/v1.0/x/delta?$deltatoken=D1"));
+        let (items, next, delta) = graph_delta_page(&last, 1, 7);
+        assert!(items.is_empty() && next.is_none());
+        assert_eq!(delta.as_deref(), Some("https://graph.microsoft.com/v1.0/x/delta?$deltatoken=D1"));
+    }
+
+    /// A delta round follows its next-page links to the deltaLink, asking
+    /// for a page size; a page with neither link is no round.
+    #[test]
+    fn a_delta_round_follows_its_pages_to_the_delta_link() {
+        let (origin, server) = serve(vec![
+            answer(
+                "$deltatoken=OLD",
+                200,
+                delta_page(
+                    vec![graph_msg("N1", &day(10))],
+                    Some("{origin}/me/mailFolders/F/messages/delta?$skiptoken=P2"),
+                    None,
+                ),
+            ),
+            answer(
+                "$skiptoken=P2",
+                200,
+                delta_page(vec![removed("C")], None, Some("{origin}/me/mailFolders/F/messages/delta?$deltatoken=NEW")),
+            ),
+            answer("$deltatoken=BROKEN", 200, delta_page(Vec::new(), None, None)),
+        ]);
+        let url = format!("{origin}/me/mailFolders/F/messages/delta?$deltatoken=OLD");
+        let round = graph_delta_round("t", &url, 1, 7).expect("round");
+        assert_eq!(round.items.len(), 2);
+        assert_eq!(round.items[1], GraphDeltaItem::Removed("C".into()));
+        assert_eq!(round.link, format!("{origin}/me/mailFolders/F/messages/delta?$deltatoken=NEW"));
+        let url = format!("{origin}/me/mailFolders/F/messages/delta?$deltatoken=BROKEN");
+        assert!(graph_delta_round("t", &url, 1, 7).is_err());
+        let seen = server.join().expect("server");
+        assert!(seen[0].contains("\nPrefer: odata.maxpagesize=100"), "{}", seen[0]);
+        assert!(seen[1].contains("\nPrefer: odata.maxpagesize=100"), "{}", seen[1]);
+    }
+
+    /// A new round starts at the oldest message of the folder's newest
+    /// page, or at the oldest cached when there are fewer; a little before
+    /// now with nothing cached. Its query asks for a listing's summary.
+    #[test]
+    fn a_delta_round_starts_at_the_newest_page() {
+        let now = ts("2026-10-01T12:00:00Z");
+        assert_eq!(graph_delta_since(&Default::default(), now), now - 600);
+        let few: std::collections::HashMap<u32, i64> = [(1, now - 50), (2, now - 900), (3, 0)].into_iter().collect();
+        assert_eq!(graph_delta_since(&few, now), now - 900);
+        let many: std::collections::HashMap<u32, i64> =
+            (0..GRAPH_FIRST_PAGE as u32 + 50).map(|i| (i, now - i64::from(i) * 60)).collect();
+        assert_eq!(graph_delta_since(&many, now), now - (GRAPH_FIRST_PAGE as i64 - 1) * 60);
+
+        let url = graph_delta_url("https://graph.microsoft.com/v1.0", "F-inbox", ts("2026-09-01T09:00:00Z"));
+        assert!(
+            url.starts_with(
+                "https://graph.microsoft.com/v1.0/me/mailFolders/F-inbox/messages/delta\
+                 ?$filter=receivedDateTime%20ge%202026-09-01T09%3A00%3A00Z&$select=id,"
+            ),
+            "{url}"
+        );
+        assert!(url.contains("isRead,flag,"), "{url}");
+    }
+
+    /// A folder with a link follows it; without one, a round starts, after
+    /// a listing unless the folder was listed lately; a start that failed
+    /// waits its turn.
+    #[test]
+    fn the_delta_step_follows_starts_or_waits() {
+        let now = std::time::Instant::now();
+        let fresh = GraphDelta::default();
+        assert_eq!(graph_delta_step(&fresh, false, now), GraphDeltaStep::Start { list: true });
+        assert_eq!(graph_delta_step(&fresh, true, now), GraphDeltaStep::Start { list: false });
+        let linked = GraphDelta { link: Some("L".into()), ..Default::default() };
+        assert_eq!(graph_delta_step(&linked, false, now), GraphDeltaStep::Follow("L".into()));
+        let failed = GraphDelta { retry_at: Some(now + Duration::from_secs(60)), failures: 1, ..Default::default() };
+        assert_eq!(graph_delta_step(&failed, false, now), GraphDeltaStep::Wait);
+        assert_eq!(
+            graph_delta_step(&failed, false, now + Duration::from_secs(61)),
+            GraphDeltaStep::Start { list: true }
+        );
+    }
+
+    /// The poll follows the Inbox, the folders opened last and the
+    /// favorites, each once, listed and not hidden, and not too many.
+    #[test]
+    fn the_followed_folders_are_few() {
+        let mut state = GraphState::new(&super::super::sample_account());
+        for (i, path) in ["Inbox", "A", "B", "C", "D", "E", "F", "G", "Secret"].iter().enumerate() {
+            state.folders.insert(path.to_string(), (i as u32 + 1, format!("F-{path}")));
+        }
+        state.inbox = Some((1, "Inbox".into()));
+        state.hidden = vec!["Secret".into()];
+        state.note_opened("A");
+        state.note_opened("Inbox");
+        state.note_opened("B");
+        let favorites = ["C", "A", "Gone", "Secret", "D", "E", "F", "G"];
+        state.favorites = Some(favorites.iter().map(|s| s.to_string()).collect());
+        assert_eq!(state.opened, vec!["B".to_string(), "Inbox".to_string()]);
+        assert_eq!(state.delta_targets(), vec!["Inbox", "B", "C", "A", "D", "E"]);
+
+        // A folder whose rounds keep failing is left be; the Inbox never is.
+        let failing = || GraphDelta { failures: GRAPH_DELTA_GIVE_UP, ..Default::default() };
+        state.delta.insert("B".into(), failing());
+        state.delta.insert("Inbox".into(), failing());
+        assert_eq!(state.delta_targets(), vec!["Inbox", "C", "A", "D", "E", "F"]);
+    }
+
+    /// With push on, the cheap poll runs every half minute and the full
+    /// one keeps the old cadence; with push off, both keep it.
+    #[test]
+    fn the_poll_cadence_follows_push_and_the_interval() {
+        let s = Duration::from_secs;
+        assert_eq!(graph_poll_cadence(0, true), (s(30), s(120)));
+        assert_eq!(graph_poll_cadence(300, true), (s(30), s(300)));
+        assert_eq!(graph_poll_cadence(10, true), (s(30), s(60)));
+        assert_eq!(graph_poll_cadence(0, false), (s(120), s(120)));
+        assert_eq!(graph_poll_cadence(900, false), (s(900), s(900)));
+    }
+
+    /// A round's changes land on the cached rows: a new summary, read
+    /// state and flag, a removal; a change to a message the cache lacks
+    /// asks for a listing.
+    #[test]
+    fn a_delta_round_applies_to_the_cache() {
+        let cache = Cache::in_memory().expect("cache");
+        let mut a = row("A", 300, 2);
+        a.unread = true;
+        cache.upsert_messages(1, "Work", &[a, row("B", 200, 2), row("C", 100, 2)]);
+        let mut uids: std::collections::HashMap<u32, String> = Default::default();
+        uids.insert(hash_uid("C"), "C".into());
+        let (n, _) = graph_message(&graph_msg("N", &day(20)), 1, 2).expect("summary");
+        let items = vec![
+            GraphDeltaItem::Summary(Box::new(n), "N".into()),
+            GraphDeltaItem::Flags { gid: "A".into(), unread: Some(false), starred: Some(true) },
+            GraphDeltaItem::Removed("C".into()),
+            GraphDeltaItem::Flags { gid: "N".into(), unread: Some(true), starred: None },
+        ];
+        let applied = graph_apply_delta(&cache, 1, "Work", items, &mut uids);
+        assert_eq!(applied, GraphDeltaApplied { changed: true, arrived: true, relist: false });
+        let rows = cache.load_messages(1, "Work", 2);
+        let by = |id: &str| rows.iter().find(|m| m.uid == hash_uid(id)).cloned();
+        assert!(by("C").is_none());
+        let a = by("A").expect("A");
+        assert!(!a.unread && a.starred);
+        assert!(by("N").expect("N").unread, "a flag change after the summary in the same round");
+        assert!(by("B").is_some());
+        assert_eq!(uids.get(&hash_uid("N")).map(String::as_str), Some("N"));
+        assert!(!uids.contains_key(&hash_uid("C")));
+
+        let unknown = vec![GraphDeltaItem::Flags { gid: "X".into(), unread: Some(false), starred: None }];
+        let applied = graph_apply_delta(&cache, 1, "Work", unknown, &mut uids);
+        assert_eq!(applied, GraphDeltaApplied { changed: false, arrived: false, relist: true });
+        assert_eq!(graph_apply_delta(&cache, 1, "Work", Vec::new(), &mut uids), GraphDeltaApplied::default());
+    }
+
+    /// The poll's turn for a followed folder, against recorded answers: a
+    /// spent link (410) is dropped, the folder is listed and a new round
+    /// starts without sending the list again; the next round brings new
+    /// mail and a removal, sent to the list once; a quiet round sends
+    /// nothing.
+    #[tokio::test]
+    async fn the_poll_follows_a_folder_by_delta_and_falls_back() {
+        let listed: Vec<serde_json::Value> = (1..=3).map(|i| graph_msg(&format!("M{i}"), &day(10 - i))).collect();
+        let mut arrived = graph_msg("N1", &day(20));
+        arrived["isRead"] = serde_json::json!(false);
+        let (origin, server) = serve(vec![
+            answer(
+                "$deltatoken=OLD",
+                410,
+                serde_json::json!({
+                    "error": { "code": "syncStateNotFound", "message": "The sync state was not found." }
+                }),
+            ),
+            answer("$top=100&$orderby", 200, serde_json::json!({ "value": listed })),
+            answer(
+                "messages/delta?$filter",
+                200,
+                delta_page(listed.clone(), None, Some("{origin}/me/mailFolders/F-work/messages/delta?$deltatoken=NEW")),
+            ),
+            answer(
+                "$deltatoken=NEW",
+                200,
+                delta_page(
+                    vec![arrived, removed("M3")],
+                    None,
+                    Some("{origin}/me/mailFolders/F-work/messages/delta?$deltatoken=N2"),
+                ),
+            ),
+            answer(
+                "$deltatoken=N2",
+                200,
+                delta_page(Vec::new(), None, Some("{origin}/me/mailFolders/F-work/messages/delta?$deltatoken=N3")),
+            ),
+        ]);
+        let cache = Cache::in_memory().expect("cache");
+        cache.upsert_messages(1, "Work", &[row("M1", ts(&day(9)), 2), row("GONE", ts(&day(8)) + 60, 2)]);
+        let mut state = state_for(&origin, "Work", 2, "F-work");
+        state.delta.insert(
+            "Work".into(),
+            GraphDelta {
+                gid: "F-work".into(),
+                link: Some(format!("{origin}/me/mailFolders/F-work/messages/delta?$deltatoken=OLD")),
+                ..Default::default()
+            },
+        );
+        // Listed lately, which a failed link must not count on.
+        state.synced.insert("Work".into(), std::time::Instant::now());
+        let account = super::super::sample_account();
+        let events = std::cell::RefCell::new(Vec::new());
+        let emit = |e: WorkerEvent| events.borrow_mut().push(e);
+        let full = Duration::from_secs(120);
+
+        graph_delta_folder("t", 1, &account, &cache, &mut state, "Work", full, &emit).await;
+        assert_eq!(
+            state.delta["Work"].link.as_deref(),
+            Some(format!("{origin}/me/mailFolders/F-work/messages/delta?$deltatoken=NEW").as_str())
+        );
+        let lists: Vec<Vec<u32>> = events
+            .borrow()
+            .iter()
+            .filter_map(|e| match e {
+                WorkerEvent::Messages { folder_id: 2, messages } => Some(messages.iter().map(|m| m.uid).collect()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(lists.len(), 1, "the listing is sent, the round that repeats it is not");
+        assert!(!lists[0].contains(&hash_uid("GONE")), "the listing settles what went");
+        events.borrow_mut().clear();
+
+        graph_delta_folder("t", 1, &account, &cache, &mut state, "Work", full, &emit).await;
+        let events_now = events.take();
+        let lists: Vec<&Vec<Message>> = events_now
+            .iter()
+            .filter_map(|e| match e {
+                WorkerEvent::Messages { folder_id: 2, messages } => Some(messages),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(lists.len(), 1);
+        let uids: Vec<u32> = lists[0].iter().map(|m| m.uid).collect();
+        assert!(uids.contains(&hash_uid("N1")) && !uids.contains(&hash_uid("M3")), "{uids:?}");
+        assert!(events_now.iter().any(|e| matches!(e, WorkerEvent::FolderUnread { folder_id: 2, unread: 1 })));
+
+        graph_delta_folder("t", 1, &account, &cache, &mut state, "Work", full, &emit).await;
+        assert!(events.borrow().is_empty(), "nothing changed, nothing sent");
+        assert!(state.delta["Work"].link.as_deref().is_some_and(|l| l.ends_with("$deltatoken=N3")));
+
+        let seen = server.join().expect("server");
+        assert_eq!(seen.len(), 5);
+        let start = "messages/delta?$filter=receivedDateTime%20ge%202026-09-07T09%3A00%3A00Z";
+        assert!(seen[2].contains(start), "{}", seen[2]);
+    }
+
+    /// A round that cannot start leaves the folder without a link until
+    /// the next full poll's time, and counts the failure.
+    #[tokio::test]
+    async fn a_failed_start_waits_for_the_full_poll() {
+        let (origin, server) = serve(vec![answer(
+            "messages/delta?$filter",
+            400,
+            serde_json::json!({ "error": { "code": "ErrorInvalidRequest", "message": "no" } }),
+        )]);
+        let cache = Cache::in_memory().expect("cache");
+        let mut state = state_for(&origin, "Work", 2, "F-work");
+        state.synced.insert("Work".into(), std::time::Instant::now());
+        let account = super::super::sample_account();
+        let emit = |_: WorkerEvent| {};
+        let full = Duration::from_secs(120);
+        graph_delta_folder("t", 1, &account, &cache, &mut state, "Work", full, &emit).await;
+        let d = &state.delta["Work"];
+        assert!(d.link.is_none() && d.failures == 1);
+        assert_eq!(graph_delta_step(d, true, std::time::Instant::now()), GraphDeltaStep::Wait);
+        // Waiting costs no request: the server has only the one answer.
+        graph_delta_folder("t", 1, &account, &cache, &mut state, "Work", full, &emit).await;
+        assert_eq!(server.join().expect("server").len(), 1);
     }
 
     /// #334: a flagged message's due date, in UTC; none once the flag is

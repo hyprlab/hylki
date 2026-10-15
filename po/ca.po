@@ -5078,9 +5078,10 @@ msgstr ""
 "La llibreta d'adreces on va un contacte creat a l'Hylki, tret que se "
 "n'esculli una altra en el moment de crear-lo."
 
+#, fuzzy
 msgid ""
-"Receives messages the moment they arrive. Microsoft 365 accounts check at "
-"the interval above."
+"Receives messages the moment they arrive. Microsoft 365 accounts check every "
+"30 seconds."
 msgstr ""
 "Rep els missatges en el moment que arriben. Els comptes de Microsoft 365 "
 "comproven a l'interval de dalt."

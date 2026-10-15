@@ -5147,9 +5147,10 @@ msgstr ""
 "La rubrica in cui va un contatto creato in Hylki, a meno che non ne venga "
 "scelta un'altra al momento della creazione."
 
+#, fuzzy
 msgid ""
-"Receives messages the moment they arrive. Microsoft 365 accounts check at "
-"the interval above."
+"Receives messages the moment they arrive. Microsoft 365 accounts check every "
+"30 seconds."
 msgstr ""
 "Riceve i messaggi nel momento in cui arrivano. Gli account Microsoft 365 "
 "controllano all'intervallo sopra."

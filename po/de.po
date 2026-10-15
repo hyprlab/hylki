@@ -5281,9 +5281,11 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Receives messages the moment they arrive. Microsoft 365 accounts check at "
-"the interval above."
+"Receives messages the moment they arrive. Microsoft 365 accounts check every "
+"30 seconds."
 msgstr ""
+"Empfängt Nachrichten, sobald sie eintreffen. Microsoft-365-Konten prüfen alle "
+"30 Sekunden."
 
 msgid "Notifications"
 msgstr "Benachrichtigungen"

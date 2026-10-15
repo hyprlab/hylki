@@ -5147,9 +5147,10 @@ msgstr ""
 "Το βιβλίο διευθύνσεων όπου αποθηκεύεται μια επαφή που δημιουργείται στο "
 "Hylki, εκτός αν επιλεγεί άλλο κατά τη δημιουργία της."
 
+#, fuzzy
 msgid ""
-"Receives messages the moment they arrive. Microsoft 365 accounts check at "
-"the interval above."
+"Receives messages the moment they arrive. Microsoft 365 accounts check every "
+"30 seconds."
 msgstr ""
 "Λαμβάνει τα μηνύματα μόλις φτάσουν. Οι λογαριασμοί Microsoft 365 ελέγχονται "
 "στο παραπάνω διάστημα."

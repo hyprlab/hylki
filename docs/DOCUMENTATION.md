@@ -394,6 +394,31 @@ during the build and they're compiled in via `option_env!`:
 HYLKI_GOOGLE_CLIENT_ID=... HYLKI_GOOGLE_CLIENT_SECRET=... cargo build --release
 ```
 
+### New mail on Microsoft 365
+
+A Microsoft 365 account reads its mail through Microsoft Graph, which has no
+push channel a desktop app can use, so Hylki asks for new mail. With
+**Settings → General → Instant new mail (push)** on, and the account's own
+**Syncing → Instant new mail** not off, it asks every 30 seconds what changed
+in the Inbox, the two folders opened last and the account's favorites, six
+folders at most. That is a delta query: one request per folder while nothing
+changes, and when something did, the new mail, read states, flags and the
+messages deleted or moved away, applied to the cached folder and shown at
+once. A new message in the Inbox is announced once, as before.
+
+The unread counts of the other folders, where server rules may have filed
+mail, are refreshed at the **Check for new mail** interval: every two minutes
+when that is set to Manually, never more often than once a minute. With push
+off, the delta query keeps that interval too.
+
+Each answer ends with a link that asks for the next changes, which Hylki
+keeps in memory only. When Microsoft no longer accepts a link, or a request
+with it fails, the folder's newest mail is listed as it was before delta
+queries, and a new link is taken from there: a lost link costs one listing,
+never mail. Opening a folder still lists it, and the background index still
+reconciles the whole folder, so what the server no longer has leaves the
+cache the same way.
+
 ### Cloud attachments (Nextcloud, OneDrive, Dropbox, Seafile)
 
 Settings → Cloud Storage holds the accounts the composer's upload button can

@@ -5107,9 +5107,10 @@ msgstr ""
 "La libreta de direcciones en la que se guardan los contactos creados en "
 "Hylki, salvo que se elija otra al crearlos."
 
+#, fuzzy
 msgid ""
-"Receives messages the moment they arrive. Microsoft 365 accounts check at "
-"the interval above."
+"Receives messages the moment they arrive. Microsoft 365 accounts check every "
+"30 seconds."
 msgstr ""
 "Recibe los mensajes en cuanto llegan. Las cuentas de Microsoft 365 se "
 "comprueban según el intervalo indicado arriba."

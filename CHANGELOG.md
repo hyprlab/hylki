@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Changed: Microsoft 365 finds new mail within half a minute, at a
+  fraction of the traffic.** With push on, the Inbox, the two folders
+  opened last and the favorites are asked every 30 seconds what changed,
+  by Graph delta query: one small request a folder while nothing did,
+  instead of listing the Inbox's newest 300 messages, three requests,
+  every few minutes. Read states, flags and mail deleted elsewhere come
+  with it. The other folders' counts keep the Check for new mail
+  interval, and with push off so does everything. A delta link Microsoft
+  no longer takes sends the folder back to a listing.
+
 - **Changed: a reply sent from the reading pane becomes its card in the
   conversation.** The editor lifts out of the composer and moves to where
   the reply now sits in the conversation, turning into its card on the
