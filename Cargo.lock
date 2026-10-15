@@ -1655,6 +1655,7 @@ dependencies = [
  "dbus-secret-service",
  "log",
  "secret-service",
+ "zbus 4.4.0",
  "zeroize",
 ]
 

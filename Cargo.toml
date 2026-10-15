@@ -39,7 +39,14 @@ poppler-rs = { version = "0.24", features = ["v20_9"] }
 cairo-rs = { version = "0.20", features = ["png", "pdf"] }
 # The printed page footer's text, laid out by Pango so any script prints (#359).
 pangocairo = "0.20"
-keyring = { version = "3", default-features = false, features = ["sync-secret-service", "crypto-rust"] }
+# The zbus-based Secret Service backend, not the dbus one: dbus-secret-service
+# gives every D-Bus call a fixed two-second timeout, and a provider that asks
+# for something first (pass-secret-service decrypting with a security key that
+# wants a tap) answers later than that, so the read failed as "keyring
+# unavailable". zbus waits for the answer. "async-io", not "tokio": keyring's
+# blocking calls are made from inside the worker's tokio runtime, where zbus's
+# tokio block_on would panic; async-io's blocks the thread like dbus did.
+keyring = { version = "3", default-features = false, features = ["async-secret-service", "async-io", "crypto-rust"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
@@ -66,7 +73,7 @@ dirs = "5"
 
 # OAuth: PKCE S256 (RFC 7636) needs SHA-256 + base64url, and every token and
 # CSP nonce comes from the OS CSPRNG. All three are already in the dependency
-# graph via keyring, so naming them here adds no new downloads.
+# graph (keyring, the mail stack, ring), so naming them here adds no new downloads.
 sha2 = "0.10"
 base64 = "0.22"
 getrandom = "0.2"

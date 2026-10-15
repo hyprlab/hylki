@@ -2,8 +2,8 @@
 
 Hylki needs the Rust toolchain ([rustup](https://rustup.rs)), a C compiler,
 and the GTK 4 / libadwaita / WebKitGTK 6 development libraries, plus
-OpenSSL, D-Bus, gettext and Wayland headers. At runtime it needs a Secret
-Service provider (e.g. gnome-keyring).
+OpenSSL, gettext and Wayland headers. At runtime it needs a Secret Service
+provider (e.g. gnome-keyring).
 
 ## Dependencies
 
@@ -11,15 +11,14 @@ Service provider (e.g. gnome-keyring).
 
 ```sh
 sudo dnf install gcc gcc-c++ gtk4-devel libadwaita-devel webkitgtk6.0-devel \
-    poppler-glib-devel openssl-devel dbus-devel gettext-devel wayland-devel
+    poppler-glib-devel openssl-devel gettext-devel wayland-devel
 ```
 
 **Debian / Ubuntu**
 
 ```sh
 sudo apt install build-essential pkg-config libgtk-4-dev libadwaita-1-dev \
-    libwebkitgtk-6.0-dev libpoppler-glib-dev libssl-dev libdbus-1-dev gettext \
-    libwayland-dev
+    libwebkitgtk-6.0-dev libpoppler-glib-dev libssl-dev gettext libwayland-dev
 ```
 
 ## Build and install

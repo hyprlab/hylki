@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: a keyring that asks first was taken for no keyring.** Every
+  read gave up after two seconds, so a Secret Service provider that waits
+  on the user, like pass-secret-service decrypting with a security key
+  that wants a tap, was reported as unavailable. Hylki now waits for the
+  answer. Building from source no longer needs the D-Bus headers.
+
 - **Added: search results say which folder they are in** (#374, requested
   by 3v1n0). A search across folders puts a pill with the folder's name on
   each result.
