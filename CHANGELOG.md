@@ -10,6 +10,11 @@
   nothing is downloaded ahead: bodies and attachments of new mail load
   when opened, and the background index of each mailbox waits until the
   connection is no longer metered.
+- **Fixed: a message sent while an IMAP account was offline was lost.**
+  The send was dropped, composer closed, when the IMAP server could not
+  be reached, instead of being kept like a failed one. It now goes to the
+  Outbox, which sends it once the connection is back, and one scheduled
+  with Send Later waits there as usual.
 
 - **Changed: a reply sent from the reading pane becomes its card in the
   conversation.** The editor lifts out of the composer and moves to where

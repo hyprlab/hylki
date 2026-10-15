@@ -1773,6 +1773,29 @@ async fn run_imap(
                 {
                     emit(WorkerEvent::BackfillDone { folder_id: *folder_id });
                 }
+                // A message sent now has a closed composer behind it: this
+                // is its only copy. Into the Outbox with it, as a failed
+                // send would be, rather than dropped with the request; the
+                // Outbox goes out first thing once a connection is back.
+                if let MailRequest::Send { mut message, sent_path } = req {
+                    restore_msgid_case(cache.as_ref(), &mut message);
+                    match message.send_at.filter(|t| *t > crate::datefmt::now()) {
+                        Some(at) => schedule_send(
+                            cache.as_ref(), account_id, &account, &message, sent_path.as_deref(), at, &emit,
+                        ),
+                        None => {
+                            let why = if may_connect(&account.imap_host) {
+                                i18n("Could not reach the server")
+                            } else {
+                                offline_text()
+                            };
+                            send_failed(
+                                cache.as_ref(), account_id, &account, &message, sent_path.as_deref(), &why,
+                                false, &emit,
+                            );
+                        }
+                    }
+                }
                 continue;
             }
         }
