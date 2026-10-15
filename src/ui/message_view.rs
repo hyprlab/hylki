@@ -2779,6 +2779,13 @@ impl Component for MessageView {
             }
             MessageViewInput::Mapped => {
                 if std::mem::take(&mut self.painted_hidden) && self.current.is_some() && !self.loading {
+                    // The document handed over while hidden never got to
+                    // scroll: unless the reader has a place to keep, the one
+                    // now painted takes the open scroll it was owed, rather
+                    // than staying at the top of the conversation.
+                    if self.saved_anchor.is_none() {
+                        self.did_autoscroll = false;
+                    }
                     self.shown_fingerprint = None;
                     self.render();
                 }

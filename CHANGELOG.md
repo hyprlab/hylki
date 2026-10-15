@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: a conversation opened at its top instead of its new mail.**
+  A conversation handed to the reader while it was still covered (by the
+  loading spinner, or with the window in the background) was painted
+  again once on screen, and that second paint kept the place of a scroll
+  that had never happened: the top. It now gets the open scroll to the
+  first unread or newest message, unless the reader was scrolled.
+
 - **Changed: a reply sent from the reading pane becomes its card in the
   conversation.** The editor lifts out of the composer and moves to where
   the reply now sits in the conversation, turning into its card on the
