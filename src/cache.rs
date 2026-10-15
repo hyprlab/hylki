@@ -155,12 +155,29 @@ CREATE TABLE IF NOT EXISTS account_owner (
     account_id INTEGER PRIMARY KEY,
     email      TEXT    NOT NULL
 );
+CREATE TABLE IF NOT EXISTS snoozes (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_id     INTEGER NOT NULL,
+    message_id     TEXT    NOT NULL,
+    folder_path    TEXT    NOT NULL,
+    snoozed_path   TEXT    NOT NULL,
+    wake_at        INTEGER NOT NULL,
+    batch          TEXT    NOT NULL DEFAULT '',
+    from_name      TEXT    NOT NULL DEFAULT '',
+    from_addr      TEXT    NOT NULL DEFAULT '',
+    subject        TEXT    NOT NULL DEFAULT '',
+    preview        TEXT    NOT NULL DEFAULT '',
+    body           TEXT    NOT NULL DEFAULT '',
+    ts             INTEGER NOT NULL DEFAULT 0,
+    has_attachment INTEGER NOT NULL DEFAULT 0,
+    UNIQUE (account_id, message_id)
+);
 ";
 
 /// Every table whose rows belong to one account, by `account_id`. An account's
 /// id is its place in the account list, so `Cache::claim_accounts` moves
 /// these rows when the places change.
-const ACCOUNT_TABLES: [&str; 11] = [
+const ACCOUNT_TABLES: [&str; 12] = [
     "folders",
     "refs_repair",
     "messages",
@@ -172,6 +189,7 @@ const ACCOUNT_TABLES: [&str; 11] = [
     "attachments_checked",
     "attachment_meta",
     "attachment_scan",
+    "snoozes",
 ];
 
 /// Bump when the table layout changes; older rows are dropped on open.
@@ -2218,6 +2236,98 @@ impl Cache {
         );
     }
 
+    // -----------------------------------------------------------------------
+    // Snooze: messages put away until a time of the user's choosing
+    // -----------------------------------------------------------------------
+
+    /// Remember a snoozed message. A message snoozed again (from the
+    /// Snoozed folder's own listing, or after a wake that found nothing)
+    /// replaces its earlier record. Returns its id.
+    pub fn add_snooze(&self, item: &crate::models::SnoozedItem) -> Option<u32> {
+        self.conn
+            .execute(
+                "INSERT OR REPLACE INTO snoozes(account_id, message_id, folder_path, snoozed_path, \
+                 wake_at, batch, from_name, from_addr, subject, preview, body, ts, has_attachment) \
+                 VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+                params![
+                    item.account_id,
+                    item.message_id,
+                    item.folder_path,
+                    item.snoozed_path,
+                    item.wake_at,
+                    item.batch,
+                    item.from_name,
+                    item.from_addr,
+                    item.subject,
+                    item.preview,
+                    item.body,
+                    item.timestamp,
+                    item.has_attachment,
+                ],
+            )
+            .map_err(|e| tracing::warn!("could not record the snooze: {e}"))
+            .ok()?;
+        Some(self.conn.last_insert_rowid() as u32)
+    }
+
+    /// Every snoozed message, of every account, soonest back first.
+    pub fn snoozes(&self) -> Vec<crate::models::SnoozedItem> {
+        let mut stmt = match self.conn.prepare(
+            "SELECT id, account_id, message_id, folder_path, snoozed_path, wake_at, batch, \
+             from_name, from_addr, subject, preview, body, ts, has_attachment \
+             FROM snoozes ORDER BY wake_at, id",
+        ) {
+            Ok(s) => s,
+            Err(e) => {
+                tracing::warn!("could not read the snoozed mail: {e}");
+                return Vec::new();
+            }
+        };
+        let rows = stmt.query_map([], |r| {
+            Ok(crate::models::SnoozedItem {
+                id: r.get::<_, i64>(0)? as u32,
+                account_id: r.get::<_, i64>(1)? as u32,
+                message_id: r.get(2)?,
+                folder_path: r.get(3)?,
+                snoozed_path: r.get(4)?,
+                wake_at: r.get(5)?,
+                batch: r.get(6)?,
+                from_name: r.get(7)?,
+                from_addr: r.get(8)?,
+                subject: r.get(9)?,
+                preview: r.get(10)?,
+                body: r.get(11)?,
+                timestamp: r.get(12)?,
+                has_attachment: r.get(13)?,
+            })
+        });
+        match rows {
+            Ok(rows) => rows.filter_map(Result::ok).collect(),
+            Err(e) => {
+                tracing::warn!("could not read the snoozed mail: {e}");
+                Vec::new()
+            }
+        }
+    }
+
+    /// Forget snoozed messages: they are back, or no longer where the
+    /// snooze put them.
+    pub fn drop_snoozes(&self, account_id: u32, message_ids: &[String]) {
+        for id in message_ids {
+            let _ = self.conn.execute(
+                "DELETE FROM snoozes WHERE account_id = ?1 AND message_id = ?2",
+                params![account_id, id],
+            );
+        }
+    }
+
+    /// Bring snoozed messages back at another time.
+    pub fn set_snooze_wake(&self, ids: &[u32], wake_at: i64) {
+        for id in ids {
+            let _ = self.conn.execute("UPDATE snoozes SET wake_at = ?2 WHERE id = ?1", params![id, wake_at]);
+        }
+    }
+
     /// Aggregate every address seen in stored mail (senders received +
     /// recipients sent/recorded), as (name, email, frequency), most-frequent first.
     pub fn address_history(&self) -> Vec<(String, String, u32)> {
@@ -2804,6 +2914,41 @@ mod tests {
         c.claim_accounts(&all(&[(1, "d@x")])).unwrap();
         assert!(paths(1).is_empty() && paths(2).is_empty());
         assert_eq!(body(2), None);
+    }
+
+    /// A snooze is kept until it is dropped, can be moved to another time,
+    /// and snoozing the same message again replaces it rather than adding a
+    /// second wake-up.
+    #[test]
+    fn snoozes_round_trip() {
+        let c = Cache::in_memory().unwrap();
+        let item = |mid: &str, wake_at: i64| crate::models::SnoozedItem {
+            id: 0,
+            account_id: 1,
+            message_id: mid.into(),
+            folder_path: "INBOX".into(),
+            snoozed_path: "Snoozed".into(),
+            wake_at,
+            batch: "b1".into(),
+            from_name: "Ada".into(),
+            from_addr: "ada@example.com".into(),
+            subject: "Lunch".into(),
+            preview: "Shall we?".into(),
+            body: "<p>Shall we?</p>".into(),
+            timestamp: 42,
+            has_attachment: true,
+        };
+        let a = c.add_snooze(&item("a@x", 200)).unwrap();
+        c.add_snooze(&item("b@x", 100)).unwrap();
+        let all = c.snoozes();
+        assert_eq!(all.iter().map(|i| i.message_id.as_str()).collect::<Vec<_>>(), ["b@x", "a@x"]);
+        assert_eq!(all[1], crate::models::SnoozedItem { id: a, ..item("a@x", 200) });
+        c.set_snooze_wake(&[a], 50);
+        assert_eq!(c.snoozes()[0].message_id, "a@x");
+        c.add_snooze(&item("a@x", 300)).unwrap();
+        assert_eq!(c.snoozes().len(), 2);
+        c.drop_snoozes(1, &["a@x".to_string(), "b@x".to_string()]);
+        assert!(c.snoozes().is_empty());
     }
 
     /// How long the conversation lookups take on a real cache (#259):

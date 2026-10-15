@@ -81,6 +81,9 @@ msgstr "Tentar enviar esta mensagem agora"
 msgid "Send all"
 msgstr "Enviar tudo"
 
+msgid "Unsnooze: bring it back now"
+msgstr ""
+
 msgid "Reply"
 msgstr "Responder"
 
@@ -150,6 +153,13 @@ msgstr "Etiquetas"
 msgid "Move To…"
 msgstr "Mover para…"
 
+msgid "Snooze…"
+msgstr ""
+
+#, fuzzy
+msgid "Change when it comes back"
+msgstr "Avisar quando o conteúdo remoto estiver bloqueado"
+
 msgid "Attachments"
 msgstr "Anexos"
 
@@ -158,6 +168,15 @@ msgstr "Alternar barra lateral"
 
 msgid "Keyboard Shortcuts"
 msgstr "Atalhos de teclado"
+
+msgid "Snooze until"
+msgstr ""
+
+msgid "Snooze"
+msgstr ""
+
+msgid "Could not bring snoozed mail back yet: {e}. Hylki will keep trying."
+msgstr ""
 
 msgid "Create Folder"
 msgstr "Criar pasta"
@@ -439,6 +458,9 @@ msgstr "Contatos"
 msgid "Outbox"
 msgstr "Caixa de saída"
 
+msgid "Snoozed"
+msgstr ""
+
 #, fuzzy
 msgid "Tag"
 msgstr "Etiquetas"
@@ -463,6 +485,19 @@ msgstr ""
 
 msgid "Your tags"
 msgstr "Suas etiquetas"
+
+msgid ""
+"{n} message could not be snoozed: it has no Message-ID, or its account has "
+"no folders"
+msgid_plural ""
+"{n} messages could not be snoozed: they have no Message-ID, or their account "
+"has no folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Agendada para {when}"
 
 msgid "Move to {name}"
 msgstr "Mover para {name}"
@@ -492,6 +527,12 @@ msgstr ""
 
 msgid "Restart Now"
 msgstr "Reiniciar agora"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "Change Time…"
+msgstr ""
 
 msgid "Move to Inbox"
 msgstr "Mover para a Caixa de entrada"
@@ -1129,6 +1170,9 @@ msgstr "Próxima mensagem na conversa"
 msgid "Move to a folder"
 msgstr "Mover pasta"
 
+msgid "Snooze until a time you choose"
+msgstr ""
+
 msgid "Undo the last action"
 msgstr ""
 
@@ -1455,6 +1499,19 @@ msgstr "Essa pasta não está no servidor"
 msgid "The file is larger than {size} MB"
 msgstr ""
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Hoje, {time}"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Amanhã de manhã ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Amanhã à tarde ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "Segunda-feira de manhã ({time})"
+
 msgid "{used} of {limit} used"
 msgstr "{used} de {limit} utilizados"
 
@@ -1589,6 +1646,9 @@ msgstr "Em espera desde {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Agendada para {when}"
+
+msgid "Until {when}"
+msgstr ""
 
 msgid "Today, {time}"
 msgstr "Hoje, {time}"
@@ -3560,15 +3620,6 @@ msgstr "Enviar mais tarde"
 msgid "Send now"
 msgstr "Enviar agora"
 
-msgid "Tomorrow morning ({time})"
-msgstr "Amanhã de manhã ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Amanhã à tarde ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "Segunda-feira de manhã ({time})"
-
 msgid "Pick a date and time…"
 msgstr "Escolher uma data e hora…"
 
@@ -3803,12 +3854,6 @@ msgid ""
 msgstr ""
 "Não existe uma chave OpenPGP para {addr}. Solicite a chave pública desse "
 "contato ou procure-a em Configurações, OpenPGP."
-
-msgid "That time has passed"
-msgstr "Essa hora já passou"
-
-msgid "Choose a time later than now."
-msgstr "Escolha uma hora posterior à atual."
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
@@ -4129,6 +4174,12 @@ msgstr[1] "{n} mensagens"
 
 msgid "Search folders"
 msgstr "Pesquisar pastas"
+
+msgid "That time has passed"
+msgstr "Essa hora já passou"
+
+msgid "Choose a time later than now."
+msgstr "Escolha uma hora posterior à atual."
 
 msgid "the portal answered response code {code}"
 msgstr "o portal respondeu com o código {code}"
@@ -6992,6 +7043,12 @@ msgstr "Ainda não existem contas"
 msgid "New Message from Template…"
 msgstr "Nova mensagem a partir de um modelo…"
 
+#, fuzzy
+msgid "Snoozed: {n} conversation comes back later"
+msgid_plural "Snoozed: {n} conversations come back later"
+msgstr[0] "Confirmar a exclusão de conversas"
+msgstr[1] "Confirmar a exclusão de conversas"
+
 msgid "Mark Inbox as Read"
 msgstr "Marcar a Caixa de entrada como lida"
 
@@ -7385,6 +7442,10 @@ msgstr "Não foi possível esvaziar a pasta: {e}"
 
 msgid "Undo failed: {e}"
 msgstr "Falha ao desfazer: {e}"
+
+#, fuzzy
+msgid "Could not snooze: {e}"
+msgstr "Não foi possível carregar o código fonte: {e}"
 
 msgid "Could not create folder: {e}"
 msgstr "Não foi possível criar a pasta: {e}"

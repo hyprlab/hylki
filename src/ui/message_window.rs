@@ -182,6 +182,11 @@ pub enum MessageWindowInput {
     MoveToInbox,
     /// The folder picker, under the Move To button (or the ⋯).
     MoveTo,
+    /// Snooze's menu, under the Snooze button (or the ⋯).
+    SnoozeMenu,
+    /// Snooze the message until then (`None`: the main window asks when),
+    /// and close.
+    Snooze(Option<i64>),
     /// The folder picker at a window point (a card's Move to…).
     MoveToAt { message: Box<Message>, x: f64, y: f64 },
     TagMenu,
@@ -250,6 +255,8 @@ pub enum MessageWindowOutput {
     LoadAttachments(Box<Message>),
     /// The folder picker for this message, at window point (x, y).
     MoveTo { message: Box<Message>, x: f64, y: f64 },
+    /// Snooze this message until `wake_at` (`None`: ask when).
+    Snooze { message: Box<Message>, wake_at: Option<i64> },
     /// Put a tag on this message, or take it off (#71).
     SetTag { message: Box<Message>, keyword: String, add: bool },
     /// Take this attachment out of the message on the server (#289).
@@ -690,6 +697,25 @@ impl Component for MessageWindow {
                 self.emit_action(RowAction::MoveToInbox, &sender);
                 root.close();
             }
+            MessageWindowInput::SnoozeMenu => {
+                let button = self.button(ToolbarItem::Snooze).filter(|b| b.is_mapped()).unwrap_or(&self.bar.overflow);
+                let s = sender.input_sender().clone();
+                let times = crate::ui::later_picker::snooze_sections(move |wake_at| {
+                    let _ = s.send(MessageWindowInput::Snooze(wake_at));
+                });
+                crate::ui::context_menu::show_context_menu_with_header(
+                    button,
+                    f64::from(button.width() / 2),
+                    f64::from(button.height()),
+                    Some(&i18n("Snooze until")),
+                    times,
+                );
+            }
+            // Snoozed: it leaves, as an archived message does.
+            MessageWindowInput::Snooze(wake_at) => {
+                let _ = sender.output(MessageWindowOutput::Snooze { message: Box::new(self.msg.clone()), wake_at });
+                root.close();
+            }
             MessageWindowInput::MoveTo => {
                 // Under the Move To button, or under the ⋯ that stands in
                 // for it while the toolbar is folded.
@@ -986,6 +1012,7 @@ impl MessageWindow {
                     }
                     section.push(entry(i18n("Move To…"), "folder", || MessageWindowInput::MoveTo));
                 }
+                ToolbarItem::Snooze => section.push(entry(i18n("Snooze…"), "alarm", || MessageWindowInput::SnoozeMenu)),
                 ToolbarItem::Find => {
                     section.push(entry(i18n("Find in Message"), "loupe-with-arrow", || MessageWindowInput::Find))
                 }
@@ -1032,6 +1059,7 @@ fn build_toolbar(header: &adw::HeaderBar, sender: &ComponentSender<MessageWindow
                 }
                 ToolbarItem::Tags => button("tag-outline-symbolic", i18n("Tags"), || MessageWindowInput::TagMenu),
                 ToolbarItem::MoveTo => button("folder-symbolic", i18n("Move To…"), || MessageWindowInput::MoveTo),
+                ToolbarItem::Snooze => button("alarm-symbolic", i18n("Snooze…"), || MessageWindowInput::SnoozeMenu),
                 ToolbarItem::Find => {
                     button("loupe-with-arrow-symbolic", i18n("Find in message (Ctrl+F)"), || MessageWindowInput::Find)
                 }

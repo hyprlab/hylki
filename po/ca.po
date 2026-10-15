@@ -74,6 +74,9 @@ msgstr "Intenta enviar aquest missatge ara"
 msgid "Send all"
 msgstr "Envia-ho tot"
 
+msgid "Unsnooze: bring it back now"
+msgstr ""
+
 msgid "Reply"
 msgstr "Respon"
 
@@ -143,6 +146,13 @@ msgstr "Etiquetes"
 msgid "Move To…"
 msgstr "Mou a…"
 
+msgid "Snooze…"
+msgstr ""
+
+#, fuzzy
+msgid "Change when it comes back"
+msgstr "Avisa quan es bloca el contingut remot"
+
 msgid "Attachments"
 msgstr "Adjunts"
 
@@ -151,6 +161,15 @@ msgstr "Mostra o amaga la barra lateral"
 
 msgid "Keyboard Shortcuts"
 msgstr "Dreceres de teclat"
+
+msgid "Snooze until"
+msgstr ""
+
+msgid "Snooze"
+msgstr ""
+
+msgid "Could not bring snoozed mail back yet: {e}. Hylki will keep trying."
+msgstr ""
 
 msgid "Create Folder"
 msgstr "Crea una carpeta"
@@ -413,6 +432,9 @@ msgstr "Contactes"
 msgid "Outbox"
 msgstr "Bústia de sortida"
 
+msgid "Snoozed"
+msgstr ""
+
 msgid "Tag"
 msgstr "Etiqueta"
 
@@ -434,6 +456,19 @@ msgstr ""
 
 msgid "Your tags"
 msgstr "Les teves etiquetes"
+
+msgid ""
+"{n} message could not be snoozed: it has no Message-ID, or its account has "
+"no folders"
+msgid_plural ""
+"{n} messages could not be snoozed: they have no Message-ID, or their account "
+"has no folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Programat per a {when}"
 
 msgid "Move to {name}"
 msgstr "Mou a {name}"
@@ -463,6 +498,12 @@ msgstr ""
 
 msgid "Restart Now"
 msgstr "Reinicia ara"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "Change Time…"
+msgstr ""
 
 msgid "Move to Inbox"
 msgstr "Mou a la bústia d'entrada"
@@ -1067,6 +1108,9 @@ msgstr ""
 msgid "Move to a folder"
 msgstr "Mou a una carpeta"
 
+msgid "Snooze until a time you choose"
+msgstr ""
+
 msgid "Undo the last action"
 msgstr "Desfés l'última acció"
 
@@ -1388,6 +1432,19 @@ msgstr "El fitxer no és un fitxer de text"
 msgid "The file is larger than {size} MB"
 msgstr "El fitxer és més gran de {size} MB"
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Avui, {time}"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Demà al matí ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Demà a la tarda ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "Dilluns al matí ({time})"
+
 msgid "{used} of {limit} used"
 msgstr "{used} de {limit} utilitzats"
 
@@ -1518,6 +1575,9 @@ msgstr "Esperant des de {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Programat per a {when}"
+
+msgid "Until {when}"
+msgstr ""
 
 msgid "Today, {time}"
 msgstr "Avui, {time}"
@@ -3461,15 +3521,6 @@ msgstr "Envia més tard"
 msgid "Send now"
 msgstr "Envia ara"
 
-msgid "Tomorrow morning ({time})"
-msgstr "Demà al matí ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Demà a la tarda ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "Dilluns al matí ({time})"
-
 msgid "Pick a date and time…"
 msgstr "Tria una data i una hora…"
 
@@ -3696,12 +3747,6 @@ msgid ""
 msgstr ""
 "No hi ha cap clau OpenPGP per a {addr}. Demana'ls la seva clau pública, o "
 "obtén-la a Paràmetres, OpenPGP."
-
-msgid "That time has passed"
-msgstr "Aquesta hora ja ha passat"
-
-msgid "Choose a time later than now."
-msgstr "Tria una hora posterior a ara."
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr "El fitxer es va moure o suprimir. Torna a adjuntar-lo des d'on és ara."
@@ -4019,6 +4064,12 @@ msgstr[1] "{n} missatges"
 
 msgid "Search folders"
 msgstr "Cerca carpetes"
+
+msgid "That time has passed"
+msgstr "Aquesta hora ja ha passat"
+
+msgid "Choose a time later than now."
+msgstr "Tria una hora posterior a ara."
 
 msgid "the portal answered response code {code}"
 msgstr "el portal ha respost amb el codi de resposta {code}"
@@ -6868,6 +6919,11 @@ msgstr "Encara no hi ha comptes"
 msgid "New Message from Template…"
 msgstr "Missatge nou a partir d'una plantilla…"
 
+msgid "Snoozed: {n} conversation comes back later"
+msgid_plural "Snoozed: {n} conversations come back later"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Mark Inbox as Read"
 msgstr "Marca la bústia d'entrada com a llegida"
 
@@ -7255,6 +7311,10 @@ msgstr "No s'ha pogut buidar la carpeta: {e}"
 
 msgid "Undo failed: {e}"
 msgstr "Desfer ha fallat: {e}"
+
+#, fuzzy
+msgid "Could not snooze: {e}"
+msgstr "No s'ha pogut carregar el codi font: {e}"
 
 msgid "Could not create folder: {e}"
 msgstr "No s'ha pogut crear la carpeta: {e}"

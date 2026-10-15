@@ -80,6 +80,9 @@ msgstr "Spróbuj teraz wysłać tę wiadomość"
 msgid "Send all"
 msgstr "Wyślij wszystkie"
 
+msgid "Unsnooze: bring it back now"
+msgstr ""
+
 msgid "Reply"
 msgstr "Odpowiedz"
 
@@ -149,6 +152,13 @@ msgstr "Etykiety"
 msgid "Move To…"
 msgstr "Przenieś do…"
 
+msgid "Snooze…"
+msgstr ""
+
+#, fuzzy
+msgid "Change when it comes back"
+msgstr "Ostrzeganie o zablokowanych zdalnych treściach"
+
 msgid "Attachments"
 msgstr "Załączniki"
 
@@ -157,6 +167,15 @@ msgstr "Przełącz panel boczny"
 
 msgid "Keyboard Shortcuts"
 msgstr "Skróty klawiszowe"
+
+msgid "Snooze until"
+msgstr ""
+
+msgid "Snooze"
+msgstr ""
+
+msgid "Could not bring snoozed mail back yet: {e}. Hylki will keep trying."
+msgstr ""
 
 msgid "Create Folder"
 msgstr "Utwórz katalog"
@@ -441,6 +460,9 @@ msgstr "Kontakty"
 msgid "Outbox"
 msgstr "Skrzynka nadawcza"
 
+msgid "Snoozed"
+msgstr ""
+
 #, fuzzy
 msgid "Tag"
 msgstr "Etykiety"
@@ -464,6 +486,20 @@ msgstr ""
 
 msgid "Your tags"
 msgstr "Własne etykiety"
+
+msgid ""
+"{n} message could not be snoozed: it has no Message-ID, or its account has "
+"no folders"
+msgid_plural ""
+"{n} messages could not be snoozed: they have no Message-ID, or their account "
+"has no folders"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Zaplanowano na {when}"
 
 msgid "Move to {name}"
 msgstr "Przenieś do katalogu {name}"
@@ -493,6 +529,12 @@ msgstr ""
 
 msgid "Restart Now"
 msgstr "Uruchom ponownie teraz"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "Change Time…"
+msgstr ""
 
 msgid "Move to Inbox"
 msgstr "Przenieś do skrzynki odbiorczej"
@@ -1154,6 +1196,9 @@ msgstr "Następna wiadomość w rozmowie"
 msgid "Move to a folder"
 msgstr "Przenieś katalog"
 
+msgid "Snooze until a time you choose"
+msgstr ""
+
 msgid "Undo the last action"
 msgstr ""
 
@@ -1482,6 +1527,19 @@ msgstr "Tego katalogu nie ma na serwerze"
 msgid "The file is larger than {size} MB"
 msgstr ""
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Dzisiaj, {time}"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Jutro rano ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Jutro po południu ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "W poniedziałek rano ({time})"
+
 msgid "{used} of {limit} used"
 msgstr ""
 
@@ -1622,6 +1680,9 @@ msgstr "Oczekuje od {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Zaplanowano na {when}"
+
+msgid "Until {when}"
+msgstr ""
 
 msgid "Today, {time}"
 msgstr "Dzisiaj, {time}"
@@ -3610,15 +3671,6 @@ msgstr "Wyślij później"
 msgid "Send now"
 msgstr "Wyślij teraz"
 
-msgid "Tomorrow morning ({time})"
-msgstr "Jutro rano ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Jutro po południu ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "W poniedziałek rano ({time})"
-
 msgid "Pick a date and time…"
 msgstr "Wybierz datę i godzinę…"
 
@@ -3866,12 +3918,6 @@ msgid ""
 msgstr ""
 "Brak klucza OpenPGP dla adresu {addr}. Poproś właściciela adresu o klucz "
 "publiczny lub pobierz go w oknie Ustawienia → OpenPGP."
-
-msgid "That time has passed"
-msgstr "Ten czas już minął"
-
-msgid "Choose a time later than now."
-msgstr "Wybierz godzinę w przyszłości."
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
@@ -4199,6 +4245,12 @@ msgstr[2] "{n} wiadomości"
 
 msgid "Search folders"
 msgstr "Wyszukaj katalogi"
+
+msgid "That time has passed"
+msgstr "Ten czas już minął"
+
+msgid "Choose a time later than now."
+msgstr "Wybierz godzinę w przyszłości."
 
 msgid "the portal answered response code {code}"
 msgstr "portal zwrócił kod odpowiedzi {code}"
@@ -7089,6 +7141,13 @@ msgstr "Brak kont"
 msgid "New Message from Template…"
 msgstr ""
 
+#, fuzzy
+msgid "Snoozed: {n} conversation comes back later"
+msgid_plural "Snoozed: {n} conversations come back later"
+msgstr[0] "Potwierdzanie usuwania rozmów"
+msgstr[1] "Potwierdzanie usuwania rozmów"
+msgstr[2] "Potwierdzanie usuwania rozmów"
+
 msgid "Mark Inbox as Read"
 msgstr "Oznacz skrzynkę odbiorczą jako przeczytaną"
 
@@ -7483,6 +7542,10 @@ msgstr "Nie udało się opróżnić katalogu: {e}"
 
 msgid "Undo failed: {e}"
 msgstr "Nie udało się cofnąć: {e}"
+
+#, fuzzy
+msgid "Could not snooze: {e}"
+msgstr "Nie udało się wczytać źródła: {e}"
 
 msgid "Could not create folder: {e}"
 msgstr "Nie udało się utworzyć katalogu: {e}"

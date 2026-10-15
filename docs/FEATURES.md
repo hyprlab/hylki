@@ -71,6 +71,10 @@ The full list. The [README](../README.md) carries a shorter one.
   returns, not lost. Queued messages can be edited, sent by hand or discarded.
 - **Send later:** schedule a message for tomorrow morning, Monday, or any
   date and time; it waits in the Outbox, editable, until then.
+- **Snooze:** put a message or conversation away until later today,
+  tomorrow, Monday or a time you pick; it waits in a Snoozed folder on the
+  server, out of the Inbox on every device, and comes back unread. See
+  [Snooze](DOCUMENTATION.md#snooze).
 
 ## Writing
 

@@ -286,7 +286,8 @@ impl SortFilterPopover {
 struct ReaderToolbarWidgets {
     /// Each action button inside its Focus Mode revealer.
     buttons: Vec<(config::ToolbarItem, gtk::Widget)>,
-    /// The Outbox's own buttons' revealers (Edit, Send, Send all).
+    /// The Outbox's own buttons' revealers (Edit, Send, Send all), and the
+    /// Snoozed view's (Unsnooze, Change Time).
     outbox: Vec<gtk::Revealer>,
     spinner: gtk::Widget,
     bin: adw::BreakpointBin,
@@ -738,6 +739,11 @@ pub struct AppModel {
     /// The reader toolbar's Move To… button (#164): the folder picker
     /// anchors to it.
     reader_move_btn: gtk::Button,
+    /// The reader toolbar's Snooze button: Snooze's menu anchors to it.
+    reader_snooze_btn: gtk::Button,
+    /// The Snoozed view's Change Time button, which the same menu anchors
+    /// to there.
+    reader_resnooze_btn: gtk::Button,
     /// Cache of fetched attachments, keyed by (account_id, message_id), so
     /// revisiting a message doesn't re-download them. Byte-bounded — raw
     /// attachment bytes for every message ever opened added up to hundreds of
@@ -1289,6 +1295,19 @@ pub struct AppModel {
     showing_outbox: bool,
     /// Messages waiting to be sent, per account, as last reported by its worker.
     outbox_by_account: HashMap<u32, Vec<crate::models::OutboxItem>>,
+    /// Whether the Snoozed view is showing, in the list and the reader, as
+    /// the Outbox does.
+    showing_snoozed: bool,
+    /// Every snoozed message, of every account, as the cache keeps them.
+    snoozed: Vec<crate::models::SnoozedItem>,
+    /// Snoozed messages whose return has been asked of their worker and not
+    /// yet answered, by (account, Message-ID): the clock skips them.
+    waking: HashSet<(u32, String)>,
+    /// Snoozed messages whose return failed and has been reported, so a
+    /// server that keeps refusing says so once rather than every tick.
+    wake_failed: HashSet<(u32, String)>,
+    /// Snoozes an undo took back, for a redo to put back (#200).
+    undone_snoozes: Vec<crate::models::SnoozedItem>,
     /// The sending identities a JMAP server keeps, per account (#346):
     /// offered as From addresses beside the account's own aliases.
     server_identities: HashMap<u32, Vec<(String, String)>>,
@@ -1477,6 +1496,22 @@ pub enum AppMsg {
     RetryAllOutbox,
     /// Send Later (#145): the half-minute clock that sends due queued mail.
     SendDueScheduled,
+    /// Show the Snoozed view: every snoozed message, with when it comes back.
+    ShowSnoozed,
+    /// Open Snooze's menu of times for what the reader's buttons act on
+    /// (the toolbar button, `b` among Gmail's keys, `z` among Hylki's).
+    SnoozeMenu,
+    /// Snooze `messages` until `wake_at`; `None` asks for a date and time
+    /// first. Rows of the Snoozed view are given the new time instead.
+    Snooze { messages: Vec<Message>, wake_at: Option<i64> },
+    /// The Snoozed view: bring the selected rows back now.
+    UnsnoozeNow,
+    /// Snooze's clock, on Send Later's: bring back what is due.
+    WakeDueSnoozes,
+    /// A snooze's move did not happen; the messages stay where they were.
+    SnoozeFailed { account_id: u32, message_ids: Vec<String> },
+    /// What came of bringing snoozed messages back.
+    Unsnoozed { account_id: u32, message_ids: Vec<String>, outcome: crate::worker::WakeOutcome },
     /// The gallery wants a page of attachments matching this query.
     GalleryLoad(Box<GalleryRequest>),
     /// Download an attachment the gallery knows of but has never fetched.
@@ -1581,6 +1616,9 @@ pub enum AppMsg {
     },
     /// HYLKI_SHOWCASE_POPOUT: open the open message in a window of its own.
     ShowcasePopout,
+    /// HYLKI_SHOWCASE_SNOOZE=<n>: snooze the first account's n newest Inbox
+    /// messages, and show them in the Snoozed view.
+    ShowcaseSnooze(usize),
     /// A message window's Move To: the folder picker over that window, at
     /// its point (x, y). The window closes once a folder is picked.
     PopoutMoveTo { key: (u32, u32), message: Box<Message>, x: f64, y: f64 },
@@ -2544,6 +2582,42 @@ impl SimpleComponent for AppModel {
                                         connect_clicked[sender] => move |_| sender.input(AppMsg::RetryAllOutbox),
                                     },
                                 },
+                                // The Snoozed view's own actions, in their place
+                                // the way the Outbox's are: bring it back now,
+                                // or at another time.
+                                #[name = "tb_unsnooze"]
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Button {
+                                        set_icon_name: "mail-inbox-symbolic",
+                                        set_tooltip_text: Some(i18n("Unsnooze: bring it back now").as_str()),
+                                        add_css_class: "flat",
+                                        #[watch]
+                                        set_visible: model.showing_snoozed
+                                            && model.reader_compose.is_none(),
+                                        #[watch]
+                                        set_sensitive: model.current.is_some() || model.many_selected(),
+                                        connect_clicked[sender] => move |_| sender.input(AppMsg::UnsnoozeNow),
+                                    },
+                                },
+                                #[name = "tb_resnooze"]
+                                pack_start = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideRight,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Box {
+                                        #[local_ref]
+                                        reader_resnooze_btn -> gtk::Button {
+                                            #[watch]
+                                            set_visible: model.showing_snoozed
+                                                && model.reader_compose.is_none(),
+                                            #[watch]
+                                            set_sensitive: model.current.is_some() || model.many_selected(),
+                                        },
+                                    },
+                                },
                                 // ---- The action buttons. Declared here in the
                                 // default order, then re-packed in init (and on
                                 // every change) in the user's saved order — see
@@ -2721,6 +2795,24 @@ impl SimpleComponent for AppModel {
                                         reader_move_btn -> gtk::Button {
                                             #[watch]
                                             set_visible: model.toolbar_visible(config::ToolbarItem::MoveTo),
+                                            #[watch]
+                                            set_sensitive: model.reply_target().is_some()
+                                                || model.many_selected(),
+                                        },
+                                    },
+                                },
+                                // Snooze: a menu of times to bring the target, or
+                                // the list selection, back at.
+                                #[name = "tb_snooze"]
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Box {
+                                        #[local_ref]
+                                        reader_snooze_btn -> gtk::Button {
+                                            #[watch]
+                                            set_visible: model.toolbar_visible(config::ToolbarItem::Snooze),
                                             #[watch]
                                             set_sensitive: model.reply_target().is_some()
                                                 || model.many_selected(),
@@ -3043,6 +3135,7 @@ impl SimpleComponent for AppModel {
                     MessageListOutput::Bulk { action, messages } => {
                         AppMsg::Bulk { action, messages }
                     }
+                    MessageListOutput::Snooze { messages, wake_at } => AppMsg::Snooze { messages, wake_at },
                     MessageListOutput::MoveTo { messages, offer_whole, x, y } => {
                         AppMsg::ListMoveTo { messages, offer_whole, x, y }
                     }
@@ -3361,6 +3454,18 @@ impl SimpleComponent for AppModel {
                 b.add_css_class("flat");
                 b
             },
+            reader_snooze_btn: {
+                let b = gtk::Button::from_icon_name(crate::ui::later_picker::SNOOZE_ICON);
+                b.set_tooltip_text(Some(i18n("Snooze…").as_str()));
+                b.add_css_class("flat");
+                b
+            },
+            reader_resnooze_btn: {
+                let b = gtk::Button::from_icon_name(crate::ui::later_picker::SNOOZE_ICON);
+                b.set_tooltip_text(Some(i18n("Change when it comes back").as_str()));
+                b.add_css_class("flat");
+                b
+            },
             attachment_cache: crate::ram_cache::RamCache::new(ATTACHMENT_CACHE_BUDGET),
             unified: false,
             unified_view: UnifiedView::Kind(FolderKind::Inbox),
@@ -3664,6 +3769,11 @@ impl SimpleComponent for AppModel {
             showing_contacts: false,
             showing_outbox: false,
             outbox_by_account: HashMap::new(),
+            showing_snoozed: false,
+            snoozed: Vec::new(),
+            waking: HashSet::new(),
+            wake_failed: HashSet::new(),
+            undone_snoozes: Vec::new(),
             server_identities: HashMap::new(),
             unified_emit_queued: std::cell::Cell::new(false),
             unified_dirty: std::cell::Cell::new(false),
@@ -3863,6 +3973,8 @@ impl SimpleComponent for AppModel {
         follow_motion_setting();
         let reader_tag_btn = model.reader_tag_btn.clone();
         let reader_move_btn = model.reader_move_btn.clone();
+        let reader_snooze_btn = model.reader_snooze_btn.clone();
+        let reader_resnooze_btn = model.reader_resnooze_btn.clone();
         let widgets = view_output!();
         let _ = model.reader_header.set(widgets.reader_header.clone());
         // Right-click on the header's empty space (not a button) offers
@@ -3933,6 +4045,7 @@ impl SimpleComponent for AppModel {
                 (T::ReadUnread, widgets.tb_read.clone().upcast()),
                 (T::Tags, widgets.tb_tags.clone().upcast()),
                 (T::MoveTo, widgets.tb_move.clone().upcast()),
+                (T::Snooze, widgets.tb_snooze.clone().upcast()),
                 (T::Find, widgets.tb_find.clone().upcast()),
                 (T::Print, widgets.tb_print.clone().upcast()),
             ];
@@ -3981,6 +4094,8 @@ impl SimpleComponent for AppModel {
                     widgets.tb_outbox_edit.clone(),
                     widgets.tb_outbox_send.clone(),
                     widgets.tb_outbox_send_all.clone(),
+                    widgets.tb_unsnooze.clone(),
+                    widgets.tb_resnooze.clone(),
                 ],
                 spinner: widgets.tb_spinner.clone().upcast(),
                 bin: widgets.reader_bin.clone(),
@@ -4017,6 +4132,12 @@ impl SimpleComponent for AppModel {
             model.reader_move_btn.connect_clicked(move |_| {
                 let _ = s.send(AppMsg::MoveToMenu);
             });
+            for btn in [&model.reader_snooze_btn, &model.reader_resnooze_btn] {
+                let s = sender.input_sender().clone();
+                btn.connect_clicked(move |_| {
+                    let _ = s.send(AppMsg::SnoozeMenu);
+                });
+            }
         }
         // The inline compose/reply pane is an overlay over the WHOLE reader
         // pane — its header bar included: revealed, it slides down from the
@@ -5070,6 +5191,20 @@ impl SimpleComponent for AppModel {
                         let _ = s.send(AppMsg::MoveToMenu);
                     });
                 }
+                // HYLKI_SHOWCASE_SNOOZE=menu opens Snooze's menu from the
+                // toolbar at 5s (pair with HYLKI_SHOWCASE_MENU=main to
+                // capture it); HYLKI_SHOWCASE_SNOOZE=<n> snoozes the first
+                // account's n newest Inbox messages at 5s, a preset each,
+                // and opens the Snoozed view on the first of them.
+                if let Ok(what) = std::env::var("HYLKI_SHOWCASE_SNOOZE") {
+                    let s = sender.input_sender().clone();
+                    gtk::glib::timeout_add_seconds_local_once(5, move || {
+                        let _ = match what.parse::<usize>() {
+                            Ok(n) => s.send(AppMsg::ShowcaseSnooze(n)),
+                            Err(_) => s.send(AppMsg::SnoozeMenu),
+                        };
+                    });
+                }
                 // HYLKI_SHOWCASE_GALLERY=1 opens the attachments gallery at
                 // 3s; add HYLKI_SHOWCASE_GALLERY_FOLDERS=1 to drop its folder
                 // popover open a second later, or HYLKI_SHOWCASE_GALLERY_ACCOUNT=<row>
@@ -5780,14 +5915,19 @@ impl SimpleComponent for AppModel {
         // message whose time has come is flushed by id, which sends it even
         // though the ordinary flush leaves scheduled mail alone. One try per
         // scheduling: a failure shows in the Outbox with Send Now to retry,
-        // rather than a loud attempt every tick.
+        // rather than a loud attempt every tick. Snoozed mail wakes on the
+        // same clock: what is due goes back where it came from, and what
+        // fell due while Hylki was closed goes back on the first tick that
+        // finds its account ready.
         {
             let s = sender.clone();
             gtk::glib::timeout_add_seconds_local(30, move || {
                 s.input(AppMsg::SendDueScheduled);
+                s.input(AppMsg::WakeDueSnoozes);
                 gtk::glib::ControlFlow::Continue
             });
         }
+        model.reload_snoozed();
         {
             // Settings, built hidden a moment after startup (see PrewarmSettings).
             let s = sender.clone();
@@ -5807,6 +5947,7 @@ impl SimpleComponent for AppModel {
                 // out from under the user. `selected` stays None so no sync or
                 // server request is ever aimed at it.
                 self.showing_outbox = true;
+                self.showing_snoozed = false;
                 self.leave_gallery();
                 self.showing_contacts = false;
                 self.unified = false;
@@ -5862,6 +6003,154 @@ impl SimpleComponent for AppModel {
                 }
             }
 
+            AppMsg::ShowSnoozed => {
+                self.close_sidebar_peek();
+                self.mirror_selection(crate::ui::sidebar::Sel::Snoozed);
+                // A view like the Outbox: the same list and reader, and no
+                // folder selected, so no sync or server request is aimed at
+                // its rows, which stand for mail in the Snoozed folders.
+                self.showing_outbox = false;
+                self.showing_snoozed = true;
+                self.leave_gallery();
+                self.showing_contacts = false;
+                self.unified = false;
+                self.tag_view = None;
+                self.smart_view = None;
+                self.selected = None;
+                self.current = None;
+                self.current_thread.clear();
+                self.attachments.clear();
+                self.attachments_loading = false;
+                self.sync_attachment_drawer();
+                self.message_list.emit(MessageListInput::SetSelected(None));
+                self.message_list.emit(MessageListInput::ResetPaging);
+                self.message_list.emit(MessageListInput::SetColorize(self.accounts.len() > 1));
+                self.show_message(None, false);
+                self.push_snoozed();
+            }
+
+            AppMsg::SnoozeMenu => {
+                // In the Snoozed view the menu changes when the selected rows
+                // come back, from the Change Time button; elsewhere it
+                // snoozes what the toolbar acts on, from the Snooze button.
+                let targets = self.snooze_targets();
+                if targets.is_empty() || self.showing_outbox {
+                    return;
+                }
+                let own = if self.showing_snoozed { &self.reader_resnooze_btn } else { &self.reader_snooze_btn };
+                let btn: gtk::Widget = if own.is_mapped() {
+                    own.clone().upcast()
+                } else if self.reader_overflow_btn.is_mapped() {
+                    self.reader_overflow_btn.clone().upcast()
+                } else {
+                    // A key pressed with the toolbar folded away entirely:
+                    // over the list, where the selection is.
+                    self.message_list.widget().clone().upcast()
+                };
+                let s = sender.input_sender().clone();
+                let sections = crate::ui::later_picker::snooze_sections(move |wake_at| {
+                    let _ = s.send(AppMsg::Snooze { messages: targets.clone(), wake_at });
+                });
+                crate::ui::context_menu::show_context_menu_with_header(
+                    &btn,
+                    (btn.width() / 2) as f64,
+                    if btn.is::<gtk::Button>() { btn.height() as f64 } else { 48.0 },
+                    Some(&i18n("Snooze until")),
+                    sections,
+                );
+            }
+
+            AppMsg::Snooze { messages, wake_at: Some(wake_at) } => {
+                self.snooze_messages(messages, wake_at);
+            }
+
+            AppMsg::Snooze { messages, wake_at: None } => {
+                // "Pick a date and time…": the same dialog as Send Later's,
+                // starting from the time a snoozed row already has.
+                let current = messages
+                    .iter()
+                    .find_map(|m| self.snoozed_row(m))
+                    .map(|i| i.wake_at);
+                let s = sender.input_sender().clone();
+                crate::ui::later_picker::pick_time(&self.window, &i18n("Snooze until"), &i18n("Snooze"), current, move |t| {
+                    let _ = s.send(AppMsg::Snooze { messages: messages.clone(), wake_at: Some(t) });
+                });
+            }
+
+            AppMsg::UnsnoozeNow => {
+                let items: Vec<crate::models::SnoozedItem> = self
+                    .snoozed_targets()
+                    .into_iter()
+                    .filter(|i| !self.waking.contains(&(i.account_id, i.message_id.clone())))
+                    .collect();
+                self.unsnooze(items);
+            }
+
+            AppMsg::WakeDueSnoozes => {
+                let now = crate::datefmt::now();
+                let due: Vec<crate::models::SnoozedItem> = crate::models::due_snoozes(&self.snoozed, now)
+                    .into_iter()
+                    .filter(|i| !self.waking.contains(&(i.account_id, i.message_id.clone())))
+                    .cloned()
+                    .collect();
+                self.unsnooze(due);
+            }
+
+            AppMsg::SnoozeFailed { account_id, message_ids } => {
+                // The rows left their folder when Snooze was chosen: the
+                // folder they never left is listed again to bring them back.
+                let mut folders: Vec<String> = self
+                    .snoozed
+                    .iter()
+                    .filter(|i| i.account_id == account_id && message_ids.contains(&i.message_id))
+                    .map(|i| i.folder_path.clone())
+                    .collect();
+                folders.dedup();
+                self.forget_snoozes(account_id, &message_ids);
+                for path in folders {
+                    let folder_id = self
+                        .folders
+                        .get(&account_id)
+                        .and_then(|fs| fs.iter().find(|f| f.path == path))
+                        .map(|f| f.id);
+                    if let Some(folder_id) = folder_id {
+                        self.send_to(account_id, MailRequest::SyncFolder { folder_id, path });
+                    }
+                }
+            }
+
+            AppMsg::Unsnoozed { account_id, message_ids, outcome } => {
+                for id in &message_ids {
+                    self.waking.remove(&(account_id, id.clone()));
+                }
+                match outcome {
+                    crate::worker::WakeOutcome::Back => self.forget_snoozes(account_id, &message_ids),
+                    crate::worker::WakeOutcome::Missing => {
+                        // Moved or deleted elsewhere while it slept: there is
+                        // nothing left to bring back, and nothing to report.
+                        tracing::info!("unsnooze: {} message(s) no longer in the Snoozed folder", message_ids.len());
+                        self.forget_snoozes(account_id, &message_ids);
+                    }
+                    crate::worker::WakeOutcome::Failed(e) => {
+                        // Kept, to be tried again on the next tick; said once.
+                        let mut fresh = false;
+                        for id in &message_ids {
+                            fresh |= self.wake_failed.insert((account_id, id.clone()));
+                        }
+                        if fresh {
+                            self.notifications.emit(NotifyInput::Push {
+                                text: i18n_f(
+                                    "Could not bring snoozed mail back yet: {e}. Hylki will keep trying.",
+                                    &[("e", &e)],
+                                ),
+                                error: true,
+                                connectivity: true,
+                            });
+                        }
+                    }
+                }
+            }
+
             AppMsg::RetryAllOutbox => {
                 let accounts: Vec<u32> = self.outbox_by_account
                     .iter()
@@ -5885,6 +6174,7 @@ impl SimpleComponent for AppModel {
                 self.close_sidebar_peek();
                 self.mirror_selection(crate::ui::sidebar::Sel::Attachments);
                 self.showing_outbox = false;
+                self.showing_snoozed = false;
                 self.showing_gallery = true;
                 self.showing_contacts = false;
                 self.gallery.emit(GalleryInput::SetLoading(true));
@@ -5968,6 +6258,7 @@ impl SimpleComponent for AppModel {
                 self.leave_gallery();
                 self.showing_contacts = false;
                 self.showing_outbox = false;
+                self.showing_snoozed = false;
                 if let Some(folder) = self
                     .folders
                     .get(&account_id)
@@ -6730,6 +7021,12 @@ impl SimpleComponent for AppModel {
                     self.show_outbox_message(&item);
                     return;
                 }
+                // So does a snoozed one, from what was kept of it: the
+                // message itself sleeps in a folder the view does not list.
+                if let Some(item) = self.snoozed_row(&m).cloned() {
+                    self.show_snoozed_message(&item);
+                    return;
+                }
                 // Selecting a draft opens it in the compose editor, in the
                 // reading pane where the message would otherwise show.
                 if self.is_drafts_folder(m.account_id, m.folder_id) {
@@ -7081,6 +7378,25 @@ impl SimpleComponent for AppModel {
                 }
             }
 
+            AppMsg::ShowcaseSnooze(n) => {
+                let Some(inbox) = self.inbox_of(1).map(|f| f.id) else { return };
+                let mut newest: Vec<Message> = self.message_cache.get(&(1, inbox)).cloned().unwrap_or_default();
+                newest.sort_by_key(|m| std::cmp::Reverse(m.timestamp));
+                let presets = crate::later::snooze_presets(crate::datefmt::now());
+                for (i, m) in newest.into_iter().take(n).enumerate() {
+                    if let Some(p) = presets.get(i % presets.len().max(1)) {
+                        self.snooze_messages(vec![m], p.at);
+                    }
+                }
+                sender.input(AppMsg::ShowSnoozed);
+                let first = crate::models::snoozed_rows(&self.snoozed).first().map(|i| (i.account_id, i.id));
+                if let Some(key) = first {
+                    let ml = self.message_list.sender().clone();
+                    gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(600), move || {
+                        let _ = ml.send(MessageListInput::SelectAndLoad(key));
+                    });                }
+            }
+
             AppMsg::ShowcasePopout => {
                 if let Some(m) = self.current.clone() {
                     let thread = self.current_thread.clone();
@@ -7342,6 +7658,12 @@ impl SimpleComponent for AppModel {
                     }
                     return;
                 }
+                // A row of the Snoozed view stands for mail in a folder it
+                // does not list: what applies to it is when it comes back,
+                // which its own buttons and the Snooze menu change.
+                if self.snoozed_row(&m).is_some() {
+                    return;
+                }
                 match action {
                     // A row that stands for a whole conversation answers the
                     // conversation's newest message, exactly as the reader's
@@ -7435,6 +7757,11 @@ impl SimpleComponent for AppModel {
                         }
                     }
                     self.message_list.emit(MessageListInput::ClearSelection);
+                    return;
+                }
+                // Nor does the bulk bar's: Unsnooze and Change Time act on
+                // the selection from the toolbar.
+                if self.showing_snoozed {
                     return;
                 }
                 match action {
@@ -10014,6 +10341,7 @@ impl SimpleComponent for AppModel {
                 self.leave_gallery();
                 self.showing_contacts = false;
                 self.showing_outbox = false;
+                self.showing_snoozed = false;
                 self.unified = false;
                 self.selected = None;
                 self.smart_view = None;
@@ -10047,6 +10375,7 @@ impl SimpleComponent for AppModel {
                 self.leave_gallery();
                 self.showing_contacts = false;
                 self.showing_outbox = false;
+                self.showing_snoozed = false;
                 self.unified = false;
                 self.selected = None;
                 self.tag_view = None;
@@ -11963,6 +12292,7 @@ impl SimpleComponent for AppModel {
                 self.close_sidebar_peek();
                 self.mirror_selection(crate::ui::sidebar::Sel::Contacts);
                 self.showing_outbox = false;
+                self.showing_snoozed = false;
                 self.leave_gallery();
                 self.showing_contacts = true;
                 // Read EDS off the UI thread (SQLite + photo decoding); the
@@ -12510,6 +12840,16 @@ impl AppModel {
             });
             return;
         }
+        // The Snoozed view's rows stand for mail it does not list: of the
+        // keys that act on a message, only Snooze's applies there.
+        let replies = match action {
+            Shortcut::Reply | Shortcut::ReplyAll | Shortcut::Forward => true,
+            Shortcut::InWindow(what) => what != WindowCompose::New,
+            _ => false,
+        };
+        if self.showing_snoozed && (replies || action.acts_on_selection()) && action != Shortcut::Snooze {
+            return;
+        }
         match action {
             Shortcut::NextMessage => self.message_list.emit(MessageListInput::MoveSelection(1)),
             Shortcut::PrevMessage => self.message_list.emit(MessageListInput::MoveSelection(-1)),
@@ -12570,6 +12910,7 @@ impl AppModel {
             }
             Shortcut::Undo => sender.input(AppMsg::Undo),
             Shortcut::MoveTo => sender.input(AppMsg::MoveToMenu),
+            Shortcut::Snooze => sender.input(AppMsg::SnoozeMenu),
             Shortcut::Label => sender.input(AppMsg::ReaderTagMenu),
             Shortcut::SelectAll => self.message_list.emit(MessageListInput::SelectAllShown),
             Shortcut::SelectNone => self.message_list.emit(MessageListInput::ClearSelection),
@@ -12726,6 +13067,7 @@ impl AppModel {
             add(i18n("Star or Remove Star"), &action, "", || AppMsg::ToggleStar);
             add(i18n("Mark as Read or Unread"), &action, "", || AppMsg::ToggleReadCurrent);
             add(i18n("Move to Folder"), &action, "", || AppMsg::MoveToMenu);
+            add(i18n("Snooze…"), &action, "", || AppMsg::SnoozeMenu);
             add(i18n("Tags"), &action, "", || AppMsg::ReaderTagMenu);
         }
         add(i18n("Open Message File…"), &action, "", || AppMsg::PickMessageFile);
@@ -12790,6 +13132,7 @@ impl AppModel {
         go(i18n("Contacts"), view.clone(), Box::new(|| AppMsg::OpenContacts));
         go(i18n("Attachments"), view.clone(), Box::new(|| AppMsg::ShowAttachments));
         go(i18n("Outbox"), view.clone(), Box::new(|| AppMsg::ShowOutbox));
+        go(i18n("Snoozed"), view.clone(), Box::new(|| AppMsg::ShowSnoozed));
         for email in self.ordered_emails() {
             let Some(account) = self.accounts.iter().find(|a| a.email == email) else { continue };
             for f in self.folders.get(&account.id).into_iter().flatten() {
@@ -13011,6 +13354,330 @@ impl AppModel {
             .cloned()
     }
 
+    /// Snooze: tell the sidebar how many rows the Snoozed view has (its row
+    /// shows only while there are any, as the Outbox's does), and refill the
+    /// list when the view is on screen.
+    fn push_snoozed(&self) {
+        let rows = crate::models::snoozed_rows(&self.snoozed);
+        self.sidebars_emit(SidebarInput::SetSnoozedCount(rows.len() as u32));
+        if self.showing_snoozed {
+            self.message_list.emit(MessageListInput::SetMessages {
+                messages: rows.iter().map(|i| i.as_message()).collect(),
+            });
+        }
+    }
+
+    /// Read the snoozed mail from the cache again: at startup, and once the
+    /// cached rows have followed the accounts to their places.
+    fn reload_snoozed(&mut self) {
+        self.snoozed = self.cache.as_ref().map(|c| c.snoozes()).unwrap_or_default();
+        self.push_snoozed();
+    }
+
+    /// The snoozed message a row of the Snoozed view stands for.
+    fn snoozed_row(&self, m: &Message) -> Option<&crate::models::SnoozedItem> {
+        if m.folder_id != crate::models::SNOOZED_FOLDER_ID {
+            return None;
+        }
+        self.snoozed.iter().find(|i| i.account_id == m.account_id && i.id == m.id)
+    }
+
+    /// Every snoozed message the Snoozed view's selected rows stand for:
+    /// a row is its whole batch, a conversation snoozed together.
+    fn snoozed_targets(&self) -> Vec<crate::models::SnoozedItem> {
+        if !self.showing_snoozed {
+            return Vec::new();
+        }
+        let keys: Vec<(u32, u32)> = if self.many_selected() {
+            self.list_selection.clone()
+        } else {
+            self.current.iter().map(|m| (m.account_id, m.id)).collect()
+        };
+        let batches: Vec<(u32, &str)> = keys
+            .iter()
+            .filter_map(|(a, id)| self.snoozed.iter().find(|i| i.account_id == *a && i.id == *id))
+            .map(|i| (i.account_id, i.batch.as_str()))
+            .collect();
+        self.snoozed
+            .iter()
+            .filter(|i| batches.contains(&(i.account_id, i.batch.as_str())))
+            .cloned()
+            .collect()
+    }
+
+    /// What Snooze acts on: several selected rows, the open conversation's
+    /// listed messages, or the reader's target. In the Snoozed view, the
+    /// selected rows, whose time it changes.
+    fn snooze_targets(&self) -> Vec<Message> {
+        if self.showing_snoozed {
+            let mut rows: Vec<Message> = Vec::new();
+            for item in crate::models::snoozed_rows(&self.snoozed_targets()) {
+                rows.push(item.as_message());
+            }
+            return rows;
+        }
+        if self.many_selected() {
+            return self.multi_selection();
+        }
+        if self.acts_on_conversation(false) {
+            let conversation = self.conversation_to_archive();
+            if conversation.len() > 1 {
+                return conversation;
+            }
+        }
+        self.reply_target().into_iter().collect()
+    }
+
+    /// Whether mail of this account can be snoozed: it needs folders to put
+    /// it in, which POP3 has not.
+    fn can_snooze(&self, account_id: u32) -> bool {
+        demo_mode()
+            || self
+                .config
+                .get(account_id.saturating_sub(1) as usize)
+                .is_some_and(|c| c.protocol != config::Protocol::Pop3)
+    }
+
+    /// Snooze messages until `wake_at`. Each leaves its folder for the
+    /// account's Snoozed folder on the server (made on first use), so it is
+    /// out of the Inbox on every device, and the cache notes when it comes
+    /// back and where to; Send Later's clock brings it back (see
+    /// [`AppModel::unsnooze`]). The rows leave the list at once, and Ctrl+Z
+    /// takes the snooze back like any move.
+    fn snooze_messages(&mut self, messages: Vec<Message>, wake_at: i64) {
+        use crate::models::SnoozedItem;
+        // Rows of the Snoozed view are snoozed already: they get the new
+        // time. Queued mail is not mail to read later, and never was.
+        let (rows, messages): (Vec<Message>, Vec<Message>) = messages
+            .into_iter()
+            .filter(|m| m.folder_id != crate::models::OUTBOX_FOLDER_ID)
+            .partition(|m| m.folder_id == crate::models::SNOOZED_FOLDER_ID);
+        if !rows.is_empty() {
+            let batches: Vec<(u32, String)> =
+                rows.iter().filter_map(|m| self.snoozed_row(m)).map(|i| (i.account_id, i.batch.clone())).collect();
+            let items: Vec<SnoozedItem> =
+                self.snoozed.iter().filter(|i| batches.contains(&(i.account_id, i.batch.clone()))).cloned().collect();
+            self.resnooze(items, wake_at);
+        }
+        if messages.is_empty() {
+            return;
+        }
+        let snoozed_at = crate::datefmt::now();
+        let mut seen = HashSet::new();
+        // (account, source folder) → (its Snoozed folder, the messages).
+        let mut groups: HashMap<(u32, String), (String, Vec<Message>)> = HashMap::new();
+        let mut refused = 0u32;
+        for m in messages {
+            // On Gmail, under a label, it is the Inbox's copy that leaves, as
+            // Archive takes it (#392); the label stays on.
+            let m = if self.archives_in_place(&m) { self.inbox_copy(&m).unwrap_or(m) } else { m };
+            if !seen.insert((m.account_id, m.id)) {
+                continue;
+            }
+            let src = self.resolve_folder_path(&m);
+            let dest = self
+                .folders
+                .get(&m.account_id)
+                .map(|fs| crate::models::snoozed_folder_path(fs, &self.folder_namespace(m.account_id)));
+            // A message is found again by its Message-ID, so one without
+            // cannot come back; drafts and queued mail are not mail to
+            // read later.
+            let snoozable = !m.message_id.is_empty()
+                && self.can_snooze(m.account_id)
+                && !self.is_drafts_folder(m.account_id, m.folder_id);
+            match (src, dest) {
+                (Some(src), Some(dest)) if snoozable && src != dest => {
+                    groups.entry((m.account_id, src)).or_insert_with(|| (dest, Vec::new())).1.push(m);
+                }
+                _ => refused += 1,
+            }
+        }
+        let mut removed = Vec::new();
+        for ((account_id, src), (dest, rows)) in groups {
+            let mut moving: Vec<Message> = Vec::new();
+            for m in rows {
+                let body = if m.body.is_empty() {
+                    self.body_cache.get(&body_key(&m)).cloned().unwrap_or_default()
+                } else {
+                    m.body.clone()
+                };
+                // One batch per conversation: its members share the root
+                // of their references, and the Snoozed view shows them as
+                // one row.
+                let root = m.references.split_whitespace().next().unwrap_or(&m.message_id);
+                let item = SnoozedItem {
+                    id: 0,
+                    account_id,
+                    message_id: m.message_id.clone(),
+                    folder_path: src.clone(),
+                    snoozed_path: dest.clone(),
+                    wake_at,
+                    batch: format!("{snoozed_at}:{wake_at}:{root}"),
+                    from_name: m.from_name.clone(),
+                    from_addr: m.from_addr.clone(),
+                    subject: m.subject.clone(),
+                    preview: m.preview.clone(),
+                    body,
+                    timestamp: m.timestamp,
+                    has_attachment: m.has_attachment,
+                };
+                // Without a record nothing would bring it back: such a
+                // message stays where it is.
+                let Some(id) = self.cache.as_ref().and_then(|c| c.add_snooze(&item)) else {
+                    refused += 1;
+                    continue;
+                };
+                self.snoozed.retain(|s| !(s.account_id == account_id && s.message_id == item.message_id));
+                self.snoozed.push(SnoozedItem { id, ..item });
+                moving.push(m);
+            }
+            if moving.is_empty() {
+                continue;
+            }
+            let uids: Vec<u32> = moving.iter().map(|m| m.uid).collect();
+            let message_ids: Vec<String> = moving.iter().map(|m| m.message_id.clone()).collect();
+            for m in &moving {
+                self.discard_message_local(m);
+                removed.push(m.id);
+            }
+            self.push_undo_move_as(account_id, i18n("Snooze"), &dest, &src, moving);
+            self.send_to(account_id, MailRequest::Snooze { path: src, uids, dest, message_ids });
+        }
+        if refused > 0 {
+            self.notifications.emit(NotifyInput::Push {
+                text: ni18n_f(
+                    "{n} message could not be snoozed: it has no Message-ID, or its account has no folders",
+                    "{n} messages could not be snoozed: they have no Message-ID, or their account has no folders",
+                    refused,
+                    &[("n", &refused.to_string())],
+                ),
+                error: true,
+                connectivity: false,
+            });
+        }
+        if !removed.is_empty() {
+            self.notifications.emit(NotifyInput::SetStatus(i18n_f(
+                "Snoozed until {when}",
+                &[("when", &crate::datefmt::date_time(wake_at))],
+            )));
+            self.message_list.emit(MessageListInput::RemoveMany(removed));
+            self.push_unread_counts();
+        }
+        self.push_snoozed();
+    }
+
+    /// Bring snoozed messages back at another time.
+    fn resnooze(&mut self, items: Vec<crate::models::SnoozedItem>, wake_at: i64) {
+        let ids: Vec<u32> = items.iter().map(|i| i.id).collect();
+        if let Some(c) = self.cache.as_ref() {
+            c.set_snooze_wake(&ids, wake_at);
+        }
+        for i in self.snoozed.iter_mut().filter(|i| ids.contains(&i.id)) {
+            i.wake_at = wake_at;
+        }
+        self.push_snoozed();
+        // The open row says the new time in the list; the reader's copy
+        // follows.
+        if let Some(item) = self.current.as_ref().and_then(|m| self.snoozed_row(m)).cloned() {
+            self.show_snoozed_message(&item);
+        }
+    }
+
+    /// Ask for snoozed messages back: the worker finds each in its Snoozed
+    /// folder by Message-ID, marks it unread and moves it to the folder it
+    /// came from (the Inbox, if that folder is gone). An account that is
+    /// disabled, or whose folders are not known yet, keeps its mail asleep
+    /// until a later tick finds it ready, so mail due while Hylki was closed
+    /// comes back shortly after the next start.
+    fn unsnooze(&mut self, items: Vec<crate::models::SnoozedItem>) {
+        let mut groups: HashMap<(u32, String, String), Vec<String>> = HashMap::new();
+        for i in items {
+            if !self.workers.contains_key(&i.account_id) {
+                continue;
+            }
+            groups.entry((i.account_id, i.snoozed_path, i.folder_path)).or_default().push(i.message_id);
+        }
+        for ((account_id, path, dest), message_ids) in groups {
+            let Some(folders) = self.folders.get(&account_id) else { continue };
+            let target = folders
+                .iter()
+                .find(|f| f.path == dest)
+                .or_else(|| folders.iter().find(|f| f.kind == FolderKind::Inbox));
+            let Some(target) = target else { continue };
+            let (dest, dest_folder_id) = (target.path.clone(), target.id);
+            for id in &message_ids {
+                self.waking.insert((account_id, id.clone()));
+            }
+            self.send_to(account_id, MailRequest::Unsnooze { path, dest, dest_folder_id, message_ids });
+        }
+    }
+
+    /// Forget snoozed messages that are back, or gone.
+    fn forget_snoozes(&mut self, account_id: u32, message_ids: &[String]) {
+        if let Some(c) = self.cache.as_ref() {
+            c.drop_snoozes(account_id, message_ids);
+        }
+        self.snoozed.retain(|i| !(i.account_id == account_id && message_ids.contains(&i.message_id)));
+        for id in message_ids {
+            self.wake_failed.remove(&(account_id, id.clone()));
+        }
+        // A row of the Snoozed view open in the reader has nothing left to show.
+        if self.showing_snoozed
+            && self.current.as_ref().is_some_and(|m| m.account_id == account_id && self.snoozed_row(m).is_none())
+        {
+            self.current = None;
+            self.show_message(None, false);
+        }
+        self.push_snoozed();
+    }
+
+    /// Undoing a snooze (#200) takes its wake-up with it, and redoing it
+    /// puts the wake-up back: a move out of a Snoozed folder drops the
+    /// records of the messages it moves, kept aside, and a move back into
+    /// one restores them.
+    fn follow_snooze_undo(&mut self, account_id: u32, from: &str, to: &str, message_ids: &[String]) {
+        let ours = |i: &crate::models::SnoozedItem, path: &str| {
+            i.account_id == account_id && i.snoozed_path == path && message_ids.contains(&i.message_id)
+        };
+        let leaving: Vec<crate::models::SnoozedItem> = self.snoozed.iter().filter(|i| ours(i, from)).cloned().collect();
+        if !leaving.is_empty() {
+            let ids: Vec<String> = leaving.iter().map(|i| i.message_id.clone()).collect();
+            self.forget_snoozes(account_id, &ids);
+            self.undone_snoozes.extend(leaving);
+        }
+        let (back, kept): (Vec<_>, Vec<_>) = std::mem::take(&mut self.undone_snoozes).into_iter().partition(|i| ours(i, to));
+        self.undone_snoozes = kept;
+        if back.is_empty() {
+            return;
+        }
+        for item in back {
+            if let Some(id) = self.cache.as_ref().and_then(|c| c.add_snooze(&item)) {
+                self.snoozed.push(crate::models::SnoozedItem { id, ..item });
+            }
+        }
+        self.push_snoozed();
+    }
+
+    /// A row of the Snoozed view in the reader: what was kept of the message
+    /// when it was snoozed, dated as the message is. Its body is the one the
+    /// reader had rendered, or the preview for mail never opened.
+    fn show_snoozed_message(&mut self, item: &crate::models::SnoozedItem) {
+        let mut message = item.as_message();
+        message.timestamp = item.timestamp;
+        message.preview = item.preview.clone();
+        message.body = if item.body.is_empty() {
+            format!("<p>{}</p>", gtk::glib::markup_escape_text(item.preview.trim()))
+        } else {
+            item.body.clone()
+        };
+        self.attachments.clear();
+        self.attachments_loading = false;
+        self.sync_attachment_drawer();
+        self.current = Some(message.clone());
+        self.current_thread.clear();
+        self.show_message(Some(message), false);
+    }
+
     /// Tell the message list whether the folder(s) currently shown are fully
     /// indexed, so it knows whether to expect more rows while scrolling.
     fn push_index_complete(&self) {
@@ -13074,6 +13741,7 @@ impl AppModel {
             | MailRequest::MarkSpam { path, uid, .. }
             | MailRequest::MarkHam { path, uid, .. } => Some((path.clone(), vec![*uid])),
             MailRequest::MoveMessages { path, uids, .. }
+            | MailRequest::Snooze { path, uids, .. }
             | MailRequest::MarkHamMany { path, uids, .. }
             | MailRequest::PurgeMessages { path, uids } => Some((path.clone(), uids.clone())),
             _ => None,
@@ -13266,6 +13934,8 @@ impl AppModel {
                 self.send_to(account_id, MailRequest::LoadOutbox);
             }
         }
+        // The snoozes' account ids may have just moved with their accounts.
+        self.reload_snoozed();
     }
 
     fn spawn_worker(
@@ -13825,6 +14495,7 @@ impl AppModel {
                     tracing::info!("undo: {to:?} is no longer there, dropping the step");
                     return false;
                 };
+                self.follow_snooze_undo(account_id, from, to, message_ids);
                 self.send_to(account_id, MailRequest::UndoMove {
                     path: from.clone(),
                     dest: to.clone(),
@@ -15068,6 +15739,14 @@ impl AppModel {
             }
             sections.push(vec![entry!(i18n("View Source"), "code", AppMsg::ViewSource, has_current)]);
             sections
+        } else if self.showing_snoozed {
+            // The Snoozed view's two buttons, for Focus Mode, which folds
+            // them in here (the ⋯ shows for nothing else in this view).
+            let rows = has_current || self.many_selected();
+            vec![vec![
+                entry!(i18n("Unsnooze"), "mail-inbox", AppMsg::UnsnoozeNow, rows),
+                entry!(i18n("Change Time…"), "alarm", AppMsg::SnoozeMenu, rows),
+            ]]
         } else {
             // Only the right group folds in here, in its own order; the left
             // group stays on the bar at every width. Per-message actions act
@@ -15131,6 +15810,7 @@ impl AppModel {
                         }
                         section.push(entry!(i18n("Move To…"), "folder", AppMsg::MoveToMenu, many));
                     }
+                    T::Snooze => section.push(entry!(i18n("Snooze…"), "alarm", AppMsg::SnoozeMenu, many)),
                     T::Find => section.push(entry!(
                         i18n("Find in Message"),
                         "loupe-with-arrow",
@@ -15700,6 +16380,7 @@ impl AppModel {
         self.leave_gallery();
         self.showing_contacts = false;
         self.showing_outbox = false;
+        self.showing_snoozed = false;
         // Another view's slices are another view's: start afresh
         // (the loads below refill them).
         if self.unified_view != view {
@@ -15914,6 +16595,15 @@ impl AppModel {
             );
         }
         acts.push(item(RowAction::Archive, i18n("Archive"), "mail-archive"));
+        // Snooze this message, from the main window's reader.
+        if popout.is_none() {
+            let s = sender.input_sender().clone();
+            let message = m.clone();
+            let times = crate::ui::later_picker::snooze_sections(move |wake_at| {
+                let _ = s.send(AppMsg::Snooze { messages: vec![message.clone()], wake_at });
+            });
+            acts.push(MenuEntry::submenu(i18n("Snooze"), times).icon(crate::ui::later_picker::SNOOZE_ICON));
+        }
         acts.push(item(RowAction::Delete, i18n("Delete"), "user-trash"));
         sections.push(acts);
         sections.push(vec![
@@ -16080,6 +16770,7 @@ impl AppModel {
         self.leave_gallery();
         self.showing_contacts = false;
         self.showing_outbox = false;
+        self.showing_snoozed = false;
         // Mirror the selection in the sidebar. Navigation that starts in the
         // sidebar hits its already-selected guard; navigation from anywhere
         // else ("Go to Message", a notification) moves the highlight — which
@@ -16508,6 +17199,7 @@ impl AppModel {
                 }
                 MessageWindowOutput::LoadAttachments(message) => AppMsg::LoadAttachmentsFor(message),
                 MessageWindowOutput::MoveTo { message, x, y } => AppMsg::PopoutMoveTo { key, message, x, y },
+                MessageWindowOutput::Snooze { message, wake_at } => AppMsg::Snooze { messages: vec![*message], wake_at },
                 MessageWindowOutput::SetTag { message, keyword, add } => AppMsg::SetTag { message, keyword, add },
                 MessageWindowOutput::DeleteAttachment { message, attachment } => {
                     AppMsg::DeletePopoutAttachment { key, message, attachment }
@@ -16579,6 +17271,7 @@ impl AppModel {
         use config::ToolbarSide;
         self.reader_compose.is_none()
             && (item == config::ToolbarItem::Delete || !self.showing_outbox)
+            && !self.showing_snoozed
             && match self.reader_toolbar.side(item) {
                 Some(ToolbarSide::Left) => true,
                 Some(ToolbarSide::Right) => !self.reader_actions_collapsed,
@@ -16594,7 +17287,9 @@ impl AppModel {
         if self.focus.active(config::FocusPart::ReaderToolbar) {
             return true;
         }
-        self.reader_actions_collapsed && (self.showing_outbox || !self.reader_toolbar.right.is_empty())
+        self.reader_actions_collapsed
+            && !self.showing_snoozed
+            && (self.showing_outbox || !self.reader_toolbar.right.is_empty())
     }
 
     /// Pack the header's action buttons in the saved order: the left group
@@ -23545,6 +24240,8 @@ pub enum Shortcut {
     ArchiveAndStep(i32),
     /// Gmail's Shift+R, Shift+A, Shift+F and d.
     InWindow(WindowCompose),
+    /// Snooze's menu: Gmail's b, and z among Hylki's own keys.
+    Snooze,
     /// Gmail's Shift+N.
     Refresh,
 }
@@ -23573,6 +24270,7 @@ impl Shortcut {
                 | Shortcut::MarkRead(_)
                 | Shortcut::MarkUnreadFrom
                 | Shortcut::MoveTo
+                | Shortcut::Snooze
                 | Shortcut::Label
                 | Shortcut::Tag(_)
                 | Shortcut::ClearTags
@@ -23618,6 +24316,7 @@ fn gmail_shortcut_for(key: gtk::gdk::Key, shift: bool) -> Option<Shortcut> {
         Key::colon => Shortcut::FoldAll(true),
         Key::z => Shortcut::Undo,
         Key::v => Shortcut::MoveTo,
+        Key::b => Shortcut::Snooze,
         Key::l => Shortcut::Label,
         Key::bracketright | Key::braceright => Shortcut::ArchiveAndStep(1),
         Key::bracketleft | Key::braceleft => Shortcut::ArchiveAndStep(-1),
@@ -23685,6 +24384,7 @@ fn shortcut_for(key: gtk::gdk::Key, shift: bool) -> Option<Shortcut> {
         Key::s => Shortcut::Star,
         Key::m => Shortcut::ToggleRead,
         Key::c => Shortcut::Compose,
+        Key::z => Shortcut::Snooze,
         Key::slash => Shortcut::Search,
         Key::question => Shortcut::Shortcuts,
         // Tags by number, the way Evolution labels mail (#157). 0 clears.
@@ -23787,6 +24487,7 @@ const GMAIL_HELP: &[(&str, &[(&str, &str)])] = &[
             ("*  r  /  *  u", i18n_noop("Select the read or the unread conversations")),
             ("*  s  /  *  t", i18n_noop("Select the starred or the unstarred conversations")),
             ("v", i18n_noop("Move to a folder")),
+            ("b", i18n_noop("Snooze until a time you choose")),
             ("l", i18n_noop("Tags")),
             ("z", i18n_noop("Undo the last action")),
             ("1 … 9", i18n_noop("Add or remove a tag (the first nine, in Settings order)")),
@@ -23824,6 +24525,7 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ("!", i18n_noop("Mark as spam")),
             ("s", i18n_noop("Star or unstar")),
             ("m", i18n_noop("Mark read or unread")),
+            ("z", i18n_noop("Snooze until a time you choose")),
             ("x", i18n_noop("Select this row (for a bulk action)")),
             ("1 … 9", i18n_noop("Add or remove a tag (the first nine, in Settings order)")),
             ("0", i18n_noop("Remove every tag")),
@@ -24664,6 +25366,7 @@ fn sidebar_output_msg(out: SidebarOutput) -> AppMsg {
         SidebarOutput::StatusBarRequested => AppMsg::ToggleNotifications,
         SidebarOutput::OpenGnomeContacts => AppMsg::LaunchGnomeContacts,
         SidebarOutput::OutboxSelected => AppMsg::ShowOutbox,
+        SidebarOutput::SnoozedSelected => AppMsg::ShowSnoozed,
         SidebarOutput::FolderSelected { account_id, folder_id, name, path } => {
             AppMsg::FolderSelected { account_id, folder_id, name, path }
         }
@@ -25033,6 +25736,8 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
         WorkerEvent::KeywordsFound(findings) => AppMsg::KeywordsFound { account_id, findings },
         WorkerEvent::Quota(quota) => AppMsg::QuotaFound { account_id, quota },
         WorkerEvent::KeywordsSynced { paths } => AppMsg::KeywordsSynced { account_id, paths },
+        WorkerEvent::SnoozeFailed { message_ids } => AppMsg::SnoozeFailed { account_id, message_ids },
+        WorkerEvent::Unsnoozed { message_ids, outcome } => AppMsg::Unsnoozed { account_id, message_ids, outcome },
         WorkerEvent::Restored { folder_id, message_ids } => {
             AppMsg::UndoRestored { account_id, folder_id, message_ids }
         }
@@ -26688,6 +27393,8 @@ mod tests {
         assert_eq!(gmail_shortcut_for(Key::k, false), Some(Shortcut::MoveCursor(-1)));
         assert_eq!(gmail_shortcut_for(Key::o, false), Some(Shortcut::OpenCursor));
         assert_eq!(gmail_shortcut_for(Key::e, false), Some(Shortcut::Archive));
+        assert_eq!(gmail_shortcut_for(Key::b, false), Some(Shortcut::Snooze));
+        assert_eq!(gmail_shortcut_for(Key::z, false), Some(Shortcut::Undo));
         assert_eq!(gmail_shortcut_for(Key::numbersign, true), Some(Shortcut::Delete));
         assert_eq!(gmail_shortcut_for(Key::a, false), Some(Shortcut::ReplyAll));
         assert_eq!(gmail_shortcut_for(Key::U, true), Some(Shortcut::MarkRead(false)));
@@ -26731,6 +27438,8 @@ mod tests {
         assert_eq!(shortcut_for(Key::d, false), Some(Shortcut::Delete));
         assert_eq!(shortcut_for(Key::w, false), Some(Shortcut::NextInThread));
         assert_eq!(shortcut_for(Key::b, false), Some(Shortcut::PrevInThread));
+        // Snooze: z ("zzz"), b being taken by the conversation.
+        assert_eq!(shortcut_for(Key::z, false), Some(Shortcut::Snooze));
         // Arrows do what h/j/k/l do.
         assert_eq!(shortcut_for(Key::Down, false), Some(Shortcut::NextMessage));
         assert_eq!(shortcut_for(Key::Up, false), Some(Shortcut::PrevMessage));
@@ -26744,7 +27453,7 @@ mod tests {
         assert_eq!(shortcut_for(Key::_9, false), Some(Shortcut::Tag(9)));
         assert_eq!(shortcut_for(Key::_0, false), Some(Shortcut::ClearTags));
         // Anything unmapped is left to the widget with focus.
-        assert_eq!(shortcut_for(Key::z, false), None);
+        assert_eq!(shortcut_for(Key::q, false), None);
         assert_eq!(shortcut_for(Key::Return, false), None);
         assert_eq!(shortcut_for(Key::space, false), None);
     }

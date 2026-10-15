@@ -76,6 +76,9 @@ msgstr "Προσπάθεια αποστολής αυτού του μηνύματ
 msgid "Send all"
 msgstr "Αποστολή όλων"
 
+msgid "Unsnooze: bring it back now"
+msgstr ""
+
 msgid "Reply"
 msgstr "Απάντηση"
 
@@ -145,6 +148,13 @@ msgstr "Ετικέτες"
 msgid "Move To…"
 msgstr "Μετακίνηση σε…"
 
+msgid "Snooze…"
+msgstr ""
+
+#, fuzzy
+msgid "Change when it comes back"
+msgstr "Προειδοποίηση όταν αποκλείεται απομακρυσμένο περιεχόμενο"
+
 msgid "Attachments"
 msgstr "Συνημμένα"
 
@@ -153,6 +163,15 @@ msgstr "Εναλλαγή πλευρικής στήλης"
 
 msgid "Keyboard Shortcuts"
 msgstr "Συντομεύσεις πληκτρολογίου"
+
+msgid "Snooze until"
+msgstr ""
+
+msgid "Snooze"
+msgstr ""
+
+msgid "Could not bring snoozed mail back yet: {e}. Hylki will keep trying."
+msgstr ""
 
 msgid "Create Folder"
 msgstr "Δημιουργία φακέλου"
@@ -420,6 +439,9 @@ msgstr "Επαφές"
 msgid "Outbox"
 msgstr "Εξερχόμενα"
 
+msgid "Snoozed"
+msgstr ""
+
 msgid "Tag"
 msgstr "Ετικέτα"
 
@@ -441,6 +463,19 @@ msgstr ""
 
 msgid "Your tags"
 msgstr "Οι ετικέτες σας"
+
+msgid ""
+"{n} message could not be snoozed: it has no Message-ID, or its account has "
+"no folders"
+msgid_plural ""
+"{n} messages could not be snoozed: they have no Message-ID, or their account "
+"has no folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Προγραμματισμένο για {when}"
 
 msgid "Move to {name}"
 msgstr "Μετακίνηση στο {name}"
@@ -470,6 +505,12 @@ msgstr ""
 
 msgid "Restart Now"
 msgstr "Επανεκκίνηση τώρα"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "Change Time…"
+msgstr ""
 
 msgid "Move to Inbox"
 msgstr "Μετακίνηση στα Εισερχόμενα"
@@ -1080,6 +1121,9 @@ msgstr ""
 msgid "Move to a folder"
 msgstr "Μετακίνηση σε φάκελο"
 
+msgid "Snooze until a time you choose"
+msgstr ""
+
 msgid "Undo the last action"
 msgstr "Αναίρεση της τελευταίας ενέργειας"
 
@@ -1406,6 +1450,19 @@ msgstr "Το αρχείο δεν είναι αρχείο κειμένου"
 msgid "The file is larger than {size} MB"
 msgstr "Το αρχείο είναι μεγαλύτερο από {size} MB"
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Σήμερα, {time}"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Αύριο το πρωί ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Αύριο το απόγευμα ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "Δευτέρα πρωί ({time})"
+
 msgid "{used} of {limit} used"
 msgstr "Χρησιμοποιούνται {used} από {limit}"
 
@@ -1535,6 +1592,9 @@ msgstr "Σε αναμονή από {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Προγραμματισμένο για {when}"
+
+msgid "Until {when}"
+msgstr ""
 
 msgid "Today, {time}"
 msgstr "Σήμερα, {time}"
@@ -3511,15 +3571,6 @@ msgstr "Αποστολή αργότερα"
 msgid "Send now"
 msgstr "Αποστολή τώρα"
 
-msgid "Tomorrow morning ({time})"
-msgstr "Αύριο το πρωί ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Αύριο το απόγευμα ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "Δευτέρα πρωί ({time})"
-
 msgid "Pick a date and time…"
 msgstr "Επιλογή ημερομηνίας και ώρας…"
 
@@ -3755,12 +3806,6 @@ msgid ""
 msgstr ""
 "Δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}. Ζητήστε το δημόσιο "
 "κλειδί ή ανακτήστε το στις Ρυθμίσεις, OpenPGP."
-
-msgid "That time has passed"
-msgstr "Αυτή η ώρα έχει παρέλθει"
-
-msgid "Choose a time later than now."
-msgstr "Επιλέξτε ώρα μεταγενέστερη από την τρέχουσα."
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
@@ -4079,6 +4124,12 @@ msgstr[1] "{n} μηνύματα"
 
 msgid "Search folders"
 msgstr "Αναζήτηση φακέλων"
+
+msgid "That time has passed"
+msgstr "Αυτή η ώρα έχει παρέλθει"
+
+msgid "Choose a time later than now."
+msgstr "Επιλέξτε ώρα μεταγενέστερη από την τρέχουσα."
 
 msgid "the portal answered response code {code}"
 msgstr "η πύλη απάντησε με κωδικό απόκρισης {code}"
@@ -6966,6 +7017,11 @@ msgstr "Δεν υπάρχουν ακόμη λογαριασμοί"
 msgid "New Message from Template…"
 msgstr "Νέο μήνυμα από πρότυπο…"
 
+msgid "Snoozed: {n} conversation comes back later"
+msgid_plural "Snoozed: {n} conversations come back later"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Mark Inbox as Read"
 msgstr "Σήμανση Εισερχομένων ως αναγνωσμένων"
 
@@ -7363,6 +7419,10 @@ msgstr "Δεν ήταν δυνατό το άδειασμα του φακέλου
 
 msgid "Undo failed: {e}"
 msgstr "Η αναίρεση απέτυχε: {e}"
+
+#, fuzzy
+msgid "Could not snooze: {e}"
+msgstr "Δεν ήταν δυνατή η φόρτωση του πηγαίου κώδικα: {e}"
 
 msgid "Could not create folder: {e}"
 msgstr "Δεν ήταν δυνατή η δημιουργία φακέλου: {e}"

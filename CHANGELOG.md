@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Added: Snooze.** A message or conversation can be put away until later
+  today, tomorrow morning or afternoon, Monday morning or a time of your
+  own, from its right-click menu, the reader toolbar, the command palette
+  or the z key (b with Gmail keys). It waits in a Snoozed folder on the
+  server, made on first use, so it is out of the Inbox on every device,
+  and comes back to its folder unread on Send Later's clock, at the next
+  start when Hylki was closed. The Snoozed row beside the Outbox lists
+  what is waiting, with Unsnooze and Change Time. IMAP, JMAP and
+  Microsoft 365. The toolbar editor adds a Snooze button to the reader
+  toolbar.
 - **Changed: a reply sent from the reading pane becomes its card in the
   conversation.** The editor lifts out of the composer and moves to where
   the reply now sits in the conversation, turning into its card on the

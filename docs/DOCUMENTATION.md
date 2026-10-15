@@ -295,6 +295,43 @@ IMAP and JMAP accounts can receive mail this way. A Microsoft account and a
 POP3 account can be moved from but not into: Microsoft files a message added
 to a folder as a draft, and POP3 has only an inbox.
 
+### Snooze
+
+**Snooze** puts a message or a conversation out of the way until a time you
+choose, and brings it back to the folder it came from, unread. It is in the
+right-click menu of a message in the list and of a card in the reading pane,
+in the command palette, on the keys <kbd>z</kbd> (or <kbd>b</kbd> with Gmail
+keys), and on an alarm-clock button the toolbar editor adds to the reader
+toolbar. The times on offer are
+Send Later's: later today (three hours on, while the evening is not too far
+gone), tomorrow morning, tomorrow afternoon and Monday morning, or **Pick a
+date and time…** for any other.
+
+A snoozed message moves to a folder called **Snoozed** on the server, which
+Hylki makes the first time; an account that already has one at the top level,
+as Outlook keeps, uses it. So the message is out of the Inbox on your phone and
+in webmail too. On Gmail the folder is a label, and the message loses its
+Inbox label while it sleeps. The Snoozed folder stays among the account's
+other folders, so mail snoozed by another app is still there to find.
+
+When the message comes back is kept in Hylki's cache, on this computer. Hylki
+checks every half minute, on the same clock that sends Send Later's mail, and
+moves what is due back to where it was, marked unread. A message that falls
+due while Hylki is closed comes back shortly after the next start. Other
+devices see only that the message is in the Snoozed folder, not when it
+comes back, and a message moved out of the Snoozed folder elsewhere in the
+meantime is simply left where it is.
+
+The **Snoozed** row, beside the Outbox in the sidebar while anything is
+snoozed, lists what is waiting with the time each comes back. A conversation
+snoozed together is one row. Opening one shows what Hylki kept of it; the
+toolbar's **Unsnooze** brings it back now, and **Change Time** (or Snooze
+again) picks another time. **Undo** (Ctrl+Z) takes a snooze back right away.
+
+Snooze needs a Message-ID to find the message again, and folders to put it
+in: it works on IMAP, JMAP and Microsoft 365 accounts, not on POP3. A message
+comes back in its place by date, not at the top of the list.
+
 ### Deleting an attachment from the server
 
 **Delete from Server…** in the right-click menu of a file in the attachment

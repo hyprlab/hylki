@@ -70,6 +70,9 @@ msgstr ""
 msgid "Send all"
 msgstr ""
 
+msgid "Unsnooze: bring it back now"
+msgstr ""
+
 msgid "Reply"
 msgstr ""
 
@@ -139,6 +142,12 @@ msgstr ""
 msgid "Move To…"
 msgstr ""
 
+msgid "Snooze…"
+msgstr ""
+
+msgid "Change when it comes back"
+msgstr ""
+
 msgid "Attachments"
 msgstr ""
 
@@ -146,6 +155,15 @@ msgid "Toggle sidebar"
 msgstr ""
 
 msgid "Keyboard Shortcuts"
+msgstr ""
+
+msgid "Snooze until"
+msgstr ""
+
+msgid "Snooze"
+msgstr ""
+
+msgid "Could not bring snoozed mail back yet: {e}. Hylki will keep trying."
 msgstr ""
 
 msgid "Create Folder"
@@ -397,6 +415,9 @@ msgstr ""
 msgid "Outbox"
 msgstr ""
 
+msgid "Snoozed"
+msgstr ""
+
 msgid "Tag"
 msgstr ""
 
@@ -413,6 +434,18 @@ msgid ""
 msgstr ""
 
 msgid "Your tags"
+msgstr ""
+
+msgid ""
+"{n} message could not be snoozed: it has no Message-ID, or its account has "
+"no folders"
+msgid_plural ""
+"{n} messages could not be snoozed: they have no Message-ID, or their account "
+"has no folders"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Snoozed until {when}"
 msgstr ""
 
 msgid "Move to {name}"
@@ -438,6 +471,12 @@ msgid ""
 msgstr ""
 
 msgid "Restart Now"
+msgstr ""
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "Change Time…"
 msgstr ""
 
 msgid "Move to Inbox"
@@ -1000,6 +1039,9 @@ msgstr ""
 msgid "Move to a folder"
 msgstr ""
 
+msgid "Snooze until a time you choose"
+msgstr ""
+
 msgid "Undo the last action"
 msgstr ""
 
@@ -1306,6 +1348,18 @@ msgstr ""
 msgid "The file is larger than {size} MB"
 msgstr ""
 
+msgid "Later today ({time})"
+msgstr ""
+
+msgid "Tomorrow morning ({time})"
+msgstr ""
+
+msgid "Tomorrow afternoon ({time})"
+msgstr ""
+
+msgid "Monday morning ({time})"
+msgstr ""
+
 msgid "{used} of {limit} used"
 msgstr ""
 
@@ -1431,6 +1485,9 @@ msgid "Waiting since {ago}"
 msgstr ""
 
 msgid "Scheduled for {when}"
+msgstr ""
+
+msgid "Until {when}"
 msgstr ""
 
 msgid "Today, {time}"
@@ -3162,15 +3219,6 @@ msgstr ""
 msgid "Send now"
 msgstr ""
 
-msgid "Tomorrow morning ({time})"
-msgstr ""
-
-msgid "Tomorrow afternoon ({time})"
-msgstr ""
-
-msgid "Monday morning ({time})"
-msgstr ""
-
 msgid "Pick a date and time…"
 msgstr ""
 
@@ -3385,12 +3433,6 @@ msgstr ""
 msgid ""
 "There is no OpenPGP key for {addr}. Ask them for their public key, or fetch "
 "it under Settings, OpenPGP."
-msgstr ""
-
-msgid "That time has passed"
-msgstr ""
-
-msgid "Choose a time later than now."
 msgstr ""
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
@@ -3689,6 +3731,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Search folders"
+msgstr ""
+
+msgid "That time has passed"
+msgstr ""
+
+msgid "Choose a time later than now."
 msgstr ""
 
 msgid "the portal answered response code {code}"
@@ -6160,6 +6208,11 @@ msgstr ""
 msgid "New Message from Template…"
 msgstr ""
 
+msgid "Snoozed: {n} conversation comes back later"
+msgid_plural "Snoozed: {n} conversations come back later"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Mark Inbox as Read"
 msgstr ""
 
@@ -6522,6 +6575,9 @@ msgid "Could not empty the folder: {e}"
 msgstr ""
 
 msgid "Undo failed: {e}"
+msgstr ""
+
+msgid "Could not snooze: {e}"
 msgstr ""
 
 msgid "Could not create folder: {e}"

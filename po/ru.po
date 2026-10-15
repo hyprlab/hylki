@@ -78,6 +78,9 @@ msgstr "Попробовать отправить сейчас"
 msgid "Send all"
 msgstr "Отправить все"
 
+msgid "Unsnooze: bring it back now"
+msgstr ""
+
 msgid "Reply"
 msgstr "Ответить"
 
@@ -147,6 +150,13 @@ msgstr "Теги"
 msgid "Move To…"
 msgstr "Переместить в…"
 
+msgid "Snooze…"
+msgstr ""
+
+#, fuzzy
+msgid "Change when it comes back"
+msgstr "Предупреждать о блокировке удалённого содержимого"
+
 msgid "Attachments"
 msgstr "Вложения"
 
@@ -155,6 +165,15 @@ msgstr "Показать/скрыть боковую панель"
 
 msgid "Keyboard Shortcuts"
 msgstr "Сочетания клавиш"
+
+msgid "Snooze until"
+msgstr ""
+
+msgid "Snooze"
+msgstr ""
+
+msgid "Could not bring snoozed mail back yet: {e}. Hylki will keep trying."
+msgstr ""
 
 msgid "Create Folder"
 msgstr "Создать папку"
@@ -437,6 +456,9 @@ msgstr "Контакты"
 msgid "Outbox"
 msgstr "Исходящие"
 
+msgid "Snoozed"
+msgstr ""
+
 #, fuzzy
 msgid "Tag"
 msgstr "Теги"
@@ -461,6 +483,20 @@ msgstr ""
 
 msgid "Your tags"
 msgstr "Ваши теги"
+
+msgid ""
+"{n} message could not be snoozed: it has no Message-ID, or its account has "
+"no folders"
+msgid_plural ""
+"{n} messages could not be snoozed: they have no Message-ID, or their account "
+"has no folders"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Запланировано на {when}"
 
 msgid "Move to {name}"
 msgstr "Переместить в {name}"
@@ -490,6 +526,12 @@ msgstr ""
 
 msgid "Restart Now"
 msgstr "Перезапустить сейчас"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "Change Time…"
+msgstr ""
 
 msgid "Move to Inbox"
 msgstr "Переместить во «Входящие»"
@@ -1142,6 +1184,9 @@ msgstr "Следующее сообщение в беседе"
 msgid "Move to a folder"
 msgstr "Переместить папку"
 
+msgid "Snooze until a time you choose"
+msgstr ""
+
 #, fuzzy
 msgid "Undo the last action"
 msgstr "Отменить последнее перемещение или удаление"
@@ -1472,6 +1517,19 @@ msgstr "Эта папка отсутствует на сервере"
 msgid "The file is larger than {size} MB"
 msgstr ""
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Сегодня, {time}"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Завтра утром ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Завтра днём ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "В понедельник утром ({time})"
+
 msgid "{used} of {limit} used"
 msgstr "Использовано {used} из {limit}"
 
@@ -1604,6 +1662,9 @@ msgstr "Ожидает {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Запланировано на {when}"
+
+msgid "Until {when}"
+msgstr ""
 
 msgid "Today, {time}"
 msgstr "Сегодня, {time}"
@@ -3567,15 +3628,6 @@ msgstr "Отправить позже"
 msgid "Send now"
 msgstr "Отправить сейчас"
 
-msgid "Tomorrow morning ({time})"
-msgstr "Завтра утром ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Завтра днём ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "В понедельник утром ({time})"
-
 msgid "Pick a date and time…"
 msgstr "Выбрать дату и время…"
 
@@ -3811,12 +3863,6 @@ msgid ""
 msgstr ""
 "Отсутствует ключ OpenPGP для {addr}. Запросите у адресата его открытый ключ "
 "или получите его в разделе «Настройки» → «OpenPGP»."
-
-msgid "That time has passed"
-msgstr "Это время уже прошло"
-
-msgid "Choose a time later than now."
-msgstr "Выберите время позже текущего."
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
@@ -4146,6 +4192,12 @@ msgstr[2] "{n} писем"
 
 msgid "Search folders"
 msgstr "Папки поиска"
+
+msgid "That time has passed"
+msgstr "Это время уже прошло"
+
+msgid "Choose a time later than now."
+msgstr "Выберите время позже текущего."
 
 msgid "the portal answered response code {code}"
 msgstr "системный портал вернул код ответа {code}"
@@ -7005,6 +7057,13 @@ msgstr "Учётные записи пока не добавлены"
 msgid "New Message from Template…"
 msgstr "Новое сообщение из шаблона…"
 
+#, fuzzy
+msgid "Snoozed: {n} conversation comes back later"
+msgid_plural "Snoozed: {n} conversations come back later"
+msgstr[0] "Подтверждать удаление обсуждения"
+msgstr[1] "Подтверждать удаление обсуждения"
+msgstr[2] "Подтверждать удаление обсуждения"
+
 msgid "Mark Inbox as Read"
 msgstr "Отметить входящие как прочитанные"
 
@@ -7395,6 +7454,10 @@ msgstr "Не удалось очистить папку: {e}"
 
 msgid "Undo failed: {e}"
 msgstr "Не удалось отменить действие: {e}"
+
+#, fuzzy
+msgid "Could not snooze: {e}"
+msgstr "Не удалось загрузить исходный код: {e}"
 
 msgid "Could not create folder: {e}"
 msgstr "Не удалось создать папку: {e}"

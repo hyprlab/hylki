@@ -1187,9 +1187,9 @@ pub(super) async fn run_graph(
             }
 
             MailRequest::UndoMove { path, dest, dest_folder_id, message_ids } => {
-                match graph_undo_move(&account, account_id, &mut state, &path, &dest, &message_ids, cache.as_ref())
-                    .await
-                {
+                let undone =
+                    graph_undo_move(&account, account_id, &mut state, &path, &dest, &message_ids, cache.as_ref(), false);
+                match undone.await {
                     Ok(0) => {
                         tracing::info!("undo: the messages are no longer where that move put them");
                     }
@@ -1224,23 +1224,64 @@ pub(super) async fn run_graph(
                 emit(WorkerEvent::BulkComplete);
             }
 
+            MailRequest::Snooze { path, uids, dest, message_ids } => {
+                // The Snoozed folder is made on first use, as an IMAP move
+                // makes its destination; a Graph move needs it to exist.
+                let mut ready = Ok(());
+                if !state.folders.contains_key(&dest) {
+                    ready = match graph_token(&account, &emit).await {
+                        Some(token) => {
+                            let made = graph_create_folder(&token, &state, &dest).await;
+                            if made.is_ok() {
+                                refresh_graph_folders(&token, account_id, cache.as_ref(), &mut state, &emit).await;
+                            }
+                            made
+                        }
+                        None => Err("no sign-in token".to_string()),
+                    };
+                }
+                let moved = match ready {
+                    Ok(()) => {
+                        graph_move_uids(&account, account_id, &mut state, &path, &uids, &dest, cache.as_ref()).await
+                    }
+                    Err(e) => Err(e),
+                };
+                if let Err(e) = moved {
+                    emit(WorkerEvent::error(i18n_f("Could not snooze: {e}", &[("e", &e)])));
+                    emit(WorkerEvent::SnoozeFailed { message_ids });
+                }
+            }
+
+            MailRequest::Unsnooze { path, dest, dest_folder_id, message_ids } => {
+                let moved =
+                    graph_undo_move(&account, account_id, &mut state, &path, &dest, &message_ids, cache.as_ref(), true)
+                        .await;
+                let outcome = match moved {
+                    Err(e) => {
+                        tracing::warn!("unsnooze: {path:?} -> {dest:?} failed: {e}");
+                        WakeOutcome::Failed(e)
+                    }
+                    Ok(0) => WakeOutcome::Missing,
+                    Ok(_) => {
+                        if let Some(token) = graph_token(&account, &emit).await {
+                            if let Ok(messages) =
+                                graph_load_folder(&token, account_id, dest_folder_id, &dest, cache.as_ref(), &mut state)
+                                    .await
+                            {
+                                let unread = state.chip_count(dest_folder_id, &messages);
+                                emit(WorkerEvent::Messages { folder_id: dest_folder_id, messages });
+                                emit(WorkerEvent::FolderUnread { folder_id: dest_folder_id, unread });
+                            }
+                        }
+                        WakeOutcome::Back
+                    }
+                };
+                emit(WorkerEvent::Unsnoozed { message_ids, outcome });
+            }
+
             MailRequest::CreateFolder { path } => {
                 let Some(token) = graph_token(&account, &emit).await else { continue };
-                // "A/B" nests under A (resolved from the last listing);
-                // otherwise a top-level folder.
-                let (url, name) = match path.rsplit_once('/') {
-                    Some((parent, leaf)) => match state.folders.get(parent) {
-                        Some((_, pgid)) => (
-                            format!("{GRAPH_BASE}/me/mailFolders/{pgid}/childFolders"),
-                            leaf.to_string(),
-                        ),
-                        None => (format!("{GRAPH_BASE}/me/mailFolders"), path.clone()),
-                    },
-                    None => (format!("{GRAPH_BASE}/me/mailFolders"), path.clone()),
-                };
-                let t = token.clone();
-                let body = serde_json::json!({ "displayName": name });
-                let r = blocking(move || graph_send_json(&t, "POST", &url, &body)).await;
+                let r = graph_create_folder(&token, &state, &path).await;
                 match r {
                     Ok(_) => {
                         refresh_graph_folders(&token, account_id, cache.as_ref(), &mut state, &emit)
@@ -2011,6 +2052,21 @@ async fn graph_patch_message(
     }
 }
 
+/// Create a folder at `path`: "A/B" nests under A (resolved from the last
+/// listing), anything else is a top-level folder.
+async fn graph_create_folder(token: &str, state: &GraphState, path: &str) -> Result<(), String> {
+    let (url, name) = match path.rsplit_once('/') {
+        Some((parent, leaf)) => match state.folders.get(parent) {
+            Some((_, pgid)) => (format!("{GRAPH_BASE}/me/mailFolders/{pgid}/childFolders"), leaf.to_string()),
+            None => (format!("{GRAPH_BASE}/me/mailFolders"), path.to_string()),
+        },
+        None => (format!("{GRAPH_BASE}/me/mailFolders"), path.to_string()),
+    };
+    let t = token.to_string();
+    let body = serde_json::json!({ "displayName": name });
+    blocking(move || graph_send_json(&t, "POST", &url, &body)).await.map(|_| ())
+}
+
 /// Move messages to another folder. The Graph id changes in transit; the moved
 /// entries leave the uid map and the destination re-indexes on its next load.
 async fn graph_move_uids(
@@ -2046,6 +2102,8 @@ async fn graph_move_uids(
 
 /// Undo a move: the messages are in `path` (where the move put them) with new
 /// Graph ids — find them by Internet Message-ID and move them back to `dest`.
+/// Snoozed mail comes back the same way, `unread`.
+#[allow(clippy::too_many_arguments)]
 async fn graph_undo_move(
     account: &AccountConfig,
     account_id: u32,
@@ -2054,6 +2112,7 @@ async fn graph_undo_move(
     dest: &str,
     message_ids: &[String],
     cache: Option<&Cache>,
+    unread: bool,
 ) -> Result<usize, String> {
     let quiet = |_e: WorkerEvent| {};
     let token = graph_token(account, &quiet)
@@ -2102,6 +2161,13 @@ async fn graph_undo_move(
         return Ok(0);
     }
     let n = uids.len();
+    // Before the move, while the ids just looked up are still good.
+    if unread {
+        let quiet = |_e: WorkerEvent| {};
+        for &uid in &uids {
+            graph_patch_message(account, state, path, uid, serde_json::json!({ "isRead": false }), &quiet).await;
+        }
+    }
     graph_move_uids(account, account_id, state, path, &uids, dest, cache).await?;
     Ok(n)
 }

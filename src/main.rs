@@ -22,6 +22,7 @@ mod i18n;
 mod invite;
 mod launcher_badge;
 mod local_contacts;
+mod later;
 mod legacy;
 mod logo;
 mod memory_report;

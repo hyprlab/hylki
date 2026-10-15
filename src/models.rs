@@ -971,6 +971,132 @@ impl OutboxItem {
 /// by the worker, so this can't collide.
 pub const OUTBOX_FOLDER_ID: u32 = u32::MAX;
 
+/// Folder id for the Snoozed view's rows, which stand for messages waiting
+/// in a server folder the app does not list them from. One below the
+/// Outbox's, for the same reason.
+pub const SNOOZED_FOLDER_ID: u32 = u32::MAX - 1;
+
+/// The name of the folder snoozed mail waits in on the server. English on
+/// every system, like the folder Gmail and Outlook use: phones and webmail
+/// see the same folder whatever language Hylki speaks.
+pub const SNOOZED_FOLDER_NAME: &str = "Snoozed";
+
+/// A message put away until later (Snooze). The message itself waits on the
+/// server, in the account's Snoozed folder, so it is out of the Inbox on
+/// every device; this is what Hylki keeps of it locally: when it comes back,
+/// where to, and enough of it to list and read it in the Snoozed view
+/// without asking the server.
+#[derive(Debug, Clone, PartialEq)]
+pub struct SnoozedItem {
+    pub id: u32,
+    pub account_id: u32,
+    /// The Message-ID it is found by in the Snoozed folder: the move gave it
+    /// a new UID there, and will again on the way back.
+    pub message_id: String,
+    /// The folder it was snoozed from, and goes back to.
+    pub folder_path: String,
+    /// Where it waits on the server.
+    pub snoozed_path: String,
+    /// Unix seconds it comes back.
+    pub wake_at: i64,
+    /// Messages snoozed together, a conversation's, share this, and the
+    /// Snoozed view shows them as one row that acts on all of them.
+    pub batch: String,
+    pub from_name: String,
+    pub from_addr: String,
+    pub subject: String,
+    pub preview: String,
+    /// The body as the reader last rendered it, when it had been opened;
+    /// empty otherwise, and the reader then shows the preview.
+    pub body: String,
+    /// The message's own date.
+    pub timestamp: i64,
+    pub has_attachment: bool,
+}
+
+impl SnoozedItem {
+    /// "Until …", with the date and time a snoozed message comes back.
+    pub fn until_label(&self) -> String {
+        i18n_f("Until {when}", &[("when", &crate::datefmt::date_time(self.wake_at))])
+    }
+
+    /// The snoozed message as a row of the Snoozed view, with the time it
+    /// comes back where a row shows its date (the list sorts by it, too) and
+    /// in front of its preview. `folder_id` is [`SNOOZED_FOLDER_ID`], so no
+    /// server action is ever aimed at it, and it has no Message-ID, so the
+    /// list never threads it.
+    pub fn as_message(&self) -> Message {
+        let preview = self.preview.trim();
+        Message {
+            id: self.id,
+            account_id: self.account_id,
+            folder_id: SNOOZED_FOLDER_ID,
+            uid: self.id,
+            from_name: self.from_name.clone(),
+            from_addr: self.from_addr.clone(),
+            reply_to: String::new(),
+            to: String::new(),
+            cc: String::new(),
+            subject: if self.subject.trim().is_empty() {
+                i18n("(no subject)")
+            } else {
+                self.subject.clone()
+            },
+            preview: if preview.is_empty() {
+                self.until_label()
+            } else {
+                format!("{} · {preview}", self.until_label())
+            },
+            body: String::new(),
+            date: String::new(),
+            timestamp: self.wake_at,
+            unread: false,
+            starred: false,
+            keywords: Vec::new(),
+            has_attachment: self.has_attachment,
+            message_id: String::new(),
+            references: String::new(),
+            importance: Default::default(),
+            due: 0,
+            labels: Vec::new(),
+        }
+    }
+}
+
+/// The Snoozed view's rows: one per batch (a conversation snoozed together
+/// is one row), standing for its newest message, soonest back first.
+pub fn snoozed_rows(items: &[SnoozedItem]) -> Vec<&SnoozedItem> {
+    let mut out: Vec<&SnoozedItem> = Vec::new();
+    for item in items {
+        match out.iter_mut().find(|o| o.account_id == item.account_id && o.batch == item.batch) {
+            Some(o) if item.timestamp > o.timestamp => *o = item,
+            Some(_) => {}
+            None => out.push(item),
+        }
+    }
+    out.sort_by_key(|i| (i.wake_at, i.id));
+    out
+}
+
+/// The snoozed messages whose time has come by `now`.
+pub fn due_snoozes(items: &[SnoozedItem], now: i64) -> Vec<&SnoozedItem> {
+    items.iter().filter(|i| i.wake_at <= now).collect()
+}
+
+/// Where an account's snoozed mail waits: a Snoozed folder it already has,
+/// at the top level or under the server's personal namespace (`INBOX.` on
+/// some servers), whatever its case; Outlook keeps one of its own, and
+/// another client may have made one. Otherwise the path the worker creates
+/// it at on first use.
+pub fn snoozed_folder_path(folders: &[Folder], namespace: &str) -> String {
+    let wanted = format!("{namespace}{SNOOZED_FOLDER_NAME}");
+    folders
+        .iter()
+        .find(|f| f.path.eq_ignore_ascii_case(&wanted) || f.path.eq_ignore_ascii_case(SNOOZED_FOLDER_NAME))
+        .map(|f| f.path.clone())
+        .unwrap_or(wanted)
+}
+
 /// A decoded message attachment (fetched on demand for the reader).
 #[derive(Debug, Clone)]
 pub struct Attachment {
@@ -1713,5 +1839,82 @@ mod tests {
             .map(|(p, k)| plain_folder(p, *k))
             .collect();
         assert!(exchange_non_mail_folders(&plain).is_empty());
+    }
+
+    fn snoozed(id: u32, batch: &str, timestamp: i64, wake_at: i64) -> SnoozedItem {
+        SnoozedItem {
+            id,
+            account_id: 1,
+            message_id: format!("m{id}@example.com"),
+            folder_path: "INBOX".into(),
+            snoozed_path: "Snoozed".into(),
+            wake_at,
+            batch: batch.into(),
+            from_name: "Ada".into(),
+            from_addr: "ada@example.com".into(),
+            subject: "Lunch".into(),
+            preview: "Shall we?".into(),
+            body: String::new(),
+            timestamp,
+            has_attachment: false,
+        }
+    }
+
+    /// A conversation snoozed together is one row, its newest message's,
+    /// and the rows come soonest back first.
+    #[test]
+    fn snoozed_rows_are_one_per_batch_soonest_first() {
+        let items = vec![
+            snoozed(1, "a", 100, 5000),
+            snoozed(2, "a", 300, 5000),
+            snoozed(3, "b", 200, 4000),
+            snoozed(4, "a", 200, 5000),
+        ];
+        let rows: Vec<u32> = snoozed_rows(&items).iter().map(|i| i.id).collect();
+        assert_eq!(rows, [3, 2]);
+        // The same batch name on another account is another batch.
+        let mut other = snoozed(5, "a", 50, 6000);
+        other.account_id = 2;
+        let items = vec![snoozed(1, "a", 100, 5000), other];
+        assert_eq!(snoozed_rows(&items).len(), 2);
+    }
+
+    #[test]
+    fn due_snoozes_are_the_ones_whose_time_has_come() {
+        let items = vec![snoozed(1, "a", 0, 100), snoozed(2, "b", 0, 200), snoozed(3, "c", 0, 201)];
+        let due: Vec<u32> = due_snoozes(&items, 200).iter().map(|i| i.id).collect();
+        assert_eq!(due, [1, 2]);
+        assert!(due_snoozes(&items, 99).is_empty());
+    }
+
+    /// A snoozed row is no server message: the Snoozed view's folder, no
+    /// Message-ID to thread on, sorted by when it comes back.
+    #[test]
+    fn a_snoozed_row_reads_as_a_row_of_its_own_view() {
+        let row = snoozed(7, "a", 100, 5000).as_message();
+        assert_eq!(row.folder_id, SNOOZED_FOLDER_ID);
+        assert_eq!(row.id, 7);
+        assert_eq!(row.timestamp, 5000);
+        assert!(row.message_id.is_empty() && row.references.is_empty());
+        assert!(row.preview.ends_with(" · Shall we?"), "{}", row.preview);
+    }
+
+    /// An existing Snoozed folder is used whatever its case, at the top or
+    /// under the namespace; otherwise it is made under the namespace.
+    #[test]
+    fn the_snoozed_folder_is_found_before_it_is_made() {
+        let folders = vec![plain_folder("INBOX", FolderKind::Inbox), plain_folder("Archive", FolderKind::Archive)];
+        assert_eq!(snoozed_folder_path(&folders, ""), "Snoozed");
+        assert_eq!(snoozed_folder_path(&folders, "INBOX."), "INBOX.Snoozed");
+        let mut outlook = folders.clone();
+        outlook.push(plain_folder("snoozed", FolderKind::Custom));
+        assert_eq!(snoozed_folder_path(&outlook, ""), "snoozed");
+        let mut dovecot = folders.clone();
+        dovecot.push(plain_folder("INBOX.Snoozed", FolderKind::Custom));
+        assert_eq!(snoozed_folder_path(&dovecot, "INBOX."), "INBOX.Snoozed");
+        // A Snoozed folder nested somewhere else is somebody's own.
+        let mut nested = folders;
+        nested.push(plain_folder("Projects/Snoozed", FolderKind::Custom));
+        assert_eq!(snoozed_folder_path(&nested, ""), "Snoozed");
     }
 }

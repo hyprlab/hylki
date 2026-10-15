@@ -1349,7 +1349,9 @@ async fn jmap_move_uids(
 }
 
 /// Undo a move: the messages are in `path` (where the move put them); find
-/// them by Message-ID and move them back to `dest`.
+/// them by Message-ID and move them back to `dest`, with `extra` set on them
+/// on the way (snoozed mail comes back unread).
+#[allow(clippy::too_many_arguments)]
 async fn jmap_undo_move(
     s: &JmapSession,
     account_id: u32,
@@ -1357,6 +1359,7 @@ async fn jmap_undo_move(
     path: &str,
     dest: &str,
     message_ids: &[String],
+    extra: serde_json::Value,
     cache: Option<&Cache>,
 ) -> Result<usize, String> {
     let (folder_id, mailbox_id) =
@@ -1406,7 +1409,7 @@ async fn jmap_undo_move(
         return Ok(0);
     }
     let n = uids.len();
-    jmap_move_uids(s, account_id, state, path, &uids, dest, serde_json::json!({}), cache).await?;
+    jmap_move_uids(s, account_id, state, path, &uids, dest, extra, cache).await?;
     Ok(n)
 }
 
@@ -2630,7 +2633,8 @@ pub(super) async fn run_jmap(
                     emit(WorkerEvent::BulkComplete);
                     continue;
                 };
-                match jmap_undo_move(&s, account_id, &mut state, &path, &dest, &message_ids, cache.as_ref()).await {
+                let none = serde_json::json!({});
+                match jmap_undo_move(&s, account_id, &mut state, &path, &dest, &message_ids, none, cache.as_ref()).await {
                     Ok(0) => tracing::info!("undo: the messages are no longer where that move put them"),
                     Ok(_) => {
                         if let Ok(messages) = jmap_load_folder(&s, account_id, dest_folder_id, &dest, cache.as_ref(), &mut state).await {
@@ -2643,6 +2647,64 @@ pub(super) async fn run_jmap(
                 }
                 // The app spins its busy indicator until an undo answers.
                 emit(WorkerEvent::BulkComplete);
+            }
+
+            MailRequest::Snooze { path, uids, dest, message_ids } => {
+                let Some(s) = jmap_session(&account, &mut state, &emit).await else {
+                    emit(WorkerEvent::SnoozeFailed { message_ids });
+                    continue;
+                };
+                // The Snoozed mailbox is made on first use, as an IMAP move
+                // makes its destination; a JMAP move needs it to exist.
+                let mut ready = Ok(());
+                if !state.folders.contains_key(&dest) {
+                    let (sess, name) = (s.clone(), dest.clone());
+                    ready = blocking(move || jmap_create_mailbox(&sess, &name, None)).await.map(|_| ());
+                    if ready.is_ok() {
+                        refresh_jmap_folders(&s, account_id, cache.as_ref(), &mut state, &emit).await;
+                    }
+                }
+                let moved = match ready {
+                    Ok(()) => {
+                        let none = serde_json::json!({});
+                        jmap_move_uids(&s, account_id, &mut state, &path, &uids, &dest, none, cache.as_ref()).await
+                    }
+                    Err(e) => Err(e),
+                };
+                if let Err(e) = moved {
+                    emit(WorkerEvent::error(i18n_f("Could not snooze: {e}", &[("e", &e)])));
+                    emit(WorkerEvent::SnoozeFailed { message_ids });
+                }
+            }
+
+            MailRequest::Unsnooze { path, dest, dest_folder_id, message_ids } => {
+                let outcome = match jmap_session(&account, &mut state, &emit).await {
+                    None => WakeOutcome::Failed("no JMAP session".to_string()),
+                    Some(s) => {
+                        let unseen = serde_json::json!({ "keywords/$seen": null });
+                        let moved =
+                            jmap_undo_move(&s, account_id, &mut state, &path, &dest, &message_ids, unseen, cache.as_ref())
+                                .await;
+                        match moved {
+                            Err(e) => {
+                                tracing::warn!("unsnooze: {path:?} -> {dest:?} failed: {e}");
+                                WakeOutcome::Failed(e)
+                            }
+                            Ok(0) => WakeOutcome::Missing,
+                            Ok(_) => {
+                                let loaded =
+                                    jmap_load_folder(&s, account_id, dest_folder_id, &dest, cache.as_ref(), &mut state);
+                                if let Ok(messages) = loaded.await {
+                                    let unread = state.chip_count(dest_folder_id, &messages);
+                                    emit(WorkerEvent::Messages { folder_id: dest_folder_id, messages });
+                                    emit(WorkerEvent::FolderUnread { folder_id: dest_folder_id, unread });
+                                }
+                                WakeOutcome::Back
+                            }
+                        }
+                    }
+                };
+                emit(WorkerEvent::Unsnoozed { message_ids, outcome });
             }
 
             MailRequest::CreateFolder { path } => {

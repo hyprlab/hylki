@@ -81,6 +81,9 @@ msgstr "Jetzt versuchen, diese Nachricht zu senden"
 msgid "Send all"
 msgstr "Alle senden"
 
+msgid "Unsnooze: bring it back now"
+msgstr "Zurückholen: jetzt wieder anzeigen"
+
 msgid "Reply"
 msgstr "Antworten"
 
@@ -150,6 +153,12 @@ msgstr "Tags"
 msgid "Move To…"
 msgstr "Verschieben nach…"
 
+msgid "Snooze…"
+msgstr "Zurückstellen…"
+
+msgid "Change when it comes back"
+msgstr "Zeitpunkt der Rückkehr ändern"
+
 msgid "Attachments"
 msgstr "Anhänge"
 
@@ -158,6 +167,15 @@ msgstr "Seitenleiste ein- oder ausblenden"
 
 msgid "Keyboard Shortcuts"
 msgstr "Tastenkombinationen"
+
+msgid "Snooze until"
+msgstr "Zurückstellen bis"
+
+msgid "Snooze"
+msgstr "Zurückstellen"
+
+msgid "Could not bring snoozed mail back yet: {e}. Hylki will keep trying."
+msgstr "Zurückgestellte E-Mails konnten noch nicht zurückgeholt werden: {e}. Hylki versucht es weiter."
 
 msgid "Create Folder"
 msgstr "Ordner erstellen"
@@ -441,6 +459,9 @@ msgstr "Kontakte"
 msgid "Outbox"
 msgstr "Postausgang"
 
+msgid "Snoozed"
+msgstr "Zurückgestellt"
+
 #, fuzzy
 msgid "Tag"
 msgstr "Tags"
@@ -466,6 +487,18 @@ msgstr ""
 
 msgid "Your tags"
 msgstr "Ihre Tags"
+
+msgid ""
+"{n} message could not be snoozed: it has no Message-ID, or its account has "
+"no folders"
+msgid_plural ""
+"{n} messages could not be snoozed: they have no Message-ID, or their account "
+"has no folders"
+msgstr[0] "{n} Nachricht konnte nicht zurückgestellt werden: Sie hat keine Message-ID, oder ihr Konto hat keine Ordner"
+msgstr[1] "{n} Nachrichten konnten nicht zurückgestellt werden: Sie haben keine Message-ID, oder ihr Konto hat keine Ordner"
+
+msgid "Snoozed until {when}"
+msgstr "Zurückgestellt bis {when}"
 
 msgid "Move to {name}"
 msgstr "Nach {name} verschieben"
@@ -495,6 +528,12 @@ msgstr ""
 
 msgid "Restart Now"
 msgstr "Jetzt neu starten"
+
+msgid "Unsnooze"
+msgstr "Zurückholen"
+
+msgid "Change Time…"
+msgstr "Zeit ändern…"
 
 msgid "Move to Inbox"
 msgstr "In den Posteingang verschieben"
@@ -1138,6 +1177,9 @@ msgstr "Nächste Nachricht im Gespräch"
 msgid "Move to a folder"
 msgstr "Ordner verschieben"
 
+msgid "Snooze until a time you choose"
+msgstr "Bis zu einem gewählten Zeitpunkt zurückstellen"
+
 msgid "Undo the last action"
 msgstr ""
 
@@ -1471,6 +1513,18 @@ msgstr "Dieser Ordner ist nicht auf dem Server vorhanden"
 msgid "The file is larger than {size} MB"
 msgstr ""
 
+msgid "Later today ({time})"
+msgstr "Später heute ({time})"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Morgen früh ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Morgen Nachmittag ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "Montagmorgen ({time})"
+
 msgid "{used} of {limit} used"
 msgstr "{used} von {limit} verwendet"
 
@@ -1609,6 +1663,9 @@ msgstr "Wartet seit {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Geplant für {when}"
+
+msgid "Until {when}"
+msgstr "Bis {when}"
 
 msgid "Today, {time}"
 msgstr "Heute, {time}"
@@ -3599,15 +3656,6 @@ msgstr "Später senden"
 msgid "Send now"
 msgstr "Jetzt senden"
 
-msgid "Tomorrow morning ({time})"
-msgstr "Morgen früh ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Morgen Nachmittag ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "Montagmorgen ({time})"
-
 msgid "Pick a date and time…"
 msgstr "Datum und Uhrzeit auswählen…"
 
@@ -3855,12 +3903,6 @@ msgid ""
 msgstr ""
 "Es gibt keinen OpenPGP-Schlüssel für {addr}. Fragen Sie sie nach ihrem "
 "öffentlichen Schlüssel oder holen Sie ihn unter Einstellungen, OpenPGP."
-
-msgid "That time has passed"
-msgstr "Diese Zeit ist vergangen"
-
-msgid "Choose a time later than now."
-msgstr "Wählen Sie eine Uhrzeit in der Zukunft."
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
@@ -4183,6 +4225,12 @@ msgstr[1] "{n} Nachrichten"
 
 msgid "Search folders"
 msgstr "Ordner durchsuchen"
+
+msgid "That time has passed"
+msgstr "Diese Zeit ist vergangen"
+
+msgid "Choose a time later than now."
+msgstr "Wählen Sie eine Uhrzeit in der Zukunft."
 
 msgid "the portal answered response code {code}"
 msgstr "das Portal beantwortet Antwortcode {code}"
@@ -7070,6 +7118,11 @@ msgstr "Noch keine Konten"
 msgid "New Message from Template…"
 msgstr ""
 
+msgid "Snoozed: {n} conversation comes back later"
+msgid_plural "Snoozed: {n} conversations come back later"
+msgstr[0] "Zurückgestellt: {n} Unterhaltung kommt später zurück"
+msgstr[1] "Zurückgestellt: {n} Unterhaltungen kommen später zurück"
+
 msgid "Mark Inbox as Read"
 msgstr "Posteingang als gelesen markieren"
 
@@ -7465,6 +7518,9 @@ msgstr "Konnte den Ordner nicht leeren: {e}"
 
 msgid "Undo failed: {e}"
 msgstr "Rückgängig fehlgeschlagen: {e}"
+
+msgid "Could not snooze: {e}"
+msgstr "Zurückstellen fehlgeschlagen: {e}"
 
 msgid "Could not create folder: {e}"
 msgstr "Ordner konnte nicht erstellt werden: {e}"

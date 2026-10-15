@@ -460,6 +460,17 @@ pub enum MailRequest {
     /// changed in transit) in `path`, where a move just put them, and move
     /// them back to `dest`, then reload that folder so they reappear.
     UndoMove { path: String, dest: String, dest_folder_id: u32, message_ids: Vec<String> },
+    /// Snooze: move messages out of `path` into the account's Snoozed folder
+    /// `dest`, creating it first where the server has none yet. A move like
+    /// [`MoveMessages`](Self::MoveMessages), except that a failure is
+    /// answered with [`WorkerEvent::SnoozeFailed`] for `message_ids`, so the
+    /// app can forget the snooze rather than wake a message that never left.
+    Snooze { path: String, uids: Vec<u32>, dest: String, message_ids: Vec<String> },
+    /// Bring snoozed messages back: find them in `path` (the Snoozed folder)
+    /// by Message-ID, as [`UndoMove`](Self::UndoMove) does, mark them unread
+    /// and move them to `dest`, then reload it so they show. Always answered
+    /// with [`WorkerEvent::Unsnoozed`].
+    Unsnooze { path: String, dest: String, dest_folder_id: u32, message_ids: Vec<String> },
     /// Find a message by its (normalized) RFC Message-ID across every folder
     /// of the account, for a `mid:` link (#130) the cache could not resolve.
     /// Answered with [`WorkerEvent::Located`] either way.
@@ -640,6 +651,12 @@ pub enum WorkerEvent {
     /// folder's fresh [`WorkerEvent::Messages`] so the app can land the user
     /// on the restored message instead of wherever the reload left the list.
     Restored { folder_id: u32, message_ids: Vec<String> },
+    /// A [`MailRequest::Snooze`] whose move did not happen: these messages
+    /// are still where they were, and are not snoozed after all.
+    SnoozeFailed { message_ids: Vec<String> },
+    /// The answer to [`MailRequest::Unsnooze`]. After [`WorkerEvent::Messages`]
+    /// for the folder they went back to, when they did.
+    Unsnoozed { message_ids: Vec<String>, outcome: WakeOutcome },
     /// The answer to [`MailRequest::Locate`]: where the message with that
     /// Message-ID lives (`folder_path`, `uid`), or `None` when no folder of
     /// this account has it.
@@ -740,6 +757,18 @@ pub enum WorkerEvent {
     /// `connectivity` marks connection/sync errors that should auto-clear once
     /// a later connect or sync succeeds.
     Error { text: String, connectivity: bool },
+}
+
+/// What came of bringing snoozed messages back.
+#[derive(Debug, Clone, PartialEq)]
+pub enum WakeOutcome {
+    /// They are back where they were snoozed from, unread.
+    Back,
+    /// None of them is in the Snoozed folder any more: moved or deleted on
+    /// another device, or never got there. There is nothing left to wake.
+    Missing,
+    /// The server could not be asked (offline, refused); worth another try.
+    Failed(String),
 }
 
 impl WorkerEvent {
@@ -2490,92 +2519,34 @@ async fn run_imap(
             }
 
             MailRequest::UndoMove { path, dest, dest_folder_id, message_ids } => {
-                // Find the moved messages where the move landed them. UIDs
-                // changed in transit; Message-IDs did not.
-                let mut uids: Vec<u32> = Vec::new();
-                let mut failed: Option<String> = None;
-                {
+                let moved = {
                     let sess = session.as_mut().unwrap();
-                    let mut exists = 0u32;
-                    match sel(sess, &path).await {
-                        Err(e) => failed = Some(e.to_string()),
-                        Ok(mb) => {
-                            exists = mb.exists;
-                            for id in &message_ids {
-                                match search_uids(sess, format!("HEADER Message-ID \"{id}\"")).await {
-                                    Ok(set) => uids.extend(set),
-                                    Err(e) => {
-                                        failed = Some(e.to_string());
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    uids.sort_unstable();
-                    uids.dedup();
-                    // Some servers (iCloud among them) can't be trusted with
-                    // HEADER searches: the index lags behind a just-landed
-                    // move, and our stored ids are lowercased while the
-                    // server's match may be case-sensitive. FETCH has neither
-                    // problem — before declaring the messages gone, read the
-                    // newest headers (a move lands at the top of the UID
-                    // space) and match Message-IDs locally.
-                    if failed.is_none() && uids.is_empty() && exists > 0 {
-                        let wanted: std::collections::HashSet<&str> =
-                            message_ids.iter().map(String::as_str).collect();
-                        let lo = exists.saturating_sub(199).max(1);
-                        let scanned: Result<Vec<Fetch>, _> = async {
-                            sess.fetch(
-                                format!("{lo}:{exists}"),
-                                "(UID BODY.PEEK[HEADER.FIELDS (MESSAGE-ID)])",
-                            )
-                            .await?
-                            .try_collect()
-                            .await
-                        }
-                        .await;
-                        match scanned {
-                            Ok(fetches) => uids.extend(fetches.iter().filter_map(|f| {
-                                f.uid.filter(|_| wanted.contains(message_id_of(f).as_str()))
-                            })),
-                            Err(e) => failed = Some(e.to_string()),
-                        }
-                    }
-                    if failed.is_none() && !uids.is_empty() {
-                        if let Err(e) = move_messages(sess, &path, &uids, &dest).await {
-                            failed = Some(e.to_string());
-                        } else if let Some(c) = cache.as_ref() {
-                            for uid in &uids {
-                                c.delete_message(account_id, &path, *uid);
-                            }
-                        }
-                    }
-                }
-                if let Some(e) = failed {
-                    emit(WorkerEvent::error(i18n_f("Undo failed: {e}", &[("e", &(e).to_string())])));
-                } else if uids.is_empty() {
+                    move_back(sess, account_id, cache.as_ref(), &path, &dest, &message_ids, false).await
+                };
+                match moved {
+                    Err(e) => emit(WorkerEvent::error(i18n_f("Undo failed: {e}", &[("e", &(e).to_string())]))),
                     // Not an error the reader needs interrupting for: the
                     // step is simply spent (#200).
-                    tracing::info!("undo: the messages are no longer where that move put them");
-                } else {
-                    // Reload the restored folder so the messages reappear in
-                    // the list (the app can't restore them optimistically —
-                    // it never learns their new UIDs).
-                    if let Ok(messages) = load_messages_retry(
-                        account_id, &mut session, &account, dest_folder_id, &dest,
-                        &mut use_envelope, cache.as_ref(),
-                    )
-                    .await
-                    {
-                        if let Some(c) = cache.as_ref() {
-                            c.upsert_messages(account_id, &dest, &messages);
+                    Ok(0) => tracing::info!("undo: the messages are no longer where that move put them"),
+                    Ok(_) => {
+                        // Reload the restored folder so the messages reappear in
+                        // the list (the app can't restore them optimistically —
+                        // it never learns their new UIDs).
+                        if let Ok(messages) = load_messages_retry(
+                            account_id, &mut session, &account, dest_folder_id, &dest,
+                            &mut use_envelope, cache.as_ref(),
+                        )
+                        .await
+                        {
+                            if let Some(c) = cache.as_ref() {
+                                c.upsert_messages(account_id, &dest, &messages);
+                            }
+                            emit(WorkerEvent::Messages { folder_id: dest_folder_id, messages });
+                            emit(WorkerEvent::Restored {
+                                folder_id: dest_folder_id,
+                                message_ids: message_ids.clone(),
+                            });
                         }
-                        emit(WorkerEvent::Messages { folder_id: dest_folder_id, messages });
-                        emit(WorkerEvent::Restored {
-                            folder_id: dest_folder_id,
-                            message_ids: message_ids.clone(),
-                        });
                     }
                 }
                 // Undoing something is not news: the messages reappearing in
@@ -2583,6 +2554,63 @@ async fn run_imap(
                 // Always signal completion — the app spins the refresh
                 // indicator while the undo's server work is in flight.
                 emit(WorkerEvent::BulkComplete);
+            }
+
+            MailRequest::Snooze { path, uids, dest, message_ids } => {
+                // The move every other move is, creating the Snoozed folder
+                // on first use; only a failure is reported differently.
+                let sess = session.as_mut().unwrap();
+                match move_messages(sess, &path, &uids, &dest).await {
+                    Ok(created) => {
+                        if let Some(c) = cache.as_ref() {
+                            drop_gmail_label_copies(c, account_id, &account, &path, &uids, &dest);
+                            for uid in &uids {
+                                c.delete_message(account_id, &path, *uid);
+                            }
+                        }
+                        if created {
+                            refresh_folders(account_id, &account, sess, cache.as_ref(), &emit).await;
+                        }
+                    }
+                    Err(e) => {
+                        tracing::warn!("snooze failed: {path:?} -> {dest:?} set={} ({e})", uid_set(&uids));
+                        emit(WorkerEvent::error(i18n_f("Could not snooze: {e}", &[("e", &e.to_string())])));
+                        emit(WorkerEvent::SnoozeFailed { message_ids });
+                        lost = true;
+                    }
+                }
+            }
+
+            MailRequest::Unsnooze { path, dest, dest_folder_id, message_ids } => {
+                let moved = {
+                    let sess = session.as_mut().unwrap();
+                    move_back(sess, account_id, cache.as_ref(), &path, &dest, &message_ids, true).await
+                };
+                let outcome = match moved {
+                    Err(e) => {
+                        // Quietly: the app tries again on its next tick, and
+                        // says so once if it keeps failing.
+                        tracing::warn!("unsnooze: {path:?} -> {dest:?} failed: {e}");
+                        lost = true;
+                        WakeOutcome::Failed(e)
+                    }
+                    Ok(0) => WakeOutcome::Missing,
+                    Ok(_) => {
+                        if let Ok(messages) = load_messages_retry(
+                            account_id, &mut session, &account, dest_folder_id, &dest,
+                            &mut use_envelope, cache.as_ref(),
+                        )
+                        .await
+                        {
+                            if let Some(c) = cache.as_ref() {
+                                c.upsert_messages(account_id, &dest, &messages);
+                            }
+                            emit(WorkerEvent::Messages { folder_id: dest_folder_id, messages });
+                        }
+                        WakeOutcome::Back
+                    }
+                };
+                emit(WorkerEvent::Unsnoozed { message_ids, outcome });
             }
 
             MailRequest::PurgeMessages { path, uids } => {
@@ -6182,6 +6210,72 @@ async fn move_messages(
         uid_move(session, &set, dest).await?;
     }
     Ok(created)
+}
+
+/// Move messages back from `path`, where a move put them, to `dest`: an
+/// undone move (#200), or snoozed mail coming back, which `unread` marks
+/// unread on the way. UIDs changed in transit and Message-IDs did not, so
+/// that is what they are found by. Returns how many were moved, 0 when none
+/// is in `path` any more.
+async fn move_back(
+    sess: &mut ImapSession,
+    account_id: u32,
+    cache: Option<&Cache>,
+    path: &str,
+    dest: &str,
+    message_ids: &[String],
+    unread: bool,
+) -> Result<usize, String> {
+    let mb = sel(sess, path).await.map_err(|e| e.to_string())?;
+    let exists = mb.exists;
+    let mut uids: Vec<u32> = Vec::new();
+    for id in message_ids {
+        let set = search_uids(sess, format!("HEADER Message-ID \"{id}\"")).await.map_err(|e| e.to_string())?;
+        uids.extend(set);
+    }
+    uids.sort_unstable();
+    uids.dedup();
+    // Some servers (iCloud among them) can't be trusted with
+    // HEADER searches: the index lags behind a just-landed
+    // move, and our stored ids are lowercased while the
+    // server's match may be case-sensitive. FETCH has neither
+    // problem — before declaring the messages gone, read the
+    // newest headers (a move lands at the top of the UID
+    // space) and match Message-IDs locally.
+    if uids.is_empty() && exists > 0 {
+        let wanted: std::collections::HashSet<&str> = message_ids.iter().map(String::as_str).collect();
+        let lo = exists.saturating_sub(199).max(1);
+        let fetches: Vec<Fetch> = async {
+            sess.fetch(format!("{lo}:{exists}"), "(UID BODY.PEEK[HEADER.FIELDS (MESSAGE-ID)])")
+                .await?
+                .try_collect()
+                .await
+        }
+        .await
+        .map_err(|e: async_imap::error::Error| e.to_string())?;
+        uids.extend(fetches.iter().filter_map(|f| f.uid.filter(|_| wanted.contains(message_id_of(f).as_str()))));
+    }
+    if uids.is_empty() {
+        return Ok(0);
+    }
+    // The flag travels with the message, so it is cleared before the move:
+    // afterwards the new UIDs are not known.
+    if unread {
+        let cleared: Result<Vec<Fetch>, _> = async {
+            store_uids(sess, uid_set(&uids), "-FLAGS.SILENT (\\Seen)").await?.try_collect().await
+        }
+        .await;
+        if let Err(e) = cleared {
+            tracing::warn!("[account {account_id}] could not mark {} message(s) unread: {e}", uids.len());
+        }
+    }
+    move_messages(sess, path, &uids, dest).await.map_err(|e| e.to_string())?;
+    if let Some(c) = cache {
+        for uid in &uids {
+            c.delete_message(account_id, path, *uid);
+        }
+    }
+    Ok(uids.len())
 }
 
 /// Create (and subscribe to) a new mailbox.
@@ -9817,6 +9911,15 @@ async fn run_pop3(
                 emit(WorkerEvent::error(i18n("POP3 accounts don't support folders")));
                 emit(WorkerEvent::BulkComplete);
             }
+            // There is no Snoozed folder to put mail in, so the app never
+            // offers Snooze here; answered all the same.
+            MailRequest::Snooze { message_ids, .. } => {
+                emit(WorkerEvent::error(i18n("POP3 accounts don't support folders")));
+                emit(WorkerEvent::SnoozeFailed { message_ids });
+            }
+            MailRequest::Unsnooze { message_ids, .. } => {
+                emit(WorkerEvent::Unsnoozed { message_ids, outcome: WakeOutcome::Missing })
+            }
 
             // POP3 has no folders beyond the inbox.
             MailRequest::CreateFolder { .. }
@@ -10187,7 +10290,12 @@ async fn run_mock(
             | MailRequest::DeleteOutbox { .. }
             | MailRequest::RefreshUnread
             | MailRequest::RefreshKeywords { .. }
+            | MailRequest::Snooze { .. }
             | MailRequest::Reconnect => {}
+            // Snoozed sample mail never left: it is simply back.
+            MailRequest::Unsnooze { message_ids, .. } => {
+                emit(WorkerEvent::Unsnoozed { message_ids, outcome: WakeOutcome::Back })
+            }
             // The demo's folders are fixed, but an emptied one reads as empty.
             MailRequest::EmptyFolder { folder_id, .. } => {
                 emit(WorkerEvent::Messages { folder_id, messages: Vec::new() });

@@ -5520,12 +5520,14 @@ pub enum ToolbarItem {
     ReadUnread,
     Tags,
     MoveTo,
+    /// Snooze: a menu of times to bring the message back at.
+    Snooze,
     Find,
     Print,
 }
 
 impl ToolbarItem {
-    pub const ALL: [ToolbarItem; 12] = [
+    pub const ALL: [ToolbarItem; 13] = [
         ToolbarItem::Reply,
         ToolbarItem::ReplyAll,
         ToolbarItem::Forward,
@@ -5536,6 +5538,7 @@ impl ToolbarItem {
         ToolbarItem::ReadUnread,
         ToolbarItem::Tags,
         ToolbarItem::MoveTo,
+        ToolbarItem::Snooze,
         ToolbarItem::Find,
         ToolbarItem::Print,
     ];
@@ -5553,6 +5556,7 @@ impl ToolbarItem {
             ToolbarItem::ReadUnread => "read_unread",
             ToolbarItem::Tags => "tags",
             ToolbarItem::MoveTo => "move_to",
+            ToolbarItem::Snooze => "snooze",
             ToolbarItem::Find => "find",
             ToolbarItem::Print => "print",
         }
@@ -5575,6 +5579,7 @@ impl ToolbarItem {
             ToolbarItem::ReadUnread => "mail-unread-symbolic",
             ToolbarItem::Tags => "tag-outline-symbolic",
             ToolbarItem::MoveTo => "folder-symbolic",
+            ToolbarItem::Snooze => "alarm-symbolic",
             ToolbarItem::Find => "loupe-with-arrow-symbolic",
             ToolbarItem::Print => "printer-symbolic",
         }
@@ -5593,6 +5598,7 @@ impl ToolbarItem {
             ToolbarItem::ReadUnread => crate::i18n::i18n_noop("Read/Unread"),
             ToolbarItem::Tags => crate::i18n::i18n_noop("Tags"),
             ToolbarItem::MoveTo => crate::i18n::i18n_noop("Move To"),
+            ToolbarItem::Snooze => crate::i18n::i18n_noop("Snooze"),
             ToolbarItem::Find => crate::i18n::i18n_noop("Find"),
             ToolbarItem::Print => crate::i18n::i18n_noop("Print"),
         }
@@ -5627,6 +5633,9 @@ impl Default for ReaderToolbar {
                 ToolbarItem::Archive,
                 ToolbarItem::Delete,
             ],
+            // Snooze is not in the default layout: the groups are full, and
+            // the toolbar editor adds it (Snooze is on z, the row and card
+            // menus and the command palette meanwhile).
             right: vec![
                 ToolbarItem::Tags,
                 ToolbarItem::ReadUnread,
@@ -5767,11 +5776,11 @@ mod toolbar_tests {
         // Hidden: on neither side, listed under hidden().
         t.place(ToolbarItem::Spam, None, 0);
         assert_eq!(t.side(ToolbarItem::Spam), None);
-        assert_eq!(t.hidden(), vec![ToolbarItem::Star, ToolbarItem::Spam]);
+        assert_eq!(t.hidden(), vec![ToolbarItem::Star, ToolbarItem::Spam, ToolbarItem::Snooze]);
         // Back from hidden into the right group's middle.
         t.place(ToolbarItem::Spam, Some(ToolbarSide::Right), 1);
         assert_eq!(t.right[1], ToolbarItem::Spam);
-        assert_eq!(t.hidden(), vec![ToolbarItem::Star]);
+        assert_eq!(t.hidden(), vec![ToolbarItem::Star, ToolbarItem::Snooze]);
     }
 
     #[test]

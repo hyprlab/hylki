@@ -81,6 +81,9 @@ msgstr "Üzenet küldésének megkísérlése most"
 msgid "Send all"
 msgstr "Összes küldése"
 
+msgid "Unsnooze: bring it back now"
+msgstr ""
+
 msgid "Reply"
 msgstr "Válasz"
 
@@ -150,6 +153,13 @@ msgstr "Címkék"
 msgid "Move To…"
 msgstr "Áthelyezés ide…"
 
+msgid "Snooze…"
+msgstr ""
+
+#, fuzzy
+msgid "Change when it comes back"
+msgstr "Figyelmeztetés távoli tartalom blokkolásakor"
+
 msgid "Attachments"
 msgstr "Mellékletek"
 
@@ -158,6 +168,15 @@ msgstr "Oldalsáv ki/bekapcsolása"
 
 msgid "Keyboard Shortcuts"
 msgstr "Billentyűparancsok"
+
+msgid "Snooze until"
+msgstr ""
+
+msgid "Snooze"
+msgstr ""
+
+msgid "Could not bring snoozed mail back yet: {e}. Hylki will keep trying."
+msgstr ""
 
 msgid "Create Folder"
 msgstr "Mappa létrehozása"
@@ -440,6 +459,9 @@ msgstr "Névjegyek"
 msgid "Outbox"
 msgstr "Kimenő"
 
+msgid "Snoozed"
+msgstr ""
+
 #, fuzzy
 msgid "Tag"
 msgstr "Címkék"
@@ -465,6 +487,19 @@ msgstr ""
 
 msgid "Your tags"
 msgstr "Saját címkék"
+
+msgid ""
+"{n} message could not be snoozed: it has no Message-ID, or its account has "
+"no folders"
+msgid_plural ""
+"{n} messages could not be snoozed: they have no Message-ID, or their account "
+"has no folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Ütemezve ekkorra: {when}"
 
 msgid "Move to {name}"
 msgstr "Áthelyzés ide: {name}"
@@ -492,6 +527,12 @@ msgstr ""
 
 msgid "Restart Now"
 msgstr "Újraindítás most"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "Change Time…"
+msgstr ""
 
 msgid "Move to Inbox"
 msgstr "Áthelyezés a Beérkezett üzenetek közé"
@@ -1121,6 +1162,9 @@ msgstr "A beszélgetés következő üzenete"
 msgid "Move to a folder"
 msgstr "Mappa áthelyezése"
 
+msgid "Snooze until a time you choose"
+msgstr ""
+
 #, fuzzy
 msgid "Undo the last action"
 msgstr "Legutóbbi áthelyezés vagy törlés visszavonása"
@@ -1458,6 +1502,19 @@ msgstr "A mappa nincs a kiszolgálón"
 msgid "The file is larger than {size} MB"
 msgstr ""
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Ma, {time}"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Holnap reggel ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Holnap délután ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "Hétfő reggel ({time})"
+
 msgid "{used} of {limit} used"
 msgstr "{used} / {limit} felhasználva"
 
@@ -1589,6 +1646,9 @@ msgstr "Várakozás {ago} óta"
 
 msgid "Scheduled for {when}"
 msgstr "Ütemezve ekkorra: {when}"
+
+msgid "Until {when}"
+msgstr ""
 
 msgid "Today, {time}"
 msgstr "Ma, {time}"
@@ -3574,15 +3634,6 @@ msgstr "Küldés később"
 msgid "Send now"
 msgstr "Küldés most"
 
-msgid "Tomorrow morning ({time})"
-msgstr "Holnap reggel ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Holnap délután ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "Hétfő reggel ({time})"
-
 msgid "Pick a date and time…"
 msgstr "Dátum és idő kiválasztása…"
 
@@ -3830,12 +3881,6 @@ msgid ""
 msgstr ""
 "Nincs OpenPGP-kulcs ehhez: {addr}. Kérje el a nyilvános kulcsukat, vagy "
 "kérje le a Beállítások → OpenPGP alatt."
-
-msgid "That time has passed"
-msgstr "Ez az időpont már elmúlt"
-
-msgid "Choose a time later than now."
-msgstr "Válasszon a jelenleginél későbbi időpontot."
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
@@ -4159,6 +4204,12 @@ msgstr[1] "{n} üzenet"
 
 msgid "Search folders"
 msgstr "Keresés a mappákban"
+
+msgid "That time has passed"
+msgstr "Ez az időpont már elmúlt"
+
+msgid "Choose a time later than now."
+msgstr "Válasszon a jelenleginél későbbi időpontot."
 
 msgid "the portal answered response code {code}"
 msgstr "a portál a {code} válasz kódot adta vissza"
@@ -7055,6 +7106,12 @@ msgstr "Még nincsenek fiókok"
 msgid "New Message from Template…"
 msgstr ""
 
+#, fuzzy
+msgid "Snoozed: {n} conversation comes back later"
+msgid_plural "Snoozed: {n} conversations come back later"
+msgstr[0] "Beszélgetés törlésének megerősítése"
+msgstr[1] "Beszélgetés törlésének megerősítése"
+
 msgid "Mark Inbox as Read"
 msgstr "Beérkezett megjelölése olvasottként"
 
@@ -7454,6 +7511,10 @@ msgstr "A mappa nem üríthető ki: {e}"
 
 msgid "Undo failed: {e}"
 msgstr "A visszavonás sikertelen: {e}"
+
+#, fuzzy
+msgid "Could not snooze: {e}"
+msgstr "A forrás nem tölthető be: {e}"
 
 msgid "Could not create folder: {e}"
 msgstr "A mappa nem hozható létre: {e}"

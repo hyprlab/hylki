@@ -1349,6 +1349,9 @@ pub enum MessageListOutput {
     /// the clicked conversation row and the rest its members: the picker
     /// offers moving them all (#171), or just the first.
     MoveTo { messages: Vec<Message>, offer_whole: bool, x: f64, y: f64 },
+    /// Snooze from a row's menu: the clicked message, or a conversation
+    /// row's every member, until `wake_at` (`None`: the app asks when).
+    Snooze { messages: Vec<Message>, wake_at: Option<i64> },
     /// The selected conversation gained a member since it was opened (a
     /// reply synced in): the head and the whole conversation as it now is.
     ThreadGrew { message: Message, thread: Vec<Message> },
@@ -3323,6 +3326,16 @@ impl MessageList {
             })
             .icon("folder-symbolic")
         };
+        // Snooze: a page of times, for the message or, on a conversation's
+        // row, all of it the folder holds.
+        let snooze_entry = {
+            let (messages, _) = self.move_to_messages(msg);
+            let s = sender.clone();
+            let times = crate::ui::later_picker::snooze_sections(move |wake_at| {
+                let _ = s.output(MessageListOutput::Snooze { messages: messages.clone(), wake_at });
+            });
+            MenuEntry::submenu(i18n("Snooze"), times).icon(crate::ui::later_picker::SNOOZE_ICON)
+        };
         if self.in_drafts {
             // A draft is neither read nor unread: no toggle to offer.
         } else if is_thread_head {
@@ -3415,6 +3428,7 @@ impl MessageList {
                 }
                 section.push(move_entry);
                 section.push(item(RowAction::Archive, &i18n("Archive"), "mail-archive-symbolic"));
+                section.push(snooze_entry);
                 section.push(item(RowAction::Delete, &i18n("Delete"), "user-trash-symbolic"));
                 section
             },

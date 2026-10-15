@@ -16,7 +16,7 @@ use relm4::prelude::*;
 
 use crate::models::{Account, Folder, FolderKind};
 use crate::ui::context_menu::{show_context_menu, show_context_menu_with_header, MenuEntry};
-use crate::i18n::{i18n, i18n_f, i18n_noop};
+use crate::i18n::{i18n, i18n_f, i18n_noop, ni18n_f};
 
 /// A per-account inbox shown in the expandable "All Inboxes" sub-list.
 #[derive(Clone)]
@@ -253,6 +253,8 @@ pub enum Sel {
     /// The in-app contacts view.
     Contacts,
     Outbox,
+    /// The Snoozed view (Snooze).
+    Snoozed,
     Folder(u32, String),
     /// An account's inbox selected via the "All Inboxes" sub-list.
     UnifiedInbox(u32),
@@ -374,6 +376,8 @@ pub struct Sidebar {
     busy: bool,
     /// The "Outbox" row list box (one row), while anything is queued.
     outbox_list: Option<gtk::ListBox>,
+    /// The "Snoozed" row list box (one row), while anything is snoozed.
+    snoozed_list: Option<gtk::ListBox>,
     /// Display-wide provider holding each account's avatar color rules.
     color_provider: crate::ui::DisplayCss,
     selected: Sel,
@@ -405,6 +409,9 @@ pub struct Sidebar {
     /// only exists while this is non-zero — an empty Outbox is the normal state
     /// and does not deserve permanent furniture.
     outbox_count: u32,
+    /// How many rows the Snoozed view has: its row, like the Outbox's, is
+    /// there only while something is snoozed.
+    snoozed_count: u32,
     /// Total unread across all inboxes, for the "All Inboxes" badge.
     unified_unread: u32,
     /// The folders whose unread count is new since last looked at, while
@@ -602,6 +609,10 @@ pub enum SidebarInput {
     SetOutboxCount(u32),
     /// The "Outbox" row was chosen.
     OutboxRowSelected,
+    /// How many rows the Snoozed view has; 0 hides its row.
+    SetSnoozedCount(u32),
+    /// The "Snoozed" row was chosen.
+    SnoozedRowSelected,
     /// Update unread badges in place without rebuilding the sidebar.
     SetUnread {
         folders: HashMap<(u32, u32), u32>,
@@ -679,6 +690,8 @@ pub enum SidebarOutput {
     /// The "Contacts" row was clicked — open the contacts browser.
     ContactsClicked,
     OutboxSelected,
+    /// The "Snoozed" row was chosen: show the Snoozed view.
+    SnoozedSelected,
     FolderSelected {
         account_id: u32,
         folder_id: u32,
@@ -859,6 +872,7 @@ impl Component for Sidebar {
             sync_spinner: None,
             busy: false,
             outbox_list: None,
+            snoozed_list: None,
             color_provider,
             selected: Sel::None,
             collapsed: init.collapsed,
@@ -869,6 +883,7 @@ impl Component for Sidebar {
             show_attachments: init.show_attachments,
             show_contacts: init.show_contacts,
             outbox_count: 0,
+            snoozed_count: 0,
             unified_unread: 0,
             fresh: None,
             folder_badges: HashMap::new(),
@@ -1212,6 +1227,45 @@ impl Sidebar {
                 self.selected = Sel::Outbox;
                 self.clear_other_selections(Sel::Outbox);
                 let _ = sender.output(SidebarOutput::OutboxSelected);
+            }
+
+            SidebarInput::SnoozedRowSelected => {
+                if self.selected == Sel::Snoozed {
+                    return;
+                }
+                self.selected = Sel::Snoozed;
+                self.clear_other_selections(Sel::Snoozed);
+                let _ = sender.output(SidebarOutput::SnoozedSelected);
+            }
+
+            SidebarInput::SetSnoozedCount(count) => {
+                if self.snoozed_count == count {
+                    return;
+                }
+                let appearing = (self.snoozed_count == 0) != (count == 0);
+                self.snoozed_count = count;
+                // As the Outbox row: rebuilt only when it comes or goes,
+                // its badge refreshed in place otherwise.
+                if appearing {
+                    if count == 0 && self.selected == Sel::Snoozed {
+                        self.selected = Sel::None;
+                    }
+                    self.rebuild_normal(
+                        &widgets.pinned_box,
+                        &widgets.normal_box,
+                        &widgets.footer_box,
+                        &sender,
+                    );
+                    self.restore_selection();
+                } else if let Some(label) = self
+                    .snoozed_list
+                    .as_ref()
+                    .and_then(|list| list.row_at_index(0))
+                    .and_then(|row| row.child().and_downcast::<gtk::Box>())
+                    .and_then(|row| row.last_child().and_downcast::<gtk::Label>())
+                {
+                    label.set_label(&count.to_string());
+                }
             }
 
             SidebarInput::SetOutboxCount(count) => {
@@ -2067,6 +2121,7 @@ impl Sidebar {
         self.attachments_row = None;
         self.contacts_row = None;
         self.outbox_list = None;
+        self.snoozed_list = None;
         self.folder_badges.clear();
         self.tree_chevrons.clear();
         self.tree_row_revealers.clear();
@@ -2480,6 +2535,60 @@ impl Sidebar {
             });
             container.append(&list);
             self.outbox_list = Some(list);
+        }
+
+        // "Snoozed" row — only while something is snoozed, beside the Outbox:
+        // mail that is out of the way for now, with when it comes back. The
+        // Snoozed folders themselves stay among each account's folders.
+        if self.snoozed_count > 0 {
+            let list = gtk::ListBox::new();
+            list.set_selection_mode(gtk::SelectionMode::Single);
+            list.add_css_class("navigation-sidebar");
+
+            let row = gtk::ListBoxRow::new();
+            let hbox = gtk::Box::new(gtk::Orientation::Horizontal, 12);
+            hbox.add_css_class("folder-row");
+            let img = gtk::Image::from_icon_name(crate::ui::later_picker::SNOOZE_ICON);
+            img.add_css_class("folder-icon");
+            pin_icon_size(&img);
+            let badge = gtk::Label::new(Some(&self.snoozed_count.to_string()));
+            style_badge(&badge, 5);
+            if self.collapsed {
+                hbox.set_halign(gtk::Align::Center);
+                row.set_tooltip_text(Some(&ni18n_f(
+                    "Snoozed: {n} conversation comes back later",
+                    "Snoozed: {n} conversations come back later",
+                    self.snoozed_count,
+                    &[("n", &self.snoozed_count.to_string())],
+                )));
+                hbox.append(&img);
+            } else {
+                if self.chevrons_left {
+                    img.set_margin_start(ROW_LEFT_INSET);
+                }
+                hbox.append(&img);
+                let label = gtk::Label::new(Some(i18n("Snoozed").as_str()));
+                label.set_hexpand(true);
+                label.set_halign(gtk::Align::Start);
+                label.add_css_class("account-name");
+                hbox.append(&label);
+                hbox.append(&badge);
+            }
+            row.set_child(Some(&hbox));
+            list.append(&row);
+
+            let s = sender.clone();
+            let quiet = self.quiet.clone();
+            list.connect_row_selected(move |_, row| {
+                if quiet.get() {
+                    return;
+                }
+                if row.is_some() {
+                    s.input(SidebarInput::SnoozedRowSelected);
+                }
+            });
+            container.append(&list);
+            self.snoozed_list = Some(list);
         }
 
         // The sections placed in the scrolling sidebar above the accounts —
@@ -4427,6 +4536,11 @@ impl Sidebar {
                 l.unselect_all();
             }
         }
+        if keep != Sel::Snoozed {
+            if let Some(l) = &self.snoozed_list {
+                l.unselect_all();
+            }
+        }
         if !matches!(keep, Sel::UnifiedInbox(_)) {
             if let Some(l) = &self.unified_inbox_list {
                 l.unselect_all();
@@ -4468,6 +4582,14 @@ impl Sidebar {
 
     fn select_outbox(&self) {
         if let Some(list) = &self.outbox_list {
+            if let Some(row) = list.row_at_index(0) {
+                list.select_row(Some(&row));
+            }
+        }
+    }
+
+    fn select_snoozed(&self) {
+        if let Some(list) = &self.snoozed_list {
             if let Some(row) = list.row_at_index(0) {
                 list.select_row(Some(&row));
             }
@@ -4563,6 +4685,7 @@ impl Sidebar {
             Sel::Attachments => self.select_attachments(),
             Sel::Contacts => self.select_contacts(),
             Sel::Outbox => self.select_outbox(),
+            Sel::Snoozed => self.select_snoozed(),
             Sel::Folder(acc, path) => self.select_folder(acc, &path),
             Sel::UnifiedInbox(acc) => self.select_unified_inbox(acc),
             Sel::UnifiedFolder(acc, path) => self.select_filtered_row(Slot::Unified, acc, &path),
