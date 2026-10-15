@@ -535,6 +535,13 @@ msgstr "Impossibile aprire {file}: {e}"
 msgid "Delete {n} messages"
 msgstr "Elimina {n} messaggi"
 
+#, fuzzy
+msgid "Sending your message…"
+msgstr "Indicizzazione di {n} messaggi…"
+
+msgid "Sending “{subject}”…"
+msgstr ""
+
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
 msgstr[0] "Impossibile allegare {names}: Hylki non riesce a leggere il file."
@@ -1300,6 +1307,13 @@ msgstr "Nome (da Z a A)"
 
 msgid "Full Path"
 msgstr "Percorso completo"
+
+#. Translators: the beginnings of words that, written in a message,
+#. mean a file is attached ("attach" also finds "attached" and
+#. "attachment"). Give the words only, separated by commas; the English
+#. ones are always looked for too.
+msgid "attachment words|attach,enclos"
+msgstr ""
 
 msgid "Sender"
 msgstr "Mittente"
@@ -3686,6 +3700,21 @@ msgstr ""
 
 msgid "Check the From address"
 msgstr "Controlla l'indirizzo Da"
+
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Invia come allegato normale"
+
+msgid "What you wrote mentions an attachment, but none is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Attach Files…"
+msgstr "Allega file"
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Invia ora"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
@@ -6213,6 +6242,24 @@ msgstr ""
 "Mutt la usano per attenuare la firma e per ometterla quando citano il tuo "
 "messaggio."
 
+#, fuzzy
+msgid "Undo send"
+msgstr "Annulla"
+
+msgid ""
+"A sent message waits this long in the Outbox, with Undo offered, before it "
+"goes."
+msgstr ""
+
+#, fuzzy
+msgid "Remind me of forgotten attachments"
+msgstr "Nascondi gli allegati"
+
+msgid ""
+"Ask before sending when what you wrote speaks of an attachment and none is "
+"attached."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Ortografia"
 
@@ -6708,6 +6755,12 @@ msgstr "Sotto i messaggi"
 
 msgid "Follows the reading order"
 msgstr "Segue l'ordine di lettura"
+
+#, fuzzy
+msgid "{n} second"
+msgid_plural "{n} seconds"
+msgstr[0] "{n} destinatario"
+msgstr[1] "{n} destinatari"
 
 msgid "System language"
 msgstr "Lingua di sistema"

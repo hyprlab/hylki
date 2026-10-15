@@ -383,6 +383,9 @@ pub struct Compose {
     /// What the last passing OpenPGP check covered (From, key, encrypt,
     /// recipients); a Send with the same passes straight on.
     pgp_cleared: Option<Vec<String>>,
+    /// Send Anyway was chosen on the forgotten-attachment question: the next
+    /// send goes without asking again.
+    attach_cleared: bool,
     /// Sign was set by hand, so it no longer follows the From account's
     /// default (#267).
     sign_touched: bool,
@@ -612,6 +615,8 @@ pub enum ComposeInput {
     /// Save to Drafts only if edited, then close (used when superseded / on nav).
     SaveDraftIfDirty,
     AccountChanged,
+    /// Send Anyway on the forgotten-attachment question.
+    SendWithoutAttachment,
     AttachFiles,
     AddAttachments(Vec<std::path::PathBuf>),
     RemoveAttachment(usize),
@@ -1343,6 +1348,7 @@ impl Component for Compose {
             encrypt: false,
             pgp_checking: false,
             pgp_cleared: None,
+            attach_cleared: false,
             send_at,
             cloud_accounts: crate::cloud::load_enabled_accounts(),
             drop_zones: None,
@@ -2195,6 +2201,10 @@ impl Component for Compose {
                 });
             }
 
+            ComposeInput::SendWithoutAttachment => {
+                self.attach_cleared = true;
+                sender.input(ComposeInput::Send);
+            }
             ComposeInput::AttachFiles => {
                 let dialog = gtk::FileDialog::new();
                 dialog.set_title(&i18n("Attach Files"));
@@ -3027,7 +3037,43 @@ impl Component for Compose {
             }
 
             ComposeInput::SendBody { html, text, to, cc, bcc, reply_to, subject, from_account_id, from_alias } => {
+                // The text part as it will be sent: for Markdown and HTML it
+                // exists only once the source is converted.
                 let (html, text) = self.outgoing_body(html, text);
+                // A message that speaks of an attachment and carries none, nor
+                // a cloud link: asked about once, while it can still be fixed.
+                if !std::mem::take(&mut self.attach_cleared)
+                    && self.attachments.is_empty()
+                    && self.cloud_links.is_empty()
+                    && crate::config::load_privacy().attachment_reminder
+                    && crate::config::mentions_attachment(
+                        &crate::config::own_text(&text),
+                        &crate::config::attachment_words(),
+                    )
+                {
+                    let dialog = adw::AlertDialog::new(
+                        Some(&i18n("Send without an attachment?")),
+                        Some(&i18n("What you wrote mentions an attachment, but none is attached.")),
+                    );
+                    dialog.add_response("attach", &i18n("Attach Files…"));
+                    dialog.add_response("send", &i18n("Send Anyway"));
+                    dialog.set_response_appearance("attach", adw::ResponseAppearance::Suggested);
+                    dialog.set_default_response(Some("attach"));
+                    // Escape goes back to the message, as it was.
+                    dialog.set_close_response("cancel");
+                    let s = sender.input_sender().clone();
+                    dialog.connect_response(None, move |_, response| match response {
+                        "send" => {
+                            let _ = s.send(ComposeInput::SendWithoutAttachment);
+                        }
+                        "attach" => {
+                            let _ = s.send(ComposeInput::AttachFiles);
+                        }
+                        _ => {}
+                    });
+                    dialog.present(Some(root));
+                    break 'handle;
+                }
                 let mut out = self
                     .build_outgoing(from_account_id, from_alias, to, cc, bcc, reply_to, subject, text, html);
                 // A draft goes once it is sent; a template stays to be used
@@ -3566,6 +3612,7 @@ window.__hylkiDirty=true;})()"#
             encrypt: self.encrypt,
             calendar: None,
             send_at: self.send_at,
+            undo_send: false,
         }
     }
 

@@ -563,6 +563,13 @@ msgstr "Не удалось переместить папку: {e}"
 msgid "Delete {n} messages"
 msgstr "Удалить {n} сообщений"
 
+#, fuzzy
+msgid "Sending your message…"
+msgstr "Индексация {n} сообщений…"
+
+msgid "Sending “{subject}”…"
+msgstr ""
+
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
 msgstr[0] "Не удалось прикрепить {names}: Hylki не удаётся прочитать файл."
@@ -1357,6 +1364,13 @@ msgstr "По имени (Я–А)"
 
 msgid "Full Path"
 msgstr "Полный путь"
+
+#. Translators: the beginnings of words that, written in a message,
+#. mean a file is attached ("attach" also finds "attached" and
+#. "attachment"). Give the words only, separated by commas; the English
+#. ones are always looked for too.
+msgid "attachment words|attach,enclos"
+msgstr ""
 
 msgid "Sender"
 msgstr "Отправитель"
@@ -3747,6 +3761,21 @@ msgstr ""
 
 msgid "Check the From address"
 msgstr "Проверьте адрес отправителя"
+
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Отправить как обычное вложение"
+
+msgid "What you wrote mentions an attachment, but none is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Attach Files…"
+msgstr "Прикрепить файлы"
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Отправить сейчас"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
@@ -6282,6 +6311,24 @@ msgstr ""
 "Mutt используют её для приглушения цвета подписи и её исключения при "
 "цитировании вашего сообщения."
 
+#, fuzzy
+msgid "Undo send"
+msgstr "Отменить"
+
+msgid ""
+"A sent message waits this long in the Outbox, with Undo offered, before it "
+"goes."
+msgstr ""
+
+#, fuzzy
+msgid "Remind me of forgotten attachments"
+msgstr "Скрыть вложения"
+
+msgid ""
+"Ask before sending when what you wrote speaks of an attachment and none is "
+"attached."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Орфография"
 
@@ -6776,6 +6823,13 @@ msgstr "Под сообщениями"
 
 msgid "Follows the reading order"
 msgstr "Соответствует порядку чтения"
+
+#, fuzzy
+msgid "{n} second"
+msgid_plural "{n} seconds"
+msgstr[0] "{n} получатель"
+msgstr[1] "{n} получателя"
+msgstr[2] "{n} получателей"
 
 msgid "System language"
 msgstr "Системный язык"

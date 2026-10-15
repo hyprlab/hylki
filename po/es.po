@@ -534,6 +534,13 @@ msgstr "No se pudo abrir {file}: {e}"
 msgid "Delete {n} messages"
 msgstr "Eliminar {n} mensajes"
 
+#, fuzzy
+msgid "Sending your message…"
+msgstr "Indexando {n} mensajes…"
+
+msgid "Sending “{subject}”…"
+msgstr ""
+
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
 msgstr[0] "No se pudo adjuntar {names}: Hylki no puede leer el archivo."
@@ -1288,6 +1295,13 @@ msgstr "Nombre (Z a A)"
 
 msgid "Full Path"
 msgstr "Ruta completa"
+
+#. Translators: the beginnings of words that, written in a message,
+#. mean a file is attached ("attach" also finds "attached" and
+#. "attachment"). Give the words only, separated by commas; the English
+#. ones are always looked for too.
+msgid "attachment words|attach,enclos"
+msgstr ""
 
 msgid "Sender"
 msgstr "Remitente"
@@ -3659,6 +3673,21 @@ msgstr ""
 
 msgid "Check the From address"
 msgstr "Comprobar la dirección del remitente"
+
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Enviar como archivo adjunto normal"
+
+msgid "What you wrote mentions an attachment, but none is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Attach Files…"
+msgstr "Adjuntar archivos"
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Enviar ahora"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
@@ -6180,6 +6209,24 @@ msgstr ""
 "Añade el separador estándar «-- » encima de la firma. Thunderbird, Evolution "
 "y Mutt lo utilizan para atenuar la firma y omitirla cuando citan tu mensaje."
 
+#, fuzzy
+msgid "Undo send"
+msgstr "Deshacer"
+
+msgid ""
+"A sent message waits this long in the Outbox, with Undo offered, before it "
+"goes."
+msgstr ""
+
+#, fuzzy
+msgid "Remind me of forgotten attachments"
+msgstr "Ocultar los archivos adjuntos"
+
+msgid ""
+"Ask before sending when what you wrote speaks of an attachment and none is "
+"attached."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Ortografía"
 
@@ -6674,6 +6721,12 @@ msgstr "Debajo de los mensajes"
 
 msgid "Follows the reading order"
 msgstr "Seguir el orden de lectura"
+
+#, fuzzy
+msgid "{n} second"
+msgid_plural "{n} seconds"
+msgstr[0] "{n} destinatario"
+msgstr[1] "{n} destinatarios"
 
 msgid "System language"
 msgstr "Idioma del sistema"

@@ -530,6 +530,13 @@ msgstr "Impossible d'ouvrir {file} : {e}"
 msgid "Delete {n} messages"
 msgstr "Supprimer {n} messages"
 
+#, fuzzy
+msgid "Sending your message…"
+msgstr "Indexation de {n} messages…"
+
+msgid "Sending “{subject}”…"
+msgstr ""
+
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
 msgstr[0] ""
@@ -1285,6 +1292,13 @@ msgstr "Nom (Z à A)"
 
 msgid "Full Path"
 msgstr "Chemin complet"
+
+#. Translators: the beginnings of words that, written in a message,
+#. mean a file is attached ("attach" also finds "attached" and
+#. "attachment"). Give the words only, separated by commas; the English
+#. ones are always looked for too.
+msgid "attachment words|attach,enclos"
+msgstr ""
 
 msgid "Sender"
 msgstr "Expéditeur"
@@ -3667,6 +3681,21 @@ msgstr ""
 
 msgid "Check the From address"
 msgstr "Vérifiez l'adresse d'expéditeur"
+
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Envoyer comme une pièce jointe normale"
+
+msgid "What you wrote mentions an attachment, but none is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Attach Files…"
+msgstr "Joindre des fichiers"
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Envoyer maintenant"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
@@ -6193,6 +6222,24 @@ msgstr ""
 "Evolution et Mutt s'en servent pour estomper la signature et l'omettre "
 "lorsqu'ils citent votre message."
 
+#, fuzzy
+msgid "Undo send"
+msgstr "Annuler"
+
+msgid ""
+"A sent message waits this long in the Outbox, with Undo offered, before it "
+"goes."
+msgstr ""
+
+#, fuzzy
+msgid "Remind me of forgotten attachments"
+msgstr "Masquer les pièces jointes"
+
+msgid ""
+"Ask before sending when what you wrote speaks of an attachment and none is "
+"attached."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Orthographe"
 
@@ -6681,6 +6728,12 @@ msgstr "Sous les messages"
 
 msgid "Follows the reading order"
 msgstr "Respecte l'ordre de lecture"
+
+#, fuzzy
+msgid "{n} second"
+msgid_plural "{n} seconds"
+msgstr[0] "{n} destinataire"
+msgstr[1] "{n} destinataires"
 
 msgid "System language"
 msgstr "Langue du système"

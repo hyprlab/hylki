@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Added: Undo Send** (#434). **Send** holds a message in the Outbox for
+  five seconds, with **Undo** on a notice, which brings it back into the
+  composer. **Settings → Composing → Undo send** sets the wait or turns it
+  off.
+- **Added: a reminder of forgotten attachments.** A message that says
+  something is attached but has nothing attached asks before it goes.
+
 - **Changed: a reply sent from the reading pane becomes its card in the
   conversation.** The editor lifts out of the composer and moves to where
   the reply now sits in the conversation, turning into its card on the

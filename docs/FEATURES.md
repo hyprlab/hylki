@@ -71,6 +71,8 @@ The full list. The [README](../README.md) carries a shorter one.
   returns, not lost. Queued messages can be edited, sent by hand or discarded.
 - **Send later:** schedule a message for tomorrow morning, Monday, or any
   date and time; it waits in the Outbox, editable, until then.
+- **Undo send:** a sent message waits a few seconds, with Undo, before it
+  goes. A message that mentions an attachment but has none asks first.
 
 ## Writing
 

@@ -587,6 +587,9 @@ pub struct OutgoingMessage {
     /// Send Later (#145): unix seconds to send at. `None` sends now. A time
     /// already past sends now too.
     pub send_at: Option<i64>,
+    /// The wait is Undo Send's (#434), whose toast already says the message
+    /// is going: no "will be sent" notice.
+    pub undo_send: bool,
     /// An answer to a meeting invitation (#223): the iCalendar document and
     /// its iTIP method, sent as a `text/calendar` alternative beside the
     /// plain text so a calendar reads the answer and a person reads the
@@ -4135,10 +4138,12 @@ fn schedule_send(
         if let (Some(old), Some(c)) = (msg.outbox_origin, cache) {
             c.delete_outbox(old);
         }
-        emit(WorkerEvent::Notice(i18n_f(
-            "“{subject}” will be sent {when}",
-            &[("subject", &msg.subject), ("when", &crate::datefmt::date_time(at))],
-        )));
+        if !msg.undo_send {
+            emit(WorkerEvent::Notice(i18n_f(
+                "“{subject}” will be sent {when}",
+                &[("subject", &msg.subject), ("when", &crate::datefmt::date_time(at))],
+            )));
+        }
     } else {
         emit(WorkerEvent::error(i18n("Could not schedule the message.")));
         emit(WorkerEvent::Unsent(Box::new(msg.clone())));
@@ -11657,6 +11662,7 @@ NIL NIL NIL NIL NIL NIL NIL))\r\n";
             sign: false,
             encrypt: false,
             send_at: None,
+            undo_send: false,
             calendar: None,
         }
     }

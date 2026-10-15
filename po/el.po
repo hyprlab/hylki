@@ -535,6 +535,13 @@ msgstr "Δεν ήταν δυνατό το άνοιγμα του {file}: {e}"
 msgid "Delete {n} messages"
 msgstr "Διαγραφή {n} μηνυμάτων"
 
+#, fuzzy
+msgid "Sending your message…"
+msgstr "Ευρετηρίαση {n} μηνυμάτων…"
+
+msgid "Sending “{subject}”…"
+msgstr ""
+
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
 msgstr[0] ""
@@ -1288,6 +1295,13 @@ msgstr "Όνομα (Ω έως Α)"
 
 msgid "Full Path"
 msgstr "Πλήρης διαδρομή"
+
+#. Translators: the beginnings of words that, written in a message,
+#. mean a file is attached ("attach" also finds "attached" and
+#. "attachment"). Give the words only, separated by commas; the English
+#. ones are always looked for too.
+msgid "attachment words|attach,enclos"
+msgstr ""
 
 msgid "Sender"
 msgstr "Αποστολέας"
@@ -3686,6 +3700,21 @@ msgstr ""
 
 msgid "Check the From address"
 msgstr "Ελέγξτε τη διεύθυνση αποστολέα"
+
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Αποστολή ως κανονικό συνημμένο"
+
+msgid "What you wrote mentions an attachment, but none is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Attach Files…"
+msgstr "Επισύναψη αρχείων"
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Αποστολή τώρα"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
@@ -6234,6 +6263,24 @@ msgstr ""
 "Evolution και Mutt τη χρησιμοποιούν για να εμφανίζουν την υπογραφή πιο αχνά "
 "και να την παραλείπουν όταν παραθέτουν το μήνυμά σας."
 
+#, fuzzy
+msgid "Undo send"
+msgstr "Αναίρεση"
+
+msgid ""
+"A sent message waits this long in the Outbox, with Undo offered, before it "
+"goes."
+msgstr ""
+
+#, fuzzy
+msgid "Remind me of forgotten attachments"
+msgstr "Απόκρυψη συνημμένων"
+
+msgid ""
+"Ask before sending when what you wrote speaks of an attachment and none is "
+"attached."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Ορθογραφία"
 
@@ -6735,6 +6782,12 @@ msgstr "Κάτω από τα μηνύματα"
 
 msgid "Follows the reading order"
 msgstr "Ακολουθεί τη σειρά ανάγνωσης"
+
+#, fuzzy
+msgid "{n} second"
+msgid_plural "{n} seconds"
+msgstr[0] "{n} παραλήπτης"
+msgstr[1] "{n} παραλήπτες"
 
 msgid "System language"
 msgstr "Γλώσσα συστήματος"

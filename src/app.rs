@@ -1240,6 +1240,16 @@ pub struct AppModel {
     follow_plain: bool,
     /// Where the split reply opens in the reading pane (#212).
     reply_position: config::ReplyPosition,
+    /// Undo Send's wait, in seconds (0 = off), and the attachment reminder.
+    undo_send_secs: u32,
+    attachment_reminder: bool,
+    /// Messages waiting out Undo Send: a token per send, with the account and
+    /// the time it is due, which find it in the Outbox, and the message it
+    /// answers, whose conversation may already show the reply's card.
+    undo_sends: HashMap<u64, (u32, i64, String)>,
+    undo_send_seq: u64,
+    /// The window's toast layer, for Undo Send.
+    toasts: Option<adw::ToastOverlay>,
     /// Where the signature sits in a reply or forward (#237).
     signature_position: config::SignaturePosition,
     /// A `-- ` line goes above the signature in new messages.
@@ -1477,6 +1487,10 @@ pub enum AppMsg {
     RetryAllOutbox,
     /// Send Later (#145): the half-minute clock that sends due queued mail.
     SendDueScheduled,
+    /// Undo Send's wait for this send is over: it goes now.
+    UndoSendExpired(u64),
+    /// Undo on Undo Send's toast: the message comes back to the composer.
+    UndoSend(u64),
     /// The gallery wants a page of attachments matching this query.
     GalleryLoad(Box<GalleryRequest>),
     /// Download an attachment the gallery knows of but has never fetched.
@@ -3637,6 +3651,11 @@ impl SimpleComponent for AppModel {
             compose_format: config::load_compose_format(),
             follow_plain: prefs.follow_plain,
             reply_position: prefs.reply_position,
+            undo_send_secs: prefs.undo_send_secs,
+            attachment_reminder: prefs.attachment_reminder,
+            undo_sends: HashMap::new(),
+            undo_send_seq: 0,
+            toasts: None,
             signature_position: prefs.signature_position,
             signature_dashes: prefs.signature_dashes,
             spellcheck: prefs.spellcheck,
@@ -5795,6 +5814,19 @@ impl SimpleComponent for AppModel {
                 s.input(AppMsg::PrewarmSettings);
             });
         }
+        // A toast layer over the whole window, for Undo Send (#434). The
+        // content is wrapped here, after the drop zones above found the
+        // overlay they expect as the window's content.
+        {
+            let toasts = adw::ToastOverlay::new();
+            if let Some(content) = root.content() {
+                root.set_content(None::<&gtk::Widget>);
+                toasts.set_child(Some(&content));
+            }
+            root.set_content(Some(&toasts));
+            model.toasts = Some(toasts);
+        }
+
         ComponentParts { model, widgets }
     }
 
@@ -5835,7 +5867,7 @@ impl SimpleComponent for AppModel {
 
             AppMsg::EditCurrentOutbox => {
                 if let Some(m) = self.current.clone() {
-                    self.compose_from_outbox(m.account_id, m.id, &sender);
+                    self.compose_from_outbox(m.account_id, m.id, false, &sender);
                 }
             }
 
@@ -9192,6 +9224,12 @@ impl SimpleComponent for AppModel {
             AppMsg::Pref(PrefOutput::SetFollowPlain(on)) => {
                 pref!(self.follow_plain = on);
             }
+            AppMsg::Pref(PrefOutput::SetUndoSendSecs(secs)) => {
+                pref!(self.undo_send_secs = secs);
+            }
+            AppMsg::Pref(PrefOutput::SetAttachmentReminder(on)) => {
+                pref!(self.attachment_reminder = on);
+            }
             AppMsg::Pref(PrefOutput::SetReplyPosition(position)) => {
                 // A split reply already open stays where it is; the next
                 // one opens in the new place.
@@ -9527,7 +9565,67 @@ impl SimpleComponent for AppModel {
                     }
                 }
                 let sent_path = self.sent_copy_path(account_id);
+                let mut out = out;
+                // Undo Send (#434): a message meant to go now waits out the
+                // chosen seconds in the Outbox, as a scheduled one does, with
+                // Undo on a toast; a scheduled message already waits.
+                if self.undo_send_secs > 0 && out.send_at.is_none() {
+                    let due = crate::datefmt::now() + i64::from(self.undo_send_secs);
+                    out.send_at = Some(due);
+                    out.undo_send = true;
+                    self.undo_send_seq += 1;
+                    let token = self.undo_send_seq;
+                    self.undo_sends.insert(token, (account_id, due, out.in_reply_to.clone()));
+                    self.show_undo_send(token, &out.subject, &sender);
+                    let s = sender.clone();
+                    gtk::glib::timeout_add_local_once(
+                        std::time::Duration::from_secs(u64::from(self.undo_send_secs)),
+                        move || s.input(AppMsg::UndoSendExpired(token)),
+                    );
+                }
                 self.send_to(account_id, MailRequest::Send { message: out, sent_path });
+            }
+
+            AppMsg::UndoSendExpired(token) => {
+                if self.undo_sends.remove(&token).is_some() {
+                    // Everything due goes, this message included; the half-
+                    // minute clock would get to it too, only later.
+                    sender.input(AppMsg::SendDueScheduled);
+                }
+            }
+
+            AppMsg::UndoSend(token) => {
+                let Some((account_id, due, answers)) = self.undo_sends.get(&token).cloned() else { return };
+                // The Outbox learns of the message from its worker; a click in
+                // the first instant may come before that, so it waits a moment.
+                let queued = self
+                    .outbox_by_account
+                    .get(&account_id)
+                    .and_then(|items| items.iter().find(|i| i.send_at == Some(due)))
+                    .map(|i| i.id);
+                match queued {
+                    Some(id) => {
+                        self.undo_sends.remove(&token);
+                        // A reply sent from the split already stands in the
+                        // conversation as its card; it is not sent after all.
+                        if !answers.is_empty() {
+                            self.drop_provisional(&answers);
+                        }
+                        // Back into a composer, and out of the Outbox so it
+                        // does not go when its time comes.
+                        self.compose_from_outbox(account_id, id, true, &sender);
+                        self.send_to(account_id, MailRequest::DeleteOutbox { id });
+                    }
+                    None if due > crate::datefmt::now() => {
+                        let s = sender.clone();
+                        gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(200), move || {
+                            s.input(AppMsg::UndoSend(token));
+                        });
+                    }
+                    None => {
+                        self.undo_sends.remove(&token);
+                    }
+                }
             }
 
             AppMsg::SaveDraftMessage(out) => {
@@ -12440,6 +12538,8 @@ impl AppModel {
             compose_format: Some(self.compose_format),
             follow_plain: self.follow_plain,
             reply_position: self.reply_position,
+            undo_send_secs: self.undo_send_secs,
+            attachment_reminder: self.attachment_reminder,
             signature_position: self.signature_position,
             signature_dashes: self.signature_dashes,
             spellcheck: self.spellcheck,
@@ -16799,6 +16899,27 @@ impl AppModel {
         self.show_message(Some(message), false);
     }
 
+    /// Undo Send's toast: what is being sent, and Undo for as long as it
+    /// waits.
+    fn show_undo_send(&self, token: u64, subject: &str, sender: &ComponentSender<Self>) {
+        let Some(toasts) = &self.toasts else { return };
+        let subject = subject.trim();
+        let title = if subject.is_empty() {
+            i18n("Sending your message…")
+        } else {
+            i18n_f("Sending “{subject}”…", &[("subject", subject)])
+        };
+        let toast = adw::Toast::builder()
+            .title(gtk::glib::markup_escape_text(&title).as_str())
+            .button_label(i18n("Undo"))
+            .timeout(self.undo_send_secs)
+            .priority(adw::ToastPriority::High)
+            .build();
+        let s = sender.clone();
+        toast.connect_button_clicked(move |_| s.input(AppMsg::UndoSend(token)));
+        toasts.add_toast(toast);
+    }
+
     /// Open a queued Outbox message in the composer.
     ///
     /// The queued copy stays put until the edited version is handed back to the
@@ -16806,7 +16927,11 @@ impl AppModel {
     /// copy of the message. Attachments are written to a private temp directory,
     /// because the composer attaches files by path and the originals are long
     /// gone (under Flatpak the portal's paths expire).
-    fn compose_from_outbox(&mut self, account_id: u32, id: u32, sender: &ComponentSender<Self>) {
+    ///
+    /// `undone` is Undo Send taking the message back (#434): it leaves the
+    /// Outbox for good, so the composer holds the only copy, unsaved, and the
+    /// next Send is a fresh one with its own wait.
+    fn compose_from_outbox(&mut self, account_id: u32, id: u32, undone: bool, sender: &ComponentSender<Self>) {
         let Some(item) = self
             .outbox_by_account
             .get(&account_id)
@@ -16833,7 +16958,7 @@ impl AppModel {
             references: String::new(),
             draft_origin: None,
             encrypt: false,
-            outbox_origin: Some(id),
+            outbox_origin: (!undone).then_some(id),
             reply_addressed_to: String::new(),
             from_address: crate::worker::parse_recipients(&editable.from)
                 .into_iter()
@@ -16841,11 +16966,12 @@ impl AppModel {
                 .map(|(_, addr)| addr)
                 .unwrap_or_default(),
             custom_from: editable.from,
-            send_at: item.send_at,
+            send_at: item.send_at.filter(|_| !undone),
             cloud_uploads: Vec::new(),
             inline_files: Vec::new(),
             block_remote_images: false,
-            resumed: false,
+            // It has its signature already, as a queued message does.
+            resumed: undone,
             no_signature: false,
             template: false,
             original_plain: false,
@@ -16854,6 +16980,12 @@ impl AppModel {
         // so its toolbar has to stay too. Leaving it would strand the user in a
         // reader offering Reply and Forward for a message that hasn't been sent.
         self.open_compose(account_id, prefill, sender);
+        if undone {
+            // Closing it asks first, as closing any unsaved message does.
+            if let Some(host) = self.composers.last() {
+                host.controller.emit(ComposeInput::MarkFieldsDirty);
+            }
+        }
     }
 
     /// Open a message the worker could not send, queue or save (#340). Its
@@ -18181,7 +18313,7 @@ impl AppModel {
     }
 
     /// Take a sent reply's stand-in card out of the conversation: its send
-    /// was refused, and the composer is back.
+    /// was refused or undone (#434), and the composer is back.
     fn drop_provisional(&mut self, in_reply_to: &str) {
         let refused: Vec<(u32, u32)> =
             self.provisionals.iter().filter(|(_, p)| p.answers == in_reply_to).map(|(k, _)| *k).collect();
@@ -20758,6 +20890,8 @@ impl AppModel {
             compose_format: self.compose_format,
             follow_plain: self.follow_plain,
             reply_position: self.reply_position,
+            undo_send_secs: self.undo_send_secs,
+            attachment_reminder: self.attachment_reminder,
             signature_position: self.signature_position,
             signature_dashes: self.signature_dashes,
             notifications: self.notifications_enabled,
@@ -22537,6 +22671,7 @@ impl AppModel {
             sign: false,
             encrypt: false,
             send_at: None,
+            undo_send: false,
             calendar: Some(crate::worker::CalendarPart {
                 ics,
                 method: "REPLY".to_string(),
@@ -22868,6 +23003,7 @@ impl AppModel {
             encrypt: false,
             calendar: None,
             send_at: None,
+            undo_send: false,
         };
         self.send_to(message.account_id, MailRequest::Send { message: Box::new(out), sent_path: None });
         sender.input(AppMsg::UnsubscribeDone { message: Box::new(message), result: Ok(true) });

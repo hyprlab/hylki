@@ -704,6 +704,24 @@ anything reading it did not. The recipient still gets them. In dark mode a
 quoted message that sets its own colors keeps the light ground it was
 designed for.
 
+### Undo Send
+
+A message sent with **Send** waits five seconds in the Outbox before it
+goes, with **Undo** on a notice at the bottom of the window. **Undo** brings
+it back into a composer, unsent, and sending it again starts a new wait.
+**Settings → Composing → Undo send** sets the wait (5, 10, 20 or 30 seconds)
+or turns it off. A message sent with **Send Later** waits already and is not
+held again. Hylki closed before the wait is over sends the message the next
+time it starts.
+
+### Forgotten attachments
+
+A message that mentions an attachment ("attached", "enclosed", and in German
+"Anhang", "anbei" and the like) but has none asks before it goes: **Attach
+Files…** opens the file chooser, **Send Anyway** sends it as it is. Only
+what you wrote counts, not the quoted message or the signature. **Settings
+→ Composing → Remind me of forgotten attachments** turns the question off.
+
 ### Drafts saved as you write
 
 A message being written is saved to the Drafts folder on its own every 30

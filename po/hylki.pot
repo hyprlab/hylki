@@ -504,6 +504,12 @@ msgstr ""
 msgid "Delete {n} messages"
 msgstr ""
 
+msgid "Sending your message…"
+msgstr ""
+
+msgid "Sending “{subject}”…"
+msgstr ""
+
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
 msgstr[0] ""
@@ -1199,6 +1205,13 @@ msgid "Name (Z to A)"
 msgstr ""
 
 msgid "Full Path"
+msgstr ""
+
+#. Translators: the beginnings of words that, written in a message,
+#. mean a file is attached ("attach" also finds "attached" and
+#. "attachment"). Give the words only, separated by commas; the English
+#. ones are always looked for too.
+msgid "attachment words|attach,enclos"
 msgstr ""
 
 msgid "Sender"
@@ -3330,6 +3343,18 @@ msgid ""
 msgstr ""
 
 msgid "Check the From address"
+msgstr ""
+
+msgid "Send without an attachment?"
+msgstr ""
+
+msgid "What you wrote mentions an attachment, but none is attached."
+msgstr ""
+
+msgid "Attach Files…"
+msgstr ""
+
+msgid "Send Anyway"
 msgstr ""
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
@@ -5522,6 +5547,22 @@ msgid ""
 "message."
 msgstr ""
 
+msgid "Undo send"
+msgstr ""
+
+msgid ""
+"A sent message waits this long in the Outbox, with Undo offered, before it "
+"goes."
+msgstr ""
+
+msgid "Remind me of forgotten attachments"
+msgstr ""
+
+msgid ""
+"Ask before sending when what you wrote speaks of an attachment and none is "
+"attached."
+msgstr ""
+
 msgid "Spelling"
 msgstr ""
 
@@ -5932,6 +5973,11 @@ msgstr ""
 
 msgid "Follows the reading order"
 msgstr ""
+
+msgid "{n} second"
+msgid_plural "{n} seconds"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "System language"
 msgstr ""

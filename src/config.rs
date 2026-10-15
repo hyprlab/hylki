@@ -1491,6 +1491,14 @@ pub(crate) struct PrivacyFile {
     /// Off by default, as in most mail programs today.
     #[serde(default)]
     pub(crate) signature_dashes: bool,
+    /// How long a sent message waits in the Outbox, with Undo offered, before
+    /// it goes (#434); 0 sends at once.
+    #[serde(default = "default_undo_send_secs")]
+    pub(crate) undo_send_secs: u32,
+    /// Whether Send asks first when the text speaks of an attachment and
+    /// none is attached.
+    #[serde(default = "default_on")]
+    pub(crate) attachment_reminder: bool,
     /// Whether the composer underlines misspelled words as you type.
     #[serde(default = "default_on")]
     pub(crate) spellcheck: bool,
@@ -1859,6 +1867,8 @@ impl Default for PrivacyFile {
             reply_position: ReplyPosition::default(),
             signature_position: SignaturePosition::default(),
             signature_dashes: false,
+            undo_send_secs: default_undo_send_secs(),
+            attachment_reminder: true,
             spellcheck: true,
             spellcheck_langs: String::new(),
             sidebar_hover_expand: false,
@@ -3632,6 +3642,68 @@ fn default_on() -> bool {
     true
 }
 
+/// Undo Send's wait when nothing was chosen: long enough to catch a slip,
+/// short enough not to hold mail up, as other mail programs default to.
+fn default_undo_send_secs() -> u32 {
+    5
+}
+
+/// The waits Settings offers for Undo Send, in seconds; 0 is off.
+pub const UNDO_SEND_CHOICES: [u32; 5] = [0, 5, 10, 20, 30];
+
+/// Whether `text`, what the user wrote (the quoted original and the
+/// signature already left out), speaks of an attachment: a word that starts
+/// like one of `words`, on a word boundary. `words` are lowercase, and come
+/// in English and the interface language.
+pub fn mentions_attachment(text: &str, words: &[String]) -> bool {
+    let lower = text.to_lowercase();
+    words.iter().filter(|w| !w.is_empty()).any(|w| {
+        lower.match_indices(w.as_str()).any(|(at, _)| {
+            lower[..at].chars().next_back().is_none_or(|c| !c.is_alphanumeric())
+        })
+    })
+}
+
+/// The words that speak of an attachment, in English and in the interface
+/// language. The translation gives the words only, separated by commas.
+pub fn attachment_words() -> Vec<String> {
+    // Translators: the beginnings of words that, written in a message,
+    // mean a file is attached ("attach" also finds "attached" and
+    // "attachment"). Give the words only, separated by commas; the English
+    // ones are always looked for too.
+    let msgid = crate::i18n::i18n_noop("attachment words|attach,enclos");
+    let mut out: Vec<String> = Vec::new();
+    for list in [msgid.to_string(), crate::i18n::i18n(msgid)] {
+        let list = list.rsplit('|').next().unwrap_or("").to_lowercase();
+        for w in list.split(',').map(str::trim).filter(|w| !w.is_empty()) {
+            if !out.iter().any(|o| o == w) {
+                out.push(w.to_string());
+            }
+        }
+    }
+    out
+}
+
+/// What the user wrote in a message: its plain text without the quoted
+/// lines and without the signature, the part a reminder should read.
+pub fn own_text(text: &str) -> String {
+    let mut out = String::new();
+    for line in text.lines() {
+        let t = line.trim_end();
+        // A signature starts at the "-- " delimiter; a quote's lines start
+        // with ">", and a reply's attribution line ends in "wrote:".
+        if t == "--" || t == "-- " {
+            break;
+        }
+        if t.trim_start().starts_with('>') {
+            continue;
+        }
+        out.push_str(line);
+        out.push('\n');
+    }
+    out
+}
+
 impl Default for RailFold {
     fn default() -> Self {
         RailFold {
@@ -4899,6 +4971,47 @@ mod tests {
     fn notifications_can_be_disabled() {
         let p: PrivacyFile = toml::from_str("notifications = false").unwrap();
         assert!(!p.notifications);
+    }
+}
+
+#[cfg(test)]
+mod send_check_tests {
+    use super::*;
+
+    fn words() -> Vec<String> {
+        ["attach", "enclos", "anbei", "anhang", "angehängt"].iter().map(|w| w.to_string()).collect()
+    }
+
+    #[test]
+    fn a_mention_of_an_attachment_is_found() {
+        assert!(mentions_attachment("Please find the report attached.", &words()));
+        assert!(mentions_attachment("The attachment has the numbers", &words()));
+        assert!(mentions_attachment("Anbei die Rechnung", &words()));
+        assert!(mentions_attachment("Siehe Anhang.", &words()));
+        assert!(mentions_attachment("Ich habe es angehängt", &words()));
+        assert!(mentions_attachment("Enclosed is the form", &words()));
+    }
+
+    #[test]
+    fn a_word_that_only_contains_one_is_not() {
+        assert!(!mentions_attachment("Im Zusammenhang mit gestern", &words()), "Zusammenhang");
+        assert!(!mentions_attachment("We reattach nothing", &words()), "mid-word");
+        assert!(!mentions_attachment("Thanks, see you", &words()));
+    }
+
+    #[test]
+    fn quotes_and_the_signature_are_not_read() {
+        let text = "Thanks, done.\n\nOn Monday, Ana wrote:\n> see the attached file\n-- \nAttach your CV at jobs.example";
+        let own = own_text(text);
+        assert!(own.contains("Thanks, done."));
+        assert!(!mentions_attachment(&own, &words()));
+    }
+
+    #[test]
+    fn the_english_words_are_always_looked_for() {
+        let w = attachment_words();
+        assert!(w.contains(&"attach".to_string()));
+        assert!(w.contains(&"enclos".to_string()));
     }
 }
 

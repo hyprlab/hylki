@@ -571,6 +571,12 @@ msgstr "Ordner konnte nicht verschoben werden: {e}"
 msgid "Delete {n} messages"
 msgstr "{n} Nachrichten löschen"
 
+msgid "Sending your message…"
+msgstr "Ihre Nachricht wird gesendet…"
+
+msgid "Sending “{subject}”…"
+msgstr "„{subject}“ wird gesendet…"
+
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
 msgstr[0] ""
@@ -1352,6 +1358,13 @@ msgstr "Name (Z–A)"
 
 msgid "Full Path"
 msgstr "Vollständiger Pfad"
+
+#. Translators: the beginnings of words that, written in a message,
+#. mean a file is attached ("attach" also finds "attached" and
+#. "attachment"). Give the words only, separated by commas; the English
+#. ones are always looked for too.
+msgid "attachment words|attach,enclos"
+msgstr "anhang,anhäng,angehängt,anbei,beigefügt,beiliegend"
 
 #, fuzzy
 msgid "Sender"
@@ -3787,6 +3800,18 @@ msgstr ""
 #, fuzzy
 msgid "Check the From address"
 msgstr "DMARC (ist die Absenderadresse echt?)"
+
+msgid "Send without an attachment?"
+msgstr "Ohne Anhang senden?"
+
+msgid "What you wrote mentions an attachment, but none is attached."
+msgstr "Ihr Text erwähnt einen Anhang, aber es ist keiner angehängt."
+
+msgid "Attach Files…"
+msgstr "Dateien anhängen…"
+
+msgid "Send Anyway"
+msgstr "Trotzdem senden"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
@@ -6324,6 +6349,26 @@ msgstr ""
 "Evolution und Mutt verwenden sie, um die Signatur abgeschwächt darzustellen "
 "und beim Zitieren Ihrer Nachricht auszulassen."
 
+msgid "Undo send"
+msgstr "Senden rückgängig machen"
+
+msgid ""
+"A sent message waits this long in the Outbox, with Undo offered, before it "
+"goes."
+msgstr ""
+"So lange wartet eine gesendete Nachricht im Postausgang, bevor sie "
+"verschickt wird; bis dahin lässt sie sich zurückholen."
+
+msgid "Remind me of forgotten attachments"
+msgstr "An vergessene Anhänge erinnern"
+
+msgid ""
+"Ask before sending when what you wrote speaks of an attachment and none is "
+"attached."
+msgstr ""
+"Vor dem Senden nachfragen, wenn Ihr Text einen Anhang erwähnt, aber keiner "
+"angehängt ist."
+
 msgid "Spelling"
 msgstr "Rechtschreibung"
 
@@ -6824,6 +6869,11 @@ msgstr "Unterhalb der Meldungen"
 
 msgid "Follows the reading order"
 msgstr "Befolgt die Lesereihenfolge"
+
+msgid "{n} second"
+msgid_plural "{n} seconds"
+msgstr[0] "{n} Sekunde"
+msgstr[1] "{n} Sekunden"
 
 #, fuzzy
 msgid "System language"

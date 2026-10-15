@@ -568,6 +568,13 @@ msgstr "A mappa nem helyezhető át: {e}"
 msgid "Delete {n} messages"
 msgstr "{n} üzenet törlése"
 
+#, fuzzy
+msgid "Sending your message…"
+msgstr "{n} üzenet indexelése…"
+
+msgid "Sending “{subject}”…"
+msgstr ""
+
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
 msgstr[0] "Nem sikerült csatolni: {names}: a Hylki nem tudja olvasni a fájlt."
@@ -1339,6 +1346,13 @@ msgstr "Név (Z–A)"
 
 msgid "Full Path"
 msgstr "Teljes elérési út"
+
+#. Translators: the beginnings of words that, written in a message,
+#. mean a file is attached ("attach" also finds "attached" and
+#. "attachment"). Give the words only, separated by commas; the English
+#. ones are always looked for too.
+msgid "attachment words|attach,enclos"
+msgstr ""
 
 #, fuzzy
 msgid "Sender"
@@ -3763,6 +3777,21 @@ msgstr ""
 #, fuzzy
 msgid "Check the From address"
 msgstr "Feladó címe"
+
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Küldés normál mellékletként"
+
+msgid "What you wrote mentions an attachment, but none is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Attach Files…"
+msgstr "Fájlok csatolása"
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Küldés most"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
@@ -6307,6 +6336,24 @@ msgstr ""
 "és a Mutt ezt használja az aláírás elhalványítására, valamint arra, hogy az "
 "üzenet idézésekor ne jelenjen meg."
 
+#, fuzzy
+msgid "Undo send"
+msgstr "Visszavonás"
+
+msgid ""
+"A sent message waits this long in the Outbox, with Undo offered, before it "
+"goes."
+msgstr ""
+
+#, fuzzy
+msgid "Remind me of forgotten attachments"
+msgstr "Mellékletek elrejtése"
+
+msgid ""
+"Ask before sending when what you wrote speaks of an attachment and none is "
+"attached."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Helyesírás"
 
@@ -6809,6 +6856,12 @@ msgstr "Az üzenetek alatt"
 
 msgid "Follows the reading order"
 msgstr "Az olvasási sorrendet követi"
+
+#, fuzzy
+msgid "{n} second"
+msgid_plural "{n} seconds"
+msgstr[0] "{n} címzett"
+msgstr[1] "{n} címzett"
 
 #, fuzzy
 msgid "System language"

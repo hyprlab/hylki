@@ -569,6 +569,13 @@ msgstr "Nie udało się przenieść katalogu: {e}"
 msgid "Delete {n} messages"
 msgstr "Usuń wiadomości ({n})"
 
+#, fuzzy
+msgid "Sending your message…"
+msgstr "Indeksowanie wiadomości ({n})…"
+
+msgid "Sending “{subject}”…"
+msgstr ""
+
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
 msgstr[0] ""
@@ -1368,6 +1375,13 @@ msgstr "Nazwa (od Z do A)"
 
 msgid "Full Path"
 msgstr "Pełna ścieżka"
+
+#. Translators: the beginnings of words that, written in a message,
+#. mean a file is attached ("attach" also finds "attached" and
+#. "attachment"). Give the words only, separated by commas; the English
+#. ones are always looked for too.
+msgid "attachment words|attach,enclos"
+msgstr ""
 
 #, fuzzy
 msgid "Sender"
@@ -3798,6 +3812,21 @@ msgstr ""
 #, fuzzy
 msgid "Check the From address"
 msgstr "DMARC (czy adres „Od” jest prawdziwy)"
+
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Wyślij jako zwykły załącznik"
+
+msgid "What you wrote mentions an attachment, but none is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Attach Files…"
+msgstr "Załącz pliki"
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Wyślij teraz"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
@@ -6341,6 +6370,24 @@ msgid ""
 "message."
 msgstr ""
 
+#, fuzzy
+msgid "Undo send"
+msgstr "Cofnij"
+
+msgid ""
+"A sent message waits this long in the Outbox, with Undo offered, before it "
+"goes."
+msgstr ""
+
+#, fuzzy
+msgid "Remind me of forgotten attachments"
+msgstr "Ukryj załączniki"
+
+msgid ""
+"Ask before sending when what you wrote speaks of an attachment and none is "
+"attached."
+msgstr ""
+
 msgid "Spelling"
 msgstr "Pisownia"
 
@@ -6841,6 +6888,13 @@ msgstr "Pod wiadomościami"
 
 msgid "Follows the reading order"
 msgstr "Zgodnie z kolejnością czytania"
+
+#, fuzzy
+msgid "{n} second"
+msgid_plural "{n} seconds"
+msgstr[0] "{n} odbiorca"
+msgstr[1] "{n} odbiorców"
+msgstr[2] "{n} odbiorców"
 
 #, fuzzy
 msgid "System language"

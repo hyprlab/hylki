@@ -127,6 +127,10 @@ pub struct PrefInit {
     pub follow_plain: bool,
     /// Where the split reply opens in the reading pane (#212).
     pub reply_position: crate::config::ReplyPosition,
+    /// Undo Send's wait in seconds, 0 off (#434).
+    pub undo_send_secs: u32,
+    /// Ask before sending when the text mentions an attachment and none is attached.
+    pub attachment_reminder: bool,
     /// Where the signature sits in a reply or forward (#237).
     pub signature_position: crate::config::SignaturePosition,
     pub signature_dashes: bool,
@@ -1157,6 +1161,7 @@ pub enum PrefInput {
     ChangeMessageTheme(u32),
     ChangeComposeFormat(u32),
     ChangeReplyPosition(u32),
+    ChangeUndoSend(u32),
     ChangeFoldMessages(u32),
     ChangeSignaturePosition(u32),
     ChangeAppTheme(u32),
@@ -1337,6 +1342,8 @@ pub enum PrefOutput {
     SetComposeFormat(crate::config::ComposeFormat),
     SetFollowPlain(bool),
     SetReplyPosition(crate::config::ReplyPosition),
+    SetUndoSendSecs(u32),
+    SetAttachmentReminder(bool),
     SetSignaturePosition(crate::config::SignaturePosition),
     SetSignatureDashes(bool),
     Closed,
@@ -3568,6 +3575,26 @@ impl Component for Preferences {
                                             let _ = sender.output(PrefOutput::SetSignatureDashes(row.is_active()));
                                         },
                                     },
+
+                                    #[name = "undo_send_row"]
+                                    adw::ComboRow {
+                                        set_title: &i18n("Undo send"),
+                                        set_subtitle: &i18n("A sent message waits this long in the Outbox, \
+                                                       with Undo offered, before it goes."),
+                                        connect_selected_notify[sender] => move |row| {
+                                            sender.input(PrefInput::ChangeUndoSend(row.selected()));
+                                        },
+                                    },
+
+                                    #[name = "attachment_reminder_row"]
+                                    adw::SwitchRow {
+                                        set_title: &i18n("Remind me of forgotten attachments"),
+                                        set_subtitle: &i18n("Ask before sending when what you wrote speaks of \
+                                                       an attachment and none is attached."),
+                                        connect_active_notify[sender] => move |row| {
+                                            let _ = sender.output(PrefOutput::SetAttachmentReminder(row.is_active()));
+                                        },
+                                    },
                                 },
 
                                 #[name = "spelling_group"]
@@ -4646,6 +4673,24 @@ impl Component for Preferences {
             &i18n("Follows the reading order"),
         ])));
         no_truncate(&widgets.reply_position_row);
+        {
+            let labels: Vec<String> = crate::config::UNDO_SEND_CHOICES
+                .iter()
+                .map(|s| {
+                    if *s == 0 {
+                        i18n("Off")
+                    } else {
+                        crate::i18n::ni18n_f("{n} second", "{n} seconds", *s, &[("n", &s.to_string())])
+                    }
+                })
+                .collect();
+            let refs: Vec<&str> = labels.iter().map(String::as_str).collect();
+            widgets.undo_send_row.set_model(Some(&gtk::StringList::new(&refs)));
+            no_truncate(&widgets.undo_send_row);
+            let at = crate::config::UNDO_SEND_CHOICES.iter().position(|s| *s == init.undo_send_secs).unwrap_or(1);
+            widgets.undo_send_row.set_selected(at as u32);
+        }
+        widgets.attachment_reminder_row.set_active(init.attachment_reminder);
         widgets.reply_position_row.set_selected(match init.reply_position {
             crate::config::ReplyPosition::Top => 0,
             crate::config::ReplyPosition::Bottom => 1,
@@ -5704,6 +5749,10 @@ impl Component for Preferences {
                     _ => crate::config::FoldMessages::Never,
                 };
                 let _ = sender.output(PrefOutput::SetFoldMessages(fold));
+            }
+            PrefInput::ChangeUndoSend(idx) => {
+                let secs = crate::config::UNDO_SEND_CHOICES.get(idx as usize).copied().unwrap_or(0);
+                let _ = sender.output(PrefOutput::SetUndoSendSecs(secs));
             }
             PrefInput::ChangeReplyPosition(idx) => {
                 let position = match idx {
