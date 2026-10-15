@@ -278,6 +278,24 @@ pub(super) fn jmap_base_url(account: &AccountConfig) -> String {
     }
 }
 
+/// The host of a URL, without scheme, port or path: what
+/// [`may_connect`] needs to tell a server on this machine (#442).
+fn url_host(url: &str) -> &str {
+    let rest = url.split_once("://").map_or(url, |(_, r)| r);
+    let authority = rest.split('/').next().unwrap_or(rest);
+    let authority = authority.rsplit_once('@').map_or(authority, |(_, h)| h);
+    if let Some(v6) = authority.strip_prefix('[') {
+        return v6.split(']').next().unwrap_or(v6);
+    }
+    authority.split(':').next().unwrap_or(authority)
+}
+
+/// Whether connecting to the account's JMAP server is worth trying in the
+/// background: [`may_connect`] for its host.
+fn jmap_may_connect(account: &AccountConfig) -> bool {
+    may_connect(url_host(&jmap_base_url(account)))
+}
+
 /// `scheme://host[:port]` of a URL (the whole string when it has no path).
 fn origin_of(url: &str) -> &str {
     match url.find("://") {
@@ -987,6 +1005,13 @@ async fn jmap_session(
         Ok(s) => {
             state.session = Some(s.clone());
             Some(s)
+        }
+        // With the network monitor reporting no network, say that plainly
+        // (#442); the attempt was still made, the monitor being a hint.
+        Err(e) if !jmap_may_connect(account) => {
+            tracing::info!("jmap: connecting with no network failed: {e}");
+            emit(WorkerEvent::net_error(offline_text()));
+            None
         }
         Err(e) => {
             emit(WorkerEvent::net_error(i18n_f("Could not reach the JMAP server: {e}", &[("e", &e)])));
@@ -2076,6 +2101,11 @@ fn spawn_jmap_push(s: JmapSession, tx: mpsc::UnboundedSender<()>) {
                 if tx.is_closed() {
                     return;
                 }
+                // No network, no attempt (#442): look again in a while.
+                if !may_connect(url_host(&url)) {
+                    std::thread::sleep(Duration::from_secs(30));
+                    continue;
+                }
                 jmap_wire("GET events");
                 let resp = ureq::AgentBuilder::new()
                     .timeout_connect(Duration::from_secs(20))
@@ -2250,8 +2280,10 @@ pub(super) async fn run_jmap(
 
     loop {
         // The background index (#429) runs only while nothing else is
-        // asked, a single request a step.
-        let indexing = !state.backfill.is_empty();
+        // asked, a single request a step. Neither it nor the poll runs with
+        // no network, and the index waits out a metered one too (#442); a
+        // NetworkChanged request wakes this loop to look again.
+        let indexing = !state.backfill.is_empty() && jmap_may_connect(&account) && !crate::power::metered();
         let wait = state.backfill_wait;
         let req = tokio::select! {
             biased;
@@ -2260,6 +2292,9 @@ pub(super) async fn run_jmap(
                 None => break,
             },
             _ = poll.tick() => {
+                if !jmap_may_connect(&account) {
+                    continue;
+                }
                 if let Some(s) = jmap_session(&account, &mut state, &|_| {}).await {
                     jmap_poll_inbox(&s, account_id, &account, cache.as_ref(), &mut state, &emit).await;
                     if push_enabled && !push_started {
@@ -2872,6 +2907,9 @@ pub(super) async fn run_jmap(
                     clean_lists_jmap(&s, account_id, &account, cache.as_ref(), &mut state, &mut last_list_clean, &emit).await;
                 }
             }
+
+            // Only a wake: the loop's next turn reads the network afresh.
+            MailRequest::NetworkChanged => {}
 
             MailRequest::Reconnect => {
                 // A fresh session resource: the server may have moved, or

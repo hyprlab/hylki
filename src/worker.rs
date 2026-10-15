@@ -505,6 +505,11 @@ pub enum MailRequest {
     RefreshUnread,
     /// Force a fresh connection and re-list folders (e.g. after a failure).
     Reconnect,
+    /// The network came or went, or turned metered or not (#442). Nothing to
+    /// answer: it wakes a worker parked in IDLE or waiting for a request, so
+    /// its background work (index, preloads) re-reads
+    /// [`crate::power::online`] and [`crate::power::metered`] at once.
+    NetworkChanged,
     /// Sent right behind a request that takes mail out of `path` (a move,
     /// a purge, Spam/Not Spam) and answered with
     /// [`WorkerEvent::MovesSettled`] once the worker reaches it. The worker
@@ -1404,7 +1409,12 @@ async fn run_imap(
             Ok(req) => req,
             Err(mpsc::error::TryRecvError::Disconnected) => break,
             Err(mpsc::error::TryRecvError::Empty) => {
-                if !body_prefetch.is_empty() {
+                // Preloads and the background index wait while there is no
+                // network or it is metered (#442); they keep their queues,
+                // and a NetworkChanged request wakes this loop when that
+                // changes.
+                let preload = may_preload(&account.imap_host);
+                if !body_prefetch.is_empty() && preload {
                     // Highest priority: get new mail's body cached so opening it is
                     // instant (no network wait).
                     let interrupted_body = body_prefetch.front().cloned();
@@ -1460,7 +1470,7 @@ async fn run_imap(
                         ).await;
                     }
                     continue;
-                } else if !prefetch.is_empty() {
+                } else if !prefetch.is_empty() && preload {
                     run_one_prefetch(
                         &mut prefetch,
                         &mut session,
@@ -1472,7 +1482,7 @@ async fn run_imap(
                     .await;
                     pending_resync = true;
                     continue;
-                } else if !refs_repair.is_empty() && session.is_some() && backfill.is_empty() {
+                } else if !refs_repair.is_empty() && session.is_some() && backfill.is_empty() && preload {
                     // Lower priority than indexing new mail: repair the threading
                     // references of already-indexed replies, a chunk at a time.
                     run_one_refs_repair(
@@ -1484,11 +1494,11 @@ async fn run_imap(
                     )
                     .await;
                     continue;
-                } else if !label_fill.is_empty() && session.is_some() && backfill.is_empty() {
+                } else if !label_fill.is_empty() && session.is_some() && backfill.is_empty() && preload {
                     run_one_label_fill(&mut label_fill, &mut session, account_id, cache.as_ref(), &emit)
                         .await;
                     continue;
-                } else if !backfill.is_empty() {
+                } else if !backfill.is_empty() && preload {
                     // Index the rest of the mailbox in the background. Connect first
                     // for cached-folder accounts (which connect lazily); if still
                     // offline, wait for a request instead of spinning.
@@ -1642,6 +1652,16 @@ async fn run_imap(
         if matches!(req, MailRequest::Reconnect) {
             session = connect_and_list(account_id, &account, cache.as_ref(), &emit).await;
             sweep_due = true;
+            continue;
+        }
+        // Mostly a wake: the idle chain above reads the network afresh. A
+        // session opened over a network that has since gone is dead whatever
+        // its socket says; dropped now, a change made offline is queued at
+        // once rather than after a read timeout.
+        if matches!(req, MailRequest::NetworkChanged) {
+            if !may_connect(&account.imap_host) {
+                session = None;
+            }
             continue;
         }
         // Answered offline too: a move that could not run has still settled.
@@ -2848,7 +2868,9 @@ async fn run_imap(
                 }
             }
 
-            MailRequest::Reconnect | MailRequest::Settle { .. } => unreachable!("handled above"),
+            MailRequest::Reconnect | MailRequest::NetworkChanged | MailRequest::Settle { .. } => {
+                unreachable!("handled above")
+            }
         }
 
         if invalidates_selection {
@@ -2909,6 +2931,15 @@ async fn connect_and_list(
                 Err(e) => emit(WorkerEvent::net_error(i18n_f("Could not list folders: {e}", &[("e", &(e).to_string())]))),
             }
             Some(session)
+        }
+        // With the network monitor reporting no network, say that plainly
+        // rather than "Connection failed" with a resolver error (#442). The
+        // monitor is only a hint, so the attempt was still made: a server on
+        // the local network or behind a VPN can be up when it says no.
+        Err(e) if !may_connect(&account.imap_host) => {
+            tracing::info!("[account {account_id}] connecting with no network failed: {e}");
+            emit(WorkerEvent::net_error(offline_text()));
+            None
         }
         Err(e) => {
             emit(WorkerEvent::net_error(i18n_f("Connection failed: {e}", &[("e", &(e).to_string())])));
@@ -3626,6 +3657,12 @@ async fn watch_folder(
             // The lease ran out while offline or backing off; don't reconnect
             // just to watch a folder nothing has touched for an hour.
             return;
+        }
+        // A watcher is background work: with no network it waits for one
+        // rather than trying (#442), and looks again at its next turn.
+        if !may_connect(&account.imap_host) {
+            backoff = Duration::from_secs(60);
+            continue;
         }
         let Ok(mut sess) = connect(&account).await else {
             // Offline, or the server's connection cap is spent (the main
@@ -6319,6 +6356,27 @@ async fn mark_ham(
 /// a name, so it fails both checks. Verification is relaxed for loopback
 /// addresses only, where anyone able to intercept the connection is already
 /// running code as the user, and never for a host reached over a network.
+/// Whether a connection to `host` is worth trying (#442): the network
+/// monitor says there is a network, or the server is on this machine (Proton
+/// Bridge on localhost needs none at all).
+pub(crate) fn may_connect(host: &str) -> bool {
+    crate::power::online() || is_loopback_host(host)
+}
+
+/// Whether background downloads may run (#442): preloading bodies and
+/// attachments, and indexing the rest of a mailbox (#429). Not with no
+/// network, and not on a metered one, where what the user opens still loads
+/// on demand. A local bridge on a metered network is no exception: it
+/// downloads what it serves over that same network.
+pub(crate) fn may_preload(host: &str) -> bool {
+    may_connect(host) && !crate::power::metered()
+}
+
+/// The error a connection the network monitor ruled out ends with.
+pub(crate) fn offline_text() -> String {
+    i18n("No network connection")
+}
+
 fn is_loopback_host(host: &str) -> bool {
     let host = host.trim().trim_start_matches('[').trim_end_matches(']');
     host.eq_ignore_ascii_case("localhost")
@@ -9868,6 +9926,9 @@ async fn run_pop3(
                 emit(WorkerEvent::Folders(pop3_folders(account_id)));
             }
 
+            // POP3 does no background work for the network to pause.
+            MailRequest::NetworkChanged => {}
+
             MailRequest::Settle { path, uids } => emit(WorkerEvent::MovesSettled { path, uids }),
 
             MailRequest::ExportRaw { token, uid, .. } => {
@@ -10187,7 +10248,8 @@ async fn run_mock(
             | MailRequest::DeleteOutbox { .. }
             | MailRequest::RefreshUnread
             | MailRequest::RefreshKeywords { .. }
-            | MailRequest::Reconnect => {}
+            | MailRequest::Reconnect
+            | MailRequest::NetworkChanged => {}
             // The demo's folders are fixed, but an emptied one reads as empty.
             MailRequest::EmptyFolder { folder_id, .. } => {
                 emit(WorkerEvent::Messages { folder_id, messages: Vec::new() });

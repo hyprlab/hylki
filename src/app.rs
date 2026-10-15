@@ -2068,6 +2068,10 @@ pub enum AppMsg {
     WindowInFront,
     /// The network came back after being down: the same reconnect as a wake.
     NetworkBack,
+    /// The network came or went, or turned metered or not (#442): wake the
+    /// workers so they re-read [`crate::power::online`] and
+    /// [`crate::power::metered`] before their next background step.
+    NetworkChanged,
     /// Open the settings window on the user's preferred view (the menu entry).
     OpenSettings,
     OpenPreferences,
@@ -3745,12 +3749,20 @@ impl SimpleComponent for AppModel {
                 let _ = s.send(AppMsg::LauncherCountLost);
             }
         });
-        crate::power::watch_network({
-            let s = sender.input_sender().clone();
-            move || {
-                let _ = s.send(AppMsg::NetworkBack);
-            }
-        });
+        crate::power::watch_network(
+            {
+                let s = sender.input_sender().clone();
+                move || {
+                    let _ = s.send(AppMsg::NetworkBack);
+                }
+            },
+            {
+                let s = sender.input_sender().clone();
+                move || {
+                    let _ = s.send(AppMsg::NetworkChanged);
+                }
+            },
+        );
         // With no accounts, no worker events will populate the sidebar, so render
         // its empty state (the "Add first account" prompt) up front — and greet
         // a first run with the welcome wizard (src/ui/welcome.rs).
@@ -10655,6 +10667,12 @@ impl SimpleComponent for AppModel {
 
             AppMsg::NetworkBack => self.reconnect_workers(&sender),
 
+            AppMsg::NetworkChanged => {
+                for w in self.workers.values() {
+                    let _ = w.send(MailRequest::NetworkChanged);
+                }
+            }
+
             AppMsg::LauncherCountLost => self.resend_launcher_count(),
 
             AppMsg::WindowInFront => {
@@ -13054,7 +13072,12 @@ impl AppModel {
             let input = sender.input_sender().clone();
             let secs = self.fetch_interval_secs.min(u32::MAX as u64) as u32;
             let id = gtk::glib::timeout_add_seconds_local(secs, move || {
-                let _ = input.send(AppMsg::Refresh);
+                // With no network there is nothing to fetch, and every
+                // attempt would only end in a connection error (#442). The
+                // network coming back reconnects and refreshes by itself.
+                if crate::power::online() {
+                    let _ = input.send(AppMsg::Refresh);
+                }
                 gtk::glib::ControlFlow::Continue
             });
             self.auto_fetch_source = Some(id);

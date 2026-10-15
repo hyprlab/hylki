@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Changed: Hylki follows the network monitor** (#442, reported by
+  3v1n0). With no network, automatic fetching, polling, push and the
+  background work stop trying to connect; what the user asks for is still
+  tried, and a failure says **No network connection** instead of a
+  resolver error. On a metered connection
+  nothing is downloaded ahead: bodies and attachments of new mail load
+  when opened, and the background index of each mailbox waits until the
+  connection is no longer metered.
+
 - **Changed: a reply sent from the reading pane becomes its card in the
   conversation.** The editor lifts out of the composer and moves to where
   the reply now sits in the conversation, turning into its card on the

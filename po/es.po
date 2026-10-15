@@ -7460,6 +7460,10 @@ msgstr ""
 msgid "no OpenPGP key for {addr}"
 msgstr "no hay ninguna clave OpenPGP para {addr}"
 
+#, fuzzy
+msgid "No network connection"
+msgstr "Probar conexión"
+
 msgid ""
 "Could not read the password for {email} from the keyring ({e}). Hylki tries "
 "again at the next connection."

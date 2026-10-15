@@ -12,7 +12,13 @@
 //!   everywhere and notices a wake within [`CLOCK_TICK`].
 //! - The network coming back, since at the moment of waking a laptop is usually
 //!   still rejoining its Wi-Fi and a reconnect then would only fail.
+//!
+//! The same network monitor also says whether there is a network at all and
+//! whether it is metered (#442). The workers read both from any thread through
+//! [`online`] and [`metered`]: with no network they make no connection
+//! attempts, and on a metered one they preload nothing.
 
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
 const LOGIN1_DEST: &str = "org.freedesktop.login1";
@@ -82,26 +88,65 @@ fn boot_clock() -> Option<Duration> {
     Some(Duration::from_secs_f64(secs))
 }
 
-/// Invoke `on_back` each time the network becomes reachable again after being
-/// down. GIO answers through the network-monitor portal inside the Flatpak,
-/// so this needs no permission. Must be called on the GTK main thread.
-pub fn watch_network<F: Fn() + 'static>(on_back: F) {
+/// What GIO's network monitor last said, for the worker threads: GObject
+/// signals arrive on the GTK main thread, so they are mirrored here. Until
+/// [`watch_network`] runs (and in tests) the network counts as up and
+/// unmetered, which is how every build before #442 behaved.
+static ONLINE: AtomicBool = AtomicBool::new(true);
+static METERED: AtomicBool = AtomicBool::new(false);
+
+/// Watch GIO's network monitor. `on_back` runs each time the network becomes
+/// reachable again after being down; `on_change` each time it comes or goes,
+/// or turns metered or not, so the workers can wake and re-read [`online`]
+/// and [`metered`]. GIO answers through the network-monitor portal inside the
+/// Flatpak, so this needs no permission. Must be called on the GTK main
+/// thread.
+pub fn watch_network<F: Fn() + 'static, G: Fn() + 'static>(on_back: F, on_change: G) {
     use gtk::gio::prelude::*;
     let monitor = gtk::gio::NetworkMonitor::default();
-    let was_up = std::cell::Cell::new(monitor.is_network_available());
+    ONLINE.store(monitor.is_network_available(), Ordering::Relaxed);
+    METERED.store(monitor.is_network_metered(), Ordering::Relaxed);
+    let on_change = std::rc::Rc::new(on_change);
     // Fires on every route change too (VPNs, container bridges); only the
     // down-to-up edge means sessions opened since have nothing to reuse.
+    let changed = on_change.clone();
     monitor.connect_network_changed(move |_, up| {
-        if up && !was_up.get() {
+        let was_up = ONLINE.swap(up, Ordering::Relaxed);
+        if up && !was_up {
             tracing::info!("network is back");
             on_back();
+        } else if !up && was_up {
+            tracing::info!("network is gone");
         }
-        was_up.set(up);
+        if up != was_up {
+            changed();
+        }
+    });
+    monitor.connect_network_metered_notify(move |m| {
+        let metered = m.is_network_metered();
+        if METERED.swap(metered, Ordering::Relaxed) != metered {
+            tracing::info!(metered, "network metering changed");
+            on_change();
+        }
     });
 }
 
-/// Whether the network looks reachable right now.
+/// Whether the network looks reachable right now, asked of the monitor
+/// itself. Main thread only; the workers use [`online`].
 pub fn network_available() -> bool {
     use gtk::gio::prelude::*;
     gtk::gio::NetworkMonitor::default().is_network_available()
+}
+
+/// Whether the network monitor last said there is a network (#442). Any
+/// thread may ask.
+pub fn online() -> bool {
+    ONLINE.load(Ordering::Relaxed)
+}
+
+/// Whether the network monitor last said the network is metered (a phone's
+/// hotspot, a mobile connection), so background downloads should wait (#442).
+/// Any thread may ask.
+pub fn metered() -> bool {
+    METERED.load(Ordering::Relaxed)
 }

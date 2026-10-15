@@ -780,7 +780,10 @@ pub(super) async fn run_graph(
         // The background index (#429) only runs while nothing else is
         // asked: a request, then the poll, come first, and each step is a
         // single request so neither waits long behind one.
-        let indexing = !state.backfill.is_empty();
+        // Neither the index nor the poll runs with no network, and the
+        // index waits out a metered one too (#442); a NetworkChanged request
+        // wakes this loop to look again.
+        let indexing = !state.backfill.is_empty() && crate::power::online() && !crate::power::metered();
         let wait = state.backfill_wait;
         let req = tokio::select! {
             biased;
@@ -789,7 +792,9 @@ pub(super) async fn run_graph(
                 None => break,
             },
             _ = poll.tick() => {
-                graph_poll_inbox(account_id, &account, cache.as_ref(), &mut state, &emit).await;
+                if crate::power::online() {
+                    graph_poll_inbox(account_id, &account, cache.as_ref(), &mut state, &emit).await;
+                }
                 continue;
             }
             _ = backfill_pause(wait), if indexing => {
@@ -1483,6 +1488,9 @@ pub(super) async fn run_graph(
                 }
             }
 
+            // Only a wake: the loop's next turn reads the network afresh.
+            MailRequest::NetworkChanged => {}
+
             MailRequest::Reconnect => {
                 if let Some(token) = graph_token(&account, &emit).await {
                     refresh_graph_folders(&token, account_id, cache.as_ref(), &mut state, &emit)
@@ -1639,6 +1647,12 @@ async fn graph_purge_uids(
 async fn graph_token(account: &AccountConfig, emit: &impl Fn(WorkerEvent)) -> Option<String> {
     match fetch_oauth_token(account).await {
         Some(t) => Some(t),
+        // With the network monitor reporting no network the token could not
+        // be renewed: say that, not that the sign-in was refused (#442).
+        None if !crate::power::online() => {
+            emit(WorkerEvent::net_error(offline_text()));
+            None
+        }
         None => {
             // Signed in through Hylki's own Microsoft app (#329) rather than
             // GNOME Online Accounts: it is Hylki's sign-in to renew.

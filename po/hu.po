@@ -7622,6 +7622,10 @@ msgstr ""
 msgid "no OpenPGP key for {addr}"
 msgstr "nincs OpenPGP-kulcs ehhez: {addr}"
 
+#, fuzzy
+msgid "No network connection"
+msgstr "Kapcsolat tesztelése"
+
 msgid ""
 "Could not read the password for {email} from the keyring ({e}). Hylki tries "
 "again at the next connection."

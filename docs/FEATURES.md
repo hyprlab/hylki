@@ -71,6 +71,9 @@ The full list. The [README](../README.md) carries a shorter one.
   returns, not lost. Queued messages can be edited, sent by hand or discarded.
 - **Send later:** schedule a message for tomorrow morning, Monday, or any
   date and time; it waits in the Outbox, editable, until then.
+- **Network aware:** no connection attempts while offline, a reconnect the
+  moment the network is back, and no downloading ahead on a metered
+  connection. See [Working offline](DOCUMENTATION.md#working-offline).
 
 ## Writing
 

@@ -1466,6 +1466,25 @@ shows or hides it. Its buttons are, from the left, **Export log** (while the
 console is open), the console, and the bar's own toggle. Stored as
 `status_bar_top` in `privacy.toml`.
 
+### Working offline
+
+Hylki follows the desktop's network monitor (GIO's, which the Flatpak reaches
+through its portal). While there is no network it makes no connection
+attempts of its own: automatic fetching, polling, push and the background
+work pause, and cached mail stays readable. What you ask for, such as opening
+mail that was never downloaded or pressing Refresh, is still tried, since the
+monitor can report no network while a server on the local network or behind
+a VPN is reachable; when it fails, Hylki says **No network connection**. A
+mail server on the computer itself, such as Proton Mail Bridge, counts as
+reachable either way. When the network comes back, every account reconnects
+and the open folder refreshes.
+
+On a metered connection, such as a phone's hotspot or mobile data, Hylki
+downloads only what is asked for: new mail is listed and what you open loads
+as usual, but nothing is fetched ahead (the newest messages' bodies and
+attachments) and the background indexing of the rest of each mailbox waits.
+Both pick up where they left off once the connection is no longer metered.
+
 ## Privacy
 
 Hylki collects no telemetry and sends no analytics. Remote content in messages is
