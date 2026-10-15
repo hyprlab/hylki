@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: a verified sender marked suspicious over its reply address.**
+  A message every check confirmed turned red when its Reply-To was on
+  another domain, as A1's mail from a1.at answered on email.a1.net is.
+  The reply address is still noted; the warning is kept for replies that
+  go to a mailbox anyone can open (Gmail, Outlook.com, GMX and the like).
+  Messages flagged before are checked again when next opened.
+
 - **Changed: a reply sent from the reading pane becomes its card in the
   conversation.** The editor lifts out of the composer and moves to where
   the reply now sits in the conversation, turning into its card on the

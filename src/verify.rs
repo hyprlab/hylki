@@ -321,7 +321,15 @@ fn judge(ev: &Evidence) -> SenderCheck {
     if let Some(reply) = &ev.reply_to_domain {
         if !same_site(reply, &ev.from_domain) {
             findings.push(i18n_f("Replies would go to {reply}, not {from}", &[("reply", reply), ("from", &from.to_string())]));
-            if trust == SenderTrust::Pass {
+            // An organisation answering from another domain of its own (a
+            // newsletter's reply address on its mailing service, a1.at
+            // replying from email.a1.net) is everyday mail: the note says
+            // so, the verdict stands. What the verdict is for is the
+            // verified sender whose replies go to a mailbox anyone can
+            // open, the way a taken-over account diverts an invoice.
+            let diverted = crate::logo::is_mailbox_domain(reply)
+                && !crate::logo::is_mailbox_domain(&ev.from_domain);
+            if diverted && trust == SenderTrust::Pass {
                 trust = SenderTrust::Suspicious;
                 downgraded_by_addressing = true;
             }
@@ -585,13 +593,26 @@ mod tests {
     }
 
     #[test]
-    fn a_reply_to_on_another_domain_is_suspicious() {
+    fn a_reply_to_a_mailbox_anyone_can_open_is_suspicious() {
         let check = check_sender(&msg(concat!(
             "Authentication-Results: mx.icloud.com; dmarc=pass\r\n",
             "From: Support <support@shop-alerts.example>\r\n",
             "Reply-To: collector@gmail.com\r\n",
         )));
         assert_eq!(check.trust, SenderTrust::Suspicious);
+    }
+
+    /// A1 sends from a1.at and takes replies on email.a1.net: worth a note,
+    /// not a red banner over a message every check confirmed.
+    #[test]
+    fn a_reply_to_on_the_senders_other_domain_keeps_the_pass() {
+        let check = check_sender(&msg(concat!(
+            "Authentication-Results: mx.google.com; dmarc=pass; dkim=pass; spf=pass\r\n",
+            "From: A1 Business Team <business-support@a1.at>\r\n",
+            "Reply-To: reply-x.500019@email.a1.net\r\n",
+        )));
+        assert_eq!(check.trust, SenderTrust::Pass);
+        assert!(check.findings.iter().any(|f| f.contains("email.a1.net")), "{check:?}");
     }
 
     #[test]

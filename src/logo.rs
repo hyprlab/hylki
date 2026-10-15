@@ -152,10 +152,13 @@ const MAILBOX_HOSTS: &[&str] = &[
 /// Whether this address is at a [`MAILBOX_HOSTS`] domain, so it names a
 /// person rather than a brand.
 fn is_mailbox_host(email: &str) -> bool {
-    let Some(domain) = domain_of(email) else {
-        return false;
-    };
-    MAILBOX_HOSTS.contains(&domain.as_str())
+    domain_of(email).is_some_and(|d| is_mailbox_domain(&d))
+}
+
+/// Whether `domain` (lowercase) is one of the [`MAILBOX_HOSTS`]: anyone can
+/// have a mailbox there, so it vouches for no organisation.
+pub(crate) fn is_mailbox_domain(domain: &str) -> bool {
+    MAILBOX_HOSTS.contains(&domain)
 }
 
 /// The host part of an address, lowercased — the sending host itself

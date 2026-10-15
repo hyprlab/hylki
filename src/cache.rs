@@ -214,7 +214,12 @@ const ACCOUNT_TABLES: [&str; 11] = [
 /// the server's quoted string, and a name with the header's own quotes
 /// around it (#312). The rows are cleaned in place, see
 /// [`Cache::clean_quoted_names`].
-const SCHEMA_VERSION: i64 = 20;
+/// v21: a Reply-To on another domain no longer marks a verified sender
+/// suspicious unless replies go to a mailbox host (A1 mail from a1.at
+/// answered on email.a1.net was flagged). Suspicious verdicts stored earlier,
+/// and the bodies served with them, are dropped once so those messages are
+/// checked again when next opened; every other cached body stays.
+const SCHEMA_VERSION: i64 = 21;
 
 /// The newest version whose change altered how bodies are *rendered* or how
 /// senders are checked. Opening a database older than this drops `bodies` and
@@ -686,6 +691,9 @@ impl Cache {
         if upgrading_index && version < 20 {
             Self::clean_quoted_names(&conn);
         }
+        if (LAYOUT_VERSION..21).contains(&version) {
+            Self::recheck_suspicious_senders(&conn);
+        }
         // `attachment_meta` is the gallery's record of every attachment that
         // *exists*; `attachments` holds the few whose bytes were downloaded.
         // Seed the first from the second so files already in hand keep showing
@@ -772,6 +780,25 @@ impl Cache {
     /// Clean the names and subjects an earlier build stored as the server
     /// quoted them (#312). Only rows holding a backslash or a leading quote
     /// are read, which is a handful in a large mailbox.
+    /// Drop the sender checks stored as suspicious, with the bodies (and
+    /// attachment lists) served beside them, so the next open fetches the
+    /// message and checks it again under the current rules (v21). A cached
+    /// body is never re-fetched on its own, and a check is only made at a
+    /// fetch, so the pair goes together; verdicts of any other kind stay.
+    fn recheck_suspicious_senders(conn: &Connection) {
+        for table in ["bodies", "attachments", "attachments_checked"] {
+            let _ = conn.execute(
+                &format!(
+                    "DELETE FROM {table} WHERE EXISTS (SELECT 1 FROM sender_checks s \
+                     WHERE s.account_id = {table}.account_id AND s.folder_path = {table}.folder_path \
+                     AND s.uid = {table}.uid AND s.trust = 'suspicious')"
+                ),
+                [],
+            );
+        }
+        let _ = conn.execute("DELETE FROM sender_checks WHERE trust = 'suspicious'", []);
+    }
+
     fn clean_quoted_names(conn: &Connection) {
         let rows: Vec<(i64, String, String)> = {
             let Ok(mut stmt) = conn.prepare(
@@ -3460,6 +3487,26 @@ mod tests {
             .query_row("SELECT subject FROM messages WHERE uid = 2", [], |r| r.get(0))
             .unwrap();
         assert_eq!(plain, "Already fine");
+    }
+
+    /// v21: a suspicious verdict goes with its body, to be checked again;
+    /// a passing one and its body stay.
+    #[test]
+    fn recheck_suspicious_senders_drops_only_those_verdicts_and_bodies() {
+        use crate::models::{SenderCheck, SenderTrust};
+        let c = Cache::in_memory().unwrap();
+        let check = |trust| SenderCheck { trust, ..Default::default() };
+        c.save_body(1, "INBOX", 1, "<p>flagged</p>");
+        c.save_sender_check(1, "INBOX", 1, &check(SenderTrust::Suspicious));
+        c.save_body(1, "INBOX", 2, "<p>fine</p>");
+        c.save_sender_check(1, "INBOX", 2, &check(SenderTrust::Pass));
+
+        Cache::recheck_suspicious_senders(&c.conn);
+
+        assert!(c.load_body(1, "INBOX", 1).is_none());
+        assert!(c.load_sender_check(1, "INBOX", 1).is_none());
+        assert!(c.load_body(1, "INBOX", 2).is_some());
+        assert_eq!(c.load_sender_check(1, "INBOX", 2).map(|k| k.trust), Some(SenderTrust::Pass));
     }
 
     #[test]
