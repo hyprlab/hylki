@@ -41,3 +41,11 @@
   - Replaced legacy multi-query loop in `load_messages` with single folded statement `load_messages_page`.
   - Empirical Benchmark: Folded page query achieved **23.8x speedup** (5.21ms vs 124.04ms over 100 runs with 2,000 messages).
   - All unit tests passed (`the_paperclip_only_clears_when_checked_and_empty`, `page_is_newest_uid_first`, `thread_key_prefers_the_root_reference`).
+
+- **Compiler Resolution & Multi-Package Integration (`src/main.rs`, `src/runtime.rs`, `src/lanes.rs`)**:
+  - Registered all Phase 2 performance modules (`cache_opt`, `scheduler`, `bounded_cache`, `connection_pool`, `lanes`, `list_model`, `prefetch`, `render_pipeline`, `runtime`) in `src/main.rs`.
+  - Added `use graph::run_graph;` to `src/worker.rs` restoring Graph worker protocol dispatch.
+  - Reverted `from_timestamp_opt` to `chrono::DateTime::from_timestamp` matching Chrono 0.4 API conventions.
+  - Resolved `SmartField` pattern match bindings by bringing `Body` and `Tagged` variants into scope in `src/ui/accounts.rs`.
+  - Added `src/runtime.rs` providing global multi-thread Tokio runtime with `OnceLock`.
+  - Added `src/lanes.rs` lane type re-exports.

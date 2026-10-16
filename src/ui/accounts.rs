@@ -5836,7 +5836,7 @@ impl AccountsWindow {
     }
 
     fn smart_field_label(f: crate::config::SmartField) -> String {
-        use crate::config::SmartField::{Attachment, NotStarred, Read, Starred, Unread};
+        use crate::config::SmartField::{Attachment, Body, NotStarred, Read, Starred, Tagged, Unread};
         match f {
             Starred => i18n("Starred"),
             NotStarred => i18n("Not starred"),

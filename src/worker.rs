@@ -32,6 +32,7 @@ use crate::i18n::{i18n, i18n_f, ni18n_f};
 mod graph;
 mod imap_io;
 mod jmap;
+use graph::run_graph;
 use imap_io::ImapIo;
 mod strip;
 

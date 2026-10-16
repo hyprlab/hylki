@@ -179,7 +179,7 @@ pub fn to_eml(bytes: &[u8]) -> Result<Vec<u8>, String> {
     let date = [CLIENT_SUBMIT_TIME, DELIVERY_TIME, LAST_MODIFICATION_TIME, CREATION_TIME]
         .iter()
         .find_map(|id| props.get(id).copied().filter(|t| *t > 0))
-        .and_then(|t| chrono::DateTime::from_timestamp_opt(unix_time(t), 0))
+        .and_then(|t| chrono::DateTime::from_timestamp(unix_time(t), 0))
         .map(|d| format!("Date: {}\r\n", d.to_rfc2822()));
     let mut headers = String::new();
     let transport = string(&mut file, root, TRANSPORT_HEADERS).filter(|h| h.to_ascii_lowercase().contains("from:"));
