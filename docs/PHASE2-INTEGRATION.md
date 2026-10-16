@@ -88,3 +88,57 @@ When applying this patch into `worker.rs`, safely delete:
 
 - `render_pipeline::WarmViews` and `record_first_paint` provide telemetry hooks to be wired directly into `WebView::connect_load_changed`.
 - CONDSTORE and Microsoft Graph batch endpoints should leverage `BudgetKind::Network` semaphores.
+
+---
+
+## 6. GTK Main-Thread Ownership & Dispatching
+Worker threads (Tokio async tasks and CPU decoding workers) must never touch GTK widgets, `gio::ListStore`, or `gtk::SelectionModel`.
+All background results must be marshaled as pure-Rust payload structs (`RowPayloadBatch`, `WarmViews`) and dispatched to the GTK main context:
+```rust
+// In Tokio worker task:
+let batch = RowPayloadBatch {
+    generation,
+    folder_id,
+    position,
+    n_removals,
+    rows: build_rows_off_thread(&messages),
+};
+
+// Dispatch to GTK main thread:
+glib::MainContext::default().spawn_local(async move {
+    if scheduler.is_current_generation(batch.generation) {
+        apply_row_payload_batch(batch);
+    }
+});
+```
+
+---
+
+## 7. Folder-Generation IDs & Stale Result Filtering
+Whenever the active folder changes:
+1. Atomically bump generation: `let gen = scheduler.bump_generation();`
+2. Attach `{account_id, folder_id, generation: gen, uid, kind}` to outgoing `RequestIdentity` tokens.
+3. Automatically cancels all pending tasks from older generations and rejects stale results returning from in-flight transfers.
+
+---
+
+## 8. List-Model Notification Consistency & UI Storm Prevention
+To avoid GTK list-view assertion panics and event storms during bulk sync:
+1. **Accurate Splice Boundaries**:
+   Use `SpliceSpec::new(pos, n_removals, n_additions)` with `gio::ListStore::splice()` to ensure notification indices and counts strictly equal underlying model changes.
+2. **Batching**:
+   Use `RowUpdateBatcher` to buffer rows into chunks of 50 items or a 32ms deadline.
+3. **Selection Bypass**:
+   Selected message open requests call `RowUpdateBatcher::bypass_immediate(row, gen)` to jump ahead of bulk folder loading.
+4. **Row Recycling**:
+   Disconnect old signal handlers with `SignalBindingRegistry::clear()` when GTK factory rebinds a recycled row widget.
+
+---
+
+## 9. IMAP IDLE Timeout Recovery & Concurrency Tuning
+1. **Unanswered DONE Timeout**:
+   If an IMAP `DONE` token receives no response within 15 seconds (`IdleRecoveryManager::IDLE_DONE_TIMEOUT`), mark slot as timed out, disconnect socket, and reclaim the lane.
+2. **Bounded Exponential Backoff**:
+   On connection drop, reconnect using `IdleRecoveryManager::next_backoff()` (`min: 1s, max: 60s, + jitter`).
+3. **Concurrency Bounds**:
+   Network operations are bounded by `BudgetKind::Network` (4 permits) and CPU decoding by `BudgetKind::Decode` (4 permits) and `BudgetKind::Render` (2 permits).

@@ -1,7 +1,7 @@
 /**
  * @file prefetch.rs
  * @author Damien O'Brien (Narcarsiss) - https://github.com/narcarsiss/hylki
- * @brief Viewport-aware intent planner and power-aware background backfill limiter.
+ * @brief Viewport-aware intent planner, scrolling coalescer, and power-aware background backfill limiter.
  */
 
 use std::collections::HashSet;
@@ -9,7 +9,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ViewportWindow {
     pub first_visible_row: u32,
     pub last_visible_row: u32,
@@ -18,14 +18,60 @@ pub struct ViewportWindow {
 
 #[derive(Debug, Clone)]
 pub struct PrefetchPlan {
+    pub generation: u64,
     pub urgent_uids: Vec<u32>,
     pub speculative_uids: Vec<u32>,
+}
+
+/// Coalesces rapid scroll updates to prevent UI churn and excessive prefetching
+pub struct ViewportCoalescer {
+    last_window: Option<ViewportWindow>,
+    last_update: Instant,
+    debounce_duration: Duration,
+    min_row_delta: u32,
+}
+
+impl ViewportCoalescer {
+    pub fn new() -> Self {
+        Self {
+            last_window: None,
+            last_update: Instant::now(),
+            debounce_duration: Duration::from_millis(50),
+            min_row_delta: 3,
+        }
+    }
+
+    pub fn should_update(&mut self, current: ViewportWindow) -> bool {
+        let now = Instant::now();
+        if let Some(prev) = self.last_window {
+            let row_delta = (current.first_visible_row as i32 - prev.first_visible_row as i32).unsigned_abs();
+            if row_delta < self.min_row_delta && now.duration_since(self.last_update) < self.debounce_duration {
+                return false;
+            }
+        }
+        self.last_window = Some(current);
+        self.last_update = now;
+        true
+    }
+
+    pub fn reset(&mut self) {
+        self.last_window = None;
+        self.last_update = Instant::now();
+    }
+}
+
+impl Default for ViewportCoalescer {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 pub struct IntentPlanner {
     hovered_row: Option<(u32, Instant)>,
     hover_threshold: Duration,
     low_power_mode: Arc<AtomicBool>,
+    coalescer: ViewportCoalescer,
+    current_generation: u64,
 }
 
 impl IntentPlanner {
@@ -34,7 +80,15 @@ impl IntentPlanner {
             hovered_row: None,
             hover_threshold: Duration::from_millis(300),
             low_power_mode: Arc::new(AtomicBool::new(false)),
+            coalescer: ViewportCoalescer::new(),
+            current_generation: 1,
         }
+    }
+
+    pub fn set_generation(&mut self, gen: u64) {
+        self.current_generation = gen;
+        self.hovered_row = None;
+        self.coalescer.reset();
     }
 
     pub fn set_low_power(&self, low: bool) {
@@ -54,11 +108,15 @@ impl IntentPlanner {
     }
 
     pub fn plan_viewport(
-        &self,
+        &mut self,
         viewport: ViewportWindow,
         visible_uids: &[u32],
         cached_uids: &HashSet<u32>,
-    ) -> PrefetchPlan {
+    ) -> Option<PrefetchPlan> {
+        if !self.coalescer.should_update(viewport) {
+            return None;
+        }
+
         let mut urgent = Vec::new();
         let mut speculative = Vec::new();
 
@@ -101,10 +159,11 @@ impl IntentPlanner {
             }
         }
 
-        PrefetchPlan {
+        Some(PrefetchPlan {
+            generation: self.current_generation,
             urgent_uids: urgent,
             speculative_uids: speculative,
-        }
+        })
     }
 }
 
