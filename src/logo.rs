@@ -404,9 +404,123 @@ fn bimi_logo(email: &str) -> Bimi {
     if unreachable { Bimi::Unreachable } else { Bimi::None }
 }
 
-/// The logo URL in `default._bimi.<name>`'s TXT record: `Ok(None)` when
-/// the name has no such record, `Err` when the resolver could not say.
+#[derive(Clone, Debug)]
+enum BimiCacheEntry {
+    Found(String),
+    NotFound,
+    Error,
+}
+
+struct BimiDnsCache {
+    entries: std::collections::HashMap<String, (BimiCacheEntry, std::time::Instant)>,
+    in_flight: std::collections::HashMap<
+        String,
+        std::sync::Arc<(std::sync::Mutex<Option<Result<Option<String>, ()>>>, std::sync::Condvar)>,
+    >,
+}
+
+impl BimiDnsCache {
+    const POSITIVE_TTL: std::time::Duration = std::time::Duration::from_secs(86400); // 24 hours
+    const NEGATIVE_TTL: std::time::Duration = std::time::Duration::from_secs(3600);  // 1 hour
+    const ERROR_TTL: std::time::Duration = std::time::Duration::from_secs(300);      // 5 minutes
+    const MAX_ENTRIES: usize = 500;
+
+    fn get(&mut self, name: &str) -> Option<Result<Option<String>, ()>> {
+        if let Some((entry, created)) = self.entries.get(name) {
+            let ttl = match entry {
+                BimiCacheEntry::Found(_) => Self::POSITIVE_TTL,
+                BimiCacheEntry::NotFound => Self::NEGATIVE_TTL,
+                BimiCacheEntry::Error => Self::ERROR_TTL,
+            };
+            if created.elapsed() < ttl {
+                return match entry {
+                    BimiCacheEntry::Found(url) => Some(Ok(Some(url.clone()))),
+                    BimiCacheEntry::NotFound => Some(Ok(None)),
+                    BimiCacheEntry::Error => Some(Err(())),
+                };
+            }
+        }
+        self.entries.remove(name);
+        None
+    }
+
+    fn insert(&mut self, name: String, res: Result<Option<String>, ()>) {
+        if self.entries.len() >= Self::MAX_ENTRIES {
+            let mut keys: Vec<(String, std::time::Instant)> =
+                self.entries.iter().map(|(k, v)| (k.clone(), v.1)).collect();
+            keys.sort_by_key(|k| k.1);
+            for (k, _) in keys.into_iter().take(Self::MAX_ENTRIES / 5) {
+                self.entries.remove(&k);
+            }
+        }
+        let entry = match res {
+            Ok(Some(url)) => BimiCacheEntry::Found(url),
+            Ok(None) => BimiCacheEntry::NotFound,
+            Err(()) => BimiCacheEntry::Error,
+        };
+        self.entries.insert(name, (entry, std::time::Instant::now()));
+    }
+}
+
+static BIMI_CACHE: std::sync::OnceLock<std::sync::Mutex<BimiDnsCache>> = std::sync::OnceLock::new();
+
+fn bimi_cache() -> &'static std::sync::Mutex<BimiDnsCache> {
+    BIMI_CACHE.get_or_init(|| {
+        std::sync::Mutex::new(BimiDnsCache {
+            entries: std::collections::HashMap::with_capacity(256),
+            in_flight: std::collections::HashMap::new(),
+        })
+    })
+}
+
+/// The logo URL in `default._bimi.<name>`'s TXT record with single-flight
+/// coalescing and bounded TTL in-memory caching.
 fn bimi_record_url(name: &str) -> Result<Option<String>, ()> {
+    // 1. Fast path: check in-memory bounded cache
+    {
+        let mut cache = bimi_cache().lock().unwrap();
+        if let Some(res) = cache.get(name) {
+            return res;
+        }
+
+        // 2. Check single-flight in-flight queries
+        if let Some(flight) = cache.in_flight.get(name) {
+            let flight = flight.clone();
+            drop(cache);
+            let (lock, cvar) = &*flight;
+            let mut guard = lock.lock().unwrap();
+            while guard.is_none() {
+                guard = cvar.wait(guard).unwrap();
+            }
+            return guard.as_ref().unwrap().clone();
+        }
+
+        // 3. Register ourselves as single flight leader
+        let flight = std::sync::Arc::new((std::sync::Mutex::new(None), std::sync::Condvar::new()));
+        cache.in_flight.insert(name.to_string(), flight);
+    }
+
+    // 4. Perform direct DNS lookup
+    let result = bimi_lookup_direct(name);
+
+    // 5. Store in cache, notify waiters, and clear in-flight
+    {
+        let mut cache = bimi_cache().lock().unwrap();
+        let flight = cache.in_flight.remove(name);
+        cache.insert(name.to_string(), result.clone());
+
+        if let Some(flight) = flight {
+            let (lock, cvar) = &*flight;
+            let mut guard = lock.lock().unwrap();
+            *guard = Some(result.clone());
+            cvar.notify_all();
+        }
+    }
+
+    result
+}
+
+fn bimi_lookup_direct(name: &str) -> Result<Option<String>, ()> {
     use gtk::gio::prelude::*;
     let resolver = gtk::gio::Resolver::default();
     let records = match resolver.lookup_records(
@@ -425,7 +539,6 @@ fn bimi_record_url(name: &str) -> Result<Option<String>, ()> {
         }
     };
     for record in records {
-        // A TXT record is `(as)`: the strings of one record, to be joined.
         let text: String = record
             .child_value(0)
             .iter()

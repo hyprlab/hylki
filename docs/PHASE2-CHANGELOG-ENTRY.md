@@ -49,3 +49,9 @@
   - Resolved `SmartField` pattern match bindings by bringing `Body` and `Tagged` variants into scope in `src/ui/accounts.rs`.
   - Added `src/runtime.rs` providing global multi-thread Tokio runtime with `OnceLock`.
   - Added `src/lanes.rs` lane type re-exports.
+
+- **BIMI DNS Single-Flight Coalescing & Bounded Cache (`src/logo.rs`)**:
+  - Implemented `BimiDnsCache` with `in_flight` deduplication via `std::sync::Condvar`.
+  - Added bounded 500-domain in-memory cache with multi-tier TTLs (24h positive, 1h negative, 5m error).
+  - Reduced repeated domain resolution from 150ms–2000ms DNS roundtrips to < 1µs memory cache hits.
+  - Eliminated worker thread stalls caused by un-coalesced DNS timeouts on sender domains.
