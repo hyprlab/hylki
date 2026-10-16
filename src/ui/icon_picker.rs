@@ -37,8 +37,11 @@ pub fn strip(selected: &str, tile: i32, on_pick: Rc<dyn Fn(&str)>) -> gtk::Overl
     if let Some(child) = row.selected_children().into_iter().next() {
         let sw2 = sw.clone();
         gtk::glib::idle_add_local_once(move || {
-            let x = child.allocation().x() as f64;
-            let w = child.allocation().width() as f64;
+            #[allow(deprecated)]
+            let (x, w) = {
+                let alloc = child.allocation();
+                (alloc.x() as f64, alloc.width() as f64)
+            };
             let page = sw2.hadjustment().page_size();
             sw2.hadjustment().set_value((x + w / 2.0 - page / 2.0).max(0.0));
         });

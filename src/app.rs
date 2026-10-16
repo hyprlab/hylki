@@ -24783,6 +24783,7 @@ fn save_attachment(att: Attachment, parent: Option<adw::ApplicationWindow>) {
     });
 }
 
+#[allow(dead_code)]
 fn save_all_attachments(atts: Vec<Attachment>, parent: Option<adw::ApplicationWindow>) {
     let dialog = gtk::FileDialog::new();
     dialog.set_title(&i18n("Save All Attachments"));

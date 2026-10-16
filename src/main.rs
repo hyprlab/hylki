@@ -1,5 +1,7 @@
 //! Hylki — a clean, fast, GNOME-native email client built with Rust + relm4.
 
+#![allow(deprecated)]
+
 mod app;
 mod app_icon;
 mod background;
