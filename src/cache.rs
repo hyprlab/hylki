@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS account_owner (
 /// Every table whose rows belong to one account, by `account_id`. An account's
 /// id is its place in the account list, so `Cache::claim_accounts` moves
 /// these rows when the places change.
-const ACCOUNT_TABLES: [&str; 11] = [
+const ACCOUNT_TABLES: [&str; 12] = [
     "folders",
     "refs_repair",
     "messages",
@@ -172,6 +172,7 @@ const ACCOUNT_TABLES: [&str; 11] = [
     "attachments_checked",
     "attachment_meta",
     "attachment_scan",
+    "thread_members",
 ];
 
 /// Bump when the table layout changes; older rows are dropped on open.
@@ -617,6 +618,7 @@ impl Cache {
             }
         }
         conn.execute_batch(SCHEMA)?;
+        crate::cache_opt::ensure_thread_members(&conn)?;
         // `messages` predates the preview column, and `CREATE TABLE IF NOT
         // EXISTS` leaves an existing table alone. Add it in place rather than
         // dropping the index, which would cost every user a full re-sync; the

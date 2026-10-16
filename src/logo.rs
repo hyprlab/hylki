@@ -52,6 +52,7 @@ const LOGO_PX: u32 = 160;
 /// A BIMI logo is a small SVG (the spec asks for 32KB); anything bigger
 /// is not one.
 const BIMI_MAX_BYTES: u64 = 64 * 1024;
+const MAX_LOGO_CACHE_ENTRIES: usize = 200;
 
 thread_local! {
     static CACHE: RefCell<HashMap<String, gtk::gdk::Texture>> = RefCell::new(HashMap::new());
@@ -220,7 +221,14 @@ pub fn cached(email: &str) -> Option<gtk::gdk::Texture> {
         .or_else(|| img_path(&domain).and_then(|p| std::fs::read(p).ok()))?;
     let tex = decode(&bytes)?;
     CACHE.with(|c| {
-        c.borrow_mut().insert(domain, tex.clone());
+        let mut cache = c.borrow_mut();
+        if cache.len() >= MAX_LOGO_CACHE_ENTRIES {
+            let to_remove: Vec<String> = cache.keys().take(MAX_LOGO_CACHE_ENTRIES / 5).cloned().collect();
+            for k in to_remove {
+                cache.remove(&k);
+            }
+        }
+        cache.insert(domain, tex.clone());
     });
     Some(tex)
 }
@@ -1019,7 +1027,14 @@ pub fn decode_and_cache(email: &str, bytes: &[u8]) -> Option<gtk::gdk::Texture> 
     match tex {
         Some(tex) => {
             CACHE.with(|c| {
-                c.borrow_mut().insert(domain, tex.clone());
+                let mut cache = c.borrow_mut();
+                if cache.len() >= MAX_LOGO_CACHE_ENTRIES {
+                    let to_remove: Vec<String> = cache.keys().take(MAX_LOGO_CACHE_ENTRIES / 5).cloned().collect();
+                    for k in to_remove {
+                        cache.remove(&k);
+                    }
+                }
+                cache.insert(domain, tex.clone());
             });
             Some(tex)
         }

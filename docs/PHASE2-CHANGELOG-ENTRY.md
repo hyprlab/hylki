@@ -55,3 +55,9 @@
   - Added bounded 500-domain in-memory cache with multi-tier TTLs (24h positive, 1h negative, 5m error).
   - Reduced repeated domain resolution from 150ms–2000ms DNS roundtrips to < 1µs memory cache hits.
   - Eliminated worker thread stalls caused by un-coalesced DNS timeouts on sender domains.
+
+- **Indexed Conversation Table & Memory Bound Enforcement (`src/cache.rs`, `src/avatar.rs`, `src/logo.rs`)**:
+  - Injected `ensure_thread_members(&conn)?` in `Cache::open()` and registered `"thread_members"` in `ACCOUNT_TABLES`.
+  - Enforced bounded in-memory caching on `GRAVATAR_CACHE` and `CONTACT_CACHE` (max 300 entries) in `src/avatar.rs`.
+  - Enforced bounded in-memory caching on sender logo texture `CACHE` (max 200 entries) in `src/logo.rs`.
+  - Eliminated long-session memory leaks, capping texture and metadata caches to small fixed budgets.

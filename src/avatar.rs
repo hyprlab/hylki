@@ -67,6 +67,17 @@ thread_local! {
         RefCell::new(HashMap::new());
 }
 
+
+const MAX_AVATAR_CACHE_ENTRIES: usize = 300;
+
+fn bound_map<K: Eq + std::hash::Hash + Clone, V>(map: &mut HashMap<K, V>, max: usize) {
+    if map.len() >= max {
+        let to_remove: Vec<K> = map.keys().take(max / 5).cloned().collect();
+        for k in to_remove {
+            map.remove(&k);
+        }
+    }
+}
 fn key(email: &str) -> String {
     email.trim().to_lowercase()
 }
@@ -388,7 +399,9 @@ pub fn cache_result(
             match fetched.source {
                 AvatarSource::Contact if generation_current => {
                     CONTACT_CACHE.with(|cache| {
-                        cache.borrow_mut().insert(
+                        let mut c = cache.borrow_mut();
+                        bound_map(&mut c, MAX_AVATAR_CACHE_ENTRIES);
+                        c.insert(
                             key,
                             ContactCache {
                                 generation,
@@ -399,7 +412,9 @@ pub fn cache_result(
                 }
                 AvatarSource::Gravatar => {
                     GRAVATAR_CACHE.with(|cache| {
-                        cache.borrow_mut().insert(key.clone(), texture);
+                        let mut c = cache.borrow_mut();
+                        bound_map(&mut c, MAX_AVATAR_CACHE_ENTRIES);
+                        c.insert(key.clone(), texture);
                     });
                     if mode == FetchMode::ContactThenGravatar && generation_current {
                         cache_missing_contact(&key, generation);
@@ -414,7 +429,9 @@ pub fn cache_result(
             }
             if mode != FetchMode::ContactOnly {
                 GRAVATAR_CACHE.with(|cache| {
-                    cache.borrow_mut().insert(key, None);
+                    let mut c = cache.borrow_mut();
+                    bound_map(&mut c, MAX_AVATAR_CACHE_ENTRIES);
+                    c.insert(key, None);
                 });
             }
         }
@@ -429,7 +446,9 @@ pub fn cache_result(
 
 fn cache_missing_contact(email: &str, generation: u64) {
     CONTACT_CACHE.with(|cache| {
-        cache.borrow_mut().insert(
+        let mut c = cache.borrow_mut();
+        bound_map(&mut c, MAX_AVATAR_CACHE_ENTRIES);
+        c.insert(
             email.to_string(),
             ContactCache {
                 generation,
