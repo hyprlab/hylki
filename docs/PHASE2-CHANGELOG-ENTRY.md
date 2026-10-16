@@ -28,3 +28,8 @@
 
 - **Stage Latency Telemetry (`tools/span_report.py`)**:
   - Tool to parse stage spans and output p50, p95, p99, and max latency benchmarks.
+
+- **Compiler & Binary Size Optimization (`Cargo.toml`)**:
+  - Upgraded release profile with Fat LTO (`lto = "fat"`) and `panic = "abort"` to strip unused landing pads and unwinding tables.
+  - Eliminated glob wildcard imports in `src/worker.rs`, `src/ui/accounts.rs`, and `src/ui/preferences.rs` to accelerate symbol resolution.
+  - Remediated deprecations in Chrono timestamp methods across `src/outlook_msg.rs` and `src/ui/pgp_keys.rs`.

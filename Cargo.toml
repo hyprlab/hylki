@@ -109,6 +109,8 @@ tokio = { version = "1", features = ["test-util"] }
 opt-level = 1
 
 [profile.release]
-lto = "thin"
+opt-level = 3
+lto = "fat"
 codegen-units = 1
+panic = "abort"
 strip = true

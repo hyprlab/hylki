@@ -600,7 +600,7 @@ fn key_row(key: &KeyInfo, own: bool, sender: &ComponentSender<PgpKeys>) -> adw::
     row.set_title(&gtk::glib::markup_escape_text(key.primary_uid()));
     let mut parts = vec![pgp::key_display(&key.key_id)];
     if let Some(exp) = key.expires {
-        let date = chrono::DateTime::from_timestamp(exp, 0)
+        let date = chrono::DateTime::from_timestamp_opt(exp, 0)
             .map(|d| d.format("%Y-%m-%d").to_string())
             .unwrap_or_default();
         parts.push(if exp > crate::datefmt::now() {

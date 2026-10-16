@@ -5795,7 +5795,7 @@ fn collect_named(root: &gtk::Widget, name: &str, out: &mut Vec<gtk::Widget>) {
 
 /// The placement combos' rows, in the order [`SectionPlacement`] lists them.
 fn placement_index(p: crate::config::SectionPlacement) -> u32 {
-    use crate::config::SectionPlacement::*;
+    use crate::config::SectionPlacement::{AboveAccounts, AllInboxes, BelowAccounts};
     match p {
         AllInboxes => 0,
         AboveAccounts => 1,
@@ -5804,7 +5804,7 @@ fn placement_index(p: crate::config::SectionPlacement) -> u32 {
 }
 
 fn placement_from_index(idx: u32) -> crate::config::SectionPlacement {
-    use crate::config::SectionPlacement::*;
+    use crate::config::SectionPlacement::{AboveAccounts, AllInboxes, BelowAccounts};
     match idx {
         1 => AboveAccounts,
         2 => BelowAccounts,

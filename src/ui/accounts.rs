@@ -5555,7 +5555,7 @@ mod tests {
 impl AccountsWindow {
     /// Human labels for the filter enums, shared by rows and the dialog.
     fn field_label(f: crate::config::FilterField) -> String {
-        use crate::config::FilterField::*;
+        use crate::config::FilterField::{Body, FromAddress, FromInContacts, FromName, FromNotInContacts, Recipients, ReplyTo, Subject};
         // One i18n() call per label: the string extractor only sees literals
         // written directly inside the call.
         match f {
@@ -5570,7 +5570,7 @@ impl AccountsWindow {
         }
     }
     fn match_label(m: crate::config::FilterMatch) -> String {
-        use crate::config::FilterMatch::*;
+        use crate::config::FilterMatch::{Contains, EndsWith, Equals, StartsWith};
         match m {
             Contains => i18n("contains"),
             Equals => i18n("is exactly"),
@@ -5824,7 +5824,7 @@ impl AccountsWindow {
     }
 
     fn smart_kind_label(k: crate::config::SmartFolderKind) -> String {
-        use crate::config::SmartFolderKind::*;
+        use crate::config::SmartFolderKind::{Archive, Drafts, Inbox, Junk, Sent, Trash};
         match k {
             Inbox => i18n("Inbox"),
             Sent => i18n("Sent"),
@@ -5836,7 +5836,7 @@ impl AccountsWindow {
     }
 
     fn smart_field_label(f: crate::config::SmartField) -> String {
-        use crate::config::SmartField::*;
+        use crate::config::SmartField::{Attachment, NotStarred, Read, Starred, Unread};
         match f {
             Starred => i18n("Starred"),
             NotStarred => i18n("Not starred"),
