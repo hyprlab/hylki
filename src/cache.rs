@@ -232,7 +232,7 @@ const KEYWORDS_COL: &str = "messages.keywords || ' ' || COALESCE((SELECT group_c
     AND messages.message_id <> '' AND lt.message_id = messages.message_id), '')";
 
 /// Split a keywords column back into the list a [`Message`] carries.
-fn split_keywords(col: String) -> Vec<String> {
+pub(crate) fn split_keywords(col: String) -> Vec<String> {
     let mut out: Vec<String> = Vec::new();
     for k in col.split_whitespace() {
         if !out.iter().any(|o| o.eq_ignore_ascii_case(k)) {
@@ -244,13 +244,13 @@ fn split_keywords(col: String) -> Vec<String> {
 
 /// Gmail labels as one column. A label can hold a space, so they are kept
 /// apart by the unit separator, which no mailbox name contains.
-const LABEL_SEP: char = '\u{1f}';
+pub(crate) const LABEL_SEP: char = '\u{1f}';
 
 fn join_labels(labels: &[String]) -> String {
     labels.join(&LABEL_SEP.to_string())
 }
 
-fn split_labels(col: String) -> Vec<String> {
+pub(crate) fn split_labels(col: String) -> Vec<String> {
     col.split(LABEL_SEP).filter(|l| !l.is_empty()).map(str::to_string).collect()
 }
 
@@ -558,6 +558,7 @@ impl Cache {
         ))?;
         let conn = Connection::open_with_flags(path, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)?;
         conn.busy_timeout(Duration::from_secs(5))?;
+        crate::cache_opt::tune_read(&conn)?;
         Ok(Cache { conn })
     }
 
@@ -577,6 +578,7 @@ impl Cache {
         restrict(&path, 0o700);
         let db = path.join("cache.db");
         let conn = Connection::open(&db)?;
+        crate::cache_opt::configure_sqlite_engine(&conn)?;
         // The whole mailbox lives here, so it gets at least the care
         // `accounts.toml` gets.
         restrict(&db, 0o600);
@@ -940,62 +942,16 @@ impl Cache {
     }
 
     pub fn load_messages(&self, account_id: u32, folder_path: &str, folder_id: u32) -> Vec<Message> {
-        let run = || -> rusqlite::Result<Vec<Message>> {
-            let mut stmt = self.conn.prepare(&format!(
-                "SELECT uid, from_name, from_addr, subject, date, ts, unread, starred, has_attachment, recipients, cc, message_id, references_, preview, reply_to, {KEYWORDS_COL}, importance, due, gmail_labels
-                 FROM messages WHERE account_id = ?1 AND folder_path = ?2 ORDER BY uid DESC",
-            ))?;
-            let rows = stmt.query_map(params![account_id, folder_path], |row| {
-                let uid: u32 = row.get(0)?;
-                let mut m = Message {
-                    id: uid,
-                    account_id,
-                    folder_id,
-                    uid,
-                    from_name: row.get(1)?,
-                    from_addr: row.get(2)?,
-                    reply_to: row.get(14)?,
-                    to: row.get(9)?,
-                    cc: row.get(10)?,
-                    subject: row.get(3)?,
-                    preview: row.get(13)?,
-                    body: String::new(),
-                    date: row.get(4)?,
-                    timestamp: row.get(5)?,
-                    unread: row.get(6)?,
-                    starred: row.get(7)?,
-                    keywords: split_keywords(row.get(15)?),
-                    has_attachment: row.get(8)?,
-                    message_id: row.get(11)?,
-                    references: row.get(12)?,
-                    importance: crate::models::Importance::from_i64(row.get(16)?),
-                    due: row.get(17)?,
-                    labels: split_labels(row.get(18)?),
-                };
-                // Rows written before NUL-scrubbing existed may still carry
-                // one; GTK labels abort on interior NULs.
-                m.scrub_nuls();
-                Ok(m)
-            })?;
-            rows.collect()
-        };
-        let mut messages = run().unwrap_or_else(|e| {
-            tracing::warn!("cache load_messages failed: {e}");
-            Vec::new()
-        });
-        // Correct false "has attachment" flags: a message we've already fetched
-        // and found to hold no real attachments (e.g. iCloud marketing mail that
-        // is multipart/mixed but only wraps inline `cid:` images) should not show
-        // the paperclip, even though its summary flag said otherwise.
-        let attachmentless = self.attachmentless_uids(account_id, folder_path);
-        if !attachmentless.is_empty() {
-            for m in messages.iter_mut() {
-                if m.has_attachment && attachmentless.contains(&m.uid) {
-                    m.has_attachment = false;
-                }
+        match crate::cache_opt::load_messages_page(&self.conn, account_id, folder_path, usize::MAX, 0) {
+            Ok(rows) => rows
+                .into_iter()
+                .map(|r| crate::cache_opt::page_row_into_message(r, account_id, folder_id))
+                .collect(),
+            Err(e) => {
+                tracing::warn!("cache load_messages failed: {e}");
+                Vec::new()
             }
         }
-        messages
     }
 
     /// UIDs whose attachments have been fetched (`attachments_checked`) but which
