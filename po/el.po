@@ -4,17 +4,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: hylki\n"
+"Project-Id-Version:  hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
-"PO-Revision-Date: 2026-09-25 15:00+0300\n"
+"POT-Creation-Date: 2026-10-21 16:25+0000\n"
+"PO-Revision-Date: 2026-10-21 19:31+0300\n"
 "Last-Translator: yiannis ioannides <git@yioannides.com>\n"
-"Language-Team: Greek\n"
 "Language: el\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: Greek\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Generated-By: Babel 2.18.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Gtranslator 51.0\n"
 
 msgid "Date (Newest first)"
 msgstr "Ημερομηνία (νεότερα πρώτα)"
@@ -38,16 +39,17 @@ msgid "Sort by"
 msgstr "Ταξινόμηση κατά"
 
 msgid "Show only"
-msgstr ""
+msgstr "Εμφάνιση μόνο"
 
 msgid "Clear Filters"
-msgstr ""
+msgstr "Εκκαθάριση φίλτρων"
 
 msgid "Sort and filter messages"
-msgstr ""
+msgstr "Ταξινόμηση και φιλτράρισμα μηνυμάτων"
 
+#, python-brace-format
 msgid "Filtered: {names}"
-msgstr ""
+msgstr "Φιλτραρισμένα: {names}"
 
 msgid "Refresh or long-press for Status Bar"
 msgstr "Ανανέωση ή παρατεταμένο πάτημα για τη γραμμή κατάστασης"
@@ -160,15 +162,19 @@ msgstr "Δημιουργία φακέλου"
 msgid "Added to Contacts"
 msgstr "Προστέθηκε στις επαφές"
 
+#, python-brace-format
 msgid "Added email to {name}"
 msgstr "Το email προστέθηκε στην επαφή {name}"
 
+#, python-brace-format
 msgid "Already in Contacts ({name})"
 msgstr "Υπάρχει ήδη στις επαφές ({name})"
 
+#, python-brace-format
 msgid "Could not add contact: {e}"
 msgstr "Αδυναμία προσθήκης επαφής: {e}"
 
+#, python-brace-format
 msgid "Unsubscribed from {name}."
 msgstr "Καταργήθηκε η εγγραφή από τη λίστα {name}."
 
@@ -179,17 +185,20 @@ msgstr ""
 msgid "Export Contacts"
 msgstr "Εξαγωγή επαφών"
 
+#, python-brace-format
 msgid "{n} contact exported to {path}"
 msgid_plural "{n} contacts exported to {path}"
 msgstr[0] "Εξήχθη {n} επαφή στο {path}"
 msgstr[1] "Εξήχθησαν {n} επαφές στο {path}"
 
+#, python-brace-format
 msgid "Could not export contacts: {e}"
 msgstr "Δεν ήταν δυνατή η εξαγωγή επαφών: {e}"
 
 msgid "Delete All Contacts?"
 msgstr "Διαγραφή όλων των επαφών;"
 
+#, python-brace-format
 msgid ""
 "The {n} contact in the Hylki address book is deleted. This cannot be undone; "
 "export the book first to keep a copy."
@@ -230,6 +239,7 @@ msgstr "Ανοίξτε πρώτα ένα μήνυμα και έπειτα εκτ
 msgid "Customize Toolbar…"
 msgstr "Προσαρμογή γραμμής εργαλείων…"
 
+#, python-brace-format
 msgid "No message with the ID {id} was found"
 msgstr "Δεν βρέθηκε μήνυμα με αναγνωριστικό {id}"
 
@@ -239,6 +249,7 @@ msgstr "Δεν υπάρχει φάκελος Προχείρων για αυτό�
 msgid "No Templates folder available for this account"
 msgstr "Δεν υπάρχει διαθέσιμος φάκελος Προτύπων για αυτόν τον λογαριασμό"
 
+#, python-brace-format
 msgid "Could not save account: {e}"
 msgstr "Αδυναμία αποθήκευσης λογαριασμού: {e}"
 
@@ -249,15 +260,18 @@ msgstr ""
 msgid "Export Settings"
 msgstr "Εξαγωγή ρυθμίσεων"
 
+#, python-brace-format
 msgid "Settings exported to {display}"
 msgstr "Οι ρυθμίσεις εξήχθησαν στο {display}"
 
+#, python-brace-format
 msgid "Export failed: {e}"
 msgstr "Η εξαγωγή απέτυχε: {e}"
 
 msgid "Export Log"
 msgstr "Εξαγωγή αρχείου καταγραφής"
 
+#, python-brace-format
 msgid "Log exported to {display}"
 msgstr "Το αρχείο καταγραφής εξήχθη στο {display}"
 
@@ -267,6 +281,7 @@ msgstr "Εισαγωγή ρυθμίσεων"
 msgid "Settings Imported"
 msgstr "Οι ρυθμίσεις εισήχθησαν"
 
+#, python-brace-format
 msgid ""
 "{n} mail account(s), the cloud storage accounts and all preferences were "
 "imported. Restart Hylki to apply them. Passwords and sign-ins are not part "
@@ -284,46 +299,53 @@ msgstr "Αργότερα"
 msgid "Restart Hylki"
 msgstr "Επανεκκίνηση Hylki"
 
+#, python-brace-format
 msgid "Import failed: {e}"
 msgstr "Η εισαγωγή απέτυχε: {e}"
 
+#, python-brace-format
 msgid "Could not import account: {e}"
 msgstr "Αδυναμία εισαγωγής λογαριασμού: {e}"
 
+#, python-brace-format
 msgid "Could not save the message: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του μηνύματος: {e}"
 
 msgid "No address book available"
 msgstr "Δεν υπάρχει διαθέσιμο βιβλίο διευθύνσεων"
 
-#, fuzzy
+#, python-brace-format
 msgid "Could not rename the address book: {e}"
-msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: {e}"
+msgstr "Δεν ήταν δυνατή η μετονομασία του καταλόγου διευθύνσεων: {e}"
 
-#, fuzzy
+#, python-brace-format
 msgid "{n} contact was not copied: {e}"
 msgid_plural "{n} contacts were not copied: {e}"
-msgstr[0] "Εξήχθη {n} επαφή στο {path}"
-msgstr[1] "Εξήχθησαν {n} επαφές στο {path}"
+msgstr[0] "{n} επαφή δεν αντιγράφηκε: {e}"
+msgstr[1] "{n} επαφές δεν αντιγράφηκαν: {e}"
 
-#, fuzzy
+#, python-brace-format
 msgid "{n} contact was not moved: {e}"
 msgid_plural "{n} contacts were not moved: {e}"
-msgstr[0] "Εξήχθη {n} επαφή στο {path}"
-msgstr[1] "Εξήχθησαν {n} επαφές στο {path}"
+msgstr[0] "{n} επαφή δεν μετακινήθηκε: {e}"
+msgstr[1] "{n} επαφές δεν μετακινήθηκαν: {e}"
 
+#, python-brace-format
 msgid "Could not update contact: {e}"
 msgstr "Αδυναμία ενημέρωσης επαφής: {e}"
 
+#, python-brace-format
 msgid "Could not import contacts: {e}"
 msgstr "Δεν ήταν δυνατή η εισαγωγή επαφών: {e}"
 
+#, python-brace-format
 msgid "Could not read: {files}"
 msgstr "Δεν ήταν δυνατή η ανάγνωση: {files}"
 
 msgid "No contacts were found in the selected files"
 msgstr "Δεν βρέθηκαν επαφές στα επιλεγμένα αρχεία"
 
+#, python-brace-format
 msgid ""
 "Contacts imported: {added} new, {updated} updated, {skipped} skipped, "
 "{errors} damaged"
@@ -331,6 +353,7 @@ msgstr ""
 "Εισαγωγή επαφών: {added} νέες, {updated} ενημερωμένες, {skipped} "
 "παραλείφθηκαν, {errors} με σφάλματα"
 
+#, python-brace-format
 msgid "Contacts imported: {added} new, {updated} updated"
 msgstr "Εισαγωγή επαφών: {added} νέες, {updated} ενημερωμένες"
 
@@ -347,7 +370,7 @@ msgid "About"
 msgstr "Σχετικά"
 
 msgid "Select a conversation first."
-msgstr ""
+msgstr "Επιλέξτε πρώτα μια συζήτηση."
 
 msgid "Remove Tags"
 msgstr "Αφαίρεση ετικετών"
@@ -382,9 +405,8 @@ msgstr "Εύρεση στο μήνυμα"
 msgid "Delete"
 msgstr "Διαγραφή"
 
-#, fuzzy
 msgid "Delete Permanently"
-msgstr "Οριστική διαγραφή αυτού του μηνύματος;"
+msgstr "Οριστική διαγραφή"
 
 msgid "Star or Remove Star"
 msgstr "Προσθήκη ή αφαίρεση αστεριού"
@@ -462,12 +484,15 @@ msgstr ""
 msgid "Your tags"
 msgstr "Οι ετικέτες σας"
 
+#, python-brace-format
 msgid "Move to {name}"
 msgstr "Μετακίνηση στο {name}"
 
+#, python-brace-format
 msgid "Add Tag {name}"
 msgstr "Προσθήκη ετικέτας {name}"
 
+#, python-brace-format
 msgid "Remove Tag {name}"
 msgstr "Αφαίρεση ετικέτας {name}"
 
@@ -498,7 +523,7 @@ msgid "Search Messages…"
 msgstr "Αναζήτηση μηνυμάτων…"
 
 msgid "Filter"
-msgstr ""
+msgstr "Φίλτρο"
 
 msgid "Sort"
 msgstr "Ταξινόμηση"
@@ -549,12 +574,15 @@ msgstr "Μηνύματα email"
 msgid "it is not an Outlook message"
 msgstr "δεν είναι μήνυμα Outlook"
 
+#, python-brace-format
 msgid "Could not open {file}: {e}"
 msgstr "Δεν ήταν δυνατό το άνοιγμα του {file}: {e}"
 
+#, python-brace-format
 msgid "Delete {n} messages"
 msgstr "Διαγραφή {n} μηνυμάτων"
 
+#, python-brace-format
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
 msgstr[0] ""
@@ -564,11 +592,13 @@ msgstr[1] ""
 "Δεν ήταν δυνατή η επισύναψη {n} αρχείων (το Hylki δεν μπορεί να τα "
 "διαβάσει): {names}"
 
+#, python-brace-format
 msgid "Send {n} file with Hylki"
 msgid_plural "Send {n} files with Hylki"
 msgstr[0] "Αποστολή {n} αρχείου με το Hylki"
 msgstr[1] "Αποστολή {n} αρχείων με το Hylki"
 
+#, python-brace-format
 msgid "{names} ({size}). What should the files go into?"
 msgstr "{names} ({size}). Σε τι θέλετε να προστεθούν τα αρχεία;"
 
@@ -593,6 +623,7 @@ msgstr "Απάντηση με τα αρχεία"
 msgid "Large files"
 msgstr "Μεγάλα αρχεία"
 
+#, python-brace-format
 msgid ""
 "{names} is {size}, over the {limit} limit. Upload it to cloud storage and "
 "put a download link in the message instead?"
@@ -643,6 +674,7 @@ msgstr "Διαγραφή συνομιλίας"
 msgid "Delete the attachment from the server?"
 msgstr "Να διαγραφεί το συνημμένο από τον διακομιστή;"
 
+#, python-brace-format
 msgid ""
 "“{name}” will be removed from the message on the server. The rest of the "
 "message stays. This can’t be undone."
@@ -650,6 +682,7 @@ msgstr ""
 "Το «{name}» θα αφαιρεθεί από το μήνυμα στον διακομιστή. Το υπόλοιπο μήνυμα "
 "παραμένει. Αυτή η ενέργεια δεν αναιρείται."
 
+#, python-brace-format
 msgid "Delete this message permanently?"
 msgid_plural "Delete {n} messages permanently?"
 msgstr[0] "Οριστική διαγραφή αυτού του μηνύματος;"
@@ -669,30 +702,31 @@ msgstr ""
 "Βρίσκονται ήδη στον Κάδο, επομένως θα διαγραφούν από τον διακομιστή. Αυτή η "
 "ενέργεια δεν αναιρείται."
 
-#, fuzzy
 msgid ""
 "It will be erased from the server instead of going to Trash. This can’t be "
 "undone."
 msgstr ""
-"Κάθε μήνυμα σε αυτόν θα διαγραφεί από τον διακομιστή. Αυτή η ενέργεια δεν "
-"αναιρείται."
+"Θα διαγραφεί από τον διακομιστή αντί να μεταφερθεί στον Κάδο. Αυτή η "
+"ενέργεια δεν αναιρείται."
 
-#, fuzzy
 msgid ""
 "They will be erased from the server instead of going to Trash. This can’t be "
 "undone."
 msgstr ""
-"Κάθε μήνυμα σε αυτόν θα διαγραφεί από τον διακομιστή. Αυτή η ενέργεια δεν "
-"αναιρείται."
+"Θα διαγραφούν από τον διακομιστή αντί να μεταφερθούν στον Κάδο. Αυτή η "
+"ενέργεια δεν αναιρείται."
 
+#, python-brace-format
 msgid "No {v1} folder available"
 msgstr "Δεν υπάρχει διαθέσιμος φάκελος {v1}"
 
+#, python-brace-format
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
 msgstr[0] "Δεν ήταν δυνατή η μετακίνηση ενός μηνύματος στο {account}: {error}"
 msgstr[1] "Δεν ήταν δυνατή η μετακίνηση {n} μηνυμάτων στο {account}: {error}"
 
+#, python-brace-format
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
 msgstr[0] "Μετακίνηση ενός μηνύματος στο {account}…"
@@ -703,6 +737,7 @@ msgstr ""
 "Ένα μήνυμα δεν μετακινήθηκε: αυτός ο λογαριασμός δεν μπορεί να λαμβάνει "
 "αλληλογραφία από άλλον λογαριασμό"
 
+#, python-brace-format
 msgid ""
 "{foreign} messages stayed put: this account can't take mail from another"
 msgstr ""
@@ -739,6 +774,7 @@ msgstr "Οι υποφάκελοι διατηρούν τη θέση τους κά
 msgid "Rename"
 msgstr "Μετονομασία"
 
+#, python-brace-format
 msgid "A folder named {new_name} is already there."
 msgstr "Υπάρχει ήδη φάκελος με όνομα {new_name}."
 
@@ -752,6 +788,7 @@ msgstr ""
 "Τα μηνύματά του μετακινούνται στον Κάδο και ο φάκελος αφαιρείται από τον "
 "διακομιστή. Αυτή η ενέργεια δεν αναιρείται."
 
+#, python-brace-format
 msgid "Empty “{name}”?"
 msgstr "Άδειασμα του «{name}»;"
 
@@ -782,6 +819,7 @@ msgstr "Δεν υπάρχει φάκελος Ανεπιθύμητων για α�
 msgid "No Inbox folder available for this account"
 msgstr "Δεν υπάρχει φάκελος Εισερχομένων για αυτόν τον λογαριασμό"
 
+#, python-brace-format
 msgid "Delete “{name}”?"
 msgstr "Διαγραφή του «{name}»;"
 
@@ -869,6 +907,7 @@ msgstr "Μετάφραση από"
 msgid "© 2026 Hyprlab"
 msgstr "© 2026 Hyprlab"
 
+#, python-brace-format
 msgid "No {v1} folder available for some messages"
 msgstr "Δεν υπάρχει διαθέσιμος φάκελος {v1} για ορισμένα μηνύματα"
 
@@ -881,29 +920,35 @@ msgstr "Εφαρμογή φίλτρων"
 msgid "Run in Background"
 msgstr "Εκτέλεση στο παρασκήνιο"
 
+#, python-brace-format
 msgid "Looked at {n} message so far"
 msgid_plural "Looked at {n} messages so far"
 msgstr[0] "Εξετάστηκε {n} μήνυμα μέχρι στιγμής"
 msgstr[1] "Εξετάστηκαν {n} μηνύματα μέχρι στιγμής"
 
+#, python-brace-format
 msgid "Matched {n} message"
 msgid_plural "Matched {n} messages"
 msgstr[0] "Αντιστοιχίστηκε {n} μήνυμα"
 msgstr[1] "Αντιστοιχίστηκαν {n} μηνύματα"
 
+#, python-brace-format
 msgid "Tagged {n} message"
 msgid_plural "Tagged {n} messages"
 msgstr[0] "Προστέθηκε ετικέτα σε {n} μήνυμα"
 msgstr[1] "Προστέθηκαν ετικέτες σε {n} μηνύματα"
 
+#, python-brace-format
 msgid "Filed {n} message away"
 msgid_plural "Filed {n} messages away"
 msgstr[0] "Αρχειοθετήθηκε {n} μήνυμα σε φάκελο"
 msgstr[1] "Αρχειοθετήθηκαν {n} μηνύματα σε φακέλους"
 
+#, python-brace-format
 msgid "Folder {done} of {total}"
 msgstr "Φάκελος {done} από {total}"
 
+#, python-brace-format
 msgid "Filters looked at {n} message, and it matched nothing"
 msgid_plural "Filters looked at {n} messages, and none of them matched"
 msgstr[0] "Τα φίλτρα εξέτασαν {n} μήνυμα και δεν αντιστοιχίστηκε σε τίποτα"
@@ -912,6 +957,7 @@ msgstr[1] "Τα φίλτρα εξέτασαν {n} μηνύματα και καν
 #. Matches that needed nothing: the rules had already done their
 #. work on an earlier sync (#201). Saying "none matched" here
 #. made working rules look broken.
+#, python-brace-format
 msgid ""
 "Filters matched {matched} of {n} message, and it was already tagged or filed"
 msgid_plural ""
@@ -924,16 +970,19 @@ msgstr[1] ""
 "Τα φίλτρα αντιστοίχισαν {matched} από {n} μηνύματα και όλα είχαν ήδη ετικέτα "
 "ή αρχειοθετηθεί"
 
+#, python-brace-format
 msgid "Filters tagged {tagged} of {n} message"
 msgid_plural "Filters tagged {tagged} of {n} messages"
 msgstr[0] "Τα φίλτρα πρόσθεσαν ετικέτα σε {tagged} από {n} μήνυμα"
 msgstr[1] "Τα φίλτρα πρόσθεσαν ετικέτες σε {tagged} από {n} μηνύματα"
 
+#, python-brace-format
 msgid "Filters filed {filed} of {n} message away"
 msgid_plural "Filters filed {filed} of {n} messages away"
 msgstr[0] "Τα φίλτρα αρχειοθέτησαν {filed} από {n} μήνυμα"
 msgstr[1] "Τα φίλτρα αρχειοθέτησαν {filed} από {n} μηνύματα"
 
+#, python-brace-format
 msgid "Filters tagged {tagged} and filed {filed} of {n} message"
 msgid_plural "Filters tagged {tagged} and filed {filed} of {n} messages"
 msgstr[0] ""
@@ -953,21 +1002,27 @@ msgstr "Αυτό το μήνυμα δεν περιέχει αρχείο ημερ
 msgid "This invitation names no organiser to answer."
 msgstr "Αυτή η πρόσκληση δεν αναφέρει διοργανωτή για να απαντήσετε."
 
+#, python-brace-format
 msgid "Accepted: {subject}"
 msgstr "Αποδεκτή: {subject}"
 
+#, python-brace-format
 msgid "Tentative: {subject}"
 msgstr "Προσωρινή αποδοχή: {subject}"
 
+#, python-brace-format
 msgid "Declined: {subject}"
 msgstr "Απορριφθείσα: {subject}"
 
+#, python-brace-format
 msgid "{name} has accepted this invitation."
 msgstr "Ο/Η {name} αποδέχτηκε αυτή την πρόσκληση."
 
+#, python-brace-format
 msgid "{name} has tentatively accepted this invitation."
 msgstr "Ο/Η {name} αποδέχτηκε προσωρινά αυτή την πρόσκληση."
 
+#, python-brace-format
 msgid "{name} has declined this invitation."
 msgstr "Ο/Η {name} απέρριψε αυτή την πρόσκληση."
 
@@ -980,6 +1035,7 @@ msgstr "Η απάντησή σας στάλθηκε: ίσως."
 msgid "Your answer has been sent: declined."
 msgstr "Η απάντησή σας στάλθηκε: απόρριψη."
 
+#, python-brace-format
 msgid "Unsubscribe from {name}?"
 msgstr "Κατάργηση εγγραφής από {name};"
 
@@ -990,6 +1046,7 @@ msgstr ""
 "Το Hylki θα ζητήσει από τη λίστα να σταματήσει να σας στέλνει αλληλογραφία. "
 "Μπορεί να χρειαστούν μερικές ημέρες για να επεξεργαστεί το αίτημα."
 
+#, python-brace-format
 msgid ""
 "An unsubscribe request will be sent to {addr} from {from}. A list can take a "
 "few days to act on it."
@@ -1014,6 +1071,7 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr "Κατάργηση εγγραφής"
 
+#, python-brace-format
 msgid "Also delete the message from {addr}"
 msgid_plural "Also delete the {n} messages from {addr}"
 msgstr[0] "Να διαγραφεί επίσης το μήνυμα από τη διεύθυνση {addr}"
@@ -1042,7 +1100,7 @@ msgid "Open the message the cursor is on"
 msgstr "Άνοιγμα του μηνύματος στο οποίο βρίσκεται ο δρομέας"
 
 msgid "Close the conversation, back to the list"
-msgstr ""
+msgstr "Κλείσιμο συζήτησης και επιστροφή στη λίστα"
 
 msgid "Next or previous message in the conversation"
 msgstr "Επόμενο ή προηγούμενο μήνυμα στη συνομιλία"
@@ -1081,13 +1139,13 @@ msgid "Archive the conversation"
 msgstr "Αρχειοθέτηση της συνομιλίας"
 
 msgid "Archive the conversation and open the older one"
-msgstr ""
+msgstr "Αρχειοθέτηση της συζήτησης και άνοιγμα της παλαιότερης"
 
 msgid "Archive the conversation and open the newer one"
-msgstr ""
+msgstr "Αρχειοθέτηση της συζήτησης και άνοιγμα της νεότερης"
 
 msgid "Delete permanently, without going to Trash"
-msgstr ""
+msgstr "Οριστική διαγραφή χωρίς μεταφορά στον Κάδο"
 
 msgid "Mark as spam"
 msgstr "Σήμανση ως ανεπιθύμητο"
@@ -1099,22 +1157,22 @@ msgid "Mark the conversation as read"
 msgstr "Σήμανση της συνομιλίας ως αναγνωσμένης"
 
 msgid "Mark the conversation as unread and close it"
-msgstr ""
+msgstr "Σήμανση της συζήτησης ως μη αναγνωσμένης και κλείσιμο"
 
 msgid "Mark as unread from this message on and close it"
-msgstr ""
+msgstr "Σήμανση ως μη αναγνωσμένων από αυτό το μήνυμα και μετά και κλείσιμο"
 
 msgid "Select this row without opening it"
-msgstr ""
+msgstr "Επιλογή αυτής της γραμμής χωρίς άνοιγμα"
 
 msgid "Select every row, or none"
 msgstr "Επιλογή όλων των γραμμών ή καμίας"
 
 msgid "Select the read or the unread conversations"
-msgstr ""
+msgstr "Επιλογή των αναγνωσμένων ή μη αναγνωσμένων συζητήσεων"
 
 msgid "Select the starred or the unstarred conversations"
-msgstr ""
+msgstr "Επιλογή των συζητήσεων με ή χωρίς αστέρι"
 
 msgid "Move to a folder"
 msgstr "Μετακίνηση σε φάκελο"
@@ -1127,16 +1185,16 @@ msgstr ""
 "Προσθήκη ή αφαίρεση ετικέτας (οι πρώτες εννέα, με τη σειρά των Ρυθμίσεων)"
 
 msgid "Reply, or reply to all, in a window"
-msgstr ""
+msgstr "Απάντηση ή απάντηση σε όλους σε νέο παράθυρο"
 
 msgid "Forward in a window"
-msgstr ""
+msgstr "Προώθηση σε νέο παράθυρο"
 
 msgid "Compose"
 msgstr "Σύνταξη"
 
 msgid "Compose in a window"
-msgstr ""
+msgstr "Σύνταξη σε νέο παράθυρο"
 
 msgid "Check for new mail"
 msgstr "Έλεγχος για νέα μηνύματα"
@@ -1308,43 +1366,41 @@ msgstr ""
 msgid "Checking for new mail"
 msgstr "Έλεγχος για νέα αλληλογραφία"
 
+#, python-brace-format
 msgid "{n} unread message"
 msgid_plural "{n} unread messages"
 msgstr[0] "{n} μη αναγνωσμένο μήνυμα"
 msgstr[1] "{n} μη αναγνωσμένα μηνύματα"
 
-#, fuzzy
 msgid "Enter the server's address."
-msgstr "Εισαγάγετε τον διακομιστή του καταλόγου."
+msgstr "Εισαγάγετε τη διεύθυνση του διακομιστή."
 
-#, fuzzy
+#, python-brace-format
 msgid "“{text}” is not a server address."
-msgstr "Το «{addr}» δεν είναι διεύθυνση email."
+msgstr "Το «{text}» δεν είναι διεύθυνση διακομιστή."
 
 msgid "The address starts with https:// or http://."
-msgstr ""
+msgstr "Η διεύθυνση αρχίζει με https:// ή http://."
 
 msgid "Evolution Data Server is not available"
 msgstr "Ο Evolution Data Server δεν είναι διαθέσιμος"
 
 msgid "Enter the password to sign in."
-msgstr ""
+msgstr "Εισαγάγετε τον κωδικό πρόσβασης για σύνδεση."
 
-#, fuzzy
 msgid "The server did not accept the user name or password."
-msgstr "Ο κατάλογος δεν αποδέχθηκε τον κωδικό πρόσβασης."
+msgstr "Ο διακομιστής δεν αποδέχθηκε το όνομα χρήστη ή τον κωδικό πρόσβασης."
 
-#, fuzzy
 msgid "The server's certificate could not be verified."
-msgstr "Δεν ήταν δυνατή η επαλήθευση του πιστοποιητικού του καταλόγου."
+msgstr "Δεν ήταν δυνατή η επαλήθευση του πιστοποιητικού του διακομιστή."
 
-#, fuzzy
+#, python-brace-format
 msgid "The server's certificate could not be verified: {error}"
-msgstr "Δεν ήταν δυνατή η επαλήθευση του πιστοποιητικού του καταλόγου: {error}"
+msgstr ""
+"Δεν ήταν δυνατή η επαλήθευση του πιστοποιητικού του διακομιστή: {error}"
 
-#, fuzzy
 msgid "Could not connect to the server."
-msgstr "Δεν ήταν δυνατή η επικοινωνία με τον διακομιστή"
+msgstr "Δεν ήταν δυνατή η σύνδεση με τον διακομιστή."
 
 msgid "Signature"
 msgstr "Υπογραφή"
@@ -1362,19 +1418,16 @@ msgid "Full Path"
 msgstr "Πλήρης διαδρομή"
 
 msgid "With sent mail"
-msgstr ""
+msgstr "Με την απεσταλμένη αλληλογραφία"
 
-#, fuzzy
 msgid "Folder of the original"
-msgstr "Εμφάνιση του πρωτοτύπου."
+msgstr "Φάκελος του αρχικού μηνύματος"
 
-#, fuzzy
 msgid "Folder of the original, not the Inbox"
-msgstr "Εμφάνιση του πρωτοτύπου."
+msgstr "Φάκελος του αρχικού μηνύματος, όχι τα Εισερχόμενα"
 
-#, fuzzy
 msgid "Replied"
-msgstr "Απάντηση"
+msgstr "Απαντήθηκε"
 
 msgid "Sender"
 msgstr "Αποστολέας"
@@ -1415,70 +1468,70 @@ msgstr "Μετακίνηση σε"
 msgid "Find"
 msgstr "Εύρεση"
 
-#, fuzzy
+#, python-brace-format
 msgid "{n} address book"
 msgid_plural "{n} address books"
-msgstr[0] "Βιβλίο διευθύνσεων"
-msgstr[1] "Βιβλίο διευθύνσεων"
+msgstr[0] "{n} κατάλογος διευθύνσεων"
+msgstr[1] "{n} κατάλογοι διευθύνσεων"
 
 msgid "Hylki Address Book"
 msgstr "Βιβλίο διευθύνσεων Hylki"
 
-#, fuzzy
+#, python-brace-format
 msgid "{n} contact, kept by Hylki"
 msgid_plural "{n} contacts, kept by Hylki"
-msgstr[0] "Εξήχθη {n} επαφή στο {path}"
-msgstr[1] "Εξήχθησαν {n} επαφές στο {path}"
+msgstr[0] "{n} επαφή που διατηρείται από το Hylki"
+msgstr[1] "{n} επαφές που διατηρούνται από το Hylki"
 
 msgid "On This Computer"
 msgstr "Σε αυτόν τον υπολογιστή"
 
+#, python-brace-format
 msgid "{books} · kept by GNOME Contacts and Evolution"
-msgstr ""
+msgstr "{books} · διατηρείται από τις Επαφές GNOME και το Evolution"
 
 msgid "Online account"
 msgstr "Διαδικτυακός λογαριασμός"
 
-#, fuzzy
 msgid "Contacts is switched off for this account in GNOME Online Accounts."
 msgstr ""
-"Σε παύση: η αλληλογραφία είναι απενεργοποιημένη για αυτόν τον λογαριασμό "
-"στις Ρυθμίσεις GNOME"
+"Οι Επαφές είναι απενεργοποιημένες για αυτόν τον λογαριασμό στους "
+"Διαδικτυακούς λογαριασμούς GNOME."
 
-#, fuzzy
 msgid "Looking for address books…"
-msgstr "Αναζήτηση κλειδιού για {addr}…"
+msgstr "Αναζήτηση καταλόγων διευθύνσεων…"
 
 msgid "This address book is switched off in Evolution."
-msgstr ""
+msgstr "Αυτός ο κατάλογος διευθύνσεων είναι απενεργοποιημένος στο Evolution."
 
+#, python-brace-format
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} άτομο, σε Κρυφή κοιν."
+msgstr[1] "{n} άτομα, σε Κρυφή κοιν."
 
-#, fuzzy
+#, python-brace-format
 msgid "{n} person"
 msgid_plural "{n} people"
-msgstr[0] "{n} παραλήπτης"
-msgstr[1] "{n} παραλήπτες"
+msgstr[0] "{n} άτομο"
+msgstr[1] "{n} άτομα"
 
 msgid "CardDAV Address Book"
 msgstr "Βιβλίο διευθύνσεων CardDAV"
 
 msgid "Hylki cannot change this kind of group"
-msgstr ""
+msgstr "Το Hylki δεν μπορεί να αλλάξει αυτόν τον τύπο ομάδας"
 
+#, python-brace-format
 msgid "{date} at {time}"
 msgstr "{date} στις {time}"
 
-#, fuzzy
 msgid ""
 "The directory cannot be searched without signing in. Add a sign-in to it in "
 "Settings → Contacts."
 msgstr ""
-"Δεν είναι δυνατή η αναζήτηση στον κατάλογο χωρίς σύνδεση. Προσθέστε σύνδεση "
-"στις Ρυθμίσεις → Κατάλογοι LDAP."
+"Δεν είναι δυνατή η αναζήτηση στον κατάλογο χωρίς σύνδεση. Προσθέστε στοιχεία "
+"σύνδεσης από τις Ρυθμίσεις → Επαφές."
 
 msgid "The directory did not accept the password."
 msgstr "Ο κατάλογος δεν αποδέχθηκε τον κωδικό πρόσβασης."
@@ -1486,9 +1539,11 @@ msgstr "Ο κατάλογος δεν αποδέχθηκε τον κωδικό π
 msgid "The directory's certificate could not be verified."
 msgstr "Δεν ήταν δυνατή η επαλήθευση του πιστοποιητικού του καταλόγου."
 
+#, python-brace-format
 msgid "The directory's certificate could not be verified: {error}"
 msgstr "Δεν ήταν δυνατή η επαλήθευση του πιστοποιητικού του καταλόγου: {error}"
 
+#, python-brace-format
 msgid ""
 "Could not connect to {server} over TLS. Check the server, the port and that "
 "it takes LDAPS."
@@ -1496,11 +1551,13 @@ msgstr ""
 "Δεν ήταν δυνατή η σύνδεση με τον {server} μέσω TLS. Ελέγξτε τον διακομιστή, "
 "τη θύρα και αν υποστηρίζει LDAPS."
 
+#, python-brace-format
 msgid "Could not connect to {server}. Check the server and the port."
 msgstr ""
 "Δεν ήταν δυνατή η σύνδεση με τον {server}. Ελέγξτε τον διακομιστή και τη "
 "θύρα."
 
+#, python-brace-format
 msgid ""
 "Could not start StartTLS with {server}: the server does not offer it, or its "
 "certificate is not trusted."
@@ -1508,23 +1565,23 @@ msgstr ""
 "Δεν ήταν δυνατή η εκκίνηση του StartTLS με τον {server}: ο διακομιστής δεν "
 "το προσφέρει ή το πιστοποιητικό του δεν είναι αξιόπιστο."
 
+#, python-brace-format
 msgid "Could not reach {server}. Check the server's name and the network."
 msgstr ""
 "Δεν ήταν δυνατή η πρόσβαση στον {server}. Ελέγξτε το όνομα του διακομιστή "
 "και το δίκτυο."
 
-#, fuzzy
 msgid "The directory needs a password. Add it in Settings → Contacts."
 msgstr ""
-"Ο κατάλογος απαιτεί κωδικό πρόσβασης. Προσθέστε τον στις Ρυθμίσεις → "
-"Κατάλογοι LDAP."
+"Ο κατάλογος απαιτεί κωδικό πρόσβασης. Προσθέστε τον από τις Ρυθμίσεις → "
+"Επαφές."
 
+#, python-brace-format
 msgid "{name} did not answer: {error}"
 msgstr "Το {name} δεν αποκρίθηκε: {error}"
 
-#, fuzzy
 msgid "A contact needs a name, an email address or a phone number"
-msgstr "Μια επαφή χρειάζεται όνομα ή διεύθυνση email"
+msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
 
 msgid "The contact is too large"
 msgstr "Η επαφή είναι υπερβολικά μεγάλη"
@@ -1535,12 +1592,15 @@ msgstr "Δεν υποστηρίζονται αρχεία UTF-16"
 msgid "The file is not a text file"
 msgstr "Το αρχείο δεν είναι αρχείο κειμένου"
 
+#, python-brace-format
 msgid "The file is larger than {size} MB"
 msgstr "Το αρχείο είναι μεγαλύτερο από {size} MB"
 
+#, python-brace-format
 msgid "{used} of {limit} used"
 msgstr "Χρησιμοποιούνται {used} από {limit}"
 
+#, python-brace-format
 msgid "{free} free ({pct}%)"
 msgstr "{free} ελεύθερα ({pct}%)"
 
@@ -1565,6 +1625,7 @@ msgstr "Κρυπτογραφημένο με OpenPGP· δεν ήταν δυνατ
 msgid "Encrypted with OpenPGP"
 msgstr "Κρυπτογραφημένο με OpenPGP"
 
+#, python-brace-format
 msgid "Encrypted, and signed by {signer}"
 msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer}"
 
@@ -1574,21 +1635,26 @@ msgstr ""
 "Κρυπτογραφημένο· η υπογραφή δεν ταιριάζει, το μήνυμα ενδέχεται να έχει "
 "αλλοιωθεί"
 
+#, python-brace-format
 msgid "Encrypted; signed with a key you don't have ({id})"
 msgstr "Κρυπτογραφημένο· υπογεγραμμένο με κλειδί που δεν διαθέτετε ({id})"
 
+#, python-brace-format
 msgid "Encrypted, and signed by {signer} with an expired key"
 msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer} με ληγμένο κλειδί"
 
+#, python-brace-format
 msgid "Encrypted, and signed by {signer} with a revoked key"
 msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer} με ανακληθέν κλειδί"
 
+#, python-brace-format
 msgid "Encrypted, and signed by {signer}; the signature has expired"
 msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer}· η υπογραφή έχει λήξει"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Υπογεγραμμένο με OpenPGP· δεν ήταν δυνατός ο έλεγχος της υπογραφής"
 
+#, python-brace-format
 msgid "Signed by {signer}"
 msgstr "Υπογεγραμμένο από {signer}"
 
@@ -1596,15 +1662,19 @@ msgid "The OpenPGP signature does not match; the message may have been altered"
 msgstr ""
 "Η υπογραφή OpenPGP δεν ταιριάζει· το μήνυμα ενδέχεται να έχει τροποποιηθεί"
 
+#, python-brace-format
 msgid "Signed with a key you don't have ({id})"
 msgstr "Υπογεγραμμένο με κλειδί που δεν διαθέτετε ({id})"
 
+#, python-brace-format
 msgid "Signed by {signer} with an expired key"
 msgstr "Υπογεγραμμένο από {signer} με ληγμένο κλειδί"
 
+#, python-brace-format
 msgid "Signed by {signer} with a revoked key"
 msgstr "Υπογεγραμμένο από {signer} με ανακληθέν κλειδί"
 
+#, python-brace-format
 msgid "Signed by {signer}; the signature has expired"
 msgstr "Υπογεγραμμένο από {signer}· η υπογραφή έχει λήξει"
 
@@ -1647,27 +1717,33 @@ msgstr "Αυτό το μήνυμα δεν έχει ελεγχθεί."
 msgid "just now"
 msgstr "μόλις τώρα"
 
+#, python-brace-format
 msgid "{n} minutes ago"
 msgstr "πριν από {n} λεπτά"
 
 msgid "an hour ago"
 msgstr "πριν από μία ώρα"
 
+#, python-brace-format
 msgid "{n} hours ago"
 msgstr "Πριν από {n} ώρες"
 
 msgid "yesterday"
 msgstr "χθες"
 
+#, python-brace-format
 msgid "{n} days ago"
 msgstr "Πριν από {n} ημέρες"
 
+#, python-brace-format
 msgid "Waiting since {ago}"
 msgstr "Σε αναμονή από {ago}"
 
+#, python-brace-format
 msgid "Scheduled for {when}"
 msgstr "Προγραμματισμένο για {when}"
 
+#, python-brace-format
 msgid "Today, {time}"
 msgstr "Σήμερα, {time}"
 
@@ -1680,24 +1756,26 @@ msgstr "Το μήνυμα είναι έτοιμο για αποστολή"
 msgid "A new message is open in Hylki."
 msgstr "Ένα νέο μήνυμα είναι ανοικτό στο Hylki."
 
+#, python-brace-format
 msgid "A new message with {n} file attached is open in Hylki."
 msgid_plural "A new message with {n} files attached is open in Hylki."
 msgstr[0] "Ένα νέο μήνυμα με {n} συνημμένο αρχείο είναι ανοικτό στο Hylki."
 msgstr[1] "Ένα νέο μήνυμα με {n} συνημμένα αρχεία είναι ανοικτό στο Hylki."
 
-#, fuzzy
 msgid "Sending message…"
-msgstr "Ευρετηρίαση {n} μηνυμάτων…"
+msgstr "Αποστολή μηνύματος…"
 
+#, python-brace-format
 msgid "Sending “{subject}”…"
-msgstr ""
+msgstr "Αποστολή «{subject}»…"
 
 msgid "Waiting to send"
-msgstr ""
+msgstr "Αναμονή για αποστολή"
 
 msgid "Sending…"
 msgstr "Αποστολή…"
 
+#, python-brace-format
 msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
@@ -1713,6 +1791,7 @@ msgstr ""
 msgid "Decrypted with your key."
 msgstr "Αποκρυπτογραφήθηκε με το κλειδί σας."
 
+#, python-brace-format
 msgid "Encrypted to key {id}, which is not in your keyring."
 msgstr ""
 "Κρυπτογραφημένο με το κλειδί {id}, το οποίο δεν υπάρχει στο keyring σας."
@@ -1721,16 +1800,20 @@ msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr ""
 "Το κρυπτογραφημένο τμήμα είναι κατεστραμμένο ή δεν περιέχει δεδομένα OpenPGP."
 
+#, python-brace-format
 msgid "Signing key {id} is trusted in your keyring."
 msgstr "Το κλειδί υπογραφής {id} είναι έμπιστο στην κλειδοθήκη σας."
 
+#, python-brace-format
 msgid "Signing key {id} is only marginally trusted in your keyring."
 msgstr "Το κλειδί υπογραφής {id} θεωρείται οριακά έμπιστο στην κλειδοθήκη σας."
 
+#, python-brace-format
 msgid "Signing key {id} is marked as not trusted in your keyring."
 msgstr ""
 "Το κλειδί υπογραφής {id} έχει επισημανθεί ως μη έμπιστο στο keyring σας."
 
+#, python-brace-format
 msgid ""
 "Signing key {id} is in your keyring but not marked as trusted; check its "
 "fingerprint with the sender."
@@ -1738,6 +1821,7 @@ msgstr ""
 "Το κλειδί υπογραφής {id} βρίσκεται στην κλειδοθήκη σας αλλά δεν έχει "
 "επισημανθεί ως έμπιστο· ελέγξτε το αποτύπωμά του με τον αποστολέα."
 
+#, python-brace-format
 msgid "Signed with key {id}."
 msgstr "Υπογεγραμμένο με το κλειδί {id}."
 
@@ -1795,6 +1879,7 @@ msgstr "Ανενεργό"
 msgid "Choose a translation service in Settings → Translation first."
 msgstr "Επιλέξτε πρώτα μια υπηρεσία μετάφρασης στις Ρυθμίσεις → Μετάφραση."
 
+#, python-brace-format
 msgid "No key for {service}: add one in Settings → Translation."
 msgstr ""
 "Δεν υπάρχει κλειδί για την υπηρεσία {service}: προσθέστε ένα στις Ρυθμίσεις "
@@ -1812,6 +1897,7 @@ msgstr "Δεν ήταν δυνατή η ανάγνωση της απάντηση
 msgid "This is too long to send for translation."
 msgstr "Αυτό είναι πολύ μεγάλο για αποστολή προς μετάφραση."
 
+#, python-brace-format
 msgid "The service could not be reached: {e}"
 msgstr "Δεν ήταν δυνατή η πρόσβαση στην υπηρεσία: {e}"
 
@@ -1824,6 +1910,7 @@ msgstr "Υπερβολικά πολλά αιτήματα: δοκιμάστε ξ�
 msgid "This month's allowance is used up."
 msgstr "Έχει εξαντληθεί το όριο χρήσης αυτού του μήνα."
 
+#, python-brace-format
 msgid "The service refused the request (error {code})."
 msgstr "Η υπηρεσία απέρριψε το αίτημα (σφάλμα {code})."
 
@@ -1844,6 +1931,7 @@ msgstr "Ιδιωτικό"
 msgid "Confidential"
 msgstr "Εμπιστευτικό"
 
+#, python-brace-format
 msgid "The sender marked this message “{label}”."
 msgstr "Ο αποστολέας επισήμανε αυτό το μήνυμα ως «{label}»."
 
@@ -1853,7 +1941,12 @@ msgid ""
 "in its settings shows the name. Hylki shows the label but does not apply its "
 "rules."
 msgstr ""
+"Ο οργανισμός του αποστολέα έχει προσθέσει ετικέτα ευαισθησίας στο μήνυμα "
+"χωρίς να αναφέρει το όνομά της. Για λογαριασμό Microsoft 365, ενεργοποιήστε "
+"τη ρύθμιση «Εμφάνιση ονομάτων ετικετών ευαισθησίας» για να εμφανίζεται το "
+"όνομα. Το Hylki εμφανίζει την ετικέτα, αλλά δεν εφαρμόζει τους κανόνες της."
 
+#, python-brace-format
 msgid ""
 "The sender's organization labeled this message “{label}”. Hylki shows the "
 "label but does not apply its rules."
@@ -1864,6 +1957,7 @@ msgstr ""
 msgid "Open Hylki"
 msgstr "Άνοιγμα Hylki"
 
+#, python-brace-format
 msgid "View all {n} unread in Inboxes…"
 msgstr "Προβολή και των {n} μη αναγνωσμένων στα Εισερχόμενα…"
 
@@ -1873,16 +1967,14 @@ msgstr "Λογαριασμοί"
 msgid "No unread mail in Inboxes"
 msgstr "Δεν υπάρχει μη αναγνωσμένη αλληλογραφία στα Εισερχόμενα"
 
+#, python-brace-format
 msgid "{n} unread in Inboxes"
 msgid_plural "{n} unread in Inboxes"
 msgstr[0] "{n} μη αναγνωσμένο στα Εισερχόμενα"
 msgstr[1] "{n} μη αναγνωσμένα στα Εισερχόμενα"
 
-#, fuzzy
 msgid "Needs an app password, not your login password."
-msgstr ""
-"Απαιτεί κωδικό πρόσβασης ειδικά για την εφαρμογή (όχι τον κανονικό κωδικό "
-"σύνδεσής σας)."
+msgstr "Απαιτείται κωδικός πρόσβασης εφαρμογής, όχι ο κωδικός σύνδεσής σας."
 
 msgid "Enter your server details manually."
 msgstr "Εισαγάγετε χειροκίνητα τα στοιχεία του διακομιστή σας."
@@ -1891,41 +1983,31 @@ msgid "Enter your provider's OAuth endpoints, then sign in."
 msgstr ""
 "Εισαγάγετε τα OAuth endpoints του παρόχου σας και, στη συνέχεια, συνδεθείτε."
 
-#, fuzzy
 msgid "Your JMAP server's address or session URL. No SMTP settings needed."
 msgstr ""
-"Εισαγάγετε τη διεύθυνση του διακομιστή Stalwart. Η αλληλογραφία διαβάζεται "
-"και αποστέλλεται μέσω JMAP· δεν απαιτούνται ρυθμίσεις SMTP."
+"Η διεύθυνση ή το URL συνεδρίας του διακομιστή JMAP. Δεν απαιτούνται "
+"ρυθμίσεις SMTP."
 
-#, fuzzy
 msgid "Signs in through your browser. No password needed."
 msgstr ""
-"Συνδεθείτε μέσω του προγράμματος περιήγησής σας — δεν απαιτείται κωδικός "
-"πρόσβασης."
+"Συνδέεται μέσω του προγράμματος περιήγησης. Δεν απαιτείται κωδικός πρόσβασης."
 
 msgid "Requires Proton Mail Bridge running locally."
 msgstr "Απαιτεί το Proton Mail Bridge να εκτελείται τοπικά."
 
-#, fuzzy
 msgid ""
 "Signs in with an API token made in Fastmail under Privacy & Security, with "
 "access to mail and sending."
 msgstr ""
-"Συνδέεται με διακριτικό API, όχι με τον κωδικό πρόσβασής σας. Δημιουργήστε "
-"ένα στις ρυθμίσεις του Fastmail, στην ενότητα «Απόρρητο και ασφάλεια», με "
-"πρόσβαση στην αλληλογραφία και στην αποστολή της. Η αλληλογραφία διαβάζεται "
-"και αποστέλλεται μέσω JMAP."
+"Συνδέεται με διακριτικό API που δημιουργείται στο Fastmail από την ενότητα "
+"Απόρρητο και ασφάλεια, με πρόσβαση στην αλληλογραφία και την αποστολή."
 
-#, fuzzy
 msgid "Your Stalwart server's address. No SMTP settings needed."
-msgstr ""
-"Εισαγάγετε τη διεύθυνση του διακομιστή Stalwart. Η αλληλογραφία διαβάζεται "
-"και αποστέλλεται μέσω JMAP· δεν απαιτούνται ρυθμίσεις SMTP."
+msgstr "Η διεύθυνση του διακομιστή Stalwart. Δεν απαιτούνται ρυθμίσεις SMTP."
 
 msgid "Enable POP/IMAP access in GMX settings first."
 msgstr "Ενεργοποιήστε πρώτα την πρόσβαση POP/IMAP στις ρυθμίσεις GMX."
 
-#, fuzzy
 msgid "Drag to reorder them in the sidebar."
 msgstr "Σύρετε για να ορίσετε τη σειρά εμφάνισής τους στην πλευρική στήλη."
 
@@ -1938,13 +2020,11 @@ msgstr "Προσθήκη λογαριασμού…"
 msgid "GNOME Online Accounts"
 msgstr "Διαδικτυακοί λογαριασμοί GNOME"
 
-#, fuzzy
 msgid "Mail accounts from GNOME Settings. Switch one on to use it."
 msgstr ""
 "Λογαριασμοί αλληλογραφίας από τις Ρυθμίσεις GNOME. Ενεργοποιήστε έναν για να "
 "τον χρησιμοποιήσετε στο Hylki."
 
-#, fuzzy
 msgid ""
 "Tags are stored on the server as IMAP keywords, so Thunderbird and other "
 "clients show them too.\n"
@@ -1972,13 +2052,12 @@ msgstr "Εύρεση ετικετών…"
 msgid "Smart Folders"
 msgstr "Έξυπνοι φάκελοι"
 
-#, fuzzy
 msgid ""
 "Lists the messages that match its conditions. Shown in the sidebar under the "
 "unified rows."
 msgstr ""
-"Πώς εμφανίζεται αυτός ο λογαριασμός στην πλευρική στήλη και στην προβολή "
-"Εισερχομένων."
+"Εμφανίζει τα μηνύματα που πληρούν τις συνθήκες του. Βρίσκεται στην πλευρική "
+"στήλη, κάτω από τις ενοποιημένες γραμμές."
 
 msgid "Add Smart Folder…"
 msgstr "Προσθήκη έξυπνου φακέλου…"
@@ -1993,6 +2072,9 @@ msgid ""
 "File or tag incoming mail automatically. Filters run on each Inbox as it "
 "syncs; Apply Now runs them over the mail already there."
 msgstr ""
+"Αυτόματη αρχειοθέτηση ή επισήμανση εισερχόμενης αλληλογραφίας. Τα φίλτρα "
+"εκτελούνται στα Εισερχόμενα κατά τον συγχρονισμό· η επιλογή «Εφαρμογή τώρα» "
+"τα εκτελεί και στα υπάρχοντα μηνύματα."
 
 msgid "Add Filter…"
 msgstr "Προσθήκη φίλτρου…"
@@ -2021,18 +2103,15 @@ msgstr "Διεύθυνση email"
 msgid "Allow this sender"
 msgstr "Να επιτρέπεται αυτός ο αποστολέας"
 
-#, fuzzy
 msgid "Blocked Senders"
-msgstr "Επιτρεπόμενοι αποστολείς"
+msgstr "Αποκλεισμένοι αποστολείς"
 
-#, fuzzy
 msgid ""
 "Their mail is moved to Trash on arrival. Enter an address, or a domain like "
 "\"example.com\" to apply to all senders from that domain."
 msgstr ""
-"Η εισερχόμενη αλληλογραφία από αυτούς τους αποστολείς διαγράφεται αυτόματα "
-"(μετακινείται στον Κάδο). Εισαγάγετε μια διεύθυνση email ή έναν ολόκληρο "
-"τομέα, όπως «example.com», για να αποκλείσετε κάθε αποστολέα από αυτόν."
+"Η αλληλογραφία τους μεταφέρεται στον Κάδο μόλις φτάσει. Εισαγάγετε διεύθυνση "
+"ή τομέα, όπως «example.com», για όλους τους αποστολείς από αυτόν τον τομέα."
 
 msgid "Address or domain"
 msgstr "Διεύθυνση ή τομέας"
@@ -2049,21 +2128,18 @@ msgstr "Διαδικτυακός λογαριασμός GNOME"
 msgid "Show in Hylki"
 msgstr "Εμφάνιση στο Hylki"
 
-#, fuzzy
 msgid "Off returns it to the import list. It stays in GNOME Online Accounts."
 msgstr ""
-"Η απενεργοποίηση επιστρέφει τον λογαριασμό στη λίστα εισαγωγής — παραμένει "
-"στους Διαδικτυακούς Λογαριασμούς GNOME."
+"Η απενεργοποίηση τον επιστρέφει στη λίστα εισαγωγής. Παραμένει στους "
+"Διαδικτυακούς λογαριασμούς GNOME."
 
-#, fuzzy
 msgid ""
 "Managed by GNOME Online Accounts. Its address, servers and password are "
 "changed in Settings → Online Accounts."
 msgstr ""
-"Αυτός ο λογαριασμός διαχειρίζεται από τους Διαδικτυακούς λογαριασμούς "
-"GNOME.\n"
-"Η διεύθυνση, οι διακομιστές και ο κωδικός πρόσβασής του αλλάζουν στις "
-"Ρυθμίσεις → Διαδικτυακοί Λογαριασμοί."
+"Διαχειρίζεται από τους Διαδικτυακούς λογαριασμούς GNOME. Η διεύθυνση, οι "
+"διακομιστές και ο κωδικός πρόσβασης αλλάζουν στις Ρυθμίσεις → Διαδικτυακοί "
+"λογαριασμοί."
 
 msgid "Open Online Accounts…"
 msgstr "Άνοιγμα Διαδικτυακών λογαριασμών…"
@@ -2110,11 +2186,10 @@ msgstr "Κωδικός πρόσβασης"
 msgid "Sign in with an API token"
 msgstr "Σύνδεση με διακριτικό API"
 
-#, fuzzy
 msgid "For servers, like Fastmail, that take a token instead of a password."
 msgstr ""
-"Για διακομιστές που χρησιμοποιούν διακριτικό αντί για κωδικό πρόσβασης, όπως "
-"το Fastmail."
+"Για διακομιστές όπως το Fastmail, που χρησιμοποιούν διακριτικό αντί για "
+"κωδικό πρόσβασης."
 
 msgid "OAuth Client ID"
 msgstr "Αναγνωριστικό πελάτη OAuth"
@@ -2152,25 +2227,20 @@ msgstr "Σύνδεση με πρόγραμμα περιήγησης"
 msgid "Sign In"
 msgstr "Σύνδεση"
 
-#, fuzzy
 msgid ""
 "Google and Microsoft sign in through GNOME Online Accounts. Sign in there, "
 "then reopen this window and switch the account on under GNOME Online "
 "Accounts."
 msgstr ""
-"Η σύνδεση Google και Microsoft χρησιμοποιεί τους Διαδικτυακούς λογαριασμούς "
-"GNOME.\n"
-"\n"
-"1. Ανοίξτε τους Διαδικτυακούς λογαριασμούς και συνδεθείτε εκεί.\n"
-"2. Επιστρέψτε στο Hylki και ανοίξτε ξανά αυτό το παράθυρο — ο λογαριασμός θα "
-"εμφανιστεί στους «Διαδικτυακούς λογαριασμούς GNOME» στο επάνω μέρος. "
-"Ενεργοποιήστε τον εκεί."
+"Η σύνδεση στο Google και στη Microsoft γίνεται μέσω των Διαδικτυακών "
+"λογαριασμών GNOME. Συνδεθείτε εκεί, ανοίξτε ξανά αυτό το παράθυρο και "
+"ενεργοποιήστε τον λογαριασμό στην αντίστοιχη ενότητα."
 
 msgid "Separate SMTP credentials"
 msgstr "Ξεχωριστά διαπιστευτήρια SMTP"
 
 msgid "Off uses the credentials above."
-msgstr ""
+msgstr "Ανενεργό: χρησιμοποιούνται τα παραπάνω διαπιστευτήρια."
 
 msgid "SMTP Username"
 msgstr "Όνομα χρήστη SMTP"
@@ -2185,16 +2255,16 @@ msgid ""
 "For shared hosting. Turn on only when the connection test says the names "
 "differ."
 msgstr ""
+"Για κοινόχρηστη φιλοξενία. Ενεργοποιήστε το μόνο αν ο έλεγχος σύνδεσης "
+"δείξει ότι τα ονόματα διαφέρουν."
 
 msgid "Show in All Inboxes"
 msgstr "Εμφάνιση σε όλα τα Εισερχόμενα"
 
-#, fuzzy
 msgid "Also in the unified Starred, Sent, Drafts, Archive, Filters and Tags."
 msgstr ""
-"Συμπερίληψη της αλληλογραφίας αυτού του λογαριασμού στα ενοποιημένα "
-"Εισερχόμενα, Επισημασμένα, Απεσταλμένα, Πρόχειρα και Αρχειοθήκη, καθώς και "
-"στα ενοποιημένα Φίλτρα και τις Ετικέτες."
+"Επίσης στις ενοποιημένες ενότητες Επισημασμένα, Απεσταλμένα, Πρόχειρα, "
+"Αρχειοθήκη, Φίλτρα και Ετικέτες."
 
 msgid "Test Connection"
 msgstr "Δοκιμή σύνδεσης"
@@ -2209,9 +2279,8 @@ msgstr "Χρώμα έμφασης λογαριασμού"
 msgid "Use my Gravatar"
 msgstr "Χρήση του Gravatar μου"
 
-#, fuzzy
 msgid "Sends gravatar.com a hash of the address."
-msgstr "Ρωτά το gravatar.com για τη διεύθυνση κάθε αποστολέα"
+msgstr "Στέλνει στο gravatar.com ένα hash της διεύθυνσης."
 
 msgid "Circle shows"
 msgstr "Ο κύκλος εμφανίζει"
@@ -2225,9 +2294,8 @@ msgstr "Εικόνα"
 msgid "Emoji"
 msgstr "Emoji"
 
-#, fuzzy
 msgid "Instead of initials."
-msgstr "Χρήση αρχικών"
+msgstr "Αντί για αρχικά."
 
 msgid "Choose…"
 msgstr "Επιλογή…"
@@ -2239,30 +2307,32 @@ msgid "Send-as aliases"
 msgstr "Ψευδώνυμα αποστολέα"
 
 msgid "Extra addresses this account can send as."
-msgstr ""
+msgstr "Πρόσθετες διευθύνσεις αποστολής για αυτόν τον λογαριασμό."
 
 msgid "Add Alias…"
 msgstr "Προσθήκη ψευδωνύμου…"
 
 msgid "Signatures"
-msgstr ""
+msgstr "Υπογραφές"
 
 msgid ""
 "With more than one, the composer's signature button allows you to pick "
 "between them."
 msgstr ""
+"Με περισσότερες από μία υπογραφές, το κουμπί υπογραφής στη σύνταξη επιτρέπει "
+"την επιλογή τους."
 
 msgid "Add Signature"
-msgstr ""
+msgstr "Προσθήκη υπογραφής"
 
 msgid "Import File…"
 msgstr "Εισαγωγή αρχείου…"
 
 msgid "Delete Signature"
-msgstr ""
+msgstr "Διαγραφή υπογραφής"
 
 msgid "Start messages with this signature"
-msgstr ""
+msgstr "Έναρξη μηνυμάτων με αυτήν την υπογραφή"
 
 msgid "Syncing"
 msgstr "Συγχρονισμός"
@@ -2282,44 +2352,44 @@ msgstr "Αυτόματο άδειασμα κάδου"
 msgid "Move list mail to Trash"
 msgstr "Μετακίνηση αλληλογραφίας λιστών στον Κάδο"
 
-#, fuzzy
 msgid ""
 "Inbox mail with an unsubscribe link older than this gets trashed unless it's "
 "starred."
 msgstr ""
-"Μηνύματα Εισερχομένων από λίστες αλληλογραφίας και ενημερωτικά δελτία (όσα "
-"έχουν σύνδεσμο διαγραφής εγγραφής) παλαιότερα από αυτό το διάστημα, εκτός αν "
-"έχουν αστέρι. Ελέγχεται σε κάθε συγχρονισμό."
+"Τα μηνύματα στα Εισερχόμενα με σύνδεσμο διαγραφής εγγραφής που είναι "
+"παλαιότερα από αυτό το διάστημα μεταφέρονται στον Κάδο, εκτός αν έχουν "
+"αστέρι."
 
 msgid "Microsoft 365"
-msgstr ""
+msgstr "Microsoft 365"
 
 msgid "Search the organization directory"
 msgstr "Αναζήτηση στον κατάλογο του οργανισμού"
 
 msgid "Suggests people from your organization as you type."
-msgstr ""
+msgstr "Προτείνει άτομα από τον οργανισμό σας καθώς πληκτρολογείτε."
 
 msgid "Suggest only from this account"
-msgstr ""
+msgstr "Προτάσεις μόνο από αυτόν τον λογαριασμό"
 
 msgid "Suggestions come from the directory and this account's mail only."
 msgstr ""
+"Οι προτάσεις προέρχονται μόνο από τον κατάλογο και την αλληλογραφία αυτού "
+"του λογαριασμού."
 
 msgid "Show sensitivity label names"
-msgstr ""
+msgstr "Εμφάνιση ονομάτων ετικετών ευαισθησίας"
 
 msgid "Shows a label's name when a message gives only its ID."
 msgstr ""
+"Εμφανίζει το όνομα μιας ετικέτας όταν το μήνυμα παρέχει μόνο το "
+"αναγνωριστικό της."
 
 msgid "Folder Order"
 msgstr "Σειρά φακέλων"
 
-#, fuzzy
 msgid "Also in the right-click menu of its Folders heading."
-msgstr ""
-"Πώς ταξινομούνται οι φάκελοι αυτού του λογαριασμού στην πλευρική στήλη. "
-"Επίσης στο μενού δεξιού κλικ της επικεφαλίδας «Φάκελοι»."
+msgstr "Επίσης στο μενού δεξιού κλικ της επικεφαλίδας «Φάκελοι»."
 
 msgid "Special Folders"
 msgstr "Ειδικοί φάκελοι"
@@ -2328,6 +2398,8 @@ msgid ""
 "Follows the server's own markings unless you pick a folder. Nothing already "
 "on the server moves."
 msgstr ""
+"Ακολουθεί τις επισημάνσεις του διακομιστή, εκτός αν επιλέξετε φάκελο. Δεν "
+"μετακινείται τίποτα από όσα βρίσκονται ήδη στον διακομιστή."
 
 msgid "Sent"
 msgstr "Απεσταλμένα"
@@ -2335,18 +2407,16 @@ msgstr "Απεσταλμένα"
 msgid "Save a copy of sent mail in"
 msgstr "Αποθήκευση αντιγράφου των απεσταλμένων στο"
 
-#, fuzzy
 msgid "Save a copy of replies in"
-msgstr "Αποθήκευση αντιγράφου των απεσταλμένων στο"
+msgstr "Αποθήκευση αντιγράφου των απαντήσεων στον"
 
 msgid "Server saves its own copy of sent mail"
 msgstr "Ο διακομιστής αποθηκεύει δικό του αντίγραφο των απεσταλμένων"
 
-#, fuzzy
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
-"Για το Gmail και άλλες υπηρεσίες που αρχειοθετούν μόνες τους τα απεσταλμένα. "
-"Απενεργοποιεί την παραπάνω αποθήκευση αντιγράφου."
+"Για το Gmail και άλλες υπηρεσίες που αποθηκεύουν μόνες τους την απεσταλμένη "
+"αλληλογραφία."
 
 msgid "Drafts"
 msgstr "Πρόχειρα"
@@ -2367,6 +2437,8 @@ msgid ""
 "Hidden folders are not synced. Hide one from its right-click menu in the "
 "sidebar."
 msgstr ""
+"Οι κρυφοί φάκελοι δεν συγχρονίζονται. Κρύψτε έναν από το μενού δεξιού κλικ "
+"στην πλευρική στήλη."
 
 msgid "No hidden folders."
 msgstr "Δεν υπάρχουν κρυφοί φάκελοι."
@@ -2376,6 +2448,7 @@ msgstr "OpenPGP"
 
 msgid "Keys are managed under OpenPGP in the sidebar."
 msgstr ""
+"Η διαχείριση των κλειδιών γίνεται στην ενότητα OpenPGP της πλευρικής στήλης."
 
 msgid "Key"
 msgstr "Κλειδί"
@@ -2387,24 +2460,22 @@ msgstr ""
 msgid "Sign messages by default"
 msgstr "Υπογραφή μηνυμάτων από προεπιλογή"
 
-#, fuzzy
 msgid "Hide the subject of encrypted mail"
-msgstr "Απόκρυψη του θέματος"
+msgstr "Απόκρυψη του θέματος κρυπτογραφημένων μηνυμάτων"
 
 msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr ""
+msgstr "Το θέμα εμφανίζεται μόνο στους παραλήπτες. Οι υπόλοιποι βλέπουν «…»."
 
-#, fuzzy
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
-"Ο κωδικός πρόσβασής σας αποθηκεύεται στην κλειδοθήκη του συστήματος (secret-"
-"service), ποτέ ως απλό κείμενο στον δίσκο."
+"Ο κωδικός πρόσβασης αποθηκεύεται στην κλειδοθήκη του συστήματος, ποτέ ως "
+"απλό κείμενο."
 
 msgid "Edit HTML"
-msgstr ""
+msgstr "Επεξεργασία HTML"
 
 msgid "Edit the signature's HTML source"
-msgstr ""
+msgstr "Επεξεργασία του πηγαίου κώδικα HTML της υπογραφής"
 
 msgid "Follow Settings"
 msgstr "Ακολούθηση ρυθμίσεων"
@@ -2441,9 +2512,12 @@ msgstr "Εγκρίνετε την πρόσβαση στον κατάλογο σ�
 
 msgid "Opening browser… approve access to the sensitivity labels there."
 msgstr ""
+"Άνοιγμα προγράμματος περιήγησης… εγκρίνετε εκεί την πρόσβαση στις ετικέτες "
+"ευαισθησίας."
 
 msgid "Approve access to the sensitivity labels in the window that opened."
 msgstr ""
+"Εγκρίνετε την πρόσβαση στις ετικέτες ευαισθησίας στο παράθυρο που άνοιξε."
 
 msgid "Import Signature"
 msgstr "Εισαγωγή υπογραφής"
@@ -2457,8 +2531,9 @@ msgstr "Δεν ήταν δυνατή η ανάγνωση του αρχείου"
 msgid "OK"
 msgstr "Εντάξει"
 
+#, python-brace-format
 msgid "Signature {n}"
-msgstr ""
+msgstr "Υπογραφή {n}"
 
 msgid "Enter a client ID and sign in before saving"
 msgstr "Εισαγάγετε αναγνωριστικό πελάτη και συνδεθείτε πριν από την αποθήκευση"
@@ -2471,10 +2546,11 @@ msgstr ""
 "διακομιστής, ενεργοποιήστε παραπάνω την επιλογή «Αποδοχή πιστοποιητικού για "
 "διαφορετικό όνομα» και δοκιμάστε ξανά."
 
-#, fuzzy
 msgid "✓ Signed in. Save the account to finish."
-msgstr "✓ Έγινε σύνδεση — αποθηκεύστε τον λογαριασμό για ολοκλήρωση"
+msgstr ""
+"✓ Συνδεθήκατε. Αποθηκεύστε τον λογαριασμό για να ολοκληρωθεί η διαδικασία."
 
+#, python-brace-format
 msgid "Sign-in failed: {e}"
 msgstr "Η σύνδεση απέτυχε: {e}"
 
@@ -2483,18 +2559,23 @@ msgstr ""
 "Η πρόσβαση στον κατάλογο εγκρίθηκε. Αποθηκεύστε τον λογαριασμό για να "
 "ολοκληρωθεί η διαδικασία."
 
+#, python-brace-format
 msgid "Access to the directory was not approved: {e}"
 msgstr "Δεν εγκρίθηκε η πρόσβαση στον κατάλογο: {e}"
 
 msgid "Access to the sensitivity labels approved. Save the account to finish."
 msgstr ""
+"Η πρόσβαση στις ετικέτες ευαισθησίας εγκρίθηκε. Αποθηκεύστε τον λογαριασμό "
+"για να ολοκληρωθεί η διαδικασία."
 
+#, python-brace-format
 msgid "Access to the sensitivity labels was not approved: {e}"
-msgstr ""
+msgstr "Δεν εγκρίθηκε η πρόσβαση στις ετικέτες ευαισθησίας: {e}"
 
 msgid "✓ SMTP: connected"
 msgstr "✓ SMTP: συνδέθηκε"
 
+#, python-brace-format
 msgid "✗ SMTP: {e}"
 msgstr "✗ SMTP: {e}"
 
@@ -2509,6 +2590,7 @@ msgstr "Εμφάνιση"
 msgid "Bring this folder back to the sidebar"
 msgstr "Επαναφορά αυτού του φακέλου στην πλευρική στήλη"
 
+#, python-brace-format
 msgid "Sends through {host}"
 msgstr "Αποστολή μέσω {host}"
 
@@ -2518,11 +2600,8 @@ msgstr "Αποστολή μέσω αυτού του λογαριασμού"
 msgid "Remove this alias"
 msgstr "Αφαίρεση αυτού του ψευδωνύμου"
 
-#, fuzzy
 msgid "Kept on the server; change it in your provider's webmail."
-msgstr ""
-"Διατηρείται στον διακομιστή· αλλάξτε το μέσω της διεπαφής webmail του "
-"παρόχου σας."
+msgstr "Διατηρείται στον διακομιστή· αλλάξτε το από το webmail του παρόχου."
 
 msgid "Edit Alias"
 msgstr "Επεξεργασία ψευδωνύμου"
@@ -2600,30 +2679,28 @@ msgstr "Αλληλογραφία"
 msgid "Use this account in Hylki"
 msgstr "Χρήση αυτού του λογαριασμού στο Hylki"
 
-#, fuzzy
 msgid ""
 "Only for an account added in Hylki with Microsoft 365 / Outlook as the "
 "provider, not from GNOME Online Accounts."
 msgstr ""
-"Μόνο για λογαριασμό στον οποίο έχετε συνδεθεί μέσα από το Hylki. Για να το "
-"χρησιμοποιήσετε, προσθέστε αυτόν τον λογαριασμό με πάροχο Microsoft 365 / "
-"Outlook, αντί μέσω των Διαδικτυακών Λογαριασμών GNOME."
+"Μόνο για λογαριασμό που προστέθηκε στο Hylki με πάροχο Microsoft 365 / "
+"Outlook, όχι μέσω των Διαδικτυακών λογαριασμών GNOME."
 
-#, fuzzy
 msgid ""
 "Asks Microsoft for access. Some organizations need an administrator to "
 "approve it."
 msgstr ""
-"Προτείνει άτομα από τον οργανισμό σας καθώς πληκτρολογείτε έναν παραλήπτη. Η "
-"ενεργοποίηση ζητά από τη Microsoft πρόσβαση στον κατάλογο· ορισμένοι "
-"οργανισμοί απαιτούν έγκριση διαχειριστή."
+"Ζητά πρόσβαση από τη Microsoft. Ορισμένοι οργανισμοί απαιτούν έγκριση "
+"διαχειριστή."
 
+#, python-brace-format
 msgid "Signed in as {address}, not {email}."
 msgstr "Συνδεθήκατε ως {address}, όχι ως {email}."
 
 msgid "Never"
 msgstr "Ποτέ"
 
+#, python-brace-format
 msgid "After {n} day"
 msgid_plural "After {n} days"
 msgstr[0] "Μετά από {n} ημέρα"
@@ -2655,6 +2732,7 @@ msgstr "Προσαρμοσμένο OAuth"
 msgid "IMAP/POP3 account"
 msgstr "Λογαριασμός IMAP/POP3"
 
+#, python-brace-format
 msgid "IMAP/POP3 account on {host}"
 msgstr "Λογαριασμός IMAP/POP3 στο {host}"
 
@@ -2702,6 +2780,7 @@ msgstr " ή "
 msgid " and "
 msgstr " και "
 
+#, python-brace-format
 msgid ", tagged {tag}"
 msgstr ", με ετικέτα {tag}"
 
@@ -2717,20 +2796,17 @@ msgstr "Αναζήτηση…"
 msgid "No New Tags"
 msgstr "Δεν υπάρχουν νέες ετικέτες"
 
-#, fuzzy
 msgid "Every tag in your mailboxes is already set up here."
-msgstr ""
-"Δεν βρέθηκαν στα γραμματοκιβώτιά σας ετικέτες που να μην έχουν ήδη ρυθμιστεί "
-"εδώ."
+msgstr "Όλες οι ετικέτες στα γραμματοκιβώτιά σας έχουν ήδη ρυθμιστεί εδώ."
 
 msgid "Tags Found"
 msgstr "Βρέθηκαν ετικέτες"
 
-#, fuzzy
+#, python-brace-format
 msgid "{n} tags are in use in your mailboxes but not set up here."
 msgstr ""
-"Δεν βρέθηκαν στα γραμματοκιβώτιά σας ετικέτες που να μην έχουν ήδη ρυθμιστεί "
-"εδώ."
+"Χρησιμοποιούνται {n} ετικέτες στα γραμματοκιβώτιά σας που δεν έχουν "
+"ρυθμιστεί εδώ."
 
 msgid "Import Selected"
 msgstr "Εισαγωγή επιλεγμένων"
@@ -2738,6 +2814,7 @@ msgstr "Εισαγωγή επιλεγμένων"
 msgid "Import All"
 msgstr "Εισαγωγή όλων"
 
+#, python-brace-format
 msgid "{n} messages"
 msgstr "{n} μηνύματα"
 
@@ -2777,9 +2854,8 @@ msgstr "Επεξεργασία έξυπνου φακέλου"
 msgid "Add Smart Folder"
 msgstr "Προσθήκη έξυπνου φακέλου"
 
-#, fuzzy
 msgid "Those in the unified section."
-msgstr "Στην ενοποιημένη ενότητα"
+msgstr "Αυτά που βρίσκονται στην ενοποιημένη ενότητα."
 
 msgid "Folders"
 msgstr "Φάκελοι"
@@ -2796,9 +2872,8 @@ msgstr "Πού"
 msgid "Match"
 msgstr "Αντιστοίχιση"
 
-#, fuzzy
 msgid "Separate alternatives with commas."
-msgstr "Τα κόμματα διαχωρίζουν τις εναλλακτικές· αρκεί οποιαδήποτε από αυτές"
+msgstr "Διαχωρίστε τις εναλλακτικές με κόμμα."
 
 msgid "Text to match"
 msgstr "Κείμενο προς αντιστοίχιση"
@@ -2824,6 +2899,7 @@ msgstr "Πρέπει να ισχύουν όλες"
 msgid "Any one may match"
 msgstr "Μπορεί να ισχύει οποιαδήποτε"
 
+#, python-brace-format
 msgid "Condition {n}"
 msgstr "Συνθήκη {n}"
 
@@ -2833,11 +2909,10 @@ msgstr "Ή όπου"
 msgid "And where"
 msgstr "Και όπου"
 
-#, fuzzy
 msgid "Toggles the tag on a message (with single-key shortcuts on)"
 msgstr ""
-"Πατήστε αυτό το πλήκτρο σε ένα μήνυμα για να προσθέσετε ή να αφαιρέσετε την "
-"ετικέτα (με ενεργές τις συντομεύσεις ενός πλήκτρου)"
+"Ενεργοποιεί ή απενεργοποιεί την ετικέτα σε ένα μήνυμα (με ενεργές τις "
+"συντομεύσεις ενός πλήκτρου)"
 
 msgid "Remove tag"
 msgstr "Αφαίρεση ετικέτας"
@@ -2851,14 +2926,12 @@ msgstr "Προσθήκη ετικέτας"
 msgid "Keyword"
 msgstr "Λέξη-κλειδί"
 
-#, fuzzy
 msgid ""
 "How the server stores the tag, without spaces. Thunderbird's built-in tags "
 "are $label1 to $label5."
 msgstr ""
-"Ο τρόπος αποθήκευσης της ετικέτας στον διακομιστή: γράμματα, ψηφία και τα "
-"περισσότερα σημεία στίξης, χωρίς διαστήματα. Οι ενσωματωμένες ετικέτες του "
-"Thunderbird είναι από $label1 έως $label5."
+"Πώς αποθηκεύει ο διακομιστής την ετικέτα, χωρίς κενά. Οι ενσωματωμένες "
+"ετικέτες του Thunderbird είναι $label1 έως $label5."
 
 msgid "Color"
 msgstr "Χρώμα"
@@ -2916,6 +2989,7 @@ msgstr "Εμφάνιση συνημμένων"
 msgid "Hide the attachments"
 msgstr "Απόκρυψη συνημμένων"
 
+#, python-brace-format
 msgid "{n} attachment"
 msgid_plural "{n} attachments"
 msgstr[0] "{n} συνημμένο"
@@ -3103,21 +3177,25 @@ msgstr "Αρχείο"
 
 #. Deliberately counts messages, not attachments: until a message has
 #. been described there is no telling how many files it holds.
+#, python-brace-format
 msgid "Indexing {n} messages…"
 msgstr "Ευρετηρίαση {n} μηνυμάτων…"
 
 msgid "Loading more…"
 msgstr "Φόρτωση περισσότερων…"
 
+#, python-brace-format
 msgid "{shown} of {total}"
 msgstr "{shown} από {total}"
 
 msgid "The file could not be opened"
 msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
 
+#, python-brace-format
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Καλώς ορίσατε στο Hylki, πρώην {old}"
 
+#, python-brace-format
 msgid ""
 "Your accounts, settings and cached mail were carried over from {old}. There "
 "is nothing to set up again, and nothing in {old} was changed or removed. "
@@ -3128,6 +3206,7 @@ msgstr ""
 "τίποτα στο {old} δεν άλλαξε ούτε αφαιρέθηκε. Μόλις μεταφερθούν όλα εδώ, "
 "μπορείτε να αφαιρέσετε το {old}."
 
+#, python-brace-format
 msgid ""
 "{old} is still the app your desktop opens email links with. To hand that to "
 "Hylki, choose it under Default Apps in Settings."
@@ -3136,6 +3215,7 @@ msgstr ""
 "ανοίγει συνδέσμους email. Για να αναλάβει το Hylki, επιλέξτε το στις "
 "Προεπιλεγμένες εφαρμογές των Ρυθμίσεων."
 
+#, python-brace-format
 msgid "To remove {old}, run:"
 msgstr "Για να αφαιρέσετε το {old}, εκτελέστε:"
 
@@ -3156,19 +3236,16 @@ msgstr "Αποθήκευση στο cloud"
 msgid "Cloud storage"
 msgstr "Αποθήκευση στο cloud"
 
-#, fuzzy
 msgid ""
 "Upload large files and send a link instead of attaching them.\n"
 "\n"
 "Supported providers: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox and "
 "Seafile."
 msgstr ""
-"Συνδέστε τον πάροχο αποθήκευσης στο cloud για να ανεβάζετε και να "
-"κοινοποιείτε μεγάλα αρχεία αντί να τα επισυνάπτετε. Μόλις προστεθεί πάροχος, "
-"εμφανίζεται ένα εικονίδιο cloud στη γραμμή εργαλείων σύνταξης.\n"
+"Μεταφορτώστε μεγάλα αρχεία και στείλτε σύνδεσμο αντί να τα επισυνάψετε.\n"
 "\n"
-"Υποστηριζόμενοι πάροχοι: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox "
-"και Seafile."
+"Υποστηρίζονται οι Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox και "
+"Seafile."
 
 msgid "No cloud accounts yet."
 msgstr "Δεν υπάρχουν ακόμη λογαριασμοί cloud."
@@ -3176,16 +3253,21 @@ msgstr "Δεν υπάρχουν ακόμη λογαριασμοί cloud."
 msgid "Cloud Account"
 msgstr "Λογαριασμός cloud"
 
+#, python-brace-format
 msgid "Remove {name}?"
 msgstr "Αφαίρεση του {name};"
 
 msgid ""
 "Files already uploaded and links sent stay active on the provider's service."
 msgstr ""
+"Τα αρχεία που έχουν ήδη μεταφορτωθεί και οι σύνδεσμοι που έχουν σταλεί "
+"παραμένουν ενεργά στην υπηρεσία του παρόχου."
 
+#, python-brace-format
 msgid "Removed {name}"
 msgstr "Αφαιρέθηκε το {name}"
 
+#, python-brace-format
 msgid "Could not store the sign-in in the keyring: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση των στοιχείων σύνδεσης στο keyring: {e}"
 
@@ -3195,6 +3277,7 @@ msgstr "Επεξεργασία λογαριασμού cloud"
 msgid "Add Cloud Account"
 msgstr "Προσθήκη λογαριασμού cloud"
 
+#, python-brace-format
 msgid "links expire after {n} days"
 msgstr "οι σύνδεσμοι λήγουν μετά από {n} ημέρες"
 
@@ -3213,22 +3296,17 @@ msgstr "Ψευδώνυμο (προαιρετικό)"
 msgid "Server URL"
 msgstr "URL διακομιστή"
 
-#, fuzzy
 msgid "Two-step verification code (if used)"
-msgstr "Κωδικός επαλήθευσης δύο βημάτων, αν τον χρησιμοποιεί ο λογαριασμός"
+msgstr "Κωδικός επαλήθευσης δύο βημάτων (αν χρησιμοποιείται)"
 
-#, fuzzy
 msgid ""
 "Your Seafile password, and the current code if two-step verification is on. "
 "They are swapped once for an API token, which is kept instead. A token can "
 "also be pasted as the password."
 msgstr ""
-"Συνδεθείτε με τον κωδικό πρόσβασης του Seafile. Αν ο λογαριασμός "
-"χρησιμοποιεί επαλήθευση δύο βημάτων, εισαγάγετε επίσης τον τρέχοντα κωδικό "
-"από την εφαρμογή ελέγχου ταυτότητας: το Hylki τον μετατρέπει μία φορά σε "
-"διακριτικό API και αποθηκεύει αυτό αντί για τον κωδικό πρόσβασης. Ένα "
-"διακριτικό που αποκτήθηκε με άλλον τρόπο μπορεί να επικολληθεί στο πεδίο "
-"κωδικού πρόσβασης."
+"Ο κωδικός Seafile και ο τρέχων κωδικός επαλήθευσης, αν είναι ενεργή η "
+"επαλήθευση δύο βημάτων. Ανταλλάσσονται μία φορά με διακριτικό API, το οποίο "
+"αποθηκεύεται. Μπορείτε επίσης να επικολλήσετε διακριτικό ως κωδικό πρόσβασης."
 
 msgid "Dropbox app key"
 msgstr "Κλειδί εφαρμογής Dropbox"
@@ -3246,33 +3324,38 @@ msgid ""
 "For a self-hosted server behind Cloudflare: files over 100 MB go up in 90 MB "
 "pieces."
 msgstr ""
+"Για ιδιωτικό διακομιστή πίσω από το Cloudflare: τα αρχεία άνω των 100 MB "
+"μεταφορτώνονται σε τμήματα των 90 MB."
 
 msgid "Links expire after"
 msgstr "Οι σύνδεσμοι λήγουν μετά από"
 
-#, fuzzy
 msgid "Days. 0 keeps links forever."
-msgstr "Ημέρες· με 0 ο σύνδεσμος διατηρείται επ’ αόριστον"
+msgstr "Ημέρες. Το 0 διατηρεί τους συνδέσμους για πάντα."
 
 msgid "Protect links with a password"
 msgstr "Προστασία συνδέσμων με κωδικό πρόσβασης"
 
 msgid "Each file gets its own password, shown to you to pass on."
 msgstr ""
+"Κάθε αρχείο αποκτά δικό του κωδικό πρόσβασης, τον οποίο μπορείτε να "
+"κοινοποιήσετε στον παραλήπτη."
 
 msgid "Link defaults"
 msgstr "Προεπιλογές συνδέσμων"
 
 msgid "Used unless you change them in the upload dialog for one email."
 msgstr ""
+"Χρησιμοποιούνται εκτός αν τα αλλάξετε στο παράθυρο μεταφόρτωσης για ένα "
+"μήνυμα."
 
 msgid "Check Connection"
 msgstr "Έλεγχος σύνδεσης"
 
+#, python-brace-format
 msgid "{email} (Files is off)"
 msgstr "{email} (τα Αρχεία είναι ανενεργά)"
 
-#, fuzzy
 msgid ""
 "No Microsoft 365 account in GNOME Online Accounts yet. Add one in Settings, "
 "Online Accounts."
@@ -3283,26 +3366,29 @@ msgstr ""
 
 msgid "OneDrive signs in through the online account above. No password needed."
 msgstr ""
+"Το OneDrive συνδέεται μέσω του παραπάνω διαδικτυακού λογαριασμού. Δεν "
+"απαιτείται κωδικός πρόσβασης."
 
 msgid ""
 "Link expiry and passwords need Microsoft 365 or OneDrive for Business. A "
 "free personal OneDrive refuses links with either set."
 msgstr ""
+"Η λήξη συνδέσμων και οι κωδικοί πρόσβασης απαιτούν Microsoft 365 ή OneDrive "
+"για επιχειρήσεις. Το δωρεάν προσωπικό OneDrive δεν επιτρέπει συνδέσμους με "
+"αυτές τις ρυθμίσεις."
 
-#, fuzzy
 msgid ""
 "Days. 0 keeps links forever. Needs Microsoft 365 or OneDrive for Business."
 msgstr ""
-"Ημέρες· με 0 ο σύνδεσμος διατηρείται επ’ αόριστον. Απαιτεί Microsoft 365 ή "
-"OneDrive για επιχειρήσεις"
+"Ημέρες. Το 0 διατηρεί τους συνδέσμους για πάντα. Απαιτείται Microsoft 365 ή "
+"OneDrive για επιχειρήσεις."
 
-#, fuzzy
 msgid ""
 "Each file gets its own password, shown to you to pass on. Needs Microsoft "
 "365 or OneDrive for Business."
 msgstr ""
-"Δημιουργείται κωδικός λήψης για κάθε αρχείο και σας εμφανίζεται, ώστε να τον "
-"στείλετε ξεχωριστά. Απαιτεί Microsoft 365 ή OneDrive για επιχειρήσεις"
+"Κάθε αρχείο αποκτά δικό του κωδικό πρόσβασης, τον οποίο μπορείτε να "
+"κοινοποιήσετε. Απαιτείται Microsoft 365 ή OneDrive για επιχειρήσεις."
 
 msgid "User name"
 msgstr "Όνομα χρήστη"
@@ -3323,11 +3409,13 @@ msgid ""
 "Each file gets its own password, shown to you to pass on. Paid Dropbox plans "
 "only."
 msgstr ""
+"Κάθε αρχείο αποκτά δικό του κωδικό πρόσβασης, τον οποίο μπορείτε να "
+"κοινοποιήσετε στον παραλήπτη. Μόνο σε επί πληρωμή προγράμματα Dropbox."
 
 msgid "Connect with Dropbox…"
 msgstr "Σύνδεση με το Dropbox…"
 
-#, fuzzy
+#, python-brace-format
 msgid ""
 "Dropbox needs an app registered to you:\n"
 "1. At dropbox.com/developers/apps, press Create app.\n"
@@ -3360,6 +3448,7 @@ msgstr ""
 "δικό σας λογαριασμό. Αφήστε το πεδίο κενό για να χρησιμοποιήσετε το κλειδί "
 "εφαρμογής με το οποίο δημιουργήθηκε αυτή η έκδοση, όταν διαθέτει ένα."
 
+#, python-brace-format
 msgid "Connected as {who}."
 msgstr "Συνδέθηκε ως {who}."
 
@@ -3384,38 +3473,34 @@ msgstr ""
 "Συμπληρώστε πρώτα το URL του διακομιστή, το όνομα χρήστη και τον κωδικό "
 "πρόσβασης εφαρμογής."
 
+#, python-brace-format
 msgid "Signed in as {who}."
 msgstr "Συνδεθήκατε ως {who}."
 
-#, fuzzy
 msgid ""
 "Uploads and plain links work. Link expiry and passwords need a Microsoft 365 "
 "subscription, so both are off for this account."
 msgstr ""
-"Μπορείτε να μεταφορτώνετε αρχεία και να κοινοποιείτε απλούς συνδέσμους με "
-"αυτό το OneDrive. Η λήξη συνδέσμων και οι κωδικοί λήψης δεν διατίθενται σε "
-"δωρεάν προσωπικό OneDrive (απαιτούν συνδρομή Microsoft 365), επομένως και οι "
-"δύο επιλογές είναι απενεργοποιημένες για αυτόν τον λογαριασμό."
+"Η μεταφόρτωση και οι απλοί σύνδεσμοι λειτουργούν. Η λήξη συνδέσμων και οι "
+"κωδικοί πρόσβασης απαιτούν συνδρομή Microsoft 365, επομένως είναι "
+"απενεργοποιημένα για αυτόν τον λογαριασμό."
 
-#, fuzzy
 msgid ""
 "Uploads, links and expiry work. OneDrive for Business links take no "
 "password, so that is off for this account."
 msgstr ""
-"Μπορείτε να μεταφορτώνετε αρχεία, να κοινοποιείτε συνδέσμους και να ορίζετε "
-"λήξη με αυτό το OneDrive. Οι κωδικοί λήψης δεν διατίθενται σε συνδέσμους "
-"OneDrive για επιχειρήσεις, επομένως αυτή η επιλογή είναι απενεργοποιημένη "
-"για αυτόν τον λογαριασμό."
+"Η μεταφόρτωση, οι σύνδεσμοι και η λήξη λειτουργούν. Οι σύνδεσμοι OneDrive "
+"για επιχειρήσεις δεν υποστηρίζουν κωδικό πρόσβασης, οπότε αυτή η επιλογή "
+"είναι απενεργοποιημένη."
 
-#, fuzzy
 msgid ""
 "Uploads, links and passwords work. Link expiry is not available, so it is "
 "off for this account."
 msgstr ""
-"Μπορείτε να μεταφορτώνετε αρχεία και να κοινοποιείτε συνδέσμους με αυτό το "
-"OneDrive, με κωδικό λήψης. Η λήξη συνδέσμων δεν διατίθεται σε αυτό, επομένως "
-"αυτή η επιλογή είναι απενεργοποιημένη για αυτόν τον λογαριασμό."
+"Η μεταφόρτωση, οι σύνδεσμοι και οι κωδικοί πρόσβασης λειτουργούν. Η λήξη "
+"συνδέσμων δεν είναι διαθέσιμη και είναι απενεργοποιημένη."
 
+#, python-brace-format
 msgid "Signed in as {who}. {terms}"
 msgstr "Συνδεθήκατε ως {who}. {terms}"
 
@@ -3426,6 +3511,8 @@ msgid ""
 "Uses a translation service under your own key. A message's text is sent only "
 "when you translate it."
 msgstr ""
+"Χρησιμοποιεί υπηρεσία μετάφρασης με δικό σας κλειδί. Το κείμενο ενός "
+"μηνύματος αποστέλλεται μόνο όταν ζητάτε μετάφραση."
 
 msgid "Server"
 msgstr "Διακομιστής"
@@ -3436,10 +3523,8 @@ msgstr "Περιοχή (κενό για καθολικό πόρο)"
 msgid "Check the settings"
 msgstr "Ελέγξτε τις ρυθμίσεις"
 
-#, fuzzy
 msgid "Translates a greeting to test the service."
-msgstr ""
-"Μεταφράζει έναν χαιρετισμό, για να ελέγξετε ότι η υπηρεσία αποκρίνεται."
+msgstr "Μεταφράζει έναν χαιρετισμό για να δοκιμάσει την υπηρεσία."
 
 msgid "Check"
 msgstr "Έλεγχος"
@@ -3447,6 +3532,7 @@ msgstr "Έλεγχος"
 msgid "Messages"
 msgstr "Μηνύματα"
 
+#, python-brace-format
 msgid "Hylki's language ({language})"
 msgstr "Γλώσσα του Hylki ({language})"
 
@@ -3456,13 +3542,12 @@ msgstr "Μετάφραση σε"
 msgid "Offer to translate"
 msgstr "Προσφορά μετάφρασης"
 
-#, fuzzy
 msgid ""
 "Messages in another language show a Translate button. The language is "
 "detected on this computer."
 msgstr ""
-"Τα μηνύματα σε άλλη γλώσσα εμφανίζουν ένα κουμπί «Μετάφραση». Η γλώσσα ενός "
-"μηνύματος αναγνωρίζεται σε αυτόν τον υπολογιστή."
+"Τα μηνύματα σε άλλη γλώσσα εμφανίζουν κουμπί Μετάφραση. Η γλώσσα εντοπίζεται "
+"σε αυτόν τον υπολογιστή."
 
 msgid "Key (if the server asks for one)"
 msgstr "Κλειδί (αν το ζητά ο διακομιστής)"
@@ -3470,6 +3555,7 @@ msgstr "Κλειδί (αν το ζητά ο διακομιστής)"
 msgid "Checking…"
 msgstr "Έλεγχος…"
 
+#, python-brace-format
 msgid "It works: “{sent}” came back as “{back}”."
 msgstr "Λειτουργεί: το «{sent}» επέστρεψε ως «{back}»."
 
@@ -3480,13 +3566,13 @@ msgid "Markdown"
 msgstr "Markdown"
 
 msgid "HTML source"
-msgstr ""
+msgstr "Πηγαίος κώδικας HTML"
 
 msgid "Plain text"
 msgstr "Απλό κείμενο"
 
 msgid "Format as you type; it is sent as HTML"
-msgstr ""
+msgstr "Μορφοποίηση κατά την πληκτρολόγηση· αποστέλλεται ως HTML"
 
 msgid "Write Markdown; it is sent as formatted mail"
 msgstr "Γράψτε Markdown· αποστέλλεται ως μορφοποιημένο μήνυμα"
@@ -3543,12 +3629,15 @@ msgstr "Αποστολή αργότερα"
 msgid "Send now"
 msgstr "Αποστολή τώρα"
 
+#, python-brace-format
 msgid "Tomorrow morning ({time})"
 msgstr "Αύριο το πρωί ({time})"
 
+#, python-brace-format
 msgid "Tomorrow afternoon ({time})"
 msgstr "Αύριο το απόγευμα ({time})"
 
+#, python-brace-format
 msgid "Monday morning ({time})"
 msgstr "Δευτέρα πρωί ({time})"
 
@@ -3579,6 +3668,7 @@ msgstr "Εμφάνιση Από, Προς και Θέμα"
 msgid "Send now instead"
 msgstr "Αποστολή τώρα αντί για αργότερα"
 
+#, python-brace-format
 msgid "Download password for {name}: {password}"
 msgstr "Κωδικός λήψης για {name}: {password}"
 
@@ -3597,6 +3687,7 @@ msgstr "Κρυφή κοιν."
 msgid "Reply-To"
 msgstr "Απάντηση προς"
 
+#, python-brace-format
 msgid "Writing in {format}"
 msgstr "Σύνταξη σε {format}"
 
@@ -3624,6 +3715,7 @@ msgstr "Επιλέξτε από τις διευθύνσεις σας"
 msgid "Not signed in"
 msgstr "Δεν έχει γίνει σύνδεση"
 
+#, python-brace-format
 msgid ""
 "The sign-in for {name} is not in the keyring. Open Settings, Cloud Storage, "
 "and enter it again."
@@ -3631,18 +3723,22 @@ msgstr ""
 "Τα στοιχεία σύνδεσης για το {name} δεν βρίσκονται στην κλειδοθήκη. Ανοίξτε "
 "τις Ρυθμίσεις, Αποθήκευση στο cloud και εισαγάγετέ τα ξανά."
 
+#, python-brace-format
 msgid "link expires {date}"
 msgstr "ο σύνδεσμος λήγει στις {date}"
 
+#, python-brace-format
 msgid "Could not upload {name}"
 msgstr "Δεν ήταν δυνατή η μεταφόρτωση του {name}"
 
 msgid "Attach Files"
 msgstr "Επισύναψη αρχείων"
 
+#, python-brace-format
 msgid "Attach {name}"
 msgstr "Επισύναψη του {name}"
 
+#, python-brace-format
 msgid "Remove {name}"
 msgstr "Αφαίρεση του {name}"
 
@@ -3650,7 +3746,7 @@ msgid "Typing"
 msgstr "Πληκτρολόγηση"
 
 msgid "No Signature"
-msgstr ""
+msgstr "Χωρίς υπογραφή"
 
 msgid "Insert Before the Text"
 msgstr "Εισαγωγή πριν από το κείμενο"
@@ -3664,6 +3760,7 @@ msgstr "Εμφάνιση πρωτοτύπου"
 msgid "Show Translation"
 msgstr "Εμφάνιση μετάφρασης"
 
+#, python-brace-format
 msgid "{language} (the quoted message)"
 msgstr "{language} (το παρατιθέμενο μήνυμα)"
 
@@ -3703,12 +3800,14 @@ msgstr "Δεν είναι δυνατή η αποστολή με OpenPGP"
 msgid "Check the address"
 msgstr "Ελέγξτε τη διεύθυνση"
 
+#, python-brace-format
 msgid "“{addr}” is not an email address."
 msgstr "Το «{addr}» δεν είναι διεύθυνση email."
 
 msgid "An attachment is missing"
 msgstr "Λείπει ένα συνημμένο"
 
+#, python-brace-format
 msgid ""
 "Hylki cannot read {names}. It was moved or deleted after it was attached. "
 "Remove it, or attach it again from where it is now."
@@ -3724,9 +3823,11 @@ msgstr ""
 "Το πεδίο αποστολέα πρέπει να περιέχει μία διεύθυνση, όπως Ann "
 "<ann@example.com>."
 
+#, python-brace-format
 msgid "“{address}” is not an email address."
 msgstr "Το «{address}» δεν είναι διεύθυνση email."
 
+#, python-brace-format
 msgid "{name} (link)"
 msgstr "{name} (σύνδεσμος)"
 
@@ -3756,6 +3857,7 @@ msgstr "Συνέχεια επεξεργασίας"
 msgid "Discard"
 msgstr "Απόρριψη"
 
+#, python-brace-format
 msgid "Upload {n} file and put its share link in the message."
 msgid_plural "Upload {n} files and put their share links in the message."
 msgstr[0] ""
@@ -3777,6 +3879,7 @@ msgstr "Προστασία με κωδικό πρόσβασης"
 msgid "Download password (empty: generated)"
 msgstr "Κωδικός λήψης (κενό: δημιουργείται αυτόματα)"
 
+#, python-brace-format
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -3784,6 +3887,7 @@ msgstr ""
 "Δεν υπάρχει δικό σας κλειδί OpenPGP για τη διεύθυνση {addr}. Δημιουργήστε "
 "ένα στις Ρυθμίσεις, OpenPGP ή επιλέξτε κλειδί στις ρυθμίσεις του λογαριασμού."
 
+#, python-brace-format
 msgid ""
 "There is no OpenPGP key for {addr}. Ask them for their public key, or fetch "
 "it under Settings, OpenPGP."
@@ -3810,42 +3914,35 @@ msgstr "Αναζήτηση επαφών"
 msgid "No Contacts"
 msgstr "Δεν υπάρχουν επαφές"
 
-#, fuzzy
 msgid "Add contacts in the Contacts view to see them here."
-msgstr "Προσθέστε επαφές στις Επαφές GNOME για να τις βλέπετε εδώ."
+msgstr "Προσθέστε επαφές στην προβολή Επαφές για να εμφανιστούν εδώ."
 
 msgid "Has Photo"
-msgstr ""
+msgstr "Έχει φωτογραφία"
 
-#, fuzzy
 msgid "Has Email"
-msgstr "Email"
+msgstr "Έχει email"
 
-#, fuzzy
 msgid "Has Phone"
-msgstr "Τηλέφωνο"
+msgstr "Έχει τηλέφωνο"
 
-#, fuzzy
 msgid "Has Address"
-msgstr "Διεύθυνση"
+msgstr "Έχει διεύθυνση"
 
-#, fuzzy
 msgid "Has Birthday"
-msgstr "Γενέθλια"
+msgstr "Έχει γενέθλια"
 
 msgid "Has Company"
-msgstr ""
+msgstr "Έχει εταιρεία"
 
-#, fuzzy
 msgid "Not in a Group"
-msgstr "Αριστερή ομάδα"
+msgstr "Δεν ανήκει σε ομάδα"
 
 msgid "Import vCard files into the Hylki address book"
 msgstr "Εισαγωγή αρχείων vCard στο βιβλίο διευθύνσεων του Hylki"
 
-#, fuzzy
 msgid "New contact or group"
-msgstr "Νέα επαφή"
+msgstr "Νέα επαφή ή ομάδα"
 
 msgid "Loading Contacts…"
 msgstr "Φόρτωση επαφών..."
@@ -3859,24 +3956,22 @@ msgstr ""
 "διατηρούνται στο δικό του βιβλίο διευθύνσεων του Hylki, ενώ εδώ εμφανίζονται "
 "και τα βιβλία διευθύνσεων των Επαφών GNOME."
 
-#, fuzzy
 msgid "Search contacts (Ctrl+F)"
-msgstr "Αναζήτηση επαφών"
+msgstr "Αναζήτηση επαφών (Ctrl+F)"
 
-#, fuzzy
 msgid "Sort and filter contacts"
-msgstr "Ταξινόμηση επαφών"
+msgstr "Ταξινόμηση και φιλτράρισμα επαφών"
 
 msgid "Edit contact"
 msgstr "Επεξεργασία επαφής"
 
-#, fuzzy
+#, python-brace-format
 msgid "Delete {n} Group?"
 msgid_plural "Delete {n} Groups?"
-msgstr[0] "Διαγραφή του κλειδιού σας;"
-msgstr[1] "Διαγραφή του κλειδιού σας;"
+msgstr[0] "Διαγραφή {n} ομάδας;"
+msgstr[1] "Διαγραφή {n} ομάδων;"
 
-#, fuzzy
+#, python-brace-format
 msgid ""
 "This will remove {n} group from your address books locally and on the "
 "server. The contacts are not removed."
@@ -3884,13 +3979,13 @@ msgid_plural ""
 "This will remove {n} groups from your address books locally and on the "
 "server. The contacts are not removed."
 msgstr[0] ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Αυτό θα αφαιρέσει {n} ομάδα από τους καταλόγους διευθύνσεών σας τοπικά και "
+"στον διακομιστή. Οι επαφές δεν αφαιρούνται."
 msgstr[1] ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Αυτό θα αφαιρέσει {n} ομάδες από τους καταλόγους διευθύνσεών σας τοπικά και "
+"στον διακομιστή. Οι επαφές δεν αφαιρούνται."
 
-#, fuzzy
+#, python-brace-format
 msgid ""
 "This will remove {n} group from your address book. The contacts are not "
 "removed."
@@ -3898,19 +3993,19 @@ msgid_plural ""
 "This will remove {n} groups from your address books. The contacts are not "
 "removed."
 msgstr[0] ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Αυτό θα αφαιρέσει {n} ομάδα από τον κατάλογο διευθύνσεών σας. Οι επαφές δεν "
+"αφαιρούνται."
 msgstr[1] ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Αυτό θα αφαιρέσει {n} ομάδες από τους καταλόγους διευθύνσεών σας. Οι επαφές "
+"δεν αφαιρούνται."
 
-#, fuzzy
+#, python-brace-format
 msgid "Delete {n} Contact?"
 msgid_plural "Delete {n} Contacts?"
-msgstr[0] "Διαγραφή επαφής;"
-msgstr[1] "Διαγραφή επαφής;"
+msgstr[0] "Διαγραφή {n} επαφής;"
+msgstr[1] "Διαγραφή {n} επαφών;"
 
-#, fuzzy
+#, python-brace-format
 msgid ""
 "This will remove {n} contact from your address books locally and on the "
 "server."
@@ -3918,87 +4013,84 @@ msgid_plural ""
 "This will remove {n} contacts from your address books locally and on the "
 "server."
 msgstr[0] ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Αυτό θα αφαιρέσει {n} επαφή από τους καταλόγους διευθύνσεών σας τοπικά και "
+"στον διακομιστή."
 msgstr[1] ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Αυτό θα αφαιρέσει {n} επαφές από τους καταλόγους διευθύνσεών σας τοπικά και "
+"στον διακομιστή."
 
-#, fuzzy
+#, python-brace-format
 msgid "This will remove {n} contact from your address book."
 msgid_plural "This will remove {n} contacts from your address books."
-msgstr[0] ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
-msgstr[1] ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+msgstr[0] "Αυτό θα αφαιρέσει {n} επαφή από τον κατάλογο διευθύνσεών σας."
+msgstr[1] "Αυτό θα αφαιρέσει {n} επαφές από τους καταλόγους διευθύνσεών σας."
 
-#, fuzzy
+#, python-brace-format
 msgid ""
 "This will remove the group {name} from your address book locally and on the "
 "server. The contacts are not removed."
 msgstr ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Αυτό θα αφαιρέσει την ομάδα {name} από τον κατάλογο διευθύνσεών σας, τοπικά "
+"και στον διακομιστή. Οι επαφές δεν αφαιρούνται."
 
+#, python-brace-format
 msgid ""
 "This will remove the group {name} from your address book. The contacts are "
 "not removed."
 msgstr ""
+"Αυτό θα αφαιρέσει την ομάδα {name} από τον κατάλογο διευθύνσεών σας. Οι "
+"επαφές δεν αφαιρούνται."
 
-#, fuzzy
 msgid "Delete Group?"
-msgstr "Διαγραφή του κλειδιού σας;"
+msgstr "Διαγραφή ομάδας;"
 
-#, fuzzy
+#, python-brace-format
 msgid ""
 "This will remove the contact {name} from your address book locally and on "
 "the server."
 msgstr ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Αυτό θα αφαιρέσει την επαφή {name} από τον κατάλογο διευθύνσεών σας, τοπικά "
+"και στον διακομιστή."
 
-#, fuzzy
+#, python-brace-format
 msgid "This will remove the contact {name} from your address book."
-msgstr ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+msgstr "Αυτό θα αφαιρέσει την επαφή {name} από τον κατάλογο διευθύνσεών σας."
 
 msgid "Delete Contact?"
 msgstr "Διαγραφή επαφής;"
 
-#, fuzzy
 msgid "Rename Address Book"
-msgstr "Βιβλίο διευθύνσεων"
+msgstr "Μετονομασία καταλόγου διευθύνσεων"
 
 msgid ""
 "The name is used in Hylki only; GNOME Contacts and Evolution keep the book's "
 "own."
 msgstr ""
+"Το όνομα χρησιμοποιείται μόνο στο Hylki· οι Επαφές GNOME και το Evolution "
+"διατηρούν το δικό τους όνομα."
 
 msgid "Use Its Own Name"
-msgstr ""
+msgstr "Χρήση του δικού του ονόματος"
 
-#, fuzzy
 msgid "Move Contact?"
-msgstr "Άνοιγμα Επαφών"
+msgstr "Μετακίνηση επαφής;"
 
-#, fuzzy
+#, python-brace-format
 msgid ""
 "This will move {name} out of {from} and into {to}, locally and on the "
 "server. A group in {from} that holds the contact will no longer have it."
 msgstr ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Η επαφή {name} θα μετακινηθεί από το {from} στο {to}, τοπικά και στον "
+"διακομιστή. Οι ομάδες στο {from} που περιλαμβάνουν την επαφή δεν θα την "
+"περιλαμβάνουν πλέον."
 
-#, fuzzy
+#, python-brace-format
 msgid "Move {n} Contact?"
 msgid_plural "Move {n} Contacts?"
-msgstr[0] "Άνοιγμα Επαφών"
-msgstr[1] "Άνοιγμα Επαφών"
+msgstr[0] "Μετακίνηση {n} επαφής;"
+msgstr[1] "Μετακίνηση {n} επαφών;"
 
-#, fuzzy
+#, python-brace-format
 msgid ""
 "This will move {n} contact out of the address book it is in and into {to}, "
 "locally and on the server. A group there that holds it will no longer have "
@@ -4008,35 +4100,34 @@ msgid_plural ""
 "{to}, locally and on the server. Groups there that hold them will no longer "
 "have them."
 msgstr[0] ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Η {n} επαφή θα μετακινηθεί από τον τρέχοντα κατάλογο στο {to}, τοπικά και "
+"στον διακομιστή. Οι ομάδες που την περιλαμβάνουν δεν θα την περιλαμβάνουν "
+"πλέον."
 msgstr[1] ""
-"Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
-"βιβλίο, και από τον διακομιστή."
+"Οι {n} επαφές θα μετακινηθούν από τους τρέχοντες καταλόγους στο {to}, τοπικά "
+"και στον διακομιστή. Οι ομάδες που τις περιλαμβάνουν δεν θα τις "
+"περιλαμβάνουν πλέον."
 
-#, fuzzy
 msgid "Move"
-msgstr "Μετακίνηση σε"
+msgstr "Μετακίνηση"
 
 msgid "In Directories"
 msgstr "Στους καταλόγους"
 
 msgid "Type three letters or more to search the directory."
-msgstr ""
+msgstr "Πληκτρολογήστε τουλάχιστον τρία γράμματα για αναζήτηση στον κατάλογο."
 
 msgid "Nobody in the directory matches."
-msgstr ""
+msgstr "Δεν βρέθηκε κανένα άτομο στον κατάλογο."
 
-#, fuzzy
 msgid "Remove from Group"
-msgstr "Αφαίρεση από τα Αγαπημένα"
+msgstr "Αφαίρεση από ομάδα"
 
 msgid "Add to Group"
-msgstr ""
+msgstr "Προσθήκη στην ομάδα"
 
-#, fuzzy
 msgid "Move to Address Book"
-msgstr "Βιβλίο διευθύνσεων"
+msgstr "Μετακίνηση σε κατάλογο διευθύνσεων"
 
 msgid "Delete…"
 msgstr "Διαγραφή…"
@@ -4047,28 +4138,26 @@ msgstr "Επεξεργασία"
 msgid "Open in GNOME Contacts"
 msgstr "Άνοιγμα στις Επαφές GNOME"
 
-#, fuzzy
+#, python-brace-format
 msgid "{n} Group Selected"
 msgid_plural "{n} Groups Selected"
-msgstr[0] "Εισαγωγή επιλεγμένων"
-msgstr[1] "Εισαγωγή επιλεγμένων"
+msgstr[0] "{n} ομάδα επιλεγμένη"
+msgstr[1] "{n} ομάδες επιλεγμένες"
 
-#, fuzzy
+#, python-brace-format
 msgid "{n} Contact Selected"
 msgid_plural "{n} Contacts Selected"
-msgstr[0] "Εισαγωγή επιλεγμένων"
-msgstr[1] "Εισαγωγή επιλεγμένων"
+msgstr[0] "{n} επαφή επιλεγμένη"
+msgstr[1] "{n} επαφές επιλεγμένες"
 
 msgid "Move to…"
 msgstr "Μετακίνηση σε…"
 
-#, fuzzy
 msgid "Move to another address book"
-msgstr "Αποθήκευση του καταλόγου;"
+msgstr "Μετακίνηση σε άλλον κατάλογο διευθύνσεων"
 
-#, fuzzy
 msgid "Selected"
-msgstr "Εισαγωγή επιλεγμένων"
+msgstr "Επιλεγμένα"
 
 msgid "View photo"
 msgstr "Προβολή φωτογραφίας"
@@ -4095,38 +4184,42 @@ msgstr "Βιβλίο διευθύνσεων"
 msgid "Details"
 msgstr "Λεπτομέρειες"
 
-#, fuzzy
 msgid "Edit Group"
-msgstr "Δεξιά ομάδα"
+msgstr "Επεξεργασία ομάδας"
 
-#, fuzzy
 msgid "New Group"
-msgstr "Αριστερή ομάδα"
+msgstr "Νέα ομάδα"
 
 msgid "Group"
-msgstr ""
+msgstr "Ομάδα"
 
-#, fuzzy
 msgid "Send as Bcc"
-msgstr "Αποστολή όλων"
+msgstr "Αποστολή ως κρυφή κοινοποίηση"
 
 msgid "Members do not see each other's addresses."
-msgstr ""
+msgstr "Τα μέλη δεν βλέπουν τις διευθύνσεις των υπόλοιπων."
 
 #. An Apple group (iCloud's) holds cards of its own book.
 msgid ""
 "Groups in this address book hold its own contacts: anyone added who is not "
 "in it yet is added to it."
 msgstr ""
+"Οι ομάδες αυτού του καταλόγου περιέχουν τις δικές του επαφές. Όποια επαφή "
+"προστεθεί και δεν υπάρχει ήδη στον κατάλογο προστίθεται σε αυτόν."
 
+#, python-brace-format
 msgid ""
 "Saving moves the group to this address book, with its people, and removes it "
 "from {book}."
 msgstr ""
+"Με την αποθήκευση, η ομάδα και τα μέλη της μεταφέρονται σε αυτόν τον "
+"κατάλογο και αφαιρούνται από τον {book}."
 
 msgid ""
 "Groups here hold addresses, so people with no email address are left out."
 msgstr ""
+"Οι ομάδες εδώ περιέχουν διευθύνσεις, επομένως παραλείπονται άτομα χωρίς "
+"διεύθυνση email."
 
 msgid "Edit Contact"
 msgstr "Επεξεργασία επαφής"
@@ -4146,6 +4239,7 @@ msgstr "Τίτλος"
 
 msgid "Another book moves the contact there when saved."
 msgstr ""
+"Αν επιλέξετε άλλον κατάλογο, η επαφή θα μεταφερθεί εκεί κατά την αποθήκευση."
 
 msgid "Add email"
 msgstr "Προσθήκη email"
@@ -4156,22 +4250,22 @@ msgstr "Προσθήκη τηλεφώνου"
 msgid "Add website"
 msgstr "Προσθήκη ιστοτόπου"
 
-#, fuzzy
 msgid "Members"
-msgstr "Αριθμοί σελίδων"
+msgstr "Μέλη"
 
-#, fuzzy
 msgid "No email address"
-msgstr "Διεύθυνση email"
+msgstr "Χωρίς διεύθυνση email"
 
 msgid "No one is in this group yet."
-msgstr ""
+msgstr "Δεν υπάρχει ακόμη κανείς σε αυτήν την ομάδα."
 
 msgid "Changed in the app it came from"
-msgstr ""
+msgstr "Έγινε αλλαγή στην εφαρμογή προέλευσης"
 
 msgid "This group names its members by contact, which Hylki does not edit."
 msgstr ""
+"Αυτή η ομάδα ορίζει τα μέλη της μέσω επαφών, κάτι που το Hylki δεν μπορεί να "
+"επεξεργαστεί."
 
 msgid "First name"
 msgstr "Όνομα"
@@ -4188,124 +4282,122 @@ msgstr "Αρχεία vCard"
 msgid "All files"
 msgstr "Όλα τα αρχεία"
 
-#, fuzzy
 msgid "Add a person by name or address"
-msgstr "Μια επαφή χρειάζεται όνομα ή διεύθυνση email"
+msgstr "Προσθήκη ατόμου με όνομα ή διεύθυνση"
 
-#, fuzzy
+#, python-brace-format
 msgid "No email address · {book}"
-msgstr "Διεύθυνση email"
+msgstr "Χωρίς διεύθυνση email · {book}"
 
 msgid "No label"
-msgstr ""
+msgstr "Χωρίς ετικέτα"
 
 msgid "Home"
-msgstr ""
+msgstr "Οικία"
 
 msgid "Work"
-msgstr ""
+msgstr "Εργασία"
 
 msgid "Mobile"
-msgstr ""
+msgstr "Κινητό"
 
 msgid "Fax"
-msgstr ""
+msgstr "Φαξ"
 
-#, fuzzy
 msgid "Label"
-msgstr "Ετικέτες"
+msgstr "Ετικέτα"
 
-#, fuzzy
 msgid "Add address"
-msgstr "Διεύθυνση"
+msgstr "Προσθήκη διεύθυνσης"
 
 msgid "Street"
-msgstr ""
+msgstr "Οδός"
 
 msgid "City"
-msgstr ""
+msgstr "Πόλη"
 
 msgid "State or region"
-msgstr ""
+msgstr "Πολιτεία ή περιφέρεια"
 
 msgid "Postal code"
-msgstr ""
+msgstr "Ταχυδρομικός κώδικας"
 
 msgid "Country"
-msgstr ""
+msgstr "Χώρα"
 
-#, fuzzy
 msgid "No birthday"
-msgstr "Γενέθλια"
+msgstr "Χωρίς γενέθλια"
 
 msgid "Year"
-msgstr ""
+msgstr "Έτος"
 
 msgid "Change Photo…"
-msgstr ""
+msgstr "Αλλαγή φωτογραφίας…"
 
-#, fuzzy
 msgid "Remove Photo"
-msgstr "Αφαίρεση ετικέτας"
+msgstr "Αφαίρεση φωτογραφίας"
 
-#, fuzzy
 msgid "Choose a Photo"
-msgstr "Επιλογή εικόνας"
+msgstr "Επιλογή φωτογραφίας"
 
-#, fuzzy
 msgid "Directories"
-msgstr "Στους καταλόγους"
+msgstr "Κατάλογοι"
 
-#, fuzzy
 msgid "Use an app-specific password, not your usual one."
-msgstr ""
-"Απαιτεί κωδικό πρόσβασης ειδικά για την εφαρμογή (όχι τον κανονικό κωδικό "
-"σύνδεσής σας)."
+msgstr "Χρησιμοποιήστε κωδικό πρόσβασης εφαρμογής, όχι τον συνηθισμένο σας."
 
-#, fuzzy
 msgid "CardDAV Server"
-msgstr "Διακομιστής"
+msgstr "Διακομιστής CardDAV"
 
 msgid ""
 "The server's address is usually enough. Two-step sign-in needs an app "
 "password."
 msgstr ""
+"Συνήθως αρκεί η διεύθυνση του διακομιστή. Η σύνδεση με επαλήθευση δύο "
+"βημάτων απαιτεί κωδικό πρόσβασης εφαρμογής."
 
 msgid ""
 "Such as cloud.example.org. With two-factor sign-in, make an app password in "
 "Nextcloud under Settings → Security."
 msgstr ""
+"Για παράδειγμα cloud.example.org. Με έλεγχο ταυτότητας δύο παραγόντων, "
+"δημιουργήστε κωδικό εφαρμογής στο Nextcloud από τις Ρυθμίσεις → Ασφάλεια."
 
 msgid ""
 "Use an app password with access to contacts, made in Fastmail under Settings "
 "→ Privacy & Security."
 msgstr ""
+"Χρησιμοποιήστε κωδικό εφαρμογής με πρόσβαση στις επαφές, που δημιουργείται "
+"στο Fastmail από τις Ρυθμίσεις → Απόρρητο και ασφάλεια."
 
 msgid "LDAP Directory"
 msgstr "Κατάλογος LDAP"
 
-#, fuzzy
 msgid "Address Books"
-msgstr "Βιβλίο διευθύνσεων"
+msgstr "Κατάλογοι διευθύνσεων"
 
 msgid ""
 "Where contacts come from for Contacts, suggestions, sender pictures and "
 "filters. Switching one off leaves it out of Hylki."
 msgstr ""
+"Από εδώ προέρχονται οι επαφές για την προβολή Επαφές, τις προτάσεις, τις "
+"φωτογραφίες αποστολέων και τα φίλτρα. Αν απενεργοποιήσετε έναν κατάλογο, δεν "
+"θα εμφανίζεται στο Hylki."
 
-#, fuzzy
 msgid "Look again for address books"
-msgstr "Αναζήτηση κλειδιού για {addr}…"
+msgstr "Νέα αναζήτηση καταλόγων διευθύνσεων"
 
-#, fuzzy
 msgid "Add Address Book…"
-msgstr "Όλα τα βιβλία διευθύνσεων"
+msgstr "Προσθήκη καταλόγου διευθύνσεων…"
 
 msgid ""
 "Address books need Evolution Data Server, which is not installed. Install "
 "the evolution-data-server package (it runs without GNOME) and reopen this "
 "page."
 msgstr ""
+"Οι κατάλογοι διευθύνσεων απαιτούν το Evolution Data Server, που δεν είναι "
+"εγκατεστημένο. Εγκαταστήστε το πακέτο evolution-data-server (λειτουργεί και "
+"χωρίς GNOME) και ανοίξτε ξανά αυτήν τη σελίδα."
 
 msgid "New Contacts"
 msgstr "Νέες επαφές"
@@ -4314,91 +4406,82 @@ msgid "Save new contacts in"
 msgstr "Αποθήκευση νέων επαφών στο"
 
 msgid "Unless another is picked when the contact is made."
-msgstr ""
+msgstr "Εκτός αν επιλεγεί άλλος κατά τη δημιουργία της επαφής."
 
-#, fuzzy
 msgid ""
 "Evolution and other apps stop seeing it too. Nothing on the server changes."
 msgstr ""
-"Ο κατάλογος αφαιρείται από τον Evolution Data Server, οπότε το Evolution και "
-"οι άλλες εφαρμογές που τον χρησιμοποιούν παύουν επίσης να τον βλέπουν. "
-"Τίποτα στον διακομιστή δεν αλλάζει."
+"Οι Επαφές GNOME και άλλες εφαρμογές δεν θα μπορούν πλέον να το βλέπουν. Δεν "
+"αλλάζει τίποτα στον διακομιστή."
 
-#, fuzzy
 msgid ""
 "Evolution and other apps stop seeing them too. Nothing on the server changes."
 msgstr ""
-"Ο κατάλογος αφαιρείται από τον Evolution Data Server, οπότε το Evolution και "
-"οι άλλες εφαρμογές που τον χρησιμοποιούν παύουν επίσης να τον βλέπουν. "
-"Τίποτα στον διακομιστή δεν αλλάζει."
+"Οι Επαφές GNOME και άλλες εφαρμογές δεν θα μπορούν πλέον να τις βλέπουν. Δεν "
+"αλλάζει τίποτα στον διακομιστή."
 
-#, fuzzy
+#, python-brace-format
 msgid "Looking for address books on {name}…"
-msgstr "Αναζήτηση κλειδιού για {addr}…"
+msgstr "Αναζήτηση καταλόγων διευθύνσεων στο {name}…"
 
-#, fuzzy
+#, python-brace-format
 msgid "{name}: {problem}"
-msgstr "{name}: επιτυχία"
+msgstr "{name}: {problem}"
 
-#, fuzzy
+#, python-brace-format
 msgid "No address books were found on {name} yet."
-msgstr "Δεν υπάρχει διαθέσιμο βιβλίο διευθύνσεων για προσθήκη επαφών"
+msgstr "Δεν βρέθηκαν ακόμη κατάλογοι διευθύνσεων στο {name}."
 
+#, python-brace-format
 msgid "Found {n} address book on {name}"
 msgid_plural "Found {n} address books on {name}"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Βρέθηκε {n} κατάλογος διευθύνσεων για {name}"
+msgstr[1] "Βρέθηκαν {n} κατάλογοι διευθύνσεων για {name}"
 
+#, python-brace-format
 msgid "Connected to {name}"
 msgstr "Συνδέθηκε με το {name}"
 
 msgid "The server took too long to answer."
 msgstr "Ο διακομιστής άργησε υπερβολικά να απαντήσει."
 
-#, fuzzy
 msgid "Kept by Evolution Data Server"
-msgstr "Ο Evolution Data Server δεν είναι διαθέσιμος"
+msgstr "Διατηρείται από το Evolution Data Server"
 
 msgid "The address books GNOME Contacts and Evolution keep on this computer."
 msgstr ""
+"Οι κατάλογοι διευθύνσεων που διατηρούν οι Επαφές GNOME και το Evolution σε "
+"αυτόν τον υπολογιστή."
 
 msgid "Open GNOME Contacts"
 msgstr "Άνοιγμα Επαφών GNOME"
 
-#, fuzzy
 msgid "Set up in GNOME Online Accounts"
-msgstr "Βρέθηκε στους Διαδικτυακούς λογαριασμούς GNOME"
+msgstr "Ρύθμιση στους Διαδικτυακούς λογαριασμούς GNOME"
 
 msgid "Its sign-in and its Contacts switch are in GNOME Settings."
-msgstr ""
+msgstr "Η σύνδεσή του και η επιλογή Επαφές βρίσκονται στις Ρυθμίσεις GNOME."
 
-#, fuzzy
 msgid "Open Online Accounts"
-msgstr "Άνοιγμα Διαδικτυακών λογαριασμών…"
+msgstr "Άνοιγμα Διαδικτυακών λογαριασμών"
 
-#, fuzzy
 msgid "Add Address Book"
-msgstr "Όλα τα βιβλία διευθύνσεων"
+msgstr "Προσθήκη καταλόγου διευθύνσεων"
 
-#, fuzzy
 msgid "Added in GNOME Online Accounts"
-msgstr "Βρέθηκε στους Διαδικτυακούς λογαριασμούς GNOME"
+msgstr "Προστέθηκε στους Διαδικτυακούς λογαριασμούς GNOME"
 
-#, fuzzy
 msgid ""
 "Google and Microsoft 365 sign in through GNOME Online Accounts. Add the "
 "account there with Contacts on, and it will be listed here."
 msgstr ""
-"Δεν υπάρχει ακόμη λογαριασμός Microsoft 365 στους Διαδικτυακούς λογαριασμούς "
-"GNOME. Προσθέστε έναν στις Ρυθμίσεις, Διαδικτυακοί λογαριασμοί· έπειτα το "
-"OneDrive συνδέεται μέσω αυτού και δεν χρειάζεται τίποτα άλλο εδώ."
+"Η σύνδεση Google και Microsoft 365 γίνεται μέσω των Διαδικτυακών λογαριασμών "
+"GNOME. Προσθέστε εκεί τον λογαριασμό με ενεργές τις Επαφές και θα εμφανιστεί "
+"εδώ."
 
-#, fuzzy
 msgid "Kept in Hylki's own data folder. Works without GNOME."
 msgstr ""
-"Οι επαφές που διατηρεί το Hylki βρίσκονται στον δικό του φάκελο δεδομένων. "
-"Εμφανίζονται στις Επαφές μαζί με τα βιβλία διευθύνσεων των Επαφών GNOME και "
-"λειτουργούν χωρίς το GNOME."
+"Διατηρείται στον φάκελο δεδομένων του Hylki. Λειτουργεί και χωρίς GNOME."
 
 msgid "Contacts in the Hylki book"
 msgstr "Επαφές στο βιβλίο του Hylki"
@@ -4406,64 +4489,63 @@ msgstr "Επαφές στο βιβλίο του Hylki"
 msgid "Import vCard files"
 msgstr "Εισαγωγή αρχείων vCard"
 
-#, fuzzy
 msgid ""
 "Adds contacts from .vcf files. Importing a file again updates existing "
 "entries."
 msgstr ""
-"Προσθέτει τις επαφές από αρχεία .vcf στο βιβλίο του Hylki. Η επανεισαγωγή "
-"ενός αρχείου ενημερώνει τις επαφές του."
+"Προσθέτει επαφές από αρχεία .vcf. Η επανεισαγωγή ενός αρχείου ενημερώνει τις "
+"υπάρχουσες εγγραφές."
 
 msgid "Export as a vCard file"
 msgstr "Εξαγωγή ως αρχείο vCard"
 
-#, fuzzy
 msgid "Saves every contact in the Hylki book in one .vcf file."
-msgstr ""
-"Αποθηκεύει κάθε επαφή του βιβλίου του Hylki σε ένα αρχείο .vcf, το οποίο "
-"μπορούν να εισαγάγουν άλλες εφαρμογές."
+msgstr "Αποθηκεύει όλες τις επαφές του καταλόγου Hylki σε ένα αρχείο .vcf."
 
 msgid "Delete all contacts"
 msgstr "Διαγραφή όλων των επαφών"
 
-#, fuzzy
 msgid "Other address books are not touched."
-msgstr ""
-"Αδειάζει το βιβλίο του Hylki. Τα βιβλία διευθύνσεων των Επαφών GNOME δεν "
-"επηρεάζονται."
+msgstr "Οι άλλοι κατάλογοι διευθύνσεων δεν επηρεάζονται."
 
-#, fuzzy
 msgid "Set up in Hylki"
-msgstr "Εμφάνιση στο Hylki"
+msgstr "Ρύθμιση στο Hylki"
 
-#, fuzzy
 msgid "From GNOME Online Accounts"
-msgstr "Διαδικτυακοί λογαριασμοί GNOME"
+msgstr "Από τους Διαδικτυακούς λογαριασμούς GNOME"
 
 msgid "Evolution"
-msgstr ""
+msgstr "Evolution"
 
 msgid "Kept by Evolution Data Server, set up in Evolution or GNOME Contacts"
 msgstr ""
+"Διατηρείται από το Evolution Data Server και ρυθμίζεται στο Evolution ή στις "
+"Επαφές GNOME"
 
-#, fuzzy
 msgid "Use in Hylki"
-msgstr "Άνοιγμα Hylki"
+msgstr "Χρήση στο Hylki"
 
+#, python-brace-format
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
+"Το όνομα που χρησιμοποιείται εδώ και στις Επαφές. Αν μείνει κενό, είναι "
+"{own}."
 
+#, python-brace-format
 msgid ""
 "The name used here and in Contacts; GNOME Contacts keeps its own. Left "
 "blank, it is {own}."
 msgstr ""
+"Το όνομα που χρησιμοποιείται εδώ και στις Επαφές· οι Επαφές GNOME διατηρούν "
+"το δικό τους. Αν μείνει κενό, είναι {own}."
 
-#, fuzzy
 msgid "Address books"
-msgstr "Βιβλίο διευθύνσεων"
+msgstr "Κατάλογοι διευθύνσεων"
 
 msgid "Rename a book for Hylki, or switch it off to leave it out."
 msgstr ""
+"Μετονομάστε έναν κατάλογο για το Hylki ή απενεργοποιήστε τον για να "
+"εξαιρεθεί."
 
 msgid "Sign-in"
 msgstr "Σύνδεση"
@@ -4471,17 +4553,17 @@ msgstr "Σύνδεση"
 msgid "Password (saved; type to replace it)"
 msgstr "Κωδικός πρόσβασης (αποθηκευμένος· πληκτρολογήστε για αντικατάσταση)"
 
-#, fuzzy
 msgid "Enter the user name."
-msgstr "Εισαγάγετε τον διακομιστή του καταλόγου."
+msgstr "Εισαγάγετε το όνομα χρήστη."
 
-#, fuzzy
 msgid "Enter the password."
-msgstr "Προστασία με κωδικό πρόσβασης"
+msgstr "Εισαγάγετε τον κωδικό πρόσβασης."
 
 msgid ""
 "Recipients are looked up here as you type, and Contacts searches it too."
 msgstr ""
+"Οι παραλήπτες αναζητούνται εδώ καθώς πληκτρολογείτε, και η αναζήτηση Επαφών "
+"τον περιλαμβάνει επίσης."
 
 msgid "Encryption"
 msgstr "Κρυπτογράφηση"
@@ -4504,11 +4586,8 @@ msgstr "Ολόκληρο το δέντρο"
 msgid "First level"
 msgstr "Πρώτο επίπεδο"
 
-#, fuzzy
 msgid "Leave empty for a directory that needs no sign-in."
-msgstr ""
-"Αφήστε τα κενά για έναν κατάλογο στον οποίο μπορεί να γίνει αναζήτηση χωρίς "
-"σύνδεση."
+msgstr "Αφήστε το κενό για κατάλογο που δεν απαιτεί σύνδεση."
 
 msgid "Sign in as, such as cn=jane,ou=people,dc=example,dc=com"
 msgstr "Σύνδεση ως, όπως cn=jane,ou=people,dc=example,dc=com"
@@ -4536,6 +4615,7 @@ msgid_plural "Share Links in New Message"
 msgstr[0] "Κοινοποίηση συνδέσμου σε νέο μήνυμα"
 msgstr[1] "Κοινοποίηση συνδέσμων σε νέο μήνυμα"
 
+#, python-brace-format
 msgid "{n} file · {size}"
 msgid_plural "{n} files · {size}"
 msgstr[0] "{n} αρχείο · {size}"
@@ -4556,6 +4636,7 @@ msgstr ""
 "Οι εικόνες εισάγονται στη θέση του δρομέα, ενώ τα άλλα αρχεία επισυνάπτονται "
 "κανονικά"
 
+#, python-brace-format
 msgid "Share a download link from {name}"
 msgstr "Κοινή χρήση συνδέσμου λήψης από το {name}"
 
@@ -4577,6 +4658,7 @@ msgid ""
 msgstr ""
 "Έναρξη μηνύματος με τις εικόνες στο κείμενο και τα υπόλοιπα αρχεία συνημμένα"
 
+#, python-brace-format
 msgid "Start a message with a download link from {name}"
 msgid_plural "Start a message with download links from {name}"
 msgstr[0] "Έναρξη μηνύματος με σύνδεσμο λήψης από το {name}"
@@ -4590,6 +4672,7 @@ msgstr[1] "Έναρξη μηνύματος με σύνδεσμο λήψης"
 msgid "Whole conversation"
 msgstr "Ολόκληρη συζήτηση"
 
+#, python-brace-format
 msgid "{n} message"
 msgid_plural "{n} messages"
 msgstr[0] "{n} μήνυμα"
@@ -4598,6 +4681,7 @@ msgstr[1] "{n} μηνύματα"
 msgid "Search folders"
 msgstr "Αναζήτηση φακέλων"
 
+#, python-brace-format
 msgid "the portal answered response code {code}"
 msgstr "η πύλη απάντησε με κωδικό απόκρισης {code}"
 
@@ -4606,6 +4690,7 @@ msgstr "Δεν ήταν δυνατό το άνοιγμα του συνδέσμο
 
 #. No Flatseal toggle can help here: portal access is not a
 #. permission, and the failure is inside the portal's own launcher.
+#, python-brace-format
 msgid ""
 "The desktop portal reported: {error}\n"
 "\n"
@@ -4620,19 +4705,18 @@ msgstr ""
 "• Η ενημέρωση του «xdg-desktop-portal» και η εκ νέου σύνδεση ενδέχεται να "
 "διορθώσουν το απευθείας άνοιγμα συνδέσμων"
 
+#, python-brace-format
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} από {total}"
 
 msgid "me"
 msgstr "εγώ"
 
-#, fuzzy
 msgid "All folders (except trash & junk)"
-msgstr "Όλοι εκτός από τον Κάδο και τα Ανεπιθύμητα"
+msgstr "Όλοι οι φάκελοι (εκτός από Κάδο και Ανεπιθύμητα)"
 
-#, fuzzy
 msgid "Everywhere"
-msgstr "Ή όπου"
+msgstr "Παντού"
 
 msgid "This folder"
 msgstr "Αυτός ο φάκελος"
@@ -4644,27 +4728,31 @@ msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
 "Trash or Junk looks there too."
 msgstr ""
+"Όλοι οι φάκελοι όλων των λογαριασμών, εκτός από τον Κάδο και τα Ανεπιθύμητα. "
+"Μια αναζήτηση που ξεκινά εκεί αναζητά και σε αυτούς."
 
 msgid "Every folder of every account, Trash and Junk included."
 msgstr ""
+"Όλοι οι φάκελοι όλων των λογαριασμών, συμπεριλαμβανομένων του Κάδου και των "
+"Ανεπιθύμητων."
 
 msgid "Only the folder or view the list is showing."
-msgstr ""
+msgstr "Μόνο ο φάκελος ή η προβολή που εμφανίζεται στη λίστα."
 
 msgid "What this searches"
-msgstr ""
+msgstr "Τι αναζητά αυτή η επιλογή"
 
 msgid "Has Attachments"
-msgstr ""
+msgstr "Έχει συνημμένα"
 
 msgid "Addressed to Me"
-msgstr ""
+msgstr "Απευθύνεται σε εμένα"
 
 msgid "From Contacts"
-msgstr ""
+msgstr "Από τις επαφές"
 
 msgid "High Importance"
-msgstr ""
+msgstr "Υψηλή προτεραιότητα"
 
 msgid "Today"
 msgstr "Σήμερα"
@@ -4673,13 +4761,13 @@ msgid "No Messages"
 msgstr "Δεν υπάρχουν μηνύματα"
 
 msgid "No Matching Messages"
-msgstr ""
+msgstr "Δεν υπάρχουν μηνύματα που να ταιριάζουν"
 
 msgid "There's nothing here right now."
 msgstr "Δεν υπάρχει τίποτα εδώ αυτήν τη στιγμή."
 
 msgid "No message here passes the filters."
-msgstr ""
+msgstr "Κανένα μήνυμα εδώ δεν πληροί τα φίλτρα."
 
 msgid "Clear selection"
 msgstr "Εκκαθάριση επιλογής"
@@ -4702,13 +4790,12 @@ msgstr "Σήμανση όλων ως αναγνωσμένων"
 msgid "Mark All as Unread"
 msgstr "Σήμανση όλων ως μη αναγνωσμένων"
 
-#, fuzzy
 msgid "Search all folders but Trash and Junk"
-msgstr "Όλοι εκτός από τον Κάδο και τα Ανεπιθύμητα"
+msgstr "Αναζήτηση σε όλους τους φακέλους εκτός από Κάδο και Ανεπιθύμητα"
 
-#, fuzzy
 msgid "Search all folders, Trash and Junk too"
-msgstr "Αναζήτηση σε όλους τους φακέλους"
+msgstr ""
+"Αναζήτηση σε όλους τους φακέλους, συμπεριλαμβανομένων Κάδου και Ανεπιθύμητων"
 
 msgid "Search this folder"
 msgstr "Αναζήτηση σε αυτόν τον φάκελο"
@@ -4731,9 +4818,8 @@ msgstr "Λήξη"
 msgid "Drag to resize, double-click for the usual width"
 msgstr "Σύρετε για αλλαγή μεγέθους, κάντε διπλό κλικ για το συνηθισμένο πλάτος"
 
-#, fuzzy
 msgid "Forwarded"
-msgstr "Προώθηση"
+msgstr "Προωθήθηκε"
 
 msgid "High importance"
 msgstr "Υψηλή σημασία"
@@ -4741,9 +4827,9 @@ msgstr "Υψηλή σημασία"
 msgid "Low importance"
 msgstr "Χαμηλή σπουδαιότητα"
 
-#, fuzzy
+#, python-brace-format
 msgid "In {folder}"
-msgstr "άγνωστος φάκελος"
+msgstr "Στον φάκελο {folder}"
 
 msgid "Mark as read"
 msgstr "Σήμανση ως αναγνωσμένο"
@@ -4766,6 +4852,7 @@ msgstr "Εμφάνιση συζήτησης"
 msgid "Unsubscribing…"
 msgstr "Κατάργηση εγγραφής…"
 
+#, python-brace-format
 msgid "Unsubscribing didn't work: {why}"
 msgstr "Η κατάργηση εγγραφής δεν ήταν επιτυχής: {why}"
 
@@ -4776,11 +4863,13 @@ msgstr "Δοκιμή ξανά"
 #. act on it, or that the List-Id covers more than the one
 #. list that was left (#284); the banner must not say
 #. "unsubscribed" over the proof that it was not.
+#, python-brace-format
 msgid "You unsubscribed on {date}, but this list is still sending mail."
 msgstr ""
 "Καταργήσατε την εγγραφή σας στις {date}, αλλά αυτή η λίστα εξακολουθεί να "
 "στέλνει αλληλογραφία."
 
+#, python-brace-format
 msgid "You unsubscribed from this list on {date}."
 msgstr "Καταργήσατε την εγγραφή σας από αυτή τη λίστα στις {date}."
 
@@ -4809,33 +4898,39 @@ msgstr "Ανοίγει τη σελίδα διαγραφής από τη λίστ
 msgid "Translating…"
 msgstr "Μετάφραση…"
 
+#, python-brace-format
 msgid "Could not translate: {why}"
 msgstr "Δεν ήταν δυνατή η μετάφραση: {why}"
 
+#, python-brace-format
 msgid "Translated from {language} by {service}."
 msgstr "Μεταφράστηκε από τα {language} μέσω {service}."
 
+#, python-brace-format
 msgid "Translated by {service}."
 msgstr "Μεταφράστηκε από {service}."
 
 msgid "Showing the original."
 msgstr "Εμφάνιση του πρωτοτύπου."
 
+#, python-brace-format
 msgid "This message is in {language}."
 msgstr "Αυτό το μήνυμα είναι στα {language}."
 
 msgid "Translate"
 msgstr "Μετάφραση"
 
+#, python-brace-format
 msgid "{n} conversation selected"
 msgid_plural "{n} conversations selected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Επιλέχθη {n} συνομιλία"
+msgstr[1] "Επιλέχθησαν {n} συνομιλίες"
 
+#, python-brace-format
 msgid "{n} message selected"
 msgid_plural "{n} messages selected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Επιλέχθη {n} μήνυμα"
+msgstr[1] "Επιλέχθησαν {n} μηνύματα"
 
 msgid "No draft selected"
 msgstr "Δεν έχει επιλεγεί πρόχειρο"
@@ -4861,9 +4956,11 @@ msgstr "Ενημερωμένη πρόσκληση"
 msgid "Invitation"
 msgstr "Πρόσκληση"
 
+#, python-brace-format
 msgid "Organised by {name}"
 msgstr "Διοργανωτής: {name}"
 
+#, python-brace-format
 msgid "{n} guest"
 msgid_plural "{n} guests"
 msgstr[0] "{n} επισκέπτης"
@@ -4875,18 +4972,21 @@ msgstr "Αυτή η συνάντηση ακυρώθηκε."
 msgid "You accepted this invitation."
 msgstr "Αποδεχτήκατε αυτή την πρόσκληση."
 
+#, python-brace-format
 msgid "You accepted this invitation on {date}."
 msgstr "Αποδεχτήκατε αυτή την πρόσκληση στις {date}."
 
 msgid "You answered maybe to this invitation."
 msgstr "Απαντήσατε «ίσως» σε αυτή την πρόσκληση."
 
+#, python-brace-format
 msgid "You answered maybe to this invitation on {date}."
 msgstr "Απαντήσατε «ίσως» σε αυτή την πρόσκληση στις {date}."
 
 msgid "You declined this invitation."
 msgstr "Απορρίψατε αυτή την πρόσκληση."
 
+#, python-brace-format
 msgid "You declined this invitation on {date}."
 msgstr "Απορρίψατε αυτή την πρόσκληση στις {date}."
 
@@ -4937,24 +5037,28 @@ msgstr "Έναρξη νέου μηνύματος από αντίγραφο το�
 msgid "Repeats daily"
 msgstr "Επαναλαμβάνεται καθημερινά"
 
+#, python-brace-format
 msgid "Repeats every {n} days"
 msgstr "Επαναλαμβάνεται κάθε {n} ημέρες"
 
 msgid "Repeats weekly"
 msgstr "Επαναλαμβάνεται εβδομαδιαία"
 
+#, python-brace-format
 msgid "Repeats every {n} weeks"
 msgstr "Επαναλαμβάνεται κάθε {n} εβδομάδες"
 
 msgid "Repeats monthly"
 msgstr "Επαναλαμβάνεται μηνιαία"
 
+#, python-brace-format
 msgid "Repeats every {n} months"
 msgstr "Επαναλαμβάνεται κάθε {n} μήνες"
 
 msgid "Repeats yearly"
 msgstr "Επαναλαμβάνεται ετησίως"
 
+#, python-brace-format
 msgid "Repeats every {n} years"
 msgstr "Επαναλαμβάνεται κάθε {n} έτη"
 
@@ -4964,12 +5068,15 @@ msgstr "Επαναλαμβάνεται"
 msgid "Somebody answered this invitation."
 msgstr "Κάποιος απάντησε σε αυτή την πρόσκληση."
 
+#, python-brace-format
 msgid "{name} accepted this invitation."
 msgstr "Ο/Η {name} αποδέχτηκε αυτή την πρόσκληση."
 
+#, python-brace-format
 msgid "{name} answered maybe to this invitation."
 msgstr "Ο/Η {name} απάντησε «ίσως» σε αυτή την πρόσκληση."
 
+#, python-brace-format
 msgid "{name} declined this invitation."
 msgstr "Ο/Η {name} απέρριψε αυτή την πρόσκληση."
 
@@ -4977,7 +5084,7 @@ msgid "Save…"
 msgstr "Αποθήκευση…"
 
 msgid "The actions above the list apply to all of them."
-msgstr ""
+msgstr "Οι ενέργειες πάνω από τη λίστα εφαρμόζονται σε όλα."
 
 msgid "Choose a draft from the list to edit it here."
 msgstr "Επιλέξτε ένα πρόχειρο από τη λίστα για να το επεξεργαστείτε εδώ."
@@ -5002,6 +5109,7 @@ msgstr "Εύρεση στο μήνυμα"
 msgid "No matches"
 msgstr "Δεν υπάρχουν αντιστοιχίες"
 
+#, python-brace-format
 msgid "{cur} of {total}"
 msgstr "{cur} από {total}"
 
@@ -5014,13 +5122,13 @@ msgstr "Επόμενη αντιστοιχία"
 msgid "Close find"
 msgstr "Κλείσιμο εύρεσης"
 
-#, fuzzy
 msgid ""
 "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "
 "click here, or Ctrl+0, puts it back to the default from Settings."
 msgstr ""
-"Μεγέθυνση μηνύματος. Τα Ctrl+ και Ctrl- την αλλάζουν· ένα κλικ εδώ ή το "
-"Ctrl+0 την επαναφέρει στην προεπιλογή των Ρυθμίσεων."
+"Μεγέθυνση μηνύματος. Τα Ctrl+ και Ctrl− ή Ctrl μαζί με τον τροχό κύλισης "
+"αλλάζουν τη μεγέθυνση· κάντε κλικ εδώ ή πατήστε Ctrl+0 για επαναφορά στην "
+"προεπιλογή των Ρυθμίσεων."
 
 msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
@@ -5116,6 +5224,7 @@ msgstr "Εμφάνιση απομακρυσμένου περιεχομένου"
 msgid "Block remote content"
 msgstr "Αποκλεισμός απομακρυσμένου περιεχομένου"
 
+#, python-brace-format
 msgid "{n} recipient"
 msgid_plural "{n} recipients"
 msgstr[0] "{n} παραλήπτης"
@@ -5144,6 +5253,7 @@ msgstr "Αποθήκευση εικόνας"
 msgid "Trust this key?"
 msgstr "Να θεωρηθεί έμπιστο αυτό το κλειδί;"
 
+#, python-brace-format
 msgid ""
 "Compare the fingerprint with the one {uid} gives you in person or over "
 "another channel. Trusting a key you have not checked lets an impostor's "
@@ -5193,7 +5303,7 @@ msgid "Cc:"
 msgstr "Κοιν.:"
 
 msgid "Bcc:"
-msgstr ""
+msgstr "Κρυφή κοινοποίηση:"
 
 msgid "Date:"
 msgstr "Ημερομηνία:"
@@ -5212,7 +5322,11 @@ msgid ""
 "sent. Messages you send wait in the Outbox. Everything syncs again once the "
 "network is back."
 msgstr ""
+"Εκτός σύνδεσης: δεν υπάρχει σύνδεση δικτύου, επομένως δεν γίνεται έλεγχος ή "
+"αποστολή αλληλογραφίας. Τα μηνύματα που στέλνετε περιμένουν στα Εξερχόμενα. "
+"Ο συγχρονισμός θα συνεχιστεί όταν επανέλθει το δίκτυο."
 
+#, python-brace-format
 msgid "Status bar ({n})"
 msgstr "Γραμμή κατάστασης ({n})"
 
@@ -5228,23 +5342,20 @@ msgstr "5 έτη"
 msgid "GnuPG"
 msgstr "GnuPG"
 
-#, fuzzy
 msgid "The same keyring the gpg command and other mail apps use."
 msgstr ""
-"Βρέθηκε GnuPG {version}. Το Hylki διαβάζει και γράφει στην κλειδοθήκη του, "
-"την ίδια που χρησιμοποιούν η εντολή gpg και άλλα προγράμματα αλληλογραφίας."
+"Η ίδια κλειδοθήκη που χρησιμοποιούν η εντολή gpg και άλλες εφαρμογές "
+"αλληλογραφίας."
 
 msgid "Your keys"
 msgstr "Τα κλειδιά σας"
 
-#, fuzzy
 msgid ""
 "Your key signs what you send and opens what is encrypted to you. Share its "
 "public half with people who write to you."
 msgstr ""
-"Ένα δικό σας κλειδί υπογράφει όσα στέλνετε και ανοίγει όσα είναι "
-"κρυπτογραφημένα για εσάς. Στείλτε το δημόσιο μέρος του στα άτομα που θέλετε "
-"να σας γράφουν κρυπτογραφημένα."
+"Το κλειδί σας υπογράφει όσα στέλνετε και ανοίγει όσα είναι κρυπτογραφημένα "
+"για εσάς. Μοιραστείτε το δημόσιο μέρος του με όσους σας γράφουν."
 
 msgid "Import…"
 msgstr "Εισαγωγή…"
@@ -5255,29 +5366,26 @@ msgstr "Δημιουργία…"
 msgid "Other people's keys"
 msgstr "Κλειδιά άλλων ατόμων"
 
-#, fuzzy
 msgid ""
 "Keys you encrypt to and check signatures with. Check a fingerprint with its "
 "owner before trusting it."
 msgstr ""
-"Τα κλειδιά με τα οποία κρυπτογραφείτε και ελέγχετε υπογραφές. Ένα κλειδί "
-"γίνεται έμπιστο όταν εγγυηθείτε για αυτό· ελέγξτε πρώτα το αποτύπωμά του με "
-"τον κάτοχό του."
+"Κλειδιά για κρυπτογράφηση και επαλήθευση υπογραφών. Ελέγξτε το αποτύπωμα με "
+"τον κάτοχό τους πριν τα εμπιστευτείτε."
 
 msgid "Fetch by address…"
 msgstr "Ανάκτηση κατά διεύθυνση…"
 
+#, python-brace-format
 msgid "GnuPG {version} found."
-msgstr ""
+msgstr "Βρέθηκε το GnuPG {version}."
 
-#, fuzzy
 msgid ""
 "GnuPG was not found. Install the gnupg package to read encrypted mail and "
 "check signatures."
 msgstr ""
-"Δεν βρέθηκε το GnuPG. Εγκαταστήστε το πακέτο gnupg για να διαβάζετε "
-"κρυπτογραφημένα μηνύματα και να ελέγχετε υπογραφές· η έκδοση Flatpak το "
-"περιλαμβάνει."
+"Δεν βρέθηκε το GnuPG. Εγκαταστήστε το πακέτο gnupg για ανάγνωση "
+"κρυπτογραφημένης αλληλογραφίας και έλεγχο υπογραφών."
 
 msgid "No key of your own yet. Generate one for your address."
 msgstr ""
@@ -5295,6 +5403,7 @@ msgstr "Εισαγωγή κλειδιού"
 msgid "OpenPGP keys"
 msgstr "Κλειδιά OpenPGP"
 
+#, python-brace-format
 msgid "Could not import: {e}"
 msgstr "Δεν ήταν δυνατή η εισαγωγή: {e}"
 
@@ -5304,6 +5413,7 @@ msgstr "Εξαγωγή δημόσιου κλειδιού"
 msgid "Delete your key?"
 msgstr "Διαγραφή του κλειδιού σας;"
 
+#, python-brace-format
 msgid ""
 "{uid} will be removed, secret half included. Mail encrypted to it can never "
 "be read again, unless you have a backup of the key."
@@ -5315,6 +5425,7 @@ msgstr ""
 msgid "Remove this key?"
 msgstr "Αφαίρεση αυτού του κλειδιού;"
 
+#, python-brace-format
 msgid ""
 "{uid} will be removed from your keyring. It can be imported or fetched again "
 "later."
@@ -5322,6 +5433,7 @@ msgstr ""
 "Το {uid} θα αφαιρεθεί από την κλειδοθήκη σας. Μπορεί να εισαχθεί ή να "
 "ανακτηθεί ξανά αργότερα."
 
+#, python-brace-format
 msgid "Could not delete: {e}"
 msgstr "Δεν ήταν δυνατή η διαγραφή: {e}"
 
@@ -5338,6 +5450,7 @@ msgstr ""
 msgid "Fetch"
 msgstr "Ανάκτηση"
 
+#, python-brace-format
 msgid "Looking for a key for {addr}…"
 msgstr "Αναζήτηση κλειδιού για {addr}…"
 
@@ -5347,38 +5460,39 @@ msgstr ""
 "Δημιουργήστε πρώτα δικό σας κλειδί: η εμπιστοσύνη ενός κλειδιού σημαίνει ότι "
 "το υπογράφετε με το δικό σας."
 
-#, fuzzy
+#, python-brace-format
 msgid ""
 "Compare the fingerprint with the one {uid} gives you in person or another "
 "way. Trusting an unchecked key lets an impostor's signature pass."
 msgstr ""
-"Συγκρίνετε το αποτύπωμα με αυτό που σας δίνει ο/η {uid} αυτοπροσώπως ή μέσω "
-"άλλου καναλιού. Αν εμπιστευτείτε ένα κλειδί που δεν έχετε ελέγξει, η "
-"υπογραφή ενός απατεώνα μπορεί να θεωρηθεί δική του/της."
+"Συγκρίνετε το αποτύπωμα με αυτό που σας δίνει ο/η {uid} αυτοπροσώπως ή με "
+"άλλο τρόπο. Αν εμπιστευτείτε κλειδί χωρίς έλεγχο, μπορεί να περάσει η "
+"υπογραφή ενός απατεώνα."
 
+#, python-brace-format
 msgid "Could not sign the key: {e}"
 msgstr "Δεν ήταν δυνατή η υπογραφή του κλειδιού: {e}"
 
 msgid "Your key is ready."
 msgstr "Το κλειδί σας είναι έτοιμο."
 
+#, python-brace-format
 msgid "Could not generate the key: {e}"
 msgstr "Δεν ήταν δυνατή η δημιουργία του κλειδιού: {e}"
 
+#, python-brace-format
 msgid "No key found: {e}"
 msgstr "Δεν βρέθηκε κλειδί: {e}"
 
 msgid "Generate a Key"
 msgstr "Δημιουργία κλειδιού"
 
-#, fuzzy
 msgid ""
 "This will be kept in the GnuPG keyring. The passphrase is asked for when the "
 "key is used."
 msgstr ""
-"Ένα κλειδί υπογραφής με δευτερεύον κλειδί κρυπτογράφησης, δημιουργημένο από "
-"το GnuPG και αποθηκευμένο στην κλειδοθήκη του. Η φράση πρόσβασης ζητείται "
-"όταν χρησιμοποιείται το κλειδί· ο πράκτορας τη θυμάται για λίγο."
+"Θα αποθηκευτεί στην κλειδοθήκη GnuPG. Η φράση πρόσβασης ζητείται όταν "
+"χρησιμοποιείται το κλειδί."
 
 msgid "Generate"
 msgstr "Δημιουργία"
@@ -5398,9 +5512,11 @@ msgstr "Οι φράσεις πρόσβασης διαφέρουν"
 msgid "Type the same passphrase twice."
 msgstr "Πληκτρολογήστε την ίδια φράση πρόσβασης δύο φορές."
 
+#, python-brace-format
 msgid "expires {date}"
 msgstr "λήγει στις {date}"
 
+#, python-brace-format
 msgid "expired {date}"
 msgstr "έληξε στις {date}"
 
@@ -5410,6 +5526,7 @@ msgstr "υπογράφει και κρυπτογραφεί"
 msgid "signs only: no encryption subkey"
 msgstr "μόνο υπογραφή: χωρίς δευτερεύον κλειδί κρυπτογράφησης"
 
+#, python-brace-format
 msgid "{n} more address"
 msgid_plural "{n} more addresses"
 msgstr[0] "{n} ακόμη διεύθυνση"
@@ -5427,6 +5544,7 @@ msgstr "Ορισμός ως έμπιστου…"
 msgid "Remove this key"
 msgstr "Αφαίρεση αυτού του κλειδιού"
 
+#, python-brace-format
 msgid "{n} key imported."
 msgid_plural "{n} keys imported."
 msgstr[0] "Εισήχθη {n} κλειδί."
@@ -5444,9 +5562,8 @@ msgstr "Συμβολικό"
 msgid "All unread inbox mail"
 msgstr "Όλα τα μη αναγνωσμένα μηνύματα των Εισερχομένων"
 
-#, fuzzy
 msgid "New since the window was last in front"
-msgstr "Τα νεότερα πρώτα από τον τελευταίο έλεγχο"
+msgstr "Νέα από την τελευταία φορά που το παράθυρο ήταν στο προσκήνιο"
 
 msgid "Follow system"
 msgstr "Ακολούθηση συστήματος"
@@ -5490,6 +5607,7 @@ msgstr "Κάθε 15 λεπτά"
 msgid "Every 30 minutes"
 msgstr "Κάθε 30 λεπτά"
 
+#, python-brace-format
 msgid "System language — {language}"
 msgstr "Γλώσσα συστήματος — {language}"
 
@@ -5557,9 +5675,14 @@ msgid ""
 "Inside the Flatpak sandbox, links open through the desktop's chooser. \"Ask "
 "each time\" picks the browser per link with the option to remember it."
 msgstr ""
+"Μέσα στο περιβάλλον Flatpak, οι σύνδεσμοι ανοίγουν μέσω του επιλογέα της "
+"επιφάνειας εργασίας. Η επιλογή «Ερώτηση κάθε φορά» επιλέγει πρόγραμμα "
+"περιήγησης για κάθε σύνδεσμο και μπορεί να απομνημονεύσει την επιλογή."
 
 msgid "\"Ask each time\" lets the desktop ask before each link."
 msgstr ""
+"Η επιλογή «Ερώτηση κάθε φορά» επιτρέπει στην επιφάνεια εργασίας να ρωτά πριν "
+"από κάθε σύνδεσμο."
 
 msgid "Not installed"
 msgstr "Δεν είναι εγκατεστημένο"
@@ -5567,29 +5690,27 @@ msgstr "Δεν είναι εγκατεστημένο"
 msgid "Installed and loaded by Files"
 msgstr "Εγκατεστημένο και φορτωμένο από τα Αρχεία"
 
-#, fuzzy
 msgid "Installed, but nautilus-python is missing"
-msgstr ""
-"Εγκαταστήστε πρώτα το πακέτο nautilus-python: επικολλήστε αυτό σε ένα "
-"τερματικό"
+msgstr "Εγκαταστάθηκε, αλλά λείπει το nautilus-python"
 
 msgid "Installed. Restart Files to load it; it needs nautilus-python"
 msgstr ""
+"Εγκαταστάθηκε. Επανεκκινήστε τα Αρχεία για να φορτωθεί· απαιτείται το "
+"nautilus-python"
 
-#, fuzzy
 msgid "Installed, but from another version"
-msgstr "Εγκατεστημένο, αλλά όχι το αντίγραφο αυτής της έκδοσης"
+msgstr "Εγκαταστάθηκε, αλλά προέρχεται από άλλη έκδοση"
 
 msgid "Measuring…"
 msgstr "Μέτρηση…"
 
-#, fuzzy
+#, python-brace-format
 msgid ""
 "Messages {bodies}, attachments {files}. {total} in all, with the message "
 "list."
 msgstr ""
-"Μηνύματα {bodies}, συνημμένα {files}. Η κρυφή μνήμη, μαζί με τη λίστα "
-"μηνυμάτων, είναι {total}."
+"Μηνύματα {bodies}, συνημμένα {files}. Σύνολο {total}, μαζί με τη λίστα "
+"μηνυμάτων."
 
 msgid "Search Settings"
 msgstr "Αναζήτηση στις Ρυθμίσεις"
@@ -5606,12 +5727,14 @@ msgid ""
 "address books CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
 msgstr ""
+"κατάλογοι διευθύνσεων CardDAV LDAP κατάλογοι Online Accounts Nextcloud "
+"iCloud Google Microsoft vCard"
 
 msgid "Save the filter?"
 msgstr "Αποθήκευση του φίλτρου;"
 
 msgid "Your changes are lost if you discard them."
-msgstr ""
+msgstr "Οι αλλαγές σας θα χαθούν αν τις απορρίψετε."
 
 msgid "Save the smart folder?"
 msgstr "Αποθήκευση του έξυπνου φακέλου;"
@@ -5619,24 +5742,22 @@ msgstr "Αποθήκευση του έξυπνου φακέλου;"
 msgid "Save the tag?"
 msgstr "Αποθήκευση της ετικέτας;"
 
-#, fuzzy
 msgid "Save the address book?"
-msgstr "Αποθήκευση του καταλόγου;"
+msgstr "Αποθήκευση του καταλόγου διευθύνσεων;"
 
 msgid "Save the account?"
 msgstr "Αποθήκευση του λογαριασμού;"
 
-#, fuzzy
 msgid "Microsoft 365 accounts check at the interval above."
-msgstr ""
-"Λαμβάνει τα μηνύματα μόλις φτάσουν. Οι λογαριασμοί Microsoft 365 ελέγχονται "
-"στο παραπάνω διάστημα."
+msgstr "Οι λογαριασμοί Microsoft 365 ελέγχονται στο παραπάνω διάστημα."
 
 msgid "Save data on metered connections"
-msgstr ""
+msgstr "Εξοικονόμηση δεδομένων σε συνδέσεις με χρέωση"
 
 msgid "New mail still arrives. Nothing else is fetched ahead."
 msgstr ""
+"Η νέα αλληλογραφία εξακολουθεί να λαμβάνεται. Δεν γίνεται εκ των προτέρων "
+"λήψη άλλων δεδομένων."
 
 msgid "Notifications"
 msgstr "Ειδοποιήσεις"
@@ -5646,6 +5767,7 @@ msgstr "Ειδοποιήσεις επιφάνειας εργασίας"
 
 msgid "For new mail and errors, while the window is in the background."
 msgstr ""
+"Για νέα μηνύματα και σφάλματα όταν το παράθυρο βρίσκεται στο παρασκήνιο."
 
 msgid "Show sender and subject"
 msgstr "Εμφάνιση αποστολέα και θέματος"
@@ -5674,24 +5796,22 @@ msgstr "Έως τρία κουμπιά σε μια ειδοποίηση για �
 msgid "Style"
 msgstr "Εμφάνιση"
 
-#, fuzzy
 msgid "Messages have their own setting under Reading."
-msgstr ""
-"Η ίδια η εφαρμογή. Το περιεχόμενο των μηνυμάτων έχει τη δική του ρύθμιση "
-"στην ενότητα Ανάγνωση."
+msgstr "Τα μηνύματα έχουν τη δική τους ρύθμιση στην ενότητα Ανάγνωση."
 
 msgid "Text size"
 msgstr "Μέγεθος κειμένου"
 
 msgid "Adjusts the interface and message text size."
 msgstr ""
+"Ρυθμίζει το μέγεθος του περιβάλλοντος εργασίας και του κειμένου των "
+"μηνυμάτων."
 
 msgid "Theme"
 msgstr "Θέμα"
 
-#, fuzzy
 msgid "Use your desktop environment's icon set"
-msgstr "Χρήση των εικονιδίων της επιφάνειας εργασίας"
+msgstr "Χρήση του συνόλου εικονιδίων του περιβάλλοντος εργασίας"
 
 msgid "This window opens to"
 msgstr "Αυτό το παράθυρο ανοίγει στο"
@@ -5703,6 +5823,8 @@ msgid ""
 "Drag buttons between the groups. The right group folds into ⋯ when the pane "
 "is narrow."
 msgstr ""
+"Σύρετε τα κουμπιά μεταξύ των ομάδων. Η δεξιά ομάδα συμπτύσσεται σε ⋯ όταν το "
+"πλαίσιο είναι στενό."
 
 msgid "Restore Defaults"
 msgstr "Επαναφορά προεπιλογών"
@@ -5711,6 +5833,8 @@ msgid ""
 "The parts switched on below hide while Focus Mode is on. Activated by "
 "Ctrl+Shift+F or the main menu."
 msgstr ""
+"Τα παρακάτω ενεργοποιημένα στοιχεία κρύβονται όταν είναι ενεργή η Λειτουργία "
+"εστίασης. Ενεργοποιείται με Ctrl+Shift+F ή από το κύριο μενού."
 
 msgid "Start in Focus Mode"
 msgstr "Έναρξη σε Λειτουργία συγκέντρωσης"
@@ -5724,9 +5848,8 @@ msgstr "Κάθε κουμπί μεταφέρεται στο μενού ⋯ το�
 msgid "Fold the message list's header"
 msgstr "Σύμπτυξη της κεφαλίδας της λίστας μηνυμάτων"
 
-#, fuzzy
 msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr "Κάθε κουμπί μεταφέρεται στο μενού ⋯ του."
+msgstr "Όλα εκτός από το κουμπί της πλευρικής στήλης μεταφέρονται στο ⋯."
 
 msgid "Hide the accounts in the sidebar"
 msgstr "Απόκρυψη των λογαριασμών στην πλευρική στήλη"
@@ -5750,17 +5873,16 @@ msgid "Hide the subject"
 msgstr "Απόκρυψη του θέματος"
 
 msgid "Tag chips hide with it."
-msgstr ""
+msgstr "Οι ετικέτες σε μορφή μικρών πλαισίων κρύβονται μαζί του."
 
 msgid "Fold the sidebar to the icon rail"
 msgstr "Σύμπτυξη της πλευρικής στήλης σε λωρίδα εικονιδίων"
 
 msgid "Hovering it slides the full sidebar out."
-msgstr ""
+msgstr "Με το πέρασμα του δείκτη, εμφανίζεται ολόκληρη η πλευρική στήλη."
 
-#, fuzzy
 msgid "Open messages in Reader View."
-msgstr "Το μήνυμα δεν έχει φορτωθεί ακόμη."
+msgstr "Άνοιγμα μηνυμάτων στην Προβολή ανάγνωσης."
 
 msgid "Open at startup"
 msgstr "Άνοιγμα κατά την εκκίνηση"
@@ -5772,40 +5894,45 @@ msgid ""
 "Off leaves only the unified section. Toggle with Ctrl+Shift+A or the main "
 "menu."
 msgstr ""
+"Ανενεργό: εμφανίζεται μόνο η ενοποιημένη ενότητα. Εναλλαγή με Ctrl+Shift+A ή "
+"από το κύριο μενού."
 
 msgid "Folder order"
 msgstr "Σειρά φακέλων"
 
 msgid "Dragging a folder switches to Custom Order."
-msgstr ""
+msgstr "Η μεταφορά φακέλου ενεργοποιεί την προσαρμοσμένη σειρά."
 
 msgid "Chevron placement"
 msgstr "Τοποθέτηση βέλους"
 
 msgid "Fold accounts with one click"
-msgstr ""
+msgstr "Σύμπτυξη λογαριασμών με ένα κλικ"
 
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr ""
+"Όταν είναι απενεργοποιημένο, η σύμπτυξη γίνεται μόνο με το βέλος ή με διπλό "
+"κλικ."
 
-#, fuzzy
 msgid "Show Attachments Browser"
-msgstr "Συρτάρι συνημμένων"
+msgstr "Εμφάνιση προγράμματος περιήγησης συνημμένων"
 
 msgid "Browse every account's attachments in one place."
-msgstr ""
+msgstr "Περιήγηση στα συνημμένα όλων των λογαριασμών σε ένα μέρος."
 
 msgid "Expand the sidebar on hover"
 msgstr "Ανάπτυξη πλευρικής στήλης κατά την αιώρηση"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
+"Με το πέρασμα πάνω από τη λωρίδα εικονιδίων, εμφανίζεται ολόκληρη η πλευρική "
+"στήλη."
 
 msgid "Remember the sidebar layout"
 msgstr "Απομνημόνευση διάταξης πλευρικής στήλης"
 
 msgid "Off starts every launch folded up."
-msgstr ""
+msgstr "Ανενεργό: κάθε εκκίνηση ξεκινά με τις ενότητες συμπτυγμένες."
 
 msgid "Remember icon rail state"
 msgstr "Απομνημόνευση κατάστασης γραμμής εικονιδίων"
@@ -5814,14 +5941,13 @@ msgid "Highlight only new unread mail"
 msgstr "Επισήμανση μόνο νέας μη αναγνωσμένης αλληλογραφίας"
 
 msgid "A count turns grey once you have looked at the folder."
-msgstr ""
+msgstr "Ο αριθμός γίνεται γκρίζος μόλις ανοίξετε τον φάκελο."
 
 msgid "Unified"
 msgstr "Ενοποιημένα"
 
-#, fuzzy
 msgid "Shown only with more than one account."
-msgstr "Εμφάνιση μόνο αυτού του λογαριασμού"
+msgstr "Εμφανίζεται μόνο όταν υπάρχουν περισσότεροι από ένας λογαριασμοί."
 
 msgid "Inboxes"
 msgstr "Εισερχόμενα"
@@ -5830,15 +5956,13 @@ msgid "Unread counts"
 msgstr "Πλήθος μη αναγνωσμένων"
 
 msgid "Shown on the unified rows while they are folded up."
-msgstr ""
+msgstr "Εμφανίζεται στις ενοποιημένες γραμμές όταν είναι συμπτυγμένες."
 
-#, fuzzy
 msgid "Sections"
-msgstr "Ενέργειες"
+msgstr "Ενότητες"
 
-#, fuzzy
 msgid "Section style"
-msgstr "Ενέργειες"
+msgstr "Στυλ ενότητας"
 
 msgid "Filters placement"
 msgstr "Τοποθέτηση φίλτρων"
@@ -5846,13 +5970,11 @@ msgstr "Τοποθέτηση φίλτρων"
 msgid "Tags placement"
 msgstr "Τοποθέτηση ετικετών"
 
-#, fuzzy
 msgid "Favorites placement"
-msgstr "Τοποθέτηση φίλτρων"
+msgstr "Θέση αγαπημένων"
 
-#, fuzzy
 msgid "Contacts placement"
-msgstr "Τοποθέτηση ετικετών"
+msgstr "Θέση επαφών"
 
 msgid "Icon rail"
 msgstr "Γραμμή εικονιδίων"
@@ -5861,71 +5983,66 @@ msgid "Unread dots instead of counts"
 msgstr "Κουκκίδες αντί για πλήθος μη αναγνωσμένων"
 
 msgid "The count stays in the tooltip."
-msgstr ""
+msgstr "Ο αριθμός παραμένει στην επεξήγηση εργαλείου."
 
 msgid "Fold up expanded items"
 msgstr "Σύμπτυξη ανεπτυγμένων στοιχείων"
 
 msgid "The items below start folded up in the rail. Long-press to open one."
 msgstr ""
+"Τα παρακάτω στοιχεία ξεκινούν συμπτυγμένα στη λωρίδα. Πατήστε παρατεταμένα "
+"για να ανοίξετε ένα."
 
-#, fuzzy
 msgid "Show sender avatars"
-msgstr "Εικόνες αποστολέων"
+msgstr "Εμφάνιση εικόνων αποστολέων"
 
 msgid "Sent mail uses your account circle"
 msgstr "Τα απεσταλμένα χρησιμοποιούν τον κύκλο του λογαριασμού σας"
 
-#, fuzzy
 msgid "The account's picture or emoji, as in the sidebar."
-msgstr ""
-"Τα μηνύματα που στείλατε εμφανίζουν το Gravatar, την εικόνα ή το emoji του "
-"λογαριασμού, όπως ο κύκλος του στην πλευρική στήλη."
+msgstr "Η εικόνα ή το emoji του λογαριασμού, όπως στην πλευρική στήλη."
 
 msgid "Layout"
 msgstr "Διάταξη"
 
 msgid "Automatic uses single lines in wide windows."
-msgstr ""
+msgstr "Η αυτόματη επιλογή χρησιμοποιεί μονές γραμμές σε πλατιά παράθυρα."
 
 msgid "Preview lines"
 msgstr "Γραμμές προεπισκόπησης"
 
 msgid "Off also stops downloading previews."
-msgstr ""
+msgstr "Ανενεργό: σταματά επίσης τη λήψη προεπισκοπήσεων."
 
 msgid "Group by date"
 msgstr "Ομαδοποίηση κατά ημερομηνία"
 
 msgid "Tags and labels under the text"
-msgstr ""
+msgstr "Ετικέτες κάτω από το κείμενο"
 
 msgid "Gives the subject its full width."
-msgstr ""
+msgstr "Δίνει στο θέμα όλο το διαθέσιμο πλάτος."
 
 msgid "Keep the search field open"
-msgstr ""
+msgstr "Διατήρηση ανοιχτού πεδίου αναζήτησης"
 
-#, fuzzy
 msgid "Search field position"
-msgstr "Αναζήτηση φίλτρων"
+msgstr "Θέση πεδίου αναζήτησης"
 
-#, fuzzy
 msgid "Selection bar position"
-msgstr "Ενέργειες"
+msgstr "Θέση γραμμής επιλογής"
 
 msgid "Tint tagged messages"
 msgstr "Χρωματισμός μηνυμάτων με ετικέτα"
 
 msgid "In the color of its first tag."
-msgstr ""
+msgstr "Στο χρώμα της πρώτης ετικέτας του."
 
 msgid "Actions palette in the message list"
 msgstr "Παλέτα ενεργειών στη λίστα μηνυμάτων"
 
-#, fuzzy
 msgid "The ⋯ row under each message."
-msgstr "Συνημμένα σε κάθε μήνυμα"
+msgstr "Η γραμμή ⋯ κάτω από κάθε μήνυμα."
 
 msgid "Open the actions palette on hover"
 msgstr "Άνοιγμα της παλέτας ενεργειών κατά την αιώρηση"
@@ -5936,6 +6053,8 @@ msgstr "Ενέργειες σάρωσης"
 msgid ""
 "Left deletes, right archives. Drag with the mouse or swipe with two fingers."
 msgstr ""
+"Το αριστερό σύρετε διαγράφει και το δεξί αρχειοθετεί. Σύρετε με το ποντίκι ή "
+"με δύο δάχτυλα."
 
 msgid "Reverse swipe directions"
 msgstr "Αντιστροφή κατευθύνσεων σάρωσης"
@@ -5945,15 +6064,14 @@ msgstr "Ευαισθησία σάρωσης επιφάνειας αφής"
 
 msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
+"Αυξήστε την τιμή αν οι κινήσεις σάρωσης δεν φτάνουν μέχρι το τέλος. Οι "
+"κινήσεις με το ποντίκι δεν επηρεάζονται."
 
 msgid "Actions palette timeout"
 msgstr "Χρόνος λήξης παλέτας ενεργειών"
 
-#, fuzzy
 msgid "Seconds it stays open after the pointer leaves."
-msgstr ""
-"Τα δευτερόλεπτα για τα οποία παραμένει ανοιχτή η παλέτα ενεργειών μιας "
-"κάρτας αφού ο δρομέας απομακρυνθεί από αυτήν."
+msgstr "Δευτερόλεπτα που παραμένει ανοιχτό αφού απομακρυνθεί ο δείκτης."
 
 msgid "Columns"
 msgstr "Στήλες"
@@ -5962,16 +6080,18 @@ msgid ""
 "For the single-line layout. Drag columns to reorder them or out to remove "
 "them. Due Date shows only for Microsoft 365 mail."
 msgstr ""
+"Για τη διάταξη μίας γραμμής. Σύρετε τις στήλες για αλλαγή σειράς ή έξω από "
+"τη λίστα για αφαίρεση. Η ημερομηνία λήξης εμφανίζεται μόνο για αλληλογραφία "
+"Microsoft 365."
 
-#, fuzzy
 msgid "Show column headings"
-msgstr "Επικεφαλίδες στηλών"
+msgstr "Εμφάνιση επικεφαλίδων στηλών"
 
 msgid "Fit columns to the list"
 msgstr "Προσαρμογή στηλών στο πλάτος της λίστας"
 
 msgid "Off, a narrow list scrolls sideways."
-msgstr ""
+msgstr "Ανενεργό: μια στενή λίστα μετακινείται οριζόντια."
 
 msgid "Group messages by conversation"
 msgstr "Ομαδοποίηση μηνυμάτων κατά συζήτηση"
@@ -5981,6 +6101,8 @@ msgstr "Αναπτυσσόμενες συζητήσεις"
 
 msgid "Off, a conversation's messages show only in the reading pane."
 msgstr ""
+"Ανενεργό: τα μηνύματα μιας συζήτησης εμφανίζονται μόνο στο παράθυρο "
+"ανάγνωσης."
 
 msgid "Expand conversations by default"
 msgstr "Ανάπτυξη συζητήσεων από προεπιλογή"
@@ -5988,15 +6110,14 @@ msgstr "Ανάπτυξη συζητήσεων από προεπιλογή"
 msgid "Newest message first"
 msgstr "Νεότερο μήνυμα πρώτο"
 
-#, fuzzy
 msgid "In the reading pane."
-msgstr "Σύμπτυξη της γραμμής εργαλείων του παραθύρου ανάγνωσης"
+msgstr "Στο παράθυρο ανάγνωσης."
 
 msgid "Fold earlier messages"
 msgstr "Σύμπτυξη παλαιότερων μηνυμάτων"
 
 msgid "The newest always opens."
-msgstr ""
+msgstr "Ανοίγει πάντα το νεότερο μήνυμα."
 
 msgid "Show your own replies in the message list"
 msgstr "Εμφάνιση των δικών σας απαντήσεων στη λίστα μηνυμάτων"
@@ -6004,12 +6125,11 @@ msgstr "Εμφάνιση των δικών σας απαντήσεων στη λ
 msgid "Off shows the last message that arrived."
 msgstr "Ανενεργό: εμφανίζεται το τελευταίο μήνυμα που έφτασε."
 
-#, fuzzy
 msgid "Reply editor position"
-msgstr "Πρόγραμμα επεξεργασίας απάντησης"
+msgstr "Θέση επεξεργαστή απάντησης"
 
 msgid "Following the reading order puts it where the conversation ends."
-msgstr ""
+msgstr "Η ακολουθία ανάγνωσης τοποθετεί το πλαίσιο στο τέλος της συζήτησης."
 
 msgid "Attachments on each message"
 msgstr "Συνημμένα σε κάθε μήνυμα"
@@ -6020,11 +6140,8 @@ msgstr "Συρτάρι συνημμένων"
 msgid "Confirm conversation deletion"
 msgstr "Επιβεβαίωση διαγραφής συζήτησης"
 
-#, fuzzy
 msgid "Conversations mark each message as it comes into view."
-msgstr ""
-"Πότε ένα ανοικτό μήνυμα θεωρείται αναγνωσμένο. Οι συζητήσεις σημειώνουν κάθε "
-"μήνυμα καθώς εμφανίζεται."
+msgstr "Οι συζητήσεις σημειώνουν κάθε μήνυμα ως αναγνωσμένο καθώς εμφανίζεται."
 
 msgid "Message appearance"
 msgstr "Εμφάνιση μηνυμάτων"
@@ -6032,21 +6149,20 @@ msgstr "Εμφάνιση μηνυμάτων"
 msgid "Light / Dark Mode switch"
 msgstr "Εναλλαγή φωτεινής / σκοτεινής λειτουργίας"
 
-#, fuzzy
 msgid "Displays in the message header for each message."
-msgstr "Ανοίγει το μήνυμα με έτοιμη προώθηση."
+msgstr "Εμφανίζεται στην κεφαλίδα κάθε μηνύματος."
 
 msgid "Default zoom"
 msgstr "Προεπιλεγμένη μεγέθυνση"
 
 msgid "Ctrl+0 returns to the default."
-msgstr ""
+msgstr "Το Ctrl+0 επαναφέρει την προεπιλογή."
 
 msgid "Use my own font"
 msgstr "Χρήση δικής μου γραμματοσειράς"
 
 msgid "The font below replaces the sender's."
-msgstr ""
+msgstr "Η παρακάτω γραμματοσειρά αντικαθιστά εκείνη του αποστολέα."
 
 msgid "Message font"
 msgstr "Γραμματοσειρά μηνυμάτων"
@@ -6059,15 +6175,14 @@ msgstr "Χρήση δικών μου χρωμάτων"
 
 msgid "Ignores the sender's colors. Pictures stay; links use the accent color."
 msgstr ""
+"Αγνοεί τα χρώματα του αποστολέα. Οι εικόνες διατηρούνται· οι σύνδεσμοι "
+"χρησιμοποιούν το χρώμα έμφασης."
 
 msgid "Plain-text messages in monospace"
 msgstr "Μηνύματα απλού κειμένου με γραμματοσειρά σταθερού πλάτους"
 
-#, fuzzy
 msgid "Formatted messages are not affected."
-msgstr ""
-"Εμφάνιση αυτού του μηνύματος σε φωτεινή ή σκοτεινή λειτουργία. Δεν "
-"επηρεάζονται άλλα μηνύματα."
+msgstr "Τα μορφοποιημένα μηνύματα δεν επηρεάζονται."
 
 msgid "Monospace font"
 msgstr "Γραμματοσειρά σταθερού πλάτους"
@@ -6085,13 +6200,13 @@ msgid "Message card actions palette as a menu"
 msgstr "Παλέτα ενεργειών κάρτας μηνύματος ως μενού"
 
 msgid "The ⋯ opens the right-click menu instead."
-msgstr ""
+msgstr "Το ⋯ ανοίγει αντί γι’ αυτό το μενού δεξιού κλικ."
 
 msgid "Single messages as cards"
 msgstr "Μεμονωμένα μηνύματα ως κάρτες"
 
 msgid "Off fills the pane edge to edge."
-msgstr ""
+msgstr "Ανενεργό: το περιεχόμενο καταλαμβάνει όλο το πλάτος του πλαισίου."
 
 msgid "Always show recipients"
 msgstr "Να εμφανίζονται πάντα οι παραλήπτες"
@@ -6100,26 +6215,23 @@ msgid "Name the OpenPGP result"
 msgstr "Ονομασία του αποτελέσματος OpenPGP"
 
 msgid "Off shows the icons alone."
-msgstr ""
+msgstr "Ανενεργό: εμφανίζονται μόνο τα εικονίδια."
 
-#, fuzzy
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""
-"Η Προβολή ανάγνωσης εμφανίζει ένα μήνυμα μόνο ως κείμενο, σε ενιαία απλή "
-"μορφή, χωρίς τη διάταξη, τα χρώματα και τις γραμματοσειρές του αποστολέα."
+"Μόνο το κείμενο του μηνύματος, χωρίς τη διάταξη, τα χρώματα και τις "
+"γραμματοσειρές του αποστολέα."
 
-#, fuzzy
 msgid "Show Reader View switch in message header"
-msgstr "Διακόπτης Προβολής ανάγνωσης"
+msgstr "Εμφάνιση διακόπτη Προβολής ανάγνωσης στην κεφαλίδα μηνύματος"
 
 msgid "When a message is opened"
 msgstr "Κατά το άνοιγμα ενός μηνύματος"
 
-#, fuzzy
 msgid "The header's switch still changes the open message."
 msgstr ""
-"Κάθε μήνυμα ανοίγει στην Προβολή ανάγνωσης. Ο διακόπτης στην κεφαλίδα "
-"εξακολουθεί να αλλάζει την προβολή του μηνύματος στην οθόνη."
+"Ο διακόπτης στην κεφαλίδα εξακολουθεί να αλλάζει την προβολή του ανοιχτού "
+"μηνύματος."
 
 msgid "Printing"
 msgstr "Εκτύπωση"
@@ -6133,18 +6245,14 @@ msgstr "Ημερομηνία εκτύπωσης"
 msgid "Wider left margin"
 msgstr "Μεγαλύτερο αριστερό περιθώριο"
 
-#, fuzzy
 msgid "25 mm, so punched holes miss the text."
-msgstr ""
-"Αφήνει 25 mm στα αριστερά κάθε σελίδας, ώστε οι τρύπες διάτρησης να μην "
-"πέφτουν πάνω στο κείμενο."
+msgstr "25 mm, ώστε οι τρύπες διάτρησης να μην περνούν μέσα από το κείμενο."
 
 msgid "Compose in the main window"
 msgstr "Σύνταξη στο κύριο παράθυρο"
 
-#, fuzzy
 msgid "Off opens new messages in their own window."
-msgstr "Ανοίξτε πρώτα ένα μήνυμα και έπειτα εκτυπώστε το."
+msgstr "Ανενεργό: ανοίγει νέα μηνύματα σε δικό τους παράθυρο."
 
 msgid "Reply and forward in the main window"
 msgstr "Απάντηση και προώθηση στο κύριο παράθυρο"
@@ -6153,34 +6261,33 @@ msgid "Show From, To and Subject in the reply panel"
 msgstr "Εμφάνιση Από, Προς και Θέματος στον πίνακα απάντησης"
 
 msgid "Off folds them behind a button."
-msgstr ""
+msgstr "Ανενεργό: τα συμπτύσσει πίσω από ένα κουμπί."
 
 msgid "Send new messages from"
 msgstr "Αποστολή νέων μηνυμάτων από"
 
-#, fuzzy
 msgid "Replies answer from the address they were sent to."
-msgstr ""
-"Οι απαντήσεις εξακολουθούν να αποστέλλονται από τη διεύθυνση στην οποία "
-"στάλθηκε το αρχικό μήνυμα."
+msgstr "Οι απαντήσεις αποστέλλονται από τη διεύθυνση στην οποία στάλθηκαν."
 
 msgid "Paste as plain text"
 msgstr "Επικόλληση ως απλό κείμενο"
 
 msgid "Right-clicking the editor offers both either way."
-msgstr ""
+msgstr "Το μενού δεξιού κλικ στον επεξεργαστή προσφέρει και τις δύο επιλογές."
 
 msgid "Return starts a new paragraph"
 msgstr "Το Enter ξεκινά νέα παράγραφο"
 
 msgid "Shift+Return does the other."
-msgstr ""
+msgstr "Το Shift+Return κάνει το αντίθετο."
 
 msgid "Formatting toolbar"
 msgstr "Γραμμή εργαλείων μορφοποίησης"
 
 msgid "For new messages. The toolbar's chevron toggles it."
 msgstr ""
+"Για νέα μηνύματα. Το βέλος στη γραμμή εργαλείων ενεργοποιεί ή απενεργοποιεί "
+"τη ρύθμιση."
 
 msgid "Always collapsed"
 msgstr "Πάντα συμπτυγμένο"
@@ -6188,31 +6295,28 @@ msgstr "Πάντα συμπτυγμένο"
 msgid "Always expanded"
 msgstr "Πάντα ανεπτυγμένο"
 
-#, fuzzy
 msgid "Start new messages in"
-msgstr "Σύνταξη μηνυμάτων σε"
+msgstr "Έναρξη νέων μηνυμάτων σε"
 
 msgid "Font"
 msgstr "Γραμματοσειρά"
 
-#, fuzzy
 msgid "For rich text. Default leaves it to the recipient's own font."
 msgstr ""
-"Η γραμματοσειρά με την οποία γράφονται και αποστέλλονται μηνύματα "
-"εμπλουτισμένου κειμένου. Η προεπιλογή αφήνει την επιλογή στη γραμματοσειρά "
+"Για εμπλουτισμένο κείμενο. Από προεπιλογή χρησιμοποιείται η γραμματοσειρά "
 "του παραλήπτη."
 
 msgid "Font size"
 msgstr "Μέγεθος γραμματοσειράς"
 
 msgid "For rich text, in points."
-msgstr ""
+msgstr "Για εμπλουτισμένο κείμενο, σε στιγμές (pt)."
 
 msgid "Reply in the original's format"
 msgstr "Απάντηση με τη μορφοποίηση του αρχικού"
 
 msgid "Plain-text mail is answered in plain text."
-msgstr ""
+msgstr "Τα μηνύματα απλού κειμένου απαντώνται σε απλό κείμενο."
 
 msgid "Signature in replies"
 msgstr "Υπογραφή στις απαντήσεις"
@@ -6222,13 +6326,13 @@ msgstr "Διαχωριστική γραμμή πάνω από την υπογρ�
 
 msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr ""
+"Η τυπική γραμμή «-- », την οποία αναγνωρίζουν άλλες εφαρμογές αλληλογραφίας."
 
-#, fuzzy
 msgid "Undo Send"
-msgstr "Αναίρεση"
+msgstr "Αναίρεση αποστολής"
 
 msgid "How long Undo is offered after sending."
-msgstr ""
+msgstr "Για πόσο χρόνο είναι διαθέσιμη η αναίρεση μετά την αποστολή."
 
 msgid "Spelling"
 msgstr "Ορθογραφία"
@@ -6237,7 +6341,7 @@ msgid "Check spelling as you type"
 msgstr "Έλεγχος ορθογραφίας κατά την πληκτρολόγηση"
 
 msgid "Right-click a word for corrections."
-msgstr ""
+msgstr "Κάντε δεξί κλικ σε μια λέξη για διορθώσεις."
 
 msgid "Languages"
 msgstr "Γλώσσες"
@@ -6246,23 +6350,26 @@ msgid "Added words"
 msgstr "Λέξεις που προστέθηκαν"
 
 msgid "Changes apply after a restart."
-msgstr ""
+msgstr "Οι αλλαγές εφαρμόζονται μετά από επανεκκίνηση."
 
 msgid "Hylki collects no telemetry and sends no analytics."
-msgstr ""
+msgstr "Το Hylki δεν συλλέγει τηλεμετρία ούτε στέλνει αναλυτικά δεδομένα."
 
 msgid "Always load remote content"
 msgstr "Να φορτώνεται πάντα το απομακρυσμένο περιεχόμενο"
 
 msgid "Remote content can tell a sender when and where you read."
 msgstr ""
+"Το απομακρυσμένο περιεχόμενο μπορεί να ενημερώσει τον αποστολέα για το πότε "
+"και πού διαβάσατε το μήνυμα."
 
 msgid "Warn when remote content is blocked"
 msgstr "Προειδοποίηση όταν αποκλείεται απομακρυσμένο περιεχόμενο"
 
-#, fuzzy
 msgid "Off hides the banner. Remote content stays blocked."
-msgstr "Προειδοποίηση όταν αποκλείεται απομακρυσμένο περιεχόμενο"
+msgstr ""
+"Ανενεργό: κρύβει το πλαίσιο. Το απομακρυσμένο περιεχόμενο παραμένει "
+"αποκλεισμένο."
 
 msgid "Warn when the addressing doesn't match"
 msgstr "Προειδοποίηση όταν οι διευθύνσεις δεν ταιριάζουν"
@@ -6271,12 +6378,14 @@ msgid ""
 "The badge beside the sender stays. A possible forgery always shows the "
 "banner."
 msgstr ""
+"Το σήμα δίπλα στον αποστολέα παραμένει. Αν υπάρχει πιθανότητα "
+"πλαστογράφησης, το πλαίσιο προειδοποίησης εμφανίζεται πάντα."
 
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Χρήση Gravatar όταν μια επαφή δεν έχει φωτογραφία"
 
 msgid "Sends a hash of the sender's address to Gravatar."
-msgstr ""
+msgstr "Στέλνει στο Gravatar ένα hash της διεύθυνσης του αποστολέα."
 
 msgid "Show sender logos"
 msgstr "Εμφάνιση λογοτύπων αποστολέων"
@@ -6284,9 +6393,13 @@ msgstr "Εμφάνιση λογοτύπων αποστολέων"
 msgid ""
 "Most are fetched from the sender's domain, which learns your IP address."
 msgstr ""
+"Τα περισσότερα λαμβάνονται από τον τομέα του αποστολέα, ο οποίος μαθαίνει τη "
+"διεύθυνση IP σας."
 
 msgid "Dates follow the system unless a format is chosen here."
 msgstr ""
+"Οι ημερομηνίες ακολουθούν τις ρυθμίσεις συστήματος, εκτός αν επιλεγεί εδώ "
+"μορφή."
 
 msgid "Date format"
 msgstr "Μορφή ημερομηνίας"
@@ -6298,31 +6411,35 @@ msgid "Language"
 msgstr "Γλώσσα"
 
 msgid "Applies after a restart."
-msgstr ""
+msgstr "Εφαρμόζεται μετά από επανεκκίνηση."
 
 msgid "Renderer"
 msgstr "Μηχανή απόδοσης"
 
 msgid "Try OpenGL or Software on older graphics. Applies after a restart."
 msgstr ""
+"Δοκιμάστε OpenGL ή Λογισμικό σε παλαιότερα γραφικά. Εφαρμόζεται μετά από "
+"επανεκκίνηση."
 
 msgid "Keep running in the background"
 msgstr "Διατήρηση εκτέλεσης στο παρασκήνιο"
 
 msgid "Closing the window hides it. Quit from Background Apps."
 msgstr ""
+"Το κλείσιμο του παραθύρου το κρύβει. Για έξοδο, χρησιμοποιήστε τις Εφαρμογές "
+"παρασκηνίου."
 
 msgid "Start at login"
 msgstr "Εκκίνηση κατά τη σύνδεση"
 
 msgid "Starts hidden."
-msgstr ""
+msgstr "Εκκινείται κρυφό."
 
 msgid "Show a tray icon"
 msgstr "Εμφάνιση εικονιδίου περιοχής ειδοποιήσεων"
 
 msgid "To use on GNOME, install an AppIndicator extension."
-msgstr ""
+msgstr "Για χρήση στο GNOME, εγκαταστήστε επέκταση AppIndicator."
 
 msgid "Tray icon"
 msgstr "Εικονίδιο περιοχής ειδοποιήσεων"
@@ -6335,18 +6452,20 @@ msgstr "Καταμέτρηση μη αναγνωσμένων στο εικονί
 
 msgid "To use on GNOME, install a dock extension such as Dash to Dock."
 msgstr ""
+"Για χρήση στο GNOME, εγκαταστήστε επέκταση βάσης, όπως το Dash to Dock."
 
 msgid "Single-key shortcuts"
 msgstr "Συντομεύσεις ενός πλήκτρου"
 
 msgid "Press Ctrl+? to list all shortcuts."
-msgstr ""
+msgstr "Πατήστε Ctrl+? για να δείτε όλες τις συντομεύσεις."
 
 msgid "Gmail keys"
 msgstr "Πλήκτρα Gmail"
 
 msgid "Swaps the single-key shortcuts for Gmail equivalents."
 msgstr ""
+"Αντικαθιστά τις συντομεύσεις ενός πλήκτρου με τις αντίστοιχες του Gmail."
 
 msgid "Status bar"
 msgstr "Γραμμή κατάστασης"
@@ -6355,10 +6474,12 @@ msgid "Console mode"
 msgstr "Λειτουργία κονσόλας"
 
 msgid "Shows a console in the status bar."
-msgstr ""
+msgstr "Εμφανίζει κονσόλα στη γραμμή κατάστασης."
 
 msgid "For bug reports. Addresses are cut to their domain for privacy."
 msgstr ""
+"Για αναφορές σφαλμάτων. Οι διευθύνσεις περιορίζονται στον τομέα τους για "
+"λόγους απορρήτου."
 
 msgid "Downloaded mail"
 msgstr "Ληφθέντα μηνύματα"
@@ -6376,6 +6497,8 @@ msgid ""
 "Adds “Send with Hylki” to the right-click menu in Files. Needs the nautilus-"
 "python package and a restart of Files."
 msgstr ""
+"Προσθέτει την επιλογή «Αποστολή με Hylki» στο μενού δεξιού κλικ στα Αρχεία. "
+"Απαιτεί το πακέτο nautilus-python και επανεκκίνηση των Αρχείων."
 
 msgid "Right-click menu entry"
 msgstr "Καταχώριση μενού δεξιού κλικ"
@@ -6386,17 +6509,15 @@ msgstr "Ενημέρωση"
 msgid "Install"
 msgstr "Εγκατάσταση"
 
-#, fuzzy
 msgid "Install nautilus-python first"
-msgstr ""
-"Εγκαταστήστε πρώτα το πακέτο nautilus-python: επικολλήστε αυτό σε ένα "
-"τερματικό"
+msgstr "Εγκαταστήστε πρώτα το nautilus-python"
 
 msgid "Restart Files"
 msgstr "Επανεκκίνηση Αρχείων"
 
 msgid "Closes every Files window, like “nautilus -q”."
 msgstr ""
+"Κλείνει όλα τα παράθυρα της εφαρμογής Αρχεία, όπως η εντολή «nautilus -q»."
 
 msgid "Restart"
 msgstr "Επανεκκίνηση"
@@ -6408,7 +6529,7 @@ msgid "Default large attachments behavior"
 msgstr "Προεπιλεγμένη συμπεριφορά μεγάλων συνημμένων"
 
 msgid "Without a cloud storage account, files are attached."
-msgstr ""
+msgstr "Χωρίς λογαριασμό αποθήκευσης στο cloud, τα αρχεία επισυνάπτονται."
 
 msgid "Size limit"
 msgstr "Όριο μεγέθους"
@@ -6426,6 +6547,8 @@ msgid ""
 "Accounts, preferences, filters, tags and layout, in one file. Passwords and "
 "OpenPGP keys are not included."
 msgstr ""
+"Λογαριασμοί, προτιμήσεις, φίλτρα, ετικέτες και διάταξη σε ένα αρχείο. Δεν "
+"περιλαμβάνονται κωδικοί πρόσβασης και κλειδιά OpenPGP."
 
 msgid "Export settings"
 msgstr "Εξαγωγή ρυθμίσεων"
@@ -6433,26 +6556,21 @@ msgstr "Εξαγωγή ρυθμίσεων"
 msgid "Import settings"
 msgstr "Εισαγωγή ρυθμίσεων"
 
-#, fuzzy
 msgid ""
 "Replaces everything in place. Don't remove accounts first: that deletes "
 "their passwords."
 msgstr ""
-"Αντικαθιστά τους τρέχοντες λογαριασμούς και τις προτιμήσεις επιτόπου. Μην "
-"αφαιρέσετε πρώτα λογαριασμούς: η αφαίρεση διαγράφει επίσης τους κωδικούς "
-"τους από την κλειδοθήκη, τους οποίους δεν περιέχει κανένα αντίγραφο "
-"ασφαλείας."
+"Αντικαθιστά τα πάντα επιτόπου. Μην αφαιρέσετε πρώτα τους λογαριασμούς: έτσι "
+"διαγράφονται οι κωδικοί πρόσβασής τους."
 
 msgid "Software"
 msgstr "Λογισμικό"
 
-#, fuzzy
 msgid "Unified style"
-msgstr "Ενοποιημένα"
+msgstr "Ενοποιημένο στυλ"
 
-#, fuzzy
 msgid "Tree style"
-msgstr "Ενέργειες"
+msgstr "Δενδρικό στυλ"
 
 msgid "Above the accounts"
 msgstr "Πάνω από τους λογαριασμούς"
@@ -6490,19 +6608,16 @@ msgstr "Κάρτες"
 msgid "Single line"
 msgstr "Μία γραμμή"
 
-#, fuzzy
 msgid "Top of the list"
-msgstr "Στο επάνω μέρος του παραθύρου"
+msgstr "Στην κορυφή της λίστας"
 
-#, fuzzy
 msgid "Bottom of the list"
-msgstr "Στο κάτω μέρος του παραθύρου"
+msgstr "Στο κάτω μέρος της λίστας"
 
-#, fuzzy
 msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
 msgstr ""
-"Η εκκίνηση εμφανίζει ένα σύνολο εικονιδίων εκτός του Hylki. Η επιλογή ενός "
-"εδώ το αντικαθιστά."
+"Ο εκκινητής εμφανίζει ένα σύνολο εικονιδίων που ορίζεται αλλού. Αν επιλέξετε "
+"ένα εδώ, το αντικαθιστά."
 
 msgid "Always"
 msgstr "Πάντα"
@@ -6582,11 +6697,11 @@ msgstr "Πάνω από το παρατιθέμενο μήνυμα"
 msgid "Below the quoted message"
 msgstr "Κάτω από το παρατιθέμενο μήνυμα"
 
-#, fuzzy
+#, python-brace-format
 msgid "{n} second"
 msgid_plural "{n} seconds"
-msgstr[0] "{n} παραλήπτης"
-msgstr[1] "{n} παραλήπτες"
+msgstr[0] "{n} δευτερόλεπτο"
+msgstr[1] "{n} δευτερόλεπτα"
 
 msgid "Above the messages"
 msgstr "Πάνω από τα μηνύματα"
@@ -6604,10 +6719,13 @@ msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
 msgstr ""
+"Δεν βρέθηκαν λεξικά. Στο Flatpak, προσθέστε μια γλώσσα με την εντολή: "
+"flatpak config --set extra-languages <code>"
 
 msgid "Add a word"
 msgstr "Προσθήκη λέξης"
 
+#, python-brace-format
 msgid "{percent}%"
 msgstr "{percent}%"
 
@@ -6617,14 +6735,12 @@ msgstr "Δεν ήταν δυνατή η εγκατάσταση της επέκτ
 msgid "Remove downloaded mail?"
 msgstr "Αφαίρεση ληφθέντων μηνυμάτων;"
 
-#, fuzzy
 msgid ""
 "Mail and attachments on this computer are removed and fetched again when "
 "opened. Nothing on the server changes."
 msgstr ""
-"Κάθε μήνυμα και συνημμένο που διατηρείται σε αυτόν τον υπολογιστή αφαιρείται "
-"και λαμβάνεται ξανά από τον διακομιστή όταν ανοιχτεί. Δεν αλλάζει τίποτα "
-"στον διακομιστή."
+"Τα μηνύματα και τα συνημμένα σε αυτόν τον υπολογιστή αφαιρούνται και "
+"λαμβάνονται ξανά όταν ανοιχτούν. Τίποτα δεν αλλάζει στον διακομιστή."
 
 msgid "Could not remove the extension"
 msgstr "Δεν ήταν δυνατή η αφαίρεση της επέκτασης"
@@ -6669,6 +6785,7 @@ msgstr "Εκτύπωση μηνύματος"
 msgid "No PDF writer is available on this system"
 msgstr "Δεν υπάρχει διαθέσιμος δημιουργός PDF σε αυτό το σύστημα"
 
+#, python-brace-format
 msgid "Page {page} of {pages}"
 msgstr "Σελίδα {page} από {pages}"
 
@@ -6681,9 +6798,11 @@ msgstr "Χωρίς προεπισκόπηση"
 msgid "Save as PDF"
 msgstr "Αποθήκευση ως PDF"
 
+#, python-brace-format
 msgid "Saved {name}"
 msgstr "Αποθηκεύτηκε το {name}"
 
+#, python-brace-format
 msgid "Could not save the PDF: {error}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του PDF: {error}"
 
@@ -6815,21 +6934,17 @@ msgstr "Εισαγωγή συνδέσμου"
 msgid "Insert"
 msgstr "Εισαγωγή"
 
-#, fuzzy
 msgid "Hylki, on this computer"
-msgstr "Σε αυτόν τον υπολογιστή"
+msgstr "Hylki, σε αυτόν τον υπολογιστή"
 
-#, fuzzy
 msgid "Rename…"
-msgstr "Μετονομασία"
+msgstr "Μετονομασία…"
 
-#, fuzzy
 msgid "Delete Group…"
-msgstr "Διαγραφή του κλειδιού σας;"
+msgstr "Διαγραφή ομάδας…"
 
-#, fuzzy
 msgid "Show or hide"
-msgstr "Εμφάνιση ή απόκρυψη ετικετών"
+msgstr "Εμφάνιση ή απόκρυψη"
 
 msgid "Favorites"
 msgstr "Αγαπημένα"
@@ -6876,9 +6991,11 @@ msgstr "Εμφάνιση ή απόκρυψη υποφακέλων"
 msgid "Show or hide labels"
 msgstr "Εμφάνιση ή απόκρυψη ετικετών"
 
+#, python-brace-format
 msgid "Labels ({len})"
 msgstr "Ετικέτες ({len})"
 
+#, python-brace-format
 msgid "Folders ({len})"
 msgstr "Φάκελοι ({len})"
 
@@ -6906,9 +7023,8 @@ msgstr "Εμφάνιση κάθε ετικέτας"
 msgid "Show each smart folder"
 msgstr "Εμφάνιση κάθε έξυπνου φακέλου"
 
-#, fuzzy
 msgid "Show each address book"
-msgstr "Αποθήκευση του καταλόγου;"
+msgstr "Εμφάνιση κάθε καταλόγου διευθύνσεων"
 
 msgid "Long-press to expand or collapse"
 msgstr "Παρατεταμένο πάτημα για ανάπτυξη ή σύμπτυξη"
@@ -6928,6 +7044,7 @@ msgstr "Διαγραφή έξυπνου φακέλου…"
 msgid "Show or hide tags"
 msgstr "Εμφάνιση ή απόκρυψη ετικετών"
 
+#, python-brace-format
 msgid "Follow Settings: {sort}"
 msgstr "Ακολούθηση ρυθμίσεων: {sort}"
 
@@ -7092,6 +7209,7 @@ msgstr "Επιλέξτε το εικονίδιο της εφαρμογής σα�
 msgid "You're all set"
 msgstr "Είστε έτοιμοι"
 
+#, python-brace-format
 msgid ""
 "Enjoy! If you encounter an issue or have a feature request,\n"
 "please open an issue on our <a href=\"{url}\">Github</a>."
@@ -7111,21 +7229,26 @@ msgstr "Εισαγάγετε πρώτα τη διεύθυνση email και τ�
 msgid "Checking the connection…"
 msgstr "Έλεγχος σύνδεσης…"
 
+#, python-brace-format
 msgid "✓ {email} — added"
 msgstr "✓ {email} — προστέθηκε"
 
 msgid "Add another email account"
 msgstr "Προσθήκη άλλου λογαριασμού email"
 
+#, python-brace-format
 msgid "✓ {email} — connected and added"
 msgstr "✓ {email} — συνδέθηκε και προστέθηκε"
 
+#, python-brace-format
 msgid "{email} — mail server: {e}"
 msgstr "{email} — διακομιστής αλληλογραφίας: {e}"
 
+#, python-brace-format
 msgid "{email} — sending (SMTP): {e}"
 msgstr "{email} — αποστολή (SMTP): {e}"
 
+#, python-brace-format
 msgid "✓ {email} — signed in and added"
 msgstr "✓ {email} — συνδέθηκε και προστέθηκε"
 
@@ -7144,12 +7267,17 @@ msgid ""
 "Offline: there is no network connection. Mail syncs again once the network "
 "is back. Click to try now, or long-press for Status Bar"
 msgstr ""
+"Εκτός σύνδεσης: δεν υπάρχει σύνδεση δικτύου. Ο συγχρονισμός αλληλογραφίας θα "
+"συνεχιστεί όταν επανέλθει το δίκτυο. Κάντε κλικ για νέα προσπάθεια ή πατήστε "
+"παρατεταμένα για τη γραμμή κατάστασης."
 
+#, python-brace-format
 msgid "Your mail provider confirmed this really came from {from}."
 msgstr ""
 "Ο πάροχος αλληλογραφίας σας επιβεβαίωσε ότι αυτό προήλθε πράγματι από το "
 "{from}."
 
+#, python-brace-format
 msgid ""
 "This message failed the checks that prove it came from {from}. Treat it as a "
 "forgery."
@@ -7157,9 +7285,11 @@ msgstr ""
 "Αυτό το μήνυμα απέτυχε στους ελέγχους που αποδεικνύουν ότι προήλθε από "
 "{from}. Αντιμετωπίστε το ως πλαστό."
 
+#, python-brace-format
 msgid "This message carries a valid signature from {from}."
 msgstr "Αυτό το μήνυμα φέρει έγκυρη υπογραφή από {from}."
 
+#, python-brace-format
 msgid ""
 "This message couldn't be confirmed as coming from {from}, and the checks "
 "that ran on it failed."
@@ -7172,17 +7302,21 @@ msgstr ""
 "Ο πάροχος αλληλογραφίας σας δεν ανέφερε ελέγχους αποστολέα για αυτό το "
 "μήνυμα."
 
+#, python-brace-format
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 "Τίποτα εδώ δεν αποδεικνύει ότι αυτό προήλθε από το {from} — ούτε ότι δεν "
 "προήλθε."
 
+#, python-brace-format
 msgid "{name}: passed"
 msgstr "{name}: επιτυχία"
 
+#, python-brace-format
 msgid "{name}: FAILED"
 msgstr "{name}: ΑΠΟΤΥΧΙΑ"
 
+#, python-brace-format
 msgid "{name}: inconclusive"
 msgstr "{name}: ασαφές αποτέλεσμα"
 
@@ -7195,25 +7329,32 @@ msgstr "DKIM (υπογραφή)"
 msgid "SPF (sending server)"
 msgstr "SPF (διακομιστής αποστολής)"
 
+#, python-brace-format
 msgid "Signed by: {d}"
 msgstr "Υπογράφηκε από: {d}"
 
+#, python-brace-format
 msgid "Checked by: {who}"
 msgstr "Ελέγχθηκε από: {who}"
 
+#, python-brace-format
 msgid "From: {from}"
 msgstr "Από: {from}"
 
+#, python-brace-format
 msgid "Replies would go to {reply}, not {from}"
 msgstr "Οι απαντήσεις θα πήγαιναν στη διεύθυνση {reply}, όχι στη {from}"
 
+#, python-brace-format
 msgid "Bounces would go to {rp}"
 msgstr "Οι επιστροφές θα πήγαιναν στη διεύθυνση {rp}"
 
+#, python-brace-format
 msgid "The sender's name says \"{claimed}\" but the address is {from}"
 msgstr ""
 "Το όνομα του αποστολέα είναι «{claimed}», αλλά η διεύθυνση είναι {from}"
 
+#, python-brace-format
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
 msgstr ""
@@ -7223,51 +7364,65 @@ msgstr ""
 msgid "Syncing…"
 msgstr "Συγχρονισμός…"
 
+#, python-brace-format
 msgid "Could not fetch mail: {e}"
 msgstr "Δεν ήταν δυνατή η ανάκτηση αλληλογραφίας: {e}"
 
+#, python-brace-format
 msgid "Could not load message: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση του μηνύματος: {e}"
 
+#, python-brace-format
 msgid "Could not load source: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση του πηγαίου κώδικα: {e}"
 
+#, python-brace-format
 msgid "Could not load attachments: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση των συνημμένων: {e}"
 
+#, python-brace-format
 msgid "Could not move message: {e}"
 msgstr "Δεν ήταν δυνατή η μετακίνηση του μηνύματος: {e}"
 
+#, python-brace-format
 msgid "Could not mark as spam: {e}"
 msgstr "Δεν ήταν δυνατή η σήμανση ως ανεπιθύμητου: {e}"
 
+#, python-brace-format
 msgid "Could not mark as not spam: {e}"
 msgstr "Δεν ήταν δυνατή η σήμανση ως επιθυμητού: {e}"
 
+#, python-brace-format
 msgid "Could not mark {len} messages as not spam: {e}"
 msgstr "Δεν ήταν δυνατή η σήμανση {len} μηνυμάτων ως επιθυμητών: {e}"
 
+#, python-brace-format
 msgid "Could not move messages: {e}"
 msgstr "Δεν ήταν δυνατή η μετακίνηση μηνυμάτων: {e}"
 
+#, python-brace-format
 msgid "Could not empty the folder: {e}"
 msgstr "Δεν ήταν δυνατό το άδειασμα του φακέλου: {e}"
 
+#, python-brace-format
 msgid "Undo failed: {e}"
 msgstr "Η αναίρεση απέτυχε: {e}"
 
+#, python-brace-format
 msgid "Could not create folder: {e}"
 msgstr "Δεν ήταν δυνατή η δημιουργία φακέλου: {e}"
 
 msgid "Could not rename folder: unknown folder"
 msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"
 
+#, python-brace-format
 msgid "Could not rename folder: {e}"
 msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: {e}"
 
 msgid "Could not delete folder: unknown folder"
 msgstr "Δεν ήταν δυνατή η διαγραφή φακέλου: άγνωστος φάκελος"
 
+#, python-brace-format
 msgid "Could not delete folder: {e}"
 msgstr "Δεν ήταν δυνατή η διαγραφή φακέλου: {e}"
 
@@ -7285,21 +7440,25 @@ msgstr ""
 msgid "Removing the attachment…"
 msgstr "Αφαίρεση του συνημμένου…"
 
+#, python-brace-format
 msgid "Could not remove the attachment: {e}"
 msgstr "Δεν ήταν δυνατή η αφαίρεση του συνημμένου: {e}"
 
+#, python-brace-format
 msgid "Could not list folders: {e}"
 msgstr "Δεν ήταν δυνατή η εμφάνιση των φακέλων: {e}"
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "Το συνημμένο δεν υπάρχει πλέον στο μήνυμα στον διακομιστή"
 
+#, python-brace-format
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Εξακολουθεί να μην είναι δυνατή η αποστολή του «{subject}»: {e}"
 
 msgid "IMAP connection stopped making progress"
 msgstr "Η σύνδεση IMAP σταμάτησε να προχωρά"
 
+#, python-brace-format
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Δεν ήταν δυνατή η επικοινωνία με τον διακομιστή JMAP: {e}"
 
@@ -7322,31 +7481,35 @@ msgstr ""
 "Διαγράψατε ένα συνημμένο από αυτό το μήνυμα. Οι αρχικές κεφαλίδες MIME του "
 "συνημμένου ήταν:"
 
+#, python-brace-format
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr ""
 "η απάντηση του διακομιστή δεν ήταν δυνατό να αναγνωστεί (ξεκινούσε με: "
 "{reply})"
 
-#, fuzzy
 msgid "no network connection"
-msgstr "Δοκιμή σύνδεσης"
+msgstr "δεν υπάρχει σύνδεση δικτύου"
 
+#, python-brace-format
 msgid "runtime error: {e}"
 msgstr "σφάλμα χρόνου εκτέλεσης: {e}"
 
-#, fuzzy
 msgid "could not reach the server"
-msgstr "Δεν ήταν δυνατή η επικοινωνία με τον διακομιστή"
+msgstr "δεν ήταν δυνατή η σύνδεση με τον διακομιστή"
 
+#, python-brace-format
 msgid "Could not load {path}: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση του {path}: {e}"
 
+#, python-brace-format
 msgid "Could not load conversation: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση της συζήτησης: {e}"
 
+#, python-brace-format
 msgid "Could not update message: {e}"
 msgstr "Δεν ήταν δυνατή η ενημέρωση του μηνύματος: {e}"
 
+#, python-brace-format
 msgid "Could not change the star: {e}"
 msgstr "Δεν ήταν δυνατή η αλλαγή του αστεριού: {e}"
 
@@ -7356,9 +7519,11 @@ msgstr ""
 "Αυτός ο διακομιστής δεν αποθηκεύει ετικέτες, επομένως το Hylki τις διατηρεί "
 "μόνο σε αυτόν τον υπολογιστή"
 
+#, python-brace-format
 msgid "Could not tag message: {e}"
 msgstr "Δεν ήταν δυνατή η προσθήκη ετικέτας στο μήνυμα: {e}"
 
+#, python-brace-format
 msgid "Could not mark folder read: {e}"
 msgstr "Δεν ήταν δυνατή η σήμανση του φακέλου ως αναγνωσμένου: {e}"
 
@@ -7369,24 +7534,31 @@ msgstr ""
 "Το Gmail διατηρεί ένα αντίγραφο κάθε μηνύματος στην «Όλη η αλληλογραφία», "
 "επομένως το Hylki δεν μπορεί να αφαιρέσει ένα συνημμένο από εκεί."
 
+#, python-brace-format
 msgid "Could not move {len} messages: {e}"
 msgstr "Δεν ήταν δυνατή η μετακίνηση {len} μηνυμάτων: {e}"
 
+#, python-brace-format
 msgid "Could not delete permanently: {e}"
 msgstr "Δεν ήταν δυνατή η οριστική διαγραφή: {e}"
 
+#, python-brace-format
 msgid "Could not move folder: {e}"
 msgstr "Δεν ήταν δυνατή η μετακίνηση φακέλου: {e}"
 
+#, python-brace-format
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Το μήνυμα στάλθηκε, αλλά η αποθήκευση στα Απεσταλμένα απέτυχε: {e}"
 
+#, python-brace-format
 msgid "Connecting to {host}…"
 msgstr "Σύνδεση στο {host}…"
 
+#, python-brace-format
 msgid "Connection failed: {e}"
 msgstr "Η σύνδεση απέτυχε: {e}"
 
+#, python-brace-format
 msgid "Downloading attachments… {n} remaining"
 msgid_plural "Downloading attachments… {n} remaining"
 msgstr[0] "Λήψη συνημμένων… απομένει {n}"
@@ -7394,14 +7566,14 @@ msgstr[1] "Λήψη συνημμένων… απομένουν {n}"
 
 #. Nothing failed: the message waits for the network, which the
 #. Refresh button already shows is down (#442).
-#, fuzzy
 msgid ""
 "No network connection. The message is in the Outbox and will be sent when "
 "the connection is back."
 msgstr ""
-"Η αποστολή απέτυχε: {e}. Το μήνυμα βρίσκεται στα Εξερχόμενα και θα σταλεί "
-"όταν αποκατασταθεί η σύνδεση."
+"Δεν υπάρχει σύνδεση δικτύου. Το μήνυμα βρίσκεται στα Εξερχόμενα και θα "
+"αποσταλεί όταν επανέλθει η σύνδεση."
 
+#, python-brace-format
 msgid ""
 "Send failed: {e}. The message is in the Outbox and will be sent when the "
 "connection is back."
@@ -7409,18 +7581,22 @@ msgstr ""
 "Η αποστολή απέτυχε: {e}. Το μήνυμα βρίσκεται στα Εξερχόμενα και θα σταλεί "
 "όταν αποκατασταθεί η σύνδεση."
 
+#, python-brace-format
 msgid "Send failed: {e}"
 msgstr "Η αποστολή απέτυχε: {e}"
 
+#, python-brace-format
 msgid "“{subject}” will be sent {when}"
 msgstr "Το «{subject}» θα σταλεί {when}"
 
 msgid "Could not schedule the message."
 msgstr "Δεν ήταν δυνατός ο προγραμματισμός του μηνύματος."
 
+#, python-brace-format
 msgid "Could not save template: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του προτύπου: {e}"
 
+#, python-brace-format
 msgid "Could not save draft: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του προχείρου: {e}"
 
@@ -7430,15 +7606,18 @@ msgstr "Αποθήκευση προτύπου…"
 msgid "Saving draft…"
 msgstr "Αποθήκευση προχείρου…"
 
+#, python-brace-format
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 "δεν υπάρχει δικό σας κλειδί OpenPGP για τη διεύθυνση {addr}· δημιουργήστε "
 "ένα στις Ρυθμίσεις, OpenPGP"
 
+#, python-brace-format
 msgid "no OpenPGP key for {addr}"
 msgstr "δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}"
 
+#, python-brace-format
 msgid ""
 "Could not read the password for {email} from the keyring ({e}). Hylki tries "
 "again at the next connection."
@@ -7454,6 +7633,7 @@ msgstr ""
 "χρησιμοποιήσει λογαριασμούς Exchange από τους Διαδικτυακούς λογαριασμούς: "
 "αφαιρέστε τον και προσθέστε τον ως λογαριασμό IMAP ή Microsoft 365."
 
+#, python-brace-format
 msgid "Could not delete message: {e}"
 msgstr "Δεν ήταν δυνατή η διαγραφή του μηνύματος: {e}"
 
@@ -7666,7 +7846,6 @@ msgstr "Hyprlab"
 #~ "Το πρόγραμμα επεξεργασίας ετικέτας είναι ανοικτό. Αποθηκεύστε τις αλλαγές "
 #~ "σας ή απορρίψτε τις πριν συνεχίσετε."
 
-#, fuzzy
 #~ msgid ""
 #~ "The address book editor is open. Save what you changed, or discard it, "
 #~ "before moving on."
@@ -7915,7 +8094,6 @@ msgstr "Hyprlab"
 #~ "Το βιβλίο διευθύνσεων όπου αποθηκεύεται μια επαφή που δημιουργείται στο "
 #~ "Hylki, εκτός αν επιλεγεί άλλο κατά τη δημιουργία της."
 
-#, fuzzy
 #~ msgid ""
 #~ "The account and its address books are removed from this computer, so "
 #~ "Evolution and other apps that use them stop seeing them too. Nothing on "
@@ -7925,7 +8103,6 @@ msgstr "Hyprlab"
 #~ "και οι άλλες εφαρμογές που τον χρησιμοποιούν παύουν επίσης να τον "
 #~ "βλέπουν. Τίποτα στον διακομιστή δεν αλλάζει."
 
-#, fuzzy
 #~ msgid ""
 #~ "The composer looks up recipients in the directory as you type an address, "
 #~ "and a search in Contacts looks in it too."
@@ -8801,7 +8978,6 @@ msgstr "Hyprlab"
 #~ "σύνδεσης παραμένουν στην κλειδοθήκη συστήματος και δεν εξάγονται ποτέ· τα "
 #~ "κλειδιά OpenPGP παραμένουν στο GnuPG."
 
-#, fuzzy
 #~ msgid "Like the accounts"
 #~ msgstr "Πάνω από τους λογαριασμούς"
 
@@ -8864,7 +9040,6 @@ msgstr "Hyprlab"
 #~ "λογαριασμών που τη φέρουν. Κάθε λογαριασμός διατηρεί τη δική του ενότητα "
 #~ "Ετικέτες ούτως ή άλλως."
 
-#, fuzzy
 #~ msgid ""
 #~ "In the unified section, in a list above or below the accounts, or Off, "
 #~ "out of the sidebar."
@@ -8881,19 +9056,15 @@ msgstr "Hyprlab"
 #~ "Μια συντόμευση που ανοίγει τις επαφές σας, καρφιτσωμένη στο κάτω μέρος "
 #~ "της πλευρικής στήλης."
 
-#, fuzzy
 #~ msgid "All Contacts"
 #~ msgstr "Επαφές"
 
-#, fuzzy
 #~ msgid "Groups"
 #~ msgstr "Αριστερή ομάδα"
 
-#, fuzzy
 #~ msgid "Search groups"
 #~ msgstr "Αναζήτηση φίλτρων"
 
-#, fuzzy
 #~ msgid "Choose which address book to search"
 #~ msgstr "Επιλέξτε τους φακέλους αναζήτησης"
 
@@ -8907,39 +9078,30 @@ msgstr "Hyprlab"
 #~ "Το {name} αφαιρείται από το βιβλίο διευθύνσεών σας και, για συγχρονισμένο "
 #~ "βιβλίο, και από τον διακομιστή."
 
-#, fuzzy
 #~ msgid "From your mail accounts"
 #~ msgstr "Προσθέστε τον λογαριασμό email σας"
 
-#, fuzzy
 #~ msgid "Add Address Books"
 #~ msgstr "Όλα τα βιβλία διευθύνσεων"
 
-#, fuzzy
 #~ msgid "CardDAV Accounts"
 #~ msgstr "Λογαριασμοί αλληλογραφίας"
 
-#, fuzzy
 #~ msgid "CardDAV accounts"
 #~ msgstr "Όλοι οι λογαριασμοί"
 
-#, fuzzy
 #~ msgid "No CardDAV accounts yet."
 #~ msgstr "Δεν υπάρχουν ακόμη λογαριασμοί cloud."
 
-#, fuzzy
 #~ msgid "CardDAV Account"
 #~ msgstr "Λογαριασμός cloud"
 
-#, fuzzy
 #~ msgid "Edit Account"
 #~ msgstr "Επεξεργασία λογαριασμού cloud"
 
-#, fuzzy
 #~ msgid "Add Account"
 #~ msgstr "Προσθήκη λογαριασμού"
 
-#, fuzzy
 #~ msgid "Use this account's address books"
 #~ msgstr "Χρήση αυτού του λογαριασμού στο Hylki"
 
@@ -8971,11 +9133,9 @@ msgstr "Hyprlab"
 #~ msgid "Look up recipients in this directory"
 #~ msgstr "Αναζήτηση παραληπτών σε αυτόν τον κατάλογο"
 
-#, fuzzy
 #~ msgid "Save the CardDAV account?"
 #~ msgstr "Αποθήκευση του λογαριασμού;"
 
-#, fuzzy
 #~ msgid ""
 #~ "The CardDAV account editor is open. Save what you changed, or discard it, "
 #~ "before moving on."
@@ -8983,11 +9143,9 @@ msgstr "Hyprlab"
 #~ "Το πρόγραμμα επεξεργασίας λογαριασμού είναι ανοικτό. Αποθηκεύστε τις "
 #~ "αλλαγές σας ή απορρίψτε τις πριν συνεχίσετε."
 
-#, fuzzy
 #~ msgid "Message sent"
 #~ msgstr "Λίστα μηνυμάτων"
 
-#, fuzzy
 #~ msgid "“{subject}” sent"
 #~ msgstr "Το «{subject}» θα σταλεί {when}"
 
