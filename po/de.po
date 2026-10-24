@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-22 22:45+0200\n"
+"PO-Revision-Date: 2026-10-24 12:00+0200\n"
 "Last-Translator: Samuel Edlmeier <samuel.edlmeier@gmx.net>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -112,7 +112,7 @@ msgid "Focus Mode"
 msgstr "Fokusmodus"
 
 msgid "Fullscreen"
-msgstr ""
+msgstr "Vollbild"
 
 msgid "Print Preview…"
 msgstr "Druckvorschau…"
@@ -374,9 +374,11 @@ msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
 msgstr ""
+"Weiterleitung der Regel {rule} fehlgeschlagen. Die Nachricht wurde nicht "
+"verschoben; ein erneuter Versuch folgt."
 
 msgid "The forward of filter {rule} is waiting in the Outbox"
-msgstr ""
+msgstr "Ausführung der Weiterleitungsregel {rule}  steht im Postausgang an."
 
 msgid "No filters to apply here yet"
 msgstr "Hier sind noch keine Filter verfügbar"
@@ -412,20 +414,18 @@ msgstr "Ordner {done} von {total}"
 
 msgid "started {n} forward"
 msgid_plural "started {n} forwards"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} Weiterleitung gestartet"
+msgstr[1] "{n} Weiterleitungen gestartet"
 
-#, fuzzy
 msgid "marked {n} message as read"
 msgid_plural "marked {n} messages as read"
-msgstr[0] "{n} Nachricht abgelegt"
-msgstr[1] "{n} Nachrichten abgelegt"
+msgstr[0] "{n} Nachricht als gelesen markiert"
+msgstr[1] "{n} Nachrichten als gelesen markiert"
 
-#, fuzzy
 msgid "deleted {n} message"
 msgid_plural "deleted {n} messages"
-msgstr[0] "{n} Nachrichten löschen"
-msgstr[1] "{n} Nachrichten löschen"
+msgstr[0] "{n} Nachricht gelöscht"
+msgstr[1] "{n} Nachrichten gelöscht"
 
 msgid "Filters looked at {n} message, and it matched nothing"
 msgid_plural "Filters looked at {n} messages, and none of them matched"
@@ -436,11 +436,10 @@ msgstr[1] ""
 #. Matches that needed nothing: the rules had already done their
 #. work on an earlier sync (#201). Saying "none matched" here
 #. made working rules look broken.
-#, fuzzy
 msgid "Filters looked at {n} message"
 msgid_plural "Filters looked at {n} messages"
-msgstr[0] "Filter haben {tagged} von {n} Nachricht mit Tags versehen"
-msgstr[1] "Filter haben {tagged} von {n} Nachrichten mit Tags versehen"
+msgstr[0] "Filter haben {n} Nachricht überprüft"
+msgstr[1] "Filter haben {n} Nachrichten überprüft"
 
 msgid ""
 "Filters matched {matched} of {n} message, and it was already tagged or filed"
@@ -656,10 +655,10 @@ msgid "Your answer has been sent: declined."
 msgstr "Antwort wurde gesendet: Abgelehnt."
 
 msgid "Date (Newest first)"
-msgstr "Datum (Neueste zuerst)"
+msgstr "Datum (neueste zuerst)"
 
 msgid "Date (Oldest first)"
-msgstr "Datum (Ältester zuerst)"
+msgstr "Datum (älteste zuerst)"
 
 msgid "Sender (A–Z)"
 msgstr "Absender (A–Z)"
@@ -782,7 +781,7 @@ msgid "Compose"
 msgstr "Verfassen"
 
 msgid "New message from a template"
-msgstr "Neue Nachricht aus äage"
+msgstr "Neue Nachricht aus Vorlage"
 
 msgid "Send the message you are writing"
 msgstr "Geschriebene Nachricht senden"
@@ -834,9 +833,8 @@ msgstr "Konten in der Seitenleiste ein- oder ausblenden"
 msgid "Focus Mode on or off"
 msgstr "Fokusmodus ein- oder ausschalten"
 
-#, fuzzy
 msgid "Fullscreen on or off"
-msgstr "Fokusmodus ein- oder ausschalten"
+msgstr "Vollbildmodus ein- oder ausschalten"
 
 msgid "Message zoom in or out"
 msgstr "Nachrichtenansicht vergrößern oder verkleinern"
@@ -1926,43 +1924,38 @@ msgstr ""
 msgid "Enable this account"
 msgstr "Konto aktivieren"
 
-#, fuzzy
 msgid "Forward to"
-msgstr "Weiterleiten"
+msgstr "Weiterleiten an"
 
 msgid "Move to"
 msgstr "Verschieben nach"
 
 msgid "forwards to {to}"
-msgstr ""
+msgstr "Weiterleitung an {to}"
 
-#, fuzzy
 msgid "marked as read"
-msgstr "Als gelesen markieren"
+msgstr "als gelesen markiert"
 
 msgid "deleted for good"
-msgstr ""
+msgstr "dauerhaft gelöscht"
 
 msgid "Then"
 msgstr "Dann"
 
-#, fuzzy
 msgid "Add Action"
-msgstr "Aktion"
+msgstr "Aktion hinzufügen"
 
-#, fuzzy
 msgid "Remove action"
-msgstr "Bedingung entfernen"
+msgstr "Aktion entfernen"
 
 msgid "Addresses, separated by commas"
-msgstr ""
+msgstr "E-Mail-Adressen, kommagetrennt"
 
 msgid "Folder"
 msgstr "Ordner"
 
-#, fuzzy
 msgid "Permanently deletes the message"
-msgstr "Diese Nachricht übersetzen"
+msgstr "Nachricht dauerhaft löschen"
 
 msgid "Show"
 msgstr "Anzeigen"
@@ -2139,10 +2132,10 @@ msgid "is exactly"
 msgstr "ist genau"
 
 msgid "starts with"
-msgstr "Beginnt mit"
+msgstr "beginnt mit"
 
 msgid "ends with"
-msgstr "Endet mit"
+msgstr "endet mit"
 
 #. Every condition, joined the way the rule combines them (#192).
 msgid " or "
@@ -2475,7 +2468,7 @@ msgid "Trash"
 msgstr "Papierkorb"
 
 msgid "Starred"
-msgstr "Markiert"
+msgstr "Mit Stern markiert"
 
 msgid "Not starred"
 msgstr "Nicht mit Stern markiert"
@@ -2970,8 +2963,8 @@ msgid ""
 "Supported providers: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox and "
 "Seafile."
 msgstr ""
-"Cloud-Speicheranbieter verbinden, um große Dateien anstelle eines "
-"Anhangshochzuladen und zu teilen.\n"
+"Cloud-Speicheranbieter verbinden, um große Dateien anstelle eines Anhangs "
+"hochzuladen und zu teilen.\n"
 "\n"
 "Unterstützte Anbieter: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox und "
 "Seafile."
@@ -3101,7 +3094,7 @@ msgid "No formatting at all"
 msgstr "Ganz ohne Formatierung"
 
 msgid "Writing in {format}"
-msgstr "Schreiben in {format}"
+msgstr "Schreiben in: {format}"
 
 msgid "Switch to plain text?"
 msgstr "Zu reinem Text wechseln?"
@@ -3349,8 +3342,8 @@ msgstr "Antwort an"
 
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
-"Der Name, der hier und in Kontakte verwendet wird. Bei Leerstand wird {own} "
-"eingesetzt."
+"Der Name des Adressbuches hier und in GNOME Kontakte . Bleibt das Feld leer, "
+"wird »{own}« verwendet."
 
 msgid ""
 "The name used here and in Contacts; GNOME Contacts keeps its own. Left "
@@ -3463,9 +3456,7 @@ msgstr ""
 "Synchronisation für Kontakte hinzufügen."
 
 msgid "Kept in Hylki's own data folder. Works without GNOME."
-msgstr ""
-"Kontakte, die Hylki selbst im eigenen Datenordner verwaltet. Funktioniert "
-"auch ohne GNOME."
+msgstr "Kontakte, die Hylki selbst verwaltet. Funktioniert auch ohne GNOME."
 
 msgid "Contacts in the Hylki book"
 msgstr "Kontakte im Adressbuch von Hylki"
@@ -3571,9 +3562,8 @@ msgid ""
 "Where contacts come from for Contacts, suggestions, sender pictures and "
 "filters. Switching one off leaves it out of Hylki."
 msgstr ""
-"Ablageorte der Kontakte für die Anwendung Kontakte, die Vorschläge des "
-"Editors, Absenderbilder und Filter. Beim Deaktivieren einer Option wird "
-"diese in Hylki nicht mehr verwendet."
+"Quelle für Kontakte, die Vorschläge des Editors, Absenderbilder und Filter. "
+"Beim Deaktivieren wird diese in Hylki nicht mehr verwendet."
 
 msgid "Look again for address books"
 msgstr "Look again for address books"
@@ -3597,7 +3587,7 @@ msgid "Save new contacts in"
 msgstr "Neue Kontakte speichern in"
 
 msgid "Unless another is picked when the contact is made."
-msgstr "Außer wenn beim Anlegen des Kontakts ein anderer Wert gewählt wird."
+msgstr "Falls bei der Kontakterstellung keine andere Auswahl getroffen wird."
 
 msgid "Layout"
 msgstr "Layout"
@@ -4184,7 +4174,7 @@ msgid "Has Attachments"
 msgstr "Hat Anhänge"
 
 msgid "Addressed to Me"
-msgstr "Wurde an mich adressiert"
+msgstr "an mich adressiert"
 
 msgid "From Contacts"
 msgstr "Aus Kontakten"
@@ -4211,10 +4201,10 @@ msgid "Mark All as Unread"
 msgstr "Alle als ungelesen markieren"
 
 msgid "All folders (except trash & junk)"
-msgstr "Alle Ordner (außer Papierkorb und Junk)"
+msgstr "Alle Ordner (außer Papierkorb und Spam)"
 
 msgid "Everywhere"
-msgstr "Überall"
+msgstr "Alle Ordner"
 
 msgid "This folder"
 msgstr "Dieser Ordner"
@@ -5089,13 +5079,11 @@ msgstr "Gelesene Nachrichten"
 msgid "All but the newest"
 msgstr "Alle außer der neuesten"
 
-#, fuzzy
 msgid "Top of the message"
-msgstr "Oberstes Element der Liste"
+msgstr "Anfang der Nachricht"
 
-#, fuzzy
 msgid "Bottom of the message"
-msgstr "Unterstes Element der Liste"
+msgstr "Ende der Nachricht"
 
 msgid "Remember the last choice"
 msgstr "Letzte Auswahl merken"
@@ -5298,7 +5286,7 @@ msgid "Your changes are lost if you discard them."
 msgstr "Nicht gespeicherte Änderungen gehen beim Verwerfen verloren."
 
 msgid "Save the smart folder?"
-msgstr "Samrt Folder speichern?"
+msgstr "Smart Folder speichern?"
 
 msgid "Save the tag?"
 msgstr "Tag speichern?"
@@ -5347,7 +5335,7 @@ msgid "Newest message first"
 msgstr "Neueste Nachricht zuerst"
 
 msgid "In the reading pane."
-msgstr "Symbolleiste des Lesebereichs einklappenIm Lesebereich"
+msgstr "Im Lesebereich"
 
 msgid "Fold earlier messages"
 msgstr "Ältere Nachrichten einklappen"
@@ -6395,7 +6383,7 @@ msgstr ""
 "Ein Microsoft-Konto kann keine E-Mails von einem anderen Konto empfangen"
 
 msgid "“{folder}” is left out of search: {reason}"
-msgstr ""
+msgstr "“{folder}” ist von der Suche ausgenommen: {reason}"
 
 msgid "Connecting to {host}…"
 msgstr "Verbinde zu {host}…"
@@ -6600,8 +6588,8 @@ msgid ""
 "syncs; Apply Now runs them over the mail already there."
 msgstr ""
 "Automatische Ablage oder Taggen eingehender E-Mails. Filter laufen bei jeder "
-"Synchronisation des Posteingangs; „Jetzt anwenden“ wendet sie auf den "
-"aktuellen Bestand an."
+"Synchronisation des Posteingangs; „Jetzt anwenden“ wendet diese auf bereits "
+"vorhandene E-Mails an."
 
 msgid "Add Filter…"
 msgstr "Filter hinzufügen…"
@@ -7091,7 +7079,7 @@ msgid "Reply in the original's format"
 msgstr "Im ursprünglichen Format antworten"
 
 msgid "Plain-text mail is answered in plain text."
-msgstr "Reine Text-E-Mails werden als reiner Text beantwortet."
+msgstr "Text-E-Mails werden als reiner Text beantwortet."
 
 msgid "Signature in replies"
 msgstr "Signatur in Antworten"
@@ -7213,9 +7201,8 @@ msgstr "OpenPGP-Ergebnis in Worten anzeigen"
 msgid "Off shows the icons alone."
 msgstr "Bei Deaktivierung werden nur Symbole angezeigt."
 
-#, fuzzy
 msgid "Find bar position"
-msgstr "Position der Auswahlleiste"
+msgstr "Position der Suchleiste"
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""
@@ -7270,13 +7257,13 @@ msgid "Start at login"
 msgstr "Bei Anmeldung starten"
 
 msgid "Starts hidden."
-msgstr "Standardmäßig ausgeblendet."
+msgstr "Startet im Hintergrund."
 
 msgid "Start fullscreen"
-msgstr ""
+msgstr "Start fullscreen"
 
 msgid "F11 switches fullscreen on and off."
-msgstr ""
+msgstr "F11 wechselt in den Vollbildmodus und zurück."
 
 msgid "Show a tray icon"
 msgstr "Symbol im Infobereich anzeigen"
