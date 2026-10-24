@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-23 11:02+0200\n"
+"PO-Revision-Date: 2026-10-24 11:29+0200\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -111,7 +111,7 @@ msgid "Focus Mode"
 msgstr "Mode Focus"
 
 msgid "Fullscreen"
-msgstr ""
+msgstr "Plein écran"
 
 msgid "Print Preview…"
 msgstr "Aperçu avant impression…"
@@ -376,9 +376,11 @@ msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
 msgstr ""
+"Le transfert du filtre {rule} a été refusé. Le message est resté là où il se "
+"trouve et une nouvelle tentative aura lieu"
 
 msgid "The forward of filter {rule} is waiting in the Outbox"
-msgstr ""
+msgstr "Le transfert du filtre {rule} est en attente dans la Boîte d’envoi"
 
 msgid "No filters to apply here yet"
 msgstr "Aucun filtre à appliquer ici pour l’instant"
@@ -414,20 +416,18 @@ msgstr "Dossier {done} sur {total}"
 
 msgid "started {n} forward"
 msgid_plural "started {n} forwards"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} transfert lancé"
+msgstr[1] "{n} transferts lancés"
 
-#, fuzzy
 msgid "marked {n} message as read"
 msgid_plural "marked {n} messages as read"
-msgstr[0] "Classé {n} message"
-msgstr[1] "Classé {n} messages"
+msgstr[0] "{n} message marqué comme lu"
+msgstr[1] "{n} messages marqués comme lus"
 
-#, fuzzy
 msgid "deleted {n} message"
 msgid_plural "deleted {n} messages"
-msgstr[0] "Supprimer {n} messages"
-msgstr[1] "Supprimer {n} messages"
+msgstr[0] "{n} message supprimé"
+msgstr[1] "{n} messages supprimés"
 
 msgid "Filters looked at {n} message, and it matched nothing"
 msgid_plural "Filters looked at {n} messages, and none of them matched"
@@ -439,11 +439,10 @@ msgstr[1] ""
 #. Matches that needed nothing: the rules had already done their
 #. work on an earlier sync (#201). Saying "none matched" here
 #. made working rules look broken.
-#, fuzzy
 msgid "Filters looked at {n} message"
 msgid_plural "Filters looked at {n} messages"
-msgstr[0] "Les filtres ont marqué {tagged} sur {n} message"
-msgstr[1] "Les filtres ont marqué {tagged} sur {n} messages"
+msgstr[0] "Les filtres ont examiné {n} message"
+msgstr[1] "Les filtres ont examiné {n} messages"
 
 msgid ""
 "Filters matched {matched} of {n} message, and it was already tagged or filed"
@@ -837,9 +836,8 @@ msgstr "Afficher ou masquer les comptes dans la barre latérale"
 msgid "Focus Mode on or off"
 msgstr "Activer ou désactiver le mode Focus"
 
-#, fuzzy
 msgid "Fullscreen on or off"
-msgstr "Activer ou désactiver le mode Focus"
+msgstr "Activer ou désactiver le mode plein écran"
 
 msgid "Message zoom in or out"
 msgstr "Zoom avant ou arrière sur le message"
@@ -1924,43 +1922,38 @@ msgstr ""
 msgid "Enable this account"
 msgstr "Activer ce compte"
 
-#, fuzzy
 msgid "Forward to"
-msgstr "Transférer"
+msgstr "Transférer à"
 
 msgid "Move to"
 msgstr "Déplacer vers"
 
 msgid "forwards to {to}"
-msgstr ""
+msgstr "transfère à {to}"
 
-#, fuzzy
 msgid "marked as read"
-msgstr "Marquer comme lu"
+msgstr "marqué comme lu"
 
 msgid "deleted for good"
-msgstr ""
+msgstr "supprimé définitivement"
 
 msgid "Then"
 msgstr "Alors"
 
-#, fuzzy
 msgid "Add Action"
-msgstr "Ajouter un compte"
+msgstr "Ajouter une action"
 
-#, fuzzy
 msgid "Remove action"
-msgstr "Supprimer la condition"
+msgstr "Supprimer l’action"
 
 msgid "Addresses, separated by commas"
-msgstr ""
+msgstr "Adresses, séparées par des virgules"
 
 msgid "Folder"
 msgstr "Dossier"
 
-#, fuzzy
 msgid "Permanently deletes the message"
-msgstr "Traduire ce message"
+msgstr "Supprime définitivement le message"
 
 msgid "Show"
 msgstr "Afficher"
@@ -5084,13 +5077,11 @@ msgstr "Messages déjà lus"
 msgid "All but the newest"
 msgstr "Tous sauf le plus récent"
 
-#, fuzzy
 msgid "Top of the message"
-msgstr "Haut de la liste"
+msgstr "Haut du message"
 
-#, fuzzy
 msgid "Bottom of the message"
-msgstr "Bas de la liste"
+msgstr "Bas du message"
 
 msgid "Remember the last choice"
 msgstr "Mémoriser le dernier choix"
@@ -6369,7 +6360,7 @@ msgid "A Microsoft account can't receive mail from another account"
 msgstr "Un compte Microsoft ne peut pas recevoir de courrier d’un autre compte"
 
 msgid "“{folder}” is left out of search: {reason}"
-msgstr ""
+msgstr "« {folder} » est exclu de la recherche : {reason}"
 
 msgid "Connecting to {host}…"
 msgstr "Connexion à {host}…"
@@ -7175,9 +7166,8 @@ msgstr "Nommer le résultat OpenPGP"
 msgid "Off shows the icons alone."
 msgstr "Désactivé, seules les icônes sont affichées."
 
-#, fuzzy
 msgid "Find bar position"
-msgstr "Position de la barre de sélection"
+msgstr "Position de la barre de recherche"
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""
@@ -7233,10 +7223,10 @@ msgid "Starts hidden."
 msgstr "Démarre masqué."
 
 msgid "Start fullscreen"
-msgstr ""
+msgstr "Démarrer en plein écran"
 
 msgid "F11 switches fullscreen on and off."
-msgstr ""
+msgstr "F11 active ou désactive le plein écran."
 
 msgid "Show a tray icon"
 msgstr "Afficher une icône dans la zone de notification"
