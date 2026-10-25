@@ -7,7 +7,9 @@ use crate::i18n::i18n_f;
 use crate::models::{Folder, FolderKind};
 use crate::worker::folders::number_folders;
 use crate::worker::graph::chores::emit_graph_body_hits;
-use crate::worker::graph::http::{graph_get_json, graph_paged, graph_token, GRAPH_BASE};
+use crate::worker::graph::http::{
+    graph_get_json, graph_paged, graph_send_json, graph_token, GRAPH_BASE,
+};
 use crate::worker::graph::index::{graph_load_folder, GraphState};
 use crate::worker::{blocking, chip_counts_all, WorkerEvent};
 
@@ -76,6 +78,9 @@ pub(super) fn graph_list_folders(
             // one goes by name.
             None if prefix.is_empty() && crate::models::is_templates_name(&name) => {
                 FolderKind::Templates
+            }
+            None if prefix.is_empty() && crate::models::is_snoozed_name(&name) => {
+                FolderKind::Snoozed
             }
             None => FolderKind::Custom,
         };
@@ -225,5 +230,31 @@ pub(super) async fn refresh_graph_folders(
             "Could not list folders: {e}",
             &[("e", &(e).to_string())],
         ))),
+    }
+}
+
+/// Make the top-level folder `path` when the account has none by that
+/// name, as an IMAP move makes its destination: the first template (#360),
+/// archive or snooze (#527) of an account without one. The listing that
+/// follows numbers it.
+pub(super) async fn graph_ensure_folder(
+    account: &AccountConfig,
+    account_id: u32,
+    cache: Option<&Cache>,
+    state: &mut GraphState,
+    path: &str,
+    emit: &impl Fn(WorkerEvent),
+) {
+    if state.folders.contains_key(path) || path.contains('/') {
+        return;
+    }
+    let Some(token) = graph_token(account, emit).await else {
+        return;
+    };
+    let (t, url) = (token.clone(), format!("{GRAPH_BASE}/me/mailFolders"));
+    let body = serde_json::json!({ "displayName": path });
+    match blocking(move || graph_send_json(&t, "POST", &url, &body)).await {
+        Ok(_) => refresh_graph_folders(&token, account_id, cache, state, emit).await,
+        Err(e) => tracing::warn!("graph: could not create {path}: {e}"),
     }
 }

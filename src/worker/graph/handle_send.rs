@@ -7,7 +7,7 @@ use crate::i18n::i18n;
 use crate::models::FolderKind;
 use crate::worker::compose::build::{build_draft, draft_message_id, restore_msgid_case};
 use crate::worker::drafts::{draft_not_saved, saving_text};
-use crate::worker::graph::folders::refresh_graph_folders;
+use crate::worker::graph::folders::graph_ensure_folder;
 use crate::worker::graph::http::{graph_post_mime, graph_send_json, graph_token, GRAPH_BASE};
 use crate::worker::graph::index::{graph_load_folder, GraphState};
 use crate::worker::graph::ops::graph_drop_draft_origin;
@@ -260,16 +260,7 @@ async fn template_folder(
     path: &str,
     emit: &impl Fn(WorkerEvent),
 ) -> Option<(u32, String)> {
-    if !state.folders.contains_key(path) {
-        if let Some(token) = graph_token(account, emit).await {
-            let (t, url) = (token.clone(), format!("{GRAPH_BASE}/me/mailFolders"));
-            let body = serde_json::json!({ "displayName": path });
-            match blocking(move || graph_send_json(&t, "POST", &url, &body)).await {
-                Ok(_) => refresh_graph_folders(&token, account_id, cache, state, emit).await,
-                Err(e) => tracing::warn!("graph: could not create {path}: {e}"),
-            }
-        }
-    }
+    graph_ensure_folder(account, account_id, cache, state, path, emit).await;
     state.folders.get(path).map(|(id, gid)| (*id, gid.clone()))
 }
 

@@ -125,6 +125,27 @@ impl KeyInfo {
             && self.expires.is_none_or(|e| e > crate::datefmt::now())
     }
 
+    /// Whether every word of `query` is in one of the key's user ids, its
+    /// key id or its fingerprint, ignoring case (#432). Key ids are often
+    /// written with a `0x` in front, and fingerprints in groups of four,
+    /// which split into words that each match.
+    pub(crate) fn matches_search(&self, query: &str) -> bool {
+        let haystack = format!(
+            "{} {} {}",
+            self.uids.join(" "),
+            self.key_id,
+            self.fingerprint
+        )
+        .to_lowercase();
+        query.to_lowercase().split_whitespace().all(|word| {
+            let word = word
+                .strip_prefix("0x")
+                .filter(|w| !w.is_empty())
+                .unwrap_or(word);
+            haystack.contains(word)
+        })
+    }
+
     /// The fingerprint in readable groups of four.
     pub(crate) fn fingerprint_display(&self) -> String {
         groups_of_four(&self.fingerprint)

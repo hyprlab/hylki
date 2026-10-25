@@ -189,6 +189,9 @@ msgstr "Μετακίνηση σε…"
 msgid "Archive"
 msgstr "Αρχειοθέτηση"
 
+msgid "Snooze"
+msgstr ""
+
 msgid "Block Remote Content"
 msgstr "Αποκλεισμός απομακρυσμένου περιεχομένου"
 
@@ -1072,6 +1075,21 @@ msgstr "(χωρίς θέμα)"
 msgid "Message Source"
 msgstr "Πηγαίος κώδικας μηνύματος"
 
+#, fuzzy
+msgid "Forwarded message"
+msgstr "Προώθηση αυτού του μηνύματος"
+
+msgid "From: {from}"
+msgstr "Από: {from}"
+
+#, fuzzy
+msgid "Date: {date}"
+msgstr "λήγει στις {date}"
+
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Αποδεκτή: {subject}"
+
 msgid "Export failed: {e}"
 msgstr "Η εξαγωγή απέτυχε: {e}"
 
@@ -1243,6 +1261,9 @@ msgid ""
 msgstr ""
 "Ο έξυπνος φάκελος αφαιρείται από την πλευρική στήλη. Τα μηνύματα που "
 "εμφανίζει παραμένουν στη θέση τους."
+
+msgid "Snooze until"
+msgstr ""
 
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
@@ -1530,6 +1551,10 @@ msgid_plural "A new message with {n} files attached is open in Hylki."
 msgstr[0] "Ένα νέο μήνυμα με {n} συνημμένο αρχείο είναι ανοικτό στο Hylki."
 msgstr[1] "Ένα νέο μήνυμα με {n} συνημμένα αρχεία είναι ανοικτό στο Hylki."
 
+#, fuzzy
+msgid "On {date} at {time}, {name} wrote:"
+msgstr "{date} στις {time}"
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "Το GnuPG (gpg) δεν είναι εγκατεστημένο, επομένως αυτό το μήνυμα δεν μπορεί "
@@ -1708,9 +1733,6 @@ msgstr "Υπογράφηκε από: {d}"
 
 msgid "Checked by: {who}"
 msgstr "Ελέγχθηκε από: {who}"
-
-msgid "From: {from}"
-msgstr "Από: {from}"
 
 msgid "Replies would go to {reply}, not {from}"
 msgstr "Οι απαντήσεις θα πήγαιναν στη διεύθυνση {reply}, όχι στη {from}"
@@ -3206,12 +3228,6 @@ msgstr "Αποστολή αργότερα"
 msgid "Schedule"
 msgstr "Προγραμματισμός"
 
-msgid "That time has passed"
-msgstr "Αυτή η ώρα έχει παρέλθει"
-
-msgid "Choose a time later than now."
-msgstr "Επιλέξτε ώρα μεταγενέστερη από την τρέχουσα."
-
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
 "Το πεδίο αποστολέα πρέπει να περιέχει μία διεύθυνση, όπως Ann "
@@ -4150,6 +4166,23 @@ msgid_plural "{n} messages"
 msgstr[0] "{n} μήνυμα"
 msgstr[1] "{n} μηνύματα"
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Σήμερα, {time}"
+
+#, fuzzy
+msgid "Saturday morning ({time})"
+msgstr "Δευτέρα πρωί ({time})"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "That time has passed"
+msgstr "Αυτή η ώρα έχει παρέλθει"
+
+msgid "Choose a time later than now."
+msgstr "Επιλέξτε ώρα μεταγενέστερη από την τρέχουσα."
+
 msgid "the portal answered response code {code}"
 msgstr "η πύλη απάντησε με κωδικό απόκρισης {code}"
 
@@ -4293,6 +4326,10 @@ msgstr "Αφαίρεση αστεριού"
 msgid "Forwarded"
 msgstr "Προωθήθηκε"
 
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Προγραμματισμένο για {when}"
+
 msgid "High importance"
 msgstr "Υψηλή σημασία"
 
@@ -4401,13 +4438,15 @@ msgstr "Προβολή ανάγνωσης"
 msgid "Loading…"
 msgstr "Φόρτωση…"
 
-#. The fold's tooltips, in the user's language.
 msgid "Show quoted text"
 msgstr "Εμφάνιση παρατιθέμενου κειμένου"
 
-#. The fold's tooltips, in the user's language.
 msgid "Hide quoted text"
 msgstr "Απόκρυψη παρατιθέμενου κειμένου"
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Αντιγραφή διεύθυνσης συνδέσμου"
 
 msgid "Double-click to open in a new window"
 msgstr "Διπλό κλικ για άνοιγμα σε νέο παράθυρο"
@@ -4769,6 +4808,47 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr "Γραμμή κατάστασης ({n})"
 
+#, fuzzy
+msgid "All keys"
+msgstr "Όλοι οι τύποι"
+
+#, fuzzy
+msgid "Not trusted"
+msgstr "Δεν είναι ακόμη αξιόπιστο"
+
+#, fuzzy
+msgid "Expired or revoked"
+msgstr "Υπογεγραμμένο, το κλειδί έχει ανακληθεί"
+
+msgid "expires {date}"
+msgstr "λήγει στις {date}"
+
+msgid "expired {date}"
+msgstr "έληξε στις {date}"
+
+msgid "signs and encrypts"
+msgstr "υπογράφει και κρυπτογραφεί"
+
+msgid "signs only: no encryption subkey"
+msgstr "μόνο υπογραφή: χωρίς δευτερεύον κλειδί κρυπτογράφησης"
+
+msgid "{n} more address"
+msgid_plural "{n} more addresses"
+msgstr[0] "{n} ακόμη διεύθυνση"
+msgstr[1] "{n} ακόμη διευθύνσεις"
+
+msgid "Export public key…"
+msgstr "Εξαγωγή δημόσιου κλειδιού…"
+
+msgid "Delete this key"
+msgstr "Διαγραφή αυτού του κλειδιού"
+
+msgid "Trust…"
+msgstr "Ορισμός ως έμπιστου…"
+
+msgid "Remove this key"
+msgstr "Αφαίρεση αυτού του κλειδιού"
+
 msgid "2 years"
 msgstr "2 έτη"
 
@@ -4815,6 +4895,12 @@ msgstr ""
 msgid "Fetch by address…"
 msgstr "Ανάκτηση κατά διεύθυνση…"
 
+msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "No keys from other people yet."
+msgstr "Δεν υπάρχουν ακόμη κλειδιά άλλων ατόμων."
+
 msgid "GnuPG {version} found."
 msgstr "Βρέθηκε το GnuPG {version}."
 
@@ -4828,9 +4914,6 @@ msgstr ""
 msgid "No key of your own yet. Generate one for your address."
 msgstr ""
 "Δεν έχετε ακόμη δικό σας κλειδί. Δημιουργήστε ένα για τη διεύθυνσή σας."
-
-msgid "No keys from other people yet."
-msgstr "Δεν υπάρχουν ακόμη κλειδιά άλλων ατόμων."
 
 msgid "Your key is ready."
 msgstr "Το κλειδί σας είναι έτοιμο."
@@ -4941,35 +5024,6 @@ msgstr ""
 msgid "Could not sign the key: {e}"
 msgstr "Δεν ήταν δυνατή η υπογραφή του κλειδιού: {e}"
 
-msgid "expires {date}"
-msgstr "λήγει στις {date}"
-
-msgid "expired {date}"
-msgstr "έληξε στις {date}"
-
-msgid "signs and encrypts"
-msgstr "υπογράφει και κρυπτογραφεί"
-
-msgid "signs only: no encryption subkey"
-msgstr "μόνο υπογραφή: χωρίς δευτερεύον κλειδί κρυπτογράφησης"
-
-msgid "{n} more address"
-msgid_plural "{n} more addresses"
-msgstr[0] "{n} ακόμη διεύθυνση"
-msgstr[1] "{n} ακόμη διευθύνσεις"
-
-msgid "Export public key…"
-msgstr "Εξαγωγή δημόσιου κλειδιού…"
-
-msgid "Delete this key"
-msgstr "Διαγραφή αυτού του κλειδιού"
-
-msgid "Trust…"
-msgstr "Ορισμός ως έμπιστου…"
-
-msgid "Remove this key"
-msgstr "Αφαίρεση αυτού του κλειδιού"
-
 msgid "{n} key imported."
 msgid_plural "{n} keys imported."
 msgstr[0] "Εισήχθη {n} κλειδί."
@@ -4990,13 +5044,14 @@ msgstr "Σύρετε για μετακίνηση"
 msgid "Left group"
 msgstr "Αριστερή ομάδα"
 
-msgid "Always shown · up to 6"
-msgstr "Πάντα ορατή · έως 6"
+msgid "Always shown · up to {n}"
+msgstr "Πάντα ορατή · έως {n}"
 
 msgid "Right group"
 msgstr "Δεξιά ομάδα"
 
-msgid "Folds into ⋯ when narrow · up to 6"
+#, fuzzy
+msgid "Folds into ⋯ when narrow"
 msgstr "Συμπτύσσεται στο ⋯ όταν είναι στενή · έως 6"
 
 msgid "Not shown"
@@ -6872,6 +6927,9 @@ msgstr ""
 msgid "Templates"
 msgstr "Πρότυπα"
 
+msgid "Snoozed"
+msgstr ""
+
 msgid "Hidden Folders"
 msgstr "Κρυφοί φάκελοι"
 
@@ -6987,6 +7045,9 @@ msgid ""
 msgstr ""
 "Σύρετε τα κουμπιά μεταξύ των ομάδων. Η δεξιά ομάδα συμπτύσσεται σε ⋯ όταν το "
 "πλαίσιο είναι στενό."
+
+msgid "Always fold the right group into ⋯"
+msgstr ""
 
 msgid ""
 "The parts switched on below hide while Focus Mode is on. Activated by "
@@ -7122,6 +7183,21 @@ msgstr "Αναίρεση αποστολής"
 
 msgid "How long Undo is offered after sending."
 msgstr "Για πόσο χρόνο είναι διαθέσιμη η αναίρεση μετά την αποστολή."
+
+#, fuzzy
+msgid "Reply Header"
+msgstr "Διεύθυνση απάντησης"
+
+msgid "{name}, {address}, {date} and {time} are filled in from the original."
+msgstr ""
+
+#, fuzzy
+msgid "Line above the quoted message"
+msgstr "Πάνω από το παρατιθέμενο μήνυμα"
+
+#, fuzzy
+msgid "Restore Default"
+msgstr "Επαναφορά προεπιλογών"
 
 msgid "Spelling"
 msgstr "Ορθογραφία"

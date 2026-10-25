@@ -4,7 +4,7 @@ use super::JmapWorker;
 use crate::i18n::i18n;
 use crate::worker::compose::build::{build_draft, draft_message_id, restore_msgid_case};
 use crate::worker::drafts::{draft_not_saved, saving_text};
-use crate::worker::jmap::folders::{jmap_create_mailbox, refresh_jmap_folders};
+use crate::worker::jmap::folders::jmap_ensure_mailbox;
 use crate::worker::jmap::index::jmap_load_folder;
 use crate::worker::jmap::ops::{jmap_drop_draft_origin, jmap_import_draft, jmap_import_template};
 use crate::worker::jmap::send::{
@@ -45,20 +45,13 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
                 let message_id = draft_message_id(&email);
                 let raw = email.formatted();
                 if let Some(s) = jmap_session(account, state, emit).await {
-                    let mut mailbox_id = state.folders.get(&path).map(|(_, id)| id.clone());
                     // The first template of an account with no
                     // Templates folder makes one, as IMAP's APPEND does.
-                    if mailbox_id.is_none() && template {
-                        let (sess, name) = (s.clone(), path.clone());
-                        match blocking(move || jmap_create_mailbox(&sess, &name, None)).await {
-                            Ok(_) => {
-                                refresh_jmap_folders(&s, account_id, cache.as_ref(), state, emit)
-                                    .await;
-                                mailbox_id = state.folders.get(&path).map(|(_, id)| id.clone());
-                            }
-                            Err(e) => tracing::warn!("jmap: could not create {path}: {e}"),
-                        }
+                    if template {
+                        jmap_ensure_mailbox(&s, account_id, cache.as_ref(), state, emit, &path)
+                            .await;
                     }
+                    let mailbox_id = state.folders.get(&path).map(|(_, id)| id.clone());
                     // The listing just made numbers the new folder.
                     let folder_id = state
                         .folders

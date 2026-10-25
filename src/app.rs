@@ -104,6 +104,7 @@ mod sidebar;
 mod sidebar_contents;
 mod sidebar_peek;
 mod smart;
+mod snooze;
 mod split_reply;
 mod tags;
 #[cfg(test)]
@@ -531,7 +532,8 @@ impl SimpleComponent for AppModel {
                                 // relayout_reader_toolbar. The left group stays
                                 // at every width; the right group folds into
                                 // the ⋯ overflow. Default left group: Reply,
-                                // Reply All, Forward, Star, Archive, Delete.
+                                // Reply All, Forward, Star, Archive, Spam,
+                                // Delete.
                                 #[name = "tb_reply"]
                                 pack_start = &gtk::Revealer {
                                     set_transition_type: gtk::RevealerTransitionType::SlideRight,
@@ -708,6 +710,23 @@ impl SimpleComponent for AppModel {
                                         },
                                     },
                                 },
+                                // Snooze (#527): a menu of times, greyed out
+                                // where nothing can be snoozed (Drafts, POP3).
+                                #[name = "tb_snooze"]
+                                pack_end = &gtk::Revealer {
+                                    set_transition_type: gtk::RevealerTransitionType::SlideLeft,
+                                    set_transition_duration: FOCUS_ANIM_MS,
+                                    add_css_class: "focus-fade",
+                                    gtk::Box {
+                                        #[local_ref]
+                                        reader_snooze_btn -> gtk::Button {
+                                            #[watch]
+                                            set_visible: model.toolbar_visible(config::ToolbarItem::Snooze),
+                                            #[watch]
+                                            set_sensitive: model.snooze_offered(),
+                                        },
+                                    },
+                                },
                                 #[name = "tb_spam"]
                                 pack_end = &gtk::Revealer {
                                     set_transition_type: gtk::RevealerTransitionType::SlideLeft,
@@ -738,8 +757,7 @@ impl SimpleComponent for AppModel {
                                     gtk::Button {
                                         add_css_class: "flat",
                                         #[watch]
-                                        set_visible: !model.showing_outbox && !model.reader_actions_collapsed
-                                            && model.reader_compose.is_none(),
+                                        set_visible: model.toolbar_visible(config::ToolbarItem::ReadUnread),
                                         // The icon shows the ACTION (read envelope =
                                         // "mark as read"), matching the menus.
                                         #[watch]
@@ -843,6 +861,7 @@ impl SimpleComponent for AppModel {
         follow_motion_setting();
         let reader_tag_btn = model.reader_tag_btn.clone();
         let reader_move_btn = model.reader_move_btn.clone();
+        let reader_snooze_btn = model.reader_snooze_btn.clone();
         let widgets = view_output!();
         let _ = model.reader_header.set(widgets.reader_header.clone());
         let _ = model.toasts.set(widgets.toasts.clone());

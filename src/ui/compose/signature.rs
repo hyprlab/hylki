@@ -75,7 +75,7 @@ impl Compose {
             // the end, or above the quoted original (#237), which
             // in source is found by its text. HTML keeps the quote's
             // tags; Markdown has the `> ` lines, with the attribution
-            // line ("On …, X wrote:" or the forward header) above.
+            // line or the forward header above.
             let place = self.source_sig_place(kind);
             self.editor.run_js(&format!(
                 "(function(){{var t=document.getElementById('src');if(!t)return;\
@@ -119,7 +119,9 @@ impl Compose {
     /// signature: at the end, or above the quoted original (#237), which in
     /// source is found by its text. HTML keeps the quote's tags; Markdown
     /// has the `> ` lines, with the attribution line ("On …, X wrote:" or
-    /// the forward header) above.
+    /// the forward header) above. Both are in the app's language (#528), so
+    /// they are found by shape: a line ending in a colon, or a paragraph
+    /// opening with the forward header's dashes.
     fn source_sig_place(&self, kind: SourceKind) -> &'static str {
         match (self.signature_position, kind) {
             (SignaturePosition::BelowQuote, _) => "v=v+n;",
@@ -131,7 +133,8 @@ impl Compose {
                 "var L=v.split('\\n');var qi=-1;\
                  for(var k=0;k<L.length;k++){if(L[k]==='>'||L[k].indexOf('> ')===0){qi=k;break;}}\
                  if(qi<0){v=v+n;}else{var a=qi-1;while(a>=0&&L[a].trim()==='')a--;\
-                 if(a>=0&&(/wrote:\\s*$/.test(L[a])||/^-{5,} Forwarded message/.test(L[a])))qi=a;\
+                 if(a>=0){var s=a;while(s>0&&L[s-1].trim()!=='')s--;\
+                 if(/^-{5,} /.test(L[s]))qi=s;else if(/[:\\uFF1A]\\s*$/.test(L[a]))qi=a;}\
                  v=L.slice(0,qi).join('\\n').replace(/\\s*$/,'')+n+'\\n'+L.slice(qi).join('\\n');}"
             }
         }

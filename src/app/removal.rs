@@ -22,7 +22,7 @@ use crate::ui::dialog::confirm_destructive;
 
 /// A bulk move per (account, source path): the destination path, the
 /// UIDs and the rows kept for undo.
-type MoveGroups = HashMap<(u32, String), (String, Vec<u32>, Vec<Message>)>;
+pub(super) type MoveGroups = HashMap<(u32, String), (String, Vec<u32>, Vec<Message>)>;
 
 impl AppModel {
     /// Whether a message already lives in its account's Trash — where "delete"
@@ -304,7 +304,9 @@ impl AppModel {
             | BulkAction::MarkUnread
             | BulkAction::Flag
             | BulkAction::Unflag
-            | BulkAction::DeleteForever => return,
+            | BulkAction::DeleteForever
+            | BulkAction::Snooze
+            | BulkAction::Unsnooze => return,
         };
         // (account, source path) → (dest path, uids, the rows for undo).
         // dest is per-account.
@@ -409,7 +411,7 @@ impl AppModel {
 
     /// The Inbox's copy of a Gmail message listed under another label, if
     /// the Inbox holds it.
-    fn inbox_copy(&self, m: &Message) -> Option<Message> {
+    pub(super) fn inbox_copy(&self, m: &Message) -> Option<Message> {
         if m.message_id.is_empty() {
             return None;
         }

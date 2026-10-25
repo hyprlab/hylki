@@ -121,6 +121,9 @@ impl AppModel {
             PrefOutput::SetSignatureDashes(on) => {
                 pref!(self.signature_dashes = on);
             }
+            PrefOutput::SetReplyHeader(header) => {
+                pref!(self.reply_header = header);
+            }
             PrefOutput::SetUndoSend(secs) => {
                 // A message already waiting keeps the delay it was sent with.
                 pref!(self.undo_send_secs = secs);

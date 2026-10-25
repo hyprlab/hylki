@@ -92,11 +92,13 @@ pub(super) fn folder_menu_items(
     // Rules normally only meet mail arriving in the Inbox; from here they
     // can be held up against whatever is already in this folder (#198).
     // Not on Drafts, Templates, Junk or Trash: filing mail *out* of those is
-    // never what a rule about incoming mail meant.
+    // never what a rule about incoming mail meant. Nor on Snoozed, whose
+    // mail is on its way back to where it came from.
     let filterable = !matches!(
         f.kind,
         FolderKind::Drafts
             | FolderKind::Templates
+            | FolderKind::Snoozed
             | FolderKind::Junk
             | FolderKind::Trash
             | FolderKind::Starred

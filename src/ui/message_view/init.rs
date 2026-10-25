@@ -7,7 +7,7 @@
 use super::bridge::{parse_bridge, Bridge};
 use super::chrome::ClassRules;
 use super::links::{is_launchable_uri, link_destination, CLICK_LINK_PROBE};
-use super::menu::{menu_lookup, MenuHit};
+use super::menu::{menu_lookup, menu_skipped, MenuHit};
 use super::page_fade::PageFade;
 use super::types::MessageViewInput;
 use super::MessageView;
@@ -81,6 +81,7 @@ impl MessageView {
             card_palette_menu: crate::config::load_privacy().card_palette_menu,
             remote_allowed: false,
             account_name: None,
+            account_color: None,
             chip_rules: ClassRules::new(),
             cover_rules: ClassRules::new(),
             account_chip: None,
@@ -194,12 +195,12 @@ impl MessageView {
     /// The reader's right-click menu (see the comment inside).
     pub(super) fn watch_context_menu(&self, sender: &ComponentSender<Self>) {
         self.watch_pointer(sender);
-        // A right-click anywhere in the reader (a card's header, its body
-        // frame, which never reports events to the page, or the space
-        // between cards) shows the message's own menu, the same one the list
-        // row has. WebKit says what the click hit but not where the pointer
+        // A right-click on a card (its header, or its body frame, which
+        // never reports events to the page) shows the message's own menu,
+        // the same one the list row has; the ground around the cards shows
+        // none. WebKit says what the click hit but not where the pointer
         // is, so a capture-phase gesture records the point first; the page
-        // is then asked which card holds it, or is nearest to it. Links,
+        // is then asked which card holds it. Links,
         // pictures and selected text used to get WebKit's own short menu
         // instead; their entries now lead the message's.
         {
@@ -245,6 +246,9 @@ impl MessageView {
                     None::<&gtk::gio::Cancellable>,
                     move |r| {
                         let json = r.map(|v| v.to_str().to_string()).unwrap_or_default();
+                        if menu_skipped(&json) {
+                            return;
+                        }
                         let (key, text) = menu_lookup(&json);
                         if key.is_none() {
                             tracing::debug!("reader menu: no card at {x:.0},{y:.0} ({json:?})");

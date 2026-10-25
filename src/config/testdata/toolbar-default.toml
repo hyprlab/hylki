@@ -4,13 +4,30 @@ left = [
     "forward",
     "star",
     "archive",
+    "spam",
     "delete",
 ]
 right = [
+    "snooze",
     "tags",
     "read_unread",
-    "spam",
     "move_to",
     "find",
     "print",
 ]
+known = [
+    "reply",
+    "reply_all",
+    "forward",
+    "star",
+    "archive",
+    "snooze",
+    "delete",
+    "spam",
+    "read_unread",
+    "tags",
+    "move_to",
+    "find",
+    "print",
+]
+revision = 1

@@ -83,6 +83,9 @@ fn message_list_output_msg(out: MessageListOutput) -> AppMsg {
             add,
         },
         MessageListOutput::Bulk { action, messages } => AppMsg::Bulk { action, messages },
+        MessageListOutput::Snooze { messages, choice } => {
+            AppMsg::SnoozeMessages { messages, choice }
+        }
         MessageListOutput::MoveTo {
             messages,
             offer_whole,

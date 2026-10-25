@@ -17,6 +17,8 @@ pub(in crate::ui::preferences) struct AppearancePage {
     pub(in crate::ui::preferences) desktop_icons_row: adw::SwitchRow,
     pub(in crate::ui::preferences) settings_open_row: adw::ComboRow,
     pub(in crate::ui::preferences) toolbar_editor_box: gtk::Box,
+    pub(in crate::ui::preferences) toolbar_fold_list: gtk::ListBox,
+    pub(in crate::ui::preferences) toolbar_fold_row: adw::SwitchRow,
     pub(in crate::ui::preferences) focus_row: adw::SwitchRow,
     pub(in crate::ui::preferences) focus_start_row: adw::SwitchRow,
     pub(in crate::ui::preferences) focus_toolbar_row: adw::SwitchRow,
@@ -113,6 +115,21 @@ impl AppearancePage {
                             set_halign: gtk::Align::End,
                             set_valign: gtk::Align::Center,
                             connect_clicked => PrefInput::ToolbarRestore,
+                        },
+
+                        // Moved under the zones once they are built.
+                        #[name = "toolbar_fold_list"]
+                        gtk::ListBox {
+                            add_css_class: "boxed-list",
+                            set_selection_mode: gtk::SelectionMode::None,
+
+                            #[name = "toolbar_fold_row"]
+                            adw::SwitchRow {
+                                set_title: &i18n("Always fold the right group into ⋯"),
+                                connect_active_notify[sender] => move |row| {
+                                    let _ = sender.output(PrefOutput::SetToolbarFoldRight(row.is_active()));
+                                },
+                            },
                         },
                     },
                 },
@@ -255,6 +272,8 @@ impl AppearancePage {
             desktop_icons_row,
             settings_open_row,
             toolbar_editor_box,
+            toolbar_fold_list,
+            toolbar_fold_row,
             focus_row,
             focus_start_row,
             focus_toolbar_row,

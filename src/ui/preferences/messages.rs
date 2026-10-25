@@ -124,6 +124,8 @@ pub(crate) struct PrefInit {
     /// Where the signature sits in a reply or forward (#237).
     pub(crate) signature_position: crate::config::SignaturePosition,
     pub(crate) signature_dashes: bool,
+    /// The line above a reply's quote, "" for the default (#528).
+    pub(crate) reply_header: String,
     /// Undo Send delay in seconds, 0 for off (#434).
     pub(crate) undo_send_secs: u32,
     pub(crate) app_theme: AppTheme,
@@ -158,6 +160,7 @@ pub(crate) struct PrefInit {
     pub(crate) rail_fold: crate::config::RailFold,
     /// The reader header's buttons, per side and in order.
     pub(crate) reader_toolbar: ReaderToolbar,
+    pub(crate) toolbar_fold_right: bool,
     /// Focus Mode: the master switch and the parts it strips.
     pub(crate) focus: crate::config::FocusMode,
     pub(crate) preview_lines: u32,
@@ -487,6 +490,7 @@ pub(crate) enum PrefOutput {
     SetRailDots(bool),
     SetSeenCounts(bool),
     SetReaderToolbar(ReaderToolbar),
+    SetToolbarFoldRight(bool),
     SetFocusMode(crate::config::FocusMode),
     SetRailFold(crate::config::RailFold),
     SetAppTheme(AppTheme),
@@ -541,6 +545,7 @@ pub(crate) enum PrefOutput {
     SetReplyPosition(crate::config::ReplyPosition),
     SetSignaturePosition(crate::config::SignaturePosition),
     SetSignatureDashes(bool),
+    SetReplyHeader(String),
     SetUndoSend(u32),
     Closed,
 }

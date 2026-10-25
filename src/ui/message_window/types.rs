@@ -28,10 +28,14 @@ pub(crate) struct MessageWindowInit {
     pub(crate) card_attachments: bool,
     /// The reader toolbar's layout, as the main window has it.
     pub(crate) toolbar: ReaderToolbar,
+    /// The right group stays in the ⋯ menu at every width.
+    pub(crate) toolbar_fold_right: bool,
     /// The message is in Junk (Spam reads Not Spam), or in Junk or Trash
     /// (Move to Inbox is offered).
     pub(crate) in_junk: bool,
     pub(crate) restorable: bool,
+    /// Whether Snooze is offered (#527), and Unsnooze (`Some(true)`).
+    pub(crate) snooze: Option<bool>,
     /// Message-content theme override (`None` follows the system).
     pub(crate) content_dark: Option<bool>,
     /// The reader's own fonts and colors over the senders' (#56).
@@ -105,6 +109,7 @@ pub(crate) enum MessageWindowInput {
     SetUnread(bool),
     /// Settings changed the reader toolbar's layout.
     SetToolbar(ReaderToolbar),
+    SetToolbarFold(bool),
     SetAttachmentDrawer(bool),
     SetCardAttachmentsShown(bool),
     /// The window crossed the width the whole toolbar needs.
@@ -165,6 +170,8 @@ pub(crate) enum MessageWindowInput {
         y: f64,
     },
     TagMenu,
+    /// The Snooze menu, under its button (or the ⋯), #527.
+    SnoozeMenu,
     OverflowMenu,
     Find,
     /// A single-key shortcut pressed in this window (#392).

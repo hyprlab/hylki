@@ -192,6 +192,9 @@ msgstr "Przenieś do…"
 msgid "Archive"
 msgstr "Archiwizuj"
 
+msgid "Snooze"
+msgstr ""
+
 msgid "Block Remote Content"
 msgstr "Blokuj zdalne treści"
 
@@ -1146,6 +1149,21 @@ msgstr "(bez tematu)"
 msgid "Message Source"
 msgstr "Źródło wiadomości"
 
+#, fuzzy
+msgid "Forwarded message"
+msgstr "Przekaż dalej tę wiadomość"
+
+msgid "From: {from}"
+msgstr "Od: {from}"
+
+#, fuzzy
+msgid "Date: {date}"
+msgstr "wygasa {date}"
+
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Zaakceptowane: {subject}"
+
 msgid "Export failed: {e}"
 msgstr "Nie udało się wyeksportować danych: {e}"
 
@@ -1320,6 +1338,9 @@ msgstr "Czy opróżnić katalog „{name}”?"
 
 msgid ""
 "The smart folder goes from the sidebar. The mail it shows stays where it is."
+msgstr ""
+
+msgid "Snooze until"
 msgstr ""
 
 msgid "One message could not be moved to {account}: {error}"
@@ -1628,6 +1649,10 @@ msgstr[0] "W aplikacji Hylki otwarto nową wiadomość z {n} załączonym plikie
 msgstr[1] "W aplikacji Hylki otwarto nową wiadomość z {n} załączonymi plikami."
 msgstr[2] "W aplikacji Hylki otwarto nową wiadomość z {n} załączonymi plikami."
 
+#, fuzzy
+msgid "On {date} at {time}, {name} wrote:"
+msgstr "{date} o {time}"
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "Program GnuPG (gpg) nie jest zainstalowany, dlatego nie można odczytać tej "
@@ -1801,9 +1826,6 @@ msgstr "Podpisane przez: {d}"
 
 msgid "Checked by: {who}"
 msgstr "Sprawdzone przez: {who}"
-
-msgid "From: {from}"
-msgstr "Od: {from}"
 
 msgid "Replies would go to {reply}, not {from}"
 msgstr "Odpowiedzi trafiałyby na adres {reply}, a nie {from}"
@@ -3339,12 +3361,6 @@ msgstr "Wyślij później"
 msgid "Schedule"
 msgstr "Zaplanuj"
 
-msgid "That time has passed"
-msgstr "Ten czas już minął"
-
-msgid "Choose a time later than now."
-msgstr "Wybierz godzinę w przyszłości."
-
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
 
@@ -4316,6 +4332,23 @@ msgstr[0] "{n} wiadomość"
 msgstr[1] "{n} wiadomości"
 msgstr[2] "{n} wiadomości"
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Dzisiaj, {time}"
+
+#, fuzzy
+msgid "Saturday morning ({time})"
+msgstr "W poniedziałek rano ({time})"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "That time has passed"
+msgstr "Ten czas już minął"
+
+msgid "Choose a time later than now."
+msgstr "Wybierz godzinę w przyszłości."
+
 msgid "the portal answered response code {code}"
 msgstr "portal zwrócił kod odpowiedzi {code}"
 
@@ -4468,6 +4501,10 @@ msgstr "Usuń gwiazdkę"
 msgid "Forwarded"
 msgstr "Przekaż dalej"
 
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Zaplanowano na {when}"
+
 msgid "High importance"
 msgstr ""
 
@@ -4583,15 +4620,17 @@ msgstr "Widok czytania"
 msgid "Loading…"
 msgstr "Wczytywanie…"
 
-#. The fold's tooltips, in the user's language.
 #, fuzzy
 msgid "Show quoted text"
 msgstr "Wyświetl zdalne treści"
 
-#. The fold's tooltips, in the user's language.
 #, fuzzy
 msgid "Hide quoted text"
 msgstr "Ukrywanie podglądu treści"
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Adres e-mail"
 
 msgid "Double-click to open in a new window"
 msgstr "Kliknij dwukrotnie, aby otworzyć w nowym oknie"
@@ -4972,6 +5011,48 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr "Pasek stanu ({n})"
 
+#, fuzzy
+msgid "All keys"
+msgstr "Wszystkie typy"
+
+#, fuzzy
+msgid "Not trusted"
+msgstr "Tłumacze"
+
+#, fuzzy
+msgid "Expired or revoked"
+msgstr "Podpisane przez: {d}"
+
+msgid "expires {date}"
+msgstr "wygasa {date}"
+
+msgid "expired {date}"
+msgstr "wygasł {date}"
+
+msgid "signs and encrypts"
+msgstr "podpisuje i szyfruje"
+
+msgid "signs only: no encryption subkey"
+msgstr "tylko podpisuje: brak podklucza do szyfrowania"
+
+msgid "{n} more address"
+msgid_plural "{n} more addresses"
+msgstr[0] "jeszcze {n} adres"
+msgstr[1] "jeszcze {n} adresy"
+msgstr[2] "jeszcze {n} adresów"
+
+msgid "Export public key…"
+msgstr "Eksportuj klucz publiczny…"
+
+msgid "Delete this key"
+msgstr "Usuń ten klucz"
+
+msgid "Trust…"
+msgstr "Zaufaj…"
+
+msgid "Remove this key"
+msgstr "Usuń ten klucz"
+
 msgid "2 years"
 msgstr "2 lata"
 
@@ -5024,6 +5105,12 @@ msgstr ""
 msgid "Fetch by address…"
 msgstr "Pobierz według adresu…"
 
+msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "No keys from other people yet."
+msgstr "Brak kluczy innych osób."
+
 msgid "GnuPG {version} found."
 msgstr ""
 
@@ -5037,9 +5124,6 @@ msgstr ""
 
 msgid "No key of your own yet. Generate one for your address."
 msgstr "Brak własnego klucza. Wygeneruj klucz dla własnego adresu."
-
-msgid "No keys from other people yet."
-msgstr "Brak kluczy innych osób."
 
 msgid "Your key is ready."
 msgstr "Klucz jest gotowy."
@@ -5153,36 +5237,6 @@ msgstr ""
 msgid "Could not sign the key: {e}"
 msgstr "Nie udało się podpisać klucza: {e}"
 
-msgid "expires {date}"
-msgstr "wygasa {date}"
-
-msgid "expired {date}"
-msgstr "wygasł {date}"
-
-msgid "signs and encrypts"
-msgstr "podpisuje i szyfruje"
-
-msgid "signs only: no encryption subkey"
-msgstr "tylko podpisuje: brak podklucza do szyfrowania"
-
-msgid "{n} more address"
-msgid_plural "{n} more addresses"
-msgstr[0] "jeszcze {n} adres"
-msgstr[1] "jeszcze {n} adresy"
-msgstr[2] "jeszcze {n} adresów"
-
-msgid "Export public key…"
-msgstr "Eksportuj klucz publiczny…"
-
-msgid "Delete this key"
-msgstr "Usuń ten klucz"
-
-msgid "Trust…"
-msgstr "Zaufaj…"
-
-msgid "Remove this key"
-msgstr "Usuń ten klucz"
-
 msgid "{n} key imported."
 msgid_plural "{n} keys imported."
 msgstr[0] "Zaimportowano {n} klucz."
@@ -5204,13 +5258,14 @@ msgstr "Przeciągnij, aby przenieść"
 msgid "Left group"
 msgstr "Lewa grupa"
 
-msgid "Always shown · up to 6"
-msgstr "Zawsze wyświetlane · maksymalnie 6"
+msgid "Always shown · up to {n}"
+msgstr "Zawsze wyświetlane · maksymalnie {n}"
 
 msgid "Right group"
 msgstr "Prawa grupa"
 
-msgid "Folds into ⋯ when narrow · up to 6"
+#, fuzzy
+msgid "Folds into ⋯ when narrow"
 msgstr "Zwijane do ⋯ przy wąskim oknie · maksymalnie 6"
 
 msgid "Not shown"
@@ -7119,6 +7174,9 @@ msgstr ""
 msgid "Templates"
 msgstr ""
 
+msgid "Snoozed"
+msgstr ""
+
 msgid "Hidden Folders"
 msgstr "Ukryte katalogi"
 
@@ -7232,6 +7290,9 @@ msgstr "Pasek narzędzi"
 msgid ""
 "Drag buttons between the groups. The right group folds into ⋯ when the pane "
 "is narrow."
+msgstr ""
+
+msgid "Always fold the right group into ⋯"
 msgstr ""
 
 msgid ""
@@ -7373,6 +7434,21 @@ msgstr "Cofnij"
 
 msgid "How long Undo is offered after sending."
 msgstr ""
+
+#, fuzzy
+msgid "Reply Header"
+msgstr "Odpowiedź do"
+
+msgid "{name}, {address}, {date} and {time} are filled in from the original."
+msgstr ""
+
+#, fuzzy
+msgid "Line above the quoted message"
+msgstr "Nad cytowaną wiadomością"
+
+#, fuzzy
+msgid "Restore Default"
+msgstr "Przywróć domyślne"
 
 msgid "Spelling"
 msgstr "Pisownia"

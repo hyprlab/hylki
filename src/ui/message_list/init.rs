@@ -90,6 +90,7 @@ impl MessageList {
             expanded_threads: std::collections::HashSet::new(),
             show_recipient: false,
             restorable: false,
+            snooze_offer: None,
             in_junk: false,
             in_drafts: false,
             in_templates: false,

@@ -3,7 +3,7 @@
 
 use super::{name_labels, GraphWorker};
 use crate::i18n::{i18n, i18n_f};
-use crate::worker::graph::folders::refresh_graph_folders;
+use crate::worker::graph::folders::{graph_ensure_folder, refresh_graph_folders};
 use crate::worker::graph::http::{graph_delete_req, graph_send_json, graph_token, GRAPH_BASE};
 use crate::worker::graph::index::graph_load_folder;
 use crate::worker::graph::messages::graph_list_ids;
@@ -142,6 +142,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
         let cache = &self.cache;
         let state = &mut self.state;
         let emit = &|ev| name_labels(&self.account, &self.emit, ev);
+        graph_ensure_folder(account, account_id, cache.as_ref(), state, &dest, emit).await;
         if let Err(e) = graph_move_uids(
             account,
             account_id,
@@ -218,6 +219,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
         let cache = &self.cache;
         let state = &mut self.state;
         let emit = &|ev| name_labels(&self.account, &self.emit, ev);
+        graph_ensure_folder(account, account_id, cache.as_ref(), state, &dest, emit).await;
         if let Err(e) = graph_move_uids(
             account,
             account_id,
@@ -362,6 +364,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             &path,
             &dest,
             &message_ids,
+            None,
             cache.as_ref(),
         )
         .await

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-23 11:02+0200\n"
+"PO-Revision-Date: 2026-10-24 11:29+0200\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -111,7 +111,7 @@ msgid "Focus Mode"
 msgstr "Mode Focus"
 
 msgid "Fullscreen"
-msgstr ""
+msgstr "Plein écran"
 
 msgid "Print Preview…"
 msgstr "Aperçu avant impression…"
@@ -187,6 +187,9 @@ msgstr "Déplacer vers…"
 
 msgid "Archive"
 msgstr "Archiver"
+
+msgid "Snooze"
+msgstr ""
 
 msgid "Block Remote Content"
 msgstr "Bloquer le contenu distant"
@@ -376,9 +379,11 @@ msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
 msgstr ""
+"Le transfert du filtre {rule} a été refusé. Le message est resté là où il se "
+"trouve et une nouvelle tentative aura lieu"
 
 msgid "The forward of filter {rule} is waiting in the Outbox"
-msgstr ""
+msgstr "Le transfert du filtre {rule} est en attente dans la Boîte d’envoi"
 
 msgid "No filters to apply here yet"
 msgstr "Aucun filtre à appliquer ici pour l’instant"
@@ -414,20 +419,18 @@ msgstr "Dossier {done} sur {total}"
 
 msgid "started {n} forward"
 msgid_plural "started {n} forwards"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} transfert lancé"
+msgstr[1] "{n} transferts lancés"
 
-#, fuzzy
 msgid "marked {n} message as read"
 msgid_plural "marked {n} messages as read"
-msgstr[0] "Classé {n} message"
-msgstr[1] "Classé {n} messages"
+msgstr[0] "{n} message marqué comme lu"
+msgstr[1] "{n} messages marqués comme lus"
 
-#, fuzzy
 msgid "deleted {n} message"
 msgid_plural "deleted {n} messages"
-msgstr[0] "Supprimer {n} messages"
-msgstr[1] "Supprimer {n} messages"
+msgstr[0] "{n} message supprimé"
+msgstr[1] "{n} messages supprimés"
 
 msgid "Filters looked at {n} message, and it matched nothing"
 msgid_plural "Filters looked at {n} messages, and none of them matched"
@@ -439,11 +442,10 @@ msgstr[1] ""
 #. Matches that needed nothing: the rules had already done their
 #. work on an earlier sync (#201). Saying "none matched" here
 #. made working rules look broken.
-#, fuzzy
 msgid "Filters looked at {n} message"
 msgid_plural "Filters looked at {n} messages"
-msgstr[0] "Les filtres ont marqué {tagged} sur {n} message"
-msgstr[1] "Les filtres ont marqué {tagged} sur {n} messages"
+msgstr[0] "Les filtres ont examiné {n} message"
+msgstr[1] "Les filtres ont examiné {n} messages"
 
 msgid ""
 "Filters matched {matched} of {n} message, and it was already tagged or filed"
@@ -837,9 +839,8 @@ msgstr "Afficher ou masquer les comptes dans la barre latérale"
 msgid "Focus Mode on or off"
 msgstr "Activer ou désactiver le mode Focus"
 
-#, fuzzy
 msgid "Fullscreen on or off"
-msgstr "Activer ou désactiver le mode Focus"
+msgstr "Activer ou désactiver le mode plein écran"
 
 msgid "Message zoom in or out"
 msgstr "Zoom avant ou arrière sur le message"
@@ -1069,6 +1070,21 @@ msgstr "(sans objet)"
 msgid "Message Source"
 msgstr "Code source du message"
 
+#, fuzzy
+msgid "Forwarded message"
+msgstr "Transférer ce message"
+
+msgid "From: {from}"
+msgstr "De : {from}"
+
+#, fuzzy
+msgid "Date: {date}"
+msgstr "expire le {date}"
+
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Accepté : {subject}"
+
 msgid "Export failed: {e}"
 msgstr "Échec de l’exportation : {e}"
 
@@ -1238,6 +1254,9 @@ msgid ""
 msgstr ""
 "Le dossier intelligent disparaît de la barre latérale. Les messages qu’il "
 "affiche restent là où ils sont."
+
+msgid "Snooze until"
+msgstr ""
 
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
@@ -1525,6 +1544,10 @@ msgid_plural "A new message with {n} files attached is open in Hylki."
 msgstr[0] "Un nouveau message avec {n} fichier joint est ouvert dans Hylki."
 msgstr[1] "Un nouveau message avec {n} fichiers joints est ouvert dans Hylki."
 
+#, fuzzy
+msgid "On {date} at {time}, {name} wrote:"
+msgstr "{date} à {time}"
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "GnuPG (gpg) n’est pas installé ; ce message ne peut donc pas être lu."
 
@@ -1704,9 +1727,6 @@ msgstr "Signé par : {d}"
 
 msgid "Checked by: {who}"
 msgstr "Vérifié par : {who}"
-
-msgid "From: {from}"
-msgstr "De : {from}"
 
 msgid "Replies would go to {reply}, not {from}"
 msgstr "Les réponses iront à {reply}, pas à {from}"
@@ -1924,43 +1944,38 @@ msgstr ""
 msgid "Enable this account"
 msgstr "Activer ce compte"
 
-#, fuzzy
 msgid "Forward to"
-msgstr "Transférer"
+msgstr "Transférer à"
 
 msgid "Move to"
 msgstr "Déplacer vers"
 
 msgid "forwards to {to}"
-msgstr ""
+msgstr "transfère à {to}"
 
-#, fuzzy
 msgid "marked as read"
-msgstr "Marquer comme lu"
+msgstr "marqué comme lu"
 
 msgid "deleted for good"
-msgstr ""
+msgstr "supprimé définitivement"
 
 msgid "Then"
 msgstr "Alors"
 
-#, fuzzy
 msgid "Add Action"
-msgstr "Ajouter un compte"
+msgstr "Ajouter une action"
 
-#, fuzzy
 msgid "Remove action"
-msgstr "Supprimer la condition"
+msgstr "Supprimer l’action"
 
 msgid "Addresses, separated by commas"
-msgstr ""
+msgstr "Adresses, séparées par des virgules"
 
 msgid "Folder"
 msgstr "Dossier"
 
-#, fuzzy
 msgid "Permanently deletes the message"
-msgstr "Traduire ce message"
+msgstr "Supprime définitivement le message"
 
 msgid "Show"
 msgstr "Afficher"
@@ -3187,12 +3202,6 @@ msgstr "Envoyer plus tard"
 msgid "Schedule"
 msgstr "Programmer"
 
-msgid "That time has passed"
-msgstr "Cette heure est déjà passée"
-
-msgid "Choose a time later than now."
-msgstr "Choisissez une heure ultérieure à maintenant."
-
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
 "Le champ De doit contenir une seule adresse, par exemple Anne "
@@ -4131,6 +4140,23 @@ msgid_plural "{n} messages"
 msgstr[0] "{n} message"
 msgstr[1] "{n} messages"
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Aujourd’hui, {time}"
+
+#, fuzzy
+msgid "Saturday morning ({time})"
+msgstr "Lundi matin ({time})"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "That time has passed"
+msgstr "Cette heure est déjà passée"
+
+msgid "Choose a time later than now."
+msgstr "Choisissez une heure ultérieure à maintenant."
+
 msgid "the portal answered response code {code}"
 msgstr "le portail a répondu avec le code {code}"
 
@@ -4275,6 +4301,10 @@ msgstr "Retirer l’étoile"
 msgid "Forwarded"
 msgstr "Transféré"
 
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Programmé pour {when}"
+
 msgid "High importance"
 msgstr "Importance haute"
 
@@ -4383,13 +4413,15 @@ msgstr "Mode Lecture"
 msgid "Loading…"
 msgstr "Chargement…"
 
-#. The fold's tooltips, in the user's language.
 msgid "Show quoted text"
 msgstr "Afficher le texte cité"
 
-#. The fold's tooltips, in the user's language.
 msgid "Hide quoted text"
 msgstr "Masquer le texte cité"
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Copier l’adresse du lien"
 
 msgid "Double-click to open in a new window"
 msgstr "Double-cliquez pour ouvrir dans une nouvelle fenêtre"
@@ -4752,6 +4784,47 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr "Barre d’état ({n})"
 
+#, fuzzy
+msgid "All keys"
+msgstr "Tous les types"
+
+#, fuzzy
+msgid "Not trusted"
+msgstr "Confiance non établie"
+
+#, fuzzy
+msgid "Expired or revoked"
+msgstr "Signé, clé révoquée"
+
+msgid "expires {date}"
+msgstr "expire le {date}"
+
+msgid "expired {date}"
+msgstr "expiré le {date}"
+
+msgid "signs and encrypts"
+msgstr "signe et chiffre"
+
+msgid "signs only: no encryption subkey"
+msgstr "signatures uniquement : pas de sous-clé de chiffrement"
+
+msgid "{n} more address"
+msgid_plural "{n} more addresses"
+msgstr[0] "{n} autre adresse"
+msgstr[1] "{n} autres adresses"
+
+msgid "Export public key…"
+msgstr "Exporter la clé publique…"
+
+msgid "Delete this key"
+msgstr "Supprimer cette clé"
+
+msgid "Trust…"
+msgstr "Faire confiance…"
+
+msgid "Remove this key"
+msgstr "Supprimer cette clé"
+
 msgid "2 years"
 msgstr "2 ans"
 
@@ -4798,6 +4871,12 @@ msgstr ""
 msgid "Fetch by address…"
 msgstr "Récupérer par adresse…"
 
+msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "No keys from other people yet."
+msgstr "Aucune clé provenant d’autres personnes pour le moment."
+
 msgid "GnuPG {version} found."
 msgstr "GnuPG {version} détecté."
 
@@ -4810,9 +4889,6 @@ msgstr ""
 
 msgid "No key of your own yet. Generate one for your address."
 msgstr "Vous n’avez pas encore de clé. Générez-en une pour votre adresse."
-
-msgid "No keys from other people yet."
-msgstr "Aucune clé provenant d’autres personnes pour le moment."
 
 msgid "Your key is ready."
 msgstr "Votre clé est prête."
@@ -4923,35 +4999,6 @@ msgstr ""
 msgid "Could not sign the key: {e}"
 msgstr "Impossible de signer la clé : {e}"
 
-msgid "expires {date}"
-msgstr "expire le {date}"
-
-msgid "expired {date}"
-msgstr "expiré le {date}"
-
-msgid "signs and encrypts"
-msgstr "signe et chiffre"
-
-msgid "signs only: no encryption subkey"
-msgstr "signatures uniquement : pas de sous-clé de chiffrement"
-
-msgid "{n} more address"
-msgid_plural "{n} more addresses"
-msgstr[0] "{n} autre adresse"
-msgstr[1] "{n} autres adresses"
-
-msgid "Export public key…"
-msgstr "Exporter la clé publique…"
-
-msgid "Delete this key"
-msgstr "Supprimer cette clé"
-
-msgid "Trust…"
-msgstr "Faire confiance…"
-
-msgid "Remove this key"
-msgstr "Supprimer cette clé"
-
 msgid "{n} key imported."
 msgid_plural "{n} keys imported."
 msgstr[0] "{n} clé importée."
@@ -4972,13 +5019,14 @@ msgstr "Faites glisser pour déplacer"
 msgid "Left group"
 msgstr "Groupe de gauche"
 
-msgid "Always shown · up to 6"
-msgstr "Toujours affiché · jusqu’à 6"
+msgid "Always shown · up to {n}"
+msgstr "Toujours affiché · jusqu’à {n}"
 
 msgid "Right group"
 msgstr "Groupe de droite"
 
-msgid "Folds into ⋯ when narrow · up to 6"
+#, fuzzy
+msgid "Folds into ⋯ when narrow"
 msgstr "Se plie en ⋯ lorsqu’il est étroit · jusqu’à 6"
 
 msgid "Not shown"
@@ -5084,13 +5132,11 @@ msgstr "Messages déjà lus"
 msgid "All but the newest"
 msgstr "Tous sauf le plus récent"
 
-#, fuzzy
 msgid "Top of the message"
-msgstr "Haut de la liste"
+msgstr "Haut du message"
 
-#, fuzzy
 msgid "Bottom of the message"
-msgstr "Bas de la liste"
+msgstr "Bas du message"
 
 msgid "Remember the last choice"
 msgstr "Mémoriser le dernier choix"
@@ -6369,7 +6415,7 @@ msgid "A Microsoft account can't receive mail from another account"
 msgstr "Un compte Microsoft ne peut pas recevoir de courrier d’un autre compte"
 
 msgid "“{folder}” is left out of search: {reason}"
-msgstr ""
+msgstr "« {folder} » est exclu de la recherche : {reason}"
 
 msgid "Connecting to {host}…"
 msgstr "Connexion à {host}…"
@@ -6831,6 +6877,9 @@ msgstr "Pour Gmail et les services qui classent eux-mêmes le courrier envoyé."
 msgid "Templates"
 msgstr "Modèles"
 
+msgid "Snoozed"
+msgstr ""
+
 msgid "Hidden Folders"
 msgstr "Dossiers masqués"
 
@@ -6941,6 +6990,9 @@ msgid ""
 msgstr ""
 "Faites glisser les boutons entre les groupes. Le groupe de droite se replie "
 "dans ⋯ lorsque le volet est étroit."
+
+msgid "Always fold the right group into ⋯"
+msgstr ""
 
 msgid ""
 "The parts switched on below hide while Focus Mode is on. Activated by "
@@ -7078,6 +7130,21 @@ msgstr "Annuler l’envoi"
 msgid "How long Undo is offered after sending."
 msgstr "Durée pendant laquelle Annuler est proposé après l’envoi."
 
+#, fuzzy
+msgid "Reply Header"
+msgstr "Adresse de réponse"
+
+msgid "{name}, {address}, {date} and {time} are filled in from the original."
+msgstr ""
+
+#, fuzzy
+msgid "Line above the quoted message"
+msgstr "Au-dessus du message cité"
+
+#, fuzzy
+msgid "Restore Default"
+msgstr "Restaurer les paramètres par défaut"
+
 msgid "Spelling"
 msgstr "Orthographe"
 
@@ -7175,9 +7242,8 @@ msgstr "Nommer le résultat OpenPGP"
 msgid "Off shows the icons alone."
 msgstr "Désactivé, seules les icônes sont affichées."
 
-#, fuzzy
 msgid "Find bar position"
-msgstr "Position de la barre de sélection"
+msgstr "Position de la barre de recherche"
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""
@@ -7233,10 +7299,10 @@ msgid "Starts hidden."
 msgstr "Démarre masqué."
 
 msgid "Start fullscreen"
-msgstr ""
+msgstr "Démarrer en plein écran"
 
 msgid "F11 switches fullscreen on and off."
-msgstr ""
+msgstr "F11 active ou désactive le plein écran."
 
 msgid "Show a tray icon"
 msgstr "Afficher une icône dans la zone de notification"

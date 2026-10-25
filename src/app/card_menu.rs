@@ -6,6 +6,7 @@ use relm4::prelude::*;
 use crate::i18n::i18n;
 use crate::models::{FolderKind, Message};
 use crate::ui::context_menu::{show_context_menu, MenuEntry};
+use crate::ui::message_actions::{KeysOf, MessageAction};
 use crate::ui::message_list::RowAction;
 use crate::ui::message_window::MessageWindowInput;
 
@@ -40,6 +41,15 @@ fn card_item<'a>(
             });
         })
         .icon(format!("{icon}-symbolic"))
+        .keys(MessageAction::row_keys(action, m.unread, keys_of(popout)))
+    }
+}
+
+/// Whose keys the card menu names: the pop-out's or the main window's.
+fn keys_of(popout: Option<(u32, u32)>) -> KeysOf {
+    match popout {
+        Some(_) => KeysOf::Popout,
+        None => KeysOf::Main,
     }
 }
 
@@ -218,7 +228,11 @@ impl AppModel {
                     add,
                 });
             });
-        Some(MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("tag-outline-symbolic"))
+        Some(
+            MenuEntry::submenu(i18n("Tags"), vec![entries])
+                .icon("tag-outline-symbolic")
+                .keys(MessageAction::Tags.keys(KeysOf::Main)),
+        )
     }
 
     /// Where the message goes: Not Spam from Junk, else back to the Inbox
@@ -268,10 +282,27 @@ impl AppModel {
                         y,
                     });
                 })
-                .icon("folder-symbolic"),
+                .icon("folder-symbolic")
+                .keys(MessageAction::MoveTo.keys(KeysOf::Main)),
             );
         }
         acts.push(item(RowAction::Archive, i18n("Archive"), "mail-archive"));
+        // Snooze (#527): the card's message alone, as its other actions.
+        if let Some(snoozed) = self.snooze_offer(m.account_id, kind) {
+            let s = sender.input_sender().clone();
+            let message = m.clone();
+            let menu = crate::ui::later::snooze_menu(snoozed, move |choice| {
+                let _ = s.send(AppMsg::SnoozeMessages {
+                    messages: vec![message.clone()],
+                    choice,
+                });
+            });
+            acts.push(
+                MenuEntry::submenu(i18n("Snooze"), menu)
+                    .icon("alarm-symbolic")
+                    .keys(MessageAction::Snooze.keys(keys_of(popout))),
+            );
+        }
         acts.push(item(RowAction::Delete, i18n("Delete"), "user-trash"));
         acts
     }
@@ -332,8 +363,10 @@ impl AppModel {
             })
         };
         vec![
-            print(i18n("Print Preview"), true).icon("printer-symbolic"),
-            print(i18n("Print…"), false),
+            print(i18n("Print Preview"), true)
+                .icon("printer-symbolic")
+                .keys(Some("<Control><Shift>p")),
+            print(i18n("Print…"), false).keys(Some("<Control>p")),
         ]
     }
 

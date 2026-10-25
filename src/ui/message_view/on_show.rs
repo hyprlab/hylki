@@ -1,7 +1,6 @@
 //! Showing a message: `Show`, the remote-content choices, and the theme and
 //! paint events that render it again.
 
-use super::chrome::wear_class;
 use super::remote::has_remote_resources;
 use super::types::MessageViewOutput;
 use super::MessageView;
@@ -83,24 +82,9 @@ impl MessageView {
         self.account_name = account_name;
         self.loading = loading;
         self.instant = instant;
-        if let Some(color) = &account_color {
-            let class = format!(
-                "chip-{}",
-                color
-                    .chars()
-                    .filter(|c| c.is_ascii_alphanumeric())
-                    .collect::<String>()
-            );
-            self.chip_rules.set(vec![(
-                format!(".hylki-account-chip.{class}"),
-                format!(
-                    "background-color: {}; color: {color};",
-                    crate::color::pale(color, 0.18)
-                ),
-            )]);
-            if let Some(chip) = &self.account_chip {
-                wear_class(chip, "chip-", &class);
-            }
+        if account_color.is_some() {
+            self.account_color = account_color;
+            self.paint_account_chip();
         }
         self.remote_allowed = allow_remote;
         let has_remote = self.thread.iter().any(|m| has_remote_resources(&m.body));
@@ -163,6 +147,7 @@ impl MessageView {
     }
 
     pub(super) fn on_theme_changed(&mut self) {
+        self.paint_account_chip();
         let dark = self.effective_dark();
         self.apply_webview_bg(dark);
         if self.current.is_some() && !self.loading {

@@ -109,6 +109,7 @@ impl AccountsWindow {
             ("trash", &widgets.form.folder_trash_row),
             ("junk", &widgets.form.folder_junk_row),
             ("archive", &widgets.form.folder_archive_row),
+            ("snoozed", &widgets.form.folder_snoozed_row),
         ] {
             row.set_model(Some(&gtk::StringList::new(&labels)));
             row.set_list_factory(Some(&non_ellipsizing_factory()));
@@ -200,6 +201,7 @@ impl AccountsWindow {
             ("trash", &widgets.form.folder_trash_row),
             ("junk", &widgets.form.folder_junk_row),
             ("archive", &widgets.form.folder_archive_row),
+            ("snoozed", &widgets.form.folder_snoozed_row),
         ] {
             let sel = row.selected();
             if sel > 0 {

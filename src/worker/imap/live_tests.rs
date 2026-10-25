@@ -12,12 +12,13 @@ use crate::worker::imap::bodies::load_raw;
 use crate::worker::imap::connect::connect;
 use crate::worker::imap::folders::list_folders;
 use crate::worker::imap::idle::{idle_wait, IdleOutcome};
-use crate::worker::imap::mutate::{kept_flags, purge_messages, rename_folder};
+use crate::worker::imap::mutate::{kept_flags, move_messages, purge_messages, rename_folder};
 use crate::worker::imap::send::{append_draft, append_to_sent, delete_draft, file_sent_copy};
+use crate::worker::imap::snooze::find_by_message_ids;
 use crate::worker::imap::strip_attachment::{find_appended, strip_imap_attachment};
 use crate::worker::imap::sync::load_messages;
 use crate::worker::imap::wire::{
-    append_dated, create_box, delete_box, fetch_uids, sel, subscribe_box,
+    append_dated, create_box, delete_box, fetch_uids, search_uids, sel, subscribe_box,
 };
 use crate::worker::render::attachments::extract_attachments;
 use crate::worker::smtp::send_smtp;
@@ -732,4 +733,141 @@ fn open_timing() {
             t[0], t[1], t[2], t[3], t[4], t[5], t[6]
         );
     }
+}
+
+/// #527 against a real server, with `IMAP_LIVE=host,port,user,password`:
+/// read mail snoozed into a folder of its own comes back to the Inbox
+/// unread, found by its Message-ID, and a second wake finds nothing to do.
+#[test]
+#[ignore]
+fn live_snoozed_mail_comes_back_unread() {
+    let Ok(spec) = std::env::var("IMAP_LIVE") else {
+        return;
+    };
+    let p: Vec<&str> = spec.splitn(4, ',').collect();
+    let account = AccountConfig {
+        imap_host: p[0].into(),
+        imap_port: p[1].parse().expect("port"),
+        username: p[2].into(),
+        password: p[3].into(),
+        security: Some(crate::config::ServerSecurity {
+            imap_starttls: false,
+            imap_accept_invalid_certs: true,
+            ..Default::default()
+        }),
+        ..sample_account()
+    };
+    let pid = std::process::id();
+    let snoozed = format!("Snoozed-{pid}");
+    let mid = format!("hylki-527-{pid}@example.test");
+    let raw = format!(
+        "From: Ann <ann@example.test>\r\nTo: me@example.test\r\nSubject: hylki-527-{pid}\r\n\
+         Message-ID: <{mid}>\r\nDate: Sun, 25 Oct 2026 08:00:00 +0000\r\n\r\nlater\r\n"
+    );
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    rt.block_on(async {
+        let mut sess = connect(&account).await.expect("connect");
+        append_dated(&mut sess, "INBOX", Some("(\\Seen)"), None, raw.as_bytes())
+            .await
+            .expect("append");
+        // A header search may not see it yet: the newest UID is it.
+        sel(&mut sess, "INBOX").await.expect("select");
+        let newest = search_uids(&mut sess, "ALL")
+            .await
+            .expect("search")
+            .into_iter()
+            .max()
+            .expect("appended");
+        let uids = vec![newest];
+        move_messages(&mut sess, "INBOX", &uids, &snoozed)
+            .await
+            .expect("snooze makes the folder");
+
+        let events = std::sync::Arc::new(std::sync::Mutex::new(Vec::<String>::new()));
+        let log = events.clone();
+        let emit = move |ev: WorkerEvent| {
+            let line = match ev {
+                WorkerEvent::Unsnoozed { message_ids, done } => {
+                    format!("unsnoozed {message_ids:?} {done}")
+                }
+                WorkerEvent::Messages { folder_id, .. } => format!("messages {folder_id}"),
+                _ => return,
+            };
+            log.lock().unwrap().push(line);
+        };
+        let (_tx, rx) = mpsc::unbounded_channel();
+        let mut worker = ImapWorker {
+            account_id: 1,
+            account: account.clone(),
+            rx,
+            emit,
+            cache: None,
+            session: Some(sess),
+            prefetch: VecDeque::new(),
+            body_prefetch: VecDeque::new(),
+            body_emitted: HashSet::new(),
+            backfill: VecDeque::new(),
+            backfill_seen: HashSet::new(),
+            refs_repair: VecDeque::new(),
+            label_fill: VecDeque::new(),
+            backlog: VecDeque::new(),
+            push_enabled: false,
+            idle_folder: None,
+            last_unread_sweep: None,
+            last_auto_empty: None,
+            last_list_clean: None,
+            inbox_watch_spawned: true,
+            watchers: HashMap::new(),
+            sweep_baseline: HashMap::new(),
+            sweep_pending: Vec::new(),
+            sweep_due: false,
+            folder_refresh_due: false,
+            pending_resync: false,
+            use_envelope: true,
+            outbox_flushed: true,
+            local_tags_noticed: true,
+        };
+        worker
+            .on_unsnooze(snoozed.clone(), "INBOX".into(), 1, vec![mid.clone()])
+            .await;
+        worker
+            .on_unsnooze(snoozed.clone(), "INBOX".into(), 1, vec![mid.clone()])
+            .await;
+        let seen = events.lock().unwrap().clone();
+        println!("events {seen:?}");
+        assert_eq!(
+            seen,
+            vec![
+                "messages 1".to_string(),
+                format!("unsnoozed [{mid:?}] true"),
+                format!("unsnoozed [{mid:?}] true"),
+            ]
+        );
+
+        let sess = worker.session.as_mut().expect("session");
+        sel(sess, "INBOX").await.expect("select");
+        let back = find_by_message_ids(sess, "INBOX", std::slice::from_ref(&mid))
+            .await
+            .expect("find");
+        assert_eq!(back.len(), 1, "back in the Inbox");
+        let fetches: Vec<Fetch> = fetch_uids(sess, back[0].to_string(), "(UID FLAGS)")
+            .await
+            .expect("fetch")
+            .try_collect()
+            .await
+            .expect("fetch");
+        let seen = fetches
+            .iter()
+            .flat_map(|f| f.flags())
+            .any(|f| matches!(f, async_imap::types::Flag::Seen));
+        assert!(!seen, "and unread");
+        assert_eq!(sel(sess, &snoozed).await.expect("select").exists, 0);
+
+        let _ = purge_messages(sess, "INBOX", &back).await;
+        let _ = sess.close().await;
+        delete_box(sess, &snoozed).await.expect("clean up");
+    });
 }

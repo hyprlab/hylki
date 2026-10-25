@@ -25,6 +25,8 @@ pub(super) fn role_kind(role: &str) -> FolderKind {
         "trash" => FolderKind::Trash,
         "junk" => FolderKind::Junk,
         "archive" => FolderKind::Archive,
+        // Fastmail's, from the email-snooze draft: the same idea (#527).
+        "snoozed" => FolderKind::Snoozed,
         _ => FolderKind::Custom,
     }
 }
@@ -82,6 +84,9 @@ pub(super) fn jmap_list_folders(
             // No role names templates (#360): a top-level one goes by name.
             None if names.len() == 1 && crate::models::is_templates_name(&name) => {
                 FolderKind::Templates
+            }
+            None if names.len() == 1 && crate::models::is_snoozed_name(&name) => {
+                FolderKind::Snoozed
             }
             None => FolderKind::Custom,
         };
@@ -205,5 +210,27 @@ pub(super) fn jmap_create_mailbox(
             .as_str()
             .unwrap_or("the server refused")
             .to_string()),
+    }
+}
+
+/// Make the top-level mailbox `path` when the account has none by that
+/// name, as an IMAP move makes its destination: the first template (#360),
+/// archive or snooze (#527) of an account without one. The listing that
+/// follows numbers it.
+pub(super) async fn jmap_ensure_mailbox(
+    s: &JmapSession,
+    account_id: u32,
+    cache: Option<&Cache>,
+    state: &mut JmapState,
+    emit: &impl Fn(WorkerEvent),
+    path: &str,
+) {
+    if state.folders.contains_key(path) || path.contains('/') {
+        return;
+    }
+    let (sess, name) = (s.clone(), path.to_string());
+    match blocking(move || jmap_create_mailbox(&sess, &name, None)).await {
+        Ok(_) => refresh_jmap_folders(s, account_id, cache, state, emit).await,
+        Err(e) => tracing::warn!("jmap: could not create {path}: {e}"),
     }
 }

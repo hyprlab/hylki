@@ -1,12 +1,18 @@
 # Keyboard shortcuts
 
 Hylki can be driven from the keyboard without holding a modifier, in the style
-of Gmail and Geary. The scheme is **off by default** (a stray keystroke
-shouldn't archive mail), so switch it on first in **Settings → System →
-Single-key shortcuts**.
+of Gmail and Geary. The scheme is on for a new install, and **Settings →
+System → Single-key shortcuts** switches it off. An install that had it off
+keeps it off until it is switched on there.
 
 Press **Ctrl+?** (or F1, or *Main Menu → Keyboard Shortcuts*) at any time for
 this list in the app; the same key closes it again.
+
+The reader toolbar's ⋯ menu and a message's right-click menus, in the list
+and in the reader, show the key beside each entry that has one: the single
+key while single-key shortcuts are on (Gmail's with Gmail keys), otherwise
+the Ctrl key where there is one. With single keys on, each of the first nine
+tags in a Tags menu shows its number.
 
 | Move around | | Act on a message | |
 | --- | --- | --- | --- |
@@ -22,6 +28,7 @@ this list in the app; the same key closes it again.
 | | | <kbd>1</kbd> … <kbd>9</kbd> | Add or remove a tag (the first nine, in Settings order) |
 | | | <kbd>0</kbd> | Remove every tag |
 | | | <kbd>D</kbd> | Delete permanently, without going to Trash |
+| | | <kbd>z</kbd> | Snooze |
 
 <kbd>w</kbd> and <kbd>b</kbd> step through the cards of the conversation you
 are reading, opening a folded one; outside a conversation they move along the
@@ -54,6 +61,7 @@ followed by another goes somewhere.
 | <kbd>Shift+N</kbd> | Check for new mail | <kbd>*</kbd> <kbd>r</kbd> / <kbd>*</kbd> <kbd>u</kbd> | Select the read or the unread conversations |
 | <kbd>?</kbd> | This list | <kbd>*</kbd> <kbd>s</kbd> / <kbd>*</kbd> <kbd>t</kbd> | Select the starred or the unstarred conversations |
 | | | <kbd>v</kbd> | Move to a folder |
+| | | <kbd>b</kbd> | Snooze |
 | | | <kbd>l</kbd> | Tags |
 | | | <kbd>z</kbd> | Undo |
 | | | <kbd>Shift+R</kbd> <kbd>Shift+A</kbd> <kbd>Shift+F</kbd> | Reply, reply to all or forward in a window |

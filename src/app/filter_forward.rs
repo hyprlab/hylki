@@ -13,7 +13,7 @@ use crate::worker::{MailRequest, OutgoingMessage};
 use super::conversation::{body_key, BodyKey};
 use super::filter_actions::ForwardJob;
 use super::model::AppModel;
-use super::prefill::{forward_subject, stage_attachments};
+use super::prefill::{forward_header, forward_subject, stage_attachments};
 
 /// How long a forward may wait for its message's body and files before the
 /// filters give up on that attempt and let the next pass start it again.
@@ -55,11 +55,8 @@ pub(super) fn forward_outgoing(
     to: &[String],
     attachments: Vec<String>,
 ) -> OutgoingMessage {
-    let header = format!(
-        "---------- Forwarded message ----------\nFrom: {} <{}>\nDate: {}\nSubject: {}",
-        m.from_name, m.from_addr, m.date, m.subject
-    );
-    let html = crate::mail::markdown::sanitize_outgoing(&quoted_original(&header, &m.body));
+    let html =
+        crate::mail::markdown::sanitize_outgoing(&quoted_original(&forward_header(m), &m.body));
     let body = crate::mail::markdown::html_to_text(&html);
     OutgoingMessage {
         from_account_id: m.account_id,

@@ -71,6 +71,7 @@ pub(super) fn classify_with_source(
         "sent" | "sent items" | "sent mail" => FolderKind::Sent,
         "drafts" => FolderKind::Drafts,
         name if crate::models::is_templates_name(name) => FolderKind::Templates,
+        name if crate::models::is_snoozed_name(name) => FolderKind::Snoozed,
         "trash" | "deleted" | "deleted items" | "bin" => FolderKind::Trash,
         "junk" | "spam" => FolderKind::Junk,
         "archive" | "all mail" => FolderKind::Archive,
@@ -90,7 +91,10 @@ pub(crate) fn folder_order(kind: FolderKind) -> u8 {
         FolderKind::Archive => 5,
         FolderKind::Junk => 6,
         FolderKind::Trash => 7,
-        FolderKind::Custom => 8,
+        // Last of the special folders: one made on the first snooze then
+        // renumbers only the custom folders, as any new folder does.
+        FolderKind::Snoozed => 8,
+        FolderKind::Custom => 9,
     }
 }
 
@@ -216,6 +220,19 @@ mod tests {
     }
 
     #[test]
+    fn a_snoozed_folder_is_found_by_name() {
+        // #527: made by the first snooze, found again by its name.
+        let kind = |p: &str, d: &str| classify_with_source(p, Some(d), &[]).0;
+        assert_eq!(kind("Snoozed", "/"), FolderKind::Snoozed);
+        assert_eq!(kind("INBOX.Snoozed", "."), FolderKind::Snoozed);
+        assert_eq!(kind("Projects/Snoozed", "/"), FolderKind::Custom);
+        assert!(folder_order(FolderKind::Trash) < folder_order(FolderKind::Snoozed));
+        assert!(folder_order(FolderKind::Snoozed) < folder_order(FolderKind::Custom));
+        assert!(!watchable(FolderKind::Snoozed));
+        assert!(!chip_counts_all(FolderKind::Snoozed));
+    }
+
+    #[test]
     fn folder_names_are_decoded_for_display() {
         // Issue #1: Gmail's Chinese labels arrived as modified UTF-7 and were
         // shown verbatim in the sidebar.
@@ -308,6 +325,7 @@ mod tests {
             FolderKind::Archive,
             FolderKind::Junk,
             FolderKind::Trash,
+            FolderKind::Snoozed,
             FolderKind::Custom,
         ];
         for (i, kind) in order.into_iter().enumerate() {

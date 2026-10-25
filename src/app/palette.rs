@@ -75,6 +75,7 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ("R  or  Ctrl+Shift+R", i18n_noop("Reply to all")),
             ("f", i18n_noop("Forward")),
             ("a", i18n_noop("Archive")),
+            ("z", i18n_noop("Snooze")),
             ("d  or  Delete", i18n_noop("Delete")),
             (
                 "D  or  Shift+Delete",
@@ -222,6 +223,7 @@ const GMAIL_HELP: &[(&str, &[(&str, &str)])] = &[
             ("*  r  /  *  u", i18n_noop("Select the read or the unread conversations")),
             ("*  s  /  *  t", i18n_noop("Select the starred or the unstarred conversations")),
             ("v", i18n_noop("Move to a folder")),
+            ("b", i18n_noop("Snooze")),
             ("l", i18n_noop("Tags")),
             ("z", i18n_noop("Undo the last action")),
             ("1 … 9", i18n_noop("Add or remove a tag (the first nine, in Settings order)")),
@@ -286,6 +288,9 @@ impl AppModel {
         }
         if self.acts_on_selection() {
             add(i18n("Archive"), &action, "", || AppMsg::Archive);
+            if self.snooze_offered() {
+                add(i18n("Snooze"), &action, "", || AppMsg::SnoozeMenu);
+            }
             add(i18n("Delete"), &action, "Delete", || AppMsg::Delete);
             add(i18n("Delete Permanently"), &action, "Shift+Delete", || {
                 AppMsg::DeleteForever

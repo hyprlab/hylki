@@ -27,13 +27,14 @@ mod tests;
 mod translate;
 mod types;
 
+use crate::ui::later::{next_monday, preset_time};
 use cloud::not_signed_in;
 use format::{markdown_body, SHOWCASE_PLAIN_LOG, ZOOM};
 use host::{fold_on_first_map, set_toggle_icon, size_for_host, COMPOSE_MIN_WIDTH};
 pub(crate) use keys::composer_key;
 pub(crate) use messages::{ComposeInput, ComposeOutput};
 pub(crate) use model::Compose;
-use send::{next_monday, pick_send_time, preset_time, start_autosave};
+use send::{pick_send_time, start_autosave};
 use setup::{add_toolbar_end_buttons, connect_editor};
 use showcase::showcase_hooks;
 use signature::sig_html;
@@ -939,7 +940,9 @@ impl Component for Compose {
 
                 ComposeInput::ShowPreview(body) => {
                     let html = match self.format {
-                        ComposeFormat::Markdown => crate::mail::markdown::to_html(&body),
+                        ComposeFormat::Markdown => {
+                            crate::mail::direction::stamp(&crate::mail::markdown::to_html(&body))
+                        }
                         _ => body,
                     };
                     self.editor.show_preview(Some(&html));

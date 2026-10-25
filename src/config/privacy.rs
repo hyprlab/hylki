@@ -312,6 +312,11 @@ pub(crate) struct PrivacyFile {
     /// Off by default, as in most mail programs today.
     #[serde(default)]
     pub(crate) signature_dashes: bool,
+    /// The line above the quote in a reply, with `{name}`, `{address}`,
+    /// `{date}` and `{time}` filled in (#528). Empty for the default, in the
+    /// app's language.
+    #[serde(default)]
+    pub(crate) reply_header: String,
     /// Undo Send (#434): seconds a sent message waits, with Undo on offer,
     /// before it is handed to the server. 0 sends at once.
     #[serde(default = "default_undo_send_secs")]
@@ -409,11 +414,17 @@ pub(crate) struct PrivacyFile {
     pub(crate) list_search_bottom: bool,
     #[serde(default)]
     pub(crate) list_bulk_bar_bottom: bool,
+    /// The reader toolbar's right group stays in the ⋯ menu at every
+    /// width. On for a new install; a file from before the key keeps the
+    /// group on the bar while it fits.
+    #[serde(default)]
+    pub(crate) toolbar_fold_right: bool,
     /// The widths columns were dragged to, in pixels, by column name.
     #[serde(default)]
     pub(crate) list_column_widths: std::collections::BTreeMap<String, i32>,
-    /// Single-key shortcuts (j/k, r, a, d…) without a modifier. Off by default:
-    /// a stray keystroke shouldn't archive mail for someone who never asked.
+    /// Single-key shortcuts (j/k, r, a, d…) without a modifier. On for a new
+    /// install, so the menus' key hints name keys that work; a file from
+    /// before the default changed keeps its own choice.
     #[serde(default)]
     pub(crate) single_key_shortcuts: bool,
     /// Gmail's keys in place of Hylki's own for the single-key shortcuts
@@ -693,6 +704,7 @@ impl Default for PrivacyFile {
             reply_position: ReplyPosition::default(),
             signature_position: SignaturePosition::default(),
             signature_dashes: false,
+            reply_header: String::new(),
             undo_send_secs: default_undo_send_secs(),
             spellcheck: true,
             spellcheck_langs: String::new(),
@@ -717,8 +729,9 @@ impl Default for PrivacyFile {
             contacts_search_open: false,
             list_search_bottom: false,
             list_bulk_bar_bottom: false,
+            toolbar_fold_right: true,
             list_column_widths: Default::default(),
-            single_key_shortcuts: false,
+            single_key_shortcuts: true,
             gmail_keys: false,
             keep_downloads_days: 0,
             run_in_background: false,

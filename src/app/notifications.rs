@@ -174,7 +174,7 @@ impl AppModel {
                     } else {
                         self.open_reply(
                             m.account_id,
-                            self.reply_context(&m, reply_prefill(&m)),
+                            self.reply_context(&m, reply_prefill(&m, &self.reply_header)),
                             (m.account_id, m.id),
                             &sender,
                         );

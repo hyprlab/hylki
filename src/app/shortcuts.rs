@@ -74,6 +74,7 @@ impl AppModel {
             Shortcut::MarkRead(read) => self.mark_read_by_key(read),
             Shortcut::Undo => sender.input(AppMsg::Undo),
             Shortcut::MoveTo => sender.input(AppMsg::MoveToMenu),
+            Shortcut::Snooze => sender.input(AppMsg::SnoozeMenu),
             Shortcut::Label => sender.input(AppMsg::ReaderTagMenu),
             Shortcut::SelectAll => self.message_list.emit(MessageListInput::SelectAllShown),
             Shortcut::SelectNone => self.message_list.emit(MessageListInput::ClearSelection),

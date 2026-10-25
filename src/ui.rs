@@ -27,6 +27,7 @@ pub(crate) mod grab_pill;
 mod icon_picker;
 pub(crate) mod initials;
 pub(crate) mod keymap;
+pub(crate) mod later;
 pub(crate) mod launch;
 pub(crate) mod lightbox;
 pub(crate) mod message_actions;

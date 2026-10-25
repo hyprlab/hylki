@@ -87,6 +87,27 @@ impl Default for RowLook {
     }
 }
 
+/// When snoozed mail comes back (#527), by (account, Message-ID), and the
+/// Snoozed folders, by (account, folder id): a row shows the time only
+/// there, not on a copy an undo has put back.
+#[derive(Debug, Default, Clone, PartialEq)]
+pub(crate) struct SnoozedRows {
+    pub(crate) times: HashMap<(u32, String), i64>,
+    pub(crate) folders: std::collections::HashSet<(u32, u32)>,
+}
+
+impl SnoozedRows {
+    /// When `msg` comes back, if it waits in a Snoozed folder.
+    pub(crate) fn until(&self, msg: &crate::models::Message) -> Option<i64> {
+        if self.times.is_empty() || !self.folders.contains(&(msg.account_id, msg.folder_id)) {
+            return None;
+        }
+        self.times
+            .get(&(msg.account_id, msg.message_id.clone()))
+            .copied()
+    }
+}
+
 /// What every row shares with the list.
 pub(crate) struct RowShared {
     pub(crate) look: RefCell<RowLook>,
@@ -95,6 +116,8 @@ pub(crate) struct RowShared {
     pub(crate) tags: RefCell<Vec<crate::config::Tag>>,
     /// Each account's name, for the Account column (#334).
     pub(crate) account_names: RefCell<HashMap<u32, String>>,
+    /// When snoozed mail comes back (#527).
+    pub(crate) snoozed: RefCell<SnoozedRows>,
     /// How long an actions palette stays open after the pointer leaves it.
     pub(crate) palette_collapse_secs: Cell<u64>,
     /// Open the palette on row hover.
@@ -137,6 +160,7 @@ impl RowShared {
             look: RefCell::new(RowLook::default()),
             tags: RefCell::new(Vec::new()),
             account_names: RefCell::new(HashMap::new()),
+            snoozed: RefCell::new(SnoozedRows::default()),
             palette_collapse_secs: Cell::new(5),
             palette_hover: Cell::new(privacy.list_palette_hover),
             swipe_reversed: Cell::new(privacy.swipe_reversed),

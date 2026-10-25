@@ -84,6 +84,7 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) folder_trash_row: adw::ComboRow,
     pub(in crate::ui::accounts) folder_junk_row: adw::ComboRow,
     pub(in crate::ui::accounts) folder_archive_row: adw::ComboRow,
+    pub(in crate::ui::accounts) folder_snoozed_row: adw::ComboRow,
     pub(in crate::ui::accounts) hidden_list: gtk::ListBox,
     pub(in crate::ui::accounts) hidden_empty: gtk::Label,
     pub(in crate::ui::accounts) pgp_key_row: adw::ComboRow,
@@ -759,6 +760,10 @@ impl EditorForm {
                     adw::ComboRow { set_title: &i18n("Junk") },
                     #[name = "folder_archive_row"]
                     adw::ComboRow { set_title: &i18n("Archive") },
+                    // Snoozed mail waits here (#527), found by name
+                    // like Templates.
+                    #[name = "folder_snoozed_row"]
+                    adw::ComboRow { set_title: &i18n("Snoozed") },
                 },
 
                 // Hidden folders (#239): what "Hide Folder" in the
@@ -900,6 +905,7 @@ impl EditorForm {
             folder_trash_row,
             folder_junk_row,
             folder_archive_row,
+            folder_snoozed_row,
             hidden_list,
             hidden_empty,
             pgp_key_row,

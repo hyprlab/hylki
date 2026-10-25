@@ -145,8 +145,10 @@ fn privacy_toml() {
 
 /// Where `PrivacyFile::default()` (a new install) and an empty file (an
 /// upgrade from before every key) differ: the flags that record a default
-/// already applied, and the section placements that `LegacySwitches` decides
-/// for an old file. The two default sets must keep exactly this difference.
+/// already applied, the section placements that `LegacySwitches` decides
+/// for an old file, and what is on for a new install only (the toolbar's
+/// folded right group, single-key shortcuts). The two default sets must
+/// keep exactly this difference.
 #[test]
 fn privacy_defaults_differ_only_in_the_applied_flags() {
     let fresh = toml::Table::try_from(PrivacyFile::default()).unwrap();
@@ -391,11 +393,7 @@ path = "INBOX"
 
 #[test]
 fn toolbar_toml() {
-    let layout = ReaderToolbar::default();
-    let file = ToolbarFile {
-        left: layout.left.iter().map(|i| i.key().to_string()).collect(),
-        right: layout.right.iter().map(|i| i.key().to_string()).collect(),
-    };
+    let file = ToolbarFile::of(&ReaderToolbar::default());
     assert_golden("config/testdata/toolbar-default.toml", &pretty(&file));
 }
 

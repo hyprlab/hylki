@@ -14,6 +14,9 @@ pub(crate) enum FolderKind {
     /// Messages kept to start new ones from (#360): no server marks this
     /// role, so it is found by name or assigned under Special Folders.
     Templates,
+    /// Mail put away until a set time (#527). No server marks this role
+    /// either; the app keeps the times and moves the mail back.
+    Snoozed,
     Archive,
     Junk,
     Trash,
@@ -28,6 +31,7 @@ impl FolderKind {
             FolderKind::Sent => "mail-send-symbolic",
             FolderKind::Drafts => "document-edit-symbolic",
             FolderKind::Templates => "folder-templates-symbolic",
+            FolderKind::Snoozed => "alarm-symbolic",
             FolderKind::Archive => "mail-archive-symbolic",
             FolderKind::Junk => "mail-mark-junk-symbolic",
             FolderKind::Trash => "user-trash-symbolic",
@@ -124,6 +128,7 @@ pub(crate) fn localize_special_folder_names(folders: &mut [Folder]) {
             ),
             FolderKind::Drafts => ("Drafts", &["drafts", "draft"]),
             FolderKind::Templates => ("Templates", &["templates", "template"]),
+            FolderKind::Snoozed => ("Snoozed", &["snoozed"]),
             FolderKind::Trash => (
                 "Trash",
                 &["trash", "deleted items", "deleted messages", "bin"],
@@ -180,7 +185,7 @@ pub(crate) fn folder_is_hidden(path: &str, delimiter: Option<&str>, hidden: &[St
 /// follows its parent through [`folder_is_hidden`].
 pub(crate) fn exchange_non_mail_folders(folders: &[Folder]) -> Vec<String> {
     const MARKERS: [&str; 4] = ["calendar", "contacts", "tasks", "journal"];
-    const HIDDEN: [&str; 10] = [
+    const HIDDEN: [&str; 9] = [
         "calendar",
         "contacts",
         "tasks",
@@ -190,7 +195,6 @@ pub(crate) fn exchange_non_mail_folders(folders: &[Folder]) -> Vec<String> {
         "sync issues",
         "conversation history",
         "scheduled",
-        "snoozed",
     ];
     let top: Vec<(&Folder, String)> = folders
         .iter()
@@ -220,12 +224,19 @@ pub(crate) fn is_templates_name(name: &str) -> bool {
     )
 }
 
+/// Whether a folder's own name makes it the Snoozed folder (#527), found
+/// the way the Templates folder is.
+pub(crate) fn is_snoozed_name(name: &str) -> bool {
+    name.trim().eq_ignore_ascii_case("snoozed")
+}
+
 /// The [`FolderKind`] behind a Special Folders role key (#82).
 fn role_kind(role: &str) -> Option<FolderKind> {
     match role {
         "sent" => Some(FolderKind::Sent),
         "drafts" => Some(FolderKind::Drafts),
         "templates" => Some(FolderKind::Templates),
+        "snoozed" => Some(FolderKind::Snoozed),
         "trash" => Some(FolderKind::Trash),
         "junk" => Some(FolderKind::Junk),
         "archive" => Some(FolderKind::Archive),

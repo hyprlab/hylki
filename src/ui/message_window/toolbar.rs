@@ -6,7 +6,7 @@ use super::MessageWindow;
 use crate::config::ToolbarItem;
 use crate::i18n::i18n;
 use crate::ui::context_menu::{show_context_menu, MenuEntry};
-use crate::ui::message_actions::MessageAction;
+use crate::ui::message_actions::{KeysOf, MessageAction};
 use adw::prelude::*;
 use relm4::prelude::*;
 
@@ -48,6 +48,7 @@ pub(super) fn build_toolbar(
                 // starred state carries color only.
                 ToolbarItem::Star => (i18n("Star"), || MessageWindowInput::ToggleStar),
                 ToolbarItem::Archive => (i18n("Archive"), || MessageWindowInput::Archive),
+                ToolbarItem::Snooze => (i18n("Snooze"), || MessageWindowInput::SnoozeMenu),
                 ToolbarItem::Delete => (i18n("Delete"), || MessageWindowInput::Delete),
                 ToolbarItem::Spam => (i18n("Mark as Spam"), || MessageWindowInput::Spam),
                 ToolbarItem::ReadUnread => {
@@ -167,14 +168,23 @@ impl MessageWindow {
             )));
     }
 
+    /// Whether the right group is in the ⋯ menu: by choice, or for want of
+    /// room.
+    fn right_folded(&self) -> bool {
+        self.fold_right || self.collapsed
+    }
+
     /// The buttons' state: which show (the right group only while the row
     /// fits), and the ones that say the message's state.
     pub(super) fn sync_toolbar(&self) {
         for (item, b) in &self.bar.buttons {
             let right = self.toolbar.right.contains(item);
-            let mut visible = !(right && self.collapsed);
+            let mut visible = !(right && self.right_folded());
             if *item == ToolbarItem::Tags {
                 visible &= !self.tags.is_empty();
+            }
+            if *item == ToolbarItem::Snooze {
+                visible &= self.snooze.is_some();
             }
             b.set_visible(visible);
             match item {
@@ -221,7 +231,7 @@ impl MessageWindow {
         }
         self.bar
             .overflow
-            .set_visible(self.collapsed && !self.toolbar.right.is_empty());
+            .set_visible(self.right_folded() && !self.toolbar.right.is_empty());
         let loading = !self.attachments_loading.is_empty();
         self.bar.spinner.set_spinning(loading);
         self.bar.spinner.set_visible(loading);
@@ -258,6 +268,37 @@ impl MessageWindow {
         );
     }
 
+    /// The Snooze menu's entries (#527), for this window's message.
+    fn snooze_entries(&self, snoozed: bool, sender: &ComponentSender<Self>) -> Vec<Vec<MenuEntry>> {
+        let s = sender.output_sender().clone();
+        let message = self.msg.clone();
+        crate::ui::later::snooze_menu(snoozed, move |choice| {
+            let _ = s.send(MessageWindowOutput::Action {
+                action: crate::ui::message_list::RowAction::Snooze(choice),
+                message: Box::new(message.clone()),
+            });
+        })
+    }
+
+    /// The Snooze menu under its button, or under the ⋯ that stands in for
+    /// it while the toolbar is folded.
+    pub(super) fn show_snooze_menu(&self, sender: &ComponentSender<Self>) {
+        let Some(snoozed) = self.snooze else {
+            return;
+        };
+        let b: gtk::Widget = match self.button(ToolbarItem::Snooze).filter(|b| b.is_mapped()) {
+            Some(b) => b.clone().upcast(),
+            None if self.bar.overflow.is_mapped() => self.bar.overflow.clone().upcast(),
+            None => self.bar.header.clone().upcast(),
+        };
+        show_context_menu(
+            &b,
+            f64::from(b.width() / 2),
+            f64::from(b.height()),
+            self.snooze_entries(snoozed, sender),
+        );
+    }
+
     /// The folded toolbar's ⋯ menu: the right group, in its own order, with
     /// the main window's labels and icons.
     pub(super) fn show_overflow_menu(&self, sender: &ComponentSender<Self>) {
@@ -268,6 +309,7 @@ impl MessageWindow {
                 let _ = s.send(msg());
             })
             .icon(format!("{}-symbolic", action.icon()))
+            .keys(action.keys(KeysOf::Popout))
         };
         let mut section = Vec::new();
         for item in &self.toolbar.right {
@@ -289,6 +331,18 @@ impl MessageWindow {
                 )),
                 ToolbarItem::Archive => {
                     section.push(entry(A::Archive, || MessageWindowInput::Archive))
+                }
+                ToolbarItem::Snooze => {
+                    if let Some(snoozed) = self.snooze {
+                        section.push(
+                            MenuEntry::submenu(
+                                A::Snooze.label(),
+                                self.snooze_entries(snoozed, sender),
+                            )
+                            .icon("alarm-symbolic")
+                            .keys(A::Snooze.keys(KeysOf::Popout)),
+                        );
+                    }
                 }
                 ToolbarItem::Delete => {
                     section.push(entry(A::Delete, || MessageWindowInput::Delete))
@@ -313,7 +367,8 @@ impl MessageWindow {
                     if !self.tags.is_empty() {
                         section.push(
                             MenuEntry::submenu(A::Tags.label(), vec![self.tag_entries(sender)])
-                                .icon("tag-outline-symbolic"),
+                                .icon("tag-outline-symbolic")
+                                .keys(A::Tags.keys(KeysOf::Popout)),
                         );
                     }
                 }

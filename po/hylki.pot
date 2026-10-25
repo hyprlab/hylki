@@ -176,6 +176,9 @@ msgstr ""
 msgid "Archive"
 msgstr ""
 
+msgid "Snooze"
+msgstr ""
+
 msgid "Block Remote Content"
 msgstr ""
 
@@ -1004,6 +1007,18 @@ msgstr ""
 msgid "Message Source"
 msgstr ""
 
+msgid "Forwarded message"
+msgstr ""
+
+msgid "From: {from}"
+msgstr ""
+
+msgid "Date: {date}"
+msgstr ""
+
+msgid "Subject: {subject}"
+msgstr ""
+
 msgid "Export failed: {e}"
 msgstr ""
 
@@ -1153,6 +1168,9 @@ msgstr ""
 
 msgid ""
 "The smart folder goes from the sidebar. The mail it shows stays where it is."
+msgstr ""
+
+msgid "Snooze until"
 msgstr ""
 
 msgid "One message could not be moved to {account}: {error}"
@@ -1420,6 +1438,9 @@ msgid_plural "A new message with {n} files attached is open in Hylki."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "On {date} at {time}, {name} wrote:"
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 
@@ -1572,9 +1593,6 @@ msgid "Signed by: {d}"
 msgstr ""
 
 msgid "Checked by: {who}"
-msgstr ""
-
-msgid "From: {from}"
 msgstr ""
 
 msgid "Replies would go to {reply}, not {from}"
@@ -2926,12 +2944,6 @@ msgstr ""
 msgid "Schedule"
 msgstr ""
 
-msgid "That time has passed"
-msgstr ""
-
-msgid "Choose a time later than now."
-msgstr ""
-
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
 
@@ -3785,6 +3797,21 @@ msgid_plural "{n} messages"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Later today ({time})"
+msgstr ""
+
+msgid "Saturday morning ({time})"
+msgstr ""
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "That time has passed"
+msgstr ""
+
+msgid "Choose a time later than now."
+msgstr ""
+
 msgid "the portal answered response code {code}"
 msgstr ""
 
@@ -3917,6 +3944,9 @@ msgstr ""
 msgid "Forwarded"
 msgstr ""
 
+msgid "Snoozed until {when}"
+msgstr ""
+
 msgid "High importance"
 msgstr ""
 
@@ -4016,12 +4046,13 @@ msgstr ""
 msgid "Loading…"
 msgstr ""
 
-#. The fold's tooltips, in the user's language.
 msgid "Show quoted text"
 msgstr ""
 
-#. The fold's tooltips, in the user's language.
 msgid "Hide quoted text"
+msgstr ""
+
+msgid "Copy Address"
 msgstr ""
 
 msgid "Double-click to open in a new window"
@@ -4372,6 +4403,44 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr ""
 
+msgid "All keys"
+msgstr ""
+
+msgid "Not trusted"
+msgstr ""
+
+msgid "Expired or revoked"
+msgstr ""
+
+msgid "expires {date}"
+msgstr ""
+
+msgid "expired {date}"
+msgstr ""
+
+msgid "signs and encrypts"
+msgstr ""
+
+msgid "signs only: no encryption subkey"
+msgstr ""
+
+msgid "{n} more address"
+msgid_plural "{n} more addresses"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Export public key…"
+msgstr ""
+
+msgid "Delete this key"
+msgstr ""
+
+msgid "Trust…"
+msgstr ""
+
+msgid "Remove this key"
+msgstr ""
+
 msgid "2 years"
 msgstr ""
 
@@ -4412,6 +4481,12 @@ msgstr ""
 msgid "Fetch by address…"
 msgstr ""
 
+msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "No keys from other people yet."
+msgstr ""
+
 msgid "GnuPG {version} found."
 msgstr ""
 
@@ -4421,9 +4496,6 @@ msgid ""
 msgstr ""
 
 msgid "No key of your own yet. Generate one for your address."
-msgstr ""
-
-msgid "No keys from other people yet."
 msgstr ""
 
 msgid "Your key is ready."
@@ -4521,35 +4593,6 @@ msgstr ""
 msgid "Could not sign the key: {e}"
 msgstr ""
 
-msgid "expires {date}"
-msgstr ""
-
-msgid "expired {date}"
-msgstr ""
-
-msgid "signs and encrypts"
-msgstr ""
-
-msgid "signs only: no encryption subkey"
-msgstr ""
-
-msgid "{n} more address"
-msgid_plural "{n} more addresses"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Export public key…"
-msgstr ""
-
-msgid "Delete this key"
-msgstr ""
-
-msgid "Trust…"
-msgstr ""
-
-msgid "Remove this key"
-msgstr ""
-
 msgid "{n} key imported."
 msgid_plural "{n} keys imported."
 msgstr[0] ""
@@ -4570,13 +4613,13 @@ msgstr ""
 msgid "Left group"
 msgstr ""
 
-msgid "Always shown · up to 6"
+msgid "Always shown · up to {n}"
 msgstr ""
 
 msgid "Right group"
 msgstr ""
 
-msgid "Folds into ⋯ when narrow · up to 6"
+msgid "Folds into ⋯ when narrow"
 msgstr ""
 
 msgid "Not shown"
@@ -6309,6 +6352,9 @@ msgstr ""
 msgid "Templates"
 msgstr ""
 
+msgid "Snoozed"
+msgstr ""
+
 msgid "Hidden Folders"
 msgstr ""
 
@@ -6401,6 +6447,9 @@ msgstr ""
 msgid ""
 "Drag buttons between the groups. The right group folds into ⋯ when the pane "
 "is narrow."
+msgstr ""
+
+msgid "Always fold the right group into ⋯"
 msgstr ""
 
 msgid ""
@@ -6529,6 +6578,18 @@ msgid "Undo Send"
 msgstr ""
 
 msgid "How long Undo is offered after sending."
+msgstr ""
+
+msgid "Reply Header"
+msgstr ""
+
+msgid "{name}, {address}, {date} and {time} are filled in from the original."
+msgstr ""
+
+msgid "Line above the quoted message"
+msgstr ""
+
+msgid "Restore Default"
 msgstr ""
 
 msgid "Spelling"

@@ -288,6 +288,11 @@ pub(super) async fn run_mock(
             | MailRequest::MarkHamMany { .. }
             | MailRequest::PurgeMessages { .. }
             | MailRequest::UndoMove { .. } => emit(WorkerEvent::BulkComplete),
+            // The demo keeps no snoozed mail to bring back (#527).
+            MailRequest::Unsnooze { message_ids, .. } => emit(WorkerEvent::Unsnoozed {
+                message_ids,
+                done: true,
+            }),
             MailRequest::SaveDraft { autosave, .. } => emit(WorkerEvent::DraftSaved {
                 autosave,
                 message_id: None,

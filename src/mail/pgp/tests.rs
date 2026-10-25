@@ -287,6 +287,24 @@ uid:r::::1757000000::ABCDEF::Old Name <old@example.org>::::::::::0:\n";
 }
 
 #[test]
+fn keys_are_searched_by_uid_key_id_and_fingerprint() {
+    let text = "\
+pub:-:4096:1:51300FD844417A2E:1757000000:1820000000::-:::scSC::::::23::0:\n\
+fpr:::::::::51300FD844417A2EF1828831DC8357B877CD8F05:\n\
+uid:-::::1757000000::ABCDEF::Jason Martin <jasonjmartin@me.com>::::::::::0:\n\
+uid:-::::1757000000::ABCDEF::Hyprlab <hyprlab@proton.me>::::::::::0:\n";
+    let k = &parse_colons(text, false)[0];
+    assert!(k.matches_search(""), "an empty search shows everything");
+    assert!(k.matches_search("jason"));
+    assert!(k.matches_search("MARTIN me.com"), "every word, any case");
+    assert!(k.matches_search("proton"), "not only the primary uid");
+    assert!(k.matches_search("0x51300fd844417a2e"));
+    assert!(k.matches_search("DC83 57B8 77CD 8F05"));
+    assert!(!k.matches_search("jason gmail"));
+    assert!(!k.matches_search("0x1234"));
+}
+
+#[test]
 fn import_status_is_summarised() {
     let out = Run {
         status_lines: lines(&[

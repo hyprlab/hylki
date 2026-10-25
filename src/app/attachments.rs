@@ -139,24 +139,25 @@ impl AppModel {
     /// Hand the reader what each message on screen has attached (#213), as
     /// far as the cache knows: names and sizes only, never the bytes — the
     /// document lists them, and the app opens or saves them on request.
-    fn push_card_attachments(&self) {
+    pub(super) fn push_card_attachments(&self) {
         use crate::ui::message_view::CardAttachment;
         let mut map: HashMap<(u32, u32), Vec<CardAttachment>> = HashMap::new();
         for key in self.conversation_members() {
-            if let Some(items) = self
+            let atts: Vec<CardAttachment> = match self
                 .member_key(key)
                 .and_then(|k| self.attachment_cache.get(&k))
             {
-                let atts: Vec<CardAttachment> = items
+                Some(items) => items
                     .iter()
                     .map(|a| CardAttachment {
                         name: a.name.clone(),
                         size: a.data.len() as u64,
                     })
-                    .collect();
-                if !atts.is_empty() {
-                    map.insert(key, atts);
-                }
+                    .collect(),
+                None => self.sent_card_files(key).unwrap_or_default(),
+            };
+            if !atts.is_empty() {
+                map.insert(key, atts);
             }
         }
         self.message_view
@@ -172,6 +173,8 @@ impl AppModel {
             .current_thread
             .iter()
             .filter(|tm| tm.has_attachment)
+            // A reply's stand-in card is on no server yet.
+            .filter(|tm| !self.provisionals.contains_key(&(tm.account_id, tm.id)))
             .filter(|tm| !self.attachment_cache.contains_key(&body_key(tm)))
             .filter_map(|tm| {
                 self.resolve_folder_path(tm)
@@ -333,6 +336,7 @@ impl AppModel {
                     .member_key((account_id, id))
                     .and_then(|k| self.attachment_cache.get(&k))
                     .cloned()
+                    .or_else(|| self.sent_file_bytes((account_id, id)))
                 else {
                     return;
                 };

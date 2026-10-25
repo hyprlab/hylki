@@ -139,6 +139,15 @@ pub(crate) enum MailRequest {
         dest_folder_id: u32,
         message_ids: Vec<String>,
     },
+    /// Bring snoozed mail back (#527): find `message_ids` in the Snoozed
+    /// folder `path`, mark them unread, move them to `dest` and reload it.
+    /// Answered with [`WorkerEvent::Unsnoozed`].
+    Unsnooze {
+        path: String,
+        dest: String,
+        dest_folder_id: u32,
+        message_ids: Vec<String>,
+    },
     /// Find a message by its (normalized) RFC Message-ID across every folder
     /// of the account, for a `mid:` link (#130) the cache could not resolve.
     /// Answered with [`WorkerEvent::Located`] either way.
@@ -366,6 +375,13 @@ pub(crate) enum WorkerEvent {
     Restored {
         folder_id: u32,
         message_ids: Vec<String>,
+    },
+    /// The answer to [`MailRequest::Unsnooze`]. `done` when the messages
+    /// went back, or were no longer in the Snoozed folder to go; false when
+    /// the server could not be asked, so the app tries again later.
+    Unsnoozed {
+        message_ids: Vec<String>,
+        done: bool,
     },
     /// The answer to [`MailRequest::Locate`]: where the message with that
     /// Message-ID lives (`folder_path`, `uid`), or `None` when no folder of

@@ -36,6 +36,7 @@ impl MessageWindow {
             Shortcut::Delete => input(MessageWindowInput::Delete),
             Shortcut::Spam => input(MessageWindowInput::Spam),
             Shortcut::MoveTo => input(MessageWindowInput::MoveTo),
+            Shortcut::Snooze => input(MessageWindowInput::SnoozeMenu),
             Shortcut::Label => input(MessageWindowInput::TagMenu),
             Shortcut::Tag(n) => {
                 if let Some(tag) = self.tags.get(usize::from(n).saturating_sub(1)) {

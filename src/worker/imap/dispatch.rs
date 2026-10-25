@@ -195,6 +195,13 @@ impl<E: Emit> ImapWorker<E> {
         // is indistinguishable from one that is still streaming — and
         // in a unified view one such account pins the spinner for
         // every account's mail.
+        // Snoozed mail waits for the next try (#527).
+        if let MailRequest::Unsnooze { message_ids, .. } = &req {
+            emit(WorkerEvent::Unsnoozed {
+                message_ids: message_ids.clone(),
+                done: false,
+            });
+        }
         if let MailRequest::LoadMessages { folder_id, .. }
         | MailRequest::SyncFolder { folder_id, .. } = &req
         {
@@ -349,6 +356,15 @@ impl<E: Emit> ImapWorker<E> {
                 message_ids,
             } => {
                 self.on_undo_move(path, dest, dest_folder_id, message_ids)
+                    .await
+            }
+            MailRequest::Unsnooze {
+                path,
+                dest,
+                dest_folder_id,
+                message_ids,
+            } => {
+                self.on_unsnooze(path, dest, dest_folder_id, message_ids)
                     .await
             }
             MailRequest::PurgeMessages { path, uids } => self.on_purge_messages(path, uids).await,

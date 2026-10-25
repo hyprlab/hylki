@@ -193,6 +193,9 @@ msgstr "Áthelyezés ide…"
 msgid "Archive"
 msgstr "Archiválás"
 
+msgid "Snooze"
+msgstr ""
+
 msgid "Block Remote Content"
 msgstr "Távoli képek blokkolása"
 
@@ -1129,6 +1132,21 @@ msgstr "(nincs tárgy)"
 msgid "Message Source"
 msgstr "Üzenetforrás"
 
+#, fuzzy
+msgid "Forwarded message"
+msgstr "Üzenet továbbítása"
+
+msgid "From: {from}"
+msgstr "Feladó: {from}"
+
+#, fuzzy
+msgid "Date: {date}"
+msgstr "lejár: {date}"
+
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Elfogadva: {subject}"
+
 msgid "Export failed: {e}"
 msgstr "Az exportálás sikertelen: {e}"
 
@@ -1295,6 +1313,9 @@ msgstr "Kiüríti ezt: „{name}”?"
 
 msgid ""
 "The smart folder goes from the sidebar. The mail it shows stays where it is."
+msgstr ""
+
+msgid "Snooze until"
 msgstr ""
 
 msgid "One message could not be moved to {account}: {error}"
@@ -1595,6 +1616,10 @@ msgid_plural "A new message with {n} files attached is open in Hylki."
 msgstr[0] "{n} csatolt fájlt tartalmazó új üzenet megnyitva a Hylkiben."
 msgstr[1] "{n} csatolt fájlt tartalmazó új üzenet megnyitva a Hylkiben."
 
+#, fuzzy
+msgid "On {date} at {time}, {name} wrote:"
+msgstr "{date} {time} órakor"
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "A GnuPG (gpg) nincs telepítve, ezért ez az üzenet nem olvasható."
 
@@ -1769,9 +1794,6 @@ msgstr "Aláírta: {d}"
 
 msgid "Checked by: {who}"
 msgstr "Ellenőrizte: {who}"
-
-msgid "From: {from}"
-msgstr "Feladó: {from}"
 
 msgid "Replies would go to {reply}, not {from}"
 msgstr "A válaszok ide mennének: {reply}, nem ide: {from}"
@@ -3295,12 +3317,6 @@ msgstr "Küldés később"
 msgid "Schedule"
 msgstr "Ütemezés"
 
-msgid "That time has passed"
-msgstr "Ez az időpont már elmúlt"
-
-msgid "Choose a time later than now."
-msgstr "Válasszon a jelenleginél későbbi időpontot."
-
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
 
@@ -4262,6 +4278,23 @@ msgid_plural "{n} messages"
 msgstr[0] "{n} üzenet"
 msgstr[1] "{n} üzenet"
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Ma, {time}"
+
+#, fuzzy
+msgid "Saturday morning ({time})"
+msgstr "Hétfő reggel ({time})"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "That time has passed"
+msgstr "Ez az időpont már elmúlt"
+
+msgid "Choose a time later than now."
+msgstr "Válasszon a jelenleginél későbbi időpontot."
+
 msgid "the portal answered response code {code}"
 msgstr "a portál a {code} válasz kódot adta vissza"
 
@@ -4414,6 +4447,10 @@ msgstr "Csillag eltávolítása"
 msgid "Forwarded"
 msgstr "Továbbítás"
 
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Ütemezve ekkorra: {when}"
+
 msgid "High importance"
 msgstr ""
 
@@ -4528,15 +4565,17 @@ msgstr "Olvasó nézet"
 msgid "Loading…"
 msgstr "Betöltés…"
 
-#. The fold's tooltips, in the user's language.
 #, fuzzy
 msgid "Show quoted text"
 msgstr "Távoli tartalom megjelenítése"
 
-#. The fold's tooltips, in the user's language.
 #, fuzzy
 msgid "Hide quoted text"
 msgstr "Elrejtés a preview text"
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Hivatkozás másolása"
 
 msgid "Double-click to open in a new window"
 msgstr "Kattintson duplán az új ablakban való megnyitáshoz"
@@ -4909,6 +4948,47 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr "Állapotsáv ({n})"
 
+#, fuzzy
+msgid "All keys"
+msgstr "Minden típus"
+
+#, fuzzy
+msgid "Not trusted"
+msgstr "Fordította"
+
+#, fuzzy
+msgid "Expired or revoked"
+msgstr "Aláírva, visszavont kulcs"
+
+msgid "expires {date}"
+msgstr "lejár: {date}"
+
+msgid "expired {date}"
+msgstr "lejárt: {date}"
+
+msgid "signs and encrypts"
+msgstr "aláír és titkosít"
+
+msgid "signs only: no encryption subkey"
+msgstr "csak aláír: nincs titkosítási alkulcs"
+
+msgid "{n} more address"
+msgid_plural "{n} more addresses"
+msgstr[0] "még {n} cím"
+msgstr[1] "még {n} cím"
+
+msgid "Export public key…"
+msgstr "Nyilvános kulcs exportálása…"
+
+msgid "Delete this key"
+msgstr "Kulcs törlése"
+
+msgid "Trust…"
+msgstr "Megbízhatóvá tétel…"
+
+msgid "Remove this key"
+msgstr "Kulcs eltávolítása"
+
 msgid "2 years"
 msgstr "2 év"
 
@@ -4960,6 +5040,12 @@ msgstr ""
 msgid "Fetch by address…"
 msgstr "Lekérés cím alapján…"
 
+msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "No keys from other people yet."
+msgstr "Még nincsenek másoktól származó kulcsok."
+
 msgid "GnuPG {version} found."
 msgstr ""
 
@@ -4973,9 +5059,6 @@ msgstr ""
 
 msgid "No key of your own yet. Generate one for your address."
 msgstr "Még nincs saját kulcsa. Hozzon létre egyet a címéhez."
-
-msgid "No keys from other people yet."
-msgstr "Még nincsenek másoktól származó kulcsok."
 
 msgid "Your key is ready."
 msgstr "A kulcsa elkészült."
@@ -5089,35 +5172,6 @@ msgstr ""
 msgid "Could not sign the key: {e}"
 msgstr "A kulcs nem írható alá: {e}"
 
-msgid "expires {date}"
-msgstr "lejár: {date}"
-
-msgid "expired {date}"
-msgstr "lejárt: {date}"
-
-msgid "signs and encrypts"
-msgstr "aláír és titkosít"
-
-msgid "signs only: no encryption subkey"
-msgstr "csak aláír: nincs titkosítási alkulcs"
-
-msgid "{n} more address"
-msgid_plural "{n} more addresses"
-msgstr[0] "még {n} cím"
-msgstr[1] "még {n} cím"
-
-msgid "Export public key…"
-msgstr "Nyilvános kulcs exportálása…"
-
-msgid "Delete this key"
-msgstr "Kulcs törlése"
-
-msgid "Trust…"
-msgstr "Megbízhatóvá tétel…"
-
-msgid "Remove this key"
-msgstr "Kulcs eltávolítása"
-
 msgid "{n} key imported."
 msgid_plural "{n} keys imported."
 msgstr[0] "{n} kulcs importálva."
@@ -5138,13 +5192,14 @@ msgstr "Húzás ide move"
 msgid "Left group"
 msgstr "Bal oldali csoport"
 
-msgid "Always shown · up to 6"
-msgstr "Mindig megjelenítve · legfeljebb 6"
+msgid "Always shown · up to {n}"
+msgstr "Mindig megjelenítve · legfeljebb {n}"
 
 msgid "Right group"
 msgstr "Jobb oldali csoport"
 
-msgid "Folds into ⋯ when narrow · up to 6"
+#, fuzzy
+msgid "Folds into ⋯ when narrow"
 msgstr "Folds -ba/-be ⋯ amikvagy narrow · up ide 6"
 
 msgid "Not shown"
@@ -7056,6 +7111,9 @@ msgstr ""
 msgid "Templates"
 msgstr ""
 
+msgid "Snoozed"
+msgstr ""
+
 msgid "Hidden Folders"
 msgstr "Rejtett mappák"
 
@@ -7171,6 +7229,9 @@ msgstr "Eszköztár"
 msgid ""
 "Drag buttons between the groups. The right group folds into ⋯ when the pane "
 "is narrow."
+msgstr ""
+
+msgid "Always fold the right group into ⋯"
 msgstr ""
 
 msgid ""
@@ -7312,6 +7373,21 @@ msgstr "Visszavonás"
 
 msgid "How long Undo is offered after sending."
 msgstr ""
+
+#, fuzzy
+msgid "Reply Header"
+msgstr "Válaszcím"
+
+msgid "{name}, {address}, {date} and {time} are filled in from the original."
+msgstr ""
+
+#, fuzzy
+msgid "Line above the quoted message"
+msgstr "Az idézett üzenet felett"
+
+#, fuzzy
+msgid "Restore Default"
+msgstr "Alapértelmezett beállítások visszaállítása"
 
 msgid "Spelling"
 msgstr "Helyesírás"

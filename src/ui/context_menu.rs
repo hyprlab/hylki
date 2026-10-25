@@ -96,6 +96,14 @@ impl MenuEntry {
         self
     }
 
+    /// `accel` when there are keys to name, as [`MenuEntry::accel`].
+    pub(crate) fn keys(self, accel: Option<&str>) -> Self {
+        match accel {
+            Some(accel) => self.accel(accel),
+            None => self,
+        }
+    }
+
     /// Mark this entry as the one the menu is set to.
     pub(crate) fn selected(mut self, selected: bool) -> Self {
         self.selected = selected;

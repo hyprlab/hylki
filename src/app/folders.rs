@@ -584,6 +584,7 @@ impl AppModel {
             FolderKind::Junk => "Junk",
             FolderKind::Drafts => "Drafts",
             FolderKind::Templates => "Templates",
+            FolderKind::Snoozed => "Snoozed",
             _ => return None,
         };
         self.folders.get(&account_id)?; // require folders to be loaded

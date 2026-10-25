@@ -22,6 +22,36 @@ impl MessageView {
             .unwrap_or_else(|| "#3584e4".to_string())
     }
 
+    /// Paint the header chip in the account's color: a tint of it behind
+    /// text in it, the text deepened (or lightened) where the color is too
+    /// close to the window ground to read. The ground moves with the
+    /// theme, so a theme change paints it again.
+    pub(super) fn paint_account_chip(&self) {
+        let Some(color) = &self.account_color else {
+            return;
+        };
+        let dark = adw::StyleManager::default().is_dark();
+        let (_, _, chrome) = self.theme_grounds(dark);
+        let text = crate::color::tinted_text(color, 0.18, &chrome, 4.5);
+        let class = format!(
+            "chip-{}",
+            color
+                .chars()
+                .filter(|c| c.is_ascii_alphanumeric())
+                .collect::<String>()
+        );
+        self.chip_rules.set(vec![(
+            format!(".hylki-account-chip.{class}"),
+            format!(
+                "background-color: {}; color: {text};",
+                crate::color::pale(color, 0.18)
+            ),
+        )]);
+        if let Some(chip) = &self.account_chip {
+            wear_class(chip, "chip-", &class);
+        }
+    }
+
     /// Whether the theme draws messages dark: the message theme, or the
     /// system's when it follows the system.
     pub(super) fn theme_dark(&self) -> bool {

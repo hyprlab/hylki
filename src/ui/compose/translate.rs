@@ -82,7 +82,8 @@ if(!sel){a=0;e=v.length;
 var sig=H?v.search(/<div class="hylki-sig"/):v.indexOf('\n-- \n');if(sig>=0)e=Math.min(e,sig);
 var q=H?v.search(/<p class="hylki-quote-attr"|<blockquote/i):v.search(/(^|\n)[ \t]*>/);
 if(q>=0){if(!H){var pre=v.slice(0,q).replace(/\s+$/,'');var ls=pre.lastIndexOf('\n');
-if(/(wrote|schrieb|a écrit|escribió|Forwarded message)/i.test(pre.slice(ls+1)))q=ls+1;}
+var L=pre.split('\n'),p=L.length-1;while(p>0&&L[p-1].trim()!=='')p--;
+if(/^-{5,} /.test(L[p]))q=L.slice(0,p).join('\n').length+(p?1:0);else if(/[:：]\s*$/.test(pre.slice(ls+1)))q=ls+1;}
 e=Math.min(e,q);}}
 while(e>a&&/\s/.test(v.charAt(e-1)))e--;while(a<e&&/\s/.test(v.charAt(a)))a++;
 var x=v.slice(a,e);if(!x.trim())return JSON.stringify({empty:true,sel:sel});

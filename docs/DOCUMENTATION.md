@@ -270,7 +270,7 @@ They are stored on the account as `hidden_folders` in `accounts.toml`.
 
 An Exchange server lists its calendar, contacts, tasks, notes and journal
 folders over IMAP as if they were mail folders, along with Outbox, Sync
-Issues, Conversation History, Scheduled and Snoozed. Hylki hides these the
+Issues, Conversation History and Scheduled. Hylki hides these the
 first time it lists such an account, and only when the listing looks like
 Exchange (at least two of Calendar, Contacts, Tasks and Journal at the top
 level), so a "Notes" folder on any other server is left alone. The look is
@@ -929,6 +929,16 @@ answers. **Settings → Composing → Reply and forward in the main window**,
 switched off, opens them in a window of their own instead, as **Compose in
 the main window** does for a new message.
 
+A reply opens with a line above the quoted message, "On Oct 25, 2026 at
+14:03, Ada wrote:" in the app's language. **Settings → Composing → Reply
+Header** changes it: `{name}`, `{address}`, `{date}` and `{time}` are
+filled in from the original, so `{name} <{address}> wrote on {date}:` gives
+"Ada <ada@example.org> wrote on Oct 25, 2026:". The date and time follow
+**Date format** and **Clock** in **Settings → Date and Time**. The button at
+the end of the row restores the default, which follows the language of the
+app. A forward opens with the original's From, Date and Subject, in the
+app's language too.
+
 The quoted message keeps its layout: its colors, fonts, tables and the
 pictures it carries inside itself look as they do in the reader, and go to
 the recipient that way. Pictures on the sender's server show only when the
@@ -999,6 +1009,37 @@ While it waits and while it is being sent, the message is listed in the
 **Outbox**, where **Edit** and **Delete** bring it back to the composer and
 **Send** sends it without waiting. Quitting Hylki before the wait is over
 keeps it in the Outbox, and it is sent at the next start.
+
+### Snoozing mail
+
+**Snooze** puts a message away until a time you choose, then moves it back
+to the folder it came from, unread. It is on the reader's toolbar, in a
+message's right-click menu, and on <kbd>z</kbd> with single-key shortcuts
+(<kbd>b</kbd> with Gmail's keys). The menu offers this evening, tomorrow
+morning and afternoon, Saturday and Monday morning, and **Pick a date and
+time…** for any other. A conversation's row snoozes the conversation, as
+much of it as is in that folder; a card picked in the reader snoozes that
+message alone.
+
+The message waits in the account's **Snoozed** folder on the server, so a
+phone or another mail program sees it leave the Inbox too. The folder is
+made the first time something is snoozed; on Gmail it is a label. In the
+Snoozed folder each message shows when it comes back in place of its date.
+A time chosen there replaces the old one, and **Unsnooze** brings the
+message back now. A reply that arrives in the conversation brings it back
+early. **Undo** (Ctrl+Z) right after a snooze puts the message back where it
+was.
+
+The times are kept on this computer, in `snoozed.toml`, and Hylki moves the
+mail back itself: snoozed mail comes back while Hylki is running, or as soon
+as it starts after its time. Hylki on another computer does not know the
+time, and leaves the message in the Snoozed folder; **Unsnooze** there moves
+it to the Inbox.
+
+A folder called Snoozed, at the top of the account or under the Inbox, is
+taken for the role. Any other is chosen in the account's **Special
+Folders**, under **Snoozed**. Drafts and templates cannot be snoozed, and
+neither can mail on a POP3 account, which has no folder to keep it in.
 
 ### Templates
 
@@ -1269,6 +1310,10 @@ signature. There are four ways to get one, none of which need a terminal:
   looks a key up by email address, and **Import…** reads a key file.
 - A key someone sends you by any other route can be imported the same way.
 
+Other people's keys are listed by name. The search field above the list finds
+a key by name, address, key ID or fingerprint, and the menu beside it shows only the trusted keys, the ones not trusted yet, or
+the expired and revoked ones. These keys are left out of the Settings search.
+
 **4. Trust a key**
 
 An imported key checks signatures, but until you have vouched for it the
@@ -1460,13 +1505,25 @@ What you fold or open stays that way while the conversation is on screen,
 and so does a message read while it is open.
 Printing shows every message in full.
 
+### The reader's toolbar
+
+The buttons above the message are in two groups. The left group, up to seven
+buttons, stays on the bar at every width: Reply, Reply All, Forward, Star,
+Archive, Spam and Delete by default. The right group folds into a ⋯ menu:
+always while **Settings → Appearance → Always fold the right group into ⋯**
+is on, as it is on a new install, and otherwise only when the pane is too
+narrow for it.
+**Settings → Appearance → Toolbar** moves buttons between the groups, or out
+of the toolbar, by dragging them; right-clicking an empty part of the
+toolbar opens it there.
+
 ### A message in its own window
 
 Double-clicking a message in the list, or a message's header in a
 conversation, opens it in a window of its own. Its toolbar is the reader's:
 the same buttons in the order **Settings → Appearance → Toolbar** gives
-them, and in a narrow window the right-hand group folds into a ⋯ menu as it
-does in the main window. Its files are in the attachment drawer under the
+them, and the right-hand group folds into a ⋯ menu as it does in the main
+window. Its files are in the attachment drawer under the
 message, and on each message's card when those are switched on, and images
 and PDFs open in the same full-window preview. A conversation's window
 gathers the files of every message in it. Its Reader View switch changes

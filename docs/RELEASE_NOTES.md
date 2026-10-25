@@ -30,6 +30,12 @@ Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Ru
 
 - source files too long to read and review, split up with no change in behaviour
 
+## What's new in 1.45.3
+
+### Fixes:
+
+- an account's chevron in the sidebar did not open or fold the account - (#525)
+
 ## What's new in 1.45.2
 
 ### Fixes:

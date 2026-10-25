@@ -339,25 +339,30 @@ var mn=document.createElement('div');mn.className='hylki-mailmenu';\
 function item(label,fn){var b=document.createElement('button');b.type='button';\
 b.textContent=label;b.addEventListener('click',function(ev){\
 ev.stopPropagation();ev.preventDefault();hideMailMenu();fn();});mn.appendChild(b);}\
-item('New Message',function(){mailMsg(mail);});\
-item('Copy Address',function(){try{window.webkit.messageHandlers.hylki.postMessage('copyaddr:0:0:'+mail);}catch(_){}});\
-item('Add to Contacts',function(){try{window.webkit.messageHandlers.hylki.postMessage('addcontact:0:0:'+mail);}catch(_){}});\
-mn.style.left=Math.max(0,Math.min(x,window.innerWidth-200))+'px';\
-mn.style.top=Math.max(0,Math.min(y,window.innerHeight-124))+'px';\
-document.body.appendChild(mn);window.__hylkiMailMenu=mn;}\
-/* The card a right-click at widget point (x, y) belongs to, in a view w\
-   widget pixels wide: the one under it, or the nearest when the click fell\
-   between cards. And the selected text, for Copy. A right-click anywhere\
-   else dismisses the address menu, as a click does. */\
+item(hylkiAM[0],function(){mailMsg(mail);});\
+item(hylkiAM[1],function(){try{window.webkit.messageHandlers.hylki.postMessage('copyaddr:0:0:'+mail);}catch(_){}});\
+item(hylkiAM[2],function(){try{window.webkit.messageHandlers.hylki.postMessage('addcontact:0:0:'+mail);}catch(_){}});\
+document.body.appendChild(mn);window.__hylkiMailMenu=mn;\
+mn.style.left=Math.max(0,Math.min(x,window.innerWidth-mn.offsetWidth))+'px';\
+mn.style.top=Math.max(0,Math.min(y,window.innerHeight-mn.offsetHeight))+'px';}\
+/* The card a right-click at widget point (x, y) is on, in a view w\
+   widget pixels wide, and the selected text, for Copy. A right-click\
+   anywhere else dismisses the address menu, as a click does. Two answer\
+   {skip:1}, for no message menu: one on the ground around the cards, which\
+   is no message's (#529), and one on an address, which opens the address\
+   menu here. WebKit sends the page's contextmenu event to the body frame a\
+   previous right-click pressed in, whose release the app's menu took, so\
+   the listener above can miss it. */\
 window.__hylkiMenuAt=function(x,y,w){hideMailMenu();var r=window.innerWidth/w;x*=r;y*=r;\
-var el=document.elementFromPoint(x,y);var m=el&&el.closest?el.closest('.hylki-msg'):null;\
-if(!m){var ms=document.querySelectorAll('.hylki-msg'),d=1e9;\
-for(var i=0;i<ms.length;i++){var b=ms[i].getBoundingClientRect();\
-var e=y<b.top?b.top-y:(y>b.bottom?y-b.bottom:0);if(e<d){d=e;m=ms[i];}}}\
+var el=document.elementFromPoint(x,y);\
+var ml=el&&el.closest?el.closest('.hylki-mail'):null;\
+if(ml&&ml.dataset.mail){showMailMenu(x,y,ml.dataset.mail);return JSON.stringify({skip:1});}\
+var m=el&&el.closest?el.closest('.hylki-msg'):null;\
+if(!m)return JSON.stringify({skip:1});\
 var sel='';try{sel=String(window.getSelection()||'');\
 if(!sel){var fs=all();for(var j=0;j<fs.length&&!sel;j++){\
 try{sel=String(fs[j].contentDocument.getSelection()||'');}catch(_){}}}}catch(_){}\
-return JSON.stringify({key:(m&&m.dataset&&m.dataset.key)||'',sel:sel});};\
+return JSON.stringify({key:(m.dataset&&m.dataset.key)||'',sel:sel});};\
 /* A left click at widget point (x, y) that landed on a message's body\
    frame, which never reports its own clicks, picks that card as a click\
    on the rest of the card does. A link or a text selection in the body\

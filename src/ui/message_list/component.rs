@@ -401,6 +401,14 @@ impl SimpleComponent for MessageList {
             // by the rebuild.
             MessageListInput::RefreshDates => self.rebuild(),
             MessageListInput::SetSenderLogos(on) => self.on_set_sender_logos(on),
+            // The rows on screen are filled again in place: a rebuild
+            // here undid the selection a snooze's removal had just moved on.
+            MessageListInput::SetSnoozed(snoozed) => {
+                if *self.shared.snoozed.borrow() != snoozed {
+                    *self.shared.snoozed.borrow_mut() = snoozed;
+                    self.shared.refresh_all();
+                }
+            }
             MessageListInput::SetSingleLine(on) => self.on_set_single_line(on),
             MessageListInput::SetColumns(columns) => self.on_set_columns(columns),
             MessageListInput::SetAccountNames { names, graph } => {
@@ -420,6 +428,7 @@ impl SimpleComponent for MessageList {
             MessageListInput::SetGravatar(on) => self.on_set_gravatar(on),
             MessageListInput::SetShowRecipient(on) => self.on_set_show_recipient(on),
             MessageListInput::SetRestorable(on) => self.restorable = on,
+            MessageListInput::SetSnoozeOffer(offer) => self.snooze_offer = offer,
             MessageListInput::SetInJunk(on) => self.on_set_in_junk(on),
             MessageListInput::SetInDrafts(on) => self.on_set_in_drafts(on),
             MessageListInput::SetInTemplates(on) => self.in_templates = on,

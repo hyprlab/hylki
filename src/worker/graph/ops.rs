@@ -208,7 +208,9 @@ pub(super) async fn graph_move_uids(
 }
 
 /// Undo a move: the messages are in `path` (where the move put them) with new
-/// Graph ids — find them by Internet Message-ID and move them back to `dest`.
+/// Graph ids — find them by Internet Message-ID and move them back to `dest`,
+/// patched with `patch` first when there is one (snoozed mail comes back
+/// unread, #527).
 pub(super) async fn graph_undo_move(
     account: &AccountConfig,
     account_id: u32,
@@ -216,6 +218,7 @@ pub(super) async fn graph_undo_move(
     path: &str,
     dest: &str,
     message_ids: &[String],
+    patch: Option<serde_json::Value>,
     cache: Option<&Cache>,
 ) -> Result<usize, String> {
     let quiet = |_e: WorkerEvent| {};
@@ -264,6 +267,11 @@ pub(super) async fn graph_undo_move(
     }
     if uids.is_empty() {
         return Ok(0);
+    }
+    if let Some(body) = patch {
+        for &uid in &uids {
+            graph_patch_message(account, state, path, uid, body.clone(), &quiet).await;
+        }
     }
     let n = uids.len();
     graph_move_uids(account, account_id, state, path, &uids, dest, cache).await?;

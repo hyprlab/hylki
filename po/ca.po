@@ -186,6 +186,9 @@ msgstr "Mou a…"
 msgid "Archive"
 msgstr "Arxiva"
 
+msgid "Snooze"
+msgstr ""
+
 msgid "Block Remote Content"
 msgstr "Bloca el contingut remot"
 
@@ -1057,6 +1060,21 @@ msgstr "(sense assumpte)"
 msgid "Message Source"
 msgstr "Codi font del missatge"
 
+#, fuzzy
+msgid "Forwarded message"
+msgstr "Reenvia aquest missatge"
+
+msgid "From: {from}"
+msgstr "De: {from}"
+
+#, fuzzy
+msgid "Date: {date}"
+msgstr "caduca el {date}"
+
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Acceptat: {subject}"
+
 msgid "Export failed: {e}"
 msgstr "L'exportació ha fallat: {e}"
 
@@ -1224,6 +1242,9 @@ msgid ""
 msgstr ""
 "La carpeta intel·ligent desapareixerà de la barra lateral. El correu que "
 "mostra es queda on és."
+
+msgid "Snooze until"
+msgstr ""
 
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
@@ -1509,6 +1530,10 @@ msgid_plural "A new message with {n} files attached is open in Hylki."
 msgstr[0] "Hi ha un missatge nou amb {n} fitxer adjunt obert a l'Hylki."
 msgstr[1] "Hi ha un missatge nou amb {n} fitxers adjunts obert a l'Hylki."
 
+#, fuzzy
+msgid "On {date} at {time}, {name} wrote:"
+msgstr "{date} a les {time}"
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "El GnuPG (gpg) no està instal·lat, així que aquest missatge no es pot llegir."
@@ -1683,9 +1708,6 @@ msgstr "Signat per: {d}"
 
 msgid "Checked by: {who}"
 msgstr "Comprovat per: {who}"
-
-msgid "From: {from}"
-msgstr "De: {from}"
 
 msgid "Replies would go to {reply}, not {from}"
 msgstr "Les respostes anirien a {reply}, no a {from}"
@@ -3144,12 +3166,6 @@ msgstr "Envia més tard"
 msgid "Schedule"
 msgstr "Programa"
 
-msgid "That time has passed"
-msgstr "Aquesta hora ja ha passat"
-
-msgid "Choose a time later than now."
-msgstr "Tria una hora posterior a ara."
-
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr "El remitent ha de ser una sola adreça, com ara Ann <ann@example.com>."
 
@@ -4081,6 +4097,23 @@ msgid_plural "{n} messages"
 msgstr[0] "{n} missatge"
 msgstr[1] "{n} missatges"
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Avui, {time}"
+
+#, fuzzy
+msgid "Saturday morning ({time})"
+msgstr "Dilluns al matí ({time})"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "That time has passed"
+msgstr "Aquesta hora ja ha passat"
+
+msgid "Choose a time later than now."
+msgstr "Tria una hora posterior a ara."
+
 msgid "the portal answered response code {code}"
 msgstr "el portal ha respost amb el codi de resposta {code}"
 
@@ -4220,6 +4253,10 @@ msgstr "Treu la destacat"
 msgid "Forwarded"
 msgstr "Reenviat"
 
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Programat per a {when}"
+
 msgid "High importance"
 msgstr "Importància alta"
 
@@ -4328,13 +4365,15 @@ msgstr "Vista de lector"
 msgid "Loading…"
 msgstr "S'està carregant…"
 
-#. The fold's tooltips, in the user's language.
 msgid "Show quoted text"
 msgstr "Mostra el text citat"
 
-#. The fold's tooltips, in the user's language.
 msgid "Hide quoted text"
 msgstr "Amaga el text citat"
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Copia l'adreça de l'enllaç"
 
 msgid "Double-click to open in a new window"
 msgstr "Fes doble clic per obrir en una finestra nova"
@@ -4695,6 +4734,47 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr "Barra d'estat ({n})"
 
+#, fuzzy
+msgid "All keys"
+msgstr "Tots els tipus"
+
+#, fuzzy
+msgid "Not trusted"
+msgstr "Encara no és de confiança"
+
+#, fuzzy
+msgid "Expired or revoked"
+msgstr "Signat, clau revocada"
+
+msgid "expires {date}"
+msgstr "caduca el {date}"
+
+msgid "expired {date}"
+msgstr "ha caducat el {date}"
+
+msgid "signs and encrypts"
+msgstr "signa i xifra"
+
+msgid "signs only: no encryption subkey"
+msgstr "només signa: sense subclau de xifratge"
+
+msgid "{n} more address"
+msgid_plural "{n} more addresses"
+msgstr[0] "{n} adreça més"
+msgstr[1] "{n} adreces més"
+
+msgid "Export public key…"
+msgstr "Exporta la clau pública…"
+
+msgid "Delete this key"
+msgstr "Suprimeix aquesta clau"
+
+msgid "Trust…"
+msgstr "Confia-hi…"
+
+msgid "Remove this key"
+msgstr "Elimina aquesta clau"
+
 msgid "2 years"
 msgstr "2 anys"
 
@@ -4741,6 +4821,12 @@ msgstr ""
 msgid "Fetch by address…"
 msgstr "Obtén per adreça…"
 
+msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "No keys from other people yet."
+msgstr "Encara no hi ha claus d'altres persones."
+
 msgid "GnuPG {version} found."
 msgstr "S'ha trobat el GnuPG {version}."
 
@@ -4753,9 +4839,6 @@ msgstr ""
 
 msgid "No key of your own yet. Generate one for your address."
 msgstr "Encara no tens cap clau pròpia. Genera'n una per a la teva adreça."
-
-msgid "No keys from other people yet."
-msgstr "Encara no hi ha claus d'altres persones."
 
 msgid "Your key is ready."
 msgstr "La teva clau està a punt."
@@ -4866,35 +4949,6 @@ msgstr ""
 msgid "Could not sign the key: {e}"
 msgstr "No s'ha pogut signar la clau: {e}"
 
-msgid "expires {date}"
-msgstr "caduca el {date}"
-
-msgid "expired {date}"
-msgstr "ha caducat el {date}"
-
-msgid "signs and encrypts"
-msgstr "signa i xifra"
-
-msgid "signs only: no encryption subkey"
-msgstr "només signa: sense subclau de xifratge"
-
-msgid "{n} more address"
-msgid_plural "{n} more addresses"
-msgstr[0] "{n} adreça més"
-msgstr[1] "{n} adreces més"
-
-msgid "Export public key…"
-msgstr "Exporta la clau pública…"
-
-msgid "Delete this key"
-msgstr "Suprimeix aquesta clau"
-
-msgid "Trust…"
-msgstr "Confia-hi…"
-
-msgid "Remove this key"
-msgstr "Elimina aquesta clau"
-
 msgid "{n} key imported."
 msgid_plural "{n} keys imported."
 msgstr[0] "S'ha importat {n} clau."
@@ -4915,13 +4969,14 @@ msgstr "Arrossega per moure"
 msgid "Left group"
 msgstr "Grup esquerre"
 
-msgid "Always shown · up to 6"
-msgstr "Sempre visible · fins a 6"
+msgid "Always shown · up to {n}"
+msgstr "Sempre visible · fins a {n}"
 
 msgid "Right group"
 msgstr "Grup dret"
 
-msgid "Folds into ⋯ when narrow · up to 6"
+#, fuzzy
+msgid "Folds into ⋯ when narrow"
 msgstr "Es replega a ⋯ quan és estret · fins a 6"
 
 msgid "Not shown"
@@ -6761,6 +6816,9 @@ msgstr "Per al Gmail i altres que arxiven ells mateixos el correu enviat."
 msgid "Templates"
 msgstr "Plantilles"
 
+msgid "Snoozed"
+msgstr ""
+
 msgid "Hidden Folders"
 msgstr "Carpetes amagades"
 
@@ -6869,6 +6927,9 @@ msgid ""
 msgstr ""
 "Arrossega els botons entre els grups. El grup dret es replega a ⋯ quan el "
 "panell és estret."
+
+msgid "Always fold the right group into ⋯"
+msgstr ""
 
 msgid ""
 "The parts switched on below hide while Focus Mode is on. Activated by "
@@ -6999,6 +7060,21 @@ msgstr "Desfés l'enviament"
 
 msgid "How long Undo is offered after sending."
 msgstr "Quant de temps s'ofereix desfer després d'enviar."
+
+#, fuzzy
+msgid "Reply Header"
+msgstr "Adreça de resposta"
+
+msgid "{name}, {address}, {date} and {time} are filled in from the original."
+msgstr ""
+
+#, fuzzy
+msgid "Line above the quoted message"
+msgstr "A sobre del missatge citat"
+
+#, fuzzy
+msgid "Restore Default"
+msgstr "Restaura els valors per defecte"
 
 msgid "Spelling"
 msgstr "Ortografia"

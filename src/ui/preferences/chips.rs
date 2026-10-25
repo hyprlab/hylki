@@ -215,11 +215,14 @@ const TOOLBAR_ZONES: [Option<ToolbarSide>; 3] =
 impl ToolbarEditor {
     pub(super) fn build(host: &gtk::Box, sender: &ComponentSender<Preferences>) -> Self {
         let heads = [
-            (i18n("Left group"), i18n("Always shown · up to 6")),
             (
-                i18n("Right group"),
-                i18n("Folds into ⋯ when narrow · up to 6"),
+                i18n("Left group"),
+                crate::i18n::i18n_f(
+                    "Always shown · up to {n}",
+                    &[("n", &crate::config::TOOLBAR_LEFT_MAX.to_string())],
+                ),
             ),
+            (i18n("Right group"), i18n("Folds into ⋯ when narrow")),
             (i18n("Not shown"), i18n("Drop a button here to hide it")),
         ];
         let input = sender.input_sender().clone();
@@ -275,12 +278,12 @@ impl ColumnEditor {
     }
 }
 
-/// Whether a zone can take the chip being dragged: the hidden zone always,
-/// a side while fewer than `TOOLBAR_SIDE_MAX` chips are on it. The chip
-/// being dragged is hidden in its own zone, so it is not counted there and
-/// moving within a full side still works.
+/// Whether a zone can take the chip being dragged: the hidden zone and the
+/// right side always, the left side while fewer than `TOOLBAR_LEFT_MAX`
+/// chips are on it. The chip being dragged is hidden in its own zone, so it
+/// is not counted there and moving within a full side still works.
 fn zone_has_room(flow: &ChipFlow, side: Option<ToolbarSide>) -> bool {
-    if side.is_none() {
+    if side != Some(ToolbarSide::Left) {
         return true;
     }
     let mut shown = 0;
@@ -291,7 +294,7 @@ fn zone_has_room(flow: &ChipFlow, side: Option<ToolbarSide>) -> bool {
         }
         child = c.next_sibling();
     }
-    shown < crate::config::TOOLBAR_SIDE_MAX
+    shown < crate::config::TOOLBAR_LEFT_MAX
 }
 
 impl Preferences {

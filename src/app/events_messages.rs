@@ -175,6 +175,7 @@ impl AppModel {
         let (vanished, next_after_vanish) =
             self.vanished_from_reader(account_id, folder_id, &messages);
         self.notify_new_mail(account_id, folder_id, &messages, &filed);
+        self.wake_on_reply(account_id, folder_id, &messages);
         // Cache for instant display when revisiting this folder.
         // The worker answers a load from its cache first and from the
         // server after, and the view was seeded from the same cache

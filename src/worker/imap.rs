@@ -43,6 +43,7 @@ mod preview_fetch;
 mod retry;
 pub(super) mod send;
 mod setup;
+mod snooze;
 mod stream;
 mod strip_attachment;
 mod structure;

@@ -2,9 +2,6 @@
 //! tags, moves, spam reports, imports, attachment removal, undo, deleting
 //! for good, and folders.
 
-use async_imap::types::Fetch;
-use futures::TryStreamExt;
-
 use super::{ensured, After, Emit, ImapWorker};
 use crate::i18n::{i18n, i18n_f};
 use crate::worker::imap::folders::refresh_folders;
@@ -17,8 +14,8 @@ use crate::worker::imap::mutate::{
     move_messages, purge_messages, rename_folder, store_flag, store_keyword,
 };
 use crate::worker::imap::retry::load_messages_retry;
+use crate::worker::imap::snooze::find_by_message_ids;
 use crate::worker::imap::strip_attachment::strip_imap_attachment;
-use crate::worker::imap::summary::message_id_of;
 use crate::worker::imap::wire::{append_msg, search_uids, sel, uid_set};
 use crate::worker::strip::{cache_rewritten, strip_refused};
 use crate::worker::{has_gmail_labels, WorkerEvent};
@@ -450,57 +447,13 @@ impl<E: Emit> ImapWorker<E> {
         let session = &mut self.session;
         let emit = &self.emit;
         let use_envelope = &mut self.use_envelope;
-        // Find the moved messages where the move landed them. UIDs
-        // changed in transit; Message-IDs did not.
         let mut uids: Vec<u32> = Vec::new();
         let mut failed: Option<String> = None;
         {
             let sess = ensured(session);
-            let mut exists = 0u32;
-            match sel(sess, &path).await {
+            match find_by_message_ids(sess, &path, &message_ids).await {
+                Ok(found) => uids = found,
                 Err(e) => failed = Some(e.to_string()),
-                Ok(mb) => {
-                    exists = mb.exists;
-                    for id in &message_ids {
-                        match search_uids(sess, format!("HEADER Message-ID \"{id}\"")).await {
-                            Ok(set) => uids.extend(set),
-                            Err(e) => {
-                                failed = Some(e.to_string());
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            uids.sort_unstable();
-            uids.dedup();
-            // Some servers (iCloud among them) can't be trusted with
-            // HEADER searches: the index lags behind a just-landed
-            // move, and our stored ids are lowercased while the
-            // server's match may be case-sensitive. FETCH has neither
-            // problem — before declaring the messages gone, read the
-            // newest headers (a move lands at the top of the UID
-            // space) and match Message-IDs locally.
-            if failed.is_none() && uids.is_empty() && exists > 0 {
-                let wanted: std::collections::HashSet<&str> =
-                    message_ids.iter().map(String::as_str).collect();
-                let lo = exists.saturating_sub(199).max(1);
-                let scanned: Result<Vec<Fetch>, _> = async {
-                    sess.fetch(
-                        format!("{lo}:{exists}"),
-                        "(UID BODY.PEEK[HEADER.FIELDS (MESSAGE-ID)])",
-                    )
-                    .await?
-                    .try_collect()
-                    .await
-                }
-                .await;
-                match scanned {
-                    Ok(fetches) => uids.extend(fetches.iter().filter_map(|f| {
-                        f.uid.filter(|_| wanted.contains(message_id_of(f).as_str()))
-                    })),
-                    Err(e) => failed = Some(e.to_string()),
-                }
             }
             if failed.is_none() && !uids.is_empty() {
                 if let Err(e) = move_messages(sess, &path, &uids, &dest).await {

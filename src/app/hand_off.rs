@@ -473,7 +473,7 @@ impl AppModel {
         files: HandOffFiles,
         sender: &ComponentSender<Self>,
     ) {
-        let mut prefill = self.reply_context(&m, reply_prefill(&m));
+        let mut prefill = self.reply_context(&m, reply_prefill(&m, &self.reply_header));
         prefill.attachments = files.attach;
         prefill.cloud_uploads = files.cloud;
         let on_screen = self

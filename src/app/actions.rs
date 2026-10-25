@@ -249,7 +249,7 @@ impl AppModel {
             RowAction::Reply => {
                 self.open_reply(
                     m.account_id,
-                    self.reply_context(&m, reply_prefill(&m)),
+                    self.reply_context(&m, reply_prefill(&m, &self.reply_header)),
                     (m.account_id, m.id),
                     &sender,
                 );
@@ -258,7 +258,7 @@ impl AppModel {
                 let own = self.own_identities(m.account_id);
                 self.open_reply(
                     m.account_id,
-                    self.reply_context(&m, reply_all_prefill(&m, &own)),
+                    self.reply_context(&m, reply_all_prefill(&m, &own, &self.reply_header)),
                     (m.account_id, m.id),
                     &sender,
                 );
@@ -325,7 +325,7 @@ impl AppModel {
                 let m = self.with_cached_body(m);
                 self.open_compose(
                     m.account_id,
-                    self.reply_context(&m, reply_prefill(&m)),
+                    self.reply_context(&m, reply_prefill(&m, &self.reply_header)),
                     &sender,
                 );
             }
@@ -335,7 +335,7 @@ impl AppModel {
                 let own = self.own_identities(m.account_id);
                 self.open_compose(
                     m.account_id,
-                    self.reply_context(&m, reply_all_prefill(&m, &own)),
+                    self.reply_context(&m, reply_all_prefill(&m, &own, &self.reply_header)),
                     &sender,
                 );
             }
@@ -374,6 +374,18 @@ impl AppModel {
                 self.show_add_contact_dialog(&m.from_name, &m.from_addr, &sender);
             }
             RowAction::CreateFilter => self.create_filter_from(&m, &sender),
+            // A conversation's row snoozes the conversation, as far as it
+            // is in this folder: a reply in Sent stays where it is.
+            RowAction::Snooze(choice) => {
+                let mut messages: Vec<Message> = conversation
+                    .into_iter()
+                    .filter(|c| c.account_id == m.account_id && c.folder_id == m.folder_id)
+                    .collect();
+                if !messages.iter().any(|c| c.id == m.id) {
+                    messages.push(m);
+                }
+                self.snooze_choice(messages, choice, &sender);
+            }
         }
     }
 
@@ -480,6 +492,7 @@ impl AppModel {
                 self.user_set_flags(star_label(false), &messages, FlagKind::Star, false)
             }
             BulkAction::DeleteForever => self.confirm_purge(messages, &sender),
+            BulkAction::Snooze | BulkAction::Unsnooze => self.apply_snooze(action, messages),
             // Archive/Delete/Spam remove every selected row. Doing that one
             // at a time blocks the UI thread (a render cycle per message) and
             // trips GTK's "app is not responding" dialog for large selections.

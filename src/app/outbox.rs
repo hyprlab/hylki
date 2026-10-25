@@ -323,6 +323,8 @@ impl AppModel {
             let s = sender.clone();
             gtk::glib::timeout_add_seconds_local(30, move || {
                 s.input(AppMsg::SendDueScheduled);
+                // Snoozed mail (#527) keeps the same clock.
+                s.input(AppMsg::WakeSnoozed);
                 gtk::glib::ControlFlow::Continue
             });
         }

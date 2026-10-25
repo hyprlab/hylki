@@ -214,7 +214,7 @@ fn pinned_translate_scripts_are_unchanged() {
     );
     assert_eq!(
         fnv(super::translate::TR_SOURCE_BEGIN),
-        (780, 0x3eff7dececcface9)
+        (877, 0x64fe55236df5c79f)
     );
     assert_eq!(
         fnv(super::translate::TR_SOURCE_END),

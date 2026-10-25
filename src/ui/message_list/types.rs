@@ -28,6 +28,10 @@ pub(crate) enum BulkAction {
     DeleteForever,
     /// Back to the Inbox, for a selection in Trash or Junk (#138).
     MoveToInbox,
+    /// Into the Snoozed folder until a time the app holds (#527).
+    Snooze,
+    /// Out of the Snoozed folder now.
+    Unsnooze,
 }
 
 #[derive(Debug)]
@@ -203,6 +207,9 @@ pub(crate) enum MessageListInput {
         names: std::collections::HashMap<u32, String>,
         graph: std::collections::HashSet<u32>,
     },
+    /// When each snoozed message comes back (#527): its row in the Snoozed
+    /// folder shows that in place of its date.
+    SetSnoozed(crate::ui::message_row::SnoozedRows),
     /// Fill them with senders' own site icons, or stop (#30).
     SetSenderLogos(bool),
     /// The date or clock preference changed: every row's date is built with the
@@ -380,6 +387,9 @@ pub(crate) enum MessageListInput {
     SetInJunk(bool),
     /// The list shows Drafts: read/unread toggles are withheld.
     SetInDrafts(bool),
+    /// Whether the menus offer Snooze (#527): `None` where nothing can be
+    /// snoozed, `Some(true)` in the Snoozed folder, which offers Unsnooze.
+    SetSnoozeOffer(Option<bool>),
     SetInTemplates(bool),
     /// Folder switch: drop any search and scroll back to the top (a plain
     /// `SetMessages` keeps the place, for refreshes).
@@ -480,6 +490,11 @@ pub(crate) enum MessageListOutput {
         offer_whole: bool,
         x: f64,
         y: f64,
+    },
+    /// A choice from the Snooze menu for these messages (#527).
+    Snooze {
+        messages: Vec<Message>,
+        choice: crate::ui::later::SnoozeChoice,
     },
     /// The selected conversation gained a member since it was opened (a
     /// reply synced in): the head and the whole conversation as it now is.

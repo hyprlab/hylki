@@ -79,103 +79,22 @@ fn pgp_send_check(
     Ok(())
 }
 
-/// Send Later presets (#145): `days` from today at `hour`:00, local time.
-pub(super) fn preset_time(days: i64, hour: u32) -> i64 {
-    use chrono::{Duration, Local, TimeZone};
-    let day = (Local::now() + Duration::days(days)).date_naive();
-    let ndt = day.and_hms_opt(hour, 0, 0).unwrap_or_default();
-    Local
-        .from_local_datetime(&ndt)
-        .single()
-        .map(|t| t.timestamp())
-        .unwrap_or_else(crate::datefmt::now)
-}
-
-/// The coming Monday at `hour`:00 local time (a Monday today means next week's).
-pub(super) fn next_monday(hour: u32) -> i64 {
-    use chrono::Datelike;
-    let today = chrono::Local::now().weekday().num_days_from_monday() as i64;
-    let ahead = (7 - today) % 7;
-    preset_time(if ahead == 0 { 7 } else { ahead }, hour)
-}
-
-/// The Send Later picker (#145): a calendar and an hour/minute pair, starting
-/// from the scheduled time if there is one, else the next full hour. A time
-/// already past is refused rather than queued to go at once by surprise.
-#[allow(deprecated)] // adw::MessageDialog: AlertDialog would change how it looks
+/// The Send Later picker (#145), starting from the scheduled time if there
+/// is one.
 pub(super) fn pick_send_time(
     parent: Option<&gtk::Window>,
     current: Option<i64>,
     sender: relm4::Sender<ComposeInput>,
 ) {
-    use chrono::{Datelike, Local, TimeZone, Timelike};
-    let start = match current {
-        Some(t) => Local
-            .timestamp_opt(t, 0)
-            .single()
-            .unwrap_or_else(Local::now),
-        None => {
-            let n = Local::now() + chrono::Duration::hours(1);
-            n.with_minute(0).and_then(|n| n.with_second(0)).unwrap_or(n)
-        }
-    };
-    let dialog = adw::MessageDialog::new(parent, Some(i18n("Send later").as_str()), None);
-    dialog.add_response("cancel", &i18n("Cancel"));
-    dialog.add_response("ok", &i18n("Schedule"));
-    dialog.set_default_response(Some("ok"));
-    dialog.set_close_response("cancel");
-    dialog.set_response_appearance("ok", adw::ResponseAppearance::Suggested);
-    let bx = gtk::Box::new(gtk::Orientation::Vertical, 8);
-    let calendar = gtk::Calendar::new();
-    calendar.set_year(start.year());
-    calendar.set_month(start.month0() as i32);
-    calendar.set_day(start.day() as i32);
-    bx.append(&calendar);
-    let row = gtk::Box::new(gtk::Orientation::Horizontal, 6);
-    row.set_halign(gtk::Align::Center);
-    let hour = gtk::SpinButton::with_range(0.0, 23.0, 1.0);
-    hour.set_value(start.hour() as f64);
-    hour.set_orientation(gtk::Orientation::Vertical);
-    hour.set_wrap(true);
-    let minute = gtk::SpinButton::with_range(0.0, 55.0, 5.0);
-    minute.set_value((start.minute() / 5 * 5) as f64);
-    minute.set_orientation(gtk::Orientation::Vertical);
-    minute.set_wrap(true);
-    row.append(&hour);
-    row.append(&gtk::Label::new(Some(":")));
-    row.append(&minute);
-    bx.append(&row);
-    dialog.set_extra_child(Some(&bx));
-    let chosen = move || -> Option<i64> {
-        let d = calendar.date();
-        let ndt =
-            chrono::NaiveDate::from_ymd_opt(d.year(), d.month() as u32, d.day_of_month() as u32)?
-                .and_hms_opt(hour.value_as_int() as u32, minute.value_as_int() as u32, 0)?;
-        Local
-            .from_local_datetime(&ndt)
-            .single()
-            .map(|t| t.timestamp())
-    };
-    dialog.connect_response(None, move |dlg, resp| {
-        if resp != "ok" {
-            return;
-        }
-        match chosen() {
-            Some(t) if t > crate::datefmt::now() => {
-                let _ = sender.send(ComposeInput::SendAt(t));
-            }
-            _ => {
-                // An explicit time in the past is a slip, not a request to
-                // send at once.
-                alert(
-                    dlg.transient_for().as_ref(),
-                    i18n("That time has passed").as_str(),
-                    i18n("Choose a time later than now.").as_str(),
-                );
-            }
-        }
-    });
-    dialog.present();
+    crate::ui::later::pick_later_time(
+        parent,
+        current,
+        &i18n("Send later"),
+        &i18n("Schedule"),
+        move |t| {
+            let _ = sender.send(ComposeInput::SendAt(t));
+        },
+    );
 }
 
 impl Compose {
@@ -574,6 +493,13 @@ impl Compose {
     /// Handles [`ComposeInput::SendBody`].
     pub(super) fn on_send_body(&mut self, fields: OutgoingFields, sender: &ComponentSender<Self>) {
         let mut out = self.outgoing_message(fields);
+        // The direction of each line (#524) is written in only here, on
+        // the way out: a draft goes back into the editor, which finds it
+        // itself, and a `dir` kept there would outlast a line rewritten in
+        // another language. Hand-written HTML goes as it was written.
+        if matches!(self.format, ComposeFormat::Rich | ComposeFormat::Markdown) {
+            out.html = crate::mail::direction::stamp(&out.html);
+        }
         // A draft goes once it is sent; a template stays to be used
         // again.
         if self.template {

@@ -87,6 +87,7 @@ pub(super) fn kind_to_i64(kind: FolderKind) -> i64 {
         // After Custom: the numbers are stored, and the older ones keep
         // their meaning.
         FolderKind::Templates => 8,
+        FolderKind::Snoozed => 9,
     }
 }
 
@@ -100,6 +101,7 @@ pub(super) fn kind_from_i64(v: i64) -> FolderKind {
         5 => FolderKind::Junk,
         6 => FolderKind::Trash,
         8 => FolderKind::Templates,
+        9 => FolderKind::Snoozed,
         _ => FolderKind::Custom,
     }
 }

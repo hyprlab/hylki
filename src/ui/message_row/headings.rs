@@ -280,19 +280,22 @@ pub(crate) fn pill_label(pill: &crate::models::Pill) -> gtk::Label {
 
 /// The tag section of a message menu (#71): one entry per tag, its swatch
 /// filled where the message carries it; choosing an entry toggles that tag
-/// through `toggle(keyword, add)`.
+/// through `toggle(keyword, add)`. `tags` is the whole list in Settings
+/// order, so each entry can name its number key.
 pub(crate) fn tag_menu_entries(
     tags: &[crate::config::Tag],
     msg: &Message,
     toggle: impl Fn(String, bool) + Clone + 'static,
 ) -> Vec<MenuEntry> {
     tags.iter()
-        .map(|t| {
+        .enumerate()
+        .map(|(i, t)| {
             let on = msg.has_tag(t);
             let keyword = t.keyword.clone();
             let toggle = toggle.clone();
             MenuEntry::new(t.name.clone(), move || toggle(keyword.clone(), !on))
                 .swatch(t.color.clone(), on)
+                .keys(crate::ui::keymap::tag_key(i))
         })
         .collect()
 }

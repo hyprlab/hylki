@@ -4,8 +4,8 @@
 use adw::prelude::*;
 use relm4::prelude::*;
 
-use crate::models::{FolderKind, Message};
-use crate::ui::message_view::MessageViewInput;
+use crate::models::{Attachment, FolderKind, Message};
+use crate::ui::message_view::{CardAttachment, MessageViewInput};
 use crate::worker::{self, OutgoingMessage};
 
 use super::model::AppModel;
@@ -26,6 +26,28 @@ pub(super) struct Provisional {
     pub(super) message: Message,
     /// The Message-ID it answers.
     pub(super) answers: String,
+}
+
+/// A file a reply sent from here went with, as its card lists it, and
+/// where it is on disk for opening it from the card.
+pub(super) struct SentFile {
+    card: CardAttachment,
+    path: String,
+}
+
+impl SentFile {
+    /// Named as the sent message names it (see `attachments_multipart`).
+    fn new(path: &str) -> Self {
+        let name = std::path::Path::new(path)
+            .file_name()
+            .map(|s| s.to_string_lossy().to_string())
+            .unwrap_or_else(|| "attachment".to_string());
+        let size = std::fs::metadata(path).map_or(0, |m| m.len());
+        SentFile {
+            card: CardAttachment { name, size },
+            path: path.to_string(),
+        }
+    }
 }
 
 impl Provisional {
@@ -105,6 +127,14 @@ impl AppModel {
                 })
                 .or_else(|| self.current.as_ref().map(|m| m.folder_id))?;
         self.related_id_seq = self.related_id_seq.saturating_sub(1);
+        // The card lists its files from the moment it is on screen, not
+        // once the copy has been sent, appended and read back.
+        if !out.attachments.is_empty() {
+            self.sent_files.insert(
+                (account_id, self.related_id_seq),
+                out.attachments.iter().map(|p| SentFile::new(p)).collect(),
+            );
+        }
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .map_or(0, |d| d.as_secs() as i64);
@@ -313,6 +343,8 @@ impl AppModel {
             self.current_thread.push(current);
         }
         self.current_thread.push(message);
+        // Ahead of the render, so the document is built with them.
+        self.push_card_attachments();
         // A document is on screen already: the next one replaces it in
         // place, never behind the spinner.
         self.thread_painted = true;
@@ -338,6 +370,7 @@ impl AppModel {
         }
         for k in &refused {
             self.provisionals.remove(k);
+            self.sent_files.remove(k);
         }
         let before = self.current_thread.len();
         self.current_thread
@@ -345,6 +378,29 @@ impl AppModel {
         if self.current_thread.len() != before {
             self.show_thread();
         }
+    }
+
+    /// What the card `key` lists as a reply sent from here, until its copy's
+    /// own attachments are read back.
+    pub(super) fn sent_card_files(&self, key: (u32, u32)) -> Option<Vec<CardAttachment>> {
+        let files = self.sent_files.get(&key)?;
+        Some(files.iter().map(|f| f.card.clone()).collect())
+    }
+
+    /// The files of the card `key` as sent, read from disk for a click on
+    /// one before its copy's own are in hand. `None` when any is gone.
+    pub(super) fn sent_file_bytes(&self, key: (u32, u32)) -> Option<Vec<Attachment>> {
+        self.sent_files
+            .get(&key)?
+            .iter()
+            .map(|f| {
+                let data = std::fs::read(&f.path).ok()?;
+                Some(Attachment {
+                    name: f.card.name.clone(),
+                    data,
+                })
+            })
+            .collect()
     }
 
     /// The messages the router sends here (see `AppModel::route`).
@@ -361,6 +417,20 @@ impl AppModel {
 mod tests {
     use super::*;
     use crate::app::test_support::msg;
+
+    /// A file is named on the card as the sent message names it, and sized
+    /// from disk before anything has gone out.
+    #[test]
+    fn a_sent_file_is_listed_by_its_name_and_size() {
+        let dir = std::env::temp_dir().join(format!("hylki-sent-file-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("report.pdf");
+        std::fs::write(&path, b"12345").unwrap();
+        let f = SentFile::new(path.to_str().unwrap());
+        std::fs::remove_dir_all(&dir).unwrap();
+        assert_eq!(f.card.name, "report.pdf");
+        assert_eq!(f.card.size, 5);
+    }
 
     /// B2 in the map: an empty `answers` never matches, since an empty
     /// reference is never in a whitespace split.

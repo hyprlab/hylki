@@ -6,6 +6,7 @@ use super::{tag_menu_entries, MessageList, RowAction};
 use crate::i18n::i18n;
 use crate::models::Message;
 use crate::ui::context_menu::{show_context_menu_popover, MenuEntry};
+use crate::ui::message_actions::{KeysOf, MessageAction as A};
 use adw::prelude::*;
 use relm4::prelude::*;
 
@@ -36,16 +37,38 @@ impl MessageList {
                 });
             })
             .icon(icon)
+            .keys(A::row_keys(action, msg.unread, KeysOf::Main))
         };
         let mut flag_section = vec![self.star_entry(msg, sender, &item)];
         let move_entry = self.move_entry(msg, x, y, sender);
         flag_section.extend(self.read_entry(msg, sender, &item));
         let tag_section = self.tag_section(msg, sender);
+        let mut move_section = self.move_section(move_entry, &item);
+        if let Some(snoozed) = self.snooze_offer {
+            let s = sender.clone();
+            let m = msg.clone();
+            let conversation = conversation.clone();
+            let menu = crate::ui::later::snooze_menu(snoozed, move |choice| {
+                let _ = s.output(MessageListOutput::Action {
+                    action: RowAction::Snooze(choice),
+                    message: Box::new(m.clone()),
+                    conversation: conversation.clone(),
+                });
+            });
+            // After Archive, as on the toolbar.
+            let at = move_section.len().saturating_sub(1);
+            move_section.insert(
+                at,
+                MenuEntry::submenu(i18n("Snooze"), menu)
+                    .icon("alarm-symbolic")
+                    .keys(A::Snooze.keys(KeysOf::Main)),
+            );
+        }
         let sections = vec![
             self.reply_section(&item),
             flag_section,
             tag_section,
-            self.move_section(move_entry, &item),
+            move_section,
             vec![
                 item(
                     RowAction::AddContact,
@@ -151,6 +174,7 @@ impl MessageList {
             } else {
                 "starred-symbolic"
             })
+            .keys(A::Star.keys(KeysOf::Main))
         } else if msg.starred {
             item(
                 RowAction::ToggleStar,
@@ -184,6 +208,7 @@ impl MessageList {
             });
         })
         .icon("folder-symbolic")
+        .keys(A::MoveTo.keys(KeysOf::Main))
     }
 
     /// The read toggle, if the row has one. A conversation row acts on the
@@ -230,7 +255,15 @@ impl MessageList {
                     "hylki-mail-read-symbolic"
                 } else {
                     "mail-unread-symbolic"
-                }),
+                })
+                .keys(
+                    if any_unread {
+                        A::MarkRead
+                    } else {
+                        A::MarkUnread
+                    }
+                    .keys(KeysOf::Main),
+                ),
             )
         } else if msg.unread {
             Some(item(
@@ -264,7 +297,9 @@ impl MessageList {
         if entries.is_empty() {
             Vec::new()
         } else {
-            vec![MenuEntry::submenu(i18n("Tags"), vec![entries]).icon("tag-outline-symbolic")]
+            vec![MenuEntry::submenu(i18n("Tags"), vec![entries])
+                .icon("tag-outline-symbolic")
+                .keys(A::Tags.keys(KeysOf::Main))]
         }
     }
 
@@ -438,7 +473,19 @@ impl MessageList {
     pub(super) fn show_bulk_menu(&self, x: f64, y: f64, sender: &ComponentSender<Self>) {
         let item = |action: BulkAction, label: &str, icon: &str| -> MenuEntry {
             let s = sender.clone();
-            MenuEntry::new(label, move || s.input(MessageListInput::Bulk(action))).icon(icon)
+            let hint = match action {
+                BulkAction::MarkRead => Some(A::MarkRead),
+                BulkAction::MarkUnread => Some(A::MarkUnread),
+                BulkAction::Flag | BulkAction::Unflag => Some(A::Star),
+                BulkAction::Archive => Some(A::Archive),
+                BulkAction::Spam => Some(A::MarkSpam),
+                BulkAction::NotSpam => Some(A::NotSpam),
+                BulkAction::Delete => Some(A::Delete),
+                _ => None,
+            };
+            MenuEntry::new(label, move || s.input(MessageListInput::Bulk(action)))
+                .icon(icon)
+                .keys(hint.and_then(|a| a.keys(KeysOf::Main)))
         };
 
         let sections = vec![
@@ -475,7 +522,9 @@ impl MessageList {
                 let tags = self.bulk_tag_entries(sender);
                 if !tags.is_empty() {
                     section.push(
-                        MenuEntry::submenu(i18n("Tags"), vec![tags]).icon("tag-outline-symbolic"),
+                        MenuEntry::submenu(i18n("Tags"), vec![tags])
+                            .icon("tag-outline-symbolic")
+                            .keys(A::Tags.keys(KeysOf::Main)),
                     );
                 }
                 section
@@ -516,7 +565,8 @@ impl MessageList {
                                 y: wy,
                             });
                         })
-                        .icon("folder-symbolic"),
+                        .icon("folder-symbolic")
+                        .keys(A::MoveTo.keys(KeysOf::Main)),
                     );
                 }
                 section.push(item(
@@ -524,6 +574,21 @@ impl MessageList {
                     &i18n("Archive"),
                     "mail-archive-symbolic",
                 ));
+                if let Some(snoozed) = self.snooze_offer {
+                    let messages = self.selected_conversations();
+                    let s = sender.clone();
+                    let menu = crate::ui::later::snooze_menu(snoozed, move |choice| {
+                        let _ = s.output(MessageListOutput::Snooze {
+                            messages: messages.clone(),
+                            choice,
+                        });
+                    });
+                    section.push(
+                        MenuEntry::submenu(i18n("Snooze"), menu)
+                            .icon("alarm-symbolic")
+                            .keys(A::Snooze.keys(KeysOf::Main)),
+                    );
+                }
                 section.push(item(
                     BulkAction::Delete,
                     &i18n("Delete"),

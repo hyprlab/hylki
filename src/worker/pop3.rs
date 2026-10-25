@@ -257,6 +257,13 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
                 emit(WorkerEvent::BulkComplete);
             }
 
+            // Nothing is snoozed on POP3, which has no folder to keep it in
+            // (#527); a stray request is spent, not retried.
+            MailRequest::Unsnooze { message_ids, .. } => emit(WorkerEvent::Unsnoozed {
+                message_ids,
+                done: true,
+            }),
+
             // POP3 has no folders beyond the inbox.
             MailRequest::CreateFolder { .. }
             | MailRequest::RenameFolder { .. }

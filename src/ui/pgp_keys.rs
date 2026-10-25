@@ -11,6 +11,10 @@ use relm4::prelude::*;
 use crate::i18n::{i18n, i18n_f, ni18n_f};
 use crate::mail::pgp::{self, Gpg, ImportSummary, KeyInfo};
 
+mod rows;
+
+use rows::{key_row, KeyShow};
+
 /// What the page needs at launch: the identities keys can be made for.
 pub(super) struct PgpKeysInit {
     /// (name, address) per account and alias.
@@ -23,6 +27,10 @@ pub(super) struct PgpKeys {
     others: Vec<KeyInfo>,
     own_list: gtk::ListBox,
     others_list: gtk::ListBox,
+    /// What the list says when nothing is in it, or nothing matches.
+    others_empty: gtk::Label,
+    others_query: String,
+    others_show: KeyShow,
     toasts: Option<adw::ToastOverlay>,
     /// A background action (generate, fetch) is running.
     busy: bool,
@@ -35,6 +43,10 @@ pub(super) struct PgpKeys {
 pub(super) enum PgpKeysInput {
     /// Re-read the keyring and rebuild both lists.
     Refresh,
+    /// The search over other people's keys changed.
+    SearchOthers(String),
+    /// The show filter's choice, by position in `KeyShow::choices`.
+    ShowOthers(u32),
     Generate,
     GenerateConfirmed {
         name: String,
@@ -158,6 +170,24 @@ impl Component for PgpKeys {
                             connect_clicked => PgpKeysInput::Fetch,
                         },
                     },
+                    gtk::Box {
+                        set_spacing: 6,
+                        set_margin_bottom: 12,
+                        gtk::SearchEntry {
+                            set_hexpand: true,
+                            set_placeholder_text: Some(i18n("Search by name, address or key ID").as_str()),
+                            connect_search_changed[sender] => move |e| {
+                                sender.input(PgpKeysInput::SearchOthers(e.text().to_string()));
+                            },
+                        },
+                        gtk::DropDown {
+                            set_valign: gtk::Align::Center,
+                            set_model: Some(&KeyShow::choices()),
+                            connect_selected_notify[sender] => move |d| {
+                                sender.input(PgpKeysInput::ShowOthers(d.selected()));
+                            },
+                        },
+                    },
                     #[local_ref]
                     others_list -> gtk::ListBox {
                         add_css_class: "boxed-list",
@@ -175,12 +205,16 @@ impl Component for PgpKeys {
     ) -> ComponentParts<Self> {
         let own_list = gtk::ListBox::new();
         let others_list = gtk::ListBox::new();
+        let empty_others = gtk::Label::new(Some(&i18n("No keys from other people yet.")));
         let mut model = PgpKeys {
             identities: init.identities,
             own: Vec::new(),
             others: Vec::new(),
             own_list: own_list.clone(),
             others_list: others_list.clone(),
+            others_empty: empty_others.clone(),
+            others_query: String::new(),
+            others_show: KeyShow::All,
             toasts: None,
             busy: false,
             reload_generation: 0,
@@ -223,7 +257,6 @@ impl Component for PgpKeys {
         empty_own.set_margin_top(14);
         empty_own.set_margin_bottom(14);
         own_list.set_placeholder(Some(&empty_own));
-        let empty_others = gtk::Label::new(Some(&i18n("No keys from other people yet.")));
         empty_others.add_css_class("dim-label");
         empty_others.set_margin_top(14);
         empty_others.set_margin_bottom(14);
@@ -235,6 +268,14 @@ impl Component for PgpKeys {
     fn update(&mut self, message: Self::Input, sender: ComponentSender<Self>, _root: &Self::Root) {
         match message {
             PgpKeysInput::Refresh => self.reload(&sender),
+            PgpKeysInput::SearchOthers(query) => {
+                self.others_query = query;
+                self.filter_others();
+            }
+            PgpKeysInput::ShowOthers(i) => {
+                self.others_show = KeyShow::from_index(i);
+                self.filter_others();
+            }
 
             PgpKeysInput::Generate => self.generate_dialog(&sender),
             PgpKeysInput::GenerateConfirmed {
@@ -344,6 +385,10 @@ impl PgpKeys {
     ) {
         self.own = own;
         self.others = others;
+        // gpg lists keys in the order they were imported; by name, a long
+        // list can be scanned.
+        self.others
+            .sort_by_cached_key(|k| k.primary_uid().to_lowercase());
         for list in [&self.own_list, &self.others_list] {
             while let Some(row) = list.row_at_index(0) {
                 list.remove(&row);
@@ -355,6 +400,26 @@ impl PgpKeys {
         for key in &self.others {
             self.others_list.append(&key_row(key, false, sender));
         }
+        self.filter_others();
+    }
+
+    /// Hide the rows of other people's keys the search or the show filter
+    /// leaves out.
+    fn filter_others(&self) {
+        let mut i = 0;
+        while let Some(row) = self.others_list.row_at_index(i) {
+            let shown = self
+                .others
+                .get(i as usize)
+                .is_none_or(|k| self.others_show.shows(k) && k.matches_search(&self.others_query));
+            row.set_visible(shown);
+            i += 1;
+        }
+        self.others_empty.set_label(&if self.others.is_empty() {
+            i18n("No keys from other people yet.")
+        } else {
+            i18n("No matches")
+        });
     }
 
     /// The form for a new key: which identity, how long it lasts, and the
@@ -737,95 +802,6 @@ impl PgpKeys {
             }))
         });
     }
-}
-
-/// One key as a row: who it is for, its id and standing, and its actions.
-fn key_row(key: &KeyInfo, own: bool, sender: &ComponentSender<PgpKeys>) -> adw::ActionRow {
-    let row = adw::ActionRow::new();
-    row.add_css_class(crate::ui::preferences::NOT_SEARCHED);
-    row.set_title(&gtk::glib::markup_escape_text(key.primary_uid()));
-    let mut parts = vec![pgp::key_display(&key.key_id)];
-    if let Some(exp) = key.expires {
-        let date = chrono::DateTime::from_timestamp(exp, 0)
-            .map(|d| d.format("%Y-%m-%d").to_string())
-            .unwrap_or_default();
-        parts.push(if exp > crate::datefmt::now() {
-            i18n_f("expires {date}", &[("date", &date)])
-        } else {
-            i18n_f("expired {date}", &[("date", &date)])
-        });
-    }
-    if own {
-        parts.push(if key.can_encrypt {
-            i18n("signs and encrypts")
-        } else {
-            i18n("signs only: no encryption subkey")
-        });
-    } else {
-        parts.push(key.validity.label());
-    }
-    if key.uids.len() > 1 {
-        parts.push(ni18n_f(
-            "{n} more address",
-            "{n} more addresses",
-            (key.uids.len() - 1) as u32,
-            &[("n", &(key.uids.len() - 1).to_string())],
-        ));
-    }
-    row.set_subtitle(&gtk::glib::markup_escape_text(&parts.join(" · ")));
-    row.set_tooltip_text(Some(&key.fingerprint_display()));
-    if !key.usable() {
-        row.add_css_class("dim-label");
-    }
-    let action = |icon: &str, tip: &str| {
-        let b = gtk::Button::from_icon_name(icon);
-        b.set_valign(gtk::Align::Center);
-        b.add_css_class("flat");
-        b.set_tooltip_text(Some(tip));
-        b
-    };
-    let fpr = key.fingerprint.clone();
-    if own {
-        let export = action("document-save-symbolic", &i18n("Export public key…"));
-        let s = sender.clone();
-        let f = fpr.clone();
-        export.connect_clicked(move |_| s.input(PgpKeysInput::Export(f.clone())));
-        row.add_suffix(&export);
-        let delete = action("user-trash-symbolic", &i18n("Delete this key"));
-        let s = sender.clone();
-        delete.connect_clicked(move |_| {
-            s.input(PgpKeysInput::Delete {
-                fingerprint: fpr.clone(),
-                secret: true,
-            })
-        });
-        row.add_suffix(&delete);
-    } else {
-        if key.validity.trusted() {
-            let seal = gtk::Image::from_icon_name("verified-checkmark-symbolic");
-            seal.set_tooltip_text(Some(&i18n("Trusted")));
-            seal.add_css_class("accent");
-            row.add_suffix(&seal);
-        } else if key.usable() {
-            let trust = gtk::Button::with_label(&i18n("Trust…"));
-            trust.set_valign(gtk::Align::Center);
-            trust.add_css_class("flat");
-            let s = sender.clone();
-            let f = fpr.clone();
-            trust.connect_clicked(move |_| s.input(PgpKeysInput::Trust(f.clone())));
-            row.add_suffix(&trust);
-        }
-        let remove = action("user-trash-symbolic", &i18n("Remove this key"));
-        let s = sender.clone();
-        remove.connect_clicked(move |_| {
-            s.input(PgpKeysInput::Delete {
-                fingerprint: fpr.clone(),
-                secret: false,
-            })
-        });
-        row.add_suffix(&remove);
-    }
-    row
 }
 
 fn import_message(s: &ImportSummary) -> String {

@@ -5,7 +5,9 @@ use super::JmapWorker;
 use crate::i18n::{i18n, i18n_f};
 use crate::worker::ids::hash_uid;
 use crate::worker::index_queue::IndexQueue;
-use crate::worker::jmap::folders::{jmap_create_mailbox, refresh_jmap_folders};
+use crate::worker::jmap::folders::{
+    jmap_create_mailbox, jmap_ensure_mailbox, refresh_jmap_folders,
+};
 use crate::worker::jmap::index::jmap_load_folder;
 use crate::worker::jmap::ops::{
     jmap_all_ids_in, jmap_destroy_all, jmap_import, jmap_move_uids, jmap_patch_all,
@@ -115,6 +117,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         let Some(s) = jmap_session(account, state, emit).await else {
             return;
         };
+        jmap_ensure_mailbox(&s, account_id, cache.as_ref(), state, emit, &dest).await;
         if let Err(e) = jmap_move_uids(
             &s,
             account_id,
@@ -232,6 +235,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         let state = &mut self.state;
         let emit = &self.emit;
         if let Some(s) = jmap_session(account, state, emit).await {
+            jmap_ensure_mailbox(&s, account_id, cache.as_ref(), state, emit, &dest).await;
             if let Err(e) = jmap_move_uids(
                 &s,
                 account_id,
@@ -336,6 +340,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
             &path,
             &dest,
             &message_ids,
+            serde_json::json!({}),
             cache.as_ref(),
         )
         .await

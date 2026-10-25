@@ -85,6 +85,7 @@ impl AppModel {
             reply_position: self.reply_position,
             signature_position: self.signature_position,
             signature_dashes: self.signature_dashes,
+            reply_header: self.reply_header.clone(),
             undo_send_secs: self.undo_send_secs,
             spellcheck: self.spellcheck,
             // Every save is after the first load, which applied it.
@@ -102,6 +103,7 @@ impl AppModel {
             contacts_search_open: self.contacts_search_open,
             list_search_bottom: self.list_search_bottom,
             list_bulk_bar_bottom: self.list_bulk_bar_bottom,
+            toolbar_fold_right: self.toolbar_fold_right,
             list_column_widths: config::list_column_widths_to(&self.list_column_widths),
             single_key_shortcuts: self.single_key.get(),
             gmail_keys: self.gmail_keys.get(),

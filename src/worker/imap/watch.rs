@@ -35,6 +35,7 @@ pub(in crate::worker) fn watchable(kind: FolderKind) -> bool {
             | FolderKind::Sent
             | FolderKind::Drafts
             | FolderKind::Templates
+            | FolderKind::Snoozed
             | FolderKind::Trash
             | FolderKind::Junk
     )

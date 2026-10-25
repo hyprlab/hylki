@@ -221,6 +221,10 @@ impl AppModel {
         }
         self.folders.insert(account_id, folders);
         self.push_template_folders();
+        // Snoozed mail (#527): the rows follow the folder ids, and an
+        // account listed at last can have its mail back.
+        self.push_snoozed();
+        self.wake_due();
         if unchanged {
             self.push_unread_counts();
         } else {

@@ -187,6 +187,9 @@ msgstr "Переместить в…"
 msgid "Archive"
 msgstr "Архив"
 
+msgid "Snooze"
+msgstr ""
+
 msgid "Block Remote Content"
 msgstr "Блокировать удалённый контент"
 
@@ -1144,6 +1147,21 @@ msgstr "(без темы)"
 msgid "Message Source"
 msgstr "Исходный текст сообщения"
 
+#, fuzzy
+msgid "Forwarded message"
+msgstr "Переслать это сообщение"
+
+msgid "From: {from}"
+msgstr "От: {from}"
+
+#, fuzzy
+msgid "Date: {date}"
+msgstr "срок действия истекает {date}"
+
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Принято: {subject}"
+
 msgid "Export failed: {e}"
 msgstr "Ошибка экспорта: {e}"
 
@@ -1316,6 +1334,9 @@ msgstr "Очистить «{name}»?"
 
 msgid ""
 "The smart folder goes from the sidebar. The mail it shows stays where it is."
+msgstr ""
+
+msgid "Snooze until"
 msgstr ""
 
 msgid "One message could not be moved to {account}: {error}"
@@ -1619,6 +1640,10 @@ msgstr[0] "Новое письмо с {n} прикрёпленным файло�
 msgstr[1] "Новое письмо с {n} прикрёпленными файлами открыто в Hylki."
 msgstr[2] "Новое письмо с {n} прикрёпленными файлами открыто в Hylki."
 
+#, fuzzy
+msgid "On {date} at {time}, {name} wrote:"
+msgstr "{date} в {time}"
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "GnuPG (gpg) не установлен, поэтому это сообщение нельзя прочитать."
 
@@ -1788,9 +1813,6 @@ msgstr "Подписано: {d}"
 
 msgid "Checked by: {who}"
 msgstr "Проверено: {who}"
-
-msgid "From: {from}"
-msgstr "От: {from}"
 
 msgid "Replies would go to {reply}, not {from}"
 msgstr "Ответы будут отправлены на {reply}, а не на {from}"
@@ -3307,12 +3329,6 @@ msgstr "Отправить позже"
 msgid "Schedule"
 msgstr "Запланировать"
 
-msgid "That time has passed"
-msgstr "Это время уже прошло"
-
-msgid "Choose a time later than now."
-msgstr "Выберите время позже текущего."
-
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
 "В поле «От кого» должен быть указан один адрес, например, Ann "
@@ -4282,6 +4298,23 @@ msgstr[0] "{n} письмо"
 msgstr[1] "{n} письма"
 msgstr[2] "{n} писем"
 
+#, fuzzy
+msgid "Later today ({time})"
+msgstr "Сегодня, {time}"
+
+#, fuzzy
+msgid "Saturday morning ({time})"
+msgstr "В понедельник утром ({time})"
+
+msgid "Unsnooze"
+msgstr ""
+
+msgid "That time has passed"
+msgstr "Это время уже прошло"
+
+msgid "Choose a time later than now."
+msgstr "Выберите время позже текущего."
+
 msgid "the portal answered response code {code}"
 msgstr "системный портал вернул код ответа {code}"
 
@@ -4435,6 +4468,10 @@ msgstr "Снять отметку"
 msgid "Forwarded"
 msgstr "Переслать"
 
+#, fuzzy
+msgid "Snoozed until {when}"
+msgstr "Запланировано на {when}"
+
 msgid "High importance"
 msgstr "Высокая важность"
 
@@ -4549,13 +4586,15 @@ msgstr "Режим чтения"
 msgid "Loading…"
 msgstr "Загрузка…"
 
-#. The fold's tooltips, in the user's language.
 msgid "Show quoted text"
 msgstr "Показать цитируемый текст"
 
-#. The fold's tooltips, in the user's language.
 msgid "Hide quoted text"
 msgstr "Скрыть цитируемый текст"
+
+#, fuzzy
+msgid "Copy Address"
+msgstr "Копировать адрес ссылки"
 
 msgid "Double-click to open in a new window"
 msgstr "Дважды щёлкните, чтобы открыть в новом окне"
@@ -4919,6 +4958,48 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr "Строка состояния ({n})"
 
+#, fuzzy
+msgid "All keys"
+msgstr "Все типы"
+
+#, fuzzy
+msgid "Not trusted"
+msgstr "Не переведено"
+
+#, fuzzy
+msgid "Expired or revoked"
+msgstr "Подписано, ключ отозван"
+
+msgid "expires {date}"
+msgstr "срок действия истекает {date}"
+
+msgid "expired {date}"
+msgstr "срок действия истёк {date}"
+
+msgid "signs and encrypts"
+msgstr "подписывает и шифрует"
+
+msgid "signs only: no encryption subkey"
+msgstr "только подписывает: нет подключа шифрования"
+
+msgid "{n} more address"
+msgid_plural "{n} more addresses"
+msgstr[0] "ещё {n} адрес"
+msgstr[1] "ещё {n} адреса"
+msgstr[2] "ещё {n} адресов"
+
+msgid "Export public key…"
+msgstr "Экспортировать открытый ключ…"
+
+msgid "Delete this key"
+msgstr "Удалить этот ключ"
+
+msgid "Trust…"
+msgstr "Доверять…"
+
+msgid "Remove this key"
+msgstr "Удалить этот ключ"
+
 msgid "2 years"
 msgstr "2 года"
 
@@ -4970,6 +5051,12 @@ msgstr ""
 msgid "Fetch by address…"
 msgstr "Получить по адресу…"
 
+msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "No keys from other people yet."
+msgstr "Ключей других людей пока нет."
+
 msgid "GnuPG {version} found."
 msgstr ""
 
@@ -4983,9 +5070,6 @@ msgstr ""
 
 msgid "No key of your own yet. Generate one for your address."
 msgstr "У вас пока нет собственного ключа. Сгенерируйте его для вашего адреса."
-
-msgid "No keys from other people yet."
-msgstr "Ключей других людей пока нет."
 
 msgid "Your key is ready."
 msgstr "Ваш ключ готов."
@@ -5098,36 +5182,6 @@ msgstr ""
 msgid "Could not sign the key: {e}"
 msgstr "Не удалось подписать ключ: {e}"
 
-msgid "expires {date}"
-msgstr "срок действия истекает {date}"
-
-msgid "expired {date}"
-msgstr "срок действия истёк {date}"
-
-msgid "signs and encrypts"
-msgstr "подписывает и шифрует"
-
-msgid "signs only: no encryption subkey"
-msgstr "только подписывает: нет подключа шифрования"
-
-msgid "{n} more address"
-msgid_plural "{n} more addresses"
-msgstr[0] "ещё {n} адрес"
-msgstr[1] "ещё {n} адреса"
-msgstr[2] "ещё {n} адресов"
-
-msgid "Export public key…"
-msgstr "Экспортировать открытый ключ…"
-
-msgid "Delete this key"
-msgstr "Удалить этот ключ"
-
-msgid "Trust…"
-msgstr "Доверять…"
-
-msgid "Remove this key"
-msgstr "Удалить этот ключ"
-
 msgid "{n} key imported."
 msgid_plural "{n} keys imported."
 msgstr[0] "Импортирован {n} ключ."
@@ -5149,13 +5203,14 @@ msgstr "Перетащите для перемещения"
 msgid "Left group"
 msgstr "Левая группа"
 
-msgid "Always shown · up to 6"
-msgstr "Отображаются всегда · до 6"
+msgid "Always shown · up to {n}"
+msgstr "Отображаются всегда · до {n}"
 
 msgid "Right group"
 msgstr "Правая группа"
 
-msgid "Folds into ⋯ when narrow · up to 6"
+#, fuzzy
+msgid "Folds into ⋯ when narrow"
 msgstr "Сворачиваются в ⋯ при узком окне · до 6"
 
 msgid "Not shown"
@@ -7040,6 +7095,9 @@ msgstr ""
 msgid "Templates"
 msgstr "Шаблоны"
 
+msgid "Snoozed"
+msgstr ""
+
 msgid "Hidden Folders"
 msgstr "Скрытые папки"
 
@@ -7153,6 +7211,9 @@ msgstr "Панель инструментов"
 msgid ""
 "Drag buttons between the groups. The right group folds into ⋯ when the pane "
 "is narrow."
+msgstr ""
+
+msgid "Always fold the right group into ⋯"
 msgstr ""
 
 msgid ""
@@ -7291,6 +7352,21 @@ msgstr "Отменить"
 
 msgid "How long Undo is offered after sending."
 msgstr ""
+
+#, fuzzy
+msgid "Reply Header"
+msgstr "Адрес для ответа"
+
+msgid "{name}, {address}, {date} and {time} are filled in from the original."
+msgstr ""
+
+#, fuzzy
+msgid "Line above the quoted message"
+msgstr "Над цитируемым сообщением"
+
+#, fuzzy
+msgid "Restore Default"
+msgstr "Восстановить по умолчанию"
 
 msgid "Spelling"
 msgstr "Орфография"

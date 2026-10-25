@@ -167,7 +167,7 @@ pub(crate) const fn i18n_noop(s: &'static str) -> &'static str {
     s
 }
 
-fn fill(mut s: String, args: &[(&str, &str)]) -> String {
+pub(crate) fn fill(mut s: String, args: &[(&str, &str)]) -> String {
     for (name, value) in args {
         s = s.replace(&format!("{{{name}}}"), value);
     }

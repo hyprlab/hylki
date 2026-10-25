@@ -45,6 +45,7 @@ mod messages;
 mod ops;
 mod push;
 mod send;
+mod snooze;
 mod wire;
 
 use crate::worker::outbox::{delete_queued, emit_outbox};
@@ -304,6 +305,15 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
                 self.on_undo_move(path, dest, dest_folder_id, message_ids)
                     .await
             }
+            MailRequest::Unsnooze {
+                path,
+                dest,
+                dest_folder_id,
+                message_ids,
+            } => {
+                self.on_unsnooze(path, dest, dest_folder_id, message_ids)
+                    .await
+            }
             MailRequest::CreateFolder { path } => self.on_create_folder(path).await,
             MailRequest::RenameFolder { old_path, new_path } => {
                 self.on_rename_folder(old_path, new_path).await
@@ -363,6 +373,8 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
     }
 }
 
+#[cfg(test)]
+mod snooze_tests;
 #[cfg(test)]
 mod tests;
 

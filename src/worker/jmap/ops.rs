@@ -201,7 +201,8 @@ pub(super) async fn jmap_move_uids(
 }
 
 /// Undo a move: the messages are in `path` (where the move put them); find
-/// them by Message-ID and move them back to `dest`.
+/// them by Message-ID and move them back to `dest`, patched with `extra`
+/// on the way (snoozed mail comes back unread, #527).
 pub(super) async fn jmap_undo_move(
     s: &JmapSession,
     account_id: u32,
@@ -209,6 +210,7 @@ pub(super) async fn jmap_undo_move(
     path: &str,
     dest: &str,
     message_ids: &[String],
+    extra: serde_json::Value,
     cache: Option<&Cache>,
 ) -> Result<usize, String> {
     let (folder_id, mailbox_id) = state
@@ -276,17 +278,7 @@ pub(super) async fn jmap_undo_move(
         return Ok(0);
     }
     let n = uids.len();
-    jmap_move_uids(
-        s,
-        account_id,
-        state,
-        path,
-        &uids,
-        dest,
-        serde_json::json!({}),
-        cache,
-    )
-    .await?;
+    jmap_move_uids(s, account_id, state, path, &uids, dest, extra, cache).await?;
     Ok(n)
 }
 

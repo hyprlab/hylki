@@ -118,7 +118,9 @@ impl Component for MessageWindow {
             toolbar: init.toolbar,
             in_junk: init.in_junk,
             restorable: init.restorable,
+            snooze: init.snooze,
             collapsed: false,
+            fold_right: init.toolbar_fold_right,
             window: root.clone(),
             content: gtk::Overlay::new(),
             bar: Toolbar {
@@ -270,6 +272,10 @@ impl Component for MessageWindow {
                     self.sync_toolbar();
                 }
             }
+            MessageWindowInput::SetToolbarFold(on) => {
+                self.fold_right = on;
+                self.sync_toolbar();
+            }
             MessageWindowInput::SetAttachmentDrawer(on) => {
                 self.drawer_enabled = on;
                 self.view.emit(MessageViewInput::SetAttachmentDrawer(on));
@@ -336,6 +342,7 @@ impl Component for MessageWindow {
             }
             MessageWindowInput::Key(action) => self.run_key(action, &sender, root),
             MessageWindowInput::TagMenu => self.show_tag_menu(&sender),
+            MessageWindowInput::SnoozeMenu => self.show_snooze_menu(&sender),
             MessageWindowInput::OverflowMenu => self.show_overflow_menu(&sender),
             MessageWindowInput::AllowSender(addr) => {
                 let _ = sender.output(MessageWindowOutput::AllowSender(addr));

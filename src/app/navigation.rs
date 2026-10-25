@@ -203,6 +203,10 @@ impl AppModel {
         self.message_list.emit(MessageListInput::SetInDrafts(
             view == UnifiedView::Kind(FolderKind::Drafts),
         ));
+        // Each message is checked when it is snoozed (#527).
+        self.message_list.emit(MessageListInput::SetSnoozeOffer(
+            (view != UnifiedView::Kind(FolderKind::Drafts)).then_some(false),
+        ));
         self.message_list
             .emit(MessageListInput::SetInTemplates(false));
         self.message_view.emit(MessageViewInput::SetDraftsView(
@@ -363,6 +367,9 @@ impl AppModel {
             )));
         self.message_list.emit(MessageListInput::SetInTemplates(
             kind == Some(FolderKind::Templates),
+        ));
+        self.message_list.emit(MessageListInput::SetSnoozeOffer(
+            self.snooze_offer(account_id, kind),
         ));
         self.message_view.emit(MessageViewInput::SetDraftsView(
             kind == Some(FolderKind::Drafts),

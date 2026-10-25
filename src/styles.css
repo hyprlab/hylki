@@ -1380,6 +1380,17 @@ flowbox.attach-flow > flowboxchild {
   opacity: 0.5;
 }
 
+/* Snoozed mail (#527): when it comes back, in the accent, where the date
+   would be. */
+.message-date.snoozed {
+  color: @accent_color;
+  opacity: 1;
+}
+
+.message-list > row:selected .message-date.snoozed {
+  color: white;
+}
+
 .dim-icon,
 .star-icon {
   opacity: 0.6;
@@ -1407,6 +1418,20 @@ headerbar.compose-toolbar button.image-button {
   min-width: 28px;
   padding-left: 3px;
   padding-right: 3px;
+}
+
+/* The narrowest reader pane: the left group never folds, so its buttons
+   and the ⋯ draw narrower instead of pushing the window controls past the
+   pane's edge. The window controls keep their size. */
+headerbar.reader-toolbar.compact box.start,
+headerbar.reader-toolbar.compact box.end {
+  border-spacing: 0;
+}
+headerbar.reader-toolbar.compact box.start button,
+headerbar.reader-toolbar.compact box.end > button {
+  min-width: 24px;
+  padding-left: 1px;
+  padding-right: 1px;
 }
 
 .reader-header {

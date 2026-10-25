@@ -30,7 +30,7 @@ impl Row {
         if look.single_line {
             self.fill_columns(&data, &look, &shared, unread);
         }
-        self.refresh_date(&data, &look);
+        self.refresh_date(&data, &look, &shared);
         self.refresh_subject(&data, &look, &shared, unread);
         self.refresh_preview(&data, &look);
         self.refresh_swipe_state(&shared, &look);
@@ -201,7 +201,7 @@ impl Row {
 
     /// The date column and its label, the column widths on one line, and
     /// the conversation's count chip.
-    fn refresh_date(&self, data: &RowData, look: &RowLook) {
+    fn refresh_date(&self, data: &RowData, look: &RowLook, shared: &RowShared) {
         let msg = &data.msg;
         let meta = &data.meta;
         let w = &self.w;
@@ -232,6 +232,26 @@ impl Row {
                 .date
                 .set_label(&crate::models::date_short(msg.timestamp, &msg.date)),
             _ => w.date.set_label(&msg.datetime_list()),
+        }
+        // Snoozed mail says when it comes back instead (#527).
+        let until = shared.snoozed.borrow().until(msg);
+        match until {
+            Some(t) => {
+                w.date.set_label(&if single {
+                    crate::models::date_short(t, "")
+                } else {
+                    crate::models::datetime_list_at(t, "")
+                });
+                w.date.add_css_class("snoozed");
+                w.date.set_tooltip_text(Some(&i18n_f(
+                    "Snoozed until {when}",
+                    &[("when", &crate::datefmt::date_time(t))],
+                )));
+            }
+            None => {
+                w.date.remove_css_class("snoozed");
+                w.date.set_tooltip_text(None);
+            }
         }
         w.chip.set_visible(meta.count > 1);
         w.chip_count.set_label(&meta.count.to_string());

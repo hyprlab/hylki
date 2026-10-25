@@ -93,6 +93,11 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
             folder_id,
             message_ids,
         },
+        WorkerEvent::Unsnoozed { message_ids, done } => AppMsg::Unsnoozed {
+            account_id,
+            message_ids,
+            done,
+        },
         WorkerEvent::BackfillDone { folder_id } => AppMsg::BackfillDone {
             account_id,
             folder_id,

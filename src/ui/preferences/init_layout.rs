@@ -88,7 +88,12 @@ impl Preferences {
             &widgets.appearance.toolbar_editor_box,
             sender,
         ));
-        // The toolbar editor's zones want a row of six chips: the page's
+        let editor_box = &widgets.appearance.toolbar_editor_box;
+        editor_box.reorder_child_after(
+            &widgets.appearance.toolbar_fold_list,
+            editor_box.last_child().as_ref(),
+        );
+        // The toolbar editor's zones want a row of seven chips: the page's
         // column is 40px wider than the stock preferences clamp allows.
         widen_page(widgets.appearance_page.upcast_ref(), 640);
         self.rebuild_toolbar_chips();

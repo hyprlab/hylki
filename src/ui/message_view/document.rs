@@ -52,11 +52,22 @@ fn wrapper_scripts() -> (String, String) {
     };
     let sizer = match &nonce {
         Some(n) => {
-            // The fold's tooltips, in the user's language.
-            let qt = serde_json::to_string(&[i18n("Show quoted text"), i18n("Hide quoted text")])
-                .unwrap_or_default()
-                .replace("</", "<\\/");
-            format!("<script nonce=\"{n}\">var vireoQT={qt};{SIZE_SCRIPT}</script>")
+            // The fold's tooltips and the address menu, in the user's
+            // language: the script has no gettext of its own (#529).
+            let js = |labels: &[String]| {
+                serde_json::to_string(labels)
+                    .unwrap_or_default()
+                    .replace("</", "<\\/")
+            };
+            let qt = js(&[i18n("Show quoted text"), i18n("Hide quoted text")]);
+            let am = js(&[
+                i18n("New Message"),
+                i18n("Copy Address"),
+                i18n("Add to Contacts"),
+            ]);
+            format!(
+                "<script nonce=\"{n}\">var vireoQT={qt};var hylkiAM={am};{SIZE_SCRIPT}</script>"
+            )
         }
         None => String::new(),
     };

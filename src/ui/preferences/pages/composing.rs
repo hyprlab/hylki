@@ -1,6 +1,9 @@
 //! Settings → Composing: format, reply and signature placement, undo
 //! send, and spelling.
 
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use adw::prelude::*;
 
 use super::super::{PrefInput, PrefOutput, ViewSender};
@@ -24,6 +27,10 @@ pub(in crate::ui::preferences) struct ComposingPage {
     pub(in crate::ui::preferences) signature_position_row: adw::ComboRow,
     pub(in crate::ui::preferences) signature_dashes_row: adw::SwitchRow,
     pub(in crate::ui::preferences) undo_send_row: adw::ComboRow,
+    pub(in crate::ui::preferences) reply_header_row: adw::EntryRow,
+    /// The reply header as last saved, as the row shows it: the apply
+    /// button is up only while the text differs from it.
+    reply_header_saved: Rc<RefCell<String>>,
     pub(in crate::ui::preferences) spelling_group: adw::PreferencesGroup,
     pub(in crate::ui::preferences) spellcheck_row: adw::SwitchRow,
     pub(in crate::ui::preferences) spell_lang_row: adw::ExpanderRow,
@@ -162,6 +169,25 @@ impl ComposingPage {
                     },
                 },
 
+                add = &adw::PreferencesGroup {
+                    set_title: &i18n("Reply Header"),
+                    set_description: Some(&i18n("{name}, {address}, {date} and {time} are filled in from the original.")),
+
+                    // Saved on Apply; the text is set and wired in build
+                    // below, beside the button that restores the default.
+                    #[name = "reply_header_row"]
+                    adw::EntryRow {
+                        set_title: &i18n("Line above the quoted message"),
+                        set_show_apply_button: true,
+                        add_suffix: reply_header_reset = &gtk::Button {
+                            set_icon_name: "edit-undo-symbolic",
+                            set_valign: gtk::Align::Center,
+                            set_tooltip_text: Some(i18n("Restore Default").as_str()),
+                            add_css_class: "flat",
+                        },
+                    },
+                },
+
                 #[name = "spelling_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Spelling"),
@@ -198,6 +224,13 @@ impl ComposingPage {
                 },
             }
         }
+        let reply_header_saved = Rc::new(RefCell::new(String::new()));
+        wire_reply_header(
+            &reply_header_row,
+            &reply_header_reset,
+            &reply_header_saved,
+            sender,
+        );
         Self {
             page,
             compose_inline_row,
@@ -214,10 +247,89 @@ impl ComposingPage {
             signature_position_row,
             signature_dashes_row,
             undo_send_row,
+            reply_header_row,
+            reply_header_saved,
             spelling_group,
             spellcheck_row,
             spell_lang_row,
             spell_words_row,
         }
+    }
+}
+
+impl ComposingPage {
+    /// Show the saved reply header, "" for the default.
+    pub(in crate::ui::preferences) fn set_reply_header(&self, stored: &str) {
+        let text = shown_template(stored);
+        set_quietly(&self.reply_header_row, &text);
+        *self.reply_header_saved.borrow_mut() = text;
+    }
+}
+
+/// The text the row shows for a stored header, "" being the default.
+fn shown_template(stored: &str) -> String {
+    if stored.is_empty() {
+        crate::mail::attribution::default_template()
+    } else {
+        stored.to_string()
+    }
+}
+
+/// Set the row's text without raising its apply button, which libadwaita
+/// raises for any change made while the row has focus, the app's own
+/// included: the text put back after Apply looked like an edit not yet
+/// saved.
+fn set_quietly(row: &adw::EntryRow, text: &str) {
+    row.set_show_apply_button(false);
+    if row.text() != text {
+        row.set_text(text);
+    }
+    row.set_show_apply_button(true);
+}
+
+/// The reply header row saves what Apply confirms, and its button goes back
+/// to the default, shown only while the text is something else. The apply
+/// button goes down again when the text is edited back to what is saved.
+fn wire_reply_header(
+    row: &adw::EntryRow,
+    reset: &gtk::Button,
+    saved: &Rc<RefCell<String>>,
+    sender: &ViewSender,
+) {
+    use crate::mail::attribution::stored_template;
+    {
+        let (reset, saved) = (reset.clone(), saved.clone());
+        row.connect_changed(move |row| {
+            reset.set_visible(!stored_template(&row.text()).is_empty());
+            if row.text().trim() == saved.borrow().trim() {
+                // After the row's own handler, which raises the button.
+                let (row, saved) = (row.clone(), saved.clone());
+                gtk::glib::idle_add_local_once(move || {
+                    if row.text().trim() == saved.borrow().trim() {
+                        row.set_show_apply_button(false);
+                        row.set_show_apply_button(true);
+                    }
+                });
+            }
+        });
+    }
+    {
+        let (saved, sender) = (saved.clone(), sender.clone());
+        row.connect_apply(move |row| {
+            let stored = stored_template(&row.text());
+            let text = shown_template(&stored);
+            set_quietly(row, &text);
+            *saved.borrow_mut() = text;
+            let _ = sender.output(PrefOutput::SetReplyHeader(stored));
+        });
+    }
+    {
+        let (row, saved, sender) = (row.clone(), saved.clone(), sender.clone());
+        reset.connect_clicked(move |_| {
+            let text = shown_template("");
+            set_quietly(&row, &text);
+            *saved.borrow_mut() = text;
+            let _ = sender.output(PrefOutput::SetReplyHeader(String::new()));
+        });
     }
 }

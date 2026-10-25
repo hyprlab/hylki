@@ -37,6 +37,7 @@ mod index;
 mod messages;
 mod ops;
 mod send;
+mod snooze;
 use crate::worker::outbox::{delete_queued, emit_outbox};
 
 /// A label whose name the message leaves out is named from the
@@ -292,6 +293,15 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
                 message_ids,
             } => {
                 self.on_undo_move(path, dest, dest_folder_id, message_ids)
+                    .await
+            }
+            MailRequest::Unsnooze {
+                path,
+                dest,
+                dest_folder_id,
+                message_ids,
+            } => {
+                self.on_unsnooze(path, dest, dest_folder_id, message_ids)
                     .await
             }
             MailRequest::CreateFolder { path } => self.on_create_folder(path).await,

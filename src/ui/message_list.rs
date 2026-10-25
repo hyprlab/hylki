@@ -231,6 +231,8 @@ pub(crate) struct MessageList {
     show_recipient: bool,
     /// The list shows Trash or Junk, where menus offer "Move to Inbox" (#138).
     restorable: bool,
+    /// Whether the menus offer Snooze (#527), and Unsnooze (`Some(true)`).
+    snooze_offer: Option<bool>,
     /// The list shows Junk: "Not Spam" stands where "Mark as Spam" would.
     in_junk: bool,
     /// The list shows Drafts (a folder or the unified row): drafts are

@@ -27,7 +27,9 @@ mod swipe;
 pub(crate) use faces::recipient_names;
 pub(crate) use headings::{fill_headings, pill_label, tag_menu_entries};
 pub(crate) use model::{MessageModel, RowItem};
-pub(crate) use shared::{factory, header_factory, make_spare_rows, RowLook, RowShared};
+pub(crate) use shared::{
+    factory, header_factory, make_spare_rows, RowLook, RowShared, SnoozedRows,
+};
 pub(crate) use swipe::SwipeSurface;
 // The row diff and the swipe math are tested from the list's tests.
 #[cfg(test)]
@@ -63,6 +65,8 @@ pub(crate) enum RowAction {
     AddContact,
     /// Start a new filter from the message's sender and subject.
     CreateFilter,
+    /// A choice from the Snooze menu (#527).
+    Snooze(crate::ui::later::SnoozeChoice),
 }
 
 /// A full swipe (#swipe): also `AdwSwipeable`'s reported `distance`, the px

@@ -152,6 +152,8 @@ pub(crate) struct MessageView {
     remote_allowed: bool,
     /// Owning account's display name (header chip).
     account_name: Option<String>,
+    /// The owning account's color, which the header chip is painted in.
+    account_color: Option<String>,
     /// The header chip's per-account colors.
     chip_rules: ClassRules,
     /// Paints the reader's spinner and its inter-document cover in the *message*
