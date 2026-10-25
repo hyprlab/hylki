@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.46.0-beta.3" date="2026-10-25" type="development">
+      <description>
+        <p>Third preview of 1.46.0: Snooze, a search for other people's OpenPGP keys, a line of your own above a quoted reply, keys beside menu entries, Spam on the reader toolbar's left, right-to-left mail sent right to left, the reply header and the address menu translated, and French, German and Portuguese brought up to date.</p>
+      </description>
+    </release>
     <release version="1.46.0-beta.2" date="2026-10-23" type="development">
       <description>
         <p>Second preview of 1.46.0: fullscreen, filters that forward, mark as read and delete, messages dragged from a conversation to a folder, a find bar under the message, card selection fixes in conversations, and the French translation brought up to date.</p>
