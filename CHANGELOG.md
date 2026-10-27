@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.46.0-beta.3 — 2026-10-25
+## 1.46.0-beta.4 — 2026-10-26
 
 - **Added: zoom in the rich text composer** (#535, requested by
   j-canaan). Ctrl+, Ctrl-, Ctrl+0 and Ctrl with the scroll wheel zoom the
@@ -41,14 +41,17 @@
   by bjesus). A right-to-left line written with Shift+Return in a paragraph
   that runs the other way was sent left to right; it now goes out with its
   own direction. On a line or paragraph running the other way from the one
-  above it, the caret was drawn at the wrong edge; it is now drawn after
-  the last word, in a draft opened again too. Starting a paragraph after the first line of a message
-  makes that line a paragraph too, so it is spaced the way the recipient
-  sees it. A message written as HTML now gets its directions the same way,
-  in the preview and when sent, where its blocks do not give one
-  themselves. In a reply or a forward the quoted message is sent as it
-  came: only what was written decides the direction, and the quote is
-  given a direction of its own only where the reply's would turn it round.
+  above it, the caret was drawn at the wrong edge; it is now drawn after the
+  last word, in a draft opened again too. Starting a paragraph after the
+  first line of a message makes that line a paragraph too, so it is spaced
+  the way the recipient sees it. A message written as HTML now gets its
+  directions the same way, in the preview and when sent, where its blocks do
+  not give one themselves. In a reply or a forward the quoted message is
+  sent as it came: only what was written decides the direction, and the
+  quote is given a direction of its own only where the reply's would turn it
+  round.
+
+## 1.46.0-beta.3 — 2026-10-25
 
 - **Fixed: a pale account color left the reader's account chip hard to
   read** (#530, reported by samuel-edlmeier). The chip's text keeps the
@@ -129,8 +132,9 @@
   Arabic or Persian aligned to the left. A rich text or Markdown message now
   goes out wrapped in `<div dir="rtl">` when it starts right to left, with a
   `dir` on each line that runs the other way, so it reads as it did in the
-  composer. Mail with no right-to-left text is sent exactly as before, and a
-  `dir` written by hand is kept. The Markdown preview shows the same.
+  composer. Mail with no right-to-left text is sent exactly as before, and
+  HTML written by hand is sent as written. The Markdown preview shows the
+  same.
 
 - **Translations:** French (PR #522 by frenchy82), German (PR #523 by
   Samuel Edlmeier) and Portuguese and Brazilian Portuguese (PR #526 by Paulo
