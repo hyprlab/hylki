@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-24 12:00+0200\n"
+"PO-Revision-Date: 2026-10-27 22:10+0100\n"
 "Last-Translator: Samuel Edlmeier <samuel.edlmeier@gmx.net>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -190,7 +190,7 @@ msgid "Archive"
 msgstr "Archivieren"
 
 msgid "Snooze"
-msgstr ""
+msgstr "Zurückstellen"
 
 msgid "Block Remote Content"
 msgstr "Externe Inhalte blockieren"
@@ -1065,20 +1065,17 @@ msgstr "(kein Betreff)"
 msgid "Message Source"
 msgstr "Nachrichtenquelle"
 
-#, fuzzy
 msgid "Forwarded message"
-msgstr "Nachricht weiterleiten"
+msgstr "Weitergeleitete Nachricht"
 
 msgid "From: {from}"
 msgstr "Von: {from}"
 
-#, fuzzy
 msgid "Date: {date}"
-msgstr "läuft ab {date}"
+msgstr "Datum: {date}"
 
-#, fuzzy
 msgid "Subject: {subject}"
-msgstr "Akzeptiert: {subject}"
+msgstr "Betreff: {subject}"
 
 msgid "Export failed: {e}"
 msgstr "Export fehlgeschlagen: {e}"
@@ -1251,7 +1248,7 @@ msgstr ""
 "unverändert erhalten."
 
 msgid "Snooze until"
-msgstr ""
+msgstr "Zurückstellen bis"
 
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
@@ -1538,9 +1535,8 @@ msgid_plural "A new message with {n} files attached is open in Hylki."
 msgstr[0] "Eine neue Nachricht mit {n}-Datei ist in Hylki geöffnet."
 msgstr[1] "Eine neue Nachricht mit {n} Dateien ist in Hylki geöffnet."
 
-#, fuzzy
 msgid "On {date} at {time}, {name} wrote:"
-msgstr "{date} um {time}"
+msgstr "Am {date} um {time} schrieb {name}:"
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
@@ -3119,6 +3115,8 @@ msgid ""
 "Zoom of the text on screen, not of the message sent. A click here, or "
 "Ctrl+0, puts it back to 100%."
 msgstr ""
+"Zoomstufe der Bildschirmanzeige (betrifft nicht die gesendete Nachricht). "
+"Ein Klick hierauf oder Strg+0 stellt die Standardgröße (100 %) wieder her."
 
 msgid "Writing in {format}"
 msgstr "Schreiben in: {format}"
@@ -4149,16 +4147,14 @@ msgid_plural "{n} messages"
 msgstr[0] "{n} Nachricht"
 msgstr[1] "{n} Nachrichten"
 
-#, fuzzy
 msgid "Later today ({time})"
-msgstr "Heute, {time}"
+msgstr "Heute später (um {time})"
 
-#, fuzzy
 msgid "Saturday morning ({time})"
-msgstr "Montagmorgen ({time})"
+msgstr "Samstagmorgen (um {time})"
 
 msgid "Unsnooze"
-msgstr ""
+msgstr "Zurückstellen aufheben"
 
 msgid "That time has passed"
 msgstr "Zeit liegt in der Vergangenheit."
@@ -4305,9 +4301,8 @@ msgstr "Stern entfernen"
 msgid "Forwarded"
 msgstr "Weitergeleitet"
 
-#, fuzzy
 msgid "Snoozed until {when}"
-msgstr "Geplant für {when}"
+msgstr "Zurückgestellt bis {when}"
 
 msgid "High importance"
 msgstr "Wichtigkeit: hoch"
@@ -4423,9 +4418,8 @@ msgstr "Zitierten Text anzeigen"
 msgid "Hide quoted text"
 msgstr "Zitierten Text nicht anzeigen"
 
-#, fuzzy
 msgid "Copy Address"
-msgstr "Link-Adresse kopieren"
+msgstr "Adresse kopieren"
 
 msgid "Double-click to open in a new window"
 msgstr "Doppelklicken, um in einem neuen Fenster zu öffnen"
@@ -4788,17 +4782,14 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr "Statusleiste ({n})"
 
-#, fuzzy
 msgid "All keys"
-msgstr "Alle Typen"
+msgstr "Alle Schlüssel"
 
-#, fuzzy
 msgid "Not trusted"
 msgstr "Nicht vertrauenswürdig"
 
-#, fuzzy
 msgid "Expired or revoked"
-msgstr "Signiert, Schlüssel widerrufen"
+msgstr "Abgelaufen oder widerrufen"
 
 msgid "expires {date}"
 msgstr "läuft ab {date}"
@@ -4877,7 +4868,7 @@ msgid "Fetch by address…"
 msgstr "Nach Adresse abrufen…"
 
 msgid "Search by name, address or key ID"
-msgstr ""
+msgstr "Nach Name, Adresse oder ID suchen"
 
 msgid "No keys from other people yet."
 msgstr "Noch keine Schlüssel von anderen Leuten."
@@ -5032,9 +5023,8 @@ msgstr "Immer angezeigt · bis zu {n}"
 msgid "Right group"
 msgstr "Rechte Gruppe"
 
-#, fuzzy
 msgid "Folds into ⋯ when narrow"
-msgstr "Falten in ⋯ wenn schmal · bis zu 6"
+msgstr "Einklappen zu ⋯ bei schmalem Fenster"
 
 msgid "Not shown"
 msgstr "Nicht angezeigt"
@@ -5187,9 +5177,8 @@ msgstr "Systemstandard"
 msgid "Account of the current folder"
 msgstr "Konto des aktuellen Ordners"
 
-#, fuzzy
 msgid "Same as reading pane zoom"
-msgstr "Im Lesebereich"
+msgstr "Identisch mit der Zoomstufe des Lesebereichs"
 
 msgid "Above the quoted message"
 msgstr "Über der zitierten Nachricht"
@@ -6909,7 +6898,7 @@ msgid "Templates"
 msgstr "Vorlagen"
 
 msgid "Snoozed"
-msgstr ""
+msgstr "Zurückgestellt"
 
 msgid "Hidden Folders"
 msgstr "Ausgeblendete Ordner"
@@ -7021,7 +7010,7 @@ msgstr ""
 "schmaler Anzeigeleiste unter ⋯ zusammengefasst."
 
 msgid "Always fold the right group into ⋯"
-msgstr ""
+msgstr "Die rechte Gruppe immer zu ⋯ einklappen"
 
 msgid ""
 "The parts switched on below hide while Focus Mode is on. Activated by "
@@ -7171,18 +7160,17 @@ msgstr "Senden widerrufen"
 msgid "How long Undo is offered after sending."
 msgstr "Dauer der Einblendung zum Wiederrufen des Sendevorgangs."
 
-#, fuzzy
 msgid "Reply Header"
-msgstr "Antwort an"
+msgstr "Antwort-Kopfzeile"
 
 msgid "{name}, {address}, {date} and {time} are filled in from the original."
 msgstr ""
+"{name}, {address}, {date} sowie {time} werden automatisch aus der "
+"ursprünglichen Nachricht eingefügt."
 
-#, fuzzy
 msgid "Line above the quoted message"
-msgstr "Über der zitierten Nachricht"
+msgstr "Trennlinie über der zitierten Nachricht"
 
-#, fuzzy
 msgid "Restore Default"
 msgstr "Standardeinstellungen wiederherstellen"
 
