@@ -53,7 +53,7 @@ pub(crate) use types::{
     CardAttachment, InviteAction, MessageViewInput, MessageViewOutput, SelectMode, TrState,
     UnsubState,
 };
-pub(crate) use webview::{new_preview_webview, shared_web_context};
+pub(crate) use webview::{keep_tab_out_of_key_translator, new_preview_webview, shared_web_context};
 
 /// Each card's detected language, with the body length it was worked out
 /// for.

@@ -192,6 +192,10 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             MailRequest::Quota => emit(WorkerEvent::Quota(None)),
             MailRequest::FindKeywords => self.on_find_keywords().await,
             MailRequest::RefreshKeywords { .. } => self.on_refresh_keywords().await,
+            // Not checked past the listing's newest page yet (#532).
+            MailRequest::RefreshFlags { .. } => {
+                emit(WorkerEvent::FlagsSynced { paths: Vec::new() })
+            }
             // Graph has no equivalent of BODYSTRUCTURE in the shape this path
             // uses: attachments come out of the raw MIME it downloads, so
             // describing one costs the same as fetching it. Listing them

@@ -3140,6 +3140,11 @@ msgstr "Γράψτε τον κώδικα HTML του μηνύματος με τ�
 msgid "No formatting at all"
 msgstr "Χωρίς καμία μορφοποίηση"
 
+msgid ""
+"Zoom of the text on screen, not of the message sent. A click here, or "
+"Ctrl+0, puts it back to 100%."
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr "Σύνταξη σε {format}"
 
@@ -5208,6 +5213,10 @@ msgstr "Προεπιλογή συστήματος"
 msgid "Account of the current folder"
 msgstr "Λογαριασμός του τρέχοντος φακέλου"
 
+#, fuzzy
+msgid "Same as reading pane zoom"
+msgstr "Στο παράθυρο ανάγνωσης."
+
 msgid "Above the quoted message"
 msgstr "Πάνω από το παρατιθέμενο μήνυμα"
 
@@ -7162,6 +7171,9 @@ msgstr ""
 msgid "For rich text, in points."
 msgstr "Για εμπλουτισμένο κείμενο, σε στιγμές (pt)."
 
+msgid "Default zoom"
+msgstr "Προεπιλεγμένη μεγέθυνση"
+
 msgid "Reply in the original's format"
 msgstr "Απάντηση με τη μορφοποίηση του αρχικού"
 
@@ -7228,9 +7240,6 @@ msgstr "Εναλλαγή φωτεινής / σκοτεινής λειτουργ�
 
 msgid "Displays in the message header for each message."
 msgstr "Εμφανίζεται στην κεφαλίδα κάθε μηνύματος."
-
-msgid "Default zoom"
-msgstr "Προεπιλεγμένη μεγέθυνση"
 
 msgid "Ctrl+0 returns to the default."
 msgstr "Το Ctrl+0 επαναφέρει την προεπιλογή."
@@ -7631,6 +7640,10 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Same as messages"
+#~ msgstr "Μηνύματα email"
 
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""

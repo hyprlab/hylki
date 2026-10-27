@@ -285,6 +285,10 @@ pub(crate) struct PrivacyFile {
     /// Their text size in points; 0 leaves it to the recipient.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub(crate) compose_font_size: u32,
+    /// The zoom a new message opens at, in percent; 0 follows the
+    /// reader's `reader_zoom` (#535).
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub(crate) compose_zoom: u32,
     /// New messages start as plain text, without formatting (#180). Kept
     /// written so a version that predates `compose_format` still opens its
     /// composer the way this one was left.
@@ -698,6 +702,7 @@ impl Default for PrivacyFile {
             toolbar_expanded: false,
             compose_font: String::new(),
             compose_font_size: 0,
+            compose_zoom: 0,
             compose_plain: false,
             compose_format: None,
             follow_plain: false,

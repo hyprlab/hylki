@@ -110,6 +110,10 @@ impl AppModel {
         toast.set_title(&o.sending_title());
         if delay > 0 {
             toast.set_button_label(Some(&i18n("Undo")));
+            toast.set_custom_title(Some(&crate::ui::toast_countdown::undo_countdown(
+                &o.sending_title(),
+                delay,
+            )));
             let s = sender.clone();
             toast.connect_button_clicked(move |_| s.input(AppMsg::UndoSend(ticket)));
             // The timer is never cancelled: Undo or Send now take the

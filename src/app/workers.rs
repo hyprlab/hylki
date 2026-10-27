@@ -85,6 +85,7 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
         },
         WorkerEvent::Quota(quota) => AppMsg::QuotaFound { account_id, quota },
         WorkerEvent::KeywordsSynced { paths } => AppMsg::KeywordsSynced { account_id, paths },
+        WorkerEvent::FlagsSynced { paths } => AppMsg::FlagsSynced { account_id, paths },
         WorkerEvent::Restored {
             folder_id,
             message_ids,
@@ -599,6 +600,9 @@ impl AppModel {
                 // learns a folder's flags when that folder syncs: have the
                 // accounts in scope re-read their keywords (#166).
                 self.sync_tag_keywords();
+                // The same for the stars and read state a Smart Folder or
+                // the Starred view lists (#532).
+                self.sync_view_flags();
             }
 
             AppMsg::SystemResumed => {

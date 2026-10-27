@@ -60,6 +60,22 @@ impl Cache {
         );
     }
 
+    /// Every cached row of a folder as `(uid, starred, unread)`, what a
+    /// flag check against the server (#532) is set against.
+    pub(crate) fn flag_states(&self, account_id: u32, folder_path: &str) -> Vec<(u32, bool, bool)> {
+        let run = || -> rusqlite::Result<Vec<(u32, bool, bool)>> {
+            let mut stmt = self.conn.prepare(
+                "SELECT uid, starred, unread FROM messages \
+                 WHERE account_id = ?1 AND folder_path = ?2",
+            )?;
+            let rows = stmt.query_map(params![account_id, folder_path], |r| {
+                Ok((r.get(0)?, r.get(1)?, r.get(2)?))
+            })?;
+            rows.collect()
+        };
+        run().unwrap_or_default()
+    }
+
     /// Whether a cached row is marked replied to and forwarded (#454).
     pub(crate) fn answer_state(
         &self,

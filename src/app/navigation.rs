@@ -160,6 +160,7 @@ impl AppModel {
         }
         if view == UnifiedView::Kind(FolderKind::Starred) {
             self.refresh_unified_starred(sender);
+            self.sync_view_flags();
         }
         if !unseen.is_empty() && self.cache.is_some() {
             read_unseen_folders(unseen, sender);

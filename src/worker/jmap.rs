@@ -218,6 +218,10 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
             MailRequest::Quota => self.on_quota().await,
             MailRequest::FindKeywords => self.on_find_keywords().await,
             MailRequest::RefreshKeywords { .. } => self.on_refresh_keywords().await,
+            // Not checked past the listing's newest page yet (#532).
+            MailRequest::RefreshFlags { .. } => {
+                emit(WorkerEvent::FlagsSynced { paths: Vec::new() })
+            }
             // Cache-only, exactly like the other paths.
             MailRequest::ScanAttachments { folder_path } => {
                 emit(WorkerEvent::AttachmentsScanned {

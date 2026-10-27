@@ -2,6 +2,54 @@
 
 ## 1.46.0-beta.3 — 2026-10-25
 
+- **Added: zoom in the rich text composer** (#535, requested by
+  j-canaan). Ctrl+, Ctrl-, Ctrl+0 and Ctrl with the scroll wheel zoom the
+  body in rich text, as they already did in the other formats. The message
+  sent is unchanged and the font size picker still names the size that is
+  sent; a chip at the start of the format bar shows the zoom while it is
+  not 100%, and a click on it goes back there. A new message opens at
+  **Settings → Composing → Default zoom**, which by default follows the
+  reader's default zoom, so text is written at the size it is read at.
+
+- **Added: a countdown line in the Undo Send toast** (#534, by Fabio
+  Rotondo). While a message waits out the Undo Send delay, a line along the
+  toast's bottom edge fills from left to right until the moment it goes.
+  The toast's line is now plain text, so a subject with `&` or `<` in it
+  shows as written.
+
+- **Added: Sign and Encrypt show when they are on.** In the composer the
+  OpenPGP shield and lock take the accent color while switched on, and
+  their tooltips end in On or Off. In the narrow window's ⋯ menu a
+  switched-on entry is shaded like a pressed button and keeps its own icon
+  instead of a tick.
+
+- **Fixed: Tab stopped going round the composer after the body.** Tab off
+  the end of the body gave the keyboard to a hidden part of the editor,
+  which then kept every Tab and Shift+Tab. Tab and Shift+Tab now come round
+  to the top of the composer again, and an inline reply no longer sends
+  them on into the main window.
+
+- **Fixed: a star or read state changed on another device stayed on older
+  mail** (#532, reported by amadeusp). A folder's sync re-read the flags of
+  its newest 50 messages only, so a star taken off older mail elsewhere
+  stayed in the folder, in Smart Folders and in Starred. Each IMAP folder
+  sync now checks the whole folder's stars and read state against the
+  server, and Refresh with a Smart Folder or Starred open checks every
+  folder the view covers, as opening one does.
+
+- **Fixed: right-to-left text in the composer, follow-up** (#524, reported
+  by bjesus). A right-to-left line written with Shift+Return in a paragraph
+  that runs the other way was sent left to right; it now goes out with its
+  own direction. On a line or paragraph running the other way from the one
+  above it, the caret was drawn at the wrong edge; it is now drawn after
+  the last word, in a draft opened again too. Starting a paragraph after the first line of a message
+  makes that line a paragraph too, so it is spaced the way the recipient
+  sees it. A message written as HTML now gets its directions the same way,
+  in the preview and when sent, where its blocks do not give one
+  themselves. In a reply or a forward the quoted message is sent as it
+  came: only what was written decides the direction, and the quote is
+  given a direction of its own only where the reply's would turn it round.
+
 - **Fixed: a pale account color left the reader's account chip hard to
   read** (#530, reported by samuel-edlmeier). The chip's text keeps the
   account color but is darkened on a light theme, or lightened on a dark
@@ -81,9 +129,8 @@
   Arabic or Persian aligned to the left. A rich text or Markdown message now
   goes out wrapped in `<div dir="rtl">` when it starts right to left, with a
   `dir` on each line that runs the other way, so it reads as it did in the
-  composer. Mail with no right-to-left text is sent exactly as before, and
-  HTML written by hand is sent as written. The Markdown preview shows the
-  same.
+  composer. Mail with no right-to-left text is sent exactly as before, and a
+  `dir` written by hand is kept. The Markdown preview shows the same.
 
 - **Translations:** French (PR #522 by frenchy82), German (PR #523 by
   Samuel Edlmeier) and Portuguese and Brazilian Portuguese (PR #526 by Paulo

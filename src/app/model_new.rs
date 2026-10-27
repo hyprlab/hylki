@@ -456,6 +456,7 @@ impl AppModel {
             smart_counts_due: false,
             smart_counts_running: false,
             keyword_sync_at: HashMap::new(),
+            flag_sync_at: HashMap::new(),
             tag_provider: crate::ui::DisplayCss::new(),
             // Demo mode gets a cache that never touches disk, seeded with the
             // sample mail: the gallery's paging, search and sort are database
@@ -510,6 +511,7 @@ impl AppModel {
             toolbar_expanded: prefs.toolbar_expanded,
             compose_font: prefs.compose_font,
             compose_font_size: prefs.compose_font_size,
+            compose_zoom: prefs.compose_zoom,
             print_options: prefs.print,
             compose_format: config::load_compose_format(),
             follow_plain: prefs.follow_plain,

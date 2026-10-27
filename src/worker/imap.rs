@@ -27,6 +27,7 @@ mod bodies;
 pub(super) mod connect;
 mod dispatch;
 pub(super) mod fetch_mode;
+mod flag_sync;
 mod folders;
 pub(super) mod gmail;
 mod handle_read;

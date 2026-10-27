@@ -62,10 +62,10 @@ impl SmartContext {
 
 /// Where a smart folder looks: per account, the folders it is held to
 /// (`None` for all) and the ones it leaves out.
-type SmartScope = Vec<(u32, Option<Vec<String>>, Vec<String>)>;
+pub(super) type SmartScope = Vec<(u32, Option<Vec<String>>, Vec<String>)>;
 
 impl AppModel {
-    fn open_smart_folder(&self) -> Option<&config::SmartFolder> {
+    pub(super) fn open_smart_folder(&self) -> Option<&config::SmartFolder> {
         let id = self.smart_view.as_ref()?;
         self.smart_folders.iter().find(|f| &f.id == id)
     }
@@ -113,7 +113,7 @@ impl AppModel {
     /// held to (`None` for all) and the ones it leaves out. One account
     /// when it names one, else every account in the unified section; one
     /// kind of folder when it names one, else all but Trash and Junk.
-    fn smart_scope(&self, f: &config::SmartFolder) -> SmartScope {
+    pub(super) fn smart_scope(&self, f: &config::SmartFolder) -> SmartScope {
         self.accounts
             .iter()
             .filter(|a| {
@@ -391,7 +391,12 @@ impl AppModel {
                 self.enter_index_view(crate::ui::sidebar::Sel::Smart(id.clone()), None, Some(id));
                 self.show_smart_view();
                 self.refresh_smart_view(&sender);
+                self.sync_view_flags();
                 self.push_index_complete();
+            }
+
+            AppMsg::FlagsSynced { account_id, paths } => {
+                self.on_flags_synced(account_id, &paths, &sender);
             }
 
             AppMsg::SmartViewLoaded { id, rows } => {

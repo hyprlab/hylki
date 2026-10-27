@@ -3088,6 +3088,11 @@ msgstr "Escrever manualmente o HTML da mensagem"
 msgid "No formatting at all"
 msgstr "Sem formatação"
 
+msgid ""
+"Zoom of the text on screen, not of the message sent. A click here, or "
+"Ctrl+0, puts it back to 100%."
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr "Escrevendo em {format}"
 
@@ -5137,6 +5142,10 @@ msgstr "Padrão do sistema"
 msgid "Account of the current folder"
 msgstr "Conta da pasta atual"
 
+#, fuzzy
+msgid "Same as reading pane zoom"
+msgstr "No painel de leitura."
+
 msgid "Above the quoted message"
 msgstr "Acima da mensagem citada"
 
@@ -7056,6 +7065,9 @@ msgstr "Para texto formatado. A opção Padrão usa a fonte do destinatário."
 msgid "For rich text, in points."
 msgstr "Para texto formatado, em pontos."
 
+msgid "Default zoom"
+msgstr "Zoom padrão"
+
 msgid "Reply in the original's format"
 msgstr "Responder no formato original"
 
@@ -7123,9 +7135,6 @@ msgstr "Botão de modo claro / escuro"
 
 msgid "Displays in the message header for each message."
 msgstr "Mostrado no cabeçalho de cada mensagem."
-
-msgid "Default zoom"
-msgstr "Zoom padrão"
 
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 restaura o padrão."
@@ -7514,3 +7523,7 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Same as messages"
+#~ msgstr "Mensagens de email"

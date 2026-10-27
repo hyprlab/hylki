@@ -3174,6 +3174,11 @@ msgstr "Scrivi l'HTML del messaggio a mano"
 msgid "No formatting at all"
 msgstr "Nessuna formattazione"
 
+msgid ""
+"Zoom of the text on screen, not of the message sent. A click here, or "
+"Ctrl+0, puts it back to 100%."
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr "Scrittura in {format}"
 
@@ -5310,6 +5315,10 @@ msgstr "Predefinito di sistema"
 msgid "Account of the current folder"
 msgstr "Account della cartella corrente"
 
+#, fuzzy
+msgid "Same as reading pane zoom"
+msgstr "Comprimi la barra degli strumenti del pannello di lettura"
+
 msgid "Above the quoted message"
 msgstr "Sopra il messaggio citato"
 
@@ -7264,6 +7273,9 @@ msgstr ""
 msgid "For rich text, in points."
 msgstr ""
 
+msgid "Default zoom"
+msgstr "Zoom predefinito"
+
 #, fuzzy
 msgid "Reply in the original's format"
 msgstr "Rispondi con i file"
@@ -7335,9 +7347,6 @@ msgstr "Interruttore Modalità chiara / scura"
 #, fuzzy
 msgid "Displays in the message header for each message."
 msgstr "Apre il messaggio con un inoltro avviato."
-
-msgid "Default zoom"
-msgstr "Zoom predefinito"
 
 msgid "Ctrl+0 returns to the default."
 msgstr ""
@@ -7735,6 +7744,10 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Same as messages"
+#~ msgstr "Messaggi e-mail"
 
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""

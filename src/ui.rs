@@ -47,6 +47,7 @@ pub(crate) mod showcase;
 pub(crate) mod sidebar;
 mod theme_picker;
 pub(crate) mod thumbnails;
+pub(crate) mod toast_countdown;
 mod tool_flow;
 mod translation_page;
 mod web_signin;

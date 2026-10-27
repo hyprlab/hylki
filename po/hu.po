@@ -3225,6 +3225,11 @@ msgstr "Üzenet HTML-jének szerkesztése kézzel"
 msgid "No formatting at all"
 msgstr "Egyáltalán nincs formázás"
 
+msgid ""
+"Zoom of the text on screen, not of the message sent. A click here, or "
+"Ctrl+0, puts it back to 100%."
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr "{format} formátumben írás"
 
@@ -5360,6 +5365,10 @@ msgstr "Rendszer alapértelmezés"
 msgid "Account of the current folder"
 msgstr "A jelenlegi mappa fiókja"
 
+#, fuzzy
+msgid "Same as reading pane zoom"
+msgstr "Az olvasópanel eszköztárának összecsukása"
+
 msgid "Above the quoted message"
 msgstr "Az idézett üzenet felett"
 
@@ -7351,6 +7360,9 @@ msgstr ""
 msgid "For rich text, in points."
 msgstr ""
 
+msgid "Default zoom"
+msgstr "Alapértelmezett nagyítás"
+
 #, fuzzy
 msgid "Reply in the original's format"
 msgstr "Válasz ezekkel a fájlokkal"
@@ -7423,9 +7435,6 @@ msgstr ""
 #, fuzzy
 msgid "Displays in the message header for each message."
 msgstr "Megnyitja az üzenetet, amelyben már megkezdődött az átirányítás."
-
-msgid "Default zoom"
-msgstr "Alapértelmezett nagyítás"
 
 msgid "Ctrl+0 returns to the default."
 msgstr ""
@@ -7829,6 +7838,10 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Same as messages"
+#~ msgstr "{n} db üzenet"
 
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""

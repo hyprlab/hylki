@@ -496,8 +496,9 @@ impl Compose {
         // The direction of each line (#524) is written in only here, on
         // the way out: a draft goes back into the editor, which finds it
         // itself, and a `dir` kept there would outlast a line rewritten in
-        // another language. Hand-written HTML goes as it was written.
-        if matches!(self.format, ComposeFormat::Rich | ComposeFormat::Markdown) {
+        // another language, or be copied onto each paragraph split from
+        // it. HTML written by hand keeps every `dir` it gives.
+        if self.format != ComposeFormat::Plain {
             out.html = crate::mail::direction::stamp(&out.html);
         }
         // A draft goes once it is sent; a template stays to be used

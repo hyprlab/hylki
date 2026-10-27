@@ -33,6 +33,13 @@ pub(super) const HISTORY_SCRIPT: &str =
 /// mode) keeps its own caret, and the chooser points at the field.
 pub(super) const EMOJI_SCRIPT: &str = concat!("<script>", include_str!("emoji.js"), "</script>");
 
+/// How the body follows the direction of each paragraph and line (#366,
+/// #524): `dir="auto"` on its blocks, and a line of a plain `<div>` or `<p>`
+/// kept as a block of its own while the message is written, joined back to
+/// a `<br>` line in what the document hands back. Its helpers reach
+/// [`PASTE_SCRIPT`] through `__hylkiLines`, so it goes in first.
+pub(super) const LINES_SCRIPT: &str = concat!("<script>", include_str!("lines.js"), "</script>");
+
 /// The paste choke point: every paste — shortcut, context menu, editing
 /// command — raises a DOM `paste` event here, where the clipboard's flavours
 /// can be inspected. `__hylkiPasteRich` is the standing mode (the user's

@@ -485,11 +485,10 @@ impl AppModel {
             AppMsg::ZoomKey(step) => {
                 // The keys are the application's, so they reach the main
                 // window before the composer in it could take them.
-                let compose = self.reader_compose.as_ref().filter(|r| {
-                    r.window.is_none()
-                        && focus_in_compose(&self.window)
-                        && r.controller.model().zooms()
-                });
+                let compose = self
+                    .reader_compose
+                    .as_ref()
+                    .filter(|r| r.window.is_none() && focus_in_compose(&self.window));
                 match compose {
                     Some(r) => r.controller.emit(ComposeInput::Zoom(step)),
                     None => sender.input(AppMsg::ZoomMessage(step)),

@@ -19,6 +19,13 @@ pub(super) const COMPOSE_MIN_WIDTH: i32 = 360;
 /// Fallback fold threshold when the toolbar could not be measured at init.
 const COMPOSE_ACTIONS_BREAKPOINT: f64 = 620.0;
 
+/// An OpenPGP switch's tooltip, header button and menu row alike: what it
+/// does, then whether it is on, which the icon alone says only to someone
+/// who knows what its color means.
+pub(super) fn pgp_tooltip(action: &str, on: bool) -> String {
+    format!("{action}\n{}", if on { i18n("On") } else { i18n("Off") })
+}
+
 /// The width a header bar's rows need side by side: the natural widths of
 /// its centre box's children (start row, title, end row) summed — what the
 /// bar itself reports doubles the wider side to keep the title centred.
@@ -269,14 +276,14 @@ impl Compose {
         // toggled handlers keep the model and the buttons agreeing.
         let mut pgp = Vec::new();
         if crate::mail::pgp::available() {
-            let check =
-                |on: bool, icon: &str| if on { "verified-checkmark" } else { icon }.to_string();
             let sign = widgets.sign_btn.clone();
             pgp.push(
                 MenuEntry::new(i18n("Sign with your OpenPGP key"), move || {
                     sign.set_active(!sign.is_active())
                 })
-                .icon(format!("{}-symbolic", check(self.sign, "security-high"))),
+                .icon("security-high-symbolic")
+                .checked(self.sign)
+                .tooltip(pgp_tooltip(&i18n("Sign with your OpenPGP key"), self.sign)),
             );
             let encrypt = widgets.encrypt_btn.clone();
             pgp.push(
@@ -284,9 +291,11 @@ impl Compose {
                     i18n("Encrypt with OpenPGP to every recipient's key"),
                     move || encrypt.set_active(!encrypt.is_active()),
                 )
-                .icon(format!(
-                    "{}-symbolic",
-                    check(self.encrypt, "channel-secure")
+                .icon("channel-secure-symbolic")
+                .checked(self.encrypt)
+                .tooltip(pgp_tooltip(
+                    &i18n("Encrypt with OpenPGP to every recipient's key"),
+                    self.encrypt,
                 )),
             );
         }

@@ -120,6 +120,10 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
             MailRequest::RefreshKeywords { .. } => {
                 emit(WorkerEvent::KeywordsSynced { paths: Vec::new() })
             }
+            // Every sync lists the whole inbox, flags and all.
+            MailRequest::RefreshFlags { .. } => {
+                emit(WorkerEvent::FlagsSynced { paths: Vec::new() })
+            }
             // POP3 keeps everything in the inbox, so a conversation never spans
             // folders and the reader already has all of it.
             MailRequest::LoadRelated { message_id, .. } => {

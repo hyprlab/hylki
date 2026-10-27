@@ -3115,6 +3115,11 @@ msgstr "HTML der Nachricht von Hand schreiben"
 msgid "No formatting at all"
 msgstr "Ganz ohne Formatierung"
 
+msgid ""
+"Zoom of the text on screen, not of the message sent. A click here, or "
+"Ctrl+0, puts it back to 100%."
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr "Schreiben in: {format}"
 
@@ -5182,6 +5187,10 @@ msgstr "Systemstandard"
 msgid "Account of the current folder"
 msgstr "Konto des aktuellen Ordners"
 
+#, fuzzy
+msgid "Same as reading pane zoom"
+msgstr "Im Lesebereich"
+
 msgid "Above the quoted message"
 msgstr "Über der zitierten Nachricht"
 
@@ -7136,6 +7145,9 @@ msgstr ""
 msgid "For rich text, in points."
 msgstr "Für formatierten Text (in Pt)."
 
+msgid "Default zoom"
+msgstr "Standard-Zoom"
+
 msgid "Reply in the original's format"
 msgstr "Im ursprünglichen Format antworten"
 
@@ -7205,9 +7217,6 @@ msgstr "Hell-/Dunkelmodus-Umschalter"
 
 msgid "Displays in the message header for each message."
 msgstr "Anzeige in der Kopfzeile jeder Nachricht."
-
-msgid "Default zoom"
-msgstr "Standard-Zoom"
 
 msgid "Ctrl+0 returns to the default."
 msgstr "Strg+0 setzt auf den Standardwert zurück."
@@ -7612,6 +7621,10 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Same as messages"
+#~ msgstr "E-Mails"
 
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr "Im Posteingang belassen und nur passende Nachrichten markieren"

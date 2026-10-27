@@ -114,10 +114,9 @@ pub(crate) struct Compose {
     /// formatting toolbar and sends no HTML part (#180); Markdown and HTML
     /// are written as source and converted on the way out.
     pub(super) format: ComposeFormat,
-    /// Whether the body zooms (Ctrl+ / Ctrl- / Ctrl+0, Ctrl + the scroll
-    /// wheel): every format but rich text. Shared with the key and scroll
-    /// handlers, which have no model to ask.
-    pub(super) zoomable: std::rc::Rc<std::cell::Cell<bool>>,
+    /// The body's zoom, shown at the start of the format bar while it is
+    /// not 100%; see [`super::format::zoom_chip`].
+    pub(super) zoom_chip: gtk::Label,
     /// The format chooser and preview toggle, which live at the end of the
     /// editor's formatting row rather than in the header.
     pub(super) format_btn: gtk::Button,

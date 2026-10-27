@@ -78,6 +78,14 @@ impl AppModel {
                 pref!(self.compose_font_size = pt);
             }
 
+            PrefOutput::SetComposeZoom(zoom) => {
+                if pref!(self.compose_zoom = zoom) {
+                    // The next composer opens at the new default, not at
+                    // the size the last one was left at.
+                    crate::ui::compose::forget_zoom();
+                }
+            }
+
             PrefOutput::SetPrintOptions(options) => {
                 if pref!(self.print_options = options) {
                     crate::ui::print_preview::set_options(options);

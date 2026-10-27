@@ -531,6 +531,24 @@ flowbox.attach-flow > flowboxchild {
   color: @accent_color;
 }
 
+/* A switch the menu shows as on (Sign, Encrypt): the grey of a toggled flat
+   header button, stated here because libadwaita's own rule may not reach a
+   button inside a menu popover. */
+.context-menu-item:checked {
+  background-color: alpha(currentColor, 0.1);
+}
+.context-menu-item:checked:hover {
+  background-color: alpha(currentColor, 0.13);
+}
+/* On, the shield and the lock take the accent color (the desktop's under
+   the stock look, the palette's under a Hylki theme), in the menu and in
+   the header, so a message about to go out signed or encrypted is plain to
+   see. */
+.context-menu-item:checked image,
+.pgp-toggle:checked image {
+  color: @accent_color;
+}
+
 /* Popout-window attachment popover rows. */
 .attach-row {
   padding: 4px 6px;
@@ -2512,4 +2530,9 @@ textview.console-view text selection {
 .sort-filter-column > button {
   margin-top: 6px;
   font-weight: normal;
+}
+
+/* Undo Send countdown (#534): the line along the toast's bottom edge. */
+toast-countdown {
+  color: @accent_bg_color;
 }

@@ -218,7 +218,6 @@ pub(crate) enum ComposeInput {
         redo: bool,
     },
     /// Zoom the body one step in (1) or out (-1), or back to 100% (0).
-    /// Nothing in rich text.
     Zoom(i8),
     /// The body's text history changed: WebKit gained or lost a step. The
     /// flag is whether it now has anything to take back.

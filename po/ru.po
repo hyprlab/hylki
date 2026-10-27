@@ -3242,6 +3242,11 @@ msgstr "Создавать HTML-код сообщения вручную"
 msgid "No formatting at all"
 msgstr "Без форматирования"
 
+msgid ""
+"Zoom of the text on screen, not of the message sent. A click here, or "
+"Ctrl+0, puts it back to 100%."
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr "Формат письма: {format}"
 
@@ -5368,6 +5373,10 @@ msgstr "Системное по умолчанию"
 msgid "Account of the current folder"
 msgstr "Учётная запись текущей папки"
 
+#, fuzzy
+msgid "Same as reading pane zoom"
+msgstr "Сворачивать панель инструментов области чтения"
+
 msgid "Above the quoted message"
 msgstr "Над цитируемым сообщением"
 
@@ -7330,6 +7339,9 @@ msgstr ""
 msgid "For rich text, in points."
 msgstr ""
 
+msgid "Default zoom"
+msgstr "Масштаб по умолчанию"
+
 #, fuzzy
 msgid "Reply in the original's format"
 msgstr "Ответить с прикреплением файлов"
@@ -7401,9 +7413,6 @@ msgstr ""
 #, fuzzy
 msgid "Displays in the message header for each message."
 msgstr "Открывает сообщение с готовым черновиком пересылки."
-
-msgid "Default zoom"
-msgstr "Масштаб по умолчанию"
 
 msgid "Ctrl+0 returns to the default."
 msgstr ""
@@ -7801,6 +7810,10 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Same as messages"
+#~ msgstr "{n} сообщений"
 
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""

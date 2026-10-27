@@ -45,6 +45,28 @@ pub(crate) fn shared_web_context() -> webkit6::WebContext {
     WEB_CONTEXT.with(|c| c.clone())
 }
 
+/// Keep Tab and Shift+Tab moving through the window after they leave a
+/// page. WebKitGTK parents a hidden GtkTextView inside every view for its
+/// key-binding translator, and it can take focus: when Tab ran off the
+/// end of the document, GTK's focus chain went into the view and gave
+/// that text view the keyboard, which then kept every Tab for itself.
+/// The translator forwards keys to it directly, so it never needs focus.
+pub(crate) fn keep_tab_out_of_key_translator(webview: &webkit6::WebView) {
+    fn unfocusable(view: &gtk::Widget) {
+        let mut child = view.first_child();
+        while let Some(c) = child {
+            if c.is::<gtk::TextView>() {
+                c.set_can_focus(false);
+                c.set_focusable(false);
+            }
+            child = c.next_sibling();
+        }
+    }
+    unfocusable(webview.upcast_ref());
+    // In case a WebKit release builds the translator later.
+    webview.connect_realize(|v| unfocusable(v.upcast_ref()));
+}
+
 pub(super) fn new_webview() -> webkit6::WebView {
     build_webview("message view")
 }
@@ -61,6 +83,7 @@ fn build_webview(role: &'static str) -> webkit6::WebView {
         .user_content_manager(&ucm)
         .build();
     crate::desktop::memory_report::register_web_view(&webview, role);
+    keep_tab_out_of_key_translator(&webview);
 
     let settings = webkit6::Settings::new();
     // JavaScript runs only in our own (trusted) wrapper document — it sizes each

@@ -118,6 +118,7 @@ mod unified;
 mod unified_starred;
 mod unsubscribe;
 mod uri_queue;
+mod view_flags;
 mod window;
 mod workers;
 

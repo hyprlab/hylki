@@ -100,6 +100,8 @@ pub(crate) struct PrefInit {
     /// and its size in points; empty and 0 are the defaults.
     pub(crate) compose_font: String,
     pub(crate) compose_font_size: u32,
+    /// Settings → Composing → Default zoom; 0 = the reader's.
+    pub(crate) compose_zoom: u32,
     /// Settings → Reading → Printing (#359).
     pub(crate) print_options: crate::config::PrintOptions,
     pub(crate) spellcheck: bool,
@@ -455,6 +457,7 @@ pub(crate) enum PrefOutput {
     SetToolbarExpanded(bool),
     SetComposeFont(String),
     SetComposeFontSize(u32),
+    SetComposeZoom(u32),
     SetSpellcheck(bool),
     SetSpellcheckLangs(String),
     SetFetchInterval(u64),

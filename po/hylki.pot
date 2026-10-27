@@ -2864,6 +2864,11 @@ msgstr ""
 msgid "No formatting at all"
 msgstr ""
 
+msgid ""
+"Zoom of the text on screen, not of the message sent. A click here, or "
+"Ctrl+0, puts it back to 100%."
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr ""
 
@@ -4773,6 +4778,9 @@ msgstr ""
 msgid "Account of the current folder"
 msgstr ""
 
+msgid "Same as reading pane zoom"
+msgstr ""
+
 msgid "Above the quoted message"
 msgstr ""
 
@@ -6559,6 +6567,9 @@ msgstr ""
 msgid "For rich text, in points."
 msgstr ""
 
+msgid "Default zoom"
+msgstr ""
+
 msgid "Reply in the original's format"
 msgstr ""
 
@@ -6620,9 +6631,6 @@ msgid "Light / Dark Mode switch"
 msgstr ""
 
 msgid "Displays in the message header for each message."
-msgstr ""
-
-msgid "Default zoom"
 msgstr ""
 
 msgid "Ctrl+0 returns to the default."

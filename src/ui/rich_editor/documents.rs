@@ -4,7 +4,7 @@
 use super::exec;
 use super::fonts::EDITOR_FONT;
 use super::fonts::{body_font, font_style};
-use super::scripts::{EMOJI_SCRIPT, HISTORY_SCRIPT, PASTE_SCRIPT};
+use super::scripts::{EMOJI_SCRIPT, HISTORY_SCRIPT, LINES_SCRIPT, PASTE_SCRIPT};
 use super::signature::{find_src_attr, quoted_value};
 use super::toolbar::js_str;
 
@@ -36,7 +36,7 @@ pub(super) fn document(
         "<script>window.__hylkiPasteRich={paste_rich};\
          window.__hylkiComposeFont={compose_font};\
          window.__hylkiReturnParagraph={return_paragraph};\
-         window.__hylkiPlain={plain};</script>{PASTE_SCRIPT}{HISTORY_SCRIPT}{EMOJI_SCRIPT}"
+         window.__hylkiPlain={plain};</script>{LINES_SCRIPT}{PASTE_SCRIPT}{HISTORY_SCRIPT}{EMOJI_SCRIPT}"
     );
     let (plain_attr, plain_css) = if plain {
         let mono = monospace_family();
@@ -82,6 +82,10 @@ pub(super) fn document(
            /* A paragraph's space goes below it, so the first line of the\
               message sits where it would in a <div>. */\
            body>p:first-child{{margin-top:0;}}\
+           /* The lines of one paragraph, each a <p> while it is written\
+              (#524), sit together as the lines of one. */\
+           body>p[data-hylki-line]{{margin-top:0;}}\
+           body>p:has(+p[data-hylki-line]){{margin-bottom:0;}}\
            .hylki-quote-attr{{opacity:0.7;margin:10px 0 4px;}}\
            /* A quoted message that sets its own colors, on the light\
               ground it was designed for. */\

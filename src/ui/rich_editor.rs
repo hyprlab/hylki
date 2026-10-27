@@ -253,6 +253,7 @@ impl RichEditor {
                     .settings(&settings)
                     .build();
                 crate::desktop::memory_report::register_web_view(&v, "editor preview");
+                super::message_view::keep_tab_out_of_key_translator(&v);
                 v.set_zoom_level(self.zoom.get());
                 v.set_background_color(&gtk::gdk::RGBA::new(0.0, 0.0, 0.0, 0.0));
                 self.stack.add_named(&v, Some("preview"));
@@ -597,7 +598,7 @@ mod body_tests {
 #[cfg(test)]
 mod pinned_tests {
     //! Characterization tests (restructure, area D).
-    use super::scripts::{EMOJI_SCRIPT, HISTORY_SCRIPT, PASTE_SCRIPT};
+    use super::scripts::{EMOJI_SCRIPT, HISTORY_SCRIPT, LINES_SCRIPT, PASTE_SCRIPT};
     use super::signature::{find_src_attr, quoted_value};
     use super::*;
 
@@ -616,7 +617,8 @@ mod pinned_tests {
     fn embedded_scripts_are_unchanged() {
         assert_eq!(fnv(HISTORY_SCRIPT), (1287, 0x8e997368982bb599));
         assert_eq!(fnv(EMOJI_SCRIPT), (1621, 0x748b009b19f3f0ec));
-        assert_eq!(fnv(PASTE_SCRIPT), (37862, 0x6fa3db610728331e));
+        assert_eq!(fnv(LINES_SCRIPT), (5153, 0xb927290405c83fda));
+        assert_eq!(fnv(PASTE_SCRIPT), (40069, 0x7bd83b8987ac108a));
     }
 
     #[test]

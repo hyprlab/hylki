@@ -222,11 +222,14 @@ The zoom stays as set from message to message until Hylki is next started,
 which begins at the default from **Settings → Reading → Default zoom**.
 
 The same keys, and <kbd>Ctrl</kbd> with the scroll wheel over the body, zoom
-the composer's text while it is written in Markdown, HTML source or plain
-text; <kbd>Ctrl+0</kbd> puts it back to 100%. Only the screen changes, not
-the message that is sent, and the next composer opens at the same size until
-Hylki is next started. Rich text does not zoom, because there the size on
-screen is the size that is sent; the keys go on to the message instead.
+the composer's text in every format; <kbd>Ctrl+0</kbd> puts it back to 100%.
+Only the screen changes, not the message that is sent: the font sizes in
+rich text keep their values, and a chip at the start of the format bar shows
+the percentage while it is not 100%. A click on the chip goes back to 100%.
+The first composer opens at **Settings → Composing → Default zoom**, which
+by default is the same as **Settings → Reading → Default zoom**, so text is
+written at the size it is read at. The next one opens at the size the last
+was left at until Hylki is next started or the setting is changed.
 
 Keys never fire while you are typing: whatever has focus gets first refusal, so
 "archive" typed into the search box searches for it.

@@ -3269,6 +3269,11 @@ msgstr "Ręczne pisanie kodu HTML wiadomości"
 msgid "No formatting at all"
 msgstr "Bez żadnego formatowania"
 
+msgid ""
+"Zoom of the text on screen, not of the message sent. A click here, or "
+"Ctrl+0, puts it back to 100%."
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr "Tryb pisania: {format}"
 
@@ -5426,6 +5431,10 @@ msgstr "Domyślna systemowa"
 msgid "Account of the current folder"
 msgstr "Konto bieżącego katalogu"
 
+#, fuzzy
+msgid "Same as reading pane zoom"
+msgstr "Zwijanie paska narzędzi panelu czytania"
+
 msgid "Above the quoted message"
 msgstr "Nad cytowaną wiadomością"
 
@@ -7412,6 +7421,9 @@ msgstr ""
 msgid "For rich text, in points."
 msgstr ""
 
+msgid "Default zoom"
+msgstr "Domyślne powiększenie"
+
 #, fuzzy
 msgid "Reply in the original's format"
 msgstr "Odpowiedz z plikami"
@@ -7484,9 +7496,6 @@ msgstr ""
 #, fuzzy
 msgid "Displays in the message header for each message."
 msgstr "Otwiera wiadomość z rozpoczętym przekazywaniem dalej."
-
-msgid "Default zoom"
-msgstr "Domyślne powiększenie"
 
 msgid "Ctrl+0 returns to the default."
 msgstr ""
@@ -7887,6 +7896,10 @@ msgstr "Zbiorcza skrzynka odbiorcza w jasnym motywie"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Same as messages"
+#~ msgstr "wiadomości: {n}"
 
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""

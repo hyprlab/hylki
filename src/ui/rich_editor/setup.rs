@@ -156,6 +156,7 @@ fn editor_view() -> (webkit6::WebView, webkit6::UserContentManager) {
         .user_content_manager(&ucm)
         .build();
     crate::desktop::memory_report::register_web_view(&webview, "editor");
+    crate::ui::message_view::keep_tab_out_of_key_translator(&webview);
     // Everything the view itself owns (its content manager's handlers,
     // its event controllers, its toolbar's buttons via the format-state
     // handler) holds the view WEAKLY. A strong clone in any of those

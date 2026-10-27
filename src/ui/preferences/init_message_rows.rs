@@ -354,6 +354,33 @@ impl Preferences {
                 let _ = sender.output(PrefOutput::SetComposeFontSize(pt));
             });
         }
+        {
+            // "Same as reading pane zoom" first: 0, the reader's default zoom.
+            let row = &widgets.composing.compose_zoom_row;
+            let steps = crate::config::READER_ZOOM_STEPS;
+            let names: Vec<String> = std::iter::once(i18n("Same as reading pane zoom"))
+                .chain(steps.iter().map(|z| format!("{z}%")))
+                .collect();
+            row.set_model(Some(&gtk::StringList::new(
+                &names.iter().map(String::as_str).collect::<Vec<_>>(),
+            )));
+            no_truncate(row);
+            let at = steps
+                .iter()
+                .position(|z| *z == init.compose_zoom)
+                .map_or(0, |i| i + 1);
+            row.set_selected(at as u32);
+            let sender = sender.clone();
+            row.connect_selected_notify(move |row| {
+                let zoom = row
+                    .selected()
+                    .checked_sub(1)
+                    .and_then(|i| steps.get(i as usize))
+                    .copied()
+                    .unwrap_or(0);
+                let _ = sender.output(PrefOutput::SetComposeZoom(zoom));
+            });
+        }
         widgets
             .composing
             .follow_plain_row

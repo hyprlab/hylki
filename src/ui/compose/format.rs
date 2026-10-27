@@ -55,10 +55,54 @@ fn format_hint(format: ComposeFormat) -> String {
     }
 }
 
-/// The zoom of the body in Markdown, HTML and plain text, in percent: the
-/// session's, so the next composer opens at the size the last one was left
-/// at. Rich text stays at 100, where what is on screen is what is sent.
-pub(super) static ZOOM: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(100);
+/// The zoom of the body, in percent: the session's, so the next composer
+/// opens at the size the last one was left at. 0 until the first change,
+/// which reads as Settings → Composing → Default zoom, itself the reader's
+/// unless set: a message written at one size and read at another looked
+/// shrunk in the writing (#535).
+static ZOOM: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+
+/// The body's zoom now; see [`ZOOM`].
+pub(super) fn session_zoom() -> u32 {
+    match ZOOM.load(std::sync::atomic::Ordering::Relaxed) {
+        0 => crate::config::load_compose_zoom(),
+        z => z,
+    }
+}
+
+/// Back to the default from Settings for the next composer.
+pub(crate) fn forget_zoom() {
+    ZOOM.store(0, std::sync::atomic::Ordering::Relaxed);
+}
+
+/// The body's zoom as a chip at the start of the format bar, shown only
+/// away from 100%: in rich text the size picker names the size that is
+/// sent, and the chip is what says the text on screen is not at it. A
+/// click goes back to 100%, as Ctrl+0 does.
+pub(super) fn zoom_chip(sender: &ComponentSender<Compose>) -> gtk::Label {
+    let chip = gtk::Label::new(None);
+    chip.set_valign(gtk::Align::Center);
+    chip.add_css_class("caption");
+    chip.add_css_class("hylki-zoom-chip");
+    chip.set_cursor_from_name(Some("pointer"));
+    chip.set_tooltip_text(Some(
+        i18n("Zoom of the text on screen, not of the message sent. A click here, or Ctrl+0, puts it back to 100%.")
+            .as_str(),
+    ));
+    let click = gtk::GestureClick::new();
+    let s = sender.input_sender().clone();
+    click.connect_released(move |_, _, _, _| {
+        let _ = s.send(ComposeInput::Zoom(0));
+    });
+    chip.add_controller(click);
+    show_zoom(&chip, session_zoom());
+    chip
+}
+
+pub(super) fn show_zoom(chip: &gtk::Label, zoom: u32) {
+    chip.set_label(&format!("{zoom}%"));
+    chip.set_visible(zoom != 100);
+}
 
 /// What HYLKI_SHOWCASE_PLAIN_LOG reports about the body (demo only).
 pub(super) const SHOWCASE_PLAIN_LOG: &str = r#"JSON.stringify({plain:!!window.__hylkiPlain,
@@ -68,11 +112,6 @@ html:document.body?document.body.innerHTML:document.documentElement.outerHTML.sl
 text:window.__hylkiBodyText?window.__hylkiBodyText():''})"#;
 
 impl Compose {
-    /// Whether the body zooms in its present format; see [`ComposeInput::Zoom`].
-    pub(crate) fn zooms(&self) -> bool {
-        self.zoomable.get()
-    }
-
     /// The format chooser's icon and tooltip for the format it is currently
     /// set to, and whether the preview toggle can afford its label.
     pub(super) fn dress_format_buttons(&self) {
@@ -115,11 +154,8 @@ impl Compose {
 
     /// Handles [`ComposeInput::Zoom`].
     pub(super) fn on_zoom(&mut self, step: i8) {
-        if !self.zoomable.get() {
-            return;
-        }
         use crate::config::READER_ZOOM_STEPS as STEPS;
-        let now = ZOOM.load(std::sync::atomic::Ordering::Relaxed);
+        let now = session_zoom();
         let at = STEPS.iter().position(|&z| z == now).unwrap_or(5) as i32;
         let zoom = match step {
             0 => 100,
@@ -127,6 +163,7 @@ impl Compose {
         };
         ZOOM.store(zoom, std::sync::atomic::Ordering::Relaxed);
         self.editor.set_zoom(zoom);
+        show_zoom(&self.zoom_chip, zoom);
     }
 
     /// Handles [`ComposeInput::FormatMenu`].
@@ -213,12 +250,6 @@ impl Compose {
         self.format = to;
         self.editor
             .set_formatting_visible(to == ComposeFormat::Rich);
-        self.zoomable.set(to != ComposeFormat::Rich);
-        self.editor.set_zoom(if self.zoomable.get() {
-            ZOOM.load(std::sync::atomic::Ordering::Relaxed)
-        } else {
-            100
-        });
         if let Some(zones) = &self.drop_zones {
             zones.set_allow_inline(to == ComposeFormat::Rich);
         }

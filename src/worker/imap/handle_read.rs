@@ -11,6 +11,7 @@ use crate::models::{KeywordFinding, Message, SenderCheck};
 use crate::worker::imap::backfill::Backfill;
 use crate::worker::imap::bodies::settle_missing_bodies;
 use crate::worker::imap::connect::connect;
+use crate::worker::imap::flag_sync::refresh_flags;
 use crate::worker::imap::folders::{cached_folder_kind, imap_storage_quota, list_folders};
 use crate::worker::imap::keywords::refresh_keywords;
 use crate::worker::imap::prefetch::{
@@ -628,6 +629,19 @@ impl<E: Emit> ImapWorker<E> {
         let sess = ensured(session);
         let paths = refresh_keywords(account_id, sess, cache.as_ref(), &keywords).await;
         emit(WorkerEvent::KeywordsSynced { paths });
+        After::Done
+    }
+
+    /// Bring the cached stars and read state of `paths` in step with the
+    /// server (#532).
+    pub(super) async fn on_refresh_flags(&mut self, paths: Vec<String>) -> After {
+        let account_id = self.account_id;
+        let cache = &self.cache;
+        let session = &mut self.session;
+        let emit = &self.emit;
+        let sess = ensured(session);
+        let paths = refresh_flags(account_id, sess, cache.as_ref(), &paths).await;
+        emit(WorkerEvent::FlagsSynced { paths });
         After::Done
     }
 }

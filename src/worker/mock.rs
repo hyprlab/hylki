@@ -269,6 +269,7 @@ pub(super) async fn run_mock(
             | MailRequest::DeleteOutbox { .. }
             | MailRequest::RefreshUnread
             | MailRequest::RefreshKeywords { .. }
+            | MailRequest::RefreshFlags { .. }
             | MailRequest::Reconnect => {}
             // The demo's folders are fixed, but an emptied one reads as empty.
             MailRequest::EmptyFolder { folder_id, .. } => {

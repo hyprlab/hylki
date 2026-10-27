@@ -153,6 +153,7 @@ impl AppModel {
             toolbar_expanded: self.toolbar_expanded,
             compose_font: self.compose_font.clone(),
             compose_font_size: self.compose_font_size,
+            compose_zoom: self.compose_zoom,
             print_options: self.print_options,
             spellcheck: self.spellcheck,
             spellcheck_langs: self.spellcheck_langs.clone(),

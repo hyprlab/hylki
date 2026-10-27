@@ -23,6 +23,7 @@ pub(in crate::ui::preferences) struct ComposingPage {
     pub(in crate::ui::preferences) compose_format_row: adw::ComboRow,
     pub(in crate::ui::preferences) compose_font_row: adw::ComboRow,
     pub(in crate::ui::preferences) compose_size_row: adw::ComboRow,
+    pub(in crate::ui::preferences) compose_zoom_row: adw::ComboRow,
     pub(in crate::ui::preferences) follow_plain_row: adw::SwitchRow,
     pub(in crate::ui::preferences) signature_position_row: adw::ComboRow,
     pub(in crate::ui::preferences) signature_dashes_row: adw::SwitchRow,
@@ -131,6 +132,11 @@ impl ComposingPage {
                     adw::ComboRow {
                         set_title: &i18n("Font size"),
                         set_subtitle: &i18n("For rich text, in points."),
+                    },
+
+                    #[name = "compose_zoom_row"]
+                    adw::ComboRow {
+                        set_title: &i18n("Default zoom"),
                     },
 
                     #[name = "follow_plain_row"]
@@ -243,6 +249,7 @@ impl ComposingPage {
             compose_format_row,
             compose_font_row,
             compose_size_row,
+            compose_zoom_row,
             follow_plain_row,
             signature_position_row,
             signature_dashes_row,

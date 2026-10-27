@@ -32,6 +32,11 @@ pub(crate) struct MenuEntry {
     /// tick. A tick costs the icon that says what the entry *is*, which is
     /// the part worth keeping in a list of alternatives.
     selected: bool,
+    /// A switch that is on: the row gets the grey of a pressed toggle
+    /// button, so it reads like the header button it stands in for.
+    checked: bool,
+    /// Shown on hover in place of the label (a switch's state, say).
+    tooltip: Option<String>,
     /// The keys that do the same, shown dim at the end of the row (#497).
     accel: Option<String>,
     activate: Box<dyn Fn()>,
@@ -47,6 +52,8 @@ impl MenuEntry {
             swatch: None,
             enabled: true,
             selected: false,
+            checked: false,
+            tooltip: None,
             accel: None,
             activate: Box::new(activate),
             submenu: None,
@@ -63,6 +70,8 @@ impl MenuEntry {
             swatch: None,
             enabled: !empty,
             selected: false,
+            checked: false,
+            tooltip: None,
             accel: None,
             activate: Box::new(|| {}),
             submenu: Some(sections),
@@ -102,6 +111,18 @@ impl MenuEntry {
             Some(accel) => self.accel(accel),
             None => self,
         }
+    }
+
+    /// Mark this entry as a switch that is on.
+    pub(crate) fn checked(mut self, checked: bool) -> Self {
+        self.checked = checked;
+        self
+    }
+
+    /// Text shown on hover, in place of the cut-short label's.
+    pub(crate) fn tooltip(mut self, text: impl Into<String>) -> Self {
+        self.tooltip = Some(text.into());
+        self
     }
 
     /// Mark this entry as the one the menu is set to.
@@ -407,6 +428,8 @@ fn build_page(
                 swatch,
                 enabled,
                 selected,
+                checked,
+                tooltip,
                 accel,
                 activate,
                 submenu,
@@ -444,13 +467,23 @@ fn build_page(
 
             let btn = gtk::Button::new();
             btn.set_child(Some(&row));
-            if label.chars().count() > MAX_LABEL_CHARS as usize {
+            if let Some(tip) = &tooltip {
+                btn.set_tooltip_text(Some(tip));
+            } else if label.chars().count() > MAX_LABEL_CHARS as usize {
                 btn.set_tooltip_text(Some(&label));
             }
             btn.add_css_class("flat");
             btn.add_css_class("context-menu-item");
             btn.set_halign(gtk::Align::Fill);
             btn.set_sensitive(enabled);
+            if checked {
+                // The checked state, not a class of our own: libadwaita
+                // then draws it exactly as it draws a toggled flat button.
+                btn.set_state_flags(gtk::StateFlags::CHECKED, false);
+                btn.update_state(&[gtk::accessible::State::Pressed(
+                    gtk::AccessibleTristate::True,
+                )]);
+            }
 
             if let Some(sections) = submenu {
                 // A trailing chevron says the row opens rather than acts.

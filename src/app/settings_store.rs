@@ -77,6 +77,7 @@ impl AppModel {
             toolbar_expanded: self.toolbar_expanded,
             compose_font: self.compose_font.clone(),
             compose_font_size: self.compose_font_size,
+            compose_zoom: self.compose_zoom,
             print: self.print_options,
             // Both are written: the boolean is what an older version reads.
             compose_plain: self.compose_format == config::ComposeFormat::Plain,

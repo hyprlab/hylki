@@ -1154,6 +1154,9 @@ pub(crate) enum AppMsg {
         id: String,
         rows: Vec<(u32, String, Message)>,
     },
+    /// An account's flag check (#532) changed the cached stars or read
+    /// state of these folders.
+    FlagsSynced { account_id: u32, paths: Vec<String> },
     /// Count every smart folder's unread mail now (the debounce ran out).
     CountSmartFolders,
     /// The smart folders' unread counts, by id, for the sidebar.

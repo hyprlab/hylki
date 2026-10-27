@@ -249,6 +249,11 @@ pub(crate) enum MailRequest {
     /// without the folder it sits in being opened. `keywords` are the
     /// configured tags. Answered with [`WorkerEvent::KeywordsSynced`].
     RefreshKeywords { keywords: Vec<String> },
+    /// Bring the cached stars and read state of `paths` in line with the
+    /// server (#532): a folder's sync re-reads them for its newest mail
+    /// only, and a Smart Folder or Starred view lists folders that are not
+    /// open. Answered with [`WorkerEvent::FlagsSynced`].
+    RefreshFlags { paths: Vec<String> },
 }
 
 /// A message composed by the user, ready to send.
@@ -398,6 +403,11 @@ pub(crate) enum WorkerEvent {
     /// The answer to [`MailRequest::RefreshKeywords`]: the folders whose
     /// cached keywords changed (empty when nothing did).
     KeywordsSynced {
+        paths: Vec<String>,
+    },
+    /// The answer to [`MailRequest::RefreshFlags`]: the folders whose
+    /// cached stars or read state changed (empty when nothing did).
+    FlagsSynced {
         paths: Vec<String>,
     },
     /// The background backfill for a folder finished — its whole index is now

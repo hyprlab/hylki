@@ -4,6 +4,7 @@
 use crate::cache::Cache;
 use crate::models::Message;
 use crate::worker::imap::fetch_mode::inline_previews_wanted;
+use crate::worker::imap::flag_sync::{server_flag_changes, FlagState};
 use crate::worker::imap::gmail::read_gmail_labels;
 use crate::worker::imap::idle::note_synced_uid_next;
 use crate::worker::imap::preview_fetch::{
@@ -84,9 +85,43 @@ pub(in crate::worker) async fn load_messages(
             }
         }
         merged.retain(|m| server.contains(&m.uid));
+        reconcile_older_flags(session, &window, &mut merged).await?;
         reconcile_attachment_flags(cache, account_id, path, &mut merged);
         Ok(merged)
     }
+}
+
+/// Stars and read state changed on another device for mail older than the
+/// window just fetched, whose flags are the index's until now (#532). The
+/// window's own flags are the server's already.
+async fn reconcile_older_flags(
+    session: &mut ImapSession,
+    window: &[u32],
+    merged: &mut [Message],
+) -> Result<(), async_imap::error::Error> {
+    let fresh: std::collections::HashSet<u32> = window.iter().copied().collect();
+    let older: Vec<FlagState> = merged
+        .iter()
+        .filter(|m| !fresh.contains(&m.uid))
+        .map(|m| FlagState {
+            uid: m.uid,
+            starred: m.starred,
+            unread: m.unread,
+        })
+        .collect();
+    let changes = server_flag_changes(session, &older).await?;
+    if changes.is_empty() {
+        return Ok(());
+    }
+    let at: std::collections::HashMap<u32, usize> =
+        merged.iter().enumerate().map(|(i, m)| (m.uid, i)).collect();
+    for s in changes {
+        if let Some(&i) = at.get(&s.uid) {
+            merged[i].starred = s.starred;
+            merged[i].unread = s.unread;
+        }
+    }
+    Ok(())
 }
 
 /// Clear the "has attachment" flag on freshly-fetched summaries whose bodies we

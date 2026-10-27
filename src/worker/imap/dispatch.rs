@@ -349,6 +349,7 @@ impl<E: Emit> ImapWorker<E> {
             MailRequest::FindKeywords => self.on_find_keywords().await,
             MailRequest::Quota => self.on_quota().await,
             MailRequest::RefreshKeywords { keywords } => self.on_refresh_keywords(keywords).await,
+            MailRequest::RefreshFlags { paths } => self.on_refresh_flags(paths).await,
             MailRequest::UndoMove {
                 path,
                 dest,
