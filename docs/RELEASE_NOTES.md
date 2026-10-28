@@ -2,6 +2,24 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.46.0-beta.5
+
+### New features:
+
+- Snoozed in the unified section, listed while mail is snoozed - (#542)
+- Names from Contacts on mail - (#541)
+- Read receipts: answered, requested, and shown on sent mail - (#520)
+- The arrow keys open and fold conversations in the list - (#540)
+- Search finds the words in a message's text, and on the server - (#509)
+- Mail kept offline for a chosen period - (#536)
+- Remote content cached, and loaded ahead if asked - (#474)
+- A date range in the sort and filter popover
+- The month named while the list's scrollbar is dragged
+
+### Translations:
+
+- German by @samuel-edlmeier
+
 ## What's new in 1.46.0-beta.4
 
 ### New features:

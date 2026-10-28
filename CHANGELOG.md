@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.46.0-beta.4 — 2026-10-26
+## 1.46.0-beta.5 — 2026-10-28
 
 - **Added: Snoozed in the unified section** (#542, requested by
   UnicornPanel). While any account's Snoozed folder holds mail, a Snoozed row
@@ -98,6 +98,8 @@
   asks to save data there. The fetches send no cookies and no Referer.
 
 - **Translations:** German (PR #539 by Samuel Edlmeier) brought up to date.
+
+## 1.46.0-beta.4 — 2026-10-26
 
 - **Added: zoom in the rich text composer** (#535, requested by
   j-canaan). Ctrl+, Ctrl-, Ctrl+0 and Ctrl with the scroll wheel zoom the
