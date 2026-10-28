@@ -221,10 +221,13 @@ pub(super) fn recipients_html(m: &Message, always_shown: bool) -> String {
             if !parts.is_empty() {
                 parts.push_str(", ");
             }
+            // A saved contact by its saved name alone (#541): the address
+            // is in the right-click menu.
+            let shown = crate::contacts::contact_name(mail);
             parts.push_str(&format!(
                 "<span class=\"hylki-mail\" data-mail=\"{}\">{}</span>",
                 escape_html(mail).replace('"', "&quot;"),
-                escape_html(entry)
+                escape_html(shown.as_deref().unwrap_or(entry))
             ));
         }
         lines.push_str(&format!("<div><b>{label}:</b> {parts}</div>"));

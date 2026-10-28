@@ -224,6 +224,7 @@ impl AppModel {
         // Snoozed mail (#527): the rows follow the folder ids, and an
         // account listed at last can have its mail back.
         self.push_snoozed();
+        self.push_receipt_marks();
         self.wake_due();
         if unchanged {
             self.push_unread_counts();

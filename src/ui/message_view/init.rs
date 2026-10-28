@@ -115,6 +115,7 @@ impl MessageView {
             sender_check: None,
             member_checks: std::collections::HashMap::new(),
             unsubscribed: std::collections::HashMap::new(),
+            receipt_marks: Default::default(),
             unsub_state: std::collections::HashMap::new(),
             fold_messages: crate::config::FoldMessages::Never,
             fold_preview_lines: 1,

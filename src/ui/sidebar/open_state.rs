@@ -385,6 +385,7 @@ impl Sidebar {
             archive: self.kind_open(FolderKind::Archive),
             junk: self.kind_open(FolderKind::Junk),
             trash: self.kind_open(FolderKind::Trash),
+            snoozed: self.kind_open(FolderKind::Snoozed),
             favorites: self.favorites_expanded,
             smart: self.smart_expanded,
             contacts: self.contacts_expanded,

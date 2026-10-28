@@ -260,11 +260,7 @@ impl AppModel {
             .into_iter()
             .take(indicator::MAIL_LIMIT)
             .map(|(a, m)| {
-                let sender = if m.from_name.trim().is_empty() {
-                    m.from_addr.clone()
-                } else {
-                    m.from_name.clone()
-                };
+                let sender = crate::contacts::shown_name_or_addr(&m.from_name, &m.from_addr);
                 let mut heading = indicator::clip(&sender, 40);
                 if several {
                     heading.push_str(" · ");
@@ -285,7 +281,7 @@ impl AppModel {
                     heading,
                     subject: indicator::clip(&m.subject, 60),
                     preview: indicator::clip(&m.preview, 70),
-                    icon: indicator::sender_icon(&m.from_name, &m.from_addr, texture),
+                    icon: indicator::sender_icon(&m.shown_from_name(), &m.from_addr, texture),
                 }
             })
             .collect()

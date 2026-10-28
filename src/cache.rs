@@ -16,10 +16,12 @@ mod bodies;
 mod flags;
 mod gallery;
 mod messages;
+mod offline;
 mod open;
 mod outbox;
 mod schema;
 mod smart;
+mod text_index;
 mod threads;
 
 pub(crate) use gallery::*;

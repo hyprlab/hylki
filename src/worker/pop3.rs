@@ -11,6 +11,8 @@ use crate::worker::auth::{load_or_migrate_password, load_smtp_password, sign_in_
 use crate::worker::compose::build::restore_msgid_case;
 use crate::worker::ids::hash_uid;
 use crate::worker::imap::send::flush_outbox;
+use crate::worker::index_queue::index_pause;
+use crate::worker::offline::Offline;
 use crate::worker::outbox::{
     delete_queued, drop_superseded_outbox, emit_outbox, note_answered, send_failed,
 };
@@ -24,6 +26,7 @@ use crate::worker::{
 };
 
 pub(super) mod client;
+mod offline;
 
 /// Cap on how many messages a POP3 sync downloads in full (POP3 has no partial
 /// fetch; mailboxes are usually small). Older messages aren't indexed.
@@ -72,8 +75,25 @@ pub(super) async fn run_pop3(
         account,
         cache,
         emit,
+        offline: Offline::default(),
     };
-    while let Some(req) = rx.recv().await {
+    loop {
+        // Between requests, the account's offline period (#536). A request
+        // cuts a step short: what came down so far is already kept.
+        let keeping = Offline::wanted(&worker.account) && crate::desktop::power::fetches_ahead();
+        let wait = worker.offline.wait();
+        let req = tokio::select! {
+            biased;
+            req = rx.recv() => req,
+            _ = index_pause(wait), if keeping => {
+                tokio::select! {
+                    biased;
+                    req = rx.recv() => req,
+                    () = worker.keep_offline_batch() => continue,
+                }
+            }
+        };
+        let Some(req) = req else { break };
         worker.handle(req).await;
     }
 }
@@ -85,6 +105,8 @@ struct Pop3Worker<E> {
     account: AccountConfig,
     cache: Option<Cache>,
     emit: E,
+    /// The download of the account's offline period (#536).
+    offline: Offline,
 }
 
 impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
@@ -95,6 +117,13 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
         let cache = &self.cache;
         let emit = &self.emit;
         match req {
+            // POP3 has no search, and every message is downloaded whole, so
+            // the index of the bodies on disk already holds its words.
+            MailRequest::FindText { gen, .. } => emit(WorkerEvent::TextFound {
+                gen,
+                hits: Vec::new(),
+                done: true,
+            }),
             MailRequest::Locate { message_id } => {
                 // No folders to search here beyond what the cache already
                 // held: answer "not found" so the app can report the miss.
@@ -555,8 +584,14 @@ async fn pop3_sync(
     pop.login(&account.username, &sign_in_password(account, false).await?)
         .await?;
     let mut entries = pop.uidl().await?;
-    // Newest first; bound how many we index.
+    // Newest first; bound how many we index. Older mail an offline period
+    // (#536) downloaded stays while the server has it.
     entries.sort_by_key(|e| std::cmp::Reverse(e.0));
+    let older = if Offline::wanted(account) {
+        entries.split_off(entries.len().min(POP3_LIMIT))
+    } else {
+        Vec::new()
+    };
     entries.truncate(POP3_LIMIT);
 
     let cached: std::collections::HashMap<u32, Message> = cache
@@ -590,6 +625,11 @@ async fn pop3_sync(
         messages.push(msg);
     }
     pop.quit().await;
+    messages.extend(
+        older
+            .iter()
+            .filter_map(|(_, uid_str)| cached.get(&hash_uid(uid_str)).cloned()),
+    );
 
     messages.sort_by_key(|m| std::cmp::Reverse(m.timestamp));
     if let Some(c) = cache {

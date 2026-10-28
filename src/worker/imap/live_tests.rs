@@ -811,6 +811,8 @@ fn live_snoozed_mail_comes_back_unread() {
             body_emitted: HashSet::new(),
             backfill: VecDeque::new(),
             backfill_seen: HashSet::new(),
+            offline: Default::default(),
+            text_search: None,
             refs_repair: VecDeque::new(),
             label_fill: VecDeque::new(),
             backlog: VecDeque::new(),
@@ -869,5 +871,136 @@ fn live_snoozed_mail_comes_back_unread() {
         let _ = purge_messages(sess, "INBOX", &back).await;
         let _ = sess.close().await;
         delete_box(sess, &snoozed).await.expect("clean up");
+    });
+}
+
+/// Mail kept offline (#536), with `IMAP_LIVE=host,port,user,password`: of a
+/// folder holding mail from two days, ten days and two months ago, a
+/// "last week" period downloads the first only, attachment and all, writes
+/// it to the cache, and then rests with the period complete.
+#[test]
+#[ignore]
+fn live_offline_period_is_kept() {
+    let Ok(spec) = std::env::var("IMAP_LIVE") else {
+        return;
+    };
+    let p: Vec<&str> = spec.splitn(4, ',').collect();
+    let account = AccountConfig {
+        imap_host: p[0].into(),
+        imap_port: p[1].parse().expect("port"),
+        username: p[2].into(),
+        password: p[3].into(),
+        security: Some(crate::config::ServerSecurity {
+            imap_starttls: false,
+            imap_accept_invalid_certs: true,
+            ..Default::default()
+        }),
+        offline_mail: crate::config::OfflineMail::Week,
+        offline_attachments: true,
+        ..sample_account()
+    };
+    let pid = std::process::id();
+    let folder = format!("Offline-{pid}");
+    let day = 86_400;
+    let now = crate::datefmt::now();
+    let mail = |n: u32, age_days: i64| {
+        let date = chrono::DateTime::from_timestamp(now - age_days * day, 0)
+            .unwrap()
+            .to_rfc2822();
+        format!(
+            "From: Ann <ann@example.test>\r\nTo: me@example.test\r\nSubject: offline {n}\r\n\
+             Message-ID: <hylki-536-{pid}-{n}@example.test>\r\nDate: {date}\r\n\
+             MIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=b\r\n\r\n\
+             --b\r\nContent-Type: text/plain\r\n\r\nbody {n}\r\n\
+             --b\r\nContent-Type: application/octet-stream\r\n\
+             Content-Disposition: attachment; filename=n{n}.bin\r\n\
+             Content-Transfer-Encoding: base64\r\n\r\naGVsbG8=\r\n--b--\r\n"
+        )
+    };
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    rt.block_on(async {
+        let mut sess = connect(&account).await.expect("connect");
+        create_box(&mut sess, &folder).await.expect("create");
+        for (n, age) in [(1, 2), (2, 10), (3, 60)] {
+            append_dated(
+                &mut sess,
+                &folder,
+                Some("(\\Seen)"),
+                None,
+                mail(n, age).as_bytes(),
+            )
+            .await
+            .expect("append");
+        }
+        let cache = Cache::in_memory().expect("cache");
+        let listed = load_messages(1, &mut sess, 1, &folder, true, None)
+            .await
+            .expect("list");
+        assert_eq!(listed.len(), 3);
+        cache.save_messages(1, &folder, &listed);
+
+        let (_tx, rx) = mpsc::unbounded_channel();
+        let mut worker = ImapWorker {
+            account_id: 1,
+            account: account.clone(),
+            rx,
+            emit: |_: WorkerEvent| {},
+            cache: Some(cache),
+            session: Some(sess),
+            prefetch: VecDeque::new(),
+            body_prefetch: VecDeque::new(),
+            body_emitted: HashSet::new(),
+            backfill: VecDeque::new(),
+            backfill_seen: HashSet::new(),
+            offline: Default::default(),
+            text_search: None,
+            refs_repair: VecDeque::new(),
+            label_fill: VecDeque::new(),
+            backlog: VecDeque::new(),
+            push_enabled: false,
+            idle_folder: None,
+            last_unread_sweep: None,
+            last_auto_empty: None,
+            last_list_clean: None,
+            inbox_watch_spawned: true,
+            watchers: HashMap::new(),
+            sweep_baseline: HashMap::new(),
+            sweep_pending: Vec::new(),
+            sweep_due: false,
+            folder_refresh_due: false,
+            pending_resync: false,
+            use_envelope: true,
+            outbox_flushed: true,
+            local_tags_noticed: true,
+        };
+        assert!(worker.offline.due(&worker.account));
+        worker.keep_offline_batch().await;
+        let uid_of = |n: u32| {
+            listed
+                .iter()
+                .find(|m| m.subject == format!("offline {n}"))
+                .expect("listed")
+                .uid
+        };
+        let cache = worker.cache.as_ref().unwrap();
+        let body = cache.load_body(1, &folder, uid_of(1)).expect("kept");
+        assert!(body.contains("body 1"), "{body}");
+        assert!(cache.attachments_checked(1, &folder, uid_of(1)));
+        assert_eq!(cache.load_attachments(1, &folder, uid_of(1)).len(), 1);
+        for n in [2, 3] {
+            assert!(
+                cache.load_body(1, &folder, uid_of(n)).is_none(),
+                "{n} is older than a week"
+            );
+        }
+        // Nothing left of the period: the next step finds it complete and rests.
+        worker.keep_offline_batch().await;
+        assert!(!worker.offline.due(&worker.account));
+
+        let sess = worker.session.as_mut().expect("session");
+        delete_box(sess, &folder).await.expect("clean up");
     });
 }

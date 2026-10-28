@@ -179,8 +179,9 @@ no chevrons, a click on a section's icon opens or closes it, and a long
 press or a double click opens or closes the unified rows.
 
 **Settings → Sidebar → Unified** chooses the unified section's rows.
-Inboxes, Starred, Sent, Drafts and Archive are on until switched off; Junk
-and Trash are off until switched on. In the unified Junk and Trash, **Not
+Inboxes, Starred, Sent, Drafts, Archive and Snoozed are on until switched
+off, and Snoozed is listed only while mail is snoozed; Junk and Trash are off
+until switched on. In the unified Junk and Trash, **Not
 Spam** and **Move to Inbox** send each message to its own account's Inbox,
 and the right-click menu of each account's row beneath has **Empty Junk…**
 or **Empty Trash…**. The same item on the unified Junk or Trash row itself
@@ -282,9 +283,9 @@ stays back.
 **Settings → Accounts → the account → Show in All Inboxes** decides whether
 the account's mail is merged into the unified section at the top of the
 sidebar. Switched off, the account's folders are left out of the unified
-Inboxes, Starred, Sent, Drafts, Archive, Junk and Trash rows, their account lists and
-unread counts, and the account's filter folders and tagged mail are left
-out of the unified Filters and Tags. The account keeps its own section in
+Inboxes, Starred, Sent, Drafts, Archive, Junk, Trash and Snoozed rows, their
+account lists and unread counts, and the account's filter folders and tagged
+mail are left out of the unified Filters and Tags. The account keeps its own section in
 the sidebar, and a search still covers its mail.
 
 The tray icon's count and new-mail notifications still include the
@@ -519,6 +520,15 @@ button beside it looks again for one just added there. Every kind but the
 Hylki book is kept by Evolution Data Server; without it, the page says so.
 **Save new contacts in**, at the foot of the page, sets the book a contact
 made in Hylki goes to.
+
+**Show names from Contacts**, on the same page, names a sender or recipient
+whose address is in an address book by the name saved there, not the one
+the message gives: in the message list, the reader and the new-mail
+notification. A contact then reads the same on all their mail, and mail
+that puts a contact's name on another address shows the name it gave,
+which gives it away. Address books that fill themselves from mail
+(Collected Addresses, Recently Contacted, Other Contacts) are not used for
+this, and a contact saved without a name keeps the message's.
 
 ### The Hylki address book
 
@@ -1026,7 +1036,11 @@ phone or another mail program sees it leave the Inbox too. The folder is
 made the first time something is snoozed; on Gmail it is a label. In the
 Snoozed folder each message shows when it comes back in place of its date.
 A time chosen there replaces the old one, and **Unsnooze** brings the
-message back now. A reply that arrives in the conversation brings it back
+message back now. While any account's Snoozed folder holds mail, a
+**Snoozed** row in the unified section lists it all together; **Settings →
+Sidebar → Unified → Snoozed** turns it off. The folders are counted each time
+Hylki checks for new mail, so mail snoozed on another computer brings the row
+too. A reply that arrives in the conversation brings it back
 early. **Undo** (Ctrl+Z) right after a snooze puts the message back where it
 was.
 
@@ -1704,7 +1718,43 @@ several labels is one result: its Inbox copy, else a label's, else All
 Mail's. Folders not opened since Hylki started are searched from the index
 Hylki keeps of them, which covers mail archived to Gmail's All Mail.
 
-The sort and filter button in the list's header opens a popover of two
+#### What a search finds
+
+Each word typed is looked for on its own, anywhere in the message and in any
+order: `rossi mario` finds mail from Mario Rossi, and `rossi invoice` finds his
+mail that mentions an invoice. Words in quotes, `"mario rossi"`, are found as
+written. A word is found in the subject, the sender, the recipients (To, Cc and
+Bcc, by address or by the name the person goes by in your mail), the preview,
+and the message's text:
+
+- **Mail on this computer:** the text of every message whose body is on disk
+  (opened, fetched ahead, or kept offline, see
+  [Storage](#storage)) is indexed, and a word is found as the start of a word,
+  so `invo` finds "invoice" while it is being typed.
+- **Mail on the server:** once typing pauses, each account's server is asked
+  for the mail holding every word, in the folders the search covers, and what
+  it finds joins the results. A spinner beside the search field shows while it
+  answers. IMAP servers are searched a folder at a time (on Gmail, All Mail
+  stands for every label), JMAP and Microsoft 365 servers in one request.
+  Servers match whole words, and how a quoted phrase is matched is the
+  server's own. POP3 has no server search; its mail is all on disk.
+
+A few words narrow the search to one part of the message, and can be combined
+with each other and with plain words:
+
+| Typed | Finds mail |
+| --- | --- |
+| `from:ann` | from a sender whose name or address holds "ann" |
+| `to:lee` | sent to, or copied to, someone whose name or address holds "lee" |
+| `subject:report` | with "report" in the subject |
+| `in:archive` | filed in a folder whose name holds "archive", in any account, whatever the button beside the field says |
+| `has:attachment` | with attachments |
+| `is:unread`, `is:read`, `is:starred` | unread, read, or starred |
+
+A value with spaces goes in quotes: `from:"mario rossi"`. A colon in any other
+word, such as `10:30` or `re:`, is searched for as written.
+
+The sort and filter button in the list's header opens a popover of three
 columns. **Sort by** orders the list by date, newest or oldest first, by
 sender or subject, or puts unread or starred mail first. **Show only** holds
 the quick filters:
@@ -1717,17 +1767,32 @@ the quick filters:
 - **Tagged**: the message has a tag or a Gmail label
 - **Today**: it arrived since midnight on this computer's clock
 
+In **Dates**, the list shows only the mail that arrived from the start of
+the **From** day to the end of the **To** day, on this computer's clock.
+Choosing **From** or **To** sets it to the day in blue on the calendar below
+them, or moves the calendar to the day it already has; a click on a day then
+sets it. A click on a day with neither chosen sets **From**. An end left at
+**Any Date** is open, to show everything since, or up to, a day. **Clear
+Dates** opens both ends again. Older mail is there as soon as the folder's
+index has reached it.
+
 A click turns a filter on or off and leaves the popover open, so an order
 and several filters can be set at once; together the filters show only the
-mail that matches all of them. While any is
-on the button is in the accent color and its tooltip names them. **Clear
-Filters** turns them all off. They apply to whichever folder or search is
-shown, and last until Hylki is closed. In Focus Mode they are under
-**Filter** and **Sort** in the list's ⋯ menu.
+mail that matches all of them. While any is on the button is in the accent
+color and its tooltip names them, with the dates. **Clear Filters** turns
+them all off. They apply to whichever folder or search is shown, and last
+until Hylki is closed. In Focus Mode they are under **Filter** and **Sort**
+in the list's ⋯ menu; the dates are set in the popover only.
 
 Clicking the unread dot on a row marks that message read without selecting
 or opening it. A conversation's dot that is lit only for an unread reply
 does not take the click.
+
+The list puts its rows on screen a few hundred at a time as it is scrolled.
+Once the pointer reaches the scrollbar, the rest of the folder joins them, so
+the bar spans all of it, back to the oldest message. While the bar is
+dragged in a list sorted by date, a label beside it names the month and year
+of the rows in the middle of the view.
 
 ### Text size
 
@@ -1840,6 +1905,53 @@ and at most every six hours. Starred mail stays, and so does anything without
 the header, however old. It works for IMAP and JMAP accounts; Microsoft 365
 offers no way to search for the header, so the choice is not shown there.
 
+### Read receipts
+
+A message can ask for a read receipt: a short message back to its sender
+saying when it was opened. When one asks, a banner above its text says so,
+with **Send Receipt** and **Ignore**. Either answer is remembered, and on IMAP
+and JMAP accounts the message is marked `$MDNSent`, as Thunderbird and K-9
+Mail mark it, so other mail apps do not ask again. Your own mail, and mail in
+Sent, Drafts, Templates, Junk and Trash, never asks. Neither does mail
+downloaded before Hylki read the request.
+
+**Settings → Privacy → Send read receipts** chooses **Ask each time**,
+**Always** or **Never**. **Always** sends the receipt when the message is
+shown, except when it would go to an address other than the one the mail came
+from (its Return-Path), or the message was not addressed to you in To or Cc:
+those still ask, as RFC 8098 requires. **Never** sends none and shows no
+banner.
+
+The receipt goes from the address the message was sent to, with no copy in
+Sent, as the `multipart/report` RFC 8098 describes: a sentence for the
+person, and a report their mail app reads.
+
+To ask for a receipt on a message you write, tick **Request a read receipt**
+in the menu beside **Send**. **Settings → Composing → Request read receipts**
+ticks it for every new message. Many mail apps send none, or only when the
+person agrees.
+
+Sent mail that asked for a receipt shows two grey checkmarks beside its date,
+in the list and in the reader. They turn green when a receipt comes back, and
+pointing at them says who opened the message and when; for mail to several
+people, how many of them did. Hylki learns that a message asked for a receipt
+when it reads the copy in Sent, so mail sent from another app shows the marks
+once its Sent copy has been opened or fetched ahead.
+
+A receipt that comes back is a message of its own. Once Hylki has read it, it
+is marked read and moved out of the Inbox: **Settings → Composing → Returned
+receipts** chooses **Move to Trash**, **Archive** or **Keep in Inbox**. A
+receipt that is open in the reader is left where it is. Who read what is kept
+on this computer, in `read_by.toml`, so another computer shows the marks only
+for the receipts it reads itself. A receipt that says the message was deleted
+unread does not turn the marks green, and stays in the Inbox.
+
+A receipt that comes back also posts a desktop notification, "Read by" the
+person, with the message's subject; clicking it opens the message. **Settings →
+General → Read receipts** turns it off. With **Show sender and subject** off it
+says only that a receipt came back, and receipts more than a day old, read for
+the first time, post nothing.
+
 ### Storage
 
 Messages and attachments that have been opened, or fetched ahead for the
@@ -1850,6 +1962,23 @@ or 30 days) removes older ones a couple of minutes after Hylki starts and
 every six hours after. Either way the list of every message stays, so the
 message list and search are unchanged, and a removed message is fetched again
 when it is opened. Nothing on the server changes.
+
+**Keep mail offline**, in an account's Syncing settings, downloads every
+message of a period ahead of being opened: the last week, month or year, or all
+mail. It works on IMAP, JMAP, Microsoft 365 and POP3 accounts, including ones
+from GNOME Online Accounts. The default, Newest messages, is the fetch ahead
+described above. Trash, Junk and Drafts are left out, and so is OpenPGP mail,
+which is only decrypted when opened. **Include attachments** keeps their files
+too; a POP3 account always downloads a message whole, so it has no such
+switch, and with a period chosen it downloads older mail than the newest 200
+its sync lists, back to the period's start. The download runs
+in the background once the account's index is complete, newest first, gives way
+whenever a message is opened, and waits on a metered connection when Settings
+asks to save data there. A server that refuses it, as Gmail does past its daily
+limit, is asked again later, after an hour at most. **Keep downloaded mail**
+does not remove mail inside an account's period, and **Remove…** clears it,
+after which it is downloaded again. Stored as `offline_mail` and
+`offline_attachments` in `accounts.toml`.
 
 ### Offline and metered connections
 
@@ -1927,6 +2056,20 @@ views' caches in `~/.cache/hylki/`, and account pictures in
 
 Passwords and tokens are never in those files: they go to the system keyring
 through the Secret Service. Decrypted OpenPGP messages are never cached at all.
+
+**Remote content**, once allowed for a message, is fetched by Hylki itself, with
+no cookies and no Referer, and kept in `~/.cache/hylki/remote/` for a week, up
+to 2 GB, so a message shown again does not fetch it again. **Settings →
+Privacy → Pre-load remote content for the next messages** fetches it for the next
+three rows in the list, and the one before, while a message is read: only
+for mail whose remote content would load anyway, and not on a metered
+connection when Settings asks to save data there. It is off by default,
+because a sender's tracking pixel then reports a message as opened before you
+open it. Stored as `remote_ahead` in `privacy.toml`.
+
+**Read receipts** are sent only when you press **Send Receipt**, unless
+**Settings → Privacy → Send read receipts** is **Always**. See
+[Read receipts](#read-receipts).
 
 **Translation** is off until a service is chosen in Settings → Translation.
 After that, a message's text goes to that service only when you press

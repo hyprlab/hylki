@@ -258,6 +258,11 @@ pub(crate) fn day_month_year(ts: i64) -> String {
     text.trim().to_string()
 }
 
+/// Month and year: "March 2019", for the list's scrollbar.
+pub(crate) fn month_year(ts: i64) -> String {
+    local(ts).map_or_else(String::new, |dt| fmt(&dt, "%B %Y"))
+}
+
 /// Date and time together, for the reader's header and printed pages.
 pub(crate) fn date_time(ts: i64) -> String {
     if local(ts).is_none() {

@@ -10,4 +10,5 @@ pub(crate) mod graph_labels;
 pub(crate) mod logo;
 pub(crate) mod ms_broker;
 pub(crate) mod oauth;
+pub(crate) mod remote_content;
 pub(crate) mod translate;

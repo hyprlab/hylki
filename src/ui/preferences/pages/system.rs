@@ -193,6 +193,7 @@ impl SystemPage {
                     #[name = "keep_downloads_row"]
                     adw::ComboRow {
                         set_title: &i18n("Keep downloaded mail"),
+                        set_subtitle: &i18n("Mail inside an account's offline period is kept."),
                         connect_selected_notify[sender] => move |row| {
                             sender.input(PrefInput::ChangeKeepDownloads(row.selected()));
                         },

@@ -301,6 +301,18 @@ impl MessageModel {
         self.imp().rows.borrow().get(pos).cloned()
     }
 
+    /// Where the rows `f` picks are, with them.
+    pub(crate) fn find(&self, f: impl Fn(&RowData) -> bool) -> Vec<(usize, Rc<RowData>)> {
+        self.imp()
+            .rows
+            .borrow()
+            .iter()
+            .enumerate()
+            .filter(|(_, r)| f(r))
+            .map(|(i, r)| (i, r.clone()))
+            .collect()
+    }
+
     /// Replace the list with `new`, telling the view only what changed:
     /// rows that show the same message keep their place (and their bound
     /// widget, refreshed with the new data), and the rest are put in or
@@ -384,7 +396,7 @@ impl MessageModel {
     }
 
     /// New data for the row at `pos`, showing the same message.
-    fn set_row(&self, pos: usize, data: Rc<RowData>) {
+    pub(crate) fn set_row(&self, pos: usize, data: Rc<RowData>) {
         if self.put_row(pos, data) {
             self.resection();
         }

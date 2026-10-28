@@ -36,6 +36,9 @@ thread_local! {
             .memory_pressure_settings(&pressure)
             .build();
         ctx.set_cache_model(webkit6::CacheModel::DocumentViewer);
+        // With WebKit's HTTP cache off, remote content comes through the
+        // app's own cache instead (#474).
+        crate::services::remote_content::register(&ctx);
         ctx
     };
 }
@@ -84,6 +87,7 @@ fn build_webview(role: &'static str) -> webkit6::WebView {
         .build();
     crate::desktop::memory_report::register_web_view(&webview, role);
     keep_tab_out_of_key_translator(&webview);
+    crate::services::remote_content::allow_in(&webview);
 
     let settings = webkit6::Settings::new();
     // JavaScript runs only in our own (trusted) wrapper document — it sizes each

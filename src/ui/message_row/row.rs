@@ -65,6 +65,8 @@ pub(super) struct RowWidgets {
     pub(super) forwarded: gtk::Image,
     pub(super) clip: gtk::Image,
     pub(super) star: gtk::Image,
+    /// Sent mail's read receipt checkmarks (#520).
+    pub(super) receipt: gtk::Image,
     pub(super) date: gtk::Label,
     pub(super) chip: gtk::Button,
     pub(super) chip_count: gtk::Label,
@@ -180,6 +182,11 @@ impl Row {
 
     pub(crate) fn data(&self) -> Option<Rc<RowData>> {
         self.st.borrow().item.as_ref().map(|i| i.data())
+    }
+
+    /// The widget the view shows this row as, while bound.
+    pub(crate) fn widget(&self) -> Option<gtk::Widget> {
+        self.list_item.borrow().upgrade()?.child()
     }
 
     /// The list position this row shows, while bound.
@@ -392,6 +399,9 @@ impl Row {
         }
         if let (Some(group), Some(shared)) = (data.meta.group.clone(), self.shared()) {
             shared.want(group);
+        }
+        if let (Some(_), Some(shared)) = (&data.meta.pending, self.shared()) {
+            shared.finish_later(data.slot());
         }
     }
 

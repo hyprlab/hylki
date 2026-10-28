@@ -12,7 +12,8 @@ use super::look::{
 use super::prefs::{
     default_files_limit_mb, default_reader_zoom, default_swipe_sensitivity, default_undo_send_secs,
     ComposeFormat, FilesAction, FilesLarge, FoldMessages, LauncherBadge, NotificationButtons,
-    PrintOptions, ReadMark, ReaderDefault, ReplyPosition, SignaturePosition,
+    PrintOptions, ReadMark, ReaderDefault, ReceiptPolicy, ReplyPosition, ReturnedReceipts,
+    SignaturePosition,
 };
 use super::sections::{
     FolderSort, RailFold, SectionPlacement, SectionStyle, StartView, UnifiedChips, UnifiedKinds,
@@ -30,6 +31,11 @@ pub(crate) struct PrivacyFile {
     /// remote content can be used to track when and where a message is read.
     #[serde(default)]
     pub(crate) auto_remote_content: bool,
+    /// Whether the remote content of the next messages in the list is
+    /// fetched while one is read (#474), where remote content is allowed.
+    /// Off by default: a sender's tracking learns of a message never opened.
+    #[serde(default)]
+    pub(crate) remote_ahead: bool,
     /// Whether to load sender avatars from Gravatar (off by default — it sends
     /// a hash of each sender's email to a third party).
     #[serde(default)]
@@ -412,6 +418,10 @@ pub(crate) struct PrivacyFile {
     /// `list_search_open` keeps the message list's. Off by default.
     #[serde(default)]
     pub(crate) contacts_search_open: bool,
+    /// A saved contact goes by the name in the address book, not the one
+    /// its mail gives (#541). Off by default.
+    #[serde(default)]
+    pub(crate) contact_names: bool,
     /// The search field and the bulk bar open under the list instead of
     /// above it (#496). Off by default.
     #[serde(default)]
@@ -541,6 +551,18 @@ pub(crate) struct PrivacyFile {
     /// Read-marking policy (#100).
     #[serde(default)]
     pub(crate) read_mark: ReadMark,
+    /// Answering a request for a read receipt (#520).
+    #[serde(default)]
+    pub(crate) receipts: ReceiptPolicy,
+    /// New messages ask for a read receipt (#520).
+    #[serde(default)]
+    pub(crate) request_receipts: bool,
+    /// Where a receipt that comes back goes (#520).
+    #[serde(default)]
+    pub(crate) returned_receipts: ReturnedReceipts,
+    /// A desktop notification when a receipt comes back (#520).
+    #[serde(default = "default_on")]
+    pub(crate) notify_receipts: bool,
     /// GNOME Files hand-off (#188 follow-up): what the files open into,
     /// what happens over the size limit, and the limit itself in MB.
     #[serde(default)]
@@ -616,6 +638,7 @@ impl Default for PrivacyFile {
         Self {
             allowed_senders: Vec::new(),
             auto_remote_content: false,
+            remote_ahead: false,
             show_remote_banner: true,
             show_spoof_banner: true,
             show_unified: true,
@@ -634,6 +657,10 @@ impl Default for PrivacyFile {
             console_mode: false,
             status_bar_top: false,
             read_mark: ReadMark::default(),
+            receipts: ReceiptPolicy::default(),
+            request_receipts: false,
+            returned_receipts: ReturnedReceipts::default(),
+            notify_receipts: true,
             files_action: FilesAction::default(),
             files_large: FilesLarge::default(),
             files_limit_mb: default_files_limit_mb(),
@@ -732,6 +759,7 @@ impl Default for PrivacyFile {
             date_groups_default_applied: true,
             list_search_open: false,
             contacts_search_open: false,
+            contact_names: false,
             list_search_bottom: false,
             list_bulk_bar_bottom: false,
             toolbar_fold_right: true,

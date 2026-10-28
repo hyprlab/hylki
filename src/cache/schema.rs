@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS sender_checks (
     unsubscribe TEXT NOT NULL DEFAULT '',
     invite      TEXT NOT NULL DEFAULT '',
     label       TEXT NOT NULL DEFAULT '',
+    receipt     TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (account_id, folder_path, uid)
 );
 CREATE TABLE IF NOT EXISTS attachments (
@@ -152,6 +153,14 @@ CREATE TABLE IF NOT EXISTS account_owner (
     account_id INTEGER PRIMARY KEY,
     email      TEXT    NOT NULL
 );
+-- The words of each body on disk, for search (#509), by the body's rowid.
+-- No copy of the text is kept; a body that goes takes its row with it.
+CREATE VIRTUAL TABLE IF NOT EXISTS body_text USING fts5(
+    text, content='', contentless_delete=1, tokenize='unicode61 remove_diacritics 2'
+);
+CREATE TRIGGER IF NOT EXISTS body_text_gone AFTER DELETE ON bodies BEGIN
+    DELETE FROM body_text WHERE rowid = old.rowid;
+END;
 ";
 
 /// Every table whose rows belong to one account, by `account_id`. An account's

@@ -2,6 +2,101 @@
 
 ## 1.46.0-beta.4 — 2026-10-26
 
+- **Added: Snoozed in the unified section** (#542, requested by
+  UnicornPanel). While any account's Snoozed folder holds mail, a Snoozed row
+  lists every account's snoozed mail as one list, each message showing when
+  it comes back, with each account's own Snoozed folder beneath; it goes when
+  the last message comes back, as Filters and Tags show only with something
+  to list. The Snoozed folders are counted on the server each time Hylki
+  checks for new mail, so mail snoozed on another computer counts too.
+  **Unsnooze** and a new time work there as in an account's folder. **Settings
+  → Sidebar → Unified → Snoozed** turns it off, and it has its own unread
+  count and icon rail fold-up switches. A unified row whose folder no account
+  has yet now shows an empty list rather than loading.
+
+- **Added: names from Contacts on mail** (#541, requested by
+  samuel-edlmeier). **Settings → Contacts → Show names from Contacts** shows
+  the name saved in the address book for a sender or recipient whose address
+  is there, in place of the name the message gives: in the list, its
+  Correspondents and Recipients columns and sender order, the reader's cards
+  and recipients, and the new-mail notification. Only address books kept by
+  hand count, not those that collect addresses from mail, so a message that
+  borrows a contact's name from another address still shows the name it
+  gave. Off by default.
+
+- **Added: read receipts** (#520, requested by dm1sh). A message that asks
+  for a read receipt (RFC 8098) shows a banner with **Send Receipt** and
+  **Ignore**; either answer is remembered, and marked `$MDNSent` on IMAP and
+  JMAP accounts so other mail apps do not ask again. **Settings → Privacy →
+  Send read receipts** asks each time, always sends, or never does; Always
+  still asks when the receipt would go somewhere other than where the mail
+  came from, or the message was not addressed to you. **Request a read
+  receipt** in the menu beside Send asks for one on a message you write, and
+  **Settings → Composing → Request read receipts** ticks it for every new
+  message. Sent mail that asked shows two grey checkmarks in the list and the
+  reader, green once a receipt comes back, with who read it and when on
+  hover; the receipt mail is then marked read and moved to Trash, or
+  archived or kept, as **Settings → Composing → Returned receipts** says, and
+  a desktop notification says who read it (**Settings → General → Read
+  receipts**). A receipt that arrives no longer lists its report as an
+  attachment.
+
+- **Added: the arrow keys open and fold conversations in the list** (#540,
+  requested by amadeusp). With the list focused, Right opens the conversation
+  on the selected row out in the list and Left folds it back up, from its row
+  or any of its replies, which moves the selection to the conversation's row.
+  On a row with nothing to open or fold, the keys do what they did before.
+  With **Expandable conversations** off they are unchanged.
+
+- **Added: the scrollbar names the month it is passing.** While the message
+  list's scrollbar is dragged in a list sorted by date, a label beside its
+  thumb names the month and year of the rows in the middle of the view. Once
+  the pointer reaches the bar, the rest of the folder joins the rows on
+  screen, so the bar spans all of it rather than the few hundred rows loaded
+  so far; the rows past those are described as they come on screen.
+
+- **Added: a date range in the sort and filter popover.** Its new **Dates**
+  column holds **From**, **To** and a calendar that sets whichever is chosen,
+  and the list shows only the mail that arrived between the two days, both
+  included, on this computer's clock. Either end can stay at **Any Date**.
+  It narrows a search too; **Clear Dates** removes it, and **Clear Filters**
+  removes it with the rest.
+
+- **Added: search finds what a message says** (#509, requested by
+  wobblyhen920, with 3v1n0). Each word typed is now found on its own, in any
+  order, in the subject, the sender, the recipients (by address or name), the
+  preview and the message's text; quoted words are found as written. The text
+  of every body on disk is indexed and found as the start of a word while
+  typing, and once typing pauses each account's server is asked too (IMAP a
+  folder at a time, Gmail through All Mail, JMAP and Microsoft 365 in one
+  request), its finds joining the results as they come. `from:`, `to:`,
+  `subject:`, `in:`, `has:attachment`, `is:unread`, `is:read` and `is:starred`
+  narrow a search.
+
+- **Added: keep mail offline for a chosen period** (#536, requested by
+  isorropisths in #474). **Keep mail offline**, in an account's Syncing
+  settings, downloads every message of the last week, month or year, or all of
+  it, in the background, so it opens with no network; **Include attachments**
+  keeps their files too. It works on IMAP, JMAP, Microsoft 365 and POP3
+  accounts; on POP3 it also brings in older mail than the newest 200 a sync
+  lists. Trash, Junk and Drafts are left out. The download
+  starts once the account's index is complete, goes newest first, gives way
+  whenever a message is opened, waits on a metered connection when Settings
+  asks to save data there, and backs off when the server refuses, as Gmail
+  does past its daily limit. **Keep downloaded mail** no longer removes mail
+  inside an account's period.
+
+- **Added: remote content is cached, and can be loaded ahead** (#474,
+  requested by bstegmaier75). Images, stylesheets and fonts a message loads
+  from the web are fetched by the app instead of the reader's web engine, whose
+  cache was off since the memory fix for #106, and kept on disk for a week, up
+  to 2 GB. A message shown again paints without the network. **Settings →
+  Privacy → Pre-load remote content for the next messages**, off by default,
+  fetches the remote content of the next three rows in the list, and the one
+  before, while a message is read: only where it would load on opening, from
+  bodies already downloaded, and not on a metered connection when Settings
+  asks to save data there. The fetches send no cookies and no Referer.
+
 - **Added: zoom in the rich text composer** (#535, requested by
   j-canaan). Ctrl+, Ctrl-, Ctrl+0 and Ctrl with the scroll wheel zoom the
   body in rich text, as they already did in the other formats. The message

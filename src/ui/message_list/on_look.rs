@@ -157,6 +157,13 @@ impl MessageList {
         self.sync_look();
     }
 
+    pub(super) fn on_contact_names_changed(&mut self) {
+        // Rows showing the same message are kept as they are unless the
+        // look is stale, and every name on them may be another now.
+        self.look_stale.set(true);
+        self.rebuild();
+    }
+
     pub(super) fn on_set_colorize(&mut self, on: bool) {
         if self.colorize != on {
             self.colorize = on;

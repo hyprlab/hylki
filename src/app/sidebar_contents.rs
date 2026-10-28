@@ -77,10 +77,11 @@ impl AppModel {
         let show_unified = self.unified_inboxes_shown();
         // The other unified rows are as pointless with one account.
         let unified_kinds = if multi_account {
-            self.unified_kinds
+            self.unified_kinds_listed()
         } else {
             config::UnifiedKinds::NONE
         };
+        self.snoozed_row.set(unified_kinds.snoozed);
         let unified_unread = self.unified_inboxes_unread();
         let unified_folders = self.unified_folder_refs();
         let favorite_folders = self.favorite_folder_refs();

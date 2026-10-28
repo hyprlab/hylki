@@ -11,12 +11,14 @@ use crate::worker::graph::http::{
     graph_get_json, graph_paged, graph_send_json, graph_token, GRAPH_BASE,
 };
 use crate::worker::graph::index::{graph_load_folder, GraphState};
-use crate::worker::{blocking, chip_counts_all, WorkerEvent};
+use crate::worker::{blocking, chip_counts_all, snoozed_counts, WorkerEvent};
 
 /// One Graph mail folder, flattened out of the tree.
 pub(super) struct GraphFolder {
     pub(super) graph_id: String,
     pub(super) folder: Folder,
+    /// Every message in it, read or not.
+    pub(super) total: u32,
 }
 
 /// List the account's mail folders (tree flattened, well-known roles mapped),
@@ -99,6 +101,7 @@ pub(super) fn graph_list_folders(
             (count("totalItemCount"), count("unreadItemCount")),
         );
         out.push(GraphFolder {
+            total: count("totalItemCount"),
             graph_id: gid.to_string(),
             folder: Folder {
                 id: 0, // assigned by order below
@@ -191,6 +194,7 @@ pub(super) async fn graph_refresh_unread(
         return;
     }
     state.adopt_folders(&list);
+    let snoozed = snoozed_counts(&list, |f| (&f.folder, f.total));
     let folders: Vec<Folder> = list.into_iter().map(|f| f.folder).collect();
     if let Some(c) = cache {
         c.save_folders(account_id, &folders);
@@ -199,6 +203,9 @@ pub(super) async fn graph_refresh_unread(
     emit(WorkerEvent::Folders(folders));
     for (folder_id, unread) in counts {
         emit(WorkerEvent::FolderUnread { folder_id, unread });
+    }
+    for ev in snoozed {
+        emit(ev);
     }
 }
 

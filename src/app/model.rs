@@ -218,6 +218,8 @@ pub(crate) struct AppModel {
     /// Bumped as a search starts and ends, so a pool read from disk for a
     /// search already over is dropped (#472).
     pub(super) search_gen: u64,
+    /// The search of the servers' text under way (#509).
+    pub(super) server_search: super::text_search::ServerSearch,
     /// (account_id, folder_id) whose background backfill has fully finished, so the
     /// message list knows no more rows will stream in for them.
     pub(super) indexed_folders: HashSet<(u32, u32)>,
@@ -337,6 +339,7 @@ pub(crate) struct AppModel {
     pub(super) archive_expanded: bool,
     pub(super) junk_expanded: bool,
     pub(super) trash_expanded: bool,
+    pub(super) snoozed_expanded: bool,
     /// Favorite folders (#367), as "email\tpath" entries in the order they
     /// were added, and whether their list is open.
     pub(super) favorites: Vec<String>,
@@ -380,12 +383,27 @@ pub(crate) struct AppModel {
     pub(super) invite_answers: Vec<config::InviteAnswer>,
     /// Whether remote content is auto-loaded for every new message.
     pub(super) auto_remote_content: bool,
+    /// Whether the next messages' remote content is fetched ahead (#474).
+    pub(super) remote_ahead: bool,
     /// Whether the blocked-remote-content banner is shown at all. Hiding it changes nothing about what
     /// is blocked — only whether the reader says so.
     pub(super) show_remote_banner: bool,
     /// Whether a "Check this sender" verdict gets the red banner over the
     /// message. A failed check gets it regardless.
     pub(super) show_spoof_banner: bool,
+    /// Answering requests for read receipts (#520), and the requests
+    /// already answered or ignored here (receipts.toml).
+    pub(super) receipts: config::ReceiptPolicy,
+    pub(super) receipts_answered: Vec<config::ReceiptAnswer>,
+    /// New messages ask for a read receipt (#520).
+    pub(super) request_receipts: bool,
+    /// The sent mail waiting for a read receipt and the receipts that came
+    /// back (read_by.toml), where the receipt mail goes, and the receipt
+    /// mail already filed this session.
+    pub(super) read_by: config::ReadByFile,
+    pub(super) returned_receipts: config::ReturnedReceipts,
+    pub(super) notify_receipts: bool,
+    pub(super) receipts_filed: HashSet<BodyKey>,
     /// Addresses/domains whose incoming inbox mail is auto-deleted (lowercased).
     pub(super) blacklist: Vec<String>,
     /// Seconds the message-list actions palette stays open after the cursor leaves.
@@ -449,6 +467,8 @@ pub(crate) struct AppModel {
     pub(super) list_search_open: bool,
     /// Contacts' search field stays open.
     pub(super) contacts_search_open: bool,
+    /// Saved contacts go by their address-book names (#541).
+    pub(super) contact_names: bool,
     /// The list's search field and bulk bar open under the rows (#496).
     pub(super) list_search_bottom: bool,
     pub(super) list_bulk_bar_bottom: bool,
@@ -803,9 +823,18 @@ pub(crate) struct AppModel {
     pub(super) outbox_by_account: HashMap<u32, Vec<crate::models::OutboxItem>>,
     /// Snoozed mail (#527), as snoozed.toml keeps it.
     pub(super) snoozed: Vec<config::Snooze>,
+    /// Whether the sidebar was last given the unified Snoozed row, which
+    /// it has only while something is snoozed (#542).
+    pub(super) snoozed_row: std::cell::Cell<bool>,
+    /// How many messages each Snoozed folder holds on the server, by
+    /// (account, path), as the last recount or listing found (#542).
+    pub(super) snoozed_held: HashMap<(u32, String), u32>,
     /// Snoozed mail a worker has been asked to bring back, by (account
     /// address, Message-ID), with when to ask again if no answer comes.
     pub(super) snooze_waking: HashMap<(String, String), std::time::Instant>,
+    /// Snoozes an undo took back, by (account address, Message-ID), for a
+    /// redo to restore (#542).
+    pub(super) snooze_undone: HashMap<(String, String), config::Snooze>,
     /// The time a Snooze of the list's selection is for, while the list
     /// resolves which messages that is.
     pub(super) snooze_until: Option<i64>,

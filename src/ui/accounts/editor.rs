@@ -261,6 +261,12 @@ impl AccountsWindow {
             .form
             .clean_lists_row
             .set_visible(matches!(protocol, Protocol::Imap | Protocol::Jmap));
+        // Every backend keeps a period offline (#536), but a POP3 message
+        // only ever comes down whole, attachments and all.
+        widgets
+            .form
+            .offline_attachments_row
+            .set_visible(protocol != Protocol::Pop3);
         widgets
             .form
             .reply_copies_row

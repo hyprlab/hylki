@@ -710,6 +710,26 @@ msgstr "Сначала непрочитанные"
 msgid "Starred first"
 msgstr "Сначала отмеченные"
 
+#, fuzzy
+msgid "Clear Dates"
+msgstr "Поиск фильтров"
+
+#, fuzzy
+msgid "Any Date"
+msgstr "Дата"
+
+#, fuzzy
+msgid "{from} to {to}"
+msgstr "{cur} из {total}"
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "срок действия истекает {date}"
+
+#, fuzzy
+msgid "Until {date}"
+msgstr "срок действия истекает {date}"
+
 msgid "Sort by"
 msgstr "Сортировать по"
 
@@ -720,6 +740,16 @@ msgstr "Только непрочитанные"
 #, fuzzy
 msgid "Clear Filters"
 msgstr "Поиск фильтров"
+
+#, fuzzy
+msgid "Dates"
+msgstr "Дата"
+
+msgid "From"
+msgstr "От"
+
+msgid "To"
+msgstr "Кому"
 
 #, fuzzy
 msgid "Sort and filter messages"
@@ -774,6 +804,10 @@ msgstr "Открыть выбранное сообщение"
 
 msgid "Back to the message list"
 msgstr "Вернуться к списку сообщений"
+
+#, fuzzy
+msgid "Open or fold a conversation in the list"
+msgstr "Всё обсуждение"
 
 msgid "Next message in the conversation"
 msgstr "Следующее сообщение в беседе"
@@ -1257,6 +1291,27 @@ msgstr "Удалить {n} сообщений"
 msgid "Customize Toolbar…"
 msgstr "Настроить панель инструментов…"
 
+msgid "Read receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Read: {subject}"
+msgstr "Принято: {subject}"
+
+msgid ""
+"This is a read receipt for the message sent to {to} on {date} with the "
+"subject \"{subject}\"."
+msgstr ""
+
+msgid ""
+"It means the message was shown on the recipient's screen, not that it was "
+"read or understood."
+msgstr ""
+
+#, fuzzy
+msgid "Read by {reader}"
+msgstr "Адрес для ответа"
+
 msgid "Full Release Notes on GitHub"
 msgstr "Полные примечания к выпуску на GitHub"
 
@@ -1556,6 +1611,26 @@ msgstr "Срок исполнения"
 
 msgid "Date"
 msgstr "Дата"
+
+#, fuzzy
+msgid "Newest messages"
+msgstr "Сначала новые сообщения"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Фамилия"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Повторяется ежемесячно"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Фамилия"
+
+#, fuzzy
+msgid "All mail"
+msgstr "Добавить адрес"
 
 msgid "With sent mail"
 msgstr ""
@@ -1860,6 +1935,17 @@ msgstr "Ожидает {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Запланировано на {when}"
+
+#, fuzzy
+msgid "No read receipt yet"
+msgstr "Скрыть получателей"
+
+msgid "{who}, {when}"
+msgstr ""
+
+#, fuzzy
+msgid "Read by {count} of {total}"
+msgstr "{name} · {current} из {total}"
 
 #, fuzzy
 msgid "Verified sender"
@@ -3449,6 +3535,10 @@ msgstr "Удалить черновик"
 msgid "Send"
 msgstr "Отправить"
 
+#, fuzzy
+msgid "Send options"
+msgstr "Действия"
+
 msgid "Send now"
 msgstr "Отправить сейчас"
 
@@ -3464,6 +3554,12 @@ msgstr "В понедельник утром ({time})"
 msgid "Pick a date and time…"
 msgstr "Выбрать дату и время…"
 
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
 msgid "Show From, To and Subject"
 msgstr "Показать поля «От», «Кому» и «Тема»"
 
@@ -3472,12 +3568,6 @@ msgstr "Отправить сейчас вместо запланированн�
 
 msgid "Download password for {name}: {password}"
 msgstr "Пароль для скачивания {name}: {password}"
-
-msgid "From"
-msgstr "От"
-
-msgid "To"
-msgstr "Кому"
 
 msgid "Cc"
 msgstr "Копия"
@@ -3740,6 +3830,17 @@ msgid "Save new contacts in"
 msgstr "Новый контакт"
 
 msgid "Unless another is picked when the contact is made."
+msgstr ""
+
+#, fuzzy
+msgid "In Mail"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Show names from Contacts"
+msgstr "Нет контактов"
+
+msgid "Saved addresses show the contact's name, not the mail's."
 msgstr ""
 
 msgid "Layout"
@@ -4362,6 +4463,15 @@ msgstr "Новое сообщение из шаблона"
 msgid "Clear selection"
 msgstr "Снять выделение"
 
+#. The scope button beside it says where it looks.
+#, fuzzy
+msgid "Search…"
+msgstr "Поиск…"
+
+#, fuzzy
+msgid "Searching the server…"
+msgstr "Поиск…"
+
 msgid "Choose which folders to search"
 msgstr "Выберите папки для поиска"
 
@@ -4427,18 +4537,6 @@ msgstr ""
 
 msgid "What this searches"
 msgstr ""
-
-#, fuzzy
-msgid "Search all folders but Trash and Junk"
-msgstr "Папки поиска"
-
-#, fuzzy
-msgid "Search all folders, Trash and Junk too"
-msgstr "Папки поиска"
-
-#, fuzzy
-msgid "Search this folder"
-msgstr "Папки поиска"
 
 msgid "me"
 msgstr "я"
@@ -4834,6 +4932,25 @@ msgstr "Дата"
 #, fuzzy
 msgid "Message"
 msgstr "Сообщения"
+
+msgid "{name} asked for a read receipt."
+msgstr ""
+
+msgid "{name} asked for a read receipt, to be sent to {addr}."
+msgstr ""
+
+msgid "Send Receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Tells the sender you opened this message"
+msgstr "Ответить всем участникам этого сообщения"
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Sends nothing and stops asking"
+msgstr ""
 
 msgid "Copied"
 msgstr "Скопировано"
@@ -5662,6 +5779,13 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr "Показывать отправителя и тему"
 
+#, fuzzy
+msgid "Read receipts"
+msgstr "Скрыть получателей"
+
+msgid "When someone opens mail you asked a receipt for."
+msgstr ""
+
 msgid "Sound for new mail"
 msgstr "Звук нового письма"
 
@@ -5798,6 +5922,12 @@ msgstr "Всегда загружать удалённое содержимое"
 msgid "Remote content can tell a sender when and where you read."
 msgstr ""
 
+msgid "Pre-load remote content for the next messages"
+msgstr ""
+
+msgid "Their senders can tell they were opened."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Предупреждать о блокировке удалённого содержимого"
 
@@ -5824,6 +5954,13 @@ msgstr "Показывать логотипы отправителей"
 
 msgid ""
 "Most are fetched from the sender's domain, which learns your IP address."
+msgstr ""
+
+#, fuzzy
+msgid "Send read receipts"
+msgstr "Скрыть получателей"
+
+msgid "A receipt tells the sender when you opened the message."
 msgstr ""
 
 msgid "Open at startup"
@@ -5889,6 +6026,12 @@ msgstr "Показывать только эту учётную запись"
 
 msgid "Inboxes"
 msgstr "Входящие"
+
+msgid "Snoozed"
+msgstr ""
+
+msgid "Shown only while mail is snoozed."
+msgstr ""
 
 msgid "Unread counts"
 msgstr "Счётчики непрочитанного"
@@ -7044,6 +7187,19 @@ msgid ""
 "starred."
 msgstr ""
 
+msgid "Keep mail offline"
+msgstr ""
+
+msgid "Leaves out Trash, Junk and Drafts."
+msgstr ""
+
+#, fuzzy
+msgid "Include attachments"
+msgstr "Нет вложений"
+
+msgid "Can consume a lot of hard drive space."
+msgstr ""
+
 #, fuzzy
 msgid "Microsoft 365"
 msgstr "Microsoft 365 / Outlook"
@@ -7103,9 +7259,6 @@ msgstr ""
 
 msgid "Templates"
 msgstr "Шаблоны"
-
-msgid "Snoozed"
-msgstr ""
 
 msgid "Hidden Folders"
 msgstr "Скрытые папки"
@@ -7365,6 +7518,24 @@ msgstr "Отменить"
 msgid "How long Undo is offered after sending."
 msgstr ""
 
+msgid "Request read receipts"
+msgstr ""
+
+#, fuzzy
+msgid "Returned receipts"
+msgstr "Скрыть получателей"
+
+msgid "Sent mail shows who read it; the receipt goes here."
+msgstr ""
+
+#, fuzzy
+msgid "Move to Trash"
+msgstr "Переместить этот черновик в «Корзину»"
+
+#, fuzzy
+msgid "Keep in Inbox"
+msgstr "Оставить во «Входящих»"
+
 #, fuzzy
 msgid "Reply Header"
 msgstr "Адрес для ответа"
@@ -7598,6 +7769,9 @@ msgstr "Удалить"
 msgid "Keep downloaded mail"
 msgstr ""
 
+msgid "Mail inside an account's offline period is kept."
+msgstr ""
+
 msgid "GNOME Files Integration"
 msgstr "Интеграция с «Файлами» GNOME"
 
@@ -7812,15 +7986,24 @@ msgid "Hyprlab"
 msgstr "Hyprlab"
 
 #, fuzzy
+#~ msgid "Search all folders but Trash and Junk"
+#~ msgstr "Папки поиска"
+
+#, fuzzy
+#~ msgid "Search all folders, Trash and Junk too"
+#~ msgstr "Папки поиска"
+
+#, fuzzy
+#~ msgid "Search this folder"
+#~ msgstr "Папки поиска"
+
+#, fuzzy
 #~ msgid "Same as messages"
 #~ msgstr "{n} сообщений"
 
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""
 #~ "Оставить во «Входящих», чтобы только размечать подходящие письма тегами"
-
-#~ msgid "Leave in Inbox"
-#~ msgstr "Оставить во «Входящих»"
 
 #~ msgid ""
 #~ "Which browser a link in a message opens in. Inside its Flatpak sandbox "

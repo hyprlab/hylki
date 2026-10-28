@@ -91,6 +91,19 @@ emaint sync -r bennypowers
 emerge -av mail-client/hylki
 ```
 
+## NixOS
+
+A community-maintained flake lives in
+[clementpoiret's hylki-flake](https://github.com/clementpoiret/hylki-flake)
+(thanks [@clementpoiret](https://github.com/clementpoiret)). It packages the
+latest stable release for x86_64 and aarch64. To run it without installing:
+
+```sh
+nix run github:clementpoiret/hylki-flake
+```
+
+Adding it to a NixOS configuration is covered in its README.
+
 ## Beta channel
 
 Flatpak betas install alongside the stable app as a separate application

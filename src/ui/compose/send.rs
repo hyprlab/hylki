@@ -248,6 +248,8 @@ impl Compose {
             sign: self.sign,
             encrypt: self.encrypt,
             calendar: None,
+            request_receipt: self.request_receipt,
+            receipt_report: None,
             send_at: self.send_at,
         }
     }

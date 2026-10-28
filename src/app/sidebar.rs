@@ -79,6 +79,7 @@ impl AppModel {
             archive_expanded: self.archive_expanded,
             junk_expanded: self.junk_expanded,
             trash_expanded: self.trash_expanded,
+            snoozed_expanded: self.snoozed_expanded,
             favorites: self.favorites.clone(),
             favorites_expanded: self.favorites_expanded,
             smart_expanded: self.smart_expanded,
@@ -345,6 +346,7 @@ impl AppModel {
             archive,
             junk,
             trash,
+            snoozed,
             favorites,
             smart,
             contacts,
@@ -352,7 +354,7 @@ impl AppModel {
         else {
             unreachable!("only SidebarSectionsOpen comes here")
         };
-        let now = (
+        let now = [
             all_inboxes,
             filtered,
             tags,
@@ -362,11 +364,12 @@ impl AppModel {
             archive,
             junk,
             trash,
+            snoozed,
             favorites,
             smart,
             contacts,
-        );
-        let was = (
+        ];
+        let was = [
             self.unified_expanded,
             self.filtered_expanded,
             self.tags_expanded,
@@ -376,10 +379,11 @@ impl AppModel {
             self.archive_expanded,
             self.junk_expanded,
             self.trash_expanded,
+            self.snoozed_expanded,
             self.favorites_expanded,
             self.smart_expanded,
             self.contacts_expanded,
-        );
+        ];
         if now != was {
             self.unified_expanded = all_inboxes;
             self.filtered_expanded = filtered;
@@ -390,6 +394,7 @@ impl AppModel {
             self.archive_expanded = archive;
             self.junk_expanded = junk;
             self.trash_expanded = trash;
+            self.snoozed_expanded = snoozed;
             self.favorites_expanded = favorites;
             self.smart_expanded = smart;
             self.contacts_expanded = contacts;

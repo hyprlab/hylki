@@ -1,6 +1,7 @@
 //! Answers given from the reader that are remembered: the lists
-//! unsubscribed from (unsubscribed.toml) and the invitations answered
-//! (invites.toml).
+//! unsubscribed from (unsubscribed.toml), the invitations answered
+//! (invites.toml) and the read receipts sent or declined (receipts.toml).
+//! Also the receipts that came back for mail sent (read_by.toml).
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -93,4 +94,97 @@ pub(crate) fn save_invite_answers(answers: &[InviteAnswer]) {
         answers: answers[kept..].to_vec(),
     };
     save_plain_toml(invites_path(), &file);
+}
+
+/// How many answered receipt requests are remembered, oldest dropped
+/// first. The server keeps its own mark where it can (`$MDNSent`); this
+/// covers the accounts that keep none, and the moment before a sync.
+const RECEIPT_ANSWER_LIMIT: usize = 1000;
+
+/// A request for a read receipt (#520) that was answered, so it is not
+/// asked about again.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub(crate) struct ReceiptAnswer {
+    /// The Message-ID of the message that asked, bare.
+    pub(crate) key: String,
+    /// Whether a receipt was sent; false when the request was ignored.
+    #[serde(default)]
+    pub(crate) sent: bool,
+    /// Unix seconds of the answer.
+    #[serde(default)]
+    pub(crate) at: i64,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub(super) struct ReceiptAnswerFile {
+    #[serde(default)]
+    answers: Vec<ReceiptAnswer>,
+}
+
+fn receipts_path() -> Option<PathBuf> {
+    config_file("receipts.toml")
+}
+
+/// The receipt requests answered, newest last.
+pub(crate) fn load_receipts() -> Vec<ReceiptAnswer> {
+    read_toml::<ReceiptAnswerFile>(receipts_path())
+        .unwrap_or_default()
+        .answers
+}
+
+pub(crate) fn save_receipts(answers: &[ReceiptAnswer]) {
+    let kept = answers.len().saturating_sub(RECEIPT_ANSWER_LIMIT);
+    let file = ReceiptAnswerFile {
+        answers: answers[kept..].to_vec(),
+    };
+    save_plain_toml(receipts_path(), &file);
+}
+
+/// How many sent messages waiting for a receipt, and how many receipts
+/// that came back, are remembered, oldest dropped first.
+const READ_BY_LIMIT: usize = 2000;
+
+/// A read receipt that came back (#520): the message `key` was shown to
+/// `by` at `at`.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub(crate) struct ReadBy {
+    /// The Message-ID of the message read, bare.
+    pub(crate) key: String,
+    /// The address it was shown to.
+    #[serde(default)]
+    pub(crate) by: String,
+    /// Unix seconds.
+    #[serde(default)]
+    pub(crate) at: i64,
+}
+
+/// The mail sent that asked for a read receipt, and the receipts that
+/// came back. The receipt mail itself is filed away once it is read, so
+/// this is the only record of it.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub(crate) struct ReadByFile {
+    /// Message-IDs, bare, newest last.
+    #[serde(default)]
+    pub(crate) asked: Vec<String>,
+    /// Newest last.
+    #[serde(default)]
+    pub(crate) read: Vec<ReadBy>,
+}
+
+fn read_by_path() -> Option<PathBuf> {
+    config_file("read_by.toml")
+}
+
+pub(crate) fn load_read_by() -> ReadByFile {
+    read_toml::<ReadByFile>(read_by_path()).unwrap_or_default()
+}
+
+pub(crate) fn save_read_by(file: &ReadByFile) {
+    let asked = file.asked.len().saturating_sub(READ_BY_LIMIT);
+    let read = file.read.len().saturating_sub(READ_BY_LIMIT);
+    let file = ReadByFile {
+        asked: file.asked[asked..].to_vec(),
+        read: file.read[read..].to_vec(),
+    };
+    save_plain_toml(read_by_path(), &file);
 }

@@ -63,6 +63,10 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ("k  or  ↑", i18n_noop("Previous message")),
             ("l  or  →", i18n_noop("Open the selected message")),
             ("h  or  ←  or  u", i18n_noop("Back to the message list")),
+            (
+                "→  and  ←",
+                i18n_noop("Open or fold a conversation in the list"),
+            ),
             ("w", i18n_noop("Next message in the conversation")),
             ("b", i18n_noop("Previous message in the conversation")),
             ("/  or  Ctrl+F", i18n_noop("Search")),
@@ -368,11 +372,12 @@ impl AppModel {
             FolderKind::Archive,
             FolderKind::Junk,
             FolderKind::Trash,
+            FolderKind::Snoozed,
         ] {
             let listed = if kind == FolderKind::Inbox {
                 self.unified_inboxes_shown()
             } else {
-                self.unified_kinds.has(kind)
+                self.unified_kinds_listed().has(kind)
             };
             if listed {
                 go(

@@ -203,7 +203,7 @@ impl AppModel {
         }
     }
 
-    /// HYLKI_SHOWCASE_UNIFIED=sent|starred|drafts|archive|junk|trash|smart opens that unified
+    /// HYLKI_SHOWCASE_UNIFIED=sent|starred|drafts|archive|junk|trash|snoozed|smart opens that unified
     /// row at 3s, All Inboxes at 6s and the row again at 9s, so the
     /// timing logs show a cold and a warm open. starred@N picks the
     /// Nth account's row under Starred instead.
@@ -228,6 +228,7 @@ impl AppModel {
                 "archive" => SidebarInput::UnifiedKindRowSelected(FolderKind::Archive),
                 "junk" => SidebarInput::UnifiedKindRowSelected(FolderKind::Junk),
                 "trash" => SidebarInput::UnifiedKindRowSelected(FolderKind::Trash),
+                "snoozed" => SidebarInput::UnifiedKindRowSelected(FolderKind::Snoozed),
                 "filtered" => SidebarInput::UnifiedFilteredSelected,
                 "favorites" => SidebarInput::UnifiedFavoritesSelected,
                 "tags" => SidebarInput::UnifiedTagsSelected,

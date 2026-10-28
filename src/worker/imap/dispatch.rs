@@ -350,6 +350,11 @@ impl<E: Emit> ImapWorker<E> {
             MailRequest::Quota => self.on_quota().await,
             MailRequest::RefreshKeywords { keywords } => self.on_refresh_keywords(keywords).await,
             MailRequest::RefreshFlags { paths } => self.on_refresh_flags(paths).await,
+            // Run from the idle ladder, a folder a step.
+            MailRequest::FindText { gen, terms, paths } => {
+                self.on_find_text(gen, terms, paths);
+                After::Done
+            }
             MailRequest::UndoMove {
                 path,
                 dest,

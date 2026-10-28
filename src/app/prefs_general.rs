@@ -17,7 +17,7 @@ use crate::desktop::icon_theme::apply_icon_theme;
 impl AppModel {
     /// Push the date and clock preference into the formatter and redraw whatever
     /// shows a date: every row carries one, as does the open message.
-    fn apply_date_style(&self) {
+    fn apply_date_style(&mut self) {
         crate::datefmt::set_style(self.date_style, self.clock_style);
         self.message_list.emit(MessageListInput::RefreshDates);
         let current = self.current.clone();
@@ -157,6 +157,10 @@ impl AppModel {
 
             PrefOutput::SetNotificationContent(on) => {
                 pref!(self.notification_content = on);
+            }
+
+            PrefOutput::SetNotifyReceipts(on) => {
+                pref!(self.notify_receipts = on);
             }
 
             PrefOutput::SetNotificationButtons(buttons) => {

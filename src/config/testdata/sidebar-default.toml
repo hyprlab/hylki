@@ -13,6 +13,7 @@ drafts_expanded = false
 archive_expanded = false
 junk_expanded = false
 trash_expanded = false
+snoozed_expanded = false
 favorites = []
 favorites_expanded = false
 smart_expanded = false

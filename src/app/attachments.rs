@@ -22,14 +22,22 @@ use super::msg::AppMsg;
 use crate::ui::dialog::confirm_destructive;
 
 /// Remove downloaded mail older than `days` (#394), off the main thread;
-/// 0 keeps it all.
+/// 0 keeps it all. An account keeping a period offline (#536) keeps that
+/// period, or the prune would remove what its download brings back.
 pub(super) fn prune_downloads(days: u32) {
     if days == 0 {
         return;
     }
-    let before = crate::datefmt::now() - i64::from(days) * 86_400;
+    let now = crate::datefmt::now();
+    let before = now - i64::from(days) * 86_400;
+    let keep: Vec<(u32, i64)> = config::load()
+        .unwrap_or_default()
+        .iter()
+        .enumerate()
+        .filter_map(|(i, a)| Some((i as u32 + 1, a.offline_mail.since(now)?)))
+        .collect();
     std::thread::spawn(move || {
-        match crate::cache::Cache::open().and_then(|c| c.remove_downloaded(Some(before))) {
+        match crate::cache::Cache::open().and_then(|c| c.remove_downloaded_sparing(before, &keep)) {
             Ok(0) => {}
             Ok(n) => {
                 tracing::info!("storage: removed {n} downloaded message(s) older than {days} days")

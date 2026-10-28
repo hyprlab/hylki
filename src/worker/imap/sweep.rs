@@ -253,6 +253,12 @@ pub(super) async fn refresh_unread_counts(
             tracing::debug!("sweep: cannot examine {}", f.path);
             continue;
         };
+        if f.kind == FolderKind::Snoozed {
+            emit(WorkerEvent::SnoozedCount {
+                path: f.path.clone(),
+                count: mb.exists,
+            });
+        }
         let Some(unread) = selected_chip_count(session, Some(f.kind)).await else {
             continue;
         };

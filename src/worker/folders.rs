@@ -6,12 +6,26 @@ use async_imap::types::NameAttribute;
 
 use crate::i18n::i18n;
 use crate::models::{Folder, FolderKind, Message};
+use crate::worker::WorkerEvent;
 
 /// Whether a folder's sidebar chip counts every message rather than unread
 /// ones. Drafts: a draft is never unread, and the chip is there to say how
 /// many are waiting to be finished.
 pub(crate) fn chip_counts_all(kind: FolderKind) -> bool {
     kind == FolderKind::Drafts
+}
+
+/// A [`WorkerEvent::SnoozedCount`] for each Snoozed folder of a listing
+/// whose entries carry a total (#542).
+pub(crate) fn snoozed_counts<T>(list: &[T], of: impl Fn(&T) -> (&Folder, u32)) -> Vec<WorkerEvent> {
+    list.iter()
+        .map(of)
+        .filter(|(f, _)| f.kind == FolderKind::Snoozed)
+        .map(|(f, count)| WorkerEvent::SnoozedCount {
+            path: f.path.clone(),
+            count,
+        })
+        .collect()
 }
 
 /// The chip number for a folder whose messages are all in hand.
@@ -230,6 +244,29 @@ mod tests {
         assert!(folder_order(FolderKind::Snoozed) < folder_order(FolderKind::Custom));
         assert!(!watchable(FolderKind::Snoozed));
         assert!(!chip_counts_all(FolderKind::Snoozed));
+    }
+
+    #[test]
+    fn only_snoozed_folders_report_what_they_hold() {
+        // #542: the unified Snoozed row follows these, so a listing's other
+        // folders send none.
+        let folder = |path: &str, kind| Folder {
+            id: 1,
+            account_id: 1,
+            name: path.into(),
+            path: path.into(),
+            kind,
+            unread: 0,
+        };
+        let list = vec![
+            (folder("INBOX", FolderKind::Inbox), 40),
+            (folder("Snoozed", FolderKind::Snoozed), 3),
+        ];
+        let events = snoozed_counts(&list, |(f, n)| (f, *n));
+        assert!(matches!(
+            events.as_slice(),
+            [WorkerEvent::SnoozedCount { path, count: 3 }] if path == "Snoozed"
+        ));
     }
 
     #[test]

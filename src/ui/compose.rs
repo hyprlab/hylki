@@ -159,7 +159,7 @@ impl Component for Compose {
                             gtk::MenuButton {
                                 set_icon_name: "pan-down-symbolic",
                                 add_css_class: "suggested-action",
-                                set_tooltip_text: Some(i18n("Send later").as_str()),
+                                set_tooltip_text: Some(i18n("Send options").as_str()),
                                 set_can_focus: false,
                                 #[wrap(Some)]
                                 set_popover = &gtk::Popover {
@@ -221,6 +221,16 @@ impl Component for Compose {
                                             connect_clicked[sender] => move |b| {
                                                 if let Some(p) = b.ancestor(gtk::Popover::static_type()).and_downcast::<gtk::Popover>() { p.popdown(); }
                                                 sender.input_sender().emit(ComposeInput::PickSendTime);
+                                            },
+                                        },
+                                        gtk::Separator {},
+                                        gtk::CheckButton {
+                                            add_css_class: "context-menu-item",
+                                            set_label: Some(&i18n("Request a read receipt")),
+                                            set_tooltip_text: Some(&i18n("Not every mail app sends one.")),
+                                            set_active: model.request_receipt,
+                                            connect_toggled[sender] => move |b| {
+                                                sender.input_sender().emit(ComposeInput::ToggleReceipt(b.is_active()));
                                             },
                                         },
                                     },
@@ -471,6 +481,7 @@ impl Component for Compose {
         let handed_files =
             !prefill_attachments.is_empty() && draft_origin.is_none() && outbox_origin.is_none();
         let prefill_encrypt = prefill.encrypt;
+        let request_receipt = prefill.receipt.unwrap_or(false);
         let send_at = prefill.send_at;
         let current_sig = accounts
             .get(selected)
@@ -639,6 +650,7 @@ impl Component for Compose {
             preview_btn,
             preview_content,
             encrypt: false,
+            request_receipt,
             pgp_checking: false,
             pgp_cleared: None,
             send_at,
@@ -957,6 +969,10 @@ impl Component for Compose {
                         self.sign = true;
                         widgets.sign_btn.set_active(true);
                     }
+                }
+                ComposeInput::ToggleReceipt(on) => {
+                    self.request_receipt = on;
+                    self.fields_dirty = true;
                 }
                 ComposeInput::PgpChecked { checked, result } => {
                     self.on_pgp_checked(checked, result, widgets, &sender)

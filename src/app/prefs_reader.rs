@@ -129,11 +129,23 @@ impl AppModel {
                 }
             }
 
+            PrefOutput::SetReceipts(policy) => {
+                if pref!(self.receipts = policy) {
+                    self.refresh_receipt_banners();
+                }
+            }
+
             PrefOutput::SetShowSpoofBanner(on) => {
                 if pref!(self.show_spoof_banner = on) {
                     self.message_view
                         .emit(MessageViewInput::SetSpoofBannerShown(on));
                     self.popouts_emit(|| MessageWindowInput::SetSpoofBannerShown(on));
+                }
+            }
+
+            PrefOutput::SetRemoteAhead(on) => {
+                if pref!(self.remote_ahead = on) && !on {
+                    crate::services::remote_content::fetch_ahead([]);
                 }
             }
 

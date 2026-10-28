@@ -69,6 +69,28 @@ CREATE TABLE bodies (
     PRIMARY KEY (account_id, folder_path, uid)
 )
 
+table body_text
+CREATE VIRTUAL TABLE body_text USING fts5(
+    text, content='', contentless_delete=1, tokenize='unicode61 remove_diacritics 2'
+)
+
+table body_text_config
+CREATE TABLE 'body_text_config'(k PRIMARY KEY, v) WITHOUT ROWID
+
+table body_text_data
+CREATE TABLE 'body_text_data'(id INTEGER PRIMARY KEY, block BLOB)
+
+table body_text_docsize
+CREATE TABLE 'body_text_docsize'(id INTEGER PRIMARY KEY, sz BLOB, origin INTEGER)
+
+trigger body_text_gone
+CREATE TRIGGER body_text_gone AFTER DELETE ON bodies BEGIN
+    DELETE FROM body_text WHERE rowid = old.rowid;
+END
+
+table body_text_idx
+CREATE TABLE 'body_text_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID
+
 table folders
 CREATE TABLE folders (
     account_id INTEGER NOT NULL,
@@ -180,6 +202,7 @@ CREATE TABLE sender_checks (
     unsubscribe TEXT NOT NULL DEFAULT '',
     invite      TEXT NOT NULL DEFAULT '',
     label       TEXT NOT NULL DEFAULT '',
+    receipt     TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (account_id, folder_path, uid)
 )
 

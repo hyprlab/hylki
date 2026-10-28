@@ -72,6 +72,7 @@ async fn find_logo(email: String) -> FaceCmd {
 }
 
 /// Display names from a raw To header: "Ann <a@x>, b@y" -> "Ann, b@y".
+/// A saved contact goes by its saved name when Settings asks (#541).
 pub(crate) fn recipient_names(to: &str) -> String {
     let mut names: Vec<String> = Vec::new();
     for part in to.split(',') {
@@ -79,15 +80,17 @@ pub(crate) fn recipient_names(to: &str) -> String {
         if part.is_empty() {
             continue;
         }
-        let name = match part.split_once('<') {
-            Some((n, _)) if !n.trim().trim_matches('"').is_empty() => {
-                n.trim().trim_matches('"').to_string()
-            }
-            Some((_, rest)) => rest.trim_end_matches('>').trim().to_string(),
-            None => part.to_string(),
+        let addr = match part.split_once('<') {
+            Some((_, rest)) => rest.trim_end_matches('>').trim(),
+            None => part,
         };
+        let name = match part.split_once('<') {
+            Some((n, _)) if !n.trim().trim_matches('"').is_empty() => n.trim().trim_matches('"'),
+            _ => addr,
+        };
+        let name = crate::contacts::shown_name(name, addr);
         if !name.is_empty() {
-            names.push(name);
+            names.push(name.into_owned());
         }
     }
     names.join(", ")
@@ -109,14 +112,14 @@ impl Row {
     pub(super) fn name_line(&self, data: &RowData, look: &RowLook) -> String {
         if !look.show_recipient {
             // A thread head surfaces its NEWEST member's sender.
-            if let Some((name, _)) = &data.meta.from {
-                return name.clone();
+            if let Some((name, addr)) = &data.meta.from {
+                return crate::contacts::shown_name(name, addr).into_owned();
             }
-            return data.msg.from_name.clone();
+            return data.msg.shown_from_name().into_owned();
         }
         let names = recipient_names(&data.msg.to);
         if names.is_empty() {
-            data.msg.from_name.clone()
+            data.msg.shown_from_name().into_owned()
         } else {
             format!("To: {names}")
         }
@@ -133,10 +136,10 @@ impl Row {
                 }
             }
         }
-        if let Some((name, _)) = &data.meta.from {
-            return name.clone();
+        if let Some((name, addr)) = &data.meta.from {
+            return crate::contacts::shown_name(name, addr).into_owned();
         }
-        data.msg.from_name.clone()
+        data.msg.shown_from_name().into_owned()
     }
 
     /// The address face lookups run against — the first recipient's in a

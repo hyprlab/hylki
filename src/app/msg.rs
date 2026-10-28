@@ -14,7 +14,7 @@ use crate::models::{
     Account, Attachment, Folder, FolderKind, KeywordFinding, Message, ThreadSummary,
 };
 use crate::ui::attachments_gallery::GalleryRequest;
-use crate::ui::message_list::{BulkAction, QuickFilter, RowAction};
+use crate::ui::message_list::{BulkAction, DateBound, QuickFilter, RowAction};
 use crate::ui::preferences::PrefOutput;
 use crate::ui::sidebar::CtxAction;
 use crate::worker::OutgoingMessage;
@@ -197,6 +197,7 @@ pub(crate) enum AppMsg {
         archive: bool,
         junk: bool,
         trash: bool,
+        snoozed: bool,
         favorites: bool,
         smart: bool,
         contacts: bool,
@@ -277,6 +278,28 @@ pub(crate) enum AppMsg {
     /// search pool (every folder's messages, so search can span the mailbox).
     SearchActive(bool),
 
+    // ---- on_text_search (text_search.rs) ----
+    /// Find each of `terms` in the bodies on disk (#509).
+    FindInBodies { terms: Vec<String> },
+    /// What the bodies on disk hold, a set for each term.
+    BodiesFound {
+        terms: Vec<String>,
+        hits: Vec<crate::ui::message_list::HitSet>,
+    },
+    /// Ask the servers for mail holding every one of `terms` (#509).
+    FindOnServers {
+        terms: Vec<String>,
+        scope: crate::ui::message_list::ServerScope,
+    },
+    /// An account's server answered a search: (folder path, uid,
+    /// Message-ID) of each message; `done` with its last answer.
+    TextFound {
+        account_id: u32,
+        gen: u64,
+        hits: Vec<(String, u32, String)>,
+        done: bool,
+    },
+
     // ---- on_reader_select (reader_select.rs) ----
     /// Gmail's o or Enter opened a row (#392): the keyboard goes to the
     /// reader, now if the row was already the one open, else once it opens.
@@ -290,6 +313,8 @@ pub(crate) enum AppMsg {
         message: Message,
         thread: Vec<Message>,
         solo: bool,
+        /// The rows likely opened next (#474).
+        ahead: Vec<Message>,
     },
     /// The open conversation gained a member (a reply synced in while it
     /// was on screen): show it in place, without a re-selection.
@@ -321,6 +346,10 @@ pub(crate) enum AppMsg {
     OpenReaderFind,
     /// Turn one of the list header's quick filters on or off (#97, #441).
     SetQuickFilter(QuickFilter, bool),
+    /// Set or clear one end of the quick filters' date range.
+    SetFilterDate(DateBound, Option<chrono::NaiveDate>),
+    /// Open both ends of the quick filters' date range.
+    ClearFilterDates,
     /// Turn every quick filter off.
     ClearQuickFilters,
     /// Delay-policy read marking (#100): fires a couple of seconds after a
@@ -553,6 +582,12 @@ pub(crate) enum AppMsg {
         message_ids: Vec<String>,
         done: bool,
     },
+    /// How many messages an account's Snoozed folder holds (#542).
+    SnoozedCount {
+        account_id: u32,
+        path: String,
+        count: u32,
+    },
 
     // ---- on_workers (workers.rs) ----
     /// Check every account for new mail now.
@@ -637,6 +672,9 @@ pub(crate) enum AppMsg {
     ContactSuggestions,
     /// The background EDS read for the contacts view finished.
     ContactsLoaded(Vec<crate::contacts::ContactDetails>),
+    /// The saved contacts' names by address, read for "Show names from
+    /// Contacts" (#541); empty with the switch off.
+    ContactNamesRead(std::collections::HashMap<String, String>),
     /// Right-click on the sidebar's Contacts row: the external app.
     LaunchGnomeContacts,
     /// Contact editor writes (run on a background thread against EDS).
@@ -717,6 +755,8 @@ pub(crate) enum AppMsg {
         message: Box<Message>,
         info: Box<crate::models::Unsubscribe>,
     },
+    /// A card's read receipt banner (#520): send the receipt, or ignore.
+    ReceiptAnswer { message: Box<Message>, send: bool },
     /// Confirmed: send the request.
     UnsubscribeGo {
         message: Box<Message>,

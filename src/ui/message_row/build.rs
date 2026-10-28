@@ -92,6 +92,10 @@ pub(super) fn build_widgets() -> RowWidgets {
     let star = gtk::Image::from_icon_name("starred-symbolic");
     star.add_css_class("star-icon");
     top.append(&star);
+    // Sent mail's read receipt (#520), beside the date it was sent.
+    let receipt = gtk::Image::from_icon_name("hylki-read-receipt-symbolic");
+    receipt.set_visible(false);
+    top.append(&receipt);
     let date = gtk::Label::new(None);
     date.set_halign(gtk::Align::End);
     // Ellipsized so it stops being the row's floor: it is the one item on
@@ -302,6 +306,7 @@ pub(super) fn build_widgets() -> RowWidgets {
         forwarded,
         clip,
         star,
+        receipt,
         date,
         chip,
         chip_count,

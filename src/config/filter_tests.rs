@@ -640,6 +640,8 @@ fn settings_bundle_roundtrip_parses() {
         empty_junk_days: 0,
         empty_trash_days: 0,
         clean_lists_days: 0,
+        offline_mail: Default::default(),
+        offline_attachments: false,
         pgp_key: None,
         in_unified: true,
         folder_sort: None,

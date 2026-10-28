@@ -394,6 +394,7 @@ impl Component for Sidebar {
                 (FolderKind::Archive, init.archive_expanded),
                 (FolderKind::Junk, init.junk_expanded),
                 (FolderKind::Trash, init.trash_expanded),
+                (FolderKind::Snoozed, init.snoozed_expanded),
             ]),
             kind_widgets: HashMap::new(),
             rail_open: HashMap::new(),

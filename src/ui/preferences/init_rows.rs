@@ -79,12 +79,29 @@ impl Preferences {
             .set_active(init.auto_remote_content);
         widgets
             .privacy
+            .remote_ahead_row
+            .set_active(init.remote_ahead);
+        widgets
+            .privacy
             .show_remote_banner_row
             .set_active(init.show_remote_banner);
         widgets
             .privacy
             .show_spoof_banner_row
             .set_active(init.show_spoof_banner);
+        no_truncate(&widgets.privacy.receipts_row);
+        widgets
+            .privacy
+            .receipts_row
+            .set_selected(super::choices::receipts_index(init.receipts));
+        widgets
+            .composing
+            .request_receipts_row
+            .set_active(init.request_receipts);
+        no_truncate(&widgets.composing.returned_receipts_row);
+        widgets.composing.returned_receipts_row.set_selected(
+            super::choices::returned_receipts_index(init.returned_receipts),
+        );
         widgets.privacy.gravatar_row.set_active(init.gravatar);
         widgets.list.avatars_row.set_active(init.avatars);
         widgets
@@ -125,6 +142,10 @@ impl Preferences {
             .general
             .notification_content_row
             .set_active(init.notification_content);
+        widgets
+            .general
+            .notify_receipts_row
+            .set_active(init.notify_receipts);
         // Set before the handlers can act on it: the self already holds
         // these values, so the echo is ignored rather than played.
         widgets.general.sound_row.set_active(self.sound.enabled);
@@ -205,6 +226,10 @@ impl Preferences {
             .set_active(init.unified_chips.trash);
         widgets
             .sidebar
+            .unified_chip_snoozed_row
+            .set_active(init.unified_chips.snoozed);
+        widgets
+            .sidebar
             .unified_starred_row
             .set_active(init.unified_kinds.starred);
         widgets
@@ -227,6 +252,10 @@ impl Preferences {
             .sidebar
             .unified_trash_row
             .set_active(init.unified_kinds.trash);
+        widgets
+            .sidebar
+            .unified_snoozed_row
+            .set_active(init.unified_kinds.snoozed);
         widgets
             .sidebar
             .section_style_row
@@ -371,6 +400,10 @@ impl Preferences {
             .sidebar
             .rail_fold_trash_row
             .set_active(init.rail_fold.trash);
+        widgets
+            .sidebar
+            .rail_fold_snoozed_row
+            .set_active(init.rail_fold.snoozed);
         widgets
             .sidebar
             .rail_fold_filtered_row

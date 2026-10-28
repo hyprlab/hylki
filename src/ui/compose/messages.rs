@@ -110,6 +110,8 @@ pub(crate) enum ComposeInput {
     ShowPreview(String),
     /// The OpenPGP Encrypt toggle; encrypting turns signing on too.
     ToggleEncrypt(bool),
+    /// The Send menu's read receipt check (#520).
+    ToggleReceipt(bool),
     /// The editor's HTML + plain text came back asynchronously — finish sending.
     SendBody(OutgoingFields),
     /// Save the current message to Drafts.

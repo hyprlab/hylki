@@ -104,7 +104,7 @@ impl AppModel {
                 // account's own folder of that kind.
                 let merged = match kind {
                     FolderKind::Inbox => self.unified_inboxes_shown(),
-                    _ => self.unified_kinds.has(kind),
+                    _ => self.unified_kinds_listed().has(kind),
                 };
                 if merged {
                     self.open_unified(UnifiedView::Kind(kind), sender);

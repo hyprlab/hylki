@@ -57,6 +57,7 @@ impl MessageView {
             self.patch_verify_badge(account_id, id);
             self.patch_unsub(account_id, id);
             self.patch_invite(account_id, id);
+            self.patch_receipt(account_id, id);
         }
     }
 
@@ -180,6 +181,32 @@ impl MessageView {
             let _ = sender.output(MessageViewOutput::Unsubscribe {
                 message: Box::new(message),
                 info: Box::new(info),
+            });
+        }
+    }
+
+    pub(super) fn on_receipt_answer(
+        &mut self,
+        account_id: u32,
+        id: u32,
+        send: bool,
+        sender: &ComponentSender<Self>,
+    ) {
+        let message = self
+            .thread
+            .iter()
+            .find(|m| m.account_id == account_id && m.id == id)
+            .cloned();
+        if let Some(message) = message {
+            // The banner goes at once; the app's answer would take it away
+            // a moment later anyway.
+            if let Some(c) = self.member_checks.get_mut(&(account_id, id)) {
+                c.receipt = None;
+            }
+            self.patch_receipt(account_id, id);
+            let _ = sender.output(MessageViewOutput::ReceiptAnswer {
+                message: Box::new(message),
+                send,
             });
         }
     }

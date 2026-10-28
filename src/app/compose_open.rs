@@ -197,6 +197,7 @@ impl AppModel {
             body_html: e.body_html,
             in_reply_to: e.in_reply_to,
             references: e.references,
+            receipt: Some(e.receipt),
             from_address: first_recipient(&e.from)
                 .map(|(_, addr)| addr)
                 .unwrap_or_default(),

@@ -1,7 +1,7 @@
 //! The list's messages in and out, and the bulk actions.
 
 use super::filters::{CheckFilter, QuickFilters};
-use super::search::{PoolFolder, SearchScope};
+use super::search::{HitSet, PoolFolder, SearchScope, ServerScope};
 use super::sort::SortOrder;
 use super::threading::{thread_slot, SourceThreads};
 use super::RowAction;
@@ -149,6 +149,9 @@ pub(crate) enum MessageListInput {
     /// The GNOME Contacts photo index changed (EDS sync, or the first load
     /// finished) — refresh visible circles without losing the scroll position.
     ContactPhotosChanged,
+    /// The names "Show names from Contacts" puts on mail changed (#541):
+    /// names, the Correspondents column and the sender order with them.
+    ContactNamesChanged,
     /// The open folder is (or stopped being) a Sent folder — rows name the
     /// recipient there instead of the sender (#27).
     SetShowRecipient(bool),
@@ -210,6 +213,9 @@ pub(crate) enum MessageListInput {
     /// When each snoozed message comes back (#527): its row in the Snoozed
     /// folder shows that in place of its date.
     SetSnoozed(crate::ui::message_row::SnoozedRows),
+    /// The read receipts asked for and come back (#520): a sent message's
+    /// row wears checkmarks, green once it was read.
+    SetReceiptMarks(crate::models::ReceiptMarks),
     /// Fill them with senders' own site icons, or stop (#30).
     SetSenderLogos(bool),
     /// The date or clock preference changed: every row's date is built with the
@@ -236,7 +242,24 @@ pub(crate) enum MessageListInput {
         gen: u64,
         query: String,
         text: std::sync::Arc<Vec<Box<str>>>,
-        hits: Vec<bool>,
+        hits: Vec<u64>,
+    },
+    /// Typing paused in the search field: time to ask the servers (#509),
+    /// if `round` is still the search's.
+    SearchServers {
+        round: u64,
+    },
+    /// The messages whose body on disk holds each of `terms` (#509).
+    BodyHits {
+        terms: Vec<String>,
+        hits: Vec<HitSet>,
+    },
+    /// Messages a server found holding every one of `terms` (#509); `done`
+    /// once every account asked has answered.
+    ServerHits {
+        terms: Vec<String>,
+        hits: HitSet,
+        done: bool,
     },
     /// The reader's selection: mirror whichever of these the list has rows for,
     /// so everything that acts on the list's selection acts on the messages the
@@ -298,6 +321,13 @@ pub(crate) enum MessageListInput {
     DebugRowMenu,
     /// Expand/collapse a conversation thread.
     ToggleThread((u32, String)),
+    /// Right or Left on a conversation in the list (#540): open it out or
+    /// fold it. `head` is where its row is when the key was pressed on one
+    /// of its replies, which go with the fold, so the keyboard moves there.
+    FoldByKey {
+        key: (u32, String),
+        head: Option<usize>,
+    },
     /// A collapsing thread's replies have finished sliding shut — drop them
     /// from the list for real (see `start_collapse_thread`).
     FinishCollapseThread((u32, String)),
@@ -402,6 +432,11 @@ pub(crate) enum MessageListInput {
     AtBottom(bool),
     /// Scrolled near the end of the rows on screen: add the next window.
     NearEnd,
+    /// The pointer reached the scrollbar: put the rest of the list on
+    /// screen, so the bar spans all of it.
+    ShowWholeList,
+    /// Describe in full the rows that came on screen without it.
+    FinishRows,
     /// A large list's conversations, worked out off the main loop.
     ThreadsReady {
         gen: u64,
@@ -435,6 +470,9 @@ pub(crate) enum MessageListOutput {
         message: Message,
         thread: Vec<Message>,
         solo: bool,
+        /// The rows the user is likely to open next, for fetching their
+        /// remote content ahead (#474).
+        ahead: Vec<Message>,
     },
     /// Every selected message, whenever that changes — the reader outlines the
     /// matching cards. Each comes with its folder: a view of several folders
@@ -527,6 +565,15 @@ pub(crate) enum MessageListOutput {
     /// scope wider than this folder), so the app can supply or drop the
     /// cross-folder search pool.
     SearchActive(bool),
+    /// Find each of `terms` in the bodies on disk (#509), answered with
+    /// [`MessageListInput::BodyHits`].
+    FindInBodies { terms: Vec<String> },
+    /// Ask the servers for mail holding every one of `terms` (#509),
+    /// answered with [`MessageListInput::ServerHits`].
+    FindOnServers {
+        terms: Vec<String>,
+        scope: ServerScope,
+    },
     /// A column heading changed the sort (#334), by its key: the sort
     /// menus follow.
     SortChanged(&'static str),

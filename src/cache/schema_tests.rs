@@ -243,7 +243,8 @@ fn every_version_gate_drops_and_rewrites_what_it_should() {
 
 /// A sender check as `sender_checks` stores it: the trust tag, the findings
 /// one per line, and the JSON of the OpenPGP verdict, the unsubscribe
-/// handles, the invitation and the sensitivity label.
+/// handles, the invitation, the sensitivity label and the read receipt
+/// asked for.
 #[test]
 fn a_sender_check_row_as_stored() {
     use crate::models::{
@@ -310,14 +311,21 @@ fn a_sender_check_row_as_stored() {
             color: String::new(),
             tooltip: String::new(),
         }),
+        receipt: Some(crate::mail::receipt::ReceiptRequest {
+            to: "ada@x".into(),
+            matches_return_path: true,
+            original_recipient: String::new(),
+            message_id: String::new(),
+        }),
+        read: None,
     };
     cache.save_sender_check(1, "INBOX", 9, &check);
     let row: Vec<String> = cache
         .conn
         .query_row(
-            "SELECT trust, summary, findings, pgp, unsubscribe, invite, label FROM sender_checks",
+            "SELECT trust, summary, findings, pgp, unsubscribe, invite, label, receipt FROM sender_checks",
             [],
-            |r| (0..7).map(|i| r.get::<_, String>(i)).collect(),
+            |r| (0..8).map(|i| r.get::<_, String>(i)).collect(),
         )
         .unwrap();
     assert_golden(
@@ -330,5 +338,6 @@ fn a_sender_check_row_as_stored() {
     assert_eq!(back.unsubscribe, check.unsubscribe);
     assert_eq!(back.invite, check.invite);
     assert_eq!(back.label, check.label);
+    assert_eq!(back.receipt, check.receipt);
     assert_eq!(back.findings, check.findings);
 }

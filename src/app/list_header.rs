@@ -3,10 +3,12 @@
 
 use adw::prelude::*;
 use relm4::prelude::*;
+use std::cell::{Cell, RefCell};
+use std::rc::Rc;
 
 use crate::config;
 use crate::i18n::{i18n, i18n_f, i18n_noop};
-use crate::ui::message_list::{MessageListInput, QuickFilter, QuickFilters};
+use crate::ui::message_list::{DateBound, MessageListInput, QuickFilter, QuickFilters};
 use crate::ui::message_view::MessageViewInput;
 
 use super::model::AppModel;
@@ -41,11 +43,226 @@ const SORT_ORDERS: [(&str, &str); 6] = [
 ];
 
 /// The list header's sort and filter button (#441): the sort orders in one
-/// column of its popover, the quick filters in the other.
+/// column of its popover, the quick filters in the next, the date range in
+/// the last.
 struct SortFilterPopover {
     button: gtk::MenuButton,
     filters: Vec<(QuickFilter, gtk::CheckButton)>,
+    dates: Rc<DateRange>,
     clear: gtk::Button,
+}
+
+/// The popover's date range, its last column: From and To, each a toggle
+/// naming its day, a calendar that sets the one toggled, and Clear Dates.
+/// The calendar sits in the popover itself, as a popover of its own inside
+/// this one would leave this one unable to close on a click outside.
+struct DateRange {
+    ends: [(DateBound, gtk::ToggleButton, gtk::Label); 2],
+    calendar: gtk::Calendar,
+    clear: gtk::Button,
+    days: Rc<Cell<[Option<chrono::NaiveDate>; 2]>>,
+    /// Set while the toggles or the calendar are moved to show the range in
+    /// force, so the move is not taken for a pick.
+    quiet: Rc<Cell<bool>>,
+}
+
+fn end_index(end: DateBound) -> usize {
+    match end {
+        DateBound::From => 0,
+        DateBound::To => 1,
+    }
+}
+
+impl DateRange {
+    fn new(sender: &relm4::Sender<AppMsg>) -> Rc<Self> {
+        let width = widest_day_label();
+        let toggle = |end: DateBound| {
+            // As wide as the longest date it can name, so the popover
+            // keeps its width whichever day is picked.
+            let label = gtk::Label::new(None);
+            label.set_width_chars(width);
+            let button = gtk::ToggleButton::new();
+            button.set_child(Some(&label));
+            button.set_hexpand(true);
+            (end, button, label)
+        };
+        let ends = [toggle(DateBound::From), toggle(DateBound::To)];
+        ends[1].1.set_group(Some(&ends[0].1));
+        let clear = gtk::Button::with_label(&i18n("Clear Dates"));
+        clear.add_css_class("flat");
+        clear.set_halign(gtk::Align::Start);
+        let this = Rc::new(Self {
+            ends,
+            calendar: gtk::Calendar::new(),
+            clear,
+            days: Rc::default(),
+            quiet: Rc::default(),
+        });
+
+        // Toggling an end shows its day on the calendar; an end left open
+        // takes the day in blue.
+        for (end, button, _) in &this.ends {
+            let (end, weak, s) = (*end, Rc::downgrade(&this), sender.clone());
+            button.connect_toggled(move |b| {
+                let Some(this) = weak.upgrade() else { return };
+                if this.quiet.get() || !b.is_active() {
+                    return;
+                }
+                match this.days.get()[end_index(end)] {
+                    Some(day) => this.show_on_calendar(day),
+                    None => s.emit(AppMsg::SetFilterDate(end, calendar_day(&this.calendar))),
+                }
+            });
+        }
+        // The arrows and the keyboard move the day in blue, and the end
+        // being set follows once they rest, rather than on every step.
+        let pending: Rc<RefCell<Option<gtk::glib::SourceId>>> = Rc::default();
+        {
+            let (weak, s, pending) = (Rc::downgrade(&this), sender.clone(), pending.clone());
+            this.calendar.connect_day_selected(move |cal| {
+                let Some(this) = weak.upgrade() else { return };
+                let Some(end) = this.editing() else { return };
+                if this.quiet.get() {
+                    return;
+                }
+                if let Some(id) = pending.take() {
+                    id.remove();
+                }
+                let (cal, s, slot) = (cal.clone(), s.clone(), pending.clone());
+                let id = gtk::glib::timeout_add_local_once(
+                    std::time::Duration::from_millis(250),
+                    move || {
+                        slot.take();
+                        s.emit(AppMsg::SetFilterDate(end, calendar_day(&cal)));
+                    },
+                );
+                pending.replace(Some(id));
+            });
+        }
+        // A click on a day sets the end toggled, From if neither is, the
+        // day already in blue too, which the calendar does not report as
+        // selected again. Captured ahead of the calendar's own click, and
+        // read once that has moved the selection.
+        let click = gtk::GestureClick::new();
+        click.set_propagation_phase(gtk::PropagationPhase::Capture);
+        {
+            let (weak, s) = (Rc::downgrade(&this), sender.clone());
+            click.connect_pressed(move |_, presses, x, y| {
+                let Some(this) = weak.upgrade() else { return };
+                let on_day = this
+                    .calendar
+                    .pick(x, y, gtk::PickFlags::DEFAULT)
+                    .is_some_and(|w| w.has_css_class("day-number"));
+                if presses != 1 || !on_day {
+                    return;
+                }
+                let (weak, s, pending) = (weak.clone(), s.clone(), pending.clone());
+                gtk::glib::idle_add_local_once(move || {
+                    let Some(this) = weak.upgrade() else { return };
+                    if let Some(id) = pending.take() {
+                        id.remove();
+                    }
+                    let end = this.editing().unwrap_or(DateBound::From);
+                    this.quiet.set(true);
+                    this.ends[end_index(end)].1.set_active(true);
+                    this.quiet.set(false);
+                    s.emit(AppMsg::SetFilterDate(end, calendar_day(&this.calendar)));
+                });
+            });
+        }
+        this.calendar.add_controller(click);
+        let s = sender.clone();
+        this.clear
+            .connect_clicked(move |_| s.emit(AppMsg::ClearFilterDates));
+        this.show(QuickFilters::default());
+        this
+    }
+
+    /// The end the calendar sets: the one toggled, if either is.
+    fn editing(&self) -> Option<DateBound> {
+        self.ends
+            .iter()
+            .find(|(_, b, _)| b.is_active())
+            .map(|(end, _, _)| *end)
+    }
+
+    fn show_on_calendar(&self, day: chrono::NaiveDate) {
+        use chrono::Datelike;
+        if calendar_day(&self.calendar) == Some(day) {
+            return;
+        }
+        if let Ok(at) = gtk::glib::DateTime::from_local(
+            day.year(),
+            day.month() as i32,
+            day.day() as i32,
+            12,
+            0,
+            0.0,
+        ) {
+            self.quiet.set(true);
+            self.calendar.select_day(&at);
+            self.quiet.set(false);
+        }
+    }
+
+    /// Show the range in force: each end's day on its toggle, the end being
+    /// set on the calendar, and neither toggled once both are open.
+    fn show(&self, filters: QuickFilters) {
+        let days = [filters.date(DateBound::From), filters.date(DateBound::To)];
+        self.days.set(days);
+        for ((_, button, label), day) in self.ends.iter().zip(days) {
+            label.set_label(&day.map_or_else(|| i18n("Any Date"), day_label));
+            if day.is_none() && days.iter().all(Option::is_none) && button.is_active() {
+                self.quiet.set(true);
+                button.set_active(false);
+                self.quiet.set(false);
+            }
+        }
+        if let Some(day) = self.editing().and_then(|end| days[end_index(end)]) {
+            self.show_on_calendar(day);
+        }
+        self.clear.set_sensitive(filters.has_dates());
+    }
+}
+
+/// The day selected on `cal`.
+fn calendar_day(cal: &gtk::Calendar) -> Option<chrono::NaiveDate> {
+    let d = cal.date();
+    chrono::NaiveDate::from_ymd_opt(d.year(), d.month() as u32, d.day_of_month() as u32)
+}
+
+/// The most characters a date button names: Any Date, or a two-digit day
+/// of the longest month written as the list writes dates.
+fn widest_day_label() -> i32 {
+    (1..=12)
+        .filter_map(|m| chrono::NaiveDate::from_ymd_opt(2026, m, 28))
+        .map(day_label)
+        .chain([i18n("Any Date")])
+        .map(|t| t.chars().count())
+        .max()
+        .unwrap_or(12) as i32
+        + 1
+}
+
+/// A day as the list writes dates, at its noon so no clock change moves it.
+fn day_label(day: chrono::NaiveDate) -> String {
+    use chrono::TimeZone;
+    day.and_hms_opt(12, 0, 0)
+        .and_then(|t| chrono::Local.from_local_datetime(&t).earliest())
+        .map(|t| crate::datefmt::day_month_year(t.timestamp()))
+        .unwrap_or_default()
+}
+
+/// The date range for the button's tooltip.
+fn range_label(filters: QuickFilters) -> Option<String> {
+    let from = filters.date(DateBound::From).map(day_label);
+    let to = filters.date(DateBound::To).map(day_label);
+    match (from, to) {
+        (Some(from), Some(to)) => Some(i18n_f("{from} to {to}", &[("from", &from), ("to", &to)])),
+        (Some(date), None) => Some(i18n_f("Since {date}", &[("date", &date)])),
+        (None, Some(date)) => Some(i18n_f("Until {date}", &[("date", &date)])),
+        (None, None) => None,
+    }
 }
 
 impl SortFilterPopover {
@@ -115,17 +332,39 @@ impl SortFilterPopover {
         clear.connect_clicked(move |_| s.emit(AppMsg::ClearQuickFilters));
         filter_col.append(&clear);
 
+        let dates_col = column(&i18n("Dates"));
+        let dates = gtk::Grid::new();
+        dates.add_css_class("sort-filter-dates");
+        dates.set_row_spacing(6);
+        dates.set_column_spacing(8);
+        let range = DateRange::new(sender);
+        for (row, (end, button, _)) in range.ends.iter().enumerate() {
+            let label = gtk::Label::new(Some(&match end {
+                DateBound::From => i18n("From"),
+                DateBound::To => i18n("To"),
+            }));
+            label.set_xalign(0.0);
+            dates.attach(&label, 0, row as i32, 1, 1);
+            dates.attach(button, 1, row as i32, 1, 1);
+        }
+        dates.attach(&range.calendar, 0, 2, 2, 1);
+        dates_col.append(&dates);
+        dates_col.append(&range.clear);
+
         let columns = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         columns.add_css_class("sort-filter-popover");
         columns.append(&sort_col);
         columns.append(&gtk::Separator::new(gtk::Orientation::Vertical));
         columns.append(&filter_col);
+        columns.append(&gtk::Separator::new(gtk::Orientation::Vertical));
+        columns.append(&dates_col);
         let popover = gtk::Popover::new();
         popover.set_child(Some(&columns));
         button.set_popover(Some(&popover));
         Self {
             button,
             filters,
+            dates: range,
             clear,
         }
     }
@@ -138,6 +377,7 @@ impl SortFilterPopover {
                 check.set_active(filters.has(*f));
             }
         }
+        self.dates.show(filters);
         self.clear.set_sensitive(!filters.is_empty());
         if filters.is_empty() {
             self.button.remove_css_class("list-filter-active");
@@ -149,6 +389,7 @@ impl SortFilterPopover {
                 .iter()
                 .filter(|f| filters.has(**f))
                 .map(|f| f.label())
+                .chain(range_label(filters))
                 .collect();
             self.button.set_tooltip_text(Some(&i18n_f(
                 "Filtered: {names}",

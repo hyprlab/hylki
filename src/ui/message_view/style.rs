@@ -225,9 +225,10 @@ pub(super) fn auto_direction(doc: &str) -> String {
 /// refuses the fetch.
 pub(super) fn inject_csp(html: &str, allow_remote: bool, dark: bool) -> String {
     let policy = if allow_remote {
-        "default-src 'none'; img-src http: https: data: cid:; \
-         style-src 'unsafe-inline' http: https: data:; \
-         font-src http: https: data:; media-src http: https: data:"
+        "default-src 'none'; img-src http: https: hylki-http: hylki-https: data: cid:; \
+         style-src 'unsafe-inline' http: https: hylki-http: hylki-https: data:; \
+         font-src http: https: hylki-http: hylki-https: data:; \
+         media-src http: https: hylki-http: hylki-https: data:"
     } else {
         "default-src 'none'; img-src data: cid:; style-src 'unsafe-inline' data:; \
          font-src data:; media-src data:"

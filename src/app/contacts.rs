@@ -6,6 +6,8 @@ use relm4::prelude::*;
 use crate::i18n::{i18n, i18n_f, ni18n_f};
 use crate::ui::contacts_page::ContactsPageInput;
 use crate::ui::message_list::MessageListInput;
+use crate::ui::message_view::MessageViewInput;
+use crate::ui::message_window::MessageWindowInput;
 use crate::ui::notifications::NotifyInput;
 use crate::ui::preferences::PrefInput;
 use crate::ui::sidebar::SidebarInput;
@@ -94,6 +96,19 @@ fn import_summary(o: &crate::contacts::local::ImportOutcome) -> (String, bool) {
 }
 
 impl AppModel {
+    /// Read the names "Show names from Contacts" puts on mail (#541) off
+    /// the main thread, or let them go when the switch is off.
+    pub(super) fn read_contact_names(&self, sender: &ComponentSender<Self>) {
+        if !self.contact_names || demo_mode() {
+            sender.input(AppMsg::ContactNamesRead(Default::default()));
+            return;
+        }
+        let s = sender.clone();
+        std::thread::spawn(move || {
+            s.input(AppMsg::ContactNamesRead(crate::contacts::read_saved_names()));
+        });
+    }
+
     /// The window a dialog opened from Settings belongs to: Settings while
     /// it is open, else the main window.
     pub(super) fn dialog_parent(&self) -> Option<gtk::Window> {
@@ -243,6 +258,9 @@ impl AppModel {
                 // reader's cards draw initials only, so it has nothing to do.
                 self.message_list
                     .emit(MessageListInput::ContactPhotosChanged);
+                if self.contact_names {
+                    self.read_contact_names(&sender);
+                }
                 // The books' files changed: a sync landed, which EDS writes
                 // after its refresh call has already returned (#408).
                 if self.showing_contacts && !demo_mode() {
@@ -316,6 +334,24 @@ impl AppModel {
                 // whether a sender is in Contacts should know.
                 if self.filters.iter().any(|r| r.needs_contacts()) {
                     self.saved_addresses.refresh();
+                }
+                if self.contact_names {
+                    self.read_contact_names(&sender);
+                }
+            }
+
+            AppMsg::ContactNamesRead(names) => {
+                // A late read must not bring back names switched off since.
+                let names = if self.contact_names {
+                    names
+                } else {
+                    Default::default()
+                };
+                if crate::contacts::set_contact_names(names) {
+                    self.message_list
+                        .emit(MessageListInput::ContactNamesChanged);
+                    self.message_view.emit(MessageViewInput::FacesChanged);
+                    self.popouts_emit(|| MessageWindowInput::FacesChanged);
                 }
             }
 

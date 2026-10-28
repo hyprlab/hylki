@@ -143,6 +143,12 @@ fn build_message(
             &msg.in_reply_to,
         )));
     }
+    // A read receipt asked for (#520) comes back to the address it left
+    // from. A receipt never asks for one itself. A draft keeps the header
+    // too, so the composer finds the request again when it is reopened.
+    if msg.request_receipt && msg.receipt_report.is_none() {
+        builder = builder.raw_header(super::report::request_header(&from_addr));
+    }
     // Reply-To (#58): answers go where the sender asked, not to From.
     for (name, addr) in parse_recipients(&msg.reply_to) {
         if let Ok(mbox) = mailbox(&name, &addr) {
@@ -177,6 +183,10 @@ fn build_message(
             .singlepart(SinglePart::plain(msg.body.clone()))
             .singlepart(part);
         return Ok(builder.multipart(alt)?);
+    }
+    // A read receipt (#520): its words and its report, nothing else.
+    if let Some(fields) = &msg.receipt_report {
+        return Ok(builder.multipart(super::report::report_multipart(&msg.body, fields)?)?);
     }
     let has_html = !msg.html.trim().is_empty();
     // The message's readable half: alternative(plain, html) — wrapped in

@@ -53,7 +53,8 @@ impl AppModel {
             | AppMsg::SnoozeMessages { .. }
             | AppMsg::SnoozeMenu
             | AppMsg::WakeSnoozed
-            | AppMsg::Unsnoozed { .. }) => self.on_snooze(msg, sender),
+            | AppMsg::Unsnoozed { .. }
+            | AppMsg::SnoozedCount { .. }) => self.on_snooze(msg, sender),
             msg @ (AppMsg::ShowOutbox
             | AppMsg::OutboxItems { .. }
             | AppMsg::EditCurrentOutbox
@@ -106,6 +107,10 @@ impl AppModel {
             msg @ (AppMsg::SearchPoolLoaded { .. }
             | AppMsg::SearchPoolBuilt { .. }
             | AppMsg::SearchActive(..)) => self.on_search(msg, sender),
+            msg @ (AppMsg::FindInBodies { .. }
+            | AppMsg::BodiesFound { .. }
+            | AppMsg::FindOnServers { .. }
+            | AppMsg::TextFound { .. }) => self.on_text_search(msg, sender),
             msg @ (AppMsg::OpenedByKey { .. }
             | AppMsg::ClearReader
             | AppMsg::MessageSelected { .. }
@@ -116,6 +121,8 @@ impl AppModel {
             | AppMsg::OpenListSearch
             | AppMsg::OpenReaderFind
             | AppMsg::SetQuickFilter(..)
+            | AppMsg::SetFilterDate(..)
+            | AppMsg::ClearFilterDates
             | AppMsg::ClearQuickFilters
             | AppMsg::DeferredMarkRead { .. }
             | AppMsg::SelectionKeys(..)
@@ -202,6 +209,7 @@ impl AppModel {
             | AppMsg::ContactBooksLoaded { .. }
             | AppMsg::ContactSuggestions
             | AppMsg::ContactsLoaded(..)
+            | AppMsg::ContactNamesRead(..)
             | AppMsg::LaunchGnomeContacts
             | AppMsg::SaveContact { .. }
             | AppMsg::CreateContact { .. }
@@ -229,6 +237,7 @@ impl AppModel {
             | AppMsg::UnsubscribeByMail { .. }
             | AppMsg::UnsubscribeDone { .. }) => self.on_unsubscribe(msg, sender),
             msg @ AppMsg::InviteAction { .. } => self.on_invites(msg),
+            AppMsg::ReceiptAnswer { message, send } => self.answer_receipt(&message, send),
             msg @ (AppMsg::ListOverflowMenu
             | AppMsg::ListPaneWidth(..)
             | AppMsg::ListCount(..)
@@ -431,6 +440,7 @@ impl AppModel {
             | PrefOutput::SetPush(..)
             | PrefOutput::SetNotifications(..)
             | PrefOutput::SetNotificationContent(..)
+            | PrefOutput::SetNotifyReceipts(..)
             | PrefOutput::SetNotificationButtons(..)
             | PrefOutput::SetRunInBackground(..)
             | PrefOutput::SetAutostart(..)
@@ -461,7 +471,9 @@ impl AppModel {
             | PrefOutput::SetToolbarFoldRight(..)
             | PrefOutput::SetShowRemoteBanner(..)
             | PrefOutput::SetShowSpoofBanner(..)
+            | PrefOutput::SetReceipts(..)
             | PrefOutput::SetAutoRemoteContent(..)
+            | PrefOutput::SetRemoteAhead(..)
             | PrefOutput::SetThreading(..)
             | PrefOutput::SetThreadExpansion(..)
             | PrefOutput::SetThreadRowNewest(..)
@@ -490,6 +502,7 @@ impl AppModel {
             | PrefOutput::SetListColumnScroll(..)
             | PrefOutput::SetListSearchOpen(..)
             | PrefOutput::SetContactsSearchOpen(..)
+            | PrefOutput::SetContactNames(..)
             | PrefOutput::SetListSearchBottom(..)
             | PrefOutput::SetListBulkBarBottom(..)
             | PrefOutput::SetGroupByDate(..)
@@ -525,7 +538,9 @@ impl AppModel {
             | PrefOutput::SetSignaturePosition(..)
             | PrefOutput::SetSignatureDashes(..)
             | PrefOutput::SetReplyHeader(..)
-            | PrefOutput::SetUndoSend(..)) => self.on_prefs_compose_pref(pref),
+            | PrefOutput::SetUndoSend(..)
+            | PrefOutput::SetRequestReceipts(..)
+            | PrefOutput::SetReturnedReceipts(..)) => self.on_prefs_compose_pref(pref),
             // The rest of Preferences' outputs are mapped to their own
             // messages before they get here.
             _ => {}

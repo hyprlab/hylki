@@ -399,6 +399,7 @@ fn drop_stale_tables(conn: &Connection, version: i64) {
             "DROP TABLE IF EXISTS folders;\
              DROP TABLE IF EXISTS messages;\
              DROP TABLE IF EXISTS bodies;\
+             DROP TABLE IF EXISTS body_text;\
              DROP TABLE IF EXISTS sender_checks;\
              DROP TABLE IF EXISTS attachments;\
              DROP TABLE IF EXISTS attachments_checked;",
@@ -409,7 +410,7 @@ fn drop_stale_tables(conn: &Connection, version: i64) {
         // stale entry would survive forever — drop it and let it re-render on
         // next open. The message index is kept: it's expensive to rebuild.
         let _ =
-            conn.execute_batch("DROP TABLE IF EXISTS bodies; DROP TABLE IF EXISTS sender_checks;");
+            conn.execute_batch("DROP TABLE IF EXISTS bodies; DROP TABLE IF EXISTS body_text; DROP TABLE IF EXISTS sender_checks;");
         // Attachment lists cached by builds before v13 are wrong in place
         // (small declared files missing, blobs duplicated per Gmail label),
         // and `attachments_checked` would keep them from ever re-fetching.
@@ -428,7 +429,7 @@ fn drop_stale_tables(conn: &Connection, version: i64) {
 /// each is added in place rather than dropping the message index, which
 /// would cost every user a full re-sync; the error when a column is already
 /// there is the expected outcome, not a problem.
-const ADDED_COLUMNS: [&str; 14] = [
+const ADDED_COLUMNS: [&str; 15] = [
     // The list preview.
     "ALTER TABLE messages ADD COLUMN preview TEXT NOT NULL DEFAULT ''",
     // Send Later (#145): when a queued message is due; NULL sends at once.
@@ -466,6 +467,9 @@ const ADDED_COLUMNS: [&str; 14] = [
     // And the sensitivity label (#411). A check stored before has none:
     // its message shows its label once it is fetched again.
     "ALTER TABLE sender_checks ADD COLUMN label TEXT NOT NULL DEFAULT ''",
+    // And the read receipt asked for (#520). A check stored before has
+    // none, so mail that arrived earlier never asks.
+    "ALTER TABLE sender_checks ADD COLUMN receipt TEXT NOT NULL DEFAULT ''",
 ];
 
 /// The cleanups run at every open, whatever the version.

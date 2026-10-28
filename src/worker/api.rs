@@ -254,7 +254,33 @@ pub(crate) enum MailRequest {
     /// only, and a Smart Folder or Starred view lists folders that are not
     /// open. Answered with [`WorkerEvent::FlagsSynced`].
     RefreshFlags { paths: Vec<String> },
+    /// Find the mail in `paths` holding every one of `terms` (#509), in its
+    /// text as the server searches it. Answered with
+    /// [`WorkerEvent::TextFound`], a folder at a time on a server searched
+    /// folder by folder; a newer search ([`text_search_is_current`]) stops
+    /// an older one.
+    FindText {
+        gen: u64,
+        terms: Vec<String>,
+        paths: Vec<String>,
+    },
 }
+
+/// The newest text search the app asked for (#509).
+static TEXT_SEARCH: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+/// Note `gen` as the newest text search, before it is sent to the workers.
+pub(crate) fn begin_text_search(gen: u64) {
+    TEXT_SEARCH.store(gen, std::sync::atomic::Ordering::Relaxed);
+}
+
+/// Whether `gen` is still the newest text search, worth going on with.
+pub(crate) fn text_search_is_current(gen: u64) -> bool {
+    TEXT_SEARCH.load(std::sync::atomic::Ordering::Relaxed) == gen
+}
+
+/// The most messages a server search answers with, per folder or account.
+pub(crate) const TEXT_SEARCH_LIMIT: usize = 1000;
 
 /// A message composed by the user, ready to send.
 #[derive(Debug, Clone)]
@@ -309,6 +335,12 @@ pub(crate) struct OutgoingMessage {
     /// plain text so a calendar reads the answer and a person reads the
     /// sentence.
     pub(crate) calendar: Option<CalendarPart>,
+    /// Ask for a read receipt (#520): a `Disposition-Notification-To`
+    /// naming the From address.
+    pub(crate) request_receipt: bool,
+    /// A read receipt (#520): the fields of its report, sent with `body` as
+    /// the words beside them in a `multipart/report`.
+    pub(crate) receipt_report: Option<String>,
 }
 
 /// The calendar half of an outgoing message (#223).
@@ -410,6 +442,13 @@ pub(crate) enum WorkerEvent {
     FlagsSynced {
         paths: Vec<String>,
     },
+    /// What [`MailRequest::FindText`] found: (folder path, uid, Message-ID)
+    /// of each message. `done` with the last answer for the search.
+    TextFound {
+        gen: u64,
+        hits: Vec<(String, u32, String)>,
+        done: bool,
+    },
     /// The background backfill for a folder finished — its whole index is now
     /// present, so the UI can stop expecting more rows to stream in.
     BackfillDone {
@@ -436,6 +475,14 @@ pub(crate) enum WorkerEvent {
     FolderUnreadByPath {
         path: String,
         unread: u32,
+    },
+    /// How many messages the Snoozed folder `path` holds (#542), snoozed
+    /// here or by another computer, read by the same checks that recount
+    /// the unread chips. The app lists the unified Snoozed row while one
+    /// holds anything. By path, as folder ids shift.
+    SnoozedCount {
+        path: String,
+        count: u32,
     },
     /// A `SetSeen` has been stored (or failed): the app stops holding its own
     /// read state for that message over what the server reports.

@@ -10,7 +10,7 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-use super::prefs::ReplyCopies;
+use super::prefs::{OfflineMail, ReplyCopies};
 use super::secrets::{
     keyring_later, store_alias_smtp_password, store_oauth_refresh, store_password,
     store_smtp_password,
@@ -297,6 +297,12 @@ pub(crate) struct AccountConfig {
     /// each sync. 0 = never.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub(crate) clean_lists_days: u32,
+    /// How much mail is kept on disk ahead of being opened (#536).
+    #[serde(default, skip_serializing_if = "OfflineMail::is_default")]
+    pub(crate) offline_mail: OfflineMail,
+    /// Whether that mail's attachments are kept too.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub(crate) offline_attachments: bool,
     /// The OpenPGP key (fingerprint) that signs mail from this account and
     /// opens what is encrypted to it (#133); `None` = the key whose address
     /// matches.
@@ -568,6 +574,8 @@ pub(crate) fn blank_account() -> AccountConfig {
         empty_junk_days: 0,
         empty_trash_days: 0,
         clean_lists_days: 0,
+        offline_mail: Default::default(),
+        offline_attachments: false,
         pgp_key: None,
         in_unified: true,
         folder_sort: None,

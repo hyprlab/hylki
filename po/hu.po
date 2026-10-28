@@ -690,6 +690,25 @@ msgstr "Olvasatlanok elöl"
 msgid "Starred first"
 msgstr "Olvasatlanok elöl"
 
+#, fuzzy
+msgid "Clear Dates"
+msgstr "Keresési szűrők"
+
+msgid "Any Date"
+msgstr ""
+
+#, fuzzy
+msgid "{from} to {to}"
+msgstr "{cur} / {total}"
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "lejár: {date}"
+
+#, fuzzy
+msgid "Until {date}"
+msgstr "lejár: {date}"
+
 msgid "Sort by"
 msgstr "Rendezés"
 
@@ -700,6 +719,15 @@ msgstr "Csak olvasatlanok megjelenítése"
 #, fuzzy
 msgid "Clear Filters"
 msgstr "Keresési szűrők"
+
+msgid "Dates"
+msgstr ""
+
+msgid "From"
+msgstr "Feladó"
+
+msgid "To"
+msgstr "Címzett"
 
 #, fuzzy
 msgid "Sort and filter messages"
@@ -754,6 +782,10 @@ msgstr "Kijelölt üzenet megnyitása"
 
 msgid "Back to the message list"
 msgstr "Vissza az üzenetlistához"
+
+#, fuzzy
+msgid "Open or fold a conversation in the list"
+msgstr "A teljes beszélgetés"
 
 msgid "Next message in the conversation"
 msgstr "A beszélgetés következő üzenete"
@@ -1239,6 +1271,27 @@ msgstr "{n} üzenet törlése"
 msgid "Customize Toolbar…"
 msgstr "Eszköztár testreszabása…"
 
+msgid "Read receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Read: {subject}"
+msgstr "Elfogadva: {subject}"
+
+msgid ""
+"This is a read receipt for the message sent to {to} on {date} with the "
+"subject \"{subject}\"."
+msgstr ""
+
+msgid ""
+"It means the message was shown on the recipient's screen, not that it was "
+"read or understood."
+msgstr ""
+
+#, fuzzy
+msgid "Read by {reader}"
+msgstr "Válaszcím"
+
 msgid "Full Release Notes on GitHub"
 msgstr "A teljes verzióinformáció a GitHub-on"
 
@@ -1534,6 +1587,26 @@ msgstr ""
 
 msgid "Date"
 msgstr ""
+
+#, fuzzy
+msgid "Newest messages"
+msgstr "Legújabb üzenet elöl"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Vezetéknév"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Havonta ismétlődik"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Vezetéknév"
+
+#, fuzzy
+msgid "All mail"
+msgstr "E-mail hozzáadása"
 
 msgid "With sent mail"
 msgstr ""
@@ -1841,6 +1914,17 @@ msgstr "Várakozás {ago} óta"
 
 msgid "Scheduled for {when}"
 msgstr "Ütemezve ekkorra: {when}"
+
+#, fuzzy
+msgid "No read receipt yet"
+msgstr "Címzettek elrejtése"
+
+msgid "{who}, {when}"
+msgstr ""
+
+#, fuzzy
+msgid "Read by {count} of {total}"
+msgstr "{name} · {current} / {total}"
 
 #, fuzzy
 msgid "Verified sender"
@@ -3447,6 +3531,10 @@ msgstr "Piszkozat törlése"
 msgid "Send"
 msgstr "Küldés"
 
+#, fuzzy
+msgid "Send options"
+msgstr "Műveletek"
+
 msgid "Send now"
 msgstr "Küldés most"
 
@@ -3462,6 +3550,12 @@ msgstr "Hétfő reggel ({time})"
 msgid "Pick a date and time…"
 msgstr "Dátum és idő kiválasztása…"
 
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
 msgid "Show From, To and Subject"
 msgstr "Feladó, címzett és tárgy megjelenítése"
 
@@ -3470,12 +3564,6 @@ msgstr "Küldés inkább most"
 
 msgid "Download password for {name}: {password}"
 msgstr "Letöltési jelszó ehhez: {name}: {password}"
-
-msgid "From"
-msgstr "Feladó"
-
-msgid "To"
-msgstr "Címzett"
 
 msgid "Cc"
 msgstr "Másolat (Cc)"
@@ -3739,6 +3827,17 @@ msgid "Save new contacts in"
 msgstr "Új névjegy"
 
 msgid "Unless another is picked when the contact is made."
+msgstr ""
+
+#, fuzzy
+msgid "In Mail"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Show names from Contacts"
+msgstr "Nincsenek névjegyek"
+
+msgid "Saved addresses show the contact's name, not the mail's."
 msgstr ""
 
 msgid "Layout"
@@ -4342,6 +4441,15 @@ msgstr "Legújabb üzenet elöl"
 msgid "Clear selection"
 msgstr "Kijelölés törlése"
 
+#. The scope button beside it says where it looks.
+#, fuzzy
+msgid "Search…"
+msgstr "Keresés…"
+
+#, fuzzy
+msgid "Searching the server…"
+msgstr "Keresés…"
+
 msgid "Choose which folders to search"
 msgstr "Válassza ki a keresendő mappákat"
 
@@ -4407,18 +4515,6 @@ msgstr ""
 
 msgid "What this searches"
 msgstr ""
-
-#, fuzzy
-msgid "Search all folders but Trash and Junk"
-msgstr "Keresés a mappákban"
-
-#, fuzzy
-msgid "Search all folders, Trash and Junk too"
-msgstr "Keresés a mappákban"
-
-#, fuzzy
-msgid "Search this folder"
-msgstr "Keresés a mappákban"
 
 #, fuzzy
 msgid "me"
@@ -4816,6 +4912,25 @@ msgstr ""
 #, fuzzy
 msgid "Message"
 msgstr "Nincsenek üzenetek"
+
+msgid "{name} asked for a read receipt."
+msgstr ""
+
+msgid "{name} asked for a read receipt, to be sent to {addr}."
+msgstr ""
+
+msgid "Send Receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Tells the sender you opened this message"
+msgstr "Válasz az üzenet minden címzettjének"
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Sends nothing and stops asking"
+msgstr ""
 
 msgid "Copied"
 msgstr "Másolva"
@@ -5659,6 +5774,13 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr "Feladó és tárgy megjelenítése"
 
+#, fuzzy
+msgid "Read receipts"
+msgstr "Címzettek elrejtése"
+
+msgid "When someone opens mail you asked a receipt for."
+msgstr ""
+
 msgid "Sound for new mail"
 msgstr "Hangjelzés új e-mail érkezésekor"
 
@@ -5795,6 +5917,12 @@ msgstr "Távoli tartalom mindig töltődjön be"
 msgid "Remote content can tell a sender when and where you read."
 msgstr ""
 
+msgid "Pre-load remote content for the next messages"
+msgstr ""
+
+msgid "Their senders can tell they were opened."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Figyelmeztetés távoli tartalom blokkolásakor"
 
@@ -5821,6 +5949,13 @@ msgstr "Feladói logók megjelenítése"
 
 msgid ""
 "Most are fetched from the sender's domain, which learns your IP address."
+msgstr ""
+
+#, fuzzy
+msgid "Send read receipts"
+msgstr "Címzettek elrejtése"
+
+msgid "A receipt tells the sender when you opened the message."
 msgstr ""
 
 msgid "Open at startup"
@@ -5886,6 +6021,12 @@ msgstr "Csak ezt a fiókot mutasd"
 
 msgid "Inboxes"
 msgstr "Beérkezett üzenetek"
+
+msgid "Snoozed"
+msgstr ""
+
+msgid "Shown only while mail is snoozed."
+msgstr ""
 
 msgid "Unread counts"
 msgstr "Olvasatlanok száma"
@@ -7060,6 +7201,19 @@ msgid ""
 "starred."
 msgstr ""
 
+msgid "Keep mail offline"
+msgstr ""
+
+msgid "Leaves out Trash, Junk and Drafts."
+msgstr ""
+
+#, fuzzy
+msgid "Include attachments"
+msgstr "Nincsenek mellékletek"
+
+msgid "Can consume a lot of hard drive space."
+msgstr ""
+
 #, fuzzy
 msgid "Microsoft 365"
 msgstr "Microsoft 365 / Outlook"
@@ -7118,9 +7272,6 @@ msgstr ""
 "kiküldött leveleket. Letiltja a fenti „Másolat mentése” opciót."
 
 msgid "Templates"
-msgstr ""
-
-msgid "Snoozed"
 msgstr ""
 
 msgid "Hidden Folders"
@@ -7386,6 +7537,24 @@ msgstr "Visszavonás"
 msgid "How long Undo is offered after sending."
 msgstr ""
 
+msgid "Request read receipts"
+msgstr ""
+
+#, fuzzy
+msgid "Returned receipts"
+msgstr "Címzettek elrejtése"
+
+msgid "Sent mail shows who read it; the receipt goes here."
+msgstr ""
+
+#, fuzzy
+msgid "Move to Trash"
+msgstr "Piszkozat áthelyezése a Kukába"
+
+#, fuzzy
+msgid "Keep in Inbox"
+msgstr "Hagyja a Beérkezett levelekben"
+
 #, fuzzy
 msgid "Reply Header"
 msgstr "Válaszcím"
@@ -7621,6 +7790,9 @@ msgstr "Eltávolítás"
 msgid "Keep downloaded mail"
 msgstr ""
 
+msgid "Mail inside an account's offline period is kept."
+msgstr ""
+
 msgid "GNOME Files Integration"
 msgstr "A GNOME Fájlkezelő integrációja"
 
@@ -7840,6 +8012,18 @@ msgid "Hyprlab"
 msgstr "Hyprlab"
 
 #, fuzzy
+#~ msgid "Search all folders but Trash and Junk"
+#~ msgstr "Keresés a mappákban"
+
+#, fuzzy
+#~ msgid "Search all folders, Trash and Junk too"
+#~ msgstr "Keresés a mappákban"
+
+#, fuzzy
+#~ msgid "Search this folder"
+#~ msgstr "Keresés a mappákban"
+
+#, fuzzy
 #~ msgid "Same as messages"
 #~ msgstr "{n} db üzenet"
 
@@ -7847,9 +8031,6 @@ msgstr "Hyprlab"
 #~ msgstr ""
 #~ "Hagyja a Beérkező levelek mappában, hogy csak az egyező leveleket "
 #~ "címkézze meg"
-
-#~ msgid "Leave in Inbox"
-#~ msgstr "Hagyja a Beérkezett levelekben"
 
 #~ msgid ""
 #~ "Which browser a link in a message opens in. Inside its Flatpak sandbox "

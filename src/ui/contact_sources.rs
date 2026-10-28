@@ -196,6 +196,8 @@ pub(crate) enum ContactSourcesOutput {
     LoadBooks,
     /// Keep the Contacts search field open.
     SetSearchOpen(bool),
+    /// Saved contacts go by their address-book names in mail (#541).
+    SetContactNames(bool),
     /// Where Contacts sits in the sidebar.
     SetPlacement(crate::config::SectionPlacement),
 }
@@ -204,6 +206,8 @@ pub(super) struct ContactSourcesInit {
     /// Whether the Contacts search field is kept open.
     pub(super) search_open: bool,
     pub(super) placement: crate::config::SectionPlacement,
+    /// Whether saved contacts go by their address-book names in mail.
+    pub(super) contact_names: bool,
 }
 
 #[relm4::component(pub(crate))]
@@ -277,6 +281,19 @@ impl SimpleComponent for ContactSources {
                                         set_subtitle: &i18n("Unless another is picked when the contact is made."),
                                         connect_selected_notify[sender] => move |row| {
                                             sender.input(ContactSourcesInput::ChangeBook(row.selected()));
+                                        },
+                                    },
+                                },
+                                add = &adw::PreferencesGroup {
+                                    set_title: &i18n("In Mail"),
+                                    // Thunderbird's "Show only the display
+                                    // name for people in my address book".
+                                    adw::SwitchRow {
+                                        set_title: &i18n("Show names from Contacts"),
+                                        set_subtitle: &i18n("Saved addresses show the contact's name, not the mail's."),
+                                        set_active: init.contact_names,
+                                        connect_active_notify[sender] => move |row| {
+                                            let _ = sender.output(ContactSourcesOutput::SetContactNames(row.is_active()));
                                         },
                                     },
                                 },

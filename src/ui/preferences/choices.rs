@@ -277,6 +277,47 @@ pub(super) fn read_mark_at(idx: u32) -> crate::config::ReadMark {
     }
 }
 
+/// The row of the read receipts combo that shows `value` (#520).
+pub(super) fn receipts_index(value: crate::config::ReceiptPolicy) -> u32 {
+    use crate::config::ReceiptPolicy;
+    match value {
+        ReceiptPolicy::Ask => 0,
+        ReceiptPolicy::Always => 1,
+        ReceiptPolicy::Never => 2,
+    }
+}
+
+/// The read receipts value at row `idx` of its combo; past the end asks.
+pub(super) fn receipts_at(idx: u32) -> crate::config::ReceiptPolicy {
+    use crate::config::ReceiptPolicy;
+    match idx {
+        1 => ReceiptPolicy::Always,
+        2 => ReceiptPolicy::Never,
+        _ => ReceiptPolicy::Ask,
+    }
+}
+
+/// The row of the returned receipts combo that shows `value` (#520).
+pub(super) fn returned_receipts_index(value: crate::config::ReturnedReceipts) -> u32 {
+    use crate::config::ReturnedReceipts;
+    match value {
+        ReturnedReceipts::Trash => 0,
+        ReturnedReceipts::Archive => 1,
+        ReturnedReceipts::Keep => 2,
+    }
+}
+
+/// The returned receipts value at row `idx` of its combo; past the end
+/// moves to Trash.
+pub(super) fn returned_receipts_at(idx: u32) -> crate::config::ReturnedReceipts {
+    use crate::config::ReturnedReceipts;
+    match idx {
+        1 => ReturnedReceipts::Archive,
+        2 => ReturnedReceipts::Keep,
+        _ => ReturnedReceipts::Trash,
+    }
+}
+
 /// The row of the fold messages combo that shows `value`.
 pub(super) fn fold_messages_index(value: crate::config::FoldMessages) -> u32 {
     use crate::config::FoldMessages;
@@ -564,6 +605,23 @@ mod tests {
             assert_eq!(read_mark_at(read_mark_index(v)), v);
         }
         assert_eq!(read_mark_at(9), ReadMark::Shown);
+        use crate::config::ReceiptPolicy;
+        for v in [
+            ReceiptPolicy::Ask,
+            ReceiptPolicy::Always,
+            ReceiptPolicy::Never,
+        ] {
+            assert_eq!(receipts_at(receipts_index(v)), v);
+        }
+        assert_eq!(receipts_at(9), ReceiptPolicy::Ask);
+        for v in [
+            ReturnedReceipts::Trash,
+            ReturnedReceipts::Archive,
+            ReturnedReceipts::Keep,
+        ] {
+            assert_eq!(returned_receipts_at(returned_receipts_index(v)), v);
+        }
+        assert_eq!(returned_receipts_at(9), ReturnedReceipts::Trash);
         for v in [
             FoldMessages::Never,
             FoldMessages::Read,

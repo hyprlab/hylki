@@ -262,6 +262,7 @@ impl AppModel {
         );
         let mut prefill = prefill;
         let selected = choose_identity(&accounts, account_id, &mut prefill);
+        prefill.receipt.get_or_insert(self.request_receipts);
 
         // A reply or forward to plain-text mail answers in kind when the
         // setting says so (#436); anything else starts in the chosen format.

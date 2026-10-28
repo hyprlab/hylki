@@ -93,6 +93,12 @@ pub(super) async fn run_mock(
 
     while let Some(req) = rx.recv().await {
         match req {
+            // The demo's mail has no server to ask; its text is all in the list.
+            MailRequest::FindText { gen, .. } => emit(WorkerEvent::TextFound {
+                gen,
+                hits: Vec::new(),
+                done: true,
+            }),
             MailRequest::Locate { message_id } => {
                 // No folders to search here beyond what the cache already
                 // held: answer "not found" so the app can report the miss.

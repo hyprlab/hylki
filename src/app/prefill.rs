@@ -228,6 +228,7 @@ pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefil
         forwards: m.forwards,
         draft_origin: m.draft_origin,
         encrypt: m.encrypt,
+        receipt: Some(m.request_receipt),
         outbox_origin: m.outbox_origin,
         reply_addressed_to: String::new(),
         from_address: m
@@ -453,6 +454,8 @@ mod tests {
             encrypt: true,
             send_at: Some(5),
             calendar: None,
+            request_receipt: true,
+            receipt_report: None,
         };
         let p = unsent_prefill(m);
         assert_eq!(

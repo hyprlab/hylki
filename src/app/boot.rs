@@ -185,6 +185,7 @@ pub(super) fn sidebar_init(
         archive_expanded: state.archive_expanded,
         junk_expanded: state.junk_expanded,
         trash_expanded: state.trash_expanded,
+        snoozed_expanded: state.snoozed_expanded,
         favorites_expanded: state.favorites_expanded,
         smart_expanded: state.smart_expanded,
         contacts_expanded: state.contacts_expanded,

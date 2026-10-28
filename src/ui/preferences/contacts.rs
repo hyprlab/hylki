@@ -47,6 +47,9 @@ impl Preferences {
             Out::SetSearchOpen(on) => {
                 let _ = sender.output(PrefOutput::SetContactsSearchOpen(on));
             }
+            Out::SetContactNames(on) => {
+                let _ = sender.output(PrefOutput::SetContactNames(on));
+            }
             // Through the Sidebar page's row, which tells the app.
             Out::SetPlacement(placement) => {
                 if let Some(row) = &self.contacts_placement_row {

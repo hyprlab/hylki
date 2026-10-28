@@ -195,6 +195,20 @@ pub(super) async fn load_bodies(
     std::collections::HashMap<u32, (String, crate::models::SenderCheck, bool)>,
     async_imap::error::Error,
 > {
+    Ok(load_raws(session, path, uids)
+        .await?
+        .into_iter()
+        .map(|(uid, raw)| (uid, render_raw(&raw)))
+        .collect())
+}
+
+/// Several messages' raw sources from one folder in a single `uid_fetch`,
+/// by UID. A UID the server doesn't answer is absent from the map.
+pub(super) async fn load_raws(
+    session: &mut ImapSession,
+    path: &str,
+    uids: &[u32],
+) -> Result<std::collections::HashMap<u32, Vec<u8>>, async_imap::error::Error> {
     select_for_read(session, path).await?;
     let set = uid_set(uids);
     let fetches: Vec<Fetch> = fetch_uids(session, set, "(BODY.PEEK[])")
@@ -216,7 +230,7 @@ pub(super) async fn load_bodies(
         let (Some(uid), Some(raw)) = (last_uid, raw_of(f)) else {
             continue;
         };
-        out.entry(uid).or_insert_with(|| render_raw(&raw));
+        out.entry(uid).or_insert(raw);
     }
     Ok(out)
 }

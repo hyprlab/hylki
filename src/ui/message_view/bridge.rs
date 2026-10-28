@@ -95,6 +95,12 @@ pub(super) fn parse_bridge(msg: &str) -> Option<Bridge> {
         "open" => MessageViewInput::OpenHeader { account_id, id },
         "seen" => MessageViewInput::MarkSeen { account_id, id },
         "unsub" => MessageViewInput::Unsubscribe { account_id, id },
+        // A card's read receipt banner (#520); `extra` is the button.
+        "mdn" => MessageViewInput::ReceiptAnswer {
+            account_id,
+            id,
+            send: extra.map(str::trim) == Some("send"),
+        },
         // A card's template banner (#360); `extra` is the button.
         "tpl" => MessageViewInput::TemplateAction {
             account_id,
@@ -279,6 +285,14 @@ mod tests {
             ("open:1:2", "Some(Input(OpenHeader { account_id: 1, id: 2 }))"),
             ("seen:1:2", "Some(Input(MarkSeen { account_id: 1, id: 2 }))"),
             ("unsub:1:2", "Some(Input(Unsubscribe { account_id: 1, id: 2 }))"),
+            (
+                "mdn:1:2:send",
+                "Some(Input(ReceiptAnswer { account_id: 1, id: 2, send: true }))",
+            ),
+            (
+                "mdn:1:2:ignore",
+                "Some(Input(ReceiptAnswer { account_id: 1, id: 2, send: false }))",
+            ),
             (
                 "tpl:1:2: edit ",
                 "Some(Input(TemplateAction { account_id: 1, id: 2, edit: true }))",

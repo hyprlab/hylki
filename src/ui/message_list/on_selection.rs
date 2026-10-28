@@ -132,10 +132,12 @@ impl MessageList {
                 {
                     let (thread, solo) = self.conversation_for(&m);
                     self.emitted_thread = thread.iter().map(|t| (t.account_id, t.id)).collect();
+                    let ahead = self.rows_ahead(*key);
                     let _ = sender.output(MessageListOutput::Selected {
                         message: m,
                         thread,
                         solo,
+                        ahead,
                     });
                 }
             }
@@ -459,10 +461,12 @@ impl MessageList {
             }
             let (thread, solo) = self.conversation_for(&m);
             self.emitted_thread = thread.iter().map(|t| (t.account_id, t.id)).collect();
+            let ahead = self.rows_ahead(key);
             let _ = sender.output(MessageListOutput::Selected {
                 message: m,
                 thread,
                 solo,
+                ahead,
             });
         } else {
             // Not listed yet: mail that has only just arrived, whose
@@ -470,5 +474,20 @@ impl MessageList {
             // Dropping the request left the reader empty (#332).
             self.late_select = Some((asked, std::time::Instant::now()));
         }
+    }
+
+    /// The rows likely opened next after `key`: three the way the user is
+    /// moving through the list, one the other way (#474).
+    fn rows_ahead(&self, key: (u32, u32)) -> Vec<Message> {
+        let Some(at) = self.shown.iter().position(|m| (m.account_id, m.id) == key) else {
+            return Vec::new();
+        };
+        let step = if self.nav_direction < 0 { -1 } else { 1 };
+        [step, 2 * step, 3 * step, -step]
+            .into_iter()
+            .filter_map(|d| at.checked_add_signed(d))
+            .filter_map(|i| self.shown.get(i))
+            .map(|m| Message::clone(m))
+            .collect()
     }
 }

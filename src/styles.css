@@ -1420,6 +1420,21 @@ flowbox.attach-flow > flowboxchild {
   opacity: 0.9;
 }
 
+/* Sent mail's read receipt (#520): grey checkmarks while it waits, green
+   once one came back. A double check needs the extra width to read. */
+.read-receipt {
+  -gtk-icon-size: 14px;
+}
+
+.read-receipt.read {
+  color: @success_color;
+  opacity: 1;
+}
+
+.message-list > row:selected .read-receipt.read {
+  color: white;
+}
+
 /* ---- Reader ---- */
 
 /* The reader pane's toolbar: tighter than stock between the action icons —
@@ -2530,6 +2545,26 @@ textview.console-view text selection {
 .sort-filter-column > button {
   margin-top: 6px;
   font-weight: normal;
+}
+/* Its date range: From and To, and the calendar that sets them. */
+.sort-filter-dates {
+  margin: 4px 8px;
+}
+
+/* The month and year beside the list's scrollbar thumb while it is
+   dragged. */
+.list-scrub-date {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: alpha(@window_bg_color, 0.92);
+  color: @window_fg_color;
+  box-shadow: 0 1px 4px alpha(black, 0.25);
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 180ms ease-out;
+}
+.list-scrub-date.shown {
+  opacity: 1;
 }
 
 /* Undo Send countdown (#534): the line along the toast's bottom edge. */

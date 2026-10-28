@@ -681,6 +681,26 @@ msgstr "Μη αναγνωσμένα πρώτα"
 msgid "Starred first"
 msgstr "Με τα μηνύματα με αστέρι πρώτα"
 
+#, fuzzy
+msgid "Clear Dates"
+msgstr "Εκκαθάριση φίλτρων"
+
+#, fuzzy
+msgid "Any Date"
+msgstr "Ημερομηνία"
+
+#, fuzzy
+msgid "{from} to {to}"
+msgstr "{cur} από {total}"
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "λήγει στις {date}"
+
+#, fuzzy
+msgid "Until {date}"
+msgstr "λήγει στις {date}"
+
 msgid "Sort by"
 msgstr "Ταξινόμηση κατά"
 
@@ -689,6 +709,16 @@ msgstr "Εμφάνιση μόνο"
 
 msgid "Clear Filters"
 msgstr "Εκκαθάριση φίλτρων"
+
+#, fuzzy
+msgid "Dates"
+msgstr "Ημερομηνία"
+
+msgid "From"
+msgstr "Από"
+
+msgid "To"
+msgstr "Προς"
 
 msgid "Sort and filter messages"
 msgstr "Ταξινόμηση και φιλτράρισμα μηνυμάτων"
@@ -738,6 +768,10 @@ msgstr "Άνοιγμα επιλεγμένου μηνύματος"
 
 msgid "Back to the message list"
 msgstr "Επιστροφή στη λίστα μηνυμάτων"
+
+#, fuzzy
+msgid "Open or fold a conversation in the list"
+msgstr "Κλείσιμο συζήτησης και επιστροφή στη λίστα"
 
 msgid "Next message in the conversation"
 msgstr "Επόμενο μήνυμα στη συνομιλία"
@@ -1184,6 +1218,27 @@ msgstr "Διαγραφή {n} μηνυμάτων"
 msgid "Customize Toolbar…"
 msgstr "Προσαρμογή γραμμής εργαλείων…"
 
+msgid "Read receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Read: {subject}"
+msgstr "Αποδεκτή: {subject}"
+
+msgid ""
+"This is a read receipt for the message sent to {to} on {date} with the "
+"subject \"{subject}\"."
+msgstr ""
+
+msgid ""
+"It means the message was shown on the recipient's screen, not that it was "
+"read or understood."
+msgstr ""
+
+#, fuzzy
+msgid "Read by {reader}"
+msgstr "Διεύθυνση απάντησης"
+
 msgid "Full Release Notes on GitHub"
 msgstr "Όλες οι σημειώσεις έκδοσης στο GitHub"
 
@@ -1471,6 +1526,26 @@ msgstr "Ημερομηνία λήξης"
 
 msgid "Date"
 msgstr "Ημερομηνία"
+
+#, fuzzy
+msgid "Newest messages"
+msgstr "Νεότερο μήνυμα πρώτο"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Επώνυμο"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Επαναλαμβάνεται μηνιαία"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Επώνυμο"
+
+#, fuzzy
+msgid "All mail"
+msgstr "Προσθήκη email"
 
 msgid "With sent mail"
 msgstr "Με την απεσταλμένη αλληλογραφία"
@@ -1779,6 +1854,17 @@ msgstr "Σε αναμονή από {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Προγραμματισμένο για {when}"
+
+#, fuzzy
+msgid "No read receipt yet"
+msgstr "Απόκρυψη παραληπτών"
+
+msgid "{who}, {when}"
+msgstr ""
+
+#, fuzzy
+msgid "Read by {count} of {total}"
+msgstr "{name} · {current} από {total}"
 
 msgid "Verified sender"
 msgstr "Αποστολέας επαληθευμένος"
@@ -3345,6 +3431,10 @@ msgstr "Διαγραφή προχείρου"
 msgid "Send"
 msgstr "Αποστολή"
 
+#, fuzzy
+msgid "Send options"
+msgstr "Ενότητες"
+
 msgid "Send now"
 msgstr "Αποστολή τώρα"
 
@@ -3360,6 +3450,12 @@ msgstr "Δευτέρα πρωί ({time})"
 msgid "Pick a date and time…"
 msgstr "Επιλογή ημερομηνίας και ώρας…"
 
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
 msgid "Show From, To and Subject"
 msgstr "Εμφάνιση Από, Προς και Θέμα"
 
@@ -3368,12 +3464,6 @@ msgstr "Αποστολή τώρα αντί για αργότερα"
 
 msgid "Download password for {name}: {password}"
 msgstr "Κωδικός λήψης για {name}: {password}"
-
-msgid "From"
-msgstr "Από"
-
-msgid "To"
-msgstr "Προς"
 
 msgid "Cc"
 msgstr "Κοιν."
@@ -3631,6 +3721,17 @@ msgstr "Αποθήκευση νέων επαφών στο"
 
 msgid "Unless another is picked when the contact is made."
 msgstr "Εκτός αν επιλεγεί άλλος κατά τη δημιουργία της επαφής."
+
+#, fuzzy
+msgid "In Mail"
+msgstr "Αλληλογραφία"
+
+#, fuzzy
+msgid "Show names from Contacts"
+msgstr "Από τις επαφές"
+
+msgid "Saved addresses show the contact's name, not the mail's."
+msgstr ""
 
 msgid "Layout"
 msgstr "Διάταξη"
@@ -4228,6 +4329,15 @@ msgstr "Κανένα μήνυμα εδώ δεν πληροί τα φίλτρα."
 msgid "Clear selection"
 msgstr "Εκκαθάριση επιλογής"
 
+#. The scope button beside it says where it looks.
+#, fuzzy
+msgid "Search…"
+msgstr "Αναζήτηση…"
+
+#, fuzzy
+msgid "Searching the server…"
+msgstr "Αναζήτηση…"
+
 msgid "Choose which folders to search"
 msgstr "Επιλέξτε τους φακέλους αναζήτησης"
 
@@ -4290,16 +4400,6 @@ msgstr "Μόνο ο φάκελος ή η προβολή που εμφανίζε�
 
 msgid "What this searches"
 msgstr "Τι αναζητά αυτή η επιλογή"
-
-msgid "Search all folders but Trash and Junk"
-msgstr "Αναζήτηση σε όλους τους φακέλους εκτός από Κάδο και Ανεπιθύμητα"
-
-msgid "Search all folders, Trash and Junk too"
-msgstr ""
-"Αναζήτηση σε όλους τους φακέλους, συμπεριλαμβανομένων Κάδου και Ανεπιθύμητων"
-
-msgid "Search this folder"
-msgstr "Αναζήτηση σε αυτόν τον φάκελο"
 
 msgid "me"
 msgstr "εγώ"
@@ -4679,6 +4779,25 @@ msgstr "Ημερομηνία:"
 
 msgid "Message"
 msgstr "Μήνυμα"
+
+msgid "{name} asked for a read receipt."
+msgstr ""
+
+msgid "{name} asked for a read receipt, to be sent to {addr}."
+msgstr ""
+
+msgid "Send Receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Tells the sender you opened this message"
+msgstr "Απάντηση σε όλους σε αυτό το μήνυμα"
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Sends nothing and stops asking"
+msgstr ""
 
 msgid "Copied"
 msgstr "Αντιγράφηκε"
@@ -5492,6 +5611,13 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr "Εμφάνιση αποστολέα και θέματος"
 
+#, fuzzy
+msgid "Read receipts"
+msgstr "Απόκρυψη παραληπτών"
+
+msgid "When someone opens mail you asked a receipt for."
+msgstr ""
+
 msgid "Sound for new mail"
 msgstr "Ήχος για νέα αλληλογραφία"
 
@@ -5624,6 +5750,12 @@ msgstr ""
 "Το απομακρυσμένο περιεχόμενο μπορεί να ενημερώσει τον αποστολέα για το πότε "
 "και πού διαβάσατε το μήνυμα."
 
+msgid "Pre-load remote content for the next messages"
+msgstr ""
+
+msgid "Their senders can tell they were opened."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Προειδοποίηση όταν αποκλείεται απομακρυσμένο περιεχόμενο"
 
@@ -5656,6 +5788,13 @@ msgid ""
 msgstr ""
 "Τα περισσότερα λαμβάνονται από τον τομέα του αποστολέα, ο οποίος μαθαίνει τη "
 "διεύθυνση IP σας."
+
+#, fuzzy
+msgid "Send read receipts"
+msgstr "Απόκρυψη παραληπτών"
+
+msgid "A receipt tells the sender when you opened the message."
+msgstr ""
 
 msgid "Open at startup"
 msgstr "Άνοιγμα κατά την εκκίνηση"
@@ -5724,6 +5863,12 @@ msgstr "Εμφανίζεται μόνο όταν υπάρχουν περισσό
 
 msgid "Inboxes"
 msgstr "Εισερχόμενα"
+
+msgid "Snoozed"
+msgstr ""
+
+msgid "Shown only while mail is snoozed."
+msgstr ""
 
 msgid "Unread counts"
 msgstr "Πλήθος μη αναγνωσμένων"
@@ -6878,6 +7023,19 @@ msgstr ""
 "παλαιότερα από αυτό το διάστημα μεταφέρονται στον Κάδο, εκτός αν έχουν "
 "αστέρι."
 
+msgid "Keep mail offline"
+msgstr ""
+
+msgid "Leaves out Trash, Junk and Drafts."
+msgstr ""
+
+#, fuzzy
+msgid "Include attachments"
+msgstr "Δεν υπάρχουν συνημμένα"
+
+msgid "Can consume a lot of hard drive space."
+msgstr ""
+
 msgid "Microsoft 365"
 msgstr "Microsoft 365"
 
@@ -6935,9 +7093,6 @@ msgstr ""
 
 msgid "Templates"
 msgstr "Πρότυπα"
-
-msgid "Snoozed"
-msgstr ""
 
 msgid "Hidden Folders"
 msgstr "Κρυφοί φάκελοι"
@@ -7196,6 +7351,24 @@ msgstr "Αναίρεση αποστολής"
 msgid "How long Undo is offered after sending."
 msgstr "Για πόσο χρόνο είναι διαθέσιμη η αναίρεση μετά την αποστολή."
 
+msgid "Request read receipts"
+msgstr ""
+
+#, fuzzy
+msgid "Returned receipts"
+msgstr "Απόκρυψη παραληπτών"
+
+msgid "Sent mail shows who read it; the receipt goes here."
+msgstr ""
+
+#, fuzzy
+msgid "Move to Trash"
+msgstr "Μετακίνηση αλληλογραφίας λιστών στον Κάδο"
+
+#, fuzzy
+msgid "Keep in Inbox"
+msgstr "Παραμονή στα Εισερχόμενα"
+
 #, fuzzy
 msgid "Reply Header"
 msgstr "Διεύθυνση απάντησης"
@@ -7424,6 +7597,9 @@ msgstr "Αφαίρεση…"
 msgid "Keep downloaded mail"
 msgstr "Διατήρηση ληφθέντων μηνυμάτων"
 
+msgid "Mail inside an account's offline period is kept."
+msgstr ""
+
 msgid "GNOME Files Integration"
 msgstr "Ενσωμάτωση με τα Αρχεία GNOME"
 
@@ -7641,6 +7817,17 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 msgid "Hyprlab"
 msgstr "Hyprlab"
 
+#~ msgid "Search all folders but Trash and Junk"
+#~ msgstr "Αναζήτηση σε όλους τους φακέλους εκτός από Κάδο και Ανεπιθύμητα"
+
+#~ msgid "Search all folders, Trash and Junk too"
+#~ msgstr ""
+#~ "Αναζήτηση σε όλους τους φακέλους, συμπεριλαμβανομένων Κάδου και "
+#~ "Ανεπιθύμητων"
+
+#~ msgid "Search this folder"
+#~ msgstr "Αναζήτηση σε αυτόν τον φάκελο"
+
 #, fuzzy
 #~ msgid "Same as messages"
 #~ msgstr "Μηνύματα email"
@@ -7649,9 +7836,6 @@ msgstr "Hyprlab"
 #~ msgstr ""
 #~ "Αφήστε το στα Εισερχόμενα για να επισημαίνεται μόνο η αλληλογραφία που "
 #~ "ταιριάζει"
-
-#~ msgid "Leave in Inbox"
-#~ msgstr "Παραμονή στα Εισερχόμενα"
 
 #~ msgid ""
 #~ "Which browser a link in a message opens in. Inside its Flatpak sandbox "

@@ -69,6 +69,8 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) empty_junk_row: adw::ComboRow,
     pub(in crate::ui::accounts) empty_trash_row: adw::ComboRow,
     pub(in crate::ui::accounts) clean_lists_row: adw::ComboRow,
+    pub(in crate::ui::accounts) offline_mail_row: adw::ComboRow,
+    pub(in crate::ui::accounts) offline_attachments_row: adw::SwitchRow,
     pub(in crate::ui::accounts) graph_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) graph_directory_row: adw::SwitchRow,
     pub(in crate::ui::accounts) directory_only_row: adw::SwitchRow,
@@ -645,6 +647,17 @@ impl EditorForm {
                         set_title: &i18n("Move list mail to Trash"),
                         set_subtitle: &i18n("Inbox mail with an unsubscribe link older than this gets trashed unless it's starred."),
                     },
+                    // Mail downloaded ahead of being opened (#536).
+                    #[name = "offline_mail_row"]
+                    adw::ComboRow {
+                        set_title: &i18n("Keep mail offline"),
+                        set_subtitle: &i18n("Leaves out Trash, Junk and Drafts."),
+                    },
+                    #[name = "offline_attachments_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Include attachments"),
+                        set_subtitle: &i18n("Can consume a lot of hard drive space."),
+                    },
                 },
 
                 // What a Microsoft 365 account can use from
@@ -890,6 +903,8 @@ impl EditorForm {
             empty_junk_row,
             empty_trash_row,
             clean_lists_row,
+            offline_mail_row,
+            offline_attachments_row,
             graph_group,
             graph_directory_row,
             directory_only_row,

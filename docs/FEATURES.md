@@ -29,6 +29,8 @@ The full list. The [README](../README.md) carries a shorter one.
 
 - **Whole-mailbox sync and search:** no message-count cap. A fast first page
   loads instantly; the rest indexes in the background with infinite scroll.
+  Search finds each word in the message's text too, on disk and on the
+  server, with `from:`, `to:`, `in:` and `has:attachment` to narrow it.
 - **Two-way sync:** deletions, moves and flag changes from your phone or
   another client sync back automatically (IMAP IDLE plus reconciliation).
 - **Conversation threading** across folders: the count covers the whole
@@ -49,13 +51,15 @@ The full list. The [README](../README.md) carries a shorter one.
   server has neither; custom colours, drag to reorder, and number-key
   shortcuts. Gmail's labels show beside them.
 - **Quick filters:** unread, starred, attachments, addressed to you, from
-  your contacts, high importance, tagged and today, combined, in one popover
-  above the list with the sort orders. See [Message list layout](DOCUMENTATION.md#message-list-layout).
+  your contacts, high importance, tagged, today and a range of dates,
+  combined, in one popover above the list with the sort orders. See [Message list layout](DOCUMENTATION.md#message-list-layout).
+- **Browse by the year:** the list's scrollbar spans the whole folder, and
+  dragging it names the month and year it is passing.
 - **Smart folders:** saved searches across accounts and folders, on
   starred, unread, attachments, tags and the filter conditions, with unread
   counts. See [Smart folders](DOCUMENTATION.md#smart-folders).
 - **Unified and filtered folders:** Inboxes, Starred, Sent, Drafts, Archive,
-  Junk and Trash across accounts, plus a folder per filter and any folders
+  Junk, Trash and Snoozed across accounts, plus a folder per filter and any folders
   you keep in Favorites.
 - **Empty Trash and Junk**, by hand or automatically after a number of days,
   and move old newsletter and mailing-list mail out of the Inbox the same way.
@@ -144,6 +148,11 @@ The full list. The [README](../README.md) carries a shorter one.
 - **One-click unsubscribe:** a banner on list mail that leaves the list for
   you, by request or by email, without a browser where the list allows it,
   and can delete the mail already received from the same address.
+- **Read receipts:** a banner on a message that asks for one sends it or
+  ignores the request, or a setting answers every time; a message you write
+  can ask for one too, and its checkmarks turn green when a receipt comes
+  back, with the receipt itself filed away. See
+  [Read receipts](DOCUMENTATION.md#read-receipts).
 - **OpenPGP:** read encrypted and signed mail, sign and encrypt what you
   send, and manage keys from Settings, through the GnuPG already on your
   computer. See [OpenPGP](DOCUMENTATION.md#openpgp-encrypted-and-signed-mail).

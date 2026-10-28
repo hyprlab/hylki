@@ -37,8 +37,11 @@ mod idle;
 pub(super) mod keywords;
 mod ladder;
 #[cfg(test)]
+mod live_receipt_tests;
+#[cfg(test)]
 mod live_tests;
 mod mutate;
+mod offline;
 mod prefetch;
 mod preview_fetch;
 mod retry;
@@ -51,6 +54,7 @@ mod structure;
 mod summary;
 mod sweep;
 mod sync;
+mod text_search;
 pub(super) mod watch;
 mod wire;
 
@@ -221,6 +225,10 @@ struct ImapWorker<E> {
     backfill: VecDeque<Backfill>,
     /// The folders already enqueued for backfill this session.
     backfill_seen: HashSet<String>,
+    /// The download of the account's offline period (#536).
+    offline: crate::worker::offline::Offline,
+    /// A search of the server's text under way (#509).
+    text_search: Option<text_search::TextSearch>,
     /// Folders queued for the one-time References repair (see
     /// [`run_one_refs_repair`]). Every folder gets one: a message indexed by
     /// an older build carries only its In-Reply-To, and threading reads

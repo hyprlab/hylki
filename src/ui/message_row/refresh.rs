@@ -253,6 +253,16 @@ impl Row {
                 w.date.set_tooltip_text(None);
             }
         }
+        // Sent mail that asked for a read receipt (#520): grey checkmarks,
+        // green once one came back.
+        let mark = shared.receipt_marks.borrow().of(msg);
+        w.receipt.set_visible(mark.is_some());
+        w.receipt.set_css_classes(match &mark {
+            Some(m) if m.read => &["read-receipt", "read"],
+            _ => &["read-receipt", "dim-icon"],
+        });
+        w.receipt
+            .set_tooltip_text(mark.as_ref().map(|m| m.tooltip.as_str()));
         w.chip.set_visible(meta.count > 1);
         w.chip_count.set_label(&meta.count.to_string());
         w.chip_caret
@@ -381,7 +391,7 @@ impl Row {
                 .meta
                 .people
                 .clone()
-                .unwrap_or_else(|| msg.from_name.clone());
+                .unwrap_or_else(|| msg.shown_from_name().into_owned());
             w.people.set_tooltip_text(Some(&people));
             w.people.set_label(&people);
             w.people.set_css_classes(weight);
@@ -546,6 +556,7 @@ impl Row {
         let name: &gtk::Widget = w.name.upcast_ref();
         let subject: &gtk::Widget = w.subject.upcast_ref();
         let star: &gtk::Widget = w.star.upcast_ref();
+        let receipt: &gtk::Widget = w.receipt.upcast_ref();
         let answer: &gtk::Widget = w.answer.upcast_ref();
         let clip: &gtk::Widget = w.clip.upcast_ref();
         let date: &gtk::Widget = w.date.upcast_ref();
@@ -571,7 +582,7 @@ impl Row {
                     ListColumn::Subject => {
                         detach(subject);
                         w.subject_col.set_child(Some(subject));
-                        into(&w.line, &[lock, w.subject_col.upcast_ref(), chip]);
+                        into(&w.line, &[lock, w.subject_col.upcast_ref(), receipt, chip]);
                     }
                     ListColumn::Tags => {
                         detach(tags);
@@ -599,10 +610,11 @@ impl Row {
             // Smaller marks on one line, level with its smaller text.
             w.star.set_pixel_size(LINE_ICON_PX);
             w.clip.set_pixel_size(LINE_ICON_PX);
+            w.receipt.set_pixel_size(LINE_ICON_PX);
             w.replied.set_pixel_size(LINE_ICON_PX);
             w.forwarded.set_pixel_size(LINE_ICON_PX);
         } else {
-            into(&w.top, &[name, answer, clip, star, date, chip]);
+            into(&w.top, &[name, answer, clip, star, receipt, date, chip]);
             into(&w.subject_line, &[subject, tags]);
             into(&w.preview_line, &[lock, preview]);
             w.name.set_hexpand(true);
@@ -611,6 +623,7 @@ impl Row {
             w.avatar.set_size(38);
             w.star.set_pixel_size(-1);
             w.clip.set_pixel_size(-1);
+            w.receipt.set_pixel_size(-1);
             w.replied.set_pixel_size(-1);
             w.forwarded.set_pixel_size(-1);
         }

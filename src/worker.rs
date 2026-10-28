@@ -34,6 +34,7 @@ mod index_queue;
 mod jmap;
 mod lane;
 mod mock;
+mod offline;
 mod outbox;
 mod pop3;
 mod preempt;
@@ -47,7 +48,10 @@ mod summary;
 mod test_support;
 mod tls;
 
-pub(crate) use api::{CalendarPart, MailRequest, OutgoingMessage, WorkerEvent};
+pub(crate) use api::{
+    begin_text_search, text_search_is_current, CalendarPart, MailRequest, OutgoingMessage,
+    WorkerEvent, TEXT_SEARCH_LIMIT,
+};
 pub(crate) use auth::{forget_access_token, oauth_token_blocking};
 pub(crate) use compose::build::sent_body_preview;
 pub(crate) use compose::editable::editable_from_raw;
@@ -55,8 +59,8 @@ pub(crate) use compose::recipients::{
     clean_recipient_field, format_recipient, invalid_recipient, parse_recipients,
 };
 pub(crate) use conn_test::{test_alias_smtp_blocking, test_connection_blocking, ConnTest};
-pub(crate) use folders::chip_counts_all;
 pub(crate) use folders::folder_order;
+pub(crate) use folders::{chip_counts_all, snoozed_counts};
 use graph::run_graph;
 pub(crate) use headers::{clean_display_name, decode_header, unescape_quoted_str};
 pub(crate) use imap::fetch_mode::readable_error;

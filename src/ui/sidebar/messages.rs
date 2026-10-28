@@ -203,6 +203,7 @@ pub(crate) enum SidebarOutput {
         archive: bool,
         junk: bool,
         trash: bool,
+        snoozed: bool,
         favorites: bool,
         smart: bool,
         contacts: bool,

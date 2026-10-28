@@ -1,5 +1,6 @@
 allowed_senders = []
 auto_remote_content = false
+remote_ahead = false
 gravatar = false
 avatars = true
 sender_logos = false
@@ -99,6 +100,7 @@ list_pills_below = false
 date_groups_default_applied = false
 list_search_open = false
 contacts_search_open = false
+contact_names = false
 list_search_bottom = false
 list_bulk_bar_bottom = false
 toolbar_fold_right = false
@@ -128,6 +130,10 @@ account_click_folds = false
 console_mode = false
 status_bar_top = false
 read_mark = "shown"
+receipts = "ask"
+request_receipts = false
+returned_receipts = "trash"
+notify_receipts = true
 files_action = "ask"
 files_large = "ask"
 files_limit_mb = 20
@@ -145,6 +151,7 @@ drafts = true
 archive = true
 junk = true
 trash = true
+snoozed = true
 filtered = true
 tags = true
 
@@ -157,6 +164,7 @@ drafts = true
 archive = true
 junk = true
 trash = true
+snoozed = true
 
 [unified_kinds]
 starred = true
@@ -165,6 +173,7 @@ drafts = true
 archive = true
 junk = false
 trash = false
+snoozed = true
 
 [print]
 page_numbers = true

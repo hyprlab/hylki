@@ -6,7 +6,7 @@ use relm4::prelude::*;
 use crate::config;
 use crate::models::{thread_ids, Message, ThreadSummary};
 use crate::ui::contacts_page::ContactsPageInput;
-use crate::ui::message_list::{MessageListInput, QuickFilters};
+use crate::ui::message_list::{DateBound, MessageListInput, QuickFilters};
 use crate::ui::message_view::MessageViewInput;
 use crate::worker::MailRequest;
 
@@ -75,7 +75,11 @@ impl AppModel {
                 message: m,
                 thread,
                 solo,
-            } => self.on_message_selected(m, thread, solo, sender),
+                ahead,
+            } => {
+                self.on_message_selected(m, thread, solo, sender);
+                self.fetch_remote_ahead(&ahead);
+            }
 
             AppMsg::ThreadGrew { message: m, thread } => self.on_thread_grew(m, thread),
 
@@ -156,6 +160,16 @@ impl AppModel {
             }
 
             AppMsg::SetQuickFilter(f, on) => self.set_quick_filters(self.quick_filters.with(f, on)),
+
+            AppMsg::SetFilterDate(end, day) => {
+                self.set_quick_filters(self.quick_filters.with_date(end, day))
+            }
+
+            AppMsg::ClearFilterDates => self.set_quick_filters(
+                self.quick_filters
+                    .with_date(DateBound::From, None)
+                    .with_date(DateBound::To, None),
+            ),
 
             AppMsg::ClearQuickFilters => self.set_quick_filters(QuickFilters::default()),
 
@@ -501,6 +515,28 @@ impl AppModel {
         self.load_attachments_on_open(&m, folder_path);
     }
 
+    /// With the Privacy switch on, the remote content of the rows likely
+    /// opened next is fetched while this one is read (#474): only where
+    /// it would be loaded on opening anyway, and only from bodies already
+    /// here, so nothing is asked of the mail server for it.
+    fn fetch_remote_ahead(&self, ahead: &[Message]) {
+        if !self.remote_ahead {
+            return;
+        }
+        let bodies: Vec<&str> = ahead
+            .iter()
+            .filter(|m| self.remote_allowed(m))
+            .filter_map(|m| {
+                if !m.body.is_empty() {
+                    Some(m.body.as_str())
+                } else {
+                    self.body_cache.get(&body_key(m)).map(String::as_str)
+                }
+            })
+            .collect();
+        crate::services::remote_content::fetch_ahead(bodies);
+    }
+
     /// Opened with Gmail's o or Enter: the keyboard follows it into
     /// the reader, as Gmail's conversation view takes it, so j and
     /// k go on to the next conversation and u or Esc come back
@@ -657,7 +693,7 @@ impl AppModel {
     /// A lone message: its body asked for first if it is not cached, then
     /// the related lookup, then the reader shows it.
     fn show_single(
-        &self,
+        &mut self,
         m: &Message,
         display: Message,
         needs_body: bool,

@@ -7,10 +7,12 @@ use super::wrapper_css::wrapper_css;
 
 use super::frame::{
     message_frame, CHROME, GROUND, LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE,
-    LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE, LIVE_TRANSLATE_ON, LIVE_UNSUB, PAGE,
+    LIVE_READ, LIVE_RECEIPT, LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE, LIVE_TRANSLATE_ON,
+    LIVE_UNSUB, PAGE,
 };
 use super::html::attr_escape;
 use super::invite::invite_row_html;
+use super::receipt_banner::{read_mark_html, receipt_row_html};
 use super::remote::has_remote_resources;
 use super::size_script::SIZE_SCRIPT;
 use super::snippets::{
@@ -326,7 +328,7 @@ fn card_avatar(m: &Message, dark: bool) -> String {
     });
     own.unwrap_or_else(|| {
         let initial = m
-            .from_name
+            .shown_from_name()
             .trim()
             .chars()
             .next()
@@ -394,11 +396,11 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
                  <div class=\"hylki-hdr-line\">\
                    {ava}{dot}<span class=\"hylki-from\">{from}</span>{verify}{addr}\
                    <span class=\"hylki-tags\" data-key=\"{aid}:{id}\">{tags}</span>\
-                   <span class=\"hylki-hdr-meta\">{folder}{rcpt_toggle}\
+                   <span class=\"hylki-hdr-meta\">{folder}{rcpt_toggle}{read}\
                      <span class=\"hylki-date\">{date}</span></span>\
                    {acts_toggle}{acts}\
                  </div>{rcpt}\
-               </header>{tpl}{invite}{unsub}{tr}{body}{atts}</section>",
+               </header>{tpl}{invite}{receipt}{unsub}{tr}{body}{atts}</section>",
         aid = m.account_id,
         id = m.id,
         // The message's own attachments beneath its body (#213).
@@ -424,6 +426,21 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
             invite_row_html(
                 (m.account_id, m.id),
                 i.borrow()
+                    .get(&(m.account_id, m.id))
+                    .map(String::as_str)
+                    .unwrap_or(""),
+            )
+        }),
+        // Sent mail's read receipt checkmarks (#520), beside the date:
+        // always there, empty (hidden) unless the message asked for one.
+        read = LIVE_READ.with(|r| {
+            read_mark_html((m.account_id, m.id), r.borrow().get(&(m.account_id, m.id)))
+        }),
+        // The read receipt banner (#520), on the same terms.
+        receipt = LIVE_RECEIPT.with(|r| {
+            receipt_row_html(
+                (m.account_id, m.id),
+                r.borrow()
                     .get(&(m.account_id, m.id))
                     .map(String::as_str)
                     .unwrap_or(""),
@@ -505,7 +522,7 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
         // display name is attacker-controlled (and RFC 2047-decoded,
         // so any byte sequence can be delivered), and this document
         // is the trusted wrapper — not a sandboxed message frame.
-        from = escape_html(&m.from_name),
+        from = escape_html(&m.shown_from_name()),
         // An initials circle, tinted per sender address, so who
         // wrote each card — and which cards are your own replies —
         // reads at a glance (#22). Nothing is linked: a picture

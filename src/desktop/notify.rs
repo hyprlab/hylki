@@ -278,6 +278,31 @@ pub(crate) fn error(account_id: u32, title: &str, body: &str) {
     send(&format!("hylki-error-{account_id}"), &n);
 }
 
+/// A read receipt came back (#520): who read which message. A click opens
+/// the message read, `open` as `(account, folder, message)`, or raises the
+/// window when it is not to be found. One per message, so a second reader
+/// replaces the first's alert rather than stacking under it.
+pub(crate) fn read_receipt(
+    message_id: &str,
+    title: &str,
+    body: &str,
+    open: Option<(u32, u32, u32)>,
+) {
+    let n = gio::Notification::new(title);
+    if !body.is_empty() {
+        n.set_body(Some(body));
+    }
+    n.set_priority(gio::NotificationPriority::Normal);
+    match open {
+        Some(target) => n.set_default_action_and_target_value(
+            &format!("app.{OPEN_MESSAGE_ACTION}"),
+            Some(&target.to_variant()),
+        ),
+        None => n.set_default_action(&format!("app.{PRESENT_ACTION}")),
+    }
+    send(&format!("hylki-receipt-{}", message_id.to_lowercase()), &n);
+}
+
 /// A message opened from outside the app (a file manager's "Send by email",
 /// a mailto: link) whose window could not come to the front: the desktop's
 /// word that it is waiting, with the click that brings it up. Clicking a

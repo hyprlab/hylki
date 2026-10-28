@@ -89,6 +89,8 @@ mod prefs_reader;
 mod prefs_sidebar;
 mod reader_select;
 mod reader_toolbar;
+mod receipts;
+mod receipts_returned;
 mod release_notes;
 mod removal;
 mod router;
@@ -109,6 +111,7 @@ mod split_reply;
 mod tags;
 #[cfg(test)]
 mod test_support;
+mod text_search;
 mod theme;
 mod transfer;
 mod tray;
@@ -846,11 +849,15 @@ impl SimpleComponent for AppModel {
         let mut model = AppModel::new(&root, &sender, boot, children, main_menu);
         model.prime_and_connect(&sender);
         schedule_download_prune();
+        text_search::prepare_text_search();
         model.withdraw_stale_notifications();
         if model.tray_enabled {
             model.start_tray(&sender);
         }
         start_contacts_sync(&sender);
+        if model.contact_names {
+            model.read_contact_names(&sender);
+        }
         watch_system_events(&sender);
         model.open_wizard_if_needed(&sender);
         model.push_settings_to_children();

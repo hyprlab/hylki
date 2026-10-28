@@ -46,6 +46,8 @@ pub(super) fn machine_message(
         encrypt: false,
         send_at: None,
         calendar: None,
+        request_receipt: false,
+        receipt_report: None,
     }
 }
 

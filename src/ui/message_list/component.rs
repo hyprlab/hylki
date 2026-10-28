@@ -273,8 +273,8 @@ impl SimpleComponent for MessageList {
                         set_hexpand: true,
                         // Its own default minimum is wider than the rows need.
                         set_width_chars: 3,
-                        #[watch]
-                        set_placeholder_text: Some(model.search_placeholder().as_str()),
+                        // The scope button beside it says where it looks.
+                        set_placeholder_text: Some(i18n("Search…").as_str()),
                         connect_search_changed[sender] => move |entry| {
                             sender.input(MessageListInput::Search(entry.text().to_string()));
                         },
@@ -290,6 +290,16 @@ impl SimpleComponent for MessageList {
                                 crate::ui::close_if_focus_left_row(&entry, move || sender.input(MessageListInput::CloseSearch));
                             },
                         },
+                    },
+
+                    // The servers are still being asked (#509).
+                    gtk::Spinner {
+                        set_valign: gtk::Align::Center,
+                        set_tooltip_text: Some(i18n("Searching the server…").as_str()),
+                        #[watch]
+                        set_visible: model.server_searching,
+                        #[watch]
+                        set_spinning: model.server_searching,
                     },
 
                     // The scope picker; its popover is built in `init`
@@ -336,6 +346,7 @@ impl SimpleComponent for MessageList {
         watch_heading_menu(widgets.headings_area.upcast_ref(), &sender);
         watch_pane_width(&widgets.scroller, &sender);
         watch_bottom(&widgets.scroller, &sender);
+        super::scrub::watch_scrollbar(&widgets.scroller, &model.shared, &sender);
         model.sync_look();
         model.search_entry = Some(widgets.search_entry.clone());
         model.bars = Some(BarSlots {
@@ -375,6 +386,8 @@ impl SimpleComponent for MessageList {
             }
             MessageListInput::AtBottom(bottom) => self.at_bottom = bottom,
             MessageListInput::NearEnd => self.grow_window(LIST_WINDOW),
+            MessageListInput::ShowWholeList => self.show_whole_list(),
+            MessageListInput::FinishRows => self.finish_bound_rows(),
             MessageListInput::ThreadsReady { gen, threads } => self.on_threads_ready(gen, *threads),
             MessageListInput::AskThreads => self.on_ask_threads(&sender),
             MessageListInput::RunQueuedRebuild => self.on_run_queued_rebuild(&sender),
@@ -409,6 +422,12 @@ impl SimpleComponent for MessageList {
                     self.shared.refresh_all();
                 }
             }
+            MessageListInput::SetReceiptMarks(marks) => {
+                if *self.shared.receipt_marks.borrow() != marks {
+                    *self.shared.receipt_marks.borrow_mut() = marks;
+                    self.shared.refresh_all();
+                }
+            }
             MessageListInput::SetSingleLine(on) => self.on_set_single_line(on),
             MessageListInput::SetColumns(columns) => self.on_set_columns(columns),
             MessageListInput::SetAccountNames { names, graph } => {
@@ -433,6 +452,7 @@ impl SimpleComponent for MessageList {
             MessageListInput::SetInDrafts(on) => self.on_set_in_drafts(on),
             MessageListInput::SetInTemplates(on) => self.in_templates = on,
             MessageListInput::ContactPhotosChanged => self.on_contact_photos_changed(),
+            MessageListInput::ContactNamesChanged => self.on_contact_names_changed(),
             MessageListInput::SetColorize(on) => self.on_set_colorize(on),
             MessageListInput::DayChanged => self.on_day_changed(&sender),
             MessageListInput::SetAccountColors(colors) => self.on_set_account_colors(colors),
@@ -443,6 +463,11 @@ impl SimpleComponent for MessageList {
                 text,
                 hits,
             } => self.on_search_matched(gen, query, text, hits),
+            MessageListInput::SearchServers { round } => self.on_search_servers(round, &sender),
+            MessageListInput::BodyHits { terms, hits } => self.on_body_hits(terms, hits),
+            MessageListInput::ServerHits { terms, hits, done } => {
+                self.on_server_hits(terms, hits, done)
+            }
             MessageListInput::SetScope(scope) => self.on_set_scope(scope, &sender),
             MessageListInput::SetSearchPool(pool, folders, text) => {
                 self.on_set_search_pool(pool, folders, text)
@@ -502,6 +527,13 @@ impl SimpleComponent for MessageList {
             MessageListInput::SetPillsBelow(on) => self.on_set_pills_below(on),
             MessageListInput::SortByColumn(column) => self.on_sort_by_column(column, &sender),
             MessageListInput::ToggleThread(key) => self.on_toggle_thread(key, &sender),
+            MessageListInput::FoldByKey { key, head } => {
+                if let Some(head) = head {
+                    self.select_positions(&[head]);
+                    self.focus_row(head);
+                }
+                self.on_toggle_thread(key, &sender);
+            }
             MessageListInput::FinishCollapseThread(key) => self.on_finish_collapse_thread(key),
             MessageListInput::RowActivated(index) => self.on_row_activated(index, &sender),
             MessageListInput::MarkRead(slot) => {

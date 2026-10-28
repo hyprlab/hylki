@@ -29,10 +29,12 @@ use crate::worker::auth::load_or_migrate_password;
 use crate::worker::index_queue::index_pause;
 use crate::worker::jmap::folders::refresh_jmap_folders;
 use crate::worker::jmap::index::{jmap_backfill_step, JmapState, JMAP_BACKFILL_BACKOFF};
+use crate::worker::jmap::offline::jmap_offline_step;
 use crate::worker::jmap::push::{jmap_poll_inbox, spawn_jmap_push};
 use crate::worker::jmap::send::emit_jmap_identities;
 use crate::worker::jmap::wire::{jmap_base_url, jmap_session};
 use crate::worker::lane::{related_from_cache, thread_summaries_with_members};
+use crate::worker::offline::Offline;
 use crate::worker::{MailRequest, WorkerEvent};
 
 mod chores;
@@ -42,10 +44,12 @@ mod handle_send;
 mod handle_write;
 mod index;
 mod messages;
+mod offline;
 mod ops;
 mod push;
 mod send;
 mod snooze;
+mod text_search;
 mod wire;
 
 use crate::worker::outbox::{delete_queued, emit_outbox};
@@ -67,6 +71,8 @@ struct JmapWorker<E> {
     push_rx: mpsc::UnboundedReceiver<()>,
     push_enabled: bool,
     push_started: bool,
+    /// The download of the account's offline period (#536).
+    offline: Offline,
 }
 
 /// Run a JMAP account until the UI drops its sender.
@@ -126,6 +132,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
             push_rx,
             push_enabled,
             push_started: false,
+            offline: Offline::default(),
         };
 
         let w = &mut worker;
@@ -163,10 +170,14 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
             // asked, a single request a step.
             // Offline or on a metered connection it waits; the request that
             // follows the change wakes this loop to look again (#442).
-            let indexing = !state.backfill.is_empty()
-                && crate::desktop::power::reaches_url(&jmap_base_url(account))
+            let net = crate::desktop::power::reaches_url(&jmap_base_url(account))
                 && !crate::desktop::power::saving_data();
+            let indexing = !state.backfill.is_empty() && net;
             let wait = state.backfill_wait;
+            // Then the account's offline period (#536), once the index is in.
+            let offline = &mut self.offline;
+            let keeping = state.backfill.is_empty() && net && Offline::wanted(account);
+            let offline_wait = offline.wait();
             let req = tokio::select! {
                 biased;
                 req = self.rx.recv() => match req {
@@ -201,6 +212,13 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
                     }
                     continue;
                 }
+                _ = index_pause(offline_wait), if keeping => {
+                    match jmap_session(account, state, &|_| {}).await {
+                        Some(s) => jmap_offline_step(&s, account_id, account, cache.as_ref(), state, offline).await,
+                        None => offline.rest(JMAP_BACKFILL_BACKOFF),
+                    }
+                    continue;
+                }
             };
             self.handle(req).await;
         }
@@ -215,6 +233,9 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         let emit = &self.emit;
         match req {
             MailRequest::Locate { message_id } => self.on_locate(message_id).await,
+            MailRequest::FindText { gen, terms, paths } => {
+                self.on_find_text(gen, terms, paths).await
+            }
             MailRequest::Quota => self.on_quota().await,
             MailRequest::FindKeywords => self.on_find_keywords().await,
             MailRequest::RefreshKeywords { .. } => self.on_refresh_keywords().await,

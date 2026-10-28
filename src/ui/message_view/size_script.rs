@@ -313,7 +313,7 @@ try{window.webkit.messageHandlers.hylki.postMessage(this.dataset.act+':'+this.da
 as[k].addEventListener('dblclick',function(e){e.stopPropagation();});}\
 document.addEventListener('click',function(e){var b=e.target&&e.target.closest?e.target.closest('.hylki-unsub-btn'):null;\
 if(!b)return;e.stopPropagation();e.preventDefault();\
-var v=b.dataset.tpl?'tpl:'+b.dataset.key+':'+b.dataset.tpl:'unsub:'+b.dataset.key;\
+var v=b.dataset.tpl?'tpl:'+b.dataset.key+':'+b.dataset.tpl:b.dataset.mdn?'mdn:'+b.dataset.key+':'+b.dataset.mdn:'unsub:'+b.dataset.key;\
 try{window.webkit.messageHandlers.hylki.postMessage(v);}catch(_){}});\
 document.addEventListener('click',function(e){var b=e.target&&e.target.closest?e.target.closest('.hylki-tr-btn'):null;\
 if(!b)return;e.stopPropagation();e.preventDefault();\

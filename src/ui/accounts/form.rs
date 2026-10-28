@@ -246,6 +246,11 @@ pub(super) fn read_account(
             .get(widgets.form.clean_lists_row.selected() as usize)
             .copied()
             .unwrap_or(0),
+        offline_mail: crate::config::OfflineMail::ALL
+            .get(widgets.form.offline_mail_row.selected() as usize)
+            .copied()
+            .unwrap_or_default(),
+        offline_attachments: widgets.form.offline_attachments_row.is_active(),
         // Row 0 is Automatic; the rest follow PGP_KEY_CHOICES. Until gpg
         // has answered, the account keeps the key it had.
         pgp_key: PGP_KEY_CHOICES.with(|c| {
@@ -505,6 +510,14 @@ pub(super) fn fill_editor(widgets: &AccountsWindowWidgets, acc: &AccountConfig) 
             .position(|d| *d == acc.clean_lists_days)
             .unwrap_or(0) as u32,
     );
+    widgets
+        .form
+        .offline_mail_row
+        .set_selected(acc.offline_mail.index());
+    widgets
+        .form
+        .offline_attachments_row
+        .set_active(acc.offline_attachments);
     fill_pgp_key_row(widgets, acc.pgp_key.as_deref());
     widgets.form.in_unified_row.set_active(acc.in_unified);
     widgets
@@ -631,6 +644,8 @@ pub(super) fn clear_editor(widgets: &AccountsWindowWidgets) {
     widgets.form.empty_junk_row.set_selected(0);
     widgets.form.empty_trash_row.set_selected(0);
     widgets.form.clean_lists_row.set_selected(0);
+    widgets.form.offline_mail_row.set_selected(0);
+    widgets.form.offline_attachments_row.set_active(false);
     fill_pgp_key_row(widgets, None);
     widgets.form.in_unified_row.set_active(true);
     widgets.form.folder_sort_row.set_selected(0);

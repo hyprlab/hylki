@@ -147,6 +147,7 @@ pub(crate) fn kind_label(kind: FolderKind) -> String {
         FolderKind::Archive => i18n("Archive"),
         FolderKind::Junk => i18n("Junk"),
         FolderKind::Trash => i18n("Trash"),
+        FolderKind::Snoozed => i18n("Snoozed"),
         _ => i18n("Folder"),
     }
 }
@@ -215,6 +216,7 @@ pub(crate) struct SidebarInit {
     pub(crate) archive_expanded: bool,
     pub(crate) junk_expanded: bool,
     pub(crate) trash_expanded: bool,
+    pub(crate) snoozed_expanded: bool,
     pub(crate) favorites_expanded: bool,
     pub(crate) smart_expanded: bool,
     pub(crate) contacts_expanded: bool,

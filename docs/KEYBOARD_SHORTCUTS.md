@@ -174,6 +174,7 @@ These work with or without single-key shortcuts too:
 | <kbd>Ctrl+Shift+K</kbd> | Command palette with `>` already typed: actions only |
 | <kbd>Delete</kbd> | Delete the selected messages, or the message you are reading, in the main window or its own |
 | <kbd>Backspace</kbd> | Delete the selected messages, with the list focused |
+| <kbd>→</kbd> <kbd>←</kbd> | Open a conversation out in the list, or fold it back up, with the list focused; <kbd>←</kbd> works from any of its replies |
 | <kbd>Shift+Delete</kbd> | Delete the selected messages permanently, without going to Trash, after asking |
 | <kbd>Ctrl+F</kbd> | Search the message list, or find in the message when it has the focus |
 | <kbd>Ctrl+P</kbd> | Print the message you are reading |

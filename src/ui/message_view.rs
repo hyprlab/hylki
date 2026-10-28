@@ -29,6 +29,7 @@ mod on_services;
 mod on_show;
 mod page_fade;
 mod print;
+mod receipt_banner;
 mod remote;
 mod render;
 mod sender;
@@ -49,6 +50,7 @@ pub(crate) use frame::theme_grounds_for;
 pub(crate) use menu::MenuHit;
 pub(crate) use menu::{hit_menu_entries, strip_navigation_items};
 pub(crate) use page_fade::{on_next_page_fade, PAGE_FADE_MS};
+pub(crate) use remote::remote_urls;
 pub(crate) use types::{
     CardAttachment, InviteAction, MessageViewInput, MessageViewOutput, SelectMode, TrState,
     UnsubState,
@@ -274,6 +276,8 @@ pub(crate) struct MessageView {
     /// [`crate::models::Unsubscribe::key`] with the time of the request, so a
     /// message from one says so instead of offering the button afresh.
     unsubscribed: std::collections::HashMap<String, i64>,
+    /// Sent mail's read receipts (#520), for the cards' checkmarks.
+    receipt_marks: crate::models::ReceiptMarks,
     /// Cards whose unsubscribe request is under way or has just failed.
     unsub_state: std::collections::HashMap<(u32, u32), UnsubState>,
     /// Which messages of a conversation open folded (#326).

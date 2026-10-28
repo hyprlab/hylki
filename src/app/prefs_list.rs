@@ -37,6 +37,11 @@ impl AppModel {
                         .emit(MessageListInput::SetSearchPinned(on));
                 }
             }
+            PrefOutput::SetContactNames(on) => {
+                if pref!(self.contact_names = on) {
+                    self.read_contact_names(&sender);
+                }
+            }
             PrefOutput::SetContactsSearchOpen(on) => {
                 if pref!(self.contacts_search_open = on) {
                     self.contacts_page

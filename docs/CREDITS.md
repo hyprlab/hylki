@@ -203,6 +203,8 @@ Adding or updating one is the easiest way in: see [po/README.md](../po/README.md
 
 - [**bennypowers**](https://github.com/bennypowers): the Gentoo ebuild, in
   [his overlay](https://github.com/bennypowers/gentoo-overlay).
+- [**clementpoiret**](https://github.com/clementpoiret): the NixOS flake, in
+  [hylki-flake](https://github.com/clementpoiret/hylki-flake).
 
 ## Third-party work
 

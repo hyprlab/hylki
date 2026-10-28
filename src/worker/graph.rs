@@ -21,10 +21,12 @@ use crate::i18n::{i18n, i18n_f};
 use crate::worker::graph::folders::{graph_poll_inbox, refresh_graph_folders};
 use crate::worker::graph::http::graph_token;
 use crate::worker::graph::index::{graph_backfill_step, GraphState};
+use crate::worker::graph::offline::graph_offline_step;
 use crate::worker::graph::ops::graph_fetch_raw;
 use crate::worker::graph::send::graph_flush_outbox;
 use crate::worker::index_queue::index_pause;
 use crate::worker::lane::{related_from_cache, thread_summaries_with_members};
+use crate::worker::offline::Offline;
 use crate::worker::{MailRequest, WorkerEvent};
 
 mod chores;
@@ -35,9 +37,11 @@ mod handle_write;
 mod http;
 mod index;
 mod messages;
+mod offline;
 mod ops;
 mod send;
 mod snooze;
+mod text_search;
 use crate::worker::outbox::{delete_queued, emit_outbox};
 
 /// A label whose name the message leaves out is named from the
@@ -64,6 +68,8 @@ struct GraphWorker<E> {
     state: GraphState,
     /// When the Junk / Trash auto-empty (#140) last ran for this worker.
     last_auto_empty: Option<std::time::Instant>,
+    /// The download of the account's offline period (#536).
+    offline: Offline,
 }
 
 /// Run a Microsoft account until the UI drops its sender.
@@ -99,6 +105,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             emit,
             cache,
             last_auto_empty: None,
+            offline: Offline::default(),
         };
         let account_id = worker.account_id;
         let account = &worker.account;
@@ -144,10 +151,13 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             // single request so neither waits long behind one.
             // Offline or on a metered connection it waits; the request that
             // follows the change wakes this loop to look again (#442).
-            let indexing = !self.state.backfill.is_empty()
-                && crate::desktop::power::reaches_internet()
-                && !crate::desktop::power::saving_data();
+            let net =
+                crate::desktop::power::reaches_internet() && !crate::desktop::power::saving_data();
+            let indexing = !self.state.backfill.is_empty() && net;
             let wait = self.state.backfill_wait;
+            // Then the account's offline period (#536), once the index is in.
+            let keeping = self.state.backfill.is_empty() && net && Offline::wanted(&self.account);
+            let offline_wait = self.offline.wait();
             let account_id = self.account_id;
             let emit = &|ev| name_labels(&self.account, &self.emit, ev);
             let req = tokio::select! {
@@ -167,6 +177,10 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
                     graph_backfill_step(&self.account, account_id, self.cache.as_ref(), &mut self.state, emit).await;
                     continue;
                 }
+                _ = index_pause(offline_wait), if keeping => {
+                    graph_offline_step(&self.account, account_id, self.cache.as_ref(), &self.state, &mut self.offline).await;
+                    continue;
+                }
             };
             self.handle(req).await;
         }
@@ -180,6 +194,9 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
         let cache = &self.cache;
         let emit = &|ev| name_labels(&self.account, &self.emit, ev);
         match req {
+            MailRequest::FindText { gen, terms, paths } => {
+                self.on_find_text(gen, terms, paths).await
+            }
             MailRequest::Locate { message_id } => {
                 // No folders to search here beyond what the cache already
                 // held: answer "not found" so the app can report the miss.

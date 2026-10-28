@@ -10,6 +10,7 @@ use tokio::sync::mpsc;
 
 use crate::cache::Cache;
 use crate::config::AccountConfig;
+use crate::models::FolderKind;
 use crate::worker::imap::folders::cached_folder_kind;
 use crate::worker::imap::prefetch::{queue_attachment_prefetch, queue_body_prefetch};
 use crate::worker::imap::retry::load_messages_retry;
@@ -82,6 +83,15 @@ pub(super) async fn idle_wait(
     // (silently dropped by a NAT during a long IDLE) answers nothing at all.
     let missed = match tokio::time::timeout(IDLE_START_TIMEOUT, sel(&mut sess, path)).await {
         Ok(Ok(mailbox)) => {
+            // The sweep passes over the folder IDLE works, so a Snoozed
+            // folder being watched says here how much it still holds
+            // (#542): mail moved out of it never wakes the IDLE.
+            if cached_folder_kind(cache, account_id, path) == Some(FolderKind::Snoozed) {
+                emit(WorkerEvent::SnoozedCount {
+                    path: path.to_string(),
+                    count: mailbox.exists,
+                });
+            }
             let missed = missed_new_mail(account_id, path, mailbox.uid_next);
             // Taken as seen now: the sync below records it again, and one
             // that fails must not send every later wait round this branch.

@@ -626,6 +626,21 @@ msgstr ""
 msgid "Starred first"
 msgstr ""
 
+msgid "Clear Dates"
+msgstr ""
+
+msgid "Any Date"
+msgstr ""
+
+msgid "{from} to {to}"
+msgstr ""
+
+msgid "Since {date}"
+msgstr ""
+
+msgid "Until {date}"
+msgstr ""
+
 msgid "Sort by"
 msgstr ""
 
@@ -633,6 +648,15 @@ msgid "Show only"
 msgstr ""
 
 msgid "Clear Filters"
+msgstr ""
+
+msgid "Dates"
+msgstr ""
+
+msgid "From"
+msgstr ""
+
+msgid "To"
 msgstr ""
 
 msgid "Sort and filter messages"
@@ -682,6 +706,9 @@ msgid "Open the selected message"
 msgstr ""
 
 msgid "Back to the message list"
+msgstr ""
+
+msgid "Open or fold a conversation in the list"
 msgstr ""
 
 msgid "Next message in the conversation"
@@ -1102,6 +1129,25 @@ msgstr ""
 msgid "Customize Toolbar…"
 msgstr ""
 
+msgid "Read receipt"
+msgstr ""
+
+msgid "Read: {subject}"
+msgstr ""
+
+msgid ""
+"This is a read receipt for the message sent to {to} on {date} with the "
+"subject \"{subject}\"."
+msgstr ""
+
+msgid ""
+"It means the message was shown on the recipient's screen, not that it was "
+"read or understood."
+msgstr ""
+
+msgid "Read by {reader}"
+msgstr ""
+
 msgid "Full Release Notes on GitHub"
 msgstr ""
 
@@ -1359,6 +1405,21 @@ msgid "Due Date"
 msgstr ""
 
 msgid "Date"
+msgstr ""
+
+msgid "Newest messages"
+msgstr ""
+
+msgid "Last week"
+msgstr ""
+
+msgid "Last month"
+msgstr ""
+
+msgid "Last year"
+msgstr ""
+
+msgid "All mail"
 msgstr ""
 
 msgid "With sent mail"
@@ -1638,6 +1699,15 @@ msgid "Waiting since {ago}"
 msgstr ""
 
 msgid "Scheduled for {when}"
+msgstr ""
+
+msgid "No read receipt yet"
+msgstr ""
+
+msgid "{who}, {when}"
+msgstr ""
+
+msgid "Read by {count} of {total}"
 msgstr ""
 
 msgid "Verified sender"
@@ -3054,6 +3124,9 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
+msgid "Send options"
+msgstr ""
+
 msgid "Send now"
 msgstr ""
 
@@ -3069,6 +3142,12 @@ msgstr ""
 msgid "Pick a date and time…"
 msgstr ""
 
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
 msgid "Show From, To and Subject"
 msgstr ""
 
@@ -3076,12 +3155,6 @@ msgid "Send now instead"
 msgstr ""
 
 msgid "Download password for {name}: {password}"
-msgstr ""
-
-msgid "From"
-msgstr ""
-
-msgid "To"
 msgstr ""
 
 msgid "Cc"
@@ -3305,6 +3378,15 @@ msgid "Save new contacts in"
 msgstr ""
 
 msgid "Unless another is picked when the contact is made."
+msgstr ""
+
+msgid "In Mail"
+msgstr ""
+
+msgid "Show names from Contacts"
+msgstr ""
+
+msgid "Saved addresses show the contact's name, not the mail's."
 msgstr ""
 
 msgid "Layout"
@@ -3851,6 +3933,13 @@ msgstr ""
 msgid "Clear selection"
 msgstr ""
 
+#. The scope button beside it says where it looks.
+msgid "Search…"
+msgstr ""
+
+msgid "Searching the server…"
+msgstr ""
+
 msgid "Choose which folders to search"
 msgstr ""
 
@@ -3908,15 +3997,6 @@ msgid "Only the folder or view the list is showing."
 msgstr ""
 
 msgid "What this searches"
-msgstr ""
-
-msgid "Search all folders but Trash and Junk"
-msgstr ""
-
-msgid "Search all folders, Trash and Junk too"
-msgstr ""
-
-msgid "Search this folder"
 msgstr ""
 
 msgid "me"
@@ -4283,6 +4363,24 @@ msgid "Date:"
 msgstr ""
 
 msgid "Message"
+msgstr ""
+
+msgid "{name} asked for a read receipt."
+msgstr ""
+
+msgid "{name} asked for a read receipt, to be sent to {addr}."
+msgstr ""
+
+msgid "Send Receipt"
+msgstr ""
+
+msgid "Tells the sender you opened this message"
+msgstr ""
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Sends nothing and stops asking"
 msgstr ""
 
 msgid "Copied"
@@ -5041,6 +5139,12 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr ""
 
+msgid "Read receipts"
+msgstr ""
+
+msgid "When someone opens mail you asked a receipt for."
+msgstr ""
+
 msgid "Sound for new mail"
 msgstr ""
 
@@ -5164,6 +5268,12 @@ msgstr ""
 msgid "Remote content can tell a sender when and where you read."
 msgstr ""
 
+msgid "Pre-load remote content for the next messages"
+msgstr ""
+
+msgid "Their senders can tell they were opened."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr ""
 
@@ -5189,6 +5299,12 @@ msgstr ""
 
 msgid ""
 "Most are fetched from the sender's domain, which learns your IP address."
+msgstr ""
+
+msgid "Send read receipts"
+msgstr ""
+
+msgid "A receipt tells the sender when you opened the message."
 msgstr ""
 
 msgid "Open at startup"
@@ -5251,6 +5367,12 @@ msgid "Shown only with more than one account."
 msgstr ""
 
 msgid "Inboxes"
+msgstr ""
+
+msgid "Snoozed"
+msgstr ""
+
+msgid "Shown only while mail is snoozed."
 msgstr ""
 
 msgid "Unread counts"
@@ -6310,6 +6432,18 @@ msgid ""
 "starred."
 msgstr ""
 
+msgid "Keep mail offline"
+msgstr ""
+
+msgid "Leaves out Trash, Junk and Drafts."
+msgstr ""
+
+msgid "Include attachments"
+msgstr ""
+
+msgid "Can consume a lot of hard drive space."
+msgstr ""
+
 msgid "Microsoft 365"
 msgstr ""
 
@@ -6358,9 +6492,6 @@ msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 
 msgid "Templates"
-msgstr ""
-
-msgid "Snoozed"
 msgstr ""
 
 msgid "Hidden Folders"
@@ -6591,6 +6722,21 @@ msgstr ""
 msgid "How long Undo is offered after sending."
 msgstr ""
 
+msgid "Request read receipts"
+msgstr ""
+
+msgid "Returned receipts"
+msgstr ""
+
+msgid "Sent mail shows who read it; the receipt goes here."
+msgstr ""
+
+msgid "Move to Trash"
+msgstr ""
+
+msgid "Keep in Inbox"
+msgstr ""
+
 msgid "Reply Header"
 msgstr ""
 
@@ -6799,6 +6945,9 @@ msgid "Remove…"
 msgstr ""
 
 msgid "Keep downloaded mail"
+msgstr ""
+
+msgid "Mail inside an account's offline period is kept."
 msgstr ""
 
 msgid "GNOME Files Integration"

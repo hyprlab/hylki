@@ -681,6 +681,26 @@ msgstr "Não lidas primeiro"
 msgid "Starred first"
 msgstr "Com estrela primeiro"
 
+#, fuzzy
+msgid "Clear Dates"
+msgstr "Limpar filtros"
+
+#, fuzzy
+msgid "Any Date"
+msgstr "Data"
+
+#, fuzzy
+msgid "{from} to {to}"
+msgstr "reencaminha para {to}"
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "expira em {date}"
+
+#, fuzzy
+msgid "Until {date}"
+msgstr "expira em {date}"
+
 msgid "Sort by"
 msgstr "Ordenar por"
 
@@ -689,6 +709,16 @@ msgstr "Mostrar apenas"
 
 msgid "Clear Filters"
 msgstr "Limpar filtros"
+
+#, fuzzy
+msgid "Dates"
+msgstr "Data"
+
+msgid "From"
+msgstr "De"
+
+msgid "To"
+msgstr "Para"
 
 msgid "Sort and filter messages"
 msgstr "Ordenar e filtrar mensagens"
@@ -738,6 +768,10 @@ msgstr "Abrir a mensagem selecionada"
 
 msgid "Back to the message list"
 msgstr "Voltar à lista de mensagens"
+
+#, fuzzy
+msgid "Open or fold a conversation in the list"
+msgstr "Fechar a conversa e voltar à lista"
 
 msgid "Next message in the conversation"
 msgstr "Mensagem seguinte na conversa"
@@ -1180,6 +1214,27 @@ msgstr "Eliminar {n} mensagens"
 msgid "Customize Toolbar…"
 msgstr "Personalizar barra de ferramentas…"
 
+msgid "Read receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Read: {subject}"
+msgstr "Aceite: {subject}"
+
+msgid ""
+"This is a read receipt for the message sent to {to} on {date} with the "
+"subject \"{subject}\"."
+msgstr ""
+
+msgid ""
+"It means the message was shown on the recipient's screen, not that it was "
+"read or understood."
+msgstr ""
+
+#, fuzzy
+msgid "Read by {reader}"
+msgstr "Endereço de resposta"
+
 msgid "Full Release Notes on GitHub"
 msgstr "Notas de lançamento completas no GitHub"
 
@@ -1465,6 +1520,26 @@ msgstr "Data limite"
 
 msgid "Date"
 msgstr "Data"
+
+#, fuzzy
+msgid "Newest messages"
+msgstr "Mensagem mais recente primeiro"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Apelido"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Repete-se mensalmente"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Apelido"
+
+#, fuzzy
+msgid "All mail"
+msgstr "Adicionar e-mail"
 
 msgid "With sent mail"
 msgstr "Com as mensagens enviadas"
@@ -1770,6 +1845,17 @@ msgstr "Em espera desde {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Agendada para {when}"
+
+#, fuzzy
+msgid "No read receipt yet"
+msgstr "Ocultar destinatários"
+
+msgid "{who}, {when}"
+msgstr ""
+
+#, fuzzy
+msgid "Read by {count} of {total}"
+msgstr "{name} · {current} de {total}"
 
 msgid "Verified sender"
 msgstr "Remetente verificado"
@@ -3309,6 +3395,10 @@ msgstr "Eliminar rascunho"
 msgid "Send"
 msgstr "Enviar"
 
+#, fuzzy
+msgid "Send options"
+msgstr "Secções"
+
 msgid "Send now"
 msgstr "Enviar agora"
 
@@ -3324,6 +3414,12 @@ msgstr "Segunda-feira de manhã ({time})"
 msgid "Pick a date and time…"
 msgstr "Escolher uma data e hora…"
 
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
 msgid "Show From, To and Subject"
 msgstr "Mostrar De, Para e Assunto"
 
@@ -3332,12 +3428,6 @@ msgstr "Enviar agora em alternativa"
 
 msgid "Download password for {name}: {password}"
 msgstr "Palavra-passe de transferência de {name}: {password}"
-
-msgid "From"
-msgstr "De"
-
-msgid "To"
-msgstr "Para"
 
 msgid "Cc"
 msgstr "Cc"
@@ -3589,6 +3679,17 @@ msgstr "Guardar novos contactos em"
 
 msgid "Unless another is picked when the contact is made."
 msgstr "A menos que seja escolhido outro ao criar o contacto."
+
+#, fuzzy
+msgid "In Mail"
+msgstr "Correio"
+
+#, fuzzy
+msgid "Show names from Contacts"
+msgstr "Dos Contactos"
+
+msgid "Saved addresses show the contact's name, not the mail's."
+msgstr ""
 
 msgid "Layout"
 msgstr "Disposição"
@@ -4185,6 +4286,15 @@ msgstr "Nenhuma mensagem aqui corresponde aos filtros."
 msgid "Clear selection"
 msgstr "Limpar seleção"
 
+#. The scope button beside it says where it looks.
+#, fuzzy
+msgid "Search…"
+msgstr "A pesquisar…"
+
+#, fuzzy
+msgid "Searching the server…"
+msgstr "A pesquisar…"
+
 msgid "Choose which folders to search"
 msgstr "Escolher as pastas a pesquisar"
 
@@ -4245,15 +4355,6 @@ msgstr "Apenas a pasta ou vista apresentada na lista."
 
 msgid "What this searches"
 msgstr "Âmbito desta pesquisa"
-
-msgid "Search all folders but Trash and Junk"
-msgstr "Pesquisar em todas as pastas exceto Lixo e Lixo eletrónico"
-
-msgid "Search all folders, Trash and Junk too"
-msgstr "Pesquisar em todas as pastas, incluindo Lixo e Lixo eletrónico"
-
-msgid "Search this folder"
-msgstr "Pesquisar nesta pasta"
 
 msgid "me"
 msgstr "eu"
@@ -4633,6 +4734,25 @@ msgstr "Data:"
 
 msgid "Message"
 msgstr "Mensagem"
+
+msgid "{name} asked for a read receipt."
+msgstr ""
+
+msgid "{name} asked for a read receipt, to be sent to {addr}."
+msgstr ""
+
+msgid "Send Receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Tells the sender you opened this message"
+msgstr "Responder a todos nesta mensagem"
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Sends nothing and stops asking"
+msgstr ""
 
 msgid "Copied"
 msgstr "Copiado"
@@ -5439,6 +5559,13 @@ msgstr "Para novas mensagens e erros, enquanto a janela está em segundo plano."
 msgid "Show sender and subject"
 msgstr "Mostrar remetente e assunto"
 
+#, fuzzy
+msgid "Read receipts"
+msgstr "Ocultar destinatários"
+
+msgid "When someone opens mail you asked a receipt for."
+msgstr ""
+
 msgid "Sound for new mail"
 msgstr "Som para novas mensagens"
 
@@ -5570,6 +5697,12 @@ msgid "Remote content can tell a sender when and where you read."
 msgstr ""
 "O conteúdo remoto pode indicar a um remetente quando e onde leu a mensagem."
 
+msgid "Pre-load remote content for the next messages"
+msgstr ""
+
+msgid "Their senders can tell they were opened."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Avisar quando o conteúdo remoto é bloqueado"
 
@@ -5600,6 +5733,13 @@ msgid ""
 msgstr ""
 "A maioria é obtida a partir do domínio do remetente, que fica a conhecer o "
 "seu endereço IP."
+
+#, fuzzy
+msgid "Send read receipts"
+msgstr "Ocultar destinatários"
+
+msgid "A receipt tells the sender when you opened the message."
+msgstr ""
 
 msgid "Open at startup"
 msgstr "Abrir no arranque"
@@ -5666,6 +5806,12 @@ msgstr "Mostrado apenas quando há mais de uma conta."
 
 msgid "Inboxes"
 msgstr "Caixas de entrada"
+
+msgid "Snoozed"
+msgstr ""
+
+msgid "Shown only while mail is snoozed."
+msgstr ""
 
 msgid "Unread counts"
 msgstr "Contagens de mensagens não lidas"
@@ -6806,6 +6952,19 @@ msgstr ""
 "e mais antigas do que este prazo são movidas para o Lixo, exceto se tiverem "
 "estrela."
 
+msgid "Keep mail offline"
+msgstr ""
+
+msgid "Leaves out Trash, Junk and Drafts."
+msgstr ""
+
+#, fuzzy
+msgid "Include attachments"
+msgstr "Sem anexos"
+
+msgid "Can consume a lot of hard drive space."
+msgstr ""
+
 msgid "Microsoft 365"
 msgstr "Microsoft 365"
 
@@ -6862,9 +7021,6 @@ msgstr ""
 
 msgid "Templates"
 msgstr "Modelos"
-
-msgid "Snoozed"
-msgstr ""
 
 msgid "Hidden Folders"
 msgstr "Pastas ocultas"
@@ -7118,6 +7274,24 @@ msgstr "Anular envio"
 msgid "How long Undo is offered after sending."
 msgstr "Durante quanto tempo é possível anular após enviar."
 
+msgid "Request read receipts"
+msgstr ""
+
+#, fuzzy
+msgid "Returned receipts"
+msgstr "Ocultar destinatários"
+
+msgid "Sent mail shows who read it; the receipt goes here."
+msgstr ""
+
+#, fuzzy
+msgid "Move to Trash"
+msgstr "Mover mensagens de listas para o Lixo"
+
+#, fuzzy
+msgid "Keep in Inbox"
+msgstr "Mover para a Caixa de entrada"
+
 #, fuzzy
 msgid "Reply Header"
 msgstr "Endereço de resposta"
@@ -7342,6 +7516,9 @@ msgstr "Remover…"
 msgid "Keep downloaded mail"
 msgstr "Manter correio transferido"
 
+msgid "Mail inside an account's offline period is kept."
+msgstr ""
+
 msgid "GNOME Files Integration"
 msgstr "Integração com Ficheiros do GNOME"
 
@@ -7554,6 +7731,15 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Search all folders but Trash and Junk"
+#~ msgstr "Pesquisar em todas as pastas exceto Lixo e Lixo eletrónico"
+
+#~ msgid "Search all folders, Trash and Junk too"
+#~ msgstr "Pesquisar em todas as pastas, incluindo Lixo e Lixo eletrónico"
+
+#~ msgid "Search this folder"
+#~ msgstr "Pesquisar nesta pasta"
 
 #, fuzzy
 #~ msgid "Same as messages"

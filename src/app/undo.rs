@@ -514,6 +514,7 @@ impl AppModel {
                         message_ids: message_ids.clone(),
                     },
                 );
+                self.follow_undo_move(account_id, from, to, message_ids);
                 // Finding, moving and reloading the messages takes a few round
                 // trips — spin the refresh indicator until the worker's
                 // BulkComplete says it has landed.

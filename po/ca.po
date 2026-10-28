@@ -669,6 +669,26 @@ msgstr "No llegits primer"
 msgid "Starred first"
 msgstr "Destacats primer"
 
+#, fuzzy
+msgid "Clear Dates"
+msgstr "Esborra els filtres"
+
+#, fuzzy
+msgid "Any Date"
+msgstr "Data"
+
+#, fuzzy
+msgid "{from} to {to}"
+msgstr "{cur} de {total}"
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "caduca el {date}"
+
+#, fuzzy
+msgid "Until {date}"
+msgstr "caduca el {date}"
+
 msgid "Sort by"
 msgstr "Ordena per"
 
@@ -677,6 +697,16 @@ msgstr "Mostra només"
 
 msgid "Clear Filters"
 msgstr "Esborra els filtres"
+
+#, fuzzy
+msgid "Dates"
+msgstr "Data"
+
+msgid "From"
+msgstr "De"
+
+msgid "To"
+msgstr "A"
 
 msgid "Sort and filter messages"
 msgstr "Ordena i filtra missatges"
@@ -726,6 +756,10 @@ msgstr "Obre el missatge seleccionat"
 
 msgid "Back to the message list"
 msgstr "Torna a la llista de missatges"
+
+#, fuzzy
+msgid "Open or fold a conversation in the list"
+msgstr "Tanca la conversa i torna a la llista"
 
 msgid "Next message in the conversation"
 msgstr "Missatge següent de la conversa"
@@ -1166,6 +1200,27 @@ msgstr "Suprimeix {n} missatges"
 msgid "Customize Toolbar…"
 msgstr "Personalitza la barra d'eines…"
 
+msgid "Read receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Read: {subject}"
+msgstr "Acceptat: {subject}"
+
+msgid ""
+"This is a read receipt for the message sent to {to} on {date} with the "
+"subject \"{subject}\"."
+msgstr ""
+
+msgid ""
+"It means the message was shown on the recipient's screen, not that it was "
+"read or understood."
+msgstr ""
+
+#, fuzzy
+msgid "Read by {reader}"
+msgstr "Adreça de resposta"
+
 msgid "Full Release Notes on GitHub"
 msgstr "Notes completes de la versió al GitHub"
 
@@ -1450,6 +1505,26 @@ msgstr "Data de venciment"
 
 msgid "Date"
 msgstr "Data"
+
+#, fuzzy
+msgid "Newest messages"
+msgstr "Missatge més nou primer"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Cognom"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Es repeteix mensualment"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Cognom"
+
+#, fuzzy
+msgid "All mail"
+msgstr "Afegeix un correu"
 
 msgid "With sent mail"
 msgstr "Amb el correu enviat"
@@ -1753,6 +1828,17 @@ msgstr "Esperant des de {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Programat per a {when}"
+
+#, fuzzy
+msgid "No read receipt yet"
+msgstr "Amaga els destinataris"
+
+msgid "{who}, {when}"
+msgstr ""
+
+#, fuzzy
+msgid "Read by {count} of {total}"
+msgstr "{name} · {current} de {total}"
 
 msgid "Verified sender"
 msgstr "Remitent verificat"
@@ -3280,6 +3366,10 @@ msgstr "Suprimeix l'esborrany"
 msgid "Send"
 msgstr "Envia"
 
+#, fuzzy
+msgid "Send options"
+msgstr "Seccions"
+
 msgid "Send now"
 msgstr "Envia ara"
 
@@ -3295,6 +3385,12 @@ msgstr "Dilluns al matí ({time})"
 msgid "Pick a date and time…"
 msgstr "Tria una data i una hora…"
 
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
 msgid "Show From, To and Subject"
 msgstr "Mostra De, A i Assumpte"
 
@@ -3303,12 +3399,6 @@ msgstr "Envia-ho ara"
 
 msgid "Download password for {name}: {password}"
 msgstr "Contrasenya de descàrrega per a {name}: {password}"
-
-msgid "From"
-msgstr "De"
-
-msgid "To"
-msgstr "A"
 
 msgid "Cc"
 msgstr "Cc"
@@ -3566,6 +3656,17 @@ msgstr "Desa els contactes nous a"
 
 msgid "Unless another is picked when the contact is made."
 msgstr "Tret que se n'esculli una altra en crear el contacte."
+
+#, fuzzy
+msgid "In Mail"
+msgstr "Correu"
+
+#, fuzzy
+msgid "Show names from Contacts"
+msgstr "De contactes"
+
+msgid "Saved addresses show the contact's name, not the mail's."
+msgstr ""
 
 msgid "Layout"
 msgstr "Disposició"
@@ -4158,6 +4259,15 @@ msgstr "Cap missatge d'aquí passa els filtres."
 msgid "Clear selection"
 msgstr "Desselecciona-ho tot"
 
+#. The scope button beside it says where it looks.
+#, fuzzy
+msgid "Search…"
+msgstr "S'està cercant…"
+
+#, fuzzy
+msgid "Searching the server…"
+msgstr "S'està cercant…"
+
 msgid "Choose which folders to search"
 msgstr "Tria quines carpetes cercar"
 
@@ -4218,15 +4328,6 @@ msgstr "Només la carpeta o vista que mostra la llista."
 
 msgid "What this searches"
 msgstr "Què cerca això"
-
-msgid "Search all folders but Trash and Junk"
-msgstr "Cerca a totes les carpetes menys la paperera i la brossa"
-
-msgid "Search all folders, Trash and Junk too"
-msgstr "Cerca a totes les carpetes, paperera i brossa incloses"
-
-msgid "Search this folder"
-msgstr "Cerca en aquesta carpeta"
 
 msgid "me"
 msgstr "jo"
@@ -4606,6 +4707,25 @@ msgstr "Data:"
 
 msgid "Message"
 msgstr "Missatge"
+
+msgid "{name} asked for a read receipt."
+msgstr ""
+
+msgid "{name} asked for a read receipt, to be sent to {addr}."
+msgstr ""
+
+msgid "Send Receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Tells the sender you opened this message"
+msgstr "Respon a tots d'aquest missatge"
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Sends nothing and stops asking"
+msgstr ""
 
 msgid "Copied"
 msgstr "Copiat"
@@ -5411,6 +5531,13 @@ msgstr "Per a correu nou i errors, mentre la finestra és en segon pla."
 msgid "Show sender and subject"
 msgstr "Mostra el remitent i l'assumpte"
 
+#, fuzzy
+msgid "Read receipts"
+msgstr "Amaga els destinataris"
+
+msgid "When someone opens mail you asked a receipt for."
+msgstr ""
+
 msgid "Sound for new mail"
 msgstr "So per a correu nou"
 
@@ -5541,6 +5668,12 @@ msgstr "Carrega sempre el contingut remot"
 msgid "Remote content can tell a sender when and where you read."
 msgstr "El contingut remot pot dir a un remitent quan i on llegeixes."
 
+msgid "Pre-load remote content for the next messages"
+msgstr ""
+
+msgid "Their senders can tell they were opened."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Avisa quan es bloca el contingut remot"
 
@@ -5571,6 +5704,13 @@ msgid ""
 msgstr ""
 "La majoria s'obtenen del domini del remitent, que llavors aprèn la teva "
 "adreça IP."
+
+#, fuzzy
+msgid "Send read receipts"
+msgstr "Amaga els destinataris"
+
+msgid "A receipt tells the sender when you opened the message."
+msgstr ""
 
 msgid "Open at startup"
 msgstr "Obre en iniciar"
@@ -5637,6 +5777,12 @@ msgstr "Només es mostra amb més d'un compte."
 
 msgid "Inboxes"
 msgstr "Bústies d'entrada"
+
+msgid "Snoozed"
+msgstr ""
+
+msgid "Shown only while mail is snoozed."
+msgstr ""
 
 msgid "Unread counts"
 msgstr "Recomptes de no llegits"
@@ -6772,6 +6918,19 @@ msgstr ""
 "El correu de la bústia d'entrada amb un enllaç de baixa més antic que això "
 "es mou a la paperera, tret que estigui destacat."
 
+msgid "Keep mail offline"
+msgstr ""
+
+msgid "Leaves out Trash, Junk and Drafts."
+msgstr ""
+
+#, fuzzy
+msgid "Include attachments"
+msgstr "No hi ha adjunts"
+
+msgid "Can consume a lot of hard drive space."
+msgstr ""
+
 msgid "Microsoft 365"
 msgstr "Microsoft 365"
 
@@ -6824,9 +6983,6 @@ msgstr "Per al Gmail i altres que arxiven ells mateixos el correu enviat."
 
 msgid "Templates"
 msgstr "Plantilles"
-
-msgid "Snoozed"
-msgstr ""
 
 msgid "Hidden Folders"
 msgstr "Carpetes amagades"
@@ -7073,6 +7229,24 @@ msgstr "Desfés l'enviament"
 msgid "How long Undo is offered after sending."
 msgstr "Quant de temps s'ofereix desfer després d'enviar."
 
+msgid "Request read receipts"
+msgstr ""
+
+#, fuzzy
+msgid "Returned receipts"
+msgstr "Amaga els destinataris"
+
+msgid "Sent mail shows who read it; the receipt goes here."
+msgstr ""
+
+#, fuzzy
+msgid "Move to Trash"
+msgstr "Mou el correu de llistes a la paperera"
+
+#, fuzzy
+msgid "Keep in Inbox"
+msgstr "Deixa-ho a la bústia d'entrada"
+
 #, fuzzy
 msgid "Reply Header"
 msgstr "Adreça de resposta"
@@ -7296,6 +7470,9 @@ msgstr "Elimina…"
 msgid "Keep downloaded mail"
 msgstr "Conserva el correu baixat"
 
+msgid "Mail inside an account's offline period is kept."
+msgstr ""
+
 msgid "GNOME Files Integration"
 msgstr "Integració amb els Fitxers del GNOME"
 
@@ -7509,6 +7686,15 @@ msgstr "La bústia d'entrada unificada en mode clar"
 msgid "Hyprlab"
 msgstr "Hyprlab"
 
+#~ msgid "Search all folders but Trash and Junk"
+#~ msgstr "Cerca a totes les carpetes menys la paperera i la brossa"
+
+#~ msgid "Search all folders, Trash and Junk too"
+#~ msgstr "Cerca a totes les carpetes, paperera i brossa incloses"
+
+#~ msgid "Search this folder"
+#~ msgstr "Cerca en aquesta carpeta"
+
 #, fuzzy
 #~ msgid "Same as messages"
 #~ msgstr "Missatges de correu"
@@ -7517,6 +7703,3 @@ msgstr "Hyprlab"
 #~ msgstr ""
 #~ "Deixa-ho a la bústia d'entrada per només etiquetar el correu que "
 #~ "coincideixi"
-
-#~ msgid "Leave in Inbox"
-#~ msgstr "Deixa-ho a la bústia d'entrada"

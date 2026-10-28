@@ -164,7 +164,7 @@ impl AppModel {
         if self.cache.is_none() || demo_mode() && self.config.is_empty() {
             return;
         }
-        let mut kinds = self.unified_kinds.listed();
+        let mut kinds = self.unified_kinds_listed().listed();
         kinds.push(FolderKind::Inbox);
         let wanted: Vec<(u32, u32, String, FolderKind)> = self
             .accounts
@@ -445,7 +445,7 @@ impl AppModel {
                     // Starred is built from the flags of every folder, and
                     // is small: its first visit builds it.
                     views.extend(
-                        self.unified_kinds
+                        self.unified_kinds_listed()
                             .listed()
                             .into_iter()
                             .filter(|k| *k != FolderKind::Starred)

@@ -130,13 +130,14 @@ fn favorites_load_in_order() {
 }
 
 /// #369: unified Junk and Trash are off in a file that predates them,
-/// and list after Archive, in an account's own order.
+/// and list after Archive, in an account's own order. Snoozed (#542) is
+/// on, and closes the run.
 #[test]
 fn unified_junk_and_trash_start_off() {
     use crate::models::FolderKind::*;
     let kinds: super::UnifiedKinds = toml::from_str("starred = false").expect("parses");
-    assert!(!kinds.junk && !kinds.trash && kinds.archive);
-    assert_eq!(kinds.listed(), vec![Sent, Drafts, Archive]);
+    assert!(!kinds.junk && !kinds.trash && kinds.snoozed && kinds.archive);
+    assert_eq!(kinds.listed(), vec![Sent, Drafts, Archive, Snoozed]);
     let all = super::UnifiedKinds {
         junk: true,
         trash: true,
@@ -144,7 +145,7 @@ fn unified_junk_and_trash_start_off() {
     };
     assert_eq!(
         all.listed(),
-        vec![Starred, Sent, Drafts, Archive, Junk, Trash]
+        vec![Starred, Sent, Drafts, Archive, Junk, Trash, Snoozed]
     );
     assert_eq!(
         super::UnifiedKinds {

@@ -3,8 +3,8 @@
 //! body with the settings the page script reads.
 
 use super::frame::{
-    LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE, LIVE_TAGS, LIVE_TEMPLATES,
-    LIVE_TRANSLATE, LIVE_TRANSLATE_ON, LIVE_UNSUB,
+    LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE, LIVE_READ, LIVE_RECEIPT,
+    LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE, LIVE_TRANSLATE_ON, LIVE_UNSUB,
 };
 use super::types::TrState;
 use super::MessageView;
@@ -131,6 +131,8 @@ impl MessageView {
         // The picture a mailbox of your own shows can change while a
         // conversation is open (#189) — the cards must be built again.
         crate::services::avatar::own_faces_generation().hash(&mut h);
+        // Names from Contacts came in, or the switch for them moved (#541).
+        crate::contacts::contact_names_generation().hash(&mut h);
         self.thread.len().hash(&mut h);
         for m in &self.thread {
             let key = (m.account_id, m.id);
@@ -181,6 +183,20 @@ impl MessageView {
                 .thread
                 .iter()
                 .map(|m| ((m.account_id, m.id), self.invite_inner_html(m)))
+                .collect()
+        });
+        LIVE_RECEIPT.with(|r| {
+            *r.borrow_mut() = self
+                .thread
+                .iter()
+                .map(|m| ((m.account_id, m.id), self.receipt_inner_html(m)))
+                .collect()
+        });
+        LIVE_READ.with(|r| {
+            *r.borrow_mut() = self
+                .thread
+                .iter()
+                .filter_map(|m| Some(((m.account_id, m.id), self.receipt_marks.of(m)?)))
                 .collect()
         });
         LIVE_FOLDED.with(|f| *f.borrow_mut() = self.folded_cards());

@@ -7,8 +7,13 @@ use super::*;
 #[derive(Debug)]
 pub(crate) struct PrefInit {
     pub(crate) auto_remote_content: bool,
+    pub(crate) remote_ahead: bool,
     pub(crate) show_remote_banner: bool,
     pub(crate) show_spoof_banner: bool,
+    /// Answering requests for read receipts, and asking for them (#520).
+    pub(crate) receipts: crate::config::ReceiptPolicy,
+    pub(crate) request_receipts: bool,
+    pub(crate) returned_receipts: crate::config::ReturnedReceipts,
     pub(crate) gravatar: bool,
     pub(crate) avatars: bool,
     /// Your own mail wears its mailbox's face, not a sender's circle (#189).
@@ -136,6 +141,8 @@ pub(crate) struct PrefInit {
     pub(crate) theme: String,
     pub(crate) notifications: bool,
     pub(crate) notification_content: bool,
+    /// A notification when a read receipt comes back (#520).
+    pub(crate) notify_receipts: bool,
     pub(crate) notification_buttons: crate::config::NotificationButtons,
     pub(crate) show_attachments: bool,
     pub(crate) show_unified: bool,
@@ -174,6 +181,7 @@ pub(crate) struct PrefInit {
     pub(crate) list_pills_below: bool,
     pub(crate) list_search_open: bool,
     pub(crate) contacts_search_open: bool,
+    pub(crate) contact_names: bool,
     pub(crate) list_search_bottom: bool,
     pub(crate) list_bulk_bar_bottom: bool,
     pub(crate) single_key_shortcuts: bool,
@@ -277,12 +285,14 @@ pub(crate) enum PrefInput {
     ToggleUnifiedChipArchive(bool),
     ToggleUnifiedChipJunk(bool),
     ToggleUnifiedChipTrash(bool),
+    ToggleUnifiedChipSnoozed(bool),
     ToggleUnifiedStarred(bool),
     ToggleUnifiedSent(bool),
     ToggleUnifiedDrafts(bool),
     ToggleUnifiedArchive(bool),
     ToggleUnifiedJunk(bool),
     ToggleUnifiedTrash(bool),
+    ToggleUnifiedSnoozed(bool),
     ToggleShowAccounts(bool),
     /// One of Focus Mode's switches.
     ToggleFocus(crate::config::FocusPart, bool),
@@ -329,6 +339,7 @@ pub(crate) enum PrefInput {
     ToggleRailFoldArchive(bool),
     ToggleRailFoldJunk(bool),
     ToggleRailFoldTrash(bool),
+    ToggleRailFoldSnoozed(bool),
     ToggleRailFoldFiltered(bool),
     ToggleRailFoldTags(bool),
     ChangePreviewLines(u32),
@@ -403,8 +414,12 @@ pub(crate) enum PrefOutput {
     /// A category was shown, so the app can reopen the window on it.
     PageShown(String),
     SetAutoRemoteContent(bool),
+    SetRemoteAhead(bool),
     SetShowRemoteBanner(bool),
     SetShowSpoofBanner(bool),
+    SetReceipts(crate::config::ReceiptPolicy),
+    SetRequestReceipts(bool),
+    SetReturnedReceipts(crate::config::ReturnedReceipts),
     SetGravatar(bool),
     SetAvatars(bool),
     SetOwnMailboxFace(bool),
@@ -465,6 +480,7 @@ pub(crate) enum PrefOutput {
     SetMeteredSaveData(bool),
     SetNotifications(bool),
     SetNotificationContent(bool),
+    SetNotifyReceipts(bool),
     SetNotificationButtons(crate::config::NotificationButtons),
     SetAttachmentsRow(bool),
     SetShowUnified(bool),
@@ -517,6 +533,8 @@ pub(crate) enum PrefOutput {
     SetListSearchOpen(bool),
     /// Keep Contacts' search field open.
     SetContactsSearchOpen(bool),
+    /// Saved contacts go by their address-book names (#541).
+    SetContactNames(bool),
     /// The list's search field under the rows, not above them (#496).
     SetListSearchBottom(bool),
     /// The list's bulk bar under the rows, not above them (#496).

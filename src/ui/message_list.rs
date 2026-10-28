@@ -2,7 +2,7 @@
 //! with a search field and live filtering.
 
 use self::layout::BarSlots;
-use self::search::{ScopePicker, SearchHits, SearchText};
+use self::search::{ScopePicker, SearchHits, SearchText, TextHits};
 use self::threading::SourceThreads;
 use self::views::ViewSnapshot;
 
@@ -28,17 +28,19 @@ mod on_rows;
 mod on_search;
 mod on_selection;
 mod on_threads;
+mod query;
 mod rows;
+mod scrub;
 mod search;
 mod sort;
 mod threading;
 mod types;
 mod views;
 
-pub(crate) use filters::{CheckFilter, QuickFilter, QuickFilters};
+pub(crate) use filters::{CheckFilter, DateBound, QuickFilter, QuickFilters};
 pub(crate) use layout::after_next_paint;
 pub(crate) use search::search_text_of;
-pub(crate) use search::{PoolFolder, SearchScope};
+pub(crate) use search::{load_address_names, HitSet, PoolFolder, SearchScope, ServerScope};
 pub(crate) use sort::SortOrder;
 pub(crate) use types::{BulkAction, MessageListInput, MessageListOutput};
 pub(crate) use views::{KEEP_AT_MOST, KEPT_VIEWS};
@@ -102,6 +104,15 @@ pub(crate) struct MessageList {
     search_gen: std::sync::Arc<std::sync::atomic::AtomicU64>,
     /// The answer of the last search that ran on another thread.
     search_hits: Option<SearchHits>,
+    /// The search field as parsed (#509).
+    parsed: query::Query,
+    /// What the bodies on disk and the servers found for its words.
+    text_hits: Option<Rc<TextHits>>,
+    /// Bumped when the servers' answers stop counting: a new search, or
+    /// one asked again.
+    server_round: u64,
+    /// The servers are still being asked.
+    server_searching: bool,
     /// Which messages the search field filters over.
     scope: SearchScope,
     /// The search scope's button and popover.

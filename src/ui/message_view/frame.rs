@@ -3,7 +3,7 @@
 
 use super::dark::{adapt_colors_for_dark, pin_color_scheme};
 use super::html::{attr_escape, body_html};
-use super::remote::strip_remote;
+use super::remote::{route_remote, strip_remote};
 use super::style::{auto_direction, inject_csp, inject_reader_style, reader_style_css};
 use super::types::CardAttachment;
 use adw::prelude::*;
@@ -90,6 +90,14 @@ thread_local! {
     /// And each card's invitation banner (#223), the same way again.
     pub(super) static LIVE_INVITE: std::cell::RefCell<std::collections::HashMap<(u32, u32), String>> =
         std::cell::RefCell::new(std::collections::HashMap::new());
+    /// And each card's read receipt banner (#520).
+    pub(super) static LIVE_RECEIPT: std::cell::RefCell<std::collections::HashMap<(u32, u32), String>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+    /// The checkmarks of each card that is sent mail asking for a read
+    /// receipt (#520). Empty in tests.
+    pub(super) static LIVE_READ: std::cell::RefCell<
+        std::collections::HashMap<(u32, u32), crate::models::ReceiptMark>,
+    > = std::cell::RefCell::new(std::collections::HashMap::new());
     /// Each card's translation banner (#327), and the translation the card
     /// shows instead of its message, if it shows one. Empty in tests.
     pub(super) static LIVE_TRANSLATE: std::cell::RefCell<TranslationsShown> =
@@ -150,7 +158,13 @@ pub(super) fn message_frame(
     } else {
         style
     };
-    let doc = if restrict { strip_remote(&doc) } else { doc };
+    // Allowed remote content goes through the app's cache (#474), so a
+    // message shown again, or fetched ahead, paints without the network.
+    let doc = if restrict {
+        strip_remote(&doc)
+    } else {
+        route_remote(&doc)
+    };
     // Dark mode: adapt the message's own colors so dark-on-dark text can't
     // happen (issue #35). `color-scheme` only helps unstyled mail; anything
     // that sets explicit dark text without a background needs its colors

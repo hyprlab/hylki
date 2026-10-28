@@ -164,7 +164,7 @@ impl AppModel {
     /// bodies, so this is a memory budget as much as a cache size.
     pub(super) const THREAD_CACHE_MAX: usize = 8;
 
-    pub(super) fn show_message(&self, message: Option<Message>, loading: bool) {
+    pub(super) fn show_message(&mut self, message: Option<Message>, loading: bool) {
         let allow_remote = message.as_ref().is_some_and(|m| self.remote_allowed(m));
         let (account_name, account_color) = match message.as_ref() {
             Some(m) => (
@@ -219,7 +219,7 @@ impl AppModel {
     /// The header follows the message the user selected, not whatever sorted to
     /// the top: a conversation can now include replies of your own pulled in from
     /// Sent, and one of those being the newest shouldn't retitle the reader.
-    pub(super) fn show_thread(&self) {
+    pub(super) fn show_thread(&mut self) {
         let Some(head) = self.current_thread.first() else {
             return;
         };
@@ -291,18 +291,12 @@ impl AppModel {
 
     /// Push every cached sender verdict for the on-screen conversation into
     /// the reader, so each card's header seal lights up (#88).
-    fn push_member_checks(&self) {
+    fn push_member_checks(&mut self) {
         // A single message never fills current_thread — the open message
         // itself is the one card then.
-        let mut keys: Vec<(u32, u32)> = self
-            .current_thread
-            .iter()
-            .map(|m| (m.account_id, m.id))
-            .collect();
-        if let Some(c) = &self.current {
-            if keys.is_empty() {
-                keys.push((c.account_id, c.id));
-            }
+        let mut cards: Vec<Message> = self.current_thread.clone();
+        if cards.is_empty() {
+            cards.extend(self.current.clone());
         }
         // HYLKI_SHOWCASE_PGP=<good|untrusted|bad|nokey|enc> gives every
         // demo card that OpenPGP verdict, for a capture of the header's
@@ -315,13 +309,29 @@ impl AppModel {
                     ..Default::default()
                 })
             });
-        for key in keys {
-            let stored = self.member_key(key).and_then(|k| self.sender_cache.get(&k));
-            if let Some(check) = showcase.as_ref().or(stored) {
+        // HYLKI_SHOWCASE_RECEIPT=1 has every demo card ask for a read
+        // receipt (#520), for a capture of its banner.
+        let receipts = std::env::var_os("HYLKI_DEMO")
+            .and(std::env::var_os("HYLKI_SHOWCASE_RECEIPT"))
+            .is_some();
+        for m in cards {
+            let stored = self.sender_cache.get(&body_key(&m)).cloned();
+            let staged = receipts.then(|| {
+                Box::new(crate::models::SenderCheck {
+                    receipt: Some(crate::mail::receipt::ReceiptRequest {
+                        to: m.from_addr.clone(),
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                })
+            });
+            if let Some(check) = staged.or(showcase.clone()).or(stored) {
+                // Its read receipt request (#520) too, as the card asks it.
+                let check = self.reader_check(&m, &check, true);
                 self.message_view.emit(MessageViewInput::SenderCheckFor {
-                    account_id: key.0,
-                    id: key.1,
-                    check: check.clone(),
+                    account_id: m.account_id,
+                    id: m.id,
+                    check,
                 });
             }
         }

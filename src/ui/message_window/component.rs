@@ -204,8 +204,14 @@ impl Component for MessageWindow {
             MessageWindowInput::Unsubscribe { message, info } => {
                 let _ = sender.output(MessageWindowOutput::Unsubscribe { message, info });
             }
+            MessageWindowInput::ReceiptAnswer { message, send } => {
+                let _ = sender.output(MessageWindowOutput::ReceiptAnswer { message, send });
+            }
             MessageWindowInput::SetUnsubscribed(lists) => {
                 self.view.emit(MessageViewInput::SetUnsubscribed(lists));
+            }
+            MessageWindowInput::SetReceiptMarks(marks) => {
+                self.view.emit(MessageViewInput::SetReceiptMarks(marks));
             }
             MessageWindowInput::InviteAction {
                 message,
@@ -423,6 +429,9 @@ fn from_reader(out: MessageViewOutput) -> MessageWindowInput {
         MessageViewOutput::Zoom(step) => MessageWindowInput::Zoom(step),
         MessageViewOutput::Unsubscribe { message, info } => {
             MessageWindowInput::Unsubscribe { message, info }
+        }
+        MessageViewOutput::ReceiptAnswer { message, send } => {
+            MessageWindowInput::ReceiptAnswer { message, send }
         }
         MessageViewOutput::InviteAction {
             message,

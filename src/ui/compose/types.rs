@@ -56,6 +56,9 @@ pub(crate) struct ComposePrefill {
     pub(crate) draft_origin: Option<DraftOrigin>,
     /// Start with Encrypt (and so Sign) on: a reply to an encrypted message (#133).
     pub(crate) encrypt: bool,
+    /// Ask for a read receipt (#520): as the message being edited did, or
+    /// `None` for the setting's default.
+    pub(crate) receipt: Option<bool>,
     /// When editing a queued Outbox message, the row this replaces.
     pub(crate) outbox_origin: Option<u32>,
     /// For a reply: the original's To+Cc, so the composer can answer from the

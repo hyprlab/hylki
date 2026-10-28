@@ -46,11 +46,7 @@ impl MessageView {
     /// it carries files, and the day. A click on it opens the card.
     pub(super) fn fold_bar_html(&self, m: &Message) -> String {
         let key = (m.account_id, m.id);
-        let from = if m.from_name.trim().is_empty() {
-            &m.from_addr
-        } else {
-            &m.from_name
-        };
+        let from = crate::contacts::shown_name_or_addr(&m.from_name, &m.from_addr);
         let icon = |name: &str, title: &str| {
             format!(
                 "<span class=\"hylki-fbar-ico\" title=\"{}\">{}</span>",
@@ -95,7 +91,7 @@ impl MessageView {
             key.0,
             key.1,
             attr_escape(&i18n("Click to open this message")),
-            escape_html(from),
+            escape_html(&from),
             escape_html(&fold_bar_date(m)),
         )
     }
