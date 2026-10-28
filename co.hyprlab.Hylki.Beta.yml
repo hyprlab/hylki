@@ -3,7 +3,8 @@
 # ID co.hyprlab.Hylki.Beta so it installs alongside the stable app. Built with
 # the `beta` cargo feature: "Hylki (beta)" branding, a b-suffixed version, and
 # XDG dirs redirected into the stable app's ~/.var/app tree so both installs
-# share accounts, settings and the mail cache. x86_64 only — no ARM beta.
+# share accounts, settings and the mail cache. Built for x86_64 here and for
+# aarch64 by .github/workflows/build-arm64.yml from the beta tag.
 #
 # Ship it with (see the beta ship workflow):
 #   flatpak-builder --user --force-clean --disable-rofiles-fuse \
