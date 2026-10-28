@@ -97,6 +97,8 @@
   bodies already downloaded, and not on a metered connection when Settings
   asks to save data there. The fetches send no cookies and no Referer.
 
+- **Translations:** German (PR #539 by Samuel Edlmeier) brought up to date.
+
 - **Added: zoom in the rich text composer** (#535, requested by
   j-canaan). Ctrl+, Ctrl-, Ctrl+0 and Ctrl with the scroll wheel zoom the
   body in rich text, as they already did in the other formats. The message
