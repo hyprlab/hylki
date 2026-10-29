@@ -48,6 +48,8 @@ pub(crate) struct PrefInit {
     pub(crate) single_message_card: bool,
     /// The Light / Dark Mode switch is shown in the reader header (PR #386).
     pub(crate) theme_switch: bool,
+    /// The account chip is shown in the reader header.
+    pub(crate) account_chip: bool,
     /// Icons come from the desktop's icon theme, not Hylki's own.
     pub(crate) desktop_icons: bool,
     /// The Reader View switch is shown in the reader header.
@@ -441,6 +443,7 @@ pub(crate) enum PrefOutput {
     SetSingleMessageCard(bool),
     SetReaderSwitch(bool),
     SetThemeSwitch(bool),
+    SetAccountChip(bool),
     SetDesktopIcons(bool),
     SetReaderDefault(crate::config::ReaderDefault),
     SetReaderZoom(u32),

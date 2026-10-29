@@ -144,6 +144,10 @@ pub(crate) struct PrivacyFile {
     /// left unread and drops out at the next save.
     #[serde(rename = "theme_switch_shown", default = "default_on")]
     pub(crate) theme_switch: bool,
+    /// Whether the chip naming the message's account is shown above the
+    /// subject in the reader header. On by default.
+    #[serde(default = "default_on")]
+    pub(crate) account_chip: bool,
     /// Draw icons from the desktop's icon theme instead of Hylki's own
     /// (Settings → Appearance). Off: the app looks the same everywhere.
     #[serde(default)]
@@ -694,6 +698,7 @@ impl Default for PrivacyFile {
             reader_mode: false,
             reader_switch: true,
             theme_switch: true,
+            account_chip: true,
             desktop_icons: false,
             reader_default: ReaderDefault::default(),
             reader_zoom: default_reader_zoom(),

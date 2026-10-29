@@ -1579,6 +1579,13 @@ message matches the new theme. In a conversation the choice follows the
 message the conversation was opened on. It works in a message's own window
 too. **Light / Dark Mode switch**, in the same group, hides the switch.
 
+### The account in the message header
+
+Above the subject, the message header names the account the message is in,
+in the account's color. **Settings → Reading → Show account in message
+header** hides it, in the main window and in a message's own window. It is
+stored as `account_chip` in `privacy.toml`.
+
 ### Finding in a message
 
 <kbd>Ctrl+F</kbd> with the message focused, or the magnifier in the reader's

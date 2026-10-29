@@ -265,6 +265,13 @@ impl AppModel {
                     self.popouts_emit(|| MessageWindowInput::SetPgpLabels(on));
                 }
             }
+            PrefOutput::SetAccountChip(on) => {
+                if pref!(self.account_chip = on) {
+                    self.message_view
+                        .emit(MessageViewInput::SetAccountChipShown(on));
+                    self.popouts_emit(|| MessageWindowInput::SetAccountChipShown(on));
+                }
+            }
             PrefOutput::SetReaderFindBottom(on) => {
                 if pref!(self.reader_find_bottom = on) {
                     self.message_view.emit(MessageViewInput::SetFindBottom(on));

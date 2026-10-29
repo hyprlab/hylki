@@ -703,6 +703,8 @@ pub(crate) struct AppModel {
     pub(super) reader_switch: bool,
     /// The Light / Dark Mode switch is shown in the reader header (PR #386).
     pub(super) theme_switch: bool,
+    /// The account chip is shown in the reader header (Settings).
+    pub(super) account_chip: bool,
     /// Icons come from the desktop's icon theme, not Hylki's own (Settings).
     pub(super) desktop_icons: bool,
     /// What Reader View does when a message is opened (Settings).

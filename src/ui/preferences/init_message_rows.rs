@@ -81,6 +81,10 @@ impl Preferences {
             .theme_switch_row
             .set_active(init.theme_switch);
         widgets
+            .reading
+            .account_chip_row
+            .set_active(init.account_chip);
+        widgets
             .appearance
             .desktop_icons_row
             .set_active(init.desktop_icons);

@@ -6779,6 +6779,12 @@ msgstr ""
 msgid "Displays in the message header for each message."
 msgstr ""
 
+msgid "Show account in message header"
+msgstr ""
+
+msgid "The account a message is in, above its subject."
+msgstr ""
+
 msgid "Ctrl+0 returns to the default."
 msgstr ""
 

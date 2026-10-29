@@ -50,6 +50,8 @@ pub(crate) struct MessageWindowInit {
     pub(crate) reader_switch: bool,
     /// Whether the Light / Dark Mode switch is shown (PR #386).
     pub(crate) theme_switch: bool,
+    /// Whether the account chip is shown.
+    pub(crate) account_chip: bool,
     /// What Reader View does when a message is opened.
     pub(crate) reader_default: crate::config::ReaderDefault,
     /// The tags (#71), for the cards' chips.
@@ -143,6 +145,7 @@ pub(crate) enum MessageWindowInput {
     Zoom(i8),
     SetReaderSwitchShown(bool),
     SetThemeSwitchShown(bool),
+    SetAccountChipShown(bool),
     SetReaderDefault(crate::config::ReaderDefault),
     /// This window's own Reader View switch was flipped. It changes this
     /// window alone: the main window and the saved choice are left as they

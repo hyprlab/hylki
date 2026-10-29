@@ -7414,6 +7414,13 @@ msgstr "Εναλλαγή φωτεινής / σκοτεινής λειτουργ�
 msgid "Displays in the message header for each message."
 msgstr "Εμφανίζεται στην κεφαλίδα κάθε μηνύματος."
 
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Εμφάνιση διακόπτη Προβολής ανάγνωσης στην κεφαλίδα μηνύματος"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
+
 msgid "Ctrl+0 returns to the default."
 msgstr "Το Ctrl+0 επαναφέρει την προεπιλογή."
 

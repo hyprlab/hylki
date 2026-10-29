@@ -7292,6 +7292,14 @@ msgstr "Interruptor de mode clar / fosc"
 msgid "Displays in the message header for each message."
 msgstr "Es mostra a l'encapçalament de cada missatge."
 
+#, fuzzy
+msgid "Show account in message header"
+msgstr ""
+"Mostra l'interruptor de la vista de lector a l'encapçalament del missatge"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
+
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 torna al valor per defecte."
 

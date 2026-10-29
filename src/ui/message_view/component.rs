@@ -207,8 +207,10 @@ impl Component for MessageView {
                         set_orientation: gtk::Orientation::Horizontal,
                         set_spacing: 12,
                         #[watch]
-                        set_visible: model.account_name.is_some() || model.current.is_some(),
+                        set_visible: model.account_line_shown(),
 
+                        // Stays when the chip is hidden in Settings: it is
+                        // what pushes the switches to the line's right end.
                         gtk::Box {
                             set_halign: gtk::Align::Start,
                             set_hexpand: true,
@@ -217,6 +219,8 @@ impl Component for MessageView {
                             set_visible: model.account_name.is_some(),
                             #[name = "account_chip"]
                             gtk::Label {
+                                #[watch]
+                                set_visible: model.account_chip_shown,
                                 #[watch]
                                 set_label: model.account_name.as_deref().unwrap_or_default(),
                                 add_css_class: "account-chip",
@@ -517,6 +521,9 @@ impl Component for MessageView {
             }
             MessageViewInput::SetThemeSwitchShown(on) => {
                 self.theme_switch_shown = on;
+            }
+            MessageViewInput::SetAccountChipShown(on) => {
+                self.account_chip_shown = on;
             }
             MessageViewInput::SetReaderDefault(policy) => self.on_set_reader_default(policy),
             MessageViewInput::ToggleSenderStyle { account_id, id } => {

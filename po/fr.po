@@ -7361,6 +7361,13 @@ msgstr "Commutateur de mode clair / sombre"
 msgid "Displays in the message header for each message."
 msgstr "S’affiche dans l’en-tête du message, pour chaque message."
 
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Afficher le commutateur du mode Lecture dans l’en-tête du message"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
+
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 revient à la valeur par défaut."
 

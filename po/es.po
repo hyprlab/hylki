@@ -7344,6 +7344,13 @@ msgstr "Interruptor del modo claro/oscuro"
 msgid "Displays in the message header for each message."
 msgstr "Se muestra en la cabecera de cada mensaje."
 
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Mostrar el interruptor de vista de lectura en la cabecera del mensaje"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
+
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 restablece el valor predeterminado."
 

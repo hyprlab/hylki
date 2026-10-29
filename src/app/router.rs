@@ -487,6 +487,7 @@ impl AppModel {
             | PrefOutput::SetAttachmentDrawer(..)
             | PrefOutput::SetReaderDefault(..)
             | PrefOutput::SetPgpLabels(..)
+            | PrefOutput::SetAccountChip(..)
             | PrefOutput::SetReaderFindBottom(..)
             | PrefOutput::SetSingleMessageCard(..)
             | PrefOutput::SetCardPaletteCollapse(..)

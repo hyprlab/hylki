@@ -142,6 +142,8 @@ pub(crate) enum MessageViewInput {
     SetReaderSwitchShown(bool),
     /// Whether the header's Light / Dark Mode switch is shown (Settings).
     SetThemeSwitchShown(bool),
+    /// Whether the header's account chip is shown (Settings).
+    SetAccountChipShown(bool),
     /// Settings: what Reader View does when a conversation is opened. A
     /// per-message default applies to what is on screen right away.
     SetReaderDefault(crate::config::ReaderDefault),

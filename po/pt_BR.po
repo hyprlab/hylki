@@ -7310,6 +7310,13 @@ msgstr "Botão de modo claro / escuro"
 msgid "Displays in the message header for each message."
 msgstr "Mostrado no cabeçalho de cada mensagem."
 
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Mostrar o botão do Modo de leitura no cabeçalho da mensagem"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
+
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 restaura o padrão."
 

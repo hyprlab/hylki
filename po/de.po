@@ -7364,6 +7364,13 @@ msgstr "Hell-/Dunkelmodus-Umschalter"
 msgid "Displays in the message header for each message."
 msgstr "Anzeige in der Kopfzeile jeder Nachricht."
 
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Schalter für Leseansicht in der Kopfzeile anzeigen"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
+
 msgid "Ctrl+0 returns to the default."
 msgstr "Strg+0 setzt auf den Standardwert zurück."
 

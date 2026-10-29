@@ -32,6 +32,7 @@ single_message_card = true
 reader_mode = false
 reader_switch = true
 theme_switch_shown = true
+account_chip = true
 desktop_icons = false
 reader_default = "remember"
 reader_zoom = 100

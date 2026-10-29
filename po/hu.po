@@ -7605,6 +7605,13 @@ msgstr ""
 msgid "Displays in the message header for each message."
 msgstr "Megnyitja az üzenetet, amelyben már megkezdődött az átirányítás."
 
+#, fuzzy
+msgid "Show account in message header"
+msgstr "„Olvasói nézet” kapcsoló"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
+
 msgid "Ctrl+0 returns to the default."
 msgstr ""
 

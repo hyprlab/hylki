@@ -116,6 +116,8 @@ pub(crate) struct MessageView {
     reader_switch_shown: bool,
     /// Whether the header's Light / Dark Mode switch is shown (Settings).
     theme_switch_shown: bool,
+    /// Whether the header's account chip is shown (Settings).
+    account_chip_shown: bool,
     /// The scheme the user chose for a message with the header's Light /
     /// Dark Mode switch, dark (`true`) or light. The scheme itself is kept,
     /// not a flip of the theme, so a message turned light stays light when
