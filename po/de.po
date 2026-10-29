@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-28 21:51+0100\n"
+"PO-Revision-Date: 2026-10-29 17:19+0100\n"
 "Last-Translator: Samuel Edlmeier <samuel.edlmeier@gmx.net>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -324,7 +324,7 @@ msgid "The contact is too large"
 msgstr "Kontakt überschreitet die zulässige Größe."
 
 msgid "UTF-16 files are not supported"
-msgstr "UTF-16-Dateien werden nicht unterstützt"
+msgstr "UTF-16-Dateien werden nicht unterstützt."
 
 msgid "The file is not a text file"
 msgstr "Die Datei ist keine Textdatei."
@@ -362,16 +362,16 @@ msgid "The files go into the draft you pick."
 msgstr "Dateien werden in den gewählten Entwurf eingefügt."
 
 msgid "No drafts to continue."
-msgstr "Keine Entwürfe, um fortzufahren."
+msgstr "Keine Entwürfe um fortzufahren"
 
 msgid "Attach to This Draft"
 msgstr "Diesem Entwurf beifügen"
 
 msgid "No Drafts folder available for this account"
-msgstr "Für dieses Konto ist kein Entwurfsordner verfügbar"
+msgstr "Für dieses Konto ist kein Entwurfsordner verfügbar."
 
 msgid "No Templates folder available for this account"
-msgstr "Für dieses Konto ist kein Vorlagenordner verfügbar"
+msgstr "Für dieses Konto ist kein Vorlagenordner verfügbar."
 
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
@@ -384,7 +384,7 @@ msgid "The forward of filter {rule} is waiting in the Outbox"
 msgstr "Ausführung der Weiterleitungsregel {rule}  steht im Postausgang an."
 
 msgid "No filters to apply here yet"
-msgstr "Hier sind noch keine Filter verfügbar"
+msgstr "Hier sind noch keine Filter verfügbar."
 
 msgid "Applying Filters"
 msgstr "Anwenden von Filtern"
@@ -4664,7 +4664,7 @@ msgid "Decline"
 msgstr "Ablehnen"
 
 msgid "Tells the organiser you will not be there"
-msgstr "Informiert den Organisator über die Absage"
+msgstr "Informiert die organisierende Person über die Absage"
 
 msgid "Opens the meeting in your calendar application"
 msgstr "Öffnet die Besprechung in der Kalenderanwendung"
@@ -7364,12 +7364,11 @@ msgstr "Hell-/Dunkelmodus-Umschalter"
 msgid "Displays in the message header for each message."
 msgstr "Anzeige in der Kopfzeile jeder Nachricht."
 
-#, fuzzy
 msgid "Show account in message header"
-msgstr "Schalter für Leseansicht in der Kopfzeile anzeigen"
+msgstr "Konto im Nachrichtenkopf anzeigen"
 
 msgid "The account a message is in, above its subject."
-msgstr ""
+msgstr "Das Konto einer Nachricht, oberhalb ihres Betreffs"
 
 msgid "Ctrl+0 returns to the default."
 msgstr "Strg+0 setzt auf den Standardwert zurück."
