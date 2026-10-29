@@ -732,8 +732,12 @@ flowbox.attach-flow > flowboxchild {
   color: @accent_fg_color;
   border-radius: 9999px;
   min-width: 18px;
-  min-height: 18px;
-  padding: 0 5px;
+  /* At the default font size the count's 15px line sits high in the 18px
+     chip, its digits 1.5px above the centre. A pixel of top padding, taken
+     from min-height so the chip stays 18px, brings them down to within half
+     a pixel, the closest a 9px digit gets in an 18px chip. */
+  min-height: 17px;
+  padding: 1px 5px 0;
   font-size: 0.8em;
   font-weight: 700;
 }
