@@ -2,11 +2,17 @@
 //! paint events that render it again.
 
 use super::remote::has_remote_resources;
-use super::types::MessageViewOutput;
+use super::types::{MessageViewInput, MessageViewOutput};
 use super::MessageView;
 use crate::models::Message;
 use adw::prelude::*;
 use relm4::prelude::*;
+use webkit6::prelude::WebViewExt;
+
+/// How long a message still being fetched leaves the last one on screen
+/// before it shows, with its spinner: a wait shorter than this looks like
+/// none, and a spinner flashed for a moment looks like a glitch.
+const LOADING_AFTER: std::time::Duration = std::time::Duration::from_millis(300);
 
 impl MessageView {
     // The fields of `MessageViewInput::Show`, one to one.
@@ -22,6 +28,7 @@ impl MessageView {
         folder_labels: std::collections::HashMap<(u32, u32), String>,
         instant: bool,
         sent: std::collections::HashSet<(u32, u32)>,
+        sender: &ComponentSender<Self>,
     ) {
         let shown = primary.map(|p| *p).or_else(|| thread.first().cloned());
         // A new message: the previous message's verdict must not linger
@@ -95,12 +102,67 @@ impl MessageView {
         self.apply_webview_bg(self.effective_dark());
         // While loading, the spinner page is shown; rendering the (empty)
         // body would just flash blank, so wait for the real body.
-        if !self.loading {
-            self.render();
+        if self.current.is_none() {
+            // The empty pane: nothing to wait for.
+            self.swap.reveal(self.swap.generation(), "empty pane");
+        } else if self.loading {
+            // Still being fetched: the last message stays, frozen, for a
+            // moment, and then this one shows with its spinner.
+            let s = sender.input_sender().clone();
+            let generation = self.swap.generation();
+            gtk::glib::timeout_add_local_once(LOADING_AFTER, move || {
+                s.emit(MessageViewInput::LoadingDeadline(generation))
+            });
+        } else {
+            let loads = self.render();
             // Stepping to another message of the same conversation
             // repaints nothing, but that message must open (#326).
             self.patch_folds();
+            // Nothing new to load: what is there, opened, is the message.
+            if !loads {
+                self.reveal_when_drawn();
+            }
         }
+    }
+
+    /// See [`MessageViewInput::LoadingDeadline`].
+    pub(super) fn on_loading_deadline(&mut self, generation: u64) {
+        if self.loading {
+            self.swap.reveal(generation, "still loading: spinner");
+        }
+    }
+
+    /// Show the pane as it now is, once the page has taken what was patched
+    /// into it on arrival (queued ahead of this, so it goes in first:
+    /// attachment chips, verdicts) and its scroll for them, and has been
+    /// drawn. A row patched in after the page is on screen pushes it down,
+    /// and the page then scrolls again to keep its card in place. A page
+    /// that loaded behind the spinner was never laid out: its frames are
+    /// measured again now that it shows.
+    pub(super) fn reveal_when_drawn(&self) {
+        // The newest page is still loading: its own readiness reveals it.
+        if self.ready_uri != self.latest_uri {
+            return;
+        }
+        let swap = self.swap.clone();
+        let generation = swap.generation();
+        let latest = self.latest_uri.clone();
+        let view = self.webview.clone();
+        self.webview.call_async_javascript_function(
+            "try{var fs=all();for(var i=0;i<fs.length;i++)s(fs[i]);chase();pin();}catch(_){}\
+             await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));",
+            None,
+            None,
+            None,
+            None::<&gtk::gio::Cancellable>,
+            move |_| {
+                // A page that has since been replaced: the newest one,
+                // once ready, ends the freeze.
+                if view.uri().unwrap_or_default() == latest {
+                    swap.reveal(generation, "page drawn");
+                }
+            },
+        );
     }
 
     pub(super) fn on_load_remote_once(&mut self, sender: &ComponentSender<Self>) {
@@ -163,7 +225,14 @@ impl MessageView {
     }
 
     pub(super) fn on_rendered(&mut self) {
+        tracing::debug!(
+            target: "hylki::swap",
+            "page ready: {} (newest {})",
+            self.webview.uri().unwrap_or_default(),
+            self.latest_uri
+        );
         self.webview_ready = true;
+        self.ready_uri = self.webview.uri().unwrap_or_default().to_string();
         // Verdicts that arrived while the document was still loading.
         for (aid, id) in self.member_checks.keys().copied().collect::<Vec<_>>() {
             self.patch_verify_badge(aid, id);
@@ -176,5 +245,7 @@ impl MessageView {
         let keys: Vec<(u32, u32)> = self.thread.iter().map(|m| (m.account_id, m.id)).collect();
         self.patch_card_atts(&keys);
         self.patch_owed_faces();
+        // After the patches: the page is shown with them in.
+        self.reveal_when_drawn();
     }
 }

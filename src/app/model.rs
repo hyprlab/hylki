@@ -838,6 +838,8 @@ pub(crate) struct AppModel {
     pub(super) message_view: Controller<MessageView>,
     /// In-message attachment thumbnail drawer, docked below the reader body.
     pub(super) attachment_drawer: Controller<AttachmentDrawer>,
+    /// The reader and its drawer frozen as one pane while a message opens.
+    pub(super) reader_swap: crate::ui::reader_swap::ReaderSwap,
     pub(super) gallery: Controller<AttachmentsGallery>,
     /// The in-app contacts view behind the sidebar's Contacts row.
     pub(super) contacts_page: Controller<ContactsPage>,
