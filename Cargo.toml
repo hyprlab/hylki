@@ -111,7 +111,7 @@ libc = "0.2"
 # Grammar checking (#452): unpacking Harper, LanguageTool and the Java
 # runtime LanguageTool runs on, which a user can download from Settings.
 # None of them ships with the app. flate2 is already in the graph.
-zip = { version = "8", default-features = false, features = ["deflate-flate2"] }
+zip = { version = "9", default-features = false, features = ["deflate-flate2"] }
 tar = { version = "0.4", default-features = false }
 flate2 = "1"
 
