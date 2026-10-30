@@ -2,7 +2,9 @@
 (function(){
   window.__hylkiPasteOnce = null;
   var urlRe = /((?:https?:\/\/|www\.)[^\s<>()]+[^\s<>().,;:!?'"])/gi;
-  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  /* Quotes too: a linkified address goes inside href="", and urlRe lets a
+     `"` through in the middle of one. */
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   /* Inline images (#113): a pasted or dropped image lands in the text as an
      <img src="data:..."> at the caret; the send path lifts it into a cid:
      part. Oversized images are downscaled on insert — a phone screenshot is
