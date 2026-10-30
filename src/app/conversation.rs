@@ -214,15 +214,26 @@ impl AppModel {
     /// A conversation is rendered as one document with every member's body
     /// inlined and handed to WebKit. Rendering per arriving body meant N loads of
     /// an N-body document, issued far faster than WebKit could retire them.
+    ///
+    /// A conversation already whole (every body in, the lookup answered) has
+    /// nothing left to collapse: it is painted on the next turn instead, and
+    /// the wait still pending finds nothing to do.
     pub(super) fn queue_thread_render(&mut self, sender: &ComponentSender<Self>) {
-        if self.thread_render_queued {
-            return;
-        }
-        self.thread_render_queued = true;
+        let first = !std::mem::replace(&mut self.thread_render_queued, true);
         let s = sender.clone();
-        gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(120), move || {
-            s.input(AppMsg::RenderThread);
-        });
+        if self.thread_settled() {
+            gtk::glib::idle_add_local_once(move || s.input(AppMsg::RenderThread));
+        } else if first {
+            gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(120), move || {
+                s.input(AppMsg::RenderThread);
+            });
+        }
+    }
+
+    /// Every member's body is in and the cross-folder lookup has answered:
+    /// nothing more is on its way to the conversation on screen.
+    pub(super) fn thread_settled(&self) -> bool {
+        !self.thread_related_pending && self.current_thread.iter().all(|m| !m.body.is_empty())
     }
 
     /// Render the current conversation (thread) in the reader, newest first.
