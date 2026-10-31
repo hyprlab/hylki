@@ -149,6 +149,9 @@ fn build_message(
     if msg.request_receipt && msg.receipt_report.is_none() {
         builder = builder.raw_header(super::report::request_header(&from_addr));
     }
+    for header in super::importance::headers(msg.importance) {
+        builder = builder.raw_header(header);
+    }
     // Reply-To (#58): answers go where the sender asked, not to From.
     for (name, addr) in parse_recipients(&msg.reply_to) {
         if let Ok(mbox) = mailbox(&name, &addr) {

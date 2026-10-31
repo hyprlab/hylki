@@ -233,6 +233,24 @@ impl Component for Compose {
                                                 sender.input_sender().emit(ComposeInput::ToggleReceipt(b.is_active()));
                                             },
                                         },
+                                        #[name = "high_check"]
+                                        gtk::CheckButton {
+                                            add_css_class: "context-menu-item",
+                                            set_label: Some(&i18n("High importance")),
+                                            set_active: model.importance == crate::models::Importance::High,
+                                            connect_toggled[sender] => move |b| {
+                                                sender.input_sender().emit(ComposeInput::ToggleImportance(crate::models::Importance::High, b.is_active()));
+                                            },
+                                        },
+                                        #[name = "low_check"]
+                                        gtk::CheckButton {
+                                            add_css_class: "context-menu-item",
+                                            set_label: Some(&i18n("Low importance")),
+                                            set_active: model.importance == crate::models::Importance::Low,
+                                            connect_toggled[sender] => move |b| {
+                                                sender.input_sender().emit(ComposeInput::ToggleImportance(crate::models::Importance::Low, b.is_active()));
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -482,6 +500,7 @@ impl Component for Compose {
             !prefill_attachments.is_empty() && draft_origin.is_none() && outbox_origin.is_none();
         let prefill_encrypt = prefill.encrypt;
         let request_receipt = prefill.receipt.unwrap_or(false);
+        let importance = prefill.importance;
         let send_at = prefill.send_at;
         let current_sig = accounts
             .get(selected)
@@ -651,6 +670,7 @@ impl Component for Compose {
             preview_content,
             encrypt: false,
             request_receipt,
+            importance,
             pgp_checking: false,
             pgp_cleared: None,
             send_at,
@@ -974,6 +994,9 @@ impl Component for Compose {
                 ComposeInput::ToggleReceipt(on) => {
                     self.request_receipt = on;
                     self.fields_dirty = true;
+                }
+                ComposeInput::ToggleImportance(level, on) => {
+                    self.on_toggle_importance(level, on, widgets)
                 }
                 ComposeInput::PgpChecked { checked, result } => {
                     self.on_pgp_checked(checked, result, widgets, &sender)

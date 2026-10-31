@@ -2135,6 +2135,19 @@ General → Read receipts** turns it off. With **Show sender and subject** off i
 says only that a receipt came back, and receipts more than a day old, read for
 the first time, post nothing.
 
+### Importance
+
+The menu beside **Send** has **High importance** and **Low importance**. Either
+one sends the `X-Priority` and `Importance` headers most mail apps read.
+Neither ticked sends normal mail, with no header. A draft or a message in the Outbox keeps its
+importance when it is opened again; a reply starts at normal.
+
+Mail the sender marked high shows a red mark beside its paperclip and star,
+and mail marked low a grey arrow, in the list's card layout and in the header
+of its card in the reader. On a single line the **Importance** column shows
+it (see [Message list layout](#message-list-layout)), and the **High
+Importance** quick filter lists only mail marked high.
+
 ### Storage
 
 Messages and attachments that have been opened, or fetched ahead for the

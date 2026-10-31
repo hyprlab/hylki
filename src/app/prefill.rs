@@ -229,6 +229,7 @@ pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefil
         draft_origin: m.draft_origin,
         encrypt: m.encrypt,
         receipt: Some(m.request_receipt),
+        importance: m.importance,
         outbox_origin: m.outbox_origin,
         reply_addressed_to: String::new(),
         from_address: m
@@ -455,6 +456,7 @@ mod tests {
             send_at: Some(5),
             calendar: None,
             request_receipt: true,
+            importance: crate::models::Importance::High,
             receipt_report: None,
         };
         let p = unsent_prefill(m);
@@ -466,6 +468,7 @@ mod tests {
         assert_eq!(p.from_address, "me@x.org");
         assert_eq!(p.custom_from, "Me <me@x.org>");
         assert!(p.resumed && p.encrypt && !p.template);
+        assert_eq!(p.importance, crate::models::Importance::High);
         assert_eq!((p.outbox_origin, p.send_at), (Some(7), Some(5)));
     }
 }

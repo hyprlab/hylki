@@ -1037,11 +1037,11 @@ flowbox.attach-flow > flowboxchild {
   opacity: 1;
 }
 
-.message-row.single-line .importance-high {
+.message-row .importance-high {
   color: @error_color;
 }
 
-.message-row.single-line .importance-low {
+.message-row .importance-low {
   opacity: 0.5;
 }
 
@@ -1079,7 +1079,7 @@ flowbox.attach-flow > flowboxchild {
 /* On the accent ground of a selected row they read in white, as the rest
    of the row does. */
 .message-list > row:selected .message-row.single-line .message-date.overdue,
-.message-list > row:selected .message-row.single-line .importance-high {
+.message-list > row:selected .message-row .importance-high {
   color: white;
 }
 

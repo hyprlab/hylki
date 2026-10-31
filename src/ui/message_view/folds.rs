@@ -5,7 +5,7 @@ use super::snippets::inline_icon_svg;
 use super::MessageView;
 use crate::encoding::escape_html;
 use crate::i18n::i18n;
-use crate::models::Message;
+use crate::models::{Importance, Message};
 
 impl MessageView {
     /// The cards of the conversation on screen that show folded (#326):
@@ -46,7 +46,8 @@ impl MessageView {
     /// whether it carries files. The star is the toolbar's, in its color,
     /// and only a starred card shows it: the card's `starred` class does, so
     /// a star toggled on the card shows or goes in place. Mail you sent says
-    /// so in a chip instead (see `card_labels`).
+    /// so in a chip instead (see `card_labels`). High or low importance
+    /// (#563) leads, and only where the sender set one.
     pub(super) fn card_marks_html(&self, m: &Message) -> String {
         let icon = |class: &str, name: &str, title: &str| {
             format!(
@@ -62,8 +63,17 @@ impl MessageView {
         } else {
             "<span class=\"hylki-mark hylki-mark-none\"></span>".to_string()
         };
+        let importance = match m.importance {
+            Importance::High => icon(
+                " hylki-mark-high",
+                "emblem-important-symbolic",
+                &i18n("High importance"),
+            ),
+            Importance::Low => icon("", "hylki-importance-low-symbolic", &i18n("Low importance")),
+            Importance::Normal => String::new(),
+        };
         format!(
-            "<span class=\"hylki-marks\">{}{clip}</span>",
+            "<span class=\"hylki-marks\">{importance}{}{clip}</span>",
             icon(
                 " hylki-mark-star",
                 "hylki-non-starred-symbolic",

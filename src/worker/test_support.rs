@@ -117,6 +117,7 @@ pub(super) fn sample_outgoing() -> OutgoingMessage {
         send_at: None,
         calendar: None,
         request_receipt: false,
+        importance: Default::default(),
         receipt_report: None,
     }
 }

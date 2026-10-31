@@ -345,6 +345,9 @@ pub(crate) struct OutgoingMessage {
     /// Ask for a read receipt (#520): a `Disposition-Notification-To`
     /// naming the From address.
     pub(crate) request_receipt: bool,
+    /// How important the sender marks it (#563): `X-Priority` and
+    /// `Importance` headers, none for normal mail.
+    pub(crate) importance: crate::models::Importance,
     /// A read receipt (#520): the fields of its report, sent with `body` as
     /// the words beside them in a `multipart/report`.
     pub(crate) receipt_report: Option<String>,

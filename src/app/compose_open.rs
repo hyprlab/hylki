@@ -199,6 +199,7 @@ impl AppModel {
             in_reply_to: e.in_reply_to,
             references: e.references,
             receipt: Some(e.receipt),
+            importance: e.importance,
             from_address: first_recipient(&e.from)
                 .map(|(_, addr)| addr)
                 .unwrap_or_default(),
