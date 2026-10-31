@@ -4002,6 +4002,9 @@ msgstr ""
 msgid "me"
 msgstr ""
 
+msgid "To:"
+msgstr ""
+
 msgid "Show conversation"
 msgstr ""
 
@@ -4345,9 +4348,6 @@ msgid ""
 msgstr ""
 
 msgid "From:"
-msgstr ""
-
-msgid "To:"
 msgstr ""
 
 msgid "Cc:"

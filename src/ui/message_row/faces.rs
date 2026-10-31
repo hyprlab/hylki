@@ -121,7 +121,7 @@ impl Row {
         if names.is_empty() {
             data.msg.shown_from_name().into_owned()
         } else {
-            format!("To: {names}")
+            format!("{} {names}", crate::i18n::i18n("To:"))
         }
     }
 
