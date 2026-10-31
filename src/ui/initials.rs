@@ -290,6 +290,26 @@ pub(super) fn picture_data_uri(path: &std::path::Path, size: i32) -> Option<Stri
     Some(uri)
 }
 
+/// A sender's face (a contact photo, a Gravatar, a domain icon) as a `data:`
+/// PNG for a reader card's circle (#560), `size` CSS pixels across. Contact
+/// photos come in any shape, so the middle square is kept, as the list's
+/// round avatar crops it, rather than squeezing the whole picture in.
+pub(super) fn texture_data_uri(texture: &gdk::Texture, size: i32) -> Option<String> {
+    let px = (size * 2).max(1);
+    let stream = gtk::gio::MemoryInputStream::from_bytes(&texture.save_to_png_bytes());
+    let pixbuf =
+        gtk::gdk_pixbuf::Pixbuf::from_stream(&stream, None::<&gtk::gio::Cancellable>).ok()?;
+    let (w, h) = (pixbuf.width(), pixbuf.height());
+    let side = w.min(h);
+    if side < 1 {
+        return None;
+    }
+    let square = pixbuf.new_subpixbuf((w - side) / 2, (h - side) / 2, side, side);
+    let scaled = square.scale_simple(px, px, gtk::gdk_pixbuf::InterpType::Hyper)?;
+    let png = scaled.save_to_bufferv("png", &[]).ok()?;
+    Some(format!("data:image/png;base64,{}", glib::base64_encode(&png)))
+}
+
 thread_local! {
     /// Reader-card circles already rendered this session, by what they
     /// show: a conversation repeats its senders, and every render of the

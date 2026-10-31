@@ -612,6 +612,11 @@ which gives it away. Address books that fill themselves from mail
 (Collected Addresses, Recently Contacted, Other Contacts) are not used for
 this, and a contact saved without a name keeps the message's.
 
+A contact's photo is the sender's circle in the message list and in the
+reader's message headers. Without one, the circle shows the sender's
+Gravatar or their domain's logo when those are switched on in **Settings →
+Privacy**, and otherwise their initials.
+
 ### The Hylki address book
 
 Hylki keeps an address book of its own, the **Hylki Address Book**, beside

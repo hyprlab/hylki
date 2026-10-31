@@ -13,6 +13,7 @@ mod chrome;
 mod component;
 mod dark;
 mod document;
+mod faces;
 mod folds;
 mod frame;
 mod html;
@@ -46,6 +47,7 @@ use self::chrome::ClassRules;
 use self::page_fade::{PageFade, PendingLoad};
 use crate::models::Message;
 
+pub(crate) use faces::set_face_tiers;
 pub(crate) use frame::theme_grounds_for;
 pub(crate) use menu::MenuHit;
 pub(crate) use menu::{hit_menu_entries, strip_navigation_items};
@@ -274,6 +276,8 @@ pub(crate) struct MessageView {
     /// Per-member verdicts for the conversation on screen, behind each card's
     /// header seal (#88). Keyed (account_id, id); cleared on Show.
     member_checks: std::collections::HashMap<(u32, u32), crate::models::SenderCheck>,
+    /// The senders' faces being looked up for the cards (#560).
+    faces: faces::Faces,
     /// The mailing lists left through the cards' Unsubscribe button, by
     /// [`crate::models::Unsubscribe::key`] with the time of the request, so a
     /// message from one says so instead of offering the button afresh.

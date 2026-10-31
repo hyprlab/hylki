@@ -115,6 +115,7 @@ impl MessageView {
             webview,
             sender_check: None,
             member_checks: std::collections::HashMap::new(),
+            faces: Default::default(),
             unsubscribed: std::collections::HashMap::new(),
             receipt_marks: Default::default(),
             unsub_state: std::collections::HashMap::new(),

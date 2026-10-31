@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Added: contact photos in the reader** (#560, requested by
+  samuel-edlmeier). A message's header in the reader shows the sender's
+  contact photo where it showed their initials, as the message list does,
+  so it is there with the list's avatars turned off. The Gravatar and
+  sender-logo switches in **Settings → Privacy** apply to it as they do to
+  the list.
+
 - **Added: setting and showing a message's importance** (#563, requested by
   samuel-edlmeier). The menu beside **Send** has **Importance**: **High**,
   **Normal** or **Low**. High and low send `X-Priority` and `Importance`
