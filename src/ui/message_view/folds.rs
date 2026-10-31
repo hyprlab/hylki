@@ -41,7 +41,7 @@ impl MessageView {
             .collect()
     }
 
-    /// The marks in a card's header, beside the date, as a folded card
+    /// The marks in a message's header, carded or not, beside the date, as a folded card
     /// showed them once on a bar of its own (#326): whether it is starred and
     /// whether it carries files. The star is the toolbar's, in its color,
     /// and only a starred card shows it: the card's `starred` class does, so

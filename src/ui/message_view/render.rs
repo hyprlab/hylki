@@ -219,15 +219,14 @@ impl MessageView {
                 Default::default()
             }
         });
+        // On every header, a card's or a full-bleed message's: the marks
+        // are the message's, not the card's.
         LIVE_MARKS.with(|b| {
-            *b.borrow_mut() = if self.carded() {
-                self.thread
-                    .iter()
-                    .map(|m| ((m.account_id, m.id), self.card_marks_html(m)))
-                    .collect()
-            } else {
-                Default::default()
-            }
+            *b.borrow_mut() = self
+                .thread
+                .iter()
+                .map(|m| ((m.account_id, m.id), self.card_marks_html(m)))
+                .collect()
         });
         let translation = crate::services::translate::load();
         LIVE_TRANSLATE_ON.with(|on| on.set(translation.enabled()));

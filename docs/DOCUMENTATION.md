@@ -2143,8 +2143,8 @@ Neither ticked sends normal mail, with no header. A draft or a message in the Ou
 importance when it is opened again; a reply starts at normal.
 
 Mail the sender marked high shows a red mark beside its paperclip and star,
-and mail marked low a grey arrow, in the list's card layout and in the header
-of its card in the reader. On a single line the **Importance** column shows
+and mail marked low a grey arrow, in the list's card layout and in its header
+in the reader. On a single line the **Importance** column shows
 it (see [Message list layout](#message-list-layout)), and the **High
 Importance** quick filter lists only mail marked high.
 
