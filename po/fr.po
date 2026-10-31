@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-30 17:10+0100\n"
+"PO-Revision-Date: 2026-10-31 15:23+0100\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -89,7 +89,7 @@ msgid "Could not import account: {e}"
 msgstr "Impossible d’importer le compte : {e}"
 
 msgid "On This Computer is switched off"
-msgstr ""
+msgstr "« Sur cet ordinateur » est désactivé"
 
 msgid "Delete the attachment from the server?"
 msgstr "Supprimer la pièce jointe du serveur ?"
@@ -114,13 +114,13 @@ msgid "Right"
 msgstr "Droite"
 
 msgid "Below"
-msgstr ""
+msgstr "En dessous"
 
 msgid "Off"
 msgstr "Désactivé"
 
 msgid "Reading Pane"
-msgstr ""
+msgstr "Volet de lecture"
 
 msgid "Focus Mode"
 msgstr "Mode Focus"
@@ -201,7 +201,7 @@ msgid "Move To…"
 msgstr "Déplacer vers…"
 
 msgid "Copy To…"
-msgstr ""
+msgstr "Copier vers…"
 
 msgid "Archive"
 msgstr "Archiver"
@@ -501,7 +501,7 @@ msgid "Unstar"
 msgstr "Retirer l’étoile"
 
 msgid "Create a folder inside {name}."
-msgstr ""
+msgstr "Créer un dossier dans {name}."
 
 msgid "Create a new folder for this account."
 msgstr "Créer un nouveau dossier pour ce compte."
@@ -562,16 +562,16 @@ msgstr ""
 "est irréversible."
 
 msgid "This account can't have folders at the top level."
-msgstr ""
+msgstr "Ce compte ne peut pas avoir de dossiers à la racine."
 
 msgid "Folders on this account can't hold other folders."
-msgstr ""
+msgstr "Les dossiers de ce compte ne peuvent pas contenir d’autres dossiers."
 
 msgid "Create Folder"
 msgstr "Créer un dossier"
 
 msgid "{name} can't hold other folders."
-msgstr ""
+msgstr "{name} ne peut pas contenir d’autres dossiers."
 
 msgid "archive"
 msgstr "archive"
@@ -583,7 +583,7 @@ msgid "destination"
 msgstr "destination"
 
 msgid "A folder can't be moved into itself."
-msgstr ""
+msgstr "Un dossier ne peut pas être déplacé dans lui-même."
 
 msgid "Move Folder"
 msgstr "Déplacer le dossier"
@@ -660,6 +660,7 @@ msgstr "Téléverser vers un stockage en ligne"
 
 msgid "The account has to connect before its folders can change."
 msgstr ""
+"Le compte doit se connecter avant que ses dossiers puissent être modifiés."
 
 msgid "This message carries no calendar file to open."
 msgstr "Ce message ne contient aucun fichier de calendrier à ouvrir."
@@ -769,8 +770,8 @@ msgstr "Actualiser ou appuyer longuement pour la barre d’état"
 
 msgid "Copying one message to On This Computer…"
 msgid_plural "Copying {n} messages to On This Computer…"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Copie d’un message vers « Sur cet ordinateur »…"
+msgstr[1] "Copie de {n} messages vers « Sur cet ordinateur »…"
 
 msgid "Sending message…"
 msgstr "Envoi du message…"
@@ -911,7 +912,7 @@ msgid "Fullscreen on or off"
 msgstr "Activer ou désactiver le mode plein écran"
 
 msgid "Reading pane right of the list, below it, or off"
-msgstr ""
+msgstr "Volet de lecture à droite de la liste, en dessous ou désactivé"
 
 msgid "Message zoom in or out"
 msgstr "Zoom avant ou arrière sur le message"
@@ -1069,13 +1070,13 @@ msgid "Show or Hide the Sidebar"
 msgstr "Afficher ou masquer la barre latérale"
 
 msgid "Reading Pane Right"
-msgstr ""
+msgstr "Volet de lecture à droite"
 
 msgid "Reading Pane Below"
-msgstr ""
+msgstr "Volet de lecture en dessous"
 
 msgid "Reading Pane Off"
-msgstr ""
+msgstr "Volet de lecture désactivé"
 
 msgid "Mail Accounts"
 msgstr "Comptes e-mail"
@@ -1360,8 +1361,8 @@ msgstr "Mettre en veille jusqu’à"
 
 msgid "One message could not be copied to {account}: {error}"
 msgid_plural "{n} messages could not be copied to {account}: {error}"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Un message n’a pas pu être copié vers {account} : {error}"
+msgstr[1] "{n} messages n’ont pas pu être copiés vers {account} : {error}"
 
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
@@ -1370,8 +1371,8 @@ msgstr[1] "{n} messages n’ont pas pu être déplacés vers {account} : {error}
 
 msgid "Copying one message to {account}…"
 msgid_plural "Copying {n} messages to {account}…"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Copie d’un message vers {account}…"
+msgstr[1] "Copie de {n} messages vers {account}…"
 
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
@@ -1868,10 +1869,10 @@ msgid "{free} free ({pct}%)"
 msgstr "{free} libres ({pct} %)"
 
 msgid "A folder needs a name."
-msgstr ""
+msgstr "Un dossier doit avoir un nom."
 
 msgid "A folder name can't contain “{c}” on this account."
-msgstr ""
+msgstr "Un nom de dossier ne peut pas contenir « {c} » sur ce compte."
 
 msgid "Encrypted message"
 msgstr "Message chiffré"
@@ -2009,94 +2010,99 @@ msgid "This message hasn't been checked."
 msgstr "Ce message n’a pas été vérifié."
 
 msgid "Harper is not available for this computer."
-msgstr ""
+msgstr "Harper n’est pas disponible pour cet ordinateur."
 
 msgid "Harper is not downloaded. Download it in Settings → Composing."
 msgstr ""
+"Harper n’est pas téléchargé. Téléchargez-le dans Paramètres → Rédaction."
 
 msgid "Harper could not be started: {e}"
-msgstr ""
+msgstr "Harper n’a pas pu démarrer : {e}"
 
 msgid "Harper's answer could not be read."
-msgstr ""
+msgstr "La réponse de Harper n’a pas pu être lue."
 
 msgid "There is no folder to install to."
-msgstr ""
+msgstr "Il n’y a pas de dossier d’installation."
 
 msgid "There is not enough free space: {size} is needed."
-msgstr ""
+msgstr "L’espace libre est insuffisant : {size} sont nécessaires."
 
 msgid "The download could not start: {e}"
-msgstr ""
+msgstr "Le téléchargement n’a pas pu démarrer : {e}"
 
 msgid "The download was cancelled."
-msgstr ""
+msgstr "Le téléchargement a été annulé."
 
 msgid "The download stopped: {e}"
-msgstr ""
+msgstr "Le téléchargement s’est arrêté : {e}"
 
 msgid "The downloaded file is not the one expected, so it was not installed."
 msgstr ""
+"Le fichier téléchargé n’est pas celui attendu ; il n’a donc pas été installé."
 
 msgid "The download could not be unpacked: {e}"
-msgstr ""
+msgstr "Le téléchargement n’a pas pu être décompressé : {e}"
 
 msgid "The files could not be written: {e}"
-msgstr ""
+msgstr "Les fichiers n’ont pas pu être écrits : {e}"
 
 msgid "{n} MB"
-msgstr ""
+msgstr "{n} Mo"
 
 msgid "The server's answer could not be read."
-msgstr ""
+msgstr "La réponse du serveur n’a pas pu être lue."
 
 msgid "Nothing answers at that address. Check that the server is running."
-msgstr ""
+msgstr "Aucune réponse à cette adresse. Vérifiez que le serveur est en marche."
 
 msgid "The server's name could not be found."
-msgstr ""
+msgstr "Le nom du serveur est introuvable."
 
 msgid "The server's address is not valid."
-msgstr ""
+msgstr "L’adresse du serveur n’est pas valide."
 
 msgid "The server could not be reached: {e}"
-msgstr ""
+msgstr "Le serveur n’a pas pu être joint : {e}"
 
 msgid "The server did not accept the username and key."
-msgstr ""
+msgstr "Le serveur n’a pas accepté le nom d’utilisateur et la clé."
 
 msgid "The message is too long for the server."
-msgstr ""
+msgstr "Le message est trop long pour le serveur."
 
 msgid "Too many requests: try again in a moment."
 msgstr "Trop de requêtes : réessayez dans un instant."
 
 msgid "The server refused the request (error {code})."
-msgstr ""
+msgstr "Le serveur a refusé la requête (erreur {code})."
 
 msgid "LanguageTool is not available for this computer."
-msgstr ""
+msgstr "LanguageTool n’est pas disponible pour cet ordinateur."
 
 msgid "LanguageTool stopped unexpectedly."
-msgstr ""
+msgstr "LanguageTool s’est arrêté de manière inattendue."
 
 msgid "LanguageTool is not downloaded. Download it in Settings → Composing."
 msgstr ""
+"LanguageTool n’est pas téléchargé. Téléchargez-le dans Paramètres → "
+"Rédaction."
 
 msgid "LanguageTool could not be started: {e}"
-msgstr ""
+msgstr "LanguageTool n’a pas pu démarrer : {e}"
 
 msgid "LanguageTool could not be started."
-msgstr ""
+msgstr "LanguageTool n’a pas pu démarrer."
 
 msgid "LanguageTool took too long to start."
-msgstr ""
+msgstr "LanguageTool a mis trop de temps à démarrer."
 
 msgid "Enter the LanguageTool server's address in Settings → Composing."
 msgstr ""
+"Indiquez l’adresse du serveur LanguageTool dans Paramètres → Rédaction."
 
 msgid "Enter the server's address first."
-msgstr ""
+msgstr "Indiquez d’abord l’adresse du serveur."
 
 msgid ""
 "{reason} If your organization manages your account, an administrator can "
@@ -2459,10 +2465,10 @@ msgid "Port (IMAP 993 / POP3 995)"
 msgstr "Port (IMAP 993 / POP3 995)"
 
 msgid "Import Mbox Files"
-msgstr ""
+msgstr "Importer des fichiers mbox"
 
 msgid "Import Maildir Folders"
-msgstr ""
+msgstr "Importer des dossiers Maildir"
 
 msgid "Signed in as {address}, not {email}."
 msgstr "Connecté en tant que {address}, et non {email}."
@@ -2528,6 +2534,8 @@ msgid ""
 "Store mail in folders that live on this computer. Move or copy mail from any "
 "account to here."
 msgstr ""
+"Stockez vos messages dans des dossiers situés sur cet ordinateur. Déplacez "
+"ou copiez-y les messages de n’importe quel compte."
 
 msgid "Add"
 msgstr "Ajouter"
@@ -2668,7 +2676,7 @@ msgid "Custom OAuth"
 msgstr "OAuth personnalisé"
 
 msgid "Folders on this computer"
-msgstr ""
+msgstr "Dossiers sur cet ordinateur"
 
 msgid "IMAP/POP3 account"
 msgstr "Compte IMAP/POP3"
@@ -2686,6 +2694,9 @@ msgid ""
 "Remove {name} from Hylki? Its folders and the mail in them stay on this "
 "computer, in {dir}, and come back if it is added again."
 msgstr ""
+"Retirer {name} de Hylki ? Ses dossiers et les messages qu’ils contiennent "
+"restent sur cet ordinateur, dans {dir}, et reviennent si vous l’ajoutez de "
+"nouveau."
 
 msgid "Edit HTML"
 msgstr "Modifier le HTML"
@@ -5397,64 +5408,68 @@ msgid "Custom File"
 msgstr "Fichier personnalisé"
 
 msgid "Downloading: {done} of {total}"
-msgstr ""
+msgstr "Téléchargement : {done} sur {total}"
 
 msgid "Not available for this computer."
-msgstr ""
+msgstr "Non disponible pour cet ordinateur."
 
 msgid "Version {version}, on this computer."
-msgstr ""
+msgstr "Version {version}, sur cet ordinateur."
 
 msgid "Not downloaded yet. The download is {size}."
-msgstr ""
+msgstr "Pas encore téléchargé. Le téléchargement représente {size}."
 
 msgid "The files could not be removed."
-msgstr ""
+msgstr "Les fichiers n’ont pas pu être supprimés."
 
 msgid "The download stopped unexpectedly."
-msgstr ""
+msgstr "Le téléchargement s’est arrêté de manière inattendue."
 
 msgid "Grammar"
-msgstr ""
+msgstr "Grammaire"
 
 msgid "Check grammar and style"
-msgstr ""
+msgstr "Vérifier la grammaire et le style"
 
 msgid "Right-click a marked phrase for suggestions."
 msgstr ""
+"Faites un clic droit sur une phrase signalée pour voir des suggestions."
 
 msgid "Checker"
-msgstr ""
+msgstr "Correcteur"
 
 msgid "Harper"
-msgstr ""
+msgstr "Harper"
 
 msgid "LanguageTool"
-msgstr ""
+msgstr "LanguageTool"
 
 msgid "LanguageTool server"
-msgstr ""
+msgstr "Serveur LanguageTool"
 
 msgid "English only. Nothing leaves this computer."
-msgstr ""
+msgstr "Anglais uniquement. Rien ne quitte cet ordinateur."
 
 msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
 msgstr ""
+"Prise en charge de plusieurs langues. Rien ne quitte cet ordinateur. Utilise "
+"1 Go de RAM"
 
 msgid "What you write is sent to the server as you type."
 msgstr ""
+"Ce que vous écrivez est envoyé au serveur au fur et à mesure de la saisie."
 
 msgid "Username (LanguageTool Premium)"
-msgstr ""
+msgstr "Nom d’utilisateur (LanguageTool Premium)"
 
 msgid "API key (LanguageTool Premium)"
-msgstr ""
+msgstr "Clé d’API (LanguageTool Premium)"
 
 msgid "Check the settings"
 msgstr "Vérifier les paramètres"
 
 msgid "Sends a test sentence to the server."
-msgstr ""
+msgstr "Envoie une phrase de test au serveur."
 
 msgid "Check"
 msgstr "Vérifier"
@@ -5463,10 +5478,10 @@ msgid "Checking…"
 msgstr "Vérification…"
 
 msgid "The check stopped unexpectedly."
-msgstr ""
+msgstr "La vérification s’est arrêtée de manière inattendue."
 
 msgid "It works: {server} answered."
-msgstr ""
+msgstr "Ça fonctionne : {server} a répondu."
 
 msgid "Messages already read"
 msgstr "Messages déjà lus"
@@ -6207,10 +6222,10 @@ msgid "Monospace"
 msgstr "Monospace"
 
 msgid "Grammar check failed: {error}"
-msgstr ""
+msgstr "Échec de la vérification grammaticale : {error}"
 
 msgid "No suggestions"
-msgstr ""
+msgstr "Aucune suggestion"
 
 msgid "Spelling Language"
 msgstr "Langue du correcteur orthographique"
@@ -6746,7 +6761,7 @@ msgid "Could not create folder: {e}"
 msgstr "Impossible de créer le dossier : {e}"
 
 msgid "the folder it goes in is gone"
-msgstr ""
+msgstr "le dossier de destination n’existe plus"
 
 msgid "Could not rename folder: {e}"
 msgstr "Impossible de renommer le dossier : {e}"
@@ -6861,33 +6876,37 @@ msgstr "Impossible de contacter le serveur JMAP : {e}"
 
 msgid "Mail on this computer is not sent, and has no drafts"
 msgstr ""
+"Les messages sur cet ordinateur ne sont pas envoyés et n’ont pas de "
+"brouillons"
 
 msgid "Mail is not sent from On This Computer: choose another From address"
 msgstr ""
+"Aucun message n’est envoyé depuis « Sur cet ordinateur » : choisissez une "
+"autre adresse d’expéditeur"
 
 msgid "Could not import {path}: {e}"
-msgstr ""
+msgstr "Impossible d’importer {path} : {e}"
 
 msgid "Importing {done} of {total} messages…"
-msgstr ""
+msgstr "Importation de {done} messages sur {total}…"
 
 msgid "A folder by that name already exists"
-msgstr ""
+msgstr "Un dossier portant ce nom existe déjà"
 
 msgid "The folder still holds mail"
-msgstr ""
+msgstr "Le dossier contient encore des messages"
 
 msgid "That is not a folder name"
-msgstr ""
+msgstr "Ce n’est pas un nom de dossier"
 
 msgid "Could not store the message: {e}"
-msgstr ""
+msgstr "Impossible d’enregistrer le message : {e}"
 
 msgid "Could not open the folders on this computer: {e}"
-msgstr ""
+msgstr "Impossible d’ouvrir les dossiers sur cet ordinateur : {e}"
 
 msgid "Reading {n} messages…"
-msgstr ""
+msgstr "Lecture de {n} messages…"
 
 #. Nothing failed: the message waits for the network, which the
 #. Refresh button already shows is down (#442).
@@ -7213,7 +7232,7 @@ msgstr ""
 "favoris."
 
 msgid "Keep mail cached"
-msgstr ""
+msgstr "Conserver les messages en cache"
 
 msgid "Leaves out Trash, Junk and Drafts."
 msgstr "Exclut la Corbeille, les Indésirables et les Brouillons."
@@ -7225,30 +7244,35 @@ msgid "Can consume a lot of hard drive space."
 msgstr "Peut consommer beaucoup d’espace disque."
 
 msgid "Copy mail to On This Computer"
-msgstr ""
+msgstr "Copier les messages vers « Sur cet ordinateur »"
 
 msgid ""
 "Downloads copies of every message from every folder of this account to this "
 "computer (except Trash, Junk and Drafts) and stores them in On This Computer."
 msgstr ""
+"Télécharge une copie de chaque message de chaque dossier de ce compte sur "
+"cet ordinateur (sauf la corbeille, les indésirables et les brouillons) et "
+"les stocke dans « Sur cet ordinateur »."
 
 msgid "Import"
-msgstr ""
+msgstr "Importer"
 
 msgid "Mail already here is not imported again."
-msgstr ""
+msgstr "Les messages déjà présents ne sont pas réimportés."
 
 msgid "Maildir folders"
-msgstr ""
+msgstr "Dossiers Maildir"
 
 msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
 msgstr ""
+"« Sur cet ordinateur » d’Evolution, Dovecot et d’autres arborescences "
+"Maildir."
 
 msgid "Mbox files"
-msgstr ""
+msgstr "Fichiers mbox"
 
 msgid "Thunderbird's folders and other mbox files."
-msgstr ""
+msgstr "Les dossiers de Thunderbird et d’autres fichiers mbox."
 
 msgid "Microsoft 365"
 msgstr "Microsoft 365"
@@ -7554,10 +7578,12 @@ msgstr ""
 "applications de messagerie."
 
 msgid "Fold quoted text"
-msgstr ""
+msgstr "Replier le texte cité"
 
 msgid "Replies and forwards open with the original behind •••."
 msgstr ""
+"Les réponses et transferts s’ouvrent avec le message d’origine masqué "
+"derrière •••."
 
 msgid "Undo Send"
 msgstr "Annuler l’envoi"
@@ -7626,10 +7652,10 @@ msgid "Displays in the message header for each message."
 msgstr "S’affiche dans l’en-tête du message, pour chaque message."
 
 msgid "Show account in message header"
-msgstr ""
+msgstr "Afficher le compte dans l’en-tête du message"
 
 msgid "The account a message is in, above its subject."
-msgstr ""
+msgstr "Le compte auquel appartient un message, au-dessus de son objet."
 
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 revient à la valeur par défaut."
@@ -8049,10 +8075,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Search this folder"
 #~ msgstr "Rechercher dans ce dossier"
-
-#, fuzzy
-#~ msgid "Same as messages"
-#~ msgstr "Messages électroniques"
 
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""
