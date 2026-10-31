@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.47.0-beta.2" date="2026-10-31" type="development">
+      <description>
+        <p>The fixes of 1.46.1: lines typed in plain text show as they are sent, and To, Cc and Bcc are translated.</p>
+      </description>
+    </release>
     <release version="1.47.0-beta.1" date="2026-10-30" type="development">
       <description>
         <p>First preview of 1.47.0: folders kept on this computer, grammar and style checking in the composer, the reading pane below the list or off, New Folder in a folder's right-click menu, folder paths taken from each server, sender checks trusted only from the account's provider, and German and French brought up to date.</p>
