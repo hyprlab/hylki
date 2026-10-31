@@ -204,6 +204,14 @@ impl AppModel {
                 "filter-folder",
             ),
         ]);
+        sections.push(vec![
+            item(
+                RowAction::CreateEvent,
+                i18n("Create Event…"),
+                "x-office-calendar",
+            ),
+            item(RowAction::CreateTask, i18n("Create Task…"), "task-due"),
+        ]);
         sections.push(vec![self.card_remote_entry(&m, sender)]);
         if let Some(folds) = fold_entries(&hit) {
             sections.push(folds);

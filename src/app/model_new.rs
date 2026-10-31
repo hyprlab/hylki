@@ -235,6 +235,7 @@ impl AppModel {
             pending_template_pick: None,
             pending_edit_as_new: None,
             pending_forward: None,
+            pending_to_calendar: None,
             pending_notified_reply: None,
             files_prefs: config::load_files_prefs(),
             link_browser: {

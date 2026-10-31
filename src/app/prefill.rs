@@ -166,16 +166,25 @@ pub(super) fn forward_subject(subject: &str) -> String {
 /// (#528). The dashes stay outside the translation: the composer's scripts
 /// find the header by them.
 pub(super) fn forward_header(m: &Message) -> String {
+    [
+        format!("---------- {} ----------", i18n("Forwarded message")),
+        sender_lines(m),
+        i18n_f("Subject: {subject}", &[("subject", &m.subject)]),
+    ]
+    .join("\n")
+}
+
+/// "From:" and "Date:", as a forward's header names them: also what an
+/// event or a task made from the message (#564) notes it came from.
+pub(super) fn sender_lines(m: &Message) -> String {
     let from = if m.from_name.trim().is_empty() {
         m.from_addr.clone()
     } else {
         format!("{} <{}>", m.from_name, m.from_addr)
     };
     [
-        format!("---------- {} ----------", i18n("Forwarded message")),
         i18n_f("From: {from}", &[("from", &from)]),
         i18n_f("Date: {date}", &[("date", &m.datetime_full())]),
-        i18n_f("Subject: {subject}", &[("subject", &m.subject)]),
     ]
     .join("\n")
 }

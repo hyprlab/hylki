@@ -173,6 +173,12 @@ msgstr ""
 msgid "Create Filter from Message…"
 msgstr ""
 
+msgid "Create Event…"
+msgstr ""
+
+msgid "Create Task…"
+msgstr ""
+
 msgid "Tags"
 msgstr ""
 
@@ -1090,13 +1096,13 @@ msgstr ""
 msgid "Forwarded message"
 msgstr ""
 
+msgid "Subject: {subject}"
+msgstr ""
+
 msgid "From: {from}"
 msgstr ""
 
 msgid "Date: {date}"
-msgstr ""
-
-msgid "Subject: {subject}"
 msgstr ""
 
 msgid "Export failed: {e}"
@@ -1270,6 +1276,12 @@ msgid ""
 msgstr ""
 
 msgid "Snooze until"
+msgstr ""
+
+msgid "Could not add the event: {e}"
+msgstr ""
+
+msgid "Could not add the task: {e}"
 msgstr ""
 
 msgid "One message could not be copied to {account}: {error}"
@@ -2804,6 +2816,39 @@ msgstr ""
 msgid "Open in the default app"
 msgstr ""
 
+msgid "New Event"
+msgstr ""
+
+msgid "New Task"
+msgstr ""
+
+msgid "Open in Calendar"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Calendar"
+msgstr ""
+
+msgid "Task list"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "All day"
+msgstr ""
+
+msgid "Starts"
+msgstr ""
+
+msgid "Ends"
+msgstr ""
+
+msgid "Due"
+msgstr ""
+
 msgid "Welcome to Hylki, formerly {old}"
 msgstr ""
 
@@ -3745,9 +3790,6 @@ msgstr ""
 msgid "Organization"
 msgstr ""
 
-msgid "Title"
-msgstr ""
-
 msgid "Another book moves the contact there when saved."
 msgstr ""
 
@@ -4193,9 +4235,6 @@ msgid "To:"
 msgstr ""
 
 msgid "Show conversation"
-msgstr ""
-
-msgid "Due"
 msgstr ""
 
 msgid "Drag to resize, double-click for the usual width"

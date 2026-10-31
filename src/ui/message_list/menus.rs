@@ -83,6 +83,18 @@ impl MessageList {
                 ),
             ],
             vec![
+                item(
+                    RowAction::CreateEvent,
+                    &i18n("Create Event…"),
+                    "x-office-calendar-symbolic",
+                ),
+                item(
+                    RowAction::CreateTask,
+                    &i18n("Create Task…"),
+                    "task-due-symbolic",
+                ),
+            ],
+            vec![
                 item(RowAction::ViewSource, &i18n("View Source"), "code-symbolic"),
                 item(
                     RowAction::SaveAsFile,

@@ -145,6 +145,10 @@ The full list. The [README](../README.md) carries a shorter one.
 - **Meeting invitations:** what the meeting is, when it runs in your own
   clock and time zone, where it is and who organised it, with Accept, Maybe,
   Decline and Add to Calendar.
+- **Events and tasks from mail:** Create Event and Create Task in a
+  message's menu fill in a title, a time and notes from the message, and
+  write it to a calendar or task list of GNOME Online Accounts or
+  Evolution.
 - **Folding conversations:** a click on a message's header folds it to its
   sender and first lines, and earlier messages can start folded, so
   a long conversation opens on what is new.

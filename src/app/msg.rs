@@ -789,6 +789,10 @@ pub(crate) enum AppMsg {
         result: Result<bool, String>,
     },
 
+    // ---- on_to_calendar (to_calendar.rs) ----
+    /// A step of Create Event or Create Task (#564).
+    ToCalendar(super::to_calendar::ToCalendar),
+
     // ---- on_invites (invites.rs) ----
     /// A card's invitation button (#223): answer the organiser, or hand the
     /// meeting to whatever application opens calendar files.

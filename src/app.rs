@@ -115,6 +115,7 @@ mod tags;
 mod test_support;
 mod text_search;
 mod theme;
+mod to_calendar;
 mod transfer;
 mod tray;
 mod types;

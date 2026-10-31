@@ -65,6 +65,9 @@ pub(crate) enum RowAction {
     AddContact,
     /// Start a new filter from the message's sender and subject.
     CreateFilter,
+    /// Make an event, or a task, from the message (#564).
+    CreateEvent,
+    CreateTask,
     /// A choice from the Snooze menu (#527).
     Snooze(crate::ui::later::SnoozeChoice),
 }

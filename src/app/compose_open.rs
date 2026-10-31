@@ -394,7 +394,7 @@ impl AppModel {
     /// The subject inside `m` once it has been decrypted (#493), where its
     /// own is a placeholder. Only answers use it: a reply to an encrypted
     /// message starts encrypted, and its subject travels inside again.
-    fn decrypted_subject(&self, m: &Message) -> Option<String> {
+    pub(super) fn decrypted_subject(&self, m: &Message) -> Option<String> {
         self.sender_cache
             .get(&body_key(m))?
             .pgp

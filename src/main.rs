@@ -7,6 +7,7 @@
 mod app;
 mod backend;
 mod cache;
+mod calendar;
 mod color;
 mod config;
 mod contacts;

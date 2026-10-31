@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Added: events and tasks from mail** (#564, requested by
+  samuel-edlmeier). **Create Event…** and **Create Task…** in a message's
+  right-click menu, in the list and the reader, open a dialog with the
+  subject as the title and the sender, date and text as the notes. An event
+  has a start and an end, or whole days; a task has an optional due date.
+  It is written to the calendar or task list picked from Evolution Data
+  Server (GNOME Online Accounts, Evolution, GNOME Calendar), read-only
+  calendars left out and the last one used chosen first. Without Evolution
+  Data Server it is handed to the calendar application as an `.ics` file.
+
 - **Added: contact photos in the reader** (#560, requested by
   samuel-edlmeier). A message's header in the reader shows the sender's
   contact photo where it showed their initials, as the message list does,

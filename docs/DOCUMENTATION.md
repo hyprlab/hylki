@@ -1772,6 +1772,30 @@ it:
 The preview is laid out on the paper chosen the last time you printed, or
 your language's default paper size before that.
 
+### Events and tasks from mail
+
+**Create Event…** and **Create Task…** in a message's right-click menu, in
+the list or the reader, open a dialog filled in from the message: its
+subject as the title, and its sender, date and text as the notes. An event
+starts at the next whole hour and lasts an hour, or takes whole days with
+**All day**; a task has no due date until **Due** is switched on.
+
+The event or task is written to the calendar or task list chosen in the
+dialog, from those in GNOME Online Accounts, Evolution or GNOME Calendar
+(Evolution Data Server). Events show up in GNOME Calendar, Evolution and the
+clock menu's agenda; tasks in Endeavour and Evolution. Calendars that only
+read, such as Birthdays & Anniversaries, are not offered, nor is the
+Reminders list iCloud shows with a warning sign: Apple serves upgraded
+reminders over no calendar protocol, so a task written there never reaches
+the Reminders app. The last calendar and task list used are chosen first the
+next time. Each is listed under its account's name in **Settings →
+Contacts**, else the nickname of the mail account with the same address,
+else the address.
+
+On a desktop without Evolution Data Server the dialog's button is **Open in
+Calendar**: the event or task is handed as an `.ics` file to the application
+that opens calendar files, as an invitation's **Add to Calendar** is.
+
 ### Message list layout
 
 **Main menu → Reading Pane** puts the reader **Right** of the list, **Below**

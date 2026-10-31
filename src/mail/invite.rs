@@ -41,6 +41,7 @@ mod ics;
 mod reply;
 mod tz;
 
+pub(crate) use ics::fold;
 use ics::{unfold, Line};
 pub(crate) use reply::reply_ics;
 use tz::{Observance, TimeZoneSpec};

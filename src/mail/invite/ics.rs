@@ -122,7 +122,7 @@ fn unquote(value: &str) -> &str {
 
 /// Fold a content line at 75 octets, as RFC 5545 asks, breaking only
 /// between characters so a multi-byte one is never split.
-pub(super) fn fold(line: &str) -> String {
+pub(crate) fn fold(line: &str) -> String {
     let mut out = String::with_capacity(line.len() + line.len() / 70);
     let mut width = 0;
     for c in line.chars() {

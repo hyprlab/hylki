@@ -981,6 +981,8 @@ pub(crate) struct AppModel {
     /// A forward (#240) waiting on the body, or the attachments, it is to
     /// carry, and whether it opens inline or in a window.
     pub(super) pending_forward: Option<(Message, bool)>,
+    /// Create Event or Create Task (#564) waiting on the message's body.
+    pub(super) pending_to_calendar: Option<(Message, crate::calendar::ItemKind)>,
     /// A reply started from a notification's button (#244), waiting for
     /// the body it quotes.
     pub(super) pending_notified_reply: Option<Message>,
