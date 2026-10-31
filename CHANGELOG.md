@@ -114,6 +114,10 @@
   paragraph (Shift+Return, or Return when it is set to start one) keeps its
   empty line.
 
+- **Fixed: "To:", "Cc:" and "Bcc:" were not translated** (#562, reported by
+  samuel-edlmeier) in the recipients of a message in the reader, or before
+  the names on a Sent folder's rows.
+
 - **Changed: Keep mail offline is called Keep mail cached** in an account's
   settings.
 
