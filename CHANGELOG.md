@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.47.0-beta.2 — 2026-10-31
+
+The fixes of 1.46.1: lines typed with Return in plain text show as they are
+sent (#557), and "To:", "Cc:" and "Bcc:" are translated (#562).
+
+## 1.46.1 — 2026-10-31
+
+Lines typed in plain text show as they are sent, and "To:", "Cc:" and
+"Bcc:" are translated.
+
+- **Fixed: plain text showed an empty line under every line typed with
+  Return** (#557, reported by amadeusp). Each line was drawn as a paragraph
+  of its own, but went out as one line break, so the sent message looked
+  run together. Lines now sit under each other as they are sent; a
+  paragraph (Shift+Return, or Return when it is set to start one) keeps its
+  empty line.
+
+- **Fixed: "To:", "Cc:" and "Bcc:" were not translated** (#562, reported by
+  samuel-edlmeier) in the recipients of a message in the reader, or before
+  the names on a Sent folder's rows.
+
+- **Fixed: a web address pasted into the composer could carry an attribute
+  into the link made of it**, a `"` inside the address ending the `href`.
+
 ## 1.47.0-beta.1 — 2026-10-30
 
 - **Added: On This Computer, folders kept on this computer** (#552).

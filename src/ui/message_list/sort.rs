@@ -158,7 +158,7 @@ pub(super) fn correspondents(msgs: &[&Message]) -> String {
         if let Some(newest) = sorted.first() {
             let to = crate::ui::message_row::recipient_names(&newest.to);
             if !to.is_empty() {
-                return format!("To: {to}");
+                return format!("{} {to}", i18n("To:"));
             }
         }
     }

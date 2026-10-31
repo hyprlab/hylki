@@ -188,9 +188,9 @@ pub(super) fn recipient_count(m: &Message) -> usize {
 pub(super) fn recipients_html(m: &Message, always_shown: bool) -> String {
     let mut lines = String::new();
     for (label, list) in [
-        ("To", m.to.trim()),
-        ("Cc", m.cc.trim()),
-        ("Bcc", m.bcc.trim()),
+        (i18n("To:"), m.to.trim()),
+        (i18n("Cc:"), m.cc.trim()),
+        (i18n("Bcc:"), m.bcc.trim()),
     ] {
         if list.is_empty() {
             continue;
@@ -220,7 +220,7 @@ pub(super) fn recipients_html(m: &Message, always_shown: bool) -> String {
                 escape_html(shown.as_deref().unwrap_or(entry))
             ));
         }
-        lines.push_str(&format!("<div><b>{label}:</b> {parts}</div>"));
+        lines.push_str(&format!("<div><b>{}</b> {parts}</div>", escape_html(&label)));
     }
     if lines.is_empty() {
         return String::new();
