@@ -83,9 +83,6 @@
   stored are checked again. Reported privately by
   [Alexander Lubovenko](https://github.com/typedev).
 
-- **Fixed: a web address pasted into the composer could carry an attribute
-  into the link made of it**, a `"` inside the address ending the `href`.
-
 - **Added: New Folder in a folder's right-click menu** (#554, requested by
   scotthews). The folder is made inside the one clicked, and its parent opens
   to show it, instead of being made at the top and dragged into place.
@@ -107,6 +104,17 @@
 - **Fixed: the swipe strip behind a selected row stood taller than its
   pill.** It takes the pill's shape now and opens at its edge.
 
+- **Changed: Keep mail offline is called Keep mail cached** in an account's
+  settings.
+
+- **Translations:** German (PR #550 by Samuel Edlmeier) and French (PR #556 by
+  frenchy82) brought up to date.
+
+## 1.46.1 — 2026-10-31
+
+Lines typed in plain text show as they are sent, and "To:", "Cc:" and
+"Bcc:" are translated.
+
 - **Fixed: plain text showed an empty line under every line typed with
   Return** (#557, reported by amadeusp). Each line was drawn as a paragraph
   of its own, but went out as one line break, so the sent message looked
@@ -118,11 +126,8 @@
   samuel-edlmeier) in the recipients of a message in the reader, or before
   the names on a Sent folder's rows.
 
-- **Changed: Keep mail offline is called Keep mail cached** in an account's
-  settings.
-
-- **Translations:** German (PR #550 by Samuel Edlmeier) and French (PR #556 by
-  frenchy82) brought up to date.
+- **Fixed: a web address pasted into the composer could carry an attribute
+  into the link made of it**, a `"` inside the address ending the `href`.
 
 ## 1.46.0 — 2026-10-29
 
