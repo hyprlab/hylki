@@ -3229,6 +3229,36 @@ msgstr ""
 msgid "“{addr}” is not an email address."
 msgstr ""
 
+msgid "Send now"
+msgstr ""
+
+msgid "Tomorrow morning ({time})"
+msgstr ""
+
+msgid "Tomorrow afternoon ({time})"
+msgstr ""
+
+msgid "Monday morning ({time})"
+msgstr ""
+
+msgid "Pick a date and time…"
+msgstr ""
+
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
+msgid "High"
+msgstr ""
+
+msgid "Normal"
+msgstr ""
+
+msgid "Low"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr ""
 
@@ -3303,27 +3333,6 @@ msgid "Send"
 msgstr ""
 
 msgid "Send options"
-msgstr ""
-
-msgid "Send now"
-msgstr ""
-
-msgid "Tomorrow morning ({time})"
-msgstr ""
-
-msgid "Tomorrow afternoon ({time})"
-msgstr ""
-
-msgid "Monday morning ({time})"
-msgstr ""
-
-msgid "Pick a date and time…"
-msgstr ""
-
-msgid "Request a read receipt"
-msgstr ""
-
-msgid "Not every mail app sends one."
 msgstr ""
 
 msgid "Show From, To and Subject"
@@ -4207,16 +4216,16 @@ msgstr ""
 msgid "Remove star"
 msgstr ""
 
-msgid "Forwarded"
-msgstr ""
-
-msgid "Snoozed until {when}"
-msgstr ""
-
 msgid "High importance"
 msgstr ""
 
 msgid "Low importance"
+msgstr ""
+
+msgid "Forwarded"
+msgstr ""
+
+msgid "Snoozed until {when}"
 msgstr ""
 
 msgid "In {folder}"
@@ -5771,9 +5780,6 @@ msgid "No suggestions"
 msgstr ""
 
 msgid "Spelling Language"
-msgstr ""
-
-msgid "Normal"
 msgstr ""
 
 msgid "Heading 1"

@@ -17,6 +17,7 @@ mod keys;
 mod messages;
 mod model;
 mod send;
+mod send_menu;
 mod setup;
 mod showcase;
 mod signature;
@@ -27,7 +28,6 @@ mod tests;
 mod translate;
 mod types;
 
-use crate::ui::later::{next_monday, preset_time};
 use cloud::not_signed_in;
 pub(crate) use format::forget_zoom;
 use format::{markdown_body, session_zoom, zoom_chip, SHOWCASE_PLAIN_LOG};
@@ -161,98 +161,7 @@ impl Component for Compose {
                                 add_css_class: "suggested-action",
                                 set_tooltip_text: Some(i18n("Send options").as_str()),
                                 set_can_focus: false,
-                                #[wrap(Some)]
-                                set_popover = &gtk::Popover {
-                                    gtk::Box {
-                                        set_orientation: gtk::Orientation::Vertical,
-                                        set_spacing: 2,
-                                        // Menu rows, not buttons: regular weight
-                                        // like every other popover menu (#167).
-                                        add_css_class: "context-menu-list",
-                                        gtk::Button {
-                                            add_css_class: "flat",
-                                            add_css_class: "context-menu-item",
-                                            set_halign: gtk::Align::Fill,
-                                            #[wrap(Some)]
-                                            set_child = &gtk::Label { set_label: &i18n("Send now"), set_halign: gtk::Align::Start },
-                                            connect_clicked[sender] => move |b| {
-                                                if let Some(p) = b.ancestor(gtk::Popover::static_type()).and_downcast::<gtk::Popover>() { p.popdown(); }
-                                                sender.input_sender().emit(ComposeInput::ClearSendAt);
-                                                sender.input_sender().emit(ComposeInput::Send);
-                                            },
-                                        },
-                                        gtk::Separator {},
-                                        gtk::Button {
-                                            add_css_class: "flat",
-                                            add_css_class: "context-menu-item",
-                                            #[wrap(Some)]
-                                            set_child = &gtk::Label { set_label: &i18n_f("Tomorrow morning ({time})", &[("time", &crate::datefmt::clock_label(8))]), set_halign: gtk::Align::Start },
-                                            connect_clicked[sender] => move |b| {
-                                                if let Some(p) = b.ancestor(gtk::Popover::static_type()).and_downcast::<gtk::Popover>() { p.popdown(); }
-                                                sender.input_sender().emit(ComposeInput::SendAt(preset_time(1, 8)));
-                                            },
-                                        },
-                                        gtk::Button {
-                                            add_css_class: "flat",
-                                            add_css_class: "context-menu-item",
-                                            #[wrap(Some)]
-                                            set_child = &gtk::Label { set_label: &i18n_f("Tomorrow afternoon ({time})", &[("time", &crate::datefmt::clock_label(13))]), set_halign: gtk::Align::Start },
-                                            connect_clicked[sender] => move |b| {
-                                                if let Some(p) = b.ancestor(gtk::Popover::static_type()).and_downcast::<gtk::Popover>() { p.popdown(); }
-                                                sender.input_sender().emit(ComposeInput::SendAt(preset_time(1, 13)));
-                                            },
-                                        },
-                                        gtk::Button {
-                                            add_css_class: "flat",
-                                            add_css_class: "context-menu-item",
-                                            #[wrap(Some)]
-                                            set_child = &gtk::Label { set_label: &i18n_f("Monday morning ({time})", &[("time", &crate::datefmt::clock_label(8))]), set_halign: gtk::Align::Start },
-                                            connect_clicked[sender] => move |b| {
-                                                if let Some(p) = b.ancestor(gtk::Popover::static_type()).and_downcast::<gtk::Popover>() { p.popdown(); }
-                                                sender.input_sender().emit(ComposeInput::SendAt(next_monday(8)));
-                                            },
-                                        },
-                                        gtk::Separator {},
-                                        gtk::Button {
-                                            add_css_class: "flat",
-                                            add_css_class: "context-menu-item",
-                                            #[wrap(Some)]
-                                            set_child = &gtk::Label { set_label: &i18n("Pick a date and time…"), set_halign: gtk::Align::Start },
-                                            connect_clicked[sender] => move |b| {
-                                                if let Some(p) = b.ancestor(gtk::Popover::static_type()).and_downcast::<gtk::Popover>() { p.popdown(); }
-                                                sender.input_sender().emit(ComposeInput::PickSendTime);
-                                            },
-                                        },
-                                        gtk::Separator {},
-                                        gtk::CheckButton {
-                                            add_css_class: "context-menu-item",
-                                            set_label: Some(&i18n("Request a read receipt")),
-                                            set_tooltip_text: Some(&i18n("Not every mail app sends one.")),
-                                            set_active: model.request_receipt,
-                                            connect_toggled[sender] => move |b| {
-                                                sender.input_sender().emit(ComposeInput::ToggleReceipt(b.is_active()));
-                                            },
-                                        },
-                                        #[name = "high_check"]
-                                        gtk::CheckButton {
-                                            add_css_class: "context-menu-item",
-                                            set_label: Some(&i18n("High importance")),
-                                            set_active: model.importance == crate::models::Importance::High,
-                                            connect_toggled[sender] => move |b| {
-                                                sender.input_sender().emit(ComposeInput::ToggleImportance(crate::models::Importance::High, b.is_active()));
-                                            },
-                                        },
-                                        #[name = "low_check"]
-                                        gtk::CheckButton {
-                                            add_css_class: "context-menu-item",
-                                            set_label: Some(&i18n("Low importance")),
-                                            set_active: model.importance == crate::models::Importance::Low,
-                                            connect_toggled[sender] => move |b| {
-                                                sender.input_sender().emit(ComposeInput::ToggleImportance(crate::models::Importance::Low, b.is_active()));
-                                            },
-                                        },
-                                    },
-                                },
+                                set_popover: Some(&send_menu),
                             },
                         },
                         // The folded toolbar (narrow pane): every action that is
@@ -687,6 +596,7 @@ impl Component for Compose {
             .get(selected)
             .map(|a| a.id)
             .unwrap_or_default();
+        let send_menu = send_menu::send_menu(&sender, model.request_receipt, model.importance);
         let widgets = view_output!();
         if prefill_encrypt && crate::mail::pgp::available() {
             // Through the buttons, so the toggles and the model agree.
@@ -995,8 +905,9 @@ impl Component for Compose {
                     self.request_receipt = on;
                     self.fields_dirty = true;
                 }
-                ComposeInput::ToggleImportance(level, on) => {
-                    self.on_toggle_importance(level, on, widgets)
+                ComposeInput::SetImportance(importance) => {
+                    self.importance = importance;
+                    self.fields_dirty = true;
                 }
                 ComposeInput::PgpChecked { checked, result } => {
                     self.on_pgp_checked(checked, result, widgets, &sender)

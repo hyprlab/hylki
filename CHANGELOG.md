@@ -3,9 +3,9 @@
 ## Unreleased
 
 - **Added: setting and showing a message's importance** (#563, requested by
-  samuel-edlmeier). The menu beside **Send** has **High importance** and
-  **Low importance**, which send `X-Priority` and `Importance` headers and
-  stay with a draft or a message in the Outbox. Mail marked high or low shows
+  samuel-edlmeier). The menu beside **Send** has **Importance**: **High**,
+  **Normal** or **Low**. High and low send `X-Priority` and `Importance`
+  headers, and stay with a draft or a message in the Outbox. Mail marked high or low shows
   a red mark or a grey arrow beside the paperclip and the star in the card
   layout of the list, and in its header in the reader; until now only the
   Importance column of a single-line list showed it. The reader's header

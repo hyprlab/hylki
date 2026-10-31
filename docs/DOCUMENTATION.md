@@ -2137,9 +2137,9 @@ the first time, post nothing.
 
 ### Importance
 
-The menu beside **Send** has **High importance** and **Low importance**. Either
-one sends the `X-Priority` and `Importance` headers most mail apps read.
-Neither ticked sends normal mail, with no header. A draft or a message in the Outbox keeps its
+The menu beside **Send** has **Importance**: **High**, **Normal** or **Low**.
+High and low send the `X-Priority` and `Importance` headers most mail apps
+read; normal mail goes with no header, as most mail apps send it. A draft or a message in the Outbox keeps its
 importance when it is opened again; a reply starts at normal.
 
 Mail the sender marked high shows a red mark beside its paperclip and star,

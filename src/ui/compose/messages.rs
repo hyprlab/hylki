@@ -112,8 +112,8 @@ pub(crate) enum ComposeInput {
     ToggleEncrypt(bool),
     /// The Send menu's read receipt check (#520).
     ToggleReceipt(bool),
-    /// One of the Send menu's importance checks (#563), on or off.
-    ToggleImportance(crate::models::Importance, bool),
+    /// The Send menu's importance, picked (#563).
+    SetImportance(crate::models::Importance),
     /// The editor's HTML + plain text came back asynchronously — finish sending.
     SendBody(OutgoingFields),
     /// Save the current message to Drafts.

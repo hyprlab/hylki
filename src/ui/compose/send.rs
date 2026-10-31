@@ -342,29 +342,6 @@ impl Compose {
         }
     }
 
-    /// Handles [`ComposeInput::ToggleImportance`]: High and Low are two
-    /// checks that rule each other out, neither on is normal.
-    pub(super) fn on_toggle_importance(
-        &mut self,
-        level: crate::models::Importance,
-        on: bool,
-        widgets: &ComposeWidgets,
-    ) {
-        use crate::models::Importance;
-        if on {
-            self.importance = level;
-            // Unchecking the other one toggles it off, which changes
-            // nothing now that `level` is the importance.
-            match level {
-                Importance::High => widgets.low_check.set_active(false),
-                _ => widgets.high_check.set_active(false),
-            }
-        } else if self.importance == level {
-            self.importance = Importance::Normal;
-        }
-        self.fields_dirty = true;
-    }
-
     /// Handles [`ComposeInput::PgpChecked`].
     pub(super) fn on_pgp_checked(
         &mut self,
