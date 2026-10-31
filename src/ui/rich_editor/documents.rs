@@ -18,7 +18,9 @@ use crate::i18n::i18n;
 /// flattens what it is given to the text that is sent once it has parsed
 /// it, and shows it in the desktop's monospace font. Every block of the
 /// body is a paragraph there, a line's height above the next, because
-/// that is the empty line the sent text has between them.
+/// that is the empty line the sent text has between them. A line typed
+/// with Return is a block too while it is written (#524), but goes out
+/// as a single line break, so it sits flush under the one above (#557).
 pub(super) fn document(
     content: &str,
     webview: &webkit6::WebView,
@@ -58,7 +60,8 @@ pub(super) fn document(
                    background:transparent;text-decoration:none;opacity:1;\
                    margin:0;padding:0;border:0;}}\
                  html[data-plain] body>*{{margin:0 0 1.6em;}}\
-                 html[data-plain] body>*:last-child{{margin-bottom:0;}}"
+                 html[data-plain] body>*:last-child{{margin-bottom:0;}}\
+                 html[data-plain] body>:has(+[data-hylki-line]){{margin-bottom:0;}}"
             ),
         )
     } else {
