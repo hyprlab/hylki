@@ -107,6 +107,13 @@
 - **Fixed: the swipe strip behind a selected row stood taller than its
   pill.** It takes the pill's shape now and opens at its edge.
 
+- **Fixed: plain text showed an empty line under every line typed with
+  Return** (#557, reported by amadeusp). Each line was drawn as a paragraph
+  of its own, but went out as one line break, so the sent message looked
+  run together. Lines now sit under each other as they are sent; a
+  paragraph (Shift+Return, or Return when it is set to start one) keeps its
+  empty line.
+
 - **Changed: Keep mail offline is called Keep mail cached** in an account's
   settings.
 
