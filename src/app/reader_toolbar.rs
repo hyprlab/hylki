@@ -28,7 +28,11 @@ pub(super) struct ReaderToolbarWidgets {
     pub(super) buttons: Vec<(config::ToolbarItem, gtk::Widget)>,
     /// The Outbox's own buttons' revealers (Edit, Send, Send all).
     pub(super) outbox: Vec<gtk::Revealer>,
-    spinner: gtk::Widget,
+    pub(super) spinner: gtk::Widget,
+    /// With the reader below the list or off (#475) the buttons move to
+    /// this box in the list header.
+    pub(super) list_header: adw::HeaderBar,
+    pub(super) list_tools: gtk::Box,
     bin: adw::BreakpointBin,
     breakpoint: adw::Breakpoint,
     /// The second breakpoint: below this the buttons draw narrower, or the
@@ -224,6 +228,9 @@ impl AppModel {
         for group in groups {
             let mut section = Vec::new();
             for item_kind in group {
+                if !self.reader_shown() && reader_only(*item_kind) {
+                    continue;
+                }
                 match item_kind {
                     T::Reply => section.push(item(A::Reply, || AppMsg::Reply, acts)),
                     T::ReplyAll => section.push(item(A::ReplyAll, || AppMsg::ReplyAll, acts)),
@@ -304,6 +311,7 @@ impl AppModel {
         use config::ToolbarSide;
         self.reader_compose.is_none()
             && (item == config::ToolbarItem::Delete || !self.showing_outbox)
+            && (self.reader_shown() || !reader_only(item))
             && match self.reader_toolbar.side(item) {
                 Some(ToolbarSide::Left) => true,
                 // The compact breakpoint is applied alone, in place of the
@@ -327,7 +335,8 @@ impl AppModel {
     /// Whether the right group is in the ⋯ menu: by choice, or for want of
     /// room.
     fn right_group_folded(&self) -> bool {
-        self.toolbar_fold_right || self.reader_actions_collapsed || self.reader_compact
+        let (collapsed, compact) = self.toolbar_fold();
+        self.toolbar_fold_right || collapsed || compact
     }
 
     /// Pack the header's action buttons in the saved order: the left group
@@ -341,14 +350,25 @@ impl AppModel {
         else {
             return;
         };
-        for (_, w) in &tb.buttons {
-            if w.parent().is_some() {
-                header.remove(w);
+        if self.toolbar_in_list() {
+            self.layout_list_tools(tb);
+            self.refresh_reader_breakpoint();
+            return;
+        }
+        let overflow: gtk::Widget = self.reader_overflow_btn.clone().upcast();
+        // Back from the list header, the ⋯ first: it is the rightmost.
+        if !overflow.is_ancestor(header) {
+            detach(&overflow);
+            header.pack_end(&overflow);
+            for r in &tb.outbox {
+                detach(r.upcast_ref());
+                header.pack_start(r);
             }
         }
-        if tb.spinner.parent().is_some() {
-            header.remove(&tb.spinner);
+        for (_, w) in &tb.buttons {
+            detach(w);
         }
+        detach(&tb.spinner);
         let find =
             |item: config::ToolbarItem| tb.buttons.iter().find(|(i, _)| *i == item).map(|(_, w)| w);
         // Each button's Focus Mode revealer slides towards the edge its
@@ -384,10 +404,24 @@ impl AppModel {
             return;
         };
         let shown = (self.reader_toolbar.left.len() + self.reader_toolbar.right.len()) as i32;
-        let threshold = if tb.button_w <= 0 {
-            READER_ACTIONS_BREAKPOINT
+        // In the list header, the list's own controls come on top.
+        let extra = if !self.toolbar_in_list() {
+            0
         } else {
-            (tb.base + tb.controls.get() + shown * tb.button_w) as f64 + 24.0
+            let header = tb.list_header.measure(gtk::Orientation::Horizontal, -1).0;
+            let tools = tb.list_tools.measure(gtk::Orientation::Horizontal, -1).0;
+            (header - tools).max(0)
+        };
+        // Below the list, the reader's header has no window controls.
+        let controls = if self.controls_in_list() && !self.toolbar_in_list() {
+            0
+        } else {
+            tb.controls.get()
+        };
+        let threshold = if tb.button_w <= 0 {
+            READER_ACTIONS_BREAKPOINT + f64::from(extra)
+        } else {
+            (tb.base + extra + controls + shown * tb.button_w) as f64 + 24.0
         };
         tracing::info!(
             "reader toolbar: {shown} buttons × {}px + base {}px + controls {}px → collapse below {threshold:.0}px",
@@ -399,7 +433,7 @@ impl AppModel {
         // Until the folded row is measured, a generous estimate: each button
         // with the headerbar's spacing, and its padding at both ends.
         let left = (self.reader_toolbar.left.len() + 1) as i32;
-        let estimate = left * (tb.button_w.max(36) + 6) + tb.controls.get() + 48;
+        let estimate = left * (tb.button_w.max(36) + 6) + extra + controls + 48;
         tb.compact_measured.set(false);
         tb.full_measured.set(false);
         tb.full_need.set(threshold as i32);
@@ -407,6 +441,8 @@ impl AppModel {
         tb.compact_breakpoint
             .set_condition(Some(&max_width(f64::from(estimate))));
         tb.bin.queue_resize();
+        self.list_fold
+            .set_needs(threshold as i32, estimate, &self.self_sender);
         let s = self.self_sender.clone();
         self.after_paint(move || {
             let _ = s.send(AppMsg::MeasureReaderFold);
@@ -421,12 +457,20 @@ impl AppModel {
     /// widest seen since the layout last changed counts, so a shorter row
     /// (the Outbox's, the toolbar without its Tags) cannot lower either.
     fn measure_reader_fold(&self) {
-        let (Some(header), Some(tb)) =
+        let (Some(reader_header), Some(tb)) =
             (self.reader_header.get(), self.reader_toolbar_widgets.get())
         else {
             return;
         };
-        if self.reader_compact
+        let header = if !self.toolbar_in_list() {
+            reader_header
+        } else {
+            &tb.list_header
+        };
+        let (collapsed, compact) = self.toolbar_fold();
+        // Hidden in the list header, the row would measure too short.
+        if compact
+            || (self.toolbar_in_list() && self.many_selected())
             || self.reader_compose.is_some()
             || self.showing_outbox
             || self.focus.active(config::FocusPart::ReaderToolbar)
@@ -463,7 +507,7 @@ impl AppModel {
                 need
             })
         };
-        if self.reader_actions_collapsed || self.toolbar_fold_right {
+        if collapsed || self.toolbar_fold_right {
             if let Some(need) = widest(min + gap, &tb.compact_need, &tb.compact_measured) {
                 tracing::info!("reader toolbar: compact below {need}px");
                 tb.compact_breakpoint
@@ -475,6 +519,7 @@ impl AppModel {
                     .right
                     .iter()
                     .filter(|i| **i != config::ToolbarItem::Tags || !self.tags.is_empty())
+                    .filter(|i| self.reader_shown() || !reader_only(**i))
                     .count() as i32;
                 // The ⋯ goes as the right group comes.
                 let need = min - button + right * (button + gap) + gap;
@@ -487,6 +532,8 @@ impl AppModel {
             tb.breakpoint
                 .set_condition(Some(&max_width(f64::from(need))));
         }
+        self.list_fold
+            .set_needs(tb.full_need.get(), tb.compact_need.get(), &self.self_sender);
     }
 
     /// One toolbar button's width and the gap between two, from the left
@@ -683,6 +730,8 @@ impl AppModel {
                 widgets.tb_outbox_send_all.clone(),
             ],
             spinner: widgets.tb_spinner.clone().upcast(),
+            list_header: widgets.list_header.clone(),
+            list_tools: widgets.list_tools.clone(),
             bin: widgets.reader_bin.clone(),
             breakpoint: bp,
             compact_breakpoint: compact_bp,
@@ -696,6 +745,8 @@ impl AppModel {
         });
         // Packs the saved order and sets the real threshold.
         self.relayout_reader_toolbar();
+        self.list_fold
+            .set_active(self.toolbar_in_list(), &self.self_sender);
         watch_decoration_layout(header, sender);
         self.connect_toolbar_menus(sender);
     }
@@ -719,6 +770,31 @@ impl AppModel {
             let _ = s.send(AppMsg::SnoozeMenu);
         });
     }
+}
+
+/// Take a toolbar widget out of whichever header holds it.
+pub(super) fn detach(w: &gtk::Widget) {
+    let Some(parent) = w.parent() else {
+        return;
+    };
+    if let Some(tools) = parent
+        .downcast_ref::<gtk::Box>()
+        .filter(|b| b.has_css_class("list-tools"))
+    {
+        tools.remove(w);
+    } else if let Some(header) = parent
+        .ancestor(adw::HeaderBar::static_type())
+        .and_downcast::<adw::HeaderBar>()
+    {
+        header.remove(w);
+    }
+}
+
+/// The buttons that act on the message in the reading pane, which have
+/// nothing to act on while it is off (#475). Print opens the message's
+/// window and prints there instead.
+pub(super) fn reader_only(item: config::ToolbarItem) -> bool {
+    item == config::ToolbarItem::Find
 }
 
 /// The controls' width comes from the headerbar's own live

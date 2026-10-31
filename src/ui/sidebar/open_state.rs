@@ -43,6 +43,14 @@ impl Sidebar {
     /// a row shows unless some ancestor node is collapsed. Rows are never
     /// removed, so selection indices hold still.
     fn apply_tree_visibility(&self, account_id: u32) {
+        let Some(h) = self
+            .sections
+            .iter()
+            .find(|s| s.account.id == account_id)
+            .map(|s| s.hierarchy.clone())
+        else {
+            return;
+        };
         // The folders inside the Inbox, under its row (#345).
         if let (Some(list), Some(folders), Some(revealers)) = (
             self.folder_lists.get(&account_id),
@@ -59,7 +67,7 @@ impl Sidebar {
                 else {
                     continue;
                 };
-                slide_tree_row(&row, rev, hidden_by_collapse(&folder.path, &collapsed));
+                slide_tree_row(&row, rev, hidden_by_collapse(&folder.path, &collapsed, &h));
             }
         }
         let (Some(list), Some(folders)) = (
@@ -78,7 +86,7 @@ impl Sidebar {
             let Some(row) = list.row_at_index(i as i32) else {
                 continue;
             };
-            let hidden = hidden_by_collapse(&folder.path, &collapsed);
+            let hidden = hidden_by_collapse(&folder.path, &collapsed, &h);
             match revealers.and_then(|r| r.get(i)) {
                 Some(rev) => slide_tree_row(&row, rev, hidden),
                 None => row.set_visible(!hidden),

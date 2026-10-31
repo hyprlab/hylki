@@ -10,7 +10,19 @@ CREATE TABLE IF NOT EXISTS folders (
     kind       INTEGER NOT NULL,
     unread     INTEGER NOT NULL,
     ord        INTEGER NOT NULL,
+    childless  INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (account_id, path)
+);
+-- How an IMAP account's folders nest (#554), as its server said at the
+-- last connect: the delimiter (NULL for a flat server), the personal
+-- namespace (NULL for none) and whether the server said it (0 without
+-- NAMESPACE). Known before the next connect, so the sidebar draws the
+-- tree and folders can be made at once.
+CREATE TABLE IF NOT EXISTS imap_hierarchy (
+    account_id INTEGER NOT NULL PRIMARY KEY,
+    delimiter  TEXT,
+    prefix     TEXT,
+    said       INTEGER NOT NULL DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS msgid_case (
     lower TEXT NOT NULL PRIMARY KEY,
@@ -89,6 +101,8 @@ CREATE TABLE IF NOT EXISTS sender_checks (
     invite      TEXT NOT NULL DEFAULT '',
     label       TEXT NOT NULL DEFAULT '',
     receipt     TEXT NOT NULL DEFAULT '',
+    authority   TEXT,
+    from_domain TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (account_id, folder_path, uid)
 );
 CREATE TABLE IF NOT EXISTS attachments (
@@ -161,13 +175,24 @@ CREATE VIRTUAL TABLE IF NOT EXISTS body_text USING fts5(
 CREATE TRIGGER IF NOT EXISTS body_text_gone AFTER DELETE ON bodies BEGIN
     DELETE FROM body_text WHERE rowid = old.rowid;
 END;
+-- The mail of an account copied to On This Computer (#552), by Message-ID,
+-- or where it has none by its place. The local tree keeps the same list,
+-- which fills this table again after the cache is dropped.
+CREATE TABLE IF NOT EXISTS local_copies (
+    account_id  INTEGER NOT NULL,
+    message_id  TEXT    NOT NULL,
+    folder_path TEXT    NOT NULL,
+    uid         INTEGER NOT NULL,
+    PRIMARY KEY (account_id, message_id, folder_path, uid)
+);
 ";
 
 /// Every table whose rows belong to one account, by `account_id`. An account's
 /// id is its place in the account list, so `Cache::claim_accounts` moves
 /// these rows when the places change.
-pub(super) const ACCOUNT_TABLES: [&str; 11] = [
+pub(super) const ACCOUNT_TABLES: [&str; 13] = [
     "folders",
+    "imap_hierarchy",
     "refs_repair",
     "messages",
     "local_tags",
@@ -178,6 +203,7 @@ pub(super) const ACCOUNT_TABLES: [&str; 11] = [
     "attachments_checked",
     "attachment_meta",
     "attachment_scan",
+    "local_copies",
 ];
 
 /// The tables holding what was downloaded for one message, which are
@@ -229,14 +255,18 @@ pub(super) const DOWNLOADED_TABLES: [&str; 3] = ["bodies", "attachments", "attac
 /// answered on email.a1.net was flagged). Suspicious verdicts stored earlier,
 /// and the bodies served with them, are dropped once so those messages are
 /// checked again when next opened; every other cached body stays.
-pub(super) const SCHEMA_VERSION: i64 = 21;
+/// v22: a sender check records whose `Authentication-Results` it read and
+/// the From: domain, which the reader learns the account's provider from,
+/// and ignores headers from another site than the topmost one. Verdicts
+/// stored earlier have neither, so they are checked again.
+pub(super) const SCHEMA_VERSION: i64 = 22;
 
 /// The newest version whose change altered how bodies are *rendered* or how
 /// senders are checked. Opening a database older than this drops `bodies` and
 /// `sender_checks` so they rebuild; a later purely-additive bump must not,
 /// or every such release would cost users a full re-fetch of everything they
 /// had read. Raise this only when the rendering itself changes.
-pub(super) const RENDER_VERSION: i64 = 19;
+pub(super) const RENDER_VERSION: i64 = 22;
 
 /// (Adding a *new* table needs no bump: `SCHEMA` runs `CREATE TABLE IF NOT
 /// EXISTS` on every open, so an existing cache gains it in place. A bump is for

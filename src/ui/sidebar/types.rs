@@ -174,7 +174,7 @@ pub(crate) struct SectionData {
     pub(crate) folder_order: Vec<String>,
     /// How the server spells its folder hierarchy, to tell a folder's
     /// siblings on the server from the folders merely drawn beside it.
-    pub(crate) hierarchy: Hierarchy,
+    pub(crate) hierarchy: FolderHierarchy,
     /// How the custom folders are sorted: the account's own choice
     /// (`own_folder_sort`) or else Settings' (`default_folder_sort`).
     pub(crate) folder_sort: crate::config::FolderSort,

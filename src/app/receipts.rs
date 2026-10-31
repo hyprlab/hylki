@@ -93,9 +93,10 @@ impl AppModel {
             .any(|(_, addr)| mine.iter().any(|a| a.eq_ignore_ascii_case(&addr)))
     }
 
-    /// A sender check as a reader is to show it: the receipt request left
-    /// in only when the card should ask about it. With `shown`, the card is
-    /// on screen now, and a receipt Always may send goes at once instead.
+    /// A sender check as a reader is to show it: its verdict only if the
+    /// account's provider made it, and the receipt request left in only when
+    /// the card should ask about it. With `shown`, the card is on screen now,
+    /// and a receipt Always may send goes at once instead.
     pub(super) fn reader_check(
         &mut self,
         m: &Message,
@@ -103,6 +104,7 @@ impl AppModel {
         shown: bool,
     ) -> Box<SenderCheck> {
         let mut out = Box::new(check.clone());
+        self.vouchers.gate(Some(m.account_id), &mut out);
         let Some(request) = out.receipt.take() else {
             return out;
         };
@@ -127,10 +129,14 @@ impl AppModel {
     ) -> Box<SenderCheck> {
         match self.held_message(key) {
             Some(m) => self.reader_check(&m, check, true),
-            None => Box::new(SenderCheck {
-                receipt: None,
-                ..check.clone()
-            }),
+            None => {
+                let mut out = Box::new(SenderCheck {
+                    receipt: None,
+                    ..check.clone()
+                });
+                self.vouchers.gate(Some(key.0), &mut out);
+                out
+            }
         }
     }
 
@@ -177,7 +183,7 @@ impl AppModel {
             i18n("It means the message was shown on the recipient's screen, not that it was read or understood."),
         );
         let mut out = machine_message(
-            m.account_id,
+            self.sending_account(m),
             from_alias,
             request.to.clone(),
             subject,
@@ -217,6 +223,21 @@ impl AppModel {
             Some(config::Protocol::Graph) => {}
             Some(config::Protocol::Jmap) => self.set_tag(m, "$mdnsent", true),
             _ => self.set_tag(m, "$MDNSent", true),
+        }
+        self.refresh_receipt_banners();
+    }
+
+    /// Every check on screen again, the open message's header included,
+    /// once the account's provider is known (see `Vouchers::note`).
+    pub(super) fn refresh_shown_checks(&mut self) {
+        let current = self
+            .current
+            .as_ref()
+            .and_then(|m| Some((m.account_id, self.sender_cache.get(&body_key(m)).cloned()?)));
+        if let Some((account_id, mut check)) = current {
+            self.vouchers.gate(Some(account_id), &mut check);
+            self.message_view
+                .emit(MessageViewInput::SetSenderCheck(check));
         }
         self.refresh_receipt_banners();
     }

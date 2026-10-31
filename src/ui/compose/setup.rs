@@ -108,8 +108,11 @@ pub(super) fn add_toolbar_end_buttons(
 }
 
 /// What the editor tells the composer: images lifted out as attachments,
-/// its text history, and spelling language changes.
+/// its text history, and spelling language changes. The body is checked
+/// for grammar too, when a server is set up for it (#452).
 pub(super) fn connect_editor(editor: &RichEditor, sender: &ComponentSender<Compose>) {
+    editor.check_grammar();
+
     // "Send as Attachment Instead" on an inline image: the editor lifts
     // it to a temp file and it joins the attachment chips here.
     {

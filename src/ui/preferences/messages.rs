@@ -48,6 +48,8 @@ pub(crate) struct PrefInit {
     pub(crate) single_message_card: bool,
     /// The Light / Dark Mode switch is shown in the reader header (PR #386).
     pub(crate) theme_switch: bool,
+    /// The account chip is shown in the reader header.
+    pub(crate) account_chip: bool,
     /// Icons come from the desktop's icon theme, not Hylki's own.
     pub(crate) desktop_icons: bool,
     /// The Reader View switch is shown in the reader header.
@@ -131,6 +133,7 @@ pub(crate) struct PrefInit {
     /// Where the signature sits in a reply or forward (#237).
     pub(crate) signature_position: crate::config::SignaturePosition,
     pub(crate) signature_dashes: bool,
+    pub(crate) fold_quote: bool,
     /// The line above a reply's quote, "" for the default (#528).
     pub(crate) reply_header: String,
     /// Undo Send delay in seconds, 0 for off (#434).
@@ -441,6 +444,7 @@ pub(crate) enum PrefOutput {
     SetSingleMessageCard(bool),
     SetReaderSwitch(bool),
     SetThemeSwitch(bool),
+    SetAccountChip(bool),
     SetDesktopIcons(bool),
     SetReaderDefault(crate::config::ReaderDefault),
     SetReaderZoom(u32),
@@ -566,6 +570,7 @@ pub(crate) enum PrefOutput {
     SetReplyPosition(crate::config::ReplyPosition),
     SetSignaturePosition(crate::config::SignaturePosition),
     SetSignatureDashes(bool),
+    SetFoldQuote(bool),
     SetReplyHeader(String),
     SetUndoSend(u32),
     Closed,

@@ -574,6 +574,7 @@ impl AccountsWindow {
         widgets.remove_btn.set_visible(false);
         // A prior GOA edit may have hidden the provider picker.
         widgets.form.provider_row.set_visible(true);
+        super::local::show_local_state(widgets, false);
         self.editor_seed = Some(self.editor_fingerprint(widgets));
         mount_editor(widgets);
         widgets.nav.push_by_tag("editor");
@@ -644,6 +645,7 @@ impl AccountsWindow {
         self.load_signatures(widgets, signatures, default);
         self.fill_face(widgets, &acc);
         show_goa_state(widgets, &acc);
+        super::local::show_local_state(widgets, acc.is_local());
         self.editor_seed = Some(self.editor_fingerprint(widgets));
         mount_editor(widgets);
         widgets.nav.push_by_tag("editor");

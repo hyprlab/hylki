@@ -68,7 +68,12 @@ impl AccountsWindow {
             // The provider's mark, right of the name and address, named on
             // hover.
             let brand = brand_for_account(acc);
-            let mark = crate::desktop::brand::mark(brand, 24, crate::desktop::brand::GENERIC_MAIL);
+            let fallback = if acc.is_local() {
+                super::local::LOCAL_ICON
+            } else {
+                crate::desktop::brand::GENERIC_MAIL
+            };
+            let mark = crate::desktop::brand::mark(brand, 24, fallback);
             mark.set_tooltip_text(Some(&provider_name(brand, acc)));
             hbox.append(&size_slot(mark.upcast_ref(), &mark_widths));
 
@@ -88,6 +93,9 @@ impl AccountsWindow {
             list.append(&row);
         }
         self.list_css.load_from_string(&css);
+        if let Some(group) = &self.local_group {
+            group.set_visible(!self.accounts.iter().any(AccountConfig::is_local));
+        }
     }
 
     /// Un-import a GNOME Online Account: drop it from Hylki (the app removes
@@ -345,7 +353,9 @@ fn account_titles(acc: &AccountConfig) -> gtk::Box {
     vbox.set_hexpand(true);
     vbox.set_valign(gtk::Align::Center);
     let title = acc.display_label();
-    let second = if title == acc.email {
+    let second = if acc.is_local() {
+        super::local::shown_dir()
+    } else if title == acc.email {
         acc.name.trim().to_string()
     } else {
         acc.email.clone()

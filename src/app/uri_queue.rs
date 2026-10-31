@@ -314,7 +314,10 @@ impl AppModel {
         let id = self.next_local_id;
         self.next_local_id -= 1;
         let mut m = crate::worker::summary_from_raw(self.active_account(), FILE_FOLDER, id, &raw);
-        let (body, check, has_attachment) = crate::worker::render_raw(&raw);
+        let (body, mut check, has_attachment) = crate::worker::render_raw(&raw);
+        // A file's sender checks were made by nobody this account knows:
+        // it could be anyone's, headers and all.
+        self.vouchers.gate(None, &mut check);
         m.unread = false;
         m.has_attachment = has_attachment;
         m.body = body.clone();

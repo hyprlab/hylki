@@ -1,4 +1,4 @@
-user_version 21
+user_version 22
 
 table account_owner
 CREATE TABLE account_owner (
@@ -99,7 +99,16 @@ CREATE TABLE folders (
     kind       INTEGER NOT NULL,
     unread     INTEGER NOT NULL,
     ord        INTEGER NOT NULL,
+    childless  INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (account_id, path)
+)
+
+table imap_hierarchy
+CREATE TABLE imap_hierarchy (
+    account_id INTEGER NOT NULL PRIMARY KEY,
+    delimiter  TEXT,
+    prefix     TEXT,
+    said       INTEGER NOT NULL DEFAULT 1
 )
 
 table label_fill
@@ -109,6 +118,15 @@ CREATE TABLE label_fill (
     next_uid    INTEGER NOT NULL,
     done        INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (account_id, folder_path)
+)
+
+table local_copies
+CREATE TABLE local_copies (
+    account_id  INTEGER NOT NULL,
+    message_id  TEXT    NOT NULL,
+    folder_path TEXT    NOT NULL,
+    uid         INTEGER NOT NULL,
+    PRIMARY KEY (account_id, message_id, folder_path, uid)
 )
 
 table local_tags
@@ -203,6 +221,8 @@ CREATE TABLE sender_checks (
     invite      TEXT NOT NULL DEFAULT '',
     label       TEXT NOT NULL DEFAULT '',
     receipt     TEXT NOT NULL DEFAULT '',
+    authority   TEXT,
+    from_domain TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (account_id, folder_path, uid)
 )
 
@@ -228,6 +248,9 @@ index sqlite_autoindex_folders_1
 
 
 index sqlite_autoindex_label_fill_1
+
+
+index sqlite_autoindex_local_copies_1
 
 
 index sqlite_autoindex_local_tags_1

@@ -26,6 +26,10 @@ const CANDIDATES: usize = 200;
 /// new mail, or a period that moved on, has more to download.
 pub(super) const RECHECK: Duration = Duration::from_secs(15 * 60);
 
+/// The same for an account copying its mail to On This Computer (#552):
+/// new mail is looked for every minute, so it is there soon after it came.
+const COPY_RECHECK: Duration = Duration::from_secs(60);
+
 /// The longest wait after a failure, and the one after a server says the
 /// account is over its limit.
 const MAX_BACKOFF: Duration = Duration::from_secs(30 * 60);
@@ -50,9 +54,10 @@ pub(super) struct Offline {
 }
 
 impl Offline {
-    /// Whether the account has a period to keep.
+    /// Whether the account has a period to keep, or mail to copy to On
+    /// This Computer (#552).
     pub(super) fn wanted(account: &AccountConfig) -> bool {
-        account.offline_mail.since(0).is_some()
+        account.offline_mail.since(0).is_some() || account.copy_to_local
     }
 
     /// Whether there is a period to download and it is time to work on it.
@@ -92,9 +97,10 @@ impl Offline {
         if !self.queue.is_empty() {
             return true;
         }
-        let Some(since) = account.offline_mail.since(crate::datefmt::now()) else {
+        let since = account.offline_mail.since(crate::datefmt::now());
+        if since.is_none() && !account.copy_to_local {
             return false;
-        };
+        }
         let skip = skipped_folders(cache, account_id);
         let tried = &self.tried;
         let found: Vec<(String, u32)> = cache
@@ -102,15 +108,31 @@ impl Offline {
                 account_id,
                 since,
                 account.offline_attachments,
+                account.copy_to_local,
                 &skip,
                 CANDIDATES + tried.len(),
             )
             .into_iter()
             .filter(|m| !tried.contains(m))
             .collect();
+        if account.copy_to_local {
+            // What the status bar says is left to copy (#552).
+            let left = if found.is_empty() {
+                0
+            } else {
+                cache
+                    .local_copy_pending(account_id, &skip)
+                    .saturating_sub(tried.len())
+            };
+            crate::worker::local::copy::set_pending(account_id, left);
+        }
         if found.is_empty() {
             tracing::debug!(account_id, "offline mail: the period is all on disk");
-            self.rest(RECHECK);
+            self.rest(if account.copy_to_local {
+                COPY_RECHECK
+            } else {
+                RECHECK
+            });
             return false;
         }
         self.queue.extend(found);
@@ -222,6 +244,8 @@ pub(super) fn keep(
     raw: &[u8],
     attachments: bool,
 ) -> bool {
+    // Encrypted mail is copied as it is; it is only never rendered here.
+    crate::worker::local::copy::copy(cache, account_id, path, uid, raw);
     if crate::mail::pgp::detect(raw).is_some() {
         return false;
     }

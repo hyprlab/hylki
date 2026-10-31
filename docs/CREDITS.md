@@ -134,6 +134,10 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
 - [**Artur Heinze**](https://github.com/aheinze) ([#484](https://github.com/hyprlab/hylki/pull/484)):
   Reply and New Message opening while the contact service hangs, with
   recipient suggestions loaded in the background.
+- [**Valentin Morice**](https://github.com/valentin-morice) ([#545](https://github.com/hyprlab/hylki/pull/545),
+  [#546](https://github.com/hyprlab/hylki/pull/546)): the count centered in
+  the sidebar's unread chip, and a setting to hide the account chip in the
+  message header.
 
 
 ## Reports, design and ideas

@@ -99,6 +99,8 @@ pub(crate) enum AppMsg {
     },
     /// A worker's status line.
     Status { account_id: u32, text: String },
+    /// What is left to copy to On This Computer (#552).
+    CopyProgress { left: usize },
     /// A worker's error, for the log and the notification bar;
     /// `connectivity` marks one that clears itself once a later connect or
     /// sync succeeds.
@@ -237,8 +239,13 @@ pub(crate) enum AppMsg {
         dest: String,
         items: Vec<(u32, u32, u32, u32)>,
     },
-    /// Create a custom folder under an account (from the right-click menu).
-    CreateFolder { account_id: u32, name: String },
+    /// Create a custom folder under an account (from the right-click menu):
+    /// inside `parent`, or at the top level when it is "" (#554).
+    CreateFolder {
+        account_id: u32,
+        parent: String,
+        name: String,
+    },
     /// Move a folder under a new parent (sidebar drag-and-drop, #51).
     /// `dest` is the new parent's path, or "" for the account's top level.
     MoveFolder {
@@ -375,6 +382,13 @@ pub(crate) enum AppMsg {
     },
     /// A popped-out message window was closed (remove it from the map).
     PopoutClosed((u32, u32)),
+    /// A conversation card in a message window was read through.
+    PopoutSeen { account_id: u32, id: u32 },
+    /// The main menu's Reading Pane item (#475).
+    SetReadingPane(crate::config::ReadingPane),
+    /// The list crossed a fold width of the toolbar in its header, while
+    /// the reading pane is off.
+    SetListFold { collapsed: bool, compact: bool },
     /// Add a contact from a popout window's sender.
     AddContactFrom { name: String, email: String },
     /// A message window's Move To: the folder picker over that window, at
@@ -1158,6 +1172,12 @@ pub(crate) enum AppMsg {
     ImportGoaAccount(Box<AccountConfig>),
     /// An account was removed in Settings: its secrets and its config go.
     AccountRemoved { email: String },
+    /// Import mail from another program into On This Computer (#552):
+    /// Maildir trees, or with `mbox`, mbox files.
+    ImportLocalMail {
+        sources: Vec<std::path::PathBuf>,
+        mbox: bool,
+    },
     /// GNOME Online Accounts changed on the session bus. Carries the fresh live
     /// state, already fetched (debounced) on the watcher thread so the GTK main
     /// thread never does D-Bus I/O — re-reconcile against it.
@@ -1256,6 +1276,20 @@ pub(crate) enum AppMsg {
         dest: String,
         messages: Vec<Message>,
     },
+    /// Copy To… (#552): the folder picker for copying `messages`, as
+    /// [`AppMsg::ListMoveTo`] opens it for a move.
+    ListCopyTo {
+        messages: Vec<Message>,
+        offer_whole: bool,
+        x: f64,
+        y: f64,
+    },
+    /// That picker's answer.
+    CopyMessagesTo {
+        account_id: u32,
+        dest: String,
+        messages: Vec<Message>,
+    },
     /// The picker's answer: file the target or selection into `dest` —
     /// or, with `whole`, the open conversation entire (#171).
     MoveSelectionTo {
@@ -1288,6 +1322,17 @@ pub(crate) enum AppMsg {
     SetFolders {
         account_id: u32,
         folders: Vec<Folder>,
+    },
+    /// How an account's folders nest (#554), from its worker.
+    SetHierarchy {
+        account_id: u32,
+        hierarchy: crate::models::FolderHierarchy,
+    },
+    /// A folder the app made at `asked` is at `made` on the server.
+    FolderMadeAt {
+        account_id: u32,
+        asked: String,
+        made: String,
     },
     /// A folder's unread count, from the server.
     FolderUnread {

@@ -185,11 +185,21 @@ mod swipe_surface_imp {
             let offset = self.visual_offset();
             if let (Some(bg), true) = (self.background(), offset != 0.0) {
                 // offset < 0: content slid left, uncovering a gap on the
-                // RIGHT. offset > 0: slid right, gap on the LEFT.
+                // RIGHT. offset > 0: slid right, gap on the LEFT. The gap
+                // opens at the pill's edge, not the row's: the pill sits
+                // inset in the row, and measuring from the row left a strip
+                // of bare ground between a selected pill and the strip.
+                let pill = self
+                    .foreground()
+                    .and_then(|fg| fg.downcast::<gtk::Overlay>().ok())
+                    .and_then(|o| o.child())
+                    .and_then(|c| c.compute_bounds(&*obj));
                 let gap = if offset < 0.0 {
-                    gtk::graphene::Rect::new(w + offset, 0.0, -offset, h)
+                    let x = pill.map_or(w + offset, |b| b.x() + b.width());
+                    gtk::graphene::Rect::new(x, 0.0, w - x, h)
                 } else {
-                    gtk::graphene::Rect::new(0.0, 0.0, offset, h)
+                    let x = pill.map_or(offset, |b| b.x());
+                    gtk::graphene::Rect::new(0.0, 0.0, x, h)
                 };
                 snapshot.push_clip(&gap);
                 obj.snapshot_child(&bg, snapshot);

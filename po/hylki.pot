@@ -78,6 +78,9 @@ msgstr ""
 msgid "Could not import account: {e}"
 msgstr ""
 
+msgid "On This Computer is switched off"
+msgstr ""
+
 msgid "Delete the attachment from the server?"
 msgstr ""
 
@@ -93,6 +96,18 @@ msgid "Settings"
 msgstr ""
 
 msgid "Show Accounts"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Below"
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+msgid "Reading Pane"
 msgstr ""
 
 msgid "Focus Mode"
@@ -171,6 +186,9 @@ msgid "Mark as Spam"
 msgstr ""
 
 msgid "Move To…"
+msgstr ""
+
+msgid "Copy To…"
 msgstr ""
 
 msgid "Archive"
@@ -450,10 +468,13 @@ msgstr ""
 msgid "Unstar"
 msgstr ""
 
-msgid "New Folder"
+msgid "Create a folder inside {name}."
 msgstr ""
 
 msgid "Create a new folder for this account."
+msgstr ""
+
+msgid "New Folder"
 msgstr ""
 
 msgid "Cancel"
@@ -502,7 +523,16 @@ msgid ""
 "Every message in them will be erased from the server. This can’t be undone."
 msgstr ""
 
+msgid "This account can't have folders at the top level."
+msgstr ""
+
+msgid "Folders on this account can't hold other folders."
+msgstr ""
+
 msgid "Create Folder"
+msgstr ""
+
+msgid "{name} can't hold other folders."
 msgstr ""
 
 msgid "archive"
@@ -512,6 +542,9 @@ msgid "trash"
 msgstr ""
 
 msgid "destination"
+msgstr ""
+
+msgid "A folder can't be moved into itself."
 msgstr ""
 
 msgid "Move Folder"
@@ -573,6 +606,9 @@ msgid "Attach Anyway"
 msgstr ""
 
 msgid "Upload to Cloud Storage"
+msgstr ""
+
+msgid "The account has to connect before its folders can change."
 msgstr ""
 
 msgid "This message carries no calendar file to open."
@@ -680,6 +716,11 @@ msgstr ""
 
 msgid "Refresh or long-press for Status Bar"
 msgstr ""
+
+msgid "Copying one message to On This Computer…"
+msgid_plural "Copying {n} messages to On This Computer…"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Sending message…"
 msgstr ""
@@ -811,6 +852,9 @@ msgid "Focus Mode on or off"
 msgstr ""
 
 msgid "Fullscreen on or off"
+msgstr ""
+
+msgid "Reading pane right of the list, below it, or off"
 msgstr ""
 
 msgid "Message zoom in or out"
@@ -963,6 +1007,15 @@ msgid "Search Messages"
 msgstr ""
 
 msgid "Show or Hide the Sidebar"
+msgstr ""
+
+msgid "Reading Pane Right"
+msgstr ""
+
+msgid "Reading Pane Below"
+msgstr ""
+
+msgid "Reading Pane Off"
 msgstr ""
 
 msgid "Mail Accounts"
@@ -1219,8 +1272,18 @@ msgstr ""
 msgid "Snooze until"
 msgstr ""
 
+msgid "One message could not be copied to {account}: {error}"
+msgid_plural "{n} messages could not be copied to {account}: {error}"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Copying one message to {account}…"
+msgid_plural "Copying {n} messages to {account}…"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1606,6 +1669,12 @@ msgid ""
 "label but does not apply its rules."
 msgstr ""
 
+msgid "Nothing here proves this came from {from} — or that it didn't."
+msgstr ""
+
+msgid "These checks aren't known to come from your mail provider"
+msgstr ""
+
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
 msgstr ""
@@ -1627,9 +1696,6 @@ msgid ""
 msgstr ""
 
 msgid "Your mail provider didn't report any sender checks for this message."
-msgstr ""
-
-msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 
 msgid "{name}: passed"
@@ -1669,6 +1735,12 @@ msgid "{used} of {limit} used"
 msgstr ""
 
 msgid "{free} free ({pct}%)"
+msgstr ""
+
+msgid "A folder needs a name."
+msgstr ""
+
+msgid "A folder name can't contain “{c}” on this account."
 msgstr ""
 
 msgid "Encrypted message"
@@ -1804,6 +1876,96 @@ msgstr ""
 msgid "This message hasn't been checked."
 msgstr ""
 
+msgid "Harper is not available for this computer."
+msgstr ""
+
+msgid "Harper is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+msgid "Harper could not be started: {e}"
+msgstr ""
+
+msgid "Harper's answer could not be read."
+msgstr ""
+
+msgid "There is no folder to install to."
+msgstr ""
+
+msgid "There is not enough free space: {size} is needed."
+msgstr ""
+
+msgid "The download could not start: {e}"
+msgstr ""
+
+msgid "The download was cancelled."
+msgstr ""
+
+msgid "The download stopped: {e}"
+msgstr ""
+
+msgid "The downloaded file is not the one expected, so it was not installed."
+msgstr ""
+
+msgid "The download could not be unpacked: {e}"
+msgstr ""
+
+msgid "The files could not be written: {e}"
+msgstr ""
+
+msgid "{n} MB"
+msgstr ""
+
+msgid "The server's answer could not be read."
+msgstr ""
+
+msgid "Nothing answers at that address. Check that the server is running."
+msgstr ""
+
+msgid "The server's name could not be found."
+msgstr ""
+
+msgid "The server's address is not valid."
+msgstr ""
+
+msgid "The server could not be reached: {e}"
+msgstr ""
+
+msgid "The server did not accept the username and key."
+msgstr ""
+
+msgid "The message is too long for the server."
+msgstr ""
+
+msgid "Too many requests: try again in a moment."
+msgstr ""
+
+msgid "The server refused the request (error {code})."
+msgstr ""
+
+msgid "LanguageTool is not available for this computer."
+msgstr ""
+
+msgid "LanguageTool stopped unexpectedly."
+msgstr ""
+
+msgid "LanguageTool is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+msgid "LanguageTool could not be started: {e}"
+msgstr ""
+
+msgid "LanguageTool could not be started."
+msgstr ""
+
+msgid "LanguageTool took too long to start."
+msgstr ""
+
+msgid "Enter the LanguageTool server's address in Settings → Composing."
+msgstr ""
+
+msgid "Enter the server's address first."
+msgstr ""
+
 msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
@@ -1818,9 +1980,6 @@ msgstr ""
 msgid "The service did not accept the key."
 msgstr ""
 
-msgid "Too many requests: try again in a moment."
-msgstr ""
-
 msgid "This month's allowance is used up."
 msgstr ""
 
@@ -1828,9 +1987,6 @@ msgid "The service refused the request (error {code})."
 msgstr ""
 
 msgid "Enter the LibreTranslate server's address in Settings → Translation."
-msgstr ""
-
-msgid "Off"
 msgstr ""
 
 msgid "Choose a translation service in Settings → Translation first."
@@ -2150,6 +2306,12 @@ msgstr ""
 msgid "Port (IMAP 993 / POP3 995)"
 msgstr ""
 
+msgid "Import Mbox Files"
+msgstr ""
+
+msgid "Import Maildir Folders"
+msgstr ""
+
 msgid "Signed in as {address}, not {email}."
 msgstr ""
 
@@ -2199,6 +2361,14 @@ msgid "Check GNOME Online Accounts for new accounts"
 msgstr ""
 
 msgid "Add Account…"
+msgstr ""
+
+msgid ""
+"Store mail in folders that live on this computer. Move or copy mail from any "
+"account to here."
+msgstr ""
+
+msgid "Add"
 msgstr ""
 
 msgid "GNOME Online Accounts"
@@ -2321,6 +2491,9 @@ msgstr ""
 msgid "Custom OAuth"
 msgstr ""
 
+msgid "Folders on this computer"
+msgstr ""
+
 msgid "IMAP/POP3 account"
 msgstr ""
 
@@ -2331,6 +2504,11 @@ msgid "Mail account"
 msgstr ""
 
 msgid "Enter a client ID and sign in before saving"
+msgstr ""
+
+msgid ""
+"Remove {name} from Hylki? Its folders and the mail in them stay on this "
+"computer, in {dir}, and come back if it is added again."
 msgstr ""
 
 msgid "Edit HTML"
@@ -4196,9 +4374,6 @@ msgstr ""
 msgid "Block remote content"
 msgstr ""
 
-msgid "Received"
-msgstr ""
-
 msgid "Click to open this message"
 msgstr ""
 
@@ -4822,6 +4997,78 @@ msgstr ""
 msgid "Custom File"
 msgstr ""
 
+msgid "Downloading: {done} of {total}"
+msgstr ""
+
+msgid "Not available for this computer."
+msgstr ""
+
+msgid "Version {version}, on this computer."
+msgstr ""
+
+msgid "Not downloaded yet. The download is {size}."
+msgstr ""
+
+msgid "The files could not be removed."
+msgstr ""
+
+msgid "The download stopped unexpectedly."
+msgstr ""
+
+msgid "Grammar"
+msgstr ""
+
+msgid "Check grammar and style"
+msgstr ""
+
+msgid "Right-click a marked phrase for suggestions."
+msgstr ""
+
+msgid "Checker"
+msgstr ""
+
+msgid "Harper"
+msgstr ""
+
+msgid "LanguageTool"
+msgstr ""
+
+msgid "LanguageTool server"
+msgstr ""
+
+msgid "English only. Nothing leaves this computer."
+msgstr ""
+
+msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
+msgstr ""
+
+msgid "What you write is sent to the server as you type."
+msgstr ""
+
+msgid "Username (LanguageTool Premium)"
+msgstr ""
+
+msgid "API key (LanguageTool Premium)"
+msgstr ""
+
+msgid "Check the settings"
+msgstr ""
+
+msgid "Sends a test sentence to the server."
+msgstr ""
+
+msgid "Check"
+msgstr ""
+
+msgid "Checking…"
+msgstr ""
+
+msgid "The check stopped unexpectedly."
+msgstr ""
+
+msgid "It works: {server} answered."
+msgstr ""
+
 msgid "Messages already read"
 msgstr ""
 
@@ -4929,9 +5176,6 @@ msgid "The last folder"
 msgstr ""
 
 msgid "Left"
-msgstr ""
-
-msgid "Right"
 msgstr ""
 
 msgid "1 line"
@@ -5520,6 +5764,12 @@ msgstr ""
 msgid "Monospace"
 msgstr ""
 
+msgid "Grammar check failed: {error}"
+msgstr ""
+
+msgid "No suggestions"
+msgstr ""
+
 msgid "Spelling Language"
 msgstr ""
 
@@ -5744,13 +5994,7 @@ msgstr ""
 msgid "Region (empty for a global resource)"
 msgstr ""
 
-msgid "Check the settings"
-msgstr ""
-
 msgid "Translates a greeting to test the service."
-msgstr ""
-
-msgid "Check"
 msgstr ""
 
 msgid "Messages"
@@ -5770,9 +6014,6 @@ msgstr ""
 msgid "Key (if the server asks for one)"
 msgstr ""
 
-msgid "Checking…"
-msgstr ""
-
 msgid "It works: “{sent}” came back as “{back}”."
 msgstr ""
 
@@ -5780,9 +6021,6 @@ msgid "Sign In"
 msgstr ""
 
 msgid "The sign-in window was closed."
-msgstr ""
-
-msgid "Add"
 msgstr ""
 
 msgid "✓ {email} — added"
@@ -6037,7 +6275,7 @@ msgstr ""
 msgid "Could not create folder: {e}"
 msgstr ""
 
-msgid "Could not rename folder: unknown folder"
+msgid "the folder it goes in is gone"
 msgstr ""
 
 msgid "Could not rename folder: {e}"
@@ -6141,6 +6379,36 @@ msgid "That folder is not on the server"
 msgstr ""
 
 msgid "Could not reach the JMAP server: {e}"
+msgstr ""
+
+msgid "Mail on this computer is not sent, and has no drafts"
+msgstr ""
+
+msgid "Mail is not sent from On This Computer: choose another From address"
+msgstr ""
+
+msgid "Could not import {path}: {e}"
+msgstr ""
+
+msgid "Importing {done} of {total} messages…"
+msgstr ""
+
+msgid "A folder by that name already exists"
+msgstr ""
+
+msgid "The folder still holds mail"
+msgstr ""
+
+msgid "That is not a folder name"
+msgstr ""
+
+msgid "Could not store the message: {e}"
+msgstr ""
+
+msgid "Could not open the folders on this computer: {e}"
+msgstr ""
+
+msgid "Reading {n} messages…"
 msgstr ""
 
 #. Nothing failed: the message waits for the network, which the
@@ -6432,7 +6700,7 @@ msgid ""
 "starred."
 msgstr ""
 
-msgid "Keep mail offline"
+msgid "Keep mail cached"
 msgstr ""
 
 msgid "Leaves out Trash, Junk and Drafts."
@@ -6442,6 +6710,32 @@ msgid "Include attachments"
 msgstr ""
 
 msgid "Can consume a lot of hard drive space."
+msgstr ""
+
+msgid "Copy mail to On This Computer"
+msgstr ""
+
+msgid ""
+"Downloads copies of every message from every folder of this account to this "
+"computer (except Trash, Junk and Drafts) and stores them in On This Computer."
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Mail already here is not imported again."
+msgstr ""
+
+msgid "Maildir folders"
+msgstr ""
+
+msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
+msgstr ""
+
+msgid "Mbox files"
+msgstr ""
+
+msgid "Thunderbird's folders and other mbox files."
 msgstr ""
 
 msgid "Microsoft 365"
@@ -6716,6 +7010,12 @@ msgstr ""
 msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr ""
 
+msgid "Fold quoted text"
+msgstr ""
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr ""
+
 msgid "Undo Send"
 msgstr ""
 
@@ -6777,6 +7077,12 @@ msgid "Light / Dark Mode switch"
 msgstr ""
 
 msgid "Displays in the message header for each message."
+msgstr ""
+
+msgid "Show account in message header"
+msgstr ""
+
+msgid "The account a message is in, above its subject."
 msgstr ""
 
 msgid "Ctrl+0 returns to the default."

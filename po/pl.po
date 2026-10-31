@@ -106,6 +106,19 @@ msgstr "Ustawienia"
 msgid "Show Accounts"
 msgstr "Wyświetlanie kont"
 
+msgid "Right"
+msgstr "Po prawej"
+
+msgid "Below"
+msgstr ""
+
+msgid "Off"
+msgstr "Wyłączone"
+
+#, fuzzy
+msgid "Reading Pane"
+msgstr "Czytanie"
+
 msgid "Focus Mode"
 msgstr "Tryb skupienia"
 
@@ -917,6 +930,9 @@ msgstr "Włącz lub wyłącz tryb skupienia"
 msgid "Fullscreen on or off"
 msgstr "Włącz lub wyłącz tryb skupienia"
 
+msgid "Reading pane right of the list, below it, or off"
+msgstr ""
+
 msgid "Message zoom in or out"
 msgstr "Powiększ lub pomniejsz wiadomość"
 
@@ -1101,6 +1117,18 @@ msgstr "Przeszukaj wiadomości…"
 #, fuzzy
 msgid "Show or Hide the Sidebar"
 msgstr "Wyświetl lub ukryj konta w panelu bocznym"
+
+#, fuzzy
+msgid "Reading Pane Right"
+msgstr "Czytanie"
+
+#, fuzzy
+msgid "Reading Pane Below"
+msgstr "Czytanie"
+
+#, fuzzy
+msgid "Reading Pane Off"
+msgstr "Czytanie"
 
 msgid "Mail Accounts"
 msgstr "Konta pocztowe"
@@ -2092,9 +2120,6 @@ msgstr ""
 
 msgid "Enter the LibreTranslate server's address in Settings → Translation."
 msgstr ""
-
-msgid "Off"
-msgstr "Wyłączone"
 
 msgid "Choose a translation service in Settings → Translation first."
 msgstr ""
@@ -4792,9 +4817,6 @@ msgstr "Wyświetl zdalne treści"
 msgid "Block remote content"
 msgstr "Blokuj zdalne treści"
 
-msgid "Received"
-msgstr ""
-
 #, fuzzy
 msgid "Click to open this message"
 msgstr "Odpowiedz na tę wiadomość"
@@ -5606,9 +5628,6 @@ msgstr "Ostatni katalog"
 
 msgid "Left"
 msgstr "Po lewej"
-
-msgid "Right"
-msgstr "Po prawej"
 
 msgid "1 line"
 msgstr "1 wiersz"
@@ -7592,6 +7611,13 @@ msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr ""
 
 #, fuzzy
+msgid "Fold quoted text"
+msgstr "Wyświetl zdalne treści"
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr ""
+
+#, fuzzy
 msgid "Undo Send"
 msgstr "Cofnij"
 
@@ -7665,6 +7691,13 @@ msgstr ""
 #, fuzzy
 msgid "Displays in the message header for each message."
 msgstr "Otwiera wiadomość z rozpoczętym przekazywaniem dalej."
+
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Przełącznik widoku czytania"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
 
 msgid "Ctrl+0 returns to the default."
 msgstr ""

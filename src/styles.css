@@ -732,8 +732,12 @@ flowbox.attach-flow > flowboxchild {
   color: @accent_fg_color;
   border-radius: 9999px;
   min-width: 18px;
-  min-height: 18px;
-  padding: 0 5px;
+  /* At the default font size the count's 15px line sits high in the 18px
+     chip, its digits 1.5px above the center. A pixel of top padding, taken
+     from min-height so the chip stays 18px, brings them down to within half
+     a pixel, the closest a 9px digit gets in an 18px chip. */
+  min-height: 17px;
+  padding: 1px 5px 0;
   font-size: 0.8em;
   font-weight: 700;
 }
@@ -1328,6 +1332,22 @@ flowbox.attach-flow > flowboxchild {
    threshold, then full color ("armed") to say a release will fire it. */
 .swipe-indicator {
   opacity: 0.55;
+  /* The pill's own box: a selected row keeps its accent fill while it
+     slides, so the strip has to meet it edge to edge and stand as tall. */
+  margin: 2px 6px;
+}
+
+.message-list.single-line .swipe-indicator {
+  margin: 1px 6px;
+}
+
+.message-item.thread-child .swipe-indicator {
+  margin-left: 10px;
+}
+
+.message-item.thread-child .swipe-indicator:dir(rtl) {
+  margin-left: 6px;
+  margin-right: 10px;
 }
 
 .swipe-indicator.armed {
@@ -1462,6 +1482,26 @@ headerbar.reader-toolbar.compact box.end {
 }
 headerbar.reader-toolbar.compact box.start button,
 headerbar.reader-toolbar.compact box.end > button {
+  min-width: 24px;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+/* The same toolbar in the list header, with the reader below the list or
+   off: spaced as in the reader's header (the box's own spacing is 6px,
+   as a headerbar's). */
+headerbar box.list-tools {
+  border-spacing: 1px;
+}
+headerbar box.list-tools button.image-button {
+  min-width: 28px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+headerbar box.list-tools.compact {
+  border-spacing: 0;
+}
+headerbar box.list-tools.compact button {
   min-width: 24px;
   padding-left: 1px;
   padding-right: 1px;

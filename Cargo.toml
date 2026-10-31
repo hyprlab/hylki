@@ -1,6 +1,6 @@
 [package]
 name = "hylki"
-version = "1.46.0-beta.5"
+version = "1.46.0"
 edition = "2021"
 description = "A clean, fast GNOME-native email client"
 license = "AGPL-3.0-or-later"
@@ -103,6 +103,17 @@ wayland-scanner = "0.31"
 # offline, so a Translate offer sends nothing until it is clicked.
 whatlang = "0.18"
 cfb = "0.15.0"
+# Whether an X server can attach this process's shared memory, before GTK
+# picks a renderer (#547): libxcb is opened at run time, and the segment made
+# with shmget. Both crates are already in the graph.
+libloading = "0.8"
+libc = "0.2"
+# Grammar checking (#452): unpacking Harper, LanguageTool and the Java
+# runtime LanguageTool runs on, which a user can download from Settings.
+# None of them ships with the app. flate2 is already in the graph.
+zip = { version = "9", default-features = false, features = ["deflate-flate2"] }
+tar = { version = "0.4", default-features = false }
+flate2 = "1"
 
 [build-dependencies]
 # Compiles resources/veem.gresource.xml (the bundled symbolic icons) into a

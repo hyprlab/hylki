@@ -47,13 +47,15 @@ pub(super) fn folder_sort_menu(
 
 /// The context menu of one folder — the same wherever the folder is
 /// listed (under its account, or as a filtered folder in the unified
-/// section): `filtered` says a filter rule files into it.
+/// section): `filtered` says a filter rule files into it, `nests` that
+/// the account's folders can hold others.
 pub(super) fn folder_menu_items(
     id: u32,
     f: &Folder,
     filtered: bool,
     has_filters: bool,
     favorite: bool,
+    nests: bool,
 ) -> Vec<(&'static str, CtxAction)> {
     let mut items = vec![
         (
@@ -122,8 +124,19 @@ pub(super) fn folder_menu_items(
             },
         ));
     }
-    // Only user-created folders can be renamed or deleted.
+    // Only user-created folders can be renamed or deleted, or hold
+    // folders of their own (as a drag onto one allows, #554), where the
+    // server lets them.
     if f.kind == FolderKind::Custom {
+        if nests && !f.childless {
+            items.push((
+                i18n_noop("New Folder…"),
+                CtxAction::NewFolder {
+                    account_id: id,
+                    parent: f.path.clone(),
+                },
+            ));
+        }
         items.push((
             i18n_noop("Rename Folder…"),
             CtxAction::RenameFolder {
@@ -199,6 +212,7 @@ pub(super) fn attach_tag_context_menu(
 
 /// Wire a right-click menu (Mark as Read / Refresh / Delete) onto a folder list;
 /// `folders` maps the list's row indices to their folders.
+#[allow(clippy::too_many_arguments)]
 pub(super) fn attach_folder_context_menu(
     list: &gtk::ListBox,
     id: u32,
@@ -206,6 +220,7 @@ pub(super) fn attach_folder_context_menu(
     filtered: Vec<String>,
     favorites: Vec<String>,
     has_filters: bool,
+    nests: bool,
     sender: &ComponentSender<Sidebar>,
 ) {
     let click = gtk::GestureClick::new();
@@ -223,6 +238,7 @@ pub(super) fn attach_folder_context_menu(
                 filtered.contains(&f.path),
                 has_filters,
                 favorites.contains(&f.path),
+                nests,
             );
             show_sidebar_menu(&list_w, x, y, items, &cs);
         }

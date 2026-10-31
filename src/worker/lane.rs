@@ -150,7 +150,9 @@ fn answer_from_cache(
                     items,
                 });
                 None
-            } else if !download {
+            } else if !download && protocol != Some(crate::config::Protocol::Local) {
+                // On this computer (#552) the file is right here: there is
+                // nothing to wait for the user to ask to download.
                 emit(WorkerEvent::AttachmentsPending {
                     path: path.to_string(),
                     message_id,

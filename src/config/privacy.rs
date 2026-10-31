@@ -7,7 +7,7 @@ use std::path::PathBuf;
 
 use super::look::{
     default_list_columns, default_text_scale, AppTheme, ClockStyle, DateStyle, ListLayout,
-    MessageTheme, TrayIcon,
+    MessageTheme, ReadingPane, TrayIcon,
 };
 use super::prefs::{
     default_files_limit_mb, default_reader_zoom, default_swipe_sensitivity, default_undo_send_secs,
@@ -144,6 +144,10 @@ pub(crate) struct PrivacyFile {
     /// left unread and drops out at the next save.
     #[serde(rename = "theme_switch_shown", default = "default_on")]
     pub(crate) theme_switch: bool,
+    /// Whether the chip naming the message's account is shown above the
+    /// subject in the reader header. On by default.
+    #[serde(default = "default_on")]
+    pub(crate) account_chip: bool,
     /// Draw icons from the desktop's icon theme instead of Hylki's own
     /// (Settings → Appearance). Off: the app looks the same everywhere.
     #[serde(default)]
@@ -322,6 +326,11 @@ pub(crate) struct PrivacyFile {
     /// Off by default, as in most mail programs today.
     #[serde(default)]
     pub(crate) signature_dashes: bool,
+    /// Whether a reply or forward opens with the quoted original folded
+    /// behind a button (#549): the reading pane beside the composer already
+    /// shows it. It is sent either way.
+    #[serde(default = "default_on")]
+    pub(crate) fold_quote: bool,
     /// The line above the quote in a reply, with `{name}`, `{address}`,
     /// `{date}` and `{time}` filled in (#528). Empty for the default, in the
     /// app's language.
@@ -460,6 +469,11 @@ pub(crate) struct PrivacyFile {
     /// The main window opens fullscreen (#511).
     #[serde(default)]
     pub(crate) start_fullscreen: bool,
+    /// Where the reader sits (#475): beside the list, below it, or off,
+    /// the list then taking the whole window and messages opening in
+    /// their own windows.
+    #[serde(default)]
+    pub(crate) reading_pane: ReadingPane,
     /// Publish a tray icon (StatusNotifierItem) for desktops that draw one
     /// (issue #116). Off by default: GNOME has no tray without an extension.
     #[serde(default)]
@@ -694,6 +708,7 @@ impl Default for PrivacyFile {
             reader_mode: false,
             reader_switch: true,
             theme_switch: true,
+            account_chip: true,
             desktop_icons: false,
             reader_default: ReaderDefault::default(),
             reader_zoom: default_reader_zoom(),
@@ -736,6 +751,7 @@ impl Default for PrivacyFile {
             reply_position: ReplyPosition::default(),
             signature_position: SignaturePosition::default(),
             signature_dashes: false,
+            fold_quote: true,
             reply_header: String::new(),
             undo_send_secs: default_undo_send_secs(),
             spellcheck: true,
@@ -770,6 +786,7 @@ impl Default for PrivacyFile {
             run_in_background: false,
             autostart: false,
             start_fullscreen: false,
+            reading_pane: ReadingPane::Right,
             tray: false,
             tray_icon: TrayIcon::default(),
             tray_mail: true,

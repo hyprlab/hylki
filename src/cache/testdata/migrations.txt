@@ -190,12 +190,12 @@ refs_repair: 1
 label_fill: 1
 messages: 5
 local_tags: 1
-bodies: 2
-sender_checks: 3
-attachments: 1
+bodies: 0
+sender_checks: 0
+attachments: 3
 addresses: 2
 outbox: 1
-attachments_checked: 2
+attachments_checked: 4
 attachment_meta: 1
 attachment_scan: 2
 account_owner: 1
@@ -205,11 +205,8 @@ account_owner: 1
   [Integer(4), Text("Di"), Text("Plain"), Text("🔒")]
   [Integer(5), Text("Ed"), Text("Plain"), Text("Hello there")]
   [Integer(1)]
-  [Integer(5)]
-  [Integer(1), Text("pass")]
-  [Integer(3), Text("pass")]
-  [Integer(5), Text("fail")]
-  [Integer(1)]
+  [Integer(2)]
+  [Integer(3)]
   [Integer(4)]
   [Integer(5), Integer(0), Text("e.png"), Integer(0), Integer(6)]
   [Integer(4)]
@@ -223,12 +220,12 @@ refs_repair: 1
 label_fill: 1
 messages: 5
 local_tags: 1
-bodies: 2
-sender_checks: 3
-attachments: 1
+bodies: 0
+sender_checks: 0
+attachments: 3
 addresses: 2
 outbox: 1
-attachments_checked: 2
+attachments_checked: 4
 attachment_meta: 1
 attachment_scan: 2
 account_owner: 1
@@ -238,11 +235,8 @@ account_owner: 1
   [Integer(4), Text("Di"), Text("Plain"), Text("🔒")]
   [Integer(5), Text("Ed"), Text("Plain"), Text("Hello there")]
   [Integer(1)]
-  [Integer(5)]
-  [Integer(1), Text("pass")]
-  [Integer(3), Text("pass")]
-  [Integer(5), Text("fail")]
-  [Integer(1)]
+  [Integer(2)]
+  [Integer(3)]
   [Integer(4)]
   [Integer(5), Integer(0), Text("e.png"), Integer(0), Integer(6)]
   [Integer(4)]
@@ -256,29 +250,23 @@ refs_repair: 1
 label_fill: 1
 messages: 5
 local_tags: 1
-bodies: 3
-sender_checks: 4
-attachments: 2
+bodies: 0
+sender_checks: 0
+attachments: 3
 addresses: 2
 outbox: 1
-attachments_checked: 3
+attachments_checked: 4
 attachment_meta: 1
 attachment_scan: 2
 account_owner: 1
-  [Integer(1), Text("\"Ann \\\"A\\\"\""), Text("=?utf-8?Q?Caf=C3=A9?="), Text("")]
+  [Integer(1), Text("\"Ann \\\"A\\\"\""), Text("Café"), Text("")]
   [Integer(2), Text("Bob"), Text("say \\\"hi\\\""), Text("🔒")]
   [Integer(3), Text("Cy"), Text("Plain"), Text("")]
   [Integer(4), Text("Di"), Text("Plain"), Text("🔒")]
   [Integer(5), Text("Ed"), Text("Plain"), Text("Hello there")]
   [Integer(1)]
   [Integer(2)]
-  [Integer(5)]
-  [Integer(1), Text("pass")]
-  [Integer(2), Text("suspicious")]
-  [Integer(3), Text("pass")]
-  [Integer(5), Text("fail")]
-  [Integer(1)]
-  [Integer(2)]
+  [Integer(3)]
   [Integer(4)]
   [Integer(5), Integer(0), Text("e.png"), Integer(0), Integer(6)]
   [Integer(4)]

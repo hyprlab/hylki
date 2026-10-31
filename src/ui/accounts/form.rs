@@ -251,6 +251,7 @@ pub(super) fn read_account(
             .copied()
             .unwrap_or_default(),
         offline_attachments: widgets.form.offline_attachments_row.is_active(),
+        copy_to_local: widgets.form.copy_local_row.is_active(),
         // Row 0 is Automatic; the rest follow PGP_KEY_CHOICES. Until gpg
         // has answered, the account keeps the key it had.
         pgp_key: PGP_KEY_CHOICES.with(|c| {
@@ -518,6 +519,7 @@ pub(super) fn fill_editor(widgets: &AccountsWindowWidgets, acc: &AccountConfig) 
         .form
         .offline_attachments_row
         .set_active(acc.offline_attachments);
+    widgets.form.copy_local_row.set_active(acc.copy_to_local);
     fill_pgp_key_row(widgets, acc.pgp_key.as_deref());
     widgets.form.in_unified_row.set_active(acc.in_unified);
     widgets
@@ -646,6 +648,7 @@ pub(super) fn clear_editor(widgets: &AccountsWindowWidgets) {
     widgets.form.clean_lists_row.set_selected(0);
     widgets.form.offline_mail_row.set_selected(0);
     widgets.form.offline_attachments_row.set_active(false);
+    widgets.form.copy_local_row.set_active(false);
     fill_pgp_key_row(widgets, None);
     widgets.form.in_unified_row.set_active(true);
     widgets.form.folder_sort_row.set_selected(0);

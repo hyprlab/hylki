@@ -108,6 +108,19 @@ msgstr "Ρυθμίσεις"
 msgid "Show Accounts"
 msgstr "Εμφάνιση λογαριασμών"
 
+msgid "Right"
+msgstr "Δεξιά"
+
+msgid "Below"
+msgstr ""
+
+msgid "Off"
+msgstr "Ανενεργό"
+
+#, fuzzy
+msgid "Reading Pane"
+msgstr "Ανάγνωση"
+
 msgid "Focus Mode"
 msgstr "Λειτουργία συγκέντρωσης"
 
@@ -882,6 +895,9 @@ msgstr "Ενεργοποίηση ή απενεργοποίηση της Λειτ
 msgid "Fullscreen on or off"
 msgstr "Ενεργοποίηση ή απενεργοποίηση της Λειτουργίας συγκέντρωσης"
 
+msgid "Reading pane right of the list, below it, or off"
+msgstr ""
+
 msgid "Message zoom in or out"
 msgstr "Μεγέθυνση ή σμίκρυνση του μηνύματος"
 
@@ -1035,6 +1051,18 @@ msgstr "Αναζήτηση μηνυμάτων"
 
 msgid "Show or Hide the Sidebar"
 msgstr "Εμφάνιση ή απόκρυψη της πλευρικής στήλης"
+
+#, fuzzy
+msgid "Reading Pane Right"
+msgstr "Ανάγνωση"
+
+#, fuzzy
+msgid "Reading Pane Below"
+msgstr "Ανάγνωση"
+
+#, fuzzy
+msgid "Reading Pane Off"
+msgstr "Ανάγνωση"
 
 msgid "Mail Accounts"
 msgstr "Λογαριασμοί αλληλογραφίας"
@@ -1992,9 +2020,6 @@ msgid "Enter the LibreTranslate server's address in Settings → Translation."
 msgstr ""
 "Εισαγάγετε τη διεύθυνση του διακομιστή LibreTranslate στις Ρυθμίσεις → "
 "Μετάφραση."
-
-msgid "Off"
-msgstr "Ανενεργό"
 
 msgid "Choose a translation service in Settings → Translation first."
 msgstr "Επιλέξτε πρώτα μια υπηρεσία μετάφρασης στις Ρυθμίσεις → Μετάφραση."
@@ -4609,9 +4634,6 @@ msgstr "Εμφάνιση απομακρυσμένου περιεχομένου"
 msgid "Block remote content"
 msgstr "Αποκλεισμός απομακρυσμένου περιεχομένου"
 
-msgid "Received"
-msgstr "Ελήφθη"
-
 msgid "Click to open this message"
 msgstr "Κάντε κλικ για να ανοίξετε αυτό το μήνυμα"
 
@@ -5389,9 +5411,6 @@ msgstr "Ο τελευταίος φάκελος"
 
 msgid "Left"
 msgstr "Αριστερά"
-
-msgid "Right"
-msgstr "Δεξιά"
 
 msgid "1 line"
 msgstr "1 γραμμή"
@@ -7345,6 +7364,13 @@ msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr ""
 "Η τυπική γραμμή «-- », την οποία αναγνωρίζουν άλλες εφαρμογές αλληλογραφίας."
 
+#, fuzzy
+msgid "Fold quoted text"
+msgstr "Εμφάνιση παρατιθέμενου κειμένου"
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr ""
+
 msgid "Undo Send"
 msgstr "Αναίρεση αποστολής"
 
@@ -7413,6 +7439,13 @@ msgstr "Εναλλαγή φωτεινής / σκοτεινής λειτουργ�
 
 msgid "Displays in the message header for each message."
 msgstr "Εμφανίζεται στην κεφαλίδα κάθε μηνύματος."
+
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Εμφάνιση διακόπτη Προβολής ανάγνωσης στην κεφαλίδα μηνύματος"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
 
 msgid "Ctrl+0 returns to the default."
 msgstr "Το Ctrl+0 επαναφέρει την προεπιλογή."
@@ -7816,6 +7849,9 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Received"
+#~ msgstr "Ελήφθη"
 
 #~ msgid "Search all folders but Trash and Junk"
 #~ msgstr "Αναζήτηση σε όλους τους φακέλους εκτός από Κάδο και Ανεπιθύμητα"

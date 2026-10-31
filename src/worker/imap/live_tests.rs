@@ -941,6 +941,19 @@ fn live_offline_period_is_kept() {
             .expect("list");
         assert_eq!(listed.len(), 3);
         cache.save_messages(1, &folder, &listed);
+        // As the folder listing leaves it: only listed folders are kept.
+        cache.save_folders(
+            1,
+            &[crate::models::Folder {
+                id: 1,
+                account_id: 1,
+                name: folder.clone(),
+                path: folder.clone(),
+                kind: crate::models::FolderKind::Custom,
+                unread: 0,
+                childless: false,
+            }],
+        );
 
         let (_tx, rx) = mpsc::unbounded_channel();
         let mut worker = ImapWorker {

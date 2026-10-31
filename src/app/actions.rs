@@ -175,7 +175,7 @@ impl AppModel {
                 self.update_busy_indicator();
                 if self.bulk_pending == 0 && self.busy.is_empty() {
                     self.notifications
-                        .emit(NotifyInput::SetStatus(String::new()));
+                        .emit(NotifyInput::SetStatus(self.copy_status()));
                 }
             }
 

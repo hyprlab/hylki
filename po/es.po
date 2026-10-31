@@ -104,6 +104,19 @@ msgstr "Ajustes"
 msgid "Show Accounts"
 msgstr "Mostrar cuentas"
 
+msgid "Right"
+msgstr "Derecha"
+
+msgid "Below"
+msgstr ""
+
+msgid "Off"
+msgstr "Desactivado"
+
+#, fuzzy
+msgid "Reading Pane"
+msgstr "Lectura"
+
 msgid "Focus Mode"
 msgstr "Modo de concentración"
 
@@ -872,6 +885,9 @@ msgstr "Activar o desactivar el modo de concentración"
 msgid "Fullscreen on or off"
 msgstr "Activar o desactivar el modo de concentración"
 
+msgid "Reading pane right of the list, below it, or off"
+msgstr ""
+
 msgid "Message zoom in or out"
 msgstr "Acercar o alejar el mensaje"
 
@@ -1028,6 +1044,18 @@ msgstr "Buscar mensajes"
 
 msgid "Show or Hide the Sidebar"
 msgstr "Mostrar u ocultar la barra lateral"
+
+#, fuzzy
+msgid "Reading Pane Right"
+msgstr "Lectura"
+
+#, fuzzy
+msgid "Reading Pane Below"
+msgstr "Lectura"
+
+#, fuzzy
+msgid "Reading Pane Off"
+msgstr "Lectura"
 
 msgid "Mail Accounts"
 msgstr "Cuentas de correo"
@@ -1982,9 +2010,6 @@ msgstr "El servicio rechazó la solicitud (error {code})."
 msgid "Enter the LibreTranslate server's address in Settings → Translation."
 msgstr ""
 "Introduce la dirección del servidor LibreTranslate en Ajustes → Traducción."
-
-msgid "Off"
-msgstr "Desactivado"
 
 msgid "Choose a translation service in Settings → Translation first."
 msgstr "Primero elige un servicio de traducción en Ajustes → Traducción."
@@ -4571,9 +4596,6 @@ msgstr "Mostrar contenido remoto"
 msgid "Block remote content"
 msgstr "Bloquear contenido remoto"
 
-msgid "Received"
-msgstr "Recibido"
-
 msgid "Click to open this message"
 msgstr "Haz clic para abrir este mensaje"
 
@@ -5349,9 +5371,6 @@ msgstr "La última carpeta"
 
 msgid "Left"
 msgstr "Izquierda"
-
-msgid "Right"
-msgstr "Derecha"
 
 msgid "1 line"
 msgstr "1 línea"
@@ -7275,6 +7294,13 @@ msgstr "Línea separadora sobre la firma"
 msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr "La línea estándar «-- » que reconocen otras aplicaciones de correo."
 
+#, fuzzy
+msgid "Fold quoted text"
+msgstr "Mostrar texto citado"
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr ""
+
 msgid "Undo Send"
 msgstr "Deshacer envío"
 
@@ -7343,6 +7369,13 @@ msgstr "Interruptor del modo claro/oscuro"
 
 msgid "Displays in the message header for each message."
 msgstr "Se muestra en la cabecera de cada mensaje."
+
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Mostrar el interruptor de vista de lectura en la cabecera del mensaje"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
 
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 restablece el valor predeterminado."
@@ -7743,6 +7776,9 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Received"
+#~ msgstr "Recibido"
 
 #~ msgid "Search all folders but Trash and Junk"
 #~ msgstr "Buscar en todas las carpetas excepto Papelera y Correo no deseado"

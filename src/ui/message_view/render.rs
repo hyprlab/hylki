@@ -3,8 +3,8 @@
 //! body with the settings the page script reads.
 
 use super::frame::{
-    LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE, LIVE_READ, LIVE_RECEIPT,
-    LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE, LIVE_TRANSLATE_ON, LIVE_UNSUB,
+    LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE, LIVE_MARKS, LIVE_READ,
+    LIVE_RECEIPT, LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE, LIVE_TRANSLATE_ON, LIVE_UNSUB,
 };
 use super::types::TrState;
 use super::MessageView;
@@ -148,6 +148,7 @@ impl MessageView {
             self.no_autoread.contains(&key).hash(&mut h);
             self.sender_style.contains(&key).hash(&mut h);
             self.folder_labels.get(&key).hash(&mut h);
+            self.sent.contains(&key).hash(&mut h);
             self.template_folders
                 .contains(&(m.account_id, m.folder_id))
                 .hash(&mut h);
@@ -209,10 +210,20 @@ impl MessageView {
                 .collect()
         });
         LIVE_FOLDBAR.with(|b| {
-            *b.borrow_mut() = if self.thread.len() > 1 {
+            *b.borrow_mut() = if self.carded() {
                 self.thread
                     .iter()
                     .map(|m| ((m.account_id, m.id), self.fold_bar_html(m)))
+                    .collect()
+            } else {
+                Default::default()
+            }
+        });
+        LIVE_MARKS.with(|b| {
+            *b.borrow_mut() = if self.carded() {
+                self.thread
+                    .iter()
+                    .map(|m| ((m.account_id, m.id), self.card_marks_html(m)))
                     .collect()
             } else {
                 Default::default()
@@ -236,7 +247,7 @@ impl MessageView {
         });
         Self::conversation_document(
             &self.thread,
-            &self.folder_labels,
+            &self.card_labels(),
             &self.no_autoread,
             &self.frame_heights,
             &self.selected_cards,

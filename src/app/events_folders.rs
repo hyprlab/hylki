@@ -24,6 +24,24 @@ impl AppModel {
                 folders,
             } => self.on_set_folders(account_id, folders, sender),
 
+            AppMsg::FolderMadeAt {
+                account_id,
+                asked,
+                made,
+            } => self.folder_made_at(account_id, &asked, &made),
+
+            AppMsg::SetHierarchy {
+                account_id,
+                hierarchy,
+            } => {
+                if self.hierarchies.get(&account_id) != Some(&hierarchy) {
+                    self.hierarchies.insert(account_id, hierarchy);
+                    if self.folders.contains_key(&account_id) {
+                        self.rebuild_sidebar();
+                    }
+                }
+            }
+
             AppMsg::FolderUnread {
                 account_id,
                 folder_id,
@@ -278,7 +296,9 @@ impl AppModel {
         if let Some(cfg) = self.config.get(account_id as usize - 1) {
             if !cfg.hidden_folders.is_empty() {
                 let hidden = cfg.hidden_folders.clone();
-                folders.retain(|f| !crate::models::folder_is_hidden(&f.path, None, &hidden));
+                let d = self.drawn_hierarchy(account_id).delimiter.map(String::from);
+                folders
+                    .retain(|f| !crate::models::folder_is_hidden(&f.path, d.as_deref(), &hidden));
             }
         }
         // Manual special-folder assignments (#82) ride over whatever

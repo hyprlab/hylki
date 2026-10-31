@@ -46,6 +46,7 @@ impl Sidebar {
                 std::mem::take(&mut s.folders),
                 &s.folder_order,
                 s.folder_sort,
+                &s.hierarchy,
             );
         }
         // Seed the tree's collapsed nodes from the persisted state;

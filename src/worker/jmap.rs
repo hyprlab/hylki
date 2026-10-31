@@ -105,6 +105,11 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
             .ok();
 
         emit(WorkerEvent::account(account_id, &account));
+        // Whether mailboxes can be made at the top comes with the session,
+        // which says so again if not.
+        emit(WorkerEvent::Hierarchy(
+            crate::models::FolderHierarchy::slashed(true),
+        ));
 
         let cached_folders = cache
             .as_ref()
@@ -373,6 +378,8 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
             MailRequest::FlushOutbox { id } => self.on_flush_outbox(id).await,
             MailRequest::RefreshUnread => self.on_refresh_unread().await,
             MailRequest::Reconnect => self.on_reconnect().await,
+            // Only On This Computer imports mail (#552).
+            MailRequest::ImportMail { .. } => {}
             MailRequest::Settle { path, uids } => emit(WorkerEvent::MovesSettled { path, uids }),
             MailRequest::ExportRaw {
                 token, path, uid, ..
@@ -398,6 +405,8 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
     }
 }
 
+#[cfg(test)]
+mod hierarchy_tests;
 #[cfg(test)]
 mod snooze_tests;
 #[cfg(test)]

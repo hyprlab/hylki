@@ -54,7 +54,10 @@ python3 flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
 `packaging/out/hylki-<version>-1.fc44.x86_64.rpm` and
 `packaging/out/hylki_<version>-1_amd64.deb`; with no argument it builds both.
 A beta's version is written `1.45.0~beta.1` in both, which sorts before
-`1.45.0`.
+`1.45.0`. Each is built for the machine it runs on: the ARM64 ones
+(`.aarch64.rpm`, `_arm64.deb`) come from `.github/workflows/build-arm64.yml`,
+which builds them on GitHub's arm64 runners and installs each in a clean
+Fedora 44 or Debian 13 container to check it.
 
 The RPM wraps a release build from the host, so it is built on Fedora. The
 Debian package is built inside a Debian 13 container (the script starts one
@@ -65,21 +68,24 @@ Debian host with the dependencies above and `dpkg-dev`, it builds in place.
 
 ## AppImage
 
-Hylki does not ship an AppImage: the packages it distributes are the Flatpak,
-the RPM and the Debian package. The build exists all the same, so the option stays open and
-does not rot (#235).
-
-`tools/build-appimage.sh` produces `packaging/out/Hylki-<arch>.AppImage` and
-the `.zsync` file that goes with it. It runs inside an Arch container (the
-script starts one with podman; in CI it is already in one), because the
-bundle carries every library down to the C library and those have to be
-current. The library collecting is [pkgforge's
+`tools/build-appimage.sh` produces `packaging/out/Hylki-<arch>.AppImage`, or
+`Hylki-Beta-<arch>.AppImage` when the version is a beta, which is then built
+with the `beta` feature as the Flatpak beta is (#235). It runs inside an Arch
+container (the script starts one with podman; in CI it is already in one),
+because the bundle carries every library down to the C library and those have
+to be current. The library collecting is [pkgforge's
 `quick-sharun`](https://github.com/pkgforge-dev/Anylinux-AppImages), fetched
-by the script rather than vendored.
+by the script rather than vendored. `HYLKI_APPIMAGE_SRC` names another
+checkout to build with this script, such as an older tag.
 
-`.github/workflows/build-appimage.yml` builds it for x86_64 and aarch64, by
-hand only: no tag starts it and nothing it produces is published. What
-turning that around would take is written at the top of the workflow.
+The bundle also carries the spell-check dictionaries and a few fonts with a
+fontconfig file of their own (`packaging/appimage/fonts-fallback.conf`), which
+the message view falls back to when the system's fonts hang it (#296).
+
+`.github/workflows/build-appimage.yml` builds it for x86_64 and aarch64 on
+every tag. Nothing is published from CI: the release attaches the two
+AppImages, and Flatout on hylki.hyprlab.co serves each channel's newest one
+with the `.zsync` file AppImage updaters read.
 
 ## Your own OAuth client
 

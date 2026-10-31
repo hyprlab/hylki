@@ -141,7 +141,7 @@ fn an_older_layout_gains_the_new_columns() {
 /// One row or more in every table, chosen so each version gate has
 /// something to drop or rewrite.
 const FIXTURE: &str = r#"
-INSERT INTO folders VALUES (1, 'INBOX', 'Inbox', 0, 0, 0);
+INSERT INTO folders (account_id, path, name, kind, unread, ord) VALUES (1, 'INBOX', 'Inbox', 0, 0, 0);
 INSERT INTO msgid_case VALUES ('a@x', 'A@X');
 INSERT INTO refs_repair VALUES (1, 'INBOX', 5, 0);
 INSERT INTO label_fill VALUES (1, 'INBOX', 5, 1);
@@ -318,6 +318,8 @@ fn a_sender_check_row_as_stored() {
             message_id: String::new(),
         }),
         read: None,
+        authority: Some("mx.example".into()),
+        from_domain: "x.example".into(),
     };
     cache.save_sender_check(1, "INBOX", 9, &check);
     let row: Vec<String> = cache
@@ -340,4 +342,6 @@ fn a_sender_check_row_as_stored() {
     assert_eq!(back.label, check.label);
     assert_eq!(back.receipt, check.receipt);
     assert_eq!(back.findings, check.findings);
+    assert_eq!(back.authority, check.authority);
+    assert_eq!(back.from_domain, check.from_domain);
 }

@@ -354,8 +354,12 @@ pub(crate) enum CtxAction {
     /// Open Settings → Accounts with this account's editor up.
     OpenAccountSettings(u32),
     RemoveAccount(u32),
-    /// Create a new custom folder under this account.
-    NewFolder(u32),
+    /// Create a new custom folder under this account: inside `parent`, or
+    /// at the top level when it is empty (#554).
+    NewFolder {
+        account_id: u32,
+        parent: String,
+    },
     /// Delete a custom folder (its contents are moved to Trash first).
     DeleteFolder {
         account_id: u32,

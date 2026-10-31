@@ -41,9 +41,10 @@ impl MessageList {
         };
         let mut flag_section = vec![self.star_entry(msg, sender, &item)];
         let move_entry = self.move_entry(msg, x, y, sender);
+        let copy_entry = self.copy_entry(msg, x, y, sender);
         flag_section.extend(self.read_entry(msg, sender, &item));
         let tag_section = self.tag_section(msg, sender);
-        let mut move_section = self.move_section(move_entry, &item);
+        let mut move_section = self.move_section(move_entry, copy_entry, &item);
         if let Some(snoozed) = self.snooze_offer {
             let s = sender.clone();
             let m = msg.clone();
@@ -211,6 +212,28 @@ impl MessageList {
         .keys(A::MoveTo.keys(KeysOf::Main))
     }
 
+    /// Copy To… (#552): what Move To… offers, for a copy.
+    fn copy_entry(
+        &self,
+        msg: &Message,
+        x: f64,
+        y: f64,
+        sender: &ComponentSender<Self>,
+    ) -> MenuEntry {
+        let (messages, offer_whole) = self.move_to_messages(msg);
+        let (wx, wy) = self.window_point(x, y);
+        let s = sender.clone();
+        MenuEntry::new(i18n("Copy To…"), move || {
+            let _ = s.output(MessageListOutput::CopyTo {
+                messages: messages.clone(),
+                offer_whole,
+                x: wx,
+                y: wy,
+            });
+        })
+        .icon("edit-copy-symbolic")
+    }
+
     /// The read toggle, if the row has one. A conversation row acts on the
     /// whole thread: its read entry marks every member, through the same
     /// bulk path as a multi-select, and the singular toggle is dropped (the
@@ -305,7 +328,12 @@ impl MessageList {
 
     /// Spam (or Not Spam in Junk), Move to Inbox where it applies, Move
     /// To…, Archive and Delete.
-    fn move_section(&self, move_entry: MenuEntry, item: &MakeEntry<'_>) -> Vec<MenuEntry> {
+    fn move_section(
+        &self,
+        move_entry: MenuEntry,
+        copy_entry: MenuEntry,
+        item: &MakeEntry<'_>,
+    ) -> Vec<MenuEntry> {
         let mut section = Vec::new();
         // In Junk the way back is "Not Spam" (#168): the server is
         // told, and the message returns to the Inbox. In Trash it
@@ -331,6 +359,7 @@ impl MessageList {
             ));
         }
         section.push(move_entry);
+        section.push(copy_entry);
         section.push(item(
             RowAction::Archive,
             &i18n("Archive"),
@@ -567,6 +596,19 @@ impl MessageList {
                         })
                         .icon("folder-symbolic")
                         .keys(A::MoveTo.keys(KeysOf::Main)),
+                    );
+                    let messages = self.selected_conversations();
+                    let s = sender.clone();
+                    section.push(
+                        MenuEntry::new(i18n("Copy To…"), move || {
+                            let _ = s.output(MessageListOutput::CopyTo {
+                                messages: messages.clone(),
+                                offer_whole: false,
+                                x: wx,
+                                y: wy,
+                            });
+                        })
+                        .icon("edit-copy-symbolic"),
                     );
                 }
                 section.push(item(

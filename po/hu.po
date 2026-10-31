@@ -107,6 +107,19 @@ msgstr "Beállítások"
 msgid "Show Accounts"
 msgstr "Fiókok megjelenítése"
 
+msgid "Right"
+msgstr "Jobbra"
+
+msgid "Below"
+msgstr ""
+
+msgid "Off"
+msgstr "Ki"
+
+#, fuzzy
+msgid "Reading Pane"
+msgstr "Olvasás"
+
 msgid "Focus Mode"
 msgstr "Fókusz mód"
 
@@ -897,6 +910,9 @@ msgstr "Fókuszmód be- vagy kikapcsolása"
 msgid "Fullscreen on or off"
 msgstr "Fókuszmód be- vagy kikapcsolása"
 
+msgid "Reading pane right of the list, below it, or off"
+msgstr ""
+
 msgid "Message zoom in or out"
 msgstr "Üzenet nagyítása vagy kicsinyítése"
 
@@ -1082,6 +1098,18 @@ msgstr "Üzenetek keresése..."
 #, fuzzy
 msgid "Show or Hide the Sidebar"
 msgstr "Fiókok megjelenítése vagy elrejtése az oldalsávban"
+
+#, fuzzy
+msgid "Reading Pane Right"
+msgstr "Olvasás"
+
+#, fuzzy
+msgid "Reading Pane Below"
+msgstr "Olvasás"
+
+#, fuzzy
+msgid "Reading Pane Off"
+msgstr "Olvasás"
 
 msgid "Mail Accounts"
 msgstr "Levelezési fiókok"
@@ -2051,9 +2079,6 @@ msgstr ""
 
 msgid "Enter the LibreTranslate server's address in Settings → Translation."
 msgstr ""
-
-msgid "Off"
-msgstr "Ki"
 
 msgid "Choose a translation service in Settings → Translation first."
 msgstr ""
@@ -4735,9 +4760,6 @@ msgstr "Távoli tartalom megjelenítése"
 msgid "Block remote content"
 msgstr "Távoli tartalom letiltása"
 
-msgid "Received"
-msgstr ""
-
 #, fuzzy
 msgid "Click to open this message"
 msgstr "Válasz erre az üzenetre"
@@ -5539,9 +5561,6 @@ msgstr "Az utolsó mappa"
 
 msgid "Left"
 msgstr "Balra"
-
-msgid "Right"
-msgstr "Jobbra"
 
 msgid "1 line"
 msgstr "1 sor"
@@ -7531,6 +7550,13 @@ msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr ""
 
 #, fuzzy
+msgid "Fold quoted text"
+msgstr "Távoli tartalom megjelenítése"
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr ""
+
+#, fuzzy
 msgid "Undo Send"
 msgstr "Visszavonás"
 
@@ -7604,6 +7630,13 @@ msgstr ""
 #, fuzzy
 msgid "Displays in the message header for each message."
 msgstr "Megnyitja az üzenetet, amelyben már megkezdődött az átirányítás."
+
+#, fuzzy
+msgid "Show account in message header"
+msgstr "„Olvasói nézet” kapcsoló"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
 
 msgid "Ctrl+0 returns to the default."
 msgstr ""

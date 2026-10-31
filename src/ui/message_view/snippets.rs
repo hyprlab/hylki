@@ -8,16 +8,6 @@ use crate::i18n::i18n;
 use crate::models::Message;
 use relm4::prelude::*;
 
-/// Where a folded card's bar takes the sender's circle, which the document
-/// builder fills in with the one the card's header wears.
-pub(super) const FOLD_BAR_FACE: &str = "\u{1}face\u{1}";
-
-/// The day on a folded card's bar, short as Proton has it: the time for
-/// today, the day and month this year, the year too before that.
-pub(super) fn fold_bar_date(m: &Message) -> String {
-    crate::models::date_short(m.timestamp, &m.date)
-}
-
 /// A template card's banner (#360): what the message is, and its two uses.
 pub(super) fn template_row_html(key: (u32, u32)) -> String {
     let button = |verb: &str, label: &str, title: &str| {

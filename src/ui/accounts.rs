@@ -26,6 +26,7 @@ mod fields;
 mod filters;
 mod form;
 mod form_page;
+mod local;
 mod messages;
 mod navigation;
 mod oauth;
@@ -72,6 +73,9 @@ pub(crate) struct AccountsWindow {
     /// Filter rules (#47), managed on this tab.
     filter_rules: Vec<crate::config::FilterRule>,
     filters_list: Option<gtk::ListBox>,
+    /// The On This Computer group (#552), shown while there is no such
+    /// account to add it as.
+    local_group: Option<adw::PreferencesGroup>,
     /// The filters page's search text, read by the list's filter function.
     filters_query: std::rc::Rc<std::cell::RefCell<String>>,
     /// The open filter or tag page's Save: reads the form and hands the
@@ -358,6 +362,10 @@ impl Component for AccountsWindow {
             AccountsInput::SearchFilters(text) => self.on_search_filters(text, widgets),
             AccountsInput::SearchSenders(text) => self.on_search_senders(text),
             AccountsInput::AddAccount => self.on_add_account(widgets, sender),
+            AccountsInput::AddLocal => self.on_add_local(widgets, sender),
+            AccountsInput::ImportLocal(mbox) => {
+                super::accounts::local::pick_import(mbox, &sender, root)
+            }
             AccountsInput::EditAccountByEmail(email) => {
                 self.on_edit_account_by_email(email, widgets, sender)
             }

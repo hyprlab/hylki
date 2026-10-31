@@ -31,6 +31,11 @@ impl AppModel {
                 if let Some(k) = key {
                     self.sender_cache.insert(k, check.clone());
                 }
+                // Learn the account's provider from it. Cards already shown
+                // with a verdict this changes are shown again.
+                if self.vouchers.note(account_id, &check) {
+                    self.refresh_shown_checks();
+                }
                 // Read receipts asked for on mail sent, and ones that came
                 // back (#520).
                 self.note_receipts(key, &check);
@@ -41,8 +46,10 @@ impl AppModel {
                 // Only the message actually on screen; a verdict that arrives
                 // from a background prefetch must not relabel a different one.
                 if self.current.as_ref().is_some_and(is_target) {
+                    let mut shown = check.clone();
+                    self.vouchers.gate(Some(account_id), &mut shown);
                     self.message_view
-                        .emit(MessageViewInput::SetSenderCheck(check.clone()));
+                        .emit(MessageViewInput::SetSenderCheck(shown));
                 }
                 // Light the header seal on whichever on-screen card this
                 // verdict belongs to (#88) — the open single message included
@@ -315,6 +322,7 @@ impl AppModel {
         if let Some(k) = key {
             self.body_cache.insert(k, body.clone());
         }
+        self.print_body_arrived(account_id, message_id, &body);
         self.resume_auto_forwards(account_id, message_id, key, false);
         if self.hand_body_to_waiter(account_id, message_id, &body, &sender) {
             return;

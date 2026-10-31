@@ -15,6 +15,7 @@ mod addresses;
 mod bodies;
 mod flags;
 mod gallery;
+mod local_copies;
 mod messages;
 mod offline;
 mod open;
@@ -25,6 +26,7 @@ mod text_index;
 mod threads;
 
 pub(crate) use gallery::*;
+pub(crate) use local_copies::CopyKey;
 pub(crate) use messages::*;
 
 #[cfg(test)]

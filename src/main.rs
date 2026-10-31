@@ -69,6 +69,7 @@ const RENDERER_SET: &str = "HYLKI_GSK_RENDERER_SET";
 
 /// Settings → System → Renderer (#403), into `GSK_RENDERER` before GTK
 /// starts. One the session already has (a `flatpak override --env`) wins.
+/// Left to GTK, an X server that cannot share memory gets Cairo (#547).
 /// Single-threaded here, so setting the environment is safe.
 fn apply_renderer() {
     if std::env::var_os(RENDERER_SET).is_some() {
@@ -78,12 +79,17 @@ fn apply_renderer() {
     if std::env::var_os("GSK_RENDERER").is_some() {
         return;
     }
-    let renderer = config::load_renderer();
+    let mut renderer = config::load_renderer();
     if !renderer.is_empty() {
         tracing::info!("renderer: {renderer}, from Settings");
-        std::env::set_var("GSK_RENDERER", &renderer);
-        std::env::set_var(RENDERER_SET, "1");
+    } else if desktop::x11_shm::gtk_uses_x11() && desktop::x11_shm::attach_fails() {
+        tracing::info!("renderer: cairo, the X server cannot attach shared memory (#547)");
+        renderer = "cairo".into();
+    } else {
+        return;
     }
+    std::env::set_var("GSK_RENDERER", &renderer);
+    std::env::set_var(RENDERER_SET, "1");
 }
 
 fn main() {

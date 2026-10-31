@@ -88,6 +88,7 @@ impl AppModel {
             single_message_card: self.single_message_card,
             reader_switch: self.reader_switch,
             theme_switch: self.theme_switch,
+            account_chip: self.account_chip,
             desktop_icons: self.desktop_icons,
             reader_default: self.reader_default,
             reader_zoom: self.zoom_default,
@@ -107,6 +108,7 @@ impl AppModel {
             reply_position: self.reply_position,
             signature_position: self.signature_position,
             signature_dashes: self.signature_dashes,
+            fold_quote: self.fold_quote,
             reply_header: self.reply_header.clone(),
             undo_send_secs: self.undo_send_secs,
             notifications: self.notifications_enabled,
@@ -353,6 +355,9 @@ impl AppModel {
                     account,
                 },
                 AccountsOutput::Removed { email } => AppMsg::AccountRemoved { email },
+                AccountsOutput::ImportMail { sources, mbox } => {
+                    AppMsg::ImportLocalMail { sources, mbox }
+                }
                 AccountsOutput::Reordered(emails) => AppMsg::AccountsReordered(emails),
                 AccountsOutput::EnabledChanged { email, enabled } => {
                     AppMsg::AccountEnabledChanged { email, enabled }

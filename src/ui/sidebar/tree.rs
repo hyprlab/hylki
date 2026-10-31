@@ -7,13 +7,11 @@ use super::*;
 /// folder names at one depth line up whether or not they have children (#51).
 pub(crate) const TREE_EXPANDER_WIDTH: i32 = 18;
 
-/// Whether `child` sits under `parent` in the mailbox hierarchy — a strict
-/// descendant, with a real delimiter at the boundary (any of the common ones;
-/// see folder_depth for why the delimiter itself never reaches the UI).
-pub(super) fn path_is_under(child: &str, parent: &str) -> bool {
-    child.len() > parent.len() + 1
-        && child.starts_with(parent)
-        && matches!(child.as_bytes()[parent.len()], b'/' | b'.' | b'\\')
+/// Whether `child` sits under `parent` in the mailbox hierarchy: a strict
+/// descendant by the server's own delimiter (#554), so "v1.2" is no child
+/// of "v1" on a '/' server.
+pub(super) fn path_is_under(child: &str, parent: &str, h: &FolderHierarchy) -> bool {
+    h.is_under(child, parent)
 }
 
 /// Which run of siblings a folder is ordered within: the main folders are
@@ -25,36 +23,11 @@ enum SiblingRun {
     Custom(String),
 }
 
-/// How an account's server spells its folder hierarchy: the delimiter, and
-/// the namespace its top-level folders live in ("INBOX." on a Dovecot-style
-/// server, "" on most).
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub(crate) struct Hierarchy {
-    pub(crate) delimiter: char,
-    pub(crate) namespace: String,
-}
-
-impl Hierarchy {
-    /// A folder's parent on the server, "" for the top level. Not the parent
-    /// the sidebar draws it under: Gmail's "[Gmail]/Important" is drawn at
-    /// the top, "[Gmail]" not being a folder, but its parent is "[Gmail]".
-    pub(crate) fn parent(&self, path: &str) -> String {
-        let head = path
-            .rsplit_once(self.delimiter)
-            .map_or("", |(head, _)| head);
-        if format!("{head}{}", self.delimiter) == self.namespace {
-            String::new()
-        } else {
-            head.to_string()
-        }
-    }
-
-    fn run(&self, folder: &Folder) -> SiblingRun {
-        if folder.kind == FolderKind::Custom {
-            SiblingRun::Custom(self.parent(&folder.path))
-        } else {
-            SiblingRun::Main
-        }
+fn run(h: &FolderHierarchy, folder: &Folder) -> SiblingRun {
+    if folder.kind == FolderKind::Custom {
+        SiblingRun::Custom(h.parent(&folder.path))
+    } else {
+        SiblingRun::Main
     }
 }
 
@@ -64,15 +37,15 @@ impl Hierarchy {
 /// place on the server (a sibling, or moved there).
 pub(crate) fn placed_run(
     shown: &[Folder],
-    hierarchy: &Hierarchy,
+    hierarchy: &FolderHierarchy,
     moving: &str,
     target: &str,
     after: bool,
 ) -> Option<Vec<String>> {
-    let run = hierarchy.run(shown.iter().find(|f| f.path == target)?);
+    let target_run = run(hierarchy, shown.iter().find(|f| f.path == target)?);
     let mut paths: Vec<String> = shown
         .iter()
-        .filter(|f| f.path != moving && hierarchy.run(f) == run)
+        .filter(|f| f.path != moving && run(hierarchy, f) == target_run)
         .map(|f| f.path.clone())
         .collect();
     let at = paths.iter().position(|p| p == target)?;
@@ -85,10 +58,11 @@ pub(crate) fn placed_run(
 pub(super) fn custom_parent<'a>(
     path: &str,
     custom: impl IntoIterator<Item = &'a str>,
+    h: &FolderHierarchy,
 ) -> Option<String> {
     custom
         .into_iter()
-        .filter(|g| path_is_under(path, g))
+        .filter(|g| path_is_under(path, g, h))
         .max_by_key(|g| g.len())
         .map(String::from)
 }
@@ -104,9 +78,10 @@ pub(crate) fn order_folders(
     folders: Vec<Folder>,
     order: &[String],
     sort: crate::config::FolderSort,
+    h: &FolderHierarchy,
 ) -> Vec<Folder> {
     use crate::config::FolderSort;
-    let nest = nests_in_inbox(&folders);
+    let nest = nests_in_inbox(&folders, h);
     let rank = |f: &Folder| order.iter().position(|p| *p == f.path);
     let (main, custom): (Vec<Folder>, Vec<Folder>) = folders
         .into_iter()
@@ -117,7 +92,7 @@ pub(crate) fn order_folders(
     // each parent's children in their arranged order.
     let parents: Vec<Option<String>> = custom
         .iter()
-        .map(|f| custom_parent(&f.path, custom.iter().map(|g| g.path.as_str())))
+        .map(|f| custom_parent(&f.path, custom.iter().map(|g| g.path.as_str()), h))
         .collect();
     let by_name = |i: usize| (custom[i].name.to_lowercase(), custom[i].path.clone());
     fn walk(
@@ -155,7 +130,7 @@ pub(crate) fn order_folders(
     // the rest of the tree comes after the main folders.
     let (inside, outside): (Vec<usize>, Vec<usize>) = flat
         .into_iter()
-        .partition(|&i| nest && under_inbox(&custom[i].path));
+        .partition(|&i| nest && under_inbox(&custom[i].path, h));
     let mut main_slots: Vec<Option<Folder>> = main.into_iter().map(Some).collect();
     let mut custom_slots: Vec<Option<Folder>> = custom.into_iter().map(Some).collect();
     let mut out = Vec::with_capacity(main_slots.len() + custom_slots.len());
@@ -208,11 +183,14 @@ pub(super) fn arrange<K: Ord>(
     out
 }
 
-/// Whether `path` is inside the Inbox: `INBOX`, then a separator (#345).
-pub(super) fn under_inbox(path: &str) -> bool {
+/// Whether `path` is inside the Inbox: `INBOX`, then the delimiter (#345).
+pub(super) fn under_inbox(path: &str, h: &FolderHierarchy) -> bool {
+    let Some(d) = h.delimiter else {
+        return false;
+    };
     path.get(..5)
         .is_some_and(|p| p.eq_ignore_ascii_case("INBOX"))
-        && matches!(path.as_bytes().get(5), Some(b'/' | b'.' | b'\\'))
+        && path[5..].starts_with(d)
 }
 
 /// Whether an account lists the folders inside its Inbox under the Inbox
@@ -220,11 +198,11 @@ pub(super) fn under_inbox(path: &str) -> bool {
 /// outside the Inbox too: a server that puts every folder inside it (an
 /// `INBOX.` namespace, as on Courier and older Dovecot) keeps them at the
 /// top of the Folders section, where they always were.
-pub(super) fn nests_in_inbox(folders: &[Folder]) -> bool {
+pub(super) fn nests_in_inbox(folders: &[Folder], h: &FolderHierarchy) -> bool {
     let mut custom = folders.iter().filter(|f| f.kind == FolderKind::Custom);
     let (mut inside, mut outside) = (false, false);
     for f in custom.by_ref() {
-        if under_inbox(&f.path) {
+        if under_inbox(&f.path, h) {
             inside = true;
         } else {
             outside = true;
@@ -235,16 +213,17 @@ pub(super) fn nests_in_inbox(folders: &[Folder]) -> bool {
 
 /// A folder listed with the main folders: a main folder, or, when the
 /// account nests them, one inside the Inbox.
-pub(super) fn is_main_row(f: &Folder, nest: bool) -> bool {
-    f.kind != FolderKind::Custom || (nest && under_inbox(&f.path))
+pub(super) fn is_main_row(f: &Folder, nest: bool, h: &FolderHierarchy) -> bool {
+    f.kind != FolderKind::Custom || (nest && under_inbox(&f.path, h))
 }
 
 /// Whether a folder row is hidden because some ancestor node is collapsed.
 pub(super) fn hidden_by_collapse(
     path: &str,
     collapsed: &std::collections::HashSet<String>,
+    h: &FolderHierarchy,
 ) -> bool {
-    collapsed.iter().any(|p| path_is_under(path, p))
+    collapsed.iter().any(|p| path_is_under(path, p, h))
 }
 
 /// Nesting depth of a custom folder: how many of the *other listed* folders are
@@ -252,15 +231,9 @@ pub(super) fn hidden_by_collapse(
 /// counting delimiters) keeps namespace prefixes honest — "INBOX.Clients" is
 /// top-level on a Dovecot-style server because "INBOX" isn't in the custom
 /// list, while "INBOX.Clients.Acme" is one level down because "INBOX.Clients"
-/// is. The delimiter itself never reaches the UI, so any of the common ones is
-/// accepted at the boundary.
-pub(crate) fn folder_depth(folder: &Folder, all: &[&Folder]) -> usize {
+/// is.
+pub(crate) fn folder_depth(folder: &Folder, all: &[&Folder], h: &FolderHierarchy) -> usize {
     all.iter()
-        .filter(|g| {
-            g.id != folder.id
-                && folder.path.len() > g.path.len() + 1
-                && folder.path.starts_with(&g.path)
-                && matches!(folder.path.as_bytes()[g.path.len()], b'/' | b'.' | b'\\')
-        })
+        .filter(|g| g.id != folder.id && h.is_under(&folder.path, &g.path))
         .count()
 }

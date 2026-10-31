@@ -89,7 +89,7 @@ pub(super) fn folder_drop_zone(
     account_id: u32,
     target: &Folder,
     custom: &[String],
-    hierarchy: &Hierarchy,
+    hierarchy: &FolderHierarchy,
     frac: f64,
 ) -> FolderDrop {
     let Some((src_account, src, main)) = dragged_folder(payload) else {
@@ -107,17 +107,27 @@ pub(super) fn folder_drop_zone(
         };
     }
     // Not among the main folders, and never inside itself.
-    if !target_custom || path_is_under(&target.path, src) {
+    if !target_custom || path_is_under(&target.path, src, hierarchy) {
         return FolderDrop::Refuse;
     }
-    if (1.0 / 3.0..=2.0 / 3.0).contains(&frac) {
+    // Into it only where the server lets the folder hold others (#554);
+    // elsewhere the whole row is its two edges.
+    let into = hierarchy.nests() && !target.childless;
+    if into && (1.0 / 3.0..=2.0 / 3.0).contains(&frac) {
         return FolderDrop::Into;
     }
     let level = hierarchy.parent(&target.path);
-    if level != hierarchy.parent(src) && !level.is_empty() && !custom.contains(&level) {
-        return FolderDrop::Refuse;
+    if level != hierarchy.parent(src) {
+        let allowed = if level.is_empty() {
+            hierarchy.top_level
+        } else {
+            custom.contains(&level)
+        };
+        if !allowed {
+            return FolderDrop::Refuse;
+        }
     }
-    if frac < 1.0 / 3.0 {
+    if frac < if into { 1.0 / 3.0 } else { 0.5 } {
         FolderDrop::Before
     } else {
         FolderDrop::After
@@ -154,7 +164,13 @@ fn row_near(list: &gtk::ListBox, y: f64) -> Option<(i32, gtk::graphene::Rect)> {
 /// Where the line for a drop before (`after` false) or after row `i` goes:
 /// midway through the gap on that side. After a folder with sub-folders
 /// shown, that is past the last of them, which is where the folder lands.
-fn drop_line_y(list: &gtk::ListBox, folders: &[Folder], i: i32, after: bool) -> Option<f64> {
+fn drop_line_y(
+    list: &gtk::ListBox,
+    folders: &[Folder],
+    hierarchy: &FolderHierarchy,
+    i: i32,
+    after: bool,
+) -> Option<f64> {
     let shown = |j: i32| {
         list.row_at_index(j)
             .filter(|r| r.is_visible())
@@ -176,7 +192,7 @@ fn drop_line_y(list: &gtk::ListBox, folders: &[Folder], i: i32, after: bool) -> 
     }
     let path = &folders.get(i as usize)?.path;
     let mut last = i;
-    while last + 1 < n && path_is_under(&folders[(last + 1) as usize].path, path) {
+    while last + 1 < n && path_is_under(&folders[(last + 1) as usize].path, path, hierarchy) {
         last += 1;
     }
     let upper = (i..=last).rev().find_map(&shown);
@@ -197,7 +213,7 @@ pub(super) fn attach_folder_list_drop(
     id: u32,
     folders: Vec<Folder>,
     custom: Vec<String>,
-    hierarchy: Hierarchy,
+    hierarchy: FolderHierarchy,
     sender: &ComponentSender<Sidebar>,
 ) {
     let drop = gtk::DropTarget::new(gtk::glib::types::Type::STRING, gtk::gdk::DragAction::MOVE);
@@ -213,7 +229,7 @@ pub(super) fn attach_folder_list_drop(
             .iter()
             .map(|f| {
                 if f.kind == FolderKind::Custom {
-                    folder_depth(f, &refs)
+                    folder_depth(f, &refs, &hierarchy)
                 } else {
                     0
                 }
@@ -225,6 +241,7 @@ pub(super) fn attach_folder_list_drop(
     let aim = {
         let list = list.clone();
         let folders = folders.clone();
+        let hierarchy = hierarchy.clone();
         std::rc::Rc::new(move |payload: &str, y: f64| -> Option<(i32, FolderDrop)> {
             let (i, b) = row_near(&list, y)?;
             let f = folders.get(i as usize)?;
@@ -271,7 +288,9 @@ pub(super) fn attach_folder_list_drop(
                     }
                 }
                 FolderDrop::Before | FolderDrop::After => {
-                    if let Some(ly) = drop_line_y(&list, &folders, i, at == FolderDrop::After) {
+                    if let Some(ly) =
+                        drop_line_y(&list, &folders, &hierarchy, i, at == FolderDrop::After)
+                    {
                         // Indented to the level the folder lands at.
                         line.set_margin_start(20 + 14 * depths[i as usize].min(4) as i32);
                         line.set_margin_top((ly - 1.0).max(0.0) as i32);

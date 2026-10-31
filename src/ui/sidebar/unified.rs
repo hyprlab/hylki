@@ -485,6 +485,7 @@ impl Sidebar {
                         path: String::new(),
                         kind,
                         unread: 0,
+                        childless: false,
                     };
                     &flagged
                 }
@@ -650,6 +651,7 @@ impl Sidebar {
         click.set_button(gtk::gdk::BUTTON_SECONDARY);
         let cs = sender.clone();
         let sub_w = sub.clone();
+        let nests = self.nesting_accounts();
         let filtered: Vec<(u32, String)> = self
             .unified_folders
             .iter()
@@ -663,11 +665,27 @@ impl Sidebar {
                 let is_filtered = filtered
                     .iter()
                     .any(|(a, p)| *a == r.account_id && *p == r.folder.path);
-                let items = folder_menu_items(r.account_id, &r.folder, is_filtered, true, true);
+                let items = folder_menu_items(
+                    r.account_id,
+                    &r.folder,
+                    is_filtered,
+                    true,
+                    true,
+                    nests.contains(&r.account_id),
+                );
                 show_sidebar_menu(&sub_w, x, y, items, &cs);
             }
         });
         sub.add_controller(click);
+    }
+
+    /// The accounts whose folders can hold others (#554).
+    fn nesting_accounts(&self) -> Vec<u32> {
+        self.sections
+            .iter()
+            .filter(|s| s.hierarchy.nests())
+            .map(|s| s.account.id)
+            .collect()
     }
 
     /// Every smart folder (#417).
@@ -818,6 +836,7 @@ impl Sidebar {
         let cs = sender.clone();
         let sub_w = sub.clone();
         let favorites = self.favorite_keys();
+        let nests = self.nesting_accounts();
         click.connect_pressed(move |_, _, x, y| {
             if let Some(r) = sub_w
                 .row_at_y(y as i32)
@@ -827,7 +846,14 @@ impl Sidebar {
                 let favorite = favorites
                     .iter()
                     .any(|(a, p)| *a == r.account_id && *p == r.folder.path);
-                let items = folder_menu_items(r.account_id, &r.folder, true, true, favorite);
+                let items = folder_menu_items(
+                    r.account_id,
+                    &r.folder,
+                    true,
+                    true,
+                    favorite,
+                    nests.contains(&r.account_id),
+                );
                 show_sidebar_menu(&sub_w, x, y, items, &cs);
             }
         });

@@ -7,11 +7,12 @@ use relm4::prelude::*;
 
 use crate::config;
 use crate::i18n::{i18n, i18n_f};
-use crate::models::{Folder, FolderKind, Message};
+use crate::models::{Folder, FolderHierarchy, FolderKind, Message};
 use crate::ui::notifications::NotifyInput;
 use crate::ui::sidebar::SidebarInput;
 use crate::worker::MailRequest;
 
+use super::hierarchy::follow_rename;
 use super::model::AppModel;
 use super::sidebar::folder_key;
 use super::undo::UndoStep;
@@ -89,24 +90,36 @@ pub(super) fn merged_unread(
 /// names, in the same order. Unread counts do not count.
 pub(super) fn same_folder_list(old: &[Folder], new: &[Folder]) -> bool {
     old.len() == new.len()
-        && old
-            .iter()
-            .zip(new)
-            .all(|(a, b)| a.id == b.id && a.path == b.path && a.kind == b.kind && a.name == b.name)
+        && old.iter().zip(new).all(|(a, b)| {
+            a.id == b.id
+                && a.path == b.path
+                && a.kind == b.kind
+                && a.name == b.name
+                && a.childless == b.childless
+        })
 }
 
 /// A sidebar key ("email\tpath", `key_prefix` being "email\t") after the
 /// folder `path` became `new_path`: the folder's own key and its children's
 /// follow it, any other key is left alone.
-fn rekey_folder_key(key: &mut String, key_prefix: &str, path: &str, new_path: &str, delim: char) {
+fn rekey_folder_key(
+    key: &mut String,
+    key_prefix: &str,
+    h: &FolderHierarchy,
+    path: &str,
+    new_path: &str,
+) {
     let Some(rest) = key.strip_prefix(key_prefix) else {
         return;
     };
-    if rest == path {
-        *key = format!("{key_prefix}{new_path}");
-    } else if let Some(r) = rest.strip_prefix(&format!("{path}{delim}")) {
-        *key = format!("{key_prefix}{new_path}{delim}{r}");
+    if let Some(moved) = follow_rename(h, rest, path, new_path) {
+        *key = format!("{key_prefix}{moved}");
     }
+}
+
+/// Why a folder can't take another inside it.
+pub(super) fn cannot_hold(name: &str) -> String {
+    i18n_f("{name} can't hold other folders.", &[("name", name)])
 }
 
 pub(super) fn kind_label(kind: FolderKind) -> String {
@@ -188,8 +201,8 @@ impl AppModel {
     /// away (a server round-trip took seconds); the worker's confirming
     /// refresh matches the prediction and repaints nothing.
     pub(super) fn create_folder(&mut self, account_id: u32, path: String) {
-        let delim = self.folder_delimiter(account_id);
-        let leaf = path.rsplit(delim).next().unwrap_or(&path).to_string();
+        let h = self.drawn_hierarchy(account_id);
+        let name = h.name_of(h.leaf(&path));
         if !self
             .folders
             .get(&account_id)
@@ -198,15 +211,29 @@ impl AppModel {
             self.folders.entry(account_id).or_default().push(Folder {
                 id: 0,
                 account_id,
-                name: crate::mail::mutf7::decode(&leaf),
+                name,
                 path: path.clone(),
                 kind: FolderKind::Custom,
                 unread: 0,
+                childless: false,
             });
             self.normalize_folders(account_id);
             self.rebuild_sidebar();
         }
         self.send_to(account_id, MailRequest::CreateFolder { path });
+    }
+
+    /// Open a folder's branch of the tree, remembered as if its caret had
+    /// been clicked; the next rebuild shows it.
+    pub(super) fn expand_folder(&mut self, account_id: u32, path: &str) {
+        let Some(email) = self.email_of(account_id) else {
+            return;
+        };
+        let key = folder_key(&email, path);
+        if self.tree_collapsed.contains(&key) {
+            self.tree_collapsed.retain(|k| *k != key);
+            self.save_sidebar_state();
+        }
     }
 
     /// Hide folders (#239): remembered on the account, taken off the
@@ -234,13 +261,15 @@ impl AppModel {
                 &[("e", &(e).to_string())],
             ));
         }
+        let d = self.drawn_hierarchy(account_id).delimiter.map(String::from);
+        let d = d.as_deref();
         if self.selected.as_ref().is_some_and(|s| {
-            s.account_id == account_id && crate::models::folder_is_hidden(&s.path, None, &hidden)
+            s.account_id == account_id && crate::models::folder_is_hidden(&s.path, d, &hidden)
         }) {
             self.blank_for_folder_change();
         }
         if let Some(folders) = self.folders.get_mut(&account_id) {
-            folders.retain(|f| !crate::models::folder_is_hidden(&f.path, None, &hidden));
+            folders.retain(|f| !crate::models::folder_is_hidden(&f.path, d, &hidden));
         }
         self.rebuild_sidebar();
         self.send_to(account_id, MailRequest::SetHiddenFolders { paths: hidden });
@@ -260,11 +289,13 @@ impl AppModel {
         }
         // A deleted folder leaves Favorites (#367), with what was inside it.
         if let Some(email) = self.email_of(account_id) {
-            let own = folder_key(&email, &path);
-            let inside = format!("{own}{}", self.folder_delimiter(account_id));
+            let h = self.drawn_hierarchy(account_id);
+            let key_prefix = format!("{email}\t");
             let before = self.favorites.len();
-            self.favorites
-                .retain(|k| *k != own && !k.starts_with(&inside));
+            self.favorites.retain(|k| {
+                k.strip_prefix(&key_prefix)
+                    .is_none_or(|p| follow_rename(&h, p, &path, "").is_none())
+            });
             if self.favorites.len() != before {
                 self.save_sidebar_state();
                 self.rebuild_sidebar();
@@ -292,33 +323,43 @@ impl AppModel {
                 connectivity: false,
             });
         };
-        let delim = self.folder_delimiter(account_id);
+        let h = self.hierarchy_for_change(account_id)?;
         // Into itself or its own subtree: there is no such place.
-        if dest == path || dest.starts_with(&format!("{path}{delim}")) {
-            complain(self, "A folder can't be moved into itself.");
+        if dest == path || h.is_under(&dest, &path) {
+            complain(self, &i18n("A folder can't be moved into itself."));
             return None;
         }
         let folders = self.folders.get(&account_id).cloned().unwrap_or_default();
         // Only your own folders (or the top level) can hold other folders —
         // moving one under Sent or Trash is never what a drop meant.
-        if !dest.is_empty()
-            && !folders
+        if !dest.is_empty() {
+            let parent = folders
                 .iter()
-                .any(|f| f.path == dest && f.kind == FolderKind::Custom)
-        {
-            return None;
+                .find(|f| f.path == dest && f.kind == FolderKind::Custom)?;
+            if parent.childless || !h.nests() {
+                complain(self, &cannot_hold(&parent.name));
+                return None;
+            }
         }
-        let leaf = path.rsplit(delim).next().unwrap_or(&path).to_string();
-        let new_path = if dest.is_empty() {
-            format!("{}{leaf}", self.folder_namespace(account_id))
-        } else {
-            format!("{dest}{delim}{leaf}")
+        let leaf = h.leaf(&path).to_string();
+        let Some(new_path) = h.child(&dest, &leaf) else {
+            complain(
+                self,
+                &i18n("This account can't have folders at the top level."),
+            );
+            return None;
         };
         if new_path == path {
             return None;
         }
         if folders.iter().any(|f| f.path == new_path) {
-            complain(self, &format!("A folder named {leaf:?} is already there."));
+            complain(
+                self,
+                &i18n_f(
+                    "A folder named {new_name} is already there.",
+                    &[("new_name", &format!("{:?}", h.name_of(&leaf)))],
+                ),
+            );
             return None;
         }
         self.apply_folder_rename(
@@ -388,19 +429,18 @@ impl AppModel {
                 },
             );
         }
-        let delim = self.folder_delimiter(account_id);
+        let h = self.drawn_hierarchy(account_id);
         // If the affected folder (or one of its children) is open, clear the
         // view — its path is about to stop existing.
         if self.selected.as_ref().is_some_and(|s| {
-            s.account_id == account_id
-                && (s.path == path || s.path.starts_with(&format!("{path}{delim}")))
+            s.account_id == account_id && follow_rename(&h, &s.path, &path, &new_path).is_some()
         }) {
             self.blank_for_folder_change();
         }
 
-        self.reshape_renamed_tree(account_id, &path, &new_path, delim);
-        self.rekey_sidebar_state(account_id, &path, &new_path, delim);
-        self.follow_renamed_selection(account_id, &path, &new_path, delim);
+        self.reshape_renamed_tree(account_id, &path, &new_path, &h);
+        self.rekey_sidebar_state(account_id, &path, &new_path, &h);
+        self.follow_renamed_selection(account_id, &path, &new_path, &h);
         self.rebuild_sidebar();
         if let Some(sel) = self.selected.clone().filter(|s| s.account_id == account_id) {
             self.sidebars_emit(SidebarInput::SelectFolderRow {
@@ -433,17 +473,20 @@ impl AppModel {
     /// mirrors the worker exactly — same subtree rewrite the server does,
     /// same sort, same index-assigned ids — so the confirming refresh is an
     /// identical list and SetFolders repaints nothing.
-    fn reshape_renamed_tree(&mut self, account_id: u32, path: &str, new_path: &str, delim: char) {
-        let old_prefix = format!("{path}{delim}");
-        let new_prefix = format!("{new_path}{delim}");
+    fn reshape_renamed_tree(
+        &mut self,
+        account_id: u32,
+        path: &str,
+        new_path: &str,
+        h: &FolderHierarchy,
+    ) {
         if let Some(folders) = self.folders.get_mut(&account_id) {
             for f in folders.iter_mut() {
                 if f.path == path {
                     f.path = new_path.to_string();
-                    let leaf = f.path.rsplit(delim).next().unwrap_or(&f.path);
-                    f.name = crate::mail::mutf7::decode(leaf);
-                } else if let Some(rest) = f.path.strip_prefix(&old_prefix) {
-                    f.path = format!("{new_prefix}{rest}");
+                    f.name = h.name_of(h.leaf(&f.path));
+                } else if let Some(moved) = follow_rename(h, &f.path, path, new_path) {
+                    f.path = moved;
                 }
             }
         }
@@ -452,7 +495,13 @@ impl AppModel {
 
     /// Collapsed tree nodes, favorites and the folder order follow the
     /// moved subtree to its new home.
-    fn rekey_sidebar_state(&mut self, account_id: u32, path: &str, new_path: &str, delim: char) {
+    fn rekey_sidebar_state(
+        &mut self,
+        account_id: u32,
+        path: &str,
+        new_path: &str,
+        h: &FolderHierarchy,
+    ) {
         if let Some(email) = self
             .accounts
             .iter()
@@ -461,23 +510,22 @@ impl AppModel {
         {
             let key_prefix = format!("{email}\t");
             for k in self.tree_collapsed.iter_mut() {
-                rekey_folder_key(k, &key_prefix, path, new_path, delim);
+                rekey_folder_key(k, &key_prefix, h, path, new_path);
             }
             // So do favorites (#367), keeping their place in the list.
             for k in self.favorites.iter_mut() {
-                rekey_folder_key(k, &key_prefix, path, new_path, delim);
+                rekey_folder_key(k, &key_prefix, h, path, new_path);
             }
             // So does the folder order. A renamed folder keeps its place; one
             // moved under another parent has left the siblings it was placed
             // among, and joins its new ones at the end.
-            let parent = |p: &str| p.rsplit_once(delim).map(|(head, _)| head.to_string());
-            let moved = parent(path) != parent(new_path);
+            let moved = h.parent(path) != h.parent(new_path);
             let own_key = format!("{key_prefix}{path}");
             if moved {
                 self.folder_order.retain(|k| *k != own_key);
             }
             for k in self.folder_order.iter_mut() {
-                rekey_folder_key(k, &key_prefix, path, new_path, delim);
+                rekey_folder_key(k, &key_prefix, h, path, new_path);
             }
             self.save_sidebar_state();
         }
@@ -491,22 +539,13 @@ impl AppModel {
         account_id: u32,
         path: &str,
         new_path: &str,
-        delim: char,
+        h: &FolderHierarchy,
     ) {
-        let old_prefix = format!("{path}{delim}");
-        let new_prefix = format!("{new_path}{delim}");
-        let followed = self.selected.as_ref().and_then(|s| {
-            if s.account_id != account_id {
-                return None;
-            }
-            if s.path == path {
-                Some(new_path.to_string())
-            } else {
-                s.path
-                    .strip_prefix(&old_prefix)
-                    .map(|rest| format!("{new_prefix}{rest}"))
-            }
-        });
+        let followed = self
+            .selected
+            .as_ref()
+            .filter(|s| s.account_id == account_id)
+            .and_then(|s| follow_rename(h, &s.path, path, new_path));
         if let Some(moved) = followed {
             let id = self.folder_by_path(account_id, &moved).map(|f| f.id);
             if let (Some(sel), Some(id)) = (self.selected.as_mut(), id) {
@@ -516,67 +555,10 @@ impl AppModel {
         }
     }
 
-    /// The account's hierarchy delimiter, inferred from its folder paths (the
-    /// namespace prefix's last character when there is one, else the first
-    /// common delimiter any path uses; '/' as the fallback).
-    pub(super) fn folder_delimiter(&self, account_id: u32) -> char {
-        let ns = self.folder_namespace(account_id);
-        if let Some(c) = ns.chars().last() {
-            if matches!(c, '/' | '.' | '\\') {
-                return c;
-            }
-        }
-        // Prefer '/' over '.' over '\' across the whole list, so one folder
-        // with a dotted display name can't masquerade as the hierarchy
-        // separator on a slash-delimited server.
-        let fs = self.folders.get(&account_id);
-        for d in ['/', '.', '\\'] {
-            if fs.is_some_and(|fs| fs.iter().any(|f| f.path.contains(d))) {
-                return d;
-            }
-        }
-        '/'
-    }
-
-    /// The mailbox namespace prefix for an account: "INBOX<delim>" on servers
-    /// that nest everything under INBOX (Dovecot-style), otherwise "". Only
-    /// the INBOX root counts — deriving it from any nested folder's parent
-    /// (as this once did) made "top level" mean "under whichever sub-folder
-    /// happened to be listed first" on servers like iCloud, so new folders
-    /// and header-dropped moves landed inside a random folder.
-    pub(super) fn folder_namespace(&self, account_id: u32) -> String {
-        let Some(folders) = self.folders.get(&account_id) else {
-            return String::new();
-        };
-        Self::infer_folder_namespace(folders)
-    }
-
-    fn infer_folder_namespace(folders: &[Folder]) -> String {
-        let delim = folders
-            .iter()
-            .find_map(|f| f.path.chars().find(|c| matches!(c, '/' | '.' | '\\')))
-            .unwrap_or('/');
-        let root = format!("INBOX{delim}");
-        let customs: Vec<&Folder> = folders
-            .iter()
-            .filter(|f| f.kind == FolderKind::Custom)
-            .collect();
-        if !customs.is_empty()
-            && customs.iter().all(|f| {
-                f.path
-                    .get(..root.len())
-                    .is_some_and(|prefix| prefix.eq_ignore_ascii_case(&root))
-            })
-        {
-            root
-        } else {
-            String::new()
-        }
-    }
-
     /// A sensible destination path for a standard folder the account doesn't have
-    /// yet (Archive/Trash/Junk), matching the account's folder namespace so the
-    /// server creates it in the right place (e.g. "INBOX.Archive").
+    /// yet (Archive/Trash/Junk), in the account's personal namespace so the
+    /// server creates it in the right place (e.g. "INBOX.Archive"). `None`
+    /// until the server has said where that is, or where it allows none.
     fn default_folder_path(&self, account_id: u32, kind: FolderKind) -> Option<String> {
         let leaf = match kind {
             FolderKind::Archive => "Archive",
@@ -588,7 +570,7 @@ impl AppModel {
             _ => return None,
         };
         self.folders.get(&account_id)?; // require folders to be loaded
-        Some(format!("{}{leaf}", self.folder_namespace(account_id)))
+        self.hierarchy(account_id)?.child("", leaf)
     }
 
     /// Find a cached message by (account, id) for drag-and-drop moves.
@@ -657,6 +639,7 @@ mod tests {
             path: path.into(),
             kind: FolderKind::Custom,
             unread,
+            childless: false,
         }
     }
 
@@ -670,6 +653,7 @@ mod tests {
             path: path.to_string(),
             kind,
             unread: 0,
+            childless: false,
         };
         let mut folders = vec![
             f(1, "INBOX", FolderKind::Inbox),
@@ -707,6 +691,7 @@ mod tests {
                 path: "INBOX".into(),
                 kind: FolderKind::Inbox,
                 unread: 0,
+                childless: false,
             },
             Folder {
                 id: 2,
@@ -715,6 +700,7 @@ mod tests {
                 path: "Sent".into(),
                 kind: FolderKind::Sent,
                 unread: 0,
+                childless: false,
             },
         ];
         let mut roles = std::collections::BTreeMap::new();
@@ -739,6 +725,7 @@ mod tests {
             path: path.to_string(),
             kind,
             unread: 0,
+            childless: false,
         };
         let folders = vec![
             f(1, "INBOX", FolderKind::Inbox),
@@ -809,7 +796,8 @@ mod tests {
     fn sidebar_keys_follow_a_renamed_folder_and_its_children() {
         let rekey = |k: &str, delim| {
             let mut k = k.to_string();
-            rekey_folder_key(&mut k, "me@x\t", "A/B", "A/C", delim);
+            let h = FolderHierarchy::imap(Some(delim), Some(String::new()));
+            rekey_folder_key(&mut k, "me@x\t", &h, "A/B", "A/C");
             k
         };
         assert_eq!(rekey("me@x\tA/B", '/'), "me@x\tA/C");
@@ -817,6 +805,8 @@ mod tests {
         assert_eq!(rekey("me@x\tA/BB", '/'), "me@x\tA/BB");
         assert_eq!(rekey("you@x\tA/B", '/'), "you@x\tA/B");
         assert_eq!(rekey("me@x\tA/B.D", '.'), "me@x\tA/C.D");
+        // A dot in a name is no level on a '/' server.
+        assert_eq!(rekey("me@x\tA/B.D", '/'), "me@x\tA/B.D");
     }
 
     #[test]
@@ -829,11 +819,12 @@ mod tests {
             path: path.to_string(),
             kind: FolderKind::Custom,
             unread: 0,
+            childless: false,
         };
         // Byte six falls inside a character in these top-level paths.
         for path in ["abcd摘要", "a收摘要", "📧摘要", "é日語"] {
             assert_eq!(
-                super::AppModel::infer_folder_namespace(&[custom(path)]),
+                FolderHierarchy::inferred(&[custom(path)]).prefix,
                 "",
                 "{path}"
             );
@@ -850,33 +841,29 @@ mod tests {
             ("", ""),
         ] {
             assert_eq!(
-                super::AppModel::infer_folder_namespace(&[custom(path)]),
+                FolderHierarchy::inferred(&[custom(path)]).prefix,
                 expected,
                 "{path}"
             );
         }
         assert_eq!(
-            super::AppModel::infer_folder_namespace(&[custom("INBOX/中文"), custom("abcd摘要")]),
+            FolderHierarchy::inferred(&[custom("INBOX/中文"), custom("abcd摘要")]).prefix,
             ""
         );
-        assert_eq!(super::AppModel::infer_folder_namespace(&[]), "");
+        assert_eq!(FolderHierarchy::inferred(&[]).prefix, "");
         let mut inbox = custom("INBOX");
         inbox.kind = FolderKind::Inbox;
+        assert_eq!(FolderHierarchy::inferred(&[inbox.clone()]).prefix, "");
         assert_eq!(
-            super::AppModel::infer_folder_namespace(&[inbox.clone()]),
-            ""
-        );
-        assert_eq!(
-            super::AppModel::infer_folder_namespace(&[inbox, custom("INBOX/中文")]),
+            FolderHierarchy::inferred(&[inbox, custom("INBOX/中文")]).prefix,
             "INBOX/"
         );
     }
 
-    /// B17 in the map: the delimiter is the first separator found in any
-    /// path, so a '/' server whose first folder has a '.' in its name gets
-    /// no namespace.
+    /// The drawing fallback (until the server says): '/' wins over a '.'
+    /// in a name, as it did over the first separator seen (B17).
     #[test]
-    fn folder_namespace_takes_the_first_separator_seen() {
+    fn the_drawing_fallback_prefers_a_slash() {
         let custom = |path: &str| Folder {
             id: 1,
             account_id: 1,
@@ -884,13 +871,14 @@ mod tests {
             path: path.into(),
             kind: FolderKind::Custom,
             unread: 0,
+            childless: false,
         };
         assert_eq!(
-            AppModel::infer_folder_namespace(&[custom("INBOX.a"), custom("INBOX.b")]),
+            FolderHierarchy::inferred(&[custom("INBOX.a"), custom("INBOX.b")]).prefix,
             "INBOX."
         );
         assert_eq!(
-            AppModel::infer_folder_namespace(&[custom("v1.2"), custom("INBOX/b")]),
+            FolderHierarchy::inferred(&[custom("v1.2"), custom("INBOX/b")]).prefix,
             ""
         );
     }

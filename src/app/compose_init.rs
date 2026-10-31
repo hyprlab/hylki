@@ -38,15 +38,16 @@ fn compose_identities(
 }
 
 /// The enabled accounts' addresses, in sidebar order, then any the order
-/// does not list.
+/// does not list. On This Computer (#552) sends nothing and is left out.
 fn accounts_in_order(account_order: &[String], config: &[AccountConfig]) -> Vec<String> {
+    let sends = |c: &&AccountConfig| c.enabled && !c.is_local();
     let mut emails: Vec<String> = Vec::new();
     for email in account_order {
-        if config.iter().any(|c| c.enabled && &c.email == email) && !emails.contains(email) {
+        if config.iter().filter(sends).any(|c| &c.email == email) && !emails.contains(email) {
             emails.push(email.clone());
         }
     }
-    for c in config.iter().filter(|c| c.enabled) {
+    for c in config.iter().filter(sends) {
         if !emails.contains(&c.email) {
             emails.push(c.email.clone());
         }
@@ -184,11 +185,14 @@ fn choose_identity(
     }
     let hay = prefill.reply_addressed_to.to_lowercase();
     let want = prefill.from_address.trim().to_lowercase();
+    // An account with no From of its own (On This Computer, #552) answers
+    // from whichever account the original was addressed to.
+    let own = accounts.iter().any(|c| c.id == account_id);
     let by_reply = || {
         (!hay.is_empty())
             .then(|| {
                 accounts.iter().position(|c| {
-                    c.id == account_id && hay.contains(c.email.to_lowercase().as_str())
+                    (c.id == account_id || !own) && hay.contains(c.email.to_lowercase().as_str())
                 })
             })
             .flatten()
@@ -470,5 +474,28 @@ mod tests {
         };
         assert_eq!(choose_identity(&ids, 1, &mut typed), 2);
         assert_eq!(typed.custom_from, "Me <me@x.com>");
+    }
+
+    /// On This Computer (#552) sends nothing: it offers no From, and a
+    /// reply to mail filed there answers from the account it was sent to.
+    #[test]
+    fn mail_on_this_computer_is_answered_from_the_account_it_came_to() {
+        let mut config = vec![
+            crate::config::local_account(),
+            crate::config::blank_account(),
+            crate::config::blank_account(),
+        ];
+        config[1].email = "a@x.com".into();
+        config[2].email = "c@y.org".into();
+        let ids = compose_identities(&[], &config, &HashMap::new());
+        let emails: Vec<(u32, &str)> = ids.iter().map(|c| (c.id, c.email.as_str())).collect();
+        assert_eq!(emails, [(2, "a@x.com"), (3, "c@y.org")]);
+        let mut reply = ComposePrefill {
+            reply_addressed_to: "C <c@y.org>".into(),
+            ..Default::default()
+        };
+        assert_eq!(choose_identity(&ids, 1, &mut reply), 1);
+        let mut fresh = ComposePrefill::default();
+        assert_eq!(choose_identity(&ids, 1, &mut fresh), 0);
     }
 }

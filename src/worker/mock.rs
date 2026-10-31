@@ -50,7 +50,10 @@ fn demo_attachment_files(message_id: u32) -> Vec<crate::models::Attachment> {
 /// Unsubscribe banner appear as they would for fetched mail.
 fn mock_sender_check(path: &str, message_id: u32, emit: &impl Fn(WorkerEvent)) {
     if let Some(raw) = crate::backend::demo_raw(message_id) {
-        let check = crate::mail::verify::check_sender(raw.as_bytes());
+        let mut check = crate::mail::verify::check_sender(raw.as_bytes());
+        // The demo's few messages are too few to learn a provider from, and
+        // its server is made up anyway: its verdicts are shown as they are.
+        check.authority = None;
         emit(WorkerEvent::SenderChecked {
             path: path.to_string(),
             message_id,
@@ -69,6 +72,9 @@ pub(super) async fn run_mock(
     if let Some(account) = backend.accounts().into_iter().find(|a| a.id == account_id) {
         emit(WorkerEvent::Account(account));
     }
+    emit(WorkerEvent::Hierarchy(
+        crate::models::FolderHierarchy::maildir(),
+    ));
     emit(WorkerEvent::Folders(backend.folders(account_id)));
     // HYLKI_DEMO_ARRIVAL=<secs>: a reply lands in account 1's Inbox
     // conversation after that long, as a sync would bring it — for
@@ -304,6 +310,8 @@ pub(super) async fn run_mock(
                 autosave,
                 message_id: None,
             }),
+            // Only On This Computer imports mail (#552).
+            MailRequest::ImportMail { .. } => {}
             MailRequest::Settle { path, uids } => emit(WorkerEvent::MovesSettled { path, uids }),
             MailRequest::ExportRaw { token, uid, .. } => emit(WorkerEvent::RawExported {
                 token,

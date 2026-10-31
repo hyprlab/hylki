@@ -137,11 +137,8 @@ impl AppModel {
                 self.mark_unread_from();
                 self.close_after_unread();
             }
-            Shortcut::FoldAll(folded) => {
-                if self.current_thread.len() > 1 {
-                    self.message_view.emit(MessageViewInput::FoldAll(folded));
-                }
-            }
+            // The reader knows whether its messages are cards to fold.
+            Shortcut::FoldAll(folded) => self.message_view.emit(MessageViewInput::FoldAll(folded)),
             Shortcut::Delete => sender.input(AppMsg::Delete),
             Shortcut::DeleteForever => sender.input(AppMsg::DeleteForever),
             Shortcut::Spam => sender.input(AppMsg::MarkSpam),
@@ -472,6 +469,10 @@ impl AppModel {
                 tracing::info!(preview, open = self.current.is_some(), "print requested");
                 if self.current.is_none() {
                     self.notice(i18n("Open a message first, then print it."));
+                    return;
+                }
+                if !self.reader_shown() {
+                    self.print_without_reader(preview);
                     return;
                 }
                 self.message_view.emit(if preview {

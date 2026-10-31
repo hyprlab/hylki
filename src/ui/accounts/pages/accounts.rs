@@ -14,6 +14,7 @@ pub(in crate::ui::accounts) struct AccountsPage {
     pub(in crate::ui::accounts) goa_refresh_btn: gtk::Button,
     pub(in crate::ui::accounts) accounts_list: gtk::ListBox,
     pub(in crate::ui::accounts) goa_group: adw::PreferencesGroup,
+    pub(in crate::ui::accounts) local_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) goa_list: gtk::ListBox,
 }
 
@@ -61,6 +62,23 @@ impl AccountsPage {
                     },
                 },
 
+                // On This Computer (#552): folders on this computer
+                // rather than a server, offered until there is one.
+                #[name = "local_group"]
+                add = &adw::PreferencesGroup {
+                    set_title: &i18n("On This Computer"),
+                    set_description: Some(
+                        i18n("Store mail in folders that live on this computer. Move or copy mail from any account to here.").as_str()
+                    ),
+                    set_visible: false,
+                    #[wrap(Some)]
+                    set_header_suffix = &gtk::Button {
+                        set_label: &i18n("Add"),
+                        set_valign: gtk::Align::Start,
+                        connect_clicked => AccountsInput::AddLocal,
+                    },
+                },
+
                 #[name = "goa_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("GNOME Online Accounts"),
@@ -82,6 +100,7 @@ impl AccountsPage {
             goa_refresh_btn,
             accounts_list,
             goa_group,
+            local_group,
             goa_list,
         }
     }

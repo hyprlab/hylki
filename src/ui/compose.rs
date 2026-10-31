@@ -965,6 +965,7 @@ impl Component for Compose {
                 }
                 ComposeInput::ToggleEncrypt(on) => {
                     self.encrypt = on;
+                    self.editor.pause_grammar(on);
                     if on && !self.sign {
                         self.sign = true;
                         widgets.sign_btn.set_active(true);

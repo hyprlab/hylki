@@ -185,6 +185,7 @@ These work with or without single-key shortcuts too:
 | <kbd>Ctrl+Shift+A</kbd> | Show or hide the accounts in the sidebar |
 | <kbd>Ctrl+Shift+C</kbd> | Console mode, when it is enabled in Settings |
 | <kbd>F11</kbd> | Fullscreen on or off |
+| <kbd>Ctrl+Alt+1</kbd> <kbd>Ctrl+Alt+2</kbd> <kbd>Ctrl+Alt+3</kbd> | Reading pane right of the list, below it, or off |
 | <kbd>Ctrl+,</kbd> | Open Settings |
 | <kbd>Ctrl+W</kbd> | Close the window; mail keeps syncing in the background. In Settings, a message window or a composer window, closes that window |
 | <kbd>Ctrl+Q</kbd> | Quit Hylki |

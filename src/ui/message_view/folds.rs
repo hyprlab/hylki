@@ -1,7 +1,7 @@
 //! Folded cards (#326): which cards open folded, and their bars.
 
 use super::html::attr_escape;
-use super::snippets::{fold_bar_date, inline_icon_svg, FOLD_BAR_FACE};
+use super::snippets::inline_icon_svg;
 use super::MessageView;
 use crate::encoding::escape_html;
 use crate::i18n::i18n;
@@ -15,7 +15,7 @@ impl MessageView {
     /// message stepped to inside the conversation is opened by hand instead
     /// (see `Show`).
     pub(super) fn folded_cards(&self) -> std::collections::HashSet<(u32, u32)> {
-        if self.thread.len() <= 1 {
+        if !self.carded() {
             return Default::default();
         }
         let newest = self
@@ -41,65 +41,76 @@ impl MessageView {
             .collect()
     }
 
-    /// A folded card's one line, as Proton Mail draws it: who it is from,
-    /// then whether it is starred, whether it was sent or received, whether
-    /// it carries files, and the day. A click on it opens the card.
-    pub(super) fn fold_bar_html(&self, m: &Message) -> String {
-        let key = (m.account_id, m.id);
-        let from = crate::contacts::shown_name_or_addr(&m.from_name, &m.from_addr);
-        let icon = |name: &str, title: &str| {
+    /// The marks in a card's header, beside the date, as a folded card
+    /// showed them once on a bar of its own (#326): whether it is starred and
+    /// whether it carries files. The star is the toolbar's, in its color,
+    /// and only a starred card shows it: the card's `starred` class does, so
+    /// a star toggled on the card shows or goes in place. Mail you sent says
+    /// so in a chip instead (see `card_labels`).
+    pub(super) fn card_marks_html(&self, m: &Message) -> String {
+        let icon = |class: &str, name: &str, title: &str| {
             format!(
-                "<span class=\"hylki-fbar-ico\" title=\"{}\">{}</span>",
+                "<span class=\"hylki-mark{class}\" title=\"{}\">{}</span>",
                 attr_escape(title),
                 inline_icon_svg(name)
             )
         };
-        let star = if m.starred {
-            icon("starred-symbolic", &i18n("Starred"))
-        } else {
-            icon("hylki-non-starred-symbolic", "")
-        };
-        let place = if self.sent.contains(&key) {
-            icon("mail-send-symbolic", &i18n("Sent"))
-        } else {
-            icon("mail-inbox-symbolic", &i18n("Received"))
-        };
-        // An empty slot when there are no files, so the icons of every bar
+        // An empty slot when there are no files, so the marks of every card
         // stand in the same columns.
         let clip = if m.has_attachment {
-            icon("mail-attachment-symbolic", &i18n("Has attachments"))
+            icon("", "mail-attachment-symbolic", &i18n("Has attachments"))
         } else {
-            "<span class=\"hylki-fbar-ico hylki-fbar-none\"></span>".to_string()
-        };
-        // Below the sender, as many lines of preview as the message list
-        // shows (#326). No subject: the conversation's is the heading above.
-        let preview = crate::models::preview_display(&m.preview);
-        let preview = if self.fold_preview_lines > 0 && !preview.trim().is_empty() {
-            format!(
-                "<div class=\"hylki-fbar-prev\" style=\"-webkit-line-clamp:{}\">{}</div>",
-                self.fold_preview_lines,
-                escape_html(preview.trim()),
-            )
-        } else {
-            String::new()
+            "<span class=\"hylki-mark hylki-mark-none\"></span>".to_string()
         };
         format!(
-            "<div class=\"hylki-fbar\" data-key=\"{}:{}\" title=\"{}\">\
-             {FOLD_BAR_FACE}<div class=\"hylki-fbar-main\"><div class=\"hylki-fbar-top\">\
-             <span class=\"hylki-fbar-from\">{}</span>{star}{place}{clip}\
-             <span class=\"hylki-fbar-date\">{}</span></div>{preview}</div></div>",
-            key.0,
-            key.1,
+            "<span class=\"hylki-marks\">{}{clip}</span>",
+            icon(
+                " hylki-mark-star",
+                "hylki-non-starred-symbolic",
+                &i18n("Starred")
+            ),
+        )
+    }
+
+    /// The chip beside each card's sender: the folder a message was read
+    /// from when it isn't the one on screen, and "Sent" on a card of mail you
+    /// sent, which takes the place of its folder's name. Received mail is
+    /// the rule, and carries no chip for it.
+    pub(super) fn card_labels(&self) -> std::collections::HashMap<(u32, u32), String> {
+        let mut labels = self.folder_labels.clone();
+        if self.carded() {
+            for key in &self.sent {
+                labels.insert(*key, i18n("Sent"));
+            }
+        }
+        labels
+    }
+
+    /// What a folded card shows under its header, which stays exactly as it
+    /// is open: as many lines of preview as the message list shows (#326),
+    /// and nothing when the list shows none. The box keeps all its lines
+    /// when the text is shorter or missing, so every folded card stands the
+    /// same height. A click on it opens the card.
+    pub(super) fn fold_bar_html(&self, m: &Message) -> String {
+        if self.fold_preview_lines == 0 {
+            return String::new();
+        }
+        let preview = crate::models::preview_display(&m.preview);
+        format!(
+            "<div class=\"hylki-fbar\" data-key=\"{}:{}\" title=\"{}\" \
+             style=\"-webkit-line-clamp:{n};height:calc({n} * 1.35em)\">{}</div>",
+            m.account_id,
+            m.id,
             attr_escape(&i18n("Click to open this message")),
-            escape_html(&from),
-            escape_html(&fold_bar_date(m)),
+            escape_html(preview.trim()),
+            n = self.fold_preview_lines,
         )
     }
 
     /// Fold and open the cards of the live document to match
     /// [`MessageView::folded_cards`], without building it again.
     pub(super) fn patch_folds(&self) {
-        if !self.webview_ready || self.thread.len() <= 1 {
+        if !self.webview_ready || !self.carded() {
             return;
         }
         let keys: Vec<String> = self

@@ -512,6 +512,13 @@ pub(crate) struct SenderCheck {
     /// message it says was read, and by whom. Not cached: it is acted on
     /// as it arrives.
     pub(crate) read: Option<crate::mail::receipt::ReadReport>,
+    /// Whose `Authentication-Results` the verdict was read from: the
+    /// topmost header's authserv-id, empty when it names none, `None` when
+    /// the message has no such header. The reader believes the verdict
+    /// only from the account's own provider (see `mail::verify::Vouchers`).
+    pub(crate) authority: Option<String>,
+    /// The From: domain, which the provider is learned from.
+    pub(crate) from_domain: String,
 }
 
 impl Default for SenderCheck {
@@ -526,6 +533,8 @@ impl Default for SenderCheck {
             label: None,
             receipt: None,
             read: None,
+            authority: None,
+            from_domain: String::new(),
         }
     }
 }

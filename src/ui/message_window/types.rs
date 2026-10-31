@@ -50,6 +50,8 @@ pub(crate) struct MessageWindowInit {
     pub(crate) reader_switch: bool,
     /// Whether the Light / Dark Mode switch is shown (PR #386).
     pub(crate) theme_switch: bool,
+    /// Whether the account chip is shown.
+    pub(crate) account_chip: bool,
     /// What Reader View does when a message is opened.
     pub(crate) reader_default: crate::config::ReaderDefault,
     /// The tags (#71), for the cards' chips.
@@ -72,6 +74,12 @@ pub(crate) enum MessageWindowInput {
     PrintPreview,
     /// No-op (unreachable output mapping).
     Ignore,
+    /// A conversation card was scrolled through: the app marks it read
+    /// when the window is where mail is read (#475).
+    Seen {
+        account_id: u32,
+        id: u32,
+    },
     /// A message body arrived from the server — the popped-out message itself
     /// or, in a conversation window, any member of the thread.
     SetBody {
@@ -143,6 +151,7 @@ pub(crate) enum MessageWindowInput {
     Zoom(i8),
     SetReaderSwitchShown(bool),
     SetThemeSwitchShown(bool),
+    SetAccountChipShown(bool),
     SetReaderDefault(crate::config::ReaderDefault),
     /// This window's own Reader View switch was flipped. It changes this
     /// window alone: the main window and the saved choice are left as they
@@ -270,6 +279,11 @@ pub(crate) enum MessageWindowOutput {
     },
     /// Download this message's attachments from the server.
     LoadAttachments(Box<Message>),
+    /// A conversation card has been read (see `MessageViewOutput::MarkSeen`).
+    MarkSeen {
+        account_id: u32,
+        id: u32,
+    },
     /// The folder picker for this message, at window point (x, y).
     MoveTo {
         message: Box<Message>,

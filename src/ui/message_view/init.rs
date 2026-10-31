@@ -67,6 +67,7 @@ impl MessageView {
             reader_mode: false,
             reader_switch_shown: true,
             theme_switch_shown: false,
+            account_chip_shown: true,
             theme_picks: std::collections::HashMap::new(),
             zoom: 100,
             zoom_default: 100,

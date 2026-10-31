@@ -49,6 +49,7 @@ fn popout_output_msg(key: (u32, u32), out: MessageWindowOutput) -> AppMsg {
             AppMsg::AddContactFrom { name, email }
         }
         MessageWindowOutput::LoadAttachments(message) => AppMsg::LoadAttachmentsFor(message),
+        MessageWindowOutput::MarkSeen { account_id, id } => AppMsg::PopoutSeen { account_id, id },
         MessageWindowOutput::MoveTo { message, x, y } => {
             AppMsg::PopoutMoveTo { key, message, x, y }
         }
@@ -177,10 +178,12 @@ impl AppModel {
 
         // Fetch the body unless the in-flight selection request already will
         // (single click precedes the double click), to avoid a duplicate fetch.
-        let already_loading = self
-            .current
-            .as_ref()
-            .is_some_and(|c| c.id == m.id && c.account_id == account_id);
+        // With the reading pane off a selection fetches nothing (#475).
+        let already_loading = self.reader_shown()
+            && self
+                .current
+                .as_ref()
+                .is_some_and(|c| c.id == m.id && c.account_id == account_id);
         if needs_body && !already_loading {
             if let Some(path) = self.resolve_folder_path(&m) {
                 self.send_to(
@@ -378,6 +381,7 @@ impl AppModel {
             zoom_default: self.zoom_default,
             reader_switch: self.reader_switch,
             theme_switch: self.theme_switch,
+            account_chip: self.account_chip,
             reader_default: self.effective_reader_default(),
             tags: self.tags.clone(),
             pgp_labels: self.pgp_labels,
@@ -399,6 +403,7 @@ impl AppModel {
                 {
                     self.edit_as_new(m, &sender);
                 } else {
+                    self.mark_window_read(&m, thread.len() > 1);
                     // Popouts follow the reading pane's display order (#70).
                     let mut thread = thread;
                     if self.thread_newest_first {

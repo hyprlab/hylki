@@ -105,6 +105,10 @@ thread_local! {
     /// Each card's folded bar (#326), already rendered. Empty in tests.
     pub(super) static LIVE_FOLDBAR: std::cell::RefCell<std::collections::HashMap<(u32, u32), String>> =
         std::cell::RefCell::new(std::collections::HashMap::new());
+    /// Each card's header marks (#326): starred, sent or received, files.
+    /// Empty in tests.
+    pub(super) static LIVE_MARKS: std::cell::RefCell<std::collections::HashMap<(u32, u32), String>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
     /// The cards that open folded (#326). Empty in tests.
     pub(super) static LIVE_FOLDED: std::cell::RefCell<std::collections::HashSet<(u32, u32)>> =
         std::cell::RefCell::new(std::collections::HashSet::new());

@@ -53,6 +53,15 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
             account_id,
             folders,
         },
+        WorkerEvent::Hierarchy(hierarchy) => AppMsg::SetHierarchy {
+            account_id,
+            hierarchy,
+        },
+        WorkerEvent::FolderMadeAt { asked, made } => AppMsg::FolderMadeAt {
+            account_id,
+            asked,
+            made,
+        },
         WorkerEvent::Messages {
             folder_id,
             messages,
@@ -262,6 +271,7 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
             message_id,
         },
         WorkerEvent::Status(text) => AppMsg::Status { account_id, text },
+        WorkerEvent::CopyProgress { left } => AppMsg::CopyProgress { left },
         WorkerEvent::Error { text, connectivity } => AppMsg::Error {
             account_id,
             text,
@@ -491,12 +501,16 @@ impl AppModel {
             }
         } else {
             self.claim_cached_accounts();
+            // Copying to On This Computer (#552) needs it there, and on.
+            let local = self.config.iter().any(|c| c.is_local() && c.enabled);
             for (i, account) in self.config.iter().enumerate() {
                 if !account.enabled {
                     continue;
                 }
                 let account_id = i as u32 + 1;
-                let worker = Self::spawn_worker(account_id, Some(account.clone()), sender);
+                let mut account = account.clone();
+                account.copy_to_local &= local;
+                let worker = Self::spawn_worker(account_id, Some(account), sender);
                 self.workers.insert(account_id, worker);
                 // Anything left queued by a previous run has to show up now, not
                 // only after the next failed send.
@@ -563,7 +577,7 @@ impl AppModel {
     /// being applied on the server. The at-a-glance "working on something"
     /// signal; the status bar has the words.
     pub(super) fn update_busy_indicator(&self) {
-        let busy = !self.busy.is_empty() || self.bulk_pending > 0;
+        let busy = !self.busy.is_empty() || self.bulk_pending > 0 || self.copies_left > 0;
         self.sidebars_emit(SidebarInput::SetBusy(busy));
         self.set_header_refresh_busy(busy);
     }

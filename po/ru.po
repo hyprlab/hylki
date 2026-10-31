@@ -104,6 +104,19 @@ msgstr "Настройки"
 msgid "Show Accounts"
 msgstr "Показывать учётные записи"
 
+msgid "Right"
+msgstr "Справа"
+
+msgid "Below"
+msgstr ""
+
+msgid "Off"
+msgstr "Выкл."
+
+#, fuzzy
+msgid "Reading Pane"
+msgstr "Чтение"
+
 msgid "Focus Mode"
 msgstr "Режим фокусировки"
 
@@ -915,6 +928,9 @@ msgstr "Включить или выключить режим концентра
 msgid "Fullscreen on or off"
 msgstr "Включить или выключить режим концентрации"
 
+msgid "Reading pane right of the list, below it, or off"
+msgstr ""
+
 msgid "Message zoom in or out"
 msgstr "Увеличить или уменьшить масштаб сообщения"
 
@@ -1100,6 +1116,18 @@ msgstr "Поиск сообщений…"
 #, fuzzy
 msgid "Show or Hide the Sidebar"
 msgstr "Показывать или скрывать учётные записи на боковой панели"
+
+#, fuzzy
+msgid "Reading Pane Right"
+msgstr "Чтение"
+
+#, fuzzy
+msgid "Reading Pane Below"
+msgstr "Чтение"
+
+#, fuzzy
+msgid "Reading Pane Off"
+msgstr "Чтение"
 
 msgid "Mail Accounts"
 msgstr "Почтовые учётные записи"
@@ -2072,9 +2100,6 @@ msgstr "Сервис отклонил запрос (ошибка {code})."
 
 msgid "Enter the LibreTranslate server's address in Settings → Translation."
 msgstr "Введите адрес сервера LibreTranslate в меню Параметры → Перевод."
-
-msgid "Off"
-msgstr "Выкл."
 
 msgid "Choose a translation service in Settings → Translation first."
 msgstr "Сначала выберите сервис перевода в меню Параметры → Перевод."
@@ -4756,9 +4781,6 @@ msgstr "Показать удалённое содержимое"
 msgid "Block remote content"
 msgstr "Блокировать удалённое содержимое"
 
-msgid "Received"
-msgstr "Получено"
-
 msgid "Click to open this message"
 msgstr "Нажмите, чтобы открыть это сообщение"
 
@@ -5549,9 +5571,6 @@ msgstr "Последняя открытая папка"
 
 msgid "Left"
 msgstr "Слева"
-
-msgid "Right"
-msgstr "Справа"
 
 msgid "1 line"
 msgstr "1 строка"
@@ -7512,6 +7531,13 @@ msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr ""
 
 #, fuzzy
+msgid "Fold quoted text"
+msgstr "Показать цитируемый текст"
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr ""
+
+#, fuzzy
 msgid "Undo Send"
 msgstr "Отменить"
 
@@ -7584,6 +7610,13 @@ msgstr ""
 #, fuzzy
 msgid "Displays in the message header for each message."
 msgstr "Открывает сообщение с готовым черновиком пересылки."
+
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Переключатель режима чтения"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
 
 msgid "Ctrl+0 returns to the default."
 msgstr ""
@@ -7984,6 +8017,9 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Received"
+#~ msgstr "Получено"
 
 #, fuzzy
 #~ msgid "Search all folders but Trash and Junk"

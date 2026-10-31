@@ -44,6 +44,7 @@ impl AppModel {
             reader_mode: self.reader_mode,
             reader_switch: self.reader_switch,
             theme_switch: self.theme_switch,
+            account_chip: self.account_chip,
             desktop_icons: self.desktop_icons,
             reader_default: self.reader_default,
             reader_zoom: self.zoom_default,
@@ -87,6 +88,7 @@ impl AppModel {
             reply_position: self.reply_position,
             signature_position: self.signature_position,
             signature_dashes: self.signature_dashes,
+            fold_quote: self.fold_quote,
             reply_header: self.reply_header.clone(),
             undo_send_secs: self.undo_send_secs,
             spellcheck: self.spellcheck,
@@ -114,6 +116,7 @@ impl AppModel {
             run_in_background: self.run_in_background.get(),
             autostart: self.autostart,
             start_fullscreen: self.start_fullscreen,
+            reading_pane: self.reading_pane,
             tray: self.tray_enabled,
             tray_icon: self.tray_icon,
             tray_mail: self.tray_mail,
@@ -247,6 +250,8 @@ impl AppModel {
             .emit(MessageViewInput::SetReaderSwitchShown(self.reader_switch));
         self.message_view
             .emit(MessageViewInput::SetThemeSwitchShown(self.theme_switch));
+        self.message_view
+            .emit(MessageViewInput::SetAccountChipShown(self.account_chip));
         self.message_view.emit(MessageViewInput::SetReaderDefault(
             self.effective_reader_default(),
         ));

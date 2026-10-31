@@ -129,6 +129,9 @@ impl AppModel {
             PrefOutput::SetSignatureDashes(on) => {
                 pref!(self.signature_dashes = on);
             }
+            PrefOutput::SetFoldQuote(on) => {
+                pref!(self.fold_quote = on);
+            }
             PrefOutput::SetReplyHeader(header) => {
                 pref!(self.reply_header = header);
             }

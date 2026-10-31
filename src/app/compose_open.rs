@@ -3,6 +3,7 @@
 
 use relm4::prelude::*;
 
+use crate::config;
 use crate::models::{FolderKind, Message};
 use crate::ui::compose::{ComposeInput, ComposePrefill};
 use crate::worker::MailRequest;
@@ -229,7 +230,7 @@ impl AppModel {
         // back in Templates, and sending leaves it there.
         prefill.template =
             self.folder_kind(m.account_id, m.folder_id) == Some(FolderKind::Templates);
-        if inline {
+        if inline && self.reading_pane == config::ReadingPane::Right {
             self.attachments.clear();
             self.attachments_loading = false;
             self.sync_attachment_drawer();

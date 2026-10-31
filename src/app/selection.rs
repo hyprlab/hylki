@@ -85,7 +85,12 @@ impl AppModel {
     }
 
     /// `shown_copy`, held to one folder.
-    fn shown_copy_in(&self, account_id: u32, folder_id: u32, id: u32) -> Option<Message> {
+    pub(super) fn shown_copy_in(
+        &self,
+        account_id: u32,
+        folder_id: u32,
+        id: u32,
+    ) -> Option<Message> {
         let same =
             |m: &&Message| m.account_id == account_id && m.folder_id == folder_id && m.id == id;
         self.current

@@ -104,6 +104,19 @@ msgstr "Impostazioni"
 msgid "Show Accounts"
 msgstr "Mostra account"
 
+msgid "Right"
+msgstr "Destra"
+
+msgid "Below"
+msgstr ""
+
+msgid "Off"
+msgstr "Disattivato"
+
+#, fuzzy
+msgid "Reading Pane"
+msgstr "Lettura"
+
 msgid "Focus Mode"
 msgstr "Modalità focus"
 
@@ -887,6 +900,9 @@ msgstr "Modalità focus attiva/disattiva"
 msgid "Fullscreen on or off"
 msgstr "Modalità focus attiva/disattiva"
 
+msgid "Reading pane right of the list, below it, or off"
+msgstr ""
+
 msgid "Message zoom in or out"
 msgstr "Zoom del messaggio avanti o indietro"
 
@@ -1059,6 +1075,18 @@ msgstr "Cerca messaggi"
 
 msgid "Show or Hide the Sidebar"
 msgstr "Mostra o nascondi la barra laterale"
+
+#, fuzzy
+msgid "Reading Pane Right"
+msgstr "Lettura"
+
+#, fuzzy
+msgid "Reading Pane Below"
+msgstr "Lettura"
+
+#, fuzzy
+msgid "Reading Pane Off"
+msgstr "Lettura"
 
 msgid "Mail Accounts"
 msgstr "Account e-mail"
@@ -2014,9 +2042,6 @@ msgstr "Il servizio ha rifiutato la richiesta (errore {code})."
 msgid "Enter the LibreTranslate server's address in Settings → Translation."
 msgstr ""
 "Inserisci l'indirizzo del server LibreTranslate in Impostazioni → Traduzione."
-
-msgid "Off"
-msgstr "Disattivato"
 
 msgid "Choose a translation service in Settings → Translation first."
 msgstr "Scegli prima un servizio di traduzione in Impostazioni → Traduzione."
@@ -4703,9 +4728,6 @@ msgstr "Mostra contenuto remoto"
 msgid "Block remote content"
 msgstr "Blocca contenuto remoto"
 
-msgid "Received"
-msgstr "Ricevuto"
-
 msgid "Click to open this message"
 msgstr "Clicca per aprire questo messaggio"
 
@@ -5491,9 +5513,6 @@ msgstr "L'ultima cartella"
 
 msgid "Left"
 msgstr "Sinistra"
-
-msgid "Right"
-msgstr "Destra"
 
 msgid "1 line"
 msgstr "1 riga"
@@ -7447,6 +7466,13 @@ msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr ""
 
 #, fuzzy
+msgid "Fold quoted text"
+msgstr "Mostra testo citato"
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr ""
+
+#, fuzzy
 msgid "Undo Send"
 msgstr "Annulla"
 
@@ -7519,6 +7545,13 @@ msgstr "Interruttore Modalità chiara / scura"
 #, fuzzy
 msgid "Displays in the message header for each message."
 msgstr "Apre il messaggio con un inoltro avviato."
+
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Interruttore Modalità lettore"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
 
 msgid "Ctrl+0 returns to the default."
 msgstr ""
@@ -7919,6 +7952,9 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Received"
+#~ msgstr "Ricevuto"
 
 #, fuzzy
 #~ msgid "Search all folders but Trash and Junk"

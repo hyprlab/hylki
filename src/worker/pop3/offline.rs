@@ -60,7 +60,13 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
     /// connection. Each is written to the cache as it comes, so a request
     /// that cuts the step short loses only the message on its way.
     pub(super) async fn keep_offline_batch(&mut self) {
-        let Some(since) = self.account.offline_mail.since(crate::datefmt::now()) else {
+        // Copying to On This Computer (#552) wants the whole mailbox.
+        let Some(since) = self
+            .account
+            .offline_mail
+            .since(crate::datefmt::now())
+            .or(self.account.copy_to_local.then_some(i64::MIN))
+        else {
             return;
         };
         let Some(c) = self.cache.as_ref() else {
@@ -70,7 +76,14 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
         let account_id = self.account_id;
         let offline = &mut self.offline;
         let lost: Vec<u32> = c
-            .offline_missing(account_id, since, false, &[], BATCH + offline.tried_count())
+            .offline_missing(
+                account_id,
+                Some(since),
+                false,
+                self.account.copy_to_local,
+                &[],
+                BATCH + offline.tried_count(),
+            )
             .into_iter()
             .filter(|(path, uid)| !offline.was_tried(path, *uid))
             .map(|(_, uid)| uid)
@@ -196,6 +209,8 @@ mod tests {
             .build()
             .unwrap();
         let cache = Cache::in_memory().expect("cache");
+        // As the worker lists it on start: only listed folders are kept.
+        cache.save_folders(1, &super::super::pop3_folders(1));
         let events = RefCell::new(Vec::new());
         rt.block_on(async {
             // What the inbox holds already is cached, as a sync leaves it.

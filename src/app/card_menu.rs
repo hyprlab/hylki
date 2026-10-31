@@ -285,6 +285,19 @@ impl AppModel {
                 .icon("folder-symbolic")
                 .keys(MessageAction::MoveTo.keys(KeysOf::Main)),
             );
+            let s = sender.input_sender().clone();
+            let message = m.clone();
+            acts.push(
+                MenuEntry::new(i18n("Copy To…"), move || {
+                    let _ = s.send(AppMsg::ListCopyTo {
+                        messages: vec![message.clone()],
+                        offer_whole: false,
+                        x,
+                        y,
+                    });
+                })
+                .icon("edit-copy-symbolic"),
+            );
         }
         acts.push(item(RowAction::Archive, i18n("Archive"), "mail-archive"));
         // Snooze (#527): the card's message alone, as its other actions.

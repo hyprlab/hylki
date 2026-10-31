@@ -165,6 +165,11 @@ impl AppModel {
     pub(super) const THREAD_CACHE_MAX: usize = 8;
 
     pub(super) fn show_message(&mut self, message: Option<Message>, loading: bool) {
+        // A hidden reader draws nothing: a body arriving for the selected
+        // row would otherwise load a page no one sees (#475).
+        if !self.reader_shown() && message.is_some() {
+            return;
+        }
         let allow_remote = message.as_ref().is_some_and(|m| self.remote_allowed(m));
         let (account_name, account_color) = match message.as_ref() {
             Some(m) => (
@@ -173,10 +178,16 @@ impl AppModel {
             ),
             None => (None, None),
         };
-        let stored_check = message
-            .as_ref()
-            .and_then(|m| self.sender_cache.get(&body_key(m)))
-            .cloned();
+        let stored_check = message.as_ref().and_then(|m| {
+            let mut check = self.sender_cache.get(&body_key(m)).cloned()?;
+            self.vouchers.gate(Some(m.account_id), &mut check);
+            Some(check)
+        });
+        let sent = message
+            .iter()
+            .filter(|m| self.folder_kind(m.account_id, m.folder_id) == Some(FolderKind::Sent))
+            .map(|m| (m.account_id, m.id))
+            .collect();
         self.message_view.emit(MessageViewInput::Show {
             thread: message.into_iter().collect(),
             allow_remote,
@@ -185,7 +196,7 @@ impl AppModel {
             loading,
             primary: None, // a single message is its own primary
             folder_labels: HashMap::new(),
-            sent: Default::default(),
+            sent,
             // A single message is one small frame; it is never covered anyway.
             instant: true,
         });
@@ -220,6 +231,9 @@ impl AppModel {
     /// the top: a conversation can now include replies of your own pulled in from
     /// Sent, and one of those being the newest shouldn't retitle the reader.
     pub(super) fn show_thread(&mut self) {
+        if !self.reader_shown() {
+            return;
+        }
         let Some(head) = self.current_thread.first() else {
             return;
         };

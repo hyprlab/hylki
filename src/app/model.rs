@@ -145,6 +145,8 @@ pub(crate) struct AppModel {
     pub(super) accounts: Vec<Account>,
     /// account_id → that account's folders.
     pub(super) folders: HashMap<u32, Vec<Folder>>,
+    /// How each account's folders nest, as its worker reports it (#554).
+    pub(super) hierarchies: HashMap<u32, crate::models::FolderHierarchy>,
     /// Preferred sidebar account order (by email).
     pub(super) account_order: Vec<String>,
     /// Accounts whose folder list is collapsed in the sidebar (by email).
@@ -168,6 +170,17 @@ pub(crate) struct AppModel {
     /// The pane is too narrow for the left group beside the overflow button
     /// and the window controls at full size: the buttons draw narrower.
     pub(super) reader_compact: bool,
+    /// The same two, for the toolbar in the list header while the reading
+    /// pane is off (#475): the list's width decides them there.
+    pub(super) list_actions_collapsed: bool,
+    pub(super) list_compact: bool,
+    /// The list's width and the toolbar's fold widths in the list header.
+    pub(super) list_fold: std::rc::Rc<super::reading_pane::ListFold>,
+    /// The list and the reader's split, turned on its side for the reader
+    /// below the list (#475).
+    pub(super) mail_split: std::cell::OnceCell<gtk::Paned>,
+    /// A print with the reading pane off, waiting for its bodies.
+    pub(super) pending_print: Option<super::reading_pane::PendingPrint>,
     /// The right group stays in the ⋯ menu at every width.
     pub(super) toolbar_fold_right: bool,
     /// The collapsed header's ⋯ button — the anchor its menu pops from.
@@ -239,6 +252,10 @@ pub(crate) struct AppModel {
     /// in-memory body cache without a worker round-trip — so the verdict has to
     /// be held here or it would be lost by the time the reader needs it.
     pub(super) sender_cache: HashMap<BodyKey, Box<crate::models::SenderCheck>>,
+    /// Which server checks each account's mail, learned from the verdicts
+    /// as they arrive: `sender_cache` keeps a verdict as the message has
+    /// it, and the reader shows it only if this account's provider made it.
+    pub(super) vouchers: crate::mail::verify::Vouchers,
     /// (account_id, folder_id) → server-side unread count, accurate beyond the
     /// loaded window (from IMAP STATUS/SEARCH). Drives the sidebar badges.
     pub(super) folder_unread: HashMap<(u32, u32), u32>,
@@ -487,6 +504,8 @@ pub(crate) struct AppModel {
     pub(super) autostart: bool,
     /// The window opens fullscreen (#511).
     pub(super) start_fullscreen: bool,
+    /// The reader beside the list (#475); off, messages open in windows.
+    pub(super) reading_pane: config::ReadingPane,
     /// Tray icon (issue #116): the setting, the icon choice, and the running
     /// item while the setting is on.
     pub(super) tray_enabled: bool,
@@ -586,6 +605,8 @@ pub(crate) struct AppModel {
     pub(super) focus: config::FocusMode,
     /// The main menu's "Focus Mode" check item.
     pub(super) focus_action: gtk::gio::SimpleAction,
+    /// The main menu's "Reading Pane" check item, the setting's only switch.
+    pub(super) reading_pane_action: gtk::gio::SimpleAction,
     /// The message list header's foldable controls and the ⋯ that stands in
     /// for them in Focus Mode (set in init).
     pub(super) list_header_widgets: std::cell::OnceCell<ListHeaderWidgets>,
@@ -703,6 +724,8 @@ pub(crate) struct AppModel {
     pub(super) reader_switch: bool,
     /// The Light / Dark Mode switch is shown in the reader header (PR #386).
     pub(super) theme_switch: bool,
+    /// The account chip is shown in the reader header (Settings).
+    pub(super) account_chip: bool,
     /// Icons come from the desktop's icon theme, not Hylki's own (Settings).
     pub(super) desktop_icons: bool,
     /// What Reader View does when a message is opened (Settings).
@@ -772,6 +795,8 @@ pub(crate) struct AppModel {
     pub(super) signature_position: config::SignaturePosition,
     /// A `-- ` line goes above the signature in new messages.
     pub(super) signature_dashes: bool,
+    /// A reply's quote opens folded in the composer (#549).
+    pub(super) fold_quote: bool,
     /// The line above a reply's quote, "" for the default (#528).
     pub(super) reply_header: String,
     /// Undo Send delay in seconds, 0 for off (#434).
@@ -801,6 +826,9 @@ pub(crate) struct AppModel {
     pub(super) notify_count: usize,
     /// Accounts currently performing network activity (drives the spinner).
     pub(super) busy: HashSet<u32>,
+    /// Messages the accounts still have to copy to On This Computer (#552):
+    /// the spinner turns and the status line says so while there are any.
+    pub(super) copies_left: usize,
     pub(super) sidebar: Controller<Sidebar>,
     /// A second instance of the sidebar, always expanded, for the floating
     /// peek panel. It is fed the same contents and counts as the docked one

@@ -116,6 +116,8 @@ pub(crate) struct MessageView {
     reader_switch_shown: bool,
     /// Whether the header's Light / Dark Mode switch is shown (Settings).
     theme_switch_shown: bool,
+    /// Whether the header's account chip is shown (Settings).
+    account_chip_shown: bool,
     /// The scheme the user chose for a message with the header's Light /
     /// Dark Mode switch, dark (`true`) or light. The scheme itself is kept,
     /// not a flip of the theme, so a message turned light stays light when
@@ -291,7 +293,7 @@ pub(crate) struct MessageView {
     /// which never painted (#332): the next document loaded on screen is owed
     /// it, unless the reader has a place to keep by then.
     scroll_owed: bool,
-    /// The conversation's messages filed in Sent, for the folded bar.
+    /// The messages on screen filed in Sent, which wear a Sent chip.
     sent: std::collections::HashSet<(u32, u32)>,
     /// Cards opened or folded by hand: these win over the default for as
     /// long as they stay in the conversation on screen.

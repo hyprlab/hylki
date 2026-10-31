@@ -82,8 +82,8 @@ sudo curl -fsSLo /etc/yum.repos.d/hylki.repo https://hylki.hyprlab.co/rpm/hylki.
 sudo dnf install hylki
 ```
 
-The Debian and Ubuntu package, the Gentoo and NixOS community packages,
-direct `.flatpak` downloads and the beta channel are covered in
+The Debian and Ubuntu package, the AppImage, the Gentoo and NixOS community
+packages, direct `.flatpak` downloads and the beta channel are covered in
 [docs/INSTALLING.md](docs/INSTALLING.md). To build Hylki
 yourself, see [docs/BUILDING.md](docs/BUILDING.md).
 

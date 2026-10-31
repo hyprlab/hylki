@@ -68,9 +68,10 @@ pub(super) fn classify_with_source(
     // The other roles go by name only where a server keeps them: at the top,
     // or one level down under INBOX (Dovecot, Courier) or a bracketed
     // container ([Gmail]). A `Sent` deeper in an archive is the user's own.
+    // By the server's delimiter only; a flat server (NIL) has no levels.
     let parts: Vec<&str> = match delimiter {
         Some(d) if !d.is_empty() => path.split(d).collect(),
-        _ => path.split(['/', '.']).collect(),
+        _ => vec![path],
     };
     let placed = match parts.as_slice() {
         [_] => true,
@@ -118,14 +119,31 @@ pub(super) fn display_name(path: &str, delimiter: Option<&str>) -> String {
     if path.eq_ignore_ascii_case("inbox") {
         return i18n("Inbox");
     }
+    // A flat server's (NIL) is the whole name, whatever it holds (#554).
     let leaf = match delimiter {
         Some(d) if !d.is_empty() => path.rsplit(d).next().unwrap_or(path),
-        _ => path.rsplit(['/', '.']).next().unwrap_or(path),
+        _ => path,
     };
     // Split first, decode second: the delimiter is ASCII and modified UTF-7
     // never produces one inside an escaped run (that is why `,` stands in for
     // `/`), so the leaf is always a whole name (issue #1).
     crate::mail::mutf7::decode(leaf)
+}
+
+/// Put the app's folder list back as the server last listed it, after a
+/// folder change the server refused: the app drew the change before
+/// sending it (#554).
+pub(super) fn restore_folders(
+    cache: Option<&crate::cache::Cache>,
+    account_id: u32,
+    emit: &impl Fn(WorkerEvent),
+) {
+    if let Some(folders) = cache
+        .map(|c| c.load_folders(account_id))
+        .filter(|f| !f.is_empty())
+    {
+        emit(WorkerEvent::Folders(folders));
+    }
 }
 
 /// Put a folder listing in the order Hylki keeps and number it 1..n:
@@ -163,6 +181,7 @@ mod tests {
             path: path.to_string(),
             kind,
             unread: 0,
+            childless: false,
         }
     }
 
@@ -257,6 +276,7 @@ mod tests {
             path: path.into(),
             kind,
             unread: 0,
+            childless: false,
         };
         let list = vec![
             (folder("INBOX", FolderKind::Inbox), 40),
@@ -342,10 +362,13 @@ mod tests {
         ] {
             assert_eq!(kind(name, Some("/")), want, "{name}");
         }
-        // No delimiter (or an empty one): both `/` and `.` split levels.
-        assert_eq!(kind("INBOX.Sent", None), FolderKind::Sent);
-        assert_eq!(kind("INBOX/Sent", Some("")), FolderKind::Sent);
-        assert_eq!(kind("a.b.Sent", None), FolderKind::Custom);
+        // Only the server's delimiter splits levels (#554): on a flat
+        // server "INBOX.Sent" is one whole name, a folder of the user's.
+        assert_eq!(kind("INBOX.Sent", Some(".")), FolderKind::Sent);
+        assert_eq!(kind("INBOX.Sent", None), FolderKind::Custom);
+        assert_eq!(kind("INBOX/Sent", Some("")), FolderKind::Custom);
+        assert_eq!(kind("a.b.Sent", Some(".")), FolderKind::Custom);
+        assert_eq!(kind("a.Sent", Some("/")), FolderKind::Custom);
         // A bracketed container, not only Gmail's, places a role.
         assert_eq!(kind("[Mail]/Trash", Some("/")), FolderKind::Trash);
         assert_eq!(kind("Mail/Trash", Some("/")), FolderKind::Custom);
@@ -371,10 +394,12 @@ mod tests {
     }
 
     #[test]
-    fn display_name_without_a_delimiter_splits_on_slash_and_dot() {
+    fn display_name_splits_only_on_the_servers_delimiter() {
         assert_eq!(display_name("inbox", None), "Inbox");
-        assert_eq!(display_name("a.b/c", None), "c");
+        assert_eq!(display_name("a.b/c", None), "a.b/c");
+        assert_eq!(display_name("a.b/c", Some("/")), "c");
         assert_eq!(display_name("a.b", Some("/")), "a.b");
-        assert_eq!(display_name("a/b.c", Some("")), "c");
+        assert_eq!(display_name("a/b.c", Some(".")), "c");
+        assert_eq!(display_name("a/b.c", Some("")), "a/b.c");
     }
 }

@@ -60,6 +60,9 @@ pub(super) struct StateFile {
     /// Message-list pane width in px (#28 — it reset every launch).
     #[serde(default = "default_list_pane_width")]
     pub(super) list_pane_width: i32,
+    /// The list's height with the reader below it (#475).
+    #[serde(default = "default_list_pane_height")]
+    list_pane_height: i32,
     /// Contacts view: the contact-list pane's width in px.
     #[serde(default = "default_contacts_pane_width")]
     contacts_pane_width: i32,
@@ -145,6 +148,10 @@ fn default_about_height() -> i32 {
 
 pub(super) fn default_list_pane_width() -> i32 {
     350
+}
+
+fn default_list_pane_height() -> i32 {
+    320
 }
 
 fn default_contacts_pane_width() -> i32 {
@@ -502,6 +509,15 @@ pub(crate) fn load_list_pane_width() -> i32 {
 /// Persist the message-list pane's width (#28).
 pub(crate) fn save_list_pane_width(width: i32) {
     update_state(|s| s.list_pane_width = width.clamp(324, 4000));
+}
+
+/// The list's height with the reader below it (#475).
+pub(crate) fn load_list_pane_height() -> i32 {
+    load_state().list_pane_height.clamp(120, 4000)
+}
+
+pub(crate) fn save_list_pane_height(height: i32) {
+    update_state(|s| s.list_pane_height = height.clamp(120, 4000));
 }
 
 /// The contacts view's remembered list-pane width (280 is also its floor).

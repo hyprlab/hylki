@@ -2,6 +2,62 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.46.0
+
+### New features:
+
+- An AppImage for x86_64 and ARM64, updating from hylki.hyprlab.co - (#235)
+- The RPM and Debian package for ARM64
+- Snooze, with Snoozed in the unified section - (#527, #542)
+- Read receipts: answered, requested, and shown on sent mail - (#520)
+- Search finds the words in a message's text, and on the server - (#509)
+- Mail kept offline for a chosen period - (#536)
+- Remote content cached, and loaded ahead if asked - (#474)
+- Names from Contacts on mail - (#541)
+- Fullscreen on F11, in the main menu, and at start - (#511)
+- The quote in a reply or forward folded behind ••• - (#549)
+- A setting to hide the account in the message header, by @valentin-morice - (#546)
+- A lone message card folds and selects, with star, attachment and Sent marks
+- A search for other people's OpenPGP keys - (#432)
+- Filters forward, mark as read and delete, by @fsoft72 - (#521)
+- The arrow keys open and fold conversations in the list - (#540)
+- A date range in the sort and filter popover
+- The month named while the list's scrollbar is dragged
+- A message in a conversation can be dragged to a folder
+- Zoom in the rich text composer, and a default zoom for new messages - (#535)
+- A line of your own above a quoted reply - (#528)
+- A countdown line in the Undo Send toast, by @fsoft72 - (#534)
+- Sign and Encrypt shown in the accent color while they are on
+- Keys beside the entries of a message's menus
+- Spam in the reader toolbar's left group, and the right group folded into ⋯
+- Single-key shortcuts on for a new install
+- The find bar can open under the message - (#392)
+
+### Fixes:
+
+- a black window on an X server without shared memory - (#547)
+- the signature in a slightly different font from the message - (#548)
+- the count in the sidebar's unread chip sitting high, by @valentin-morice - (#545)
+- stars and read state changed on another device stuck on older mail - (#532)
+- right-to-left mail and composer text - (#524)
+- the line above a quoted reply always in English - (#528)
+- the address menu in the reader always in English - (#529)
+- the account chip hard to read in a pale account color - (#530)
+- Ctrl or Shift and a click on a card selecting only that card
+- deleting several selected cards deleting the whole conversation
+- a click on a message's text not selecting its card
+- the keyboard left in the message list after closing the find bar - (#392)
+- a picked LDAP directory showing nobody - (#307)
+- the window buttons pushed off a narrow reader
+- a sent reply's card listing its attachments only once back from Sent
+- Tab stuck in the composer after the body
+
+### Translations:
+
+- German, complete, by @samuel-edlmeier
+- French by @frenchy82
+- Portuguese and Brazilian Portuguese by @somepaulo
+
 ## What's new in 1.46.0-beta.5
 
 ### New features:

@@ -160,6 +160,10 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ),
             ("Ctrl+Shift+F", i18n_noop("Focus Mode on or off")),
             ("F11", i18n_noop("Fullscreen on or off")),
+            (
+                "Ctrl+Alt+1  /  2  /  3",
+                i18n_noop("Reading pane right of the list, below it, or off"),
+            ),
             ("Ctrl++  /  Ctrl+-", i18n_noop("Message zoom in or out")),
             ("Ctrl+0", i18n_noop("Message zoom back to the default")),
             ("Ctrl+,", i18n_noop("Settings")),
@@ -320,6 +324,15 @@ impl AppModel {
         });
         add(i18n("Show or Hide the Sidebar"), &action, "", || {
             AppMsg::ToggleSidebar
+        });
+        add(i18n("Reading Pane Right"), &action, "Ctrl+Alt+1", || {
+            AppMsg::SetReadingPane(crate::config::ReadingPane::Right)
+        });
+        add(i18n("Reading Pane Below"), &action, "Ctrl+Alt+2", || {
+            AppMsg::SetReadingPane(crate::config::ReadingPane::Below)
+        });
+        add(i18n("Reading Pane Off"), &action, "Ctrl+Alt+3", || {
+            AppMsg::SetReadingPane(crate::config::ReadingPane::Off)
         });
         add(i18n("Settings"), &action, "Ctrl+,", || AppMsg::OpenSettings);
         add(i18n("Mail Accounts"), &action, "", || AppMsg::OpenAccounts);

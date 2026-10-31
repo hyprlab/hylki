@@ -91,6 +91,45 @@ pub(crate) enum Protocol {
     /// session resource is found at `/.well-known/jmap`; sending goes
     /// through the server too, so the SMTP fields are unused.
     Jmap,
+    /// On This Computer (#552): folders kept in a Maildir tree on this
+    /// computer ([`local_mail_dir`]), with no server and no sending. There
+    /// is one at most, known by [`LOCAL_ACCOUNT`] in place of an address.
+    Local,
+}
+
+/// What an On This Computer account has in its `email` field, the key
+/// every account is found by: it has no address of its own.
+pub(crate) const LOCAL_ACCOUNT: &str = "local";
+
+/// Where an On This Computer account keeps its folders.
+pub(crate) fn local_mail_dir() -> Option<PathBuf> {
+    data_base().map(|d| d.join("hylki").join("local-mail"))
+}
+
+/// A new On This Computer account (#552). Its mail is kept whole on disk,
+/// so the cache keeps everything it renders, as for an account keeping all
+/// its mail offline; and mail filed away is not new mail, so it stays out
+/// of All Inboxes until asked.
+pub(crate) fn local_account() -> AccountConfig {
+    let name = crate::i18n::i18n("On This Computer");
+    AccountConfig {
+        label: Some(name.clone()),
+        name,
+        email: LOCAL_ACCOUNT.to_string(),
+        protocol: Protocol::Local,
+        imap_port: 0,
+        smtp_port: 0,
+        offline_mail: OfflineMail::All,
+        in_unified: false,
+        ..blank_account()
+    }
+}
+
+impl AccountConfig {
+    /// Whether this is the On This Computer account.
+    pub(crate) fn is_local(&self) -> bool {
+        self.protocol == Protocol::Local
+    }
 }
 
 /// How an account's servers are secured, as GNOME Online Accounts records
@@ -303,6 +342,10 @@ pub(crate) struct AccountConfig {
     /// Whether that mail's attachments are kept too.
     #[serde(default, skip_serializing_if = "is_false")]
     pub(crate) offline_attachments: bool,
+    /// Every message is copied to On This Computer too (#552), into a
+    /// folder named after the account.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub(crate) copy_to_local: bool,
     /// The OpenPGP key (fingerprint) that signs mail from this account and
     /// opens what is encrypted to it (#133); `None` = the key whose address
     /// matches.
@@ -576,6 +619,7 @@ pub(crate) fn blank_account() -> AccountConfig {
         clean_lists_days: 0,
         offline_mail: Default::default(),
         offline_attachments: false,
+        copy_to_local: false,
         pgp_key: None,
         in_unified: true,
         folder_sort: None,

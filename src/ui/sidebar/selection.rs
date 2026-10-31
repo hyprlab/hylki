@@ -472,8 +472,11 @@ impl Sidebar {
             .iter()
             .find(|s| s.account.id == account_id)
             .map(|s| {
-                let nest = nests_in_inbox(&s.folders);
-                s.folders.iter().filter(|f| is_main_row(f, nest)).count()
+                let nest = nests_in_inbox(&s.folders, &s.hierarchy);
+                s.folders
+                    .iter()
+                    .filter(|f| is_main_row(f, nest, &s.hierarchy))
+                    .count()
             })
             .unwrap_or(0)
     }

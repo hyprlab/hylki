@@ -429,7 +429,7 @@ fn drop_stale_tables(conn: &Connection, version: i64) {
 /// each is added in place rather than dropping the message index, which
 /// would cost every user a full re-sync; the error when a column is already
 /// there is the expected outcome, not a problem.
-const ADDED_COLUMNS: [&str; 15] = [
+const ADDED_COLUMNS: [&str; 18] = [
     // The list preview.
     "ALTER TABLE messages ADD COLUMN preview TEXT NOT NULL DEFAULT ''",
     // Send Later (#145): when a queued message is due; NULL sends at once.
@@ -470,6 +470,13 @@ const ADDED_COLUMNS: [&str; 15] = [
     // And the read receipt asked for (#520). A check stored before has
     // none, so mail that arrived earlier never asks.
     "ALTER TABLE sender_checks ADD COLUMN receipt TEXT NOT NULL DEFAULT ''",
+    // And whose verdict it is (VIREO-11). A RENDER_VERSION bump came with
+    // them, so no row is left without.
+    "ALTER TABLE sender_checks ADD COLUMN authority TEXT",
+    "ALTER TABLE sender_checks ADD COLUMN from_domain TEXT NOT NULL DEFAULT ''",
+    // And whether a folder can hold others (#554): a cached listing reads
+    // as yes until the server lists it again.
+    "ALTER TABLE folders ADD COLUMN childless INTEGER NOT NULL DEFAULT 0",
 ];
 
 /// The cleanups run at every open, whatever the version.

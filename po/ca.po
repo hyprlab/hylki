@@ -105,6 +105,19 @@ msgstr "Paràmetres"
 msgid "Show Accounts"
 msgstr "Mostra els comptes"
 
+msgid "Right"
+msgstr "Dreta"
+
+msgid "Below"
+msgstr ""
+
+msgid "Off"
+msgstr "Desactivat"
+
+#, fuzzy
+msgid "Reading Pane"
+msgstr "Lectura"
+
 msgid "Focus Mode"
 msgstr "Mode d'enfocament"
 
@@ -867,6 +880,9 @@ msgstr "Activa o desactiva el mode d'enfocament"
 msgid "Fullscreen on or off"
 msgstr "Activa o desactiva el mode d'enfocament"
 
+msgid "Reading pane right of the list, below it, or off"
+msgstr ""
+
 msgid "Message zoom in or out"
 msgstr "Amplia o redueix el missatge"
 
@@ -1020,6 +1036,18 @@ msgstr "Cerca missatges"
 
 msgid "Show or Hide the Sidebar"
 msgstr "Mostra o amaga la barra lateral"
+
+#, fuzzy
+msgid "Reading Pane Right"
+msgstr "Lectura"
+
+#, fuzzy
+msgid "Reading Pane Below"
+msgstr "Lectura"
+
+#, fuzzy
+msgid "Reading Pane Off"
+msgstr "Lectura"
 
 msgid "Mail Accounts"
 msgstr "Comptes de correu"
@@ -1966,9 +1994,6 @@ msgstr "El servei ha refusat la sol·licitud (error {code})."
 msgid "Enter the LibreTranslate server's address in Settings → Translation."
 msgstr ""
 "Introdueix l'adreça del servidor LibreTranslate a Paràmetres → Traducció."
-
-msgid "Off"
-msgstr "Desactivat"
 
 msgid "Choose a translation service in Settings → Translation first."
 msgstr "Tria primer un servei de traducció a Paràmetres → Traducció."
@@ -4537,9 +4562,6 @@ msgstr "Mostra el contingut remot"
 msgid "Block remote content"
 msgstr "Bloca el contingut remot"
 
-msgid "Received"
-msgstr "Rebut"
-
 msgid "Click to open this message"
 msgstr "Fes clic per obrir aquest missatge"
 
@@ -5314,9 +5336,6 @@ msgstr "L'última carpeta"
 
 msgid "Left"
 msgstr "Esquerra"
-
-msgid "Right"
-msgstr "Dreta"
 
 msgid "1 line"
 msgstr "1 línia"
@@ -7223,6 +7242,13 @@ msgstr "Línia separadora a sobre de la signatura"
 msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr "La línia estàndard «-- », que altres aplicacions de correu reconeixen."
 
+#, fuzzy
+msgid "Fold quoted text"
+msgstr "Mostra el text citat"
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr ""
+
 msgid "Undo Send"
 msgstr "Desfés l'enviament"
 
@@ -7291,6 +7317,14 @@ msgstr "Interruptor de mode clar / fosc"
 
 msgid "Displays in the message header for each message."
 msgstr "Es mostra a l'encapçalament de cada missatge."
+
+#, fuzzy
+msgid "Show account in message header"
+msgstr ""
+"Mostra l'interruptor de la vista de lector a l'encapçalament del missatge"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
 
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 torna al valor per defecte."
@@ -7685,6 +7719,9 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Received"
+#~ msgstr "Rebut"
 
 #~ msgid "Search all folders but Trash and Junk"
 #~ msgstr "Cerca a totes les carpetes menys la paperera i la brossa"

@@ -51,6 +51,10 @@ pub(crate) enum AccountsInput {
     /// The app's live folder lists per account email (for Special Folders).
     SetFolderChoices(std::collections::HashMap<String, Vec<(String, String)>>),
     AddAccount,
+    /// Add the On This Computer account (#552).
+    AddLocal,
+    /// Pick a Maildir tree, or with `true` mbox files, to import into it.
+    ImportLocal(bool),
     EditAccount(usize),
     /// Open the editor for the account with this address (the sidebar's
     /// "Account Settings…"), leaving another account's editor if one is up.
@@ -230,6 +234,12 @@ pub(crate) enum AccountsOutput {
     },
     Removed {
         email: String,
+    },
+    /// Import mail into On This Computer (#552): Maildir trees, or with
+    /// `mbox`, mbox files.
+    ImportMail {
+        sources: Vec<std::path::PathBuf>,
+        mbox: bool,
     },
     /// New display order, as account emails.
     Reordered(Vec<String>),

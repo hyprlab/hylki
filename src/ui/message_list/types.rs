@@ -529,6 +529,13 @@ pub(crate) enum MessageListOutput {
         x: f64,
         y: f64,
     },
+    /// "Copy To…" from a row's menu (#552): as `MoveTo`, for a copy.
+    CopyTo {
+        messages: Vec<Message>,
+        offer_whole: bool,
+        x: f64,
+        y: f64,
+    },
     /// A choice from the Snooze menu for these messages (#527).
     Snooze {
         messages: Vec<Message>,

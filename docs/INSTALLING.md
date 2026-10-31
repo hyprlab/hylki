@@ -50,8 +50,8 @@ package adds the repository itself, so an RPM installed from a download
 keeps updating too; it is the same `/etc/yum.repos.d/hylki.repo`, kept if you
 edit it (set `enabled=0` to stop updates from it).
 
-The RPM targets current Fedora releases (44+) on x86_64 only. On ARM, or on
-anything older, use the Flatpak or [build from source](BUILDING.md).
+The RPM targets current Fedora releases (44+) on x86_64 and aarch64. On anything older, use the Flatpak or
+[build from source](BUILDING.md).
 
 ## Debian and Ubuntu
 
@@ -70,14 +70,40 @@ dnf repository's, so there is no key to import separately.
 
 The `.deb` is also attached to each
 [release](https://github.com/hyprlab/hylki/releases/latest); install it with
-`sudo apt install ./hylki_*_amd64.deb`, which fetches its dependencies. The
+`sudo apt install ./hylki_*_amd64.deb` (`_arm64.deb` on ARM), which fetches
+its dependencies. The
 package adds the repository itself, as the RPM does: the same
 `/etc/apt/sources.list.d/hylki.sources`, kept if you edit it (add a line
 `Enabled: no` to stop updates from it).
 
 The package needs libadwaita 1.7: Debian 13 (trixie) and later, or Ubuntu
-25.10 and later, on x86_64 only. Ubuntu 24.04 LTS and the distributions built
+25.10 and later, on x86_64 and arm64. Ubuntu 24.04 LTS and the distributions built
 on it, such as Linux Mint 22, have an older libadwaita; use the Flatpak there.
+
+## AppImage
+
+One file that runs on any distribution, for **x86_64 and aarch64 (ARM64)**.
+Download the one matching
+`uname -m`, make it executable and run it:
+
+```sh
+curl -fLO https://hylki.hyprlab.co/download/Hylki-x86_64.AppImage
+chmod +x Hylki-x86_64.AppImage
+./Hylki-x86_64.AppImage
+```
+
+On ARM, the file is `Hylki-aarch64.AppImage`. Each release carries both as
+well.
+
+Each AppImage knows where its updates come from: add it to
+[Gear Lever](https://flathub.org/apps/it.mijorus.gearlever) or
+AppImageLauncher, or run `appimageupdatetool` on it, and it updates from
+hylki.hyprlab.co, fetching only the parts that changed.
+
+The AppImage runs without a sandbox, like the RPM and the Debian package, and
+shares their settings (`~/.config/hylki`) and cached mail. OpenPGP uses the system's `gpg`, which the AppImage
+does not carry. When the system's fonts hang the message view (#296), it falls
+back to fonts it carries.
 
 ## Gentoo
 
@@ -106,9 +132,19 @@ Adding it to a NixOS configuration is covered in its README.
 
 ## Beta channel
 
-Flatpak betas install alongside the stable app as a separate application
-(`co.hyprlab.Hylki.Beta`), with their own settings and cache. See
-[hylki.hyprlab.co](https://hylki.hyprlab.co) for the repo address.
+Betas come in every format the stable release does, on **x86_64 and aarch64
+(ARM64)**: Flatpak, RPM and Debian packages, and an AppImage.
+
+The Flatpak beta installs alongside the stable app as a separate application
+(`co.hyprlab.Hylki.Beta`) and shares its accounts, settings and cached mail:
+
+```sh
+flatpak install --user --from https://hylki.hyprlab.co/flatpak/co.hyprlab.Hylki.Beta.flatpakref
+```
+
+Each beta release also carries `Hylki-Beta-x86_64.flatpak` and
+`Hylki-Beta-aarch64.flatpak` for a direct download. To remove the beta, run
+`flatpak uninstall co.hyprlab.Hylki.Beta`; the stable app is untouched.
 
 On Fedora, betas also come as RPMs from a beta dnf repository. They replace the
 installed `hylki` package rather than sitting beside it, and share its settings.
@@ -138,6 +174,18 @@ sudo apt update && sudo apt install hylki
 To leave the betas, set `Enabled: no` again, then run
 `sudo apt install hylki/stable` to return to the newest stable; apt asks
 before it moves to an older version.
+
+The beta AppImage is the beta app, "Hylki (beta)" with its own launcher, and
+updates from the beta channel. Like the packages, it shares the settings and
+mail of a stable AppImage, RPM or Debian package:
+
+```sh
+curl -fLO https://hylki.hyprlab.co/download/beta/Hylki-Beta-x86_64.AppImage
+chmod +x Hylki-Beta-x86_64.AppImage
+```
+
+On ARM, the file is `Hylki-Beta-aarch64.AppImage`. To leave the betas, delete
+it and use the stable AppImage.
 
 ## Other distributions
 

@@ -28,9 +28,7 @@ impl MessageWindow {
             Shortcut::PrevInThread if conversation => {
                 self.view.emit(MessageViewInput::StepCard(-1))
             }
-            Shortcut::FoldAll(folded) if conversation => {
-                self.view.emit(MessageViewInput::FoldAll(folded))
-            }
+            Shortcut::FoldAll(folded) => self.view.emit(MessageViewInput::FoldAll(folded)),
             Shortcut::Star => input(MessageWindowInput::ToggleStar),
             Shortcut::ToggleRead => input(MessageWindowInput::ToggleRead),
             Shortcut::Delete => input(MessageWindowInput::Delete),

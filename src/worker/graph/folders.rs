@@ -21,6 +21,46 @@ pub(super) struct GraphFolder {
     pub(super) total: u32,
 }
 
+/// Move the folder `gid` under `destination` (a folder's id, or
+/// "msgfolderroot" for the top), rename it to `name`, or both: Graph moves
+/// with one call and renames with another (#554).
+pub(super) fn graph_move_folder(
+    token: &str,
+    base: &str,
+    gid: &str,
+    destination: Option<&str>,
+    name: Option<&str>,
+) -> Result<(), String> {
+    let mut id = gid.to_string();
+    if let Some(dest) = destination {
+        let url = format!("{base}/me/mailFolders/{id}/move");
+        let moved = graph_send_json(
+            token,
+            "POST",
+            &url,
+            &serde_json::json!({ "destinationId": dest }),
+        )?;
+        // The moved folder, which may come back under a new id.
+        if let Some(new_id) = moved["id"].as_str() {
+            id = new_id.to_string();
+        }
+    }
+    if let Some(name) = name {
+        let url = format!("{base}/me/mailFolders/{id}");
+        graph_send_json(
+            token,
+            "PATCH",
+            &url,
+            &serde_json::json!({ "displayName": name }),
+        )?;
+    }
+    Ok(())
+}
+
+/// The most folders the listing takes, and how deep it goes.
+const FOLDERS_MAX: usize = 5000;
+const DEPTH_MAX: u8 = 64;
+
 /// List the account's mail folders (tree flattened, well-known roles mapped),
 /// sorted and id-numbered exactly like the IMAP path's folder list.
 pub(super) fn graph_list_folders(
@@ -53,11 +93,13 @@ pub(super) fn graph_list_folders(
     let roots = graph_paged(
         token,
         &format!("{GRAPH_BASE}/me/mailFolders?$top=100&{SELECT}"),
-        200,
+        FOLDERS_MAX,
     )?;
 
-    // Flatten the tree breadth-first; paths join with '/' like the sidebar's
-    // hierarchy expects. Depth and total are capped defensively.
+    // Flatten the tree; paths join with '/' like the sidebar's hierarchy
+    // expects, a '/' in a name written as its look-alike (#554). Capped
+    // against a runaway answer, well past any real mailbox: a folder made
+    // deeper than the listing reaches would vanish from the sidebar.
     let mut out: Vec<GraphFolder> = Vec::new();
     // Graph folder id → (every message, unread): the chip picks one once the
     // kinds are final (a manual Drafts assignment counts every draft).
@@ -68,7 +110,7 @@ pub(super) fn graph_list_folders(
         let Some(gid) = v["id"].as_str() else {
             continue;
         };
-        let name = v["displayName"].as_str().unwrap_or("?").to_string();
+        let name = crate::models::slashed_leaf(v["displayName"].as_str().unwrap_or("?"));
         let path = if prefix.is_empty() {
             name.clone()
         } else {
@@ -86,11 +128,14 @@ pub(super) fn graph_list_folders(
             }
             None => FolderKind::Custom,
         };
-        if v["childFolderCount"].as_i64().unwrap_or(0) > 0 && depth < 4 && out.len() < 400 {
+        if v["childFolderCount"].as_i64().unwrap_or(0) > 0
+            && depth < DEPTH_MAX
+            && out.len() < FOLDERS_MAX
+        {
             if let Ok(children) = graph_paged(
                 token,
                 &format!("{GRAPH_BASE}/me/mailFolders/{gid}/childFolders?$top=100&{SELECT}"),
-                200,
+                FOLDERS_MAX,
             ) {
                 queue.extend(children.into_iter().map(|c| (c, path.clone(), depth + 1)));
             }
@@ -109,7 +154,8 @@ pub(super) fn graph_list_folders(
                 name,
                 path,
                 kind,
-                unread: 0, // filled in below, once the kinds are final
+                unread: 0, // filled in below, once the kinds are final,
+                childless: false,
             },
         });
     }

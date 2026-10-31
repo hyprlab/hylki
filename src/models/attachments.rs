@@ -176,6 +176,9 @@ pub(crate) struct AttachmentMeta {
 pub(crate) struct GalleryItem {
     pub(crate) account_id: u32,
     pub(crate) folder_path: String,
+    /// The folder's name as the sidebar shows it, from the account's
+    /// listing; empty for a folder no longer listed.
+    pub(crate) folder_name: String,
     pub(crate) uid: u32,
     pub(crate) name: String,
     /// Size in bytes as the server declared it, decoded.

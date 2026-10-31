@@ -251,6 +251,7 @@ fn english_folder_names_stay_as_the_server_has_them() {
         path: name.into(),
         kind,
         unread: 0,
+        childless: false,
     };
     let mut folders = vec![
         folder("Deleted Items", FolderKind::Trash),
@@ -358,6 +359,7 @@ fn assigned_drafts_folder_takes_the_kind_that_counts_every_draft() {
         path: path.to_string(),
         kind,
         unread: 0,
+        childless: false,
     };
     // A laposte.net-style listing: nothing detected as Drafts, and the
     // user assigned "Brouillons" under Special Folders.
@@ -394,6 +396,7 @@ fn templates_can_be_assigned_and_are_named_in_the_language() {
         path: path.to_string(),
         kind,
         unread: 0,
+        childless: false,
     };
     let mut folders = vec![
         f(1, "INBOX", FolderKind::Inbox),
@@ -417,6 +420,7 @@ fn plain_folder(path: &str, kind: FolderKind) -> Folder {
         path: path.to_string(),
         kind,
         unread: 0,
+        childless: false,
     }
 }
 
@@ -431,8 +435,19 @@ fn a_hidden_folder_takes_its_sub_folders_with_it() {
     ));
     assert!(!folder_is_hidden("Sync Issues Archive", Some("/"), &hidden));
     assert!(!folder_is_hidden("INBOX/Sync Issues", Some("/"), &hidden));
-    // Without a known delimiter, the usual three all count.
-    assert!(folder_is_hidden("Sync Issues.Conflicts", None, &hidden));
+    // Only the server's own delimiter makes a level (#554); a flat
+    // server has none.
+    assert!(folder_is_hidden(
+        "Sync Issues.Conflicts",
+        Some("."),
+        &hidden
+    ));
+    assert!(!folder_is_hidden(
+        "Sync Issues.Conflicts",
+        Some("/"),
+        &hidden
+    ));
+    assert!(!folder_is_hidden("Sync Issues.Conflicts", None, &hidden));
     assert!(!folder_is_hidden("Sync Issues Archive", None, &hidden));
 }
 

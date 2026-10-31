@@ -97,12 +97,22 @@ fn serve(answers: Vec<Answer>) -> (String, std::thread::JoinHandle<Vec<String>>)
             let mut line = String::new();
             reader.read_line(&mut line).expect("request line");
             let target = line.split_whitespace().nth(1).unwrap_or("").to_string();
+            let mut length = 0;
             loop {
                 let mut h = String::new();
                 if reader.read_line(&mut h).unwrap_or(0) == 0 || h.trim().is_empty() {
                     break;
                 }
+                if let Some((name, value)) = h.split_once(':') {
+                    if name.eq_ignore_ascii_case("content-length") {
+                        length = value.trim().parse().unwrap_or(0);
+                    }
+                }
             }
+            // The body read through, or a client still sending it meets a
+            // closed socket.
+            let mut body = vec![0; length];
+            let _ = std::io::Read::read_exact(&mut reader, &mut body);
             let hit = answers
                 .iter_mut()
                 .find(|a| a.as_ref().is_some_and(|a| target.contains(&a.key)))
@@ -466,6 +476,7 @@ fn the_offline_period_is_downloaded_message_by_message() {
                 path: "Inbox".into(),
                 kind: crate::models::FolderKind::Inbox,
                 unread: 0,
+                childless: false,
             },
             crate::models::Folder {
                 id: 2,
@@ -474,6 +485,7 @@ fn the_offline_period_is_downloaded_message_by_message() {
                 path: "Deleted Items".into(),
                 kind: crate::models::FolderKind::Trash,
                 unread: 0,
+                childless: false,
             },
         ],
     );
@@ -506,4 +518,40 @@ fn the_offline_period_is_downloaded_message_by_message() {
         .load_body(1, "Deleted Items", hash_uid("M7"))
         .is_none());
     assert!(offline.wait().is_some(), "the period is complete");
+}
+
+/// #554: a move goes first and the rename follows on the id the move gave
+/// back; a rename alone is one call; a refused move renames nothing.
+#[test]
+fn a_folder_moves_then_takes_its_new_name() {
+    use crate::worker::graph::folders::graph_move_folder;
+    let (origin, server) = serve(vec![
+        answer(
+            "/me/mailFolders/G1/move",
+            201,
+            serde_json::json!({ "id": "G9" }),
+        ),
+        answer("/me/mailFolders/G9", 200, serde_json::json!({ "id": "G9" })),
+    ]);
+    graph_move_folder("t", &origin, "G1", Some("msgfolderroot"), Some("a/b")).unwrap();
+    assert_eq!(
+        server.join().unwrap(),
+        ["/me/mailFolders/G1/move", "/me/mailFolders/G9"]
+    );
+
+    let (origin, server) = serve(vec![answer(
+        "/me/mailFolders/G1",
+        200,
+        serde_json::json!({ "id": "G1" }),
+    )]);
+    graph_move_folder("t", &origin, "G1", None, Some("New")).unwrap();
+    assert_eq!(server.join().unwrap(), ["/me/mailFolders/G1"]);
+
+    let (origin, server) = serve(vec![answer(
+        "/me/mailFolders/G1/move",
+        400,
+        serde_json::json!({ "error": { "message": "no" } }),
+    )]);
+    assert!(graph_move_folder("t", &origin, "G1", Some("P"), Some("New")).is_err());
+    assert_eq!(server.join().unwrap(), ["/me/mailFolders/G1/move"]);
 }

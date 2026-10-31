@@ -137,6 +137,8 @@ fn serve_api(
         account: "a1".into(),
         auth: "Bearer t".into(),
         quota: false,
+        top_level: true,
+        max_depth: None,
     };
     (s, handle)
 }

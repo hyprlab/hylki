@@ -448,3 +448,17 @@ fn notifications_can_be_disabled() {
     let p: PrivacyFile = toml::from_str("notifications = false").unwrap();
     assert!(!p.notifications);
 }
+
+#[test]
+fn reading_pane_reads_the_old_switch() {
+    use super::ReadingPane;
+    #[derive(serde::Deserialize)]
+    struct F {
+        reading_pane: ReadingPane,
+    }
+    let read = |s: &str| toml::from_str::<F>(s).unwrap().reading_pane;
+    assert_eq!(read("reading_pane = true"), ReadingPane::Right);
+    assert_eq!(read("reading_pane = false"), ReadingPane::Off);
+    assert_eq!(read("reading_pane = \"below\""), ReadingPane::Below);
+    assert_eq!(read("reading_pane = \"sideways\""), ReadingPane::Right);
+}

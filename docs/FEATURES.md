@@ -15,6 +15,11 @@ The full list. The [README](../README.md) carries a shorter one.
   Settings, IMAP and SMTP accounts and Microsoft 365 over Graph included.
   See [Configuration](DOCUMENTATION.md#gnome-online-accounts). Pausing an account's Mail
   service in GNOME Settings pauses it here.
+- **On This Computer:** folders kept on this computer, not on a server, for
+  an archive of mail moved or copied in from any account, copied
+  automatically from an account that asks for it, or imported from
+  Evolution's local folders, Dovecot or mbox files. Stored as Maildir, the
+  layout Dovecot uses. See [Configuration](DOCUMENTATION.md#on-this-computer).
 - **Per-alias SMTP:** each address on an account can send through its own
   server and credentials.
 - **Any From address:** type a name and address for one message, such as a
@@ -37,7 +42,8 @@ The full list. The [README](../README.md) carries a shorter one.
   conversation, and an expanded conversation shows your replies from Sent
   and its archived messages alongside the folder's own.
 - **Moving mail between accounts:** Move To lists every account's folders,
-  and mail dragged onto another account's folder goes there too.
+  and mail dragged onto another account's folder goes there too. Copy To
+  stores a copy anywhere and leaves the original.
 - **Full folder management:** create, rename, move, reorder and delete
   folders, assign the special roles (Drafts, Sent, Junk, Trash, Archive),
   and hide the ones you never open. An Exchange server's calendar, contacts
@@ -103,6 +109,9 @@ The full list. The [README](../README.md) carries a shorter one.
   by handle or menu, with an optional recompress on send.
 - **Spell check** in one language or several at once, through the system
   dictionaries.
+- **Grammar and style checking** with Harper or LanguageTool, downloaded
+  from Settings in one click and run on this computer, or a LanguageTool
+  server or account, each paragraph in its own language.
 - **Undo and redo** across the whole message.
 - **Quote folding:** a long quoted original folds away, interleaved replies
   intact.

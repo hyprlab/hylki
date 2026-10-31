@@ -99,6 +99,17 @@ fn message_list_output_msg(out: MessageListOutput) -> AppMsg {
             x,
             y,
         },
+        MessageListOutput::CopyTo {
+            messages,
+            offer_whole,
+            x,
+            y,
+        } => AppMsg::ListCopyTo {
+            messages,
+            offer_whole,
+            x,
+            y,
+        },
         MessageListOutput::SelectionCleared => AppMsg::ClearReader,
         MessageListOutput::OpenedByKey { already_open } => AppMsg::OpenedByKey { already_open },
         MessageListOutput::SearchActive(active) => AppMsg::SearchActive(active),

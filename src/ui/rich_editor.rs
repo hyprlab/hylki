@@ -11,6 +11,7 @@ mod context_menu;
 mod documents;
 mod files;
 mod fonts;
+mod grammar;
 mod scripts;
 mod setup;
 mod signature;
@@ -72,6 +73,9 @@ pub(super) struct RichEditor {
     /// whole new setting (#365). The submenu is only offered once a host
     /// has connected it ([`RichEditor::connect_spell_languages`]).
     spell_langs_cb: SpellLangsCallback,
+    /// Grammar checking (#452), off until a host turns it on with
+    /// [`RichEditor::check_grammar`].
+    grammar: grammar::GrammarState,
     /// The style manager's dark-notify handler that re-grounds the document
     /// on a live theme flip; disconnected when the last clone of the editor
     /// goes (the editor is a cloneable handle, so the guard is shared).
@@ -178,6 +182,20 @@ impl RichEditor {
     /// language (#365).
     pub(super) fn connect_spell_languages(&self, f: impl Fn(String) + 'static) {
         *self.spell_langs_cb.borrow_mut() = Some(Box::new(f));
+    }
+
+    /// Check the grammar and style of what is written, when Settings has a
+    /// LanguageTool server for it (#452): the composer's body, not a
+    /// signature.
+    pub(super) fn check_grammar(&self) {
+        grammar::switch_on(&self.webview, &self.grammar);
+    }
+
+    /// Send nothing for checking while `on`: a message that is to go out
+    /// encrypted keeps its text on this computer, as it does from
+    /// translation.
+    pub(super) fn pause_grammar(&self, on: bool) {
+        grammar::pause(&self.webview, &self.grammar, on);
     }
 
     /// What "Send as Attachment Instead" does with the lifted image: the
@@ -618,7 +636,7 @@ mod pinned_tests {
         assert_eq!(fnv(HISTORY_SCRIPT), (1287, 0x8e997368982bb599));
         assert_eq!(fnv(EMOJI_SCRIPT), (1621, 0x748b009b19f3f0ec));
         assert_eq!(fnv(LINES_SCRIPT), (5153, 0xb927290405c83fda));
-        assert_eq!(fnv(PASTE_SCRIPT), (40069, 0x7bd83b8987ac108a));
+        assert_eq!(fnv(PASTE_SCRIPT), (40419, 0xc68b9a6a876b9791));
     }
 
     #[test]

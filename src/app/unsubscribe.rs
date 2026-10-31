@@ -74,7 +74,7 @@ impl AppModel {
     /// address it writes to), else the account itself. Returns the send-as
     /// alias for the wire (`None` for the account) and the bare address.
     pub(super) fn unsubscribe_from(&self, message: &Message) -> (Option<String>, String) {
-        let Some(cfg) = self.account_config(message.account_id) else {
+        let Some(cfg) = self.account_config(self.sending_account(message)) else {
             return (None, String::new());
         };
         let recipients: Vec<String> = [&message.to, &message.cc]
@@ -337,7 +337,7 @@ impl AppModel {
         };
         let (from_alias, _) = self.unsubscribe_from(&message);
         let out = machine_message(
-            message.account_id,
+            self.sending_account(&message),
             from_alias,
             target.to,
             target.subject,

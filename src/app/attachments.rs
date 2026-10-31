@@ -23,7 +23,8 @@ use crate::ui::dialog::confirm_destructive;
 
 /// Remove downloaded mail older than `days` (#394), off the main thread;
 /// 0 keeps it all. An account keeping a period offline (#536) keeps that
-/// period, or the prune would remove what its download brings back.
+/// period, or the prune would remove what its download brings back, and
+/// On This Computer (#552) keeps it all, for the same reason.
 pub(super) fn prune_downloads(days: u32) {
     if days == 0 {
         return;
@@ -34,7 +35,14 @@ pub(super) fn prune_downloads(days: u32) {
         .unwrap_or_default()
         .iter()
         .enumerate()
-        .filter_map(|(i, a)| Some((i as u32 + 1, a.offline_mail.since(now)?)))
+        .filter_map(|(i, a)| {
+            let since = if a.is_local() {
+                Some(i64::MIN)
+            } else {
+                a.offline_mail.since(now)
+            };
+            Some((i as u32 + 1, since?))
+        })
         .collect();
     std::thread::spawn(move || {
         match crate::cache::Cache::open().and_then(|c| c.remove_downloaded_sparing(before, &keep)) {

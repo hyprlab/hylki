@@ -60,7 +60,11 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) emoji_clear_btn: gtk::Button,
     pub(in crate::ui::accounts) picture_row: adw::ActionRow,
     pub(in crate::ui::accounts) avatar_clear_btn: gtk::Button,
+    pub(in crate::ui::accounts) aliases_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) aliases_list: gtk::ListBox,
+    pub(in crate::ui::accounts) signatures_group: adw::PreferencesGroup,
+    pub(in crate::ui::accounts) syncing_group: adw::PreferencesGroup,
+    pub(in crate::ui::accounts) openpgp_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) sig_choice_row: adw::ComboRow,
     pub(in crate::ui::accounts) sig_name_row: adw::EntryRow,
     pub(in crate::ui::accounts) sig_default_row: adw::SwitchRow,
@@ -71,6 +75,8 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) clean_lists_row: adw::ComboRow,
     pub(in crate::ui::accounts) offline_mail_row: adw::ComboRow,
     pub(in crate::ui::accounts) offline_attachments_row: adw::SwitchRow,
+    pub(in crate::ui::accounts) copy_local_row: adw::SwitchRow,
+    pub(in crate::ui::accounts) import_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) graph_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) graph_directory_row: adw::SwitchRow,
     pub(in crate::ui::accounts) directory_only_row: adw::SwitchRow,
@@ -521,6 +527,7 @@ impl EditorForm {
                 // from it. Each alias sends through this account's
                 // SMTP, or — for a forwarded mailbox whose provider
                 // would rewrite the sender — through its own.
+                #[name = "aliases_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Send-as aliases"),
                     set_description: Some(
@@ -553,6 +560,7 @@ impl EditorForm {
                     },
                 },
 
+                #[name = "signatures_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Signatures"),
                     set_description: Some(
@@ -621,6 +629,7 @@ impl EditorForm {
                 // Per-account push override (#91): some servers
                 // mishandle IDLE, and one bad account shouldn't
                 // cost the good ones their instant delivery.
+                #[name = "syncing_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Syncing"),
 
@@ -650,13 +659,47 @@ impl EditorForm {
                     // Mail downloaded ahead of being opened (#536).
                     #[name = "offline_mail_row"]
                     adw::ComboRow {
-                        set_title: &i18n("Keep mail offline"),
+                        set_title: &i18n("Keep mail cached"),
                         set_subtitle: &i18n("Leaves out Trash, Junk and Drafts."),
                     },
                     #[name = "offline_attachments_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Include attachments"),
                         set_subtitle: &i18n("Can consume a lot of hard drive space."),
+                    },
+                    // Every message copied to On This Computer (#552).
+                    #[name = "copy_local_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Copy mail to On This Computer"),
+                        set_subtitle: &i18n("Downloads copies of every message from every folder of this account to this computer (except Trash, Junk and Drafts) and stores them in On This Computer."),
+                    },
+                },
+
+                // On This Computer only (#552): mail from another
+                // program's folders.
+                #[name = "import_group"]
+                add = &adw::PreferencesGroup {
+                    set_title: &i18n("Import"),
+                    set_description: Some(i18n("Mail already here is not imported again.").as_str()),
+                    set_visible: false,
+
+                    adw::ActionRow {
+                        set_title: &i18n("Maildir folders"),
+                        set_subtitle: &i18n("Evolution's On This Computer, Dovecot and other Maildir trees."),
+                        add_suffix = &gtk::Button {
+                            set_label: &i18n("Choose…"),
+                            set_valign: gtk::Align::Center,
+                            connect_clicked => AccountsInput::ImportLocal(false),
+                        },
+                    },
+                    adw::ActionRow {
+                        set_title: &i18n("Mbox files"),
+                        set_subtitle: &i18n("Thunderbird's folders and other mbox files."),
+                        add_suffix = &gtk::Button {
+                            set_label: &i18n("Choose…"),
+                            set_valign: gtk::Align::Center,
+                            connect_clicked => AccountsInput::ImportLocal(true),
+                        },
                     },
                 },
 
@@ -802,6 +845,7 @@ impl EditorForm {
 
                 // OpenPGP (#133): which of the user's keys this
                 // account signs and decrypts with.
+                #[name = "openpgp_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("OpenPGP"),
                     set_description: Some(
@@ -894,7 +938,11 @@ impl EditorForm {
             emoji_clear_btn,
             picture_row,
             avatar_clear_btn,
+            aliases_group,
             aliases_list,
+            signatures_group,
+            syncing_group,
+            openpgp_group,
             sig_choice_row,
             sig_name_row,
             sig_default_row,
@@ -905,6 +953,8 @@ impl EditorForm {
             clean_lists_row,
             offline_mail_row,
             offline_attachments_row,
+            copy_local_row,
+            import_group,
             graph_group,
             graph_directory_row,
             directory_only_row,

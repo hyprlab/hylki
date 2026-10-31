@@ -20,6 +20,7 @@ mod chips;
 mod choices;
 mod composing;
 mod contacts;
+mod grammar;
 mod init_layout;
 mod init_message_rows;
 mod init_rows;

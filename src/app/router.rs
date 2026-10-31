@@ -70,6 +70,7 @@ impl AppModel {
             | AppMsg::NotificationReply { .. }
             | AppMsg::NotificationForward { .. }
             | AppMsg::Status { .. }
+            | AppMsg::CopyProgress { .. }
             | AppMsg::Error { .. }
             | AppMsg::DirectoryError(..)
             | AppMsg::NotifyCount(..)
@@ -136,6 +137,9 @@ impl AppModel {
             | AppMsg::PopoutMoveTo { .. }
             | AppMsg::PopoutShortcut { .. }
             | AppMsg::ViewSource) => self.on_popout(msg, sender),
+            msg @ (AppMsg::SetReadingPane(..)
+            | AppMsg::SetListFold { .. }
+            | AppMsg::PopoutSeen { .. }) => self.on_reading_pane(msg),
             msg @ (AppMsg::LoadAttachmentsFor(..)
             | AppMsg::DeletePopoutAttachment { .. }
             | AppMsg::ShowLightbox { .. }
@@ -344,6 +348,7 @@ impl AppModel {
             | AppMsg::ApplyWelcomePrefs(..)
             | AppMsg::ImportGoaAccount(..)
             | AppMsg::AccountRemoved { .. }
+            | AppMsg::ImportLocalMail { .. }
             | AppMsg::GoaChanged(..)
             | AppMsg::SetAccount(..)) => self.on_accounts(msg, sender),
             msg @ (AppMsg::OpenConsole | AppMsg::ExportLogTo(..)) => self.on_diagnostics(msg),
@@ -368,12 +373,16 @@ impl AppModel {
             | AppMsg::MoveToMenu
             | AppMsg::ListMoveTo { .. }
             | AppMsg::MoveMessagesTo { .. }
+            | AppMsg::ListCopyTo { .. }
+            | AppMsg::CopyMessagesTo { .. }
             | AppMsg::MoveSelectionTo { .. }) => self.on_move_tag(msg, sender),
             msg @ (AppMsg::ReaderTagMenu | AppMsg::CardMenu { .. }) => {
                 self.on_card_menu(msg, sender)
             }
             msg @ AppMsg::ImportSettingsFrom(..) => self.on_prefs_data(msg),
             msg @ (AppMsg::SetFolders { .. }
+            | AppMsg::SetHierarchy { .. }
+            | AppMsg::FolderMadeAt { .. }
             | AppMsg::FolderUnread { .. }
             | AppMsg::SeenSettled { .. }
             | AppMsg::Answered { .. }
@@ -487,6 +496,7 @@ impl AppModel {
             | PrefOutput::SetAttachmentDrawer(..)
             | PrefOutput::SetReaderDefault(..)
             | PrefOutput::SetPgpLabels(..)
+            | PrefOutput::SetAccountChip(..)
             | PrefOutput::SetReaderFindBottom(..)
             | PrefOutput::SetSingleMessageCard(..)
             | PrefOutput::SetCardPaletteCollapse(..)
@@ -537,6 +547,7 @@ impl AppModel {
             | PrefOutput::SetReplyPosition(..)
             | PrefOutput::SetSignaturePosition(..)
             | PrefOutput::SetSignatureDashes(..)
+            | PrefOutput::SetFoldQuote(..)
             | PrefOutput::SetReplyHeader(..)
             | PrefOutput::SetUndoSend(..)
             | PrefOutput::SetRequestReceipts(..)

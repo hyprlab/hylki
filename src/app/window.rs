@@ -113,6 +113,7 @@ impl AppModel {
         let app = relm4::main_application();
         app.add_action(&self.show_accounts_action);
         app.add_action(&self.focus_action);
+        app.add_action(&self.reading_pane_action);
         let window = root.clone();
         let outgoing = self.outgoing.clone();
         let quit = gtk::gio::SimpleAction::new("quit", None);
@@ -144,6 +145,19 @@ impl AppModel {
             gtk::prelude::GtkApplicationExt::set_accels_for_action(
                 &app,
                 &format!("app.{name}"),
+                &[accel],
+            );
+        }
+        // Ctrl+Alt+1, 2 and 3: the reader right of the list, below it, or
+        // off (#475). The menu shows them beside its radio items.
+        for (pane, accel) in [
+            (config::ReadingPane::Right, "<Ctrl><Alt>1"),
+            (config::ReadingPane::Below, "<Ctrl><Alt>2"),
+            (config::ReadingPane::Off, "<Ctrl><Alt>3"),
+        ] {
+            gtk::prelude::GtkApplicationExt::set_accels_for_action(
+                &app,
+                &format!("app.reading-pane::{}", pane.key()),
                 &[accel],
             );
         }

@@ -72,6 +72,7 @@ impl Component for MessageWindow {
         view.emit(MessageViewInput::SetZoom(init.zoom));
         view.emit(MessageViewInput::SetReaderSwitchShown(init.reader_switch));
         view.emit(MessageViewInput::SetThemeSwitchShown(init.theme_switch));
+        view.emit(MessageViewInput::SetAccountChipShown(init.account_chip));
         view.emit(MessageViewInput::SetPgpLabels(init.pgp_labels));
         view.emit(MessageViewInput::SetFindBottom(init.find_bottom));
         view.emit(MessageViewInput::SetReaderDefault(init.reader_default));
@@ -171,6 +172,9 @@ impl Component for MessageWindow {
     fn update(&mut self, msg: Self::Input, sender: ComponentSender<Self>, root: &Self::Root) {
         match msg {
             MessageWindowInput::Ignore => {}
+            MessageWindowInput::Seen { account_id, id } => {
+                let _ = sender.output(MessageWindowOutput::MarkSeen { account_id, id });
+            }
             MessageWindowInput::SetContentTheme(o) => {
                 self.view.emit(MessageViewInput::SetContentTheme(o));
             }
@@ -194,6 +198,9 @@ impl Component for MessageWindow {
             }
             MessageWindowInput::SetThemeSwitchShown(on) => {
                 self.view.emit(MessageViewInput::SetThemeSwitchShown(on));
+            }
+            MessageWindowInput::SetAccountChipShown(on) => {
+                self.view.emit(MessageViewInput::SetAccountChipShown(on));
             }
             MessageWindowInput::SetReaderDefault(policy) => {
                 self.view.emit(MessageViewInput::SetReaderDefault(policy));
@@ -400,7 +407,9 @@ fn from_reader(out: MessageViewOutput) -> MessageWindowInput {
             MessageWindowInput::CardAction { action, message }
         }
         MessageViewOutput::ContactSender(m) => MessageWindowInput::ContactFor(m),
-        MessageViewOutput::MarkSeen { .. } => MessageWindowInput::Ignore,
+        MessageViewOutput::MarkSeen { account_id, id } => {
+            MessageWindowInput::Seen { account_id, id }
+        }
         MessageViewOutput::CardMenu { message, x, y, hit } => {
             MessageWindowInput::CardMenu { message, x, y, hit }
         }

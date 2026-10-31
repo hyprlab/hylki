@@ -18,6 +18,7 @@ pub(super) fn sample_account() -> AccountConfig {
         clean_lists_days: 0,
         offline_mail: Default::default(),
         offline_attachments: false,
+        copy_to_local: false,
         pgp_key: None,
         in_unified: true,
         folder_sort: None,

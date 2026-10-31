@@ -4,11 +4,18 @@ use super::snippets::att_chips_html;
 use super::MessageView;
 
 impl MessageView {
+    /// Whether the messages on screen are cards: a conversation, or a lone
+    /// message when Settings shows single messages as cards (#57). A card
+    /// is selected and folded the same way whether or not it has replies.
+    pub(super) fn carded(&self) -> bool {
+        self.thread.len() > 1 || (self.thread.len() == 1 && self.single_message_card)
+    }
+
     /// Outline the selected cards in the document already on screen. Rendering
     /// it again would reload every frame and lose the reader's place.
     pub(super) fn apply_card_selection(&self) {
-        // A lone card never wears the outline (see `conversation_document`).
-        if self.thread.len() <= 1 {
+        // A full-bleed message is no card to outline.
+        if !self.carded() {
             return;
         }
         let keys: Vec<String> = self

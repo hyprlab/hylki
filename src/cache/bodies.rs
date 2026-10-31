@@ -185,7 +185,7 @@ impl Cache {
     ) -> Option<crate::models::SenderCheck> {
         self.conn
             .query_row(
-                "SELECT trust, summary, findings, pgp, unsubscribe, invite, label, receipt FROM sender_checks \
+                "SELECT trust, summary, findings, pgp, unsubscribe, invite, label, receipt, authority, from_domain FROM sender_checks \
                  WHERE account_id = ?1 AND folder_path = ?2 AND uid = ?3",
                 params![account_id, folder_path, uid],
                 |row| {
@@ -206,6 +206,8 @@ impl Cache {
                         label: serde_json::from_str(&row.get::<_, String>(6)?).ok(),
                         receipt: serde_json::from_str(&row.get::<_, String>(7)?).ok(),
                         read: None,
+                        authority: row.get(8)?,
+                        from_domain: row.get(9)?,
                     })
                 },
             )
@@ -221,8 +223,8 @@ impl Cache {
     ) {
         if let Err(e) = self.conn.execute(
             "INSERT OR REPLACE INTO sender_checks \
-             (account_id, folder_path, uid, trust, summary, findings, pgp, unsubscribe, invite, label, receipt) \
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+             (account_id, folder_path, uid, trust, summary, findings, pgp, unsubscribe, invite, label, receipt, authority, from_domain) \
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
             params![
                 account_id,
                 folder_path,
@@ -254,7 +256,9 @@ impl Cache {
                     .receipt
                     .as_ref()
                     .and_then(|r| serde_json::to_string(r).ok())
-                    .unwrap_or_default()
+                    .unwrap_or_default(),
+                check.authority,
+                check.from_domain
             ],
         ) {
             tracing::warn!("cache save_sender_check failed: {e}");

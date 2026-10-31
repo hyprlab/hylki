@@ -134,6 +134,7 @@ impl AppModel {
             self.folders.get(&account_id).cloned().unwrap_or_default(),
             &order,
             self.folder_sort_of(account_id),
+            &self.drawn_hierarchy(account_id),
         )
     }
 
@@ -267,10 +268,7 @@ impl AppModel {
                     return;
                 };
                 let shown = self.shown_folders(account_id);
-                let hierarchy = crate::ui::sidebar::Hierarchy {
-                    delimiter: self.folder_delimiter(account_id),
-                    namespace: self.folder_namespace(account_id),
-                };
+                let hierarchy = self.drawn_hierarchy(account_id);
                 if let Some(paths) =
                     crate::ui::sidebar::placed_run(&shown, &hierarchy, &new_path, &target, after)
                 {

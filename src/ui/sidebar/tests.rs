@@ -5,9 +5,17 @@ use super::dnd::parse_move_payload;
 use super::dnd::{folder_drop_zone, FolderDrop};
 use super::tree::folder_depth;
 use super::tree::hidden_by_collapse;
-use super::tree::{is_main_row, nests_in_inbox, order_folders, placed_run, under_inbox, Hierarchy};
+use super::tree::{is_main_row, nests_in_inbox, order_folders, placed_run, under_inbox};
 use crate::config::FolderSort;
-use crate::models::{Folder, FolderKind};
+use crate::models::{Folder, FolderHierarchy, FolderKind};
+
+fn slash() -> FolderHierarchy {
+    FolderHierarchy::imap(Some('/'), Some(String::new()))
+}
+
+fn dot(prefix: &str) -> FolderHierarchy {
+    FolderHierarchy::imap(Some('.'), Some(prefix.to_string()))
+}
 
 fn custom(id: u32, path: &str) -> Folder {
     Folder {
@@ -17,6 +25,7 @@ fn custom(id: u32, path: &str) -> Folder {
         path: path.to_string(),
         kind: FolderKind::Custom,
         unread: 0,
+        childless: false,
     }
 }
 
@@ -32,10 +41,10 @@ fn folder_depth_follows_listed_ancestors() {
         custom(4, "INBOX.Travel"),
     ];
     let refs: Vec<&Folder> = folders.iter().collect();
-    assert_eq!(folder_depth(&folders[0], &refs), 0);
-    assert_eq!(folder_depth(&folders[1], &refs), 1);
-    assert_eq!(folder_depth(&folders[2], &refs), 2);
-    assert_eq!(folder_depth(&folders[3], &refs), 0);
+    assert_eq!(folder_depth(&folders[0], &refs, &dot("INBOX.")), 0);
+    assert_eq!(folder_depth(&folders[1], &refs, &dot("INBOX.")), 1);
+    assert_eq!(folder_depth(&folders[2], &refs, &dot("INBOX.")), 2);
+    assert_eq!(folder_depth(&folders[3], &refs, &dot("INBOX.")), 0);
 }
 
 #[test]
@@ -48,8 +57,8 @@ fn folder_depth_needs_a_delimiter_not_just_a_prefix() {
         custom(3, "Clients/X"),
     ];
     let refs: Vec<&Folder> = folders.iter().collect();
-    assert_eq!(folder_depth(&folders[1], &refs), 0);
-    assert_eq!(folder_depth(&folders[2], &refs), 1);
+    assert_eq!(folder_depth(&folders[1], &refs, &slash()), 0);
+    assert_eq!(folder_depth(&folders[2], &refs, &slash()), 1);
 }
 
 #[test]
@@ -58,15 +67,27 @@ fn a_collapsed_node_hides_descendants_and_nothing_else() {
     collapsed.insert("Clients".to_string());
     // Direct child and grandchild hide; a sibling sharing the prefix does
     // not, and neither does the collapsed node itself.
-    assert!(hidden_by_collapse("Clients/Acme", &collapsed));
-    assert!(hidden_by_collapse("Clients/Acme/Invoices", &collapsed));
-    assert!(!hidden_by_collapse("ClientsB", &collapsed));
-    assert!(!hidden_by_collapse("Clients", &collapsed));
+    assert!(hidden_by_collapse("Clients/Acme", &collapsed, &slash()));
+    assert!(hidden_by_collapse(
+        "Clients/Acme/Invoices",
+        &collapsed,
+        &slash()
+    ));
+    assert!(!hidden_by_collapse("ClientsB", &collapsed, &slash()));
+    assert!(!hidden_by_collapse("Clients", &collapsed, &slash()));
     // Dotted hierarchies collapse the same way.
     collapsed.clear();
     collapsed.insert("INBOX.2025".to_string());
-    assert!(hidden_by_collapse("INBOX.2025.Archive", &collapsed));
-    assert!(!hidden_by_collapse("INBOX.2026.Archive", &collapsed));
+    assert!(hidden_by_collapse(
+        "INBOX.2025.Archive",
+        &collapsed,
+        &dot("")
+    ));
+    assert!(!hidden_by_collapse(
+        "INBOX.2026.Archive",
+        &collapsed,
+        &dot("")
+    ));
 }
 
 #[test]
@@ -126,7 +147,7 @@ fn server_order() -> Vec<Folder> {
 
 #[test]
 fn no_order_keeps_the_default_order() {
-    let folders = order_folders(server_order(), &[], FolderSort::Custom);
+    let folders = order_folders(server_order(), &[], FolderSort::Custom, &slash());
     assert_eq!(
         paths(&folders),
         [
@@ -147,7 +168,7 @@ fn a_set_order_sorts_siblings_and_keeps_the_tree() {
         .iter()
         .map(|s| s.to_string())
         .collect();
-    let folders = order_folders(server_order(), &order, FolderSort::Custom);
+    let folders = order_folders(server_order(), &order, FolderSort::Custom, &slash());
     // Archive leads the main folders; Sent (never placed) follows INBOX,
     // the folder before it by default. Clients (never placed) comes
     // before Travel by name, and keeps its sub-folders under it.
@@ -184,7 +205,7 @@ fn a_chosen_sort_ignores_the_dragged_order_but_not_the_main_folders() {
         .map(|s| s.to_string())
         .collect();
     let sorted = |sort| {
-        paths(&order_folders(folders.clone(), &order, sort))
+        paths(&order_folders(folders.clone(), &order, sort, &slash()))
             .iter()
             .map(|p| p.to_string())
             .collect::<Vec<_>>()
@@ -261,7 +282,12 @@ fn folders_sort_by_the_name_shown_and_new_ones_by_name_among_the_placed() {
     .collect();
     // No order of the user's: by name, "[Gmail]/Test" as "Test".
     assert_eq!(
-        paths(&order_folders(folders.clone(), &[], FolderSort::Custom)),
+        paths(&order_folders(
+            folders.clone(),
+            &[],
+            FolderSort::Custom,
+            &slash()
+        )),
         [
             "2e-303Disk",
             "9e-308Disk",
@@ -291,7 +317,12 @@ fn folders_sort_by_the_name_shown_and_new_ones_by_name_among_the_placed() {
     .map(|s| s.to_string())
     .collect();
     assert_eq!(
-        paths(&order_folders(folders, &order, FolderSort::Custom)),
+        paths(&order_folders(
+            folders,
+            &order,
+            FolderSort::Custom,
+            &slash()
+        )),
         [
             "[Gmail]/Important",
             "[Gmail]/Test",
@@ -324,8 +355,8 @@ fn folders_inside_the_inbox_follow_it() {
         custom(5, "INBOX.Mailinglisten"),
         custom(6, "INBOX.Mailinglisten.KiCad"),
     ];
-    assert!(nests_in_inbox(&mixed));
-    let shown = order_folders(mixed.clone(), &[], FolderSort::Custom);
+    assert!(nests_in_inbox(&mixed, &dot("")));
+    let shown = order_folders(mixed.clone(), &[], FolderSort::Custom, &dot(""));
     assert_eq!(
         paths(&shown),
         [
@@ -337,27 +368,40 @@ fn folders_inside_the_inbox_follow_it() {
             "Archiv"
         ]
     );
-    assert_eq!(shown.iter().filter(|f| is_main_row(f, true)).count(), 5);
+    assert_eq!(
+        shown
+            .iter()
+            .filter(|f| is_main_row(f, true, &dot("")))
+            .count(),
+        5
+    );
 
     let namespaced = vec![
         main(1, "INBOX", FolderKind::Inbox),
         custom(2, "INBOX.Ablage"),
         custom(3, "INBOX.Archiv"),
     ];
-    assert!(!nests_in_inbox(&namespaced));
+    assert!(!nests_in_inbox(&namespaced, &dot("INBOX.")));
     assert_eq!(
-        paths(&order_folders(namespaced, &[], FolderSort::Custom)),
+        paths(&order_folders(
+            namespaced,
+            &[],
+            FolderSort::Custom,
+            &dot("INBOX.")
+        )),
         ["INBOX", "INBOX.Ablage", "INBOX.Archiv"]
     );
     // "INBOXES" is not inside the Inbox.
-    assert!(!under_inbox("INBOXES") && under_inbox("inbox/x") && !under_inbox("INBOX"));
+    assert!(!under_inbox("INBOXES", &slash()));
+    assert!(under_inbox("inbox/x", &slash()) && !under_inbox("INBOX", &slash()));
+    // Only by the server's delimiter (#554).
+    assert!(!under_inbox("INBOX.x", &slash()) && under_inbox("INBOX.x", &dot("")));
+    let flat = FolderHierarchy::imap(None, Some(String::new()));
+    assert!(!under_inbox("INBOX/x", &flat));
 }
 
-fn gmail() -> Hierarchy {
-    Hierarchy {
-        delimiter: '/',
-        namespace: String::new(),
-    }
+fn gmail() -> FolderHierarchy {
+    slash()
 }
 
 #[test]
@@ -366,10 +410,7 @@ fn the_parent_is_the_servers_not_the_one_drawn() {
     assert_eq!(gmail().parent("Test 2/Test"), "Test 2");
     assert_eq!(gmail().parent("Test 3"), "");
     // A Dovecot-style namespace counts as the top level.
-    let dovecot = Hierarchy {
-        delimiter: '.',
-        namespace: "INBOX.".into(),
-    };
+    let dovecot = dot("INBOX.");
     assert_eq!(dovecot.parent("INBOX.old-messages"), "");
     assert_eq!(
         dovecot.parent("INBOX.old-messages.test 2"),
@@ -457,7 +498,7 @@ fn a_custom_folder_goes_in_any_gap_or_inside_a_folder() {
 
 #[test]
 fn a_placed_folder_joins_the_targets_run_only() {
-    let shown = order_folders(server_order(), &[], FolderSort::Custom);
+    let shown = order_folders(server_order(), &[], FolderSort::Custom, &slash());
     // Travel dropped after Clients: the top-level run, sub-folders apart.
     assert_eq!(
         placed_run(&shown, &gmail(), "Travel", "Clients", false).unwrap(),
@@ -466,7 +507,7 @@ fn a_placed_folder_joins_the_targets_run_only() {
     // A folder just moved up from a sub-folder, placed before Travel.
     let mut moved = server_order();
     moved[5].path = "Beta".into();
-    let shown = order_folders(moved, &[], FolderSort::Custom);
+    let shown = order_folders(moved, &[], FolderSort::Custom, &slash());
     assert_eq!(
         placed_run(&shown, &gmail(), "Beta", "Travel", false).unwrap(),
         ["Clients", "Beta", "Travel"]
@@ -578,10 +619,7 @@ fn account_initials_take_two_words_then_the_address() {
 
 #[test]
 fn a_namespace_prefix_counts_as_the_top_level() {
-    let dovecot = Hierarchy {
-        delimiter: '.',
-        namespace: "INBOX.".into(),
-    };
+    let dovecot = dot("INBOX.");
     assert_eq!(dovecot.parent("INBOX.Foo"), "");
     assert_eq!(dovecot.parent("INBOX.Foo.Bar"), "INBOX.Foo");
     assert_eq!(dovecot.parent("Top"), "");
@@ -592,10 +630,15 @@ fn custom_parents_and_dragged_folder_payloads() {
     use super::dnd::dragged_folder;
     use super::tree::custom_parent;
     let custom = ["A", "A/B", "AB", "C.D"];
-    assert_eq!(custom_parent("A/B/C", custom), Some("A/B".to_string()));
-    assert_eq!(custom_parent("AB/C", custom), Some("AB".to_string()));
-    assert_eq!(custom_parent("C.D.E", custom), Some("C.D".to_string()));
-    assert_eq!(custom_parent("A", custom), None);
+    let s = slash();
+    assert_eq!(custom_parent("A/B/C", custom, &s), Some("A/B".to_string()));
+    assert_eq!(custom_parent("AB/C", custom, &s), Some("AB".to_string()));
+    assert_eq!(custom_parent("C.D.E", custom, &s), None);
+    assert_eq!(
+        custom_parent("C.D.E", custom, &dot("")),
+        Some("C.D".to_string())
+    );
+    assert_eq!(custom_parent("A", custom, &s), None);
     assert_eq!(
         dragged_folder("vireo-folder\t3\tA/B"),
         Some((3, "A/B", false))

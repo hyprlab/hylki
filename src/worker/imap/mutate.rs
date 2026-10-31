@@ -247,11 +247,15 @@ pub(super) async fn rename_folder(
             .await
             .unwrap_or_default()
             .iter()
-            .map(|n| imap_unquote(n.name()).into_owned())
-            .filter(|p| {
-                p.len() > old_path.len() + 1
-                    && p.starts_with(old_path)
-                    && matches!(p.as_bytes()[old_path.len()], b'/' | b'.' | b'\\')
+            // Below it by the delimiter the server gives each name (#554).
+            .filter_map(|n| {
+                let d = imap_unquote(n.delimiter()?).into_owned();
+                let path = imap_unquote(n.name()).into_owned();
+                let below = path
+                    .strip_prefix(old_path)?
+                    .strip_prefix(d.as_str())
+                    .is_some_and(|rest| !rest.is_empty());
+                below.then_some(path)
             })
             .collect(),
         Err(_) => Vec::new(),

@@ -222,6 +222,13 @@ pub(crate) enum MailRequest {
         seen: bool,
         flagged: bool,
     },
+    /// Import mail from another program into On This Computer (#552):
+    /// Maildir trees, or with `mbox`, mbox files. Only that account's
+    /// worker answers it.
+    ImportMail {
+        sources: Vec<std::path::PathBuf>,
+        mbox: bool,
+    },
     /// Take one attachment out of a message on the server (#289), found by
     /// its name and, among files sharing the name, its decoded size.
     /// IMAP and JMAP store a copy without it and delete the original, so
@@ -373,6 +380,22 @@ pub(crate) enum WorkerEvent {
     /// anyone at the domain.
     Identities(Vec<(String, String)>),
     Folders(Vec<Folder>),
+    /// How the account's folders nest and are named (#554), sent before
+    /// the first `Folders` and again whenever the server says otherwise.
+    Hierarchy(crate::models::FolderHierarchy),
+    /// A folder asked for at `asked` was made at `made` instead: the
+    /// server refused the top level and took it inside the Inbox, its
+    /// namespace (#554).
+    FolderMadeAt {
+        asked: String,
+        made: String,
+    },
+    /// How many messages the accounts copying to On This Computer (#552)
+    /// still have to copy, all together; 0 when they are done. Sent by
+    /// that account's worker.
+    CopyProgress {
+        left: usize,
+    },
     Messages {
         folder_id: u32,
         messages: Vec<Message>,

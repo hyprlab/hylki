@@ -14,10 +14,11 @@
 //! iCloud emits one per method (`dmarc.icloud.com`, `dkim-verifier.icloud.com`,
 //! …) and leads with BIMI. So [`check_sender`] reads them all in order and keeps
 //! the *first* verdict for each method, which is the provider's; a forged copy
-//! further down loses. The residual gap: if a provider reports nothing at all for
-//! a method, a forged verdict below could be the only one found. The authority
-//! that supplied each verdict is therefore reported in the findings, where an
-//! unfamiliar name is itself the tell.
+//! further down loses. Only headers from the topmost one's site are read, so a
+//! forged header in another name cannot fill a method the provider left out.
+//! That leaves a provider that stamps nothing at all, where the topmost header
+//! is the sender's: [`vouch`] keeps a verdict only when its authority is the
+//! one that checks the account's other mail (RFC 8601 §5).
 //!
 //! **What a pass means.** It proves the From: domain wasn't forged. It does not
 //! prove the message is safe: a phisher who registers `amaz0n-security.com` and
@@ -26,6 +27,9 @@
 
 use crate::i18n::{i18n, i18n_f};
 use crate::models::{SenderCheck, SenderTrust};
+
+mod vouch;
+pub(crate) use vouch::Vouchers;
 
 /// One authentication method's outcome, as reported by the receiving server.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -65,6 +69,9 @@ struct Evidence {
     return_path_domain: Option<String>,
     /// Whether the receiving server reported any authentication at all.
     checked: bool,
+    /// The topmost `Authentication-Results` header's authserv-id, empty for
+    /// one that names none (Microsoft's); `None` when there is no header.
+    authority: Option<String>,
     /// Which authserv-id supplied each verdict, so the details can name who
     /// vouched — a check attributed to an unfamiliar authority is itself a clue.
     authorities: Vec<(&'static str, String)>,
@@ -152,12 +159,19 @@ fn gather(raw: &[u8]) -> Evidence {
     // order instead, keeping the first verdict found for each method: trace
     // headers are prepended, so the first is the most recent, and the provider's
     // own verdict still wins over anything the sender shipped further down.
+    // A header from another site than the topmost one is not the provider's
+    // (iCloud's several all share icloud.com), whatever it claims.
     for header in parsed
         .headers()
         .iter()
         .filter(|h| h.name().eq_ignore_ascii_case("Authentication-Results"))
     {
         if let Some(line) = header_text(&header.value) {
+            let who = authserv_id(&line);
+            let top = ev.authority.get_or_insert_with(|| who.clone());
+            if registrable(top) != registrable(&who) {
+                continue;
+            }
             ev.checked = true;
             parse_auth_results(&line, &mut ev);
         }
@@ -187,8 +201,7 @@ fn header_text(value: &mail_parser::HeaderValue) -> Option<String> {
 /// `Authentication-Results` header.
 fn parse_auth_results(line: &str, ev: &mut Evidence) {
     let lower = line.to_ascii_lowercase();
-    // Everything before the first `;` is the authserv-id: who is vouching.
-    let authority = lower.split(';').next().unwrap_or("").trim().to_string();
+    let authority = authserv_id(line);
 
     let mut this_spf = None;
     let mut this_dkim = None;
@@ -236,6 +249,21 @@ fn parse_auth_results(line: &str, ev: &mut Evidence) {
     }
 }
 
+/// Who an `Authentication-Results` header says is vouching: the authserv-id
+/// before the first `;`, without the version that may follow it. Empty when
+/// the header opens with a result instead, as Microsoft's do.
+fn authserv_id(line: &str) -> String {
+    let first = line.split(';').next().unwrap_or("").trim();
+    if first.contains('=') {
+        return String::new();
+    }
+    first
+        .split_whitespace()
+        .next()
+        .unwrap_or("")
+        .to_ascii_lowercase()
+}
+
 /// Whether at least one authentication method failed and none of them passed —
 /// the only no-DMARC shape worth remarking on.
 fn failed_and_nothing_passed(dkim: AuthResult, spf: AuthResult) -> bool {
@@ -275,6 +303,8 @@ fn judge(ev: &Evidence) -> SenderCheck {
         label: ev.label.clone(),
         receipt: ev.receipt.clone(),
         read: ev.read.clone(),
+        authority: ev.authority.clone(),
+        from_domain: ev.from_domain.clone(),
     }
 }
 
@@ -346,7 +376,7 @@ fn authentication_findings(ev: &Evidence, from: &str) -> Vec<String> {
     if let Some(d) = &ev.dkim_domain {
         findings.push(i18n_f("Signed by: {d}", &[("d", d)]));
     }
-    if let Some((_, who)) = ev.authorities.first() {
+    if let Some((_, who)) = ev.authorities.first().filter(|(_, who)| !who.is_empty()) {
         findings.push(i18n_f("Checked by: {who}", &[("who", who)]));
     }
     findings.push(i18n_f("From: {from}", &[("from", from)]));
@@ -423,7 +453,7 @@ fn same_site(a: &str, b: &str) -> bool {
     !a.is_empty() && !b.is_empty() && registrable(a) == registrable(b)
 }
 
-fn registrable(domain: &str) -> String {
+pub(crate) fn registrable(domain: &str) -> String {
     const TWO_PART: &[&str] = &[
         "co", "com", "net", "org", "gov", "edu", "ac", "or", "ne", "gouv",
     ];
@@ -584,6 +614,35 @@ mod tests {
             "From: Amazon <account-update@amazon.in>\r\n",
         )));
         assert_eq!(check.trust, SenderTrust::Fail);
+    }
+
+    /// VIREO-11: the provider reported SPF only, and the sender shipped a
+    /// DMARC pass in another name below it. Only the provider's site counts.
+    #[test]
+    fn a_forged_header_cannot_fill_a_method_the_provider_left_out() {
+        let check = check_sender(&msg(concat!(
+            "Authentication-Results: mx.example.net; spf=pass smtp.mailfrom=bank.example\r\n",
+            "Received: from relay.example by mx.example.net\r\n",
+            "Authentication-Results: mx.google.com; dmarc=pass header.from=bank.example\r\n",
+            "From: Bank <alerts@bank.example>\r\n",
+        )));
+        assert_eq!(check.trust, SenderTrust::Unverified);
+        assert_eq!(check.authority.as_deref(), Some("mx.example.net"));
+        assert_eq!(check.from_domain, "bank.example");
+    }
+
+    /// Microsoft's headers name no authserv-id: they open with the result.
+    #[test]
+    fn a_header_that_names_no_authority_is_read_as_unnamed() {
+        let check = check_sender(&msg(concat!(
+            "Authentication-Results: spf=pass (sender IP is 192.0.2.1) ",
+            "smtp.mailfrom=gnome.org; dkim=pass (signature was verified) ",
+            "header.d=gnome.org;dmarc=pass action=none header.from=gnome.org;\r\n",
+            "From: GNOME <news@gnome.org>\r\n",
+        )));
+        assert_eq!(check.trust, SenderTrust::Pass);
+        assert_eq!(check.authority.as_deref(), Some(""));
+        assert!(!check.findings.iter().any(|f| f.contains("spf=")), "{check:?}");
     }
 
     /// Real mail from the author's mailbox: a billing notice relayed through a
