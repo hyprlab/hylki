@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.47.0-beta.1" date="2026-10-30" type="development">
+      <description>
+        <p>First preview of 1.47.0: folders kept on this computer, grammar and style checking in the composer, the reading pane below the list or off, New Folder in a folder's right-click menu, folder paths taken from each server, sender checks trusted only from the account's provider, and German and French brought up to date.</p>
+      </description>
+    </release>
     <release version="1.46.0-beta.5" date="2026-10-28" type="development">
       <description>
         <p>Fifth preview of 1.46.0: Snoozed in the unified section, names from Contacts on mail, read receipts, search in message text and on the server, mail kept offline for a chosen period, cached remote content, a date range filter, the arrow keys opening conversations in the list, and German brought up to date.</p>

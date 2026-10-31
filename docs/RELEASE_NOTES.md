@@ -2,6 +2,28 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.47.0-beta.1
+
+### New features:
+
+- Folders kept on this computer, with Copy To and import - (#552)
+- Grammar and style checking in the composer, with Harper or LanguageTool - (#452)
+- The reading pane below the list, or off - (#475)
+- New Folder in a folder's right-click menu - (#554)
+
+### Fixes:
+
+- a sender's own Authentication-Results header earning the Verified sender badge
+- a web address pasted into the composer carrying an attribute into its link
+- a new or moved folder landing in the wrong place, or being refused - (#554)
+- accounts with the same sender name named alike in errors, dialogs and the Account column
+- the swipe strip behind a selected row standing taller than its pill
+
+### Translations:
+
+- German by @samuel-edlmeier
+- French by @frenchy82
+
 ## What's new in 1.46.0
 
 ### New features:

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.47.0-beta.1 — 2026-10-30
 
 - **Added: On This Computer, folders kept on this computer** (#552).
   **Settings → Accounts → On This Computer → Add** adds an account with no
