@@ -1,52 +1,12 @@
 # Changelog
 
-## 1.47.0-beta.2 — 2026-10-31
-
-The fixes of 1.46.1: lines typed with Return in plain text show as they are
-sent (#557), and "To:", "Cc:" and "Bcc:" are translated (#562).
-
-## 1.46.1 — 2026-10-31
-
-Lines typed in plain text show as they are sent, and "To:", "Cc:" and
-"Bcc:" are translated.
-
-- **Fixed: plain text showed an empty line under every line typed with
-  Return** (#557, reported by amadeusp). Each line was drawn as a paragraph
-  of its own, but went out as one line break, so the sent message looked
-  run together. Lines now sit under each other as they are sent; a
-  paragraph (Shift+Return, or Return when it is set to start one) keeps its
-  empty line.
-
-- **Fixed: "To:", "Cc:" and "Bcc:" were not translated** (#562, reported by
-  samuel-edlmeier) in the recipients of a message in the reader, or before
-  the names on a Sent folder's rows.
-
-- **Fixed: a web address pasted into the composer could carry an attribute
-  into the link made of it**, a `"` inside the address ending the `href`.
-
-## 1.47.0-beta.1 — 2026-10-30
+## 1.47.0-beta.3 — 2026-11-01
 
 - **Added: showing only contact groups.** **Show only** in the Contacts
   sort and filter menu has **Groups**, which lists every address book's
   groups and nobody else, and a search for "group" or "groups" lists every
   group as well as anyone whose details hold the word. **All Address
   Books** listed no groups before, so they were reached book by book.
-
-- **Fixed: a darker edge at the corners of the menu beside Send** while it
-  was open or under the pointer, with libadwaita 1.9.
-
-- **Fixed: a draft could take seconds to open, with nothing on screen to
-  say so.** Opening a draft fetched its bytes from the server first, which
-  waited behind whatever the account was doing. The drafts and templates of
-  a folder are now fetched in the background when it is listed, the newest
-  50 first, and open from that copy at once. One not fetched yet shows
-  Loading… in the reading pane, and goes ahead of the background fetches.
-
-- **Fixed: a draft stayed highlighted after its editor closed.** A draft
-  opened from the Drafts list and then saved, sent or cancelled left its row
-  selected over a reading pane that said no draft was selected, and a click
-  on the row did not open it again. The row is now let go when the editor
-  closes.
 
 - **Added: mail merge** (#447, requested by samuel-edlmeier). **Mail
   Merge…** in the menu beside **Send** sends the message once per row of a
@@ -98,6 +58,51 @@ Lines typed in plain text show as they are sent, and "To:", "Cc:" and
   Importance column of a single-line list showed it. The reader's header
   shows the star, paperclip and importance marks on a lone message too when
   **Settings → Reading → Single messages as cards** is off.
+
+- **Fixed: a darker edge at the corners of the menu beside Send** while it
+  was open or under the pointer, with libadwaita 1.9.
+
+- **Fixed: a draft could take seconds to open, with nothing on screen to
+  say so.** Opening a draft fetched its bytes from the server first, which
+  waited behind whatever the account was doing. The drafts and templates of
+  a folder are now fetched in the background when it is listed, the newest
+  50 first, and open from that copy at once. One not fetched yet shows
+  Loading… in the reading pane, and goes ahead of the background fetches.
+
+- **Fixed: a draft stayed highlighted after its editor closed.** A draft
+  opened from the Drafts list and then saved, sent or cancelled left its row
+  selected over a reading pane that said no draft was selected, and a click
+  on the row did not open it again. The row is now let go when the editor
+  closes.
+
+- **Translations:** German (PR #559 by Samuel Edlmeier), French (PR #558 by
+  frenchy82) and Spanish (PR #561 by Daniel Miguel) brought up to date.
+
+## 1.47.0-beta.2 — 2026-10-31
+
+The fixes of 1.46.1: lines typed with Return in plain text show as they are
+sent (#557), and "To:", "Cc:" and "Bcc:" are translated (#562).
+
+## 1.46.1 — 2026-10-31
+
+Lines typed in plain text show as they are sent, and "To:", "Cc:" and
+"Bcc:" are translated.
+
+- **Fixed: plain text showed an empty line under every line typed with
+  Return** (#557, reported by amadeusp). Each line was drawn as a paragraph
+  of its own, but went out as one line break, so the sent message looked
+  run together. Lines now sit under each other as they are sent; a
+  paragraph (Shift+Return, or Return when it is set to start one) keeps its
+  empty line.
+
+- **Fixed: "To:", "Cc:" and "Bcc:" were not translated** (#562, reported by
+  samuel-edlmeier) in the recipients of a message in the reader, or before
+  the names on a Sent folder's rows.
+
+- **Fixed: a web address pasted into the composer could carry an attribute
+  into the link made of it**, a `"` inside the address ending the `href`.
+
+## 1.47.0-beta.1 — 2026-10-30
 
 - **Added: On This Computer, folders kept on this computer** (#552).
   **Settings → Accounts → On This Computer → Add** adds an account with no
@@ -207,9 +212,8 @@ Lines typed in plain text show as they are sent, and "To:", "Cc:" and
 - **Changed: Keep mail offline is called Keep mail cached** in an account's
   settings.
 
-- **Translations:** German (PRs #550 and #559 by Samuel Edlmeier), French
-  (PRs #556 and #558 by frenchy82) and Spanish (PR #561 by Daniel Miguel)
-  brought up to date.
+- **Translations:** German (PR #550 by Samuel Edlmeier) and French (PR #556 by
+  frenchy82) brought up to date.
 
 ## 1.46.0 — 2026-10-29
 

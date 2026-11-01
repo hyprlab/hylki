@@ -2,6 +2,28 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.47.0-beta.3
+
+### New features:
+
+- Mail merge from a CSV file or a contact group, with fields to insert - (#447)
+- Events and tasks made from a message, with alarms - (#564)
+- The sender's contact photo in the reader's header - (#560)
+- A message's importance, set in the Send menu and shown on mail - (#563)
+- Contacts show only the groups by a filter, or by a search for "group"
+
+### Fixes:
+
+- Drafts open at once, from a copy fetched in the background
+- A draft's row is let go when its editor closes
+- The menu beside Send kept its corners clean under libadwaita 1.9
+
+### Translations:
+
+- German by @samuel-edlmeier
+- French by @frenchy82
+- Spanish by @danielmigueltejedor
+
 ## What's new in 1.47.0-beta.2
 
 ### Fixes:
