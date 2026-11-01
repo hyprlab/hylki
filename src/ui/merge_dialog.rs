@@ -321,22 +321,7 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
             (use_table.clone(), file_table.clone(), file_row.clone());
         let dialog_ref = dialog.clone();
         choose.connect_clicked(move |_| {
-            let picker = gtk::FileDialog::builder()
-                .title(i18n("Choose a CSV File"))
-                .build();
-            let filter = gtk::FileFilter::new();
-            filter.set_name(Some(&i18n("CSV files")));
-            for pattern in ["*.csv", "*.CSV", "*.tsv", "*.txt"] {
-                filter.add_pattern(pattern);
-            }
-            filter.add_mime_type("text/csv");
-            let filters = gtk::gio::ListStore::new::<gtk::FileFilter>();
-            filters.append(&filter);
-            let any = gtk::FileFilter::new();
-            any.set_name(Some(&i18n("All files")));
-            any.add_pattern("*");
-            filters.append(&any);
-            picker.set_filters(Some(&filters));
+            let picker = csv_file_dialog();
             let (use_table, file_table, file_row) =
                 (use_table.clone(), file_table.clone(), file_row.clone());
             picker.open(Some(&dialog_ref), gtk::gio::Cancellable::NONE, move |res| {
@@ -378,6 +363,15 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
             done(std::mem::take(&mut merged.borrow_mut().letters));
         }
     });
+    // The file last chosen, here or in the field palette, to start from.
+    if let Some(path) = crate::config::load_merge_file() {
+        if let Some(name) = path.file_name() {
+            file_row.set_subtitle(&name.to_string_lossy());
+        }
+        let table = read_table(&path);
+        *file_table.borrow_mut() = table.clone();
+        use_table(table);
+    }
     dialog.present();
     showcase(&dialog, &file_row, &*use_table);
 }
@@ -409,6 +403,27 @@ fn showcase(
             dialog.response("send");
         }
     });
+}
+
+/// The file chooser for a merge's CSV file.
+pub(crate) fn csv_file_dialog() -> gtk::FileDialog {
+    let picker = gtk::FileDialog::builder()
+        .title(i18n("Choose a CSV File"))
+        .build();
+    let filter = gtk::FileFilter::new();
+    filter.set_name(Some(&i18n("CSV files")));
+    for pattern in ["*.csv", "*.CSV", "*.tsv", "*.txt"] {
+        filter.add_pattern(pattern);
+    }
+    filter.add_mime_type("text/csv");
+    let filters = gtk::gio::ListStore::new::<gtk::FileFilter>();
+    filters.append(&filter);
+    let any = gtk::FileFilter::new();
+    any.set_name(Some(&i18n("All files")));
+    any.add_pattern("*");
+    filters.append(&any);
+    picker.set_filters(Some(&filters));
+    picker
 }
 
 /// A CSV file's table, or why it could not be read.

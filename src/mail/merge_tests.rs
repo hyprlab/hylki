@@ -55,6 +55,22 @@ fn decodes_byte_order_marks_and_windows_1252() {
 }
 
 #[test]
+fn the_columns_come_from_the_first_line_alone() {
+    let dir = std::env::temp_dir().join(format!("hylki-merge-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = dir.join("people.csv");
+    let mut csv = String::from("Name;;\"E-mail\"\n");
+    // Past the 64 KiB read: a row cut in half there is no harm.
+    for i in 0..5000 {
+        csv.push_str(&format!("Person {i};x;p{i}@example.com\n"));
+    }
+    std::fs::write(&path, csv).unwrap();
+    assert_eq!(csv_columns(&path), ["Name", "Column 2", "E-mail"]);
+    assert!(csv_columns(&dir.join("missing.csv")).is_empty());
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+#[test]
 fn an_empty_file_or_a_header_alone_is_refused() {
     assert!(parse_csv(b"").is_err());
     assert!(parse_csv(b"Name,Email\n").is_err());

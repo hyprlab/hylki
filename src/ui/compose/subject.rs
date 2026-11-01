@@ -1,6 +1,7 @@
-//! The subject row: edits that dirty the draft, and spelling underlines
-//! painted onto its inner text (#114).
+//! The subject row: edits that dirty the draft, spelling underlines painted
+//! onto its inner text (#114), and the mail merge fields button (#447).
 
+use super::merge_fields::FieldTarget;
 use super::messages::ComposeInput;
 use super::{Compose, ComposeWidgets};
 use adw::prelude::*;
@@ -8,6 +9,21 @@ use relm4::prelude::*;
 
 /// The subject marks the draft edited, and gets spelling underlines.
 pub(super) fn wire_subject(widgets: &ComposeWidgets, sender: &ComponentSender<Compose>) {
+    // Not focusable, so the cursor the field goes in at stays where it is.
+    let fields = gtk::Button::from_icon_name("hylki-merge-field-symbolic");
+    fields.set_tooltip_text(Some(crate::i18n::i18n("Insert Merge Field").as_str()));
+    fields.add_css_class("flat");
+    fields.set_valign(gtk::Align::Center);
+    fields.set_can_focus(false);
+    fields.set_focus_on_click(false);
+    {
+        let s = sender.input_sender().clone();
+        fields.connect_clicked(move |_| {
+            let _ = s.send(ComposeInput::MergeFields(FieldTarget::Subject));
+        });
+    }
+    widgets.subject_row.add_suffix(&fields);
+
     // Subject edits also count as dirtying the draft.
     let s = sender.clone();
     widgets

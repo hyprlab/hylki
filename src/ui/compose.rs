@@ -15,6 +15,7 @@ mod history;
 mod host;
 mod keys;
 mod merge;
+mod merge_fields;
 mod messages;
 mod model;
 mod send;
@@ -918,6 +919,10 @@ impl Component for Compose {
                 ComposeInput::SendBody(fields) => self.on_send_body(fields, &sender),
 
                 ComposeInput::MailMerge => self.on_mail_merge(widgets, &sender),
+
+                ComposeInput::MergeFields(target) => {
+                    self.on_merge_fields(target, widgets, &sender)
+                }
 
                 ComposeInput::MergeBody(fields) => self.on_merge_body(fields, widgets, &sender),
 

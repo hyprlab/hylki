@@ -28,6 +28,24 @@ pub(super) fn showcase_hooks(
         });
     }
 
+    // HYLKI_SHOWCASE_MERGE_FIELDS=<subject|body>:… opens the field
+    // palette five seconds after the composer opens (demo only); see
+    // `merge_fields`.
+    if let (Ok(v), Some(_)) = (
+        std::env::var("HYLKI_SHOWCASE_MERGE_FIELDS"),
+        std::env::var_os("HYLKI_DEMO"),
+    ) {
+        let target = if v.starts_with("subject") {
+            super::merge_fields::FieldTarget::Subject
+        } else {
+            super::merge_fields::FieldTarget::Body
+        };
+        let s = sender.input_sender().clone();
+        gtk::glib::timeout_add_seconds_local_once(5, move || {
+            let _ = s.send(ComposeInput::MergeFields(target));
+        });
+    }
+
     // HYLKI_SHOWCASE_MERGE opens Mail Merge five seconds after the
     // composer opens (demo only); see `ui::merge_dialog`.
     if std::env::var_os("HYLKI_SHOWCASE_MERGE").is_some()

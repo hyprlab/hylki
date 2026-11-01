@@ -14,6 +14,10 @@
   file may be comma, semicolon or tab separated, in UTF-8, UTF-16 or
   Windows-1252. The messages go one after another with no Undo Send; one
   that fails waits in the Outbox. An encrypted message cannot be merged.
+  A braces button at the end of the Subject row and in the body's toolbar,
+  or Ctrl+Shift+M, lists the fields at the cursor to put in with a click:
+  the last CSV file's columns and a contact group's, with **Choose a CSV
+  File…** to pick another, which the dialog then starts from.
 
 - **Added: events and tasks from mail** (#564, requested by
   samuel-edlmeier). **Create Event…** and **Create Task…** in a message's

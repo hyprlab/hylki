@@ -1594,10 +1594,10 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-msgid "The file is empty."
+msgid "Column {n}"
 msgstr ""
 
-msgid "Column {n}"
+msgid "The file is empty."
 msgstr ""
 
 msgid "The file has no rows below its first."
@@ -3287,6 +3287,12 @@ msgstr ""
 msgid "Check the From address"
 msgstr ""
 
+msgid "Contact Groups"
+msgstr ""
+
+msgid "Choose a CSV File…"
+msgstr ""
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -3372,6 +3378,9 @@ msgid "Translate what you wrote"
 msgstr ""
 
 msgid "Insert Signature"
+msgstr ""
+
+msgid "Insert Merge Field"
 msgstr ""
 
 msgid "No Signature"

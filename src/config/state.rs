@@ -122,6 +122,10 @@ pub(super) struct StateFile {
     /// The alarms the last such event had, in minutes before its start.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     last_event_alarms: Vec<u32>,
+    /// The CSV file last chosen for a mail merge (#447): the field palette
+    /// offers its columns, and the merge starts from it.
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    merge_file: String,
 }
 
 /// A font family picked in the composer (#358), and whether it is
@@ -211,6 +215,16 @@ pub(crate) fn save_calendar_choice(task: bool, uid: &str) {
         };
         *slot = uid.to_string();
     });
+}
+
+/// The CSV file last chosen for a mail merge (#447), while it is there.
+pub(crate) fn load_merge_file() -> Option<std::path::PathBuf> {
+    let path = std::path::PathBuf::from(load_state().merge_file);
+    path.is_file().then_some(path)
+}
+
+pub(crate) fn save_merge_file(path: &std::path::Path) {
+    update_state(|s| s.merge_file = path.to_string_lossy().to_string());
 }
 
 /// The alarms the last event made from a message had (#564).

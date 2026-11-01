@@ -118,6 +118,8 @@ pub(crate) enum ComposeInput {
     SendBody(OutgoingFields),
     /// Mail Merge (#447): read the message, fields and all, for the dialog.
     MailMerge,
+    /// The field palette, at the cursor in the subject or the body (#447).
+    MergeFields(super::merge_fields::FieldTarget),
     /// The message came back from the editor: open the dialog.
     MergeBody(OutgoingFields),
     /// The dialog's Send: one message per row, each filled in.

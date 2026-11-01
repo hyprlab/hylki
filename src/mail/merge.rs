@@ -351,24 +351,51 @@ fn records(text: &str, delim: char) -> Vec<Vec<String>> {
     rows
 }
 
+/// The header's names, a blank one called by its number.
+fn column_names(header: &[String]) -> Vec<String> {
+    header
+        .iter()
+        .enumerate()
+        .map(|(i, name)| match name.trim() {
+            "" => crate::i18n::i18n_f("Column {n}", &[("n", &(i + 1).to_string())]),
+            name => name.to_string(),
+        })
+        .collect()
+}
+
+/// The fields a CSV file names in its first row, read from its start alone:
+/// the composer's field palette asks for them each time it opens.
+pub(crate) fn csv_columns(path: &std::path::Path) -> Vec<String> {
+    use std::io::Read;
+    let mut start = Vec::new();
+    let read = std::fs::File::open(path).and_then(|f| f.take(64 * 1024).read_to_end(&mut start));
+    if read.is_err() {
+        return Vec::new();
+    }
+    let text = decode(&start);
+    records(&text, delimiter(&text))
+        .into_iter()
+        .next()
+        .map(|header| column_names(&header))
+        .unwrap_or_default()
+}
+
+/// The fields of a contact group, as [`group_table`] names them.
+pub(crate) fn group_columns() -> Vec<String> {
+    group_table(&[]).columns
+}
+
 /// A CSV file's table: the first row names the fields. A column with no
 /// name is called by its number; a row shorter than the first is padded,
 /// and what a longer one has past it is dropped.
 pub(crate) fn parse_csv(bytes: &[u8]) -> Result<Table, String> {
-    use crate::i18n::{i18n, i18n_f};
+    use crate::i18n::i18n;
     let text = decode(bytes);
     let mut rows = records(&text, delimiter(&text)).into_iter();
     let Some(header) = rows.next() else {
         return Err(i18n("The file is empty."));
     };
-    let columns: Vec<String> = header
-        .iter()
-        .enumerate()
-        .map(|(i, name)| match name.trim() {
-            "" => i18n_f("Column {n}", &[("n", &(i + 1).to_string())]),
-            name => name.to_string(),
-        })
-        .collect();
+    let columns = column_names(&header);
     let rows: Vec<Vec<String>> = rows
         .map(|mut r| {
             r.resize(columns.len(), String::new());

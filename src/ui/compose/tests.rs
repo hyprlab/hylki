@@ -162,6 +162,12 @@ fn pinned_key_tables() {
         super::keys::composer_key(Key::b, cs),
         Some(super::ComposeInput::FocusField(super::types::Field::Bcc))
     ));
+    assert!(matches!(
+        super::keys::composer_key(Key::M, cs),
+        Some(super::ComposeInput::MergeFields(
+            super::merge_fields::FieldTarget::Focused
+        ))
+    ));
     assert!(super::keys::composer_key(Key::a, M::CONTROL_MASK).is_none());
     assert!(super::keys::composer_key(Key::a, cs | M::ALT_MASK).is_none());
     assert!(super::keys::composer_key(Key::x, cs).is_none());
