@@ -174,7 +174,8 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
     body.set_selectable(true);
     let scroller = gtk::ScrolledWindow::new();
     scroller.set_hscrollbar_policy(gtk::PolicyType::Never);
-    scroller.set_min_content_height(160);
+    scroller.set_min_content_height(80);
+    scroller.set_propagate_natural_height(true);
     scroller.set_max_content_height(240);
     scroller.set_child(Some(&body));
     let card = gtk::Box::new(gtk::Orientation::Vertical, 8);
@@ -201,7 +202,14 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
     bx.append(&form);
     bx.append(&note);
     bx.append(&preview);
-    dialog.set_extra_child(Some(&bx));
+    // The dialog is held to its window's height: in a short composer
+    // window everything below the text scrolls rather than run off it.
+    let outer = gtk::ScrolledWindow::new();
+    outer.set_hscrollbar_policy(gtk::PolicyType::Never);
+    outer.set_propagate_natural_height(true);
+    outer.set_propagate_natural_width(true);
+    outer.set_child(Some(&bx));
+    dialog.set_extra_child(Some(&outer));
 
     let start = Rc::new(start);
     let merged = Rc::new(RefCell::new(Merged::default()));
