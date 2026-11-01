@@ -1202,12 +1202,15 @@ different languages save it, and be in UTF-8, UTF-16 or Windows-1252. A
 contact group has the fields **Name**, **First Name**, **Last Name** and
 **Email**.
 
-Fields need not be typed. The braces button at the end of the Subject row,
-the same button in the body's toolbar, or <kbd>Ctrl+Shift+M</kbd> opens a
-list of fields at the cursor, and a click puts one in where the cursor was:
-the shortcut picks the Subject when the cursor is in it, the body otherwise.
-The list has the columns of the CSV file chosen last, under its name, and a
-contact group's fields. **Choose a CSV File…** at its end picks another
+Fields need not be typed. The braces button at the end of the To and
+Subject rows, the same button in the body's toolbar, or
+<kbd>Ctrl+Shift+M</kbd> opens a list of fields at the cursor, and a click
+puts one in where the cursor was: the shortcut picks To or the Subject when
+the cursor is in it, the body otherwise. The list has the columns of the CSV
+file chosen last, under its name, and a contact group's fields. For To it
+has only the fields that hold addresses, and the field goes in as a pill
+marked with the braces. Address suggestions stay closed while a field is
+typed there. **Choose a CSV File…** at its end picks another
 file, which the **Mail Merge…** dialog then starts from too.
 
 With To left empty, each message goes to the column whose values are email

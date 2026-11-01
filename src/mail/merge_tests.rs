@@ -65,8 +65,9 @@ fn the_columns_come_from_the_first_line_alone() {
         csv.push_str(&format!("Person {i};x;p{i}@example.com\n"));
     }
     std::fs::write(&path, csv).unwrap();
-    assert_eq!(csv_columns(&path), ["Name", "Column 2", "E-mail"]);
-    assert!(csv_columns(&dir.join("missing.csv")).is_empty());
+    assert_eq!(csv_columns(&path, false), ["Name", "Column 2", "E-mail"]);
+    assert_eq!(csv_columns(&path, true), ["E-mail"]);
+    assert!(csv_columns(&dir.join("missing.csv"), false).is_empty());
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
@@ -240,4 +241,14 @@ fn a_group_splits_names_and_skips_members_without_an_address() {
         ]
     );
     assert_eq!(t.address_column(), Some(3));
+    assert_eq!(group_columns(true), [group_columns(false)[3].clone()]);
+}
+
+#[test]
+fn every_column_of_addresses_is_offered_to_to() {
+    let t = table("Name,Work,Home\nAnn,ann@work.example,ann@home.example\nBob,bob@work.example,\n");
+    assert_eq!(t.address_columns(), [1, 2]);
+    assert!(is_field("{{Work}}"));
+    assert!(is_field("{{First Name}} <{{Email}}>"));
+    assert!(!is_field("ann@example.com"));
 }

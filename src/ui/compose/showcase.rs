@@ -28,17 +28,18 @@ pub(super) fn showcase_hooks(
         });
     }
 
-    // HYLKI_SHOWCASE_MERGE_FIELDS=<subject|body>:… opens the field
+    // HYLKI_SHOWCASE_MERGE_FIELDS=<to|subject|body>:… opens the field
     // palette five seconds after the composer opens (demo only); see
     // `merge_fields`.
     if let (Ok(v), Some(_)) = (
         std::env::var("HYLKI_SHOWCASE_MERGE_FIELDS"),
         std::env::var_os("HYLKI_DEMO"),
     ) {
-        let target = if v.starts_with("subject") {
-            super::merge_fields::FieldTarget::Subject
-        } else {
-            super::merge_fields::FieldTarget::Body
+        use super::merge_fields::FieldTarget;
+        let target = match v.split(':').next() {
+            Some("subject") => FieldTarget::Subject,
+            Some("to") => FieldTarget::To,
+            _ => FieldTarget::Body,
         };
         let s = sender.input_sender().clone();
         gtk::glib::timeout_add_seconds_local_once(5, move || {

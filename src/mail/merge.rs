@@ -134,6 +134,17 @@ impl Table {
         best.filter(|_| n * 2 >= self.rows.len().max(1))
     }
 
+    /// Every column at least half of whose values are email addresses: the
+    /// fields To can take.
+    pub(crate) fn address_columns(&self) -> Vec<usize> {
+        (0..self.columns.len())
+            .filter(|&c| {
+                let n = self.rows.iter().filter(|r| is_address(r[c].trim())).count();
+                n > 0 && n * 2 >= self.rows.len()
+            })
+            .collect()
+    }
+
     /// The fields `letter` names that the table has no column for, each
     /// once, as written, with where it is written.
     pub(crate) fn missing_fields(&self, letter: &Letter) -> Vec<Missing> {
@@ -401,8 +412,10 @@ fn column_names(header: &[String]) -> Vec<String> {
 }
 
 /// The fields a CSV file names in its first row, read from its start alone:
-/// the composer's field palette asks for them each time it opens.
-pub(crate) fn csv_columns(path: &std::path::Path) -> Vec<String> {
+/// the composer's field palette asks for them each time it opens. With
+/// `addresses`, only those whose values are mostly email addresses, judged
+/// by the rows in that start.
+pub(crate) fn csv_columns(path: &std::path::Path, addresses: bool) -> Vec<String> {
     use std::io::Read;
     let mut start = Vec::new();
     let read = std::fs::File::open(path).and_then(|f| f.take(64 * 1024).read_to_end(&mut start));
@@ -410,16 +423,44 @@ pub(crate) fn csv_columns(path: &std::path::Path) -> Vec<String> {
         return Vec::new();
     }
     let text = decode(&start);
-    records(&text, delimiter(&text))
+    let mut records = records(&text, delimiter(&text)).into_iter();
+    let Some(header) = records.next() else {
+        return Vec::new();
+    };
+    let columns = column_names(&header);
+    if !addresses {
+        return columns;
+    }
+    let rows = records
+        .map(|mut r| {
+            r.resize(columns.len(), String::new());
+            r
+        })
+        .collect();
+    let table = Table { columns, rows };
+    table
+        .address_columns()
         .into_iter()
-        .next()
-        .map(|header| column_names(&header))
-        .unwrap_or_default()
+        .map(|c| table.columns[c].clone())
+        .collect()
 }
 
-/// The fields of a contact group, as [`group_table`] names them.
-pub(crate) fn group_columns() -> Vec<String> {
-    group_table(&[]).columns
+/// The fields of a contact group, as [`group_table`] names them; with
+/// `addresses`, only the one that holds the address.
+pub(crate) fn group_columns(addresses: bool) -> Vec<String> {
+    let table = group_table(&[]);
+    if addresses {
+        // The last column: an empty table has no values to judge by.
+        table.columns.last().cloned().into_iter().collect()
+    } else {
+        table.columns
+    }
+}
+
+/// Whether a recipient is a mail merge field rather than an address, as
+/// To holds one until the merge fills it in.
+pub(crate) fn is_field(recipient: &str) -> bool {
+    !placeholders(recipient).is_empty()
 }
 
 /// A CSV file's table: the first row names the fields. A column with no

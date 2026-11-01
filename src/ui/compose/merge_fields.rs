@@ -1,7 +1,8 @@
 //! The field palette (#447): the mail merge fields a click away, put in at
-//! the cursor in the subject or the body, from a button beside each or with
-//! Ctrl+Shift+M. It offers a contact group's fields and the columns of the
-//! CSV file last chosen, and a file can be chosen from it.
+//! the cursor in To, the subject or the body, from a button beside each or
+//! with Ctrl+Shift+M. It offers a contact group's fields and the columns of
+//! the CSV file last chosen, only those that hold addresses for To, and a
+//! file can be chosen from it.
 
 use std::rc::Rc;
 
@@ -16,10 +17,56 @@ use crate::mail::merge::{csv_columns, group_columns};
 /// Where a field picked in the palette goes.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub(crate) enum FieldTarget {
+    To,
     Subject,
     Body,
-    /// The subject if the cursor is in it, the body otherwise: the shortcut.
+    /// Where the cursor is, To or the subject, the body otherwise: the
+    /// shortcut.
     Focused,
+}
+
+/// The name of To's field button, by which the palette finds it to point at.
+const TO_BUTTON: &str = "hylki-merge-field-to";
+
+/// To's field button, after the row's More.
+pub(super) fn add_to_button(widgets: &ComposeWidgets, sender: &ComponentSender<Compose>) {
+    let button = gtk::Button::from_icon_name("hylki-merge-field-symbolic");
+    button.set_widget_name(TO_BUTTON);
+    button.set_tooltip_text(Some(i18n("Insert Merge Field").as_str()));
+    button.add_css_class("flat");
+    button.set_valign(gtk::Align::Center);
+    button.set_can_focus(false);
+    button.set_focus_on_click(false);
+    let s = sender.input_sender().clone();
+    button.connect_clicked(move |_| {
+        let _ = s.send(ComposeInput::MergeFields(FieldTarget::To));
+    });
+    widgets.to_row.add_suffix(&button);
+}
+
+/// The first widget under `root` with this name.
+fn named(root: &gtk::Widget, name: &str) -> Option<gtk::Widget> {
+    let mut stack = vec![root.clone()];
+    while let Some(w) = stack.pop() {
+        if w.widget_name() == name {
+            return Some(w);
+        }
+        let mut child = w.first_child();
+        while let Some(c) = child {
+            child = c.next_sibling();
+            stack.push(c);
+        }
+    }
+    None
+}
+
+/// Whether the keyboard is in `widget`, or in something inside it.
+fn focus_within(widget: &impl IsA<gtk::Widget>) -> bool {
+    let widget = widget.upcast_ref::<gtk::Widget>();
+    widget
+        .root()
+        .and_then(|r| r.focus())
+        .is_some_and(|f| &f == widget || f.is_ancestor(widget))
 }
 
 /// The GtkText inside the subject row, which holds its cursor.
@@ -50,6 +97,7 @@ impl Compose {
             return;
         };
         let target = match target {
+            FieldTarget::Focused if focus_within(&widgets.to_row) => FieldTarget::To,
             FieldTarget::Focused if text.has_focus() => FieldTarget::Subject,
             FieldTarget::Focused => FieldTarget::Body,
             other => other,
@@ -73,6 +121,29 @@ impl Compose {
             })
         };
         match target {
+            FieldTarget::To => {
+                let row = widgets.to_row.clone();
+                let Some(button) = named(row.upcast_ref(), TO_BUTTON) else {
+                    return;
+                };
+                // A pill after the others, and the cursor back in the row
+                // to go on typing.
+                let put = {
+                    let row = row.clone();
+                    Rc::new(move |field: &str| {
+                        row.add_recipient(field);
+                        row.grab_focus();
+                    })
+                };
+                let popover = palette(put, choose, true);
+                popover.set_parent(&button);
+                popover.connect_closed(|p| {
+                    let p = p.clone();
+                    gtk::glib::idle_add_local_once(move || p.unparent());
+                });
+                popover.popup();
+                showcase(&popover, move |log| log(row.text()));
+            }
             FieldTarget::Subject => {
                 // Read now: the palette takes the focus, and a selection
                 // is what the field replaces.
@@ -90,7 +161,7 @@ impl Compose {
                         text.set_position(at);
                     })
                 };
-                let popover = palette(put, choose);
+                let popover = palette(put, choose, false);
                 let row = widgets.subject_row.clone();
                 popover.set_parent(&row);
                 let (cursor, _) = text.compute_cursor_extents(start as usize);
@@ -114,7 +185,7 @@ impl Compose {
             _ => {
                 let editor = self.editor.clone();
                 let put = Rc::new(move |field: &str| editor.insert_at_caret(field));
-                let popover = palette(put, choose);
+                let popover = palette(put, choose, false);
                 self.editor.popup_at_caret(popover.clone());
                 let editor = self.editor.clone();
                 showcase(&popover, move |log| {
@@ -128,9 +199,9 @@ impl Compose {
     }
 }
 
-/// HYLKI_SHOWCASE_MERGE_FIELDS=<subject|body>:<png>[:<n>] (demo only; see
-/// `compose::showcase`): the palette captured a second after it opens,
-/// then its `n`th field clicked and what the subject or body holds logged.
+/// HYLKI_SHOWCASE_MERGE_FIELDS=<to|subject|body>:<png>[:<n>] (demo only;
+/// see `compose::showcase`): the palette captured a second after it opens,
+/// then its `n`th field clicked and what the field or body holds logged.
 fn showcase(popover: &gtk::Popover, read: impl Fn(Box<dyn FnOnce(String)>) + 'static) {
     let (Ok(v), Some(_)) = (
         std::env::var("HYLKI_SHOWCASE_MERGE_FIELDS"),
@@ -168,9 +239,10 @@ fn showcase(popover: &gtk::Popover, read: impl Fn(Box<dyn FnOnce(String)>) + 'st
 }
 
 /// The palette: the last file's columns under its name, a contact group's
-/// fields, and Choose a CSV File…. A pick is put in once the popover has
-/// closed and given the focus back.
-fn palette(put: Rc<dyn Fn(&str)>, choose: Rc<dyn Fn()>) -> gtk::Popover {
+/// fields, and Choose a CSV File…; with `addresses`, only the fields that
+/// hold an address. A pick is put in once the popover has closed and given
+/// the focus back.
+fn palette(put: Rc<dyn Fn(&str)>, choose: Rc<dyn Fn()>, addresses: bool) -> gtk::Popover {
     let popover = gtk::Popover::new();
     let list = gtk::Box::new(gtk::Orientation::Vertical, 2);
     list.add_css_class("context-menu-list");
@@ -213,7 +285,7 @@ fn palette(put: Rc<dyn Fn(&str)>, choose: Rc<dyn Fn()>) -> gtk::Popover {
 
     // The file chosen comes first: it is what a merge is likeliest to use.
     if let Some(path) = crate::config::load_merge_file() {
-        let columns = csv_columns(&path);
+        let columns = csv_columns(&path, addresses);
         if !columns.is_empty() {
             let name = path
                 .file_name()
@@ -227,7 +299,7 @@ fn palette(put: Rc<dyn Fn(&str)>, choose: Rc<dyn Fn()>) -> gtk::Popover {
         }
     }
     list.append(&heading(&i18n("Contact Groups")));
-    for name in group_columns() {
+    for name in group_columns(addresses) {
         list.append(&field(&name));
     }
     list.append(&gtk::Separator::new(gtk::Orientation::Horizontal));

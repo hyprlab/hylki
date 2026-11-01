@@ -3287,6 +3287,9 @@ msgstr ""
 msgid "Check the From address"
 msgstr ""
 
+msgid "Insert Merge Field"
+msgstr ""
+
 msgid "Contact Groups"
 msgstr ""
 
@@ -3378,9 +3381,6 @@ msgid "Translate what you wrote"
 msgstr ""
 
 msgid "Insert Signature"
-msgstr ""
-
-msgid "Insert Merge Field"
 msgstr ""
 
 msgid "No Signature"
@@ -5923,6 +5923,9 @@ msgid "Saved {name}"
 msgstr ""
 
 msgid "Could not save the PDF: {error}"
+msgstr ""
+
+msgid "Filled in by Mail Merge"
 msgstr ""
 
 msgid "Custom…"

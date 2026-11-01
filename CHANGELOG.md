@@ -16,8 +16,10 @@
   file may be comma, semicolon or tab separated, in UTF-8, UTF-16 or
   Windows-1252. The messages go one after another with no Undo Send; one
   that fails waits in the Outbox. An encrypted message cannot be merged.
-  A braces button at the end of the Subject row and in the body's toolbar,
-  or Ctrl+Shift+M, lists the fields at the cursor to put in with a click:
+  A braces button at the end of the To and Subject rows and in the body's
+  toolbar, or Ctrl+Shift+M, lists the fields at the cursor to put in with a
+  click, only those holding addresses for To, where a field is a pill marked
+  with the braces and no address suggestions open:
   the last CSV file's columns and a contact group's, with **Choose a CSV
   File…** to pick another, which the dialog then starts from.
 

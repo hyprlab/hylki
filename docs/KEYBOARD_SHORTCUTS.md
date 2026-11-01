@@ -143,7 +143,7 @@ no recipient is not sent, and one scheduled for later is queued.
 <kbd>Ctrl+Shift+C</kbd> and <kbd>Ctrl+Shift+B</kbd> put the cursor in To, Cc
 and Bcc, showing the row if it is hidden, as in Thunderbird.
 <kbd>Ctrl+Shift+M</kbd> opens the list of
-[mail merge](DOCUMENTATION.md#mail-merge) fields at the cursor, in the
+[mail merge](DOCUMENTATION.md#mail-merge) fields at the cursor, in To, the
 Subject or the body. Outside the
 composer, <kbd>Ctrl+Shift+A</kbd> and <kbd>Ctrl+Shift+C</kbd> keep the
 meanings below.

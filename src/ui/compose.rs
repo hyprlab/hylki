@@ -661,6 +661,8 @@ impl Component for Compose {
 
         wire_subject(&widgets, &sender);
 
+        merge_fields::add_to_button(&widgets, &sender);
+
         model.install_keys(&root, &sender);
 
         start_autosave(&sender);
