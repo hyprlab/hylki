@@ -16,6 +16,9 @@ impl MessageView {
     pub(super) fn render(&mut self) {
         let dark = self.effective_dark();
         self.apply_webview_bg(dark);
+        // Before the shortcut below: a sender whose face could not be found
+        // last time may have one now (#560).
+        self.look_up_faces();
         // Already showing exactly this — returning to a conversation, or a
         // re-render nothing changed. Loading it again would only blank the view
         // and paint the same pixels back.
@@ -131,6 +134,8 @@ impl MessageView {
         // The picture a mailbox of your own shows can change while a
         // conversation is open (#189) — the cards must be built again.
         crate::services::avatar::own_faces_generation().hash(&mut h);
+        // Which tiers a sender's face may come from (#560).
+        super::faces::tiers().hash(&mut h);
         // Names from Contacts came in, or the switch for them moved (#541).
         crate::contacts::contact_names_generation().hash(&mut h);
         self.thread.len().hash(&mut h);
@@ -219,15 +224,14 @@ impl MessageView {
                 Default::default()
             }
         });
+        // On every header, a card's or a full-bleed message's: the marks
+        // are the message's, not the card's.
         LIVE_MARKS.with(|b| {
-            *b.borrow_mut() = if self.carded() {
-                self.thread
-                    .iter()
-                    .map(|m| ((m.account_id, m.id), self.card_marks_html(m)))
-                    .collect()
-            } else {
-                Default::default()
-            }
+            *b.borrow_mut() = self
+                .thread
+                .iter()
+                .map(|m| ((m.account_id, m.id), self.card_marks_html(m)))
+                .collect()
         });
         let translation = crate::services::translate::load();
         LIVE_TRANSLATE_ON.with(|on| on.set(translation.enabled()));

@@ -172,6 +172,7 @@ impl AppModel {
             draft_origin: None,
             encrypt: false,
             receipt: Some(editable.receipt),
+            importance: editable.importance,
             outbox_origin: Some(id),
             reply_addressed_to: String::new(),
             from_address: first_recipient(&editable.from)

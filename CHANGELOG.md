@@ -26,6 +26,79 @@ Lines typed in plain text show as they are sent, and "To:", "Cc:" and
 
 ## 1.47.0-beta.1 — 2026-10-30
 
+- **Added: showing only contact groups.** **Show only** in the Contacts
+  sort and filter menu has **Groups**, which lists every address book's
+  groups and nobody else, and a search for "group" or "groups" lists every
+  group as well as anyone whose details hold the word. **All Address
+  Books** listed no groups before, so they were reached book by book.
+
+- **Fixed: a darker edge at the corners of the menu beside Send** while it
+  was open or under the pointer, with libadwaita 1.9.
+
+- **Fixed: a draft could take seconds to open, with nothing on screen to
+  say so.** Opening a draft fetched its bytes from the server first, which
+  waited behind whatever the account was doing. The drafts and templates of
+  a folder are now fetched in the background when it is listed, the newest
+  50 first, and open from that copy at once. One not fetched yet shows
+  Loading… in the reading pane, and goes ahead of the background fetches.
+
+- **Fixed: a draft stayed highlighted after its editor closed.** A draft
+  opened from the Drafts list and then saved, sent or cancelled left its row
+  selected over a reading pane that said no draft was selected, and a click
+  on the row did not open it again. The row is now let go when the editor
+  closes.
+
+- **Added: mail merge** (#447, requested by samuel-edlmeier). **Mail
+  Merge…** in the menu beside **Send** sends the message once per row of a
+  CSV file, or once per member of a contact group. A field written as
+  `{{Field}}` in To, Cc, Bcc, Reply-To, the subject or the text takes the
+  row's value, matched to the file's first row by letters and digits in any
+  case, so `{{E-mail}}` finds "Email". To left empty
+  goes to the column that holds addresses. The dialog lists the fields,
+  steps through a preview of each message, and lists each field the file or
+  group does not have with where it is written, keeping Send off until it
+  is taken out or **Leave these fields empty** is on; rows without a valid
+  address are left out and counted. The
+  file may be comma, semicolon or tab separated, in UTF-8, UTF-16 or
+  Windows-1252. The messages go one after another with no Undo Send; one
+  that fails waits in the Outbox. An encrypted message cannot be merged.
+  A braces button at the end of the To and Subject rows and in the body's
+  toolbar, or Ctrl+Shift+M, lists the fields at the cursor to put in with a
+  click, only those holding addresses for To, where a field is a pill marked
+  with the braces and no address suggestions open. Drafts and templates
+  keep fields in To, Cc and Bcc, under a stand-in address that reaches no
+  one, and Send without the merge points to it:
+  the last CSV file's columns and a contact group's, with **Choose a CSV
+  File…** to pick another, which the dialog then starts from.
+
+- **Added: events and tasks from mail** (#564, requested by
+  samuel-edlmeier). **Create Event…** and **Create Task…** in a message's
+  right-click menu, in the list and the reader, open a dialog with the
+  subject as the title and the sender, date and text as the notes. An event
+  has a start and an end, or whole days, and up to two alarms from the
+  start to a week before; a task has an optional due date.
+  It is written to the calendar or task list picked from Evolution Data
+  Server (GNOME Online Accounts, Evolution, GNOME Calendar), read-only
+  calendars left out and the last one used chosen first. Without Evolution
+  Data Server it is handed to the calendar application as an `.ics` file.
+
+- **Added: contact photos in the reader** (#560, requested by
+  samuel-edlmeier). A message's header in the reader shows the sender's
+  contact photo where it showed their initials, as the message list does,
+  so it is there with the list's avatars turned off. The Gravatar and
+  sender-logo switches in **Settings → Privacy** apply to it as they do to
+  the list.
+
+- **Added: setting and showing a message's importance** (#563, requested by
+  samuel-edlmeier). The menu beside **Send** has **Importance**: **High**,
+  **Normal** or **Low**. High and low send `X-Priority` and `Importance`
+  headers, and stay with a draft or a message in the Outbox. Mail marked high or low shows
+  a red mark or a grey arrow beside the paperclip and the star in the card
+  layout of the list, and in its header in the reader; until now only the
+  Importance column of a single-line list showed it. The reader's header
+  shows the star, paperclip and importance marks on a lone message too when
+  **Settings → Reading → Single messages as cards** is off.
+
 - **Added: On This Computer, folders kept on this computer** (#552).
   **Settings → Accounts → On This Computer → Add** adds an account with no
   server, as Evolution has, for an archive of mail moved or copied in from
@@ -134,8 +207,9 @@ Lines typed in plain text show as they are sent, and "To:", "Cc:" and
 - **Changed: Keep mail offline is called Keep mail cached** in an account's
   settings.
 
-- **Translations:** German (PR #550 by Samuel Edlmeier) and French (PR #556 by
-  frenchy82) brought up to date.
+- **Translations:** German (PRs #550 and #559 by Samuel Edlmeier), French
+  (PRs #556 and #558 by frenchy82) and Spanish (PR #561 by Daniel Miguel)
+  brought up to date.
 
 ## 1.46.0 — 2026-10-29
 

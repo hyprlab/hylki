@@ -96,17 +96,27 @@ fn build_message(
     let sender_address = from.email.clone();
     let from_mailbox = from.clone();
     let mut builder = LettreMessage::builder().from(from);
+    // A mail merge field (#447) is no address, but a draft or template
+    // written for a merge keeps it: as the display name of an address that
+    // reaches no one, which the composer turns back into the field.
+    let recipient = |name: &str, addr: &str| match mailbox(name, addr) {
+        Err(_) if draft && crate::mail::merge::is_field(&format!("{name} {addr}")) => {
+            let written = crate::worker::format_recipient(name, addr);
+            mailbox(&written, &crate::mail::merge::draft_field_address(&written))
+        }
+        built => built,
+    };
     let mut recipients = 0;
     for (name, addr) in parse_recipients(&msg.to) {
-        builder = builder.to(mailbox(&name, &addr)?);
+        builder = builder.to(recipient(&name, &addr)?);
         recipients += 1;
     }
     for (name, addr) in parse_recipients(&msg.cc) {
-        builder = builder.cc(mailbox(&name, &addr)?);
+        builder = builder.cc(recipient(&name, &addr)?);
         recipients += 1;
     }
     for (name, addr) in parse_recipients(&msg.bcc) {
-        builder = builder.bcc(mailbox(&name, &addr)?);
+        builder = builder.bcc(recipient(&name, &addr)?);
         recipients += 1;
     }
     // A draft is the user's own copy and has to come back with its Bcc
@@ -148,6 +158,9 @@ fn build_message(
     // too, so the composer finds the request again when it is reopened.
     if msg.request_receipt && msg.receipt_report.is_none() {
         builder = builder.raw_header(super::report::request_header(&from_addr));
+    }
+    for header in super::importance::headers(msg.importance) {
+        builder = builder.raw_header(header);
     }
     // Reply-To (#58): answers go where the sender asked, not to From.
     for (name, addr) in parse_recipients(&msg.reply_to) {
@@ -482,6 +495,40 @@ mod tests {
         msg.to = "Peer <peer@hylki.invalid>".into();
         let raw = build_draft(&account, &msg).expect("builds").formatted();
         assert!(String::from_utf8_lossy(&raw).contains("peer@hylki.invalid"));
+    }
+
+    /// A draft or template written for a mail merge (#447) keeps the fields
+    /// in To and Cc, which read back as written; a send still refuses them.
+    #[test]
+    fn a_merge_draft_keeps_its_fields() {
+        let account = sample_account();
+        let mut msg = sample_outgoing();
+        msg.to = "{{First Name}} <{{Email}}>".into();
+        msg.cc = "{{Boss}}, ann@example.com".into();
+        let raw = build_draft(&account, &msg)
+            .expect("draft builds")
+            .formatted();
+        let parsed = mail_parser::MessageParser::default()
+            .parse(&raw)
+            .expect("parses");
+        let field = |list: Option<&mail_parser::Address>| {
+            let list: Vec<String> = list
+                .map(|a| {
+                    a.iter()
+                        .map(|m| {
+                            crate::worker::format_recipient(
+                                m.name().unwrap_or_default(),
+                                m.address().unwrap_or_default(),
+                            )
+                        })
+                        .collect()
+                })
+                .unwrap_or_default();
+            crate::mail::merge::fields_from_draft(&list.join(", "))
+        };
+        assert_eq!(field(parsed.to()), "{{First Name}} <{{Email}}>");
+        assert_eq!(field(parsed.cc()), "{{Boss}}, ann@example.com");
+        assert!(build_email(&account, &msg).is_err());
     }
 
     /// OpenPGP sending (#133), end to end against a real gpg in a throwaway

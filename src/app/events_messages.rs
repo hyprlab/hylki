@@ -205,6 +205,8 @@ impl AppModel {
         if !unchanged {
             self.cache_listed(account_id, folder_id, &messages);
         }
+        // A draft or template opens at once from bytes fetched now.
+        self.fetch_drafts_ahead(account_id, folder_id, &messages);
         self.resume_pickers(account_id, folder_id, &sender);
         if !unchanged {
             self.after_list_changed(account_id, &sender);

@@ -89,6 +89,11 @@ pub(super) fn build_widgets() -> RowWidgets {
     let clip = gtk::Image::from_icon_name("mail-attachment-symbolic");
     clip.add_css_class("dim-icon");
     top.append(&clip);
+    // How important the sender marked it (#563), and a column of its own on
+    // one line (#334).
+    let importance = gtk::Image::from_icon_name("emblem-important-symbolic");
+    importance.set_visible(false);
+    top.append(&importance);
     let star = gtk::Image::from_icon_name("starred-symbolic");
     star.add_css_class("star-icon");
     top.append(&star);
@@ -202,9 +207,6 @@ pub(super) fn build_widgets() -> RowWidgets {
     due_col.set_child(Some(&due));
     due_col.set_visible(false);
     line.append(&due_col);
-    let importance = gtk::Image::from_icon_name("emblem-important-symbolic");
-    importance.set_visible(false);
-    line.append(&importance);
 
     // The last reply's rail: a real dotted border on a widget spanning
     // exactly the row's top half, so it ends at the node dot. Added before

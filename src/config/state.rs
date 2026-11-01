@@ -113,6 +113,19 @@ pub(super) struct StateFile {
     /// newest first, for the font menu to offer again.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     recent_fonts: Vec<RecentFont>,
+    /// The EDS calendar and task list a message was last made into an
+    /// event or a task in (#564), by source UID: the dialog's first choice.
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    last_calendar: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    last_task_list: String,
+    /// The alarms the last such event had, in minutes before its start.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    last_event_alarms: Vec<u32>,
+    /// The CSV file last chosen for a mail merge (#447): the field palette
+    /// offers its columns, and the merge starts from it.
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    merge_file: String,
 }
 
 /// A font family picked in the composer (#358), and whether it is
@@ -180,6 +193,47 @@ fn load_state() -> StateFile {
     read_toml::<StateFile>(state_path())
         .or_else(|| toml::from_str::<StateFile>("").ok())
         .unwrap_or_default()
+}
+
+/// The calendar, or with `task` the task list, last picked for an item
+/// made from a message (#564).
+pub(crate) fn load_calendar_choice(task: bool) -> String {
+    let s = load_state();
+    if task {
+        s.last_task_list
+    } else {
+        s.last_calendar
+    }
+}
+
+pub(crate) fn save_calendar_choice(task: bool, uid: &str) {
+    update_state(|s| {
+        let slot = if task {
+            &mut s.last_task_list
+        } else {
+            &mut s.last_calendar
+        };
+        *slot = uid.to_string();
+    });
+}
+
+/// The CSV file last chosen for a mail merge (#447), while it is there.
+pub(crate) fn load_merge_file() -> Option<std::path::PathBuf> {
+    let path = std::path::PathBuf::from(load_state().merge_file);
+    path.is_file().then_some(path)
+}
+
+pub(crate) fn save_merge_file(path: &std::path::Path) {
+    update_state(|s| s.merge_file = path.to_string_lossy().to_string());
+}
+
+/// The alarms the last event made from a message had (#564).
+pub(crate) fn load_event_alarms() -> Vec<u32> {
+    load_state().last_event_alarms
+}
+
+pub(crate) fn save_event_alarms(alarms: &[u32]) {
+    update_state(|s| s.last_event_alarms = alarms.to_vec());
 }
 
 /// Each folder's unread count when it was last looked at (#343).

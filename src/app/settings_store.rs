@@ -173,6 +173,7 @@ impl AppModel {
         // it before anything draws a date.
         self.message_list
             .emit(MessageListInput::SetSenderLogos(self.sender_logos));
+        crate::ui::message_view::set_face_tiers(self.gravatar, self.sender_logos);
         crate::datefmt::set_style(self.date_style, self.clock_style);
         crate::ui::print_preview::set_options(self.print_options);
         self.message_list.emit(MessageListInput::SetLook {

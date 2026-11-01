@@ -13,6 +13,7 @@ use crate::models::Message;
 
 mod addresses;
 mod bodies;
+mod draft_copies;
 mod flags;
 mod gallery;
 mod local_copies;

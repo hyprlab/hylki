@@ -175,5 +175,6 @@ impl MessageView {
         // what was known when the render was queued.
         let keys: Vec<(u32, u32)> = self.thread.iter().map(|m| (m.account_id, m.id)).collect();
         self.patch_card_atts(&keys);
+        self.patch_owed_faces();
     }
 }

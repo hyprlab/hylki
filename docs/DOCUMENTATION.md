@@ -612,6 +612,11 @@ which gives it away. Address books that fill themselves from mail
 (Collected Addresses, Recently Contacted, Other Contacts) are not used for
 this, and a contact saved without a name keeps the message's.
 
+A contact's photo is the sender's circle in the message list and in the
+reader's message headers. Without one, the circle shows the sender's
+Gravatar or their domain's logo when those are switched on in **Settings →
+Privacy**, and otherwise their initials.
+
 ### The Hylki address book
 
 Hylki keeps an address book of its own, the **Hylki Address Book**, beside
@@ -624,11 +629,13 @@ The Contacts view searches as the message list does. The search button in
 the list's header, <kbd>Ctrl+F</kbd> or <kbd>/</kbd> shows the search field,
 and <kbd>Esc</kbd>, or leaving the field empty, hides it and clears the
 search. **Settings → Contacts → Keep the search field open** shows it at
-all times. The button at the right of the header sorts the people by first
-name, last name or email. Its **Show only** column keeps those with a photo,
-an email address, a phone number, a street address, a birthday or a
-company, or those in no group. The button turns the accent color while a
-filter is on, and **Clear Filters** shows everything again.
+all times. Searching for "group" or "groups" lists every group, whatever
+its name. The button at the right of the header sorts the people by first
+name, last name or email. Its **Show only** column keeps the groups alone,
+or the people with a photo, an email address, a phone number, a street
+address, a birthday or a company, or those in no group. The button turns
+the accent color while a filter is on, and **Clear Filters** shows
+everything again.
 
 **Contacts** is a row of the sidebar's footer, above Attachments, unless
 **Settings → Sidebar → Sections** places it elsewhere. In the footer, or
@@ -1174,6 +1181,61 @@ A folder called Templates is taken for the role, at the top of the account
 or directly under the Inbox. Nothing on a server marks one otherwise, so a
 folder by another name, "Vorlagen" say, is chosen in the account's
 **Special Folders**, under **Templates**.
+
+### Mail merge
+
+**Mail Merge…**, in the menu beside **Send**, sends the message being
+written once to each row of a CSV file, or to each member of a contact
+group. A field written as `{{Field}}` anywhere in To, Cc, Bcc, Reply-To,
+the subject or the text is replaced by that row's value:
+
+```
+Dear {{First Name}},
+
+Your order {{Order}} has shipped.
+```
+
+The first row of the file names the fields. A field is matched to it by its
+letters and digits alone, in any case, so `{{first name}}` and
+`{{first_name}}` find a column called "First Name", and `{{E-mail}}` one
+called "Email".
+The file may be separated by commas, semicolons or tabs, as spreadsheets in
+different languages save it, and be in UTF-8, UTF-16 or Windows-1252. A
+contact group has the fields **Name**, **First Name**, **Last Name** and
+**Email**.
+
+Fields need not be typed. The braces button at the end of the To and
+Subject rows, the same button in the body's toolbar, or
+<kbd>Ctrl+Shift+M</kbd> opens a list of fields at the cursor, and a click
+puts one in where the cursor was: the shortcut picks To or the Subject when
+the cursor is in it, the body otherwise. The list has the columns of the CSV
+file chosen last, under its name, and a contact group's fields. For To it
+has only the fields that hold addresses, and the field goes in as a pill
+marked with the braces. Address suggestions stay closed while a field is
+typed there.
+
+A draft or [template](#templates) keeps its fields, those in To, Cc and Bcc
+too, so a merge can be saved and used again. Another mail app shows a field
+there as an address at `hylki.invalid`, which reaches no one. **Send**
+refuses a field in To, Cc or Bcc and points to **Mail Merge…**. **Choose a CSV File…** at its end picks another
+file, which the **Mail Merge…** dialog then starts from too.
+
+With To left empty, each message goes to the column whose values are email
+addresses. To name the recipient too, write To yourself, for instance
+`{{First Name}} {{Last Name}} <{{Email}}>`. Whatever is in Cc and Bcc goes
+on every message.
+
+The dialog lists the file's fields and steps through a preview of each
+message, filled in. A field the message names that the file or group does
+not have, a misspelled one or **Company** with a contact group say, is
+listed with where it is written, and Send stays off until it is taken out of
+the message or **Leave these fields empty** is switched on. A row without a
+valid address is left out and counted.
+**Send** then sends them all, one after another, from the From address
+chosen, each with its own copy in Sent. There is no Undo Send for a merge:
+the preview is the time to check. A message that cannot go waits in the
+Outbox like any other. An encrypted message cannot be merged, since each
+recipient would need their own key.
 
 ### Addresses as pills
 
@@ -1767,6 +1829,32 @@ it:
 The preview is laid out on the paper chosen the last time you printed, or
 your language's default paper size before that.
 
+### Events and tasks from mail
+
+**Create Event…** and **Create Task…** in a message's right-click menu, in
+the list or the reader, open a dialog filled in from the message: its
+subject as the title, and its sender, date and text as the notes. An event
+starts at the next whole hour and lasts an hour, or takes whole days with
+**All day**. **Alarm** and **Second alarm** each go off at the start or from
+five minutes to a week before, and the ones picked last are picked again; a
+task has no due date until **Due** is switched on.
+
+The event or task is written to the calendar or task list chosen in the
+dialog, from those in GNOME Online Accounts, Evolution or GNOME Calendar
+(Evolution Data Server). Events show up in GNOME Calendar, Evolution and the
+clock menu's agenda; tasks in Endeavour and Evolution. Calendars that only
+read, such as Birthdays & Anniversaries, are not offered, nor is the
+Reminders list iCloud shows with a warning sign: Apple serves upgraded
+reminders over no calendar protocol, so a task written there never reaches
+the Reminders app. The last calendar and task list used are chosen first the
+next time. Each is listed under its account's name in **Settings →
+Contacts**, else the nickname of the mail account with the same address,
+else the address.
+
+On a desktop without Evolution Data Server the dialog's button is **Open in
+Calendar**: the event or task is handed as an `.ics` file to the application
+that opens calendar files, as an invitation's **Add to Calendar** is.
+
 ### Message list layout
 
 **Main menu → Reading Pane** puts the reader **Right** of the list, **Below**
@@ -2134,6 +2222,19 @@ person, with the message's subject; clicking it opens the message. **Settings �
 General → Read receipts** turns it off. With **Show sender and subject** off it
 says only that a receipt came back, and receipts more than a day old, read for
 the first time, post nothing.
+
+### Importance
+
+The menu beside **Send** has **Importance**: **High**, **Normal** or **Low**.
+High and low send the `X-Priority` and `Importance` headers most mail apps
+read; normal mail goes with no header, as most mail apps send it. A draft or a message in the Outbox keeps its
+importance when it is opened again; a reply starts at normal.
+
+Mail the sender marked high shows a red mark beside its paperclip and star,
+and mail marked low a grey arrow, in the list's card layout and in its header
+in the reader. On a single line the **Importance** column shows
+it (see [Message list layout](#message-list-layout)), and the **High
+Importance** quick filter lists only mail marked high.
 
 ### Storage
 

@@ -74,6 +74,15 @@ pub(crate) fn factory_dest() -> Option<String> {
     )
 }
 
+/// Discover the versioned Calendar factory bus name (e.g. `…Calendar8`),
+/// which serves task lists too: where events and tasks made from mail are
+/// written (#564).
+pub(crate) fn calendar_factory_dest() -> Option<String> {
+    remembered("org.gnome.evolution.dataserver.Calendar", || {
+        dest_from_service_files("evolution.dataserver.Calendar", |_| true)
+    })
+}
+
 /// Fallback: read the name from the host's D-Bus service files (works outside
 /// Flatpak only).
 fn factory_dest_from_files() -> Option<String> {

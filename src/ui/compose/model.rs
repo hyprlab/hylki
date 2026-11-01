@@ -101,6 +101,8 @@ pub(crate) struct Compose {
     pub(super) encrypt: bool,
     /// Ask for a read receipt (#520).
     pub(super) request_receipt: bool,
+    /// How important the message is marked (#563).
+    pub(super) importance: crate::models::Importance,
     /// The OpenPGP send check is running on a worker thread.
     pub(super) pgp_checking: bool,
     /// What the last passing OpenPGP check covered (From, key, encrypt,

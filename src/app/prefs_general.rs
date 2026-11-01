@@ -88,6 +88,9 @@ impl AppModel {
             PrefOutput::SetSenderLogos(on) => {
                 if pref!(self.sender_logos = on) {
                     self.message_list.emit(MessageListInput::SetSenderLogos(on));
+                    crate::ui::message_view::set_face_tiers(self.gravatar, on);
+                    let current = self.current.clone();
+                    self.show_message(current, false);
                 }
             }
 
@@ -124,6 +127,7 @@ impl AppModel {
             PrefOutput::SetGravatar(on) => {
                 if pref!(self.gravatar = on) {
                     self.message_list.emit(MessageListInput::SetGravatar(on));
+                    crate::ui::message_view::set_face_tiers(on, self.sender_logos);
                     // Refresh the reader's avatar for the open message.
                     let current = self.current.clone();
                     self.show_message(current, false);

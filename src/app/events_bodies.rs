@@ -378,6 +378,9 @@ impl AppModel {
             }
             self.pending_forward = Some((pending, inline));
         }
+        // An event or a task made from it (#564); the reader may be
+        // showing it too, so the body goes on.
+        self.resume_to_calendar(account_id, message_id, body, sender);
         // A reply from a notification's button (#244): the message
         // is opening in the reader too, so the body goes on to be
         // shown as usual.

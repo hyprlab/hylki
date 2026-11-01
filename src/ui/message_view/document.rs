@@ -286,8 +286,21 @@ fn card_body(cards: &Cards<'_>, m: &Message) -> String {
 }
 
 /// The face on a card's header: a mailbox of your own wears the one it was
-/// given (#189), anyone else tinted initials.
+/// given (#189), anyone else their photo or icon once one is known (#560),
+/// else tinted initials. Each circle carries its card's key, for the face a
+/// lookup patches in later.
 fn card_avatar(m: &Message, dark: bool) -> String {
+    let circle = circle_html(m, dark);
+    let key = format!(" data-key=\"{}:{}\"", m.account_id, m.id);
+    // Both shapes open with the class attribute; the key goes at the end of
+    // the opening tag.
+    match circle.find('>') {
+        Some(end) => format!("{}{key}{}", &circle[..end], &circle[end..]),
+        None => circle,
+    }
+}
+
+fn circle_html(m: &Message, dark: bool) -> String {
     // One of your own mailboxes wrote this card (#189):
     // show what its account chose — the sidebar's picture,
     // or its emoji on the account color — so your own
@@ -325,7 +338,11 @@ fn card_avatar(m: &Message, dark: bool) -> String {
             (None, None) => None,
         }
     });
-    own.unwrap_or_else(|| {
+    let face = || {
+        super::faces::known_face(&m.from_addr)
+            .map(|uri| format!("<img class=\"hylki-ava\" src=\"{uri}\" alt=\"\">"))
+    };
+    own.or_else(face).unwrap_or_else(|| {
         let initial = m
             .shown_from_name()
             .trim()

@@ -964,6 +964,9 @@ pub(crate) struct AppModel {
     /// The `ExportRaw` token the pending draft's bytes come back under.
     /// While it is set, the draft waits for those and not for its body.
     pub(super) pending_draft_token: Option<u64>,
+    /// Drafts and templates being fetched ahead of time, by `ExportRaw`
+    /// token, so they open at once (see `draft_copies`).
+    pub(super) draft_fetches: std::collections::HashMap<u64, super::draft_copies::DraftFetch>,
     /// A message whose body is being fetched so a reply to it can open with
     /// handed-in files (Send with Hylki → Reply to a Message…).
     pub(super) pending_reply: Option<(Message, HandOffFiles)>,
@@ -981,6 +984,8 @@ pub(crate) struct AppModel {
     /// A forward (#240) waiting on the body, or the attachments, it is to
     /// carry, and whether it opens inline or in a window.
     pub(super) pending_forward: Option<(Message, bool)>,
+    /// Create Event or Create Task (#564) waiting on the message's body.
+    pub(super) pending_to_calendar: Option<(Message, crate::calendar::ItemKind)>,
     /// A reply started from a notification's button (#244), waiting for
     /// the body it quotes.
     pub(super) pending_notified_reply: Option<Message>,

@@ -241,6 +241,7 @@ impl AppModel {
             | AppMsg::UnsubscribeByMail { .. }
             | AppMsg::UnsubscribeDone { .. }) => self.on_unsubscribe(msg, sender),
             msg @ AppMsg::InviteAction { .. } => self.on_invites(msg),
+            AppMsg::ToCalendar(msg) => self.on_to_calendar(msg, sender),
             AppMsg::ReceiptAnswer { message, send } => self.answer_receipt(&message, send),
             msg @ (AppMsg::ListOverflowMenu
             | AppMsg::ListPaneWidth(..)
@@ -321,6 +322,7 @@ impl AppModel {
             | AppMsg::KeywordsSynced { .. }
             | AppMsg::TagViewLoaded { .. }) => self.on_tags(msg, sender),
             msg @ (AppMsg::SendMessage { .. }
+            | AppMsg::SendMerged(..)
             | AppMsg::DispatchSend(..)
             | AppMsg::UndoSend(..)
             | AppMsg::SendDone { .. }

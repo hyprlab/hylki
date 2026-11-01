@@ -230,6 +230,7 @@ impl AppModel {
             controller,
             window: None,
             answering: focus,
+            list_draft: false,
         });
         // A fresh composer has nothing to take back yet; the last one's
         // labels must not carry over into its menu.

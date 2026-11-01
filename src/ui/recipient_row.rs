@@ -227,7 +227,7 @@ impl RecipientRow {
     }
 
     /// Add a recipient after the others, leaving what is being typed alone.
-    pub(super) fn add_recipient(&self, recipient: &str) {
+    pub(crate) fn add_recipient(&self, recipient: &str) {
         self.push(recipient);
         self.emit_changed();
     }

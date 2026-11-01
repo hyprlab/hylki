@@ -173,6 +173,12 @@ msgstr ""
 msgid "Create Filter from Message…"
 msgstr ""
 
+msgid "Create Event…"
+msgstr ""
+
+msgid "Create Task…"
+msgstr ""
+
 msgid "Tags"
 msgstr ""
 
@@ -1090,13 +1096,13 @@ msgstr ""
 msgid "Forwarded message"
 msgstr ""
 
+msgid "Subject: {subject}"
+msgstr ""
+
 msgid "From: {from}"
 msgstr ""
 
 msgid "Date: {date}"
-msgstr ""
-
-msgid "Subject: {subject}"
 msgstr ""
 
 msgid "Export failed: {e}"
@@ -1247,6 +1253,11 @@ msgstr ""
 msgid "No {v1} folder available for some messages"
 msgstr ""
 
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Remove Account?"
 msgstr ""
 
@@ -1270,6 +1281,12 @@ msgid ""
 msgstr ""
 
 msgid "Snooze until"
+msgstr ""
+
+msgid "Could not add the event: {e}"
+msgstr ""
+
+msgid "Could not add the task: {e}"
 msgstr ""
 
 msgid "One message could not be copied to {account}: {error}"
@@ -1563,6 +1580,27 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "On {date} at {time}, {name} wrote:"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "First Name"
+msgstr ""
+
+msgid "Last Name"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Column {n}"
+msgstr ""
+
+msgid "The file is empty."
+msgstr ""
+
+msgid "The file has no rows below its first."
 msgstr ""
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
@@ -2430,9 +2468,6 @@ msgstr ""
 msgid "Add Tag"
 msgstr ""
 
-msgid "Name"
-msgstr ""
-
 msgid "Keyword"
 msgstr ""
 
@@ -2802,6 +2837,68 @@ msgid "Next"
 msgstr ""
 
 msgid "Open in the default app"
+msgstr ""
+
+msgid "New Event"
+msgstr ""
+
+msgid "New Task"
+msgstr ""
+
+msgid "Open in Calendar"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Calendar"
+msgstr ""
+
+msgid "Task list"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "All day"
+msgstr ""
+
+msgid "Starts"
+msgstr ""
+
+msgid "Ends"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+msgid "Second alarm"
+msgstr ""
+
+msgid "At the start"
+msgstr ""
+
+msgid "{n} week before"
+msgid_plural "{n} weeks before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} day before"
+msgid_plural "{n} days before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} hour before"
+msgid_plural "{n} hours before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} minute before"
+msgid_plural "{n} minutes before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Due"
 msgstr ""
 
 msgid "Welcome to Hylki, formerly {old}"
@@ -3181,6 +3278,24 @@ msgstr ""
 msgid "Show Cc, Bcc and Reply-To"
 msgstr ""
 
+msgid "Cannot merge an encrypted message"
+msgstr ""
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr ""
+
+msgid "Check the From address"
+msgstr ""
+
+msgid "Insert Merge Field"
+msgstr ""
+
+msgid "Contact Groups"
+msgstr ""
+
+msgid "Choose a CSV File…"
+msgstr ""
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -3206,9 +3321,6 @@ msgstr ""
 msgid "Cannot send with OpenPGP"
 msgstr ""
 
-msgid "Check the From address"
-msgstr ""
-
 msgid "An attachment is missing"
 msgstr ""
 
@@ -3223,10 +3335,48 @@ msgstr ""
 msgid "Choose from your addresses"
 msgstr ""
 
-msgid "Check the address"
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
 msgstr ""
 
 msgid "“{addr}” is not an email address."
+msgstr ""
+
+msgid "Check the address"
+msgstr ""
+
+msgid "Send now"
+msgstr ""
+
+msgid "Tomorrow morning ({time})"
+msgstr ""
+
+msgid "Tomorrow afternoon ({time})"
+msgstr ""
+
+msgid "Monday morning ({time})"
+msgstr ""
+
+msgid "Pick a date and time…"
+msgstr ""
+
+msgid "Mail Merge…"
+msgstr ""
+
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
+msgid "High"
+msgstr ""
+
+msgid "Normal"
+msgstr ""
+
+msgid "Low"
 msgstr ""
 
 msgid "Show the message as it will be sent"
@@ -3303,27 +3453,6 @@ msgid "Send"
 msgstr ""
 
 msgid "Send options"
-msgstr ""
-
-msgid "Send now"
-msgstr ""
-
-msgid "Tomorrow morning ({time})"
-msgstr ""
-
-msgid "Tomorrow afternoon ({time})"
-msgstr ""
-
-msgid "Monday morning ({time})"
-msgstr ""
-
-msgid "Pick a date and time…"
-msgstr ""
-
-msgid "Request a read receipt"
-msgstr ""
-
-msgid "Not every mail app sends one."
 msgstr ""
 
 msgid "Show From, To and Subject"
@@ -3662,9 +3791,6 @@ msgstr ""
 msgid "Add to Contacts"
 msgstr ""
 
-msgid "Email"
-msgstr ""
-
 msgid "Phone"
 msgstr ""
 
@@ -3734,9 +3860,6 @@ msgid "Nickname"
 msgstr ""
 
 msgid "Organization"
-msgstr ""
-
-msgid "Title"
 msgstr ""
 
 msgid "Another book moves the contact there when saved."
@@ -3861,6 +3984,9 @@ msgid "Last name"
 msgstr ""
 
 msgid "Sort and filter contacts"
+msgstr ""
+
+msgid "Groups"
 msgstr ""
 
 msgid "Import Contacts"
@@ -4096,6 +4222,67 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr ""
 
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr ""
+
+msgid "No row has an address to send to."
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "In {places}"
+msgstr ""
+
+msgid "Mail Merge"
+msgstr ""
+
+msgid "Send to"
+msgstr ""
+
+msgid "A CSV file"
+msgstr ""
+
+msgid "CSV file"
+msgstr ""
+
+msgid "Its first row names the fields."
+msgstr ""
+
+msgid "Choose…"
+msgstr ""
+
+msgid "Fields"
+msgstr ""
+
+msgid "Leave these fields empty"
+msgstr ""
+
+msgid "{n} of {total}"
+msgstr ""
+
+msgid "Not in {source}"
+msgstr ""
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Choose a CSV File"
+msgstr ""
+
+msgid "CSV files"
+msgstr ""
+
+msgid "The file could not be read: {error}"
+msgstr ""
+
 msgid "No Messages"
 msgstr ""
 
@@ -4186,9 +4373,6 @@ msgstr ""
 msgid "Show conversation"
 msgstr ""
 
-msgid "Due"
-msgstr ""
-
 msgid "Drag to resize, double-click for the usual width"
 msgstr ""
 
@@ -4207,16 +4391,16 @@ msgstr ""
 msgid "Remove star"
 msgstr ""
 
-msgid "Forwarded"
-msgstr ""
-
-msgid "Snoozed until {when}"
-msgstr ""
-
 msgid "High importance"
 msgstr ""
 
 msgid "Low importance"
+msgstr ""
+
+msgid "Forwarded"
+msgstr ""
+
+msgid "Snoozed until {when}"
 msgstr ""
 
 msgid "In {folder}"
@@ -5401,9 +5585,6 @@ msgstr ""
 msgid "Sound file"
 msgstr ""
 
-msgid "Choose…"
-msgstr ""
-
 msgid "Also play while Hylki is in front"
 msgstr ""
 
@@ -5752,6 +5933,9 @@ msgstr ""
 msgid "Could not save the PDF: {error}"
 msgstr ""
 
+msgid "Filled in by Mail Merge"
+msgstr ""
+
 msgid "Custom…"
 msgstr ""
 
@@ -5771,9 +5955,6 @@ msgid "No suggestions"
 msgstr ""
 
 msgid "Spelling Language"
-msgstr ""
-
-msgid "Normal"
 msgstr ""
 
 msgid "Heading 1"

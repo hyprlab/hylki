@@ -1,6 +1,7 @@
 //! Steps of the composer's `init` that belong to no one concern.
 
 use super::format::{format_icon, format_label};
+use super::merge_fields::FieldTarget;
 use super::messages::{ComposeInput, ComposeOutput};
 use super::Compose;
 use crate::config::ComposeFormat;
@@ -9,8 +10,8 @@ use crate::ui::rich_editor::RichEditor;
 use adw::prelude::*;
 use relm4::prelude::*;
 
-/// The buttons at the far end of the format bar: signature, translate,
-/// preview and the format chooser, in that order.
+/// The buttons at the far end of the format bar: merge fields, signature,
+/// translate, preview and the format chooser, in that order.
 pub(super) fn add_toolbar_end_buttons(
     editor: &RichEditor,
     format: ComposeFormat,
@@ -94,6 +95,19 @@ pub(super) fn add_toolbar_end_buttons(
         });
         signature_btn.add_controller(right);
     }
+    // Mail merge fields (#447), at the caret: in every format, since a
+    // field is text in each.
+    let fields_btn = gtk::Button::from_icon_name("hylki-merge-field-symbolic");
+    fields_btn.set_tooltip_text(Some(i18n("Insert Merge Field").as_str()));
+    fields_btn.add_css_class("flat");
+    fields_btn.set_can_focus(false);
+    {
+        let s = sender.input_sender().clone();
+        fields_btn.connect_clicked(move |_| {
+            let _ = s.send(ComposeInput::MergeFields(FieldTarget::Body));
+        });
+    }
+    editor.toolbar_end().append(&fields_btn);
     editor.toolbar_end().append(&signature_btn);
     editor.toolbar_end().append(&translate_btn);
     editor.toolbar_end().append(&preview_btn);

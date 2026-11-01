@@ -789,6 +789,10 @@ pub(crate) enum AppMsg {
         result: Result<bool, String>,
     },
 
+    // ---- on_to_calendar (to_calendar.rs) ----
+    /// A step of Create Event or Create Task (#564).
+    ToCalendar(super::to_calendar::ToCalendar),
+
     // ---- on_invites (invites.rs) ----
     /// A card's invitation button (#223): answer the organiser, or hand the
     /// meeting to whatever application opens calendar files.
@@ -1090,6 +1094,8 @@ pub(crate) enum AppMsg {
         from: u32,
         out: Box<OutgoingMessage>,
     },
+    /// A composer's Mail Merge (#447): one message per row.
+    SendMerged(Vec<OutgoingMessage>),
     /// A message's Undo Send delay is over, or Send now was asked for it in
     /// the Outbox: it goes to its worker (#434).
     DispatchSend(u64),

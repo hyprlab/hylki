@@ -59,6 +59,8 @@ pub(crate) struct ComposePrefill {
     /// Ask for a read receipt (#520): as the message being edited did, or
     /// `None` for the setting's default.
     pub(crate) receipt: Option<bool>,
+    /// How important the message being edited was marked (#563).
+    pub(crate) importance: crate::models::Importance,
     /// When editing a queued Outbox message, the row this replaces.
     pub(crate) outbox_origin: Option<u32>,
     /// For a reply: the original's To+Cc, so the composer can answer from the

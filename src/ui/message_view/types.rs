@@ -179,6 +179,8 @@ pub(crate) enum MessageViewInput {
     },
     /// The WebView finished loading the current document — reveal it.
     Rendered,
+    /// A sender's face lookup came back (#560).
+    FaceFound(Box<super::faces::FaceAnswer>),
     /// The sender-authentication verdict for the message now on screen.
     SetSenderCheck(Box<crate::models::SenderCheck>),
     /// A member's sender verdict, for its header seal (#88). Patched into the

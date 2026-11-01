@@ -395,6 +395,7 @@ impl Component for MessageView {
         let webview = new_webview();
         let link_preview = link_preview_plaque(&webview);
         let mut model = MessageView::initial(webview, &link_preview);
+        model.faces.input = Some(sender.input_sender().clone());
         model.watch_loads(&sender);
         model.watch_context_menu(&sender);
         model.watch_bridge(&sender);
@@ -597,6 +598,7 @@ impl Component for MessageView {
                 result,
             } => self.on_pgp_done(account_id, id, result, &sender),
             MessageViewInput::Rendered => self.on_rendered(),
+            MessageViewInput::FaceFound(answer) => self.on_face_found(*answer),
             MessageViewInput::SuppressAutoRead { account_id, id } => {
                 self.on_suppress_auto_read(account_id, id)
             }

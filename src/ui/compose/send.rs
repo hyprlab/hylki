@@ -101,7 +101,7 @@ impl Compose {
     /// The From to put on the wire: the picked identity's (`None` for the
     /// account's own), or the one typed in (#347), which has to hold one
     /// address.
-    fn chosen_from(&self, widgets: &ComposeWidgets) -> Result<Option<String>, String> {
+    pub(super) fn chosen_from(&self, widgets: &ComposeWidgets) -> Result<Option<String>, String> {
         let idx = widgets.from_row.selected() as usize;
         let picked = self.accounts.get(idx).and_then(|a| a.alias_from.clone());
         if !self.custom_from {
@@ -185,7 +185,7 @@ impl Compose {
     /// The fields as a draft or the automatic save takes them, before the
     /// body is read. A draft can be saved without recipients, and keeps even
     /// a From still being typed: it is checked when the message is sent.
-    fn draft_fields(&self, widgets: &ComposeWidgets) -> OutgoingFields {
+    pub(super) fn draft_fields(&self, widgets: &ComposeWidgets) -> OutgoingFields {
         let to = widgets.to_row.text().trim().to_string();
         let cc = widgets.cc_row.text().trim().to_string();
         let bcc = widgets.bcc_row.text().trim().to_string();
@@ -212,7 +212,7 @@ impl Compose {
     /// The message to hand over: the body converted out of its composing
     /// format, the fields and the attachments, with the draft origin so a
     /// saved or sent draft replaces its predecessor.
-    fn outgoing_message(&self, fields: OutgoingFields) -> OutgoingMessage {
+    pub(super) fn outgoing_message(&self, fields: OutgoingFields) -> OutgoingMessage {
         let OutgoingFields {
             html,
             text,
@@ -249,6 +249,7 @@ impl Compose {
             encrypt: self.encrypt,
             calendar: None,
             request_receipt: self.request_receipt,
+            importance: self.importance,
             receipt_report: None,
             send_at: self.send_at,
         }
@@ -420,7 +421,7 @@ impl Compose {
     /// since it was attached (#340) is named, and the send stops: the
     /// composer closes on Send, so this is the last moment the message can
     /// still be fixed rather than lost.
-    fn attachments_present(
+    pub(super) fn attachments_present(
         &mut self,
         widgets: &ComposeWidgets,
         sender: &ComponentSender<Self>,
@@ -823,11 +824,16 @@ fn recipients_ok(widgets: &ComposeWidgets) -> bool {
     {
         row.add_css_class("error");
         let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
-        alert(
-            parent.as_ref(),
-            &i18n("Check the address"),
-            &i18n_f("“{addr}” is not an email address.", &[("addr", &addr)]),
-        );
+        // A mail merge field is filled in only by the merge (#447).
+        let why = if crate::mail::merge::is_field(&addr) {
+            i18n_f(
+                "“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside Send.",
+                &[("addr", &addr)],
+            )
+        } else {
+            i18n_f("“{addr}” is not an email address.", &[("addr", &addr)])
+        };
+        alert(parent.as_ref(), &i18n("Check the address"), &why);
         return false;
     }
     true
