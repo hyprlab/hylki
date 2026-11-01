@@ -85,6 +85,23 @@ fn fills_fields_in_any_case_and_spacing() {
 }
 
 #[test]
+fn fields_match_without_their_punctuation() {
+    let t = group_table(&[crate::contacts::Contact {
+        name: "Ann Smith".into(),
+        email: "ann@example.com".into(),
+    }]);
+    let letter = Letter {
+        to: "{{E-mail}}".into(),
+        text: "Hi {{first_name}} {{LastName}}, {{ - }}".into(),
+        ..Default::default()
+    };
+    assert!(t.unknown_fields(&letter).is_empty());
+    let out = t.letter_for(&letter, 0, ComposeFormat::Plain);
+    assert_eq!(out.to, "ann@example.com");
+    assert_eq!(out.text, "Hi Ann Smith, {{ - }}");
+}
+
+#[test]
 fn a_rich_body_gets_escaped_values_and_its_markup_ignored() {
     let t = table("Company,Email\nSmith & <Sons>,a@example.com\n");
     let letter = Letter {

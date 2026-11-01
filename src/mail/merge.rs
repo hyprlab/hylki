@@ -29,10 +29,15 @@ pub(crate) struct Letter {
 }
 
 /// A field as written between the braces, compared the way people type it:
-/// any case, any run of spaces, and in a rich body without the markup or
-/// the entities the editor may have put in it.
+/// letters and digits only, in any case, so `{{E-mail}}`, `{{email}}` and
+/// `{{first_name}}` find "Email" and "First Name". In a rich body the markup
+/// and entities the editor may have put in it are left out too.
 fn field_key(raw: &str) -> String {
-    field_text(raw).to_lowercase()
+    field_text(raw)
+        .chars()
+        .filter(|c| c.is_alphanumeric())
+        .flat_map(char::to_lowercase)
+        .collect()
 }
 
 /// A field's name as it reads: its text without markup, entities or extra

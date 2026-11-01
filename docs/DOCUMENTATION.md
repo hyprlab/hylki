@@ -1193,8 +1193,10 @@ Dear {{First Name}},
 Your order {{Order}} has shipped.
 ```
 
-The first row of the file names the fields. A field is matched to it in any
-case and spacing, so `{{first name}}` finds a column called "First Name".
+The first row of the file names the fields. A field is matched to it by its
+letters and digits alone, in any case, so `{{first name}}` and
+`{{first_name}}` find a column called "First Name", and `{{E-mail}}` one
+called "Email".
 The file may be separated by commas, semicolons or tabs, as spreadsheets in
 different languages save it, and be in UTF-8, UTF-16 or Windows-1252. A
 contact group has the fields **Name**, **First Name**, **Last Name** and

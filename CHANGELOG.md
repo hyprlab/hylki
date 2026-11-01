@@ -6,7 +6,8 @@
   Merge…** in the menu beside **Send** sends the message once per row of a
   CSV file, or once per member of a contact group. A field written as
   `{{Field}}` in To, Cc, Bcc, Reply-To, the subject or the text takes the
-  row's value, matched to the file's first row in any case. To left empty
+  row's value, matched to the file's first row by letters and digits in any
+  case, so `{{E-mail}}` finds "Email". To left empty
   goes to the column that holds addresses. The dialog lists the fields,
   steps through a preview of each message, and names a field the file does
   not have; rows without a valid address are left out and counted. The
