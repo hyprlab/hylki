@@ -9,14 +9,19 @@ use crate::ui::dialog::alert;
 
 /// `days` from today at `hour`:00, local time.
 pub(crate) fn preset_time(days: i64, hour: u32) -> i64 {
-    use chrono::{Duration, Local, TimeZone};
-    let day = (Local::now() + Duration::days(days)).date_naive();
+    preset_time_from(&chrono::Local::now(), days, hour)
+}
+
+/// `days` after `now`'s date at `hour`:00 in `now`'s time zone; taking the
+/// time rather than reading the clock lets the tests pin the day (#567).
+fn preset_time_from<Tz: chrono::TimeZone>(now: &chrono::DateTime<Tz>, days: i64, hour: u32) -> i64 {
+    let day = now.date_naive() + chrono::Duration::days(days);
     let ndt = day.and_hms_opt(hour, 0, 0).unwrap_or_default();
-    Local
+    now.timezone()
         .from_local_datetime(&ndt)
         .single()
         .map(|t| t.timestamp())
-        .unwrap_or_else(crate::datefmt::now)
+        .unwrap_or_else(|| now.timestamp())
 }
 
 /// How many days ahead the coming `weekday` is (0 = Monday): a week when
@@ -47,8 +52,11 @@ pub(crate) struct LaterPreset {
 /// there is time left in the day, tomorrow morning and afternoon, Saturday
 /// from Monday to Thursday, and Monday unless that is tomorrow.
 pub(crate) fn snooze_presets() -> Vec<LaterPreset> {
+    snooze_presets_at(&chrono::Local::now())
+}
+
+fn snooze_presets_at<Tz: chrono::TimeZone>(now: &chrono::DateTime<Tz>) -> Vec<LaterPreset> {
     use chrono::{Datelike, Timelike};
-    let now = chrono::Local::now();
     let today = now.weekday().num_days_from_monday();
     let mut presets = Vec::new();
     if now.hour() < 17 {
@@ -57,7 +65,7 @@ pub(crate) fn snooze_presets() -> Vec<LaterPreset> {
                 "Later today ({time})",
                 &[("time", &crate::datefmt::clock_label(18))],
             ),
-            at: preset_time(0, 18),
+            at: preset_time_from(now, 0, 18),
         });
     }
     presets.push(LaterPreset {
@@ -65,14 +73,14 @@ pub(crate) fn snooze_presets() -> Vec<LaterPreset> {
             "Tomorrow morning ({time})",
             &[("time", &crate::datefmt::clock_label(8))],
         ),
-        at: preset_time(1, 8),
+        at: preset_time_from(now, 1, 8),
     });
     presets.push(LaterPreset {
         label: i18n_f(
             "Tomorrow afternoon ({time})",
             &[("time", &crate::datefmt::clock_label(13))],
         ),
-        at: preset_time(1, 13),
+        at: preset_time_from(now, 1, 13),
     });
     // Friday's tomorrow is Saturday already.
     if today < 4 {
@@ -81,7 +89,7 @@ pub(crate) fn snooze_presets() -> Vec<LaterPreset> {
                 "Saturday morning ({time})",
                 &[("time", &crate::datefmt::clock_label(8))],
             ),
-            at: preset_time(days_until(today, 5), 8),
+            at: preset_time_from(now, days_until(today, 5), 8),
         });
     }
     // Sunday's tomorrow morning is Monday's.
@@ -91,7 +99,7 @@ pub(crate) fn snooze_presets() -> Vec<LaterPreset> {
                 "Monday morning ({time})",
                 &[("time", &crate::datefmt::clock_label(8))],
             ),
-            at: next_monday(8),
+            at: preset_time_from(now, days_until(today, 0), 8),
         });
     }
     presets
@@ -225,10 +233,32 @@ mod tests {
 
     #[test]
     fn every_snooze_preset_is_later_than_now() {
-        let now = crate::datefmt::now();
-        let presets = snooze_presets();
-        assert!(presets.len() >= 3);
-        assert!(presets.iter().all(|p| p.at > now));
-        assert!(presets.windows(2).all(|w| w[0].at <= w[1].at));
+        use chrono::TimeZone;
+        // Every hour of a week, Monday 2026-10-26 to Sunday 2026-11-01, so
+        // the test does not depend on when it runs (#567).
+        let monday = chrono::Utc
+            .with_ymd_and_hms(2026, 10, 26, 0, 14, 0)
+            .unwrap();
+        for hours in 0..7 * 24 {
+            let now = monday + chrono::Duration::hours(hours);
+            let presets = snooze_presets_at(&now);
+            assert!(presets.len() >= 2, "{now}");
+            assert!(presets.iter().all(|p| p.at > now.timestamp()), "{now}");
+            assert!(presets.windows(2).all(|w| w[0].at <= w[1].at), "{now}");
+        }
+    }
+
+    #[test]
+    fn sunday_evening_offers_only_tomorrow() {
+        use chrono::TimeZone;
+        let count = |d, h| {
+            let now = chrono::Utc.with_ymd_and_hms(2026, 11, d, h, 14, 0).unwrap();
+            snooze_presets_at(&now).len()
+        };
+        // Sunday: tomorrow morning and afternoon, and this evening before 17:00.
+        assert_eq!(count(1, 18), 2);
+        assert_eq!(count(1, 9), 3);
+        // Monday: this evening, tomorrow twice, Saturday and next Monday.
+        assert_eq!(count(2, 9), 5);
     }
 }

@@ -86,6 +86,10 @@ msgstr "No s'ha pogut desar el compte: {e}"
 msgid "Could not import account: {e}"
 msgstr "No s'ha pogut importar el compte: {e}"
 
+#, fuzzy
+msgid "On This Computer is switched off"
+msgstr "En aquest ordinador"
+
 msgid "Delete the attachment from the server?"
 msgstr "Vols suprimir l'adjunt del servidor?"
 
@@ -181,6 +185,13 @@ msgstr "Afegeix el remitent a contactes"
 msgid "Create Filter from Message…"
 msgstr "Crea un filtre a partir del missatge…"
 
+msgid "Create Event…"
+msgstr ""
+
+#, fuzzy
+msgid "Create Task…"
+msgstr "Crea"
+
 msgid "Tags"
 msgstr "Etiquetes"
 
@@ -194,6 +205,10 @@ msgid "Mark as Spam"
 msgstr "Marca com a brossa"
 
 msgid "Move To…"
+msgstr "Mou a…"
+
+#, fuzzy
+msgid "Copy To…"
 msgstr "Mou a…"
 
 msgid "Archive"
@@ -495,11 +510,15 @@ msgstr "Tanca"
 msgid "Unstar"
 msgstr "Treu la destacat"
 
-msgid "New Folder"
-msgstr "Carpeta nova"
+#, fuzzy
+msgid "Create a folder inside {name}."
+msgstr "Crea una carpeta nova per a aquest compte."
 
 msgid "Create a new folder for this account."
 msgstr "Crea una carpeta nova per a aquest compte."
+
+msgid "New Folder"
+msgstr "Carpeta nova"
 
 msgid "Cancel"
 msgstr "Cancel·la"
@@ -553,8 +572,19 @@ msgstr ""
 "Tots els missatges que contenen s'esborraran del servidor. Això no es pot "
 "desfer."
 
+msgid "This account can't have folders at the top level."
+msgstr ""
+
+#, fuzzy
+msgid "Folders on this account can't hold other folders."
+msgstr "Ofereix aquest compte al redactor"
+
 msgid "Create Folder"
 msgstr "Crea una carpeta"
+
+#, fuzzy
+msgid "{name} can't hold other folders."
+msgstr "Inclou altres carpetes"
 
 msgid "archive"
 msgstr "Arxiva"
@@ -564,6 +594,9 @@ msgstr "Paperera"
 
 msgid "destination"
 msgstr "Destinació"
+
+msgid "A folder can't be moved into itself."
+msgstr ""
 
 msgid "Move Folder"
 msgstr "Mou la carpeta"
@@ -630,6 +663,9 @@ msgstr "Adjunta-ho igualment"
 
 msgid "Upload to Cloud Storage"
 msgstr "Puja a l'emmagatzematge al núvol"
+
+msgid "The account has to connect before its folders can change."
+msgstr ""
 
 msgid "This message carries no calendar file to open."
 msgstr "Aquest missatge no porta cap fitxer de calendari per obrir."
@@ -742,6 +778,12 @@ msgstr "Accions"
 
 msgid "Refresh or long-press for Status Bar"
 msgstr "Actualitza o mantén premut per a la barra d'estat"
+
+#, fuzzy
+msgid "Copying one message to On This Computer…"
+msgid_plural "Copying {n} messages to On This Computer…"
+msgstr[0] "S'està movent un missatge a {account}…"
+msgstr[1] "S'estan movent {n} missatges a {account}…"
 
 msgid "Sending message…"
 msgstr "S'està enviant el missatge…"
@@ -1126,16 +1168,16 @@ msgstr "Codi font del missatge"
 msgid "Forwarded message"
 msgstr "Reenvia aquest missatge"
 
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Acceptat: {subject}"
+
 msgid "From: {from}"
 msgstr "De: {from}"
 
 #, fuzzy
 msgid "Date: {date}"
 msgstr "caduca el {date}"
-
-#, fuzzy
-msgid "Subject: {subject}"
-msgstr "Acceptat: {subject}"
 
 msgid "Export failed: {e}"
 msgstr "L'exportació ha fallat: {e}"
@@ -1302,6 +1344,12 @@ msgstr "No hi ha cap bústia d'entrada disponible per a aquest compte"
 msgid "No {v1} folder available for some messages"
 msgstr "No hi ha cap carpeta {v1} disponible per a alguns missatges"
 
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "S'està enviant el missatge…"
+msgstr[1] "S'està enviant el missatge…"
+
 msgid "Remove Account?"
 msgstr "Vols eliminar el compte?"
 
@@ -1329,10 +1377,30 @@ msgstr ""
 msgid "Snooze until"
 msgstr ""
 
+#, fuzzy
+msgid "Could not add the event: {e}"
+msgstr "No s'ha pogut desar el missatge: {e}"
+
+#, fuzzy
+msgid "Could not add the task: {e}"
+msgstr "No s'ha pogut canviar la destacat: {e}"
+
+#, fuzzy
+msgid "One message could not be copied to {account}: {error}"
+msgid_plural "{n} messages could not be copied to {account}: {error}"
+msgstr[0] "No s'ha pogut moure un missatge a {account}: {error}"
+msgstr[1] "No s'han pogut moure {n} missatges a {account}: {error}"
+
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
 msgstr[0] "No s'ha pogut moure un missatge a {account}: {error}"
 msgstr[1] "No s'han pogut moure {n} missatges a {account}: {error}"
+
+#, fuzzy
+msgid "Copying one message to {account}…"
+msgid_plural "Copying {n} messages to {account}…"
+msgstr[0] "S'està movent un missatge a {account}…"
+msgstr[1] "S'estan movent {n} missatges a {account}…"
 
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
@@ -1637,6 +1705,32 @@ msgstr[1] "Hi ha un missatge nou amb {n} fitxers adjunts obert a l'Hylki."
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "{date} a les {time}"
 
+msgid "Name"
+msgstr "Nom"
+
+#, fuzzy
+msgid "First Name"
+msgstr "Nom"
+
+#, fuzzy
+msgid "Last Name"
+msgstr "Cognom"
+
+msgid "Email"
+msgstr "Correu electrònic"
+
+#, fuzzy
+msgid "Column {n}"
+msgstr "Columnes"
+
+#, fuzzy
+msgid "The file is empty."
+msgstr "El fitxer no és un fitxer de text"
+
+#, fuzzy
+msgid "The file has no rows below its first."
+msgstr "El fitxer no és un fitxer de text"
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "El GnuPG (gpg) no està instal·lat, així que aquest missatge no es pot llegir."
@@ -1754,6 +1848,12 @@ msgstr ""
 "L'organització del remitent ha etiquetat aquest missatge com a «{label}». "
 "L'Hylki mostra l'etiqueta però no n'aplica les regles."
 
+msgid "Nothing here proves this came from {from} — or that it didn't."
+msgstr "Res aquí demostra que això provingui de {from} — ni que no ho faci."
+
+msgid "These checks aren't known to come from your mail provider"
+msgstr ""
+
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
 msgstr ""
@@ -1784,9 +1884,6 @@ msgid "Your mail provider didn't report any sender checks for this message."
 msgstr ""
 "El teu proveïdor de correu no ha informat de cap comprovació del remitent "
 "per a aquest missatge."
-
-msgid "Nothing here proves this came from {from} — or that it didn't."
-msgstr "Res aquí demostra que això provingui de {from} — ni que no ho faci."
 
 msgid "{name}: passed"
 msgstr "{name}: superat"
@@ -1826,6 +1923,13 @@ msgstr "{used} de {limit} utilitzats"
 
 msgid "{free} free ({pct}%)"
 msgstr "{free} lliures ({pct}%)"
+
+#, fuzzy
+msgid "A folder needs a name."
+msgstr "Nom de la carpeta"
+
+msgid "A folder name can't contain “{c}” on this account."
+msgstr ""
 
 msgid "Encrypted message"
 msgstr "Missatge xifrat"
@@ -1966,6 +2070,116 @@ msgstr "Signatura caducada"
 msgid "This message hasn't been checked."
 msgstr "Aquest missatge no s'ha comprovat."
 
+#, fuzzy
+msgid "Harper is not available for this computer."
+msgstr "No hi ha cap carpeta de plantilles disponible per a aquest compte"
+
+msgid "Harper is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "Harper could not be started: {e}"
+msgstr "No s'ha pogut contactar amb el servei: {e}"
+
+#, fuzzy
+msgid "Harper's answer could not be read."
+msgstr "No s'ha pogut llegir la resposta del servei."
+
+#, fuzzy
+msgid "There is no folder to install to."
+msgstr "No hi ha text per traduir."
+
+msgid "There is not enough free space: {size} is needed."
+msgstr ""
+
+#, fuzzy
+msgid "The download could not start: {e}"
+msgstr "No s'ha pogut desar l'esborrany: {e}"
+
+msgid "The download was cancelled."
+msgstr ""
+
+msgid "The download stopped: {e}"
+msgstr ""
+
+msgid "The downloaded file is not the one expected, so it was not installed."
+msgstr ""
+
+#, fuzzy
+msgid "The download could not be unpacked: {e}"
+msgstr "No s'ha pogut contactar amb el servei: {e}"
+
+#, fuzzy
+msgid "The files could not be written: {e}"
+msgstr "No s'ha pogut obrir el fitxer"
+
+msgid "{n} MB"
+msgstr ""
+
+#, fuzzy
+msgid "The server's answer could not be read."
+msgstr "No s'ha pogut llegir la resposta del servei."
+
+msgid "Nothing answers at that address. Check that the server is running."
+msgstr ""
+
+#, fuzzy
+msgid "The server's name could not be found."
+msgstr "No s'ha pogut llegir la resposta del servei."
+
+#, fuzzy
+msgid "The server's address is not valid."
+msgstr "Introdueix l'adreça del servidor."
+
+#, fuzzy
+msgid "The server could not be reached: {e}"
+msgstr "No s'ha pogut contactar amb el servei: {e}"
+
+#, fuzzy
+msgid "The server did not accept the username and key."
+msgstr "El servidor no ha acceptat el nom d'usuari o la contrasenya."
+
+#, fuzzy
+msgid "The message is too long for the server."
+msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
+
+msgid "Too many requests: try again in a moment."
+msgstr "Massa sol·licituds: torna-ho a provar d'aquí a un moment."
+
+#, fuzzy
+msgid "The server refused the request (error {code})."
+msgstr "El servei ha refusat la sol·licitud (error {code})."
+
+#, fuzzy
+msgid "LanguageTool is not available for this computer."
+msgstr "No hi ha cap carpeta d'esborranys disponible per a aquest compte"
+
+msgid "LanguageTool stopped unexpectedly."
+msgstr ""
+
+msgid "LanguageTool is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool could not be started: {e}"
+msgstr "No s'ha pogut contactar amb el servei: {e}"
+
+msgid "LanguageTool could not be started."
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool took too long to start."
+msgstr "El servidor ha trigat massa a respondre."
+
+#, fuzzy
+msgid "Enter the LanguageTool server's address in Settings → Composing."
+msgstr ""
+"Introdueix l'adreça del servidor LibreTranslate a Paràmetres → Traducció."
+
+#, fuzzy
+msgid "Enter the server's address first."
+msgstr "Introdueix l'adreça del servidor."
+
 msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
@@ -1981,9 +2195,6 @@ msgstr "No s'ha pogut contactar amb el servei: {e}"
 
 msgid "The service did not accept the key."
 msgstr "El servei no ha acceptat la clau."
-
-msgid "Too many requests: try again in a moment."
-msgstr "Massa sol·licituds: torna-ho a provar d'aquí a un moment."
 
 msgid "This month's allowance is used up."
 msgstr "S'ha esgotat l'assignació d'aquest mes."
@@ -2330,6 +2541,14 @@ msgstr "Servidor entrant"
 msgid "Port (IMAP 993 / POP3 995)"
 msgstr "Port (IMAP 993 / POP3 995)"
 
+#, fuzzy
+msgid "Import Mbox Files"
+msgstr "Importa un fitxer…"
+
+#, fuzzy
+msgid "Import Maildir Folders"
+msgstr "La importació ha fallat: {e}"
+
 msgid "Signed in as {address}, not {email}."
 msgstr "Sessió iniciada com a {address}, no com a {email}."
 
@@ -2386,6 +2605,14 @@ msgstr "Comprova si hi ha comptes nous als comptes en línia del GNOME"
 
 msgid "Add Account…"
 msgstr "Afegeix un compte…"
+
+msgid ""
+"Store mail in folders that live on this computer. Move or copy mail from any "
+"account to here."
+msgstr ""
+
+msgid "Add"
+msgstr "Afegeix"
 
 msgid "GNOME Online Accounts"
 msgstr "Comptes en línia del GNOME"
@@ -2451,9 +2678,6 @@ msgstr "Edita l'etiqueta"
 
 msgid "Add Tag"
 msgstr "Afegeix una etiqueta"
-
-msgid "Name"
-msgstr "Nom"
 
 msgid "Keyword"
 msgstr "Paraula clau"
@@ -2521,6 +2745,10 @@ msgstr "Proton Mail"
 msgid "Custom OAuth"
 msgstr "OAuth personalitzat"
 
+#, fuzzy
+msgid "Folders on this computer"
+msgstr "Hylki, en aquest ordinador"
+
 msgid "IMAP/POP3 account"
 msgstr "Compte IMAP/POP3"
 
@@ -2532,6 +2760,11 @@ msgstr "Compte de correu"
 
 msgid "Enter a client ID and sign in before saving"
 msgstr "Introdueix un ID de client i inicia sessió abans de desar"
+
+msgid ""
+"Remove {name} from Hylki? Its folders and the mail in them stay on this "
+"computer, in {dir}, and come back if it is added again."
+msgstr ""
 
 msgid "Edit HTML"
 msgstr "Edita l'HTML"
@@ -2829,6 +3062,81 @@ msgstr "Següent"
 
 msgid "Open in the default app"
 msgstr "Obre amb l'aplicació per defecte"
+
+#, fuzzy
+msgid "New Event"
+msgstr "Contacte nou"
+
+#, fuzzy
+msgid "New Task"
+msgstr "No hi ha etiquetes noves"
+
+#, fuzzy
+msgid "Open in Calendar"
+msgstr "Obre en una finestra"
+
+msgid "Title"
+msgstr "Càrrec"
+
+#, fuzzy
+msgid "Calendar"
+msgstr "Afegeix al calendari"
+
+#, fuzzy
+msgid "Task list"
+msgstr "Aquesta llista"
+
+#, fuzzy
+msgid "Notes"
+msgstr "Nota"
+
+#, fuzzy
+msgid "All day"
+msgstr "Afegeix un correu"
+
+#, fuzzy
+msgid "Starts"
+msgstr "Destaca"
+
+msgid "Ends"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+#, fuzzy
+msgid "Second alarm"
+msgstr "Envia-ho tot"
+
+#, fuzzy
+msgid "At the start"
+msgstr "Reinicia"
+
+msgid "{n} week before"
+msgid_plural "{n} weeks before"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "{n} day before"
+msgid_plural "{n} days before"
+msgstr[0] "fa {n} dies"
+msgstr[1] "fa {n} dies"
+
+#, fuzzy
+msgid "{n} hour before"
+msgid_plural "{n} hours before"
+msgstr[0] "fa {n} hores"
+msgstr[1] "fa {n} hores"
+
+#, fuzzy
+msgid "{n} minute before"
+msgid_plural "{n} minutes before"
+msgstr[0] "fa {n} minuts"
+msgstr[1] "fa {n} minuts"
+
+msgid "Due"
+msgstr "Venciment"
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Benvingut a l'Hylki, abans {old}"
@@ -3262,6 +3570,28 @@ msgstr "Més"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Mostra Cc, Cco i Respon a"
 
+#, fuzzy
+msgid "Cannot merge an encrypted message"
+msgstr "Missatge xifrat"
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr ""
+
+msgid "Check the From address"
+msgstr "Comprova l'adreça del remitent"
+
+#, fuzzy
+msgid "Insert Merge Field"
+msgstr "Insereix després del text"
+
+#, fuzzy
+msgid "Contact Groups"
+msgstr "Contactes"
+
+#, fuzzy
+msgid "Choose a CSV File…"
+msgstr "Desa com a fitxer…"
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -3291,9 +3621,6 @@ msgstr "«{address}» no és una adreça de correu electrònic."
 msgid "Cannot send with OpenPGP"
 msgstr "No es pot enviar amb OpenPGP"
 
-msgid "Check the From address"
-msgstr "Comprova l'adreça del remitent"
-
 msgid "An attachment is missing"
 msgstr "Falta un adjunt"
 
@@ -3310,11 +3637,50 @@ msgstr "Escriu una adreça de remitent"
 msgid "Choose from your addresses"
 msgstr "Tria entre les teves adreces"
 
-msgid "Check the address"
-msgstr "Comprova l'adreça"
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
+msgstr ""
 
 msgid "“{addr}” is not an email address."
 msgstr "«{addr}» no és una adreça de correu electrònic."
+
+msgid "Check the address"
+msgstr "Comprova l'adreça"
+
+msgid "Send now"
+msgstr "Envia ara"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Demà al matí ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Demà a la tarda ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "Dilluns al matí ({time})"
+
+msgid "Pick a date and time…"
+msgstr "Tria una data i una hora…"
+
+msgid "Mail Merge…"
+msgstr ""
+
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
+#, fuzzy
+msgid "High"
+msgstr "Ressaltat"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "Low"
+msgstr ""
 
 msgid "Show the message as it will be sent"
 msgstr "Mostra el missatge tal com s'enviarà"
@@ -3394,27 +3760,6 @@ msgstr "Envia"
 #, fuzzy
 msgid "Send options"
 msgstr "Seccions"
-
-msgid "Send now"
-msgstr "Envia ara"
-
-msgid "Tomorrow morning ({time})"
-msgstr "Demà al matí ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Demà a la tarda ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "Dilluns al matí ({time})"
-
-msgid "Pick a date and time…"
-msgstr "Tria una data i una hora…"
-
-msgid "Request a read receipt"
-msgstr ""
-
-msgid "Not every mail app sends one."
-msgstr ""
 
 msgid "Show From, To and Subject"
 msgstr "Mostra De, A i Assumpte"
@@ -3796,9 +4141,6 @@ msgstr "Mostra la foto"
 msgid "Add to Contacts"
 msgstr "Afegeix a contactes"
 
-msgid "Email"
-msgstr "Correu electrònic"
-
 msgid "Phone"
 msgstr "Telèfon"
 
@@ -3876,9 +4218,6 @@ msgstr "Àlies"
 
 msgid "Organization"
 msgstr "Organització"
-
-msgid "Title"
-msgstr "Càrrec"
 
 msgid "Another book moves the contact there when saved."
 msgstr "Una altra llibreta mou el contacte allà quan es desa."
@@ -4003,6 +4342,10 @@ msgstr "Cognom"
 
 msgid "Sort and filter contacts"
 msgstr "Ordena i filtra contactes"
+
+#, fuzzy
+msgid "Groups"
+msgstr "Grup"
 
 msgid "Import Contacts"
 msgstr "Importa contactes"
@@ -4269,6 +4612,79 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} de {total}"
 
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr ""
+
+msgid "No row has an address to send to."
+msgstr ""
+
+#, fuzzy
+msgid "Text"
+msgstr "Mida del text"
+
+#, fuzzy
+msgid "In {places}"
+msgstr "A {folder}"
+
+msgid "Mail Merge"
+msgstr ""
+
+#, fuzzy
+msgid "Send to"
+msgstr "Envia ara"
+
+#, fuzzy
+msgid "A CSV file"
+msgstr "Tots els fitxers"
+
+#, fuzzy
+msgid "CSV file"
+msgstr "Fitxer de so"
+
+msgid "Its first row names the fields."
+msgstr ""
+
+msgid "Choose…"
+msgstr "Tria…"
+
+msgid "Fields"
+msgstr ""
+
+#, fuzzy
+msgid "Leave these fields empty"
+msgstr "Mantén obert el camp de cerca"
+
+#, fuzzy
+msgid "{n} of {total}"
+msgstr "{shown} de {total}"
+
+#, fuzzy
+msgid "Not in {source}"
+msgstr "No és en cap grup"
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] "Cerca al missatge"
+msgstr[1] "Cerca al missatge"
+
+#, fuzzy
+msgid "Choose a CSV File"
+msgstr "Tria una imatge"
+
+#, fuzzy
+msgid "CSV files"
+msgstr "Fitxers vCard"
+
+#, fuzzy
+msgid "The file could not be read: {error}"
+msgstr "No s'ha pogut contactar amb el servei: {e}"
+
 msgid "No Messages"
 msgstr "No hi ha missatges"
 
@@ -4357,11 +4773,11 @@ msgstr "Què cerca això"
 msgid "me"
 msgstr "jo"
 
+msgid "To:"
+msgstr "A:"
+
 msgid "Show conversation"
 msgstr "Mostra la conversa"
-
-msgid "Due"
-msgstr "Venciment"
 
 msgid "Drag to resize, double-click for the usual width"
 msgstr "Arrossega per redimensionar, doble clic per a l'amplada habitual"
@@ -4381,18 +4797,18 @@ msgstr "Marca com a no llegit"
 msgid "Remove star"
 msgstr "Treu la destacat"
 
+msgid "High importance"
+msgstr "Importància alta"
+
+msgid "Low importance"
+msgstr "Importància baixa"
+
 msgid "Forwarded"
 msgstr "Reenviat"
 
 #, fuzzy
 msgid "Snoozed until {when}"
 msgstr "Programat per a {when}"
-
-msgid "High importance"
-msgstr "Importància alta"
-
-msgid "Low importance"
-msgstr "Importància baixa"
 
 msgid "In {folder}"
 msgstr "A {folder}"
@@ -4714,9 +5130,6 @@ msgstr ""
 
 msgid "From:"
 msgstr "De:"
-
-msgid "To:"
-msgstr "A:"
 
 msgid "Cc:"
 msgstr "Cc:"
@@ -5223,6 +5636,88 @@ msgstr "Balanceig"
 msgid "Custom File"
 msgstr "Fitxer personalitzat"
 
+#, fuzzy
+msgid "Downloading: {done} of {total}"
+msgstr "Carpeta {done} de {total}"
+
+#, fuzzy
+msgid "Not available for this computer."
+msgstr "No hi ha cap carpeta d'esborranys disponible per a aquest compte"
+
+#, fuzzy
+msgid "Version {version}, on this computer."
+msgstr "Hylki, en aquest ordinador"
+
+msgid "Not downloaded yet. The download is {size}."
+msgstr ""
+
+#, fuzzy
+msgid "The files could not be removed."
+msgstr "No s'ha pogut obrir el fitxer"
+
+msgid "The download stopped unexpectedly."
+msgstr ""
+
+msgid "Grammar"
+msgstr ""
+
+msgid "Check grammar and style"
+msgstr ""
+
+#, fuzzy
+msgid "Right-click a marked phrase for suggestions."
+msgstr "Fes clic dret en una paraula per veure'n correccions."
+
+#, fuzzy
+msgid "Checker"
+msgstr "Comprova"
+
+msgid "Harper"
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool"
+msgstr "Idioma"
+
+#, fuzzy
+msgid "LanguageTool server"
+msgstr "Idiomes"
+
+msgid "English only. Nothing leaves this computer."
+msgstr ""
+
+msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
+msgstr ""
+
+#, fuzzy
+msgid "What you write is sent to the server as you type."
+msgstr "Aquesta carpeta no és al servidor"
+
+msgid "Username (LanguageTool Premium)"
+msgstr ""
+
+msgid "API key (LanguageTool Premium)"
+msgstr ""
+
+msgid "Check the settings"
+msgstr "Comprova els paràmetres"
+
+#, fuzzy
+msgid "Sends a test sentence to the server."
+msgstr "No s'ha pogut connectar al servidor."
+
+msgid "Check"
+msgstr "Comprova"
+
+msgid "Checking…"
+msgstr "S'està comprovant…"
+
+msgid "The check stopped unexpectedly."
+msgstr ""
+
+msgid "It works: {server} answered."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Missatges ja llegits"
 
@@ -5568,9 +6063,6 @@ msgstr "Reprodueix"
 
 msgid "Sound file"
 msgstr "Fitxer de so"
-
-msgid "Choose…"
-msgstr "Tria…"
 
 msgid "Also play while Hylki is in front"
 msgstr "Reprodueix també quan l'Hylki és al davant"
@@ -5950,6 +6442,9 @@ msgstr "S'ha desat {name}"
 msgid "Could not save the PDF: {error}"
 msgstr "No s'ha pogut desar el PDF: {error}"
 
+msgid "Filled in by Mail Merge"
+msgstr ""
+
 msgid "Custom…"
 msgstr "Personalitzada…"
 
@@ -5962,11 +6457,14 @@ msgstr "Serif"
 msgid "Monospace"
 msgstr "Monoespaiada"
 
+msgid "Grammar check failed: {error}"
+msgstr ""
+
+msgid "No suggestions"
+msgstr ""
+
 msgid "Spelling Language"
 msgstr "Idioma de correcció ortogràfica"
-
-msgid "Normal"
-msgstr "Normal"
 
 msgid "Heading 1"
 msgstr "Encapçalament 1"
@@ -6188,14 +6686,8 @@ msgstr "Clau"
 msgid "Region (empty for a global resource)"
 msgstr "Regió (buit per a un recurs global)"
 
-msgid "Check the settings"
-msgstr "Comprova els paràmetres"
-
 msgid "Translates a greeting to test the service."
 msgstr "Tradueix una salutació per provar el servei."
-
-msgid "Check"
-msgstr "Comprova"
 
 msgid "Messages"
 msgstr "Missatges"
@@ -6216,9 +6708,6 @@ msgstr ""
 msgid "Key (if the server asks for one)"
 msgstr "Clau (si el servidor en demana una)"
 
-msgid "Checking…"
-msgstr "S'està comprovant…"
-
 msgid "It works: “{sent}” came back as “{back}”."
 msgstr "Funciona: «{sent}» ha tornat com a «{back}»."
 
@@ -6227,9 +6716,6 @@ msgstr "Inicia sessió"
 
 msgid "The sign-in window was closed."
 msgstr "La finestra d'inici de sessió s'ha tancat."
-
-msgid "Add"
-msgstr "Afegeix"
 
 msgid "✓ {email} — added"
 msgstr "✓ {email} — afegit"
@@ -6506,8 +6992,9 @@ msgstr "Desfer ha fallat: {e}"
 msgid "Could not create folder: {e}"
 msgstr "No s'ha pogut crear la carpeta: {e}"
 
-msgid "Could not rename folder: unknown folder"
-msgstr "No s'ha pogut canviar el nom de la carpeta: carpeta desconeguda"
+#, fuzzy
+msgid "the folder it goes in is gone"
+msgstr "Només la carpeta o vista que mostra la llista."
 
 msgid "Could not rename folder: {e}"
 msgstr "No s'ha pogut canviar el nom de la carpeta: {e}"
@@ -6618,6 +7105,43 @@ msgstr "Aquesta carpeta no és al servidor"
 
 msgid "Could not reach the JMAP server: {e}"
 msgstr "No s'ha pogut contactar amb el servidor JMAP: {e}"
+
+msgid "Mail on this computer is not sent, and has no drafts"
+msgstr ""
+
+msgid "Mail is not sent from On This Computer: choose another From address"
+msgstr ""
+
+#, fuzzy
+msgid "Could not import {path}: {e}"
+msgstr "No s'ha pogut importar: {e}"
+
+#, fuzzy
+msgid "Importing {done} of {total} messages…"
+msgstr "Carpeta {done} de {total}"
+
+#, fuzzy
+msgid "A folder by that name already exists"
+msgstr "Ja hi ha una carpeta anomenada {new_name}."
+
+msgid "The folder still holds mail"
+msgstr ""
+
+#, fuzzy
+msgid "That is not a folder name"
+msgstr "Aquesta carpeta"
+
+#, fuzzy
+msgid "Could not store the message: {e}"
+msgstr "No s'ha pogut desar el missatge: {e}"
+
+#, fuzzy
+msgid "Could not open the folders on this computer: {e}"
+msgstr "No s'ha pogut buidar la carpeta: {e}"
+
+#, fuzzy
+msgid "Reading {n} messages…"
+msgstr "S'estan indexant {n} missatges…"
 
 #. Nothing failed: the message waits for the network, which the
 #. Refresh button already shows is down (#442).
@@ -6937,7 +7461,7 @@ msgstr ""
 "El correu de la bústia d'entrada amb un enllaç de baixa més antic que això "
 "es mou a la paperera, tret que estigui destacat."
 
-msgid "Keep mail offline"
+msgid "Keep mail cached"
 msgstr ""
 
 msgid "Leaves out Trash, Junk and Drafts."
@@ -6948,6 +7472,36 @@ msgid "Include attachments"
 msgstr "No hi ha adjunts"
 
 msgid "Can consume a lot of hard drive space."
+msgstr ""
+
+#, fuzzy
+msgid "Copy mail to On This Computer"
+msgstr "En aquest ordinador"
+
+msgid ""
+"Downloads copies of every message from every folder of this account to this "
+"computer (except Trash, Junk and Drafts) and stores them in On This Computer."
+msgstr ""
+
+#, fuzzy
+msgid "Import"
+msgstr "Importa…"
+
+msgid "Mail already here is not imported again."
+msgstr ""
+
+#, fuzzy
+msgid "Maildir folders"
+msgstr "Totes les carpetes"
+
+msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
+msgstr ""
+
+#, fuzzy
+msgid "Mbox files"
+msgstr "Tots els fitxers"
+
+msgid "Thunderbird's folders and other mbox files."
 msgstr ""
 
 msgid "Microsoft 365"
@@ -7719,6 +8273,9 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Could not rename folder: unknown folder"
+#~ msgstr "No s'ha pogut canviar el nom de la carpeta: carpeta desconeguda"
 
 #~ msgid "Received"
 #~ msgstr "Rebut"

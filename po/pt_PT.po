@@ -90,6 +90,10 @@ msgstr "Não foi possível guardar a conta: {e}"
 msgid "Could not import account: {e}"
 msgstr "Não foi possível importar a conta: {e}"
 
+#, fuzzy
+msgid "On This Computer is switched off"
+msgstr "Neste computador"
+
 msgid "Delete the attachment from the server?"
 msgstr "Eliminar o anexo do servidor?"
 
@@ -185,6 +189,13 @@ msgstr "Adicionar remetente aos contactos"
 msgid "Create Filter from Message…"
 msgstr "Criar filtro a partir da mensagem…"
 
+msgid "Create Event…"
+msgstr ""
+
+#, fuzzy
+msgid "Create Task…"
+msgstr "Criar"
+
 msgid "Tags"
 msgstr "Etiquetas"
 
@@ -198,6 +209,10 @@ msgid "Mark as Spam"
 msgstr "Marcar como lixo eletrónico"
 
 msgid "Move To…"
+msgstr "Mover para…"
+
+#, fuzzy
+msgid "Copy To…"
 msgstr "Mover para…"
 
 msgid "Archive"
@@ -504,11 +519,15 @@ msgstr "Fechar"
 msgid "Unstar"
 msgstr "Remover estrela"
 
-msgid "New Folder"
-msgstr "Nova pasta"
+#, fuzzy
+msgid "Create a folder inside {name}."
+msgstr "Criar uma nova pasta para esta conta."
 
 msgid "Create a new folder for this account."
 msgstr "Criar uma nova pasta para esta conta."
+
+msgid "New Folder"
+msgstr "Nova pasta"
 
 msgid "Cancel"
 msgstr "Cancelar"
@@ -562,8 +581,19 @@ msgstr ""
 "Todas as mensagens nessas pastas serão eliminadas do servidor. Esta ação não "
 "pode ser anulada."
 
+msgid "This account can't have folders at the top level."
+msgstr ""
+
+#, fuzzy
+msgid "Folders on this account can't hold other folders."
+msgstr "Disponibilizar esta conta no compositor"
+
 msgid "Create Folder"
 msgstr "Criar pasta"
+
+#, fuzzy
+msgid "{name} can't hold other folders."
+msgstr "Incluir outras pastas"
 
 msgid "archive"
 msgstr "arquivo"
@@ -573,6 +603,9 @@ msgstr "lixo"
 
 msgid "destination"
 msgstr "destino"
+
+msgid "A folder can't be moved into itself."
+msgstr ""
 
 msgid "Move Folder"
 msgstr "Mover pasta"
@@ -642,6 +675,9 @@ msgstr "Anexar mesmo assim"
 
 msgid "Upload to Cloud Storage"
 msgstr "Carregar para o armazenamento na nuvem"
+
+msgid "The account has to connect before its folders can change."
+msgstr ""
 
 msgid "This message carries no calendar file to open."
 msgstr "Esta mensagem não contém nenhum ficheiro de calendário para abrir."
@@ -754,6 +790,12 @@ msgstr "Ações"
 
 msgid "Refresh or long-press for Status Bar"
 msgstr "Atualizar ou premir sem soltar para mostrar a barra de estado"
+
+#, fuzzy
+msgid "Copying one message to On This Computer…"
+msgid_plural "Copying {n} messages to On This Computer…"
+msgstr[0] "A mover uma mensagem para {account}…"
+msgstr[1] "A mover {n} mensagens para {account}…"
 
 msgid "Sending message…"
 msgstr "A enviar mensagem…"
@@ -1138,16 +1180,16 @@ msgstr "Código fonte da mensagem"
 msgid "Forwarded message"
 msgstr "Reencaminhar esta mensagem"
 
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Aceite: {subject}"
+
 msgid "From: {from}"
 msgstr "De: {from}"
 
 #, fuzzy
 msgid "Date: {date}"
 msgstr "expira em {date}"
-
-#, fuzzy
-msgid "Subject: {subject}"
-msgstr "Aceite: {subject}"
 
 msgid "Export failed: {e}"
 msgstr "Falha ao exportar: {e}"
@@ -1317,6 +1359,12 @@ msgstr "Não existe uma pasta Caixa de entrada disponível para esta conta"
 msgid "No {v1} folder available for some messages"
 msgstr "Não está disponível nenhuma pasta {v1} para algumas mensagens"
 
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "A enviar mensagem…"
+msgstr[1] "A enviar mensagem…"
+
 msgid "Remove Account?"
 msgstr "Remover conta?"
 
@@ -1344,10 +1392,30 @@ msgstr ""
 msgid "Snooze until"
 msgstr ""
 
+#, fuzzy
+msgid "Could not add the event: {e}"
+msgstr "Não foi possível guardar a mensagem: {e}"
+
+#, fuzzy
+msgid "Could not add the task: {e}"
+msgstr "Não foi possível alterar a estrela: {e}"
+
+#, fuzzy
+msgid "One message could not be copied to {account}: {error}"
+msgid_plural "{n} messages could not be copied to {account}: {error}"
+msgstr[0] "Não foi possível mover uma mensagem para {account}: {error}"
+msgstr[1] "Não foi possível mover {n} mensagens para {account}: {error}"
+
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
 msgstr[0] "Não foi possível mover uma mensagem para {account}: {error}"
 msgstr[1] "Não foi possível mover {n} mensagens para {account}: {error}"
+
+#, fuzzy
+msgid "Copying one message to {account}…"
+msgid_plural "Copying {n} messages to {account}…"
+msgstr[0] "A mover uma mensagem para {account}…"
+msgstr[1] "A mover {n} mensagens para {account}…"
 
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
@@ -1652,6 +1720,32 @@ msgstr[1] "Está aberta no Hylki uma nova mensagem com {n} ficheiros anexados."
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "{date} às {time}"
 
+msgid "Name"
+msgstr "Nome"
+
+#, fuzzy
+msgid "First Name"
+msgstr "Nome próprio"
+
+#, fuzzy
+msgid "Last Name"
+msgstr "Apelido"
+
+msgid "Email"
+msgstr "E-mail"
+
+#, fuzzy
+msgid "Column {n}"
+msgstr "Colunas"
+
+#, fuzzy
+msgid "The file is empty."
+msgstr "O ficheiro não é um ficheiro de texto"
+
+#, fuzzy
+msgid "The file has no rows below its first."
+msgstr "O ficheiro não é um ficheiro de texto"
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "O GnuPG (gpg) não está instalado, pelo que não é possível ler esta mensagem."
@@ -1769,6 +1863,12 @@ msgstr ""
 "A organização do remetente classificou esta mensagem como “{label}”. O Hylki "
 "mostra a classificação, mas não aplica as suas regras."
 
+msgid "Nothing here proves this came from {from} — or that it didn't."
+msgstr "Nada aqui prova que esta mensagem veio de {from} — nem que não veio."
+
+msgid "These checks aren't known to come from your mail provider"
+msgstr ""
+
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
 msgstr ""
@@ -1801,9 +1901,6 @@ msgid "Your mail provider didn't report any sender checks for this message."
 msgstr ""
 "O seu fornecedor de correio não comunicou quaisquer verificações do "
 "remetente para esta mensagem."
-
-msgid "Nothing here proves this came from {from} — or that it didn't."
-msgstr "Nada aqui prova que esta mensagem veio de {from} — nem que não veio."
 
 msgid "{name}: passed"
 msgstr "{name}: aprovado"
@@ -1843,6 +1940,13 @@ msgstr "{used} de {limit} utilizados"
 
 msgid "{free} free ({pct}%)"
 msgstr "{free} livres ({pct}%)"
+
+#, fuzzy
+msgid "A folder needs a name."
+msgstr "Nome da pasta"
+
+msgid "A folder name can't contain “{c}” on this account."
+msgstr ""
 
 msgid "Encrypted message"
 msgstr "Mensagem encriptada"
@@ -1981,6 +2085,116 @@ msgstr "Assinatura expirada"
 msgid "This message hasn't been checked."
 msgstr "Esta mensagem não foi verificada."
 
+#, fuzzy
+msgid "Harper is not available for this computer."
+msgstr "Não existe uma pasta Modelos disponível para esta conta"
+
+msgid "Harper is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "Harper could not be started: {e}"
+msgstr "Não foi possível contactar o serviço: {e}"
+
+#, fuzzy
+msgid "Harper's answer could not be read."
+msgstr "Não foi possível ler a resposta do serviço."
+
+#, fuzzy
+msgid "There is no folder to install to."
+msgstr "Não há texto para traduzir."
+
+msgid "There is not enough free space: {size} is needed."
+msgstr ""
+
+#, fuzzy
+msgid "The download could not start: {e}"
+msgstr "Não foi possível guardar o rascunho: {e}"
+
+msgid "The download was cancelled."
+msgstr ""
+
+msgid "The download stopped: {e}"
+msgstr ""
+
+msgid "The downloaded file is not the one expected, so it was not installed."
+msgstr ""
+
+#, fuzzy
+msgid "The download could not be unpacked: {e}"
+msgstr "Não foi possível contactar o serviço: {e}"
+
+#, fuzzy
+msgid "The files could not be written: {e}"
+msgstr "Não foi possível abrir o ficheiro"
+
+msgid "{n} MB"
+msgstr ""
+
+#, fuzzy
+msgid "The server's answer could not be read."
+msgstr "Não foi possível ler a resposta do serviço."
+
+msgid "Nothing answers at that address. Check that the server is running."
+msgstr ""
+
+#, fuzzy
+msgid "The server's name could not be found."
+msgstr "Não foi possível ler a resposta do serviço."
+
+#, fuzzy
+msgid "The server's address is not valid."
+msgstr "Introduza o endereço do servidor."
+
+#, fuzzy
+msgid "The server could not be reached: {e}"
+msgstr "Não foi possível contactar o serviço: {e}"
+
+#, fuzzy
+msgid "The server did not accept the username and key."
+msgstr "O servidor não aceitou o nome de utilizador ou a palavra-passe."
+
+#, fuzzy
+msgid "The message is too long for the server."
+msgstr "Esta mensagem é demasiado longa para enviar para tradução."
+
+msgid "Too many requests: try again in a moment."
+msgstr "Demasiados pedidos: tente novamente daqui a pouco."
+
+#, fuzzy
+msgid "The server refused the request (error {code})."
+msgstr "O serviço recusou o pedido (erro {code})."
+
+#, fuzzy
+msgid "LanguageTool is not available for this computer."
+msgstr "Não existe uma pasta Rascunhos disponível para esta conta"
+
+msgid "LanguageTool stopped unexpectedly."
+msgstr ""
+
+msgid "LanguageTool is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool could not be started: {e}"
+msgstr "Não foi possível contactar o serviço: {e}"
+
+msgid "LanguageTool could not be started."
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool took too long to start."
+msgstr "O servidor demorou demasiado tempo a responder."
+
+#, fuzzy
+msgid "Enter the LanguageTool server's address in Settings → Composing."
+msgstr ""
+"Introduza o endereço do servidor LibreTranslate em Definições → Tradução."
+
+#, fuzzy
+msgid "Enter the server's address first."
+msgstr "Introduza o endereço do servidor."
+
 msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
@@ -1996,9 +2210,6 @@ msgstr "Não foi possível contactar o serviço: {e}"
 
 msgid "The service did not accept the key."
 msgstr "O serviço não aceitou a chave."
-
-msgid "Too many requests: try again in a moment."
-msgstr "Demasiados pedidos: tente novamente daqui a pouco."
 
 msgid "This month's allowance is used up."
 msgstr "A quota deste mês foi esgotada."
@@ -2339,6 +2550,14 @@ msgstr "Servidor de receção"
 msgid "Port (IMAP 993 / POP3 995)"
 msgstr "Porta (IMAP 993/POP3 995)"
 
+#, fuzzy
+msgid "Import Mbox Files"
+msgstr "Importar ficheiro…"
+
+#, fuzzy
+msgid "Import Maildir Folders"
+msgstr "Falha ao importar: {e}"
+
 msgid "Signed in as {address}, not {email}."
 msgstr "Sessão iniciada como {address}, em vez de {email}."
 
@@ -2397,6 +2616,14 @@ msgstr "Procurar novas contas nas Contas online do GNOME"
 
 msgid "Add Account…"
 msgstr "Adicionar conta…"
+
+msgid ""
+"Store mail in folders that live on this computer. Move or copy mail from any "
+"account to here."
+msgstr ""
+
+msgid "Add"
+msgstr "Adicionar"
 
 msgid "GNOME Online Accounts"
 msgstr "Contas online do GNOME"
@@ -2463,9 +2690,6 @@ msgstr "Editar etiqueta"
 
 msgid "Add Tag"
 msgstr "Adicionar etiqueta"
-
-msgid "Name"
-msgstr "Nome"
 
 msgid "Keyword"
 msgstr "Palavra-chave"
@@ -2537,6 +2761,10 @@ msgstr "Proton Mail"
 msgid "Custom OAuth"
 msgstr "OAuth personalizado"
 
+#, fuzzy
+msgid "Folders on this computer"
+msgstr "Hylki, neste computador"
+
 msgid "IMAP/POP3 account"
 msgstr "Conta IMAP/POP3"
 
@@ -2548,6 +2776,11 @@ msgstr "Conta de correio"
 
 msgid "Enter a client ID and sign in before saving"
 msgstr "Introduza um ID de cliente e inicie sessão antes de guardar"
+
+msgid ""
+"Remove {name} from Hylki? Its folders and the mail in them stay on this "
+"computer, in {dir}, and come back if it is added again."
+msgstr ""
 
 msgid "Edit HTML"
 msgstr "Editar HTML"
@@ -2845,6 +3078,81 @@ msgstr "Seguinte"
 
 msgid "Open in the default app"
 msgstr "Abrir na aplicação predefinida"
+
+#, fuzzy
+msgid "New Event"
+msgstr "Novo contacto"
+
+#, fuzzy
+msgid "New Task"
+msgstr "Nenhuma etiqueta nova"
+
+#, fuzzy
+msgid "Open in Calendar"
+msgstr "Abrir numa janela"
+
+msgid "Title"
+msgstr "Cargo"
+
+#, fuzzy
+msgid "Calendar"
+msgstr "Adicionar ao calendário"
+
+#, fuzzy
+msgid "Task list"
+msgstr "Esta lista"
+
+#, fuzzy
+msgid "Notes"
+msgstr "Nota"
+
+#, fuzzy
+msgid "All day"
+msgstr "Adicionar e-mail"
+
+#, fuzzy
+msgid "Starts"
+msgstr "Adicionar estrela"
+
+msgid "Ends"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+#, fuzzy
+msgid "Second alarm"
+msgstr "Enviar tudo"
+
+#, fuzzy
+msgid "At the start"
+msgstr "Reiniciar"
+
+msgid "{n} week before"
+msgid_plural "{n} weeks before"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "{n} day before"
+msgid_plural "{n} days before"
+msgstr[0] "há {n} dias"
+msgstr[1] "há {n} dias"
+
+#, fuzzy
+msgid "{n} hour before"
+msgid_plural "{n} hours before"
+msgstr[0] "há {n} horas"
+msgstr[1] "há {n} horas"
+
+#, fuzzy
+msgid "{n} minute before"
+msgid_plural "{n} minutes before"
+msgstr[0] "há {n} minutos"
+msgstr[1] "há {n} minutos"
+
+msgid "Due"
+msgstr "Prazo"
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Bem-vindo ao Hylki, anteriormente {old}"
@@ -3289,6 +3597,28 @@ msgstr "Mais"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Mostrar Cc, Bcc e Responder a"
 
+#, fuzzy
+msgid "Cannot merge an encrypted message"
+msgstr "Mensagem encriptada"
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr ""
+
+msgid "Check the From address"
+msgstr "Verificar o endereço do campo De"
+
+#, fuzzy
+msgid "Insert Merge Field"
+msgstr "Inserir depois do texto"
+
+#, fuzzy
+msgid "Contact Groups"
+msgstr "Contactos"
+
+#, fuzzy
+msgid "Choose a CSV File…"
+msgstr "Guardar como ficheiro…"
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -3319,9 +3649,6 @@ msgstr "“{address}” não é um endereço de e-mail."
 msgid "Cannot send with OpenPGP"
 msgstr "Não é possível enviar com OpenPGP"
 
-msgid "Check the From address"
-msgstr "Verificar o endereço do campo De"
-
 msgid "An attachment is missing"
 msgstr "Falta um anexo"
 
@@ -3339,11 +3666,50 @@ msgstr "Introduzir um endereço no campo De"
 msgid "Choose from your addresses"
 msgstr "Escolher entre os seus endereços"
 
-msgid "Check the address"
-msgstr "Verificar o endereço"
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
+msgstr ""
 
 msgid "“{addr}” is not an email address."
 msgstr "“{addr}” não é um endereço de e-mail."
+
+msgid "Check the address"
+msgstr "Verificar o endereço"
+
+msgid "Send now"
+msgstr "Enviar agora"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Amanhã de manhã ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Amanhã à tarde ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "Segunda-feira de manhã ({time})"
+
+msgid "Pick a date and time…"
+msgstr "Escolher uma data e hora…"
+
+msgid "Mail Merge…"
+msgstr ""
+
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
+#, fuzzy
+msgid "High"
+msgstr "Realce"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "Low"
+msgstr ""
 
 msgid "Show the message as it will be sent"
 msgstr "Mostrar a mensagem tal como será enviada"
@@ -3423,27 +3789,6 @@ msgstr "Enviar"
 #, fuzzy
 msgid "Send options"
 msgstr "Secções"
-
-msgid "Send now"
-msgstr "Enviar agora"
-
-msgid "Tomorrow morning ({time})"
-msgstr "Amanhã de manhã ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Amanhã à tarde ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "Segunda-feira de manhã ({time})"
-
-msgid "Pick a date and time…"
-msgstr "Escolher uma data e hora…"
-
-msgid "Request a read receipt"
-msgstr ""
-
-msgid "Not every mail app sends one."
-msgstr ""
 
 msgid "Show From, To and Subject"
 msgstr "Mostrar De, Para e Assunto"
@@ -3821,9 +4166,6 @@ msgstr "Ver fotografia"
 msgid "Add to Contacts"
 msgstr "Adicionar aos contactos"
 
-msgid "Email"
-msgstr "E-mail"
-
 msgid "Phone"
 msgstr "Telefone"
 
@@ -3903,9 +4245,6 @@ msgstr "Alcunha"
 
 msgid "Organization"
 msgstr "Organização"
-
-msgid "Title"
-msgstr "Cargo"
 
 msgid "Another book moves the contact there when saved."
 msgstr ""
@@ -4031,6 +4370,10 @@ msgstr "Apelido"
 
 msgid "Sort and filter contacts"
 msgstr "Ordenar e filtrar contactos"
+
+#, fuzzy
+msgid "Groups"
+msgstr "Grupo"
 
 msgid "Import Contacts"
 msgstr "Importar contactos"
@@ -4296,6 +4639,79 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} de {total}"
 
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr ""
+
+msgid "No row has an address to send to."
+msgstr ""
+
+#, fuzzy
+msgid "Text"
+msgstr "Tamanho do texto"
+
+#, fuzzy
+msgid "In {places}"
+msgstr "Em {folder}"
+
+msgid "Mail Merge"
+msgstr ""
+
+#, fuzzy
+msgid "Send to"
+msgstr "Enviar agora"
+
+#, fuzzy
+msgid "A CSV file"
+msgstr "Todos os ficheiros"
+
+#, fuzzy
+msgid "CSV file"
+msgstr "Ficheiro de som"
+
+msgid "Its first row names the fields."
+msgstr ""
+
+msgid "Choose…"
+msgstr "Escolher…"
+
+msgid "Fields"
+msgstr ""
+
+#, fuzzy
+msgid "Leave these fields empty"
+msgstr "Manter o campo de pesquisa aberto"
+
+#, fuzzy
+msgid "{n} of {total}"
+msgstr "{shown} de {total}"
+
+#, fuzzy
+msgid "Not in {source}"
+msgstr "Não pertence a um grupo"
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] "Localizar na mensagem"
+msgstr[1] "Localizar na mensagem"
+
+#, fuzzy
+msgid "Choose a CSV File"
+msgstr "Escolher uma imagem"
+
+#, fuzzy
+msgid "CSV files"
+msgstr "Ficheiros vCard"
+
+#, fuzzy
+msgid "The file could not be read: {error}"
+msgstr "Não foi possível contactar o serviço: {e}"
+
 msgid "No Messages"
 msgstr "Sem mensagens"
 
@@ -4384,11 +4800,11 @@ msgstr "Âmbito desta pesquisa"
 msgid "me"
 msgstr "eu"
 
+msgid "To:"
+msgstr "Para:"
+
 msgid "Show conversation"
 msgstr "Mostrar conversa"
-
-msgid "Due"
-msgstr "Prazo"
 
 msgid "Drag to resize, double-click for the usual width"
 msgstr ""
@@ -4409,18 +4825,18 @@ msgstr "Marcar como não lida"
 msgid "Remove star"
 msgstr "Remover estrela"
 
+msgid "High importance"
+msgstr "Importância alta"
+
+msgid "Low importance"
+msgstr "Importância baixa"
+
 msgid "Forwarded"
 msgstr "Reencaminhada"
 
 #, fuzzy
 msgid "Snoozed until {when}"
 msgstr "Agendada para {when}"
-
-msgid "High importance"
-msgstr "Importância alta"
-
-msgid "Low importance"
-msgstr "Importância baixa"
 
 msgid "In {folder}"
 msgstr "Em {folder}"
@@ -4741,9 +5157,6 @@ msgstr ""
 
 msgid "From:"
 msgstr "De:"
-
-msgid "To:"
-msgstr "Para:"
 
 msgid "Cc:"
 msgstr "Cc:"
@@ -5250,6 +5663,88 @@ msgstr "Balanço"
 msgid "Custom File"
 msgstr "Ficheiro personalizado"
 
+#, fuzzy
+msgid "Downloading: {done} of {total}"
+msgstr "Pasta {done} de {total}"
+
+#, fuzzy
+msgid "Not available for this computer."
+msgstr "Não existe uma pasta Rascunhos disponível para esta conta"
+
+#, fuzzy
+msgid "Version {version}, on this computer."
+msgstr "Hylki, neste computador"
+
+msgid "Not downloaded yet. The download is {size}."
+msgstr ""
+
+#, fuzzy
+msgid "The files could not be removed."
+msgstr "Não foi possível abrir o ficheiro"
+
+msgid "The download stopped unexpectedly."
+msgstr ""
+
+msgid "Grammar"
+msgstr ""
+
+msgid "Check grammar and style"
+msgstr ""
+
+#, fuzzy
+msgid "Right-click a marked phrase for suggestions."
+msgstr "Clique com o botão direito numa palavra para ver correções."
+
+#, fuzzy
+msgid "Checker"
+msgstr "Verificar"
+
+msgid "Harper"
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool"
+msgstr "Idioma"
+
+#, fuzzy
+msgid "LanguageTool server"
+msgstr "Idiomas"
+
+msgid "English only. Nothing leaves this computer."
+msgstr ""
+
+msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
+msgstr ""
+
+#, fuzzy
+msgid "What you write is sent to the server as you type."
+msgstr "Essa pasta não existe no servidor"
+
+msgid "Username (LanguageTool Premium)"
+msgstr ""
+
+msgid "API key (LanguageTool Premium)"
+msgstr ""
+
+msgid "Check the settings"
+msgstr "Verificar as definições"
+
+#, fuzzy
+msgid "Sends a test sentence to the server."
+msgstr "Não foi possível estabelecer ligação ao servidor."
+
+msgid "Check"
+msgstr "Verificar"
+
+msgid "Checking…"
+msgstr "A verificar…"
+
+msgid "The check stopped unexpectedly."
+msgstr ""
+
+msgid "It works: {server} answered."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Mensagens já lidas"
 
@@ -5596,9 +6091,6 @@ msgstr "Reproduzir"
 
 msgid "Sound file"
 msgstr "Ficheiro de som"
-
-msgid "Choose…"
-msgstr "Escolher…"
 
 msgid "Also play while Hylki is in front"
 msgstr "Reproduzir também quando o Hylki está em primeiro plano"
@@ -5978,6 +6470,9 @@ msgstr "{name} guardado"
 msgid "Could not save the PDF: {error}"
 msgstr "Não foi possível guardar o PDF: {error}"
 
+msgid "Filled in by Mail Merge"
+msgstr ""
+
 msgid "Custom…"
 msgstr "Personalizado…"
 
@@ -5990,11 +6485,14 @@ msgstr "Com serifa"
 msgid "Monospace"
 msgstr "Largura fixa"
 
+msgid "Grammar check failed: {error}"
+msgstr ""
+
+msgid "No suggestions"
+msgstr ""
+
 msgid "Spelling Language"
 msgstr "Idioma da correção ortográfica"
-
-msgid "Normal"
-msgstr "Normal"
 
 msgid "Heading 1"
 msgstr "Título 1"
@@ -6216,14 +6714,8 @@ msgstr "Chave"
 msgid "Region (empty for a global resource)"
 msgstr "Região (em branco para um recurso global)"
 
-msgid "Check the settings"
-msgstr "Verificar as definições"
-
 msgid "Translates a greeting to test the service."
 msgstr "Traduz uma saudação para testar o serviço."
-
-msgid "Check"
-msgstr "Verificar"
 
 msgid "Messages"
 msgstr "Mensagens"
@@ -6244,9 +6736,6 @@ msgstr ""
 msgid "Key (if the server asks for one)"
 msgstr "Chave (se o servidor a solicitar)"
 
-msgid "Checking…"
-msgstr "A verificar…"
-
 msgid "It works: “{sent}” came back as “{back}”."
 msgstr "Funciona: “{sent}” foi traduzido como “{back}”."
 
@@ -6255,9 +6744,6 @@ msgstr "Iniciar sessão"
 
 msgid "The sign-in window was closed."
 msgstr "A janela de início de sessão foi fechada."
-
-msgid "Add"
-msgstr "Adicionar"
 
 msgid "✓ {email} — added"
 msgstr "✓ {email} — adicionada"
@@ -6533,8 +7019,9 @@ msgstr "Falha ao anular: {e}"
 msgid "Could not create folder: {e}"
 msgstr "Não foi possível criar a pasta: {e}"
 
-msgid "Could not rename folder: unknown folder"
-msgstr "Não foi possível renomear a pasta: pasta desconhecida"
+#, fuzzy
+msgid "the folder it goes in is gone"
+msgstr "Apenas a pasta ou vista apresentada na lista."
 
 msgid "Could not rename folder: {e}"
 msgstr "Não foi possível renomear a pasta: {e}"
@@ -6646,6 +7133,43 @@ msgstr "Essa pasta não existe no servidor"
 
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Não foi possível aceder ao servidor JMAP: {e}"
+
+msgid "Mail on this computer is not sent, and has no drafts"
+msgstr ""
+
+msgid "Mail is not sent from On This Computer: choose another From address"
+msgstr ""
+
+#, fuzzy
+msgid "Could not import {path}: {e}"
+msgstr "Não foi possível importar: {e}"
+
+#, fuzzy
+msgid "Importing {done} of {total} messages…"
+msgstr "Pasta {done} de {total}"
+
+#, fuzzy
+msgid "A folder by that name already exists"
+msgstr "Já existe uma pasta com o nome {new_name}."
+
+msgid "The folder still holds mail"
+msgstr ""
+
+#, fuzzy
+msgid "That is not a folder name"
+msgstr "Esta pasta"
+
+#, fuzzy
+msgid "Could not store the message: {e}"
+msgstr "Não foi possível guardar a mensagem: {e}"
+
+#, fuzzy
+msgid "Could not open the folders on this computer: {e}"
+msgstr "Não foi possível esvaziar a pasta: {e}"
+
+#, fuzzy
+msgid "Reading {n} messages…"
+msgstr "A indexar {n} mensagens…"
 
 #. Nothing failed: the message waits for the network, which the
 #. Refresh button already shows is down (#442).
@@ -6971,7 +7495,7 @@ msgstr ""
 "e mais antigas do que este prazo são movidas para o Lixo, exceto se tiverem "
 "estrela."
 
-msgid "Keep mail offline"
+msgid "Keep mail cached"
 msgstr ""
 
 msgid "Leaves out Trash, Junk and Drafts."
@@ -6982,6 +7506,36 @@ msgid "Include attachments"
 msgstr "Sem anexos"
 
 msgid "Can consume a lot of hard drive space."
+msgstr ""
+
+#, fuzzy
+msgid "Copy mail to On This Computer"
+msgstr "Neste computador"
+
+msgid ""
+"Downloads copies of every message from every folder of this account to this "
+"computer (except Trash, Junk and Drafts) and stores them in On This Computer."
+msgstr ""
+
+#, fuzzy
+msgid "Import"
+msgstr "Importar…"
+
+msgid "Mail already here is not imported again."
+msgstr ""
+
+#, fuzzy
+msgid "Maildir folders"
+msgstr "Todas as pastas"
+
+msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
+msgstr ""
+
+#, fuzzy
+msgid "Mbox files"
+msgstr "Todos os ficheiros"
+
+msgid "Thunderbird's folders and other mbox files."
 msgstr ""
 
 msgid "Microsoft 365"
@@ -7764,6 +8318,9 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Could not rename folder: unknown folder"
+#~ msgstr "Não foi possível renomear a pasta: pasta desconhecida"
 
 #~ msgid "Received"
 #~ msgstr "Recebida"

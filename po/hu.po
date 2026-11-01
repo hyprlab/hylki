@@ -88,6 +88,10 @@ msgstr "A fiók nem menthető: {e}"
 msgid "Could not import account: {e}"
 msgstr "A fiók nem importálható: {e}"
 
+#, fuzzy
+msgid "On This Computer is switched off"
+msgstr "Ezen a számítógépen"
+
 msgid "Delete the attachment from the server?"
 msgstr "Töröljük a mellékletet a kiszolgálóról?"
 
@@ -188,6 +192,13 @@ msgstr "Feladó hozzáadása a névjegyekhez"
 msgid "Create Filter from Message…"
 msgstr "Nyomtatás…"
 
+msgid "Create Event…"
+msgstr ""
+
+#, fuzzy
+msgid "Create Task…"
+msgstr "Létrehozás"
+
 msgid "Tags"
 msgstr "Címkék"
 
@@ -201,6 +212,10 @@ msgid "Mark as Spam"
 msgstr "Megjelölés levélszemétként"
 
 msgid "Move To…"
+msgstr "Áthelyezés ide…"
+
+#, fuzzy
+msgid "Copy To…"
 msgstr "Áthelyezés ide…"
 
 msgid "Archive"
@@ -511,11 +526,15 @@ msgstr "Bezárás"
 msgid "Unstar"
 msgstr "Csillagozás törlése"
 
-msgid "New Folder"
-msgstr "Új mappa"
+#, fuzzy
+msgid "Create a folder inside {name}."
+msgstr "Új mappa létrehozása ehhez a fiókhoz."
 
 msgid "Create a new folder for this account."
 msgstr "Új mappa létrehozása ehhez a fiókhoz."
+
+msgid "New Folder"
+msgstr "Új mappa"
 
 msgid "Cancel"
 msgstr "Mégse"
@@ -568,8 +587,19 @@ msgid ""
 msgstr ""
 "A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
 
+msgid "This account can't have folders at the top level."
+msgstr ""
+
+#, fuzzy
+msgid "Folders on this account can't hold other folders."
+msgstr "Ajánld fel ezt a fiókot a programnak "
+
 msgid "Create Folder"
 msgstr "Mappa létrehozása"
+
+#, fuzzy
+msgid "{name} can't hold other folders."
+msgstr "Egyéb mappák bevonása"
 
 #, fuzzy
 msgid "archive"
@@ -582,6 +612,9 @@ msgstr "Kuka"
 #, fuzzy
 msgid "destination"
 msgstr "Frissített meghívó"
+
+msgid "A folder can't be moved into itself."
+msgstr ""
 
 msgid "Move Folder"
 msgstr "Mappa áthelyezése"
@@ -650,6 +683,9 @@ msgstr "Csatolás mindenképpen"
 
 msgid "Upload to Cloud Storage"
 msgstr "Feltöltés a felhőbe"
+
+msgid "The account has to connect before its folders can change."
+msgstr ""
 
 msgid "This message carries no calendar file to open."
 msgstr "Ez az üzenet nem tartalmaz megnyitható naptárfájlt."
@@ -766,6 +802,12 @@ msgstr "Műveletek"
 
 msgid "Refresh or long-press for Status Bar"
 msgstr "Frissítsen, vagy tartsa hosszan lenyomva az állapotsávhoz"
+
+#, fuzzy
+msgid "Copying one message to On This Computer…"
+msgid_plural "Copying {n} messages to On This Computer…"
+msgstr[0] "Egy üzenet áthelyezése a {account} fiókba…"
+msgstr[1] "{n} üzenet áthelyezése a {account} fiókba…"
 
 #, fuzzy
 msgid "Sending message…"
@@ -1196,16 +1238,16 @@ msgstr "Üzenetforrás"
 msgid "Forwarded message"
 msgstr "Üzenet továbbítása"
 
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Elfogadva: {subject}"
+
 msgid "From: {from}"
 msgstr "Feladó: {from}"
 
 #, fuzzy
 msgid "Date: {date}"
 msgstr "lejár: {date}"
-
-#, fuzzy
-msgid "Subject: {subject}"
-msgstr "Elfogadva: {subject}"
 
 msgid "Export failed: {e}"
 msgstr "Az exportálás sikertelen: {e}"
@@ -1372,6 +1414,12 @@ msgstr "Ehhez a fiókhoz nem érhető el Beérkezett üzenetek mappa"
 msgid "No {v1} folder available for some messages"
 msgstr "Néhány üzenethez nem érhető el {v1} mappa"
 
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "{n} üzenet indexelése…"
+msgstr[1] "{n} üzenet indexelése…"
+
 msgid "Remove Account?"
 msgstr "Eltávolítja a fiókot?"
 
@@ -1399,10 +1447,30 @@ msgstr ""
 msgid "Snooze until"
 msgstr ""
 
+#, fuzzy
+msgid "Could not add the event: {e}"
+msgstr "Az üzenet nem frissíthető: {e}"
+
+#, fuzzy
+msgid "Could not add the task: {e}"
+msgstr "Nem sikerült a csillagozás: {e}"
+
+#, fuzzy
+msgid "One message could not be copied to {account}: {error}"
+msgid_plural "{n} messages could not be copied to {account}: {error}"
+msgstr[0] "Egy üzenet nem tudott átkerülni a {account} fiókba: {error}"
+msgstr[1] "{n} üzeneteket nem sikerült áthelyezni a {account} fiókba: {error}"
+
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
 msgstr[0] "Egy üzenet nem tudott átkerülni a {account} fiókba: {error}"
 msgstr[1] "{n} üzeneteket nem sikerült áthelyezni a {account} fiókba: {error}"
+
+#, fuzzy
+msgid "Copying one message to {account}…"
+msgid_plural "Copying {n} messages to {account}…"
+msgstr[0] "Egy üzenet áthelyezése a {account} fiókba…"
+msgstr[1] "{n} üzenet áthelyezése a {account} fiókba…"
 
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
@@ -1721,6 +1789,32 @@ msgstr[1] "{n} csatolt fájlt tartalmazó új üzenet megnyitva a Hylkiben."
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "{date} {time} órakor"
 
+msgid "Name"
+msgstr "Név"
+
+#, fuzzy
+msgid "First Name"
+msgstr "Keresztnév"
+
+#, fuzzy
+msgid "Last Name"
+msgstr "Vezetéknév"
+
+msgid "Email"
+msgstr "E-mail"
+
+#, fuzzy
+msgid "Column {n}"
+msgstr "{n} feltétel"
+
+#, fuzzy
+msgid "The file is empty."
+msgstr "A mappa nincs a kiszolgálón"
+
+#, fuzzy
+msgid "The file has no rows below its first."
+msgstr "A mappa nincs a kiszolgálón"
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "A GnuPG (gpg) nincs telepítve, ezért ez az üzenet nem olvasható."
 
@@ -1835,6 +1929,14 @@ msgid ""
 "label but does not apply its rules."
 msgstr ""
 
+msgid "Nothing here proves this came from {from} — or that it didn't."
+msgstr ""
+"Itt semmi nem bizonyítja, hogy ez innen származik: {from} — de azt sem, hogy "
+"nem."
+
+msgid "These checks aren't known to come from your mail provider"
+msgstr ""
+
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
 msgstr ""
@@ -1866,11 +1968,6 @@ msgstr ""
 msgid "Your mail provider didn't report any sender checks for this message."
 msgstr ""
 "A levelezőszolgáltató nem jelentett feladó ellenőrzést ehhez az üzenethez."
-
-msgid "Nothing here proves this came from {from} — or that it didn't."
-msgstr ""
-"Itt semmi nem bizonyítja, hogy ez innen származik: {from} — de azt sem, hogy "
-"nem."
 
 msgid "{name}: passed"
 msgstr "{name}: sikeres"
@@ -1910,6 +2007,13 @@ msgstr "{used} / {limit} felhasználva"
 
 msgid "{free} free ({pct}%)"
 msgstr "{free} szabad ({pct}%)"
+
+#, fuzzy
+msgid "A folder needs a name."
+msgstr "Mappanév"
+
+msgid "A folder name can't contain “{c}” on this account."
+msgstr ""
 
 msgid "Encrypted message"
 msgstr "Titkosított üzenet"
@@ -2051,6 +2155,111 @@ msgstr "Az aláírás érvényessége lejárt"
 msgid "This message hasn't been checked."
 msgstr "Ezt az üzenetet még nem ellenőrizték."
 
+#, fuzzy
+msgid "Harper is not available for this computer."
+msgstr "Ehhez a fiókhoz nem érhető el Piszkozatok mappa"
+
+msgid "Harper is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "Harper could not be started: {e}"
+msgstr "A fájl nem megnyitható"
+
+#, fuzzy
+msgid "Harper's answer could not be read."
+msgstr "a lista e-mail-címét nem sikerült beolvasni"
+
+msgid "There is no folder to install to."
+msgstr ""
+
+msgid "There is not enough free space: {size} is needed."
+msgstr ""
+
+#, fuzzy
+msgid "The download could not start: {e}"
+msgstr "A piszkozat nem menthető: {e}"
+
+msgid "The download was cancelled."
+msgstr ""
+
+msgid "The download stopped: {e}"
+msgstr ""
+
+msgid "The downloaded file is not the one expected, so it was not installed."
+msgstr ""
+
+#, fuzzy
+msgid "The download could not be unpacked: {e}"
+msgstr "A fájl nem megnyitható"
+
+#, fuzzy
+msgid "The files could not be written: {e}"
+msgstr "A fájl nem megnyitható"
+
+msgid "{n} MB"
+msgstr ""
+
+#, fuzzy
+msgid "The server's answer could not be read."
+msgstr "a lista e-mail-címét nem sikerült beolvasni"
+
+msgid "Nothing answers at that address. Check that the server is running."
+msgstr ""
+
+#, fuzzy
+msgid "The server's name could not be found."
+msgstr "a lista e-mail-címét nem sikerült beolvasni"
+
+#, fuzzy
+msgid "The server's address is not valid."
+msgstr "Lépjen be a könyvtár kiszolgálójára."
+
+#, fuzzy
+msgid "The server could not be reached: {e}"
+msgstr "A fájl nem megnyitható"
+
+#, fuzzy
+msgid "The server did not accept the username and key."
+msgstr "A könyvtár nem fogadta el a jelszót."
+
+#, fuzzy
+msgid "The message is too long for the server."
+msgstr "Ez az üzenet nem tartalmaz megnyitható naptárfájlt."
+
+msgid "Too many requests: try again in a moment."
+msgstr ""
+
+msgid "The server refused the request (error {code})."
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool is not available for this computer."
+msgstr "Ehhez a fiókhoz nem érhető el Piszkozatok mappa"
+
+msgid "LanguageTool stopped unexpectedly."
+msgstr ""
+
+msgid "LanguageTool is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool could not be started: {e}"
+msgstr "A fájl nem megnyitható"
+
+msgid "LanguageTool could not be started."
+msgstr ""
+
+msgid "LanguageTool took too long to start."
+msgstr ""
+
+msgid "Enter the LanguageTool server's address in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "Enter the server's address first."
+msgstr "Lépjen be a könyvtár kiszolgálójára."
+
 msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
@@ -2067,9 +2276,6 @@ msgstr "A fájl nem megnyitható"
 #, fuzzy
 msgid "The service did not accept the key."
 msgstr "A könyvtár nem fogadta el a jelszót."
-
-msgid "Too many requests: try again in a moment."
-msgstr ""
 
 msgid "This month's allowance is used up."
 msgstr ""
@@ -2424,6 +2630,14 @@ msgid "Port (IMAP 993 / POP3 995)"
 msgstr "Végpont (IMAP 993 / POP3 995)"
 
 #, fuzzy
+msgid "Import Mbox Files"
+msgstr "Fájl importálása…"
+
+#, fuzzy
+msgid "Import Maildir Folders"
+msgstr "Az importálás sikertelen: {e}"
+
+#, fuzzy
 msgid "Signed in as {address}, not {email}."
 msgstr "Bejelentkezve mint: {who}. {terms}"
 
@@ -2484,6 +2698,14 @@ msgstr "GNOME Internetes Fiókok"
 
 msgid "Add Account…"
 msgstr "Fiók hozzáadása…"
+
+msgid ""
+"Store mail in folders that live on this computer. Move or copy mail from any "
+"account to here."
+msgstr ""
+
+msgid "Add"
+msgstr "Hozzáadás"
 
 msgid "GNOME Online Accounts"
 msgstr "GNOME Internetes Fiókok"
@@ -2559,9 +2781,6 @@ msgstr "Címke szerkesztése"
 msgid "Add Tag"
 msgstr "Címke hozzáadása"
 
-msgid "Name"
-msgstr "Név"
-
 msgid "Keyword"
 msgstr "Kulcsszó"
 
@@ -2631,6 +2850,10 @@ msgstr "Proton Mail"
 msgid "Custom OAuth"
 msgstr "Egyedi OAuth"
 
+#, fuzzy
+msgid "Folders on this computer"
+msgstr "Ezen a számítógépen"
+
 msgid "IMAP/POP3 account"
 msgstr "IMAP/POP3 fiók"
 
@@ -2643,6 +2866,11 @@ msgstr "E-mail fiók"
 msgid "Enter a client ID and sign in before saving"
 msgstr ""
 "Mentés előtt adja meg az ügyfélazonosítót (client ID) és jelentkezzen be"
+
+msgid ""
+"Remove {name} from Hylki? Its folders and the mail in them stay on this "
+"computer, in {dir}, and come back if it is added again."
+msgstr ""
 
 #, fuzzy
 msgid "Edit HTML"
@@ -2952,6 +3180,80 @@ msgstr "Következő"
 
 msgid "Open in the default app"
 msgstr "Megnyitás az alapértelmezett alkalmazásban"
+
+#, fuzzy
+msgid "New Event"
+msgstr "Új névjegy"
+
+#, fuzzy
+msgid "New Task"
+msgstr "Nincs új címke"
+
+#, fuzzy
+msgid "Open in Calendar"
+msgstr "Megnyitás ablakban"
+
+msgid "Title"
+msgstr ""
+
+#, fuzzy
+msgid "Calendar"
+msgstr "Hozzáadás a naptárhoz"
+
+#, fuzzy
+msgid "Task list"
+msgstr "Ez a lista"
+
+msgid "Notes"
+msgstr ""
+
+#, fuzzy
+msgid "All day"
+msgstr "E-mail hozzáadása"
+
+#, fuzzy
+msgid "Starts"
+msgstr "Csillagozás"
+
+msgid "Ends"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+#, fuzzy
+msgid "Second alarm"
+msgstr "Összes küldése"
+
+#, fuzzy
+msgid "At the start"
+msgstr "Újraindítás"
+
+msgid "{n} week before"
+msgid_plural "{n} weeks before"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "{n} day before"
+msgid_plural "{n} days before"
+msgstr[0] "{n} napja"
+msgstr[1] "{n} napja"
+
+#, fuzzy
+msgid "{n} hour before"
+msgid_plural "{n} hours before"
+msgstr[0] "{n} órája"
+msgstr[1] "{n} órája"
+
+#, fuzzy
+msgid "{n} minute before"
+msgid_plural "{n} minutes before"
+msgstr[0] "{n} órája"
+msgstr[1] "{n} órája"
+
+msgid "Due"
+msgstr ""
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Üdvözöljük a Hylki-n, korábban {old}"
@@ -3411,6 +3713,29 @@ msgstr "Továbbiak"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Másolat, titkos másolat és válaszcím megjelenítése"
 
+#, fuzzy
+msgid "Cannot merge an encrypted message"
+msgstr "Titkosított üzenet"
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr ""
+
+#, fuzzy
+msgid "Check the From address"
+msgstr "Feladó címe"
+
+#, fuzzy
+msgid "Insert Merge Field"
+msgstr "Beillesztés a szövegbe"
+
+#, fuzzy
+msgid "Contact Groups"
+msgstr "Névjegyek"
+
+#, fuzzy
+msgid "Choose a CSV File…"
+msgstr "Mentés PDF-ként…"
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -3441,10 +3766,6 @@ msgid "Cannot send with OpenPGP"
 msgstr "Nem lehet küldeni OpenPGP-vel"
 
 #, fuzzy
-msgid "Check the From address"
-msgstr "Feladó címe"
-
-#, fuzzy
 msgid "An attachment is missing"
 msgstr "{n} melléklet"
 
@@ -3460,11 +3781,49 @@ msgstr "Feladó címe"
 msgid "Choose from your addresses"
 msgstr ""
 
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
+msgstr ""
+
+msgid "“{addr}” is not an email address."
+msgstr ""
+
 #, fuzzy
 msgid "Check the address"
 msgstr "Feladó címe"
 
-msgid "“{addr}” is not an email address."
+msgid "Send now"
+msgstr "Küldés most"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Holnap reggel ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Holnap délután ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "Hétfő reggel ({time})"
+
+msgid "Pick a date and time…"
+msgstr "Dátum és idő kiválasztása…"
+
+msgid "Mail Merge…"
+msgstr ""
+
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
+msgid "High"
+msgstr ""
+
+msgid "Normal"
+msgstr ""
+
+msgid "Low"
 msgstr ""
 
 msgid "Show the message as it will be sent"
@@ -3559,27 +3918,6 @@ msgstr "Küldés"
 #, fuzzy
 msgid "Send options"
 msgstr "Műveletek"
-
-msgid "Send now"
-msgstr "Küldés most"
-
-msgid "Tomorrow morning ({time})"
-msgstr "Holnap reggel ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Holnap délután ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "Hétfő reggel ({time})"
-
-msgid "Pick a date and time…"
-msgstr "Dátum és idő kiválasztása…"
-
-msgid "Request a read receipt"
-msgstr ""
-
-msgid "Not every mail app sends one."
-msgstr ""
 
 msgid "Show From, To and Subject"
 msgstr "Feladó, címzett és tárgy megjelenítése"
@@ -3975,9 +4313,6 @@ msgstr "Fénykép megtekintése"
 msgid "Add to Contacts"
 msgstr "Hozzáadás a névjegyekhez"
 
-msgid "Email"
-msgstr "E-mail"
-
 msgid "Phone"
 msgstr "Telefon"
 
@@ -4052,9 +4387,6 @@ msgstr ""
 #, fuzzy
 msgid "Organization"
 msgstr "Fordította"
-
-msgid "Title"
-msgstr ""
 
 msgid "Another book moves the contact there when saved."
 msgstr ""
@@ -4191,6 +4523,10 @@ msgstr "Vezetéknév"
 #, fuzzy
 msgid "Sort and filter contacts"
 msgstr "{n} db üzenet"
+
+#, fuzzy
+msgid "Groups"
+msgstr "Bal oldali csoport"
 
 #, fuzzy
 msgid "Import Contacts"
@@ -4449,6 +4785,79 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} / {total}"
 
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr ""
+
+msgid "No row has an address to send to."
+msgstr ""
+
+#, fuzzy
+msgid "Text"
+msgstr "Text méret"
+
+#, fuzzy
+msgid "In {places}"
+msgstr "Minden mappa megjelenítése"
+
+msgid "Mail Merge"
+msgstr ""
+
+#, fuzzy
+msgid "Send to"
+msgstr "Küldés most"
+
+#, fuzzy
+msgid "A CSV file"
+msgstr "Minden fájl"
+
+#, fuzzy
+msgid "CSV file"
+msgstr "Hangfájl"
+
+msgid "Its first row names the fields."
+msgstr ""
+
+msgid "Choose…"
+msgstr "Választás…"
+
+msgid "Fields"
+msgstr ""
+
+#, fuzzy
+msgid "Leave these fields empty"
+msgstr "Elmented a szűrőt?"
+
+#, fuzzy
+msgid "{n} of {total}"
+msgstr "{shown} / {total}"
+
+#, fuzzy
+msgid "Not in {source}"
+msgstr "Bal oldali csoport"
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] "Keresés az üzenetben"
+msgstr[1] "Keresés az üzenetben"
+
+#, fuzzy
+msgid "Choose a CSV File"
+msgstr "Kép választása"
+
+#, fuzzy
+msgid "CSV files"
+msgstr "Nagy fájlok"
+
+#, fuzzy
+msgid "The file could not be read: {error}"
+msgstr "A fájl nem megnyitható"
+
 msgid "No Messages"
 msgstr "Nincsenek üzenetek"
 
@@ -4545,11 +4954,12 @@ msgstr ""
 msgid "me"
 msgstr "Név"
 
+#, fuzzy
+msgid "To:"
+msgstr "Címzett"
+
 msgid "Show conversation"
 msgstr "Beszélgetés megjelenítése"
-
-msgid "Due"
-msgstr ""
 
 msgid "Drag to resize, double-click for the usual width"
 msgstr ""
@@ -4569,6 +4979,13 @@ msgstr "Megjelölés olvasatlanként"
 msgid "Remove star"
 msgstr "Csillag eltávolítása"
 
+msgid "High importance"
+msgstr ""
+
+#, fuzzy
+msgid "Low importance"
+msgstr "Kulcs importálva"
+
 #, fuzzy
 msgid "Forwarded"
 msgstr "Továbbítás"
@@ -4576,13 +4993,6 @@ msgstr "Továbbítás"
 #, fuzzy
 msgid "Snoozed until {when}"
 msgstr "Ütemezve ekkorra: {when}"
-
-msgid "High importance"
-msgstr ""
-
-#, fuzzy
-msgid "Low importance"
-msgstr "Kulcs importálva"
 
 #, fuzzy
 msgid "In {folder}"
@@ -4916,10 +5326,6 @@ msgstr ""
 #, fuzzy
 msgid "From:"
 msgstr "Feladó"
-
-#, fuzzy
-msgid "To:"
-msgstr "Címzett"
 
 #, fuzzy
 msgid "Cc:"
@@ -5446,6 +5852,88 @@ msgid "Custom File"
 msgstr "Egyéni fájl"
 
 #, fuzzy
+msgid "Downloading: {done} of {total}"
+msgstr "{done} mappa a {total} közül"
+
+#, fuzzy
+msgid "Not available for this computer."
+msgstr "Ehhez a fiókhoz nem érhető el Piszkozatok mappa"
+
+#, fuzzy
+msgid "Version {version}, on this computer."
+msgstr "Ezen a számítógépen"
+
+msgid "Not downloaded yet. The download is {size}."
+msgstr ""
+
+#, fuzzy
+msgid "The files could not be removed."
+msgstr "A fájl nem megnyitható"
+
+msgid "The download stopped unexpectedly."
+msgstr ""
+
+msgid "Grammar"
+msgstr ""
+
+msgid "Check grammar and style"
+msgstr ""
+
+msgid "Right-click a marked phrase for suggestions."
+msgstr ""
+
+msgid "Checker"
+msgstr ""
+
+msgid "Harper"
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool"
+msgstr "Nyelv"
+
+#, fuzzy
+msgid "LanguageTool server"
+msgstr "Nyelv"
+
+msgid "English only. Nothing leaves this computer."
+msgstr ""
+
+msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
+msgstr ""
+
+#, fuzzy
+msgid "What you write is sent to the server as you type."
+msgstr "A mappa nincs a kiszolgálón"
+
+msgid "Username (LanguageTool Premium)"
+msgstr ""
+
+msgid "API key (LanguageTool Premium)"
+msgstr ""
+
+#, fuzzy
+msgid "Check the settings"
+msgstr "Keresési beállítások"
+
+#, fuzzy
+msgid "Sends a test sentence to the server."
+msgstr "Nem sikerült elérni a kiszolgálót"
+
+msgid "Check"
+msgstr ""
+
+#, fuzzy
+msgid "Checking…"
+msgstr "Keresés…"
+
+msgid "The check stopped unexpectedly."
+msgstr ""
+
+msgid "It works: {server} answered."
+msgstr ""
+
+#, fuzzy
 msgid "Messages already read"
 msgstr "Az üzenet elküldésre kész"
 
@@ -5811,9 +6299,6 @@ msgstr "Lejátszás"
 
 msgid "Sound file"
 msgstr "Hangfájl"
-
-msgid "Choose…"
-msgstr "Választás…"
 
 msgid "Also play while Hylki is in front"
 msgstr ""
@@ -6194,6 +6679,9 @@ msgstr "Eltávolítva: {name}"
 msgid "Could not save the PDF: {error}"
 msgstr "A PDF nem menthető: {error}"
 
+msgid "Filled in by Mail Merge"
+msgstr ""
+
 #, fuzzy
 msgid "Custom…"
 msgstr "Egyéni szín…"
@@ -6208,12 +6696,15 @@ msgstr ""
 msgid "Monospace"
 msgstr "Fix szélességű betűtípus"
 
+msgid "Grammar check failed: {error}"
+msgstr ""
+
+msgid "No suggestions"
+msgstr ""
+
 #, fuzzy
 msgid "Spelling Language"
 msgstr "Helyesírás"
-
-msgid "Normal"
-msgstr ""
 
 #, fuzzy
 msgid "Heading 1"
@@ -6453,14 +6944,7 @@ msgstr "Kulcs"
 msgid "Region (empty for a global resource)"
 msgstr ""
 
-#, fuzzy
-msgid "Check the settings"
-msgstr "Keresési beállítások"
-
 msgid "Translates a greeting to test the service."
-msgstr ""
-
-msgid "Check"
 msgstr ""
 
 #, fuzzy
@@ -6482,10 +6966,6 @@ msgstr ""
 msgid "Key (if the server asks for one)"
 msgstr ""
 
-#, fuzzy
-msgid "Checking…"
-msgstr "Keresés…"
-
 msgid "It works: “{sent}” came back as “{back}”."
 msgstr ""
 
@@ -6495,9 +6975,6 @@ msgstr "Bejelentkezés"
 
 msgid "The sign-in window was closed."
 msgstr ""
-
-msgid "Add"
-msgstr "Hozzáadás"
 
 msgid "✓ {email} — added"
 msgstr "✓ {email} — hozzáadva"
@@ -6774,8 +7251,8 @@ msgstr "A visszavonás sikertelen: {e}"
 msgid "Could not create folder: {e}"
 msgstr "A mappa nem hozható létre: {e}"
 
-msgid "Could not rename folder: unknown folder"
-msgstr "A mappa nem nevezhető át: ismeretlen mappa"
+msgid "the folder it goes in is gone"
+msgstr ""
 
 msgid "Could not rename folder: {e}"
 msgstr "A mappa nem nevezhető át: {e}"
@@ -6884,6 +7361,43 @@ msgstr "A mappa nincs a kiszolgálón"
 
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Nem sikerült elérni a JMAP kiszolgálót: {e}"
+
+msgid "Mail on this computer is not sent, and has no drafts"
+msgstr ""
+
+msgid "Mail is not sent from On This Computer: choose another From address"
+msgstr ""
+
+#, fuzzy
+msgid "Could not import {path}: {e}"
+msgstr "Nem importálható: {e}"
+
+#, fuzzy
+msgid "Importing {done} of {total} messages…"
+msgstr "{done} mappa a {total} közül"
+
+#, fuzzy
+msgid "A folder by that name already exists"
+msgstr "Már létezik {new_name} nevű mappa."
+
+msgid "The folder still holds mail"
+msgstr ""
+
+#, fuzzy
+msgid "That is not a folder name"
+msgstr "Ez a mappa"
+
+#, fuzzy
+msgid "Could not store the message: {e}"
+msgstr "Az üzenet nem frissíthető: {e}"
+
+#, fuzzy
+msgid "Could not open the folders on this computer: {e}"
+msgstr "A mappa nem üríthető ki: {e}"
+
+#, fuzzy
+msgid "Reading {n} messages…"
+msgstr "{n} üzenet indexelése…"
 
 #. Nothing failed: the message waits for the network, which the
 #. Refresh button already shows is down (#442).
@@ -7220,7 +7734,7 @@ msgid ""
 "starred."
 msgstr ""
 
-msgid "Keep mail offline"
+msgid "Keep mail cached"
 msgstr ""
 
 msgid "Leaves out Trash, Junk and Drafts."
@@ -7232,6 +7746,37 @@ msgstr "Nincsenek mellékletek"
 
 msgid "Can consume a lot of hard drive space."
 msgstr ""
+
+#, fuzzy
+msgid "Copy mail to On This Computer"
+msgstr "Ezen a számítógépen"
+
+msgid ""
+"Downloads copies of every message from every folder of this account to this "
+"computer (except Trash, Junk and Drafts) and stores them in On This Computer."
+msgstr ""
+
+#, fuzzy
+msgid "Import"
+msgstr "Importálás…"
+
+msgid "Mail already here is not imported again."
+msgstr ""
+
+#, fuzzy
+msgid "Maildir folders"
+msgstr "Minden mappa"
+
+msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
+msgstr ""
+
+#, fuzzy
+msgid "Mbox files"
+msgstr "Minden fájl"
+
+#, fuzzy
+msgid "Thunderbird's folders and other mbox files."
+msgstr "A „Szűrők” sor alatt található mappák."
 
 #, fuzzy
 msgid "Microsoft 365"
@@ -8044,6 +8589,9 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 msgid "Hyprlab"
 msgstr "Hyprlab"
 
+#~ msgid "Could not rename folder: unknown folder"
+#~ msgstr "A mappa nem nevezhető át: ismeretlen mappa"
+
 #, fuzzy
 #~ msgid "Search all folders but Trash and Junk"
 #~ msgstr "Keresés a mappákban"
@@ -8605,9 +9153,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "The account list under the unified Trash row."
 #~ msgstr "A fióklista az egységes „Piszkozatok” sor alatt."
-
-#~ msgid "The folders under the Filters row."
-#~ msgstr "A „Szűrők” sor alatt található mappák."
 
 #~ msgid "The tags under the Tags row."
 #~ msgstr "A „Címkék” sor alatt található címkék."
@@ -9181,10 +9726,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "All Contacts"
 #~ msgstr "Névjegyek"
-
-#, fuzzy
-#~ msgid "Groups"
-#~ msgstr "Bal oldali csoport"
 
 #, fuzzy
 #~ msgid "Search groups"

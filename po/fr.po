@@ -1338,6 +1338,12 @@ msgstr "Aucun dossier de réception disponible pour ce compte"
 msgid "No {v1} folder available for some messages"
 msgstr "Aucun dossier {v1} disponible pour certains messages"
 
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "Envoi du message…"
+msgstr[1] "Envoi du message…"
+
 msgid "Remove Account?"
 msgstr "Supprimer le compte ?"
 
@@ -1684,6 +1690,32 @@ msgstr[1] "Un nouveau message avec {n} fichiers joints est ouvert dans Hylki."
 
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "Le {date} à {time}, {name} a écrit :"
+
+msgid "Name"
+msgstr "Nom"
+
+#, fuzzy
+msgid "First Name"
+msgstr "Prénom"
+
+#, fuzzy
+msgid "Last Name"
+msgstr "Nom"
+
+msgid "Email"
+msgstr "E-mail"
+
+#, fuzzy
+msgid "Column {n}"
+msgstr "Colonnes"
+
+#, fuzzy
+msgid "The file is empty."
+msgstr "Le fichier n’est pas un fichier texte"
+
+#, fuzzy
+msgid "The file has no rows below its first."
+msgstr "Le fichier n’est pas un fichier texte"
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "GnuPG (gpg) n’est pas installé ; ce message ne peut donc pas être lu."
@@ -2621,9 +2653,6 @@ msgstr "Modifier le tag"
 msgid "Add Tag"
 msgstr "Ajouter un tag"
 
-msgid "Name"
-msgstr "Nom"
-
 msgid "Keyword"
 msgstr "Mot-clé"
 
@@ -3521,6 +3550,28 @@ msgstr "Plus"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Afficher Cc, Cci et Répondre à"
 
+#, fuzzy
+msgid "Cannot merge an encrypted message"
+msgstr "Message chiffré"
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr ""
+
+msgid "Check the From address"
+msgstr "Vérifiez l’adresse d’expéditeur"
+
+#, fuzzy
+msgid "Insert Merge Field"
+msgstr "Insérer après le texte"
+
+#, fuzzy
+msgid "Contact Groups"
+msgstr "Contacts"
+
+#, fuzzy
+msgid "Choose a CSV File…"
+msgstr "Enregistrer dans un fichier…"
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -3553,9 +3604,6 @@ msgstr "« {address} » n’est pas une adresse e-mail."
 msgid "Cannot send with OpenPGP"
 msgstr "Impossible d’envoyer avec OpenPGP"
 
-msgid "Check the From address"
-msgstr "Vérifiez l’adresse d’expéditeur"
-
 msgid "An attachment is missing"
 msgstr "Une pièce jointe est manquante"
 
@@ -3573,11 +3621,16 @@ msgstr "Saisir une adresse d’expéditeur"
 msgid "Choose from your addresses"
 msgstr "Choisir parmi vos adresses"
 
-msgid "Check the address"
-msgstr "Vérifiez l’adresse"
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
+msgstr ""
 
 msgid "“{addr}” is not an email address."
 msgstr "« {addr} » n’est pas une adresse e-mail."
+
+msgid "Check the address"
+msgstr "Vérifiez l’adresse"
 
 msgid "Send now"
 msgstr "Envoyer maintenant"
@@ -3593,6 +3646,9 @@ msgstr "Lundi matin ({time})"
 
 msgid "Pick a date and time…"
 msgstr "Choisir une date et une heure…"
+
+msgid "Mail Merge…"
+msgstr ""
 
 msgid "Request a read receipt"
 msgstr "Demander un accusé de lecture"
@@ -4069,9 +4125,6 @@ msgstr "Voir la photo"
 msgid "Add to Contacts"
 msgstr "Ajouter aux contacts"
 
-msgid "Email"
-msgstr "E-mail"
-
 msgid "Phone"
 msgstr "Téléphone"
 
@@ -4275,6 +4328,10 @@ msgstr "Nom"
 
 msgid "Sort and filter contacts"
 msgstr "Trier et filtrer les contacts"
+
+#, fuzzy
+msgid "Groups"
+msgstr "Groupe"
 
 msgid "Import Contacts"
 msgstr "Importer des contacts"
@@ -4539,6 +4596,79 @@ msgstr ""
 
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} sur {total}"
+
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr ""
+
+msgid "No row has an address to send to."
+msgstr ""
+
+#, fuzzy
+msgid "Text"
+msgstr "Taille du texte"
+
+#, fuzzy
+msgid "In {places}"
+msgstr "Dans {folder}"
+
+msgid "Mail Merge"
+msgstr ""
+
+#, fuzzy
+msgid "Send to"
+msgstr "Envoyer maintenant"
+
+#, fuzzy
+msgid "A CSV file"
+msgstr "Tous les fichiers"
+
+#, fuzzy
+msgid "CSV file"
+msgstr "Fichier son"
+
+msgid "Its first row names the fields."
+msgstr ""
+
+msgid "Choose…"
+msgstr "Choisir…"
+
+msgid "Fields"
+msgstr ""
+
+#, fuzzy
+msgid "Leave these fields empty"
+msgstr "Garder le champ de recherche ouvert"
+
+#, fuzzy
+msgid "{n} of {total}"
+msgstr "{shown} sur {total}"
+
+#, fuzzy
+msgid "Not in {source}"
+msgstr "Sans groupe"
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] "Rechercher dans le message"
+msgstr[1] "Rechercher dans le message"
+
+#, fuzzy
+msgid "Choose a CSV File"
+msgstr "Choisir une photo"
+
+#, fuzzy
+msgid "CSV files"
+msgstr "Fichiers vCard"
+
+#, fuzzy
+msgid "The file could not be read: {error}"
+msgstr "Les fichiers n’ont pas pu être écrits : {e}"
 
 msgid "No Messages"
 msgstr "Aucun message"
@@ -5909,9 +6039,6 @@ msgstr "Lire"
 msgid "Sound file"
 msgstr "Fichier son"
 
-msgid "Choose…"
-msgstr "Choisir…"
-
 msgid "Also play while Hylki is in front"
 msgstr "Lire aussi le son lorsque Hylki est au premier plan"
 
@@ -6288,6 +6415,9 @@ msgstr "{name} enregistré"
 
 msgid "Could not save the PDF: {error}"
 msgstr "Impossible d’enregistrer le PDF : {error}"
+
+msgid "Filled in by Mail Merge"
+msgstr ""
 
 msgid "Custom…"
 msgstr "Personnalisé…"
