@@ -173,8 +173,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/hyprlab/hylki.git
-        tag: v1.47.0-beta.3
-        commit: 5d9627268fbc1d72b2e75ec072f357d9feaabae7
+        tag: v1.47.0-beta.4
+        commit: 5015af858ee9a16463575edeb16385df2a19c3a1
       # Vendored crate sources for the offline Flatpak build. Generate with:
       #   flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
       - cargo-sources.json
