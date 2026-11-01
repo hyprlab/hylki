@@ -2419,11 +2419,10 @@ textview.console-view text selection {
 
 /* The composer's Send split (#145): Send and the Send Later dropdown as
    one accent-colored control, joined flush, with a short inset divider
-   line between them rather than a full-height seam. */
-.send-split {
-  background: @accent_bg_color;
-  border-radius: 6px;
-}
+   line between them rather than a full-height seam. The box paints
+   nothing itself: the buttons' outer corners follow the theme's radius,
+   which is 9px in libadwaita 1.9 and 6px before, and a box rounded to
+   either one shows a crescent past the other's corners. */
 .send-split > button:dir(ltr):first-child,
 .send-split > menubutton:dir(ltr):first-child > button,
 .send-split > button:dir(rtl):last-child,
@@ -2459,13 +2458,17 @@ textview.console-view text selection {
 .send-split > menubutton > button:checked {
   background-image: image(alpha(currentColor, 0.2));
 }
+/* The separator fills the gap between the buttons with the accent, and
+   draws the short line over its middle half. */
 .send-split > separator {
-  background-color: alpha(@accent_fg_color, 0.55);
+  background-color: @accent_bg_color;
+  background-image: image(alpha(@accent_fg_color, 0.55));
+  background-size: 100% 50%;
+  background-position: center;
+  background-repeat: no-repeat;
   /* Two wide: the dropdown's linked edge overlaps the first pixel, so one
      shows, which is the line wanted. */
   min-width: 2px;
-  margin-top: 9px;
-  margin-bottom: 9px;
 }
 /* Linked siblings overlap by a pixel, which is exactly the divider's width:
    the dropdown keeps to its own side of it. */
