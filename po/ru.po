@@ -85,6 +85,10 @@ msgstr "Не удалось сохранить учетную запись: {e}"
 msgid "Could not import account: {e}"
 msgstr "Не удалось импортировать учетную запись: {e}"
 
+#, fuzzy
+msgid "On This Computer is switched off"
+msgstr "На этом компьютере"
+
 msgid "Delete the attachment from the server?"
 msgstr "Удалить вложение с сервера?"
 
@@ -182,6 +186,13 @@ msgstr "Добавить отправителя в контакты"
 msgid "Create Filter from Message…"
 msgstr "Печать сообщения…"
 
+msgid "Create Event…"
+msgstr ""
+
+#, fuzzy
+msgid "Create Task…"
+msgstr "Создать"
+
 msgid "Tags"
 msgstr "Теги"
 
@@ -195,6 +206,10 @@ msgid "Mark as Spam"
 msgstr "Отметить как спам"
 
 msgid "Move To…"
+msgstr "Переместить в…"
+
+#, fuzzy
+msgid "Copy To…"
 msgstr "Переместить в…"
 
 msgid "Archive"
@@ -526,11 +541,15 @@ msgstr "Закрыть"
 msgid "Unstar"
 msgstr "Снять отметку"
 
-msgid "New Folder"
-msgstr "Новая папка"
+#, fuzzy
+msgid "Create a folder inside {name}."
+msgstr "Создать новую папку для этого аккаунта."
 
 msgid "Create a new folder for this account."
 msgstr "Создать новую папку для этого аккаунта."
+
+msgid "New Folder"
+msgstr "Новая папка"
 
 msgid "Cancel"
 msgstr "Отмена"
@@ -583,8 +602,19 @@ msgid ""
 msgstr ""
 "Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
 
+msgid "This account can't have folders at the top level."
+msgstr ""
+
+#, fuzzy
+msgid "Folders on this account can't hold other folders."
+msgstr "Предлагать эту учётную запись в редакторе"
+
 msgid "Create Folder"
 msgstr "Создать папку"
+
+#, fuzzy
+msgid "{name} can't hold other folders."
+msgstr "Включать другие папки"
 
 #, fuzzy
 msgid "archive"
@@ -597,6 +627,9 @@ msgstr "Корзина"
 #, fuzzy
 msgid "destination"
 msgstr "Обновлённое приглашение"
+
+msgid "A folder can't be moved into itself."
+msgstr ""
 
 msgid "Move Folder"
 msgstr "Переместить папку"
@@ -671,6 +704,9 @@ msgstr "Всё равно прикрепить"
 
 msgid "Upload to Cloud Storage"
 msgstr "Загрузить в облачное хранилище"
+
+msgid "The account has to connect before its folders can change."
+msgstr ""
 
 msgid "This message carries no calendar file to open."
 msgstr "В этом сообщении нет файла календаря для открытия."
@@ -788,6 +824,13 @@ msgstr "Действия"
 
 msgid "Refresh or long-press for Status Bar"
 msgstr "Обновите или удерживайте для строки состояния"
+
+#, fuzzy
+msgid "Copying one message to On This Computer…"
+msgid_plural "Copying {n} messages to On This Computer…"
+msgstr[0] "Перемещение {n} сообщения в «{account}»…"
+msgstr[1] "Перемещение {n} сообщений в «{account}»…"
+msgstr[2] "Перемещение {n} сообщений в «{account}»…"
 
 #, fuzzy
 msgid "Sending message…"
@@ -1213,16 +1256,16 @@ msgstr "Исходный текст сообщения"
 msgid "Forwarded message"
 msgstr "Переслать это сообщение"
 
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Принято: {subject}"
+
 msgid "From: {from}"
 msgstr "От: {from}"
 
 #, fuzzy
 msgid "Date: {date}"
 msgstr "срок действия истекает {date}"
-
-#, fuzzy
-msgid "Subject: {subject}"
-msgstr "Принято: {subject}"
 
 msgid "Export failed: {e}"
 msgstr "Ошибка экспорта: {e}"
@@ -1395,6 +1438,13 @@ msgstr "Для этой учётной записи недоступна пап�
 msgid "No {v1} folder available for some messages"
 msgstr "Для некоторых сообщений нет доступной папки {v1}"
 
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "Индексация {n} сообщений…"
+msgstr[1] "Индексация {n} сообщений…"
+msgstr[2] "Индексация {n} сообщений…"
+
 msgid "Remove Account?"
 msgstr "Удалить аккаунт?"
 
@@ -1422,11 +1472,33 @@ msgstr ""
 msgid "Snooze until"
 msgstr ""
 
+#, fuzzy
+msgid "Could not add the event: {e}"
+msgstr "Не удалось обновить сообщение: {e}"
+
+#, fuzzy
+msgid "Could not add the task: {e}"
+msgstr "Не удалось изменить отметку: {e}"
+
+#, fuzzy
+msgid "One message could not be copied to {account}: {error}"
+msgid_plural "{n} messages could not be copied to {account}: {error}"
+msgstr[0] "Не удалось переместить {n} сообщение в «{account}»: {error}"
+msgstr[1] "Не удалось переместить {n} сообщения в «{account}»: {error}"
+msgstr[2] "Не удалось переместить {n} сообщений в «{account}»: {error}"
+
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
 msgstr[0] "Не удалось переместить {n} сообщение в «{account}»: {error}"
 msgstr[1] "Не удалось переместить {n} сообщения в «{account}»: {error}"
 msgstr[2] "Не удалось переместить {n} сообщений в «{account}»: {error}"
+
+#, fuzzy
+msgid "Copying one message to {account}…"
+msgid_plural "Copying {n} messages to {account}…"
+msgstr[0] "Перемещение {n} сообщения в «{account}»…"
+msgstr[1] "Перемещение {n} сообщений в «{account}»…"
+msgstr[2] "Перемещение {n} сообщений в «{account}»…"
 
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
@@ -1747,6 +1819,32 @@ msgstr[2] "Новое письмо с {n} прикрёпленными файл�
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "{date} в {time}"
 
+msgid "Name"
+msgstr "Имя"
+
+#, fuzzy
+msgid "First Name"
+msgstr "Имя"
+
+#, fuzzy
+msgid "Last Name"
+msgstr "Фамилия"
+
+msgid "Email"
+msgstr "Email"
+
+#, fuzzy
+msgid "Column {n}"
+msgstr "Столбцы"
+
+#, fuzzy
+msgid "The file is empty."
+msgstr "Эта папка отсутствует на сервере"
+
+#, fuzzy
+msgid "The file has no rows below its first."
+msgstr "Эта папка отсутствует на сервере"
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "GnuPG (gpg) не установлен, поэтому это сообщение нельзя прочитать."
 
@@ -1859,6 +1957,12 @@ msgid ""
 "label but does not apply its rules."
 msgstr ""
 
+msgid "Nothing here proves this came from {from} — or that it didn't."
+msgstr "Нет данных, подтверждающих или опровергающих отправку с адреса {from}."
+
+msgid "These checks aren't known to come from your mail provider"
+msgstr ""
+
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
 msgstr ""
@@ -1889,9 +1993,6 @@ msgstr ""
 msgid "Your mail provider didn't report any sender checks for this message."
 msgstr ""
 "Ваш почтовый провайдер не сообщил о проверках отправителя для этого письма."
-
-msgid "Nothing here proves this came from {from} — or that it didn't."
-msgstr "Нет данных, подтверждающих или опровергающих отправку с адреса {from}."
 
 msgid "{name}: passed"
 msgstr "{name}: пройден"
@@ -1931,6 +2032,13 @@ msgstr "Использовано {used} из {limit}"
 
 msgid "{free} free ({pct}%)"
 msgstr "Свободно {free} ({pct}%)"
+
+#, fuzzy
+msgid "A folder needs a name."
+msgstr "Название папки"
+
+msgid "A folder name can't contain “{c}” on this account."
+msgstr ""
 
 msgid "Encrypted message"
 msgstr "Зашифрованное сообщение"
@@ -2073,6 +2181,114 @@ msgstr "Срок действия подписи истёк"
 msgid "This message hasn't been checked."
 msgstr "Это сообщение не проверялось."
 
+#, fuzzy
+msgid "Harper is not available for this computer."
+msgstr "Для этой учётной записи недоступна папка «Шаблоны»"
+
+msgid "Harper is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "Harper could not be started: {e}"
+msgstr "Не удалось связаться с сервисом: {e}"
+
+#, fuzzy
+msgid "Harper's answer could not be read."
+msgstr "Не удалось прочитать ответ сервиса."
+
+#, fuzzy
+msgid "There is no folder to install to."
+msgstr "Нет текста для перевода."
+
+msgid "There is not enough free space: {size} is needed."
+msgstr ""
+
+#, fuzzy
+msgid "The download could not start: {e}"
+msgstr "Не удалось сохранить черновик: {e}"
+
+msgid "The download was cancelled."
+msgstr ""
+
+msgid "The download stopped: {e}"
+msgstr ""
+
+msgid "The downloaded file is not the one expected, so it was not installed."
+msgstr ""
+
+#, fuzzy
+msgid "The download could not be unpacked: {e}"
+msgstr "Не удалось связаться с сервисом: {e}"
+
+#, fuzzy
+msgid "The files could not be written: {e}"
+msgstr "Не удалось открыть файл"
+
+msgid "{n} MB"
+msgstr ""
+
+#, fuzzy
+msgid "The server's answer could not be read."
+msgstr "Не удалось прочитать ответ сервиса."
+
+msgid "Nothing answers at that address. Check that the server is running."
+msgstr ""
+
+#, fuzzy
+msgid "The server's name could not be found."
+msgstr "Не удалось прочитать ответ сервиса."
+
+#, fuzzy
+msgid "The server's address is not valid."
+msgstr "Введите адрес сервера каталогов."
+
+#, fuzzy
+msgid "The server could not be reached: {e}"
+msgstr "Не удалось связаться с сервисом: {e}"
+
+#, fuzzy
+msgid "The server did not accept the username and key."
+msgstr "Каталог не принял пароль."
+
+#, fuzzy
+msgid "The message is too long for the server."
+msgstr "Это сообщение слишком длинное для отправки на перевод."
+
+msgid "Too many requests: try again in a moment."
+msgstr "Слишком много запросов: повторите попытку чуть позже."
+
+#, fuzzy
+msgid "The server refused the request (error {code})."
+msgstr "Сервис отклонил запрос (ошибка {code})."
+
+#, fuzzy
+msgid "LanguageTool is not available for this computer."
+msgstr "Для этой учётной записи недоступна папка «Черновики»"
+
+msgid "LanguageTool stopped unexpectedly."
+msgstr ""
+
+msgid "LanguageTool is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool could not be started: {e}"
+msgstr "Не удалось связаться с сервисом: {e}"
+
+msgid "LanguageTool could not be started."
+msgstr ""
+
+msgid "LanguageTool took too long to start."
+msgstr ""
+
+#, fuzzy
+msgid "Enter the LanguageTool server's address in Settings → Composing."
+msgstr "Введите адрес сервера LibreTranslate в меню Параметры → Перевод."
+
+#, fuzzy
+msgid "Enter the server's address first."
+msgstr "Введите адрес сервера каталогов."
+
 msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
@@ -2088,9 +2304,6 @@ msgstr "Не удалось связаться с сервисом: {e}"
 
 msgid "The service did not accept the key."
 msgstr "Сервис не принял этот ключ."
-
-msgid "Too many requests: try again in a moment."
-msgstr "Слишком много запросов: повторите попытку чуть позже."
 
 msgid "This month's allowance is used up."
 msgstr "Лимит на этот месяц исчерпан."
@@ -2443,6 +2656,14 @@ msgid "Port (IMAP 993 / POP3 995)"
 msgstr "Порт (IMAP 993 / POP3 995)"
 
 #, fuzzy
+msgid "Import Mbox Files"
+msgstr "Импортировать файл…"
+
+#, fuzzy
+msgid "Import Maildir Folders"
+msgstr "Ошибка импорта: {e}"
+
+#, fuzzy
 msgid "Signed in as {address}, not {email}."
 msgstr "Выполнен вход как {who}. {terms}"
 
@@ -2502,6 +2723,14 @@ msgstr "Сетевые учётные записи GNOME"
 
 msgid "Add Account…"
 msgstr "Добавить учётную запись…"
+
+msgid ""
+"Store mail in folders that live on this computer. Move or copy mail from any "
+"account to here."
+msgstr ""
+
+msgid "Add"
+msgstr "Добавить"
 
 msgid "GNOME Online Accounts"
 msgstr "Сетевые учётные записи GNOME"
@@ -2576,9 +2805,6 @@ msgstr "Редактировать тег"
 msgid "Add Tag"
 msgstr "Добавить тег"
 
-msgid "Name"
-msgstr "Имя"
-
 msgid "Keyword"
 msgstr "Ключевое слово"
 
@@ -2652,6 +2878,10 @@ msgstr "Proton Mail"
 msgid "Custom OAuth"
 msgstr "Собственный OAuth"
 
+#, fuzzy
+msgid "Folders on this computer"
+msgstr "На этом компьютере"
+
 msgid "IMAP/POP3 account"
 msgstr "Учётная запись IMAP/POP3"
 
@@ -2663,6 +2893,11 @@ msgstr "Почтовая учётная запись"
 
 msgid "Enter a client ID and sign in before saving"
 msgstr "Введите идентификатор клиента и войдите перед сохранением"
+
+msgid ""
+"Remove {name} from Hylki? Its folders and the mail in them stay on this "
+"computer, in {dir}, and come back if it is added again."
+msgstr ""
 
 #, fuzzy
 msgid "Edit HTML"
@@ -2973,6 +3208,84 @@ msgstr "Вперёд"
 
 msgid "Open in the default app"
 msgstr "Открыть в приложении по умолчанию"
+
+#, fuzzy
+msgid "New Event"
+msgstr "Новый контакт"
+
+#, fuzzy
+msgid "New Task"
+msgstr "Новых меток нет"
+
+#, fuzzy
+msgid "Open in Calendar"
+msgstr "Открыть в отдельном окне"
+
+msgid "Title"
+msgstr ""
+
+#, fuzzy
+msgid "Calendar"
+msgstr "Добавить в Календарь"
+
+#, fuzzy
+msgid "Task list"
+msgstr "Этот список"
+
+msgid "Notes"
+msgstr ""
+
+#, fuzzy
+msgid "All day"
+msgstr "Добавить адрес"
+
+#, fuzzy
+msgid "Starts"
+msgstr "Отметить"
+
+msgid "Ends"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+#, fuzzy
+msgid "Second alarm"
+msgstr "Отправить все"
+
+#, fuzzy
+msgid "At the start"
+msgstr "Перезапустить"
+
+msgid "{n} week before"
+msgid_plural "{n} weeks before"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, fuzzy
+msgid "{n} day before"
+msgid_plural "{n} days before"
+msgstr[0] "{n} дн. назад"
+msgstr[1] "{n} дн. назад"
+msgstr[2] "{n} дн. назад"
+
+#, fuzzy
+msgid "{n} hour before"
+msgid_plural "{n} hours before"
+msgstr[0] "{n} ч. назад"
+msgstr[1] "{n} ч. назад"
+msgstr[2] "{n} ч. назад"
+
+#, fuzzy
+msgid "{n} minute before"
+msgid_plural "{n} minutes before"
+msgstr[0] "{n} ч. назад"
+msgstr[1] "{n} ч. назад"
+msgstr[2] "{n} ч. назад"
+
+msgid "Due"
+msgstr "Срок"
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Добро пожаловать в Hylki (ранее — {old})"
@@ -3425,6 +3738,28 @@ msgstr "Ещё"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Показать «Копия», «Скрытая копия» и «Адрес для ответа»"
 
+#, fuzzy
+msgid "Cannot merge an encrypted message"
+msgstr "Зашифрованное сообщение"
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr ""
+
+msgid "Check the From address"
+msgstr "Проверьте адрес отправителя"
+
+#, fuzzy
+msgid "Insert Merge Field"
+msgstr "Вставить в текст"
+
+#, fuzzy
+msgid "Contact Groups"
+msgstr "Контакты"
+
+#, fuzzy
+msgid "Choose a CSV File…"
+msgstr "Сохранить как PDF…"
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -3456,9 +3791,6 @@ msgstr "«{address}» не является адресом электронно�
 msgid "Cannot send with OpenPGP"
 msgstr "Невозможно отправить с помощью OpenPGP"
 
-msgid "Check the From address"
-msgstr "Проверьте адрес отправителя"
-
 msgid "An attachment is missing"
 msgstr "Отсутствует вложение"
 
@@ -3475,11 +3807,50 @@ msgstr "Введите адрес отправителя"
 msgid "Choose from your addresses"
 msgstr "Выберите из ваших адресов"
 
-msgid "Check the address"
-msgstr "Проверьте адрес"
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
+msgstr ""
 
 msgid "“{addr}” is not an email address."
 msgstr "«{addr}» не является адресом электронной почты."
+
+msgid "Check the address"
+msgstr "Проверьте адрес"
+
+msgid "Send now"
+msgstr "Отправить сейчас"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Завтра утром ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Завтра днём ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "В понедельник утром ({time})"
+
+msgid "Pick a date and time…"
+msgstr "Выбрать дату и время…"
+
+msgid "Mail Merge…"
+msgstr ""
+
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
+#, fuzzy
+msgid "High"
+msgstr "Выделение цветом"
+
+msgid "Normal"
+msgstr "Обычный"
+
+msgid "Low"
+msgstr ""
 
 msgid "Show the message as it will be sent"
 msgstr "Показать сообщение в том виде, в котором оно будет отправлено"
@@ -3563,27 +3934,6 @@ msgstr "Отправить"
 #, fuzzy
 msgid "Send options"
 msgstr "Действия"
-
-msgid "Send now"
-msgstr "Отправить сейчас"
-
-msgid "Tomorrow morning ({time})"
-msgstr "Завтра утром ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Завтра днём ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "В понедельник утром ({time})"
-
-msgid "Pick a date and time…"
-msgstr "Выбрать дату и время…"
-
-msgid "Request a read receipt"
-msgstr ""
-
-msgid "Not every mail app sends one."
-msgstr ""
 
 msgid "Show From, To and Subject"
 msgstr "Показать поля «От», «Кому» и «Тема»"
@@ -3980,9 +4330,6 @@ msgstr "Просмотреть фото"
 msgid "Add to Contacts"
 msgstr "Добавить в Контакты"
 
-msgid "Email"
-msgstr "Email"
-
 msgid "Phone"
 msgstr "Телефон"
 
@@ -4058,9 +4405,6 @@ msgstr ""
 #, fuzzy
 msgid "Organization"
 msgstr "Перевод"
-
-msgid "Title"
-msgstr ""
 
 msgid "Another book moves the contact there when saved."
 msgstr ""
@@ -4199,6 +4543,10 @@ msgstr "Фамилия"
 #, fuzzy
 msgid "Sort and filter contacts"
 msgstr "{n} сообщений"
+
+#, fuzzy
+msgid "Groups"
+msgstr "Левая группа"
 
 #, fuzzy
 msgid "Import Contacts"
@@ -4471,6 +4819,81 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} из {total}"
 
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr ""
+
+msgid "No row has an address to send to."
+msgstr ""
+
+#, fuzzy
+msgid "Text"
+msgstr "Размер текста"
+
+#, fuzzy
+msgid "In {places}"
+msgstr "неизвестная папка"
+
+msgid "Mail Merge"
+msgstr ""
+
+#, fuzzy
+msgid "Send to"
+msgstr "Отправить сейчас"
+
+#, fuzzy
+msgid "A CSV file"
+msgstr "Все файлы"
+
+#, fuzzy
+msgid "CSV file"
+msgstr "Звуковой файл"
+
+msgid "Its first row names the fields."
+msgstr ""
+
+msgid "Choose…"
+msgstr "Выбрать…"
+
+msgid "Fields"
+msgstr ""
+
+#, fuzzy
+msgid "Leave these fields empty"
+msgstr "Сохранить фильтр?"
+
+#, fuzzy
+msgid "{n} of {total}"
+msgstr "{shown} из {total}"
+
+#, fuzzy
+msgid "Not in {source}"
+msgstr "Левая группа"
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, fuzzy
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] "Найти в сообщении"
+msgstr[1] "Найти в сообщении"
+msgstr[2] "Найти в сообщении"
+
+#, fuzzy
+msgid "Choose a CSV File"
+msgstr "Выбрать картинку"
+
+#, fuzzy
+msgid "CSV files"
+msgstr "Большие файлы"
+
+#, fuzzy
+msgid "The file could not be read: {error}"
+msgstr "Не удалось связаться с сервисом: {e}"
+
 msgid "No Messages"
 msgstr "Нет сообщений"
 
@@ -4566,11 +4989,12 @@ msgstr ""
 msgid "me"
 msgstr "я"
 
+#, fuzzy
+msgid "To:"
+msgstr "Кому"
+
 msgid "Show conversation"
 msgstr "Показать обсуждение"
-
-msgid "Due"
-msgstr "Срок"
 
 msgid "Drag to resize, double-click for the usual width"
 msgstr ""
@@ -4592,6 +5016,12 @@ msgstr "Отметить как непрочитанное"
 msgid "Remove star"
 msgstr "Снять отметку"
 
+msgid "High importance"
+msgstr "Высокая важность"
+
+msgid "Low importance"
+msgstr "Низкая важность"
+
 #, fuzzy
 msgid "Forwarded"
 msgstr "Переслать"
@@ -4599,12 +5029,6 @@ msgstr "Переслать"
 #, fuzzy
 msgid "Snoozed until {when}"
 msgstr "Запланировано на {when}"
-
-msgid "High importance"
-msgstr "Высокая важность"
-
-msgid "Low importance"
-msgstr "Низкая важность"
 
 #, fuzzy
 msgid "In {folder}"
@@ -4935,10 +5359,6 @@ msgstr ""
 #, fuzzy
 msgid "From:"
 msgstr "От"
-
-#, fuzzy
-msgid "To:"
-msgstr "Кому"
 
 #, fuzzy
 msgid "Cc:"
@@ -5456,6 +5876,87 @@ msgstr "Свинг"
 msgid "Custom File"
 msgstr "Другой файл"
 
+#, fuzzy
+msgid "Downloading: {done} of {total}"
+msgstr "Папка {done} из {total}"
+
+#, fuzzy
+msgid "Not available for this computer."
+msgstr "Для этой учётной записи недоступна папка «Черновики»"
+
+#, fuzzy
+msgid "Version {version}, on this computer."
+msgstr "На этом компьютере"
+
+msgid "Not downloaded yet. The download is {size}."
+msgstr ""
+
+#, fuzzy
+msgid "The files could not be removed."
+msgstr "Не удалось открыть файл"
+
+msgid "The download stopped unexpectedly."
+msgstr ""
+
+msgid "Grammar"
+msgstr ""
+
+msgid "Check grammar and style"
+msgstr ""
+
+msgid "Right-click a marked phrase for suggestions."
+msgstr ""
+
+#, fuzzy
+msgid "Checker"
+msgstr "Проверить"
+
+msgid "Harper"
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool"
+msgstr "Язык"
+
+#, fuzzy
+msgid "LanguageTool server"
+msgstr "Языки"
+
+msgid "English only. Nothing leaves this computer."
+msgstr ""
+
+msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
+msgstr ""
+
+#, fuzzy
+msgid "What you write is sent to the server as you type."
+msgstr "Эта папка отсутствует на сервере"
+
+msgid "Username (LanguageTool Premium)"
+msgstr ""
+
+msgid "API key (LanguageTool Premium)"
+msgstr ""
+
+msgid "Check the settings"
+msgstr "Проверить параметры"
+
+#, fuzzy
+msgid "Sends a test sentence to the server."
+msgstr "Не удалось связаться с сервером"
+
+msgid "Check"
+msgstr "Проверить"
+
+msgid "Checking…"
+msgstr "Проверка…"
+
+msgid "The check stopped unexpectedly."
+msgstr ""
+
+msgid "It works: {server} answered."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Уже прочитанные сообщения"
 
@@ -5816,9 +6317,6 @@ msgstr "Воспроизвести"
 
 msgid "Sound file"
 msgstr "Звуковой файл"
-
-msgid "Choose…"
-msgstr "Выбрать…"
 
 msgid "Also play while Hylki is in front"
 msgstr ""
@@ -6195,6 +6693,9 @@ msgstr "Сохранено: {name}"
 msgid "Could not save the PDF: {error}"
 msgstr "Не удалось сохранить PDF: {error}"
 
+msgid "Filled in by Mail Merge"
+msgstr ""
+
 #, fuzzy
 msgid "Custom…"
 msgstr "Другой цвет…"
@@ -6208,11 +6709,14 @@ msgstr "С засечками"
 msgid "Monospace"
 msgstr "Моноширинный"
 
+msgid "Grammar check failed: {error}"
+msgstr ""
+
+msgid "No suggestions"
+msgstr ""
+
 msgid "Spelling Language"
 msgstr "Язык проверки орфографии"
-
-msgid "Normal"
-msgstr "Обычный"
 
 msgid "Heading 1"
 msgstr "Заголовок 1"
@@ -6439,15 +6943,9 @@ msgstr "Ключ"
 msgid "Region (empty for a global resource)"
 msgstr "Регион (оставьте пустым для глобального ресурса)"
 
-msgid "Check the settings"
-msgstr "Проверить параметры"
-
 #, fuzzy
 msgid "Translates a greeting to test the service."
 msgstr "Переводит приветствие для проверки ответа сервиса."
-
-msgid "Check"
-msgstr "Проверить"
 
 msgid "Messages"
 msgstr "Сообщения"
@@ -6469,9 +6967,6 @@ msgstr ""
 msgid "Key (if the server asks for one)"
 msgstr "Ключ (если требуется сервером)"
 
-msgid "Checking…"
-msgstr "Проверка…"
-
 msgid "It works: “{sent}” came back as “{back}”."
 msgstr "Всё работает: «{sent}» переведено как «{back}»."
 
@@ -6480,9 +6975,6 @@ msgstr "Войти"
 
 msgid "The sign-in window was closed."
 msgstr "Окно входа было закрыто."
-
-msgid "Add"
-msgstr "Добавить"
 
 msgid "✓ {email} — added"
 msgstr "✓ {email} — добавлено"
@@ -6754,8 +7246,8 @@ msgstr "Не удалось отменить действие: {e}"
 msgid "Could not create folder: {e}"
 msgstr "Не удалось создать папку: {e}"
 
-msgid "Could not rename folder: unknown folder"
-msgstr "Не удалось переименовать папку: неизвестная папка"
+msgid "the folder it goes in is gone"
+msgstr ""
 
 msgid "Could not rename folder: {e}"
 msgstr "Не удалось переименовать папку: {e}"
@@ -6870,6 +7362,43 @@ msgstr "Эта папка отсутствует на сервере"
 
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Не удалось связаться с сервером JMAP: {e}"
+
+msgid "Mail on this computer is not sent, and has no drafts"
+msgstr ""
+
+msgid "Mail is not sent from On This Computer: choose another From address"
+msgstr ""
+
+#, fuzzy
+msgid "Could not import {path}: {e}"
+msgstr "Не удалось импортировать: {e}"
+
+#, fuzzy
+msgid "Importing {done} of {total} messages…"
+msgstr "Папка {done} из {total}"
+
+#, fuzzy
+msgid "A folder by that name already exists"
+msgstr "Папка с именем {new_name} уже существует."
+
+msgid "The folder still holds mail"
+msgstr ""
+
+#, fuzzy
+msgid "That is not a folder name"
+msgstr "Эта папка"
+
+#, fuzzy
+msgid "Could not store the message: {e}"
+msgstr "Не удалось обновить сообщение: {e}"
+
+#, fuzzy
+msgid "Could not open the folders on this computer: {e}"
+msgstr "Не удалось очистить папку: {e}"
+
+#, fuzzy
+msgid "Reading {n} messages…"
+msgstr "Индексация {n} сообщений…"
 
 #. Nothing failed: the message waits for the network, which the
 #. Refresh button already shows is down (#442).
@@ -7206,7 +7735,7 @@ msgid ""
 "starred."
 msgstr ""
 
-msgid "Keep mail offline"
+msgid "Keep mail cached"
 msgstr ""
 
 msgid "Leaves out Trash, Junk and Drafts."
@@ -7218,6 +7747,37 @@ msgstr "Нет вложений"
 
 msgid "Can consume a lot of hard drive space."
 msgstr ""
+
+#, fuzzy
+msgid "Copy mail to On This Computer"
+msgstr "На этом компьютере"
+
+msgid ""
+"Downloads copies of every message from every folder of this account to this "
+"computer (except Trash, Junk and Drafts) and stores them in On This Computer."
+msgstr ""
+
+#, fuzzy
+msgid "Import"
+msgstr "Импортировать…"
+
+msgid "Mail already here is not imported again."
+msgstr ""
+
+#, fuzzy
+msgid "Maildir folders"
+msgstr "Все папки"
+
+msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
+msgstr ""
+
+#, fuzzy
+msgid "Mbox files"
+msgstr "Все файлы"
+
+#, fuzzy
+msgid "Thunderbird's folders and other mbox files."
+msgstr "Папки под строкой «Фильтры»."
 
 #, fuzzy
 msgid "Microsoft 365"
@@ -8018,6 +8578,9 @@ msgstr "Общие входящие в светлом режиме"
 msgid "Hyprlab"
 msgstr "Hyprlab"
 
+#~ msgid "Could not rename folder: unknown folder"
+#~ msgstr "Не удалось переименовать папку: неизвестная папка"
+
 #~ msgid "Received"
 #~ msgstr "Получено"
 
@@ -8580,9 +9143,6 @@ msgstr "Hyprlab"
 
 #~ msgid "The account list under the unified Trash row."
 #~ msgstr "Список учётных записей под общей строкой «Корзина»."
-
-#~ msgid "The folders under the Filters row."
-#~ msgstr "Папки под строкой «Фильтры»."
 
 #~ msgid "The tags under the Tags row."
 #~ msgstr "Теги под строкой «Теги»."
@@ -9196,10 +9756,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "All Contacts"
 #~ msgstr "Контакты"
-
-#, fuzzy
-#~ msgid "Groups"
-#~ msgstr "Левая группа"
 
 #, fuzzy
 #~ msgid "Search groups"
