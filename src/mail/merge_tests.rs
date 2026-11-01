@@ -245,6 +245,30 @@ fn a_group_splits_names_and_skips_members_without_an_address() {
 }
 
 #[test]
+fn a_draft_gives_its_fields_back() {
+    let both = "{{First Name}} <{{Email}}>";
+    let saved = format!(
+        "\"{both}\" <{}>, Ann <ann@example.com>, \"{{{{Boss}}}}\" <{}>",
+        draft_field_address(both),
+        draft_field_address("{{Boss}}"),
+    );
+    assert_eq!(
+        fields_from_draft(&saved),
+        "{{First Name}} <{{Email}}>, Ann <ann@example.com>, {{Boss}}"
+    );
+    // A listing that kept only the addresses still has the fields.
+    let bare = format!("{}, ann@example.com", draft_field_address("{{Email}}"));
+    assert_eq!(fields_from_draft(&bare), "{{Email}}, ann@example.com");
+    // Too long to spell out: the display name alone carries it.
+    let long = "{{The Address We Have On File For Them}}";
+    assert_eq!(draft_field_address(long), "merge@hylki.invalid");
+    let saved = format!("\"{long}\" <merge@hylki.invalid>");
+    assert_eq!(fields_from_draft(&saved), long);
+    assert!(draft_field_address(both).len() <= 64 + "@hylki.invalid".len());
+    assert_eq!(fields_from_draft("ann@example.com"), "ann@example.com");
+}
+
+#[test]
 fn every_column_of_addresses_is_offered_to_to() {
     let t = table("Name,Work,Home\nAnn,ann@work.example,ann@home.example\nBob,bob@work.example,\n");
     assert_eq!(t.address_columns(), [1, 2]);

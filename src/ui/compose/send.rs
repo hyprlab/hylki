@@ -824,11 +824,16 @@ fn recipients_ok(widgets: &ComposeWidgets) -> bool {
     {
         row.add_css_class("error");
         let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
-        alert(
-            parent.as_ref(),
-            &i18n("Check the address"),
-            &i18n_f("“{addr}” is not an email address.", &[("addr", &addr)]),
-        );
+        // A mail merge field is filled in only by the merge (#447).
+        let why = if crate::mail::merge::is_field(&addr) {
+            i18n_f(
+                "“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside Send.",
+                &[("addr", &addr)],
+            )
+        } else {
+            i18n_f("“{addr}” is not an email address.", &[("addr", &addr)])
+        };
+        alert(parent.as_ref(), &i18n("Check the address"), &why);
         return false;
     }
     true

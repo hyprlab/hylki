@@ -1210,7 +1210,12 @@ the cursor is in it, the body otherwise. The list has the columns of the CSV
 file chosen last, under its name, and a contact group's fields. For To it
 has only the fields that hold addresses, and the field goes in as a pill
 marked with the braces. Address suggestions stay closed while a field is
-typed there. **Choose a CSV File…** at its end picks another
+typed there.
+
+A draft or [template](#templates) keeps its fields, those in To, Cc and Bcc
+too, so a merge can be saved and used again. Another mail app shows a field
+there as an address at `hylki.invalid`, which reaches no one. **Send**
+refuses a field in To, Cc or Bcc and points to **Mail Merge…**. **Choose a CSV File…** at its end picks another
 file, which the **Mail Merge…** dialog then starts from too.
 
 With To left empty, each message goes to the column whose values are email

@@ -19,7 +19,9 @@
   A braces button at the end of the To and Subject rows and in the body's
   toolbar, or Ctrl+Shift+M, lists the fields at the cursor to put in with a
   click, only those holding addresses for To, where a field is a pill marked
-  with the braces and no address suggestions open:
+  with the braces and no address suggestions open. Drafts and templates
+  keep fields in To, Cc and Bcc, under a stand-in address that reaches no
+  one, and Send without the merge points to it:
   the last CSV file's columns and a contact group's, with **Choose a CSV
   File…** to pick another, which the dialog then starts from.
 

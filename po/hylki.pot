@@ -3335,10 +3335,15 @@ msgstr ""
 msgid "Choose from your addresses"
 msgstr ""
 
-msgid "Check the address"
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
 msgstr ""
 
 msgid "“{addr}” is not an email address."
+msgstr ""
+
+msgid "Check the address"
 msgstr ""
 
 msgid "Send now"

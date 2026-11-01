@@ -629,9 +629,12 @@ impl Component for Compose {
 
         model.fill_from_row(&widgets, &prefill, selected, &sender);
 
-        widgets.to_row.set_text(&prefill.to);
-        widgets.cc_row.set_text(&prefill.cc);
-        widgets.bcc_row.set_text(&prefill.bcc);
+        // A draft or template written for a mail merge kept its fields
+        // under a stand-in address (#447).
+        use crate::mail::merge::fields_from_draft;
+        widgets.to_row.set_text(&fields_from_draft(&prefill.to));
+        widgets.cc_row.set_text(&fields_from_draft(&prefill.cc));
+        widgets.bcc_row.set_text(&fields_from_draft(&prefill.bcc));
         widgets.subject_row.set_text(&prefill.subject);
         if !model.attachments.is_empty() {
             model.rebuild_attachments(&widgets.attach_box, &sender);

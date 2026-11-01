@@ -457,6 +457,57 @@ pub(crate) fn group_columns(addresses: bool) -> Vec<String> {
     }
 }
 
+/// The domain of the stand-in addresses below. `.invalid` is reserved
+/// (RFC 2606), so nothing is ever delivered there.
+const FIELD_DOMAIN: &str = "hylki.invalid";
+
+/// The address a draft or template gives a field in To, Cc or Bcc, which
+/// a saved message's headers take only as addresses. The field is the
+/// display name too, but a folder listing may keep the address alone, so
+/// it is spelled out in hex there as well while that fits the 64
+/// characters an address's local part allows.
+pub(crate) fn draft_field_address(written: &str) -> String {
+    let hex: String = written.bytes().map(|b| format!("{b:02x}")).collect();
+    if hex.len() + "merge.".len() <= 64 {
+        format!("merge.{hex}@{FIELD_DOMAIN}")
+    } else {
+        format!("merge@{FIELD_DOMAIN}")
+    }
+}
+
+/// The field a saved recipient stands in for, if it is one.
+fn field_from_draft(name: &str, addr: &str) -> Option<String> {
+    let (local, domain) = addr.rsplit_once('@')?;
+    if !domain.eq_ignore_ascii_case(FIELD_DOMAIN) {
+        return None;
+    }
+    if is_field(name) {
+        return Some(name.to_string());
+    }
+    let hex = local.strip_prefix("merge.")?;
+    let bytes = (0..hex.len())
+        .step_by(2)
+        .map(|i| u8::from_str_radix(hex.get(i..i + 2)?, 16).ok())
+        .collect::<Option<Vec<u8>>>()?;
+    String::from_utf8(bytes).ok().filter(|f| is_field(f))
+}
+
+/// A recipient list as a saved draft or template has it, with each field
+/// kept under a [`draft_field_address`] back as it was written.
+pub(crate) fn fields_from_draft(field: &str) -> String {
+    if !field.contains(FIELD_DOMAIN) {
+        return field.to_string();
+    }
+    crate::worker::parse_recipients(field)
+        .into_iter()
+        .map(|(name, addr)| {
+            field_from_draft(&name, &addr)
+                .unwrap_or_else(|| crate::worker::format_recipient(&name, &addr))
+        })
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
 /// Whether a recipient is a mail merge field rather than an address, as
 /// To holds one until the merge fills it in.
 pub(crate) fn is_field(recipient: &str) -> bool {
