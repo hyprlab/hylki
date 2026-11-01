@@ -131,16 +131,38 @@ fn request(
     language: &str,
     preferred: &[String],
 ) -> Result<Vec<Match>, String> {
-    let preferred = preferred.join(",");
+    let (languages, variants) = preferred_split(preferred);
     let mut form = vec![("text", text), ("language", language)];
-    if language == "auto" && !preferred.is_empty() {
-        form.push(("preferredLanguages", &preferred));
+    if language == "auto" && !languages.is_empty() {
+        form.push(("preferredLanguages", &languages));
+        if !variants.is_empty() {
+            form.push(("preferredVariants", &variants));
+        }
     }
     if !account.username.is_empty() && !account.key.is_empty() {
         form.push(("username", account.username));
         form.push(("apiKey", account.key));
     }
     Ok(post::<Answer>(agent, base, &form)?.matches)
+}
+
+/// The spelling languages as a server detecting the language wants them:
+/// `preferredLanguages` refuses a variant ("en-US") with error 500 (#566),
+/// so the bare languages go there and the variants go in
+/// `preferredVariants`, which tells it which English is meant.
+fn preferred_split(codes: &[String]) -> (String, String) {
+    let mut languages: Vec<&str> = Vec::new();
+    let mut variants: Vec<&str> = Vec::new();
+    for code in codes {
+        let base = code.split('-').next().unwrap_or(code);
+        if !base.is_empty() && !languages.contains(&base) {
+            languages.push(base);
+        }
+        if code.contains('-') && !variants.contains(&code.as_str()) {
+            variants.push(code);
+        }
+    }
+    (languages.join(","), variants.join(","))
 }
 
 fn post<T: serde::de::DeserializeOwned>(
@@ -348,6 +370,16 @@ mod tests {
         assert_eq!(a.matches[0].rule.issue_type, "grammar");
     }
 
+    #[test]
+    fn variants_are_kept_out_of_the_preferred_languages() {
+        let codes = |c: &[&str]| c.iter().map(|s| s.to_string()).collect::<Vec<_>>();
+        assert_eq!(
+            preferred_split(&codes(&["en-US", "es", "fr-FR", "en-GB", "ca-ES-valencia"])),
+            ("en,es,fr,ca".into(), "en-US,fr-FR,en-GB,ca-ES-valencia".into())
+        );
+        assert_eq!(preferred_split(&codes(&["de"])), ("de".into(), String::new()));
+    }
+
     /// Against a real server:
     /// `LANGUAGETOOL_LIVE=http://localhost:8010 cargo test -- --ignored live_languagetool`.
     #[test]
@@ -370,6 +402,16 @@ mod tests {
             .collect();
         assert!(words.iter().any(|w| w == "a"), "{words:?}");
         assert!(words.iter().any(|w| w.contains("goes")), "{words:?}");
+        // Too short to tell apart here: the server is left to detect them.
+        let short = "Hello,\n\nMerci.\n\nHola.";
+        check(
+            &base,
+            &NO_ACCOUNT,
+            short,
+            &["en_US".into(), "es_ES".into(), "fr_FR".into()],
+            true,
+        )
+        .unwrap();
         let server = check_server(&base, &NO_ACCOUNT).unwrap();
         assert!(server.starts_with("LanguageTool "), "{server}");
     }

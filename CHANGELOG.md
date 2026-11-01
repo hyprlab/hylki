@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: grammar checks with a LanguageTool server failing with error
+  500** (#566, reported by warpedwood) when more than one spelling language
+  was on and a paragraph was too short to tell its language. The server
+  was asked to detect it from a list that held variants such as "en-US",
+  which it refuses; the languages and their variants now go separately.
+
 - **Added: showing only contact groups.** **Show only** in the Contacts
   sort and filter menu has **Groups**, which lists every address book's
   groups and nobody else, and a search for "group" or "groups" lists every
