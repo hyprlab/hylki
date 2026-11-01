@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: a draft could take seconds to open, with nothing on screen to
+  say so.** Opening a draft fetched its bytes from the server first, which
+  waited behind whatever the account was doing. The drafts and templates of
+  a folder are now fetched in the background when it is listed, the newest
+  50 first, and open from that copy at once. One not fetched yet shows
+  Loading… in the reading pane, and goes ahead of the background fetches.
+
 - **Fixed: a draft stayed highlighted after its editor closed.** A draft
   opened from the Drafts list and then saved, sent or cancelled left its row
   selected over a reading pane that said no draft was selected, and a click

@@ -604,6 +604,9 @@ impl AppModel {
     pub(super) fn on_transfer(&mut self, msg: AppMsg, sender: ComponentSender<Self>) {
         match msg {
             AppMsg::RawExported { token, raw } => {
+                if self.keep_fetched_draft(token, &raw) {
+                    return;
+                }
                 if let Some(name) = self.pending_saves.remove(&token) {
                     match raw {
                         Ok(raw) => self.save_message_file(name, raw),
@@ -618,7 +621,13 @@ impl AppModel {
                         return;
                     };
                     match raw {
-                        Ok(raw) => self.compose_from_draft_raw(m, &raw, inline, extra, &sender),
+                        Ok(raw) => {
+                            // Kept, so the next opening is at once.
+                            if let Some(path) = self.resolve_folder_path(&m) {
+                                self.keep_draft(&path, m.account_id, m.uid, &m.message_id, m.timestamp, &raw);
+                            }
+                            self.compose_from_draft_raw(m, &raw, inline, extra, &sender)
+                        }
                         // Offline, say: the body the reader has is still
                         // better than nothing.
                         Err(e) => {

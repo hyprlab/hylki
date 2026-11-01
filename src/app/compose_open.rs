@@ -100,6 +100,18 @@ impl AppModel {
             self.open_draft_body(m, inline, extra, sender);
             return;
         };
+        // Fetched ahead (see `draft_copies`): the editor opens at once.
+        if let Some(raw) = self.kept_draft(&m, &path) {
+            tracing::debug!(target: "hylki::drafts", "draft {} opened from its kept copy", m.uid);
+            self.compose_from_draft_raw(m, &raw, inline, extra, sender);
+            return;
+        }
+        tracing::debug!(target: "hylki::drafts", "draft {} not kept yet: fetching it", m.uid);
+        // Not kept yet: the reader says it is loading while the bytes come,
+        // rather than leave what it showed before.
+        if inline && self.reading_pane == config::ReadingPane::Right {
+            self.show_message(Some(m.clone()), true);
+        }
         let token = self.next_transfer;
         self.next_transfer += 1;
         self.pending_draft_token = Some(token);

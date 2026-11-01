@@ -32,8 +32,18 @@ fn is_list_load(req: &MailRequest) -> bool {
 
 /// Refresh ticks now only schedule idle work, so they are no longer a
 /// barrier between a reader and a folder sync already in the backlog.
+/// Drafts fetched ahead of time (and a message's bytes for a move to
+/// another account) are reads too, which the draft clicked on overtakes.
 fn can_yield_to_reader(req: &MailRequest) -> bool {
-    is_list_load(req) || matches!(req, MailRequest::RefreshUnread)
+    is_list_load(req)
+        || matches!(
+            req,
+            MailRequest::RefreshUnread
+                | MailRequest::ExportRaw {
+                    for_reader: false,
+                    ..
+                }
+        )
 }
 
 /// Take everything else already queued behind `first` and move the reader's
@@ -157,6 +167,31 @@ mod reader_preemption_tests {
             backlog.pop_front(),
             Some(MailRequest::LoadMessages { .. })
         ));
+    }
+
+    /// A draft clicked goes ahead of the drafts being fetched ahead of
+    /// time, which keep their order behind it.
+    #[test]
+    fn a_draft_opened_overtakes_the_drafts_fetched_ahead() {
+        let raw = |token, for_reader| MailRequest::ExportRaw {
+            token,
+            path: "Drafts".into(),
+            uid: token as u32,
+            for_reader,
+        };
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(raw(2, false)).unwrap();
+        tx.send(raw(3, false)).unwrap();
+        tx.send(raw(9, true)).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(raw(1, false), &mut rx, &mut backlog);
+        let token = |r: &MailRequest| match r {
+            MailRequest::ExportRaw { token, .. } => *token,
+            _ => 0,
+        };
+        assert_eq!(token(&first), 9);
+        let rest: Vec<u64> = backlog.iter().map(token).collect();
+        assert_eq!(rest, [1, 2, 3]);
     }
 
     #[test]

@@ -185,12 +185,24 @@ CREATE TABLE IF NOT EXISTS local_copies (
     uid         INTEGER NOT NULL,
     PRIMARY KEY (account_id, message_id, folder_path, uid)
 );
+-- Drafts and templates as their own bytes, fetched ahead of time, so one
+-- opens in the editor without waiting on the server. The Message-ID and
+-- date tell a copy from a message that took its place at the same UID.
+CREATE TABLE IF NOT EXISTS draft_copies (
+    account_id  INTEGER NOT NULL,
+    folder_path TEXT    NOT NULL,
+    uid         INTEGER NOT NULL,
+    message_id  TEXT    NOT NULL,
+    ts          INTEGER NOT NULL,
+    raw         BLOB    NOT NULL,
+    PRIMARY KEY (account_id, folder_path, uid)
+);
 ";
 
 /// Every table whose rows belong to one account, by `account_id`. An account's
 /// id is its place in the account list, so `Cache::claim_accounts` moves
 /// these rows when the places change.
-pub(super) const ACCOUNT_TABLES: [&str; 13] = [
+pub(super) const ACCOUNT_TABLES: [&str; 14] = [
     "folders",
     "imap_hierarchy",
     "refs_repair",
@@ -204,6 +216,7 @@ pub(super) const ACCOUNT_TABLES: [&str; 13] = [
     "attachment_meta",
     "attachment_scan",
     "local_copies",
+    "draft_copies",
 ];
 
 /// The tables holding what was downloaded for one message, which are

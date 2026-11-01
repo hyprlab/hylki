@@ -511,6 +511,9 @@ impl AppModel {
                 continue;
             }
             let messages = self.overlay_local_state(account_id, folder_id, messages);
+            // Drafts read ahead at launch are fetched ahead too, so the
+            // first one opened is as quick as the rest.
+            self.fetch_drafts_ahead(account_id, folder_id, &messages);
             if open && self.is_unified_target(account_id, folder_id) {
                 if self.unified_reads_through() {
                     self.unified_slices.remove(&(account_id, folder_id));

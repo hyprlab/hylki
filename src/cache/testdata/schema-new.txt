@@ -91,6 +91,17 @@ END
 table body_text_idx
 CREATE TABLE 'body_text_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID
 
+table draft_copies
+CREATE TABLE draft_copies (
+    account_id  INTEGER NOT NULL,
+    folder_path TEXT    NOT NULL,
+    uid         INTEGER NOT NULL,
+    message_id  TEXT    NOT NULL,
+    ts          INTEGER NOT NULL,
+    raw         BLOB    NOT NULL,
+    PRIMARY KEY (account_id, folder_path, uid)
+)
+
 table folders
 CREATE TABLE folders (
     account_id INTEGER NOT NULL,
@@ -242,6 +253,9 @@ index sqlite_autoindex_attachments_checked_1
 
 
 index sqlite_autoindex_bodies_1
+
+
+index sqlite_autoindex_draft_copies_1
 
 
 index sqlite_autoindex_folders_1
