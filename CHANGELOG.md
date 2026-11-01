@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: a test failing on Sundays from 17:00** (#567, reported by
+  clementpoiret), which stopped package builds that run the tests, such as
+  the Nix flake. The snooze presets test read the clock and expected three
+  presets, where Sunday evening has two; it now checks every hour of a fixed
+  week.
+
 - **Fixed: grammar checks with a LanguageTool server failing with error
   500** (#566, reported by warpedwood) when more than one spelling language
   was on and a paragraph was too short to tell its language. The server
