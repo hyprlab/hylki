@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Added: showing only contact groups.** **Show only** in the Contacts
+  sort and filter menu has **Groups**, which lists every address book's
+  groups and nobody else, and a search for "group" or "groups" lists every
+  group as well as anyone whose details hold the word. **All Address
+  Books** listed no groups before, so they were reached book by book.
+
+- **Fixed: a darker edge at the corners of the menu beside Send** while it
+  was open or under the pointer, with libadwaita 1.9.
+
 - **Fixed: a draft could take seconds to open, with nothing on screen to
   say so.** Opening a draft fetched its bytes from the server first, which
   waited behind whatever the account was doing. The drafts and templates of
@@ -171,8 +180,9 @@
 - **Changed: Keep mail offline is called Keep mail cached** in an account's
   settings.
 
-- **Translations:** German (PR #550 by Samuel Edlmeier) and French (PR #556 by
-  frenchy82) brought up to date.
+- **Translations:** German (PRs #550 and #559 by Samuel Edlmeier), French
+  (PRs #556 and #558 by frenchy82) and Spanish (PR #561 by Daniel Miguel)
+  brought up to date.
 
 ## 1.46.1 — 2026-10-31
 
