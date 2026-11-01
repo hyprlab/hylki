@@ -239,6 +239,9 @@ impl AppModel {
             self.current_thread.clear();
             self.show_message(None, false);
             self.open_inline_reply(m.account_id, prefill, None, sender);
+            if let Some(r) = self.reader_compose.as_mut() {
+                r.list_draft = true;
+            }
         } else {
             self.open_compose(m.account_id, prefill, sender);
         }

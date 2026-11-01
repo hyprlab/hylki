@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: a draft stayed highlighted after its editor closed.** A draft
+  opened from the Drafts list and then saved, sent or cancelled left its row
+  selected over a reading pane that said no draft was selected, and a click
+  on the row did not open it again. The row is now let go when the editor
+  closes.
+
 - **Added: mail merge** (#447, requested by samuel-edlmeier). **Mail
   Merge…** in the menu beside **Send** sends the message once per row of a
   CSV file, or once per member of a contact group. A field written as
