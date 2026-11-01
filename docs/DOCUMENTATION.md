@@ -1216,8 +1216,11 @@ addresses. To name the recipient too, write To yourself, for instance
 on every message.
 
 The dialog lists the file's fields and steps through a preview of each
-message, filled in. Send stays off while the message names a field the file
-does not have, and a row without a valid address is left out and counted.
+message, filled in. A field the message names that the file or group does
+not have, a misspelled one or **Company** with a contact group say, is
+listed with where it is written, and Send stays off until it is taken out of
+the message or **Leave these fields empty** is switched on. A row without a
+valid address is left out and counted.
 **Send** then sends them all, one after another, from the From address
 chosen, each with its own copy in Sent. There is no Undo Send for a merge:
 the preview is the time to check. A message that cannot go waits in the

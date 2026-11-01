@@ -9,8 +9,10 @@
   row's value, matched to the file's first row by letters and digits in any
   case, so `{{E-mail}}` finds "Email". To left empty
   goes to the column that holds addresses. The dialog lists the fields,
-  steps through a preview of each message, and names a field the file does
-  not have; rows without a valid address are left out and counted. The
+  steps through a preview of each message, and lists each field the file or
+  group does not have with where it is written, keeping Send off until it
+  is taken out or **Leave these fields empty** is on; rows without a valid
+  address are left out and counted. The
   file may be comma, semicolon or tab separated, in UTF-8, UTF-16 or
   Windows-1252. The messages go one after another with no Undo Send; one
   that fails waits in the Outbox. An encrypted message cannot be merged.

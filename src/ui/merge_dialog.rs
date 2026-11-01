@@ -12,7 +12,7 @@ use adw::prelude::*;
 use crate::config::ComposeFormat;
 use crate::contacts::Contact;
 use crate::i18n::{i18n, i18n_f, ni18n_f};
-use crate::mail::merge::{group_table, parse_csv, Letter, Table};
+use crate::mail::merge::{group_table, parse_csv, Letter, Missing, Place, Table};
 
 /// What the dialog opens with.
 pub(crate) struct Start {
@@ -31,11 +31,19 @@ struct Merged {
     skipped: usize,
     /// Why nothing can be sent yet.
     problem: Option<String>,
+    /// The fields the message names that the rows lack. Nothing is sent
+    /// until they are taken out of the message or left empty.
+    missing: Vec<Missing>,
 }
+
+/// Rows to merge with, or why there are none, and what they are called:
+/// the file's name or the group's.
+type Source = (Result<Option<Table>, String>, String);
 
 /// The table's messages. A To with nothing in it goes to the column of
 /// addresses; one with no field would send every message to the same place.
-fn merge(start: &Start, table: &Table) -> Merged {
+/// With `blank`, a field the table lacks is left empty.
+fn merge(start: &Start, table: &Table, blank: bool) -> Merged {
     let mut letter = start.letter.clone();
     let needs_field = || Merged {
         problem: Some(i18n(
@@ -51,15 +59,19 @@ fn merge(start: &Start, table: &Table) -> Merged {
     } else if !letter.to_has_field() {
         return needs_field();
     }
-    if let Some(field) = table.unknown_fields(&letter).first() {
+    let missing = table.missing_fields(&letter);
+    if !missing.is_empty() && !blank {
         return Merged {
-            problem: Some(i18n_f("There is no field “{field}”.", &[("field", field)])),
+            missing,
             ..Default::default()
         };
     }
-    let mut merged = Merged::default();
+    let mut merged = Merged {
+        missing,
+        ..Default::default()
+    };
     for row in 0..table.rows.len() {
-        let one = table.letter_for(&letter, row, start.format);
+        let one = table.letter_for(&letter, row, start.format, blank);
         if one.sendable() {
             merged.letters.push(one);
         } else {
@@ -70,6 +82,22 @@ fn merge(start: &Start, table: &Table) -> Merged {
         merged.problem = Some(i18n("No row has an address to send to."));
     }
     merged
+}
+
+/// Where a missing field is written, as its row says it.
+fn places_label(places: &[Place]) -> String {
+    let names: Vec<String> = places
+        .iter()
+        .map(|p| match p {
+            Place::To => i18n("To"),
+            Place::Cc => i18n("Cc"),
+            Place::Bcc => i18n("Bcc"),
+            Place::ReplyTo => i18n("Reply-To"),
+            Place::Subject => i18n("Subject"),
+            Place::Text => i18n("Text"),
+        })
+        .collect();
+    i18n_f("In {places}", &[("places", &names.join(", "))])
 }
 
 /// A label for one line of the preview's header.
@@ -93,13 +121,7 @@ fn header_line(grid: &gtk::Grid, row: i32, title: &str) -> gtk::Label {
 /// row with an address.
 #[allow(deprecated)] // adw::MessageDialog, see ui::dialog
 pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>) + 'static) {
-    let dialog = adw::MessageDialog::new(
-        Some(parent),
-        Some(&i18n("Mail Merge")),
-        Some(&i18n(
-            "One message per row. A field written as {{Name}} is filled in from the row.",
-        )),
-    );
+    let dialog = adw::MessageDialog::new(Some(parent), Some(&i18n("Mail Merge")), None);
     dialog.add_response("cancel", &i18n("Cancel"));
     dialog.add_response("send", &i18n("Send"));
     dialog.set_response_appearance("send", adw::ResponseAppearance::Suggested);
@@ -141,6 +163,23 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
     note.set_xalign(0.0);
     note.set_wrap(true);
     note.set_visible(false);
+
+    // Fields the message names that the rows lack, each with where it is
+    // written, and the way past them short of editing the message.
+    let missing_title = gtk::Label::new(None);
+    missing_title.set_xalign(0.0);
+    missing_title.set_wrap(true);
+    missing_title.add_css_class("heading");
+    let missing_list = gtk::ListBox::new();
+    missing_list.add_css_class("boxed-list");
+    missing_list.set_selection_mode(gtk::SelectionMode::None);
+    let blank_row = adw::SwitchRow::new();
+    blank_row.set_title(&i18n("Leave these fields empty"));
+    missing_list.append(&blank_row);
+    let missing_box = gtk::Box::new(gtk::Orientation::Vertical, 6);
+    missing_box.append(&missing_title);
+    missing_box.append(&missing_list);
+    missing_box.set_visible(false);
 
     // The preview: one message at a time, stepped through with the arrows.
     let back = gtk::Button::from_icon_name("go-previous-symbolic");
@@ -200,6 +239,7 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
     let bx = gtk::Box::new(gtk::Orientation::Vertical, 12);
     bx.set_size_request(460, -1);
     bx.append(&form);
+    bx.append(&missing_box);
     bx.append(&note);
     bx.append(&preview);
     // The dialog is held to its window's height: in a short composer
@@ -239,8 +279,10 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
     };
     let show_one = Rc::new(show_one);
 
-    // A table read or picked: its fields, its messages, the count to send.
-    let use_table = {
+    // The rows in use: their fields, their messages, the count to send,
+    // made again when the source changes or the switch is turned.
+    let current: Rc<RefCell<Source>> = Rc::new(RefCell::new((Ok(None), String::new())));
+    let refresh = {
         let (merged, shown, start) = (merged.clone(), shown.clone(), start.clone());
         let (dialog, fields_row, note, preview) = (
             dialog.clone(),
@@ -248,17 +290,44 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
             note.clone(),
             preview.clone(),
         );
-        let show_one = show_one.clone();
-        move |table: Result<Option<Table>, String>| {
-            let result = match &table {
-                Ok(Some(t)) => merge(&start, t),
+        let (missing_box, missing_title, missing_list, blank_row) = (
+            missing_box.clone(),
+            missing_title.clone(),
+            missing_list.clone(),
+            blank_row.clone(),
+        );
+        let (show_one, current) = (show_one.clone(), current.clone());
+        move || {
+            let (table, name) = &*current.borrow();
+            let blank = blank_row.is_active();
+            let result = match table {
+                Ok(Some(t)) => merge(&start, t, blank),
                 Ok(None) => Merged::default(),
                 Err(e) => Merged {
                     problem: Some(e.clone()),
                     ..Default::default()
                 },
             };
-            match &table {
+            // The switch stays put, being what may have called this.
+            while let Some(row) = missing_list
+                .row_at_index(0)
+                .filter(|r| r.upcast_ref::<gtk::Widget>() != blank_row.upcast_ref::<gtk::Widget>())
+            {
+                missing_list.remove(&row);
+            }
+            for (i, m) in result.missing.iter().enumerate() {
+                let row = adw::ActionRow::new();
+                row.set_use_markup(false);
+                row.set_title(&format!("{{{{{}}}}}", m.name));
+                row.set_subtitle(&places_label(&m.places));
+                let icon = gtk::Image::from_icon_name("dialog-warning-symbolic");
+                icon.add_css_class("warning");
+                row.add_prefix(&icon);
+                missing_list.insert(&row, i as i32);
+            }
+            missing_title.set_label(&i18n_f("Not in {source}", &[("source", name)]));
+            missing_box.set_visible(!result.missing.is_empty());
+            match table {
                 Ok(Some(t)) => {
                     let names: Vec<String> =
                         t.columns.iter().map(|c| format!("{{{{{c}}}}}")).collect();
@@ -284,7 +353,7 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
             }
             note.set_visible(result.problem.is_some() || result.skipped > 0);
             let n = result.letters.len() as u32;
-            let ready = result.problem.is_none() && n > 0;
+            let ready = result.problem.is_none() && (result.missing.is_empty() || blank) && n > 0;
             dialog.set_response_enabled("send", ready);
             dialog.set_response_label(
                 "send",
@@ -305,9 +374,20 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
             show_one();
         }
     };
-    let use_table = Rc::new(use_table);
+    let refresh = Rc::new(refresh);
+    let use_table = {
+        let (current, refresh) = (current.clone(), refresh.clone());
+        Rc::new(move |source: Source| {
+            *current.borrow_mut() = source;
+            refresh();
+        })
+    };
+    {
+        let refresh = refresh.clone();
+        blank_row.connect_active_notify(move |_| refresh());
+    }
     // The file last read, kept for going back to it from a group.
-    let file_table: Rc<RefCell<Result<Option<Table>, String>>> = Rc::new(RefCell::new(Ok(None)));
+    let file_table: Rc<RefCell<Source>> = Rc::new(RefCell::new((Ok(None), String::new())));
 
     {
         let (shown, show_one) = (shown.clone(), show_one.clone());
@@ -336,15 +416,11 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
                 let Some(path) = res.ok().and_then(|f| f.path()) else {
                     return;
                 };
-                let table = read_table(&path);
-                file_row.set_subtitle(
-                    &path
-                        .file_name()
-                        .map(|n| n.to_string_lossy().to_string())
-                        .unwrap_or_default(),
-                );
-                *file_table.borrow_mut() = table.clone();
-                use_table(table);
+                let name = file_name(&path);
+                file_row.set_subtitle(&name);
+                let source = (read_table(&path), name);
+                *file_table.borrow_mut() = source.clone();
+                use_table(source);
             });
         });
     }
@@ -360,7 +436,7 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
             let picked = row.selected() as usize;
             file_row.set_visible(picked == 0);
             match picked.checked_sub(1).and_then(|i| start.groups.get(i)) {
-                Some((_, members)) => use_table(Ok(Some(group_table(members)))),
+                Some((name, members)) => use_table((Ok(Some(group_table(members))), name.clone())),
                 None => use_table(file_table.borrow().clone()),
             }
         });
@@ -373,25 +449,26 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
     });
     // The file last chosen, here or in the field palette, to start from.
     if let Some(path) = crate::config::load_merge_file() {
-        if let Some(name) = path.file_name() {
-            file_row.set_subtitle(&name.to_string_lossy());
-        }
-        let table = read_table(&path);
-        *file_table.borrow_mut() = table.clone();
-        use_table(table);
+        let name = file_name(&path);
+        file_row.set_subtitle(&name);
+        let source = (read_table(&path), name);
+        *file_table.borrow_mut() = source.clone();
+        use_table(source);
     }
     dialog.present();
-    showcase(&dialog, &file_row, &*use_table);
+    showcase(&dialog, &file_row, &blank_row, &*use_table);
 }
 
 /// HYLKI_SHOWCASE_MERGE=<csv>:<png> (demo only) reads the file as if it
 /// were chosen and captures the dialog two seconds later; with
-/// HYLKI_SHOWCASE_MERGE_SEND it then sends.
+/// HYLKI_SHOWCASE_MERGE_BLANK missing fields are left empty first, and
+/// with HYLKI_SHOWCASE_MERGE_SEND it then sends.
 #[allow(deprecated)] // adw::MessageDialog, see ui::dialog
 fn showcase(
     dialog: &adw::MessageDialog,
     file_row: &adw::ActionRow,
-    use_table: &dyn Fn(Result<Option<Table>, String>),
+    blank_row: &adw::SwitchRow,
+    use_table: &dyn Fn(Source),
 ) {
     let (Ok(v), Some(_)) = (
         std::env::var("HYLKI_SHOWCASE_MERGE"),
@@ -403,7 +480,10 @@ fn showcase(
         return;
     };
     file_row.set_subtitle(csv);
-    use_table(read_table(Path::new(csv)));
+    use_table((read_table(Path::new(csv)), file_name(Path::new(csv))));
+    if std::env::var_os("HYLKI_SHOWCASE_MERGE_BLANK").is_some() {
+        blank_row.set_active(true);
+    }
     let (dialog, png) = (dialog.clone(), png.to_string());
     gtk::glib::timeout_add_seconds_local_once(2, move || {
         crate::ui::showcase::showcase_capture(dialog.upcast_ref(), &png);
@@ -432,6 +512,13 @@ pub(crate) fn csv_file_dialog() -> gtk::FileDialog {
     filters.append(&any);
     picker.set_filters(Some(&filters));
     picker
+}
+
+/// A file's name, as the dialog shows it.
+fn file_name(path: &Path) -> String {
+    path.file_name()
+        .map(|n| n.to_string_lossy().to_string())
+        .unwrap_or_default()
 }
 
 /// A CSV file's table, or why it could not be read.

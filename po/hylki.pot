@@ -4217,17 +4217,16 @@ msgstr ""
 msgid "To needs the field that holds the address, such as {{Email}}."
 msgstr ""
 
-msgid "There is no field “{field}”."
-msgstr ""
-
 msgid "No row has an address to send to."
 msgstr ""
 
-msgid "Mail Merge"
+msgid "Text"
 msgstr ""
 
-msgid ""
-"One message per row. A field written as {{Name}} is filled in from the row."
+msgid "In {places}"
+msgstr ""
+
+msgid "Mail Merge"
 msgstr ""
 
 msgid "Send to"
@@ -4248,7 +4247,13 @@ msgstr ""
 msgid "Fields"
 msgstr ""
 
+msgid "Leave these fields empty"
+msgstr ""
+
 msgid "{n} of {total}"
+msgstr ""
+
+msgid "Not in {source}"
 msgstr ""
 
 msgid "{n} row has no address and is left out."

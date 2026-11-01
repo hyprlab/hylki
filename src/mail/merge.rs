@@ -28,6 +28,25 @@ pub(crate) struct Letter {
     pub(crate) text: String,
 }
 
+/// Where in a message a field is written.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub(crate) enum Place {
+    To,
+    Cc,
+    Bcc,
+    ReplyTo,
+    Subject,
+    Text,
+}
+
+/// A field the message names that the rows have no column for.
+#[derive(Debug, Clone, PartialEq)]
+pub(crate) struct Missing {
+    /// As written, without its braces.
+    pub(crate) name: String,
+    pub(crate) places: Vec<Place>,
+}
+
 /// A field as written between the braces, compared the way people type it:
 /// letters and digits only, in any case, so `{{E-mail}}`, `{{email}}` and
 /// `{{first_name}}` find "Email" and "First Name". In a rich body the markup
@@ -116,33 +135,43 @@ impl Table {
     }
 
     /// The fields `letter` names that the table has no column for, each
-    /// once, as written.
-    pub(crate) fn unknown_fields(&self, letter: &Letter) -> Vec<String> {
-        let mut unknown: Vec<String> = Vec::new();
-        for part in letter.parts() {
+    /// once, as written, with where it is written.
+    pub(crate) fn missing_fields(&self, letter: &Letter) -> Vec<Missing> {
+        let mut missing: Vec<Missing> = Vec::new();
+        for (place, part) in letter.parts() {
             for (range, key) in placeholders(part) {
-                if self.column(&key).is_none() && !unknown.iter().any(|u| field_key(u) == key) {
-                    unknown.push(field_text(&part[range.start + 2..range.end - 2]));
+                if self.column(&key).is_some() {
+                    continue;
+                }
+                match missing.iter_mut().find(|m| field_key(&m.name) == key) {
+                    Some(m) if !m.places.contains(&place) => m.places.push(place),
+                    Some(_) => {}
+                    None => missing.push(Missing {
+                        name: field_text(&part[range.start + 2..range.end - 2]),
+                        places: vec![place],
+                    }),
                 }
             }
         }
-        unknown
+        missing
     }
 
     /// `text` with each field it names replaced by row `row`'s value, HTML
-    /// escaped when `html`. A field with no column is left as written.
-    fn fill(&self, text: &str, row: usize, html: bool) -> String {
+    /// escaped when `html`. A field with no column is left as written, or
+    /// with `blank` taken out.
+    fn fill(&self, text: &str, row: usize, html: bool, blank: bool) -> String {
         let Some(values) = self.rows.get(row) else {
             return text.to_string();
         };
         let mut out = String::with_capacity(text.len());
         let mut last = 0;
         for (range, key) in placeholders(text) {
-            let Some(col) = self.column(&key) else {
-                continue;
+            let value = match self.column(&key) {
+                Some(col) => values[col].trim(),
+                None if blank => "",
+                None => continue,
             };
             out.push_str(&text[last..range.start]);
-            let value = values[col].trim();
             if html {
                 out.push_str(&crate::encoding::escape_html(value));
             } else {
@@ -155,31 +184,39 @@ impl Table {
     }
 
     /// The message for row `row`. A body written as HTML gets its values
-    /// escaped; Markdown and plain text take them as they are.
-    pub(crate) fn letter_for(&self, letter: &Letter, row: usize, format: ComposeFormat) -> Letter {
+    /// escaped; Markdown and plain text take them as they are. With `blank`,
+    /// a field the table has no column for is left empty.
+    pub(crate) fn letter_for(
+        &self,
+        letter: &Letter,
+        row: usize,
+        format: ComposeFormat,
+        blank: bool,
+    ) -> Letter {
         let html = matches!(format, ComposeFormat::Rich | ComposeFormat::Html);
+        let fill = |text: &str, html: bool| self.fill(text, row, html, blank);
         Letter {
-            to: self.fill(&letter.to, row, false),
-            cc: self.fill(&letter.cc, row, false),
-            bcc: self.fill(&letter.bcc, row, false),
-            reply_to: self.fill(&letter.reply_to, row, false),
-            subject: self.fill(&letter.subject, row, false),
-            body: self.fill(&letter.body, row, html),
-            text: self.fill(&letter.text, row, false),
+            to: fill(&letter.to, false),
+            cc: fill(&letter.cc, false),
+            bcc: fill(&letter.bcc, false),
+            reply_to: fill(&letter.reply_to, false),
+            subject: fill(&letter.subject, false),
+            body: fill(&letter.body, html),
+            text: fill(&letter.text, false),
         }
     }
 }
 
 impl Letter {
-    fn parts(&self) -> [&str; 7] {
+    fn parts(&self) -> [(Place, &str); 7] {
         [
-            &self.to,
-            &self.cc,
-            &self.bcc,
-            &self.reply_to,
-            &self.subject,
-            &self.body,
-            &self.text,
+            (Place::To, &self.to),
+            (Place::Cc, &self.cc),
+            (Place::Bcc, &self.bcc),
+            (Place::ReplyTo, &self.reply_to),
+            (Place::Subject, &self.subject),
+            (Place::Text, &self.body),
+            (Place::Text, &self.text),
         ]
     }
 

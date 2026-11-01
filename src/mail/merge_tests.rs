@@ -93,11 +93,17 @@ fn fills_fields_in_any_case_and_spacing() {
         text: "Dear {{First Name}}, {{Unknown}} stays.".into(),
         ..Default::default()
     };
-    let out = t.letter_for(&letter, 0, ComposeFormat::Plain);
+    let out = t.letter_for(&letter, 0, ComposeFormat::Plain, false);
     assert_eq!(out.to, "ann@example.com");
     assert_eq!(out.subject, "Hello Ann");
     assert_eq!(out.text, "Dear Ann, {{Unknown}} stays.");
-    assert_eq!(t.unknown_fields(&letter), ["Unknown"]);
+    assert_eq!(
+        t.missing_fields(&letter),
+        [Missing {
+            name: "Unknown".into(),
+            places: vec![Place::Text],
+        }]
+    );
 }
 
 #[test]
@@ -111,10 +117,41 @@ fn fields_match_without_their_punctuation() {
         text: "Hi {{first_name}} {{LastName}}, {{ - }}".into(),
         ..Default::default()
     };
-    assert!(t.unknown_fields(&letter).is_empty());
-    let out = t.letter_for(&letter, 0, ComposeFormat::Plain);
+    assert!(t.missing_fields(&letter).is_empty());
+    let out = t.letter_for(&letter, 0, ComposeFormat::Plain, false);
     assert_eq!(out.to, "ann@example.com");
     assert_eq!(out.text, "Hi Ann Smith, {{ - }}");
+}
+
+#[test]
+fn missing_fields_are_named_once_with_where_they_are() {
+    let t = table("Name,Email\nAnn,ann@example.com\n");
+    let letter = Letter {
+        to: "{{Email}}".into(),
+        subject: "{{Company}} news".into(),
+        body: "<p>{{company}} and {{<b>Order</b>}}</p>".into(),
+        text: "{{company}} and {{Order}}".into(),
+        ..Default::default()
+    };
+    assert_eq!(
+        t.missing_fields(&letter),
+        [
+            Missing {
+                name: "Company".into(),
+                places: vec![Place::Subject, Place::Text],
+            },
+            Missing {
+                name: "Order".into(),
+                places: vec![Place::Text],
+            },
+        ]
+    );
+    // Left empty on request: the rest of the text stays.
+    let out = t.letter_for(&letter, 0, ComposeFormat::Rich, true);
+    assert_eq!(out.subject, " news");
+    assert_eq!(out.body, "<p> and </p>");
+    assert_eq!(out.text, " and ");
+    assert_eq!(out.to, "ann@example.com");
 }
 
 #[test]
@@ -125,7 +162,7 @@ fn a_rich_body_gets_escaped_values_and_its_markup_ignored() {
         text: "Hi {{Company}}".into(),
         ..Default::default()
     };
-    let out = t.letter_for(&letter, 0, ComposeFormat::Rich);
+    let out = t.letter_for(&letter, 0, ComposeFormat::Rich, false);
     assert_eq!(
         out.body,
         "<p>Hi Smith &amp; &lt;Sons&gt;&nbsp;and Smith &amp; &lt;Sons&gt;</p>"
@@ -137,7 +174,7 @@ fn a_rich_body_gets_escaped_values_and_its_markup_ignored() {
         ..Default::default()
     };
     assert_eq!(
-        t.letter_for(&md, 0, ComposeFormat::Markdown).body,
+        t.letter_for(&md, 0, ComposeFormat::Markdown, false).body,
         "Hi Smith & <Sons>"
     );
 }
@@ -150,10 +187,10 @@ fn braces_that_name_nothing_are_left_alone() {
         ..Default::default()
     };
     assert_eq!(
-        t.letter_for(&letter, 0, ComposeFormat::Plain).text,
+        t.letter_for(&letter, 0, ComposeFormat::Plain, false).text,
         "{{}} {1 1 }}{{ {{A"
     );
-    assert!(t.unknown_fields(&letter).is_empty());
+    assert!(t.missing_fields(&letter).is_empty());
 }
 
 #[test]
