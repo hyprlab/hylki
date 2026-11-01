@@ -192,9 +192,9 @@
 - **Changed: Keep mail offline is called Keep mail cached** in an account's
   settings.
 
-- **Translations:** German (PRs #550 and #559 by Samuel Edlmeier), French
-  (PRs #556 and #558 by frenchy82) and Spanish (PR #561 by Daniel Miguel)
-  brought up to date.
+- **Translations:** German (PRs #550, #559 and #565 by Samuel Edlmeier) is
+  complete; French (PRs #556 and #558 by frenchy82) and Spanish (PR #561 by
+  Daniel Miguel) are up to date.
 
 ## 1.46.1 — 2026-10-31
 
