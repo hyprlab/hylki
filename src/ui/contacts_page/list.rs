@@ -12,7 +12,7 @@ use crate::i18n::{i18n, i18n_f, ni18n_f};
 use crate::ui::context_menu::{show_context_menu, MenuEntry};
 
 use super::detail::{group_byline, member_for};
-use super::menus::BulkChoices;
+use super::menus::{names_groups, BulkChoices};
 use super::rows::{avatar_for, group, is_member, line_photo_key, Line, LineKind};
 use super::types::{ContactScope, ContactSort, ContactsPage, ContactsPageInput, DIRECTORY};
 use super::ContactsPageWidgets;
@@ -117,17 +117,19 @@ impl ContactsPage {
     }
 
     /// The count over the list: everyone in scope, or so many of them while
-    /// a search or a filter narrows it.
+    /// a search or a filter narrows it. Asked for groups, by the Groups
+    /// filter or a search for them, it counts the groups.
     fn show_count(&self, widgets: &ContactsPageWidgets, people: &[usize]) {
         // People in what the list shows, and of them those it lists.
+        let groups = self.groups_only() || names_groups(&self.query);
         let total = self
             .contacts
             .iter()
-            .filter(|c| !c.is_group() && self.in_scope(c))
+            .filter(|c| c.is_group() == groups && self.in_scope(c))
             .count();
         let shown = people
             .iter()
-            .filter(|&&i| !self.contacts[i].is_group())
+            .filter(|&&i| self.contacts[i].is_group() == groups)
             .count();
         let narrowed = !self.query.is_empty() || self.filters != 0;
         widgets.count_label.set_label(&if !narrowed {

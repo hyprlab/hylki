@@ -629,11 +629,13 @@ The Contacts view searches as the message list does. The search button in
 the list's header, <kbd>Ctrl+F</kbd> or <kbd>/</kbd> shows the search field,
 and <kbd>Esc</kbd>, or leaving the field empty, hides it and clears the
 search. **Settings → Contacts → Keep the search field open** shows it at
-all times. The button at the right of the header sorts the people by first
-name, last name or email. Its **Show only** column keeps those with a photo,
-an email address, a phone number, a street address, a birthday or a
-company, or those in no group. The button turns the accent color while a
-filter is on, and **Clear Filters** shows everything again.
+all times. Searching for "group" or "groups" lists every group, whatever
+its name. The button at the right of the header sorts the people by first
+name, last name or email. Its **Show only** column keeps the groups alone,
+or the people with a photo, an email address, a phone number, a street
+address, a birthday or a company, or those in no group. The button turns
+the accent color while a filter is on, and **Clear Filters** shows
+everything again.
 
 **Contacts** is a row of the sidebar's footer, above Attachments, unless
 **Settings → Sidebar → Sections** places it elsewhere. In the footer, or
