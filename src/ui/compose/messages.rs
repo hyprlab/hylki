@@ -116,6 +116,15 @@ pub(crate) enum ComposeInput {
     SetImportance(crate::models::Importance),
     /// The editor's HTML + plain text came back asynchronously — finish sending.
     SendBody(OutgoingFields),
+    /// Mail Merge (#447): read the message, fields and all, for the dialog.
+    MailMerge,
+    /// The message came back from the editor: open the dialog.
+    MergeBody(OutgoingFields),
+    /// The dialog's Send: one message per row, each filled in.
+    MergeSend {
+        fields: OutgoingFields,
+        letters: Vec<crate::mail::merge::Letter>,
+    },
     /// Save the current message to Drafts.
     SaveDraft,
     /// Save a copy of the message as a template (#360), and go on writing.
@@ -258,6 +267,8 @@ pub(crate) enum ComposeOutput {
         id: u32,
         message: Box<OutgoingMessage>,
     },
+    /// Mail Merge (#447): a message for each row, sent one after another.
+    SendMerged(Vec<OutgoingMessage>),
     /// Save the message to the Drafts folder (no send).
     SaveDraft(Box<OutgoingMessage>),
     /// Save the message to the Templates folder (#360), replacing the

@@ -1253,6 +1253,11 @@ msgstr ""
 msgid "No {v1} folder available for some messages"
 msgstr ""
 
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Remove Account?"
 msgstr ""
 
@@ -1575,6 +1580,27 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "On {date} at {time}, {name} wrote:"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "First Name"
+msgstr ""
+
+msgid "Last Name"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "The file is empty."
+msgstr ""
+
+msgid "Column {n}"
+msgstr ""
+
+msgid "The file has no rows below its first."
 msgstr ""
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
@@ -2442,9 +2468,6 @@ msgstr ""
 msgid "Add Tag"
 msgstr ""
 
-msgid "Name"
-msgstr ""
-
 msgid "Keyword"
 msgstr ""
 
@@ -3255,6 +3278,15 @@ msgstr ""
 msgid "Show Cc, Bcc and Reply-To"
 msgstr ""
 
+msgid "Cannot merge an encrypted message"
+msgstr ""
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr ""
+
+msgid "Check the From address"
+msgstr ""
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -3278,9 +3310,6 @@ msgid "“{address}” is not an email address."
 msgstr ""
 
 msgid "Cannot send with OpenPGP"
-msgstr ""
-
-msgid "Check the From address"
 msgstr ""
 
 msgid "An attachment is missing"
@@ -3316,6 +3345,9 @@ msgid "Monday morning ({time})"
 msgstr ""
 
 msgid "Pick a date and time…"
+msgstr ""
+
+msgid "Mail Merge…"
 msgstr ""
 
 msgid "Request a read receipt"
@@ -3745,9 +3777,6 @@ msgstr ""
 msgid "Add to Contacts"
 msgstr ""
 
-msgid "Email"
-msgstr ""
-
 msgid "Phone"
 msgstr ""
 
@@ -4174,6 +4203,62 @@ msgid ""
 msgstr ""
 
 msgid "{name} · {current} of {total}"
+msgstr ""
+
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr ""
+
+msgid "There is no field “{field}”."
+msgstr ""
+
+msgid "No row has an address to send to."
+msgstr ""
+
+msgid "Mail Merge"
+msgstr ""
+
+msgid ""
+"One message per row. A field written as {{Name}} is filled in from the row."
+msgstr ""
+
+msgid "Send to"
+msgstr ""
+
+msgid "A CSV file"
+msgstr ""
+
+msgid "CSV file"
+msgstr ""
+
+msgid "Its first row names the fields."
+msgstr ""
+
+msgid "Choose…"
+msgstr ""
+
+msgid "Fields"
+msgstr ""
+
+msgid "{n} of {total}"
+msgstr ""
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Choose a CSV File"
+msgstr ""
+
+msgid "CSV files"
+msgstr ""
+
+msgid "The file could not be read: {error}"
 msgstr ""
 
 msgid "No Messages"
@@ -5476,9 +5561,6 @@ msgid "Play"
 msgstr ""
 
 msgid "Sound file"
-msgstr ""
-
-msgid "Choose…"
 msgstr ""
 
 msgid "Also play while Hylki is in front"

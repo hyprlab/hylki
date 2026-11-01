@@ -1,5 +1,5 @@
-//! The menu beside Send: send now or later, a read receipt (#520) and the
-//! message's importance (#563).
+//! The menu beside Send: send now or later, Mail Merge (#447), a read
+//! receipt (#520) and the message's importance (#563).
 
 use adw::prelude::*;
 use relm4::prelude::*;
@@ -66,6 +66,11 @@ pub(super) fn send_menu(
     item(
         &i18n("Pick a date and time…"),
         Box::new(|| vec![ComposeInput::PickSendTime]),
+    );
+    list.append(&gtk::Separator::new(gtk::Orientation::Horizontal));
+    item(
+        &i18n("Mail Merge…"),
+        Box::new(|| vec![ComposeInput::MailMerge]),
     );
 
     list.append(&gtk::Separator::new(gtk::Orientation::Horizontal));

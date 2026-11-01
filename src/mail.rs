@@ -6,6 +6,7 @@ pub(crate) mod direction;
 pub(crate) mod invite;
 mod mail_header;
 pub(crate) mod markdown;
+pub(crate) mod merge;
 pub(crate) mod mutf7;
 pub(crate) mod outlook_msg;
 pub(crate) mod pgp;

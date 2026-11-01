@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **Added: mail merge** (#447, requested by samuel-edlmeier). **Mail
+  Merge…** in the menu beside **Send** sends the message once per row of a
+  CSV file, or once per member of a contact group. A field written as
+  `{{Field}}` in To, Cc, Bcc, Reply-To, the subject or the text takes the
+  row's value, matched to the file's first row in any case. To left empty
+  goes to the column that holds addresses. The dialog lists the fields,
+  steps through a preview of each message, and names a field the file does
+  not have; rows without a valid address are left out and counted. The
+  file may be comma, semicolon or tab separated, in UTF-8, UTF-16 or
+  Windows-1252. The messages go one after another with no Undo Send; one
+  that fails waits in the Outbox. An encrypted message cannot be merged.
+
 - **Added: events and tasks from mail** (#564, requested by
   samuel-edlmeier). **Create Event…** and **Create Task…** in a message's
   right-click menu, in the list and the reader, open a dialog with the

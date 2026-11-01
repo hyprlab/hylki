@@ -28,6 +28,17 @@ pub(super) fn showcase_hooks(
         });
     }
 
+    // HYLKI_SHOWCASE_MERGE opens Mail Merge five seconds after the
+    // composer opens (demo only); see `ui::merge_dialog`.
+    if std::env::var_os("HYLKI_SHOWCASE_MERGE").is_some()
+        && std::env::var_os("HYLKI_DEMO").is_some()
+    {
+        let s = sender.input_sender().clone();
+        gtk::glib::timeout_add_seconds_local_once(5, move || {
+            let _ = s.send(ComposeInput::MailMerge);
+        });
+    }
+
     // HYLKI_SHOWCASE_EDITOR_JS=<file> runs that script in the body three
     // seconds after the composer opens, and logs the body's HTML a
     // second later (demo only), to drive the format bar's commands

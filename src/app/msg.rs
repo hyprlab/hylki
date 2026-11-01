@@ -1094,6 +1094,8 @@ pub(crate) enum AppMsg {
         from: u32,
         out: Box<OutgoingMessage>,
     },
+    /// A composer's Mail Merge (#447): one message per row.
+    SendMerged(Vec<OutgoingMessage>),
     /// A message's Undo Send delay is over, or Send now was asked for it in
     /// the Outbox: it goes to its worker (#434).
     DispatchSend(u64),

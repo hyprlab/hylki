@@ -1180,6 +1180,40 @@ or directly under the Inbox. Nothing on a server marks one otherwise, so a
 folder by another name, "Vorlagen" say, is chosen in the account's
 **Special Folders**, under **Templates**.
 
+### Mail merge
+
+**Mail Merge…**, in the menu beside **Send**, sends the message being
+written once to each row of a CSV file, or to each member of a contact
+group. A field written as `{{Field}}` anywhere in To, Cc, Bcc, Reply-To,
+the subject or the text is replaced by that row's value:
+
+```
+Dear {{First Name}},
+
+Your order {{Order}} has shipped.
+```
+
+The first row of the file names the fields. A field is matched to it in any
+case and spacing, so `{{first name}}` finds a column called "First Name".
+The file may be separated by commas, semicolons or tabs, as spreadsheets in
+different languages save it, and be in UTF-8, UTF-16 or Windows-1252. A
+contact group has the fields **Name**, **First Name**, **Last Name** and
+**Email**.
+
+With To left empty, each message goes to the column whose values are email
+addresses. To name the recipient too, write To yourself, for instance
+`{{First Name}} {{Last Name}} <{{Email}}>`. Whatever is in Cc and Bcc goes
+on every message.
+
+The dialog lists the file's fields and steps through a preview of each
+message, filled in. Send stays off while the message names a field the file
+does not have, and a row without a valid address is left out and counted.
+**Send** then sends them all, one after another, from the From address
+chosen, each with its own copy in Sent. There is no Undo Send for a merge:
+the preview is the time to check. A message that cannot go waits in the
+Outbox like any other. An encrypted message cannot be merged, since each
+recipient would need their own key.
+
 ### Addresses as pills
 
 Each address in To, Cc and Bcc is a pill, with its name when it has one and

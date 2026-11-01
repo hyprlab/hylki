@@ -312,6 +312,7 @@ impl AppModel {
                     from: id,
                     out: message,
                 },
+                ComposeOutput::SendMerged(messages) => AppMsg::SendMerged(messages),
                 ComposeOutput::SaveDraft(msg) => AppMsg::SaveDraftMessage(msg),
                 ComposeOutput::SaveTemplate(msg) => AppMsg::SaveTemplateMessage(msg),
                 ComposeOutput::AutoSave { id, message } => AppMsg::AutoSaveDraft { id, message },

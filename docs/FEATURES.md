@@ -103,6 +103,9 @@ The full list. The [README](../README.md) carries a shorter one.
 - **Templates:** save a message as a template and start new ones from it,
   from the Templates folder or with Ctrl+Shift+N. Thunderbird's Templates
   folder is picked up as it is.
+- **Mail merge:** one message per row of a CSV file or member of a contact
+  group, with `{{Field}}` filled in from the row and a preview of each. See
+  [Mail merge](DOCUMENTATION.md#mail-merge).
 - **Forwarding keeps the attachments:** the original's files are attached to
   the forward, ready to send on. A reply does not repeat them.
 - **Inline images:** dropped, pasted or picked from a file manager, resized
