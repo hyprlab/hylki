@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-31 16:27+0100\n"
+"PO-Revision-Date: 2026-11-01 18:29+0100\n"
 "Last-Translator: Samuel Edlmeier <samuel.edlmeier@gmx.net>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -187,10 +187,10 @@ msgid "Create Filter from Message…"
 msgstr "Filterregel aus Nachricht erstellen…"
 
 msgid "Create Event…"
-msgstr ""
+msgstr "Erstelle Termin..."
 
 msgid "Create Task…"
-msgstr ""
+msgstr "Erstelle Aufgabe..."
 
 msgid "Tags"
 msgstr "Tags"
@@ -238,7 +238,7 @@ msgid "Hylki cannot change this kind of group"
 msgstr "Kontaktlisten dieser Art können nicht geändert werden."
 
 msgid "On This Computer"
-msgstr "Auf diesem Computer"
+msgstr "Auf diesem Rechner"
 
 msgid "CardDAV Address Book"
 msgstr "CardDAV-Adressbuch"
@@ -299,8 +299,8 @@ msgid ""
 "The directory cannot be searched without signing in. Add a sign-in to it in "
 "Settings → Contacts."
 msgstr ""
-"Verzeichnis-Suche erfordert Anmeldung. Anmeldung unter Einstellungen → LDAP-"
-"Verzeichnisse hinzufügen."
+"Verzeichnis-Suche erfordert Anmeldung. Anmeldung unter »Einstellungen → LDAP-"
+"Verzeichnisse« hinzufügen."
 
 msgid "The directory did not accept the password."
 msgstr "Der Verzeichnisdienst hat das Passwort nicht akzeptiert."
@@ -334,8 +334,8 @@ msgstr ""
 
 msgid "The directory needs a password. Add it in Settings → Contacts."
 msgstr ""
-"Verzeichnis erfordert Passwort. Passwort unter Einstellungen → LDAP-"
-"Verzeichnisse hinzufügen."
+"Verzeichnis erfordert Passwort. Passwort unter »Einstellungen → LDAP-"
+"Verzeichnisse« hinzufügen."
 
 msgid "{name} did not answer: {error}"
 msgstr "{name} hat nicht geantwortet: {error}"
@@ -377,7 +377,7 @@ msgstr "Neue Nachricht basiert auf gewählter Vorlage."
 
 msgid ""
 "No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr "Keine Vorlagen. Im Editor-Menü ⋯ »Als Vorlage speichern« wählen."
+msgstr "Keine Vorlagen. Im Editor-Menü »⋯« »Als Vorlage speichern« wählen."
 
 msgid "Continue a Draft"
 msgstr "Entwurf fortsetzen"
@@ -386,7 +386,7 @@ msgid "The files go into the draft you pick."
 msgstr "Dateien werden in den gewählten Entwurf eingefügt."
 
 msgid "No drafts to continue."
-msgstr "Keine Entwürfe, um fortzufahren"
+msgstr "Keine Entwürfe um fortzufahren"
 
 msgid "Attach to This Draft"
 msgstr "Diesem Entwurf beifügen"
@@ -405,7 +405,7 @@ msgstr ""
 "verschoben; ein erneuter Versuch folgt."
 
 msgid "The forward of filter {rule} is waiting in the Outbox"
-msgstr "Ausführung der Weiterleitungsregel {rule} steht im Postausgang an."
+msgstr "Ausführung der Weiterleitungsregel {rule}  steht im Postausgang an."
 
 msgid "No filters to apply here yet"
 msgstr "Hier sind noch keine Filter verfügbar."
@@ -601,7 +601,8 @@ msgid "Toggle sidebar"
 msgstr "Seitenleiste ein- oder ausblenden"
 
 msgid "Always do this (change it in Settings → System → GNOME Files)"
-msgstr "Immer ausführen (änderbar unter Einstellungen → System → GNOME Files)"
+msgstr ""
+"Immer ausführen (änderbar unter »Einstellungen → System → GNOME Files«)"
 
 msgid "Could not attach {names}: Hylki cannot read the file."
 msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
@@ -900,7 +901,7 @@ msgid "Undo the last action, or the last edit while you are writing"
 msgstr "Letzte Aktion oder Bearbeitung rückgängig machen"
 
 msgid "Redo it (Ctrl+Y does the same)"
-msgstr "Wiederholen (auch mit Strg+Y)"
+msgstr "Wiederholen (auch mit »Strg+Y«)"
 
 msgid "Reveal the status bar (also: long-press Refresh)"
 msgstr "Statusleiste anzeigen (auch: Aktualisieren lange drücken)"
@@ -1121,12 +1122,12 @@ msgid ""
 "on in Settings → System."
 msgstr ""
 "Einzeltasten-Kürzel und Gmail-Tastenkombinationen deaktiviert. Aktivierung "
-"unter Einstellungen → System."
+"unter »Einstellungen → System«."
 
 msgid ""
 "Single-key shortcuts are switched off. Turn them on in Settings → System."
 msgstr ""
-"Einztasten-Kürzel deaktiviert. Aktivierung unter Einstellungen → System."
+"Einztasten-Kürzel deaktiviert. Aktivierung unter »Einstellungen → System«."
 
 msgid "Your tags"
 msgstr "Eigene Tags"
@@ -1333,6 +1334,11 @@ msgstr "Kein Posteingangsordner für dieses Konto verfügbar"
 msgid "No {v1} folder available for some messages"
 msgstr "Für einige Nachrichten ist kein Ordner für {v1} verfügbar"
 
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "Sende {n} Nachricht…"
+msgstr[1] "Sende {n} Nachrichten…"
+
 msgid "Remove Account?"
 msgstr "Konto entfernen?"
 
@@ -1361,10 +1367,10 @@ msgid "Snooze until"
 msgstr "Zurückstellen bis"
 
 msgid "Could not add the event: {e}"
-msgstr ""
+msgstr "Termin konnte nicht erstellt werden: {e}"
 
 msgid "Could not add the task: {e}"
-msgstr ""
+msgstr "Aufgabe konnte nicht erstellt werden: {e}"
 
 msgid "One message could not be copied to {account}: {error}"
 msgid_plural "{n} messages could not be copied to {account}: {error}"
@@ -1533,7 +1539,7 @@ msgid "Collapse sidebar"
 msgstr "Seitenleiste einklappen"
 
 msgid "Search messages (Ctrl+F)"
-msgstr "Nachrichten durchsuchen (Strg+F)"
+msgstr "Nachrichten durchsuchen (»Strg+F«)"
 
 msgid "Search, filters and sort"
 msgstr "Suchen, Filtern und Sortieren"
@@ -1541,10 +1547,10 @@ msgstr "Suchen, Filtern und Sortieren"
 #. The preview, not the print dialog: it shows what will come
 #. out and prints from there (#359).
 msgid "Print Preview (Ctrl+Shift+P)"
-msgstr "Druckvorschau (Strg+Umschalt+P)"
+msgstr "Druckvorschau (»Strg+Umschalt+P«)"
 
 msgid "Find in message (Ctrl+F)"
-msgstr "In Nachricht suchen (Strg+F)"
+msgstr "In Nachricht suchen (»Strg+F«)"
 
 msgid "Downloading attachments…"
 msgstr "Anhänge werden heruntergeladen…"
@@ -1678,6 +1684,27 @@ msgstr[1] "Eine neue Nachricht mit {n} Dateien ist in Hylki geöffnet."
 
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "Am {date} um {time} schrieb {name}:"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "First Name"
+msgstr "Vorname"
+
+msgid "Last Name"
+msgstr "Nachname"
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "Column {n}"
+msgstr "Spalte {n}"
+
+msgid "The file is empty."
+msgstr "Die Datei ist leer."
+
+msgid "The file has no rows below its first."
+msgstr "Keine Datenzeilen unterhalb der Kopfzeile vorhanden."
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
@@ -2149,16 +2176,17 @@ msgstr "Der Dienst verweigerte die Anfrage (Fehler {code})."
 
 msgid "Enter the LibreTranslate server's address in Settings → Translation."
 msgstr ""
-"Adresse des LibreTranslate-Servers unter »Einstellungen → Übersetzung« "
-"eintragen."
+"LanguageTool ist nicht installiert. Der Download kann unter »Einstellungen → "
+"Verfassen« durchgeführt werden."
 
 msgid "Choose a translation service in Settings → Translation first."
 msgstr ""
-"Bitte zuerst unter Einstellungen → Übersetzung einen Übersetzungsdienst "
+"Bitte zuerst unter »Einstellungen → Übersetzung« einen Übersetzungsdienst "
 "auswählen."
 
 msgid "No key for {service}: add one in Settings → Translation."
-msgstr "Kein Key für {service}: unter Einstellungen → Übersetzung hinzufügen."
+msgstr ""
+"Kein Key für {service}: unter »Einstellungen → Übersetzung« hinzufügen."
 
 msgid "There is no text to translate."
 msgstr "Kein Text zum Übersetzen"
@@ -2553,8 +2581,8 @@ msgid ""
 "Store mail in folders that live on this computer. Move or copy mail from any "
 "account to here."
 msgstr ""
-"E-Mails in lokalen Ordnern auf diesem Computer speichern. Nachrichten aus "
-"allen Konten können hierher verschoben oder kopiert werden."
+"E-Mails in lokalen Ordnern auf diesem Computer speichern. Es können "
+"Nachrichten aus allen Konten hierher verschoben oder kopiert werden."
 
 msgid "Add"
 msgstr "Hinzufügen"
@@ -2625,9 +2653,6 @@ msgstr "Tag bearbeiten"
 msgid "Add Tag"
 msgstr "Tag hinzufügen"
 
-msgid "Name"
-msgstr "Name"
-
 msgid "Keyword"
 msgstr "Stichwort"
 
@@ -2672,7 +2697,7 @@ msgid ""
 "access to mail and sending."
 msgstr ""
 "Die Anmeldung erfolgt über ein API-Token aus den Fastmail-Einstellungen "
-"unter Datenschutz & Sicherheit (Zugriffsrechte: E-Mail und Versand)."
+"unter »Datenschutz & Sicherheit« (Zugriffsrechte: E-Mail und Versand)."
 
 msgid "Your Stalwart server's address. No SMTP settings needed."
 msgstr "Stalwart-Serveradresse angeben. Keine SMTP Einstellunge erforderlich."
@@ -2694,7 +2719,10 @@ msgid "Custom OAuth"
 msgstr "Benutzerdefiniertes OAuth"
 
 msgid "Folders on this computer"
-msgstr "Ordner auf diesem Computer"
+msgstr ""
+"Ordner \n"
+"\n"
+" Computer"
 
 msgid "IMAP/POP3 account"
 msgstr "IMAP/POP3-Konto"
@@ -2825,7 +2853,7 @@ msgid ""
 "have checked its fingerprint with its owner."
 msgstr ""
 "Der Schlüssel befindet sich jetzt im Schlüsselbund. Vertrauen unter "
-"Einstellungen → OpenPGP vergeben, nachdem der Fingerabdruck mit der "
+"»Einstellungen → OpenPGP« vergeben, nachdem der Fingerabdruck mit der "
 "besitzenden Person überprüft wurde."
 
 msgid "Already in your keyring"
@@ -3014,63 +3042,63 @@ msgid "Open in the default app"
 msgstr "Mit der Standardanwendung öffnen"
 
 msgid "New Event"
-msgstr ""
+msgstr "Neuer Termin"
 
 msgid "New Task"
-msgstr ""
+msgstr "Neue Aufgabe"
 
 msgid "Open in Calendar"
-msgstr ""
+msgstr "Im Kalender öffnen"
 
 msgid "Title"
 msgstr "Titel"
 
 msgid "Calendar"
-msgstr ""
+msgstr "Kalender"
 
 msgid "Task list"
-msgstr ""
+msgstr "Aufgabenliste"
 
 msgid "Notes"
-msgstr ""
+msgstr "Notizen"
 
 msgid "All day"
-msgstr ""
+msgstr "Ganztägig"
 
 msgid "Starts"
-msgstr ""
+msgstr "Beginn"
 
 msgid "Ends"
-msgstr ""
+msgstr "Ende"
 
 msgid "Alarm"
-msgstr ""
+msgstr "Erinnerungen"
 
 msgid "Second alarm"
-msgstr ""
+msgstr "Zweite Erinnerung"
 
 msgid "At the start"
-msgstr ""
+msgstr "Bei Fälligkeit"
 
 msgid "{n} week before"
 msgid_plural "{n} weeks before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} Woche vorher"
+msgstr[1] "{n} Wochen vorher"
 
 msgid "{n} day before"
 msgid_plural "{n} days before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} Tag vorher"
+msgstr[1] "{n} Tage vorher"
 
 msgid "{n} hour before"
 msgid_plural "{n} hours before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} Stunde vorher"
+msgstr[1] "{n} Stunden vorher"
 
 msgid "{n} minute before"
 msgid_plural "{n} minutes before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} Minute vorher"
+msgstr[1] "{n} Minuten vorher"
 
 msgid "Due"
 msgstr "Fälligkeitsdatum"
@@ -3106,7 +3134,7 @@ msgid "Service"
 msgstr "Dienst"
 
 msgid "Nickname (optional)"
-msgstr "Spitzname (optional)"
+msgstr "Alias (optional)"
 
 msgid "Server URL"
 msgstr "Server-URL"
@@ -3175,7 +3203,7 @@ msgid ""
 "Online Accounts."
 msgstr ""
 "Noch kein Microsoft-365-Konto in den GNOME-Online-Konten vorhanden. Ein "
-"Konto unter Einstellungen → Online-Konten hinzufügen."
+"Konto unter »Einstellungen → Online-Konten« hinzufügen."
 
 msgid "OneDrive signs in through the online account above. No password needed."
 msgstr ""
@@ -3424,7 +3452,7 @@ msgid ""
 "and enter it again."
 msgstr ""
 "Die Anmeldedaten für {name} befinden sich nicht im Schlüsselbund. "
-"Einstellungen → Cloud-Speicher öffnen und erneut eingeben."
+"»Einstellungen → Cloud-Speicher« öffnen und erneut eingeben."
 
 msgid "Rich text"
 msgstr "Formatierter Text"
@@ -3455,7 +3483,7 @@ msgid ""
 "Ctrl+0, puts it back to 100%."
 msgstr ""
 "Zoomstufe der Bildschirmanzeige (betrifft nicht die gesendete Nachricht). "
-"Ein Klick hierauf oder Strg+0 stellt die Standardgröße (100 %) wieder her."
+"Ein Klick hierauf oder »Strg+0« stellt die Standardgröße (100 %) wieder her."
 
 msgid "Writing in {format}"
 msgstr "Schreiben in: {format}"
@@ -3524,12 +3552,32 @@ msgstr "Mehr"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Cc, Bcc und Reply-To anzeigen"
 
+msgid "Cannot merge an encrypted message"
+msgstr "Verschlüsselte Nachrichten können nicht zusammengeführt werden."
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr ""
+"Für jede Nachricht wird der Schlüssel des Empfängers benötigt. "
+"Verschlüsselung vor dem Zusammenführen deaktivieren."
+
+msgid "Check the From address"
+msgstr "Adresse des Absenders überprüfen"
+
+msgid "Insert Merge Field"
+msgstr "Serienmail-Feld einfügen"
+
+msgid "Contact Groups"
+msgstr "Kontaktlisten"
+
+msgid "Choose a CSV File…"
+msgstr "CSV-Datei auswählen…"
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
 msgstr ""
 "Es ist kein eigener OpenPGP-Schlüssel für {addr} vorhanden. Einen Schlüssel "
-"unter Einstellungen → OpenPGP generieren oder in den Kontoeinstellungen "
+"unter »Einstellungen → OpenPGP« generieren oder in den Kontoeinstellungen "
 "auswählen."
 
 msgid ""
@@ -3537,7 +3585,7 @@ msgid ""
 "it under Settings, OpenPGP."
 msgstr ""
 "Es ist kein OpenPGP-Schlüssel für {addr} vorhanden. Bitte den öffentlichen "
-"Schlüssel anfragen oder unter Einstellungen → OpenPGP abrufen."
+"Schlüssel anfragen oder unter »Einstellungen → OpenPGP« abrufen."
 
 msgid "Send later"
 msgstr "Später senden"
@@ -3556,9 +3604,6 @@ msgstr "»{address}« ist keine E-Mail-Adresse."
 msgid "Cannot send with OpenPGP"
 msgstr "Kann nicht mit OpenPGP senden"
 
-msgid "Check the From address"
-msgstr "Adresse des Absenders überprüfen"
-
 msgid "An attachment is missing"
 msgstr "Ein Anhang fehlt"
 
@@ -3576,11 +3621,18 @@ msgstr "Absenderadresse eingeben"
 msgid "Choose from your addresses"
 msgstr "Aus den eigenen Adressen auswählen"
 
-msgid "Check the address"
-msgstr "Adresse überprüfen"
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
+msgstr ""
+"»{addr}« ist ein Serienmail-Feld. Über »Serienmail…« im Menü neben »Senden« "
+"versenden."
 
 msgid "“{addr}” is not an email address."
 msgstr "»{addr}« ist keine E-Mail-Adresse."
+
+msgid "Check the address"
+msgstr "Adresse überprüfen"
 
 msgid "Send now"
 msgstr "Jetzt senden"
@@ -3597,6 +3649,9 @@ msgstr "Montagmorgen ({time})"
 msgid "Pick a date and time…"
 msgstr "Datum und Uhrzeit auswählen…"
 
+msgid "Mail Merge…"
+msgstr "Serienmail…"
+
 msgid "Request a read receipt"
 msgstr "Lesebestätigung anfordern"
 
@@ -3605,13 +3660,13 @@ msgstr ""
 "Nicht jede E-Mail-Anwendung unterstützt das Senden von Lesebestätigungen."
 
 msgid "High"
-msgstr ""
+msgstr "Hoch"
 
 msgid "Normal"
-msgstr "Normaler Text"
+msgstr "Normal"
 
 msgid "Low"
-msgstr ""
+msgstr "Niedrig"
 
 msgid "Show the message as it will be sent"
 msgstr "Zeige die Nachricht, wie sie gesendet wird"
@@ -3912,8 +3967,8 @@ msgid ""
 "Nextcloud under Settings → Security."
 msgstr ""
 "Die Adresse der Nextcloud-Instanz, wie beispielsweise cloud.example.org. Bei "
-"zweistufiger Anmeldung ein App-Passwort in Nextcloud unter Einstellungen → "
-"Sicherheit erstellen."
+"zweistufiger Anmeldung ein App-Passwort in Nextcloud unter »Einstellungen → "
+"Sicherheit« erstellen."
 
 msgid ""
 "Use an app password with access to contacts, made in Fastmail under Settings "
@@ -4074,9 +4129,6 @@ msgstr "Foto ansehen"
 
 msgid "Add to Contacts"
 msgstr "Zu Kontakten hinzufügen"
-
-msgid "Email"
-msgstr "E-Mail"
 
 msgid "Phone"
 msgstr "Telefon"
@@ -4284,6 +4336,9 @@ msgstr "Nachname"
 msgid "Sort and filter contacts"
 msgstr "Kontakte sortieren und filtern"
 
+msgid "Groups"
+msgstr "Kontaktlisten"
+
 msgid "Import Contacts"
 msgstr "Kontakte importieren"
 
@@ -4417,7 +4472,7 @@ msgstr ""
 "zudem werden die Adressbücher von GNOME Kontakte hier aufgelistet."
 
 msgid "Search contacts (Ctrl+F)"
-msgstr "Kontakte durchsuchen (Strg+F)"
+msgstr "Kontakte durchsuchen (»Strg+F«)"
 
 msgid "Edit contact"
 msgstr "Kontakt bearbeiten"
@@ -4543,6 +4598,67 @@ msgstr ""
 
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} von {total}"
+
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr "Das Feld »An« erfordert ein Adressfeld, beispielsweise {{Email}}."
+
+msgid "No row has an address to send to."
+msgstr "Keine der Zeilen enthält eine gültige Empfängeradresse."
+
+msgid "Text"
+msgstr "Text"
+
+msgid "In {places}"
+msgstr "In {places}"
+
+msgid "Mail Merge"
+msgstr "Serienmail (Mail Merge)"
+
+msgid "Send to"
+msgstr "Senden an"
+
+msgid "A CSV file"
+msgstr "Eine CSV-Datei"
+
+msgid "CSV file"
+msgstr "CSV-Datei"
+
+msgid "Its first row names the fields."
+msgstr "Die erste Zeile enthält die Feldnamen."
+
+msgid "Choose…"
+msgstr "Auswählen…"
+
+msgid "Fields"
+msgstr "Felder"
+
+msgid "Leave these fields empty"
+msgstr "Diese Felder leer lassen"
+
+msgid "{n} of {total}"
+msgstr "{n} von {total}"
+
+msgid "Not in {source}"
+msgstr "Nicht in {source}"
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] "{n} Zeile enthält keine Adresse und wird übersprungen."
+msgstr[1] "»{n}« Zeilen enthalten keine Adresse und werden übersprungen."
+
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] "{n} E-Mail senden"
+msgstr[1] "{n} E-Mails senden"
+
+msgid "Choose a CSV File"
+msgstr "CSV-Datei auswählen"
+
+msgid "CSV files"
+msgstr "CSV-Dateien"
+
+msgid "The file could not be read: {error}"
+msgstr "Datei konnte nicht gelesen werden: {error}"
 
 msgid "No Messages"
 msgstr "Keine Nachrichten"
@@ -4739,9 +4855,9 @@ msgid ""
 "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "
 "click here, or Ctrl+0, puts it back to the default from Settings."
 msgstr ""
-"Nachrichten-Zoom. Mit Strg+ und Strg- sowie Strg und Mausrad anpassen. Ein "
-"Klick hierauf oder Strg+0 setzt die Ansicht auf die Standardeinstellung aus "
-"den Einstellungen zurück."
+"Nachrichten-Zoom. Mit »Strg+« und »Strg-« sowie »Strg und Mausrad« anpassen. "
+"Ein Klick hierauf oder »Strg+0« setzt die Ansicht auf die "
+"Standardeinstellung aus den Einstellungen zurück."
 
 msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
@@ -4980,7 +5096,7 @@ msgid ""
 "Generate a key of your own first (Settings, OpenPGP): trusting a key means "
 "signing it with yours."
 msgstr ""
-"Zuerst einen eigenen Schlüssel erzeugen (Einstellungen → OpenPGP): Das "
+"Zuerst einen eigenen Schlüssel erzeugen (»Einstellungen → OpenPGP«): Das "
 "Vertrauen in einen Schlüssel entspricht dessen Signierung mit dem eigenen."
 
 msgid "From:"
@@ -5392,7 +5508,7 @@ msgid "Right group"
 msgstr "Rechte Gruppe"
 
 msgid "Folds into ⋯ when narrow"
-msgstr "Einklappen zu ⋯ bei schmalem Fenster"
+msgstr "Einklappen zu »⋯« bei schmalem Fenster"
 
 msgid "Not shown"
 msgstr "Nicht angezeigt"
@@ -5915,9 +6031,6 @@ msgstr "Abspielen"
 msgid "Sound file"
 msgstr "Tondatei"
 
-msgid "Choose…"
-msgstr "Auswählen…"
-
 msgid "Also play while Hylki is in front"
 msgstr "Auch abspielen wenn Hylki im Vordergrund ist"
 
@@ -5974,7 +6087,7 @@ msgid "Actions palette in the message list"
 msgstr "Aktionspalette in der Nachrichtenliste"
 
 msgid "The ⋯ row under each message."
-msgstr "Die ⋯ Zeile unter jeder Nachricht"
+msgstr "Die »⋯« Zeile unter jeder Nachricht"
 
 msgid "Open the actions palette on hover"
 msgstr "Aktionspalette beim Darüberfahren öffnen"
@@ -6099,7 +6212,7 @@ msgid ""
 "menu."
 msgstr ""
 "Bei Deaktivierung bleibt nur der vereinheitlichte Bereich sichtbar. "
-"Aktivierung/Deaktivierung mittels Strg+Umschalt+A oder über das Hauptmenü."
+"Aktivierung/Deaktivierung mittels »Strg+Umschalt+A« oder über das Hauptmenü."
 
 msgid "Folder order"
 msgstr "Ordnerreihenfolge"
@@ -6311,6 +6424,9 @@ msgstr "{name} gespeichert"
 
 msgid "Could not save the PDF: {error}"
 msgstr "PDF konnte nicht gespeichert werden: {error}"
+
+msgid "Filled in by Mail Merge"
+msgstr "Automatisch durch Serienmail (Mail Merge) befüllt"
 
 msgid "Custom…"
 msgstr "Benutzerdefiniert…"
@@ -6653,7 +6769,7 @@ msgid ""
 "here in one click. Google accounts are only supported through GNOME Online "
 "Accounts."
 msgstr ""
-"E-Mail-Konten, die unter GNOME-Einstellungen → Online-Konten angemeldet "
+"E-Mail-Konten, die unter »GNOME-Einstellungen → Online-Konten« angemeldet "
 "sind, können hier mit einem Klick hinzugefügt werden. Google-Konten werden "
 "nur über Online-Konten unterstützt."
 
@@ -6802,8 +6918,8 @@ msgstr ""
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
-"kein eigener OpenPGP-Schlüssel für {addr} vorhanden; unter Einstellungen → "
-"OpenPGP einen Schlüssel erzeugen"
+"kein eigener OpenPGP-Schlüssel für {addr} vorhanden; unter »Einstellungen → "
+"OpenPGP« einen Schlüssel erzeugen"
 
 msgid "no OpenPGP key for {addr}"
 msgstr "kein OpenPGP-Schlüssel für {addr}"
@@ -6894,7 +7010,7 @@ msgstr ""
 "Ein Microsoft-Konto kann keine E-Mails von einem anderen Konto empfangen"
 
 msgid "“{folder}” is left out of search: {reason}"
-msgstr "»{folder}« ist von der Suche ausgenommen: {reason}"
+msgstr "«{folder}« ist von der Suche ausgenommen: {reason}"
 
 msgid "Connecting to {host}…"
 msgstr "Verbinde zu {host}…"
@@ -7157,7 +7273,7 @@ msgid ""
 "changed in Settings → Online Accounts."
 msgstr ""
 "Konto wird von GNOME Online Accounts verwaltet. Adresse, Server und Passwort "
-"werden in Einstellungen → Online-Konten geändert."
+"werden in »Einstellungen → Online-Konten« geändert."
 
 msgid "Storage"
 msgstr "Speicher"
@@ -7538,17 +7654,17 @@ msgid ""
 "is narrow."
 msgstr ""
 "Schaltflächen zwischen den Gruppen verschieben. Die rechte Gruppe wird bei "
-"schmaler Anzeigeleiste unter ⋯ zusammengefasst."
+"schmaler Anzeigeleiste unter »⋯« zusammengefasst."
 
 msgid "Always fold the right group into ⋯"
-msgstr "Die rechte Gruppe immer zu ⋯ einklappen"
+msgstr "Die rechte Gruppe immer zu »⋯« einklappen"
 
 msgid ""
 "The parts switched on below hide while Focus Mode is on. Activated by "
 "Ctrl+Shift+F or the main menu."
 msgstr ""
 "Bei eingeschaltetem Fokusmodus werden die unten ausgewählten Bereiche "
-"ausgeblendet. Lässt sich mit Strg+Umschalt+F oder über das Hauptmenü "
+"ausgeblendet. Lässt sich mit »Strg+Umschalt+F« oder über das Hauptmenü "
 "aktivieren."
 
 msgid "Start in Focus Mode"
@@ -7558,14 +7674,14 @@ msgid "Fold the reading pane's toolbar"
 msgstr "Symbolleiste des Lesebereichs einklappen"
 
 msgid "Every button goes into its ⋯ menu."
-msgstr "Jeder Button geht in sein ⋯ Menü."
+msgstr "Jeder Button geht in sein »⋯« Menü."
 
 msgid "Fold the message list's header"
 msgstr "Kopfzeile der Nachrichtenliste einklappen"
 
 msgid "Everything but the sidebar toggle goes into ⋯."
 msgstr ""
-"Alle Elemente außer dem Seitenleisten-Schalter werden unter ⋯ "
+"Alle Elemente außer dem Seitenleisten-Schalter werden unter »⋯« "
 "zusammengefasst."
 
 msgid "Hide the accounts in the sidebar"
@@ -7767,7 +7883,7 @@ msgid "The account a message is in, above its subject."
 msgstr "Das Konto einer Nachricht, oberhalb ihres Betreffs"
 
 msgid "Ctrl+0 returns to the default."
-msgstr "Strg+0 setzt auf den Standardwert zurück."
+msgstr "»Strg+0« setzt auf den Standardwert zurück."
 
 msgid "Use my own font"
 msgstr "Eigene Schriftart verwenden"
@@ -7816,7 +7932,7 @@ msgid "Message card actions palette as a menu"
 msgstr "Nachrichtenkarten-Aktionspalette als Menü"
 
 msgid "The ⋯ opens the right-click menu instead."
-msgstr "Das Symbol ⋯ öffnet stattdessen das Kontextmenü."
+msgstr "Das Symbol »⋯« öffnet stattdessen das Kontextmenü."
 
 msgid "Single messages as cards"
 msgstr "Einzelne Nachrichten als Karten"
@@ -7893,7 +8009,7 @@ msgid "Starts hidden."
 msgstr "Startet im Hintergrund."
 
 msgid "Start fullscreen"
-msgstr "Start fullscreen"
+msgstr "Im Vollbildmodus starten"
 
 msgid "F11 switches fullscreen on and off."
 msgstr "F11 wechselt in den Vollbildmodus und zurück."
@@ -7923,7 +8039,7 @@ msgid "Single-key shortcuts"
 msgstr "Einzeltasten-Kürzel"
 
 msgid "Press Ctrl+? to list all shortcuts."
-msgstr "Strg+? drücken, um alle Tastenkombinationen aufzulisten."
+msgstr "»Strg+?« drücken, um alle Tastenkombinationen aufzulisten."
 
 msgid "Gmail keys"
 msgstr "Gmail-Tastenkürzel"
