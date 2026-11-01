@@ -2846,6 +2846,35 @@ msgstr ""
 msgid "Ends"
 msgstr ""
 
+msgid "Alarm"
+msgstr ""
+
+msgid "Second alarm"
+msgstr ""
+
+msgid "At the start"
+msgstr ""
+
+msgid "{n} week before"
+msgid_plural "{n} weeks before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} day before"
+msgid_plural "{n} days before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} hour before"
+msgid_plural "{n} hours before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} minute before"
+msgid_plural "{n} minutes before"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Due"
 msgstr ""
 

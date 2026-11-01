@@ -450,6 +450,7 @@ mod tests {
                 start: 1_793_606_400,
                 end: 1_793_610_000,
             },
+            alarms: vec![15, 24 * 60],
         };
         create(&personal.uid, &event).expect("event written");
         let events = read_back(ItemKind::Event, &personal.uid);
@@ -458,7 +459,10 @@ mod tests {
             .iter()
             .any(|e| e.contains("SUMMARY:Rig lunch\\, with notes")
                 && e.contains("20261102T080000Z")
-                && e.contains("Bring the slides")));
+                && e.contains("Bring the slides")
+                && e.contains("BEGIN:VALARM")
+                && e.contains("-PT15M")
+                && e.contains("-P1D")));
 
         let lists = sources(ItemKind::Task, AccountNames::default()).expect("EDS answers");
         eprintln!("task lists: {lists:?}");
@@ -468,6 +472,7 @@ mod tests {
             summary: "Pay the invoice".into(),
             notes: String::new(),
             when: super::super::When::Due(chrono::NaiveDate::from_ymd_opt(2026, 11, 5)),
+            alarms: Vec::new(),
         };
         create(&list.uid, &task).expect("task written");
         let tasks = read_back(ItemKind::Task, &list.uid);

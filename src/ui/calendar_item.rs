@@ -11,7 +11,7 @@ use chrono::{DateTime, Datelike, Duration, Local, NaiveDate, TimeZone, Timelike}
 use gtk::glib;
 
 use crate::calendar::{Item, ItemKind, Source, When};
-use crate::i18n::i18n;
+use crate::i18n::{i18n, ni18n_f};
 
 /// What the dialog opens with.
 pub(crate) struct Start {
@@ -20,6 +20,8 @@ pub(crate) struct Start {
     pub(crate) notes: String,
     /// Where an item went last time, chosen again if it is still offered.
     pub(crate) last_source: String,
+    /// The alarms the last event had, chosen again.
+    pub(crate) last_alarms: Vec<u32>,
 }
 
 /// Show the dialog over `parent`. `done` gets the item and the UID of the
@@ -82,8 +84,8 @@ pub(crate) fn show(
         row
     });
 
-    let when: Box<dyn Fn() -> When> = match kind {
-        ItemKind::Event => event_rows(&form),
+    let when: Box<dyn Fn() -> (When, Vec<u32>)> = match kind {
+        ItemKind::Event => event_rows(&form, &start.last_alarms),
         ItemKind::Task => task_rows(&form),
     };
 
@@ -117,13 +119,15 @@ pub(crate) fn show(
             return;
         }
         let buffer = notes.buffer();
+        let (when, alarms) = when();
         let item = Item {
             kind,
             summary: title.text().trim().to_string(),
             notes: buffer
                 .text(&buffer.start_iter(), &buffer.end_iter(), false)
                 .to_string(),
-            when: when(),
+            when,
+            alarms,
         };
         let source = source_row
             .as_ref()
@@ -134,9 +138,9 @@ pub(crate) fn show(
     dialog.present();
 }
 
-/// All day, Starts and Ends. Moving the start takes the end along, so the
-/// event keeps its length.
-fn event_rows(form: &gtk::ListBox) -> Box<dyn Fn() -> When> {
+/// All day, Starts, Ends and two alarms. Moving the start takes the end
+/// along, so the event keeps its length.
+fn event_rows(form: &gtk::ListBox, last_alarms: &[u32]) -> Box<dyn Fn() -> (When, Vec<u32>)> {
     let begin = next_hour();
     let start = Moment::new(begin);
     let end = Moment::new(begin + Duration::hours(1));
@@ -145,6 +149,13 @@ fn event_rows(form: &gtk::ListBox) -> Box<dyn Fn() -> When> {
     form.append(&all_day);
     form.append(&start.row(&i18n("Starts")));
     form.append(&end.row(&i18n("Ends")));
+    let alarms = [
+        alarm_row(&i18n("Alarm"), last_alarms.first().copied()),
+        alarm_row(&i18n("Second alarm"), last_alarms.get(1).copied()),
+    ];
+    for row in &alarms {
+        form.append(row);
+    }
     for m in [&start, &end] {
         all_day
             .bind_property("active", &m.time, "visible")
@@ -166,7 +177,7 @@ fn event_rows(form: &gtk::ListBox) -> Box<dyn Fn() -> When> {
         });
     }
     Box::new(move || {
-        if all_day.is_active() {
+        let when = if all_day.is_active() {
             When::AllDay {
                 first: start.date.get(),
                 last: end.date.get().max(start.date.get()),
@@ -178,12 +189,86 @@ fn event_rows(form: &gtk::ListBox) -> Box<dyn Fn() -> When> {
                 start: s,
                 end: e.max(s),
             }
-        }
+        };
+        let mut picked: Vec<u32> = alarms
+            .iter()
+            .filter_map(|row| ALARMS.get(row.selected() as usize).copied().flatten())
+            .collect();
+        // The same alarm twice would go off twice.
+        picked.dedup();
+        (when, picked)
     })
 }
 
+/// The alarms offered, in minutes before the start, the ones GNOME Calendar
+/// offers and one at the start itself.
+const ALARMS: [Option<u32>; 10] = [
+    None,
+    Some(0),
+    Some(5),
+    Some(10),
+    Some(15),
+    Some(30),
+    Some(60),
+    Some(24 * 60),
+    Some(2 * 24 * 60),
+    Some(7 * 24 * 60),
+];
+
+/// When one of the event's alarms goes off, `last` picked first.
+fn alarm_row(title: &str, last: Option<u32>) -> adw::ComboRow {
+    let labels: Vec<String> = ALARMS.iter().map(|a| alarm_label(*a)).collect();
+    let labels: Vec<&str> = labels.iter().map(String::as_str).collect();
+    let row = adw::ComboRow::new();
+    row.set_title(title);
+    row.set_model(Some(&gtk::StringList::new(&labels)));
+    if let Some(i) = ALARMS.iter().position(|a| *a == last) {
+        row.set_selected(i as u32);
+    }
+    row
+}
+
+fn alarm_label(alarm: Option<u32>) -> String {
+    const DAY: u32 = 24 * 60;
+    let Some(m) = alarm else {
+        return i18n("None");
+    };
+    let count = |n: u32| n.to_string();
+    match m {
+        0 => i18n("At the start"),
+        m if m % (7 * DAY) == 0 => {
+            let n = m / (7 * DAY);
+            ni18n_f(
+                "{n} week before",
+                "{n} weeks before",
+                n,
+                &[("n", &count(n))],
+            )
+        }
+        m if m % DAY == 0 => {
+            let n = m / DAY;
+            ni18n_f("{n} day before", "{n} days before", n, &[("n", &count(n))])
+        }
+        m if m % 60 == 0 => {
+            let n = m / 60;
+            ni18n_f(
+                "{n} hour before",
+                "{n} hours before",
+                n,
+                &[("n", &count(n))],
+            )
+        }
+        n => ni18n_f(
+            "{n} minute before",
+            "{n} minutes before",
+            n,
+            &[("n", &count(n))],
+        ),
+    }
+}
+
 /// Due, with a switch: a task has no due day unless one is given.
-fn task_rows(form: &gtk::ListBox) -> Box<dyn Fn() -> When> {
+fn task_rows(form: &gtk::ListBox) -> Box<dyn Fn() -> (When, Vec<u32>)> {
     let due = Moment::new(Local::now());
     due.time.set_visible(false);
     let on = gtk::Switch::new();
@@ -195,7 +280,12 @@ fn task_rows(form: &gtk::ListBox) -> Box<dyn Fn() -> When> {
     row.add_suffix(&on);
     row.set_activatable_widget(Some(&on));
     form.append(&row);
-    Box::new(move || When::Due(on.is_active().then(|| due.date.get())))
+    Box::new(move || {
+        (
+            When::Due(on.is_active().then(|| due.date.get())),
+            Vec::new(),
+        )
+    })
 }
 
 /// The next whole hour from now.

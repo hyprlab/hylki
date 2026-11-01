@@ -37,6 +37,8 @@ pub(crate) struct Item {
     pub(crate) summary: String,
     pub(crate) notes: String,
     pub(crate) when: When,
+    /// An event's alarms, in minutes before it starts: 0 is at the start.
+    pub(crate) alarms: Vec<u32>,
 }
 
 /// What accounts are called here, for naming their calendars.

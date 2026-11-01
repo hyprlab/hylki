@@ -119,6 +119,9 @@ pub(super) struct StateFile {
     last_calendar: String,
     #[serde(default, skip_serializing_if = "String::is_empty")]
     last_task_list: String,
+    /// The alarms the last such event had, in minutes before its start.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    last_event_alarms: Vec<u32>,
 }
 
 /// A font family picked in the composer (#358), and whether it is
@@ -208,6 +211,15 @@ pub(crate) fn save_calendar_choice(task: bool, uid: &str) {
         };
         *slot = uid.to_string();
     });
+}
+
+/// The alarms the last event made from a message had (#564).
+pub(crate) fn load_event_alarms() -> Vec<u32> {
+    load_state().last_event_alarms
+}
+
+pub(crate) fn save_event_alarms(alarms: &[u32]) {
+    update_state(|s| s.last_event_alarms = alarms.to_vec());
 }
 
 /// Each folder's unread count when it was last looked at (#343).

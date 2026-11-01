@@ -1778,7 +1778,9 @@ your language's default paper size before that.
 the list or the reader, open a dialog filled in from the message: its
 subject as the title, and its sender, date and text as the notes. An event
 starts at the next whole hour and lasts an hour, or takes whole days with
-**All day**; a task has no due date until **Due** is switched on.
+**All day**. **Alarm** and **Second alarm** each go off at the start or from
+five minutes to a week before, and the ones picked last are picked again; a
+task has no due date until **Due** is switched on.
 
 The event or task is written to the calendar or task list chosen in the
 dialog, from those in GNOME Online Accounts, Evolution or GNOME Calendar

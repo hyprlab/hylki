@@ -143,6 +143,7 @@ impl AppModel {
             summary: m.subject.clone(),
             notes,
             last_source: crate::config::load_calendar_choice(kind == ItemKind::Task),
+            last_alarms: crate::config::load_event_alarms(),
         };
         // A pop-out's menu opens the dialog over the pop-out.
         let parent = relm4::main_application()
@@ -150,19 +151,24 @@ impl AppModel {
             .unwrap_or_else(|| self.window.clone().upcast());
         let input = sender.input_sender().clone();
         let owner = parent.clone();
-        crate::ui::calendar_item::show(&owner, start, sources, move |item, source| match source {
-            Some(uid) => {
-                crate::config::save_calendar_choice(kind == ItemKind::Task, &uid);
-                let input = input.clone();
-                std::thread::spawn(move || {
-                    let result = crate::calendar::create(&uid, &item);
-                    if let Err(e) = &result {
-                        tracing::warn!("calendar: adding to {uid} failed: {e}");
-                    }
-                    let _ = input.send(AppMsg::ToCalendar(ToCalendar::Saved(kind, result)));
-                });
+        crate::ui::calendar_item::show(&owner, start, sources, move |item, source| {
+            if kind == ItemKind::Event {
+                crate::config::save_event_alarms(&item.alarms);
             }
-            None => open_in_calendar(&item, &parent),
+            match source {
+                Some(uid) => {
+                    crate::config::save_calendar_choice(kind == ItemKind::Task, &uid);
+                    let input = input.clone();
+                    std::thread::spawn(move || {
+                        let result = crate::calendar::create(&uid, &item);
+                        if let Err(e) = &result {
+                            tracing::warn!("calendar: adding to {uid} failed: {e}");
+                        }
+                        let _ = input.send(AppMsg::ToCalendar(ToCalendar::Saved(kind, result)));
+                    });
+                }
+                None => open_in_calendar(&item, &parent),
+            }
         });
     }
 }

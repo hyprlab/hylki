@@ -55,6 +55,14 @@ pub(super) fn component(item: &Item, uid: &str, now: i64) -> String {
     if !notes.is_empty() {
         line(format!("DESCRIPTION:{}", escape(notes)));
     }
+    for &minutes in &item.alarms {
+        line("BEGIN:VALARM".into());
+        line("ACTION:DISPLAY".into());
+        line(format!("TRIGGER;RELATED=START:{}", trigger(minutes)));
+        // DISPLAY needs a text: the event's title is what the alarm shows.
+        line(format!("DESCRIPTION:{}", escape(item.summary.trim())));
+        line("END:VALARM".into());
+    }
     line(format!("END:{name}"));
     out
 }
@@ -76,6 +84,19 @@ fn stamp_utc(ts: i64) -> String {
         .and_then(|d| d.format("%Y%m%dT%H%M%SZ").ok())
         .map(|s| s.to_string())
         .unwrap_or_default()
+}
+
+/// Minutes before the start as an iCalendar DURATION: `-PT15M`, `-P1D`,
+/// `PT0S` at the start.
+fn trigger(minutes: u32) -> String {
+    const DAY: u32 = 24 * 60;
+    match minutes {
+        0 => "PT0S".into(),
+        m if m % (7 * DAY) == 0 => format!("-P{}W", m / (7 * DAY)),
+        m if m % DAY == 0 => format!("-P{}D", m / DAY),
+        m if m % 60 == 0 => format!("-PT{}H", m / 60),
+        m => format!("-PT{m}M"),
+    }
 }
 
 /// A day as an iCalendar DATE: `20261102`.
@@ -104,6 +125,7 @@ mod tests {
                 start: MONDAY_8,
                 end: MONDAY_8 + 3600,
             },
+            alarms: Vec::new(),
         };
         let ics = component(&item, "u1@hylki", MONDAY_8 - 60);
         assert!(ics.starts_with("BEGIN:VEVENT\r\nUID:u1@hylki\r\n"), "{ics}");
@@ -125,6 +147,7 @@ mod tests {
                 first: date(2026, 12, 30),
                 last: date(2026, 12, 31),
             },
+            alarms: Vec::new(),
         };
         let ics = component(&item, "u2@hylki", MONDAY_8);
         assert!(ics.contains("DTSTART;VALUE=DATE:20261230\r\n"));
@@ -139,6 +162,7 @@ mod tests {
             summary: "Pay the invoice".into(),
             notes: String::new(),
             when: When::Due(Some(date(2026, 11, 5))),
+            alarms: Vec::new(),
         };
         let ics = component(&item, "u3@hylki", MONDAY_8);
         assert!(ics.starts_with("BEGIN:VTODO\r\n"));
@@ -159,6 +183,7 @@ mod tests {
                 start: MONDAY_8,
                 end: MONDAY_8,
             },
+            alarms: Vec::new(),
         };
         let file = calendar_file(&item, "u4@hylki", MONDAY_8);
         assert!(file.starts_with("BEGIN:VCALENDAR\r\n"));
@@ -166,6 +191,39 @@ mod tests {
         assert!(file.ends_with("END:VEVENT\r\nEND:VCALENDAR\r\n"));
         assert!(file.split("\r\n").all(|l| l.len() <= 75), "{file}");
         assert!(file.contains("\r\n "), "a continuation line: {file}");
+    }
+
+    #[test]
+    fn an_alarm_goes_off_before_the_start() {
+        let mut item = Item {
+            kind: ItemKind::Event,
+            summary: "Dentist".into(),
+            notes: String::new(),
+            when: When::Timed {
+                start: MONDAY_8,
+                end: MONDAY_8 + 1800,
+            },
+            alarms: vec![15],
+        };
+        let ics = component(&item, "u5@hylki", MONDAY_8);
+        assert!(
+            ics.contains(
+                "BEGIN:VALARM\r\nACTION:DISPLAY\r\nTRIGGER;RELATED=START:-PT15M\r\n\
+                 DESCRIPTION:Dentist\r\nEND:VALARM\r\nEND:VEVENT\r\n"
+            ),
+            "{ics}"
+        );
+        for (minutes, trigger) in [(0, "PT0S"), (60, "-PT1H"), (1440, "-P1D"), (10080, "-P1W")] {
+            item.alarms = vec![minutes];
+            let ics = component(&item, "u5@hylki", MONDAY_8);
+            assert!(ics.contains(&format!("START:{trigger}\r\n")), "{ics}");
+        }
+        item.alarms = vec![15, 24 * 60];
+        let ics = component(&item, "u5@hylki", MONDAY_8);
+        assert_eq!(ics.matches("BEGIN:VALARM").count(), 2, "{ics}");
+        assert!(ics.contains("START:-PT15M\r\n") && ics.contains("START:-P1D\r\n"));
+        item.alarms.clear();
+        assert!(!component(&item, "u5@hylki", MONDAY_8).contains("VALARM"));
     }
 
     #[test]
