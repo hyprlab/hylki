@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.47.0-beta.4 — 2026-11-01
+
+- **Fixed: a test failing on Sundays from 17:00** (#567, reported by
+  clementpoiret), which stopped package builds that run the tests, such as
+  the Nix flake. The snooze presets test read the clock and expected three
+  presets, where Sunday evening has two; it now checks every hour of a fixed
+  week.
+
+- **Fixed: grammar checks with a LanguageTool server failing with error
+  500** (#566, reported by warpedwood) when more than one spelling language
+  was on and a paragraph was too short to tell its language. The server
+  was asked to detect it from a list that held variants such as "en-US",
+  which it refuses; the languages and their variants now go separately.
+
+- **Translations:** German (PR #565 by Samuel Edlmeier) is complete.
+
 ## 1.47.0-beta.3 — 2026-11-01
 
 - **Added: showing only contact groups.** **Show only** in the Contacts

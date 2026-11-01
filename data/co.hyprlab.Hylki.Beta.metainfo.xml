@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.47.0-beta.4" date="2026-11-01" type="development">
+      <description>
+        <p>Grammar checks with a LanguageTool server work again with several spelling languages on, the snooze presets test no longer fails on Sunday evenings, and German is complete.</p>
+      </description>
+    </release>
     <release version="1.47.0-beta.3" date="2026-11-01" type="development">
       <description>
         <p>Mail merge from a CSV file or a contact group, events and tasks made from a message, the sender's contact photo in the reader, a message's importance, contact groups shown by a filter or a search, drafts that open at once, and German, French and Spanish brought up to date.</p>

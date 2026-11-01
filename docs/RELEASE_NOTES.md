@@ -2,6 +2,17 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.47.0-beta.4
+
+### Fixes:
+
+- Grammar checks with a LanguageTool server work with several languages on - (#566)
+- The snooze presets test passes on Sunday evenings - (#567)
+
+### Translations:
+
+- German by @samuel-edlmeier
+
 ## What's new in 1.47.0-beta.3
 
 ### New features:
