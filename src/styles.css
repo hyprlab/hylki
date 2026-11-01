@@ -2611,3 +2611,10 @@ textview.console-view text selection {
 toast-countdown {
   color: @accent_bg_color;
 }
+
+/* The Mail Merge dialog's scrolled content (#447) keeps 8px of margin for
+   the lists' outlines and shadows, which this takes back, so they line up
+   with the dialog's buttons. */
+scrolledwindow.merge-dialog-scroll {
+  margin: -8px;
+}

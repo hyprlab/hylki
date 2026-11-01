@@ -244,7 +244,22 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
     bx.append(&preview);
     // The dialog is held to its window's height: in a short composer
     // window everything below the text scrolls rather than run off it.
+    // A scrolled window clips at its edges, which would cut the lists'
+    // outlines, shadows and focus rings: the content keeps a margin for
+    // them, which the stylesheet takes back outside, so the lists still
+    // line up with the buttons. The undershoots shade a cut edge.
+    for side in [
+        gtk::Widget::set_margin_top,
+        gtk::Widget::set_margin_bottom,
+        gtk::Widget::set_margin_start,
+        gtk::Widget::set_margin_end,
+    ] {
+        side(bx.upcast_ref(), 8);
+    }
     let outer = gtk::ScrolledWindow::new();
+    outer.add_css_class("merge-dialog-scroll");
+    outer.add_css_class("undershoot-top");
+    outer.add_css_class("undershoot-bottom");
     outer.set_hscrollbar_policy(gtk::PolicyType::Never);
     outer.set_propagate_natural_height(true);
     outer.set_propagate_natural_width(true);
