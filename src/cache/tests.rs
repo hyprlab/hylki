@@ -790,3 +790,40 @@ fn clean_quoted_names_strips_the_escapes_in_place() {
         ("Plain Name".to_string(), "Already fine".to_string())
     );
 }
+
+/// A chip number the server gave since the last full listing is what the
+/// next launch starts from: a connect keeps the cached numbers (#370), and
+/// a Drafts chip of 1 came back at every start after the draft was gone.
+#[test]
+fn a_folders_fresh_chip_number_outlasts_the_session() {
+    let c = Cache::in_memory().unwrap();
+    let folder = |path: &str, kind: FolderKind, unread: u32| crate::models::Folder {
+        id: 0,
+        account_id: 1,
+        name: path.to_string(),
+        path: path.to_string(),
+        kind,
+        unread,
+        childless: false,
+    };
+    c.save_folders(
+        1,
+        &[
+            folder("INBOX", FolderKind::Inbox, 3),
+            folder("Drafts", FolderKind::Drafts, 1),
+        ],
+    );
+    c.set_folder_unread(1, "Drafts", 0);
+    // A folder the cache does not hold, or another account's, changes nothing.
+    c.set_folder_unread(1, "Gone", 5);
+    c.set_folder_unread(2, "INBOX", 9);
+    let counts: Vec<(String, u32)> = c
+        .load_folders(1)
+        .into_iter()
+        .map(|f| (f.path, f.unread))
+        .collect();
+    assert_eq!(
+        counts,
+        vec![("INBOX".to_string(), 3), ("Drafts".to_string(), 0)]
+    );
+}

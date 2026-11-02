@@ -192,6 +192,19 @@ impl Cache {
         }
     }
 
+    /// Store one folder's chip number as the server last gave it. The
+    /// folder list a connect saves keeps the cached numbers (#370), so
+    /// without this the next launch shows whatever was counted at the last
+    /// full listing: a Drafts chip of 1 long after the draft was sent.
+    pub(crate) fn set_folder_unread(&self, account_id: u32, path: &str, unread: u32) {
+        if let Err(e) = self.conn.execute(
+            "UPDATE folders SET unread = ?3 WHERE account_id = ?1 AND path = ?2",
+            params![account_id, path, unread],
+        ) {
+            tracing::warn!("cache set_folder_unread failed: {e}");
+        }
+    }
+
     /// An IMAP account's hierarchy as its server last told it (#554).
     pub(crate) fn load_imap_hierarchy(&self, account_id: u32) -> Option<FolderHierarchy> {
         self.conn
