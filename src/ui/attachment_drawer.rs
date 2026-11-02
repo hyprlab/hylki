@@ -203,6 +203,9 @@ pub(crate) enum AttachmentDrawerInput {
     /// The expand/collapse slide finished. Carries the state it was heading
     /// for and the generation it belongs to (see `toggle_gen`).
     ToggleSettled { collapsed: bool, gen: u64 },
+    /// Fold the drawer at once, its files out of the way (the reader below
+    /// the list, #475).
+    Fold,
     /// An empty list held back (see `SetItems`) is due, unless a newer list
     /// came since: carries the `empty_gen` it was held under.
     SettleEmpty(u64),
@@ -631,6 +634,7 @@ impl SimpleComponent for AttachmentDrawer {
             AttachmentDrawerInput::ToggleSettled { collapsed, gen } => {
                 self.toggle_settled(collapsed, gen)
             }
+            AttachmentDrawerInput::Fold => self.fold(),
         }
     }
 }

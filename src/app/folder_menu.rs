@@ -15,13 +15,20 @@ use super::undo::UndoStep;
 use crate::ui::dialog::confirm_destructive;
 
 impl AppModel {
-    /// Prompt for a new custom folder name and create it under `account_id`.
+    /// Prompt for a new custom folder name and create it under `account_id`,
+    /// inside `parent` when there is one (#554).
     #[allow(deprecated)] // adw::MessageDialog: AlertDialog would change how it looks
-    fn prompt_new_folder(&self, account_id: u32, sender: &ComponentSender<Self>) {
+    fn prompt_new_folder(&self, account_id: u32, parent: String, sender: &ComponentSender<Self>) {
+        let body = match self.folder_by_path(account_id, &parent) {
+            Some(f) if !parent.is_empty() => {
+                i18n_f("Create a folder inside {name}.", &[("name", &f.name)])
+            }
+            _ => i18n("Create a new folder for this account."),
+        };
         let dialog = adw::MessageDialog::new(
             Some(&self.window),
             Some(i18n("New Folder").as_str()),
-            Some(i18n("Create a new folder for this account.").as_str()),
+            Some(body.as_str()),
         );
         dialog.add_response("cancel", &i18n("Cancel"));
         dialog.add_response("ok", &i18n("Create"));
@@ -36,7 +43,11 @@ impl AppModel {
             if resp == "ok" {
                 let name = entry.text().to_string();
                 if !name.trim().is_empty() {
-                    s.input(AppMsg::CreateFolder { account_id, name });
+                    s.input(AppMsg::CreateFolder {
+                        account_id,
+                        parent: parent.clone(),
+                        name,
+                    });
                 }
             }
         });
@@ -85,15 +96,16 @@ impl AppModel {
     /// Rename a custom folder's leaf in place: same parent, new (encoded)
     /// name, the same optimistic machinery as a drag-and-drop move.
     fn rename_folder_to(&mut self, account_id: u32, path: String, new_name: String) {
-        let delim = self.folder_delimiter(account_id);
-        let new_name = new_name.trim();
-        // The path's parent (everything up to and including the last
-        // delimiter) stays; only the leaf changes.
-        let parent = match path.rfind(delim) {
-            Some(at) => &path[..=at],
-            None => "",
+        let Some(h) = self.hierarchy_for_change(account_id) else {
+            return;
         };
-        let new_path = format!("{parent}{}", crate::mail::mutf7::encode(new_name));
+        let leaf = match h.leaf_for(&new_name) {
+            Ok(leaf) => leaf,
+            Err(why) => return self.notice_error(why),
+        };
+        let Some(new_path) = h.child(&h.parent(&path), &leaf) else {
+            return;
+        };
         if new_path == path {
             return;
         }
@@ -104,7 +116,7 @@ impl AppModel {
         {
             self.notice_error(i18n_f(
                 "A folder named {new_name} is already there.",
-                &[("new_name", &format!("{new_name:?}"))],
+                &[("new_name", &format!("{:?}", new_name.trim()))],
             ));
             return;
         }
@@ -243,24 +255,55 @@ impl AppModel {
                 self.drop_move(dest_account, dest, items);
             }
 
-            AppMsg::CreateFolder { account_id, name } => {
-                let name = name.trim();
-                if !name.is_empty() {
-                    // The server names mailboxes in modified UTF-7, so a name
-                    // with any non-ASCII character has to be encoded before it
-                    // becomes a path (issue #1, in the other direction).
-                    let path = format!(
-                        "{}{}",
-                        self.folder_namespace(account_id),
-                        crate::mail::mutf7::encode(name)
-                    );
-                    self.create_folder(account_id, path.clone());
-                    self.push_undo(
-                        account_id,
-                        i18n("Create Folder"),
-                        UndoStep::DeleteFolder { path },
-                    );
+            AppMsg::CreateFolder {
+                account_id,
+                parent,
+                name,
+            } => {
+                let Some(h) = self.hierarchy_for_change(account_id) else {
+                    return;
+                };
+                // Encoded as the account names folders: modified UTF-7 on
+                // IMAP (issue #1, in the other direction), the delimiter
+                // refused where a name can't hold it (#554).
+                let leaf = match h.leaf_for(&name) {
+                    Ok(leaf) => leaf,
+                    Err(why) => return self.notice_error(why),
+                };
+                if let Some(f) = self
+                    .folder_by_path(account_id, &parent)
+                    .filter(|f| f.childless)
+                {
+                    return self.notice_error(super::folders::cannot_hold(&f.name));
                 }
+                let Some(path) = h.child(&parent, &leaf) else {
+                    return self.notice_error(if parent.is_empty() {
+                        i18n("This account can't have folders at the top level.")
+                    } else {
+                        i18n("Folders on this account can't hold other folders.")
+                    });
+                };
+                if self
+                    .folders
+                    .get(&account_id)
+                    .is_some_and(|fs| fs.iter().any(|f| f.path == path))
+                {
+                    return self.notice_error(i18n_f(
+                        "A folder named {new_name} is already there.",
+                        &[("new_name", &format!("{:?}", name.trim()))],
+                    ));
+                }
+                // Its parent opens, or the new folder would be made out of
+                // sight.
+                if !parent.is_empty() {
+                    self.expand_folder(account_id, &parent);
+                }
+                self.create_folder(account_id, path.clone());
+                self.push_undo(
+                    account_id,
+                    i18n("Create Folder"),
+                    UndoStep::DeleteFolder { path },
+                );
             }
 
             AppMsg::MoveFolder {
@@ -419,8 +462,8 @@ impl AppModel {
             CtxAction::RemoveAccount(account_id) => {
                 self.confirm_remove_account(account_id, &sender);
             }
-            CtxAction::NewFolder(account_id) => {
-                self.prompt_new_folder(account_id, &sender);
+            CtxAction::NewFolder { account_id, parent } => {
+                self.prompt_new_folder(account_id, parent, &sender);
             }
             CtxAction::DeleteFolder {
                 account_id,

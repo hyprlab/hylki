@@ -665,6 +665,7 @@ fn quick_filters_narrow_together() {
         )),
         tags: Vec::new(),
         today: 900,
+        span: filters.span(),
     };
     let mut m = msg(1, "a", "");
     m.cc = "\"Doe, Jo\" <jo@example.com>, Me <ME@example.com>".into();
@@ -693,6 +694,43 @@ fn quick_filters_narrow_together() {
     assert!(!ctx(all.with(QuickFilter::Today, true)).passes(&m));
 }
 
+/// The date range takes in the whole of both days it names, on this
+/// computer's clock, whichever way round they were picked.
+#[test]
+fn date_range_spans_whole_days() {
+    use super::filters::{start_of_day, DateBound};
+    let day = chrono::NaiveDate::from_ymd_opt(2026, 3, 10).unwrap();
+    let before = day.pred_opt().unwrap();
+    let after = day.succ_opt().unwrap();
+    let ctx = |filters: QuickFilters| QuickFilterContext {
+        filters,
+        own: Default::default(),
+        contacts: None,
+        tags: Vec::new(),
+        today: 0,
+        span: filters.span(),
+    };
+    let range = |from, to| {
+        QuickFilters::default()
+            .with_date(DateBound::From, from)
+            .with_date(DateBound::To, to)
+    };
+    let mut m = msg(1, "a", "");
+    for at in [start_of_day(day), start_of_day(after) - 1] {
+        m.timestamp = at;
+        assert!(ctx(range(Some(day), Some(day))).passes(&m));
+        assert!(ctx(range(Some(after), Some(before))).passes(&m));
+        assert!(ctx(range(Some(day), None)).passes(&m));
+        assert!(ctx(range(None, Some(day))).passes(&m));
+        assert!(!ctx(range(Some(after), None)).passes(&m));
+        assert!(!ctx(range(None, Some(before))).passes(&m));
+    }
+    m.timestamp = start_of_day(after);
+    assert!(!ctx(range(Some(day), Some(day))).passes(&m));
+    assert!(!range(None, None).has_dates());
+    assert!(!range(Some(day), None).is_empty());
+}
+
 /// #515: what a search looks in is made once, lowercased, and a query
 /// matches inside one field, never across two.
 #[test]
@@ -715,4 +753,80 @@ fn search_text_keeps_the_fields_apart() {
     assert!(!text.contains("report ada"));
     assert!(!text.contains("reportada"));
     assert!(!text.contains("REPORT"));
+}
+
+/// #509: each word may be found in a different place: the list's own
+/// text, the body on disk, or a server that found them all.
+#[test]
+fn each_word_may_be_found_in_its_own_place() {
+    use super::query::Query;
+    use super::search::{decide, text_match, HitSet, TextHits};
+    let mail = |uid: u32, subject: &str, message_id: &str| {
+        let mut m = msg(uid, message_id, "");
+        m.subject = subject.into();
+        m
+    };
+    let q = Query::parse("rossi invoice");
+    let m = mail(7, "Lunch with Rossi", "a@x");
+    let found = text_match(&q, &super::search_text_of(&m));
+    assert!(!decide(&q, found, &m, None), "invoice is nowhere yet");
+
+    let mut body = HitSet::default();
+    body.insert(1, 1, 7, "a@x");
+    let hits = TextHits {
+        terms: q.terms.clone(),
+        body: vec![Default::default(), std::rc::Rc::new(body)],
+        ..Default::default()
+    };
+    assert!(decide(&q, found, &m, Some(&hits)), "invoice is in its body");
+
+    // A copy in another folder is found by its Message-ID.
+    let mut server = HitSet::default();
+    server.insert(1, 9, 99, "b@x");
+    let other = mail(8, "Hello", "b@x");
+    let hits = TextHits {
+        terms: q.terms.clone(),
+        server,
+        ..Default::default()
+    };
+    let found = text_match(&q, &super::search_text_of(&other));
+    assert!(decide(&q, found, &other, Some(&hits)));
+
+    // Answers for other words do not count.
+    let stale = TextHits {
+        terms: vec!["else".into()],
+        ..hits.clone()
+    };
+    assert!(!decide(&q, found, &other, Some(&stale)));
+
+    // An operator on the text still rules a server's find out.
+    let q = Query::parse("from:ann invoice");
+    let hits = TextHits {
+        terms: q.terms.clone(),
+        ..hits
+    };
+    let found = text_match(&q, &super::search_text_of(&other));
+    assert!(!decide(&q, found, &other, Some(&hits)));
+}
+
+/// #509: while a word is typed further, what its shorter self found
+/// stands in, and a new word starts with nothing of its own.
+#[test]
+fn hits_carry_over_while_a_word_is_typed_on() {
+    use super::search::{HitSet, TextHits};
+    let mut body = HitSet::default();
+    body.insert(1, 1, 7, "");
+    let before = TextHits {
+        terms: vec!["zan".into()],
+        body: vec![std::rc::Rc::new(body)],
+        ..Default::default()
+    };
+    let on = TextHits::carried(Some(&before), &["zanz".into(), "rossi".into()]);
+    assert_eq!(on.body.len(), 1);
+    assert_eq!(on.body[0].len(), 1);
+    assert!(!on.server_own);
+    let other = TextHits::carried(Some(&before), &["za".into()]);
+    assert!(other.body.is_empty(), "a word made shorter finds more");
+    let other = TextHits::carried(Some(&before), &["bob".into()]);
+    assert!(other.body.is_empty());
 }

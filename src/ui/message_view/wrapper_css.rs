@@ -31,23 +31,23 @@ pub(super) fn wrapper_css(
          body:not(.hylki-conv) .hylki-msg{{border-radius:0;margin:0;}}\
          .hylki-msg.selected{{box-shadow:0 0 0 2px {accent};}}\
          .hylki-fbar{{display:none;}}\
-         .hylki-msg.hylki-folded>.hylki-fbar{{display:flex;align-items:flex-start;gap:12px;\
-         padding:14px 18px;cursor:pointer;user-select:none;}}\
-         .hylki-fbar-main{{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px;}}\
-         .hylki-fbar-top{{display:flex;align-items:center;gap:12px;min-height:26px;}}\
-         .hylki-fbar>.hylki-ava{{align-self:flex-start;}}\
-         .hylki-fbar-prev{{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;\
-         opacity:0.6;font-size:0.92em;line-height:1.35;overflow-wrap:anywhere;}}\
-         .hylki-fbar-from{{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;\
-         white-space:nowrap;opacity:0.85;}}\
-         .hylki-msg.unread .hylki-fbar-from{{font-weight:700;opacity:1;}}\
-         .hylki-fbar-ico{{flex:none;display:inline-flex;opacity:0.55;line-height:0;}}\
-         .hylki-fbar-ico svg{{width:16px;height:16px;}}\
-         .hylki-fbar-none{{width:16px;height:16px;}}\
-         .hylki-fbar-ico svg,.hylki-fbar-ico svg *{{fill:currentColor;}}\
-         .hylki-fbar-date{{flex:none;min-width:6.5em;text-align:end;opacity:0.7;\
-         font-size:0.92em;white-space:nowrap;}}\
-         .hylki-msg.hylki-folded>:not(.hylki-fbar){{display:none;}}\
+         /* Folded, a card keeps its header exactly as it is open and\
+         shows the preview under it, lined up with the sender's name\
+         (16px padding, 26px circle, 8px gap). */\
+         .hylki-msg.hylki-folded>.hylki-fbar{{display:-webkit-box;-webkit-box-orient:vertical;\
+         overflow:hidden;opacity:0.6;font-size:0.92em;line-height:1.35;overflow-wrap:anywhere;\
+         margin:-6px 0 12px;padding:0;padding-inline:50px 16px;position:relative;z-index:2;\
+         cursor:pointer;user-select:none;}}\
+         .hylki-msg.hylki-folded>:not(.hylki-fbar):not(.hylki-msg-hdr){{display:none;}}\
+         .hylki-marks{{display:inline-flex;gap:8px;align-self:center;flex:none;}}\
+         .hylki-mark{{display:inline-flex;opacity:0.55;line-height:0;}}\
+         .hylki-mark svg{{width:16px;height:16px;}}\
+         .hylki-mark svg,.hylki-mark svg *{{fill:currentColor;}}\
+         .hylki-mark-none{{width:16px;height:16px;}}\
+         /* The star keeps its place unstarred, so starring moves nothing. */\
+         .hylki-mark-star{{color:#e5a50a;opacity:1;}}\
+         .hylki-mark-high{{color:#e01b24;opacity:1;}}\
+         .hylki-msg:not(.starred) .hylki-mark-star{{visibility:hidden;}}\
          body.hylki-folds .hylki-msg-hdr{{cursor:pointer;}}\
          @media print{{.hylki-msg.hylki-folded>:not(.hylki-fbar){{display:revert !important;}}\
          .hylki-msg.hylki-folded>.hylki-fbar{{display:none !important;}}}}\
@@ -70,6 +70,7 @@ pub(super) fn wrapper_css(
          combined inset never drops below 20px. */\
          body.hylki-conv{{padding:10px;}}\
          body.hylki-conv .hylki-msg-hdr{{padding:12px 10px;}}\
+         .hylki-msg.hylki-folded>.hylki-fbar{{padding-inline:44px 10px;}}\
          .hylki-hdr-line{{flex-wrap:wrap;}}\
          .hylki-hdr-meta{{order:10;flex-basis:100%;margin-inline-start:34px;\
          justify-content:flex-start;}}\
@@ -108,9 +109,9 @@ pub(super) fn wrapper_css(
          color:inherit;font:inherit;font-size:0.95em;font-weight:600;cursor:pointer;}}\
          .hylki-tr-btn:hover{{background:color-mix(in srgb,currentColor 15%,transparent);}}\
          .hylki-tr-btn:active{{background:color-mix(in srgb,currentColor 30%,transparent);}}\
-         .hylki-unsub{{display:flex;align-items:center;gap:10px;padding:8px 14px 9px;\
+         .hylki-unsub,.hylki-mdn{{display:flex;align-items:center;gap:10px;padding:8px 14px 9px;\
          font-size:0.9em;border-bottom:1px solid rgba(128,128,128,0.25);}}\
-         .hylki-unsub:empty{{display:none;}}\
+         .hylki-unsub:empty,.hylki-mdn:empty{{display:none;}}\
          .hylki-unsub-text{{flex:1 1 auto;min-width:0;opacity:0.8;}}\
          .hylki-unsub-btn{{flex:none;border:none;border-radius:6px;\
          padding:3px 12px;background:color-mix(in srgb,currentColor 10%,transparent);\
@@ -270,6 +271,12 @@ pub(super) fn wrapper_css(
          body:not(.hylki-conv) .hylki-addr.clipped:hover::after{{\
          background:{chrome};}}\
          .hylki-date{{opacity:0.55;font-size:0.85em;flex:none;white-space:nowrap;}}\
+         .hylki-read{{display:none;flex:none;align-self:center;margin-inline-end:-3px;}}\
+         .hylki-read.asked,.hylki-read.read{{display:inline-flex;}}\
+         .hylki-read svg{{width:1.05em;height:1.05em;display:block;}}\
+         .hylki-read svg,.hylki-read svg *{{fill:currentColor;}}\
+         .hylki-read.asked{{opacity:0.55;}}\
+         .hylki-read.read{{color:#26a269;}}\
          .hylki-dot{{width:8px;height:8px;border-radius:50%;background:#3584e4;\
          flex:none;align-self:center;}}\
          .hylki-end{{height:1px;}}\
@@ -371,9 +378,8 @@ pub(super) fn wrapper_css(
          /* Each chip's words in their own direction, as a GTK label\
          has them: an English 1 recipient in a right-to-left line\
          otherwise reads recipient 1. */\
-         html[dir=rtl] :is(.hylki-rcpt-toggle,.hylki-date,.hylki-fbar-date,\
+         html[dir=rtl] :is(.hylki-rcpt-toggle,.hylki-date,\
          .hylki-folder,.hylki-rcpt div){{unicode-bidi:plaintext;}}\
-         html[dir=rtl] .hylki-fbar-date{{text-align:left;}}\
          "
     )
 }

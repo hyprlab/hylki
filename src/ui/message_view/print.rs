@@ -2,7 +2,7 @@
 //! under a header that exists only on paper.
 
 use super::html::body_html;
-use super::remote::strip_remote;
+use super::remote::{route_remote, strip_remote};
 use super::style::{inject_csp, inject_reader_style, reader_style_css};
 use super::MessageView;
 use crate::encoding::escape_html;
@@ -323,7 +323,7 @@ impl MessageView {
                     body_html(&m.body)
                 };
                 let doc = if self.remote_allowed {
-                    doc
+                    route_remote(&doc)
                 } else {
                     strip_remote(&doc)
                 };

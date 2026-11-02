@@ -18,7 +18,7 @@ pub(super) fn caption(item: &GalleryItem) -> String {
     if !subject.is_empty() {
         parts.push(subject.to_string());
     }
-    parts.push(folder_label(&item.folder_path));
+    parts.push(folder_label(item));
     let date = item.date_label();
     if !date.is_empty() {
         parts.push(date);
@@ -27,14 +27,17 @@ pub(super) fn caption(item: &GalleryItem) -> String {
     parts.join(" · ")
 }
 
-/// A friendly folder name from a mailbox path (the last path segment).
-pub(super) fn folder_label(path: &str) -> String {
-    let name = path.rsplit(['/', '.']).next().unwrap_or(path);
-    if name.eq_ignore_ascii_case("inbox") {
-        "Inbox".to_string()
+/// The name of the folder an attachment's message is in: the one the
+/// account's listing gives it, as the sidebar shows it. A folder no longer
+/// listed shows its whole path, which no rule can split rightly for every
+/// kind of account (#554).
+pub(super) fn folder_label(item: &GalleryItem) -> String {
+    if !item.folder_name.is_empty() {
+        item.folder_name.clone()
+    } else if item.folder_path.eq_ignore_ascii_case("inbox") {
+        i18n("Inbox")
     } else {
-        // Paths are stored as the server names them, in modified UTF-7.
-        crate::mail::mutf7::decode(name)
+        item.folder_path.clone()
     }
 }
 
@@ -114,6 +117,10 @@ mod tests {
             account_id: 1,
             downloaded: true,
             folder_path: folder.into(),
+            folder_name: match folder {
+                "INBOX" => String::new(),
+                f => f.rsplit('/').next().unwrap_or(f).to_string(),
+            },
             uid: 1,
             name: name.into(),
             size,
@@ -137,14 +144,19 @@ mod tests {
     }
 
     #[test]
-    fn folder_labels_are_the_last_segment_decoded() {
-        assert_eq!(folder_label("INBOX"), "Inbox");
-        assert_eq!(folder_label("inbox"), "Inbox");
-        assert_eq!(folder_label("INBOX/Work"), "Work");
-        assert_eq!(folder_label("INBOX.Inbox"), "Inbox");
-        assert_eq!(folder_label("Archives.2024"), "2024");
-        assert_eq!(folder_label("Entw&APw-rfe"), "Entwürfe");
-        assert_eq!(folder_label(""), "");
+    fn folder_labels_are_the_listed_names() {
+        let label = |path: &str, name: &str| {
+            let mut it = item("a", "", "", path, 0, 0);
+            it.folder_name = name.into();
+            folder_label(&it)
+        };
+        assert_eq!(label("INBOX", ""), "Inbox");
+        assert_eq!(label("inbox", ""), "Inbox");
+        assert_eq!(label("Entw&APw-rfe", "Entwürfe"), "Entwürfe");
+        // On a '/' server a dot is part of the name.
+        assert_eq!(label("Archives/v1.2", "v1.2"), "v1.2");
+        // No longer listed: the whole path, not a guess at its last level.
+        assert_eq!(label("Archives.2024", ""), "Archives.2024");
     }
 
     #[test]

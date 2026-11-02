@@ -13,16 +13,21 @@ use crate::models::Message;
 
 mod addresses;
 mod bodies;
+mod draft_copies;
 mod flags;
 mod gallery;
+mod local_copies;
 mod messages;
+mod offline;
 mod open;
 mod outbox;
 mod schema;
 mod smart;
+mod text_index;
 mod threads;
 
 pub(crate) use gallery::*;
+pub(crate) use local_copies::CopyKey;
 pub(crate) use messages::*;
 
 #[cfg(test)]

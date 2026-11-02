@@ -134,6 +134,10 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
 - [**Artur Heinze**](https://github.com/aheinze) ([#484](https://github.com/hyprlab/hylki/pull/484)):
   Reply and New Message opening while the contact service hangs, with
   recipient suggestions loaded in the background.
+- [**Valentin Morice**](https://github.com/valentin-morice) ([#545](https://github.com/hyprlab/hylki/pull/545),
+  [#546](https://github.com/hyprlab/hylki/pull/546)): the count centered in
+  the sidebar's unread chip, and a setting to hide the account chip in the
+  message header.
 
 
 ## Reports, design and ideas
@@ -203,6 +207,8 @@ Adding or updating one is the easiest way in: see [po/README.md](../po/README.md
 
 - [**bennypowers**](https://github.com/bennypowers): the Gentoo ebuild, in
   [his overlay](https://github.com/bennypowers/gentoo-overlay).
+- [**clementpoiret**](https://github.com/clementpoiret): the NixOS flake, in
+  [hylki-flake](https://github.com/clementpoiret/hylki-flake).
 
 ## Third-party work
 

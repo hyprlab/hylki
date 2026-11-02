@@ -28,10 +28,12 @@ pub(super) enum Idle {
 }
 
 impl<E: Emit> ImapWorker<E> {
-    /// Climb the ladder: body prefetch, then folder names, the unread sweep
+    /// Climb the ladder: a search of the server's text (#509), body
+    /// prefetch, then folder names, the unread sweep
     /// (with auto-empty and list clean-up), attachment prefetch, References
     /// repair and Gmail label fill (only once the index is complete), the
-    /// background index (connecting first if need be), the IDLE resync, IDLE
+    /// background index (connecting first if need be), the offline period's
+    /// download (#536), the IDLE resync, IDLE
     /// itself, and otherwise a plain wait for the next request.
     pub(super) async fn idle(&mut self) -> Idle {
         // Offline, the queues keep for when the network is back; on
@@ -39,16 +41,23 @@ impl<E: Emit> ImapWorker<E> {
         // for an unmetered one (#442).
         let net = crate::desktop::power::reaches(&self.account.imap_host);
         let ahead = net && !crate::desktop::power::saving_data();
-        if !self.body_prefetch.is_empty() && ahead {
+        if self.text_search.is_some() && net {
+            // A search the user is waiting on (#509), before anything done
+            // ahead of them.
+            match self.session {
+                Some(_) => self.search_one_folder().await,
+                None => self.connect_or_wait().await,
+            }
+        } else if !self.body_prefetch.is_empty() && ahead {
             self.prefetch_one_body().await
-        } else if self.folder_refresh_due && self.session.is_some() && net {
+        } else if let (true, true, Some(session)) =
+            (self.folder_refresh_due, net, self.session.as_mut())
+        {
             self.folder_refresh_due = false;
             refresh_folder_names(
                 self.account_id,
                 &self.account,
-                self.session
-                    .as_mut()
-                    .expect("the ladder checked for a session"),
+                session,
                 self.cache.as_ref(),
                 &self.emit,
             )
@@ -106,6 +115,13 @@ impl<E: Emit> ImapWorker<E> {
                 self.connect_or_wait().await
             } else {
                 self.index_one_chunk().await
+            }
+        } else if ahead && self.offline.due(&self.account) {
+            // The account's offline period (#536), once the index is in.
+            if self.session.is_none() {
+                self.connect_or_wait().await
+            } else {
+                self.keep_offline_batch().await
             }
         } else if self.push_enabled && self.session.is_some() && self.idle_folder.is_some() && net {
             self.idle_on_folder().await

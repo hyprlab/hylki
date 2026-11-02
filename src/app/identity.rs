@@ -45,11 +45,46 @@ impl AppModel {
             .unwrap_or_else(|| "#3584e4".to_string())
     }
 
+    /// The account that sends for `m`: its own, unless `m` is filed On This
+    /// Computer (#552), which sends nothing. Then it is the account the
+    /// message was addressed to, by its address or an alias, else the first
+    /// in the sidebar that sends.
+    pub(super) fn sending_account(&self, m: &crate::models::Message) -> u32 {
+        if !self
+            .saved_account_config(m.account_id)
+            .is_some_and(AccountConfig::is_local)
+        {
+            return m.account_id;
+        }
+        let to: Vec<String> = [&m.to, &m.cc]
+            .into_iter()
+            .flat_map(|f| crate::worker::parse_recipients(f))
+            .map(|(_, e)| e.to_lowercase())
+            .collect();
+        let sends = |c: &&AccountConfig| c.enabled && !c.is_local();
+        let addressed = self.config.iter().filter(sends).find(|c| {
+            to.contains(&c.email.to_lowercase())
+                || c.aliases
+                    .iter()
+                    .any(|al| to.contains(&config::split_identity(&al.identity).1.to_lowercase()))
+        });
+        let first = || {
+            self.ordered_emails()
+                .into_iter()
+                .find_map(|e| self.config.iter().filter(sends).find(|c| c.email == e))
+        };
+        addressed
+            .or_else(first)
+            .and_then(|c| self.config.iter().position(|x| std::ptr::eq(x, c)))
+            .map_or(m.account_id, |i| i as u32 + 1)
+    }
+
     /// Every address the accounts send from, their aliases included, lower
     /// case.
     pub(super) fn own_addresses(&self) -> std::collections::HashSet<String> {
         self.effective_config()
             .iter()
+            .filter(|a| !a.is_local())
             .flat_map(|a| {
                 std::iter::once(a.email.clone()).chain(
                     a.aliases
@@ -179,26 +214,21 @@ impl AppModel {
         }
     }
 
-    /// A label for an account in messages (name, else email, else "Account N").
-    /// Uses config (available even before the account connects), then live data.
+    /// An account as messages name it: the nickname and the address, else
+    /// "Account N". Not the sender name, which is often the same on every
+    /// account and so cannot say which one is meant. Uses config (available
+    /// even before the account connects, the demo's stand-ins included),
+    /// then live data.
     pub(super) fn account_label(&self, account_id: u32) -> String {
-        let pick = |name: &str, email: &str| -> Option<String> {
-            if !name.trim().is_empty() {
-                Some(name.to_string())
-            } else if !email.trim().is_empty() {
-                Some(email.to_string())
-            } else {
-                None
-            }
-        };
-        self.saved_account_config(account_id)
-            .and_then(|c| pick(&c.name, &c.email))
+        self.account_config(account_id)
+            .map(|c| (c.display_label(), c.email.clone()))
             .or_else(|| {
                 self.accounts
                     .iter()
                     .find(|a| a.id == account_id)
-                    .and_then(|a| pick(&a.name, &a.email))
+                    .map(|a| (a.label.clone(), a.email.clone()))
             })
+            .and_then(|(nickname, email)| nickname_and_email(&nickname, &email))
             .unwrap_or_else(|| format!("Account {account_id}"))
     }
 
@@ -248,5 +278,41 @@ impl AppModel {
             }
             _ => unreachable!("not routed to on_identity"),
         }
+    }
+}
+
+/// "Nickname (address)", or the address alone when the nickname is empty or
+/// is the address; `None` with no address either.
+fn nickname_and_email(nickname: &str, email: &str) -> Option<String> {
+    let (nickname, email) = (nickname.trim(), email.trim());
+    match (nickname.is_empty(), email.is_empty()) {
+        (true, true) => None,
+        (false, true) => Some(nickname.to_string()),
+        (true, false) => Some(email.to_string()),
+        _ if nickname.eq_ignore_ascii_case(email) => Some(email.to_string()),
+        _ => Some(format!("{nickname} ({email})")),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::nickname_and_email;
+
+    #[test]
+    fn error_label_names_the_nickname_and_the_address() {
+        assert_eq!(
+            nickname_and_email("Work", "me@work.example").as_deref(),
+            Some("Work (me@work.example)")
+        );
+        assert_eq!(
+            nickname_and_email("me@work.example", "me@work.example").as_deref(),
+            Some("me@work.example")
+        );
+        assert_eq!(
+            nickname_and_email(" ", "me@work.example").as_deref(),
+            Some("me@work.example")
+        );
+        assert_eq!(nickname_and_email("Work", "").as_deref(), Some("Work"));
+        assert_eq!(nickname_and_email("", ""), None);
     }
 }

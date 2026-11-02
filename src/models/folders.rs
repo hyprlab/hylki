@@ -110,6 +110,9 @@ pub(crate) struct Folder {
     /// The sidebar chip's number: unread mail, except Drafts, where it is
     /// how many drafts there are (see `worker::chip_counts_all`).
     pub(crate) unread: u32,
+    /// The server makes no folder inside this one (IMAP's `\Noinferiors`,
+    /// a JMAP mailbox without `mayCreateChild` or at the depth limit).
+    pub(crate) childless: bool,
 }
 
 /// Show the special folders under the app's own names for them in a language
@@ -160,7 +163,7 @@ pub(crate) fn localize_special_folder_names(folders: &mut [Folder]) {
 
 /// Whether `path` is one of an account's hidden folders (#239), or lies
 /// under one: hiding a folder hides its sub-folders with it. `delimiter`
-/// is the server's, when known; otherwise any of the usual three counts.
+/// is the server's; `None` for a server whose folders don't nest.
 pub(crate) fn folder_is_hidden(path: &str, delimiter: Option<&str>, hidden: &[String]) -> bool {
     hidden.iter().any(|h| {
         if h == path {
@@ -169,10 +172,7 @@ pub(crate) fn folder_is_hidden(path: &str, delimiter: Option<&str>, hidden: &[St
         let Some(rest) = path.strip_prefix(h.as_str()) else {
             return false;
         };
-        match delimiter {
-            Some(d) if !d.is_empty() => rest.starts_with(d),
-            _ => rest.starts_with(['/', '.', '\\']),
-        }
+        delimiter.is_some_and(|d| !d.is_empty() && rest.starts_with(d))
     })
 }
 

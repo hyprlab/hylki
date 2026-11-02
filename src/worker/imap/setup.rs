@@ -40,6 +40,13 @@ impl<E: Emit> ImapWorker<E> {
             .map(|c| c.load_folders(account_id))
             .unwrap_or_default();
         let have_cached_folders = !cached_folders.is_empty();
+        // How they nest, as the server said at the last connect (#554).
+        if let Some(h) = cache
+            .as_ref()
+            .and_then(|c| c.load_imap_hierarchy(account_id))
+        {
+            emit(WorkerEvent::Hierarchy(h));
+        }
         note_gmail_account(account_id, &account, &cached_folders);
         if have_cached_folders {
             emit(WorkerEvent::Folders(cached_folders));
@@ -71,6 +78,8 @@ impl<E: Emit> ImapWorker<E> {
             body_emitted: HashSet::new(),
             backfill: VecDeque::new(),
             backfill_seen: HashSet::new(),
+            offline: Default::default(),
+            text_search: None,
             refs_repair: VecDeque::new(),
             label_fill: VecDeque::new(),
             backlog: VecDeque::new(),

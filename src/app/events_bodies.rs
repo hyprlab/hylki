@@ -31,6 +31,14 @@ impl AppModel {
                 if let Some(k) = key {
                     self.sender_cache.insert(k, check.clone());
                 }
+                // Learn the account's provider from it. Cards already shown
+                // with a verdict this changes are shown again.
+                if self.vouchers.note(account_id, &check) {
+                    self.refresh_shown_checks();
+                }
+                // Read receipts asked for on mail sent, and ones that came
+                // back (#520).
+                self.note_receipts(key, &check);
                 // A filter's forward of a message with no preview waits for
                 // this to know it is not encrypted.
                 self.resume_auto_forwards(account_id, message_id, key, false);
@@ -38,30 +46,38 @@ impl AppModel {
                 // Only the message actually on screen; a verdict that arrives
                 // from a background prefetch must not relabel a different one.
                 if self.current.as_ref().is_some_and(is_target) {
+                    let mut shown = check.clone();
+                    self.vouchers.gate(Some(account_id), &mut shown);
                     self.message_view
-                        .emit(MessageViewInput::SetSenderCheck(check.clone()));
+                        .emit(MessageViewInput::SetSenderCheck(shown));
                 }
                 // Light the header seal on whichever on-screen card this
                 // verdict belongs to (#88) — the open single message included
                 // (it never fills current_thread). The card goes by the id
                 // it has here, which for a member from another folder is not
                 // its UID.
+                // A read receipt (#520) is asked about only where the card
+                // should ask, and one the setting sends goes as it is shown.
                 let card = self
                     .current_thread
                     .iter()
                     .chain(self.current.iter())
                     .find(|m| is_target(m))
-                    .map(|m| m.id);
-                if let Some(id) = card {
+                    .cloned();
+                if let Some(m) = card {
+                    let check = self.reader_check(&m, &check, true);
                     self.message_view.emit(MessageViewInput::SenderCheckFor {
                         account_id,
-                        id,
-                        check: check.clone(),
+                        id: m.id,
+                        check,
                     });
                 }
-                for p in self.popouts.values().filter(|p| key == Some(p.message)) {
-                    p.controller
-                        .emit(MessageWindowInput::SetSenderCheck(check.clone()));
+                if let Some(k) = key.filter(|k| self.popouts.values().any(|p| p.message == *k)) {
+                    let check = self.reader_check_by_key(k, &check);
+                    for p in self.popouts.values().filter(|p| p.message == k) {
+                        p.controller
+                            .emit(MessageWindowInput::SetSenderCheck(check.clone()));
+                    }
                 }
             }
 
@@ -306,6 +322,7 @@ impl AppModel {
         if let Some(k) = key {
             self.body_cache.insert(k, body.clone());
         }
+        self.print_body_arrived(account_id, message_id, &body);
         self.resume_auto_forwards(account_id, message_id, key, false);
         if self.hand_body_to_waiter(account_id, message_id, &body, &sender) {
             return;
@@ -361,6 +378,9 @@ impl AppModel {
             }
             self.pending_forward = Some((pending, inline));
         }
+        // An event or a task made from it (#564); the reader may be
+        // showing it too, so the body goes on.
+        self.resume_to_calendar(account_id, message_id, body, sender);
         // A reply from a notification's button (#244): the message
         // is opening in the reader too, so the body goes on to be
         // shown as usual.

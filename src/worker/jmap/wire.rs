@@ -34,6 +34,11 @@ pub(super) struct JmapSession {
     pub(super) auth: String,
     /// Whether the server answers `Quota/get` (RFC 9425).
     pub(super) quota: bool,
+    /// Whether a mailbox can be made at the top (RFC 8621 §1.3.1's
+    /// `mayCreateTopLevelMailbox`), and how deep they may go
+    /// (`maxMailboxDepth`, `None` for no limit) (#554).
+    pub(super) top_level: bool,
+    pub(super) max_depth: Option<usize>,
 }
 
 /// The server's base URL from the account's incoming-server field: a bare
@@ -205,6 +210,12 @@ pub(super) fn jmap_connect(account: &AccountConfig) -> Result<JmapSession, Strin
         return Err("the server does not offer JMAP for mail".into());
     }
     let quota = v["capabilities"][CAP_QUOTA].is_object();
+    let mail = &v["accounts"][&account_id]["accountCapabilities"][CAP_MAIL];
+    let top_level = mail["mayCreateTopLevelMailbox"].as_bool().unwrap_or(true);
+    let max_depth = mail["maxMailboxDepth"]
+        .as_u64()
+        .map(|d| d as usize)
+        .filter(|d| *d > 0);
     Ok(JmapSession {
         api_url,
         download_url,
@@ -213,6 +224,8 @@ pub(super) fn jmap_connect(account: &AccountConfig) -> Result<JmapSession, Strin
         account: account_id,
         auth,
         quota,
+        top_level,
+        max_depth,
     })
 }
 
@@ -442,6 +455,9 @@ pub(super) async fn jmap_session(
     match blocking(move || jmap_connect(&a)).await {
         Ok(s) => {
             state.session = Some(s.clone());
+            emit(WorkerEvent::Hierarchy(
+                crate::models::FolderHierarchy::slashed(s.top_level),
+            ));
             Some(s)
         }
         Err(e) => {

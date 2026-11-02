@@ -132,3 +132,31 @@ impl AppModel {
         }
     }
 }
+
+/// HYLKI_SHOWCASE_READ=1 gives the demo's mail read receipt checkmarks
+/// (#520), for a capture of them: every other message green, read by its
+/// first recipient an hour after it went, the rest grey.
+pub(super) fn showcase_receipt_marks(marks: &mut crate::models::ReceiptMarks) {
+    use crate::backend::MailBackend;
+    if !demo_mode() || std::env::var_os("HYLKI_SHOWCASE_READ").is_none() {
+        return;
+    }
+    let backend = crate::backend::MockBackend::new();
+    let accounts = backend.accounts();
+    let all = accounts
+        .iter()
+        .flat_map(|a| backend.folders(a.id))
+        .flat_map(|f| backend.messages(f.id));
+    for (i, m) in all.filter(|m| !m.message_id.is_empty()).enumerate() {
+        let key = m.message_id.to_lowercase();
+        let first = crate::worker::parse_recipients(&m.to).into_iter().next();
+        match first {
+            Some((_, addr)) if i % 2 == 0 => {
+                marks.read.insert(key, vec![(addr, m.timestamp + 3600)]);
+            }
+            _ => {
+                marks.asked.insert(key);
+            }
+        }
+    }
+}

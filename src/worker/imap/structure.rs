@@ -39,10 +39,20 @@ pub(in crate::worker) fn structure_has_attachment(
         Bs::Text { common, .. } => is_attachment(common) || is_calendar(common),
         Bs::Basic { common, other, .. } | Bs::Message { common, other, .. } => {
             is_attachment(common)
-                || other.id.is_none()
-                || decoded_size(other) >= INLINE_ATTACHMENT_MIN
+                || (!is_receipt_report(common)
+                    && (other.id.is_none() || decoded_size(other) >= INLINE_ATTACHMENT_MIN))
         }
     }
+}
+
+/// Whether a BODYSTRUCTURE part is a read receipt's report (#520), which
+/// the reader keeps out of the attachments.
+fn is_receipt_report(common: &async_imap::imap_proto::types::BodyContentCommon) -> bool {
+    common.ty.ty.eq_ignore_ascii_case("message")
+        && common
+            .ty
+            .subtype
+            .eq_ignore_ascii_case("disposition-notification")
 }
 
 /// Whether a BODYSTRUCTURE part is a `text/calendar` one (#223).
@@ -102,7 +112,9 @@ pub(super) fn structure_attachments(
                 let counts = if is_text {
                     declared || is_calendar(common)
                 } else {
-                    declared || other.id.is_none() || size as usize >= INLINE_ATTACHMENT_MIN
+                    declared
+                        || (!is_receipt_report(common)
+                            && (other.id.is_none() || size as usize >= INLINE_ATTACHMENT_MIN))
                 };
                 if !counts {
                     return;

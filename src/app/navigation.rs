@@ -82,7 +82,9 @@ impl AppModel {
         let Some(view) = open else { return };
         let listed = match view {
             UnifiedView::Kind(FolderKind::Inbox) => self.unified_inboxes_shown(),
-            UnifiedView::Kind(kind) => self.multi_account() && self.unified_kinds.has(kind),
+            UnifiedView::Kind(kind) => {
+                self.multi_account() && self.unified_kinds_listed().has(kind)
+            }
             UnifiedView::Filtered => self.filtered_shown(),
             UnifiedView::Favorites => {
                 self.favorites_placement.shown() && !self.favorites.is_empty()
@@ -152,7 +154,18 @@ impl AppModel {
         let reqs = self.unified_targets();
         let unseen = self.seed_unified_slices(&reqs);
         self.fill_unified_starred();
-        self.show_unified_view(sender);
+        // No account has the folder (Snoozed is made by the first snooze,
+        // #542): nothing will answer, so the list is empty now rather than
+        // loading. Starred reads flags instead, and an account whose
+        // folders are not listed yet may still have one.
+        let unlisted = self
+            .accounts
+            .iter()
+            .filter(|a| self.in_unified(a.id) && account.is_none_or(|x| x == a.id))
+            .any(|a| self.folders.get(&a.id).is_none_or(|fs| fs.is_empty()));
+        let waiting =
+            !reqs.is_empty() || unlisted || view == UnifiedView::Kind(FolderKind::Starred);
+        self.show_unified_view(waiting, sender);
         // Request every account's inbox; each result replaces that
         // account's slice as it arrives.
         for (account_id, folder_id, path) in reqs {
@@ -204,9 +217,11 @@ impl AppModel {
         self.message_list.emit(MessageListInput::SetInDrafts(
             view == UnifiedView::Kind(FolderKind::Drafts),
         ));
-        // Each message is checked when it is snoozed (#527).
+        // Each message is checked when it is snoozed (#527); unified
+        // Snoozed offers Unsnooze as an account's own does (#542).
         self.message_list.emit(MessageListInput::SetSnoozeOffer(
-            (view != UnifiedView::Kind(FolderKind::Drafts)).then_some(false),
+            (view != UnifiedView::Kind(FolderKind::Drafts))
+                .then_some(view == UnifiedView::Kind(FolderKind::Snoozed)),
         ));
         self.message_list
             .emit(MessageListInput::SetInTemplates(false));
@@ -270,10 +285,17 @@ impl AppModel {
 
     /// The list keeps the views it showed as built: one whose content is
     /// the same as then comes back at once, without a merge or a regroup.
-    fn show_unified_view(&mut self, sender: &ComponentSender<Self>) {
+    fn show_unified_view(&mut self, waiting: bool, sender: &ComponentSender<Self>) {
         let key = self.unified_view_key();
         self.list_fp.set(None);
-        if self.unified_slices.is_empty() && self.unified_unfilled.is_empty() {
+        if !waiting {
+            self.message_list.emit(MessageListInput::SetView {
+                key: Some(key),
+                fp: 0,
+                restore: false,
+            });
+            self.emit_unified();
+        } else if self.unified_slices.is_empty() && self.unified_unfilled.is_empty() {
             self.message_list.emit(MessageListInput::SetView {
                 key: Some(key),
                 fp: 0,

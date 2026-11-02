@@ -204,6 +204,14 @@ impl AppModel {
                 "filter-folder",
             ),
         ]);
+        sections.push(vec![
+            item(
+                RowAction::CreateEvent,
+                i18n("Create Event…"),
+                "x-office-calendar",
+            ),
+            item(RowAction::CreateTask, i18n("Create Task…"), "task-due"),
+        ]);
         sections.push(vec![self.card_remote_entry(&m, sender)]);
         if let Some(folds) = fold_entries(&hit) {
             sections.push(folds);
@@ -284,6 +292,19 @@ impl AppModel {
                 })
                 .icon("folder-symbolic")
                 .keys(MessageAction::MoveTo.keys(KeysOf::Main)),
+            );
+            let s = sender.input_sender().clone();
+            let message = m.clone();
+            acts.push(
+                MenuEntry::new(i18n("Copy To…"), move || {
+                    let _ = s.send(AppMsg::ListCopyTo {
+                        messages: vec![message.clone()],
+                        offer_whole: false,
+                        x,
+                        y,
+                    });
+                })
+                .icon("edit-copy-symbolic"),
             );
         }
         acts.push(item(RowAction::Archive, i18n("Archive"), "mail-archive"));

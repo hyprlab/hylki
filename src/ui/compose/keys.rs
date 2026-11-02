@@ -1,5 +1,6 @@
 //! The composer's keyboard shortcuts.
 
+use super::merge_fields::FieldTarget;
 use super::messages::ComposeInput;
 use super::types::Field;
 use super::Compose;
@@ -7,7 +8,7 @@ use crate::ui::rich_editor;
 use adw::prelude::*;
 use relm4::prelude::*;
 
-/// Ctrl+Shift+A, T, C or B as what it asks the composer for.
+/// Ctrl+Shift+A, T, C, B or M as what it asks the composer for.
 pub(crate) fn composer_key(
     keyval: gtk::gdk::Key,
     state: gtk::gdk::ModifierType,
@@ -23,6 +24,7 @@ pub(crate) fn composer_key(
         Key::t => Some(ComposeInput::FocusField(Field::To)),
         Key::c => Some(ComposeInput::FocusField(Field::Cc)),
         Key::b => Some(ComposeInput::FocusField(Field::Bcc)),
+        Key::m => Some(ComposeInput::MergeFields(FieldTarget::Focused)),
         _ => None,
     }
 }

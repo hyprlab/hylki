@@ -34,4 +34,13 @@ Tools Inc.), converted to sRGB, renamed, and mapped onto libadwaita's colour
 roles by `tools/gen-themes.py`. Hylki is not affiliated with or endorsed by
 T3 Tools.
 
+## Grammar checkers
+
+Hylki does not ship a grammar checker. When asked to in Settings, it
+downloads one from its publisher: [Harper](https://github.com/Automattic/harper)
+(Apache-2.0), or [LanguageTool](https://languagetool.org) (LGPL-2.1-or-later)
+with the [Eclipse Temurin](https://adoptium.net) Java runtime (GPL-2.0 with
+the Classpath Exception). Each runs as a program of its own, under its own
+licence, and is not part of Hylki.
+
 © 2026 Hyprlab

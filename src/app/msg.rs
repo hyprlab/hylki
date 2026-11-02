@@ -14,7 +14,7 @@ use crate::models::{
     Account, Attachment, Folder, FolderKind, KeywordFinding, Message, ThreadSummary,
 };
 use crate::ui::attachments_gallery::GalleryRequest;
-use crate::ui::message_list::{BulkAction, QuickFilter, RowAction};
+use crate::ui::message_list::{BulkAction, DateBound, QuickFilter, RowAction};
 use crate::ui::preferences::PrefOutput;
 use crate::ui::sidebar::CtxAction;
 use crate::worker::OutgoingMessage;
@@ -99,6 +99,8 @@ pub(crate) enum AppMsg {
     },
     /// A worker's status line.
     Status { account_id: u32, text: String },
+    /// What is left to copy to On This Computer (#552).
+    CopyProgress { left: usize },
     /// A worker's error, for the log and the notification bar;
     /// `connectivity` marks one that clears itself once a later connect or
     /// sync succeeds.
@@ -197,6 +199,7 @@ pub(crate) enum AppMsg {
         archive: bool,
         junk: bool,
         trash: bool,
+        snoozed: bool,
         favorites: bool,
         smart: bool,
         contacts: bool,
@@ -236,8 +239,13 @@ pub(crate) enum AppMsg {
         dest: String,
         items: Vec<(u32, u32, u32, u32)>,
     },
-    /// Create a custom folder under an account (from the right-click menu).
-    CreateFolder { account_id: u32, name: String },
+    /// Create a custom folder under an account (from the right-click menu):
+    /// inside `parent`, or at the top level when it is "" (#554).
+    CreateFolder {
+        account_id: u32,
+        parent: String,
+        name: String,
+    },
     /// Move a folder under a new parent (sidebar drag-and-drop, #51).
     /// `dest` is the new parent's path, or "" for the account's top level.
     MoveFolder {
@@ -277,6 +285,28 @@ pub(crate) enum AppMsg {
     /// search pool (every folder's messages, so search can span the mailbox).
     SearchActive(bool),
 
+    // ---- on_text_search (text_search.rs) ----
+    /// Find each of `terms` in the bodies on disk (#509).
+    FindInBodies { terms: Vec<String> },
+    /// What the bodies on disk hold, a set for each term.
+    BodiesFound {
+        terms: Vec<String>,
+        hits: Vec<crate::ui::message_list::HitSet>,
+    },
+    /// Ask the servers for mail holding every one of `terms` (#509).
+    FindOnServers {
+        terms: Vec<String>,
+        scope: crate::ui::message_list::ServerScope,
+    },
+    /// An account's server answered a search: (folder path, uid,
+    /// Message-ID) of each message; `done` with its last answer.
+    TextFound {
+        account_id: u32,
+        gen: u64,
+        hits: Vec<(String, u32, String)>,
+        done: bool,
+    },
+
     // ---- on_reader_select (reader_select.rs) ----
     /// Gmail's o or Enter opened a row (#392): the keyboard goes to the
     /// reader, now if the row was already the one open, else once it opens.
@@ -290,6 +320,8 @@ pub(crate) enum AppMsg {
         message: Message,
         thread: Vec<Message>,
         solo: bool,
+        /// The rows likely opened next (#474).
+        ahead: Vec<Message>,
     },
     /// The open conversation gained a member (a reply synced in while it
     /// was on screen): show it in place, without a re-selection.
@@ -321,6 +353,10 @@ pub(crate) enum AppMsg {
     OpenReaderFind,
     /// Turn one of the list header's quick filters on or off (#97, #441).
     SetQuickFilter(QuickFilter, bool),
+    /// Set or clear one end of the quick filters' date range.
+    SetFilterDate(DateBound, Option<chrono::NaiveDate>),
+    /// Open both ends of the quick filters' date range.
+    ClearFilterDates,
     /// Turn every quick filter off.
     ClearQuickFilters,
     /// Delay-policy read marking (#100): fires a couple of seconds after a
@@ -346,6 +382,13 @@ pub(crate) enum AppMsg {
     },
     /// A popped-out message window was closed (remove it from the map).
     PopoutClosed((u32, u32)),
+    /// A conversation card in a message window was read through.
+    PopoutSeen { account_id: u32, id: u32 },
+    /// The main menu's Reading Pane item (#475).
+    SetReadingPane(crate::config::ReadingPane),
+    /// The list crossed a fold width of the toolbar in its header, while
+    /// the reading pane is off.
+    SetListFold { collapsed: bool, compact: bool },
     /// Add a contact from a popout window's sender.
     AddContactFrom { name: String, email: String },
     /// A message window's Move To: the folder picker over that window, at
@@ -553,6 +596,12 @@ pub(crate) enum AppMsg {
         message_ids: Vec<String>,
         done: bool,
     },
+    /// How many messages an account's Snoozed folder holds (#542).
+    SnoozedCount {
+        account_id: u32,
+        path: String,
+        count: u32,
+    },
 
     // ---- on_workers (workers.rs) ----
     /// Check every account for new mail now.
@@ -637,6 +686,9 @@ pub(crate) enum AppMsg {
     ContactSuggestions,
     /// The background EDS read for the contacts view finished.
     ContactsLoaded(Vec<crate::contacts::ContactDetails>),
+    /// The saved contacts' names by address, read for "Show names from
+    /// Contacts" (#541); empty with the switch off.
+    ContactNamesRead(std::collections::HashMap<String, String>),
     /// Right-click on the sidebar's Contacts row: the external app.
     LaunchGnomeContacts,
     /// Contact editor writes (run on a background thread against EDS).
@@ -717,6 +769,8 @@ pub(crate) enum AppMsg {
         message: Box<Message>,
         info: Box<crate::models::Unsubscribe>,
     },
+    /// A card's read receipt banner (#520): send the receipt, or ignore.
+    ReceiptAnswer { message: Box<Message>, send: bool },
     /// Confirmed: send the request.
     UnsubscribeGo {
         message: Box<Message>,
@@ -734,6 +788,10 @@ pub(crate) enum AppMsg {
         message: Box<Message>,
         result: Result<bool, String>,
     },
+
+    // ---- on_to_calendar (to_calendar.rs) ----
+    /// A step of Create Event or Create Task (#564).
+    ToCalendar(super::to_calendar::ToCalendar),
 
     // ---- on_invites (invites.rs) ----
     /// A card's invitation button (#223): answer the organiser, or hand the
@@ -1036,6 +1094,8 @@ pub(crate) enum AppMsg {
         from: u32,
         out: Box<OutgoingMessage>,
     },
+    /// A composer's Mail Merge (#447): one message per row.
+    SendMerged(Vec<OutgoingMessage>),
     /// A message's Undo Send delay is over, or Send now was asked for it in
     /// the Outbox: it goes to its worker (#434).
     DispatchSend(u64),
@@ -1118,6 +1178,12 @@ pub(crate) enum AppMsg {
     ImportGoaAccount(Box<AccountConfig>),
     /// An account was removed in Settings: its secrets and its config go.
     AccountRemoved { email: String },
+    /// Import mail from another program into On This Computer (#552):
+    /// Maildir trees, or with `mbox`, mbox files.
+    ImportLocalMail {
+        sources: Vec<std::path::PathBuf>,
+        mbox: bool,
+    },
     /// GNOME Online Accounts changed on the session bus. Carries the fresh live
     /// state, already fetched (debounced) on the watcher thread so the GTK main
     /// thread never does D-Bus I/O — re-reconcile against it.
@@ -1216,6 +1282,20 @@ pub(crate) enum AppMsg {
         dest: String,
         messages: Vec<Message>,
     },
+    /// Copy To… (#552): the folder picker for copying `messages`, as
+    /// [`AppMsg::ListMoveTo`] opens it for a move.
+    ListCopyTo {
+        messages: Vec<Message>,
+        offer_whole: bool,
+        x: f64,
+        y: f64,
+    },
+    /// That picker's answer.
+    CopyMessagesTo {
+        account_id: u32,
+        dest: String,
+        messages: Vec<Message>,
+    },
     /// The picker's answer: file the target or selection into `dest` —
     /// or, with `whole`, the open conversation entire (#171).
     MoveSelectionTo {
@@ -1248,6 +1328,17 @@ pub(crate) enum AppMsg {
     SetFolders {
         account_id: u32,
         folders: Vec<Folder>,
+    },
+    /// How an account's folders nest (#554), from its worker.
+    SetHierarchy {
+        account_id: u32,
+        hierarchy: crate::models::FolderHierarchy,
+    },
+    /// A folder the app made at `asked` is at `made` on the server.
+    FolderMadeAt {
+        account_id: u32,
+        asked: String,
+        made: String,
     },
     /// A folder's unread count, from the server.
     FolderUnread {

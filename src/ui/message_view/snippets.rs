@@ -8,16 +8,6 @@ use crate::i18n::i18n;
 use crate::models::Message;
 use relm4::prelude::*;
 
-/// Where a folded card's bar takes the sender's circle, which the document
-/// builder fills in with the one the card's header wears.
-pub(super) const FOLD_BAR_FACE: &str = "\u{1}face\u{1}";
-
-/// The day on a folded card's bar, short as Proton has it: the time for
-/// today, the day and month this year, the year too before that.
-pub(super) fn fold_bar_date(m: &Message) -> String {
-    crate::models::date_short(m.timestamp, &m.date)
-}
-
 /// A template card's banner (#360): what the message is, and its two uses.
 pub(super) fn template_row_html(key: (u32, u32)) -> String {
     let button = |verb: &str, label: &str, title: &str| {
@@ -198,9 +188,9 @@ pub(super) fn recipient_count(m: &Message) -> usize {
 pub(super) fn recipients_html(m: &Message, always_shown: bool) -> String {
     let mut lines = String::new();
     for (label, list) in [
-        ("To", m.to.trim()),
-        ("Cc", m.cc.trim()),
-        ("Bcc", m.bcc.trim()),
+        (i18n("To:"), m.to.trim()),
+        (i18n("Cc:"), m.cc.trim()),
+        (i18n("Bcc:"), m.bcc.trim()),
     ] {
         if list.is_empty() {
             continue;
@@ -221,13 +211,16 @@ pub(super) fn recipients_html(m: &Message, always_shown: bool) -> String {
             if !parts.is_empty() {
                 parts.push_str(", ");
             }
+            // A saved contact by its saved name alone (#541): the address
+            // is in the right-click menu.
+            let shown = crate::contacts::contact_name(mail);
             parts.push_str(&format!(
                 "<span class=\"hylki-mail\" data-mail=\"{}\">{}</span>",
                 escape_html(mail).replace('"', "&quot;"),
-                escape_html(entry)
+                escape_html(shown.as_deref().unwrap_or(entry))
             ));
         }
-        lines.push_str(&format!("<div><b>{label}:</b> {parts}</div>"));
+        lines.push_str(&format!("<div><b>{}</b> {parts}</div>", escape_html(&label)));
     }
     if lines.is_empty() {
         return String::new();

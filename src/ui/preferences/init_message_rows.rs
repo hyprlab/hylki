@@ -81,6 +81,10 @@ impl Preferences {
             .theme_switch_row
             .set_active(init.theme_switch);
         widgets
+            .reading
+            .account_chip_row
+            .set_active(init.account_chip);
+        widgets
             .appearance
             .desktop_icons_row
             .set_active(init.desktop_icons);
@@ -401,6 +405,10 @@ impl Preferences {
             .composing
             .signature_dashes_row
             .set_active(init.signature_dashes);
+        widgets
+            .composing
+            .fold_quote_row
+            .set_active(init.fold_quote);
         widgets.composing.set_reply_header(&init.reply_header);
         let undo_labels: Vec<String> = crate::config::UNDO_SEND_CHOICES
             .iter()

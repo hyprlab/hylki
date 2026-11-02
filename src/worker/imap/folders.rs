@@ -68,6 +68,9 @@ pub(super) async fn list_folder_metadata(
         }
         let (kind, by_special_use) = classify_with_source(&path, delimiter, name.attributes());
         special_use.push(by_special_use);
+        // A mailbox that can't hold others (RFC 3501 §7.2.2), as an mbox
+        // file on Dovecot or UW-IMAP (#554).
+        let childless = name.attributes().contains(&NameAttribute::NoInferiors);
         folders.push(Folder {
             id: 0, // assigned by order below
             account_id,
@@ -75,6 +78,7 @@ pub(super) async fn list_folder_metadata(
             path,
             kind,
             unread: 0,
+            childless,
         });
     }
 

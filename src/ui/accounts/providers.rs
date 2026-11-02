@@ -320,6 +320,9 @@ pub(super) fn protocol_index(protocol: Protocol) -> u32 {
 /// incoming server (the well-known hosts, then the provider table, whose
 /// manual entry gives anything else the blue envelope).
 pub(super) fn brand_for_account(acc: &AccountConfig) -> &'static str {
+    if acc.is_local() {
+        return "local";
+    }
     if acc.protocol == Protocol::Graph {
         return "outlook";
     }
@@ -377,6 +380,7 @@ pub(super) fn provider_name(brand: &str, acc: &AccountConfig) -> String {
         "outlook" => i18n("Microsoft 365 / Outlook"),
         "proton" => i18n("Proton Mail"),
         "mail-oauth" => i18n("Custom OAuth"),
+        "local" => i18n("Folders on this computer"),
         "mail" | "mail-pop3" => {
             let host = acc.imap_host.trim();
             if host.is_empty() {

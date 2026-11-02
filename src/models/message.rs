@@ -166,6 +166,12 @@ pub(crate) fn preview_display(preview: &str) -> String {
 }
 
 impl Message {
+    /// The sender's name as shown: the address book's for a saved contact
+    /// when Settings asks for it (#541), else the one the mail gives.
+    pub(crate) fn shown_from_name(&self) -> std::borrow::Cow<'_, str> {
+        crate::contacts::shown_name(&self.from_name, &self.from_addr)
+    }
+
     /// Whether the message carries `keyword`. IMAP keywords are atoms
     /// compared case-insensitively (RFC 3501), so `work` and `Work` are one.
     pub(crate) fn has_keyword(&self, keyword: &str) -> bool {

@@ -2,7 +2,9 @@
 (function(){
   window.__hylkiPasteOnce = null;
   var urlRe = /((?:https?:\/\/|www\.)[^\s<>()]+[^\s<>().,;:!?'"])/gi;
-  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  /* Quotes too: a linkified address goes inside href="", and urlRe lets a
+     `"` through in the middle of one. */
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   /* Inline images (#113): a pasted or dropped image lands in the text as an
      <img src="data:..."> at the caret; the send path lifts it into a cid:
      part. Oversized images are downscaled on insert — a phone screenshot is
@@ -788,14 +790,19 @@
   };
   /* The font set for new messages, written around each stretch of what
      was typed, since the editor's style sheet does not go out with it. The
-     signature and the quoted original (its attribution line and the quote
-     straight after) are left out, as the editor shows them. */
+     signature carries it on its own block (#548); the quoted original (its
+     attribution line and the quote straight after) is left out, as the
+     editor shows it. */
   function fontRuns(html){
     var style = window.__hylkiComposeFont;
     if(!style) return html;
     var t = document.createElement('template');
     t.innerHTML = html;
     var kids = Array.prototype.slice.call(t.content.childNodes);
+    kids.forEach(function(n){
+      if(n.nodeType === 1 && n.classList.contains('hylki-sig'))
+        n.setAttribute('style', style + (n.getAttribute('style') || ''));
+    });
     var kept = kids.map(function(n){
       if(n.nodeType !== 1) return false;
       if(n.classList.contains('hylki-sig') || n.classList.contains('hylki-quote-attr')) return true;

@@ -19,6 +19,11 @@ use std::rc::Rc;
 /// is scrolled near the end of them.
 pub(super) const LIST_WINDOW: usize = 300;
 
+/// How many rows a rebuild describes in full at most, past those the view
+/// has bound: a list grown to the whole folder for its scrollbar leaves the
+/// rest to be described as they come on screen.
+const FULL_ROWS_AT_MOST: usize = 3000;
+
 /// How many of a large list's newest messages go on screen while its
 /// conversations are worked out (see `MessageList::threads_pending`).
 const PREVIEW_ROWS: usize = 2000;
@@ -183,6 +188,50 @@ impl MessageList {
         let at = self.shared.model.len();
         self.shared.model.splice(at, 0, more);
         self.window = self.shown.len();
+    }
+
+    /// Put the rest of the list on screen, as it is: describing tens of
+    /// thousands of rows would hold the scrollbar up, and each is described
+    /// when the view binds it.
+    pub(super) fn show_whole_list(&mut self) {
+        if self.tail.is_empty() {
+            return;
+        }
+        let t = std::time::Instant::now();
+        let more = std::mem::take(&mut self.tail);
+        let n = more.len();
+        self.shown.extend(more.iter().map(|r| r.msg.clone()));
+        let at = self.shared.model.len();
+        self.shared.model.splice(at, 0, more);
+        self.window = self.shown.len();
+        tracing::debug!(
+            "list: {n} more rows on screen for the scrollbar in {:?}",
+            t.elapsed()
+        );
+    }
+
+    /// Describe in full the rows the view bound before they were.
+    pub(super) fn finish_bound_rows(&mut self) {
+        let wanted: std::collections::HashSet<_> =
+            self.shared.take_unfinished().into_iter().collect();
+        if wanted.is_empty() {
+            return;
+        }
+        let found = self
+            .shared
+            .model
+            .find(|r| r.meta.pending.is_some() && wanted.contains(&r.slot()));
+        let t = std::time::Instant::now();
+        let (at, mut rows): (Vec<usize>, Vec<Rc<RowData>>) = found.into_iter().unzip();
+        self.finish_rows(&mut rows);
+        let n = rows.len();
+        for (pos, row) in at.into_iter().zip(rows) {
+            self.shared.model.set_row(pos, row);
+        }
+        tracing::debug!(
+            "list: {n} rows described as they came on screen in {:?}",
+            t.elapsed()
+        );
     }
 
     /// Who took part in a conversation (#334), for its Correspondents
@@ -474,6 +523,10 @@ impl MessageList {
             self.sync_look();
         }
         let sort = self.sort;
+        self.shared.by_date.set(matches!(
+            sort,
+            SortOrder::DateNewest | SortOrder::DateOldest
+        ));
         self.sort_matches(&mut matches);
         self.total_matches = matches.len();
         if preview {
@@ -573,7 +626,10 @@ impl MessageList {
             self.groups.reserve(grouped.len());
         }
         let mut any_expanded = false;
-        let full_rows = self.window.max(LIST_WINDOW);
+        let full_rows = self.window.max(LIST_WINDOW).min(FULL_ROWS_AT_MOST);
+        // Rows on screen are described in full wherever they are, so a
+        // rebuild never shows them half done.
+        let bound = self.shared.bound_slots();
         let mut unseen: std::collections::HashSet<(u32, u32)> = self
             .selected_ids
             .iter()
@@ -604,7 +660,12 @@ impl MessageList {
             }
             // Past the window, and the selection, a row is described in
             // full only when it comes on screen.
-            let full = rows.len() < full_rows || !unseen.is_empty();
+            let full = rows.len() < full_rows
+                || !unseen.is_empty()
+                || (!bound.is_empty()
+                    && msgs
+                        .iter()
+                        .any(|m| bound.contains(&(m.account_id, m.folder_id, m.id))));
             let (meta, members) = self.describe_group(key, &msgs, &passes, full);
             if !unseen.is_empty() {
                 for m in &members {
@@ -731,7 +792,7 @@ impl MessageList {
     /// Everything the view needs wired: selection, activation and keys.
     pub(super) fn wire_list(
         list: &gtk::ListView,
-        shared: &RowShared,
+        shared: &Rc<RowShared>,
         input: &relm4::Sender<MessageListInput>,
     ) {
         // Multiple selection: plain click selects one (shown in the reader),
@@ -751,8 +812,11 @@ impl MessageList {
         // Delete / Backspace on a focused row deletes the selection (single or
         // multi). Scoped to the list, so typing in the search box is unaffected.
         // Shift+Delete erases it instead, as in Thunderbird (#471).
+        // Right and Left open out and fold conversations, as in a tree
+        // (#540).
         let key = gtk::EventControllerKey::new();
         let s = input.clone();
+        let shared = shared.clone();
         key.connect_key_pressed(move |_, keyval, _, state| {
             let shift = state.contains(gtk::gdk::ModifierType::SHIFT_MASK);
             if shift && matches!(keyval, gtk::gdk::Key::Delete | gtk::gdk::Key::KP_Delete) {
@@ -765,6 +829,9 @@ impl MessageList {
                 // ResolveDelete, not a straight Bulk: a lone thread-head row
                 // stands for its whole conversation (confirmed by the app).
                 let _ = s.send(MessageListInput::ResolveDelete);
+                gtk::glib::Propagation::Stop
+            } else if let Some(fold) = fold_key(&shared, keyval, state) {
+                let _ = s.send(fold);
                 gtk::glib::Propagation::Stop
             } else {
                 gtk::glib::Propagation::Proceed
@@ -820,4 +887,51 @@ impl MessageList {
         // never laid out one more time for nothing before they go.
         run();
     }
+}
+
+/// What Right or Left does on the row the keyboard is on (#540): Right opens
+/// a folded conversation out in the list, Left folds an open one, from its
+/// head or any of its replies. `None` leaves the key to the window's own
+/// shortcuts: the row stands alone, is already as asked, or conversations
+/// do not open out in the list.
+fn fold_key(
+    shared: &RowShared,
+    keyval: gtk::gdk::Key,
+    state: gtk::gdk::ModifierType,
+) -> Option<MessageListInput> {
+    use gtk::gdk::{Key, ModifierType};
+    if state
+        .intersects(ModifierType::CONTROL_MASK | ModifierType::SHIFT_MASK | ModifierType::ALT_MASK)
+    {
+        return None;
+    }
+    let forward = match keyval {
+        Key::Right | Key::KP_Right => true,
+        Key::Left | Key::KP_Left => false,
+        _ => return None,
+    };
+    if !shared.look.borrow().thread_expansion {
+        return None;
+    }
+    let view = shared.view.upgrade()?;
+    // Right to left the tree opens the other way, as GTK's own do.
+    let open = forward != (view.direction() == gtk::TextDirection::Rtl);
+    let pos = shared
+        .bound_rows()
+        .into_iter()
+        .find(|r| r.has_focus_within())
+        .and_then(|r| r.position())?;
+    let mut head = pos;
+    while head > 0 && shared.model.row(head).is_some_and(|r| r.meta.is_child) {
+        head -= 1;
+    }
+    let row = shared.model.row(head)?;
+    let key = row.meta.key.clone()?;
+    if row.meta.expanded == open {
+        return None;
+    }
+    Some(MessageListInput::FoldByKey {
+        key,
+        head: (head != pos).then_some(head),
+    })
 }

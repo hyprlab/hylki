@@ -284,6 +284,15 @@ impl AttachmentDrawer {
         self.adjusting.set(false);
     }
 
+    /// Collapse without the slide, and keep it so.
+    pub(super) fn fold(&mut self) {
+        self.finish_running_toggle();
+        if !self.collapsed {
+            self.settle_collapsed();
+            config::save_drawer_collapsed(true);
+        }
+    }
+
     /// The end state of a collapse: body hidden, divider locked, position
     /// pinned to exactly the header.
     fn settle_collapsed(&mut self) {

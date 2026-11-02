@@ -207,8 +207,10 @@ impl Component for MessageView {
                         set_orientation: gtk::Orientation::Horizontal,
                         set_spacing: 12,
                         #[watch]
-                        set_visible: model.account_name.is_some() || model.current.is_some(),
+                        set_visible: model.account_line_shown(),
 
+                        // Stays when the chip is hidden in Settings: it is
+                        // what pushes the switches to the line's right end.
                         gtk::Box {
                             set_halign: gtk::Align::Start,
                             set_hexpand: true,
@@ -217,6 +219,8 @@ impl Component for MessageView {
                             set_visible: model.account_name.is_some(),
                             #[name = "account_chip"]
                             gtk::Label {
+                                #[watch]
+                                set_visible: model.account_chip_shown,
                                 #[watch]
                                 set_label: model.account_name.as_deref().unwrap_or_default(),
                                 add_css_class: "account-chip",
@@ -391,6 +395,7 @@ impl Component for MessageView {
         let webview = new_webview();
         let link_preview = link_preview_plaque(&webview);
         let mut model = MessageView::initial(webview, &link_preview);
+        model.faces.input = Some(sender.input_sender().clone());
         model.watch_loads(&sender);
         model.watch_context_menu(&sender);
         model.watch_bridge(&sender);
@@ -458,6 +463,12 @@ impl Component for MessageView {
             MessageViewInput::AllowSenderAlways => self.on_allow_sender_always(&sender),
             MessageViewInput::Print => self.on_print(),
             MessageViewInput::PrintPreview => self.on_print_preview(),
+            MessageViewInput::PrintMessages {
+                message,
+                thread,
+                allow_remote,
+                preview,
+            } => self.on_print_messages(*message, thread, allow_remote, preview),
             MessageViewInput::FacesChanged => self.render(),
 
             MessageViewInput::ThemeChanged => self.on_theme_changed(),
@@ -518,6 +529,9 @@ impl Component for MessageView {
             MessageViewInput::SetThemeSwitchShown(on) => {
                 self.theme_switch_shown = on;
             }
+            MessageViewInput::SetAccountChipShown(on) => {
+                self.account_chip_shown = on;
+            }
             MessageViewInput::SetReaderDefault(policy) => self.on_set_reader_default(policy),
             MessageViewInput::ToggleSenderStyle { account_id, id } => {
                 self.on_toggle_sender_style(account_id, id)
@@ -532,6 +546,7 @@ impl Component for MessageView {
                 check,
             } => self.on_sender_check_for(account_id, id, check),
             MessageViewInput::SetUnsubscribed(lists) => self.on_set_unsubscribed(lists),
+            MessageViewInput::SetReceiptMarks(marks) => self.on_set_receipt_marks(marks),
             MessageViewInput::Translate { account_id, id } => {
                 self.on_translate(account_id, id, &sender)
             }
@@ -543,6 +558,11 @@ impl Component for MessageView {
             MessageViewInput::Unsubscribe { account_id, id } => {
                 self.on_unsubscribe(account_id, id, &sender)
             }
+            MessageViewInput::ReceiptAnswer {
+                account_id,
+                id,
+                send,
+            } => self.on_receipt_answer(account_id, id, send, &sender),
             MessageViewInput::UnsubscribeState {
                 account_id,
                 id,
@@ -578,6 +598,7 @@ impl Component for MessageView {
                 result,
             } => self.on_pgp_done(account_id, id, result, &sender),
             MessageViewInput::Rendered => self.on_rendered(),
+            MessageViewInput::FaceFound(answer) => self.on_face_found(*answer),
             MessageViewInput::SuppressAutoRead { account_id, id } => {
                 self.on_suppress_auto_read(account_id, id)
             }

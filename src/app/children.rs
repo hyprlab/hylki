@@ -28,10 +28,12 @@ fn message_list_output_msg(out: MessageListOutput) -> AppMsg {
             message,
             thread,
             solo,
+            ahead,
         } => AppMsg::MessageSelected {
             message,
             thread,
             solo,
+            ahead,
         },
         MessageListOutput::SelectionKeys(keys) => AppMsg::SelectionKeys(keys),
         MessageListOutput::Checked(count) => AppMsg::ListChecked(count),
@@ -97,9 +99,22 @@ fn message_list_output_msg(out: MessageListOutput) -> AppMsg {
             x,
             y,
         },
+        MessageListOutput::CopyTo {
+            messages,
+            offer_whole,
+            x,
+            y,
+        } => AppMsg::ListCopyTo {
+            messages,
+            offer_whole,
+            x,
+            y,
+        },
         MessageListOutput::SelectionCleared => AppMsg::ClearReader,
         MessageListOutput::OpenedByKey { already_open } => AppMsg::OpenedByKey { already_open },
         MessageListOutput::SearchActive(active) => AppMsg::SearchActive(active),
+        MessageListOutput::FindInBodies { terms } => AppMsg::FindInBodies { terms },
+        MessageListOutput::FindOnServers { terms, scope } => AppMsg::FindOnServers { terms, scope },
         MessageListOutput::SortChanged(key) => AppMsg::ListSortChanged(key),
         MessageListOutput::ColumnWidths(widths) => AppMsg::ListColumnWidths(widths),
         MessageListOutput::CustomizeColumns => AppMsg::CustomizeColumns,
@@ -160,6 +175,9 @@ fn message_view_output_msg(out: MessageViewOutput) -> AppMsg {
         MessageViewOutput::ReaderMode(on) => AppMsg::SetReaderMode(on),
         MessageViewOutput::Zoom(step) => AppMsg::ZoomMessage(step),
         MessageViewOutput::Unsubscribe { message, info } => AppMsg::Unsubscribe { message, info },
+        MessageViewOutput::ReceiptAnswer { message, send } => {
+            AppMsg::ReceiptAnswer { message, send }
+        }
         MessageViewOutput::InviteAction {
             message,
             invite,
@@ -350,6 +368,7 @@ pub(super) fn sidebar_output_msg(out: SidebarOutput) -> AppMsg {
             archive,
             junk,
             trash,
+            snoozed,
             favorites,
             smart,
             contacts,
@@ -363,6 +382,7 @@ pub(super) fn sidebar_output_msg(out: SidebarOutput) -> AppMsg {
             archive,
             junk,
             trash,
+            snoozed,
             favorites,
             smart,
             contacts,

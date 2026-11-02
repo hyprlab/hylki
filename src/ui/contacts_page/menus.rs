@@ -245,12 +245,13 @@ pub(super) fn book_label_factory(ellipsize: bool) -> gtk::SignalListItemFactory 
 }
 
 /// Whether a contact matches a search, already lower case; an empty one
-/// matches everyone.
+/// matches everyone, and "group" or "groups" every group.
 pub(super) fn matches_query(c: &ContactDetails, q: &str) -> bool {
     if q.is_empty() {
         return true;
     }
-    c.name.to_lowercase().contains(q)
+    (c.is_group() && names_groups(q))
+        || c.name.to_lowercase().contains(q)
         || c.nickname.to_lowercase().contains(q)
         || c.org.to_lowercase().contains(q)
         || c.emails.iter().any(|e| e.value.to_lowercase().contains(q))
@@ -258,6 +259,16 @@ pub(super) fn matches_query(c: &ContactDetails, q: &str) -> bool {
         || c.members
             .iter()
             .any(|m| m.name.to_lowercase().contains(q) || m.email.to_lowercase().contains(q))
+}
+
+/// Whether a search is the word for groups, in English or the app's
+/// language, so groups can be found by what they are as well as by name.
+pub(super) fn names_groups(q: &str) -> bool {
+    let q = q.trim();
+    ["group", "groups"].contains(&q)
+        || [i18n("Group"), i18n("Groups")]
+            .iter()
+            .any(|w| w.to_lowercase() == q)
 }
 
 /// Ask for `.vcf` files to import into the Hylki book, and hand their paths

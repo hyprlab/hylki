@@ -46,6 +46,10 @@ pub(crate) struct EditableMessage {
     pub(crate) body_html: String,
     /// The files, without the pictures already back in the text.
     pub(crate) attachments: Vec<crate::models::Attachment>,
+    /// It asks for a read receipt (#520).
+    pub(crate) receipt: bool,
+    /// How important it is marked (#563).
+    pub(crate) importance: crate::models::Importance,
 }
 
 /// Whoever the envelope names that none of the `headers` (address lists)
@@ -235,6 +239,13 @@ pub(crate) fn editable_from_raw(raw: &[u8], envelope_rcpts: &[String]) -> Editab
         references,
         body_html,
         attachments,
+        receipt: parsed
+            .as_ref()
+            .and_then(crate::mail::receipt::detect)
+            .is_some(),
+        importance: crate::models::Importance::from_headers(|name| {
+            parsed.as_ref().and_then(|p| p.header_raw(name))
+        }),
     }
 }
 

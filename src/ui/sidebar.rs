@@ -15,7 +15,7 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 use crate::i18n::{i18n, i18n_f, i18n_noop};
-use crate::models::{Account, Folder, FolderKind};
+use crate::models::{Account, Folder, FolderHierarchy, FolderKind};
 use crate::ui::context_menu::{show_context_menu, show_context_menu_with_header, MenuEntry};
 
 mod account_section;
@@ -34,7 +34,6 @@ mod unified;
 mod widgets;
 
 pub(crate) use messages::{CtxAction, SidebarInput, SidebarOutput};
-pub(crate) use tree::Hierarchy;
 pub(crate) use tree::{folder_depth, order_folders, placed_run, TREE_EXPANDER_WIDTH};
 pub(crate) use types::kind_label;
 use types::{InboxRef, KindWidgets, SectionWidgets, UnifiedRow};
@@ -394,6 +393,7 @@ impl Component for Sidebar {
                 (FolderKind::Archive, init.archive_expanded),
                 (FolderKind::Junk, init.junk_expanded),
                 (FolderKind::Trash, init.trash_expanded),
+                (FolderKind::Snoozed, init.snoozed_expanded),
             ]),
             kind_widgets: HashMap::new(),
             rail_open: HashMap::new(),

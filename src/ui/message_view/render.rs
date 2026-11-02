@@ -3,8 +3,8 @@
 //! body with the settings the page script reads.
 
 use super::frame::{
-    LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE, LIVE_TAGS, LIVE_TEMPLATES,
-    LIVE_TRANSLATE, LIVE_TRANSLATE_ON, LIVE_UNSUB,
+    LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE, LIVE_MARKS, LIVE_READ,
+    LIVE_RECEIPT, LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE, LIVE_TRANSLATE_ON, LIVE_UNSUB,
 };
 use super::types::TrState;
 use super::MessageView;
@@ -16,6 +16,9 @@ impl MessageView {
     pub(super) fn render(&mut self) {
         let dark = self.effective_dark();
         self.apply_webview_bg(dark);
+        // Before the shortcut below: a sender whose face could not be found
+        // last time may have one now (#560).
+        self.look_up_faces();
         // Already showing exactly this — returning to a conversation, or a
         // re-render nothing changed. Loading it again would only blank the view
         // and paint the same pixels back.
@@ -131,6 +134,10 @@ impl MessageView {
         // The picture a mailbox of your own shows can change while a
         // conversation is open (#189) — the cards must be built again.
         crate::services::avatar::own_faces_generation().hash(&mut h);
+        // Which tiers a sender's face may come from (#560).
+        super::faces::tiers().hash(&mut h);
+        // Names from Contacts came in, or the switch for them moved (#541).
+        crate::contacts::contact_names_generation().hash(&mut h);
         self.thread.len().hash(&mut h);
         for m in &self.thread {
             let key = (m.account_id, m.id);
@@ -146,6 +153,7 @@ impl MessageView {
             self.no_autoread.contains(&key).hash(&mut h);
             self.sender_style.contains(&key).hash(&mut h);
             self.folder_labels.get(&key).hash(&mut h);
+            self.sent.contains(&key).hash(&mut h);
             self.template_folders
                 .contains(&(m.account_id, m.folder_id))
                 .hash(&mut h);
@@ -183,6 +191,20 @@ impl MessageView {
                 .map(|m| ((m.account_id, m.id), self.invite_inner_html(m)))
                 .collect()
         });
+        LIVE_RECEIPT.with(|r| {
+            *r.borrow_mut() = self
+                .thread
+                .iter()
+                .map(|m| ((m.account_id, m.id), self.receipt_inner_html(m)))
+                .collect()
+        });
+        LIVE_READ.with(|r| {
+            *r.borrow_mut() = self
+                .thread
+                .iter()
+                .filter_map(|m| Some(((m.account_id, m.id), self.receipt_marks.of(m)?)))
+                .collect()
+        });
         LIVE_FOLDED.with(|f| *f.borrow_mut() = self.folded_cards());
         LIVE_TEMPLATES.with(|t| {
             *t.borrow_mut() = self
@@ -193,7 +215,7 @@ impl MessageView {
                 .collect()
         });
         LIVE_FOLDBAR.with(|b| {
-            *b.borrow_mut() = if self.thread.len() > 1 {
+            *b.borrow_mut() = if self.carded() {
                 self.thread
                     .iter()
                     .map(|m| ((m.account_id, m.id), self.fold_bar_html(m)))
@@ -201,6 +223,15 @@ impl MessageView {
             } else {
                 Default::default()
             }
+        });
+        // On every header, a card's or a full-bleed message's: the marks
+        // are the message's, not the card's.
+        LIVE_MARKS.with(|b| {
+            *b.borrow_mut() = self
+                .thread
+                .iter()
+                .map(|m| ((m.account_id, m.id), self.card_marks_html(m)))
+                .collect()
         });
         let translation = crate::services::translate::load();
         LIVE_TRANSLATE_ON.with(|on| on.set(translation.enabled()));
@@ -220,7 +251,7 @@ impl MessageView {
         });
         Self::conversation_document(
             &self.thread,
-            &self.folder_labels,
+            &self.card_labels(),
             &self.no_autoread,
             &self.frame_heights,
             &self.selected_cards,

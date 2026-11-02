@@ -83,6 +83,18 @@ impl MessageView {
         self.card_atts_shown && (self.thread.len() > 1 || !self.drawer_on)
     }
 
+    /// Whether the reader header's first line has anything on it. With the
+    /// account chip and both switches hidden in Settings it would be an
+    /// empty row adding its spacing above the subject.
+    pub(super) fn account_line_shown(&self) -> bool {
+        let chip = self.account_name.is_some() && self.account_chip_shown;
+        let controls = self.current.is_some()
+            && (self.theme_switch_shown
+                || self.reader_switch_shown
+                || self.zoom != self.zoom_default);
+        chip || controls
+    }
+
     /// The reader's two grounds for `dark` (see [`theme_grounds_for`]).
     pub(super) fn theme_grounds(&self, dark: bool) -> (String, String, String) {
         theme_grounds_for(&self.webview, dark)
@@ -97,16 +109,15 @@ impl MessageView {
         // The cover matches it so the spinner gives way to the document
         // without a change of color.
         let (ground, page, chrome) = self.theme_grounds(dark);
-        let (bg, kind) =
-            if self.thread.len() > 1 || (!self.thread.is_empty() && self.single_message_card) {
-                (&page, "page")
-            } else if self.thread.len() == 1
-                && (self.reader_mode || !paints_own_background(&self.thread[0].body))
-            {
-                (&chrome, "chrome")
-            } else {
-                (&ground, "ground")
-            };
+        let (bg, kind) = if self.carded() {
+            (&page, "page")
+        } else if self.thread.len() == 1
+            && (self.reader_mode || !paints_own_background(&self.thread[0].body))
+        {
+            (&chrome, "chrome")
+        } else {
+            (&ground, "ground")
+        };
         self.webview.set_background_color(&ground_rgba(bg));
         // The spinner and the cover stand in for the message, so they answer to
         // the message's theme: #1e1e1e matches the document's own dark ground,

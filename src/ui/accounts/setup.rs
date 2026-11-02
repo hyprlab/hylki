@@ -76,6 +76,7 @@ impl AccountsWindow {
             blacklist_addrs: Vec::new(),
             filter_rules: init.filters,
             filters_list: None,
+            local_group: None,
             filters_query: Default::default(),
             form_save: Default::default(),
             senders_query: Default::default(),
@@ -138,6 +139,7 @@ impl AccountsWindow {
         self.rebuild_tag_rows(sender);
         self.smart_list = Some(widgets.smart.smart_list.clone());
         self.rebuild_smart_rows(sender);
+        self.local_group = Some(widgets.accounts.local_group.clone());
         let t_list = std::time::Instant::now();
         self.rebuild_account_list(&widgets.accounts.accounts_list, sender);
         tracing::debug!(
@@ -306,6 +308,32 @@ pub(super) fn fill_editor_choices(widgets: &AccountsWindowWidgets) {
         .form
         .clean_lists_row
         .set_list_factory(Some(&non_ellipsizing_factory()));
+    let offline_labels: Vec<String> = crate::config::OfflineMail::ALL
+        .iter()
+        .map(|o| o.label())
+        .collect();
+    let offline_labels: Vec<&str> = offline_labels.iter().map(String::as_str).collect();
+    widgets
+        .form
+        .offline_mail_row
+        .set_model(Some(&gtk::StringList::new(&offline_labels)));
+    widgets
+        .form
+        .offline_mail_row
+        .set_list_factory(Some(&non_ellipsizing_factory()));
+    widgets
+        .form
+        .offline_mail_row
+        .set_factory(Some(&non_ellipsizing_factory()));
+    wrap_subtitle(&widgets.form.offline_mail_row, 30);
+    // Attachments ride along with a period's mail; the newest messages
+    // have their own attachment download already.
+    let attachments = widgets.form.offline_attachments_row.clone();
+    widgets
+        .form
+        .offline_mail_row
+        .connect_selected_notify(move |row| attachments.set_sensitive(row.selected() != 0));
+    widgets.form.offline_attachments_row.set_sensitive(false);
     let reply_labels: Vec<String> = crate::config::ReplyCopies::ALL
         .iter()
         .map(|c| c.label())

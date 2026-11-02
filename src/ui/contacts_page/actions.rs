@@ -11,7 +11,7 @@ use crate::contacts::{ContactDetails, GroupEdit, GroupFormat, Member};
 use crate::i18n::{i18n, i18n_f, ni18n_f};
 
 use super::detail::member_for;
-use super::menus::{confirm, matches_query};
+use super::menus::{confirm, matches_query, names_groups};
 use super::rows::{is_member, split_book_name, Line};
 use super::types::{
     ContactFilter, ContactScope, ContactTree, ContactsPage, ContactsPageInput, ContactsPageOutput,
@@ -58,7 +58,11 @@ impl ContactsPage {
     /// Whether the list's scope takes `c`, the search aside.
     pub(super) fn in_scope(&self, c: &ContactDetails) -> bool {
         match &self.scope {
-            ContactScope::All => !c.is_group(),
+            // Every book's groups are listed only when asked for, by the
+            // Groups filter or a search for them.
+            ContactScope::All => {
+                !c.is_group() || self.groups_only() || names_groups(&self.query)
+            }
             // A book lists its groups as well as its people, the groups
             // first; so does an account of several books.
             ContactScope::Book(book) => c.book_uid == *book,
@@ -279,16 +283,24 @@ impl ContactsPage {
         }
     }
 
-    /// Whether `c` passes the "Show only" filters on; groups always do.
+    /// Whether `c` passes the "Show only" filters on; groups always do, and
+    /// with Groups on nobody else does.
     pub(super) fn passes_filters(
         &self,
         c: &ContactDetails,
         grouped: &std::collections::HashSet<String>,
     ) -> bool {
+        if self.groups_only() {
+            return c.is_group();
+        }
         c.is_group()
             || ContactFilter::ALL
                 .iter()
                 .all(|f| self.filters & f.bit() == 0 || f.passes(c, grouped))
+    }
+
+    pub(super) fn groups_only(&self) -> bool {
+        self.filters & ContactFilter::Groups.bit() != 0
     }
 
     /// The addresses of every group's people, lower case, for "Not in a

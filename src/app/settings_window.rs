@@ -59,8 +59,12 @@ impl AppModel {
     fn pref_init(&self, accounts: &Controller<AccountsWindow>, on_accounts: bool) -> PrefInit {
         PrefInit {
             auto_remote_content: self.auto_remote_content,
+            remote_ahead: self.remote_ahead,
             show_remote_banner: self.show_remote_banner,
             show_spoof_banner: self.show_spoof_banner,
+            receipts: self.receipts,
+            request_receipts: self.request_receipts,
+            returned_receipts: self.returned_receipts,
             gravatar: self.gravatar,
             avatars: self.avatars,
             own_mailbox_face: self.own_mailbox_face,
@@ -84,6 +88,7 @@ impl AppModel {
             single_message_card: self.single_message_card,
             reader_switch: self.reader_switch,
             theme_switch: self.theme_switch,
+            account_chip: self.account_chip,
             desktop_icons: self.desktop_icons,
             reader_default: self.reader_default,
             reader_zoom: self.zoom_default,
@@ -103,10 +108,12 @@ impl AppModel {
             reply_position: self.reply_position,
             signature_position: self.signature_position,
             signature_dashes: self.signature_dashes,
+            fold_quote: self.fold_quote,
             reply_header: self.reply_header.clone(),
             undo_send_secs: self.undo_send_secs,
             notifications: self.notifications_enabled,
             notification_content: self.notification_content,
+            notify_receipts: self.notify_receipts,
             notification_buttons: self.notification_buttons,
             show_attachments: self.show_attachments,
             show_unified: self.show_unified_pref,
@@ -169,6 +176,7 @@ impl AppModel {
             list_pills_below: self.list_pills_below,
             list_search_open: self.list_search_open,
             contacts_search_open: self.contacts_search_open,
+            contact_names: self.contact_names,
             list_search_bottom: self.list_search_bottom,
             list_bulk_bar_bottom: self.list_bulk_bar_bottom,
             toolbar_fold_right: self.toolbar_fold_right,
@@ -347,6 +355,9 @@ impl AppModel {
                     account,
                 },
                 AccountsOutput::Removed { email } => AppMsg::AccountRemoved { email },
+                AccountsOutput::ImportMail { sources, mbox } => {
+                    AppMsg::ImportLocalMail { sources, mbox }
+                }
                 AccountsOutput::Reordered(emails) => AppMsg::AccountsReordered(emails),
                 AccountsOutput::EnabledChanged { email, enabled } => {
                     AppMsg::AccountEnabledChanged { email, enabled }

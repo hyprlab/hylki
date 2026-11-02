@@ -1,0 +1,6 @@
+asked = ["abc@example.org"]
+
+[[read]]
+key = "abc@example.org"
+by = "ann@example.org"
+at = 1700000000

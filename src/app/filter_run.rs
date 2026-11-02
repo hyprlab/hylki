@@ -395,7 +395,7 @@ impl AppModel {
         );
         self.set_filters_applying(false);
         self.notifications
-            .emit(NotifyInput::SetStatus(String::new()));
+            .emit(NotifyInput::SetStatus(self.copy_status()));
         // Always says how many messages the rules were held up against: with
         // nothing matching, that is the whole answer to "are my rules working"
         // (#198). The plural follows that count throughout.

@@ -145,6 +145,8 @@ pub(crate) struct AppModel {
     pub(super) accounts: Vec<Account>,
     /// account_id → that account's folders.
     pub(super) folders: HashMap<u32, Vec<Folder>>,
+    /// How each account's folders nest, as its worker reports it (#554).
+    pub(super) hierarchies: HashMap<u32, crate::models::FolderHierarchy>,
     /// Preferred sidebar account order (by email).
     pub(super) account_order: Vec<String>,
     /// Accounts whose folder list is collapsed in the sidebar (by email).
@@ -168,6 +170,17 @@ pub(crate) struct AppModel {
     /// The pane is too narrow for the left group beside the overflow button
     /// and the window controls at full size: the buttons draw narrower.
     pub(super) reader_compact: bool,
+    /// The same two, for the toolbar in the list header while the reading
+    /// pane is off (#475): the list's width decides them there.
+    pub(super) list_actions_collapsed: bool,
+    pub(super) list_compact: bool,
+    /// The list's width and the toolbar's fold widths in the list header.
+    pub(super) list_fold: std::rc::Rc<super::reading_pane::ListFold>,
+    /// The list and the reader's split, turned on its side for the reader
+    /// below the list (#475).
+    pub(super) mail_split: std::cell::OnceCell<gtk::Paned>,
+    /// A print with the reading pane off, waiting for its bodies.
+    pub(super) pending_print: Option<super::reading_pane::PendingPrint>,
     /// The right group stays in the ⋯ menu at every width.
     pub(super) toolbar_fold_right: bool,
     /// The collapsed header's ⋯ button — the anchor its menu pops from.
@@ -218,6 +231,8 @@ pub(crate) struct AppModel {
     /// Bumped as a search starts and ends, so a pool read from disk for a
     /// search already over is dropped (#472).
     pub(super) search_gen: u64,
+    /// The search of the servers' text under way (#509).
+    pub(super) server_search: super::text_search::ServerSearch,
     /// (account_id, folder_id) whose background backfill has fully finished, so the
     /// message list knows no more rows will stream in for them.
     pub(super) indexed_folders: HashSet<(u32, u32)>,
@@ -237,6 +252,10 @@ pub(crate) struct AppModel {
     /// in-memory body cache without a worker round-trip — so the verdict has to
     /// be held here or it would be lost by the time the reader needs it.
     pub(super) sender_cache: HashMap<BodyKey, Box<crate::models::SenderCheck>>,
+    /// Which server checks each account's mail, learned from the verdicts
+    /// as they arrive: `sender_cache` keeps a verdict as the message has
+    /// it, and the reader shows it only if this account's provider made it.
+    pub(super) vouchers: crate::mail::verify::Vouchers,
     /// (account_id, folder_id) → server-side unread count, accurate beyond the
     /// loaded window (from IMAP STATUS/SEARCH). Drives the sidebar badges.
     pub(super) folder_unread: HashMap<(u32, u32), u32>,
@@ -337,6 +356,7 @@ pub(crate) struct AppModel {
     pub(super) archive_expanded: bool,
     pub(super) junk_expanded: bool,
     pub(super) trash_expanded: bool,
+    pub(super) snoozed_expanded: bool,
     /// Favorite folders (#367), as "email\tpath" entries in the order they
     /// were added, and whether their list is open.
     pub(super) favorites: Vec<String>,
@@ -380,12 +400,27 @@ pub(crate) struct AppModel {
     pub(super) invite_answers: Vec<config::InviteAnswer>,
     /// Whether remote content is auto-loaded for every new message.
     pub(super) auto_remote_content: bool,
+    /// Whether the next messages' remote content is fetched ahead (#474).
+    pub(super) remote_ahead: bool,
     /// Whether the blocked-remote-content banner is shown at all. Hiding it changes nothing about what
     /// is blocked — only whether the reader says so.
     pub(super) show_remote_banner: bool,
     /// Whether a "Check this sender" verdict gets the red banner over the
     /// message. A failed check gets it regardless.
     pub(super) show_spoof_banner: bool,
+    /// Answering requests for read receipts (#520), and the requests
+    /// already answered or ignored here (receipts.toml).
+    pub(super) receipts: config::ReceiptPolicy,
+    pub(super) receipts_answered: Vec<config::ReceiptAnswer>,
+    /// New messages ask for a read receipt (#520).
+    pub(super) request_receipts: bool,
+    /// The sent mail waiting for a read receipt and the receipts that came
+    /// back (read_by.toml), where the receipt mail goes, and the receipt
+    /// mail already filed this session.
+    pub(super) read_by: config::ReadByFile,
+    pub(super) returned_receipts: config::ReturnedReceipts,
+    pub(super) notify_receipts: bool,
+    pub(super) receipts_filed: HashSet<BodyKey>,
     /// Addresses/domains whose incoming inbox mail is auto-deleted (lowercased).
     pub(super) blacklist: Vec<String>,
     /// Seconds the message-list actions palette stays open after the cursor leaves.
@@ -449,6 +484,8 @@ pub(crate) struct AppModel {
     pub(super) list_search_open: bool,
     /// Contacts' search field stays open.
     pub(super) contacts_search_open: bool,
+    /// Saved contacts go by their address-book names (#541).
+    pub(super) contact_names: bool,
     /// The list's search field and bulk bar open under the rows (#496).
     pub(super) list_search_bottom: bool,
     pub(super) list_bulk_bar_bottom: bool,
@@ -467,6 +504,8 @@ pub(crate) struct AppModel {
     pub(super) autostart: bool,
     /// The window opens fullscreen (#511).
     pub(super) start_fullscreen: bool,
+    /// The reader beside the list (#475); off, messages open in windows.
+    pub(super) reading_pane: config::ReadingPane,
     /// Tray icon (issue #116): the setting, the icon choice, and the running
     /// item while the setting is on.
     pub(super) tray_enabled: bool,
@@ -566,6 +605,8 @@ pub(crate) struct AppModel {
     pub(super) focus: config::FocusMode,
     /// The main menu's "Focus Mode" check item.
     pub(super) focus_action: gtk::gio::SimpleAction,
+    /// The main menu's "Reading Pane" check item, the setting's only switch.
+    pub(super) reading_pane_action: gtk::gio::SimpleAction,
     /// The message list header's foldable controls and the ⋯ that stands in
     /// for them in Focus Mode (set in init).
     pub(super) list_header_widgets: std::cell::OnceCell<ListHeaderWidgets>,
@@ -683,6 +724,8 @@ pub(crate) struct AppModel {
     pub(super) reader_switch: bool,
     /// The Light / Dark Mode switch is shown in the reader header (PR #386).
     pub(super) theme_switch: bool,
+    /// The account chip is shown in the reader header (Settings).
+    pub(super) account_chip: bool,
     /// Icons come from the desktop's icon theme, not Hylki's own (Settings).
     pub(super) desktop_icons: bool,
     /// What Reader View does when a message is opened (Settings).
@@ -752,6 +795,8 @@ pub(crate) struct AppModel {
     pub(super) signature_position: config::SignaturePosition,
     /// A `-- ` line goes above the signature in new messages.
     pub(super) signature_dashes: bool,
+    /// A reply's quote opens folded in the composer (#549).
+    pub(super) fold_quote: bool,
     /// The line above a reply's quote, "" for the default (#528).
     pub(super) reply_header: String,
     /// Undo Send delay in seconds, 0 for off (#434).
@@ -781,6 +826,9 @@ pub(crate) struct AppModel {
     pub(super) notify_count: usize,
     /// Accounts currently performing network activity (drives the spinner).
     pub(super) busy: HashSet<u32>,
+    /// Messages the accounts still have to copy to On This Computer (#552):
+    /// the spinner turns and the status line says so while there are any.
+    pub(super) copies_left: usize,
     pub(super) sidebar: Controller<Sidebar>,
     /// A second instance of the sidebar, always expanded, for the floating
     /// peek panel. It is fed the same contents and counts as the docked one
@@ -803,9 +851,18 @@ pub(crate) struct AppModel {
     pub(super) outbox_by_account: HashMap<u32, Vec<crate::models::OutboxItem>>,
     /// Snoozed mail (#527), as snoozed.toml keeps it.
     pub(super) snoozed: Vec<config::Snooze>,
+    /// Whether the sidebar was last given the unified Snoozed row, which
+    /// it has only while something is snoozed (#542).
+    pub(super) snoozed_row: std::cell::Cell<bool>,
+    /// How many messages each Snoozed folder holds on the server, by
+    /// (account, path), as the last recount or listing found (#542).
+    pub(super) snoozed_held: HashMap<(u32, String), u32>,
     /// Snoozed mail a worker has been asked to bring back, by (account
     /// address, Message-ID), with when to ask again if no answer comes.
     pub(super) snooze_waking: HashMap<(String, String), std::time::Instant>,
+    /// Snoozes an undo took back, by (account address, Message-ID), for a
+    /// redo to restore (#542).
+    pub(super) snooze_undone: HashMap<(String, String), config::Snooze>,
     /// The time a Snooze of the list's selection is for, while the list
     /// resolves which messages that is.
     pub(super) snooze_until: Option<i64>,
@@ -907,6 +964,9 @@ pub(crate) struct AppModel {
     /// The `ExportRaw` token the pending draft's bytes come back under.
     /// While it is set, the draft waits for those and not for its body.
     pub(super) pending_draft_token: Option<u64>,
+    /// Drafts and templates being fetched ahead of time, by `ExportRaw`
+    /// token, so they open at once (see `draft_copies`).
+    pub(super) draft_fetches: std::collections::HashMap<u64, super::draft_copies::DraftFetch>,
     /// A message whose body is being fetched so a reply to it can open with
     /// handed-in files (Send with Hylki → Reply to a Message…).
     pub(super) pending_reply: Option<(Message, HandOffFiles)>,
@@ -924,6 +984,8 @@ pub(crate) struct AppModel {
     /// A forward (#240) waiting on the body, or the attachments, it is to
     /// carry, and whether it opens inline or in a window.
     pub(super) pending_forward: Option<(Message, bool)>,
+    /// Create Event or Create Task (#564) waiting on the message's body.
+    pub(super) pending_to_calendar: Option<(Message, crate::calendar::ItemKind)>,
     /// A reply started from a notification's button (#244), waiting for
     /// the body it quotes.
     pub(super) pending_notified_reply: Option<Message>,

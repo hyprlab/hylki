@@ -201,9 +201,23 @@ impl AppModel {
                 }
                 self.update_busy_indicator();
                 // A sync going quiet must not blank the status while background
-                // bulk operations are still reporting there.
-                if !text.is_empty() || self.bulk_pending == 0 {
+                // bulk operations are still reporting there, and hands it back
+                // to the copying to On This Computer when that is still going.
+                if !text.is_empty() {
                     self.notifications.emit(NotifyInput::SetStatus(text));
+                } else if self.bulk_pending == 0 {
+                    self.notifications
+                        .emit(NotifyInput::SetStatus(self.copy_status()));
+                }
+            }
+
+            AppMsg::CopyProgress { left } => {
+                self.copies_left = left;
+                self.update_busy_indicator();
+                // A sync's own line, or a bulk operation's, comes first.
+                if self.busy.is_empty() && self.bulk_pending == 0 {
+                    self.notifications
+                        .emit(NotifyInput::SetStatus(self.copy_status()));
                 }
             }
 
@@ -504,5 +518,22 @@ fn install_quiet_message_actions(sender: &ComponentSender<AppModel>, ty: &gtk::g
             }
         });
         app.add_action(&act);
+    }
+}
+
+impl AppModel {
+    /// The status line while accounts copy to On This Computer (#552);
+    /// empty when nothing is left. What a finished task leaves the line
+    /// showing.
+    pub(super) fn copy_status(&self) -> String {
+        match self.copies_left {
+            0 => String::new(),
+            n => crate::i18n::ni18n_f(
+                "Copying one message to On This Computer…",
+                "Copying {n} messages to On This Computer…",
+                n as u32,
+                &[("n", &n.to_string())],
+            ),
+        }
     }
 }

@@ -15,6 +15,7 @@ pub(in crate::ui::preferences) struct GeneralPage {
     pub(in crate::ui::preferences) metered_row: adw::SwitchRow,
     pub(in crate::ui::preferences) notifications_row: adw::SwitchRow,
     pub(in crate::ui::preferences) notification_content_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) notify_receipts_row: adw::SwitchRow,
     pub(in crate::ui::preferences) sound_row: adw::SwitchRow,
     pub(in crate::ui::preferences) sound_choice_row: adw::ComboRow,
     pub(in crate::ui::preferences) sound_file_row: adw::ActionRow,
@@ -80,6 +81,18 @@ impl GeneralPage {
                         set_title: &i18n("Show sender and subject"),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetNotificationContent(row.is_active()));
+                        },
+                    },
+
+                    // When a receipt comes back for mail sent (#520).
+                    #[name = "notify_receipts_row"]
+                    adw::SwitchRow {
+                        // Kept current by update_view.
+                        set_sensitive: model.notifications,
+                        set_title: &i18n("Read receipts"),
+                        set_subtitle: &i18n("When someone opens mail you asked a receipt for."),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetNotifyReceipts(row.is_active()));
                         },
                     },
 
@@ -225,6 +238,7 @@ impl GeneralPage {
             metered_row,
             notifications_row,
             notification_content_row,
+            notify_receipts_row,
             sound_row,
             sound_choice_row,
             sound_file_row,
@@ -243,6 +257,7 @@ impl GeneralPage {
     pub(in crate::ui::preferences) fn update_view(&self, model: &Preferences) {
         self.notification_content_row
             .set_sensitive(model.notifications);
+        self.notify_receipts_row.set_sensitive(model.notifications);
         self.sound_row.set_sensitive(model.notifications);
         self.sound_choice_row
             .set_sensitive(model.notifications && model.sound.enabled);

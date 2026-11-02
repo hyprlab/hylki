@@ -12,6 +12,7 @@ pub(in crate::ui::preferences) struct ReadingPage {
     pub(in crate::ui::preferences) read_mark_row: adw::ComboRow,
     pub(in crate::ui::preferences) message_theme_row: adw::ComboRow,
     pub(in crate::ui::preferences) theme_switch_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) account_chip_row: adw::SwitchRow,
     pub(in crate::ui::preferences) reader_zoom_row: adw::ComboRow,
     pub(in crate::ui::preferences) override_fonts_row: adw::SwitchRow,
     pub(in crate::ui::preferences) reader_font_row: adw::ActionRow,
@@ -64,6 +65,15 @@ impl ReadingPage {
                         set_subtitle: &i18n("Displays in the message header for each message."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetThemeSwitch(row.is_active()));
+                        },
+                    },
+
+                    #[name = "account_chip_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Show account in message header"),
+                        set_subtitle: &i18n("The account a message is in, above its subject."),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetAccountChip(row.is_active()));
                         },
                     },
 
@@ -266,6 +276,7 @@ impl ReadingPage {
             read_mark_row,
             message_theme_row,
             theme_switch_row,
+            account_chip_row,
             reader_zoom_row,
             override_fonts_row,
             reader_font_row,

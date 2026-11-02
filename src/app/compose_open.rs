@@ -3,6 +3,7 @@
 
 use relm4::prelude::*;
 
+use crate::config;
 use crate::models::{FolderKind, Message};
 use crate::ui::compose::{ComposeInput, ComposePrefill};
 use crate::worker::MailRequest;
@@ -99,6 +100,18 @@ impl AppModel {
             self.open_draft_body(m, inline, extra, sender);
             return;
         };
+        // Fetched ahead (see `draft_copies`): the editor opens at once.
+        if let Some(raw) = self.kept_draft(&m, &path) {
+            tracing::debug!(target: "hylki::drafts", "draft {} opened from its kept copy", m.uid);
+            self.compose_from_draft_raw(m, &raw, inline, extra, sender);
+            return;
+        }
+        tracing::debug!(target: "hylki::drafts", "draft {} not kept yet: fetching it", m.uid);
+        // Not kept yet: the reader says it is loading while the bytes come,
+        // rather than leave what it showed before.
+        if inline && self.reading_pane == config::ReadingPane::Right {
+            self.show_message(Some(m.clone()), true);
+        }
         let token = self.next_transfer;
         self.next_transfer += 1;
         self.pending_draft_token = Some(token);
@@ -197,6 +210,8 @@ impl AppModel {
             body_html: e.body_html,
             in_reply_to: e.in_reply_to,
             references: e.references,
+            receipt: Some(e.receipt),
+            importance: e.importance,
             from_address: first_recipient(&e.from)
                 .map(|(_, addr)| addr)
                 .unwrap_or_default(),
@@ -228,7 +243,7 @@ impl AppModel {
         // back in Templates, and sending leaves it there.
         prefill.template =
             self.folder_kind(m.account_id, m.folder_id) == Some(FolderKind::Templates);
-        if inline {
+        if inline && self.reading_pane == config::ReadingPane::Right {
             self.attachments.clear();
             self.attachments_loading = false;
             self.sync_attachment_drawer();
@@ -236,6 +251,9 @@ impl AppModel {
             self.current_thread.clear();
             self.show_message(None, false);
             self.open_inline_reply(m.account_id, prefill, None, sender);
+            if let Some(r) = self.reader_compose.as_mut() {
+                r.list_draft = true;
+            }
         } else {
             self.open_compose(m.account_id, prefill, sender);
         }
@@ -391,7 +409,7 @@ impl AppModel {
     /// The subject inside `m` once it has been decrypted (#493), where its
     /// own is a placeholder. Only answers use it: a reply to an encrypted
     /// message starts encrypted, and its subject travels inside again.
-    fn decrypted_subject(&self, m: &Message) -> Option<String> {
+    pub(super) fn decrypted_subject(&self, m: &Message) -> Option<String> {
         self.sender_cache
             .get(&body_key(m))?
             .pgp

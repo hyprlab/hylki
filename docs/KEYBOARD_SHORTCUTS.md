@@ -141,7 +141,10 @@ no recipient is not sent, and one scheduled for later is queued.
 
 <kbd>Ctrl+Shift+A</kbd> attaches files, and <kbd>Ctrl+Shift+T</kbd>,
 <kbd>Ctrl+Shift+C</kbd> and <kbd>Ctrl+Shift+B</kbd> put the cursor in To, Cc
-and Bcc, showing the row if it is hidden, as in Thunderbird. Outside the
+and Bcc, showing the row if it is hidden, as in Thunderbird.
+<kbd>Ctrl+Shift+M</kbd> opens the list of
+[mail merge](DOCUMENTATION.md#mail-merge) fields at the cursor, in To, the
+Subject or the body. Outside the
 composer, <kbd>Ctrl+Shift+A</kbd> and <kbd>Ctrl+Shift+C</kbd> keep the
 meanings below.
 
@@ -174,6 +177,7 @@ These work with or without single-key shortcuts too:
 | <kbd>Ctrl+Shift+K</kbd> | Command palette with `>` already typed: actions only |
 | <kbd>Delete</kbd> | Delete the selected messages, or the message you are reading, in the main window or its own |
 | <kbd>Backspace</kbd> | Delete the selected messages, with the list focused |
+| <kbd>→</kbd> <kbd>←</kbd> | Open a conversation out in the list, or fold it back up, with the list focused; <kbd>←</kbd> works from any of its replies |
 | <kbd>Shift+Delete</kbd> | Delete the selected messages permanently, without going to Trash, after asking |
 | <kbd>Ctrl+F</kbd> | Search the message list, or find in the message when it has the focus |
 | <kbd>Ctrl+P</kbd> | Print the message you are reading |
@@ -184,6 +188,7 @@ These work with or without single-key shortcuts too:
 | <kbd>Ctrl+Shift+A</kbd> | Show or hide the accounts in the sidebar |
 | <kbd>Ctrl+Shift+C</kbd> | Console mode, when it is enabled in Settings |
 | <kbd>F11</kbd> | Fullscreen on or off |
+| <kbd>Ctrl+Alt+1</kbd> <kbd>Ctrl+Alt+2</kbd> <kbd>Ctrl+Alt+3</kbd> | Reading pane right of the list, below it, or off |
 | <kbd>Ctrl+,</kbd> | Open Settings |
 | <kbd>Ctrl+W</kbd> | Close the window; mail keeps syncing in the background. In Settings, a message window or a composer window, closes that window |
 | <kbd>Ctrl+Q</kbd> | Quit Hylki |

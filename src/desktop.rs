@@ -23,3 +23,4 @@ pub(crate) mod text_scale;
 pub(crate) mod theme;
 mod theme_palettes;
 pub(crate) mod web_fonts;
+pub(crate) mod x11_shm;

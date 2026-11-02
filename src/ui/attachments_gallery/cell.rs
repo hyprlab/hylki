@@ -146,7 +146,7 @@ fn append_cell_labels(cell: &gtk::Box, item: &GalleryItem) {
         cell.append(&subj);
     }
 
-    let mut meta = vec![folder_label(&item.folder_path)];
+    let mut meta = vec![folder_label(item)];
     let date = item.date_label();
     if !date.is_empty() {
         meta.push(date);

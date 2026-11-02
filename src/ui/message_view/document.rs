@@ -7,15 +7,17 @@ use super::wrapper_css::wrapper_css;
 
 use super::frame::{
     message_frame, CHROME, GROUND, LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE,
-    LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE, LIVE_TRANSLATE_ON, LIVE_UNSUB, PAGE,
+    LIVE_MARKS, LIVE_READ, LIVE_RECEIPT, LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE,
+    LIVE_TRANSLATE_ON, LIVE_UNSUB, PAGE,
 };
 use super::html::attr_escape;
 use super::invite::invite_row_html;
+use super::receipt_banner::{read_mark_html, receipt_row_html};
 use super::remote::has_remote_resources;
 use super::size_script::SIZE_SCRIPT;
 use super::snippets::{
     att_row_html, card_action_button, inline_icon_svg, paints_own_background, recipient_count,
-    recipients_html, tag_chips_html, template_row_html, unsub_row_html, FOLD_BAR_FACE,
+    recipients_html, tag_chips_html, template_row_html, unsub_row_html,
 };
 use super::MessageView;
 use crate::encoding::escape_html;
@@ -146,9 +148,8 @@ impl MessageView {
         // A lone message cards up too when the preference asks (#57);
         // otherwise it keeps the full-bleed treatment below.
         let carded = thread.len() > 1 || (conversation && single_message_card);
-        // Card selection only means something between cards: a lone message is
-        // already the selection, so it never wears the accent outline.
-        let mark_selection = thread.len() > 1;
+        // A full-bleed message is no card to outline.
+        let mark_selection = carded;
         let cards = Cards {
             thread,
             folder_labels,
@@ -285,8 +286,21 @@ fn card_body(cards: &Cards<'_>, m: &Message) -> String {
 }
 
 /// The face on a card's header: a mailbox of your own wears the one it was
-/// given (#189), anyone else tinted initials.
+/// given (#189), anyone else their photo or icon once one is known (#560),
+/// else tinted initials. Each circle carries its card's key, for the face a
+/// lookup patches in later.
 fn card_avatar(m: &Message, dark: bool) -> String {
+    let circle = circle_html(m, dark);
+    let key = format!(" data-key=\"{}:{}\"", m.account_id, m.id);
+    // Both shapes open with the class attribute; the key goes at the end of
+    // the opening tag.
+    match circle.find('>') {
+        Some(end) => format!("{}{key}{}", &circle[..end], &circle[end..]),
+        None => circle,
+    }
+}
+
+fn circle_html(m: &Message, dark: bool) -> String {
     // One of your own mailboxes wrote this card (#189):
     // show what its account chose — the sidebar's picture,
     // or its emoji on the account color — so your own
@@ -324,9 +338,13 @@ fn card_avatar(m: &Message, dark: bool) -> String {
             (None, None) => None,
         }
     });
-    own.unwrap_or_else(|| {
+    let face = || {
+        super::faces::known_face(&m.from_addr)
+            .map(|uri| format!("<img class=\"hylki-ava\" src=\"{uri}\" alt=\"\">"))
+    };
+    own.or_else(face).unwrap_or_else(|| {
         let initial = m
-            .from_name
+            .shown_from_name()
             .trim()
             .chars()
             .next()
@@ -388,17 +406,17 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
         sens = inline_icon_svg("tag-outline-symbolic"),
     );
     format!(
-        "<section class=\"hylki-msg{sel}{unread_cls}{folded_cls}\" data-key=\"{aid}:{id}\">{fbar}\
+        "<section class=\"hylki-msg{sel}{unread_cls}{starred_cls}{folded_cls}\" data-key=\"{aid}:{id}\">\
                <header class=\"hylki-msg-hdr\" data-key=\"{aid}:{id}\" \
                  title=\"{hdr_title}\">\
                  <div class=\"hylki-hdr-line\">\
                    {ava}{dot}<span class=\"hylki-from\">{from}</span>{verify}{addr}\
                    <span class=\"hylki-tags\" data-key=\"{aid}:{id}\">{tags}</span>\
-                   <span class=\"hylki-hdr-meta\">{folder}{rcpt_toggle}\
+                   <span class=\"hylki-hdr-meta\">{folder}{rcpt_toggle}{marks}{read}\
                      <span class=\"hylki-date\">{date}</span></span>\
                    {acts_toggle}{acts}\
                  </div>{rcpt}\
-               </header>{tpl}{invite}{unsub}{tr}{body}{atts}</section>",
+               </header>{fbar}{tpl}{invite}{receipt}{unsub}{tr}{body}{atts}</section>",
         aid = m.account_id,
         id = m.id,
         // The message's own attachments beneath its body (#213).
@@ -424,6 +442,21 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
             invite_row_html(
                 (m.account_id, m.id),
                 i.borrow()
+                    .get(&(m.account_id, m.id))
+                    .map(String::as_str)
+                    .unwrap_or(""),
+            )
+        }),
+        // Sent mail's read receipt checkmarks (#520), beside the date:
+        // always there, empty (hidden) unless the message asked for one.
+        read = LIVE_READ.with(|r| {
+            read_mark_html((m.account_id, m.id), r.borrow().get(&(m.account_id, m.id)))
+        }),
+        // The read receipt banner (#520), on the same terms.
+        receipt = LIVE_RECEIPT.with(|r| {
+            receipt_row_html(
+                (m.account_id, m.id),
+                r.borrow()
                     .get(&(m.account_id, m.id))
                     .map(String::as_str)
                     .unwrap_or(""),
@@ -487,17 +520,25 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
             ""
         },
         unread_cls = if m.unread { " unread" } else { "" },
+        starred_cls = if m.starred { " starred" } else { "" },
+        marks = LIVE_MARKS.with(|b| {
+            b.borrow()
+                .get(&(m.account_id, m.id))
+                .cloned()
+                .unwrap_or_default()
+        }),
         // Folded (#326): the header and a line of preview.
         folded_cls = if LIVE_FOLDED.with(|f| f.borrow().contains(&(m.account_id, m.id))) {
             " hylki-folded"
         } else {
             ""
         },
-        // What a folded card shows instead of all of it (#326).
+        // What a folded card shows under its header instead of the
+        // rest (#326).
         fbar = LIVE_FOLDBAR.with(|b| {
             b.borrow()
                 .get(&(m.account_id, m.id))
-                .map(|bar| bar.replace(FOLD_BAR_FACE, ava_html))
+                .cloned()
                 .unwrap_or_default()
         }),
         // `escape_html`, not `attr_escape`: these land in element
@@ -505,7 +546,7 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
         // display name is attacker-controlled (and RFC 2047-decoded,
         // so any byte sequence can be delivered), and this document
         // is the trusted wrapper — not a sandboxed message frame.
-        from = escape_html(&m.from_name),
+        from = escape_html(&m.shown_from_name()),
         // An initials circle, tinted per sender address, so who
         // wrote each card — and which cards are your own replies —
         // reads at a glance (#22). Nothing is linked: a picture

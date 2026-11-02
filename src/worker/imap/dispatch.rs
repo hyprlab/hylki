@@ -348,8 +348,15 @@ impl<E: Emit> ImapWorker<E> {
             }
             MailRequest::FindKeywords => self.on_find_keywords().await,
             MailRequest::Quota => self.on_quota().await,
+            // Only On This Computer imports mail (#552).
+            MailRequest::ImportMail { .. } => After::Done,
             MailRequest::RefreshKeywords { keywords } => self.on_refresh_keywords(keywords).await,
             MailRequest::RefreshFlags { paths } => self.on_refresh_flags(paths).await,
+            // Run from the idle ladder, a folder a step.
+            MailRequest::FindText { gen, terms, paths } => {
+                self.on_find_text(gen, terms, paths);
+                After::Done
+            }
             MailRequest::UndoMove {
                 path,
                 dest,

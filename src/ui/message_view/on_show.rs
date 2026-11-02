@@ -169,10 +169,12 @@ impl MessageView {
             self.patch_verify_badge(aid, id);
             self.patch_unsub(aid, id);
             self.patch_invite(aid, id);
+            self.patch_receipt(aid, id);
         }
         // Likewise attachments (#213): the document was built from
         // what was known when the render was queued.
         let keys: Vec<(u32, u32)> = self.thread.iter().map(|m| (m.account_id, m.id)).collect();
         self.patch_card_atts(&keys);
+        self.patch_owed_faces();
     }
 }

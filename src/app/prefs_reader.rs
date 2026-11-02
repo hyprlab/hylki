@@ -129,11 +129,23 @@ impl AppModel {
                 }
             }
 
+            PrefOutput::SetReceipts(policy) => {
+                if pref!(self.receipts = policy) {
+                    self.refresh_receipt_banners();
+                }
+            }
+
             PrefOutput::SetShowSpoofBanner(on) => {
                 if pref!(self.show_spoof_banner = on) {
                     self.message_view
                         .emit(MessageViewInput::SetSpoofBannerShown(on));
                     self.popouts_emit(|| MessageWindowInput::SetSpoofBannerShown(on));
+                }
+            }
+
+            PrefOutput::SetRemoteAhead(on) => {
+                if pref!(self.remote_ahead = on) && !on {
+                    crate::services::remote_content::fetch_ahead([]);
                 }
             }
 
@@ -251,6 +263,13 @@ impl AppModel {
                 if pref!(self.pgp_labels = on) {
                     self.message_view.emit(MessageViewInput::SetPgpLabels(on));
                     self.popouts_emit(|| MessageWindowInput::SetPgpLabels(on));
+                }
+            }
+            PrefOutput::SetAccountChip(on) => {
+                if pref!(self.account_chip = on) {
+                    self.message_view
+                        .emit(MessageViewInput::SetAccountChipShown(on));
+                    self.popouts_emit(|| MessageWindowInput::SetAccountChipShown(on));
                 }
             }
             PrefOutput::SetReaderFindBottom(on) => {

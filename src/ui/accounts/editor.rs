@@ -261,6 +261,12 @@ impl AccountsWindow {
             .form
             .clean_lists_row
             .set_visible(matches!(protocol, Protocol::Imap | Protocol::Jmap));
+        // Every backend keeps a period offline (#536), but a POP3 message
+        // only ever comes down whole, attachments and all.
+        widgets
+            .form
+            .offline_attachments_row
+            .set_visible(protocol != Protocol::Pop3);
         widgets
             .form
             .reply_copies_row
@@ -568,6 +574,7 @@ impl AccountsWindow {
         widgets.remove_btn.set_visible(false);
         // A prior GOA edit may have hidden the provider picker.
         widgets.form.provider_row.set_visible(true);
+        super::local::show_local_state(widgets, false);
         self.editor_seed = Some(self.editor_fingerprint(widgets));
         mount_editor(widgets);
         widgets.nav.push_by_tag("editor");
@@ -638,6 +645,7 @@ impl AccountsWindow {
         self.load_signatures(widgets, signatures, default);
         self.fill_face(widgets, &acc);
         show_goa_state(widgets, &acc);
+        super::local::show_local_state(widgets, acc.is_local());
         self.editor_seed = Some(self.editor_fingerprint(widgets));
         mount_editor(widgets);
         widgets.nav.push_by_tag("editor");

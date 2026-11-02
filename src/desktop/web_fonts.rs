@@ -60,7 +60,7 @@ enum State {
     Probing,
     /// Settled for this session, one way or the other: nothing is watched.
     Settled,
-    /// Not available here (not the Flatpak, or the user set the fonts up).
+    /// Not available here (no fallback config, or the user set the fonts up).
     Off,
 }
 
@@ -82,7 +82,8 @@ thread_local! {
 }
 
 /// The fallback config, when this build has one. `HYLKI_FONT_FALLBACK_CONF`
-/// names another file, for trying the whole path outside the Flatpak.
+/// names another file: the AppImage's, which carries its own fonts and sets
+/// it in the bundle's environment, or one for trying the whole path by hand.
 fn fallback_conf() -> Option<String> {
     if let Ok(path) = std::env::var("HYLKI_FONT_FALLBACK_CONF") {
         return std::path::Path::new(&path).is_file().then_some(path);
@@ -91,8 +92,13 @@ fn fallback_conf() -> Option<String> {
         .then(|| FALLBACK_CONF.to_string())
 }
 
-/// The runtime the choice is tied to: its commit in the Flatpak.
+/// The runtime the choice is tied to: its commit in the Flatpak. An AppImage
+/// brings its own WebKit, so there it is the version, and an update tries
+/// the host's fonts again as a runtime update does.
 fn runtime_key() -> String {
+    if crate::desktop::platform::is_appimage() {
+        return format!("appimage {}", env!("CARGO_PKG_VERSION"));
+    }
     std::fs::read_to_string("/.flatpak-info")
         .ok()
         .and_then(|info| {

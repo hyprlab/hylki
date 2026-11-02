@@ -4,6 +4,12 @@
 # the tagged commit pinned in co.hyprlab.Hylki.yml.
 #
 #   tools/local-manifest.sh /tmp/hylki-local.yml
+#   tools/local-manifest.sh /tmp/hylki-beta.yml path/to/co.hyprlab.Hylki.Beta.yml
+#
+# The second argument picks another manifest; the tree it builds is the one
+# that manifest sits in. The beta's lives on the beta branch only, and the
+# aarch64 CI build runs this script from the workflow's own commit against an
+# older checkout, so the tree is never taken from where the script is.
 #
 # Two callers need this:
 #
@@ -18,8 +24,10 @@
 # about being the same recipe.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SRC="$ROOT/co.hyprlab.Hylki.yml"
+HERE="$(cd "$(dirname "$0")/.." && pwd)"
+SRC="${2:-$HERE/co.hyprlab.Hylki.yml}"
+ROOT="$(cd "$(dirname "$SRC")" && pwd)"
+SRC="$ROOT/$(basename "$SRC")"
 OUT="${1:-$ROOT/co.hyprlab.Hylki.local.yml}"
 
 python3 - "$SRC" "$OUT" "$ROOT" <<'PY'
@@ -33,7 +41,7 @@ manifest = open(src).read()
 pinned = re.compile(
     r"      - type: git\n"
     r"        url: https://github\.com/hyprlab/hylki\.git\n"
-    r"        tag: v[0-9.]+\n"
+    r"        tag: v[0-9][0-9A-Za-z.-]*\n"
     r"        commit: [0-9a-f]+\n"
 )
 local = (

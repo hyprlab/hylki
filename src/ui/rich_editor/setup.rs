@@ -11,6 +11,7 @@ use webkit6::prelude::WebViewExt;
 use super::context_menu::connect_context_menu;
 use super::documents::{document, image_policy_meta, reground};
 use super::files::{attach_all, deliver_files};
+use super::grammar::{self, GrammarState};
 use super::spelling::apply_spellcheck;
 use super::toolbar::build_toolbar;
 use super::{
@@ -63,6 +64,8 @@ impl RichEditor {
         let source: std::rc::Rc<std::cell::Cell<Option<SourceKind>>> =
             std::rc::Rc::new(std::cell::Cell::new(None));
         let spell_langs_cb: SpellLangsCallback = Default::default();
+        let grammar: GrammarState = Default::default();
+        grammar::connect(&webview, &ucm, &grammar);
         // The stock editable menu's single "Paste" hides the plain/rich choice
         // behind the preference; the menu offers both, always, in its place.
         // Over an image the menu leads with image actions — cut, copy, and
@@ -74,6 +77,7 @@ impl RichEditor {
             text_history.clone(),
             plain.clone(),
             spell_langs_cb.clone(),
+            grammar.clone(),
         );
 
         // Files dropped from a file manager never reach the document: WebKitGTK
@@ -129,6 +133,7 @@ impl RichEditor {
             text_history,
             history_cb,
             spell_langs_cb,
+            grammar,
             _theme_handler: std::rc::Rc::new(ThemeHandlerGuard(Some(theme_handler))),
             image_policy,
             zoom: std::rc::Rc::new(std::cell::Cell::new(1.0)),

@@ -78,6 +78,9 @@ pub(super) fn forward_outgoing(
         encrypt: false,
         send_at: None,
         calendar: None,
+        request_receipt: false,
+        importance: Default::default(),
+        receipt_report: None,
     }
 }
 

@@ -14,6 +14,9 @@ impl MessageView {
     }
 
     pub(super) fn on_fold_all(&mut self, folded: bool) {
+        if !self.carded() {
+            return;
+        }
         for m in &self.thread {
             self.folds.insert((m.account_id, m.id), folded);
         }
@@ -99,9 +102,7 @@ impl MessageView {
         mode: SelectMode,
         sender: &ComponentSender<Self>,
     ) {
-        // Only meaningful in a conversation: a lone message is already
-        // the selection.
-        if self.thread.len() <= 1 {
+        if !self.carded() {
             return;
         }
         let key = (account_id, id);
@@ -163,7 +164,7 @@ impl MessageView {
     }
 
     pub(super) fn on_select_all_cards(&mut self, sender: &ComponentSender<Self>) {
-        if self.thread.len() <= 1 {
+        if !self.carded() {
             return;
         }
         let keys: Vec<(u32, u32)> = self.thread.iter().map(|m| (m.account_id, m.id)).collect();
@@ -339,7 +340,9 @@ impl MessageView {
         let js = format!(
             "(function(){{\
              var b=document.querySelector('.hylki-act[data-act=\"star\"][data-key=\"{account_id}:{id}\"]');\
-             if(b)b.classList.{}('on');}})()",
+             if(b)b.classList.{0}('on');\
+             var s=document.querySelector('.hylki-msg[data-key=\"{account_id}:{id}\"]');\
+             if(s)s.classList.{0}('starred');}})()",
             if starred { "add" } else { "remove" },
         );
         self.run_js_or_warn(&js, "card star patch");

@@ -147,6 +147,7 @@ pub(crate) fn kind_label(kind: FolderKind) -> String {
         FolderKind::Archive => i18n("Archive"),
         FolderKind::Junk => i18n("Junk"),
         FolderKind::Trash => i18n("Trash"),
+        FolderKind::Snoozed => i18n("Snoozed"),
         _ => i18n("Folder"),
     }
 }
@@ -173,7 +174,7 @@ pub(crate) struct SectionData {
     pub(crate) folder_order: Vec<String>,
     /// How the server spells its folder hierarchy, to tell a folder's
     /// siblings on the server from the folders merely drawn beside it.
-    pub(crate) hierarchy: Hierarchy,
+    pub(crate) hierarchy: FolderHierarchy,
     /// How the custom folders are sorted: the account's own choice
     /// (`own_folder_sort`) or else Settings' (`default_folder_sort`).
     pub(crate) folder_sort: crate::config::FolderSort,
@@ -215,6 +216,7 @@ pub(crate) struct SidebarInit {
     pub(crate) archive_expanded: bool,
     pub(crate) junk_expanded: bool,
     pub(crate) trash_expanded: bool,
+    pub(crate) snoozed_expanded: bool,
     pub(crate) favorites_expanded: bool,
     pub(crate) smart_expanded: bool,
     pub(crate) contacts_expanded: bool,
