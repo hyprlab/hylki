@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Fixed: the window could open blank while the keyring was locked**
+  (#573, by Fabio Rotondo). An account's password was read before the
+  account and its cached folders were shown, so a keyring that did not
+  answer, locked and waiting to be unlocked, left the sidebar empty. The
+  account and its folders now show first. When the keyring gives an error,
+  or has not answered after 10 seconds, a dialog names the accounts it
+  concerns. It closes by itself once a waiting keyring answers, and after an
+  error **Retry** reads the keyring again. This covers IMAP, POP3 and JMAP
+  accounts; an OAuth account, which signs in with a token, no longer reads
+  the keyring at start.
+
 - **Added: a mail merge's progress, and a sending rate** (#447, suggested
   by samuel-edlmeier). While a merge sends, its toast counts the messages
   sent so far, "Sent 57 of 200 messages", and **Stop** sends no more of

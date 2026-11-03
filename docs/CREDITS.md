@@ -105,11 +105,13 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   person running it.
 - [**Fabio Rotondo**](https://github.com/fsoft72) ([#379](https://github.com/hyprlab/hylki/pull/379),
   [#380](https://github.com/hyprlab/hylki/pull/380), [#383](https://github.com/hyprlab/hylki/pull/383),
-  [#384](https://github.com/hyprlab/hylki/pull/384), [#386](https://github.com/hyprlab/hylki/pull/386)):
+  [#384](https://github.com/hyprlab/hylki/pull/384), [#386](https://github.com/hyprlab/hylki/pull/386),
+  [#573](https://github.com/hyprlab/hylki/pull/573)):
   the Hylki address book with vCard import, filters on whether the sender is
   in Contacts, the per-message Light / Dark Mode switch, tag-colored rows,
-  marking a message read from its unread dot, and a search that stays open
-  while its folder scope is picked.
+  marking a message read from its unread dot, a search that stays open
+  while its folder scope is picked, and a window that no longer opens blank
+  while the keyring is locked.
 - [**Elliot**](https://github.com/Elliot-32) ([#409](https://github.com/hyprlab/hylki/pull/409)):
   a startup crash when a folder's name has a non-ASCII character near its
   start.
