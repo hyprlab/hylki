@@ -1172,6 +1172,12 @@ pub(crate) enum AppMsg {
     /// Show the keyring / Secret Service setup help. `problem: true` when a save
     /// actually failed to persist; `false` for the proactive one-time tip.
     ShowKeyringHelp { problem: bool },
+    /// A worker's read of the account's password from the keyring failed,
+    /// is still waiting, or answered after a wait (#573).
+    KeyringRead {
+        account_id: u32,
+        read: crate::worker::KeyringRead,
+    },
     /// Reconnect every account: a saved edit changed a secret, which the
     /// keyring said after the save.
     ReconnectAccounts,

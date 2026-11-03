@@ -13,7 +13,7 @@ use super::prefetch::gallery_folder;
 use super::{Emit, ImapWorker};
 use crate::cache::Cache;
 use crate::config::AccountConfig;
-use crate::worker::auth::{load_or_migrate_password, load_smtp_password};
+use crate::worker::auth::resolve_keyring_passwords;
 use crate::worker::{MailRequest, WorkerEvent};
 
 impl<E: Emit> ImapWorker<E> {
@@ -150,8 +150,7 @@ impl<E: Emit> ImapWorker<E> {
 /// password into the keyring (and strip it from disk), otherwise load it
 /// from the keyring; then take what GNOME Online Accounts holds.
 async fn resolve_passwords(account: &mut AccountConfig, emit: &impl Fn(WorkerEvent)) {
-    load_or_migrate_password(account);
-    load_smtp_password(account);
+    resolve_keyring_passwords(account, emit).await;
     // An account from GNOME Online Accounts takes its password from GOA at
     // every connect, so one changed in GNOME Settings reaches Hylki without
     // being typed again (#254). The keyring copy is kept for a GOA that

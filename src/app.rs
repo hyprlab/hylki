@@ -69,6 +69,7 @@ mod hierarchy;
 mod identity;
 mod invites;
 mod keymap;
+mod keyring_alert;
 mod list_header;
 mod merge_send;
 mod model;

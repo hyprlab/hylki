@@ -319,6 +319,9 @@ impl AppModel {
             } => self.on_account_saved(original_email, account, sender),
 
             AppMsg::ShowKeyringHelp { problem } => self.show_keyring_help(problem),
+            AppMsg::KeyringRead { account_id, read } => {
+                self.on_keyring_read(account_id, read, &sender)
+            }
             AppMsg::ReconnectAccounts => self.reconnect_all(&sender),
             AppMsg::ShowCarryOverNotice(from) => crate::ui::carry_over::show(&self.window, from),
 

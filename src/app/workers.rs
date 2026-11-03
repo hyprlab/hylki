@@ -272,6 +272,7 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
         },
         WorkerEvent::Status(text) => AppMsg::Status { account_id, text },
         WorkerEvent::CopyProgress { left } => AppMsg::CopyProgress { left },
+        WorkerEvent::Keyring(read) => AppMsg::KeyringRead { account_id, read },
         WorkerEvent::Error { text, connectivity } => AppMsg::Error {
             account_id,
             text,

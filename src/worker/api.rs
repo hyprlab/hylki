@@ -368,6 +368,18 @@ pub(crate) struct CalendarPart {
     pub(crate) method: String,
 }
 
+/// A keyring read worth telling the user about (#573).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum KeyringRead {
+    /// No answer yet. The read goes on: a locked keyring answers once it
+    /// is unlocked.
+    Silent,
+    /// The answer, after a [`KeyringRead::Silent`].
+    Answered,
+    /// An error instead of the password.
+    Failed(String),
+}
+
 /// An event pushed from the worker back to the UI.
 // Events cross the channel one at a time and are matched all over the app;
 // boxing the large variant would change every place that builds or reads it.
@@ -656,6 +668,9 @@ pub(crate) enum WorkerEvent {
     /// bulk-action spinner in the UI.
     BulkComplete,
     Status(String),
+    /// How a read of the account's password from the keyring went, when
+    /// that is news for the user (#573).
+    Keyring(KeyringRead),
     /// `connectivity` marks connection/sync errors that should auto-clear once
     /// a later connect or sync succeeds.
     Error {
