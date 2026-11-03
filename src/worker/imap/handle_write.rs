@@ -4,6 +4,8 @@
 
 use super::{ensured, After, Emit, ImapWorker};
 use crate::i18n::{i18n, i18n_f};
+use crate::models::FolderHierarchy;
+use crate::worker::folders::restore_folders;
 use crate::worker::imap::folders::refresh_folders;
 use crate::worker::imap::gmail::{
     drop_gmail_label_copies, gmail_erase, gmail_labels_wanted, gmail_trash, store_gmail_labels,
@@ -13,6 +15,7 @@ use crate::worker::imap::mutate::{
     create_folder, delete_folder, import_flags, mark_all_read, mark_ham, mark_spam, move_message,
     move_messages, purge_messages, rename_folder, store_flag, store_keyword,
 };
+use crate::worker::imap::namespace::inside_inbox;
 use crate::worker::imap::retry::load_messages_retry;
 use crate::worker::imap::snooze::find_by_message_ids;
 use crate::worker::imap::strip_attachment::strip_imap_attachment;
@@ -606,14 +609,45 @@ impl<E: Emit> ImapWorker<E> {
         let emit = &self.emit;
         let mut lost = false;
         let sess = ensured(session);
-        match create_folder(sess, &path).await {
+        let made = match create_folder(sess, &path).await {
+            Err(async_imap::error::Error::No(why)) => {
+                match inside_inbox(cache.as_ref(), account_id, &path) {
+                    // A server that didn't say where its folders go, and
+                    // refused this one at the top (#554): RFC 3501 has no
+                    // way to ask, so the Inbox, the one other place there
+                    // is, answers it.
+                    Some((h, inside)) => match create_folder(sess, &inside).await {
+                        Ok(()) => {
+                            let learned = FolderHierarchy::imap(
+                                h.delimiter,
+                                Some(inside[..inside.len() - path.len()].to_string()),
+                            );
+                            if let Some(c) = cache.as_ref() {
+                                c.save_imap_hierarchy(account_id, &learned);
+                            }
+                            emit(WorkerEvent::Hierarchy(learned));
+                            emit(WorkerEvent::FolderMadeAt {
+                                asked: path.clone(),
+                                made: inside,
+                            });
+                            Ok(())
+                        }
+                        Err(_) => Err(async_imap::error::Error::No(why)),
+                    },
+                    None => Err(async_imap::error::Error::No(why)),
+                }
+            }
+            other => other,
+        };
+        match made {
             Ok(()) => refresh_folders(account_id, account, sess, cache.as_ref(), emit).await,
             Err(e) => {
                 emit(WorkerEvent::error(i18n_f(
                     "Could not create folder: {e}",
                     &[("e", &(e).to_string())],
                 )));
-                lost = true;
+                restore_folders(cache.as_ref(), account_id, emit);
+                lost = !matches!(e, async_imap::error::Error::No(_));
             }
         }
         After::lost_if(lost)
@@ -635,6 +669,7 @@ impl<E: Emit> ImapWorker<E> {
                     "Could not move folder: {e}",
                     &[("e", &(e).to_string())],
                 )));
+                restore_folders(cache.as_ref(), account_id, emit);
                 lost = true;
             }
         }

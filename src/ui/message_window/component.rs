@@ -10,6 +10,7 @@ use crate::ui::attachment_drawer::{AttachmentDrawer, DrawerInit, DrawerOutput};
 use crate::ui::lightbox::{Lightbox, LightboxInput};
 use crate::ui::message_list::RowAction;
 use crate::ui::message_view::{MessageView, MessageViewInput, MessageViewOutput};
+use crate::ui::reader_swap::ReaderSwap;
 use adw::prelude::*;
 use relm4::prelude::*;
 
@@ -49,7 +50,7 @@ impl Component for MessageWindow {
                 #[wrap(Some)]
                 #[name = "content"]
                 set_content = &gtk::Overlay {
-                    set_child: Some(model.drawer.widget()),
+                    set_child: Some(model.swap.host()),
                     add_overlay: model.lightbox.widget(),
                 },
             },
@@ -61,8 +62,9 @@ impl Component for MessageWindow {
         root: Self::Root,
         sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
+        let swap = ReaderSwap::new();
         let view = MessageView::builder()
-            .launch(())
+            .launch(swap.clone())
             .forward(sender.input_sender(), from_reader);
         // Apply the message-content theme before the first render.
         view.emit(MessageViewInput::SetContentTheme(init.content_dark));
@@ -72,6 +74,7 @@ impl Component for MessageWindow {
         view.emit(MessageViewInput::SetZoom(init.zoom));
         view.emit(MessageViewInput::SetReaderSwitchShown(init.reader_switch));
         view.emit(MessageViewInput::SetThemeSwitchShown(init.theme_switch));
+        view.emit(MessageViewInput::SetAccountChipShown(init.account_chip));
         view.emit(MessageViewInput::SetPgpLabels(init.pgp_labels));
         view.emit(MessageViewInput::SetFindBottom(init.find_bottom));
         view.emit(MessageViewInput::SetReaderDefault(init.reader_default));
@@ -94,6 +97,7 @@ impl Component for MessageWindow {
                 DrawerOutput::ShowInMessage(att) => MessageWindowInput::ShowAttachment(att),
                 DrawerOutput::DeleteFromServer(att) => MessageWindowInput::DeleteAttachment(att),
             });
+        swap.set_pane(drawer.widget());
         let lightbox = Lightbox::builder().launch(()).detach();
 
         let thread = if init.thread.is_empty() {
@@ -113,6 +117,7 @@ impl Component for MessageWindow {
             attachments_loading: init.attachments_loading.into_iter().collect(),
             drawer_enabled: init.drawer_enabled,
             drawer,
+            swap,
             lightbox,
             tags: init.tags,
             toolbar: init.toolbar,
@@ -171,6 +176,9 @@ impl Component for MessageWindow {
     fn update(&mut self, msg: Self::Input, sender: ComponentSender<Self>, root: &Self::Root) {
         match msg {
             MessageWindowInput::Ignore => {}
+            MessageWindowInput::Seen { account_id, id } => {
+                let _ = sender.output(MessageWindowOutput::MarkSeen { account_id, id });
+            }
             MessageWindowInput::SetContentTheme(o) => {
                 self.view.emit(MessageViewInput::SetContentTheme(o));
             }
@@ -195,6 +203,9 @@ impl Component for MessageWindow {
             MessageWindowInput::SetThemeSwitchShown(on) => {
                 self.view.emit(MessageViewInput::SetThemeSwitchShown(on));
             }
+            MessageWindowInput::SetAccountChipShown(on) => {
+                self.view.emit(MessageViewInput::SetAccountChipShown(on));
+            }
             MessageWindowInput::SetReaderDefault(policy) => {
                 self.view.emit(MessageViewInput::SetReaderDefault(policy));
             }
@@ -204,8 +215,14 @@ impl Component for MessageWindow {
             MessageWindowInput::Unsubscribe { message, info } => {
                 let _ = sender.output(MessageWindowOutput::Unsubscribe { message, info });
             }
+            MessageWindowInput::ReceiptAnswer { message, send } => {
+                let _ = sender.output(MessageWindowOutput::ReceiptAnswer { message, send });
+            }
             MessageWindowInput::SetUnsubscribed(lists) => {
                 self.view.emit(MessageViewInput::SetUnsubscribed(lists));
+            }
+            MessageWindowInput::SetReceiptMarks(marks) => {
+                self.view.emit(MessageViewInput::SetReceiptMarks(marks));
             }
             MessageWindowInput::InviteAction {
                 message,
@@ -394,7 +411,9 @@ fn from_reader(out: MessageViewOutput) -> MessageWindowInput {
             MessageWindowInput::CardAction { action, message }
         }
         MessageViewOutput::ContactSender(m) => MessageWindowInput::ContactFor(m),
-        MessageViewOutput::MarkSeen { .. } => MessageWindowInput::Ignore,
+        MessageViewOutput::MarkSeen { account_id, id } => {
+            MessageWindowInput::Seen { account_id, id }
+        }
         MessageViewOutput::CardMenu { message, x, y, hit } => {
             MessageWindowInput::CardMenu { message, x, y, hit }
         }
@@ -423,6 +442,9 @@ fn from_reader(out: MessageViewOutput) -> MessageWindowInput {
         MessageViewOutput::Zoom(step) => MessageWindowInput::Zoom(step),
         MessageViewOutput::Unsubscribe { message, info } => {
             MessageWindowInput::Unsubscribe { message, info }
+        }
+        MessageViewOutput::ReceiptAnswer { message, send } => {
+            MessageWindowInput::ReceiptAnswer { message, send }
         }
         MessageViewOutput::InviteAction {
             message,

@@ -94,8 +94,7 @@ pub(crate) enum MessageViewInput {
         /// (account, message id) — "Sent" beside a reply of yours read from the
         /// Inbox. Messages from the folder on screen aren't in here.
         folder_labels: std::collections::HashMap<(u32, u32), String>,
-        /// The conversation's messages filed in a Sent folder: a folded card
-        /// shows a paper plane for those, an inbox for the rest (#326).
+        /// The messages filed in a Sent folder, whose cards wear a Sent chip.
         sent: std::collections::HashSet<(u32, u32)>,
     },
     LoadRemoteOnce,
@@ -116,6 +115,14 @@ pub(crate) enum MessageViewInput {
     /// Render the message to a PDF and open it, so the layout can be checked
     /// before any paper is used.
     PrintPreview,
+    /// Print `thread` (`message` naming the job) rather than what is on
+    /// screen: the reading pane is off, and nothing is (#475).
+    PrintMessages {
+        message: Box<Message>,
+        thread: Vec<Message>,
+        allow_remote: bool,
+        preview: bool,
+    },
     /// Set the message-content theme: `None` follows the system, `Some(dark)`
     /// forces light/dark for email content only (not the app UI).
     SetContentTheme(Option<bool>),
@@ -142,6 +149,8 @@ pub(crate) enum MessageViewInput {
     SetReaderSwitchShown(bool),
     /// Whether the header's Light / Dark Mode switch is shown (Settings).
     SetThemeSwitchShown(bool),
+    /// Whether the header's account chip is shown (Settings).
+    SetAccountChipShown(bool),
     /// Settings: what Reader View does when a conversation is opened. A
     /// per-message default applies to what is on screen right away.
     SetReaderDefault(crate::config::ReaderDefault),
@@ -170,6 +179,11 @@ pub(crate) enum MessageViewInput {
     },
     /// The WebView finished loading the current document — reveal it.
     Rendered,
+    /// A sender's face lookup came back (#560).
+    FaceFound(Box<super::faces::FaceAnswer>),
+    /// A message still being fetched has kept the last one on screen this
+    /// long (for this freeze): show the new one, with its spinner, now.
+    LoadingDeadline(u64),
     /// The sender-authentication verdict for the message now on screen.
     SetSenderCheck(Box<crate::models::SenderCheck>),
     /// A member's sender verdict, for its header seal (#88). Patched into the
@@ -182,10 +196,19 @@ pub(crate) enum MessageViewInput {
     /// The lists left so far (key → unix seconds), from the app; the cards'
     /// banners are patched to match.
     SetUnsubscribed(std::collections::HashMap<String, i64>),
+    /// Sent mail's read receipts (#520), from the app; the cards'
+    /// checkmarks are patched to match.
+    SetReceiptMarks(crate::models::ReceiptMarks),
     /// A card's Unsubscribe button was clicked.
     Unsubscribe {
         account_id: u32,
         id: u32,
+    },
+    /// A card's read receipt banner (#520): Send Receipt, or Ignore.
+    ReceiptAnswer {
+        account_id: u32,
+        id: u32,
+        send: bool,
     },
     /// A card's Translate button or its translation banner (#327): start a
     /// translation, or switch between it and the original.
@@ -389,8 +412,8 @@ pub(crate) enum MessageViewInput {
         offset: u32,
     },
     /// A sent reply's card is joining the conversation: the next document
-    /// pins it in view, below the page's top gutter, and goes in without the
-    /// page crossfade.
+    /// pins it in view, below the page's top gutter, and goes in without
+    /// the pane being frozen over it.
     PinArrival {
         account_id: u32,
         id: u32,
@@ -501,6 +524,9 @@ pub(crate) enum MessageViewOutput {
         message: Box<Message>,
         info: Box<crate::models::Unsubscribe>,
     },
+    /// A card's read receipt banner (#520): send the receipt, or ignore
+    /// the request.
+    ReceiptAnswer { message: Box<Message>, send: bool },
     /// A card's invitation button (#223): answer the organiser, or hand the
     /// meeting to a calendar application.
     InviteAction {

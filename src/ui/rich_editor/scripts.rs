@@ -52,3 +52,13 @@ pub(super) const LINES_SCRIPT: &str = concat!("<script>", include_str!("lines.js
 /// pastes that carry no HTML at all. Lives in `<head>` (not the editable
 /// body) so it never becomes part of the message.
 pub(super) const PASTE_SCRIPT: &str = concat!("<script>", include_str!("paste.js"), "</script>");
+
+/// The quoted original of a reply or forward, folded behind a button while
+/// `__hylkiFoldQuote` is set (#549). After [`PASTE_SCRIPT`], whose plain
+/// view flattens the body first.
+pub(super) const FOLD_SCRIPT: &str = concat!("<script>", include_str!("fold.js"), "</script>");
+
+/// Grammar and style marks (#452), drawn over the text the user wrote once
+/// the host switches them on. See [`super::grammar`].
+pub(super) const GRAMMAR_SCRIPT: &str =
+    concat!("<script>", include_str!("grammar.js"), "</script>");

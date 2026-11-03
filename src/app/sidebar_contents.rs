@@ -77,10 +77,11 @@ impl AppModel {
         let show_unified = self.unified_inboxes_shown();
         // The other unified rows are as pointless with one account.
         let unified_kinds = if multi_account {
-            self.unified_kinds
+            self.unified_kinds_listed()
         } else {
             config::UnifiedKinds::NONE
         };
+        self.snoozed_row.set(unified_kinds.snoozed);
         let unified_unread = self.unified_inboxes_unread();
         let unified_folders = self.unified_folder_refs();
         let favorite_folders = self.favorite_folder_refs();
@@ -150,10 +151,7 @@ impl AppModel {
             .collect();
         let folder_sort = self.folder_sort_of(account.id);
         let own_folder_sort = self.own_folder_sort(account.id);
-        let hierarchy = crate::ui::sidebar::Hierarchy {
-            delimiter: self.folder_delimiter(account.id),
-            namespace: self.folder_namespace(account.id),
-        };
+        let hierarchy = self.drawn_hierarchy(account.id);
         let filtered = self.account_filtered_folders(account.id);
         let has_filters = self
             .filters
@@ -192,10 +190,18 @@ impl AppModel {
             .collect();
         self.message_list
             .emit(MessageListInput::SetAccountColors(colors));
+        // The column is narrow: the nickname alone, which an address would
+        // only push out of view.
         let names: std::collections::HashMap<u32, String> = self
             .accounts
             .iter()
-            .map(|a| (a.id, self.account_label(a.id)))
+            .map(|a| {
+                let nickname = self
+                    .account_config(a.id)
+                    .map(|c| c.display_label())
+                    .unwrap_or_else(|| a.label.clone());
+                (a.id, nickname)
+            })
             .collect();
         let graph: std::collections::HashSet<u32> = self
             .accounts

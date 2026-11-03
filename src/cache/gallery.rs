@@ -147,8 +147,10 @@ impl Cache {
             "SELECT am.account_id, am.folder_path, am.uid, am.idx, am.name, am.size, \
                     COALESCE(m.from_name, ''), COALESCE(m.subject, ''), COALESCE(m.ts, 0), \
                     CASE WHEN a.data IS NOT NULL AND LENGTH(a.data) <= ?1 THEN a.data ELSE NULL END, \
-                    a.uid IS NOT NULL \
+                    a.uid IS NOT NULL, COALESCE(f.name, '') \
              FROM attachment_meta am \
+             LEFT JOIN folders f \
+               ON f.account_id = am.account_id AND f.path = am.folder_path \
              LEFT JOIN messages m \
                ON m.account_id = am.account_id AND m.folder_path = am.folder_path AND m.uid = am.uid \
              LEFT JOIN attachments a \
@@ -173,6 +175,7 @@ impl Cache {
                     timestamp: row.get(8)?,
                     data: row.get(9)?,
                     downloaded: row.get(10)?,
+                    folder_name: row.get(11)?,
                 })
             })?;
             rows.collect()

@@ -3,10 +3,21 @@
 # Build the AppImage (#235).
 #
 #   tools/build-appimage.sh          # builds it in a container, from the host
+#   HYLKI_APPIMAGE_SRC=<checkout> tools/build-appimage.sh
+#                                    # builds another checkout (a tag, the
+#                                    # beta worktree) with this script
 #
 # Output lands in packaging/out/:
-#   Hylki-<arch>.AppImage            - the bundle
-#   Hylki-<arch>.AppImage.zsync      - the delta file AppImage updaters read
+#   Hylki-<arch>.AppImage            - the stable bundle
+#   Hylki-Beta-<arch>.AppImage       - the beta, when the version is X.Y.Z-beta.N
+#
+# A beta is the beta app, as in the Flatpak: built with the `beta` feature,
+# app ID co.hyprlab.Hylki.Beta, its own launcher and icon. Outside the
+# Flatpak both read ~/.config/hylki, so a beta tester keeps their accounts.
+#
+# Both update from hylki.hyprlab.co, which serves the newest AppImage of each
+# channel and its .zsync file. Flatout writes the same address in again when
+# the bundle is published, and makes the .zsync itself.
 #
 # Unlike the RPM, this carries every library the app needs, down to glibc and
 # the dynamic linker, so one file runs on any distribution and any libc. The
@@ -23,10 +34,29 @@
 # the host's or the Flatpak runtime's.
 set -euo pipefail
 
-APP_ID="co.hyprlab.Hylki"
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# HERE is the checkout this script is in, for its own files under
+# packaging/appimage; ROOT is the source being built. They differ when an
+# older tag is built with today's script (CI does that for a hand-started run).
+HERE="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="${HYLKI_APPIMAGE_SRC:-$HERE}"
 ARCH="$(uname -m)"
 IMAGE="${HYLKI_APPIMAGE_IMAGE:-ghcr.io/pkgforge-dev/archlinux:latest}"
+SITE="https://hylki.hyprlab.co"
+VERSION="$(sed -n 's/^version = "\(.*\)"/\1/p' "$ROOT/Cargo.toml" | head -1)"
+case "$VERSION" in
+    *-beta.*)
+        APP_ID="co.hyprlab.Hylki.Beta"
+        NAME="Hylki-Beta"
+        FEATURES=(--features beta)
+        UPDATES="$SITE/download/beta/$NAME-$ARCH.AppImage.zsync"
+        ;;
+    *)
+        APP_ID="co.hyprlab.Hylki"
+        NAME="Hylki"
+        FEATURES=()
+        UPDATES="$SITE/download/$NAME-$ARCH.AppImage.zsync"
+        ;;
+esac
 
 # ---------------------------------------------------------------- host side
 
@@ -46,6 +76,7 @@ if [ ! -f /etc/arch-release ]; then
     exec podman run --rm \
         --security-opt label=disable \
         -v "$ROOT":/src:ro \
+        -v "$HERE":/here:ro \
         -v "$OUT":/out \
         -v hylki-appimage-target:/build/target \
         -v hylki-appimage-cargo:/root/.cargo \
@@ -55,7 +86,7 @@ if [ ! -f /etc/arch-release ]; then
             tar -C /src --exclude=./target --exclude=./temp --exclude=./.git \
                         --exclude=./dist --exclude=./packaging/out -cf - . \
                 | tar -C /build -xf -
-            exec /build/tools/build-appimage.sh
+            HYLKI_APPIMAGE_SRC=/build exec /here/tools/build-appimage.sh
         '
 fi
 
@@ -67,18 +98,23 @@ OUT="$([ -d /out ] && echo /out || echo "$ROOT/packaging/out")"
 mkdir -p "$OUT"
 
 echo "==> Installing build and runtime dependencies"
+# Xvfb gives quick-sharun a display to start the app on under strace, which is
+# how it finds the libraries loaded with dlopen; without one it skips that
+# step and bundles only what the binaries link.
+#
 # Spell-check dictionaries (#114): the languages Arch packages. The four the
 # Flatpak has and Arch does not (pt_BR, pt_PT, sv_SE, uk_UA) are fetched
 # below, so the two packages spell-check the same languages; el, hu, ro and
 # en_GB come free with these packages and are kept. enchant finds them all
 # under share/hunspell inside the bundle.
 pacman -Syu --noconfirm --needed \
-    base-devel git rust pkgconf patchelf wget strace file \
+    base-devel git rust pkgconf patchelf wget strace file xorg-server-xvfb \
     gtk4 libadwaita webkitgtk-6.0 poppler-glib poppler-data \
     enchant hunspell \
     hunspell-de hunspell-el hunspell-en_us hunspell-en_gb hunspell-es_es \
     hunspell-fr-classical hunspell-hu hunspell-it hunspell-nl hunspell-pl \
     hunspell-ro hunspell-ru \
+    ttf-dejavu ttf-liberation adwaita-fonts python \
     gettext desktop-file-utils adwaita-icon-theme hicolor-icon-theme
 
 echo "==> Fetching quick-sharun"
@@ -90,9 +126,9 @@ chmod +x /usr/bin/quick-sharun /usr/bin/get-debloated-pkgs
 # WebKit bundle weighs beyond WebKit itself.
 get-debloated-pkgs --add-common --prefer-nano
 
-echo "==> Building the release binary"
+echo "==> Building the release binary ($APP_ID $VERSION)"
 cd "$ROOT"
-cargo build --release
+cargo build --release "${FEATURES[@]}"
 
 echo "==> Installing into /usr"
 # The same layout the RPM installs (packaging/fedora/hylki.spec): the
@@ -114,23 +150,25 @@ for size in 256x256 512x512; do
 done
 install -Dm644 "data/icons/hicolor/scalable/apps/$APP_ID.svg" \
     "/usr/share/icons/hicolor/scalable/apps/$APP_ID.svg"
+desktop-file-validate "/usr/share/applications/$APP_ID.desktop"
 
 echo "==> Collecting the dependencies"
-VERSION="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
 export APPDIR="$ROOT/AppDir"
 export VERSION ARCH
 export ICON="/usr/share/icons/hicolor/256x256/apps/$APP_ID.png"
 export DESKTOP="/usr/share/applications/$APP_ID.desktop"
 export OUTPATH="$OUT"
-export OUTNAME="Hylki-$ARCH.AppImage"
+export OUTNAME="$NAME-$ARCH.AppImage"
 # The window has to match the launcher's StartupWMClass or the desktop shows
 # the app twice in the dock; on X11 the class comes out wrong without the shim.
 export STARTUPWMCLASS="$APP_ID"
 export GTK_CLASS_FIX=1
 # What AppImage updaters (AppImageUpdate, AppManager, Gear Lever) read to
-# update in place from the GitHub release, using the .zsync file beside the
-# bundle. Both have to be attached to the release for this to resolve.
-export UPINFO="gh-releases-zsync|hyprlab|hylki|latest|*$ARCH.AppImage.zsync"
+# update in place: the address of the newest .zsync on this channel. Written
+# here so that a bundle taken from the GitHub release updates from the same
+# place as one downloaded from the site, and so that Flatout, finding it
+# already there, publishes the file unchanged.
+export UPINFO="zsync|$UPDATES"
 
 # gpg is deliberately *not* bundled: OpenPGP (#133) drives the user's own
 # keyring and gpg-agent, and a second gpg of a different version talking to
@@ -189,6 +227,57 @@ SUMS
 
 echo "    dictionaries: $(ls "$APPDIR/share/hunspell" | sed 's/\..*//' | sort -u | tr '\n' ' ')"
 
+# The fonts WebKit falls back to when the host's hang it (#296): the
+# Flatpak has the runtime's for this, the AppImage carries its own. Sans,
+# serif and monospace in DejaVu, Liberation for the Arial, Times and Courier
+# that mail asks for by name, Adwaita for the GNOME look. About 20 MB raw.
+echo "==> Fallback fonts"
+FC="$APPDIR/share/hylki/fontconfig"
+install -d "$FC" "$APPDIR/share/hylki/fonts"
+cp -L /usr/share/fonts/TTF/DejaVuSans{,-Bold,-Oblique,-BoldOblique}.ttf \
+      /usr/share/fonts/TTF/DejaVuSerif{,-Bold,-Italic,-BoldItalic}.ttf \
+      /usr/share/fonts/TTF/DejaVuSansMono{,-Bold,-Oblique,-BoldOblique}.ttf \
+      /usr/share/fonts/liberation/Liberation{Sans,Serif,Mono}-*.ttf \
+      /usr/share/fonts/Adwaita/*.ttf \
+      "$APPDIR/share/hylki/fonts/"
+# The rules of the build's conf.d, written into the file rather than
+# included: an include of conf.d resolves to the host's /etc/fonts. Left
+# out, as in the Flatpak's: the ones that add folders (the user's, the
+# local admin's) and the README.
+python3 - "$HERE/packaging/appimage/fonts-fallback.conf" "$FC/fallback.conf" /etc/fonts/conf.d <<'PY'
+# Text, not an XML parser: some of these files use prefixes they never
+# declare (xsi:nil, its:rules), which fontconfig reads and a strict parser
+# refuses. fontconfig itself checks the result below.
+import os, re, sys
+template, dest, confd = sys.argv[1:]
+skip = {"50-user.conf", "51-local.conf"}
+rules = []
+for name in sorted(os.listdir(confd)):
+    if not name.endswith(".conf") or name in skip or name.startswith("05-"):
+        continue
+    text = open(os.path.join(confd, name)).read()
+    found = re.search(r"<fontconfig[^>]*>(.*)</fontconfig>", text, re.S)
+    if not found:
+        continue
+    body = re.sub(r"<!--.*?-->", "", found.group(1), flags=re.S)
+    for tag in ("its:rules", "description", "dir", "cachedir", "include"):
+        body = re.sub(rf"<{tag}\b[^>]*/>|<{tag}\b.*?</{tag}>", "", body, flags=re.S)
+    body = "\n".join(line.rstrip() for line in body.splitlines() if line.strip())
+    if body:
+        rules += [f"  <!-- {name} -->", body]
+text = open(template).read().replace("  <!-- @RULES@ -->", "\n".join(rules))
+open(dest, "w").write(text)
+PY
+# The fallback has to find these fonts and no others, wherever the bundle is
+# mounted: tried from a second, moved copy.
+probe="$(mktemp -d)/share/hylki"
+install -d "$probe"; cp -r "$APPDIR/share/hylki/." "$probe/"
+fonts="$(HOME=$(mktemp -d) FONTCONFIG_FILE="$probe/fontconfig/fallback.conf" fc-list : file 2>"$probe/fc.err")"
+grep -i "fontconfig error" "$probe/fc.err" && { echo "fontconfig refuses the fallback config" >&2; exit 1; }
+echo "$fonts" | grep -v "^$probe/fonts/" | grep . && { echo "fallback fonts reach outside the bundle" >&2; exit 1; }
+echo "    fallback fonts: $(echo "$fonts" | grep -c .), sans-serif is $(HOME=$(mktemp -d) FONTCONFIG_FILE="$probe/fontconfig/fallback.conf" fc-match -f '%{family[0]}' sans-serif)"
+echo 'HYLKI_FONT_FALLBACK_CONF=${SHARUN_DIR}/share/hylki/fontconfig/fallback.conf' >> "$APPDIR/.env"
+
 # Pin the message catalogues rather than leave them to be found: src/i18n.rs
 # looks beside the binary, which happens to land in the right place in the
 # bundle's layout, and a layout change upstream should not silently turn the
@@ -198,5 +287,9 @@ echo 'HYLKI_LOCALEDIR=${SHARUN_DIR}/share/locale' >> "$APPDIR/.env"
 echo "==> Packing"
 quick-sharun --make-appimage
 
+# The .zsync quick-sharun writes is for its own address; Flatout makes the
+# one that is served.
+rm -f "$OUT/$NAME-$ARCH.AppImage.zsync"
+
 echo "==> AppImage in $OUT:"
-ls -lh "$OUT"/Hylki-"$ARCH".AppImage*
+ls -lh "$OUT/$NAME-$ARCH.AppImage"

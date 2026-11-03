@@ -395,6 +395,20 @@ impl AppModel {
                 }
             }
 
+            AppMsg::ImportLocalMail { sources, mbox } => {
+                let local = self
+                    .config
+                    .iter()
+                    .position(|c| c.is_local() && c.enabled)
+                    .map(|i| i as u32 + 1);
+                match local {
+                    Some(id) => {
+                        self.send_to(id, crate::worker::MailRequest::ImportMail { sources, mbox })
+                    }
+                    None => self.notice_error(i18n("On This Computer is switched off")),
+                }
+            }
+
             AppMsg::AccountRemoved { email } => {
                 // Drop the keyring entries while the config (which knows the
                 // alias addresses) is still around.

@@ -35,6 +35,8 @@ pub(super) struct ReaderCompose {
     /// The message a split reply answers, by (account, id): its card in the
     /// reader is the one the reply was opened from.
     pub(super) answering: Option<(u32, u32)>,
+    /// A draft opened by selecting its row, which the list keeps selected.
+    pub(super) list_draft: bool,
 }
 
 impl AppModel {
@@ -312,6 +314,14 @@ impl AppModel {
                     window.destroy();
                 }
                 None => {
+                    // A draft opened from its row closed on its own (saved,
+                    // sent, cancelled): the row lets go too, or it stays lit
+                    // over a reader that says no draft is selected, and a
+                    // click on it, being no change, opens nothing. Saving
+                    // gives the draft a new row anyway.
+                    if r.list_draft {
+                        self.message_list.emit(MessageListInput::ClearSelection);
+                    }
                     // A sent split reply turns into its card; cancel, and
                     // a send that cannot, slide it out rather than blink it.
                     match self.arriving.take().filter(|(cid, _, _)| *cid == id) {

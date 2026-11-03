@@ -143,6 +143,53 @@ pub(crate) fn load_theme() -> String {
     }
 }
 
+/// Where the reader sits (#475): beside the list, below it, or nowhere,
+/// messages then opening in windows of their own.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case", from = "ReadingPaneSaved")]
+pub(crate) enum ReadingPane {
+    #[default]
+    Right,
+    Below,
+    Off,
+}
+
+/// What a settings file may hold: the pane's name, or the on/off switch
+/// that came before Below and was never released.
+#[derive(serde::Deserialize)]
+#[serde(untagged)]
+enum ReadingPaneSaved {
+    Name(String),
+    On(bool),
+}
+
+impl From<ReadingPaneSaved> for ReadingPane {
+    fn from(saved: ReadingPaneSaved) -> Self {
+        match saved {
+            ReadingPaneSaved::Name(key) => ReadingPane::from_key(&key).unwrap_or_default(),
+            ReadingPaneSaved::On(true) => ReadingPane::Right,
+            ReadingPaneSaved::On(false) => ReadingPane::Off,
+        }
+    }
+}
+
+impl ReadingPane {
+    /// The main menu's name for it, the action's state.
+    pub(crate) fn key(self) -> &'static str {
+        match self {
+            ReadingPane::Right => "right",
+            ReadingPane::Below => "below",
+            ReadingPane::Off => "off",
+        }
+    }
+
+    pub(crate) fn from_key(key: &str) -> Option<Self> {
+        [ReadingPane::Right, ReadingPane::Below, ReadingPane::Off]
+            .into_iter()
+            .find(|p| p.key() == key)
+    }
+}
+
 /// How the message list lays out a message (#334).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "snake_case")]

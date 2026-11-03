@@ -20,7 +20,7 @@ Everyone whose work is in the app is named in
 - **Design and UX:** GNOME HIG corrections, layout and wording feedback are
   welcome as issues.
 - **Code:** send a pull request; see below.
-- **Package it:** the Gentoo package is maintained by its users.
+- **Package it:** the Gentoo and NixOS packages are maintained by their users.
 - **Security:** please report privately, following [SECURITY.md](SECURITY.md).
 
 ## Pull requests

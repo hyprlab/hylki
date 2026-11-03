@@ -9,6 +9,7 @@ use crate::i18n::{i18n, i18n_f};
 use crate::worker::auth::{fetch_oauth_token, oauth_user, sign_in_password};
 use crate::worker::imap::folders::list_folder_metadata;
 use crate::worker::imap::gmail::note_gmail_account;
+use crate::worker::imap::namespace::read_hierarchy;
 use crate::worker::imap::stream::ImapIo;
 use crate::worker::imap::ImapSession;
 use crate::worker::tls::{is_loopback_host, tls_connector};
@@ -54,6 +55,27 @@ pub(super) async fn connect_and_list(
                 Ok(folders) if folders.is_empty() => {}
                 Ok(folders) => {
                     note_gmail_account(account_id, account, &folders);
+                    // How the folders nest, before the folders themselves,
+                    // so the sidebar draws them by it (#554).
+                    if let Some(h) = read_hierarchy(&mut session, &folders).await {
+                        tracing::info!(
+                            target: "hylki::imap",
+                            "account {account_id}: folders nest by {:?}, top level {:?} (said: {})",
+                            h.delimiter,
+                            h.top_level.then_some(h.prefix.as_str()),
+                            h.prefix_said
+                        );
+                        if cache
+                            .and_then(|c| c.load_imap_hierarchy(account_id))
+                            .as_ref()
+                            != Some(&h)
+                        {
+                            if let Some(c) = cache {
+                                c.save_imap_hierarchy(account_id, &h);
+                            }
+                        }
+                        emit(WorkerEvent::Hierarchy(h));
+                    }
                     let changed = cache
                         .map(|c| {
                             !crate::cache::folders_equal(&c.load_folders(account_id), &folders)

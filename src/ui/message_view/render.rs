@@ -3,8 +3,8 @@
 //! body with the settings the page script reads.
 
 use super::frame::{
-    LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE, LIVE_TAGS, LIVE_TEMPLATES,
-    LIVE_TRANSLATE, LIVE_TRANSLATE_ON, LIVE_UNSUB,
+    LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE, LIVE_MARKS, LIVE_READ,
+    LIVE_RECEIPT, LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE, LIVE_TRANSLATE_ON, LIVE_UNSUB,
 };
 use super::types::TrState;
 use super::MessageView;
@@ -13,22 +13,38 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 impl MessageView {
-    pub(super) fn render(&mut self) {
+    /// Build the document for what is to be shown and load it; `false`
+    /// when what is on screen already is that.
+    pub(super) fn render(&mut self) -> bool {
         let dark = self.effective_dark();
         self.apply_webview_bg(dark);
+        // Before the shortcut below: a sender whose face could not be found
+        // last time may have one now (#560).
+        self.look_up_faces();
         // Already showing exactly this — returning to a conversation, or a
         // re-render nothing changed. Loading it again would only blank the view
         // and paint the same pixels back.
         let fingerprint = self.render_fingerprint(dark);
         if self.webview_ready && self.shown_fingerprint == Some(fingerprint) {
-            return;
+            return false;
         }
         self.shown_fingerprint = Some(fingerprint);
         // A page handed over while the window is hidden (running in the
         // background, a notification about to bring it back) may never be
         // painted: it is loaded again once the view is on screen (#332).
-        if !self.webview.is_mapped() {
+        // Only the window counts: behind the reader's spinner the view is off
+        // screen just until the stack shows it, later in this same turn, and
+        // loading the page a second time then made every open wait for two.
+        if !self.webview.root().is_some_and(|r| r.is_mapped()) {
             self.painted_hidden = true;
+        }
+        // What is on screen (a page, or the spinner) stays, frozen, until the
+        // new page is ready: opening a message has frozen the whole pane
+        // already, and this covers a page replaced in place. A sent reply's
+        // card has its own entrance (`PinArrival`).
+        let unseen = self.swap.held();
+        if !std::mem::take(&mut self.skip_freeze) {
+            self.swap.freeze();
         }
         // A conversation is covered until its new document has painted: the
         // spinner is already up from the moment the thread was opened, so it
@@ -42,9 +58,6 @@ impl MessageView {
         if self.thread.len() > 1 && !self.instant {
             self.webview_ready = false;
         }
-        // Only a page that stays in view dissolves into the next; behind the
-        // spinner there is nothing to see.
-        let fade = self.webview_ready && !self.loading && !std::mem::take(&mut self.skip_fade);
         let html = self.document_html(dark);
         // A message painted alone that has since grown into a conversation
         // gets the conversation's open scroll, unless the reader has been
@@ -55,6 +68,13 @@ impl MessageView {
             && self.thread.len() > 1
             && self.saved_anchor.is_none()
         {
+            self.did_autoscroll = false;
+        }
+        // A page replaced while the pane is still frozen was never seen: the
+        // open scroll it spent is owed to the page replacing it, which would
+        // otherwise open at the top (a second render close behind the
+        // first, before the page has reported where it is).
+        if unseen && self.saved_anchor.is_none() {
             self.did_autoscroll = false;
         }
         // A conversation opened behind the loading cover spends its open
@@ -90,7 +110,9 @@ impl MessageView {
         self.autoscroll_lone = self.thread.len() <= 1;
         let n = self.seq.get().wrapping_add(1);
         self.seq.set(n);
-        self.load_after_paint(html, format!("https://hylki.localhost/message/{n}"), fade);
+        self.latest_uri = format!("https://hylki.localhost/message/{n}");
+        self.load_after_paint(html, self.latest_uri.clone());
+        true
     }
 
     /// Everything the rendered document depends on, in one number. Ordered by
@@ -131,6 +153,10 @@ impl MessageView {
         // The picture a mailbox of your own shows can change while a
         // conversation is open (#189) — the cards must be built again.
         crate::services::avatar::own_faces_generation().hash(&mut h);
+        // Which tiers a sender's face may come from (#560).
+        super::faces::tiers().hash(&mut h);
+        // Names from Contacts came in, or the switch for them moved (#541).
+        crate::contacts::contact_names_generation().hash(&mut h);
         self.thread.len().hash(&mut h);
         for m in &self.thread {
             let key = (m.account_id, m.id);
@@ -146,6 +172,7 @@ impl MessageView {
             self.no_autoread.contains(&key).hash(&mut h);
             self.sender_style.contains(&key).hash(&mut h);
             self.folder_labels.get(&key).hash(&mut h);
+            self.sent.contains(&key).hash(&mut h);
             self.template_folders
                 .contains(&(m.account_id, m.folder_id))
                 .hash(&mut h);
@@ -183,6 +210,20 @@ impl MessageView {
                 .map(|m| ((m.account_id, m.id), self.invite_inner_html(m)))
                 .collect()
         });
+        LIVE_RECEIPT.with(|r| {
+            *r.borrow_mut() = self
+                .thread
+                .iter()
+                .map(|m| ((m.account_id, m.id), self.receipt_inner_html(m)))
+                .collect()
+        });
+        LIVE_READ.with(|r| {
+            *r.borrow_mut() = self
+                .thread
+                .iter()
+                .filter_map(|m| Some(((m.account_id, m.id), self.receipt_marks.of(m)?)))
+                .collect()
+        });
         LIVE_FOLDED.with(|f| *f.borrow_mut() = self.folded_cards());
         LIVE_TEMPLATES.with(|t| {
             *t.borrow_mut() = self
@@ -193,7 +234,7 @@ impl MessageView {
                 .collect()
         });
         LIVE_FOLDBAR.with(|b| {
-            *b.borrow_mut() = if self.thread.len() > 1 {
+            *b.borrow_mut() = if self.carded() {
                 self.thread
                     .iter()
                     .map(|m| ((m.account_id, m.id), self.fold_bar_html(m)))
@@ -201,6 +242,15 @@ impl MessageView {
             } else {
                 Default::default()
             }
+        });
+        // On every header, a card's or a full-bleed message's: the marks
+        // are the message's, not the card's.
+        LIVE_MARKS.with(|b| {
+            *b.borrow_mut() = self
+                .thread
+                .iter()
+                .map(|m| ((m.account_id, m.id), self.card_marks_html(m)))
+                .collect()
         });
         let translation = crate::services::translate::load();
         LIVE_TRANSLATE_ON.with(|on| on.set(translation.enabled()));
@@ -220,7 +270,7 @@ impl MessageView {
         });
         Self::conversation_document(
             &self.thread,
-            &self.folder_labels,
+            &self.card_labels(),
             &self.no_autoread,
             &self.frame_heights,
             &self.selected_cards,

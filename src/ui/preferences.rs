@@ -20,6 +20,7 @@ mod chips;
 mod choices;
 mod composing;
 mod contacts;
+mod grammar;
 mod init_layout;
 mod init_message_rows;
 mod init_rows;
@@ -613,6 +614,9 @@ impl Component for Preferences {
             PrefInput::ToggleUnifiedChipTrash(on) => {
                 self.set_unified_chip(|s| &mut s.trash, on, sender)
             }
+            PrefInput::ToggleUnifiedChipSnoozed(on) => {
+                self.set_unified_chip(|s| &mut s.snoozed, on, sender)
+            }
             PrefInput::ToggleUnifiedStarred(on) => {
                 self.set_unified_kind(|s| &mut s.starred, on, sender)
             }
@@ -626,6 +630,9 @@ impl Component for Preferences {
             PrefInput::ToggleUnifiedJunk(on) => self.set_unified_kind(|s| &mut s.junk, on, sender),
             PrefInput::ToggleUnifiedTrash(on) => {
                 self.set_unified_kind(|s| &mut s.trash, on, sender)
+            }
+            PrefInput::ToggleUnifiedSnoozed(on) => {
+                self.set_unified_kind(|s| &mut s.snoozed, on, sender)
             }
             PrefInput::MountPages => self.mount_pages(),
             PrefInput::Search(text) => self.on_search(text),
@@ -693,6 +700,9 @@ impl Component for Preferences {
             }
             PrefInput::ToggleRailFoldJunk(on) => self.set_rail_fold(|s| &mut s.junk, on, sender),
             PrefInput::ToggleRailFoldTrash(on) => self.set_rail_fold(|s| &mut s.trash, on, sender),
+            PrefInput::ToggleRailFoldSnoozed(on) => {
+                self.set_rail_fold(|s| &mut s.snoozed, on, sender)
+            }
             PrefInput::ToggleRailFoldFiltered(on) => {
                 self.set_rail_fold(|s| &mut s.filtered, on, sender)
             }

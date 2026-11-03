@@ -68,6 +68,10 @@ pub(in crate::worker) fn attachment_parts(
         if strip::is_placeholder(part) {
             continue;
         }
+        // A read receipt's report (#520) is for the mail app, not a file.
+        if crate::mail::receipt::is_report_part(part) {
+            continue;
+        }
         // Decoration referenced from the body (a `cid:` logo) is rendered in
         // place, not listed — unless it's big enough to be real content.
         //

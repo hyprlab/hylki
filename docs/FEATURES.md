@@ -15,6 +15,11 @@ The full list. The [README](../README.md) carries a shorter one.
   Settings, IMAP and SMTP accounts and Microsoft 365 over Graph included.
   See [Configuration](DOCUMENTATION.md#gnome-online-accounts). Pausing an account's Mail
   service in GNOME Settings pauses it here.
+- **On This Computer:** folders kept on this computer, not on a server, for
+  an archive of mail moved or copied in from any account, copied
+  automatically from an account that asks for it, or imported from
+  Evolution's local folders, Dovecot or mbox files. Stored as Maildir, the
+  layout Dovecot uses. See [Configuration](DOCUMENTATION.md#on-this-computer).
 - **Per-alias SMTP:** each address on an account can send through its own
   server and credentials.
 - **Any From address:** type a name and address for one message, such as a
@@ -29,13 +34,16 @@ The full list. The [README](../README.md) carries a shorter one.
 
 - **Whole-mailbox sync and search:** no message-count cap. A fast first page
   loads instantly; the rest indexes in the background with infinite scroll.
+  Search finds each word in the message's text too, on disk and on the
+  server, with `from:`, `to:`, `in:` and `has:attachment` to narrow it.
 - **Two-way sync:** deletions, moves and flag changes from your phone or
   another client sync back automatically (IMAP IDLE plus reconciliation).
 - **Conversation threading** across folders: the count covers the whole
   conversation, and an expanded conversation shows your replies from Sent
   and its archived messages alongside the folder's own.
 - **Moving mail between accounts:** Move To lists every account's folders,
-  and mail dragged onto another account's folder goes there too.
+  and mail dragged onto another account's folder goes there too. Copy To
+  stores a copy anywhere and leaves the original.
 - **Full folder management:** create, rename, move, reorder and delete
   folders, assign the special roles (Drafts, Sent, Junk, Trash, Archive),
   and hide the ones you never open. An Exchange server's calendar, contacts
@@ -49,13 +57,15 @@ The full list. The [README](../README.md) carries a shorter one.
   server has neither; custom colours, drag to reorder, and number-key
   shortcuts. Gmail's labels show beside them.
 - **Quick filters:** unread, starred, attachments, addressed to you, from
-  your contacts, high importance, tagged and today, combined, in one popover
-  above the list with the sort orders. See [Message list layout](DOCUMENTATION.md#message-list-layout).
+  your contacts, high importance, tagged, today and a range of dates,
+  combined, in one popover above the list with the sort orders. See [Message list layout](DOCUMENTATION.md#message-list-layout).
+- **Browse by the year:** the list's scrollbar spans the whole folder, and
+  dragging it names the month and year it is passing.
 - **Smart folders:** saved searches across accounts and folders, on
   starred, unread, attachments, tags and the filter conditions, with unread
   counts. See [Smart folders](DOCUMENTATION.md#smart-folders).
 - **Unified and filtered folders:** Inboxes, Starred, Sent, Drafts, Archive,
-  Junk and Trash across accounts, plus a folder per filter and any folders
+  Junk, Trash and Snoozed across accounts, plus a folder per filter and any folders
   you keep in Favorites.
 - **Empty Trash and Junk**, by hand or automatically after a number of days,
   and move old newsletter and mailing-list mail out of the Inbox the same way.
@@ -93,12 +103,18 @@ The full list. The [README](../README.md) carries a shorter one.
 - **Templates:** save a message as a template and start new ones from it,
   from the Templates folder or with Ctrl+Shift+N. Thunderbird's Templates
   folder is picked up as it is.
+- **Mail merge:** one message per row of a CSV file or member of a contact
+  group, with `{{Field}}` filled in from the row and a preview of each. See
+  [Mail merge](DOCUMENTATION.md#mail-merge).
 - **Forwarding keeps the attachments:** the original's files are attached to
   the forward, ready to send on. A reply does not repeat them.
 - **Inline images:** dropped, pasted or picked from a file manager, resized
   by handle or menu, with an optional recompress on send.
 - **Spell check** in one language or several at once, through the system
   dictionaries.
+- **Grammar and style checking** with Harper or LanguageTool, downloaded
+  from Settings in one click and run on this computer, or a LanguageTool
+  server or account, each paragraph in its own language.
 - **Undo and redo** across the whole message.
 - **Quote folding:** a long quoted original folds away, interleaved replies
   intact.
@@ -132,6 +148,10 @@ The full list. The [README](../README.md) carries a shorter one.
 - **Meeting invitations:** what the meeting is, when it runs in your own
   clock and time zone, where it is and who organised it, with Accept, Maybe,
   Decline and Add to Calendar.
+- **Events and tasks from mail:** Create Event and Create Task in a
+  message's menu fill in a title, a time and notes from the message, and
+  write it to a calendar or task list of GNOME Online Accounts or
+  Evolution.
 - **Folding conversations:** a click on a message's header folds it to its
   sender and first lines, and earlier messages can start folded, so
   a long conversation opens on what is new.
@@ -144,6 +164,11 @@ The full list. The [README](../README.md) carries a shorter one.
 - **One-click unsubscribe:** a banner on list mail that leaves the list for
   you, by request or by email, without a browser where the list allows it,
   and can delete the mail already received from the same address.
+- **Read receipts:** a banner on a message that asks for one sends it or
+  ignores the request, or a setting answers every time; a message you write
+  can ask for one too, and its checkmarks turn green when a receipt comes
+  back, with the receipt itself filed away. See
+  [Read receipts](DOCUMENTATION.md#read-receipts).
 - **OpenPGP:** read encrypted and signed mail, sign and encrypt what you
   send, and manage keys from Settings, through the GnuPG already on your
   computer. See [OpenPGP](DOCUMENTATION.md#openpgp-encrypted-and-signed-mail).

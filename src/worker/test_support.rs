@@ -16,6 +16,9 @@ pub(super) fn sample_account() -> AccountConfig {
         empty_junk_days: 0,
         empty_trash_days: 0,
         clean_lists_days: 0,
+        offline_mail: Default::default(),
+        offline_attachments: false,
+        copy_to_local: false,
         pgp_key: None,
         in_unified: true,
         folder_sort: None,
@@ -113,6 +116,9 @@ pub(super) fn sample_outgoing() -> OutgoingMessage {
         encrypt: false,
         send_at: None,
         calendar: None,
+        request_receipt: false,
+        importance: Default::default(),
+        receipt_report: None,
     }
 }
 

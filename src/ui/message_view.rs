@@ -13,6 +13,7 @@ mod chrome;
 mod component;
 mod dark;
 mod document;
+mod faces;
 mod folds;
 mod frame;
 mod html;
@@ -27,8 +28,9 @@ mod on_find;
 mod on_prefs;
 mod on_services;
 mod on_show;
-mod page_fade;
+mod page_load;
 mod print;
+mod receipt_banner;
 mod remote;
 mod render;
 mod sender;
@@ -42,13 +44,14 @@ mod webview;
 mod wrapper_css;
 
 use self::chrome::ClassRules;
-use self::page_fade::{PageFade, PendingLoad};
+use self::page_load::PendingLoad;
 use crate::models::Message;
 
+pub(crate) use faces::set_face_tiers;
 pub(crate) use frame::theme_grounds_for;
 pub(crate) use menu::MenuHit;
 pub(crate) use menu::{hit_menu_entries, strip_navigation_items};
-pub(crate) use page_fade::{on_next_page_fade, PAGE_FADE_MS};
+pub(crate) use remote::remote_urls;
 pub(crate) use types::{
     CardAttachment, InviteAction, MessageViewInput, MessageViewOutput, SelectMode, TrState,
     UnsubState,
@@ -114,6 +117,8 @@ pub(crate) struct MessageView {
     reader_switch_shown: bool,
     /// Whether the header's Light / Dark Mode switch is shown (Settings).
     theme_switch_shown: bool,
+    /// Whether the header's account chip is shown (Settings).
+    account_chip_shown: bool,
     /// The scheme the user chose for a message with the header's Light /
     /// Dark Mode switch, dark (`true`) or light. The scheme itself is kept,
     /// not a flip of the theme, so a message turned light stays light when
@@ -204,9 +209,10 @@ pub(crate) struct MessageView {
     /// its first card), not flush at the top the way a place the user
     /// scrolled to is restored.
     anchor_gutter: bool,
-    /// The next document goes in without the page crossfade: a sent reply's
-    /// card is arriving, and the app's stage covers the pane while it does.
-    skip_fade: bool,
+    /// The next document goes in without the pane being frozen: a sent
+    /// reply's card is arriving, and the app's stage covers the pane while
+    /// it does.
+    skip_freeze: bool,
     /// What each message's frame measured last time it was shown, so reopening a
     /// conversation lays out right away instead of settling into place.
     frame_heights: std::collections::HashMap<(u32, u32), u32>,
@@ -259,8 +265,14 @@ pub(crate) struct MessageView {
     seq: std::cell::Cell<u64>,
     /// The document waiting to replace the one on screen (`load_after_paint`).
     pending_load: std::rc::Rc<std::cell::RefCell<PendingLoad>>,
-    /// The outgoing page's still, faded out over the incoming one.
-    page_fade: PageFade,
+    /// The pane's freeze: a message opens as one change on screen.
+    swap: crate::ui::reader_swap::ReaderSwap,
+    /// The base URI of the newest document asked for: only that page,
+    /// once ready, ends the freeze.
+    latest_uri: String,
+    /// The base URI of the last page that said it was ready. WebKit's own
+    /// `uri` moves to a page as soon as it starts loading.
+    ready_uri: String,
     /// Forced dark flag for message content, or `None` to follow the system UI.
     /// This themes email content only, not the app chrome.
     content_dark: Option<bool>,
@@ -270,10 +282,14 @@ pub(crate) struct MessageView {
     /// Per-member verdicts for the conversation on screen, behind each card's
     /// header seal (#88). Keyed (account_id, id); cleared on Show.
     member_checks: std::collections::HashMap<(u32, u32), crate::models::SenderCheck>,
+    /// The senders' faces being looked up for the cards (#560).
+    faces: faces::Faces,
     /// The mailing lists left through the cards' Unsubscribe button, by
     /// [`crate::models::Unsubscribe::key`] with the time of the request, so a
     /// message from one says so instead of offering the button afresh.
     unsubscribed: std::collections::HashMap<String, i64>,
+    /// Sent mail's read receipts (#520), for the cards' checkmarks.
+    receipt_marks: crate::models::ReceiptMarks,
     /// Cards whose unsubscribe request is under way or has just failed.
     unsub_state: std::collections::HashMap<(u32, u32), UnsubState>,
     /// Which messages of a conversation open folded (#326).
@@ -287,7 +303,7 @@ pub(crate) struct MessageView {
     /// which never painted (#332): the next document loaded on screen is owed
     /// it, unless the reader has a place to keep by then.
     scroll_owed: bool,
-    /// The conversation's messages filed in Sent, for the folded bar.
+    /// The messages on screen filed in Sent, which wear a Sent chip.
     sent: std::collections::HashSet<(u32, u32)>,
     /// Cards opened or folded by hand: these win over the default for as
     /// long as they stay in the conversation on screen.

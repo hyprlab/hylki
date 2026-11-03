@@ -161,8 +161,8 @@ fn clean_family(css: &str) -> String {
         .to_string()
 }
 
-/// The editor's own font, which the signature and the quoted original
-/// keep whatever font new messages are set to.
+/// The editor's own font, which the quoted original keeps whatever font
+/// new messages are set to.
 pub(super) const EDITOR_FONT: &str = "14px/1.55 system-ui,sans-serif";
 
 /// The body's `font` shorthand: the font and size set for new messages,

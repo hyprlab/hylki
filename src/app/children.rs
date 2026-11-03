@@ -13,6 +13,7 @@ use crate::ui::message_list::{MessageList, MessageListOutput};
 use crate::ui::message_view::{MessageView, MessageViewOutput};
 use crate::ui::notifications::{NotificationCenter, NotifyOutput};
 use crate::ui::preferences::PrefOutput;
+use crate::ui::reader_swap::ReaderSwap;
 use crate::ui::sidebar::{Sidebar, SidebarInput, SidebarOutput};
 
 use super::attachments::AttachmentTarget;
@@ -28,10 +29,12 @@ fn message_list_output_msg(out: MessageListOutput) -> AppMsg {
             message,
             thread,
             solo,
+            ahead,
         } => AppMsg::MessageSelected {
             message,
             thread,
             solo,
+            ahead,
         },
         MessageListOutput::SelectionKeys(keys) => AppMsg::SelectionKeys(keys),
         MessageListOutput::Checked(count) => AppMsg::ListChecked(count),
@@ -97,9 +100,22 @@ fn message_list_output_msg(out: MessageListOutput) -> AppMsg {
             x,
             y,
         },
+        MessageListOutput::CopyTo {
+            messages,
+            offer_whole,
+            x,
+            y,
+        } => AppMsg::ListCopyTo {
+            messages,
+            offer_whole,
+            x,
+            y,
+        },
         MessageListOutput::SelectionCleared => AppMsg::ClearReader,
         MessageListOutput::OpenedByKey { already_open } => AppMsg::OpenedByKey { already_open },
         MessageListOutput::SearchActive(active) => AppMsg::SearchActive(active),
+        MessageListOutput::FindInBodies { terms } => AppMsg::FindInBodies { terms },
+        MessageListOutput::FindOnServers { terms, scope } => AppMsg::FindOnServers { terms, scope },
         MessageListOutput::SortChanged(key) => AppMsg::ListSortChanged(key),
         MessageListOutput::ColumnWidths(widths) => AppMsg::ListColumnWidths(widths),
         MessageListOutput::CustomizeColumns => AppMsg::CustomizeColumns,
@@ -160,6 +176,9 @@ fn message_view_output_msg(out: MessageViewOutput) -> AppMsg {
         MessageViewOutput::ReaderMode(on) => AppMsg::SetReaderMode(on),
         MessageViewOutput::Zoom(step) => AppMsg::ZoomMessage(step),
         MessageViewOutput::Unsubscribe { message, info } => AppMsg::Unsubscribe { message, info },
+        MessageViewOutput::ReceiptAnswer { message, send } => {
+            AppMsg::ReceiptAnswer { message, send }
+        }
         MessageViewOutput::InviteAction {
             message,
             invite,
@@ -350,6 +369,7 @@ pub(super) fn sidebar_output_msg(out: SidebarOutput) -> AppMsg {
             archive,
             junk,
             trash,
+            snoozed,
             favorites,
             smart,
             contacts,
@@ -363,6 +383,7 @@ pub(super) fn sidebar_output_msg(out: SidebarOutput) -> AppMsg {
             archive,
             junk,
             trash,
+            snoozed,
             favorites,
             smart,
             contacts,
@@ -427,6 +448,7 @@ pub(super) struct Children {
     pub(super) message_list: Controller<MessageList>,
     pub(super) message_view: Controller<MessageView>,
     pub(super) attachment_drawer: Controller<AttachmentDrawer>,
+    pub(super) reader_swap: ReaderSwap,
     pub(super) lightbox: Controller<crate::ui::lightbox::Lightbox>,
     pub(super) gallery: Controller<AttachmentsGallery>,
     pub(super) contacts_compose_revealer: gtk::Revealer,
@@ -472,8 +494,10 @@ impl Children {
             .launch(())
             .forward(sender.input_sender(), message_list_output_msg);
 
+        // Opening a message freezes the reader and its drawer as one pane.
+        let reader_swap = ReaderSwap::new();
         let message_view = MessageView::builder()
-            .launch(())
+            .launch(reader_swap.clone())
             .forward(sender.input_sender(), message_view_output_msg);
 
         // The drawer owns a Paned whose top pane is the reader body, so hand it
@@ -484,6 +508,7 @@ impl Children {
                 reader: message_view.widget().clone().upcast(),
             })
             .forward(sender.input_sender(), attachment_drawer_output_msg);
+        reader_swap.set_pane(attachment_drawer.widget());
 
         let lightbox = crate::ui::lightbox::Lightbox::builder().launch(()).detach();
 
@@ -514,6 +539,7 @@ impl Children {
             message_list,
             message_view,
             attachment_drawer,
+            reader_swap,
             lightbox,
             gallery,
             contacts_compose_revealer,

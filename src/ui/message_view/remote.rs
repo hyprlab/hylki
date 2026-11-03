@@ -280,3 +280,40 @@ pub(super) fn strip_remote(html: &str) -> String {
 pub(super) fn has_remote_resources(html: &str) -> bool {
     !remote_url_spans(html).is_empty()
 }
+
+/// Send every remote fetch in `html` through the app's own cache (#474):
+/// `https://host/x` becomes `hylki-https://host/x`, which the web context
+/// hands to [`crate::services::remote_content`]. The original scheme is kept in
+/// the new one's name, so a relative URL inside a fetched stylesheet still
+/// resolves on the right host. Only for mail whose remote content is allowed;
+/// a URL with any other scheme is left alone.
+pub(super) fn route_remote(html: &str) -> String {
+    let spans = remote_url_spans(html);
+    if spans.is_empty() {
+        return html.to_string();
+    }
+    let mut out = String::with_capacity(html.len() + spans.len() * 6);
+    let mut at = 0usize;
+    for (s, e) in spans {
+        if s < at {
+            continue;
+        }
+        out.push_str(&html[at..s]);
+        let url = &html[s..e];
+        out.push_str(
+            &crate::services::remote_content::route(url).unwrap_or_else(|| url.to_string()),
+        );
+        at = e;
+    }
+    out.push_str(&html[at..]);
+    out
+}
+
+/// The remote URLs in `html` as written in the markup, entities and all: what
+/// the prefetch fetches ahead of the reader (#474).
+pub(crate) fn remote_urls(html: &str) -> Vec<&str> {
+    remote_url_spans(html)
+        .into_iter()
+        .map(|(s, e)| &html[s..e])
+        .collect()
+}

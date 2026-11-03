@@ -6,6 +6,7 @@ use super::sender::{confirm_trust, fetch_sender_key};
 use super::types::{InviteAction, MessageViewInput, MessageViewOutput, TrState, UnsubState};
 use super::MessageView;
 use crate::i18n::i18n;
+use crate::models::Message;
 use adw::prelude::*;
 use relm4::prelude::*;
 
@@ -36,6 +37,29 @@ impl MessageView {
         );
     }
 
+    /// Print messages the reader is not showing, with its fonts, Reader
+    /// View and remote-content choice: the page is built at once, and the
+    /// reader is left as it was.
+    pub(super) fn on_print_messages(
+        &mut self,
+        message: Message,
+        thread: Vec<Message>,
+        allow_remote: bool,
+        preview: bool,
+    ) {
+        let thread = std::mem::replace(&mut self.thread, thread);
+        let current = self.current.replace(message);
+        let remote = std::mem::replace(&mut self.remote_allowed, allow_remote);
+        if preview {
+            self.on_print_preview();
+        } else {
+            self.on_print();
+        }
+        self.thread = thread;
+        self.current = current;
+        self.remote_allowed = remote;
+    }
+
     pub(super) fn on_toggle_sender_style(&mut self, account_id: u32, id: u32) {
         let key = (account_id, id);
         if !self.sender_style.remove(&key) {
@@ -57,6 +81,7 @@ impl MessageView {
             self.patch_verify_badge(account_id, id);
             self.patch_unsub(account_id, id);
             self.patch_invite(account_id, id);
+            self.patch_receipt(account_id, id);
         }
     }
 
@@ -180,6 +205,32 @@ impl MessageView {
             let _ = sender.output(MessageViewOutput::Unsubscribe {
                 message: Box::new(message),
                 info: Box::new(info),
+            });
+        }
+    }
+
+    pub(super) fn on_receipt_answer(
+        &mut self,
+        account_id: u32,
+        id: u32,
+        send: bool,
+        sender: &ComponentSender<Self>,
+    ) {
+        let message = self
+            .thread
+            .iter()
+            .find(|m| m.account_id == account_id && m.id == id)
+            .cloned();
+        if let Some(message) = message {
+            // The banner goes at once; the app's answer would take it away
+            // a moment later anyway.
+            if let Some(c) = self.member_checks.get_mut(&(account_id, id)) {
+                c.receipt = None;
+            }
+            self.patch_receipt(account_id, id);
+            let _ = sender.output(MessageViewOutput::ReceiptAnswer {
+                message: Box::new(message),
+                send,
             });
         }
     }

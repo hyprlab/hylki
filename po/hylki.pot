@@ -78,6 +78,9 @@ msgstr ""
 msgid "Could not import account: {e}"
 msgstr ""
 
+msgid "On This Computer is switched off"
+msgstr ""
+
 msgid "Delete the attachment from the server?"
 msgstr ""
 
@@ -93,6 +96,18 @@ msgid "Settings"
 msgstr ""
 
 msgid "Show Accounts"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Below"
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+msgid "Reading Pane"
 msgstr ""
 
 msgid "Focus Mode"
@@ -158,6 +173,12 @@ msgstr ""
 msgid "Create Filter from Message…"
 msgstr ""
 
+msgid "Create Event…"
+msgstr ""
+
+msgid "Create Task…"
+msgstr ""
+
 msgid "Tags"
 msgstr ""
 
@@ -171,6 +192,9 @@ msgid "Mark as Spam"
 msgstr ""
 
 msgid "Move To…"
+msgstr ""
+
+msgid "Copy To…"
 msgstr ""
 
 msgid "Archive"
@@ -450,10 +474,13 @@ msgstr ""
 msgid "Unstar"
 msgstr ""
 
-msgid "New Folder"
+msgid "Create a folder inside {name}."
 msgstr ""
 
 msgid "Create a new folder for this account."
+msgstr ""
+
+msgid "New Folder"
 msgstr ""
 
 msgid "Cancel"
@@ -502,7 +529,16 @@ msgid ""
 "Every message in them will be erased from the server. This can’t be undone."
 msgstr ""
 
+msgid "This account can't have folders at the top level."
+msgstr ""
+
+msgid "Folders on this account can't hold other folders."
+msgstr ""
+
 msgid "Create Folder"
+msgstr ""
+
+msgid "{name} can't hold other folders."
 msgstr ""
 
 msgid "archive"
@@ -512,6 +548,9 @@ msgid "trash"
 msgstr ""
 
 msgid "destination"
+msgstr ""
+
+msgid "A folder can't be moved into itself."
 msgstr ""
 
 msgid "Move Folder"
@@ -575,6 +614,9 @@ msgstr ""
 msgid "Upload to Cloud Storage"
 msgstr ""
 
+msgid "The account has to connect before its folders can change."
+msgstr ""
+
 msgid "This message carries no calendar file to open."
 msgstr ""
 
@@ -626,6 +668,21 @@ msgstr ""
 msgid "Starred first"
 msgstr ""
 
+msgid "Clear Dates"
+msgstr ""
+
+msgid "Any Date"
+msgstr ""
+
+msgid "{from} to {to}"
+msgstr ""
+
+msgid "Since {date}"
+msgstr ""
+
+msgid "Until {date}"
+msgstr ""
+
 msgid "Sort by"
 msgstr ""
 
@@ -633,6 +690,15 @@ msgid "Show only"
 msgstr ""
 
 msgid "Clear Filters"
+msgstr ""
+
+msgid "Dates"
+msgstr ""
+
+msgid "From"
+msgstr ""
+
+msgid "To"
 msgstr ""
 
 msgid "Sort and filter messages"
@@ -656,6 +722,11 @@ msgstr ""
 
 msgid "Refresh or long-press for Status Bar"
 msgstr ""
+
+msgid "Copying one message to On This Computer…"
+msgid_plural "Copying {n} messages to On This Computer…"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Sending message…"
 msgstr ""
@@ -682,6 +753,9 @@ msgid "Open the selected message"
 msgstr ""
 
 msgid "Back to the message list"
+msgstr ""
+
+msgid "Open or fold a conversation in the list"
 msgstr ""
 
 msgid "Next message in the conversation"
@@ -784,6 +858,9 @@ msgid "Focus Mode on or off"
 msgstr ""
 
 msgid "Fullscreen on or off"
+msgstr ""
+
+msgid "Reading pane right of the list, below it, or off"
 msgstr ""
 
 msgid "Message zoom in or out"
@@ -938,6 +1015,15 @@ msgstr ""
 msgid "Show or Hide the Sidebar"
 msgstr ""
 
+msgid "Reading Pane Right"
+msgstr ""
+
+msgid "Reading Pane Below"
+msgstr ""
+
+msgid "Reading Pane Off"
+msgstr ""
+
 msgid "Mail Accounts"
 msgstr ""
 
@@ -1010,13 +1096,13 @@ msgstr ""
 msgid "Forwarded message"
 msgstr ""
 
+msgid "Subject: {subject}"
+msgstr ""
+
 msgid "From: {from}"
 msgstr ""
 
 msgid "Date: {date}"
-msgstr ""
-
-msgid "Subject: {subject}"
 msgstr ""
 
 msgid "Export failed: {e}"
@@ -1102,6 +1188,25 @@ msgstr ""
 msgid "Customize Toolbar…"
 msgstr ""
 
+msgid "Read receipt"
+msgstr ""
+
+msgid "Read: {subject}"
+msgstr ""
+
+msgid ""
+"This is a read receipt for the message sent to {to} on {date} with the "
+"subject \"{subject}\"."
+msgstr ""
+
+msgid ""
+"It means the message was shown on the recipient's screen, not that it was "
+"read or understood."
+msgstr ""
+
+msgid "Read by {reader}"
+msgstr ""
+
 msgid "Full Release Notes on GitHub"
 msgstr ""
 
@@ -1148,6 +1253,11 @@ msgstr ""
 msgid "No {v1} folder available for some messages"
 msgstr ""
 
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Remove Account?"
 msgstr ""
 
@@ -1173,8 +1283,24 @@ msgstr ""
 msgid "Snooze until"
 msgstr ""
 
+msgid "Could not add the event: {e}"
+msgstr ""
+
+msgid "Could not add the task: {e}"
+msgstr ""
+
+msgid "One message could not be copied to {account}: {error}"
+msgid_plural "{n} messages could not be copied to {account}: {error}"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Copying one message to {account}…"
+msgid_plural "Copying {n} messages to {account}…"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1361,6 +1487,21 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
+msgid "Newest messages"
+msgstr ""
+
+msgid "Last week"
+msgstr ""
+
+msgid "Last month"
+msgstr ""
+
+msgid "Last year"
+msgstr ""
+
+msgid "All mail"
+msgstr ""
+
 msgid "With sent mail"
 msgstr ""
 
@@ -1439,6 +1580,27 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "On {date} at {time}, {name} wrote:"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "First Name"
+msgstr ""
+
+msgid "Last Name"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Column {n}"
+msgstr ""
+
+msgid "The file is empty."
+msgstr ""
+
+msgid "The file has no rows below its first."
 msgstr ""
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
@@ -1545,6 +1707,12 @@ msgid ""
 "label but does not apply its rules."
 msgstr ""
 
+msgid "Nothing here proves this came from {from} — or that it didn't."
+msgstr ""
+
+msgid "These checks aren't known to come from your mail provider"
+msgstr ""
+
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
 msgstr ""
@@ -1566,9 +1734,6 @@ msgid ""
 msgstr ""
 
 msgid "Your mail provider didn't report any sender checks for this message."
-msgstr ""
-
-msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 
 msgid "{name}: passed"
@@ -1610,6 +1775,12 @@ msgstr ""
 msgid "{free} free ({pct}%)"
 msgstr ""
 
+msgid "A folder needs a name."
+msgstr ""
+
+msgid "A folder name can't contain “{c}” on this account."
+msgstr ""
+
 msgid "Encrypted message"
 msgstr ""
 
@@ -1638,6 +1809,15 @@ msgid "Waiting since {ago}"
 msgstr ""
 
 msgid "Scheduled for {when}"
+msgstr ""
+
+msgid "No read receipt yet"
+msgstr ""
+
+msgid "{who}, {when}"
+msgstr ""
+
+msgid "Read by {count} of {total}"
 msgstr ""
 
 msgid "Verified sender"
@@ -1734,6 +1914,96 @@ msgstr ""
 msgid "This message hasn't been checked."
 msgstr ""
 
+msgid "Harper is not available for this computer."
+msgstr ""
+
+msgid "Harper is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+msgid "Harper could not be started: {e}"
+msgstr ""
+
+msgid "Harper's answer could not be read."
+msgstr ""
+
+msgid "There is no folder to install to."
+msgstr ""
+
+msgid "There is not enough free space: {size} is needed."
+msgstr ""
+
+msgid "The download could not start: {e}"
+msgstr ""
+
+msgid "The download was cancelled."
+msgstr ""
+
+msgid "The download stopped: {e}"
+msgstr ""
+
+msgid "The downloaded file is not the one expected, so it was not installed."
+msgstr ""
+
+msgid "The download could not be unpacked: {e}"
+msgstr ""
+
+msgid "The files could not be written: {e}"
+msgstr ""
+
+msgid "{n} MB"
+msgstr ""
+
+msgid "The server's answer could not be read."
+msgstr ""
+
+msgid "Nothing answers at that address. Check that the server is running."
+msgstr ""
+
+msgid "The server's name could not be found."
+msgstr ""
+
+msgid "The server's address is not valid."
+msgstr ""
+
+msgid "The server could not be reached: {e}"
+msgstr ""
+
+msgid "The server did not accept the username and key."
+msgstr ""
+
+msgid "The message is too long for the server."
+msgstr ""
+
+msgid "Too many requests: try again in a moment."
+msgstr ""
+
+msgid "The server refused the request (error {code})."
+msgstr ""
+
+msgid "LanguageTool is not available for this computer."
+msgstr ""
+
+msgid "LanguageTool stopped unexpectedly."
+msgstr ""
+
+msgid "LanguageTool is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+msgid "LanguageTool could not be started: {e}"
+msgstr ""
+
+msgid "LanguageTool could not be started."
+msgstr ""
+
+msgid "LanguageTool took too long to start."
+msgstr ""
+
+msgid "Enter the LanguageTool server's address in Settings → Composing."
+msgstr ""
+
+msgid "Enter the server's address first."
+msgstr ""
+
 msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
@@ -1748,9 +2018,6 @@ msgstr ""
 msgid "The service did not accept the key."
 msgstr ""
 
-msgid "Too many requests: try again in a moment."
-msgstr ""
-
 msgid "This month's allowance is used up."
 msgstr ""
 
@@ -1758,9 +2025,6 @@ msgid "The service refused the request (error {code})."
 msgstr ""
 
 msgid "Enter the LibreTranslate server's address in Settings → Translation."
-msgstr ""
-
-msgid "Off"
 msgstr ""
 
 msgid "Choose a translation service in Settings → Translation first."
@@ -2080,6 +2344,12 @@ msgstr ""
 msgid "Port (IMAP 993 / POP3 995)"
 msgstr ""
 
+msgid "Import Mbox Files"
+msgstr ""
+
+msgid "Import Maildir Folders"
+msgstr ""
+
 msgid "Signed in as {address}, not {email}."
 msgstr ""
 
@@ -2129,6 +2399,14 @@ msgid "Check GNOME Online Accounts for new accounts"
 msgstr ""
 
 msgid "Add Account…"
+msgstr ""
+
+msgid ""
+"Store mail in folders that live on this computer. Move or copy mail from any "
+"account to here."
+msgstr ""
+
+msgid "Add"
 msgstr ""
 
 msgid "GNOME Online Accounts"
@@ -2190,9 +2468,6 @@ msgstr ""
 msgid "Add Tag"
 msgstr ""
 
-msgid "Name"
-msgstr ""
-
 msgid "Keyword"
 msgstr ""
 
@@ -2251,6 +2526,9 @@ msgstr ""
 msgid "Custom OAuth"
 msgstr ""
 
+msgid "Folders on this computer"
+msgstr ""
+
 msgid "IMAP/POP3 account"
 msgstr ""
 
@@ -2261,6 +2539,11 @@ msgid "Mail account"
 msgstr ""
 
 msgid "Enter a client ID and sign in before saving"
+msgstr ""
+
+msgid ""
+"Remove {name} from Hylki? Its folders and the mail in them stay on this "
+"computer, in {dir}, and come back if it is added again."
 msgstr ""
 
 msgid "Edit HTML"
@@ -2554,6 +2837,68 @@ msgid "Next"
 msgstr ""
 
 msgid "Open in the default app"
+msgstr ""
+
+msgid "New Event"
+msgstr ""
+
+msgid "New Task"
+msgstr ""
+
+msgid "Open in Calendar"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Calendar"
+msgstr ""
+
+msgid "Task list"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "All day"
+msgstr ""
+
+msgid "Starts"
+msgstr ""
+
+msgid "Ends"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+msgid "Second alarm"
+msgstr ""
+
+msgid "At the start"
+msgstr ""
+
+msgid "{n} week before"
+msgid_plural "{n} weeks before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} day before"
+msgid_plural "{n} days before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} hour before"
+msgid_plural "{n} hours before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} minute before"
+msgid_plural "{n} minutes before"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Due"
 msgstr ""
 
 msgid "Welcome to Hylki, formerly {old}"
@@ -2933,6 +3278,24 @@ msgstr ""
 msgid "Show Cc, Bcc and Reply-To"
 msgstr ""
 
+msgid "Cannot merge an encrypted message"
+msgstr ""
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr ""
+
+msgid "Check the From address"
+msgstr ""
+
+msgid "Insert Merge Field"
+msgstr ""
+
+msgid "Contact Groups"
+msgstr ""
+
+msgid "Choose a CSV File…"
+msgstr ""
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -2958,9 +3321,6 @@ msgstr ""
 msgid "Cannot send with OpenPGP"
 msgstr ""
 
-msgid "Check the From address"
-msgstr ""
-
 msgid "An attachment is missing"
 msgstr ""
 
@@ -2975,10 +3335,48 @@ msgstr ""
 msgid "Choose from your addresses"
 msgstr ""
 
-msgid "Check the address"
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
 msgstr ""
 
 msgid "“{addr}” is not an email address."
+msgstr ""
+
+msgid "Check the address"
+msgstr ""
+
+msgid "Send now"
+msgstr ""
+
+msgid "Tomorrow morning ({time})"
+msgstr ""
+
+msgid "Tomorrow afternoon ({time})"
+msgstr ""
+
+msgid "Monday morning ({time})"
+msgstr ""
+
+msgid "Pick a date and time…"
+msgstr ""
+
+msgid "Mail Merge…"
+msgstr ""
+
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
+msgid "High"
+msgstr ""
+
+msgid "Normal"
+msgstr ""
+
+msgid "Low"
 msgstr ""
 
 msgid "Show the message as it will be sent"
@@ -3054,19 +3452,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-msgid "Send now"
-msgstr ""
-
-msgid "Tomorrow morning ({time})"
-msgstr ""
-
-msgid "Tomorrow afternoon ({time})"
-msgstr ""
-
-msgid "Monday morning ({time})"
-msgstr ""
-
-msgid "Pick a date and time…"
+msgid "Send options"
 msgstr ""
 
 msgid "Show From, To and Subject"
@@ -3076,12 +3462,6 @@ msgid "Send now instead"
 msgstr ""
 
 msgid "Download password for {name}: {password}"
-msgstr ""
-
-msgid "From"
-msgstr ""
-
-msgid "To"
 msgstr ""
 
 msgid "Cc"
@@ -3307,6 +3687,15 @@ msgstr ""
 msgid "Unless another is picked when the contact is made."
 msgstr ""
 
+msgid "In Mail"
+msgstr ""
+
+msgid "Show names from Contacts"
+msgstr ""
+
+msgid "Saved addresses show the contact's name, not the mail's."
+msgstr ""
+
 msgid "Layout"
 msgstr ""
 
@@ -3402,9 +3791,6 @@ msgstr ""
 msgid "Add to Contacts"
 msgstr ""
 
-msgid "Email"
-msgstr ""
-
 msgid "Phone"
 msgstr ""
 
@@ -3474,9 +3860,6 @@ msgid "Nickname"
 msgstr ""
 
 msgid "Organization"
-msgstr ""
-
-msgid "Title"
 msgstr ""
 
 msgid "Another book moves the contact there when saved."
@@ -3601,6 +3984,9 @@ msgid "Last name"
 msgstr ""
 
 msgid "Sort and filter contacts"
+msgstr ""
+
+msgid "Groups"
 msgstr ""
 
 msgid "Import Contacts"
@@ -3836,6 +4222,67 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr ""
 
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr ""
+
+msgid "No row has an address to send to."
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "In {places}"
+msgstr ""
+
+msgid "Mail Merge"
+msgstr ""
+
+msgid "Send to"
+msgstr ""
+
+msgid "A CSV file"
+msgstr ""
+
+msgid "CSV file"
+msgstr ""
+
+msgid "Its first row names the fields."
+msgstr ""
+
+msgid "Choose…"
+msgstr ""
+
+msgid "Fields"
+msgstr ""
+
+msgid "Leave these fields empty"
+msgstr ""
+
+msgid "{n} of {total}"
+msgstr ""
+
+msgid "Not in {source}"
+msgstr ""
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Choose a CSV File"
+msgstr ""
+
+msgid "CSV files"
+msgstr ""
+
+msgid "The file could not be read: {error}"
+msgstr ""
+
 msgid "No Messages"
 msgstr ""
 
@@ -3849,6 +4296,13 @@ msgid "No message here passes the filters."
 msgstr ""
 
 msgid "Clear selection"
+msgstr ""
+
+#. The scope button beside it says where it looks.
+msgid "Search…"
+msgstr ""
+
+msgid "Searching the server…"
 msgstr ""
 
 msgid "Choose which folders to search"
@@ -3910,22 +4364,13 @@ msgstr ""
 msgid "What this searches"
 msgstr ""
 
-msgid "Search all folders but Trash and Junk"
-msgstr ""
-
-msgid "Search all folders, Trash and Junk too"
-msgstr ""
-
-msgid "Search this folder"
-msgstr ""
-
 msgid "me"
 msgstr ""
 
-msgid "Show conversation"
+msgid "To:"
 msgstr ""
 
-msgid "Due"
+msgid "Show conversation"
 msgstr ""
 
 msgid "Drag to resize, double-click for the usual width"
@@ -3946,16 +4391,16 @@ msgstr ""
 msgid "Remove star"
 msgstr ""
 
-msgid "Forwarded"
-msgstr ""
-
-msgid "Snoozed until {when}"
-msgstr ""
-
 msgid "High importance"
 msgstr ""
 
 msgid "Low importance"
+msgstr ""
+
+msgid "Forwarded"
+msgstr ""
+
+msgid "Snoozed until {when}"
 msgstr ""
 
 msgid "In {folder}"
@@ -4116,9 +4561,6 @@ msgstr ""
 msgid "Block remote content"
 msgstr ""
 
-msgid "Received"
-msgstr ""
-
 msgid "Click to open this message"
 msgstr ""
 
@@ -4270,9 +4712,6 @@ msgstr ""
 msgid "From:"
 msgstr ""
 
-msgid "To:"
-msgstr ""
-
 msgid "Cc:"
 msgstr ""
 
@@ -4283,6 +4722,24 @@ msgid "Date:"
 msgstr ""
 
 msgid "Message"
+msgstr ""
+
+msgid "{name} asked for a read receipt."
+msgstr ""
+
+msgid "{name} asked for a read receipt, to be sent to {addr}."
+msgstr ""
+
+msgid "Send Receipt"
+msgstr ""
+
+msgid "Tells the sender you opened this message"
+msgstr ""
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Sends nothing and stops asking"
 msgstr ""
 
 msgid "Copied"
@@ -4724,6 +5181,78 @@ msgstr ""
 msgid "Custom File"
 msgstr ""
 
+msgid "Downloading: {done} of {total}"
+msgstr ""
+
+msgid "Not available for this computer."
+msgstr ""
+
+msgid "Version {version}, on this computer."
+msgstr ""
+
+msgid "Not downloaded yet. The download is {size}."
+msgstr ""
+
+msgid "The files could not be removed."
+msgstr ""
+
+msgid "The download stopped unexpectedly."
+msgstr ""
+
+msgid "Grammar"
+msgstr ""
+
+msgid "Check grammar and style"
+msgstr ""
+
+msgid "Right-click a marked phrase for suggestions."
+msgstr ""
+
+msgid "Checker"
+msgstr ""
+
+msgid "Harper"
+msgstr ""
+
+msgid "LanguageTool"
+msgstr ""
+
+msgid "LanguageTool server"
+msgstr ""
+
+msgid "English only. Nothing leaves this computer."
+msgstr ""
+
+msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
+msgstr ""
+
+msgid "What you write is sent to the server as you type."
+msgstr ""
+
+msgid "Username (LanguageTool Premium)"
+msgstr ""
+
+msgid "API key (LanguageTool Premium)"
+msgstr ""
+
+msgid "Check the settings"
+msgstr ""
+
+msgid "Sends a test sentence to the server."
+msgstr ""
+
+msgid "Check"
+msgstr ""
+
+msgid "Checking…"
+msgstr ""
+
+msgid "The check stopped unexpectedly."
+msgstr ""
+
+msgid "It works: {server} answered."
+msgstr ""
+
 msgid "Messages already read"
 msgstr ""
 
@@ -4831,9 +5360,6 @@ msgid "The last folder"
 msgstr ""
 
 msgid "Left"
-msgstr ""
-
-msgid "Right"
 msgstr ""
 
 msgid "1 line"
@@ -5041,6 +5567,12 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr ""
 
+msgid "Read receipts"
+msgstr ""
+
+msgid "When someone opens mail you asked a receipt for."
+msgstr ""
+
 msgid "Sound for new mail"
 msgstr ""
 
@@ -5051,9 +5583,6 @@ msgid "Play"
 msgstr ""
 
 msgid "Sound file"
-msgstr ""
-
-msgid "Choose…"
 msgstr ""
 
 msgid "Also play while Hylki is in front"
@@ -5164,6 +5693,12 @@ msgstr ""
 msgid "Remote content can tell a sender when and where you read."
 msgstr ""
 
+msgid "Pre-load remote content for the next messages"
+msgstr ""
+
+msgid "Their senders can tell they were opened."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr ""
 
@@ -5189,6 +5724,12 @@ msgstr ""
 
 msgid ""
 "Most are fetched from the sender's domain, which learns your IP address."
+msgstr ""
+
+msgid "Send read receipts"
+msgstr ""
+
+msgid "A receipt tells the sender when you opened the message."
 msgstr ""
 
 msgid "Open at startup"
@@ -5251,6 +5792,12 @@ msgid "Shown only with more than one account."
 msgstr ""
 
 msgid "Inboxes"
+msgstr ""
+
+msgid "Snoozed"
+msgstr ""
+
+msgid "Shown only while mail is snoozed."
 msgstr ""
 
 msgid "Unread counts"
@@ -5386,6 +5933,9 @@ msgstr ""
 msgid "Could not save the PDF: {error}"
 msgstr ""
 
+msgid "Filled in by Mail Merge"
+msgstr ""
+
 msgid "Custom…"
 msgstr ""
 
@@ -5398,10 +5948,13 @@ msgstr ""
 msgid "Monospace"
 msgstr ""
 
-msgid "Spelling Language"
+msgid "Grammar check failed: {error}"
 msgstr ""
 
-msgid "Normal"
+msgid "No suggestions"
+msgstr ""
+
+msgid "Spelling Language"
 msgstr ""
 
 msgid "Heading 1"
@@ -5622,13 +6175,7 @@ msgstr ""
 msgid "Region (empty for a global resource)"
 msgstr ""
 
-msgid "Check the settings"
-msgstr ""
-
 msgid "Translates a greeting to test the service."
-msgstr ""
-
-msgid "Check"
 msgstr ""
 
 msgid "Messages"
@@ -5648,9 +6195,6 @@ msgstr ""
 msgid "Key (if the server asks for one)"
 msgstr ""
 
-msgid "Checking…"
-msgstr ""
-
 msgid "It works: “{sent}” came back as “{back}”."
 msgstr ""
 
@@ -5658,9 +6202,6 @@ msgid "Sign In"
 msgstr ""
 
 msgid "The sign-in window was closed."
-msgstr ""
-
-msgid "Add"
 msgstr ""
 
 msgid "✓ {email} — added"
@@ -5915,7 +6456,7 @@ msgstr ""
 msgid "Could not create folder: {e}"
 msgstr ""
 
-msgid "Could not rename folder: unknown folder"
+msgid "the folder it goes in is gone"
 msgstr ""
 
 msgid "Could not rename folder: {e}"
@@ -6019,6 +6560,36 @@ msgid "That folder is not on the server"
 msgstr ""
 
 msgid "Could not reach the JMAP server: {e}"
+msgstr ""
+
+msgid "Mail on this computer is not sent, and has no drafts"
+msgstr ""
+
+msgid "Mail is not sent from On This Computer: choose another From address"
+msgstr ""
+
+msgid "Could not import {path}: {e}"
+msgstr ""
+
+msgid "Importing {done} of {total} messages…"
+msgstr ""
+
+msgid "A folder by that name already exists"
+msgstr ""
+
+msgid "The folder still holds mail"
+msgstr ""
+
+msgid "That is not a folder name"
+msgstr ""
+
+msgid "Could not store the message: {e}"
+msgstr ""
+
+msgid "Could not open the folders on this computer: {e}"
+msgstr ""
+
+msgid "Reading {n} messages…"
 msgstr ""
 
 #. Nothing failed: the message waits for the network, which the
@@ -6310,6 +6881,44 @@ msgid ""
 "starred."
 msgstr ""
 
+msgid "Keep mail cached"
+msgstr ""
+
+msgid "Leaves out Trash, Junk and Drafts."
+msgstr ""
+
+msgid "Include attachments"
+msgstr ""
+
+msgid "Can consume a lot of hard drive space."
+msgstr ""
+
+msgid "Copy mail to On This Computer"
+msgstr ""
+
+msgid ""
+"Downloads copies of every message from every folder of this account to this "
+"computer (except Trash, Junk and Drafts) and stores them in On This Computer."
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Mail already here is not imported again."
+msgstr ""
+
+msgid "Maildir folders"
+msgstr ""
+
+msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
+msgstr ""
+
+msgid "Mbox files"
+msgstr ""
+
+msgid "Thunderbird's folders and other mbox files."
+msgstr ""
+
 msgid "Microsoft 365"
 msgstr ""
 
@@ -6358,9 +6967,6 @@ msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 
 msgid "Templates"
-msgstr ""
-
-msgid "Snoozed"
 msgstr ""
 
 msgid "Hidden Folders"
@@ -6585,10 +7191,31 @@ msgstr ""
 msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr ""
 
+msgid "Fold quoted text"
+msgstr ""
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr ""
+
 msgid "Undo Send"
 msgstr ""
 
 msgid "How long Undo is offered after sending."
+msgstr ""
+
+msgid "Request read receipts"
+msgstr ""
+
+msgid "Returned receipts"
+msgstr ""
+
+msgid "Sent mail shows who read it; the receipt goes here."
+msgstr ""
+
+msgid "Move to Trash"
+msgstr ""
+
+msgid "Keep in Inbox"
 msgstr ""
 
 msgid "Reply Header"
@@ -6631,6 +7258,12 @@ msgid "Light / Dark Mode switch"
 msgstr ""
 
 msgid "Displays in the message header for each message."
+msgstr ""
+
+msgid "Show account in message header"
+msgstr ""
+
+msgid "The account a message is in, above its subject."
 msgstr ""
 
 msgid "Ctrl+0 returns to the default."
@@ -6799,6 +7432,9 @@ msgid "Remove…"
 msgstr ""
 
 msgid "Keep downloaded mail"
+msgstr ""
+
+msgid "Mail inside an account's offline period is kept."
 msgstr ""
 
 msgid "GNOME Files Integration"

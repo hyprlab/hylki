@@ -109,9 +109,11 @@ pub(crate) enum TreeAction {
 pub(super) const DRAG_MARK: &str = "hylki-contacts";
 
 /// The "Show only" filters of the sort and filter button, as the message
-/// list has for mail. They narrow the people; groups are not filtered.
+/// list has for mail. They narrow the people and leave the groups, except
+/// Groups, which leaves the groups alone.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum ContactFilter {
+    Groups,
     Photo,
     Email,
     Phone,
@@ -122,7 +124,8 @@ pub(crate) enum ContactFilter {
 }
 
 impl ContactFilter {
-    pub(crate) const ALL: [ContactFilter; 7] = [
+    pub(crate) const ALL: [ContactFilter; 8] = [
+        ContactFilter::Groups,
         ContactFilter::Photo,
         ContactFilter::Email,
         ContactFilter::Phone,
@@ -134,6 +137,7 @@ impl ContactFilter {
 
     pub(super) fn label(self) -> String {
         match self {
+            ContactFilter::Groups => i18n("Groups"),
             ContactFilter::Photo => i18n("Has Photo"),
             ContactFilter::Email => i18n("Has Email"),
             ContactFilter::Phone => i18n("Has Phone"),
@@ -159,6 +163,7 @@ impl ContactFilter {
         grouped: &std::collections::HashSet<String>,
     ) -> bool {
         match self {
+            ContactFilter::Groups => c.is_group(),
             ContactFilter::Photo => c.has_photo(),
             ContactFilter::Email => !c.emails.is_empty(),
             ContactFilter::Phone => !c.phones.is_empty(),

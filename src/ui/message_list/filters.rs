@@ -65,26 +65,84 @@ impl QuickFilter {
     }
 }
 
-/// The quick filters that are on.
+/// Which end of the quick filters' date range a day is for.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum DateBound {
+    From,
+    To,
+}
+
+/// The quick filters that are on, and the days the list is narrowed to:
+/// mail from the start of `from` to the end of `to`, both on this
+/// computer's clock, either end left open.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
-pub(crate) struct QuickFilters(u16);
+pub(crate) struct QuickFilters {
+    bits: u16,
+    from: Option<chrono::NaiveDate>,
+    to: Option<chrono::NaiveDate>,
+}
 
 impl QuickFilters {
     pub(crate) fn has(self, f: QuickFilter) -> bool {
-        self.0 & f.bit() != 0
+        self.bits & f.bit() != 0
     }
 
     pub(crate) fn with(self, f: QuickFilter, on: bool) -> Self {
-        Self(if on {
-            self.0 | f.bit()
-        } else {
-            self.0 & !f.bit()
-        })
+        Self {
+            bits: if on {
+                self.bits | f.bit()
+            } else {
+                self.bits & !f.bit()
+            },
+            ..self
+        }
+    }
+
+    pub(crate) fn date(self, end: DateBound) -> Option<chrono::NaiveDate> {
+        match end {
+            DateBound::From => self.from,
+            DateBound::To => self.to,
+        }
+    }
+
+    pub(crate) fn with_date(self, end: DateBound, day: Option<chrono::NaiveDate>) -> Self {
+        match end {
+            DateBound::From => Self { from: day, ..self },
+            DateBound::To => Self { to: day, ..self },
+        }
+    }
+
+    pub(crate) fn has_dates(self) -> bool {
+        self.from.is_some() || self.to.is_some()
+    }
+
+    /// The range as Unix seconds, the end excluded. Days given the wrong
+    /// way round are read in order rather than matching nothing.
+    pub(super) fn span(self) -> (i64, i64) {
+        let (from, to) = match (self.from, self.to) {
+            (Some(a), Some(b)) if a > b => (Some(b), Some(a)),
+            other => other,
+        };
+        (
+            from.map_or(i64::MIN, start_of_day),
+            to.and_then(|d| d.succ_opt()).map_or(i64::MAX, start_of_day),
+        )
     }
 
     pub(crate) fn is_empty(self) -> bool {
-        self.0 == 0
+        self.bits == 0 && !self.has_dates()
     }
+}
+
+/// Local midnight of `day`, Unix seconds; an hour on where a clock change
+/// skips midnight.
+pub(super) fn start_of_day(day: chrono::NaiveDate) -> i64 {
+    use chrono::TimeZone;
+    let midnight = day.and_time(chrono::NaiveTime::MIN);
+    [midnight, midnight + chrono::Duration::hours(1)]
+        .iter()
+        .find_map(|t| chrono::Local.from_local_datetime(t).earliest())
+        .map_or_else(|| midnight.and_utc().timestamp(), |t| t.timestamp())
 }
 
 /// What the quick filters need to judge a message, gathered once a pass.
@@ -97,10 +155,16 @@ pub(super) struct QuickFilterContext {
     pub(super) tags: Vec<crate::config::Tag>,
     /// Local midnight, Unix seconds ("Today").
     pub(super) today: i64,
+    /// The date range as Unix seconds, the end excluded.
+    pub(super) span: (i64, i64),
 }
 
 impl QuickFilterContext {
     pub(super) fn passes(&self, m: &Message) -> bool {
+        (self.span.0..self.span.1).contains(&m.timestamp) && self.passes_checks(m)
+    }
+
+    fn passes_checks(&self, m: &Message) -> bool {
         QuickFilter::ALL
             .iter()
             .filter(|f| self.filters.has(**f))

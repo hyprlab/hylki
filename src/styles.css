@@ -732,8 +732,12 @@ flowbox.attach-flow > flowboxchild {
   color: @accent_fg_color;
   border-radius: 9999px;
   min-width: 18px;
-  min-height: 18px;
-  padding: 0 5px;
+  /* At the default font size the count's 15px line sits high in the 18px
+     chip, its digits 1.5px above the center. A pixel of top padding, taken
+     from min-height so the chip stays 18px, brings them down to within half
+     a pixel, the closest a 9px digit gets in an 18px chip. */
+  min-height: 17px;
+  padding: 1px 5px 0;
   font-size: 0.8em;
   font-weight: 700;
 }
@@ -1033,11 +1037,11 @@ flowbox.attach-flow > flowboxchild {
   opacity: 1;
 }
 
-.message-row.single-line .importance-high {
+.message-row .importance-high {
   color: @error_color;
 }
 
-.message-row.single-line .importance-low {
+.message-row .importance-low {
   opacity: 0.5;
 }
 
@@ -1075,7 +1079,7 @@ flowbox.attach-flow > flowboxchild {
 /* On the accent ground of a selected row they read in white, as the rest
    of the row does. */
 .message-list > row:selected .message-row.single-line .message-date.overdue,
-.message-list > row:selected .message-row.single-line .importance-high {
+.message-list > row:selected .message-row .importance-high {
   color: white;
 }
 
@@ -1328,6 +1332,22 @@ flowbox.attach-flow > flowboxchild {
    threshold, then full color ("armed") to say a release will fire it. */
 .swipe-indicator {
   opacity: 0.55;
+  /* The pill's own box: a selected row keeps its accent fill while it
+     slides, so the strip has to meet it edge to edge and stand as tall. */
+  margin: 2px 6px;
+}
+
+.message-list.single-line .swipe-indicator {
+  margin: 1px 6px;
+}
+
+.message-item.thread-child .swipe-indicator {
+  margin-left: 10px;
+}
+
+.message-item.thread-child .swipe-indicator:dir(rtl) {
+  margin-left: 6px;
+  margin-right: 10px;
 }
 
 .swipe-indicator.armed {
@@ -1420,6 +1440,21 @@ flowbox.attach-flow > flowboxchild {
   opacity: 0.9;
 }
 
+/* Sent mail's read receipt (#520): grey checkmarks while it waits, green
+   once one came back. A double check needs the extra width to read. */
+.read-receipt {
+  -gtk-icon-size: 14px;
+}
+
+.read-receipt.read {
+  color: @success_color;
+  opacity: 1;
+}
+
+.message-list > row:selected .read-receipt.read {
+  color: white;
+}
+
 /* ---- Reader ---- */
 
 /* The reader pane's toolbar: tighter than stock between the action icons —
@@ -1452,6 +1487,26 @@ headerbar.reader-toolbar.compact box.end > button {
   padding-right: 1px;
 }
 
+/* The same toolbar in the list header, with the reader below the list or
+   off: spaced as in the reader's header (the box's own spacing is 6px,
+   as a headerbar's). */
+headerbar box.list-tools {
+  border-spacing: 1px;
+}
+headerbar box.list-tools button.image-button {
+  min-width: 28px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+headerbar box.list-tools.compact {
+  border-spacing: 0;
+}
+headerbar box.list-tools.compact button {
+  min-width: 24px;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
 .reader-header {
   /* The account chip's top sits level with the top of the message list's
      first highlight pill, so the two panes start on one line instead of the
@@ -1474,6 +1529,12 @@ headerbar.reader-toolbar.compact box.end > button {
    header keeps the 20px it always had. */
 .reader-header.under-bar {
   padding-top: 20px;
+}
+
+/* The reading pane's still while a message opens (ReaderSwap): opaque, on
+   the ground the pane sits on. */
+.reader-swap-still {
+  background-color: @window_bg_color;
 }
 
 .reader-subject {
@@ -1921,12 +1982,6 @@ headerbar.reader-toolbar.compact box.end > button {
   /* Matches the 6px grab strip above, so the drawer reads evenly spaced. */
   padding-bottom: 6px;
 }
-/* The still of a drawer on its way out: the drawer's own tint is in the
-   picture, but not the window ground it sits on, without which the reader
-   behind shows through (see fade_out_drawer). */
-.attachment-drawer-still {
-  background: @window_bg_color;
-}
 /* The drawer's divider draws no line or grip of its own: it wears the
    drawer's exact tint, so the grabbable strip reads as the drawer's own top
    edge rather than a band of window ground showing through. Dragging resizes
@@ -2364,11 +2419,10 @@ textview.console-view text selection {
 
 /* The composer's Send split (#145): Send and the Send Later dropdown as
    one accent-colored control, joined flush, with a short inset divider
-   line between them rather than a full-height seam. */
-.send-split {
-  background: @accent_bg_color;
-  border-radius: 6px;
-}
+   line between them rather than a full-height seam. The box paints
+   nothing itself: the buttons' outer corners follow the theme's radius,
+   which is 9px in libadwaita 1.9 and 6px before, and a box rounded to
+   either one shows a crescent past the other's corners. */
 .send-split > button:dir(ltr):first-child,
 .send-split > menubutton:dir(ltr):first-child > button,
 .send-split > button:dir(rtl):last-child,
@@ -2404,13 +2458,17 @@ textview.console-view text selection {
 .send-split > menubutton > button:checked {
   background-image: image(alpha(currentColor, 0.2));
 }
+/* The separator fills the gap between the buttons with the accent, and
+   draws the short line over its middle half. */
 .send-split > separator {
-  background-color: alpha(@accent_fg_color, 0.55);
+  background-color: @accent_bg_color;
+  background-image: image(alpha(@accent_fg_color, 0.55));
+  background-size: 100% 50%;
+  background-position: center;
+  background-repeat: no-repeat;
   /* Two wide: the dropdown's linked edge overlaps the first pixel, so one
      shows, which is the line wanted. */
   min-width: 2px;
-  margin-top: 9px;
-  margin-bottom: 9px;
 }
 /* Linked siblings overlap by a pixel, which is exactly the divider's width:
    the dropdown keeps to its own side of it. */
@@ -2531,8 +2589,35 @@ textview.console-view text selection {
   margin-top: 6px;
   font-weight: normal;
 }
+/* Its date range: From and To, and the calendar that sets them. */
+.sort-filter-dates {
+  margin: 4px 8px;
+}
+
+/* The month and year beside the list's scrollbar thumb while it is
+   dragged. */
+.list-scrub-date {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: alpha(@window_bg_color, 0.92);
+  color: @window_fg_color;
+  box-shadow: 0 1px 4px alpha(black, 0.25);
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 180ms ease-out;
+}
+.list-scrub-date.shown {
+  opacity: 1;
+}
 
 /* Undo Send countdown (#534): the line along the toast's bottom edge. */
 toast-countdown {
   color: @accent_bg_color;
+}
+
+/* The Mail Merge dialog's scrolled content (#447) keeps 8px of margin for
+   the lists' outlines and shadows, which this takes back, so they line up
+   with the dialog's buttons. */
+scrolledwindow.merge-dialog-scroll {
+  margin: -8px;
 }

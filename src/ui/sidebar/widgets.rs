@@ -326,17 +326,21 @@ pub(super) fn build_folder_row(
     lead: Option<&gtk::Widget>,
     inset: bool,
     glyph: FolderGlyph,
+    h: &FolderHierarchy,
 ) -> (gtk::ListBoxRow, Option<gtk::Label>) {
     let row = gtk::ListBoxRow::new();
     let hbox = gtk::Box::new(gtk::Orientation::Horizontal, 12);
     hbox.add_css_class("folder-row");
     // Custom folders show only their leaf name; the tooltip carries the whole
     // hierarchy, so nine folders all named "Archive" stay tellable apart (#51).
-    if folder.kind == FolderKind::Custom && folder.path.contains(['/', '.', '\\']) {
+    if let Some(d) = h
+        .delimiter
+        .filter(|d| folder.kind == FolderKind::Custom && folder.path.contains(*d))
+    {
         let pretty = folder
             .path
-            .split(['/', '.', '\\'])
-            .map(crate::mail::mutf7::decode)
+            .split(d)
+            .map(|level| h.name_of(level))
             .collect::<Vec<_>>()
             .join(" › ");
         row.set_tooltip_text(Some(&pretty));

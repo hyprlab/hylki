@@ -304,6 +304,7 @@ drafts_expanded = true
 archive_expanded = true
 junk_expanded = true
 trash_expanded = true
+snoozed_expanded = true
 favorites = ["a@x	INBOX"]
 favorites_expanded = false
 smart_expanded = false
@@ -421,6 +422,16 @@ fn unsubscribed_and_invites_toml() {
         "invites.toml",
         "[[answers]]\nkey = \"uid-1\"\nstatus = \"ACCEPTED\"\nat = 1700000000\nsummary = \"Standup\"\n\n\
          [[answers]]\nkey = \"uid-2/20240101T090000Z\"\nstatus = \"DECLINED\"\n",
+    );
+    pin_round_trip::<ReceiptAnswerFile>(
+        "receipts.toml",
+        "[[answers]]\nkey = \"abc@example.org\"\nsent = true\nat = 1700000000\n\n\
+         [[answers]]\nkey = \"def@example.org\"\n",
+    );
+    pin_round_trip::<ReadByFile>(
+        "read_by.toml",
+        "asked = [\"abc@example.org\"]\n\n\
+         [[read]]\nkey = \"abc@example.org\"\nby = \"ann@example.org\"\nat = 1700000000\n",
     );
 }
 

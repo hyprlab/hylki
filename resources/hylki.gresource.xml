@@ -120,8 +120,10 @@
     <file>icons/scalable/actions/highlights-symbolic.svg</file>
     <file>icons/scalable/actions/hylki-importance-low-symbolic.svg</file>
     <file>icons/scalable/actions/hylki-mail-read-symbolic.svg</file>
+    <file>icons/scalable/actions/hylki-merge-field-symbolic.svg</file>
     <file>icons/scalable/actions/hylki-non-starred-symbolic.svg</file>
     <file>icons/scalable/actions/hylki-open-menu-symbolic.svg</file>
+    <file>icons/scalable/actions/hylki-read-receipt-symbolic.svg</file>
     <file>icons/scalable/actions/image-x-generic-symbolic.svg</file>
     <file>icons/scalable/actions/info-outline-symbolic.svg</file>
     <file>icons/scalable/actions/insert-image-symbolic.svg</file>
@@ -181,6 +183,7 @@
     <file>icons/scalable/actions/system-users-symbolic.svg</file>
     <file>icons/scalable/actions/tag-outline-symbolic.svg</file>
     <file>icons/scalable/actions/tag-symbolic.svg</file>
+    <file>icons/scalable/actions/task-due-symbolic.svg</file>
     <file>icons/scalable/actions/text-x-generic-symbolic.svg</file>
     <file>icons/scalable/actions/translate-symbolic.svg</file>
     <file>icons/scalable/actions/user-bookmarks-symbolic.svg</file>

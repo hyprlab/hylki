@@ -129,12 +129,23 @@ impl AppModel {
             PrefOutput::SetSignatureDashes(on) => {
                 pref!(self.signature_dashes = on);
             }
+            PrefOutput::SetFoldQuote(on) => {
+                pref!(self.fold_quote = on);
+            }
             PrefOutput::SetReplyHeader(header) => {
                 pref!(self.reply_header = header);
             }
             PrefOutput::SetUndoSend(secs) => {
                 // A message already waiting keeps the delay it was sent with.
                 pref!(self.undo_send_secs = secs);
+            }
+            PrefOutput::SetRequestReceipts(on) => {
+                // Open composers keep the check they opened with.
+                pref!(self.request_receipts = on);
+            }
+            PrefOutput::SetReturnedReceipts(to) => {
+                // Receipts already filed stay where they went.
+                pref!(self.returned_receipts = to);
             }
             _ => unreachable!("not routed to on_prefs_compose_pref"),
         }

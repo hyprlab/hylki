@@ -5,6 +5,10 @@
 #
 #   tools/import-arm64.sh v1.9.2       # a tag (default: the current version)
 #   tools/import-arm64.sh --run 12345  # a specific workflow run id
+#   tools/import-arm64.sh --beta --run 12345   # a beta build (co.hyprlab.Hylki.Beta)
+#
+# A beta tag (vX.Y.Z-beta.N) is a beta build too: it goes to the repo's beta
+# branch as co.hyprlab.Hylki.Beta, and its bundle is Hylki-Beta-aarch64.flatpak.
 #
 # CI never signs anything: it uploads a plain OSTree repo. This re-commits that
 # build into dist/repo under the project's key, so both architectures in the
@@ -16,6 +20,14 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 APP_ID="co.hyprlab.Hylki"
+BRANCH="stable"
+BUNDLE="Hylki-aarch64.flatpak"
+if [ "${1:-}" = "--beta" ] || [[ "${1:-}" == v*-beta.* ]]; then
+    APP_ID="co.hyprlab.Hylki.Beta"
+    BRANCH="beta"
+    BUNDLE="Hylki-Beta-aarch64.flatpak"
+    [ "${1:-}" = "--beta" ] && shift
+fi
 REPO="$ROOT/dist/repo"
 GPG_HOME="$ROOT/dist/gpg-home"
 KEYID="$(cat "$ROOT/dist/keyid.txt")"
@@ -46,14 +58,14 @@ SRC="$WORK/repo-aarch64"
 flatpak build-commit-from \
     --src-repo="$SRC" \
     --gpg-sign="$KEYID" --gpg-homedir="$GPG_HOME" \
-    "$REPO" "app/$APP_ID/aarch64/stable"
+    "$REPO" "app/$APP_ID/aarch64/$BRANCH"
 
 flatpak build-update-repo --generate-static-deltas \
     --gpg-sign="$KEYID" --gpg-homedir="$GPG_HOME" "$REPO"
 
 mkdir -p "$OUT"
-flatpak build-bundle --arch=aarch64 "$REPO" "$OUT/Hylki-aarch64.flatpak" \
-    "$APP_ID" stable \
+flatpak build-bundle --arch=aarch64 "$REPO" "$OUT/$BUNDLE" \
+    "$APP_ID" "$BRANCH" \
     --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo \
     --repo-url=https://hylki.hyprlab.co/flatpak \
     --gpg-keys="$ROOT/dist/veem.gpg"
@@ -61,4 +73,4 @@ flatpak build-bundle --arch=aarch64 "$REPO" "$OUT/Hylki-aarch64.flatpak" \
 echo
 echo "imported:"
 ostree --repo="$REPO" refs | grep "$APP_ID" | sort
-echo "bundle:   $OUT/Hylki-aarch64.flatpak"
+echo "bundle:   $OUT/$BUNDLE"

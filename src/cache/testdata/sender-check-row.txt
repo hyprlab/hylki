@@ -12,3 +12,5 @@ two
 {"method":"REQUEST","uid":"uid-1","sequence":2,"summary":"Standup","location":"Room 1","start":1700000000,"end":1700003600,"all_day":false,"recurrence_id":"20240101T090000Z","repeats":"FREQ=DAILY","organizer":{"name":"Ada","email":"ada@x","status":"ACCEPTED","rsvp":false,"resource":false},"attendees":[{"name":"","email":"room@x","status":"NEEDS-ACTION","rsvp":true,"resource":true}],"cancelled":false,"ics":"BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n"}
 ---
 {"name":"Confidential","id":"id-1"}
+---
+{"to":"ada@x","matches_return_path":true}

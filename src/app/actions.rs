@@ -175,7 +175,7 @@ impl AppModel {
                 self.update_busy_indicator();
                 if self.bulk_pending == 0 && self.busy.is_empty() {
                     self.notifications
-                        .emit(NotifyInput::SetStatus(String::new()));
+                        .emit(NotifyInput::SetStatus(self.copy_status()));
                 }
             }
 
@@ -374,6 +374,15 @@ impl AppModel {
                 self.show_add_contact_dialog(&m.from_name, &m.from_addr, &sender);
             }
             RowAction::CreateFilter => self.create_filter_from(&m, &sender),
+            // A conversation's row makes it from the message it shows.
+            RowAction::CreateEvent => {
+                let m = self.newest_to_answer(&conversation, m);
+                self.make_calendar_item(m, crate::calendar::ItemKind::Event, &sender);
+            }
+            RowAction::CreateTask => {
+                let m = self.newest_to_answer(&conversation, m);
+                self.make_calendar_item(m, crate::calendar::ItemKind::Task, &sender);
+            }
             // A conversation's row snoozes the conversation, as far as it
             // is in this folder: a reply in Sent stays where it is.
             RowAction::Snooze(choice) => {

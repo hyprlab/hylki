@@ -19,6 +19,8 @@ pub(crate) struct PickerAccount {
     pub(crate) folders: Vec<Folder>,
     /// The folder the mail already sits in, left out.
     pub(crate) exclude: Option<String>,
+    /// How its folders nest, for the indent.
+    pub(crate) hierarchy: crate::models::FolderHierarchy,
 }
 
 /// Open the picker below the point (`x`, `y`) of `parent`, listing each of
@@ -230,7 +232,7 @@ fn fill_folder_list(list: &gtk::ListBox, accounts: &[PickerAccount]) -> Vec<Pick
             if account.exclude.as_deref() == Some(f.path.as_str()) {
                 continue;
             }
-            let depth = crate::ui::sidebar::folder_depth(f, &refs);
+            let depth = crate::ui::sidebar::folder_depth(f, &refs, &account.hierarchy);
             let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
             row.set_margin_start(4 + 16 * depth as i32);
             let icon = gtk::Image::from_icon_name(f.kind.icon());

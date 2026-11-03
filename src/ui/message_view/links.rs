@@ -118,3 +118,30 @@ pub(super) fn default_image_name(mime: &str) -> String {
     };
     format!("image.{ext}")
 }
+
+/// The name to pre-fill when saving a remote picture: the last part of its
+/// address when that looks like a file name (`banner.png`), else what
+/// [`default_image_name`] makes of the content type. Tracking and CDN
+/// addresses often end in an ID with no extension.
+pub(super) fn remote_image_name(url: &str, content_type: &str) -> String {
+    let path = url.split(['?', '#']).next().unwrap_or(url);
+    let path = path.split_once("://").map_or(path, |(_, rest)| rest);
+    let last = path.split_once('/').map_or("", |(_, p)| p);
+    let last = crate::encoding::percent::decode(last.rsplit('/').next().unwrap_or(""), false);
+    let named = last.rsplit_once('.').is_some_and(|(stem, ext)| {
+        !stem.is_empty()
+            && (1..=5).contains(&ext.len())
+            && ext.chars().all(|c| c.is_ascii_alphanumeric())
+    }) && !last.contains(['/', '\\', '\0'])
+        && !last.starts_with('.');
+    if named {
+        last
+    } else {
+        let mime = content_type.split(';').next().unwrap_or("").trim();
+        let mime = mime.to_ascii_lowercase();
+        match mime.strip_prefix("image/") {
+            Some(sub) if !sub.is_empty() => default_image_name(&mime),
+            _ => "image".to_string(),
+        }
+    }
+}

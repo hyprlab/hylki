@@ -14,6 +14,9 @@ impl MessageView {
     }
 
     pub(super) fn on_fold_all(&mut self, folded: bool) {
+        if !self.carded() {
+            return;
+        }
         for m in &self.thread {
             self.folds.insert((m.account_id, m.id), folded);
         }
@@ -99,9 +102,7 @@ impl MessageView {
         mode: SelectMode,
         sender: &ComponentSender<Self>,
     ) {
-        // Only meaningful in a conversation: a lone message is already
-        // the selection.
-        if self.thread.len() <= 1 {
+        if !self.carded() {
             return;
         }
         let key = (account_id, id);
@@ -163,7 +164,7 @@ impl MessageView {
     }
 
     pub(super) fn on_select_all_cards(&mut self, sender: &ComponentSender<Self>) {
-        if self.thread.len() <= 1 {
+        if !self.carded() {
             return;
         }
         let keys: Vec<(u32, u32)> = self.thread.iter().map(|m| (m.account_id, m.id)).collect();
@@ -339,7 +340,9 @@ impl MessageView {
         let js = format!(
             "(function(){{\
              var b=document.querySelector('.hylki-act[data-act=\"star\"][data-key=\"{account_id}:{id}\"]');\
-             if(b)b.classList.{}('on');}})()",
+             if(b)b.classList.{0}('on');\
+             var s=document.querySelector('.hylki-msg[data-key=\"{account_id}:{id}\"]');\
+             if(s)s.classList.{0}('starred');}})()",
             if starred { "add" } else { "remove" },
         );
         self.run_js_or_warn(&js, "card star patch");
@@ -396,6 +399,11 @@ impl MessageView {
     }
 
     pub(super) fn on_scroll_anchor(&mut self, account_id: u32, id: u32, offset: u32) {
+        // A page under the pane's still has not been seen: where it stands
+        // is not the reader's place (a page loading reports the top).
+        if self.swap.held() {
+            return;
+        }
         self.saved_anchor = Some((account_id, id, offset));
         self.anchor_gutter = false;
     }
@@ -405,7 +413,7 @@ impl MessageView {
         self.anchor_gutter = true;
         // The anchor rides only on a document that keeps its place.
         self.did_autoscroll = true;
-        self.skip_fade = true;
+        self.skip_freeze = true;
     }
 
     pub(super) fn on_hold_place(&mut self, account_id: u32, id: u32) {

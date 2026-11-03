@@ -63,6 +63,7 @@ fn live_snoozed_mail_comes_back_unread() {
         push_rx,
         push_enabled: false,
         push_started: false,
+        offline: Default::default(),
     };
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()

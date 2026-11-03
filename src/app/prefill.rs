@@ -166,16 +166,25 @@ pub(super) fn forward_subject(subject: &str) -> String {
 /// (#528). The dashes stay outside the translation: the composer's scripts
 /// find the header by them.
 pub(super) fn forward_header(m: &Message) -> String {
+    [
+        format!("---------- {} ----------", i18n("Forwarded message")),
+        sender_lines(m),
+        i18n_f("Subject: {subject}", &[("subject", &m.subject)]),
+    ]
+    .join("\n")
+}
+
+/// "From:" and "Date:", as a forward's header names them: also what an
+/// event or a task made from the message (#564) notes it came from.
+pub(super) fn sender_lines(m: &Message) -> String {
     let from = if m.from_name.trim().is_empty() {
         m.from_addr.clone()
     } else {
         format!("{} <{}>", m.from_name, m.from_addr)
     };
     [
-        format!("---------- {} ----------", i18n("Forwarded message")),
         i18n_f("From: {from}", &[("from", &from)]),
         i18n_f("Date: {date}", &[("date", &m.datetime_full())]),
-        i18n_f("Subject: {subject}", &[("subject", &m.subject)]),
     ]
     .join("\n")
 }
@@ -228,6 +237,8 @@ pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefil
         forwards: m.forwards,
         draft_origin: m.draft_origin,
         encrypt: m.encrypt,
+        receipt: Some(m.request_receipt),
+        importance: m.importance,
         outbox_origin: m.outbox_origin,
         reply_addressed_to: String::new(),
         from_address: m
@@ -453,6 +464,9 @@ mod tests {
             encrypt: true,
             send_at: Some(5),
             calendar: None,
+            request_receipt: true,
+            importance: crate::models::Importance::High,
+            receipt_report: None,
         };
         let p = unsent_prefill(m);
         assert_eq!(
@@ -463,6 +477,7 @@ mod tests {
         assert_eq!(p.from_address, "me@x.org");
         assert_eq!(p.custom_from, "Me <me@x.org>");
         assert!(p.resumed && p.encrypt && !p.template);
+        assert_eq!(p.importance, crate::models::Importance::High);
         assert_eq!((p.outbox_origin, p.send_at), (Some(7), Some(5)));
     }
 }

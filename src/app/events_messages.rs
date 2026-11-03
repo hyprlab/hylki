@@ -23,7 +23,10 @@ impl AppModel {
                 account_id,
                 folder_id,
                 messages,
-            } => self.on_messages(account_id, folder_id, messages, sender),
+            } => {
+                self.note_snoozed_listing(account_id, folder_id, messages.len());
+                self.on_messages(account_id, folder_id, messages, sender)
+            }
 
             AppMsg::MessagesAppend {
                 account_id,
@@ -202,6 +205,8 @@ impl AppModel {
         if !unchanged {
             self.cache_listed(account_id, folder_id, &messages);
         }
+        // A draft or template opens at once from bytes fetched now.
+        self.fetch_drafts_ahead(account_id, folder_id, &messages);
         self.resume_pickers(account_id, folder_id, &sender);
         if !unchanged {
             self.after_list_changed(account_id, &sender);
@@ -382,7 +387,7 @@ impl AppModel {
                             account_id,
                             folder_id,
                             m.id,
-                            &m.from_name,
+                            &m.shown_from_name(),
                             &m.subject,
                             others,
                             true,
@@ -401,7 +406,7 @@ impl AppModel {
                             account_id,
                             dest_id,
                             m.id,
-                            &m.from_name,
+                            &m.shown_from_name(),
                             &m.subject,
                             others,
                             false,

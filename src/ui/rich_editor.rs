@@ -11,6 +11,7 @@ mod context_menu;
 mod documents;
 mod files;
 mod fonts;
+mod grammar;
 mod scripts;
 mod setup;
 mod signature;
@@ -72,6 +73,9 @@ pub(super) struct RichEditor {
     /// whole new setting (#365). The submenu is only offered once a host
     /// has connected it ([`RichEditor::connect_spell_languages`]).
     spell_langs_cb: SpellLangsCallback,
+    /// Grammar checking (#452), off until a host turns it on with
+    /// [`RichEditor::check_grammar`].
+    grammar: grammar::GrammarState,
     /// The style manager's dark-notify handler that re-grounds the document
     /// on a live theme flip; disconnected when the last clone of the editor
     /// goes (the editor is a cloneable handle, so the guard is shared).
@@ -180,6 +184,20 @@ impl RichEditor {
         *self.spell_langs_cb.borrow_mut() = Some(Box::new(f));
     }
 
+    /// Check the grammar and style of what is written, when Settings has a
+    /// LanguageTool server for it (#452): the composer's body, not a
+    /// signature.
+    pub(super) fn check_grammar(&self) {
+        grammar::switch_on(&self.webview, &self.grammar);
+    }
+
+    /// Send nothing for checking while `on`: a message that is to go out
+    /// encrypted keeps its text on this computer, as it does from
+    /// translation.
+    pub(super) fn pause_grammar(&self, on: bool) {
+        grammar::pause(&self.webview, &self.grammar, on);
+    }
+
     /// What "Send as Attachment Instead" does with the lifted image: the
     /// host receives the temp file's path and adds it to its attachments.
     pub(super) fn connect_send_as_attachment(&self, f: impl Fn(std::path::PathBuf) + 'static) {
@@ -280,6 +298,18 @@ impl RichEditor {
         } else {
             exec(&self.webview, PLACE_CARET);
         }
+    }
+
+    /// Open `popover` at the body's caret, as the emoji chooser opens; text
+    /// given to [`RichEditor::insert_at_caret`] then goes where the caret was.
+    pub(super) fn popup_at_caret(&self, popover: gtk::Popover) {
+        popup_at_caret(&self.webview, &self.stack, popover);
+    }
+
+    /// Type `text` into the body at the caret, as if it were typed: in the
+    /// document or in a source message's field, with the history's undo.
+    pub(super) fn insert_at_caret(&self, text: &str) {
+        put_at_caret(&self.webview, text);
     }
 
     /// Run a JavaScript snippet against the editor document (e.g. to swap the
@@ -450,10 +480,22 @@ const PLACE_CARET: &str = "(function(){var b=document.body;\
     if(!r){r=document.createRange();r.setStart(b,0);r.collapse(true);}\
     s.removeAllRanges();s.addRange(r);})()";
 
-/// GTK's emoji chooser over the editor, pointing at the caret (#348). It is
-/// parented only while it is open, so a closed composer leaves nothing
-/// behind.
+/// GTK's emoji chooser over the editor, pointing at the caret (#348).
 fn show_emoji_chooser(webview: &webkit6::WebView, anchor: &gtk::Stack) {
+    let chooser = gtk::EmojiChooser::new();
+    let weak = webview.downgrade();
+    chooser.connect_emoji_picked(move |_, emoji| {
+        if let Some(v) = weak.upgrade() {
+            put_at_caret(&v, emoji);
+        }
+    });
+    popup_at_caret(webview, anchor, chooser.upcast());
+}
+
+/// `popover` over the editor, pointing at the caret, which is marked first
+/// so that [`put_at_caret`] puts text where it was. It is parented only
+/// while it is open, so a closed composer leaves nothing behind.
+fn popup_at_caret(webview: &webkit6::WebView, anchor: &gtk::Stack, popover: gtk::Popover) {
     let weak = webview.downgrade();
     let anchor = anchor.downgrade();
     webview.evaluate_javascript(
@@ -465,8 +507,7 @@ fn show_emoji_chooser(webview: &webkit6::WebView, anchor: &gtk::Stack) {
             let (Some(v), Some(anchor)) = (weak.upgrade(), anchor.upgrade()) else {
                 return;
             };
-            let chooser = gtk::EmojiChooser::new();
-            chooser.set_parent(&anchor);
+            popover.set_parent(&anchor);
             let at: Vec<f64> = res
                 .map(|r| r.to_str().to_string())
                 .unwrap_or_default()
@@ -482,31 +523,37 @@ fn show_emoji_chooser(webview: &webkit6::WebView, anchor: &gtk::Stack) {
                         &gtk::graphene::Point::new((x * z) as f32, (y * z) as f32),
                     )
                     .map_or((x * z, y * z), |p| (p.x() as f64, p.y() as f64));
-                chooser.set_pointing_to(Some(&gtk::gdk::Rectangle::new(
+                popover.set_pointing_to(Some(&gtk::gdk::Rectangle::new(
                     x as i32,
                     y as i32,
                     (w * z).max(1.0) as i32,
                     (h * z).max(1.0) as i32,
                 )));
             }
-            let weak = v.downgrade();
-            chooser.connect_emoji_picked(move |_, emoji| {
-                let Some(v) = weak.upgrade() else { return };
-                v.grab_focus();
-                let text = serde_json::to_string(emoji).unwrap_or_default();
-                exec(
-                    &v,
-                    &format!("window.__hylkiEmojiPut && window.__hylkiEmojiPut({text})"),
-                );
-            });
-            chooser.connect_closed(|c| {
-                // Unparented after the pick has been handled, not inside the
+            popover.connect_closed(|c| {
+                // Unparented after a pick has been handled, not inside the
                 // signal that is still running on it.
                 let c = c.clone();
                 gtk::glib::idle_add_local_once(move || c.unparent());
             });
-            chooser.popup();
+            popover.popup();
         },
+    );
+}
+
+/// Type `text` in where the caret was marked, or at the caret. A document
+/// never clicked into has no caret: the text goes at its start.
+fn put_at_caret(webview: &webkit6::WebView, text: &str) {
+    webview.grab_focus();
+    let text = serde_json::to_string(text).unwrap_or_default();
+    exec(
+        webview,
+        &format!(
+            "(function(t){{var s=getSelection(),a=document.activeElement;\
+             if(!(a&&a.tagName==='TEXTAREA')&&!(s&&s.rangeCount)){{\
+             var x=document.getElementById('src');if(x)x.focus();else{PLACE_CARET};}}\
+             window.__hylkiEmojiPut&&window.__hylkiEmojiPut(t);}})({text})"
+        ),
     );
 }
 
@@ -618,7 +665,7 @@ mod pinned_tests {
         assert_eq!(fnv(HISTORY_SCRIPT), (1287, 0x8e997368982bb599));
         assert_eq!(fnv(EMOJI_SCRIPT), (1621, 0x748b009b19f3f0ec));
         assert_eq!(fnv(LINES_SCRIPT), (5153, 0xb927290405c83fda));
-        assert_eq!(fnv(PASTE_SCRIPT), (40069, 0x7bd83b8987ac108a));
+        assert_eq!(fnv(PASTE_SCRIPT), (40419, 0xc68b9a6a876b9791));
     }
 
     #[test]

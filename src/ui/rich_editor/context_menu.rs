@@ -5,19 +5,29 @@ use webkit6::prelude::WebViewExt;
 use crate::i18n::i18n;
 
 use super::files::{detach_ctx_image, paste_into};
+use super::grammar::{lead_menu, GrammarState};
 use super::spelling::append_spelling_menu;
 use super::{exec, js_escape, AttachCallback, SpellLangsCallback};
 
 /// The editor's right-click menu: image actions over a picture, both
-/// kinds of paste, history and the spelling submenu.
+/// kinds of paste, history, the spelling submenu, and over a grammar mark
+/// the problem and its suggestions.
 pub(super) fn connect_context_menu(
     webview: &webkit6::WebView,
     menu_attach_cb: AttachCallback,
     menu_history: std::rc::Rc<std::cell::Cell<(bool, bool)>>,
     menu_plain: std::rc::Rc<std::cell::Cell<bool>>,
     menu_spell_cb: SpellLangsCallback,
+    grammar: GrammarState,
 ) {
     webview.connect_context_menu(move |view, menu, hit| {
+        // The problem goes on top, above Undo and the spelling guesses,
+        // so it is put in after them.
+        let lead = |menu: &webkit6::ContextMenu| {
+            if !hit.context_is_image() {
+                lead_menu(menu, view, &grammar);
+            }
+        };
         crate::ui::message_view::strip_navigation_items(menu);
         if hit.context_is_image() {
             // Stock image entries (copy/save/open variants) are replaced
@@ -107,6 +117,7 @@ pub(super) fn connect_context_menu(
             .iter()
             .position(|i| i.stock_action() == webkit6::ContextMenuAction::Paste)
         else {
+            lead(menu);
             return false; // no paste here (nothing editable hit): stock menu as-is
         };
         for item in items.iter().filter(|i| {
@@ -174,6 +185,7 @@ pub(super) fn connect_context_menu(
             }
             menu.insert(&webkit6::ContextMenuItem::new_separator(), 2);
         }
+        lead(menu);
         false
     });
 }

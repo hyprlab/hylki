@@ -133,7 +133,7 @@ impl AppModel {
             }
         };
         let mut out = machine_message(
-            message.account_id,
+            self.sending_account(message),
             from_alias,
             organizer,
             subject,
@@ -166,7 +166,7 @@ impl AppModel {
         message: &Message,
         invite: &crate::models::Invite,
     ) -> (Option<String>, String, String) {
-        let Some(cfg) = self.account_config(message.account_id) else {
+        let Some(cfg) = self.account_config(self.sending_account(message)) else {
             return (None, String::new(), String::new());
         };
         let invited: Vec<String> = invite

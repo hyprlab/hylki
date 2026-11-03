@@ -17,6 +17,56 @@ pub(crate) fn escape_html(text: &str) -> String {
     gtk::glib::markup_escape_text(text).into()
 }
 
+/// The handful of entities mail bodies use, decoded: the named five, `&nbsp;`
+/// and numeric references. Anything else is left as written.
+pub(crate) fn unescape_html(s: &str) -> String {
+    if !s.contains('&') {
+        return s.to_string();
+    }
+    let mut out = String::with_capacity(s.len());
+    let mut rest = s;
+    while let Some(amp) = rest.find('&') {
+        out.push_str(&rest[..amp]);
+        let after = &rest[amp + 1..];
+        let Some(semi) = after.find(';').filter(|&i| i <= 10) else {
+            out.push('&');
+            rest = after;
+            continue;
+        };
+        let name = &after[..semi];
+        let replacement = match name {
+            "amp" => Some('&'),
+            "lt" => Some('<'),
+            "gt" => Some('>'),
+            "quot" => Some('"'),
+            "apos" => Some('\''),
+            "nbsp" => Some(' '),
+            _ => name
+                .strip_prefix('#')
+                .and_then(|n| {
+                    if let Some(h) = n.strip_prefix(['x', 'X']) {
+                        u32::from_str_radix(h, 16).ok()
+                    } else {
+                        n.parse::<u32>().ok()
+                    }
+                })
+                .and_then(char::from_u32),
+        };
+        match replacement {
+            Some(c) => {
+                out.push(c);
+                rest = &after[semi + 1..];
+            }
+            None => {
+                out.push('&');
+                rest = after;
+            }
+        }
+    }
+    out.push_str(rest);
+    out
+}
+
 #[cfg(test)]
 mod tests {
     use super::escape_html;

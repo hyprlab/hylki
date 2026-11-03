@@ -129,7 +129,8 @@ impl Compose {
     /// a popover under the field; clicking one completes that recipient.
     fn show_completion(&mut self, field: Field, row: &RecipientRow, bcc: &RecipientRow) {
         let token = row.typed();
-        if token.is_empty() {
+        // Nothing for an empty field, nor for a mail merge field (#447).
+        if token.is_empty() || token.contains("{{") {
             self.completion_open.set(false);
             self.completion.popdown();
             return;
@@ -266,6 +267,13 @@ impl Compose {
         self.directory_generation = self.directory_generation.wrapping_add(1);
         self.directory_matches.clear();
         let token = recipient_token(row);
+        // A mail merge field being typed (#447) is no one to suggest or to
+        // look up in a directory.
+        if token.contains("{{") {
+            self.completion_open.set(false);
+            self.completion.popdown();
+            return;
+        }
         if token.chars().count() >= crate::contacts::directory::MIN_QUERY {
             // A directory is asked once the typing pauses, not per key.
             let generation = self.directory_generation;

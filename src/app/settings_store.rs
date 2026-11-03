@@ -16,6 +16,7 @@ impl AppModel {
         config::save_privacy(config::PrivacyFile {
             allowed_senders: self.allowed_senders.clone(),
             auto_remote_content: self.auto_remote_content,
+            remote_ahead: self.remote_ahead,
             gravatar: self.gravatar,
             avatars: self.avatars,
             own_mailbox_face: self.own_mailbox_face,
@@ -43,6 +44,7 @@ impl AppModel {
             reader_mode: self.reader_mode,
             reader_switch: self.reader_switch,
             theme_switch: self.theme_switch,
+            account_chip: self.account_chip,
             desktop_icons: self.desktop_icons,
             reader_default: self.reader_default,
             reader_zoom: self.zoom_default,
@@ -86,6 +88,7 @@ impl AppModel {
             reply_position: self.reply_position,
             signature_position: self.signature_position,
             signature_dashes: self.signature_dashes,
+            fold_quote: self.fold_quote,
             reply_header: self.reply_header.clone(),
             undo_send_secs: self.undo_send_secs,
             spellcheck: self.spellcheck,
@@ -102,6 +105,7 @@ impl AppModel {
             date_groups_default_applied: true,
             list_search_open: self.list_search_open,
             contacts_search_open: self.contacts_search_open,
+            contact_names: self.contact_names,
             list_search_bottom: self.list_search_bottom,
             list_bulk_bar_bottom: self.list_bulk_bar_bottom,
             toolbar_fold_right: self.toolbar_fold_right,
@@ -112,6 +116,7 @@ impl AppModel {
             run_in_background: self.run_in_background.get(),
             autostart: self.autostart,
             start_fullscreen: self.start_fullscreen,
+            reading_pane: self.reading_pane,
             tray: self.tray_enabled,
             tray_icon: self.tray_icon,
             tray_mail: self.tray_mail,
@@ -119,6 +124,10 @@ impl AppModel {
             launcher_badge: Some(self.launcher_badge),
             show_remote_banner: self.show_remote_banner,
             show_spoof_banner: self.show_spoof_banner,
+            receipts: self.receipts,
+            request_receipts: self.request_receipts,
+            returned_receipts: self.returned_receipts,
+            notify_receipts: self.notify_receipts,
             sidebar_hover_expand: self.sidebar_hover_expand,
             remember_sidebar: self.remember_sidebar,
             remember_rail: self.remember_rail,
@@ -164,6 +173,7 @@ impl AppModel {
         // it before anything draws a date.
         self.message_list
             .emit(MessageListInput::SetSenderLogos(self.sender_logos));
+        crate::ui::message_view::set_face_tiers(self.gravatar, self.sender_logos);
         crate::datefmt::set_style(self.date_style, self.clock_style);
         crate::ui::print_preview::set_options(self.print_options);
         self.message_list.emit(MessageListInput::SetLook {
@@ -241,6 +251,8 @@ impl AppModel {
             .emit(MessageViewInput::SetReaderSwitchShown(self.reader_switch));
         self.message_view
             .emit(MessageViewInput::SetThemeSwitchShown(self.theme_switch));
+        self.message_view
+            .emit(MessageViewInput::SetAccountChipShown(self.account_chip));
         self.message_view.emit(MessageViewInput::SetReaderDefault(
             self.effective_reader_default(),
         ));

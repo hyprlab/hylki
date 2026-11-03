@@ -27,6 +27,7 @@ pub(in crate::ui::preferences) struct SidebarPage {
     pub(in crate::ui::preferences) unified_archive_row: adw::SwitchRow,
     pub(in crate::ui::preferences) unified_junk_row: adw::SwitchRow,
     pub(in crate::ui::preferences) unified_trash_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) unified_snoozed_row: adw::SwitchRow,
     pub(in crate::ui::preferences) unified_chips_row: adw::ExpanderRow,
     pub(in crate::ui::preferences) unified_chip_all_inboxes_row: adw::SwitchRow,
     pub(in crate::ui::preferences) unified_chip_starred_row: adw::SwitchRow,
@@ -34,6 +35,7 @@ pub(in crate::ui::preferences) struct SidebarPage {
     pub(in crate::ui::preferences) unified_chip_archive_row: adw::SwitchRow,
     pub(in crate::ui::preferences) unified_chip_junk_row: adw::SwitchRow,
     pub(in crate::ui::preferences) unified_chip_trash_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) unified_chip_snoozed_row: adw::SwitchRow,
     pub(in crate::ui::preferences) section_style_row: adw::ComboRow,
     pub(in crate::ui::preferences) filtered_placement_row: adw::ComboRow,
     pub(in crate::ui::preferences) tags_placement_row: adw::ComboRow,
@@ -49,6 +51,7 @@ pub(in crate::ui::preferences) struct SidebarPage {
     pub(in crate::ui::preferences) rail_fold_archive_row: adw::SwitchRow,
     pub(in crate::ui::preferences) rail_fold_junk_row: adw::SwitchRow,
     pub(in crate::ui::preferences) rail_fold_trash_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) rail_fold_snoozed_row: adw::SwitchRow,
     pub(in crate::ui::preferences) rail_fold_filtered_row: adw::SwitchRow,
     pub(in crate::ui::preferences) rail_fold_tags_row: adw::SwitchRow,
 }
@@ -212,6 +215,15 @@ impl SidebarPage {
                         },
                     },
 
+                    #[name = "unified_snoozed_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Snoozed"),
+                        set_subtitle: &i18n("Shown only while mail is snoozed."),
+                        connect_active_notify[sender] => move |row| {
+                            sender.input(PrefInput::ToggleUnifiedSnoozed(row.is_active()));
+                        },
+                    },
+
                     #[name = "unified_chips_row"]
                     adw::ExpanderRow {
                         set_title: &i18n("Unread counts"),
@@ -258,6 +270,13 @@ impl SidebarPage {
                             set_title: &i18n("Trash"),
                             connect_active_notify[sender] => move |row| {
                                 sender.input(PrefInput::ToggleUnifiedChipTrash(row.is_active()));
+                            },
+                        },
+                        #[name = "unified_chip_snoozed_row"]
+                        add_row = &adw::SwitchRow {
+                            set_title: &i18n("Snoozed"),
+                            connect_active_notify[sender] => move |row| {
+                                sender.input(PrefInput::ToggleUnifiedChipSnoozed(row.is_active()));
                             },
                         },
                     },
@@ -386,6 +405,13 @@ impl SidebarPage {
                                 sender.input(PrefInput::ToggleRailFoldTrash(row.is_active()));
                             },
                         },
+                        #[name = "rail_fold_snoozed_row"]
+                        add_row = &adw::SwitchRow {
+                            set_title: &i18n("Snoozed"),
+                            connect_active_notify[sender] => move |row| {
+                                sender.input(PrefInput::ToggleRailFoldSnoozed(row.is_active()));
+                            },
+                        },
                         #[name = "rail_fold_filtered_row"]
                         add_row = &adw::SwitchRow {
                             set_title: &i18n("Filters"),
@@ -423,6 +449,7 @@ impl SidebarPage {
             unified_archive_row,
             unified_junk_row,
             unified_trash_row,
+            unified_snoozed_row,
             unified_chips_row,
             unified_chip_all_inboxes_row,
             unified_chip_starred_row,
@@ -430,6 +457,7 @@ impl SidebarPage {
             unified_chip_archive_row,
             unified_chip_junk_row,
             unified_chip_trash_row,
+            unified_chip_snoozed_row,
             section_style_row,
             filtered_placement_row,
             tags_placement_row,
@@ -445,6 +473,7 @@ impl SidebarPage {
             rail_fold_archive_row,
             rail_fold_junk_row,
             rail_fold_trash_row,
+            rail_fold_snoozed_row,
             rail_fold_filtered_row,
             rail_fold_tags_row,
         }

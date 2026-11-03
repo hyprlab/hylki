@@ -17,6 +17,13 @@
 // or silent image host left the card blank for up to a minute (#487).
 // Listeners on a script-less sandboxed document never fire, so it is
 // polled; `init` runs once and the later `load` only measures again.
+//
+// `ready` is posted once the open scroll (`openAt`) has been applied and
+// drawn, two animation frames on: the reader reveals the page at that
+// moment, so the page must already be where it opens. Its timeout is queued
+// after `openAt`'s own, which wait a turn for the folds the same handler
+// sets up. A page loading behind the spinner is not drawn and gets no
+// animation frames: it says so at once, and the reader shows it.
 /// Wrapper-document script: size each message iframe to its content height so the
 /// whole conversation scrolls as one page (the iframes have no inner scrollbars).
 /// Re-measures as images load and as content reflows.
@@ -161,9 +168,12 @@ setTimeout(function(){s(f);},250);setTimeout(function(){s(f);},1000);}\
 function all(){return document.querySelectorAll('iframe.hylki-frame');}\
 document.addEventListener('DOMContentLoaded',function(){\
 var fs=all();var pend=fs.length,rdy=false;\
-function ready(){if(rdy)return;rdy=true;\
-try{window.webkit.messageHandlers.hylki.postMessage('ready:0:0');}catch(_){}\
-var bd=document.body.dataset;\
+function ready(){if(rdy)return;rdy=true;openAt();\
+setTimeout(function(){function post(){\
+try{window.webkit.messageHandlers.hylki.postMessage('ready:0:0');}catch(_){}}\
+if(document.visibilityState==='hidden'){post();return;}\
+requestAnimationFrame(function(){requestAnimationFrame(post);});},0);}\
+function openAt(){var bd=document.body.dataset;\
 if(bd.hylkiNoscroll){var a=(bd.hylkiAnchor||'').split(':');\
 if(a.length>=3){var el=document.querySelector('.hylki-msg[data-key=\"'+a[0]+':'+a[1]+'\"]');\
 if(el){hold={el:el,off:parseInt(a[2],10)||0,g:a[3]==='g'};\
@@ -189,7 +199,7 @@ setTimeout(ready,450);\
 var hs=document.querySelectorAll('.hylki-msg-hdr');\
 for(var j=0;j<hs.length;j++){hs[j].addEventListener('dblclick',function(){\
 try{window.webkit.messageHandlers.hylki.postMessage('open:'+this.dataset.key);}catch(_){}});}\
-if(document.querySelectorAll('.hylki-msg').length>1){document.body.classList.add('hylki-folds');\
+if(document.body.classList.contains('hylki-conv')){document.body.classList.add('hylki-folds');\
 for(var j=0;j<hs.length;j++){(function(h){var tm=null;\
 h.addEventListener('click',function(e){\
 if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;\
@@ -306,14 +316,15 @@ card.addEventListener('mouseenter',function(){if(timer){clearTimeout(timer);time
 var as=document.querySelectorAll('.hylki-act');\
 for(var k=0;k<as.length;k++){as[k].addEventListener('click',function(e){\
 e.stopPropagation();e.preventDefault();reportPos();\
-if(this.dataset.act==='star')this.classList.toggle('on');\
+if(this.dataset.act==='star'){var on=this.classList.toggle('on');\
+var sm=this.closest('.hylki-msg');if(sm)sm.classList.toggle('starred',on);}\
 var extra='';if(this.dataset.act==='moveto'){var br=this.getBoundingClientRect();\
 extra=':'+(br.left+br.width/2)+','+br.bottom+','+window.innerWidth;}\
 try{window.webkit.messageHandlers.hylki.postMessage(this.dataset.act+':'+this.dataset.key+extra);}catch(_){}});\
 as[k].addEventListener('dblclick',function(e){e.stopPropagation();});}\
 document.addEventListener('click',function(e){var b=e.target&&e.target.closest?e.target.closest('.hylki-unsub-btn'):null;\
 if(!b)return;e.stopPropagation();e.preventDefault();\
-var v=b.dataset.tpl?'tpl:'+b.dataset.key+':'+b.dataset.tpl:'unsub:'+b.dataset.key;\
+var v=b.dataset.tpl?'tpl:'+b.dataset.key+':'+b.dataset.tpl:b.dataset.mdn?'mdn:'+b.dataset.key+':'+b.dataset.mdn:'unsub:'+b.dataset.key;\
 try{window.webkit.messageHandlers.hylki.postMessage(v);}catch(_){}});\
 document.addEventListener('click',function(e){var b=e.target&&e.target.closest?e.target.closest('.hylki-tr-btn'):null;\
 if(!b)return;e.stopPropagation();e.preventDefault();\

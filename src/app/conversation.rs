@@ -164,7 +164,12 @@ impl AppModel {
     /// bodies, so this is a memory budget as much as a cache size.
     pub(super) const THREAD_CACHE_MAX: usize = 8;
 
-    pub(super) fn show_message(&self, message: Option<Message>, loading: bool) {
+    pub(super) fn show_message(&mut self, message: Option<Message>, loading: bool) {
+        // A hidden reader draws nothing: a body arriving for the selected
+        // row would otherwise load a page no one sees (#475).
+        if !self.reader_shown() && message.is_some() {
+            return;
+        }
         let allow_remote = message.as_ref().is_some_and(|m| self.remote_allowed(m));
         let (account_name, account_color) = match message.as_ref() {
             Some(m) => (
@@ -173,10 +178,16 @@ impl AppModel {
             ),
             None => (None, None),
         };
-        let stored_check = message
-            .as_ref()
-            .and_then(|m| self.sender_cache.get(&body_key(m)))
-            .cloned();
+        let stored_check = message.as_ref().and_then(|m| {
+            let mut check = self.sender_cache.get(&body_key(m)).cloned()?;
+            self.vouchers.gate(Some(m.account_id), &mut check);
+            Some(check)
+        });
+        let sent = message
+            .iter()
+            .filter(|m| self.folder_kind(m.account_id, m.folder_id) == Some(FolderKind::Sent))
+            .map(|m| (m.account_id, m.id))
+            .collect();
         self.message_view.emit(MessageViewInput::Show {
             thread: message.into_iter().collect(),
             allow_remote,
@@ -185,7 +196,7 @@ impl AppModel {
             loading,
             primary: None, // a single message is its own primary
             folder_labels: HashMap::new(),
-            sent: Default::default(),
+            sent,
             // A single message is one small frame; it is never covered anyway.
             instant: true,
         });
@@ -203,15 +214,26 @@ impl AppModel {
     /// A conversation is rendered as one document with every member's body
     /// inlined and handed to WebKit. Rendering per arriving body meant N loads of
     /// an N-body document, issued far faster than WebKit could retire them.
+    ///
+    /// A conversation already whole (every body in, the lookup answered) has
+    /// nothing left to collapse: it is painted on the next turn instead, and
+    /// the wait still pending finds nothing to do.
     pub(super) fn queue_thread_render(&mut self, sender: &ComponentSender<Self>) {
-        if self.thread_render_queued {
-            return;
-        }
-        self.thread_render_queued = true;
+        let first = !std::mem::replace(&mut self.thread_render_queued, true);
         let s = sender.clone();
-        gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(120), move || {
-            s.input(AppMsg::RenderThread);
-        });
+        if self.thread_settled() {
+            gtk::glib::idle_add_local_once(move || s.input(AppMsg::RenderThread));
+        } else if first {
+            gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(120), move || {
+                s.input(AppMsg::RenderThread);
+            });
+        }
+    }
+
+    /// Every member's body is in and the cross-folder lookup has answered:
+    /// nothing more is on its way to the conversation on screen.
+    pub(super) fn thread_settled(&self) -> bool {
+        !self.thread_related_pending && self.current_thread.iter().all(|m| !m.body.is_empty())
     }
 
     /// Render the current conversation (thread) in the reader, newest first.
@@ -219,7 +241,10 @@ impl AppModel {
     /// The header follows the message the user selected, not whatever sorted to
     /// the top: a conversation can now include replies of your own pulled in from
     /// Sent, and one of those being the newest shouldn't retitle the reader.
-    pub(super) fn show_thread(&self) {
+    pub(super) fn show_thread(&mut self) {
+        if !self.reader_shown() {
+            return;
+        }
         let Some(head) = self.current_thread.first() else {
             return;
         };
@@ -291,18 +316,12 @@ impl AppModel {
 
     /// Push every cached sender verdict for the on-screen conversation into
     /// the reader, so each card's header seal lights up (#88).
-    fn push_member_checks(&self) {
+    fn push_member_checks(&mut self) {
         // A single message never fills current_thread — the open message
         // itself is the one card then.
-        let mut keys: Vec<(u32, u32)> = self
-            .current_thread
-            .iter()
-            .map(|m| (m.account_id, m.id))
-            .collect();
-        if let Some(c) = &self.current {
-            if keys.is_empty() {
-                keys.push((c.account_id, c.id));
-            }
+        let mut cards: Vec<Message> = self.current_thread.clone();
+        if cards.is_empty() {
+            cards.extend(self.current.clone());
         }
         // HYLKI_SHOWCASE_PGP=<good|untrusted|bad|nokey|enc> gives every
         // demo card that OpenPGP verdict, for a capture of the header's
@@ -315,13 +334,29 @@ impl AppModel {
                     ..Default::default()
                 })
             });
-        for key in keys {
-            let stored = self.member_key(key).and_then(|k| self.sender_cache.get(&k));
-            if let Some(check) = showcase.as_ref().or(stored) {
+        // HYLKI_SHOWCASE_RECEIPT=1 has every demo card ask for a read
+        // receipt (#520), for a capture of its banner.
+        let receipts = std::env::var_os("HYLKI_DEMO")
+            .and(std::env::var_os("HYLKI_SHOWCASE_RECEIPT"))
+            .is_some();
+        for m in cards {
+            let stored = self.sender_cache.get(&body_key(&m)).cloned();
+            let staged = receipts.then(|| {
+                Box::new(crate::models::SenderCheck {
+                    receipt: Some(crate::mail::receipt::ReceiptRequest {
+                        to: m.from_addr.clone(),
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                })
+            });
+            if let Some(check) = staged.or(showcase.clone()).or(stored) {
+                // Its read receipt request (#520) too, as the card asks it.
+                let check = self.reader_check(&m, &check, true);
                 self.message_view.emit(MessageViewInput::SenderCheckFor {
-                    account_id: key.0,
-                    id: key.1,
-                    check: check.clone(),
+                    account_id: m.account_id,
+                    id: m.id,
+                    check,
                 });
             }
         }

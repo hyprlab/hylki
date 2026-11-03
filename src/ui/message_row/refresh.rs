@@ -127,8 +127,8 @@ impl Row {
         }
     }
 
-    /// The unread dot, the sender, and the attachment, star and replied
-    /// marks.
+    /// The unread dot, the sender, and the attachment, importance, star and
+    /// replied marks.
     fn refresh_marks(&self, data: &RowData, look: &RowLook, unread: bool) {
         let msg = &data.msg;
         let meta = &data.meta;
@@ -179,6 +179,30 @@ impl Row {
             starred
         });
         w.star.set_opacity(if starred { 1.0 } else { 0.0 });
+        // A card shows it beside its other marks when there is one (#563).
+        w.importance.set_visible(if single {
+            col(ListColumn::Importance)
+        } else {
+            msg.importance != Importance::Normal
+        });
+        let (icon, class, tip) = match msg.importance {
+            Importance::High => (
+                "emblem-important-symbolic",
+                "importance-high",
+                Some(i18n("High importance")),
+            ),
+            Importance::Low => (
+                "hylki-importance-low-symbolic",
+                "importance-low",
+                Some(i18n("Low importance")),
+            ),
+            Importance::Normal => ("emblem-important-symbolic", "importance-high", None),
+        };
+        w.importance.set_icon_name(Some(icon));
+        w.importance.set_css_classes(&[class]);
+        w.importance
+            .set_opacity(if tip.is_some() { 1.0 } else { 0.0 });
+        w.importance.set_tooltip_text(tip.as_deref());
         let (answered, forwarded) = if meta.key.is_some() {
             (meta.answered, meta.forwarded)
         } else {
@@ -253,6 +277,16 @@ impl Row {
                 w.date.set_tooltip_text(None);
             }
         }
+        // Sent mail that asked for a read receipt (#520): grey checkmarks,
+        // green once one came back.
+        let mark = shared.receipt_marks.borrow().of(msg);
+        w.receipt.set_visible(mark.is_some());
+        w.receipt.set_css_classes(match &mark {
+            Some(m) if m.read => &["read-receipt", "read"],
+            _ => &["read-receipt", "dim-icon"],
+        });
+        w.receipt
+            .set_tooltip_text(mark.as_ref().map(|m| m.tooltip.as_str()));
         w.chip.set_visible(meta.count > 1);
         w.chip_count.set_label(&meta.count.to_string());
         w.chip_caret
@@ -381,31 +415,11 @@ impl Row {
                 .meta
                 .people
                 .clone()
-                .unwrap_or_else(|| msg.from_name.clone());
+                .unwrap_or_else(|| msg.shown_from_name().into_owned());
             w.people.set_tooltip_text(Some(&people));
             w.people.set_label(&people);
             w.people.set_css_classes(weight);
         }
-
-        w.importance.set_visible(on(ListColumn::Importance));
-        let (icon, class, tip) = match msg.importance {
-            Importance::High => (
-                "emblem-important-symbolic",
-                "importance-high",
-                Some(i18n("High importance")),
-            ),
-            Importance::Low => (
-                "hylki-importance-low-symbolic",
-                "importance-low",
-                Some(i18n("Low importance")),
-            ),
-            Importance::Normal => ("emblem-important-symbolic", "importance-high", None),
-        };
-        w.importance.set_icon_name(Some(icon));
-        w.importance.set_css_classes(&[class]);
-        w.importance
-            .set_opacity(if tip.is_some() { 1.0 } else { 0.0 });
-        w.importance.set_tooltip_text(tip.as_deref());
 
         w.account_col.set_visible(on(ListColumn::Account));
         if on(ListColumn::Account) {
@@ -546,9 +560,11 @@ impl Row {
         let name: &gtk::Widget = w.name.upcast_ref();
         let subject: &gtk::Widget = w.subject.upcast_ref();
         let star: &gtk::Widget = w.star.upcast_ref();
+        let receipt: &gtk::Widget = w.receipt.upcast_ref();
         let answer: &gtk::Widget = w.answer.upcast_ref();
         let clip: &gtk::Widget = w.clip.upcast_ref();
         let date: &gtk::Widget = w.date.upcast_ref();
+        let importance: &gtk::Widget = w.importance.upcast_ref();
         let chip: &gtk::Widget = w.chip.upcast_ref();
         let tags: &gtk::Widget = w.tags_box.upcast_ref();
         let lock: &gtk::Widget = w.lock.upcast_ref();
@@ -571,7 +587,7 @@ impl Row {
                     ListColumn::Subject => {
                         detach(subject);
                         w.subject_col.set_child(Some(subject));
-                        into(&w.line, &[lock, w.subject_col.upcast_ref(), chip]);
+                        into(&w.line, &[lock, w.subject_col.upcast_ref(), receipt, chip]);
                     }
                     ListColumn::Tags => {
                         detach(tags);
@@ -579,7 +595,7 @@ impl Row {
                         into(&w.line, &[w.tags_col.upcast_ref()]);
                     }
                     ListColumn::Attachment => into(&w.line, &[clip]),
-                    ListColumn::Importance => into(&w.line, &[w.importance.upcast_ref()]),
+                    ListColumn::Importance => into(&w.line, &[importance]),
                     ListColumn::Account => into(&w.line, &[w.account_col.upcast_ref()]),
                     ListColumn::Due => into(&w.line, &[w.due_col.upcast_ref()]),
                     ListColumn::Date => {
@@ -599,10 +615,14 @@ impl Row {
             // Smaller marks on one line, level with its smaller text.
             w.star.set_pixel_size(LINE_ICON_PX);
             w.clip.set_pixel_size(LINE_ICON_PX);
+            w.receipt.set_pixel_size(LINE_ICON_PX);
             w.replied.set_pixel_size(LINE_ICON_PX);
             w.forwarded.set_pixel_size(LINE_ICON_PX);
         } else {
-            into(&w.top, &[name, answer, clip, star, date, chip]);
+            into(
+                &w.top,
+                &[name, answer, clip, importance, star, receipt, date, chip],
+            );
             into(&w.subject_line, &[subject, tags]);
             into(&w.preview_line, &[lock, preview]);
             w.name.set_hexpand(true);
@@ -611,6 +631,7 @@ impl Row {
             w.avatar.set_size(38);
             w.star.set_pixel_size(-1);
             w.clip.set_pixel_size(-1);
+            w.receipt.set_pixel_size(-1);
             w.replied.set_pixel_size(-1);
             w.forwarded.set_pixel_size(-1);
         }

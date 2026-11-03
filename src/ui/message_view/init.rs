@@ -8,7 +8,6 @@ use super::bridge::{parse_bridge, Bridge};
 use super::chrome::ClassRules;
 use super::links::{is_launchable_uri, link_destination, CLICK_LINK_PROBE};
 use super::menu::{menu_lookup, menu_skipped, MenuHit};
-use super::page_fade::PageFade;
 use super::types::MessageViewInput;
 use super::MessageView;
 use adw::prelude::*;
@@ -47,7 +46,11 @@ pub(super) fn link_preview_plaque(webview: &webkit6::WebView) -> gtk::Label {
 
 impl MessageView {
     /// The reader before anything is shown.
-    pub(super) fn initial(webview: webkit6::WebView, link_preview: &gtk::Label) -> Self {
+    pub(super) fn initial(
+        webview: webkit6::WebView,
+        link_preview: &gtk::Label,
+        swap: crate::ui::reader_swap::ReaderSwap,
+    ) -> Self {
         MessageView {
             always_show_recipients: false,
             single_message_card: false,
@@ -67,6 +70,7 @@ impl MessageView {
             reader_mode: false,
             reader_switch_shown: true,
             theme_switch_shown: false,
+            account_chip_shown: true,
             theme_picks: std::collections::HashMap::new(),
             zoom: 100,
             zoom_default: 100,
@@ -91,7 +95,7 @@ impl MessageView {
             autoscroll_lone: false,
             saved_anchor: None,
             anchor_gutter: false,
-            skip_fade: false,
+            skip_freeze: false,
             drafts_view: false,
             template_folders: std::collections::HashSet::new(),
             frame_heights: std::collections::HashMap::new(),
@@ -114,7 +118,9 @@ impl MessageView {
             webview,
             sender_check: None,
             member_checks: std::collections::HashMap::new(),
+            faces: Default::default(),
             unsubscribed: std::collections::HashMap::new(),
+            receipt_marks: Default::default(),
             unsub_state: std::collections::HashMap::new(),
             fold_messages: crate::config::FoldMessages::Never,
             fold_preview_lines: 1,
@@ -129,7 +135,9 @@ impl MessageView {
             link_preview: link_preview.clone(),
             seq: std::cell::Cell::new(0),
             pending_load: Default::default(),
-            page_fade: PageFade::new(),
+            swap,
+            latest_uri: String::new(),
+            ready_uri: String::new(),
             content_dark: None,
         }
     }
@@ -150,15 +158,23 @@ impl MessageView {
         // without a pointer.
         let click_link = std::env::var("HYLKI_SHOWCASE_CLICK_LINK").is_ok();
         let clicked = std::rc::Rc::new(std::cell::Cell::new(false));
-        let page_fade = self.page_fade.clone();
+        // Bumped per load, so the backstop of a page already replaced can't
+        // say the next one is ready (and lift its still) before it is.
+        let loads = std::rc::Rc::new(std::cell::Cell::new(0u64));
         self.webview.connect_load_changed(move |view, event| {
+            if event == webkit6::LoadEvent::Started {
+                loads.set(loads.get().wrapping_add(1));
+            }
             if event == webkit6::LoadEvent::Finished {
-                page_fade.release(view);
                 let s = ready_sender.clone();
+                let load = loads.get();
+                let loads = loads.clone();
                 gtk::glib::timeout_add_local_once(
                     std::time::Duration::from_millis(600),
                     move || {
-                        s.input_sender().emit(MessageViewInput::Rendered);
+                        if loads.get() == load {
+                            s.input_sender().emit(MessageViewInput::Rendered);
+                        }
                     },
                 );
                 if click_link && !clicked.get() {

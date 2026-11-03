@@ -50,6 +50,7 @@ mod conversation;
 mod counts;
 mod demo;
 mod diagnostics;
+mod draft_copies;
 mod drafts;
 mod events_bodies;
 mod events_folders;
@@ -64,6 +65,7 @@ mod folder_menu;
 mod folders;
 mod gallery;
 mod hand_off;
+mod hierarchy;
 mod identity;
 mod invites;
 mod keymap;
@@ -89,6 +91,9 @@ mod prefs_reader;
 mod prefs_sidebar;
 mod reader_select;
 mod reader_toolbar;
+mod reading_pane;
+mod receipts;
+mod receipts_returned;
 mod release_notes;
 mod removal;
 mod router;
@@ -109,7 +114,9 @@ mod split_reply;
 mod tags;
 #[cfg(test)]
 mod test_support;
+mod text_search;
 mod theme;
+mod to_calendar;
 mod transfer;
 mod tray;
 mod types;
@@ -298,6 +305,7 @@ impl SimpleComponent for AppModel {
                             "mail"
                         },
 
+                    #[name = "mail_split"]
                     add_named[Some("mail")] = &gtk::Paned {
                         set_orientation: gtk::Orientation::Horizontal,
                         // Thin handle so the panes sit flush (just a 1px divider),
@@ -323,9 +331,13 @@ impl SimpleComponent for AppModel {
                             ))
                         ] => move |p| {
                             let pos = p.position();
+                            // With the reader below, the list's height (#475).
+                            let below = p.orientation() == gtk::Orientation::Vertical;
                             // Automatic layout follows the width as it is
                             // dragged, not once the drag has settled (#334).
-                            sender.input(AppMsg::ListPaneWidth(pos));
+                            if !below {
+                                sender.input(AppMsg::ListPaneWidth(pos));
+                            }
                             if let Some(id) = pending.borrow_mut().take() {
                                 id.remove();
                             }
@@ -334,7 +346,11 @@ impl SimpleComponent for AppModel {
                                 std::time::Duration::from_millis(600),
                                 move || {
                                     *armed.borrow_mut() = None;
-                                    crate::config::save_list_pane_width(pos);
+                                    if below {
+                                        crate::config::save_list_pane_height(pos);
+                                    } else {
+                                        crate::config::save_list_pane_width(pos);
+                                    }
                                 },
                             ));
                         },
@@ -349,13 +365,32 @@ impl SimpleComponent for AppModel {
                         set_shrink_end_child: false,
 
                         #[wrap(Some)]
-                        set_start_child = &adw::ToolbarView {
+                        set_start_child = &gtk::Overlay {
+                            // A strip across the top that says how wide the
+                            // list is: with the reading pane off, that decides
+                            // when the toolbar folds (#475).
+                            add_overlay = &gtk::DrawingArea {
+                                set_can_target: false,
+                                set_valign: gtk::Align::Start,
+                                set_content_height: 1,
+                                connect_resize[
+                                    sender,
+                                    fold = model.list_fold.clone()
+                                ] => move |_, width, _| {
+                                    fold.resized(width, sender.input_sender());
+                                },
+                            },
+                            #[wrap(Some)]
+                            set_child = &adw::ToolbarView {
+                            #[name = "list_header"]
                             add_top_bar = &adw::HeaderBar {
                                 add_css_class: "flat",
                                 // Middle pane: no window controls (the reader pane's
-                                // header carries the window's close button).
+                                // header carries the window's close button),
+                                // unless there is no reader pane (#475).
                                 set_show_start_title_buttons: false,
-                                set_show_end_title_buttons: false,
+                                #[watch]
+                                set_show_end_title_buttons: model.controls_in_list(),
                                 // No folder title here — the sidebar's selection
                                 // already names it. An empty label keeps the
                                 // window's "Hylki" title from appearing instead.
@@ -395,9 +430,24 @@ impl SimpleComponent for AppModel {
                                 // pack_end packs right-to-left: sort rightmost.
                                 // Quick filters (#97, #441): session state,
                                 // like Mail.app's filter bar.
+                                // The reader's toolbar, while there is no
+                                // reading pane to carry it (#475): beside the
+                                // window controls, so packed first. Filled by
+                                // relayout_reader_toolbar.
+                                #[name = "list_tools"]
+                                pack_end = &gtk::Box {
+                                    add_css_class: "list-tools",
+                                    // The headerbar's own spacing, so the
+                                    // buttons sit as they do in the reader.
+                                    set_spacing: 6,
+                                    // The selection bar carries the actions
+                                    // for several rows; not twice.
+                                    #[watch]
+                                    set_visible: model.toolbar_in_list() && !model.many_selected(),
+                                },
                                 // Focus Mode: the ⋯ that stands in for the
                                 // search, filters, count and sort while they
-                                // are folded away. Rightmost, so packed first.
+                                // are folded away.
                                 #[name = "lh_overflow"]
                                 pack_end = &gtk::Revealer {
                                     set_transition_type: gtk::RevealerTransitionType::SlideLeft,
@@ -444,6 +494,7 @@ impl SimpleComponent for AppModel {
                             },
                             #[wrap(Some)]
                             set_content = model.message_list.widget(),
+                            },
                         },
 
                         #[wrap(Some)]
@@ -456,10 +507,17 @@ impl SimpleComponent for AppModel {
                             // on an explicit one; the window's own minimum is what
                             // really binds vertically.
                             set_size_request: (READER_MIN_WIDTH, 200),
+                            // Hidden, the list takes the whole width (#475).
+                            #[watch]
+                            set_visible: model.reader_shown(),
                             #[wrap(Some)]
                             set_child = &adw::ToolbarView {
                             #[name = "reader_header"]
                             add_top_bar = &adw::HeaderBar {
+                                // Below the list the window's controls are
+                                // in the list's header, at the top.
+                                #[watch]
+                                set_show_end_title_buttons: !model.controls_in_list(),
                                 // Rightmost of the packed items, beside the window
                                 // controls: the overflow ⋯ that stands in for the
                                 // action buttons while collapsed.
@@ -811,7 +869,7 @@ impl SimpleComponent for AppModel {
                             #[name = "reader_content_box"]
                             set_content = &gtk::Box {
                                 set_orientation: gtk::Orientation::Vertical,
-                                append: model.attachment_drawer.widget(),
+                                append: model.reader_swap.host(),
                             },
                             },
                         },
@@ -842,15 +900,24 @@ impl SimpleComponent for AppModel {
     ) -> ComponentParts<Self> {
         let boot = Boot::read(&root);
         let children = Children::launch(&boot, &sender);
-        let main_menu = build_main_menu(boot.prefs.show_accounts, &boot.focus, &sender);
+        let main_menu = build_main_menu(
+            boot.prefs.show_accounts,
+            boot.prefs.reading_pane,
+            &boot.focus,
+            &sender,
+        );
         let mut model = AppModel::new(&root, &sender, boot, children, main_menu);
         model.prime_and_connect(&sender);
         schedule_download_prune();
+        text_search::prepare_text_search();
         model.withdraw_stale_notifications();
         if model.tray_enabled {
             model.start_tray(&sender);
         }
         start_contacts_sync(&sender);
+        if model.contact_names {
+            model.read_contact_names(&sender);
+        }
         watch_system_events(&sender);
         model.open_wizard_if_needed(&sender);
         model.push_settings_to_children();
@@ -865,9 +932,11 @@ impl SimpleComponent for AppModel {
         let reader_snooze_btn = model.reader_snooze_btn.clone();
         let widgets = view_output!();
         let _ = model.reader_header.set(widgets.reader_header.clone());
+        let _ = model.mail_split.set(widgets.mail_split.clone());
         let _ = model.toasts.set(widgets.toasts.clone());
         model.init_reader_header_menu(&widgets, &sender);
         model.init_reader_toolbar_fold(&widgets, &sender);
+        model.place_reader();
         model.init_compose_overlay(&widgets);
         model.init_gallery_page(&widgets, &sender);
         model.install_notification_actions(&sender);

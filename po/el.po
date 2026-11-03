@@ -89,6 +89,10 @@ msgstr "Αδυναμία αποθήκευσης λογαριασμού: {e}"
 msgid "Could not import account: {e}"
 msgstr "Αδυναμία εισαγωγής λογαριασμού: {e}"
 
+#, fuzzy
+msgid "On This Computer is switched off"
+msgstr "Σε αυτόν τον υπολογιστή"
+
 msgid "Delete the attachment from the server?"
 msgstr "Να διαγραφεί το συνημμένο από τον διακομιστή;"
 
@@ -107,6 +111,19 @@ msgstr "Ρυθμίσεις"
 
 msgid "Show Accounts"
 msgstr "Εμφάνιση λογαριασμών"
+
+msgid "Right"
+msgstr "Δεξιά"
+
+msgid "Below"
+msgstr ""
+
+msgid "Off"
+msgstr "Ανενεργό"
+
+#, fuzzy
+msgid "Reading Pane"
+msgstr "Ανάγνωση"
 
 msgid "Focus Mode"
 msgstr "Λειτουργία συγκέντρωσης"
@@ -171,6 +188,13 @@ msgstr "Προσθήκη αποστολέα στις επαφές"
 msgid "Create Filter from Message…"
 msgstr "Δημιουργία φίλτρου από μήνυμα…"
 
+msgid "Create Event…"
+msgstr ""
+
+#, fuzzy
+msgid "Create Task…"
+msgstr "Δημιουργία"
+
 msgid "Tags"
 msgstr "Ετικέτες"
 
@@ -184,6 +208,10 @@ msgid "Mark as Spam"
 msgstr "Σήμανση ως ανεπιθύμητο"
 
 msgid "Move To…"
+msgstr "Μετακίνηση σε…"
+
+#, fuzzy
+msgid "Copy To…"
 msgstr "Μετακίνηση σε…"
 
 msgid "Archive"
@@ -490,11 +518,15 @@ msgstr "Κλείσιμο"
 msgid "Unstar"
 msgstr "Αφαίρεση αστεριού"
 
-msgid "New Folder"
-msgstr "Νέος φάκελος"
+#, fuzzy
+msgid "Create a folder inside {name}."
+msgstr "Δημιουργήστε έναν νέο φάκελο για αυτόν τον λογαριασμό."
 
 msgid "Create a new folder for this account."
 msgstr "Δημιουργήστε έναν νέο φάκελο για αυτόν τον λογαριασμό."
+
+msgid "New Folder"
+msgstr "Νέος φάκελος"
 
 msgid "Cancel"
 msgstr "Ακύρωση"
@@ -548,8 +580,19 @@ msgstr ""
 "Κάθε μήνυμα σε αυτούς θα διαγραφεί από τον διακομιστή. Αυτό δεν μπορεί να "
 "αναιρεθεί."
 
+msgid "This account can't have folders at the top level."
+msgstr ""
+
+#, fuzzy
+msgid "Folders on this account can't hold other folders."
+msgstr "Προσφορά αυτού του λογαριασμού στο παράθυρο σύνταξης"
+
 msgid "Create Folder"
 msgstr "Δημιουργία φακέλου"
+
+#, fuzzy
+msgid "{name} can't hold other folders."
+msgstr "Συμπερίληψη άλλων φακέλων"
 
 msgid "archive"
 msgstr "αρχειοθέτηση"
@@ -559,6 +602,9 @@ msgstr "κάδος"
 
 msgid "destination"
 msgstr "προορισμός"
+
+msgid "A folder can't be moved into itself."
+msgstr ""
 
 msgid "Move Folder"
 msgstr "Μετακίνηση φακέλου"
@@ -630,6 +676,9 @@ msgstr "Επισύναψη ούτως ή άλλως"
 msgid "Upload to Cloud Storage"
 msgstr "Μεταφόρτωση σε αποθήκευση cloud"
 
+msgid "The account has to connect before its folders can change."
+msgstr ""
+
 msgid "This message carries no calendar file to open."
 msgstr "Αυτό το μήνυμα δεν περιέχει αρχείο ημερολογίου για άνοιγμα."
 
@@ -681,6 +730,26 @@ msgstr "Μη αναγνωσμένα πρώτα"
 msgid "Starred first"
 msgstr "Με τα μηνύματα με αστέρι πρώτα"
 
+#, fuzzy
+msgid "Clear Dates"
+msgstr "Εκκαθάριση φίλτρων"
+
+#, fuzzy
+msgid "Any Date"
+msgstr "Ημερομηνία"
+
+#, fuzzy
+msgid "{from} to {to}"
+msgstr "{cur} από {total}"
+
+#, fuzzy
+msgid "Since {date}"
+msgstr "λήγει στις {date}"
+
+#, fuzzy
+msgid "Until {date}"
+msgstr "λήγει στις {date}"
+
 msgid "Sort by"
 msgstr "Ταξινόμηση κατά"
 
@@ -689,6 +758,16 @@ msgstr "Εμφάνιση μόνο"
 
 msgid "Clear Filters"
 msgstr "Εκκαθάριση φίλτρων"
+
+#, fuzzy
+msgid "Dates"
+msgstr "Ημερομηνία"
+
+msgid "From"
+msgstr "Από"
+
+msgid "To"
+msgstr "Προς"
 
 msgid "Sort and filter messages"
 msgstr "Ταξινόμηση και φιλτράρισμα μηνυμάτων"
@@ -711,6 +790,12 @@ msgstr "Ενέργειες"
 
 msgid "Refresh or long-press for Status Bar"
 msgstr "Ανανέωση ή παρατεταμένο πάτημα για τη γραμμή κατάστασης"
+
+#, fuzzy
+msgid "Copying one message to On This Computer…"
+msgid_plural "Copying {n} messages to On This Computer…"
+msgstr[0] "Μετακίνηση ενός μηνύματος στο {account}…"
+msgstr[1] "Μετακίνηση {n} μηνυμάτων στο {account}…"
 
 msgid "Sending message…"
 msgstr "Αποστολή μηνύματος…"
@@ -738,6 +823,10 @@ msgstr "Άνοιγμα επιλεγμένου μηνύματος"
 
 msgid "Back to the message list"
 msgstr "Επιστροφή στη λίστα μηνυμάτων"
+
+#, fuzzy
+msgid "Open or fold a conversation in the list"
+msgstr "Κλείσιμο συζήτησης και επιστροφή στη λίστα"
 
 msgid "Next message in the conversation"
 msgstr "Επόμενο μήνυμα στη συνομιλία"
@@ -847,6 +936,9 @@ msgstr "Ενεργοποίηση ή απενεργοποίηση της Λειτ
 #, fuzzy
 msgid "Fullscreen on or off"
 msgstr "Ενεργοποίηση ή απενεργοποίηση της Λειτουργίας συγκέντρωσης"
+
+msgid "Reading pane right of the list, below it, or off"
+msgstr ""
 
 msgid "Message zoom in or out"
 msgstr "Μεγέθυνση ή σμίκρυνση του μηνύματος"
@@ -1002,6 +1094,18 @@ msgstr "Αναζήτηση μηνυμάτων"
 msgid "Show or Hide the Sidebar"
 msgstr "Εμφάνιση ή απόκρυψη της πλευρικής στήλης"
 
+#, fuzzy
+msgid "Reading Pane Right"
+msgstr "Ανάγνωση"
+
+#, fuzzy
+msgid "Reading Pane Below"
+msgstr "Ανάγνωση"
+
+#, fuzzy
+msgid "Reading Pane Off"
+msgstr "Ανάγνωση"
+
 msgid "Mail Accounts"
 msgstr "Λογαριασμοί αλληλογραφίας"
 
@@ -1079,16 +1183,16 @@ msgstr "Πηγαίος κώδικας μηνύματος"
 msgid "Forwarded message"
 msgstr "Προώθηση αυτού του μηνύματος"
 
+#, fuzzy
+msgid "Subject: {subject}"
+msgstr "Αποδεκτή: {subject}"
+
 msgid "From: {from}"
 msgstr "Από: {from}"
 
 #, fuzzy
 msgid "Date: {date}"
 msgstr "λήγει στις {date}"
-
-#, fuzzy
-msgid "Subject: {subject}"
-msgstr "Αποδεκτή: {subject}"
 
 msgid "Export failed: {e}"
 msgstr "Η εξαγωγή απέτυχε: {e}"
@@ -1184,6 +1288,27 @@ msgstr "Διαγραφή {n} μηνυμάτων"
 msgid "Customize Toolbar…"
 msgstr "Προσαρμογή γραμμής εργαλείων…"
 
+msgid "Read receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Read: {subject}"
+msgstr "Αποδεκτή: {subject}"
+
+msgid ""
+"This is a read receipt for the message sent to {to} on {date} with the "
+"subject \"{subject}\"."
+msgstr ""
+
+msgid ""
+"It means the message was shown on the recipient's screen, not that it was "
+"read or understood."
+msgstr ""
+
+#, fuzzy
+msgid "Read by {reader}"
+msgstr "Διεύθυνση απάντησης"
+
 msgid "Full Release Notes on GitHub"
 msgstr "Όλες οι σημειώσεις έκδοσης στο GitHub"
 
@@ -1238,6 +1363,12 @@ msgstr "Δεν υπάρχει φάκελος Εισερχομένων για α�
 msgid "No {v1} folder available for some messages"
 msgstr "Δεν υπάρχει διαθέσιμος φάκελος {v1} για ορισμένα μηνύματα"
 
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "Αποστολή μηνύματος…"
+msgstr[1] "Αποστολή μηνύματος…"
+
 msgid "Remove Account?"
 msgstr "Αφαίρεση λογαριασμού;"
 
@@ -1265,10 +1396,30 @@ msgstr ""
 msgid "Snooze until"
 msgstr ""
 
+#, fuzzy
+msgid "Could not add the event: {e}"
+msgstr "Δεν ήταν δυνατή η αποθήκευση του μηνύματος: {e}"
+
+#, fuzzy
+msgid "Could not add the task: {e}"
+msgstr "Δεν ήταν δυνατή η αλλαγή του αστεριού: {e}"
+
+#, fuzzy
+msgid "One message could not be copied to {account}: {error}"
+msgid_plural "{n} messages could not be copied to {account}: {error}"
+msgstr[0] "Δεν ήταν δυνατή η μετακίνηση ενός μηνύματος στο {account}: {error}"
+msgstr[1] "Δεν ήταν δυνατή η μετακίνηση {n} μηνυμάτων στο {account}: {error}"
+
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
 msgstr[0] "Δεν ήταν δυνατή η μετακίνηση ενός μηνύματος στο {account}: {error}"
 msgstr[1] "Δεν ήταν δυνατή η μετακίνηση {n} μηνυμάτων στο {account}: {error}"
+
+#, fuzzy
+msgid "Copying one message to {account}…"
+msgid_plural "Copying {n} messages to {account}…"
+msgstr[0] "Μετακίνηση ενός μηνύματος στο {account}…"
+msgstr[1] "Μετακίνηση {n} μηνυμάτων στο {account}…"
 
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
@@ -1472,6 +1623,26 @@ msgstr "Ημερομηνία λήξης"
 msgid "Date"
 msgstr "Ημερομηνία"
 
+#, fuzzy
+msgid "Newest messages"
+msgstr "Νεότερο μήνυμα πρώτο"
+
+#, fuzzy
+msgid "Last week"
+msgstr "Επώνυμο"
+
+#, fuzzy
+msgid "Last month"
+msgstr "Επαναλαμβάνεται μηνιαία"
+
+#, fuzzy
+msgid "Last year"
+msgstr "Επώνυμο"
+
+#, fuzzy
+msgid "All mail"
+msgstr "Προσθήκη email"
+
 msgid "With sent mail"
 msgstr "Με την απεσταλμένη αλληλογραφία"
 
@@ -1554,6 +1725,32 @@ msgstr[1] "Ένα νέο μήνυμα με {n} συνημμένα αρχεία �
 #, fuzzy
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "{date} στις {time}"
+
+msgid "Name"
+msgstr "Όνομα"
+
+#, fuzzy
+msgid "First Name"
+msgstr "Όνομα"
+
+#, fuzzy
+msgid "Last Name"
+msgstr "Επώνυμο"
+
+msgid "Email"
+msgstr "Email"
+
+#, fuzzy
+msgid "Column {n}"
+msgstr "Στήλες"
+
+#, fuzzy
+msgid "The file is empty."
+msgstr "Το αρχείο δεν είναι αρχείο κειμένου"
+
+#, fuzzy
+msgid "The file has no rows below its first."
+msgstr "Το αρχείο δεν είναι αρχείο κειμένου"
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
@@ -1672,6 +1869,14 @@ msgstr ""
 "Ο οργανισμός του αποστολέα επισήμανε αυτό το μήνυμα ως «{label}». Το Hylki "
 "εμφανίζει την ετικέτα, αλλά δεν εφαρμόζει τους κανόνες της."
 
+msgid "Nothing here proves this came from {from} — or that it didn't."
+msgstr ""
+"Τίποτα εδώ δεν αποδεικνύει ότι αυτό προήλθε από το {from} — ούτε ότι δεν "
+"προήλθε."
+
+msgid "These checks aren't known to come from your mail provider"
+msgstr ""
+
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
 msgstr ""
@@ -1704,11 +1909,6 @@ msgid "Your mail provider didn't report any sender checks for this message."
 msgstr ""
 "Ο πάροχος αλληλογραφίας σας δεν ανέφερε ελέγχους αποστολέα για αυτό το "
 "μήνυμα."
-
-msgid "Nothing here proves this came from {from} — or that it didn't."
-msgstr ""
-"Τίποτα εδώ δεν αποδεικνύει ότι αυτό προήλθε από το {from} — ούτε ότι δεν "
-"προήλθε."
 
 msgid "{name}: passed"
 msgstr "{name}: επιτυχία"
@@ -1750,6 +1950,13 @@ msgstr "Χρησιμοποιούνται {used} από {limit}"
 msgid "{free} free ({pct}%)"
 msgstr "{free} ελεύθερα ({pct}%)"
 
+#, fuzzy
+msgid "A folder needs a name."
+msgstr "Όνομα φακέλου"
+
+msgid "A folder name can't contain “{c}” on this account."
+msgstr ""
+
 msgid "Encrypted message"
 msgstr "Κρυπτογραφημένο μήνυμα"
 
@@ -1779,6 +1986,17 @@ msgstr "Σε αναμονή από {ago}"
 
 msgid "Scheduled for {when}"
 msgstr "Προγραμματισμένο για {when}"
+
+#, fuzzy
+msgid "No read receipt yet"
+msgstr "Απόκρυψη παραληπτών"
+
+msgid "{who}, {when}"
+msgstr ""
+
+#, fuzzy
+msgid "Read by {count} of {total}"
+msgstr "{name} · {current} από {total}"
 
 msgid "Verified sender"
 msgstr "Αποστολέας επαληθευμένος"
@@ -1877,6 +2095,117 @@ msgstr "Η υπογραφή έχει λήξει"
 msgid "This message hasn't been checked."
 msgstr "Αυτό το μήνυμα δεν έχει ελεγχθεί."
 
+#, fuzzy
+msgid "Harper is not available for this computer."
+msgstr "Δεν υπάρχει διαθέσιμος φάκελος Προτύπων για αυτόν τον λογαριασμό"
+
+msgid "Harper is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "Harper could not be started: {e}"
+msgstr "Δεν ήταν δυνατή η πρόσβαση στην υπηρεσία: {e}"
+
+#, fuzzy
+msgid "Harper's answer could not be read."
+msgstr "Δεν ήταν δυνατή η ανάγνωση της απάντησης της υπηρεσίας."
+
+#, fuzzy
+msgid "There is no folder to install to."
+msgstr "Δεν υπάρχει κείμενο για μετάφραση."
+
+msgid "There is not enough free space: {size} is needed."
+msgstr ""
+
+#, fuzzy
+msgid "The download could not start: {e}"
+msgstr "Δεν ήταν δυνατή η αποθήκευση του προχείρου: {e}"
+
+msgid "The download was cancelled."
+msgstr ""
+
+msgid "The download stopped: {e}"
+msgstr ""
+
+msgid "The downloaded file is not the one expected, so it was not installed."
+msgstr ""
+
+#, fuzzy
+msgid "The download could not be unpacked: {e}"
+msgstr "Δεν ήταν δυνατή η πρόσβαση στην υπηρεσία: {e}"
+
+#, fuzzy
+msgid "The files could not be written: {e}"
+msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
+
+msgid "{n} MB"
+msgstr ""
+
+#, fuzzy
+msgid "The server's answer could not be read."
+msgstr "Δεν ήταν δυνατή η ανάγνωση της απάντησης της υπηρεσίας."
+
+msgid "Nothing answers at that address. Check that the server is running."
+msgstr ""
+
+#, fuzzy
+msgid "The server's name could not be found."
+msgstr "Δεν ήταν δυνατή η ανάγνωση της απάντησης της υπηρεσίας."
+
+#, fuzzy
+msgid "The server's address is not valid."
+msgstr "Εισαγάγετε τη διεύθυνση του διακομιστή."
+
+#, fuzzy
+msgid "The server could not be reached: {e}"
+msgstr "Δεν ήταν δυνατή η πρόσβαση στην υπηρεσία: {e}"
+
+#, fuzzy
+msgid "The server did not accept the username and key."
+msgstr "Ο διακομιστής δεν αποδέχθηκε το όνομα χρήστη ή τον κωδικό πρόσβασης."
+
+#, fuzzy
+msgid "The message is too long for the server."
+msgstr "Αυτό το μήνυμα είναι πολύ μεγάλο για αποστολή προς μετάφραση."
+
+msgid "Too many requests: try again in a moment."
+msgstr "Υπερβολικά πολλά αιτήματα: δοκιμάστε ξανά σε λίγο."
+
+#, fuzzy
+msgid "The server refused the request (error {code})."
+msgstr "Η υπηρεσία απέρριψε το αίτημα (σφάλμα {code})."
+
+#, fuzzy
+msgid "LanguageTool is not available for this computer."
+msgstr "Δεν υπάρχει φάκελος Προχείρων για αυτόν τον λογαριασμό"
+
+msgid "LanguageTool stopped unexpectedly."
+msgstr ""
+
+msgid "LanguageTool is not downloaded. Download it in Settings → Composing."
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool could not be started: {e}"
+msgstr "Δεν ήταν δυνατή η πρόσβαση στην υπηρεσία: {e}"
+
+msgid "LanguageTool could not be started."
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool took too long to start."
+msgstr "Ο διακομιστής άργησε υπερβολικά να απαντήσει."
+
+#, fuzzy
+msgid "Enter the LanguageTool server's address in Settings → Composing."
+msgstr ""
+"Εισαγάγετε τη διεύθυνση του διακομιστή LibreTranslate στις Ρυθμίσεις → "
+"Μετάφραση."
+
+#, fuzzy
+msgid "Enter the server's address first."
+msgstr "Εισαγάγετε τη διεύθυνση του διακομιστή."
+
 msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
@@ -1893,9 +2222,6 @@ msgstr "Δεν ήταν δυνατή η πρόσβαση στην υπηρεσί
 msgid "The service did not accept the key."
 msgstr "Η υπηρεσία δεν αποδέχτηκε το κλειδί."
 
-msgid "Too many requests: try again in a moment."
-msgstr "Υπερβολικά πολλά αιτήματα: δοκιμάστε ξανά σε λίγο."
-
 msgid "This month's allowance is used up."
 msgstr "Έχει εξαντληθεί το όριο χρήσης αυτού του μήνα."
 
@@ -1906,9 +2232,6 @@ msgid "Enter the LibreTranslate server's address in Settings → Translation."
 msgstr ""
 "Εισαγάγετε τη διεύθυνση του διακομιστή LibreTranslate στις Ρυθμίσεις → "
 "Μετάφραση."
-
-msgid "Off"
-msgstr "Ανενεργό"
 
 msgid "Choose a translation service in Settings → Translation first."
 msgstr "Επιλέξτε πρώτα μια υπηρεσία μετάφρασης στις Ρυθμίσεις → Μετάφραση."
@@ -2249,6 +2572,14 @@ msgstr "Διακομιστής εισερχομένων"
 msgid "Port (IMAP 993 / POP3 995)"
 msgstr "Θύρα (IMAP 993 / POP3 995)"
 
+#, fuzzy
+msgid "Import Mbox Files"
+msgstr "Εισαγωγή αρχείου…"
+
+#, fuzzy
+msgid "Import Maildir Folders"
+msgstr "Η εισαγωγή απέτυχε: {e}"
+
 msgid "Signed in as {address}, not {email}."
 msgstr "Συνδεθήκατε ως {address}, όχι ως {email}."
 
@@ -2310,6 +2641,14 @@ msgstr "Έλεγχος για νέους λογαριασμούς στους Δ�
 
 msgid "Add Account…"
 msgstr "Προσθήκη λογαριασμού…"
+
+msgid ""
+"Store mail in folders that live on this computer. Move or copy mail from any "
+"account to here."
+msgstr ""
+
+msgid "Add"
+msgstr "Προσθήκη"
 
 msgid "GNOME Online Accounts"
 msgstr "Διαδικτυακοί λογαριασμοί GNOME"
@@ -2378,9 +2717,6 @@ msgstr "Επεξεργασία ετικέτας"
 msgid "Add Tag"
 msgstr "Προσθήκη ετικέτας"
 
-msgid "Name"
-msgstr "Όνομα"
-
 msgid "Keyword"
 msgstr "Λέξη-κλειδί"
 
@@ -2447,6 +2783,10 @@ msgstr "Proton Mail"
 msgid "Custom OAuth"
 msgstr "Προσαρμοσμένο OAuth"
 
+#, fuzzy
+msgid "Folders on this computer"
+msgstr "Hylki, σε αυτόν τον υπολογιστή"
+
 msgid "IMAP/POP3 account"
 msgstr "Λογαριασμός IMAP/POP3"
 
@@ -2458,6 +2798,11 @@ msgstr "Λογαριασμός αλληλογραφίας"
 
 msgid "Enter a client ID and sign in before saving"
 msgstr "Εισαγάγετε αναγνωριστικό πελάτη και συνδεθείτε πριν από την αποθήκευση"
+
+msgid ""
+"Remove {name} from Hylki? Its folders and the mail in them stay on this "
+"computer, in {dir}, and come back if it is added again."
+msgstr ""
 
 msgid "Edit HTML"
 msgstr "Επεξεργασία HTML"
@@ -2756,6 +3101,81 @@ msgstr "Επόμενο"
 
 msgid "Open in the default app"
 msgstr "Άνοιγμα στην προεπιλεγμένη εφαρμογή"
+
+#, fuzzy
+msgid "New Event"
+msgstr "Νέα επαφή"
+
+#, fuzzy
+msgid "New Task"
+msgstr "Δεν υπάρχουν νέες ετικέτες"
+
+#, fuzzy
+msgid "Open in Calendar"
+msgstr "Άνοιγμα σε παράθυρο"
+
+msgid "Title"
+msgstr "Τίτλος"
+
+#, fuzzy
+msgid "Calendar"
+msgstr "Προσθήκη στο ημερολόγιο"
+
+#, fuzzy
+msgid "Task list"
+msgstr "Αυτή η λίστα"
+
+#, fuzzy
+msgid "Notes"
+msgstr "Σημείωση"
+
+#, fuzzy
+msgid "All day"
+msgstr "Προσθήκη email"
+
+#, fuzzy
+msgid "Starts"
+msgstr "Προσθήκη αστεριού"
+
+msgid "Ends"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+#, fuzzy
+msgid "Second alarm"
+msgstr "Αποστολή όλων"
+
+#, fuzzy
+msgid "At the start"
+msgstr "Επανεκκίνηση"
+
+msgid "{n} week before"
+msgid_plural "{n} weeks before"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "{n} day before"
+msgid_plural "{n} days before"
+msgstr[0] "Πριν από {n} ημέρες"
+msgstr[1] "Πριν από {n} ημέρες"
+
+#, fuzzy
+msgid "{n} hour before"
+msgid_plural "{n} hours before"
+msgstr[0] "Πριν από {n} ώρες"
+msgstr[1] "Πριν από {n} ώρες"
+
+#, fuzzy
+msgid "{n} minute before"
+msgid_plural "{n} minutes before"
+msgstr[0] "πριν από {n} λεπτά"
+msgstr[1] "πριν από {n} λεπτά"
+
+msgid "Due"
+msgstr "Λήξη"
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Καλώς ορίσατε στο Hylki, πρώην {old}"
@@ -3213,6 +3633,28 @@ msgstr "Περισσότερα"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Εμφάνιση Κοιν., Κρυφής κοιν. και Απάντησης προς"
 
+#, fuzzy
+msgid "Cannot merge an encrypted message"
+msgstr "Κρυπτογραφημένο μήνυμα"
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr ""
+
+msgid "Check the From address"
+msgstr "Ελέγξτε τη διεύθυνση αποστολέα"
+
+#, fuzzy
+msgid "Insert Merge Field"
+msgstr "Εισαγωγή μετά το κείμενο"
+
+#, fuzzy
+msgid "Contact Groups"
+msgstr "Επαφές"
+
+#, fuzzy
+msgid "Choose a CSV File…"
+msgstr "Αποθήκευση ως αρχείο…"
+
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
@@ -3244,9 +3686,6 @@ msgstr "Το «{address}» δεν είναι διεύθυνση email."
 msgid "Cannot send with OpenPGP"
 msgstr "Δεν είναι δυνατή η αποστολή με OpenPGP"
 
-msgid "Check the From address"
-msgstr "Ελέγξτε τη διεύθυνση αποστολέα"
-
 msgid "An attachment is missing"
 msgstr "Λείπει ένα συνημμένο"
 
@@ -3263,11 +3702,50 @@ msgstr "Πληκτρολογήστε μια διεύθυνση αποστολέ�
 msgid "Choose from your addresses"
 msgstr "Επιλέξτε από τις διευθύνσεις σας"
 
-msgid "Check the address"
-msgstr "Ελέγξτε τη διεύθυνση"
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
+msgstr ""
 
 msgid "“{addr}” is not an email address."
 msgstr "Το «{addr}» δεν είναι διεύθυνση email."
+
+msgid "Check the address"
+msgstr "Ελέγξτε τη διεύθυνση"
+
+msgid "Send now"
+msgstr "Αποστολή τώρα"
+
+msgid "Tomorrow morning ({time})"
+msgstr "Αύριο το πρωί ({time})"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "Αύριο το απόγευμα ({time})"
+
+msgid "Monday morning ({time})"
+msgstr "Δευτέρα πρωί ({time})"
+
+msgid "Pick a date and time…"
+msgstr "Επιλογή ημερομηνίας και ώρας…"
+
+msgid "Mail Merge…"
+msgstr ""
+
+msgid "Request a read receipt"
+msgstr ""
+
+msgid "Not every mail app sends one."
+msgstr ""
+
+#, fuzzy
+msgid "High"
+msgstr "Επισήμανση"
+
+msgid "Normal"
+msgstr "Κανονική"
+
+msgid "Low"
+msgstr ""
 
 msgid "Show the message as it will be sent"
 msgstr "Εμφάνιση του μηνύματος όπως θα σταλεί"
@@ -3345,20 +3823,9 @@ msgstr "Διαγραφή προχείρου"
 msgid "Send"
 msgstr "Αποστολή"
 
-msgid "Send now"
-msgstr "Αποστολή τώρα"
-
-msgid "Tomorrow morning ({time})"
-msgstr "Αύριο το πρωί ({time})"
-
-msgid "Tomorrow afternoon ({time})"
-msgstr "Αύριο το απόγευμα ({time})"
-
-msgid "Monday morning ({time})"
-msgstr "Δευτέρα πρωί ({time})"
-
-msgid "Pick a date and time…"
-msgstr "Επιλογή ημερομηνίας και ώρας…"
+#, fuzzy
+msgid "Send options"
+msgstr "Ενότητες"
 
 msgid "Show From, To and Subject"
 msgstr "Εμφάνιση Από, Προς και Θέμα"
@@ -3368,12 +3835,6 @@ msgstr "Αποστολή τώρα αντί για αργότερα"
 
 msgid "Download password for {name}: {password}"
 msgstr "Κωδικός λήψης για {name}: {password}"
-
-msgid "From"
-msgstr "Από"
-
-msgid "To"
-msgstr "Προς"
 
 msgid "Cc"
 msgstr "Κοιν."
@@ -3632,6 +4093,17 @@ msgstr "Αποθήκευση νέων επαφών στο"
 msgid "Unless another is picked when the contact is made."
 msgstr "Εκτός αν επιλεγεί άλλος κατά τη δημιουργία της επαφής."
 
+#, fuzzy
+msgid "In Mail"
+msgstr "Αλληλογραφία"
+
+#, fuzzy
+msgid "Show names from Contacts"
+msgstr "Από τις επαφές"
+
+msgid "Saved addresses show the contact's name, not the mail's."
+msgstr ""
+
 msgid "Layout"
 msgstr "Διάταξη"
 
@@ -3738,9 +4210,6 @@ msgstr "Προβολή φωτογραφίας"
 msgid "Add to Contacts"
 msgstr "Προσθήκη στις επαφές"
 
-msgid "Email"
-msgstr "Email"
-
 msgid "Phone"
 msgstr "Τηλέφωνο"
 
@@ -3819,9 +4288,6 @@ msgstr "Ψευδώνυμο"
 
 msgid "Organization"
 msgstr "Οργανισμός"
-
-msgid "Title"
-msgstr "Τίτλος"
 
 msgid "Another book moves the contact there when saved."
 msgstr ""
@@ -3947,6 +4413,9 @@ msgstr "Επώνυμο"
 
 msgid "Sort and filter contacts"
 msgstr "Ταξινόμηση και φιλτράρισμα επαφών"
+
+msgid "Groups"
+msgstr "Αριστερή ομάδα"
 
 msgid "Import Contacts"
 msgstr "Εισαγωγή επαφών"
@@ -4213,6 +4682,79 @@ msgstr ""
 msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} από {total}"
 
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr ""
+
+msgid "No row has an address to send to."
+msgstr ""
+
+#, fuzzy
+msgid "Text"
+msgstr "Μέγεθος κειμένου"
+
+#, fuzzy
+msgid "In {places}"
+msgstr "Στον φάκελο {folder}"
+
+msgid "Mail Merge"
+msgstr ""
+
+#, fuzzy
+msgid "Send to"
+msgstr "Αποστολή τώρα"
+
+#, fuzzy
+msgid "A CSV file"
+msgstr "Όλα τα αρχεία"
+
+#, fuzzy
+msgid "CSV file"
+msgstr "Αρχείο ήχου"
+
+msgid "Its first row names the fields."
+msgstr ""
+
+msgid "Choose…"
+msgstr "Επιλογή…"
+
+msgid "Fields"
+msgstr ""
+
+#, fuzzy
+msgid "Leave these fields empty"
+msgstr "Διατήρηση ανοιχτού πεδίου αναζήτησης"
+
+#, fuzzy
+msgid "{n} of {total}"
+msgstr "{shown} από {total}"
+
+#, fuzzy
+msgid "Not in {source}"
+msgstr "Δεν ανήκει σε ομάδα"
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] "Εύρεση στο μήνυμα"
+msgstr[1] "Εύρεση στο μήνυμα"
+
+#, fuzzy
+msgid "Choose a CSV File"
+msgstr "Επιλογή εικόνας"
+
+#, fuzzy
+msgid "CSV files"
+msgstr "Αρχεία vCard"
+
+#, fuzzy
+msgid "The file could not be read: {error}"
+msgstr "Δεν ήταν δυνατή η πρόσβαση στην υπηρεσία: {e}"
+
 msgid "No Messages"
 msgstr "Δεν υπάρχουν μηνύματα"
 
@@ -4227,6 +4769,15 @@ msgstr "Κανένα μήνυμα εδώ δεν πληροί τα φίλτρα."
 
 msgid "Clear selection"
 msgstr "Εκκαθάριση επιλογής"
+
+#. The scope button beside it says where it looks.
+#, fuzzy
+msgid "Search…"
+msgstr "Αναζήτηση…"
+
+#, fuzzy
+msgid "Searching the server…"
+msgstr "Αναζήτηση…"
 
 msgid "Choose which folders to search"
 msgstr "Επιλέξτε τους φακέλους αναζήτησης"
@@ -4291,24 +4842,14 @@ msgstr "Μόνο ο φάκελος ή η προβολή που εμφανίζε�
 msgid "What this searches"
 msgstr "Τι αναζητά αυτή η επιλογή"
 
-msgid "Search all folders but Trash and Junk"
-msgstr "Αναζήτηση σε όλους τους φακέλους εκτός από Κάδο και Ανεπιθύμητα"
-
-msgid "Search all folders, Trash and Junk too"
-msgstr ""
-"Αναζήτηση σε όλους τους φακέλους, συμπεριλαμβανομένων Κάδου και Ανεπιθύμητων"
-
-msgid "Search this folder"
-msgstr "Αναζήτηση σε αυτόν τον φάκελο"
-
 msgid "me"
 msgstr "εγώ"
 
+msgid "To:"
+msgstr "Προς:"
+
 msgid "Show conversation"
 msgstr "Εμφάνιση συζήτησης"
-
-msgid "Due"
-msgstr "Λήξη"
 
 msgid "Drag to resize, double-click for the usual width"
 msgstr "Σύρετε για αλλαγή μεγέθους, κάντε διπλό κλικ για το συνηθισμένο πλάτος"
@@ -4328,18 +4869,18 @@ msgstr "Σήμανση ως μη αναγνωσμένο"
 msgid "Remove star"
 msgstr "Αφαίρεση αστεριού"
 
+msgid "High importance"
+msgstr "Υψηλή σημασία"
+
+msgid "Low importance"
+msgstr "Χαμηλή σπουδαιότητα"
+
 msgid "Forwarded"
 msgstr "Προωθήθηκε"
 
 #, fuzzy
 msgid "Snoozed until {when}"
 msgstr "Προγραμματισμένο για {when}"
-
-msgid "High importance"
-msgstr "Υψηλή σημασία"
-
-msgid "Low importance"
-msgstr "Χαμηλή σπουδαιότητα"
 
 msgid "In {folder}"
 msgstr "Στον φάκελο {folder}"
@@ -4509,9 +5050,6 @@ msgstr "Εμφάνιση απομακρυσμένου περιεχομένου"
 msgid "Block remote content"
 msgstr "Αποκλεισμός απομακρυσμένου περιεχομένου"
 
-msgid "Received"
-msgstr "Ελήφθη"
-
 msgid "Click to open this message"
 msgstr "Κάντε κλικ για να ανοίξετε αυτό το μήνυμα"
 
@@ -4665,9 +5203,6 @@ msgstr ""
 msgid "From:"
 msgstr "Από:"
 
-msgid "To:"
-msgstr "Προς:"
-
 msgid "Cc:"
 msgstr "Κοιν.:"
 
@@ -4679,6 +5214,25 @@ msgstr "Ημερομηνία:"
 
 msgid "Message"
 msgstr "Μήνυμα"
+
+msgid "{name} asked for a read receipt."
+msgstr ""
+
+msgid "{name} asked for a read receipt, to be sent to {addr}."
+msgstr ""
+
+msgid "Send Receipt"
+msgstr ""
+
+#, fuzzy
+msgid "Tells the sender you opened this message"
+msgstr "Απάντηση σε όλους σε αυτό το μήνυμα"
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Sends nothing and stops asking"
+msgstr ""
 
 msgid "Copied"
 msgstr "Αντιγράφηκε"
@@ -5157,6 +5711,88 @@ msgstr "Αιώρα"
 msgid "Custom File"
 msgstr "Προσαρμοσμένο αρχείο"
 
+#, fuzzy
+msgid "Downloading: {done} of {total}"
+msgstr "Φάκελος {done} από {total}"
+
+#, fuzzy
+msgid "Not available for this computer."
+msgstr "Δεν υπάρχει φάκελος Προχείρων για αυτόν τον λογαριασμό"
+
+#, fuzzy
+msgid "Version {version}, on this computer."
+msgstr "Hylki, σε αυτόν τον υπολογιστή"
+
+msgid "Not downloaded yet. The download is {size}."
+msgstr ""
+
+#, fuzzy
+msgid "The files could not be removed."
+msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
+
+msgid "The download stopped unexpectedly."
+msgstr ""
+
+msgid "Grammar"
+msgstr ""
+
+msgid "Check grammar and style"
+msgstr ""
+
+#, fuzzy
+msgid "Right-click a marked phrase for suggestions."
+msgstr "Κάντε δεξί κλικ σε μια λέξη για διορθώσεις."
+
+#, fuzzy
+msgid "Checker"
+msgstr "Έλεγχος"
+
+msgid "Harper"
+msgstr ""
+
+#, fuzzy
+msgid "LanguageTool"
+msgstr "Γλώσσα"
+
+#, fuzzy
+msgid "LanguageTool server"
+msgstr "Γλώσσες"
+
+msgid "English only. Nothing leaves this computer."
+msgstr ""
+
+msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
+msgstr ""
+
+#, fuzzy
+msgid "What you write is sent to the server as you type."
+msgstr "Αυτός ο φάκελος δεν υπάρχει στον διακομιστή"
+
+msgid "Username (LanguageTool Premium)"
+msgstr ""
+
+msgid "API key (LanguageTool Premium)"
+msgstr ""
+
+msgid "Check the settings"
+msgstr "Ελέγξτε τις ρυθμίσεις"
+
+#, fuzzy
+msgid "Sends a test sentence to the server."
+msgstr "Δεν ήταν δυνατή η σύνδεση με τον διακομιστή."
+
+msgid "Check"
+msgstr "Έλεγχος"
+
+msgid "Checking…"
+msgstr "Έλεγχος…"
+
+msgid "The check stopped unexpectedly."
+msgstr ""
+
+msgid "It works: {server} answered."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Μηνύματα που έχουν ήδη αναγνωστεί"
 
@@ -5270,9 +5906,6 @@ msgstr "Ο τελευταίος φάκελος"
 
 msgid "Left"
 msgstr "Αριστερά"
-
-msgid "Right"
-msgstr "Δεξιά"
 
 msgid "1 line"
 msgstr "1 γραμμή"
@@ -5492,6 +6125,13 @@ msgstr ""
 msgid "Show sender and subject"
 msgstr "Εμφάνιση αποστολέα και θέματος"
 
+#, fuzzy
+msgid "Read receipts"
+msgstr "Απόκρυψη παραληπτών"
+
+msgid "When someone opens mail you asked a receipt for."
+msgstr ""
+
 msgid "Sound for new mail"
 msgstr "Ήχος για νέα αλληλογραφία"
 
@@ -5503,9 +6143,6 @@ msgstr "Αναπαραγωγή"
 
 msgid "Sound file"
 msgstr "Αρχείο ήχου"
-
-msgid "Choose…"
-msgstr "Επιλογή…"
 
 msgid "Also play while Hylki is in front"
 msgstr "Αναπαραγωγή ήχου και όταν το Hylki βρίσκεται στο προσκήνιο"
@@ -5624,6 +6261,12 @@ msgstr ""
 "Το απομακρυσμένο περιεχόμενο μπορεί να ενημερώσει τον αποστολέα για το πότε "
 "και πού διαβάσατε το μήνυμα."
 
+msgid "Pre-load remote content for the next messages"
+msgstr ""
+
+msgid "Their senders can tell they were opened."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Προειδοποίηση όταν αποκλείεται απομακρυσμένο περιεχόμενο"
 
@@ -5656,6 +6299,13 @@ msgid ""
 msgstr ""
 "Τα περισσότερα λαμβάνονται από τον τομέα του αποστολέα, ο οποίος μαθαίνει τη "
 "διεύθυνση IP σας."
+
+#, fuzzy
+msgid "Send read receipts"
+msgstr "Απόκρυψη παραληπτών"
+
+msgid "A receipt tells the sender when you opened the message."
+msgstr ""
 
 msgid "Open at startup"
 msgstr "Άνοιγμα κατά την εκκίνηση"
@@ -5724,6 +6374,12 @@ msgstr "Εμφανίζεται μόνο όταν υπάρχουν περισσό
 
 msgid "Inboxes"
 msgstr "Εισερχόμενα"
+
+msgid "Snoozed"
+msgstr ""
+
+msgid "Shown only while mail is snoozed."
+msgstr ""
 
 msgid "Unread counts"
 msgstr "Πλήθος μη αναγνωσμένων"
@@ -5873,6 +6529,9 @@ msgstr "Αποθηκεύτηκε το {name}"
 msgid "Could not save the PDF: {error}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του PDF: {error}"
 
+msgid "Filled in by Mail Merge"
+msgstr ""
+
 msgid "Custom…"
 msgstr "Προσαρμοσμένο…"
 
@@ -5885,11 +6544,14 @@ msgstr "Serif"
 msgid "Monospace"
 msgstr "Σταθερού πλάτους"
 
+msgid "Grammar check failed: {error}"
+msgstr ""
+
+msgid "No suggestions"
+msgstr ""
+
 msgid "Spelling Language"
 msgstr "Γλώσσα ορθογραφικού ελέγχου"
-
-msgid "Normal"
-msgstr "Κανονική"
 
 msgid "Heading 1"
 msgstr "Επικεφαλίδα 1"
@@ -6111,14 +6773,8 @@ msgstr "Κλειδί"
 msgid "Region (empty for a global resource)"
 msgstr "Περιοχή (κενό για καθολικό πόρο)"
 
-msgid "Check the settings"
-msgstr "Ελέγξτε τις ρυθμίσεις"
-
 msgid "Translates a greeting to test the service."
 msgstr "Μεταφράζει έναν χαιρετισμό για να δοκιμάσει την υπηρεσία."
-
-msgid "Check"
-msgstr "Έλεγχος"
 
 msgid "Messages"
 msgstr "Μηνύματα"
@@ -6139,9 +6795,6 @@ msgstr ""
 msgid "Key (if the server asks for one)"
 msgstr "Κλειδί (αν το ζητά ο διακομιστής)"
 
-msgid "Checking…"
-msgstr "Έλεγχος…"
-
 msgid "It works: “{sent}” came back as “{back}”."
 msgstr "Λειτουργεί: το «{sent}» επέστρεψε ως «{back}»."
 
@@ -6150,9 +6803,6 @@ msgstr "Σύνδεση"
 
 msgid "The sign-in window was closed."
 msgstr "Το παράθυρο σύνδεσης έκλεισε."
-
-msgid "Add"
-msgstr "Προσθήκη"
 
 msgid "✓ {email} — added"
 msgstr "✓ {email} — προστέθηκε"
@@ -6434,8 +7084,9 @@ msgstr "Η αναίρεση απέτυχε: {e}"
 msgid "Could not create folder: {e}"
 msgstr "Δεν ήταν δυνατή η δημιουργία φακέλου: {e}"
 
-msgid "Could not rename folder: unknown folder"
-msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"
+#, fuzzy
+msgid "the folder it goes in is gone"
+msgstr "Μόνο ο φάκελος ή η προβολή που εμφανίζεται στη λίστα."
 
 msgid "Could not rename folder: {e}"
 msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: {e}"
@@ -6550,6 +7201,43 @@ msgstr "Αυτός ο φάκελος δεν υπάρχει στον διακομ
 
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Δεν ήταν δυνατή η επικοινωνία με τον διακομιστή JMAP: {e}"
+
+msgid "Mail on this computer is not sent, and has no drafts"
+msgstr ""
+
+msgid "Mail is not sent from On This Computer: choose another From address"
+msgstr ""
+
+#, fuzzy
+msgid "Could not import {path}: {e}"
+msgstr "Δεν ήταν δυνατή η εισαγωγή: {e}"
+
+#, fuzzy
+msgid "Importing {done} of {total} messages…"
+msgstr "Φάκελος {done} από {total}"
+
+#, fuzzy
+msgid "A folder by that name already exists"
+msgstr "Υπάρχει ήδη φάκελος με όνομα {new_name}."
+
+msgid "The folder still holds mail"
+msgstr ""
+
+#, fuzzy
+msgid "That is not a folder name"
+msgstr "Αυτός ο φάκελος"
+
+#, fuzzy
+msgid "Could not store the message: {e}"
+msgstr "Δεν ήταν δυνατή η αποθήκευση του μηνύματος: {e}"
+
+#, fuzzy
+msgid "Could not open the folders on this computer: {e}"
+msgstr "Δεν ήταν δυνατό το άδειασμα του φακέλου: {e}"
+
+#, fuzzy
+msgid "Reading {n} messages…"
+msgstr "Ευρετηρίαση {n} μηνυμάτων…"
 
 #. Nothing failed: the message waits for the network, which the
 #. Refresh button already shows is down (#442).
@@ -6878,6 +7566,50 @@ msgstr ""
 "παλαιότερα από αυτό το διάστημα μεταφέρονται στον Κάδο, εκτός αν έχουν "
 "αστέρι."
 
+msgid "Keep mail cached"
+msgstr ""
+
+msgid "Leaves out Trash, Junk and Drafts."
+msgstr ""
+
+#, fuzzy
+msgid "Include attachments"
+msgstr "Δεν υπάρχουν συνημμένα"
+
+msgid "Can consume a lot of hard drive space."
+msgstr ""
+
+#, fuzzy
+msgid "Copy mail to On This Computer"
+msgstr "Σε αυτόν τον υπολογιστή"
+
+msgid ""
+"Downloads copies of every message from every folder of this account to this "
+"computer (except Trash, Junk and Drafts) and stores them in On This Computer."
+msgstr ""
+
+#, fuzzy
+msgid "Import"
+msgstr "Εισαγωγή…"
+
+msgid "Mail already here is not imported again."
+msgstr ""
+
+#, fuzzy
+msgid "Maildir folders"
+msgstr "Όλοι οι φάκελοι"
+
+msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
+msgstr ""
+
+#, fuzzy
+msgid "Mbox files"
+msgstr "Όλα τα αρχεία"
+
+#, fuzzy
+msgid "Thunderbird's folders and other mbox files."
+msgstr "Οι φάκελοι κάτω από τη σειρά Φίλτρα."
+
 msgid "Microsoft 365"
 msgstr "Microsoft 365"
 
@@ -6935,9 +7667,6 @@ msgstr ""
 
 msgid "Templates"
 msgstr "Πρότυπα"
-
-msgid "Snoozed"
-msgstr ""
 
 msgid "Hidden Folders"
 msgstr "Κρυφοί φάκελοι"
@@ -7190,11 +7919,36 @@ msgid "The standard “-- ” line, which other mail apps recognize."
 msgstr ""
 "Η τυπική γραμμή «-- », την οποία αναγνωρίζουν άλλες εφαρμογές αλληλογραφίας."
 
+#, fuzzy
+msgid "Fold quoted text"
+msgstr "Εμφάνιση παρατιθέμενου κειμένου"
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr ""
+
 msgid "Undo Send"
 msgstr "Αναίρεση αποστολής"
 
 msgid "How long Undo is offered after sending."
 msgstr "Για πόσο χρόνο είναι διαθέσιμη η αναίρεση μετά την αποστολή."
+
+msgid "Request read receipts"
+msgstr ""
+
+#, fuzzy
+msgid "Returned receipts"
+msgstr "Απόκρυψη παραληπτών"
+
+msgid "Sent mail shows who read it; the receipt goes here."
+msgstr ""
+
+#, fuzzy
+msgid "Move to Trash"
+msgstr "Μετακίνηση αλληλογραφίας λιστών στον Κάδο"
+
+#, fuzzy
+msgid "Keep in Inbox"
+msgstr "Παραμονή στα Εισερχόμενα"
 
 #, fuzzy
 msgid "Reply Header"
@@ -7240,6 +7994,13 @@ msgstr "Εναλλαγή φωτεινής / σκοτεινής λειτουργ�
 
 msgid "Displays in the message header for each message."
 msgstr "Εμφανίζεται στην κεφαλίδα κάθε μηνύματος."
+
+#, fuzzy
+msgid "Show account in message header"
+msgstr "Εμφάνιση διακόπτη Προβολής ανάγνωσης στην κεφαλίδα μηνύματος"
+
+msgid "The account a message is in, above its subject."
+msgstr ""
 
 msgid "Ctrl+0 returns to the default."
 msgstr "Το Ctrl+0 επαναφέρει την προεπιλογή."
@@ -7423,6 +8184,9 @@ msgstr "Αφαίρεση…"
 
 msgid "Keep downloaded mail"
 msgstr "Διατήρηση ληφθέντων μηνυμάτων"
+
+msgid "Mail inside an account's offline period is kept."
+msgstr ""
 
 msgid "GNOME Files Integration"
 msgstr "Ενσωμάτωση με τα Αρχεία GNOME"
@@ -7641,6 +8405,23 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 msgid "Hyprlab"
 msgstr "Hyprlab"
 
+#~ msgid "Could not rename folder: unknown folder"
+#~ msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"
+
+#~ msgid "Received"
+#~ msgstr "Ελήφθη"
+
+#~ msgid "Search all folders but Trash and Junk"
+#~ msgstr "Αναζήτηση σε όλους τους φακέλους εκτός από Κάδο και Ανεπιθύμητα"
+
+#~ msgid "Search all folders, Trash and Junk too"
+#~ msgstr ""
+#~ "Αναζήτηση σε όλους τους φακέλους, συμπεριλαμβανομένων Κάδου και "
+#~ "Ανεπιθύμητων"
+
+#~ msgid "Search this folder"
+#~ msgstr "Αναζήτηση σε αυτόν τον φάκελο"
+
 #, fuzzy
 #~ msgid "Same as messages"
 #~ msgstr "Μηνύματα email"
@@ -7649,9 +8430,6 @@ msgstr "Hyprlab"
 #~ msgstr ""
 #~ "Αφήστε το στα Εισερχόμενα για να επισημαίνεται μόνο η αλληλογραφία που "
 #~ "ταιριάζει"
-
-#~ msgid "Leave in Inbox"
-#~ msgstr "Παραμονή στα Εισερχόμενα"
 
 #~ msgid ""
 #~ "Which browser a link in a message opens in. Inside its Flatpak sandbox "
@@ -8241,9 +9019,6 @@ msgstr "Hyprlab"
 
 #~ msgid "The account list under the unified Trash row."
 #~ msgstr "Η λίστα λογαριασμών κάτω από την ενοποιημένη γραμμή Κάδος."
-
-#~ msgid "The folders under the Filters row."
-#~ msgstr "Οι φάκελοι κάτω από τη σειρά Φίλτρα."
 
 #~ msgid "The tags under the Tags row."
 #~ msgstr "Οι ετικέτες κάτω από τη σειρά Ετικέτες."
@@ -8923,9 +9698,6 @@ msgstr "Hyprlab"
 
 #~ msgid "All Contacts"
 #~ msgstr "Επαφές"
-
-#~ msgid "Groups"
-#~ msgstr "Αριστερή ομάδα"
 
 #~ msgid "Search groups"
 #~ msgstr "Αναζήτηση φίλτρων"

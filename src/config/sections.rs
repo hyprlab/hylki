@@ -16,8 +16,9 @@ pub(crate) fn load_unified_chips() -> UnifiedChips {
 
 /// Which of the unified section's folder rows are shown besides All
 /// Inboxes: each combines that folder across every account, and opens to
-/// the accounts' own. Starred, Sent, Drafts and Archive are on until
-/// switched off; Trash and Junk (#369) are off until switched on.
+/// the accounts' own. Starred, Sent, Drafts, Archive and Snoozed (#542)
+/// are on until switched off, Snoozed listed only while mail is snoozed;
+/// Trash and Junk (#369) are off until switched on.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub(crate) struct UnifiedKinds {
     #[serde(default = "default_on")]
@@ -32,6 +33,8 @@ pub(crate) struct UnifiedKinds {
     pub(crate) junk: bool,
     #[serde(default)]
     pub(crate) trash: bool,
+    #[serde(default = "default_on")]
+    pub(crate) snoozed: bool,
 }
 
 impl Default for UnifiedKinds {
@@ -43,6 +46,7 @@ impl Default for UnifiedKinds {
             archive: true,
             junk: false,
             trash: false,
+            snoozed: true,
         }
     }
 }
@@ -64,6 +68,8 @@ pub(crate) struct UnifiedChips {
     pub(crate) junk: bool,
     #[serde(default = "default_on")]
     pub(crate) trash: bool,
+    #[serde(default = "default_on")]
+    pub(crate) snoozed: bool,
 }
 
 impl Default for UnifiedChips {
@@ -75,6 +81,7 @@ impl Default for UnifiedChips {
             archive: true,
             junk: true,
             trash: true,
+            snoozed: true,
         }
     }
 }
@@ -90,6 +97,7 @@ impl UnifiedChips {
             Archive => self.archive,
             Junk => self.junk,
             Trash => self.trash,
+            Snoozed => self.snoozed,
             _ => false,
         }
     }
@@ -103,6 +111,7 @@ impl UnifiedKinds {
         archive: false,
         junk: false,
         trash: false,
+        snoozed: false,
     };
 
     /// Whether the row for `kind` is on (Inbox and custom folders have none
@@ -116,6 +125,7 @@ impl UnifiedKinds {
             Archive => self.archive,
             Junk => self.junk,
             Trash => self.trash,
+            Snoozed => self.snoozed,
             _ => false,
         }
     }
@@ -123,7 +133,7 @@ impl UnifiedKinds {
     /// The kinds with a row, in sidebar order: an account's own order.
     pub(crate) fn listed(self) -> Vec<crate::models::FolderKind> {
         use crate::models::FolderKind::*;
-        [Starred, Sent, Drafts, Archive, Junk, Trash]
+        [Starred, Sent, Drafts, Archive, Junk, Trash, Snoozed]
             .into_iter()
             .filter(|k| self.has(*k))
             .collect()
@@ -256,6 +266,8 @@ pub(crate) struct RailFold {
     pub(crate) junk: bool,
     #[serde(default = "default_on")]
     pub(crate) trash: bool,
+    #[serde(default = "default_on")]
+    pub(crate) snoozed: bool,
     /// The Filtered Folders section.
     #[serde(default = "default_on")]
     pub(crate) filtered: bool,
@@ -276,6 +288,7 @@ impl Default for RailFold {
             archive: true,
             junk: true,
             trash: true,
+            snoozed: true,
             filtered: true,
             tags: true,
         }
@@ -301,6 +314,7 @@ impl RailFold {
                 Archive => self.archive,
                 Junk => self.junk,
                 Trash => self.trash,
+                Snoozed => self.snoozed,
                 _ => false,
             }
     }

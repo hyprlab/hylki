@@ -3,7 +3,11 @@
 
 use super::{name_labels, GraphWorker};
 use crate::i18n::{i18n, i18n_f};
-use crate::worker::graph::folders::{graph_ensure_folder, refresh_graph_folders};
+use crate::models::slashed_name;
+use crate::worker::folders::restore_folders;
+use crate::worker::graph::folders::{
+    graph_ensure_folder, graph_move_folder, refresh_graph_folders,
+};
 use crate::worker::graph::http::{graph_delete_req, graph_send_json, graph_token, GRAPH_BASE};
 use crate::worker::graph::index::graph_load_folder;
 use crate::worker::graph::messages::graph_list_ids;
@@ -406,73 +410,100 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
         emit(WorkerEvent::BulkComplete);
     }
 
-    /// Create a folder.
+    /// Create a folder. `path` is the app's: its last level the name, the
+    /// rest a folder the last listing knows.
     pub(super) async fn on_create_folder(&mut self, path: String) {
         let account_id = self.account_id;
         let account = &self.account;
         let cache = &self.cache;
         let state = &mut self.state;
         let emit = &|ev| name_labels(&self.account, &self.emit, ev);
+        let refused = |e: &str| {
+            emit(WorkerEvent::error(i18n_f(
+                "Could not create folder: {e}",
+                &[("e", e)],
+            )));
+            restore_folders(cache.as_ref(), account_id, emit);
+        };
         let Some(token) = graph_token(account, emit).await else {
+            restore_folders(cache.as_ref(), account_id, emit);
             return;
         };
-        // "A/B" nests under A (resolved from the last listing);
-        // otherwise a top-level folder.
-        let (url, name) = match path.rsplit_once('/') {
+        let base = &state.base;
+        let (url, leaf) = match path.rsplit_once('/') {
             Some((parent, leaf)) => match state.folders.get(parent) {
-                Some((_, pgid)) => (
-                    format!("{GRAPH_BASE}/me/mailFolders/{pgid}/childFolders"),
-                    leaf.to_string(),
-                ),
-                None => (format!("{GRAPH_BASE}/me/mailFolders"), path.clone()),
+                Some((_, pgid)) => (format!("{base}/me/mailFolders/{pgid}/childFolders"), leaf),
+                None => return refused(&i18n("the folder it goes in is gone")),
             },
-            None => (format!("{GRAPH_BASE}/me/mailFolders"), path.clone()),
+            None => (format!("{base}/me/mailFolders"), path.as_str()),
         };
         let t = token.clone();
-        let body = serde_json::json!({ "displayName": name });
+        let body = serde_json::json!({ "displayName": slashed_name(leaf) });
         let r = blocking(move || graph_send_json(&t, "POST", &url, &body)).await;
         match r {
             Ok(_) => {
                 refresh_graph_folders(&token, account_id, cache.as_ref(), state, emit).await;
             }
-            Err(e) => emit(WorkerEvent::error(i18n_f(
-                "Could not create folder: {e}",
-                &[("e", &(e).to_string())],
-            ))),
+            Err(e) => refused(&e),
         }
     }
 
-    /// Rename or move a folder.
+    /// Rename a folder, move it under another parent ("" in the path for
+    /// the top), or both: Graph moves with one call and renames with
+    /// another.
     pub(super) async fn on_rename_folder(&mut self, old_path: String, new_path: String) {
         let account_id = self.account_id;
         let account = &self.account;
         let cache = &self.cache;
         let state = &mut self.state;
         let emit = &|ev| name_labels(&self.account, &self.emit, ev);
+        let refused = |e: &str| {
+            emit(WorkerEvent::error(i18n_f(
+                "Could not rename folder: {e}",
+                &[("e", e)],
+            )));
+            restore_folders(cache.as_ref(), account_id, emit);
+        };
         let Some(token) = graph_token(account, emit).await else {
+            restore_folders(cache.as_ref(), account_id, emit);
             return;
         };
         let Some((_, gid)) = state.folders.get(&old_path).cloned() else {
-            emit(WorkerEvent::error(i18n(
-                "Could not rename folder: unknown folder",
-            )));
-            return;
+            return refused(&i18n("unknown folder"));
         };
-        // Graph renames by displayName; moving between parents would be
-        // a different call — the sidebar only renames leaves here.
-        let leaf = new_path.rsplit('/').next().unwrap_or(&new_path).to_string();
-        let t = token.clone();
-        let url = format!("{GRAPH_BASE}/me/mailFolders/{gid}");
-        let body = serde_json::json!({ "displayName": leaf });
-        let r = blocking(move || graph_send_json(&t, "PATCH", &url, &body)).await;
+        let split = |p: &str| match p.rsplit_once('/') {
+            Some((parent, leaf)) => (parent.to_string(), leaf.to_string()),
+            None => (String::new(), p.to_string()),
+        };
+        let (old_parent, old_leaf) = split(&old_path);
+        let (new_parent, new_leaf) = split(&new_path);
+        let destination = if new_parent == old_parent {
+            None
+        } else if new_parent.is_empty() {
+            // The top of the mailbox is the root folder's children.
+            Some("msgfolderroot".to_string())
+        } else {
+            match state.folders.get(&new_parent) {
+                Some((_, pgid)) => Some(pgid.clone()),
+                None => return refused(&i18n("the folder it goes in is gone")),
+            }
+        };
+        let name = (new_leaf != old_leaf).then(|| slashed_name(&new_leaf));
+        let (t, base) = (token.clone(), state.base.clone());
+        let r = blocking(move || {
+            graph_move_folder(&t, &base, &gid, destination.as_deref(), name.as_deref())
+        })
+        .await;
         match r {
-            Ok(_) => {
+            Ok(()) => {
                 refresh_graph_folders(&token, account_id, cache.as_ref(), state, emit).await;
             }
-            Err(e) => emit(WorkerEvent::error(i18n_f(
-                "Could not rename folder: {e}",
-                &[("e", &(e).to_string())],
-            ))),
+            Err(e) => {
+                refused(&e);
+                // A move that went through before a refused rename: the
+                // folder is where the server has it.
+                refresh_graph_folders(&token, account_id, cache.as_ref(), state, emit).await;
+            }
         }
     }
 

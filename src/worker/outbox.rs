@@ -566,6 +566,7 @@ mod tests {
             path: path.to_string(),
             kind,
             unread: 0,
+            childless: false,
         };
         let folders = vec![
             folder(1, "INBOX", FolderKind::Inbox),
@@ -624,6 +625,7 @@ mod tests {
             path: path.to_string(),
             kind,
             unread: 0,
+            childless: false,
         };
         let folders = vec![
             folder(1, "INBOX", FolderKind::Inbox),

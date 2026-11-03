@@ -96,7 +96,8 @@ impl AccountsWindow {
         // original above (GNOME owns them; a Graph account rightly has
         // no IMAP host at all) — validating them would only block the
         // fields Hylki does own: label, signature, color, aliases.
-        let is_goa_edit = account.goa_id.is_some();
+        // On This Computer (#552) has no connection at all.
+        let is_goa_edit = account.goa_id.is_some() || account.is_local();
         if !is_goa_edit
             && (account.imap_host.is_empty()
                 || account.username.is_empty()
@@ -119,10 +120,15 @@ impl AccountsWindow {
             _ => self.accounts.push(account.clone()),
         }
         self.rebuild_account_list(&widgets.accounts.accounts_list, &sender);
+        let wants_local = account.copy_to_local;
         let _ = sender.output(AccountsOutput::Saved {
             original_email,
             account: Box::new(account),
         });
+        // Copying to On This Computer (#552) adds it when there is none.
+        if wants_local {
+            self.on_add_local(widgets, sender.clone());
+        }
         widgets.nav.pop();
     }
 
@@ -188,7 +194,12 @@ impl AccountsWindow {
         } else {
             account.name.clone()
         };
-        let body = if account.goa_id.is_some() {
+        let body = if account.is_local() {
+            i18n_f(
+                "Remove {name} from Hylki? Its folders and the mail in them stay on this computer, in {dir}, and come back if it is added again.",
+                &[("name", &name), ("dir", &super::local::shown_dir())],
+            )
+        } else if account.goa_id.is_some() {
             format!(
                 "Remove {name} from Hylki? It stays in GNOME Online Accounts \
                  and can be imported again from the list below. Mail on the \
@@ -266,5 +277,23 @@ fn keep_from_original(account: &mut AccountConfig, orig: &AccountConfig) {
         account.smtp_username = orig.smtp_username.clone();
         account.smtp_password = orig.smtp_password.clone();
         account.security = orig.security.clone();
+    }
+    // On This Computer (#552): the form shows none of what makes it what
+    // it is, and reads as a plain IMAP account.
+    if orig.is_local() {
+        let mut kept = orig.clone();
+        kept.name = account.name.clone();
+        kept.label = account.label.clone();
+        kept.color = account.color.clone();
+        kept.emoji = account.emoji.clone();
+        kept.avatar = account.avatar.clone();
+        kept.gravatar = account.gravatar;
+        kept.in_unified = account.in_unified;
+        kept.empty_junk_days = account.empty_junk_days;
+        kept.empty_trash_days = account.empty_trash_days;
+        kept.folder_sort = account.folder_sort;
+        kept.folder_roles = account.folder_roles.clone();
+        kept.hidden_folders = account.hidden_folders.clone();
+        *account = kept;
     }
 }

@@ -3,6 +3,8 @@
 
 use super::JmapWorker;
 use crate::i18n::{i18n, i18n_f};
+use crate::models::slashed_name;
+use crate::worker::folders::restore_folders;
 use crate::worker::ids::hash_uid;
 use crate::worker::index_queue::IndexQueue;
 use crate::worker::jmap::folders::{
@@ -370,53 +372,87 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         emit(WorkerEvent::BulkComplete);
     }
 
-    /// Create a mailbox.
+    /// Create a mailbox. `path` is the app's: its last level the name, the
+    /// rest a mailbox the last listing knows.
     pub(super) async fn on_create_folder(&mut self, path: String) {
         let account_id = self.account_id;
         let account = &self.account;
         let cache = &self.cache;
         let state = &mut self.state;
         let emit = &self.emit;
+        let refused = |e: &str| {
+            emit(WorkerEvent::error(i18n_f(
+                "Could not create folder: {e}",
+                &[("e", e)],
+            )));
+            restore_folders(cache.as_ref(), account_id, emit);
+        };
         let Some(s) = jmap_session(account, state, emit).await else {
+            restore_folders(cache.as_ref(), account_id, emit);
             return;
         };
-        // "A/B" nests under A (resolved from the last listing);
-        // otherwise a top-level mailbox.
-        let (parent, name) = match path.rsplit_once('/') {
+        let (parent, leaf) = match path.rsplit_once('/') {
             Some((parent, leaf)) => match state.folders.get(parent) {
-                Some((_, pid)) => (Some(pid.clone()), leaf.to_string()),
-                None => (None, path.clone()),
+                Some((_, pid)) => (Some(pid.clone()), leaf),
+                None => return refused(&i18n("the folder it goes in is gone")),
             },
-            None => (None, path.clone()),
+            None => (None, path.as_str()),
         };
+        let name = slashed_name(leaf);
         let sess = s.clone();
         let r = blocking(move || jmap_create_mailbox(&sess, &name, parent.as_deref())).await;
         match r {
             Ok(_) => refresh_jmap_folders(&s, account_id, cache.as_ref(), state, emit).await,
-            Err(e) => emit(WorkerEvent::error(i18n_f(
-                "Could not create folder: {e}",
-                &[("e", &e)],
-            ))),
+            Err(e) => refused(&e),
         }
     }
 
-    /// Rename or move a mailbox.
+    /// Rename a mailbox, move it under another parent ("" in the path for
+    /// the top), or both: one `Mailbox/set` either way.
     pub(super) async fn on_rename_folder(&mut self, old_path: String, new_path: String) {
         let account_id = self.account_id;
         let account = &self.account;
         let cache = &self.cache;
         let state = &mut self.state;
         let emit = &self.emit;
+        let refused = |e: &str| {
+            emit(WorkerEvent::error(i18n_f(
+                "Could not rename folder: {e}",
+                &[("e", e)],
+            )));
+            restore_folders(cache.as_ref(), account_id, emit);
+        };
         let Some(s) = jmap_session(account, state, emit).await else {
+            restore_folders(cache.as_ref(), account_id, emit);
             return;
         };
         let Some((_, id)) = state.folders.get(&old_path).cloned() else {
-            emit(WorkerEvent::error(i18n(
-                "Could not rename folder: unknown folder",
-            )));
-            return;
+            return refused(&i18n("unknown folder"));
         };
-        let leaf = new_path.rsplit('/').next().unwrap_or(&new_path).to_string();
+        let split = |p: &str| match p.rsplit_once('/') {
+            Some((parent, leaf)) => (parent.to_string(), leaf.to_string()),
+            None => (String::new(), p.to_string()),
+        };
+        let (old_parent, old_leaf) = split(&old_path);
+        let (new_parent, new_leaf) = split(&new_path);
+        let mut update = serde_json::Map::new();
+        if new_leaf != old_leaf {
+            update.insert("name".into(), slashed_name(&new_leaf).into());
+        }
+        if new_parent != old_parent {
+            let parent_id = if new_parent.is_empty() {
+                serde_json::Value::Null
+            } else {
+                match state.folders.get(&new_parent) {
+                    Some((_, pid)) => pid.clone().into(),
+                    None => return refused(&i18n("the folder it goes in is gone")),
+                }
+            };
+            update.insert("parentId".into(), parent_id);
+        }
+        if update.is_empty() {
+            return;
+        }
         let sess = s.clone();
         let r = blocking(move || {
             let r = jmap_call(
@@ -427,7 +463,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
                     "Mailbox/set",
                     serde_json::json!({
                         "accountId": sess.account,
-                        "update": { id.clone(): { "name": leaf } },
+                        "update": { id.clone(): update },
                     }),
                 )],
             )?;
@@ -447,10 +483,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         .await;
         match r {
             Ok(()) => refresh_jmap_folders(&s, account_id, cache.as_ref(), state, emit).await,
-            Err(e) => emit(WorkerEvent::error(i18n_f(
-                "Could not rename folder: {e}",
-                &[("e", &e)],
-            ))),
+            Err(e) => refused(&e),
         }
     }
 

@@ -249,5 +249,6 @@ fn folder(id: u32, account_id: u32, name: &str, kind: FolderKind, unread: u32) -
         path: name.into(),
         kind,
         unread,
+        childless: false,
     }
 }

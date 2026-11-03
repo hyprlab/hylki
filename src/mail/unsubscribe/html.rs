@@ -3,6 +3,7 @@
 
 use super::action::parse_mailto;
 use super::body::{has_strong, link_score, squash, BodyFindings};
+use crate::encoding::unescape_html;
 
 /// Every anchor in an HTML body, scored.
 pub(super) fn scan_html(html: &str) -> BodyFindings {
@@ -28,7 +29,7 @@ pub(super) fn scan_html(html: &str) -> BodyFindings {
         let inner = &html[tag_end + 1..inner_end];
         pos = inner_end;
 
-        let Some(href) = attr(tag, "href").map(|h| decode_entities(&h)) else {
+        let Some(href) = attr(tag, "href").map(|h| unescape_html(&h)) else {
             continue;
         };
         let href = href.trim().to_string();
@@ -36,7 +37,7 @@ pub(super) fn scan_html(html: &str) -> BodyFindings {
         for a in ["title", "aria-label"] {
             if let Some(v) = attr(tag, a) {
                 text.push(' ');
-                text.push_str(&decode_entities(&v));
+                text.push_str(&unescape_html(&v));
             }
         }
         // The sentence around the link, for a "click here". Both sides
@@ -166,57 +167,8 @@ fn tag_text(html: &str) -> String {
         rest = &after[gt + 1..];
     }
     out.push_str(rest);
-    let decoded = decode_entities(&out);
+    let decoded = unescape_html(&out);
     decoded.split_whitespace().collect::<Vec<_>>().join(" ")
-}
-
-/// The handful of entities mail bodies use, decoded.
-fn decode_entities(s: &str) -> String {
-    if !s.contains('&') {
-        return s.to_string();
-    }
-    let mut out = String::with_capacity(s.len());
-    let mut rest = s;
-    while let Some(amp) = rest.find('&') {
-        out.push_str(&rest[..amp]);
-        let after = &rest[amp + 1..];
-        let Some(semi) = after.find(';').filter(|&i| i <= 10) else {
-            out.push('&');
-            rest = after;
-            continue;
-        };
-        let name = &after[..semi];
-        let replacement = match name {
-            "amp" => Some('&'),
-            "lt" => Some('<'),
-            "gt" => Some('>'),
-            "quot" => Some('"'),
-            "apos" => Some('\''),
-            "nbsp" => Some(' '),
-            _ => name
-                .strip_prefix('#')
-                .and_then(|n| {
-                    if let Some(h) = n.strip_prefix(['x', 'X']) {
-                        u32::from_str_radix(h, 16).ok()
-                    } else {
-                        n.parse::<u32>().ok()
-                    }
-                })
-                .and_then(char::from_u32),
-        };
-        match replacement {
-            Some(c) => {
-                out.push(c);
-                rest = &after[semi + 1..];
-            }
-            None => {
-                out.push('&');
-                rest = after;
-            }
-        }
-    }
-    out.push_str(rest);
-    out
 }
 
 #[cfg(test)]
@@ -226,7 +178,7 @@ mod tests {
     #[test]
     fn entities_and_attributes_are_read() {
         assert_eq!(
-            decode_entities("a &amp; b &#39;c&#x27; &nbsp;d &unknown; e"),
+            unescape_html("a &amp; b &#39;c&#x27; &nbsp;d &unknown; e"),
             "a & b 'c'  d &unknown; e"
         );
         assert_eq!(

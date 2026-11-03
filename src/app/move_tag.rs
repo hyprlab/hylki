@@ -164,6 +164,49 @@ impl AppModel {
                 );
             }
 
+            AppMsg::ListCopyTo {
+                messages,
+                offer_whole,
+                x,
+                y,
+            } => {
+                let Some(first) = messages.first() else {
+                    return;
+                };
+                let accounts = self.copy_picker_accounts(first.account_id, None);
+                if accounts.is_empty() {
+                    return;
+                }
+                let conversation = offer_whole.then_some(messages.len());
+                let s = sender.input_sender().clone();
+                let window = self.window.clone();
+                crate::ui::folder_picker::show_folder_picker(
+                    &window,
+                    x,
+                    y,
+                    accounts,
+                    conversation,
+                    move |account_id, dest, whole| {
+                        let picked = if offer_whole && !whole {
+                            messages[..1].to_vec()
+                        } else {
+                            messages.clone()
+                        };
+                        let _ = s.send(AppMsg::CopyMessagesTo {
+                            account_id,
+                            dest,
+                            messages: picked,
+                        });
+                    },
+                );
+            }
+
+            AppMsg::CopyMessagesTo {
+                account_id,
+                dest,
+                messages,
+            } => self.copy_messages(messages, account_id, dest),
+
             AppMsg::MoveMessagesTo {
                 account_id,
                 dest,

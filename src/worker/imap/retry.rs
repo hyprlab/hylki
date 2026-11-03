@@ -4,7 +4,7 @@
 use crate::cache::Cache;
 use crate::config::AccountConfig;
 use crate::models::Message;
-use crate::worker::imap::bodies::{load_bodies, load_body, load_raw, load_source};
+use crate::worker::imap::bodies::{load_bodies, load_body, load_raw, load_raws, load_source};
 use crate::worker::imap::connect::connect;
 use crate::worker::imap::fetch_mode::{is_parse_error, previews_rejected, step_fetch_mode};
 use crate::worker::imap::sync::load_messages;
@@ -111,6 +111,16 @@ pub(super) async fn load_body_retry(
     uid: u32,
 ) -> Result<(String, crate::models::SenderCheck, bool), async_imap::error::Error> {
     with_one_retry(session, account, async |s| load_body(s, path, uid).await).await
+}
+
+/// [`load_raws`] with [`load_body_retry`]'s one reconnect-and-retry.
+pub(super) async fn load_raws_retry(
+    session: &mut Option<ImapSession>,
+    account: &AccountConfig,
+    path: &str,
+    uids: &[u32],
+) -> Result<std::collections::HashMap<u32, Vec<u8>>, async_imap::error::Error> {
+    with_one_retry(session, account, async |s| load_raws(s, path, uids).await).await
 }
 
 /// [`load_bodies`] with [`load_body_retry`]'s one reconnect-and-retry.

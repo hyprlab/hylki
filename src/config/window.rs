@@ -53,6 +53,8 @@ pub(crate) struct SidebarState {
     pub(crate) junk_expanded: bool,
     #[serde(default)]
     pub(crate) trash_expanded: bool,
+    #[serde(default)]
+    pub(crate) snoozed_expanded: bool,
     /// Folders picked as favorites (#367), as "email\tpath" entries in the
     /// order they were added, and whether their list is open.
     #[serde(default)]

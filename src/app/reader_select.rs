@@ -6,7 +6,7 @@ use relm4::prelude::*;
 use crate::config;
 use crate::models::{thread_ids, Message, ThreadSummary};
 use crate::ui::contacts_page::ContactsPageInput;
-use crate::ui::message_list::{MessageListInput, QuickFilters};
+use crate::ui::message_list::{DateBound, MessageListInput, QuickFilters};
 use crate::ui::message_view::MessageViewInput;
 use crate::worker::MailRequest;
 
@@ -61,7 +61,15 @@ impl AppModel {
     pub(super) fn on_reader_select(&mut self, msg: AppMsg, sender: ComponentSender<Self>) {
         match msg {
             AppMsg::OpenedByKey { already_open } => {
-                if already_open {
+                if !self.reader_shown() {
+                    // No pane to read it in: Gmail's o or Enter opens a
+                    // window, now or once the row is selected (#475).
+                    if already_open {
+                        self.open_selected_window(&sender);
+                    } else {
+                        self.reader_focus_pending = true;
+                    }
+                } else if already_open {
                     self.message_view.emit(MessageViewInput::FocusBody);
                 } else {
                     self.reader_focus_pending = true;
@@ -75,7 +83,11 @@ impl AppModel {
                 message: m,
                 thread,
                 solo,
-            } => self.on_message_selected(m, thread, solo, sender),
+                ahead,
+            } => {
+                self.on_message_selected(m, thread, solo, sender);
+                self.fetch_remote_ahead(&ahead);
+            }
 
             AppMsg::ThreadGrew { message: m, thread } => self.on_thread_grew(m, thread),
 
@@ -157,6 +169,16 @@ impl AppModel {
 
             AppMsg::SetQuickFilter(f, on) => self.set_quick_filters(self.quick_filters.with(f, on)),
 
+            AppMsg::SetFilterDate(end, day) => {
+                self.set_quick_filters(self.quick_filters.with_date(end, day))
+            }
+
+            AppMsg::ClearFilterDates => self.set_quick_filters(
+                self.quick_filters
+                    .with_date(DateBound::From, None)
+                    .with_date(DateBound::To, None),
+            ),
+
             AppMsg::ClearQuickFilters => self.set_quick_filters(QuickFilters::default()),
 
             AppMsg::DeferredMarkRead { message } => {
@@ -227,13 +249,15 @@ impl AppModel {
             }
 
             AppMsg::RenderThread => {
-                self.thread_render_queued = false;
+                // Painted already, by a sooner call for the same render.
+                if !std::mem::take(&mut self.thread_render_queued) {
+                    return;
+                }
                 if self.current_thread.len() > 1 {
                     // Still assembling and still within the grace period: come
                     // back rather than paint a conversation that is about to be
                     // replaced. The re-queue is what makes the deadline fire.
-                    let unsettled = self.current_thread.iter().any(|m| m.body.is_empty())
-                        || self.thread_related_pending;
+                    let unsettled = !self.thread_settled();
                     let waiting = self
                         .thread_opened_at
                         .is_some_and(|opened| opened.elapsed() < THREAD_BODY_WAIT);
@@ -392,6 +416,10 @@ impl AppModel {
         solo: bool,
         sender: ComponentSender<Self>,
     ) {
+        if !self.reader_shown() {
+            self.select_without_reader(m, thread, &sender);
+            return;
+        }
         // What the reader is showing right now. A message that has just
         // been moved back arrives under a new UID, so the list hands it
         // over again as if it were a different message; rendering it a
@@ -476,7 +504,12 @@ impl AppModel {
 
         let mut related = self.related_request(&m, &thread, solo);
 
+        // Opening it changes the reader and its drawer one input at a
+        // time: freeze the pane first, so they change unseen and show
+        // together. What this update emits (the emptied drawer above
+        // included) is only handled once it returns, under the freeze.
         if thread.len() > 1 {
+            self.reader_swap.freeze();
             self.open_conversation(&m, &thread, &current, needs_body, related, &sender);
         } else {
             self.current_thread.clear();
@@ -495,10 +528,33 @@ impl AppModel {
                 }
                 return;
             }
+            self.reader_swap.freeze();
             self.show_single(&m, display, needs_body, folder_path.clone(), related);
         }
 
         self.load_attachments_on_open(&m, folder_path);
+    }
+
+    /// With the Privacy switch on, the remote content of the rows likely
+    /// opened next is fetched while this one is read (#474): only where
+    /// it would be loaded on opening anyway, and only from bodies already
+    /// here, so nothing is asked of the mail server for it.
+    fn fetch_remote_ahead(&self, ahead: &[Message]) {
+        if !self.remote_ahead {
+            return;
+        }
+        let bodies: Vec<&str> = ahead
+            .iter()
+            .filter(|m| self.remote_allowed(m))
+            .filter_map(|m| {
+                if !m.body.is_empty() {
+                    Some(m.body.as_str())
+                } else {
+                    self.body_cache.get(&body_key(m)).map(String::as_str)
+                }
+            })
+            .collect();
+        crate::services::remote_content::fetch_ahead(bodies);
     }
 
     /// Opened with Gmail's o or Enter: the keyboard follows it into
@@ -613,6 +669,10 @@ impl AppModel {
             self.load_missing_thread_bodies(Some((account_id, m.id)));
             self.thread_painted = true;
             self.thread_related_pending = false;
+            // The cards' files go in with the document (the pane is frozen
+            // meanwhile): patched in after it shows, a row of them pushes
+            // the page down.
+            self.push_card_attachments();
             self.show_thread();
             self.load_thread_attachments();
             if let Some(req) = related.take() {
@@ -657,7 +717,7 @@ impl AppModel {
     /// A lone message: its body asked for first if it is not cached, then
     /// the related lookup, then the reader shows it.
     fn show_single(
-        &self,
+        &mut self,
         m: &Message,
         display: Message,
         needs_body: bool,

@@ -50,19 +50,30 @@ impl RecipientRow {
         // Focusable for the keyboard (see `pill_key`), but Tab passes over
         // the pills (see the flow's `focus`).
         pill.set_focusable(true);
-        let valid = crate::worker::invalid_recipient(recipient).is_none();
+        // A mail merge field (#447) is an address once the merge fills it
+        // in: it wears the field palette's braces, not the error's red.
+        let field = crate::mail::merge::is_field(recipient);
+        let valid = field || crate::worker::invalid_recipient(recipient).is_none();
         if !valid {
             pill.add_css_class("invalid");
         }
         let shown = if name.is_empty() { addr } else { name };
         pill.update_property(&[gtk::accessible::Property::Label(shown)]);
+        if field {
+            let icon = gtk::Image::from_icon_name("hylki-merge-field-symbolic");
+            icon.set_pixel_size(12);
+            icon.set_margin_end(4);
+            pill.append(&icon);
+        }
         let label = gtk::Label::new(Some(shown));
         label.set_ellipsize(gtk::pango::EllipsizeMode::End);
         label.set_max_width_chars(32);
         label.set_single_line_mode(true);
         pill.append(&label);
         pill.set_tooltip_text(Some(
-            if valid {
+            if field {
+                i18n("Filled in by Mail Merge")
+            } else if valid {
                 addr.to_string()
             } else {
                 i18n_f("“{addr}” is not an email address.", &[("addr", addr)])

@@ -1,5 +1,5 @@
 //! Settings → Composing: format, reply and signature placement, undo
-//! send, and spelling.
+//! send, spelling and grammar.
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -27,7 +27,10 @@ pub(in crate::ui::preferences) struct ComposingPage {
     pub(in crate::ui::preferences) follow_plain_row: adw::SwitchRow,
     pub(in crate::ui::preferences) signature_position_row: adw::ComboRow,
     pub(in crate::ui::preferences) signature_dashes_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) fold_quote_row: adw::SwitchRow,
     pub(in crate::ui::preferences) undo_send_row: adw::ComboRow,
+    pub(in crate::ui::preferences) request_receipts_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) returned_receipts_row: adw::ComboRow,
     pub(in crate::ui::preferences) reply_header_row: adw::EntryRow,
     /// The reply header as last saved, as the row shows it: the apply
     /// button is up only while the text differs from it.
@@ -165,12 +168,46 @@ impl ComposingPage {
                         },
                     },
 
+                    #[name = "fold_quote_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Fold quoted text"),
+                        set_subtitle: &i18n("Replies and forwards open with the original behind •••."),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetFoldQuote(row.is_active()));
+                        },
+                    },
+
                     #[name = "undo_send_row"]
                     adw::ComboRow {
                         set_title: &i18n("Undo Send"),
                         set_subtitle: &i18n("How long Undo is offered after sending."),
                         connect_selected_notify[sender] => move |row| {
                             sender.input(PrefInput::ChangeUndoSend(row.selected()));
+                        },
+                    },
+
+                    #[name = "request_receipts_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Request read receipts"),
+                        set_subtitle: &i18n("Not every mail app sends one."),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetRequestReceipts(row.is_active()));
+                        },
+                    },
+
+                    #[name = "returned_receipts_row"]
+                    adw::ComboRow {
+                        set_title: &i18n("Returned receipts"),
+                        set_subtitle: &i18n("Sent mail shows who read it; the receipt goes here."),
+                        set_model: Some(&gtk::StringList::new(&[
+                            &i18n("Move to Trash"),
+                            &i18n("Archive"),
+                            &i18n("Keep in Inbox"),
+                        ])),
+                        connect_selected_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetReturnedReceipts(
+                                crate::ui::preferences::choices::returned_receipts_at(row.selected()),
+                            ));
                         },
                     },
                 },
@@ -230,6 +267,7 @@ impl ComposingPage {
                 },
             }
         }
+        page.add(&super::super::grammar::group());
         let reply_header_saved = Rc::new(RefCell::new(String::new()));
         wire_reply_header(
             &reply_header_row,
@@ -253,7 +291,10 @@ impl ComposingPage {
             follow_plain_row,
             signature_position_row,
             signature_dashes_row,
+            fold_quote_row,
             undo_send_row,
+            request_receipts_row,
+            returned_receipts_row,
             reply_header_row,
             reply_header_saved,
             spelling_group,

@@ -10,6 +10,7 @@ gallery_archive = true
 gallery_other = true
 gallery_folders = []
 list_pane_width = 350
+list_pane_height = 320
 contacts_pane_width = 280
 about_height = 740
 split_reply_height = 0

@@ -10,6 +10,7 @@ use std::time::Duration;
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 use tokio::time::Sleep;
 
+use super::namespace::NamespaceFilter;
 use crate::i18n::i18n;
 
 const IO_TIMEOUT: Duration = Duration::from_secs(60);
@@ -23,6 +24,10 @@ pub(in crate::worker) struct ImapIo<S> {
     idle: bool,
     failed: bool,
     selected_folder: Option<String>,
+    /// While NAMESPACE is out (#554), what arrives is read through this.
+    namespace: Option<NamespaceFilter>,
+    /// Bytes read and let through, not yet handed to async-imap.
+    passing: Vec<u8>,
 }
 
 impl<S> ImapIo<S> {
@@ -35,7 +40,21 @@ impl<S> ImapIo<S> {
             idle: false,
             failed: false,
             selected_folder: None,
+            namespace: None,
+            passing: Vec::new(),
         }
+    }
+
+    /// Keep a `* NAMESPACE` reply back from async-imap, whose parser would
+    /// fail the session on it, until [`Self::release_namespace`].
+    pub(in crate::worker) fn hold_namespace(&mut self) {
+        self.namespace = Some(NamespaceFilter::default());
+    }
+
+    /// Stop holding, and hand over the NAMESPACE reply if one came.
+    pub(in crate::worker) fn release_namespace(&mut self) -> Option<Vec<u8>> {
+        let filter = self.namespace.take()?;
+        filter.finish(&mut self.passing)
     }
 
     // IDLE has its own wait, init and DONE deadlines. Silence while waiting
@@ -69,12 +88,8 @@ fn elapsed(timer: &mut Option<Pin<Box<Sleep>>>, timeout: Duration, cx: &mut Cont
         .is_ready()
 }
 
-impl<S: AsyncRead + Unpin> AsyncRead for ImapIo<S> {
-    fn poll_read(
-        mut self: Pin<&mut Self>,
-        cx: &mut Context<'_>,
-        buf: &mut ReadBuf<'_>,
-    ) -> Poll<io::Result<()>> {
+impl<S: AsyncRead + Unpin> ImapIo<S> {
+    fn poll_wire(&mut self, cx: &mut Context<'_>, buf: &mut ReadBuf<'_>) -> Poll<io::Result<()>> {
         if self.failed {
             return Poll::Ready(Err(Self::timed_out()));
         }
@@ -96,6 +111,53 @@ impl<S: AsyncRead + Unpin> AsyncRead for ImapIo<S> {
                 } else {
                     Poll::Pending
                 }
+            }
+        }
+    }
+
+    /// Hand on what the NAMESPACE filter let through, as much as fits.
+    fn pass(&mut self, buf: &mut ReadBuf<'_>) {
+        let n = self.passing.len().min(buf.remaining());
+        buf.put_slice(&self.passing[..n]);
+        self.passing.drain(..n);
+    }
+}
+
+impl<S: AsyncRead + Unpin> AsyncRead for ImapIo<S> {
+    fn poll_read(
+        mut self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+        buf: &mut ReadBuf<'_>,
+    ) -> Poll<io::Result<()>> {
+        let this = &mut *self;
+        if !this.passing.is_empty() {
+            this.pass(buf);
+            return Poll::Ready(Ok(()));
+        }
+        if this.namespace.is_none() {
+            return this.poll_wire(cx, buf);
+        }
+        loop {
+            let mut chunk = [0u8; 4096];
+            let mut read = ReadBuf::new(&mut chunk);
+            match this.poll_wire(cx, &mut read) {
+                Poll::Pending => return Poll::Pending,
+                Poll::Ready(Err(e)) => return Poll::Ready(Err(e)),
+                Poll::Ready(Ok(())) => {}
+            }
+            if read.filled().is_empty() {
+                // The end of the stream: what was held goes on before it.
+                let filter = this.namespace.take().expect("held above");
+                filter.finish(&mut this.passing);
+                this.pass(buf);
+                return Poll::Ready(Ok(()));
+            }
+            if let Some(filter) = this.namespace.as_mut() {
+                filter.feed(read.filled(), &mut this.passing);
+            }
+            if !this.passing.is_empty() {
+                this.pass(buf);
+                return Poll::Ready(Ok(()));
             }
         }
     }
@@ -333,5 +395,130 @@ mod tests {
             io::ErrorKind::TimedOut
         );
         assert_eq!(started.elapsed(), IO_TIMEOUT);
+    }
+    async fn reply(server: &mut BufReader<DuplexStream>, expected: &str, lines: &str) {
+        let tag = command(server, expected).await;
+        let answer = match lines {
+            "NO" => format!("{tag} NO refused\r\n"),
+            _ => format!("{lines}{tag} OK done\r\n"),
+        };
+        server.get_mut().write_all(answer.as_bytes()).await.unwrap();
+    }
+
+    /// The hierarchy as `read_hierarchy` hears it from a server that
+    /// answers CAPABILITY with `caps` and the rest with `answers`, and
+    /// what a SEARCH after it finds (the session must carry on).
+    async fn hierarchy_from(
+        caps: &str,
+        answers: &[(&str, &str)],
+    ) -> (Option<crate::models::FolderHierarchy>, usize) {
+        let (mut client, mut server) = session().await;
+        let task = tokio::spawn(async move {
+            let h = super::super::namespace::read_hierarchy(&mut client, &[]).await;
+            let found = client.uid_search("ALL").await.unwrap().len();
+            (h, found)
+        });
+        reply(
+            &mut server,
+            "CAPABILITY",
+            &format!("* CAPABILITY {caps}\r\n"),
+        )
+        .await;
+        for (cmd, lines) in answers {
+            reply(&mut server, cmd, lines).await;
+        }
+        reply(&mut server, "UID SEARCH", "* SEARCH 4 5\r\n").await;
+        task.await.unwrap()
+    }
+
+    #[tokio::test]
+    async fn namespace_is_read_and_the_session_carries_on() {
+        use crate::models::FolderHierarchy;
+        let courier = hierarchy_from(
+            "IMAP4rev1 NAMESPACE",
+            &[(
+                "NAMESPACE",
+                "* 2 EXISTS\r\n* NAMESPACE ((\"INBOX.\" \".\")) NIL NIL\r\n",
+            )],
+        )
+        .await;
+        assert_eq!(
+            courier,
+            (
+                Some(FolderHierarchy::imap(Some('.'), Some("INBOX.".into()))),
+                2
+            )
+        );
+        // No personal namespace: the root's delimiter, nothing at the top.
+        let shared = hierarchy_from(
+            "IMAP4rev1 NAMESPACE",
+            &[
+                ("NAMESPACE", "* NAMESPACE NIL NIL ((\"\" \"/\"))\r\n"),
+                ("LIST", "* LIST (\\Noselect) \"/\" \"\"\r\n"),
+            ],
+        )
+        .await;
+        assert_eq!(shared, (Some(FolderHierarchy::imap(Some('/'), None)), 2));
+    }
+
+    #[tokio::test]
+    async fn without_namespace_list_gives_the_delimiter_or_none() {
+        use crate::models::FolderHierarchy;
+        let slash = hierarchy_from(
+            "IMAP4rev1",
+            &[
+                ("LIST \"\" \"\"", "* LIST (\\Noselect) \"/\" \"\"\r\n"),
+                ("LIST \"\" %", "* LIST () \"/\" \"INBOX\"\r\n"),
+            ],
+        )
+        .await;
+        assert_eq!(
+            slash,
+            (
+                Some(FolderHierarchy::imap(Some('/'), Some(String::new())).unsaid()),
+                2
+            )
+        );
+        let flat =
+            hierarchy_from("IMAP4rev1", &[("LIST", "* LIST (\\Noselect) NIL \"\"\r\n")]).await;
+        assert_eq!(
+            flat,
+            (
+                Some(FolderHierarchy::imap(None, Some(String::new())).unsaid()),
+                2
+            )
+        );
+        // NAMESPACE advertised but refused: LIST answers instead.
+        let refused = hierarchy_from(
+            "IMAP4rev1 NAMESPACE",
+            &[
+                ("NAMESPACE", "NO"),
+                ("LIST", "* LIST () \"\\\\\" \"\"\r\n"),
+                ("LIST", ""),
+            ],
+        )
+        .await;
+        assert_eq!(refused.0.and_then(|h| h.delimiter), Some('\\'));
+        // Proton Bridge: no NAMESPACE, its folders kept in "Folders".
+        let bridge = hierarchy_from(
+            "IMAP4rev1 IDLE MOVE",
+            &[
+                ("LIST \"\" \"\"", "* LIST (\\Noselect) \"/\" \"\"\r\n"),
+                (
+                    "LIST \"\" %",
+                    "* LIST (\\Noinferiors) \"/\" \"INBOX\"\r\n\
+                     * LIST (\\Noselect \\Unmarked) \"/\" \"Labels\"\r\n\
+                     * LIST (\\Noselect \\Unmarked) \"/\" \"Folders\"\r\n",
+                ),
+            ],
+        )
+        .await;
+        assert_eq!(
+            bridge,
+            (
+                Some(FolderHierarchy::imap(Some('/'), Some("Folders/".into()))),
+                2
+            )
+        );
     }
 }

@@ -125,6 +125,7 @@ mod tests {
             path: "Deleted Messages".into(),
             kind: FolderKind::Trash,
             unread: 0,
+            childless: false,
         }];
         assert_eq!(
             role_folder_path(&acc, &folders, FolderKind::Trash, "trash").as_deref(),

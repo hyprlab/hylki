@@ -9,12 +9,14 @@ use crate::models::{Folder, FolderKind};
 use crate::worker::folders::number_folders;
 use crate::worker::jmap::index::JmapState;
 use crate::worker::jmap::wire::{args, call, jmap_call, JmapSession, CAP_CORE, CAP_MAIL};
-use crate::worker::{blocking, chip_counts_all, WorkerEvent};
+use crate::worker::{blocking, chip_counts_all, snoozed_counts, WorkerEvent};
 
 /// One mailbox, flattened out of the tree.
 pub(super) struct JmapFolder {
     pub(super) mailbox_id: String,
     pub(super) folder: Folder,
+    /// Every message in it, read or not.
+    pub(super) total: u32,
 }
 
 pub(super) fn role_kind(role: &str) -> FolderKind {
@@ -59,20 +61,20 @@ pub(super) fn jmap_list_folders(
     // which is what the sidebar's hierarchy expects. A name with a slash in
     // it would read as nesting; the character is swapped for a look-alike.
     let name_of =
-        |m: &serde_json::Value| -> String { m["name"].as_str().unwrap_or("?").replace('/', "∕") };
+        |m: &serde_json::Value| crate::models::slashed_leaf(m["name"].as_str().unwrap_or("?"));
     let mut out: Vec<JmapFolder> = Vec::new();
     let mut counts: HashMap<String, (u32, u32)> = HashMap::new();
     for m in &list {
         let Some(id) = m["id"].as_str() else { continue };
         let mut names = vec![name_of(m)];
         let mut parent = m["parentId"].as_str();
-        let mut depth = 0;
+        // No deeper than there are mailboxes: a parent loop, which the
+        // server should never send, ends there.
         while let Some(pid) = parent {
             let Some(p) = by_id.get(pid) else { break };
             names.push(name_of(p));
             parent = p["parentId"].as_str();
-            depth += 1;
-            if depth > 10 {
+            if names.len() > list.len() {
                 break;
             }
         }
@@ -91,11 +93,16 @@ pub(super) fn jmap_list_folders(
             None => FolderKind::Custom,
         };
         let count = |field: &str| m[field].as_i64().unwrap_or(0).max(0) as u32;
+        // Where the server lets no mailbox be made (#554): no right to, or
+        // as deep as the account allows.
+        let childless = m["myRights"]["mayCreateChild"].as_bool() == Some(false)
+            || s.max_depth.is_some_and(|max| names.len() >= max);
         counts.insert(
             id.to_string(),
             (count("totalEmails"), count("unreadEmails")),
         );
         out.push(JmapFolder {
+            total: count("totalEmails"),
             mailbox_id: id.to_string(),
             folder: Folder {
                 id: 0,
@@ -104,6 +111,7 @@ pub(super) fn jmap_list_folders(
                 path,
                 kind,
                 unread: 0,
+                childless,
             },
         });
     }
@@ -172,6 +180,7 @@ pub(super) async fn jmap_refresh_unread(
         return;
     }
     state.adopt_folders(&list);
+    let snoozed = snoozed_counts(&list, |f| (&f.folder, f.total));
     let folders: Vec<Folder> = list.into_iter().map(|f| f.folder).collect();
     if let Some(c) = cache {
         c.save_folders(account_id, &folders);
@@ -180,6 +189,9 @@ pub(super) async fn jmap_refresh_unread(
     emit(WorkerEvent::Folders(folders));
     for (folder_id, unread) in counts {
         emit(WorkerEvent::FolderUnread { folder_id, unread });
+    }
+    for ev in snoozed {
+        emit(ev);
     }
 }
 
