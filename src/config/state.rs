@@ -126,6 +126,49 @@ pub(super) struct StateFile {
     /// offers its columns, and the merge starts from it.
     #[serde(default, skip_serializing_if = "String::is_empty")]
     merge_file: String,
+    /// How fast a mail merge sends, as last set in its dialog.
+    #[serde(default, skip_serializing_if = "MergeRate::is_default")]
+    merge_rate: MergeRate,
+}
+
+/// A mail merge's sending rate (#447): at most `count` messages a minute,
+/// or an hour, for a provider that limits how fast mail may go out. Off,
+/// each message goes as soon as the one before it has.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
+pub(crate) struct MergeRate {
+    #[serde(default)]
+    pub(crate) on: bool,
+    #[serde(default = "default_merge_count")]
+    pub(crate) count: u32,
+    #[serde(default)]
+    pub(crate) per_hour: bool,
+}
+
+fn default_merge_count() -> u32 {
+    30
+}
+
+impl Default for MergeRate {
+    fn default() -> Self {
+        Self {
+            on: false,
+            count: default_merge_count(),
+            per_hour: false,
+        }
+    }
+}
+
+impl MergeRate {
+    fn is_default(&self) -> bool {
+        *self == Self::default()
+    }
+
+    /// The wait from one message to the next, if the rate is limited.
+    pub(crate) fn interval(&self) -> Option<std::time::Duration> {
+        let period = if self.per_hour { 3600.0 } else { 60.0 };
+        (self.on && self.count > 0)
+            .then(|| std::time::Duration::from_secs_f64(period / f64::from(self.count)))
+    }
 }
 
 /// A font family picked in the composer (#358), and whether it is
@@ -225,6 +268,14 @@ pub(crate) fn load_merge_file() -> Option<std::path::PathBuf> {
 
 pub(crate) fn save_merge_file(path: &std::path::Path) {
     update_state(|s| s.merge_file = path.to_string_lossy().to_string());
+}
+
+pub(crate) fn load_merge_rate() -> MergeRate {
+    load_state().merge_rate
+}
+
+pub(crate) fn save_merge_rate(rate: MergeRate) {
+    update_state(|s| s.merge_rate = rate);
 }
 
 /// The alarms the last event made from a message had (#564).

@@ -1233,8 +1233,16 @@ the message or **Leave these fields empty** is switched on. A row without a
 valid address is left out and counted.
 **Send** then sends them all, one after another, from the From address
 chosen, each with its own copy in Sent. There is no Undo Send for a merge:
-the preview is the time to check. A message that cannot go waits in the
-Outbox like any other. An encrypted message cannot be merged, since each
+the preview is the time to check. A toast counts the messages as they go,
+and its **Stop** sends no more of them. A message that cannot go waits in the
+Outbox like any other.
+
+**Limit sending rate**, at the foot of the dialog, sends at most a set number
+of messages a minute or an hour, for a provider that limits how fast mail
+may go out, and says how long the merge will take at that rate. The choice
+is kept for the next merge. Quitting before a merge is done puts the
+messages not yet sent in the Outbox, each scheduled at the rate if one is
+set, and the next launch sends them from there. An encrypted message cannot be merged, since each
 recipient would need their own key.
 
 ### Addresses as pills

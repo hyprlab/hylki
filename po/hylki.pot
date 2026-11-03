@@ -716,6 +716,26 @@ msgstr ""
 msgid "Sort"
 msgstr ""
 
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox or came back in a composer.
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Stop"
+msgstr ""
+
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
 msgstr ""
@@ -1252,11 +1272,6 @@ msgstr ""
 
 msgid "No {v1} folder available for some messages"
 msgstr ""
-
-msgid "Sending {n} message…"
-msgid_plural "Sending {n} messages…"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid "Remove Account?"
 msgstr ""
@@ -4234,6 +4249,22 @@ msgstr ""
 msgid "In {places}"
 msgstr ""
 
+msgid "Takes under a minute"
+msgstr ""
+
+msgid "Takes about a minute"
+msgstr ""
+
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Mail Merge"
 msgstr ""
 
@@ -4256,6 +4287,18 @@ msgid "Fields"
 msgstr ""
 
 msgid "Leave these fields empty"
+msgstr ""
+
+msgid "Limit sending rate"
+msgstr ""
+
+msgid "Messages"
+msgstr ""
+
+msgid "per minute"
+msgstr ""
+
+msgid "per hour"
 msgstr ""
 
 msgid "{n} of {total}"
@@ -6176,9 +6219,6 @@ msgid "Region (empty for a global resource)"
 msgstr ""
 
 msgid "Translates a greeting to test the service."
-msgstr ""
-
-msgid "Messages"
 msgstr ""
 
 msgid "Hylki's language ({language})"

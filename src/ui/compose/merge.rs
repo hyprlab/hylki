@@ -88,10 +88,11 @@ impl Compose {
             groups,
         };
         let s = sender.input_sender().clone();
-        merge_dialog::show(&parent, start, move |letters| {
+        merge_dialog::show(&parent, start, move |letters, interval| {
             s.emit(ComposeInput::MergeSend {
                 fields: fields.clone(),
                 letters,
+                interval,
             });
         });
     }
@@ -102,6 +103,7 @@ impl Compose {
         &mut self,
         fields: OutgoingFields,
         letters: Vec<Letter>,
+        interval: Option<std::time::Duration>,
         sender: &ComponentSender<Self>,
     ) {
         let mut messages = Vec::with_capacity(letters.len());
@@ -134,7 +136,7 @@ impl Compose {
         if messages.is_empty() {
             return;
         }
-        let _ = sender.output(ComposeOutput::SendMerged(messages));
+        let _ = sender.output(ComposeOutput::SendMerged { messages, interval });
         let _ = sender.output(ComposeOutput::Close(self.compose_id));
     }
 }

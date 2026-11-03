@@ -925,15 +925,15 @@ impl Component for Compose {
 
                 ComposeInput::MailMerge => self.on_mail_merge(widgets, &sender),
 
-                ComposeInput::MergeFields(target) => {
-                    self.on_merge_fields(target, widgets, &sender)
-                }
+                ComposeInput::MergeFields(target) => self.on_merge_fields(target, widgets, &sender),
 
                 ComposeInput::MergeBody(fields) => self.on_merge_body(fields, widgets, &sender),
 
-                ComposeInput::MergeSend { fields, letters } => {
-                    self.on_merge_send(fields, letters, &sender)
-                }
+                ComposeInput::MergeSend {
+                    fields,
+                    letters,
+                    interval,
+                } => self.on_merge_send(fields, letters, interval, &sender),
 
                 ComposeInput::SaveDraft => self.on_save_draft(false, widgets, &sender),
                 ComposeInput::SaveAsTemplate => self.on_save_draft(true, widgets, &sender),

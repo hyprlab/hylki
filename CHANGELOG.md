@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Added: a mail merge's progress, and a sending rate** (#447, suggested
+  by samuel-edlmeier). While a merge sends, its toast counts the messages
+  sent so far, "Sent 57 of 200 messages", and **Stop** sends no more of
+  them. **Limit sending rate** in the Mail Merge dialog sends at most a set
+  number of messages a minute or an hour, for a provider that limits how
+  fast mail may go out, and says how long the merge will take. The rate is
+  remembered. Quitting during a merge keeps the messages not yet sent in
+  the Outbox, each scheduled at the rate, so the next launch carries on.
+  The messages now go to the account one at a time, so the account's other
+  work is no longer held up behind the whole merge.
+
 - **Fixed: an IMAP folder showed an old count at every start** (#571, by
   Valentin Morice). The sidebar starts from the folder counts saved in the
   cache, and since #370 those were only saved by a full folder listing, so a

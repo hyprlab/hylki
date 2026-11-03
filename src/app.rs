@@ -70,6 +70,7 @@ mod identity;
 mod invites;
 mod keymap;
 mod list_header;
+mod merge_send;
 mod model;
 mod model_new;
 mod move_tag;
@@ -169,7 +170,7 @@ impl SimpleComponent for AppModel {
             // Persist the window size + maximized state on close. (Position and
             // which monitor can't be restored on Wayland — the compositor owns
             // placement — so only the geometry is saved.)
-            connect_close_request[background = model.run_in_background.clone(), outgoing = model.outgoing.clone()] => move |w| {
+            connect_close_request[background = model.run_in_background.clone(), outgoing = model.outgoing.clone(), merges = model.merges.clone()] => move |w| {
                 save_window_geometry(w);
                 // Running in the background: hide the window and stay alive, so
                 // mail keeps arriving and GNOME lists Hylki under Background Apps
@@ -180,7 +181,7 @@ impl SimpleComponent for AppModel {
                     w.set_visible(false);
                     return gtk::glib::Propagation::Stop;
                 }
-                exit_now(&outgoing)
+                exit_now(&outgoing, &merges)
             },
 
             // Send's toasts (#434) float over everything, the status bar

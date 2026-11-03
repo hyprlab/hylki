@@ -129,6 +129,8 @@ pub(crate) struct AppModel {
     /// Messages on their way out (#434), shared with the quit paths, which
     /// park any still waiting out the Undo Send delay in the Outbox.
     pub(super) outgoing: super::outgoing::OutgoingList,
+    /// Mail merges under way (#447), shared with the quit paths too.
+    pub(super) merges: super::merge_send::MergeRuns,
     /// The last ticket handed to a send; 0 is never used.
     pub(super) send_ticket: u64,
     /// Same idea over the contacts view's detail pane: composing from a

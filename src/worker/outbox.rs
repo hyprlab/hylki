@@ -194,6 +194,7 @@ pub(crate) fn park_for_next_launch(
     account: &AccountConfig,
     msg: &OutgoingMessage,
     sent_path: Option<&str>,
+    at: i64,
 ) -> bool {
     let mut msg = msg.clone();
     restore_msgid_case(Some(cache), &mut msg);
@@ -204,7 +205,7 @@ pub(crate) fn park_for_next_launch(
         &msg,
         sent_path,
         "",
-        Some(crate::datefmt::now()),
+        Some(at),
     );
     if let (true, Some(old)) = (queued, msg.outbox_origin) {
         cache.delete_outbox(old);

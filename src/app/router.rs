@@ -322,7 +322,9 @@ impl AppModel {
             | AppMsg::KeywordsSynced { .. }
             | AppMsg::TagViewLoaded { .. }) => self.on_tags(msg, sender),
             msg @ (AppMsg::SendMessage { .. }
-            | AppMsg::SendMerged(..)
+            | AppMsg::SendMerged { .. }
+            | AppMsg::MergeTick(..)
+            | AppMsg::StopMerge(..)
             | AppMsg::DispatchSend(..)
             | AppMsg::UndoSend(..)
             | AppMsg::SendDone { .. }

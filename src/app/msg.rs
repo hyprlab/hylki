@@ -1094,8 +1094,16 @@ pub(crate) enum AppMsg {
         from: u32,
         out: Box<OutgoingMessage>,
     },
-    /// A composer's Mail Merge (#447): one message per row.
-    SendMerged(Vec<OutgoingMessage>),
+    /// A composer's Mail Merge (#447): one message per row, and the wait
+    /// from one to the next if the rate is limited.
+    SendMerged {
+        messages: Vec<OutgoingMessage>,
+        interval: Option<std::time::Duration>,
+    },
+    /// A merge's wait for its rate is over (#447).
+    MergeTick(u64),
+    /// Stop on a merge's toast (#447).
+    StopMerge(u64),
     /// A message's Undo Send delay is over, or Send now was asked for it in
     /// the Outbox: it goes to its worker (#434).
     DispatchSend(u64),
