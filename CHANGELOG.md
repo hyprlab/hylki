@@ -1,5 +1,78 @@
 # Changelog
 
+## 1.47.0-beta.5 — 2026-11-03
+
+- **Added: a reminder for a forgotten attachment** (#575, by Fabio
+  Rotondo). **Send** now asks first when what you wrote mentions an
+  attachment, as in "please find it attached" or "in allegato", and nothing
+  is attached: **Send Anyway** sends it, **Cancel** goes back to the
+  message. The quoted original of a reply or forward and the signature are
+  not looked at, and a cloud link or a picture in the text counts as an
+  attachment. The words are set in
+  **Settings → Composing → Attachment Reminder**; a word counts when it
+  starts with one of them, so "attach" covers "attached" and "attachment".
+  The default list covers the languages Hylki is translated into, the
+  button beside it puts it back, and an empty list never asks.
+
+- **Added: the list's sort is kept** (#574, suggested by Bohne13). The
+  order chosen under **Sort by**, or by a column heading, including a
+  heading clicked a second time to reverse it, is now the order the list
+  opens with at the next launch, instead of newest first.
+
+- **Added: a mail merge's progress, and a sending rate** (#447, suggested
+  by samuel-edlmeier). While a merge sends, its toast counts the messages
+  sent so far, "Sent 57 of 200 messages", and **Stop** sends no more of
+  them. **Limit sending rate** in the Mail Merge dialog sends at most a set
+  number of messages a minute or an hour, for a provider that limits how
+  fast mail may go out, and says how long the merge will take. The rate is
+  remembered. Quitting during a merge keeps the messages not yet sent in
+  the Outbox, each scheduled at the rate, so the next launch carries on.
+  The messages now go to the account one at a time, so the account's other
+  work is no longer held up behind the whole merge. A message the server
+  refuses, for a mistyped address or a sending limit, now waits in the
+  Outbox with the reason instead of opening in a composer, which for a large
+  merge could mean a window for each; the last toast offers **Show Outbox**
+  when some did not go. A refused message in the Outbox no longer stops the
+  ones queued after it from being sent.
+
+- **Fixed: the window could open blank while the keyring was locked**
+  (#573, by Fabio Rotondo). An account's password was read before the
+  account and its cached folders were shown, so a keyring that did not
+  answer, locked and waiting to be unlocked, left the sidebar empty. The
+  account and its folders now show first. When the keyring gives an error,
+  or has not answered after 10 seconds, a dialog names the accounts it
+  concerns. It closes by itself once a waiting keyring answers, and after an
+  error **Retry** reads the keyring again. This covers IMAP, POP3 and JMAP
+  accounts; an OAuth account, which signs in with a token, no longer reads
+  the keyring at start.
+
+- **Fixed: an IMAP folder showed an old count at every start** (#571, by
+  Valentin Morice). The sidebar starts from the folder counts saved in the
+  cache, and since #370 those were only saved by a full folder listing, so a
+  launch could show counts from long ago until the first sweep corrected
+  them: a Drafts chip of 1 with no draft left, for example. Each count read
+  from the server is now saved as it is read.
+
+- **Fixed: opening a message changed the reading pane in steps** (#570, by
+  Valentin Morice). The new subject showed over the previous message's body,
+  the attachment drawer left and came back, and a page could show at the top
+  and then jump to where it opens. The previous message now stays on screen
+  until the new one is ready, and the new one shows in one frame. A message
+  still downloading after 0.3 s shows its spinner. A conversation whose
+  bodies are all cached opens without a 120 ms wait, and a message opened
+  behind the spinner is loaded once instead of twice.
+
+- **Fixed: remote pictures in a message could not be saved** (#569,
+  reported by samuel-edlmeier). Right-clicking a picture loaded from the web
+  now offers **Save Image As…**, **Copy Image** and **Copy Image Address**,
+  as a picture carried in the mail does. The picture is taken from the
+  remote-content cache, so nothing is fetched again from the sender. Since
+  1.46.0-beta.5 such a picture had no entries at all, and before that only
+  Copy Image Address.
+
+- **Translations:** French (PR #568 by frenchy82) and Greek (PR #572 by
+  Yiannis Ioannides) are up to date.
+
 ## 1.47.0-beta.4 — 2026-11-01
 
 - **Fixed: a test failing on Sundays from 17:00** (#567, reported by
