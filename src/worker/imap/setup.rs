@@ -17,7 +17,7 @@ use crate::worker::auth::{load_or_migrate_password, load_smtp_password};
 use crate::worker::{MailRequest, WorkerEvent};
 
 impl<E: Emit> ImapWorker<E> {
-    /// Resolve the passwords, show the account and its cached folders, and
+    /// Show the account and its cached folders, resolve the passwords, and
     /// queue the background work the cache calls for. Connects at once only
     /// when there is no cached folder list to show.
     pub(super) async fn start(
@@ -27,14 +27,6 @@ impl<E: Emit> ImapWorker<E> {
         emit: E,
     ) -> Self {
         let started = std::time::Instant::now();
-        tracing::info!("worker {account_id}: resolving passwords (keyring/GOA)");
-        resolve_passwords(&mut account, &emit).await;
-        tracing::info!(
-            "worker {account_id}: passwords resolved in {} ms (found: {})",
-            started.elapsed().as_millis(),
-            !account.password.is_empty()
-        );
-
         tracing::info!("worker {account_id}: opening the cache");
         let cache = Cache::open()
             .map_err(|e| tracing::error!("worker {account_id}: cache unavailable: {e}"))
@@ -78,6 +70,16 @@ impl<E: Emit> ImapWorker<E> {
         if have_cached_folders {
             emit(WorkerEvent::Folders(cached_folders));
         }
+
+        // Only now the passwords: a keyring that is locked or slow to answer
+        // must not keep the account and its cached folders off the screen.
+        tracing::info!("worker {account_id}: resolving passwords (keyring/GOA)");
+        resolve_passwords(&mut account, &emit).await;
+        tracing::info!(
+            "worker {account_id}: passwords resolved in {} ms (found: {})",
+            started.elapsed().as_millis(),
+            !account.password.is_empty()
+        );
 
         // The worker stays alive even if connecting fails, so the UI can retry. With
         // cached folders we connect lazily (on the first request) so cached mail can

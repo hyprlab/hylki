@@ -288,13 +288,26 @@ fn load_key(key: &str) -> Option<String> {
 /// account in with an empty one until Hylki restarted (#375).
 fn read_key(key: &str) -> Result<Option<String>, String> {
     let key = key.to_owned();
-    on_keyring_thread(
-        move || match keyring_entry(&key).and_then(|e| e.get_password()) {
-            Ok(password) => Ok(Some(password)),
-            Err(keyring::Error::NoEntry) => Ok(load_legacy_key(&key)),
-            Err(e) => Err(e.to_string()),
-        },
-    )
+    tracing::info!("keyring: reading the entry for {key}");
+    let started = std::time::Instant::now();
+    let answer =
+        on_keyring_thread(
+            move || match keyring_entry(&key).and_then(|e| e.get_password()) {
+                Ok(password) => Ok(Some(password)),
+                Err(keyring::Error::NoEntry) => Ok(load_legacy_key(&key)),
+                Err(e) => Err(e.to_string()),
+            },
+        );
+    tracing::info!(
+        "keyring: read answered in {} ms ({})",
+        started.elapsed().as_millis(),
+        match &answer {
+            Ok(Some(_)) => "found".to_string(),
+            Ok(None) => "no entry".to_string(),
+            Err(e) => format!("error: {e}"),
+        }
+    );
+    answer
 }
 
 /// [`load_password`], with a keyring that could not be read as an error.
