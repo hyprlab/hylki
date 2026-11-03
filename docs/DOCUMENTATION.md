@@ -1235,7 +1235,10 @@ valid address is left out and counted.
 chosen, each with its own copy in Sent. There is no Undo Send for a merge:
 the preview is the time to check. A toast counts the messages as they go,
 and its **Stop** sends no more of them. A message that cannot go waits in the
-Outbox like any other.
+Outbox, with the reason, and that includes one the server refuses, a
+mistyped address or a sending limit reached, which in an ordinary message
+comes back in a composer. When some did not go, the last toast has **Show
+Outbox**.
 
 **Limit sending rate**, at the foot of the dialog, sends at most a set number
 of messages a minute or an hour, for a provider that limits how fast mail

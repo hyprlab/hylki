@@ -251,6 +251,7 @@ impl Compose {
             request_receipt: self.request_receipt,
             importance: self.importance,
             receipt_report: None,
+            merged: false,
             send_at: self.send_at,
         }
     }

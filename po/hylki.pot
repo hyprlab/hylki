@@ -722,7 +722,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Each one that failed has said why already, and waits in the
-#. Outbox or came back in a composer.
+#. Outbox, a refused one included.
 msgid "Sent {n} of {total} message"
 msgid_plural "Sent {n} of {total} messages"
 msgstr[0] ""
@@ -734,6 +734,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Stop"
+msgstr ""
+
+msgid "Show Outbox"
 msgstr ""
 
 #. Rightmost, beside the window controls, as in the main window.
@@ -6637,6 +6640,11 @@ msgstr ""
 msgid ""
 "No network connection. The message is in the Outbox and will be sent when "
 "the connection is back."
+msgstr ""
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+msgid "Send failed: {e}. The message is in the Outbox."
 msgstr ""
 
 msgid ""

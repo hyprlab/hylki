@@ -351,6 +351,10 @@ pub(crate) struct OutgoingMessage {
     /// A read receipt (#520): the fields of its report, sent with `body` as
     /// the words beside them in a `multipart/report`.
     pub(crate) receipt_report: Option<String>,
+    /// One of a mail merge's messages (#447): a server's refusal puts it in
+    /// the Outbox with the reason, rather than opening it in a composer,
+    /// which for a merge could be a window for each of hundreds.
+    pub(crate) merged: bool,
 }
 
 /// The calendar half of an outgoing message (#223).

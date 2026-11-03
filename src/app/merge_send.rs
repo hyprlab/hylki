@@ -71,7 +71,7 @@ impl MergeRun {
             );
         }
         // Each one that failed has said why already, and waits in the
-        // Outbox or came back in a composer.
+        // Outbox, a refused one included.
         ni18n_f(
             "Sent {n} of {total} message",
             "Sent {n} of {total} messages",
@@ -216,7 +216,7 @@ impl AppModel {
             run.failed += run.waiting.len() as u32;
             run.waiting.clear();
             drop(runs);
-            self.end_merge(id);
+            self.end_merge(id, sender);
             return;
         }
         let Some(message) = run.waiting.pop_front() else {
@@ -248,7 +248,7 @@ impl AppModel {
 
     /// Stop on a merge's toast: nothing more goes. The message the worker
     /// has already is past stopping, and is counted when it is done.
-    pub(super) fn stop_merge(&mut self, id: u64) {
+    pub(super) fn stop_merge(&mut self, id: u64, sender: &ComponentSender<Self>) {
         let finished = {
             let mut runs = self.merges.borrow_mut();
             let Some(run) = runs.iter_mut().find(|r| r.id == id) else {
@@ -258,7 +258,7 @@ impl AppModel {
             run.finished()
         };
         if finished {
-            self.end_merge(id);
+            self.end_merge(id, sender);
         }
     }
 
@@ -284,15 +284,16 @@ impl AppModel {
             (run.id, run.finished())
         };
         if finished {
-            self.end_merge(id);
+            self.end_merge(id, sender);
         } else {
             self.next_merged(id, sender);
         }
         true
     }
 
-    /// A merge is over: its toast gives way to one with the count.
-    fn end_merge(&mut self, id: u64) {
+    /// A merge is over: its toast gives way to one with the count, and the
+    /// way to the Outbox if some of them are waiting there.
+    fn end_merge(&mut self, id: u64, sender: &ComponentSender<Self>) {
         let run = {
             let mut runs = self.merges.borrow_mut();
             let Some(i) = runs.iter().position(|r| r.id == id) else {
@@ -308,6 +309,12 @@ impl AppModel {
             if run.stopped { ", stopped" } else { "" }
         );
         run.toast.dismiss();
-        self.show_toast(&adw::Toast::new(&run.result_title()));
+        let toast = adw::Toast::new(&run.result_title());
+        if run.failed > 0 {
+            toast.set_button_label(Some(&i18n("Show Outbox")));
+            let s = sender.clone();
+            toast.connect_button_clicked(move |_| s.input(AppMsg::ShowOutbox));
+        }
+        self.show_toast(&toast);
     }
 }

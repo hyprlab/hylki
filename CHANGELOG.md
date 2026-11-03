@@ -11,7 +11,12 @@
   remembered. Quitting during a merge keeps the messages not yet sent in
   the Outbox, each scheduled at the rate, so the next launch carries on.
   The messages now go to the account one at a time, so the account's other
-  work is no longer held up behind the whole merge.
+  work is no longer held up behind the whole merge. A message the server
+  refuses, for a mistyped address or a sending limit, now waits in the
+  Outbox with the reason instead of opening in a composer, which for a large
+  merge could mean a window for each; the last toast offers **Show Outbox**
+  when some did not go. A refused message in the Outbox no longer stops the
+  ones queued after it from being sent.
 
 - **Fixed: an IMAP folder showed an old count at every start** (#571, by
   Valentin Morice). The sidebar starts from the folder counts saved in the

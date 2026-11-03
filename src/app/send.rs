@@ -49,6 +49,7 @@ pub(super) fn machine_message(
         request_receipt: false,
         importance: Default::default(),
         receipt_report: None,
+        merged: false,
     }
 }
 
@@ -337,7 +338,7 @@ impl AppModel {
 
             AppMsg::MergeTick(id) => self.on_merge_tick(id, &sender),
 
-            AppMsg::StopMerge(id) => self.stop_merge(id),
+            AppMsg::StopMerge(id) => self.stop_merge(id, &sender),
 
             AppMsg::DispatchSend(ticket) => self.dispatch_send(ticket),
 

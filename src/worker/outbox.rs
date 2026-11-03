@@ -65,8 +65,8 @@ pub(super) fn send_failed(
     refused: bool,
     emit: &impl Fn(WorkerEvent),
 ) {
-    let queued =
-        !refused && queue_outbox_message(cache, account_id, account, msg, sent_path, error, None);
+    let queued = (!refused || msg.merged)
+        && queue_outbox_message(cache, account_id, account, msg, sent_path, error, None);
     // Queue first, drop the superseded row second: a crash in between leaves
     // the message queued twice, which is recoverable, rather than not at all.
     if let (true, Some(old), Some(c)) = (queued, msg.outbox_origin, cache) {
@@ -79,7 +79,14 @@ pub(super) fn send_failed(
             "No network connection. The message is in the Outbox and will be sent when the connection is back.",
         )));
     } else {
-        emit(WorkerEvent::error(if queued {
+        emit(WorkerEvent::error(if queued && refused {
+            // A merge's message the server would not take: retrying will
+            // not help unless it is edited, or the server's limit resets.
+            i18n_f(
+                "Send failed: {e}. The message is in the Outbox.",
+                &[("e", error)],
+            )
+        } else if queued {
             i18n_f(
                 "Send failed: {e}. The message is in the Outbox and will be sent when the connection is back.",
                 &[("e", error)],
@@ -555,6 +562,35 @@ mod tests {
             .iter()
             .any(|e| matches!(e, WorkerEvent::Unsent(_))));
         assert!(cache.outbox_items(1).is_empty());
+    }
+
+    /// #447: a mail merge's refused message waits in the Outbox with the
+    /// reason, rather than opening a composer for each of hundreds.
+    #[test]
+    fn a_refused_merge_message_waits_in_the_outbox() {
+        let cache = Cache::in_memory().expect("cache");
+        let account = sample_account();
+        let mut msg = sample_outgoing();
+        msg.to = "ann@example.com".into();
+        msg.merged = true;
+        let events = std::cell::RefCell::new(Vec::new());
+        send_failed(
+            Some(&cache),
+            1,
+            &account,
+            &msg,
+            None,
+            "550 no such user",
+            true,
+            &|e| events.borrow_mut().push(e),
+        );
+        assert!(!events
+            .into_inner()
+            .iter()
+            .any(|e| matches!(e, WorkerEvent::Unsent(_))));
+        let items = cache.outbox_items(1);
+        assert_eq!(items.len(), 1);
+        assert_eq!(items[0].last_error, "550 no such user");
     }
 
     #[test]

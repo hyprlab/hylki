@@ -122,6 +122,7 @@ impl Compose {
                 out.html = crate::mail::direction::stamp(&out.html);
             }
             out.send_at = None;
+            out.merged = true;
             // The draft or queued message this was written from is
             // replaced once, by the first; a template stays to be used
             // again.

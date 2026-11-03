@@ -467,6 +467,7 @@ mod tests {
             request_receipt: true,
             importance: crate::models::Importance::High,
             receipt_report: None,
+            merged: false,
         };
         let p = unsent_prefill(m);
         assert_eq!(
