@@ -669,8 +669,17 @@ pub(crate) fn path() -> Option<PathBuf> {
 /// (missing file, parse error, or empty list) — in which case the app falls
 /// back to the offline sample backend.
 pub(crate) fn load() -> Option<Vec<AccountConfig>> {
-    let path = path()?;
-    let text = std::fs::read_to_string(&path).ok()?;
+    let Some(path) = path() else {
+        tracing::error!("accounts: no config directory, cannot locate accounts.toml");
+        return None;
+    };
+    let text = match std::fs::read_to_string(&path) {
+        Ok(text) => text,
+        Err(e) => {
+            tracing::error!("accounts: cannot read {}: {e}", path.display());
+            return None;
+        }
+    };
     match toml::from_str::<ConfigFile>(&text) {
         Ok(mut cfg) if !cfg.accounts.is_empty() => {
             // Heal pre-#36 Microsoft 365 imports: a GOA OAuth account with no
@@ -696,7 +705,10 @@ pub(crate) fn load() -> Option<Vec<AccountConfig>> {
             );
             Some(cfg.accounts)
         }
-        Ok(_) => None,
+        Ok(_) => {
+            tracing::warn!("accounts: {} holds no accounts", path.display());
+            None
+        }
         Err(e) => {
             tracing::error!("failed to parse {}: {e}", path.display());
             None

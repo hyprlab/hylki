@@ -26,20 +26,47 @@ impl<E: Emit> ImapWorker<E> {
         rx: mpsc::UnboundedReceiver<MailRequest>,
         emit: E,
     ) -> Self {
+        let started = std::time::Instant::now();
+        tracing::info!("worker {account_id}: resolving passwords (keyring/GOA)");
         resolve_passwords(&mut account, &emit).await;
+        tracing::info!(
+            "worker {account_id}: passwords resolved in {} ms (found: {})",
+            started.elapsed().as_millis(),
+            !account.password.is_empty()
+        );
 
+        tracing::info!("worker {account_id}: opening the cache");
         let cache = Cache::open()
-            .map_err(|e| tracing::warn!("cache unavailable: {e}"))
+            .map_err(|e| tracing::error!("worker {account_id}: cache unavailable: {e}"))
             .ok();
+        tracing::info!(
+            "worker {account_id}: cache {} after {} ms",
+            if cache.is_some() {
+                "open"
+            } else {
+                "NOT available"
+            },
+            started.elapsed().as_millis()
+        );
 
         // Show the account + any cached folders immediately, before any network.
         emit(WorkerEvent::account(account_id, &account));
+        tracing::info!("worker {account_id}: account emitted to the UI");
 
         let cached_folders = cache
             .as_ref()
             .map(|c| c.load_folders(account_id))
             .unwrap_or_default();
         let have_cached_folders = !cached_folders.is_empty();
+        tracing::info!(
+            "worker {account_id}: {} cached folder(s), {}",
+            cached_folders.len(),
+            if have_cached_folders {
+                "connecting lazily"
+            } else {
+                "connecting now to list folders"
+            }
+        );
         // How they nest, as the server said at the last connect (#554).
         if let Some(h) = cache
             .as_ref()

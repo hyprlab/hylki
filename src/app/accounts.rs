@@ -458,6 +458,11 @@ impl AppModel {
             }
 
             AppMsg::SetAccount(account) => {
+                tracing::info!(
+                    "ui: account {} ({}) reported by its worker",
+                    account.id,
+                    account.email
+                );
                 if let Some(existing) = self.accounts.iter_mut().find(|a| a.id == account.id) {
                     *existing = account;
                 } else {

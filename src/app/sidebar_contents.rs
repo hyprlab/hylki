@@ -67,6 +67,14 @@ impl AppModel {
             .iter()
             .filter_map(|email| self.section_data(email))
             .collect();
+        tracing::info!(
+            "sidebar: rebuild with {} section(s) from {} ordered email(s), {} known account(s), \
+             show_accounts={}",
+            sections.len(),
+            order.len(),
+            self.accounts.len(),
+            self.show_accounts
+        );
         // Count enabled accounts from config, not just the workers that have
         // reported in: at startup the accounts stream in one by one, and
         // counting only the connected ones made the first sidebar build look

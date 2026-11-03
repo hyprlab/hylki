@@ -430,16 +430,37 @@ impl AppModel {
     /// loads and syncs then replace each slice with whatever changed since
     /// the app last ran.
     fn prime_from_cache(&mut self) {
+        let started = std::time::Instant::now();
+        tracing::info!("prime: claiming cached accounts");
         self.claim_cached_accounts();
-        let Ok(cache) = crate::cache::Cache::open() else {
-            return;
+        tracing::info!("prime: claim done in {} ms", started.elapsed().as_millis());
+        let cache = match crate::cache::Cache::open() {
+            Ok(cache) => cache,
+            Err(e) => {
+                tracing::error!("prime: cache unavailable, nothing painted from disk: {e}");
+                return;
+            }
         };
+        tracing::info!(
+            "prime: cache open after {} ms",
+            started.elapsed().as_millis()
+        );
         for (i, c) in self.config.iter().enumerate() {
             if !c.enabled {
+                tracing::info!(
+                    "prime: account {} ({}) is disabled, skipped",
+                    i + 1,
+                    c.email
+                );
                 continue;
             }
             let account_id = (i + 1) as u32;
             let mut folders = cache.load_folders(account_id);
+            tracing::info!(
+                "prime: account {account_id} ({}) has {} cached folder(s)",
+                c.email,
+                folders.len()
+            );
             if folders.is_empty() {
                 continue;
             }
@@ -492,6 +513,10 @@ impl AppModel {
         // accounts configured, the app is blank — the sample/demo data only appears
         // when explicitly requested via HYLKI_DEMO (so removing all real accounts
         // doesn't fall back to fake content).
+        tracing::info!(
+            "workers: spawning for {} configured account(s)",
+            self.config.len()
+        );
         if self.config.is_empty() {
             if demo_mode() {
                 for account_id in [1, 2, 3] {
@@ -505,9 +530,19 @@ impl AppModel {
             let local = self.config.iter().any(|c| c.is_local() && c.enabled);
             for (i, account) in self.config.iter().enumerate() {
                 if !account.enabled {
+                    tracing::info!(
+                        "workers: account {} ({}) disabled, no worker",
+                        i + 1,
+                        account.email
+                    );
                     continue;
                 }
                 let account_id = i as u32 + 1;
+                tracing::info!(
+                    "workers: spawning worker {account_id} for {} ({:?})",
+                    account.email,
+                    account.protocol
+                );
                 let mut account = account.clone();
                 account.copy_to_local &= local;
                 let worker = Self::spawn_worker(account_id, Some(account), sender);

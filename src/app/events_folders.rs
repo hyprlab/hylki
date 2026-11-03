@@ -22,7 +22,13 @@ impl AppModel {
             AppMsg::SetFolders {
                 account_id,
                 folders,
-            } => self.on_set_folders(account_id, folders, sender),
+            } => {
+                tracing::info!(
+                    "ui: {} folder(s) received for account {account_id}",
+                    folders.len()
+                );
+                self.on_set_folders(account_id, folders, sender)
+            }
 
             AppMsg::FolderMadeAt {
                 account_id,

@@ -39,11 +39,35 @@ pub(super) struct Boot {
 impl Boot {
     /// Runs the steps in the order they depend on each other.
     pub(super) fn read(root: &adw::ApplicationWindow) -> Self {
+        let started = std::time::Instant::now();
+        tracing::info!("boot: start (hylki {})", env!("CARGO_PKG_VERSION"));
         let prefs = install_globals(root);
+        tracing::info!(
+            "boot: globals ready in {} ms (show_accounts={}, remember_sidebar={})",
+            started.elapsed().as_millis(),
+            prefs.show_accounts,
+            prefs.remember_sidebar
+        );
         let (mut sidebar_state, focus, icon_only, rail_now) = load_sidebar_layout(&prefs);
+        tracing::info!(
+            "boot: sidebar layout (icon_only={icon_only}, rail_now={rail_now}, focus_enabled={}, \
+             order={}, folders_expanded={})",
+            focus.enabled,
+            sidebar_state.order.len(),
+            sidebar_state.folders_expanded.len()
+        );
         let config = load_accounts(&mut sidebar_state);
         // Decided after the GOA reconcile, which can add accounts.
         let demo_data = demo_mode() && config.is_empty();
+        tracing::info!(
+            "boot: {} account(s) configured, {} enabled, demo_data={demo_data}, done in {} ms",
+            config.len(),
+            config.iter().filter(|c| c.enabled).count(),
+            started.elapsed().as_millis()
+        );
+        if config.is_empty() && !demo_data {
+            tracing::warn!("boot: no accounts configured, the window will be blank");
+        }
         Boot {
             prefs,
             sidebar_state,
@@ -122,10 +146,19 @@ fn load_accounts(sidebar_state: &mut config::SidebarState) -> Vec<AccountConfig>
     // Snapshot before reconciling: a removed account's alias-password
     // keyring entries are keyed by addresses only its config knows.
     let config_before_goa = config.clone();
+    let goa_started = std::time::Instant::now();
     let goa_outcome = match crate::services::goa::live_state() {
         Some(live) => reconcile_goa(&mut config, &live),
-        None => GoaReconcile::default(),
+        None => {
+            tracing::info!("boot: GOA unreachable, accounts left as they are");
+            GoaReconcile::default()
+        }
     };
+    tracing::info!(
+        "boot: GOA reconcile took {} ms, {} account(s) removed",
+        goa_started.elapsed().as_millis(),
+        goa_outcome.removed.len()
+    );
     let goa_removed = goa_outcome.removed;
     if !goa_removed.is_empty() {
         forget_account_secrets(&goa_removed, &config_before_goa);
