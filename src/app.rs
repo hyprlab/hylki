@@ -37,6 +37,7 @@ macro_rules! pref {
 mod about;
 mod accounts;
 mod actions;
+mod assistant;
 mod attachments;
 mod boot;
 mod card_menu;
@@ -980,6 +981,7 @@ impl SimpleComponent for AppModel {
             .emit(NotifyInput::SetAtTop(model.status_bar_top));
         model.install_showcase_overlays(&sender);
         model.drain_hand_off_queues(&sender);
+        model.start_assistant_if_on(&sender);
 
         model.install_drop_targets(&root, &widgets, &sender);
 

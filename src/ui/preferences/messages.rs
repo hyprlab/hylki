@@ -199,6 +199,9 @@ pub(crate) struct PrefInit {
     pub(crate) tray_icon: TrayIcon,
     pub(crate) tray_mail: bool,
     pub(crate) launcher_badge: LauncherBadge,
+    /// AI assistants may connect, and what the connection is doing.
+    pub(crate) assistant_access: bool,
+    pub(crate) assistant_status: String,
     /// The chosen app icon (an `app_icon::catalog` id).
     pub(crate) app_icon: String,
     /// The accounts panel (built by the AccountsWindow component), shown
@@ -224,6 +227,8 @@ pub(crate) enum PrefInput {
     SetContactBooks(Vec<crate::contacts::Book>),
     /// The Hylki book's size changed (an import, a deletion).
     SetLocalContactCount(usize),
+    /// What the assistant connection is doing, as the app saw it change.
+    SetAssistantStatus(String),
     ToggleAvatars(bool),
     ChangeDateStyle(u32),
     ChangeClockStyle(u32),
@@ -558,6 +563,8 @@ pub(crate) enum PrefOutput {
     SetTrayIcon(TrayIcon),
     SetTrayMail(bool),
     SetLauncherBadge(LauncherBadge),
+    /// Let AI assistants connect (`crate::mcp`).
+    SetAssistantAccess(bool),
     SetAppIcon(String),
     SetPaletteCollapse(u64),
     SetCardPaletteCollapse(u64),

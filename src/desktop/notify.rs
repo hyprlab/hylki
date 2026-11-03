@@ -327,6 +327,20 @@ pub(crate) fn compose_ready(attachments: u32) {
     send(COMPOSE_READY_ID, &n);
 }
 
+/// A message an AI assistant prepared is open (or waiting to be) in its
+/// own window (`crate::mcp`). The click brings it up, as for
+/// [`compose_ready`], whose alert this replaces.
+pub(crate) fn assistant_ready() {
+    let n = gio::Notification::new(&i18n("Message ready"));
+    n.set_body(Some(&i18n(
+        "An AI assistant prepared a message in Hylki. Check it, then send it.",
+    )));
+    n.set_priority(gio::NotificationPriority::Normal);
+    n.set_default_action(&format!("app.{PRESENT_COMPOSE_ACTION}"));
+    COMPOSE_READY_POSTED.store(true, std::sync::atomic::Ordering::Relaxed);
+    send(COMPOSE_READY_ID, &n);
+}
+
 /// Take down the "message ready" alert once a window of ours has the focus
 /// (the user got there by themselves).
 pub(crate) fn withdraw_compose_ready() {

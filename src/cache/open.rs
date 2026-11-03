@@ -126,6 +126,21 @@ impl Cache {
         Ok(Cache { conn })
     }
 
+    /// Read the running app's cache without migrations or cleanup writes.
+    /// The app initializes it before accepting assistant connections.
+    pub(crate) fn open_reader() -> rusqlite::Result<Cache> {
+        let db = crate::config::data_base()
+            .ok_or_else(|| {
+                rusqlite::Error::InvalidPath(std::path::PathBuf::from(
+                    "no XDG data directory for the mail cache",
+                ))
+            })?
+            .join("hylki/cache.db");
+        let conn = Connection::open_with_flags(db, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)?;
+        conn.busy_timeout(Duration::from_secs(5))?;
+        Ok(Cache { conn })
+    }
+
     /// Open (creating if needed) the cache DB at `~/.local/share/hylki/cache.db`.
     pub(crate) fn open() -> rusqlite::Result<Cache> {
         // No `temp_dir` fallback: this database holds message bodies, attachment

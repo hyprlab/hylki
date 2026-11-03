@@ -397,6 +397,8 @@ impl AppModel {
             autostart: config::load_autostart(),
             start_fullscreen: prefs.start_fullscreen,
             reading_pane: prefs.reading_pane,
+            assistant_access: prefs.assistant_access,
+            assistant: Default::default(),
             tray_enabled: prefs.tray,
             tray_icon: prefs.tray_icon,
             tray_mail: prefs.tray_mail,

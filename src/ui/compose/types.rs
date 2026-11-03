@@ -102,6 +102,12 @@ pub(crate) struct ComposePrefill {
     /// The message replied to or forwarded had no HTML part (#436): with
     /// the setting on, the composer opens in plain text.
     pub(crate) original_plain: bool,
+    /// Text that goes where the user would type (an assistant's, already
+    /// HTML), ahead of the signature and any quote. Empty: a blank line.
+    pub(crate) typed_html: String,
+    /// An AI assistant prepared the message (`crate::mcp`): the composer
+    /// says so above it, with every recipient it was given.
+    pub(crate) assistant: bool,
 }
 
 /// Everything the compose pane needs to open.

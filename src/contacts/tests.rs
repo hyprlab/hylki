@@ -484,3 +484,28 @@ fn a_line_goes_after_the_version() {
         "BEGIN:VCARD\r\nVERSION:3.0\r\nUID:x\r\nFN:A\r\nEND:VCARD\r\n"
     );
 }
+
+/// What a directory finds joins what is known, once: a known address is
+/// marked as in the directory, a new one follows, and the order is the
+/// completion's (#307).
+#[test]
+fn directory_matches_join_the_known_ones_once() {
+    use super::{merge_found, Suggestion};
+    let person = |name: &str, email: &str, score: u32| Suggestion {
+        name: name.into(),
+        email: email.into(),
+        score,
+        ..Default::default()
+    };
+    let known = vec![person("Ada Lovelace", "ada@example.org", 2)];
+    let directory = vec![
+        person("Ada L.", "ADA@example.org", 0),
+        person("Adam Smith", "adam@example.org", 0),
+        person("Adam Smith", "adam@example.org", 0),
+    ];
+    let found = merge_found(known, &directory, "ada");
+    let emails: Vec<&str> = found.iter().map(|s| s.email.as_str()).collect();
+    assert_eq!(emails, ["ada@example.org", "adam@example.org"]);
+    assert!(found[0].from_directory);
+    assert_eq!(found[0].name, "Ada Lovelace");
+}
