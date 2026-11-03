@@ -262,6 +262,9 @@ pub(super) async fn refresh_unread_counts(
         let Some(unread) = selected_chip_count(session, Some(f.kind)).await else {
             continue;
         };
+        if let Some(c) = cache {
+            c.set_folder_unread(account_id, &f.path, unread);
+        }
         emit(WorkerEvent::FolderUnread {
             folder_id: f.id,
             unread,

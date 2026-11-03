@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: an IMAP folder showed an old count at every start** (#571, by
+  Valentin Morice). The sidebar starts from the folder counts saved in the
+  cache, and since #370 those were only saved by a full folder listing, so a
+  launch could show counts from long ago until the first sweep corrected
+  them: a Drafts chip of 1 with no draft left, for example. Each count read
+  from the server is now saved as it is read.
+
 - **Fixed: opening a message changed the reading pane in steps** (#570, by
   Valentin Morice). The new subject showed over the previous message's body,
   the attachment drawer left and came back, and a page could show at the top
