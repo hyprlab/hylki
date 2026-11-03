@@ -91,6 +91,7 @@ impl AppModel {
             fold_quote: self.fold_quote,
             reply_header: self.reply_header.clone(),
             undo_send_secs: self.undo_send_secs,
+            attachment_keywords: self.attachment_keywords.clone(),
             spellcheck: self.spellcheck,
             // Every save is after the first load, which applied it.
             single_card_default_applied: true,

@@ -340,6 +340,11 @@ pub(crate) struct PrivacyFile {
     /// before it is handed to the server. 0 sends at once.
     #[serde(default = "default_undo_send_secs")]
     pub(crate) undo_send_secs: u32,
+    /// The words, comma-separated, that make Send ask when nothing is
+    /// attached. Empty never asks. Absent is the default list, left out of
+    /// the file so that a list grown in a later version reaches it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub(crate) attachment_keywords: Option<String>,
     /// Whether the composer underlines misspelled words as you type.
     #[serde(default = "default_on")]
     pub(crate) spellcheck: bool,
@@ -760,6 +765,7 @@ impl Default for PrivacyFile {
             fold_quote: true,
             reply_header: String::new(),
             undo_send_secs: default_undo_send_secs(),
+            attachment_keywords: None,
             spellcheck: true,
             spellcheck_langs: String::new(),
             sidebar_hover_expand: false,

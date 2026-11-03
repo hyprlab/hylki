@@ -554,6 +554,7 @@ impl AppModel {
             | PrefOutput::SetSignatureDashes(..)
             | PrefOutput::SetFoldQuote(..)
             | PrefOutput::SetReplyHeader(..)
+            | PrefOutput::SetAttachmentKeywords(..)
             | PrefOutput::SetUndoSend(..)
             | PrefOutput::SetRequestReceipts(..)
             | PrefOutput::SetReturnedReceipts(..)) => self.on_prefs_compose_pref(pref),

@@ -8,6 +8,7 @@ use adw::prelude::*;
 
 use super::super::{PrefInput, PrefOutput, ViewSender};
 use crate::i18n::i18n;
+use crate::mail::attachment_reminder::{normalized, DEFAULT_KEYWORDS};
 
 /// The page, and the rows on it that the window reaches later.
 #[derive(Debug)]
@@ -35,6 +36,10 @@ pub(in crate::ui::preferences) struct ComposingPage {
     /// The reply header as last saved, as the row shows it: the apply
     /// button is up only while the text differs from it.
     reply_header_saved: Rc<RefCell<String>>,
+    pub(in crate::ui::preferences) attachment_keywords_row: adw::EntryRow,
+    /// The attachment reminder's words as last saved: the apply button is
+    /// up only while the text differs from them.
+    attachment_keywords_saved: Rc<RefCell<String>>,
     pub(in crate::ui::preferences) spelling_group: adw::PreferencesGroup,
     pub(in crate::ui::preferences) spellcheck_row: adw::SwitchRow,
     pub(in crate::ui::preferences) spell_lang_row: adw::ExpanderRow,
@@ -231,6 +236,25 @@ impl ComposingPage {
                     },
                 },
 
+                add = &adw::PreferencesGroup {
+                    set_title: &i18n("Attachment Reminder"),
+                    set_description: Some(&i18n("Send asks first when the message mentions one of these words and nothing is attached.")),
+
+                    // Saved on Apply; the text is set and wired in build
+                    // below, beside the button that restores the default.
+                    #[name = "attachment_keywords_row"]
+                    adw::EntryRow {
+                        set_title: &i18n("Words, separated by commas"),
+                        set_show_apply_button: true,
+                        add_suffix: attachment_keywords_reset = &gtk::Button {
+                            set_icon_name: "edit-undo-symbolic",
+                            set_valign: gtk::Align::Center,
+                            set_tooltip_text: Some(i18n("Restore Default").as_str()),
+                            add_css_class: "flat",
+                        },
+                    },
+                },
+
                 #[name = "spelling_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Spelling"),
@@ -275,6 +299,13 @@ impl ComposingPage {
             &reply_header_saved,
             sender,
         );
+        let attachment_keywords_saved = Rc::new(RefCell::new(String::new()));
+        wire_attachment_keywords(
+            &attachment_keywords_row,
+            &attachment_keywords_reset,
+            &attachment_keywords_saved,
+            sender,
+        );
         Self {
             page,
             compose_inline_row,
@@ -297,6 +328,8 @@ impl ComposingPage {
             returned_receipts_row,
             reply_header_row,
             reply_header_saved,
+            attachment_keywords_row,
+            attachment_keywords_saved,
             spelling_group,
             spellcheck_row,
             spell_lang_row,
@@ -311,6 +344,13 @@ impl ComposingPage {
         let text = shown_template(stored);
         set_quietly(&self.reply_header_row, &text);
         *self.reply_header_saved.borrow_mut() = text;
+    }
+
+    /// Show the attachment reminder's saved words.
+    pub(in crate::ui::preferences) fn set_attachment_keywords(&self, stored: &str) {
+        let text = normalized(stored);
+        set_quietly(&self.attachment_keywords_row, &text);
+        *self.attachment_keywords_saved.borrow_mut() = text;
     }
 }
 
@@ -378,6 +418,53 @@ fn wire_reply_header(
             set_quietly(&row, &text);
             *saved.borrow_mut() = text;
             let _ = sender.output(PrefOutput::SetReplyHeader(String::new()));
+        });
+    }
+}
+
+/// The attachment reminder row saves what Apply confirms, and its button
+/// puts the default words back, shown only while the text is something
+/// else. The apply button goes down again when the text is edited back to
+/// what is saved.
+fn wire_attachment_keywords(
+    row: &adw::EntryRow,
+    reset: &gtk::Button,
+    saved: &Rc<RefCell<String>>,
+    sender: &ViewSender,
+) {
+    {
+        let (reset, saved) = (reset.clone(), saved.clone());
+        row.connect_changed(move |row| {
+            reset.set_visible(normalized(&row.text()) != DEFAULT_KEYWORDS);
+            if normalized(&row.text()) == *saved.borrow() {
+                // After the row's own handler, which raises the button.
+                let (row, saved) = (row.clone(), saved.clone());
+                gtk::glib::idle_add_local_once(move || {
+                    if normalized(&row.text()) == *saved.borrow() {
+                        row.set_show_apply_button(false);
+                        row.set_show_apply_button(true);
+                    }
+                });
+            }
+        });
+    }
+    {
+        let (saved, sender) = (saved.clone(), sender.clone());
+        row.connect_apply(move |row| {
+            let text = normalized(&row.text());
+            set_quietly(row, &text);
+            *saved.borrow_mut() = text.clone();
+            let _ = sender.output(PrefOutput::SetAttachmentKeywords(text));
+        });
+    }
+    {
+        let (row, saved, sender) = (row.clone(), saved.clone(), sender.clone());
+        reset.connect_clicked(move |_| {
+            set_quietly(&row, DEFAULT_KEYWORDS);
+            *saved.borrow_mut() = DEFAULT_KEYWORDS.to_string();
+            let _ = sender.output(PrefOutput::SetAttachmentKeywords(
+                DEFAULT_KEYWORDS.to_string(),
+            ));
         });
     }
 }

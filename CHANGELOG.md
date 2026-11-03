@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **Added: a reminder for a forgotten attachment** (#575, by Fabio
+  Rotondo). **Send** now asks first when what you wrote mentions an
+  attachment, as in "please find it attached" or "in allegato", and nothing
+  is attached: **Send Anyway** sends it, **Cancel** goes back to the
+  message. The quoted original of a reply or forward and the signature are
+  not looked at, and a cloud link or a picture in the text counts as an
+  attachment. The words are set in
+  **Settings → Composing → Attachment Reminder**; a word counts when it
+  starts with one of them, so "attach" covers "attached" and "attachment".
+  The default list covers the languages Hylki is translated into, the
+  button beside it puts it back, and an empty list never asks.
+
 - **Added: the list's sort is kept** (#574, suggested by Bohne13). The
   order chosen under **Sort by**, or by a column heading, including a
   heading clicked a second time to reverse it, is now the order the list
