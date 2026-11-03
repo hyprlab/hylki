@@ -536,8 +536,9 @@ pub(crate) struct AppModel {
     pub(super) keep_downloads_days: u32,
     /// Whether messages are grouped into conversation threads.
     pub(super) threading: bool,
-    /// A conversation re-render is already scheduled, so further bodies arriving
-    /// in the same burst don't each queue one of their own.
+    /// A conversation re-render is wanted and scheduled, so further bodies
+    /// arriving in the same burst don't each queue one of their own. Taken by
+    /// the render, so a second call scheduled for it does nothing.
     pub(super) thread_render_queued: bool,
     /// When the conversation on screen was opened. Its bodies arrive one at a
     /// time, and painting each arrival meant a stack of half-built renders

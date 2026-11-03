@@ -249,13 +249,15 @@ impl AppModel {
             }
 
             AppMsg::RenderThread => {
-                self.thread_render_queued = false;
+                // Painted already, by a sooner call for the same render.
+                if !std::mem::take(&mut self.thread_render_queued) {
+                    return;
+                }
                 if self.current_thread.len() > 1 {
                     // Still assembling and still within the grace period: come
                     // back rather than paint a conversation that is about to be
                     // replaced. The re-queue is what makes the deadline fire.
-                    let unsettled = self.current_thread.iter().any(|m| m.body.is_empty())
-                        || self.thread_related_pending;
+                    let unsettled = !self.thread_settled();
                     let waiting = self
                         .thread_opened_at
                         .is_some_and(|opened| opened.elapsed() < THREAD_BODY_WAIT);
