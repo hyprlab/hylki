@@ -431,8 +431,12 @@ impl AppModel {
     /// the app last ran.
     fn prime_from_cache(&mut self) {
         self.claim_cached_accounts();
-        let Ok(cache) = crate::cache::Cache::open() else {
-            return;
+        let cache = match crate::cache::Cache::open() {
+            Ok(cache) => cache,
+            Err(e) => {
+                tracing::error!("cache unavailable, nothing shown from it at start: {e}");
+                return;
+            }
         };
         for (i, c) in self.config.iter().enumerate() {
             if !c.enabled {
