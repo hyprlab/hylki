@@ -4,7 +4,8 @@
 use std::time::Duration;
 
 use crate::config::AccountConfig;
-use crate::i18n::i18n_f;
+use crate::i18n::{i18n, i18n_f};
+use crate::worker::WorkerEvent;
 
 /// The SASL identity for XOAUTH2 (the IMAP/SMTP username, else the email).
 pub(super) fn oauth_user(account: &AccountConfig) -> String {
@@ -208,6 +209,56 @@ pub(super) fn load_or_migrate_password(account: &mut AccountConfig) {
     } else {
         let _ = crate::config::store_password(&account.email, &account.password);
         crate::config::strip_passwords_on_disk();
+    }
+}
+
+/// How long a keyring read may stay silent before the user is told. It keeps
+/// waiting afterwards: a locked keyring answers once it is unlocked.
+const KEYRING_SLOW: std::time::Duration = std::time::Duration::from_secs(10);
+
+/// Read `email`'s password (or its separate SMTP one) from the keyring off the
+/// async runtime's threads, and report to the UI when the keyring errors or
+/// has not answered after [`KEYRING_SLOW`]. `None` when there is no password
+/// to use, whatever the reason.
+pub(super) async fn read_keyring_password(
+    email: &str,
+    smtp: bool,
+    emit: &impl Fn(WorkerEvent),
+) -> Option<String> {
+    let owner = email.to_string();
+    let mut read = tokio::task::spawn_blocking(move || {
+        if smtp {
+            crate::config::read_smtp_password(&owner)
+        } else {
+            crate::config::read_password(&owner)
+        }
+    });
+    let answer = match tokio::time::timeout(KEYRING_SLOW, &mut read).await {
+        Ok(answer) => answer,
+        Err(_) => {
+            emit(WorkerEvent::KeyringFailed {
+                email: email.to_string(),
+                detail: i18n("The keyring has not answered for 10 seconds. It may be locked and waiting to be unlocked. Hylki keeps waiting."),
+            });
+            read.await
+        }
+    };
+    match answer {
+        Ok(Ok(password)) => password,
+        Ok(Err(e)) => {
+            emit(WorkerEvent::KeyringFailed {
+                email: email.to_string(),
+                detail: e,
+            });
+            None
+        }
+        Err(e) => {
+            emit(WorkerEvent::KeyringFailed {
+                email: email.to_string(),
+                detail: format!("the keyring read failed: {e}"),
+            });
+            None
+        }
     }
 }
 

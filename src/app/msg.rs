@@ -1164,6 +1164,9 @@ pub(crate) enum AppMsg {
     /// Show the keyring / Secret Service setup help. `problem: true` when a save
     /// actually failed to persist; `false` for the proactive one-time tip.
     ShowKeyringHelp { problem: bool },
+    /// A worker could not get an account's password from the keyring
+    /// (error, or no answer yet): tell the user, once per account at a time.
+    KeyringReadFailed { email: String, detail: String },
     /// Reconnect every account: a saved edit changed a secret, which the
     /// keyring said after the save.
     ReconnectAccounts,

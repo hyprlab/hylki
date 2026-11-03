@@ -344,6 +344,7 @@ impl AppModel {
             | AppMsg::AddFirstAccount
             | AppMsg::AccountSaved { .. }
             | AppMsg::ShowKeyringHelp { .. }
+            | AppMsg::KeyringReadFailed { .. }
             | AppMsg::ReconnectAccounts
             | AppMsg::ShowCarryOverNotice(..)
             | AppMsg::AccountEnabledChanged { .. }

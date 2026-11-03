@@ -652,6 +652,13 @@ pub(crate) enum WorkerEvent {
     /// bulk-action spinner in the UI.
     BulkComplete,
     Status(String),
+    /// The keyring did not hand over `email`'s password: it answered with an
+    /// error, or is still silent after a while (locked, waiting to be
+    /// unlocked). The UI tells the user in a dialog.
+    KeyringFailed {
+        email: String,
+        detail: String,
+    },
     /// `connectivity` marks connection/sync errors that should auto-clear once
     /// a later connect or sync succeeds.
     Error {

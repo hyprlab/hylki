@@ -239,6 +239,51 @@ impl AppModel {
     /// `problem` is true when this is shown because a save actually failed;
     /// false for the proactive one-time tip (which offers "Don't show again").
     #[allow(deprecated)] // adw::MessageDialog: AlertDialog would change how it looks
+    /// The dialog for a password the keyring would not hand over. One per
+    /// account at a time (the slow-answer and the error report can both
+    /// come); "Retry" reconnects, which reads the keyring again.
+    fn show_keyring_read_failed(&self, email: &str, detail: &str, sender: &ComponentSender<Self>) {
+        use std::collections::HashSet;
+        use std::sync::Mutex;
+        static OPEN: Mutex<Option<HashSet<String>>> = Mutex::new(None);
+        tracing::warn!("keyring: password for {email} not available: {detail}");
+        let first = OPEN
+            .lock()
+            .map(|mut open| {
+                open.get_or_insert_with(HashSet::new)
+                    .insert(email.to_string())
+            })
+            .unwrap_or(true);
+        if !first {
+            return;
+        }
+        let dialog = adw::AlertDialog::new(
+            Some(&i18n("Hylki can’t read your password from the keyring")),
+            Some(&i18n_f(
+                "The password for {email} could not be retrieved.\n\n{detail}\n\nMake sure the system keyring (Secret Service) is running and unlocked, for example by opening “Passwords and Keys” and unlocking the Login keyring, then choose Retry.",
+                &[("email", email), ("detail", detail)],
+            )),
+        );
+        dialog.add_response("close", &i18n("Close"));
+        dialog.add_response("retry", &i18n("Retry"));
+        dialog.set_default_response(Some("retry"));
+        dialog.set_close_response("close");
+        dialog.set_response_appearance("retry", adw::ResponseAppearance::Suggested);
+        let s = sender.clone();
+        let email = email.to_string();
+        dialog.connect_response(None, move |_, resp| {
+            if let Ok(mut open) = OPEN.lock() {
+                if let Some(open) = open.as_mut() {
+                    open.remove(&email);
+                }
+            }
+            if resp == "retry" {
+                s.input(AppMsg::ReconnectAccounts);
+            }
+        });
+        dialog.present(Some(&self.window));
+    }
+
     fn show_keyring_help(&self, problem: bool) {
         let mint = crate::desktop::platform::is_mint_cinnamon();
 
@@ -319,6 +364,9 @@ impl AppModel {
             } => self.on_account_saved(original_email, account, sender),
 
             AppMsg::ShowKeyringHelp { problem } => self.show_keyring_help(problem),
+            AppMsg::KeyringReadFailed { email, detail } => {
+                self.show_keyring_read_failed(&email, &detail, &sender)
+            }
             AppMsg::ReconnectAccounts => self.reconnect_all(&sender),
             AppMsg::ShowCarryOverNotice(from) => crate::ui::carry_over::show(&self.window, from),
 
