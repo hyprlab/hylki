@@ -244,8 +244,8 @@
   settings.
 
 - **Translations:** German (PRs #550, #559 and #565 by Samuel Edlmeier) is
-  complete; French (PRs #556 and #558 by frenchy82) and Spanish (PR #561 by
-  Daniel Miguel) are up to date.
+  complete; French (PRs #556, #558 and #568 by frenchy82), Greek (PR #572 by
+  Yiannis Ioannides) and Spanish (PR #561 by Daniel Miguel) are up to date.
 
 ## 1.46.1 — 2026-10-31
 
