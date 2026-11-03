@@ -650,6 +650,30 @@ msgstr ""
 msgid "Your answer has been sent: declined."
 msgstr ""
 
+msgid "Retry"
+msgstr ""
+
+msgid "Waiting for the keyring"
+msgstr ""
+
+msgid "Couldn’t read the password"
+msgstr ""
+
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr ""
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr ""
+
 msgid "Date (Newest first)"
 msgstr ""
 

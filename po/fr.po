@@ -701,6 +701,33 @@ msgstr "Votre réponse a été envoyée : peut-être."
 msgid "Your answer has been sent: declined."
 msgstr "Votre réponse a été envoyée : refusé."
 
+msgid "Retry"
+msgstr ""
+
+#, fuzzy
+msgid "Waiting for the keyring"
+msgstr "En attente d’envoi"
+
+#, fuzzy
+msgid "Couldn’t read the password"
+msgstr "Indiquez le mot de passe."
+
+#, fuzzy
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr "Un message n’a pas pu être déplacé vers {account} : {error}"
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr ""
+
 msgid "Date (Newest first)"
 msgstr "Date (récents en premier)"
 
@@ -766,6 +793,33 @@ msgstr "Filtrer"
 
 msgid "Sort"
 msgstr "Trier"
+
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "Envoi du message…"
+msgstr[1] "Envoi du message…"
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox, a refused one included.
+#, fuzzy
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] "Importation de {done} messages sur {total}…"
+msgstr[1] "Importation de {done} messages sur {total}…"
+
+#, fuzzy
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] "Rechercher dans le message"
+msgstr[1] "Rechercher dans le message"
+
+msgid "Stop"
+msgstr ""
+
+#, fuzzy
+msgid "Show Outbox"
+msgstr "Boîte d’envoi"
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -1337,12 +1391,6 @@ msgstr "Aucun dossier de réception disponible pour ce compte"
 
 msgid "No {v1} folder available for some messages"
 msgstr "Aucun dossier {v1} disponible pour certains messages"
-
-#, fuzzy
-msgid "Sending {n} message…"
-msgid_plural "Sending {n} messages…"
-msgstr[0] "Envoi du message…"
-msgstr[1] "Envoi du message…"
 
 msgid "Remove Account?"
 msgstr "Supprimer le compte ?"
@@ -4611,6 +4659,22 @@ msgstr "Taille du texte"
 msgid "In {places}"
 msgstr "Dans {folder}"
 
+msgid "Takes under a minute"
+msgstr ""
+
+msgid "Takes about a minute"
+msgstr ""
+
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Mail Merge"
 msgstr ""
 
@@ -4638,6 +4702,19 @@ msgstr ""
 #, fuzzy
 msgid "Leave these fields empty"
 msgstr "Garder le champ de recherche ouvert"
+
+msgid "Limit sending rate"
+msgstr ""
+
+msgid "Messages"
+msgstr "Messages"
+
+#, fuzzy
+msgid "per minute"
+msgstr "Toutes les minutes"
+
+msgid "per hour"
+msgstr ""
 
 #, fuzzy
 msgid "{n} of {total}"
@@ -6663,9 +6740,6 @@ msgstr "Région (vide pour une ressource globale)"
 msgid "Translates a greeting to test the service."
 msgstr "Traduit une formule de salutation pour tester le service."
 
-msgid "Messages"
-msgstr "Messages"
-
 msgid "Hylki's language ({language})"
 msgstr "Langue de Hylki ({language})"
 
@@ -7122,6 +7196,14 @@ msgid ""
 "the connection is back."
 msgstr ""
 "Aucune connexion réseau. Le message est dans la Boîte d’envoi et sera envoyé "
+"dès le rétablissement de la connexion."
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+#, fuzzy
+msgid "Send failed: {e}. The message is in the Outbox."
+msgstr ""
+"Échec de l’envoi : {e}. Le message est dans la Boîte d’envoi et sera envoyé "
 "dès le rétablissement de la connexion."
 
 msgid ""

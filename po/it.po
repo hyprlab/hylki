@@ -714,6 +714,33 @@ msgstr "La tua risposta è stata inviata: forse."
 msgid "Your answer has been sent: declined."
 msgstr "La tua risposta è stata inviata: rifiutato."
 
+msgid "Retry"
+msgstr ""
+
+#, fuzzy
+msgid "Waiting for the keyring"
+msgstr "Già nel tuo portachiavi"
+
+#, fuzzy
+msgid "Couldn’t read the password"
+msgstr "Proteggi con una password"
+
+#, fuzzy
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr "Un messaggio non è stato spostato in {account}: {error}"
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr ""
+
 msgid "Date (Newest first)"
 msgstr "Data (più recenti prima)"
 
@@ -790,6 +817,33 @@ msgstr "Filtri"
 
 msgid "Sort"
 msgstr "Ordina"
+
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "Indicizzazione di {n} messaggi…"
+msgstr[1] "Indicizzazione di {n} messaggi…"
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox, a refused one included.
+#, fuzzy
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] "Cartella {done} di {total}"
+msgstr[1] "Cartella {done} di {total}"
+
+#, fuzzy
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] "Trova nel messaggio"
+msgstr[1] "Trova nel messaggio"
+
+msgid "Stop"
+msgstr ""
+
+#, fuzzy
+msgid "Show Outbox"
+msgstr "Posta in uscita"
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -1386,12 +1440,6 @@ msgstr "Nessuna cartella Posta in arrivo disponibile per questo account"
 
 msgid "No {v1} folder available for some messages"
 msgstr "Nessuna cartella {v1} disponibile per alcuni messaggi"
-
-#, fuzzy
-msgid "Sending {n} message…"
-msgid_plural "Sending {n} messages…"
-msgstr[0] "Indicizzazione di {n} messaggi…"
-msgstr[1] "Indicizzazione di {n} messaggi…"
 
 msgid "Remove Account?"
 msgstr "Rimuovere l'account?"
@@ -4778,6 +4826,22 @@ msgstr "Dimensione testo"
 msgid "In {places}"
 msgstr "cartella sconosciuta"
 
+msgid "Takes under a minute"
+msgstr ""
+
+msgid "Takes about a minute"
+msgstr ""
+
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Mail Merge"
 msgstr ""
 
@@ -4805,6 +4869,19 @@ msgstr ""
 #, fuzzy
 msgid "Leave these fields empty"
 msgstr "Salvare il filtro?"
+
+msgid "Limit sending rate"
+msgstr ""
+
+msgid "Messages"
+msgstr "Messaggi"
+
+#, fuzzy
+msgid "per minute"
+msgstr "Ogni minuto"
+
+msgid "per hour"
+msgstr ""
 
 #, fuzzy
 msgid "{n} of {total}"
@@ -6873,9 +6950,6 @@ msgstr "Regione (vuoto per una risorsa globale)"
 msgid "Translates a greeting to test the service."
 msgstr "Traduce un saluto, per verificare che il servizio risponda."
 
-msgid "Messages"
-msgstr "Messaggi"
-
 msgid "Hylki's language ({language})"
 msgstr "La lingua di Hylki ({language})"
 
@@ -7330,6 +7404,14 @@ msgstr "Indicizzazione di {n} messaggi…"
 msgid ""
 "No network connection. The message is in the Outbox and will be sent when "
 "the connection is back."
+msgstr ""
+"Invio non riuscito: {e}. Il messaggio è nella Posta in uscita e verrà "
+"inviato quando la connessione sarà ripristinata."
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+#, fuzzy
+msgid "Send failed: {e}. The message is in the Outbox."
 msgstr ""
 "Invio non riuscito: {e}. Il messaggio è nella Posta in uscita e verrà "
 "inviato quando la connessione sarà ripristinata."

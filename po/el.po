@@ -712,6 +712,33 @@ msgstr "Η απάντησή σας στάλθηκε: ίσως."
 msgid "Your answer has been sent: declined."
 msgstr "Η απάντησή σας στάλθηκε: απόρριψη."
 
+msgid "Retry"
+msgstr ""
+
+#, fuzzy
+msgid "Waiting for the keyring"
+msgstr "Αναμονή για αποστολή"
+
+#, fuzzy
+msgid "Couldn’t read the password"
+msgstr "Εισαγάγετε τον κωδικό πρόσβασης."
+
+#, fuzzy
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr "Δεν ήταν δυνατή η μετακίνηση ενός μηνύματος στο {account}: {error}"
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr ""
+
 msgid "Date (Newest first)"
 msgstr "Ημερομηνία (νεότερα πρώτα)"
 
@@ -783,6 +810,33 @@ msgstr "Φίλτρο"
 
 msgid "Sort"
 msgstr "Ταξινόμηση"
+
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "Αποστολή μηνύματος…"
+msgstr[1] "Αποστολή μηνύματος…"
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox, a refused one included.
+#, fuzzy
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] "Φάκελος {done} από {total}"
+msgstr[1] "Φάκελος {done} από {total}"
+
+#, fuzzy
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] "Εύρεση στο μήνυμα"
+msgstr[1] "Εύρεση στο μήνυμα"
+
+msgid "Stop"
+msgstr ""
+
+#, fuzzy
+msgid "Show Outbox"
+msgstr "Εξερχόμενα"
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -1362,12 +1416,6 @@ msgstr "Δεν υπάρχει φάκελος Εισερχομένων για α�
 
 msgid "No {v1} folder available for some messages"
 msgstr "Δεν υπάρχει διαθέσιμος φάκελος {v1} για ορισμένα μηνύματα"
-
-#, fuzzy
-msgid "Sending {n} message…"
-msgid_plural "Sending {n} messages…"
-msgstr[0] "Αποστολή μηνύματος…"
-msgstr[1] "Αποστολή μηνύματος…"
 
 msgid "Remove Account?"
 msgstr "Αφαίρεση λογαριασμού;"
@@ -4696,6 +4744,22 @@ msgstr "Μέγεθος κειμένου"
 msgid "In {places}"
 msgstr "Στον φάκελο {folder}"
 
+msgid "Takes under a minute"
+msgstr ""
+
+msgid "Takes about a minute"
+msgstr ""
+
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Mail Merge"
 msgstr ""
 
@@ -4723,6 +4787,19 @@ msgstr ""
 #, fuzzy
 msgid "Leave these fields empty"
 msgstr "Διατήρηση ανοιχτού πεδίου αναζήτησης"
+
+msgid "Limit sending rate"
+msgstr ""
+
+msgid "Messages"
+msgstr "Μηνύματα"
+
+#, fuzzy
+msgid "per minute"
+msgstr "Κάθε λεπτό"
+
+msgid "per hour"
+msgstr ""
 
 #, fuzzy
 msgid "{n} of {total}"
@@ -6776,9 +6853,6 @@ msgstr "Περιοχή (κενό για καθολικό πόρο)"
 msgid "Translates a greeting to test the service."
 msgstr "Μεταφράζει έναν χαιρετισμό για να δοκιμάσει την υπηρεσία."
 
-msgid "Messages"
-msgstr "Μηνύματα"
-
 msgid "Hylki's language ({language})"
 msgstr "Γλώσσα του Hylki ({language})"
 
@@ -7247,6 +7321,14 @@ msgid ""
 msgstr ""
 "Δεν υπάρχει σύνδεση δικτύου. Το μήνυμα βρίσκεται στα Εξερχόμενα και θα "
 "αποσταλεί όταν επανέλθει η σύνδεση."
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+#, fuzzy
+msgid "Send failed: {e}. The message is in the Outbox."
+msgstr ""
+"Η αποστολή απέτυχε: {e}. Το μήνυμα βρίσκεται στα Εξερχόμενα και θα σταλεί "
+"όταν αποκατασταθεί η σύνδεση."
 
 msgid ""
 "Send failed: {e}. The message is in the Outbox and will be sent when the "
