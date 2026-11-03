@@ -11,7 +11,8 @@ use relm4::prelude::*;
 
 #[relm4::component(pub(crate))]
 impl Component for MessageView {
-    type Init = ();
+    /// The freeze of the pane the reader is in (with its attachment drawer).
+    type Init = crate::ui::reader_swap::ReaderSwap;
     type Input = MessageViewInput;
     type Output = MessageViewOutput;
     type CommandOutput = ();
@@ -48,6 +49,11 @@ impl Component for MessageView {
 
                 gtk::Revealer {
                     set_transition_type: gtk::RevealerTransitionType::SlideDown,
+                    // A banner that comes with the message opening is just
+                    // there: sliding in, it would push the page down after
+                    // it shows.
+                    #[watch]
+                    set_transition_duration: model.banner_slide_ms(),
                     #[watch]
                     set_reveal_child: model.spoof_alert_shown(),
 
@@ -74,6 +80,8 @@ impl Component for MessageView {
                 #[name = "remote_alert"]
                 gtk::Revealer {
                     set_transition_type: gtk::RevealerTransitionType::SlideDown,
+                    #[watch]
+                    set_transition_duration: model.banner_slide_ms(),
                     #[watch]
                     set_reveal_child: model.blocked && model.show_banner,
 
@@ -349,11 +357,9 @@ impl Component for MessageView {
                     // page sits on it — the spinner box is centred and paints
                     // only its own few square inches.
                     add_css_class: "reader-cover",
-                    // Both pages sit on that same ground, so a short dissolve
-                    // between them reads as the message arriving rather than as
-                    // the hard cut a stack does by default.
-                    set_transition_type: gtk::StackTransitionType::Crossfade,
-                    set_transition_duration: 120,
+                    // A cut: the spinner shows with its message, under the
+                    // pane's still or as the reveal after it, never dissolved
+                    // over the message before.
                     set_vexpand: true,
                     #[watch]
                     set_visible_child_name: model.body_page(),
@@ -388,13 +394,13 @@ impl Component for MessageView {
     }
 
     fn init(
-        _init: Self::Init,
+        swap: Self::Init,
         root: Self::Root,
         sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
         let webview = new_webview();
         let link_preview = link_preview_plaque(&webview);
-        let mut model = MessageView::initial(webview, &link_preview);
+        let mut model = MessageView::initial(webview, &link_preview, swap);
         model.faces.input = Some(sender.input_sender().clone());
         model.watch_loads(&sender);
         model.watch_context_menu(&sender);
@@ -414,7 +420,6 @@ impl Component for MessageView {
         model.apply_webview_bg(model.effective_dark());
         let body_overlay = gtk::Overlay::new();
         body_overlay.set_child(Some(&model.webview));
-        body_overlay.add_overlay(&model.page_fade.cover);
         body_overlay.add_overlay(&link_preview);
         let zoom_sender = sender.clone();
         body_overlay.add_controller(crate::ui::ctrl_scroll_zoom(
@@ -455,6 +460,7 @@ impl Component for MessageView {
                 folder_labels,
                 instant,
                 sent,
+                &sender,
             ),
             MessageViewInput::LoadRemoteOnce => self.on_load_remote_once(&sender),
             MessageViewInput::ToggleRemote { account_id, id } => {
@@ -469,7 +475,9 @@ impl Component for MessageView {
                 allow_remote,
                 preview,
             } => self.on_print_messages(*message, thread, allow_remote, preview),
-            MessageViewInput::FacesChanged => self.render(),
+            MessageViewInput::FacesChanged => {
+                self.render();
+            }
 
             MessageViewInput::ThemeChanged => self.on_theme_changed(),
             MessageViewInput::SetAlwaysShowRecipients(on) => {
@@ -599,6 +607,7 @@ impl Component for MessageView {
             } => self.on_pgp_done(account_id, id, result, &sender),
             MessageViewInput::Rendered => self.on_rendered(),
             MessageViewInput::FaceFound(answer) => self.on_face_found(*answer),
+            MessageViewInput::LoadingDeadline(generation) => self.on_loading_deadline(generation),
             MessageViewInput::SuppressAutoRead { account_id, id } => {
                 self.on_suppress_auto_read(account_id, id)
             }

@@ -869,7 +869,7 @@ impl SimpleComponent for AppModel {
                             #[name = "reader_content_box"]
                             set_content = &gtk::Box {
                                 set_orientation: gtk::Orientation::Vertical,
-                                append: model.attachment_drawer.widget(),
+                                append: model.reader_swap.host(),
                             },
                             },
                         },

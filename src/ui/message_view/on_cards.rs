@@ -399,6 +399,11 @@ impl MessageView {
     }
 
     pub(super) fn on_scroll_anchor(&mut self, account_id: u32, id: u32, offset: u32) {
+        // A page under the pane's still has not been seen: where it stands
+        // is not the reader's place (a page loading reports the top).
+        if self.swap.held() {
+            return;
+        }
         self.saved_anchor = Some((account_id, id, offset));
         self.anchor_gutter = false;
     }
@@ -408,7 +413,7 @@ impl MessageView {
         self.anchor_gutter = true;
         // The anchor rides only on a document that keeps its place.
         self.did_autoscroll = true;
-        self.skip_fade = true;
+        self.skip_freeze = true;
     }
 
     pub(super) fn on_hold_place(&mut self, account_id: u32, id: u32) {

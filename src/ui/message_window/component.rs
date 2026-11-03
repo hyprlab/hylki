@@ -10,6 +10,7 @@ use crate::ui::attachment_drawer::{AttachmentDrawer, DrawerInit, DrawerOutput};
 use crate::ui::lightbox::{Lightbox, LightboxInput};
 use crate::ui::message_list::RowAction;
 use crate::ui::message_view::{MessageView, MessageViewInput, MessageViewOutput};
+use crate::ui::reader_swap::ReaderSwap;
 use adw::prelude::*;
 use relm4::prelude::*;
 
@@ -49,7 +50,7 @@ impl Component for MessageWindow {
                 #[wrap(Some)]
                 #[name = "content"]
                 set_content = &gtk::Overlay {
-                    set_child: Some(model.drawer.widget()),
+                    set_child: Some(model.swap.host()),
                     add_overlay: model.lightbox.widget(),
                 },
             },
@@ -61,8 +62,9 @@ impl Component for MessageWindow {
         root: Self::Root,
         sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
+        let swap = ReaderSwap::new();
         let view = MessageView::builder()
-            .launch(())
+            .launch(swap.clone())
             .forward(sender.input_sender(), from_reader);
         // Apply the message-content theme before the first render.
         view.emit(MessageViewInput::SetContentTheme(init.content_dark));
@@ -95,6 +97,7 @@ impl Component for MessageWindow {
                 DrawerOutput::ShowInMessage(att) => MessageWindowInput::ShowAttachment(att),
                 DrawerOutput::DeleteFromServer(att) => MessageWindowInput::DeleteAttachment(att),
             });
+        swap.set_pane(drawer.widget());
         let lightbox = Lightbox::builder().launch(()).detach();
 
         let thread = if init.thread.is_empty() {
@@ -114,6 +117,7 @@ impl Component for MessageWindow {
             attachments_loading: init.attachments_loading.into_iter().collect(),
             drawer_enabled: init.drawer_enabled,
             drawer,
+            swap,
             lightbox,
             tags: init.tags,
             toolbar: init.toolbar,

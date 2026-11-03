@@ -36,8 +36,8 @@ pub(super) fn parse_bridge(msg: &str) -> Option<Bridge> {
     // `extra` as a non-empty trimmed address (the address menu's verbs).
     let address = || extra.map(str::trim).filter(|a| !a.is_empty());
     let input = match verb {
-        // Every message frame has loaded and been sized: the layout has
-        // settled, so there is something worth revealing.
+        // Every message frame has loaded and been sized, and the page has
+        // been drawn at its open scroll: there is something worth revealing.
         "ready" => MessageViewInput::Rendered,
         "desel" => MessageViewInput::ClearCards,
         "selall" => MessageViewInput::SelectAllCards,

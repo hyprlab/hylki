@@ -13,7 +13,9 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 impl MessageView {
-    pub(super) fn render(&mut self) {
+    /// Build the document for what is to be shown and load it; `false`
+    /// when what is on screen already is that.
+    pub(super) fn render(&mut self) -> bool {
         let dark = self.effective_dark();
         self.apply_webview_bg(dark);
         // Before the shortcut below: a sender whose face could not be found
@@ -24,7 +26,7 @@ impl MessageView {
         // and paint the same pixels back.
         let fingerprint = self.render_fingerprint(dark);
         if self.webview_ready && self.shown_fingerprint == Some(fingerprint) {
-            return;
+            return false;
         }
         self.shown_fingerprint = Some(fingerprint);
         // A page handed over while the window is hidden (running in the
@@ -32,6 +34,14 @@ impl MessageView {
         // painted: it is loaded again once the view is on screen (#332).
         if !self.webview.is_mapped() {
             self.painted_hidden = true;
+        }
+        // What is on screen (a page, or the spinner) stays, frozen, until the
+        // new page is ready: opening a message has frozen the whole pane
+        // already, and this covers a page replaced in place. A sent reply's
+        // card has its own entrance (`PinArrival`).
+        let unseen = self.swap.held();
+        if !std::mem::take(&mut self.skip_freeze) {
+            self.swap.freeze();
         }
         // A conversation is covered until its new document has painted: the
         // spinner is already up from the moment the thread was opened, so it
@@ -45,9 +55,6 @@ impl MessageView {
         if self.thread.len() > 1 && !self.instant {
             self.webview_ready = false;
         }
-        // Only a page that stays in view dissolves into the next; behind the
-        // spinner there is nothing to see.
-        let fade = self.webview_ready && !self.loading && !std::mem::take(&mut self.skip_fade);
         let html = self.document_html(dark);
         // A message painted alone that has since grown into a conversation
         // gets the conversation's open scroll, unless the reader has been
@@ -58,6 +65,13 @@ impl MessageView {
             && self.thread.len() > 1
             && self.saved_anchor.is_none()
         {
+            self.did_autoscroll = false;
+        }
+        // A page replaced while the pane is still frozen was never seen: the
+        // open scroll it spent is owed to the page replacing it, which would
+        // otherwise open at the top (a second render close behind the
+        // first, before the page has reported where it is).
+        if unseen && self.saved_anchor.is_none() {
             self.did_autoscroll = false;
         }
         // A conversation opened behind the loading cover spends its open
@@ -93,7 +107,9 @@ impl MessageView {
         self.autoscroll_lone = self.thread.len() <= 1;
         let n = self.seq.get().wrapping_add(1);
         self.seq.set(n);
-        self.load_after_paint(html, format!("https://hylki.localhost/message/{n}"), fade);
+        self.latest_uri = format!("https://hylki.localhost/message/{n}");
+        self.load_after_paint(html, self.latest_uri.clone());
+        true
     }
 
     /// Everything the rendered document depends on, in one number. Ordered by

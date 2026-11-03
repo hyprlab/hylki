@@ -83,6 +83,16 @@ impl MessageView {
         self.card_atts_shown && (self.thread.len() > 1 || !self.drawer_on)
     }
 
+    /// How long a banner over the message slides: not at all while the
+    /// pane is frozen for a message opening (it comes with the message).
+    pub(super) fn banner_slide_ms(&self) -> u32 {
+        if self.swap.held() {
+            0
+        } else {
+            250
+        }
+    }
+
     /// Whether the reader header's first line has anything on it. With the
     /// account chip and both switches hidden in Settings it would be an
     /// empty row adding its spacing above the subject.

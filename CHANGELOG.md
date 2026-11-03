@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Fixed: opening a message changed the reading pane in steps** (#570, by
+  Valentin Morice). The new subject showed over the previous message's body,
+  the attachment drawer left and came back, and a page could show at the top
+  and then jump to where it opens. The previous message now stays on screen
+  until the new one is ready, and the new one shows in one frame. A message
+  still downloading after 0.3 s shows its spinner. A conversation whose
+  bodies are all cached opens without a 120 ms wait, and a message opened
+  behind the spinner is loaded once instead of twice.
+
 - **Fixed: remote pictures in a message could not be saved** (#569,
   reported by samuel-edlmeier). Right-clicking a picture loaded from the web
   now offers **Save Image As…**, **Copy Image** and **Copy Image Address**,

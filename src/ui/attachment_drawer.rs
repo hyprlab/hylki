@@ -112,20 +112,8 @@ pub(crate) struct AttachmentDrawer {
     /// waits in `pending_items`, so a fade is never cut short by a rebuild.
     fading: usize,
     pending_items: Option<Vec<Attachment>>,
-    /// The drawer's body, faded in when a message with attachments opens.
+    /// The drawer's body, shown when a message with attachments opens.
     drawer_body: Option<gtk::Box>,
-    /// The body in its own overlay, which carries `swapping`. What a still
-    /// of the drawer is taken from: it is what is on screen, swap included.
-    drawer_frame: Option<gtk::Overlay>,
-    /// A still of the drawer, faded out where it stood when a message
-    /// without attachments replaces one with them.
-    leaving: gtk::Picture,
-    /// The running fade in or out.
-    presence_anim: Rc<std::cell::RefCell<Option<adw::TimedAnimation>>>,
-    /// A still of the previous message's drawer, dissolving over this one's
-    /// when both have attachments.
-    swapping: gtk::Picture,
-    swap_anim: Rc<std::cell::RefCell<Option<adw::TimedAnimation>>>,
     /// Bumped by every list, so an empty one held back is dropped when the
     /// next message's list follows it.
     empty_gen: u64,
@@ -449,20 +437,6 @@ impl SimpleComponent for AttachmentDrawer {
 
         let pill = grab_pill(&root, &sender);
 
-        let leaving = gtk::Picture::new();
-        leaving.set_content_fit(gtk::ContentFit::Fill);
-        leaving.set_can_shrink(true);
-        leaving.set_can_target(false);
-        leaving.set_valign(gtk::Align::End);
-        leaving.add_css_class("attachment-drawer-still");
-        let swapping = gtk::Picture::new();
-        swapping.set_content_fit(gtk::ContentFit::Fill);
-        swapping.set_can_shrink(true);
-        swapping.set_can_target(false);
-        swapping.set_visible(false);
-        swapping.add_css_class("attachment-drawer-still");
-        leaving.set_visible(false);
-
         let mut model = AttachmentDrawer {
             items: Vec::new(),
             display_order: Vec::new(),
@@ -485,38 +459,30 @@ impl SimpleComponent for AttachmentDrawer {
             fading: 0,
             pending_items: None,
             drawer_body: None,
-            drawer_frame: None,
-            leaving: leaving.clone(),
-            presence_anim: Rc::new(std::cell::RefCell::new(None)),
-            swapping: swapping.clone(),
-            swap_anim: Rc::new(std::cell::RefCell::new(None)),
             empty_gen: 0,
         };
 
         let widgets = view_output!();
         model.drawer_body = Some(widgets.drawer_body.clone());
-        // The body moves into an overlay of its own, where the previous
-        // message's drawer dissolves over it. The overlay comes and goes
-        // with the body, so the split still hides its seam with no drawer.
+        // The body moves into an overlay of its own (`header_height` reads
+        // it there). The overlay comes and goes with the body, so the split
+        // still hides its seam with no drawer.
         {
             let body = widgets.drawer_body.clone();
             let frame = gtk::Overlay::new();
             root.set_end_child(None::<&gtk::Widget>);
             frame.set_child(Some(&body));
-            frame.add_overlay(&swapping);
             body.bind_property("visible", &frame, "visible")
                 .sync_create()
                 .build();
             root.set_end_child(Some(&frame));
             root.set_resize_end_child(false);
             root.set_shrink_end_child(false);
-            model.drawer_frame = Some(frame);
         }
         // Dock the reader as the top pane (the drawer body is the bottom pane),
         // wrapped in the Overlay that floats the grab pill over its lower edge.
         let reader_wrap = gtk::Overlay::new();
         reader_wrap.set_child(Some(&init.reader));
-        reader_wrap.add_overlay(&leaving);
         reader_wrap.add_overlay(&pill);
         root.set_start_child(Some(&reader_wrap));
         // A collapsed drawer starts with its divider locked.
