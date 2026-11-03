@@ -244,3 +244,45 @@ fn suggests_a_filename_from_the_mime_type() {
     assert_eq!(default_image_name("image/png"), "image.png");
     assert_eq!(default_image_name("image/svg+xml"), "image.svg");
 }
+
+#[test]
+fn names_a_remote_picture_from_its_address() {
+    let png = "image/png";
+    assert_eq!(
+        remote_image_name("https://a.example/img/banner.png?w=600", png),
+        "banner.png"
+    );
+    assert_eq!(
+        remote_image_name("https://a.example/My%20Photo.JPG", "image/jpeg"),
+        "My Photo.JPG"
+    );
+    // An ID with no extension, the host alone, or a hidden name: from the type.
+    assert_eq!(
+        remote_image_name("https://t.example/o/8f3a2b", png),
+        "image.png"
+    );
+    assert_eq!(
+        remote_image_name("https://a.example/", "image/jpeg; q=1"),
+        "image.jpg"
+    );
+    assert_eq!(
+        remote_image_name("https://a.example/.png", png),
+        "image.png"
+    );
+    // A decoded slash is not a path.
+    assert_eq!(
+        remote_image_name("https://a.example/x%2F..%2Fy.png", png),
+        "image.png"
+    );
+    assert_eq!(remote_image_name("https://a.example/x", ""), "image");
+}
+
+#[test]
+fn a_cached_picture_gives_back_its_web_address() {
+    assert_eq!(
+        crate::services::remote_content::web_url("hylki-https://img.example/a.png").as_deref(),
+        Some("https://img.example/a.png")
+    );
+    assert!(crate::services::remote_content::web_url("https://img.example/a.png").is_none());
+    assert!(crate::services::remote_content::web_url("data:image/png;base64,AA").is_none());
+}

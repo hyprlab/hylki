@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Fixed: remote pictures in a message could not be saved** (#569,
+  reported by samuel-edlmeier). Right-clicking a picture loaded from the web
+  now offers **Save Image As…**, **Copy Image** and **Copy Image Address**,
+  as a picture carried in the mail does. The picture is taken from the
+  remote-content cache, so nothing is fetched again from the sender. Since
+  1.46.0-beta.5 such a picture had no entries at all, and before that only
+  Copy Image Address.
+
 - **Fixed: a test failing on Sundays from 17:00** (#567, reported by
   clementpoiret), which stopped package builds that run the tests, such as
   the Nix flake. The snooze presets test read the clock and expected three
