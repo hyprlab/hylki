@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-11-01 18:29+0100\n"
+"PO-Revision-Date: 2026-11-03 18:39+0100\n"
 "Last-Translator: Samuel Edlmeier <samuel.edlmeier@gmx.net>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -386,7 +386,7 @@ msgid "The files go into the draft you pick."
 msgstr "Dateien werden in den gewählten Entwurf eingefügt."
 
 msgid "No drafts to continue."
-msgstr "Keine Entwürfe, um fortzufahren"
+msgstr "Keine Entwürfe um fortzufahren"
 
 msgid "Attach to This Draft"
 msgstr "Diesem Entwurf beifügen"
@@ -405,7 +405,7 @@ msgstr ""
 "verschoben; ein erneuter Versuch folgt."
 
 msgid "The forward of filter {rule} is waiting in the Outbox"
-msgstr "Ausführung der Weiterleitungsregel {rule} steht im Postausgang an."
+msgstr "Ausführung der Weiterleitungsregel {rule}  steht im Postausgang an."
 
 msgid "No filters to apply here yet"
 msgstr "Hier sind noch keine Filter verfügbar."
@@ -702,31 +702,37 @@ msgid "Your answer has been sent: declined."
 msgstr "Antwort wurde gesendet: Abgelehnt."
 
 msgid "Retry"
-msgstr ""
+msgstr "Erneut versuchen"
 
-#, fuzzy
 msgid "Waiting for the keyring"
-msgstr "Wartet auf Versand"
+msgstr "Warten auf Schlüsselbund"
 
-#, fuzzy
 msgid "Couldn’t read the password"
-msgstr "Passwort eingeben"
+msgstr "Passwort konnte nicht gelesen werden."
 
-#, fuzzy
 msgid "The keyring gave an error for {accounts}: {error}"
-msgstr "Eine Nachricht konnte nicht in {account} verschoben werden: {error}"
+msgstr ""
+"Eine Nachricht konnte nicht in {account} verschoben werden: {error}\n"
+"\n"
+"\n"
 
 msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
 msgstr ""
+"Schlüsselbund antwortet nicht für »{accounts}«. E-Mails werden abgerufen, "
+"sobald er bereit ist."
 
 msgid ""
 "Unlock the keyring, for example the Login keyring in Passwords and Keys."
 msgstr ""
+"Schlüsselbund entsperren (z. B. Login Schlüsselbund in »Passwörter und "
+"Verschlüsselung«)"
 
 msgid ""
 "Unlock the keyring, for example the Login keyring in Passwords and Keys, "
 "then choose Retry."
 msgstr ""
+"Schlüsselbund entsperren (z. B. Login Schlüsselbund in »Passwörter und "
+"Verschlüsselung«) und wiederholen."
 
 msgid "Date (Newest first)"
 msgstr "Datum (neueste zuerst)"
@@ -801,24 +807,21 @@ msgstr[1] "Sende {n} Nachrichten…"
 
 #. Each one that failed has said why already, and waits in the
 #. Outbox, a refused one included.
-#, fuzzy
 msgid "Sent {n} of {total} message"
 msgid_plural "Sent {n} of {total} messages"
-msgstr[0] "Importieren von {done} von {total} Nachrichten…"
-msgstr[1] "Importieren von {done} von {total} Nachrichten…"
+msgstr[0] "{n} von {total} E-Mail gesendet"
+msgstr[1] "{n} von {total} E-Mails gesendet"
 
-#, fuzzy
 msgid "Sent {n} message"
 msgid_plural "Sent {n} messages"
-msgstr[0] "{n} E-Mail senden"
-msgstr[1] "{n} E-Mails senden"
+msgstr[0] "{n} E-Mail gesendet"
+msgstr[1] "{n} E-Mails gesendet"
 
 msgid "Stop"
-msgstr ""
+msgstr "Stop"
 
-#, fuzzy
 msgid "Show Outbox"
-msgstr "Postausgang"
+msgstr "Postausgang anzeigen"
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -2224,8 +2227,8 @@ msgstr "Der Dienst verweigerte die Anfrage (Fehler {code})."
 
 msgid "Enter the LibreTranslate server's address in Settings → Translation."
 msgstr ""
-"Adresse des LibreTranslate-Servers unter »Einstellungen → Übersetzung« "
-"eintragen."
+"LanguageTool ist nicht installiert. Der Download kann unter »Einstellungen → "
+"Verfassen« durchgeführt werden."
 
 msgid "Choose a translation service in Settings → Translation first."
 msgstr ""
@@ -2767,7 +2770,10 @@ msgid "Custom OAuth"
 msgstr "Benutzerdefiniertes OAuth"
 
 msgid "Folders on this computer"
-msgstr "Ordner auf diesem Computer"
+msgstr ""
+"Ordner \n"
+"\n"
+" Computer"
 
 msgid "IMAP/POP3 account"
 msgstr "IMAP/POP3-Konto"
@@ -3441,16 +3447,15 @@ msgstr "Befehlspalette"
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr "Aktion, Ordner oder Tag eingeben (oder > nur für Aktionen)"
 
-#, fuzzy
 msgid "Send without an attachment?"
-msgstr "Als normalen Anhang senden"
+msgstr "Ohne Anhang senden?"
 
 msgid "The message mentions “{word}”, but nothing is attached."
 msgstr ""
+"In der Nachricht wird »{word}« erwähnt, aber es ist keine Datei angehängt."
 
-#, fuzzy
 msgid "Send Anyway"
-msgstr "Jetzt senden"
+msgstr "Trotzdem senden"
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
@@ -4668,20 +4673,20 @@ msgid "In {places}"
 msgstr "In {places}"
 
 msgid "Takes under a minute"
-msgstr ""
+msgstr "Dauert weniger als eine Minute"
 
 msgid "Takes about a minute"
-msgstr ""
+msgstr "Dauert etwa eine Minute"
 
 msgid "Takes about {n} minute"
 msgid_plural "Takes about {n} minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Dauert etwa {n} Minute"
+msgstr[1] "Dauert etwa {n} Minuten"
 
 msgid "Takes about {n} hour"
 msgid_plural "Takes about {n} hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Dauert etwa {n} Stunde"
+msgstr[1] "Dauert etwa {n} Stunden"
 
 msgid "Mail Merge"
 msgstr "Serienmail (Mail Merge)"
@@ -4708,17 +4713,16 @@ msgid "Leave these fields empty"
 msgstr "Diese Felder leer lassen"
 
 msgid "Limit sending rate"
-msgstr ""
+msgstr "Versandgeschwindigkeit begrenzen"
 
 msgid "Messages"
 msgstr "Nachrichten"
 
-#, fuzzy
 msgid "per minute"
-msgstr "Jede Minute"
+msgstr "pro Minute"
 
 msgid "per hour"
-msgstr ""
+msgstr "pro Stunde"
 
 msgid "{n} of {total}"
 msgstr "{n} von {total}"
@@ -7218,11 +7222,8 @@ msgstr ""
 
 #. A merge's message the server would not take: retrying will
 #. not help unless it is edited, or the server's limit resets.
-#, fuzzy
 msgid "Send failed: {e}. The message is in the Outbox."
-msgstr ""
-"Senden fehlgeschlagen: {e}. Die Nachricht liegt im Postausgang und wird "
-"gesendet, sobald die Verbindung wiederhergestellt ist."
+msgstr "Senden fehlgeschlagen: {e}. Die Nachricht liegt im Postausgang."
 
 msgid ""
 "Send failed: {e}. The message is in the Outbox and will be sent when the "
@@ -7571,7 +7572,7 @@ msgstr "Ordner im Maildir-Format"
 
 msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
 msgstr ""
-"»Auf diesem Rechner« von Evolution, Dovecot sowie weitere Maildir-"
+"Auf diesem Rechner« von Evolution, Dovecot sowie weitere Maildir-"
 "Verzeichnisse."
 
 msgid "Mbox files"
@@ -7934,18 +7935,18 @@ msgstr "Trennlinie über der zitierten Nachricht"
 msgid "Restore Default"
 msgstr "Standardeinstellungen wiederherstellen"
 
-#, fuzzy
 msgid "Attachment Reminder"
-msgstr "Anhangbereich"
+msgstr "Attachment Reminder"
 
 msgid ""
 "Send asks first when the message mentions one of these words and nothing is "
 "attached."
 msgstr ""
+"Vor dem Senden nachfragen, wenn die Nachricht eines dieser Wörter enthält "
+"und kein Anhang beigefügt ist."
 
-#, fuzzy
 msgid "Words, separated by commas"
-msgstr "E-Mail-Adressen, kommagetrennt"
+msgstr "Begriffe, getrennt durch Kommas"
 
 msgid "Spelling"
 msgstr "Rechtschreibung"
