@@ -32,7 +32,10 @@ impl MessageView {
         // A page handed over while the window is hidden (running in the
         // background, a notification about to bring it back) may never be
         // painted: it is loaded again once the view is on screen (#332).
-        if !self.webview.is_mapped() {
+        // Only the window counts: behind the reader's spinner the view is off
+        // screen just until the stack shows it, later in this same turn, and
+        // loading the page a second time then made every open wait for two.
+        if !self.webview.root().is_some_and(|r| r.is_mapped()) {
             self.painted_hidden = true;
         }
         // What is on screen (a page, or the spinner) stays, frozen, until the
