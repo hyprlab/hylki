@@ -10,10 +10,10 @@ use super::look::{
     MessageTheme, ReadingPane, TrayIcon,
 };
 use super::prefs::{
-    default_files_limit_mb, default_reader_zoom, default_swipe_sensitivity, default_undo_send_secs,
-    ComposeFormat, FilesAction, FilesLarge, FoldMessages, LauncherBadge, NotificationButtons,
-    PrintOptions, ReadMark, ReaderDefault, ReceiptPolicy, ReplyPosition, ReturnedReceipts,
-    SignaturePosition,
+    default_attachment_keywords, default_files_limit_mb, default_reader_zoom,
+    default_swipe_sensitivity, default_undo_send_secs, ComposeFormat, FilesAction, FilesLarge,
+    FoldMessages, LauncherBadge, NotificationButtons, PrintOptions, ReadMark, ReaderDefault,
+    ReceiptPolicy, ReplyPosition, ReturnedReceipts, SignaturePosition,
 };
 use super::sections::{
     FolderSort, RailFold, SectionPlacement, SectionStyle, StartView, UnifiedChips, UnifiedKinds,
@@ -340,6 +340,10 @@ pub(crate) struct PrivacyFile {
     /// before it is handed to the server. 0 sends at once.
     #[serde(default = "default_undo_send_secs")]
     pub(crate) undo_send_secs: u32,
+    /// The words, comma-separated, that make Send ask when nothing is
+    /// attached. Empty never asks.
+    #[serde(default = "default_attachment_keywords")]
+    pub(crate) attachment_keywords: String,
     /// Whether the composer underlines misspelled words as you type.
     #[serde(default = "default_on")]
     pub(crate) spellcheck: bool,
@@ -754,6 +758,7 @@ impl Default for PrivacyFile {
             fold_quote: true,
             reply_header: String::new(),
             undo_send_secs: default_undo_send_secs(),
+            attachment_keywords: default_attachment_keywords(),
             spellcheck: true,
             spellcheck_langs: String::new(),
             sidebar_hover_expand: false,

@@ -1117,6 +1117,21 @@ While it waits and while it is being sent, the message is listed in the
 **Send** sends it without waiting. Quitting Hylki before the wait is over
 keeps it in the Outbox, and it is sent at the next start.
 
+### Attachment reminder
+
+When what you wrote mentions an attachment and nothing is attached,
+**Send** asks first: **Send Anyway** sends the message as it is, and
+**Cancel**, the default, goes back to it. The quoted original of a reply
+or forward is not looked at, and a file uploaded to the cloud or a picture
+put in the text counts as an attachment.
+
+**Settings → Composing → Attachment Reminder** lists the words looked for,
+separated by commas. A word in the message counts when it starts with one
+of them, whatever its case: "attach" covers "attached" and "attachment",
+"allegat" covers "allegato" and "allegati". The default list covers the
+languages Hylki is translated into; the button beside the list puts it
+back. An empty list never asks.
+
 ### Snoozing mail
 
 **Snooze** puts a message away until a time you choose, then moves it back

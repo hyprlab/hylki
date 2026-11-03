@@ -410,6 +410,9 @@ impl Preferences {
             .fold_quote_row
             .set_active(init.fold_quote);
         widgets.composing.set_reply_header(&init.reply_header);
+        widgets
+            .composing
+            .set_attachment_keywords(&init.attachment_keywords);
         let undo_labels: Vec<String> = crate::config::UNDO_SEND_CHOICES
             .iter()
             .map(|&secs| match secs {

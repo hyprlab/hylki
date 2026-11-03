@@ -804,6 +804,8 @@ pub(crate) struct AppModel {
     pub(super) reply_header: String,
     /// Undo Send delay in seconds, 0 for off (#434).
     pub(super) undo_send_secs: u32,
+    /// The words that make Send ask when nothing is attached, "" for never.
+    pub(super) attachment_keywords: String,
     pub(super) spellcheck: bool,
     pub(super) spellcheck_langs: String,
     /// How email content is themed (message content only, not the app UI).

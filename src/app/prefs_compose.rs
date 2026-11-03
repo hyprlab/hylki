@@ -135,6 +135,10 @@ impl AppModel {
             PrefOutput::SetReplyHeader(header) => {
                 pref!(self.reply_header = header);
             }
+            PrefOutput::SetAttachmentKeywords(words) => {
+                // Read again at each Send, so open composers follow it.
+                pref!(self.attachment_keywords = words);
+            }
             PrefOutput::SetUndoSend(secs) => {
                 // A message already waiting keeps the delay it was sent with.
                 pref!(self.undo_send_secs = secs);

@@ -565,6 +565,16 @@ pub(super) fn default_undo_send_secs() -> u32 {
     5
 }
 
+/// The words the attachment reminder looks for on a new install.
+pub(super) fn default_attachment_keywords() -> String {
+    crate::mail::attachment_reminder::DEFAULT_KEYWORDS.to_string()
+}
+
+/// The words, comma-separated, that make Send ask when nothing is attached.
+pub(crate) fn load_attachment_keywords() -> String {
+    load_privacy().attachment_keywords
+}
+
 /// The address book chosen for new contacts (empty: automatic).
 pub(crate) fn load_contact_book() -> String {
     load_privacy().contact_book

@@ -8,6 +8,7 @@ use crate::i18n::{i18n, i18n_f};
 use crate::ui::recipient_row::RecipientRow;
 use crate::ui::rich_editor::{RichEditor, SourceKind};
 
+mod attachment_check;
 mod attachments;
 mod cloud;
 mod format;
@@ -921,7 +922,9 @@ impl Component for Compose {
                 }
                 ComposeInput::Send => self.on_send(widgets, &sender),
 
-                ComposeInput::SendBody(fields) => self.on_send_body(fields, &sender),
+                ComposeInput::SendBody(fields) => self.on_send_body(fields, widgets, &sender),
+
+                ComposeInput::SendAnyway(fields) => self.finish_send(fields, &sender),
 
                 ComposeInput::MailMerge => self.on_mail_merge(widgets, &sender),
 

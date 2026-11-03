@@ -74,6 +74,7 @@ signature_dashes = false
 fold_quote = true
 reply_header = ""
 undo_send_secs = 5
+attachment_keywords = "attach, enclos, allegat, allego, anhang, angehängt, beigefügt, adjunt, ci-joint, pièce jointe, pièces jointes, bijlage, bijgevoegd, anexo, anexa, załącz, csatol, συνημμέν"
 spellcheck = true
 spellcheck_langs = ""
 sidebar_hover_expand = false

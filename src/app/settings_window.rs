@@ -111,6 +111,7 @@ impl AppModel {
             fold_quote: self.fold_quote,
             reply_header: self.reply_header.clone(),
             undo_send_secs: self.undo_send_secs,
+            attachment_keywords: self.attachment_keywords.clone(),
             notifications: self.notifications_enabled,
             notification_content: self.notification_content,
             notify_receipts: self.notify_receipts,
