@@ -812,8 +812,9 @@ pub(crate) enum AppMsg {
     ListCount(String),
     /// A column heading was dragged to a new width (#334): keep it.
     ListColumnWidths(std::collections::HashMap<config::ListColumn, i32>),
-    /// A column heading sorted the list (#334): the sort menus follow.
-    ListSortChanged(&'static str),
+    /// The list's sort changed, by its key and whether it is reversed: the
+    /// sort menus follow and it is kept (#334, #574).
+    ListSortChanged(&'static str, bool),
 
     // ---- on_identity (identity.rs) ----
     /// A Gravatar one of the accounts asked for came back (#189).

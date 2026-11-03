@@ -116,7 +116,7 @@ fn message_list_output_msg(out: MessageListOutput) -> AppMsg {
         MessageListOutput::SearchActive(active) => AppMsg::SearchActive(active),
         MessageListOutput::FindInBodies { terms } => AppMsg::FindInBodies { terms },
         MessageListOutput::FindOnServers { terms, scope } => AppMsg::FindOnServers { terms, scope },
-        MessageListOutput::SortChanged(key) => AppMsg::ListSortChanged(key),
+        MessageListOutput::SortChanged(key, reversed) => AppMsg::ListSortChanged(key, reversed),
         MessageListOutput::ColumnWidths(widths) => AppMsg::ListColumnWidths(widths),
         MessageListOutput::CustomizeColumns => AppMsg::CustomizeColumns,
     }

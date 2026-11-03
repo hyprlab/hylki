@@ -482,6 +482,8 @@ pub(crate) struct AppModel {
     pub(super) list_group_by_date: bool,
     /// A card's pills on a line under its text (#374).
     pub(super) list_pills_below: bool,
+    /// The list's sort key and whether it is reversed, kept (#574).
+    pub(super) list_sort: (&'static str, bool),
     /// The list's search field stays open (#446).
     pub(super) list_search_open: bool,
     /// Contacts' search field stays open.

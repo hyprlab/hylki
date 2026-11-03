@@ -331,8 +331,9 @@ pub(crate) enum MessageListInput {
     /// A collapsing thread's replies have finished sliding shut — drop them
     /// from the list for real (see `start_collapse_thread`).
     FinishCollapseThread((u32, String)),
-    /// Change the list sort order.
-    SetSort(SortOrder),
+    /// Change the list sort order; `reversed` turns it the other way, as a
+    /// second click on a column heading does.
+    SetSort { order: SortOrder, reversed: bool },
     /// A message was read. Messages are named by their slot (account,
     /// folder, UID) here: a UID repeats from folder to folder and, in the
     /// unified view, from account to account (#333).
@@ -581,9 +582,9 @@ pub(crate) enum MessageListOutput {
         terms: Vec<String>,
         scope: ServerScope,
     },
-    /// A column heading changed the sort (#334), by its key: the sort
-    /// menus follow.
-    SortChanged(&'static str),
+    /// The sort changed, by its key and whether it is reversed: the sort
+    /// menus follow and the app keeps it (#334, #574).
+    SortChanged(&'static str, bool),
     /// A column was resized by its heading (#334): the widths to keep.
     ColumnWidths(std::collections::HashMap<crate::config::ListColumn, i32>),
     /// Customize Columns… from the headings' right-click menu (#443).

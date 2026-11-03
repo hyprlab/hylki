@@ -380,6 +380,10 @@ impl AppModel {
             list_column_scroll: prefs.list_column_scroll,
             list_group_by_date: prefs.list_group_by_date,
             list_pills_below: prefs.list_pills_below,
+            list_sort: (
+                crate::ui::message_list::SortOrder::from_key(&prefs.list_sort).key(),
+                prefs.list_sort_reversed,
+            ),
             list_search_open: prefs.list_search_open,
             contacts_search_open: prefs.contacts_search_open,
             contact_names: prefs.contact_names,

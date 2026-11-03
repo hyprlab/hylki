@@ -566,10 +566,11 @@ impl AppModel {
             AppMsg::ListColumnWidths(widths) => {
                 pref!(self.list_column_widths = widths);
             }
-            AppMsg::ListSortChanged(key) => {
+            AppMsg::ListSortChanged(key, reversed) => {
                 if let Some(lh) = self.list_header_widgets.get() {
                     lh.sort.set_state(&key.to_variant());
                 }
+                pref!(self.list_sort = (key, reversed));
             }
             _ => unreachable!("not routed to on_list_header"),
         }
@@ -593,7 +594,10 @@ impl AppModel {
         sort_action.connect_activate(move |action, param| {
             if let Some(key) = param.and_then(|v| v.str()) {
                 action.set_state(&key.to_variant());
-                let _ = list.send(MessageListInput::SetSort(SortOrder::from_key(key)));
+                let _ = list.send(MessageListInput::SetSort {
+                    order: SortOrder::from_key(key),
+                    reversed: false,
+                });
             }
         });
         sort_group.add_action(&sort_action);

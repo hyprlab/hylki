@@ -2032,8 +2032,9 @@ word, such as `10:30` or `re:`, is searched for as written.
 
 The sort and filter button in the list's header opens a popover of three
 columns. **Sort by** orders the list by date, newest or oldest first, by
-sender or subject, or puts unread or starred mail first. **Show only** holds
-the quick filters:
+sender or subject, or puts unread or starred mail first, and the order
+chosen there or by a column heading is kept from one launch to the next.
+**Show only** holds the quick filters:
 
 - **Unread** and **Starred**
 - **Has Attachments**

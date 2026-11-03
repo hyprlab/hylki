@@ -413,6 +413,12 @@ pub(crate) struct PrivacyFile {
     /// text, instead of at the end of the subject (#374).
     #[serde(default)]
     pub(crate) list_pills_below: bool,
+    /// The list's sort, by its key, and whether a heading turned it the
+    /// other way (#574). Empty is newest first.
+    #[serde(default)]
+    pub(crate) list_sort: String,
+    #[serde(default)]
+    pub(crate) list_sort_reversed: bool,
     /// Grouping by date was turned on once for an install from before it
     /// became the default: every save writes every key, so those files
     /// carry the old `false` without anyone having chosen it. A new
@@ -772,6 +778,8 @@ impl Default for PrivacyFile {
             list_column_scroll: false,
             list_group_by_date: true,
             list_pills_below: false,
+            list_sort: String::new(),
+            list_sort_reversed: false,
             date_groups_default_applied: true,
             list_search_open: false,
             contacts_search_open: false,

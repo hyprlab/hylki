@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Added: the list's sort is kept** (#574, suggested by Bohne13). The
+  order chosen under **Sort by**, or by a column heading, including a
+  heading clicked a second time to reverse it, is now the order the list
+  opens with at the next launch, instead of newest first.
+
 - **Fixed: the window could open blank while the keyring was locked**
   (#573, by Fabio Rotondo). An account's password was read before the
   account and its cached folders were shown, so a keyring that did not

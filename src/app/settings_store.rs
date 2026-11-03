@@ -102,6 +102,8 @@ impl AppModel {
             list_column_scroll: self.list_column_scroll,
             list_group_by_date: self.list_group_by_date,
             list_pills_below: self.list_pills_below,
+            list_sort: self.list_sort.0.to_string(),
+            list_sort_reversed: self.list_sort.1,
             date_groups_default_applied: true,
             list_search_open: self.list_search_open,
             contacts_search_open: self.contacts_search_open,
@@ -204,6 +206,10 @@ impl AppModel {
         self.message_list.emit(MessageListInput::SetColumnWidths(
             self.list_column_widths.clone(),
         ));
+        self.message_list.emit(MessageListInput::SetSort {
+            order: crate::ui::message_list::SortOrder::from_key(self.list_sort.0),
+            reversed: self.list_sort.1,
+        });
         self.sidebars_emit(SidebarInput::SetFocus {
             hide_accounts: self.focus.active(config::FocusPart::HideAccounts),
             fold_unified: self.focus.active(config::FocusPart::FoldUnified),
