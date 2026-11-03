@@ -3633,6 +3633,17 @@ msgstr ""
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Отправить как обычное вложение"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Отправить сейчас"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
 "Файл был перемещён или удалён. Прикрепите его повторно из нового "
@@ -8222,6 +8233,18 @@ msgstr "Над цитируемым сообщением"
 #, fuzzy
 msgid "Restore Default"
 msgstr "Восстановить по умолчанию"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Панель вложений"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+msgid "Words, separated by commas"
+msgstr ""
 
 msgid "Spelling"
 msgstr "Орфография"

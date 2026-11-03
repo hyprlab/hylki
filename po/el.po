@@ -3451,6 +3451,17 @@ msgstr ""
 "Πληκτρολογήστε μια ενέργεια, έναν φάκελο ή μια ετικέτα, ή > για μόνο "
 "ενέργειες"
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Αποστολή ως κανονικό συνημμένο"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Αποστολή τώρα"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
 "Το αρχείο μετακινήθηκε ή διαγράφηκε. Επισυνάψτε το ξανά από τη νέα του θέση."
@@ -7923,6 +7934,19 @@ msgstr "Γραμμή πάνω από το παρατιθέμενο μήνυμα"
 
 msgid "Restore Default"
 msgstr "Επαναφορά προεπιλογής"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Συρτάρι συνημμένων"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+#, fuzzy
+msgid "Words, separated by commas"
+msgstr "Διευθύνσεις χωρισμένες με κόμματα"
 
 msgid "Spelling"
 msgstr "Ορθογραφία"

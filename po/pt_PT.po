@@ -3491,6 +3491,17 @@ msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 "Escreva uma ação, uma pasta ou uma etiqueta, ou > para ver apenas ações"
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Enviar como anexo normal"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Enviar agora"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
 "O ficheiro foi movido ou eliminado. Volte a anexá-lo a partir da sua "
@@ -7968,6 +7979,19 @@ msgstr "Acima da mensagem citada"
 #, fuzzy
 msgid "Restore Default"
 msgstr "Restaurar predefinições"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Painel de anexos"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+#, fuzzy
+msgid "Words, separated by commas"
+msgstr "Endereços separados por vírgulas"
 
 msgid "Spelling"
 msgstr "Ortografia"

@@ -3655,6 +3655,17 @@ msgstr ""
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Wyślij jako zwykły załącznik"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Wyślij teraz"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
 
@@ -8298,6 +8309,18 @@ msgstr "Nad cytowaną wiadomością"
 #, fuzzy
 msgid "Restore Default"
 msgstr "Przywróć domyślne"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Szuflada załączników"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+msgid "Words, separated by commas"
+msgstr ""
 
 msgid "Spelling"
 msgstr "Pisownia"

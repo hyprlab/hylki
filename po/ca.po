@@ -3470,6 +3470,17 @@ msgstr "Paleta d'ordres"
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr "Escriu una acció, una carpeta o una etiqueta, o > per a només accions"
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Envia com un adjunt normal"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Envia ara"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr "El fitxer es va moure o suprimir. Torna a adjuntar-lo des d'on és ara."
 
@@ -7923,6 +7934,18 @@ msgstr "A sobre del missatge citat"
 #, fuzzy
 msgid "Restore Default"
 msgstr "Restaura els valors per defecte"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Calaix d'adjunts"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+msgid "Words, separated by commas"
+msgstr ""
 
 msgid "Spelling"
 msgstr "Ortografia"

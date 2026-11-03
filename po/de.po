@@ -3441,6 +3441,17 @@ msgstr "Befehlspalette"
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr "Aktion, Ordner oder Tag eingeben (oder > nur für Aktionen)"
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Als normalen Anhang senden"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Jetzt senden"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
 "Die Datei wurde verschoben oder gelöscht. Erneut am aktuellen Speicherort "
@@ -7922,6 +7933,19 @@ msgstr "Trennlinie über der zitierten Nachricht"
 
 msgid "Restore Default"
 msgstr "Standardeinstellungen wiederherstellen"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Anhangbereich"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+#, fuzzy
+msgid "Words, separated by commas"
+msgstr "E-Mail-Adressen, kommagetrennt"
 
 msgid "Spelling"
 msgstr "Rechtschreibung"
