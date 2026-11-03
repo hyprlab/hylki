@@ -13,11 +13,11 @@ use super::prefetch::gallery_folder;
 use super::{Emit, ImapWorker};
 use crate::cache::Cache;
 use crate::config::AccountConfig;
-use crate::worker::auth::{load_or_migrate_password, load_smtp_password};
+use crate::worker::auth::resolve_keyring_passwords;
 use crate::worker::{MailRequest, WorkerEvent};
 
 impl<E: Emit> ImapWorker<E> {
-    /// Resolve the passwords, show the account and its cached folders, and
+    /// Show the account and its cached folders, resolve the passwords, and
     /// queue the background work the cache calls for. Connects at once only
     /// when there is no cached folder list to show.
     pub(super) async fn start(
@@ -26,8 +26,6 @@ impl<E: Emit> ImapWorker<E> {
         rx: mpsc::UnboundedReceiver<MailRequest>,
         emit: E,
     ) -> Self {
-        resolve_passwords(&mut account, &emit).await;
-
         let cache = Cache::open()
             .map_err(|e| tracing::warn!("cache unavailable: {e}"))
             .ok();
@@ -51,6 +49,10 @@ impl<E: Emit> ImapWorker<E> {
         if have_cached_folders {
             emit(WorkerEvent::Folders(cached_folders));
         }
+
+        // Only now the passwords: a keyring that is locked or slow to answer
+        // kept the account and its cached folders off the screen (#573).
+        resolve_passwords(&mut account, &emit).await;
 
         // The worker stays alive even if connecting fails, so the UI can retry. With
         // cached folders we connect lazily (on the first request) so cached mail can
@@ -148,8 +150,7 @@ impl<E: Emit> ImapWorker<E> {
 /// password into the keyring (and strip it from disk), otherwise load it
 /// from the keyring; then take what GNOME Online Accounts holds.
 async fn resolve_passwords(account: &mut AccountConfig, emit: &impl Fn(WorkerEvent)) {
-    load_or_migrate_password(account);
-    load_smtp_password(account);
+    resolve_keyring_passwords(account, emit).await;
     // An account from GNOME Online Accounts takes its password from GOA at
     // every connect, so one changed in GNOME Settings reaches Hylki without
     // being typed again (#254). The keyring copy is kept for a GOA that

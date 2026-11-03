@@ -1117,6 +1117,21 @@ While it waits and while it is being sent, the message is listed in the
 **Send** sends it without waiting. Quitting Hylki before the wait is over
 keeps it in the Outbox, and it is sent at the next start.
 
+### Attachment reminder
+
+When what you wrote mentions an attachment and nothing is attached,
+**Send** asks first: **Send Anyway** sends the message as it is, and
+**Cancel**, the default, goes back to it. The quoted original of a reply
+or forward and the signature are not looked at, and a file uploaded to the
+cloud or a picture put in the text counts as an attachment.
+
+**Settings → Composing → Attachment Reminder** lists the words looked for,
+separated by commas. A word in the message counts when it starts with one
+of them, whatever its case: "attach" covers "attached" and "attachment",
+"allegat" covers "allegato" and "allegati". The default list covers the
+languages Hylki is translated into; the button beside the list puts it
+back. An empty list never asks.
+
 ### Snoozing mail
 
 **Snooze** puts a message away until a time you choose, then moves it back
@@ -1233,8 +1248,19 @@ the message or **Leave these fields empty** is switched on. A row without a
 valid address is left out and counted.
 **Send** then sends them all, one after another, from the From address
 chosen, each with its own copy in Sent. There is no Undo Send for a merge:
-the preview is the time to check. A message that cannot go waits in the
-Outbox like any other. An encrypted message cannot be merged, since each
+the preview is the time to check. A toast counts the messages as they go,
+and its **Stop** sends no more of them. A message that cannot go waits in the
+Outbox, with the reason, and that includes one the server refuses, a
+mistyped address or a sending limit reached, which in an ordinary message
+comes back in a composer. When some did not go, the last toast has **Show
+Outbox**.
+
+**Limit sending rate**, at the foot of the dialog, sends at most a set number
+of messages a minute or an hour, for a provider that limits how fast mail
+may go out, and says how long the merge will take at that rate. The choice
+is kept for the next merge. Quitting before a merge is done puts the
+messages not yet sent in the Outbox, each scheduled at the rate if one is
+set, and the next launch sends them from there. An encrypted message cannot be merged, since each
 recipient would need their own key.
 
 ### Addresses as pills
@@ -2021,8 +2047,9 @@ word, such as `10:30` or `re:`, is searched for as written.
 
 The sort and filter button in the list's header opens a popover of three
 columns. **Sort by** orders the list by date, newest or oldest first, by
-sender or subject, or puts unread or starred mail first. **Show only** holds
-the quick filters:
+sender or subject, or puts unread or starred mail first, and the order
+chosen there or by a column heading is kept from one launch to the next.
+**Show only** holds the quick filters:
 
 - **Unread** and **Starred**
 - **Has Attachments**

@@ -700,6 +700,33 @@ msgstr "La teva resposta s'ha enviat: potser."
 msgid "Your answer has been sent: declined."
 msgstr "La teva resposta s'ha enviat: rebutjat."
 
+msgid "Retry"
+msgstr ""
+
+#, fuzzy
+msgid "Waiting for the keyring"
+msgstr "Esperant per enviar"
+
+#, fuzzy
+msgid "Couldn’t read the password"
+msgstr "Introdueix la contrasenya."
+
+#, fuzzy
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr "No s'ha pogut moure un missatge a {account}: {error}"
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr ""
+
 msgid "Date (Newest first)"
 msgstr "Data (més recents primer)"
 
@@ -771,6 +798,33 @@ msgstr "Filtra"
 
 msgid "Sort"
 msgstr "Ordena"
+
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "S'està enviant el missatge…"
+msgstr[1] "S'està enviant el missatge…"
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox, a refused one included.
+#, fuzzy
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] "Carpeta {done} de {total}"
+msgstr[1] "Carpeta {done} de {total}"
+
+#, fuzzy
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] "Cerca al missatge"
+msgstr[1] "Cerca al missatge"
+
+msgid "Stop"
+msgstr ""
+
+#, fuzzy
+msgid "Show Outbox"
+msgstr "Bústia de sortida"
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -1343,12 +1397,6 @@ msgstr "No hi ha cap bústia d'entrada disponible per a aquest compte"
 
 msgid "No {v1} folder available for some messages"
 msgstr "No hi ha cap carpeta {v1} disponible per a alguns missatges"
-
-#, fuzzy
-msgid "Sending {n} message…"
-msgid_plural "Sending {n} messages…"
-msgstr[0] "S'està enviant el missatge…"
-msgstr[1] "S'està enviant el missatge…"
 
 msgid "Remove Account?"
 msgstr "Vols eliminar el compte?"
@@ -3422,6 +3470,17 @@ msgstr "Paleta d'ordres"
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr "Escriu una acció, una carpeta o una etiqueta, o > per a només accions"
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Envia com un adjunt normal"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Envia ara"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr "El fitxer es va moure o suprimir. Torna a adjuntar-lo des d'on és ara."
 
@@ -4626,6 +4685,22 @@ msgstr "Mida del text"
 msgid "In {places}"
 msgstr "A {folder}"
 
+msgid "Takes under a minute"
+msgstr ""
+
+msgid "Takes about a minute"
+msgstr ""
+
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Mail Merge"
 msgstr ""
 
@@ -4653,6 +4728,19 @@ msgstr ""
 #, fuzzy
 msgid "Leave these fields empty"
 msgstr "Mantén obert el camp de cerca"
+
+msgid "Limit sending rate"
+msgstr ""
+
+msgid "Messages"
+msgstr "Missatges"
+
+#, fuzzy
+msgid "per minute"
+msgstr "Cada minut"
+
+msgid "per hour"
+msgstr ""
 
 #, fuzzy
 msgid "{n} of {total}"
@@ -6689,9 +6777,6 @@ msgstr "Regió (buit per a un recurs global)"
 msgid "Translates a greeting to test the service."
 msgstr "Tradueix una salutació per provar el servei."
 
-msgid "Messages"
-msgstr "Missatges"
-
 msgid "Hylki's language ({language})"
 msgstr "Idioma de l'Hylki ({language})"
 
@@ -7150,6 +7235,14 @@ msgid ""
 "the connection is back."
 msgstr ""
 "No hi ha connexió de xarxa. El missatge és a la bústia de sortida i "
+"s'enviarà quan torni la connexió."
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+#, fuzzy
+msgid "Send failed: {e}. The message is in the Outbox."
+msgstr ""
+"L'enviament ha fallat: {e}. El missatge és a la bústia de sortida i "
 "s'enviarà quan torni la connexió."
 
 msgid ""
@@ -7841,6 +7934,18 @@ msgstr "A sobre del missatge citat"
 #, fuzzy
 msgid "Restore Default"
 msgstr "Restaura els valors per defecte"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Calaix d'adjunts"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+msgid "Words, separated by commas"
+msgstr ""
 
 msgid "Spelling"
 msgstr "Ortografia"

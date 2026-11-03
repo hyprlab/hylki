@@ -116,6 +116,8 @@ pub(crate) enum ComposeInput {
     SetImportance(crate::models::Importance),
     /// The editor's HTML + plain text came back asynchronously — finish sending.
     SendBody(OutgoingFields),
+    /// The attachment reminder's Send Anyway: send without asking again.
+    SendAnyway(OutgoingFields),
     /// Mail Merge (#447): read the message, fields and all, for the dialog.
     MailMerge,
     /// The field palette, at the cursor in the subject or the body (#447).
@@ -126,6 +128,7 @@ pub(crate) enum ComposeInput {
     MergeSend {
         fields: OutgoingFields,
         letters: Vec<crate::mail::merge::Letter>,
+        interval: Option<std::time::Duration>,
     },
     /// Save the current message to Drafts.
     SaveDraft,
@@ -269,8 +272,12 @@ pub(crate) enum ComposeOutput {
         id: u32,
         message: Box<OutgoingMessage>,
     },
-    /// Mail Merge (#447): a message for each row, sent one after another.
-    SendMerged(Vec<OutgoingMessage>),
+    /// Mail Merge (#447): a message for each row, sent one after another,
+    /// `interval` apart if the rate is limited.
+    SendMerged {
+        messages: Vec<OutgoingMessage>,
+        interval: Option<std::time::Duration>,
+    },
     /// Save the message to the Drafts folder (no send).
     SaveDraft(Box<OutgoingMessage>),
     /// Save the message to the Templates folder (#360), replacing the

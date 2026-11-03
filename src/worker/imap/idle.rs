@@ -177,6 +177,9 @@ pub(super) async fn idle_wait(
                     if let Some(sess) = session.as_mut() {
                         let kind = cached_folder_kind(cache, account_id, path);
                         if let Some(unread) = selected_chip_count(sess, kind).await {
+                            if let Some(c) = cache {
+                                c.set_folder_unread(account_id, path, unread);
+                            }
                             emit(WorkerEvent::FolderUnread { folder_id, unread });
                         }
                     }

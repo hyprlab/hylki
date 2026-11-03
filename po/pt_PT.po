@@ -712,6 +712,33 @@ msgstr "A sua resposta foi enviada: talvez."
 msgid "Your answer has been sent: declined."
 msgstr "A sua resposta foi enviada: recusado."
 
+msgid "Retry"
+msgstr ""
+
+#, fuzzy
+msgid "Waiting for the keyring"
+msgstr "A aguardar envio"
+
+#, fuzzy
+msgid "Couldn’t read the password"
+msgstr "Introduza a palavra-passe."
+
+#, fuzzy
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr "Não foi possível mover uma mensagem para {account}: {error}"
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr ""
+
 msgid "Date (Newest first)"
 msgstr "Data (mais recentes primeiro)"
 
@@ -783,6 +810,33 @@ msgstr "Filtro"
 
 msgid "Sort"
 msgstr "Ordenar"
+
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "A enviar mensagem…"
+msgstr[1] "A enviar mensagem…"
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox, a refused one included.
+#, fuzzy
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] "Pasta {done} de {total}"
+msgstr[1] "Pasta {done} de {total}"
+
+#, fuzzy
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] "Localizar na mensagem"
+msgstr[1] "Localizar na mensagem"
+
+msgid "Stop"
+msgstr ""
+
+#, fuzzy
+msgid "Show Outbox"
+msgstr "Caixa de saída"
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -1358,12 +1412,6 @@ msgstr "Não existe uma pasta Caixa de entrada disponível para esta conta"
 
 msgid "No {v1} folder available for some messages"
 msgstr "Não está disponível nenhuma pasta {v1} para algumas mensagens"
-
-#, fuzzy
-msgid "Sending {n} message…"
-msgid_plural "Sending {n} messages…"
-msgstr[0] "A enviar mensagem…"
-msgstr[1] "A enviar mensagem…"
 
 msgid "Remove Account?"
 msgstr "Remover conta?"
@@ -3443,6 +3491,17 @@ msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 "Escreva uma ação, uma pasta ou uma etiqueta, ou > para ver apenas ações"
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Enviar como anexo normal"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Enviar agora"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
 "O ficheiro foi movido ou eliminado. Volte a anexá-lo a partir da sua "
@@ -4653,6 +4712,22 @@ msgstr "Tamanho do texto"
 msgid "In {places}"
 msgstr "Em {folder}"
 
+msgid "Takes under a minute"
+msgstr ""
+
+msgid "Takes about a minute"
+msgstr ""
+
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Mail Merge"
 msgstr ""
 
@@ -4680,6 +4755,19 @@ msgstr ""
 #, fuzzy
 msgid "Leave these fields empty"
 msgstr "Manter o campo de pesquisa aberto"
+
+msgid "Limit sending rate"
+msgstr ""
+
+msgid "Messages"
+msgstr "Mensagens"
+
+#, fuzzy
+msgid "per minute"
+msgstr "A cada minuto"
+
+msgid "per hour"
+msgstr ""
 
 #, fuzzy
 msgid "{n} of {total}"
@@ -6717,9 +6805,6 @@ msgstr "Região (em branco para um recurso global)"
 msgid "Translates a greeting to test the service."
 msgstr "Traduz uma saudação para testar o serviço."
 
-msgid "Messages"
-msgstr "Mensagens"
-
 msgid "Hylki's language ({language})"
 msgstr "Idioma do Hylki ({language})"
 
@@ -7179,6 +7264,14 @@ msgid ""
 msgstr ""
 "Sem ligação à rede. A mensagem está na Caixa de saída e será enviada quando "
 "a ligação for restabelecida."
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+#, fuzzy
+msgid "Send failed: {e}. The message is in the Outbox."
+msgstr ""
+"Falha ao enviar: {e}. A mensagem encontra-se na Caixa de saída e será "
+"enviada quando a ligação for restabelecida."
 
 msgid ""
 "Send failed: {e}. The message is in the Outbox and will be sent when the "
@@ -7886,6 +7979,19 @@ msgstr "Acima da mensagem citada"
 #, fuzzy
 msgid "Restore Default"
 msgstr "Restaurar predefinições"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Painel de anexos"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+#, fuzzy
+msgid "Words, separated by commas"
+msgstr "Endereços separados por vírgulas"
 
 msgid "Spelling"
 msgstr "Ortografia"

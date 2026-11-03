@@ -7,7 +7,7 @@ use crate::cache::Cache;
 use crate::config::AccountConfig;
 use crate::i18n::{i18n, i18n_f};
 use crate::models::{Folder, FolderKind, Message};
-use crate::worker::auth::{load_or_migrate_password, load_smtp_password, sign_in_password};
+use crate::worker::auth::{resolve_keyring_passwords, sign_in_password};
 use crate::worker::compose::build::restore_msgid_case;
 use crate::worker::ids::hash_uid;
 use crate::worker::imap::send::flush_outbox;
@@ -56,10 +56,6 @@ pub(super) async fn run_pop3(
     mut rx: mpsc::UnboundedReceiver<MailRequest>,
     emit: impl Fn(WorkerEvent),
 ) {
-    // Resolve credentials from the keyring (same as the IMAP path).
-    load_or_migrate_password(&mut account);
-    load_smtp_password(&mut account);
-
     let cache = Cache::open()
         .map_err(|e| tracing::warn!("cache unavailable: {e}"))
         .ok();
@@ -73,6 +69,8 @@ pub(super) async fn run_pop3(
         c.save_folders(account_id, &folders);
     }
     emit(WorkerEvent::Folders(folders));
+    // After the account is on screen: a locked keyring may not answer (#573).
+    resolve_keyring_passwords(&mut account, &emit).await;
 
     let mut worker = Pop3Worker {
         account_id,

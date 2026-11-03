@@ -28,7 +28,7 @@ mod on_find;
 mod on_prefs;
 mod on_services;
 mod on_show;
-mod page_fade;
+mod page_load;
 mod print;
 mod receipt_banner;
 mod remote;
@@ -44,14 +44,13 @@ mod webview;
 mod wrapper_css;
 
 use self::chrome::ClassRules;
-use self::page_fade::{PageFade, PendingLoad};
+use self::page_load::PendingLoad;
 use crate::models::Message;
 
 pub(crate) use faces::set_face_tiers;
 pub(crate) use frame::theme_grounds_for;
 pub(crate) use menu::MenuHit;
 pub(crate) use menu::{hit_menu_entries, strip_navigation_items};
-pub(crate) use page_fade::{on_next_page_fade, PAGE_FADE_MS};
 pub(crate) use remote::remote_urls;
 pub(crate) use types::{
     CardAttachment, InviteAction, MessageViewInput, MessageViewOutput, SelectMode, TrState,
@@ -210,9 +209,10 @@ pub(crate) struct MessageView {
     /// its first card), not flush at the top the way a place the user
     /// scrolled to is restored.
     anchor_gutter: bool,
-    /// The next document goes in without the page crossfade: a sent reply's
-    /// card is arriving, and the app's stage covers the pane while it does.
-    skip_fade: bool,
+    /// The next document goes in without the pane being frozen: a sent
+    /// reply's card is arriving, and the app's stage covers the pane while
+    /// it does.
+    skip_freeze: bool,
     /// What each message's frame measured last time it was shown, so reopening a
     /// conversation lays out right away instead of settling into place.
     frame_heights: std::collections::HashMap<(u32, u32), u32>,
@@ -265,8 +265,14 @@ pub(crate) struct MessageView {
     seq: std::cell::Cell<u64>,
     /// The document waiting to replace the one on screen (`load_after_paint`).
     pending_load: std::rc::Rc<std::cell::RefCell<PendingLoad>>,
-    /// The outgoing page's still, faded out over the incoming one.
-    page_fade: PageFade,
+    /// The pane's freeze: a message opens as one change on screen.
+    swap: crate::ui::reader_swap::ReaderSwap,
+    /// The base URI of the newest document asked for: only that page,
+    /// once ready, ends the freeze.
+    latest_uri: String,
+    /// The base URI of the last page that said it was ready. WebKit's own
+    /// `uri` moves to a page as soon as it starts loading.
+    ready_uri: String,
     /// Forced dark flag for message content, or `None` to follow the system UI.
     /// This themes email content only, not the app chrome.
     content_dark: Option<bool>,

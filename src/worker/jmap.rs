@@ -25,7 +25,7 @@ use tokio::sync::mpsc;
 
 use crate::cache::Cache;
 use crate::config::AccountConfig;
-use crate::worker::auth::load_or_migrate_password;
+use crate::worker::auth::resolve_keyring_passwords;
 use crate::worker::index_queue::index_pause;
 use crate::worker::jmap::folders::refresh_jmap_folders;
 use crate::worker::jmap::index::{jmap_backfill_step, JmapState, JMAP_BACKFILL_BACKOFF};
@@ -89,7 +89,7 @@ pub(super) async fn run_jmap(
 }
 
 impl<E: Fn(WorkerEvent)> JmapWorker<E> {
-    /// Read the password, show the account and its cached folders, then open
+    /// Show the account and its cached folders, read the password, then open
     /// the session, list the mailboxes and start push.
     async fn start(
         account_id: u32,
@@ -97,9 +97,6 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         rx: mpsc::UnboundedReceiver<MailRequest>,
         emit: E,
     ) -> Self {
-        // The password lives in the keyring, like an IMAP account's.
-        load_or_migrate_password(&mut account);
-
         let cache = Cache::open()
             .map_err(|e| tracing::warn!("cache unavailable: {e}"))
             .ok();
@@ -118,6 +115,8 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         if !cached_folders.is_empty() {
             emit(WorkerEvent::Folders(cached_folders));
         }
+        // After the account is on screen: a locked keyring may not answer (#573).
+        resolve_keyring_passwords(&mut account, &emit).await;
 
         let state = JmapState::new(&account);
         let (push_tx, push_rx) = mpsc::unbounded_channel::<()>();

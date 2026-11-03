@@ -5,6 +5,7 @@ use std::time::Duration;
 
 use crate::config::AccountConfig;
 use crate::i18n::i18n_f;
+use crate::worker::{KeyringRead, WorkerEvent};
 
 /// The SASL identity for XOAUTH2 (the IMAP/SMTP username, else the email).
 pub(super) fn oauth_user(account: &AccountConfig) -> String {
@@ -198,24 +199,61 @@ pub(super) async fn sign_in_password(
         .map_err(|e| e.to_string())?
 }
 
-/// The account password from the keyring; a legacy plaintext one is moved
-/// into the keyring first (and stripped from disk).
-pub(super) fn load_or_migrate_password(account: &mut AccountConfig) {
-    if account.password.is_empty() {
-        if let Some(pw) = crate::config::load_password(&account.email) {
-            account.password = pw;
-        }
-    } else {
+/// How long a keyring read may stay silent before the user is told. The read
+/// goes on: a locked keyring answers once it is unlocked.
+const KEYRING_SILENT: Duration = Duration::from_secs(10);
+
+/// The passwords a starting worker needs, a legacy one on disk moved to the
+/// keyring instead (and stripped from disk). A keyring that errors or does
+/// not answer is reported, so a missing password has a reason on screen
+/// (#573). An OAuth account signs in with a token and reads nothing.
+pub(super) async fn resolve_keyring_passwords(
+    account: &mut AccountConfig,
+    emit: &impl Fn(WorkerEvent),
+) {
+    if !account.password.is_empty() {
         let _ = crate::config::store_password(&account.email, &account.password);
         crate::config::strip_passwords_on_disk();
+    } else if !account.oauth {
+        let email = account.email.clone();
+        let read = move || crate::config::read_password(&email);
+        if let Some(pw) = read_reported(read, KEYRING_SILENT, emit).await {
+            account.password = pw;
+        }
+    }
+    if account.smtp_separate && account.smtp_password.is_empty() && !account.oauth {
+        let email = account.email.clone();
+        let read = move || crate::config::read_smtp_password(&email);
+        if let Some(pw) = read_reported(read, KEYRING_SILENT, emit).await {
+            account.smtp_password = pw;
+        }
     }
 }
 
-/// The separate SMTP password from the keyring, when the account has one.
-pub(super) fn load_smtp_password(account: &mut AccountConfig) {
-    if account.smtp_separate && account.smtp_password.is_empty() {
-        if let Some(pw) = crate::config::load_smtp_password(&account.email) {
-            account.smtp_password = pw;
+/// Run a keyring `read` off the async runtime's threads, telling the UI when
+/// it errors or is still silent after `silent_after`. `None` when there is no
+/// password to use, whatever the reason.
+async fn read_reported(
+    read: impl FnOnce() -> Result<Option<String>, String> + Send + 'static,
+    silent_after: Duration,
+    emit: &impl Fn(WorkerEvent),
+) -> Option<String> {
+    let mut task = tokio::task::spawn_blocking(read);
+    let answer = match tokio::time::timeout(silent_after, &mut task).await {
+        Ok(answer) => answer,
+        Err(_) => {
+            emit(WorkerEvent::Keyring(KeyringRead::Silent));
+            let answer = task.await;
+            emit(WorkerEvent::Keyring(KeyringRead::Answered));
+            answer
+        }
+    };
+    match answer.unwrap_or_else(|e| Err(e.to_string())) {
+        Ok(password) => password,
+        Err(e) => {
+            tracing::warn!("could not read a password from the keyring: {e}");
+            emit(WorkerEvent::Keyring(KeyringRead::Failed(e)));
+            None
         }
     }
 }
@@ -247,5 +285,50 @@ mod tests {
             ..sample_account()
         };
         assert_eq!(sign_in_password_blocking(&oauth, false).as_deref(), Ok(""));
+    }
+
+    /// The events a keyring read sends, from a closure standing in for it.
+    fn reported(
+        read: impl FnOnce() -> Result<Option<String>, String> + Send + 'static,
+    ) -> (Option<String>, Vec<KeyringRead>) {
+        let events = std::sync::Mutex::new(Vec::new());
+        let emit = |e: WorkerEvent| match e {
+            WorkerEvent::Keyring(read) => events.lock().unwrap().push(read),
+            other => panic!("unexpected event {other:?}"),
+        };
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        let password = rt.block_on(read_reported(read, Duration::from_millis(50), &emit));
+        (password, events.into_inner().unwrap())
+    }
+
+    /// A keyring that answers at once is not worth a word; one that errors
+    /// is reported, and leaves no password (#573).
+    #[test]
+    fn keyring_reads_report_errors_only() {
+        assert_eq!(
+            reported(|| Ok(Some("pw".into()))),
+            (Some("pw".into()), vec![])
+        );
+        assert_eq!(reported(|| Ok(None)), (None, vec![]));
+        assert_eq!(
+            reported(|| Err("locked".into())),
+            (None, vec![KeyringRead::Failed("locked".into())])
+        );
+    }
+
+    /// A silent keyring is reported, and its late answer still counts.
+    #[test]
+    fn a_silent_keyring_is_reported_and_waited_for() {
+        let slow = || {
+            std::thread::sleep(Duration::from_millis(300));
+            Ok(Some("pw".into()))
+        };
+        assert_eq!(
+            reported(slow),
+            (
+                Some("pw".into()),
+                vec![KeyringRead::Silent, KeyringRead::Answered]
+            )
+        );
     }
 }

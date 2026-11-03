@@ -72,6 +72,7 @@ impl AppModel {
             message_list,
             message_view,
             attachment_drawer,
+            reader_swap,
             lightbox,
             gallery,
             contacts_compose_revealer,
@@ -144,6 +145,7 @@ impl AppModel {
             reader_header: std::cell::OnceCell::new(),
             toasts: std::cell::OnceCell::new(),
             outgoing: Default::default(),
+            merges: Default::default(),
             send_ticket: 0,
             reader_split: {
                 let p = gtk::Paned::new(gtk::Orientation::Vertical);
@@ -378,6 +380,10 @@ impl AppModel {
             list_column_scroll: prefs.list_column_scroll,
             list_group_by_date: prefs.list_group_by_date,
             list_pills_below: prefs.list_pills_below,
+            list_sort: (
+                crate::ui::message_list::SortOrder::from_key(&prefs.list_sort).key(),
+                prefs.list_sort_reversed,
+            ),
             list_search_open: prefs.list_search_open,
             contacts_search_open: prefs.contacts_search_open,
             contact_names: prefs.contact_names,
@@ -546,6 +552,7 @@ impl AppModel {
             fold_quote: prefs.fold_quote,
             reply_header: prefs.reply_header,
             undo_send_secs: prefs.undo_send_secs,
+            attachment_keywords: prefs.attachment_keywords,
             spellcheck: prefs.spellcheck,
             spellcheck_langs: prefs.spellcheck_langs,
             message_theme: prefs.message_theme,
@@ -566,6 +573,7 @@ impl AppModel {
             message_list,
             message_view,
             attachment_drawer,
+            reader_swap,
             gallery,
             showing_gallery: false,
             contacts_page,

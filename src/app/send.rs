@@ -5,7 +5,7 @@ use std::collections::HashSet;
 
 use relm4::prelude::*;
 
-use crate::i18n::{i18n, ni18n_f};
+use crate::i18n::i18n;
 use crate::models::Message;
 use crate::ui::compose::ComposeInput;
 use crate::ui::message_list::MessageListInput;
@@ -49,6 +49,7 @@ pub(super) fn machine_message(
         request_receipt: false,
         importance: Default::default(),
         receipt_report: None,
+        merged: false,
     }
 }
 
@@ -331,13 +332,22 @@ impl AppModel {
         match msg {
             AppMsg::SendMessage { from, out } => self.on_send_message(from, out, sender),
 
-            AppMsg::SendMerged(messages) => self.send_merged(messages),
+            AppMsg::SendMerged { messages, interval } => {
+                self.send_merged(messages, interval, &sender)
+            }
+
+            AppMsg::MergeTick(id) => self.on_merge_tick(id, &sender),
+
+            AppMsg::StopMerge(id) => self.stop_merge(id, &sender),
 
             AppMsg::DispatchSend(ticket) => self.dispatch_send(ticket),
 
             AppMsg::UndoSend(ticket) => self.undo_send(ticket, &sender),
 
             AppMsg::SendDone { ticket, sent } => {
+                if self.merged_done(ticket, sent, &sender) {
+                    return;
+                }
                 self.finish_auto_forward(ticket, sent);
                 // A failure has said so already, in the status bar, and the
                 // message is in the Outbox or back in a composer. Its
@@ -398,43 +408,6 @@ impl AppModel {
             }
             _ => unreachable!("not routed to on_send"),
         }
-    }
-
-    /// Mail Merge (#447): every message straight to its worker, which sends
-    /// them one after another. There is no Undo Send: the dialog showed
-    /// each message and the count before Send. One that cannot go waits in
-    /// the Outbox, or comes back in a composer if the server refused it.
-    fn send_merged(&mut self, messages: Vec<OutgoingMessage>) {
-        let Some(account_id) = messages.first().map(|m| m.from_account_id) else {
-            return;
-        };
-        let recipients: Vec<(String, String)> = messages
-            .iter()
-            .flat_map(|m| [&m.to, &m.cc, &m.bcc])
-            .flat_map(|f| crate::worker::parse_recipients(f))
-            .collect();
-        if let Some(c) = self.cache.as_ref() {
-            c.record_addresses(&recipients);
-        }
-        let sent_path = self.sent_copy_path(account_id);
-        let n = messages.len() as u32;
-        tracing::info!("mail merge: {n} messages from account {account_id}");
-        for message in messages {
-            self.send_to(
-                account_id,
-                MailRequest::Send {
-                    message: Box::new(message),
-                    sent_path: sent_path.clone(),
-                    ticket: 0,
-                },
-            );
-        }
-        self.show_toast(&adw::Toast::new(&ni18n_f(
-            "Sending {n} message…",
-            "Sending {n} messages…",
-            n,
-            &[("n", &n.to_string())],
-        )));
     }
 
     /// A composer sent a message; `from` is that composer's id.

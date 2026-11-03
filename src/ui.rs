@@ -41,6 +41,7 @@ pub(crate) mod notifications;
 mod pgp_keys;
 pub(crate) mod preferences;
 pub(crate) mod print_preview;
+pub(crate) mod reader_swap;
 mod recipient_row;
 pub(crate) mod rich_editor;
 pub(crate) mod send_morph;

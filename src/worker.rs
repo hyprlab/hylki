@@ -50,8 +50,8 @@ mod test_support;
 mod tls;
 
 pub(crate) use api::{
-    begin_text_search, text_search_is_current, CalendarPart, MailRequest, OutgoingMessage,
-    WorkerEvent, TEXT_SEARCH_LIMIT,
+    begin_text_search, text_search_is_current, CalendarPart, KeyringRead, MailRequest,
+    OutgoingMessage, WorkerEvent, TEXT_SEARCH_LIMIT,
 };
 pub(crate) use auth::{forget_access_token, oauth_token_blocking};
 pub(crate) use compose::build::sent_body_preview;

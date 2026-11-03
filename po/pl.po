@@ -745,6 +745,33 @@ msgstr "Wysłano odpowiedź: może."
 msgid "Your answer has been sent: declined."
 msgstr "Wysłano odpowiedź: odrzucono."
 
+msgid "Retry"
+msgstr ""
+
+#, fuzzy
+msgid "Waiting for the keyring"
+msgstr "Klucz jest już w bazie kluczy"
+
+#, fuzzy
+msgid "Couldn’t read the password"
+msgstr "Ochrona hasłem"
+
+#, fuzzy
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr "Nie udało się przenieść jednej wiadomości na konto {account}: {error}"
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr ""
+
 msgid "Date (Newest first)"
 msgstr "Data (od najnowszych)"
 
@@ -820,6 +847,36 @@ msgstr "Filtry"
 
 msgid "Sort"
 msgstr "Sortuj"
+
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "Indeksowanie wiadomości ({n})…"
+msgstr[1] "Indeksowanie wiadomości ({n})…"
+msgstr[2] "Indeksowanie wiadomości ({n})…"
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox, a refused one included.
+#, fuzzy
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] "Katalog {done} z {total}"
+msgstr[1] "Katalog {done} z {total}"
+msgstr[2] "Katalog {done} z {total}"
+
+#, fuzzy
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] "Znajdź w wiadomości"
+msgstr[1] "Znajdź w wiadomości"
+msgstr[2] "Znajdź w wiadomości"
+
+msgid "Stop"
+msgstr ""
+
+#, fuzzy
+msgid "Show Outbox"
+msgstr "Skrzynka nadawcza"
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -1439,13 +1496,6 @@ msgstr "To konto nie ma skrzynki odbiorczej"
 
 msgid "No {v1} folder available for some messages"
 msgstr "Brak katalogu {v1} dla części wiadomości"
-
-#, fuzzy
-msgid "Sending {n} message…"
-msgid_plural "Sending {n} messages…"
-msgstr[0] "Indeksowanie wiadomości ({n})…"
-msgstr[1] "Indeksowanie wiadomości ({n})…"
-msgstr[2] "Indeksowanie wiadomości ({n})…"
 
 msgid "Remove Account?"
 msgstr "Czy usunąć konto?"
@@ -3605,6 +3655,17 @@ msgstr ""
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Wyślij jako zwykły załącznik"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Wyślij teraz"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
 
@@ -4862,6 +4923,24 @@ msgstr "Rozmiar tekstu"
 msgid "In {places}"
 msgstr "Wyświetl poszczególne katalogi"
 
+msgid "Takes under a minute"
+msgstr ""
+
+msgid "Takes about a minute"
+msgstr ""
+
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
 msgid "Mail Merge"
 msgstr ""
 
@@ -4889,6 +4968,20 @@ msgstr ""
 #, fuzzy
 msgid "Leave these fields empty"
 msgstr "Czy zapisać filtr?"
+
+msgid "Limit sending rate"
+msgstr ""
+
+#, fuzzy
+msgid "Messages"
+msgstr "Brak wiadomości"
+
+#, fuzzy
+msgid "per minute"
+msgstr "Co minutę"
+
+msgid "per hour"
+msgstr ""
 
 #, fuzzy
 msgid "{n} of {total}"
@@ -7019,10 +7112,6 @@ msgid "Translates a greeting to test the service."
 msgstr ""
 
 #, fuzzy
-msgid "Messages"
-msgstr "Brak wiadomości"
-
-#, fuzzy
 msgid "Hylki's language ({language})"
 msgstr "Język systemu – {language}"
 
@@ -7475,6 +7564,14 @@ msgstr "Indeksowanie wiadomości ({n})…"
 msgid ""
 "No network connection. The message is in the Outbox and will be sent when "
 "the connection is back."
+msgstr ""
+"Nie udało się wysłać: {e}. Wiadomość jest w skrzynce nadawczej i zostanie "
+"wysłana po przywróceniu połączenia."
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+#, fuzzy
+msgid "Send failed: {e}. The message is in the Outbox."
 msgstr ""
 "Nie udało się wysłać: {e}. Wiadomość jest w skrzynce nadawczej i zostanie "
 "wysłana po przywróceniu połączenia."
@@ -8212,6 +8309,18 @@ msgstr "Nad cytowaną wiadomością"
 #, fuzzy
 msgid "Restore Default"
 msgstr "Przywróć domyślne"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Szuflada załączników"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+msgid "Words, separated by commas"
+msgstr ""
 
 msgid "Spelling"
 msgstr "Pisownia"

@@ -1531,6 +1531,12 @@ headerbar box.list-tools.compact button {
   padding-top: 20px;
 }
 
+/* The reading pane's still while a message opens (ReaderSwap): opaque, on
+   the ground the pane sits on. */
+.reader-swap-still {
+  background-color: @window_bg_color;
+}
+
 .reader-subject {
   font-size: 1.5em;
   font-weight: 800;
@@ -1975,12 +1981,6 @@ headerbar box.list-tools.compact button {
   background: alpha(currentColor, 0.03);
   /* Matches the 6px grab strip above, so the drawer reads evenly spaced. */
   padding-bottom: 6px;
-}
-/* The still of a drawer on its way out: the drawer's own tint is in the
-   picture, but not the window ground it sits on, without which the reader
-   behind shows through (see fade_out_drawer). */
-.attachment-drawer-still {
-  background: @window_bg_color;
 }
 /* The drawer's divider draws no line or grip of its own: it wears the
    drawer's exact tint, so the grabbable strip reads as the drawer's own top

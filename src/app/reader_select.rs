@@ -249,13 +249,15 @@ impl AppModel {
             }
 
             AppMsg::RenderThread => {
-                self.thread_render_queued = false;
+                // Painted already, by a sooner call for the same render.
+                if !std::mem::take(&mut self.thread_render_queued) {
+                    return;
+                }
                 if self.current_thread.len() > 1 {
                     // Still assembling and still within the grace period: come
                     // back rather than paint a conversation that is about to be
                     // replaced. The re-queue is what makes the deadline fire.
-                    let unsettled = self.current_thread.iter().any(|m| m.body.is_empty())
-                        || self.thread_related_pending;
+                    let unsettled = !self.thread_settled();
                     let waiting = self
                         .thread_opened_at
                         .is_some_and(|opened| opened.elapsed() < THREAD_BODY_WAIT);
@@ -502,7 +504,12 @@ impl AppModel {
 
         let mut related = self.related_request(&m, &thread, solo);
 
+        // Opening it changes the reader and its drawer one input at a
+        // time: freeze the pane first, so they change unseen and show
+        // together. What this update emits (the emptied drawer above
+        // included) is only handled once it returns, under the freeze.
         if thread.len() > 1 {
+            self.reader_swap.freeze();
             self.open_conversation(&m, &thread, &current, needs_body, related, &sender);
         } else {
             self.current_thread.clear();
@@ -521,6 +528,7 @@ impl AppModel {
                 }
                 return;
             }
+            self.reader_swap.freeze();
             self.show_single(&m, display, needs_body, folder_path.clone(), related);
         }
 
@@ -661,6 +669,10 @@ impl AppModel {
             self.load_missing_thread_bodies(Some((account_id, m.id)));
             self.thread_painted = true;
             self.thread_related_pending = false;
+            // The cards' files go in with the document (the pane is frozen
+            // meanwhile): patched in after it shows, a row of them pushes
+            // the page down.
+            self.push_card_attachments();
             self.show_thread();
             self.load_thread_attachments();
             if let Some(req) = related.take() {

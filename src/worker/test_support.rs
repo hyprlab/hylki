@@ -119,6 +119,7 @@ pub(super) fn sample_outgoing() -> OutgoingMessage {
         request_receipt: false,
         importance: Default::default(),
         receipt_report: None,
+        merged: false,
     }
 }
 

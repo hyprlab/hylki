@@ -670,7 +670,15 @@ pub(crate) fn path() -> Option<PathBuf> {
 /// back to the offline sample backend.
 pub(crate) fn load() -> Option<Vec<AccountConfig>> {
     let path = path()?;
-    let text = std::fs::read_to_string(&path).ok()?;
+    // A missing file is a first start; any other failure was silent (#573).
+    let text = match std::fs::read_to_string(&path) {
+        Ok(text) => text,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => return None,
+        Err(e) => {
+            tracing::error!("cannot read {}: {e}", path.display());
+            return None;
+        }
+    };
     match toml::from_str::<ConfigFile>(&text) {
         Ok(mut cfg) if !cfg.accounts.is_empty() => {
             // Heal pre-#36 Microsoft 365 imports: a GOA OAuth account with no

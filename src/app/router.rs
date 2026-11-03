@@ -322,7 +322,9 @@ impl AppModel {
             | AppMsg::KeywordsSynced { .. }
             | AppMsg::TagViewLoaded { .. }) => self.on_tags(msg, sender),
             msg @ (AppMsg::SendMessage { .. }
-            | AppMsg::SendMerged(..)
+            | AppMsg::SendMerged { .. }
+            | AppMsg::MergeTick(..)
+            | AppMsg::StopMerge(..)
             | AppMsg::DispatchSend(..)
             | AppMsg::UndoSend(..)
             | AppMsg::SendDone { .. }
@@ -344,6 +346,7 @@ impl AppModel {
             | AppMsg::AddFirstAccount
             | AppMsg::AccountSaved { .. }
             | AppMsg::ShowKeyringHelp { .. }
+            | AppMsg::KeyringRead { .. }
             | AppMsg::ReconnectAccounts
             | AppMsg::ShowCarryOverNotice(..)
             | AppMsg::AccountEnabledChanged { .. }
@@ -551,6 +554,7 @@ impl AppModel {
             | PrefOutput::SetSignatureDashes(..)
             | PrefOutput::SetFoldQuote(..)
             | PrefOutput::SetReplyHeader(..)
+            | PrefOutput::SetAttachmentKeywords(..)
             | PrefOutput::SetUndoSend(..)
             | PrefOutput::SetRequestReceipts(..)
             | PrefOutput::SetReturnedReceipts(..)) => self.on_prefs_compose_pref(pref),

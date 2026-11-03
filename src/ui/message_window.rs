@@ -40,6 +40,8 @@ pub(crate) struct MessageWindow {
     attachments_loading: std::collections::HashSet<(u32, u32)>,
     drawer_enabled: bool,
     drawer: Controller<AttachmentDrawer>,
+    /// The reader and its drawer frozen as one pane while a message opens.
+    swap: crate::ui::reader_swap::ReaderSwap,
     lightbox: Controller<Lightbox>,
     tags: Vec<Tag>,
     toolbar: ReaderToolbar,

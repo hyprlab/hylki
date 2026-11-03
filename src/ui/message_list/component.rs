@@ -504,7 +504,9 @@ impl SimpleComponent for MessageList {
             MessageListInput::BulkToggleRead => self.on_bulk_toggle_read(&sender),
             MessageListInput::BulkTagMenu => self.on_bulk_tag_menu(&sender),
             MessageListInput::ClearSelection => self.on_clear_selection(),
-            MessageListInput::SetSort(order) => self.on_set_sort(order),
+            MessageListInput::SetSort { order, reversed } => {
+                self.on_set_sort(order, reversed, &sender)
+            }
             MessageListInput::ResizeColumn {
                 column,
                 width,

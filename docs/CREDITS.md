@@ -105,11 +105,13 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   person running it.
 - [**Fabio Rotondo**](https://github.com/fsoft72) ([#379](https://github.com/hyprlab/hylki/pull/379),
   [#380](https://github.com/hyprlab/hylki/pull/380), [#383](https://github.com/hyprlab/hylki/pull/383),
-  [#384](https://github.com/hyprlab/hylki/pull/384), [#386](https://github.com/hyprlab/hylki/pull/386)):
+  [#384](https://github.com/hyprlab/hylki/pull/384), [#386](https://github.com/hyprlab/hylki/pull/386),
+  [#573](https://github.com/hyprlab/hylki/pull/573), [#575](https://github.com/hyprlab/hylki/pull/575)):
   the Hylki address book with vCard import, filters on whether the sender is
   in Contacts, the per-message Light / Dark Mode switch, tag-colored rows,
-  marking a message read from its unread dot, and a search that stays open
-  while its folder scope is picked.
+  marking a message read from its unread dot, a search that stays open
+  while its folder scope is picked, a window that no longer opens blank
+  while the keyring is locked, and the reminder for a forgotten attachment.
 - [**Elliot**](https://github.com/Elliot-32) ([#409](https://github.com/hyprlab/hylki/pull/409)):
   a startup crash when a folder's name has a non-ASCII character near its
   start.
@@ -135,9 +137,12 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   Reply and New Message opening while the contact service hangs, with
   recipient suggestions loaded in the background.
 - [**Valentin Morice**](https://github.com/valentin-morice) ([#545](https://github.com/hyprlab/hylki/pull/545),
-  [#546](https://github.com/hyprlab/hylki/pull/546)): the count centered in
-  the sidebar's unread chip, and a setting to hide the account chip in the
-  message header.
+  [#546](https://github.com/hyprlab/hylki/pull/546),
+  [#570](https://github.com/hyprlab/hylki/pull/570),
+  [#571](https://github.com/hyprlab/hylki/pull/571)): the count centered in
+  the sidebar's unread chip, a setting to hide the account chip in the
+  message header, a message opening as one change on screen, sooner, and
+  folder counts that start from the last ones the server gave.
 
 
 ## Reports, design and ideas

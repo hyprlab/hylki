@@ -720,6 +720,33 @@ msgstr "Válasza elküldve: talán."
 msgid "Your answer has been sent: declined."
 msgstr "Válasza elküldve: elutasítva."
 
+msgid "Retry"
+msgstr ""
+
+#, fuzzy
+msgid "Waiting for the keyring"
+msgstr "Nincs visszavonható művelet"
+
+#, fuzzy
+msgid "Couldn’t read the password"
+msgstr "Védelem jelszóval"
+
+#, fuzzy
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr "Egy üzenet nem tudott átkerülni a {account} fiókba: {error}"
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr ""
+
 msgid "Date (Newest first)"
 msgstr "Dátum (legújabb elöl)"
 
@@ -795,6 +822,33 @@ msgstr "Szűrők"
 
 msgid "Sort"
 msgstr "Rendezés"
+
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "{n} üzenet indexelése…"
+msgstr[1] "{n} üzenet indexelése…"
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox, a refused one included.
+#, fuzzy
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] "{done} mappa a {total} közül"
+msgstr[1] "{done} mappa a {total} közül"
+
+#, fuzzy
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] "Keresés az üzenetben"
+msgstr[1] "Keresés az üzenetben"
+
+msgid "Stop"
+msgstr ""
+
+#, fuzzy
+msgid "Show Outbox"
+msgstr "Kimenő"
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -1413,12 +1467,6 @@ msgstr "Ehhez a fiókhoz nem érhető el Beérkezett üzenetek mappa"
 
 msgid "No {v1} folder available for some messages"
 msgstr "Néhány üzenethez nem érhető el {v1} mappa"
-
-#, fuzzy
-msgid "Sending {n} message…"
-msgid_plural "Sending {n} messages…"
-msgstr[0] "{n} üzenet indexelése…"
-msgstr[1] "{n} üzenet indexelése…"
 
 msgid "Remove Account?"
 msgstr "Eltávolítja a fiókot?"
@@ -3553,6 +3601,17 @@ msgstr ""
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Küldés normál mellékletként"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Küldés most"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
 
@@ -4799,6 +4858,22 @@ msgstr "Text méret"
 msgid "In {places}"
 msgstr "Minden mappa megjelenítése"
 
+msgid "Takes under a minute"
+msgstr ""
+
+msgid "Takes about a minute"
+msgstr ""
+
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Mail Merge"
 msgstr ""
 
@@ -4826,6 +4901,20 @@ msgstr ""
 #, fuzzy
 msgid "Leave these fields empty"
 msgstr "Elmented a szűrőt?"
+
+msgid "Limit sending rate"
+msgstr ""
+
+#, fuzzy
+msgid "Messages"
+msgstr "Nincsenek üzenetek"
+
+#, fuzzy
+msgid "per minute"
+msgstr "Percenként"
+
+msgid "per hour"
+msgstr ""
 
 #, fuzzy
 msgid "{n} of {total}"
@@ -6948,10 +7037,6 @@ msgid "Translates a greeting to test the service."
 msgstr ""
 
 #, fuzzy
-msgid "Messages"
-msgstr "Nincsenek üzenetek"
-
-#, fuzzy
 msgid "Hylki's language ({language})"
 msgstr "Rendszer nyelve — {language}"
 
@@ -7405,6 +7490,14 @@ msgstr "{n} üzenet indexelése…"
 msgid ""
 "No network connection. The message is in the Outbox and will be sent when "
 "the connection is back."
+msgstr ""
+"A küldés sikertelen volt: {e}. Az üzenet a Kimenő mappában található, és a "
+"kapcsolat helyreállása után elküldésre kerül."
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+#, fuzzy
+msgid "Send failed: {e}. The message is in the Outbox."
 msgstr ""
 "A küldés sikertelen volt: {e}. Az üzenet a Kimenő mappában található, és a "
 "kapcsolat helyreállása után elküldésre kerül."
@@ -8140,6 +8233,18 @@ msgstr "Az idézett üzenet felett"
 #, fuzzy
 msgid "Restore Default"
 msgstr "Alapértelmezett beállítások visszaállítása"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Csatolmány tároló"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+msgid "Words, separated by commas"
+msgstr ""
 
 msgid "Spelling"
 msgstr "Helyesírás"

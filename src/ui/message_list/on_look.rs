@@ -183,14 +183,20 @@ impl MessageList {
         self.sync_look();
     }
 
-    pub(super) fn on_set_sort(&mut self, order: SortOrder) {
-        if self.sort != order || self.sort_reversed {
+    pub(super) fn on_set_sort(
+        &mut self,
+        order: SortOrder,
+        reversed: bool,
+        sender: &ComponentSender<Self>,
+    ) {
+        if self.sort != order || self.sort_reversed != reversed {
             self.sort = order;
-            self.sort_reversed = false;
+            self.sort_reversed = reversed;
             self.rebuild();
             self.scroll_top();
             self.sync_headings();
         }
+        let _ = sender.output(MessageListOutput::SortChanged(self.sort.key(), reversed));
     }
 
     pub(super) fn on_resize_column(
@@ -310,7 +316,10 @@ impl MessageList {
         self.rebuild();
         self.scroll_top();
         self.sync_headings();
-        let _ = sender.output(MessageListOutput::SortChanged(self.sort.key()));
+        let _ = sender.output(MessageListOutput::SortChanged(
+            self.sort.key(),
+            self.sort_reversed,
+        ));
     }
 
     pub(super) fn on_set_swipe_enabled(&mut self, on: bool) {

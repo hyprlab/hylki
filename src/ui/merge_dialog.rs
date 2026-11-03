@@ -117,10 +117,42 @@ fn header_line(grid: &gtk::Grid, row: i32, title: &str) -> gtk::Label {
     value
 }
 
+/// How long `n` messages take, one every `interval`, as the rate row says
+/// it.
+fn duration_label(n: usize, interval: std::time::Duration) -> String {
+    let secs = interval.as_secs_f64() * n.saturating_sub(1) as f64;
+    let minutes = (secs / 60.0).ceil() as u32;
+    if secs < 60.0 {
+        i18n("Takes under a minute")
+    } else if minutes <= 1 {
+        i18n("Takes about a minute")
+    } else if minutes < 120 {
+        ni18n_f(
+            "Takes about {n} minute",
+            "Takes about {n} minutes",
+            minutes,
+            &[("n", &minutes.to_string())],
+        )
+    } else {
+        let hours = (f64::from(minutes) / 60.0).round() as u32;
+        ni18n_f(
+            "Takes about {n} hour",
+            "Takes about {n} hours",
+            hours,
+            &[("n", &hours.to_string())],
+        )
+    }
+}
+
 /// Show the dialog over `parent`. `done` gets the messages to send, one per
-/// row with an address.
+/// row with an address, and the wait from one to the next if the rate is
+/// limited.
 #[allow(deprecated)] // adw::MessageDialog, see ui::dialog
-pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>) + 'static) {
+pub(crate) fn show(
+    parent: &gtk::Window,
+    start: Start,
+    done: impl Fn(Vec<Letter>, Option<std::time::Duration>) + 'static,
+) {
     let dialog = adw::MessageDialog::new(Some(parent), Some(&i18n("Mail Merge")), None);
     dialog.add_response("cancel", &i18n("Cancel"));
     dialog.add_response("send", &i18n("Send"));
@@ -236,12 +268,49 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
     preview.append(&card);
     preview.set_visible(false);
 
+    // How fast the messages go, for a provider that limits it.
+    let rate = crate::config::load_merge_rate();
+    let rate_row = adw::ExpanderRow::new();
+    rate_row.set_title(&i18n("Limit sending rate"));
+    rate_row.set_show_enable_switch(true);
+    rate_row.set_enable_expansion(rate.on);
+    rate_row.set_expanded(rate.on);
+    let count_row = adw::ActionRow::new();
+    count_row.set_title(&i18n("Messages"));
+    let count_spin = gtk::SpinButton::with_range(1.0, 1000.0, 1.0);
+    count_spin.set_value(f64::from(rate.count.clamp(1, 1000)));
+    count_spin.set_valign(gtk::Align::Center);
+    count_spin.set_numeric(true);
+    let per_minute = i18n("per minute");
+    let per_hour = i18n("per hour");
+    let per = gtk::DropDown::from_strings(&[per_minute.as_str(), per_hour.as_str()]);
+    per.set_selected(u32::from(rate.per_hour));
+    per.set_valign(gtk::Align::Center);
+    count_row.add_suffix(&count_spin);
+    count_row.add_suffix(&per);
+    count_row.set_activatable_widget(Some(&count_spin));
+    rate_row.add_row(&count_row);
+    let rate_list = gtk::ListBox::new();
+    rate_list.add_css_class("boxed-list");
+    rate_list.set_selection_mode(gtk::SelectionMode::None);
+    rate_list.append(&rate_row);
+    rate_list.set_visible(false);
+    let rate_now = {
+        let (rate_row, count_spin, per) = (rate_row.clone(), count_spin.clone(), per.clone());
+        move || crate::config::MergeRate {
+            on: rate_row.enables_expansion(),
+            count: count_spin.value_as_int().max(1) as u32,
+            per_hour: per.selected() == 1,
+        }
+    };
+
     let bx = gtk::Box::new(gtk::Orientation::Vertical, 12);
     bx.set_size_request(460, -1);
     bx.append(&form);
     bx.append(&missing_box);
     bx.append(&note);
     bx.append(&preview);
+    bx.append(&rate_list);
     // The dialog is held to its window's height: in a short composer
     // window everything below the text scrolls rather than run off it.
     // A scrolled window clips at its edges, which would cut the lists'
@@ -294,6 +363,32 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
     };
     let show_one = Rc::new(show_one);
 
+    // The rate's subtitle: how long this many messages take at it.
+    let show_rate = {
+        let (merged, rate_row, rate_now) = (merged.clone(), rate_row.clone(), rate_now.clone());
+        Rc::new(move || {
+            let n = merged.borrow().letters.len();
+            match rate_now().interval() {
+                Some(interval) if n > 1 => {
+                    rate_row.set_subtitle(&duration_label(n, interval));
+                }
+                _ => rate_row.set_subtitle(""),
+            }
+        })
+    };
+    {
+        let show_rate = show_rate.clone();
+        rate_row.connect_enable_expansion_notify(move |_| show_rate());
+    }
+    {
+        let show_rate = show_rate.clone();
+        count_spin.connect_value_changed(move |_| show_rate());
+    }
+    {
+        let show_rate = show_rate.clone();
+        per.connect_selected_notify(move |_| show_rate());
+    }
+
     // The rows in use: their fields, their messages, the count to send,
     // made again when the source changes or the switch is turned.
     let current: Rc<RefCell<Source>> = Rc::new(RefCell::new((Ok(None), String::new())));
@@ -312,6 +407,7 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
             blank_row.clone(),
         );
         let (show_one, current) = (show_one.clone(), current.clone());
+        let (rate_list, show_rate) = (rate_list.clone(), show_rate.clone());
         move || {
             let (table, name) = &*current.borrow();
             let blank = blank_row.is_active();
@@ -384,7 +480,9 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
                 },
             );
             preview.set_visible(ready);
+            rate_list.set_visible(ready);
             *merged.borrow_mut() = result;
+            show_rate();
             shown.set(0);
             show_one();
         }
@@ -458,8 +556,13 @@ pub(crate) fn show(parent: &gtk::Window, start: Start, done: impl Fn(Vec<Letter>
     }
 
     dialog.connect_response(None, move |_, resp| {
+        let rate = rate_now();
+        crate::config::save_merge_rate(rate);
         if resp == "send" {
-            done(std::mem::take(&mut merged.borrow_mut().letters));
+            done(
+                std::mem::take(&mut merged.borrow_mut().letters),
+                rate.interval(),
+            );
         }
     });
     // The file last chosen, here or in the field palette, to start from.
@@ -545,4 +648,51 @@ fn read_table(path: &Path) -> Result<Option<Table>, String> {
         )
     })?;
     parse_csv(&bytes).map(Some)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::duration_label;
+    use crate::config::MergeRate;
+    use std::time::Duration;
+
+    #[test]
+    fn a_rate_is_a_wait_between_messages() {
+        let rate = |on, count, per_hour| MergeRate {
+            on,
+            count,
+            per_hour,
+        };
+        assert_eq!(rate(false, 30, false).interval(), None);
+        assert_eq!(rate(true, 0, false).interval(), None);
+        assert_eq!(
+            rate(true, 30, false).interval(),
+            Some(Duration::from_secs(2))
+        );
+        assert_eq!(
+            rate(true, 100, true).interval(),
+            Some(Duration::from_secs_f64(36.0))
+        );
+    }
+
+    /// The first message goes at once: 200 messages are 199 waits.
+    #[test]
+    fn the_rate_row_says_how_long_the_merge_takes() {
+        assert_eq!(
+            duration_label(12, Duration::from_secs(1)),
+            "Takes under a minute"
+        );
+        assert_eq!(
+            duration_label(31, Duration::from_secs(2)),
+            "Takes about a minute"
+        );
+        assert_eq!(
+            duration_label(200, Duration::from_secs(2)),
+            "Takes about 7 minutes"
+        );
+        assert_eq!(
+            duration_label(200, Duration::from_secs(36)),
+            "Takes about 2 hours"
+        );
+    }
 }

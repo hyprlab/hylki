@@ -251,6 +251,7 @@ impl Compose {
             request_receipt: self.request_receipt,
             importance: self.importance,
             receipt_report: None,
+            merged: false,
             send_at: self.send_at,
         }
     }
@@ -493,8 +494,23 @@ impl Compose {
         false
     }
 
-    /// Handles [`ComposeInput::SendBody`].
-    pub(super) fn on_send_body(&mut self, fields: OutgoingFields, sender: &ComponentSender<Self>) {
+    /// Handles [`ComposeInput::SendBody`]: a message that mentions an
+    /// attachment it does not have is asked about first.
+    pub(super) fn on_send_body(
+        &mut self,
+        fields: OutgoingFields,
+        widgets: &ComposeWidgets,
+        sender: &ComponentSender<Self>,
+    ) {
+        if let Some(word) = self.unattached_mention(&fields) {
+            self.ask_send_unattached(&word, fields, widgets, sender);
+            return;
+        }
+        self.finish_send(fields, sender);
+    }
+
+    /// Hand the message to the app to send, and close the composer.
+    pub(super) fn finish_send(&mut self, fields: OutgoingFields, sender: &ComponentSender<Self>) {
         let mut out = self.outgoing_message(fields);
         // The direction of each line (#524) is written in only here, on
         // the way out: a draft goes back into the editor, which finds it

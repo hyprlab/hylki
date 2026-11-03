@@ -351,6 +351,10 @@ pub(crate) struct OutgoingMessage {
     /// A read receipt (#520): the fields of its report, sent with `body` as
     /// the words beside them in a `multipart/report`.
     pub(crate) receipt_report: Option<String>,
+    /// One of a mail merge's messages (#447): a server's refusal puts it in
+    /// the Outbox with the reason, rather than opening it in a composer,
+    /// which for a merge could be a window for each of hundreds.
+    pub(crate) merged: bool,
 }
 
 /// The calendar half of an outgoing message (#223).
@@ -362,6 +366,18 @@ pub(crate) struct CalendarPart {
     /// well as in the document: a recipient's calendar reads it there
     /// first, and Exchange ignores a part that does not carry it.
     pub(crate) method: String,
+}
+
+/// A keyring read worth telling the user about (#573).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum KeyringRead {
+    /// No answer yet. The read goes on: a locked keyring answers once it
+    /// is unlocked.
+    Silent,
+    /// The answer, after a [`KeyringRead::Silent`].
+    Answered,
+    /// An error instead of the password.
+    Failed(String),
 }
 
 /// An event pushed from the worker back to the UI.
@@ -652,6 +668,9 @@ pub(crate) enum WorkerEvent {
     /// bulk-action spinner in the UI.
     BulkComplete,
     Status(String),
+    /// How a read of the account's password from the keyring went, when
+    /// that is news for the user (#573).
+    Keyring(KeyringRead),
     /// `connectivity` marks connection/sync errors that should auto-clear once
     /// a later connect or sync succeeds.
     Error {

@@ -127,6 +127,7 @@ pub(super) fn park_held(list: &OutgoingList) {
             &o.account,
             &o.message,
             o.sent_path.as_deref(),
+            crate::datefmt::now(),
         );
         tracing::info!(
             "quit during Undo Send: message {} kept in the Outbox: {kept}",

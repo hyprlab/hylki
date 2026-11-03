@@ -1,5 +1,5 @@
-//! How the drawer comes and goes and how tall it is: presence and swap fades,
-//! collapse and expand, the divider and the remembered height.
+//! How the drawer comes and goes and how tall it is: its list, collapse and
+//! expand, the divider and the remembered height.
 
 use super::{AttachmentDrawer, AttachmentDrawerInput, MIN_HEIGHT};
 use crate::config;
@@ -7,180 +7,16 @@ use crate::models::Attachment;
 use adw::prelude::*;
 use gtk::glib;
 use relm4::prelude::*;
-use std::rc::Rc;
-
-/// Whether two lists show the same files, in the same order.
-fn same_files(a: &[Attachment], b: &[Attachment]) -> bool {
-    a.len() == b.len()
-        && a.iter()
-            .zip(b)
-            .all(|(x, y)| x.name == y.name && x.data.len() == y.data.len())
-}
 
 impl AttachmentDrawer {
-    /// Show a new list, fading the drawer in or out when it comes or goes
-    /// and dissolving one message's files into the next's, instead of
-    /// popping. Its room is given or taken at once either way: the reader
-    /// must change size in the same frame as the message does (see
-    /// `load_after_paint` in message_view), so only the look fades.
+    /// Show a new list. Opening a message hands it over while the reading
+    /// pane is frozen (`ReaderSwap`), so the drawer comes, goes or changes
+    /// its files unseen, and its room is given or taken before the new
+    /// message is laid out.
     pub(super) fn apply_items(&mut self, items: Vec<Attachment>, sender: &ComponentSender<Self>) {
-        // What is on screen, not the old list: the view has yet to follow.
-        let was_shown = self.drawer_body.as_ref().is_some_and(|b| b.is_visible());
-        if was_shown && items.is_empty() {
-            self.fade_out_drawer();
-        } else if was_shown && !same_files(&self.items, &items) {
-            self.swap_drawer();
-        }
         self.items = items;
         self.update_pill_visibility();
         self.rebuild(sender);
-        if !was_shown && !self.items.is_empty() {
-            self.fade_in_drawer();
-        }
-    }
-
-    /// End a fade in or out where it was headed.
-    fn finish_presence_fade(&self) {
-        if let Some(running) = self.presence_anim.borrow_mut().take() {
-            running.skip();
-        }
-    }
-
-    /// Drop a swap's still: the drawer under it is going, or coming back.
-    fn finish_swap(&self) {
-        if let Some(running) = self.swap_anim.borrow_mut().take() {
-            running.skip();
-        }
-    }
-
-    /// A still of the drawer as it is on screen, or `None` with nothing to
-    /// take (not shown, or never laid out).
-    fn drawer_still(&self) -> Option<(gtk::gdk::Paintable, i32)> {
-        let body = self.drawer_body.as_ref()?;
-        let frame = self.drawer_frame.as_ref()?;
-        let height = frame.height();
-        if height <= 0 || !body.is_mapped() {
-            return None;
-        }
-        // Drawn the way the drawer's own overlay draws it, into a snapshot
-        // of our own: a WidgetPaintable's image of the body comes out empty.
-        // At the frame's size, so the body's place in it comes along and the
-        // still lies exactly over the drawer.
-        let snapshot = gtk::Snapshot::new();
-        frame.snapshot_child(body, &snapshot);
-        let size = gtk::graphene::Size::new(frame.width() as f32, height as f32);
-        Some((snapshot.to_paintable(Some(&size))?, height))
-    }
-
-    fn fade_in_drawer(&self) {
-        self.finish_presence_fade();
-        self.finish_swap();
-        let Some(body) = &self.drawer_body else {
-            return;
-        };
-        let faded: [gtk::Widget; 2] = [body.clone().upcast(), self.pill.clone().upcast()];
-        for w in &faded {
-            w.set_opacity(0.0);
-        }
-        let target = adw::CallbackAnimationTarget::new(move |v| {
-            for w in &faded {
-                w.set_opacity(v);
-            }
-        });
-        // Timed on the split, which is on screen: the body isn't shown until
-        // the view catches up, and an animation on an unmapped widget
-        // jumps straight to its end.
-        let anim = adw::TimedAnimation::new(
-            &self.paned,
-            0.0,
-            1.0,
-            crate::ui::message_view::PAGE_FADE_MS,
-            target,
-        );
-        anim.set_easing(adw::Easing::Linear);
-        anim.play();
-        *self.presence_anim.borrow_mut() = Some(anim);
-    }
-
-    /// The drawer goes at once; a still of it stays where it stood, over
-    /// the bottom of the reader that takes its room, and fades out with the
-    /// message it belonged to. Fading ahead of it would uncover the old
-    /// message's hidden end for a beat before the new one arrives.
-    fn fade_out_drawer(&self) {
-        self.finish_presence_fade();
-        let Some((still, height)) = self.drawer_still() else {
-            return;
-        };
-        self.finish_swap();
-        self.leaving.set_size_request(-1, height);
-        self.dissolve(&self.leaving, still, &self.presence_anim);
-    }
-
-    /// One message's files for another's: the drawer stays, and a still of
-    /// the old one dissolves over the new, with the message.
-    fn swap_drawer(&self) {
-        // A swap not yet under way already shows what is on screen; the
-        // widgets under it may hold a list that was never drawn (a
-        // conversation's files arrive a few lists at a time).
-        let waiting = self
-            .swap_anim
-            .borrow()
-            .as_ref()
-            .is_some_and(|a| a.state() == adw::AnimationState::Idle);
-        if waiting {
-            return;
-        }
-        let Some((still, _)) = self.drawer_still() else {
-            return;
-        };
-        self.finish_swap();
-        self.dissolve(&self.swapping, still, &self.swap_anim);
-    }
-
-    /// Show `still` over the drawer's place and fade it out with the
-    /// reader's next page change, or a beat later when none comes.
-    fn dissolve(
-        &self,
-        picture: &gtk::Picture,
-        still: gtk::gdk::Paintable,
-        slot: &Rc<std::cell::RefCell<Option<adw::TimedAnimation>>>,
-    ) {
-        picture.set_paintable(Some(&still));
-        picture.set_opacity(1.0);
-        picture.set_visible(true);
-        let target = {
-            let picture = picture.clone();
-            adw::CallbackAnimationTarget::new(move |v| picture.set_opacity(v))
-        };
-        let anim = adw::TimedAnimation::new(
-            &self.paned,
-            1.0,
-            0.0,
-            crate::ui::message_view::PAGE_FADE_MS,
-            target,
-        );
-        anim.set_easing(adw::Easing::Linear);
-        {
-            let picture = picture.clone();
-            anim.connect_done(move |_| {
-                picture.set_visible(false);
-                picture.set_paintable(None::<&gtk::gdk::Paintable>);
-            });
-        }
-        *slot.borrow_mut() = Some(anim.clone());
-        // A fade that was cut short in the meantime (finished, or replaced)
-        // is not started again.
-        let start = {
-            let slot = slot.clone();
-            move || {
-                let current = slot.borrow().as_ref().is_some_and(|a| *a == anim);
-                if current && anim.state() == adw::AnimationState::Idle {
-                    anim.play();
-                }
-            }
-        };
-        crate::ui::message_view::on_next_page_fade(start.clone());
-        glib::timeout_add_local_once(std::time::Duration::from_millis(200), start);
     }
 
     /// The grab pill shows whenever the drawer does — collapsed included,

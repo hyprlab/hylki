@@ -39,8 +39,12 @@ pub(super) fn save_window_geometry(w: &adw::ApplicationWindow) {
 /// the Flatpak surfaces as a crash notification. Nothing else needs
 /// persisting on quit: accounts and settings are written as they change,
 /// held sends are parked, the keyring's share once its thread is done.
-pub(super) fn exit_now(outgoing: &super::outgoing::OutgoingList) -> ! {
+pub(super) fn exit_now(
+    outgoing: &super::outgoing::OutgoingList,
+    merges: &super::merge_send::MergeRuns,
+) -> ! {
     super::outgoing::park_held(outgoing);
+    super::merge_send::park_waiting(merges);
     finish_keyring_writes();
     std::process::exit(0)
 }
@@ -116,13 +120,14 @@ impl AppModel {
         app.add_action(&self.reading_pane_action);
         let window = root.clone();
         let outgoing = self.outgoing.clone();
+        let merges = self.merges.clone();
         let quit = gtk::gio::SimpleAction::new("quit", None);
         quit.connect_activate(move |_, _| {
             // Same teardown as closing the last window: save the geometry,
             // then exit rather than unwinding through GTK and WebKit.
             save_window_geometry(&window);
             crate::desktop::background::set_status("");
-            exit_now(&outgoing)
+            exit_now(&outgoing, &merges)
         });
         app.add_action(&quit);
         gtk::prelude::GtkApplicationExt::set_accels_for_action(&app, "app.quit", &["<Ctrl>q"]);

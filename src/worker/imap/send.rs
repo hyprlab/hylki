@@ -19,7 +19,7 @@ use crate::worker::outbox::{
     current_sent_copy_path, due_outbox_items, emit_outbox, note_answered, outbox_envelope,
     raw_in_reply_to,
 };
-use crate::worker::smtp::send_raw_smtp;
+use crate::worker::smtp::{send_raw_smtp, smtp_refused};
 use crate::worker::{answered_copies, reply_copy_path, WorkerEvent};
 
 /// Mark what a sent message answered (#454): `\Answered` on the original
@@ -171,7 +171,12 @@ pub(in crate::worker) async fn flush_outbox(
                 }
                 // A failure now will almost certainly repeat for the rest of the
                 // queue (the connection is down), so stop rather than hammering.
-                break;
+                // A message the server refused says nothing about the rest:
+                // a merge's message with a bad address must not hold up the
+                // others behind it (#447).
+                if !smtp_refused(&e) {
+                    break;
+                }
             }
         }
     }

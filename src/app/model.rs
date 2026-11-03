@@ -129,6 +129,8 @@ pub(crate) struct AppModel {
     /// Messages on their way out (#434), shared with the quit paths, which
     /// park any still waiting out the Undo Send delay in the Outbox.
     pub(super) outgoing: super::outgoing::OutgoingList,
+    /// Mail merges under way (#447), shared with the quit paths too.
+    pub(super) merges: super::merge_send::MergeRuns,
     /// The last ticket handed to a send; 0 is never used.
     pub(super) send_ticket: u64,
     /// Same idea over the contacts view's detail pane: composing from a
@@ -480,6 +482,8 @@ pub(crate) struct AppModel {
     pub(super) list_group_by_date: bool,
     /// A card's pills on a line under its text (#374).
     pub(super) list_pills_below: bool,
+    /// The list's sort key and whether it is reversed, kept (#574).
+    pub(super) list_sort: (&'static str, bool),
     /// The list's search field stays open (#446).
     pub(super) list_search_open: bool,
     /// Contacts' search field stays open.
@@ -536,8 +540,9 @@ pub(crate) struct AppModel {
     pub(super) keep_downloads_days: u32,
     /// Whether messages are grouped into conversation threads.
     pub(super) threading: bool,
-    /// A conversation re-render is already scheduled, so further bodies arriving
-    /// in the same burst don't each queue one of their own.
+    /// A conversation re-render is wanted and scheduled, so further bodies
+    /// arriving in the same burst don't each queue one of their own. Taken by
+    /// the render, so a second call scheduled for it does nothing.
     pub(super) thread_render_queued: bool,
     /// When the conversation on screen was opened. Its bodies arrive one at a
     /// time, and painting each arrival meant a stack of half-built renders
@@ -801,6 +806,9 @@ pub(crate) struct AppModel {
     pub(super) reply_header: String,
     /// Undo Send delay in seconds, 0 for off (#434).
     pub(super) undo_send_secs: u32,
+    /// The words that make Send ask when nothing is attached, "" for never,
+    /// `None` for the default list.
+    pub(super) attachment_keywords: Option<String>,
     pub(super) spellcheck: bool,
     pub(super) spellcheck_langs: String,
     /// How email content is themed (message content only, not the app UI).
@@ -838,6 +846,8 @@ pub(crate) struct AppModel {
     pub(super) message_view: Controller<MessageView>,
     /// In-message attachment thumbnail drawer, docked below the reader body.
     pub(super) attachment_drawer: Controller<AttachmentDrawer>,
+    /// The reader and its drawer frozen as one pane while a message opens.
+    pub(super) reader_swap: crate::ui::reader_swap::ReaderSwap,
     pub(super) gallery: Controller<AttachmentsGallery>,
     /// The in-app contacts view behind the sidebar's Contacts row.
     pub(super) contacts_page: Controller<ContactsPage>,

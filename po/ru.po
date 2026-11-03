@@ -741,6 +741,33 @@ msgstr "Ваш ответ отправлен: возможно."
 msgid "Your answer has been sent: declined."
 msgstr "Ваш ответ отправлен: отклонено."
 
+msgid "Retry"
+msgstr ""
+
+#, fuzzy
+msgid "Waiting for the keyring"
+msgstr "Нечего отменять"
+
+#, fuzzy
+msgid "Couldn’t read the password"
+msgstr "Защитить паролем"
+
+#, fuzzy
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr "Не удалось переместить {n} сообщение в «{account}»: {error}"
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr ""
+
 msgid "Date (Newest first)"
 msgstr "Дата (сначала новые)"
 
@@ -817,6 +844,36 @@ msgstr "Фильтры"
 
 msgid "Sort"
 msgstr "Сортировать"
+
+#, fuzzy
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "Индексация {n} сообщений…"
+msgstr[1] "Индексация {n} сообщений…"
+msgstr[2] "Индексация {n} сообщений…"
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox, a refused one included.
+#, fuzzy
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] "Папка {done} из {total}"
+msgstr[1] "Папка {done} из {total}"
+msgstr[2] "Папка {done} из {total}"
+
+#, fuzzy
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] "Найти в сообщении"
+msgstr[1] "Найти в сообщении"
+msgstr[2] "Найти в сообщении"
+
+msgid "Stop"
+msgstr ""
+
+#, fuzzy
+msgid "Show Outbox"
+msgstr "Исходящие"
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -1437,13 +1494,6 @@ msgstr "Для этой учётной записи недоступна пап�
 
 msgid "No {v1} folder available for some messages"
 msgstr "Для некоторых сообщений нет доступной папки {v1}"
-
-#, fuzzy
-msgid "Sending {n} message…"
-msgid_plural "Sending {n} messages…"
-msgstr[0] "Индексация {n} сообщений…"
-msgstr[1] "Индексация {n} сообщений…"
-msgstr[2] "Индексация {n} сообщений…"
 
 msgid "Remove Account?"
 msgstr "Удалить аккаунт?"
@@ -3583,6 +3633,17 @@ msgstr ""
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Отправить как обычное вложение"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Отправить сейчас"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
 "Файл был перемещён или удалён. Прикрепите его повторно из нового "
@@ -4833,6 +4894,24 @@ msgstr "Размер текста"
 msgid "In {places}"
 msgstr "неизвестная папка"
 
+msgid "Takes under a minute"
+msgstr ""
+
+msgid "Takes about a minute"
+msgstr ""
+
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
 msgid "Mail Merge"
 msgstr ""
 
@@ -4860,6 +4939,19 @@ msgstr ""
 #, fuzzy
 msgid "Leave these fields empty"
 msgstr "Сохранить фильтр?"
+
+msgid "Limit sending rate"
+msgstr ""
+
+msgid "Messages"
+msgstr "Сообщения"
+
+#, fuzzy
+msgid "per minute"
+msgstr "Каждую минуту"
+
+msgid "per hour"
+msgstr ""
 
 #, fuzzy
 msgid "{n} of {total}"
@@ -6947,9 +7039,6 @@ msgstr "Регион (оставьте пустым для глобальног�
 msgid "Translates a greeting to test the service."
 msgstr "Переводит приветствие для проверки ответа сервиса."
 
-msgid "Messages"
-msgstr "Сообщения"
-
 msgid "Hylki's language ({language})"
 msgstr "Язык Hylki ({language})"
 
@@ -7406,6 +7495,14 @@ msgstr "Индексация {n} сообщений…"
 msgid ""
 "No network connection. The message is in the Outbox and will be sent when "
 "the connection is back."
+msgstr ""
+"Не удалось отправить: {e}. Сообщение находится в папке «Исходящие» и будет "
+"отправлено при восстановлении соединения."
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+#, fuzzy
+msgid "Send failed: {e}. The message is in the Outbox."
 msgstr ""
 "Не удалось отправить: {e}. Сообщение находится в папке «Исходящие» и будет "
 "отправлено при восстановлении соединения."
@@ -8136,6 +8233,18 @@ msgstr "Над цитируемым сообщением"
 #, fuzzy
 msgid "Restore Default"
 msgstr "Восстановить по умолчанию"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Панель вложений"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+msgid "Words, separated by commas"
+msgstr ""
 
 msgid "Spelling"
 msgstr "Орфография"

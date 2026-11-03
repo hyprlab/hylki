@@ -138,6 +138,8 @@ pub(crate) struct PrefInit {
     pub(crate) reply_header: String,
     /// Undo Send delay in seconds, 0 for off (#434).
     pub(crate) undo_send_secs: u32,
+    /// The words that make Send ask when nothing is attached, "" for never.
+    pub(crate) attachment_keywords: String,
     pub(crate) app_theme: AppTheme,
     pub(crate) text_scale: u32,
     /// The appearance theme's id ("system" for the stock GNOME colors).
@@ -572,6 +574,7 @@ pub(crate) enum PrefOutput {
     SetSignatureDashes(bool),
     SetFoldQuote(bool),
     SetReplyHeader(String),
+    SetAttachmentKeywords(String),
     SetUndoSend(u32),
     Closed,
 }

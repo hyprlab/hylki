@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-31 15:23+0100\n"
+"PO-Revision-Date: 2026-11-02 08:50+0100\n"
 "Last-Translator: cartes <cartes341@free.fr>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -186,10 +186,10 @@ msgid "Create Filter from Message…"
 msgstr "Créer un filtre à partir du message…"
 
 msgid "Create Event…"
-msgstr ""
+msgstr "Créer un événement…"
 
 msgid "Create Task…"
-msgstr ""
+msgstr "Créer une tâche…"
 
 msgid "Tags"
 msgstr "Tags"
@@ -701,6 +701,30 @@ msgstr "Votre réponse a été envoyée : peut-être."
 msgid "Your answer has been sent: declined."
 msgstr "Votre réponse a été envoyée : refusé."
 
+msgid "Retry"
+msgstr ""
+
+msgid "Waiting for the keyring"
+msgstr ""
+
+msgid "Couldn’t read the password"
+msgstr ""
+
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr ""
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr ""
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr ""
+
 msgid "Date (Newest first)"
 msgstr "Date (récents en premier)"
 
@@ -766,6 +790,29 @@ msgstr "Filtrer"
 
 msgid "Sort"
 msgstr "Trier"
+
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "Envoi de {n} message…"
+msgstr[1] "Envoi de {n} messages…"
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox, a refused one included.
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Show Outbox"
+msgstr ""
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -1338,12 +1385,6 @@ msgstr "Aucun dossier de réception disponible pour ce compte"
 msgid "No {v1} folder available for some messages"
 msgstr "Aucun dossier {v1} disponible pour certains messages"
 
-#, fuzzy
-msgid "Sending {n} message…"
-msgid_plural "Sending {n} messages…"
-msgstr[0] "Envoi du message…"
-msgstr[1] "Envoi du message…"
-
 msgid "Remove Account?"
 msgstr "Supprimer le compte ?"
 
@@ -1372,10 +1413,10 @@ msgid "Snooze until"
 msgstr "Mettre en veille jusqu’à"
 
 msgid "Could not add the event: {e}"
-msgstr ""
+msgstr "Impossible d’ajouter l’événement : {e}"
 
 msgid "Could not add the task: {e}"
-msgstr ""
+msgstr "Impossible d’ajouter la tâche : {e}"
 
 msgid "One message could not be copied to {account}: {error}"
 msgid_plural "{n} messages could not be copied to {account}: {error}"
@@ -1694,28 +1735,23 @@ msgstr "Le {date} à {time}, {name} a écrit :"
 msgid "Name"
 msgstr "Nom"
 
-#, fuzzy
 msgid "First Name"
 msgstr "Prénom"
 
-#, fuzzy
 msgid "Last Name"
 msgstr "Nom"
 
 msgid "Email"
 msgstr "E-mail"
 
-#, fuzzy
 msgid "Column {n}"
-msgstr "Colonnes"
+msgstr "Colonne {n}"
 
-#, fuzzy
 msgid "The file is empty."
-msgstr "Le fichier n’est pas un fichier texte"
+msgstr "Le fichier est vide."
 
-#, fuzzy
 msgid "The file has no rows below its first."
-msgstr "Le fichier n’est pas un fichier texte"
+msgstr "Le fichier ne contient aucune ligne après la première."
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "GnuPG (gpg) n’est pas installé ; ce message ne peut donc pas être lu."
@@ -1842,6 +1878,8 @@ msgstr ""
 
 msgid "These checks aren't known to come from your mail provider"
 msgstr ""
+"Ces vérifications ne sont pas connues pour provenir de votre fournisseur de "
+"messagerie"
 
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
@@ -3041,63 +3079,63 @@ msgid "Open in the default app"
 msgstr "Ouvrir dans l’application par défaut"
 
 msgid "New Event"
-msgstr ""
+msgstr "Nouvel événement"
 
 msgid "New Task"
-msgstr ""
+msgstr "Nouvelle tâche"
 
 msgid "Open in Calendar"
-msgstr ""
+msgstr "Ouvrir dans Agenda"
 
 msgid "Title"
 msgstr "Titre"
 
 msgid "Calendar"
-msgstr ""
+msgstr "Agenda"
 
 msgid "Task list"
-msgstr ""
+msgstr "Liste de tâches"
 
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 msgid "All day"
-msgstr ""
+msgstr "Toute la journée"
 
 msgid "Starts"
-msgstr ""
+msgstr "Début"
 
 msgid "Ends"
-msgstr ""
+msgstr "Fin"
 
 msgid "Alarm"
-msgstr ""
+msgstr "Alarme"
 
 msgid "Second alarm"
-msgstr ""
+msgstr "Deuxième alarme"
 
 msgid "At the start"
-msgstr ""
+msgstr "Au début"
 
 msgid "{n} week before"
 msgid_plural "{n} weeks before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} semaine avant"
+msgstr[1] "{n} semaines avant"
 
 msgid "{n} day before"
 msgid_plural "{n} days before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} jour avant"
+msgstr[1] "{n} jours avant"
 
 msgid "{n} hour before"
 msgid_plural "{n} hours before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} heure avant"
+msgstr[1] "{n} heures avant"
 
 msgid "{n} minute before"
 msgid_plural "{n} minutes before"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} minute avant"
+msgstr[1] "{n} minutes avant"
 
 msgid "Due"
 msgstr "Échéance"
@@ -3393,6 +3431,17 @@ msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 "Saisissez une action, un dossier ou un tag, ou > pour les actions uniquement"
 
+#, fuzzy
+msgid "Send without an attachment?"
+msgstr "Envoyer comme une pièce jointe normale"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr ""
+
+#, fuzzy
+msgid "Send Anyway"
+msgstr "Envoyer maintenant"
+
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
 "Le fichier a été déplacé ou supprimé. Joignez-le à nouveau depuis son "
@@ -3550,27 +3599,25 @@ msgstr "Plus"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Afficher Cc, Cci et Répondre à"
 
-#, fuzzy
 msgid "Cannot merge an encrypted message"
-msgstr "Message chiffré"
+msgstr "Le publipostage est impossible avec un message chiffré"
 
 msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
 msgstr ""
+"Chaque message nécessiterait la clé de son destinataire. Désactivez le "
+"chiffrement pour utiliser le publipostage."
 
 msgid "Check the From address"
 msgstr "Vérifiez l’adresse d’expéditeur"
 
-#, fuzzy
 msgid "Insert Merge Field"
-msgstr "Insérer après le texte"
+msgstr "Insérer un champ de fusion"
 
-#, fuzzy
 msgid "Contact Groups"
-msgstr "Contacts"
+msgstr "Groupes de contacts"
 
-#, fuzzy
 msgid "Choose a CSV File…"
-msgstr "Enregistrer dans un fichier…"
+msgstr "Choisir un fichier CSV…"
 
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
@@ -3625,6 +3672,8 @@ msgid ""
 "“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
 "Send."
 msgstr ""
+"« {addr} » est un champ de publipostage. Envoyez avec Publipostage…, dans le "
+"menu à côté de Envoyer."
 
 msgid "“{addr}” is not an email address."
 msgstr "« {addr} » n’est pas une adresse e-mail."
@@ -3648,7 +3697,7 @@ msgid "Pick a date and time…"
 msgstr "Choisir une date et une heure…"
 
 msgid "Mail Merge…"
-msgstr ""
+msgstr "Publipostage…"
 
 msgid "Request a read receipt"
 msgstr "Demander un accusé de lecture"
@@ -3657,13 +3706,13 @@ msgid "Not every mail app sends one."
 msgstr "Toutes les applications de messagerie n’en envoient pas."
 
 msgid "High"
-msgstr ""
+msgstr "Haute"
 
 msgid "Normal"
 msgstr "Normal"
 
 msgid "Low"
-msgstr ""
+msgstr "Basse"
 
 msgid "Show the message as it will be sent"
 msgstr "Afficher le message tel qu’il sera envoyé"
@@ -4329,9 +4378,8 @@ msgstr "Nom"
 msgid "Sort and filter contacts"
 msgstr "Trier et filtrer les contacts"
 
-#, fuzzy
 msgid "Groups"
-msgstr "Groupe"
+msgstr "Groupes"
 
 msgid "Import Contacts"
 msgstr "Importer des contacts"
@@ -4599,76 +4647,94 @@ msgstr "{name} · {current} sur {total}"
 
 msgid "To needs the field that holds the address, such as {{Email}}."
 msgstr ""
+"Le champ À doit référencer la colonne qui contient l’adresse, par exemple "
+"{{Email}}."
 
 msgid "No row has an address to send to."
+msgstr "Aucune ligne ne comporte d’adresse à laquelle envoyer."
+
+msgid "Text"
+msgstr "Texte"
+
+msgid "In {places}"
+msgstr "Dans {places}"
+
+msgid "Takes under a minute"
 msgstr ""
 
-#, fuzzy
-msgid "Text"
-msgstr "Taille du texte"
+msgid "Takes about a minute"
+msgstr ""
 
-#, fuzzy
-msgid "In {places}"
-msgstr "Dans {folder}"
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Mail Merge"
-msgstr ""
+msgstr "Publipostage"
 
-#, fuzzy
 msgid "Send to"
-msgstr "Envoyer maintenant"
+msgstr "Envoyer à"
 
-#, fuzzy
 msgid "A CSV file"
-msgstr "Tous les fichiers"
+msgstr "Un fichier CSV"
 
-#, fuzzy
 msgid "CSV file"
-msgstr "Fichier son"
+msgstr "Fichier CSV"
 
 msgid "Its first row names the fields."
-msgstr ""
+msgstr "Sa première ligne nomme les champs."
 
 msgid "Choose…"
 msgstr "Choisir…"
 
 msgid "Fields"
+msgstr "Champs"
+
+msgid "Leave these fields empty"
+msgstr "Laisser ces champs vides"
+
+msgid "Limit sending rate"
 msgstr ""
 
-#, fuzzy
-msgid "Leave these fields empty"
-msgstr "Garder le champ de recherche ouvert"
+msgid "Messages"
+msgstr "Messages"
 
-#, fuzzy
+msgid "per minute"
+msgstr ""
+
+msgid "per hour"
+msgstr ""
+
 msgid "{n} of {total}"
-msgstr "{shown} sur {total}"
+msgstr "{n} sur {total}"
 
-#, fuzzy
 msgid "Not in {source}"
-msgstr "Sans groupe"
+msgstr "Pas dans {source}"
 
 msgid "{n} row has no address and is left out."
 msgid_plural "{n} rows have no address and are left out."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{n} ligne n’a pas d’adresse et est ignorée."
+msgstr[1] "{n} lignes n’ont pas d’adresse et sont ignorées."
 
-#, fuzzy
 msgid "Send {n} Message"
 msgid_plural "Send {n} Messages"
-msgstr[0] "Rechercher dans le message"
-msgstr[1] "Rechercher dans le message"
+msgstr[0] "Envoyer {n} message"
+msgstr[1] "Envoyer {n} messages"
 
-#, fuzzy
 msgid "Choose a CSV File"
-msgstr "Choisir une photo"
+msgstr "Choisir un fichier CSV"
 
-#, fuzzy
 msgid "CSV files"
-msgstr "Fichiers vCard"
+msgstr "Fichiers CSV"
 
-#, fuzzy
 msgid "The file could not be read: {error}"
-msgstr "Les fichiers n’ont pas pu être écrits : {e}"
+msgstr "Le fichier n’a pas pu être lu : {error}"
 
 msgid "No Messages"
 msgstr "Aucun message"
@@ -6417,7 +6483,7 @@ msgid "Could not save the PDF: {error}"
 msgstr "Impossible d’enregistrer le PDF : {error}"
 
 msgid "Filled in by Mail Merge"
-msgstr ""
+msgstr "Rempli par le publipostage"
 
 msgid "Custom…"
 msgstr "Personnalisé…"
@@ -6662,9 +6728,6 @@ msgstr "Région (vide pour une ressource globale)"
 
 msgid "Translates a greeting to test the service."
 msgstr "Traduit une formule de salutation pour tester le service."
-
-msgid "Messages"
-msgstr "Messages"
 
 msgid "Hylki's language ({language})"
 msgstr "Langue de Hylki ({language})"
@@ -7123,6 +7186,11 @@ msgid ""
 msgstr ""
 "Aucune connexion réseau. Le message est dans la Boîte d’envoi et sera envoyé "
 "dès le rétablissement de la connexion."
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+msgid "Send failed: {e}. The message is in the Outbox."
+msgstr ""
 
 msgid ""
 "Send failed: {e}. The message is in the Outbox and will be sent when the "
@@ -7826,6 +7894,19 @@ msgstr "Ligne au-dessus du message cité"
 
 msgid "Restore Default"
 msgstr "Restaurer la valeur par défaut"
+
+#, fuzzy
+msgid "Attachment Reminder"
+msgstr "Panneau de pièces jointes"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr ""
+
+#, fuzzy
+msgid "Words, separated by commas"
+msgstr "Adresses, séparées par des virgules"
 
 msgid "Spelling"
 msgstr "Orthographe"

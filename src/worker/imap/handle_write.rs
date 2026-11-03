@@ -149,6 +149,7 @@ impl<E: Emit> ImapWorker<E> {
             Ok(()) => {
                 if let Some(c) = cache.as_ref() {
                     c.mark_folder_read(account_id, &path);
+                    c.set_folder_unread(account_id, &path, 0);
                 }
                 emit(WorkerEvent::FolderUnread {
                     folder_id,
@@ -578,6 +579,7 @@ impl<E: Emit> ImapWorker<E> {
                     for uid in &uids {
                         c.delete_message(account_id, &path, *uid);
                     }
+                    c.set_folder_unread(account_id, &path, 0);
                 }
                 tracing::info!("emptied {path}: {} message(s) erased", uids.len());
                 emit(WorkerEvent::Messages {

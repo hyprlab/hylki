@@ -340,6 +340,11 @@ pub(crate) struct PrivacyFile {
     /// before it is handed to the server. 0 sends at once.
     #[serde(default = "default_undo_send_secs")]
     pub(crate) undo_send_secs: u32,
+    /// The words, comma-separated, that make Send ask when nothing is
+    /// attached. Empty never asks. Absent is the default list, left out of
+    /// the file so that a list grown in a later version reaches it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub(crate) attachment_keywords: Option<String>,
     /// Whether the composer underlines misspelled words as you type.
     #[serde(default = "default_on")]
     pub(crate) spellcheck: bool,
@@ -413,6 +418,12 @@ pub(crate) struct PrivacyFile {
     /// text, instead of at the end of the subject (#374).
     #[serde(default)]
     pub(crate) list_pills_below: bool,
+    /// The list's sort, by its key, and whether a heading turned it the
+    /// other way (#574). Empty is newest first.
+    #[serde(default)]
+    pub(crate) list_sort: String,
+    #[serde(default)]
+    pub(crate) list_sort_reversed: bool,
     /// Grouping by date was turned on once for an install from before it
     /// became the default: every save writes every key, so those files
     /// carry the old `false` without anyone having chosen it. A new
@@ -754,6 +765,7 @@ impl Default for PrivacyFile {
             fold_quote: true,
             reply_header: String::new(),
             undo_send_secs: default_undo_send_secs(),
+            attachment_keywords: None,
             spellcheck: true,
             spellcheck_langs: String::new(),
             sidebar_hover_expand: false,
@@ -772,6 +784,8 @@ impl Default for PrivacyFile {
             list_column_scroll: false,
             list_group_by_date: true,
             list_pills_below: false,
+            list_sort: String::new(),
+            list_sort_reversed: false,
             date_groups_default_applied: true,
             list_search_open: false,
             contacts_search_open: false,
