@@ -30,6 +30,7 @@ mod subject;
 mod suggest;
 #[cfg(test)]
 mod tests;
+mod text_diff;
 mod translate;
 mod types;
 
@@ -607,10 +608,11 @@ impl Component for Compose {
             assistant_banner: None,
             assistant_edit: None,
             edit_bar: {
-                // An assistant's edit, shown here until applied or
-                // rejected (`assistant_edit.rs`).
-                let bar = gtk::Box::new(gtk::Orientation::Vertical, 6);
+                // The bar over an assistant's edit, until accepted or
+                // rejected; its text shows in the editor (`assistant_edit.rs`).
+                let bar = gtk::Box::new(gtk::Orientation::Vertical, 4);
                 bar.add_css_class("assistant-banner");
+                bar.add_css_class("assistant-edit-bar");
                 bar.set_margin_start(12);
                 bar.set_margin_end(12);
                 bar.set_margin_top(6);
@@ -919,7 +921,9 @@ impl Component for Compose {
 
                 ComposeInput::ApplyFormat(to) => self.on_apply_format(to, &sender),
 
-                ComposeInput::LoadAs { from, to, body } => self.on_load_as(from, to, body),
+                ComposeInput::LoadAs { from, to, body } => {
+                    self.on_load_as(from, to, body, &sender)
+                }
 
                 ComposeInput::TogglePreview(on) => self.on_toggle_preview(on, &sender),
 
@@ -995,6 +999,13 @@ impl Component for Compose {
                 ComposeInput::ApplyAssistantEdit => self.on_apply_assistant_edit(widgets, root),
 
                 ComposeInput::RejectAssistantEdit => self.on_reject_assistant_edit(),
+
+                ComposeInput::ReshowAssistantDiff => {
+                    let text = self.assistant_edit.as_ref().and_then(|e| e.text.clone());
+                    if text.is_some() {
+                        self.show_text_diff(text);
+                    }
+                }
             }
         }
         // Overriding `update_with_view` takes over relm4's default, which

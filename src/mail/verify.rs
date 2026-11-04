@@ -642,7 +642,10 @@ mod tests {
         )));
         assert_eq!(check.trust, SenderTrust::Pass);
         assert_eq!(check.authority.as_deref(), Some(""));
-        assert!(!check.findings.iter().any(|f| f.contains("spf=")), "{check:?}");
+        assert!(
+            !check.findings.iter().any(|f| f.contains("spf=")),
+            "{check:?}"
+        );
     }
 
     /// Real mail from the author's mailbox: a billing notice relayed through a

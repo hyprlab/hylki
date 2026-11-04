@@ -1,10 +1,12 @@
 //! An AI assistant at an open composer (`crate::mcp`): what it reads of
-//! the message (read_draft), and an edit it asks for (update_draft), shown
-//! in a bar over the composer with everything it would change until the
-//! user applies or rejects it. Nothing changes before. Applied, the fields
-//! take the new values, and the new text goes in place of what is written
-//! above the signature and any quote, as one edit Undo takes back; the
-//! signature and the quote stay as they are.
+//! the message (read_draft), and an edit it asks for (update_draft). The
+//! edit waits for the user to accept or reject it, and nothing changes
+//! before: a slim bar over the composer says what it does to the header
+//! fields, and its text shows in the editor as a diff against what is
+//! written there, over the document rather than in it. Accepted, the
+//! fields take the new values, and the new text goes in place of what is
+//! written above the signature and any quote, as one edit Undo takes
+//! back; the signature and the quote stay as they are.
 
 use adw::prelude::*;
 use relm4::prelude::*;
@@ -12,12 +14,14 @@ use relm4::prelude::*;
 use super::assistant::{fill_banner, outside};
 use super::messages::ComposeInput;
 use super::signature::sig_source;
+use super::text_diff::diff_html;
 use super::{Compose, ComposeWidgets};
 use crate::config::ComposeFormat;
 use crate::i18n::i18n;
 use crate::mcp::{DraftEdit, EditOutcome, OpenDraft};
 use crate::ui::dialog::alert;
 use crate::ui::rich_editor::SourceKind;
+use std::sync::atomic::{AtomicU32, Ordering};
 
 /// The rich document's written part, as `__w(body)`: the top-level nodes
 /// before the first signature, quote attribution or quote (`first`, or
@@ -75,6 +79,35 @@ if(a>=e){a=0;e=0;if(x)x+='\n\n';}
 t.focus();t.setSelectionRange(a,e);if(!document.execCommand('insertText',false,x))t.setRangeText(x,a,e,'end');
 window.__hylkiDirty=true;t.dispatchEvent(new Event('input'));return 'ok';})(@ARGS@)"#;
 
+/// The diff of an edit's text, `h` (HTML), shown over the editor if `n` is
+/// still the edit waiting (`__hylkiSuggestSeq`): a layer of its own in the
+/// document's look, outside the body, so nothing the document hands back
+/// carries it. The text under it is locked meanwhile.
+const SHOW_DIFF: &str = r#"(function(n,h){if(window.__hylkiSuggestSeq!==n)return;
+var o=document.querySelector('[data-hylki-ui=suggest]');
+if(!o){var t=document.getElementById('src'),b=document.body,ref=t||b;if(!ref)return;var cs=getComputedStyle(ref);
+o=document.createElement('div');o.setAttribute('data-hylki-ui','suggest');o.setAttribute('contenteditable','false');o.setAttribute('dir','auto');
+var s=o.style;s.cssText='position:fixed;top:0;right:0;bottom:0;left:0;z-index:20;overflow:auto;box-sizing:border-box;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;unicode-bidi:plaintext;';
+s.padding=cs.padding;s.fontFamily=cs.fontFamily;s.fontSize=cs.fontSize;s.lineHeight=cs.lineHeight;s.color=cs.color;
+s.backgroundColor=cs.backgroundColor;
+if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+if(t)t.readOnly=true;else b.setAttribute('contenteditable','false');
+document.documentElement.appendChild(o);}
+o.innerHTML=h;o.scrollTop=0;})(@ARGS@)"#;
+
+/// The diff taken away, and the text unlocked unless a translation still
+/// holds it. One on its way is not shown.
+const HIDE_DIFF: &str = r#"(function(){window.__hylkiSuggestSeq=0;var o=document.querySelector('[data-hylki-ui=suggest]');if(!o)return;o.remove();
+if(window.__hylkiTr)return;var t=document.getElementById('src');if(t)t.readOnly=false;else if(document.body)document.body.setAttribute('contenteditable','true');})()"#;
+
+/// How the diff marks what goes and what comes, on a light or dark ground.
+const DIFF_STYLE: &str = "<style>[data-hylki-ui=suggest] del{text-decoration:line-through;\
+text-decoration-color:#e01b24;background:rgba(224,27,36,0.16);opacity:0.8;border-radius:3px;}\
+[data-hylki-ui=suggest] ins{text-decoration:none;background:rgba(46,194,126,0.26);border-radius:3px;}</style>";
+
+/// The number of the latest diff asked for.
+static DIFF_SEQ: AtomicU32 = AtomicU32::new(1);
+
 /// A value as a JavaScript literal.
 fn js(value: &str) -> String {
     serde_json::to_string(value).unwrap_or_else(|_| "''".into())
@@ -96,24 +129,31 @@ impl Compose {
             let _ = done.send(draft);
             return;
         }
+        self.read_written(move |written| {
+            draft.text = Some(written);
+            let _ = done.send(draft);
+        });
+    }
+
+    /// What is written above the signature and any quote, as text, once
+    /// the editor hands it over.
+    fn read_written(&self, done: impl FnOnce(String) + 'static) {
         match self.editor.source_kind() {
             Some(kind) => {
                 let js_text = READ_SOURCE
                     .replace("@E@", SOURCE_WRITTEN)
                     .replace("@ARGS@", &self.source_args(kind));
                 self.editor.eval(&js_text, move |written| {
-                    draft.text = Some(match kind {
+                    done(match kind {
                         SourceKind::Html => crate::cache::body_text(&written).trim().to_string(),
                         SourceKind::Markdown => written,
                     });
-                    let _ = done.send(draft);
                 });
             }
             None => {
                 self.editor
                     .eval(&READ_RICH.replace("@W@", RICH_WRITTEN), move |html| {
-                        draft.text = Some(crate::cache::body_text(&html).trim().to_string());
-                        let _ = done.send(draft);
+                        done(crate::cache::body_text(&html).trim().to_string());
                     });
             }
         }
@@ -188,7 +228,26 @@ impl Compose {
     ) {
         self.fill_edit_bar(&edit, widgets, sender);
         self.edit_bar.set_visible(true);
+        self.show_text_diff(edit.text.clone());
         self.assistant_edit = Some(edit);
+    }
+
+    /// `new` over the editor as a diff against what is written there, or,
+    /// with no new text, no diff. Whatever diff is still on its way for an
+    /// earlier edit is not shown.
+    pub(super) fn show_text_diff(&self, new: Option<String>) {
+        let Some(new) = new else {
+            self.editor.run_js(HIDE_DIFF);
+            return;
+        };
+        let n = DIFF_SEQ.fetch_add(1, Ordering::Relaxed);
+        self.editor
+            .run_js(&format!("window.__hylkiSuggestSeq={n};"));
+        let editor = self.editor.clone();
+        self.read_written(move |old| {
+            let html = format!("{DIFF_STYLE}{}", diff_html(&old, new.trim()));
+            editor.run_js(&SHOW_DIFF.replace("@ARGS@", &format!("{n},{}", js(&html))));
+        });
     }
 
     /// Handles [`ComposeInput::RejectAssistantEdit`].
@@ -197,6 +256,7 @@ impl Compose {
             self.last_edit = Some(EditOutcome::Rejected);
         }
         self.edit_bar.set_visible(false);
+        self.editor.run_js(HIDE_DIFF);
     }
 
     /// Handles [`ComposeInput::ApplyAssistantEdit`].
@@ -214,7 +274,7 @@ impl Compose {
             alert(
                 parent.as_ref(),
                 &i18n("Not now"),
-                &i18n("Wait for the translation to come back, then apply the changes."),
+                &i18n("Wait for the translation to come back, then accept the changes."),
             );
             return;
         }
@@ -237,8 +297,9 @@ impl Compose {
         if let Some(subject) = &edit.subject {
             widgets.subject_row.set_text(subject);
         }
-        if let Some(text) = &edit.text {
-            self.put_assistant_text(text);
+        match &edit.text {
+            Some(text) => self.put_assistant_text(text),
+            None => self.editor.run_js(HIDE_DIFF),
         }
         self.fields_dirty = true;
         self.last_edit = Some(EditOutcome::Applied);
@@ -255,7 +316,8 @@ impl Compose {
         }
     }
 
-    /// `text` in place of what is written above the signature and quote.
+    /// `text` in place of what is written above the signature and quote,
+    /// once the diff over it is gone and it is unlocked.
     fn put_assistant_text(&self, text: &str) {
         let script = match self.editor.source_kind() {
             Some(kind) => {
@@ -271,11 +333,12 @@ impl Compose {
                 .replace("@W@", RICH_WRITTEN)
                 .replace("@ARGS@", &js(&crate::mcp::text_html(text))),
         };
-        self.editor.run_js(&script);
+        self.editor.run_js(&format!("{HIDE_DIFF};{script}"));
     }
 
-    /// The bar's contents for `edit`: every field it changes, recipients
-    /// set against those there now, then Reject and Apply.
+    /// The bar for `edit`: one row with Reject and Accept, and under it
+    /// only what it adds to and takes out of the header fields. Its text
+    /// shows in the editor.
     fn fill_edit_bar(
         &self,
         edit: &DraftEdit,
@@ -288,16 +351,29 @@ impl Compose {
         }
         let head = gtk::Box::new(gtk::Orientation::Horizontal, 8);
         head.append(&gtk::Image::from_icon_name("document-edit-symbolic"));
-        let title = gtk::Label::new(Some(&i18n(
-            "An AI assistant suggests changes to this message. Nothing changes until you apply them.",
-        )));
-        title.set_wrap(true);
+        let title = gtk::Label::new(Some(&i18n("Changes suggested by an AI assistant")));
+        title.set_ellipsize(gtk::pango::EllipsizeMode::End);
         title.set_xalign(0.0);
         title.set_hexpand(true);
         title.add_css_class("heading");
+        title.set_tooltip_text(Some(&i18n("Nothing changes until you accept them.")));
         head.append(&title);
+        let reject = gtk::Button::with_label(&i18n("Reject"));
+        reject.set_valign(gtk::Align::Center);
+        let s = sender.input_sender().clone();
+        reject.connect_clicked(move |_| s.emit(ComposeInput::RejectAssistantEdit));
+        let accept = gtk::Button::with_label(&i18n("Accept"));
+        accept.set_valign(gtk::Align::Center);
+        accept.add_css_class("suggested-action");
+        let s = sender.input_sender().clone();
+        accept.connect_clicked(move |_| s.emit(ComposeInput::ApplyAssistantEdit));
+        head.append(&reject);
+        head.append(&accept);
         bar.append(&head);
 
+        let changes = gtk::Box::new(gtk::Orientation::Vertical, 2);
+        // Under the title, past the icon.
+        changes.set_margin_start(24);
         for (label, bcc, list, row) in [
             (i18n("To:"), false, &edit.to, &widgets.to_row),
             (i18n("Cc:"), false, &edit.cc, &widgets.cc_row),
@@ -309,65 +385,56 @@ impl Compose {
             ),
         ] {
             let Some(list) = list else { continue };
-            bar.append(&self.recipient_change(&label, bcc, list, &row.text()));
+            if let Some(line) = self.recipient_change(&label, bcc, list, &row.text()) {
+                changes.append(&line);
+            }
         }
-        if let Some(subject) = &edit.subject {
+        let now = widgets.subject_row.text();
+        if let Some(subject) = edit.subject.as_ref().filter(|s| **s != now) {
             let line = gtk::Box::new(gtk::Orientation::Horizontal, 6);
             let field = gtk::Label::new(Some(&i18n("Subject:")));
             field.add_css_class("dim-label");
-            field.set_valign(gtk::Align::Start);
             line.append(&field);
-            let value = gtk::Label::new(Some(subject));
-            value.set_wrap(true);
-            value.set_xalign(0.0);
-            value.set_selectable(true);
-            line.append(&value);
-            bar.append(&line);
-        }
-        if let Some(text) = &edit.text {
-            let note = gtk::Label::new(Some(&if text.trim().is_empty() {
-                i18n("Takes out what is written above the signature and the quoted message.")
-            } else {
-                i18n("New text, in place of what is written above the signature and the quoted message:")
-            }));
-            note.set_wrap(true);
-            note.set_xalign(0.0);
-            note.add_css_class("dim-label");
-            bar.append(&note);
-            if !text.trim().is_empty() {
-                let body = gtk::Label::new(Some(text));
-                body.set_wrap(true);
-                body.set_wrap_mode(gtk::pango::WrapMode::WordChar);
-                body.set_xalign(0.0);
-                body.set_yalign(0.0);
-                body.set_selectable(true);
-                let scroll = gtk::ScrolledWindow::new();
-                scroll.set_hscrollbar_policy(gtk::PolicyType::Never);
-                scroll.set_propagate_natural_height(true);
-                scroll.set_max_content_height(180);
-                scroll.set_child(Some(&body));
-                bar.append(&scroll);
+            if !now.trim().is_empty() {
+                let old = gtk::Label::new(None);
+                old.set_markup(&format!("<s>− {}</s>", gtk::glib::markup_escape_text(&now)));
+                old.add_css_class("assistant-removed");
+                old.set_ellipsize(gtk::pango::EllipsizeMode::End);
+                old.set_tooltip_text(Some(&now));
+                line.append(&old);
             }
+            let new = gtk::Label::new(Some(&format!("+ {subject}")));
+            new.add_css_class("assistant-added");
+            new.set_ellipsize(gtk::pango::EllipsizeMode::End);
+            new.set_xalign(0.0);
+            new.set_hexpand(true);
+            new.set_tooltip_text(Some(subject));
+            line.append(&new);
+            changes.append(&line);
         }
-
-        let buttons = gtk::Box::new(gtk::Orientation::Horizontal, 8);
-        buttons.set_halign(gtk::Align::End);
-        let reject = gtk::Button::with_label(&i18n("Reject"));
-        let s = sender.input_sender().clone();
-        reject.connect_clicked(move |_| s.emit(ComposeInput::RejectAssistantEdit));
-        let apply = gtk::Button::with_label(&i18n("Apply"));
-        apply.add_css_class("suggested-action");
-        let s = sender.input_sender().clone();
-        apply.connect_clicked(move |_| s.emit(ComposeInput::ApplyAssistantEdit));
-        buttons.append(&reject);
-        buttons.append(&apply);
-        bar.append(&buttons);
+        if changes.first_child().is_some() {
+            bar.append(&changes);
+        }
     }
 
-    /// One recipient field as the edit would leave it: those it adds, those
-    /// it keeps, and those it takes out, struck through. Additions outside
-    /// the user's domains, and all of Bcc, are set apart as on the banner.
-    fn recipient_change(&self, label: &str, bcc: bool, new: &[String], now: &str) -> gtk::Box {
+    /// What the edit does to one recipient field: those it adds and those
+    /// it takes out, or `None` when it leaves the field as it is. Additions
+    /// outside the user's domains, and all of Bcc, are set apart as on the
+    /// banner.
+    fn recipient_change(
+        &self,
+        label: &str,
+        bcc: bool,
+        new: &[String],
+        now: &str,
+    ) -> Option<gtk::Box> {
+        let changes: Vec<_> = recipient_changes(now, new)
+            .into_iter()
+            .filter(|(_, _, c)| *c != Change::Kept)
+            .collect();
+        if changes.is_empty() {
+            return None;
+        }
         let line = gtk::Box::new(gtk::Orientation::Horizontal, 6);
         let field = gtk::Label::new(Some(label));
         field.set_valign(gtk::Align::Start);
@@ -377,44 +444,36 @@ impl Compose {
         flow.set_selection_mode(gtk::SelectionMode::None);
         flow.set_hexpand(true);
         flow.set_max_children_per_line(8);
-        flow.set_column_spacing(6);
-        flow.set_row_spacing(2);
-        let changes = recipient_changes(now, new);
-        if changes.is_empty() {
-            let none = gtk::Label::new(Some(&i18n("No one")));
-            none.add_css_class("dim-label");
-            flow.insert(&none, -1);
-        }
+        flow.set_column_spacing(10);
+        flow.set_row_spacing(0);
         for (text, addr, change) in changes {
             let chip = gtk::Label::new(None);
             chip.set_xalign(0.0);
             let escaped = gtk::glib::markup_escape_text(&text);
-            match change {
-                Change::Removed => {
-                    chip.set_markup(&format!("<s>{escaped}</s>"));
-                    chip.add_css_class("dim-label");
-                    chip.set_tooltip_text(Some(&i18n("Taken out")));
-                }
-                Change::Added => {
-                    chip.set_markup(&format!("<b>+ {escaped}</b>"));
-                    let flagged = bcc || outside(&addr, &self.own_domains);
-                    chip.set_tooltip_text(Some(&if bcc {
-                        i18n("Added in Bcc: the other recipients will not see this address")
-                    } else if flagged {
-                        i18n("Added, outside your own domains")
-                    } else {
-                        i18n("Added")
-                    }));
-                    if flagged {
-                        chip.add_css_class("warning");
-                    }
-                }
-                Change::Kept => chip.set_text(&text),
+            if change == Change::Removed {
+                chip.set_markup(&format!("<s>− {escaped}</s>"));
+                chip.add_css_class("assistant-removed");
+                chip.set_tooltip_text(Some(&i18n("Taken out")));
+            } else {
+                chip.set_text(&format!("+ {text}"));
+                let flagged = bcc || outside(&addr, &self.own_domains);
+                chip.set_tooltip_text(Some(&if bcc {
+                    i18n("Added in Bcc: the other recipients will not see this address")
+                } else if flagged {
+                    i18n("Added, outside your own domains")
+                } else {
+                    i18n("Added")
+                }));
+                chip.add_css_class(if flagged {
+                    "warning"
+                } else {
+                    "assistant-added"
+                });
             }
             flow.insert(&chip, -1);
         }
         line.append(&flow);
-        line
+        Some(line)
     }
 }
 

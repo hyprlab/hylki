@@ -258,6 +258,9 @@ pub(crate) enum ComposeInput {
     /// The user applied the assistant's edit, or rejected it.
     ApplyAssistantEdit,
     RejectAssistantEdit,
+    /// The editor has reloaded (a format change): the pending edit's diff
+    /// drawn over it again.
+    ReshowAssistantDiff,
 }
 
 /// A message as it stood when Send, Save or the automatic save read it:

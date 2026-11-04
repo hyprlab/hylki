@@ -71,10 +71,12 @@ fn is_zero(n: &u32) -> bool {
 
 #[tool_router(router = contact_tools, vis = "pub(super)")]
 impl Mail {
-    #[tool(description = "People and contact groups whose name or address holds `query`: \
+    #[tool(
+        description = "People and contact groups whose name or address holds `query`: \
         from the user's address books (GNOME Contacts, CardDAV, Hylki's own), the people in \
         their mail, and their LDAP and Microsoft 365 directories, as Hylki's composer suggests \
-        them. Find every recipient's address here before drafting; never guess one from a name.")]
+        them. Find every recipient's address here before drafting; never guess one from a name."
+    )]
     async fn find_contacts(
         &self,
         Parameters(args): Parameters<FindContactsArgs>,
@@ -96,7 +98,9 @@ impl Mail {
             Ok(Ok(found)) => found,
             Ok(Err(e)) => return failure(format!("the lookup failed: {e}")),
             Err(_) => {
-                return failure("the contact lookup timed out; a directory may be unavailable".into())
+                return failure(
+                    "the contact lookup timed out; a directory may be unavailable".into(),
+                )
             }
         };
         json(&FindOut {
@@ -211,4 +215,3 @@ mod tests {
         );
     }
 }
-
