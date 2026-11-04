@@ -20,6 +20,12 @@ pub(crate) enum Shape {
     InlineSigned { text: Vec<u8> },
 }
 
+/// Whether `raw` is encrypted mail. It says so without touching GnuPG, so
+/// no passphrase prompt comes of asking.
+pub(crate) fn is_encrypted(raw: &[u8]) -> bool {
+    detect(raw).is_some_and(|shape| shape.is_encrypted())
+}
+
 impl Shape {
     pub(super) fn is_encrypted(&self) -> bool {
         matches!(

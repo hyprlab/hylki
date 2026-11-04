@@ -333,7 +333,7 @@ pub(crate) fn compose_ready(attachments: u32) {
 pub(crate) fn assistant_ready() {
     let n = gio::Notification::new(&i18n("Message ready"));
     n.set_body(Some(&i18n(
-        "An AI assistant prepared a message in Hylki. Check it, then send it.",
+        "An AI assistant prepared a message. Check it, then send it.",
     )));
     n.set_priority(gio::NotificationPriority::Normal);
     n.set_default_action(&format!("app.{PRESENT_COMPOSE_ACTION}"));

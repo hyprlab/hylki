@@ -1,6 +1,13 @@
 //! Conversation reads share the reader's References-based cache lookup.
 use super::*;
 
+/// The most text one answer carries: a long conversation goes on in the next
+/// call rather than filling the assistant's context.
+const ANSWER_MAX: usize = 256 * 1024;
+/// How long one answer may take to gather: bodies may have to be downloaded,
+/// and the client gives up on a tool that stays silent too long.
+const ANSWER_WAIT: std::time::Duration = std::time::Duration::from_secs(60);
+
 #[derive(Deserialize, JsonSchema)]
 pub(super) struct ReadThreadArgs {
     /// The thread_id from a message summary or read_message.
@@ -62,7 +69,8 @@ fn dedupe(rows: &mut Vec<(String, Message)>) {
 #[tool_router(router = thread_tools, vis = "pub(super)")]
 impl Mail {
     #[tool(
-        description = "Read a conversation by thread_id, across the account's cached folders. Returns deduplicated messages oldest first. Does not mark mail as read. Only cached thread members are discoverable; bodies may be downloaded. Lookup is capped at 100 folder copies, so this may not be the entire server conversation."
+        description = "Read a conversation by thread_id, across the account's shared folders. Returns deduplicated messages oldest first, as read_message gives them, and next_offset when there are more to fetch. Does not mark mail as read. Only cached thread members are discoverable; bodies may be downloaded. Lookup is capped at 100 folder copies, so this may not be the entire server conversation.",
+        annotations(read_only_hint = true)
     )]
     async fn read_thread(&self, Parameters(args): Parameters<ReadThreadArgs>) -> CallToolResult {
         let Ok((address, root, singleton)) =
@@ -70,33 +78,48 @@ impl Mail {
         else {
             return failure("Invalid thread_id; use one returned by a message tool.".into());
         };
-        let account = match accounts_in_scope(Some(&address)) {
+        let account = match self.scope(Some(&address), AssistantCap::Read) {
             Ok(mut accounts) if accounts.len() == 1 => accounts.remove(0),
-            _ => return failure("The thread's account is unavailable.".into()),
+            Ok(_) => return failure("The thread's account is unavailable.".into()),
+            Err(e) => return failure(e),
         };
         let mut rows = if root.is_empty() {
-            match self.message(&singleton) {
+            match self.message(&singleton, AssistantCap::Read) {
                 Ok((a, m)) if a.id == account.id => vec![(m.path, m.message)],
-                _ => return failure("The thread's message is no longer cached.".into()),
+                Ok(_) => return failure("The thread's message is no longer cached.".into()),
+                Err(e) => return failure(e),
             }
         } else {
             self.lock().messages_by_thread_ids(account.id, &[root])
         };
         dedupe(&mut rows);
+        let hidden = hidden_paths(&self.lock(), &account);
+        rows.retain(|(path, _)| !hidden.contains(path));
         if rows.is_empty() {
             return failure("No cached messages found for this thread.".into());
         }
         let total = rows.len();
         let offset = args.offset.unwrap_or(0);
         let limit = args.limit.unwrap_or(20).clamp(1, 50);
+        let started = std::time::Instant::now();
         let mut messages = Vec::new();
+        let mut size = 0;
         for (path, m) in rows.into_iter().skip(offset).take(limit) {
-            let result = self
-                .read_message(Parameters(ReadMessageArgs {
-                    id: message_id(&account.address, &path, m.uid),
-                }))
+            let out = self
+                .message_out(
+                    &account,
+                    &Located {
+                        path,
+                        uid: m.uid,
+                        message: m,
+                    },
+                )
                 .await;
-            messages.push(result);
+            size += out.weight();
+            messages.push(out);
+            if size >= ANSWER_MAX || started.elapsed() >= ANSWER_WAIT {
+                break;
+            }
         }
         let end = offset.saturating_add(messages.len());
         json(&serde_json::json!({
@@ -104,7 +127,7 @@ impl Mail {
             "cached_message_count": total,
             "messages": messages,
             "next_offset": if end < total { Some(end) } else { None },
-            "scope_note": "Cached members only; lookup capped at 100 folder copies."
+            "scope_note": "Cached members in shared folders only; lookup capped at 100 folder copies."
         }))
     }
 }

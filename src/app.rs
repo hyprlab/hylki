@@ -38,6 +38,7 @@ mod about;
 mod accounts;
 mod actions;
 mod assistant;
+mod assistant_organize;
 mod attachments;
 mod boot;
 mod card_menu;

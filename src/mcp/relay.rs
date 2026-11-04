@@ -2,13 +2,14 @@
 //! so startup order and app restarts never change the advertised tools.
 
 use rmcp::model::{
-    CallToolRequestParams, CallToolResponse, CallToolResult, ContentBlock, Implementation,
-    ListToolsResult, PaginatedRequestParams, ServerCapabilities, ServerConfig,
+    CallToolRequestParams, CallToolResponse, CallToolResult, ClientCapabilities, ClientConfig,
+    ContentBlock, Implementation, ListToolsResult, PaginatedRequestParams, ServerCapabilities,
+    ServerConfig,
 };
 use rmcp::service::RequestContext;
 use rmcp::{RoleServer, ServerHandler, ServiceExt};
 
-const UNAVAILABLE: &str = "Hylki cannot be reached. Start Hylki and turn on Settings → Privacy → AI Assistants, then retry this tool. No MCP reconnect is needed.";
+const UNAVAILABLE: &str = "Hylki cannot be reached. Start Hylki and turn on Settings → AI Assistants, then retry this tool. No MCP reconnect is needed.";
 
 pub(crate) fn run() -> ! {
     tracing_subscriber::fmt()
@@ -62,7 +63,7 @@ impl ServerHandler for Relay {
     async fn call_tool(
         &self,
         request: CallToolRequestParams,
-        _: RequestContext<RoleServer>,
+        context: RequestContext<RoleServer>,
     ) -> Result<CallToolResponse, rmcp::ErrorData> {
         let Some(path) = super::socket_path() else {
             return Ok(unavailable().into());
@@ -74,7 +75,16 @@ impl ServerHandler for Relay {
                 return Ok(unavailable().into());
             }
         };
-        let client = match ().serve(stream).await {
+        // The name of the program asking, for what Settings shows it did.
+        let name = context.peer.peer_info().map_or_else(
+            || "unknown".to_string(),
+            |info| info.client_info.name.clone(),
+        );
+        let hello = ClientConfig::new(
+            ClientCapabilities::default(),
+            Implementation::new(name, crate::VERSION),
+        );
+        let client = match hello.serve(stream).await {
             Ok(client) => client,
             Err(e) => {
                 tracing::warn!("mcp: app handshake failed: {e}");

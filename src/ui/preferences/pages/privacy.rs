@@ -1,8 +1,8 @@
-//! Settings → Privacy, with the connection for AI assistants.
+//! Settings → Privacy.
 
 use adw::prelude::*;
 
-use super::super::{PrefOutput, Preferences, ViewSender};
+use super::super::{PrefOutput, ViewSender};
 use crate::i18n::i18n;
 
 /// The page, and the rows on it that the window reaches later.
@@ -16,14 +16,10 @@ pub(in crate::ui::preferences) struct PrivacyPage {
     pub(in crate::ui::preferences) gravatar_row: adw::SwitchRow,
     pub(in crate::ui::preferences) sender_logos_row: adw::SwitchRow,
     pub(in crate::ui::preferences) receipts_row: adw::ComboRow,
-    pub(in crate::ui::preferences) assistant_row: adw::SwitchRow,
-    pub(in crate::ui::preferences) assistant_status_row: adw::ActionRow,
-    pub(in crate::ui::preferences) assistant_cmd_row: adw::EntryRow,
 }
 
 impl PrivacyPage {
-    pub(in crate::ui::preferences) fn build(model: &Preferences, sender: &ViewSender) -> Self {
-        let command = crate::mcp::connect_command();
+    pub(in crate::ui::preferences) fn build(sender: &ViewSender) -> Self {
         relm4::view! {
             page = adw::PreferencesPage {
                 add = &adw::PreferencesGroup {
@@ -103,54 +99,6 @@ impl PrivacyPage {
                     },
 
                 },
-
-                // An assistant's way in (crate::mcp): reading, looking up
-                // contacts and preparing messages, never sending them.
-                add = &adw::PreferencesGroup {
-                    set_title: &i18n("AI Assistants"),
-                    set_description: Some(
-                        i18n("Through the Model Context Protocol. An assistant never sends: each message it prepares opens in a window for you to check and send.").as_str()
-                    ),
-
-                    #[name = "assistant_row"]
-                    adw::SwitchRow {
-                        set_title: &i18n("Let AI assistants read mail and prepare messages while Hylki is running"),
-                        connect_active_notify[sender] => move |row| {
-                            let _ = sender.output(PrefOutput::SetAssistantAccess(row.is_active()));
-                        },
-                    },
-
-                    #[name = "assistant_status_row"]
-                    adw::ActionRow {
-                        set_title: &i18n("Status"),
-                        // Kept current by update_view.
-                        set_subtitle: &model.assistant_status,
-                    },
-
-                    // The command that adds Hylki to an assistant, ready
-                    // to paste into a terminal.
-                    #[name = "assistant_cmd_row"]
-                    adw::EntryRow {
-                        set_title: &i18n("Add to Claude Code"),
-                        set_text: &command,
-                        set_editable: false,
-                        add_css_class: "monospace",
-                        add_suffix = &gtk::Button {
-                            set_icon_name: "edit-copy-symbolic",
-                            set_valign: gtk::Align::Center,
-                            set_tooltip_text: Some(i18n("Copy").as_str()),
-                            add_css_class: "flat",
-                            connect_clicked[command = command.clone()] => move |b| {
-                                b.clipboard().set_text(&command);
-                                b.set_icon_name("verified-checkmark-symbolic");
-                                let b = b.clone();
-                                gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(1200), move || {
-                                    b.set_icon_name("edit-copy-symbolic");
-                                });
-                            },
-                        },
-                    },
-                },
             }
         }
         Self {
@@ -162,16 +110,6 @@ impl PrivacyPage {
             gravatar_row,
             sender_logos_row,
             receipts_row,
-            assistant_row,
-            assistant_status_row,
-            assistant_cmd_row,
         }
-    }
-
-    /// The view's `#[watch]` setters for this page (see the module
-    /// comment of `pages`).
-    pub(in crate::ui::preferences) fn update_view(&self, model: &Preferences) {
-        self.assistant_status_row
-            .set_subtitle(&model.assistant_status);
     }
 }

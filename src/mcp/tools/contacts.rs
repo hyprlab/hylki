@@ -8,6 +8,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use super::{failure, json, Mail};
+use crate::config::AssistantPolicy;
 use crate::contacts::Suggestion;
 
 const FIND_DEFAULT: usize = 10;
@@ -71,10 +72,14 @@ fn is_zero(n: &u32) -> bool {
 
 #[tool_router(router = contact_tools, vis = "pub(super)")]
 impl Mail {
-    #[tool(description = "People and contact groups whose name or address holds `query`: \
+    #[tool(
+        description = "People and contact groups whose name or address holds `query`: \
         from the user's address books (GNOME Contacts, CardDAV, Hylki's own), the people in \
         their mail, and their LDAP and Microsoft 365 directories, as Hylki's composer suggests \
-        them. Find every recipient's address here before drafting; never guess one from a name.")]
+        them, as far as the user allows each. Find every recipient's address here before \
+        drafting; never guess one from a name.",
+        annotations(read_only_hint = true)
+    )]
     async fn find_contacts(
         &self,
         Parameters(args): Parameters<FindContactsArgs>,
@@ -84,40 +89,69 @@ impl Mail {
             return failure("an empty query finds no one".into());
         }
         let limit = args.limit.unwrap_or(FIND_DEFAULT).clamp(1, FIND_MAX);
-        let own = own_addresses();
+        let policy = self.policy();
+        if !policy.address_books && !policy.mail_people {
+            return failure(
+                "The user has not allowed assistants to look up contacts. They can allow it in \
+                 Settings → AI Assistants."
+                    .into(),
+            );
+        }
+        let own = own_addresses(&policy);
+        let policy_for_lookup = policy.clone();
         // A blocking directory lookup cannot be cancelled, but it must not
         // keep an MCP request waiting indefinitely.
         let looked_up = tokio::time::timeout(
             std::time::Duration::from_secs(15),
-            tokio::task::spawn_blocking(move || crate::contacts::lookup(&query, &own)),
+            tokio::task::spawn_blocking(move || {
+                crate::contacts::lookup(&query, &own, policy_for_lookup.address_books)
+            }),
         )
         .await;
         let (found, failed) = match looked_up {
             Ok(Ok(found)) => found,
             Ok(Err(e)) => return failure(format!("the lookup failed: {e}")),
             Err(_) => {
-                return failure("the contact lookup timed out; a directory may be unavailable".into())
+                return failure(
+                    "the contact lookup timed out; a directory may be unavailable".into(),
+                )
             }
         };
         json(&FindOut {
-            found: found.iter().take(limit).map(found_out).collect(),
+            found: found
+                .iter()
+                .filter(|s| allowed(s, &policy))
+                .take(limit)
+                .map(|s| found_out(s, &policy))
+                .collect(),
             unreachable_directories: failed.iter().map(|f| f.text()).collect(),
         })
     }
 }
 
-/// The user's own (name, address) per account, which the composer's
-/// suggestions carry too, ranked last.
-fn own_addresses() -> Vec<(String, String)> {
+/// Whether the user allows an assistant to see this one: someone in an
+/// address book or a directory, or someone only the mail knows. Mail history
+/// runs across every account, shared or not, which is why it is its own switch.
+fn allowed(s: &Suggestion, policy: &AssistantPolicy) -> bool {
+    if s.own {
+        return true;
+    }
+    let booked = s.group.is_some() || s.from_contacts || s.from_directory;
+    (booked && policy.address_books) || (!booked && policy.mail_people)
+}
+
+/// The user's own (name, address) in each account they share, which the
+/// composer's suggestions carry too, ranked last.
+fn own_addresses(policy: &AssistantPolicy) -> Vec<(String, String)> {
     crate::config::load()
         .unwrap_or_default()
         .into_iter()
-        .filter(|a| !a.is_local())
+        .filter(|a| !a.is_local() && policy.grant(&a.email).is_some())
         .map(|a| (a.name, a.email))
         .collect()
 }
 
-fn found_out(s: &Suggestion) -> FoundOut {
+fn found_out(s: &Suggestion, policy: &AssistantPolicy) -> FoundOut {
     if let Some(group) = &s.group {
         return FoundOut::Group(GroupOut {
             group: s.name.clone(),
@@ -144,7 +178,8 @@ fn found_out(s: &Suggestion) -> FoundOut {
         } else {
             "mail"
         },
-        times_in_mail: s.score,
+        // How often someone is written to says something of its own.
+        times_in_mail: if policy.mail_people { s.score } else { 0 },
     })
 }
 
@@ -163,6 +198,44 @@ mod tests {
     use super::*;
     use crate::contacts::{Contact, SuggestedGroup};
 
+    fn both() -> AssistantPolicy {
+        AssistantPolicy {
+            address_books: true,
+            mail_people: true,
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn each_kind_of_contact_has_its_own_switch() {
+        let booked = Suggestion {
+            email: "ada@example.org".into(),
+            from_contacts: true,
+            score: 3,
+            ..Default::default()
+        };
+        let only_mail = Suggestion {
+            email: "bo@example.org".into(),
+            score: 3,
+            ..Default::default()
+        };
+        let books = AssistantPolicy {
+            address_books: true,
+            ..Default::default()
+        };
+        let mail = AssistantPolicy {
+            mail_people: true,
+            ..Default::default()
+        };
+        assert!(allowed(&booked, &books) && !allowed(&only_mail, &books));
+        assert!(!allowed(&booked, &mail) && allowed(&only_mail, &mail));
+        // Without the mail, how often they are in it is not said either.
+        let FoundOut::Person(p) = found_out(&booked, &books) else {
+            panic!("a person")
+        };
+        assert_eq!(p.times_in_mail, 0);
+    }
+
     #[test]
     fn a_person_says_where_they_are_known_from() {
         let person = Suggestion {
@@ -174,7 +247,7 @@ mod tests {
             ..Default::default()
         };
         assert_eq!(
-            found_out(&person),
+            found_out(&person, &both()),
             FoundOut::Person(PersonOut {
                 name: String::new(),
                 email: "ada@example.org".into(),
@@ -197,7 +270,7 @@ mod tests {
             })),
             ..Default::default()
         };
-        let FoundOut::Group(g) = found_out(&group) else {
+        let FoundOut::Group(g) = found_out(&group, &both()) else {
             panic!("a group")
         };
         assert_eq!(g.group, "Team");
@@ -211,4 +284,3 @@ mod tests {
         );
     }
 }
-

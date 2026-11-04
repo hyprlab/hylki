@@ -162,7 +162,7 @@ impl AppModel {
             link_browser: self.link_browser.clone(),
             start_view: self.start_view,
             folder_sort: self.folder_sort,
-            assistant_access: self.assistant_access,
+            assistant: self.assistant_policy.clone(),
         });
     }
 

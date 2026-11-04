@@ -183,18 +183,19 @@ pub(crate) fn search_directories(
 
 /// Everyone `typed` finds, the way the composer's address completion finds
 /// them: the address book, mail history and `own`, the user's addresses,
-/// then every directory, ranked as the completion ranks them. Blocking:
-/// call it off the main thread.
+/// then, with `directories`, every directory, ranked as the completion ranks
+/// them. Blocking: call it off the main thread.
 pub(crate) fn lookup(
     typed: &str,
     own: &[(String, String)],
+    directories: bool,
 ) -> (Vec<Suggestion>, Vec<directory::DirectoryFailure>) {
     let typed = typed.trim();
     let known: Vec<Suggestion> = suggestions(own)
         .into_iter()
         .filter(|s| s.matches(typed))
         .collect();
-    let (directory, failed) = if typed.chars().count() >= directory::MIN_QUERY {
+    let (directory, failed) = if directories && typed.chars().count() >= directory::MIN_QUERY {
         search_directories(typed, &graph_directory::accounts(), true)
     } else {
         Default::default()

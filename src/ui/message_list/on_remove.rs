@@ -153,6 +153,32 @@ impl MessageList {
         self.queue_rebuild(true);
     }
 
+    /// Remove the rows at `slots`, and no others: a row elsewhere in a unified
+    /// list with the same id stays, and so does its namesake until a sync
+    /// settles it, since removal goes by id.
+    pub(super) fn on_remove_exact(
+        &mut self,
+        slots: Vec<(u32, u32, u32)>,
+        sender: &ComponentSender<Self>,
+    ) {
+        let slots: std::collections::HashSet<(u32, u32, u32)> = slots.into_iter().collect();
+        let others: std::collections::HashSet<u32> = self
+            .all
+            .iter()
+            .filter(|m| !slots.contains(&(m.account_id, m.folder_id, m.id)))
+            .map(|m| m.id)
+            .collect();
+        let ids: Vec<u32> = self
+            .all
+            .iter()
+            .filter(|m| {
+                slots.contains(&(m.account_id, m.folder_id, m.id)) && !others.contains(&m.id)
+            })
+            .map(|m| m.id)
+            .collect();
+        self.on_remove_many(ids, sender);
+    }
+
     pub(super) fn on_remove_many(&mut self, ids: Vec<u32>, sender: &ComponentSender<Self>) {
         if ids.is_empty() {
             return;

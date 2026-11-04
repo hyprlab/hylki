@@ -199,9 +199,11 @@ pub(crate) struct PrefInit {
     pub(crate) tray_icon: TrayIcon,
     pub(crate) tray_mail: bool,
     pub(crate) launcher_badge: LauncherBadge,
-    /// AI assistants may connect, and what the connection is doing.
-    pub(crate) assistant_access: bool,
+    /// What AI assistants may reach, what the connection is doing, and what
+    /// they did, newest first: (title, subtitle).
+    pub(crate) assistant_policy: crate::config::AssistantPolicy,
     pub(crate) assistant_status: String,
+    pub(crate) assistant_activity: Vec<(String, String)>,
     /// The chosen app icon (an `app_icon::catalog` id).
     pub(crate) app_icon: String,
     /// The accounts panel (built by the AccountsWindow component), shown
@@ -227,8 +229,12 @@ pub(crate) enum PrefInput {
     SetContactBooks(Vec<crate::contacts::Book>),
     /// The Hylki book's size changed (an import, a deletion).
     SetLocalContactCount(usize),
-    /// What the assistant connection is doing, as the app saw it change.
-    SetAssistantStatus(String),
+    /// What the assistant connection is doing and has done, as the app saw
+    /// it change.
+    SetAssistantActivity {
+        status: String,
+        lines: Vec<(String, String)>,
+    },
     ToggleAvatars(bool),
     ChangeDateStyle(u32),
     ChangeClockStyle(u32),
@@ -563,8 +569,8 @@ pub(crate) enum PrefOutput {
     SetTrayIcon(TrayIcon),
     SetTrayMail(bool),
     SetLauncherBadge(LauncherBadge),
-    /// Let AI assistants connect (`crate::mcp`).
-    SetAssistantAccess(bool),
+    /// What AI assistants may reach changed (`crate::mcp`).
+    SetAssistantPolicy(Box<crate::config::AssistantPolicy>),
     SetAppIcon(String),
     SetPaletteCollapse(u64),
     SetCardPaletteCollapse(u64),

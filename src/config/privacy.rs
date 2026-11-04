@@ -608,10 +608,10 @@ pub(crate) struct PrivacyFile {
     /// How accounts' folders are sorted, unless an account chooses.
     #[serde(default)]
     pub(crate) folder_sort: FolderSort,
-    /// AI assistants may read the mail and prepare messages through the
-    /// running app (`crate::mcp`). Off by default: it is asked for.
+    /// What AI assistants may reach through the running app (`crate::mcp`).
+    /// Nothing, until the user says.
     #[serde(default)]
-    pub(crate) assistant_access: bool,
+    pub(crate) assistant: super::AssistantPolicy,
     /// What a printed page carries besides the message (#359).
     #[serde(default)]
     pub(crate) print: PrintOptions,
@@ -696,7 +696,7 @@ impl Default for PrivacyFile {
             link_browser: String::new(),
             start_view: StartView::default(),
             folder_sort: FolderSort::default(),
-            assistant_access: false,
+            assistant: Default::default(),
             gravatar: false,
             avatars: true,
             own_mailbox_face: true,

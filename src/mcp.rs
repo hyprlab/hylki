@@ -6,9 +6,15 @@
 //! long as the app runs: it listens on a socket in the user's runtime
 //! directory ([`socket_path`]), which no other user can open, and the
 //! connecting process is checked to be the user's own as well. It reads
-//! with the app's own code (the cache, the contact lookup) and drafts
-//! through the app's own composer, so there is never a second program
-//! reading the database a different version of Hylki laid out.
+//! with the app's own code (the cache, the contact lookup), drafts through
+//! the app's own composer and changes mail through the app's own actions, so
+//! there is never a second program reading the database a different version
+//! of Hylki laid out.
+//!
+//! What an assistant may reach is [`crate::config::AssistantPolicy`], checked
+//! at every call, and nothing until the user allows it. No setting allows
+//! sending, erasing mail for good, or encrypted mail: there is no tool for
+//! the first two, and the tools get mail in a way that cannot decrypt.
 //!
 //! An assistant's client starts `hylki --mcp` ([`run_relay`]), an ordinary
 //! stdio server to it, which only carries bytes between the client and that
@@ -16,14 +22,19 @@
 
 use std::path::PathBuf;
 
+mod activity;
+mod content;
 mod draft;
+mod organize;
 mod relay;
 mod server;
 mod tools;
 
+pub(crate) use activity::Activity;
 pub(crate) use draft::{text_html, Draft, DraftKind, Original};
+pub(crate) use organize::{Change, Organized, Target};
 pub(crate) use relay::run as run_relay;
-pub(crate) use server::{remove_socket, AppCall, Server};
+pub(crate) use server::{remove_socket, AppCall, Server, SharedPolicy};
 
 /// The command-line flag that runs the relay instead of the app.
 pub(crate) const MCP_FLAG: &str = "--mcp";
@@ -58,14 +69,11 @@ pub(crate) fn socket_path() -> Option<PathBuf> {
     Some(dir.join(SOCKET_NAME))
 }
 
-/// The command that adds Hylki to an assistant (Claude Code's form, which
-/// others copy), with the relay started the way this copy of Hylki runs:
-/// through `flatpak run`, from the AppImage, or as the installed program.
+/// The command an assistant's client starts as a local (stdio) MCP server,
+/// the way this copy of Hylki runs: through `flatpak run`, from the AppImage,
+/// or as the installed program.
 pub(crate) fn connect_command() -> String {
-    format!(
-        "claude mcp add {SERVER_NAME} -- {} {MCP_FLAG}",
-        relay_program()
-    )
+    format!("{} {MCP_FLAG}", relay_program())
 }
 
 fn relay_program() -> String {

@@ -196,7 +196,7 @@ fn splice_encoded_words(value: &[u8]) -> Vec<u8> {
 /// included. Only the name is looked at, and GIO calls a name it has no
 /// suffix for `application/x-zerosize` (it reads the missing data as empty),
 /// so that becomes the generic type.
-pub(in crate::worker) fn guess_mime(name: &str) -> String {
+pub(crate) fn guess_mime(name: &str) -> String {
     let (content_type, _uncertain) = gtk::gio::content_type_guess(Some(name), &[]);
     gtk::gio::content_type_get_mime_type(&content_type)
         .map(|m| m.to_string())

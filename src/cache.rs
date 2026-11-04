@@ -27,6 +27,7 @@ mod smart;
 mod text_index;
 mod threads;
 
+pub(crate) use assistant::{MailScope, ScopedFolder};
 pub(crate) use gallery::*;
 pub(crate) use local_copies::CopyKey;
 pub(crate) use messages::*;

@@ -43,11 +43,6 @@ impl Preferences {
     /// renderer and the privacy switches.
     pub(super) fn init_general_rows(&self, widgets: &PreferencesWidgets, init: &PrefInit) {
         hide_edit_icon(widgets.system.nautilus_cmd_row.upcast_ref());
-        hide_edit_icon(widgets.privacy.assistant_cmd_row.upcast_ref());
-        widgets
-            .privacy
-            .assistant_row
-            .set_active(init.assistant_access);
 
         // Language combo: the system's, then every catalogue shipped.
         let choices = language_choices();

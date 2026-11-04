@@ -2,34 +2,85 @@
 //! on, and the line back to the app's main loop.
 
 use std::path::{Path, PathBuf};
+use std::sync::{Arc, RwLock};
 
 use rmcp::ServiceExt;
 
 use crate::app::AppMsg;
+use crate::config::AssistantPolicy;
 
 /// The app's main loop, as the server reaches it.
 pub(crate) type AppLink = relm4::Sender<AppMsg>;
+
+/// What Settings allows now: the app writes it as it changes, each tool call
+/// reads it, so a switch turned off holds from the next call on.
+pub(crate) type SharedPolicy = Arc<RwLock<AssistantPolicy>>;
+
+/// An account, as the tools know it, before what is allowed in it is known.
+#[derive(Clone, Debug)]
+pub(super) struct KnownAccount {
+    /// Its id in the cache: its place in the accounts file, from 1.
+    pub(super) id: u32,
+    pub(super) address: String,
+    pub(super) name: String,
+    /// It sends mail: every account but On This Computer.
+    pub(super) sends: bool,
+}
+
+/// What every connection shares.
+pub(super) struct Shared {
+    pub(super) policy: SharedPolicy,
+    pub(super) memo: super::content::RawMemo,
+    /// The enabled accounts, read at each call: one added or removed while
+    /// an assistant is connected shows at once.
+    pub(super) accounts: fn() -> Vec<KnownAccount>,
+}
+
+/// The accounts as the app has them in its accounts file.
+fn accounts_on_file() -> Vec<KnownAccount> {
+    crate::config::load()
+        .unwrap_or_default()
+        .into_iter()
+        .enumerate()
+        .filter(|(_, a)| a.enabled)
+        .map(|(i, a)| KnownAccount {
+            id: i as u32 + 1,
+            sends: !a.is_local(),
+            name: a.label.clone().unwrap_or(a.name.clone()),
+            address: a.email,
+        })
+        .collect()
+}
 
 /// What the server asks of, or tells, the app: the work only the main
 /// loop can do, or that the user should see. Each request carries where
 /// the answer goes; a server that stopped waiting has dropped its end.
 #[derive(Debug)]
 pub(crate) enum AppCall {
-    /// An assistant connected (`true`) or left (`false`).
-    Connected(bool),
-    /// Download the body of the message at `uid` in `path`, as the reader
-    /// would, and hand it over (HTML), or `None` when it cannot be had.
-    FetchBody {
+    /// The message at `uid` in `path` as the server keeps it, or why not.
+    /// Raw bytes rather than a body: what renders a body also decrypts, and
+    /// an assistant must never set that off.
+    FetchRaw {
         account_id: u32,
         path: String,
         uid: u32,
-        done: tokio::sync::oneshot::Sender<Option<String>>,
+        done: tokio::sync::oneshot::Sender<Result<Vec<u8>, String>>,
     },
     /// Open a composer on `draft`, or say why not.
     Draft {
         draft: super::draft::Draft,
         done: tokio::sync::oneshot::Sender<Result<String, String>>,
     },
+    /// Change `targets`, the way the same action in the app does, undoable.
+    Organize {
+        change: super::organize::Change,
+        targets: Vec<super::organize::Target>,
+        done: tokio::sync::oneshot::Sender<super::organize::Organized>,
+    },
+    /// A tool was called, for the record Settings shows.
+    Activity(super::activity::Activity),
+    /// Show the prepared messages that waited while the user was busy.
+    ShowWaiting,
 }
 
 /// The socket listened at, for [`remove_socket`]: the app quits without
@@ -60,17 +111,23 @@ impl std::fmt::Debug for Server {
 
 impl Server {
     /// Listen at [`super::socket_path`], serving each connection on a
-    /// thread of the server's own; `app` hears of what needs the app.
-    pub(crate) fn start(app: AppLink) -> Result<Server, String> {
+    /// thread of the server's own; `app` hears of what needs the app, and
+    /// `policy` says what is allowed.
+    pub(crate) fn start(app: AppLink, policy: SharedPolicy) -> Result<Server, String> {
         let path = super::socket_path().ok_or("there is no XDG_RUNTIME_DIR to listen in")?;
         let listener = bind(&path)?;
         if let Ok(mut l) = LISTENING.lock() {
             *l = Some(path.clone());
         }
+        let shared = Arc::new(Shared {
+            policy,
+            memo: Default::default(),
+            accounts: accounts_on_file,
+        });
         let (stop, stopped) = tokio::sync::oneshot::channel();
         let thread = std::thread::Builder::new()
             .name("hylki-mcp".into())
-            .spawn(move || listen(listener, stopped, app))
+            .spawn(move || listen(listener, stopped, app, shared))
             .map_err(|e| e.to_string())?;
         tracing::info!("mcp: listening at {}", path.display());
         Ok(Server {
@@ -86,6 +143,8 @@ impl Drop for Server {
         if let Some(stop) = self.stop.take() {
             let _ = stop.send(());
         }
+        // The window waits on this, so `listen` hears the stop however long
+        // a tool's query takes: see the runtime it builds.
         if let Some(thread) = self.thread.take() {
             let _ = thread.join();
         }
@@ -129,8 +188,13 @@ fn listen(
     listener: std::os::unix::net::UnixListener,
     mut stopped: tokio::sync::oneshot::Receiver<()>,
     app: AppLink,
+    shared: Arc<Shared>,
 ) {
-    let runtime = match tokio::runtime::Builder::new_current_thread()
+    // More than one worker: tools query SQLite without yielding, and on one
+    // thread a slow search would hold up the stop the window is waiting for.
+    let runtime = match tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(2)
+        .thread_name("hylki-mcp-tool")
         .enable_all()
         .build()
     {
@@ -153,7 +217,7 @@ fn listen(
                 _ = &mut stopped => break,
                 accepted = listener.accept() => match accepted {
                     Ok((stream, _)) if is_own(&stream) => {
-                        tokio::spawn(serve(stream, app.clone()));
+                        tokio::spawn(serve(stream, app.clone(), shared.clone()));
                     }
                     Ok(_) => tracing::warn!("mcp: refused a connection from another user"),
                     Err(e) => tracing::warn!("mcp: accept: {e}"),
@@ -174,8 +238,9 @@ fn is_own(stream: &tokio::net::UnixStream) -> bool {
     stream.peer_cred().is_ok_and(|c| c.uid() == me)
 }
 
-/// One assistant's session, until it closes.
-async fn serve(stream: tokio::net::UnixStream, app: AppLink) {
+/// One assistant's connection, until it closes. The relay makes one for each
+/// tool call, so a connection says nothing about an assistant being around.
+async fn serve(stream: tokio::net::UnixStream, app: AppLink, shared: Arc<Shared>) {
     let cache = match crate::cache::Cache::open_reader() {
         Ok(c) => c,
         Err(e) => {
@@ -183,8 +248,7 @@ async fn serve(stream: tokio::net::UnixStream, app: AppLink) {
             return;
         }
     };
-    let _ = app.send(AppMsg::Assistant(AppCall::Connected(true)));
-    match super::tools::Mail::new(cache, app.clone())
+    match super::tools::Mail::new(cache, app, shared)
         .serve(stream)
         .await
     {
@@ -195,7 +259,6 @@ async fn serve(stream: tokio::net::UnixStream, app: AppLink) {
         }
         Err(e) => tracing::warn!("mcp: a session could not start: {e}"),
     }
-    let _ = app.send(AppMsg::Assistant(AppCall::Connected(false)));
 }
 
 #[cfg(test)]

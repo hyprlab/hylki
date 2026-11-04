@@ -22,9 +22,11 @@ pub(crate) struct Draft {
 #[derive(Debug)]
 pub(crate) enum DraftKind {
     /// A new message, from this account (its id), or from the one a new
-    /// message starts from.
+    /// message starts from as long as it is among `allowed`, or else the
+    /// first of them.
     New {
         account_id: Option<u32>,
+        allowed: Vec<u32>,
     },
     /// An answer to the original, to everyone it went to with `all`.
     Reply {
@@ -36,12 +38,14 @@ pub(crate) enum DraftKind {
     },
 }
 
-/// The message answered or forwarded, with its body (HTML) to quote.
+/// The message answered or forwarded, with its body (HTML) to quote, and
+/// for a forward the files that go along.
 #[derive(Debug)]
 pub(crate) struct Original {
     pub(crate) message: Message,
     pub(crate) path: String,
     pub(crate) body: String,
+    pub(crate) attachments: Vec<crate::models::Attachment>,
 }
 
 /// The most text an assistant hands over for one message.

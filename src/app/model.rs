@@ -510,9 +510,9 @@ pub(crate) struct AppModel {
     pub(super) start_fullscreen: bool,
     /// The reader beside the list (#475); off, messages open in windows.
     pub(super) reading_pane: config::ReadingPane,
-    /// AI assistants may connect (Settings → Privacy), and the connection
-    /// while they may: see `assistant.rs`.
-    pub(super) assistant_access: bool,
+    /// What AI assistants may reach (Settings → AI Assistants), and the
+    /// connection while they may connect: see `assistant.rs`.
+    pub(super) assistant_policy: config::AssistantPolicy,
     pub(super) assistant: super::assistant::Assistant,
     /// Tray icon (issue #116): the setting, the icon choice, and the running
     /// item while the setting is on.

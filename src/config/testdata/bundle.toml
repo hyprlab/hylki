@@ -149,7 +149,6 @@ files_limit_mb = 20
 link_browser = ""
 start_view = "all_inboxes"
 folder_sort = "custom"
-assistant_access = false
 
 [privacy.rail_fold]
 enabled = true
@@ -184,6 +183,13 @@ archive = true
 junk = false
 trash = false
 snoozed = true
+
+[privacy.assistant]
+enabled = false
+address_books = false
+mail_people = false
+
+[privacy.assistant.accounts]
 
 [privacy.print]
 page_numbers = true

@@ -8,14 +8,15 @@ use rmcp::{tool, tool_router};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use super::{accounts_in_scope, failure, json, Mail};
+use super::bodies::Body;
+use super::{failure, json, Mail, ENCRYPTED_NOTE};
 use crate::app::AppMsg;
+use crate::config::AssistantCap;
 use crate::mcp::draft::{self, Draft, DraftKind, Original};
 use crate::mcp::AppCall;
 
-/// How long the app is given to open the composer: a forward waits for
-/// the original's attachments to download first.
-const OPEN_WAIT: std::time::Duration = std::time::Duration::from_secs(120);
+/// How long the app is given to open the composer.
+const OPEN_WAIT: std::time::Duration = std::time::Duration::from_secs(30);
 
 #[derive(Deserialize, JsonSchema)]
 pub(super) struct ComposeArgs {
@@ -81,24 +82,33 @@ impl Mail {
     #[tool(
         description = "Prepare a new message and open it in Hylki for the user to check \
         and send. It is not sent. Recipients must be email addresses from find_contacts or \
-        the user; the body is plain text."
+        the user; the body is plain text.",
+        annotations(read_only_hint = false, destructive_hint = false)
     )]
     async fn compose_message(&self, Parameters(args): Parameters<ComposeArgs>) -> CallToolResult {
-        let account_id = match args.account.as_deref().map(str::trim) {
-            None | Some("") => None,
-            Some(address) => match accounts_in_scope(Some(address)) {
-                Ok(mut found) => {
-                    let account = found.remove(0);
-                    if !account.sends {
-                        return failure(format!("{} cannot send mail", account.address));
-                    }
-                    Some(account.id)
-                }
-                Err(e) => return failure(e),
-            },
+        let accounts = match self.scope_where(
+            args.account.as_deref(),
+            AssistantCap::Draft,
+            crate::config::AccountGrant::may_compose,
+        ) {
+            Ok(accounts) => accounts,
+            Err(e) => return failure(e),
         };
+        let accounts: Vec<_> = accounts.into_iter().filter(|a| a.sends).collect();
+        if accounts.is_empty() {
+            return failure("no account the user allows this in can send mail".into());
+        }
+        let named = args
+            .account
+            .as_deref()
+            .is_some_and(|a| !a.trim().is_empty());
+        let account_id = named.then(|| accounts[0].id);
+        let allowed = accounts.iter().map(|a| a.id).collect();
         let draft = match checked(
-            DraftKind::New { account_id },
+            DraftKind::New {
+                account_id,
+                allowed,
+            },
             (&args.to, &args.cc, &args.bcc),
             &args.subject,
             &args.body,
@@ -112,10 +122,11 @@ impl Mail {
     #[tool(
         description = "Prepare a reply to a message and open it in Hylki, the original \
         quoted under it as when the user clicks Reply, for the user to check and send. It is \
-        not sent. Extra recipients must be email addresses; the body is plain text."
+        not sent. Extra recipients must be email addresses; the body is plain text.",
+        annotations(read_only_hint = false, destructive_hint = false)
     )]
     async fn reply_to_message(&self, Parameters(args): Parameters<ReplyArgs>) -> CallToolResult {
-        let original = match self.original(&args.id).await {
+        let original = match self.original(&args.id, false).await {
             Ok(o) => o,
             Err(e) => return failure(e),
         };
@@ -137,10 +148,11 @@ impl Mail {
     #[tool(
         description = "Prepare a forward of a message, with its attachments, and open it \
         in Hylki as when the user clicks Forward, for the user to check and send. It is not \
-        sent. Recipients must be email addresses; the body is plain text."
+        sent. Recipients must be email addresses; the body is plain text.",
+        annotations(read_only_hint = false, destructive_hint = false)
     )]
     async fn forward_message(&self, Parameters(args): Parameters<ForwardArgs>) -> CallToolResult {
-        let original = match self.original(&args.id).await {
+        let original = match self.original(&args.id, true).await {
             Ok(o) => o,
             Err(e) => return failure(e),
         };
@@ -178,20 +190,30 @@ fn checked(
 
 impl Mail {
     /// The message an id names, with the body a reply or forward quotes,
-    /// downloaded first if it has to be.
-    async fn original(&self, id: &str) -> Result<Original, String> {
-        let (account, located) = self.message(id)?;
-        let body = self
-            .body(account.id, &located.path, located.uid)
-            .await
-            .ok_or(
-                "Hylki could not download that message's text to quote (its account may be \
-                    offline or off); try again later",
-            )?;
+    /// downloaded first if it has to be, and with `files`, the ones it carries.
+    /// An encrypted message is refused: quoting it would put its plaintext
+    /// in a message going who knows where.
+    async fn original(&self, id: &str, files: bool) -> Result<Original, String> {
+        let (account, located) = self.message(id, AssistantCap::Draft)?;
+        let body = match self.body(account.id, &located).await {
+            Body::Html(body) => body,
+            Body::Encrypted => return Err(ENCRYPTED_NOTE.to_string()),
+            Body::Unavailable(why) => {
+                return Err(format!(
+                    "Hylki could not download that message's text to quote: {why}. Try again later."
+                ))
+            }
+        };
+        let attachments = if files && located.message.has_attachment {
+            self.files_of(account.id, &located).await?
+        } else {
+            Vec::new()
+        };
         Ok(Original {
             message: located.message,
             path: located.path,
             body,
+            attachments,
         })
     }
 
@@ -209,11 +231,7 @@ impl Mail {
             Ok(Ok(Ok(note))) => json(&OpenedOut { opened: true, note }),
             Ok(Ok(Err(e))) => failure(e),
             Ok(Err(_)) => failure("Hylki could not open the message".into()),
-            Err(_) => failure(
-                "Hylki took too long to open the message (a forward waits for its \
-                 attachments to download); it may still open"
-                    .into(),
-            ),
+            Err(_) => failure("Hylki took too long to open the message; it may still open".into()),
         }
     }
 }

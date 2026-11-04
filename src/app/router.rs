@@ -559,7 +559,7 @@ impl AppModel {
             | PrefOutput::SetUndoSend(..)
             | PrefOutput::SetRequestReceipts(..)
             | PrefOutput::SetReturnedReceipts(..)) => self.on_prefs_compose_pref(pref),
-            pref @ PrefOutput::SetAssistantAccess(..) => self.on_assistant_pref(pref, sender),
+            pref @ PrefOutput::SetAssistantPolicy(..) => self.on_assistant_pref(pref, sender),
             // The rest of Preferences' outputs are mapped to their own
             // messages before they get here.
             _ => {}
