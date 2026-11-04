@@ -81,6 +81,84 @@ msgstr ""
 msgid "On This Computer is switched off"
 msgstr ""
 
+msgid "Could not start: {error}"
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+msgid "No activity yet."
+msgstr ""
+
+msgid "Message from an AI Assistant"
+msgstr ""
+
+msgid "An AI assistant prepared a message"
+msgstr ""
+
+msgid "Show"
+msgstr ""
+
+msgid "Listed accounts"
+msgstr ""
+
+msgid "Listed folders"
+msgstr ""
+
+msgid "Listed messages"
+msgstr ""
+
+msgid "Searched mail"
+msgstr ""
+
+msgid "Read a message"
+msgstr ""
+
+msgid "Read a conversation"
+msgstr ""
+
+msgid "Listed attachments"
+msgstr ""
+
+msgid "Read an attachment"
+msgstr ""
+
+msgid "Looked up contacts"
+msgstr ""
+
+msgid "Prepared a message"
+msgstr ""
+
+msgid "Prepared a reply"
+msgstr ""
+
+msgid "Prepared a forward"
+msgstr ""
+
+msgid "Changed read state"
+msgstr ""
+
+msgid "Changed stars"
+msgstr ""
+
+msgid "Listed tags"
+msgstr ""
+
+msgid "Changed tags"
+msgstr ""
+
+msgid "Moved messages"
+msgstr ""
+
+msgid "Archived messages"
+msgstr ""
+
+msgid "Moved messages to Trash"
+msgstr ""
+
+msgid "Refused or failed: {action}"
+msgstr ""
+
 msgid "Delete the attachment from the server?"
 msgstr ""
 
@@ -102,9 +180,6 @@ msgid "Right"
 msgstr ""
 
 msgid "Below"
-msgstr ""
-
-msgid "Off"
 msgstr ""
 
 msgid "Reading Pane"
@@ -1621,6 +1696,12 @@ msgid_plural "A new message with {n} files attached is open in Hylki."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Message ready"
+msgstr ""
+
+msgid "An AI assistant prepared a message. Check it, then send it."
+msgstr ""
+
 msgid "On {date} at {time}, {name} wrote:"
 msgstr ""
 
@@ -2139,9 +2220,6 @@ msgid "Folder"
 msgstr ""
 
 msgid "Permanently deletes the message"
-msgstr ""
-
-msgid "Show"
 msgstr ""
 
 msgid "Bring this folder back to the sidebar"
@@ -3175,6 +3253,29 @@ msgstr ""
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 
+msgid "Cc"
+msgstr ""
+
+msgid "Bcc"
+msgstr ""
+
+msgid ""
+"An AI assistant prepared this message. Check who it goes to before you send "
+"it."
+msgstr ""
+
+msgid "It has no recipients yet."
+msgstr ""
+
+msgid "Bcc, hidden from the others:"
+msgstr ""
+
+msgid "In Bcc: the other recipients will not see this address"
+msgstr ""
+
+msgid "Outside your own domains"
+msgstr ""
+
 msgid "Send without an attachment?"
 msgstr ""
 
@@ -3513,12 +3614,6 @@ msgid "Send now instead"
 msgstr ""
 
 msgid "Download password for {name}: {password}"
-msgstr ""
-
-msgid "Cc"
-msgstr ""
-
-msgid "Bcc"
 msgstr ""
 
 msgid "Reply-To"
@@ -5528,6 +5623,9 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
+msgid "AI Assistants"
+msgstr ""
+
 msgid "Date and Time"
 msgstr ""
 
@@ -5550,6 +5648,66 @@ msgid "Save the address book?"
 msgstr ""
 
 msgid "Save the account?"
+msgstr ""
+
+msgid "See message lists"
+msgstr ""
+
+msgid "Senders, subjects, dates, previews and folders."
+msgstr ""
+
+msgid "Read message text"
+msgstr ""
+
+msgid "Read attachments"
+msgstr ""
+
+msgid "Prepare messages"
+msgstr ""
+
+msgid "Each opens in a window for you to check and send."
+msgstr ""
+
+msgid "Add and remove stars"
+msgstr ""
+
+msgid "Add and remove tags"
+msgstr ""
+
+msgid "Move and archive"
+msgstr ""
+
+msgid "Move to Trash"
+msgstr ""
+
+msgid "Mail already in Trash stays there."
+msgstr ""
+
+msgid "Allow AI assistants"
+msgstr ""
+
+msgid "Connects through the Model Context Protocol."
+msgstr ""
+
+msgid "Recent Activity"
+msgstr ""
+
+msgid "Nothing is shared until you allow it. Encrypted mail is never shared."
+msgstr ""
+
+msgid "Command for the assistant"
+msgstr ""
+
+msgid "Address books and directories"
+msgstr ""
+
+msgid "People in your mail"
+msgstr ""
+
+msgid "From every account, shared or not."
+msgstr ""
+
+msgid "Junk and Trash are hidden until you allow them."
 msgstr ""
 
 msgid ""
@@ -7291,9 +7449,6 @@ msgid "Returned receipts"
 msgstr ""
 
 msgid "Sent mail shows who read it; the receipt goes here."
-msgstr ""
-
-msgid "Move to Trash"
 msgstr ""
 
 msgid "Keep in Inbox"

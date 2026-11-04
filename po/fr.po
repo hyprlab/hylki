@@ -91,6 +91,104 @@ msgstr "Impossible d’importer le compte : {e}"
 msgid "On This Computer is switched off"
 msgstr "« Sur cet ordinateur » est désactivé"
 
+#, fuzzy
+msgid "Could not start: {error}"
+msgstr "Impossible d’enregistrer le PDF : {error}"
+
+msgid "Off"
+msgstr "Désactivé"
+
+#, fuzzy
+msgid "No activity yet."
+msgstr "Aucun compte pour le moment"
+
+#, fuzzy
+msgid "Message from an AI Assistant"
+msgstr "Nouveau message à partir d’un modèle"
+
+msgid "An AI assistant prepared a message"
+msgstr ""
+
+msgid "Show"
+msgstr "Afficher"
+
+#, fuzzy
+msgid "Listed accounts"
+msgstr "Ajouter un compte"
+
+#, fuzzy
+msgid "Listed folders"
+msgstr "Dossiers filtrés"
+
+#, fuzzy
+msgid "Listed messages"
+msgstr "Teinter les messages avec tag"
+
+#, fuzzy
+msgid "Searched mail"
+msgstr "Filtres de recherche"
+
+#, fuzzy
+msgid "Read a message"
+msgstr "Nouveau message"
+
+#, fuzzy
+msgid "Read a conversation"
+msgstr "Conversation entière"
+
+#, fuzzy
+msgid "Listed attachments"
+msgstr "Masquer les pièces jointes"
+
+#, fuzzy
+msgid "Read an attachment"
+msgstr "{n} pièce jointe"
+
+#, fuzzy
+msgid "Looked up contacts"
+msgstr "Trier les contacts"
+
+#, fuzzy
+msgid "Prepared a message"
+msgstr "Message transféré"
+
+#, fuzzy
+msgid "Prepared a reply"
+msgstr "marqué comme lu"
+
+#, fuzzy
+msgid "Prepared a forward"
+msgstr "{n} transfert lancé"
+
+msgid "Changed read state"
+msgstr ""
+
+msgid "Changed stars"
+msgstr ""
+
+msgid "Listed tags"
+msgstr ""
+
+#, fuzzy
+msgid "Changed tags"
+msgstr "Journal des modifications"
+
+#, fuzzy
+msgid "Moved messages"
+msgstr "Au-dessus des messages"
+
+#, fuzzy
+msgid "Archived messages"
+msgstr "Archiver ce message"
+
+#, fuzzy
+msgid "Moved messages to Trash"
+msgstr "Déplace le message vers la corbeille."
+
+#, fuzzy
+msgid "Refused or failed: {action}"
+msgstr "L’annulation a échoué : {e}"
+
 msgid "Delete the attachment from the server?"
 msgstr "Supprimer la pièce jointe du serveur ?"
 
@@ -115,9 +213,6 @@ msgstr "Droite"
 
 msgid "Below"
 msgstr "En dessous"
-
-msgid "Off"
-msgstr "Désactivé"
 
 msgid "Reading Pane"
 msgstr "Volet de lecture"
@@ -1729,6 +1824,13 @@ msgid_plural "A new message with {n} files attached is open in Hylki."
 msgstr[0] "Un nouveau message avec {n} fichier joint est ouvert dans Hylki."
 msgstr[1] "Un nouveau message avec {n} fichiers joints est ouvert dans Hylki."
 
+#, fuzzy
+msgid "Message ready"
+msgstr "Corps du message"
+
+msgid "An AI assistant prepared a message. Check it, then send it."
+msgstr ""
+
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "Le {date} à {time}, {name} a écrit :"
 
@@ -2290,9 +2392,6 @@ msgstr "Dossier"
 
 msgid "Permanently deletes the message"
 msgstr "Supprime définitivement le message"
-
-msgid "Show"
-msgstr "Afficher"
 
 msgid "Bring this folder back to the sidebar"
 msgstr "Ramener ce dossier dans la barre latérale"
@@ -3431,6 +3530,30 @@ msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 "Saisissez une action, un dossier ou un tag, ou > pour les actions uniquement"
 
+msgid "Cc"
+msgstr "Cc"
+
+msgid "Bcc"
+msgstr "Cci"
+
+msgid ""
+"An AI assistant prepared this message. Check who it goes to before you send "
+"it."
+msgstr ""
+
+#, fuzzy
+msgid "It has no recipients yet."
+msgstr "Afficher les destinataires"
+
+msgid "Bcc, hidden from the others:"
+msgstr ""
+
+msgid "In Bcc: the other recipients will not see this address"
+msgstr ""
+
+msgid "Outside your own domains"
+msgstr ""
+
 #, fuzzy
 msgid "Send without an attachment?"
 msgstr "Envoyer comme une pièce jointe normale"
@@ -3800,12 +3923,6 @@ msgstr "Envoyer maintenant à la place"
 
 msgid "Download password for {name}: {password}"
 msgstr "Mot de passe de téléchargement pour {name} : {password}"
-
-msgid "Cc"
-msgstr "Cc"
-
-msgid "Bcc"
-msgstr "Cci"
 
 msgid "Reply-To"
 msgstr "Répondre à"
@@ -5959,6 +6076,9 @@ msgstr "Rédaction"
 msgid "Privacy"
 msgstr "Confidentialité"
 
+msgid "AI Assistants"
+msgstr ""
+
 msgid "Date and Time"
 msgstr "Date et heure"
 
@@ -5982,6 +6102,75 @@ msgstr "Enregistrer le carnet d’adresses ?"
 
 msgid "Save the account?"
 msgstr "Enregistrer le compte ?"
+
+#, fuzzy
+msgid "See message lists"
+msgstr "Message le plus récent en premier"
+
+msgid "Senders, subjects, dates, previews and folders."
+msgstr ""
+
+#, fuzzy
+msgid "Read message text"
+msgstr "Nouveau message"
+
+#, fuzzy
+msgid "Read attachments"
+msgstr "Contient des pièces jointes"
+
+#, fuzzy
+msgid "Prepare messages"
+msgstr "Message transféré"
+
+msgid "Each opens in a window for you to check and send."
+msgstr ""
+
+#, fuzzy
+msgid "Add and remove stars"
+msgstr "Retirer l’étoile"
+
+#, fuzzy
+msgid "Add and remove tags"
+msgstr "Supprimer le tag"
+
+#, fuzzy
+msgid "Move and archive"
+msgstr "Aller à l’archive"
+
+msgid "Move to Trash"
+msgstr "Déplacer vers la Corbeille"
+
+msgid "Mail already in Trash stays there."
+msgstr ""
+
+msgid "Allow AI assistants"
+msgstr ""
+
+msgid "Connects through the Model Context Protocol."
+msgstr ""
+
+msgid "Recent Activity"
+msgstr ""
+
+msgid "Nothing is shared until you allow it. Encrypted mail is never shared."
+msgstr ""
+
+msgid "Command for the assistant"
+msgstr ""
+
+#, fuzzy
+msgid "Address books and directories"
+msgstr "Carnets d’adresses"
+
+msgid "People in your mail"
+msgstr ""
+
+#, fuzzy
+msgid "From every account, shared or not."
+msgstr "La liste des dossiers de chaque compte."
+
+msgid "Junk and Trash are hidden until you allow them."
+msgstr ""
 
 msgid ""
 "Accounts, preferences, filters, tags and layout, in one file. Passwords and "
@@ -7875,9 +8064,6 @@ msgstr "Accusés reçus"
 msgid "Sent mail shows who read it; the receipt goes here."
 msgstr "Le courrier envoyé indique qui l’a lu ; l’accusé arrive ici."
 
-msgid "Move to Trash"
-msgstr "Déplacer vers la Corbeille"
-
 msgid "Keep in Inbox"
 msgstr "Laisser dans la boîte de réception"
 
@@ -8747,9 +8933,6 @@ msgstr "Hyprlab"
 #~ "Sinon, le son n’est émis qu’avec la notification, lorsque la fenêtre est "
 #~ "en arrière-plan ou fermée."
 
-#~ msgid "Moves the message to Trash."
-#~ msgstr "Déplace le message vers la corbeille."
-
 #~ msgid "Opens the message with a reply started."
 #~ msgstr "Ouvre le message en démarrant une réponse."
 
@@ -8969,9 +9152,6 @@ msgstr "Hyprlab"
 #~ "activés ci-dessous démarrent repliés. Un appui long dans la barre permet "
 #~ "toujours de les déplier ou de les replier, et la barre latérale complète "
 #~ "revient exactement telle que vous l’avez laissée."
-
-#~ msgid "Every account's folder list."
-#~ msgstr "La liste des dossiers de chaque compte."
 
 #~ msgid "The account list under the unified Inboxes row."
 #~ msgstr "La liste des comptes sous la ligne unifiée Boîtes de réception."
@@ -9635,9 +9815,6 @@ msgstr "Hyprlab"
 #~ msgid "Add contacts in GNOME Contacts to see them here."
 #~ msgstr "Ajoutez des contacts dans Contacts GNOME pour les voir ici."
 
-#~ msgid "Sort contacts"
-#~ msgstr "Trier les contacts"
-
 #~ msgid ""
 #~ "{name} is removed from your address book, and for a synced book, from the "
 #~ "server too. The people in it are not."
@@ -10037,9 +10214,6 @@ msgstr "Hyprlab"
 #~ msgid "Label (defaults to email address)"
 #~ msgstr "Étiquette (adresse e-mail par défaut)"
 
-#~ msgid "Changelog"
-#~ msgstr "Journal des modifications"
-
 #~ msgid "Full version history"
 #~ msgstr "Historique complet des versions"
 
@@ -10221,9 +10395,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Inside All Inboxes"
 #~ msgstr "Dans toutes les boîtes de réception"
-
-#~ msgid "Filtered Folders"
-#~ msgstr "Dossiers filtrés"
 
 #~ msgid "Multiple IMAP and POP3 accounts, with a unified All Inboxes view"
 #~ msgstr ""

@@ -92,6 +92,104 @@ msgstr "A fiók nem importálható: {e}"
 msgid "On This Computer is switched off"
 msgstr "Ezen a számítógépen"
 
+#, fuzzy
+msgid "Could not start: {error}"
+msgstr "A PDF nem menthető: {error}"
+
+msgid "Off"
+msgstr "Ki"
+
+#, fuzzy
+msgid "No activity yet."
+msgstr "Még nincsenek fiókok"
+
+#, fuzzy
+msgid "Message from an AI Assistant"
+msgstr "Legújabb üzenet elöl"
+
+msgid "An AI assistant prepared a message"
+msgstr ""
+
+msgid "Show"
+msgstr "Megjelenítés"
+
+#, fuzzy
+msgid "Listed accounts"
+msgstr "A fiókok felett"
+
+#, fuzzy
+msgid "Listed folders"
+msgstr "Ez a mappa"
+
+#, fuzzy
+msgid "Listed messages"
+msgstr "{n} db üzenet címkézve"
+
+#, fuzzy
+msgid "Searched mail"
+msgstr "Keresési szűrők"
+
+#, fuzzy
+msgid "Read a message"
+msgstr "{n} db üzenet"
+
+#, fuzzy
+msgid "Read a conversation"
+msgstr "A teljes beszélgetés"
+
+#, fuzzy
+msgid "Listed attachments"
+msgstr "Mellékletek elrejtése"
+
+#, fuzzy
+msgid "Read an attachment"
+msgstr "{n} melléklet"
+
+#, fuzzy
+msgid "Looked up contacts"
+msgstr "Névjegyek rendezése"
+
+#, fuzzy
+msgid "Prepared a message"
+msgstr "Üzenet továbbítása"
+
+#, fuzzy
+msgid "Prepared a reply"
+msgstr "Megjelölés olvasottként"
+
+#, fuzzy
+msgid "Prepared a forward"
+msgstr "Megjelölés olvasottként"
+
+msgid "Changed read state"
+msgstr ""
+
+msgid "Changed stars"
+msgstr ""
+
+msgid "Listed tags"
+msgstr ""
+
+#, fuzzy
+msgid "Changed tags"
+msgstr "Változásnapló"
+
+#, fuzzy
+msgid "Moved messages"
+msgstr "Az üzenetek felett"
+
+#, fuzzy
+msgid "Archived messages"
+msgstr "Üzenet archiválása"
+
+#, fuzzy
+msgid "Moved messages to Trash"
+msgstr "Az üzenetet a Kukába helyezi."
+
+#, fuzzy
+msgid "Refused or failed: {action}"
+msgstr "A visszavonás sikertelen: {e}"
+
 msgid "Delete the attachment from the server?"
 msgstr "Töröljük a mellékletet a kiszolgálóról?"
 
@@ -116,9 +214,6 @@ msgstr "Jobbra"
 
 msgid "Below"
 msgstr ""
-
-msgid "Off"
-msgstr "Ki"
 
 #, fuzzy
 msgid "Reading Pane"
@@ -1834,6 +1929,13 @@ msgstr[0] "{n} csatolt fájlt tartalmazó új üzenet megnyitva a Hylkiben."
 msgstr[1] "{n} csatolt fájlt tartalmazó új üzenet megnyitva a Hylkiben."
 
 #, fuzzy
+msgid "Message ready"
+msgstr "Üzenet betűtípusa"
+
+msgid "An AI assistant prepared a message. Check it, then send it."
+msgstr ""
+
+#, fuzzy
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "{date} {time} órakor"
 
@@ -2412,9 +2514,6 @@ msgstr "Mappa"
 #, fuzzy
 msgid "Permanently deletes the message"
 msgstr "Üzenet törlése"
-
-msgid "Show"
-msgstr "Megjelenítés"
 
 msgid "Bring this folder back to the sidebar"
 msgstr "Helyezd vissza ezt a mappát az oldalsávba"
@@ -3601,6 +3700,30 @@ msgstr ""
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 
+msgid "Cc"
+msgstr "Másolat (Cc)"
+
+msgid "Bcc"
+msgstr "Titkos másolat (Bcc)"
+
+msgid ""
+"An AI assistant prepared this message. Check who it goes to before you send "
+"it."
+msgstr ""
+
+#, fuzzy
+msgid "It has no recipients yet."
+msgstr "Címzettek megjelenítése"
+
+msgid "Bcc, hidden from the others:"
+msgstr ""
+
+msgid "In Bcc: the other recipients will not see this address"
+msgstr ""
+
+msgid "Outside your own domains"
+msgstr ""
+
 #, fuzzy
 msgid "Send without an attachment?"
 msgstr "Küldés normál mellékletként"
@@ -3986,12 +4109,6 @@ msgstr "Küldés inkább most"
 
 msgid "Download password for {name}: {password}"
 msgstr "Letöltési jelszó ehhez: {name}: {password}"
-
-msgid "Cc"
-msgstr "Másolat (Cc)"
-
-msgid "Bcc"
-msgstr "Titkos másolat (Bcc)"
 
 msgid "Reply-To"
 msgstr "Válaszcím"
@@ -6237,6 +6354,9 @@ msgstr "Levélírás"
 msgid "Privacy"
 msgstr "Adatvédelem"
 
+msgid "AI Assistants"
+msgstr ""
+
 msgid "Date and Time"
 msgstr "Dátum és idő"
 
@@ -6262,6 +6382,76 @@ msgstr "El akarod menteni a könyvtárat?"
 
 msgid "Save the account?"
 msgstr "Elmented a fiókot?"
+
+#, fuzzy
+msgid "See message lists"
+msgstr "Legújabb üzenet elöl"
+
+msgid "Senders, subjects, dates, previews and folders."
+msgstr ""
+
+#, fuzzy
+msgid "Read message text"
+msgstr "Új üzenet"
+
+#, fuzzy
+msgid "Read attachments"
+msgstr "Nincsenek mellékletek"
+
+#, fuzzy
+msgid "Prepare messages"
+msgstr "Üzenet továbbítása"
+
+msgid "Each opens in a window for you to check and send."
+msgstr ""
+
+#, fuzzy
+msgid "Add and remove stars"
+msgstr "Csillag eltávolítása"
+
+#, fuzzy
+msgid "Add and remove tags"
+msgstr "Címke eltávolítása"
+
+#, fuzzy
+msgid "Move and archive"
+msgstr "Archiválás"
+
+#, fuzzy
+msgid "Move to Trash"
+msgstr "Piszkozat áthelyezése a Kukába"
+
+msgid "Mail already in Trash stays there."
+msgstr ""
+
+msgid "Allow AI assistants"
+msgstr ""
+
+msgid "Connects through the Model Context Protocol."
+msgstr ""
+
+msgid "Recent Activity"
+msgstr ""
+
+msgid "Nothing is shared until you allow it. Encrypted mail is never shared."
+msgstr ""
+
+msgid "Command for the assistant"
+msgstr ""
+
+#, fuzzy
+msgid "Address books and directories"
+msgstr "Címjegyzék"
+
+msgid "People in your mail"
+msgstr ""
+
+#, fuzzy
+msgid "From every account, shared or not."
+msgstr "Az egyes fiókok mappalistája."
+
+msgid "Junk and Trash are hidden until you allow them."
+msgstr ""
 
 #, fuzzy
 msgid ""
@@ -8212,10 +8402,6 @@ msgid "Sent mail shows who read it; the receipt goes here."
 msgstr ""
 
 #, fuzzy
-msgid "Move to Trash"
-msgstr "Piszkozat áthelyezése a Kukába"
-
-#, fuzzy
 msgid "Keep in Inbox"
 msgstr "Hagyja a Beérkezett levelekben"
 
@@ -8709,10 +8895,6 @@ msgstr "Hyprlab"
 #~ msgid "Search this folder"
 #~ msgstr "Keresés a mappákban"
 
-#, fuzzy
-#~ msgid "Same as messages"
-#~ msgstr "{n} db üzenet"
-
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""
 #~ "Hagyja a Beérkező levelek mappában, hogy csak az egyező leveleket "
@@ -9032,9 +9214,6 @@ msgstr "Hyprlab"
 #~ "A Hylki nem aktív ablakként fut, amikor új e-mail érkezik vagy hibaüzenet "
 #~ "jelenik meg, a rendszer értesítéseket jelenít meg."
 
-#~ msgid "Moves the message to Trash."
-#~ msgstr "Az üzenetet a Kukába helyezi."
-
 #~ msgid "Opens the message with a reply started."
 #~ msgstr "Megnyitja az üzenetet úgy, hogy a válasz már meg van kezdve."
 
@@ -9232,9 +9411,6 @@ msgstr "Hyprlab"
 #~ "tartó megnyomással bármelyiket továbbra is kibonthatod vagy "
 #~ "összecsukhatod, és a teljes oldalsáv pontosan olyan állapotban jelenik "
 #~ "meg újra, ahogyan hagytad."
-
-#~ msgid "Every account's folder list."
-#~ msgstr "Az egyes fiókok mappalistája."
 
 #~ msgid "The account list under the unified Inboxes row."
 #~ msgstr "A fióklista az „Egységes beérkező levelek” sor alatt."
@@ -9748,10 +9924,6 @@ msgstr "Hyprlab"
 #~ "bejelentkezési adatok a rendszer kulcstárában maradnak, és soha nem "
 #~ "kerülnek exportálásra; az OpenPGP-kulcsok pedig a GnuPG-ben maradnak."
 
-#, fuzzy
-#~ msgid "Like the accounts"
-#~ msgstr "A fiókok felett"
-
 #~ msgid "Show or hide filters"
 #~ msgstr "Szűrők megjelenítése vagy elrejtése"
 
@@ -9839,9 +10011,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "Choose which address book to search"
 #~ msgstr "Válassza ki a keresendő mappákat"
-
-#~ msgid "Sort contacts"
-#~ msgstr "Névjegyek rendezése"
 
 #, fuzzy
 #~ msgid "From your mail accounts"
@@ -10101,9 +10270,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Label (defaults to email address)"
 #~ msgstr "Címke (alapértelmezés szerint az e-mail-cím)"
-
-#~ msgid "Changelog"
-#~ msgstr "Változásnapló"
 
 #~ msgid "Full version history"
 #~ msgstr "Teljes verziótörténet"

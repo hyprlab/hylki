@@ -90,6 +90,104 @@ msgstr "No s'ha pogut importar el compte: {e}"
 msgid "On This Computer is switched off"
 msgstr "En aquest ordinador"
 
+#, fuzzy
+msgid "Could not start: {error}"
+msgstr "No s'ha pogut desar el PDF: {error}"
+
+msgid "Off"
+msgstr "Desactivat"
+
+#, fuzzy
+msgid "No activity yet."
+msgstr "Encara no hi ha comptes"
+
+#, fuzzy
+msgid "Message from an AI Assistant"
+msgstr "Missatge nou a partir d'una plantilla"
+
+msgid "An AI assistant prepared a message"
+msgstr ""
+
+msgid "Show"
+msgstr "Mostra"
+
+#, fuzzy
+msgid "Listed accounts"
+msgstr "Afegeix un compte"
+
+#, fuzzy
+msgid "Listed folders"
+msgstr "Aquesta carpeta"
+
+#, fuzzy
+msgid "Listed messages"
+msgstr "Acoloreix els missatges etiquetats"
+
+#, fuzzy
+msgid "Searched mail"
+msgstr "Cerca filtres"
+
+#, fuzzy
+msgid "Read a message"
+msgstr "Missatges de correu"
+
+#, fuzzy
+msgid "Read a conversation"
+msgstr "Conversa sencera"
+
+#, fuzzy
+msgid "Listed attachments"
+msgstr "Amaga els adjunts"
+
+#, fuzzy
+msgid "Read an attachment"
+msgstr "{n} adjunt"
+
+#, fuzzy
+msgid "Looked up contacts"
+msgstr "Afegit a contactes"
+
+#, fuzzy
+msgid "Prepared a message"
+msgstr "Reenvia aquest missatge"
+
+#, fuzzy
+msgid "Prepared a reply"
+msgstr "Marca com a llegit"
+
+#, fuzzy
+msgid "Prepared a forward"
+msgstr "Marca com a llegit"
+
+msgid "Changed read state"
+msgstr ""
+
+msgid "Changed stars"
+msgstr ""
+
+msgid "Listed tags"
+msgstr ""
+
+#, fuzzy
+msgid "Changed tags"
+msgstr ", etiquetat amb {tag}"
+
+#, fuzzy
+msgid "Moved messages"
+msgstr "A sobre dels missatges"
+
+#, fuzzy
+msgid "Archived messages"
+msgstr "Arxiva aquest missatge"
+
+#, fuzzy
+msgid "Moved messages to Trash"
+msgstr "Mou el correu de llistes a la paperera"
+
+#, fuzzy
+msgid "Refused or failed: {action}"
+msgstr "Desfer ha fallat: {e}"
+
 msgid "Delete the attachment from the server?"
 msgstr "Vols suprimir l'adjunt del servidor?"
 
@@ -114,9 +212,6 @@ msgstr "Dreta"
 
 msgid "Below"
 msgstr ""
-
-msgid "Off"
-msgstr "Desactivat"
 
 #, fuzzy
 msgid "Reading Pane"
@@ -1750,6 +1845,13 @@ msgstr[0] "Hi ha un missatge nou amb {n} fitxer adjunt obert a l'Hylki."
 msgstr[1] "Hi ha un missatge nou amb {n} fitxers adjunts obert a l'Hylki."
 
 #, fuzzy
+msgid "Message ready"
+msgstr "Cos del missatge"
+
+msgid "An AI assistant prepared a message. Check it, then send it."
+msgstr ""
+
+#, fuzzy
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "{date} a les {time}"
 
@@ -2333,9 +2435,6 @@ msgstr "Carpeta"
 #, fuzzy
 msgid "Permanently deletes the message"
 msgstr "Tradueix aquest missatge"
-
-msgid "Show"
-msgstr "Mostra"
 
 msgid "Bring this folder back to the sidebar"
 msgstr "Torna a portar aquesta carpeta a la barra lateral"
@@ -3470,6 +3569,30 @@ msgstr "Paleta d'ordres"
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr "Escriu una acció, una carpeta o una etiqueta, o > per a només accions"
 
+msgid "Cc"
+msgstr "Cc"
+
+msgid "Bcc"
+msgstr "Cco"
+
+msgid ""
+"An AI assistant prepared this message. Check who it goes to before you send "
+"it."
+msgstr ""
+
+#, fuzzy
+msgid "It has no recipients yet."
+msgstr "Mostra els destinataris"
+
+msgid "Bcc, hidden from the others:"
+msgstr ""
+
+msgid "In Bcc: the other recipients will not see this address"
+msgstr ""
+
+msgid "Outside your own domains"
+msgstr ""
+
 #, fuzzy
 msgid "Send without an attachment?"
 msgstr "Envia com un adjunt normal"
@@ -3828,12 +3951,6 @@ msgstr "Envia-ho ara"
 
 msgid "Download password for {name}: {password}"
 msgstr "Contrasenya de descàrrega per a {name}: {password}"
-
-msgid "Cc"
-msgstr "Cc"
-
-msgid "Bcc"
-msgstr "Cco"
 
 msgid "Reply-To"
 msgstr "Respon a"
@@ -6009,6 +6126,9 @@ msgstr "Redacció"
 msgid "Privacy"
 msgstr "Privacitat"
 
+msgid "AI Assistants"
+msgstr ""
+
 msgid "Date and Time"
 msgstr "Data i hora"
 
@@ -6032,6 +6152,75 @@ msgstr "Vols desar la llibreta d'adreces?"
 
 msgid "Save the account?"
 msgstr "Vols desar el compte?"
+
+#, fuzzy
+msgid "See message lists"
+msgstr "Missatge més nou primer"
+
+msgid "Senders, subjects, dates, previews and folders."
+msgstr ""
+
+#, fuzzy
+msgid "Read message text"
+msgstr "Missatge nou"
+
+#, fuzzy
+msgid "Read attachments"
+msgstr "Té adjunts"
+
+#, fuzzy
+msgid "Prepare messages"
+msgstr "Reenvia aquest missatge"
+
+msgid "Each opens in a window for you to check and send."
+msgstr ""
+
+#, fuzzy
+msgid "Add and remove stars"
+msgstr "Treu la destacat"
+
+#, fuzzy
+msgid "Add and remove tags"
+msgstr "Treu l'etiqueta"
+
+#, fuzzy
+msgid "Move and archive"
+msgstr "Ves a l'arxiu"
+
+#, fuzzy
+msgid "Move to Trash"
+msgstr "Mou el correu de llistes a la paperera"
+
+msgid "Mail already in Trash stays there."
+msgstr ""
+
+msgid "Allow AI assistants"
+msgstr ""
+
+msgid "Connects through the Model Context Protocol."
+msgstr ""
+
+msgid "Recent Activity"
+msgstr ""
+
+msgid "Nothing is shared until you allow it. Encrypted mail is never shared."
+msgstr ""
+
+msgid "Command for the assistant"
+msgstr ""
+
+#, fuzzy
+msgid "Address books and directories"
+msgstr "Llibretes d'adreces"
+
+msgid "People in your mail"
+msgstr ""
+
+msgid "From every account, shared or not."
+msgstr ""
+
+msgid "Junk and Trash are hidden until you allow them."
+msgstr ""
 
 msgid ""
 "Accounts, preferences, filters, tags and layout, in one file. Passwords and "
@@ -7913,10 +8102,6 @@ msgid "Sent mail shows who read it; the receipt goes here."
 msgstr ""
 
 #, fuzzy
-msgid "Move to Trash"
-msgstr "Mou el correu de llistes a la paperera"
-
-#, fuzzy
 msgid "Keep in Inbox"
 msgstr "Deixa-ho a la bústia d'entrada"
 
@@ -8393,10 +8578,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Search this folder"
 #~ msgstr "Cerca en aquesta carpeta"
-
-#, fuzzy
-#~ msgid "Same as messages"
-#~ msgstr "Missatges de correu"
 
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""

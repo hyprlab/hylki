@@ -89,6 +89,104 @@ msgstr "Не удалось импортировать учетную запис
 msgid "On This Computer is switched off"
 msgstr "На этом компьютере"
 
+#, fuzzy
+msgid "Could not start: {error}"
+msgstr "Не удалось сохранить PDF: {error}"
+
+msgid "Off"
+msgstr "Выкл."
+
+#, fuzzy
+msgid "No activity yet."
+msgstr "Учётные записи пока не добавлены"
+
+#, fuzzy
+msgid "Message from an AI Assistant"
+msgstr "Новое сообщение из шаблона"
+
+msgid "An AI assistant prepared a message"
+msgstr ""
+
+msgid "Show"
+msgstr "Показать"
+
+#, fuzzy
+msgid "Listed accounts"
+msgstr "Над учётными записями"
+
+#, fuzzy
+msgid "Listed folders"
+msgstr "Эта папка"
+
+#, fuzzy
+msgid "Listed messages"
+msgstr "Метка добавлена к {n} письму"
+
+#, fuzzy
+msgid "Searched mail"
+msgstr "Поиск фильтров"
+
+#, fuzzy
+msgid "Read a message"
+msgstr "{n} сообщений"
+
+#, fuzzy
+msgid "Read a conversation"
+msgstr "Всё обсуждение"
+
+#, fuzzy
+msgid "Listed attachments"
+msgstr "Скрыть вложения"
+
+#, fuzzy
+msgid "Read an attachment"
+msgstr "{n} вложение"
+
+#, fuzzy
+msgid "Looked up contacts"
+msgstr "Сортировка контактов"
+
+#, fuzzy
+msgid "Prepared a message"
+msgstr "Переслать это сообщение"
+
+#, fuzzy
+msgid "Prepared a reply"
+msgstr "Отметить как прочитанное"
+
+#, fuzzy
+msgid "Prepared a forward"
+msgstr "Отметить как прочитанное"
+
+msgid "Changed read state"
+msgstr ""
+
+msgid "Changed stars"
+msgstr ""
+
+msgid "Listed tags"
+msgstr ""
+
+#, fuzzy
+msgid "Changed tags"
+msgstr "Список изменений"
+
+#, fuzzy
+msgid "Moved messages"
+msgstr "Над сообщениями"
+
+#, fuzzy
+msgid "Archived messages"
+msgstr "Архивировать это сообщение"
+
+#, fuzzy
+msgid "Moved messages to Trash"
+msgstr "Перемещает сообщение в «Корзину»."
+
+#, fuzzy
+msgid "Refused or failed: {action}"
+msgstr "Не удалось отменить действие: {e}"
+
 msgid "Delete the attachment from the server?"
 msgstr "Удалить вложение с сервера?"
 
@@ -113,9 +211,6 @@ msgstr "Справа"
 
 msgid "Below"
 msgstr ""
-
-msgid "Off"
-msgstr "Выкл."
 
 #, fuzzy
 msgid "Reading Pane"
@@ -1866,6 +1961,13 @@ msgstr[1] "Новое письмо с {n} прикрёпленными файл�
 msgstr[2] "Новое письмо с {n} прикрёпленными файлами открыто в Hylki."
 
 #, fuzzy
+msgid "Message ready"
+msgstr "Шрифт сообщений"
+
+msgid "An AI assistant prepared a message. Check it, then send it."
+msgstr ""
+
+#, fuzzy
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "{date} в {time}"
 
@@ -2441,9 +2543,6 @@ msgstr "Папка"
 #, fuzzy
 msgid "Permanently deletes the message"
 msgstr "Перевести это сообщение"
-
-msgid "Show"
-msgstr "Показать"
 
 msgid "Bring this folder back to the sidebar"
 msgstr "Вернуть эту папку на боковую панель"
@@ -3633,6 +3732,30 @@ msgstr ""
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 
+msgid "Cc"
+msgstr "Копия"
+
+msgid "Bcc"
+msgstr "Скрытая копия"
+
+msgid ""
+"An AI assistant prepared this message. Check who it goes to before you send "
+"it."
+msgstr ""
+
+#, fuzzy
+msgid "It has no recipients yet."
+msgstr "Показать получателей"
+
+msgid "Bcc, hidden from the others:"
+msgstr ""
+
+msgid "In Bcc: the other recipients will not see this address"
+msgstr ""
+
+msgid "Outside your own domains"
+msgstr ""
+
 #, fuzzy
 msgid "Send without an attachment?"
 msgstr "Отправить как обычное вложение"
@@ -4004,12 +4127,6 @@ msgstr "Отправить сейчас вместо запланированн�
 
 msgid "Download password for {name}: {password}"
 msgstr "Пароль для скачивания {name}: {password}"
-
-msgid "Cc"
-msgstr "Копия"
-
-msgid "Bcc"
-msgstr "Скрытая копия"
 
 msgid "Reply-To"
 msgstr "Адрес для ответа"
@@ -6260,6 +6377,9 @@ msgstr "Создание писем"
 msgid "Privacy"
 msgstr "Конфиденциальность"
 
+msgid "AI Assistants"
+msgstr ""
+
 msgid "Date and Time"
 msgstr "Дата и время"
 
@@ -6285,6 +6405,76 @@ msgstr "Сохранить каталог?"
 
 msgid "Save the account?"
 msgstr "Сохранить учётную запись?"
+
+#, fuzzy
+msgid "See message lists"
+msgstr "Сначала новые сообщения"
+
+msgid "Senders, subjects, dates, previews and folders."
+msgstr ""
+
+#, fuzzy
+msgid "Read message text"
+msgstr "Новое сообщение"
+
+#, fuzzy
+msgid "Read attachments"
+msgstr "Есть вложения"
+
+#, fuzzy
+msgid "Prepare messages"
+msgstr "Переслать это сообщение"
+
+msgid "Each opens in a window for you to check and send."
+msgstr ""
+
+#, fuzzy
+msgid "Add and remove stars"
+msgstr "Снять отметку"
+
+#, fuzzy
+msgid "Add and remove tags"
+msgstr "Удалить тег"
+
+#, fuzzy
+msgid "Move and archive"
+msgstr "Архив"
+
+#, fuzzy
+msgid "Move to Trash"
+msgstr "Переместить этот черновик в «Корзину»"
+
+msgid "Mail already in Trash stays there."
+msgstr ""
+
+msgid "Allow AI assistants"
+msgstr ""
+
+msgid "Connects through the Model Context Protocol."
+msgstr ""
+
+msgid "Recent Activity"
+msgstr ""
+
+msgid "Nothing is shared until you allow it. Encrypted mail is never shared."
+msgstr ""
+
+msgid "Command for the assistant"
+msgstr ""
+
+#, fuzzy
+msgid "Address books and directories"
+msgstr "Адресная книга"
+
+msgid "People in your mail"
+msgstr ""
+
+#, fuzzy
+msgid "From every account, shared or not."
+msgstr "Список папок каждой учётной записи."
+
+msgid "Junk and Trash are hidden until you allow them."
+msgstr ""
 
 msgid ""
 "Accounts, preferences, filters, tags and layout, in one file. Passwords and "
@@ -8212,10 +8402,6 @@ msgid "Sent mail shows who read it; the receipt goes here."
 msgstr ""
 
 #, fuzzy
-msgid "Move to Trash"
-msgstr "Переместить этот черновик в «Корзину»"
-
-#, fuzzy
 msgid "Keep in Inbox"
 msgstr "Оставить во «Входящих»"
 
@@ -8705,10 +8891,6 @@ msgstr "Hyprlab"
 #~ msgid "Search this folder"
 #~ msgstr "Папки поиска"
 
-#, fuzzy
-#~ msgid "Same as messages"
-#~ msgstr "{n} сообщений"
-
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""
 #~ "Оставить во «Входящих», чтобы только размечать подходящие письма тегами"
@@ -9028,9 +9210,6 @@ msgstr "Hyprlab"
 #~ "Показывать системные уведомления о новых письмах и ошибках, когда окно "
 #~ "Hylki не активно."
 
-#~ msgid "Moves the message to Trash."
-#~ msgstr "Перемещает сообщение в «Корзину»."
-
 #~ msgid "Opens the message with a reply started."
 #~ msgstr "Открывает сообщение с готовым черновиком ответа."
 
@@ -9228,9 +9407,6 @@ msgstr "Hyprlab"
 #~ "будут автоматически сворачиваться. Долгое нажатие на значок всё равно "
 #~ "позволяет раскрыть или свернуть любой из них, а при возврате к полной "
 #~ "панеле её состояние сохранится."
-
-#~ msgid "Every account's folder list."
-#~ msgstr "Список папок каждой учётной записи."
 
 #~ msgid "The account list under the unified Inboxes row."
 #~ msgstr "Список учётных записей под общей строкой «Входящие»."
@@ -9783,10 +9959,6 @@ msgstr "Hyprlab"
 #~ "остаются в системной связке ключей и не экспортируются; ключи OpenPGP "
 #~ "остаются в GnuPG."
 
-#, fuzzy
-#~ msgid "Like the accounts"
-#~ msgstr "Над учётными записями"
-
 #~ msgid "Show or hide filters"
 #~ msgstr "Показать или скрыть фильтры"
 
@@ -9873,9 +10045,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "Choose which address book to search"
 #~ msgstr "Выберите папки для поиска"
-
-#~ msgid "Sort contacts"
-#~ msgstr "Сортировка контактов"
 
 #, fuzzy
 #~ msgid "From your mail accounts"
@@ -10142,9 +10311,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Label (defaults to email address)"
 #~ msgstr "Метка (по умолчанию адрес электронной почты)"
-
-#~ msgid "Changelog"
-#~ msgstr "Список изменений"
 
 #~ msgid "Full version history"
 #~ msgstr "Полная история версий"

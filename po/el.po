@@ -92,6 +92,104 @@ msgstr "Αδυναμία εισαγωγής λογαριασμού: {e}"
 msgid "On This Computer is switched off"
 msgstr "Το «Σε αυτόν τον υπολογιστή» είναι απενεργοποιημένο"
 
+#, fuzzy
+msgid "Could not start: {error}"
+msgstr "Δεν ήταν δυνατή η αποθήκευση του PDF: {error}"
+
+msgid "Off"
+msgstr "Ανενεργό"
+
+#, fuzzy
+msgid "No activity yet."
+msgstr "Δεν υπάρχουν ακόμη λογαριασμοί"
+
+#, fuzzy
+msgid "Message from an AI Assistant"
+msgstr "Νέο μήνυμα από πρότυπο"
+
+msgid "An AI assistant prepared a message"
+msgstr ""
+
+msgid "Show"
+msgstr "Εμφάνιση"
+
+#, fuzzy
+msgid "Listed accounts"
+msgstr "Πάνω από τους λογαριασμούς"
+
+#, fuzzy
+msgid "Listed folders"
+msgstr "Αυτός ο φάκελος"
+
+#, fuzzy
+msgid "Listed messages"
+msgstr "Χρωματισμός μηνυμάτων με ετικέτα"
+
+#, fuzzy
+msgid "Searched mail"
+msgstr "Αναζήτηση φίλτρων"
+
+#, fuzzy
+msgid "Read a message"
+msgstr "Μηνύματα email"
+
+#, fuzzy
+msgid "Read a conversation"
+msgstr "Ολόκληρη συζήτηση"
+
+#, fuzzy
+msgid "Listed attachments"
+msgstr "Απόκρυψη συνημμένων"
+
+#, fuzzy
+msgid "Read an attachment"
+msgstr "{n} συνημμένο"
+
+#, fuzzy
+msgid "Looked up contacts"
+msgstr "Προστέθηκε στις επαφές"
+
+#, fuzzy
+msgid "Prepared a message"
+msgstr "Προωθημένο μήνυμα"
+
+#, fuzzy
+msgid "Prepared a reply"
+msgstr "επισημάνθηκε ως αναγνωσμένο"
+
+#, fuzzy
+msgid "Prepared a forward"
+msgstr "Ξεκίνησε {n} προώθηση"
+
+msgid "Changed read state"
+msgstr ""
+
+msgid "Changed stars"
+msgstr ""
+
+msgid "Listed tags"
+msgstr ""
+
+#, fuzzy
+msgid "Changed tags"
+msgstr "Αρχείο αλλαγών"
+
+#, fuzzy
+msgid "Moved messages"
+msgstr "Πάνω από τα μηνύματα"
+
+#, fuzzy
+msgid "Archived messages"
+msgstr "Αρχειοθέτηση αυτού του μηνύματος"
+
+#, fuzzy
+msgid "Moved messages to Trash"
+msgstr "Μετακινεί το μήνυμα στον Κάδο."
+
+#, fuzzy
+msgid "Refused or failed: {action}"
+msgstr "Η αναίρεση απέτυχε: {e}"
+
 msgid "Delete the attachment from the server?"
 msgstr "Να διαγραφεί το συνημμένο από τον διακομιστή;"
 
@@ -116,9 +214,6 @@ msgstr "Δεξιά"
 
 msgid "Below"
 msgstr "Κάτω"
-
-msgid "Off"
-msgstr "Ανενεργό"
 
 msgid "Reading Pane"
 msgstr "Παράθυρο ανάγνωσης"
@@ -1735,6 +1830,13 @@ msgid_plural "A new message with {n} files attached is open in Hylki."
 msgstr[0] "Ένα νέο μήνυμα με {n} συνημμένο αρχείο είναι ανοικτό στο Hylki."
 msgstr[1] "Ένα νέο μήνυμα με {n} συνημμένα αρχεία είναι ανοικτό στο Hylki."
 
+#, fuzzy
+msgid "Message ready"
+msgstr "Σώμα μηνύματος"
+
+msgid "An AI assistant prepared a message. Check it, then send it."
+msgstr ""
+
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "Στις {date}, ώρα {time}, ο/η {name} έγραψε:"
 
@@ -2298,9 +2400,6 @@ msgstr "Φάκελος"
 
 msgid "Permanently deletes the message"
 msgstr "Διαγράφει οριστικά το μήνυμα"
-
-msgid "Show"
-msgstr "Εμφάνιση"
 
 msgid "Bring this folder back to the sidebar"
 msgstr "Επαναφορά αυτού του φακέλου στην πλευρική στήλη"
@@ -3451,6 +3550,30 @@ msgstr ""
 "Πληκτρολογήστε μια ενέργεια, έναν φάκελο ή μια ετικέτα, ή > για μόνο "
 "ενέργειες"
 
+msgid "Cc"
+msgstr "Κοιν."
+
+msgid "Bcc"
+msgstr "Κρυφή κοιν."
+
+msgid ""
+"An AI assistant prepared this message. Check who it goes to before you send "
+"it."
+msgstr ""
+
+#, fuzzy
+msgid "It has no recipients yet."
+msgstr "Εμφάνιση παραληπτών"
+
+msgid "Bcc, hidden from the others:"
+msgstr ""
+
+msgid "In Bcc: the other recipients will not see this address"
+msgstr ""
+
+msgid "Outside your own domains"
+msgstr ""
+
 #, fuzzy
 msgid "Send without an attachment?"
 msgstr "Αποστολή ως κανονικό συνημμένο"
@@ -3820,12 +3943,6 @@ msgstr "Αποστολή τώρα αντί για αργότερα"
 
 msgid "Download password for {name}: {password}"
 msgstr "Κωδικός λήψης για {name}: {password}"
-
-msgid "Cc"
-msgstr "Κοιν."
-
-msgid "Bcc"
-msgstr "Κρυφή κοιν."
 
 msgid "Reply-To"
 msgstr "Απάντηση προς"
@@ -5976,6 +6093,9 @@ msgstr "Σύνταξη"
 msgid "Privacy"
 msgstr "Απόρρητο"
 
+msgid "AI Assistants"
+msgstr ""
+
 msgid "Date and Time"
 msgstr "Ημερομηνία και ώρα"
 
@@ -5999,6 +6119,75 @@ msgstr "Αποθήκευση του καταλόγου διευθύνσεων;"
 
 msgid "Save the account?"
 msgstr "Αποθήκευση του λογαριασμού;"
+
+#, fuzzy
+msgid "See message lists"
+msgstr "Νεότερο μήνυμα πρώτο"
+
+msgid "Senders, subjects, dates, previews and folders."
+msgstr ""
+
+#, fuzzy
+msgid "Read message text"
+msgstr "Νέο μήνυμα"
+
+#, fuzzy
+msgid "Read attachments"
+msgstr "Έχει συνημμένα"
+
+#, fuzzy
+msgid "Prepare messages"
+msgstr "Προωθημένο μήνυμα"
+
+msgid "Each opens in a window for you to check and send."
+msgstr ""
+
+#, fuzzy
+msgid "Add and remove stars"
+msgstr "Αφαίρεση αστεριού"
+
+#, fuzzy
+msgid "Add and remove tags"
+msgstr "Αφαίρεση ετικέτας"
+
+#, fuzzy
+msgid "Move and archive"
+msgstr "Μετάβαση στο Αρχείο"
+
+msgid "Move to Trash"
+msgstr "Μετακίνηση στον Κάδο"
+
+msgid "Mail already in Trash stays there."
+msgstr ""
+
+msgid "Allow AI assistants"
+msgstr ""
+
+msgid "Connects through the Model Context Protocol."
+msgstr ""
+
+msgid "Recent Activity"
+msgstr ""
+
+msgid "Nothing is shared until you allow it. Encrypted mail is never shared."
+msgstr ""
+
+msgid "Command for the assistant"
+msgstr ""
+
+#, fuzzy
+msgid "Address books and directories"
+msgstr "Κατάλογοι διευθύνσεων"
+
+msgid "People in your mail"
+msgstr ""
+
+#, fuzzy
+msgid "From every account, shared or not."
+msgstr "Η λίστα φακέλων κάθε λογαριασμού."
+
+msgid "Junk and Trash are hidden until you allow them."
+msgstr ""
 
 msgid ""
 "Accounts, preferences, filters, tags and layout, in one file. Passwords and "
@@ -7916,9 +8105,6 @@ msgstr ""
 "Τα απεσταλμένα μηνύματα εμφανίζουν ποιος τα διάβασε· η επιβεβαίωση "
 "αποθηκεύεται εδώ."
 
-msgid "Move to Trash"
-msgstr "Μετακίνηση στον Κάδο"
-
 msgid "Keep in Inbox"
 msgstr "Διατήρηση στα Εισερχόμενα"
 
@@ -8404,10 +8590,6 @@ msgstr "Hyprlab"
 #~ msgid "Search this folder"
 #~ msgstr "Αναζήτηση σε αυτόν τον φάκελο"
 
-#, fuzzy
-#~ msgid "Same as messages"
-#~ msgstr "Μηνύματα email"
-
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""
 #~ "Αφήστε το στα Εισερχόμενα για να επισημαίνεται μόνο η αλληλογραφία που "
@@ -8759,9 +8941,6 @@ msgstr "Hyprlab"
 #~ "Διαφορετικά, ο ήχος ακούγεται μόνο μαζί με την ειδοποίηση, όταν το "
 #~ "παράθυρο βρίσκεται στο παρασκήνιο ή είναι κλειστό."
 
-#~ msgid "Moves the message to Trash."
-#~ msgstr "Μετακινεί το μήνυμα στον Κάδο."
-
 #~ msgid "Opens the message with a reply started."
 #~ msgstr "Ανοίγει το μήνυμα με έτοιμη απάντηση."
 
@@ -8977,9 +9156,6 @@ msgstr "Hyprlab"
 #~ "ενεργοποιημένα στοιχεία ξεκινούν συμπτυγμένα. Ένα παρατεταμένο πάτημα στη "
 #~ "γραμμή εξακολουθεί να αναπτύσσει ή να συμπτύσσει οποιοδήποτε από αυτά και "
 #~ "η πλήρης πλευρική στήλη επιστρέφει ακριβώς όπως την αφήσατε."
-
-#~ msgid "Every account's folder list."
-#~ msgstr "Η λίστα φακέλων κάθε λογαριασμού."
 
 #~ msgid "The account list under the unified Inboxes row."
 #~ msgstr "Η λίστα λογαριασμών κάτω από την ενοποιημένη σειρά Εισερχόμενα."
@@ -9600,9 +9776,6 @@ msgstr "Hyprlab"
 #~ "σύνδεσης παραμένουν στην κλειδοθήκη συστήματος και δεν εξάγονται ποτέ· τα "
 #~ "κλειδιά OpenPGP παραμένουν στο GnuPG."
 
-#~ msgid "Like the accounts"
-#~ msgstr "Πάνω από τους λογαριασμούς"
-
 #~ msgid "Show or hide filters"
 #~ msgstr "Εμφάνιση ή απόκρυψη φίλτρων"
 
@@ -9960,9 +10133,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Label (defaults to email address)"
 #~ msgstr "Ετικέτα (προεπιλογή η διεύθυνση email)"
-
-#~ msgid "Changelog"
-#~ msgstr "Αρχείο αλλαγών"
 
 #~ msgid "Full version history"
 #~ msgstr "Πλήρες ιστορικό εκδόσεων"
