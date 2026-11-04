@@ -79,10 +79,12 @@ struct ChangedOut {
     note: &'static str,
 }
 
-/// What every answer reminds the assistant of. A message that moved has a
-/// new id, which only listing it again gives.
-const NOTE: &str = "The user can undo this in Hylki. A message that moved has a new id: list or \
-    search again to find it.";
+/// What every answer reminds the assistant of. A change reaches the list a
+/// moment after it is made, and a message that moved has a new id, which only
+/// listing or searching its new folder gives, once that has caught up.
+const NOTE: &str = "The user can undo this in Hylki. It shows in listings a moment later. A \
+    message that moved has a new id: list or search its new folder after a few seconds to find \
+    it.";
 
 #[tool_router(router = organize_tools, vis = "pub(super)")]
 impl Mail {

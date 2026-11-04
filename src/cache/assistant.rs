@@ -134,11 +134,16 @@ impl Cache {
         scopes: &[MailScope],
         query: &Query,
         limit: usize,
+        offset: usize,
     ) -> Vec<(u32, String, Message)> {
         if scopes.is_empty() {
             return Vec::new();
         }
-        let (sql, args) = find_sql(scopes, query, limit.saturating_mul(COPIES_PER_MESSAGE));
+        let (sql, args) = find_sql(
+            scopes,
+            query,
+            (limit + offset).saturating_mul(COPIES_PER_MESSAGE),
+        );
         let run = || -> rusqlite::Result<Vec<(u32, String, Message)>> {
             let mut stmt = self.conn.prepare(&sql)?;
             let rows = stmt.query_map(params_from_iter(args.iter()), |row| {
@@ -161,6 +166,7 @@ impl Cache {
                     seen.insert((*account, m.message_id.clone()))
                 }
             })
+            .skip(offset)
             .take(limit)
             .collect()
     }
@@ -319,7 +325,7 @@ mod tests {
 
     fn found(cache: &Cache, scopes: &[MailScope], query: &str) -> Vec<u32> {
         cache
-            .find_messages(scopes, &Query::parse(query), 20)
+            .find_messages(scopes, &Query::parse(query), 20, 0)
             .into_iter()
             .map(|(_, _, m)| m.uid)
             .collect()
@@ -334,6 +340,21 @@ mod tests {
         assert_eq!(found(&cache, &[scope(1)], "invoice"), [9, 2, 1]);
         assert_eq!(found(&cache, &[scope(1)], "from:billing march"), [1]);
         assert!(found(&cache, &[scope(1)], "invoice lunch").is_empty());
+    }
+
+    #[test]
+    fn a_search_goes_further_back_with_an_offset() {
+        let cache = cache();
+        let uids = |offset| -> Vec<u32> {
+            cache
+                .find_messages(&[scope(1)], &Query::parse("invoice"), 2, offset)
+                .into_iter()
+                .map(|(_, _, m)| m.uid)
+                .collect()
+        };
+        assert_eq!(uids(0), [9, 2]);
+        assert_eq!(uids(2), [1]);
+        assert!(uids(3).is_empty());
     }
 
     #[test]

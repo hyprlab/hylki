@@ -96,11 +96,15 @@ impl ServerHandler for Relay {
         let _ = client.cancel().await;
         match result {
             Ok(result) => Ok(result.into()),
+            // The app answered, with a protocol error: an unknown tool, say.
+            // It is the client's to hear, as it is: the connection was fine.
+            Err(rmcp::ServiceError::McpError(e)) => Err(e),
             Err(e) => {
                 tracing::warn!("mcp: app call failed: {e}");
                 Ok(CallToolResult::error(vec![ContentBlock::text(
                     "The connection to Hylki ended before an answer arrived. If preparing a draft, check Hylki before retrying to avoid duplicates.",
-                )]).into())
+                )])
+                .into())
             }
         }
     }

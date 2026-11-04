@@ -63,7 +63,7 @@ impl Mail {
             .map(|(index, file)| AttachmentOut {
                 index,
                 name: file.name.clone(),
-                mime_type: crate::worker::guess_mime(&file.name),
+                mime_type: mime_of(&file.name),
                 size: file.data.len(),
             })
             .collect();
@@ -142,8 +142,13 @@ fn picture_type(name: &str) -> Option<&'static str> {
     }
 }
 
+/// A file's type, as it is said to an assistant and sent to it.
+fn mime_of(name: &str) -> String {
+    picture_type(name).map_or_else(|| crate::worker::guess_mime(name), str::to_string)
+}
+
 fn answer_with(file: &Attachment) -> CallToolResult {
-    let mime = crate::worker::guess_mime(&file.name);
+    let mime = mime_of(&file.name);
     if is_text(&mime) {
         if let Ok(text) = std::str::from_utf8(&file.data) {
             let (text, cut) = cap(text.to_string(), TEXT_MAX);
@@ -203,6 +208,12 @@ mod tests {
         let other = answer(&file("report.pdf", &[1, 2, 3]));
         assert_eq!(other["content"][0]["type"], "resource");
         assert_eq!(other["content"][0]["resource"]["blob"], "AQID");
+    }
+
+    #[test]
+    fn a_picture_is_called_what_it_is_sent_as() {
+        assert_eq!(mime_of("Photo.PNG"), "image/png");
+        assert_eq!(mime_of("a.jpeg"), "image/jpeg");
     }
 
     #[test]

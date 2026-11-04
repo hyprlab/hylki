@@ -514,6 +514,8 @@ pub(crate) struct AppModel {
     /// connection while they may connect: see `assistant.rs`.
     pub(super) assistant_policy: config::AssistantPolicy,
     pub(super) assistant: super::assistant::Assistant,
+    /// What assistants lately changed on messages (`assistant_organize.rs`).
+    pub(super) assistant_flags: super::assistant_organize::RecentFlags,
     /// Tray icon (issue #116): the setting, the icon choice, and the running
     /// item while the setting is on.
     pub(super) tray_enabled: bool,

@@ -65,6 +65,11 @@ fn seeded_cache() -> Cache {
             folder(3, "Private", FolderKind::Custom),
             folder(4, "Bin", FolderKind::Trash),
             folder(5, "Vault", FolderKind::Custom),
+            // iCloud: a plain folder called Trash, beside the real one.
+            folder(6, "Trash", FolderKind::Custom),
+            // On This Computer: the same name, once for each account copied.
+            folder(7, "iCloud/Saved", FolderKind::Custom),
+            folder(8, "Work/Saved", FolderKind::Custom),
         ],
     );
     cache.save_folders(2, &[folder(1, "INBOX", FolderKind::Inbox)]);
@@ -79,6 +84,9 @@ fn seeded_cache() -> Cache {
     let mut sealed = message(11, "Sealed");
     sealed.preview = crate::models::ENCRYPTED_PREVIEW.into();
     cache.upsert_messages(1, "Vault", &[sealed]);
+    cache.upsert_messages(1, "Trash", &[message(21, "In the plain Trash folder")]);
+    cache.upsert_messages(1, "iCloud/Saved", &[message(22, "One copy")]);
+    cache.upsert_messages(1, "Work/Saved", &[message(23, "Other copy")]);
     cache.save_body(1, "INBOX", 5, "<p>Friday at noon?</p>");
     cache
 }
@@ -492,6 +500,46 @@ async fn a_folder_kept_back_is_out_of_reach_by_every_route() {
     assert!(refused(&moved), "{moved}");
     assert_eq!(s.saw.lock().unwrap().fetched, 0);
     assert!(s.saw.lock().unwrap().organized.is_empty());
+}
+
+#[tokio::test]
+async fn a_path_means_that_folder_and_a_shared_name_means_none_of_them() {
+    let mut s = Session::start(ada_may(&AssistantCap::ALL), Err("none".into())).await;
+    // The path list_folders gives wins over the role of the same word...
+    assert_eq!(
+        subjects(&s.call("list_messages", json!({"folder":"Trash"})).await),
+        ["In the plain Trash folder"]
+    );
+    // ...and the two names pick neither copy at random: moving mail by one
+    // would put it in the wrong place.
+    assert!(refused(
+        &s.call("list_messages", json!({"folder":"Saved"})).await
+    ));
+    assert_eq!(
+        subjects(
+            &s.call("list_messages", json!({"folder":"Work/Saved"}))
+                .await
+        ),
+        ["Other copy"]
+    );
+    let moved = s
+        .call(
+            "move_messages",
+            json!({"ids":[id_of(ADA,"INBOX",5)],"folder":"Saved"}),
+        )
+        .await;
+    assert!(refused(&moved), "{moved}");
+}
+
+#[tokio::test]
+async fn a_listing_goes_further_back_with_an_offset() {
+    let mut s = Session::start(ada_may(&AssistantCap::ALL), Err("none".into())).await;
+    let page = |r: &Value| subjects(r);
+    let all = page(&s.call("list_messages", json!({"limit":2})).await);
+    assert_eq!(all, ["Not downloaded", "Lunch"]);
+    let one = page(&s.call("list_messages", json!({"limit":1,"offset":1})).await);
+    assert_eq!(one, ["Lunch"]);
+    assert!(page(&s.call("list_messages", json!({"offset":2})).await).is_empty());
 }
 
 #[tokio::test]

@@ -399,6 +399,7 @@ impl AppModel {
             reading_pane: prefs.reading_pane,
             assistant_policy: prefs.assistant.clone(),
             assistant: Default::default(),
+            assistant_flags: Default::default(),
             tray_enabled: prefs.tray,
             tray_icon: prefs.tray_icon,
             tray_mail: prefs.tray_mail,

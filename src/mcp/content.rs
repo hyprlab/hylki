@@ -34,7 +34,10 @@ pub(super) fn without_hidden(html: &str) -> String {
         };
         let tag = &rest[..end];
         let name = tag_name(tag);
-        if !tag.starts_with("</") && !VOID.contains(&name.as_str()) {
+        // A comment or a declaration hides nothing of its own, whatever words
+        // are in it: Outlook's `<!--[if mso]>` blocks are full of them.
+        let plain_tag = tag.starts_with("<!") || tag.starts_with("</");
+        if !plain_tag && !VOID.contains(&name.as_str()) && !closes_itself(tag, &name) {
             let hidden = hides(tag, &name);
             if hidden || zero_font(tag) {
                 let after = &rest[end..];
@@ -53,29 +56,44 @@ pub(super) fn without_hidden(html: &str) -> String {
 }
 
 /// Where the tag at the start of `text` ends, a `>` inside a quoted
-/// attribute not counting; past the end of a comment for a comment.
+/// attribute value not counting; past the end of a comment for a comment. A
+/// quote opens a value only straight after `=`, as in a browser: an apostrophe
+/// anywhere else in a tag is only an apostrophe.
 fn tag_end(text: &str) -> Option<usize> {
     if text.starts_with("<!--") {
         return text.find("-->").map(|i| i + 3);
     }
     let mut quote = None;
+    let mut after_equals = false;
     for (i, c) in text.char_indices() {
         match (quote, c) {
             (Some(q), c) if c == q => quote = None,
             (Some(_), _) => {}
-            (None, '"' | '\'') => quote = Some(c),
             (None, '>') => return Some(i + 1),
-            _ => {}
+            (None, '"' | '\'') if after_equals => {
+                quote = Some(c);
+                after_equals = false;
+            }
+            (None, '=') => after_equals = true,
+            (None, c) if c.is_whitespace() => {}
+            _ => after_equals = false,
         }
     }
     None
+}
+
+/// Whether an element ends at its own start tag. Only for namespaced elements
+/// (Outlook's `<v:rect … />`): to a browser `<div … />` is still open, so
+/// taking it at its word would show an assistant what the reader hides.
+fn closes_itself(tag: &str, name: &str) -> bool {
+    name.contains(':') && tag.ends_with("/>")
 }
 
 fn tag_name(tag: &str) -> String {
     tag.trim_start_matches('<')
         .trim_start_matches('/')
         .chars()
-        .take_while(|c| c.is_ascii_alphanumeric())
+        .take_while(|c| c.is_ascii_alphanumeric() || matches!(c, ':' | '-'))
         .collect::<String>()
         .to_ascii_lowercase()
 }
@@ -139,35 +157,38 @@ fn sets_font_size(inner: &str) -> bool {
     inner.to_ascii_lowercase().contains("font-size")
 }
 
-/// Whether `hidden` stands as an attribute of its own, not as part of a
-/// value or a longer name.
+/// Whether `attribute` stands as an attribute of its own: not part of a value,
+/// quoted or not (`class=hidden`), nor of a longer name.
 fn has_attribute(tag: &str, attribute: &str) -> bool {
-    let mut quote = None;
-    let mut word = String::new();
-    for c in tag.chars() {
-        match quote {
-            Some(q) if c == q => quote = None,
-            Some(_) => {}
-            None if c == '"' || c == '\'' => {
-                quote = Some(c);
-                word.clear();
-            }
-            None if c.is_whitespace() || c == '/' || c == '>' => {
-                if word == attribute {
-                    return true;
-                }
-                word.clear();
-            }
-            None if c == '=' => {
-                if word == attribute {
-                    return true;
-                }
-                word.clear();
-            }
-            None => word.push(c),
+    let body = tag
+        .trim_start_matches('<')
+        .trim_end_matches('>')
+        .trim_end_matches('/');
+    let mut chars = body.chars().peekable();
+    // Past the element's own name.
+    while chars.next_if(|c| !c.is_whitespace()).is_some() {}
+    loop {
+        while chars.next_if(|c| c.is_whitespace()).is_some() {}
+        let mut name = String::new();
+        while let Some(c) = chars.next_if(|c| !c.is_whitespace() && *c != '=') {
+            name.push(c);
+        }
+        if name.is_empty() && chars.peek().is_none() {
+            return false;
+        }
+        if name == attribute {
+            return true;
+        }
+        while chars.next_if(|c| c.is_whitespace()).is_some() {}
+        if chars.next_if_eq(&'=').is_none() {
+            continue;
+        }
+        while chars.next_if(|c| c.is_whitespace()).is_some() {}
+        match chars.next_if(|c| matches!(c, '"' | '\'')) {
+            Some(quote) => while chars.next().is_some_and(|c| c != quote) {},
+            None => while chars.next_if(|c| !c.is_whitespace()).is_some() {},
         }
     }
-    false
 }
 
 /// What follows the element whose start tag just ended, nested elements of
@@ -180,7 +201,7 @@ fn past_element<'a>(mut rest: &'a str, name: &str) -> &'a str {
             return "";
         };
         let tag = &rest[..end];
-        if tag_name(tag) == name && !tag.ends_with("/>") {
+        if !tag.starts_with("<!") && tag_name(tag) == name && !closes_itself(tag, name) {
             if tag.starts_with("</") {
                 depth -= 1;
             } else {
@@ -301,6 +322,74 @@ mod tests {
         for shown in ["Visible", "Also visible", "Mentions display:none"] {
             assert!(text.contains(shown), "{shown}: {text}");
         }
+    }
+
+    #[test]
+    fn a_comment_hides_nothing_whatever_it_says() {
+        // Outlook's conditional blocks, as newsletters write them.
+        for comment in [
+            r#"<!--[if mso]><table style="all:unset;opacity:0;"><tr><![endif]-->"#,
+            r#"<!--[if mso]><i style="letter-spacing:25px" hidden>&nbsp;</i><![endif]-->"#,
+            r#"<!--[if !mso]><!-->"#,
+            "<!-- hidden -->",
+        ] {
+            let text = visible_text(&format!("<p>Before</p>{comment}<p>After</p>"));
+            assert!(
+                text.contains("Before") && text.contains("After"),
+                "{comment}: {text}"
+            );
+        }
+    }
+
+    #[test]
+    fn an_apostrophe_in_a_tag_opens_nothing() {
+        let text = visible_text("<p>One</p><td width=100'>Two</td><p>Three</p>");
+        for shown in ["One", "Two", "Three"] {
+            assert!(text.contains(shown), "{shown}: {text}");
+        }
+    }
+
+    #[test]
+    fn hidden_as_a_value_hides_nothing() {
+        for tag in [
+            "<div class=hidden>",
+            "<div class = hidden>",
+            r#"<div class="hidden">"#,
+            r#"<div title='a hidden b'>"#,
+            "<div data-hidden>",
+            "<hidden>",
+        ] {
+            let text = visible_text(&format!("{tag}Shown</div>"));
+            assert_eq!(text, "Shown", "{tag}");
+        }
+        for tag in [
+            "<div hidden>",
+            "<div  HIDDEN >",
+            r#"<div hidden="">"#,
+            "<div id=a hidden=hidden>",
+        ] {
+            assert_eq!(
+                visible_text(&format!("{tag}Gone</div>Shown")),
+                "Shown",
+                "{tag}"
+            );
+        }
+    }
+
+    #[test]
+    fn outlook_shapes_end_where_they_say() {
+        let text = visible_text(
+            r#"<v:rect style="display:none"/><p>Shown</p><v:roundrect style="display:none"><v:fill/>Gone</v:roundrect><p>Too</p>"#,
+        );
+        assert!(
+            text.contains("Shown") && text.contains("Too") && !text.contains("Gone"),
+            "{text}"
+        );
+        // To a browser a <div /> stays open, so what it hides stays hidden.
+        assert_eq!(
+            visible_text(r#"<div style="display:none"/>Gone</div>Shown"#),
+            "Shown"
+        );
     }
 
     #[test]

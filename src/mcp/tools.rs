@@ -42,6 +42,9 @@ const LIST_DEFAULT: usize = 25;
 const LIST_MAX: usize = 200;
 const SEARCH_DEFAULT: usize = 20;
 const SEARCH_MAX: usize = 100;
+/// How far back a listing goes: an account's whole folder is read up to here
+/// to merge it with the others, so this is a limit on the work of one call.
+const OFFSET_MAX: usize = 50_000;
 /// The most of one body handed over: enough for nearly every message, and a
 /// newsletter or a digest does not fill the assistant's context.
 const BODY_MAX: usize = 32 * 1024;
@@ -49,6 +52,9 @@ const BODY_MAX: usize = 32 * 1024;
 /// What an assistant is told a message's text is when it is encrypted.
 const ENCRYPTED_NOTE: &str = "This message is encrypted. Hylki never gives encrypted mail to \
     assistants: the user reads it themselves.";
+
+/// What an assistant is told about a message with nothing to read.
+const NO_TEXT_NOTE: &str = "This message has no text to show: it may be only pictures or files.";
 
 pub(super) const INSTRUCTIONS: &str =
     "Access to the mail in Hylki, the user's email app, while it runs, limited to what the user \
@@ -103,6 +109,8 @@ struct ListMessagesArgs {
     unread_only: bool,
     /// How many messages, newest first (default 25, at most 200).
     limit: Option<usize>,
+    /// How many of the newest to skip, to go further back (default 0).
+    offset: Option<usize>,
 }
 
 #[derive(Deserialize, JsonSchema)]
@@ -118,6 +126,8 @@ struct SearchArgs {
     folder: Option<String>,
     /// How many results, newest first (default 20, at most 100).
     limit: Option<usize>,
+    /// How many of the newest to skip, to go further back (default 0).
+    offset: Option<usize>,
 }
 
 #[derive(Deserialize, JsonSchema)]
@@ -196,6 +206,10 @@ pub(super) struct MessageOut {
     body: Option<String>,
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     body_truncated: bool,
+    /// Text the sender hid from the reader was left out of `body`. Not proof
+    /// of anything: most is a newsletter's preview line.
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    hidden_text_removed: bool,
     /// Why there is no body, said to the model in words.
     #[serde(skip_serializing_if = "Option::is_none")]
     body_note: Option<String>,
@@ -323,6 +337,10 @@ impl Mail {
         };
         let folder = args.folder.as_deref().unwrap_or("inbox");
         let limit = args.limit.unwrap_or(LIST_DEFAULT).clamp(1, LIST_MAX);
+        let offset = args.offset.unwrap_or(0).min(OFFSET_MAX);
+        // Each account's newest as far back as asked, then merged: which of
+        // them the page falls in is not known until they are.
+        let each = limit + offset;
         let cache = self.lock();
         let mut found_folder = false;
         let mut rows: Vec<(String, String, Message)> = Vec::new();
@@ -330,14 +348,14 @@ impl Mail {
             match resolve_folder(&cache, a, folder) {
                 Some(Target::Path(path)) => {
                     found_folder = true;
-                    for m in cache.newest_messages(a.id, &path, args.unread_only, limit) {
+                    for m in cache.newest_messages(a.id, &path, args.unread_only, each) {
                         rows.push((a.address.clone(), path.clone(), m));
                     }
                 }
                 Some(Target::Starred) => {
                     found_folder = true;
                     let hidden = hidden_paths(&cache, a);
-                    for (path, m) in cache.newest_starred(a.id, args.unread_only, limit) {
+                    for (path, m) in cache.newest_starred(a.id, args.unread_only, each) {
                         if !hidden.contains(&path) {
                             rows.push((a.address.clone(), path, m));
                         }
@@ -353,9 +371,10 @@ impl Mail {
             ));
         }
         rows.sort_by_key(|r| std::cmp::Reverse(r.2.timestamp));
-        rows.truncate(limit);
         let out: Vec<SummaryOut> = rows
             .into_iter()
+            .skip(offset)
+            .take(limit)
             .map(|(account, path, m)| summary(&account, &path, &m))
             .collect();
         json(&out)
@@ -379,6 +398,7 @@ impl Mail {
             Err(e) => return failure(e),
         };
         let limit = args.limit.unwrap_or(SEARCH_DEFAULT).clamp(1, SEARCH_MAX);
+        let offset = args.offset.unwrap_or(0).min(OFFSET_MAX);
         let cache = self.lock();
         let mut only_some = false;
         let mut scopes: Vec<MailScope> = Vec::new();
@@ -407,7 +427,7 @@ impl Mail {
                 args.folder.unwrap_or_default()
             ));
         }
-        let hits = cache.find_messages(&scopes, &query, limit);
+        let hits = cache.find_messages(&scopes, &query, limit, offset);
         let out: Vec<SummaryOut> = hits
             .into_iter()
             .filter_map(|(account_id, path, m)| {
@@ -609,11 +629,15 @@ impl Mail {
     /// A message as read_message gives it: its text, or why not.
     pub(super) async fn message_out(&self, account: &Account, m: &Located) -> MessageOut {
         let msg = &m.message;
+        let mut hidden_text_removed = false;
         let (body, body_truncated, body_note, preview, encrypted) =
             match self.body(account.id, m).await {
                 Body::Html(html) => {
-                    let (text, cut) = cap(super::content::visible_text(&html), BODY_MAX);
-                    (Some(text), cut, None, None, false)
+                    let visible = super::content::visible_text(&html);
+                    hidden_text_removed = visible.len() != crate::cache::body_text(&html).len();
+                    let (text, cut) = cap(visible, BODY_MAX);
+                    let note = text.is_empty().then(|| NO_TEXT_NOTE.to_string());
+                    (Some(text), cut, note, None, false)
                 }
                 Body::Encrypted => (None, false, Some(ENCRYPTED_NOTE.to_string()), None, true),
                 Body::Unavailable(why) => (
@@ -647,6 +671,7 @@ impl Mail {
             tags: msg.keywords.clone(),
             body,
             body_truncated,
+            hidden_text_removed,
             body_note,
             preview,
         }
@@ -767,9 +792,11 @@ fn role_from_name(name: &str) -> Option<FolderKind> {
     })
 }
 
-/// A folder argument in one account: a role first, then an exact path, then
-/// a folder's name in any case. `None` when the account has no such folder
-/// or does not share it.
+/// A folder argument in one account: an exact path first, since that is what
+/// list_folders hands out and iCloud can have a folder called `Trash` that is
+/// not its Trash; then a role; then a name, if only one folder has it, as the
+/// names under On This Computer repeat for each account copied there. `None`
+/// when the account has no such folder or does not share it.
 pub(super) fn resolve_folder(cache: &Cache, account: &Account, folder: &str) -> Option<Target> {
     let folder = folder.trim();
     let folders: Vec<_> = cache
@@ -777,6 +804,9 @@ pub(super) fn resolve_folder(cache: &Cache, account: &Account, folder: &str) -> 
         .into_iter()
         .filter(|f| account.grant.folder_allowed(&f.path, f.kind))
         .collect();
+    if let Some(f) = folders.iter().find(|f| f.path == folder) {
+        return Some(Target::Path(f.path.clone()));
+    }
     if let Some(kind) = role_from_name(folder) {
         if let Some(f) = folders.iter().find(|f| f.kind == kind) {
             return Some(Target::Path(f.path.clone()));
@@ -785,11 +815,13 @@ pub(super) fn resolve_folder(cache: &Cache, account: &Account, folder: &str) -> 
             return Some(Target::Starred);
         }
     }
-    folders
+    let mut named = folders
         .iter()
-        .find(|f| f.path == folder)
-        .or_else(|| folders.iter().find(|f| f.name.eq_ignore_ascii_case(folder)))
-        .map(|f| Target::Path(f.path.clone()))
+        .filter(|f| f.name.eq_ignore_ascii_case(folder));
+    match (named.next(), named.next()) {
+        (Some(f), None) => Some(Target::Path(f.path.clone())),
+        _ => None,
+    }
 }
 
 /// The folders of an account it does not share.

@@ -20,6 +20,52 @@ use super::flags::{read_label, star_label};
 use super::model::AppModel;
 use super::undo::FlagKind;
 
+/// How long a change made here outranks what the cache says of a message: the
+/// worker writes it there once the server has it, which is soon.
+const RECENT_FOR: std::time::Duration = std::time::Duration::from_secs(60);
+
+/// A flag change on one message, by (account, folder path, UID).
+type FlagKey = (u32, String, u32);
+
+/// What assistants lately set on messages. Their messages come from the disk
+/// cache, which the change has not reached yet if they ask again at once. Going
+/// by that, a second change back was taken for no change at all and dropped,
+/// while the assistant was told it was made.
+#[derive(Debug, Default)]
+pub(super) struct RecentFlags {
+    set: HashMap<FlagKey, (Vec<(FlagKind, bool)>, std::time::Instant)>,
+}
+
+impl RecentFlags {
+    fn note(&mut self, key: FlagKey, kind: &FlagKind, value: bool) {
+        self.set.retain(|_, (_, at)| at.elapsed() < RECENT_FOR);
+        let (changes, at) = self
+            .set
+            .entry(key)
+            .or_insert_with(|| (Vec::new(), std::time::Instant::now()));
+        *at = std::time::Instant::now();
+        changes.retain(|(k, _)| k != kind);
+        changes.push((kind.clone(), value));
+    }
+
+    /// `m` as the changes made to it have left it.
+    fn bring_up_to_date(&self, key: &FlagKey, m: &mut Message) {
+        let Some((changes, at)) = self.set.get(key) else {
+            return;
+        };
+        if at.elapsed() >= RECENT_FOR {
+            return;
+        }
+        for (kind, value) in changes {
+            match kind {
+                FlagKind::Read => m.unread = !*value,
+                FlagKind::Star => m.starred = *value,
+                FlagKind::Tag(keyword) => m.set_keyword(keyword, *value),
+            }
+        }
+    }
+}
+
 /// A message to move, under the id the assistant named it by.
 struct Moving {
     id: String,
@@ -49,6 +95,8 @@ impl AppModel {
             }
             let mut message = target.message;
             message.folder_id = folder_id;
+            self.assistant_flags
+                .bring_up_to_date(&(account, target.path.clone(), message.uid), &mut message);
             ready.push((target.id, message));
         }
         match change {
@@ -107,7 +155,13 @@ impl AppModel {
         done: &mut Organized,
     ) {
         let (ids, messages): (Vec<String>, Vec<Message>) = ready.into_iter().unzip();
-        self.user_set_flags(what, &messages, kind, value);
+        self.user_set_flags(what, &messages, kind.clone(), value);
+        for m in &messages {
+            if let Some(path) = self.resolve_folder_path(m) {
+                self.assistant_flags
+                    .note((m.account_id, path, m.uid), &kind, value);
+            }
+        }
         done.changed.extend(ids);
     }
 
@@ -186,8 +240,10 @@ impl AppModel {
             return;
         }
         self.bulk_pending += groups.len();
+        let mut arriving: HashSet<(u32, String)> = HashSet::new();
         for ((account_id, src), (dest, uids, rows)) in groups {
             self.push_undo_move(account_id, &dest, &src, rows);
+            arriving.insert((account_id, dest.clone()));
             self.send_to(
                 account_id,
                 MailRequest::MoveMessages {
@@ -196,6 +252,21 @@ impl AppModel {
                     dest,
                 },
             );
+        }
+        // A move takes mail out of the cache here but nothing puts it in at
+        // the other end until that folder is next synced, which for a folder
+        // the user is not looking at may be never. An assistant finds moved
+        // mail through the cache, so it has to be there.
+        for (account_id, dest) in arriving {
+            if let Some(folder_id) = self.folder_by_path(account_id, &dest).map(|f| f.id) {
+                self.send_to(
+                    account_id,
+                    MailRequest::SyncFolder {
+                        folder_id,
+                        path: dest,
+                    },
+                );
+            }
         }
         self.update_busy_indicator();
         self.message_list.emit(MessageListInput::RemoveExact(gone));
@@ -223,5 +294,38 @@ impl AppModel {
                 .popouts
                 .get(&(m.account_id, m.id))
                 .is_some_and(|p| p.message.1 != m.folder_id)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_quick_change_back_goes_by_the_change_before_it() {
+        let key: FlagKey = (1, "Junk".into(), 7);
+        let mut recent = RecentFlags::default();
+        recent.note(key.clone(), &FlagKind::Star, true);
+        recent.note(key.clone(), &FlagKind::Read, true);
+        recent.note(key.clone(), &FlagKind::Tag("work".into()), true);
+        // What the cache still says.
+        let mut m = Message {
+            unread: true,
+            starred: false,
+            ..Message::blank()
+        };
+        recent.bring_up_to_date(&key, &mut m);
+        assert!(m.starred && !m.unread && m.has_keyword("work"));
+        // The latest of each is the one that counts.
+        recent.note(key.clone(), &FlagKind::Star, false);
+        recent.bring_up_to_date(&key, &mut m);
+        assert!(!m.starred);
+        // Another folder's message with this UID is another message.
+        let mut other = Message {
+            starred: true,
+            ..Message::blank()
+        };
+        recent.bring_up_to_date(&(1, "INBOX".into(), 7), &mut other);
+        assert!(other.starred);
     }
 }
