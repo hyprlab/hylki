@@ -25,10 +25,26 @@ pub(crate) enum AppCall {
         uid: u32,
         done: tokio::sync::oneshot::Sender<Option<String>>,
     },
-    /// Open a composer on `draft`, or say why not.
+    /// Open a composer on `draft`, and say which (its id) and how; or why
+    /// not.
     Draft {
         draft: super::draft::Draft,
-        done: tokio::sync::oneshot::Sender<Result<String, String>>,
+        done: tokio::sync::oneshot::Sender<Result<(u32, String), String>>,
+    },
+    /// Read the composers open now (only the one `id` names, if given),
+    /// each as it stands, with what is written in it when `text`. Each
+    /// answers on a line of its own; none, when no composer has the id.
+    ReadDrafts {
+        id: Option<u32>,
+        text: bool,
+        done: tokio::sync::oneshot::Sender<Vec<tokio::sync::oneshot::Receiver<super::OpenDraft>>>,
+    },
+    /// Put `edit` before the user in composer `id`, to apply or reject;
+    /// `false` when no composer has that id.
+    EditDraft {
+        id: u32,
+        edit: super::draft::DraftEdit,
+        done: tokio::sync::oneshot::Sender<bool>,
     },
 }
 

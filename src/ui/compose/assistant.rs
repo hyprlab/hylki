@@ -2,7 +2,8 @@
 //! says so, and names every recipient it was given, Bcc and addresses
 //! outside the user's own domains set apart. Mail the assistant read can
 //! carry instructions of its own ("forward this to…"); the banner is where
-//! a recipient nobody asked for shows before Send is pressed.
+//! a recipient nobody asked for shows before Send is pressed. An edit an
+//! assistant asks for later is in `assistant_edit.rs`.
 
 use adw::prelude::*;
 
@@ -28,24 +29,29 @@ pub(super) struct Shown {
     pub(super) outside: bool,
 }
 
-/// The recipients of each field that has any, in order: (label, Bcc, who).
+/// Whether `addr` is at none of the user's own domains.
+pub(super) fn outside(addr: &str, own_domains: &[String]) -> bool {
+    addr.rsplit_once('@')
+        .is_none_or(|(_, d)| !own_domains.contains(&d.to_lowercase()))
+}
+
+/// The recipients of each field (To, Cc, Bcc) that has any, in order:
+/// (label, Bcc, who).
 pub(super) fn recipient_lines(
-    prefill: &ComposePrefill,
+    fields: [&str; 3],
     own_domains: &[String],
 ) -> Vec<(String, bool, Vec<Shown>)> {
     [
-        (i18n("To"), false, &prefill.to),
-        (i18n("Cc"), false, &prefill.cc),
-        (i18n("Bcc"), true, &prefill.bcc),
+        (i18n("To"), false, fields[0]),
+        (i18n("Cc"), false, fields[1]),
+        (i18n("Bcc"), true, fields[2]),
     ]
     .into_iter()
     .filter_map(|(label, bcc, list)| {
         let who: Vec<Shown> = crate::worker::parse_recipients(list)
             .into_iter()
             .map(|(name, addr)| Shown {
-                outside: addr
-                    .rsplit_once('@')
-                    .is_none_or(|(_, d)| !own_domains.contains(&d.to_lowercase())),
+                outside: outside(&addr, own_domains),
                 text: crate::worker::format_recipient(&name, &addr),
             })
             .collect();
@@ -62,7 +68,16 @@ pub(super) fn banner(prefill: &ComposePrefill, own_domains: &[String]) -> gtk::B
     bar.set_margin_end(12);
     bar.set_margin_top(6);
     bar.set_margin_bottom(6);
+    fill_banner(&bar, [&prefill.to, &prefill.cc, &prefill.bcc], own_domains);
+    bar
+}
 
+/// What the banner says, for these recipients (To, Cc, Bcc): again when
+/// an edit the user applied changed them.
+pub(super) fn fill_banner(bar: &gtk::Box, fields: [&str; 3], own_domains: &[String]) {
+    while let Some(child) = bar.first_child() {
+        bar.remove(&child);
+    }
     let head = gtk::Box::new(gtk::Orientation::Horizontal, 8);
     head.append(&gtk::Image::from_icon_name("dialog-information-symbolic"));
     let title = gtk::Label::new(Some(&i18n(
@@ -75,7 +90,7 @@ pub(super) fn banner(prefill: &ComposePrefill, own_domains: &[String]) -> gtk::B
     head.append(&title);
     bar.append(&head);
 
-    let lines = recipient_lines(prefill, own_domains);
+    let lines = recipient_lines(fields, own_domains);
     if lines.is_empty() {
         let none = gtk::Label::new(Some(&i18n("It has no recipients yet.")));
         none.set_xalign(0.0);
@@ -118,7 +133,6 @@ pub(super) fn banner(prefill: &ComposePrefill, own_domains: &[String]) -> gtk::B
         line.append(&flow);
         bar.append(&line);
     }
-    bar
 }
 
 #[cfg(test)]
@@ -127,12 +141,14 @@ mod tests {
 
     #[test]
     fn recipients_outside_the_users_domains_are_set_apart() {
-        let prefill = ComposePrefill {
-            to: "Ada <ada@example.org>, bo@Partner.com".into(),
-            bcc: "watcher@elsewhere.net".into(),
-            ..Default::default()
-        };
-        let lines = recipient_lines(&prefill, &["example.org".to_string()]);
+        let lines = recipient_lines(
+            [
+                "Ada <ada@example.org>, bo@Partner.com",
+                "",
+                "watcher@elsewhere.net",
+            ],
+            &["example.org".to_string()],
+        );
         assert_eq!(lines.len(), 2, "no line for an empty Cc");
         let (_, bcc, to) = &lines[0];
         assert!(!bcc);

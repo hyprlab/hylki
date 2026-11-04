@@ -9,6 +9,7 @@ use crate::ui::recipient_row::RecipientRow;
 use crate::ui::rich_editor::{RichEditor, SourceKind};
 
 mod assistant;
+mod assistant_edit;
 mod attachment_check;
 mod attachments;
 mod cloud;
@@ -601,6 +602,23 @@ impl Component for Compose {
             cloud_passwords: Vec::new(),
             undo_stack: Vec::new(),
             redo_stack: Vec::new(),
+            by_assistant: prefill.assistant,
+            own_domains,
+            assistant_banner: None,
+            assistant_edit: None,
+            edit_bar: {
+                // An assistant's edit, shown here until applied or
+                // rejected (`assistant_edit.rs`).
+                let bar = gtk::Box::new(gtk::Orientation::Vertical, 6);
+                bar.add_css_class("assistant-banner");
+                bar.set_margin_start(12);
+                bar.set_margin_end(12);
+                bar.set_margin_top(6);
+                bar.set_margin_bottom(6);
+                bar.set_visible(false);
+                bar
+            },
+            last_edit: None,
         };
         model.from_account = model
             .accounts
@@ -620,10 +638,11 @@ impl Component for Compose {
         }
         widgets.editor_holder.append(&model.editor.widget);
         if prefill.assistant {
-            widgets
-                .toolbar_root
-                .add_top_bar(&assistant::banner(&prefill, &own_domains));
+            let banner = assistant::banner(&prefill, &model.own_domains);
+            widgets.toolbar_root.add_top_bar(&banner);
+            model.assistant_banner = Some(banner);
         }
+        widgets.toolbar_root.add_top_bar(&model.edit_bar);
 
         // The inline/window toggle: only reply/forward panes can toggle. Its icon
         // reflects the current host (fullscreen = "expand to window", restore =
@@ -966,6 +985,16 @@ impl Component for Compose {
                 ComposeInput::AutoSaveBody(fields) => self.on_auto_save_body(fields, &sender),
 
                 ComposeInput::Autosaved { saved, origin } => self.on_autosaved(saved, origin),
+
+                ComposeInput::AssistantRead { text, done } => {
+                    self.on_assistant_read(text, done, widgets)
+                }
+
+                ComposeInput::AssistantEdit(edit) => self.on_assistant_edit(edit, widgets, &sender),
+
+                ComposeInput::ApplyAssistantEdit => self.on_apply_assistant_edit(widgets, root),
+
+                ComposeInput::RejectAssistantEdit => self.on_reject_assistant_edit(),
             }
         }
         // Overriding `update_with_view` takes over relm4's default, which

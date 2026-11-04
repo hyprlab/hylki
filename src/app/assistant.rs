@@ -1,16 +1,17 @@
 //! The app's side of the connection for AI assistants (`crate::mcp`): the
 //! Settings switch that starts and stops it, and what the server asks of
-//! the main loop: bodies downloaded as the reader downloads them, and
-//! messages prepared in composers of the app's own, the way Reply and
-//! Forward prepare them, each in a window of its own that never takes over
-//! what the user is doing.
+//! the main loop: bodies downloaded as the reader downloads them, messages
+//! prepared in composers of the app's own, the way Reply and Forward
+//! prepare them, each in a window of its own that never takes over what
+//! the user is doing, and the open composers read, or handed an edit for
+//! the user to apply.
 
 use adw::prelude::*;
 use relm4::prelude::*;
 use tokio::sync::oneshot;
 
 use crate::i18n::{i18n, i18n_f, ni18n_f};
-use crate::mcp::{AppCall, Draft, DraftKind, Original, Server};
+use crate::mcp::{AppCall, Draft, DraftEdit, DraftKind, OpenDraft, Original, Server};
 use crate::models::Message;
 use crate::ui::compose::{ComposeInput, ComposePrefill};
 use crate::ui::preferences::{PrefInput, PrefOutput};
@@ -30,6 +31,9 @@ const MAX_OPEN: usize = 5;
 /// A body the server waits on: where it is, (account, folder path, UID),
 /// and where it goes.
 type WaitingBody = ((u32, String, u32), oneshot::Sender<Option<String>>);
+/// Where the server waits to hear which composer a draft opened in (its
+/// id) and how, or why it did not open.
+type Opened = oneshot::Sender<Result<(u32, String), String>>;
 
 /// The connection while Settings has it on.
 #[derive(Debug, Default)]
@@ -51,7 +55,7 @@ struct WaitingForward {
     key: BodyKey,
     message: Message,
     draft: Draft,
-    done: oneshot::Sender<Result<String, String>>,
+    done: Opened,
 }
 
 impl AppModel {
@@ -146,6 +150,12 @@ impl AppModel {
                 done,
             } => self.fetch_body_for_assistant(account_id, path, uid, done),
             AppCall::Draft { draft, done } => self.open_assistant_draft(draft, done, &sender),
+            AppCall::ReadDrafts { id, text, done } => {
+                let _ = done.send(self.read_composers(id, text));
+            }
+            AppCall::EditDraft { id, edit, done } => {
+                let _ = done.send(self.edit_composer(id, edit));
+            }
         }
     }
 
@@ -204,6 +214,30 @@ impl AppModel {
         }
     }
 
+    /// Ask each open composer (or the one `id` names) what it holds; each
+    /// answers on its own line, once its editor has handed its text over.
+    fn read_composers(&self, id: Option<u32>, text: bool) -> Vec<oneshot::Receiver<OpenDraft>> {
+        self.open_composers()
+            .filter(|(cid, _)| id.is_none_or(|id| id == *cid))
+            .map(|(_, controller)| {
+                let (done, answer) = oneshot::channel();
+                controller.emit(ComposeInput::AssistantRead { text, done });
+                answer
+            })
+            .collect()
+    }
+
+    /// Put an assistant's edit before the user in composer `id`, to apply
+    /// or reject there; `false` when no composer has that id.
+    fn edit_composer(&self, id: u32, edit: DraftEdit) -> bool {
+        let Some(controller) = self.compose_controller(id) else {
+            return false;
+        };
+        tracing::info!("mcp: an assistant asked to edit composer {id}");
+        controller.emit(ComposeInput::AssistantEdit(edit));
+        true
+    }
+
     /// Composers with an assistant's message in them.
     fn assistant_composers(&self) -> usize {
         self.composers.iter().filter(|h| h.assistant).count() + self.assistant.forwards.len()
@@ -212,12 +246,7 @@ impl AppModel {
     /// Prepare the message an assistant asked for, as Hylki's own New,
     /// Reply, Reply All or Forward would, with its text where the user
     /// would have typed.
-    fn open_assistant_draft(
-        &mut self,
-        draft: Draft,
-        done: oneshot::Sender<Result<String, String>>,
-        sender: &ComponentSender<Self>,
-    ) {
+    fn open_assistant_draft(&mut self, draft: Draft, done: Opened, sender: &ComponentSender<Self>) {
         if self.assistant_composers() >= MAX_OPEN {
             let _ = done.send(Err(format!(
                 "{MAX_OPEN} messages an assistant prepared are already open in Hylki. Ask the \
@@ -327,7 +356,7 @@ impl AppModel {
         &mut self,
         mut m: Message,
         draft: Draft,
-        done: oneshot::Sender<Result<String, String>>,
+        done: Opened,
         sender: &ComponentSender<Self>,
     ) {
         if let Some(subject) = self.decrypted_subject(&m) {
@@ -358,7 +387,7 @@ impl AppModel {
         &mut self,
         account_id: u32,
         prefill: ComposePrefill,
-        done: oneshot::Sender<Result<String, String>>,
+        done: Opened,
         sender: &ComponentSender<Self>,
     ) {
         self.leave_gallery();
@@ -413,7 +442,7 @@ impl AppModel {
         if files > 0 {
             note.push_str(&format!(" The original's {files} attachment(s) go along."));
         }
-        let _ = done.send(Ok(note));
+        let _ = done.send(Ok((id, note)));
     }
 }
 

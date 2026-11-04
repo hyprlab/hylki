@@ -21,7 +21,7 @@ mod relay;
 mod server;
 mod tools;
 
-pub(crate) use draft::{text_html, Draft, DraftKind, Original};
+pub(crate) use draft::{text_html, Draft, DraftEdit, DraftKind, EditOutcome, OpenDraft, Original};
 pub(crate) use relay::run as run_relay;
 pub(crate) use server::{remove_socket, AppCall, Server};
 

@@ -95,12 +95,17 @@ async fn an_assistant_drafts_through_the_app_and_cannot_guess_an_address() {
             "compose_message",
             "find_contacts",
             "forward_message",
+            "hylki_status",
             "list_accounts",
+            "list_drafts",
             "list_folders",
             "list_messages",
+            "read_draft",
             "read_message",
+            "read_thread",
             "reply_to_message",
             "search",
+            "update_draft",
         ]
     );
 
@@ -119,7 +124,7 @@ async fn an_assistant_drafts_through_the_app_and_cannot_guess_an_address() {
     // An address goes to the app, which opens it and says so.
     let app = std::thread::spawn(move || match calls.recv_sync() {
         Some(AppMsg::Assistant(AppCall::Draft { draft, done })) => {
-            let _ = done.send(Ok("opened".into()));
+            let _ = done.send(Ok((7, "opened".into())));
             draft
         }
         other => panic!("not a draft: {other:?}"),
@@ -134,6 +139,7 @@ async fn an_assistant_drafts_through_the_app_and_cannot_guess_an_address() {
     )
     .await;
     assert_ne!(opened["isError"], true, "{opened}");
+    assert!(opened.to_string().contains("composer-7"), "{opened}");
     let draft = app.join().unwrap();
     assert_eq!(draft.to, ["Ada <ada@example.org>"]);
     assert_eq!(draft.bcc, ["bo@example.com"]);
@@ -154,4 +160,122 @@ async fn an_assistant_drafts_through_the_app_and_cannot_guess_an_address() {
     )
     .await;
     assert_eq!(missing["isError"], true);
+}
+
+#[tokio::test]
+async fn an_edit_waits_in_the_composer_and_reading_says_so() {
+    let (mut r, mut w, calls) = session().await;
+    send(
+        &mut w,
+        serde_json::json!({"jsonrpc":"2.0","id":1,"method":"initialize","params":{
+            "protocolVersion":"2025-06-18","capabilities":{},
+            "clientInfo":{"name":"test","version":"0"}}}),
+    )
+    .await;
+    answer(&mut r).await;
+    send(
+        &mut w,
+        serde_json::json!({"jsonrpc":"2.0","method":"notifications/initialized"}),
+    )
+    .await;
+
+    // A stand-in for the app with one composer open, number 4, which
+    // keeps the edit it is handed and shows it when read.
+    let app = std::thread::spawn(move || {
+        let mut pending = None;
+        while let Some(msg) = calls.recv_sync() {
+            match msg {
+                AppMsg::Assistant(AppCall::EditDraft { id, edit, done }) => {
+                    let open = id == 4;
+                    if open {
+                        pending = Some(edit);
+                    }
+                    let _ = done.send(open);
+                }
+                AppMsg::Assistant(AppCall::ReadDrafts { id, text, done }) => {
+                    let mut lines = Vec::new();
+                    if id.is_none_or(|id| id == 4) {
+                        let (tx, rx) = tokio::sync::oneshot::channel();
+                        let _ = tx.send(crate::mcp::OpenDraft {
+                            compose_id: 4,
+                            from: "me@example.org".into(),
+                            to: "ada@example.org".into(),
+                            cc: String::new(),
+                            bcc: String::new(),
+                            subject: "Friday".into(),
+                            kind: "new",
+                            by_assistant: false,
+                            attachments: Vec::new(),
+                            encrypted: false,
+                            format: "rich",
+                            text: text.then(|| "Hi Ada".to_string()),
+                            pending: pending.clone(),
+                            last_edit: None,
+                        });
+                        lines.push(rx);
+                    }
+                    let _ = done.send(lines);
+                    if pending.is_some() {
+                        break;
+                    }
+                }
+                other => panic!("not for the open composers: {other:?}"),
+            }
+        }
+    });
+
+    let listed = call(&mut r, &mut w, 2, "list_drafts", serde_json::json!({})).await;
+    let listed = listed.to_string();
+    assert!(listed.contains("composer-4"), "{listed}");
+    assert!(
+        !listed.contains("Hi Ada"),
+        "the list carries no text: {listed}"
+    );
+
+    // Not a composer that is open, and a guessed address: both refused.
+    let gone = call(
+        &mut r,
+        &mut w,
+        3,
+        "update_draft",
+        serde_json::json!({"id":"composer-9","subject":"x"}),
+    )
+    .await;
+    assert_eq!(gone["isError"], true);
+    let guessed = call(
+        &mut r,
+        &mut w,
+        4,
+        "update_draft",
+        serde_json::json!({"id":"composer-4","to":["Bo"]}),
+    )
+    .await;
+    assert_eq!(guessed["isError"], true);
+    assert!(guessed.to_string().contains("find_contacts"));
+
+    let asked = call(
+        &mut r,
+        &mut w,
+        5,
+        "update_draft",
+        serde_json::json!({"id":"composer-4","cc":["bo@example.com"],"body":"Hi Ada,\n\nFriday?"}),
+    )
+    .await;
+    assert_ne!(asked["isError"], true, "{asked}");
+    assert!(asked.to_string().contains("pending"), "{asked}");
+
+    let read = call(
+        &mut r,
+        &mut w,
+        6,
+        "read_draft",
+        serde_json::json!({"id":"composer-4"}),
+    )
+    .await;
+    assert_ne!(read["isError"], true, "{read}");
+    let read = read.to_string();
+    assert!(read.contains("Hi Ada"), "{read}");
+    assert!(read.contains("waiting for the user"), "{read}");
+    assert!(read.contains("bo@example.com"), "{read}");
+    app.join().unwrap();
 }
