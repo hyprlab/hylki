@@ -2621,3 +2621,11 @@ toast-countdown {
 scrolledwindow.merge-dialog-scroll {
   margin: -8px;
 }
+
+/* A message an AI assistant prepared: the banner over it, which names every
+   recipient. */
+.assistant-banner {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background-color: alpha(@accent_bg_color, 0.12);
+}

@@ -256,6 +256,8 @@ pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefil
         // A template that failed to save comes back cut loose from it.
         template: false,
         original_plain: false,
+        typed_html: String::new(),
+        assistant: false,
     }
 }
 

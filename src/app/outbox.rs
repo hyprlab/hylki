@@ -187,6 +187,8 @@ impl AppModel {
             no_signature: false,
             template: false,
             original_plain: false,
+            typed_html: String::new(),
+            assistant: false,
         };
         // The Outbox stays the folder on screen: its list is still what's listed,
         // so its toolbar has to stay too. Leaving it would strand the user in a

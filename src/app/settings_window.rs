@@ -194,6 +194,8 @@ impl AppModel {
             tray_icon: self.tray_icon,
             tray_mail: self.tray_mail,
             launcher_badge: self.launcher_badge,
+            assistant_access: self.assistant_access,
+            assistant_status: self.assistant_status_text(),
             app_icon: self.app_icon.clone(),
             accounts_panel: accounts.widget().clone().upcast::<gtk::Widget>(),
             accounts_sender: accounts.sender().clone(),

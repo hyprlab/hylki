@@ -145,6 +145,7 @@ files_limit_mb = 20
 link_browser = ""
 start_view = "all_inboxes"
 folder_sort = "custom"
+assistant_access = false
 
 [rail_fold]
 enabled = true

@@ -1492,6 +1492,10 @@ pub(crate) enum AppMsg {
         message_id: u32,
     },
 
+    // ---- on_assistant (assistant.rs) ----
+    /// The connection for AI assistants asks for, or tells of, something.
+    Assistant(crate::mcp::AppCall),
+
     // ---- Settings: route_pref (router.rs) ----
     /// A setting changed in Preferences (or its equivalent elsewhere).
     Pref(PrefOutput),

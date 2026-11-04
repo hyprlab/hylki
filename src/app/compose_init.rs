@@ -342,6 +342,19 @@ impl AppModel {
         id: u32,
         sender: &ComponentSender<Self>,
     ) -> adw::Window {
+        let win = self.compose_window(content, id, sender);
+        win.present();
+        win
+    }
+
+    /// That window, not yet shown: one an assistant's message opens in
+    /// may wait until the user asks for it.
+    pub(super) fn compose_window(
+        &self,
+        content: &impl IsA<gtk::Widget>,
+        id: u32,
+        sender: &ComponentSender<Self>,
+    ) -> adw::Window {
         let win = adw::Window::builder()
             .modal(false)
             // Room for the full compose toolbar (Cancel, Save Draft, the
@@ -364,7 +377,6 @@ impl AppModel {
                 crate::desktop::notify::withdraw_compose_ready();
             }
         });
-        win.present();
         win
     }
 }

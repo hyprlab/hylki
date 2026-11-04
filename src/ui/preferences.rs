@@ -181,6 +181,8 @@ pub(crate) struct Preferences {
     /// Composing → Spelling → Languages, kept to follow a change made from
     /// a composer's right-click menu (#365).
     spell_langs: Option<SpellLangRows>,
+    /// What the connection for AI assistants is doing, in words.
+    assistant_status: String,
 }
 
 /// The `sender` the view's handlers report through. Setting a row's initial
@@ -395,6 +397,7 @@ impl Component for Preferences {
             files: init.files,
             files_rows: None,
             spell_langs: None,
+            assistant_status: init.assistant_status.clone(),
             browsers: crate::ui::launch::browsers(),
             notifications: init.notifications,
             notification_buttons: init.notification_buttons,
@@ -459,7 +462,7 @@ impl Component for Preferences {
         let reading_page = &reading.page;
         let composing = ComposingPage::build(&sender);
         let composing_page = &composing.page;
-        let privacy = PrivacyPage::build(&sender);
+        let privacy = PrivacyPage::build(&model, &sender);
         let privacy_page = &privacy.page;
         let datetime = DateTimePage::build(&sender);
         let datetime_page = &datetime.page;
@@ -534,6 +537,7 @@ impl Component for Preferences {
         list.update_view(model);
         conversations.update_view(model);
         reading.update_view(model);
+        privacy.update_view(model);
         system.update_view(model);
     }
 
@@ -559,6 +563,7 @@ impl Component for Preferences {
             PrefInput::ChangeLinkBrowser(idx) => self.on_change_link_browser(idx, sender),
             PrefInput::ChangeFilesLimit(mb) => self.on_change_files_limit(mb, sender),
             PrefInput::SetFilesPrefs(p) => self.on_set_files_prefs(p),
+            PrefInput::SetAssistantStatus(text) => self.assistant_status = text,
             PrefInput::SetSpellcheckLangs(langs) => self.on_set_spellcheck_langs(langs),
             PrefInput::NautilusRestartFiles => self.on_nautilus_restart_files(root),
             PrefInput::NautilusRefresh => {

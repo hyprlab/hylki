@@ -23,6 +23,9 @@ pub(super) struct ComposeHost {
     #[allow(dead_code)]
     pub(super) controller: Controller<Compose>,
     pub(super) window: adw::Window,
+    /// An AI assistant prepared it (`assistant.rs`, which limits how many
+    /// of those are open).
+    pub(super) assistant: bool,
 }
 
 /// The reader's inline reply/forward composer. `window` is `Some` only while the
@@ -81,6 +84,7 @@ impl AppModel {
             id,
             controller,
             window,
+            assistant: false,
         });
     }
 
@@ -236,6 +240,7 @@ impl AppModel {
                     id: r.id,
                     controller: r.controller,
                     window,
+                    assistant: false,
                 });
             }
             None => {
