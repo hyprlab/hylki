@@ -1539,7 +1539,8 @@ on, it has these, each on its own:
 | --- | --- | --- |
 | See message lists | Senders, subjects, dates, previews and folders | On |
 | Read message text | The text of a message, and searching it | On |
-| Read attachments | The files on a message | Off |
+| Search on the mail server | Finds mail not downloaded yet, and needs **Read message text** | On |
+| Read attachments | The files on a message; a PDF as its text, and pages without text as pictures | Off |
 | Prepare messages | New messages, replies and forwards, opened for you to check | On |
 | Mark as read or unread | | Off |
 | Add and remove stars | | Off |
@@ -1551,6 +1552,12 @@ Everything but starting a new message needs **See message lists**, since that is
 how a message is named. **Folders** on the same row keeps single folders back.
 Junk and Trash are kept back until you allow them, as mail in them is the most
 likely to carry instructions aimed at an assistant.
+
+An assistant has two searches. One looks in what Hylki has downloaded, at once.
+The other sends the search words to the account's mail server, which can take up
+to a minute, and saves the headers of what it finds in Hylki's list. Neither
+reads folders that are kept back. On This Computer and POP3 have no server to
+ask.
 
 **Contacts** has two switches of its own, off to start with: **Address books and
 directories**, and **People in your mail**. The second draws on every account,

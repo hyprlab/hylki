@@ -51,6 +51,7 @@ mod prefetch;
 mod preview_fetch;
 mod retry;
 pub(super) mod send;
+mod server_search;
 mod setup;
 mod snooze;
 mod stream;
@@ -234,6 +235,8 @@ struct ImapWorker<E> {
     offline: crate::worker::offline::Offline,
     /// A search of the server's text under way (#509).
     text_search: Option<text_search::TextSearch>,
+    /// Assistants' searches of the server, oldest first.
+    server_searches: VecDeque<server_search::ServerJob>,
     /// Folders queued for the one-time References repair (see
     /// [`run_one_refs_repair`]). Every folder gets one: a message indexed by
     /// an older build carries only its In-Reply-To, and threading reads

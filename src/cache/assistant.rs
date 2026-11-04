@@ -24,8 +24,11 @@ pub(crate) struct MailScope {
     /// Its message text may be searched. Without that a search must not say
     /// what the text holds, even by what it finds.
     pub(crate) read_bodies: bool,
-    /// Folders it does not share.
-    pub(crate) hidden_paths: Vec<String>,
+    /// The folders it shares, and so the only ones looked in. Named rather
+    /// than the others left out, as the cache can hold rows for folders the
+    /// account does not have: those of another account, from before the
+    /// numbers shifted when one was removed.
+    pub(crate) shared_paths: Vec<String>,
     /// Only this folder.
     pub(crate) folder: Option<ScopedFolder>,
 }
@@ -77,8 +80,8 @@ impl Cache {
         })
     }
 
-    /// An account's `limit` newest starred messages in any folder but Junk
-    /// and Trash, with the folder each is in.
+    /// An account's `limit` newest starred messages in any folder it has but
+    /// Junk and Trash, with the folder each is in.
     pub(crate) fn newest_starred(
         &self,
         account_id: u32,
@@ -91,8 +94,8 @@ impl Cache {
             let mut stmt = self.conn.prepare(&format!(
                 "SELECT folder_path, {cols} FROM messages \
                  WHERE account_id = ?1 AND starred = 1 {unread} \
-                 AND NOT EXISTS (SELECT 1 FROM folders f WHERE f.account_id = messages.account_id \
-                     AND f.path = messages.folder_path AND f.kind IN (5, 6)) \
+                 AND EXISTS (SELECT 1 FROM folders f WHERE f.account_id = messages.account_id \
+                     AND f.path = messages.folder_path AND f.kind NOT IN (5, 6)) \
                  ORDER BY ts DESC LIMIT ?2"
             ))?;
             let rows = stmt.query_map(params![account_id, limit as i64], |row| {
@@ -180,10 +183,9 @@ fn find_sql(scopes: &[MailScope], query: &Query, limit: usize) -> (String, Vec<V
     for scope in scopes {
         args.push(Value::Integer(scope.account_id.into()));
         let mut clause = String::from("(account_id = ?");
-        for path in &scope.hidden_paths {
-            clause.push_str(" AND folder_path <> ?");
-            args.push(Value::Text(path.clone()));
-        }
+        let marks = vec!["?"; scope.shared_paths.len()].join(", ");
+        clause.push_str(&format!(" AND folder_path IN ({marks})"));
+        args.extend(scope.shared_paths.iter().cloned().map(Value::Text));
         match &scope.folder {
             Some(ScopedFolder::Path(path)) => {
                 clause.push_str(" AND folder_path = ?");
@@ -318,7 +320,7 @@ mod tests {
         MailScope {
             account_id,
             read_bodies: true,
-            hidden_paths: Vec::new(),
+            shared_paths: vec!["INBOX".into(), "Spam".into()],
             folder: None,
         }
     }
@@ -365,7 +367,7 @@ mod tests {
         assert_eq!(found(&cache, &[scope(1), scope(2)], "other"), [4]);
         // A hidden folder's mail is not found.
         let hidden = MailScope {
-            hidden_paths: vec!["Spam".into()],
+            shared_paths: vec!["INBOX".into()],
             ..scope(1)
         };
         assert_eq!(found(&cache, &[hidden], "invoice"), [2, 1]);

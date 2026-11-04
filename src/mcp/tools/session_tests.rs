@@ -88,6 +88,11 @@ fn seeded_cache() -> Cache {
     cache.upsert_messages(1, "iCloud/Saved", &[message(22, "One copy")]);
     cache.upsert_messages(1, "Work/Saved", &[message(23, "Other copy")]);
     cache.save_body(1, "INBOX", 5, "<p>Friday at noon?</p>");
+    // Another account's mail, under the number this one has now: no such
+    // folder is on the account.
+    let mut stale = message(31, "Lunch of another account");
+    stale.starred = true;
+    cache.upsert_messages(1, "[Gmail]/All Mail", &[stale]);
     cache
 }
 
@@ -111,6 +116,11 @@ struct AppSaw {
     drafts: usize,
     organized: Vec<String>,
     activity: Vec<(String, bool)>,
+    /// What each account's server answers: hits, or why not. An account not
+    /// here has no worker, so its answer never comes.
+    server: std::collections::HashMap<u32, Result<Vec<(String, u32)>, String>>,
+    /// What servers were asked: account, words, folders.
+    asked: Vec<(u32, Vec<String>, Vec<String>)>,
 }
 
 struct Session {
@@ -147,6 +157,24 @@ impl Session {
                         AppCall::FetchRaw { done, .. } => {
                             saw.fetched += 1;
                             let _ = done.send(raw.clone());
+                        }
+                        AppCall::AskServer { account_id, ask } => {
+                            saw.asked
+                                .push((account_id, ask.terms.clone(), ask.paths.clone()));
+                            match saw.server.get(&account_id).cloned() {
+                                Some(Ok(hits)) => {
+                                    let _ = ask.answer.send(crate::worker::ServerFound {
+                                        account_id,
+                                        found: hits.len(),
+                                        hits,
+                                        done: true,
+                                        ..Default::default()
+                                    });
+                                }
+                                Some(Err(why)) => ask.refuse(account_id, why),
+                                // No worker: the channel closes unanswered.
+                                None => drop(ask),
+                            }
                         }
                         AppCall::Draft { done, .. } => {
                             saw.drafts += 1;
@@ -283,6 +311,7 @@ async fn the_tools_offered_cannot_send_or_erase() {
             "read_thread",
             "reply_to_message",
             "search",
+            "search_server",
             "set_read",
             "set_starred",
             "set_tag",
@@ -723,4 +752,169 @@ async fn status_says_what_is_allowed_and_what_never_is() {
     );
     assert_eq!(status["accounts"].as_array().unwrap().len(), 1);
     assert!(status["never_allowed"].to_string().contains("encrypted"));
+}
+
+const LOOKING: &[AssistantCap] = &[
+    AssistantCap::List,
+    AssistantCap::Read,
+    AssistantCap::SearchServer,
+];
+
+fn answered_by_server(s: &Session, hits: &[(&str, u32)]) {
+    let hits = hits.iter().map(|(p, uid)| (p.to_string(), *uid)).collect();
+    s.saw.lock().unwrap().server.insert(1, Ok(hits));
+}
+
+#[tokio::test]
+async fn a_server_is_asked_only_with_leave_to_search_it_and_read_the_text() {
+    for caps in [
+        &[AssistantCap::List, AssistantCap::Read][..],
+        &[AssistantCap::List, AssistantCap::SearchServer][..],
+    ] {
+        let mut s = Session::start(ada_may(caps), Ok(plain_raw("text"))).await;
+        let result = s.call("search_server", json!({"query":"lunch"})).await;
+        assert!(refused(&result), "{result}");
+        assert!(result.to_string().contains("search on the mail server"));
+        assert!(s.saw.lock().unwrap().asked.is_empty());
+    }
+}
+
+#[tokio::test]
+async fn a_server_is_asked_about_shared_folders_and_answers_only_for_them() {
+    let mut policy = ada_may(LOOKING);
+    policy
+        .grant_mut(ADA)
+        .folders
+        .insert("Private".into(), false);
+    let mut s = Session::start(policy, Ok(plain_raw("text"))).await;
+    // Whatever a worker gets wrong, a folder kept back stays back.
+    answered_by_server(
+        &s,
+        &[("INBOX", 5), ("Private", 8), ("Spam", 7), ("INBOX", 999)],
+    );
+    let result = s.call("search_server", json!({"query":"lunch"})).await;
+    let answer = data(&result);
+    let found: Vec<&str> = answer["messages"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|m| m["subject"].as_str().unwrap())
+        .collect();
+    assert_eq!(found, ["Lunch"], "{result}");
+    assert_eq!(answer["found"], 4);
+    let saw = s.saw.lock().unwrap();
+    let (account, words, paths) = &saw.asked[0];
+    assert_eq!(
+        (*account, words.as_slice()),
+        (1, &["lunch".to_string()][..])
+    );
+    assert!(paths.contains(&"INBOX".to_string()));
+    for hidden in ["Private", "Spam", "Bin"] {
+        assert!(!paths.contains(&hidden.to_string()), "{paths:?}");
+    }
+}
+
+#[tokio::test]
+async fn what_a_server_found_can_be_read_like_any_other() {
+    let mut s = Session::start(ada_may(LOOKING), Ok(plain_raw("from the server"))).await;
+    answered_by_server(&s, &[("INBOX", 6)]);
+    let result = s
+        .call("search_server", json!({"query":"words only it knows"}))
+        .await;
+    let id = data(&result)["messages"][0]["id"]
+        .as_str()
+        .unwrap()
+        .to_string();
+    let read = s.call("read_message", json!({"id":id})).await;
+    assert!(data(&read)["body"]
+        .as_str()
+        .unwrap()
+        .contains("from the server"));
+}
+
+#[tokio::test]
+async fn encrypted_mail_a_server_finds_is_named_but_not_opened() {
+    let mut s = Session::start(ada_may(LOOKING), Ok(plain_raw("text"))).await;
+    answered_by_server(&s, &[("Vault", 11)]);
+    let result = s.call("search_server", json!({"query":"sealed"})).await;
+    let message = &data(&result)["messages"][0];
+    assert_eq!(message["encrypted"], true);
+    let id = message["id"].as_str().unwrap().to_string();
+    let read = s.call("read_message", json!({"id":id})).await;
+    assert!(data(&read)["body"].is_null(), "{read}");
+    assert!(data(&read)["body_note"]
+        .as_str()
+        .unwrap()
+        .contains("encrypted"));
+}
+
+#[tokio::test]
+async fn a_server_that_cannot_answer_is_said_to_have_not_answered() {
+    let mut s = Session::start(ada_may(LOOKING), Ok(plain_raw("text"))).await;
+    s.saw
+        .lock()
+        .unwrap()
+        .server
+        .insert(1, Err("cannot be reached".into()));
+    let result = s.call("search_server", json!({"query":"lunch"})).await;
+    assert!(!refused(&result), "{result}");
+    let answer = data(&result);
+    assert_eq!(answer["not_searched"][0]["account"], ADA);
+    assert_eq!(answer["not_searched"][0]["why"], "cannot be reached");
+
+    // No worker to ask: the channel closes with no answer.
+    s.saw.lock().unwrap().server.clear();
+    let result = s.call("search_server", json!({"query":"lunch"})).await;
+    assert!(data(&result)["not_searched"][0]["why"]
+        .as_str()
+        .unwrap()
+        .contains("did not finish"));
+}
+
+#[tokio::test]
+async fn a_server_is_not_asked_what_it_cannot_search_for() {
+    let mut s = Session::start(ada_may(LOOKING), Ok(plain_raw("text"))).await;
+    let long = "x".repeat(2000);
+    for query in ["", "   ", "is:unread has:attachment", long.as_str()] {
+        let result = s.call("search_server", json!({"query":query})).await;
+        assert!(refused(&result), "{query}: {result}");
+    }
+    assert!(refused(
+        &s.call(
+            "search_server",
+            json!({"query":"x","folder":"nothing like it"})
+        )
+        .await
+    ));
+    assert!(s.saw.lock().unwrap().asked.is_empty());
+}
+
+#[tokio::test]
+async fn rows_of_a_folder_the_account_does_not_have_are_out_of_reach() {
+    let mut caps = LOOKING.to_vec();
+    caps.push(AssistantCap::Attachments);
+    let mut s = Session::start(ada_may(&caps), Ok(plain_raw("text"))).await;
+    let stale = "Lunch of another account";
+    let search = s.call("search", json!({"query":"lunch"})).await;
+    assert!(!search.to_string().contains(stale), "{search}");
+    let starred = s.call("list_messages", json!({"folder":"starred"})).await;
+    assert!(!starred.to_string().contains(stale), "{starred}");
+    let listed = s
+        .call("list_messages", json!({"folder":"[Gmail]/All Mail"}))
+        .await;
+    assert!(refused(&listed), "{listed}");
+    let id = id_of(ADA, "[Gmail]/All Mail", 31);
+    for (tool, args) in [
+        ("read_message", json!({"id":id})),
+        ("list_attachments", json!({"id":id})),
+    ] {
+        assert!(refused(&s.call(tool, args).await), "{tool}");
+    }
+    let thread_id = super::threads::thread_id(ADA, "[Gmail]/All Mail", &message(31, stale));
+    let thread = s.call("read_thread", json!({"thread_id":thread_id})).await;
+    assert!(!thread.to_string().contains(stale), "{thread}");
+    // Nor can a server's answer name one.
+    answered_by_server(&s, &[("[Gmail]/All Mail", 31)]);
+    let found = s.call("search_server", json!({"query":"lunch"})).await;
+    assert_eq!(data(&found)["messages"], json!([]), "{found}");
 }

@@ -271,6 +271,49 @@ pub(crate) enum MailRequest {
         terms: Vec<String>,
         paths: Vec<String>,
     },
+    /// An assistant's search of the server: unlike [`Self::FindText`], which
+    /// marks what the list already holds, it brings in mail the index does
+    /// not have yet, says when a server could not answer, and runs beside
+    /// the user's own search without taking its place.
+    AskServer(ServerSearch),
+}
+
+/// What an assistant asks a server, and where the answer goes. It answers
+/// with [`ServerFound`] on `answer` and lets it go when done, so a search no
+/// one waits for any more can be seen and given up.
+#[derive(Debug)]
+pub(crate) struct ServerSearch {
+    pub(crate) terms: Vec<String>,
+    pub(crate) paths: Vec<String>,
+    /// The newest this many of each folder are kept.
+    pub(crate) keep: usize,
+    pub(crate) answer: tokio::sync::mpsc::UnboundedSender<ServerFound>,
+}
+
+/// One part of a server's answer to a [`ServerSearch`].
+#[derive(Debug, Default)]
+pub(crate) struct ServerFound {
+    pub(crate) account_id: u32,
+    /// (folder path, uid), each one in the cache by now.
+    pub(crate) hits: Vec<(String, u32)>,
+    /// How many the server found, kept or not.
+    pub(crate) found: usize,
+    /// What could not be searched, in words for the assistant.
+    pub(crate) trouble: Option<String>,
+    /// The last part for this account.
+    pub(crate) done: bool,
+}
+
+impl ServerSearch {
+    /// Say that this account's server cannot be asked, and why.
+    pub(crate) fn refuse(self, account_id: u32, why: impl Into<String>) {
+        let _ = self.answer.send(ServerFound {
+            account_id,
+            trouble: Some(why.into()),
+            done: true,
+            ..Default::default()
+        });
+    }
 }
 
 /// The newest text search the app asked for (#509).

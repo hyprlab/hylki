@@ -128,6 +128,10 @@ msgid "Searched mail"
 msgstr "Cerca filtres"
 
 #, fuzzy
+msgid "Searched on the server"
+msgstr "S'està cercant…"
+
+#, fuzzy
 msgid "Read a message"
 msgstr "Missatges de correu"
 
@@ -6163,6 +6167,14 @@ msgstr ""
 #, fuzzy
 msgid "Read message text"
 msgstr "Missatge nou"
+
+#, fuzzy
+msgid "Search on the mail server"
+msgstr "S'està cercant…"
+
+#, fuzzy
+msgid "Finds mail not downloaded yet."
+msgstr "El missatge encara no s'ha carregat."
 
 #, fuzzy
 msgid "Read attachments"

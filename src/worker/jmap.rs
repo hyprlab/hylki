@@ -48,6 +48,7 @@ mod offline;
 mod ops;
 mod push;
 mod send;
+mod server_search;
 mod snooze;
 mod text_search;
 mod wire;
@@ -237,6 +238,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         let emit = &self.emit;
         match req {
             MailRequest::Locate { message_id } => self.on_locate(message_id).await,
+            MailRequest::AskServer(ask) => self.on_ask_server(ask).await,
             MailRequest::FindText { gen, terms, paths } => {
                 self.on_find_text(gen, terms, paths).await
             }

@@ -59,6 +59,10 @@ fn cap_text(cap: AssistantCap) -> (String, Option<String>) {
             Some(i18n("Senders, subjects, dates, previews and folders.")),
         ),
         AssistantCap::Read => (i18n("Read message text"), None),
+        AssistantCap::SearchServer => (
+            i18n("Search on the mail server"),
+            Some(i18n("Finds mail not downloaded yet.")),
+        ),
         AssistantCap::Attachments => (i18n("Read attachments"), None),
         AssistantCap::Draft => (
             i18n("Prepare messages"),
@@ -259,6 +263,8 @@ fn account_row(
 
     let mut needs_list = Vec::new();
     let mut list_row = None;
+    let mut read_row = None;
+    let mut search_row = None;
     for cap in AssistantCap::ALL {
         let (title, subtitle) = cap_text(cap);
         let switch = adw::SwitchRow::builder()
@@ -279,6 +285,9 @@ fn account_row(
             AssistantCap::List => list_row = Some(switch),
             // A new message names no other, so drafting goes on without it.
             AssistantCap::Draft => {}
+            // These two follow the list as well, and each other: see below.
+            AssistantCap::Read => read_row = Some(switch),
+            AssistantCap::SearchServer => search_row = Some(switch),
             _ => needs_list.push(switch),
         }
     }
@@ -295,17 +304,26 @@ fn account_row(
     }
     row.add_row(&folders);
 
-    // What is done to a message needs the list that names it: see
-    // `AccountGrant::allows`.
-    if let Some(list_row) = list_row {
-        let follow = move |on: bool| {
-            for row in &needs_list {
-                row.set_sensitive(on);
-            }
-            folders.set_sensitive(on);
+    // What is done to a message needs the list that names it, and searching
+    // on the server needs leave to read: see `AccountGrant::allows`.
+    if let (Some(list_row), Some(read_row), Some(search_row)) = (list_row, read_row, search_row) {
+        let follow = {
+            let (list_row, read_row) = (list_row.clone(), read_row.clone());
+            Rc::new(move || {
+                let on = list_row.is_active();
+                for row in &needs_list {
+                    row.set_sensitive(on);
+                }
+                folders.set_sensitive(on);
+                read_row.set_sensitive(on);
+                search_row.set_sensitive(on && read_row.is_active());
+            })
         };
-        follow(list_row.is_active());
-        list_row.connect_active_notify(move |row| follow(row.is_active()));
+        follow();
+        for switch in [&list_row, &read_row] {
+            let follow = follow.clone();
+            switch.connect_active_notify(move |_| follow());
+        }
     }
     row
 }

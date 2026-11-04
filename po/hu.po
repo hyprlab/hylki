@@ -130,6 +130,10 @@ msgid "Searched mail"
 msgstr "Keresési szűrők"
 
 #, fuzzy
+msgid "Searched on the server"
+msgstr "Keresés…"
+
+#, fuzzy
 msgid "Read a message"
 msgstr "{n} db üzenet"
 
@@ -6393,6 +6397,14 @@ msgstr ""
 #, fuzzy
 msgid "Read message text"
 msgstr "Új üzenet"
+
+#, fuzzy
+msgid "Search on the mail server"
+msgstr "Keresés…"
+
+#, fuzzy
+msgid "Finds mail not downloaded yet."
+msgstr "Ezt az üzenetet még nem ellenőrizték."
 
 #, fuzzy
 msgid "Read attachments"

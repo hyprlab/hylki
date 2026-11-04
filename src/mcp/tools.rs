@@ -32,6 +32,7 @@ mod bodies;
 mod contacts;
 mod drafts;
 mod organize;
+mod server_search;
 #[cfg(test)]
 mod session_tests;
 mod threads;
@@ -63,6 +64,8 @@ not ask the user to widen it unless the task needs it. \
 Every tool reads all shared accounts unless `account` (an address from list_accounts) narrows \
 it. Folders are named by role (inbox, sent, drafts, archive, junk, trash, starred, templates, \
 snoozed) or by the path list_folders gives. Pass the `id` of a listed message to read_message. \
+search looks in what Hylki has downloaded, at once; search_server asks the mail servers, more \
+slowly, and also finds what is not downloaded yet: use it when search misses something. \
 compose_message, reply_to_message and forward_message prepare a message and open it in Hylki \
 for the user to check and send; nothing is ever sent from here. Write plain text only. \
 Recipients must be email addresses: find each with find_contacts first, and never guess one \
@@ -239,6 +242,7 @@ fn routers() -> ToolRouter<Mail> {
         + Mail::thread_tools()
         + Mail::attachment_tools()
         + Mail::organize_tools()
+        + Mail::server_search_tools()
 }
 
 #[tool_router]
@@ -354,9 +358,9 @@ impl Mail {
                 }
                 Some(Target::Starred) => {
                     found_folder = true;
-                    let hidden = hidden_paths(&cache, a);
+                    let shared = shared_paths(&cache, a);
                     for (path, m) in cache.newest_starred(a.id, args.unread_only, each) {
-                        if !hidden.contains(&path) {
+                        if shared.contains(&path) {
                             rows.push((a.address.clone(), path, m));
                         }
                     }
@@ -417,7 +421,7 @@ impl Mail {
             scopes.push(MailScope {
                 account_id: a.id,
                 read_bodies: a.grant.allows(AssistantCap::Read),
-                hidden_paths: hidden_paths(&cache, a),
+                shared_paths: shared_paths(&cache, a),
                 folder,
             });
         }
@@ -605,13 +609,11 @@ impl Mail {
         }
         let cache = self.lock();
         // A folder not shared looks like no folder: an old id, or one written
-        // by hand, is no way in.
-        let kind = cache
-            .load_folders(account.id)
-            .into_iter()
-            .find(|f| f.path == path)
-            .map_or(FolderKind::Custom, |f| f.kind);
-        if !account.grant.folder_allowed(path, kind) {
+        // by hand, is no way in. Nor is one the account does not have, whose
+        // rows would be another account's: see `MailScope::shared_paths`.
+        let folders = cache.load_folders(account.id);
+        let folder = folders.iter().find(|f| f.path == path).ok_or_else(gone)?;
+        if !account.grant.folder_allowed(path, folder.kind) {
             return Err(gone());
         }
         let message = cache.message_at(account.id, path, uid).ok_or_else(gone)?;
@@ -824,12 +826,12 @@ pub(super) fn resolve_folder(cache: &Cache, account: &Account, folder: &str) -> 
     }
 }
 
-/// The folders of an account it does not share.
-fn hidden_paths(cache: &Cache, account: &Account) -> Vec<String> {
+/// The folders of an account it shares.
+pub(super) fn shared_paths(cache: &Cache, account: &Account) -> Vec<String> {
     cache
         .load_folders(account.id)
         .into_iter()
-        .filter(|f| !account.grant.folder_allowed(&f.path, f.kind))
+        .filter(|f| account.grant.folder_allowed(&f.path, f.kind))
         .map(|f| f.path)
         .collect()
 }

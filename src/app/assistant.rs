@@ -160,6 +160,11 @@ impl AppModel {
                 uid,
                 done,
             } => self.fetch_raw_for_assistant(account_id, path, uid, done),
+            AppCall::AskServer { account_id, ask } => {
+                // With no worker the request goes nowhere, and the channel
+                // closing tells the server so.
+                self.send_to(account_id, MailRequest::AskServer(ask));
+            }
             AppCall::Draft { draft, done } => self.open_assistant_draft(draft, done, &sender),
             AppCall::Organize {
                 change,
@@ -425,6 +430,7 @@ fn activity_line(a: &Activity) -> (String, String) {
         "list_folders" => i18n("Listed folders"),
         "list_messages" => i18n("Listed messages"),
         "search" => i18n("Searched mail"),
+        "search_server" => i18n("Searched on the server"),
         "read_message" => i18n("Read a message"),
         "read_thread" => i18n("Read a conversation"),
         "list_attachments" => i18n("Listed attachments"),

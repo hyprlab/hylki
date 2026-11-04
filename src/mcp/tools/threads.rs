@@ -93,8 +93,8 @@ impl Mail {
             self.lock().messages_by_thread_ids(account.id, &[root])
         };
         dedupe(&mut rows);
-        let hidden = hidden_paths(&self.lock(), &account);
-        rows.retain(|(path, _)| !hidden.contains(path));
+        let shared = shared_paths(&self.lock(), &account);
+        rows.retain(|(path, _)| shared.contains(path));
         if rows.is_empty() {
             return failure("No cached messages found for this thread.".into());
         }

@@ -105,6 +105,7 @@ pub(super) async fn run_mock(
                 hits: Vec::new(),
                 done: true,
             }),
+            MailRequest::AskServer(ask) => ask.refuse(0, "the demo has no server"),
             MailRequest::Locate { message_id } => {
                 // No folders to search here beyond what the cache already
                 // held: answer "not found" so the app can report the miss.

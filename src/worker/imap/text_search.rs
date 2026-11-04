@@ -46,7 +46,11 @@ pub(super) fn text_query(terms: &[String]) -> String {
 
 /// The folders to search: on Gmail, All Mail for every label it holds,
 /// with the binned and the junk when they were asked for.
-fn folders_to_search(cache: Option<&Cache>, account_id: u32, paths: Vec<String>) -> Vec<String> {
+pub(super) fn folders_to_search(
+    cache: Option<&Cache>,
+    account_id: u32,
+    paths: Vec<String>,
+) -> Vec<String> {
     let Some(c) = cache else { return paths };
     let folders = c.load_folders(account_id);
     let all_mail = folders.iter().find(|f| {

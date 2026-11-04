@@ -126,6 +126,10 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
                 hits: Vec::new(),
                 done: true,
             }),
+            MailRequest::AskServer(ask) => ask.refuse(
+                account_id,
+                "POP3 servers cannot search: search already finds all that was downloaded",
+            ),
             MailRequest::Locate { message_id } => {
                 // No folders to search here beyond what the cache already
                 // held: answer "not found" so the app can report the miss.

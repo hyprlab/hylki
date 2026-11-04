@@ -66,6 +66,12 @@ pub(crate) enum AppCall {
         uid: u32,
         done: tokio::sync::oneshot::Sender<Result<Vec<u8>, String>>,
     },
+    /// Have an account's worker search its server, which answers on the
+    /// channel `ask` carries.
+    AskServer {
+        account_id: u32,
+        ask: crate::worker::ServerSearch,
+    },
     /// Open a composer on `draft`, or say why not.
     Draft {
         draft: super::draft::Draft,

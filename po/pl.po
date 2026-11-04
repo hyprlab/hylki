@@ -129,6 +129,10 @@ msgid "Searched mail"
 msgstr "Wyszukaj filtry"
 
 #, fuzzy
+msgid "Searched on the server"
+msgstr "Wyszukiwanie…"
+
+#, fuzzy
 msgid "Read a message"
 msgstr "wiadomości: {n}"
 
@@ -6475,6 +6479,14 @@ msgstr ""
 #, fuzzy
 msgid "Read message text"
 msgstr "Nowa wiadomość"
+
+#, fuzzy
+msgid "Search on the mail server"
+msgstr "Wyszukiwanie…"
+
+#, fuzzy
+msgid "Finds mail not downloaded yet."
+msgstr "Ta wiadomość nie została sprawdzona."
 
 #, fuzzy
 msgid "Read attachments"

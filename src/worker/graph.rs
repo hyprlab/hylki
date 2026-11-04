@@ -40,6 +40,7 @@ mod messages;
 mod offline;
 mod ops;
 mod send;
+mod server_search;
 mod snooze;
 mod text_search;
 use crate::worker::outbox::{delete_queued, emit_outbox};
@@ -197,6 +198,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
         let cache = &self.cache;
         let emit = &|ev| name_labels(&self.account, &self.emit, ev);
         match req {
+            MailRequest::AskServer(ask) => self.on_ask_server(ask).await,
             MailRequest::FindText { gen, terms, paths } => {
                 self.on_find_text(gen, terms, paths).await
             }

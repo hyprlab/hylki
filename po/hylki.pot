@@ -111,6 +111,9 @@ msgstr ""
 msgid "Searched mail"
 msgstr ""
 
+msgid "Searched on the server"
+msgstr ""
+
 msgid "Read a message"
 msgstr ""
 
@@ -5657,6 +5660,12 @@ msgid "Senders, subjects, dates, previews and folders."
 msgstr ""
 
 msgid "Read message text"
+msgstr ""
+
+msgid "Search on the mail server"
+msgstr ""
+
+msgid "Finds mail not downloaded yet."
 msgstr ""
 
 msgid "Read attachments"

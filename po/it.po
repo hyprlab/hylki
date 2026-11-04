@@ -127,6 +127,10 @@ msgid "Searched mail"
 msgstr "Filtri di ricerca"
 
 #, fuzzy
+msgid "Searched on the server"
+msgstr "Ricerca in corso…"
+
+#, fuzzy
 msgid "Read a message"
 msgstr "Messaggi e-mail"
 
@@ -6345,6 +6349,14 @@ msgstr ""
 #, fuzzy
 msgid "Read message text"
 msgstr "Nuovo messaggio"
+
+#, fuzzy
+msgid "Search on the mail server"
+msgstr "Ricerca in corso…"
+
+#, fuzzy
+msgid "Finds mail not downloaded yet."
+msgstr "Il messaggio non è ancora stato caricato."
 
 #, fuzzy
 msgid "Read attachments"

@@ -7,8 +7,8 @@
   the app runs, started as `hylki --mcp`. It is off by default and set up in the
   new **Settings → MCP**. Nothing is shared until you share it: each
   account has its own switch, and its own switches for seeing lists, reading
-  text, reading attachments, preparing messages, read state, stars, tags, moving
-  and Trash, with single folders kept back and Junk and Trash kept back until
+  text, searching on the mail server, reading attachments (a PDF as its text),
+  preparing messages, read state, stars, tags, moving and Trash, with single folders kept back and Junk and Trash kept back until
   allowed. Contacts have two switches of their own. **Recent Activity** lists
   what assistants did, and what they change is in **Undo**. A message an
   assistant prepares opens for you to check and send. No setting allows sending,

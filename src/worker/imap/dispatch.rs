@@ -357,6 +357,10 @@ impl<E: Emit> ImapWorker<E> {
                 self.on_find_text(gen, terms, paths);
                 After::Done
             }
+            MailRequest::AskServer(ask) => {
+                self.on_ask_server(ask);
+                After::Done
+            }
             MailRequest::UndoMove {
                 path,
                 dest,

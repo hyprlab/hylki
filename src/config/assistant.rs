@@ -17,6 +17,8 @@ pub(crate) enum AssistantCap {
     List,
     /// The text of a message.
     Read,
+    /// Search on the mail server, past what is downloaded.
+    SearchServer,
     /// The files on a message.
     Attachments,
     /// Open a composer on a message for the user to check and send.
@@ -32,9 +34,10 @@ pub(crate) enum AssistantCap {
 
 impl AssistantCap {
     /// Every capability, in the order Settings shows them.
-    pub(crate) const ALL: [AssistantCap; 9] = [
+    pub(crate) const ALL: [AssistantCap; 10] = [
         AssistantCap::List,
         AssistantCap::Read,
+        AssistantCap::SearchServer,
         AssistantCap::Attachments,
         AssistantCap::Draft,
         AssistantCap::MarkRead,
@@ -49,6 +52,7 @@ impl AssistantCap {
         match self {
             AssistantCap::List => "see message lists",
             AssistantCap::Read => "read message text",
+            AssistantCap::SearchServer => "search on the mail server",
             AssistantCap::Attachments => "read attachments",
             AssistantCap::Draft => "prepare messages",
             AssistantCap::MarkRead => "mark mail read or unread",
@@ -68,6 +72,7 @@ pub(crate) struct AccountGrant {
     pub(crate) on: bool,
     pub(crate) list: bool,
     pub(crate) read: bool,
+    pub(crate) search_server: bool,
     pub(crate) attachments: bool,
     pub(crate) draft: bool,
     pub(crate) mark_read: bool,
@@ -87,6 +92,7 @@ impl Default for AccountGrant {
             on: false,
             list: true,
             read: true,
+            search_server: true,
             attachments: false,
             draft: true,
             mark_read: false,
@@ -105,6 +111,7 @@ impl AccountGrant {
         match cap {
             AssistantCap::List => self.list,
             AssistantCap::Read => self.read,
+            AssistantCap::SearchServer => self.search_server,
             AssistantCap::Attachments => self.attachments,
             AssistantCap::Draft => self.draft,
             AssistantCap::MarkRead => self.mark_read,
@@ -119,6 +126,7 @@ impl AccountGrant {
         match cap {
             AssistantCap::List => self.list = value,
             AssistantCap::Read => self.read = value,
+            AssistantCap::SearchServer => self.search_server = value,
             AssistantCap::Attachments => self.attachments = value,
             AssistantCap::Draft => self.draft = value,
             AssistantCap::MarkRead => self.mark_read = value,
@@ -132,9 +140,11 @@ impl AccountGrant {
     /// Whether `cap` is allowed. A message is only ever named by what a
     /// list handed out, so everything done to one needs the list too: an
     /// id written by hand must not get further than a listed one. A new
-    /// message, which names none, is checked by [`Self::may_compose`].
+    /// message, which names none, is checked by [`Self::may_compose`]. A
+    /// server searches the text of messages, so what it finds says what
+    /// they hold, and asking it needs leave to read them.
     pub(crate) fn allows(&self, cap: AssistantCap) -> bool {
-        self.on && self.list && self.switch(cap)
+        self.on && self.list && self.switch(cap) && (cap != AssistantCap::SearchServer || self.read)
     }
 
     /// Whether a new message may be started from the account: unlike a
@@ -198,7 +208,12 @@ mod tests {
         let mut policy = AssistantPolicy::default();
         policy.grant_mut("Ada@Example.org").on = true;
         let grant = policy.grant("ada@example.ORG").unwrap();
-        for cap in [AssistantCap::List, AssistantCap::Read, AssistantCap::Draft] {
+        for cap in [
+            AssistantCap::List,
+            AssistantCap::Read,
+            AssistantCap::SearchServer,
+            AssistantCap::Draft,
+        ] {
             assert!(grant.allows(cap), "{cap:?}");
         }
         for cap in [
@@ -252,14 +267,30 @@ mod tests {
             }
             grant.set_switch(AssistantCap::List, true);
             grant.set_switch(cap, true);
+            // Searching on the server needs leave to read as well.
+            let read_too = cap == AssistantCap::SearchServer;
+            grant.read = grant.read || read_too;
             for other in AssistantCap::ALL {
                 assert_eq!(
                     grant.allows(other),
-                    other == cap || other == AssistantCap::List,
+                    other == cap
+                        || other == AssistantCap::List
+                        || (read_too && other == AssistantCap::Read),
                     "{cap:?} / {other:?}"
                 );
             }
         }
+    }
+
+    #[test]
+    fn a_server_is_not_asked_what_the_text_holds_without_leave_to_read_it() {
+        let mut grant = AccountGrant {
+            on: true,
+            ..Default::default()
+        };
+        assert!(grant.allows(AssistantCap::SearchServer));
+        grant.read = false;
+        assert!(!grant.allows(AssistantCap::SearchServer));
     }
 
     #[test]

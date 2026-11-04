@@ -26,6 +26,7 @@ mod activity;
 mod content;
 mod draft;
 mod organize;
+mod pdf;
 mod relay;
 mod server;
 mod tools;

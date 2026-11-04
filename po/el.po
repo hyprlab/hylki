@@ -130,6 +130,10 @@ msgid "Searched mail"
 msgstr "Αναζήτηση φίλτρων"
 
 #, fuzzy
+msgid "Searched on the server"
+msgstr "Αναζήτηση στον διακομιστή…"
+
+#, fuzzy
 msgid "Read a message"
 msgstr "Μηνύματα email"
 
@@ -6130,6 +6134,14 @@ msgstr ""
 #, fuzzy
 msgid "Read message text"
 msgstr "Νέο μήνυμα"
+
+#, fuzzy
+msgid "Search on the mail server"
+msgstr "Αναζήτηση στον διακομιστή…"
+
+#, fuzzy
+msgid "Finds mail not downloaded yet."
+msgstr "Το μήνυμα δεν έχει φορτωθεί ακόμη."
 
 #, fuzzy
 msgid "Read attachments"

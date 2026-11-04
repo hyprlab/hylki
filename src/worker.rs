@@ -53,6 +53,7 @@ pub(crate) use api::{
     begin_text_search, text_search_is_current, CalendarPart, KeyringRead, MailRequest,
     OutgoingMessage, WorkerEvent, TEXT_SEARCH_LIMIT,
 };
+pub(crate) use api::{ServerFound, ServerSearch};
 pub(crate) use auth::{forget_access_token, oauth_token_blocking};
 pub(crate) use compose::build::sent_body_preview;
 pub(crate) use compose::editable::editable_from_raw;
