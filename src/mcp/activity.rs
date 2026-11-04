@@ -1,4 +1,4 @@
-//! A record of what assistants did, for Settings → AI Assistants: the only
+//! A record of what assistants did, for Settings → MCP: the only
 //! way to learn what one read, since reading leaves no mark on the mail.
 //! It stays in memory and in the app: nothing here is written to a log file.
 

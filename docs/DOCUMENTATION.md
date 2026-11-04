@@ -1517,7 +1517,7 @@ a message that started life as Markdown lands very close to what you wrote.
 
 An AI assistant, such as Claude Code or Codex, can work with your mail through
 the [Model Context Protocol](https://modelcontextprotocol.io) while Hylki runs.
-It is off until you turn it on in **Settings → AI Assistants**, and then nothing
+It is off until you turn it on in **Settings → MCP**, and then nothing
 is shared until you share it.
 
 **Connecting.** Copy **Command for the assistant** from that page and add it to

@@ -93,7 +93,7 @@ impl Mail {
         if !policy.address_books && !policy.mail_people {
             return failure(
                 "The user has not allowed assistants to look up contacts. They can allow it in \
-                 Settings → AI Assistants."
+                 Settings → MCP."
                     .into(),
             );
         }

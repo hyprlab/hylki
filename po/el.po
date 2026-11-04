@@ -6093,7 +6093,7 @@ msgstr "Σύνταξη"
 msgid "Privacy"
 msgstr "Απόρρητο"
 
-msgid "AI Assistants"
+msgid "MCP"
 msgstr ""
 
 msgid "Date and Time"

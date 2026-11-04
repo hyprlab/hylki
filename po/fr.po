@@ -6076,7 +6076,7 @@ msgstr "Rédaction"
 msgid "Privacy"
 msgstr "Confidentialité"
 
-msgid "AI Assistants"
+msgid "MCP"
 msgstr ""
 
 msgid "Date and Time"

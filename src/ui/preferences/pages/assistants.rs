@@ -1,4 +1,4 @@
-//! Settings → AI Assistants: what an assistant may reach through `crate::mcp`.
+//! Settings → MCP: what an assistant may reach through `crate::mcp`.
 //! Nothing until the user allows it, account by account, capability by
 //! capability, folder by folder. The rows of an account are made when the page
 //! shows, since the window is built ahead of time and accounts come and go.

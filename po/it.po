@@ -6307,7 +6307,7 @@ msgstr "Composizione"
 msgid "Privacy"
 msgstr "Privacy"
 
-msgid "AI Assistants"
+msgid "MCP"
 msgstr ""
 
 msgid "Date and Time"

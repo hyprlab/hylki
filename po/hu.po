@@ -6354,7 +6354,7 @@ msgstr "Levélírás"
 msgid "Privacy"
 msgstr "Adatvédelem"
 
-msgid "AI Assistants"
+msgid "MCP"
 msgstr ""
 
 msgid "Date and Time"

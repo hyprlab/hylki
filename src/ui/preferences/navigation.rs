@@ -126,7 +126,7 @@ pub(super) const SIDE_PAGES: &[(&str, &[SidePage])] = &[
             },
             SidePage {
                 id: "assistants",
-                title: i18n_noop("AI Assistants"),
+                title: i18n_noop("MCP"),
                 icon: "network-workgroup-symbolic",
                 accounts: false,
             },

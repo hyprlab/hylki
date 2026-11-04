@@ -5,7 +5,7 @@
 - **Added: AI assistants** (#577, by Isak Samsten). An assistant such as Claude
   Code or Codex can work with your mail through the Model Context Protocol while
   the app runs, started as `hylki --mcp`. It is off by default and set up in the
-  new **Settings → AI Assistants**. Nothing is shared until you share it: each
+  new **Settings → MCP**. Nothing is shared until you share it: each
   account has its own switch, and its own switches for seeing lists, reading
   text, reading attachments, preparing messages, read state, stars, tags, moving
   and Trash, with single folders kept back and Junk and Trash kept back until

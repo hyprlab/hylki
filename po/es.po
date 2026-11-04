@@ -6063,7 +6063,7 @@ msgstr "Redacción"
 msgid "Privacy"
 msgstr "Privacidad"
 
-msgid "AI Assistants"
+msgid "MCP"
 msgstr ""
 
 msgid "Date and Time"

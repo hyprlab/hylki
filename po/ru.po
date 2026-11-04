@@ -6377,7 +6377,7 @@ msgstr "Создание писем"
 msgid "Privacy"
 msgstr "Конфиденциальность"
 
-msgid "AI Assistants"
+msgid "MCP"
 msgstr ""
 
 msgid "Date and Time"

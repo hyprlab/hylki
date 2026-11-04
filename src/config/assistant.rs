@@ -154,7 +154,7 @@ impl AccountGrant {
     }
 }
 
-/// Everything Settings → AI Assistants decides.
+/// Everything Settings → MCP decides.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(default)]
 pub(crate) struct AssistantPolicy {

@@ -6436,7 +6436,7 @@ msgstr "Pisanie wiadomości"
 msgid "Privacy"
 msgstr "Prywatność"
 
-msgid "AI Assistants"
+msgid "MCP"
 msgstr ""
 
 msgid "Date and Time"

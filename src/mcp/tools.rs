@@ -558,7 +558,7 @@ impl Mail {
             (true, Some(a)) => denied(&a.address, cap),
             _ => format!(
                 "The user has not allowed assistants to {} in any account. They can allow it in \
-                 Settings → AI Assistants.",
+                 Settings → MCP.",
                 cap.name()
             ),
         })
@@ -671,14 +671,14 @@ pub(super) fn failure(message: String) -> CallToolResult {
 pub(super) fn denied(address: &str, cap: AssistantCap) -> String {
     format!(
         "The user has not allowed assistants to {} in {address}. They can allow it in Settings → \
-         AI Assistants.",
+         MCP.",
         cap.name()
     )
 }
 
 fn none_shared() -> String {
     "The user has not shared any account with assistants. They can choose what to share in \
-     Settings → AI Assistants."
+     Settings → MCP."
         .to_string()
 }
 

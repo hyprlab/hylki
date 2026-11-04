@@ -510,7 +510,7 @@ pub(crate) struct AppModel {
     pub(super) start_fullscreen: bool,
     /// The reader beside the list (#475); off, messages open in windows.
     pub(super) reading_pane: config::ReadingPane,
-    /// What AI assistants may reach (Settings → AI Assistants), and the
+    /// What AI assistants may reach (Settings → MCP), and the
     /// connection while they may connect: see `assistant.rs`.
     pub(super) assistant_policy: config::AssistantPolicy,
     pub(super) assistant: super::assistant::Assistant,

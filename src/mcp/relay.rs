@@ -9,7 +9,7 @@ use rmcp::model::{
 use rmcp::service::RequestContext;
 use rmcp::{RoleServer, ServerHandler, ServiceExt};
 
-const UNAVAILABLE: &str = "Hylki cannot be reached. Start Hylki and turn on Settings → AI Assistants, then retry this tool. No MCP reconnect is needed.";
+const UNAVAILABLE: &str = "Hylki cannot be reached. Start Hylki and turn on Settings → MCP, then retry this tool. No MCP reconnect is needed.";
 
 pub(crate) fn run() -> ! {
     tracing_subscriber::fmt()

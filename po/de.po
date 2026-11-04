@@ -6082,7 +6082,7 @@ msgstr "Verfassen"
 msgid "Privacy"
 msgstr "Datenschutz"
 
-msgid "AI Assistants"
+msgid "MCP"
 msgstr ""
 
 msgid "Date and Time"
