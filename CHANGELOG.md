@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **Added: AI assistants** (#577, by Isak Samsten). An assistant such as Claude
+  Code or Codex can work with your mail through the Model Context Protocol while
+  the app runs, started as `hylki --mcp`. It is off by default and set up in the
+  new **Settings → AI Assistants**. Nothing is shared until you share it: each
+  account has its own switch, and its own switches for seeing lists, reading
+  text, reading attachments, preparing messages, read state, stars, tags, moving
+  and Trash, with single folders kept back and Junk and Trash kept back until
+  allowed. Contacts have two switches of their own. **Recent Activity** lists
+  what assistants did, and what they change is in **Undo**. A message an
+  assistant prepares opens for you to check and send. No setting allows sending,
+  erasing mail for good, or reading encrypted mail, which stays out of reach
+  even after you have opened it. See
+  [AI assistants](docs/DOCUMENTATION.md#ai-assistants).
 - **Added: a reminder for a forgotten attachment** (#575, by Fabio
   Rotondo). **Send** now asks first when what you wrote mentions an
   attachment, as in "please find it attached" or "in allegato", and nothing

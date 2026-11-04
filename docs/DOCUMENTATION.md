@@ -1513,6 +1513,74 @@ formatted part and a plain-text one), so re-opening it puts you in your
 default format. Switching that draft back to Markdown converts it, which for
 a message that started life as Markdown lands very close to what you wrote.
 
+### AI assistants
+
+An AI assistant, such as Claude Code or Codex, can work with your mail through
+the [Model Context Protocol](https://modelcontextprotocol.io) while Hylki runs.
+It is off until you turn it on in **Settings → AI Assistants**, and then nothing
+is shared until you share it.
+
+**Connecting.** Copy **Command for the assistant** from that page and add it to
+the assistant as a local (stdio) MCP server. In Claude Code:
+
+```sh
+claude mcp add hylki -- hylki --mcp
+```
+
+The command is written for the way your copy of Hylki is installed, so use the
+one on the page for a Flatpak or an AppImage. It connects to the running app
+through a socket only your user can open. With Hylki closed or the switch off,
+the assistant is told so.
+
+**What can be shared.** Each account has its own switch, off to start with. Once
+on, it has these, each on its own:
+
+| Switch | What it allows | At first |
+| --- | --- | --- |
+| See message lists | Senders, subjects, dates, previews and folders | On |
+| Read message text | The text of a message, and searching it | On |
+| Read attachments | The files on a message | Off |
+| Prepare messages | New messages, replies and forwards, opened for you to check | On |
+| Mark as read or unread | | Off |
+| Add and remove stars | | Off |
+| Add and remove tags | Only tags you already have | Off |
+| Move and archive | Within the account | Off |
+| Move to Trash | Mail already in Trash stays there | Off |
+
+Everything but starting a new message needs **See message lists**, since that is
+how a message is named. **Folders** on the same row keeps single folders back.
+Junk and Trash are kept back until you allow them, as mail in them is the most
+likely to carry instructions aimed at an assistant.
+
+**Contacts** has two switches of its own, off to start with: **Address books and
+directories**, and **People in your mail**. The second draws on every account,
+shared or not, because the addresses in your mail are kept together.
+
+**What no setting allows.**
+
+- Sending. A message an assistant prepares opens in a composer, with a banner
+  naming every recipient and setting apart Bcc and addresses outside your own
+  domains. You check it and send it. While you are at work in Hylki it waits,
+  with a toast and a notification, until you ask for it or leave the app.
+- Erasing mail for good.
+- Encrypted mail. An assistant sees that a message is encrypted and who it is
+  from, not its text or its files, and it cannot reply to it or forward it, even
+  after you have opened it. Hylki never asks GnuPG on an assistant's behalf.
+- Reading or attaching files from your disk.
+
+**Keeping an eye on it.** **Recent Activity** lists what assistants did, refused
+calls included, with the program's name as it gives it. The list stays in memory
+and is gone when Hylki quits. What an assistant changes is in **Undo**, as if you
+had done it. A switch you turn off holds from the assistant's next call.
+
+**Limits to keep in mind.** Mail is written by whoever sent it, and an assistant
+can be misled by what it reads. Hylki removes text a message hides with inline
+styles before an assistant sees it and tells the assistant to treat mail as data,
+but this does not catch everything, such as text colored like its background.
+What you allow an assistant to read can reach anything else that assistant is
+allowed to do, which Hylki has no say over. Any program running as your user can
+use the connection while it is on: the name in Recent Activity is its own word.
+
 ### OpenPGP (encrypted and signed mail)
 
 Hylki can read OpenPGP-encrypted mail, check signatures, and sign and encrypt
