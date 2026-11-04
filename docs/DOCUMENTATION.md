@@ -1548,6 +1548,11 @@ on, it has these, each on its own:
 | Move and archive | Within the account | Off |
 | Move to Trash | Mail already in Trash stays there | Off |
 
+**Full access**, above these, turns on all of them in every folder, Junk and Trash
+and folders you kept back included, for that account. It changes neither the
+contacts switches nor what no setting allows, and your own choices come back when
+you turn it off.
+
 Everything but starting a new message needs **See message lists**, since that is
 how a message is named. **Folders** on the same row keeps single folders back.
 Junk and Trash are kept back until you allow them, as mail in them is the most

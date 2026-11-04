@@ -5716,6 +5716,12 @@ msgstr ""
 msgid "From every account, shared or not."
 msgstr ""
 
+msgid "Full access"
+msgstr ""
+
+msgid "All of these, in every folder, Junk and Trash included."
+msgstr ""
+
 msgid "Junk and Trash are hidden until you allow them."
 msgstr ""
 

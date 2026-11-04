@@ -6462,6 +6462,13 @@ msgstr ""
 msgid "From every account, shared or not."
 msgstr "Az egyes fiókok mappalistája."
 
+#, fuzzy
+msgid "Full access"
+msgstr "Összes fiók"
+
+msgid "All of these, in every folder, Junk and Trash included."
+msgstr ""
+
 msgid "Junk and Trash are hidden until you allow them."
 msgstr ""
 

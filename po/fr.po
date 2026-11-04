@@ -6181,6 +6181,13 @@ msgstr ""
 msgid "From every account, shared or not."
 msgstr "La liste des dossiers de chaque compte."
 
+#, fuzzy
+msgid "Full access"
+msgstr "Tous les comptes"
+
+msgid "All of these, in every folder, Junk and Trash included."
+msgstr ""
+
 msgid "Junk and Trash are hidden until you allow them."
 msgstr ""
 

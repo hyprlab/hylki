@@ -6485,6 +6485,13 @@ msgstr ""
 msgid "From every account, shared or not."
 msgstr "Список папок каждой учётной записи."
 
+#, fuzzy
+msgid "Full access"
+msgstr "Все учётные записи"
+
+msgid "All of these, in every folder, Junk and Trash included."
+msgstr ""
+
 msgid "Junk and Trash are hidden until you allow them."
 msgstr ""
 

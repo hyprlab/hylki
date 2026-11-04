@@ -70,6 +70,9 @@ impl AssistantCap {
 pub(crate) struct AccountGrant {
     /// The account is shared. Off keeps the choices below for when it is on.
     pub(crate) on: bool,
+    /// Everything is allowed, in every folder, whatever the choices below
+    /// say. They are kept for when it goes off.
+    pub(crate) full: bool,
     pub(crate) list: bool,
     pub(crate) read: bool,
     pub(crate) search_server: bool,
@@ -90,6 +93,7 @@ impl Default for AccountGrant {
     fn default() -> Self {
         Self {
             on: false,
+            full: false,
             list: true,
             read: true,
             search_server: true,
@@ -144,23 +148,29 @@ impl AccountGrant {
     /// server searches the text of messages, so what it finds says what
     /// they hold, and asking it needs leave to read them.
     pub(crate) fn allows(&self, cap: AssistantCap) -> bool {
-        self.on && self.list && self.switch(cap) && (cap != AssistantCap::SearchServer || self.read)
+        self.on
+            && (self.full
+                || (self.list
+                    && self.switch(cap)
+                    && (cap != AssistantCap::SearchServer || self.read)))
     }
 
     /// Whether a new message may be started from the account: unlike a
     /// reply, it needs no message to have been listed.
     pub(crate) fn may_compose(&self) -> bool {
-        self.on && self.draft
+        self.on && (self.full || self.draft)
     }
 
     /// Whether assistants may see into a folder. Junk and Trash stay shut
     /// until asked for: mail in them is the likeliest to carry instructions
     /// aimed at an assistant.
     pub(crate) fn folder_allowed(&self, path: &str, kind: FolderKind) -> bool {
-        self.folders
-            .get(path)
-            .copied()
-            .unwrap_or(!matches!(kind, FolderKind::Junk | FolderKind::Trash))
+        self.full
+            || self
+                .folders
+                .get(path)
+                .copied()
+                .unwrap_or(!matches!(kind, FolderKind::Junk | FolderKind::Trash))
     }
 }
 
@@ -294,6 +304,39 @@ mod tests {
     }
 
     #[test]
+    fn full_access_allows_everything_and_keeps_the_choices_for_later() {
+        let mut grant = AccountGrant {
+            on: true,
+            full: true,
+            ..Default::default()
+        };
+        for cap in AssistantCap::ALL {
+            grant.set_switch(cap, false);
+        }
+        grant.folders.insert("Private".into(), false);
+        assert!(AssistantCap::ALL.iter().all(|c| grant.allows(*c)));
+        assert!(grant.may_compose());
+        for (path, kind) in [
+            ("Spam", FolderKind::Junk),
+            ("Bin", FolderKind::Trash),
+            ("Private", FolderKind::Custom),
+        ] {
+            assert!(grant.folder_allowed(path, kind), "{path}");
+        }
+
+        grant.full = false;
+        assert!(AssistantCap::ALL.iter().all(|c| !grant.allows(*c)));
+        assert!(!grant.folder_allowed("Spam", FolderKind::Junk));
+        assert!(!grant.folder_allowed("Private", FolderKind::Custom));
+
+        // An account not shared stays that way, whatever it would allow.
+        grant.full = true;
+        grant.on = false;
+        assert!(AssistantCap::ALL.iter().all(|c| !grant.allows(*c)));
+        assert!(!grant.may_compose());
+    }
+
+    #[test]
     fn junk_and_trash_stay_shut_until_asked_for() {
         let mut grant = AccountGrant::default();
         assert!(grant.folder_allowed("INBOX", FolderKind::Inbox));
@@ -322,9 +365,7 @@ mod tests {
         // A file from before a capability existed reads as not allowing it.
         let old: AssistantPolicy =
             toml::from_str("enabled = true\n[accounts.\"ada@example.org\"]\non = true\n").unwrap();
-        assert!(!old
-            .grant("ada@example.org")
-            .unwrap()
-            .allows(AssistantCap::Trash));
+        let old = old.grant("ada@example.org").unwrap();
+        assert!(!old.full && !old.allows(AssistantCap::Trash));
     }
 }

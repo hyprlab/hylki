@@ -3,7 +3,7 @@
 //! capability, folder by folder. The rows of an account are made when the page
 //! shows, since the window is built ahead of time and accounts come and go.
 
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
 use adw::prelude::*;
@@ -229,7 +229,8 @@ fn rebuild_accounts(group: &adw::PreferencesGroup, state: &Rc<PageState>) {
     }
 }
 
-/// One account's row: its switch shares it, and it opens on what is allowed.
+/// One account's row: its switch shares it, and it opens on what is allowed,
+/// with one switch above the rest for all of it.
 fn account_row(
     address: &str,
     name: &str,
@@ -261,35 +262,40 @@ fn account_row(
         });
     }
 
-    let mut needs_list = Vec::new();
-    let mut list_row = None;
-    let mut read_row = None;
-    let mut search_row = None;
+    let full_row = adw::SwitchRow::builder()
+        .title(i18n("Full access"))
+        .subtitle(i18n(
+            "All of these, in every folder, Junk and Trash included.",
+        ))
+        .active(grant.full)
+        .build();
+    row.add_row(&full_row);
+
+    // Under full access the switches show on and hold still, while the choices
+    // behind them are kept: setting a row from here is not the user's change.
+    let showing_full = Rc::new(Cell::new(false));
+    let mut cap_rows = Vec::new();
     for cap in AssistantCap::ALL {
         let (title, subtitle) = cap_text(cap);
         let switch = adw::SwitchRow::builder()
             .title(title)
-            .active(grant.switch(cap))
+            .active(grant.full || grant.switch(cap))
             .build();
         if let Some(subtitle) = subtitle {
             switch.set_subtitle(&subtitle);
         }
         let state = state.clone();
         let address_for = address.to_string();
+        let showing_full = showing_full.clone();
         switch.connect_active_notify(move |row| {
+            if showing_full.get() {
+                return;
+            }
             let on = row.is_active();
             state.change(|p| p.grant_mut(&address_for).set_switch(cap, on));
         });
         row.add_row(&switch);
-        match cap {
-            AssistantCap::List => list_row = Some(switch),
-            // A new message names no other, so drafting goes on without it.
-            AssistantCap::Draft => {}
-            // These two follow the list as well, and each other: see below.
-            AssistantCap::Read => read_row = Some(switch),
-            AssistantCap::SearchServer => search_row = Some(switch),
-            _ => needs_list.push(switch),
-        }
+        cap_rows.push((cap, switch));
     }
     let folders = adw::ActionRow::builder()
         .title(i18n("Folders"))
@@ -304,26 +310,87 @@ fn account_row(
     }
     row.add_row(&folders);
 
+    let row_for = |wanted: AssistantCap| {
+        cap_rows
+            .iter()
+            .find(|(cap, _)| *cap == wanted)
+            .map(|(_, row)| row.clone())
+    };
+    let (Some(list_row), Some(read_row), Some(search_row), Some(draft_row)) = (
+        row_for(AssistantCap::List),
+        row_for(AssistantCap::Read),
+        row_for(AssistantCap::SearchServer),
+        row_for(AssistantCap::Draft),
+    ) else {
+        return row;
+    };
     // What is done to a message needs the list that names it, and searching
-    // on the server needs leave to read: see `AccountGrant::allows`.
-    if let (Some(list_row), Some(read_row), Some(search_row)) = (list_row, read_row, search_row) {
-        let follow = {
-            let (list_row, read_row) = (list_row.clone(), read_row.clone());
-            Rc::new(move || {
-                let on = list_row.is_active();
-                for row in &needs_list {
-                    row.set_sensitive(on);
-                }
-                folders.set_sensitive(on);
-                read_row.set_sensitive(on);
-                search_row.set_sensitive(on && read_row.is_active());
+    // on the server needs leave to read: see `AccountGrant::allows`. A new
+    // message names no other, so drafting goes on without the list. Weak, for
+    // the rows this is connected to: they would otherwise never be let go of
+    // when the page rebuilds them.
+    let follow = {
+        let others: Vec<adw::SwitchRow> = cap_rows
+            .iter()
+            .filter(|(cap, _)| {
+                !matches!(
+                    cap,
+                    AssistantCap::List
+                        | AssistantCap::Read
+                        | AssistantCap::SearchServer
+                        | AssistantCap::Draft
+                )
             })
-        };
-        follow();
-        for switch in [&list_row, &read_row] {
-            let follow = follow.clone();
-            switch.connect_active_notify(move |_| follow());
-        }
+            .map(|(_, row)| row.clone())
+            .collect();
+        let (full, list, read) = (
+            full_row.downgrade(),
+            list_row.downgrade(),
+            read_row.downgrade(),
+        );
+        Rc::new(move || {
+            let (Some(full), Some(list), Some(read)) =
+                (full.upgrade(), list.upgrade(), read.upgrade())
+            else {
+                return;
+            };
+            let free = !full.is_active();
+            let listed = list.is_active();
+            list.set_sensitive(free);
+            draft_row.set_sensitive(free);
+            for row in &others {
+                row.set_sensitive(free && listed);
+            }
+            folders.set_sensitive(free && listed);
+            read.set_sensitive(free && listed);
+            search_row.set_sensitive(free && listed && read.is_active());
+        })
+    };
+    follow();
+    for switch in [&list_row, &read_row] {
+        let follow = follow.clone();
+        switch.connect_active_notify(move |_| follow());
+    }
+    {
+        let state = state.clone();
+        let address = address.to_string();
+        full_row.connect_active_notify(move |full| {
+            let on = full.is_active();
+            state.change(|p| p.grant_mut(&address).full = on);
+            let kept = state
+                .policy
+                .borrow()
+                .accounts
+                .get(&address.to_lowercase())
+                .cloned()
+                .unwrap_or_default();
+            showing_full.set(true);
+            for (cap, row) in &cap_rows {
+                row.set_active(on || kept.switch(*cap));
+            }
+            showing_full.set(false);
+            follow();
+        });
     }
     row
 }
