@@ -70,8 +70,9 @@ impl AssistantCap {
 pub(crate) struct AccountGrant {
     /// The account is shared. Off keeps the choices below for when it is on.
     pub(crate) on: bool,
-    /// Everything is allowed, in every folder, whatever the choices below
-    /// say. They are kept for when it goes off.
+    /// Everything is allowed, in every folder but Junk and Trash, whatever
+    /// the choices below say. They are kept for when it goes off. Junk and
+    /// Trash keep their own switches in `folders`.
     pub(crate) full: bool,
     pub(crate) list: bool,
     pub(crate) read: bool,
@@ -141,6 +142,15 @@ impl AccountGrant {
         }
     }
 
+    /// Back to what an account starts with. Whether it is shared stays as
+    /// it is: that is the account's own switch, not one of its permissions.
+    pub(crate) fn reset(&mut self) {
+        *self = Self {
+            on: self.on,
+            ..Self::default()
+        };
+    }
+
     /// Whether `cap` is allowed. A message is only ever named by what a
     /// list handed out, so everything done to one needs the list too: an
     /// id written by hand must not get further than a listed one. A new
@@ -162,15 +172,17 @@ impl AccountGrant {
     }
 
     /// Whether assistants may see into a folder. Junk and Trash stay shut
-    /// until asked for: mail in them is the likeliest to carry instructions
-    /// aimed at an assistant.
+    /// until asked for one by one, even under full access: mail in them is
+    /// the likeliest to carry instructions aimed at an assistant.
     pub(crate) fn folder_allowed(&self, path: &str, kind: FolderKind) -> bool {
-        self.full
-            || self
-                .folders
-                .get(path)
-                .copied()
-                .unwrap_or(!matches!(kind, FolderKind::Junk | FolderKind::Trash))
+        let open_by_default = Self::full_covers(kind);
+        (self.full && open_by_default) || self.folders.get(path).copied().unwrap_or(open_by_default)
+    }
+
+    /// Whether full access decides a folder of this kind, leaving its own
+    /// switch with nothing to say.
+    pub(crate) fn full_covers(kind: FolderKind) -> bool {
+        !matches!(kind, FolderKind::Junk | FolderKind::Trash)
     }
 }
 
@@ -304,7 +316,7 @@ mod tests {
     }
 
     #[test]
-    fn full_access_allows_everything_and_keeps_the_choices_for_later() {
+    fn full_access_allows_everything_but_junk_and_trash_and_keeps_the_choices() {
         let mut grant = AccountGrant {
             on: true,
             full: true,
@@ -316,13 +328,16 @@ mod tests {
         grant.folders.insert("Private".into(), false);
         assert!(AssistantCap::ALL.iter().all(|c| grant.allows(*c)));
         assert!(grant.may_compose());
-        for (path, kind) in [
-            ("Spam", FolderKind::Junk),
-            ("Bin", FolderKind::Trash),
-            ("Private", FolderKind::Custom),
-        ] {
-            assert!(grant.folder_allowed(path, kind), "{path}");
-        }
+        assert!(grant.folder_allowed("INBOX", FolderKind::Inbox));
+        assert!(grant.folder_allowed("Private", FolderKind::Custom));
+        assert!(!grant.folder_allowed("Spam", FolderKind::Junk));
+        assert!(!grant.folder_allowed("Bin", FolderKind::Trash));
+
+        // Their own switches still work, and only for themselves.
+        grant.folders.insert("Spam".into(), true);
+        assert!(grant.folder_allowed("Spam", FolderKind::Junk));
+        assert!(!grant.folder_allowed("Bin", FolderKind::Trash));
+        grant.folders.remove("Spam");
 
         grant.full = false;
         assert!(AssistantCap::ALL.iter().all(|c| !grant.allows(*c)));
@@ -334,6 +349,29 @@ mod tests {
         grant.on = false;
         assert!(AssistantCap::ALL.iter().all(|c| !grant.allows(*c)));
         assert!(!grant.may_compose());
+    }
+
+    #[test]
+    fn a_reset_goes_back_to_the_start_and_leaves_the_account_shared_or_not() {
+        for on in [true, false] {
+            let mut grant = AccountGrant {
+                on,
+                full: true,
+                list: false,
+                trash: true,
+                ..Default::default()
+            };
+            grant.folders.insert("Spam".into(), true);
+            grant.folders.insert("Private".into(), false);
+            grant.reset();
+            assert_eq!(
+                grant,
+                AccountGrant {
+                    on,
+                    ..Default::default()
+                }
+            );
+        }
     }
 
     #[test]

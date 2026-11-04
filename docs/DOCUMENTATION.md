@@ -1548,10 +1548,15 @@ on, it has these, each on its own:
 | Move and archive | Within the account | Off |
 | Move to Trash | Mail already in Trash stays there | Off |
 
-**Full access**, above these, turns on all of them in every folder, Junk and Trash
-and folders you kept back included, for that account. It changes neither the
+**Full access**, above these, turns on all of them for that account, in every
+folder but Junk and Trash, folders you kept back included. Junk and Trash keep their own
+switches under **Folders**, and turning them on there works with Full access too.
+It can still move mail to Trash without seeing into it. It changes neither the
 contacts switches nor what no setting allows, and your own choices come back when
 you turn it off.
+
+**Reset to Defaults**, at the end of an account's list, puts its switches and
+folders back to the table above and turns Full access off. The account stays shared.
 
 Everything but starting a new message needs **See message lists**, since that is
 how a message is named. **Folders** on the same row keeps single folders back.

@@ -5721,10 +5721,24 @@ msgstr ""
 msgid "Full access"
 msgstr ""
 
-msgid "Grant access to entire account"
+msgid "Grant access to entire account (except Trash and Junk)"
 msgstr ""
 
 msgid "Junk and Trash are hidden until you allow them."
+msgstr ""
+
+msgid "Reset to Defaults"
+msgstr ""
+
+msgid "Reset permissions?"
+msgstr ""
+
+msgid ""
+"The account stays shared, but only for reading and preparing messages. Junk "
+"and Trash are hidden again."
+msgstr ""
+
+msgid "Reset"
 msgstr ""
 
 msgid ""

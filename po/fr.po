@@ -6187,10 +6187,25 @@ msgstr "La liste des dossiers de chaque compte."
 msgid "Full access"
 msgstr "Tous les comptes"
 
-msgid "Grant access to entire account"
+msgid "Grant access to entire account (except Trash and Junk)"
 msgstr ""
 
 msgid "Junk and Trash are hidden until you allow them."
+msgstr ""
+
+#, fuzzy
+msgid "Reset to Defaults"
+msgstr "Restaurer les paramètres par défaut"
+
+msgid "Reset permissions?"
+msgstr ""
+
+msgid ""
+"The account stays shared, but only for reading and preparing messages. Junk "
+"and Trash are hidden again."
+msgstr ""
+
+msgid "Reset"
 msgstr ""
 
 msgid ""

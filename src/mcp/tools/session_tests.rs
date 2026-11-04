@@ -920,7 +920,7 @@ async fn rows_of_a_folder_the_account_does_not_have_are_out_of_reach() {
 }
 
 #[tokio::test]
-async fn full_access_opens_every_folder_and_still_not_what_no_setting_allows() {
+async fn full_access_opens_all_but_junk_and_trash_and_still_not_what_no_setting_allows() {
     let mut policy = ada_may(&[]);
     let grant = policy.grant_mut(ADA);
     grant.full = true;
@@ -932,12 +932,20 @@ async fn full_access_opens_every_folder_and_still_not_what_no_setting_allows() {
         status["accounts"][0]["allowed"].as_array().unwrap().len(),
         AssistantCap::ALL.len()
     );
-    for (folder, subject) in [("Spam", "Prize"), ("Private", "Diagnosis")] {
-        let listed = s.call("list_messages", json!({"folder":folder})).await;
-        assert_eq!(subjects(&listed), [subject], "{listed}");
-    }
+    let listed = s.call("list_messages", json!({"folder":"Private"})).await;
+    assert_eq!(subjects(&listed), ["Diagnosis"], "{listed}");
     let found = s.call("search", json!({"query":"Diagnosis"})).await;
     assert_eq!(subjects(&found), ["Diagnosis"], "{found}");
+
+    // Junk is its own choice, by name or by a message's id.
+    let junk = s.call("list_messages", json!({"folder":"Spam"})).await;
+    assert!(refused(&junk), "{junk}");
+    let by_id = s
+        .call("read_message", json!({"id":id_of(ADA, "Spam", 7)}))
+        .await;
+    assert!(refused(&by_id), "{by_id}");
+    let found = s.call("search", json!({"query":"Prize"})).await;
+    assert!(subjects(&found).is_empty(), "{found}");
 
     let trash = s
         .call("trash_messages", json!({"ids":[id_of(ADA, "INBOX", 5)]}))
@@ -959,4 +967,19 @@ async fn full_access_opens_every_folder_and_still_not_what_no_setting_allows() {
     // Another account is not shared by this one's switch.
     let other = s.call("list_messages", json!({"account":BO})).await;
     assert!(refused(&other), "{other}");
+}
+
+#[tokio::test]
+async fn junk_on_its_own_switch_opens_under_full_access() {
+    let mut policy = ada_may(&[]);
+    let grant = policy.grant_mut(ADA);
+    grant.full = true;
+    grant.folders.insert("Spam".into(), true);
+    let mut s = Session::start(policy, Ok(plain_raw("text"))).await;
+
+    let listed = s.call("list_messages", json!({"folder":"Spam"})).await;
+    assert_eq!(subjects(&listed), ["Prize"], "{listed}");
+    // Trash has a switch of its own, still off.
+    let bin = s.call("list_messages", json!({"folder":"Bin"})).await;
+    assert!(refused(&bin), "{bin}");
 }

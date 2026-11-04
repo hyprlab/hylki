@@ -248,7 +248,6 @@ fn account_row(
         .title(gtk::glib::markup_escape_text(address).as_str())
         .show_enable_switch(true)
         .enable_expansion(grant.on)
-        .expanded(grant.on)
         .build();
     if !name.is_empty() && !name.eq_ignore_ascii_case(address) {
         row.set_subtitle(&gtk::glib::markup_escape_text(name));
@@ -264,7 +263,9 @@ fn account_row(
 
     let full_row = adw::SwitchRow::builder()
         .title(i18n("Full access"))
-        .subtitle(i18n("Grant access to entire account"))
+        .subtitle(i18n(
+            "Grant access to entire account (except Trash and Junk)",
+        ))
         .active(grant.full)
         .build();
     row.add_row(&full_row);
@@ -307,6 +308,11 @@ fn account_row(
         folders.connect_activated(move |row| show_folders(row, &address, account_id, &state));
     }
     row.add_row(&folders);
+    let reset_row = adw::ActionRow::builder()
+        .title(i18n("Reset to Defaults"))
+        .activatable(true)
+        .build();
+    row.add_row(&reset_row);
 
     let row_for = |wanted: AssistantCap| {
         cap_rows
@@ -359,7 +365,8 @@ fn account_row(
             for row in &others {
                 row.set_sensitive(free && listed);
             }
-            folders.set_sensitive(free && listed);
+            // Junk and Trash are still chosen there under full access.
+            folders.set_sensitive(!free || listed);
             read.set_sensitive(free && listed);
             search_row.set_sensitive(free && listed && read.is_active());
         })
@@ -369,6 +376,27 @@ fn account_row(
         let follow = follow.clone();
         switch.connect_active_notify(move |_| follow());
     }
+    // Nothing here holds the reset row, so holding these from it makes no cycle.
+    let reset_now = {
+        let state = state.clone();
+        let address = address.to_string();
+        let full_row = full_row.clone();
+        let cap_rows = cap_rows.clone();
+        let showing_full = showing_full.clone();
+        let follow = follow.clone();
+        move || {
+            full_row.set_active(false);
+            state.change(|p| p.grant_mut(&address).reset());
+            let defaults = AccountGrant::default();
+            showing_full.set(true);
+            for (cap, row) in &cap_rows {
+                row.set_active(defaults.switch(*cap));
+            }
+            showing_full.set(false);
+            follow();
+        }
+    };
+    reset_row.connect_activated(move |row| confirm_reset(row, reset_now.clone()));
     {
         let state = state.clone();
         let address = address.to_string();
@@ -393,6 +421,27 @@ fn account_row(
     row
 }
 
+/// Ask before an account's choices are lost: nothing brings them back.
+fn confirm_reset(parent: &adw::ActionRow, reset: impl Fn() + 'static) {
+    let dialog = adw::AlertDialog::new(
+        Some(&i18n("Reset permissions?")),
+        Some(&i18n(
+            "The account stays shared, but only for reading and preparing messages. Junk and Trash are hidden again.",
+        )),
+    );
+    dialog.add_response("cancel", &i18n("Cancel"));
+    dialog.add_response("reset", &i18n("Reset"));
+    dialog.set_response_appearance("reset", adw::ResponseAppearance::Destructive);
+    dialog.set_default_response(Some("cancel"));
+    dialog.set_close_response("cancel");
+    dialog.connect_response(None, move |_, response| {
+        if response == "reset" {
+            reset();
+        }
+    });
+    dialog.present(Some(parent));
+}
+
 /// An account's folders, each with its own switch.
 fn show_folders(parent: &adw::ActionRow, address: &str, account_id: u32, state: &Rc<PageState>) {
     let folders = crate::cache::Cache::open_reader()
@@ -410,6 +459,7 @@ fn show_folders(parent: &adw::ActionRow, address: &str, account_id: u32, state: 
         let row = adw::SwitchRow::builder()
             .title(gtk::glib::markup_escape_text(&folder.path).as_str())
             .active(grant.folder_allowed(&folder.path, folder.kind))
+            .sensitive(!grant.full || !AccountGrant::full_covers(folder.kind))
             .build();
         let state = state.clone();
         let address = address.to_string();

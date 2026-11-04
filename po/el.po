@@ -6204,10 +6204,25 @@ msgstr "Η λίστα φακέλων κάθε λογαριασμού."
 msgid "Full access"
 msgstr "Όλοι οι λογαριασμοί"
 
-msgid "Grant access to entire account"
+msgid "Grant access to entire account (except Trash and Junk)"
 msgstr ""
 
 msgid "Junk and Trash are hidden until you allow them."
+msgstr ""
+
+#, fuzzy
+msgid "Reset to Defaults"
+msgstr "Επαναφορά προεπιλογών"
+
+msgid "Reset permissions?"
+msgstr ""
+
+msgid ""
+"The account stays shared, but only for reading and preparing messages. Junk "
+"and Trash are hidden again."
+msgstr ""
+
+msgid "Reset"
 msgstr ""
 
 msgid ""
