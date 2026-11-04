@@ -121,7 +121,7 @@ impl AssistantsPage {
         let accounts = adw::PreferencesGroup::builder()
             .title(i18n("Accounts"))
             .description(i18n(
-                "Nothing is shared until you allow it. Encrypted mail is never shared.",
+                "Nothing is shared until you allow it. Agents can't send mail, erase it permanently (moving to Trash is ok) or read encrypted mail.",
             ))
             .build();
         page.add(&accounts);
@@ -264,9 +264,7 @@ fn account_row(
 
     let full_row = adw::SwitchRow::builder()
         .title(i18n("Full access"))
-        .subtitle(i18n(
-            "All of these, in every folder, Junk and Trash included.",
-        ))
+        .subtitle(i18n("Grant access to entire account"))
         .active(grant.full)
         .build();
     row.add_row(&full_row);

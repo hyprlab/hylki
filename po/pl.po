@@ -6527,7 +6527,9 @@ msgstr ""
 msgid "Recent Activity"
 msgstr ""
 
-msgid "Nothing is shared until you allow it. Encrypted mail is never shared."
+msgid ""
+"Nothing is shared until you allow it. Agents can't send mail, erase it "
+"permanently (moving to Trash is ok) or read encrypted mail."
 msgstr ""
 
 msgid "Command for the assistant"
@@ -6548,7 +6550,7 @@ msgstr "Lista katalogów każdego konta."
 msgid "Full access"
 msgstr "Wszystkie konta"
 
-msgid "All of these, in every folder, Junk and Trash included."
+msgid "Grant access to entire account"
 msgstr ""
 
 msgid "Junk and Trash are hidden until you allow them."
