@@ -1568,7 +1568,8 @@ shared or not, because the addresses in your mail are kept together.
 - Sending. A message an assistant prepares opens in a composer, with a banner
   naming every recipient and setting apart Bcc and addresses outside your own
   domains. You check it and send it. While you are at work in Hylki it waits,
-  with a toast and a notification, until you ask for it or leave the app.
+  with a toast and a notification, until you ask for it or leave the app. It
+  saves to your Drafts folder meanwhile, as any composer does after 30 seconds.
 - Erasing mail for good.
 - Encrypted mail. An assistant sees that a message is encrypted and who it is
   from, not its text or its files, and it cannot reply to it or forward it, even

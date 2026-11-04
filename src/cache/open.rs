@@ -6,7 +6,8 @@ use rusqlite::{params, Connection};
 use std::time::Duration;
 
 use super::schema::{
-    ACCOUNT_TABLES, DOWNLOADED_TABLES, LAYOUT_VERSION, RENDER_VERSION, SCHEMA, SCHEMA_VERSION,
+    ACCOUNT_TABLES, DOWNLOADED_TABLES, FOLDER_TABLES, LAYOUT_VERSION, RENDER_VERSION, SCHEMA,
+    SCHEMA_VERSION,
 };
 use super::Cache;
 
@@ -113,6 +114,51 @@ impl Cache {
             )?;
         }
         tx.commit()
+    }
+
+    /// Drop what is cached for folders an account does not have: mail of a
+    /// folder deleted or renamed elsewhere, and from before
+    /// [`Self::claim_accounts`], the mail of whichever account held this
+    /// number before. Search and the gallery would find those rows, under the
+    /// wrong account. `accounts` is each one to tidy, with the folders it
+    /// hides, which are real and left out of its list. Only for accounts on
+    /// a server, where all of it can be had again: POP3 mail and On This
+    /// Computer exist nowhere else. An account with no folder list yet says
+    /// nothing about its rows. Answers how many messages went.
+    pub(crate) fn drop_rows_of_missing_folders(
+        &self,
+        accounts: &[(u32, Vec<String>)],
+    ) -> rusqlite::Result<usize> {
+        let tx = self.conn.unchecked_transaction()?;
+        let mut messages = 0;
+        for (account_id, hidden) in accounts {
+            let listed: i64 = tx.query_row(
+                "SELECT COUNT(*) FROM folders WHERE account_id = ?1",
+                [account_id],
+                |r| r.get(0),
+            )?;
+            if listed == 0 {
+                continue;
+            }
+            let marks = vec!["?"; hidden.len()].join(", ");
+            for table in FOLDER_TABLES {
+                let mut args: Vec<rusqlite::types::Value> = vec![i64::from(*account_id).into()];
+                args.extend(hidden.iter().cloned().map(rusqlite::types::Value::Text));
+                let gone = tx.execute(
+                    &format!(
+                        "DELETE FROM {table} WHERE account_id = ?1 AND folder_path NOT IN \
+                         (SELECT path FROM folders WHERE account_id = ?1) \
+                         AND folder_path NOT IN ({marks})"
+                    ),
+                    rusqlite::params_from_iter(args),
+                )?;
+                if table == "messages" {
+                    messages += gone;
+                }
+            }
+        }
+        tx.commit()?;
+        Ok(messages)
     }
 
     /// A separate WAL reader over an already-initialized cache. Background
