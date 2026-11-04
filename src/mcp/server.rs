@@ -10,6 +10,30 @@ use crate::app::AppMsg;
 /// The app's main loop, as the server reaches it.
 pub(crate) type AppLink = relm4::Sender<AppMsg>;
 
+/// A message on screen, where the cache has it: (account, folder path, UID).
+pub(crate) type Shown = (u32, String, u32);
+
+/// A conversation on screen: the message the user is on, and every message
+/// shown with it (that one too; only it, for a lone message).
+#[derive(Debug, Clone)]
+pub(crate) struct OpenThread {
+    pub(crate) selected: Shown,
+    pub(crate) members: Vec<Shown>,
+}
+
+/// What the user has open in Hylki now.
+#[derive(Debug, Default)]
+pub(crate) struct OpenNow {
+    /// The main window's: the message open in the reader, or selected in
+    /// the list with the reading pane off.
+    pub(crate) main: Option<OpenThread>,
+    /// Each message window's.
+    pub(crate) windows: Vec<OpenThread>,
+    /// The message window the user was in last, of the main window and the
+    /// message windows (its place in `windows`); `None` for the main one.
+    pub(crate) focused: Option<usize>,
+}
+
 /// What the server asks of, or tells, the app: the work only the main
 /// loop can do, or that the user should see. Each request carries where
 /// the answer goes; a server that stopped waiting has dropped its end.
@@ -45,6 +69,11 @@ pub(crate) enum AppCall {
         id: u32,
         edit: super::draft::DraftEdit,
         done: tokio::sync::oneshot::Sender<bool>,
+    },
+    /// The conversations the user has open: the main window's and each
+    /// message window's, and which of them the user was in last.
+    ReadOpen {
+        done: tokio::sync::oneshot::Sender<OpenNow>,
     },
 }
 

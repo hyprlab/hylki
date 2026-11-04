@@ -3,15 +3,18 @@
 //! the main loop: bodies downloaded as the reader downloads them, messages
 //! prepared in composers of the app's own, the way Reply and Forward
 //! prepare them, each in a window of its own that never takes over what
-//! the user is doing, and the open composers read, or handed an edit for
-//! the user to apply.
+//! the user is doing, the open composers read, or handed an edit for
+//! the user to apply, and the conversations the user has open named, in
+//! the main window and in message windows.
 
 use adw::prelude::*;
 use relm4::prelude::*;
 use tokio::sync::oneshot;
 
 use crate::i18n::{i18n, i18n_f, ni18n_f};
-use crate::mcp::{AppCall, Draft, DraftEdit, DraftKind, OpenDraft, Original, Server};
+use crate::mcp::{
+    AppCall, Draft, DraftEdit, DraftKind, OpenDraft, OpenNow, OpenThread, Original, Server, Shown,
+};
 use crate::models::Message;
 use crate::ui::compose::{ComposeInput, ComposePrefill};
 use crate::ui::preferences::{PrefInput, PrefOutput};
@@ -34,6 +37,22 @@ type WaitingBody = ((u32, String, u32), oneshot::Sender<Option<String>>);
 /// Where the server waits to hear which composer a draft opened in (its
 /// id) and how, or why it did not open.
 type Opened = oneshot::Sender<Result<(u32, String), String>>;
+
+thread_local! {
+    /// The window showing mail the user was in last: the main window or a
+    /// message window. A composer taking the focus leaves it as it was.
+    static LAST_IN_FRONT: gtk::glib::WeakRef<gtk::Window> = gtk::glib::WeakRef::new();
+}
+
+/// Have `window` count as where the user is whenever it takes the focus,
+/// for an assistant asking about "this message".
+pub(super) fn follow_focus(window: &impl IsA<gtk::Window>) {
+    window.connect_is_active_notify(|w| {
+        if w.is_active() {
+            LAST_IN_FRONT.with(|last| last.set(Some(w.upcast_ref())));
+        }
+    });
+}
 
 /// The connection while Settings has it on.
 #[derive(Debug, Default)]
@@ -59,8 +78,10 @@ struct WaitingForward {
 }
 
 impl AppModel {
-    /// Listen for assistants, if Settings says to (at start-up).
+    /// Listen for assistants, if Settings says to (at start-up); and follow
+    /// which window the user is in from the start, whatever the setting.
     pub(super) fn start_assistant_if_on(&mut self, sender: &ComponentSender<Self>) {
+        follow_focus(&self.window);
         if self.assistant_access {
             self.start_assistant(sender);
         }
@@ -156,6 +177,51 @@ impl AppModel {
             AppCall::EditDraft { id, edit, done } => {
                 let _ = done.send(self.edit_composer(id, edit));
             }
+            AppCall::ReadOpen { done } => {
+                let _ = done.send(self.open_for_assistant());
+            }
+        }
+    }
+
+    /// The conversations the user has open, each message where the cache
+    /// has it: the main window's as the reader holds it (the replies
+    /// brought in from Sent too), each message window's, and which of
+    /// those the user was in last. A message with no folder (one waiting
+    /// in the Outbox, a reply's card before the server has it) is left out.
+    fn open_for_assistant(&self) -> OpenNow {
+        let main = self.current.as_ref().and_then(|current| {
+            let at = |m: &Message| {
+                self.resolve_folder_path(m)
+                    .map(|path| (m.account_id, path, m.uid))
+            };
+            Some(on_screen(
+                at(current)?,
+                self.current_thread.iter().filter_map(at),
+            ))
+        });
+        let at = |&(account_id, folder_id, uid): &BodyKey| {
+            self.folder_path(account_id, folder_id)
+                .map(|path| (account_id, path, uid))
+        };
+        let last = LAST_IN_FRONT.with(|l| l.upgrade());
+        let mut windows: Vec<(bool, OpenThread)> = self
+            .popouts
+            .values()
+            .filter_map(|p| {
+                let thread =
+                    on_screen(at(&p.message)?, p.members.iter().filter_map(|(k, _)| at(k)));
+                let in_front = last
+                    .as_ref()
+                    .is_some_and(|w| p.window.upcast_ref::<gtk::Window>() == w);
+                Some((in_front, thread))
+            })
+            .collect();
+        // In a steady order, whatever the map's.
+        windows.sort_by(|a, b| a.1.selected.cmp(&b.1.selected));
+        OpenNow {
+            main,
+            focused: windows.iter().position(|(in_front, _)| *in_front),
+            windows: windows.into_iter().map(|(_, t)| t).collect(),
         }
     }
 
@@ -444,6 +510,16 @@ impl AppModel {
         }
         let _ = done.send(Ok((id, note)));
     }
+}
+
+/// A conversation on screen: the message the user is on, and the rest,
+/// it among them.
+fn on_screen(selected: Shown, members: impl Iterator<Item = Shown>) -> OpenThread {
+    let mut members: Vec<Shown> = members.collect();
+    if !members.contains(&selected) {
+        members.push(selected.clone());
+    }
+    OpenThread { selected, members }
 }
 
 /// Whether any window of Hylki's has the focus.

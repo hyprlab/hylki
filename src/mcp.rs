@@ -23,7 +23,7 @@ mod tools;
 
 pub(crate) use draft::{text_html, Draft, DraftEdit, DraftKind, EditOutcome, OpenDraft, Original};
 pub(crate) use relay::run as run_relay;
-pub(crate) use server::{remove_socket, AppCall, Server};
+pub(crate) use server::{remove_socket, AppCall, OpenNow, OpenThread, Server, Shown};
 
 /// The command-line flag that runs the relay instead of the app.
 pub(crate) const MCP_FLAG: &str = "--mcp";

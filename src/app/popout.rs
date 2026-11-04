@@ -220,6 +220,7 @@ impl AppModel {
 
         let window = controller.widget().clone();
         window.set_transient_for(Some(&self.window));
+        super::assistant::follow_focus(&window);
         window.present();
         controller.emit(MessageWindowInput::SetUnsubscribed(self.unsubscribed_map()));
         controller.emit(MessageWindowInput::SetReceiptMarks(self.receipt_marks()));

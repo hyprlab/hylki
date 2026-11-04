@@ -102,6 +102,7 @@ async fn an_assistant_drafts_through_the_app_and_cannot_guess_an_address() {
             "list_messages",
             "read_draft",
             "read_message",
+            "read_open_thread",
             "read_thread",
             "reply_to_message",
             "search",
@@ -278,4 +279,34 @@ async fn an_edit_waits_in_the_composer_and_reading_says_so() {
     assert!(read.contains("waiting for the user"), "{read}");
     assert!(read.contains("bo@example.com"), "{read}");
     app.join().unwrap();
+}
+
+#[tokio::test]
+async fn the_open_thread_is_asked_of_the_app() {
+    let (mut r, mut w, calls) = session().await;
+    send(
+        &mut w,
+        serde_json::json!({"jsonrpc":"2.0","id":1,"method":"initialize","params":{
+            "protocolVersion":"2025-06-18","capabilities":{},
+            "clientInfo":{"name":"test","version":"0"}}}),
+    )
+    .await;
+    answer(&mut r).await;
+    send(
+        &mut w,
+        serde_json::json!({"jsonrpc":"2.0","method":"notifications/initialized"}),
+    )
+    .await;
+
+    // Nothing open: said as such, not as a failure.
+    let app = std::thread::spawn(move || match calls.recv_sync() {
+        Some(AppMsg::Assistant(AppCall::ReadOpen { done })) => {
+            let _ = done.send(crate::mcp::OpenNow::default());
+        }
+        other => panic!("not a read of the open thread: {other:?}"),
+    });
+    let none = call(&mut r, &mut w, 2, "read_open_thread", serde_json::json!({})).await;
+    app.join().unwrap();
+    assert_ne!(none["isError"], true, "{none}");
+    assert!(none.to_string().contains("No message is open"), "{none}");
 }

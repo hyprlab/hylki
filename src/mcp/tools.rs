@@ -40,6 +40,8 @@ pub(super) const INSTRUCTIONS: &str =
 Every tool reads all accounts unless `account` (an address from list_accounts) narrows it. \
 Folders are named by role (inbox, sent, drafts, archive, junk, trash, starred, templates, \
 snoozed) or by the path list_folders gives. Pass the `id` of a listed message to read_message. \
+read_open_thread shows the message the user has open in Hylki now, with its conversation: \
+start there when the user says \"this message\" or \"this thread\". \
 compose_message, reply_to_message and forward_message prepare a message and open it in Hylki \
 for the user to check and send; nothing is ever sent from here. list_drafts and read_draft show \
 the messages being written in Hylki now, and update_draft asks for a change to one, which the \
@@ -360,50 +362,10 @@ impl Mail {
 
     #[tool(description = "One message in full: its headers and its text.")]
     async fn read_message(&self, Parameters(args): Parameters<ReadMessageArgs>) -> CallToolResult {
-        let (account, m) = match self.message(&args.id) {
-            Ok(found) => found,
-            Err(e) => return failure(e),
-        };
-        let body = self
-            .body(account.id, &m.path, m.uid)
-            .await
-            .map(|html| cap(crate::cache::body_text(&html), BODY_MAX));
-        let (body_note, preview) = match body {
-            Some(_) => (None, None),
-            None => (
-                Some(
-                    "Hylki could not download the body of this message (its account may be \
-                     offline or off); only its preview is shown.",
-                ),
-                Some(m.message.preview.clone()).filter(|p| !p.is_empty()),
-            ),
-        };
-        let (body, body_truncated) = match body {
-            Some((text, cut)) => (Some(text), cut),
-            None => (None, false),
-        };
-        let msg = &m.message;
-        json(&MessageOut {
-            id: args.id.clone(),
-            thread_id: threads::thread_id(&account.address, &m.path, msg),
-            is_part_of_thread: self.thread_members(account.id, &m.path, msg).len() > 1,
-            account: account.address.clone(),
-            folder: m.path.clone(),
-            from: sender(msg),
-            reply_to: msg.reply_to.clone(),
-            to: msg.to.clone(),
-            cc: msg.cc.clone(),
-            subject: msg.subject.clone(),
-            date: iso_date(msg.timestamp),
-            message_id: msg.message_id.clone(),
-            unread: msg.unread,
-            starred: msg.starred,
-            has_attachment: msg.has_attachment,
-            body,
-            body_truncated,
-            body_note,
-            preview,
-        })
+        match self.message_out(&args.id).await {
+            Ok(out) => json(&out),
+            Err(e) => failure(e),
+        }
     }
 }
 
@@ -424,6 +386,52 @@ struct Located {
 }
 
 impl Mail {
+    /// The message an id names in full, as read_message gives it, its
+    /// body downloaded first if it has to be.
+    async fn message_out(&self, id: &str) -> Result<MessageOut, String> {
+        let (account, m) = self.message(id)?;
+        let body = self
+            .body(account.id, &m.path, m.uid)
+            .await
+            .map(|html| cap(crate::cache::body_text(&html), BODY_MAX));
+        let (body_note, preview) = match body {
+            Some(_) => (None, None),
+            None => (
+                Some(
+                    "Hylki could not download the body of this message (its account may be \
+                     offline or off); only its preview is shown.",
+                ),
+                Some(m.message.preview.clone()).filter(|p| !p.is_empty()),
+            ),
+        };
+        let (body, body_truncated) = match body {
+            Some((text, cut)) => (Some(text), cut),
+            None => (None, false),
+        };
+        let msg = &m.message;
+        Ok(MessageOut {
+            id: id.to_string(),
+            thread_id: threads::thread_id(&account.address, &m.path, msg),
+            is_part_of_thread: self.thread_members(account.id, &m.path, msg).len() > 1,
+            account: account.address.clone(),
+            folder: m.path.clone(),
+            from: sender(msg),
+            reply_to: msg.reply_to.clone(),
+            to: msg.to.clone(),
+            cc: msg.cc.clone(),
+            subject: msg.subject.clone(),
+            date: iso_date(msg.timestamp),
+            message_id: msg.message_id.clone(),
+            unread: msg.unread,
+            starred: msg.starred,
+            has_attachment: msg.has_attachment,
+            body,
+            body_truncated,
+            body_note,
+            preview,
+        })
+    }
+
     fn lock(&self) -> std::sync::MutexGuard<'_, Cache> {
         // A tool that panicked left the connection as it was: it only reads.
         self.cache.lock().unwrap_or_else(|p| p.into_inner())
