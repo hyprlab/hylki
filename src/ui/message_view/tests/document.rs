@@ -647,3 +647,52 @@ fn a_sender_cannot_put_markup_in_the_conversation_header() {
     assert!(doc.contains("&lt;script&gt;x=1&lt;/script&gt;"), "{doc}");
     assert!(doc.contains("onerror=z&gt;"), "{doc}");
 }
+
+/// A folded card hides its frame, and a hidden frame still loads its whole
+/// document: a long conversation folded down to its newest card rendered
+/// every message at once. The folded card's frame keeps its document aside
+/// until the card opens; an open card's frame loads it as before.
+#[test]
+fn a_folded_card_does_not_load_its_message_until_opened() {
+    let mut first = msg_for_print();
+    first.body = "<p>opening</p>".into();
+    let mut second = msg_for_print();
+    second.id = 2;
+    second.body = "<p>reply</p>".into();
+    LIVE_FOLDED.with(|f| *f.borrow_mut() = [(1, 1)].into_iter().collect());
+
+    let doc = MessageView::conversation_document(
+        &[first, second],
+        &std::collections::HashMap::new(),
+        &Default::default(),
+        &Default::default(),
+        &[],
+        "#3584e4",
+        true,
+        false,
+        false,
+        false,
+        &crate::config::ReaderStyle::NONE,
+        &Default::default(),
+        false,
+        100,
+    );
+    LIVE_FOLDED.with(|f| f.borrow_mut().clear());
+
+    let frame = |key: &str| {
+        let at = doc
+            .find(&format!("<iframe class=\"hylki-frame\" data-key=\"{key}\""))
+            .expect("the card's frame");
+        doc[at..doc[at..].find("</iframe>").map(|e| at + e).unwrap()].to_string()
+    };
+    let folded = frame("1:1");
+    assert!(
+        folded.contains(" data-hylki-srcdoc=\"") && !folded.contains(" srcdoc=\""),
+        "a folded card keeps its document aside: {folded}"
+    );
+    let open = frame("1:2");
+    assert!(
+        open.contains(" srcdoc=\"") && !open.contains("data-hylki-srcdoc"),
+        "an open card loads its document: {open}"
+    );
+}
