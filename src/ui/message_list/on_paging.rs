@@ -2,6 +2,7 @@
 //! and the window of rows growing as the list scrolls.
 
 use super::rows::LIST_WINDOW;
+use super::sort::SortOrder;
 use super::threading::{source_threads_of, thread_inputs, SourceThreads};
 use super::types::{MessageListInput, MessageListOutput};
 use super::views::KEEP_AT_MOST;
@@ -38,21 +39,30 @@ impl MessageList {
         }
     }
 
-    pub(super) fn on_prebuild(&mut self, key: u64, fp: u64, messages: Vec<Message>) {
-        if self.view_key == Some(key) || self.has_view(key, fp) || messages.len() > KEEP_AT_MOST {
+    pub(super) fn on_prebuild(
+        &mut self,
+        key: u64,
+        fp: u64,
+        sort: (SortOrder, bool),
+        messages: Vec<Message>,
+    ) {
+        if self.view_key == Some(key)
+            || self.has_view(key, fp, sort)
+            || messages.len() > KEEP_AT_MOST
+        {
             return;
         }
         let all: Vec<Rc<Message>> = messages.into_iter().map(Rc::new).collect();
         self.prebuild_gen += 1;
         let gen = self.prebuild_gen;
         if !self.threading {
-            self.prebuild_view(key, fp, all, None);
+            self.prebuild_view(key, fp, sort, all, None);
             return;
         }
         let input = thread_inputs(&all);
         let links = self.thread_links.clone();
         let sender = self.input.clone();
-        self.prebuild = Some((gen, key, fp, all));
+        self.prebuild = Some((gen, key, fp, sort, all));
         std::thread::spawn(move || {
             let threads = source_threads_of(&input, &links, false);
             let _ = sender.send(MessageListInput::PrebuildThreads {
@@ -63,11 +73,11 @@ impl MessageList {
     }
 
     pub(super) fn on_prebuild_threads(&mut self, gen: u64, threads: SourceThreads) {
-        if let Some((g, key, fp, all)) = self.prebuild.take() {
+        if let Some((g, key, fp, sort, all)) = self.prebuild.take() {
             if g == gen {
-                self.prebuild_view(key, fp, all, Some(Rc::new(threads)));
+                self.prebuild_view(key, fp, sort, all, Some(Rc::new(threads)));
             } else {
-                self.prebuild = Some((g, key, fp, all));
+                self.prebuild = Some((g, key, fp, sort, all));
             }
         }
     }

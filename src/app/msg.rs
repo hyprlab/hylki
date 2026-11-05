@@ -815,6 +815,8 @@ pub(crate) enum AppMsg {
     /// The list's sort changed, by its key and whether it is reversed: the
     /// sort menus follow and it is kept (#334, #574).
     ListSortChanged(&'static str, bool),
+    /// The open view's sort becomes every view's.
+    ListSortForAll,
 
     // ---- on_identity (identity.rs) ----
     /// A Gravatar one of the accounts asked for came back (#189).

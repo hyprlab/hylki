@@ -123,7 +123,8 @@ impl AppModel {
                 continue;
             }
             let fp = content_fp(content());
-            if self.message_list.model().has_view(key, fp) {
+            let sort = self.unified_sort(view);
+            if self.message_list.model().has_view(key, fp, sort) {
                 continue;
             }
             let mut messages: Vec<Message> = content().cloned().collect();
@@ -131,10 +132,14 @@ impl AppModel {
             tracing::debug!(
                 "prebuild: {view:?}, {} messages ({})",
                 messages.len(),
-                self.message_list.model().view_miss(key, fp)
+                self.message_list.model().view_miss(key, fp, sort)
             );
-            self.message_list
-                .emit(MessageListInput::Prebuild { key, fp, messages });
+            self.message_list.emit(MessageListInput::Prebuild {
+                key,
+                fp,
+                sort,
+                messages,
+            });
             let s = sender.input_sender().clone();
             gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(300), move || {
                 let _ = s.send(AppMsg::PrebuildNext);

@@ -13,6 +13,9 @@ use gtk::glib;
 use crate::calendar::{Item, ItemKind, Source, When};
 use crate::i18n::{i18n, ni18n_f};
 
+/// The width of the dialog's form, in pixels.
+const FORM_WIDTH: i32 = 400;
+
 /// What the dialog opens with.
 pub(crate) struct Start {
     pub(crate) kind: ItemKind,
@@ -109,6 +112,10 @@ pub(crate) fn show(
     notes_label.add_css_class("heading");
 
     let bx = gtk::Box::new(gtk::Orientation::Vertical, 12);
+    // A message dialog's own width leaves a row with a date and a time too
+    // little room for its title, more so in a long translation or a large
+    // font (#564).
+    bx.set_width_request(FORM_WIDTH);
     bx.append(&form);
     bx.append(&notes_label);
     bx.append(&scroller);
@@ -368,6 +375,9 @@ impl Moment {
     fn row(&self, title: &str) -> adw::ActionRow {
         let row = adw::ActionRow::new();
         row.set_title(title);
+        // A title too long even so ends in an ellipsis rather than breaking
+        // letter by letter.
+        row.set_title_lines(1);
         let suffix = gtk::Box::new(gtk::Orientation::Horizontal, 6);
         suffix.append(&self.button);
         suffix.append(&self.time);

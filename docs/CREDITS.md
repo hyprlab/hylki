@@ -149,7 +149,10 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   the sidebar's unread chip, a setting to hide the account chip in the
   message header, a message opening as one change on screen, sooner, and
   folder counts that start from the last ones the server gave.
-
+- [**James Reilly**](https://github.com/hanthor) ([#588](https://github.com/hyprlab/hylki/pull/588),
+  [#591](https://github.com/hyprlab/hylki/pull/591)): the gap above a message
+  card reached with `w` or `b`, and Drafts shown from the cache after a send
+  from a Microsoft account.
 
 ## Reports, design and ideas
 

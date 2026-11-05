@@ -528,6 +528,19 @@ impl AppModel {
                 rekey_folder_key(k, &key_prefix, h, path, new_path);
             }
             self.save_sidebar_state();
+            // A folder keeps its sort, under its new name.
+            let sorts = std::mem::take(&mut self.list_sorts);
+            let before = sorts.keys().cloned().collect::<Vec<_>>();
+            self.list_sorts = sorts
+                .into_iter()
+                .map(|(mut k, sort)| {
+                    rekey_folder_key(&mut k, &key_prefix, h, path, new_path);
+                    (k, sort)
+                })
+                .collect();
+            if !self.list_sorts.keys().eq(before.iter()) {
+                self.save_settings();
+            }
         }
     }
 

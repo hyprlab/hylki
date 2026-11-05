@@ -891,6 +891,10 @@ msgstr "expira em {date}"
 msgid "Sort by"
 msgstr "Ordenar por"
 
+#, fuzzy
+msgid "Use for All Folders"
+msgstr "Todas as pastas"
+
 msgid "Show only"
 msgstr "Mostrar apenas"
 
@@ -3226,6 +3230,10 @@ msgstr "Tipo (Z–A)"
 
 msgid "Previous"
 msgstr "Anterior"
+
+#, fuzzy
+msgid "No preview available"
+msgstr "Não está disponível nenhuma pasta {v1}"
 
 msgid "Next"
 msgstr "Próximo"

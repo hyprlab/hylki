@@ -6,14 +6,14 @@ Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Ru
 
 ### New features:
 
-- AI agent access over MCP with per-account permissions by @isaksamsten - (#577)
+- AI agents reach your mail over MCP, as far as you allow, by @isaksamsten - (#577)
 - Agents read PDFs and search on the mail server - (#577)
-- Agents see the open conversation by @isaksamsten - (#577)
-- Agents suggest changes to open drafts by @isaksamsten - (#577)
+- Agents see the conversation you have open, by @isaksamsten - (#577)
+- Agents suggest changes to drafts for you to accept, by @isaksamsten - (#577)
 
 ### Fixes:
 
-- A long conversation no longer uses all the memory by @gonzisdev - (#581)
+- A long conversation no longer uses all the memory, by @gonzisdev - (#581)
 - Cached mail from folders an account does not have is cleared
 
 ## What's new in 1.47.0

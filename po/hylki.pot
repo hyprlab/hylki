@@ -800,6 +800,9 @@ msgstr ""
 msgid "Sort by"
 msgstr ""
 
+msgid "Use for All Folders"
+msgstr ""
+
 msgid "Show only"
 msgstr ""
 
@@ -2966,6 +2969,9 @@ msgid "Type (Z–A)"
 msgstr ""
 
 msgid "Previous"
+msgstr ""
+
+msgid "No preview available"
 msgstr ""
 
 msgid "Next"

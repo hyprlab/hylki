@@ -193,6 +193,7 @@ impl AppModel {
     fn reset_list_for_unified(&self, view: UnifiedView, account: Option<u32>) {
         self.message_list.emit(MessageListInput::SetSelected(None));
         self.message_list.emit(MessageListInput::ResetPaging);
+        self.apply_view_sort();
         self.message_list
             .emit(MessageListInput::SetScope(default_scope(
                 view == UnifiedView::Kind(FolderKind::Inbox),
@@ -304,11 +305,12 @@ impl AppModel {
             self.message_list.emit(MessageListInput::SetLoading);
         } else {
             let fp = self.unified_fp();
-            let kept = self.message_list.model().has_view(key, fp);
+            let sort = self.view_sort();
+            let kept = self.message_list.model().has_view(key, fp, sort);
             if !kept {
                 tracing::debug!(
                     "unified: not kept by the list ({})",
-                    self.message_list.model().view_miss(key, fp)
+                    self.message_list.model().view_miss(key, fp, sort)
                 );
             }
             self.message_list.emit(MessageListInput::SetView {
@@ -402,6 +404,7 @@ impl AppModel {
             folder_id,
             path: path.clone(),
         });
+        self.apply_view_sort();
         // Opening a folder is looking at it (#343).
         if self.seen_counts {
             self.push_unread_counts();

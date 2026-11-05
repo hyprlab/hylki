@@ -199,6 +199,15 @@ impl MessageList {
         let _ = sender.output(MessageListOutput::SortChanged(self.sort.key(), reversed));
     }
 
+    pub(super) fn on_apply_sort(&mut self, order: SortOrder, reversed: bool) {
+        if self.sort != order || self.sort_reversed != reversed {
+            self.sort = order;
+            self.sort_reversed = reversed;
+            self.queue_rebuild(false);
+            self.sync_headings();
+        }
+    }
+
     pub(super) fn on_resize_column(
         &mut self,
         column: crate::config::ListColumn,

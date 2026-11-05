@@ -46,6 +46,10 @@ pub(crate) use sort::SortOrder;
 pub(crate) use types::{BulkAction, MessageListInput, MessageListOutput};
 pub(crate) use views::{KEEP_AT_MOST, KEPT_VIEWS};
 
+/// A view being built ahead while its conversations are worked out: the
+/// build's number, the view's key and fingerprint, its sort, its messages.
+type PendingPrebuild = (u64, u64, u64, (SortOrder, bool), Vec<Rc<Message>>);
+
 pub(crate) struct MessageList {
     /// The rows: a `ListView` builds only the ones on screen, so a folder
     /// of any size is one list (#323).
@@ -71,7 +75,7 @@ pub(crate) struct MessageList {
     /// A view being built ahead (`Prebuild`) while its conversations are
     /// worked out off the main thread: its number, key, fingerprint and
     /// messages.
-    prebuild: Option<(u64, u64, u64, Vec<Rc<Message>>)>,
+    prebuild: Option<PendingPrebuild>,
     prebuild_gen: u64,
     /// Another view was opened: its first rebuild waits for a frame, and
     /// fills the rows for the new look in passing (#401).

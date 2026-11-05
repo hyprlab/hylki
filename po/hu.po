@@ -904,6 +904,10 @@ msgid "Sort by"
 msgstr "Rendezés"
 
 #, fuzzy
+msgid "Use for All Folders"
+msgstr "Minden mappa"
+
+#, fuzzy
 msgid "Show only"
 msgstr "Csak olvasatlanok megjelenítése"
 
@@ -3341,6 +3345,10 @@ msgstr "Típus (Z–A)"
 
 msgid "Previous"
 msgstr "Előző"
+
+#, fuzzy
+msgid "No preview available"
+msgstr "Nem érhető el a(z) {v1} mappa"
 
 msgid "Next"
 msgstr "Következő"

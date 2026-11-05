@@ -167,9 +167,11 @@ the right-click menu of the account's header or its Folders heading, forgets
 what was dragged. The item is there only once something has been.
 
 The chevrons open and close the items in the sidebar. Clicking a folder
-opens it and leaves its sub-folders as they were. Clicking the name of the
-Folders or Tags heading of an account does nothing; the chevron beside it
-opens or closes the section. Clicking Inboxes, Starred, Sent, Drafts,
+opens it and leaves its sub-folders as they were, and double-clicking it
+opens or closes them as its chevron does. The Folders, Labels and Tags
+headings of an account work the same way: a chevron or a double click opens or
+closes the section, and a single click elsewhere on it does nothing.
+Clicking Inboxes, Starred, Sent, Drafts,
 Archive, Junk or Trash in the unified section, or Favorites, Filters, Tags
 or Contacts, opens the combined list without showing each account's folder under it, and
 double-clicking it opens or closes that list as its chevron does. An
@@ -2148,9 +2150,12 @@ word, such as `10:30` or `re:`, is searched for as written.
 
 The sort and filter button in the list's header opens a popover of three
 columns. **Sort by** orders the list by date, newest or oldest first, by
-sender or subject, or puts unread or starred mail first, and the order
-chosen there or by a column heading is kept from one launch to the next.
-**Show only** holds the quick filters:
+sender or subject, or puts unread or starred mail first. The order chosen
+there or by a column heading is kept for the open folder, from one launch to
+the next, and each folder, unified row, tag and smart folder has its own.
+One where none was chosen uses the default, newest first. **Use for All
+Folders** makes the open folder's order the default and drops the orders the
+others kept. **Show only** holds the quick filters:
 
 - **Unread** and **Starred**
 - **Has Attachments**

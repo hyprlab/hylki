@@ -929,6 +929,10 @@ msgid "Sort by"
 msgstr "Sortowanie według"
 
 #, fuzzy
+msgid "Use for All Folders"
+msgstr "Wszystkie katalogi"
+
+#, fuzzy
 msgid "Show only"
 msgstr "Wyświetl tylko nieprzeczytane"
 
@@ -3393,6 +3397,10 @@ msgstr "Typ (Z–A)"
 
 msgid "Previous"
 msgstr "Poprzedni"
+
+#, fuzzy
+msgid "No preview available"
+msgstr "Brak katalogu {v1}"
 
 msgid "Next"
 msgstr "Następny"

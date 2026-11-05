@@ -670,14 +670,18 @@ flowbox.attach-flow > flowboxchild {
   margin: 0 6px;
   border-radius: 9px;
 }
-/* In the full sidebar only a heading's chevron folds its section, as a
-   parent folder's arrow does, so the heading is a plain box
-   (ui/sidebar.rs `section_heading`) laid out like the button it is in the
-   rail: Adwaita's button padding, height floor and weight. */
+/* In the full sidebar a plain click on a heading does nothing, as on an
+   account's header, so the heading is a plain box (ui/sidebar/widgets.rs
+   `section_heading`) laid out like the button it is in the rail: Adwaita's
+   button padding, height floor and weight. It lights up as that button
+   does, for the double click it takes. */
 .folders-toggle.heading-box {
   min-height: 24px;
   padding: 5px 10px;
   font-weight: bold;
+}
+.folders-toggle.heading-box:hover {
+  background-color: alpha(currentColor, 0.07);
 }
 .folders-toggle label {
   font-weight: 600;
@@ -1974,6 +1978,10 @@ headerbar box.list-tools.compact button {
 }
 .gallery-lightbox-bar .dim-label {
   color: alpha(white, 0.7);
+}
+/* The page for an item with no picture sits on the dark ground in any theme. */
+.gallery-lightbox-file {
+  color: white;
 }
 
 /* In-message attachment drawer (footer beneath the reader body). */

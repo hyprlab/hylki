@@ -31,6 +31,15 @@ pub(super) struct ListHeaderWidgets {
     sort: gtk::gio::SimpleAction,
 }
 
+impl ListHeaderWidgets {
+    /// Show the open view's sort. Setting the action's state moves the
+    /// radios without activating it, so nothing is sorted again.
+    pub(super) fn show_sort(&self, key: &str, any_kept: bool) {
+        self.sort.set_state(&key.to_variant());
+        self.filter.sort_for_all.set_sensitive(any_kept);
+    }
+}
+
 /// The orders the list header offers, by their keys in `SortOrder`. The
 /// column headings can set more (#443); none of these is ticked then.
 const SORT_ORDERS: [(&str, &str); 6] = [
@@ -47,6 +56,7 @@ const SORT_ORDERS: [(&str, &str); 6] = [
 /// the last.
 struct SortFilterPopover {
     button: gtk::MenuButton,
+    sort_for_all: gtk::Button,
     filters: Vec<(QuickFilter, gtk::CheckButton)>,
     dates: Rc<DateRange>,
     clear: gtk::Button,
@@ -314,6 +324,13 @@ impl SortFilterPopover {
         sort.connect_state_notify(move |a| {
             show_sort(a.state().and_then(|v| v.str().map(String::from)))
         });
+        let sort_for_all = gtk::Button::with_label(&i18n("Use for All Folders"));
+        sort_for_all.add_css_class("flat");
+        sort_for_all.set_halign(gtk::Align::Start);
+        sort_for_all.set_sensitive(false);
+        let s = sender.clone();
+        sort_for_all.connect_clicked(move |_| s.emit(AppMsg::ListSortForAll));
+        sort_col.append(&sort_for_all);
 
         let filter_col = column(&i18n("Show only"));
         let mut filters = Vec::new();
@@ -363,6 +380,7 @@ impl SortFilterPopover {
         button.set_popover(Some(&popover));
         Self {
             button,
+            sort_for_all,
             filters,
             dates: range,
             clear,
@@ -566,12 +584,8 @@ impl AppModel {
             AppMsg::ListColumnWidths(widths) => {
                 pref!(self.list_column_widths = widths);
             }
-            AppMsg::ListSortChanged(key, reversed) => {
-                if let Some(lh) = self.list_header_widgets.get() {
-                    lh.sort.set_state(&key.to_variant());
-                }
-                pref!(self.list_sort = (key, reversed));
-            }
+            AppMsg::ListSortChanged(key, reversed) => self.keep_view_sort(key, reversed),
+            AppMsg::ListSortForAll => self.use_view_sort_for_all(),
             _ => unreachable!("not routed to on_list_header"),
         }
     }
@@ -588,7 +602,7 @@ impl AppModel {
         let sort_action = gtk::gio::SimpleAction::new_stateful(
             "order",
             Some(gtk::glib::VariantTy::STRING),
-            &"date_newest".to_variant(),
+            &self.view_sort().0.key().to_variant(),
         );
         let list = self.message_list.sender().clone();
         sort_action.connect_activate(move |action, param| {
@@ -619,6 +633,7 @@ impl AppModel {
             ),
             sort: sort_action,
         });
+        self.show_view_sort();
         // Focus Mode's chrome as saved: nothing is mapped yet, so the
         // revealers jump to their state without animating.
         self.sync_focus_chrome();

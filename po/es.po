@@ -875,6 +875,10 @@ msgstr "Hasta {date}"
 msgid "Sort by"
 msgstr "Ordenar por"
 
+#, fuzzy
+msgid "Use for All Folders"
+msgstr "Todas las carpetas"
+
 msgid "Show only"
 msgstr "Mostrar solo"
 
@@ -3178,6 +3182,10 @@ msgstr "Tipo (Z–A)"
 
 msgid "Previous"
 msgstr "Anterior"
+
+#, fuzzy
+msgid "No preview available"
+msgstr "No hay ninguna carpeta {v1} disponible"
 
 msgid "Next"
 msgstr "Siguiente"

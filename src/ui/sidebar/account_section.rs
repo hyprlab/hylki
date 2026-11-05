@@ -6,8 +6,8 @@ use super::menus::{attach_folder_context_menu, folder_sort_menu, show_sidebar_me
 use super::tree::{hidden_by_collapse, is_main_row, nests_in_inbox, path_is_under};
 use super::types::chevron_icon;
 use super::widgets::{
-    account_gravatar, build_folder_row, filter_icon, heading_chevron, section_heading,
-    with_unread_overlay, wrap_row_in_revealer, ROW_LEFT_INSET,
+    account_gravatar, build_folder_row, filter_icon, fold_on_double_click, heading_chevron,
+    section_heading, with_unread_overlay, wrap_row_in_revealer, ROW_LEFT_INSET,
 };
 use super::*;
 
@@ -338,6 +338,15 @@ impl Sidebar {
                 icon,
                 &section.hierarchy,
             );
+            if has_children {
+                if let Some(lead) = &lead {
+                    let msg = SidebarInput::ToggleFolderNode {
+                        account_id: id,
+                        path: folder.path.clone(),
+                    };
+                    fold_on_double_click(&row, lead, msg, sender);
+                }
+            }
             if nested {
                 // Hidden while the Inbox or a parent is folded, as in
                 // the Folders section.
@@ -431,6 +440,15 @@ impl Sidebar {
                 if !self.collapsed {
                     let payload = format!("vireo-folder\t{id}\t{}", folder.path);
                     row.add_controller(folder_drag_source(&row, payload));
+                }
+                if has_children {
+                    if let Some(lead) = &lead {
+                        let msg = SidebarInput::ToggleFolderNode {
+                            account_id: id,
+                            path: folder.path.clone(),
+                        };
+                        fold_on_double_click(&row, lead, msg, sender);
+                    }
                 }
                 custom_list.append(&row);
                 if let Some(badge) = badge {

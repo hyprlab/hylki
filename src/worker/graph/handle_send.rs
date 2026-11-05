@@ -179,22 +179,17 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
                             emit,
                         )
                         .await;
-                        if let Some(token) = graph_token(account, emit).await {
-                            if let Ok(messages) = graph_load_folder(
-                                &token,
-                                account_id,
-                                o.folder_id,
-                                &o.path,
-                                cache.as_ref(),
-                                state,
-                            )
-                            .await
-                            {
-                                emit(WorkerEvent::Messages {
-                                    folder_id: o.folder_id,
-                                    messages,
-                                });
-                            }
+                        // Drafts as the cache has it, not listed again:
+                        // sendMail leaves the message in Drafts until
+                        // transport moves it to Sent Items under a new id, so
+                        // a listing now could keep a copy whose id is about
+                        // to go, and the conversation on screen would ask for
+                        // its body and get a 404 (#538).
+                        if let Some(c) = cache.as_ref() {
+                            emit(WorkerEvent::Messages {
+                                folder_id: o.folder_id,
+                                messages: c.load_messages(account_id, &o.path, o.folder_id),
+                            });
                         }
                     }
                 }

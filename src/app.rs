@@ -73,6 +73,7 @@ mod invites;
 mod keymap;
 mod keyring_alert;
 mod list_header;
+mod list_sort;
 mod merge_send;
 mod model;
 mod model_new;

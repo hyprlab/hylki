@@ -898,6 +898,10 @@ msgid "Sort by"
 msgstr "Ordina per"
 
 #, fuzzy
+msgid "Use for All Folders"
+msgstr "Tutte le cartelle"
+
+#, fuzzy
 msgid "Show only"
 msgstr "Mostra solo non letti"
 
@@ -3300,6 +3304,10 @@ msgstr "Tipo (Z–A)"
 
 msgid "Previous"
 msgstr "Precedente"
+
+#, fuzzy
+msgid "No preview available"
+msgstr "Nessuna cartella {v1} disponibile"
 
 msgid "Next"
 msgstr "Successivo"

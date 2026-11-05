@@ -93,6 +93,7 @@ impl AppModel {
         self.blank_reader();
         self.message_list.emit(MessageListInput::SetSelected(None));
         self.message_list.emit(MessageListInput::ResetPaging);
+        self.apply_view_sort();
         self.message_list
             .emit(MessageListInput::SetScope(SearchScope::ThisFolder));
         self.message_list.emit(MessageListInput::SetColorize(true));
