@@ -14,6 +14,9 @@ use std::cell::Cell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
+/// The room between two columns of the headings, as between a row's.
+const COLUMN_GAP: i32 = 8;
+
 /// Fill `bar` with the single line's column headings (#334), laid out as a
 /// row is so each sits over its column. `sorted` is the column the list is
 /// sorted by and whether it runs downwards; a heading sorts the list by its
@@ -46,7 +49,7 @@ pub(crate) fn fill_headings(
     let dot = gtk::Box::new(gtk::Orientation::Horizontal, 0);
     dot.set_size_request(10, -1);
     bar.append(&dot);
-    let line = gtk::Box::new(gtk::Orientation::Horizontal, 8);
+    let line = gtk::Box::new(gtk::Orientation::Horizontal, COLUMN_GAP);
     line.set_hexpand(true);
     bar.append(&line);
 
@@ -138,11 +141,11 @@ pub(crate) fn fill_headings(
     bins
 }
 
-/// A heading with a handle for dragging its column's width (#334), on the
-/// edge it shares with the subject: the right edge of a column before it,
-/// the left of one after it, so the edge follows the pointer. Each step of
-/// a drag is handed to `resize`, the last marked done; a double click puts
-/// the column back to its own width.
+/// A heading with a handle for dragging its column's width (#334), in the gap
+/// on the edge it shares with the subject: right of a column before it, left
+/// of one after it, so the edge follows the pointer. Each step of a drag is
+/// handed to `resize`, the last marked done; a double click puts the column
+/// back to its own width.
 fn resize_handle(
     cell: gtk::Widget,
     bin: &ColumnBin,
@@ -156,17 +159,22 @@ fn resize_handle(
     overlay.set_child(Some(&cell));
     let handle = gtk::Box::new(gtk::Orientation::Horizontal, 0);
     handle.add_css_class("column-resize-handle");
-    handle.set_size_request(8, -1);
-    handle.set_halign(if before_subject {
-        gtk::Align::End
-    } else {
-        gtk::Align::Start
-    });
+    handle.set_size_request(COLUMN_GAP, -1);
     handle.set_cursor_from_name(Some("col-resize"));
     handle.set_tooltip_text(Some(&i18n(
         "Drag to resize, double-click for the usual width",
     )));
     overlay.add_overlay(&handle);
+    // Outside the heading: inside, its line stood on the name's first letter
+    // (#579). The name cannot move over, it lines up with the rows below.
+    overlay.connect_get_child_position(move |overlay, _| {
+        let x = if before_subject {
+            overlay.width()
+        } else {
+            -COLUMN_GAP
+        };
+        Some(gtk::gdk::Rectangle::new(x, 0, COLUMN_GAP, overlay.height()))
+    });
 
     let drag = gtk::GestureDrag::new();
     let start = Rc::new(Cell::new(0));
