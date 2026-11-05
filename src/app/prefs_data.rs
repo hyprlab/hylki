@@ -141,9 +141,12 @@ impl AppModel {
             PrefOutput::ExportSettings => self.export_to_chosen_file(
                 &i18n("Export Settings"),
                 "hylki-settings.toml",
+                // Owner-only, as accounts.toml is: the bundle names every
+                // server, user name and correspondent the accounts know.
                 |path| {
-                    crate::config::export_bundle()
-                        .and_then(|t| std::fs::write(path, t).map_err(|e| e.to_string()))
+                    crate::config::export_bundle().and_then(|t| {
+                        crate::config::write_private(path, &t).map_err(|e| e.to_string())
+                    })
                 },
                 |path| {
                     i18n_f(

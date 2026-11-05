@@ -2474,6 +2474,12 @@ views' caches in `~/.cache/hylki/`, and account pictures in
 Passwords and tokens are never in those files: they go to the system keyring
 through the Secret Service. Decrypted OpenPGP messages are never cached at all.
 
+**Settings → Backup → Export settings** writes a file only you can
+read. It carries no passwords or tokens, and no OAuth client secret either:
+importing it on the same computer keeps the secret already there, and on
+another one, an account with its own OAuth client needs the secret typed in
+again.
+
 **Remote content**, once allowed for a message, is fetched by Hylki itself, with
 no cookies and no Referer, and kept in `~/.cache/hylki/remote/` for a week, up
 to 2 GB, so a message shown again does not fetch it again. **Settings →
