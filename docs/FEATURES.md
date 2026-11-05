@@ -8,6 +8,10 @@ The full list. The [README](../README.md) carries a shorter one.
   worker, with a unified *Inboxes* view across all of them.
 - **JMAP:** a Stalwart or Fastmail mailbox over the JSON mail protocol,
   including push. See [Configuration](DOCUMENTATION.md#jmap-stalwart-fastmail).
+- **Tuta:** a Tuta mailbox through a bundled helper built on Tuta's own SDK,
+  signed in with the password and an authenticator code where the account
+  has one. Hylki keeps the session, never the password. See
+  [Configuration](DOCUMENTATION.md#tuta).
 - **OAuth 2.0 sign-in:** Microsoft with Hylki's own app (no GNOME Online
   Accounts needed), Google through GNOME Online Accounts, and custom
   providers over XOAUTH2. See [Configuration](DOCUMENTATION.md#oauth-google--microsoft).

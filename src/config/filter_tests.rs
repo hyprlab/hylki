@@ -630,6 +630,7 @@ fn settings_bundle_roundtrip_parses() {
         oauth: false,
         oauth_settings: None,
         oauth_refresh: "TOKEN".into(),
+        helper_session: "SESSION".into(),
         push: None,
         folder_roles: Default::default(),
         hidden_folders: Vec::new(),
@@ -671,6 +672,7 @@ fn settings_bundle_roundtrip_parses() {
     let text = toml::to_string_pretty(&bundle).unwrap();
     assert!(!text.contains("SECRET"));
     assert!(!text.contains("TOKEN"));
+    assert!(!text.contains("SESSION"));
     let back: SettingsBundle = toml::from_str(&text).unwrap();
     assert_eq!(back.accounts[0].email, "a@b.c");
     assert!(back.accounts[0].password.is_empty());

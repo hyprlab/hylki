@@ -33,6 +33,7 @@ brands!(
     "icloud",
     "yahoo",
     "proton",
+    "tuta",
     "fastmail",
     "aol",
     "zoho",

@@ -49,6 +49,7 @@ pub(super) fn demo_account_configs() -> Vec<AccountConfig> {
         oauth: false,
         oauth_settings: None,
         oauth_refresh: String::new(),
+        helper_session: String::new(),
         push: None,
         folder_roles: Default::default(),
         hidden_folders: Vec::new(),

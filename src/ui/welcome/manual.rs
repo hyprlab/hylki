@@ -25,6 +25,7 @@ pub(super) fn form_has_input(widgets: &WelcomeWidgets) -> bool {
     typed(&widgets.name_row)
         || typed(&widgets.email_row)
         || typed(widgets.pass_row.upcast_ref())
+        || typed(&widgets.totp_row)
         || typed(&widgets.oauth_client_id_row)
         || typed(widgets.oauth_secret_row.upcast_ref())
         || typed(&widgets.oauth_auth_url_row)
@@ -128,6 +129,59 @@ impl Welcome {
             }
         });
     }
+
+    /// Tuta: sign in through the helper, which opens the session the
+    /// account keeps in place of the password. A second factor brings out
+    /// the code row, and the next Test & Add sends the code with it.
+    fn sign_in_with_helper(
+        &mut self,
+        widgets: &WelcomeWidgets,
+        sender: &ComponentSender<Self>,
+        email: String,
+        password: String,
+    ) {
+        if email.is_empty() || password.is_empty() {
+            widgets
+                .status_lbl
+                .set_css_classes(&["welcome-hint", "error"]);
+            widgets
+                .status_lbl
+                .set_text(&i18n("Enter your email address and password first."));
+            return;
+        }
+        let account = AccountConfig {
+            name: widgets.name_row.text().trim().to_string(),
+            email: email.clone(),
+            protocol: Protocol::Tuta,
+            imap_port: 0,
+            smtp_port: 0,
+            username: email.clone(),
+            ..blank_account()
+        };
+        let code = totp_code(&widgets.totp_row);
+        self.test_seq += 1;
+        let seq = self.test_seq;
+        widgets.test_spinner.set_visible(true);
+        widgets.test_spinner.start();
+        widgets.status_lbl.set_css_classes(&["welcome-hint"]);
+        widgets.status_lbl.set_text(&i18n("Signing in…"));
+        sender.oneshot_command(async move {
+            let result = tokio::task::spawn_blocking(move || {
+                worker::helper_login_blocking(Protocol::Tuta, &email, &password, code.as_deref())
+            })
+            .await
+            .unwrap_or_else(|_| {
+                Err(worker::HelperError {
+                    code: "helper_failed".into(),
+                })
+            });
+            WelcomeCmd::HelperSignedIn {
+                account: Box::new(account),
+                result,
+                seq,
+            }
+        });
+    }
 }
 
 impl Welcome {
@@ -139,6 +193,11 @@ impl Welcome {
         // the sign-in.
         let custom = wizard_provider(sel).is_some_and(|p| p.wizard_is_custom_oauth());
         let builtin = wizard_provider(sel).is_some_and(|p| p.wizard_builtin_oauth().is_some());
+        // Tuta has no servers to show, and asks for a code only once a
+        // sign-in comes back wanting one.
+        let helper = wizard_provider(sel).is_some_and(|p| p.wizard_protocol() == Protocol::Tuta);
+        widgets.totp_row.set_text("");
+        widgets.totp_row.set_visible(false);
         // A newer choice supersedes a sign-in still waiting in the
         // browser; its late result is ignored.
         self.test_seq += 1;
@@ -156,7 +215,7 @@ impl Welcome {
         ] {
             row.set_visible(custom);
         }
-        widgets.server_exp.set_visible(!builtin);
+        widgets.server_exp.set_visible(!builtin && !helper);
         widgets.add_btn.set_label(&if oauth {
             i18n("Sign In & Add")
         } else {
@@ -215,6 +274,10 @@ impl Welcome {
         let provider = wizard_provider(widgets.provider_row.selected());
         let oauth = provider.is_some_and(|p| p.wizard_is_oauth());
         let protocol = provider.map(|p| p.wizard_protocol()).unwrap_or_default();
+        if protocol == Protocol::Tuta {
+            self.sign_in_with_helper(widgets, &sender, email, password);
+            return;
+        }
         let domain = email.split('@').nth(1).unwrap_or("").to_string();
         let mut host = widgets.host_row.text().trim().to_string();
         // A JMAP server's address is the user's to give; imap.<domain>
@@ -391,6 +454,59 @@ impl Welcome {
             }
         }
     }
+
+    pub(super) fn on_helper_signed_in(
+        &mut self,
+        mut account: Box<AccountConfig>,
+        result: Result<String, worker::HelperError>,
+        seq: u32,
+        widgets: &WelcomeWidgets,
+        sender: ComponentSender<Self>,
+    ) {
+        if seq != self.test_seq {
+            return;
+        }
+        widgets.test_spinner.stop();
+        widgets.test_spinner.set_visible(false);
+        let session = match result {
+            Ok(session) => session,
+            Err(e) => return show_sign_in_failure(widgets, &e),
+        };
+        // The session is what the account keeps; the password it bought
+        // is not stored, and is cleared from the form with the code.
+        account.helper_session = session;
+        let email = account.email.clone();
+        self.added.push(email.clone());
+        widgets
+            .status_lbl
+            .set_css_classes(&["welcome-hint", "success"]);
+        widgets.status_lbl.set_text(&i18n_f(
+            "✓ {email} — signed in and added",
+            &[("email", &email)],
+        ));
+        widgets.pass_row.set_text("");
+        widgets.totp_row.set_text("");
+        widgets.totp_row.set_visible(false);
+        widgets.email_row.set_text("");
+        let _ = sender.output(WelcomeOutput::AddAccount(account));
+        self.manual_added = true;
+        self.refresh_footer(widgets);
+    }
+}
+
+/// Why a Tuta sign-in did not finish, under the button. A second factor is
+/// a step rather than a failure: the code row comes out, and the password
+/// stays so the next Test & Add can send both. The helper's text already
+/// says what failed, so it stands alone.
+fn show_sign_in_failure(widgets: &WelcomeWidgets, error: &worker::HelperError) {
+    let text = reveal_code_row(&widgets.totp_row, error);
+    let classes: &[&str] = if error.needs_second_factor() {
+        &["welcome-hint"]
+    } else {
+        &["welcome-hint", "error"]
+    };
+    widgets.status_lbl.set_css_classes(classes);
+    widgets.status_lbl.set_text(&text);
 }
 
 #[cfg(test)]
@@ -403,5 +519,71 @@ mod tests {
         assert!(wizard_providers().all(|p| p.wizard_label() != "Google (Gmail)"));
         assert!(wizard_provider(0).is_some_and(|p| p.wizard_is_manual()));
         assert!(wizard_provider(PROVIDERS.len() as u32).is_none());
+    }
+
+    /// The wizard's form for Tuta: no servers, the code row hidden until a
+    /// sign-in asks for a second factor, and hidden again for another
+    /// provider. Ignored by default: it needs a display. Run it on its own
+    /// (GTK is initialised once per process, from one thread):
+    ///
+    /// ```text
+    /// cargo test -- --ignored the_wizard_asks_for_a_tuta_code_only_when_needed
+    /// ```
+    #[test]
+    #[ignore = "needs a display"]
+    fn the_wizard_asks_for_a_tuta_code_only_when_needed() {
+        gtk::init().expect("a display");
+        adw::init().expect("libadwaita");
+        let settle = || while gtk::glib::MainContext::default().iteration(false) {};
+        let wizard = Welcome::builder().launch(()).detach();
+        let tuta = wizard_providers()
+            .position(|p| p.wizard_protocol() == Protocol::Tuta)
+            .expect("Tuta in the wizard") as u32;
+        wizard.widgets().provider_row.set_selected(tuta);
+        settle();
+        {
+            let w = wizard.widgets();
+            // The rows' own visibility: the window itself is never shown.
+            assert!(w.email_row.get_visible());
+            assert!(w.pass_row.get_visible());
+            assert!(!w.server_exp.get_visible());
+            assert!(!w.totp_row.get_visible());
+            assert_eq!(w.add_btn.label().as_deref(), Some("Test & Add"));
+
+            // Tuta wants a second factor: the code row comes out, with a
+            // hint rather than an error.
+            w.email_row.set_text("me@tuta.com");
+            w.pass_row.set_text("secret");
+            show_sign_in_failure(
+                &w,
+                &worker::HelperError {
+                    code: "second_factor_required".into(),
+                },
+            );
+            assert!(w.totp_row.get_visible());
+            assert!(!w.status_lbl.has_css_class("error"));
+            assert_eq!(w.pass_row.text(), "secret");
+            w.totp_row.set_text("123 456");
+            assert_eq!(totp_code(&w.totp_row).as_deref(), Some("123456"));
+
+            // Any other answer is an error, and leaves the row as it was.
+            show_sign_in_failure(
+                &w,
+                &worker::HelperError {
+                    code: "invalid_totp".into(),
+                },
+            );
+            assert!(w.status_lbl.has_css_class("error"));
+            assert!(w.totp_row.get_visible());
+        }
+        // Another provider puts the code row away.
+        let manual = wizard_providers()
+            .position(|p| p.wizard_is_manual())
+            .expect("the manual entry") as u32;
+        wizard.widgets().provider_row.set_selected(manual);
+        settle();
+        let w = wizard.widgets();
+        assert!(!w.totp_row.get_visible());
+        assert!(w.server_exp.get_visible());
     }
 }

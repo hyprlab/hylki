@@ -699,6 +699,35 @@ impl Cache {
             );
         }
     }
+
+    /// Fill in a row's Message-ID, References and preview once its body
+    /// has shown them, for a backend whose listings carry none (Tuta): the
+    /// listing that follows keeps them (see the Tuta worker's merge), so a
+    /// read message threads, is found again after a move and is answered
+    /// with the right In-Reply-To.
+    pub(crate) fn set_threading(
+        &self,
+        account_id: u32,
+        folder_path: &str,
+        uid: u32,
+        message_id: &str,
+        references: &str,
+        preview: &str,
+    ) {
+        let _ = self.conn.execute(
+            "UPDATE messages SET message_id = ?4, references_ = ?5, \
+             preview = CASE WHEN ?6 = '' THEN preview ELSE ?6 END \
+             WHERE account_id = ?1 AND folder_path = ?2 AND uid = ?3",
+            params![
+                account_id,
+                folder_path,
+                uid,
+                message_id,
+                references,
+                preview
+            ],
+        );
+    }
 }
 
 /// Writes every summary column of a message, `?1` to `?24` in the order

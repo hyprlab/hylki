@@ -37,6 +37,14 @@ pub(super) fn load_snoozed() -> Vec<Snooze> {
     }
 }
 
+/// Whether an account of `protocol` can snooze: snoozed mail waits in a
+/// folder on the server, which POP3 has none of and a Tuta account cannot
+/// make (its helper creates no folders), and is found again by Message-ID,
+/// which a Tuta listing lacks until the body is read.
+fn snooze_supported(protocol: config::Protocol) -> bool {
+    !matches!(protocol, config::Protocol::Pop3 | config::Protocol::Tuta)
+}
+
 /// The messages a reply in `messages` brings back early: the snoozed ones it
 /// refers to, if it was written after they were snoozed.
 fn woken_by_replies(asleep: &HashMap<&str, i64>, messages: &[Message]) -> HashSet<String> {
@@ -123,13 +131,14 @@ impl AppModel {
     }
 
     /// What the list's menus offer in a folder of `kind` (#527): nothing
-    /// in Drafts, Templates or a POP3 inbox, Unsnooze in Snoozed.
+    /// in Drafts, Templates, a POP3 inbox or a Tuta account, Unsnooze in
+    /// Snoozed.
     pub(super) fn snooze_offer(&self, account_id: u32, kind: Option<FolderKind>) -> Option<bool> {
-        let pop3 = self
+        let unsnoozable = self
             .saved_account_config(account_id)
-            .is_none_or(|c| c.protocol == config::Protocol::Pop3);
+            .is_none_or(|c| !snooze_supported(c.protocol));
         match kind {
-            _ if pop3 => None,
+            _ if unsnoozable => None,
             Some(FolderKind::Drafts | FolderKind::Templates) | None => None,
             Some(k) => Some(k == FolderKind::Snoozed),
         }
@@ -205,7 +214,7 @@ impl AppModel {
         !m.message_id.is_empty()
             && self
                 .saved_account_config(m.account_id)
-                .is_some_and(|c| c.protocol != config::Protocol::Pop3)
+                .is_some_and(|c| snooze_supported(c.protocol))
             && !matches!(
                 self.folder_kind(m.account_id, m.folder_id),
                 Some(FolderKind::Drafts | FolderKind::Templates) | None

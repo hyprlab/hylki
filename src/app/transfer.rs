@@ -73,7 +73,8 @@ impl AppModel {
     /// Whether mail from another account can be moved into this one (#265):
     /// IMAP and JMAP accounts take a message whole, and so does On This
     /// Computer (#552), which is what it is for. A Microsoft account files
-    /// one posted to a folder as a draft, and POP3 has only an inbox.
+    /// one posted to a folder as a draft, POP3 has only an inbox, and a Tuta
+    /// account's helper cannot store a message it did not send or receive.
     fn can_receive(&self, account_id: u32) -> bool {
         if demo_mode() {
             return true;

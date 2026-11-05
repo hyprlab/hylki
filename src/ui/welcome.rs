@@ -14,7 +14,7 @@ use relm4::prelude::*;
 use crate::config::Protocol;
 use crate::config::{blank_account, AccountConfig};
 use crate::i18n::{i18n, i18n_f};
-use crate::ui::accounts::{Provider, PROVIDERS};
+use crate::ui::accounts::{reveal_code_row, totp_code, Provider, PROVIDERS};
 use crate::worker::{self, ConnTest};
 
 mod goa;
@@ -63,6 +63,8 @@ pub(crate) struct WelcomeWidgets {
     name_row: adw::EntryRow,
     email_row: adw::EntryRow,
     pass_row: adw::PasswordEntryRow,
+    /// Tuta's second-factor code, shown once a sign-in asks for it.
+    totp_row: adw::EntryRow,
     server_exp: adw::ExpanderRow,
     host_row: adw::EntryRow,
     port_row: adw::EntryRow,
@@ -182,6 +184,11 @@ impl Component for Welcome {
         email_row.set_title(&i18n("Email address"));
         let pass_row = adw::PasswordEntryRow::new();
         pass_row.set_title(&i18n("Password"));
+        // Hidden until Tuta asks for it (`show_sign_in_failure`).
+        let totp_row = adw::EntryRow::new();
+        totp_row.set_title(&i18n("Authenticator code"));
+        totp_row.set_input_purpose(gtk::InputPurpose::Digits);
+        totp_row.set_visible(false);
         let server_exp = adw::ExpanderRow::new();
         server_exp.set_title(&i18n("Server details"));
         server_exp.set_subtitle(&i18n("Filled in for known providers"));
@@ -219,6 +226,7 @@ impl Component for Welcome {
         form.append(&name_row);
         form.append(&email_row);
         form.append(&pass_row);
+        form.append(&totp_row);
         for row in [
             oauth_client_id_row.upcast_ref::<gtk::Widget>(),
             oauth_secret_row.upcast_ref(),
@@ -325,6 +333,7 @@ impl Component for Welcome {
         // Typing in the manual form turns its Skip into Continue.
         for entry in [
             name_row.upcast_ref::<gtk::Editable>(),
+            totp_row.upcast_ref(),
             email_row.upcast_ref(),
             pass_row.upcast_ref(),
             host_row.upcast_ref(),
@@ -351,6 +360,7 @@ impl Component for Welcome {
             name_row,
             email_row,
             pass_row,
+            totp_row,
             server_exp,
             host_row,
             port_row,
@@ -454,6 +464,11 @@ impl Component for Welcome {
                 result,
                 seq,
             } => self.on_tested(account, result, seq, widgets, sender),
+            WelcomeCmd::HelperSignedIn {
+                account,
+                result,
+                seq,
+            } => self.on_helper_signed_in(account, result, seq, widgets, sender),
             WelcomeCmd::SignedIn {
                 account,
                 result,

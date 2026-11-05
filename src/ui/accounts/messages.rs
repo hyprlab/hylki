@@ -287,6 +287,15 @@ pub(super) type SignInResult = Result<(String, Option<(String, String)>), String
 pub(crate) enum AccountsCmd {
     /// Test-connection result.
     Test(ConnTest),
+    /// A Tuta sign-in from the editor ended: the address it signed in and
+    /// the session it opened, or why not. `editor` is the editor session it
+    /// was started in, so the answer for an editor since closed is dropped;
+    /// `then_save` says Save started it and runs again on success.
+    HelperSignIn {
+        editor: u64,
+        then_save: bool,
+        result: Result<(String, String), worker::HelperError>,
+    },
     /// A browser sign-in finished: the refresh token, and who signed in
     /// when the provider says (Microsoft); or why it failed.
     OAuth(SignInResult),

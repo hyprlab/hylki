@@ -19,6 +19,10 @@ pub(super) enum ProviderKind {
     /// A JMAP server (#245), signed in with a password: the servers are the
     /// user's own, so nothing is pre-filled but the protocol.
     Jmap,
+    /// Tuta, through the bundled `hylki-tuta` helper: Tuta has no IMAP,
+    /// so there are no servers to fill in, and a sign-in yields a session
+    /// that is kept in place of the password.
+    Tuta,
 }
 
 /// One entry in the Provider dropdown. It selects both the sign-in method and,
@@ -107,10 +111,12 @@ impl Provider {
         self.kind == ProviderKind::Jmap && self.brand == "mail-jmap"
     }
 
+    /// The entries asked for a password. Tuta is one: the password goes to
+    /// the helper once, for the session it opens.
     pub(super) fn is_password(&self) -> bool {
         matches!(
             self.kind,
-            ProviderKind::Manual | ProviderKind::Preset | ProviderKind::Jmap
+            ProviderKind::Manual | ProviderKind::Preset | ProviderKind::Jmap | ProviderKind::Tuta
         )
     }
     /// The incoming protocol the entry stands for; the manual entry and the
@@ -118,6 +124,7 @@ impl Provider {
     pub(crate) fn wizard_protocol(&self) -> Protocol {
         match self.kind {
             ProviderKind::Jmap => Protocol::Jmap,
+            ProviderKind::Tuta => Protocol::Tuta,
             ProviderKind::Microsoft => Protocol::Graph,
             _ => Protocol::Imap,
         }
@@ -151,6 +158,7 @@ pub(crate) const PROVIDERS: &[Provider] = &[
     Provider { label: "iCloud", brand: "icloud", kind: ProviderKind::Preset, imap_host: "imap.mail.me.com", imap_port: 993, smtp_host: "smtp.mail.me.com", smtp_port: 587, hint: APP_PW },
     Provider { label: "Yahoo Mail", brand: "yahoo", kind: ProviderKind::Preset, imap_host: "imap.mail.yahoo.com", imap_port: 993, smtp_host: "smtp.mail.yahoo.com", smtp_port: 465, hint: APP_PW },
     Provider { label: "Proton Mail (Bridge)", brand: "proton", kind: ProviderKind::Preset, imap_host: "127.0.0.1", imap_port: 1143, smtp_host: "127.0.0.1", smtp_port: 1025, hint: i18n_noop("Requires Proton Mail Bridge running locally.") },
+    Provider { label: "Tuta", brand: "tuta", kind: ProviderKind::Tuta, imap_host: "", imap_port: 0, smtp_host: "", smtp_port: 0, hint: i18n_noop("Signs in with your Tuta password. Hylki keeps the session it opens, not the password.") },
     Provider { label: "Fastmail", brand: "fastmail", kind: ProviderKind::Preset, imap_host: "imap.fastmail.com", imap_port: 993, smtp_host: "smtp.fastmail.com", smtp_port: 465, hint: APP_PW },
     Provider { label: "Fastmail (JMAP)", brand: "fastmail", kind: ProviderKind::Jmap, imap_host: "https://api.fastmail.com/jmap/session", imap_port: 443, smtp_host: "", smtp_port: 0, hint: i18n_noop("Signs in with an API token made in Fastmail under Privacy & Security, with access to mail and sending.") },
     Provider { label: "Stalwart (JMAP)", brand: "stalwart", kind: ProviderKind::Jmap, imap_host: "", imap_port: 443, smtp_host: "", smtp_port: 0, hint: i18n_noop("Your Stalwart server's address. No SMTP settings needed.") },
@@ -297,6 +305,9 @@ pub(super) fn provider_index_for_account(acc: &AccountConfig) -> u32 {
         };
         return kind_index(kind);
     }
+    if acc.protocol == Protocol::Tuta {
+        return kind_index(ProviderKind::Tuta);
+    }
     if acc.protocol == Protocol::Jmap {
         return jmap_index(acc);
     }
@@ -325,6 +336,9 @@ pub(super) fn brand_for_account(acc: &AccountConfig) -> &'static str {
     }
     if acc.protocol == Protocol::Graph {
         return "outlook";
+    }
+    if acc.protocol == Protocol::Tuta {
+        return "tuta";
     }
     if acc.protocol == Protocol::Jmap {
         return jmap_brand(acc);
@@ -623,6 +637,53 @@ mod tests {
         assert_eq!(
             provider_at(provider_index_for_account(&goa)).label,
             "Yahoo Mail"
+        );
+    }
+
+    #[test]
+    fn tuta_entry_signs_in_through_the_helper() {
+        let p = provider_at(kind_index(ProviderKind::Tuta));
+        assert_eq!(p.label, "Tuta");
+        assert_eq!(p.brand, "tuta");
+        assert!(crate::desktop::brand::png(p.brand).is_some());
+        assert_eq!(p.wizard_protocol(), Protocol::Tuta);
+        // Asked for a password, which buys the session; no browser.
+        assert!(p.is_password());
+        assert!(!p.wizard_is_oauth());
+        assert!(!p.wizard_token());
+        assert!(p.wizard_listed());
+        // Tuta runs no IMAP or SMTP server to point at.
+        assert_eq!(p.wizard_servers(), ("", 0, "", 0));
+        // The Bridge preset stays beside it, for those who run Bridge.
+        let bridge = PROVIDERS
+            .iter()
+            .find(|p| p.label == "Proton Mail (Bridge)")
+            .expect("the Bridge preset");
+        assert_eq!(bridge.kind, ProviderKind::Preset);
+    }
+
+    #[test]
+    fn tuta_accounts_find_their_entry_mark_and_name() {
+        let acc = AccountConfig {
+            email: "me@tuta.com".into(),
+            protocol: Protocol::Tuta,
+            ..crate::config::blank_account()
+        };
+        assert_eq!(
+            provider_at(provider_index_for_account(&acc)).kind,
+            ProviderKind::Tuta
+        );
+        assert_eq!(brand_for_account(&acc), "tuta");
+        assert_eq!(provider_name("tuta", &acc), "Tuta");
+        // A stray host left on the account does not make it a preset's.
+        let stray = AccountConfig {
+            imap_host: "imap.mail.me.com".into(),
+            ..acc
+        };
+        assert_eq!(brand_for_account(&stray), "tuta");
+        assert_eq!(
+            provider_at(provider_index_for_account(&stray)).label,
+            "Tuta"
         );
     }
 }

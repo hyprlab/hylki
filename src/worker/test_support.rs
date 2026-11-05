@@ -61,6 +61,7 @@ pub(super) fn sample_account() -> AccountConfig {
         oauth: false,
         oauth_settings: None,
         oauth_refresh: String::new(),
+        helper_session: String::new(),
     }
 }
 

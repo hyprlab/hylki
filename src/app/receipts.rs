@@ -208,7 +208,8 @@ impl AppModel {
 
     /// Remember the answer, here and, where the server keeps keywords, on
     /// the message itself as `$MDNSent`, which other mail apps read too.
-    /// Microsoft 365 has no keywords: its categories are the user's own.
+    /// Microsoft 365 has no keywords (its categories are the user's own),
+    /// and Tuta has none at all.
     fn record_receipt(&mut self, m: &Message, sent: bool) {
         self.receipts_answered
             .retain(|a| !a.key.eq_ignore_ascii_case(&m.message_id));
@@ -220,7 +221,7 @@ impl AppModel {
         config::save_receipts(&self.receipts_answered);
         // JMAP writes keywords in lower case (RFC 8621).
         match self.account_config(m.account_id).map(|c| c.protocol) {
-            Some(config::Protocol::Graph) => {}
+            Some(config::Protocol::Graph | config::Protocol::Tuta) => {}
             Some(config::Protocol::Jmap) => self.set_tag(m, "$mdnsent", true),
             _ => self.set_tag(m, "$MDNSent", true),
         }

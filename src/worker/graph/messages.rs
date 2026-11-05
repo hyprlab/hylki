@@ -4,7 +4,7 @@
 use crate::models::Message;
 use crate::worker::graph::http::{graph_get_json, graph_paged, graph_paged_more};
 use crate::worker::headers::label_from_timestamp;
-use crate::worker::ids::{hash_uid, normalize_msgid};
+use crate::worker::ids::{hash_uid, normalize_msgid, GRAPH_CONV};
 use crate::worker::preview::pgp_preview;
 
 /// The newest summaries a folder load lists, for a quick first paint; the
@@ -110,7 +110,7 @@ pub(super) fn graph_message(
         message_id: normalize_msgid(v["internetMessageId"].as_str().unwrap_or("").as_bytes()),
         references: v["conversationId"]
             .as_str()
-            .map(|c| format!("graph-conv:{}", c.to_ascii_lowercase()))
+            .map(|c| format!("{GRAPH_CONV}{}", c.to_ascii_lowercase()))
             .unwrap_or_default(),
         importance: match v["importance"].as_str() {
             Some("high") => crate::models::Importance::High,

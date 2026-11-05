@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Added: Tuta accounts.** Tuta has no IMAP, so a Tuta account goes through
+  `hylki-tuta`, a helper built on Tuta's own SDK. Choose **Tuta** in the
+  Provider list and sign in with the address and password; an account with
+  an authenticator app is asked for its code next. Hylki keeps the session in
+  the keyring, never the password. Folders, reading, read state, moving and
+  sending to other providers work. Stars stay on this computer, mail between
+  Tuta accounts is not sent end-to-end encrypted (a message to Tuta
+  recipients only is refused), new mail is polled for, and security keys are
+  not supported. See [Tuta](docs/DOCUMENTATION.md#tuta).
+
 - **Fixed: a long conversation could use all the memory** (#581, by Gonzalo
   Vasco López). A folded message card still loaded its message in the
   background, and one conversation of 83 quoted replies took the app past 14 GB.

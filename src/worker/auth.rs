@@ -206,11 +206,22 @@ const KEYRING_SILENT: Duration = Duration::from_secs(10);
 /// The passwords a starting worker needs, a legacy one on disk moved to the
 /// keyring instead (and stripped from disk). A keyring that errors or does
 /// not answer is reported, so a missing password has a reason on screen
-/// (#573). An OAuth account signs in with a token and reads nothing.
+/// (#573). An OAuth account signs in with a token and reads nothing; a Tuta
+/// account reads its helper session, since it keeps no password.
 pub(super) async fn resolve_keyring_passwords(
     account: &mut AccountConfig,
     emit: &impl Fn(WorkerEvent),
 ) {
+    if account.protocol == crate::config::Protocol::Tuta {
+        if account.helper_session.is_empty() {
+            let email = account.email.clone();
+            let read = move || crate::config::read_session(&email);
+            if let Some(session) = read_reported(read, KEYRING_SILENT, emit).await {
+                account.helper_session = session;
+            }
+        }
+        return;
+    }
     if !account.password.is_empty() {
         let _ = crate::config::store_password(&account.email, &account.password);
         crate::config::strip_passwords_on_disk();

@@ -36,3 +36,16 @@ password = "app-specific-password"
 #
 # Bridge presents a certificate it signed itself, which is accepted for
 # 127.0.0.1/localhost only — connections to any other host are fully verified.
+#
+# Tuta has no IMAP or SMTP; Hylki reaches it through its bundled hylki-tuta
+# helper. Add it from Settings or the welcome wizard (Provider: Tuta), which
+# signs in and keeps the session in the keyring. The password is never stored,
+# here or in the keyring, so a stanza written by hand only names the account
+# and still has to be signed in from Settings:
+#
+#   [[accounts]]
+#   name = "Tuta"
+#   email = "you@tuta.com"
+#   protocol = "tuta"
+#   imap_host = ""           # no server: the helper knows Tuta's
+#   username = "you@tuta.com"

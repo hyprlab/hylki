@@ -40,7 +40,19 @@ pub(crate) struct OutboxItem {
     pub(crate) status: String,
 }
 
+/// What starts `last_error` when a send of this message may have gone out
+/// (Tuta's `send_uncertain`): such a message is never sent again on its
+/// own, since a second try could deliver it twice. Kept in `last_error`,
+/// where the reason already is, so the table needs no new column; it is
+/// not shown.
+pub(crate) const SEND_UNCERTAIN_MARK: &str = "send-uncertain:";
+
 impl OutboxItem {
+    /// Whether a send of this message may already have gone out.
+    pub(crate) fn is_send_uncertain(&self) -> bool {
+        self.last_error.starts_with(SEND_UNCERTAIN_MARK)
+    }
+
     /// "Waiting since 10 minutes ago" — what the reader shows where a received
     /// message shows its date, since an unsent message has no send time yet.
     pub(crate) fn waiting_label(queued_at: i64) -> String {
@@ -108,7 +120,10 @@ impl OutboxItem {
                 let reason = if self.last_error.trim().is_empty() {
                     self.preview.trim().to_string()
                 } else {
-                    self.last_error.trim().to_string()
+                    self.last_error
+                        .trim_start_matches(SEND_UNCERTAIN_MARK)
+                        .trim()
+                        .to_string()
                 };
                 if reason.is_empty() {
                     format!("{waiting}{attempts}")

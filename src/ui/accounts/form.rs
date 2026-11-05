@@ -159,11 +159,12 @@ pub(super) fn read_account(
     let default_port = match protocol {
         Protocol::Pop3 => 995,
         Protocol::Jmap => 443,
+        Protocol::Tuta => 0,
         _ => 993,
     };
     let jmap_token = protocol == Protocol::Jmap && widgets.form.jmap_token_row.is_active();
     let jmap_generic = provider_at(widgets.form.provider_row.selected()).wizard_jmap_generic();
-    AccountConfig {
+    let mut account = AccountConfig {
         name: trimmed(&widgets.form.name_row),
         email: trimmed(&widgets.form.email_row),
         protocol,
@@ -217,6 +218,8 @@ pub(super) fn read_account(
         oauth: false,
         oauth_settings: None,
         oauth_refresh: String::new(),
+        // Set by SaveWithSig from the editor's own sign-in.
+        helper_session: String::new(),
         push: match widgets.form.push_row.selected() {
             1 => Some(true),
             2 => Some(false),
@@ -278,7 +281,29 @@ pub(super) fn read_account(
         graph_directory_only: protocol == Protocol::Graph
             && widgets.form.directory_only_row.is_active(),
         graph_label_names: protocol == Protocol::Graph && widgets.form.graph_labels_row.is_active(),
+    };
+    if protocol == Protocol::Tuta {
+        drop_server_fields(&mut account);
     }
+    account
+}
+
+/// Clear what a Tuta account has no use for. The helper reaches Tuta's own
+/// servers and signs in with the address, so the server, SMTP and push
+/// rows are hidden for it, and would only carry what another provider
+/// picked before it left in them.
+pub(super) fn drop_server_fields(account: &mut AccountConfig) {
+    account.imap_host.clear();
+    account.imap_port = 0;
+    account.smtp_host.clear();
+    account.smtp_port = 0;
+    account.username = account.email.clone();
+    account.smtp_separate = false;
+    account.smtp_username.clear();
+    account.smtp_password.clear();
+    account.tls_accept_hostname_mismatch = false;
+    account.jmap_token = false;
+    account.push = None;
 }
 
 /// The editor's OpenPGP combo (#133): the fingerprints behind its rows, and
@@ -485,6 +510,9 @@ pub(super) fn fill_editor(widgets: &AccountsWindowWidgets, acc: &AccountConfig) 
         .set_text(&acc.smtp_port.to_string());
     widgets.form.user_row.set_text(&acc.username);
     widgets.form.pass_row.set_text(&acc.password);
+    // A code is good for one sign-in, and only asked for once Tuta wants one.
+    widgets.form.totp_row.set_text("");
+    widgets.form.totp_row.set_visible(false);
     widgets.form.smtp_separate_row.set_active(acc.smtp_separate);
     widgets
         .form
@@ -640,6 +668,8 @@ pub(super) fn clear_editor(widgets: &AccountsWindowWidgets) {
     widgets.form.smtp_port_row.set_text("587");
     widgets.form.user_row.set_text("");
     widgets.form.pass_row.set_text("");
+    widgets.form.totp_row.set_text("");
+    widgets.form.totp_row.set_visible(false);
     widgets.form.smtp_separate_row.set_active(false);
     widgets.form.tls_mismatch_row.set_active(false);
     widgets.form.push_row.set_selected(0);
@@ -685,11 +715,40 @@ pub(super) fn trimmed(row: &impl IsA<gtk::Editable>) -> String {
     row.text().trim().to_string()
 }
 
+/// The second-factor code to sign in with: the code row's text without the
+/// spaces authenticator apps show in it ("123 456"), or none while the row
+/// is hidden or empty.
+pub(crate) fn totp_code(row: &adw::EntryRow) -> Option<String> {
+    if !row.get_visible() {
+        return None;
+    }
+    code_without_spaces(&row.text())
+}
+
+fn code_without_spaces(text: &str) -> Option<String> {
+    let code: String = text.chars().filter(|c| !c.is_whitespace()).collect();
+    (!code.is_empty()).then_some(code)
+}
+
+/// What to say about a Tuta sign-in that did not finish, with the code row
+/// brought out when that is why: a second factor is a step, not a failure,
+/// and the next sign-in sends the code. Shared with the welcome wizard.
+pub(crate) fn reveal_code_row(row: &adw::EntryRow, error: &crate::worker::HelperError) -> String {
+    if error.needs_second_factor() {
+        row.set_text("");
+        row.set_visible(true);
+        row.grab_focus();
+        return i18n("Enter the code from your authenticator app, then sign in again.");
+    }
+    error.message()
+}
+
 /// The protocol the form stands for: the provider's own for one that has
 /// one (the JMAP entries'), otherwise the Incoming Protocol row's.
 pub(super) fn form_protocol(widgets: &AccountsWindowWidgets) -> Protocol {
     match provider_at(widgets.form.provider_row.selected()).kind {
         ProviderKind::Jmap => Protocol::Jmap,
+        ProviderKind::Tuta => Protocol::Tuta,
         // Hylki's own Microsoft sign-in asks for Graph, not IMAP (#329).
         ProviderKind::Microsoft => Protocol::Graph,
         _ => protocol_at(widgets.form.protocol_row.selected()),
@@ -700,7 +759,14 @@ pub(super) fn form_protocol(widgets: &AccountsWindowWidgets) -> Protocol {
 /// through its server, so the SMTP rows go, and the server row takes a host
 /// or a URL rather than an IMAP host and port.
 pub(super) fn apply_protocol(widgets: &AccountsWindowWidgets) {
-    let jmap = form_protocol(widgets) == Protocol::Jmap;
+    let protocol = form_protocol(widgets);
+    let jmap = protocol == Protocol::Jmap;
+    // Tuta is signed in to with the address alone, and asks for a code
+    // only when the account has one (see `on_helper_signed_in`).
+    let helper = protocol == Protocol::Tuta;
+    if !helper {
+        widgets.form.totp_row.set_visible(false);
+    }
     // Only where the servers are shown at all (OAuth providers hide them).
     let servers_shown = widgets.form.host_row.is_visible();
     widgets.form.smtp_row.set_visible(servers_shown && !jmap);
@@ -726,7 +792,7 @@ pub(super) fn apply_protocol(widgets: &AccountsWindowWidgets) {
         .set_visible(servers_shown && jmap && password_shown);
     let token = jmap && widgets.form.jmap_token_row.is_active();
     if password_shown {
-        widgets.form.user_row.set_visible(!token);
+        widgets.form.user_row.set_visible(!token && !helper);
         widgets.form.pass_row.set_title(&if token {
             i18n("API Token")
         } else {
@@ -769,5 +835,128 @@ mod tests {
         );
         assert_eq!(auto_empty_labels().len(), AUTO_EMPTY_DAYS.len());
         assert_eq!(CLEAN_LISTS_DAYS, [0, 30, 60, 90, 180]);
+    }
+
+    #[test]
+    fn a_tuta_account_keeps_no_servers() {
+        let mut acc = AccountConfig {
+            email: "me@tuta.com".into(),
+            protocol: Protocol::Tuta,
+            // What an IMAP preset picked first leaves in the hidden rows.
+            imap_host: "imap.mail.me.com".into(),
+            imap_port: 993,
+            smtp_host: "smtp.mail.me.com".into(),
+            smtp_port: 587,
+            username: "someone-else".into(),
+            smtp_separate: true,
+            smtp_username: "smtp-user".into(),
+            smtp_password: "smtp-pw".into(),
+            tls_accept_hostname_mismatch: true,
+            push: Some(true),
+            ..crate::config::blank_account()
+        };
+        drop_server_fields(&mut acc);
+        assert_eq!((acc.imap_host.as_str(), acc.imap_port), ("", 0));
+        assert_eq!((acc.smtp_host.as_str(), acc.smtp_port), ("", 0));
+        assert_eq!(acc.username, "me@tuta.com");
+        assert!(!acc.smtp_separate);
+        assert!(acc.smtp_username.is_empty() && acc.smtp_password.is_empty());
+        assert!(!acc.tls_accept_hostname_mismatch);
+        assert_eq!(acc.push, None);
+    }
+
+    #[test]
+    fn codes_lose_the_spaces_apps_show() {
+        assert_eq!(code_without_spaces("123 456").as_deref(), Some("123456"));
+        assert_eq!(code_without_spaces(" 123456\n").as_deref(), Some("123456"));
+        assert_eq!(code_without_spaces("   "), None);
+        assert_eq!(code_without_spaces(""), None);
+    }
+
+    /// A Tuta account through the real editor: filled in, read back, the
+    /// rows the form shows for it, and the code row a second factor brings
+    /// out. Ignored by default: it needs a display. Run it on its own (GTK
+    /// is initialised once per process, from one thread):
+    ///
+    /// ```text
+    /// cargo test -- --ignored tuta_account_round_trips_through_the_editor
+    /// ```
+    #[test]
+    #[ignore = "needs a display"]
+    fn tuta_account_round_trips_through_the_editor() {
+        gtk::init().expect("a display");
+        adw::init().expect("libadwaita");
+        let panel = AccountsWindow::builder()
+            .launch(AccountsInit {
+                accounts: Vec::new(),
+                allowed_senders: Vec::new(),
+                blacklist: Vec::new(),
+                filters: Vec::new(),
+                tags: Vec::new(),
+                smart_folders: Vec::new(),
+            })
+            .detach();
+        let w = panel.widgets();
+        let acc = AccountConfig {
+            name: "Me".into(),
+            email: "me@tuta.com".into(),
+            protocol: Protocol::Tuta,
+            username: "me@tuta.com".into(),
+            imap_port: 0,
+            smtp_port: 0,
+            ..crate::config::blank_account()
+        };
+        fill_editor(&w, &acc);
+        panel.model().apply_provider(&w);
+        assert_eq!(form_protocol(&w), Protocol::Tuta);
+
+        let back = read_account(&w, None, None);
+        assert_eq!(back.protocol, Protocol::Tuta);
+        assert_eq!(back.name, "Me");
+        assert_eq!(back.email, "me@tuta.com");
+        assert_eq!(back.username, "me@tuta.com");
+        assert_eq!((back.imap_host.as_str(), back.imap_port), ("", 0));
+        assert_eq!((back.smtp_host.as_str(), back.smtp_port), ("", 0));
+        assert!(back.password.is_empty());
+        assert!(back.helper_session.is_empty());
+        assert!(!back.oauth);
+
+        // The address and password, and nothing about servers.
+        assert!(w.form.email_row.get_visible());
+        assert!(w.form.pass_row.get_visible());
+        for row in [
+            w.form.protocol_row.upcast_ref::<gtk::Widget>(),
+            w.form.host_row.upcast_ref(),
+            w.form.port_row.upcast_ref(),
+            w.form.smtp_row.upcast_ref(),
+            w.form.smtp_port_row.upcast_ref(),
+            w.form.user_row.upcast_ref(),
+            w.form.smtp_separate_row.upcast_ref(),
+            w.form.tls_mismatch_row.upcast_ref(),
+            w.form.jmap_token_row.upcast_ref(),
+        ] {
+            assert!(!row.get_visible(), "{}", row.type_().name());
+        }
+        assert!(!w.form.totp_row.get_visible());
+
+        // A second factor brings the code row out, and the code is sent
+        // without the space the app showed in it.
+        let hint = reveal_code_row(
+            &w.form.totp_row,
+            &crate::worker::HelperError {
+                code: "second_factor_required".into(),
+            },
+        );
+        assert!(!hint.is_empty());
+        assert!(w.form.totp_row.get_visible());
+        w.form.totp_row.set_text("123 456");
+        assert_eq!(totp_code(&w.form.totp_row).as_deref(), Some("123456"));
+
+        // Another provider puts it away again.
+        w.form.provider_row.set_selected(manual_index());
+        panel.model().apply_provider(&w);
+        assert!(!w.form.totp_row.get_visible());
+        assert!(w.form.host_row.get_visible());
+        assert_eq!(totp_code(&w.form.totp_row), None);
     }
 }

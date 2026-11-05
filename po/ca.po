@@ -1040,6 +1040,9 @@ msgstr "Missatge nou a partir d'una plantilla"
 msgid "Send the message you are writing"
 msgstr "Envia el missatge que estàs escrivint"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Adjunta fitxers"
 
@@ -2567,6 +2570,12 @@ msgstr ""
 "El Microsoft 365 arxiva la seva pròpia còpia a Elements enviats; això no es "
 "pot canviar."
 
+#, fuzzy
+msgid "Tuta files its own copy in Sent; this cannot be changed."
+msgstr ""
+"El Microsoft 365 arxiva la seva pròpia còpia a Elements enviats; això no es "
+"pot canviar."
+
 msgid "POP3 accounts have no server folders to save a copy in."
 msgstr "Els comptes POP3 no tenen carpetes de servidor on desar una còpia."
 
@@ -2584,11 +2593,31 @@ msgstr ""
 "Demana accés a Microsoft. Algunes organitzacions necessiten que un "
 "administrador ho aprovi."
 
+msgid "Sign In"
+msgstr "Inicia sessió"
+
+msgid "Test Connection"
+msgstr "Prova la connexió"
+
 msgid "Choose a Picture"
 msgstr "Tria una imatge"
 
 msgid "Images"
 msgstr "Imatges"
+
+msgid "Enter your email address and password first."
+msgstr "Introdueix primer la teva adreça de correu i la contrasenya."
+
+msgid "Signing in…"
+msgstr "S'està iniciant la sessió…"
+
+#, fuzzy
+msgid "✓ Tuta: signed in"
+msgstr "Sense sessió iniciada"
+
+#, fuzzy
+msgid "✗ Tuta: {e}"
+msgstr "✗ SMTP: {e}"
 
 msgid ""
 "The certificate is for another name. If this server is the right one, turn "
@@ -2689,6 +2718,9 @@ msgid "After {n} day"
 msgid_plural "After {n} days"
 msgstr[0] "Després d'{n} dia"
 msgstr[1] "Després de {n} dies"
+
+msgid "Enter the code from your authenticator app, then sign in again."
+msgstr ""
 
 msgid "API Token"
 msgstr "Token d'API"
@@ -2888,6 +2920,11 @@ msgid "Requires Proton Mail Bridge running locally."
 msgstr "Requereix el Proton Mail Bridge en execució local."
 
 msgid ""
+"Signs in with your Tuta password. Hylki keeps the session it opens, not the "
+"password."
+msgstr ""
+
+msgid ""
 "Signs in with an API token made in Fastmail under Privacy & Security, with "
 "access to mail and sending."
 msgstr ""
@@ -2924,6 +2961,10 @@ msgstr "Compte IMAP/POP3 a {host}"
 
 msgid "Mail account"
 msgstr "Compte de correu"
+
+#, fuzzy
+msgid "Enter your password and sign in to Tuta before saving."
+msgstr "Introdueix un ID de client i inicia sessió abans de desar"
 
 msgid "Enter a client ID and sign in before saving"
 msgstr "Introdueix un ID de client i inicia sessió abans de desar"
@@ -3460,8 +3501,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -3471,8 +3512,8 @@ msgstr ""
 "1. A dropbox.com/developers/apps, prem Create app.\n"
 "2. Tria Scoped access, i després App folder o Full Dropbox.\n"
 "3. Dona-li un nom que ningú més no hagi fet servir i prem Create app.\n"
-"4. A Permissions, marca account_info.read, files.content.write i "
-"sharing.write, i després prem Submit.\n"
+"4. A Permissions, marca account_info.read, files.content.write i sharing."
+"write, i després prem Submit.\n"
 "5. A Settings, sota OAuth 2, afegeix l'URI de redirecció {uri} i prem Add.\n"
 "6. Copia l'App key al camp de dalt.\n"
 "L'estat Development és suficient. Deixa el camp buit per utilitzar la clau "
@@ -3483,9 +3524,6 @@ msgstr "Connectat com a {who}."
 
 msgid "Choose an online account first."
 msgstr "Tria primer un compte en línia."
-
-msgid "Signing in…"
-msgstr "S'està iniciant la sessió…"
 
 msgid "Enter the app key of a Dropbox app first."
 msgstr "Introdueix primer la clau d'aplicació d'una app del Dropbox."
@@ -6167,6 +6205,7 @@ msgstr "Traducció"
 msgid "General"
 msgstr "General"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Aparença"
 
@@ -7098,9 +7137,6 @@ msgstr "Clau (si el servidor en demana una)"
 msgid "It works: “{sent}” came back as “{back}”."
 msgstr "Funciona: «{sent}» ha tornat com a «{back}»."
 
-msgid "Sign In"
-msgstr "Inicia sessió"
-
 msgid "The sign-in window was closed."
 msgstr "La finestra d'inici de sessió s'ha tancat."
 
@@ -7126,9 +7162,6 @@ msgstr "Servidor IMAP"
 
 msgid "IMAP port"
 msgstr "Port IMAP"
-
-msgid "Enter your email address and password first."
-msgstr "Introdueix primer la teva adreça de correu i la contrasenya."
 
 msgid "Checking the connection…"
 msgstr "S'està comprovant la connexió…"
@@ -7271,6 +7304,9 @@ msgstr "Proveïdor"
 msgid "Your name"
 msgstr "El teu nom"
 
+msgid "Authenticator code"
+msgstr ""
+
 msgid "Server details"
 msgstr "Dades del servidor"
 
@@ -7409,6 +7445,108 @@ msgstr "No s'ha pogut carregar el codi font: {e}"
 
 msgid "A Microsoft account can't receive mail from another account"
 msgstr "Un compte de Microsoft no pot rebre correu d'un altre compte"
+
+msgid "The helper program for this account is not installed. Reinstall Hylki."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not answer in time."
+msgstr "El servei no ha acceptat la clau."
+
+#, fuzzy
+msgid "Could not reach the server."
+msgstr "No s'ha pogut contactar amb el servidor"
+
+msgid "Sign-in failed. Check the address and the password."
+msgstr ""
+
+msgid "Enter the six-digit code from your authenticator app."
+msgstr ""
+
+#, fuzzy
+msgid "The two-step verification code must be six digits."
+msgstr "Codi de verificació en dos passos (si s'utilitza)"
+
+#, fuzzy
+msgid "The two-step verification code was not accepted."
+msgstr "Codi de verificació en dos passos (si s'utilitza)"
+
+msgid ""
+"This account signs in with a security key, which Hylki does not support yet. "
+"Add an authenticator app to the account."
+msgstr ""
+
+msgid ""
+"This account's two-step verification is not supported yet. Add an "
+"authenticator app to the account."
+msgstr ""
+
+msgid "This account is not signed in. Sign in again in the account's settings."
+msgstr ""
+
+msgid "The server ended this sign-in. Sign in again in the account's settings."
+msgstr ""
+
+msgid "The stored sign-in is damaged. Sign in again in the account's settings."
+msgstr ""
+
+#, fuzzy
+msgid "The server no longer accepts this version. Update Hylki."
+msgstr "El servidor no ha acceptat el nom d'usuari o la contrasenya."
+
+#, fuzzy
+msgid "Could not end the sign-in on the server."
+msgstr "No s'ha pogut desar l'inici de sessió a l'anell de claus: {e}"
+
+#, fuzzy
+msgid "The folder is no longer on the server."
+msgstr "Aquesta carpeta no és al servidor"
+
+#, fuzzy
+msgid "The message is no longer on the server."
+msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
+
+#, fuzzy
+msgid "The message could not be decrypted."
+msgstr "No s'ha pogut obrir el fitxer"
+
+msgid "This message is stored in an older format Hylki cannot read yet."
+msgstr ""
+
+#, fuzzy
+msgid "An attachment could not be read or stored."
+msgstr "No s'ha pogut contactar amb el servei: {e}"
+
+#, fuzzy
+msgid "A recipient's address is not valid."
+msgstr "Introdueix l'adreça del servidor."
+
+#, fuzzy
+msgid "The From address does not belong to this account."
+msgstr "Adreça del remitent quan no s'ha definit cap Reply-To"
+
+#, fuzzy
+msgid "The message text is too long to send."
+msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
+
+msgid ""
+"Encrypted delivery from Tuta to Tuta isn't supported yet, so a message only "
+"to Tuta addresses can't be sent from Hylki. Send it from Tuta's own app."
+msgstr ""
+
+#, fuzzy
+msgid "The server refused the message."
+msgstr "El servei ha refusat la sol·licitud (error {code})."
+
+msgid "The message may have been sent. Check Sent before trying again."
+msgstr ""
+
+#, fuzzy
+msgid "This account can't do that yet."
+msgstr "Ofereix aquest compte al redactor"
+
+msgid "The helper program for this account failed. Try again later."
+msgstr ""
 
 msgid "“{folder}” is left out of search: {reason}"
 msgstr ""
@@ -7591,6 +7729,49 @@ msgstr ""
 "Has suprimit un adjunt d'aquest missatge. Les capçaleres MIME originals de "
 "l'adjunt eren:"
 
+msgid "Tuta accounts can't save drafts on the server from Hylki yet"
+msgstr ""
+
+msgid ""
+"Folders of a Tuta account can't be created, renamed or deleted from Hylki "
+"yet. Use Tuta's own app."
+msgstr ""
+
+msgid ""
+"Tuta accounts can't delete mail for good from Hylki yet. Empty the Trash in "
+"Tuta's own app."
+msgstr ""
+
+msgid ""
+"OpenPGP signing and encryption aren't available for Tuta accounts. Turn them "
+"off to send."
+msgstr ""
+
+msgid ""
+"This message may already have been sent, so it is not sent again from the "
+"Outbox. Check Sent; to send it anyway, open it and send it from the composer."
+msgstr ""
+
+#, fuzzy
+msgid "“{subject}”: {e}"
+msgstr "«{subject}» s'enviarà {when}"
+
+msgid ""
+"Tuta's servers cannot search encrypted mail: search finds what is on this "
+"computer"
+msgstr ""
+
+#, fuzzy
+msgid "A Tuta account can't receive mail from another account"
+msgstr "Un compte POP3 no pot rebre correu d'un altre compte"
+
+#, fuzzy
+msgid ""
+"Tuta cannot change a message on the server, so the attachment was not removed"
+msgstr ""
+"El POP3 no pot modificar un missatge al servidor, així que l'adjunt no s'ha "
+"eliminat"
+
 msgid "no network connection"
 msgstr "no hi ha connexió de xarxa"
 
@@ -7718,6 +7899,9 @@ msgstr ""
 "Per a servidors, com el Fastmail, que accepten un token en lloc d'una "
 "contrasenya."
 
+msgid "Authenticator Code"
+msgstr ""
+
 msgid "Advanced"
 msgstr "Avançat"
 
@@ -7773,9 +7957,6 @@ msgstr "Mostra a totes les bústies d'entrada"
 msgid "Also in the unified Starred, Sent, Drafts, Archive, Filters and Tags."
 msgstr ""
 "També a destacats, enviats, esborranys, arxiu, filtres i etiquetes unificats."
-
-msgid "Test Connection"
-msgstr "Prova la connexió"
 
 msgid "Account accent color"
 msgstr "Color d'accent del compte"

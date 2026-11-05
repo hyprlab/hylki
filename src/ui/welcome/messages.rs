@@ -58,6 +58,13 @@ pub(crate) enum WelcomeCmd {
         result: ConnTest,
         seq: u32,
     },
+    /// A Tuta sign-in through the helper ended: the session it opened,
+    /// which the account keeps in place of the password, or why not.
+    HelperSignedIn {
+        account: Box<AccountConfig>,
+        result: Result<String, worker::HelperError>,
+        seq: u32,
+    },
     /// The browser sign-in for a custom OAuth account ended: its refresh
     /// token, or why not.
     SignedIn {

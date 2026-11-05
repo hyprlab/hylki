@@ -54,6 +54,7 @@ impl AccountsWindow {
             label_synced: String::new(),
             goa,
             pending_oauth_refresh: None,
+            pending_helper_session: None,
             editor_session: 0,
             editor_secrets: None,
             secrets_reading: false,

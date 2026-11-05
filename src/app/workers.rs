@@ -437,7 +437,7 @@ impl AppModel {
             .filter(|(_, a)| {
                 matches!(
                     a.protocol,
-                    Protocol::Imap | Protocol::Graph | Protocol::Jmap
+                    Protocol::Imap | Protocol::Graph | Protocol::Jmap | Protocol::Tuta
                 )
             })
             .map(|(i, a)| (i as u32 + 1, a.hidden_folders.clone()))

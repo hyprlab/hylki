@@ -128,6 +128,7 @@ impl GoaMailAccount {
             oauth,
             oauth_settings: None,
             oauth_refresh: String::new(),
+            helper_session: String::new(),
             push: None,
         }
     }

@@ -47,6 +47,7 @@ use form::{
     apply_protocol, clear_editor, fill_editor, form_protocol, import_avatar_file, mount_editor,
     parse_color, read_account, set_connection_editable, show_quota, trimmed,
 };
+pub(crate) use form::{reveal_code_row, totp_code};
 pub(crate) use messages::{AccountsCmd, AccountsInit, AccountsInput, AccountsOutput, TagProposal};
 pub(crate) use oauth::open_online_accounts;
 use pages::{AccountsPage, EditorForm, FiltersPage, SendersPage, SmartPage, TagsPage};
@@ -158,6 +159,10 @@ pub(crate) struct AccountsWindow {
     goa: Vec<crate::services::goa::GoaMailAccount>,
     /// Refresh token captured from a successful OAuth sign-in, applied on save.
     pending_oauth_refresh: Option<String>,
+    /// The address a Tuta sign-in in the editor signed in, and the session
+    /// it opened, saved in place of the password. Held only until Save,
+    /// which is what stores it, and only for that address.
+    pending_helper_session: Option<(String, String)>,
     /// Counts the times the editor opened, so a keyring answer for an
     /// editor since replaced is dropped.
     editor_session: u64,
@@ -483,6 +488,11 @@ impl Component for AccountsWindow {
                 self.on_secrets_read(session, secrets, widgets, sender)
             }
             AccountsCmd::Test(result) => self.on_connection_tested(result, widgets),
+            AccountsCmd::HelperSignIn {
+                editor,
+                then_save,
+                result,
+            } => self.on_helper_signed_in(editor, then_save, result, widgets, sender),
             AccountsCmd::OAuth(result) => self.on_signed_in(result, widgets),
             AccountsCmd::DirectoryConsent(result) => self.on_directory_consent(result, widgets),
             AccountsCmd::LabelsConsent(result) => self.on_labels_consent(result, widgets),

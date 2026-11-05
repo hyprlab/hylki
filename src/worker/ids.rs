@@ -54,6 +54,18 @@ pub(super) fn merge_msgids(a: &str, b: &str) -> String {
     out.join(" ")
 }
 
+/// The synthetic reference tokens the API backends thread by, where a
+/// listing carries the server's conversation id but no References header:
+/// Microsoft 365 (`graph-conv:`) and Tuta (`tuta-conv:`). They are internal
+/// glue for the threader and must never reach a wire header.
+pub(super) const GRAPH_CONV: &str = "graph-conv:";
+pub(super) const TUTA_CONV: &str = "tuta-conv:";
+
+/// Whether a References token is one of the synthetic ones above.
+pub(super) fn is_conversation_token(token: &str) -> bool {
+    token.starts_with(GRAPH_CONV) || token.starts_with(TUTA_CONV)
+}
+
 /// Stable u32 id derived from a server's string id (POP3 UIDL, JMAP and Graph
 /// message ids), since the rest of the app keys messages by u32. The ids are
 /// kept in the cache, so the hash must never change: it is pinned to SipHash-1-3

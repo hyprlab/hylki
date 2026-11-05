@@ -112,6 +112,53 @@ the account has `protocol = "jmap"`, the server in `imap_host`, and
 where a password would be. An account made from the JMAP Server entry has
 `jmap_generic = true`.
 
+### Tuta
+
+Tuta has no IMAP, SMTP or JMAP, so a Tuta account goes through
+`hylki-tuta`, a small helper built on Tuta's own SDK that ships with
+Hylki. Hylki starts it for each operation and talks to it over a private
+pipe; it opens no port and keeps no files. It is looked for next to the
+`hylki` executable first, then on `PATH`.
+
+Choose **Tuta** in the Provider list, in the welcome wizard or under
+Settings, and enter the address and the account password. There are no
+servers to fill in. **Test & Add** in the wizard, and **Sign In** or
+**Save** in Settings, sign in, and Hylki keeps the session that opens, in
+the keyring under `session:` and the address. The password is never
+stored: it is cleared from the form once it has signed in, and is asked
+for again only when the session ends, which Tuta does when it is revoked
+from another client.
+
+An account with two-factor authentication through an authenticator app
+(TOTP) is asked for its code after the password: the **Authenticator
+code** row appears under the password, and signing in again sends both.
+Security keys (U2F and WebAuthn) are not supported, so an account whose
+only second factor is a key cannot be added.
+
+What works: the folders and the mail in them, read and unread, moving
+between folders, Junk and Trash included, and sending. Tuta files the copy
+of sent mail in Sent itself. A message that Tuta does not confirm as sent
+is not sent again on its own; check Sent before sending it once more.
+
+The limits, all of them Tuta's or the helper's:
+
+- **No stars on the server.** Tuta keeps none, so a star stays on this
+  computer.
+- **No end-to-end encrypted sending between Tuta accounts.** Mail is sent
+  as ordinary mail, readable by the recipients' providers. A message whose
+  recipients are all on Tuta is refused rather than sent unencrypted, so it
+  is best sent from Tuta's own app.
+- **Polling only.** Tuta offers no push the helper can use, so new mail is
+  looked for at the automatic fetch interval, at least once a minute, or
+  every two minutes with automatic fetching off.
+- **Removing the account** deletes its session from the keyring. The
+  session on Tuta's side is left to expire, as the SDK has no way to end
+  it.
+
+Snoozing is not offered for a Tuta account, and mail cannot be moved into
+one from another account. In `accounts.toml` the account has
+`protocol = "tuta"` and no server settings.
+
 ### Folder order
 
 An account's main folders (Inbox, Drafts, Sent, Archive, Junk, Trash) come

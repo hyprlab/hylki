@@ -1091,6 +1091,9 @@ msgstr "Новое сообщение из шаблона"
 msgid "Send the message you are writing"
 msgstr "Отправить создаваемое сообщение"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Прикрепить файлы"
 
@@ -2680,6 +2683,12 @@ msgstr ""
 "Microsoft 365 автоматически сохраняет собственную копию в папку "
 "«Отправленные»; это поведение нельзя изменить."
 
+#, fuzzy
+msgid "Tuta files its own copy in Sent; this cannot be changed."
+msgstr ""
+"Microsoft 365 автоматически сохраняет собственную копию в папку "
+"«Отправленные»; это поведение нельзя изменить."
+
 msgid "POP3 accounts have no server folders to save a copy in."
 msgstr "У учётных записей POP3 нет папок на сервере для сохранения копии."
 
@@ -2693,11 +2702,31 @@ msgid ""
 "approve it."
 msgstr ""
 
+msgid "Sign In"
+msgstr "Войти"
+
+msgid "Test Connection"
+msgstr "Проверить соединение"
+
 msgid "Choose a Picture"
 msgstr "Выбрать картинку"
 
 msgid "Images"
 msgstr "Изображения"
+
+msgid "Enter your email address and password first."
+msgstr "Сначала введите адрес электронной почты и пароль."
+
+msgid "Signing in…"
+msgstr "Выполняется вход…"
+
+#, fuzzy
+msgid "✓ Tuta: signed in"
+msgstr "Вход не выполнен"
+
+#, fuzzy
+msgid "✗ Tuta: {e}"
+msgstr "✗ SMTP: {e}"
 
 msgid ""
 "The certificate is for another name. If this server is the right one, turn "
@@ -2805,6 +2834,9 @@ msgid_plural "After {n} days"
 msgstr[0] "Через {n} день"
 msgstr[1] "Через {n} дня"
 msgstr[2] "Через {n} дней"
+
+msgid "Enter the code from your authenticator app, then sign in again."
+msgstr ""
 
 msgid "API Token"
 msgstr "API токен"
@@ -3017,6 +3049,11 @@ msgstr "Войдите через браузер — пароль не треб�
 msgid "Requires Proton Mail Bridge running locally."
 msgstr "Требуется локально запущенный Proton Mail Bridge."
 
+msgid ""
+"Signs in with your Tuta password. Hylki keeps the session it opens, not the "
+"password."
+msgstr ""
+
 #, fuzzy
 msgid ""
 "Signs in with an API token made in Fastmail under Privacy & Security, with "
@@ -3059,6 +3096,10 @@ msgstr "Учётная запись IMAP/POP3 на {host}"
 
 msgid "Mail account"
 msgstr "Почтовая учётная запись"
+
+#, fuzzy
+msgid "Enter your password and sign in to Tuta before saving."
+msgstr "Введите идентификатор клиента и войдите перед сохранением"
 
 msgid "Enter a client ID and sign in before saving"
 msgstr "Введите идентификатор клиента и войдите перед сохранением"
@@ -3611,8 +3652,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -3642,9 +3683,6 @@ msgstr "Подключено как {who}."
 
 msgid "Choose an online account first."
 msgstr "Сначала выберите сетевую учётную запись."
-
-msgid "Signing in…"
-msgstr "Выполняется вход…"
 
 msgid "Enter the app key of a Dropbox app first."
 msgstr "Сначала введите ключ приложения Dropbox."
@@ -4038,8 +4076,8 @@ msgstr "Запланировать"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
-"В поле «От кого» должен быть указан один адрес, например, Ann "
-"<ann@example.com>."
+"В поле «От кого» должен быть указан один адрес, например, Ann <ann@example."
+"com>."
 
 msgid "“{address}” is not an email address."
 msgstr "«{address}» не является адресом электронной почты."
@@ -6417,6 +6455,7 @@ msgstr "Перевод"
 msgid "General"
 msgstr "Основные"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Внешний вид"
 
@@ -7360,9 +7399,6 @@ msgstr "Ключ (если требуется сервером)"
 msgid "It works: “{sent}” came back as “{back}”."
 msgstr "Всё работает: «{sent}» переведено как «{back}»."
 
-msgid "Sign In"
-msgstr "Войти"
-
 msgid "The sign-in window was closed."
 msgstr "Окно входа было закрыто."
 
@@ -7388,9 +7424,6 @@ msgstr "Сервер IMAP"
 
 msgid "IMAP port"
 msgstr "Порт IMAP"
-
-msgid "Enter your email address and password first."
-msgstr "Сначала введите адрес электронной почты и пароль."
 
 msgid "Checking the connection…"
 msgstr "Проверка соединения…"
@@ -7531,6 +7564,9 @@ msgstr "Провайдер"
 msgid "Your name"
 msgstr "Ваше имя"
 
+msgid "Authenticator code"
+msgstr ""
+
 msgid "Server details"
 msgstr "Данные сервера"
 
@@ -7666,6 +7702,108 @@ msgstr "Не удалось загрузить исходный код: {e}"
 msgid "A Microsoft account can't receive mail from another account"
 msgstr ""
 "Учётная запись Microsoft не может получать почту из другой учётной записи"
+
+msgid "The helper program for this account is not installed. Reinstall Hylki."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not answer in time."
+msgstr "Сервис не принял этот ключ."
+
+#, fuzzy
+msgid "Could not reach the server."
+msgstr "Не удалось связаться с сервером"
+
+msgid "Sign-in failed. Check the address and the password."
+msgstr ""
+
+msgid "Enter the six-digit code from your authenticator app."
+msgstr ""
+
+#, fuzzy
+msgid "The two-step verification code must be six digits."
+msgstr "Код двухэтапной аутентификации (если используется для учётной записи)"
+
+#, fuzzy
+msgid "The two-step verification code was not accepted."
+msgstr "Код двухэтапной аутентификации (если используется для учётной записи)"
+
+msgid ""
+"This account signs in with a security key, which Hylki does not support yet. "
+"Add an authenticator app to the account."
+msgstr ""
+
+msgid ""
+"This account's two-step verification is not supported yet. Add an "
+"authenticator app to the account."
+msgstr ""
+
+msgid "This account is not signed in. Sign in again in the account's settings."
+msgstr ""
+
+msgid "The server ended this sign-in. Sign in again in the account's settings."
+msgstr ""
+
+msgid "The stored sign-in is damaged. Sign in again in the account's settings."
+msgstr ""
+
+#, fuzzy
+msgid "The server no longer accepts this version. Update Hylki."
+msgstr "Каталог не принял пароль."
+
+#, fuzzy
+msgid "Could not end the sign-in on the server."
+msgstr "Не удалось сохранить данные входа в связке ключей: {e}"
+
+#, fuzzy
+msgid "The folder is no longer on the server."
+msgstr "Эта папка отсутствует на сервере"
+
+#, fuzzy
+msgid "The message is no longer on the server."
+msgstr "Это сообщение слишком длинное для отправки на перевод."
+
+#, fuzzy
+msgid "The message could not be decrypted."
+msgstr "Не удалось открыть файл"
+
+msgid "This message is stored in an older format Hylki cannot read yet."
+msgstr ""
+
+#, fuzzy
+msgid "An attachment could not be read or stored."
+msgstr "Не удалось связаться с сервисом: {e}"
+
+#, fuzzy
+msgid "A recipient's address is not valid."
+msgstr "Введите адрес сервера каталогов."
+
+#, fuzzy
+msgid "The From address does not belong to this account."
+msgstr "Адрес отправителя, если не указан адрес для ответа (Reply-To)"
+
+#, fuzzy
+msgid "The message text is too long to send."
+msgstr "Это сообщение слишком длинное для отправки на перевод."
+
+msgid ""
+"Encrypted delivery from Tuta to Tuta isn't supported yet, so a message only "
+"to Tuta addresses can't be sent from Hylki. Send it from Tuta's own app."
+msgstr ""
+
+#, fuzzy
+msgid "The server refused the message."
+msgstr "Сервис отклонил запрос (ошибка {code})."
+
+msgid "The message may have been sent. Check Sent before trying again."
+msgstr ""
+
+#, fuzzy
+msgid "This account can't do that yet."
+msgstr "Предлагать эту учётную запись в редакторе"
+
+msgid "The helper program for this account failed. Try again later."
+msgstr ""
 
 msgid "“{folder}” is left out of search: {reason}"
 msgstr ""
@@ -7853,6 +7991,49 @@ msgid ""
 msgstr ""
 "Вы удалили вложение из этого сообщения. Исходные заголовки MIME для вложения:"
 
+msgid "Tuta accounts can't save drafts on the server from Hylki yet"
+msgstr ""
+
+msgid ""
+"Folders of a Tuta account can't be created, renamed or deleted from Hylki "
+"yet. Use Tuta's own app."
+msgstr ""
+
+msgid ""
+"Tuta accounts can't delete mail for good from Hylki yet. Empty the Trash in "
+"Tuta's own app."
+msgstr ""
+
+msgid ""
+"OpenPGP signing and encryption aren't available for Tuta accounts. Turn them "
+"off to send."
+msgstr ""
+
+msgid ""
+"This message may already have been sent, so it is not sent again from the "
+"Outbox. Check Sent; to send it anyway, open it and send it from the composer."
+msgstr ""
+
+#, fuzzy
+msgid "“{subject}”: {e}"
+msgstr "Письмо «{subject}» будет отправлено {when}"
+
+msgid ""
+"Tuta's servers cannot search encrypted mail: search finds what is on this "
+"computer"
+msgstr ""
+
+#, fuzzy
+msgid "A Tuta account can't receive mail from another account"
+msgstr "Учётная запись POP3 не может получать почту из другой учётной записи"
+
+#, fuzzy
+msgid ""
+"Tuta cannot change a message on the server, so the attachment was not removed"
+msgstr ""
+"Протокол POP3 не позволяет изменять сообщения на сервере, поэтому вложение "
+"не было удалено"
+
 #, fuzzy
 msgid "no network connection"
 msgstr "Проверить соединение"
@@ -7986,6 +8167,9 @@ msgid "For servers, like Fastmail, that take a token instead of a password."
 msgstr ""
 "Для серверов, использующих токен вместо пароля, например, для Fastmail."
 
+msgid "Authenticator Code"
+msgstr ""
+
 msgid "Advanced"
 msgstr "Дополнительно"
 
@@ -8046,9 +8230,6 @@ msgstr ""
 "Включать почту этой учётной записи в объединённые папки «Входящие», "
 "«Отмеченные», «Отправленные», «Черновики» и «Архив», а также в объединённые "
 "фильтры и метки."
-
-msgid "Test Connection"
-msgstr "Проверить соединение"
 
 msgid "Account accent color"
 msgstr "Цвет учётной записи"
@@ -10232,10 +10413,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "Message sent"
 #~ msgstr "Список сообщений"
-
-#, fuzzy
-#~ msgid "“{subject}” sent"
-#~ msgstr "Письмо «{subject}» будет отправлено {when}"
 
 #, fuzzy
 #~ msgid ""

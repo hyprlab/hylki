@@ -28,6 +28,7 @@ mod drafts;
 mod folders;
 mod graph;
 mod headers;
+mod helper;
 mod ids;
 mod imap;
 mod index_queue;
@@ -48,6 +49,7 @@ mod summary;
 #[cfg(test)]
 mod test_support;
 mod tls;
+mod tuta;
 
 pub(crate) use api::{
     begin_text_search, text_search_is_current, CalendarPart, KeyringRead, MailRequest,
@@ -65,6 +67,7 @@ pub(crate) use folders::folder_order;
 pub(crate) use folders::{chip_counts_all, snoozed_counts};
 use graph::run_graph;
 pub(crate) use headers::{clean_display_name, decode_header, unescape_quoted_str};
+pub(crate) use helper::{helper_login_blocking, helper_revoke_blocking, HelperError};
 pub(crate) use imap::fetch_mode::readable_error;
 pub(crate) use imap::gmail::has_gmail_labels;
 pub(crate) use imap::keywords::is_system_keyword;
@@ -175,6 +178,9 @@ async fn run(
         }
         Some(account) if account.protocol == crate::config::Protocol::Local => {
             local::run_local(account_id, account, rx, emit).await
+        }
+        Some(account) if account.protocol == crate::config::Protocol::Tuta => {
+            tuta::run_tuta(account_id, account, rx, emit).await
         }
         Some(account) => run_imap(account_id, account, rx, emit).await,
         None => run_mock(account_id, rx, emit).await,

@@ -52,6 +52,8 @@ fn secrets_kept(old: &AccountConfig, new: &AccountConfig) -> bool {
         config::load_smtp_password(&old.email)
     }) && kept(&new.oauth_refresh, &old.oauth_refresh, &|| {
         config::load_oauth_refresh(&old.email)
+    }) && kept(&new.helper_session, &old.helper_session, &|| {
+        config::read_session(&old.email).ok().flatten()
     }) && new.aliases.iter().all(|alias| {
         let addr = alias.address();
         let before = old
@@ -67,7 +69,9 @@ fn secrets_kept(old: &AccountConfig, new: &AccountConfig) -> bool {
 
 /// Drop the keyring entries of the accounts `removed` names, on the keyring
 /// thread. `config` still holds them: their alias entries are keyed by
-/// addresses only it knows.
+/// addresses only it knows. A Tuta account's session is read first and
+/// ended on the server on a thread of its own, so a helper that takes its
+/// time holds up no other keyring work.
 pub(super) fn forget_account_secrets(removed: &[String], config: &[AccountConfig]) {
     let gone: Vec<(String, Option<AccountConfig>)> = removed
         .iter()
@@ -81,11 +85,39 @@ pub(super) fn forget_account_secrets(removed: &[String], config: &[AccountConfig
     config::keyring_later(move || {
         for (email, account) in gone {
             match account {
-                Some(account) => config::delete_account_secrets(&account),
+                Some(account) => {
+                    if account.protocol == config::Protocol::Tuta {
+                        revoke_later(&account);
+                    }
+                    config::delete_account_secrets(&account)
+                }
                 None => config::delete_password(&email),
             }
         }
     });
+}
+
+/// End a removed helper account's session on the server, from a thread of
+/// its own. Called on the keyring thread, before the session is deleted.
+fn revoke_later(account: &AccountConfig) {
+    let session = match config::read_session(&account.email) {
+        Ok(Some(session)) if !session.is_empty() => session,
+        Ok(_) => return,
+        Err(e) => {
+            tracing::warn!(
+                "could not read the session of {} to end it: {e}",
+                account.email
+            );
+            return;
+        }
+    };
+    let (protocol, email) = (account.protocol, account.email.clone());
+    let spawned = std::thread::Builder::new()
+        .name("hylki-revoke".into())
+        .spawn(move || crate::worker::helper_revoke_blocking(protocol, &email, &session));
+    if let Err(e) = spawned {
+        tracing::warn!("could not end the session of {}: {e}", account.email);
+    }
 }
 
 /// On the way out: hide the windows, then let the keyring thread finish

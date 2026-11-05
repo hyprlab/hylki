@@ -168,13 +168,13 @@ fn build_message(
             builder = builder.reply_to(mbox);
         }
     }
-    // Graph accounts thread by a synthetic "graph-conv:<id>" token (there is no
-    // cheap way to read the real References header over the API) — that token is
-    // internal glue and must never reach a wire header.
+    // Microsoft 365 and Tuta accounts thread by a synthetic conversation token
+    // (neither listing carries the real References header): internal glue that
+    // must never reach a wire header.
     let wire_references = msg
         .references
         .split_whitespace()
-        .filter(|t| !t.starts_with("graph-conv:"))
+        .filter(|t| !crate::worker::ids::is_conversation_token(t))
         .collect::<Vec<_>>()
         .join(" ");
     if !wire_references.trim().is_empty() {

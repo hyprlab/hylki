@@ -126,6 +126,12 @@ impl AccountsWindow {
         widgets: &AccountsWindowWidgets,
         sender: ComponentSender<Self>,
     ) {
+        // Tuta's connection test is its sign-in, and it opens the session
+        // the account keeps.
+        if form_protocol(widgets) == Protocol::Tuta {
+            self.start_helper_sign_in(widgets, &sender, false);
+            return;
+        }
         let account = read_account(widgets, self.saved_emoji(), self.saved_avatar());
         widgets.form.test_btn.set_sensitive(false);
         widgets.form.test_result.set_visible(true);
@@ -140,6 +146,99 @@ impl AccountsWindow {
                 });
             AccountsCmd::Test(r)
         });
+    }
+
+    /// Sign in to Tuta through the helper with the form's address, password
+    /// and, once Tuta has asked for one, code. The answer comes back as
+    /// [`AccountsCmd::HelperSignIn`]. Save starts one as well, with
+    /// `then_save`, when a password was typed but not yet signed in with.
+    pub(super) fn start_helper_sign_in(
+        &mut self,
+        widgets: &AccountsWindowWidgets,
+        sender: &ComponentSender<Self>,
+        then_save: bool,
+    ) {
+        let email = trimmed(&widgets.form.email_row);
+        let password = widgets.form.pass_row.text().to_string();
+        widgets.form.test_result.set_visible(true);
+        if email.is_empty() || password.is_empty() {
+            widgets.form.test_result.set_css_classes(&["error"]);
+            widgets
+                .form
+                .test_result
+                .set_label(&i18n("Enter your email address and password first."));
+            return;
+        }
+        let code = totp_code(&widgets.form.totp_row);
+        widgets.form.test_btn.set_sensitive(false);
+        widgets.form.test_result.set_css_classes(&["dim-label"]);
+        widgets.form.test_result.set_label(&i18n("Signing in…"));
+        let editor = self.editor_session;
+        sender.oneshot_command(async move {
+            let address = email.clone();
+            let result = tokio::task::spawn_blocking(move || {
+                worker::helper_login_blocking(Protocol::Tuta, &email, &password, code.as_deref())
+            })
+            .await
+            .unwrap_or_else(|_| {
+                Err(worker::HelperError {
+                    code: "helper_failed".into(),
+                })
+            });
+            AccountsCmd::HelperSignIn {
+                editor,
+                then_save,
+                result: result.map(|session| (address, session)),
+            }
+        });
+    }
+
+    pub(super) fn on_helper_signed_in(
+        &mut self,
+        editor: u64,
+        then_save: bool,
+        result: Result<(String, String), worker::HelperError>,
+        widgets: &AccountsWindowWidgets,
+        sender: ComponentSender<Self>,
+    ) {
+        // Started in an editor since closed or replaced.
+        if editor != self.editor_session {
+            return;
+        }
+        widgets.form.test_btn.set_sensitive(true);
+        widgets.form.test_result.set_visible(true);
+        match result {
+            Ok(signed_in) => {
+                self.pending_helper_session = Some(signed_in);
+                // The session stands in for the password from here on, so
+                // the password is not kept even in the form.
+                widgets.form.pass_row.set_text("");
+                widgets.form.totp_row.set_text("");
+                widgets.form.totp_row.set_visible(false);
+                widgets.form.test_result.set_css_classes(&["success"]);
+                widgets
+                    .form
+                    .test_result
+                    .set_label(&i18n("✓ Tuta: signed in"));
+                if then_save {
+                    sender.input_sender().emit(AccountsInput::Save);
+                }
+            }
+            Err(e) => {
+                let asks_code = e.needs_second_factor();
+                let text = reveal_code_row(&widgets.form.totp_row, &e);
+                widgets.form.test_result.set_css_classes(&[if asks_code {
+                    "dim-label"
+                } else {
+                    "error"
+                }]);
+                widgets.form.test_result.set_label(&if asks_code {
+                    text
+                } else {
+                    i18n_f("✗ Tuta: {e}", &[("e", &text)])
+                });
+            }
+        }
     }
 
     pub(super) fn on_protocol_changed(&mut self, widgets: &AccountsWindowWidgets) {
@@ -242,10 +341,11 @@ impl AccountsWindow {
         let incoming_label = match protocol {
             Protocol::Pop3 => "POP3",
             Protocol::Jmap => "JMAP",
+            Protocol::Tuta => "Tuta",
             _ => "IMAP",
         };
-        // A JMAP account sends through the server: no SMTP line.
-        let text = if protocol == Protocol::Jmap {
+        // A JMAP or Tuta account sends through its server: no SMTP line.
+        let text = if matches!(protocol, Protocol::Jmap | Protocol::Tuta) {
             line(incoming_label, &result.incoming)
         } else {
             format!(

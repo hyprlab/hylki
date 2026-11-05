@@ -30,6 +30,7 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) smtp_port_row: adw::EntryRow,
     pub(in crate::ui::accounts) user_row: adw::EntryRow,
     pub(in crate::ui::accounts) pass_row: adw::PasswordEntryRow,
+    pub(in crate::ui::accounts) totp_row: adw::EntryRow,
     pub(in crate::ui::accounts) jmap_token_row: adw::SwitchRow,
     pub(in crate::ui::accounts) oauth_client_id_row: adw::EntryRow,
     pub(in crate::ui::accounts) oauth_secret_row: adw::PasswordEntryRow,
@@ -242,6 +243,16 @@ impl EditorForm {
                         set_subtitle: &i18n("For servers, like Fastmail, that take a token instead of a password."),
                         set_visible: false,
                         connect_active_notify => AccountsInput::ProtocolChanged,
+                    },
+                    // Tuta's second factor: hidden until a sign-in
+                    // comes back asking for it, since most accounts
+                    // have none and an empty code row reads as one
+                    // more thing to fill in.
+                    #[name = "totp_row"]
+                    adw::EntryRow {
+                        set_title: &i18n("Authenticator Code"),
+                        set_input_purpose: gtk::InputPurpose::Digits,
+                        set_visible: false,
                     },
 
                     // ---- OAuth fields (shown when Authentication is an OAuth option) ----
@@ -908,6 +919,7 @@ impl EditorForm {
             smtp_port_row,
             user_row,
             pass_row,
+            totp_row,
             jmap_token_row,
             oauth_client_id_row,
             oauth_secret_row,

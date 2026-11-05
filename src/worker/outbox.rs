@@ -101,6 +101,51 @@ pub(super) fn send_failed(
     emit_outbox(cache, account_id, emit);
 }
 
+/// The third way a send can end, beside [`send_failed`]'s two: it may have
+/// gone out. A provider that reports this (Tuta's `send_uncertain`: the
+/// connection broke after the submit left) cannot say which, and a retry
+/// could deliver the message twice, so it is never queued to go again on
+/// its own. The message goes back to the composer, with the user asked to
+/// look in Sent first; a merge's message, which has no composer to go back
+/// to, waits in the Outbox marked so no flush sends it. The Outbox row it
+/// was edited from, if any, is marked the same way rather than left to be
+/// flushed.
+pub(super) fn send_uncertain(
+    cache: Option<&Cache>,
+    account_id: u32,
+    account: &AccountConfig,
+    msg: &OutgoingMessage,
+    emit: &impl Fn(WorkerEvent),
+) {
+    let why = uncertain_text();
+    let mark = uncertain_mark(&why);
+    let queued =
+        msg.merged && queue_outbox_message(cache, account_id, account, msg, None, &mark, None);
+    if let (Some(old), Some(c)) = (msg.outbox_origin, cache) {
+        if queued {
+            c.delete_outbox(old);
+        } else {
+            c.record_outbox_failure(old, &mark);
+        }
+    }
+    emit(WorkerEvent::error(why));
+    if !queued {
+        emit(WorkerEvent::Unsent(Box::new(msg.clone())));
+    }
+    emit_outbox(cache, account_id, emit);
+}
+
+/// What the user is told when a send may have gone out.
+pub(super) fn uncertain_text() -> String {
+    i18n("The message may have been sent. Check Sent before trying again.")
+}
+
+/// `why` as an Outbox row's `last_error`, marked so no flush sends it again
+/// (see [`crate::models::SEND_UNCERTAIN_MARK`]).
+pub(super) fn uncertain_mark(why: &str) -> String {
+    format!("{}{why}", crate::models::SEND_UNCERTAIN_MARK)
+}
+
 /// Send Later (#145): park the message in the Outbox until `at`. The bytes are
 /// built now, like a failed send's, so the attachments are read while they
 /// exist; the app's clock sends it when the time comes, or the next launch
@@ -456,6 +501,68 @@ mod tests {
         assert!(answered_copies(Some(&cache), 1, "", "").is_empty());
         assert!(answered_copies(Some(&cache), 1, "gone@x", "").is_empty());
         assert!(answered_copies(None, 1, "a@x", "").is_empty());
+    }
+
+    /// A send that may have gone out is never queued to go again: it comes
+    /// back to the composer, and the Outbox row it was edited from is
+    /// marked so no flush sends it.
+    #[test]
+    fn an_uncertain_send_is_not_queued_for_a_retry() {
+        let cache = Cache::in_memory().expect("cache");
+        let account = sample_account();
+        let mut msg = sample_outgoing();
+        msg.to = "ann@example.com".into();
+        // The row the message was edited from, queued earlier.
+        assert!(queue_outbox_message(
+            Some(&cache),
+            1,
+            &account,
+            &msg,
+            None,
+            "offline",
+            None
+        ));
+        let origin = cache.outbox_items(1)[0].id;
+        msg.outbox_origin = Some(origin);
+        let events = std::cell::RefCell::new(Vec::new());
+        send_uncertain(Some(&cache), 1, &account, &msg, &|e| {
+            events.borrow_mut().push(e)
+        });
+        let events = events.into_inner();
+        assert!(events
+            .iter()
+            .any(|e| matches!(e, WorkerEvent::Unsent(m) if m.subject == "Subject")));
+        assert!(
+            events
+                .iter()
+                .any(|e| matches!(e, WorkerEvent::Error { .. })),
+            "{events:?}"
+        );
+        let items = cache.outbox_items(1);
+        assert_eq!(items.len(), 1, "nothing new was queued");
+        assert!(items[0].is_send_uncertain());
+        // The mark is not what the list shows.
+        assert!(!items[0]
+            .as_message()
+            .preview
+            .contains(crate::models::SEND_UNCERTAIN_MARK));
+
+        // A merge's message has no composer to go back to: it waits in the
+        // Outbox, marked.
+        let cache = Cache::in_memory().expect("cache");
+        msg.outbox_origin = None;
+        msg.merged = true;
+        let events = std::cell::RefCell::new(Vec::new());
+        send_uncertain(Some(&cache), 1, &account, &msg, &|e| {
+            events.borrow_mut().push(e)
+        });
+        assert!(!events
+            .into_inner()
+            .iter()
+            .any(|e| matches!(e, WorkerEvent::Unsent(_))));
+        let items = cache.outbox_items(1);
+        assert_eq!(items.len(), 1);
+        assert!(items[0].is_send_uncertain());
     }
 
     /// #340: a send that fails on a file gone since it was attached cannot

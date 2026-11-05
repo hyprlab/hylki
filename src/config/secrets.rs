@@ -172,6 +172,23 @@ pub(crate) fn load_oauth_refresh(email: &str) -> Option<String> {
     load_key(&oauth_key(email))
 }
 
+/// Keyring key for the resumable session a provider helper signs in to
+/// (Tuta). Kept apart from the password key because such an account never
+/// stores its password: the session is all it has.
+pub(super) fn session_key(email: &str) -> String {
+    format!("session:{email}")
+}
+
+pub(crate) fn store_session(email: &str, session: &str) -> keyring::Result<()> {
+    set_secret(&session_key(email), session)
+}
+
+/// The stored helper session, with a keyring that could not be read as an
+/// error, as [`read_password`] does: a locked keyring is not "signed out".
+pub(crate) fn read_session(email: &str) -> Result<Option<String>, String> {
+    read_key(&session_key(email))
+}
+
 pub(crate) fn store_password(email: &str, password: &str) -> keyring::Result<()> {
     set_secret(email, password)
 }
@@ -333,9 +350,11 @@ fn load_legacy_key(key: &str) -> Option<String> {
 
 pub(crate) fn delete_password(email: &str) {
     delete_key(email);
-    // Also drop the account's separate SMTP password and OAuth token, if any.
+    // Also drop the account's separate SMTP password, OAuth token and
+    // helper session, if any.
     delete_key(&smtp_key(email));
     delete_key(&oauth_key(email));
+    delete_key(&session_key(email));
 }
 
 fn delete_key(key: &str) {

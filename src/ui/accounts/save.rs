@@ -73,6 +73,12 @@ impl AccountsWindow {
         account.graph_label_names &= account.goa_id.is_none() && self.labels_granted;
 
         self.apply_form_auth(&mut account, widgets);
+        // Tuta keeps the session a sign-in opened, never the password.
+        if account.protocol == Protocol::Tuta
+            && !self.take_helper_session(&mut account, editing_orig.as_ref(), widgets, &sender)
+        {
+            return;
+        }
 
         // Validation.
         let oauth_ready = self.check_oauth_ready(&account, editing_orig.as_ref(), widgets);
@@ -98,7 +104,9 @@ impl AccountsWindow {
         // fields Hylki does own: label, signature, color, aliases.
         // On This Computer (#552) has no connection at all.
         let is_goa_edit = account.goa_id.is_some() || account.is_local();
+        // A Tuta account has no servers or username, and was checked above.
         if !is_goa_edit
+            && account.protocol != Protocol::Tuta
             && (account.imap_host.is_empty()
                 || account.username.is_empty()
                 || !password_ok
@@ -110,6 +118,7 @@ impl AccountsWindow {
             return;
         }
         self.pending_oauth_refresh = None;
+        self.pending_helper_session = None;
 
         let original_email = self
             .editing
@@ -130,6 +139,41 @@ impl AccountsWindow {
             self.on_add_local(widgets, sender.clone());
         }
         widgets.nav.pop();
+    }
+
+    /// Give a Tuta account its session: the one this editor's sign-in opened
+    /// for the address, or for an edit that keeps the address, the one
+    /// already in the keyring. A password typed but not yet signed in with
+    /// is signed in with first, and Save runs again once it has. Whether the
+    /// account can be saved now.
+    fn take_helper_session(
+        &mut self,
+        account: &mut AccountConfig,
+        orig: Option<&AccountConfig>,
+        widgets: &AccountsWindowWidgets,
+        sender: &ComponentSender<Self>,
+    ) -> bool {
+        let typed = !account.password.is_empty();
+        account.password.clear();
+        if let Some((address, session)) = &self.pending_helper_session {
+            if *address == account.email {
+                account.helper_session = session.clone();
+                return true;
+            }
+        }
+        if typed {
+            self.start_helper_sign_in(widgets, sender, true);
+            return false;
+        }
+        let kept = orig.is_some_and(|o| o.protocol == Protocol::Tuta && o.email == account.email);
+        if !kept {
+            widgets.form.test_result.set_visible(true);
+            widgets.form.test_result.set_css_classes(&["error"]);
+            widgets.form.test_result.set_label(&i18n(
+                "Enter your password and sign in to Tuta before saving.",
+            ));
+        }
+        kept
     }
 
     /// Native account: authentication comes from the provider dropdown.

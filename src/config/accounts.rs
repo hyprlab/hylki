@@ -12,7 +12,7 @@ use std::path::PathBuf;
 
 use super::prefs::{OfflineMail, ReplyCopies};
 use super::secrets::{
-    keyring_later, store_alias_smtp_password, store_oauth_refresh, store_password,
+    keyring_later, store_alias_smtp_password, store_oauth_refresh, store_password, store_session,
     store_smtp_password,
 };
 use super::sections::FolderSort;
@@ -95,6 +95,12 @@ pub(crate) enum Protocol {
     /// computer ([`local_mail_dir`]), with no server and no sending. There
     /// is one at most, known by [`LOCAL_ACCOUNT`] in place of an address.
     Local,
+    /// Tuta over the bundled `hylki-tuta` helper: mail is end-to-end
+    /// encrypted at rest on Tuta's servers and only its own client library
+    /// can read it, so there is no IMAP, SMTP or JMAP to speak. No servers to
+    /// configure. The account keeps a resumable session in the keyring,
+    /// never its password.
+    Tuta,
 }
 
 /// What an On This Computer account has in its `email` field, the key
@@ -285,6 +291,11 @@ pub(crate) struct AccountConfig {
     /// memory (like `password`); stored on save.
     #[serde(default, skip_serializing)]
     pub(crate) oauth_refresh: String,
+    /// A provider helper's resumable session (Tuta), as the JSON the helper
+    /// returned at sign-in. Kept in the keyring, never on disk; transient in
+    /// memory like `oauth_refresh`, and stored on save when not empty.
+    #[serde(default, skip_serializing)]
+    pub(crate) helper_session: String,
     /// Per-account IMAP push override (#91): Some(true/false) wins over the
     /// global "Instant new mail" switch; None follows it. Lets an account on
     /// a server that mishandles IDLE opt out without costing push elsewhere.
@@ -607,6 +618,7 @@ pub(crate) fn blank_account() -> AccountConfig {
         oauth: false,
         oauth_settings: None,
         oauth_refresh: String::new(),
+        helper_session: String::new(),
         push: None,
         folder_roles: Default::default(),
         hidden_folders: Vec::new(),
@@ -733,7 +745,9 @@ pub(crate) fn save(accounts: &[AccountConfig]) -> std::io::Result<()> {
 
 fn store_secrets(accounts: &[AccountConfig]) {
     for account in accounts {
-        if !account.password.is_empty() {
+        // A Tuta account signs in with a session; its password is never kept,
+        // even if a form left one behind.
+        if !account.password.is_empty() && account.protocol != Protocol::Tuta {
             if let Err(e) = store_password(&account.email, &account.password) {
                 tracing::error!("could not store password for {}: {e}", account.email);
             }
@@ -764,6 +778,13 @@ fn store_secrets(accounts: &[AccountConfig]) {
         if !account.oauth_refresh.is_empty() {
             if let Err(e) = store_oauth_refresh(&account.email, &account.oauth_refresh) {
                 tracing::error!("could not store OAuth token for {}: {e}", account.email);
+            }
+        }
+        // A helper session, with the same guard: editing an account without
+        // signing in again saves it empty, and the stored one must survive.
+        if !account.helper_session.is_empty() {
+            if let Err(e) = store_session(&account.email, &account.helper_session) {
+                tracing::error!("could not store the session for {}: {e}", account.email);
             }
         }
     }
