@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fixed: a PDF with a password froze the app** (#582). Opening one, or any
+  other PDF that cannot be read, kept the app busy until it was killed. The
+  preview now says **No preview available**, and **Open** hands the file to
+  another app.
+
 - **Fixed: a long conversation could use all the memory** (#581, by Gonzalo
   Vasco López). A folded message card still loaded its message in the
   background, and one conversation of 83 quoted replies took the app past 14 GB.

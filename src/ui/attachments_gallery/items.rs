@@ -149,6 +149,7 @@ impl AttachmentsGallery {
     /// back here. Anything else has no texture — the file-icon page shows.
     pub(super) fn refresh_preview(&mut self, sender: &ComponentSender<Self>) {
         self.preview_texture = None;
+        self.preview_failed = false;
         let Some(item) = self.current() else { return };
         let Some(data) = item.data.as_ref() else {
             // Never downloaded (or too big to have ridden along with the page):
@@ -167,7 +168,10 @@ impl AttachmentsGallery {
         }
         let key = thumb_cache_key(data);
         match PDF_PREVIEWS.with(|c| c.borrow().get(&key).cloned()) {
-            Some(texture) => self.preview_texture = texture,
+            Some(texture) => {
+                self.preview_failed = texture.is_none();
+                self.preview_texture = texture;
+            }
             None => {
                 let s = sender.clone();
                 lightbox_pdf_texture(data, move |_| {

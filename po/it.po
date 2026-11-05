@@ -3301,6 +3301,10 @@ msgstr "Tipo (Z–A)"
 msgid "Previous"
 msgstr "Precedente"
 
+#, fuzzy
+msgid "No preview available"
+msgstr "Nessuna cartella {v1} disponibile"
+
 msgid "Next"
 msgstr "Successivo"
 

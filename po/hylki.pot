@@ -2968,6 +2968,9 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
+msgid "No preview available"
+msgstr ""
+
 msgid "Next"
 msgstr ""
 

@@ -3342,6 +3342,10 @@ msgstr "Típus (Z–A)"
 msgid "Previous"
 msgstr "Előző"
 
+#, fuzzy
+msgid "No preview available"
+msgstr "Nem érhető el a(z) {v1} mappa"
+
 msgid "Next"
 msgstr "Következő"
 

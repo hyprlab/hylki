@@ -3224,6 +3224,10 @@ msgstr "Tipus (Z–A)"
 msgid "Previous"
 msgstr "Anterior"
 
+#, fuzzy
+msgid "No preview available"
+msgstr "No hi ha cap carpeta {v1} disponible"
+
 msgid "Next"
 msgstr "Següent"
 

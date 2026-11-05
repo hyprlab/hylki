@@ -3227,6 +3227,10 @@ msgstr "Tipo (Z–A)"
 msgid "Previous"
 msgstr "Anterior"
 
+#, fuzzy
+msgid "No preview available"
+msgstr "Não está disponível nenhuma pasta {v1}"
+
 msgid "Next"
 msgstr "Próximo"
 

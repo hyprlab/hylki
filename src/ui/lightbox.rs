@@ -13,11 +13,15 @@ use relm4::prelude::*;
 
 use crate::i18n::{i18n, i18n_f};
 use crate::models::Attachment;
+use crate::ui::thumbnails;
 
 pub(crate) struct Lightbox {
     items: Vec<Attachment>,
     pos: usize,
     texture: Option<gtk::gdk::Texture>,
+    /// The current item has nothing to show: a PDF poppler cannot open, or
+    /// an image that does not decode.
+    no_preview: bool,
     /// Current zoom (1 or 3): a click on the document toggles it, Escape
     /// unwinds it before closing.
     zoom: i32,
@@ -54,9 +58,9 @@ pub(crate) enum LightboxInput {
     OpenCurrent,
     /// Save the shown item via a file chooser.
     DownloadCurrent,
-    /// A full-size PDF render finished (content hash): show it if that item
-    /// is still on screen.
-    Rendered(u64),
+    /// A full-size PDF render finished (content hash, and the page unless
+    /// it failed): show it if that item is still on screen.
+    Rendered(u64, Option<gtk::gdk::Texture>),
 }
 
 #[relm4::component(pub(crate))]
@@ -120,7 +124,13 @@ impl Component for Lightbox {
                     set_hexpand: true,
                     set_vexpand: true,
                     #[watch]
-                    set_visible_child_name: if model.texture.is_some() { "image" } else { "rendering" },
+                    set_visible_child_name: if model.texture.is_some() {
+                        "image"
+                    } else if model.no_preview {
+                        "no-preview"
+                    } else {
+                        "rendering"
+                    },
 
                     #[name = "scroller"]
                     add_named[Some("image")] = &gtk::ScrolledWindow {
@@ -145,6 +155,28 @@ impl Component for Lightbox {
                             set_spinning: true,
                             set_width_request: 36,
                             set_height_request: 36,
+                        },
+                    },
+
+                    add_named[Some("no-preview")] = &gtk::Box {
+                        add_css_class: "gallery-lightbox-file",
+                        set_orientation: gtk::Orientation::Vertical,
+                        set_halign: gtk::Align::Center,
+                        set_valign: gtk::Align::Center,
+                        set_spacing: 12,
+                        gtk::Image {
+                            #[watch]
+                            set_icon_name: model.items.get(model.pos).map(|a| thumbnails::icon_for(&a.name)),
+                            set_pixel_size: 96,
+                            #[watch]
+                            set_css_classes: &[
+                                "gallery-file-icon",
+                                model.items.get(model.pos).map(|a| thumbnails::icon_color_class(&a.name)).unwrap_or("ftype-generic"),
+                            ],
+                        },
+                        gtk::Label {
+                            set_label: &i18n("No preview available"),
+                            add_css_class: "title-3",
                         },
                     },
                 },
@@ -198,6 +230,7 @@ impl Component for Lightbox {
             items: Vec::new(),
             pos: 0,
             texture: None,
+            no_preview: false,
             zoom: 1,
             picture: gtk::Picture::new(),
             scroller: gtk::ScrolledWindow::new(),
@@ -277,7 +310,7 @@ impl Component for Lightbox {
             LightboxInput::Next => self.step(1, &sender),
             LightboxInput::Close => {
                 self.items.clear();
-                self.texture = None;
+                self.show_page(None);
                 self.open.set(false);
                 self.set_zoom(1);
             }
@@ -315,13 +348,13 @@ impl Component for Lightbox {
                     );
                 }
             }
-            LightboxInput::Rendered(key) => {
+            LightboxInput::Rendered(key, page) => {
                 let still_current = self
                     .items
                     .get(self.pos)
-                    .is_some_and(|a| crate::ui::thumbnails::content_key(&a.data) == key);
+                    .is_some_and(|a| thumbnails::content_key(&a.data) == key);
                 if still_current {
-                    self.refresh(&sender);
+                    self.show_page(page);
                 }
             }
         }
@@ -451,29 +484,38 @@ impl Lightbox {
         }
     }
 
+    /// The outcome for the current item; no page at all means it has none
+    /// to show, which is not the same as one still on its way.
+    fn show_page(&mut self, page: Option<gtk::gdk::Texture>) {
+        self.no_preview = page.is_none();
+        self.texture = page;
+    }
+
     /// Work out the texture for the current item: images decode on the
     /// spot; a PDF's page comes from the shared full-size cache or a worker
     /// render that circles back via [`LightboxInput::Rendered`].
     fn refresh(&mut self, sender: &ComponentSender<Self>) {
-        use crate::ui::thumbnails;
         self.texture = None;
+        self.no_preview = false;
         let Some(att) = self.items.get(self.pos) else {
             return;
         };
         if crate::models::is_image_name(&att.name) {
-            self.texture = thumbnails::texture_from(&att.data);
+            let image = thumbnails::texture_from(&att.data);
+            self.show_page(image);
             return;
         }
-        // A cache hit paints immediately (and, crucially, spawns nothing: a
-        // hit that re-entered via Rendered would loop forever).
-        if let Some(tex) = thumbnails::cached_pdf_preview(&att.data) {
-            self.texture = Some(tex);
+        // The result travels in the message and does not come back through
+        // here: a render that answered this function again looped for ever on
+        // a PDF that fails, with the window frozen (#582).
+        if let Some(page) = thumbnails::cached_pdf_preview(&att.data) {
+            self.show_page(page);
             return;
         }
         let key = thumbnails::content_key(&att.data);
         let s = sender.input_sender().clone();
-        thumbnails::lightbox_pdf_texture(&att.data, move |_| {
-            let _ = s.send(LightboxInput::Rendered(key));
+        thumbnails::lightbox_pdf_texture(&att.data, move |page| {
+            let _ = s.send(LightboxInput::Rendered(key, page));
         });
     }
 }
