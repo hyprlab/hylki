@@ -12,6 +12,7 @@ use rusqlite::Connection;
 use crate::models::Message;
 
 mod addresses;
+mod assistant;
 mod bodies;
 mod draft_copies;
 mod flags;
@@ -26,9 +27,11 @@ mod smart;
 mod text_index;
 mod threads;
 
+pub(crate) use assistant::{MailScope, ScopedFolder};
 pub(crate) use gallery::*;
 pub(crate) use local_copies::CopyKey;
 pub(crate) use messages::*;
+pub(crate) use text_index::body_text;
 
 #[cfg(test)]
 use schema::*;

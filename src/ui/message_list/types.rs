@@ -333,7 +333,10 @@ pub(crate) enum MessageListInput {
     FinishCollapseThread((u32, String)),
     /// Change the list sort order; `reversed` turns it the other way, as a
     /// second click on a column heading does.
-    SetSort { order: SortOrder, reversed: bool },
+    SetSort {
+        order: SortOrder,
+        reversed: bool,
+    },
     /// A message was read. Messages are named by their slot (account,
     /// folder, UID) here: a UID repeats from folder to folder and, in the
     /// unified view, from account to account (#333).
@@ -391,6 +394,9 @@ pub(crate) enum MessageListInput {
     /// Remove many messages in a single batch (bulk archive/delete/spam), so the
     /// list updates in one render pass instead of one per message.
     RemoveMany(Vec<u32>),
+    /// Remove rows by (account, folder, id): mail moved from outside the
+    /// list, where the same UID can be another folder's message.
+    RemoveExact(Vec<(u32, u32, u32)>),
     /// Secondary-click on the row showing `key`, at (x, y) in the list's
     /// coordinates: open the context menu.
     ContextMenu {

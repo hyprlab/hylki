@@ -70,6 +70,10 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
                 hits: Vec::new(),
                 done: true,
             }),
+            MailRequest::AskServer(ask) => ask.refuse(
+                self.account_id,
+                "On This Computer is not on a server: search already finds all of it",
+            ),
             MailRequest::ScanAttachments { folder_path } => emit(WorkerEvent::AttachmentsScanned {
                 folder_path,
                 added: 0,

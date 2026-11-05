@@ -2621,3 +2621,24 @@ toast-countdown {
 scrolledwindow.merge-dialog-scroll {
   margin: -8px;
 }
+
+/* A message an AI assistant prepared: the banner over it, which names every
+   recipient. */
+.assistant-banner {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background-color: alpha(@accent_bg_color, 0.12);
+}
+
+/* An assistant's edit waiting for the user: one slim row with Reject and
+   Accept, and under it what it does to the header fields. Its text shows
+   in the editor, as a diff. */
+.assistant-edit-bar {
+  padding: 4px 6px 4px 10px;
+}
+.assistant-edit-bar .assistant-added {
+  color: @success_color;
+}
+.assistant-edit-bar .assistant-removed {
+  color: @error_color;
+}

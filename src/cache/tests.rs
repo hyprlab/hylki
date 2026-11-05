@@ -174,6 +174,81 @@ fn cached_rows_follow_their_accounts() {
     assert_eq!(body(2), None);
 }
 
+/// Rows of a folder the account does not have go, in every table of what can
+/// be had again, and only those.
+#[test]
+fn rows_of_folders_an_account_does_not_have_go() {
+    let c = Cache::in_memory().unwrap();
+    let folder = |account: u32, path: &str| {
+        c.conn
+            .execute(
+                "INSERT INTO folders (account_id, path, name, kind, unread, ord) \
+                 VALUES (?1, ?2, ?2, 0, 0, 0)",
+                params![account, path],
+            )
+            .unwrap();
+    };
+    let mail = |account: u32, path: &str, uid: u32| {
+        let m = Message {
+            id: uid,
+            uid,
+            subject: format!("{account} {path} {uid}"),
+            message_id: format!("{account}-{path}-{uid}@example.org"),
+            ..Message::blank()
+        };
+        c.upsert_messages(account, path, &[m]);
+        c.save_body(account, path, uid, "<p>words</p>");
+    };
+    let count = |table: &str, account: u32, path: &str| -> i64 {
+        c.conn
+            .query_row(
+                &format!("SELECT COUNT(*) FROM {table} WHERE account_id = ?1 AND folder_path = ?2"),
+                params![account, path],
+                |r| r.get(0),
+            )
+            .unwrap()
+    };
+    folder(1, "INBOX");
+    mail(1, "INBOX", 1);
+    mail(1, "[Gmail]/All Mail", 2);
+    mail(1, "Hidden", 3);
+    // No folder list yet: nothing known about these.
+    mail(2, "INBOX", 4);
+    // Not on a server, so not for tidying.
+    folder(3, "INBOX");
+    mail(3, "Saved", 5);
+    c.conn
+        .execute(
+            "INSERT INTO local_copies (account_id, folder_path, uid, message_id) \
+             VALUES (1, '[Gmail]/All Mail', 2, 'x')",
+            [],
+        )
+        .unwrap();
+
+    let gone = c
+        .drop_rows_of_missing_folders(&[(1, vec!["Hidden".into()]), (2, Vec::new())])
+        .unwrap();
+
+    assert_eq!(gone, 1);
+    assert_eq!(count("messages", 1, "[Gmail]/All Mail"), 0);
+    assert_eq!(count("bodies", 1, "[Gmail]/All Mail"), 0);
+    assert_eq!(count("local_copies", 1, "[Gmail]/All Mail"), 1);
+    for (account, path) in [(1, "INBOX"), (1, "Hidden"), (2, "INBOX"), (3, "Saved")] {
+        assert_eq!(count("messages", account, path), 1, "{account} {path}");
+        assert_eq!(count("bodies", account, path), 1, "{account} {path}");
+    }
+    // A hidden folder with no list of hidden ones, and the search index.
+    assert_eq!(
+        c.drop_rows_of_missing_folders(&[(1, Vec::new())]).unwrap(),
+        1
+    );
+    assert_eq!(c.find_body_text("words", 10).len(), 3);
+    assert_eq!(
+        c.drop_rows_of_missing_folders(&[(1, Vec::new())]).unwrap(),
+        0
+    );
+}
+
 /// How long the conversation lookups take on a real cache (#259):
 /// `HYLKI_CACHE_TIMING=<copy of cache.db> cargo test --release --bin hylki
 /// cache::tests::thread_lookup_timing -- --ignored --nocapture`. Takes

@@ -10,6 +10,7 @@
 //! view had them.
 
 mod appearance;
+mod assistants;
 mod backup;
 mod composing;
 mod conversations;
@@ -22,6 +23,7 @@ mod sidebar;
 mod system;
 
 pub(super) use appearance::AppearancePage;
+pub(super) use assistants::AssistantsPage;
 pub(super) use backup::BackupPage;
 pub(super) use composing::ComposingPage;
 pub(super) use conversations::ConversationsPage;

@@ -219,7 +219,7 @@ async fn backfill_worklist(
 }
 
 /// Fetch message summaries for a specific set of UIDs (used by the backfill).
-async fn fetch_summaries_by_uid(
+pub(super) async fn fetch_summaries_by_uid(
     account_id: u32,
     session: &mut ImapSession,
     folder_id: u32,

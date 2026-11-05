@@ -410,6 +410,7 @@ impl AppModel {
             | AppMsg::AttachmentsPending { .. }
             | AppMsg::NoAttachments { .. }
             | AppMsg::HasAttachments { .. }) => self.on_events_bodies(msg, sender),
+            msg @ AppMsg::Assistant(..) => self.on_assistant(msg, sender),
             AppMsg::Pref(pref) => self.route_pref(pref, sender),
         }
     }
@@ -558,6 +559,7 @@ impl AppModel {
             | PrefOutput::SetUndoSend(..)
             | PrefOutput::SetRequestReceipts(..)
             | PrefOutput::SetReturnedReceipts(..)) => self.on_prefs_compose_pref(pref),
+            pref @ PrefOutput::SetAssistantPolicy(..) => self.on_assistant_pref(pref, sender),
             // The rest of Preferences' outputs are mapped to their own
             // messages before they get here.
             _ => {}

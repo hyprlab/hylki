@@ -237,6 +237,7 @@ pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefil
         forwards: m.forwards,
         draft_origin: m.draft_origin,
         encrypt: m.encrypt,
+        from_encrypted: false,
         receipt: Some(m.request_receipt),
         importance: m.importance,
         outbox_origin: m.outbox_origin,
@@ -256,6 +257,8 @@ pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefil
         // A template that failed to save comes back cut loose from it.
         template: false,
         original_plain: false,
+        typed_html: String::new(),
+        assistant: false,
     }
 }
 

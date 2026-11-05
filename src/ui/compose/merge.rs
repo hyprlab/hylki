@@ -23,6 +23,9 @@ impl Compose {
         widgets: &ComposeWidgets,
         sender: &ComponentSender<Self>,
     ) {
+        if self.edit_waiting(widgets) {
+            return;
+        }
         let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
         if self.encrypt {
             alert(

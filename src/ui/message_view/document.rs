@@ -282,6 +282,16 @@ fn card_body(cards: &Cards<'_>, m: &Message) -> String {
             zoom,
         )
     };
+    // A folded card hides its frame, but a hidden frame still loads and
+    // renders its whole document: a long conversation folded down to its
+    // newest card held every message in memory at once, and one of 83
+    // quoted replies took the app past 14 GB. Folded, the frame keeps its
+    // document aside and gets it when the card opens (`wake` in the
+    // wrapper script). The document is attribute-escaped, so the only
+    // `srcdoc="` in the markup is the frame's own.
+    if LIVE_FOLDED.with(|f| f.borrow().contains(&(m.account_id, m.id))) {
+        return body.replacen(" srcdoc=\"", " data-hylki-srcdoc=\"", 1);
+    }
     body
 }
 

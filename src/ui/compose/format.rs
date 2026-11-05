@@ -269,7 +269,13 @@ impl Compose {
     }
 
     /// Handles [`ComposeInput::LoadAs`].
-    pub(super) fn on_load_as(&mut self, from: ComposeFormat, to: ComposeFormat, body: String) {
+    pub(super) fn on_load_as(
+        &mut self,
+        from: ComposeFormat,
+        to: ComposeFormat,
+        body: String,
+        sender: &ComponentSender<Self>,
+    ) {
         // Every conversion goes through HTML: it is the one form
         // all four formats can be written to and read back from.
         let html = match from {
@@ -287,6 +293,17 @@ impl Compose {
             ComposeFormat::Rich | ComposeFormat::Plain => self.editor.set_html(&html),
         }
         self.editor.grab_focus();
+        // The reload took away an assistant's diff: it comes back once
+        // the new document is there.
+        if self
+            .assistant_edit
+            .as_ref()
+            .is_some_and(|e| e.text.is_some())
+        {
+            let s = sender.input_sender().clone();
+            self.editor
+                .when_loaded(move || s.emit(ComposeInput::ReshowAssistantDiff));
+        }
         // HYLKI_SHOWCASE_PLAIN_LOG logs the reloaded body, its font
         // and the text it sends (demo only).
         if std::env::var_os("HYLKI_SHOWCASE_PLAIN_LOG").is_some()

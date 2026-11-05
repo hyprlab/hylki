@@ -8,6 +8,8 @@ use crate::i18n::{i18n, i18n_f};
 use crate::ui::recipient_row::RecipientRow;
 use crate::ui::rich_editor::{RichEditor, SourceKind};
 
+mod assistant;
+mod assistant_edit;
 mod attachment_check;
 mod attachments;
 mod cloud;
@@ -28,6 +30,7 @@ mod subject;
 mod suggest;
 #[cfg(test)]
 mod tests;
+mod text_diff;
 mod translate;
 mod types;
 
@@ -419,6 +422,8 @@ impl Component for Compose {
             .map(|a| a.signature.clone())
             .unwrap_or_default();
         let sign_default = accounts.get(selected).is_some_and(|a| a.sign_default);
+        // The user's own domains, which the assistant banner does not flag.
+        let own_domains = assistant::own_domains(&accounts);
 
         let completion = gtk::Popover::new();
         completion.set_autohide(false); // don't steal focus from the entry
@@ -433,13 +438,18 @@ impl Component for Compose {
         // another blank line (#349). With Return set to start paragraphs the
         // line is a paragraph too, so the first Return splits it into two.
         let resumed = prefill.resumed || draft_origin.is_some() || outbox_origin.is_some();
-        let mut content = String::from(
-            match (resumed, crate::config::load_privacy().return_paragraph) {
-                (true, _) => "",
-                (false, true) => "<p><br></p>",
-                (false, false) => "<div><br></div>",
-            },
-        );
+        let blank_line = match (resumed, crate::config::load_privacy().return_paragraph) {
+            (true, _) => "",
+            (false, true) => "<p><br></p>",
+            (false, false) => "<div><br></div>",
+        };
+        // Text written for the user (an assistant's) stands where they would
+        // have typed, with the blank line under it to part it from the rest.
+        let mut content = if prefill.typed_html.is_empty() {
+            String::from(blank_line)
+        } else {
+            format!("{}{blank_line}", prefill.typed_html)
+        };
         let sig_dashes = crate::config::load_privacy().signature_dashes;
         let sig = if !resumed && !prefill.no_signature && !current_sig.is_empty() {
             sig_html(&current_sig, sig_dashes)
@@ -593,6 +603,14 @@ impl Component for Compose {
             cloud_passwords: Vec::new(),
             undo_stack: Vec::new(),
             redo_stack: Vec::new(),
+            by_assistant: prefill.assistant,
+            from_encrypted: prefill.from_encrypted,
+            own_domains,
+            assistant_banner: None,
+            assistant_edit: None,
+            edit_loss: None,
+            edit_bar: assistant_edit::new_edit_bar(),
+            last_edit: None,
         };
         model.from_account = model
             .accounts
@@ -611,6 +629,12 @@ impl Component for Compose {
             widgets.sign_btn.set_active(true);
         }
         widgets.editor_holder.append(&model.editor.widget);
+        if prefill.assistant {
+            let banner = assistant::banner(&prefill, &model.own_domains);
+            widgets.toolbar_root.add_top_bar(&banner);
+            model.assistant_banner = Some(banner);
+        }
+        widgets.toolbar_root.add_top_bar(&model.edit_bar);
 
         // The inline/window toggle: only reply/forward panes can toggle. Its icon
         // reflects the current host (fullscreen = "expand to window", restore =
@@ -887,7 +911,7 @@ impl Component for Compose {
 
                 ComposeInput::ApplyFormat(to) => self.on_apply_format(to, &sender),
 
-                ComposeInput::LoadAs { from, to, body } => self.on_load_as(from, to, body),
+                ComposeInput::LoadAs { from, to, body } => self.on_load_as(from, to, body, &sender),
 
                 ComposeInput::TogglePreview(on) => self.on_toggle_preview(on, &sender),
 
@@ -953,6 +977,14 @@ impl Component for Compose {
                 ComposeInput::AutoSaveBody(fields) => self.on_auto_save_body(fields, &sender),
 
                 ComposeInput::Autosaved { saved, origin } => self.on_autosaved(saved, origin),
+
+                input @ (ComposeInput::AssistantRead { .. }
+                | ComposeInput::AssistantEdit(_)
+                | ComposeInput::ApplyAssistantEdit
+                | ComposeInput::RejectAssistantEdit
+                | ComposeInput::ReshowAssistantDiff) => {
+                    self.on_assistant_input(input, widgets, root, &sender)
+                }
             }
         }
         // Overriding `update_with_view` takes over relm4's default, which

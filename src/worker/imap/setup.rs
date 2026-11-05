@@ -82,6 +82,7 @@ impl<E: Emit> ImapWorker<E> {
             backfill_seen: HashSet::new(),
             offline: Default::default(),
             text_search: None,
+            server_searches: VecDeque::new(),
             refs_repair: VecDeque::new(),
             label_fill: VecDeque::new(),
             backlog: VecDeque::new(),

@@ -229,6 +229,25 @@ impl RichEditor {
         );
     }
 
+    /// `f`, once, when the document now loading has loaded.
+    pub(super) fn when_loaded(&self, f: impl FnOnce() + 'static) {
+        let f = std::cell::RefCell::new(Some(f));
+        let id = std::rc::Rc::new(std::cell::Cell::new(None));
+        let handler_id = id.clone();
+        let handler = self.webview.connect_load_changed(move |v, ev| {
+            if ev != webkit6::LoadEvent::Finished {
+                return;
+            }
+            if let Some(f) = f.borrow_mut().take() {
+                f();
+            }
+            if let Some(h) = handler_id.take() {
+                v.disconnect(h);
+            }
+        });
+        id.set(Some(handler));
+    }
+
     /// Show the message as plain text from the next [`RichEditor::set_html`]
     /// on: the document flattens itself to the text that is sent, in the
     /// monospace font, and pastes and drops bring in text alone (#424).

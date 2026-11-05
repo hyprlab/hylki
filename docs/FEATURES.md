@@ -180,6 +180,10 @@ The full list. The [README](../README.md) carries a shorter one.
 
 ## The app
 
+- **AI agents:** an agent reads and organizes mail and prepares messages
+  through the Model Context Protocol, as far as you allow it per account, per
+  action and per folder. It cannot send, erase mail for good or read encrypted
+  mail. See [Configuration](DOCUMENTATION.md#ai-agents).
 - **GNOME-native:** adaptive three-pane layout, per-account colours and
   emoji, picture or Gravatar avatars, light and dark following the system.
 - **Appearance themes:** five palettes (Rose, Forest, Tidal, Earth and

@@ -184,6 +184,13 @@ junk = false
 trash = false
 snoozed = true
 
+[privacy.assistant]
+enabled = false
+address_books = false
+mail_people = false
+
+[privacy.assistant.accounts]
+
 [privacy.print]
 page_numbers = true
 date = false

@@ -9,6 +9,7 @@
 use std::path::PathBuf;
 
 mod accounts;
+mod assistant;
 mod bundle;
 mod filters;
 mod focus;
@@ -29,6 +30,7 @@ mod toolbar;
 mod window;
 
 pub(crate) use accounts::*;
+pub(crate) use assistant::*;
 pub(crate) use bundle::*;
 pub(crate) use filters::*;
 pub(crate) use focus::*;

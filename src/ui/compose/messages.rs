@@ -246,6 +246,21 @@ pub(crate) enum ComposeInput {
     /// Showcase only (HYLKI_SHOWCASE_COMPOSE_FROM): pick the From row's
     /// entry `n`, as a click would, so the signature swap can be captured.
     ShowcaseFrom(u32),
+    /// An AI assistant asks what the composer holds (`crate::mcp`): its
+    /// fields, and with `text` what is written in it.
+    AssistantRead {
+        text: bool,
+        done: tokio::sync::oneshot::Sender<crate::mcp::OpenDraft>,
+    },
+    /// An AI assistant asks for this change: shown for the user to apply
+    /// or reject, in place of one still waiting.
+    AssistantEdit(crate::mcp::DraftEdit),
+    /// The user applied the assistant's edit, or rejected it.
+    ApplyAssistantEdit,
+    RejectAssistantEdit,
+    /// The editor has reloaded (a format change): the pending edit's diff
+    /// drawn over it again.
+    ReshowAssistantDiff,
 }
 
 /// A message as it stood when Send, Save or the automatic save read it:

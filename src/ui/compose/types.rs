@@ -56,6 +56,9 @@ pub(crate) struct ComposePrefill {
     pub(crate) draft_origin: Option<DraftOrigin>,
     /// Start with Encrypt (and so Sign) on: a reply to an encrypted message (#133).
     pub(crate) encrypt: bool,
+    /// It quotes or copies a message that arrived encrypted: an assistant
+    /// never sees into the composer, whatever becomes of Encrypt.
+    pub(crate) from_encrypted: bool,
     /// Ask for a read receipt (#520): as the message being edited did, or
     /// `None` for the setting's default.
     pub(crate) receipt: Option<bool>,
@@ -102,6 +105,12 @@ pub(crate) struct ComposePrefill {
     /// The message replied to or forwarded had no HTML part (#436): with
     /// the setting on, the composer opens in plain text.
     pub(crate) original_plain: bool,
+    /// Text that goes where the user would type (an assistant's, already
+    /// HTML), ahead of the signature and any quote. Empty: a blank line.
+    pub(crate) typed_html: String,
+    /// An AI assistant prepared the message (`crate::mcp`): the composer
+    /// says so above it, with every recipient it was given.
+    pub(crate) assistant: bool,
 }
 
 /// Everything the compose pane needs to open.

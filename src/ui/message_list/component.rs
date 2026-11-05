@@ -577,6 +577,7 @@ impl SimpleComponent for MessageList {
                 self.on_leave_conversation(gone, head)
             }
             MessageListInput::RemoveMany(ids) => self.on_remove_many(ids, &sender),
+            MessageListInput::RemoveExact(slots) => self.on_remove_exact(slots, &sender),
             MessageListInput::RowAction { action, message } => {
                 self.on_row_action(action, message, &sender)
             }

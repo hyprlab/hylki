@@ -604,6 +604,9 @@ impl AppModel {
     pub(super) fn on_transfer(&mut self, msg: AppMsg, sender: ComponentSender<Self>) {
         match msg {
             AppMsg::RawExported { token, raw } => {
+                let Some(raw) = self.assistant_takes_raw(token, raw) else {
+                    return;
+                };
                 if self.keep_fetched_draft(token, &raw) {
                     return;
                 }
@@ -624,7 +627,14 @@ impl AppModel {
                         Ok(raw) => {
                             // Kept, so the next opening is at once.
                             if let Some(path) = self.resolve_folder_path(&m) {
-                                self.keep_draft(&path, m.account_id, m.uid, &m.message_id, m.timestamp, &raw);
+                                self.keep_draft(
+                                    &path,
+                                    m.account_id,
+                                    m.uid,
+                                    &m.message_id,
+                                    m.timestamp,
+                                    &raw,
+                                );
                             }
                             self.compose_from_draft_raw(m, &raw, inline, extra, &sender)
                         }

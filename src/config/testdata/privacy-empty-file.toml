@@ -180,6 +180,13 @@ junk = false
 trash = false
 snoozed = true
 
+[assistant]
+enabled = false
+address_books = false
+mail_people = false
+
+[assistant.accounts]
+
 [print]
 page_numbers = true
 date = false

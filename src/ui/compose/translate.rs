@@ -220,6 +220,21 @@ impl Compose {
             );
             return;
         }
+        // The text is under an assistant's suggested changes, locked
+        // until they are accepted or rejected.
+        if self
+            .assistant_edit
+            .as_ref()
+            .is_some_and(|e| e.text.is_some())
+        {
+            let parent = root.root().and_downcast::<gtk::Window>();
+            alert(
+                parent.as_ref(),
+                &i18n("Not now"),
+                &i18n("Accept or reject the AI agent's suggested changes first."),
+            );
+            return;
+        }
         self.translating = true;
         self.translate_btn.set_sensitive(false);
         let js = match self.format {

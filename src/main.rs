@@ -16,6 +16,7 @@ mod desktop;
 mod encoding;
 mod i18n;
 mod mail;
+mod mcp;
 mod models;
 mod ram_cache;
 mod rng;
@@ -94,6 +95,14 @@ fn apply_renderer() {
 }
 
 fn main() {
+    // An assistant's relay to the running app (mcp/relay.rs) is not the
+    // app: no window, no single-instance hand-off, and stdout belongs to
+    // the protocol, so this goes before the app's logging (whose stdout
+    // layer would write there).
+    if std::env::args().nth(1).as_deref() == Some(mcp::MCP_FLAG) {
+        mcp::run_relay();
+    }
+
     // The allocator's tunables before the first allocation that matters (see
     // memory_report::tune_allocator).
     desktop::memory_report::tune_allocator();

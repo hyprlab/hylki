@@ -4,7 +4,7 @@ use adw::prelude::*;
 use relm4::prelude::*;
 use tokio::sync::mpsc::UnboundedSender;
 
-use crate::config::AccountConfig;
+use crate::config::{AccountConfig, Protocol};
 use crate::models::FolderKind;
 use crate::ui::message_list::MessageListInput;
 use crate::ui::message_view::MessageViewInput;
@@ -424,6 +424,37 @@ impl AppModel {
         }
     }
 
+    /// Once at start, with no worker writing yet: rows of folders the accounts
+    /// do not have go (see `Cache::drop_rows_of_missing_folders`).
+    fn tidy_cached_folders(&self) {
+        if demo_mode() {
+            return;
+        }
+        let on_a_server: Vec<(u32, Vec<String>)> = self
+            .config
+            .iter()
+            .enumerate()
+            .filter(|(_, a)| {
+                matches!(
+                    a.protocol,
+                    Protocol::Imap | Protocol::Graph | Protocol::Jmap
+                )
+            })
+            .map(|(i, a)| (i as u32 + 1, a.hidden_folders.clone()))
+            .collect();
+        let started = std::time::Instant::now();
+        match crate::cache::Cache::open()
+            .and_then(|cache| cache.drop_rows_of_missing_folders(&on_a_server))
+        {
+            Ok(0) => {}
+            Ok(gone) => tracing::info!(
+                "cache: dropped {gone} messages of folders the accounts do not have, in {:?}",
+                started.elapsed()
+            ),
+            Err(e) => tracing::warn!("cache: could not drop rows of missing folders: {e}"),
+        }
+    }
+
     /// Paint the mail panes straight from the disk cache, before any worker
     /// has spoken: every enabled account's folder list and inbox slice is
     /// loaded synchronously at startup, so "All Inboxes" (the launch view) is
@@ -432,6 +463,7 @@ impl AppModel {
     /// the app last ran.
     fn prime_from_cache(&mut self) {
         self.claim_cached_accounts();
+        self.tidy_cached_folders();
         let cache = match crate::cache::Cache::open() {
             Ok(cache) => cache,
             Err(e) => {

@@ -39,6 +39,7 @@ mod views;
 
 pub(crate) use filters::{CheckFilter, DateBound, QuickFilter, QuickFilters};
 pub(crate) use layout::after_next_paint;
+pub(crate) use query::Query;
 pub(crate) use search::search_text_of;
 pub(crate) use search::{load_address_names, HitSet, PoolFolder, SearchScope, ServerScope};
 pub(crate) use sort::SortOrder;

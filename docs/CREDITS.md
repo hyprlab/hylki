@@ -85,10 +85,16 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   longer asks for root; and a long run of requests and design feedback that
   shaped tags, split replies, the reader's own font and colours, Empty Trash
   and the reply panel's fields.
-- [**Isak Samsten**](https://github.com/isaksamsten) ([#307](https://github.com/hyprlab/hylki/issues/307)):
+- [**Gonzalo Vasco López**](https://github.com/gonzisdev) ([#581](https://github.com/hyprlab/hylki/pull/581)):
+  folded message cards that load their message only when they open, which
+  keeps a long conversation from using all the memory.
+- [**Isak Samsten**](https://github.com/isaksamsten) ([#307](https://github.com/hyprlab/hylki/issues/307),
+  [#577](https://github.com/hyprlab/hylki/pull/577)):
   recipient lookups in LDAP directories. The composer asks the directories
   as an address is typed, once the typing pauses, and drops an answer that
-  arrives for text since changed, as the #307 branch did.
+  arrives for text since changed, as the #307 branch did. Also the connection
+  for AI agents: the server inside the app, the relay an agent's client
+  starts, and drafts that open in the composer for the user to check.
 - [**Felix Günther**](https://github.com/fegue) ([#314](https://github.com/hyprlab/hylki/pull/314),
   [#315](https://github.com/hyprlab/hylki/pull/315)): saving contacts and
   reading LDAP directories in the Flatpak, which finds Evolution Data Server

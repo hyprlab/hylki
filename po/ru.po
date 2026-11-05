@@ -89,6 +89,124 @@ msgstr "Не удалось импортировать учетную запис
 msgid "On This Computer is switched off"
 msgstr "На этом компьютере"
 
+#, fuzzy
+msgid "Could not start: {error}"
+msgstr "Не удалось сохранить PDF: {error}"
+
+msgid "Off"
+msgstr "Выкл."
+
+#, fuzzy
+msgid "No activity yet."
+msgstr "Учётные записи пока не добавлены"
+
+#, fuzzy
+msgid "Message from an AI Agent"
+msgstr "Новое сообщение из шаблона"
+
+#, fuzzy
+msgid "An AI agent prepared a message"
+msgstr "Переслать это сообщение"
+
+msgid "Show"
+msgstr "Показать"
+
+#, fuzzy
+msgid "Listed accounts"
+msgstr "Над учётными записями"
+
+#, fuzzy
+msgid "Listed folders"
+msgstr "Эта папка"
+
+#, fuzzy
+msgid "Listed messages"
+msgstr "Метка добавлена к {n} письму"
+
+#, fuzzy
+msgid "Searched mail"
+msgstr "Поиск фильтров"
+
+#, fuzzy
+msgid "Searched on the server"
+msgstr "Поиск…"
+
+#, fuzzy
+msgid "Read a message"
+msgstr "{n} сообщений"
+
+#, fuzzy
+msgid "Read a conversation"
+msgstr "Всё обсуждение"
+
+#, fuzzy
+msgid "Listed attachments"
+msgstr "Скрыть вложения"
+
+#, fuzzy
+msgid "Read an attachment"
+msgstr "{n} вложение"
+
+#, fuzzy
+msgid "Looked up contacts"
+msgstr "Сортировка контактов"
+
+#, fuzzy
+msgid "Prepared a message"
+msgstr "Переслать это сообщение"
+
+#, fuzzy
+msgid "Prepared a reply"
+msgstr "Отметить как прочитанное"
+
+#, fuzzy
+msgid "Prepared a forward"
+msgstr "Отметить как прочитанное"
+
+msgid "Changed read state"
+msgstr ""
+
+msgid "Changed stars"
+msgstr ""
+
+msgid "Listed tags"
+msgstr ""
+
+#, fuzzy
+msgid "Changed tags"
+msgstr "Список изменений"
+
+#, fuzzy
+msgid "Moved messages"
+msgstr "Над сообщениями"
+
+#, fuzzy
+msgid "Archived messages"
+msgstr "Архивировать это сообщение"
+
+#, fuzzy
+msgid "Moved messages to Trash"
+msgstr "Перемещает сообщение в «Корзину»."
+
+#, fuzzy
+msgid "Read the open conversation"
+msgstr "Всё обсуждение"
+
+#, fuzzy
+msgid "Listed open drafts"
+msgstr "Эта папка"
+
+#, fuzzy
+msgid "Read an open draft"
+msgstr "Всё обсуждение"
+
+msgid "Suggested changes to a draft"
+msgstr ""
+
+#, fuzzy
+msgid "Refused or failed: {action}"
+msgstr "Не удалось отменить действие: {e}"
+
 msgid "Delete the attachment from the server?"
 msgstr "Удалить вложение с сервера?"
 
@@ -113,9 +231,6 @@ msgstr "Справа"
 
 msgid "Below"
 msgstr ""
-
-msgid "Off"
-msgstr "Выкл."
 
 #, fuzzy
 msgid "Reading Pane"
@@ -1866,6 +1981,13 @@ msgstr[1] "Новое письмо с {n} прикрёпленными файл�
 msgstr[2] "Новое письмо с {n} прикрёпленными файлами открыто в Hylki."
 
 #, fuzzy
+msgid "Message ready"
+msgstr "Шрифт сообщений"
+
+msgid "An AI agent prepared a message. Check it, then send it."
+msgstr ""
+
+#, fuzzy
 msgid "On {date} at {time}, {name} wrote:"
 msgstr "{date} в {time}"
 
@@ -2441,9 +2563,6 @@ msgstr "Папка"
 #, fuzzy
 msgid "Permanently deletes the message"
 msgstr "Перевести это сообщение"
-
-msgid "Show"
-msgstr "Показать"
 
 msgid "Bring this folder back to the sidebar"
 msgstr "Вернуть эту папку на боковую панель"
@@ -3633,6 +3752,82 @@ msgstr ""
 msgid "Type an action, a folder or a tag, or > for actions only"
 msgstr ""
 
+msgid "Cc"
+msgstr "Копия"
+
+msgid "Bcc"
+msgstr "Скрытая копия"
+
+msgid ""
+"An AI agent prepared this message. Check who it goes to before you send it."
+msgstr ""
+
+#, fuzzy
+msgid "It has no recipients yet."
+msgstr "Показать получателей"
+
+msgid "Bcc, hidden from the others:"
+msgstr ""
+
+msgid "In Bcc: the other recipients will not see this address"
+msgstr ""
+
+msgid "Outside your own domains"
+msgstr ""
+
+#, fuzzy
+msgid "Not now"
+msgstr "Скрыты"
+
+msgid "Accept or reject the AI agent's suggested changes first."
+msgstr ""
+
+msgid "Wait for the translation to come back, then accept the changes."
+msgstr ""
+
+#, fuzzy
+msgid "Changes suggested by an AI agent"
+msgstr "Новое сообщение из шаблона"
+
+msgid "Nothing changes until you accept them."
+msgstr ""
+
+#, fuzzy
+msgid "Reject"
+msgstr "Проект"
+
+msgid "Accept"
+msgstr "Принять"
+
+#, fuzzy
+msgid "To:"
+msgstr "Кому"
+
+#, fuzzy
+msgid "Cc:"
+msgstr "Копия"
+
+#, fuzzy
+msgid "Subject:"
+msgstr "Тема"
+
+msgid "Accepting removes this text's formatting, links and pictures."
+msgstr ""
+
+msgid "Taken out"
+msgstr ""
+
+msgid "Added in Bcc: the other recipients will not see this address"
+msgstr ""
+
+#, fuzzy
+msgid "Added, outside your own domains"
+msgstr "Адрес или домен"
+
+#, fuzzy
+msgid "Added"
+msgstr "Добавленные слова"
+
 #, fuzzy
 msgid "Send without an attachment?"
 msgstr "Отправить как обычное вложение"
@@ -4004,12 +4199,6 @@ msgstr "Отправить сейчас вместо запланированн�
 
 msgid "Download password for {name}: {password}"
 msgstr "Пароль для скачивания {name}: {password}"
-
-msgid "Cc"
-msgstr "Копия"
-
-msgid "Bcc"
-msgstr "Скрытая копия"
 
 msgid "Reply-To"
 msgstr "Адрес для ответа"
@@ -5081,10 +5270,6 @@ msgstr ""
 msgid "me"
 msgstr "я"
 
-#, fuzzy
-msgid "To:"
-msgstr "Кому"
-
 msgid "Show conversation"
 msgstr "Показать обсуждение"
 
@@ -5381,9 +5566,6 @@ msgstr "Вы отклонили это приглашение."
 msgid "You declined this invitation on {date}."
 msgstr "Вы отклонили это приглашение {date}."
 
-msgid "Accept"
-msgstr "Принять"
-
 msgid "Tells the organiser you will be there"
 msgstr "Сообщает организатору, что вы прийдете"
 
@@ -5451,10 +5633,6 @@ msgstr ""
 #, fuzzy
 msgid "From:"
 msgstr "От"
-
-#, fuzzy
-msgid "Cc:"
-msgstr "Копия"
 
 msgid "Bcc:"
 msgstr ""
@@ -6260,6 +6438,9 @@ msgstr "Создание писем"
 msgid "Privacy"
 msgstr "Конфиденциальность"
 
+msgid "MCP"
+msgstr ""
+
 msgid "Date and Time"
 msgstr "Дата и время"
 
@@ -6285,6 +6466,126 @@ msgstr "Сохранить каталог?"
 
 msgid "Save the account?"
 msgstr "Сохранить учётную запись?"
+
+#, fuzzy
+msgid "See message lists"
+msgstr "Сначала новые сообщения"
+
+msgid "Senders, subjects, dates, previews and folders."
+msgstr ""
+
+#, fuzzy
+msgid "Read message text"
+msgstr "Новое сообщение"
+
+#, fuzzy
+msgid "Search on the mail server"
+msgstr "Поиск…"
+
+#, fuzzy
+msgid "Finds mail not downloaded yet."
+msgstr "Сообщение ещё не загружено."
+
+#, fuzzy
+msgid "Read attachments"
+msgstr "Есть вложения"
+
+#, fuzzy
+msgid "Prepare messages"
+msgstr "Переслать это сообщение"
+
+msgid "Each opens in a window for you to check and send."
+msgstr ""
+
+#, fuzzy
+msgid "Add and remove stars"
+msgstr "Снять отметку"
+
+#, fuzzy
+msgid "Add and remove tags"
+msgstr "Удалить тег"
+
+#, fuzzy
+msgid "Move and archive"
+msgstr "Архив"
+
+#, fuzzy
+msgid "Move to Trash"
+msgstr "Переместить этот черновик в «Корзину»"
+
+#, fuzzy
+msgid "See open conversation"
+msgstr "Показать обсуждение"
+
+msgid "The one you are reading, as you read it."
+msgstr ""
+
+msgid "Read and edit open drafts"
+msgstr ""
+
+msgid "Those agents prepared. You accept each edit."
+msgstr ""
+
+msgid "Include drafts you started"
+msgstr ""
+
+msgid "What you are writing, unsaved text too."
+msgstr ""
+
+msgid ""
+"Hylki contains no AI agent of its own but you can allow outside agents to "
+"access your mail using MCP (Model Context Protocol)"
+msgstr ""
+
+msgid "Allow AI agent access"
+msgstr ""
+
+msgid "Recent Activity"
+msgstr ""
+
+msgid ""
+"Nothing is shared until you allow it. Agents can't send mail, erase it "
+"permanently (moving to Trash is ok) or read encrypted mail."
+msgstr ""
+
+msgid "Command for the agent"
+msgstr ""
+
+#, fuzzy
+msgid "Address books and directories"
+msgstr "Адресная книга"
+
+msgid "People in your mail"
+msgstr ""
+
+#, fuzzy
+msgid "From every account, shared or not."
+msgstr "Список папок каждой учётной записи."
+
+#, fuzzy
+msgid "Full access"
+msgstr "Все учётные записи"
+
+msgid "Grant access to entire account (except Trash and Junk)"
+msgstr ""
+
+msgid "Junk and Trash are hidden until you allow them."
+msgstr ""
+
+#, fuzzy
+msgid "Reset to Defaults"
+msgstr "Восстановить по умолчанию"
+
+msgid "Reset permissions?"
+msgstr ""
+
+msgid ""
+"The account stays shared, but only for reading and preparing messages. Junk "
+"and Trash are hidden again."
+msgstr ""
+
+msgid "Reset"
+msgstr ""
 
 msgid ""
 "Accounts, preferences, filters, tags and layout, in one file. Passwords and "
@@ -8212,10 +8513,6 @@ msgid "Sent mail shows who read it; the receipt goes here."
 msgstr ""
 
 #, fuzzy
-msgid "Move to Trash"
-msgstr "Переместить этот черновик в «Корзину»"
-
-#, fuzzy
 msgid "Keep in Inbox"
 msgstr "Оставить во «Входящих»"
 
@@ -8705,10 +9002,6 @@ msgstr "Hyprlab"
 #~ msgid "Search this folder"
 #~ msgstr "Папки поиска"
 
-#, fuzzy
-#~ msgid "Same as messages"
-#~ msgstr "{n} сообщений"
-
 #~ msgid "Leave in Inbox to only tag matching mail"
 #~ msgstr ""
 #~ "Оставить во «Входящих», чтобы только размечать подходящие письма тегами"
@@ -9028,9 +9321,6 @@ msgstr "Hyprlab"
 #~ "Показывать системные уведомления о новых письмах и ошибках, когда окно "
 #~ "Hylki не активно."
 
-#~ msgid "Moves the message to Trash."
-#~ msgstr "Перемещает сообщение в «Корзину»."
-
 #~ msgid "Opens the message with a reply started."
 #~ msgstr "Открывает сообщение с готовым черновиком ответа."
 
@@ -9228,9 +9518,6 @@ msgstr "Hyprlab"
 #~ "будут автоматически сворачиваться. Долгое нажатие на значок всё равно "
 #~ "позволяет раскрыть или свернуть любой из них, а при возврате к полной "
 #~ "панеле её состояние сохранится."
-
-#~ msgid "Every account's folder list."
-#~ msgstr "Список папок каждой учётной записи."
 
 #~ msgid "The account list under the unified Inboxes row."
 #~ msgstr "Список учётных записей под общей строкой «Входящие»."
@@ -9783,10 +10070,6 @@ msgstr "Hyprlab"
 #~ "остаются в системной связке ключей и не экспортируются; ключи OpenPGP "
 #~ "остаются в GnuPG."
 
-#, fuzzy
-#~ msgid "Like the accounts"
-#~ msgstr "Над учётными записями"
-
 #~ msgid "Show or hide filters"
 #~ msgstr "Показать или скрыть фильтры"
 
@@ -9873,9 +10156,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "Choose which address book to search"
 #~ msgstr "Выберите папки для поиска"
-
-#~ msgid "Sort contacts"
-#~ msgstr "Сортировка контактов"
 
 #, fuzzy
 #~ msgid "From your mail accounts"
@@ -10142,9 +10422,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Label (defaults to email address)"
 #~ msgstr "Метка (по умолчанию адрес электронной почты)"
-
-#~ msgid "Changelog"
-#~ msgstr "Список изменений"
 
 #~ msgid "Full version history"
 #~ msgstr "Полная история версий"

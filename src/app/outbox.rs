@@ -171,6 +171,7 @@ impl AppModel {
             forwards: item.forwards.clone(),
             draft_origin: None,
             encrypt: false,
+            from_encrypted: false,
             receipt: Some(editable.receipt),
             importance: editable.importance,
             outbox_origin: Some(id),
@@ -187,6 +188,8 @@ impl AppModel {
             no_signature: false,
             template: false,
             original_plain: false,
+            typed_html: String::new(),
+            assistant: false,
         };
         // The Outbox stays the folder on screen: its list is still what's listed,
         // so its toolbar has to stay too. Leaving it would strand the user in a

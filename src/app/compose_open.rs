@@ -420,8 +420,16 @@ impl AppModel {
 
     /// A composer quoting or copying `m` loads its remote pictures only
     /// when the reader would (#295).
-    fn quoting(&self, m: &Message, mut prefill: ComposePrefill) -> ComposePrefill {
+    pub(super) fn quoting(&self, m: &Message, mut prefill: ComposePrefill) -> ComposePrefill {
         prefill.block_remote_images = !self.remote_allowed(m);
+        // An answer may turn Encrypt off, and a forward never has it on, yet
+        // both hold what was decrypted.
+        prefill.from_encrypted = crate::models::preview_is_encrypted(&m.preview)
+            || self
+                .sender_cache
+                .get(&body_key(m))
+                .and_then(|c| c.pgp.as_ref())
+                .is_some_and(|p| p.encrypted);
         prefill
     }
 
@@ -526,7 +534,17 @@ impl AppModel {
             AppMsg::OpenMailto(uri) => self.open_mailto(uri, sender),
 
             AppMsg::PresentComposers => {
+                crate::desktop::notify::withdraw_compose_ready();
                 crate::desktop::session::present_window(&self.window);
+                // Messages an assistant prepared while the user was busy
+                // in Hylki wait unshown until asked for.
+                for h in self
+                    .composers
+                    .iter()
+                    .filter(|h| !gtk::prelude::WidgetExt::is_visible(&h.window))
+                {
+                    crate::desktop::session::present_window(&h.window);
+                }
                 // The newest standalone composer is the one the alert was
                 // about; transient for the main window, it sits above it.
                 if let Some(h) = self.composers.last() {

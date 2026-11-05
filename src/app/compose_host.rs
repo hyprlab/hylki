@@ -23,6 +23,9 @@ pub(super) struct ComposeHost {
     #[allow(dead_code)]
     pub(super) controller: Controller<Compose>,
     pub(super) window: adw::Window,
+    /// An AI assistant prepared it (`assistant.rs`, which limits how many
+    /// of those are open).
+    pub(super) assistant: bool,
 }
 
 /// The reader's inline reply/forward composer. `window` is `Some` only while the
@@ -38,6 +41,9 @@ pub(super) struct ReaderCompose {
     /// A draft opened by selecting its row, which the list keeps selected.
     pub(super) list_draft: bool,
 }
+
+/// A composer's id and its component.
+type OpenComposer<'a> = (u32, &'a Controller<Compose>);
 
 impl AppModel {
     /// A new message with these recipients, from the account being looked at.
@@ -81,7 +87,24 @@ impl AppModel {
             id,
             controller,
             window,
+            assistant: false,
         });
+    }
+
+    /// Every composer open now: in windows of their own, and the reader's
+    /// (inline or popped out). One draining closed is not.
+    pub(super) fn open_composers(&self) -> impl Iterator<Item = OpenComposer<'_>> {
+        self.composers
+            .iter()
+            .map(|h| (h.id, &h.controller))
+            .chain(self.reader_compose.iter().map(|r| (r.id, &r.controller)))
+    }
+
+    /// The open composer with this id.
+    pub(super) fn compose_controller(&self, id: u32) -> Option<&Controller<Compose>> {
+        self.open_composers()
+            .find(|(cid, _)| *cid == id)
+            .map(|(_, c)| c)
     }
 
     /// The revealer the inline composer should slide down in: the reader
@@ -236,6 +259,7 @@ impl AppModel {
                     id: r.id,
                     controller: r.controller,
                     window,
+                    assistant: false,
                 });
             }
             None => {

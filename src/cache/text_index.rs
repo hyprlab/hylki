@@ -17,14 +17,16 @@ const MAX_TEXT: usize = 256 * 1024;
 pub(crate) type BodyHit = (u32, String, u32, String);
 
 /// The text of a cached body, as the index wants it: its words, without the
-/// markup, the style sheets or the scripts, entities decoded.
+/// markup, the style sheets or the scripts, entities decoded. A tag that
+/// starts a line on screen leaves a line break (the index reads it as any
+/// other space), so the text reads as the message did ([`body_text`]).
 pub(super) fn index_text(html: &str) -> String {
     let mut out = String::with_capacity(html.len().min(MAX_TEXT) / 2);
     let mut rest = html;
     while let Some(lt) = rest.find('<') {
         out.push_str(&rest[..lt]);
-        out.push(' ');
         rest = &rest[lt + 1..];
+        out.push(if breaks_line(rest) { '\n' } else { ' ' });
         let name: String = rest
             .chars()
             .take_while(|c| c.is_ascii_alphanumeric() || *c == '!' || *c == '-')
@@ -62,6 +64,59 @@ pub(super) fn index_text(html: &str) -> String {
         text.truncate(cut);
     }
     text
+}
+
+/// Whether the tag `tag` (what follows its `<`) starts or ends a line on
+/// screen: a paragraph, a break, a row, a list item.
+fn breaks_line(tag: &str) -> bool {
+    let tag = tag.strip_prefix('/').unwrap_or(tag);
+    let name: String = tag
+        .chars()
+        .take_while(char::is_ascii_alphanumeric)
+        .collect::<String>()
+        .to_ascii_lowercase();
+    matches!(
+        name.as_str(),
+        "br" | "p"
+            | "div"
+            | "tr"
+            | "li"
+            | "hr"
+            | "pre"
+            | "blockquote"
+            | "table"
+            | "ul"
+            | "ol"
+            | "h1"
+            | "h2"
+            | "h3"
+            | "h4"
+            | "h5"
+            | "h6"
+    )
+}
+
+/// A cached body as plain text, for a reader that is not a browser (the
+/// assistant server, [`crate::mcp`]): [`index_text`], with the blank runs
+/// the markup leaves behind squeezed to one empty line at most.
+pub(crate) fn body_text(html: &str) -> String {
+    let text = index_text(html);
+    let mut out = String::with_capacity(text.len());
+    let mut blank = 0;
+    for line in text.lines().map(str::trim) {
+        if line.is_empty() {
+            blank += 1;
+            if blank > 1 || out.is_empty() {
+                continue;
+            }
+        } else {
+            blank = 0;
+        }
+        out.push_str(line);
+        out.push('\n');
+    }
+    out.truncate(out.trim_end().len());
+    out
 }
 
 /// One search term as an FTS5 query: a phrase as written, a word as the

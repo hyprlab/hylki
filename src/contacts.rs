@@ -129,6 +129,80 @@ pub(crate) fn rank(matches: &mut [Suggestion], typed: &str) {
     });
 }
 
+/// The matches for `typed` a recipient field offers, best first: those the
+/// address book and mail history hold (`known`, already matched), marked
+/// where a directory has them too, then the directories' own (#307). A
+/// directory matched on attributes the entry may not show (a surname under
+/// a display name), so its answers are not matched again.
+pub(crate) fn merge_found(
+    mut known: Vec<Suggestion>,
+    directory: &[Suggestion],
+    typed: &str,
+) -> Vec<Suggestion> {
+    let in_directory: HashSet<String> = directory.iter().map(|s| s.email.to_lowercase()).collect();
+    for s in &mut known {
+        s.from_directory |= in_directory.contains(&s.email.to_lowercase());
+    }
+    let have: HashSet<String> = known.iter().map(|s| s.email.to_lowercase()).collect();
+    let mut seen = HashSet::new();
+    known.extend(
+        directory
+            .iter()
+            .filter(|s| {
+                !have.contains(&s.email.to_lowercase()) && seen.insert(s.email.to_lowercase())
+            })
+            .cloned(),
+    );
+    rank(&mut known, typed);
+    known
+}
+
+/// Ask the directories for `typed`: the Microsoft 365 ones of `graph`, and
+/// the LDAP ones too unless `ldap` is off, all at once, so the slowest
+/// decides how long it takes rather than all of them in turn. Blocking:
+/// call it off the main thread.
+pub(crate) fn search_directories(
+    typed: &str,
+    graph: &[crate::config::AccountConfig],
+    ldap: bool,
+) -> (Vec<Suggestion>, Vec<directory::DirectoryFailure>) {
+    std::thread::scope(|scope| {
+        let org =
+            (!graph.is_empty()).then(|| scope.spawn(|| graph_directory::search(typed, graph)));
+        let (mut matches, failed) = if ldap {
+            directory::search(typed)
+        } else {
+            Default::default()
+        };
+        if let Some(found) = org.and_then(|h| h.join().ok()) {
+            matches.extend(found);
+        }
+        (matches, failed)
+    })
+}
+
+/// Everyone `typed` finds, the way the composer's address completion finds
+/// them: the address book, mail history and `own`, the user's addresses,
+/// then, with `directories`, every directory, ranked as the completion ranks
+/// them. Blocking: call it off the main thread.
+pub(crate) fn lookup(
+    typed: &str,
+    own: &[(String, String)],
+    directories: bool,
+) -> (Vec<Suggestion>, Vec<directory::DirectoryFailure>) {
+    let typed = typed.trim();
+    let known: Vec<Suggestion> = suggestions(own)
+        .into_iter()
+        .filter(|s| s.matches(typed))
+        .collect();
+    let (directory, failed) = if directories && typed.chars().count() >= directory::MIN_QUERY {
+        search_directories(typed, &graph_directory::accounts(), true)
+    } else {
+        Default::default()
+    };
+    (merge_found(known, &directory, typed), failed)
+}
+
 /// Combined, de-duplicated recipient suggestions from Contacts and mail history
 /// (addresses sent to / received from). History frequency becomes each
 /// suggestion's `score` so frequently used addresses — contact or not — can

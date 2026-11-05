@@ -53,6 +53,7 @@ pub(crate) use api::{
     begin_text_search, text_search_is_current, CalendarPart, KeyringRead, MailRequest,
     OutgoingMessage, WorkerEvent, TEXT_SEARCH_LIMIT,
 };
+pub(crate) use api::{ServerFound, ServerSearch};
 pub(crate) use auth::{forget_access_token, oauth_token_blocking};
 pub(crate) use compose::build::sent_body_preview;
 pub(crate) use compose::editable::editable_from_raw;
@@ -72,7 +73,7 @@ use lane::cache_lane;
 use mock::run_mock;
 pub(crate) use outbox::{answered_copies, park_for_next_launch, reply_copy_path};
 use pop3::run_pop3;
-pub(crate) use render::attachments::extract_attachments_of;
+pub(crate) use render::attachments::{extract_attachments_of, guess_mime};
 pub(crate) use render::body::extract_body;
 pub(crate) use render::body::wrap_plain;
 pub(crate) use render::render_raw;

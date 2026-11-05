@@ -28,8 +28,8 @@ pub(super) enum Idle {
 }
 
 impl<E: Emit> ImapWorker<E> {
-    /// Climb the ladder: a search of the server's text (#509), body
-    /// prefetch, then folder names, the unread sweep
+    /// Climb the ladder: a search of the server's text (#509), an
+    /// assistant's search, body prefetch, then folder names, the unread sweep
     /// (with auto-empty and list clean-up), attachment prefetch, References
     /// repair and Gmail label fill (only once the index is complete), the
     /// background index (connecting first if need be), the offline period's
@@ -46,6 +46,13 @@ impl<E: Emit> ImapWorker<E> {
             // ahead of them.
             match self.session {
                 Some(_) => self.search_one_folder().await,
+                None => self.connect_or_wait().await,
+            }
+        } else if !self.server_searches.is_empty() && net {
+            // An assistant is waiting on this, but the user's own search
+            // goes first, and any request between one folder and the next.
+            match self.session {
+                Some(_) => self.search_server_folder().await,
                 None => self.connect_or_wait().await,
             }
         } else if !self.body_prefetch.is_empty() && ahead {

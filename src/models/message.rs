@@ -166,6 +166,39 @@ pub(crate) fn preview_display(preview: &str) -> String {
 }
 
 impl Message {
+    /// A message with nothing in it, for a test to fill in what matters.
+    #[cfg(test)]
+    pub(crate) fn blank() -> Message {
+        Message {
+            id: 0,
+            account_id: 0,
+            folder_id: 0,
+            uid: 0,
+            from_name: String::new(),
+            from_addr: String::new(),
+            reply_to: String::new(),
+            to: String::new(),
+            cc: String::new(),
+            bcc: String::new(),
+            subject: String::new(),
+            preview: String::new(),
+            body: String::new(),
+            date: String::new(),
+            timestamp: 0,
+            unread: false,
+            starred: false,
+            answered: false,
+            forwarded: false,
+            keywords: Vec::new(),
+            has_attachment: false,
+            message_id: String::new(),
+            references: String::new(),
+            importance: Importance::default(),
+            due: 0,
+            labels: Vec::new(),
+        }
+    }
+
     /// The sender's name as shown: the address book's for a saved contact
     /// when Settings asks for it (#541), else the one the mail gives.
     pub(crate) fn shown_from_name(&self) -> std::borrow::Cow<'_, str> {

@@ -219,6 +219,22 @@ pub(super) const ACCOUNT_TABLES: [&str; 14] = [
     "draft_copies",
 ];
 
+/// The tables of what can be had again from a server, by the folder it is
+/// in, which go with a folder the account no longer has. Not `draft_copies`,
+/// which prune themselves, or `local_copies`, which remembers what has been
+/// copied whichever folder it came from.
+pub(super) const FOLDER_TABLES: [&str; 9] = [
+    "messages",
+    "bodies",
+    "sender_checks",
+    "attachments",
+    "attachments_checked",
+    "attachment_meta",
+    "attachment_scan",
+    "refs_repair",
+    "label_fill",
+];
+
 /// The tables holding what was downloaded for one message, which are
 /// dropped together.
 pub(super) const DOWNLOADED_TABLES: [&str; 3] = ["bodies", "attachments", "attachments_checked"];

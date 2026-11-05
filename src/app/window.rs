@@ -46,6 +46,8 @@ pub(super) fn exit_now(
     super::outgoing::park_held(outgoing);
     super::merge_send::park_waiting(merges);
     finish_keyring_writes();
+    // No assistant can reach an app that has gone.
+    crate::mcp::remove_socket();
     std::process::exit(0)
 }
 

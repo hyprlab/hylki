@@ -269,7 +269,7 @@ const PREVIEW_RENDER_WIDTH: f64 = 1600.0;
 /// thumbnail threads rendering concurrently crashed with heap corruption, one
 /// thread tearing down its Gfx (cmsCloseProfile) while the other still
 /// rendered. Printing (#359) renders with poppler too, on the main thread.
-pub(super) fn pdf_render_lock() -> std::sync::MutexGuard<'static, ()> {
+pub(crate) fn pdf_render_lock() -> std::sync::MutexGuard<'static, ()> {
     static PDF_RENDER: std::sync::Mutex<()> = std::sync::Mutex::new(());
     PDF_RENDER
         .lock()

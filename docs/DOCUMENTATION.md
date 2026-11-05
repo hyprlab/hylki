@@ -1513,6 +1513,107 @@ formatted part and a plain-text one), so re-opening it puts you in your
 default format. Switching that draft back to Markdown converts it, which for
 a message that started life as Markdown lands very close to what you wrote.
 
+### AI agents
+
+An AI agent, such as Claude Code or Codex, can work with your mail through
+the [Model Context Protocol](https://modelcontextprotocol.io) while Hylki runs.
+It is off until you turn it on in **Settings → MCP**, and then nothing
+is shared until you share it.
+
+**Connecting.** Copy **Command for the agent** from that page and add it to
+the agent as a local (stdio) MCP server. In Claude Code:
+
+```sh
+claude mcp add hylki -- hylki --mcp
+```
+
+The command is written for the way your copy of Hylki is installed, so use the
+one on the page for a Flatpak or an AppImage. It connects to the running app
+through a socket only your user can open. With Hylki closed or the switch off,
+the agent is told so.
+
+**What can be shared.** Each account has its own switch, off to start with. Once
+on, it has these, each on its own:
+
+| Switch | What it allows | At first |
+| --- | --- | --- |
+| See message lists | Senders, subjects, dates, previews and folders | On |
+| Read message text | The text of a message, and searching it | On |
+| Search on the mail server | Finds mail not downloaded yet, and needs **Read message text** | On |
+| Read attachments | The files on a message; a PDF as its text, and pages without text as pictures | Off |
+| Prepare messages | New messages, replies and forwards, opened for you to check | On |
+| Mark as read or unread | | Off |
+| Add and remove stars | | Off |
+| Add and remove tags | Only tags you already have | Off |
+| Move and archive | Within the account | Off |
+| Move to Trash | Mail already in Trash stays there | Off |
+| See open conversation | The conversation you have open, in the main window or a message window | Off |
+| Read and edit open drafts | Messages agents prepared that are still open | Off |
+| Include drafts you started | The same for messages you are writing, unsaved text included | Off |
+
+**Full access**, above these, turns on all of them for that account, in every
+folder but Junk and Trash, folders you kept back included. Junk and Trash keep their own
+switches under **Folders**, and turning them on there works with Full access too.
+It can still move mail to Trash without seeing into it. It changes neither the
+last three switches in the table, which are about what you are doing right now, nor
+the contacts switches, nor what no setting allows, and your own choices come back
+when you turn it off.
+
+**Suggested changes.** An agent allowed to edit a draft suggests a change, and
+nothing changes until you press **Accept**. New and removed words show over the
+text, and a bar above lists the recipients it adds or takes out, with Bcc and
+addresses outside your own domains marked. Your signature and any quoted message
+stay as they are. While a suggestion waits, the text is locked and Send asks you to
+answer it first. Accepting puts plain text in place of what you wrote, and the bar
+says so when that would remove formatting, links or pictures; Undo brings them back.
+An agent can suggest a change to one draft once every ten seconds. A draft that is
+encrypted, or that replies to or forwards encrypted mail, shows an agent only that it
+is there, and takes no suggestions.
+
+**Reset to Defaults**, at the end of an account's list, puts its switches and
+folders back to the table above and turns Full access off. The account stays shared.
+
+Everything but starting a new message and working on an open draft needs **See
+message lists**, since that is how a message is named. **Folders** on the same row keeps single folders back.
+Junk and Trash are kept back until you allow them, as mail in them is the most
+likely to carry instructions aimed at an agent.
+
+An agent has two searches. One looks in what Hylki has downloaded, at once.
+The other sends the search words to the account's mail server, which can take up
+to a minute, and saves the headers of what it finds in Hylki's list. Neither
+reads folders that are kept back. On This Computer and POP3 have no server to
+ask.
+
+**Contacts** has two switches of its own, off to start with: **Address books and
+directories**, and **People in your mail**. The second draws on every account,
+shared or not, because the addresses in your mail are kept together.
+
+**What no setting allows.**
+
+- Sending. A message an agent prepares opens in a composer, with a banner
+  naming every recipient and setting apart Bcc and addresses outside your own
+  domains. You check it and send it. While you are at work in Hylki it waits,
+  with a toast and a notification, until you ask for it or leave the app. It
+  saves to your Drafts folder meanwhile, as any composer does after 30 seconds.
+- Erasing mail for good.
+- Encrypted mail. An agent sees that a message is encrypted and who it is
+  from, not its text or its files, and it cannot reply to it or forward it, even
+  after you have opened it. Hylki never asks GnuPG on an agent's behalf.
+- Reading or attaching files from your disk.
+
+**Keeping an eye on it.** **Recent Activity** lists what agents did, refused
+calls included, with the program's name as it gives it. The list stays in memory
+and is gone when Hylki quits. What an agent changes is in **Undo**, as if you
+had done it. A switch you turn off holds from the agent's next call.
+
+**Limits to keep in mind.** Mail is written by whoever sent it, and an agent
+can be misled by what it reads. Hylki removes text a message hides with inline
+styles before an agent sees it and tells the agent to treat mail as data,
+but this does not catch everything, such as text colored like its background.
+What you allow an agent to read can reach anything else that agent is
+allowed to do, which Hylki has no say over. Any program running as your user can
+use the connection while it is on: the name in Recent Activity is its own word.
+
 ### OpenPGP (encrypted and signed mail)
 
 Hylki can read OpenPGP-encrypted mail, check signatures, and sign and encrypt
