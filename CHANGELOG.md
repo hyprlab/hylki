@@ -33,11 +33,6 @@
   The handle now sits in the gap between two columns, and beside the words of
   Date and Due, which are set to the right of their columns.
 
-- **Fixed: a PDF with a password froze the app** (#582). Opening one, or any
-  other PDF that cannot be read, kept the app busy until it was killed. The
-  preview now says **No preview available**, and **Open** hands the file to
-  another app.
-
 - **Fixed: a long conversation could use all the memory** (#581, by Gonzalo
   Vasco López). A folded message card still loaded its message in the
   background, and one conversation of 83 quoted replies took the app past 14 GB.
@@ -60,6 +55,15 @@
   erasing mail for good, or reading encrypted mail, which stays out of reach
   even after you have opened it. See
   [AI agents](docs/DOCUMENTATION.md#ai-agents).
+
+## 1.47.1 — 2026-11-05
+
+A patch for #582: a PDF with a password no longer freezes the app.
+
+- **Fixed: a PDF with a password froze the app** (#582). Opening one, or any
+  other PDF that cannot be read, kept the app busy until it was killed. The
+  preview now says **No preview available**, and **Open** hands the file to
+  another app.
 
 ## 1.47.0 — 2026-11-04
 

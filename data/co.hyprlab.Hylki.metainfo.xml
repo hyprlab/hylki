@@ -74,6 +74,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.47.1" date="2026-11-05">
+      <description>
+        <p>A PDF with a password no longer freezes the app.</p>
+      </description>
+    </release>
     <release version="1.47.0" date="2026-11-04">
       <description>
         <p>Folders kept on this computer, grammar and style checking in the composer, mail merge, events and tasks from mail, a reading pane below the list or off, a message's importance, contact photos in the reader, New Folder in a folder's menu and a reminder for a forgotten attachment.</p>
