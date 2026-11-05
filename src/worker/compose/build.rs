@@ -115,9 +115,14 @@ fn build_message(
         builder = builder.cc(recipient(&name, &addr)?);
         recipients += 1;
     }
-    for (name, addr) in parse_recipients(&msg.bcc) {
-        builder = builder.bcc(recipient(&name, &addr)?);
-        recipients += 1;
+    // An encrypted draft keeps its Bcc inside, with the rest of what only
+    // the user is to read (see `protect_headers`).
+    let sealed_draft = draft && msg.encrypt;
+    if !sealed_draft {
+        for (name, addr) in parse_recipients(&msg.bcc) {
+            builder = builder.bcc(recipient(&name, &addr)?);
+            recipients += 1;
+        }
     }
     // A draft is the user's own copy and has to come back with its Bcc
     // recipients (#350); a sent message goes without them, and only its
@@ -184,11 +189,19 @@ fn build_message(
     }
     // Autocrypt (Level 1): the sender's key on everything the account
     // sends, so the people it writes to can encrypt back. Not on a draft,
-    // which goes to no one.
+    // which goes to no one; an encrypted one says so instead, to be
+    // encrypted again when it is sent.
     if !draft {
         if let Some(header) = super::pgp_mime::autocrypt_header(account, &from_addr) {
             builder = builder.raw_header(header);
         }
+    } else if sealed_draft {
+        builder = builder.raw_header(lettre::message::header::HeaderValue::new(
+            lettre::message::header::HeaderName::new_from_ascii_str(
+                crate::mail::pgp::autocrypt::DRAFT_STATE,
+            ),
+            crate::mail::pgp::autocrypt::draft_state(true),
+        ));
     }
 
     use lettre::message::{header::ContentType, Attachment, MultiPart, SinglePart};
@@ -236,8 +249,9 @@ fn build_message(
         related
     });
     // OpenPGP (#133): the body as one MIME entity, signed and/or encrypted
-    // into the PGP/MIME shape the reader recognises.
-    if msg.sign || msg.encrypt {
+    // into the PGP/MIME shape the reader recognises. A draft is never
+    // signed (Level 1: its signature would mean nothing), only encrypted.
+    if (msg.sign && !draft) || msg.encrypt {
         let entity = if msg.attachments.is_empty() {
             match content {
                 Some(content) => PgpEntity::Multi(content),
@@ -246,12 +260,12 @@ fn build_message(
         } else {
             PgpEntity::Multi(attachments_multipart(content, msg)?)
         };
-        let entity = if protect {
-            protect_headers(entity, msg, &from_mailbox)?
+        let entity = if protect || sealed_draft {
+            protect_headers(entity, msg, &from_mailbox, sealed_draft)?
         } else {
             entity
         };
-        let wrapped = pgp_wrap(account, msg, &from_addr, entity)?;
+        let wrapped = pgp_wrap(account, msg, &from_addr, entity, draft)?;
         return Ok(builder.multipart(wrapped)?);
     }
     let email = if msg.attachments.is_empty() {
@@ -736,6 +750,43 @@ mod tests {
             other => panic!("not PGP/MIME encrypted: {other:?}"),
         };
         account.email = "sender@hylki.invalid".into();
+
+        // An encrypted draft (Autocrypt Level 1): to the sender alone, never
+        // signed, with the subject and the Bcc inside and its state outside.
+        msg.bcc = "Hidden <hidden@hylki.invalid>".into();
+        let draft = build_draft(&account, &msg)
+            .expect("draft builds")
+            .formatted();
+        let text = String::from_utf8_lossy(&draft).to_string();
+        assert!(text.contains("multipart/encrypted"), "{text}");
+        for secret in ["secret body text", "Secret plans", "hidden@hylki.invalid"] {
+            assert!(!text.contains(secret), "{secret} must not appear: {text}");
+        }
+        assert!(
+            text.contains("Autocrypt-Draft-State: encrypt=yes"),
+            "{text}"
+        );
+        assert_eq!(
+            encrypted_to(&gpg, &armored(&draft)).len(),
+            1,
+            "to the sender alone"
+        );
+        // The cache keeps the draft as the server has it, encrypted.
+        let cache = Cache::in_memory().expect("cache");
+        cache.save_draft_copy(1, "Drafts", 9, "d@x", 1, &draft);
+        let kept = cache
+            .load_draft_copy(1, "Drafts", 9, "d@x", 1)
+            .expect("kept");
+        assert!(!String::from_utf8_lossy(&kept).contains("secret body text"));
+        // Opened again: decrypted, everything back, still to be encrypted.
+        let opened = crate::worker::decrypt_draft(&kept).expect("decrypts");
+        let e = crate::worker::editable_from_raw(&opened, &[]);
+        assert_eq!(e.subject, "Secret plans");
+        assert_eq!(e.to, "Peer <peer@hylki.invalid>");
+        assert_eq!(e.bcc, "Hidden <hidden@hylki.invalid>");
+        assert!(e.body_html.contains("secret body text"), "{}", e.body_html);
+        assert!(e.encrypt);
+        msg.bcc.clear();
 
         // Autocrypt on: the sender's key goes with every message, folded.
         account.autocrypt = true;

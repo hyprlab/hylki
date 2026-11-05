@@ -383,6 +383,39 @@ pub(crate) fn combine(each: &[Recommendation]) -> Recommendation {
     }
 }
 
+/// `Autocrypt-Draft-State` (Level 1, "Storing Draft State"): an encrypted
+/// draft says so, so it is encrypted again when it is sent.
+pub(crate) const DRAFT_STATE: &str = "Autocrypt-Draft-State";
+
+/// The value an encrypted draft carries.
+pub(crate) fn draft_state(encrypt: bool) -> String {
+    format!(
+        "encrypt={}; _by-choice=yes;",
+        if encrypt { "yes" } else { "no" }
+    )
+}
+
+/// Whether a draft's `Autocrypt-Draft-State` asks for encryption. A
+/// critical attribute this does not know makes the header void.
+pub(crate) fn draft_wants_encryption(raw: &[u8]) -> bool {
+    let fields = header_fields(raw);
+    let Some(value) = fields_named(&fields, DRAFT_STATE).first().copied() else {
+        return false;
+    };
+    let mut encrypt = false;
+    for attr in value.split(';').map(str::trim).filter(|a| !a.is_empty()) {
+        let Some((name, val)) = attr.split_once('=') else {
+            return false;
+        };
+        match name.trim() {
+            "encrypt" => encrypt = val.trim() == "yes",
+            n if n.starts_with('_') => {}
+            _ => return false,
+        }
+    }
+    encrypt
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -588,5 +621,18 @@ mod tests {
         assert_eq!(found.len(), 1);
         assert_eq!(found[0].addr, "bob@example.org");
         assert_eq!(found[0].keydata, key());
+    }
+
+    #[test]
+    fn draft_state_reads_back() {
+        let raw = format!("{DRAFT_STATE}: {}\r\n\r\n", draft_state(true));
+        assert!(draft_wants_encryption(raw.as_bytes()));
+        assert!(!draft_wants_encryption(
+            format!("{DRAFT_STATE}: {}\r\n\r\n", draft_state(false)).as_bytes()
+        ));
+        assert!(!draft_wants_encryption(
+            format!("{DRAFT_STATE}: encrypt=yes; future=1\r\n\r\n").as_bytes()
+        ));
+        assert!(!draft_wants_encryption(b"Subject: x\r\n\r\n"));
     }
 }

@@ -227,11 +227,11 @@ impl<E: Emit> ImapWorker<E> {
         if autosave.is_none() {
             emit(WorkerEvent::Status(saving_text(template)));
         }
-        // A draft is kept as written: signing and encrypting happen
-        // at send time (#133).
+        // A draft is never signed; one of a message to be encrypted is
+        // encrypted to the user alone (see `build_draft`), so the server
+        // never holds its text (#133).
         let mut message = OutgoingMessage {
             sign: false,
-            encrypt: false,
             ..*message
         };
         restore_msgid_case(cache.as_ref(), &mut message);

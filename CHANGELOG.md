@@ -14,6 +14,10 @@
   domain (WKD) as they are added; a keyserver only when allowed under
   Settings, OpenPGP.
 
+- **Fixed: drafts of encrypted messages were saved readable** by the server
+  and the cache. They are now encrypted to the user's own key, and decrypted
+  when opened again.
+
 - **Fixed: Bcc recipients' OpenPGP keys showed in encrypted mail.** Every
   copy of an encrypted message named the key of each recipient, so the To and
   Cc could tell whose keys were Bcc'd. A Bcc recipient's key is now in the

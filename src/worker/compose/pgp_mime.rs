@@ -39,13 +39,15 @@ pub(super) const PROTECTED_SUBJECT: &str = "...";
 /// Protected headers (#493, RFC 9788): the encrypted entity carries the real
 /// Subject and who the message is from and to, flagged so the reader takes
 /// them from there, and the Subject outside is [`PROTECTED_SUBJECT`]. Bcc
-/// stays out, as every recipient can decrypt what is inside.
+/// stays out, as every recipient can decrypt what is inside, except in an
+/// encrypted draft (`with_bcc`), which only the user can.
 pub(super) fn protect_headers(
     entity: PgpEntity,
     msg: &OutgoingMessage,
     from: &Mailbox,
+    with_bcc: bool,
 ) -> Result<PgpEntity, SmtpError> {
-    use lettre::message::header::{Cc, ContentType, From, ReplyTo, Subject, To};
+    use lettre::message::header::{Bcc, Cc, ContentType, From, ReplyTo, Subject, To};
     use lettre::message::Mailboxes;
     let mut multi = into_multi(entity);
     let mailboxes = |field: &str| -> Result<Option<Mailboxes>, SmtpError> {
@@ -68,6 +70,11 @@ pub(super) fn protect_headers(
     }
     if let Some(cc) = mailboxes(&msg.cc)? {
         headers.set(Cc::from(cc));
+    }
+    if with_bcc {
+        if let Some(bcc) = mailboxes(&msg.bcc)? {
+            headers.set(Bcc::from(bcc));
+        }
     }
     if let Some(reply_to) = mailboxes(&msg.reply_to)? {
         headers.set(ReplyTo::from(reply_to));
@@ -202,12 +209,15 @@ fn recipient_key(
     Err(i18n_f("no OpenPGP key for {addr}", &[("addr", addr)]).into())
 }
 
-/// Sign and/or encrypt an outgoing entity into PGP/MIME (RFC 3156).
+/// Sign and/or encrypt an outgoing entity into PGP/MIME (RFC 3156). A
+/// `draft` is encrypted to the user alone and never signed: it is theirs
+/// to read, on a server that should not (Level 1, "Message Drafts").
 pub(super) fn pgp_wrap(
     account: &AccountConfig,
     msg: &OutgoingMessage,
     from_addr: &str,
     entity: PgpEntity,
+    draft: bool,
 ) -> Result<lettre::message::MultiPart, SmtpError> {
     use lettre::message::{header::ContentType, MultiPart, SinglePart};
     let gpg = Gpg::system();
@@ -231,28 +241,33 @@ pub(super) fn pgp_wrap(
                 Recipient::Id(own.fingerprint)
             }
         };
-        let found = Gpg::discovered();
-        let (visible, hidden_addrs) = split_recipients(msg, from_addr);
-        let mut recipients = Vec::new();
-        let mut gossip = Vec::new();
-        for addr in &visible {
-            let (r, g) = recipient_key(&gpg, found.as_ref(), msg, addr)?;
-            recipients.push(r);
-            if let Some(g) = g {
-                gossip.push((addr.clone(), g));
-            }
-        }
-        let mut hidden = Vec::new();
-        for addr in &hidden_addrs {
-            hidden.push(recipient_key(&gpg, found.as_ref(), msg, addr)?.0);
-        }
-        recipients.push(own);
-        let entity = if account.autocrypt && visible.len() > 1 {
-            add_gossip(entity, &gossip)
+        let (recipients, hidden, entity) = if draft {
+            (vec![own], Vec::new(), entity)
         } else {
-            entity
+            let found = Gpg::discovered();
+            let (visible, hidden_addrs) = split_recipients(msg, from_addr);
+            let mut recipients = Vec::new();
+            let mut gossip = Vec::new();
+            for addr in &visible {
+                let (r, g) = recipient_key(&gpg, found.as_ref(), msg, addr)?;
+                recipients.push(r);
+                if let Some(g) = g {
+                    gossip.push((addr.clone(), g));
+                }
+            }
+            let mut hidden = Vec::new();
+            for addr in &hidden_addrs {
+                hidden.push(recipient_key(&gpg, found.as_ref(), msg, addr)?.0);
+            }
+            recipients.push(own);
+            let entity = if account.autocrypt && visible.len() > 1 {
+                add_gossip(entity, &gossip)
+            } else {
+                entity
+            };
+            (recipients, hidden, entity)
         };
-        let signer = if msg.sign {
+        let signer = if msg.sign && !draft {
             Some(key.ok_or_else(no_key)?.fingerprint)
         } else {
             None

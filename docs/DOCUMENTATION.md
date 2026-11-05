@@ -1723,7 +1723,7 @@ in the composer moves Sign to the new account's setting until you press Sign
 yourself; after that the composer leaves it as you set it. Stored on the
 account as `sign_by_default = true` in `accounts.toml`.
 
-**Autocrypt and found keys**
+**Autocrypt, found keys and encrypted drafts**
 
 Turn on **Send your key with your mail** under an account's *OpenPGP* group
 and every message from it carries your public key in an `Autocrypt:` header
@@ -1746,6 +1746,12 @@ on their own domain's server (WKD) a moment after you add them; *Settings →
 OpenPGP → Finding keys* turns that off, or adds keys.openpgp.org for addresses
 WKD has nothing for (off by default, as the keyserver learns who you write to).
 The pills only show locks when your From address has a key of its own.
+
+A draft of a message set to be encrypted is saved encrypted to your key alone,
+with its subject, recipients and Bcc inside, so neither the server nor the
+cache holds its text. Opening it again asks for your passphrase if the agent
+needs it, and the message opens with Encrypt on. This works for IMAP, JMAP and
+Microsoft 365 accounts.
 
 Hylki uses GnuPG for all of this. Whether it should move to an OpenPGP
 library for OpenPGP v6 keys is discussed in
