@@ -69,12 +69,21 @@ fn strip_scheme<'a>(uri: &'a str, scheme: &str) -> Option<&'a str> {
 
 /// Send the RFC 8058 one-click request: a POST of `List-Unsubscribe=One-Click`
 /// to the list's handle. Blocking; run it off the UI thread. Only a 2xx
-/// answer to the POST itself means the list took the request.
+/// answer to the POST itself means the list took the request. Only an
+/// https handle is posted to (RFC 8058 §3.1), whatever a cached verdict
+/// from before that rule says.
 pub(crate) fn one_click_post(url: &str) -> Result<(), String> {
-    let l = url.to_ascii_lowercase();
-    if !l.starts_with("https://") && !l.starts_with("http://") {
-        return Err("the list's unsubscribe handle is not a web address".to_string());
+    if !url
+        .trim_start()
+        .to_ascii_lowercase()
+        .starts_with("https://")
+    {
+        return Err("the list's one-click handle is not an https address".to_string());
     }
+    post_one_click(url)
+}
+
+fn post_one_click(url: &str) -> Result<(), String> {
     // Redirects are not followed: ureq turns a redirected POST into a GET,
     // and the page it lands on (a login, a "confirm" form) answers 200
     // without anything having been unsubscribed (#284).
@@ -157,12 +166,22 @@ mod tests {
 
     #[test]
     fn one_click_takes_only_a_direct_success() {
-        assert!(one_click_post(&answer_once("200 OK")).is_ok());
-        assert!(one_click_post(&answer_once("202 Accepted")).is_ok());
+        // The local server speaks plain http, so it is reached past the
+        // https rule, which is checked on its own below.
+        assert!(post_one_click(&answer_once("200 OK")).is_ok());
+        assert!(post_one_click(&answer_once("202 Accepted")).is_ok());
         // A redirect is not followed: the page behind it would answer 200
         // to a GET and pass for a list that took the request (#284).
-        assert!(one_click_post(&answer_once("302 Found")).is_err());
-        assert!(one_click_post(&answer_once("303 See Other")).is_err());
-        assert!(one_click_post(&answer_once("404 Not Found")).is_err());
+        assert!(post_one_click(&answer_once("302 Found")).is_err());
+        assert!(post_one_click(&answer_once("303 See Other")).is_err());
+        assert!(post_one_click(&answer_once("404 Not Found")).is_err());
+    }
+
+    #[test]
+    fn one_click_posts_to_https_only() {
+        // Refused before any connection is tried.
+        assert!(one_click_post("http://127.0.0.1:9/u").is_err());
+        assert!(one_click_post("HTTP://list.example/u").is_err());
+        assert!(one_click_post("mailto:leave@list.example").is_err());
     }
 }
