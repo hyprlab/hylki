@@ -99,6 +99,24 @@ impl PrivacyPage {
                     },
 
                 },
+
+                add = &adw::PreferencesGroup {
+                    // Not "On This Computer": that names an account kind.
+                    set_title: &i18n("Stored Mail"),
+
+                    adw::SwitchRow {
+                        set_title: &i18n("Encrypt stored mail"),
+                        set_subtitle: &i18n("The key is kept in the keyring. Applies after a restart."),
+                        set_active: crate::config::cache_encrypted(),
+                        connect_active_notify => move |row| {
+                            if row.is_active() {
+                                crate::config::save_cache_encrypted(true);
+                            } else if crate::config::cache_encrypted() {
+                                confirm_unencrypted(row);
+                            }
+                        },
+                    },
+                },
             }
         }
         Self {
@@ -112,4 +130,30 @@ impl PrivacyPage {
             receipts_row,
         }
     }
+}
+
+/// Settings → Privacy → Encrypt stored mail, switched off. That is for a
+/// computer without a keyring, and is asked about first; the cache itself
+/// is converted at the next start, when nothing has it open.
+fn confirm_unencrypted(row: &adw::SwitchRow) {
+    let body = format!(
+        "{} {}",
+        crate::ui::cache_unlock::unencrypted_warning(),
+        i18n("Turn this off only if this computer has no keyring. The change is made the next time Hylki starts.")
+    );
+    let dialog = adw::AlertDialog::new(Some(&i18n("Store Mail Unencrypted?")), Some(&body));
+    dialog.add_response("cancel", &i18n("Cancel"));
+    dialog.add_response("unencrypted", &i18n("Store Unencrypted"));
+    dialog.set_response_appearance("unencrypted", adw::ResponseAppearance::Destructive);
+    dialog.set_default_response(Some("cancel"));
+    dialog.set_close_response("cancel");
+    let switch = row.clone();
+    dialog.connect_response(None, move |_, response| {
+        if response == "unencrypted" {
+            crate::config::save_cache_encrypted(false);
+        } else {
+            switch.set_active(true);
+        }
+    });
+    dialog.present(Some(row));
 }

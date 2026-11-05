@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- **Added: the mail cache is encrypted on disk.** `cache.db`, which holds
+  every message and attachment kept on the computer, mail from a bridge that
+  decrypts end-to-end encrypted mail included, is now a SQLCipher database
+  under a random key kept in the keyring. An existing cache is encrypted in
+  place at the first start, and left as it was if that fails. A keyring that
+  is locked, or a key that is missing or wrong, never opens the cache
+  unencrypted: Hylki asks to try again, quit, or reset the cache. **Settings →
+  Privacy → Encrypt stored mail** turns it off for a computer without a
+  keyring, after a warning.
+
+- **Fixed: some files holding mail could be read by other users of the
+  computer.** The remote-content cache, the On This Computer folders, an
+  exported log and an exported settings file are now readable by their owner
+  only, and existing ones are tightened.
+
+- **Fixed: opened attachments stayed on disk in the Flatpak.** The cleanup at
+  start emptied the staging directory a native install uses, not the one the
+  Flatpak stages in, so attachments opened there were only removed at logout.
+
 - **Added: each folder keeps its own sort** (#574, suggested by Bohne13). The
   order chosen under **Sort by**, or by a column heading, now belongs to the
   folder, unified row, tag or smart folder it was chosen in, and a renamed

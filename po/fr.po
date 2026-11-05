@@ -1031,6 +1031,9 @@ msgstr "Nouveau message à partir d’un modèle"
 msgid "Send the message you are writing"
 msgstr "Envoyer le message en cours de rédaction"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Joindre des fichiers"
 
@@ -3205,6 +3208,99 @@ msgstr "Suivant"
 msgid "Open in the default app"
 msgstr "Ouvrir dans l’application par défaut"
 
+#, fuzzy
+msgid "Store Unencrypted…"
+msgstr "Non déchiffré"
+
+msgid "Reset Cache…"
+msgstr ""
+
+msgid "Try Again"
+msgstr "Réessayer"
+
+#, fuzzy
+msgid "Keyring Unavailable"
+msgstr "Aucun dossier {v1} disponible"
+
+msgid ""
+"Mail kept on this computer is encrypted with a key stored in the keyring, "
+"and the keyring is locked or did not answer. Unlock it, then try again."
+msgstr ""
+
+msgid "Mail Cache Key Missing"
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is encrypted, and the keyring no longer holds its "
+"key. If the keyring was replaced, restore the old one and try again. "
+"Otherwise reset the cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Cannot Be Unlocked"
+msgstr ""
+
+msgid ""
+"The key in the keyring does not open the mail kept on this computer. If the "
+"keyring was replaced, restore the old one and try again. Otherwise reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Not Converted"
+msgstr ""
+
+msgid ""
+"The mail kept on this computer could not be converted, and was left as it "
+"was. Check that the disk has free space, then try again."
+msgstr ""
+
+#, fuzzy
+msgid "Mail Cache Unreadable"
+msgstr "Marquer comme non lu"
+
+msgid ""
+"The mail kept on this computer could not be read. Try again, or reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid ""
+"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"unsent mail in the Outbox."
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Mail kept on this computer is deleted and downloaded again from the server."
+msgstr ""
+"Les messages sur cet ordinateur ne sont pas envoyés et n’ont pas de "
+"brouillons"
+
+msgid "Reset the Mail Cache?"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid ""
+"Anyone who can read your files, or a backup of them, can then read the mail "
+"kept on this computer, including mail that is end-to-end encrypted on the "
+"server."
+msgstr ""
+
+msgid "Encryption can be turned back on in Settings → Privacy."
+msgstr ""
+
+msgid ""
+"The encrypted cache cannot be opened without the keyring, so it is deleted "
+"and your mail is downloaded again."
+msgstr ""
+
+msgid "Store Mail Unencrypted?"
+msgstr ""
+
+#, fuzzy
+msgid "Store Unencrypted"
+msgstr "Non déchiffré"
+
 msgid "New Event"
 msgstr "Nouvel événement"
 
@@ -3425,8 +3521,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -3825,9 +3921,9 @@ msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
 msgstr ""
-"Il n’y a pas de clé OpenPGP associée à {addr}. Générez-en une dans "
-"« Paramètres », puis « OpenPGP », ou sélectionnez une clé dans les "
-"paramètres du compte."
+"Il n’y a pas de clé OpenPGP associée à {addr}. Générez-en une dans « "
+"Paramètres », puis « OpenPGP », ou sélectionnez une clé dans les paramètres "
+"du compte."
 
 msgid ""
 "There is no OpenPGP key for {addr}. Ask them for their public key, or fetch "
@@ -3844,8 +3940,8 @@ msgstr "Programmer"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
-"Le champ De doit contenir une seule adresse, par exemple Anne "
-"<anne@example.com>."
+"Le champ De doit contenir une seule adresse, par exemple Anne <anne@example."
+"com>."
 
 msgid "“{address}” is not an email address."
 msgstr "« {address} » n’est pas une adresse e-mail."
@@ -5458,9 +5554,6 @@ msgstr "Traduction en cours…"
 msgid "Could not translate: {why}"
 msgstr "Impossible de traduire : {why}"
 
-msgid "Try Again"
-msgstr "Réessayer"
-
 msgid "Translated from {language} by {service}."
 msgstr "Traduit par {service} (langue d’origine : {language})."
 
@@ -6125,6 +6218,7 @@ msgstr "Traduction"
 msgid "General"
 msgstr "Général"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Apparence"
 
@@ -6288,9 +6382,6 @@ msgstr ""
 msgid ""
 "The account stays shared, but only for reading and preparing messages. Junk "
 "and Trash are hidden again."
-msgstr ""
-
-msgid "Reset"
 msgstr ""
 
 msgid ""
@@ -6575,6 +6666,26 @@ msgstr "Envoyer des accusés de lecture"
 
 msgid "A receipt tells the sender when you opened the message."
 msgstr "Un accusé indique à l’expéditeur quand vous avez ouvert le message."
+
+#. Not "On This Computer": that names an account kind.
+#, fuzzy
+msgid "Stored Mail"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Encrypt stored mail"
+msgstr "Message chiffré"
+
+#, fuzzy
+msgid "The key is kept in the keyring. Applies after a restart."
+msgstr ""
+"Essayez OpenGL ou Logiciel sur les anciens matériels graphiques. S’applique "
+"après un redémarrage."
+
+msgid ""
+"Turn this off only if this computer has no keyring. The change is made the "
+"next time Hylki starts."
+msgstr ""
 
 msgid "Open at startup"
 msgstr "Ouvrir au démarrage"
@@ -8651,6 +8762,10 @@ msgstr "La boîte de réception unifiée en mode clair"
 msgid "Hyprlab"
 msgstr "Hyprlab"
 
+#, fuzzy
+#~ msgid "Mail on This Computer"
+#~ msgstr "Sur cet ordinateur"
+
 #~ msgid "Received"
 #~ msgstr "Reçu"
 
@@ -8694,9 +8809,9 @@ msgstr "Hyprlab"
 #~ "the desktop's own choice; \"Ask each time\" lets the desktop ask before "
 #~ "each one."
 #~ msgstr ""
-#~ "Le navigateur dans lequel s’ouvre un lien contenu dans un message. "
-#~ "« Système par défaut » suit le choix du bureau ; « Demander à chaque "
-#~ "fois » laisse le bureau demander avant chaque ouverture."
+#~ "Le navigateur dans lequel s’ouvre un lien contenu dans un message. « "
+#~ "Système par défaut » suit le choix du bureau ; « Demander à chaque fois » "
+#~ "laisse le bureau demander avant chaque ouverture."
 
 #~ msgid ""
 #~ "Installed, but the nautilus-python package is missing, so Files cannot "
@@ -8951,8 +9066,8 @@ msgstr "Hyprlab"
 #~ "Accounts."
 #~ msgstr ""
 #~ "OneDrive se connecte via le compte des Comptes en ligne de GNOME choisi "
-#~ "ci-dessus ; il n’y a pas de mot de passe à saisir. Un compte marqué "
-#~ "« Fichiers désactivé » fonctionne quand même ici, mais vous pouvez "
+#~ "ci-dessus ; il n’y a pas de mot de passe à saisir. Un compte marqué « "
+#~ "Fichiers désactivé » fonctionne quand même ici, mais vous pouvez "
 #~ "souhaiter activer Fichiers pour ce compte dans Paramètres, Comptes en "
 #~ "ligne."
 

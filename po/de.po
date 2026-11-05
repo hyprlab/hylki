@@ -1037,6 +1037,9 @@ msgstr "Neue Nachricht aus Vorlage"
 msgid "Send the message you are writing"
 msgstr "Geschriebene Nachricht senden"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Dateien anhängen"
 
@@ -3213,6 +3216,98 @@ msgstr "Nächste"
 msgid "Open in the default app"
 msgstr "Mit der Standardanwendung öffnen"
 
+#, fuzzy
+msgid "Store Unencrypted…"
+msgstr "Nicht entschlüsselt"
+
+msgid "Reset Cache…"
+msgstr ""
+
+msgid "Try Again"
+msgstr "Erneut versuchen"
+
+#, fuzzy
+msgid "Keyring Unavailable"
+msgstr "Kein Ordner für {v1} verfügbar"
+
+msgid ""
+"Mail kept on this computer is encrypted with a key stored in the keyring, "
+"and the keyring is locked or did not answer. Unlock it, then try again."
+msgstr ""
+
+msgid "Mail Cache Key Missing"
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is encrypted, and the keyring no longer holds its "
+"key. If the keyring was replaced, restore the old one and try again. "
+"Otherwise reset the cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Cannot Be Unlocked"
+msgstr ""
+
+msgid ""
+"The key in the keyring does not open the mail kept on this computer. If the "
+"keyring was replaced, restore the old one and try again. Otherwise reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Not Converted"
+msgstr ""
+
+msgid ""
+"The mail kept on this computer could not be converted, and was left as it "
+"was. Check that the disk has free space, then try again."
+msgstr ""
+
+#, fuzzy
+msgid "Mail Cache Unreadable"
+msgstr "Als ungelesen markieren"
+
+msgid ""
+"The mail kept on this computer could not be read. Try again, or reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid ""
+"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"unsent mail in the Outbox."
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Mail kept on this computer is deleted and downloaded again from the server."
+msgstr ""
+"Lokale E-Mails werden nicht versendet; es sind keine Entwürfe vorhanden."
+
+msgid "Reset the Mail Cache?"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid ""
+"Anyone who can read your files, or a backup of them, can then read the mail "
+"kept on this computer, including mail that is end-to-end encrypted on the "
+"server."
+msgstr ""
+
+msgid "Encryption can be turned back on in Settings → Privacy."
+msgstr ""
+
+msgid ""
+"The encrypted cache cannot be opened without the keyring, so it is deleted "
+"and your mail is downloaded again."
+msgstr ""
+
+msgid "Store Mail Unencrypted?"
+msgstr ""
+
+#, fuzzy
+msgid "Store Unencrypted"
+msgstr "Nicht entschlüsselt"
+
 msgid "New Event"
 msgstr "Neuer Termin"
 
@@ -3433,8 +3528,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -3447,8 +3542,8 @@ msgstr ""
 "2. »Scoped access« und anschließend »App folder« oder »Full Dropbox« \n"
 "3. Einen eindeutigen App-Namen vergeben (z. B. Hylki für [Name]) und auf "
 "»Create app« klicken.\n"
-"4. Auf dem Reiter »Permissions« die Berechtigungen account_info.read, "
-"files.content.write und sharing.write aktivieren und auf »Submit« klicken.\n"
+"4. Auf dem Reiter »Permissions« die Berechtigungen account_info.read, files."
+"content.write und sharing.write aktivieren und auf »Submit« klicken.\n"
 "5. Auf dem Reiter »Settings« unter »OAuth 2« die Weiterleitungs-URI {uri} "
 "eingeben und auf »Add« klicken.\n"
 "6. Den App-Schlüssel (»App key«) oben vom Reiter »Settings« in das obere "
@@ -5463,9 +5558,6 @@ msgstr "übersetze…"
 msgid "Could not translate: {why}"
 msgstr "Konnte nicht übersetzt werden: {why}"
 
-msgid "Try Again"
-msgstr "Erneut versuchen"
-
 msgid "Translated from {language} by {service}."
 msgstr "Aus {language} übersetzt von {service}"
 
@@ -6131,6 +6223,7 @@ msgstr "Übersetzung"
 msgid "General"
 msgstr "Allgemein"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Aussehen"
 
@@ -6294,9 +6387,6 @@ msgstr ""
 msgid ""
 "The account stays shared, but only for reading and preparing messages. Junk "
 "and Trash are hidden again."
-msgstr ""
-
-msgid "Reset"
 msgstr ""
 
 msgid ""
@@ -6595,6 +6685,26 @@ msgid "A receipt tells the sender when you opened the message."
 msgstr ""
 "Eine Lesebestätigung informiert die absendende Person darüber, wann die "
 "Nachricht geöffnet wurde."
+
+#. Not "On This Computer": that names an account kind.
+#, fuzzy
+msgid "Stored Mail"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Encrypt stored mail"
+msgstr "Verschlüsselte Nachricht"
+
+#, fuzzy
+msgid "The key is kept in the keyring. Applies after a restart."
+msgstr ""
+"Bei älteren Grafikkarten OpenGL oder Software versuchen. Änderungen werden "
+"nach einem Neustart angewendet."
+
+msgid ""
+"Turn this off only if this computer has no keyring. The change is made the "
+"next time Hylki starts."
+msgstr ""
 
 msgid "Open at startup"
 msgstr "Beim Start öffnen"
@@ -8700,6 +8810,10 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Mail on This Computer"
+#~ msgstr "Auf diesem Rechner"
 
 #~ msgid "Received"
 #~ msgstr "Empfangen"

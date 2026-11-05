@@ -2474,6 +2474,40 @@ views' caches in `~/.cache/hylki/`, and account pictures in
 Passwords and tokens are never in those files: they go to the system keyring
 through the Secret Service. Decrypted OpenPGP messages are never cached at all.
 
+**The mail cache is encrypted.** `cache.db` holds the message list, every
+message and attachment that was opened or kept offline, the Outbox and the
+addresses collected from mail, mail that a local bridge decrypted from
+end-to-end encryption included. Hylki encrypts it with SQLCipher 4 (AES-256,
+with an HMAC on every page) under a random 256-bit key, made the first time it
+starts and kept in the keyring as `cache-key` beside the passwords. A copy of
+the file, or a backup of it, is unreadable without that keyring. A cache from
+an earlier version is encrypted at the first start: an encrypted copy is made
+and checked against the original table by table, and only then takes its
+place, so a failure leaves the original as it was. The unencrypted file is then
+deleted, but as with any deleted file, the disk may keep its old blocks until
+they are written over.
+
+Without its key the cache is never opened unencrypted instead. When the
+keyring is locked or has not answered within a minute and a half, holds no key,
+or holds one that does not open the cache, Hylki asks before its window opens:
+**Try Again**, **Quit**, or **Reset Cache…**, which deletes the cache and
+downloads the mail again. Mail that exists only on this computer is then lost:
+a POP3 account's mail, and unsent mail in the Outbox. The demo
+(`HYLKI_DEMO`) never opens the cache and asks nothing.
+
+**Settings → Privacy → Encrypt stored mail** is for a computer without a
+keyring. Turning it off asks first, and the cache is decrypted the next time
+Hylki starts; from then on anyone who can read your files can read the mail
+kept there. When the keyring cannot be reached at start, the same choice is
+offered as **Store Unencrypted…**, which deletes an encrypted cache it cannot
+open. Stored as the one-line file `cache-encryption` in `~/.config/hylki/`.
+
+The other files that hold mail are readable by their owner only: the
+On This Computer folders in `~/.local/share/hylki/local-mail/`, the
+remote-content cache, and an exported log or settings file. Opened
+attachments are staged in a private directory that is emptied at every start,
+in the Flatpak as well.
+
 **Remote content**, once allowed for a message, is fetched by Hylki itself, with
 no cookies and no Referer, and kept in `~/.cache/hylki/remote/` for a week, up
 to 2 GB, so a message shown again does not fetch it again. **Settings →

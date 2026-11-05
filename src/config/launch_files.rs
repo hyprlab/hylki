@@ -1,5 +1,5 @@
-//! The two one-line settings files read before anything else starts:
-//! the interface language and the GTK renderer.
+//! The one-line settings files read before anything else starts: the
+//! interface language, the GTK renderer and the mail cache's encryption.
 
 use std::path::PathBuf;
 
@@ -26,6 +26,17 @@ pub(crate) fn load_renderer() -> String {
 
 pub(crate) fn save_renderer(renderer: &str) {
     write_line_file(renderer_path(), renderer);
+}
+
+/// Whether the mail cache is encrypted (`cache::at_rest`): on unless
+/// Settings → Privacy turned it off. Its own small file, as the renderer
+/// is: the cache is unlocked before anything else opens it.
+pub(crate) fn cache_encrypted() -> bool {
+    read_line_file(config_file("cache-encryption")) != "off"
+}
+
+pub(crate) fn save_cache_encrypted(on: bool) {
+    write_line_file(config_file("cache-encryption"), if on { "" } else { "off" });
 }
 
 fn renderer_path() -> Option<PathBuf> {

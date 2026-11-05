@@ -153,6 +153,13 @@ fn main() {
         return;
     }
 
+    // The cache's key comes from the keyring before anything can open the
+    // cache: the window, the workers and the assistant server all read it
+    // from their first moment, and none may find it unencrypted instead.
+    if !ui::cache_unlock::unlock_cache() {
+        return;
+    }
+
     let first_run = is_first_run();
     install_startup_handlers(&adw_app);
     let app = RelmApp::from_app(adw_app)

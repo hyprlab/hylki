@@ -1034,6 +1034,9 @@ msgstr "Νέο μήνυμα από πρότυπο"
 msgid "Send the message you are writing"
 msgstr "Αποστολή του μηνύματος που συντάσσετε"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Επισύναψη αρχείων"
 
@@ -3216,6 +3219,97 @@ msgstr "Επόμενο"
 msgid "Open in the default app"
 msgstr "Άνοιγμα στην προεπιλεγμένη εφαρμογή"
 
+#, fuzzy
+msgid "Store Unencrypted…"
+msgstr "Δεν έχει αποκρυπτογραφηθεί"
+
+msgid "Reset Cache…"
+msgstr ""
+
+msgid "Try Again"
+msgstr "Δοκιμή ξανά"
+
+#, fuzzy
+msgid "Keyring Unavailable"
+msgstr "Δεν υπάρχει διαθέσιμος φάκελος {v1}"
+
+msgid ""
+"Mail kept on this computer is encrypted with a key stored in the keyring, "
+"and the keyring is locked or did not answer. Unlock it, then try again."
+msgstr ""
+
+msgid "Mail Cache Key Missing"
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is encrypted, and the keyring no longer holds its "
+"key. If the keyring was replaced, restore the old one and try again. "
+"Otherwise reset the cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Cannot Be Unlocked"
+msgstr ""
+
+msgid ""
+"The key in the keyring does not open the mail kept on this computer. If the "
+"keyring was replaced, restore the old one and try again. Otherwise reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Not Converted"
+msgstr ""
+
+msgid ""
+"The mail kept on this computer could not be converted, and was left as it "
+"was. Check that the disk has free space, then try again."
+msgstr ""
+
+#, fuzzy
+msgid "Mail Cache Unreadable"
+msgstr "Σήμανση ως μη αναγνωσμένο"
+
+msgid ""
+"The mail kept on this computer could not be read. Try again, or reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid ""
+"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"unsent mail in the Outbox."
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Mail kept on this computer is deleted and downloaded again from the server."
+msgstr "Η τοπική αλληλογραφία δεν αποστέλλεται και δεν διαθέτει πρόχειρα"
+
+msgid "Reset the Mail Cache?"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid ""
+"Anyone who can read your files, or a backup of them, can then read the mail "
+"kept on this computer, including mail that is end-to-end encrypted on the "
+"server."
+msgstr ""
+
+msgid "Encryption can be turned back on in Settings → Privacy."
+msgstr ""
+
+msgid ""
+"The encrypted cache cannot be opened without the keyring, so it is deleted "
+"and your mail is downloaded again."
+msgstr ""
+
+msgid "Store Mail Unencrypted?"
+msgstr ""
+
+#, fuzzy
+msgid "Store Unencrypted"
+msgstr "Δεν έχει αποκρυπτογραφηθεί"
+
 msgid "New Event"
 msgstr "Νέο συμβάν"
 
@@ -3437,8 +3531,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -3864,8 +3958,8 @@ msgstr "Προγραμματισμός"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
-"Το πεδίο αποστολέα πρέπει να περιέχει μία διεύθυνση, όπως Ann "
-"<ann@example.com>."
+"Το πεδίο αποστολέα πρέπει να περιέχει μία διεύθυνση, όπως Ann <ann@example."
+"com>."
 
 msgid "“{address}” is not an email address."
 msgstr "Το «{address}» δεν είναι διεύθυνση email."
@@ -5476,9 +5570,6 @@ msgstr "Μετάφραση…"
 msgid "Could not translate: {why}"
 msgstr "Δεν ήταν δυνατή η μετάφραση: {why}"
 
-msgid "Try Again"
-msgstr "Δοκιμή ξανά"
-
 msgid "Translated from {language} by {service}."
 msgstr "Μεταφράστηκε από τα {language} μέσω {service}."
 
@@ -6142,6 +6233,7 @@ msgstr "Μετάφραση"
 msgid "General"
 msgstr "Γενικά"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Εμφάνιση"
 
@@ -6305,9 +6397,6 @@ msgstr ""
 msgid ""
 "The account stays shared, but only for reading and preparing messages. Junk "
 "and Trash are hidden again."
-msgstr ""
-
-msgid "Reset"
 msgstr ""
 
 msgid ""
@@ -6595,6 +6684,26 @@ msgstr "Αποστολή επιβεβαιώσεων ανάγνωσης"
 
 msgid "A receipt tells the sender when you opened the message."
 msgstr "Η επιβεβαίωση ενημερώνει τον αποστολέα πότε ανοίξατε το μήνυμα."
+
+#. Not "On This Computer": that names an account kind.
+#, fuzzy
+msgid "Stored Mail"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Encrypt stored mail"
+msgstr "Κρυπτογραφημένο μήνυμα"
+
+#, fuzzy
+msgid "The key is kept in the keyring. Applies after a restart."
+msgstr ""
+"Δοκιμάστε OpenGL ή Λογισμικό σε παλαιότερα γραφικά. Εφαρμόζεται μετά από "
+"επανεκκίνηση."
+
+msgid ""
+"Turn this off only if this computer has no keyring. The change is made the "
+"next time Hylki starts."
+msgstr ""
 
 msgid "Open at startup"
 msgstr "Άνοιγμα κατά την εκκίνηση"
@@ -8693,6 +8802,10 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Mail on This Computer"
+#~ msgstr "Σε αυτόν τον υπολογιστή"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"
