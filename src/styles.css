@@ -1062,9 +1062,9 @@ flowbox.attach-flow > flowboxchild {
   opacity: 0.6;
 }
 
-/* A heading's resize handle: an accent line on the edge it drags, shown
-   only under the pointer. A divider at rest on every column's edge read as
-   marks on the headings' names (#443). */
+/* A heading's resize handle: an accent line in the gap on the edge it
+   drags, shown only under the pointer. A divider at rest on every column's
+   edge read as marks on the headings' names (#443). */
 .column-resize-handle:hover {
   background: linear-gradient(to right, transparent 2px, @accent_color 2px,
                               @accent_color 5px, transparent 5px);

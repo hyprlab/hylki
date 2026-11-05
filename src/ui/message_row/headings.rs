@@ -46,7 +46,7 @@ pub(crate) fn fill_headings(
     let dot = gtk::Box::new(gtk::Orientation::Horizontal, 0);
     dot.set_size_request(10, -1);
     bar.append(&dot);
-    let line = gtk::Box::new(gtk::Orientation::Horizontal, 8);
+    let line = gtk::Box::new(gtk::Orientation::Horizontal, COLUMN_GAP);
     line.set_hexpand(true);
     bar.append(&line);
 
@@ -138,6 +138,9 @@ pub(crate) fn fill_headings(
     bins
 }
 
+/// The room between two headings, as between a row's columns.
+const COLUMN_GAP: i32 = 8;
+
 /// A heading with a handle for dragging its column's width (#334), on the
 /// edge it shares with the subject: the right edge of a column before it,
 /// the left of one after it, so the edge follows the pointer. Each step of
@@ -156,11 +159,19 @@ fn resize_handle(
     overlay.set_child(Some(&cell));
     let handle = gtk::Box::new(gtk::Orientation::Horizontal, 0);
     handle.add_css_class("column-resize-handle");
-    handle.set_size_request(8, -1);
-    handle.set_halign(if before_subject {
-        gtk::Align::End
-    } else {
-        gtk::Align::Start
+    handle.set_size_request(COLUMN_GAP, -1);
+    // In the gap beside the heading rather than over its edge, where its
+    // line struck through the name's first or last letter (#579). Nothing
+    // here clips, so the handle is drawn and takes the pointer outside the
+    // overlay's own bounds.
+    overlay.connect_get_child_position(move |overlay, _| {
+        let rtl = overlay.direction() == gtk::TextDirection::Rtl;
+        let x = if before_subject != rtl {
+            overlay.width()
+        } else {
+            -COLUMN_GAP
+        };
+        Some(gtk::gdk::Rectangle::new(x, 0, COLUMN_GAP, overlay.height()))
     });
     handle.set_cursor_from_name(Some("col-resize"));
     handle.set_tooltip_text(Some(&i18n(
@@ -298,4 +309,64 @@ pub(crate) fn tag_menu_entries(
                 .keys(crate::ui::keymap::tag_key(i))
         })
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A heading's handle takes the pointer in the gap beside the name and
+    /// leaves the name's own first and last pixels to the heading (#579).
+    #[test]
+    #[ignore = "needs a display"]
+    fn the_handle_sits_in_the_gap_beside_the_heading() {
+        gtk::init().expect("a display");
+        let heading = |column, before_subject| {
+            let bin = ColumnBin::new(80);
+            bin.set_child(Some(&gtk::Label::new(Some("Correspondents"))));
+            let cell = resize_handle(
+                bin.clone().upcast(),
+                &bin,
+                column,
+                before_subject,
+                Rc::new(|_, _, _| {}),
+            );
+            (bin, cell)
+        };
+        let (sender, sender_cell) = heading(ListColumn::Sender, true);
+        let (names, names_cell) = heading(ListColumn::Correspondents, false);
+        let subject = gtk::Label::new(Some("Subject"));
+        subject.set_hexpand(true);
+        let line = gtk::Box::new(gtk::Orientation::Horizontal, COLUMN_GAP);
+        line.append(&sender_cell);
+        line.append(&subject);
+        line.append(&names_cell);
+        let window = gtk::Window::new();
+        window.set_child(Some(&line));
+        window.set_default_size(400, 40);
+        window.present();
+        let context = gtk::glib::MainContext::default();
+        while names.width() == 0 {
+            context.iteration(true);
+        }
+
+        let picked = |bin: &ColumnBin, dx: f32| {
+            let x = if dx < 0.0 { 0.0 } else { bin.width() as f32 };
+            let at = bin
+                .compute_point(&window, &gtk::graphene::Point::new(x + dx, 5.0))
+                .unwrap();
+            window
+                .pick(at.x().into(), at.y().into(), gtk::PickFlags::DEFAULT)
+                .is_some_and(|w| w.has_css_class("column-resize-handle"))
+        };
+        // After the sender's name, and before the correspondents'.
+        assert!(picked(&sender, 1.0));
+        assert!(picked(&sender, (COLUMN_GAP - 1) as f32));
+        assert!(picked(&names, -1.0));
+        assert!(picked(&names, -(COLUMN_GAP - 1) as f32));
+        // The names themselves are the headings', to sort by.
+        assert!(!picked(&sender, -1.0));
+        assert!(!picked(&names, 1.0));
+        window.destroy();
+    }
 }
