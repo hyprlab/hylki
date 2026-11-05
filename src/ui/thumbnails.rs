@@ -142,6 +142,19 @@ mod texture_cache_tests {
     }
 
     #[test]
+    fn a_cached_failure_is_not_a_miss() {
+        let (failed, rendered, unseen) = (&b"locked"[..], &b"fine"[..], &b"unseen"[..]);
+        PDF_PREVIEWS.with(|c| {
+            let mut c = c.borrow_mut();
+            c.insert(thumb_cache_key(failed), None);
+            c.insert(thumb_cache_key(rendered), Some(texture(1)));
+        });
+        assert!(matches!(cached_pdf_preview(failed), Some(None)));
+        assert!(matches!(cached_pdf_preview(rendered), Some(Some(_))));
+        assert!(cached_pdf_preview(unseen).is_none());
+    }
+
+    #[test]
     fn a_single_render_over_budget_is_still_kept() {
         let mut c = TextureCache::new(1_000);
         c.insert(1, Some(texture(100)));
@@ -162,11 +175,13 @@ pub(super) fn content_key(data: &[u8]) -> u64 {
     thumb_cache_key(data)
 }
 
-/// A full-size PDF page already in the preview cache, if any.
-pub(super) fn cached_pdf_preview(data: &[u8]) -> Option<gdk::Texture> {
-    PDF_PREVIEWS
-        .with(|c| c.borrow().get(&thumb_cache_key(data)).cloned())
-        .flatten()
+/// What the preview cache holds for a PDF: `None` while it has not been
+/// rendered, `Some(None)` once poppler could not open it, such as a PDF locked
+/// with a password. Callers must tell those apart: asking for a render of a
+/// failure answers at once, so treating it as "not rendered yet" never ends
+/// (#582).
+pub(super) fn cached_pdf_preview(data: &[u8]) -> Option<Option<gdk::Texture>> {
+    PDF_PREVIEWS.with(|c| c.borrow().get(&thumb_cache_key(data)).cloned())
 }
 
 /// A lightbox-size render of a PDF's first page: handed to `on_done` on the

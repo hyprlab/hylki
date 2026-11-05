@@ -3083,6 +3083,10 @@ msgstr "Τύπος (Ω–Α)"
 msgid "Previous"
 msgstr "Προηγούμενο"
 
+#, fuzzy
+msgid "No preview available"
+msgstr "Δεν υπάρχει διαθέσιμος φάκελος {v1}"
+
 msgid "Next"
 msgstr "Επόμενο"
 

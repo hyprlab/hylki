@@ -84,6 +84,9 @@ pub(crate) struct AttachmentsGallery {
     /// PDF's first page once its full-size render lands (None while a PDF
     /// render is in flight, and for types with nothing to show).
     preview_texture: Option<gdk::Texture>,
+    /// The PDF being previewed could not be rendered, such as one locked
+    /// with a password: its page is not on its way.
+    preview_failed: bool,
     loading: bool,
     /// Show the sortable table instead of the thumbnail grid (persisted).
     view_table: bool,
@@ -565,7 +568,9 @@ impl Component for AttachmentsGallery {
                         #[watch]
                         set_visible_child_name: if model.preview_texture.is_some() {
                             "image"
-                        } else if model.current().is_some_and(|i| is_pdf_name(&i.name) && i.data.is_some()) {
+                        } else if !model.preview_failed
+                            && model.current().is_some_and(|i| is_pdf_name(&i.name) && i.data.is_some())
+                        {
                             // A PDF whose full-size render is still on its way.
                             "rendering"
                         } else {
@@ -591,6 +596,7 @@ impl Component for AttachmentsGallery {
                         },
 
                         add_named[Some("file")] = &gtk::Box {
+                            add_css_class: "gallery-lightbox-file",
                             set_orientation: gtk::Orientation::Vertical,
                             set_halign: gtk::Align::Center,
                             set_valign: gtk::Align::Center,
@@ -610,6 +616,12 @@ impl Component for AttachmentsGallery {
                                 set_label: &model.current().map(|i| i.name.clone()).unwrap_or_default(),
                                 set_ellipsize: gtk::pango::EllipsizeMode::Middle,
                                 add_css_class: "title-3",
+                            },
+                            gtk::Label {
+                                set_label: &i18n("No preview available"),
+                                add_css_class: "dim-label",
+                                #[watch]
+                                set_visible: model.preview_failed,
                             },
                         },
                     },
@@ -679,6 +691,7 @@ impl Component for AttachmentsGallery {
             sort: GallerySort::from_index(sort_index),
             preview: None,
             preview_texture: None,
+            preview_failed: false,
             loading: false,
             view_table,
             thumb_width,
