@@ -1,9 +1,9 @@
 name: Tuta helper tests
 
 # The Tuta helper (native/tuta) is a crate of its own, with its own lock file,
-# built against the Tuta SDK that sdk-prepare.py generates from the
-# submodules. Its tests run here on every change to it; the app itself has
-# no test workflow.
+# built against the Tuta SDK that native/tuta/prepare.sh prepares from the
+# submodules and Hylki's own SDK patches. Its tests run here on every change
+# to it; the app itself has no test workflow.
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
           submodules: recursive
 
       - name: Prepare the Tuta SDK
-        run: python3 native/tuta/upstream/scripts/sdk-prepare.py
+        run: sh native/tuta/prepare.sh
 
       - name: Fetch the crates
         # Fetched first so the tests run as the packaged builds do: offline,

@@ -1,0 +1,167 @@
+Decrypt owner-less service responses with the request's key (Hylki)
+
+A service whose return type is marked encrypted but carries no owner key of
+its own -- CreateMailFolderReturn (MailFolderService POST) and
+DraftUpdateReturn (DraftService PUT) among them -- fails after the server has
+already applied the request: handle_response always resolves the key from the
+instance's _ownerEncSessionKey, which such a type does not have.
+
+The TS ServiceExecutor.decryptResponse resolves the key as
+`resolveServiceSessionKey(instance) ?? params.sessionKey ?? null`. This does
+the same: a return type with an owner key is resolved from it as before; one
+without is decrypted with ExtraServiceParams.session_key, or with no key. The
+Executor::handle_response trait method takes that key, passed through by the
+service_impl! trampoline. EntityFacade::decrypt_and_map_with_keys records the
+key in owner fields only when the type has them: a data transfer type has none.
+
+diff --git a/tuta-sdk/rust/sdk/src/entities/entity_facade.rs b/tuta-sdk/rust/sdk/src/entities/entity_facade.rs
+index 87bcbce..f5e6a9b 100644
+--- a/tuta-sdk/rust/sdk/src/entities/entity_facade.rs
++++ b/tuta-sdk/rust/sdk/src/entities/entity_facade.rs
+@@ -598,6 +598,15 @@ impl EntityFacade for EntityFacadeImpl {
+ 		let Some(resolved_session_key) = keys.session_key.as_ref() else {
+ 			return Ok(mapped_decrypted);
+ 		};
++		// A service data type is decrypted with its request's key but has no
++		// owner fields to record it in (TS `decryptAndMap` adds none either).
++		if type_model
++			.get_attribute_id_by_attribute_name(OWNER_ENC_SESSION_KEY_FIELD)
++			.is_err()
++			&& type_model.element_type == ElementType::DataTransfer
++		{
++			return Ok(mapped_decrypted);
++		}
+ 
+ 		let owner_enc_session_key_attribute_id: String = type_model
+             .get_attribute_id_by_attribute_name(OWNER_ENC_SESSION_KEY_FIELD)
+diff --git a/tuta-sdk/rust/sdk/src/services/generator.rs b/tuta-sdk/rust/sdk/src/services/generator.rs
+index d10295e..31abe4a 100644
+--- a/tuta-sdk/rust/sdk/src/services/generator.rs
++++ b/tuta-sdk/rust/sdk/src/services/generator.rs
+@@ -28,11 +28,12 @@ macro_rules! __service_input_value {
+ /// if the service does not return anything ($output is unit)
+ /// we don't need to call handle_response on the executor
+ macro_rules! __service_handle_response {
+-	($x:expr, $res:expr, ()) => {
++	($x:expr, $res:expr, $session_key:expr, ()) => {
++		let _ = $session_key;
+ 		return Ok(());
+ 	};
+-	($x:expr, $res:expr, $output: tt) => {
+-		return $x.handle_response::<Self::Output>($res).await;
++	($x:expr, $res:expr, $session_key:expr, $output: tt) => {
++		return $x.handle_response::<Self::Output>($res, $session_key).await;
+ 	};
+ }
+ 
+@@ -121,13 +122,14 @@ macro_rules! service_impl {
+                     params: $crate::services::ExtraServiceParams
+                 ) -> ::core::result::Result<Self::Output, $crate::ApiCallError> {
+                     // mapping () input to `Nothing`
++                    let session_key = params.session_key.clone();
+                     let res = x.do_request::<Self, $crate::__service_input_type!($input_type)>(
+                         $crate::__service_input_value!(data, $input_type),
+                         $crate::bindings::rest_client::HttpMethod::$method_name,
+                         params
+                     ).await?;
+                     // this might call handle_response or not depending on our output type
+-                    $crate::__service_handle_response!(x, res, $output_type);
++                    $crate::__service_handle_response!(x, res, session_key, $output_type);
+                 }
+             }
+         };
+diff --git a/tuta-sdk/rust/sdk/src/services/service_executor.rs b/tuta-sdk/rust/sdk/src/services/service_executor.rs
+index 53499a6..533fcdb 100644
+--- a/tuta-sdk/rust/sdk/src/services/service_executor.rs
++++ b/tuta-sdk/rust/sdk/src/services/service_executor.rs
+@@ -3,6 +3,8 @@ use crate::bindings::rest_client::{
+ };
+ #[cfg_attr(test, mockall_double::double)]
+ use crate::crypto::crypto_facade::CryptoFacade;
++use crate::crypto::crypto_facade::ResolvedSessionKey;
++use crate::entities::entity_facade::EntityDecryptionKeys;
+ use crate::entities::entity_facade::EntityFacade;
+ use crate::entities::Entity;
+ use crate::instance_mapper::InstanceMapper;
+@@ -21,6 +23,7 @@ use serde::Serialize;
+ use std::borrow::Borrow;
+ use std::ops::Deref;
+ use std::sync::Arc;
++use crypto_primitives::key::GenericAesKey;
+ 
+ /// wrapper around a service executor that is guaranteed to have the ability
+ /// to resolve session keys (and therefore to call services returning encrypted instances)
+@@ -329,6 +332,7 @@ impl Executor for ServiceExecutor {
+ 	async fn handle_response<OutputType>(
+ 		&self,
+ 		body: Option<Vec<u8>>,
++		request_session_key: Option<GenericAesKey>,
+ 	) -> Result<OutputType, ApiCallError>
+ 	where
+ 		OutputType: Entity + DeserializeOwned,
+@@ -346,6 +350,37 @@ impl Executor for ServiceExecutor {
+ 			.expect("invalid type ref!");
+ 		let type_model: &TypeModel = type_model.borrow();
+ 
++		// A service return type that carries its own key is resolved from it.
++		// One that does not (e.g. `CreateMailFolderReturn`) is decrypted with
++		// the key its request was encrypted with, or with none: TS
++		// `ServiceExecutor.decryptResponse` uses
++		// `resolveServiceSessionKey(instance) ?? params.sessionKey ?? null`.
++		let carries_owner_key = type_model.values.values().any(|value| {
++			value.name == "_ownerEncSessionKey" || value.name == "_ownerPublicEncSessionKey"
++		});
++		if type_model.marked_encrypted() && !carries_owner_key {
++			let keys = EntityDecryptionKeys {
++				session_key: request_session_key.map(|session_key| ResolvedSessionKey {
++					session_key,
++					owner_enc_session_key: Vec::new(),
++					owner_key_version: 0,
++					sender_identity_pub_key: None,
++				}),
++				group_keys: Default::default(),
++			};
++			let decrypted_entity =
++				self.entity_facade
++					.decrypt_and_map_with_keys(type_model, parsed_entity, keys)?;
++			return self
++				.instance_mapper
++				.parse_entity::<OutputType>(decrypted_entity)
++				.map_err(|e| {
++					ApiCallError::internal_with_err(
++						e,
++						"Failed to parse encrypted entity into proper types",
++					)
++				});
++		}
+ 		if type_model.marked_encrypted() {
+ 			let session_key = self
+ 				.crypto_facade
+diff --git a/tuta-sdk/rust/sdk/src/services.rs b/tuta-sdk/rust/sdk/src/services.rs
+index 797fc5f..4ed1032 100644
+--- a/tuta-sdk/rust/sdk/src/services.rs
++++ b/tuta-sdk/rust/sdk/src/services.rs
+@@ -86,6 +86,7 @@ mod hidden {
+ 	use crate::entities::Entity;
+ 	use crate::services::{ExtraServiceParams, Service};
+ 	use crate::{ApiCallError, TypeRef};
++	use crypto_primitives::key::GenericAesKey;
+ 	use serde::de::DeserializeOwned;
+ 	use serde::{Serialize, Serializer};
+ 
+@@ -129,7 +130,14 @@ mod hidden {
+ 			S: Service,
+ 			I: Entity + Serialize + Send;
+ 
+-		async fn handle_response<O>(&self, body: Option<Vec<u8>>) -> Result<O, ApiCallError>
++		/// `session_key` is the one the request was encrypted with
++		/// (`ExtraServiceParams::session_key`); a response type without an
++		/// owner key is decrypted with it, as the TS `ServiceExecutor` does.
++		async fn handle_response<O>(
++			&self,
++			body: Option<Vec<u8>>,
++			session_key: Option<GenericAesKey>,
++		) -> Result<O, ApiCallError>
+ 		where
+ 			O: Entity + DeserializeOwned;
+ 	}

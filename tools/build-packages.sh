@@ -38,22 +38,30 @@ DEB_IMAGE="${HYLKI_DEB_IMAGE:-docker.io/library/rust:1-trixie}"
 mkdir -p "$OUT"
 
 # The Tuta helper (native/tuta) builds against the Tuta SDK that
-# native/tuta/upstream/scripts/sdk-prepare.py writes from the submodules. The
-# script checks the submodules' git metadata, so it runs where the checkout
-# is; the Debian container gets a copy without .git, prepared on the host
-# before it was copied in. A tree from before the helper (CI builds older
-# tags with this script) has no native/tuta and packages hylki alone.
+# native/tuta/prepare.sh writes to native/tuta/prepared from the submodules
+# (through their sdk-prepare.py) and Hylki's own SDK patches. The script
+# checks the submodules' git metadata, so it runs where the checkout is; the
+# Debian container gets a copy without .git, prepared on the host before it
+# was copied in. A tree from before prepare.sh (CI builds older tags with
+# this script) ran sdk-prepare.py alone, and one from before the helper has
+# no native/tuta and packages hylki alone.
 HAS_TUTA=""
 [ -f "$ROOT/native/tuta/Cargo.toml" ] && HAS_TUTA=1
 
 prepare_tuta_sdk() {
     [ -n "$HAS_TUTA" ] || return 0
+    local prepared=native/tuta/prepared
+    [ -f "$ROOT/native/tuta/prepare.sh" ] || prepared=native/tuta/upstream/sdk/generated
     if git -C "$ROOT/native/tuta/upstream" rev-parse --git-dir >/dev/null 2>&1; then
-        python3 "$ROOT/native/tuta/upstream/scripts/sdk-prepare.py"
-    elif [ ! -d "$ROOT/native/tuta/upstream/sdk/generated" ]; then
-        echo "native/tuta/upstream/sdk/generated is missing: run" \
+        if [ -f "$ROOT/native/tuta/prepare.sh" ]; then
+            sh "$ROOT/native/tuta/prepare.sh"
+        else
+            python3 "$ROOT/native/tuta/upstream/scripts/sdk-prepare.py"
+        fi
+    elif [ ! -d "$ROOT/$prepared" ]; then
+        echo "$prepared is missing: run" \
              "git submodule update --init --recursive and" \
-             "native/tuta/upstream/scripts/sdk-prepare.py" >&2
+             "native/tuta/prepare.sh" >&2
         exit 1
     fi
 }

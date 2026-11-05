@@ -109,11 +109,14 @@ jobs:
 
       - name: Prepare the Tuta SDK
         # The helper builds against an SDK generated from the tutanota
-        # submodule. The generated tree is not tracked, so it is made here and
-        # carried into the build by the working-tree manifest. An older tag
-        # has no helper.
+        # submodule plus Hylki's own SDK patches. The prepared tree is not
+        # tracked, so it is made here and carried into the build by the
+        # working-tree manifest. An older tag has no prepare.sh (it ran
+        # sdk-prepare.py alone) or no helper at all.
         run: |
-          if [ -f native/tuta/Cargo.lock ]; then
+          if [ -f native/tuta/prepare.sh ]; then
+            sh native/tuta/prepare.sh
+          elif [ -f native/tuta/Cargo.lock ]; then
             python3 native/tuta/upstream/scripts/sdk-prepare.py
           fi
 

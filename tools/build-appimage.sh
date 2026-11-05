@@ -75,8 +75,11 @@ if [ ! -f /etc/arch-release ]; then
     # to please one build is not a trade worth making.
     #
     # The Tuta helper's SDK is prepared here first: sdk-prepare.py checks the
-    # submodules' git metadata, which the copy leaves out.
-    if [ -f "$ROOT/native/tuta/Cargo.toml" ]; then
+    # submodules' git metadata, which the copy leaves out. Trees from before
+    # native/tuta/prepare.sh ran sdk-prepare.py alone.
+    if [ -f "$ROOT/native/tuta/prepare.sh" ]; then
+        sh "$ROOT/native/tuta/prepare.sh"
+    elif [ -f "$ROOT/native/tuta/Cargo.toml" ]; then
         python3 "$ROOT/native/tuta/upstream/scripts/sdk-prepare.py"
     fi
     exec podman run --rm \
@@ -146,7 +149,11 @@ HELPERS=()
 if [ -f native/tuta/Cargo.toml ]; then
     echo "==> Building the Tuta helper"
     if git -C native/tuta/upstream rev-parse --git-dir >/dev/null 2>&1; then
-        python3 native/tuta/upstream/scripts/sdk-prepare.py
+        if [ -f native/tuta/prepare.sh ]; then
+            sh native/tuta/prepare.sh
+        else
+            python3 native/tuta/upstream/scripts/sdk-prepare.py
+        fi
     fi
     ( cd native/tuta && cargo build --release --locked )
     HELPERS+=(/usr/bin/hylki-tuta)

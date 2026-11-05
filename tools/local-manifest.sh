@@ -69,17 +69,24 @@ if count != expected:
     raise SystemExit(f"expected {expected} pinned git source(s), replaced {count}")
 
 if has_helper:
-    # The checkout already holds the helper's upstream submodule and the SDK
-    # it was prepared with, so the pinned upstream and the separate SDK
-    # source would only overwrite the working tree's copies.
-    for block in (
+    # The checkout already holds what the helper builds from -- the SDK that
+    # native/tuta/prepare.sh prepared, or in a manifest from before that
+    # script, tutabridge and the SDK it generated -- so the separate sources
+    # would only overwrite the working tree's copies.
+    prepared = (
+        r"      - type: dir\n"
+        r"        path: native/tuta/prepared\n"
+        r"(?:        .*\n)+"
+    )
+    blocks = (prepared,) if re.search(prepared, manifest) else (
         r"      - type: git\n"
         r"        url: https://github\.com/spartanz51/tutabridge\.git\n"
         r"(?:        .*\n)+",
         r"      - type: dir\n"
         r"        path: native/tuta/upstream/sdk/generated\n"
         r"(?:        .*\n)+",
-    ):
+    )
+    for block in blocks:
         manifest, count = re.subn(block, "", manifest)
         if count != 1:
             raise SystemExit(f"expected one helper source matching {block!r}, removed {count}")

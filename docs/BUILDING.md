@@ -39,19 +39,23 @@ executable first, then on `PATH`, so every package installs it in the same
 `bin` directory as `hylki`. Without it, everything but Tuta accounts works.
 
 The helper builds against the Tuta SDK, which is generated from two
-submodules: `native/tuta/upstream` (tutabridge) and the tutanota repository
-inside it. Check them out and prepare the SDK once, and again whenever the
-submodule moves:
+submodules, `native/tuta/upstream` (tutabridge) and the tutanota repository
+inside it, plus Hylki's own SDK patches in `native/tuta/sdk-patches`. Check
+the submodules out and prepare the SDK once, and again whenever the
+submodule or a patch changes:
 
 ```sh
 git submodule update --init --recursive
-python3 native/tuta/upstream/scripts/sdk-prepare.py
+native/tuta/prepare.sh
 ```
 
-The script needs `git` and `python3`, no network, and verifies the generated
-tree in `native/tuta/upstream/sdk/generated` against the digests the
-submodule pins; on a repeat run it only checks. Then build the helper and put
-it beside `hylki`:
+The script needs `git` and `python3`, no network. It runs tutabridge's
+`sdk-prepare.py`, which verifies the generated tree in
+`native/tuta/upstream/sdk/generated` against the digests the submodule pins,
+then writes that tree with Hylki's patches applied, beside tutabridge's
+`tutabridge-tuta` crate, to `native/tuta/prepared` (untracked), which the
+helper builds from. On a repeat run it only checks. Then build the helper and
+put it beside `hylki`:
 
 ```sh
 (cd native/tuta && cargo build --release --locked)

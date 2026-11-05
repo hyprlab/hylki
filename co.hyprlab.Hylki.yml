@@ -152,12 +152,13 @@ modules:
         sha256: cbd790eca560de5e8ec8bd64117a00dfd0bc06b091c8f52d23e44ea00d3e8461
   # The Tuta helper (native/tuta, GPL-3.0-or-later): a separate program the
   # app runs for Tuta accounts, found next to the hylki executable. It comes
-  # from the same tagged commit as the app. Its upstream, tutabridge, is a
-  # submodule pinned here by commit, without the nested tutanota checkout,
-  # which only sdk-prepare.py reads. The SDK that script prepares is not
-  # tracked by git, so it comes from the checkout the build runs in: run
+  # from the same tagged commit as the app. It builds against
+  # native/tuta/prepared: the Tuta SDK that tutabridge (the native/tuta/upstream
+  # submodule) prepares from its nested tutanota checkout, with Hylki's own SDK
+  # patches applied, beside tutabridge's tutabridge-tuta crate. That tree is
+  # not tracked by git, so it comes from the checkout the build runs in: run
   #   git submodule update --init --recursive
-  #   python3 native/tuta/upstream/scripts/sdk-prepare.py
+  #   native/tuta/prepare.sh
   #   flatpak-cargo-generator.py native/tuta/Cargo.lock -o native/tuta/cargo-sources.json
   # before building (docs/BUILDING.md).
   - name: hylki-tuta
@@ -176,16 +177,9 @@ modules:
         tag: v1.47.0
         commit: 31ab0659359e06a0a92c7c672e9e54b6f49b6c2f
         disable-submodules: true
-      - type: git
-        url: https://github.com/spartanz51/tutabridge.git
-        # Must equal the native/tuta/upstream submodule pin: the prepared SDK
-        # tree and the helper's Cargo.lock are generated against it.
-        commit: da12fd4a479d6885f6643f05690b78205e2adbec
-        dest: native/tuta/upstream
-        disable-submodules: true
       - type: dir
-        path: native/tuta/upstream/sdk/generated
-        dest: native/tuta/upstream/sdk/generated
+        path: native/tuta/prepared
+        dest: native/tuta/prepared
       # Vendored crate sources for the helper, generated like the app's.
       - native/tuta/cargo-sources.json
   - name: hylki

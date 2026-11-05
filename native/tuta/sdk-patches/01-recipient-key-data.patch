@@ -1,0 +1,526 @@
+Expose bucket-key encryption for internal recipients (Hylki)
+
+Confidential (end-to-end encrypted) Tuta-to-Tuta mail needs the bucket key
+encrypted with each recipient's public key, which only the SDK's
+AsymmetricCryptoFacade can do -- and LoggedInSdk does not expose it.
+
+This adds AsymmetricCryptoFacade::encrypt_bucket_key_for_internal_recipients,
+the internal-recipient arm of the TS MailFacade.addRecipientKeyData and
+CryptoFacade.encryptBucketKeyForInternalRecipient: current public keys come
+from the PublicKeyService through the PublicKeyProvider, asym_encrypt_sym_key
+encrypts (legacy RSA, or TutaCrypt with the sender identity key, created first
+when the sender group has none), unknown recipients are collected and fail
+the whole set. LoggedInSdk keeps the facade it already builds and exposes the
+call, choosing the sender key group as the TS client does (the user group, or
+a shared mailbox's own). Each result carries a SHA-256 fingerprint of the key
+it used, so a caller can pin keys. No cryptography is added; only existing SDK
+primitives are composed.
+
+diff --git a/tuta-sdk/rust/sdk/src/crypto/asymmetric_crypto_facade.rs b/tuta-sdk/rust/sdk/src/crypto/asymmetric_crypto_facade.rs
+index 526b1980..2f3892bf 100644
+--- a/tuta-sdk/rust/sdk/src/crypto/asymmetric_crypto_facade.rs
++++ b/tuta-sdk/rust/sdk/src/crypto/asymmetric_crypto_facade.rs
+@@ -9,15 +9,18 @@ use crate::crypto::rsa::{RSAEncryptionError, RSAKeyError, RSAX25519KeyPair};
+ use crate::crypto::tuta_crypt::{TutaCryptError, TutaCryptMessage, TutaCryptPublicKeys};
+ use crate::crypto::x25519::{X25519KeyPair, X25519PublicKey};
+ use crate::entities::generated::sys::{PubEncKeyData, PublicKeyPutIn};
++use crate::entities::generated::tutanota::InternalRecipientKeyData;
+ #[cfg_attr(test, mockall_double::double)]
+ use crate::key_loader_facade::KeyLoaderFacade;
++use crate::rest_error::HttpError;
+ use crate::services::generated::sys::PublicKeyService;
+ #[cfg_attr(test, mockall_double::double)]
+ use crate::services::service_executor::ServiceExecutor;
+ use crate::services::ExtraServiceParams;
+ use crate::tutanota_constants::CryptoProtocolVersion;
+ use crate::tutanota_constants::EncryptionAuthStatus;
+-use crate::util::convert_version_to_u64;
++use crate::tutanota_constants::{PublicKeyIdentifierType, SYSTEM_GROUP_MAIL_ADDRESS};
++use crate::util::{convert_version_to_i64, convert_version_to_u64};
+ use crate::ApiCallError;
+ use crate::GeneratedId;
+ use crypto_primitives::aes::Aes256Key;
+@@ -25,6 +28,7 @@ use crypto_primitives::aes::{AesEncryptError, InitializationVector};
+ use crypto_primitives::key::GenericAesKey;
+ use crypto_primitives::key::KeyDecryptError;
+ use crypto_primitives::randomizer_facade::RandomizerFacade;
++use crypto_primitives::sha::sha256;
+ use crypto_primitives::versioned::{Versioned, VersionedAesKey};
+ use std::sync::Arc;
+ use util::array::ArrayCastingError;
+@@ -56,6 +60,59 @@ pub struct PubEncSymKey {
+ 	recipient_key_version: u64,
+ }
+ 
++/// One internal recipient's share of a confidential mail: the bucket key
++/// encrypted with the recipient's current public key, ready for
++/// `SendDraftData.internalRecipientKeyData` (the caller assigns the aggregate
++/// `_id`), plus a fingerprint of the key it was encrypted with.
++pub struct InternalRecipientKey {
++	pub key_data: InternalRecipientKeyData,
++	/// See `public_key_fingerprint`.
++	pub public_key_fingerprint: Vec<u8>,
++}
++
++#[derive(thiserror::Error, Debug)]
++pub enum InternalRecipientKeyError {
++	/// No public key exists for these addresses (the TS client's
++	/// `RecipientsNotFoundError`). No key data is built for anyone then.
++	#[error("recipients not found")]
++	RecipientsNotFound(Vec<String>),
++	/// External (secure-mail) users encrypt symmetrically for internal
++	/// recipients; that path is not offered here.
++	#[error("external sender")]
++	ExternalSender,
++	#[error("recipient key encryption failed")]
++	Crypto(#[from] AsymmetricCryptoError),
++}
++
++/// SHA-256 over a public encryption key, for callers that pin recipient keys
++/// (trust on first use). It covers each component as the PublicKeyService
++/// serves it -- RSA, X25519, Kyber, in that order -- each prefixed with its
++/// length as a big-endian u32, an absent component counting as empty. This is
++/// not Tuta's identity-key fingerprint, which covers the signing key instead.
++#[must_use]
++pub fn public_key_fingerprint(public_key: &PublicKey) -> Vec<u8> {
++	let (rsa, ecc, kyber) = match public_key {
++		PublicKey::Rsa(rsa) => (rsa.serialize(), Vec::new(), Vec::new()),
++		PublicKey::RsaX25519(keys) => (
++			keys.rsa_public_key.serialize(),
++			keys.x25519_public_key.as_bytes().to_vec(),
++			Vec::new(),
++		),
++		PublicKey::TutaCrypt(keys) => (
++			Vec::new(),
++			keys.x25519_public_key.as_bytes().to_vec(),
++			keys.kyber_public_key.serialize(),
++		),
++	};
++	let mut material = Vec::new();
++	for part in [rsa, ecc, kyber] {
++		let length = u32::try_from(part.len()).expect("public key component over 4 GiB");
++		material.extend_from_slice(&length.to_be_bytes());
++		material.extend_from_slice(&part);
++	}
++	sha256(&material)
++}
++
+ #[derive(thiserror::Error, Debug)]
+ #[error("AsymmetricCryptoError")]
+ pub enum AsymmetricCryptoError {
+@@ -290,6 +347,82 @@ impl AsymmetricCryptoFacade {
+ 		}
+ 	}
+ 
++	/// Encrypts `bucket_key` for every internal recipient of a confidential
++	/// mail: the internal-recipient arm of TS `MailFacade.addRecipientKeyData`
++	/// plus `CryptoFacade.encryptBucketKeyForInternalRecipient`. Each
++	/// recipient's current public key comes from the PublicKeyService through
++	/// the `PublicKeyProvider`, and `asym_encrypt_sym_key` encrypts the bucket
++	/// key with it -- RSA for legacy keys, TutaCrypt (authenticated with the
++	/// sender group's identity key, created first if the group has none) for
++	/// PQ keys.
++	///
++	/// Like the TS client, every unknown recipient is collected before
++	/// failing, and no key data is built once one is missing. The TS client
++	/// additionally verifies keys of contacts the user verified manually;
++	/// there are none here, so the service's current key is used, as the TS
++	/// client does for every unverified contact. The returned fingerprints let
++	/// a caller pin keys itself.
++	///
++	/// @param sender_group_id the user group, or a shared mailbox's mail group
++	///        when sending from one (TS `isSharedMailboxSender`).
++	pub async fn encrypt_bucket_key_for_internal_recipients(
++		&self,
++		bucket_key: &GenericAesKey,
++		recipient_mail_addresses: &[String],
++		sender_group_id: &GeneratedId,
++	) -> Result<Vec<InternalRecipientKey>, InternalRecipientKeyError> {
++		let mut not_found = Vec::new();
++		let mut keys = Vec::with_capacity(recipient_mail_addresses.len());
++		for address in recipient_mail_addresses {
++			if address == SYSTEM_GROUP_MAIL_ADDRESS {
++				not_found.push(address.clone());
++				continue;
++			}
++			let identifier = PublicKeyIdentifier {
++				identifier: address.clone(),
++				identifier_type: PublicKeyIdentifierType::MailAddress,
++			};
++			let public_key = match self
++				.public_key_provider
++				.load_current_pub_key(&identifier)
++				.await
++			{
++				Ok(public_key) => public_key,
++				Err(PublicKeyLoadingError::KeyLoadingError(
++					ApiCallError::ServerResponseError {
++						source: HttpError::NotFoundError,
++					},
++				)) => {
++					not_found.push(address.clone());
++					continue;
++				},
++				Err(error) => return Err(AsymmetricCryptoError::from(error).into()),
++			};
++			if !not_found.is_empty() {
++				continue;
++			}
++			let public_key_fingerprint = public_key_fingerprint(&public_key.object);
++			let encrypted = self
++				.asym_encrypt_sym_key(bucket_key.clone(), public_key, sender_group_id)
++				.await?;
++			keys.push(InternalRecipientKey {
++				key_data: InternalRecipientKeyData {
++					_id: None,
++					mailAddress: address.clone(),
++					pubEncBucketKey: encrypted.pub_enc_sym_key_bytes,
++					recipientKeyVersion: convert_version_to_i64(encrypted.recipient_key_version),
++					protocolVersion: encrypted.crypto_protocol_version as i64,
++					senderKeyVersion: encrypted.sender_key_version.map(convert_version_to_i64),
++				},
++				public_key_fingerprint,
++			});
++		}
++		if !not_found.is_empty() {
++			return Err(InternalRecipientKeyError::RecipientsNotFound(not_found));
++		}
++		Ok(keys)
++	}
++
+ 	/// Encrypts the symKey asymmetrically with the provided public keys using the TutaCrypt protocol.
+ 	/// @param symKey the key to be encrypted
+ 	/// @param recipientPublicKeys MUST be a tuta_crypt key pair
+@@ -1205,4 +1338,253 @@ mod tests {
+ 			}
+ 		}
+ 	}
++
++	mod encrypt_bucket_key_for_internal_recipients {
++		use crate::crypto::asymmetric_crypto_facade::{
++			public_key_fingerprint, AsymmetricCryptoError, AsymmetricCryptoFacade,
++			InternalRecipientKeyError,
++		};
++		use crate::crypto::key::{AsymmetricKeyPair, PublicKey};
++		use crate::crypto::public_key_provider::{MockPublicKeyProvider, PublicKeyLoadingError};
++		use crate::crypto::rsa::RSAKeyPair;
++		use crate::crypto::tuta_crypt::TutaCryptPublicKeys;
++		use crate::crypto::{Aes256Key, TutaCryptKeyPairs};
++		use crate::key_loader_facade::MockKeyLoaderFacade;
++		use crate::rest_error::HttpError;
++		use crate::services::generated::sys::PublicKeyService;
++		use crate::services::service_executor::MockServiceExecutor;
++		use crate::tutanota_constants::{
++			CryptoProtocolVersion, PublicKeyIdentifierType, SYSTEM_GROUP_MAIL_ADDRESS,
++		};
++		use crate::ApiCallError;
++		use crate::GeneratedId;
++		use crate::GenericAesKey;
++		use crypto_primitives::randomizer_facade::test_util::make_thread_rng_facade;
++		use crypto_primitives::versioned::Versioned;
++		use mockall::predicate::eq;
++		use std::sync::Arc;
++
++		fn not_found() -> PublicKeyLoadingError {
++			PublicKeyLoadingError::KeyLoadingError(ApiCallError::ServerResponseError {
++				source: HttpError::NotFoundError,
++			})
++		}
++
++		fn facade(
++			key_loader_facade: MockKeyLoaderFacade,
++			public_key_provider: MockPublicKeyProvider,
++		) -> AsymmetricCryptoFacade {
++			let mut service_executor = MockServiceExecutor::default();
++			service_executor.expect_get::<PublicKeyService>().never();
++			service_executor.expect_put::<PublicKeyService>().never();
++			AsymmetricCryptoFacade::new(
++				Arc::new(key_loader_facade),
++				make_thread_rng_facade(),
++				Arc::new(service_executor),
++				Arc::new(public_key_provider),
++			)
++		}
++
++		fn serve_key(
++			public_key_provider: &mut MockPublicKeyProvider,
++			address: &'static str,
++			key: Versioned<PublicKey>,
++		) {
++			public_key_provider
++				.expect_load_current_pub_key()
++				.withf(move |identifier| {
++					identifier.identifier == address
++						&& identifier.identifier_type == PublicKeyIdentifierType::MailAddress
++				})
++				.returning(move |_| Ok(key.clone()))
++				.once();
++		}
++
++		#[tokio::test]
++		async fn tuta_crypt_recipients_can_decrypt_the_bucket_key_and_authenticate_the_sender() {
++			let randomizer_facade = make_thread_rng_facade();
++			let sender_group_id = GeneratedId::test_random();
++			let sender_key_pair = TutaCryptKeyPairs::generate(&randomizer_facade);
++			let sender_identity = sender_key_pair.x25519_keys.public_key.clone();
++			let mut key_loader_facade = MockKeyLoaderFacade::default();
++			key_loader_facade
++				.expect_load_current_key_pair()
++				.with(eq(sender_group_id.clone()))
++				.returning(move |_| {
++					Ok(Versioned {
++						object: AsymmetricKeyPair::TutaCryptKeyPairs(sender_key_pair.clone()),
++						version: 1,
++					})
++				});
++			let recipient_key_pair = TutaCryptKeyPairs::generate(&randomizer_facade);
++			let recipient_public_key = PublicKey::TutaCrypt(TutaCryptPublicKeys {
++				x25519_public_key: recipient_key_pair.x25519_keys.public_key.clone(),
++				kyber_public_key: recipient_key_pair.kyber_keys.public_key.clone(),
++			});
++			let mut public_key_provider = MockPublicKeyProvider::default();
++			serve_key(
++				&mut public_key_provider,
++				"bob@tuta.com",
++				Versioned::new(recipient_public_key.clone(), 3),
++			);
++			let bucket_key = GenericAesKey::Aes256(Aes256Key::generate(&randomizer_facade));
++
++			let keys = facade(key_loader_facade, public_key_provider)
++				.encrypt_bucket_key_for_internal_recipients(
++					&bucket_key,
++					&["bob@tuta.com".to_string()],
++					&sender_group_id,
++				)
++				.await
++				.unwrap();
++
++			assert_eq!(keys.len(), 1);
++			let key_data = &keys[0].key_data;
++			assert_eq!(key_data.mailAddress, "bob@tuta.com");
++			assert_eq!(
++				key_data.protocolVersion,
++				CryptoProtocolVersion::TutaCrypt as i64
++			);
++			assert_eq!(key_data.recipientKeyVersion, 3);
++			assert_eq!(key_data.senderKeyVersion, Some(1));
++			assert_eq!(
++				keys[0].public_key_fingerprint,
++				public_key_fingerprint(&recipient_public_key)
++			);
++			let decapsulated = AsymmetricCryptoFacade::decrypt_sym_key_with_key_pair(
++				AsymmetricKeyPair::TutaCryptKeyPairs(recipient_key_pair),
++				&CryptoProtocolVersion::TutaCrypt,
++				&key_data.pubEncBucketKey,
++			)
++			.unwrap();
++			assert_eq!(
++				decapsulated.decrypted_aes_key.as_bytes(),
++				bucket_key.as_bytes()
++			);
++			assert_eq!(decapsulated.sender_identity_pub_key, Some(sender_identity));
++		}
++
++		#[tokio::test]
++		async fn legacy_rsa_recipients_get_an_rsa_encrypted_bucket_key() {
++			let randomizer_facade = make_thread_rng_facade();
++			let mut key_loader_facade = MockKeyLoaderFacade::default();
++			key_loader_facade.expect_load_current_key_pair().never();
++			let recipient_key_pair = RSAKeyPair::generate(&randomizer_facade);
++			let recipient_public_key = PublicKey::Rsa(recipient_key_pair.public_key.clone());
++			let mut public_key_provider = MockPublicKeyProvider::default();
++			serve_key(
++				&mut public_key_provider,
++				"old@tutanota.de",
++				Versioned::new(recipient_public_key.clone(), 0),
++			);
++			let bucket_key = GenericAesKey::Aes256(Aes256Key::generate(&randomizer_facade));
++
++			let keys = facade(key_loader_facade, public_key_provider)
++				.encrypt_bucket_key_for_internal_recipients(
++					&bucket_key,
++					&["old@tutanota.de".to_string()],
++					&GeneratedId::test_random(),
++				)
++				.await
++				.unwrap();
++
++			let key_data = &keys[0].key_data;
++			assert_eq!(key_data.protocolVersion, CryptoProtocolVersion::Rsa as i64);
++			assert_eq!(key_data.recipientKeyVersion, 0);
++			assert_eq!(key_data.senderKeyVersion, None);
++			assert_eq!(
++				keys[0].public_key_fingerprint,
++				public_key_fingerprint(&recipient_public_key)
++			);
++			let decrypted = AsymmetricCryptoFacade::decrypt_sym_key_with_key_pair(
++				AsymmetricKeyPair::RSAKeyPair(recipient_key_pair),
++				&CryptoProtocolVersion::Rsa,
++				&key_data.pubEncBucketKey,
++			)
++			.unwrap();
++			assert_eq!(
++				decrypted.decrypted_aes_key.as_bytes(),
++				bucket_key.as_bytes()
++			);
++		}
++
++		#[tokio::test]
++		async fn every_unknown_recipient_is_reported_and_nothing_is_encrypted() {
++			let randomizer_facade = make_thread_rng_facade();
++			let mut key_loader_facade = MockKeyLoaderFacade::default();
++			key_loader_facade.expect_load_current_key_pair().never();
++			let known = TutaCryptKeyPairs::generate(&randomizer_facade);
++			let mut public_key_provider = MockPublicKeyProvider::default();
++			public_key_provider
++				.expect_load_current_pub_key()
++				.withf(|identifier| identifier.identifier != "known@tuta.com")
++				.returning(|_| Err(not_found()))
++				.times(2);
++			serve_key(
++				&mut public_key_provider,
++				"known@tuta.com",
++				Versioned::new(
++					PublicKey::TutaCrypt(TutaCryptPublicKeys {
++						x25519_public_key: known.x25519_keys.public_key.clone(),
++						kyber_public_key: known.kyber_keys.public_key.clone(),
++					}),
++					1,
++				),
++			);
++			let addresses = [
++				"gone@tuta.com".to_string(),
++				"known@tuta.com".to_string(),
++				SYSTEM_GROUP_MAIL_ADDRESS.to_string(),
++				"never@tuta.com".to_string(),
++			];
++
++			let result = facade(key_loader_facade, public_key_provider)
++				.encrypt_bucket_key_for_internal_recipients(
++					&GenericAesKey::Aes256(Aes256Key::generate(&randomizer_facade)),
++					&addresses,
++					&GeneratedId::test_random(),
++				)
++				.await;
++
++			match result {
++				Err(InternalRecipientKeyError::RecipientsNotFound(missing)) => assert_eq!(
++					missing,
++					["gone@tuta.com", SYSTEM_GROUP_MAIL_ADDRESS, "never@tuta.com"]
++				),
++				_ => panic!("expected RecipientsNotFound"),
++			}
++		}
++
++		#[tokio::test]
++		async fn a_failed_key_lookup_is_an_error_not_a_missing_recipient() {
++			let mut public_key_provider = MockPublicKeyProvider::default();
++			public_key_provider
++				.expect_load_current_pub_key()
++				.returning(|_| {
++					Err(PublicKeyLoadingError::KeyLoadingError(
++						ApiCallError::ServerResponseError {
++							source: HttpError::TooManyRequestsError {
++								suspension_time_sec: None,
++							},
++						},
++					))
++				})
++				.once();
++
++			let result = facade(MockKeyLoaderFacade::default(), public_key_provider)
++				.encrypt_bucket_key_for_internal_recipients(
++					&GenericAesKey::Aes256(Aes256Key::generate(&make_thread_rng_facade())),
++					&["busy@tuta.com".to_string()],
++					&GeneratedId::test_random(),
++				)
++				.await;
++
++			assert!(matches!(
++				result,
++				Err(InternalRecipientKeyError::Crypto(
++					AsymmetricCryptoError::PublicKeyLoadingError(_)
++				))
++			));
++		}
++	}
+ }
+diff --git a/tuta-sdk/rust/sdk/src/lib.rs b/tuta-sdk/rust/sdk/src/lib.rs
+index 76d551ae..0d3cc8a7 100644
+--- a/tuta-sdk/rust/sdk/src/lib.rs
++++ b/tuta-sdk/rust/sdk/src/lib.rs
+@@ -15,6 +15,9 @@ use crate::blobs::blob_access_token_facade::BlobAccessTokenFacade;
+ use crate::blobs::blob_facade::BlobFacade;
+ #[cfg_attr(test, mockall_double::double)]
+ use crate::crypto::asymmetric_crypto_facade::AsymmetricCryptoFacade;
++use crate::crypto::asymmetric_crypto_facade::{
++	AsymmetricCryptoError, InternalRecipientKey, InternalRecipientKeyError,
++};
+ #[cfg_attr(test, mockall_double::double)]
+ use crate::crypto::crypto_facade::CryptoFacade;
+ #[cfg_attr(test, mockall_double::double)]
+@@ -99,7 +102,7 @@ use crate::entities::generated::storage::BlobServerAccessInfo;
+ use crate::entities::Entity;
+ use crate::groups::GroupType;
+ use crate::metamodel::TypeModel;
+-use crate::tutanota_constants::ArchiveDataType;
++use crate::tutanota_constants::{AccountType, ArchiveDataType};
+ #[cfg_attr(test, mockall_double::double)]
+ use crate::user_facade_factory::UserFacadeFactory;
+ pub use id::custom_id::CustomId;
+@@ -315,6 +318,7 @@ impl Sdk {
+ 			user_facade,
+ 			entity_client,
+ 			service_executor,
++			asymmetric_crypto_facade,
+ 			typed_entity_client,
+ 			crypto_entity_client,
+ 			instance_mapper: Arc::clone(&self.instance_mapper),
+@@ -431,6 +435,7 @@ pub struct LoggedInSdk {
+ 	typed_entity_client: Arc<TypedEntityClient>,
+ 	crypto_entity_client: Arc<CryptoEntityClient>,
+ 	blob_facade: Arc<BlobFacade>,
++	asymmetric_crypto_facade: Arc<AsymmetricCryptoFacade>,
+ 	pub instance_mapper: Arc<InstanceMapper>,
+ 	pub type_model_provider: Arc<TypeModelProvider>,
+ 	pub contact_facade: Arc<ContactFacade>,
+@@ -470,6 +475,39 @@ impl LoggedInSdk {
+ 			.map_err(|err| ApiCallError::internal(format!("KeyLoadError: {err:?}")))
+ 	}
+ 
++	/// Encrypts a confidential mail's bucket key for its internal recipients
++	/// (see `AsymmetricCryptoFacade::encrypt_bucket_key_for_internal_recipients`),
++	/// with the sender key pair the TS `MailFacade.addRecipientKeyData`
++	/// chooses: the user group's, or a shared mailbox's own when
++	/// `sender_mail_group_id` is not the user's mail group.
++	pub async fn encrypt_bucket_key_for_internal_recipients(
++		&self,
++		sender_mail_group_id: &GeneratedId,
++		bucket_key: &GenericAesKey,
++		recipient_mail_addresses: &[String],
++	) -> Result<Vec<InternalRecipientKey>, InternalRecipientKeyError> {
++		if self.user_facade.get_user().accountType == AccountType::EXTERNAL as i64 {
++			return Err(InternalRecipientKeyError::ExternalSender);
++		}
++		let own_mail_group_id = self
++			.user_facade
++			.get_membership_by_group_type(GroupType::Mail)
++			.map_err(AsymmetricCryptoError::from)?
++			.group;
++		let sender_group_id = if own_mail_group_id == *sender_mail_group_id {
++			self.user_facade.get_user_group_id()
++		} else {
++			sender_mail_group_id.clone()
++		};
++		self.asymmetric_crypto_facade
++			.encrypt_bucket_key_for_internal_recipients(
++				bucket_key,
++				recipient_mail_addresses,
++				&sender_group_id,
++			)
++			.await
++	}
++
+ 	#[must_use]
+ 	pub fn get_user_group_id(&self) -> GeneratedId {
+ 		self.user_facade.get_user_group_id()

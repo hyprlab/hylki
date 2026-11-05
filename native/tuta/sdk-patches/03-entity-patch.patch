@@ -1,0 +1,163 @@
+PATCH an instance with a PatchList, as the TS client updates entities (Hylki)
+
+The SDK updates an instance only with a whole-instance PUT, which encrypts
+every value again with a fresh IV. The TS client writes every update as a
+PATCH of a sys/PatchList holding only the changed, non-final attributes
+(EntityRestClient.update, PatchGenerator.computePatches), so a final value
+such as Mail.subject is never resent. HttpMethod gains PATCH (mapped in
+NativeRestClient), EntityClient gains patch_instance, which serializes a
+PatchList and PATCHes it to the instance's list element path with the
+instance type's model version, mapping a non-2xx status to its HttpError
+instead of panicking, and CryptoEntityClient gains a typed patch_instance
+over it. An encrypted value in a patch is passed in as ciphertext: the caller
+encrypts it with the instance's session key, as TS encrypts the modified
+instance before computing the patch.
+
+diff --git a/tuta-sdk/rust/sdk/src/bindings/rest_client.rs b/tuta-sdk/rust/sdk/src/bindings/rest_client.rs
+index e85bf68..5d39338 100644
+--- a/tuta-sdk/rust/sdk/src/bindings/rest_client.rs
++++ b/tuta-sdk/rust/sdk/src/bindings/rest_client.rs
+@@ -8,6 +8,7 @@ pub enum HttpMethod {
+ 	POST,
+ 	PUT,
+ 	DELETE,
++	PATCH,
+ }
+ 
+ /// HTTP(S) data inserted by the `RestClient` in its REST requests
+diff --git a/tuta-sdk/rust/sdk/src/crypto_entity_client.rs b/tuta-sdk/rust/sdk/src/crypto_entity_client.rs
+index 531ac96..18e645c 100644
+--- a/tuta-sdk/rust/sdk/src/crypto_entity_client.rs
++++ b/tuta-sdk/rust/sdk/src/crypto_entity_client.rs
+@@ -15,7 +15,7 @@ use crate::crypto::X25519PublicKey;
+ use crate::element_value::{ElementValue, ParsedEntity};
+ use crate::entities::entity_facade::{has_kdf_nonce, EntityFacade, ID_FIELD};
+ use crate::entities::generated::base::PersistenceResourcePostReturn;
+-use crate::entities::generated::sys::BucketKey;
++use crate::entities::generated::sys::{BucketKey, PatchList};
+ use crate::entities::generated::tutanota::{Mail, MailAddress};
+ use crate::entities::Entity;
+ #[cfg_attr(test, mockall_double::double)]
+@@ -31,7 +31,7 @@ use crate::tutanota_constants::{
+ };
+ use crate::util::convert_version_to_u64;
+ use crate::{ApiCallError, ListLoadDirection};
+-use crate::{GeneratedId, TypeRef};
++use crate::{GeneratedId, IdTupleGenerated, TypeRef};
+ use crypto_primitives::key::GenericAesKey;
+ use crypto_primitives::versioned::Versioned;
+ use serde::de::DeserializeOwned;
+@@ -182,6 +182,28 @@ impl CryptoEntityClient {
+ 			.await
+ 	}
+ 
++	/// Applies `patches` to the stored list element `id` of type `Instance`
++	/// (see `EntityClient::patch_instance`). An encrypted value in a patch is
++	/// expected as ciphertext under the instance's session key.
++	pub async fn patch_instance<Instance: Entity>(
++		&self,
++		id: &IdTupleGenerated,
++		patches: PatchList,
++	) -> Result<(), ApiCallError> {
++		let parsed_patch_list = self
++			.instance_mapper
++			.serialize_entity(patches)
++			.map_err(|e| ApiCallError::internal_with_err(e, "serializing a PatchList"))?;
++		self.entity_client
++			.patch_instance(
++				&Instance::type_ref(),
++				&id.list_id,
++				&id.element_id,
++				parsed_patch_list,
++			)
++			.await
++	}
++
+ 	pub async fn update_instance<Instance: Entity + Serialize>(
+ 		&self,
+ 		instance: Instance,
+diff --git a/tuta-sdk/rust/sdk/src/entity_client.rs b/tuta-sdk/rust/sdk/src/entity_client.rs
+index 650c56c..bd11f06 100644
+--- a/tuta-sdk/rust/sdk/src/entity_client.rs
++++ b/tuta-sdk/rust/sdk/src/entity_client.rs
+@@ -5,6 +5,7 @@ use crate::bindings::suspendable_rest_client::SuspensionBehavior;
+ use crate::element_value::{ElementValue, ParsedEntity};
+ use crate::entities::entity_facade::{ID_FIELD, PERMISSIONS_FIELD};
+ use crate::entities::generated::base::PersistenceResourcePostReturn;
++use crate::entities::generated::sys::PatchList;
+ use crate::entities::Entity;
+ use crate::id::id_tuple::{BaseIdType, IdTupleType, IdType};
+ use crate::instance_mapper::InstanceMapper;
+@@ -407,6 +408,51 @@ impl EntityClient {
+ 		Ok(())
+ 	}
+ 
++	/// Applies a `sys/PatchList` to a stored list element with a PATCH
++	/// request, as TS `EntityRestClient.update` writes every update: only the
++	/// listed attributes change, so final values (re-encrypted with fresh IVs
++	/// by a whole-instance PUT) and every other field stay as they are. An
++	/// encrypted value in the list is already ciphertext.
++	pub async fn patch_instance(
++		&self,
++		type_ref: &TypeRef,
++		list_id: &GeneratedId,
++		element_id: &GeneratedId,
++		patch_list: ParsedEntity,
++	) -> Result<(), ApiCallError> {
++		let type_model = self.resolve_client_type_ref(type_ref)?;
++		let request_url = format!(
++			"{}/rest/{}/{}/{}/{}",
++			self.base_url, type_ref.app, type_model.name, list_id, element_id
++		);
++		let raw_patch_list = self
++			.json_serializer
++			.serialize(&PatchList::type_ref(), patch_list)
++			.map_err(|e| ApiCallError::internal_with_err(e, "serializing a PatchList"))?;
++		let body = serde_json::to_vec(&raw_patch_list).map_err(|_| {
++			ApiCallError::internal("Cannot serialize RawEntity to json".to_string())
++		})?;
++		let mut options = RestClientOptions {
++			body: Some(body),
++			headers: self.auth_headers_provider.provide_headers(type_model.version),
++			suspension_behavior: Some(SuspensionBehavior::Suspend),
++		};
++		options
++			.headers
++			.insert("Content-Type".to_owned(), "application/json".to_owned());
++		let response = self
++			.rest_client
++			.request_binary(request_url, HttpMethod::PATCH, options)
++			.await?;
++		self.ensure_latest_server_model(&response).await?;
++		match response.status {
++			200..=299 => Ok(()),
++			_ => Err(ApiCallError::ServerResponseError {
++				source: HttpError::from_http_response(response.status, &response.headers)?,
++			}),
++		}
++	}
++
+ 	/// Deletes an existing single entity/instance on the backend
+ 	#[allow(clippy::unused_async, unused)]
+ 	pub async fn erase_element(
+@@ -530,6 +576,8 @@ mockall::mock! {
+ 		async fn post_instance_changes( &self, parsed_entity: ParsedEntity, type_ref: &TypeRef, request_type: HttpMethod,
+ 			) -> Result<RestResponse, ApiCallError>;
+ 		pub async fn update_instance(&self, type_ref: &TypeRef, parsed_entity: ParsedEntity) -> Result<(), ApiCallError>;
++		pub async fn patch_instance(&self, type_ref: &TypeRef, list_id: &GeneratedId, element_id: &GeneratedId, patch_list: ParsedEntity)
++			-> Result<(), ApiCallError>;
+ 		pub async fn create_instance(&self, type_ref: &TypeRef, parsed_entity: ParsedEntity, instance_mapper: &InstanceMapper)
+ 			-> Result<PersistenceResourcePostReturn, ApiCallError>;
+ 	}
+diff --git a/tuta-sdk/rust/sdk/src/net/native_rest_client.rs b/tuta-sdk/rust/sdk/src/net/native_rest_client.rs
+index 9d83701..fb164a2 100644
+--- a/tuta-sdk/rust/sdk/src/net/native_rest_client.rs
++++ b/tuta-sdk/rust/sdk/src/net/native_rest_client.rs
+@@ -52,6 +52,7 @@ impl RestClient for NativeRestClient {
+ 			HttpMethod::POST => req.method("POST"),
+ 			HttpMethod::PUT => req.method("PUT"),
+ 			HttpMethod::DELETE => req.method("DELETE"),
++			HttpMethod::PATCH => req.method("PATCH"),
+ 		};
+ 
+ 		for (header_name, header_value) in headers {
