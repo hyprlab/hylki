@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Fixed: Export settings wrote OAuth client secrets, readable by anyone on
+  the computer.** The file is now readable only by you and leaves the secrets
+  out. Importing it keeps the secret this computer already has.
+
 - **Fixed: `w` and `b` left a message card under the bar above it** (#587, by
   James Reilly). The card's top border and selection outline were cut off. The
   card now stops 14 px below the bar, as it does when focused for a reply.

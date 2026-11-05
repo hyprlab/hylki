@@ -1057,6 +1057,9 @@ msgstr "Nova mensagem a partir de um modelo"
 msgid "Send the message you are writing"
 msgstr "Enviar a mensagem que está a escrever"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Anexar ficheiros"
 
@@ -3486,8 +3489,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -6200,6 +6203,7 @@ msgstr "Tradução"
 msgid "General"
 msgstr "Geral"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Aspeto"
 
@@ -6368,9 +6372,10 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
+#, fuzzy
 msgid ""
-"Accounts, preferences, filters, tags and layout, in one file. Passwords and "
-"OpenPGP keys are not included."
+"Accounts, preferences, filters, tags and layout, in one file. Passwords, "
+"OAuth client secrets and OpenPGP keys are not included."
 msgstr ""
 "Contas, preferências, filtros, etiquetas e disposição num único ficheiro. As "
 "palavras-passe e chaves OpenPGP não estão incluídas."
