@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **Added: Autocrypt** (Level 1). An account can send its OpenPGP key with
+  its mail and keep the keys others send that way, and the keys passed on in
+  encrypted mail to several people. When everyone on a message prefers
+  encrypted mail, Encrypt turns on by itself. Found keys stay in a keyring of
+  Hylki's own, never the user's GnuPG keyring, and a key in a header that
+  names someone other than the sender is refused.
+
+- **Added: each recipient shows whether they have an OpenPGP key**, and
+  where it came from. A recipient without one is looked up on their own
+  domain (WKD) as they are added; a keyserver only when allowed under
+  Settings, OpenPGP.
+
 - **Fixed: Bcc recipients' OpenPGP keys showed in encrypted mail.** Every
   copy of an encrypted message named the key of each recipient, so the To and
   Cc could tell whose keys were Bcc'd. A Bcc recipient's key is now in the

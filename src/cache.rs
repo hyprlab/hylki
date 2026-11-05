@@ -22,6 +22,7 @@ mod messages;
 mod offline;
 mod open;
 mod outbox;
+mod pgp_peers;
 mod schema;
 mod smart;
 mod text_index;

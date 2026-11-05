@@ -115,6 +115,36 @@ impl Component for PgpKeys {
                     },
                 },
 
+                // Automatic key discovery while composing: WKD on, a
+                // keyserver only when asked, as it tells a third party
+                // who the user writes to.
+                add = &adw::PreferencesGroup {
+                    set_title: &i18n("Finding keys"),
+                    set_description: Some(
+                        i18n("Keys found for the people you write to, and keys sent with their mail (Autocrypt), are kept apart from your keyring.").as_str()
+                    ),
+                    adw::SwitchRow {
+                        set_title: &i18n("Look up recipients' keys"),
+                        set_subtitle: &i18n("Asks each recipient's own mail domain (WKD) while you address a message."),
+                        set_active: crate::config::load_privacy().key_lookup,
+                        connect_active_notify => move |row| {
+                            let mut prefs = crate::config::load_privacy();
+                            prefs.key_lookup = row.is_active();
+                            crate::config::save_privacy(prefs);
+                        },
+                    },
+                    adw::SwitchRow {
+                        set_title: &i18n("Also ask a keyserver"),
+                        set_subtitle: &i18n("keys.openpgp.org is asked for recipients their domain has no key for, and so learns who you write to."),
+                        set_active: crate::config::load_privacy().keyserver_lookup,
+                        connect_active_notify => move |row| {
+                            let mut prefs = crate::config::load_privacy();
+                            prefs.keyserver_lookup = row.is_active();
+                            crate::config::save_privacy(prefs);
+                        },
+                    },
+                },
+
                 #[name = "own_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Your keys"),

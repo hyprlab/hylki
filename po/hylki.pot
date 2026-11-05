@@ -1764,6 +1764,11 @@ msgstr ""
 msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr ""
 
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+
 msgid "Revoked"
 msgstr ""
 
@@ -3514,6 +3519,32 @@ msgstr ""
 msgid "Show Cc, Bcc and Reply-To"
 msgstr ""
 
+msgid "They prefer encrypted mail."
+msgstr ""
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key in your keyring."
+msgstr ""
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
 msgid "Cannot merge an encrypted message"
 msgstr ""
 
@@ -5016,7 +5047,7 @@ msgstr ""
 msgid "Trust"
 msgstr ""
 
-msgid "The sender's key was imported from the message."
+msgid "The sender's key was taken from the message."
 msgstr ""
 
 msgid "The sender's key was fetched and imported."
@@ -5175,6 +5206,29 @@ msgid "GnuPG"
 msgstr ""
 
 msgid "The same keyring the gpg command and other mail apps use."
+msgstr ""
+
+msgid "Finding keys"
+msgstr ""
+
+msgid ""
+"Keys found for the people you write to, and keys sent with their mail "
+"(Autocrypt), are kept apart from your keyring."
+msgstr ""
+
+msgid "Look up recipients' keys"
+msgstr ""
+
+msgid ""
+"Asks each recipient's own mail domain (WKD) while you address a message."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid ""
+"keys.openpgp.org is asked for recipients their domain has no key for, and so "
+"learns who you write to."
 msgstr ""
 
 msgid "Your keys"
@@ -6760,11 +6814,11 @@ msgid ""
 "again at the next connection."
 msgstr ""
 
-msgid ""
-"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
+msgid "no OpenPGP key for {addr}"
 msgstr ""
 
-msgid "no OpenPGP key for {addr}"
+msgid ""
+"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 
 msgid "Could not save template: {e}"
@@ -7363,6 +7417,21 @@ msgid "Hide the subject of encrypted mail"
 msgstr ""
 
 msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr ""
+
+msgid "Send your key with your mail"
+msgstr ""
+
+msgid ""
+"Autocrypt: people whose mail apps support it can encrypt to you, and their "
+"keys are kept from their mail to you."
+msgstr ""
+
+msgid "Encrypt by default"
+msgstr ""
+
+msgid ""
+"Mail to people who ask for the same is encrypted unless you turn it off."
 msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."

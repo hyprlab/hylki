@@ -7,7 +7,7 @@ use super::keys::{
     key_display, list_keys, parse_colons, pick_public_key, public_key_for,
     secret_key_by_fingerprint, secret_key_for, trust_key, KeyValidity,
 };
-use super::outbound::{encrypt, sign_detached};
+use super::outbound::{encrypt, sign_detached, Recipient};
 use super::status::{parse_status, signature_verdict, Outcome};
 use super::{available, run, Gpg, Run};
 use crate::models::{PgpSignature, PgpStatus, PgpTrust};
@@ -628,7 +628,7 @@ fn round_trip_through_a_throwaway_keyring() {
     let ct = encrypt(
         &gpg2,
         b"Content-Type: text/plain\r\n\r\nfor second",
-        &["second@hylki.invalid".into()],
+        &[Recipient::Id("second@hylki.invalid".into())],
         &[],
         Some(&own),
     )
@@ -662,7 +662,7 @@ fn round_trip_through_a_throwaway_keyring() {
         &gpg2,
         b"Content-Type: text/plain\r\n\r\nfor a bcc",
         &[],
-        &["second@hylki.invalid".into()],
+        &[Recipient::Id("second@hylki.invalid".into())],
         None,
     )
     .expect("encrypted");

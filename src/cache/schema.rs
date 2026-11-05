@@ -197,6 +197,23 @@ CREATE TABLE IF NOT EXISTS draft_copies (
     raw         BLOB    NOT NULL,
     PRIMARY KEY (account_id, folder_path, uid)
 );
+-- OpenPGP correspondents (Autocrypt Level 1 peer state, plus what a WKD or
+-- keyserver lookup found), by lowercased address. Keys are fingerprints in
+-- Hylki's own keyring of discovered keys, never the keys themselves.
+CREATE TABLE IF NOT EXISTS pgp_peers (
+    addr                TEXT    PRIMARY KEY,
+    last_seen           INTEGER NOT NULL DEFAULT 0,
+    autocrypt_timestamp INTEGER NOT NULL DEFAULT 0,
+    autocrypt_key       TEXT    NOT NULL DEFAULT '',
+    autocrypt_digest    TEXT    NOT NULL DEFAULT '',
+    prefer_encrypt      INTEGER NOT NULL DEFAULT 0,
+    gossip_timestamp    INTEGER NOT NULL DEFAULT 0,
+    gossip_key          TEXT    NOT NULL DEFAULT '',
+    gossip_digest       TEXT    NOT NULL DEFAULT '',
+    found_key           TEXT    NOT NULL DEFAULT '',
+    found_by            TEXT    NOT NULL DEFAULT '',
+    found_checked       INTEGER NOT NULL DEFAULT 0
+);
 ";
 
 /// Every table whose rows belong to one account, by `account_id`. An account's

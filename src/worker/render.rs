@@ -18,6 +18,10 @@ pub(crate) fn render_raw(raw: &[u8]) -> (String, crate::models::SenderCheck, boo
     let mut check = crate::mail::verify::check_sender(raw);
     match crate::mail::pgp::unwrap_message(raw, &crate::mail::pgp::Gpg::system()) {
         Some(u) => {
+            // Autocrypt (Level 1) reads every message as it arrives or is
+            // shown; gossip only comes from inside a decrypted one.
+            let decrypted = u.inner.as_deref().filter(|_| u.status.decrypted);
+            crate::mail::pgp::discovery::observe(raw, decrypted);
             let body = match &u.inner {
                 Some(inner) => extract_body(inner),
                 None => wrap_plain(&pgp_notice(&u.status)),
@@ -29,11 +33,14 @@ pub(crate) fn render_raw(raw: &[u8]) -> (String, crate::models::SenderCheck, boo
             check.pgp = Some(u.status);
             (body, check, has)
         }
-        None => (
-            extract_body(raw),
-            check,
-            !extract_attachments(raw).is_empty(),
-        ),
+        None => {
+            crate::mail::pgp::discovery::observe(raw, None);
+            (
+                extract_body(raw),
+                check,
+                !extract_attachments(raw).is_empty(),
+            )
+        }
     }
 }
 

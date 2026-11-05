@@ -98,6 +98,8 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) pgp_key_row: adw::ComboRow,
     pub(in crate::ui::accounts) sign_default_row: adw::SwitchRow,
     pub(in crate::ui::accounts) hide_subject_row: adw::SwitchRow,
+    pub(in crate::ui::accounts) autocrypt_row: adw::SwitchRow,
+    pub(in crate::ui::accounts) autocrypt_mutual_row: adw::SwitchRow,
     pub(in crate::ui::accounts) keyring_note: gtk::Label,
 }
 
@@ -870,6 +872,19 @@ impl EditorForm {
                         set_title: &i18n("Hide the subject of encrypted mail"),
                         set_subtitle: &i18n("Only the recipients see the subject. Others see \"...\"."),
                     },
+                    // Autocrypt Level 1: the key goes out with the mail,
+                    // and keys that come in that way are kept apart from
+                    // the user's keyring.
+                    #[name = "autocrypt_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Send your key with your mail"),
+                        set_subtitle: &i18n("Autocrypt: people whose mail apps support it can encrypt to you, and their keys are kept from their mail to you."),
+                    },
+                    #[name = "autocrypt_mutual_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Encrypt by default"),
+                        set_subtitle: &i18n("Mail to people who ask for the same is encrypted unless you turn it off."),
+                    },
                 },
 
                 // For a GOA-imported account this removes it from
@@ -889,6 +904,12 @@ impl EditorForm {
                 },
             }
         }
+        // A preference for encryption means nothing without the key going
+        // out with the mail.
+        autocrypt_row
+            .bind_property("active", &autocrypt_mutual_row, "sensitive")
+            .sync_create()
+            .build();
         Self {
             page,
             provider_mark,
@@ -976,6 +997,8 @@ impl EditorForm {
             pgp_key_row,
             sign_default_row,
             hide_subject_row,
+            autocrypt_row,
+            autocrypt_mutual_row,
             keyring_note,
         }
     }

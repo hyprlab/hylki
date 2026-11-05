@@ -131,6 +131,16 @@ pub(crate) struct PrivacyFile {
     /// words (#300); off, the default, shows the lock and shield icons alone.
     #[serde(default)]
     pub(crate) pgp_labels: bool,
+    /// The composer looks each recipient's OpenPGP key up by WKD, on their
+    /// own domain's server, while the message is addressed. On by default:
+    /// it tells that domain only that someone is writing to the address.
+    #[serde(default = "default_on")]
+    pub(crate) key_lookup: bool,
+    /// Recipients WKD has no key for are also looked up on a keyserver
+    /// (keys.openpgp.org). Off by default: that tells a third party who
+    /// the user writes to.
+    #[serde(default)]
+    pub(crate) keyserver_lookup: bool,
     /// The reader's find bar opens under the message instead of above it
     /// (#392). Off by default.
     #[serde(default)]
@@ -732,6 +742,8 @@ impl Default for PrivacyFile {
             fold_messages: FoldMessages::Never,
             always_show_recipients: false,
             pgp_labels: false,
+            key_lookup: true,
+            keyserver_lookup: false,
             reader_find_bottom: false,
             single_message_card: default_single_message_card(),
             reader_mode: false,
