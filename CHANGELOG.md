@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 1.47.0 — 2026-11-04
+
+Everything from 1.47.0-beta.1 to 1.47.0-beta.5: folders kept on this computer,
+grammar and style checking in the composer, mail merge, events and tasks from
+mail, a reading pane below the list or off, a message's importance, contact
+photos in the reader, New Folder in a folder's menu, and a reminder for a
+forgotten attachment. German is complete.
 
 - **Added: a reminder for a forgotten attachment** (#575, by Fabio
   Rotondo). **Send** now asks first when what you wrote mentions an
