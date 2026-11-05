@@ -41,7 +41,7 @@ window shows. It is a list to scan, not prose to read:
   generated list is the compare view again, only longer.
 
 `tools/release-notes.sh` adds the last line, `Full changelog:` and the compare
-link to the previous release of the same kind:
+link, from a tag that outlasts the page (see [Tags stay](#tags-stay)):
 
 ```sh
 tools/release-notes.sh 1.36.0 > /tmp/notes.md
@@ -76,6 +76,12 @@ tag of the current stable series stays. Once the next minor's first release is
 out, the old series keeps only its last tag: with 1.44.0 published, 1.43.4 stays
 and 1.43.0 to 1.43.3 go. A beta's tag and release page go once the next beta
 supersedes them, after its release page and notes are up.
+
+A dropped tag kills every compare link naming it, so a release page never
+compares from a tag these rules drop: a beta compares from the last stable, a
+stable from the last tag of the series before its own. After dropping any tag,
+run `tools/check-release-links.sh --fix`, which finds the pages still naming a
+tag that is gone and points them at the tag the rule picks.
 
 ## Every release gets a section
 

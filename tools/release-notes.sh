@@ -7,17 +7,56 @@
 #   Notes            the version's section of docs/RELEASE_NOTES.md: New
 #                    features, Fixes and Translations, one short line each
 #                    (see docs/RELEASING.md), or of CHANGELOG.md when it has none.
-#   Full changelog   the compare link to the previous release of the same kind.
+#   Full changelog   the compare link from a tag that outlasts this page.
 #
 # GitHub's generated "What's changed" list is left out on purpose: at the rate
 # this repository commits it is the compare view again, only longer.
 #
 #   tools/release-notes.sh 1.14.3 > /tmp/notes.md
+#   tools/release-notes.sh --base 1.14.3    only the tag its link compares from
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-ver="${1:?usage: release-notes.sh X.Y.Z (no leading v)}"
+only_base=
+if [ "${1:-}" = "--base" ]; then
+  only_base=1
+  shift
+fi
+ver="${1:?usage: release-notes.sh [--base] X.Y.Z (no leading v)}"
 repo="hyprlab/hylki"
+
+# The newest stable tag on GitHub that sorts before the one given. Local tags
+# are no use here, as a clone keeps the tags GitHub has since dropped.
+newest_stable_before() {
+  { git ls-remote --tags --refs origin 'v*' | sed 's#.*refs/tags/##' |
+      grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$'
+    echo "$1"
+  } | sort -uV | awk -v tag="$1" '$0 == tag { print last; exit } { last = $0 }'
+}
+
+# The tag a release's compare link starts from. A dropped tag kills every link
+# naming it, and docs/RELEASING.md drops a superseded beta and all but the last
+# tag of an old stable series, so the link can only start from a tag those rules
+# keep: a beta from the last stable, a stable from the last tag of the series
+# before its own. A beta that only catches up with a stable lists little, which
+# beats a 404.
+compare_base() {
+  local base
+  if printf '%s' "$1" | grep -Eq -- '-beta\.|[0-9]b$'; then
+    base=${1%%-beta.*}
+    newest_stable_before "v${base%b}"
+    return
+  fi
+  base=$(newest_stable_before "v${1%.*}.0")
+  # The first series has no series before it.
+  [ -n "$base" ] || base=$(newest_stable_before "v$1")
+  printf '%s\n' "$base"
+}
+
+if [ -n "$only_base" ]; then
+  compare_base "$ver"
+  exit
+fi
 
 section() { # file, heading-regex, stop-regex
   awk -v head="$2" -v stop="$3" '
@@ -86,24 +125,7 @@ fi
 
 printf '%s\n' "$notes" | trim | unwrap | credit
 
-# The release before this one, in version order, and of the same kind: a beta
-# is measured against the previous beta, a stable against the previous stable.
-# (Measuring a catch-up beta against the stable it catches up with would list
-# nothing, which is how this was found.) Betas are vX.Y.Z-beta.N, or the older
-# vX.Y.Zb.
-beta_re='-beta\.|[0-9]b$'
-if printf '%s' "v${ver}" | grep -Eq "$beta_re"; then
-  kind() { grep -E -- "$beta_re"; }
-else
-  kind() { grep -Ev -- "$beta_re"; }
-fi
-before() { awk -v cur="v${ver}" 'seen { print; exit } $0 == cur { seen = 1 }'; }
-prev=$(git tag --list 'v*' --sort=-v:refname | kind | before)
-# A superseded release loses its tag, so the first beta after a stable finds
-# no beta to measure against; the stable before it is the next best thing.
-if [ -z "$prev" ]; then
-  prev=$(git tag --list 'v*' --sort=-v:refname | before)
-fi
+prev=$(compare_base "$ver")
 
 if [ -n "$prev" ]; then
   printf '\nFull changelog: [%s...v%s](https://github.com/%s/compare/%s...v%s)\n' \
