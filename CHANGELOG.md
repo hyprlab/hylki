@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Added: a double click on a folder with sub-folders opens or closes them**,
+  as it does on a unified row or an account's header (#583). A single click
+  still opens the folder and leaves them as they were.
+
 - **Fixed: only the chevron of a Folders, Labels or Tags heading could be
   clicked** (#583). A click anywhere on an account's heading now opens or closes
   the section, and the heading lights up under the pointer as the rows around it

@@ -338,6 +338,11 @@ impl Sidebar {
                 icon,
                 &section.hierarchy,
             );
+            if has_children {
+                if let Some(lead) = &lead {
+                    fold_on_double_click(&row, lead, id, &folder.path, sender);
+                }
+            }
             if nested {
                 // Hidden while the Inbox or a parent is folded, as in
                 // the Folders section.
@@ -431,6 +436,11 @@ impl Sidebar {
                 if !self.collapsed {
                     let payload = format!("vireo-folder\t{id}\t{}", folder.path);
                     row.add_controller(folder_drag_source(&row, payload));
+                }
+                if has_children {
+                    if let Some(lead) = &lead {
+                        fold_on_double_click(&row, lead, id, &folder.path, sender);
+                    }
                 }
                 custom_list.append(&row);
                 if let Some(badge) = badge {
@@ -638,6 +648,39 @@ impl Sidebar {
         );
         list_box
     }
+}
+
+/// A double click on a parent folder's row opens or folds its sub-folders, as
+/// on a unified row or an account's header. Its first click opens the folder
+/// as any click does. A press on `chevron` reaches the row too, and is left
+/// out: the chevron counts both clicks of a double click itself.
+fn fold_on_double_click(
+    row: &gtk::ListBoxRow,
+    chevron: &gtk::Widget,
+    account_id: u32,
+    path: &str,
+    sender: &ComponentSender<Sidebar>,
+) {
+    let double = gtk::GestureClick::new();
+    double.set_button(gtk::gdk::BUTTON_PRIMARY);
+    let (r, chev) = (row.downgrade(), chevron.downgrade());
+    let path = path.to_string();
+    let s = sender.input_sender().clone();
+    double.connect_pressed(move |_, presses, x, y| {
+        let (Some(r), Some(chev)) = (r.upgrade(), chev.upgrade()) else {
+            return;
+        };
+        let on_chevron = r
+            .pick(x, y, gtk::PickFlags::DEFAULT)
+            .is_some_and(|w| w == chev || w.is_ancestor(&chev));
+        if presses == 2 && !on_chevron {
+            let _ = s.send(SidebarInput::ToggleFolderNode {
+                account_id,
+                path: path.clone(),
+            });
+        }
+    });
+    row.add_controller(double);
 }
 
 /// The account's avatar disc (`name_str` gives its initials): its color,
