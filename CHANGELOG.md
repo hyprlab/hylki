@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.47.1 — 2026-11-05
+
+A patch for #582: a PDF with a password no longer freezes the app.
+
+- **Fixed: a PDF with a password froze the app** (#582). Opening one, or any
+  other PDF that cannot be read, kept the app busy until it was killed. The
+  preview now says **No preview available**, and **Open** hands the file to
+  another app.
+
 ## 1.47.0 — 2026-11-04
 
 Everything from 1.47.0-beta.1 to 1.47.0-beta.5: folders kept on this computer,
