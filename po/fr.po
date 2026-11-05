@@ -1031,6 +1031,9 @@ msgstr "Nouveau message à partir d’un modèle"
 msgid "Send the message you are writing"
 msgstr "Envoyer le message en cours de rédaction"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Joindre des fichiers"
 
@@ -3425,8 +3428,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -3825,9 +3828,9 @@ msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
 "OpenPGP, or choose a key in the account's settings."
 msgstr ""
-"Il n’y a pas de clé OpenPGP associée à {addr}. Générez-en une dans "
-"« Paramètres », puis « OpenPGP », ou sélectionnez une clé dans les "
-"paramètres du compte."
+"Il n’y a pas de clé OpenPGP associée à {addr}. Générez-en une dans « "
+"Paramètres », puis « OpenPGP », ou sélectionnez une clé dans les paramètres "
+"du compte."
 
 msgid ""
 "There is no OpenPGP key for {addr}. Ask them for their public key, or fetch "
@@ -3844,8 +3847,8 @@ msgstr "Programmer"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
-"Le champ De doit contenir une seule adresse, par exemple Anne "
-"<anne@example.com>."
+"Le champ De doit contenir une seule adresse, par exemple Anne <anne@example."
+"com>."
 
 msgid "“{address}” is not an email address."
 msgstr "« {address} » n’est pas une adresse e-mail."
@@ -6125,6 +6128,7 @@ msgstr "Traduction"
 msgid "General"
 msgstr "Général"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Apparence"
 
@@ -6538,6 +6542,15 @@ msgstr "Précharger le contenu distant des messages suivants"
 
 msgid "Their senders can tell they were opened."
 msgstr "Leurs expéditeurs peuvent savoir qu’ils ont été ouverts."
+
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Supprimer cet alias"
+
+msgid ""
+"Takes tracking tags such as utm_source off a link before it opens, and skips "
+"redirects that only log the click."
+msgstr ""
 
 msgid "Warn when remote content is blocked"
 msgstr "Avertir lorsque le contenu distant est bloqué"
@@ -8694,9 +8707,9 @@ msgstr "Hyprlab"
 #~ "the desktop's own choice; \"Ask each time\" lets the desktop ask before "
 #~ "each one."
 #~ msgstr ""
-#~ "Le navigateur dans lequel s’ouvre un lien contenu dans un message. "
-#~ "« Système par défaut » suit le choix du bureau ; « Demander à chaque "
-#~ "fois » laisse le bureau demander avant chaque ouverture."
+#~ "Le navigateur dans lequel s’ouvre un lien contenu dans un message. « "
+#~ "Système par défaut » suit le choix du bureau ; « Demander à chaque fois » "
+#~ "laisse le bureau demander avant chaque ouverture."
 
 #~ msgid ""
 #~ "Installed, but the nautilus-python package is missing, so Files cannot "
@@ -8951,8 +8964,8 @@ msgstr "Hyprlab"
 #~ "Accounts."
 #~ msgstr ""
 #~ "OneDrive se connecte via le compte des Comptes en ligne de GNOME choisi "
-#~ "ci-dessus ; il n’y a pas de mot de passe à saisir. Un compte marqué "
-#~ "« Fichiers désactivé » fonctionne quand même ici, mais vous pouvez "
+#~ "ci-dessus ; il n’y a pas de mot de passe à saisir. Un compte marqué « "
+#~ "Fichiers désactivé » fonctionne quand même ici, mais vous pouvez "
 #~ "souhaiter activer Fichiers pour ce compte dans Paramètres, Comptes en "
 #~ "ligne."
 

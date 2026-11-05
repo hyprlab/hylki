@@ -2484,6 +2484,18 @@ connection when Settings asks to save data there. It is off by default,
 because a sender's tracking pixel then reports a message as opened before you
 open it. Stored as `remote_ahead` in `privacy.toml`.
 
+**Links in messages** lose their tracking tags (`utm_source` and the other
+`utm_` tags, `fbclid`, `gclid`, `mc_eid` and similar) before the browser opens
+them. A link wrapped by a redirector that logs the click, such as Outlook Safe
+Links or Google's `/url`, opens at the address it carries, when that address
+is written in the link itself; nothing is looked up to find it. **Settings →
+Privacy → Remove trackers from links** turns this off. Stored as
+`clean_links` in `privacy.toml`.
+
+The reader and the composer never look up the addresses of a message's links
+ahead of a click (DNS prefetching), which would tell the sender's DNS server
+that the message was opened.
+
 **Read receipts** are sent only when you press **Send Receipt**, unless
 **Settings → Privacy → Send read receipts** is **Always**. See
 [Read receipts](#read-receipts).

@@ -1044,6 +1044,9 @@ msgstr "Missatge nou a partir d'una plantilla"
 msgid "Send the message you are writing"
 msgstr "Envia el missatge que estàs escrivint"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Adjunta fitxers"
 
@@ -3468,8 +3471,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -3479,8 +3482,8 @@ msgstr ""
 "1. A dropbox.com/developers/apps, prem Create app.\n"
 "2. Tria Scoped access, i després App folder o Full Dropbox.\n"
 "3. Dona-li un nom que ningú més no hagi fet servir i prem Create app.\n"
-"4. A Permissions, marca account_info.read, files.content.write i "
-"sharing.write, i després prem Submit.\n"
+"4. A Permissions, marca account_info.read, files.content.write i sharing."
+"write, i després prem Submit.\n"
 "5. A Settings, sota OAuth 2, afegeix l'URI de redirecció {uri} i prem Add.\n"
 "6. Copia l'App key al camp de dalt.\n"
 "L'estat Development és suficient. Deixa el camp buit per utilitzar la clau "
@@ -6175,6 +6178,7 @@ msgstr "Traducció"
 msgid "General"
 msgstr "General"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Aparença"
 
@@ -6581,6 +6585,15 @@ msgid "Pre-load remote content for the next messages"
 msgstr ""
 
 msgid "Their senders can tell they were opened."
+msgstr ""
+
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Elimina aquest àlies"
+
+msgid ""
+"Takes tracking tags such as utm_source off a link before it opens, and skips "
+"redirects that only log the click."
 msgstr ""
 
 msgid "Warn when remote content is blocked"

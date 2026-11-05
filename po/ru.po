@@ -1095,6 +1095,9 @@ msgstr "Новое сообщение из шаблона"
 msgid "Send the message you are writing"
 msgstr "Отправить создаваемое сообщение"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Прикрепить файлы"
 
@@ -3619,8 +3622,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -4046,8 +4049,8 @@ msgstr "Запланировать"
 
 msgid "The From has to be one address, such as Ann <ann@example.com>."
 msgstr ""
-"В поле «От кого» должен быть указан один адрес, например, Ann "
-"<ann@example.com>."
+"В поле «От кого» должен быть указан один адрес, например, Ann <ann@example."
+"com>."
 
 msgid "“{address}” is not an email address."
 msgstr "«{address}» не является адресом электронной почты."
@@ -6425,6 +6428,7 @@ msgstr "Перевод"
 msgid "General"
 msgstr "Основные"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Внешний вид"
 
@@ -6844,6 +6848,15 @@ msgid "Pre-load remote content for the next messages"
 msgstr ""
 
 msgid "Their senders can tell they were opened."
+msgstr ""
+
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Удалить этот псевдоним"
+
+msgid ""
+"Takes tracking tags such as utm_source off a link before it opens, and skips "
+"redirects that only log the click."
 msgstr ""
 
 msgid "Warn when remote content is blocked"
