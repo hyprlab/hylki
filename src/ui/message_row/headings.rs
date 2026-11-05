@@ -141,11 +141,21 @@ pub(crate) fn fill_headings(
     bins
 }
 
-/// A heading with a handle for dragging its column's width (#334), in the gap
-/// on the edge it shares with the subject: right of a column before it, left
-/// of one after it, so the edge follows the pointer. Each step of a drag is
-/// handed to `resize`, the last marked done; a double click puts the column
-/// back to its own width.
+/// Where a column's handle starts across its heading, `width` wide: in the gap
+/// on the edge the column shares with the subject. A name set to the right of
+/// a column after the subject, `right_aligned_text` wide, keeps it beside the
+/// words instead, out of the room between them and that edge.
+fn handle_x(before_subject: bool, width: i32, right_aligned_text: Option<i32>) -> i32 {
+    if before_subject {
+        width
+    } else {
+        (width - right_aligned_text.unwrap_or(width)).max(0) - COLUMN_GAP
+    }
+}
+
+/// A heading with a handle for dragging its column's width (#334), at
+/// [`handle_x`]. Each step of a drag is handed to `resize`, the last marked
+/// done; a double click puts the column back to its own width.
 fn resize_handle(
     cell: gtk::Widget,
     bin: &ColumnBin,
@@ -165,14 +175,15 @@ fn resize_handle(
         "Drag to resize, double-click for the usual width",
     )));
     overlay.add_overlay(&handle);
-    // Outside the heading: inside, its line stood on the name's first letter
+    // Off the words: over them, its line stood on the name's first letter
     // (#579). The name cannot move over, it lines up with the rows below.
+    let right_aligned = bin
+        .first_child()
+        .and_downcast::<gtk::Label>()
+        .filter(|label| label.xalign() == 1.0);
     overlay.connect_get_child_position(move |overlay, _| {
-        let x = if before_subject {
-            overlay.width()
-        } else {
-            -COLUMN_GAP
-        };
+        let text = right_aligned.as_ref().map(|l| l.layout().pixel_size().0);
+        let x = handle_x(before_subject, overlay.width(), text);
         Some(gtk::gdk::Rectangle::new(x, 0, COLUMN_GAP, overlay.height()))
     });
 
@@ -306,4 +317,23 @@ pub(crate) fn tag_menu_entries(
                 .keys(crate::ui::keymap::tag_key(i))
         })
         .collect()
+}
+
+#[cfg(test)]
+mod handle_tests {
+    use super::*;
+
+    #[test]
+    fn the_handle_stays_off_the_words() {
+        // Before the subject, in the gap past the column's end.
+        assert_eq!(handle_x(true, 160, None), 160);
+        assert_eq!(handle_x(true, 160, Some(40)), 160);
+        // After it, in the gap before a name that starts the column.
+        assert_eq!(handle_x(false, 160, None), -COLUMN_GAP);
+        // Beside a name at the far end of a wide column.
+        assert_eq!(handle_x(false, 200, Some(40)), 160 - COLUMN_GAP);
+        // A name that fills or overflows its column leaves it in the gap.
+        assert_eq!(handle_x(false, 40, Some(40)), -COLUMN_GAP);
+        assert_eq!(handle_x(false, 32, Some(40)), -COLUMN_GAP);
+    }
 }

@@ -7,7 +7,8 @@
   translation or a large font. It is now wider.
 
 - **Fixed: a column's resize line stood on its heading's first letter** (#579).
-  The handle now sits in the gap between two columns.
+  The handle now sits in the gap between two columns, and beside the words of
+  Date and Due, which are set to the right of their columns.
 
 - **Fixed: a PDF with a password froze the app** (#582). Opening one, or any
   other PDF that cannot be read, kept the app busy until it was killed. The
