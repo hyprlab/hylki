@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fixed: a theme picked in Settings could have no effect** (#593, by Alp Sahin).
+  A `~/.config/gtk-4.0/gtk.css` that sets GTK's named colors, as theme generators
+  do, overrode it. A picked theme now wins. With no theme picked, that file still
+  colors the app.
+
 - **Fixed: text on the accent color could be hard to read** (#593, by Alp Sahin).
   New Message, a selected message and a selected contact used white whatever the
   accent, so a pale accent from a desktop's GTK colors left white on pale. They

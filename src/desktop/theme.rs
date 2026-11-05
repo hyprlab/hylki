@@ -136,12 +136,15 @@ thread_local! {
 pub(crate) fn install(id: &str) {
     let provider = gtk::CssProvider::new();
     if let Some(display) = gtk::gdk::Display::default() {
-        // Above the static stylesheet (APPLICATION) and the scheme-dependent
-        // provider (+1), so a theme's colors win wherever they are defined.
+        // Above the static stylesheet and the scheme-dependent provider, so
+        // a theme's colors win wherever they are defined, and above the
+        // user's gtk.css, whose named colors from a theming tool would
+        // otherwise hide the theme picked here (#593). Under the stock look
+        // this provider is empty, so that file still colors the app.
         gtk::style_context_add_provider_for_display(
             &display,
             &provider,
-            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION + 2,
+            gtk::STYLE_PROVIDER_PRIORITY_USER + 1,
         );
     }
     PROVIDER.with(|p| *p.borrow_mut() = Some(provider));
