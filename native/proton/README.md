@@ -62,14 +62,88 @@ success is the only session-taking reply without one.
 ### `login`
 
 Request: `email`, `password`, optional `totp` (six digits, or `null`),
-optional `mailbox_password` (two-password accounts only).
+optional `mailbox_password` (two-password accounts only), optional
+`hv_token` + `hv_type` (a solved human-verification challenge — both or
+neither; printable ASCII without spaces, `hv_type` a method name).
 
 Proves SRP, completes a TOTP challenge when the account has one, then
 derives the key passphrase and unlocks the user and address keys once to
 prove it. Result: `{"session": {...}}`.
 
 A login that cannot finish (second factor or mailbox password missing or
-wrong) logs the half-made session out again, best-effort.
+wrong, verification demanded after auth) logs the half-made session out
+again, best-effort.
+
+#### Human verification (CAPTCHA)
+
+Proton may refuse a sign-in from a new client or network with API code
+9001. The helper then replies:
+
+```json
+{"version": 1, "error": {"code": "human_verification_required",
+  "hv": {"token": "<challenge token>", "methods": ["captcha", "email"]}}}
+```
+
+`hv.token` and `hv.methods` are copied verbatim from the error's `Details`
+(`HumanVerificationToken`, `HumanVerificationMethods`) and are opaque;
+method names that are not `[A-Za-z0-9_-]` are dropped, and the error's text
+and `WebUrl` are never passed on. If the details are missing or malformed
+the code arrives without `hv` and cannot be solved from that reply.
+
+The client flow:
+
+1. Open
+   `https://verify.proton.me/?methods=<methods joined with ",">&token=<hv.token>&embed=true`
+   (URL-encode both values) in an embedded WebKit view.
+2. Before the page loads, inject a user script that forwards the page's
+   own messages to the native side:
+
+   ```js
+   window.addEventListener('message', (event) => {
+       if (event.origin === 'https://verify.proton.me') {
+           window.webkit.messageHandlers.protonVerify.postMessage(event.data);
+       }
+   });
+   ```
+
+   (register `protonVerify` with `WebKitUserContentManager`). In a
+   top-level view `window.parent` is the page itself, so the page's
+   `window.parent.postMessage(…, '*')` lands on this listener.
+3. The verify app (`WebClients/applications/verify`, `broadcast.ts` +
+   `packages/shared/lib/broadcast/broadcast.ts`) posts every message as a
+   **JSON string**, not an object:
+
+   ```json
+   "{\"type\":\"HUMAN_VERIFICATION_SUCCESS\",\"payload\":{\"token\":\"<solved token>\",\"type\":\"captcha\"}}"
+   ```
+
+   Parse it; on `type == "HUMAN_VERIFICATION_SUCCESS"` take
+   `payload.token` and `payload.type`. Other messages the page sends:
+   `{"type":"RESIZE","payload":{"height":N}}`, `{"type":"LOADED"}`,
+   `{"type":"CLOSE"}` (user dismissed it), `{"type":"ERROR","payload":{…}}`
+   and `{"type":"NOTIFICATION","payload":{"type","text"}}`. Ignore
+   anything else, and anything not from `https://verify.proton.me`.
+4. Retry `login` with the same credentials plus
+   `hv_token: payload.token, hv_type: payload.type` (and the `totp` if
+   the account has one — a solved token should not be spent on a sign-in
+   that then stops at `second_factor_required`). The helper sends them as
+   `x-pm-human-verification-token` / `x-pm-human-verification-token-type`
+   on `POST /auth/v4` and on the following `GET /core/v4/users`, as
+   go-proton-api and Bridge do and as WebClients' `getVerificationHeaders`
+   builds them.
+5. `human_verification_failed` (API code 12087) means the token was
+   rejected or already used: show the challenge again from a fresh
+   `human_verification_required` reply. A second
+   `human_verification_required` means the same.
+
+`embed=true` matters: without it the page treats a top-level view as an
+external browser and itself redeems the CAPTCHA against the challenge
+token (`POST core/v4/verification/captcha/<token>`) before posting the
+message. In that mode the retry must send the *original* `hv.token` with
+`hv_type: "captcha"` instead (the flow Bridge's CLI uses after the user
+solves the challenge in a browser), and the posted `payload.token` is
+already spent. The embedded flow keeps the posted token as the one to
+present.
 
 ### `sync`
 
@@ -226,7 +300,8 @@ Idempotent: a session the server already dropped is a success. Result:
 | `second_factor_failed` | TOTP rejected by the server |
 | `mailbox_password_required` | two-password account, no `mailbox_password` given |
 | `mailbox_password_failed` | the mailbox password does not unlock the keys |
-| `human_verification_required` | the API demands a CAPTCHA the helper cannot solve |
+| `human_verification_required` | the API demands a CAPTCHA; `error.hv` carries the challenge (see `login`) |
+| `human_verification_failed` | the presented `hv_token` was rejected or already used (API 12087) |
 | `client_outdated` | the API refuses this app version |
 | `session_invalid` | the stored session is missing fields or its `key_pass` no longer opens the keys (password changed elsewhere) — sign in again |
 | `session_revoked` | the server ended the session (logout, refresh token spent) |
@@ -257,8 +332,9 @@ Per-id outcome codes (`mark_read`, `move`): `null`, `request_failed`,
 
 - Every session-bearing reply carries `session` (in `result` or `error`):
   Proton rotates refresh tokens, Tuta sessions do not change.
-- `login` takes an optional `mailbox_password`; the session carries
-  `key_pass` instead of Tuta's `encrypted_passphrase_key`.
+- `login` takes optional `mailbox_password`, `hv_token` and `hv_type`,
+  and its `human_verification_required` error carries `hv`; the session
+  carries `key_pass` instead of Tuta's `encrypted_passphrase_key`.
 - `sync` adds `cursor`, `since`, `next_cursor`, `event_id` and `changes`;
   folder rows add `kind`, `total` and `unread`; header rows add
   `message_id`, `label_ids`, `is_starred`, `is_draft`, `has_attachments`
@@ -275,7 +351,8 @@ Per-id outcome codes (`mark_read`, `move`): `null`, `request_failed`,
   extra; failures after the submit are probed before `send_uncertain`.
 - `revoke` closes the session server-side (Tuta's pinned SDK cannot).
 - New codes: `mailbox_password_required`, `mailbox_password_failed`,
-  `human_verification_required`, `invalid_destination`,
+  `human_verification_required`, `human_verification_failed`,
+  `invalid_destination`,
   `message_too_large`. `unsupported_operation`, `unsupported_u2f`,
   `unsupported_webauthn`, `resume_failed`, `incomplete_response`,
   `unsupported_legacy_body` and `body_too_large` are never produced.
@@ -337,7 +414,8 @@ adapter finds it on `PATH` inside the sandbox:
 ## Limits
 
 - Only TOTP is supported as a second factor; FIDO2/U2F is refused.
-- A CAPTCHA (human verification) cannot be solved here; login reports it.
+- The CAPTCHA itself is solved by the user in the client's WebKit view;
+  the helper only relays the challenge and presents the solved token.
 - Replies and forwards are sent as new conversations: no `ParentID`, so
   Proton does not mark the original as answered.
 - Password-protected mail to outsiders ("encrypted outside") is not

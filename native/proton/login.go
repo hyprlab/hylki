@@ -18,6 +18,30 @@ type loginParams struct {
 	// Only two-password accounts need it; one-password accounts unlock
 	// their keys with the login password.
 	MailboxPassword *string `json:"mailbox_password"`
+	// A solved human-verification challenge: the token and type the
+	// verify page reported. Both or neither.
+	HVToken *string `json:"hv_token"`
+	HVType  *string `json:"hv_type"`
+}
+
+// verification is the solved challenge login presents, or nil.
+func (p loginParams) verification() (*proton.APIHVDetails, bool) {
+	token, kind := "", ""
+	if p.HVToken != nil {
+		token = *p.HVToken
+	}
+	if p.HVType != nil {
+		kind = *p.HVType
+	}
+	switch {
+	case token == "" && kind == "":
+		return nil, true
+	case token == "" || kind == "" || !headerSafeValue(token) || !validMethod(kind):
+		return nil, false
+	}
+	// go-proton-api sends Methods joined with "," as the token type, so a
+	// single entry is sent verbatim.
+	return &proton.APIHVDetails{Token: token, Methods: []string{kind}}, true
 }
 
 // login proves the SRP credentials, completes a TOTP challenge, then unlocks
@@ -32,11 +56,15 @@ func login(ctx context.Context, raw []byte) envelope {
 	if params.Email == "" || params.Password == "" {
 		return failure("invalid_request")
 	}
+	hv, ok := params.verification()
+	if !ok {
+		return failure("invalid_request")
+	}
 	manager := newManager()
-	client, auth, err := manager.NewClientWithLogin(ctx, params.Email, []byte(params.Password))
+	client, auth, err := manager.NewClientWithLoginWithHVToken(ctx, params.Email, []byte(params.Password), hv)
 	if err != nil {
 		manager.Close()
-		return failure(loginFailure(err))
+		return loginRefusal(err)
 	}
 	session := attach(manager, client, sessionPayload{
 		Login:        params.Email,
@@ -63,10 +91,10 @@ func login(ctx context.Context, raw []byte) envelope {
 		}
 		keyPassword = *params.MailboxPassword
 	}
-	keyPass, code := saltedKeyPass(ctx, client, []byte(keyPassword))
-	if code != "" {
+	keyPass, refused := saltedKeyPass(ctx, client, []byte(keyPassword), hv)
+	if refused != nil {
 		abandon(client)
-		return failure(code)
+		return *refused
 	}
 	session.payload.KeyPass = base64.StdEncoding.EncodeToString(keyPass)
 	return success(map[string]any{"session": session.current()})
@@ -82,11 +110,18 @@ func abandon(client *proton.Client) {
 
 // saltedKeyPass derives the key passphrase the way the official clients do
 // (bcrypt over the primary user key's salt) and proves it unlocks the user
-// and at least one address key.
-func saltedKeyPass(ctx context.Context, client *proton.Client, password []byte) ([]byte, string) {
-	user, err := client.GetUser(ctx)
+// and at least one address key. The user fetch carries the solved challenge
+// too: the API may ask for verification there as well as at /auth (Bridge
+// sends it on both).
+func saltedKeyPass(ctx context.Context, client *proton.Client, password []byte, hv *proton.APIHVDetails) ([]byte, *envelope) {
+	refuse := func(code string) *envelope {
+		reply := failure(code)
+		return &reply
+	}
+	user, err := client.GetUserWithHV(ctx, hv)
 	if err != nil {
-		return nil, loginFailure(err)
+		reply := loginRefusal(err)
+		return nil, &reply
 	}
 	primary := ""
 	for _, key := range user.Keys {
@@ -96,24 +131,24 @@ func saltedKeyPass(ctx context.Context, client *proton.Client, password []byte) 
 		}
 	}
 	if primary == "" {
-		return nil, "mailbox_password_failed"
+		return nil, refuse("mailbox_password_failed")
 	}
 	salts, err := client.GetSalts(ctx)
 	if err != nil {
-		return nil, loginFailure(err)
+		return nil, refuse(loginFailure(err))
 	}
 	keyPass, err := salts.SaltForKey(password, primary)
 	if err != nil || len(keyPass) == 0 {
-		return nil, "mailbox_password_failed"
+		return nil, refuse("mailbox_password_failed")
 	}
 	addresses, err := client.GetAddresses(ctx)
 	if err != nil {
-		return nil, loginFailure(err)
+		return nil, refuse(loginFailure(err))
 	}
 	if _, _, err := proton.Unlock(user, addresses, keyPass, async.NoopPanicHandler{}); err != nil {
-		return nil, "mailbox_password_failed"
+		return nil, refuse("mailbox_password_failed")
 	}
-	return keyPass, ""
+	return keyPass, nil
 }
 
 // secondFactor completes a TOTP challenge. It reports ok unless the account
@@ -160,6 +195,8 @@ func loginFailure(err error) string {
 		switch {
 		case apiErr.Code == proton.PasswordWrong, apiErr.Code == proton.UsernameInvalid:
 			return "login_failed"
+		case apiErr.Code == proton.HumanValidationInvalidToken:
+			return "human_verification_failed"
 		case apiErr.Status == http.StatusUnauthorized:
 			return "login_failed"
 		}

@@ -52,6 +52,8 @@ type envelope struct {
 type codedError struct {
 	Code    string          `json:"code"`
 	Session *sessionPayload `json:"session,omitempty"`
+	// HV is the challenge of a human_verification_required login refusal.
+	HV *hvChallenge `json:"hv,omitempty"`
 }
 
 func (e *codedError) Error() string { return e.Code }
