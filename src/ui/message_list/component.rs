@@ -373,7 +373,12 @@ impl SimpleComponent for MessageList {
                 self.on_set_view(key, fp, restore, &sender)
             }
             MessageListInput::SetViewFp(fp) => self.view_fp = fp,
-            MessageListInput::Prebuild { key, fp, messages } => self.on_prebuild(key, fp, messages),
+            MessageListInput::Prebuild {
+                key,
+                fp,
+                sort,
+                messages,
+            } => self.on_prebuild(key, fp, sort, messages),
             MessageListInput::PrebuildThreads { gen, threads } => {
                 self.on_prebuild_threads(gen, *threads)
             }
@@ -507,6 +512,7 @@ impl SimpleComponent for MessageList {
             MessageListInput::SetSort { order, reversed } => {
                 self.on_set_sort(order, reversed, &sender)
             }
+            MessageListInput::ApplySort { order, reversed } => self.on_apply_sort(order, reversed),
             MessageListInput::ResizeColumn {
                 column,
                 width,

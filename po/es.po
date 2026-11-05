@@ -875,6 +875,10 @@ msgstr "Hasta {date}"
 msgid "Sort by"
 msgstr "Ordenar por"
 
+#, fuzzy
+msgid "Use for All Folders"
+msgstr "Todas las carpetas"
+
 msgid "Show only"
 msgstr "Mostrar solo"
 

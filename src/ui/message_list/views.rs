@@ -125,6 +125,10 @@ impl MessageList {
     /// What a rebuild reads besides the messages, as one number: a kept view
     /// is shown again only under the settings it was built with.
     fn rows_signature(&self) -> u64 {
+        self.signature_under((self.sort, self.sort_reversed))
+    }
+
+    fn signature_under(&self, (sort, reversed): (SortOrder, bool)) -> u64 {
         use std::hash::{Hash, Hasher};
         let mut h = std::collections::hash_map::DefaultHasher::new();
         let mut expanded: Vec<&(u32, String)> = self.expanded_threads.iter().collect();
@@ -135,8 +139,8 @@ impl MessageList {
         graph.sort();
         format!(
             "{:?}{}{}{}{}{}{:?}{:?}{}{:?}{:?}{:?}{}",
-            self.sort,
-            self.sort_reversed,
+            sort,
+            reversed,
             self.threading,
             self.thread_expansion,
             self.default_expanded,
@@ -209,21 +213,23 @@ impl MessageList {
     }
 
     /// Whether the view `key` is kept with this content, under the
-    /// settings the list has now: the app shows it with `SetView { restore }`
-    /// rather than sending its messages.
-    pub(crate) fn has_view(&self, key: u64, fp: u64) -> bool {
-        let sig = self.rows_signature();
+    /// settings the list has now and the sort it opens with: the app shows
+    /// it with `SetView { restore }` rather than sending its messages. The
+    /// sort is passed as the view's own, as the list has not been told it
+    /// when the app asks.
+    pub(crate) fn has_view(&self, key: u64, fp: u64, sort: (SortOrder, bool)) -> bool {
+        let sig = self.signature_under(sort);
         self.views
             .iter()
             .any(|v| v.key == key && v.fp == fp && v.sig == sig)
     }
 
     /// Why `has_view` said no, for the log.
-    pub(crate) fn view_miss(&self, key: u64, fp: u64) -> &'static str {
+    pub(crate) fn view_miss(&self, key: u64, fp: u64, sort: (SortOrder, bool)) -> &'static str {
         match self.views.iter().find(|v| v.key == key) {
             None => "never kept",
             Some(v) if v.fp != fp => "its mail changed",
-            Some(v) if v.sig != self.rows_signature() => "the list's settings changed",
+            Some(v) if v.sig != self.signature_under(sort) => "the list's settings changed",
             Some(_) => "kept",
         }
     }
@@ -301,6 +307,7 @@ impl MessageList {
         &mut self,
         key: u64,
         fp: u64,
+        sort: (SortOrder, bool),
         all: Vec<Rc<Message>>,
         threads: Option<Rc<SourceThreads>>,
     ) {
@@ -324,6 +331,8 @@ impl MessageList {
         let window = std::mem::replace(&mut self.window, LIST_WINDOW);
         let selected_ids = std::mem::take(&mut self.selected_ids);
         let selected_id = self.selected_id.take();
+        let sort_on_show = (self.sort, self.sort_reversed);
+        (self.sort, self.sort_reversed) = sort;
 
         let built = self.compute_rows(true);
         let snap = ViewSnapshot {
@@ -344,6 +353,7 @@ impl MessageList {
             thread_drag: std::mem::replace(&mut *self.shared.thread_drag.borrow_mut(), thread_drag),
             window: std::mem::replace(&mut self.window, window),
         };
+        (self.sort, self.sort_reversed) = sort_on_show;
         *self.source_threads.borrow_mut() = source_threads;
         self.selected_ids = selected_ids;
         self.selected_id = selected_id;

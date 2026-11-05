@@ -2150,9 +2150,12 @@ word, such as `10:30` or `re:`, is searched for as written.
 
 The sort and filter button in the list's header opens a popover of three
 columns. **Sort by** orders the list by date, newest or oldest first, by
-sender or subject, or puts unread or starred mail first, and the order
-chosen there or by a column heading is kept from one launch to the next.
-**Show only** holds the quick filters:
+sender or subject, or puts unread or starred mail first. The order chosen
+there or by a column heading is kept for the open folder, from one launch to
+the next, and each folder, unified row, tag and smart folder has its own.
+One where none was chosen uses the default, newest first. **Use for All
+Folders** makes the open folder's order the default and drops the orders the
+others kept. **Show only** holds the quick filters:
 
 - **Unread** and **Starred**
 - **Has Attachments**

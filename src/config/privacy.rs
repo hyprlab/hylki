@@ -20,6 +20,15 @@ use super::sections::{
 };
 use super::{config_file, default_on, is_zero, save_private_toml, write_private};
 
+/// A sort a view keeps for itself: `SortOrder`'s key, and whether a heading
+/// turned it the other way.
+#[derive(Clone, Debug, Deserialize, PartialEq, Eq, Serialize)]
+pub(crate) struct ListSort {
+    pub(crate) order: String,
+    #[serde(default)]
+    pub(crate) reversed: bool,
+}
+
 /// Every preference privacy.toml holds. The name is historical: the file
 /// began as the remote-content allowlist (`allowed_senders`).
 #[derive(Debug, Deserialize, Serialize)]
@@ -424,6 +433,10 @@ pub(crate) struct PrivacyFile {
     pub(crate) list_sort: String,
     #[serde(default)]
     pub(crate) list_sort_reversed: bool,
+    /// The sort a folder or other view keeps for itself, by the view's name.
+    /// A view not named here uses `list_sort`.
+    #[serde(default)]
+    pub(crate) list_sorts: std::collections::BTreeMap<String, ListSort>,
     /// Grouping by date was turned on once for an install from before it
     /// became the default: every save writes every key, so those files
     /// carry the old `false` without anyone having chosen it. A new
@@ -791,6 +804,7 @@ impl Default for PrivacyFile {
             list_pills_below: false,
             list_sort: String::new(),
             list_sort_reversed: false,
+            list_sorts: Default::default(),
             date_groups_default_applied: true,
             list_search_open: false,
             contacts_search_open: false,

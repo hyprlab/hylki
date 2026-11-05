@@ -880,6 +880,10 @@ msgstr "Έως {date}"
 msgid "Sort by"
 msgstr "Ταξινόμηση κατά"
 
+#, fuzzy
+msgid "Use for All Folders"
+msgstr "Όλοι οι φάκελοι"
+
 msgid "Show only"
 msgstr "Εμφάνιση μόνο"
 

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Added: each folder keeps its own sort** (#574, suggested by Bohne13). The
+  order chosen under **Sort by**, or by a column heading, now belongs to the
+  folder, unified row, tag or smart folder it was chosen in, and a renamed
+  folder keeps it. The order saved by an earlier version stays as the default
+  for the folders with none of their own. **Use for All Folders**, under the
+  orders, makes the open folder's order the default and drops the others.
+
 - **Added: a double click opens or closes a folder's sub-folders and the
   Folders, Labels and Tags headings** (#583), as it does on a unified row or an
   account's header. A single click on a folder still opens it and leaves its

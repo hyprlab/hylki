@@ -62,6 +62,7 @@ pub(crate) enum MessageListInput {
     Prebuild {
         key: u64,
         fp: u64,
+        sort: (SortOrder, bool),
         messages: Vec<Message>,
     },
     /// The conversations of the view being built ahead.
@@ -334,6 +335,13 @@ pub(crate) enum MessageListInput {
     /// Change the list sort order; `reversed` turns it the other way, as a
     /// second click on a column heading does.
     SetSort {
+        order: SortOrder,
+        reversed: bool,
+    },
+    /// The sort of the view being opened: not a choice, so not reported
+    /// back, and the view's own rows are drawn with it rather than the old
+    /// view's being sorted first.
+    ApplySort {
         order: SortOrder,
         reversed: bool,
     },

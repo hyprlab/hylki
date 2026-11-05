@@ -904,6 +904,10 @@ msgid "Sort by"
 msgstr "Rendezés"
 
 #, fuzzy
+msgid "Use for All Folders"
+msgstr "Minden mappa"
+
+#, fuzzy
 msgid "Show only"
 msgstr "Csak olvasatlanok megjelenítése"
 

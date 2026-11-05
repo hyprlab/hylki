@@ -160,6 +160,8 @@ snoozed = true
 filtered = true
 tags = true
 
+[list_sorts]
+
 [list_column_widths]
 
 [unified_chips]

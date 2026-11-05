@@ -164,6 +164,8 @@ snoozed = true
 filtered = true
 tags = true
 
+[privacy.list_sorts]
+
 [privacy.list_column_widths]
 
 [privacy.unified_chips]

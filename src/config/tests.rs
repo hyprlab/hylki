@@ -462,3 +462,24 @@ fn reading_pane_reads_the_old_switch() {
     assert_eq!(read("reading_pane = \"below\""), ReadingPane::Below);
     assert_eq!(read("reading_pane = \"sideways\""), ReadingPane::Right);
 }
+
+/// #574: a folder's name holds a tab, and its sort has to come back from
+/// the file under the same name.
+#[test]
+fn a_view_keeps_its_sort_through_the_file() {
+    let mut file = super::PrivacyFile::default();
+    file.list_sorts.insert(
+        "a@x\tInbox/Work".to_string(),
+        super::ListSort {
+            order: "unread".to_string(),
+            reversed: true,
+        },
+    );
+    let text = toml::to_string_pretty(&file).unwrap();
+    let back: super::PrivacyFile = toml::from_str(&text).unwrap();
+    assert_eq!(back.list_sorts, file.list_sorts);
+    // A file from before the key reads as no folder having its own.
+    let old: super::PrivacyFile = toml::from_str("list_sort = \"unread\"").unwrap();
+    assert!(old.list_sorts.is_empty());
+    assert_eq!(old.list_sort, "unread");
+}

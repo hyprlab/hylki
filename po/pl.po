@@ -929,6 +929,10 @@ msgid "Sort by"
 msgstr "Sortowanie według"
 
 #, fuzzy
+msgid "Use for All Folders"
+msgstr "Wszystkie katalogi"
+
+#, fuzzy
 msgid "Show only"
 msgstr "Wyświetl tylko nieprzeczytane"
 

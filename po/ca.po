@@ -883,6 +883,10 @@ msgstr "caduca el {date}"
 msgid "Sort by"
 msgstr "Ordena per"
 
+#, fuzzy
+msgid "Use for All Folders"
+msgstr "Totes les carpetes"
+
 msgid "Show only"
 msgstr "Mostra només"
 

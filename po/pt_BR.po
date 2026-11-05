@@ -891,6 +891,10 @@ msgstr "expira em {date}"
 msgid "Sort by"
 msgstr "Ordenar por"
 
+#, fuzzy
+msgid "Use for All Folders"
+msgstr "Todas as pastas"
+
 msgid "Show only"
 msgstr "Mostrar apenas"
 

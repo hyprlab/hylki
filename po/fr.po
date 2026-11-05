@@ -876,6 +876,10 @@ msgstr "Jusqu’au {date}"
 msgid "Sort by"
 msgstr "Trier par"
 
+#, fuzzy
+msgid "Use for All Folders"
+msgstr "Tous les dossiers"
+
 msgid "Show only"
 msgstr "Afficher uniquement"
 

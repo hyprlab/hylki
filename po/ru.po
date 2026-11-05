@@ -925,6 +925,10 @@ msgid "Sort by"
 msgstr "Сортировать по"
 
 #, fuzzy
+msgid "Use for All Folders"
+msgstr "Все папки"
+
+#, fuzzy
 msgid "Show only"
 msgstr "Только непрочитанные"
 

@@ -800,6 +800,9 @@ msgstr ""
 msgid "Sort by"
 msgstr ""
 
+msgid "Use for All Folders"
+msgstr ""
+
 msgid "Show only"
 msgstr ""
 
