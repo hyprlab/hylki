@@ -173,7 +173,7 @@ pub(crate) fn load_oauth_refresh(email: &str) -> Option<String> {
 }
 
 /// Keyring key for the resumable session a provider helper signs in to
-/// (Tuta). Kept apart from the password key because such an account never
+/// (Tuta, Proton). Kept apart from the password key because such an account never
 /// stores its password: the session is all it has.
 pub(super) fn session_key(email: &str) -> String {
     format!("session:{email}")
@@ -187,6 +187,102 @@ pub(crate) fn store_session(email: &str, session: &str) -> keyring::Result<()> {
 /// error, as [`read_password`] does: a locked keyring is not "signed out".
 pub(crate) fn read_session(email: &str) -> Result<Option<String>, String> {
     read_key(&session_key(email))
+}
+
+/// A helper account's session as this run last saw it, and the turn its
+/// helper calls take. A helper that rotates its session (Proton) spends the
+/// refresh token it was handed, so two calls holding one copy would sign
+/// the account out, and so would a copy written to the keyring after a
+/// newer one. Every user of the session (the worker, its successor after a
+/// reconnect, the connection test, the removal's revoke) goes through the
+/// one value here.
+#[derive(Default)]
+pub(crate) struct LiveSession {
+    turn: std::sync::Mutex<()>,
+    latest: std::sync::Mutex<String>,
+}
+
+impl LiveSession {
+    /// Held for the whole of one helper call. A call that panicked holding
+    /// it left nothing half-written, so a poisoned lock is taken as is.
+    pub(crate) fn turn(&self) -> std::sync::MutexGuard<'_, ()> {
+        self.turn
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+    }
+
+    /// The newest session, empty before one is known.
+    pub(crate) fn latest(&self) -> String {
+        self.latest
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .clone()
+    }
+
+    /// The newest session, `stored` first when there is none yet.
+    pub(crate) fn seed(&self, stored: &str) -> String {
+        let mut latest = self
+            .latest
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
+        if latest.is_empty() {
+            *latest = stored.to_string();
+        }
+        latest.clone()
+    }
+
+    pub(crate) fn set_latest(&self, session: &str) {
+        *self
+            .latest
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner) = session.to_string();
+    }
+}
+
+/// Live sessions by lower-cased address.
+type LiveSessions = std::collections::HashMap<String, std::sync::Arc<LiveSession>>;
+
+static LIVE_SESSIONS: std::sync::LazyLock<std::sync::Mutex<LiveSessions>> =
+    std::sync::LazyLock::new(Default::default);
+
+fn live_sessions() -> std::sync::MutexGuard<'static, LiveSessions> {
+    LIVE_SESSIONS
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
+}
+
+/// The live session of the helper account `email`, made empty on first use.
+pub(crate) fn live_session(email: &str) -> std::sync::Arc<LiveSession> {
+    live_sessions()
+        .entry(email.to_lowercase())
+        .or_default()
+        .clone()
+}
+
+/// The newest session this run has for `email`, if it has one.
+pub(crate) fn latest_session(email: &str) -> Option<String> {
+    let live = live_sessions().get(&email.to_lowercase()).cloned()?;
+    Some(live.latest()).filter(|s| !s.is_empty())
+}
+
+/// Forget `email`'s live session: the account is gone, or signed out.
+pub(crate) fn forget_live_session(email: &str) {
+    live_sessions().remove(&email.to_lowercase());
+}
+
+/// Keep `email`'s newest session in the keyring, on the keyring thread. The
+/// value is read when the write runs, so writes queued out of order still
+/// leave the newest behind, and one queued after the account went writes
+/// nothing.
+pub(crate) fn persist_live_session(email: &str) {
+    let email = email.to_string();
+    keyring_later(move || {
+        if let Some(session) = latest_session(&email) {
+            if let Err(e) = store_session(&email, &session) {
+                tracing::error!("could not store the session for {email}: {e}");
+            }
+        }
+    });
 }
 
 pub(crate) fn store_password(email: &str, password: &str) -> keyring::Result<()> {

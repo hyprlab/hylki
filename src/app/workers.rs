@@ -273,6 +273,7 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
         WorkerEvent::Status(text) => AppMsg::Status { account_id, text },
         WorkerEvent::CopyProgress { left } => AppMsg::CopyProgress { left },
         WorkerEvent::Keyring(read) => AppMsg::KeyringRead { account_id, read },
+        WorkerEvent::HelperSession { email } => AppMsg::HelperSessionRotated { email },
         WorkerEvent::Error { text, connectivity } => AppMsg::Error {
             account_id,
             text,
@@ -437,7 +438,11 @@ impl AppModel {
             .filter(|(_, a)| {
                 matches!(
                     a.protocol,
-                    Protocol::Imap | Protocol::Graph | Protocol::Jmap | Protocol::Tuta
+                    Protocol::Imap
+                        | Protocol::Graph
+                        | Protocol::Jmap
+                        | Protocol::Tuta
+                        | Protocol::Proton
                 )
             })
             .map(|(i, a)| (i as u32 + 1, a.hidden_folders.clone()))

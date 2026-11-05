@@ -1193,6 +1193,8 @@ pub(crate) enum AppMsg {
     ImportGoaAccount(Box<AccountConfig>),
     /// An account was removed in Settings: its secrets and its config go.
     AccountRemoved { email: String },
+    /// A helper account's helper rotated its session: keep the new one.
+    HelperSessionRotated { email: String },
     /// Import mail from another program into On This Computer (#552):
     /// Maildir trees, or with `mbox`, mbox files.
     ImportLocalMail {

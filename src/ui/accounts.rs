@@ -31,6 +31,7 @@ mod messages;
 mod navigation;
 mod oauth;
 mod pages;
+pub(crate) mod proton_verify;
 mod providers;
 mod save;
 mod senders;
@@ -45,9 +46,11 @@ pub(crate) use editor::AccountSecrets;
 pub(crate) use form::non_ellipsizing_factory;
 use form::{
     apply_protocol, clear_editor, fill_editor, form_protocol, import_avatar_file, mount_editor,
-    parse_color, read_account, set_connection_editable, show_quota, trimmed,
+    parse_color, read_account, set_connection_editable, show_quota, sign_in_rows, trimmed,
 };
-pub(crate) use form::{reveal_code_row, totp_code};
+pub(crate) use form::{
+    hide_sign_in_rows, is_sign_in_step, mailbox_password, reveal_sign_in_row, totp_code, SignInRows,
+};
 pub(crate) use messages::{AccountsCmd, AccountsInit, AccountsInput, AccountsOutput, TagProposal};
 pub(crate) use oauth::open_online_accounts;
 use pages::{AccountsPage, EditorForm, FiltersPage, SendersPage, SmartPage, TagsPage};
@@ -159,10 +162,16 @@ pub(crate) struct AccountsWindow {
     goa: Vec<crate::services::goa::GoaMailAccount>,
     /// Refresh token captured from a successful OAuth sign-in, applied on save.
     pending_oauth_refresh: Option<String>,
-    /// The address a Tuta sign-in in the editor signed in, and the session
-    /// it opened, saved in place of the password. Held only until Save,
-    /// which is what stores it, and only for that address.
-    pending_helper_session: Option<(String, String)>,
+    /// The protocol and address a Tuta or Proton sign-in in the editor
+    /// signed in, and the session it opened, saved in place of the
+    /// password. Held only until Save, which is what stores it, and only
+    /// for that protocol and address.
+    pending_helper_session: Option<(Protocol, String, String)>,
+    /// Proton's human verification for the editor's sign-in.
+    human_check: proton_verify::HumanCheck,
+    /// Whether the sign-in a verification stopped was Save's, so the one
+    /// after it saves too.
+    human_check_then_save: bool,
     /// Counts the times the editor opened, so a keyring answer for an
     /// editor since replaced is dropped.
     editor_session: u64,
@@ -396,6 +405,10 @@ impl Component for AccountsWindow {
             AccountsInput::PickAvatar => self.on_pick_avatar(sender, root),
             AccountsInput::SetAvatar(name) => self.on_set_avatar(name, widgets),
             AccountsInput::TestConnection => self.on_test_connection(widgets, sender),
+            AccountsInput::VerifyHuman => self.on_verify_human(widgets, &sender),
+            AccountsInput::HumanVerified(verified) => {
+                self.on_human_verified(verified, widgets, &sender)
+            }
             AccountsInput::ProtocolChanged => self.on_protocol_changed(widgets),
             AccountsInput::ProviderChanged => self.on_provider_changed(widgets),
             AccountsInput::OAuthSignIn => self.on_oauth_sign_in(widgets, sender, root),

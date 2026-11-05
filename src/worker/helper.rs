@@ -1,7 +1,7 @@
 //! JSON over stdin/stdout with a bundled provider helper: a separate
 //! program that signs in to a provider Hylki cannot reach over IMAP, SMTP or
-//! JMAP (Tuta's `hylki-tuta`), because only that provider's own client
-//! library can decrypt its mail.
+//! JMAP (Tuta's `hylki-tuta`, Proton's `hylki-proton`), because only that
+//! provider's own client library can decrypt its mail.
 //!
 //! One request per run: one UTF-8 JSON object goes to the helper on stdin,
 //! one comes back on stdout, and stderr is discarded. Secrets travel on
@@ -24,7 +24,7 @@ use std::time::{Duration, Instant};
 
 use serde_json::{Map, Value};
 
-use crate::config::Protocol;
+use crate::config::{LiveSession, Protocol};
 use crate::i18n::i18n;
 
 /// The version every request carries and every reply must echo.
@@ -54,25 +54,91 @@ pub(super) struct HelperSpec {
     pub(super) max_response_bytes: usize,
     /// How long one run may take before it is killed.
     pub(super) timeout: Duration,
+    /// Whether the helper hands back a new session with its replies
+    /// (Proton's refresh tokens are spent on use): such an account's
+    /// session lives in [`crate::config::live_session`], where every call
+    /// waits its turn and the newest copy is kept.
+    pub(super) rotates_sessions: bool,
 }
 
-/// A helper request that failed, as a fixed code. It carries nothing else,
-/// so its Debug output can never hold a secret or server text.
-#[derive(Debug, Clone, PartialEq, Eq)]
+/// A human-verification challenge (a CAPTCHA) a sign-in was refused with:
+/// opaque values the helper copied from the server, solved by the user in
+/// a web view and handed back on the retry.
+#[derive(Clone, PartialEq, Eq)]
+pub(crate) struct HvChallenge {
+    pub(crate) token: String,
+    /// The verification methods offered (`captcha`, `email`, ...).
+    pub(crate) methods: Vec<String>,
+}
+
+impl std::fmt::Debug for HvChallenge {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("HvChallenge")
+            .field("methods", &self.methods)
+            .finish_non_exhaustive()
+    }
+}
+
+/// A helper request that failed, as a fixed code, and for a sign-in the
+/// server wants a person behind, its challenge. Its Debug output never
+/// holds a secret or server text.
+#[derive(Clone, PartialEq, Eq)]
 pub(crate) struct HelperError {
     pub(crate) code: String,
+    hv: Option<HvChallenge>,
+}
+
+impl std::fmt::Debug for HelperError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut out = f.debug_struct("HelperError");
+        out.field("code", &self.code);
+        if let Some(hv) = &self.hv {
+            out.field("hv", hv);
+        }
+        out.finish()
+    }
 }
 
 impl HelperError {
     pub(crate) fn new(code: &str) -> HelperError {
         HelperError {
             code: code.to_string(),
+            hv: None,
+        }
+    }
+
+    /// A `human_verification_required` refusal with `challenge`, as the
+    /// helper's reply would make it.
+    #[cfg(test)]
+    pub(crate) fn with_challenge(challenge: HvChallenge) -> HelperError {
+        HelperError {
+            code: "human_verification_required".to_string(),
+            hv: Some(challenge),
         }
     }
 
     /// The sign-in needs the code from the account's authenticator app.
     pub(crate) fn needs_second_factor(&self) -> bool {
         self.code == "second_factor_required"
+    }
+
+    /// The sign-in needs the account's separate mailbox password (a Proton
+    /// account in two-password mode).
+    pub(crate) fn needs_mailbox_password(&self) -> bool {
+        self.code == "mailbox_password_required"
+    }
+
+    /// The server wants a CAPTCHA solved before it lets the sign-in go on;
+    /// [`HelperError::hv_challenge`] has it when the helper could read it.
+    /// A `human_verification_failed` refusal carries none: signing in again
+    /// without the spent token brings a fresh one.
+    pub(crate) fn needs_human_verification(&self) -> bool {
+        self.code == "human_verification_required"
+    }
+
+    /// The challenge of a `human_verification_required` refusal.
+    pub(crate) fn hv_challenge(&self) -> Option<HvChallenge> {
+        self.hv.clone()
     }
 
     /// What the user is told, fixed per code: the helper's own words never
@@ -90,6 +156,14 @@ impl HelperError {
             }
             "invalid_totp" => i18n("The two-step verification code must be six digits."),
             "second_factor_failed" => i18n("The two-step verification code was not accepted."),
+            "mailbox_password_required" => i18n("Enter the account's mailbox password."),
+            "mailbox_password_failed" => i18n("The mailbox password was not accepted."),
+            "human_verification_required" => {
+                i18n("The server wants to confirm that a person is signing in.")
+            }
+            "human_verification_failed" => {
+                i18n("The verification was not accepted. Sign in again to get a new one.")
+            }
             "unsupported_u2f" | "unsupported_webauthn" => i18n(
                 "This account signs in with a security key, which Hylki does not support yet. Add an authenticator app to the account.",
             ),
@@ -134,6 +208,7 @@ impl HelperError {
                 "Tuta does not let this account import mail. Importing needs a Legend or Unlimited plan.",
             ),
             "import_failed" => i18n("The server did not store the message."),
+            "invalid_destination" => i18n("Mail can't be moved into that folder."),
             "message_gone" => i18n("The message is no longer on the server."),
             "decryption_failed" => i18n("The message could not be decrypted."),
             "unsupported_legacy_body" => {
@@ -151,6 +226,10 @@ impl HelperError {
             ),
             "ordinary_delivery_requires_consent" => i18n(
                 "Mail to an address outside Tuta is not end-to-end encrypted, and sending it that way was not confirmed.",
+            ),
+            "message_too_large" => i18n("The message is too large to send."),
+            "confidential_send_unsupported" => i18n(
+                "A recipient has no key for end-to-end encryption, so the message can't be sent encrypted.",
             ),
             "send_failed" => i18n("The server refused the message."),
             "send_uncertain" => {
@@ -292,7 +371,8 @@ fn envelope(operation: &str, parameters: Object) -> Value {
     Value::Object(envelope)
 }
 
-/// A reply's version, and its error, as a code from `spec`'s list.
+/// A reply's version, and its error, as a code from `spec`'s list, with
+/// the challenge of a human-verification refusal.
 fn check_reply(reply: &Object, spec: HelperSpec) -> Result<(), HelperError> {
     if reply.get("version").and_then(Value::as_u64) != Some(PROTOCOL_VERSION) {
         return Err(HelperError::new("unsupported_version"));
@@ -302,7 +382,11 @@ fn check_reply(reply: &Object, spec: HelperSpec) -> Result<(), HelperError> {
             Some(Value::String(code)) if spec.codes.contains(&code.as_str()) => code.as_str(),
             _ => "request_failed",
         };
-        return Err(HelperError::new(code));
+        let mut error = HelperError::new(code);
+        if code == "human_verification_required" {
+            error.hv = hv_challenge(detail.get("hv"));
+        }
+        return Err(error);
     }
     Ok(())
 }
@@ -315,11 +399,37 @@ pub(super) fn request(
     operation: &str,
     parameters: Object,
 ) -> Result<Object, HelperError> {
-    let mut reply = transport(&envelope(operation, parameters))?;
-    check_reply(&reply, spec)?;
+    exchange(transport, spec, operation, parameters).0
+}
+
+/// [`request`], with the session the reply handed back beside the answer:
+/// `result.session` or, for a failure after the helper resumed the
+/// session, `error.session`. A helper whose sessions rotate needs it kept
+/// whatever the answer.
+fn exchange(
+    transport: &Transport,
+    spec: HelperSpec,
+    operation: &str,
+    parameters: Object,
+) -> (Result<Object, HelperError>, Option<Value>) {
+    let mut reply = match transport(&envelope(operation, parameters)) {
+        Ok(reply) => reply,
+        Err(e) => return (Err(e), None),
+    };
+    if let Err(error) = check_reply(&reply, spec) {
+        // A reply of another protocol version hands back nothing to trust.
+        let session = match error.code.as_str() {
+            "unsupported_version" => None,
+            _ => reply.get("error").and_then(session_of),
+        };
+        return (Err(error), session);
+    }
     match reply.remove("result") {
-        Some(Value::Object(result)) => Ok(result),
-        _ => Err(HelperError::new("invalid_response")),
+        Some(Value::Object(result)) => {
+            let session = result.get("session").filter(|s| s.is_object()).cloned();
+            (Ok(result), session)
+        }
+        _ => (Err(HelperError::new("invalid_response")), None),
     }
 }
 
@@ -449,6 +559,33 @@ fn read_watch_lines(
     }
 }
 
+/// The session an error reply handed back, when it carries one.
+fn session_of(detail: &Value) -> Option<Value> {
+    detail.get("session").filter(|s| s.is_object()).cloned()
+}
+
+/// A challenge as the helper relays it, or `None` when it is not one: a
+/// token, and at least one method to offer.
+fn hv_challenge(hv: Option<&Value>) -> Option<HvChallenge> {
+    let hv = hv?;
+    let token = hv.get("token")?.as_str().filter(|t| !t.is_empty())?;
+    let methods: Vec<String> = hv
+        .get("methods")?
+        .as_array()?
+        .iter()
+        .filter_map(Value::as_str)
+        .filter(|m| !m.is_empty())
+        .map(str::to_string)
+        .collect();
+    if methods.is_empty() {
+        return None;
+    }
+    Some(HvChallenge {
+        token: token.to_string(),
+        methods,
+    })
+}
+
 /// Whether a session object names `email` as its login. A session for
 /// another address is never used: the keyring entry would be crossed.
 pub(super) fn session_login_matches(session: &Value, email: &str) -> bool {
@@ -458,39 +595,72 @@ pub(super) fn session_login_matches(session: &Value, email: &str) -> bool {
     }
 }
 
-/// Sign in with `password` (and `totp`, when the account asks for it) and
-/// return the resumable session, as the JSON to keep in the keyring. The
-/// password goes to the helper once and is never kept.
+/// What a sign-in sends: the password and, when the server asked for
+/// them, the authenticator code, a two-password account's mailbox
+/// password, and a solved human-verification challenge. A field left
+/// `None` is not sent, so a helper that knows nothing of it (Tuta's) never
+/// sees it. Its Debug output names no value.
+#[derive(Clone, Default)]
+pub(crate) struct HelperLogin {
+    pub(crate) email: String,
+    pub(crate) password: String,
+    pub(crate) totp: Option<String>,
+    pub(crate) mailbox_password: Option<String>,
+    pub(crate) hv_token: Option<String>,
+    pub(crate) hv_type: Option<String>,
+}
+
+impl std::fmt::Debug for HelperLogin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("HelperLogin")
+            .field("email", &self.email)
+            .finish_non_exhaustive()
+    }
+}
+
+/// Sign in and return the resumable session, as the JSON to keep in the
+/// keyring. The password goes to the helper once and is never kept.
 pub(super) fn login(
     transport: &Transport,
     spec: HelperSpec,
-    email: &str,
-    password: &str,
-    totp: Option<&str>,
+    sign_in: &HelperLogin,
 ) -> Result<String, HelperError> {
     let mut parameters = Object::new();
-    parameters.insert("email".into(), email.into());
-    parameters.insert("password".into(), password.into());
-    parameters.insert("totp".into(), totp.map_or(Value::Null, Value::from));
+    parameters.insert("email".into(), sign_in.email.as_str().into());
+    parameters.insert("password".into(), sign_in.password.as_str().into());
+    parameters.insert(
+        "totp".into(),
+        sign_in.totp.as_deref().map_or(Value::Null, Value::from),
+    );
+    for (key, value) in [
+        ("mailbox_password", &sign_in.mailbox_password),
+        ("hv_token", &sign_in.hv_token),
+        ("hv_type", &sign_in.hv_type),
+    ] {
+        if let Some(value) = value {
+            parameters.insert(key.into(), value.as_str().into());
+        }
+    }
     let result = request(transport, spec, "login", parameters)?;
     match result.get("session") {
-        Some(session) if session_login_matches(session, email) => Ok(session.to_string()),
+        Some(session) if session_login_matches(session, &sign_in.email) => Ok(session.to_string()),
         _ => Err(HelperError::new("invalid_response")),
     }
 }
 
 /// A signed-in account's way to its helper: every request resumes the
-/// stored session, so a session the server ended reads as
+/// account's session, so a session the server ended reads as
 /// `session_revoked`, apart from an outage.
 #[derive(Clone)]
 pub(super) struct HelperClient {
     spec: HelperSpec,
     transport: Transport,
-    /// The session JSON as the keyring holds it, for as long as the worker
-    /// runs, the way the other accounts' passwords are held: Hylki has no
-    /// secret-holding type. Each request parses it into a value dropped
-    /// with the request.
-    session: String,
+    email: String,
+    /// The session JSON, for as long as the worker runs, the way the other
+    /// accounts' passwords are held: Hylki has no secret-holding type. Each
+    /// request parses it into a value dropped with the request, and a
+    /// session the reply hands back replaces it here.
+    live: Arc<LiveSession>,
 }
 
 impl std::fmt::Debug for HelperClient {
@@ -501,51 +671,104 @@ impl std::fmt::Debug for HelperClient {
     }
 }
 
+/// A session JSON that may be used for `email`: a damaged or crossed
+/// keyring entry means signing in again.
+fn check_session(session: &str, email: &str) -> Result<(), HelperError> {
+    if session.is_empty() {
+        return Err(HelperError::new("not_signed_in"));
+    }
+    let parsed: Value =
+        serde_json::from_str(session).map_err(|_| HelperError::new("session_invalid"))?;
+    if !session_login_matches(&parsed, email) {
+        return Err(HelperError::new("session_invalid"));
+    }
+    Ok(())
+}
+
 impl HelperClient {
-    /// A client for `email`'s stored `session`, checked before any request:
-    /// a damaged or crossed keyring entry means signing in again.
+    /// A client for `email`'s stored `session`, checked before any request.
+    /// The session is the client's own: for a helper whose sessions do not
+    /// change.
     pub(super) fn new(
         spec: HelperSpec,
         transport: Transport,
         email: &str,
         session: &str,
     ) -> Result<HelperClient, HelperError> {
-        if session.is_empty() {
-            return Err(HelperError::new("not_signed_in"));
-        }
-        let parsed: Value =
-            serde_json::from_str(session).map_err(|_| HelperError::new("session_invalid"))?;
-        if !session_login_matches(&parsed, email) {
-            return Err(HelperError::new("session_invalid"));
-        }
+        check_session(session, email)?;
+        let live = LiveSession::default();
+        live.set_latest(session);
         Ok(HelperClient {
             spec,
             transport,
-            session: session.to_string(),
+            email: email.to_string(),
+            live: Arc::new(live),
         })
     }
 
-    /// One operation on the stored session.
+    /// A client on `live`, the session every user of the account shares.
+    /// `stored` (the keyring's copy) seeds it when this run has none yet;
+    /// otherwise the newer live one is used, and checked like a stored one.
+    pub(super) fn shared(
+        spec: HelperSpec,
+        transport: Transport,
+        email: &str,
+        live: Arc<LiveSession>,
+        stored: &str,
+    ) -> Result<HelperClient, HelperError> {
+        // No turn is taken: a call another thread is running must not hold
+        // up a worker that only wants a client.
+        if live.latest().is_empty() {
+            check_session(stored, email)?;
+        }
+        check_session(&live.seed(stored), email)?;
+        Ok(HelperClient {
+            spec,
+            transport,
+            email: email.to_string(),
+            live,
+        })
+    }
+
+    /// The session as it now stands, rotated by every reply that handed one
+    /// back.
+    pub(super) fn session(&self) -> String {
+        self.live.latest()
+    }
+
+    /// One operation on the session. The call holds the account's turn
+    /// from reading the session to keeping the one the reply handed back,
+    /// failure or not, so no other call ever presents a refresh token this
+    /// one spent.
     pub(super) fn request(
         &self,
         operation: &str,
         mut parameters: Object,
     ) -> Result<Object, HelperError> {
-        let session: Value =
-            serde_json::from_str(&self.session).map_err(|_| HelperError::new("session_invalid"))?;
-        parameters.insert("session".into(), session);
-        request(&self.transport, self.spec, operation, parameters)
+        let _turn = self.live.turn();
+        let session: Value = serde_json::from_str(&self.live.latest())
+            .map_err(|_| HelperError::new("session_invalid"))?;
+        parameters.insert("session".into(), session.clone());
+        let (answer, handed_back) = exchange(&self.transport, self.spec, operation, parameters);
+        if let Some(rotated) = handed_back {
+            // A session for another address would cross the keyring entry.
+            if rotated != session && session_login_matches(&rotated, &self.email) {
+                self.live.set_latest(&rotated.to_string());
+            }
+        }
+        answer
     }
 
-    /// Start a streaming `operation` on the stored session, with the
-    /// helper at `executable`.
+    /// Start a streaming `operation` on the session as it stands, with the
+    /// helper at `executable`. Its lines hand no session back, so it is for
+    /// a helper whose sessions do not rotate.
     pub(super) fn watch(
         &self,
         executable: &Path,
         operation: &str,
     ) -> Result<Watch, HelperError> {
-        let session: Value =
-            serde_json::from_str(&self.session).map_err(|_| HelperError::new("session_invalid"))?;
+        let session: Value = serde_json::from_str(&self.live.latest())
+            .map_err(|_| HelperError::new("session_invalid"))?;
         let mut parameters = Object::new();
         parameters.insert("session".into(), session);
         Watch::start(executable, &envelope(operation, parameters), self.spec)
@@ -556,6 +779,7 @@ impl HelperClient {
 fn spec_for(protocol: Protocol) -> Option<HelperSpec> {
     match protocol {
         Protocol::Tuta => Some(super::tuta::SPEC),
+        Protocol::Proton => Some(super::proton::SPEC),
         _ => None,
     }
 }
@@ -563,25 +787,48 @@ fn spec_for(protocol: Protocol) -> Option<HelperSpec> {
 /// Sign in to a helper-backed account from the account editor or the
 /// wizard: the session JSON to store, or why not. Blocking (the helper's
 /// key derivation takes seconds); call it from a blocking task.
+///
+/// A rotating session becomes the account's live one at once, after any
+/// call still running on the old one: from then on it is the one every
+/// call and every keyring write uses.
 pub(crate) fn helper_login_blocking(
     protocol: Protocol,
-    email: &str,
-    password: &str,
-    totp: Option<&str>,
+    sign_in: &HelperLogin,
 ) -> Result<String, HelperError> {
     let spec = spec_for(protocol).ok_or_else(|| HelperError::new("unsupported_operation"))?;
-    login(&process_transport(spec), spec, email, password, totp)
+    let session = login(&process_transport(spec), spec, sign_in)?;
+    if spec.rotates_sessions {
+        let live = crate::config::live_session(&sign_in.email);
+        let _turn = live.turn();
+        live.set_latest(&session);
+    }
+    Ok(session)
 }
 
 /// End a removed account's session on the server. Blocking, and best
 /// effort: the keyring entry goes either way, and a session left open
-/// expires on its own.
+/// expires on its own. A rotating session is ended as this run last saw
+/// it, and then forgotten, so no later write puts it back in the keyring.
 pub(crate) fn helper_revoke_blocking(protocol: Protocol, email: &str, session: &str) {
     let Some(spec) = spec_for(protocol) else {
         return;
     };
-    let revoked = HelperClient::new(spec, process_transport(spec), email, session)
-        .and_then(|client| client.request("revoke", Object::new()));
+    let transport = process_transport(spec);
+    let client = if spec.rotates_sessions {
+        HelperClient::shared(
+            spec,
+            transport,
+            email,
+            crate::config::live_session(email),
+            session,
+        )
+    } else {
+        HelperClient::new(spec, transport, email, session)
+    };
+    let revoked = client.and_then(|client| client.request("revoke", Object::new()));
+    if spec.rotates_sessions {
+        crate::config::forget_live_session(email);
+    }
     if let Err(e) = revoked {
         tracing::warn!(
             "could not end the session of the removed account {email}: {}",
@@ -695,6 +942,8 @@ pub(super) mod test_support {
         )
     }
 }
+
+pub(super) mod send;
 
 #[cfg(test)]
 mod tests;

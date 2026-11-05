@@ -12,6 +12,13 @@ The full list. The [README](../README.md) carries a shorter one.
   signed in with the password and an authenticator code where the account
   has one. Hylki keeps the session, never the password. See
   [Configuration](DOCUMENTATION.md#tuta).
+- **Proton Mail without Bridge:** a Proton mailbox through a bundled helper
+  built on Proton's own libraries, signed in with the password, an
+  authenticator code and a mailbox password where the account has them,
+  and Proton's CAPTCHA when it asks for one. Mail to Proton addresses goes
+  end-to-end encrypted. Hylki keeps the session, never a password. Proton
+  Mail Bridge stays available as its own provider. See
+  [Configuration](DOCUMENTATION.md#proton-mail).
 - **OAuth 2.0 sign-in:** Microsoft with Hylki's own app (no GNOME Online
   Accounts needed), Google through GNOME Online Accounts, and custom
   providers over XOAUTH2. See [Configuration](DOCUMENTATION.md#oauth-google--microsoft).

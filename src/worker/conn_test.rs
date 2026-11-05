@@ -24,13 +24,16 @@ async fn test_connection(account: &AccountConfig) -> ConnTest {
         crate::config::Protocol::Pop3 => test_pop3(account).await,
         crate::config::Protocol::Jmap => jmap::test_jmap(account).await,
         crate::config::Protocol::Tuta => crate::worker::tuta::test_tuta(account).await,
+        crate::config::Protocol::Proton => crate::worker::proton::test_proton(account).await,
         _ => test_imap(account).await,
     };
-    // A JMAP or Tuta account sends through the server itself: there is no
-    // SMTP to test, and the Accounts window leaves that line out.
+    // A JMAP, Tuta or Proton account sends through the server itself:
+    // there is no SMTP to test, and the Accounts window leaves that line out.
     let smtp = if matches!(
         account.protocol,
-        crate::config::Protocol::Jmap | crate::config::Protocol::Tuta
+        crate::config::Protocol::Jmap
+            | crate::config::Protocol::Tuta
+            | crate::config::Protocol::Proton
     ) {
         Ok(())
     } else {

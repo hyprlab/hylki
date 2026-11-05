@@ -108,7 +108,7 @@ pub(super) async fn run_tuta(
 /// again at once, so a test leaves no sign-in behind. An account that asks
 /// for a second factor says so; signing in for good is the editor's.
 pub(super) async fn test_tuta(account: &AccountConfig) -> Result<(), String> {
-    use crate::worker::helper::{login, process_transport, HelperClient, Object};
+    use crate::worker::helper::{login, process_transport, HelperClient, HelperLogin, Object};
     let account = account.clone();
     let session = match account.helper_session.as_str() {
         "" => crate::config::read_session(&account.email)
@@ -126,7 +126,12 @@ pub(super) async fn test_tuta(account: &AccountConfig) -> Result<(), String> {
         if account.password.is_empty() {
             return Err(HelperError::new("not_signed_in"));
         }
-        let fresh = login(&transport, SPEC, &account.email, &account.password, None)?;
+        let sign_in = HelperLogin {
+            email: account.email.clone(),
+            password: account.password.clone(),
+            ..HelperLogin::default()
+        };
+        let fresh = login(&transport, SPEC, &sign_in)?;
         let client = HelperClient::new(SPEC, transport, &account.email, &fresh)?;
         if let Err(e) = client.request("revoke", Object::new()) {
             tracing::warn!(

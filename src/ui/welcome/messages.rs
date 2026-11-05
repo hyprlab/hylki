@@ -25,6 +25,11 @@ pub(crate) enum WelcomeInput {
     Back,
     ProviderChanged,
     TestAndAdd,
+    /// Open Proton's human verification for the challenge the last
+    /// sign-in came back with.
+    VerifyHuman,
+    /// The challenge was solved: sign in again with its token.
+    HumanVerified(proton_verify::Verified),
     ImportGoa(usize),
     RescanGoa,
     OpenOnlineAccounts,
@@ -58,8 +63,9 @@ pub(crate) enum WelcomeCmd {
         result: ConnTest,
         seq: u32,
     },
-    /// A Tuta sign-in through the helper ended: the session it opened,
-    /// which the account keeps in place of the password, or why not.
+    /// A Tuta or Proton sign-in through the helper ended: the session it
+    /// opened, which the account keeps in place of the password, or why
+    /// not.
     HelperSignedIn {
         account: Box<AccountConfig>,
         result: Result<String, worker::HelperError>,

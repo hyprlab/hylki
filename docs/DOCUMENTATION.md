@@ -208,6 +208,99 @@ Hylki says why. A message larger than 25 MiB is refused too. In
 `accounts.toml` the account has `protocol = "tuta"` and no server
 settings.
 
+### Proton Mail
+
+The Provider list offers Proton Mail two ways:
+
+- **Proton Mail** signs in to Proton directly through `hylki-proton`, a
+  small helper built on Proton's own Go libraries (go-proton-api and
+  gopenpgp) that ships with Hylki. Nothing else has to be installed or
+  running.
+- **Proton Mail (Bridge)** is an ordinary IMAP and SMTP account on Proton
+  Mail Bridge, Proton's own program, running on this computer. Take the
+  ports and the password Bridge generates from its window.
+
+Use **Proton Mail** unless you already run Bridge. It needs no other
+program, and it decrypts mail on this computer just as Bridge does. Use
+Bridge when other mail apps share it, or when you want what an IMAP
+account has and the native account does not: searching on the server,
+drafts and templates kept on the server, snoozing, and making or renaming
+folders. Proton offers Bridge on paid plans only. Both can be set up
+side by side for different addresses.
+
+The helper is started for each operation and talked to over a private
+pipe; it opens no port and writes no files. It is looked for next to the
+`hylki` executable first, then on `PATH`, and it tells Proton it is a
+third-party client.
+
+To add the account:
+
+1. Choose **Proton Mail** in the Provider list, in the welcome wizard or
+   under **Settings → Accounts**, and enter the address and the account
+   password. There are no servers to fill in.
+2. Press **Test & Add** in the wizard, or **Sign In** or **Save** in
+   Settings.
+3. An account with two-factor authentication through an authenticator app
+   is asked for its code next: the **Authenticator code** row appears under
+   the password. Enter the code and sign in again.
+4. An account in two-password mode is asked for its mailbox password the
+   same way, in the **Mailbox password** row.
+5. Proton sometimes wants to confirm that a person is signing in, most
+   often from a new network. A **Human Verification** window then opens on
+   Proton's own page from `verify.proton.me`, usually a CAPTCHA. Solve it
+   there, and the window closes and the sign-in carries on by itself,
+   with the authenticator code when the row shows one. Closing the window
+   cancels; the **Verify…** button on the **Human Verification** row opens
+   it again. If Proton turns the answer down, Hylki signs in once more to
+   get a fresh challenge.
+
+The verification page is the only web page Hylki runs scripts for: it is
+Proton's, not mail, and it does not work without them. It runs in a
+private session that keeps no cookies or storage once the window closes,
+it may load pages only from Proton's own servers, and a link to anywhere
+else, Proton's website included, opens in the browser.
+
+Hylki keeps the session that opens, in the keyring under `session:` and
+the address, and saves it again each time Proton renews it. Neither
+password is stored: both are cleared from the form once the session is
+open, and are asked for again only when the session ends, for example
+when it is revoked from Proton's website.
+
+What works: the folders and labels and the mail in them, read and unread,
+stars, moving between Inbox, Archive, Spam, Trash and your own folders,
+and sending. A message to a Proton address is end-to-end encrypted; one
+to an outside address whose key Proton knows, published or pinned in a
+contact, is sent with PGP; anything else goes as ordinary mail over TLS.
+Proton files the copy of sent mail in Sent itself, and a reply or a
+forward joins the conversation it answers in Proton's own apps. A message
+that Proton does not confirm as sent is not sent again on its own; check
+Sent before sending it once more.
+
+The limits, all of them Proton's or the helper's:
+
+- **Polling only.** The helper reads Proton's change log rather than
+  holding a connection open, so new mail and changes made elsewhere are
+  looked for at the automatic fetch interval, at least once a minute, or
+  every two minutes with automatic fetching off.
+- **Labels are for browsing.** They are listed beside the folders, but
+  Proton does not move mail into a label.
+- **Less is kept on the server.** Search runs on this computer only,
+  drafts and templates stay here, folders cannot be made, renamed or
+  removed from Hylki, and deleting outside Trash moves the mail to Trash.
+  Mail in Trash cannot be deleted for good from Hylki.
+- **Proton does the encryption.** Hylki's own OpenPGP signing and
+  encryption are not used for a Proton account, and a message sent with
+  them turned on is refused.
+- **Authenticator apps only.** Security keys (U2F and WebAuthn) are not
+  supported, so an account whose only second factor is a key cannot be
+  added.
+- **Removing the account** ends its session on Proton's side and deletes
+  it from the keyring.
+
+Snoozing is not offered for a Proton account, and mail cannot be moved
+into one from another account. In `accounts.toml` the account has
+`protocol = "proton"` and no server settings.
+
 ### Folder order
 
 An account's main folders (Inbox, Drafts, Sent, Archive, Junk, Trash) come

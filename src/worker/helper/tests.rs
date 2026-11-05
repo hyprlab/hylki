@@ -15,6 +15,7 @@ const SPEC: HelperSpec = HelperSpec {
     codes: &["login_failed", "session_revoked", "second_factor_required"],
     max_response_bytes: 1000,
     timeout: Duration::from_secs(20),
+    rotates_sessions: false,
 };
 
 fn transport_for(helper: &FakeHelper, spec: HelperSpec) -> Transport {
@@ -130,22 +131,56 @@ fn an_oversized_reply_is_refused_before_it_is_parsed() {
     assert!(started.elapsed() < Duration::from_secs(4));
 }
 
+fn sign_in(email: &str, totp: Option<&str>) -> HelperLogin {
+    HelperLogin {
+        email: email.into(),
+        password: "pw".into(),
+        totp: totp.map(str::to_string),
+        ..HelperLogin::default()
+    }
+}
+
 #[test]
 fn login_returns_the_session_for_that_address_only() {
     let reply = json!({"version": 1, "result": {"session": serde_json::from_str::<Value>(&session()).unwrap()}});
     let helper = fake_helper(&reply.to_string(), 0);
     let transport = transport_for(&helper, SPEC);
-    let stored = login(&transport, SPEC, "me@tuta.com", "pw", Some("123456")).unwrap();
+    let stored = login(&transport, SPEC, &sign_in("me@tuta.com", Some("123456"))).unwrap();
     assert!(session_login_matches(
         &serde_json::from_str(&stored).unwrap(),
         "me@tuta.com"
     ));
+    // The fields a sign-in did not need are not sent at all: Tuta's helper
+    // refuses a field it does not know.
     assert_eq!(
         helper.stdin(),
         json!({"version": 1, "op": "login", "email": "me@tuta.com", "password": "pw", "totp": "123456"})
     );
-    let err = login(&transport, SPEC, "someone@else.com", "pw", None).unwrap_err();
+    let err = login(&transport, SPEC, &sign_in("someone@else.com", None)).unwrap_err();
     assert_eq!(err.code, "invalid_response");
+}
+
+#[test]
+fn a_full_sign_in_sends_the_mailbox_password_and_the_solved_challenge() {
+    let reply = json!({"version": 1, "result": {"session": serde_json::from_str::<Value>(&session()).unwrap()}});
+    let helper = fake_helper(&reply.to_string(), 0);
+    let full = HelperLogin {
+        mailbox_password: Some("mailbox".into()),
+        hv_token: Some("solved".into()),
+        hv_type: Some("captcha".into()),
+        ..sign_in("me@tuta.com", Some("123456"))
+    };
+    login(&transport_for(&helper, SPEC), SPEC, &full).unwrap();
+    assert_eq!(
+        helper.stdin(),
+        json!({"version": 1, "op": "login", "email": "me@tuta.com", "password": "pw",
+            "totp": "123456", "mailbox_password": "mailbox", "hv_token": "solved",
+            "hv_type": "captcha"})
+    );
+    let shown = format!("{full:?}");
+    for secret in ["pw", "mailbox", "solved", "123456"] {
+        assert!(!shown.contains(&format!("\"{secret}\"")), "{shown}");
+    }
 }
 
 #[test]
@@ -157,9 +192,7 @@ fn a_second_factor_is_asked_for_by_code() {
     let err = login(
         &transport_for(&helper, SPEC),
         SPEC,
-        "me@tuta.com",
-        "pw",
-        None,
+        &sign_in("me@tuta.com", None),
     )
     .unwrap_err();
     assert!(err.needs_second_factor());
@@ -168,6 +201,171 @@ fn a_second_factor_is_asked_for_by_code() {
     for code in ["helper_failed", "anything at all", "send_uncertain"] {
         assert!(!HelperError::new(code).message().is_empty());
     }
+}
+
+const PROTON_SPEC: HelperSpec = HelperSpec {
+    codes: &[
+        "mailbox_password_required",
+        "human_verification_required",
+        "human_verification_failed",
+        "session_revoked",
+    ],
+    rotates_sessions: true,
+    ..SPEC
+};
+
+fn answering(reply: Value) -> Transport {
+    Arc::new(move |_| Ok(reply.as_object().unwrap().clone()))
+}
+
+#[test]
+fn a_verification_challenge_comes_with_its_refusal() {
+    let refusal = json!({"version": 1, "error": {"code": "human_verification_required",
+        "hv": {"token": "challenge", "methods": ["captcha", "email", 7, ""]}}});
+    let err = login(
+        &answering(refusal),
+        PROTON_SPEC,
+        &sign_in("me@tuta.com", None),
+    )
+    .unwrap_err();
+    assert!(err.needs_human_verification());
+    let hv = err.hv_challenge().expect("the challenge is kept");
+    assert_eq!(hv.token, "challenge");
+    assert_eq!(hv.methods, ["captcha", "email"]);
+    // The token is the server's, and stays out of the log.
+    assert!(!format!("{err:?}").contains("challenge\""), "{err:?}");
+
+    // A challenge with nothing to solve it by is no challenge.
+    let bare = json!({"version": 1, "error": {"code": "human_verification_required",
+        "hv": {"token": "challenge", "methods": []}}});
+    let err = login(&answering(bare), PROTON_SPEC, &sign_in("me@tuta.com", None)).unwrap_err();
+    assert!(err.needs_human_verification() && err.hv_challenge().is_none());
+
+    // A spent token asks for a new challenge, and carries none.
+    let spent = json!({"version": 1, "error": {"code": "human_verification_failed",
+        "hv": {"token": "x", "methods": ["captcha"]}}});
+    let err = login(
+        &answering(spent),
+        PROTON_SPEC,
+        &sign_in("me@tuta.com", None),
+    )
+    .unwrap_err();
+    assert!(!err.needs_human_verification() && err.hv_challenge().is_none());
+    assert_eq!(err.code, "human_verification_failed");
+
+    // Only the codes the spec lists pass, and only a listed code's
+    // challenge is read.
+    let other = json!({"version": 1, "error": {"code": "human_verification_required",
+        "hv": {"token": "challenge", "methods": ["captcha"]}}});
+    let err = login(&answering(other), SPEC, &sign_in("me@tuta.com", None)).unwrap_err();
+    assert_eq!(err.code, "request_failed");
+    assert!(err.hv_challenge().is_none());
+}
+
+#[test]
+fn a_two_password_account_asks_for_its_mailbox_password() {
+    let refusal = json!({"version": 1, "error": {"code": "mailbox_password_required"}});
+    let err = login(
+        &answering(refusal),
+        PROTON_SPEC,
+        &sign_in("me@tuta.com", None),
+    )
+    .unwrap_err();
+    assert!(err.needs_mailbox_password());
+    assert!(!err.needs_second_factor() && !err.needs_human_verification());
+    assert!(!HelperError::new("mailbox_password_failed").needs_mailbox_password());
+}
+
+fn rotated(token: &str) -> Value {
+    json!({"login": "Me@Tuta.com", "user_id": "u", "access_token": token})
+}
+
+#[test]
+fn a_rotated_session_is_kept_on_success_and_on_failure() {
+    let presented: Arc<std::sync::Mutex<Vec<Value>>> = Arc::default();
+    let seen = presented.clone();
+    let replies = std::sync::Mutex::new(vec![
+        // Last first: popped from the end.
+        json!({"version": 1, "result": {}}),
+        json!({"version": 1, "error": {"code": "session_revoked", "session": rotated("third")}}),
+        json!({"version": 1, "result": {"session": rotated("second")}}),
+        // A session for another address is never taken.
+        json!({"version": 1, "result": {"session": {"login": "other@tuta.com"}}}),
+    ]);
+    let transport: Transport = Arc::new(move |request: &Value| {
+        seen.lock().unwrap().push(request["session"].clone());
+        let reply = replies.lock().unwrap().pop().unwrap();
+        Ok(reply.as_object().unwrap().clone())
+    });
+    let live = Arc::new(LiveSession::default());
+    let client = HelperClient::shared(
+        PROTON_SPEC,
+        transport,
+        "me@tuta.com",
+        live.clone(),
+        &session(),
+    )
+    .unwrap();
+    client.request("sync", Object::new()).unwrap();
+    assert_eq!(client.session(), session());
+    client.request("sync", Object::new()).unwrap();
+    assert_eq!(client.session(), rotated("second").to_string());
+    let err = client.request("sync", Object::new()).unwrap_err();
+    assert_eq!(err.code, "session_revoked");
+    // The failure's session is kept too: its refresh token is the live one.
+    assert_eq!(live.latest(), rotated("third").to_string());
+    client.request("sync", Object::new()).unwrap();
+    let tokens: Vec<Value> = presented
+        .lock()
+        .unwrap()
+        .iter()
+        .map(|s| s["access_token"].clone())
+        .collect();
+    assert_eq!(tokens, ["TOKEN-SECRET", "TOKEN-SECRET", "second", "third"]);
+
+    // A second client on the same account picks up the newest session,
+    // not the stale stored copy it was handed.
+    let transport: Transport = Arc::new(|_| Err(HelperError::new("helper_failed")));
+    let later =
+        HelperClient::shared(PROTON_SPEC, transport, "me@tuta.com", live, &session()).unwrap();
+    assert_eq!(later.session(), rotated("third").to_string());
+}
+
+#[test]
+fn calls_on_one_session_take_turns() {
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    let running = Arc::new(AtomicUsize::new(0));
+    let overlapped = Arc::new(AtomicUsize::new(0));
+    let (r, o) = (running.clone(), overlapped.clone());
+    let transport: Transport = Arc::new(move |_| {
+        if r.fetch_add(1, Ordering::SeqCst) > 0 {
+            o.fetch_add(1, Ordering::SeqCst);
+        }
+        std::thread::sleep(Duration::from_millis(20));
+        r.fetch_sub(1, Ordering::SeqCst);
+        Ok(json!({"version": 1, "result": {}})
+            .as_object()
+            .unwrap()
+            .clone())
+    });
+    let live = Arc::new(LiveSession::default());
+    let threads: Vec<_> = (0..4)
+        .map(|_| {
+            let client = HelperClient::shared(
+                PROTON_SPEC,
+                transport.clone(),
+                "me@tuta.com",
+                live.clone(),
+                &session(),
+            )
+            .unwrap();
+            std::thread::spawn(move || client.request("sync", Object::new()).unwrap())
+        })
+        .collect();
+    for t in threads {
+        t.join().unwrap();
+    }
+    assert_eq!(overlapped.load(Ordering::SeqCst), 0);
 }
 
 #[test]

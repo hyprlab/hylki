@@ -15,7 +15,7 @@ use crate::config::AccountConfig;
 use crate::models::{Folder, FolderKind, Message};
 use crate::worker::helper::{process_transport, HelperClient, HelperError, Transport};
 use crate::worker::ids::hash_uid;
-use crate::worker::index_queue::{IndexJob, IndexQueue};
+use crate::worker::index_queue::{snapshot_plan, IndexJob, IndexQueue};
 use crate::worker::reconcile::listing_gone;
 use crate::worker::tuta::folders::{tuta_folders, TutaFolder};
 use crate::worker::tuta::messages::{header_labels, tuta_message};
@@ -174,30 +174,6 @@ impl IndexJob for TutaBackfill {
     fn path(&self) -> &str {
         &self.path
     }
-}
-
-/// What a folder's complete id snapshot (newest first) asks of the cache:
-/// the rows to drop, and the runs of mail to fetch as (offset, length),
-/// none longer than [`TUTA_BACKFILL_CHUNK`]. `since` is when the snapshot
-/// was asked for.
-pub(super) fn tuta_index_plan(
-    ids: &[String],
-    cached: &HashMap<u32, i64>,
-    since: i64,
-) -> (Vec<u32>, Vec<(usize, usize)>) {
-    let server: HashSet<u32> = ids.iter().map(|id| hash_uid(id)).collect();
-    let gone = listing_gone(cached, &server, since);
-    let mut runs: Vec<(usize, usize)> = Vec::new();
-    for (at, id) in ids.iter().enumerate() {
-        if cached.contains_key(&hash_uid(id)) {
-            continue;
-        }
-        match runs.last_mut() {
-            Some((start, len)) if *start + *len == at && *len < TUTA_BACKFILL_CHUNK => *len += 1,
-            _ => runs.push((at, 1)),
-        }
-    }
-    (gone, runs)
 }
 
 /// The rows of a page, with what only the cache knows carried over the
@@ -471,7 +447,7 @@ pub(super) async fn tuta_backfill_with(
                     merge_page(c, account_id, folder_id, &job.path, messages);
                 }
                 let cached = c.cached_uid_times(account_id, &job.path);
-                let (gone, missing) = tuta_index_plan(&ids, &cached, since);
+                let (gone, missing) = snapshot_plan(&ids, &cached, since, TUTA_BACKFILL_CHUNK);
                 tracing::info!(
                     "[account {account_id}] index of {}: {} on the server, {} to fetch in {} run(s), {} gone",
                     job.path,

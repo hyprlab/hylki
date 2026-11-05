@@ -14,7 +14,11 @@ use relm4::prelude::*;
 use crate::config::Protocol;
 use crate::config::{blank_account, AccountConfig};
 use crate::i18n::{i18n, i18n_f};
-use crate::ui::accounts::{reveal_code_row, totp_code, Provider, PROVIDERS};
+use crate::ui::accounts::proton_verify::{self, HumanCheck};
+use crate::ui::accounts::{
+    hide_sign_in_rows, is_sign_in_step, mailbox_password, reveal_sign_in_row, totp_code, Provider,
+    SignInRows, PROVIDERS,
+};
 use crate::worker::{self, ConnTest};
 
 mod goa;
@@ -50,6 +54,8 @@ pub(crate) struct Welcome {
     /// page's footer button reads Continue rather than Skip.
     goa_imported: bool,
     manual_added: bool,
+    /// Proton's human verification for the manual form's sign-in.
+    human_check: HumanCheck,
 }
 
 pub(crate) struct WelcomeWidgets {
@@ -63,8 +69,14 @@ pub(crate) struct WelcomeWidgets {
     name_row: adw::EntryRow,
     email_row: adw::EntryRow,
     pass_row: adw::PasswordEntryRow,
-    /// Tuta's second-factor code, shown once a sign-in asks for it.
+    /// Tuta's and Proton's second-factor code, shown once a sign-in asks
+    /// for it.
     totp_row: adw::EntryRow,
+    /// Proton's mailbox password, for accounts with two passwords; shown
+    /// once a sign-in asks for it.
+    mailbox_pass_row: adw::PasswordEntryRow,
+    /// Proton's human verification, shown once a sign-in asks for it.
+    verify_row: adw::ActionRow,
     server_exp: adw::ExpanderRow,
     host_row: adw::EntryRow,
     port_row: adw::EntryRow,
@@ -136,6 +148,7 @@ impl Component for Welcome {
             test_seq: 0,
             goa_imported: false,
             manual_added: false,
+            human_check: HumanCheck::default(),
         };
 
         let carousel = adw::Carousel::new();
@@ -184,11 +197,26 @@ impl Component for Welcome {
         email_row.set_title(&i18n("Email address"));
         let pass_row = adw::PasswordEntryRow::new();
         pass_row.set_title(&i18n("Password"));
-        // Hidden until Tuta asks for it (`show_sign_in_failure`).
+        // Hidden until Tuta or Proton asks for it (`show_sign_in_failure`).
         let totp_row = adw::EntryRow::new();
         totp_row.set_title(&i18n("Authenticator code"));
         totp_row.set_input_purpose(gtk::InputPurpose::Digits);
         totp_row.set_visible(false);
+        // Likewise, until Proton asks for either.
+        let mailbox_pass_row = adw::PasswordEntryRow::new();
+        mailbox_pass_row.set_title(&i18n("Mailbox password"));
+        mailbox_pass_row.set_visible(false);
+        let verify_row = adw::ActionRow::new();
+        verify_row.set_title(&i18n("Human verification"));
+        verify_row.set_subtitle(&i18n("Proton wants to confirm a person is signing in."));
+        verify_row.set_visible(false);
+        {
+            let verify_btn = gtk::Button::with_label(&i18n("Verify…"));
+            verify_btn.set_valign(gtk::Align::Center);
+            let s = sender.clone();
+            verify_btn.connect_clicked(move |_| s.input_sender().emit(WelcomeInput::VerifyHuman));
+            verify_row.add_suffix(&verify_btn);
+        }
         let server_exp = adw::ExpanderRow::new();
         server_exp.set_title(&i18n("Server details"));
         server_exp.set_subtitle(&i18n("Filled in for known providers"));
@@ -227,6 +255,8 @@ impl Component for Welcome {
         form.append(&email_row);
         form.append(&pass_row);
         form.append(&totp_row);
+        form.append(&mailbox_pass_row);
+        form.append(&verify_row);
         for row in [
             oauth_client_id_row.upcast_ref::<gtk::Widget>(),
             oauth_secret_row.upcast_ref(),
@@ -334,6 +364,7 @@ impl Component for Welcome {
         for entry in [
             name_row.upcast_ref::<gtk::Editable>(),
             totp_row.upcast_ref(),
+            mailbox_pass_row.upcast_ref(),
             email_row.upcast_ref(),
             pass_row.upcast_ref(),
             host_row.upcast_ref(),
@@ -361,6 +392,8 @@ impl Component for Welcome {
             email_row,
             pass_row,
             totp_row,
+            mailbox_pass_row,
+            verify_row,
             server_exp,
             host_row,
             port_row,
@@ -443,6 +476,12 @@ impl Component for Welcome {
             WelcomeInput::Back => self.on_back(widgets),
             WelcomeInput::ProviderChanged => self.on_provider_changed(widgets),
             WelcomeInput::TestAndAdd => self.on_test_and_add(widgets, sender),
+            WelcomeInput::VerifyHuman => self.on_verify_human(widgets, &sender),
+            WelcomeInput::HumanVerified(verified) => {
+                if self.human_check.solve(verified) {
+                    self.on_test_and_add(widgets, sender);
+                }
+            }
             WelcomeInput::ImportGoa(index) => self.on_import_goa(index, widgets, sender),
             WelcomeInput::RescanGoa => self.on_rescan_goa(widgets, sender),
             WelcomeInput::OpenOnlineAccounts => crate::ui::accounts::open_online_accounts(),

@@ -126,9 +126,9 @@ impl AccountsWindow {
         widgets: &AccountsWindowWidgets,
         sender: ComponentSender<Self>,
     ) {
-        // Tuta's connection test is its sign-in, and it opens the session
-        // the account keeps.
-        if form_protocol(widgets) == Protocol::Tuta {
+        // A Tuta or Proton connection test is its sign-in, and it opens the
+        // session the account keeps.
+        if form_protocol(widgets).uses_helper() {
             self.start_helper_sign_in(widgets, &sender, false);
             return;
         }
@@ -148,9 +148,10 @@ impl AccountsWindow {
         });
     }
 
-    /// Sign in to Tuta through the helper with the form's address, password
-    /// and, once Tuta has asked for one, code. The answer comes back as
-    /// [`AccountsCmd::HelperSignIn`]. Save starts one as well, with
+    /// Sign in to Tuta or Proton through the helper with the form's address
+    /// and password and whatever else the provider has asked for by now: a
+    /// code, a mailbox password, a solved challenge. The answer comes back
+    /// as [`AccountsCmd::HelperSignIn`]. Save starts one as well, with
     /// `then_save`, when a password was typed but not yet signed in with.
     pub(super) fn start_helper_sign_in(
         &mut self,
@@ -158,6 +159,7 @@ impl AccountsWindow {
         sender: &ComponentSender<Self>,
         then_save: bool,
     ) {
+        let protocol = form_protocol(widgets);
         let email = trimmed(&widgets.form.email_row);
         let password = widgets.form.pass_row.text().to_string();
         widgets.form.test_result.set_visible(true);
@@ -169,26 +171,29 @@ impl AccountsWindow {
                 .set_label(&i18n("Enter your email address and password first."));
             return;
         }
-        let code = totp_code(&widgets.form.totp_row);
+        let (hv_token, hv_type) = self.human_check.solved();
+        let login = worker::HelperLogin {
+            email: email.clone(),
+            password,
+            totp: totp_code(&widgets.form.totp_row),
+            mailbox_password: mailbox_password(&widgets.form.mailbox_pass_row),
+            hv_token,
+            hv_type,
+        };
         widgets.form.test_btn.set_sensitive(false);
         widgets.form.test_result.set_css_classes(&["dim-label"]);
         widgets.form.test_result.set_label(&i18n("Signing in…"));
         let editor = self.editor_session;
         sender.oneshot_command(async move {
-            let address = email.clone();
             let result = tokio::task::spawn_blocking(move || {
-                worker::helper_login_blocking(Protocol::Tuta, &email, &password, code.as_deref())
+                worker::helper_login_blocking(protocol, &login)
             })
             .await
-            .unwrap_or_else(|_| {
-                Err(worker::HelperError {
-                    code: "helper_failed".into(),
-                })
-            });
+            .unwrap_or_else(|_| Err(worker::HelperError::new("helper_failed")));
             AccountsCmd::HelperSignIn {
                 editor,
                 then_save,
-                result: result.map(|session| (address, session)),
+                result: result.map(|session| (protocol, email, session)),
             }
         });
     }
@@ -197,7 +202,7 @@ impl AccountsWindow {
         &mut self,
         editor: u64,
         then_save: bool,
-        result: Result<(String, String), worker::HelperError>,
+        result: Result<(Protocol, String, String), worker::HelperError>,
         widgets: &AccountsWindowWidgets,
         sender: ComponentSender<Self>,
     ) {
@@ -207,38 +212,84 @@ impl AccountsWindow {
         }
         widgets.form.test_btn.set_sensitive(true);
         widgets.form.test_result.set_visible(true);
-        match result {
+        let e = match result {
             Ok(signed_in) => {
+                let name = helper_name(signed_in.0);
                 self.pending_helper_session = Some(signed_in);
+                self.human_check.clear();
                 // The session stands in for the password from here on, so
-                // the password is not kept even in the form.
+                // neither password is kept even in the form.
                 widgets.form.pass_row.set_text("");
-                widgets.form.totp_row.set_text("");
-                widgets.form.totp_row.set_visible(false);
+                hide_sign_in_rows(&sign_in_rows(widgets));
                 widgets.form.test_result.set_css_classes(&["success"]);
                 widgets
                     .form
                     .test_result
-                    .set_label(&i18n("✓ Tuta: signed in"));
+                    .set_label(&i18n_f("✓ {provider}: signed in", &[("provider", name)]));
                 if then_save {
                     sender.input_sender().emit(AccountsInput::Save);
                 }
+                return;
             }
-            Err(e) => {
-                let asks_code = e.needs_second_factor();
-                let text = reveal_code_row(&widgets.form.totp_row, &e);
-                widgets.form.test_result.set_css_classes(&[if asks_code {
-                    "dim-label"
-                } else {
-                    "error"
-                }]);
-                widgets.form.test_result.set_label(&if asks_code {
-                    text
-                } else {
-                    i18n_f("✗ Tuta: {e}", &[("e", &text)])
-                });
+            Err(e) => e,
+        };
+        match self.human_check.stopped(&e) {
+            proton_verify::HumanStep::Retry => {
+                self.start_helper_sign_in(widgets, &sender, then_save);
+                return;
             }
+            proton_verify::HumanStep::Show => {
+                self.human_check_then_save = then_save;
+                self.on_verify_human(widgets, &sender);
+            }
+            proton_verify::HumanStep::Nothing => {}
         }
+        let step = is_sign_in_step(&e);
+        let text = reveal_sign_in_row(&sign_in_rows(widgets), &e);
+        widgets
+            .form
+            .test_result
+            .set_css_classes(&[if step { "dim-label" } else { "error" }]);
+        widgets.form.test_result.set_label(&if step {
+            text
+        } else {
+            let name = helper_name(form_protocol(widgets));
+            i18n_f("✗ {provider}: {e}", &[("provider", name), ("e", &text)])
+        });
+    }
+
+    /// Show Proton's challenge for the editor's sign-in: when a sign-in
+    /// comes back asking for it, and from the Verify button after.
+    pub(super) fn on_verify_human(
+        &mut self,
+        widgets: &AccountsWindowWidgets,
+        sender: &ComponentSender<Self>,
+    ) {
+        let Some(challenge) = self.human_check.challenge() else {
+            return;
+        };
+        let input = sender.input_sender().clone();
+        proton_verify::present(&widgets.form.verify_row, challenge, move |verified| {
+            if let Some(verified) = verified {
+                input.emit(AccountsInput::HumanVerified(verified));
+            }
+        });
+    }
+
+    /// The challenge was solved: sign in again at once with its token, and
+    /// with the code the account may also want, so the token is not spent
+    /// on a sign-in that stops there.
+    pub(super) fn on_human_verified(
+        &mut self,
+        verified: proton_verify::Verified,
+        widgets: &AccountsWindowWidgets,
+        sender: &ComponentSender<Self>,
+    ) {
+        if !self.human_check.solve(verified) {
+            return;
+        }
+        let then_save = std::mem::take(&mut self.human_check_then_save);
+        self.start_helper_sign_in(widgets, sender, then_save);
     }
 
     pub(super) fn on_protocol_changed(&mut self, widgets: &AccountsWindowWidgets) {
@@ -341,11 +392,12 @@ impl AccountsWindow {
         let incoming_label = match protocol {
             Protocol::Pop3 => "POP3",
             Protocol::Jmap => "JMAP",
-            Protocol::Tuta => "Tuta",
+            Protocol::Tuta | Protocol::Proton => helper_name(protocol),
             _ => "IMAP",
         };
-        // A JMAP or Tuta account sends through its server: no SMTP line.
-        let text = if matches!(protocol, Protocol::Jmap | Protocol::Tuta) {
+        // A JMAP, Tuta or Proton account sends through its server: no SMTP
+        // line.
+        let text = if protocol == Protocol::Jmap || protocol.uses_helper() {
             line(incoming_label, &result.incoming)
         } else {
             format!(
@@ -362,5 +414,14 @@ impl AccountsWindow {
         widgets.form.test_result.set_label(&text);
         widgets.form.test_result.set_css_classes(&[class]);
         widgets.form.test_btn.set_sensitive(true);
+    }
+}
+
+/// The provider a helper signs in to, as its result lines name it. A brand,
+/// so not translated.
+fn helper_name(protocol: Protocol) -> &'static str {
+    match protocol {
+        Protocol::Proton => "Proton Mail",
+        _ => "Tuta",
     }
 }

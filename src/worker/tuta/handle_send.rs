@@ -6,14 +6,13 @@ use crate::i18n::i18n;
 use crate::models::DraftOrigin;
 use crate::worker::compose::build::{build_draft, draft_message_id, restore_msgid_case};
 use crate::worker::drafts::{draft_not_saved, saving_text};
+use crate::worker::helper::send::{exact_forwards, SendOutcome};
 use crate::worker::helper::HelperError;
 use crate::worker::ids::hash_uid;
 use crate::worker::outbox::{drop_superseded_outbox, schedule_send, send_failed, send_uncertain};
 use crate::worker::tuta::index::{run, tuta_load_folder};
 use crate::worker::tuta::ops::{emit_folder, tuta_ensure_folder, tuta_move_ids};
-use crate::worker::tuta::send::{
-    draft_parameters, exact_forwards, tuta_list_sent, tuta_send_message, SendOutcome,
-};
+use crate::worker::tuta::send::{draft_parameters, tuta_list_sent, tuta_send_message};
 use crate::worker::tuta::wire::{delete_draft, save_draft};
 use crate::worker::{OutgoingMessage, WorkerEvent};
 

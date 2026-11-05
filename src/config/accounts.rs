@@ -12,8 +12,8 @@ use std::path::PathBuf;
 
 use super::prefs::{OfflineMail, ReplyCopies};
 use super::secrets::{
-    keyring_later, store_alias_smtp_password, store_oauth_refresh, store_password, store_session,
-    store_smtp_password,
+    keyring_later, latest_session, store_alias_smtp_password, store_oauth_refresh, store_password,
+    store_session, store_smtp_password,
 };
 use super::sections::FolderSort;
 use super::{config_file, data_base, default_on, is_false, is_true, is_zero, write_private};
@@ -101,6 +101,20 @@ pub(crate) enum Protocol {
     /// configure. The account keeps a resumable session in the keyring,
     /// never its password.
     Tuta,
+    /// Proton Mail over the bundled `hylki-proton` helper, for the same
+    /// reason as Tuta: mail is stored encrypted to keys only Proton's own
+    /// libraries open, and without Proton Mail Bridge there is no IMAP or
+    /// SMTP to reach. The keyring keeps a session, which the helper rotates
+    /// on use, never the password.
+    Proton,
+}
+
+impl Protocol {
+    /// Whether the account signs in through a bundled provider helper and
+    /// keeps only that helper's session in the keyring.
+    pub(crate) fn uses_helper(self) -> bool {
+        matches!(self, Protocol::Tuta | Protocol::Proton)
+    }
 }
 
 /// What an On This Computer account has in its `email` field, the key
@@ -291,7 +305,7 @@ pub(crate) struct AccountConfig {
     /// memory (like `password`); stored on save.
     #[serde(default, skip_serializing)]
     pub(crate) oauth_refresh: String,
-    /// A provider helper's resumable session (Tuta), as the JSON the helper
+    /// A provider helper's resumable session (Tuta, Proton), as the JSON the helper
     /// returned at sign-in. Kept in the keyring, never on disk; transient in
     /// memory like `oauth_refresh`, and stored on save when not empty.
     #[serde(default, skip_serializing)]
@@ -745,9 +759,9 @@ pub(crate) fn save(accounts: &[AccountConfig]) -> std::io::Result<()> {
 
 fn store_secrets(accounts: &[AccountConfig]) {
     for account in accounts {
-        // A Tuta account signs in with a session; its password is never kept,
-        // even if a form left one behind.
-        if !account.password.is_empty() && account.protocol != Protocol::Tuta {
+        // A helper account signs in with a session; its password is never
+        // kept, even if a form left one behind.
+        if !account.password.is_empty() && !account.protocol.uses_helper() {
             if let Err(e) = store_password(&account.email, &account.password) {
                 tracing::error!("could not store password for {}: {e}", account.email);
             }
@@ -782,8 +796,12 @@ fn store_secrets(accounts: &[AccountConfig]) {
         }
         // A helper session, with the same guard: editing an account without
         // signing in again saves it empty, and the stored one must survive.
+        // A session the helper rotated since this copy was taken wins: the
+        // copy's refresh token is spent.
         if !account.helper_session.is_empty() {
-            if let Err(e) = store_session(&account.email, &account.helper_session) {
+            let session =
+                latest_session(&account.email).unwrap_or_else(|| account.helper_session.clone());
+            if let Err(e) = store_session(&account.email, &session) {
                 tracing::error!("could not store the session for {}: {e}", account.email);
             }
         }

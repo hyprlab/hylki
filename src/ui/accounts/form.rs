@@ -159,7 +159,7 @@ pub(super) fn read_account(
     let default_port = match protocol {
         Protocol::Pop3 => 995,
         Protocol::Jmap => 443,
-        Protocol::Tuta => 0,
+        Protocol::Tuta | Protocol::Proton => 0,
         _ => 993,
     };
     let jmap_token = protocol == Protocol::Jmap && widgets.form.jmap_token_row.is_active();
@@ -282,16 +282,16 @@ pub(super) fn read_account(
             && widgets.form.directory_only_row.is_active(),
         graph_label_names: protocol == Protocol::Graph && widgets.form.graph_labels_row.is_active(),
     };
-    if protocol == Protocol::Tuta {
+    if protocol.uses_helper() {
         drop_server_fields(&mut account);
     }
     account
 }
 
-/// Clear what a Tuta account has no use for. The helper reaches Tuta's own
-/// servers and signs in with the address, so the server, SMTP and push
-/// rows are hidden for it, and would only carry what another provider
-/// picked before it left in them.
+/// Clear what a Tuta or Proton account has no use for. The helper reaches
+/// the provider's own servers and signs in with the address, so the
+/// server, SMTP and push rows are hidden for it, and would only carry what
+/// another provider picked before it left in them.
 pub(super) fn drop_server_fields(account: &mut AccountConfig) {
     account.imap_host.clear();
     account.imap_port = 0;
@@ -510,9 +510,9 @@ pub(super) fn fill_editor(widgets: &AccountsWindowWidgets, acc: &AccountConfig) 
         .set_text(&acc.smtp_port.to_string());
     widgets.form.user_row.set_text(&acc.username);
     widgets.form.pass_row.set_text(&acc.password);
-    // A code is good for one sign-in, and only asked for once Tuta wants one.
-    widgets.form.totp_row.set_text("");
-    widgets.form.totp_row.set_visible(false);
+    // A code is good for one sign-in, and the rows a helper sign-in asks
+    // for come out only once it does.
+    hide_sign_in_rows(&sign_in_rows(widgets));
     widgets.form.smtp_separate_row.set_active(acc.smtp_separate);
     widgets
         .form
@@ -668,8 +668,7 @@ pub(super) fn clear_editor(widgets: &AccountsWindowWidgets) {
     widgets.form.smtp_port_row.set_text("587");
     widgets.form.user_row.set_text("");
     widgets.form.pass_row.set_text("");
-    widgets.form.totp_row.set_text("");
-    widgets.form.totp_row.set_visible(false);
+    hide_sign_in_rows(&sign_in_rows(widgets));
     widgets.form.smtp_separate_row.set_active(false);
     widgets.form.tls_mismatch_row.set_active(false);
     widgets.form.push_row.set_selected(0);
@@ -730,15 +729,74 @@ fn code_without_spaces(text: &str) -> Option<String> {
     (!code.is_empty()).then_some(code)
 }
 
-/// What to say about a Tuta sign-in that did not finish, with the code row
-/// brought out when that is why: a second factor is a step, not a failure,
-/// and the next sign-in sends the code. Shared with the welcome wizard.
-pub(crate) fn reveal_code_row(row: &adw::EntryRow, error: &crate::worker::HelperError) -> String {
+/// The rows a Tuta or Proton sign-in can ask for after the password, each
+/// hidden until it does. Shared with the welcome wizard.
+pub(crate) struct SignInRows<'a> {
+    pub(crate) code: &'a adw::EntryRow,
+    pub(crate) mailbox_password: &'a adw::PasswordEntryRow,
+    pub(crate) verify: &'a adw::ActionRow,
+}
+
+/// The editor's own.
+pub(super) fn sign_in_rows(widgets: &AccountsWindowWidgets) -> SignInRows<'_> {
+    SignInRows {
+        code: &widgets.form.totp_row,
+        mailbox_password: &widgets.form.mailbox_pass_row,
+        verify: &widgets.form.verify_row,
+    }
+}
+
+/// Put the rows away, and what was typed in them: a code is good for one
+/// sign-in, and a mailbox password is not kept once it opened a session.
+pub(crate) fn hide_sign_in_rows(rows: &SignInRows) {
+    rows.code.set_text("");
+    rows.code.set_visible(false);
+    rows.mailbox_password.set_text("");
+    rows.mailbox_password.set_visible(false);
+    rows.verify.set_visible(false);
+}
+
+/// The mailbox password to sign in with, or none while its row is hidden
+/// or empty. Taken as typed: a password may hold spaces.
+pub(crate) fn mailbox_password(row: &adw::PasswordEntryRow) -> Option<String> {
+    if !row.get_visible() {
+        return None;
+    }
+    let text = row.text();
+    (!text.is_empty()).then(|| text.to_string())
+}
+
+/// Whether a sign-in stopped for something the form can give it (a code,
+/// a mailbox password, a solved challenge) rather than failing. A demand
+/// for verification without a challenge to show cannot be met from here.
+pub(crate) fn is_sign_in_step(error: &crate::worker::HelperError) -> bool {
+    error.needs_second_factor()
+        || error.needs_mailbox_password()
+        || (error.needs_human_verification() && error.hv_challenge().is_some())
+}
+
+/// What to say about a Tuta or Proton sign-in that did not finish, with
+/// the row it asks for brought out: a step is not a failure, and the next
+/// sign-in sends what the row holds. The password stays in its row for
+/// that sign-in. Shared with the welcome wizard.
+pub(crate) fn reveal_sign_in_row(rows: &SignInRows, error: &crate::worker::HelperError) -> String {
     if error.needs_second_factor() {
-        row.set_text("");
-        row.set_visible(true);
-        row.grab_focus();
+        rows.code.set_text("");
+        rows.code.set_visible(true);
+        rows.code.grab_focus();
         return i18n("Enter the code from your authenticator app, then sign in again.");
+    }
+    if error.needs_mailbox_password() {
+        rows.mailbox_password.set_text("");
+        rows.mailbox_password.set_visible(true);
+        rows.mailbox_password.grab_focus();
+        return i18n("This account has a separate mailbox password. Enter it, then sign in again.");
+    }
+    if error.needs_human_verification() && error.hv_challenge().is_some() {
+        rows.verify.set_visible(true);
+        return i18n(
+            "Proton wants to confirm a person is signing in. Solve the challenge to continue.",
+        );
     }
     error.message()
 }
@@ -749,6 +807,7 @@ pub(super) fn form_protocol(widgets: &AccountsWindowWidgets) -> Protocol {
     match provider_at(widgets.form.provider_row.selected()).kind {
         ProviderKind::Jmap => Protocol::Jmap,
         ProviderKind::Tuta => Protocol::Tuta,
+        ProviderKind::Proton => Protocol::Proton,
         // Hylki's own Microsoft sign-in asks for Graph, not IMAP (#329).
         ProviderKind::Microsoft => Protocol::Graph,
         _ => protocol_at(widgets.form.protocol_row.selected()),
@@ -761,11 +820,17 @@ pub(super) fn form_protocol(widgets: &AccountsWindowWidgets) -> Protocol {
 pub(super) fn apply_protocol(widgets: &AccountsWindowWidgets) {
     let protocol = form_protocol(widgets);
     let jmap = protocol == Protocol::Jmap;
-    // Tuta is signed in to with the address alone, and asks for a code
-    // only when the account has one (see `on_helper_signed_in`).
-    let helper = protocol == Protocol::Tuta;
+    // Tuta and Proton are signed in to with the address alone, and ask for
+    // a code, a mailbox password or a challenge only when the account needs
+    // one (see `on_helper_signed_in`).
+    let helper = protocol.uses_helper();
     if !helper {
         widgets.form.totp_row.set_visible(false);
+    }
+    if protocol != Protocol::Proton {
+        widgets.form.mailbox_pass_row.set_text("");
+        widgets.form.mailbox_pass_row.set_visible(false);
+        widgets.form.verify_row.set_visible(false);
     }
     // Only where the servers are shown at all (OAuth providers hide them).
     let servers_shown = widgets.form.host_row.is_visible();
@@ -938,16 +1003,15 @@ mod tests {
             assert!(!row.get_visible(), "{}", row.type_().name());
         }
         assert!(!w.form.totp_row.get_visible());
+        assert!(!w.form.mailbox_pass_row.get_visible());
+        assert!(!w.form.verify_row.get_visible());
 
         // A second factor brings the code row out, and the code is sent
         // without the space the app showed in it.
-        let hint = reveal_code_row(
-            &w.form.totp_row,
-            &crate::worker::HelperError {
-                code: "second_factor_required".into(),
-            },
-        );
+        let second_factor = crate::worker::HelperError::new("second_factor_required");
+        let hint = reveal_sign_in_row(&sign_in_rows(&w), &second_factor);
         assert!(!hint.is_empty());
+        assert!(is_sign_in_step(&second_factor));
         assert!(w.form.totp_row.get_visible());
         w.form.totp_row.set_text("123 456");
         assert_eq!(totp_code(&w.form.totp_row).as_deref(), Some("123456"));
@@ -958,5 +1022,176 @@ mod tests {
         assert!(!w.form.totp_row.get_visible());
         assert!(w.form.host_row.get_visible());
         assert_eq!(totp_code(&w.form.totp_row), None);
+    }
+
+    #[test]
+    fn a_proton_account_keeps_no_servers() {
+        let mut acc = AccountConfig {
+            email: "me@proton.me".into(),
+            protocol: Protocol::Proton,
+            // What the Bridge preset picked first leaves in the hidden rows.
+            imap_host: "127.0.0.1".into(),
+            imap_port: 1143,
+            smtp_host: "127.0.0.1".into(),
+            smtp_port: 1025,
+            username: "bridge-user".into(),
+            ..crate::config::blank_account()
+        };
+        drop_server_fields(&mut acc);
+        assert_eq!((acc.imap_host.as_str(), acc.imap_port), ("", 0));
+        assert_eq!((acc.smtp_host.as_str(), acc.smtp_port), ("", 0));
+        assert_eq!(acc.username, "me@proton.me");
+    }
+
+    /// A native Proton account through the real editor: filled in, read
+    /// back, the rows the form shows for it, and the three rows a sign-in
+    /// can ask for (code, mailbox password, human verification), each
+    /// hidden until it does. Ignored by default: it needs a display. Run it
+    /// on its own (GTK is initialised once per process, from one thread):
+    ///
+    /// ```text
+    /// cargo test -- --ignored proton_account_round_trips_through_the_editor
+    /// ```
+    #[test]
+    #[ignore = "needs a display"]
+    fn proton_account_round_trips_through_the_editor() {
+        use crate::worker::{HelperError, HvChallenge};
+        gtk::init().expect("a display");
+        adw::init().expect("libadwaita");
+        let panel = AccountsWindow::builder()
+            .launch(AccountsInit {
+                accounts: Vec::new(),
+                allowed_senders: Vec::new(),
+                blacklist: Vec::new(),
+                filters: Vec::new(),
+                tags: Vec::new(),
+                smart_folders: Vec::new(),
+            })
+            .detach();
+        let w = panel.widgets();
+        let acc = AccountConfig {
+            name: "Me".into(),
+            email: "me@proton.me".into(),
+            protocol: Protocol::Proton,
+            username: "me@proton.me".into(),
+            imap_port: 0,
+            smtp_port: 0,
+            ..crate::config::blank_account()
+        };
+        fill_editor(&w, &acc);
+        panel.model().apply_provider(&w);
+        assert_eq!(form_protocol(&w), Protocol::Proton);
+        assert_eq!(
+            provider_at(w.form.provider_row.selected()).label,
+            "Proton Mail"
+        );
+        assert_eq!(w.form.test_btn.label().as_deref(), Some("Sign In"));
+
+        let back = read_account(&w, None, None);
+        assert_eq!(back.protocol, Protocol::Proton);
+        assert_eq!(back.name, "Me");
+        assert_eq!(back.email, "me@proton.me");
+        assert_eq!(back.username, "me@proton.me");
+        assert_eq!((back.imap_host.as_str(), back.imap_port), ("", 0));
+        assert_eq!((back.smtp_host.as_str(), back.smtp_port), ("", 0));
+        assert!(back.password.is_empty());
+        assert!(back.helper_session.is_empty());
+        assert!(!back.oauth);
+
+        // The address and password, nothing about servers, and none of
+        // the rows a sign-in asks for until it does.
+        assert!(w.form.email_row.get_visible());
+        assert!(w.form.pass_row.get_visible());
+        for row in [
+            w.form.protocol_row.upcast_ref::<gtk::Widget>(),
+            w.form.host_row.upcast_ref(),
+            w.form.port_row.upcast_ref(),
+            w.form.smtp_row.upcast_ref(),
+            w.form.smtp_port_row.upcast_ref(),
+            w.form.user_row.upcast_ref(),
+            w.form.smtp_separate_row.upcast_ref(),
+            w.form.tls_mismatch_row.upcast_ref(),
+            w.form.jmap_token_row.upcast_ref(),
+            w.form.totp_row.upcast_ref(),
+            w.form.mailbox_pass_row.upcast_ref(),
+            w.form.verify_row.upcast_ref(),
+        ] {
+            assert!(!row.get_visible(), "{}", row.type_().name());
+        }
+        let rows = sign_in_rows(&w);
+
+        // A second factor: the code row.
+        let second_factor = HelperError::new("second_factor_required");
+        assert!(is_sign_in_step(&second_factor));
+        reveal_sign_in_row(&rows, &second_factor);
+        assert!(w.form.totp_row.get_visible());
+        assert!(!w.form.mailbox_pass_row.get_visible());
+        assert!(!w.form.verify_row.get_visible());
+        hide_sign_in_rows(&rows);
+
+        // A two-password account: the mailbox password row, sent as typed
+        // (spaces and all) and only while it shows.
+        let mailbox = HelperError::new("mailbox_password_required");
+        assert!(is_sign_in_step(&mailbox));
+        let hint = reveal_sign_in_row(&rows, &mailbox);
+        assert!(!hint.is_empty());
+        assert!(w.form.mailbox_pass_row.get_visible());
+        assert!(!w.form.totp_row.get_visible());
+        assert_eq!(mailbox_password(&w.form.mailbox_pass_row), None);
+        w.form.mailbox_pass_row.set_text(" two words ");
+        assert_eq!(
+            mailbox_password(&w.form.mailbox_pass_row).as_deref(),
+            Some(" two words ")
+        );
+        // Never part of the account read back.
+        let back = read_account(&w, None, None);
+        assert!(!format!("{back:?}").contains("two words"));
+        hide_sign_in_rows(&rows);
+        assert_eq!(w.form.mailbox_pass_row.text(), "");
+        assert_eq!(mailbox_password(&w.form.mailbox_pass_row), None);
+
+        // Human verification: its row, when the refusal carries a
+        // challenge to show.
+        let challenge = HelperError::with_challenge(HvChallenge {
+            token: "t".into(),
+            methods: vec!["captcha".into()],
+        });
+        assert!(is_sign_in_step(&challenge));
+        reveal_sign_in_row(&rows, &challenge);
+        assert!(w.form.verify_row.get_visible());
+        assert!(!w.form.totp_row.get_visible());
+        assert!(!w.form.mailbox_pass_row.get_visible());
+        hide_sign_in_rows(&rows);
+        // Without one there is nothing to solve: an error, no row.
+        let bare = HelperError::new("human_verification_required");
+        assert!(!is_sign_in_step(&bare));
+        assert_eq!(reveal_sign_in_row(&rows, &bare), bare.message());
+        assert!(!w.form.verify_row.get_visible());
+
+        // Tuta puts Proton's own rows away, and keeps the code row.
+        reveal_sign_in_row(&rows, &mailbox);
+        reveal_sign_in_row(&rows, &challenge);
+        w.form.provider_row.set_selected(
+            PROVIDERS
+                .iter()
+                .position(|p| p.kind == ProviderKind::Tuta)
+                .expect("Tuta") as u32,
+        );
+        panel.model().apply_provider(&w);
+        assert!(!w.form.mailbox_pass_row.get_visible());
+        assert!(!w.form.verify_row.get_visible());
+        // The Bridge preset is an IMAP account with its servers shown.
+        w.form.provider_row.set_selected(
+            PROVIDERS
+                .iter()
+                .position(|p| p.label == "Proton Mail (Bridge)")
+                .expect("Bridge") as u32,
+        );
+        panel.model().apply_provider(&w);
+        assert_eq!(form_protocol(&w), Protocol::Imap);
+        assert!(w.form.host_row.get_visible());
+        assert_eq!(w.form.host_row.text(), "127.0.0.1");
+        assert!(!w.form.mailbox_pass_row.get_visible());
+        assert!(!w.form.verify_row.get_visible());
     }
 }

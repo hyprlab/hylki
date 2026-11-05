@@ -38,9 +38,10 @@ pub(super) fn load_snoozed() -> Vec<Snooze> {
 }
 
 /// Whether an account of `protocol` can snooze: snoozed mail waits in a
-/// folder on the server, which POP3 has none of.
+/// folder on the server, which POP3 has none of and a Proton account cannot
+/// make (its helper creates no folders).
 fn snooze_supported(protocol: config::Protocol) -> bool {
-    protocol != config::Protocol::Pop3
+    !matches!(protocol, config::Protocol::Pop3 | config::Protocol::Proton)
 }
 
 /// The messages a reply in `messages` brings back early: the snoozed ones it
@@ -129,7 +130,8 @@ impl AppModel {
     }
 
     /// What the list's menus offer in a folder of `kind` (#527): nothing
-    /// in Drafts, Templates or a POP3 inbox, Unsnooze in Snoozed.
+    /// in Drafts, Templates, a POP3 inbox or a Proton account, Unsnooze in
+    /// Snoozed.
     pub(super) fn snooze_offer(&self, account_id: u32, kind: Option<FolderKind>) -> Option<bool> {
         let unsnoozable = self
             .saved_account_config(account_id)

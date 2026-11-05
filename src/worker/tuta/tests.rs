@@ -9,19 +9,18 @@ use serde_json::{json, Value};
 use tokio::sync::mpsc;
 
 use super::folders::tuta_folders;
-use super::index::{apply_first_page, carry_over, tuta_index_plan, TutaState};
+use super::index::{apply_first_page, carry_over, TutaState, TUTA_BACKFILL_CHUNK};
 use super::messages::tuta_message;
 use super::mime::mime_message;
 use super::ops::{tuta_move_uids, tuta_set_seen};
 use super::push::{spawn_tuta_push, PushSignal};
-use super::send::{
-    draft_parameters, send_outcome, send_parameters, tuta_flush_outbox, tuta_send_raw, SendOutcome,
-};
+use super::send::{draft_parameters, tuta_flush_outbox, tuta_send_raw};
 use super::wire::{sync_page, FolderRow};
 use super::TutaWorker;
 use crate::cache::Cache;
 use crate::config::{AccountConfig, Protocol};
 use crate::models::{DraftOrigin, FolderKind, Message};
+use crate::worker::helper::send::{send_outcome, send_parameters, SendOutcome};
 use crate::worker::helper::{HelperClient, HelperError, Object, Transport};
 use crate::worker::ids::hash_uid;
 use crate::worker::test_support::{queued, sample_account, sample_outgoing};
@@ -264,7 +263,8 @@ fn the_index_plan_finds_runs_of_missing_mail() {
     cached.insert(hash_uid("l/1"), 0);
     cached.insert(hash_uid("l/4"), 0);
     cached.insert(hash_uid("gone"), 0);
-    let (gone, runs) = tuta_index_plan(&ids, &cached, 10_000);
+    let (gone, runs) =
+        crate::worker::index_queue::snapshot_plan(&ids, &cached, 10_000, TUTA_BACKFILL_CHUNK);
     assert_eq!(gone, [hash_uid("gone")]);
     assert_eq!(runs, [(0, 1), (2, 2), (5, 1)]);
 }
@@ -1445,7 +1445,7 @@ struct LiveStart {
 /// Sign in with `TUTA_LIVE`, `TUTA_LIVE_PASSWORD` and `TUTA_LIVE_TOTP`, as
 /// the live tests do; `None` without `TUTA_LIVE`.
 fn live_start() -> Option<LiveStart> {
-    use crate::worker::helper::{login, process_transport};
+    use crate::worker::helper::{login, process_transport, HelperLogin};
     let Ok(email) = std::env::var("TUTA_LIVE") else {
         eprintln!("TUTA_LIVE not set");
         return None;
@@ -1453,8 +1453,14 @@ fn live_start() -> Option<LiveStart> {
     let password = std::env::var("TUTA_LIVE_PASSWORD").expect("TUTA_LIVE_PASSWORD");
     let totp = std::env::var("TUTA_LIVE_TOTP").ok();
     let inner = process_transport(super::SPEC);
-    let session = login(&inner, super::SPEC, &email, &password, totp.as_deref())
-        .unwrap_or_else(|e| panic!("login: {}", e.code));
+    let sign_in = HelperLogin {
+        email: email.clone(),
+        password,
+        totp,
+        ..HelperLogin::default()
+    };
+    let session =
+        login(&inner, super::SPEC, &sign_in).unwrap_or_else(|e| panic!("login: {}", e.code));
     let token = crate::rng::from_alphabet(12, b"0123456789abcdef").unwrap();
     let guard = LiveGuard {
         client: HelperClient::new(super::SPEC, inner.clone(), &email, &session).unwrap(),

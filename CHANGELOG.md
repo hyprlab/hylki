@@ -18,6 +18,19 @@
   providers is not offered, stars stay on this computer, and security keys
   are not supported. See [Tuta](docs/DOCUMENTATION.md#tuta).
 
+- **Added: Proton Mail accounts without Bridge.** Choose **Proton Mail** in
+  the Provider list and sign in with the address and password; Hylki goes
+  through `hylki-proton`, a helper built on Proton's own libraries, so Proton
+  Mail Bridge is not needed. An account with an authenticator app is asked
+  for its code next, a two-password account for its mailbox password, and
+  when Proton wants a CAPTCHA solved its own verification page opens in a
+  private window and the sign-in carries on once it is solved. Hylki keeps
+  the session in the keyring, never a password. Folders, labels, reading,
+  read state, stars, moving and sending work; mail to Proton addresses is
+  end-to-end encrypted. New mail is polled for, search runs on this computer,
+  and security keys are not supported. The **Proton Mail (Bridge)** provider
+  is unchanged. See [Proton Mail](docs/DOCUMENTATION.md#proton-mail).
+
 - **Fixed: a long conversation could use all the memory** (#581, by Gonzalo
   Vasco López). A folded message card still loaded its message in the
   background, and one conversation of 83 quoted replies took the app past 14 GB.

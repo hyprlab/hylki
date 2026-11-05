@@ -701,10 +701,10 @@ impl Cache {
     }
 
     /// Fill in a row's Message-ID, References and preview once its body
-    /// has shown them, for a backend whose listings carry none (Tuta): the
-    /// listing that follows keeps them (see the Tuta worker's merge), so a
-    /// read message threads, is found again after a move and is answered
-    /// with the right In-Reply-To.
+    /// has shown them, for a backend whose listings carry none (Tuta) or
+    /// no References (Proton): the listing that follows keeps them (see
+    /// the helper workers' merges), so a read message threads, is found
+    /// again after a move and is answered with the right In-Reply-To.
     pub(crate) fn set_threading(
         &self,
         account_id: u32,

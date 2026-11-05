@@ -69,7 +69,7 @@ fn secrets_kept(old: &AccountConfig, new: &AccountConfig) -> bool {
 
 /// Drop the keyring entries of the accounts `removed` names, on the keyring
 /// thread. `config` still holds them: their alias entries are keyed by
-/// addresses only it knows. A Tuta account's session is read first and
+/// addresses only it knows. A helper account's session is read first and
 /// ended on the server on a thread of its own, so a helper that takes its
 /// time holds up no other keyring work.
 pub(super) fn forget_account_secrets(removed: &[String], config: &[AccountConfig]) {
@@ -86,7 +86,7 @@ pub(super) fn forget_account_secrets(removed: &[String], config: &[AccountConfig
         for (email, account) in gone {
             match account {
                 Some(account) => {
-                    if account.protocol == config::Protocol::Tuta {
+                    if account.protocol.uses_helper() {
                         revoke_later(&account);
                     }
                     config::delete_account_secrets(&account)
@@ -99,8 +99,14 @@ pub(super) fn forget_account_secrets(removed: &[String], config: &[AccountConfig
 
 /// End a removed helper account's session on the server, from a thread of
 /// its own. Called on the keyring thread, before the session is deleted.
+/// A session this run rotated is newer than the keyring's, and the one to
+/// end.
 fn revoke_later(account: &AccountConfig) {
-    let session = match config::read_session(&account.email) {
+    let stored = match config::latest_session(&account.email) {
+        Some(live) => Ok(Some(live)),
+        None => config::read_session(&account.email),
+    };
+    let session = match stored {
         Ok(Some(session)) if !session.is_empty() => session,
         Ok(_) => return,
         Err(e) => {
@@ -456,6 +462,20 @@ impl AppModel {
                 }
                 self.save_sidebar_state();
                 self.reconnect_all(&sender);
+            }
+
+            AppMsg::HelperSessionRotated { email } => {
+                // The live session is the newest; the account's copy here
+                // would otherwise put a spent one back on the next save. An
+                // account removed meanwhile keeps nothing: its keyring entry
+                // is already queued for deletion.
+                let slot = self.config.iter_mut().find(|c| c.email == email);
+                if let (Some(slot), Some(session)) = (slot, config::latest_session(&email)) {
+                    if !slot.helper_session.is_empty() {
+                        slot.helper_session = session;
+                    }
+                    config::persist_live_session(&email);
+                }
             }
 
             AppMsg::GoaChanged(live) => {

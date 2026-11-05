@@ -714,6 +714,14 @@ pub(crate) enum WorkerEvent {
     /// How a read of the account's password from the keyring went, when
     /// that is news for the user (#573).
     Keyring(KeyringRead),
+    /// A helper account's session changed: the helper rotated it (Proton
+    /// spends a refresh token on every refresh). The new one is the
+    /// account's live session (`config::latest_session`), which the app
+    /// keeps in the keyring and in its copy of the account. It is not
+    /// carried here, so no Debug output of an event can hold it.
+    HelperSession {
+        email: String,
+    },
     /// `connectivity` marks connection/sync errors that should auto-clear once
     /// a later connect or sync succeeds.
     Error {

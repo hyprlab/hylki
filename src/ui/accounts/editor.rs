@@ -51,9 +51,9 @@ impl AccountSecrets {
 
     /// Whether `acc` still needs anything from the keyring.
     pub(super) fn needed(acc: &AccountConfig) -> bool {
-        // A Tuta account keeps a session, not a password, and only its
-        // worker reads it: the editor has nothing to show of it.
-        if acc.protocol == Protocol::Tuta {
+        // A Tuta or Proton account keeps a session, not a password, and
+        // only its worker reads it: the editor has nothing to show of it.
+        if acc.protocol.uses_helper() {
             return false;
         }
         (!acc.oauth && acc.password.is_empty())
@@ -161,6 +161,9 @@ impl AccountsWindow {
             )),
             Some(Protocol::Tuta) => Some(i18n(
                 "Tuta files its own copy in Sent; this cannot be changed.",
+            )),
+            Some(Protocol::Proton) => Some(i18n(
+                "Proton files its own copy in Sent; this cannot be changed.",
             )),
             Some(Protocol::Pop3) => Some(i18n(
                 "POP3 accounts have no server folders to save a copy in.",
@@ -306,6 +309,8 @@ impl AccountsWindow {
         self.secrets_reading = false;
         self.save_waiting = false;
         self.pending_helper_session = None;
+        self.human_check.clear();
+        self.human_check_then_save = false;
     }
 
     /// Read `acc`'s secrets off the main thread; they arrive as
@@ -338,9 +343,9 @@ impl AccountsWindow {
         let is_password = p.is_password();
         let is_oauth = p.is_oauth();
         let is_custom = matches!(p.kind, ProviderKind::CustomOAuth);
-        // Tuta takes the address and password only: the helper knows its
-        // servers, and its sign-in is the connection test.
-        let helper = p.kind == ProviderKind::Tuta;
+        // Tuta and Proton take the address and password only: the helper
+        // knows their servers, and its sign-in is the connection test.
+        let helper = p.is_helper();
         // Google or Microsoft with no built-in (or user-supplied) OAuth client:
         // there's nothing to sign in with, so guide the user to GNOME Online
         // Accounts instead. Microsoft always lands here since its embedded
@@ -370,7 +375,7 @@ impl AccountsWindow {
         widgets
             .form
             .protocol_row
-            .set_visible(is_password && !matches!(p.kind, ProviderKind::Jmap | ProviderKind::Tuta));
+            .set_visible(is_password && p.kind != ProviderKind::Jmap && !helper);
         widgets.form.host_row.set_visible(show_servers);
         widgets.form.port_row.set_visible(show_servers);
         widgets.form.smtp_row.set_visible(show_servers);
@@ -429,7 +434,8 @@ impl AccountsWindow {
             ProviderKind::Manual
             | ProviderKind::CustomOAuth
             | ProviderKind::Jmap
-            | ProviderKind::Tuta => None,
+            | ProviderKind::Tuta
+            | ProviderKind::Proton => None,
         };
         if let Some((ih, ip, sh, sp)) = servers {
             widgets.form.protocol_row.set_selected(0); // IMAP

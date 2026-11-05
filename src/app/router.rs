@@ -353,6 +353,7 @@ impl AppModel {
             | AppMsg::ApplyWelcomePrefs(..)
             | AppMsg::ImportGoaAccount(..)
             | AppMsg::AccountRemoved { .. }
+            | AppMsg::HelperSessionRotated { .. }
             | AppMsg::ImportLocalMail { .. }
             | AppMsg::GoaChanged(..)
             | AppMsg::SetAccount(..)) => self.on_accounts(msg, sender),

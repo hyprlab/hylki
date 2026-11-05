@@ -74,8 +74,9 @@ impl AppModel {
     /// IMAP and JMAP accounts take a message whole, and so does On This
     /// Computer (#552), which is what it is for, and Tuta, whose helper
     /// imports it the way Tuta's own app imports a mail file. A Microsoft
-    /// account files one posted to a folder as a draft, and POP3 has only an
-    /// inbox.
+    /// account files one posted to a folder as a draft, POP3 has only an
+    /// inbox, and a Proton account's helper cannot store a message it did not
+    /// send or receive.
     fn can_receive(&self, account_id: u32) -> bool {
         if demo_mode() {
             return true;

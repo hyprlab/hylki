@@ -2,11 +2,13 @@
 //! paths keep: one pass per folder, the folder on screen first, and a
 //! folder indexed a while ago listed again when it is opened.
 
-use std::collections::{HashMap, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::time::{Duration, Instant};
 
 use crate::models::{FolderKind, Message};
 use crate::worker::folders::chip_count_of;
+use crate::worker::ids::hash_uid;
+use crate::worker::reconcile::listing_gone;
 
 /// One folder's background-index pass.
 pub(super) trait IndexJob {
@@ -112,4 +114,29 @@ pub(super) async fn index_pause(wait: Option<Instant>) {
     if let Some(at) = wait {
         tokio::time::sleep_until(tokio::time::Instant::from_std(at)).await;
     }
+}
+
+/// What a folder's complete id snapshot (newest first) asks of the cache,
+/// for a backend whose uids are hashed server ids (Tuta, Proton): the rows
+/// to drop, and the runs of mail to fetch as (offset, length), none longer
+/// than `chunk`. `since` is when the snapshot was asked for.
+pub(super) fn snapshot_plan(
+    ids: &[String],
+    cached: &HashMap<u32, i64>,
+    since: i64,
+    chunk: usize,
+) -> (Vec<u32>, Vec<(usize, usize)>) {
+    let server: HashSet<u32> = ids.iter().map(|id| hash_uid(id)).collect();
+    let gone = listing_gone(cached, &server, since);
+    let mut runs: Vec<(usize, usize)> = Vec::new();
+    for (at, id) in ids.iter().enumerate() {
+        if cached.contains_key(&hash_uid(id)) {
+            continue;
+        }
+        match runs.last_mut() {
+            Some((start, len)) if *start + *len == at && *len < chunk => *len += 1,
+            _ => runs.push((at, 1)),
+        }
+    }
+    (gone, runs)
 }

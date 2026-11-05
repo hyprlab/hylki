@@ -31,6 +31,8 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) user_row: adw::EntryRow,
     pub(in crate::ui::accounts) pass_row: adw::PasswordEntryRow,
     pub(in crate::ui::accounts) totp_row: adw::EntryRow,
+    pub(in crate::ui::accounts) mailbox_pass_row: adw::PasswordEntryRow,
+    pub(in crate::ui::accounts) verify_row: adw::ActionRow,
     pub(in crate::ui::accounts) jmap_token_row: adw::SwitchRow,
     pub(in crate::ui::accounts) oauth_client_id_row: adw::EntryRow,
     pub(in crate::ui::accounts) oauth_secret_row: adw::PasswordEntryRow,
@@ -244,7 +246,7 @@ impl EditorForm {
                         set_visible: false,
                         connect_active_notify => AccountsInput::ProtocolChanged,
                     },
-                    // Tuta's second factor: hidden until a sign-in
+                    // Tuta's and Proton's second factor: hidden until a sign-in
                     // comes back asking for it, since most accounts
                     // have none and an empty code row reads as one
                     // more thing to fill in.
@@ -253,6 +255,29 @@ impl EditorForm {
                         set_title: &i18n("Authenticator Code"),
                         set_input_purpose: gtk::InputPurpose::Digits,
                         set_visible: false,
+                    },
+                    // Proton's second password, for accounts that keep
+                    // their mail behind one: hidden until a sign-in
+                    // asks for it, as most have a single password.
+                    #[name = "mailbox_pass_row"]
+                    adw::PasswordEntryRow {
+                        set_title: &i18n("Mailbox Password"),
+                        set_visible: false,
+                    },
+                    // Proton's human verification, shown once a
+                    // sign-in comes back asking for it. The challenge
+                    // opens on its own then; the button brings it back
+                    // after it was closed.
+                    #[name = "verify_row"]
+                    adw::ActionRow {
+                        set_title: &i18n("Human Verification"),
+                        set_subtitle: &i18n("Proton wants to confirm a person is signing in."),
+                        set_visible: false,
+                        add_suffix = &gtk::Button {
+                            set_valign: gtk::Align::Center,
+                            set_label: &i18n("Verify…"),
+                            connect_clicked => AccountsInput::VerifyHuman,
+                        },
                     },
 
                     // ---- OAuth fields (shown when Authentication is an OAuth option) ----
@@ -920,6 +945,8 @@ impl EditorForm {
             user_row,
             pass_row,
             totp_row,
+            mailbox_pass_row,
+            verify_row,
             jmap_token_row,
             oauth_client_id_row,
             oauth_secret_row,

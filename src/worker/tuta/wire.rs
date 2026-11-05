@@ -86,6 +86,7 @@ pub(in crate::worker) const SPEC: HelperSpec = HelperSpec {
     codes: ERROR_CODES,
     max_response_bytes: MAX_RESPONSE_BYTES,
     timeout: HELPER_TIMEOUT,
+    rotates_sessions: false,
 };
 
 /// The helper applies at most this many ids per mutation and refuses a

@@ -2541,6 +2541,12 @@ msgstr ""
 "Το Microsoft 365 αποθηκεύει το δικό του αντίγραφο στα Απεσταλμένα· αυτό δεν "
 "μπορεί να αλλάξει."
 
+#, fuzzy
+msgid "Proton files its own copy in Sent; this cannot be changed."
+msgstr ""
+"Το Microsoft 365 αποθηκεύει το δικό του αντίγραφο στα Απεσταλμένα· αυτό δεν "
+"μπορεί να αλλάξει."
+
 msgid "POP3 accounts have no server folders to save a copy in."
 msgstr ""
 "Οι λογαριασμοί POP3 δεν διαθέτουν φακέλους διακομιστή στους οποίους μπορεί "
@@ -2579,12 +2585,11 @@ msgid "Signing in…"
 msgstr "Σύνδεση…"
 
 #, fuzzy
-msgid "✓ Tuta: signed in"
+msgid "✓ {provider}: signed in"
 msgstr "Δεν έχει γίνει σύνδεση"
 
-#, fuzzy
-msgid "✗ Tuta: {e}"
-msgstr "✗ SMTP: {e}"
+msgid "✗ {provider}: {e}"
+msgstr ""
 
 msgid ""
 "The certificate is for another name. If this server is the right one, turn "
@@ -2688,6 +2693,15 @@ msgstr[0] "Μετά από {n} ημέρα"
 msgstr[1] "Μετά από {n} ημέρες"
 
 msgid "Enter the code from your authenticator app, then sign in again."
+msgstr ""
+
+msgid ""
+"This account has a separate mailbox password. Enter it, then sign in again."
+msgstr ""
+
+msgid ""
+"Proton wants to confirm a person is signing in. Solve the challenge to "
+"continue."
 msgstr ""
 
 msgid "API Token"
@@ -2872,6 +2886,9 @@ msgstr "Προσαρμοσμένο χρώμα…"
 msgid "Tag Color"
 msgstr "Χρώμα ετικέτας"
 
+msgid "Human Verification"
+msgstr ""
+
 msgid "Needs an app password, not your login password."
 msgstr "Απαιτείται κωδικός πρόσβασης εφαρμογής, όχι ο κωδικός σύνδεσής σας."
 
@@ -2893,6 +2910,11 @@ msgstr ""
 
 msgid "Requires Proton Mail Bridge running locally."
 msgstr "Απαιτεί το Proton Mail Bridge να εκτελείται τοπικά."
+
+msgid ""
+"Signs in with your Proton password, without Proton Mail Bridge. Hylki keeps "
+"the session it opens, not the password."
+msgstr ""
 
 msgid ""
 "Signs in with your Tuta password. Hylki keeps the session it opens, not the "
@@ -2937,7 +2959,7 @@ msgid "Mail account"
 msgstr "Λογαριασμός αλληλογραφίας"
 
 #, fuzzy
-msgid "Enter your password and sign in to Tuta before saving."
+msgid "Enter your password and sign in to {provider} before saving."
 msgstr "Εισαγάγετε αναγνωριστικό πελάτη και συνδεθείτε πριν από την αποθήκευση"
 
 msgid "Enter a client ID and sign in before saving"
@@ -7290,6 +7312,19 @@ msgstr "Το όνομά σας"
 msgid "Authenticator code"
 msgstr ""
 
+#, fuzzy
+msgid "Mailbox password"
+msgstr "Κωδικός πρόσβασης SMTP"
+
+msgid "Human verification"
+msgstr ""
+
+msgid "Proton wants to confirm a person is signing in."
+msgstr ""
+
+msgid "Verify…"
+msgstr ""
+
 msgid "Server details"
 msgstr "Στοιχεία διακομιστή"
 
@@ -7430,6 +7465,11 @@ msgstr ""
 "Ένας λογαριασμός Microsoft δεν μπορεί να λαμβάνει αλληλογραφία από άλλον "
 "λογαριασμό"
 
+msgid ""
+"This message may already have been sent, so it is not sent again from the "
+"Outbox. Check Sent; to send it anyway, open it and send it from the composer."
+msgstr ""
+
 msgid "The helper program for this account is not installed. Reinstall Hylki."
 msgstr ""
 
@@ -7454,6 +7494,20 @@ msgstr "Κωδικός επαλήθευσης δύο βημάτων (αν χρη
 #, fuzzy
 msgid "The two-step verification code was not accepted."
 msgstr "Κωδικός επαλήθευσης δύο βημάτων (αν χρησιμοποιείται)"
+
+#, fuzzy
+msgid "Enter the account's mailbox password."
+msgstr "Εισαγάγετε τον κωδικό πρόσβασης."
+
+#, fuzzy
+msgid "The mailbox password was not accepted."
+msgstr "Κωδικός επαλήθευσης δύο βημάτων (αν χρησιμοποιείται)"
+
+msgid "The server wants to confirm that a person is signing in."
+msgstr ""
+
+msgid "The verification was not accepted. Sign in again to get a new one."
+msgstr ""
 
 msgid ""
 "This account signs in with a security key, which Hylki does not support yet. "
@@ -7560,6 +7614,10 @@ msgid "The server did not store the message."
 msgstr "Η υπηρεσία δεν αποδέχτηκε το κλειδί."
 
 #, fuzzy
+msgid "Mail can't be moved into that folder."
+msgstr "Ένας φάκελος δεν μπορεί να μετακινηθεί μέσα στον εαυτό του."
+
+#, fuzzy
 msgid "The message is no longer on the server."
 msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τον διακομιστή."
 
@@ -7599,6 +7657,15 @@ msgstr ""
 msgid ""
 "Mail to an address outside Tuta is not end-to-end encrypted, and sending it "
 "that way was not confirmed."
+msgstr ""
+
+#, fuzzy
+msgid "The message is too large to send."
+msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τον διακομιστή."
+
+msgid ""
+"A recipient has no key for end-to-end encryption, so the message can't be "
+"sent encrypted."
 msgstr ""
 
 #, fuzzy
@@ -7779,6 +7846,47 @@ msgstr ""
 "Το POP3 δεν μπορεί να τροποποιήσει ένα μήνυμα στον διακομιστή, επομένως το "
 "συνημμένο δεν αφαιρέθηκε."
 
+#, fuzzy
+msgid "Proton accounts can't save drafts on the server from Hylki yet"
+msgstr "Αυτός ο λογαριασμός δεν επιτρέπει φακέλους στο ανώτατο επίπεδο."
+
+msgid ""
+"Folders of a Proton account can't be created, renamed or deleted from Hylki "
+"yet. Use Proton's own apps."
+msgstr ""
+
+msgid ""
+"Proton accounts can't delete mail for good from Hylki yet. Empty the Trash "
+"in Proton's own apps."
+msgstr ""
+
+msgid ""
+"Hylki's OpenPGP signing and encryption aren't available for Proton accounts: "
+"Proton encrypts the message itself. Turn them off to send."
+msgstr ""
+
+#, fuzzy
+msgid "“{subject}”: {e}"
+msgstr "Το «{subject}» θα σταλεί {when}"
+
+msgid ""
+"Hylki can't search on Proton's servers: search finds what is on this computer"
+msgstr ""
+
+#, fuzzy
+msgid "A Proton account can't receive mail from another account"
+msgstr ""
+"Ένας λογαριασμός POP3 δεν μπορεί να λαμβάνει αλληλογραφία από άλλον "
+"λογαριασμό"
+
+#, fuzzy
+msgid ""
+"Proton cannot change a message on the server, so the attachment was not "
+"removed"
+msgstr ""
+"Το POP3 δεν μπορεί να τροποποιήσει ένα μήνυμα στον διακομιστή, επομένως το "
+"συνημμένο δεν αφαιρέθηκε."
+
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
 "Το μήνυμα είναι υπογεγραμμένο ή κρυπτογραφημένο και η αφαίρεση ενός αρχείου "
@@ -7799,15 +7907,6 @@ msgid ""
 "OpenPGP signing and encryption aren't available for Tuta accounts. Turn them "
 "off to send."
 msgstr ""
-
-msgid ""
-"This message may already have been sent, so it is not sent again from the "
-"Outbox. Check Sent; to send it anyway, open it and send it from the composer."
-msgstr ""
-
-#, fuzzy
-msgid "“{subject}”: {e}"
-msgstr "Το «{subject}» θα σταλεί {when}"
 
 msgid ""
 "Tuta's servers cannot search encrypted mail: search finds what is on this "
@@ -7951,6 +8050,10 @@ msgstr ""
 
 msgid "Authenticator Code"
 msgstr ""
+
+#, fuzzy
+msgid "Mailbox Password"
+msgstr "Κωδικός πρόσβασης SMTP"
 
 msgid "Advanced"
 msgstr "Για προχωρημένους"
@@ -8934,14 +9037,14 @@ msgid "Hyprlab"
 msgstr "Hyprlab"
 
 #, fuzzy
+#~ msgid "✗ Tuta: {e}"
+#~ msgstr "✗ SMTP: {e}"
+
+#, fuzzy
 #~ msgid "This account can't take in mail from another account."
 #~ msgstr ""
 #~ "Ένας λογαριασμός POP3 δεν μπορεί να λαμβάνει αλληλογραφία από άλλον "
 #~ "λογαριασμό"
-
-#, fuzzy
-#~ msgid "Tuta accounts can't save drafts on the server from Hylki yet"
-#~ msgstr "Αυτός ο λογαριασμός δεν επιτρέπει φακέλους στο ανώτατο επίπεδο."
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"

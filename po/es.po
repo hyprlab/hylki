@@ -2533,6 +2533,12 @@ msgstr ""
 "Microsoft 365 guarda su propia copia en Elementos enviados; esto no se puede "
 "cambiar."
 
+#, fuzzy
+msgid "Proton files its own copy in Sent; this cannot be changed."
+msgstr ""
+"Microsoft 365 guarda su propia copia en Elementos enviados; esto no se puede "
+"cambiar."
+
 msgid "POP3 accounts have no server folders to save a copy in."
 msgstr ""
 "Las cuentas POP3 no tienen carpetas en el servidor donde guardar una copia."
@@ -2570,12 +2576,11 @@ msgid "Signing in…"
 msgstr "Iniciando sesión…"
 
 #, fuzzy
-msgid "✓ Tuta: signed in"
+msgid "✓ {provider}: signed in"
 msgstr "Sesión no iniciada"
 
-#, fuzzy
-msgid "✗ Tuta: {e}"
-msgstr "✗ SMTP: {e}"
+msgid "✗ {provider}: {e}"
+msgstr ""
 
 msgid ""
 "The certificate is for another name. If this server is the right one, turn "
@@ -2678,6 +2683,15 @@ msgstr[0] "Después de {n} día"
 msgstr[1] "Después de {n} días"
 
 msgid "Enter the code from your authenticator app, then sign in again."
+msgstr ""
+
+msgid ""
+"This account has a separate mailbox password. Enter it, then sign in again."
+msgstr ""
+
+msgid ""
+"Proton wants to confirm a person is signing in. Solve the challenge to "
+"continue."
 msgstr ""
 
 msgid "API Token"
@@ -2855,6 +2869,9 @@ msgstr "Color personalizado…"
 msgid "Tag Color"
 msgstr "Color de la etiqueta"
 
+msgid "Human Verification"
+msgstr ""
+
 msgid "Needs an app password, not your login password."
 msgstr "Necesita una contraseña de aplicación, no tu contraseña habitual."
 
@@ -2874,6 +2891,11 @@ msgstr "Inicia sesión mediante el navegador. No se necesita contraseña."
 
 msgid "Requires Proton Mail Bridge running locally."
 msgstr "Requiere que Proton Mail Bridge se esté ejecutando localmente."
+
+msgid ""
+"Signs in with your Proton password, without Proton Mail Bridge. Hylki keeps "
+"the session it opens, not the password."
+msgstr ""
 
 msgid ""
 "Signs in with your Tuta password. Hylki keeps the session it opens, not the "
@@ -2918,7 +2940,7 @@ msgid "Mail account"
 msgstr "Cuenta de correo"
 
 #, fuzzy
-msgid "Enter your password and sign in to Tuta before saving."
+msgid "Enter your password and sign in to {provider} before saving."
 msgstr "Introduce un ID de cliente e inicia sesión antes de guardar"
 
 msgid "Enter a client ID and sign in before saving"
@@ -7249,6 +7271,19 @@ msgstr "Tu nombre"
 msgid "Authenticator code"
 msgstr ""
 
+#, fuzzy
+msgid "Mailbox password"
+msgstr "Contraseña SMTP"
+
+msgid "Human verification"
+msgstr ""
+
+msgid "Proton wants to confirm a person is signing in."
+msgstr ""
+
+msgid "Verify…"
+msgstr ""
+
 msgid "Server details"
 msgstr "Datos del servidor"
 
@@ -7387,6 +7422,11 @@ msgstr "No se pudo cargar el código fuente: {e}"
 msgid "A Microsoft account can't receive mail from another account"
 msgstr "Una cuenta de Microsoft no puede recibir correo de otra cuenta"
 
+msgid ""
+"This message may already have been sent, so it is not sent again from the "
+"Outbox. Check Sent; to send it anyway, open it and send it from the composer."
+msgstr ""
+
 msgid "The helper program for this account is not installed. Reinstall Hylki."
 msgstr ""
 
@@ -7411,6 +7451,20 @@ msgstr "Código de verificación en dos pasos (si se utiliza)"
 #, fuzzy
 msgid "The two-step verification code was not accepted."
 msgstr "Código de verificación en dos pasos (si se utiliza)"
+
+#, fuzzy
+msgid "Enter the account's mailbox password."
+msgstr "Introduce la contraseña."
+
+#, fuzzy
+msgid "The mailbox password was not accepted."
+msgstr "Código de verificación en dos pasos (si se utiliza)"
+
+msgid "The server wants to confirm that a person is signing in."
+msgstr ""
+
+msgid "The verification was not accepted. Sign in again to get a new one."
+msgstr ""
 
 msgid ""
 "This account signs in with a security key, which Hylki does not support yet. "
@@ -7515,6 +7569,10 @@ msgid "The server did not store the message."
 msgstr "El servicio no aceptó la clave."
 
 #, fuzzy
+msgid "Mail can't be moved into that folder."
+msgstr "Mover a una carpeta"
+
+#, fuzzy
 msgid "The message is no longer on the server."
 msgstr "El archivo adjunto ya no está en el mensaje del servidor"
 
@@ -7553,6 +7611,15 @@ msgstr ""
 msgid ""
 "Mail to an address outside Tuta is not end-to-end encrypted, and sending it "
 "that way was not confirmed."
+msgstr ""
+
+#, fuzzy
+msgid "The message is too large to send."
+msgstr "Este mensaje es demasiado largo para enviarlo a traducir."
+
+msgid ""
+"A recipient has no key for end-to-end encryption, so the message can't be "
+"sent encrypted."
 msgstr ""
 
 #, fuzzy
@@ -7728,6 +7795,44 @@ msgstr ""
 "POP3 no puede modificar un mensaje en el servidor, por lo que el archivo "
 "adjunto no se eliminó"
 
+msgid "Proton accounts can't save drafts on the server from Hylki yet"
+msgstr ""
+
+msgid ""
+"Folders of a Proton account can't be created, renamed or deleted from Hylki "
+"yet. Use Proton's own apps."
+msgstr ""
+
+msgid ""
+"Proton accounts can't delete mail for good from Hylki yet. Empty the Trash "
+"in Proton's own apps."
+msgstr ""
+
+msgid ""
+"Hylki's OpenPGP signing and encryption aren't available for Proton accounts: "
+"Proton encrypts the message itself. Turn them off to send."
+msgstr ""
+
+#, fuzzy
+msgid "“{subject}”: {e}"
+msgstr "«{subject}» se enviará {when}"
+
+msgid ""
+"Hylki can't search on Proton's servers: search finds what is on this computer"
+msgstr ""
+
+#, fuzzy
+msgid "A Proton account can't receive mail from another account"
+msgstr "Una cuenta POP3 no puede recibir correo de otra cuenta"
+
+#, fuzzy
+msgid ""
+"Proton cannot change a message on the server, so the attachment was not "
+"removed"
+msgstr ""
+"POP3 no puede modificar un mensaje en el servidor, por lo que el archivo "
+"adjunto no se eliminó"
+
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
 "El mensaje está firmado o cifrado, y eliminar un archivo lo invalidaría"
@@ -7747,15 +7852,6 @@ msgid ""
 "OpenPGP signing and encryption aren't available for Tuta accounts. Turn them "
 "off to send."
 msgstr ""
-
-msgid ""
-"This message may already have been sent, so it is not sent again from the "
-"Outbox. Check Sent; to send it anyway, open it and send it from the composer."
-msgstr ""
-
-#, fuzzy
-msgid "“{subject}”: {e}"
-msgstr "«{subject}» se enviará {when}"
 
 msgid ""
 "Tuta's servers cannot search encrypted mail: search finds what is on this "
@@ -7899,6 +7995,10 @@ msgstr ""
 
 msgid "Authenticator Code"
 msgstr ""
+
+#, fuzzy
+msgid "Mailbox Password"
+msgstr "Contraseña SMTP"
 
 msgid "Advanced"
 msgstr "Avanzado"
@@ -8864,6 +8964,10 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "✗ Tuta: {e}"
+#~ msgstr "✗ SMTP: {e}"
 
 #, fuzzy
 #~ msgid "This account can't take in mail from another account."

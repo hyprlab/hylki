@@ -73,8 +73,9 @@ impl AccountsWindow {
         account.graph_label_names &= account.goa_id.is_none() && self.labels_granted;
 
         self.apply_form_auth(&mut account, widgets);
-        // Tuta keeps the session a sign-in opened, never the password.
-        if account.protocol == Protocol::Tuta
+        // Tuta and Proton keep the session a sign-in opened, never the
+        // password (or Proton's mailbox password, which no field keeps).
+        if account.protocol.uses_helper()
             && !self.take_helper_session(&mut account, editing_orig.as_ref(), widgets, &sender)
         {
             return;
@@ -104,9 +105,10 @@ impl AccountsWindow {
         // fields Hylki does own: label, signature, color, aliases.
         // On This Computer (#552) has no connection at all.
         let is_goa_edit = account.goa_id.is_some() || account.is_local();
-        // A Tuta account has no servers or username, and was checked above.
+        // A Tuta or Proton account has no servers or username, and was
+        // checked above.
         if !is_goa_edit
-            && account.protocol != Protocol::Tuta
+            && !account.protocol.uses_helper()
             && (account.imap_host.is_empty()
                 || account.username.is_empty()
                 || !password_ok
@@ -141,11 +143,11 @@ impl AccountsWindow {
         widgets.nav.pop();
     }
 
-    /// Give a Tuta account its session: the one this editor's sign-in opened
-    /// for the address, or for an edit that keeps the address, the one
-    /// already in the keyring. A password typed but not yet signed in with
-    /// is signed in with first, and Save runs again once it has. Whether the
-    /// account can be saved now.
+    /// Give a Tuta or Proton account its session: the one this editor's
+    /// sign-in opened for the protocol and address, or for an edit that
+    /// keeps both, the one already in the keyring. A password typed but not
+    /// yet signed in with is signed in with first, and Save runs again once
+    /// it has. Whether the account can be saved now.
     fn take_helper_session(
         &mut self,
         account: &mut AccountConfig,
@@ -155,8 +157,8 @@ impl AccountsWindow {
     ) -> bool {
         let typed = !account.password.is_empty();
         account.password.clear();
-        if let Some((address, session)) = &self.pending_helper_session {
-            if *address == account.email {
+        if let Some((protocol, address, session)) = &self.pending_helper_session {
+            if *protocol == account.protocol && *address == account.email {
                 account.helper_session = session.clone();
                 return true;
             }
@@ -165,12 +167,14 @@ impl AccountsWindow {
             self.start_helper_sign_in(widgets, sender, true);
             return false;
         }
-        let kept = orig.is_some_and(|o| o.protocol == Protocol::Tuta && o.email == account.email);
+        let kept = orig.is_some_and(|o| o.protocol == account.protocol && o.email == account.email);
         if !kept {
+            let provider = provider_at(widgets.form.provider_row.selected()).label;
             widgets.form.test_result.set_visible(true);
             widgets.form.test_result.set_css_classes(&["error"]);
-            widgets.form.test_result.set_label(&i18n(
-                "Enter your password and sign in to Tuta before saving.",
+            widgets.form.test_result.set_label(&i18n_f(
+                "Enter your password and sign in to {provider} before saving.",
+                &[("provider", provider)],
             ));
         }
         kept

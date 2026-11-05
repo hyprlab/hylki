@@ -23,6 +23,11 @@ pub(super) enum ProviderKind {
     /// so there are no servers to fill in, and a sign-in yields a session
     /// that is kept in place of the password.
     Tuta,
+    /// Proton Mail, through the bundled `hylki-proton` helper rather than
+    /// Proton Mail Bridge, which keeps its own entry beside it as a preset.
+    /// Signs in as Tuta does, and can also ask for a mailbox password or a
+    /// human verification.
+    Proton,
 }
 
 /// One entry in the Provider dropdown. It selects both the sign-in method and,
@@ -111,13 +116,22 @@ impl Provider {
         self.kind == ProviderKind::Jmap && self.brand == "mail-jmap"
     }
 
-    /// The entries asked for a password. Tuta is one: the password goes to
-    /// the helper once, for the session it opens.
+    /// The entries asked for a password. Tuta and Proton are among them:
+    /// the password goes to the helper once, for the session it opens.
     pub(super) fn is_password(&self) -> bool {
         matches!(
             self.kind,
-            ProviderKind::Manual | ProviderKind::Preset | ProviderKind::Jmap | ProviderKind::Tuta
+            ProviderKind::Manual
+                | ProviderKind::Preset
+                | ProviderKind::Jmap
+                | ProviderKind::Tuta
+                | ProviderKind::Proton
         )
+    }
+    /// The entries signed in to through a bundled helper, which knows the
+    /// servers and keeps a session in place of the password.
+    pub(super) fn is_helper(&self) -> bool {
+        self.wizard_protocol().uses_helper()
     }
     /// The incoming protocol the entry stands for; the manual entry and the
     /// presets leave it to the Incoming Protocol row.
@@ -125,6 +139,7 @@ impl Provider {
         match self.kind {
             ProviderKind::Jmap => Protocol::Jmap,
             ProviderKind::Tuta => Protocol::Tuta,
+            ProviderKind::Proton => Protocol::Proton,
             ProviderKind::Microsoft => Protocol::Graph,
             _ => Protocol::Imap,
         }
@@ -158,6 +173,7 @@ pub(crate) const PROVIDERS: &[Provider] = &[
     Provider { label: "iCloud", brand: "icloud", kind: ProviderKind::Preset, imap_host: "imap.mail.me.com", imap_port: 993, smtp_host: "smtp.mail.me.com", smtp_port: 587, hint: APP_PW },
     Provider { label: "Yahoo Mail", brand: "yahoo", kind: ProviderKind::Preset, imap_host: "imap.mail.yahoo.com", imap_port: 993, smtp_host: "smtp.mail.yahoo.com", smtp_port: 465, hint: APP_PW },
     Provider { label: "Proton Mail (Bridge)", brand: "proton", kind: ProviderKind::Preset, imap_host: "127.0.0.1", imap_port: 1143, smtp_host: "127.0.0.1", smtp_port: 1025, hint: i18n_noop("Requires Proton Mail Bridge running locally.") },
+    Provider { label: "Proton Mail", brand: "proton", kind: ProviderKind::Proton, imap_host: "", imap_port: 0, smtp_host: "", smtp_port: 0, hint: i18n_noop("Signs in with your Proton password, without Proton Mail Bridge. Hylki keeps the session it opens, not the password.") },
     Provider { label: "Tuta", brand: "tuta", kind: ProviderKind::Tuta, imap_host: "", imap_port: 0, smtp_host: "", smtp_port: 0, hint: i18n_noop("Signs in with your Tuta password. Hylki keeps the session it opens, not the password.") },
     Provider { label: "Fastmail", brand: "fastmail", kind: ProviderKind::Preset, imap_host: "imap.fastmail.com", imap_port: 993, smtp_host: "smtp.fastmail.com", smtp_port: 465, hint: APP_PW },
     Provider { label: "Fastmail (JMAP)", brand: "fastmail", kind: ProviderKind::Jmap, imap_host: "https://api.fastmail.com/jmap/session", imap_port: 443, smtp_host: "", smtp_port: 0, hint: i18n_noop("Signs in with an API token made in Fastmail under Privacy & Security, with access to mail and sending.") },
@@ -308,6 +324,9 @@ pub(super) fn provider_index_for_account(acc: &AccountConfig) -> u32 {
     if acc.protocol == Protocol::Tuta {
         return kind_index(ProviderKind::Tuta);
     }
+    if acc.protocol == Protocol::Proton {
+        return kind_index(ProviderKind::Proton);
+    }
     if acc.protocol == Protocol::Jmap {
         return jmap_index(acc);
     }
@@ -339,6 +358,9 @@ pub(super) fn brand_for_account(acc: &AccountConfig) -> &'static str {
     }
     if acc.protocol == Protocol::Tuta {
         return "tuta";
+    }
+    if acc.protocol == Protocol::Proton {
+        return "proton";
     }
     if acc.protocol == Protocol::Jmap {
         return jmap_brand(acc);
@@ -685,5 +707,72 @@ mod tests {
             provider_at(provider_index_for_account(&stray)).label,
             "Tuta"
         );
+    }
+
+    #[test]
+    fn proton_entry_signs_in_through_the_helper_beside_bridge() {
+        let p = provider_at(kind_index(ProviderKind::Proton));
+        assert_eq!(p.label, "Proton Mail");
+        assert_eq!(p.brand, "proton");
+        assert!(crate::desktop::brand::png(p.brand).is_some());
+        assert_eq!(p.wizard_protocol(), Protocol::Proton);
+        assert!(p.is_password());
+        assert!(p.is_helper());
+        assert!(!p.wizard_is_oauth());
+        assert!(!p.wizard_token());
+        assert!(p.wizard_listed());
+        assert_eq!(p.wizard_servers(), ("", 0, "", 0));
+        // The hint says Bridge is not needed.
+        assert!(p.hint.contains("without Proton Mail Bridge"));
+
+        // Bridge keeps its preset, unchanged, and is no helper's.
+        let bridge = PROVIDERS
+            .iter()
+            .find(|p| p.label == "Proton Mail (Bridge)")
+            .expect("the Bridge preset");
+        assert_eq!(bridge.kind, ProviderKind::Preset);
+        assert_eq!(bridge.brand, "proton");
+        assert_eq!(
+            bridge.wizard_servers(),
+            ("127.0.0.1", 1143, "127.0.0.1", 1025)
+        );
+        assert_eq!(bridge.wizard_protocol(), Protocol::Imap);
+        assert!(!bridge.is_helper());
+        // Labels are what the picker finds an entry by.
+        assert_eq!(
+            PROVIDERS
+                .iter()
+                .filter(|p| p.label == "Proton Mail")
+                .count(),
+            1
+        );
+    }
+
+    #[test]
+    fn proton_accounts_find_their_entry_mark_and_name() {
+        let acc = AccountConfig {
+            email: "me@proton.me".into(),
+            protocol: Protocol::Proton,
+            ..crate::config::blank_account()
+        };
+        assert_eq!(
+            provider_at(provider_index_for_account(&acc)).kind,
+            ProviderKind::Proton
+        );
+        assert_eq!(brand_for_account(&acc), "proton");
+        assert_eq!(provider_name("proton", &acc), "Proton Mail");
+        // A Bridge account is still the Bridge preset's.
+        let bridge = AccountConfig {
+            email: "me@proton.me".into(),
+            protocol: Protocol::Imap,
+            imap_host: "127.0.0.1".into(),
+            imap_port: 1143,
+            ..crate::config::blank_account()
+        };
+        assert_eq!(
+            provider_at(provider_index_for_account(&bridge)).label,
+            "Proton Mail (Bridge)"
+        );
+        assert_eq!(brand_for_account(&bridge), "proton");
     }
 }
