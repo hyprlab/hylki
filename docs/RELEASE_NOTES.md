@@ -6,30 +6,30 @@ Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Ru
 
 ### New features:
 
-- Folders kept on this computer, with Copy To and import - (#552)
-- Grammar and style checking in the composer, with Harper or LanguageTool - (#452)
-- Mail merge from a CSV file or a contact group, at a set rate - (#447)
-- Events and tasks made from a message, with alarms - (#564)
-- The reading pane below the list, or off - (#475)
-- A message's importance, set in the Send menu and shown on mail - (#563)
+- Folders kept on this computer with Copy To and import - (#552)
+- Grammar and style checking in the composer with Harper or LanguageTool - (#452)
+- Mail merge from a CSV file or a contact group at a set rate - (#447)
+- Events with alarms and tasks made from a message - (#564)
+- The reading pane below the list or off - (#475)
+- A message's importance set in the Send menu and shown on mail - (#563)
 - The sender's contact photo in the reader's header - (#560)
 - New Folder in a folder's right-click menu - (#554)
-- Send asks first when the message mentions a missing attachment, by @fsoft72 - (#575)
+- A missing attachment reminder on Send by @fsoft72 - (#575)
 - The list's sort is kept across launches - (#574)
 - Remote pictures in a message can be saved and copied - (#569)
-- Contacts show only the groups by a filter, or by a search for "group"
+- Contacts show only the groups by a filter or a search for "group"
 
 ### Fixes:
 
-- The window no longer opens blank while the keyring is locked, by @fsoft72 - (#573)
-- An IMAP folder starts from its last known count, by @valentin-morice - (#571)
-- Opening a message changes the reading pane in one step, by @valentin-morice - (#570)
+- No blank window on a locked keyring by @fsoft72 - (#573)
+- An IMAP folder starts from its last known count by @valentin-morice - (#571)
+- Opening a message changes the reading pane in one step by @valentin-morice - (#570)
 - Grammar checks with a LanguageTool server work with several languages on - (#566)
 - The snooze presets test passes on Sunday evenings - (#567)
 - A new or moved folder lands in the right place - (#554)
 - A sender's own Authentication-Results header no longer earns the Verified sender badge
 - Accounts with the same sender name can be told apart in errors and dialogs
-- Drafts open at once, from a copy fetched in the background
+- Drafts open at once from a copy fetched in the background
 - A draft's row is let go when its editor closes
 - The menu beside Send keeps its corners clean under libadwaita 1.9
 - The swipe strip behind a selected row keeps to its pill
