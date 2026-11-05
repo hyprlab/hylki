@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **Fixed: Bcc recipients' OpenPGP keys showed in encrypted mail.** Every
+  copy of an encrypted message named the key of each recipient, so the To and
+  Cc could tell whose keys were Bcc'd. A Bcc recipient's key is now in the
+  message without its key ID.
+
+- **Fixed: a signature from someone else's key showed green.** A good
+  signature by a trusted key whose addresses do not include the message's
+  From address now shows amber, **Signed by another address**, and the
+  details name the address the key lacks.
+
+- **Added: a warning before encrypting to a key you have not trusted.**
+  **Send** names the recipients whose keys nobody has vouched for and asks
+  before the message goes; **Send Anyway** sends it as before. When an
+  address has several keys, the trusted one is used.
+
 - **Fixed: `w` and `b` left a message card under the bar above it** (#587, by
   James Reilly). The card's top border and selection outline were cut off. The
   card now stops 14 px below the bar, as it does when focused for a reply.

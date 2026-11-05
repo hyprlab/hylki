@@ -1,11 +1,11 @@
 use super::inbound::{
-    armored_block, autocrypt_key, detect, legacy_display_part, looks_like_mime,
+    armored_block, autocrypt_key, detect, key_carries, legacy_display_part, looks_like_mime,
     protected_header_block, protected_subject, signed_bytes, text_entity, unwrap_message, Shape,
 };
 use super::keys::{
     delete_key, export_public, generate_key, import_keys, import_summary, key_by_fingerprint,
-    key_display, list_keys, parse_colons, public_key_for, secret_key_by_fingerprint,
-    secret_key_for, trust_key, KeyValidity,
+    key_display, list_keys, parse_colons, pick_public_key, public_key_for,
+    secret_key_by_fingerprint, secret_key_for, trust_key, KeyValidity,
 };
 use super::outbound::{encrypt, sign_detached};
 use super::status::{parse_status, signature_verdict, Outcome};
@@ -81,6 +81,43 @@ fn verdicts_follow_the_status() {
         signature_verdict(&Outcome::default(), &mut notes),
         PgpSignature::None
     ));
+}
+
+#[test]
+fn a_signer_matches_the_from_by_address_only() {
+    let keys = lines(&["ada@example.org", "ada@work.example"]);
+    assert!(key_carries(&keys, "ada@example.org"));
+    assert!(key_carries(&keys, " ADA@Work.Example "));
+    assert!(!key_carries(&keys, "eve@example.org"));
+    assert!(!key_carries(&keys, "ada@example.org.evil"));
+    assert!(!key_carries(&[], "ada@example.org"));
+}
+
+/// Of two keys for one address, the one the keyring vouches for that
+/// address is used, wherever it is listed; and validity is read per user
+/// id, so a key signed for one address is not vouched for another it
+/// carries unchecked.
+#[test]
+fn the_vouched_key_for_an_address_wins() {
+    let text = "\
+pub:-:255:22:1111111111111111:1700000000:::-:::scESC:\n\
+fpr:::::::::1111111111111111111111111111111111111111:\n\
+uid:-::::1700000000::HASH::Planted <ada@example.org>::::::::::0:\n\
+pub:f:255:22:2222222222222222:1700000000:::-:::scESC:\n\
+fpr:::::::::2222222222222222222222222222222222222222:\n\
+uid:f::::1700000000::HASH::Ada <ada@example.org>::::::::::0:\n\
+uid:-::::1700000000::HASH::Ada <boss@example.org>::::::::::0:\n";
+    let keys = parse_colons(text, false);
+    let ada = pick_public_key(keys.clone(), "ada@example.org").expect("a key");
+    assert_eq!(ada.key_id, "2222222222222222");
+    assert!(ada.vouched_for("ADA@example.org"));
+    assert!(!ada.vouched_for("boss@example.org"));
+    let boss = pick_public_key(keys.clone(), "boss@example.org").expect("a key");
+    assert!(!boss.vouched_for("boss@example.org"));
+    // Only an unvouched key: still found, for the composer to ask about.
+    let planted = pick_public_key(keys[..1].to_vec(), "ada@example.org").expect("a key");
+    assert!(!planted.vouched_for("ada@example.org"));
+    assert!(pick_public_key(keys, "eve@example.org").is_none());
 }
 
 #[test]
@@ -465,11 +502,60 @@ fn round_trip_through_a_throwaway_keyring() {
     let u = unwrap_message(mail.as_bytes(), &gpg).expect("recognised");
     assert!(!u.status.encrypted);
     assert!(
-        matches!(u.status.signature, PgpSignature::Good { .. }),
+        matches!(
+            u.status.signature,
+            PgpSignature::Good {
+                from_mismatch: false,
+                ..
+            }
+        ),
         "{:?}",
         u.status
     );
     assert_eq!(u.inner.unwrap(), part.to_vec());
+
+    // The same good, trusted signature under someone else's From is not
+    // green: the key carries no user id for that address.
+    let forged = mail.replace(
+        "From: test@hylki.invalid",
+        "From: Boss <boss@hylki.invalid>",
+    );
+    let u = unwrap_message(forged.as_bytes(), &gpg).expect("recognised");
+    assert!(
+        matches!(
+            u.status.signature,
+            PgpSignature::Good {
+                trust: PgpTrust::Full,
+                from_mismatch: true,
+                ..
+            }
+        ),
+        "{:?}",
+        u.status
+    );
+    assert_eq!(u.status.css_class(), "pgp-warn");
+    assert!(
+        u.status
+            .notes
+            .iter()
+            .any(|n| n.contains("boss@hylki.invalid")),
+        "{:?}",
+        u.status.notes
+    );
+    // Case in the From is no mismatch.
+    let shouted = mail.replace("From: test@hylki.invalid", "From: TEST@Hylki.Invalid");
+    let u = unwrap_message(shouted.as_bytes(), &gpg).expect("recognised");
+    assert!(
+        matches!(
+            u.status.signature,
+            PgpSignature::Good {
+                from_mismatch: false,
+                ..
+            }
+        ),
+        "{:?}",
+        u.status
+    );
 
     // A tampered signed part fails.
     let mail = mail.replace("signed hello", "signed hellO");
@@ -525,6 +611,9 @@ fn round_trip_through_a_throwaway_keyring() {
         key_by_fingerprint(&gpg2, &fpr).unwrap().validity,
         KeyValidity::Unknown
     );
+    assert!(!public_key_for(&gpg2, "second@hylki.invalid")
+        .expect("found")
+        .vouched_for("second@hylki.invalid"));
     assert!(
         trust_key(&gpg2, &fpr, None).is_err(),
         "no key of one's own to sign with"
@@ -532,11 +621,15 @@ fn round_trip_through_a_throwaway_keyring() {
     let own = generate_key(&gpg2, "", "me@hylki.invalid", "never", "").expect("own key");
     trust_key(&gpg2, &fpr, Some(&own)).expect("signed");
     assert!(key_by_fingerprint(&gpg2, &fpr).unwrap().validity.trusted());
+    // The composer asks about an imported key until it is vouched for.
+    let imported = public_key_for(&gpg2, "second@hylki.invalid").expect("found");
+    assert!(imported.vouched_for("second@hylki.invalid"));
     // Encrypt to the imported key from the second keyring; the first opens it.
     let ct = encrypt(
         &gpg2,
         b"Content-Type: text/plain\r\n\r\nfor second",
         &["second@hylki.invalid".into()],
+        &[],
         Some(&own),
     )
     .expect("encrypted");
@@ -563,6 +656,45 @@ fn round_trip_through_a_throwaway_keyring() {
         out.status_lines
     );
     let _ = mail;
+    // A Bcc recipient's key id is zeroed in the packet, and a plain
+    // `--decrypt`, as the reader runs it, still finds the key that opens it.
+    let ct = encrypt(
+        &gpg2,
+        b"Content-Type: text/plain\r\n\r\nfor a bcc",
+        &[],
+        &["second@hylki.invalid".into()],
+        None,
+    )
+    .expect("encrypted");
+    let out = run(
+        &gpg_pw,
+        &[
+            "--pinentry-mode",
+            "loopback",
+            "--passphrase",
+            "pw",
+            "--decrypt",
+        ],
+        &ct,
+        None,
+    );
+    assert!(
+        String::from_utf8_lossy(&out.stdout).contains("for a bcc"),
+        "{:?}",
+        out.status_lines
+    );
+    let enc_to: Vec<&String> = out
+        .status_lines
+        .iter()
+        .filter(|l| l.starts_with("ENC_TO "))
+        .collect();
+    assert!(
+        !enc_to.is_empty()
+            && enc_to
+                .iter()
+                .all(|l| l.starts_with("ENC_TO 0000000000000000 ")),
+        "{enc_to:?}"
+    );
     let (sig, micalg) = sign_detached(&gpg2, b"data", &own).expect("signed");
     assert!(String::from_utf8_lossy(&sig).contains("BEGIN PGP SIGNATURE"));
     assert!(micalg.starts_with("pgp-sha"), "{micalg}");

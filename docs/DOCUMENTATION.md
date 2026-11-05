@@ -1689,6 +1689,15 @@ recipient has no key in your keyring, or your address has no key of its own,
 Hylki says so before anything is sent. Replying to an encrypted message starts
 with Encrypt on.
 
+When a recipient's key is one you have not trusted yet (step 4), **Send**
+names them and asks first: anyone can publish a key with any address on it.
+**Send Anyway** encrypts to the key as it is. With several keys for one
+address, the one you trusted is used.
+
+Bcc recipients are encrypted to without their key IDs in the message, so the
+To and Cc recipients cannot tell whose keys were Bcc'd. They can still see
+that some were.
+
 An encrypted message carries its subject inside, where only the recipients
 can read it, and "..." as the subject anyone else sees, as Thunderbird does.
 Hylki and other mail programs that read subjects from there show the real one
@@ -1718,6 +1727,11 @@ means it was signed. Green: everything checks out against a trusted key.
 Amber: a doubt, such as an unknown or untrusted key, or an expired one. Red:
 a failure, such as a signature that does not match or a message that could not
 be decrypted. Click the icon for the details.
+
+A signature only shows who owns the key, so it stays amber when none of the
+key's addresses is the message's From address, however much the key is
+trusted: it reads **Signed by another address**, and the details say which
+address the key lacks.
 
 To have the result in words as well, switch on *Settings → Reading → Name the
 OpenPGP result*. The icons then sit in a label that reads **Signed**,

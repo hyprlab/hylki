@@ -104,31 +104,51 @@ pub(super) fn pgp_wrap(
         )
     };
     if msg.encrypt {
-        let mut recipients: Vec<String> = [&msg.to, &msg.cc, &msg.bcc]
-            .iter()
-            .flat_map(|field| {
-                parse_recipients(field)
-                    .into_iter()
-                    .map(|(_, addr)| addr.to_ascii_lowercase())
-            })
-            .collect();
-        recipients.sort();
-        recipients.dedup();
-        for r in &recipients {
-            if crate::mail::pgp::public_key_for(&gpg, r).is_none() {
-                return Err(i18n_f("no OpenPGP key for {addr}", &[("addr", r)]).into());
+        let addresses = |fields: &[&String]| -> Vec<String> {
+            let mut found: Vec<String> = fields
+                .iter()
+                .flat_map(|field| {
+                    parse_recipients(field)
+                        .into_iter()
+                        .map(|(_, addr)| addr.to_ascii_lowercase())
+                })
+                .collect();
+            found.sort();
+            found.dedup();
+            found
+        };
+        let to_cc = addresses(&[&msg.to, &msg.cc]);
+        // Bcc keys are hidden in the packet; one also in To or Cc is
+        // visible there anyway, and the sender's own copy is added below.
+        let mut bcc = addresses(&[&msg.bcc]);
+        let from_lower = from_addr.to_ascii_lowercase();
+        bcc.retain(|a| !to_cc.contains(a) && *a != from_lower);
+        // Each address goes to gpg as the fingerprint of the key checked
+        // here, so the key the composer warned about is the key used, not
+        // whichever one gpg finds first for the address.
+        let key_for = |addr: &String| -> Result<String, SmtpError> {
+            let found = crate::mail::pgp::public_key_for(&gpg, addr)
+                .ok_or_else(|| i18n_f("no OpenPGP key for {addr}", &[("addr", addr)]))?;
+            if !found.vouched_for(addr) {
+                tracing::warn!(
+                    "encrypting to key {} for {addr}, which the keyring does not vouch for",
+                    found.fingerprint
+                );
             }
-        }
+            Ok(found.fingerprint)
+        };
+        let mut recipients = to_cc.iter().map(key_for).collect::<Result<Vec<_>, _>>()?;
+        let hidden = bcc.iter().map(key_for).collect::<Result<Vec<_>, _>>()?;
         // The sender's own copy: to the account's key when it has one (by
         // fingerprint, so a chosen key with another address still reads its
         // Sent mail), else to whatever key the From address has.
         match &key {
             Some(k) => recipients.push(k.fingerprint.clone()),
             None => {
-                if crate::mail::pgp::public_key_for(&gpg, from_addr).is_none() {
+                let Some(own) = crate::mail::pgp::public_key_for(&gpg, from_addr) else {
                     return Err(no_key().into());
-                }
-                recipients.push(from_addr.to_ascii_lowercase());
+                };
+                recipients.push(own.fingerprint);
             }
         }
         let signer = if msg.sign {
@@ -136,7 +156,8 @@ pub(super) fn pgp_wrap(
         } else {
             None
         };
-        let ciphertext = crate::mail::pgp::encrypt(&gpg, &inner, &recipients, signer.as_deref())?;
+        let ciphertext =
+            crate::mail::pgp::encrypt(&gpg, &inner, &recipients, &hidden, signer.as_deref())?;
         let control = SinglePart::builder()
             .header(ContentType::parse("application/pgp-encrypted").expect("static content type"))
             .body(String::from("Version: 1\r\n"));

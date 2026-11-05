@@ -263,6 +263,7 @@ fn a_sender_check_row_as_stored() {
                 signer: "Ada <ada@x>".into(),
                 key_id: "ABCD".into(),
                 trust: PgpTrust::Marginal,
+                from_mismatch: false,
             },
             ..Default::default()
         }),

@@ -1044,6 +1044,9 @@ msgstr "Missatge nou a partir d'una plantilla"
 msgid "Send the message you are writing"
 msgstr "Envia el missatge que estàs escrivint"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Adjunta fitxers"
 
@@ -1905,6 +1908,11 @@ msgstr "El fitxer no és un fitxer de text"
 msgid "The file has no rows below its first."
 msgstr "El fitxer no és un fitxer de text"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "El GnuPG (gpg) no està instal·lat, així que aquest missatge no es pot llegir."
@@ -2164,6 +2172,12 @@ msgstr "Xifrat amb OpenPGP; no s'ha pogut desxifrar"
 msgid "Encrypted with OpenPGP"
 msgstr "Xifrat amb OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Xifrat i signat per {signer}; la signatura ha caducat"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Xifrat i signat per {signer}"
 
@@ -2187,6 +2201,9 @@ msgstr "Xifrat i signat per {signer}; la signatura ha caducat"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Signat amb OpenPGP; no s'ha pogut comprovar la signatura"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Signat per {signer}"
@@ -2216,6 +2233,10 @@ msgstr "Xifrat"
 
 msgid "Signature not checked"
 msgstr "Signatura no comprovada"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Mou a una altra llibreta d'adreces"
 
 msgid "Encrypted and signed"
 msgstr "Xifrat i signat"
@@ -3468,8 +3489,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -3479,8 +3500,8 @@ msgstr ""
 "1. A dropbox.com/developers/apps, prem Create app.\n"
 "2. Tria Scoped access, i després App folder o Full Dropbox.\n"
 "3. Dona-li un nom que ningú més no hagi fet servir i prem Create app.\n"
-"4. A Permissions, marca account_info.read, files.content.write i "
-"sharing.write, i després prem Submit.\n"
+"4. A Permissions, marca account_info.read, files.content.write i sharing."
+"write, i després prem Submit.\n"
 "5. A Settings, sota OAuth 2, afegeix l'URI de redirecció {uri} i prem Add.\n"
 "6. Copia l'App key al camp de dalt.\n"
 "L'estat Development és suficient. Deixa el camp buit per utilitzar la clau "
@@ -3866,6 +3887,16 @@ msgid ""
 msgstr ""
 "No hi ha cap clau OpenPGP per a {addr}. Demana'ls la seva clau pública, o "
 "obtén-la a Paràmetres, OpenPGP."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nobody has confirmed that the OpenPGP keys for {addresses} belong to them. "
+"If a key is someone else's, they can read the message and the recipient "
+"cannot. Compare the fingerprint with the recipient, then mark the key as "
+"trusted under Settings, OpenPGP."
+msgstr ""
 
 msgid "Send later"
 msgstr "Envia més tard"
@@ -6175,6 +6206,7 @@ msgstr "Traducció"
 msgid "General"
 msgstr "General"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Aparença"
 
