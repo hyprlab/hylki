@@ -53,8 +53,8 @@ pub(super) fn install_scheme_css(window: &impl IsA<gtk::Widget>) {
     }
     let window = window.clone().upcast::<gtk::Widget>();
     let apply = move |provider: &gtk::CssProvider, dark: bool| {
-        // The selection is the GNOME accent itself at full saturation, with
-        // high-contrast white text, while the list holds the keyboard. A
+        // The selection is the accent itself at full saturation, with the
+        // accent's own foreground on it, while the list holds the keyboard. A
         // click into the reader hands focus straight back to the list, so
         // that is nearly always; when something else really has it (the
         // composer, a search entry, or focus lost in a rebuild) the row
@@ -74,7 +74,7 @@ pub(super) fn install_scheme_css(window: &impl IsA<gtk::Widget>) {
             ".message-list > row:selected .message-row, \
              .message-list > row:selected:hover .message-row, \
              .message-list > row:selected:active .message-row {{ \
-               background-color: @accent_bg_color; color: white; }}\
+               background-color: @accent_bg_color; color: @accent_fg_color; }}\
              .message-list:not(:focus-within):not(:backdrop) > row:selected .message-row, \
              .message-list:not(:focus-within):not(:backdrop) > row:selected:hover .message-row, \
              .message-list:not(:focus-within):not(:backdrop) > row:selected:active .message-row {{ \

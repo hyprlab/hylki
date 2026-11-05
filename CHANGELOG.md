@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: text on the accent color could be hard to read** (#593, by Alp Sahin).
+  New Message, a selected message and a selected contact used white whatever the
+  accent, so a pale accent from a desktop's GTK colors left white on pale. They
+  now use the accent's foreground color. GNOME's accents still get white. The
+  dark palettes of Forest, Tidal and Earth now get their dark foreground on the
+  accent, and Rose's its pale pink.
+
 - **Translations:** German updated (PR #578 by Samuel Edlmeier), with 2375 of
   2458 strings translated.
 

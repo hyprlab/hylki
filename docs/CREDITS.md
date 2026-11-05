@@ -153,6 +153,9 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   [#591](https://github.com/hyprlab/hylki/pull/591)): the gap above a message
   card reached with `w` or `b`, and Drafts shown from the cache after a send
   from a Microsoft account.
+- [**Alp Sahin**](https://github.com/AlpSha) ([#593](https://github.com/hyprlab/hylki/issues/593)):
+  text in the accent's foreground color on the accent, and a theme picked in
+  Settings shown over the colors of a user's `gtk.css`.
 
 ## Reports, design and ideas
 

@@ -23,13 +23,14 @@ switch > image {
 
 /* The sidebar's "New message" action: a standing accent button shaped like a
    row — full width, rounded like the row highlights, icon column aligned with
-   the rows below. Text and icon in plain white on the accent. */
+   the rows below. Text and icon in the accent's own foreground: white on
+   GNOME's accents, dark on a pale one a desktop or theme defines (#593). */
 /* Row geometry plus extra vertical presence: 5px above and below the
    shared .folder-row padding, so the accent button stands taller than a
    plain row without changing its width alignment. */
 row.compose-row {
   background-color: @accent_bg_color;
-  color: white;
+  color: @accent_fg_color;
   padding-top: 5px;
   padding-bottom: 5px;
 }
@@ -50,7 +51,7 @@ row.compose-row:active {
 
 row.compose-row .folder-icon,
 row.compose-row .account-name {
-  color: white;
+  color: @accent_fg_color;
   opacity: 1;
 }
 
@@ -66,7 +67,7 @@ row.compose-row .compose-split:dir(rtl) {
   padding-right: 8px;
 }
 row.compose-row .compose-split > separator {
-  background-color: alpha(white, 0.55);
+  background-color: alpha(@accent_fg_color, 0.55);
   min-width: 1px;
   margin: 3px 4px 3px 8px;
 }
@@ -74,7 +75,7 @@ row.compose-row .compose-split > separator:dir(rtl) {
   margin: 3px 8px 3px 4px;
 }
 row.compose-row .compose-caret {
-  color: white;
+  color: @accent_fg_color;
   min-height: 0;
   min-width: 0;
   padding: 2px 6px;
@@ -87,10 +88,10 @@ row.compose-row .compose-caret:dir(rtl) {
   margin-left: -3px;
 }
 row.compose-row .compose-caret:hover {
-  background-color: alpha(white, 0.15);
+  background-color: alpha(@accent_fg_color, 0.15);
 }
 row.compose-row .compose-caret:active {
-  background-color: alpha(white, 0.28);
+  background-color: alpha(@accent_fg_color, 0.28);
 }
 
 .account-header {
@@ -605,7 +606,8 @@ flowbox.attach-flow > flowboxchild {
 /* ---- Contacts view ---- */
 
 /* Selected contact: the full accent treatment the message list's selection
-   gets — accent ground, everything on it white at full strength. */
+   gets — accent ground, everything on it the accent's foreground at full
+   strength. */
 .contacts-listbox > row:selected,
 .contacts-listbox > row:selected:hover,
 .contacts-listbox > row:selected:active {
@@ -642,7 +644,7 @@ flowbox.attach-flow > flowboxchild {
    row is also its descendant, and a bare `label` selector painted the menu's
    text white-on-white. */
 .contacts-listbox > row:selected box.header label {
-  color: white;
+  color: @accent_fg_color;
   opacity: 1;
 }
 
@@ -908,7 +910,8 @@ flowbox.attach-flow > flowboxchild {
 /* Gmail's j/k cursor (#392): an accent outline inside the pill, while the
    list has the keyboard. It is a class the list sets for j and k and takes
    off at a click, not a focus ring, so a click never draws it. On the
-   selected row, whose pill is already the accent, it is white. */
+   selected row, whose pill is already the accent, it is the accent's
+   foreground. */
 .message-list:focus-within > row > .message-item.kbd-cursor:not(.swiping) .message-row {
   box-shadow: inset 0 0 0 2px alpha(@accent_color, 0.85);
 }
@@ -918,7 +921,7 @@ flowbox.attach-flow > flowboxchild {
 }
 
 .message-list:focus-within > row:selected > .message-item.kbd-cursor:not(.swiping) .message-row {
-  box-shadow: inset 0 0 0 2px alpha(white, 0.8);
+  box-shadow: inset 0 0 0 2px alpha(@accent_fg_color, 0.8);
 }
 
 .message-row {
@@ -933,24 +936,25 @@ flowbox.attach-flow > flowboxchild {
   padding: 13px 10px 13px 8px;
 }
 
-/* Selected rows: every text element fully white at full strength, in both
-   schemes — the accent ground (see install_scheme_css) carries the
-   contrast, so nothing on it is dimmed. */
+/* Selected rows: every text element in the accent's foreground at full
+   strength, in both schemes — the accent ground (see install_scheme_css)
+   carries the contrast, so nothing on it is dimmed. */
 .message-list > row:selected .message-row label {
-  color: white;
+  color: @accent_fg_color;
   opacity: 1;
 }
 
 /* The unread dot inverts on the accent ground too — accent-on-accent would
    vanish, and a selected thread head must still show its unread mark. */
 .message-list > row:selected .message-row .unread-dot {
-  background: white;
+  background: @accent_fg_color;
 }
 
-/* The thread chip inverts on the accent ground: white pill, accent text
-   and caret — a grey chip would sink into the highlight. */
+/* The thread chip inverts on the accent ground: a pill in the accent's
+   foreground, accent text and caret — a grey chip would sink into the
+   highlight. */
 .message-list > row:selected .message-row .thread-chip {
-  background: white;
+  background: @accent_fg_color;
   opacity: 1;
 }
 
@@ -1080,11 +1084,11 @@ flowbox.attach-flow > flowboxchild {
   opacity: 1;
 }
 
-/* On the accent ground of a selected row they read in white, as the rest
-   of the row does. */
+/* On the accent ground of a selected row they take the accent's
+   foreground, as the rest of the row does. */
 .message-list > row:selected .message-row.single-line .message-date.overdue,
 .message-list > row:selected .message-row .importance-high {
-  color: white;
+  color: @accent_fg_color;
 }
 
 /* Conversation threading: count chip + compact expand/collapse chevron on the
@@ -1105,7 +1109,7 @@ flowbox.attach-flow > flowboxchild {
 
 .message-list > row:selected .message-row .tag-chip {
   /* Keep the tag's own color on a selected row; the selection paints
-     everything else white. */
+     everything else in the accent's foreground. */
   opacity: 0.95;
 }
 
@@ -1159,7 +1163,7 @@ flowbox.attach-flow > flowboxchild {
 .message-item.thread-child {
   margin-left: 10px;
   /* @window_fg_color, not currentColor: a selected row's currentColor is the
-     white selection foreground, which made the rail vanish under selection. */
+     selection foreground, which made the rail vanish under selection. */
   border-left: 2px dotted alpha(@window_fg_color, 0.3);
 }
 .message-item.thread-child:dir(rtl) {
@@ -1430,7 +1434,7 @@ flowbox.attach-flow > flowboxchild {
 }
 
 .message-list > row:selected .message-date.snoozed {
-  color: white;
+  color: @accent_fg_color;
 }
 
 .dim-icon,
@@ -1456,7 +1460,7 @@ flowbox.attach-flow > flowboxchild {
 }
 
 .message-list > row:selected .read-receipt.read {
-  color: white;
+  color: @accent_fg_color;
 }
 
 /* ---- Reader ---- */
