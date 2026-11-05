@@ -103,11 +103,12 @@ msgid "No activity yet."
 msgstr "Brak kont"
 
 #, fuzzy
-msgid "Message from an AI Assistant"
+msgid "Message from an AI Agent"
 msgstr "Najnowsza wiadomość na początku"
 
-msgid "An AI assistant prepared a message"
-msgstr ""
+#, fuzzy
+msgid "An AI agent prepared a message"
+msgstr "Przekaż dalej tę wiadomość"
 
 msgid "Show"
 msgstr "Wyświetl"
@@ -1991,7 +1992,7 @@ msgstr[2] "W aplikacji Hylki otwarto nową wiadomość z {n} załączonymi plika
 msgid "Message ready"
 msgstr "Czcionka wiadomości"
 
-msgid "An AI assistant prepared a message. Check it, then send it."
+msgid "An AI agent prepared a message. Check it, then send it."
 msgstr ""
 
 #, fuzzy
@@ -3780,8 +3781,7 @@ msgid "Bcc"
 msgstr "UDW"
 
 msgid ""
-"An AI assistant prepared this message. Check who it goes to before you send "
-"it."
+"An AI agent prepared this message. Check who it goes to before you send it."
 msgstr ""
 
 #, fuzzy
@@ -3801,14 +3801,14 @@ msgstr ""
 msgid "Not now"
 msgstr "Niewyświetlane"
 
-msgid "Accept or reject the AI assistant's suggested changes first."
+msgid "Accept or reject the AI agent's suggested changes first."
 msgstr ""
 
 msgid "Wait for the translation to come back, then accept the changes."
 msgstr ""
 
 #, fuzzy
-msgid "Changes suggested by an AI assistant"
+msgid "Changes suggested by an AI agent"
 msgstr "Najnowsza wiadomość na początku"
 
 msgid "Nothing changes until you accept them."
@@ -6607,7 +6607,7 @@ msgid ""
 "permanently (moving to Trash is ok) or read encrypted mail."
 msgstr ""
 
-msgid "Command for the assistant"
+msgid "Command for the agent"
 msgstr ""
 
 #, fuzzy

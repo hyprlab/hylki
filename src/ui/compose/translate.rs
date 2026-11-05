@@ -231,7 +231,7 @@ impl Compose {
             alert(
                 parent.as_ref(),
                 &i18n("Not now"),
-                &i18n("Accept or reject the AI assistant's suggested changes first."),
+                &i18n("Accept or reject the AI agent's suggested changes first."),
             );
             return;
         }

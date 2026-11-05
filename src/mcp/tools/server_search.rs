@@ -283,7 +283,7 @@ impl Mail {
                 not_searched.push(NotSearched {
                     account: a.address,
                     why: format!(
-                        "the user has not allowed assistants to {}",
+                        "the user has not allowed agents to {}",
                         AssistantCap::SearchServer.name()
                     ),
                 });

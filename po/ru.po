@@ -101,11 +101,12 @@ msgid "No activity yet."
 msgstr "Учётные записи пока не добавлены"
 
 #, fuzzy
-msgid "Message from an AI Assistant"
+msgid "Message from an AI Agent"
 msgstr "Новое сообщение из шаблона"
 
-msgid "An AI assistant prepared a message"
-msgstr ""
+#, fuzzy
+msgid "An AI agent prepared a message"
+msgstr "Переслать это сообщение"
 
 msgid "Show"
 msgstr "Показать"
@@ -1983,7 +1984,7 @@ msgstr[2] "Новое письмо с {n} прикрёпленными файл�
 msgid "Message ready"
 msgstr "Шрифт сообщений"
 
-msgid "An AI assistant prepared a message. Check it, then send it."
+msgid "An AI agent prepared a message. Check it, then send it."
 msgstr ""
 
 #, fuzzy
@@ -3758,8 +3759,7 @@ msgid "Bcc"
 msgstr "Скрытая копия"
 
 msgid ""
-"An AI assistant prepared this message. Check who it goes to before you send "
-"it."
+"An AI agent prepared this message. Check who it goes to before you send it."
 msgstr ""
 
 #, fuzzy
@@ -3779,14 +3779,14 @@ msgstr ""
 msgid "Not now"
 msgstr "Скрыты"
 
-msgid "Accept or reject the AI assistant's suggested changes first."
+msgid "Accept or reject the AI agent's suggested changes first."
 msgstr ""
 
 msgid "Wait for the translation to come back, then accept the changes."
 msgstr ""
 
 #, fuzzy
-msgid "Changes suggested by an AI assistant"
+msgid "Changes suggested by an AI agent"
 msgstr "Новое сообщение из шаблона"
 
 msgid "Nothing changes until you accept them."
@@ -6548,7 +6548,7 @@ msgid ""
 "permanently (moving to Trash is ok) or read encrypted mail."
 msgstr ""
 
-msgid "Command for the assistant"
+msgid "Command for the agent"
 msgstr ""
 
 #, fuzzy

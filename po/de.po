@@ -103,11 +103,12 @@ msgid "No activity yet."
 msgstr "Noch keine Konten"
 
 #, fuzzy
-msgid "Message from an AI Assistant"
+msgid "Message from an AI Agent"
 msgstr "Neue Nachricht aus Vorlage"
 
-msgid "An AI assistant prepared a message"
-msgstr ""
+#, fuzzy
+msgid "An AI agent prepared a message"
+msgstr "Weitergeleitete Nachricht"
 
 msgid "Show"
 msgstr "Anzeigen"
@@ -1848,7 +1849,7 @@ msgstr[1] "Eine neue Nachricht mit {n} Dateien ist in Hylki geöffnet."
 msgid "Message ready"
 msgstr "Nachrichtentext"
 
-msgid "An AI assistant prepared a message. Check it, then send it."
+msgid "An AI agent prepared a message. Check it, then send it."
 msgstr ""
 
 msgid "On {date} at {time}, {name} wrote:"
@@ -3566,8 +3567,7 @@ msgid "Bcc"
 msgstr "Bcc"
 
 msgid ""
-"An AI assistant prepared this message. Check who it goes to before you send "
-"it."
+"An AI agent prepared this message. Check who it goes to before you send it."
 msgstr ""
 
 #, fuzzy
@@ -3587,14 +3587,14 @@ msgstr ""
 msgid "Not now"
 msgstr "Nicht angezeigt"
 
-msgid "Accept or reject the AI assistant's suggested changes first."
+msgid "Accept or reject the AI agent's suggested changes first."
 msgstr ""
 
 msgid "Wait for the translation to come back, then accept the changes."
 msgstr ""
 
 #, fuzzy
-msgid "Changes suggested by an AI assistant"
+msgid "Changes suggested by an AI agent"
 msgstr "Neue Nachricht aus Vorlage"
 
 #, fuzzy
@@ -6251,8 +6251,9 @@ msgid ""
 "permanently (moving to Trash is ok) or read encrypted mail."
 msgstr ""
 
-msgid "Command for the assistant"
-msgstr ""
+#, fuzzy
+msgid "Command for the agent"
+msgstr "Befehlspalette"
 
 #, fuzzy
 msgid "Address books and directories"

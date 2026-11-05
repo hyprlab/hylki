@@ -90,7 +90,7 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   recipient lookups in LDAP directories. The composer asks the directories
   as an address is typed, once the typing pauses, and drops an answer that
   arrives for text since changed, as the #307 branch did. Also the connection
-  for AI assistants: the server inside the app, the relay an assistant's client
+  for AI agents: the server inside the app, the relay an agent's client
   starts, and drafts that open in the composer for the user to check.
 - [**Felix Günther**](https://github.com/fegue) ([#314](https://github.com/hyprlab/hylki/pull/314),
   [#315](https://github.com/hyprlab/hylki/pull/315)): saving contacts and

@@ -81,7 +81,7 @@ pub(super) fn fill_banner(bar: &gtk::Box, fields: [&str; 3], own_domains: &[Stri
     let head = gtk::Box::new(gtk::Orientation::Horizontal, 8);
     head.append(&gtk::Image::from_icon_name("dialog-information-symbolic"));
     let title = gtk::Label::new(Some(&i18n(
-        "An AI assistant prepared this message. Check who it goes to before you send it.",
+        "An AI agent prepared this message. Check who it goes to before you send it.",
     )));
     title.set_wrap(true);
     title.set_xalign(0.0);

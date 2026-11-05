@@ -53,7 +53,7 @@ const BODY_MAX: usize = 32 * 1024;
 
 /// What an assistant is told a message's text is when it is encrypted.
 const ENCRYPTED_NOTE: &str = "This message is encrypted. Hylki never gives encrypted mail to \
-    assistants: the user reads it themselves.";
+    agents: the user reads it themselves.";
 
 /// What an assistant is told about a message with nothing to read.
 const NO_TEXT_NOTE: &str = "This message has no text to show: it may be only pictures or files.";
@@ -285,7 +285,7 @@ impl Mail {
     }
 
     #[tool(
-        description = "The email accounts the user shares with assistants, and what is allowed in each.",
+        description = "The email accounts the user shares with agents, and what is allowed in each.",
         annotations(read_only_hint = true)
     )]
     async fn list_accounts(&self) -> CallToolResult {
@@ -586,7 +586,7 @@ impl Mail {
         Err(match (named, no.first()) {
             (true, Some(a)) => denied(&a.address, cap),
             _ => format!(
-                "The user has not allowed assistants to {} in any account. They can allow it in \
+                "The user has not allowed agents to {} in any account. They can allow it in \
                  Settings → MCP.",
                 cap.name()
             ),
@@ -702,14 +702,14 @@ pub(super) fn failure(message: String) -> CallToolResult {
 /// What an assistant is told when `cap` is not allowed in an account.
 pub(super) fn denied(address: &str, cap: AssistantCap) -> String {
     format!(
-        "The user has not allowed assistants to {} in {address}. They can allow it in Settings → \
+        "The user has not allowed agents to {} in {address}. They can allow it in Settings → \
          MCP.",
         cap.name()
     )
 }
 
 fn none_shared() -> String {
-    "The user has not shared any account with assistants. They can choose what to share in \
+    "The user has not shared any account with agents. They can choose what to share in \
      Settings → MCP."
         .to_string()
 }

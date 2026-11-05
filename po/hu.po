@@ -104,11 +104,12 @@ msgid "No activity yet."
 msgstr "Még nincsenek fiókok"
 
 #, fuzzy
-msgid "Message from an AI Assistant"
+msgid "Message from an AI Agent"
 msgstr "Legújabb üzenet elöl"
 
-msgid "An AI assistant prepared a message"
-msgstr ""
+#, fuzzy
+msgid "An AI agent prepared a message"
+msgstr "Üzenet továbbítása"
 
 msgid "Show"
 msgstr "Megjelenítés"
@@ -1951,7 +1952,7 @@ msgstr[1] "{n} csatolt fájlt tartalmazó új üzenet megnyitva a Hylkiben."
 msgid "Message ready"
 msgstr "Üzenet betűtípusa"
 
-msgid "An AI assistant prepared a message. Check it, then send it."
+msgid "An AI agent prepared a message. Check it, then send it."
 msgstr ""
 
 #, fuzzy
@@ -3726,8 +3727,7 @@ msgid "Bcc"
 msgstr "Titkos másolat (Bcc)"
 
 msgid ""
-"An AI assistant prepared this message. Check who it goes to before you send "
-"it."
+"An AI agent prepared this message. Check who it goes to before you send it."
 msgstr ""
 
 #, fuzzy
@@ -3747,14 +3747,14 @@ msgstr ""
 msgid "Not now"
 msgstr "Nem jelenik meg"
 
-msgid "Accept or reject the AI assistant's suggested changes first."
+msgid "Accept or reject the AI agent's suggested changes first."
 msgstr ""
 
 msgid "Wait for the translation to come back, then accept the changes."
 msgstr ""
 
 #, fuzzy
-msgid "Changes suggested by an AI assistant"
+msgid "Changes suggested by an AI agent"
 msgstr "Legújabb üzenet elöl"
 
 msgid "Nothing changes until you accept them."
@@ -6525,7 +6525,7 @@ msgid ""
 "permanently (moving to Trash is ok) or read encrypted mail."
 msgstr ""
 
-msgid "Command for the assistant"
+msgid "Command for the agent"
 msgstr ""
 
 #, fuzzy

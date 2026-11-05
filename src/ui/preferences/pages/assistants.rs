@@ -168,7 +168,7 @@ impl AssistantsPage {
 fn command_row() -> adw::EntryRow {
     let command = crate::mcp::connect_command();
     let row = adw::EntryRow::builder()
-        .title(i18n("Command for the assistant"))
+        .title(i18n("Command for the agent"))
         .text(&command)
         .editable(false)
         .build();

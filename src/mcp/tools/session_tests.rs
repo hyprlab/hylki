@@ -161,7 +161,7 @@ impl Session {
             std::thread::spawn(move || {
                 while let Some(call) = calls.recv_sync() {
                     let AppMsg::Assistant(call) = call else {
-                        panic!("not for the assistant: {call:?}")
+                        panic!("not for the agent: {call:?}")
                     };
                     let mut saw = saw.lock().unwrap();
                     match call {

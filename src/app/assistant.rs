@@ -306,7 +306,7 @@ impl AppModel {
         self.assistant.edited_at.retain(|id, _| open.contains(id));
         self.assistant.edited_at.insert(id, now);
         if let Some(controller) = self.compose_controller(id) {
-            tracing::info!("mcp: an assistant asked to edit composer {id}");
+            tracing::info!("mcp: an agent asked to edit composer {id}");
             controller.emit(ComposeInput::AssistantEdit(edit));
         }
         EditAnswer::Waits
@@ -360,7 +360,7 @@ impl AppModel {
     fn open_assistant_draft(&mut self, draft: Draft, done: Opened, sender: &ComponentSender<Self>) {
         if self.assistant_composers() >= MAX_OPEN {
             let _ = done.send(Err(format!(
-                "{MAX_OPEN} messages an assistant prepared are already open in Hylki. Ask the \
+                "{MAX_OPEN} messages an agent prepared are already open in Hylki. Ask the \
                  user to send or close some first."
             )));
             return;
@@ -459,12 +459,12 @@ impl AppModel {
         let (id, init) = self.build_compose_init(account_id, prefill, true, false);
         let controller = self.spawn_compose(init, sender);
         let window = self.compose_window(controller.widget(), id, sender);
-        window.set_title(Some(&i18n("Message from an AI Assistant")));
+        window.set_title(Some(&i18n("Message from an AI Agent")));
         let busy_here = ours_in_front();
         if busy_here {
             self.show_toast(
                 &adw::Toast::builder()
-                    .title(i18n("An AI assistant prepared a message"))
+                    .title(i18n("An AI agent prepared a message"))
                     .button_label(i18n("Show"))
                     .action_name(format!(
                         "app.{}",
@@ -495,7 +495,7 @@ impl AppModel {
             });
         }
         tracing::info!(
-            "mcp: an assistant's message opened, with {files} file(s){}",
+            "mcp: an agent's message opened, with {files} file(s){}",
             if busy_here {
                 ", waiting to be shown"
             } else {

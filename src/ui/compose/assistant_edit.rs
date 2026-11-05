@@ -186,7 +186,7 @@ impl Compose {
         alert(
             parent.as_ref(),
             &i18n("Not now"),
-            &i18n("Accept or reject the AI assistant's suggested changes first."),
+            &i18n("Accept or reject the AI agent's suggested changes first."),
         );
         true
     }
@@ -469,7 +469,7 @@ impl Compose {
         }
         let head = gtk::Box::new(gtk::Orientation::Horizontal, 8);
         head.append(&gtk::Image::from_icon_name("document-edit-symbolic"));
-        let title = gtk::Label::new(Some(&i18n("Changes suggested by an AI assistant")));
+        let title = gtk::Label::new(Some(&i18n("Changes suggested by an AI agent")));
         title.set_ellipsize(gtk::pango::EllipsizeMode::End);
         title.set_xalign(0.0);
         title.set_hexpand(true);

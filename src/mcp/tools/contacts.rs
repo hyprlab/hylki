@@ -92,7 +92,7 @@ impl Mail {
         let policy = self.policy();
         if !policy.address_books && !policy.mail_people {
             return failure(
-                "The user has not allowed assistants to look up contacts. They can allow it in \
+                "The user has not allowed agents to look up contacts. They can allow it in \
                  Settings → MCP."
                     .into(),
             );

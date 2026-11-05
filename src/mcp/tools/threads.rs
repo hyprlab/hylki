@@ -32,7 +32,7 @@ const OPEN_WAIT: std::time::Duration = std::time::Duration::from_secs(5);
 
 /// What an assistant is told when the message the user is on is not one it
 /// may know of, or there is none: the same, so that says nothing either.
-const NOTHING_OPEN: &str = "No message shared with assistants is what the user has open now. Ask \
+const NOTHING_OPEN: &str = "No message shared with agents is what the user has open now. Ask \
     the user which one they mean, or find it with list_messages or search.";
 
 /// A conversation on screen an assistant may know of, as the cache has it.

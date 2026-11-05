@@ -90,10 +90,10 @@ msgstr ""
 msgid "No activity yet."
 msgstr ""
 
-msgid "Message from an AI Assistant"
+msgid "Message from an AI Agent"
 msgstr ""
 
-msgid "An AI assistant prepared a message"
+msgid "An AI agent prepared a message"
 msgstr ""
 
 msgid "Show"
@@ -1714,7 +1714,7 @@ msgstr[1] ""
 msgid "Message ready"
 msgstr ""
 
-msgid "An AI assistant prepared a message. Check it, then send it."
+msgid "An AI agent prepared a message. Check it, then send it."
 msgstr ""
 
 msgid "On {date} at {time}, {name} wrote:"
@@ -3275,8 +3275,7 @@ msgid "Bcc"
 msgstr ""
 
 msgid ""
-"An AI assistant prepared this message. Check who it goes to before you send "
-"it."
+"An AI agent prepared this message. Check who it goes to before you send it."
 msgstr ""
 
 msgid "It has no recipients yet."
@@ -3294,13 +3293,13 @@ msgstr ""
 msgid "Not now"
 msgstr ""
 
-msgid "Accept or reject the AI assistant's suggested changes first."
+msgid "Accept or reject the AI agent's suggested changes first."
 msgstr ""
 
 msgid "Wait for the translation to come back, then accept the changes."
 msgstr ""
 
-msgid "Changes suggested by an AI assistant"
+msgid "Changes suggested by an AI agent"
 msgstr ""
 
 msgid "Nothing changes until you accept them."
@@ -5771,7 +5770,7 @@ msgid ""
 "permanently (moving to Trash is ok) or read encrypted mail."
 msgstr ""
 
-msgid "Command for the assistant"
+msgid "Command for the agent"
 msgstr ""
 
 msgid "Address books and directories"

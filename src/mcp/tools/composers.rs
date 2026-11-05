@@ -52,7 +52,7 @@ pub(super) struct UpdateDraftArgs {
 struct DraftOut {
     id: String,
     kind: &'static str,
-    by_assistant: bool,
+    by_agent: bool,
     #[serde(skip_serializing_if = "String::is_empty")]
     from: String,
     #[serde(skip_serializing_if = "String::is_empty")]
@@ -108,7 +108,7 @@ struct EditedOut {
 impl Mail {
     #[tool(
         description = "The messages being written in Hylki now that the user allows \
-        assistants to see, with recipients, subject and any edit waiting for the user. Pass \
+        agents to see, with recipients, subject and any edit waiting for the user. Pass \
         an `id` to read_draft for the text. Drafts saved and closed are in the drafts folder \
         (list_messages).",
         annotations(read_only_hint = true)
@@ -246,7 +246,7 @@ fn draft_out(d: OpenDraft) -> DraftOut {
     DraftOut {
         id: composer_id(d.compose_id),
         kind: d.kind,
-        by_assistant: d.by_assistant,
+        by_agent: d.by_assistant,
         from: d.from,
         to: d.to,
         cc: d.cc,
