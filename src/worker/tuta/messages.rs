@@ -1,10 +1,13 @@
 //! Messages as a Tuta sync lists them, turned into list rows.
 
+use std::collections::HashMap;
+
 use serde_json::Value;
 
 use crate::models::Message;
 use crate::worker::headers::label_from_timestamp;
 use crate::worker::ids::{hash_uid, TUTA_CONV};
+use crate::worker::tuta::wire::LabelRow;
 
 /// Tuta's replied/forwarded mark (`Mail.replyType`).
 const REPLIED: i64 = 1;
@@ -19,9 +22,11 @@ fn text(v: &Value) -> String {
 /// for the uid map. `None` for a header without an id or a date, which is
 /// not a message the list could show.
 ///
-/// A listing has no Message-ID, References or preview (Tuta keeps them in
-/// the encrypted details, read with the body), so the conversation entry's
-/// list id threads the message meanwhile, as a `tuta-conv:` token.
+/// A listing has no References or preview (Tuta keeps them in the
+/// encrypted details, read with the body), so the conversation entry's list
+/// id threads the message meanwhile, as a `tuta-conv:` token. It does carry
+/// the Message-ID Tuta keeps for the mail, which is the only one mail
+/// between Tuta accounts has: a reply to it names that.
 pub(super) fn tuta_message(
     v: &Value,
     account_id: u32,
@@ -63,7 +68,7 @@ pub(super) fn tuta_message(
         forwarded: matches!(reply_type, FORWARDED | REPLIED_AND_FORWARDED),
         keywords: Vec::new(),
         has_attachment: v["has_attachments"].as_bool().unwrap_or(false),
-        message_id: String::new(),
+        message_id: listed_message_id(v),
         references: if conversation.is_empty() {
             String::new()
         } else {
@@ -74,4 +79,31 @@ pub(super) fn tuta_message(
         labels: Vec::new(),
     };
     Some((msg, id))
+}
+
+/// A header's Message-ID as the cache stores one: without brackets and
+/// lowercased, its exact spelling noted so a reply names it the way Tuta
+/// spells it (see `Cache::exact_msgids`). Empty when the header has none.
+fn listed_message_id(v: &Value) -> String {
+    let exact = v["message_id"]
+        .as_str()
+        .unwrap_or_default()
+        .trim()
+        .trim_start_matches('<')
+        .trim_end_matches('>');
+    crate::cache::note_msgid_case(exact);
+    exact.to_ascii_lowercase()
+}
+
+/// The names of the labels a header wears, as a row keeps Gmail's (#374):
+/// written as the server writes them, modified UTF-7, so a tag named like
+/// one shows as that tag. A label the last sync did not list is left out.
+pub(super) fn header_labels(v: &Value, labels: &HashMap<String, LabelRow>) -> Vec<String> {
+    v["labels"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(|id| labels.get(id.as_str()?))
+        .map(|label| crate::mail::mutf7::encode(&label.name))
+        .collect()
 }

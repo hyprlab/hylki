@@ -140,24 +140,73 @@ between folders, Junk and Trash included, and sending. Tuta files the copy
 of sent mail in Sent itself. A message that Tuta does not confirm as sent
 is not sent again on its own; check Sent before sending it once more.
 
+A reply or a forward joins the conversation of the message it answers in
+Tuta's own app, which then shows that message as replied to or forwarded.
+This works for mail between Tuta accounts too: such mail has no headers
+of its own, so Hylki uses the Message-ID Tuta keeps for it.
+
+Folders are made, renamed, moved and deleted in the sidebar as for any
+account. Deleting a folder works as in Tuta's own app: an empty folder, or
+one in the Trash or Spam, goes for good, and one holding mail goes to the
+Trash with it. Tuta's own folders (Inbox, Sent and the rest) cannot be
+changed.
+
+Mail is deleted for good from the Trash and Spam, which is the only place
+Tuta erases it: **Delete Permanently** anywhere else moves the mail to the
+Trash and erases it there, and **Empty** on the Trash or Junk folder works.
+Drafts are kept on Tuta's servers, so a draft saved here opens in Tuta's
+own app and the other way round, and is updated in place as you write.
+Templates are drafts in a **Templates** folder, which Hylki makes the
+first time one is saved. Tags are Tuta labels: tagging a message puts on
+it the label named like the tag, made in the tag's color the first time,
+and a label set in Tuta's own app shows as the tag of that name. **Find
+Tags…** lists the account's labels.
+
+Snoozing works as on other accounts, with a **Snoozed** folder made the
+first time, and so does **Undo** after a move: a Tuta message keeps its id
+wherever it goes, so it is found again whether or not it was opened.
+
+Mail between Tuta accounts is end-to-end encrypted, as in Tuta's own app:
+a message whose recipients are all on Tuta is encrypted for each of them
+with their current Tuta key, without asking. A message with any recipient
+elsewhere goes out as ordinary mail to everyone, Tuta recipients included,
+as Tuta's own app sends it when it is not asked to protect it with a
+password. A Tuta address that does not exist stops the whole message
+rather than leaving anyone out.
+
+New mail is pushed: while Hylki runs, the helper keeps Tuta's own event
+channel open and every change it reports syncs the folder it names. While
+the channel is down, or **Instant new mail (push)** is off under
+**Settings → General**, new mail is looked for at the automatic fetch
+interval, at least once a minute, or every two minutes with automatic
+fetching off; while it is up, the Inbox is still looked at every quarter
+of an hour.
+
 The limits, all of them Tuta's or the helper's:
 
 - **No stars on the server.** Tuta keeps none, so a star stays on this
   computer.
-- **No end-to-end encrypted sending between Tuta accounts.** Mail is sent
-  as ordinary mail, readable by the recipients' providers. A message whose
-  recipients are all on Tuta is refused rather than sent unencrypted, so it
-  is best sent from Tuta's own app.
-- **Polling only.** Tuta offers no push the helper can use, so new mail is
-  looked for at the automatic fetch interval, at least once a minute, or
-  every two minutes with automatic fetching off.
-- **Removing the account** deletes its session from the keyring. The
-  session on Tuta's side is left to expire, as the SDK has no way to end
-  it.
+- **No password-protected mail to other providers.** Tuta can encrypt for
+  someone outside Tuta with a password you share with them; the helper
+  cannot, so such mail goes as ordinary mail.
+- **Keys are not verified by hand.** Each recipient's key is taken from
+  Tuta as it is, as Tuta's own app does for every contact you have not
+  verified there.
+- **No searching on the server.** Tuta's servers hold only ciphertext, so
+  search finds what is on this computer.
+- **Removing the account** ends its session on Tuta's servers and deletes
+  it from the keyring.
 
-Snoozing is not offered for a Tuta account, and mail cannot be moved into
-one from another account. In `accounts.toml` the account has
-`protocol = "tuta"` and no server settings.
+Mail can be moved or copied into a Tuta account from another account, and
+copied between a Tuta account's own folders. The helper imports the whole
+message the way Tuta's own app imports a mail file, encrypted for the
+account like the rest of its mail: subject, body, attachments and headers
+are kept, an unread message stays unread, and a star stays on this
+computer. Tuta allows importing only on its Legend and Unlimited plans, as
+its own app does; on any other plan the message stays where it was and
+Hylki says why. A message larger than 25 MiB is refused too. In
+`accounts.toml` the account has `protocol = "tuta"` and no server
+settings.
 
 ### Folder order
 

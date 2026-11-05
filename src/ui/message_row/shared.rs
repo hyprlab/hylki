@@ -87,9 +87,10 @@ impl Default for RowLook {
     }
 }
 
-/// When snoozed mail comes back (#527), by (account, Message-ID), and the
-/// Snoozed folders, by (account, folder id): a row shows the time only
-/// there, not on a copy an undo has put back.
+/// When snoozed mail comes back (#527), by (account, key: the Message-ID,
+/// or a Tuta message's [`crate::models::tuta_key`]), and the Snoozed
+/// folders, by (account, folder id): a row shows the time only there, not
+/// on a copy an undo has put back.
 #[derive(Debug, Default, Clone, PartialEq)]
 pub(crate) struct SnoozedRows {
     pub(crate) times: HashMap<(u32, String), i64>,
@@ -102,9 +103,8 @@ impl SnoozedRows {
         if self.times.is_empty() || !self.folders.contains(&(msg.account_id, msg.folder_id)) {
             return None;
         }
-        self.times
-            .get(&(msg.account_id, msg.message_id.clone()))
-            .copied()
+        let at = |key: String| self.times.get(&(msg.account_id, key)).copied();
+        at(msg.message_id.clone()).or_else(|| at(crate::models::tuta_key(msg.uid)))
     }
 }
 

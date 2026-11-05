@@ -150,8 +150,8 @@ impl AppModel {
     }
 
     /// Record a just-issued move so Ctrl+Z can bring it back. Skips silently
-    /// when nothing identifies the messages (no Message-ID) — an unrecordable
-    /// move simply isn't undoable.
+    /// when nothing identifies the messages (see [`AppModel::move_key`]) —
+    /// an unrecordable move simply isn't undoable.
     pub(super) fn push_undo_move(
         &mut self,
         account_id: u32,
@@ -173,16 +173,17 @@ impl AppModel {
         restore_to: &str,
         rows: Vec<Message>,
     ) {
-        // A message with no Message-ID can't be found again on the server, so
-        // it can't be part of the step — and a step of nothing isn't undoable.
-        let rows: Vec<Message> = rows
+        // A message nothing identifies can't be found again on the server,
+        // so it can't be part of the step — and a step of nothing isn't
+        // undoable.
+        let keyed: Vec<(String, Message)> = rows
             .into_iter()
-            .filter(|m| !m.message_id.is_empty())
+            .filter_map(|m| Some((self.move_key(&m)?, m)))
             .collect();
-        if rows.is_empty() {
+        if keyed.is_empty() {
             return;
         }
-        let ids: Vec<String> = rows.iter().map(|m| m.message_id.clone()).collect();
+        let (ids, rows): (Vec<String>, Vec<Message>) = keyed.into_iter().unzip();
         // Keep each row's body with it. The reader renders from the message's
         // own body before it looks anywhere else, so a restored row opens
         // instantly instead of asking the server for a UID the move has
@@ -200,6 +201,7 @@ impl AppModel {
             .collect();
         let threads: Vec<(String, Vec<Message>)> = rows
             .iter()
+            .filter(|m| !m.message_id.is_empty())
             .filter_map(|m| {
                 self.thread_cache
                     .get(&body_key(m))
@@ -220,6 +222,21 @@ impl AppModel {
             rows_return: true,
             also: Vec::new(),
         });
+    }
+
+    /// What a moved message is found again by, on the server and among the
+    /// rows (#527): its Message-ID, or on a Tuta account its uid, which a
+    /// move there leaves as it was (see [`crate::models::tuta_key`]). `None`
+    /// for a message neither identifies.
+    pub(super) fn move_key(&self, m: &Message) -> Option<String> {
+        let tuta = self
+            .saved_account_config(m.account_id)
+            .is_some_and(|c| c.protocol == crate::config::Protocol::Tuta);
+        if tuta {
+            Some(crate::models::tuta_key(m.uid))
+        } else {
+            Some(m.message_id.clone()).filter(|id| !id.is_empty())
+        }
     }
 
     /// What to call a move in the Undo menu, taken from where it landed:
@@ -338,7 +355,11 @@ impl AppModel {
             if self.carried_bodies.len() > CARRIED_BODY_LIMIT {
                 self.carried_bodies.clear();
             }
-            for row in entry.rows.iter().filter(|m| !m.body.is_empty()) {
+            for row in entry
+                .rows
+                .iter()
+                .filter(|m| !m.body.is_empty() && !m.message_id.is_empty())
+            {
                 self.carried_bodies
                     .insert((entry.account_id, row.message_id.clone()), row.body.clone());
             }
@@ -416,10 +437,15 @@ impl AppModel {
             // copies the caches hold now — a reload may have landed since,
             // and those carry the UIDs the next action will need.
             for row in &entry.rows {
+                let key = self.move_key(row);
                 let current = self
                     .message_cache
                     .get(&(account_id, folder_id))
-                    .and_then(|ms| ms.iter().find(|c| c.message_id == row.message_id).cloned());
+                    .and_then(|ms| {
+                        ms.iter()
+                            .find(|c| key.as_deref().is_some_and(|k| c.answers_to(k)))
+                            .cloned()
+                    });
                 if let Some(m) = current {
                     self.discard_message(&m);
                 }
@@ -429,13 +455,13 @@ impl AppModel {
         let known: std::collections::HashSet<String> = self
             .message_cache
             .get(&(account_id, folder_id))
-            .map(|ms| ms.iter().map(|m| m.message_id.clone()).collect())
+            .map(|ms| ms.iter().filter_map(|m| self.move_key(m)).collect())
             .unwrap_or_default();
         let mut added = false;
         for row in &entry.rows {
             // The reload may have beaten us to it, or the user may have
             // pressed twice; either way the row is already there.
-            if known.contains(&row.message_id) {
+            if self.move_key(row).is_some_and(|k| known.contains(&k)) {
                 continue;
             }
             let mut m = row.clone();
@@ -705,16 +731,20 @@ impl AppModel {
                 // the undo put the row back itself (#200): selecting it again
                 // would tear the message down and render it a second time for
                 // no change the reader can see.
-                let already_open = self.current.as_ref().is_some_and(|c| {
-                    !c.message_id.is_empty() && message_ids.contains(&c.message_id)
-                });
+                let already_open = self
+                    .current
+                    .as_ref()
+                    .is_some_and(|c| message_ids.iter().any(|k| c.answers_to(k)));
                 if already_open {
                     return;
                 }
                 let restored = self
                     .message_cache
                     .get(&(account_id, folder_id))
-                    .and_then(|msgs| msgs.iter().find(|m| message_ids.contains(&m.message_id)))
+                    .and_then(|msgs| {
+                        msgs.iter()
+                            .find(|m| message_ids.iter().any(|k| m.answers_to(k)))
+                    })
                     .map(|m| (m.account_id, m.id));
                 if let Some(key) = restored {
                     self.message_list.emit(MessageListInput::SelectAndLoad(key));

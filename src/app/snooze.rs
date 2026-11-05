@@ -38,11 +38,9 @@ pub(super) fn load_snoozed() -> Vec<Snooze> {
 }
 
 /// Whether an account of `protocol` can snooze: snoozed mail waits in a
-/// folder on the server, which POP3 has none of and a Tuta account cannot
-/// make (its helper creates no folders), and is found again by Message-ID,
-/// which a Tuta listing lacks until the body is read.
+/// folder on the server, which POP3 has none of.
 fn snooze_supported(protocol: config::Protocol) -> bool {
-    !matches!(protocol, config::Protocol::Pop3 | config::Protocol::Tuta)
+    protocol != config::Protocol::Pop3
 }
 
 /// The messages a reply in `messages` brings back early: the snoozed ones it
@@ -131,8 +129,7 @@ impl AppModel {
     }
 
     /// What the list's menus offer in a folder of `kind` (#527): nothing
-    /// in Drafts, Templates, a POP3 inbox or a Tuta account, Unsnooze in
-    /// Snoozed.
+    /// in Drafts, Templates or a POP3 inbox, Unsnooze in Snoozed.
     pub(super) fn snooze_offer(&self, account_id: u32, kind: Option<FolderKind>) -> Option<bool> {
         let unsnoozable = self
             .saved_account_config(account_id)
@@ -208,10 +205,11 @@ impl AppModel {
             .is_some_and(|m| snoozed(m.account_id, m.folder_id))
     }
 
-    /// Whether `m` can be snoozed: it has a Message-ID to be found again
-    /// by, a folder on a server to wait in, and is not a draft or template.
+    /// Whether `m` can be snoozed: it has a key to be found again by (see
+    /// [`AppModel::move_key`]), a folder on a server to wait in, and is not
+    /// a draft or template.
     pub(super) fn snoozable(&self, m: &Message) -> bool {
-        !m.message_id.is_empty()
+        self.move_key(m).is_some()
             && self
                 .saved_account_config(m.account_id)
                 .is_some_and(|c| snooze_supported(c.protocol))
@@ -444,9 +442,9 @@ impl AppModel {
         let mut groups: MoveGroups = HashMap::new();
         let mut leaving = Vec::new();
         for m in &messages {
-            if !self.snoozable(m) {
+            let Some(key) = self.move_key(m).filter(|_| self.snoozable(m)) else {
                 continue;
-            }
+            };
             let (Some(src), Some(account)) = (
                 self.resolve_folder_path(m),
                 self.account_email(m.account_id),
@@ -457,13 +455,13 @@ impl AppModel {
                 let back = self
                     .snoozed
                     .iter()
-                    .find(|s| s.account == account && s.message_id == m.message_id)
+                    .find(|s| s.account == account && s.message_id == key)
                     .map(|s| s.folder.clone())
                     .or_else(|| self.inbox_of(m.account_id).map(|f| f.path.clone()));
                 if let Some(folder) = back {
                     self.record_snooze(Snooze {
                         account,
-                        message_id: m.message_id.clone(),
+                        message_id: key,
                         until,
                         at: now,
                         folder,
@@ -478,7 +476,7 @@ impl AppModel {
             };
             self.record_snooze(Snooze {
                 account,
-                message_id: m.message_id.clone(),
+                message_id: key,
                 until,
                 at: now,
                 folder: src.clone(),
@@ -533,9 +531,9 @@ impl AppModel {
         let now = crate::datefmt::now();
         let mut leaving = Vec::new();
         for m in &messages {
-            if m.message_id.is_empty() {
+            let Some(key) = self.move_key(m) else {
                 continue;
-            }
+            };
             let Some(account) = self.account_email(m.account_id) else {
                 continue;
             };
@@ -544,7 +542,7 @@ impl AppModel {
             match self
                 .snoozed
                 .iter_mut()
-                .find(|s| s.account == account && s.message_id == m.message_id)
+                .find(|s| s.account == account && s.message_id == key)
             {
                 Some(s) => s.until = now,
                 None if in_snoozed => {
@@ -556,7 +554,7 @@ impl AppModel {
                     };
                     self.snoozed.push(Snooze {
                         account,
-                        message_id: m.message_id.clone(),
+                        message_id: key,
                         until: now,
                         at: now,
                         folder: inbox,
@@ -674,7 +672,7 @@ impl AppModel {
             .iter()
             .filter_map(|fid| self.message_cache.get(&(account_id, *fid)))
             .flat_map(|ms| ms.iter())
-            .filter(|m| message_ids.contains(&m.message_id))
+            .filter(|m| message_ids.iter().any(|k| m.answers_to(k)))
             .cloned()
             .collect();
         for m in &gone {

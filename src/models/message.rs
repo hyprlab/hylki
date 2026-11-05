@@ -165,6 +165,22 @@ pub(crate) fn preview_display(preview: &str) -> String {
     }
 }
 
+/// How snooze and undo (#527) record a message a Tuta account moved: by
+/// its uid, since a Tuta listing carries no Message-ID until the body is
+/// read, while a Tuta mail keeps its id, and so its uid, wherever it moves.
+/// Every other account's mail goes by its Message-ID.
+const TUTA_KEY: &str = "tuta-uid:";
+
+/// The key of the Tuta message whose uid is `uid`.
+pub(crate) fn tuta_key(uid: u32) -> String {
+    format!("{TUTA_KEY}{uid}")
+}
+
+/// The uid a [`tuta_key`] stands for.
+pub(crate) fn tuta_key_uid(key: &str) -> Option<u32> {
+    key.strip_prefix(TUTA_KEY)?.parse().ok()
+}
+
 impl Message {
     /// A message with nothing in it, for a test to fill in what matters.
     #[cfg(test)]
@@ -203,6 +219,13 @@ impl Message {
     /// when Settings asks for it (#541), else the one the mail gives.
     pub(crate) fn shown_from_name(&self) -> std::borrow::Cow<'_, str> {
         crate::contacts::shown_name(&self.from_name, &self.from_addr)
+    }
+
+    /// Whether `key`, as snooze and undo record a moved message (see
+    /// [`tuta_key`]), names this message.
+    pub(crate) fn answers_to(&self, key: &str) -> bool {
+        (!self.message_id.is_empty() && self.message_id == key)
+            || tuta_key_uid(key) == Some(self.uid)
     }
 
     /// Whether the message carries `keyword`. IMAP keywords are atoms

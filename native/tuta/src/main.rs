@@ -1,7 +1,13 @@
 //! Experimental native Tuta adapter. One JSON request/response on private stdio.
 //! No IMAP, SMTP, listener, keyring, database, or message logging.
+mod delivery;
 mod diag;
+mod drafts;
+mod import;
+mod mailbox_ops;
+mod thread;
 mod transport;
+mod watch;
 
 use base64::{
     engine::general_purpose::{STANDARD, URL_SAFE_NO_PAD},
@@ -15,8 +21,8 @@ use crypto_primitives::{
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::{
-    collections::HashMap,
-    io::{self, Read},
+    collections::{HashMap, HashSet},
+    io::{self, BufRead, Read},
     os::fd::{AsRawFd, FromRawFd, OwnedFd},
     sync::{Arc, Mutex},
     time::Duration,
@@ -35,9 +41,8 @@ use tutasdk::{
         generated::{
             sys::{CloseSessionServicePost, PublicKeyGetIn},
             tutanota::{
-                AttachmentKeyData, DraftAttachment, DraftCreateData, DraftData, DraftRecipient,
-                EncryptedMailAddress, Mail, MailSet, MailSetEntry, MoveMailData,
-                NewDraftAttachment, SendDraftData, SendDraftParameters, SendDraftReturn,
+                DraftAttachment, DraftCreateData, DraftData, DraftRecipient, EncryptedMailAddress,
+                Mail, MailSet, MailSetEntry, MoveMailData, NewDraftAttachment, SendDraftReturn,
                 TutanotaFile,
             },
         },
@@ -61,9 +66,10 @@ use tutasdk::{
 
 const VERSION: u32 = 1;
 // Attachments ride the same stdin pipe as the request (base64), so the cap
-// covers a large mail, not just a JSON envelope. 32 MiB bounds memory while
-// leaving headroom over the blob service's own per-file limits.
-const MAX_REQUEST_BYTES: u64 = 32 * 1024 * 1024;
+// covers a large mail, not just a JSON envelope: the largest is an `import`,
+// a whole message of up to `import::MAX_IMPORT_BYTES` (25 MiB), which base64
+// makes 33.4 MiB. 36 MiB bounds memory while leaving room for that.
+const MAX_REQUEST_BYTES: u64 = 36 * 1024 * 1024;
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(90);
 
 /// What a request that overran `REQUEST_TIMEOUT` reports. Before a send's
@@ -73,7 +79,7 @@ fn timeout_outcome(is_send: bool, submit: Submit) -> Result<Value> {
     if !is_send || submit == Submit::NotSent {
         return Err("timeout");
     }
-    submit_outcome(submit).map(|()| sent_reply(None, None))
+    submit_outcome(submit).map(|()| sent_reply(None, None, delivery::recorded().as_ref()))
 }
 const TUTA_URL: &str = "https://app.tuta.com";
 // The server rejects larger mail-mutation batches with Bad Request; both the
@@ -85,12 +91,6 @@ const MAX_BODY_BYTES: usize = 1024 * 1024;
 // Folder types, per the role table below.
 const SENT_FOLDER_TYPE: i64 = 2;
 const TRASH_FOLDER_TYPE: i64 = 3;
-// A new conversation, not a reply or forward: server-side conversation
-// linking for replies needs the parent's conversation id, which Hylki only
-// knows as an SMTP Message-ID, so every send starts conversation type NEW.
-// Local threading still works through the In-Reply-To/References headers the
-// caller filed with its own copy.
-const CONVERSATION_NEW: i64 = 0;
 const METHOD_NONE: i64 = 0;
 // The notification language on the send call. Only the server's notification
 // mails (external password delivery, which this helper refuses to compose)
@@ -201,15 +201,37 @@ enum Operation {
         delivery: Delivery,
         ordinary_confirmed: bool,
         attachments: Vec<SendAttachment>,
+        /// The parent's Message-ID, for a reply or forward (see `thread`).
+        in_reply_to: Option<String>,
+        /// Whitespace-separated Message-IDs, oldest first.
+        references: Option<String>,
+        action: Option<thread::Action>,
     },
     Revoke {
         session: Session,
     },
+    ListLabels(mailbox_ops::ListLabels),
+    CreateFolder(mailbox_ops::CreateFolder),
+    RenameFolder(mailbox_ops::RenameFolder),
+    DeleteFolder(mailbox_ops::DeleteFolder),
+    CreateLabel(mailbox_ops::CreateLabel),
+    UpdateLabel(mailbox_ops::UpdateLabel),
+    DeleteLabel(mailbox_ops::DeleteLabel),
+    ApplyLabels(mailbox_ops::ApplyLabels),
+    Delete(mailbox_ops::DeleteMails),
+    EmptyFolder(mailbox_ops::EmptyFolder),
+    SaveDraft(drafts::SaveDraft),
+    DeleteDraft(drafts::DeleteDraft),
+    Import(import::Import),
+    /// Streaming; served by `watch::serve` before `dispatch` (see `main`).
+    Watch(watch::Watch),
 }
 
-/// Which delivery the caller chose. There is no default: ordinary delivery
-/// additionally requires `ordinary_confirmed`, so it can never be selected by
-/// omitting a field.
+/// Which delivery the caller chose; there is no default. `ordinary` is the
+/// official client's own default: end-to-end encrypted when every recipient
+/// is on Tuta, ordinary for everyone otherwise -- and only then does it need
+/// `ordinary_confirmed`. `secure` is end-to-end encrypted or refused, never
+/// ordinary. See `delivery::plan`.
 #[derive(Deserialize, PartialEq, Eq, Debug)]
 #[serde(rename_all = "snake_case")]
 enum Delivery {
@@ -294,12 +316,13 @@ fn role(kind: i64) -> (&'static str, &'static str) {
     }
 }
 // `conversation` is the conversation entry's list id: Tuta files every mail
-// of one conversation in one such list, and header listings carry no
-// Message-ID or References, so it is the only threading key a client has
-// before a body is read. `reply_type` is Tuta's own replied/forwarded mark
-// (0 none, 1 replied, 2 forwarded, 3 both). All three fields are additive:
-// a client that predates them ignores them.
-fn header(mail: &Mail) -> Result<Value> {
+// of one conversation in one such list. `message_id` is the mail's own
+// Message-ID as its conversation entry keeps it, bare (null for a draft, or
+// when it could not be read): mail between Tuta accounts has no header block
+// that would carry one. `reply_type` is Tuta's own replied/forwarded mark
+// (0 none, 1 replied, 2 forwarded, 3 both). All four fields are additive: a
+// client that predates them ignores them.
+fn header(mail: &Mail, message_id: Option<&str>) -> Result<Value> {
     if !mail._errors.is_empty() {
         return Err("decryption_failed");
     }
@@ -310,6 +333,7 @@ fn header(mail: &Mail) -> Result<Value> {
         "recipient": mail.firstRecipient.as_ref().map(|r| json!({"name": r.name, "address": r.address})),
         "is_unread": mail.unread, "confidential": mail.confidential,
         "conversation": mail.conversationEntry.list_id.to_string(),
+        "message_id": message_id,
         "has_attachments": !mail.attachments.is_empty(),
         "reply_type": mail.replyType}),
     )
@@ -434,15 +458,39 @@ fn submit_outcome(submit: Submit) -> Result<()> {
 
 /// The result of a sent mail. Without the server's reply (accepted, but the
 /// reply was unreadable or the run overran after it) the ids are null: the
-/// mail went, and nothing a caller does with a send depends on them.
-fn sent_reply(reply: Option<&SendDraftReturn>, counts: Option<(usize, usize)>) -> Value {
-    json!({
+/// mail went, and nothing a caller does with a send depends on them. The
+/// delivery mode is null only if a run overran before recording it.
+fn sent_reply(
+    reply: Option<&SendDraftReturn>,
+    counts: Option<(usize, usize)>,
+    delivered: Option<&delivery::Delivered>,
+) -> Value {
+    let mut result = json!({
         "message_id": reply.map(|r| r.messageId.clone()),
         "sent_date_ms": reply.map(|r| r.sentDate.as_millis()),
         "sent_mail": reply.map(|r| id(&r.sentMail)),
         "internal_recipients": counts.map(|(internal, _)| internal),
         "external_recipients": counts.map(|(_, external)| external),
-    })
+        "confidential": null,
+        "recipients": null,
+    });
+    if let (Some(fields), Some(Value::Object(mode))) = (
+        result.as_object_mut(),
+        delivered.map(delivery::Delivered::to_json),
+    ) {
+        fields.extend(mode);
+    }
+    result
+}
+
+/// A sent reply's or forward's result with whether the mail it answers was
+/// marked replied or forwarded (see `thread::mark_parent`). New mail has no
+/// such field.
+fn with_parent_mark(mut result: Value, thread: &thread::Thread, marked: bool) -> Value {
+    if thread.parent.is_some() {
+        result["parent_marked"] = json!(marked);
+    }
+    result
 }
 
 // Which code to report when none of the offered challenges is TOTP: name
@@ -597,17 +645,35 @@ async fn sync(
         .load_all(&mailbox.mailSets.mailSets, ListLoadDirection::ASC)
         .await
         .map_err(|_| "request_failed")?;
+    let label_ids: HashSet<String> = folders
+        .iter()
+        .filter(|set| mailbox_ops::is_label(set))
+        .filter_map(|set| set._id.as_ref().map(id))
+        .collect();
     let mut folder_rows = Vec::new();
+    let mut label_rows = Vec::new();
     let mut target: Option<MailSet> = None;
     for folder in folders {
         if !folder._errors.is_empty() {
             return Err("decryption_failed");
         }
         let folder_id = id(folder._id.as_ref().ok_or("incomplete_response")?);
-        let (folder_role, fallback) = role(folder.folderType);
-        folder_rows.push(json!({"id": folder_id, "role": folder_role,
-            "label": if folder.name.is_empty() { fallback } else { &folder.name },
-            "parent": folder.parentFolder.as_ref().map(id).unwrap_or_default()}));
+        // Labels are mail sets too, listed apart from the folder tree; a
+        // label can still be selected to list its mail.
+        if mailbox_ops::is_label(&folder) {
+            label_rows.extend(mailbox_ops::label_row(&folder));
+        } else if folder.folderType == mailbox_ops::IMPORTED_FOLDER_TYPE {
+            // The set an import files its mail in besides the target folder:
+            // the official client keeps it out of the folder tree
+            // (`FolderSystem.importedMailSet`), and its mail is listed in the
+            // folders it was imported into.
+            continue;
+        } else {
+            let (folder_role, fallback) = role(folder.folderType);
+            folder_rows.push(json!({"id": folder_id, "role": folder_role,
+                "label": if folder.name.is_empty() { fallback } else { &folder.name },
+                "parent": folder.parentFolder.as_ref().map(id).unwrap_or_default()}));
+        }
         if selected.as_ref() == Some(&folder_id) || (selected.is_none() && folder.folderType == 1) {
             target = Some(folder);
         }
@@ -619,17 +685,33 @@ async fn sync(
         .await
         .map_err(|_| "request_failed")?;
     let all_ids: Vec<String> = entries.iter().map(|e| id(&e.mail)).collect();
-    let mut messages = Vec::new();
+    let mut mails = Vec::new();
     for entry in entries.iter().skip(offset).take(limit) {
         let mail: Mail = client
             .load(&entry.mail)
             .await
             .map_err(|_| "request_failed")?;
-        messages.push(header(&mail)?);
+        mails.push(mail);
     }
-    Ok(json!({"folders": folder_rows, "messages": messages,
-        "folder": id(target._id.as_ref().ok_or("incomplete_response")?),
-        "exists": all_ids.len(), "all_ids": if offset == 0 { Some(all_ids) } else { None }, "offset": offset}))
+    let message_ids = thread::message_ids(&sdk, &mails).await;
+    let mut messages = Vec::with_capacity(mails.len());
+    for mail in &mails {
+        let mut row = header(mail, thread::message_id_of(&message_ids, mail))?;
+        row["labels"] = json!(mailbox_ops::mail_labels(&mail.sets, &label_ids));
+        messages.push(row);
+    }
+    let folder = id(target._id.as_ref().ok_or("incomplete_response")?);
+    let exists = all_ids.len();
+    let all_ids = (offset == 0).then_some(all_ids);
+    Ok(json!({
+        "folders": folder_rows,
+        "labels": label_rows,
+        "messages": messages,
+        "folder": folder,
+        "exists": exists,
+        "all_ids": all_ids,
+        "offset": offset,
+    }))
 }
 async fn message(sdk: Arc<LoggedInSdk>, mail_id: String) -> Result<Value> {
     let mail: Mail = sdk
@@ -638,6 +720,8 @@ async fn message(sdk: Arc<LoggedInSdk>, mail_id: String) -> Result<Value> {
         .load(&tuple(&mail_id)?)
         .await
         .map_err(|_| "request_failed")?;
+    let message_ids = thread::message_ids(&sdk, std::slice::from_ref(&mail)).await;
+    let message_id = thread::message_id_of(&message_ids, &mail);
     let extensions = MailExtensions::new(sdk);
     let details = if mail.mailDetailsDraft.is_some() {
         extensions.load_mail_details_draft(&mail).await
@@ -661,7 +745,7 @@ async fn message(sdk: Arc<LoggedInSdk>, mail_id: String) -> Result<Value> {
         "name": file.name, "mime_type": file.mimeType, "cid": file.cid, "data": STANDARD.encode(bytes)
     })).collect();
     let address = |a: &tutasdk::entities::generated::tutanota::MailAddress| json!({"name": a.name, "address": a.address});
-    Ok(json!({"header": header(&mail)?,
+    Ok(json!({"header": header(&mail, message_id)?,
         "html": details.body.compressedText.or(details.body.text).ok_or("incomplete_response")?,
         "headers": details.headers.and_then(|h| h.compressedHeaders.or(h.headers)).unwrap_or_default(),
         "to": details.recipients.toRecipients.iter().map(address).collect::<Vec<_>>(),
@@ -735,36 +819,6 @@ async fn classify_recipients(sdk: &LoggedInSdk, addresses: &[String]) -> Vec<Rec
         });
     }
     kinds
-}
-
-/// Whether ordinary delivery may go ahead, decided before anything is
-/// written server-side. Returns the (internal, external) counts, or None when
-/// some lookup failed but an external recipient already settles the mode.
-///
-/// The official client never sends ordinary mail when no recipient is
-/// external: `SendMailModel.isConfidential()` is `confidential ||
-/// !containsExternalRecipients()`, so an all-Tuta send is always end-to-end
-/// encrypted -- which this helper cannot do (docs/tuta-confidential-send.md).
-/// Such a send is refused definitively instead of being submitted as
-/// ordinary mail the server does not deliver. With no external recipient and
-/// a failed lookup the mode cannot be decided, so that refuses too, with the
-/// lookup's own definitive code.
-fn ordinary_delivery_plan(kinds: &[RecipientKind]) -> Result<Option<(usize, usize)>> {
-    let count = |wanted: RecipientKind| kinds.iter().filter(|&&kind| kind == wanted).count();
-    let (internal, external) = (
-        count(RecipientKind::Internal),
-        count(RecipientKind::External),
-    );
-    let unknown = kinds.iter().find_map(|kind| match kind {
-        RecipientKind::Unknown(code) => Some(*code),
-        _ => None,
-    });
-    match (external, unknown) {
-        (0, Some(code)) => Err(code),
-        (0, None) => Err("confidential_send_unsupported"),
-        (_, Some(_)) => Ok(None),
-        (_, None) => Ok(Some((internal, external))),
-    }
 }
 
 /// The account's Trash and Sent folder ids.
@@ -870,7 +924,8 @@ fn draft_payload(
         bodyText: body_html.clone(),
         senderName: encrypted_name(&sender_name, &sender),
         senderMailAddress: sender,
-        // Ordinary delivery only (see `send`): never flipped silently.
+        // `send` sets it for a confidential send (see `delivery::plan`);
+        // never flipped silently.
         confidential: false,
         method: METHOD_NONE,
         compressedBodyText: Some(body_html),
@@ -895,62 +950,6 @@ fn aggregate_id(randomizer: &RandomizerFacade) -> Option<CustomId> {
     ))
 }
 
-fn ordinary_send_payload(
-    draft: IdTupleGenerated,
-    mail_session_key: Vec<u8>,
-    attachment_keys: Vec<AttachmentKeyData>,
-    randomizer: &RandomizerFacade,
-) -> SendDraftData {
-    // Both copies of the attachment keys are aggregates in their own right.
-    let keyed = |keys: &[AttachmentKeyData]| -> Vec<AttachmentKeyData> {
-        keys.iter()
-            .map(|key| AttachmentKeyData {
-                _id: aggregate_id(randomizer),
-                ..key.clone()
-            })
-            .collect()
-    };
-    SendDraftData {
-        _format: 0,
-        language: SEND_LANGUAGE.to_string(),
-        // Ordinary delivery hands the server the clear session keys, exactly
-        // as the official client does for a non-confidential draft. The
-        // bucket-encrypted variants stay empty: there is no bucket.
-        mailSessionKey: Some(mail_session_key.clone()),
-        bucketEncMailSessionKey: None,
-        senderNameUnencrypted: None,
-        // Plaintext stays off in both copies: the official client reads the
-        // account's sendPlaintextOnly property, but Hylki has no such
-        // setting and always composes HTML, so the flag matches the content
-        // rather than a server-side switch the user cannot see here.
-        plaintext: false,
-        calendarMethod: false,
-        sessionEncEncryptionAuthStatus: None,
-        sendAt: None,
-        allowUndo: false,
-        internalRecipientKeyData: Vec::new(),
-        secureExternalRecipientKeyData: Vec::new(),
-        attachmentKeyData: keyed(&attachment_keys),
-        mail: draft.clone(),
-        symEncInternalRecipientKeyData: Vec::new(),
-        parameters: Some(SendDraftParameters {
-            _id: aggregate_id(randomizer),
-            language: SEND_LANGUAGE.to_string(),
-            mailSessionKey: Some(mail_session_key),
-            bucketEncMailSessionKey: None,
-            senderNameUnencrypted: None,
-            plaintext: false,
-            calendarMethod: false,
-            sessionEncEncryptionAuthStatus: None,
-            mail: draft,
-            internalRecipientKeyData: Vec::new(),
-            secureExternalRecipientKeyData: Vec::new(),
-            symEncInternalRecipientKeyData: Vec::new(),
-            attachmentKeyData: keyed(&attachment_keys),
-        }),
-    }
-}
-
 struct StagedAttachment {
     name: String,
     mime_type: String,
@@ -970,25 +969,11 @@ async fn send(
     reply_tos: Vec<SendRecipient>,
     subject: String,
     body_html: String,
-    delivery: Delivery,
+    requested: Delivery,
     ordinary_confirmed: bool,
     attachments: Vec<SendAttachment>,
+    thread: thread::Thread,
 ) -> Result<Value> {
-    // Secure delivery is refused, not downgraded. Composing it needs the
-    // recipient-key path the pinned SDK keeps private: LoggedInSdk exposes
-    // neither AsymmetricCryptoFacade nor PublicKeyProvider, and the TutaCrypt
-    // sender-identity flow has no public entry point, so only legacy RSA
-    // recipients could be served -- and serving some Tuta recipients while
-    // failing others is a trap, not a feature. Follow-up: expose the facades
-    // (an SDK patch adding getters) or re-pin to an SDK with a send API, then
-    // implement recipient-key lookup + bucket encryption + key verification
-    // before enabling this arm.
-    if delivery == Delivery::Secure {
-        return Err("confidential_send_unsupported");
-    }
-    if !ordinary_confirmed {
-        return Err("ordinary_delivery_requires_consent");
-    }
     let addresses: Vec<String> = to
         .iter()
         .chain(cc.iter())
@@ -1001,7 +986,7 @@ async fn send(
     {
         return Err("invalid_recipient");
     }
-    if body_html.as_bytes().len() > MAX_BODY_BYTES {
+    if body_html.len() > MAX_BODY_BYTES {
         return Err("body_too_large");
     }
     let randomizer = RandomizerFacade::from_core(rand_core::OsRng);
@@ -1042,8 +1027,29 @@ async fn send(
         .await
         .map_err(diag::fail("sender group key", "send_failed"))?;
     // Decided before any server-side write (blob upload, draft, submit): a
-    // send the helper cannot deliver as ordinary mail is refused here.
-    let counts = ordinary_delivery_plan(&classify_recipients(&sdk, &addresses).await)?;
+    // send that can go out in neither mode is refused here, and so is a
+    // confidential one with an unknown Tuta recipient. The recipients' keys
+    // are loaded and the bucket key encrypted for them now, for the same
+    // reason.
+    let plan = delivery::plan(
+        &requested,
+        ordinary_confirmed,
+        &classify_recipients(&sdk, &addresses).await,
+    )?;
+    let (counts, confidential) = match plan {
+        delivery::Plan::Ordinary(counts) => (counts, None),
+        delivery::Plan::Confidential => {
+            let bucket_key = GenericAesKey::Aes256(Aes256Key::generate(&randomizer));
+            let recipients = delivery::recipient_keys(
+                &sdk,
+                &mail_group_id,
+                &bucket_key,
+                &delivery::unique_addresses(&addresses),
+            )
+            .await?;
+            (Some((addresses.len(), 0)), Some((bucket_key, recipients)))
+        }
+    };
     let file_data: Vec<FileData> = staged
         .iter()
         .map(|s| FileData {
@@ -1107,34 +1113,38 @@ async fn send(
         &mail_session_key,
         InitializationVector::generate(&randomizer),
     );
+    let mut draft_data = draft_payload(
+        subject,
+        body_html,
+        sender,
+        sender_name,
+        draft_recipients(&to),
+        draft_recipients(&cc),
+        draft_recipients(&bcc),
+        reply_tos
+            .iter()
+            .map(|r| EncryptedMailAddress {
+                _id: None,
+                name: encrypted_name(&r.name, &r.address),
+                address: r.address.clone(),
+                _errors: Default::default(),
+            })
+            .collect(),
+        added_attachments,
+    );
+    // The official client marks the draft itself confidential; the server
+    // then expects bucket-encrypted keys at submit.
+    draft_data.confidential = confidential.is_some();
     let created = sdk
         .get_service_executor()
         .post::<DraftService>(
             DraftCreateData {
                 _format: 0,
-                previousMessageId: None,
-                conversationType: CONVERSATION_NEW,
+                previousMessageId: thread.parent.clone(),
+                conversationType: thread.conversation_type,
                 ownerEncSessionKey: owner_enc.object,
                 ownerKeyVersion: i64::try_from(owner_enc.version).map_err(|_| "send_failed")?,
-                draftData: draft_payload(
-                    subject,
-                    body_html,
-                    sender,
-                    sender_name,
-                    draft_recipients(&to),
-                    draft_recipients(&cc),
-                    draft_recipients(&bcc),
-                    reply_tos
-                        .iter()
-                        .map(|r| EncryptedMailAddress {
-                            _id: None,
-                            name: encrypted_name(&r.name, &r.address),
-                            address: r.address.clone(),
-                            _errors: Default::default(),
-                        })
-                        .collect(),
-                    added_attachments,
-                ),
+                draftData: draft_data,
                 _errors: Default::default(),
             },
             ExtraServiceParams {
@@ -1164,23 +1174,47 @@ async fn send(
             return Err("send_failed");
         }
     };
-    let attachment_keys = match file_session_keys(&sdk, &mail).await {
-        Ok(keys) => keys,
+    let files = match file_session_keys(&sdk, &mail).await {
+        Ok(files) => files,
         Err(()) => {
             diag::note("attachment keys failed");
             cleanup_draft(sdk.clone(), &draft).await;
             return Err("send_failed");
         }
     };
+    let (keys, delivered) = match confidential {
+        Some((bucket_key, recipients)) => {
+            let delivered = delivery::Delivered {
+                confidential: true,
+                recipients: recipients
+                    .iter()
+                    .map(delivery::RecipientReport::of)
+                    .collect(),
+            };
+            match delivery::confidential_keys(
+                &bucket_key,
+                &mail_session_key,
+                &files,
+                recipients.into_iter().map(|key| key.key_data).collect(),
+                &randomizer,
+            ) {
+                Ok(keys) => (keys, delivered),
+                Err(code) => {
+                    cleanup_draft(sdk.clone(), &draft).await;
+                    return Err(code);
+                }
+            }
+        }
+        None => (
+            delivery::ordinary_keys(&mail_session_key, &files),
+            delivery::Delivered::default(),
+        ),
+    };
+    delivery::record(&delivered);
     let reply = match sdk
         .get_service_executor()
         .post::<SendDraftService>(
-            ordinary_send_payload(
-                draft.clone(),
-                mail_session_key.as_bytes().to_vec(),
-                attachment_keys,
-                &randomizer,
-            ),
+            delivery::send_payload(draft.clone(), keys, &randomizer),
             ExtraServiceParams::default(),
         )
         .await
@@ -1191,7 +1225,14 @@ async fn send(
             diag::failed("send draft (SendDraftService post)", &error);
             diag::note(&format!("submit on the wire: {submit:?}"));
             return match submit_outcome(submit) {
-                Ok(()) => Ok(sent_reply(None, counts)),
+                Ok(()) => {
+                    let marked = thread::mark_parent(&sdk, &mail, &thread).await;
+                    Ok(with_parent_mark(
+                        sent_reply(None, counts, Some(&delivered)),
+                        &thread,
+                        marked,
+                    ))
+                }
                 // The server may still be sending it: leave the draft alone.
                 Err(code @ "send_uncertain") => Err(code),
                 Err(code) => {
@@ -1201,7 +1242,12 @@ async fn send(
             };
         }
     };
-    Ok(sent_reply(Some(&reply), counts))
+    let marked = thread::mark_parent(&sdk, &mail, &thread).await;
+    Ok(with_parent_mark(
+        sent_reply(Some(&reply), counts, Some(&delivered)),
+        &thread,
+        marked,
+    ))
 }
 
 /// Each attachment file's session key, resolved from the server like the
@@ -1210,7 +1256,7 @@ async fn send(
 async fn file_session_keys(
     sdk: &LoggedInSdk,
     mail: &Mail,
-) -> std::result::Result<Vec<AttachmentKeyData>, ()> {
+) -> std::result::Result<Vec<(IdTupleGenerated, GenericAesKey)>, ()> {
     if mail.attachments.is_empty() {
         return Ok(Vec::new());
     }
@@ -1253,26 +1299,28 @@ async fn file_session_keys(
     }
     mail.attachments
         .iter()
-        .map(|file_id| {
-            keys.remove(&id(file_id)).map(|key| AttachmentKeyData {
-                _id: None,
-                bucketEncFileSessionKey: None,
-                fileSessionKey: Some(key.as_bytes().to_vec()),
-                file: file_id.clone(),
-            })
-        })
+        .map(|file_id| keys.remove(&id(file_id)).map(|key| (file_id.clone(), key)))
         .collect::<Option<Vec<_>>>()
         .ok_or(())
+}
+
+/// The SDK over the traced transport, as every operation uses it.
+fn new_sdk() -> Result<Sdk> {
+    let native =
+        NativeRestClient::try_new().map_err(diag::fail("transport setup", "transport_failed"))?;
+    let transport: Arc<dyn RestClient> = Arc::new(transport::Traced(Arc::new(native)));
+    Ok(Sdk::new(
+        TUTA_URL.into(),
+        transport,
+        Arc::new(MemoryFiles::default()),
+    ))
 }
 
 async fn dispatch(request: Request) -> Result<Value> {
     if request.version != VERSION {
         return Err("unsupported_version");
     }
-    let native =
-        NativeRestClient::try_new().map_err(diag::fail("transport setup", "transport_failed"))?;
-    let transport: Arc<dyn RestClient> = Arc::new(transport::Traced(Arc::new(native)));
-    let sdk = Sdk::new(TUTA_URL.into(), transport, Arc::new(MemoryFiles::default()));
+    let sdk = new_sdk()?;
     match request.operation {
         Operation::Login {
             email,
@@ -1316,24 +1364,13 @@ async fn dispatch(request: Request) -> Result<Value> {
             ids,
             destination,
         } => {
-            if ids.len() > MAIL_BATCH_LIMIT {
+            if ids.is_empty() || ids.len() > MAIL_BATCH_LIMIT {
                 return Err("invalid_batch");
             }
-            let parsed = ids.iter().map(|s| tuple(s)).collect::<Result<Vec<_>>>()?;
-            let destination = tuple(&destination)?;
+            ids.iter().map(|s| tuple(s)).collect::<Result<Vec<_>>>()?;
+            tuple(&destination)?;
             let logged_in = resume(&sdk, session).await?;
-            let mut applied = 0;
-            for chunk in parsed.chunks(MAIL_BATCH_LIMIT) {
-                if MailExtensions::new(logged_in.clone())
-                    .move_mails(chunk.to_vec(), destination.clone())
-                    .await
-                    .is_err()
-                {
-                    return Ok(outcomes(&ids, applied, Some("request_failed")));
-                }
-                applied += chunk.len();
-            }
-            Ok(outcomes(&ids, applied, None))
+            mailbox_ops::move_mails(&logged_in, &ids, &destination).await
         }
         Operation::Send {
             session,
@@ -1348,7 +1385,11 @@ async fn dispatch(request: Request) -> Result<Value> {
             delivery,
             ordinary_confirmed,
             attachments,
+            in_reply_to,
+            references,
+            action,
         } => {
+            let thread = thread::Thread::of(in_reply_to.as_deref(), references.as_deref(), action)?;
             send(
                 resume(&sdk, session).await?,
                 sender,
@@ -1362,10 +1403,27 @@ async fn dispatch(request: Request) -> Result<Value> {
                 delivery,
                 ordinary_confirmed,
                 attachments,
+                thread,
             )
             .await
         }
         Operation::Revoke { session } => revoke(&sdk, session).await,
+        Operation::ListLabels(r) => mailbox_ops::list_labels(&sdk, r).await,
+        Operation::CreateFolder(r) => mailbox_ops::create_folder(&sdk, r).await,
+        Operation::RenameFolder(r) => mailbox_ops::rename_folder(&sdk, r).await,
+        Operation::DeleteFolder(r) => mailbox_ops::delete_folder(&sdk, r).await,
+        Operation::CreateLabel(r) => mailbox_ops::create_label(&sdk, r).await,
+        Operation::UpdateLabel(r) => mailbox_ops::update_label(&sdk, r).await,
+        Operation::DeleteLabel(r) => mailbox_ops::delete_label(&sdk, r).await,
+        Operation::ApplyLabels(r) => mailbox_ops::apply_labels(&sdk, r).await,
+        Operation::Delete(r) => mailbox_ops::delete_mails(&sdk, r).await,
+        Operation::EmptyFolder(r) => mailbox_ops::empty_folder(&sdk, r).await,
+        Operation::SaveDraft(r) => drafts::save_draft(&sdk, r).await,
+        Operation::DeleteDraft(r) => drafts::delete_draft(&sdk, r).await,
+        Operation::Import(r) => import::import(&sdk, r).await,
+        // A watch arrives here only without its newline or with stdin
+        // already closed: there is nothing to stream to.
+        Operation::Watch(_) => Err("invalid_request"),
     }
 }
 #[tokio::main]
@@ -1374,10 +1432,16 @@ async fn main() {
     // risks the reply, it must not fail the operation itself.
     let quiet = quiet_stdout().ok();
     let mut input = Vec::new();
-    let result = match io::stdin()
-        .take(MAX_REQUEST_BYTES + 1)
-        .read_to_end(&mut input)
-    {
+    let mut stdin = io::stdin().lock().take(MAX_REQUEST_BYTES + 1);
+    // `watch` is one newline-terminated line on a stdin that stays open;
+    // every other request is read to EOF.
+    let first = stdin.read_until(b'\n', &mut input);
+    if first.is_ok() && watch::is_watch(&input) {
+        drop(stdin);
+        watch::serve(&input, quiet.as_ref()).await;
+        return;
+    }
+    let result = match first.and_then(|_| stdin.read_to_end(&mut input)) {
         Ok(_) if input.len() <= MAX_REQUEST_BYTES as usize => {
             match serde_json::from_slice::<Request>(&input) {
                 Ok(request) => {
@@ -1571,6 +1635,40 @@ mod tests {
         .is_err());
     }
     #[test]
+    fn send_takes_an_optional_place_in_a_conversation() {
+        let parse = |extra: &str| {
+            serde_json::from_str::<Request>(&format!(
+                r#"{{"version":1,"op":"send","session":{{"login":"a@tuta.com","user_id":"u",
+                "access_token":"t","encrypted_passphrase_key":[]}},
+                "sender":"a@tuta.com","sender_name":"A","to":[],"cc":[],"bcc":[],
+                "reply_tos":[],"subject":"s","body_html":"b","delivery":"ordinary",
+                "ordinary_confirmed":true,"attachments":[]{extra}}}"#
+            ))
+        };
+        assert!(matches!(
+            parse("").unwrap().operation,
+            Operation::Send {
+                in_reply_to: None,
+                references: None,
+                action: None,
+                ..
+            }
+        ));
+        let reply =
+            parse(r#","in_reply_to":"<p@x>","references":"<r@x> <p@x>","action":"reply_all""#);
+        assert!(matches!(
+            reply.unwrap().operation,
+            Operation::Send {
+                in_reply_to: Some(_),
+                references: Some(_),
+                action: Some(thread::Action::ReplyAll),
+                ..
+            }
+        ));
+        assert!(parse(r#","action":"redirect""#).is_err());
+        assert!(parse(r#","in_reply_to":1"#).is_err());
+    }
+    #[test]
     fn address_validation_rejects_only_the_shapeless() {
         for address in ["ada@tuta.com", "a+b@x.io", "Ada@Tuta.Com"] {
             assert!(valid_address(address), "{address}");
@@ -1668,9 +1766,15 @@ mod tests {
     fn an_accepted_submit_with_an_unreadable_reply_was_sent() {
         assert_eq!(submit_outcome(Submit::Answered(200)), Ok(()));
         assert_eq!(submit_outcome(Submit::Answered(201)), Ok(()));
-        let reply = sent_reply(None, Some((0, 1)));
+        let reply = sent_reply(None, Some((0, 1)), Some(&delivery::Delivered::default()));
         assert!(reply["sent_mail"].is_null());
         assert_eq!(reply["external_recipients"], json!(1));
+        assert_eq!(reply["confidential"], json!(false));
+        assert_eq!(reply["recipients"], json!([]));
+        // A run that overran before choosing a mode says so.
+        let unknown = sent_reply(None, None, None);
+        assert!(unknown["confidential"].is_null());
+        assert!(unknown["recipients"].is_null());
     }
     #[test]
     fn tuta_domains_are_internal_without_a_lookup() {
@@ -1690,51 +1794,6 @@ mod tests {
         ] {
             assert!(!is_tuta_address(address), "{address}");
         }
-    }
-    #[test]
-    fn an_all_internal_send_is_refused_before_anything_is_written() {
-        use RecipientKind::*;
-        // A send to one's own Tuta address: the official client would make it
-        // end-to-end encrypted, which this helper cannot -- refuse, never
-        // submit it as ordinary mail.
-        assert_eq!(
-            ordinary_delivery_plan(&[Internal]),
-            Err("confidential_send_unsupported")
-        );
-        assert_eq!(
-            ordinary_delivery_plan(&[Internal, Internal]),
-            Err("confidential_send_unsupported")
-        );
-        assert_eq!(
-            ordinary_delivery_plan(&[]),
-            Err("confidential_send_unsupported")
-        );
-    }
-    #[test]
-    fn an_external_recipient_keeps_ordinary_delivery() {
-        use RecipientKind::*;
-        assert_eq!(ordinary_delivery_plan(&[External]), Ok(Some((0, 1))));
-        assert_eq!(
-            ordinary_delivery_plan(&[Internal, External]),
-            Ok(Some((1, 1)))
-        );
-        // A failed lookup leaves the counts unknown, not the send.
-        assert_eq!(
-            ordinary_delivery_plan(&[External, Unknown("transport_failed")]),
-            Ok(None)
-        );
-    }
-    #[test]
-    fn an_undecidable_mode_refuses_definitively() {
-        use RecipientKind::*;
-        assert_eq!(
-            ordinary_delivery_plan(&[Internal, Unknown("transport_failed")]),
-            Err("transport_failed")
-        );
-        assert_eq!(
-            ordinary_delivery_plan(&[Unknown("send_failed")]),
-            Err("send_failed")
-        );
     }
     #[test]
     fn only_a_timeout_after_submit_can_be_uncertain() {
@@ -1799,54 +1858,6 @@ mod tests {
         assert_eq!(payload.toRecipients[0].name, "bo@example.com");
         assert_eq!(payload.bodyText, "<p>body</p>");
         assert_eq!(encrypted_name("Bo", "bo@example.com"), "Bo");
-    }
-    #[test]
-    fn ordinary_send_payload_carries_clear_keys_and_no_bucket() {
-        let randomizer = RandomizerFacade::from_core(rand_core::OsRng);
-        let draft = IdTupleGenerated::new(GeneratedId("list".into()), GeneratedId("mail".into()));
-        let payload = ordinary_send_payload(draft, vec![7; 32], Vec::new(), &randomizer);
-        assert_eq!(payload.mailSessionKey, Some(vec![7; 32]));
-        assert!(payload.bucketEncMailSessionKey.is_none());
-        assert!(payload.internalRecipientKeyData.is_empty());
-        assert!(payload.secureExternalRecipientKeyData.is_empty());
-        assert!(payload.symEncInternalRecipientKeyData.is_empty());
-        assert!(!payload.plaintext);
-        let parameters = payload.parameters.unwrap();
-        assert_eq!(parameters.mailSessionKey, Some(vec![7; 32]));
-        assert_eq!(parameters.language, SEND_LANGUAGE);
-    }
-    #[test]
-    fn every_send_payload_aggregate_carries_an_id() {
-        // SendDraftData is not encrypted, so the SDK never fills a missing
-        // aggregate id in, and its serializer refuses the submit before it
-        // is sent ("Invalid value: ... TypeId(1788) _id", seen live).
-        let randomizer = RandomizerFacade::from_core(rand_core::OsRng);
-        let draft = IdTupleGenerated::new(GeneratedId("list".into()), GeneratedId("mail".into()));
-        let key = |element: &str| AttachmentKeyData {
-            _id: None,
-            bucketEncFileSessionKey: None,
-            fileSessionKey: Some(vec![1; 32]),
-            file: IdTupleGenerated::new(GeneratedId("files".into()), GeneratedId(element.into())),
-        };
-        let payload =
-            ordinary_send_payload(draft, vec![7; 32], vec![key("a"), key("b")], &randomizer);
-        let parameters = payload.parameters.as_ref().unwrap();
-        let ids: Vec<&CustomId> = std::iter::once(&parameters._id)
-            .chain(payload.attachmentKeyData.iter().map(|k| &k._id))
-            .chain(parameters.attachmentKeyData.iter().map(|k| &k._id))
-            .map(|id| id.as_ref().expect("aggregate without an id"))
-            .collect();
-        assert_eq!(ids.len(), 5);
-        for id in &ids {
-            // Four random bytes, base64url without padding, as the SDK mints.
-            assert_eq!(URL_SAFE_NO_PAD.decode(id.as_str()).unwrap().len(), 4);
-        }
-        // The file references survive, in order, in both copies.
-        let files = |keys: &[AttachmentKeyData]| -> Vec<String> {
-            keys.iter().map(|k| k.file.element_id.to_string()).collect()
-        };
-        assert_eq!(files(&payload.attachmentKeyData), ["a", "b"]);
-        assert_eq!(files(&parameters.attachmentKeyData), ["a", "b"]);
     }
     #[test]
     fn attachment_metadata_round_trips_through_the_sdk_cipher() {

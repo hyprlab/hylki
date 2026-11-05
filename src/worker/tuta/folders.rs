@@ -15,19 +15,26 @@ pub(super) struct TutaFolder {
     pub(super) folder: Folder,
 }
 
-/// The kind of folder a Tuta role is. Tuta has no Templates or Snoozed
-/// folder, and a user folder of any name stays Custom: neither a template
-/// nor a snooze can be filed on a Tuta account (no draft upload, no folder
-/// creation), so a folder only named like one must not be taken for it.
-fn role_kind(role: &str) -> FolderKind {
-    match role {
+/// The kind of a Tuta folder: its role, which names every system folder.
+/// Tuta has no Templates or Snoozed folder, so those are user folders
+/// Hylki makes at the top of the tree (#360, #527) and go by name there,
+/// as on Microsoft 365; any other user folder stays Custom.
+fn folder_kind(row: &FolderRow) -> FolderKind {
+    match row.role.as_str() {
         "inbox" => FolderKind::Inbox,
         "sent" => FolderKind::Sent,
         "drafts" => FolderKind::Drafts,
         "trash" => FolderKind::Trash,
         "junk" => FolderKind::Junk,
         "archive" => FolderKind::Archive,
-        // `other`, and any role a newer helper adds: still browsable.
+        "other" if row.parent.is_empty() && crate::models::is_templates_name(&row.label) => {
+            FolderKind::Templates
+        }
+        "other" if row.parent.is_empty() && crate::models::is_snoozed_name(&row.label) => {
+            FolderKind::Snoozed
+        }
+        // Any other folder, and any role a newer helper adds: still
+        // browsable.
         _ => FolderKind::Custom,
     }
 }
@@ -88,7 +95,7 @@ pub(super) fn tuta_folders(
                     .find(|f| f.path == path)
                     .map_or(0, |f| f.unread),
                 path,
-                kind: role_kind(&row.role),
+                kind: folder_kind(row),
                 childless: false,
             },
         });

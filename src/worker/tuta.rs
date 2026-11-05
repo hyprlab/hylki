@@ -14,12 +14,16 @@
 //! so mail threads by a synthetic `tuta-conv:` token (stripped before any
 //! wire header in `build_email`) until a read body fills them in.
 //!
-//! What the helper cannot do yet is refused out loud rather than faked:
-//! deleting for good, folder changes, drafts, and importing mail. Stars
-//! and tags are kept on this computer only, as on POP3: Tuta has neither.
-//! There is no push, so new mail comes on a poll.
+//! Folders are made, renamed, moved and deleted on the server; drafts and
+//! templates are Tuta drafts; tags are Tuta labels (see `labels`); mail
+//! is erased for good from the Trash or Spam, as the server allows. Stars
+//! are kept on this computer only, as on POP3: Tuta has none. Mail from
+//! another account is imported the way Tuta's own app imports a mail file,
+//! re-encrypted for this account by the helper. New mail is pushed over
+//! Tuta's event bus while the helper's `watch` runs (see `push`), and
+//! polled for while it does not.
 
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tokio::sync::mpsc;
 
@@ -28,6 +32,7 @@ use crate::config::AccountConfig;
 use crate::i18n::{i18n, i18n_f};
 use crate::worker::auth::resolve_keyring_passwords;
 use crate::worker::index_queue::index_pause;
+use crate::worker::helper::HelperError;
 use crate::worker::lane::{related_from_cache, thread_summaries_with_members};
 use crate::worker::offline::Offline;
 use crate::worker::outbox::{delete_queued, emit_outbox};
@@ -35,24 +40,31 @@ use crate::worker::strip::strip_refused;
 use crate::worker::{MailRequest, WorkerEvent};
 
 mod folders;
+mod handle_folders;
 mod handle_read;
 mod handle_send;
 mod handle_write;
 mod index;
+mod labels;
 mod messages;
 mod mime;
 mod offline;
 mod ops;
+mod push;
 mod send;
 mod wire;
 
 pub(super) use wire::SPEC;
 
-use handle_write::permanent_delete_text;
-use index::{tuta_backfill_step, TutaState};
+use index::{tuta_backfill_step, tuta_load_folder, TutaState};
 use offline::tuta_offline_step;
-use ops::tuta_poll;
+use ops::{emit_folder, tuta_poll};
+use push::{spawn_tuta_push, PushSignal};
 use send::tuta_flush_outbox;
+
+/// While push is live, the poll still runs this often, as the safety net
+/// for a change the event bus did not report.
+const PUSHED_POLL: Duration = Duration::from_secs(15 * 60);
 
 /// A Tuta account's worker: the folder and uid maps, the background index,
 /// and what it reports through.
@@ -65,6 +77,17 @@ struct TutaWorker<E> {
     state: TutaState,
     /// The download of the account's offline period (#536).
     offline: Offline,
+    /// The push thread's signals (see `push`).
+    push_rx: mpsc::UnboundedReceiver<PushSignal>,
+    /// Its sender, until the thread is started with it.
+    push_tx: Option<mpsc::UnboundedSender<PushSignal>>,
+    /// Whether the helper's `watch` is connected now.
+    push_live: bool,
+    /// When the Inbox was last polled.
+    polled: Instant,
+    /// The folder the user last opened, refreshed along with the Inbox
+    /// when a change was pushed without saying where.
+    open: Option<String>,
 }
 
 /// Run a Tuta account until the UI drops its sender.
@@ -85,7 +108,7 @@ pub(super) async fn run_tuta(
 /// again at once, so a test leaves no sign-in behind. An account that asks
 /// for a second factor says so; signing in for good is the editor's.
 pub(super) async fn test_tuta(account: &AccountConfig) -> Result<(), String> {
-    use crate::worker::helper::{login, process_transport, HelperClient, HelperError, Object};
+    use crate::worker::helper::{login, process_transport, HelperClient, Object};
     let account = account.clone();
     let session = match account.helper_session.as_str() {
         "" => crate::config::read_session(&account.email)
@@ -142,6 +165,7 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
             emit(WorkerEvent::Folders(cached_folders));
         }
         resolve_keyring_passwords(&mut account, &emit).await;
+        let (push_tx, push_rx) = mpsc::unbounded_channel();
         let mut worker = TutaWorker {
             account_id,
             state: TutaState::new(&account),
@@ -150,9 +174,33 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
             emit,
             cache,
             offline: Offline::default(),
+            push_rx,
+            push_tx: Some(push_tx),
+            push_live: false,
+            polled: Instant::now(),
+            open: None,
         };
         worker.sync_folders().await;
+        worker.start_push();
         worker
+    }
+
+    /// Start the push thread, when the push preference allows it and the
+    /// account has a sign-in to watch with. It lives as long as the worker.
+    fn start_push(&mut self) {
+        let wanted = self
+            .account
+            .push
+            .unwrap_or_else(|| crate::config::load_privacy().push);
+        if !wanted {
+            return;
+        }
+        let Ok(client) = self.state.client(&self.account) else {
+            return;
+        };
+        if let Some(tx) = self.push_tx.take() {
+            spawn_tuta_push(client, None, tx);
+        }
     }
 
     /// The folder tree and the Inbox, with a failure said.
@@ -176,12 +224,12 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
         }
     }
 
-    /// Serve requests until the UI hangs up; between them, poll the Inbox
-    /// and index the mailbox in the background.
+    /// Serve requests until the UI hangs up; between them, follow push,
+    /// poll the Inbox while push is down, and index the mailbox in the
+    /// background.
     async fn run(mut self) {
-        // No push: the helper offers no event channel. The auto-fetch
-        // preference sets the cadence when it's on; otherwise a quiet
-        // couple of minutes, as for Microsoft 365.
+        // The auto-fetch preference sets the poll's cadence when it's on;
+        // otherwise a quiet couple of minutes, as for Microsoft 365.
         let poll_secs = match crate::config::load_privacy().fetch_interval_secs {
             0 => 120,
             s => s.max(60),
@@ -207,11 +255,14 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
                     Some(req) => req,
                     None => break,
                 },
+                Some(signal) = self.push_rx.recv() => {
+                    self.on_pushed(signal).await;
+                    continue;
+                }
                 _ = poll.tick() => {
-                    if crate::desktop::power::reaches_internet() {
-                        if let Err(e) = tuta_poll(&self.account, account_id, self.cache.as_ref(), &mut self.state, &self.emit).await {
-                            tracing::info!("[account {account_id}] poll: {}", e.code);
-                        }
+                    let pushed = self.push_live && self.polled.elapsed() < PUSHED_POLL;
+                    if !pushed && crate::desktop::power::reaches_internet() {
+                        self.poll().await;
                     }
                     continue;
                 }
@@ -225,6 +276,100 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
                 }
             };
             self.handle(req).await;
+        }
+    }
+
+    /// One quiet poll of the folder tree and the Inbox.
+    async fn poll(&mut self) {
+        let account_id = self.account_id;
+        self.polled = Instant::now();
+        if let Err(e) = tuta_poll(
+            &self.account,
+            account_id,
+            self.cache.as_ref(),
+            &mut self.state,
+            &self.emit,
+        )
+        .await
+        {
+            tracing::info!("[account {account_id}] poll: {}", e.code);
+        }
+    }
+
+    /// What the push thread said, with whatever else it said meanwhile: a
+    /// burst of changes is one sync of each folder it named. A change that
+    /// named no folder, and a reconnect, which may have missed some, sync
+    /// the Inbox, the folder tree and the folder open in the list.
+    async fn on_pushed(&mut self, first: PushSignal) {
+        let mut signals = vec![first];
+        while let Ok(signal) = self.push_rx.try_recv() {
+            signals.push(signal);
+        }
+        let mut folders: Vec<String> = Vec::new();
+        let mut everything = false;
+        let mut tree = false;
+        for signal in signals {
+            match signal {
+                // Connected: whatever changed while it was not was missed.
+                PushSignal::Live => {
+                    self.push_live = true;
+                    everything = true;
+                }
+                PushSignal::Ended => self.push_live = false,
+                PushSignal::Mail(folder) if folder.is_empty() => everything = true,
+                PushSignal::Mail(folder) => {
+                    if !folders.contains(&folder) {
+                        folders.push(folder);
+                    }
+                }
+                PushSignal::Folders => tree = true,
+            }
+        }
+        if everything || tree {
+            self.poll().await;
+        }
+        let inbox = self.state.path_of(crate::models::FolderKind::Inbox);
+        let mut paths: Vec<String> = folders
+            .iter()
+            .filter_map(|tuta_id| {
+                self.state
+                    .folders
+                    .iter()
+                    .find(|(_, (_, id))| id == tuta_id)
+                    .map(|(path, _)| path.clone())
+            })
+            .collect();
+        if let Some(open) = self.open.clone().filter(|o| everything && !paths.contains(o)) {
+            paths.push(open);
+        }
+        for path in paths {
+            // The poll just listed the Inbox.
+            if (everything || tree) && inbox.as_ref() == Some(&path) {
+                continue;
+            }
+            self.refresh(&path).await;
+        }
+    }
+
+    /// List a folder's newest page again, quietly.
+    async fn refresh(&mut self, path: &str) {
+        let account_id = self.account_id;
+        let Some((folder_id, _)) = self.state.folders.get(path).cloned() else {
+            return;
+        };
+        match tuta_load_folder(
+            &self.account,
+            account_id,
+            folder_id,
+            path,
+            self.cache.as_ref(),
+            &mut self.state,
+            &self.emit,
+        )
+        .await
+        {
+            Ok(messages) => emit_folder(folder_id, messages, &self.state, &self.emit),
+            Err(e) => tracing::info!("[account {account_id}] pushed: {path}: {}", e.code),
         }
     }
 
@@ -253,8 +398,10 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
             }),
             // The helper reports no mailbox size or limit.
             MailRequest::Quota => (self.emit)(WorkerEvent::Quota(None)),
-            // Tuta keeps no keywords: every tag is Hylki's own.
-            MailRequest::FindKeywords => (self.emit)(WorkerEvent::KeywordsFound(Vec::new())),
+            // Tags are Tuta labels (see `labels`), which every sync lists
+            // and every listing names on its rows: there is nothing more
+            // to ask for.
+            MailRequest::FindKeywords => self.on_find_keywords(),
             MailRequest::RefreshKeywords { .. } => {
                 (self.emit)(WorkerEvent::KeywordsSynced { paths: Vec::new() })
             }
@@ -293,6 +440,9 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
             }
             MailRequest::LoadMessages { folder_id, path }
             | MailRequest::SyncFolder { folder_id, path } => {
+                if user {
+                    self.open = Some(path.clone());
+                }
                 self.on_load_messages(folder_id, path, user).await
             }
             MailRequest::LoadBody {
@@ -327,8 +477,6 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
                     c.set_starred(account_id, &path, uid, flagged);
                 }
             }
-            // No keywords either: a tag is Hylki's own, by Message-ID where
-            // the row has one so it follows the message.
             MailRequest::SetKeyword {
                 path,
                 uid,
@@ -336,14 +484,8 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
                 keyword,
                 add,
             } => {
-                if let Some(c) = self.cache.as_ref() {
-                    if message_id.is_empty() {
-                        c.set_keyword(account_id, &path, uid, &keyword, add);
-                    } else {
-                        c.set_local_tag(account_id, &message_id, &keyword, add);
-                    }
-                }
-                (self.emit)(WorkerEvent::TagSettled { path, uid, keyword });
+                self.on_set_keyword(path, uid, message_id, keyword, add)
+                    .await
             }
             MailRequest::MarkAllRead { folder_id, path } => {
                 self.on_mark_all_read(folder_id, path).await
@@ -380,8 +522,8 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
                 (self.emit)(WorkerEvent::BulkComplete);
             }
             MailRequest::PurgeMessages { path, uids } => self.on_purge_messages(path, uids).await,
-            MailRequest::EmptyFolder { .. } => {
-                (self.emit)(WorkerEvent::error(permanent_delete_text()))
+            MailRequest::EmptyFolder { folder_id, path } => {
+                self.on_empty_folder(folder_id, path).await
             }
             MailRequest::UndoMove {
                 path,
@@ -392,30 +534,36 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
                 self.on_undo_move(path, dest, dest_folder_id, message_ids)
                     .await
             }
-            // Snoozing is not offered on a Tuta account (no folder can be
-            // made to keep snoozed mail in); a stray request is spent.
-            MailRequest::Unsnooze { message_ids, .. } => (self.emit)(WorkerEvent::Unsnoozed {
+            MailRequest::Unsnooze {
+                path,
+                dest,
+                dest_folder_id,
                 message_ids,
-                done: true,
-            }),
-            MailRequest::CreateFolder { .. }
-            | MailRequest::RenameFolder { .. }
-            | MailRequest::DeleteFolder { .. } => self.on_folder_change(),
+            } => {
+                self.on_unsnooze(path, dest, dest_folder_id, message_ids)
+                    .await
+            }
+            MailRequest::CreateFolder { path } => self.on_create_folder(path).await,
+            MailRequest::RenameFolder { old_path, new_path } => {
+                self.on_rename_folder(old_path, new_path).await
+            }
+            MailRequest::DeleteFolder { path, .. } => self.on_delete_folder(path).await,
             MailRequest::SetHiddenFolders { paths } => {
                 self.state.hidden = paths;
                 self.sync_folders().await;
             }
             MailRequest::SaveDraft {
                 message,
+                path,
                 autosave,
                 template,
                 ..
-            } => self.on_save_draft(message, autosave, template),
+            } => self.on_save_draft(message, path, autosave, template).await,
             // Send Later (#145): into the Outbox until its time.
             MailRequest::Send {
                 message, ticket, ..
             } if message.send_at.is_some_and(|t| t > crate::datefmt::now()) => {
-                self.on_send_later(message, ticket)
+                self.on_send_later(message, ticket).await
             }
             MailRequest::Send {
                 message, ticket, ..
@@ -448,12 +596,13 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
                 let raw = self.raw_of(&path, uid).await;
                 (self.emit)(WorkerEvent::RawExported { token, raw });
             }
-            // The helper cannot store a message it did not send or receive;
-            // a Tuta account is never offered as a destination.
-            MailRequest::ImportRaw { token, .. } => (self.emit)(WorkerEvent::RawImported {
+            MailRequest::ImportRaw {
                 token,
-                result: Err(i18n("A Tuta account can't receive mail from another account")),
-            }),
+                path,
+                raw,
+                seen,
+                flagged,
+            } => self.on_import_raw(token, path, raw, seen, flagged).await,
             MailRequest::DeleteAttachment {
                 message_id,
                 name,
@@ -472,3 +621,5 @@ impl<E: Fn(WorkerEvent)> TutaWorker<E> {
 
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod handler_tests;

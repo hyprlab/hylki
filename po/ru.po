@@ -7760,6 +7760,79 @@ msgid "The folder is no longer on the server."
 msgstr "Эта папка отсутствует на сервере"
 
 #, fuzzy
+msgid "The server did not make the change to the folder."
+msgstr "Сервис не принял этот ключ."
+
+#, fuzzy
+msgid "There is already a folder by that name there."
+msgstr "Нет текста для перевода."
+
+#, fuzzy
+msgid "Tuta's own folders can't be changed."
+msgstr ""
+"Microsoft 365 автоматически сохраняет собственную копию в папку "
+"«Отправленные»; это поведение нельзя изменить."
+
+msgid "The account has reached Tuta's limit for that."
+msgstr ""
+
+msgid "There is already a tag by that name."
+msgstr ""
+
+#, fuzzy
+msgid "The message is not a draft."
+msgstr "Сообщение ещё не загружено."
+
+msgid "That name can't be used for a folder or a tag."
+msgstr ""
+
+msgid "That color can't be used for a tag."
+msgstr ""
+
+#, fuzzy
+msgid "The tag is no longer on the server."
+msgstr "Это сообщение слишком длинное для отправки на перевод."
+
+#, fuzzy
+msgid "The server did not make the change to the tag."
+msgstr "Сервис не принял этот ключ."
+
+#, fuzzy
+msgid "The draft is no longer on the server."
+msgstr "Эта папка отсутствует на сервере"
+
+#, fuzzy
+msgid "The server did not store the draft."
+msgstr "Сервис не принял этот ключ."
+
+msgid "Mail can only be deleted for good from the Trash or Spam."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not delete the mail."
+msgstr "Сервис не принял этот ключ."
+
+msgid "The server is still busy with an earlier change. Try again in a moment."
+msgstr ""
+
+#, fuzzy
+msgid "The message could not be read, so it was not stored."
+msgstr "Не удалось открыть файл"
+
+#, fuzzy
+msgid "The message is too large for Tuta to take in."
+msgstr "Это сообщение слишком длинное для отправки на перевод."
+
+msgid ""
+"Tuta does not let this account import mail. Importing needs a Legend or "
+"Unlimited plan."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not store the message."
+msgstr "Сервис не принял этот ключ."
+
+#, fuzzy
 msgid "The message is no longer on the server."
 msgstr "Это сообщение слишком длинное для отправки на перевод."
 
@@ -7787,8 +7860,18 @@ msgid "The message text is too long to send."
 msgstr "Это сообщение слишком длинное для отправки на перевод."
 
 msgid ""
-"Encrypted delivery from Tuta to Tuta isn't supported yet, so a message only "
-"to Tuta addresses can't be sent from Hylki. Send it from Tuta's own app."
+"A recipient's Tuta address was not found, so the message could not be "
+"encrypted for it. Check the address."
+msgstr ""
+
+msgid ""
+"End-to-end encrypted delivery reaches Tuta addresses only, and a recipient "
+"is outside Tuta."
+msgstr ""
+
+msgid ""
+"Mail to an address outside Tuta is not end-to-end encrypted, and sending it "
+"that way was not confirmed."
 msgstr ""
 
 #, fuzzy
@@ -7991,19 +8074,6 @@ msgid ""
 msgstr ""
 "Вы удалили вложение из этого сообщения. Исходные заголовки MIME для вложения:"
 
-msgid "Tuta accounts can't save drafts on the server from Hylki yet"
-msgstr ""
-
-msgid ""
-"Folders of a Tuta account can't be created, renamed or deleted from Hylki "
-"yet. Use Tuta's own app."
-msgstr ""
-
-msgid ""
-"Tuta accounts can't delete mail for good from Hylki yet. Empty the Trash in "
-"Tuta's own app."
-msgstr ""
-
 msgid ""
 "OpenPGP signing and encryption aren't available for Tuta accounts. Turn them "
 "off to send."
@@ -8022,10 +8092,6 @@ msgid ""
 "Tuta's servers cannot search encrypted mail: search finds what is on this "
 "computer"
 msgstr ""
-
-#, fuzzy
-msgid "A Tuta account can't receive mail from another account"
-msgstr "Учётная запись POP3 не может получать почту из другой учётной записи"
 
 #, fuzzy
 msgid ""
@@ -9164,6 +9230,11 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "This account can't take in mail from another account."
+#~ msgstr ""
+#~ "Учётная запись POP3 не может получать почту из другой учётной записи"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Не удалось переименовать папку: неизвестная папка"

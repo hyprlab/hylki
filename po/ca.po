@@ -7503,6 +7503,79 @@ msgid "The folder is no longer on the server."
 msgstr "Aquesta carpeta no és al servidor"
 
 #, fuzzy
+msgid "The server did not make the change to the folder."
+msgstr "El servei no ha acceptat la clau."
+
+#, fuzzy
+msgid "There is already a folder by that name there."
+msgstr "No hi ha text per traduir."
+
+#, fuzzy
+msgid "Tuta's own folders can't be changed."
+msgstr ""
+"El Microsoft 365 arxiva la seva pròpia còpia a Elements enviats; això no es "
+"pot canviar."
+
+msgid "The account has reached Tuta's limit for that."
+msgstr ""
+
+msgid "There is already a tag by that name."
+msgstr ""
+
+#, fuzzy
+msgid "The message is not a draft."
+msgstr "El missatge encara no s'ha carregat."
+
+msgid "That name can't be used for a folder or a tag."
+msgstr ""
+
+msgid "That color can't be used for a tag."
+msgstr ""
+
+#, fuzzy
+msgid "The tag is no longer on the server."
+msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
+
+#, fuzzy
+msgid "The server did not make the change to the tag."
+msgstr "El servei no ha acceptat la clau."
+
+#, fuzzy
+msgid "The draft is no longer on the server."
+msgstr "Aquesta carpeta no és al servidor"
+
+#, fuzzy
+msgid "The server did not store the draft."
+msgstr "El servei no ha acceptat la clau."
+
+msgid "Mail can only be deleted for good from the Trash or Spam."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not delete the mail."
+msgstr "El servei no ha acceptat la clau."
+
+msgid "The server is still busy with an earlier change. Try again in a moment."
+msgstr ""
+
+#, fuzzy
+msgid "The message could not be read, so it was not stored."
+msgstr "No s'ha pogut obrir el fitxer"
+
+#, fuzzy
+msgid "The message is too large for Tuta to take in."
+msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
+
+msgid ""
+"Tuta does not let this account import mail. Importing needs a Legend or "
+"Unlimited plan."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not store the message."
+msgstr "El servei no ha acceptat la clau."
+
+#, fuzzy
 msgid "The message is no longer on the server."
 msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
 
@@ -7530,8 +7603,18 @@ msgid "The message text is too long to send."
 msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
 
 msgid ""
-"Encrypted delivery from Tuta to Tuta isn't supported yet, so a message only "
-"to Tuta addresses can't be sent from Hylki. Send it from Tuta's own app."
+"A recipient's Tuta address was not found, so the message could not be "
+"encrypted for it. Check the address."
+msgstr ""
+
+msgid ""
+"End-to-end encrypted delivery reaches Tuta addresses only, and a recipient "
+"is outside Tuta."
+msgstr ""
+
+msgid ""
+"Mail to an address outside Tuta is not end-to-end encrypted, and sending it "
+"that way was not confirmed."
 msgstr ""
 
 #, fuzzy
@@ -7729,19 +7812,6 @@ msgstr ""
 "Has suprimit un adjunt d'aquest missatge. Les capçaleres MIME originals de "
 "l'adjunt eren:"
 
-msgid "Tuta accounts can't save drafts on the server from Hylki yet"
-msgstr ""
-
-msgid ""
-"Folders of a Tuta account can't be created, renamed or deleted from Hylki "
-"yet. Use Tuta's own app."
-msgstr ""
-
-msgid ""
-"Tuta accounts can't delete mail for good from Hylki yet. Empty the Trash in "
-"Tuta's own app."
-msgstr ""
-
 msgid ""
 "OpenPGP signing and encryption aren't available for Tuta accounts. Turn them "
 "off to send."
@@ -7760,10 +7830,6 @@ msgid ""
 "Tuta's servers cannot search encrypted mail: search finds what is on this "
 "computer"
 msgstr ""
-
-#, fuzzy
-msgid "A Tuta account can't receive mail from another account"
-msgstr "Un compte POP3 no pot rebre correu d'un altre compte"
 
 #, fuzzy
 msgid ""
@@ -8857,6 +8923,10 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "This account can't take in mail from another account."
+#~ msgstr "Un compte POP3 no pot rebre correu d'un altre compte"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "No s'ha pogut canviar el nom de la carpeta: carpeta desconeguda"

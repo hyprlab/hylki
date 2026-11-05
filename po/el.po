@@ -7487,6 +7487,79 @@ msgid "The folder is no longer on the server."
 msgstr "Αυτός ο φάκελος δεν υπάρχει στον διακομιστή"
 
 #, fuzzy
+msgid "The server did not make the change to the folder."
+msgstr "Η υπηρεσία δεν αποδέχτηκε το κλειδί."
+
+#, fuzzy
+msgid "There is already a folder by that name there."
+msgstr "Δεν υπάρχει φάκελος εγκατάστασης."
+
+#, fuzzy
+msgid "Tuta's own folders can't be changed."
+msgstr ""
+"Το Microsoft 365 αποθηκεύει το δικό του αντίγραφο στα Απεσταλμένα· αυτό δεν "
+"μπορεί να αλλάξει."
+
+msgid "The account has reached Tuta's limit for that."
+msgstr ""
+
+msgid "There is already a tag by that name."
+msgstr ""
+
+#, fuzzy
+msgid "The message is not a draft."
+msgstr "Το μήνυμα δεν έχει φορτωθεί ακόμη."
+
+msgid "That name can't be used for a folder or a tag."
+msgstr ""
+
+msgid "That color can't be used for a tag."
+msgstr ""
+
+#, fuzzy
+msgid "The tag is no longer on the server."
+msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τον διακομιστή."
+
+#, fuzzy
+msgid "The server did not make the change to the tag."
+msgstr "Η υπηρεσία δεν αποδέχτηκε το κλειδί."
+
+#, fuzzy
+msgid "The draft is no longer on the server."
+msgstr "Αυτός ο φάκελος δεν υπάρχει στον διακομιστή"
+
+#, fuzzy
+msgid "The server did not store the draft."
+msgstr "Η υπηρεσία δεν αποδέχτηκε το κλειδί."
+
+msgid "Mail can only be deleted for good from the Trash or Spam."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not delete the mail."
+msgstr "Η υπηρεσία δεν αποδέχτηκε το κλειδί."
+
+msgid "The server is still busy with an earlier change. Try again in a moment."
+msgstr ""
+
+#, fuzzy
+msgid "The message could not be read, so it was not stored."
+msgstr "Δεν ήταν δυνατή η αφαίρεση των αρχείων."
+
+#, fuzzy
+msgid "The message is too large for Tuta to take in."
+msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τον διακομιστή."
+
+msgid ""
+"Tuta does not let this account import mail. Importing needs a Legend or "
+"Unlimited plan."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not store the message."
+msgstr "Η υπηρεσία δεν αποδέχτηκε το κλειδί."
+
+#, fuzzy
 msgid "The message is no longer on the server."
 msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τον διακομιστή."
 
@@ -7514,8 +7587,18 @@ msgid "The message text is too long to send."
 msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τον διακομιστή."
 
 msgid ""
-"Encrypted delivery from Tuta to Tuta isn't supported yet, so a message only "
-"to Tuta addresses can't be sent from Hylki. Send it from Tuta's own app."
+"A recipient's Tuta address was not found, so the message could not be "
+"encrypted for it. Check the address."
+msgstr ""
+
+msgid ""
+"End-to-end encrypted delivery reaches Tuta addresses only, and a recipient "
+"is outside Tuta."
+msgstr ""
+
+msgid ""
+"Mail to an address outside Tuta is not end-to-end encrypted, and sending it "
+"that way was not confirmed."
 msgstr ""
 
 #, fuzzy
@@ -7712,20 +7795,6 @@ msgstr ""
 "Διαγράψατε ένα συνημμένο από αυτό το μήνυμα. Οι αρχικές κεφαλίδες MIME του "
 "συνημμένου ήταν:"
 
-#, fuzzy
-msgid "Tuta accounts can't save drafts on the server from Hylki yet"
-msgstr "Αυτός ο λογαριασμός δεν επιτρέπει φακέλους στο ανώτατο επίπεδο."
-
-msgid ""
-"Folders of a Tuta account can't be created, renamed or deleted from Hylki "
-"yet. Use Tuta's own app."
-msgstr ""
-
-msgid ""
-"Tuta accounts can't delete mail for good from Hylki yet. Empty the Trash in "
-"Tuta's own app."
-msgstr ""
-
 msgid ""
 "OpenPGP signing and encryption aren't available for Tuta accounts. Turn them "
 "off to send."
@@ -7744,12 +7813,6 @@ msgid ""
 "Tuta's servers cannot search encrypted mail: search finds what is on this "
 "computer"
 msgstr ""
-
-#, fuzzy
-msgid "A Tuta account can't receive mail from another account"
-msgstr ""
-"Ένας λογαριασμός POP3 δεν μπορεί να λαμβάνει αλληλογραφία από άλλον "
-"λογαριασμό"
 
 #, fuzzy
 msgid ""
@@ -8869,6 +8932,16 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "This account can't take in mail from another account."
+#~ msgstr ""
+#~ "Ένας λογαριασμός POP3 δεν μπορεί να λαμβάνει αλληλογραφία από άλλον "
+#~ "λογαριασμό"
+
+#, fuzzy
+#~ msgid "Tuta accounts can't save drafts on the server from Hylki yet"
+#~ msgstr "Αυτός ο λογαριασμός δεν επιτρέπει φακέλους στο ανώτατο επίπεδο."
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"

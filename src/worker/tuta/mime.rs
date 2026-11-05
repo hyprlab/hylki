@@ -4,8 +4,9 @@
 //! parser as every other account's mail.
 //!
 //! The original Message-ID, In-Reply-To and References are kept when the
-//! header block has them. No Message-ID is ever made up: one invented here
-//! would tie the message to nothing Tuta's own app knows.
+//! header block has them. Mail between Tuta accounts has no header block,
+//! so its Message-ID is the one Tuta keeps for it (the header's
+//! `message_id`): the id Tuta's own app answers it by. None is ever made up.
 
 use base64::engine::general_purpose::STANDARD;
 use base64::Engine as _;
@@ -194,6 +195,21 @@ fn attachment_part(attachment: &Value) -> Result<String, HelperError> {
     Ok(part)
 }
 
+/// The Message-ID Tuta keeps for the mail, when it is one: printable ASCII
+/// without spaces or brackets, which the helper hands back bare.
+fn kept_message_id(header: &Object) -> Option<&str> {
+    header
+        .get("message_id")
+        .and_then(Value::as_str)
+        .filter(|id| {
+            !id.is_empty()
+                && id.len() <= 998
+                && id
+                    .bytes()
+                    .all(|b| b.is_ascii_graphic() && b != b'<' && b != b'>')
+        })
+}
+
 /// Put a `message` reply back together as MIME.
 pub(super) fn mime_message(item: &Object) -> Result<Vec<u8>, HelperError> {
     let Some(Value::Object(header)) = item.get("header") else {
@@ -242,6 +258,10 @@ pub(super) fn mime_message(item: &Object) -> Result<Vec<u8>, HelperError> {
     ] {
         if let Some(value) = header_value(original, name).filter(|v| !v.is_empty()) {
             put(name, &header_safe(&value));
+        } else if name == "Message-ID" {
+            if let Some(id) = kept_message_id(header) {
+                put(name, &format!("<{id}>"));
+            }
         }
     }
     let attachments = match item.get("attachments") {

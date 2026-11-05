@@ -7686,6 +7686,79 @@ msgid "The folder is no longer on the server."
 msgstr "Quella cartella non è sul server"
 
 #, fuzzy
+msgid "The server did not make the change to the folder."
+msgstr "Il servizio non ha accettato la chiave."
+
+#, fuzzy
+msgid "There is already a folder by that name there."
+msgstr "Non c'è testo da tradurre."
+
+#, fuzzy
+msgid "Tuta's own folders can't be changed."
+msgstr ""
+"Microsoft 365 archivia la propria copia negli Elementi inviati; questo non "
+"può essere modificato."
+
+msgid "The account has reached Tuta's limit for that."
+msgstr ""
+
+msgid "There is already a tag by that name."
+msgstr ""
+
+#, fuzzy
+msgid "The message is not a draft."
+msgstr "Il messaggio non è ancora stato caricato."
+
+msgid "That name can't be used for a folder or a tag."
+msgstr ""
+
+msgid "That color can't be used for a tag."
+msgstr ""
+
+#, fuzzy
+msgid "The tag is no longer on the server."
+msgstr "Questo messaggio è troppo lungo per essere inviato per la traduzione."
+
+#, fuzzy
+msgid "The server did not make the change to the tag."
+msgstr "Il servizio non ha accettato la chiave."
+
+#, fuzzy
+msgid "The draft is no longer on the server."
+msgstr "Quella cartella non è sul server"
+
+#, fuzzy
+msgid "The server did not store the draft."
+msgstr "Il servizio non ha accettato la chiave."
+
+msgid "Mail can only be deleted for good from the Trash or Spam."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not delete the mail."
+msgstr "Il servizio non ha accettato la chiave."
+
+msgid "The server is still busy with an earlier change. Try again in a moment."
+msgstr ""
+
+#, fuzzy
+msgid "The message could not be read, so it was not stored."
+msgstr "Impossibile aprire il file"
+
+#, fuzzy
+msgid "The message is too large for Tuta to take in."
+msgstr "Questo messaggio è troppo lungo per essere inviato per la traduzione."
+
+msgid ""
+"Tuta does not let this account import mail. Importing needs a Legend or "
+"Unlimited plan."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not store the message."
+msgstr "Il servizio non ha accettato la chiave."
+
+#, fuzzy
 msgid "The message is no longer on the server."
 msgstr "Questo messaggio è troppo lungo per essere inviato per la traduzione."
 
@@ -7713,8 +7786,18 @@ msgid "The message text is too long to send."
 msgstr "Questo messaggio è troppo lungo per essere inviato per la traduzione."
 
 msgid ""
-"Encrypted delivery from Tuta to Tuta isn't supported yet, so a message only "
-"to Tuta addresses can't be sent from Hylki. Send it from Tuta's own app."
+"A recipient's Tuta address was not found, so the message could not be "
+"encrypted for it. Check the address."
+msgstr ""
+
+msgid ""
+"End-to-end encrypted delivery reaches Tuta addresses only, and a recipient "
+"is outside Tuta."
+msgstr ""
+
+msgid ""
+"Mail to an address outside Tuta is not end-to-end encrypted, and sending it "
+"that way was not confirmed."
 msgstr ""
 
 #, fuzzy
@@ -7915,19 +7998,6 @@ msgstr ""
 "Hai eliminato un allegato da questo messaggio. Le intestazioni MIME "
 "originali per l'allegato erano:"
 
-msgid "Tuta accounts can't save drafts on the server from Hylki yet"
-msgstr ""
-
-msgid ""
-"Folders of a Tuta account can't be created, renamed or deleted from Hylki "
-"yet. Use Tuta's own app."
-msgstr ""
-
-msgid ""
-"Tuta accounts can't delete mail for good from Hylki yet. Empty the Trash in "
-"Tuta's own app."
-msgstr ""
-
 msgid ""
 "OpenPGP signing and encryption aren't available for Tuta accounts. Turn them "
 "off to send."
@@ -7946,10 +8016,6 @@ msgid ""
 "Tuta's servers cannot search encrypted mail: search finds what is on this "
 "computer"
 msgstr ""
-
-#, fuzzy
-msgid "A Tuta account can't receive mail from another account"
-msgstr "Un account POP3 non può ricevere posta da un altro account"
 
 #, fuzzy
 msgid ""
@@ -9092,6 +9158,10 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "This account can't take in mail from another account."
+#~ msgstr "Un account POP3 non può ricevere posta da un altro account"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Impossibile rinominare la cartella: cartella sconosciuta"

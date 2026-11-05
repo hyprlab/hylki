@@ -7,10 +7,16 @@
   Provider list and sign in with the address and password; an account with
   an authenticator app is asked for its code next. Hylki keeps the session in
   the keyring, never the password. Folders, reading, read state, moving and
-  sending to other providers work. Stars stay on this computer, mail between
-  Tuta accounts is not sent end-to-end encrypted (a message to Tuta
-  recipients only is refused), new mail is polled for, and security keys are
-  not supported. See [Tuta](docs/DOCUMENTATION.md#tuta).
+  sending work, and mail between Tuta accounts is end-to-end encrypted as in
+  Tuta's own app; a message with recipients elsewhere goes out as ordinary
+  mail. Folders are made, renamed, moved and deleted on the server, drafts
+  and templates are Tuta drafts, tags are Tuta labels, mail is deleted for
+  good from the Trash and Spam, snoozing and undoing a move work, new mail
+  is pushed, mail moved or copied in from another account is imported as
+  Tuta's own app imports a mail file, and a reply or forward joins the
+  conversation it answers in Tuta's own app. Password-protected mail to other
+  providers is not offered, stars stay on this computer, and security keys
+  are not supported. See [Tuta](docs/DOCUMENTATION.md#tuta).
 
 - **Fixed: a long conversation could use all the memory** (#581, by Gonzalo
   Vasco López). A folded message card still loaded its message in the

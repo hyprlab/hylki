@@ -5,7 +5,9 @@ use std::time::Duration;
 
 use serde_json::{json, Value};
 
-use super::test_support::{fake_helper, flooding_helper, hanging_helper, FakeHelper};
+use super::test_support::{
+    fake_helper, flooding_helper, hanging_helper, streaming_helper, stubborn_helper, FakeHelper,
+};
 use super::*;
 
 const SPEC: HelperSpec = HelperSpec {
@@ -202,4 +204,111 @@ fn secrets_stay_out_of_debug_output() {
         format!("{err:?}"),
         r#"HelperError { code: "login_failed" }"#
     );
+}
+
+/// A streaming run's lines until it says nothing for `quiet`.
+fn lines_of(watch: &mut Watch, quiet: Duration) -> Vec<Result<Value, String>> {
+    let mut out = Vec::new();
+    loop {
+        match watch.next(quiet) {
+            Ok(Some(line)) => out.push(Ok(Value::Object(line))),
+            Ok(None) => return out,
+            Err(e) => {
+                out.push(Err(e.code));
+                return out;
+            }
+        }
+    }
+}
+
+fn client_of(helper: &FakeHelper) -> HelperClient {
+    HelperClient::new(
+        SPEC,
+        transport_for(helper, SPEC),
+        "me@tuta.com",
+        &session(),
+    )
+    .unwrap()
+}
+
+#[test]
+fn a_streaming_run_reads_line_after_line_until_its_stdin_closes() {
+    let helper = streaming_helper(
+        "{\"version\":1,\"event\":\"ready\"}\n\n{\"version\":1,\"event\":\"mail_changed\",\"folder\":\"a/b\"}\n",
+        true,
+    );
+    let mut watch = client_of(&helper).watch(&helper.path(), "watch").unwrap();
+    let lines = lines_of(&mut watch, Duration::from_millis(500));
+    assert_eq!(lines.len(), 2, "{lines:?}");
+    assert_eq!(lines[0].as_ref().unwrap()["event"], "ready");
+    assert_eq!(lines[1].as_ref().unwrap()["folder"], "a/b");
+    // The request went on stdin, the session in it, nothing in argv.
+    assert_eq!(helper.argc(), 0);
+    let request = helper.stdin();
+    assert_eq!(request["op"], "watch");
+    assert_eq!(request["version"], 1);
+    assert_eq!(request["session"]["access_token"], "TOKEN-SECRET");
+    assert!(!helper.ended());
+    // Closing stdin is the stop signal, and the helper leaves on its own.
+    drop(watch);
+    assert!(helper.ended());
+    assert!(!format!("{:?}", client_of(&helper)).contains("TOKEN-SECRET"));
+}
+
+#[test]
+fn a_streaming_run_stops_at_the_first_line_it_cannot_take() {
+    for (stdout, code) in [
+        (
+            r#"{"version":1,"error":{"code":"session_revoked"}}"#,
+            "session_revoked",
+        ),
+        (
+            r#"{"version":1,"error":{"code":"Server said: no"}}"#,
+            "request_failed",
+        ),
+        (r#"{"version":2,"event":"ready"}"#, "unsupported_version"),
+        ("not json", "invalid_response"),
+        ("[1]", "invalid_response"),
+    ] {
+        let helper = streaming_helper(
+            &format!("{stdout}\n{{\"version\":1,\"event\":\"ready\"}}\n"),
+            true,
+        );
+        let mut watch = client_of(&helper).watch(&helper.path(), "watch").unwrap();
+        let lines = lines_of(&mut watch, Duration::from_millis(500));
+        assert_eq!(lines, [Err(code.to_string())], "{stdout}");
+    }
+}
+
+#[test]
+fn a_streaming_run_that_ends_or_floods_says_so() {
+    let helper = streaming_helper("{\"version\":1,\"event\":\"ready\"}\n", false);
+    let mut watch = client_of(&helper).watch(&helper.path(), "watch").unwrap();
+    let lines = lines_of(&mut watch, Duration::from_secs(5));
+    assert_eq!(lines.len(), 2, "{lines:?}");
+    assert_eq!(lines[1], Err("helper_failed".to_string()));
+
+    let long = format!(
+        "{{\"version\":1,\"event\":\"{}\"}}\n",
+        "a".repeat(MAX_WATCH_LINE)
+    );
+    let helper = streaming_helper(&long, true);
+    let mut watch = client_of(&helper).watch(&helper.path(), "watch").unwrap();
+    let lines = lines_of(&mut watch, Duration::from_secs(5));
+    assert_eq!(lines, [Err("response_too_large".to_string())]);
+
+    let gone = std::env::temp_dir().join("hylki-helper-that-is-not-there");
+    let err = client_of(&helper).watch(&gone, "watch").unwrap_err();
+    assert_eq!(err.code, "helper_missing");
+}
+
+#[test]
+fn a_streaming_helper_that_will_not_leave_is_stopped() {
+    let helper = stubborn_helper();
+    let watch = client_of(&helper).watch(&helper.path(), "watch").unwrap();
+    let started = Instant::now();
+    drop(watch);
+    let took = started.elapsed();
+    assert!(took >= WATCH_EXIT_GRACE, "{took:?}");
+    assert!(took < WATCH_EXIT_GRACE + Duration::from_secs(5), "{took:?}");
 }

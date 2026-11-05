@@ -9,12 +9,16 @@
 //! prints reaches the log or the UI: every failure is a code from a closed
 //! list, turned into text by [`HelperError::message`].
 //!
+//! The one exception is a streaming run ([`Watch`]): its request goes in the
+//! same way, but stdin stays open for as long as the caller wants the run to
+//! last, and the helper writes one JSON object per line until stdin closes.
+//!
 //! Nothing here is specific to one provider, so a second helper only needs
 //! a [`HelperSpec`] of its own.
 
-use std::io::{Read, Write};
+use std::io::{BufRead, Read, Write};
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::{Child, ChildStdin, Command, Stdio};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
@@ -104,6 +108,32 @@ impl HelperError {
             "client_outdated" => i18n("The server no longer accepts this version. Update Hylki."),
             "revoke_failed" => i18n("Could not end the sign-in on the server."),
             "folder_not_found" => i18n("The folder is no longer on the server."),
+            "folder_failed" => i18n("The server did not make the change to the folder."),
+            "folder_exists" => i18n("There is already a folder by that name there."),
+            "invalid_parent" => i18n("A folder can't be moved into itself."),
+            "not_custom_folder" => i18n("Tuta's own folders can't be changed."),
+            "limit_reached" => i18n("The account has reached Tuta's limit for that."),
+            "label_exists" => i18n("There is already a tag by that name."),
+            "not_a_draft" => i18n("The message is not a draft."),
+            "invalid_name" => i18n("That name can't be used for a folder or a tag."),
+            "invalid_color" => i18n("That color can't be used for a tag."),
+            "label_not_found" => i18n("The tag is no longer on the server."),
+            "label_failed" => i18n("The server did not make the change to the tag."),
+            "draft_not_found" => i18n("The draft is no longer on the server."),
+            "draft_failed" => i18n("The server did not store the draft."),
+            "not_trash_or_spam" => {
+                i18n("Mail can only be deleted for good from the Trash or Spam.")
+            }
+            "delete_failed" => i18n("The server did not delete the mail."),
+            "operation_still_active" => {
+                i18n("The server is still busy with an earlier change. Try again in a moment.")
+            }
+            "import_invalid" => i18n("The message could not be read, so it was not stored."),
+            "import_too_large" => i18n("The message is too large for Tuta to take in."),
+            "import_refused" => i18n(
+                "Tuta does not let this account import mail. Importing needs a Legend or Unlimited plan.",
+            ),
+            "import_failed" => i18n("The server did not store the message."),
             "message_gone" => i18n("The message is no longer on the server."),
             "decryption_failed" => i18n("The message could not be decrypted."),
             "unsupported_legacy_body" => {
@@ -113,8 +143,14 @@ impl HelperError {
             "invalid_recipient" => i18n("A recipient's address is not valid."),
             "sender_unknown" => i18n("The From address does not belong to this account."),
             "body_too_large" => i18n("The message text is too long to send."),
-            "confidential_send_unsupported" => i18n(
-                "Encrypted delivery from Tuta to Tuta isn't supported yet, so a message only to Tuta addresses can't be sent from Hylki. Send it from Tuta's own app.",
+            "recipient_not_found" => i18n(
+                "A recipient's Tuta address was not found, so the message could not be encrypted for it. Check the address.",
+            ),
+            "secure_external_unsupported" => i18n(
+                "End-to-end encrypted delivery reaches Tuta addresses only, and a recipient is outside Tuta.",
+            ),
+            "ordinary_delivery_requires_consent" => i18n(
+                "Mail to an address outside Tuta is not end-to-end encrypted, and sending it that way was not confirmed.",
             ),
             "send_failed" => i18n("The server refused the message."),
             "send_uncertain" => {
@@ -148,12 +184,14 @@ fn is_executable(path: &Path) -> bool {
         .is_ok_and(|meta| meta.is_file() && meta.permissions().mode() & 0o111 != 0)
 }
 
+/// The helper `spec` names, found by [`locate`].
+pub(super) fn locate_helper(spec: HelperSpec) -> Result<PathBuf, HelperError> {
+    locate(spec.name).ok_or_else(|| HelperError::new("helper_missing"))
+}
+
 /// Runs the helper `spec` names, found by [`locate`], once per request.
 pub(super) fn process_transport(spec: HelperSpec) -> Transport {
-    Arc::new(move |request| {
-        let executable = locate(spec.name).ok_or_else(|| HelperError::new("helper_missing"))?;
-        run_helper(&executable, request, spec)
-    })
+    Arc::new(move |request| run_helper(&locate_helper(spec)?, request, spec))
 }
 
 /// One helper run: fixed argv (no shell), the request on stdin, one JSON
@@ -245,19 +283,17 @@ pub(super) fn run_helper(
     }
 }
 
-/// One versioned request: `parameters` go beside `version` and `op`, and
-/// the answer is the reply's `result` object or its error code.
-pub(super) fn request(
-    transport: &Transport,
-    spec: HelperSpec,
-    operation: &str,
-    parameters: Object,
-) -> Result<Object, HelperError> {
+/// A request's envelope: `parameters` beside `version` and `op`.
+fn envelope(operation: &str, parameters: Object) -> Value {
     let mut envelope = Object::new();
     envelope.insert("version".into(), PROTOCOL_VERSION.into());
     envelope.insert("op".into(), operation.into());
     envelope.extend(parameters);
-    let mut reply = transport(&Value::Object(envelope))?;
+    Value::Object(envelope)
+}
+
+/// A reply's version, and its error, as a code from `spec`'s list.
+fn check_reply(reply: &Object, spec: HelperSpec) -> Result<(), HelperError> {
     if reply.get("version").and_then(Value::as_u64) != Some(PROTOCOL_VERSION) {
         return Err(HelperError::new("unsupported_version"));
     }
@@ -268,9 +304,148 @@ pub(super) fn request(
         };
         return Err(HelperError::new(code));
     }
+    Ok(())
+}
+
+/// One versioned request: `parameters` go beside `version` and `op`, and
+/// the answer is the reply's `result` object or its error code.
+pub(super) fn request(
+    transport: &Transport,
+    spec: HelperSpec,
+    operation: &str,
+    parameters: Object,
+) -> Result<Object, HelperError> {
+    let mut reply = transport(&envelope(operation, parameters))?;
+    check_reply(&reply, spec)?;
     match reply.remove("result") {
         Some(Value::Object(result)) => Ok(result),
         _ => Err(HelperError::new("invalid_response")),
+    }
+}
+
+/// The longest line a streaming run may print. Its lines are small events;
+/// a longer one is a helper gone wrong, and is not read into memory.
+const MAX_WATCH_LINE: usize = 64 * 1024;
+
+/// How long a streaming helper is given to leave once its stdin closes,
+/// before it is killed.
+const WATCH_EXIT_GRACE: Duration = Duration::from_secs(2);
+
+/// A streaming helper run, such as Tuta's `watch`: the request goes in on
+/// stdin as for any other, but stdin is held open, which is what keeps the
+/// helper going, and every line it prints is one JSON object carrying the
+/// version, checked like a reply. Dropping it closes stdin, gives the helper
+/// [`WATCH_EXIT_GRACE`] to leave and kills it if it has not.
+pub(super) struct Watch {
+    child: Child,
+    stdin: Option<ChildStdin>,
+    lines: std::sync::mpsc::Receiver<Result<Object, HelperError>>,
+}
+
+impl std::fmt::Debug for Watch {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Watch").finish_non_exhaustive()
+    }
+}
+
+impl Watch {
+    /// Start `executable` with `request` on its stdin. Blocking only for
+    /// as long as the request takes to write.
+    pub(super) fn start(
+        executable: &Path,
+        request: &Value,
+        spec: HelperSpec,
+    ) -> Result<Watch, HelperError> {
+        let fail = HelperError::new;
+        let mut input = serde_json::to_vec(request).map_err(|_| fail("invalid_request"))?;
+        input.push(b'\n');
+        let mut child = Command::new(executable)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::null())
+            .spawn()
+            .map_err(|_| fail("helper_missing"))?;
+        let (Some(mut stdin), Some(stdout)) = (child.stdin.take(), child.stdout.take()) else {
+            let _ = child.kill();
+            let _ = child.wait();
+            return Err(fail("helper_failed"));
+        };
+        let (tx, lines) = std::sync::mpsc::channel();
+        let reader = std::thread::Builder::new()
+            .name(format!("{}-watch", spec.name))
+            .spawn(move || read_watch_lines(stdout, spec, &tx));
+        // A helper that exits without reading shows as the end of its
+        // output, which `next` reports.
+        let written = stdin.write_all(&input).and_then(|()| stdin.flush());
+        if reader.is_err() || written.is_err() {
+            let _ = child.kill();
+            let _ = child.wait();
+            return Err(fail("helper_failed"));
+        }
+        Ok(Watch {
+            child,
+            stdin: Some(stdin),
+            lines,
+        })
+    }
+
+    /// The helper's next line, waiting at most `wait`: `None` when it said
+    /// nothing meanwhile. An error when it has ended, printed something
+    /// other than a line of the protocol, or reported a failure, whose code
+    /// it then is; nothing more is read after one.
+    pub(super) fn next(&mut self, wait: Duration) -> Result<Option<Object>, HelperError> {
+        use std::sync::mpsc::RecvTimeoutError;
+        match self.lines.recv_timeout(wait) {
+            Ok(line) => line.map(Some),
+            Err(RecvTimeoutError::Timeout) => Ok(None),
+            Err(RecvTimeoutError::Disconnected) => Err(HelperError::new("helper_failed")),
+        }
+    }
+}
+
+impl Drop for Watch {
+    fn drop(&mut self) {
+        drop(self.stdin.take());
+        let deadline = Instant::now() + WATCH_EXIT_GRACE;
+        while Instant::now() < deadline {
+            match self.child.try_wait() {
+                Ok(Some(_)) => return,
+                Ok(None) => std::thread::sleep(Duration::from_millis(20)),
+                Err(_) => break,
+            }
+        }
+        let _ = self.child.kill();
+        let _ = self.child.wait();
+    }
+}
+
+/// Read a streaming helper's lines into `tx` until it ends, a line is not
+/// one of the protocol, or the receiver has gone.
+fn read_watch_lines(
+    stdout: std::process::ChildStdout,
+    spec: HelperSpec,
+    tx: &std::sync::mpsc::Sender<Result<Object, HelperError>>,
+) {
+    let mut reader = std::io::BufReader::new(stdout);
+    loop {
+        let mut line = Vec::new();
+        let read = (&mut reader)
+            .take(MAX_WATCH_LINE as u64 + 1)
+            .read_until(b'\n', &mut line);
+        let parsed = match read {
+            Ok(0) => return,
+            Err(_) => Err(HelperError::new("helper_failed")),
+            Ok(_) if line.len() > MAX_WATCH_LINE => Err(HelperError::new("response_too_large")),
+            Ok(_) if line.iter().all(u8::is_ascii_whitespace) => continue,
+            Ok(_) => match serde_json::from_slice(&line) {
+                Ok(Value::Object(object)) => check_reply(&object, spec).map(|()| object),
+                _ => Err(HelperError::new("invalid_response")),
+            },
+        };
+        let last = parsed.is_err();
+        if tx.send(parsed).is_err() || last {
+            return;
+        }
     }
 }
 
@@ -361,6 +536,20 @@ impl HelperClient {
         parameters.insert("session".into(), session);
         request(&self.transport, self.spec, operation, parameters)
     }
+
+    /// Start a streaming `operation` on the stored session, with the
+    /// helper at `executable`.
+    pub(super) fn watch(
+        &self,
+        executable: &Path,
+        operation: &str,
+    ) -> Result<Watch, HelperError> {
+        let session: Value =
+            serde_json::from_str(&self.session).map_err(|_| HelperError::new("session_invalid"))?;
+        let mut parameters = Object::new();
+        parameters.insert("session".into(), session);
+        Watch::start(executable, &envelope(operation, parameters), self.spec)
+    }
 }
 
 /// The helper behind a protocol, for the protocols that have one.
@@ -430,6 +619,11 @@ pub(super) mod test_support {
             let text = std::fs::read_to_string(self.dir.join("argc")).expect("argc recorded");
             text.trim().parse().expect("argc is a number")
         }
+
+        /// Whether the helper saw its stdin close and left on its own.
+        pub(in crate::worker) fn ended(&self) -> bool {
+            self.dir.join("ended").exists()
+        }
     }
 
     impl Drop for FakeHelper {
@@ -464,6 +658,28 @@ pub(super) mod test_support {
             ),
             stdout,
         )
+    }
+
+    /// A streaming helper: records its argc and the request line, prints
+    /// `stdout`, then, when `stays`, keeps going until its stdin closes and
+    /// notes that it did; otherwise it exits at once.
+    pub(in crate::worker) fn streaming_helper(stdout: &str, stays: bool) -> FakeHelper {
+        let rest = if stays {
+            "cat > /dev/null\necho ended > \"$dir/ended\"\n"
+        } else {
+            ""
+        };
+        script(
+            &format!(
+                "echo $# > \"$dir/argc\"\nhead -n 1 > \"$dir/stdin\"\ncat \"$dir/reply\"\n{rest}"
+            ),
+            stdout,
+        )
+    }
+
+    /// Reads its request, then pays no attention to its stdin closing.
+    pub(in crate::worker) fn stubborn_helper() -> FakeHelper {
+        script("head -n 1 > /dev/null\nexec sleep 30\n", "")
     }
 
     /// Prints a secret to stderr and never answers.

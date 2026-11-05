@@ -5,13 +5,13 @@ use crate::cache::Cache;
 use crate::config::AccountConfig;
 use crate::models::Message;
 use crate::worker::helper::HelperError;
-use crate::worker::ids::{merge_msgids, TUTA_CONV};
+use crate::worker::ids::{hash_uid, merge_msgids, TUTA_CONV};
 use crate::worker::summary_from_raw;
 use crate::worker::tuta::index::{
     apply_first_page, run, take_folders, tuta_load_folder, TutaState, TUTA_FIRST_PAGE,
 };
 use crate::worker::tuta::mime::mime_message;
-use crate::worker::tuta::wire::{mark_read, message, move_ids, sync};
+use crate::worker::tuta::wire::{create_folder, mark_read, message, move_ids, sync};
 use crate::worker::WorkerEvent;
 
 /// A message uid's compound id, listing the folder once when the uid map
@@ -165,10 +165,13 @@ async fn seen_on_server(
         .unwrap_or_else(|_| (Vec::new(), Some(HelperError::new("helper_failed"))))
 }
 
-/// Move messages from `path` to the folder `dest`. A moved row leaves the
-/// source at once; its new id is never predicted (Tuta may file a moved
-/// mail in another list), so the destination is listed again, which is
-/// where the moved mail is found. The error, when not every message went.
+/// Move messages from `path` to the folder `dest`, made first at the top
+/// of the tree when the account has none by that name, as an IMAP move
+/// makes its destination (the first snooze, #527). A moved row leaves the
+/// source at once and the destination is listed again, which is where the
+/// moved mail is found: Tuta keeps a mail's id through a move, and the
+/// helper names the id anyway, so its uid is the same there. The error,
+/// when not every message went.
 pub(super) async fn tuta_move_uids(
     account: &AccountConfig,
     account_id: u32,
@@ -179,40 +182,72 @@ pub(super) async fn tuta_move_uids(
     cache: Option<&Cache>,
     emit: &impl Fn(WorkerEvent),
 ) -> Result<(), HelperError> {
-    let (dest_id, dest_tuta) = state
-        .folders
-        .get(dest)
-        .cloned()
-        .ok_or_else(|| HelperError::new("folder_not_found"))?;
+    match tuta_move_ids(account, account_id, state, path, uids, dest, cache, emit).await {
+        (_, Some(e)) => Err(e),
+        (_, None) => Ok(()),
+    }
+}
+
+/// [`tuta_move_uids`], with the ids the moved mail has in `dest`.
+pub(super) async fn tuta_move_ids(
+    account: &AccountConfig,
+    account_id: u32,
+    state: &mut TutaState,
+    path: &str,
+    uids: &[u32],
+    dest: &str,
+    cache: Option<&Cache>,
+    emit: &impl Fn(WorkerEvent),
+) -> (Vec<String>, Option<HelperError>) {
+    tuta_ensure_folder(account, account_id, cache, state, dest, emit).await;
+    let Some((dest_id, dest_tuta)) = state.folders.get(dest).cloned() else {
+        return (Vec::new(), Some(HelperError::new("folder_not_found")));
+    };
     let mut ids = Vec::with_capacity(uids.len());
     let mut by_id = std::collections::HashMap::new();
     for &uid in uids {
-        let id = tuta_resolve(account, account_id, state, path, uid, cache, emit).await?;
-        by_id.insert(id.clone(), uid);
-        ids.push(id);
+        match tuta_resolve(account, account_id, state, path, uid, cache, emit).await {
+            Ok(id) => {
+                by_id.insert(id.clone(), uid);
+                ids.push(id);
+            }
+            Err(e) => return (Vec::new(), Some(e)),
+        }
     }
-    let client = state.client(account)?;
+    let client = match state.client(account) {
+        Ok(client) => client,
+        Err(e) => return (Vec::new(), Some(e)),
+    };
     let (applied, failed) =
         tokio::task::spawn_blocking(move || move_ids(&client, &ids, &dest_tuta))
             .await
             .unwrap_or_else(|_| (Vec::new(), Some(HelperError::new("helper_failed"))));
     // What a read body showed of a moved row, for the destination's row:
-    // where Tuta kept the id, the uid is the same there, and the moved mail
-    // stays threaded and can be found again by an undo.
-    let moved: Vec<u32> = applied
+    // the moved mail stays threaded and is found again by an undo.
+    let moved: Vec<(u32, String)> = applied
         .iter()
-        .filter_map(|id| by_id.get(id).copied())
+        .filter_map(|(id, new_id)| {
+            let uid = by_id.get(id).copied()?;
+            Some((uid, new_id.clone().unwrap_or_else(|| id.clone())))
+        })
         .collect();
     let known: Vec<Message> = cache
         .map(|c| {
             c.load_messages(account_id, path, 0)
                 .into_iter()
-                .filter(|m| moved.contains(&m.uid) && !m.message_id.is_empty())
+                .filter(|m| moved.iter().any(|(uid, _)| *uid == m.uid) && !m.message_id.is_empty())
+                .map(|mut m| {
+                    if let Some((_, new_id)) = moved.iter().find(|(uid, _)| *uid == m.uid) {
+                        m.uid = hash_uid(new_id);
+                    }
+                    m
+                })
                 .collect()
         })
         .unwrap_or_default();
-    for uid in &moved {
+    for (uid, new_id) in &moved {
         state.uids.remove(uid);
+        state.uids.insert(hash_uid(new_id), new_id.clone());
         if let Some(c) = cache {
             c.delete_message(account_id, path, *uid);
         }
@@ -238,10 +273,7 @@ pub(super) async fn tuta_move_uids(
                     m.references = old.references.clone();
                     m.preview = old.preview.clone();
                 }
-                emit(WorkerEvent::Messages {
-                    folder_id: dest_id,
-                    messages,
-                })
+                emit_folder(dest_id, messages, state, emit)
             }
             Err(e) => tracing::warn!(
                 "[account {account_id}] could not list {dest} after a move: {}",
@@ -249,16 +281,47 @@ pub(super) async fn tuta_move_uids(
             ),
         }
     }
-    match failed {
-        Some(e) => {
-            tracing::warn!(
-                "[account {account_id}] could not move {} message(s) from {path} to {dest}: {}",
-                uids.len() - applied.len(),
-                e.code
-            );
-            Err(e)
+    if let Some(e) = &failed {
+        tracing::warn!(
+            "[account {account_id}] could not move {} message(s) from {path} to {dest}: {}",
+            uids.len() - moved.len(),
+            e.code
+        );
+    }
+    (moved.into_iter().map(|(_, id)| id).collect(), failed)
+}
+
+/// Make the top-level folder `path` when the account has none by that
+/// name, as an IMAP move makes its destination: the first snooze (#527),
+/// template (#360) or archive of an account without one. The folder list
+/// is synced again so it is numbered; a failure is logged, and the caller
+/// finds no folder.
+pub(super) async fn tuta_ensure_folder(
+    account: &AccountConfig,
+    account_id: u32,
+    cache: Option<&Cache>,
+    state: &mut TutaState,
+    path: &str,
+    emit: &impl Fn(WorkerEvent),
+) {
+    if state.folders.contains_key(path) || path.is_empty() || path.contains('/') {
+        return;
+    }
+    let name = crate::models::slashed_name(path);
+    let made = match state.client(account) {
+        Ok(client) => run(move || create_folder(&client, &name, None)).await,
+        Err(e) => Err(e),
+    };
+    match made {
+        Ok(_) => {
+            if let Err(e) = tuta_poll(account, account_id, cache, state, emit).await {
+                tracing::warn!(
+                    "[account {account_id}] could not list folders after making {path}: {}",
+                    e.code
+                );
+            }
         }
-        None => Ok(()),
+        Err(e) => tracing::warn!("[account {account_id}] could not make {path}: {}", e.code),
     }
 }
 
@@ -291,7 +354,8 @@ pub(super) async fn tuta_poll(
     Ok(())
 }
 
-/// A folder's rows to the list, and its chip number.
+/// A folder's rows to the list, and its chip number; for the Snoozed
+/// folder, how much it holds (#542), which a Tuta folder list leaves out.
 pub(super) fn emit_folder(
     folder_id: u32,
     messages: Vec<Message>,
@@ -300,9 +364,22 @@ pub(super) fn emit_folder(
 ) {
     use crate::worker::index_queue::IndexQueue;
     let unread = state.chip_count(folder_id, &messages);
+    let snoozed = state
+        .folders
+        .iter()
+        .find(|(path, (id, _))| {
+            *id == folder_id && state.kinds.get(*path) == Some(&crate::models::FolderKind::Snoozed)
+        })
+        .map(|(path, _)| WorkerEvent::SnoozedCount {
+            path: path.clone(),
+            count: messages.len() as u32,
+        });
     emit(WorkerEvent::Messages {
         folder_id,
         messages,
     });
     emit(WorkerEvent::FolderUnread { folder_id, unread });
+    if let Some(count) = snoozed {
+        emit(count);
+    }
 }

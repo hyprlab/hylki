@@ -7486,6 +7486,79 @@ msgid "The folder is no longer on the server."
 msgstr "Dieser Ordner ist nicht auf dem Server vorhanden"
 
 #, fuzzy
+msgid "The server did not make the change to the folder."
+msgstr "Der Dienst hat den Schlüssel nicht akzeptiert."
+
+#, fuzzy
+msgid "There is already a folder by that name there."
+msgstr "Kein Ordner für die Installation vorhanden"
+
+#, fuzzy
+msgid "Tuta's own folders can't be changed."
+msgstr ""
+"Microsoft 365 archiviert eine eigene Kopie in Gesendete Elemente; dies kann "
+"nicht geändert werden."
+
+msgid "The account has reached Tuta's limit for that."
+msgstr ""
+
+msgid "There is already a tag by that name."
+msgstr ""
+
+#, fuzzy
+msgid "The message is not a draft."
+msgstr "Diese Nachricht wurde noch nicht geladen."
+
+msgid "That name can't be used for a folder or a tag."
+msgstr ""
+
+msgid "That color can't be used for a tag."
+msgstr ""
+
+#, fuzzy
+msgid "The tag is no longer on the server."
+msgstr "Die Nachricht ist zu lang für den Server."
+
+#, fuzzy
+msgid "The server did not make the change to the tag."
+msgstr "Der Dienst hat den Schlüssel nicht akzeptiert."
+
+#, fuzzy
+msgid "The draft is no longer on the server."
+msgstr "Dieser Ordner ist nicht auf dem Server vorhanden"
+
+#, fuzzy
+msgid "The server did not store the draft."
+msgstr "Der Dienst hat den Schlüssel nicht akzeptiert."
+
+msgid "Mail can only be deleted for good from the Trash or Spam."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not delete the mail."
+msgstr "Der Dienst hat den Schlüssel nicht akzeptiert."
+
+msgid "The server is still busy with an earlier change. Try again in a moment."
+msgstr ""
+
+#, fuzzy
+msgid "The message could not be read, so it was not stored."
+msgstr "Die Dateien konnten nicht gelöscht werden."
+
+#, fuzzy
+msgid "The message is too large for Tuta to take in."
+msgstr "Die Nachricht ist zu lang für den Server."
+
+msgid ""
+"Tuta does not let this account import mail. Importing needs a Legend or "
+"Unlimited plan."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not store the message."
+msgstr "Der Dienst hat den Schlüssel nicht akzeptiert."
+
+#, fuzzy
 msgid "The message is no longer on the server."
 msgstr "Die Nachricht ist zu lang für den Server."
 
@@ -7513,8 +7586,18 @@ msgid "The message text is too long to send."
 msgstr "Die Nachricht ist zu lang für den Server."
 
 msgid ""
-"Encrypted delivery from Tuta to Tuta isn't supported yet, so a message only "
-"to Tuta addresses can't be sent from Hylki. Send it from Tuta's own app."
+"A recipient's Tuta address was not found, so the message could not be "
+"encrypted for it. Check the address."
+msgstr ""
+
+msgid ""
+"End-to-end encrypted delivery reaches Tuta addresses only, and a recipient "
+"is outside Tuta."
+msgstr ""
+
+msgid ""
+"Mail to an address outside Tuta is not end-to-end encrypted, and sending it "
+"that way was not confirmed."
 msgstr ""
 
 #, fuzzy
@@ -7711,20 +7794,6 @@ msgstr ""
 "Anhang aus dieser Nachricht entfernt. Ursprüngliche MIME-Kopfzeilen des "
 "Anhangs:"
 
-#, fuzzy
-msgid "Tuta accounts can't save drafts on the server from Hylki yet"
-msgstr "Dieses Konto kann keine Ordner auf der obersten Ebene enthalten."
-
-msgid ""
-"Folders of a Tuta account can't be created, renamed or deleted from Hylki "
-"yet. Use Tuta's own app."
-msgstr ""
-
-msgid ""
-"Tuta accounts can't delete mail for good from Hylki yet. Empty the Trash in "
-"Tuta's own app."
-msgstr ""
-
 msgid ""
 "OpenPGP signing and encryption aren't available for Tuta accounts. Turn them "
 "off to send."
@@ -7743,10 +7812,6 @@ msgid ""
 "Tuta's servers cannot search encrypted mail: search finds what is on this "
 "computer"
 msgstr ""
-
-#, fuzzy
-msgid "A Tuta account can't receive mail from another account"
-msgstr "Ein POP3-Konto kann keine E-Mails von einem anderen Konto übernehmen"
 
 #, fuzzy
 msgid ""
@@ -8874,6 +8939,15 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "This account can't take in mail from another account."
+#~ msgstr ""
+#~ "Ein POP3-Konto kann keine E-Mails von einem anderen Konto übernehmen"
+
+#, fuzzy
+#~ msgid "Tuta accounts can't save drafts on the server from Hylki yet"
+#~ msgstr "Dieses Konto kann keine Ordner auf der obersten Ebene enthalten."
 
 #~ msgid "Received"
 #~ msgstr "Empfangen"

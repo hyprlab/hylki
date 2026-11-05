@@ -72,9 +72,10 @@ type TrashPair = (u32, String, String, u32, String, String);
 impl AppModel {
     /// Whether mail from another account can be moved into this one (#265):
     /// IMAP and JMAP accounts take a message whole, and so does On This
-    /// Computer (#552), which is what it is for. A Microsoft account files
-    /// one posted to a folder as a draft, POP3 has only an inbox, and a Tuta
-    /// account's helper cannot store a message it did not send or receive.
+    /// Computer (#552), which is what it is for, and Tuta, whose helper
+    /// imports it the way Tuta's own app imports a mail file. A Microsoft
+    /// account files one posted to a folder as a draft, and POP3 has only an
+    /// inbox.
     fn can_receive(&self, account_id: u32) -> bool {
         if demo_mode() {
             return true;
@@ -83,7 +84,10 @@ impl AppModel {
             c.enabled
                 && matches!(
                     c.protocol,
-                    config::Protocol::Imap | config::Protocol::Jmap | config::Protocol::Local
+                    config::Protocol::Imap
+                        | config::Protocol::Jmap
+                        | config::Protocol::Local
+                        | config::Protocol::Tuta
                 )
         })
     }

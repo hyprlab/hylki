@@ -513,3 +513,26 @@ fn thread_ids_skips_messages_with_no_headers() {
     // that would match every message with an empty message_id.
     assert!(thread_ids(&[msg(1, 1, 10)]).is_empty());
 }
+
+/// Snooze and undo find a Tuta message again by its uid, and every other
+/// message by its Message-ID (#527).
+#[test]
+fn a_moved_message_answers_to_its_key() {
+    use super::{tuta_key, tuta_key_uid, Message};
+    assert_eq!(tuta_key_uid(&tuta_key(42)), Some(42));
+    assert_eq!(tuta_key_uid("42"), None);
+    assert_eq!(tuta_key_uid("tuta-uid:x"), None);
+    let tuta = Message {
+        uid: 42,
+        ..Message::blank()
+    };
+    assert!(tuta.answers_to(&tuta_key(42)));
+    assert!(!tuta.answers_to(&tuta_key(43)));
+    // An empty Message-ID answers to nothing, an empty key included.
+    assert!(!tuta.answers_to(""));
+    let read = Message {
+        message_id: "a@b".into(),
+        ..tuta
+    };
+    assert!(read.answers_to("a@b") && read.answers_to(&tuta_key(42)));
+}

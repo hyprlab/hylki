@@ -3,11 +3,16 @@
 //! and attachments), so the message `build_email` produces is read back
 //! into those parts. Tuta files the Sent copy itself.
 //!
-//! Delivery is ordinary mail (encrypted in transit, not end to end): the
-//! helper cannot yet encrypt for Tuta recipients, so a message only to
-//! Tuta addresses is refused rather than sent unencrypted, and a message
-//! that also goes elsewhere goes as ordinary mail to everyone, as Tuta's
-//! own app sends it.
+//! Delivery is chosen as Tuta's own app chooses it: a message only to Tuta
+//! addresses goes end-to-end encrypted ("confidential"), each recipient's
+//! key loaded by the helper through Tuta's SDK, and a message that also
+//! goes outside Tuta goes as ordinary mail (encrypted in transit only) to
+//! everyone. A Tuta address the server has no key for is refused, never
+//! sent unencrypted instead.
+//!
+//! A reply or a forward names the message it answers: the helper creates
+//! the draft in that message's conversation, as Tuta's own app does, and
+//! marks the original replied or forwarded once it went out.
 
 use base64::engine::general_purpose::STANDARD;
 use base64::Engine as _;
@@ -53,11 +58,13 @@ pub(super) fn send_outcome(error: &HelperError) -> SendOutcome {
         | "unsupported_version"
         | "request_failed" => SendOutcome::Uncertain,
         // Decided before anything was written to the server.
-        "confidential_send_unsupported"
+        "recipient_not_found"
+        | "secure_external_unsupported"
         | "invalid_recipient"
         | "sender_unknown"
         | "body_too_large"
         | "invalid_request"
+        | "invalid_thread"
         | "ordinary_delivery_requires_consent" => SendOutcome::Refused(error.message()),
         // The helper is missing, the sign-in needs renewing, the server was
         // out of reach, or it turned the draft down before the submit: none
@@ -148,30 +155,21 @@ fn send_attachments(message: &mail_parser::Message<'_>) -> Result<Vec<Value>, He
         .collect()
 }
 
-/// The helper's `send` parameters for a built message and its envelope.
-/// To and Cc keep their names from the headers; Bcc is only in the
-/// envelope, so it is the envelope less To and Cc. Threading headers are
-/// not passed: Tuta links conversations by its own ids.
-pub(super) fn send_parameters(raw: &[u8], envelope: &[String]) -> Result<Object, HelperError> {
-    let message = MessageParser::default()
-        .parse(raw)
-        .ok_or_else(|| HelperError::new("invalid_request"))?;
+/// The parts of a built message the helper takes, with `bcc` from wherever
+/// the caller found it. To and Cc keep their names from the headers.
+/// Threading goes separately (see [`thread_parameters`]).
+fn message_parts(
+    message: &mail_parser::Message<'_>,
+    bcc: impl FnOnce(&[(String, String)]) -> Vec<(String, String)>,
+) -> Result<Object, HelperError> {
     let (sender_name, sender) = addresses_of(message.from())
         .into_iter()
         .next()
         .ok_or_else(|| HelperError::new("sender_unknown"))?;
     let to = addresses_of(message.to());
     let cc = addresses_of(message.cc());
-    let named: Vec<String> = to
-        .iter()
-        .chain(&cc)
-        .map(|(_, a)| a.to_lowercase())
-        .collect();
-    let bcc: Vec<(String, String)> = envelope
-        .iter()
-        .filter(|address| !named.contains(&address.to_lowercase()))
-        .map(|address| (String::new(), address.clone()))
-        .collect();
+    let named: Vec<(String, String)> = to.iter().chain(&cc).cloned().collect();
+    let bcc = bcc(&named);
     let reply_tos = addresses_of(message.reply_to());
     let mut parameters = Object::new();
     for (key, value) in [
@@ -182,32 +180,179 @@ pub(super) fn send_parameters(raw: &[u8], envelope: &[String]) -> Result<Object,
         ("bcc", address_rows(&bcc)),
         ("reply_tos", address_rows(&reply_tos)),
         ("subject", message.subject().unwrap_or_default().into()),
-        ("body_html", send_body(&message).into()),
-        // The only delivery the helper can make, chosen here and nowhere
-        // else; the helper refuses ordinary delivery unless it is confirmed.
-        ("delivery", "ordinary".into()),
-        ("ordinary_confirmed", true.into()),
-        ("attachments", Value::Array(send_attachments(&message)?)),
+        ("body_html", send_body(message).into()),
+        ("attachments", Value::Array(send_attachments(message)?)),
     ] {
         parameters.insert(key.into(), value);
     }
     Ok(parameters)
 }
 
-/// Send built bytes. Any reply with a result means the mail went: its
-/// fields are the server's own ids, which nothing here needs.
+/// Where a built message sits in a conversation, as the helper's optional
+/// `in_reply_to`, `references` and `action`: nothing for new mail. A
+/// forward names the message it forwards as its parent, as Tuta's own app
+/// does. A reply is a reply-all when it goes to more than one address: the
+/// composer keeps no other mark of it. `recipients` are every address the
+/// message goes to.
+pub(super) fn thread_parameters(
+    message: &mail_parser::Message<'_>,
+    recipients: &[String],
+    forwards: &str,
+) -> Object {
+    let in_reply_to = sendable_msgids(message.in_reply_to());
+    let references = sendable_references(&sendable_msgids(message.references()));
+    let forwarded = forwards.split_whitespace().find(|id| sendable_msgid(id));
+    let parent = forwarded.or_else(|| in_reply_to.first().map(String::as_str));
+    let mut parameters = Object::new();
+    if parent.is_none() && references.is_empty() {
+        return parameters;
+    }
+    if let Some(parent) = parent {
+        parameters.insert("in_reply_to".into(), parent.into());
+    }
+    if !references.is_empty() {
+        parameters.insert("references".into(), references.into());
+    }
+    let distinct: std::collections::HashSet<String> =
+        recipients.iter().map(|a| a.to_lowercase()).collect();
+    let action = match (forwarded, distinct.len()) {
+        (Some(_), _) => "forward",
+        (None, n) if n > 1 => "reply_all",
+        (None, _) => "reply",
+    };
+    parameters.insert("action".into(), action.into());
+    parameters
+}
+
+/// Whether the helper takes `id` as a Message-ID: it refuses the whole
+/// request over one it does not, and a reply must not fail over a malformed
+/// id some other client wrote into the thread.
+fn sendable_msgid(id: &str) -> bool {
+    !id.is_empty()
+        && id.len() <= 998
+        && id
+            .bytes()
+            .all(|b| b.is_ascii_graphic() && b != b'<' && b != b'>')
+}
+
+/// The well-formed Message-IDs of an In-Reply-To or References header,
+/// without their brackets.
+fn sendable_msgids(header: &mail_parser::HeaderValue) -> Vec<String> {
+    let ids: Vec<&str> = match header {
+        mail_parser::HeaderValue::Text(id) => vec![id.as_ref()],
+        mail_parser::HeaderValue::TextList(ids) => ids.iter().map(|id| id.as_ref()).collect(),
+        _ => Vec::new(),
+    };
+    ids.into_iter()
+        .map(|id| id.trim().trim_start_matches('<').trim_end_matches('>'))
+        .filter(|id| sendable_msgid(id))
+        .map(str::to_string)
+        .collect()
+}
+
+/// The References chain as the helper takes it: the newest 100 ids within
+/// 16 KiB, oldest first.
+fn sendable_references(ids: &[String]) -> String {
+    let mut kept: Vec<&str> = Vec::new();
+    let mut size = 0;
+    for id in ids.iter().rev().take(100) {
+        size += id.len() + 1;
+        if size > 16 * 1024 {
+            break;
+        }
+        kept.push(id);
+    }
+    kept.reverse();
+    kept.join(" ")
+}
+
+/// The forwarded message's Message-ID as it arrived: the cache keeps it
+/// lowercased for matching, and the helper finds the parent by its exact
+/// id (as `restore_msgid_case` does for the threading headers).
+pub(super) fn exact_forwards(cache: Option<&Cache>, forwards: &str) -> String {
+    cache.map_or_else(|| forwards.to_string(), |c| c.exact_msgids(forwards))
+}
+
+fn parse(raw: &[u8]) -> Result<mail_parser::Message<'_>, HelperError> {
+    MessageParser::default()
+        .parse(raw)
+        .ok_or_else(|| HelperError::new("invalid_request"))
+}
+
+/// The helper's `send` parameters for a built message and its envelope.
+/// Bcc is only in the envelope, so it is the envelope less To and Cc.
+/// `forwards` is [`exact_forwards`] of the message's `forwards`.
+pub(super) fn send_parameters(
+    raw: &[u8],
+    envelope: &[String],
+    forwards: &str,
+) -> Result<Object, HelperError> {
+    let message = parse(raw)?;
+    let mut parameters = message_parts(&message, |named| {
+        envelope
+            .iter()
+            .filter(|address| !named.iter().any(|(_, a)| a.eq_ignore_ascii_case(address)))
+            .map(|address| (String::new(), address.clone()))
+            .collect()
+    })?;
+    // Ordinary delivery is what Tuta's own app does when it is not given
+    // a choice: confidential when every recipient is on Tuta, ordinary for
+    // everyone otherwise, which is confirmed here as that app confirms it
+    // by sending. The helper refuses ordinary delivery unconfirmed.
+    parameters.insert("delivery".into(), "ordinary".into());
+    parameters.insert("ordinary_confirmed".into(), true.into());
+    parameters.extend(thread_parameters(&message, envelope, forwards));
+    Ok(parameters)
+}
+
+/// The helper's `save_draft` parameters for a built draft, which keeps its
+/// Bcc in a header, as a draft is the user's own copy. It is not marked
+/// confidential: that only asks Tuta's own app to send it to outside
+/// addresses behind a password, which Hylki does not offer, and mail to
+/// Tuta addresses goes end-to-end encrypted whatever the mark.
+///
+/// `forwards` is [`exact_forwards`] of the message's `forwards`.
+pub(super) fn draft_parameters(raw: &[u8], forwards: &str) -> Result<Object, HelperError> {
+    let message = parse(raw)?;
+    let mut parameters = message_parts(&message, |_| addresses_of(message.bcc()))?;
+    parameters.insert("confidential".into(), false.into());
+    let recipients: Vec<String> = [message.to(), message.cc(), message.bcc()]
+        .into_iter()
+        .flat_map(addresses_of)
+        .map(|(_, address)| address)
+        .collect();
+    parameters.extend(thread_parameters(&message, &recipients, forwards));
+    Ok(parameters)
+}
+
+/// Send built bytes. Any reply with a result means the mail went. Its
+/// fields are the server's ids, which nothing here needs, and whether it
+/// went confidentially, with each recipient's key version and fingerprint
+/// as the helper loaded them: Tuta verifies no key unless the user has
+/// pinned it, and Hylki pins none yet, so those only go to the debug log.
 pub(super) async fn tuta_send_raw(
     client: HelperClient,
     raw: Vec<u8>,
     envelope: Vec<String>,
+    forwards: String,
 ) -> SendOutcome {
     let sent = run(move || {
-        let parameters = send_parameters(&raw, &envelope)?;
+        let parameters = send_parameters(&raw, &envelope, &forwards)?;
         client.request("send", parameters)
     })
     .await;
     match sent {
-        Ok(_) => SendOutcome::Sent,
+        Ok(reply) => {
+            let keys = reply
+                .get("recipients")
+                .and_then(Value::as_array)
+                .map_or(0, Vec::len);
+            match reply.get("confidential").and_then(Value::as_bool) {
+                Some(true) => tracing::debug!("tuta: sent end-to-end encrypted to {keys} key(s)"),
+                _ => tracing::debug!("tuta: sent as ordinary mail"),
+            }
+            SendOutcome::Sent
+        }
         Err(e) => {
             if e.code != "send_uncertain" {
                 tracing::warn!("tuta: send failed: {}", e.code);
@@ -217,11 +362,13 @@ pub(super) async fn tuta_send_raw(
     }
 }
 
-/// Send a composed message.
+/// Send a composed message. `forwards` is [`exact_forwards`] of its
+/// `forwards`.
 pub(super) async fn tuta_send_message(
     account: &AccountConfig,
     state: &TutaState,
     message: &OutgoingMessage,
+    forwards: String,
 ) -> SendOutcome {
     // Tuta rebuilds the mail from its parts, which would leave an OpenPGP
     // signature or encryption behind: refused, not sent without it.
@@ -247,7 +394,7 @@ pub(super) async fn tuta_send_message(
         .iter()
         .map(|a| a.to_string())
         .collect();
-    tuta_send_raw(client, email.formatted(), envelope).await
+    tuta_send_raw(client, email.formatted(), envelope, forwards).await
 }
 
 /// List the Sent folder, where Tuta filed the copy, so it joins the
@@ -315,7 +462,15 @@ pub(super) async fn tuta_flush_outbox(
     emit(WorkerEvent::Status(i18n("Sending…")));
     let mut sent_any = false;
     for item in items {
-        match tuta_send_raw(client.clone(), item.raw.clone(), item.rcpts.clone()).await {
+        let forwards = exact_forwards(cache, &item.forwards);
+        match tuta_send_raw(
+            client.clone(),
+            item.raw.clone(),
+            item.rcpts.clone(),
+            forwards,
+        )
+        .await
+        {
             SendOutcome::Sent => {
                 sent_any = true;
                 c.delete_outbox(item.id);

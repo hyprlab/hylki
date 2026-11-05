@@ -7531,6 +7531,79 @@ msgid "The folder is no longer on the server."
 msgstr "Essa pasta não existe no servidor"
 
 #, fuzzy
+msgid "The server did not make the change to the folder."
+msgstr "O serviço não aceitou a chave."
+
+#, fuzzy
+msgid "There is already a folder by that name there."
+msgstr "Não há texto para traduzir."
+
+#, fuzzy
+msgid "Tuta's own folders can't be changed."
+msgstr ""
+"O Microsoft 365 arquiva a sua própria cópia em Itens Enviados; isto não pode "
+"ser alterado."
+
+msgid "The account has reached Tuta's limit for that."
+msgstr ""
+
+msgid "There is already a tag by that name."
+msgstr ""
+
+#, fuzzy
+msgid "The message is not a draft."
+msgstr "A mensagem ainda não foi carregada."
+
+msgid "That name can't be used for a folder or a tag."
+msgstr ""
+
+msgid "That color can't be used for a tag."
+msgstr ""
+
+#, fuzzy
+msgid "The tag is no longer on the server."
+msgstr "Esta mensagem é demasiado longa para enviar para tradução."
+
+#, fuzzy
+msgid "The server did not make the change to the tag."
+msgstr "O serviço não aceitou a chave."
+
+#, fuzzy
+msgid "The draft is no longer on the server."
+msgstr "Essa pasta não existe no servidor"
+
+#, fuzzy
+msgid "The server did not store the draft."
+msgstr "O serviço não aceitou a chave."
+
+msgid "Mail can only be deleted for good from the Trash or Spam."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not delete the mail."
+msgstr "O serviço não aceitou a chave."
+
+msgid "The server is still busy with an earlier change. Try again in a moment."
+msgstr ""
+
+#, fuzzy
+msgid "The message could not be read, so it was not stored."
+msgstr "Não foi possível abrir o ficheiro"
+
+#, fuzzy
+msgid "The message is too large for Tuta to take in."
+msgstr "Esta mensagem é demasiado longa para enviar para tradução."
+
+msgid ""
+"Tuta does not let this account import mail. Importing needs a Legend or "
+"Unlimited plan."
+msgstr ""
+
+#, fuzzy
+msgid "The server did not store the message."
+msgstr "O serviço não aceitou a chave."
+
+#, fuzzy
 msgid "The message is no longer on the server."
 msgstr "Esta mensagem é demasiado longa para enviar para tradução."
 
@@ -7558,8 +7631,18 @@ msgid "The message text is too long to send."
 msgstr "Esta mensagem é demasiado longa para enviar para tradução."
 
 msgid ""
-"Encrypted delivery from Tuta to Tuta isn't supported yet, so a message only "
-"to Tuta addresses can't be sent from Hylki. Send it from Tuta's own app."
+"A recipient's Tuta address was not found, so the message could not be "
+"encrypted for it. Check the address."
+msgstr ""
+
+msgid ""
+"End-to-end encrypted delivery reaches Tuta addresses only, and a recipient "
+"is outside Tuta."
+msgstr ""
+
+msgid ""
+"Mail to an address outside Tuta is not end-to-end encrypted, and sending it "
+"that way was not confirmed."
 msgstr ""
 
 #, fuzzy
@@ -7759,19 +7842,6 @@ msgid ""
 msgstr ""
 "Eliminou um anexo desta mensagem. Os cabeçalhos MIME originais do anexo eram:"
 
-msgid "Tuta accounts can't save drafts on the server from Hylki yet"
-msgstr ""
-
-msgid ""
-"Folders of a Tuta account can't be created, renamed or deleted from Hylki "
-"yet. Use Tuta's own app."
-msgstr ""
-
-msgid ""
-"Tuta accounts can't delete mail for good from Hylki yet. Empty the Trash in "
-"Tuta's own app."
-msgstr ""
-
 msgid ""
 "OpenPGP signing and encryption aren't available for Tuta accounts. Turn them "
 "off to send."
@@ -7790,10 +7860,6 @@ msgid ""
 "Tuta's servers cannot search encrypted mail: search finds what is on this "
 "computer"
 msgstr ""
-
-#, fuzzy
-msgid "A Tuta account can't receive mail from another account"
-msgstr "Uma conta POP3 não pode receber correio de outra conta"
 
 #, fuzzy
 msgid ""
@@ -8904,6 +8970,10 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "This account can't take in mail from another account."
+#~ msgstr "Uma conta POP3 não pode receber correio de outra conta"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Não foi possível renomear a pasta: pasta desconhecida"

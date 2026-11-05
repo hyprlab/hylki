@@ -18,8 +18,8 @@ use crate::worker::ids::hash_uid;
 use crate::worker::index_queue::{IndexJob, IndexQueue};
 use crate::worker::reconcile::listing_gone;
 use crate::worker::tuta::folders::{tuta_folders, TutaFolder};
-use crate::worker::tuta::messages::tuta_message;
-use crate::worker::tuta::wire::{sync, SyncPage, SPEC};
+use crate::worker::tuta::messages::{header_labels, tuta_message};
+use crate::worker::tuta::wire::{sync, LabelRow, SyncPage, SPEC};
 use crate::worker::WorkerEvent;
 
 /// The newest headers a folder load lists, for a quick first paint. The
@@ -60,6 +60,8 @@ pub(super) struct TutaState {
     pub(super) listed: HashMap<String, Instant>,
     /// No background step before this, after one failed.
     pub(super) backfill_wait: Option<Instant>,
+    /// The account's labels by id, from the last sync that listed them.
+    pub(super) labels: HashMap<String, LabelRow>,
 }
 
 impl TutaState {
@@ -75,6 +77,7 @@ impl TutaState {
             backfill: VecDeque::new(),
             listed: HashMap::new(),
             backfill_wait: None,
+            labels: HashMap::new(),
         }
     }
 
@@ -200,7 +203,8 @@ pub(super) fn tuta_index_plan(
 /// The rows of a page, with what only the cache knows carried over the
 /// listing: Hylki's own star (Tuta has none) and the Message-ID,
 /// References and preview a read body filled in (see
-/// `Cache::set_threading`).
+/// `Cache::set_threading`). A body's Message-ID wins over the listed one:
+/// it came with the References the listing lacks.
 pub(super) fn carry_over(listed: &mut [Message], cached: &[Message]) {
     let by_uid: HashMap<u32, &Message> = cached.iter().map(|m| (m.uid, m)).collect();
     for m in listed {
@@ -208,7 +212,7 @@ pub(super) fn carry_over(listed: &mut [Message], cached: &[Message]) {
             continue;
         };
         m.starred = old.starred;
-        if m.message_id.is_empty() && !old.message_id.is_empty() {
+        if !old.message_id.is_empty() {
             m.message_id = old.message_id.clone();
             m.references = old.references.clone();
         }
@@ -218,16 +222,26 @@ pub(super) fn carry_over(listed: &mut [Message], cached: &[Message]) {
     }
 }
 
-/// A page's headers as rows of `folder_id`, their ids noted in the uid map.
+/// A page's labels, adopted when it lists them.
+fn adopt_labels(page: &SyncPage, state: &mut TutaState) {
+    if let Some(labels) = &page.labels {
+        state.labels = labels.iter().map(|l| (l.id.clone(), l.clone())).collect();
+    }
+}
+
+/// A page's headers as rows of `folder_id`, their ids noted in the uid map
+/// and their labels named.
 pub(super) fn page_messages(
     page: &SyncPage,
     account_id: u32,
     folder_id: u32,
     state: &mut TutaState,
 ) -> Vec<Message> {
+    adopt_labels(page, state);
     let mut messages = Vec::with_capacity(page.headers.len());
     for header in &page.headers {
-        if let Some((m, id)) = tuta_message(header, account_id, folder_id) {
+        if let Some((mut m, id)) = tuta_message(header, account_id, folder_id) {
+            m.labels = header_labels(header, &state.labels);
             state.uids.insert(m.uid, id);
             messages.push(m);
         }
@@ -253,7 +267,7 @@ fn merge_page(
 }
 
 /// The folder list a sync carried, adopted, saved and sent to the UI when
-/// it changed.
+/// it changed, and its labels adopted.
 pub(super) fn take_folders(
     page: &SyncPage,
     account_id: u32,
@@ -261,6 +275,7 @@ pub(super) fn take_folders(
     state: &mut TutaState,
     emit: &impl Fn(WorkerEvent),
 ) {
+    adopt_labels(page, state);
     let cached = cache
         .map(|c| c.load_folders(account_id))
         .unwrap_or_default();
