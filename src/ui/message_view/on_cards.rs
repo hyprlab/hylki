@@ -208,9 +208,13 @@ impl MessageView {
         self.selected_cards = vec![key];
         self.apply_card_selection();
         let _ = sender.output(MessageViewOutput::SelectCards(vec![key]));
+        // The same 14px gap a reply's focus leaves (on_focus_card): without
+        // it the card stops flush under the bar above, its top border and
+        // selection outline hidden (#587).
         let js = format!(
             "(function(){{var s=document.querySelector('.hylki-msg[data-key=\"{}:{}\"]');\
-             if(s)s.scrollIntoView({{behavior:'smooth',block:'start'}});}})()",
+             if(s){{s.style.scrollMarginTop='14px';\
+             s.scrollIntoView({{behavior:'smooth',block:'start'}});}}}})()",
             key.0, key.1
         );
         self.run_js(&js);

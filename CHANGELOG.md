@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Fixed: `w` and `b` left a message card under the bar above it** (#587, by
+  James Reilly). The card's top border and selection outline were cut off. The
+  card now stops 14 px below the bar, as it does when focused for a reply.
+
 - **Added: each folder keeps its own sort** (#574, suggested by Bohne13). The
   order chosen under **Sort by**, or by a column heading, now belongs to the
   folder, unified row, tag or smart folder it was chosen in, and a renamed
