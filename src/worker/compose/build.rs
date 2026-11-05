@@ -638,6 +638,45 @@ mod tests {
                 .count(),
             1
         );
+        // A Bcc with a key of its own is in the packet without its key id,
+        // which the To and the Cc would otherwise see.
+        crate::mail::pgp::generate_key(&gpg, "Bcc", "bcc@hylki.invalid", "never", "")
+            .expect("bcc key");
+        msg.bcc = "Hidden <bcc@hylki.invalid>".into();
+        let raw = build_email(&account, &msg).expect("builds").formatted();
+        let text = String::from_utf8_lossy(&raw);
+        let begin = text.find("-----BEGIN PGP MESSAGE-----").expect("armour");
+        let end = text.find("-----END PGP MESSAGE-----").expect("armour end");
+        let mut list = std::process::Command::new("gpg")
+            .env("GNUPGHOME", &home)
+            .args(["--batch", "--list-only", "--list-packets"])
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::null())
+            .spawn()
+            .expect("gpg runs");
+        use std::io::Write as _;
+        list.stdin
+            .take()
+            .unwrap()
+            .write_all(text[begin..end + 25].as_bytes())
+            .unwrap();
+        let packets = String::from_utf8_lossy(&list.wait_with_output().unwrap().stdout).to_string();
+        let keyids: Vec<&str> = packets
+            .lines()
+            .filter(|l| l.contains(":pubkey enc packet:"))
+            .collect();
+        assert_eq!(keyids.len(), 3, "peer, sender and the Bcc: {packets}");
+        assert_eq!(
+            keyids
+                .iter()
+                .filter(|l| l.ends_with("keyid 0000000000000000"))
+                .count(),
+            1,
+            "only the Bcc is anonymous: {packets}"
+        );
+        let u = crate::mail::pgp::unwrap_message(&raw, &gpg).expect("recognised");
+        assert!(u.status.decrypted, "{:?}", u.status);
         msg.bcc.clear();
         // An account that leaves the subject readable (#493) sends it outside.
         account.plain_subject = true;

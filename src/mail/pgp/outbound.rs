@@ -46,10 +46,15 @@ pub(crate) fn sign_detached(
 /// address, armoured. The sender is a recipient too, so the Sent copy stays
 /// readable. Keys are used as found: a recipient's key that is in the
 /// keyring but not vouched for still encrypts, as Thunderbird does.
+///
+/// `hidden` recipients (Bcc) go in with their key ids zeroed: every copy of
+/// the message carries the same encrypted packet, so a Bcc key id written
+/// out in it would tell the To and Cc who else could read it.
 pub(crate) fn encrypt(
     gpg: &Gpg,
     data: &[u8],
     recipients: &[String],
+    hidden: &[String],
     local_user: Option<&str>,
 ) -> Result<Vec<u8>, String> {
     let mut args: Vec<&str> = vec!["--armor", "--trust-model", "always", "--encrypt"];
@@ -58,6 +63,9 @@ pub(crate) fn encrypt(
     }
     for r in recipients {
         args.extend(["--recipient", r.as_str()]);
+    }
+    for r in hidden {
+        args.extend(["--hidden-recipient", r.as_str()]);
     }
     let out = run(gpg, &args, data, None);
     if out.stdout.is_empty() {
