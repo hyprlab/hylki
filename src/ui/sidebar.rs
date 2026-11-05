@@ -207,6 +207,8 @@ pub(crate) struct Sidebar {
     /// or folded, when "Fold up expanded items" covers it.
     rail_open: HashMap<UnifiedRow, bool>,
     rail_open_accounts: HashMap<u32, bool>,
+    /// The rail avatar clicked last and when, to tell a double click.
+    rail_last_click: Option<(u32, std::time::Instant)>,
     /// Which unified Starred / Sent / Drafts rows are shown, whether their
     /// account lists are open, and their widgets.
     unified_kinds: crate::config::UnifiedKinds,
@@ -398,6 +400,7 @@ impl Component for Sidebar {
             kind_widgets: HashMap::new(),
             rail_open: HashMap::new(),
             rail_open_accounts: HashMap::new(),
+            rail_last_click: None,
             show_accounts: true,
             section_style: crate::config::SectionStyle::default(),
             filtered_placement: crate::config::SectionPlacement::AboveAccounts,
@@ -540,6 +543,7 @@ impl Sidebar {
             }
             SidebarInput::ToggleCollapsed => self.on_toggle_collapsed(widgets, sender),
             SidebarInput::ToggleCollapseLocal(id) => self.on_toggle_collapse_local(id, sender),
+            SidebarInput::RailAvatarClicked(id) => self.on_rail_avatar_clicked(id, sender),
             SidebarInput::ToggleCustomFoldersLocal(id) => {
                 self.on_toggle_custom_folders_local(id, sender)
             }

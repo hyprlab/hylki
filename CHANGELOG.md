@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Changed: a click on an account's avatar in the icon rail opens its Inbox**
+  (#594, suggested by Alp Sahin). A long press or a double click now opens or
+  closes its folders. The avatar is lit while a folder of that account is open
+  and folded away. With Settings → Sidebar → Fold accounts with one click on, a
+  click opens or closes the folders as before.
+
 - **Fixed: a theme picked in Settings could have no effect** (#593, by Alp Sahin).
   A `~/.config/gtk-4.0/gtk.css` that sets GTK's named colors, as theme generators
   do, overrode it. A picked theme now wins. With no theme picked, that file still

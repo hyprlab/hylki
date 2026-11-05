@@ -180,7 +180,10 @@ header, opens or closes its folders, and a single click elsewhere on it
 does nothing. **Settings → Sidebar → Fold accounts with one click** brings
 back the single click anywhere on the header. In the icon rail, which has
 no chevrons, a click on a section's icon opens or closes it, and a long
-press or a double click opens or closes the unified rows.
+press or a double click opens or closes the unified rows. A click on an
+account's avatar opens that account's Inbox, and a long press or a double
+click opens or closes its folders; with **Fold accounts with one click** on,
+a click opens or closes them instead.
 
 **Settings → Sidebar → Unified** chooses the unified section's rows.
 Inboxes, Starred, Sent, Drafts, Archive and Snoozed are on until switched

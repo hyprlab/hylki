@@ -129,6 +129,9 @@ pub(crate) enum SidebarInput {
     /// Each smart folder's unread count, by id.
     SetSmartUnread(HashMap<String, u32>),
     ToggleCollapseLocal(u32),
+    /// A click on a rail avatar: show that account's inbox, or with a second
+    /// click straight after it, open or fold the account.
+    RailAvatarClicked(u32),
     /// Set icon-only mode outright (the app's narrow-window breakpoint) —
     /// unlike ToggleCollapsed this never reports CollapsedChanged, so it can't
     /// overwrite the user's own persisted choice.

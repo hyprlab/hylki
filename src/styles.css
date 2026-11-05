@@ -111,6 +111,11 @@ row.compose-row .compose-caret:active {
   margin-right: 2px;
 }
 
+/* A rail avatar whose account holds the open folder, folded out of sight. */
+.rail-collapsed .account-header.rail-current {
+  background-color: alpha(currentColor, 0.1);
+}
+
 .rail-collapsed .folder-row {
   padding-left: 2px;
   padding-right: 2px;
