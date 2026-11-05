@@ -2,14 +2,11 @@
 
 ## Unreleased
 
-- **Added: a double click on a folder with sub-folders opens or closes them**,
-  as it does on a unified row or an account's header (#583). A single click
-  still opens the folder and leaves them as they were.
-
-- **Fixed: only the chevron of a Folders, Labels or Tags heading could be
-  clicked** (#583). A click anywhere on an account's heading now opens or closes
-  the section, and the heading lights up under the pointer as the rows around it
-  do.
+- **Added: a double click opens or closes a folder's sub-folders and the
+  Folders, Labels and Tags headings** (#583), as it does on a unified row or an
+  account's header. A single click on a folder still opens it and leaves its
+  sub-folders as they were. A heading now lights up under the pointer as the
+  rows around it do.
 
 - **Fixed: row titles broke letter by letter in New Event and New Task** (#564).
   The dialog was too narrow for a title beside a date and a time, in a long

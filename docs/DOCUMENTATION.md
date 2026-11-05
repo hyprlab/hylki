@@ -168,8 +168,9 @@ what was dragged. The item is there only once something has been.
 
 The chevrons open and close the items in the sidebar. Clicking a folder
 opens it and leaves its sub-folders as they were, and double-clicking it
-opens or closes them as its chevron does. Clicking anywhere on the
-Folders, Labels or Tags heading of an account opens or closes the section.
+opens or closes them as its chevron does. The Folders, Labels and Tags
+headings of an account work the same way: a chevron or a double click opens or
+closes the section, and a single click elsewhere on it does nothing.
 Clicking Inboxes, Starred, Sent, Drafts,
 Archive, Junk or Trash in the unified section, or Favorites, Filters, Tags
 or Contacts, opens the combined list without showing each account's folder under it, and

@@ -6,8 +6,8 @@ use super::menus::{attach_folder_context_menu, folder_sort_menu, show_sidebar_me
 use super::tree::{hidden_by_collapse, is_main_row, nests_in_inbox, path_is_under};
 use super::types::chevron_icon;
 use super::widgets::{
-    account_gravatar, build_folder_row, filter_icon, heading_chevron, section_heading,
-    with_unread_overlay, wrap_row_in_revealer, ROW_LEFT_INSET,
+    account_gravatar, build_folder_row, filter_icon, fold_on_double_click, heading_chevron,
+    section_heading, with_unread_overlay, wrap_row_in_revealer, ROW_LEFT_INSET,
 };
 use super::*;
 
@@ -340,7 +340,11 @@ impl Sidebar {
             );
             if has_children {
                 if let Some(lead) = &lead {
-                    fold_on_double_click(&row, lead, id, &folder.path, sender);
+                    let msg = SidebarInput::ToggleFolderNode {
+                        account_id: id,
+                        path: folder.path.clone(),
+                    };
+                    fold_on_double_click(&row, lead, msg, sender);
                 }
             }
             if nested {
@@ -439,7 +443,11 @@ impl Sidebar {
                 }
                 if has_children {
                     if let Some(lead) = &lead {
-                        fold_on_double_click(&row, lead, id, &folder.path, sender);
+                        let msg = SidebarInput::ToggleFolderNode {
+                            account_id: id,
+                            path: folder.path.clone(),
+                        };
+                        fold_on_double_click(&row, lead, msg, sender);
                     }
                 }
                 custom_list.append(&row);
@@ -459,6 +467,7 @@ impl Sidebar {
 
             let hb = gtk::Box::new(gtk::Orientation::Horizontal, 8);
             hb.add_css_class("folder-row");
+            let mut folders_chevron: Option<gtk::Button> = None;
             if self.collapsed {
                 hb.set_halign(gtk::Align::Center);
                 hb.append(&gtk::Image::from_icon_name("folder-symbolic"));
@@ -470,7 +479,17 @@ impl Sidebar {
                     // above — a smaller value keeps the same column.
                     custom_chevron.set_margin_start(2);
                 }
-                hb.append(&heading_chevron(&custom_chevron));
+                let btn = heading_chevron(&custom_chevron);
+                btn.set_tooltip_text(Some(
+                    if section.gmail {
+                        i18n("Show or hide labels")
+                    } else {
+                        i18n("Show or hide folders")
+                    }
+                    .as_str(),
+                ));
+                hb.append(&btn);
+                folders_chevron = Some(btn);
                 // Gmail's own word for them: its folders are labels.
                 let len = custom.len().to_string();
                 let heading = if section.gmail {
@@ -483,17 +502,23 @@ impl Sidebar {
                 lbl.set_hexpand(true);
                 hb.append(&lbl);
             }
-            let folders_toggle =
-                section_heading(&hb, &[], SidebarInput::ToggleCustomFoldersLocal(id), sender);
-            folders_toggle.set_tooltip_text(Some(
-                match (self.collapsed, section.gmail) {
-                    (true, true) => i18n("Labels"),
-                    (true, false) => i18n("Folders"),
-                    (false, true) => i18n("Show or hide labels"),
-                    (false, false) => i18n("Show or hide folders"),
-                }
-                .as_str(),
-            ));
+            let folders_toggle = section_heading(
+                &hb,
+                folders_chevron.as_ref(),
+                &[],
+                SidebarInput::ToggleCustomFoldersLocal(id),
+                sender,
+            );
+            if self.collapsed {
+                folders_toggle.set_tooltip_text(Some(
+                    if section.gmail {
+                        i18n("Labels")
+                    } else {
+                        i18n("Folders")
+                    }
+                    .as_str(),
+                ));
+            }
             // Right-click: how this account's folders are sorted.
             let click = gtk::GestureClick::new();
             click.set_button(gtk::gdk::BUTTON_SECONDARY);
@@ -648,39 +673,6 @@ impl Sidebar {
         );
         list_box
     }
-}
-
-/// A double click on a parent folder's row opens or folds its sub-folders, as
-/// on a unified row or an account's header. Its first click opens the folder
-/// as any click does. A press on `chevron` reaches the row too, and is left
-/// out: the chevron counts both clicks of a double click itself.
-fn fold_on_double_click(
-    row: &gtk::ListBoxRow,
-    chevron: &gtk::Widget,
-    account_id: u32,
-    path: &str,
-    sender: &ComponentSender<Sidebar>,
-) {
-    let double = gtk::GestureClick::new();
-    double.set_button(gtk::gdk::BUTTON_PRIMARY);
-    let (r, chev) = (row.downgrade(), chevron.downgrade());
-    let path = path.to_string();
-    let s = sender.input_sender().clone();
-    double.connect_pressed(move |_, presses, x, y| {
-        let (Some(r), Some(chev)) = (r.upgrade(), chev.upgrade()) else {
-            return;
-        };
-        let on_chevron = r
-            .pick(x, y, gtk::PickFlags::DEFAULT)
-            .is_some_and(|w| w == chev || w.is_ancestor(&chev));
-        if presses == 2 && !on_chevron {
-            let _ = s.send(SidebarInput::ToggleFolderNode {
-                account_id,
-                path: path.clone(),
-            });
-        }
-    });
-    row.add_controller(double);
 }
 
 /// The account's avatar disc (`name_str` gives its initials): its color,
