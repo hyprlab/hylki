@@ -483,3 +483,29 @@ fn a_view_keeps_its_sort_through_the_file() {
     assert!(old.list_sorts.is_empty());
     assert_eq!(old.list_sort, "unread");
 }
+
+/// An exported log or settings bundle replaces whatever file the user picked,
+/// and is left readable by its owner only, even where the file was not.
+#[cfg(unix)]
+#[test]
+fn a_private_file_is_tightened_before_it_is_filled() {
+    use std::os::unix::fs::PermissionsExt;
+    let mode = |p: &std::path::Path| std::fs::metadata(p).unwrap().permissions().mode() & 0o777;
+    let dir = std::env::temp_dir().join(format!("hylki-private-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    super::private_dir(&dir.join("a/b")).unwrap();
+    assert_eq!(mode(&dir.join("a/b")), 0o700);
+    std::fs::set_permissions(dir.join("a"), std::fs::Permissions::from_mode(0o755)).unwrap();
+    super::private_dir(&dir.join("a")).unwrap();
+    assert_eq!(mode(&dir.join("a")), 0o700);
+
+    let file = dir.join("hylki-log.txt");
+    std::fs::write(&file, b"an older, longer log").unwrap();
+    std::fs::set_permissions(&file, std::fs::Permissions::from_mode(0o644)).unwrap();
+    super::write_private(&file, "log").unwrap();
+    assert_eq!(mode(&file), 0o600);
+    assert_eq!(std::fs::read(&file).unwrap(), b"log");
+    super::write_private_bytes(&dir.join("new.bin"), b"\x00\x01").unwrap();
+    assert_eq!(mode(&dir.join("new.bin")), 0o600);
+    let _ = std::fs::remove_dir_all(&dir);
+}

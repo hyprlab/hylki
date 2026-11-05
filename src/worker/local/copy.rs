@@ -222,12 +222,16 @@ fn ledger_line(key: &CopyKey) -> String {
 fn append_ledger(ledger: &std::path::Path, key: &CopyKey) {
     let written = ledger
         .parent()
-        .map_or(Ok(()), std::fs::create_dir_all)
+        .map_or(Ok(()), crate::config::private_dir)
         .and_then(|()| {
-            std::fs::OpenOptions::new()
-                .create(true)
-                .append(true)
-                .open(ledger)
+            let mut opts = std::fs::OpenOptions::new();
+            opts.create(true).append(true);
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::OpenOptionsExt;
+                opts.mode(0o600);
+            }
+            opts.open(ledger)
         })
         .and_then(|mut f| f.write_all(ledger_line(key).as_bytes()));
     if let Err(e) = written {

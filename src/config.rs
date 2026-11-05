@@ -67,6 +67,12 @@ mod tests;
 /// hostnames, usernames, OAuth client secrets and correspondent lists. Creating
 /// with the mode already set closes it.
 pub(crate) fn write_private(path: &std::path::Path, contents: &str) -> std::io::Result<()> {
+    write_private_bytes(path, contents.as_bytes())
+}
+
+/// [`write_private`] for bytes: the remote-content cache, the exported log
+/// and the settings bundle.
+pub(crate) fn write_private_bytes(path: &std::path::Path, contents: &[u8]) -> std::io::Result<()> {
     use std::io::Write;
     let mut opts = std::fs::OpenOptions::new();
     opts.write(true).create(true).truncate(true);
@@ -76,15 +82,34 @@ pub(crate) fn write_private(path: &std::path::Path, contents: &str) -> std::io::
         opts.mode(0o600);
     }
     let mut f = opts.open(path)?;
-    f.write_all(contents.as_bytes())?;
     // An existing file keeps its old mode through `OpenOptions::mode`, which
-    // only applies at creation — so tighten regardless.
+    // only applies at creation, so it is tightened before anything goes in.
+    // Best effort: a document portal path may not take a mode.
     #[cfg(unix)]
     {
         use std::os::unix::fs::PermissionsExt;
-        let _ = std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o600));
+        let _ = f.set_permissions(std::fs::Permissions::from_mode(0o600));
     }
-    Ok(())
+    f.write_all(contents)
+}
+
+/// Create `dir`, and any parent missing, for its owner alone, and tighten
+/// it if it already exists with more.
+pub(crate) fn private_dir(dir: &std::path::Path) -> std::io::Result<()> {
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
+        std::fs::DirBuilder::new()
+            .recursive(true)
+            .mode(0o700)
+            .create(dir)?;
+        if std::fs::metadata(dir)?.permissions().mode() & 0o077 != 0 {
+            std::fs::set_permissions(dir, std::fs::Permissions::from_mode(0o700))?;
+        }
+        Ok(())
+    }
+    #[cfg(not(unix))]
+    std::fs::create_dir_all(dir)
 }
 
 /// XDG base directories, with one twist: the beta channel running inside its
