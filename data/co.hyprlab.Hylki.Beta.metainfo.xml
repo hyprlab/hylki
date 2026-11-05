@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.48.0-beta.2" date="2026-11-05" type="development">
+      <description>
+        <p>Each folder keeps its own sort, and a double click folds sub-folders and sidebar headings. A PDF with a password no longer freezes the app.</p>
+      </description>
+    </release>
     <release version="1.48.0-beta.1" date="2026-11-04" type="development">
       <description>
         <p>AI agent access over MCP with per-account permissions and a long conversation no longer using all the memory.</p>
