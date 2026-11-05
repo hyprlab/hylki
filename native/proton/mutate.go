@@ -25,6 +25,13 @@ type moveParams struct {
 	Destination string   `json:"destination"`
 }
 
+type starParams struct {
+	envelopeFields
+	sessionRequest
+	IDs       []string `json:"ids"`
+	IsStarred *bool    `json:"is_starred"`
+}
+
 // checkBatch validates ids before anything is sent: the batch cap, then
 // every id's shape (ids are spliced into requests).
 func checkBatch(ids []string) string {
@@ -87,6 +94,30 @@ func moveOp(ctx context.Context, raw []byte) envelope {
 		// Labelling with a folder (an exclusive label) is Proton's move: the
 		// server drops the message's previous folder.
 		return session.client.LabelMessages(ctx, ids, params.Destination)
+	})
+}
+
+// starOp adds or removes the Starred system label. Starring is a label, not
+// a folder, so the message stays where it is.
+func starOp(ctx context.Context, raw []byte) envelope {
+	var params starParams
+	if !decodeStrict(raw, &params) || params.IsStarred == nil {
+		return failure("invalid_request")
+	}
+	if code := checkBatch(params.IDs); code != "" {
+		return failure(code)
+	}
+	if !params.Session.usable() {
+		return failure("session_invalid")
+	}
+	session := resume(*params.Session)
+	defer session.close()
+	isStarred := *params.IsStarred
+	return session.batch(ctx, params.IDs, func(ctx context.Context, ids ...string) error {
+		if isStarred {
+			return session.client.LabelMessages(ctx, ids, proton.StarredLabel)
+		}
+		return session.client.UnlabelMessages(ctx, ids, proton.StarredLabel)
 	})
 }
 

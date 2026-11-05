@@ -1,6 +1,6 @@
 # Proton native helper
 
-`postcard-proton` speaks the same stdio JSON envelope as the
+`hylki-proton` speaks the same stdio JSON envelope as the
 [Tuta helper](../tuta/README.md): one request object on stdin, one reply line
 on stdout, protocol version pinned at `1`. Every operation is implemented
 over [`go-proton-api`](https://github.com/ProtonMail/go-proton-api) and
@@ -232,6 +232,13 @@ Drafts, Starred) and user labels are `invalid_destination`; an unknown id
 is `folder_not_found`. Outcomes as for `mark_read`. Like Tuta, the reply
 asserts no destination id: Proton keeps the message id across moves.
 
+### `star`
+
+Request: `session`, `ids` (≤ 50), `is_starred`.
+
+Adds or removes the Starred system label (`10`). It is a label, so the
+message stays in its folder. Outcomes as for `mark_read`.
+
 ### `send`
 
 Request (the Tuta shape): `session`, `sender`, `sender_name`, `to`, `cc`,
@@ -239,8 +246,40 @@ Request (the Tuta shape): `session`, `sender`, `sender_name`, `to`, `cc`,
 `body_html`, `delivery` (`"secure"` or `"ordinary"`), `ordinary_confirmed`,
 `attachments` (`[{name, mime_type, cid, data}]`, `data` standard base64,
 `cid` `null` or a Content-ID that makes the attachment inline), and
-optionally `message_id` (with or without `<>`; one is generated on the
-sender's domain when absent).
+optionally:
+
+- `message_id`: the sent mail's Message-ID, with or without `<>`; one is
+  generated on the sender's domain when absent.
+- `in_reply_to`: the Message-ID being answered (with or without `<>`).
+- `references`: the References chain, Message-IDs oldest first separated
+  by whitespace — bracketed (`"<a@b> <c@d>"`, glued `"<a@b><c@d>"` too) or
+  bare (`"a@b c@d"`).
+- `action`: `"reply"` (default), `"reply_all"` or `"forward"`; only with
+  `in_reply_to` or `references`.
+
+Message-IDs are printable ASCII without spaces or brackets once their one
+pair of `<>` is stripped, at most 998 bytes each; `references` holds at most
+100 of them in at most 16 KiB. Anything else is `invalid_request` (no
+partial acceptance: a malformed id refuses the send).
+
+**Threading.** Before anything is written, the helper looks the parent up
+among the account's own messages by Message-ID (Proton's `ExternalID`
+filter): `in_reply_to` first, then `references` newest first, at most four
+lookups. Drafts never count; when one Message-ID matches several copies,
+the copy on the sending address wins, then a sent copy, then the first.
+When a parent is found the draft is created with `ParentID` and the
+action (`Action` 0 reply, 1 reply-all, 2 forward), as Proton's own
+clients and Bridge do: the server then writes `In-Reply-To` and
+`References` itself and marks the parent answered or forwarded.
+
+When no parent is found the mail is still sent, but **without
+`In-Reply-To`/`References`**: Proton's draft API takes no custom headers
+(go-proton-api's `DraftTemplate` and WebClients' `createDraft` payload are
+`Message`, `ParentID`, `Action`, `AttachmentKeyPackets` only, and the
+server derives those headers from `ParentID` alone). Recipients' clients
+then thread by subject, if at all. A lookup that fails for want of a
+connection fails the send definitively (`transport_failed`, `timeout`, …)
+before anything was written.
 
 Everything that can refuse does so before anything is written server
 side: request shape, consent (`ordinary` needs `ordinary_confirmed: true`),
@@ -324,7 +363,7 @@ Idempotent: a session the server already dropped is a success. Result:
 | `send_failed` | definite send failure: nothing was sent, safe to retry |
 | `send_uncertain` | the submit may have delivered: never retry automatically |
 
-Per-id outcome codes (`mark_read`, `move`): `null`, `request_failed`,
+Per-id outcome codes (`mark_read`, `move`, `star`): `null`, `request_failed`,
 `not_attempted`, or one of `transport_failed` / `timeout` /
 `session_revoked` for the id an outage hit.
 
@@ -343,12 +382,15 @@ Per-id outcome codes (`mark_read`, `move`): `null`, `request_failed`,
 - `message` returns the finished RFC 5322 message (`mime`, base64) instead
   of Tuta's `html` / `headers` / `to` / `cc` / `reply_to` pieces, and its
   attachment rows carry no `data` — the bytes are inside `mime`.
-- `mark_read` / `move`: when the server refuses a batch, each id is
-  replayed and reports its own outcome, rather than Tuta's "first id of the
-  failed chunk carries the code, the rest `not_attempted`".
+- `mark_read` / `move` / `star`: when the server refuses a batch, each id
+  is replayed and reports its own outcome, rather than Tuta's "first id of
+  the failed chunk carries the code, the rest `not_attempted`".
+- `star` is new: Tuta has no starred state.
 - `send` really encrypts: `delivery: "secure"` is honoured for Proton and
-  PGP recipients instead of always refusing; `message_id` is an optional
-  extra; failures after the submit are probed before `send_uncertain`.
+  PGP recipients instead of always refusing; `message_id`, `in_reply_to`,
+  `references` and `action` are optional extras (Tuta starts every send as
+  a new conversation); failures after the submit are probed before
+  `send_uncertain`.
 - `revoke` closes the session server-side (Tuta's pinned SDK cannot).
 - New codes: `mailbox_password_required`, `mailbox_password_failed`,
   `human_verification_required`, `human_verification_failed`,
@@ -364,8 +406,8 @@ cd native/proton
 gofmt -l . | grep -v '^vendor/'   # must print nothing
 go vet -mod=vendor ./...
 go test -mod=vendor ./...
-go build -mod=vendor -o postcard-proton .
-echo '{"version":2,"op":"login"}' | ./postcard-proton
+go build -mod=vendor -o hylki-proton .
+echo '{"version":2,"op":"login"}' | ./hylki-proton
 ```
 
 The tests are offline. They run go-proton-api's own in-process API server
@@ -374,7 +416,8 @@ tests control, and drive the helper through its real framing: login →
 sync (pages, cursor, snapshot, events) → message decrypt → mark_read →
 move → send to Proton recipients (whose copies are then decrypted from
 their own accounts), to a cleartext outsider and to a PGP outsider (whose
-package is opened with the recipient's key) → revoke, plus token rotation
+package is opened with the recipient's key), replies and forwards threaded
+through their parent → revoke, plus token rotation
 and every failure mode the proxy can inject (refusals, lost submits, lost
 replies, retried submits, timeouts, human verification, outdated client).
 No test talks to the real Proton API.
@@ -403,7 +446,7 @@ No test talks to the real Proton API.
 The manifest builds the helper and installs it to `/app/bin`, so the
 adapter finds it on `PATH` inside the sandbox:
 
-- The `postcard-proton` module runs `go build` with `GOFLAGS=-mod=vendor`
+- The `hylki-proton` module runs `go build` with `GOFLAGS=-mod=vendor`
   and `GOPROXY=off` from a `native/proton` dir source; the build sandbox has
   no network.
 - `GOPATH` and `GOCACHE` point at the module's build directory, which is
@@ -416,8 +459,9 @@ adapter finds it on `PATH` inside the sandbox:
 - Only TOTP is supported as a second factor; FIDO2/U2F is refused.
 - The CAPTCHA itself is solved by the user in the client's WebKit view;
   the helper only relays the challenge and presents the solved token.
-- Replies and forwards are sent as new conversations: no `ParentID`, so
-  Proton does not mark the original as answered.
+- A reply to a message that is not in the account (or not findable by
+  its Message-ID) carries no `In-Reply-To`/`References`: the draft API
+  cannot set headers.
 - Password-protected mail to outsiders ("encrypted outside") is not
   implemented; `secure` delivery refuses such recipients instead.
 - `all_ids` is skipped past 10 000 messages to stay inside the budget; use

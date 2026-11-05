@@ -317,6 +317,33 @@ func TestMarkReadReportsEachID(t *testing.T) {
 	}
 }
 
+func TestStarAddsAndRemovesTheStarredLabel(t *testing.T) {
+	f := newFixture(t)
+	f.user("alice")
+	alice := f.account("alice")
+	id := alice.deliver(t, "one", "1", true)
+	session := loginAs(t, "alice")
+
+	got := result(t, call(t, map[string]any{"op": "star", "session": session, "ids": []string{id}, "is_starred": true}))
+	if got["outcomes"].([]any)[0].(map[string]any)["code"] != nil {
+		t.Fatalf("outcomes = %v", got["outcomes"])
+	}
+	if got["session"] == nil {
+		t.Fatal("star reply carries no session")
+	}
+	labels := alice.metadata(t, id).LabelIDs
+	if !slices.Contains(labels, proton.StarredLabel) || !slices.Contains(labels, proton.InboxLabel) {
+		t.Fatalf("labels after star = %v", labels)
+	}
+	result(t, call(t, map[string]any{"op": "star", "session": session, "ids": []string{id}, "is_starred": false}))
+	if labels := alice.metadata(t, id).LabelIDs; slices.Contains(labels, proton.StarredLabel) {
+		t.Fatalf("labels after unstar = %v", labels)
+	}
+	if code := errorCode(t, call(t, map[string]any{"op": "star", "session": session, "ids": []string{id}})); code != "invalid_request" {
+		t.Fatalf("missing is_starred code = %q", code)
+	}
+}
+
 func TestMoveFilesIntoFoldersOnly(t *testing.T) {
 	f := newFixture(t)
 	userID := f.user("alice")

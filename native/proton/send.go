@@ -59,6 +59,12 @@ type sendParams struct {
 	// Optional Message-ID (with or without angle brackets) for the sent
 	// mail; one is generated when absent so the reply can always name it.
 	MessageID *string `json:"message_id"`
+	// Optional threading: the Message-ID being answered, the References
+	// chain (space-separated Message-IDs, oldest first), and what the send
+	// does to that parent — "reply" (default), "reply_all" or "forward".
+	InReplyTo  *string `json:"in_reply_to"`
+	References *string `json:"references"`
+	Action     *string `json:"action"`
 }
 
 // stagedAttachment is a decoded attachment ready to upload.
@@ -91,6 +97,10 @@ func sendOp(ctx context.Context, raw []byte) envelope {
 	if !ok {
 		return failure("invalid_request")
 	}
+	thread, ok := threadingOf(params.InReplyTo, params.References, params.Action)
+	if !ok {
+		return failure("invalid_request")
+	}
 	staged, ok := stageAttachments(params.Attachments)
 	if !ok {
 		return failure("attachment_failed")
@@ -100,7 +110,7 @@ func sendOp(ctx context.Context, raw []byte) envelope {
 	}
 	session := resume(*params.Session)
 	defer session.close()
-	return session.send(ctx, params, recipients, externalID, staged)
+	return session.send(ctx, params, recipients, externalID, staged, thread)
 }
 
 // recipientList is every envelope recipient once, in To, Cc, Bcc order.
@@ -199,7 +209,7 @@ func normaliseMIME(mimeType string) string {
 // encrypted to their key; external ones get PGP when the API or their
 // contact card has a key, cleartext otherwise. The server files the Sent
 // copy and delivers Bcc from the packages, never from a header.
-func (s *apiSession) send(ctx context.Context, params sendParams, recipients []string, externalID string, staged []stagedAttachment) envelope {
+func (s *apiSession) send(ctx context.Context, params sendParams, recipients []string, externalID string, staged []stagedAttachment, thread threading) envelope {
 	keys, code := s.keyrings(ctx)
 	if code != "" {
 		return s.fail(code)
@@ -236,6 +246,17 @@ func (s *apiSession) send(ctx context.Context, params sendParams, recipients []s
 		}
 		prefs[address] = pref
 	}
+	// The parent is resolved before anything is written: a lookup that
+	// fails for want of a connection fails the send definitively.
+	parentID, code := s.findParent(ctx, thread, sender.ID)
+	if code != "" {
+		return s.fail(code)
+	}
+	// With no parent the action is moot; Bridge sends forward.
+	action := proton.ForwardAction
+	if parentID != "" {
+		action = thread.action
+	}
 	if len(params.ReplyTos) > 0 {
 		replyTos := fromMail(params.ReplyTos)
 		s.client.AddPreRequestHook(func(_ *resty.Client, r *resty.Request) error {
@@ -253,8 +274,8 @@ func (s *apiSession) send(ctx context.Context, params sendParams, recipients []s
 			MIMEType:   rfc822.TextHTML,
 			ExternalID: externalID,
 		},
-		// With no parent the action is moot; Bridge sends forward.
-		Action: proton.ForwardAction,
+		ParentID: parentID,
+		Action:   action,
 	})
 	if err != nil {
 		return s.fail(s.refusal(err))

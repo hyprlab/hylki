@@ -1,4 +1,4 @@
-module postcard-proton
+module hylki-proton
 
 go 1.26.1
 

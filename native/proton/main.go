@@ -1,4 +1,4 @@
-// Command postcard-proton is the native Proton Mail helper.
+// Command hylki-proton is the native Proton Mail helper.
 //
 // One UTF-8 JSON object on stdin, one versioned envelope on stdout, exit 0
 // always: {"version":1,"result":{...}} or {"version":1,"error":{"code":"..."}}.
@@ -66,6 +66,7 @@ var operations = map[string]handler{
 	"message":   messageOp,
 	"mark_read": markReadOp,
 	"move":      moveOp,
+	"star":      starOp,
 	"send":      sendOp,
 	"revoke":    revokeOp,
 }
