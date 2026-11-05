@@ -133,7 +133,7 @@ impl MessageView {
              for(var i=0;i<ms.length;i++){{var on=k.indexOf(ms[i].dataset.key)>=0;\
              if(ms[i].classList.contains('hylki-folded')===on)continue;\
              ms[i].classList.toggle('hylki-folded',on);\
-             if(!on){{var f=ms[i].querySelector('iframe.hylki-frame');if(f){{f._h=0;s(f);}}}}}}}})({})",
+             if(!on){{var f=ms[i].querySelector('iframe.hylki-frame');if(f){{wake(f);f._h=0;s(f);}}}}}}}})({})",
             serde_json::to_string(&keys).unwrap_or_else(|_| "[]".into()),
         );
         self.run_js(&js);

@@ -15,7 +15,7 @@ try{var q=f&&f.contentDocument?ft(f.contentDocument):null;\
 if(q){var fr=f.getBoundingClientRect();t=[fr.left+q[0],fr.top+q[1],q[2]];}}catch(_){}\
 r.push([ms[i].dataset.key||'',b.left,b.top,b.width,b.height,h?h.getBoundingClientRect().height:0,t]);}\
 var fs=document.querySelectorAll('iframe.hylki-frame'),live=true;\
-for(var j=0;j<fs.length;j++){if(!fs[j].classList.contains('hylki-live'))live=false;}\
+for(var j=0;j<fs.length;j++){if(!fs[j].classList.contains('hylki-live')&&!fs[j].hasAttribute('data-hylki-srcdoc'))live=false;}\
 return JSON.stringify({w:window.innerWidth,y:window.scrollY,live:live,cards:r});})()");
 
 /// The script that finds where the editor's first line of text begins.

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: a long conversation could use all the memory** (#581, by Gonzalo
+  Vasco López). A folded message card still loaded its message in the
+  background, and one conversation of 83 quoted replies took the app past 14 GB.
+  A folded card now loads its message when it opens. Find in Message looks
+  through the cards that are open.
+
 - **Added: AI agents** (#577, by Isak Samsten). An agent such as Claude
   Code or Codex can work with your mail through the Model Context Protocol while
   the app runs, started as `hylki --mcp`. It is off by default and set up in the

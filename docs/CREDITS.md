@@ -85,6 +85,9 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   longer asks for root; and a long run of requests and design feedback that
   shaped tags, split replies, the reader's own font and colours, Empty Trash
   and the reply panel's fields.
+- [**Gonzalo Vasco López**](https://github.com/gonzisdev) ([#581](https://github.com/hyprlab/hylki/pull/581)):
+  folded message cards that load their message only when they open, which
+  keeps a long conversation from using all the memory.
 - [**Isak Samsten**](https://github.com/isaksamsten) ([#307](https://github.com/hyprlab/hylki/issues/307),
   [#577](https://github.com/hyprlab/hylki/pull/577)):
   recipient lookups in LDAP directories. The composer asks the directories
