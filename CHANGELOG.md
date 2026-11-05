@@ -1,5 +1,300 @@
 # Changelog
 
+## 1.48.0-beta.1 — 2026-11-04
+
+- **Fixed: a long conversation could use all the memory** (#581, by Gonzalo
+  Vasco López). A folded message card still loaded its message in the
+  background, and one conversation of 83 quoted replies took the app past 14 GB.
+  A folded card now loads its message when it opens. Find in Message looks
+  through the cards that are open.
+
+- **Added: AI agents** (#577, by Isak Samsten). An agent such as Claude
+  Code or Codex can work with your mail through the Model Context Protocol while
+  the app runs, started as `hylki --mcp`. It is off by default and set up in the
+  new **Settings → MCP**. Nothing is shared until you share it: each
+  account has its own switch, and its own switches for seeing lists, reading
+  text, searching on the mail server, reading attachments (a PDF as its text),
+  preparing messages, read state, stars, tags, moving and Trash, or **Full
+  access** for all of them, with single folders kept back and Junk and Trash
+  kept back until allowed. Contacts have two switches of their own. **Recent Activity** lists
+  what agents did, and what they change is in **Undo**. A message an
+  agent prepares opens for you to check and send. Three more switches, left
+  out of Full access, let an agent see the conversation you have open, and
+  read open drafts and suggest changes that you accept or reject. No setting allows sending,
+  erasing mail for good, or reading encrypted mail, which stays out of reach
+  even after you have opened it. See
+  [AI agents](docs/DOCUMENTATION.md#ai-agents).
+
+## 1.47.0 — 2026-11-04
+
+Everything from 1.47.0-beta.1 to 1.47.0-beta.5: folders kept on this computer,
+grammar and style checking in the composer, mail merge, events and tasks from
+mail, a reading pane below the list or off, a message's importance, contact
+photos in the reader, New Folder in a folder's menu, and a reminder for a
+forgotten attachment. German is complete.
+
+- **Added: a reminder for a forgotten attachment** (#575, by Fabio
+  Rotondo). **Send** now asks first when what you wrote mentions an
+  attachment, as in "please find it attached" or "in allegato", and nothing
+  is attached: **Send Anyway** sends it, **Cancel** goes back to the
+  message. The quoted original of a reply or forward and the signature are
+  not looked at, and a cloud link or a picture in the text counts as an
+  attachment. The words are set in
+  **Settings → Composing → Attachment Reminder**; a word counts when it
+  starts with one of them, so "attach" covers "attached" and "attachment".
+  The default list covers the languages Hylki is translated into, the
+  button beside it puts it back, and an empty list never asks.
+
+- **Added: the list's sort is kept** (#574, suggested by Bohne13). The
+  order chosen under **Sort by**, or by a column heading, including a
+  heading clicked a second time to reverse it, is now the order the list
+  opens with at the next launch, instead of newest first.
+
+- **Fixed: the window could open blank while the keyring was locked**
+  (#573, by Fabio Rotondo). An account's password was read before the
+  account and its cached folders were shown, so a keyring that did not
+  answer, locked and waiting to be unlocked, left the sidebar empty. The
+  account and its folders now show first. When the keyring gives an error,
+  or has not answered after 10 seconds, a dialog names the accounts it
+  concerns. It closes by itself once a waiting keyring answers, and after an
+  error **Retry** reads the keyring again. This covers IMAP, POP3 and JMAP
+  accounts; an OAuth account, which signs in with a token, no longer reads
+  the keyring at start.
+
+- **Added: a mail merge's progress, and a sending rate** (#447, suggested
+  by samuel-edlmeier). While a merge sends, its toast counts the messages
+  sent so far, "Sent 57 of 200 messages", and **Stop** sends no more of
+  them. **Limit sending rate** in the Mail Merge dialog sends at most a set
+  number of messages a minute or an hour, for a provider that limits how
+  fast mail may go out, and says how long the merge will take. The rate is
+  remembered. Quitting during a merge keeps the messages not yet sent in
+  the Outbox, each scheduled at the rate, so the next launch carries on.
+  The messages now go to the account one at a time, so the account's other
+  work is no longer held up behind the whole merge. A message the server
+  refuses, for a mistyped address or a sending limit, now waits in the
+  Outbox with the reason instead of opening in a composer, which for a large
+  merge could mean a window for each; the last toast offers **Show Outbox**
+  when some did not go. A refused message in the Outbox no longer stops the
+  ones queued after it from being sent.
+
+- **Fixed: an IMAP folder showed an old count at every start** (#571, by
+  Valentin Morice). The sidebar starts from the folder counts saved in the
+  cache, and since #370 those were only saved by a full folder listing, so a
+  launch could show counts from long ago until the first sweep corrected
+  them: a Drafts chip of 1 with no draft left, for example. Each count read
+  from the server is now saved as it is read.
+
+- **Fixed: opening a message changed the reading pane in steps** (#570, by
+  Valentin Morice). The new subject showed over the previous message's body,
+  the attachment drawer left and came back, and a page could show at the top
+  and then jump to where it opens. The previous message now stays on screen
+  until the new one is ready, and the new one shows in one frame. A message
+  still downloading after 0.3 s shows its spinner. A conversation whose
+  bodies are all cached opens without a 120 ms wait, and a message opened
+  behind the spinner is loaded once instead of twice.
+
+- **Fixed: remote pictures in a message could not be saved** (#569,
+  reported by samuel-edlmeier). Right-clicking a picture loaded from the web
+  now offers **Save Image As…**, **Copy Image** and **Copy Image Address**,
+  as a picture carried in the mail does. The picture is taken from the
+  remote-content cache, so nothing is fetched again from the sender. Since
+  1.46.0-beta.5 such a picture had no entries at all, and before that only
+  Copy Image Address.
+
+- **Fixed: a test failing on Sundays from 17:00** (#567, reported by
+  clementpoiret), which stopped package builds that run the tests, such as
+  the Nix flake. The snooze presets test read the clock and expected three
+  presets, where Sunday evening has two; it now checks every hour of a fixed
+  week.
+
+- **Fixed: grammar checks with a LanguageTool server failing with error
+  500** (#566, reported by warpedwood) when more than one spelling language
+  was on and a paragraph was too short to tell its language. The server
+  was asked to detect it from a list that held variants such as "en-US",
+  which it refuses; the languages and their variants now go separately.
+
+- **Added: showing only contact groups.** **Show only** in the Contacts
+  sort and filter menu has **Groups**, which lists every address book's
+  groups and nobody else, and a search for "group" or "groups" lists every
+  group as well as anyone whose details hold the word. **All Address
+  Books** listed no groups before, so they were reached book by book.
+
+- **Fixed: a darker edge at the corners of the menu beside Send** while it
+  was open or under the pointer, with libadwaita 1.9.
+
+- **Fixed: a draft could take seconds to open, with nothing on screen to
+  say so.** Opening a draft fetched its bytes from the server first, which
+  waited behind whatever the account was doing. The drafts and templates of
+  a folder are now fetched in the background when it is listed, the newest
+  50 first, and open from that copy at once. One not fetched yet shows
+  Loading… in the reading pane, and goes ahead of the background fetches.
+
+- **Fixed: a draft stayed highlighted after its editor closed.** A draft
+  opened from the Drafts list and then saved, sent or cancelled left its row
+  selected over a reading pane that said no draft was selected, and a click
+  on the row did not open it again. The row is now let go when the editor
+  closes.
+
+- **Added: mail merge** (#447, requested by samuel-edlmeier). **Mail
+  Merge…** in the menu beside **Send** sends the message once per row of a
+  CSV file, or once per member of a contact group. A field written as
+  `{{Field}}` in To, Cc, Bcc, Reply-To, the subject or the text takes the
+  row's value, matched to the file's first row by letters and digits in any
+  case, so `{{E-mail}}` finds "Email". To left empty
+  goes to the column that holds addresses. The dialog lists the fields,
+  steps through a preview of each message, and lists each field the file or
+  group does not have with where it is written, keeping Send off until it
+  is taken out or **Leave these fields empty** is on; rows without a valid
+  address are left out and counted. The
+  file may be comma, semicolon or tab separated, in UTF-8, UTF-16 or
+  Windows-1252. The messages go one after another with no Undo Send; one
+  that fails waits in the Outbox. An encrypted message cannot be merged.
+  A braces button at the end of the To and Subject rows and in the body's
+  toolbar, or Ctrl+Shift+M, lists the fields at the cursor to put in with a
+  click, only those holding addresses for To, where a field is a pill marked
+  with the braces and no address suggestions open. Drafts and templates
+  keep fields in To, Cc and Bcc, under a stand-in address that reaches no
+  one, and Send without the merge points to it:
+  the last CSV file's columns and a contact group's, with **Choose a CSV
+  File…** to pick another, which the dialog then starts from.
+
+- **Added: events and tasks from mail** (#564, requested by
+  samuel-edlmeier). **Create Event…** and **Create Task…** in a message's
+  right-click menu, in the list and the reader, open a dialog with the
+  subject as the title and the sender, date and text as the notes. An event
+  has a start and an end, or whole days, and up to two alarms from the
+  start to a week before; a task has an optional due date.
+  It is written to the calendar or task list picked from Evolution Data
+  Server (GNOME Online Accounts, Evolution, GNOME Calendar), read-only
+  calendars left out and the last one used chosen first. Without Evolution
+  Data Server it is handed to the calendar application as an `.ics` file.
+
+- **Added: contact photos in the reader** (#560, requested by
+  samuel-edlmeier). A message's header in the reader shows the sender's
+  contact photo where it showed their initials, as the message list does,
+  so it is there with the list's avatars turned off. The Gravatar and
+  sender-logo switches in **Settings → Privacy** apply to it as they do to
+  the list.
+
+- **Added: setting and showing a message's importance** (#563, requested by
+  samuel-edlmeier). The menu beside **Send** has **Importance**: **High**,
+  **Normal** or **Low**. High and low send `X-Priority` and `Importance`
+  headers, and stay with a draft or a message in the Outbox. Mail marked high or low shows
+  a red mark or a grey arrow beside the paperclip and the star in the card
+  layout of the list, and in its header in the reader; until now only the
+  Importance column of a single-line list showed it. The reader's header
+  shows the star, paperclip and importance marks on a lone message too when
+  **Settings → Reading → Single messages as cards** is off.
+
+- **Added: On This Computer, folders kept on this computer** (#552).
+  **Settings → Accounts → On This Computer → Add** adds an account with no
+  server, as Evolution has, for an archive of mail moved or copied in from
+  any other account with **Move To**, **Copy To** or by dragging it onto one
+  of its folders. It starts with a Trash, and its Inbox is shown only while
+  it holds mail. Folders are made,
+  renamed and deleted as on any account. Nothing is sent from it: a reply to
+  mail filed there is sent from the account the mail was addressed to. Every
+  message is rendered into the cache in the background, so search covers
+  all of it, and it stays out of All Inboxes until switched on. Its Junk and
+  Trash can be emptied automatically, counting from when mail was moved in.
+  The mail is a Maildir++ tree in `~/.local/share/hylki/local-mail/`, the
+  layout Dovecot uses, with tags in `dovecot-keywords`.
+
+- **Added: Copy To** (#552). A message's right-click menu, in the list and
+  in the reader, has **Copy To…**, which stores the message again in a folder
+  of the same account or of another one and leaves the original.
+
+- **Added: copying an account's mail to On This Computer** (#552).
+  **Settings → Accounts → the account → Syncing → Copy mail to On This
+  Computer** downloads the account's mail in the background and copies every
+  message into a folder named after the account, leaving out Trash, Junk and
+  Drafts. Mail deleted or moved on the server stays in the copy, and a
+  message is copied once, wherever it moves. While it copies, the refresh
+  button turns and the status bar says how many messages are left.
+
+- **Added: importing mail into On This Computer** (#552). **Import** in its
+  settings takes a Maildir tree, such as Evolution's own local folders or
+  Dovecot's, or mbox files, such as Thunderbird's, with their read, starred
+  and replied state. Mail its folder already holds is not imported again.
+
+- **Added: grammar and style checking in the composer** (#452, requested by
+  warpedwood). **Settings → Composing → Check grammar and style** checks what
+  is written about a second after typing stops, and marks what it finds: a
+  mistake with a wavy blue line, a matter of style with a dotted one.
+  Right-clicking a mark puts the problem, its suggestions and **Ignore** at
+  the top of the menu, and a suggestion goes in as one edit. **Checker** is
+  Harper (English, a 14 MB download) or LanguageTool (over 30 languages, a
+  305 MB download with its Java runtime), each fetched with one
+  **Download** button, checked against a pinned SHA-256 and run on this
+  computer, or a LanguageTool server: one of your own, LanguageTool's free
+  service or a Premium account. Neither checker ships with the app.
+  LanguageTool starts when a composer opens and stops after 15 idle minutes.
+  The quote and the signature are not checked. Each paragraph is checked in
+  its own language, recognised offline from among the spelling languages,
+  and misspelled words are left to the spell checker. Rich text and plain
+  text are checked, Markdown and HTML are not. The settings are in
+  `grammar.toml`, the Premium key in the keyring.
+
+- **Added: the reading pane can sit below the list, or be switched off**
+  (#475, requested by fhangel). **Main menu → Reading Pane** puts the reader
+  **Right** of the list, as before, **Below** it or **Off**, as do
+  **Ctrl+Alt+1**, **Ctrl+Alt+2** and **Ctrl+Alt+3**. Below or off, the list
+  shows single lines, whatever **Settings → Message List → Layout** says, the
+  window controls move to the list's header, and a reply, a forward or a new
+  message opens in a window of its own, whatever **Settings → Composing** says
+  about the reading pane. Below, the toolbar stays at the top of the reader,
+  the list's height is remembered apart from its width, and the attachments
+  start folded. Off, the list takes the whole window and the toolbar moves to
+  its header, between the filter button and the window controls, folding into
+  its ⋯ menu as it does in the reader, greyed out until a row is selected and
+  making way for the selection bar when several are; Find, which searches the
+  reader, is left out, and Print prints the selected message, or its whole
+  conversation. A message opens in a window of its own on a double-click,
+  **Enter** or Gmail's **o**. Selecting a row does not mark it read: opening
+  its window does, as **Settings → Reading → Mark as read** says, and a
+  conversation's window marks each message as it is read through. The keys,
+  the right-click menu and the selection bar act on the selected rows as
+  before.
+
+- **Fixed: a sender could earn the Verified sender badge with a header of
+  their own.** The verdict is read from the `Authentication-Results` header
+  the provider adds on delivery, but a provider that adds none, or reports one
+  method and not another, left a copy the sender wrote as the one read. Only
+  headers from the topmost one's site are read now, and the reader believes a
+  verdict only from the server that checks at least half of the sites the
+  account's mail comes from (RFC 8601 §5); any other verdict reads as
+  unverified, as does one in a message opened from a file. Verdicts already
+  stored are checked again. Reported privately by
+  [Alexander Lubovenko](https://github.com/typedev).
+
+- **Added: New Folder in a folder's right-click menu** (#554, requested by
+  scotthews). The folder is made inside the one clicked, and its parent opens
+  to show it, instead of being made at the top and dragged into place.
+
+- **Fixed: a new or moved folder could land in the wrong place, or be
+  refused** (#554). Folder paths came from a guess at the server's delimiter
+  and namespace; they now come from the server: IMAP's NAMESPACE or LIST, and
+  the folder trees of JMAP and Microsoft 365. Proton Bridge's Folders
+  container is recognised, a mailbox that cannot hold folders takes none, JMAP
+  and Microsoft 365 folders move to another parent, and a change the server
+  refuses is undone on screen.
+
+- **Fixed: accounts with the same sender name could not be told apart.** The
+  status bar's account errors, the Remove Account dialog and the copy and move
+  status lines named an account by its sender name, often the same on every
+  account; they name its nickname and address now. The list's Account column
+  shows the nickname.
+
+- **Fixed: the swipe strip behind a selected row stood taller than its
+  pill.** It takes the pill's shape now and opens at its edge.
+
+- **Changed: Keep mail offline is called Keep mail cached** in an account's
+  settings.
+
+- **Translations:** German (PRs #550, #559 and #565 by Samuel Edlmeier) is
+  complete; French (PRs #556, #558 and #568 by frenchy82), Greek (PR #572 by
+  Yiannis Ioannides) and Spanish (PR #561 by Daniel Miguel) are up to date.
+
 ## 1.47.0-beta.5 — 2026-11-03
 
 - **Added: a reminder for a forgotten attachment** (#575, by Fabio
