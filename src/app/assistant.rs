@@ -3,8 +3,9 @@
 //! of what assistants did, and what the server asks of the main loop: raw
 //! messages from the account's worker, and messages prepared in composers of
 //! the app's own, the way Reply and Forward prepare them, each in a window of
-//! its own that never takes over what the user is doing. Changing mail is in
-//! `assistant_organize.rs`.
+//! its own that never takes over what the user is doing, the open composers
+//! read or handed an edit for the user to accept, and the conversations the
+//! user has open named. Changing mail is in `assistant_organize.rs`.
 
 use std::collections::{HashMap, VecDeque};
 
@@ -14,7 +15,10 @@ use tokio::sync::oneshot;
 
 use crate::config::AssistantPolicy;
 use crate::i18n::{i18n, i18n_f};
-use crate::mcp::{Activity, AppCall, Draft, DraftKind, Original, Server, SharedPolicy};
+use crate::mcp::{
+    Activity, AppCall, Draft, DraftEdit, DraftKind, EditAnswer, OpenDraft, OpenNow, OpenThread,
+    Original, Server, SharedPolicy, Shown,
+};
 use crate::models::Message;
 use crate::ui::compose::{ComposeInput, ComposePrefill};
 use crate::ui::preferences::{PrefInput, PrefOutput};
@@ -36,8 +40,32 @@ const ACTIVITY_KEPT: usize = 200;
 /// How often a message waiting for the user to be done looks again.
 const WAITING_CHECK_SECS: u32 = 5;
 
+/// The least time between two edits to one composer: each takes the text out
+/// of the user's hands until they answer, and an assistant gone wrong must not
+/// keep doing that.
+const EDIT_GAP: std::time::Duration = std::time::Duration::from_secs(10);
+
 /// A raw message the server waits on.
 type WaitingRaw = oneshot::Sender<Result<Vec<u8>, String>>;
+/// Where the server waits to hear which composer a draft opened in (its
+/// id) and how, or why it did not open.
+type Opened = oneshot::Sender<Result<(u32, String), String>>;
+
+thread_local! {
+    /// The window showing mail the user was in last: the main window or a
+    /// message window. A composer taking the focus leaves it as it was.
+    static LAST_IN_FRONT: gtk::glib::WeakRef<gtk::Window> = gtk::glib::WeakRef::new();
+}
+
+/// Have `window` count as where the user is whenever it takes the focus,
+/// for an assistant asking about "this message".
+pub(super) fn follow_focus(window: &impl IsA<gtk::Window>) {
+    window.connect_is_active_notify(|w| {
+        if w.is_active() {
+            LAST_IN_FRONT.with(|last| last.set(Some(w.upcast_ref())));
+        }
+    });
+}
 
 /// The connection while Settings has it on, and what outlasts it.
 #[derive(Debug, Default)]
@@ -51,11 +79,15 @@ pub(super) struct Assistant {
     raws: HashMap<u64, WaitingRaw>,
     /// What assistants did, newest last. In memory only.
     activity: VecDeque<Activity>,
+    /// When each open composer was last handed an edit.
+    edited_at: HashMap<u32, std::time::Instant>,
 }
 
 impl AppModel {
-    /// Listen for assistants, if Settings says to (at start-up).
+    /// Listen for assistants, if Settings says to (at start-up); and follow
+    /// which window the user is in from the start, whatever the setting.
     pub(super) fn start_assistant_if_on(&mut self, sender: &ComponentSender<Self>) {
+        follow_focus(&self.window);
         self.share_policy();
         if self.assistant_policy.enabled {
             self.start_assistant(sender);
@@ -166,6 +198,15 @@ impl AppModel {
                 self.send_to(account_id, MailRequest::AskServer(ask));
             }
             AppCall::Draft { draft, done } => self.open_assistant_draft(draft, done, &sender),
+            AppCall::ReadDrafts { id, text, done } => {
+                let _ = done.send(self.read_composers(id, text));
+            }
+            AppCall::EditDraft { id, edit, done } => {
+                let _ = done.send(self.edit_composer(id, edit));
+            }
+            AppCall::ReadOpen { done } => {
+                let _ = done.send(self.open_for_assistant());
+            }
             AppCall::Organize {
                 change,
                 targets,
@@ -237,15 +278,86 @@ impl AppModel {
         self.composers.iter().filter(|h| h.assistant).count()
     }
 
+    /// Ask each open composer (or the one `id` names) what it holds; each
+    /// answers on its own line, once its editor has handed its text over.
+    fn read_composers(&self, id: Option<u32>, text: bool) -> Vec<oneshot::Receiver<OpenDraft>> {
+        self.open_composers()
+            .filter(|(cid, _)| id.is_none_or(|id| id == *cid))
+            .map(|(_, controller)| {
+                let (done, answer) = oneshot::channel();
+                controller.emit(ComposeInput::AssistantRead { text, done });
+                answer
+            })
+            .collect()
+    }
+
+    /// Put an assistant's edit before the user in composer `id`, to accept
+    /// or reject there.
+    fn edit_composer(&mut self, id: u32, edit: DraftEdit) -> EditAnswer {
+        if self.compose_controller(id).is_none() {
+            return EditAnswer::NotOpen;
+        }
+        let now = std::time::Instant::now();
+        let last = self.assistant.edited_at.get(&id).copied();
+        if let Some(secs) = wait_for_edit(last, now) {
+            return EditAnswer::TooSoon(secs);
+        }
+        let open: Vec<u32> = self.open_composers().map(|(id, _)| id).collect();
+        self.assistant.edited_at.retain(|id, _| open.contains(id));
+        self.assistant.edited_at.insert(id, now);
+        if let Some(controller) = self.compose_controller(id) {
+            tracing::info!("mcp: an assistant asked to edit composer {id}");
+            controller.emit(ComposeInput::AssistantEdit(edit));
+        }
+        EditAnswer::Waits
+    }
+
+    /// The conversations the user has open, each message by where the cache
+    /// has it: the main window's as the reader holds it (the replies
+    /// brought in from Sent too), each message window's, and which of
+    /// those the user was in last. A message with no folder (one waiting
+    /// in the Outbox, a reply's card before the server has it) is left out.
+    fn open_for_assistant(&self) -> OpenNow {
+        let main = self.current.as_ref().and_then(|current| {
+            let at = |m: &Message| {
+                self.resolve_folder_path(m)
+                    .map(|path| (m.account_id, path, m.uid))
+            };
+            Some(on_screen(
+                at(current)?,
+                self.current_thread.iter().filter_map(at),
+            ))
+        });
+        let at = |&(account_id, folder_id, uid): &super::conversation::BodyKey| {
+            self.folder_path(account_id, folder_id)
+                .map(|path| (account_id, path, uid))
+        };
+        let last = LAST_IN_FRONT.with(|l| l.upgrade());
+        let mut windows: Vec<(bool, OpenThread)> = self
+            .popouts
+            .values()
+            .filter_map(|p| {
+                let thread =
+                    on_screen(at(&p.message)?, p.members.iter().filter_map(|(k, _)| at(k)));
+                let in_front = last
+                    .as_ref()
+                    .is_some_and(|w| p.window.upcast_ref::<gtk::Window>() == w);
+                Some((in_front, thread))
+            })
+            .collect();
+        // In a steady order, whatever the map's.
+        windows.sort_by(|a, b| a.1.selected.cmp(&b.1.selected));
+        OpenNow {
+            main,
+            focused: windows.iter().position(|(in_front, _)| *in_front),
+            windows: windows.into_iter().map(|(_, t)| t).collect(),
+        }
+    }
+
     /// Prepare the message an assistant asked for, as Hylki's own New,
     /// Reply, Reply All or Forward would, with its text where the user
     /// would have typed.
-    fn open_assistant_draft(
-        &mut self,
-        draft: Draft,
-        done: oneshot::Sender<Result<String, String>>,
-        sender: &ComponentSender<Self>,
-    ) {
+    fn open_assistant_draft(&mut self, draft: Draft, done: Opened, sender: &ComponentSender<Self>) {
         if self.assistant_composers() >= MAX_OPEN {
             let _ = done.send(Err(format!(
                 "{MAX_OPEN} messages an assistant prepared are already open in Hylki. Ask the \
@@ -340,7 +452,7 @@ impl AppModel {
         &mut self,
         account_id: u32,
         prefill: ComposePrefill,
-        done: oneshot::Sender<Result<String, String>>,
+        done: Opened,
         sender: &ComponentSender<Self>,
     ) {
         let files = prefill.attachments.len();
@@ -405,7 +517,7 @@ impl AppModel {
         if files > 0 {
             note.push_str(&format!(" The original's {files} attachment(s) go along."));
         }
-        let _ = done.send(Ok(note));
+        let _ = done.send(Ok((id, note)));
     }
 
     /// Show the prepared messages still waiting.
@@ -446,6 +558,10 @@ fn activity_line(a: &Activity) -> (String, String) {
         "move_messages" => i18n("Moved messages"),
         "archive_messages" => i18n("Archived messages"),
         "trash_messages" => i18n("Moved messages to Trash"),
+        "read_open_thread" => i18n("Read the open conversation"),
+        "list_drafts" => i18n("Listed open drafts"),
+        "read_draft" => i18n("Read an open draft"),
+        "update_draft" => i18n("Suggested changes to a draft"),
         other => other.to_string(),
     };
     let title = if a.ok {
@@ -463,6 +579,22 @@ fn activity_line(a: &Activity) -> (String, String) {
         subtitle.push_str(&a.detail);
     }
     (title, subtitle)
+}
+
+/// A conversation on screen: the message the user is on, and the rest,
+/// it among them.
+fn on_screen(selected: Shown, members: impl Iterator<Item = Shown>) -> OpenThread {
+    let mut members: Vec<Shown> = members.collect();
+    if !members.contains(&selected) {
+        members.push(selected.clone());
+    }
+    OpenThread { selected, members }
+}
+
+/// How many seconds a composer last edited at `last` still has to wait.
+fn wait_for_edit(last: Option<std::time::Instant>, now: std::time::Instant) -> Option<u64> {
+    let since = now.duration_since(last?);
+    (since < EDIT_GAP).then(|| (EDIT_GAP - since).as_secs().max(1))
 }
 
 /// Whether any window of Hylki's has the focus.
@@ -497,7 +629,15 @@ fn with_more(list: &str, more: &[String]) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::with_more;
+    use super::{wait_for_edit, with_more, EDIT_GAP};
+
+    #[test]
+    fn a_composer_is_not_interrupted_again_right_away() {
+        let then = std::time::Instant::now();
+        assert_eq!(wait_for_edit(None, then), None);
+        assert_eq!(wait_for_edit(Some(then), then), Some(EDIT_GAP.as_secs()));
+        assert_eq!(wait_for_edit(Some(then), then + EDIT_GAP), None);
+    }
 
     #[test]
     fn recipients_added_to_a_reply_are_not_repeated() {

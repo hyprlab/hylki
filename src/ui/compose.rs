@@ -9,6 +9,7 @@ use crate::ui::recipient_row::RecipientRow;
 use crate::ui::rich_editor::{RichEditor, SourceKind};
 
 mod assistant;
+mod assistant_edit;
 mod attachment_check;
 mod attachments;
 mod cloud;
@@ -29,6 +30,7 @@ mod subject;
 mod suggest;
 #[cfg(test)]
 mod tests;
+mod text_diff;
 mod translate;
 mod types;
 
@@ -601,6 +603,14 @@ impl Component for Compose {
             cloud_passwords: Vec::new(),
             undo_stack: Vec::new(),
             redo_stack: Vec::new(),
+            by_assistant: prefill.assistant,
+            from_encrypted: prefill.from_encrypted,
+            own_domains,
+            assistant_banner: None,
+            assistant_edit: None,
+            edit_loss: None,
+            edit_bar: assistant_edit::new_edit_bar(),
+            last_edit: None,
         };
         model.from_account = model
             .accounts
@@ -620,10 +630,11 @@ impl Component for Compose {
         }
         widgets.editor_holder.append(&model.editor.widget);
         if prefill.assistant {
-            widgets
-                .toolbar_root
-                .add_top_bar(&assistant::banner(&prefill, &own_domains));
+            let banner = assistant::banner(&prefill, &model.own_domains);
+            widgets.toolbar_root.add_top_bar(&banner);
+            model.assistant_banner = Some(banner);
         }
+        widgets.toolbar_root.add_top_bar(&model.edit_bar);
 
         // The inline/window toggle: only reply/forward panes can toggle. Its icon
         // reflects the current host (fullscreen = "expand to window", restore =
@@ -900,7 +911,7 @@ impl Component for Compose {
 
                 ComposeInput::ApplyFormat(to) => self.on_apply_format(to, &sender),
 
-                ComposeInput::LoadAs { from, to, body } => self.on_load_as(from, to, body),
+                ComposeInput::LoadAs { from, to, body } => self.on_load_as(from, to, body, &sender),
 
                 ComposeInput::TogglePreview(on) => self.on_toggle_preview(on, &sender),
 
@@ -966,6 +977,14 @@ impl Component for Compose {
                 ComposeInput::AutoSaveBody(fields) => self.on_auto_save_body(fields, &sender),
 
                 ComposeInput::Autosaved { saved, origin } => self.on_autosaved(saved, origin),
+
+                input @ (ComposeInput::AssistantRead { .. }
+                | ComposeInput::AssistantEdit(_)
+                | ComposeInput::ApplyAssistantEdit
+                | ComposeInput::RejectAssistantEdit
+                | ComposeInput::ReshowAssistantDiff) => {
+                    self.on_assistant_input(input, widgets, root, &sender)
+                }
             }
         }
         // Overriding `update_with_view` takes over relm4's default, which

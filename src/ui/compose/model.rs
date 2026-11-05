@@ -99,6 +99,8 @@ pub(crate) struct Compose {
     /// OpenPGP (#133): sign the message; encrypt it to every recipient.
     pub(super) sign: bool,
     pub(super) encrypt: bool,
+    /// It quotes or copies a message that arrived encrypted.
+    pub(super) from_encrypted: bool,
     /// Ask for a read receipt (#520).
     pub(super) request_receipt: bool,
     /// How important the message is marked (#563).
@@ -167,4 +169,19 @@ pub(crate) struct Compose {
     /// are ordered against each other.
     pub(super) undo_stack: Vec<ComposeUndoEntry>,
     pub(super) redo_stack: Vec<ComposeUndoEntry>,
+    /// An AI assistant prepared the message (`crate::mcp`).
+    pub(super) by_assistant: bool,
+    /// The user's own domains, which the assistant's bars do not flag.
+    pub(super) own_domains: Vec<String>,
+    /// The banner over an assistant's message, filled again when an edit
+    /// to its recipients is applied.
+    pub(super) assistant_banner: Option<gtk::Box>,
+    /// An edit an assistant asked for, waiting for the user; the bar that
+    /// shows it; and what the user did with the last one.
+    pub(super) assistant_edit: Option<crate::mcp::DraftEdit>,
+    /// The line on the edit bar that says accepting loses more than the
+    /// diff can show.
+    pub(super) edit_loss: Option<gtk::Label>,
+    pub(super) edit_bar: gtk::Box,
+    pub(super) last_edit: Option<crate::mcp::EditOutcome>,
 }

@@ -52,6 +52,31 @@ fn accounts_on_file() -> Vec<KnownAccount> {
         .collect()
 }
 
+/// A message on screen, where the cache has it: (account, folder path, UID).
+pub(crate) type Shown = (u32, String, u32);
+
+/// A conversation on screen: the message the user is on, and every message
+/// shown with it (that one too; only it, for a lone message).
+#[derive(Debug, Clone)]
+pub(crate) struct OpenThread {
+    pub(crate) selected: Shown,
+    pub(crate) members: Vec<Shown>,
+}
+
+/// What the user has open in Hylki now, by place only: what an assistant may
+/// know of each is decided from the cache, as for any other message.
+#[derive(Debug, Clone, Default)]
+pub(crate) struct OpenNow {
+    /// The main window's: the message open in the reader, or selected in
+    /// the list with the reading pane off.
+    pub(crate) main: Option<OpenThread>,
+    /// Each message window's.
+    pub(crate) windows: Vec<OpenThread>,
+    /// The message window the user was in last, of the main window and the
+    /// message windows (its place in `windows`); `None` for the main one.
+    pub(crate) focused: Option<usize>,
+}
+
 /// What the server asks of, or tells, the app: the work only the main
 /// loop can do, or that the user should see. Each request carries where
 /// the answer goes; a server that stopped waiting has dropped its end.
@@ -72,10 +97,32 @@ pub(crate) enum AppCall {
         account_id: u32,
         ask: crate::worker::ServerSearch,
     },
-    /// Open a composer on `draft`, or say why not.
+    /// Open a composer on `draft`, and say which (its id) and how; or why
+    /// not.
     Draft {
         draft: super::draft::Draft,
-        done: tokio::sync::oneshot::Sender<Result<String, String>>,
+        done: tokio::sync::oneshot::Sender<Result<(u32, String), String>>,
+    },
+    /// Read the composers open now (only the one `id` names, if given),
+    /// each as it stands, with what is written in it when `text`. Each
+    /// answers on a line of its own; none, when no composer has the id.
+    ReadDrafts {
+        id: Option<u32>,
+        text: bool,
+        done: tokio::sync::oneshot::Sender<
+            Vec<tokio::sync::oneshot::Receiver<super::draft::OpenDraft>>,
+        >,
+    },
+    /// Put `edit` before the user in composer `id`, to accept or reject.
+    EditDraft {
+        id: u32,
+        edit: super::draft::DraftEdit,
+        done: tokio::sync::oneshot::Sender<super::draft::EditAnswer>,
+    },
+    /// The conversations the user has open: the main window's and each
+    /// message window's, and which of them the user was in last.
+    ReadOpen {
+        done: tokio::sync::oneshot::Sender<OpenNow>,
     },
     /// Change `targets`, the way the same action in the app does, undoable.
     Organize {

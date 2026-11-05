@@ -159,6 +159,18 @@ msgstr ""
 msgid "Moved messages to Trash"
 msgstr ""
 
+msgid "Read the open conversation"
+msgstr ""
+
+msgid "Listed open drafts"
+msgstr ""
+
+msgid "Read an open draft"
+msgstr ""
+
+msgid "Suggested changes to a draft"
+msgstr ""
+
 msgid "Refused or failed: {action}"
 msgstr ""
 
@@ -3279,6 +3291,51 @@ msgstr ""
 msgid "Outside your own domains"
 msgstr ""
 
+msgid "Not now"
+msgstr ""
+
+msgid "Accept or reject the AI assistant's suggested changes first."
+msgstr ""
+
+msgid "Wait for the translation to come back, then accept the changes."
+msgstr ""
+
+msgid "Changes suggested by an AI assistant"
+msgstr ""
+
+msgid "Nothing changes until you accept them."
+msgstr ""
+
+msgid "Reject"
+msgstr ""
+
+msgid "Accept"
+msgstr ""
+
+msgid "To:"
+msgstr ""
+
+msgid "Cc:"
+msgstr ""
+
+msgid "Subject:"
+msgstr ""
+
+msgid "Accepting removes this text's formatting, links and pictures."
+msgstr ""
+
+msgid "Taken out"
+msgstr ""
+
+msgid "Added in Bcc: the other recipients will not see this address"
+msgstr ""
+
+msgid "Added, outside your own domains"
+msgstr ""
+
+msgid "Added"
+msgstr ""
+
 msgid "Send without an attachment?"
 msgstr ""
 
@@ -4544,9 +4601,6 @@ msgstr ""
 msgid "me"
 msgstr ""
 
-msgid "To:"
-msgstr ""
-
 msgid "Show conversation"
 msgstr ""
 
@@ -4821,9 +4875,6 @@ msgstr ""
 msgid "You declined this invitation on {date}."
 msgstr ""
 
-msgid "Accept"
-msgstr ""
-
 msgid "Tells the organiser you will be there"
 msgstr ""
 
@@ -4887,9 +4938,6 @@ msgid ""
 msgstr ""
 
 msgid "From:"
-msgstr ""
-
-msgid "Cc:"
 msgstr ""
 
 msgid "Bcc:"
@@ -5687,6 +5735,24 @@ msgid "Move and archive"
 msgstr ""
 
 msgid "Move to Trash"
+msgstr ""
+
+msgid "See open conversation"
+msgstr ""
+
+msgid "The one you are reading, as you read it."
+msgstr ""
+
+msgid "Read and edit open drafts"
+msgstr ""
+
+msgid "Those agents prepared. You accept each edit."
+msgstr ""
+
+msgid "Include drafts you started"
+msgstr ""
+
+msgid "What you are writing, unsaved text too."
 msgstr ""
 
 msgid ""

@@ -29,6 +29,7 @@ use crate::models::{preview_is_encrypted, FolderKind, Message};
 
 mod attachments;
 mod bodies;
+mod composers;
 mod contacts;
 mod drafts;
 mod organize;
@@ -68,6 +69,9 @@ search looks in what Hylki has downloaded, at once; search_server asks the mail 
 slowly, and also finds what is not downloaded yet: use it when search misses something. \
 compose_message, reply_to_message and forward_message prepare a message and open it in Hylki \
 for the user to check and send; nothing is ever sent from here. Write plain text only. \
+read_open_thread shows the message the user has open now: start there when the user says \
+\"this message\". list_drafts and read_draft show messages being written, and update_draft \
+asks for a change, which the user accepts or rejects in the composer. \
 Recipients must be email addresses: find each with find_contacts first, and never guess one \
 from a name. Changes to mail show in the user's Undo history. Mail cannot be erased for good \
 from here, and encrypted mail cannot be read. \
@@ -239,6 +243,7 @@ fn routers() -> ToolRouter<Mail> {
     Mail::tool_router()
         + Mail::contact_tools()
         + Mail::draft_tools()
+        + Mail::composer_tools()
         + Mail::thread_tools()
         + Mail::attachment_tools()
         + Mail::organize_tools()

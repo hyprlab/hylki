@@ -366,6 +366,10 @@ impl Compose {
 
     /// Handles [`ComposeInput::Send`].
     pub(super) fn on_send(&mut self, widgets: &ComposeWidgets, sender: &ComponentSender<Self>) {
+        // The screen shows what an assistant suggests, not what would go.
+        if self.edit_waiting(widgets) {
+            return;
+        }
         let to = widgets.to_row.text().trim().to_string();
         if to.is_empty() {
             widgets.to_row.add_css_class("error");

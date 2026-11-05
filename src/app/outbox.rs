@@ -171,6 +171,7 @@ impl AppModel {
             forwards: item.forwards.clone(),
             draft_origin: None,
             encrypt: false,
+            from_encrypted: false,
             receipt: Some(editable.receipt),
             importance: editable.importance,
             outbox_origin: Some(id),

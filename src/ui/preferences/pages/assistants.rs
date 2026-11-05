@@ -73,6 +73,18 @@ fn cap_text(cap: AssistantCap) -> (String, Option<String>) {
         AssistantCap::Tag => (i18n("Add and remove tags"), None),
         AssistantCap::Move => (i18n("Move and archive"), None),
         AssistantCap::Trash => (i18n("Move to Trash"), None),
+        AssistantCap::OpenConversation => (
+            i18n("See open conversation"),
+            Some(i18n("The one you are reading, as you read it.")),
+        ),
+        AssistantCap::OpenDrafts => (
+            i18n("Read and edit open drafts"),
+            Some(i18n("Those agents prepared. You accept each edit.")),
+        ),
+        AssistantCap::OwnDrafts => (
+            i18n("Include drafts you started"),
+            Some(i18n("What you are writing, unsaved text too.")),
+        ),
     }
 }
 
@@ -278,7 +290,7 @@ fn account_row(
         let (title, subtitle) = cap_text(cap);
         let switch = adw::SwitchRow::builder()
             .title(title)
-            .active(grant.full || grant.switch(cap))
+            .active((grant.full && cap.in_full_access()) || grant.switch(cap))
             .build();
         if let Some(subtitle) = subtitle {
             switch.set_subtitle(&subtitle);
@@ -320,12 +332,24 @@ fn account_row(
             .find(|(cap, _)| *cap == wanted)
             .map(|(_, row)| row.clone())
     };
-    let (Some(list_row), Some(read_row), Some(search_row), Some(draft_row)) = (
+    let (
+        Some(list_row),
+        Some(read_row),
+        Some(search_row),
+        Some(draft_row),
+        Some(open_row),
+        Some(drafts_row),
+        Some(own_row),
+    ) = (
         row_for(AssistantCap::List),
         row_for(AssistantCap::Read),
         row_for(AssistantCap::SearchServer),
         row_for(AssistantCap::Draft),
-    ) else {
+        row_for(AssistantCap::OpenConversation),
+        row_for(AssistantCap::OpenDrafts),
+        row_for(AssistantCap::OwnDrafts),
+    )
+    else {
         return row;
     };
     // What is done to a message needs the list that names it, and searching
@@ -337,25 +361,30 @@ fn account_row(
         let others: Vec<adw::SwitchRow> = cap_rows
             .iter()
             .filter(|(cap, _)| {
-                !matches!(
-                    cap,
-                    AssistantCap::List
-                        | AssistantCap::Read
-                        | AssistantCap::SearchServer
-                        | AssistantCap::Draft
-                )
+                cap.in_full_access()
+                    && !matches!(
+                        cap,
+                        AssistantCap::List
+                            | AssistantCap::Read
+                            | AssistantCap::SearchServer
+                            | AssistantCap::Draft
+                    )
             })
             .map(|(_, row)| row.clone())
             .collect();
-        let (full, list, read) = (
+        let (full, list, read, drafts) = (
             full_row.downgrade(),
             list_row.downgrade(),
             read_row.downgrade(),
+            drafts_row.downgrade(),
         );
         Rc::new(move || {
-            let (Some(full), Some(list), Some(read)) =
-                (full.upgrade(), list.upgrade(), read.upgrade())
-            else {
+            let (Some(full), Some(list), Some(read), Some(drafts)) = (
+                full.upgrade(),
+                list.upgrade(),
+                read.upgrade(),
+                drafts.upgrade(),
+            ) else {
                 return;
             };
             let free = !full.is_active();
@@ -369,10 +398,14 @@ fn account_row(
             folders.set_sensitive(!free || listed);
             read.set_sensitive(free && listed);
             search_row.set_sensitive(free && listed && read.is_active());
+            // Full access does not decide these, but it does stand in for
+            // what they depend on.
+            open_row.set_sensitive(!free || (listed && read.is_active()));
+            own_row.set_sensitive(drafts.is_active());
         })
     };
     follow();
-    for switch in [&list_row, &read_row] {
+    for switch in [&list_row, &read_row, &drafts_row] {
         let follow = follow.clone();
         switch.connect_active_notify(move |_| follow());
     }
@@ -412,7 +445,7 @@ fn account_row(
                 .unwrap_or_default();
             showing_full.set(true);
             for (cap, row) in &cap_rows {
-                row.set_active(on || kept.switch(*cap));
+                row.set_active((on && cap.in_full_access()) || kept.switch(*cap));
             }
             showing_full.set(false);
             follow();

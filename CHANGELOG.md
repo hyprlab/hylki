@@ -12,7 +12,9 @@
   access** for all of them, with single folders kept back and Junk and Trash
   kept back until allowed. Contacts have two switches of their own. **Recent Activity** lists
   what assistants did, and what they change is in **Undo**. A message an
-  assistant prepares opens for you to check and send. No setting allows sending,
+  assistant prepares opens for you to check and send. Three more switches, left
+  out of Full access, let an assistant see the conversation you have open, and
+  read open drafts and suggest changes that you accept or reject. No setting allows sending,
   erasing mail for good, or reading encrypted mail, which stays out of reach
   even after you have opened it. See
   [AI assistants](docs/DOCUMENTATION.md#ai-assistants).

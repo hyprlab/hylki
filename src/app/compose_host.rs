@@ -42,6 +42,9 @@ pub(super) struct ReaderCompose {
     pub(super) list_draft: bool,
 }
 
+/// A composer's id and its component.
+type OpenComposer<'a> = (u32, &'a Controller<Compose>);
+
 impl AppModel {
     /// A new message with these recipients, from the account being looked at.
     pub(super) fn compose_addressed(
@@ -86,6 +89,22 @@ impl AppModel {
             window,
             assistant: false,
         });
+    }
+
+    /// Every composer open now: in windows of their own, and the reader's
+    /// (inline or popped out). One draining closed is not.
+    pub(super) fn open_composers(&self) -> impl Iterator<Item = OpenComposer<'_>> {
+        self.composers
+            .iter()
+            .map(|h| (h.id, &h.controller))
+            .chain(self.reader_compose.iter().map(|r| (r.id, &r.controller)))
+    }
+
+    /// The open composer with this id.
+    pub(super) fn compose_controller(&self, id: u32) -> Option<&Controller<Compose>> {
+        self.open_composers()
+            .find(|(cid, _)| *cid == id)
+            .map(|(_, c)| c)
     }
 
     /// The revealer the inline composer should slide down in: the reader

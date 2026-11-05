@@ -30,11 +30,17 @@ pub(crate) enum AssistantCap {
     Move,
     /// Move to Trash, which Undo brings back.
     Trash,
+    /// See the conversation the user has open now.
+    OpenConversation,
+    /// Read and suggest changes to the open drafts an assistant prepared.
+    OpenDrafts,
+    /// The same for the drafts the user is writing, unsaved text included.
+    OwnDrafts,
 }
 
 impl AssistantCap {
     /// Every capability, in the order Settings shows them.
-    pub(crate) const ALL: [AssistantCap; 10] = [
+    pub(crate) const ALL: [AssistantCap; 13] = [
         AssistantCap::List,
         AssistantCap::Read,
         AssistantCap::SearchServer,
@@ -45,7 +51,20 @@ impl AssistantCap {
         AssistantCap::Tag,
         AssistantCap::Move,
         AssistantCap::Trash,
+        AssistantCap::OpenConversation,
+        AssistantCap::OpenDrafts,
+        AssistantCap::OwnDrafts,
     ];
+
+    /// Whether full access covers it. These are about what the user is doing
+    /// right now rather than the mail in the account, so they stay asked for
+    /// one by one.
+    pub(crate) fn in_full_access(self) -> bool {
+        !matches!(
+            self,
+            AssistantCap::OpenConversation | AssistantCap::OpenDrafts | AssistantCap::OwnDrafts
+        )
+    }
 
     /// The name an assistant is told it by.
     pub(crate) fn name(self) -> &'static str {
@@ -60,6 +79,9 @@ impl AssistantCap {
             AssistantCap::Tag => "add and remove tags",
             AssistantCap::Move => "move and archive mail",
             AssistantCap::Trash => "move mail to Trash",
+            AssistantCap::OpenConversation => "see the conversation open in Hylki",
+            AssistantCap::OpenDrafts => "read and edit the open drafts assistants prepared",
+            AssistantCap::OwnDrafts => "read and edit the drafts the user is writing",
         }
     }
 }
@@ -84,6 +106,9 @@ pub(crate) struct AccountGrant {
     pub(crate) tag: bool,
     pub(crate) move_mail: bool,
     pub(crate) trash: bool,
+    pub(crate) open_conversation: bool,
+    pub(crate) open_drafts: bool,
+    pub(crate) own_drafts: bool,
     /// Folders set apart from the default of [`Self::folder_allowed`], by path.
     pub(crate) folders: BTreeMap<String, bool>,
 }
@@ -105,6 +130,9 @@ impl Default for AccountGrant {
             tag: false,
             move_mail: false,
             trash: false,
+            open_conversation: false,
+            open_drafts: false,
+            own_drafts: false,
             folders: BTreeMap::new(),
         }
     }
@@ -124,6 +152,9 @@ impl AccountGrant {
             AssistantCap::Tag => self.tag,
             AssistantCap::Move => self.move_mail,
             AssistantCap::Trash => self.trash,
+            AssistantCap::OpenConversation => self.open_conversation,
+            AssistantCap::OpenDrafts => self.open_drafts,
+            AssistantCap::OwnDrafts => self.own_drafts,
         }
     }
 
@@ -139,6 +170,9 @@ impl AccountGrant {
             AssistantCap::Tag => self.tag = value,
             AssistantCap::Move => self.move_mail = value,
             AssistantCap::Trash => self.trash = value,
+            AssistantCap::OpenConversation => self.open_conversation = value,
+            AssistantCap::OpenDrafts => self.open_drafts = value,
+            AssistantCap::OwnDrafts => self.own_drafts = value,
         }
     }
 
@@ -156,13 +190,25 @@ impl AccountGrant {
     /// id written by hand must not get further than a listed one. A new
     /// message, which names none, is checked by [`Self::may_compose`]. A
     /// server searches the text of messages, so what it finds says what
-    /// they hold, and asking it needs leave to read them.
+    /// they hold, and asking it needs leave to read them. An open draft is
+    /// no message from a list, so it needs none.
     pub(crate) fn allows(&self, cap: AssistantCap) -> bool {
-        self.on
-            && (self.full
-                || (self.list
-                    && self.switch(cap)
-                    && (cap != AssistantCap::SearchServer || self.read)))
+        if !self.on {
+            return false;
+        }
+        match cap {
+            AssistantCap::OpenConversation => {
+                self.open_conversation && (self.full || (self.list && self.read))
+            }
+            AssistantCap::OpenDrafts => self.open_drafts,
+            AssistantCap::OwnDrafts => self.open_drafts && self.own_drafts,
+            _ => {
+                self.full
+                    || (self.list
+                        && self.switch(cap)
+                        && (cap != AssistantCap::SearchServer || self.read))
+            }
+        }
     }
 
     /// Whether a new message may be started from the account: unlike a
@@ -289,15 +335,22 @@ mod tests {
             }
             grant.set_switch(AssistantCap::List, true);
             grant.set_switch(cap, true);
-            // Searching on the server needs leave to read as well.
-            let read_too = cap == AssistantCap::SearchServer;
+            // Searching on the server, and seeing what is open, need leave
+            // to read as well. Their own drafts come on top of the others.
+            let read_too = matches!(
+                cap,
+                AssistantCap::SearchServer | AssistantCap::OpenConversation
+            );
             grant.read = grant.read || read_too;
+            let drafts_too = cap == AssistantCap::OwnDrafts;
+            grant.open_drafts = grant.open_drafts || drafts_too;
             for other in AssistantCap::ALL {
                 assert_eq!(
                     grant.allows(other),
                     other == cap
                         || other == AssistantCap::List
-                        || (read_too && other == AssistantCap::Read),
+                        || (read_too && other == AssistantCap::Read)
+                        || (drafts_too && other == AssistantCap::OpenDrafts),
                     "{cap:?} / {other:?}"
                 );
             }
@@ -326,7 +379,9 @@ mod tests {
             grant.set_switch(cap, false);
         }
         grant.folders.insert("Private".into(), false);
-        assert!(AssistantCap::ALL.iter().all(|c| grant.allows(*c)));
+        for cap in AssistantCap::ALL {
+            assert_eq!(grant.allows(cap), cap.in_full_access(), "{cap:?}");
+        }
         assert!(grant.may_compose());
         assert!(grant.folder_allowed("INBOX", FolderKind::Inbox));
         assert!(grant.folder_allowed("Private", FolderKind::Custom));
@@ -352,6 +407,31 @@ mod tests {
     }
 
     #[test]
+    fn what_the_user_is_doing_now_stays_its_own_choice_under_full_access() {
+        let mut grant = AccountGrant {
+            on: true,
+            full: true,
+            list: false,
+            read: false,
+            ..Default::default()
+        };
+        grant.open_conversation = true;
+        assert!(grant.allows(AssistantCap::OpenConversation));
+        assert!(!grant.allows(AssistantCap::OpenDrafts));
+        // Their own drafts need the others' switch too.
+        grant.own_drafts = true;
+        assert!(!grant.allows(AssistantCap::OwnDrafts));
+        grant.open_drafts = true;
+        assert!(grant.allows(AssistantCap::OwnDrafts));
+        // Without full access, seeing what is open needs the list and the text.
+        grant.full = false;
+        assert!(!grant.allows(AssistantCap::OpenConversation));
+        grant.list = true;
+        grant.read = true;
+        assert!(grant.allows(AssistantCap::OpenConversation));
+    }
+
+    #[test]
     fn a_reset_goes_back_to_the_start_and_leaves_the_account_shared_or_not() {
         for on in [true, false] {
             let mut grant = AccountGrant {
@@ -359,6 +439,9 @@ mod tests {
                 full: true,
                 list: false,
                 trash: true,
+                open_conversation: true,
+                open_drafts: true,
+                own_drafts: true,
                 ..Default::default()
             };
             grant.folders.insert("Spam".into(), true);
@@ -405,5 +488,7 @@ mod tests {
             toml::from_str("enabled = true\n[accounts.\"ada@example.org\"]\non = true\n").unwrap();
         let old = old.grant("ada@example.org").unwrap();
         assert!(!old.full && !old.allows(AssistantCap::Trash));
+        assert!(!old.allows(AssistantCap::OpenConversation));
+        assert!(!old.allows(AssistantCap::OpenDrafts));
     }
 }

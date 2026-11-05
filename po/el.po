@@ -191,6 +191,21 @@ msgid "Moved messages to Trash"
 msgstr "Μετακινεί το μήνυμα στον Κάδο."
 
 #, fuzzy
+msgid "Read the open conversation"
+msgstr "Ολόκληρη συζήτηση"
+
+#, fuzzy
+msgid "Listed open drafts"
+msgstr "Αυτός ο φάκελος"
+
+#, fuzzy
+msgid "Read an open draft"
+msgstr "Ολόκληρη συζήτηση"
+
+msgid "Suggested changes to a draft"
+msgstr ""
+
+#, fuzzy
 msgid "Refused or failed: {action}"
 msgstr "Η αναίρεση απέτυχε: {e}"
 
@@ -3579,6 +3594,58 @@ msgid "Outside your own domains"
 msgstr ""
 
 #, fuzzy
+msgid "Not now"
+msgstr "Δεν εμφανίζεται"
+
+msgid "Accept or reject the AI assistant's suggested changes first."
+msgstr ""
+
+msgid "Wait for the translation to come back, then accept the changes."
+msgstr ""
+
+#, fuzzy
+msgid "Changes suggested by an AI assistant"
+msgstr "Νέο μήνυμα από πρότυπο"
+
+#, fuzzy
+msgid "Nothing changes until you accept them."
+msgstr "Οι αλλαγές σας θα χαθούν αν τις απορρίψετε."
+
+#, fuzzy
+msgid "Reject"
+msgstr "Έργο"
+
+msgid "Accept"
+msgstr "Αποδοχή"
+
+msgid "To:"
+msgstr "Προς:"
+
+msgid "Cc:"
+msgstr "Κοιν.:"
+
+#, fuzzy
+msgid "Subject:"
+msgstr "Θέμα"
+
+msgid "Accepting removes this text's formatting, links and pictures."
+msgstr ""
+
+msgid "Taken out"
+msgstr ""
+
+msgid "Added in Bcc: the other recipients will not see this address"
+msgstr ""
+
+#, fuzzy
+msgid "Added, outside your own domains"
+msgstr "Διεύθυνση ή τομέας"
+
+#, fuzzy
+msgid "Added"
+msgstr "Λέξεις που προστέθηκαν"
+
+#, fuzzy
 msgid "Send without an attachment?"
 msgstr "Αποστολή ως κανονικό συνημμένο"
 
@@ -4965,9 +5032,6 @@ msgstr "Τι αναζητά αυτή η επιλογή"
 msgid "me"
 msgstr "εγώ"
 
-msgid "To:"
-msgstr "Προς:"
-
 msgid "Show conversation"
 msgstr "Εμφάνιση συζήτησης"
 
@@ -5251,9 +5315,6 @@ msgstr "Απορρίψατε αυτή την πρόσκληση."
 msgid "You declined this invitation on {date}."
 msgstr "Απορρίψατε αυτή την πρόσκληση στις {date}."
 
-msgid "Accept"
-msgstr "Αποδοχή"
-
 msgid "Tells the organiser you will be there"
 msgstr "Ενημερώνει τον διοργανωτή ότι θα παρευρεθείτε"
 
@@ -5320,9 +5381,6 @@ msgstr ""
 
 msgid "From:"
 msgstr "Από:"
-
-msgid "Cc:"
-msgstr "Κοιν.:"
 
 msgid "Bcc:"
 msgstr "Κρυφή κοινοποίηση:"
@@ -6168,6 +6226,25 @@ msgstr "Μετάβαση στο Αρχείο"
 
 msgid "Move to Trash"
 msgstr "Μετακίνηση στον Κάδο"
+
+#, fuzzy
+msgid "See open conversation"
+msgstr "Εμφάνιση συζήτησης"
+
+msgid "The one you are reading, as you read it."
+msgstr ""
+
+msgid "Read and edit open drafts"
+msgstr ""
+
+msgid "Those agents prepared. You accept each edit."
+msgstr ""
+
+msgid "Include drafts you started"
+msgstr ""
+
+msgid "What you are writing, unsaved text too."
+msgstr ""
 
 msgid ""
 "Hylki contains no AI agent of its own but you can allow outside agents to "

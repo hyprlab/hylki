@@ -422,6 +422,14 @@ impl AppModel {
     /// when the reader would (#295).
     pub(super) fn quoting(&self, m: &Message, mut prefill: ComposePrefill) -> ComposePrefill {
         prefill.block_remote_images = !self.remote_allowed(m);
+        // An answer may turn Encrypt off, and a forward never has it on, yet
+        // both hold what was decrypted.
+        prefill.from_encrypted = crate::models::preview_is_encrypted(&m.preview)
+            || self
+                .sender_cache
+                .get(&body_key(m))
+                .and_then(|c| c.pgp.as_ref())
+                .is_some_and(|p| p.encrypted);
         prefill
     }
 

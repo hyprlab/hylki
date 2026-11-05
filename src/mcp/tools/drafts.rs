@@ -9,6 +9,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use super::bodies::Body;
+use super::composers::composer_id;
 use super::{failure, json, Mail, ENCRYPTED_NOTE};
 use crate::app::AppMsg;
 use crate::config::AssistantCap;
@@ -74,6 +75,8 @@ pub(super) struct ForwardArgs {
 #[derive(Serialize)]
 struct OpenedOut {
     opened: bool,
+    /// The composer's id, for read_draft and update_draft.
+    id: String,
     note: String,
 }
 
@@ -82,7 +85,7 @@ impl Mail {
     #[tool(
         description = "Prepare a new message and open it in Hylki for the user to check \
         and send. It is not sent. Recipients must be email addresses from find_contacts or \
-        the user; the body is plain text.",
+        the user; the body is plain text. Returns the composer's id.",
         annotations(read_only_hint = false, destructive_hint = false)
     )]
     async fn compose_message(&self, Parameters(args): Parameters<ComposeArgs>) -> CallToolResult {
@@ -122,7 +125,8 @@ impl Mail {
     #[tool(
         description = "Prepare a reply to a message and open it in Hylki, the original \
         quoted under it as when the user clicks Reply, for the user to check and send. It is \
-        not sent. Extra recipients must be email addresses; the body is plain text.",
+        not sent. Extra recipients must be email addresses; the body is plain text. Returns \
+        the composer's id.",
         annotations(read_only_hint = false, destructive_hint = false)
     )]
     async fn reply_to_message(&self, Parameters(args): Parameters<ReplyArgs>) -> CallToolResult {
@@ -148,7 +152,8 @@ impl Mail {
     #[tool(
         description = "Prepare a forward of a message, with its attachments, and open it \
         in Hylki as when the user clicks Forward, for the user to check and send. It is not \
-        sent. Recipients must be email addresses; the body is plain text.",
+        sent. Recipients must be email addresses; the body is plain text. Returns the \
+        composer's id.",
         annotations(read_only_hint = false, destructive_hint = false)
     )]
     async fn forward_message(&self, Parameters(args): Parameters<ForwardArgs>) -> CallToolResult {
@@ -228,7 +233,11 @@ impl Mail {
             return failure("Hylki is closing".into());
         }
         match tokio::time::timeout(OPEN_WAIT, answer).await {
-            Ok(Ok(Ok(note))) => json(&OpenedOut { opened: true, note }),
+            Ok(Ok(Ok((id, note)))) => json(&OpenedOut {
+                opened: true,
+                id: composer_id(id),
+                note,
+            }),
             Ok(Ok(Err(e))) => failure(e),
             Ok(Err(_)) => failure("Hylki could not open the message".into()),
             Err(_) => failure("Hylki took too long to open the message; it may still open".into()),

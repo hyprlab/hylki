@@ -190,6 +190,21 @@ msgid "Moved messages to Trash"
 msgstr "Déplace le message vers la corbeille."
 
 #, fuzzy
+msgid "Read the open conversation"
+msgstr "Conversation entière"
+
+#, fuzzy
+msgid "Listed open drafts"
+msgstr "Dossiers filtrés"
+
+#, fuzzy
+msgid "Read an open draft"
+msgstr "Conversation entière"
+
+msgid "Suggested changes to a draft"
+msgstr ""
+
+#, fuzzy
 msgid "Refused or failed: {action}"
 msgstr "L’annulation a échoué : {e}"
 
@@ -3559,6 +3574,58 @@ msgid "Outside your own domains"
 msgstr ""
 
 #, fuzzy
+msgid "Not now"
+msgstr "Non affiché"
+
+msgid "Accept or reject the AI assistant's suggested changes first."
+msgstr ""
+
+msgid "Wait for the translation to come back, then accept the changes."
+msgstr ""
+
+#, fuzzy
+msgid "Changes suggested by an AI assistant"
+msgstr "Nouveau message à partir d’un modèle"
+
+#, fuzzy
+msgid "Nothing changes until you accept them."
+msgstr "Vos modifications sont perdues si vous les abandonnez."
+
+#, fuzzy
+msgid "Reject"
+msgstr "Projet"
+
+msgid "Accept"
+msgstr "Accepter"
+
+msgid "To:"
+msgstr "À :"
+
+msgid "Cc:"
+msgstr "Cc :"
+
+#, fuzzy
+msgid "Subject:"
+msgstr "Objet"
+
+msgid "Accepting removes this text's formatting, links and pictures."
+msgstr ""
+
+msgid "Taken out"
+msgstr ""
+
+msgid "Added in Bcc: the other recipients will not see this address"
+msgstr ""
+
+#, fuzzy
+msgid "Added, outside your own domains"
+msgstr "Adresse ou domaine"
+
+#, fuzzy
+msgid "Added"
+msgstr "Mots ajoutés"
+
+#, fuzzy
 msgid "Send without an attachment?"
 msgstr "Envoyer comme une pièce jointe normale"
 
@@ -4945,9 +5012,6 @@ msgstr "Ce qui est recherché"
 msgid "me"
 msgstr "moi"
 
-msgid "To:"
-msgstr "À :"
-
 msgid "Show conversation"
 msgstr "Afficher la conversation"
 
@@ -5232,9 +5296,6 @@ msgstr "Vous avez refusé cette invitation."
 msgid "You declined this invitation on {date}."
 msgstr "Vous avez refusé cette invitation le {date}."
 
-msgid "Accept"
-msgstr "Accepter"
-
 msgid "Tells the organiser you will be there"
 msgstr "Indique à l’organisateur que vous serez présent(e)"
 
@@ -5301,9 +5362,6 @@ msgstr ""
 
 msgid "From:"
 msgstr "De :"
-
-msgid "Cc:"
-msgstr "Cc :"
 
 msgid "Bcc:"
 msgstr "Cci :"
@@ -6151,6 +6209,25 @@ msgstr "Aller à l’archive"
 
 msgid "Move to Trash"
 msgstr "Déplacer vers la Corbeille"
+
+#, fuzzy
+msgid "See open conversation"
+msgstr "Afficher la conversation"
+
+msgid "The one you are reading, as you read it."
+msgstr ""
+
+msgid "Read and edit open drafts"
+msgstr ""
+
+msgid "Those agents prepared. You accept each edit."
+msgstr ""
+
+msgid "Include drafts you started"
+msgstr ""
+
+msgid "What you are writing, unsaved text too."
+msgstr ""
 
 msgid ""
 "Hylki contains no AI agent of its own but you can allow outside agents to "

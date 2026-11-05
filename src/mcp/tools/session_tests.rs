@@ -15,6 +15,9 @@ use crate::mcp::server::{KnownAccount, Shared};
 use crate::mcp::{AppCall, Organized};
 use crate::models::{Folder, FolderKind, Message};
 
+mod full_access;
+mod open;
+
 const ADA: &str = "ada@example.org";
 const BO: &str = "bo@example.org";
 
@@ -121,6 +124,14 @@ struct AppSaw {
     server: std::collections::HashMap<u32, Result<Vec<(String, u32)>, String>>,
     /// What servers were asked: account, words, folders.
     asked: Vec<(u32, Vec<String>, Vec<String>)>,
+    /// The composers open, each with its text.
+    composers: Vec<crate::mcp::OpenDraft>,
+    /// How many times a composer's text was asked for.
+    texts_read: usize,
+    /// The edits handed to composers.
+    edits: Vec<(u32, crate::mcp::DraftEdit)>,
+    /// What is on screen.
+    on_screen: crate::mcp::OpenNow,
 }
 
 struct Session {
@@ -178,7 +189,41 @@ impl Session {
                         }
                         AppCall::Draft { done, .. } => {
                             saw.drafts += 1;
-                            let _ = done.send(Ok("opened".into()));
+                            let _ = done.send(Ok((7, "opened".into())));
+                        }
+                        AppCall::ReadDrafts { id, text, done } => {
+                            let mut lines = Vec::new();
+                            let open: Vec<_> = saw
+                                .composers
+                                .iter()
+                                .filter(|d| id.is_none_or(|id| id == d.compose_id))
+                                .cloned()
+                                .collect();
+                            for mut draft in open {
+                                if text {
+                                    saw.texts_read += 1;
+                                } else {
+                                    draft.text = None;
+                                }
+                                let (line, answer) = tokio::sync::oneshot::channel();
+                                let _ = line.send(draft);
+                                lines.push(answer);
+                            }
+                            let _ = done.send(lines);
+                        }
+                        AppCall::EditDraft { id, edit, done } => {
+                            let open = saw.composers.iter().any(|d| d.compose_id == id);
+                            if open {
+                                saw.edits.push((id, edit));
+                            }
+                            let _ = done.send(if open {
+                                crate::mcp::EditAnswer::Waits
+                            } else {
+                                crate::mcp::EditAnswer::NotOpen
+                            });
+                        }
+                        AppCall::ReadOpen { done } => {
+                            let _ = done.send(saw.on_screen.clone());
                         }
                         AppCall::Organize { targets, done, .. } => {
                             let changed: Vec<String> =
@@ -302,12 +347,15 @@ async fn the_tools_offered_cannot_send_or_erase() {
             "hylki_status",
             "list_accounts",
             "list_attachments",
+            "list_drafts",
             "list_folders",
             "list_messages",
             "list_tags",
             "move_messages",
             "read_attachment",
+            "read_draft",
             "read_message",
+            "read_open_thread",
             "read_thread",
             "reply_to_message",
             "search",
@@ -316,6 +364,7 @@ async fn the_tools_offered_cannot_send_or_erase() {
             "set_starred",
             "set_tag",
             "trash_messages",
+            "update_draft",
         ]
     );
     // What a client may run without asking, it can tell from the tool.
@@ -917,69 +966,4 @@ async fn rows_of_a_folder_the_account_does_not_have_are_out_of_reach() {
     answered_by_server(&s, &[("[Gmail]/All Mail", 31)]);
     let found = s.call("search_server", json!({"query":"lunch"})).await;
     assert_eq!(data(&found)["messages"], json!([]), "{found}");
-}
-
-#[tokio::test]
-async fn full_access_opens_all_but_junk_and_trash_and_still_not_what_no_setting_allows() {
-    let mut policy = ada_may(&[]);
-    let grant = policy.grant_mut(ADA);
-    grant.full = true;
-    grant.folders.insert("Private".into(), false);
-    let mut s = Session::start(policy, Ok(plain_raw("text"))).await;
-
-    let status = data(&s.call("hylki_status", json!({})).await);
-    assert_eq!(
-        status["accounts"][0]["allowed"].as_array().unwrap().len(),
-        AssistantCap::ALL.len()
-    );
-    let listed = s.call("list_messages", json!({"folder":"Private"})).await;
-    assert_eq!(subjects(&listed), ["Diagnosis"], "{listed}");
-    let found = s.call("search", json!({"query":"Diagnosis"})).await;
-    assert_eq!(subjects(&found), ["Diagnosis"], "{found}");
-
-    // Junk is its own choice, by name or by a message's id.
-    let junk = s.call("list_messages", json!({"folder":"Spam"})).await;
-    assert!(refused(&junk), "{junk}");
-    let by_id = s
-        .call("read_message", json!({"id":id_of(ADA, "Spam", 7)}))
-        .await;
-    assert!(refused(&by_id), "{by_id}");
-    let found = s.call("search", json!({"query":"Prize"})).await;
-    assert!(subjects(&found).is_empty(), "{found}");
-
-    let trash = s
-        .call("trash_messages", json!({"ids":[id_of(ADA, "INBOX", 5)]}))
-        .await;
-    assert_eq!(
-        data(&trash)["changed"].as_array().unwrap().len(),
-        1,
-        "{trash}"
-    );
-
-    let sealed = s
-        .call("read_message", json!({"id":id_of(ADA, "Vault", 11)}))
-        .await;
-    assert!(data(&sealed)["body"].is_null(), "{sealed}");
-    let names = s.request("tools/list", json!({})).await.to_string();
-    for never in ["send_message", "delete_forever", "empty_trash"] {
-        assert!(!names.contains(never), "{never}");
-    }
-    // Another account is not shared by this one's switch.
-    let other = s.call("list_messages", json!({"account":BO})).await;
-    assert!(refused(&other), "{other}");
-}
-
-#[tokio::test]
-async fn junk_on_its_own_switch_opens_under_full_access() {
-    let mut policy = ada_may(&[]);
-    let grant = policy.grant_mut(ADA);
-    grant.full = true;
-    grant.folders.insert("Spam".into(), true);
-    let mut s = Session::start(policy, Ok(plain_raw("text"))).await;
-
-    let listed = s.call("list_messages", json!({"folder":"Spam"})).await;
-    assert_eq!(subjects(&listed), ["Prize"], "{listed}");
-    // Trash has a switch of its own, still off.
-    let bin = s.call("list_messages", json!({"folder":"Bin"})).await;
-    assert!(refused(&bin), "{bin}");
 }

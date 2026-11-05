@@ -1,7 +1,9 @@
 //! A message an assistant asks Hylki to prepare, checked before it goes to
 //! the app: every recipient an email address, the text plain. The app
 //! opens it in a composer ([`crate::mcp::AppCall::Draft`]); nothing here
-//! or there sends it.
+//! or there sends it. Also what an assistant is shown of a composer that
+//! is open ([`OpenDraft`]), and a change it asks for in one
+//! ([`DraftEdit`]), which waits there for the user to accept.
 
 use crate::models::Message;
 
@@ -46,6 +48,105 @@ pub(crate) struct Original {
     pub(crate) path: String,
     pub(crate) body: String,
     pub(crate) attachments: Vec<crate::models::Attachment>,
+}
+
+/// What an assistant asks to change in an open composer: each field given
+/// takes the place of what is there, the rest stay. It waits in the
+/// composer until the user accepts or rejects it; nothing changes before.
+#[derive(Debug, Clone, Default)]
+pub(crate) struct DraftEdit {
+    pub(crate) to: Option<Vec<String>>,
+    pub(crate) cc: Option<Vec<String>>,
+    pub(crate) bcc: Option<Vec<String>>,
+    pub(crate) subject: Option<String>,
+    /// Plain text, in place of what is written above the signature and
+    /// any quoted message.
+    pub(crate) text: Option<String>,
+}
+
+impl DraftEdit {
+    pub(crate) fn is_empty(&self) -> bool {
+        self.to.is_none()
+            && self.cc.is_none()
+            && self.bcc.is_none()
+            && self.subject.is_none()
+            && self.text.is_none()
+    }
+}
+
+/// What the user did with the last edit an assistant asked for.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum EditOutcome {
+    Applied,
+    Rejected,
+}
+
+/// What became of an edit handed to the app.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum EditAnswer {
+    /// It waits in the composer for the user.
+    Waits,
+    /// No composer has that id.
+    NotOpen,
+    /// The composer had one a moment ago: try again in this many seconds.
+    TooSoon(u64),
+}
+
+/// A composer open in Hylki, as it stands, for an assistant to read.
+#[derive(Debug, Clone)]
+pub(crate) struct OpenDraft {
+    /// The composer's own id, which the app knows it by.
+    pub(crate) compose_id: u32,
+    /// The account it sends from: what is allowed is decided by this.
+    pub(crate) account_id: u32,
+    pub(crate) from: String,
+    pub(crate) to: String,
+    pub(crate) cc: String,
+    pub(crate) bcc: String,
+    pub(crate) subject: String,
+    /// "new", "reply", "forward" or "template".
+    pub(crate) kind: &'static str,
+    /// An assistant prepared it.
+    pub(crate) by_assistant: bool,
+    /// The attached files' names.
+    pub(crate) attachments: Vec<String>,
+    /// It goes out encrypted, or answers encrypted mail: nothing of it leaves
+    /// the composer. See [`OpenDraft::sealed`].
+    pub(crate) encrypted: bool,
+    /// "rich", "plain", "markdown" or "html".
+    pub(crate) format: &'static str,
+    /// What is written above the signature and any quote, as text; only
+    /// when it was asked for.
+    pub(crate) text: Option<String>,
+    /// An edit waiting for the user.
+    pub(crate) pending: Option<DraftEdit>,
+    /// What became of the last one.
+    pub(crate) last_edit: Option<EditOutcome>,
+}
+
+impl OpenDraft {
+    /// A composer whose content stays there: that it exists and is
+    /// encrypted, and no more. Its subject and who it goes to are mail an
+    /// assistant may not have, like the text.
+    pub(crate) fn sealed(compose_id: u32, account_id: u32, by_assistant: bool) -> Self {
+        Self {
+            compose_id,
+            account_id,
+            from: String::new(),
+            to: String::new(),
+            cc: String::new(),
+            bcc: String::new(),
+            subject: String::new(),
+            kind: "new",
+            by_assistant,
+            attachments: Vec::new(),
+            encrypted: true,
+            format: "plain",
+            text: None,
+            pending: None,
+            last_edit: None,
+        }
+    }
 }
 
 /// The most text an assistant hands over for one message.

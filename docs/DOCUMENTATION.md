@@ -1547,19 +1547,34 @@ on, it has these, each on its own:
 | Add and remove tags | Only tags you already have | Off |
 | Move and archive | Within the account | Off |
 | Move to Trash | Mail already in Trash stays there | Off |
+| See open conversation | The conversation you have open, in the main window or a message window | Off |
+| Read and edit open drafts | Messages agents prepared that are still open | Off |
+| Include drafts you started | The same for messages you are writing, unsaved text included | Off |
 
 **Full access**, above these, turns on all of them for that account, in every
 folder but Junk and Trash, folders you kept back included. Junk and Trash keep their own
 switches under **Folders**, and turning them on there works with Full access too.
 It can still move mail to Trash without seeing into it. It changes neither the
-contacts switches nor what no setting allows, and your own choices come back when
-you turn it off.
+last three switches in the table, which are about what you are doing right now, nor
+the contacts switches, nor what no setting allows, and your own choices come back
+when you turn it off.
+
+**Suggested changes.** An agent allowed to edit a draft suggests a change, and
+nothing changes until you press **Accept**. New and removed words show over the
+text, and a bar above lists the recipients it adds or takes out, with Bcc and
+addresses outside your own domains marked. Your signature and any quoted message
+stay as they are. While a suggestion waits, the text is locked and Send asks you to
+answer it first. Accepting puts plain text in place of what you wrote, and the bar
+says so when that would remove formatting, links or pictures; Undo brings them back.
+An agent can suggest a change to one draft once every ten seconds. A draft that is
+encrypted, or that replies to or forwards encrypted mail, shows an agent only that it
+is there, and takes no suggestions.
 
 **Reset to Defaults**, at the end of an account's list, puts its switches and
 folders back to the table above and turns Full access off. The account stays shared.
 
-Everything but starting a new message needs **See message lists**, since that is
-how a message is named. **Folders** on the same row keeps single folders back.
+Everything but starting a new message and working on an open draft needs **See
+message lists**, since that is how a message is named. **Folders** on the same row keeps single folders back.
 Junk and Trash are kept back until you allow them, as mail in them is the most
 likely to carry instructions aimed at an assistant.
 

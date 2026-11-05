@@ -18,6 +18,45 @@ pub(super) struct ReadThreadArgs {
     offset: Option<usize>,
 }
 
+#[derive(Deserialize, JsonSchema)]
+pub(super) struct ReadOpenThreadArgs {
+    /// Number of messages (default 20, at most 50).
+    limit: Option<usize>,
+    /// Number of messages to skip, oldest first (default 0).
+    offset: Option<usize>,
+}
+
+/// How long the app is given to say what is open: it answers from the
+/// main loop, at once unless it is busy.
+const OPEN_WAIT: std::time::Duration = std::time::Duration::from_secs(5);
+
+/// What an assistant is told when the message the user is on is not one it
+/// may know of, or there is none: the same, so that says nothing either.
+const NOTHING_OPEN: &str = "No message shared with assistants is what the user has open now. Ask \
+    the user which one they mean, or find it with list_messages or search.";
+
+/// A conversation on screen an assistant may know of, as the cache has it.
+struct OnScreen {
+    /// "main_window" or "message_window".
+    shown_in: &'static str,
+    account: Account,
+    selected_id: String,
+    thread_id: String,
+    subject: String,
+    /// Its messages in shared folders, oldest first, each copy once.
+    rows: Vec<(String, Message)>,
+}
+
+/// Another conversation open beside the one read, to name.
+#[derive(Serialize)]
+struct AlsoOpenOut {
+    shown_in: &'static str,
+    selected_id: String,
+    thread_id: String,
+    subject: String,
+    message_count: usize,
+}
+
 pub(super) fn thread_id(account: &str, path: &str, m: &Message) -> String {
     let root = m
         .references
@@ -50,6 +89,77 @@ impl Mail {
         rows.push((path.to_owned(), m.clone()));
         dedupe(&mut rows);
         rows
+    }
+
+    /// A conversation the app has on screen, as far as it is shared; `None`
+    /// when the message the user is on is not, in an account or a folder
+    /// that is out of reach, or when the cache has lost it.
+    fn on_screen(
+        &self,
+        shown_in: &'static str,
+        t: crate::mcp::OpenThread,
+        accounts: &[Account],
+    ) -> Option<OnScreen> {
+        let (account_id, path, uid) = t.selected;
+        let account = accounts.iter().find(|a| a.id == account_id)?.clone();
+        let mut rows: Vec<(String, Message)> = {
+            let cache = self.lock();
+            let shared = shared_paths(&cache, &account);
+            if !shared.contains(&path) {
+                return None;
+            }
+            t.members
+                .into_iter()
+                .filter(|(a, p, _)| *a == account_id && shared.contains(p))
+                .filter_map(|(_, p, u)| cache.message_at(account_id, &p, u).map(|m| (p, m)))
+                .collect()
+        };
+        // Named before copies are folded away: the one the user is on may
+        // be the copy that goes.
+        let (thread_id, subject) = rows
+            .iter()
+            .find(|(p, m)| *p == path && m.uid == uid)
+            .map(|(p, m)| (thread_id(&account.address, p, m), m.subject.clone()))?;
+        dedupe(&mut rows);
+        Some(OnScreen {
+            shown_in,
+            selected_id: message_id(&account.address, &path, uid),
+            account,
+            thread_id,
+            subject,
+            rows,
+        })
+    }
+
+    /// The messages from `offset`, as many as `limit` and as fit in one answer.
+    async fn gather(
+        &self,
+        account: &Account,
+        rows: Vec<(String, Message)>,
+        offset: usize,
+        limit: usize,
+    ) -> Vec<MessageOut> {
+        let started = std::time::Instant::now();
+        let mut messages = Vec::new();
+        let mut size = 0;
+        for (path, m) in rows.into_iter().skip(offset).take(limit) {
+            let out = self
+                .message_out(
+                    account,
+                    &Located {
+                        path,
+                        uid: m.uid,
+                        message: m,
+                    },
+                )
+                .await;
+            size += out.weight();
+            messages.push(out);
+            if size >= ANSWER_MAX || started.elapsed() >= ANSWER_WAIT {
+                break;
+            }
+        }
+        messages
     }
 }
 
@@ -101,26 +211,7 @@ impl Mail {
         let total = rows.len();
         let offset = args.offset.unwrap_or(0);
         let limit = args.limit.unwrap_or(20).clamp(1, 50);
-        let started = std::time::Instant::now();
-        let mut messages = Vec::new();
-        let mut size = 0;
-        for (path, m) in rows.into_iter().skip(offset).take(limit) {
-            let out = self
-                .message_out(
-                    &account,
-                    &Located {
-                        path,
-                        uid: m.uid,
-                        message: m,
-                    },
-                )
-                .await;
-            size += out.weight();
-            messages.push(out);
-            if size >= ANSWER_MAX || started.elapsed() >= ANSWER_WAIT {
-                break;
-            }
-        }
+        let messages = self.gather(&account, rows, offset, limit).await;
         let end = offset.saturating_add(messages.len());
         json(&serde_json::json!({
             "thread_id": args.thread_id,
@@ -129,5 +220,90 @@ impl Mail {
             "next_offset": if end < total { Some(end) } else { None },
             "scope_note": "Cached members in shared folders only; lookup capped at 100 folder copies."
         }))
+    }
+
+    #[tool(
+        description = "The conversation the user has open in Hylki now: the one in the \
+        window they were in last, the main window (the message open in the reader, or \
+        selected in the list with the reading pane off) or a message window of its own. \
+        Its messages in full, oldest first, as far as they are shared; `selected_id` is the \
+        message the user is on, `shown_in` says where. `also_open` names other shared \
+        conversations open; read one with read_thread or read_message. Says so when what \
+        the user is on is not shared, or nothing is open. Does not mark mail as read.",
+        annotations(read_only_hint = true)
+    )]
+    async fn read_open_thread(
+        &self,
+        Parameters(args): Parameters<ReadOpenThreadArgs>,
+    ) -> CallToolResult {
+        let accounts = match self.scope(None, AssistantCap::OpenConversation) {
+            Ok(accounts) => accounts,
+            Err(e) => return failure(e),
+        };
+        let (done, answer) = tokio::sync::oneshot::channel();
+        if self
+            .app
+            .send(AppMsg::Assistant(AppCall::ReadOpen { done }))
+            .is_err()
+        {
+            return failure("Hylki is closing".into());
+        }
+        let open = match tokio::time::timeout(OPEN_WAIT, answer).await {
+            Ok(Ok(open)) => open,
+            _ => return failure("Hylki did not answer".into()),
+        };
+        // What the user is on, by where they were last: if that is out of
+        // reach nothing else stands in for it, or "this message" would
+        // answer about another one.
+        let main_open = open.main.is_some();
+        let front = open
+            .focused
+            .or_else(|| (!main_open && !open.windows.is_empty()).then_some(0));
+        let mut main = open
+            .main
+            .and_then(|t| self.on_screen("main_window", t, &accounts));
+        let mut windows: Vec<Option<OnScreen>> = open
+            .windows
+            .into_iter()
+            .map(|t| self.on_screen("message_window", t, &accounts))
+            .collect();
+        let shown = match front {
+            Some(i) => windows.get_mut(i).and_then(Option::take),
+            None => main.take(),
+        };
+        let also_open: Vec<AlsoOpenOut> = main
+            .into_iter()
+            .chain(windows.into_iter().flatten())
+            .map(|s| AlsoOpenOut {
+                shown_in: s.shown_in,
+                selected_id: s.selected_id,
+                thread_id: s.thread_id,
+                subject: s.subject,
+                message_count: s.rows.len(),
+            })
+            .collect();
+        let mut out = match shown {
+            None => serde_json::json!({ "open": false, "note": NOTHING_OPEN }),
+            Some(shown) => {
+                let total = shown.rows.len();
+                let offset = args.offset.unwrap_or(0);
+                let limit = args.limit.unwrap_or(20).clamp(1, 50);
+                let messages = self.gather(&shown.account, shown.rows, offset, limit).await;
+                let end = offset.saturating_add(messages.len());
+                serde_json::json!({
+                    "open": true,
+                    "shown_in": shown.shown_in,
+                    "selected_id": shown.selected_id,
+                    "thread_id": shown.thread_id,
+                    "message_count": total,
+                    "messages": messages,
+                    "next_offset": if end < total { Some(end) } else { None },
+                })
+            }
+        };
+        if !also_open.is_empty() {
+            out["also_open"] = serde_json::json!(also_open);
+        }
+        json(&out)
     }
 }

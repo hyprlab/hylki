@@ -32,10 +32,12 @@ mod server;
 mod tools;
 
 pub(crate) use activity::Activity;
-pub(crate) use draft::{text_html, Draft, DraftKind, Original};
+pub(crate) use draft::{
+    text_html, Draft, DraftEdit, DraftKind, EditAnswer, EditOutcome, OpenDraft, Original,
+};
 pub(crate) use organize::{Change, Organized, Target};
 pub(crate) use relay::run as run_relay;
-pub(crate) use server::{remove_socket, AppCall, Server, SharedPolicy};
+pub(crate) use server::{remove_socket, AppCall, OpenNow, OpenThread, Server, SharedPolicy, Shown};
 
 /// The command-line flag that runs the relay instead of the app.
 pub(crate) const MCP_FLAG: &str = "--mcp";

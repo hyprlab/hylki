@@ -56,6 +56,9 @@ pub(crate) struct ComposePrefill {
     pub(crate) draft_origin: Option<DraftOrigin>,
     /// Start with Encrypt (and so Sign) on: a reply to an encrypted message (#133).
     pub(crate) encrypt: bool,
+    /// It quotes or copies a message that arrived encrypted: an assistant
+    /// never sees into the composer, whatever becomes of Encrypt.
+    pub(crate) from_encrypted: bool,
     /// Ask for a read receipt (#520): as the message being edited did, or
     /// `None` for the setting's default.
     pub(crate) receipt: Option<bool>,
