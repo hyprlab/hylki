@@ -1,0 +1,63 @@
+name: Proton helper tests
+
+# The Proton helper (native/proton) is a Go module of its own, built from the
+# dependencies committed in native/proton/vendor. Its tests run against
+# go-proton-api's in-process test server, so they need no account and no
+# network beyond fetching the toolchain.
+
+on:
+  push:
+    paths:
+      - 'native/proton/**'
+      - '.github/workflows/proton-helper.yml'
+  pull_request:
+    paths:
+      - 'native/proton/**'
+      - '.github/workflows/proton-helper.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: go test (${{ matrix.runner }})
+    strategy:
+      fail-fast: false
+      matrix:
+        # aarch64 too: every package ships the helper for both.
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          # The oldest Go the module builds with, as the packages do.
+          go-version-file: native/proton/go.mod
+          cache: false
+
+      - name: Formatting
+        working-directory: native/proton
+        run: |
+          unformatted="$(gofmt -l . | grep -v '^vendor/' || true)"
+          if [ -n "$unformatted" ]; then
+            echo "not gofmt-formatted:" >&2
+            echo "$unformatted" >&2
+            exit 1
+          fi
+
+      - name: Vet
+        # With -mod=vendor, go also refuses a vendor tree that no longer
+        # matches go.mod.
+        working-directory: native/proton
+        run: go vet -mod=vendor ./...
+
+      - name: Test
+        working-directory: native/proton
+        env:
+          GOFLAGS: -mod=vendor
+          GOPROXY: 'off'
+        run: go test ./...

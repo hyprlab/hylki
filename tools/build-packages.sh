@@ -73,6 +73,21 @@ build_tuta_helper() {
     ( cd "$ROOT/native/tuta" && cargo build --release --locked )
 }
 
+# The Proton helper (native/proton) is Go, built from the modules committed
+# in native/proton/vendor. Its go.mod names the oldest Go it builds with;
+# GOTOOLCHAIN=auto lets an older system Go (Debian's) fetch that one. A tree
+# from before the helper has no native/proton.
+HAS_PROTON=""
+[ -f "$ROOT/native/proton/go.mod" ] && HAS_PROTON=1
+
+build_proton_helper() {
+    [ -n "$HAS_PROTON" ] || return 0
+    echo "==> Building the Proton helper"
+    ( cd "$ROOT/native/proton" \
+        && GOFLAGS=-mod=vendor GOTOOLCHAIN="${GOTOOLCHAIN:-auto}" \
+            go build -trimpath -buildvcs=false -o hylki-proton . )
+}
+
 # The payload both packages carry, staged into $1: the release binary, the
 # launcher and metainfo with their translated fields merged in, a message
 # catalogue per po/<lang>.po (see po/README.md), and the icons.
@@ -82,6 +97,9 @@ stage_payload() {
     cp "$ROOT/target/release/hylki"              "$stage/hylki"
     if [ -n "$HAS_TUTA" ]; then
         cp "$ROOT/native/tuta/target/release/hylki-tuta" "$stage/hylki-tuta"
+    fi
+    if [ -n "$HAS_PROTON" ]; then
+        cp "$ROOT/native/proton/hylki-proton" "$stage/hylki-proton"
     fi
     cp "$ROOT/LICENSE"                          "$stage/LICENSE"
     msgfmt --desktop --template="$ROOT/data/$APP_ID.desktop" -d "$ROOT/po" -o "$stage/$APP_ID.desktop"
@@ -106,6 +124,7 @@ build_rpm() {
     echo "==> Building release binary (host)"
     ( cd "$ROOT" && cargo build --release )
     build_tuta_helper
+    build_proton_helper
 
     echo "==> Staging RPM payload"
     local work stage
@@ -151,7 +170,8 @@ build_deb() {
                             --exclude=./.flatpak-builder \
                             --exclude=./native/tuta/target \
                             --exclude=./native/tuta/upstream/target \
-                            --exclude=./native/tuta/upstream/tuta-repo -cf - . \
+                            --exclude=./native/tuta/upstream/tuta-repo \
+                            --exclude=./native/proton/hylki-proton -cf - . \
                     | tar -C /build -xf -
                 exec /build/tools/build-packages.sh deb
             '
@@ -162,7 +182,7 @@ build_deb() {
         echo "==> Installing build dependencies"
         apt-get update -qq
         DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
-            build-essential pkg-config dpkg-dev gettext git python3 \
+            build-essential pkg-config dpkg-dev gettext git python3 golang-go \
             libgtk-4-dev libadwaita-1-dev libwebkitgtk-6.0-dev libpoppler-glib-dev \
             libssl-dev libwayland-dev >/dev/null
     fi
@@ -170,6 +190,7 @@ build_deb() {
     echo "==> Building release binary ($(. /etc/os-release && echo "$PRETTY_NAME"))"
     ( cd "$ROOT" && cargo build --release )
     build_tuta_helper
+    build_proton_helper
 
     echo "==> Staging Debian package"
     local work stage pkg arch deps mo
@@ -179,11 +200,15 @@ build_deb() {
     arch="$(dpkg --print-architecture)"
     stage_payload "$stage"
     install -Dm755 "$stage/hylki" "$pkg/usr/bin/hylki"
-    # The Tuta helper, beside hylki, where the app looks for it first.
+    # The helpers, beside hylki, where the app looks for them first.
     local -a binaries=("$pkg/usr/bin/hylki")
     if [ -n "$HAS_TUTA" ]; then
         install -Dm755 "$stage/hylki-tuta" "$pkg/usr/bin/hylki-tuta"
         binaries+=("$pkg/usr/bin/hylki-tuta")
+    fi
+    if [ -n "$HAS_PROTON" ]; then
+        install -Dm755 "$stage/hylki-proton" "$pkg/usr/bin/hylki-proton"
+        binaries+=("$pkg/usr/bin/hylki-proton")
     fi
     install -Dm644 "$stage/$APP_ID.desktop" "$pkg/usr/share/applications/$APP_ID.desktop"
     install -Dm644 "$stage/$APP_ID.metainfo.xml" "$pkg/usr/share/metainfo/$APP_ID.metainfo.xml"
@@ -217,6 +242,10 @@ build_deb() {
         if [ -n "$HAS_TUTA" ]; then
             printf '\nFiles: usr/bin/hylki-tuta\nCopyright: The Postcard and tutabridge authors\n'
             printf 'License: GPL-3.0-or-later\n See /usr/share/common-licenses/GPL-3.\n'
+        fi
+        if [ -n "$HAS_PROTON" ]; then
+            printf '\nFiles: usr/bin/hylki-proton\nCopyright: The Postcard authors; Proton AG and others for the Go modules it links\n'
+            printf 'License: GPL-3.0-or-later AND MIT AND BSD-2-Clause AND BSD-3-Clause\n See /usr/share/common-licenses/GPL-3; the Go modules'"'"' own licences are in native/proton/vendor of the source.\n'
         fi
     } > "$pkg/usr/share/doc/hylki/copyright"
 

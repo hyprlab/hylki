@@ -70,7 +70,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y flatpak flatpak-builder python3-aiohttp python3-tomlkit
 
-      - name: Install the GNOME runtime and Rust SDK extension
+      - name: Install the GNOME runtime and the Rust and Go SDK extensions
         id: sdk
         run: |
           flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -90,6 +90,11 @@ jobs:
           }
 
           install_ref org.gnome.Platform//50 org.gnome.Sdk//50
+          # The Proton helper (native/proton) is Go, built with the SDK's Go
+          # extension. An older tag has no helper and does not need it.
+          if [ -f native/proton/go.mod ]; then
+            install_ref org.freedesktop.Sdk.Extension.golang//25.08
+          fi
 
           # The stable Rust extension is what releases are built with. During
           # v1.10.0 its aarch64 objects were missing from Flathub for hours
@@ -177,6 +182,9 @@ jobs:
           if [ -f native/tuta/Cargo.toml ]; then
             file build-dir/files/bin/hylki-tuta | tee /dev/stderr | grep -q 'ARM aarch64'
           fi
+          if [ -f native/proton/go.mod ]; then
+            file build-dir/files/bin/hylki-proton | tee /dev/stderr | grep -q 'ARM aarch64'
+          fi
           # Guard against building the wrong revision: the app's version has to
           # match the checkout's Cargo.toml.
           want="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
@@ -211,7 +219,7 @@ jobs:
         run: |
           dnf install -y --setopt=install_weak_deps=False git tar gzip gcc gcc-c++ \
             gtk4-devel libadwaita-devel webkitgtk6.0-devel poppler-glib-devel \
-            openssl-devel gettext-devel wayland-devel gettext rpm-build python3
+            openssl-devel gettext-devel wayland-devel gettext rpm-build python3 golang
           # The same rustup stable the x86_64 RPM is built with, not Fedora's
           # packaged Rust, which can trail the language features in use.
           curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal
@@ -265,8 +273,9 @@ jobs:
         run: |
           dnf install -y ./hylki-*.aarch64.rpm file
           bins=/usr/bin/hylki
-          # The Tuta helper, in every package from the one that added it.
+          # The helpers, in every package from the one that added each.
           if [ -e /usr/bin/hylki-tuta ]; then bins="$bins /usr/bin/hylki-tuta"; fi
+          if [ -e /usr/bin/hylki-proton ]; then bins="$bins /usr/bin/hylki-proton"; fi
           for bin in $bins; do
             file "$bin" | grep -q 'ARM aarch64'
             if ldd "$bin" | grep 'not found'; then exit 1; fi
@@ -333,8 +342,9 @@ jobs:
           apt-get update -qq
           DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ./hylki_*_arm64.deb file
           bins=/usr/bin/hylki
-          # The Tuta helper, in every package from the one that added it.
+          # The helpers, in every package from the one that added each.
           if [ -e /usr/bin/hylki-tuta ]; then bins="$bins /usr/bin/hylki-tuta"; fi
+          if [ -e /usr/bin/hylki-proton ]; then bins="$bins /usr/bin/hylki-proton"; fi
           for bin in $bins; do
             file "$bin" | grep -q 'ARM aarch64'
             if ldd "$bin" | grep 'not found'; then exit 1; fi

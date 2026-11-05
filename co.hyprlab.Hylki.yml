@@ -6,7 +6,8 @@
 # Local test build (both tools are already installed):
 #   python3 flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
 #   flatpak install flathub org.gnome.Sdk//50 org.gnome.Platform//50 \
-#       org.freedesktop.Sdk.Extension.rust-stable//25.08
+#       org.freedesktop.Sdk.Extension.rust-stable//25.08 \
+#       org.freedesktop.Sdk.Extension.golang//25.08
 #   flatpak-builder --user --install --force-clean build-dir co.hyprlab.Hylki.yml
 #   flatpak run co.hyprlab.Hylki
 id: co.hyprlab.Hylki
@@ -15,6 +16,7 @@ runtime-version: '50'
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
+  - org.freedesktop.Sdk.Extension.golang
 command: hylki
 # Keep the message catalogues in the app itself. By default flatpak-builder
 # moves /app/share/locale into a .Locale extension of which Flatpak installs
@@ -182,6 +184,30 @@ modules:
         dest: native/tuta/prepared
       # Vendored crate sources for the helper, generated like the app's.
       - native/tuta/cargo-sources.json
+  # The Proton helper (native/proton, GPL-3.0-or-later): a separate Go
+  # program the app runs for Proton accounts, found on PATH in /app/bin. It
+  # comes from the same tagged commit as the app. The build has no network,
+  # so its modules are the ones committed in native/proton/vendor.
+  - name: hylki-proton
+    buildsystem: simple
+    subdir: native/proton
+    build-options:
+      append-path: /usr/lib/sdk/golang/bin
+      env:
+        GOFLAGS: -mod=vendor
+        GOPROXY: 'off'
+        GOTOOLCHAIN: local
+        GOCACHE: /run/build/hylki-proton/go-cache
+        GOPATH: /run/build/hylki-proton/go
+    build-commands:
+      - go build -trimpath -buildvcs=false -o hylki-proton .
+      - install -Dm755 hylki-proton /app/bin/hylki-proton
+    sources:
+      - type: git
+        url: https://github.com/hyprlab/hylki.git
+        tag: v1.47.0
+        commit: 31ab0659359e06a0a92c7c672e9e54b6f49b6c2f
+        disable-submodules: true
   - name: hylki
     buildsystem: simple
     build-commands:

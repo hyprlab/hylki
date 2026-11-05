@@ -65,6 +65,29 @@ install -Dm755 native/tuta/target/release/hylki-tuta ~/.local/bin/hylki-tuta
 `native/tuta` has its own `Cargo.lock`, and its tests run with
 `cargo test --locked` there (`.github/workflows/tuta-helper.yml`).
 
+## Proton helper
+
+Proton Mail accounts that sign in natively (rather than through Proton Mail
+Bridge) go through `hylki-proton`, a separate Go program built from
+`native/proton` (GPL-3.0-or-later). It is found the same way as the Tuta
+helper: next to `hylki`, then on `PATH`. Without it, everything but native
+Proton accounts works.
+
+It needs Go 1.26.1 or newer (the `go` line in `native/proton/go.mod`) and
+nothing from the network: its dependencies are committed in
+`native/proton/vendor`.
+
+```sh
+(cd native/proton && go build -mod=vendor -trimpath -o hylki-proton .)
+install -Dm755 native/proton/hylki-proton ~/.local/bin/hylki-proton
+```
+
+Its tests run offline against go-proton-api's in-process server with
+`go test -mod=vendor ./...` in `native/proton`
+(`.github/workflows/proton-helper.yml`). After changing `go.mod`, run
+`go mod tidy && go mod vendor` there and commit both. `native/proton/README.md`
+describes the JSON it speaks.
+
 ## Translations
 
 `tools/build-locale.sh` compiles `po/*.po` so a source-tree run picks them up;
@@ -84,7 +107,10 @@ python3 flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
 python3 flatpak-cargo-generator.py native/tuta/Cargo.lock -o native/tuta/cargo-sources.json
 ```
 
-The `hylki-tuta` module builds the helper into `/app/bin` beside `hylki`.
+The `hylki-tuta` module builds the helper into `/app/bin` beside `hylki`,
+and the `hylki-proton` module builds the Proton helper there with the
+`org.freedesktop.Sdk.Extension.golang//25.08` SDK extension (install it
+beside the Rust one), offline from `native/proton/vendor`.
 Prepare the Tuta SDK first, as above: the generated tree is not in git, so
 the manifest takes it from the checkout it is built in. To build the working
 tree rather than the tagged release, write a local manifest:
@@ -113,7 +139,10 @@ Debian host with the dependencies above and `dpkg-dev`, it builds in place.
 `dpkg-shlibdeps` works out the package's dependencies from the binaries.
 Both packages carry the Tuta helper as `/usr/bin/hylki-tuta`; the script
 prepares the Tuta SDK and builds the helper itself, so the submodules have
-to be checked out.
+to be checked out. They carry the Proton helper as `/usr/bin/hylki-proton`
+too, so the RPM build needs `go` on the host; the Debian container installs
+Debian's, and a Go older than `native/proton/go.mod` asks for fetches the
+right one (`GOTOOLCHAIN=auto`).
 
 ## AppImage
 
@@ -130,7 +159,7 @@ checkout to build with this script, such as an older tag.
 The bundle also carries the spell-check dictionaries and a few fonts with a
 fontconfig file of their own (`packaging/appimage/fonts-fallback.conf`), which
 the message view falls back to when the system's fonts hang it (#296), and the
-Tuta helper beside `hylki`, built the same way as for the packages.
+Tuta and Proton helpers beside `hylki`, built the same way as for the packages.
 
 `.github/workflows/build-appimage.yml` builds it for x86_64 and aarch64 on
 every tag. Nothing is published from CI: the release attaches the two

@@ -96,7 +96,8 @@ if [ ! -f /etc/arch-release ]; then
                         --exclude=./dist --exclude=./packaging/out \
                         --exclude=./native/tuta/target \
                         --exclude=./native/tuta/upstream/target \
-                        --exclude=./native/tuta/upstream/tuta-repo -cf - . \
+                        --exclude=./native/tuta/upstream/tuta-repo \
+                        --exclude=./native/proton/hylki-proton -cf - . \
                 | tar -C /build -xf -
             HYLKI_APPIMAGE_SRC=/build exec /here/tools/build-appimage.sh
         '
@@ -120,7 +121,7 @@ echo "==> Installing build and runtime dependencies"
 # en_GB come free with these packages and are kept. enchant finds them all
 # under share/hunspell inside the bundle.
 pacman -Syu --noconfirm --needed \
-    base-devel git rust pkgconf patchelf wget strace file xorg-server-xvfb \
+    base-devel git rust go pkgconf patchelf wget strace file xorg-server-xvfb \
     gtk4 libadwaita webkitgtk-6.0 poppler-glib poppler-data \
     enchant hunspell \
     hunspell-de hunspell-el hunspell-en_us hunspell-en_gb hunspell-es_es \
@@ -159,14 +160,25 @@ if [ -f native/tuta/Cargo.toml ]; then
     HELPERS+=(/usr/bin/hylki-tuta)
 fi
 
+# The Proton helper, in every tree from the one that added it: Go, from the
+# modules committed in native/proton/vendor.
+if [ -f native/proton/go.mod ]; then
+    echo "==> Building the Proton helper"
+    ( cd native/proton && GOFLAGS=-mod=vendor go build -trimpath -buildvcs=false -o hylki-proton . )
+    HELPERS+=(/usr/bin/hylki-proton)
+fi
+
 echo "==> Installing into /usr"
 # The same layout the RPM installs (packaging/fedora/hylki.spec): the
 # collector reads the app out of /usr, and the app's own paths are relative to
 # the binary, so what works there works inside the bundle.
 install -Dm755 target/release/hylki /usr/bin/hylki
-# The Tuta helper, beside hylki, where the app looks for it first.
-if [ "${#HELPERS[@]}" -gt 0 ]; then
+# The helpers, beside hylki, where the app looks for them first.
+if [ -f native/tuta/Cargo.toml ]; then
     install -Dm755 native/tuta/target/release/hylki-tuta /usr/bin/hylki-tuta
+fi
+if [ -f native/proton/go.mod ]; then
+    install -Dm755 native/proton/hylki-proton /usr/bin/hylki-proton
 fi
 install -d /usr/share/applications /usr/share/metainfo
 msgfmt --desktop --template="data/$APP_ID.desktop" -d po -o "/usr/share/applications/$APP_ID.desktop"
@@ -213,7 +225,8 @@ export UPINFO="zsync|$UPDATES"
 # module that makes WebKit honour the desktop's proxy settings, and
 # enchant_hunspell is the only spell-check backend we want (the aspell,
 # hspell, nuspell and voikko ones would each drag in a library of their own).
-# HELPERS holds the Tuta helper, which the app runs from beside itself.
+# HELPERS holds the Tuta and Proton helpers, which the app runs from beside
+# itself.
 quick-sharun /usr/bin/hylki \
     "${HELPERS[@]}" \
     /usr/lib/gio/modules/libgiognomeproxy.so \
