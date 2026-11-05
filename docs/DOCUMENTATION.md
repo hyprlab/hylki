@@ -167,9 +167,9 @@ the right-click menu of the account's header or its Folders heading, forgets
 what was dragged. The item is there only once something has been.
 
 The chevrons open and close the items in the sidebar. Clicking a folder
-opens it and leaves its sub-folders as they were. Clicking the name of the
-Folders or Tags heading of an account does nothing; the chevron beside it
-opens or closes the section. Clicking Inboxes, Starred, Sent, Drafts,
+opens it and leaves its sub-folders as they were. Clicking anywhere on the
+Folders, Labels or Tags heading of an account opens or closes the section.
+Clicking Inboxes, Starred, Sent, Drafts,
 Archive, Junk or Trash in the unified section, or Favorites, Filters, Tags
 or Contacts, opens the combined list without showing each account's folder under it, and
 double-clicking it opens or closes that list as its chevron does. An

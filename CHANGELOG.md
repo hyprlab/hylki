@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fixed: only the chevron of a Folders, Labels or Tags heading could be
+  clicked** (#583). A click anywhere on an account's heading now opens or closes
+  the section, and the heading lights up under the pointer as the rows around it
+  do.
+
 - **Fixed: row titles broke letter by letter in New Event and New Task** (#564).
   The dialog was too narrow for a title beside a date and a time, in a long
   translation or a large font. It is now wider.

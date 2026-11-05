@@ -449,7 +449,6 @@ impl Sidebar {
 
             let hb = gtk::Box::new(gtk::Orientation::Horizontal, 8);
             hb.add_css_class("folder-row");
-            let mut folders_chevron: Option<gtk::Button> = None;
             if self.collapsed {
                 hb.set_halign(gtk::Align::Center);
                 hb.append(&gtk::Image::from_icon_name("folder-symbolic"));
@@ -461,17 +460,7 @@ impl Sidebar {
                     // above — a smaller value keeps the same column.
                     custom_chevron.set_margin_start(2);
                 }
-                let btn = heading_chevron(&custom_chevron);
-                btn.set_tooltip_text(Some(
-                    if section.gmail {
-                        i18n("Show or hide labels")
-                    } else {
-                        i18n("Show or hide folders")
-                    }
-                    .as_str(),
-                ));
-                hb.append(&btn);
-                folders_chevron = Some(btn);
+                hb.append(&heading_chevron(&custom_chevron));
                 // Gmail's own word for them: its folders are labels.
                 let len = custom.len().to_string();
                 let heading = if section.gmail {
@@ -484,23 +473,17 @@ impl Sidebar {
                 lbl.set_hexpand(true);
                 hb.append(&lbl);
             }
-            let folders_toggle = section_heading(
-                &hb,
-                folders_chevron.as_ref(),
-                &[],
-                SidebarInput::ToggleCustomFoldersLocal(id),
-                sender,
-            );
-            if self.collapsed {
-                folders_toggle.set_tooltip_text(Some(
-                    if section.gmail {
-                        i18n("Labels")
-                    } else {
-                        i18n("Folders")
-                    }
-                    .as_str(),
-                ));
-            }
+            let folders_toggle =
+                section_heading(&hb, &[], SidebarInput::ToggleCustomFoldersLocal(id), sender);
+            folders_toggle.set_tooltip_text(Some(
+                match (self.collapsed, section.gmail) {
+                    (true, true) => i18n("Labels"),
+                    (true, false) => i18n("Folders"),
+                    (false, true) => i18n("Show or hide labels"),
+                    (false, false) => i18n("Show or hide folders"),
+                }
+                .as_str(),
+            ));
             // Right-click: how this account's folders are sorted.
             let click = gtk::GestureClick::new();
             click.set_button(gtk::gdk::BUTTON_SECONDARY);

@@ -352,7 +352,6 @@ impl Sidebar {
         let chevron = gtk::Image::from_icon_name(chevron_icon(open));
         let hb = gtk::Box::new(gtk::Orientation::Horizontal, 8);
         hb.add_css_class("folder-row");
-        let mut chevron_btn: Option<gtk::Button> = None;
         if self.collapsed {
             let icon = gtk::Image::from_icon_name("tag-outline-symbolic");
             pin_icon_size(&icon);
@@ -362,26 +361,22 @@ impl Sidebar {
             if self.chevrons_left {
                 chevron.set_margin_start(2);
             }
-            let btn = heading_chevron(&chevron);
-            btn.set_tooltip_text(Some(i18n("Show or hide tags").as_str()));
-            hb.append(&btn);
-            chevron_btn = Some(btn);
+            hb.append(&heading_chevron(&chevron));
             let lbl = gtk::Label::new(Some(i18n("Tags").as_str()));
             lbl.set_halign(gtk::Align::Start);
             lbl.set_hexpand(true);
             lbl.set_ellipsize(gtk::pango::EllipsizeMode::End);
             hb.append(&lbl);
         }
-        let toggle = section_heading(
-            &hb,
-            chevron_btn.as_ref(),
-            &[],
-            SidebarInput::ToggleTagsExpand(slot),
-            sender,
-        );
-        if self.collapsed {
-            toggle.set_tooltip_text(Some(i18n("Tags").as_str()));
-        }
+        let toggle = section_heading(&hb, &[], SidebarInput::ToggleTagsExpand(slot), sender);
+        toggle.set_tooltip_text(Some(
+            if self.collapsed {
+                i18n("Tags")
+            } else {
+                i18n("Show or hide tags")
+            }
+            .as_str(),
+        ));
         parent.append(&toggle);
 
         let list = gtk::ListBox::new();

@@ -3,56 +3,44 @@
 
 use super::*;
 
-/// A section heading's chevron (Folders, Filters, Tags) as a button of its
-/// own, the size of a parent folder's arrow.
-pub(super) fn heading_chevron(chevron: &gtk::Image) -> gtk::Button {
-    let btn = gtk::Button::new();
-    btn.set_child(Some(chevron));
-    btn.add_css_class("flat");
-    btn.add_css_class("tree-expander");
-    btn.set_valign(gtk::Align::Center);
-    btn
+/// A section heading's chevron (Folders, Labels, Tags) in a slot the size of
+/// a parent folder's arrow, so the heading's name lines up with the rows
+/// under it. Only an icon: the whole heading is the button (#583).
+pub(super) fn heading_chevron(chevron: &gtk::Image) -> gtk::Box {
+    let slot = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    slot.set_size_request(TREE_EXPANDER_WIDTH, TREE_EXPANDER_WIDTH);
+    slot.set_valign(gtk::Align::Center);
+    // The icon expands to centre in the slot. Set on the slot, this stops
+    // that reaching the heading, where it would take room from the name.
+    slot.set_hexpand(false);
+    chevron.set_hexpand(true);
+    slot.append(chevron);
+    slot
 }
 
-/// A section heading (Folders, Filters, Tags) around `content`. In the full
-/// sidebar only its chevron folds the section, as a parent folder's arrow
-/// folds its sub-folders, so the heading is a plain box padded like a
-/// button: a button would take every click in its capture phase, the
-/// chevron's included. In the rail, which has no chevron, it is a button
-/// that folds the section.
+/// A section heading (Folders, Labels, Tags) around `content`: a button that
+/// folds the section from anywhere on it. It selects nothing, unlike a folder
+/// or a unified row, so nothing else wants the click (#583). A chevron inside
+/// it has to stay a plain icon: a button takes every click in its capture
+/// phase, and one nested here would never see any.
 pub(super) fn section_heading(
     content: &gtk::Box,
-    chevron: Option<&gtk::Button>,
     classes: &[&str],
     msg: SidebarInput,
     sender: &ComponentSender<Sidebar>,
 ) -> gtk::Widget {
+    let heading = gtk::Button::new();
+    heading.add_css_class("flat");
+    heading.set_child(Some(content));
     let s = sender.input_sender().clone();
-    let fire = move |_: &gtk::Button| {
+    heading.connect_clicked(move |_| {
         let _ = s.send(msg.clone());
-    };
-    let heading: gtk::Widget = match chevron {
-        Some(btn) => {
-            btn.connect_clicked(fire);
-            let b = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-            b.add_css_class("heading-box");
-            content.set_hexpand(true);
-            b.append(content);
-            b.upcast()
-        }
-        None => {
-            let t = gtk::Button::new();
-            t.add_css_class("flat");
-            t.set_child(Some(content));
-            t.connect_clicked(fire);
-            t.upcast()
-        }
-    };
+    });
     heading.add_css_class("folders-toggle");
     for c in classes {
         heading.add_css_class(c);
     }
-    heading
+    heading.upcast()
 }
 
 /// The Gravatar an account asked for (#189), once the app has looked it up.
