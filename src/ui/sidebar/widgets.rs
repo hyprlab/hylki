@@ -14,12 +14,12 @@ pub(super) fn heading_chevron(chevron: &gtk::Image) -> gtk::Button {
     btn
 }
 
-/// A section heading (Folders, Filters, Tags) around `content`. In the full
-/// sidebar only its chevron folds the section, as a parent folder's arrow
-/// folds its sub-folders, so the heading is a plain box padded like a
-/// button: a button would take every click in its capture phase, the
-/// chevron's included. In the rail, which has no chevron, it is a button
-/// that folds the section.
+/// A section heading (Folders, Labels, Tags) around `content`: a button that
+/// folds the section from anywhere on it, as the Smart Folders header does,
+/// since a heading is a toggle and not a view (#583). Its chevron (none in
+/// the rail) sits inside; the heading's button takes a pointer click in its
+/// capture phase before the chevron sees it, so a click there folds once,
+/// and the chevron's own handler is left for the keyboard.
 pub(super) fn section_heading(
     content: &gtk::Box,
     chevron: Option<&gtk::Button>,
@@ -31,28 +31,19 @@ pub(super) fn section_heading(
     let fire = move |_: &gtk::Button| {
         let _ = s.send(msg.clone());
     };
-    let heading: gtk::Widget = match chevron {
-        Some(btn) => {
-            btn.connect_clicked(fire);
-            let b = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-            b.add_css_class("heading-box");
-            content.set_hexpand(true);
-            b.append(content);
-            b.upcast()
-        }
-        None => {
-            let t = gtk::Button::new();
-            t.add_css_class("flat");
-            t.set_child(Some(content));
-            t.connect_clicked(fire);
-            t.upcast()
-        }
-    };
+    let heading = gtk::Button::new();
+    heading.add_css_class("flat");
+    if let Some(btn) = chevron {
+        btn.connect_clicked(fire.clone());
+        content.set_hexpand(true);
+    }
+    heading.set_child(Some(content));
+    heading.connect_clicked(fire);
     heading.add_css_class("folders-toggle");
     for c in classes {
         heading.add_css_class(c);
     }
-    heading
+    heading.upcast()
 }
 
 /// The Gravatar an account asked for (#189), once the app has looked it up.

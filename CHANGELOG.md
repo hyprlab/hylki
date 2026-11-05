@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Fixed: the Labels heading only opened from its arrow** (#583). A click
+  anywhere on an account's Folders, Labels or Tags heading now opens or
+  closes the section, as a click on the Smart Folders header does.
+
 - **Fixed: a PDF with a password froze the app** (#582). Opening one, or any
   other PDF that cannot be read, kept the app busy until it was killed. The
   preview now says **No preview available**, and **Open** hands the file to

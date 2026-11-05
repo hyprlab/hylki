@@ -670,15 +670,6 @@ flowbox.attach-flow > flowboxchild {
   margin: 0 6px;
   border-radius: 9px;
 }
-/* In the full sidebar only a heading's chevron folds its section, as a
-   parent folder's arrow does, so the heading is a plain box
-   (ui/sidebar.rs `section_heading`) laid out like the button it is in the
-   rail: Adwaita's button padding, height floor and weight. */
-.folders-toggle.heading-box {
-  min-height: 24px;
-  padding: 5px 10px;
-  font-weight: bold;
-}
 .folders-toggle label {
   font-weight: 600;
   opacity: 0.65;
