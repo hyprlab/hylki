@@ -952,6 +952,9 @@ msgstr ""
 msgid "Send the message you are writing"
 msgstr ""
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr ""
 
@@ -2844,6 +2847,17 @@ msgstr ""
 msgid "Save Attachment"
 msgstr ""
 
+msgid "Open “{name}”?"
+msgstr ""
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust whoever sent it."
+msgstr ""
+
+msgid "Open Anyway"
+msgstr ""
+
 msgid "The file could not be opened"
 msgstr ""
 
@@ -3171,8 +3185,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -5658,6 +5672,7 @@ msgstr ""
 msgid "General"
 msgstr ""
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr ""
 

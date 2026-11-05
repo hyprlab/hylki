@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Added: a warning before opening a program or a script.** An attachment
+  such as a `.desktop`, `.sh`, `.AppImage`, `.jar` or `.exe` file, or one
+  whose first bytes say it is a program whatever its name, asks before it
+  opens.
+
 - **Fixed: `w` and `b` left a message card under the bar above it** (#587, by
   James Reilly). The card's top border and selection outline were cut off. The
   card now stops 14 px below the bar, as it does when focused for a reply.
