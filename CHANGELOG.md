@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Fixed: Focus Mode's list rows held their text above the middle of the
+  highlight.** It is now centered. Rows with avatars switched off outside Focus
+  Mode keep their text at the top.
+
 - **Changed: a click on an account's avatar in the icon rail opens its Inbox**
   (#594, suggested by Alp Sahin). A long press or a double click now opens or
   closes its folders. The avatar is lit while a folder of that account is open

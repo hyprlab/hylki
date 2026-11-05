@@ -1002,6 +1002,18 @@ flowbox.attach-flow > flowboxchild {
   margin-right: 1px;
 }
 
+/* Focus Mode takes the circles away for a quieter list, and there the text
+   sits in the middle of its pill. Same height with the palette on: the ⋯ rides
+   the pill's bottom edge, below the line's baseline. */
+.focus-list .message-row.no-avatar:not(.single-line) {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.focus-list .message-row.no-avatar:not(.single-line):not(.no-palette) {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
 /* Palette + avatars + previews off: a two-line row is too short for
    the floating ⋯ to clear the circle, so the pill reserves exactly the height
    the pair needs — centred 38px circle, 2px air, the ⋯ riding 1px off the
