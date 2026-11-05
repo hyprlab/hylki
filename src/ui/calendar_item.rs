@@ -339,6 +339,10 @@ impl Moment {
         let time = gtk::MenuButton::new();
         time.set_popover(Some(&time_popover));
         time.set_valign(gtk::Align::Center);
+        // Tabular figures, so 09:00 is as wide as 10:00 and the buttons of
+        // Starts and Ends line up.
+        button.add_css_class("numeric");
+        time.add_css_class("numeric");
         let m = Moment {
             date: Rc::new(Cell::new(at.date_naive())),
             button,
@@ -366,8 +370,16 @@ impl Moment {
     }
 
     fn row(&self, title: &str) -> adw::ActionRow {
+        // The title is a prefix rather than the row's own: that one wraps
+        // anywhere, so in a dialog this narrow the buttons squeezed it to a
+        // letter per line. A label that does not wrap keeps its word and
+        // widens the dialog instead.
+        let label = gtk::Label::new(Some(title));
+        label.set_xalign(0.0);
+        label.set_hexpand(true);
         let row = adw::ActionRow::new();
-        row.set_title(title);
+        row.add_prefix(&label);
+        row.update_property(&[gtk::accessible::Property::Label(title)]);
         let suffix = gtk::Box::new(gtk::Orientation::Horizontal, 6);
         suffix.append(&self.button);
         suffix.append(&self.time);
