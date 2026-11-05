@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Fixed: row titles broke letter by letter in New Event and New Task** (#564).
+  The dialog was too narrow for a title beside a date and a time, in a long
+  translation or a large font. It is now wider.
+
 - **Fixed: a column's resize line stood on its heading's first letter** (#579).
   The handle now sits in the gap between two columns.
 
