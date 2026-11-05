@@ -65,7 +65,7 @@
   <releases>
     <release version="1.48.0-beta.1" date="2026-11-04" type="development">
       <description>
-        <p>AI agents reach your mail over MCP, as far as you allow, and a long conversation no longer uses all the memory.</p>
+        <p>AI agent access over MCP with per-account permissions and a long conversation no longer using all the memory.</p>
       </description>
     </release>
     <release version="1.47.0-beta.5" date="2026-11-03" type="development">
