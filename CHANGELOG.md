@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: a message sent from a Microsoft account could end in a 404** (#538).
+  A message that had been saved as a draft, often one with pictures in it,
+  went out, yet the status bar said it could not be loaded. Microsoft keeps a
+  message in Drafts until it has gone, and the app read Drafts in that moment,
+  then asked for the message after it had moved to Sent. Drafts is now updated
+  without asking the server.
+
 - **Fixed: a PDF with a password froze the app** (#582). Opening one, or any
   other PDF that cannot be read, kept the app busy until it was killed. The
   preview now says **No preview available**, and **Open** hands the file to
