@@ -32,6 +32,99 @@ pub(crate) fn save_attachment_as(
     });
 }
 
+/// File name endings that run as a program, or carry one, when opened with
+/// the desktop's default handler: the ones a file manager would at least
+/// ask about, and the Windows ones a Wine install hands to Wine.
+const RISKY_EXTENSIONS: &[&str] = &[
+    "desktop",
+    "sh",
+    "bash",
+    "zsh",
+    "ksh",
+    "csh",
+    "fish",
+    "command",
+    "run",
+    "bin",
+    "elf",
+    "so",
+    "appimage",
+    "flatpakref",
+    "flatpakrepo",
+    "deb",
+    "rpm",
+    "apk",
+    "snap",
+    "jar",
+    "py",
+    "pyc",
+    "pl",
+    "rb",
+    "php",
+    "exe",
+    "msi",
+    "com",
+    "scr",
+    "pif",
+    "bat",
+    "cmd",
+    "ps1",
+    "psm1",
+    "vbs",
+    "vbe",
+    "js",
+    "jse",
+    "wsf",
+    "wsh",
+    "hta",
+    "lnk",
+    "reg",
+    "cpl",
+    "msc",
+    "dll",
+    "docm",
+    "xlsm",
+    "pptm",
+    "dotm",
+    "xltm",
+];
+
+/// Whether an attachment is a program or a script by its name, or by its
+/// first bytes (an ELF or Windows binary, or a `#!` script) whatever it is
+/// called. Its name and type come from whoever sent it, so the bytes are
+/// looked at too.
+fn is_risky_attachment(name: &str, data: &[u8]) -> bool {
+    let name = name.trim_end_matches(|c: char| c == '.' || c.is_whitespace());
+    let risky_name = name.rsplit_once('.').is_some_and(|(stem, ext)| {
+        !stem.is_empty()
+            && RISKY_EXTENSIONS
+                .iter()
+                .any(|r| r.eq_ignore_ascii_case(ext.trim()))
+    });
+    risky_name || data.starts_with(b"\x7fELF") || data.starts_with(b"MZ") || data.starts_with(b"#!")
+}
+
+/// Open an attachment, asking first when it is a program or a script (see
+/// [`is_risky_attachment`]): a sender can name a launcher `invoice.pdf` in
+/// the list but not change what the default handler does with it.
+pub(crate) fn open_bytes(name: &str, data: &[u8], parent: Option<&gtk::Window>) {
+    if !is_risky_attachment(name, data) {
+        open_now(name, data, parent);
+        return;
+    }
+    let (owned_name, owned_data, owned_parent) = (name.to_string(), data.to_vec(), parent.cloned());
+    crate::ui::dialog::confirm_destructive(
+        parent,
+        &crate::i18n::i18n_f("Open “{name}”?", &[("name", name)]),
+        &i18n(
+            "This attachment is a program or a script. Opening it can run it with your permissions. Open it only if you expected it and trust whoever sent it.",
+        ),
+        "open",
+        &i18n("Open Anyway"),
+        move || open_now(&owned_name, &owned_data, owned_parent.as_ref()),
+    );
+}
+
 /// Write bytes to a temp file and open it in the default application.
 ///
 /// The filename comes from an email, so it comes from whoever sent it. The
@@ -46,7 +139,7 @@ pub(crate) fn save_attachment_as(
 /// (common for attachments — nothing may ever have been "set as default" for
 /// a `.pdf`) the portal falls back to GNOME's own app-chooser dialog instead
 /// of silently doing nothing.
-pub(crate) fn open_bytes(name: &str, data: &[u8], parent: Option<&gtk::Window>) {
+fn open_now(name: &str, data: &[u8], parent: Option<&gtk::Window>) {
     let safe: String = name
         .chars()
         .map(|c| {
@@ -321,6 +414,32 @@ pub(crate) fn purge_attachment_dir() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn programs_and_scripts_are_asked_about_by_name_or_by_bytes() {
+        for (name, data, risky) in [
+            ("report.pdf", &b"%PDF-1.7"[..], false),
+            ("photo.JPG", b"\xff\xd8\xff", false),
+            ("notes.txt", b"plain words", false),
+            ("invite.ics", b"BEGIN:VCALENDAR", false),
+            ("setup.desktop", b"[Desktop Entry]", true),
+            ("install.sh", b"echo", true),
+            ("Tool.AppImage", b"", true),
+            ("app.jar", b"PK", true),
+            ("invoice.pdf.exe", b"", true),
+            ("invoice.exe. ", b"", true),
+            ("macro.DOCM", b"PK", true),
+            // What the name hides, the first bytes give away.
+            ("invoice.pdf", b"\x7fELF\x02\x01", true),
+            ("readme.txt", b"#!/bin/sh\nrm -rf ~", true),
+            ("cv.doc", b"MZ\x90\x00", true),
+            // A dot file is a name, not an ending.
+            (".sh", b"", false),
+            ("noextension", b"", false),
+        ] {
+            assert_eq!(is_risky_attachment(name, data), risky, "{name}");
+        }
+    }
 
     #[cfg(unix)]
     #[test]

@@ -2484,6 +2484,11 @@ connection when Settings asks to save data there. It is off by default,
 because a sender's tracking pixel then reports a message as opened before you
 open it. Stored as `remote_ahead` in `privacy.toml`.
 
+**Attachments that are programs or scripts**, such as `.desktop`, `.sh`,
+`.AppImage`, `.jar` or `.exe` files, or a file whose first bytes say it is
+one whatever its name, are asked about before they open: opening one can run
+it.
+
 **Read receipts** are sent only when you press **Send Receipt**, unless
 **Settings → Privacy → Send read receipts** is **Always**. See
 [Read receipts](#read-receipts).
