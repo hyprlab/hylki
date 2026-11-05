@@ -1,0 +1,3 @@
+[submodule "native/tuta/upstream"]
+	path = native/tuta/upstream
+	url = https://github.com/spartanz51/tutabridge.git

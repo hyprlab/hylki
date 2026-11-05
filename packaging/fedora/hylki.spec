@@ -7,7 +7,8 @@ Name:           hylki
 Version:        1.47.0
 Release:        1%{?dist}
 Summary:        A clean, fast GNOME-native email client
-License:        AGPL-3.0-or-later
+# The Tuta helper, /usr/bin/hylki-tuta, is GPL-3.0-or-later.
+License:        AGPL-3.0-or-later AND GPL-3.0-or-later
 URL:            https://hylki.hyprlab.co
 Source0:        %{name}-%{version}-bin.tar
 
@@ -34,6 +35,8 @@ and blocks trackers by default - no telemetry, no analytics.
 
 %install
 install -Dm755 hylki %{buildroot}%{_bindir}/hylki
+# The Tuta helper, beside hylki, where the app looks for it first.
+install -Dm755 hylki-tuta %{buildroot}%{_bindir}/hylki-tuta
 # The dnf repository on hylki.hyprlab.co, the same file the site serves at
 # /rpm/hylki.repo: an RPM installed from a download then updates with the rest
 # of the system. noreplace keeps a user's own edits (enabled=0) on upgrade.
@@ -65,6 +68,7 @@ done
 %files -f %{name}.lang
 %license LICENSE
 %{_bindir}/hylki
+%{_bindir}/hylki-tuta
 %config(noreplace) %{_sysconfdir}/yum.repos.d/hylki.repo
 %config(noreplace) %{_sysconfdir}/yum.repos.d/hylki-beta.repo
 %{_datadir}/applications/%{appid}.desktop

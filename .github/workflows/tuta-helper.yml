@@ -1,0 +1,46 @@
+name: Tuta helper tests
+
+# The Tuta helper (native/tuta) is a crate of its own, with its own lock file,
+# built against the Tuta SDK that sdk-prepare.py generates from the
+# submodules. Its tests run here on every change to it; the app itself has
+# no test workflow.
+
+on:
+  push:
+    paths:
+      - 'native/tuta/**'
+      - '.gitmodules'
+      - '.github/workflows/tuta-helper.yml'
+  pull_request:
+    paths:
+      - 'native/tuta/**'
+      - '.gitmodules'
+      - '.github/workflows/tuta-helper.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: cargo test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Prepare the Tuta SDK
+        run: python3 native/tuta/upstream/scripts/sdk-prepare.py
+
+      - name: Fetch the crates
+        # Fetched first so the tests run as the packaged builds do: offline,
+        # from the lock file alone.
+        working-directory: native/tuta
+        run: cargo fetch --locked
+
+      - name: Test
+        working-directory: native/tuta
+        run: cargo test --locked --offline

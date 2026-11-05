@@ -43,4 +43,15 @@ with the [Eclipse Temurin](https://adoptium.net) Java runtime (GPL-2.0 with
 the Classpath Exception). Each runs as a program of its own, under its own
 licence, and is not part of Hylki.
 
+## Tuta helper
+
+Tuta accounts go through `hylki-tuta`, a helper program built from
+`native/tuta` and shipped beside `hylki` in every package. It originates in [Postcard](https://github.com/gxanshu/postcard) and its [tuna-os fork](https://github.com/tuna-os/postcard).
+It builds on
+[tutabridge](https://github.com/spartanz51/tutabridge) and the
+[Tuta SDK](https://github.com/tutao/tutanota), and is licensed under the
+GNU General Public License v3.0 or later (GPL-3.0-or-later), which is
+compatible with the AGPL-3.0. It runs as a separate program under its own
+licence.
+
 © 2026 Hyprlab

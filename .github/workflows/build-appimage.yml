@@ -43,10 +43,17 @@ jobs:
     container: ghcr.io/pkgforge-dev/archlinux:latest
 
     steps:
+      # actions/checkout clones with git when it is installed, and only a
+      # clone brings the submodules: the Tuta helper's upstream and the
+      # tutanota checkout sdk-prepare.py reads (the build script runs it).
+      - name: Install git
+        run: pacman -Sy --noconfirm --needed git
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
           path: src
+          submodules: recursive
 
       # The build script as this workflow knows it. A run started by hand
       # builds an older tag, whose own copy may not make the beta app or
@@ -58,7 +65,11 @@ jobs:
 
       - name: Build
         # The script notices it is already inside Arch and builds in place.
-        run: HYLKI_APPIMAGE_SRC="$PWD/src" ci/tools/build-appimage.sh
+        # sdk-prepare.py runs git in the submodules, which can belong to
+        # another user than the container's root.
+        run: |
+          git config --global --add safe.directory '*'
+          HYLKI_APPIMAGE_SRC="$PWD/src" ci/tools/build-appimage.sh
 
       - name: Check the result is the right app, architecture and channel
         # `appinfo` is written beside the bundle by quick-sharun; the same

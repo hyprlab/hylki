@@ -73,6 +73,12 @@ if [ ! -f /etc/arch-release ]; then
     # `label=disable`: SELinux would otherwise deny the container access to
     # the repository rather than relabel it, and relabelling a working tree
     # to please one build is not a trade worth making.
+    #
+    # The Tuta helper's SDK is prepared here first: sdk-prepare.py checks the
+    # submodules' git metadata, which the copy leaves out.
+    if [ -f "$ROOT/native/tuta/Cargo.toml" ]; then
+        python3 "$ROOT/native/tuta/upstream/scripts/sdk-prepare.py"
+    fi
     exec podman run --rm \
         --security-opt label=disable \
         -v "$ROOT":/src:ro \
@@ -84,7 +90,10 @@ if [ ! -f /etc/arch-release ]; then
         sh -euc '
             mkdir -p /build
             tar -C /src --exclude=./target --exclude=./temp --exclude=./.git \
-                        --exclude=./dist --exclude=./packaging/out -cf - . \
+                        --exclude=./dist --exclude=./packaging/out \
+                        --exclude=./native/tuta/target \
+                        --exclude=./native/tuta/upstream/target \
+                        --exclude=./native/tuta/upstream/tuta-repo -cf - . \
                 | tar -C /build -xf -
             HYLKI_APPIMAGE_SRC=/build exec /here/tools/build-appimage.sh
         '
@@ -130,11 +139,28 @@ echo "==> Building the release binary ($APP_ID $VERSION)"
 cd "$ROOT"
 cargo build --release "${FEATURES[@]}"
 
+# The Tuta helper, in every tree from the one that added it. In CI the
+# checkout is here with its git metadata, so the SDK is prepared in place; a
+# copy made by the host side above was prepared before it was made.
+HELPERS=()
+if [ -f native/tuta/Cargo.toml ]; then
+    echo "==> Building the Tuta helper"
+    if git -C native/tuta/upstream rev-parse --git-dir >/dev/null 2>&1; then
+        python3 native/tuta/upstream/scripts/sdk-prepare.py
+    fi
+    ( cd native/tuta && cargo build --release --locked )
+    HELPERS+=(/usr/bin/hylki-tuta)
+fi
+
 echo "==> Installing into /usr"
 # The same layout the RPM installs (packaging/fedora/hylki.spec): the
 # collector reads the app out of /usr, and the app's own paths are relative to
 # the binary, so what works there works inside the bundle.
 install -Dm755 target/release/hylki /usr/bin/hylki
+# The Tuta helper, beside hylki, where the app looks for it first.
+if [ "${#HELPERS[@]}" -gt 0 ]; then
+    install -Dm755 native/tuta/target/release/hylki-tuta /usr/bin/hylki-tuta
+fi
 install -d /usr/share/applications /usr/share/metainfo
 msgfmt --desktop --template="data/$APP_ID.desktop" -d po -o "/usr/share/applications/$APP_ID.desktop"
 msgfmt --xml --template="data/$APP_ID.metainfo.xml" -d po -o "/usr/share/metainfo/$APP_ID.metainfo.xml"
@@ -180,7 +206,9 @@ export UPINFO="zsync|$UPDATES"
 # module that makes WebKit honour the desktop's proxy settings, and
 # enchant_hunspell is the only spell-check backend we want (the aspell,
 # hspell, nuspell and voikko ones would each drag in a library of their own).
+# HELPERS holds the Tuta helper, which the app runs from beside itself.
 quick-sharun /usr/bin/hylki \
+    "${HELPERS[@]}" \
     /usr/lib/gio/modules/libgiognomeproxy.so \
     /usr/lib/enchant-2/enchant_hunspell.so
 

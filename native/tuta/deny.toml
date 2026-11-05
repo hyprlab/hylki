@@ -1,0 +1,66 @@
+# cargo-deny configuration for the Tuta native helper (issue #18).
+# CI runs `cargo deny check` (advisories + bans + licenses + sources) against
+# the Cargo.lock graph. Triage and exception policy: docs/supply-chain.md.
+#
+# The allow list below is the exact identifier union over the 282 locked
+# registry crates (enumerated from crates.io, 2026-11-03) and the pinned
+# uniffi-rs git checkout, plus both GPL-3 variants for this workspace,
+# tutabridge-tuta, and the generated SDK crates (whose license-file is stock
+# GPL-3.0 text). MPL-2.0 is the uniffi crates' license: weak copyleft,
+# GPL-compatible, allowed consciously since this workspace is
+# GPL-3.0-or-later. A new license appearing in the graph fails the check
+# until a human allows it here.
+
+[licenses]
+allow = [
+    "Apache-2.0",
+    "BSD-1-Clause",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BlueOak-1.0.0",
+    "CC0-1.0",
+    "CDLA-Permissive-2.0",
+    "GPL-3.0-only",
+    "GPL-3.0-or-later",
+    "ISC",
+    "LGPL-2.1-or-later",
+    "MIT",
+    "MIT-0",
+    "MPL-2.0",
+    "Unicode-3.0",
+    "Unlicense",
+]
+# Anything not allowed above fails the check. Copyleft needs no extra flag:
+# this workspace is GPL-3.0-or-later, so the GPL entries are the allowance.
+
+[advisories]
+# Vulnerabilities, unsoundness, and notices fail the check unconditionally in
+# deny 0.20 (no severity knobs left); see docs/supply-chain.md for the
+# ignore-with-issue escape hatch. Yanked versions only warn: they still build.
+yanked = "warn"
+# Unmaintained is not a gate: the locked graph carries six unmaintained
+# advisories on stable transitive crates with no upgrade path (bincode 1.3.3,
+# paste, basic-toml, pqcrypto-*) — unmaintained is not vulnerable, and
+# freshness is tracked via dependabot instead.
+unmaintained = "none"
+ignore = [
+    # RUSTSEC-2023-0071 (rsa Marvin timing sidechannel): no fixed release
+    # exists — patched = [] is intentional and latest stable is still
+    # affected. The helper runs locally (stdio, exits), matching the
+    # advisory's own "local use is fine" workaround. Re-check 2027-05-01;
+    # the tuta lane should file a tracking issue for removal/replacement.
+    { id = "RUSTSEC-2023-0071", reason = "no fixed release available; local-only use per advisory workarounds; re-check 2027-05-01; see #46" },
+]
+
+[bans]
+# Sixteen crates currently resolve to two versions each (see Cargo.lock);
+# collapsing them is tuta-lane work, so duplicates warn rather than fail.
+multiple-versions = "warn"
+wildcards = "allow"
+
+[sources]
+# The locked graph uses crates.io plus one pinned git checkout (uniffi-rs,
+# required by the generated SDK); anything else is denied.
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-git = ["https://github.com/mozilla/uniffi-rs"]

@@ -8,7 +8,8 @@ oauth.toml
 # Developer scratch / asset drop-off
 /temp
 
-# Generated for the offline Flatpak build (regenerate from Cargo.lock)
+# Generated for the offline Flatpak build (regenerate from Cargo.lock): the
+# app's at the top, the Tuta helper's in native/tuta
 cargo-sources.json
 
 # Self-hosted Flatpak distribution (signed repo, private GPG key)

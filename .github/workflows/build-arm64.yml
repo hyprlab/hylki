@@ -37,6 +37,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
+          # The Tuta helper's upstream (native/tuta/upstream) and the
+          # tutanota checkout inside it, which sdk-prepare.py reads.
+          submodules: recursive
 
       # The manifest script as this workflow knows it. A run started by hand
       # builds an older tag, whose own copy may not handle the beta yet.
@@ -104,33 +107,50 @@ jobs:
             exit 1
           fi
 
+      - name: Prepare the Tuta SDK
+        # The helper builds against an SDK generated from the tutanota
+        # submodule. The generated tree is not tracked, so it is made here and
+        # carried into the build by the working-tree manifest. An older tag
+        # has no helper.
+        run: |
+          if [ -f native/tuta/Cargo.lock ]; then
+            python3 native/tuta/upstream/scripts/sdk-prepare.py
+          fi
+
       - name: Vendor the crate sources
         # cargo-sources.json is generated, not committed — it pins every crate
         # tarball so the build inside the sandbox needs no network. It comes out
         # of Cargo.lock, which is committed, so this reproduces the file the
-        # maintainer builds x86_64 from.
+        # maintainer builds x86_64 from. The Tuta helper has a lock file and a
+        # cargo-sources.json of its own.
         run: |
           curl -fsSL -o /tmp/gen-cargo-sources.py \
             https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/master/cargo/flatpak-cargo-generator.py
-          # The generator's dependencies drift (it moved from toml to tomlkit),
-          # and it is fetched from master rather than a tag. Install whatever it
-          # turns out to want instead of guessing: run it, and on a missing
-          # module install that module and try again.
-          for attempt in 1 2 3; do
-            if python3 /tmp/gen-cargo-sources.py Cargo.lock -o cargo-sources.json 2>/tmp/gen.err; then
-              break
-            fi
-            cat /tmp/gen.err
-            module="$(sed -n "s/.*No module named '\([^']*\)'.*/\1/p" /tmp/gen.err | head -1)"
-            if [ -z "$module" ]; then
-              echo "generator failed for a reason other than a missing module" >&2
-              exit 1
-            fi
-            echo "installing missing module: $module"
-            pip install --break-system-packages "$module"
-          done
-          test -s cargo-sources.json
-          echo "vendored $(python3 -c 'import json;print(len(json.load(open("cargo-sources.json"))))') crate sources"
+          vendor() {
+            # The generator's dependencies drift (it moved from toml to tomlkit),
+            # and it is fetched from master rather than a tag. Install whatever it
+            # turns out to want instead of guessing: run it, and on a missing
+            # module install that module and try again.
+            for attempt in 1 2 3; do
+              if python3 /tmp/gen-cargo-sources.py "$1/Cargo.lock" -o "$1/cargo-sources.json" 2>/tmp/gen.err; then
+                break
+              fi
+              cat /tmp/gen.err
+              module="$(sed -n "s/.*No module named '\([^']*\)'.*/\1/p" /tmp/gen.err | head -1)"
+              if [ -z "$module" ]; then
+                echo "generator failed for a reason other than a missing module" >&2
+                exit 1
+              fi
+              echo "installing missing module: $module (attempt $attempt)"
+              pip install --break-system-packages "$module"
+            done
+            test -s "$1/cargo-sources.json"
+            echo "vendored $(python3 -c 'import json,sys;print(len(json.load(open(sys.argv[1]))))' "$1/cargo-sources.json") crate sources for $1"
+          }
+          vendor .
+          if [ -f native/tuta/Cargo.lock ]; then
+            vendor native/tuta
+          fi
 
       - name: Build
         # The manifest's pinned source points at the *previous* release when this
@@ -151,6 +171,9 @@ jobs:
       - name: Check the result is actually ARM64
         run: |
           file build-dir/files/bin/hylki | tee /dev/stderr | grep -q 'ARM aarch64'
+          if [ -f native/tuta/Cargo.toml ]; then
+            file build-dir/files/bin/hylki-tuta | tee /dev/stderr | grep -q 'ARM aarch64'
+          fi
           # Guard against building the wrong revision: the app's version has to
           # match the checkout's Cargo.toml.
           want="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
@@ -185,7 +208,7 @@ jobs:
         run: |
           dnf install -y --setopt=install_weak_deps=False git tar gzip gcc gcc-c++ \
             gtk4-devel libadwaita-devel webkitgtk6.0-devel poppler-glib-devel \
-            openssl-devel gettext-devel wayland-devel gettext rpm-build
+            openssl-devel gettext-devel wayland-devel gettext rpm-build python3
           # The same rustup stable the x86_64 RPM is built with, not Fedora's
           # packaged Rust, which can trail the language features in use.
           curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal
@@ -194,6 +217,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
+          submodules: recursive
 
       - uses: actions/checkout@v4
         with:
@@ -207,6 +231,9 @@ jobs:
         # turns the version's dash into a tilde with bash's ${//}.
         shell: bash
         run: |
+          # sdk-prepare.py runs git in the submodules, which can belong to
+          # another user than the container's root.
+          git config --global --add safe.directory '*'
           cp ci/tools/build-packages.sh tools/build-packages.sh
           tools/build-packages.sh rpm
           rpm=$(ls packaging/out/hylki-*.aarch64.rpm)
@@ -234,8 +261,13 @@ jobs:
       - name: Install on a clean Fedora and check its libraries
         run: |
           dnf install -y ./hylki-*.aarch64.rpm file
-          file /usr/bin/hylki | grep -q 'ARM aarch64'
-          if ldd /usr/bin/hylki | grep 'not found'; then exit 1; fi
+          bins=/usr/bin/hylki
+          # The Tuta helper, in every package from the one that added it.
+          if [ -e /usr/bin/hylki-tuta ]; then bins="$bins /usr/bin/hylki-tuta"; fi
+          for bin in $bins; do
+            file "$bin" | grep -q 'ARM aarch64'
+            if ldd "$bin" | grep 'not found'; then exit 1; fi
+          done
           rpm -q hylki
 
   deb:
@@ -251,6 +283,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
+          submodules: recursive
 
       - uses: actions/checkout@v4
         with:
@@ -264,6 +297,9 @@ jobs:
         # turns the version's dash into a tilde with bash's ${//}.
         shell: bash
         run: |
+          # sdk-prepare.py runs git in the submodules, which can belong to
+          # another user than the container's root.
+          git config --global --add safe.directory '*'
           cp ci/tools/build-packages.sh tools/build-packages.sh
           tools/build-packages.sh deb
           deb=$(ls /out/hylki_*_arm64.deb)
@@ -293,6 +329,11 @@ jobs:
         run: |
           apt-get update -qq
           DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ./hylki_*_arm64.deb file
-          file /usr/bin/hylki | grep -q 'ARM aarch64'
-          if ldd /usr/bin/hylki | grep 'not found'; then exit 1; fi
+          bins=/usr/bin/hylki
+          # The Tuta helper, in every package from the one that added it.
+          if [ -e /usr/bin/hylki-tuta ]; then bins="$bins /usr/bin/hylki-tuta"; fi
+          for bin in $bins; do
+            file "$bin" | grep -q 'ARM aarch64'
+            if ldd "$bin" | grep 'not found'; then exit 1; fi
+          done
           dpkg -s hylki | grep -q '^Status: install ok installed'

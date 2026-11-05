@@ -31,6 +31,36 @@ cargo build --release
 ./uninstall.sh        # removes them again (--purge also removes settings and the mail cache)
 ```
 
+## Tuta helper
+
+Tuta accounts go through `hylki-tuta`, a separate program built from
+`native/tuta` (GPL-3.0-or-later). Hylki looks for it next to the `hylki`
+executable first, then on `PATH`, so every package installs it in the same
+`bin` directory as `hylki`. Without it, everything but Tuta accounts works.
+
+The helper builds against the Tuta SDK, which is generated from two
+submodules: `native/tuta/upstream` (tutabridge) and the tutanota repository
+inside it. Check them out and prepare the SDK once, and again whenever the
+submodule moves:
+
+```sh
+git submodule update --init --recursive
+python3 native/tuta/upstream/scripts/sdk-prepare.py
+```
+
+The script needs `git` and `python3`, no network, and verifies the generated
+tree in `native/tuta/upstream/sdk/generated` against the digests the
+submodule pins; on a repeat run it only checks. Then build the helper and put
+it beside `hylki`:
+
+```sh
+(cd native/tuta && cargo build --release --locked)
+install -Dm755 native/tuta/target/release/hylki-tuta ~/.local/bin/hylki-tuta
+```
+
+`native/tuta` has its own `Cargo.lock`, and its tests run with
+`cargo test --locked` there (`.github/workflows/tuta-helper.yml`).
+
 ## Translations
 
 `tools/build-locale.sh` compiles `po/*.po` so a source-tree run picks them up;
@@ -42,10 +72,22 @@ See [po/README.md](../po/README.md).
 
 The manifest is `co.hyprlab.Hylki.yml`, built with `flatpak-builder` (or
 `org.flatpak.Builder`). Its Rust dependencies come from `cargo-sources.json`,
-which has to be regenerated whenever `Cargo.lock` changes:
+and the Tuta helper's from `native/tuta/cargo-sources.json`. Neither is
+committed; regenerate them whenever the matching `Cargo.lock` changes:
 
 ```sh
 python3 flatpak-cargo-generator.py Cargo.lock -o cargo-sources.json
+python3 flatpak-cargo-generator.py native/tuta/Cargo.lock -o native/tuta/cargo-sources.json
+```
+
+The `hylki-tuta` module builds the helper into `/app/bin` beside `hylki`.
+Prepare the Tuta SDK first, as above: the generated tree is not in git, so
+the manifest takes it from the checkout it is built in. To build the working
+tree rather than the tagged release, write a local manifest:
+
+```sh
+tools/local-manifest.sh /tmp/hylki-local.yml
+flatpak-builder --user --install --force-clean build-dir /tmp/hylki-local.yml
 ```
 
 ## RPM and Debian packages
@@ -64,7 +106,10 @@ Debian package is built inside a Debian 13 container (the script starts one
 with podman), because a binary built on Fedora needs a newer C library than
 Debian has, and Debian 13 is the oldest release with libadwaita 1.7. On a
 Debian host with the dependencies above and `dpkg-dev`, it builds in place.
-`dpkg-shlibdeps` works out the package's dependencies from the binary.
+`dpkg-shlibdeps` works out the package's dependencies from the binaries.
+Both packages carry the Tuta helper as `/usr/bin/hylki-tuta`; the script
+prepares the Tuta SDK and builds the helper itself, so the submodules have
+to be checked out.
 
 ## AppImage
 
@@ -80,7 +125,8 @@ checkout to build with this script, such as an older tag.
 
 The bundle also carries the spell-check dictionaries and a few fonts with a
 fontconfig file of their own (`packaging/appimage/fonts-fallback.conf`), which
-the message view falls back to when the system's fonts hang it (#296).
+the message view falls back to when the system's fonts hang it (#296), and the
+Tuta helper beside `hylki`, built the same way as for the packages.
 
 `.github/workflows/build-appimage.yml` builds it for x86_64 and aarch64 on
 every tag. Nothing is published from CI: the release attaches the two

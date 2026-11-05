@@ -1,0 +1,31 @@
+[package]
+name = "hylki-tuta"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.84"
+license = "GPL-3.0-or-later"
+publish = false
+
+[workspace]
+exclude = ["upstream", "upstream/sdk/generated"]
+
+[dependencies]
+tuta-sdk = { path = "upstream/sdk/generated/tuta-sdk/rust/sdk", features = ["net"] }
+tutabridge-tuta = { path = "upstream/crates/tuta" }
+# Pin rationale (issue #4): both resolve to versions already in Cargo.lock --
+# crypto-primitives 362.261020.0 from the same prepared SDK tree as tuta-sdk,
+# rand_core 0.6.4 as required by crypto-primitives and tutabridge-tuta. This
+# adds dependency edges only (no new crates or versions), so
+# cargo-sources.json is unchanged; verified by diffing the sorted
+# `cargo metadata` package list before and after (must be identical) and by
+# `cargo build --locked`. Needed to compose draft/send calls from the SDK's
+# public crypto (session keys, attachment encryption, blob upload), since
+# MailFacade exposes no send API at this pin.
+crypto-primitives = { path = "upstream/sdk/generated/tuta-sdk/rust/crypto-primitives" }
+rand_core = "0.6"
+async-trait = "0.1"
+base64 = "0.22"
+libc = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time"] }

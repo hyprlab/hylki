@@ -37,6 +37,34 @@ DEB_IMAGE="${HYLKI_DEB_IMAGE:-docker.io/library/rust:1-trixie}"
 [ -n "${HYLKI_DEB_CONTAINER:-}" ] && OUT=/out
 mkdir -p "$OUT"
 
+# The Tuta helper (native/tuta) builds against the Tuta SDK that
+# native/tuta/upstream/scripts/sdk-prepare.py writes from the submodules. The
+# script checks the submodules' git metadata, so it runs where the checkout
+# is; the Debian container gets a copy without .git, prepared on the host
+# before it was copied in. A tree from before the helper (CI builds older
+# tags with this script) has no native/tuta and packages hylki alone.
+HAS_TUTA=""
+[ -f "$ROOT/native/tuta/Cargo.toml" ] && HAS_TUTA=1
+
+prepare_tuta_sdk() {
+    [ -n "$HAS_TUTA" ] || return 0
+    if git -C "$ROOT/native/tuta/upstream" rev-parse --git-dir >/dev/null 2>&1; then
+        python3 "$ROOT/native/tuta/upstream/scripts/sdk-prepare.py"
+    elif [ ! -d "$ROOT/native/tuta/upstream/sdk/generated" ]; then
+        echo "native/tuta/upstream/sdk/generated is missing: run" \
+             "git submodule update --init --recursive and" \
+             "native/tuta/upstream/scripts/sdk-prepare.py" >&2
+        exit 1
+    fi
+}
+
+build_tuta_helper() {
+    [ -n "$HAS_TUTA" ] || return 0
+    echo "==> Building the Tuta helper"
+    prepare_tuta_sdk
+    ( cd "$ROOT/native/tuta" && cargo build --release --locked )
+}
+
 # The payload both packages carry, staged into $1: the release binary, the
 # launcher and metainfo with their translated fields merged in, a message
 # catalogue per po/<lang>.po (see po/README.md), and the icons.
@@ -44,6 +72,9 @@ stage_payload() {
     local stage="$1" po lang size
     mkdir -p "$stage/icons/256x256" "$stage/icons/512x512" "$stage/icons/scalable" "$stage/icons/symbolic"
     cp "$ROOT/target/release/hylki"              "$stage/hylki"
+    if [ -n "$HAS_TUTA" ]; then
+        cp "$ROOT/native/tuta/target/release/hylki-tuta" "$stage/hylki-tuta"
+    fi
     cp "$ROOT/LICENSE"                          "$stage/LICENSE"
     msgfmt --desktop --template="$ROOT/data/$APP_ID.desktop" -d "$ROOT/po" -o "$stage/$APP_ID.desktop"
     msgfmt --xml --template="$ROOT/data/$APP_ID.metainfo.xml" -d "$ROOT/po" -o "$stage/$APP_ID.metainfo.xml"
@@ -66,6 +97,7 @@ build_rpm() {
 
     echo "==> Building release binary (host)"
     ( cd "$ROOT" && cargo build --release )
+    build_tuta_helper
 
     echo "==> Staging RPM payload"
     local work stage
@@ -94,6 +126,8 @@ build_deb() {
         # so target/ is never shared with the host's builds, named volumes keep
         # the container's target/ and crate downloads between runs, and
         # `label=disable` spares relabelling the working tree for SELinux.
+        # The SDK the Tuta helper needs is prepared here, where .git is.
+        prepare_tuta_sdk
         podman run --rm \
             --security-opt label=disable \
             -e HYLKI_DEB_CONTAINER=1 \
@@ -106,7 +140,10 @@ build_deb() {
                 mkdir -p /build
                 tar -C /src --exclude=./target --exclude=./temp --exclude=./.git \
                             --exclude=./dist --exclude=./packaging/out \
-                            --exclude=./.flatpak-builder -cf - . \
+                            --exclude=./.flatpak-builder \
+                            --exclude=./native/tuta/target \
+                            --exclude=./native/tuta/upstream/target \
+                            --exclude=./native/tuta/upstream/tuta-repo -cf - . \
                     | tar -C /build -xf -
                 exec /build/tools/build-packages.sh deb
             '
@@ -117,13 +154,14 @@ build_deb() {
         echo "==> Installing build dependencies"
         apt-get update -qq
         DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
-            build-essential pkg-config dpkg-dev gettext \
+            build-essential pkg-config dpkg-dev gettext git python3 \
             libgtk-4-dev libadwaita-1-dev libwebkitgtk-6.0-dev libpoppler-glib-dev \
             libssl-dev libwayland-dev >/dev/null
     fi
 
     echo "==> Building release binary ($(. /etc/os-release && echo "$PRETTY_NAME"))"
     ( cd "$ROOT" && cargo build --release )
+    build_tuta_helper
 
     echo "==> Staging Debian package"
     local work stage pkg arch deps mo
@@ -133,6 +171,12 @@ build_deb() {
     arch="$(dpkg --print-architecture)"
     stage_payload "$stage"
     install -Dm755 "$stage/hylki" "$pkg/usr/bin/hylki"
+    # The Tuta helper, beside hylki, where the app looks for it first.
+    local -a binaries=("$pkg/usr/bin/hylki")
+    if [ -n "$HAS_TUTA" ]; then
+        install -Dm755 "$stage/hylki-tuta" "$pkg/usr/bin/hylki-tuta"
+        binaries+=("$pkg/usr/bin/hylki-tuta")
+    fi
     install -Dm644 "$stage/$APP_ID.desktop" "$pkg/usr/share/applications/$APP_ID.desktop"
     install -Dm644 "$stage/$APP_ID.metainfo.xml" "$pkg/usr/share/metainfo/$APP_ID.metainfo.xml"
     for size in 256x256 512x512 scalable symbolic; do
@@ -162,13 +206,17 @@ build_deb() {
         printf 'Upstream-Name: Hylki\nSource: https://github.com/hyprlab/hylki\n\n'
         printf 'Files: *\nCopyright: Hyprlab <hyprlab@proton.me>\nLicense: AGPL-3.0-or-later\n'
         sed 's/^[[:space:]]*$/./; s/^/ /' "$stage/LICENSE"
+        if [ -n "$HAS_TUTA" ]; then
+            printf '\nFiles: usr/bin/hylki-tuta\nCopyright: The Postcard and tutabridge authors\n'
+            printf 'License: GPL-3.0-or-later\n See /usr/share/common-licenses/GPL-3.\n'
+        fi
     } > "$pkg/usr/share/doc/hylki/copyright"
 
-    # dpkg-shlibdeps turns the libraries the binary links into package names
+    # dpkg-shlibdeps turns the libraries the binaries link into package names
     # and minimum versions; it wants a source control file to exist.
     mkdir -p "$work/debian"
     printf 'Source: hylki\n\nPackage: hylki\nArchitecture: any\n' > "$work/debian/control"
-    deps="$(cd "$work" && dpkg-shlibdeps -O -e"$pkg/usr/bin/hylki" 2>/dev/null)"
+    deps="$(cd "$work" && dpkg-shlibdeps -O "${binaries[@]/#/-e}" 2>/dev/null)"
     deps="${deps#shlibs:Depends=}"
     [ -n "$deps" ] || { echo "dpkg-shlibdeps found no dependencies" >&2; exit 1; }
     # The app's icons are SVG, which GTK reads through a gdk-pixbuf loader

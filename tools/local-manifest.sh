@@ -37,12 +37,15 @@ src, out, root = sys.argv[1], sys.argv[2], sys.argv[3]
 manifest = open(src).read()
 
 # The pinned GitHub source becomes the checkout itself. `skip` keeps build
-# output and the signed repo out of the copy flatpak-builder makes.
+# output, the signed repo and the Tuta helper's host-only weight (its build
+# output and the tutanota checkout only sdk-prepare.py reads) out of the copy
+# flatpak-builder makes.
 pinned = re.compile(
     r"      - type: git\n"
     r"        url: https://github\.com/hyprlab/hylki\.git\n"
     r"        tag: v[0-9][0-9A-Za-z.-]*\n"
     r"        commit: [0-9a-f]+\n"
+    r"(?:        disable-submodules: true\n)?"
 )
 local = (
     "      - type: dir\n"
@@ -53,14 +56,40 @@ local = (
     "          - dist\n"
     "          - target\n"
     "          - packaging/out\n"
+    "          - native/tuta/target\n"
+    "          - native/tuta/upstream/target\n"
+    "          - native/tuta/upstream/tuta-repo\n"
 )
+# Two modules build from this repository: the app and its Tuta helper
+# (native/tuta). A manifest from before the helper has only the app's.
+has_helper = "  - name: hylki-tuta\n" in manifest
+expected = 2 if has_helper else 1
 manifest, count = pinned.subn(local, manifest)
-if count != 1:
-    raise SystemExit(f"expected exactly one pinned git source, replaced {count}")
+if count != expected:
+    raise SystemExit(f"expected {expected} pinned git source(s), replaced {count}")
 
-# cargo-sources.json is referenced relative to the manifest, which is about to
-# move elsewhere.
+if has_helper:
+    # The checkout already holds the helper's upstream submodule and the SDK
+    # it was prepared with, so the pinned upstream and the separate SDK
+    # source would only overwrite the working tree's copies.
+    for block in (
+        r"      - type: git\n"
+        r"        url: https://github\.com/spartanz51/tutabridge\.git\n"
+        r"(?:        .*\n)+",
+        r"      - type: dir\n"
+        r"        path: native/tuta/upstream/sdk/generated\n"
+        r"(?:        .*\n)+",
+    ):
+        manifest, count = re.subn(block, "", manifest)
+        if count != 1:
+            raise SystemExit(f"expected one helper source matching {block!r}, removed {count}")
+
+# The cargo-sources.json files are referenced relative to the manifest, which
+# is about to move elsewhere.
 manifest = manifest.replace("      - cargo-sources.json\n", f"      - {root}/cargo-sources.json\n")
+manifest = manifest.replace(
+    "      - native/tuta/cargo-sources.json\n", f"      - {root}/native/tuta/cargo-sources.json\n"
+)
 
 open(out, "w").write(manifest)
 print(out)
