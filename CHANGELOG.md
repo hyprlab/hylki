@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: sending from a Microsoft account could report that a message could
+  not be loaded** (#538, by James Reilly). The message had gone out. Microsoft
+  keeps a sent message in Drafts until it moves to Sent, and the app could list
+  Drafts in that time, then ask for the message by an ID that no longer existed.
+  Drafts is now updated from the cache after a send.
+
 - **Fixed: `w` and `b` left a message card under the bar above it** (#587, by
   James Reilly). The card's top border and selection outline were cut off. The
   card now stops 14 px below the bar, as it does when focused for a reply.
