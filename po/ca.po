@@ -6203,9 +6203,6 @@ msgstr "Ves a l'arxiu"
 msgid "Move to Trash"
 msgstr "Mou el correu de llistes a la paperera"
 
-msgid "Mail already in Trash stays there."
-msgstr ""
-
 msgid "Allow AI assistants"
 msgstr ""
 

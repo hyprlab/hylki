@@ -5689,9 +5689,6 @@ msgstr ""
 msgid "Move to Trash"
 msgstr ""
 
-msgid "Mail already in Trash stays there."
-msgstr ""
-
 msgid "Allow AI assistants"
 msgstr ""
 

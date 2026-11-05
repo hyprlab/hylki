@@ -6228,9 +6228,6 @@ msgstr "Ir para Arquivo"
 msgid "Move to Trash"
 msgstr "Mover mensagens de listas para o Lixo"
 
-msgid "Mail already in Trash stays there."
-msgstr ""
-
 msgid "Allow AI assistants"
 msgstr ""
 

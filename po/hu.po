@@ -6433,9 +6433,6 @@ msgstr "Archiválás"
 msgid "Move to Trash"
 msgstr "Piszkozat áthelyezése a Kukába"
 
-msgid "Mail already in Trash stays there."
-msgstr ""
-
 msgid "Allow AI assistants"
 msgstr ""
 

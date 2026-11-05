@@ -6169,9 +6169,6 @@ msgstr "Μετάβαση στο Αρχείο"
 msgid "Move to Trash"
 msgstr "Μετακίνηση στον Κάδο"
 
-msgid "Mail already in Trash stays there."
-msgstr ""
-
 msgid "Allow AI assistants"
 msgstr ""
 

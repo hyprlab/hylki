@@ -6152,9 +6152,6 @@ msgstr "Aller à l’archive"
 msgid "Move to Trash"
 msgstr "Déplacer vers la Corbeille"
 
-msgid "Mail already in Trash stays there."
-msgstr ""
-
 msgid "Allow AI assistants"
 msgstr ""
 

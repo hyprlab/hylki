@@ -6456,9 +6456,6 @@ msgstr "Архив"
 msgid "Move to Trash"
 msgstr "Переместить этот черновик в «Корзину»"
 
-msgid "Mail already in Trash stays there."
-msgstr ""
-
 msgid "Allow AI assistants"
 msgstr ""
 

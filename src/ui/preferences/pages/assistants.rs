@@ -72,10 +72,7 @@ fn cap_text(cap: AssistantCap) -> (String, Option<String>) {
         AssistantCap::Star => (i18n("Add and remove stars"), None),
         AssistantCap::Tag => (i18n("Add and remove tags"), None),
         AssistantCap::Move => (i18n("Move and archive"), None),
-        AssistantCap::Trash => (
-            i18n("Move to Trash"),
-            Some(i18n("Mail already in Trash stays there.")),
-        ),
+        AssistantCap::Trash => (i18n("Move to Trash"), None),
     }
 }
 

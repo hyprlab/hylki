@@ -6385,9 +6385,6 @@ msgstr "Archivia"
 msgid "Move to Trash"
 msgstr "Sposta la posta di lista nel Cestino"
 
-msgid "Mail already in Trash stays there."
-msgstr ""
-
 msgid "Allow AI assistants"
 msgstr ""
 
