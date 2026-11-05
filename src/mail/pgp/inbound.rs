@@ -1,7 +1,7 @@
 //! Recognising signed and encrypted mail and unwrapping it for the reader.
 
-use super::keys::key_display;
-use super::status::{parse_status, signature_verdict};
+use super::keys::{key_addresses, key_display};
+use super::status::{parse_status, signature_verdict, Outcome};
 use super::{available, run, Gpg};
 use crate::i18n::{i18n, i18n_f};
 use crate::models::{PgpSignature, PgpStatus};
@@ -168,8 +168,40 @@ pub(crate) fn unwrap_message(raw: &[u8], gpg: &Gpg) -> Option<Unwrapped> {
     let shape = detect(raw)?;
     let mut unwrapped = unwrap_shape(shape, raw, gpg);
     unwrapped.status.sender_addr = from_address(raw);
+    check_signer(&mut unwrapped.status, gpg);
     unwrapped.status.autocrypt = autocrypt_key(raw).map(|k| crate::encoding::base64_encode(&k));
     Some(unwrapped)
+}
+
+/// A good signature proves the key's owner wrote the message, and the From
+/// is a claim anyone can type: unless one of the key's user ids is the From
+/// address, the signature says nothing about who the message is from, and
+/// a trusted key of the attacker's own would otherwise show green.
+fn check_signer(status: &mut PgpStatus, gpg: &Gpg) {
+    let from = status.sender_addr.clone();
+    let PgpSignature::Good {
+        key_id,
+        from_mismatch,
+        ..
+    } = &mut status.signature
+    else {
+        return;
+    };
+    // Nothing claimed, nothing to contradict.
+    if from.is_empty() || key_carries(&key_addresses(gpg, key_id), &from) {
+        return;
+    }
+    *from_mismatch = true;
+    status.notes.push(i18n_f(
+        "The signing key is not for {addr}, the address this message is from, so the signature does not show who sent it.",
+        &[("addr", &from)],
+    ));
+}
+
+/// Whether `from` is one of a key's user id addresses, ignoring case.
+pub(super) fn key_carries(addresses: &[String], from: &str) -> bool {
+    let from = from.trim();
+    addresses.iter().any(|a| a.eq_ignore_ascii_case(from))
 }
 
 /// The From address of a raw message, lowercased ("" when it has none).
@@ -207,10 +239,29 @@ fn unwrap_shape(shape: Shape, _raw: &[u8], gpg: &Gpg) -> Unwrapped {
     match shape {
         Shape::Encrypted { armored } | Shape::InlineEncrypted { armored } => {
             let out = run(gpg, &["--decrypt"], &armored, None);
-            let outcome = parse_status(&out.status_lines);
+            let mut outcome = parse_status(&out.status_lines);
             let decrypted = outcome.decryption_ok && !out.stdout.is_empty();
+            // A signer the keyring lacks may be one Hylki found: the
+            // signed message inside, unwrapped of its encryption, is
+            // checked again against those keys.
+            let mut by_found = false;
+            if decrypted && outcome.missing_key.is_some() && gpg.found_keyring_if_any().is_some() {
+                let inner = run(gpg, &["--unwrap"], &armored, None);
+                if !inner.stdout.is_empty() {
+                    if let Some(o) = recheck_with_found(gpg, &["--decrypt"], &inner.stdout, None) {
+                        outcome.sig = o.sig;
+                        outcome.fingerprint = o.fingerprint;
+                        outcome.trust = o.trust;
+                        outcome.missing_key = None;
+                        by_found = true;
+                    }
+                }
+            }
             let mut notes = Vec::new();
             let signature = signature_verdict(&outcome, &mut notes);
+            if by_found {
+                found_key_note(&signature, &outcome, &mut notes);
+            }
             if decrypted {
                 notes.insert(0, i18n("Decrypted with your key."));
             } else if let Some(k) = outcome.no_seckey.first() {
@@ -252,9 +303,20 @@ fn unwrap_shape(shape: Shape, _raw: &[u8], gpg: &Gpg) -> Unwrapped {
         }
         Shape::Signed { data, signature } => {
             let out = run(gpg, &["--verify"], &data, Some(&signature));
-            let outcome = parse_status(&out.status_lines);
+            let mut outcome = parse_status(&out.status_lines);
+            let by_found = outcome.missing_key.is_some()
+                && match recheck_with_found(gpg, &["--verify"], &data, Some(&signature)) {
+                    Some(o) => {
+                        outcome = o;
+                        true
+                    }
+                    None => false,
+                };
             let mut notes = Vec::new();
             let signature = signature_verdict(&outcome, &mut notes);
+            if by_found {
+                found_key_note(&signature, &outcome, &mut notes);
+            }
             if matches!(signature, PgpSignature::None) {
                 if let Some(d) = out.detail.clone() {
                     notes.push(d);
@@ -275,9 +337,20 @@ fn unwrap_shape(shape: Shape, _raw: &[u8], gpg: &Gpg) -> Unwrapped {
             // `--decrypt` on a clear-signed block verifies it and prints the
             // signed text, dearmoured.
             let out = run(gpg, &["--decrypt"], &text, None);
-            let outcome = parse_status(&out.status_lines);
+            let mut outcome = parse_status(&out.status_lines);
+            let by_found = outcome.missing_key.is_some()
+                && match recheck_with_found(gpg, &["--decrypt"], &text, None) {
+                    Some(o) => {
+                        outcome = o;
+                        true
+                    }
+                    None => false,
+                };
             let mut notes = Vec::new();
             let signature = signature_verdict(&outcome, &mut notes);
+            if by_found {
+                found_key_note(&signature, &outcome, &mut notes);
+            }
             let inner = if out.stdout.is_empty() {
                 text_entity(&text)
             } else {
@@ -294,6 +367,34 @@ fn unwrap_shape(shape: Shape, _raw: &[u8], gpg: &Gpg) -> Unwrapped {
                 },
             }
         }
+    }
+}
+
+/// A signature by a key the user's keyring lacks, checked again against
+/// Hylki's own keyring of found keys (Autocrypt, gossip, WKD). The outcome
+/// there, when that keyring had the key; nobody vouched for one, so its
+/// trust is unknown whatever gpg says.
+fn recheck_with_found(
+    gpg: &Gpg,
+    args: &[&str],
+    input: &[u8],
+    detached_sig: Option<&[u8]>,
+) -> Option<Outcome> {
+    let found = gpg.found_keyring_if_any()?;
+    let out = run(&found, args, input, detached_sig);
+    let mut o = parse_status(&out.status_lines);
+    o.trust = Some(crate::models::PgpTrust::Unknown);
+    o.sig.is_some().then_some(o)
+}
+
+/// Say where a good signature's key came from: not the user's keyring.
+fn found_key_note(signature: &PgpSignature, o: &Outcome, notes: &mut Vec<String>) {
+    if let PgpSignature::Good { key_id, .. } = signature {
+        notes.pop();
+        notes.push(i18n_f(
+            "Signing key {id} came with the sender's mail or from their domain, not from your keyring; check its fingerprint with the sender before trusting it.",
+            &[("id", &key_display(o.fingerprint.as_deref().unwrap_or(key_id)))],
+        ));
     }
 }
 
@@ -381,18 +482,8 @@ pub(super) fn text_entity(text: &[u8]) -> Vec<u8> {
 }
 
 /// The sender's key carried in an Autocrypt header (Level 1: `addr=…;
-/// keydata=<base64>`), decoded, if the message has one.
+/// keydata=<base64>`), decoded, if the message has one valid for its
+/// From: a header naming another address is anyone's to forge.
 pub(super) fn autocrypt_key(raw: &[u8]) -> Option<Vec<u8>> {
-    use mail_parser::MessageParser;
-    let parsed = MessageParser::default().parse(raw)?;
-    let header = parsed.header_raw("Autocrypt")?;
-    let mut keydata = None;
-    for attr in header.split(';') {
-        let attr = attr.trim();
-        if let Some(v) = attr.strip_prefix("keydata=") {
-            keydata = Some(v.split_whitespace().collect::<String>());
-        }
-    }
-    let keydata = keydata?;
-    crate::encoding::base64_decode(&keydata).filter(|b| !b.is_empty())
+    super::autocrypt::sender_header(raw).map(|h| h.keydata)
 }

@@ -1034,6 +1034,9 @@ msgstr "Mensaje nuevo a partir de una plantilla"
 msgid "Send the message you are writing"
 msgstr "Enviar el mensaje que estás escribiendo"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Adjuntar archivos"
 
@@ -1891,6 +1894,11 @@ msgstr "El archivo no es de texto"
 msgid "The file has no rows below its first."
 msgstr "El archivo no es de texto"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "GnuPG (gpg) no está instalado, por lo que no se puede leer este mensaje."
@@ -2148,6 +2156,12 @@ msgstr "Cifrado con OpenPGP; no se pudo descifrar"
 msgid "Encrypted with OpenPGP"
 msgstr "Cifrado con OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Cifrado y firmado por {signer}; la firma ha caducado"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Cifrado y firmado por {signer}"
 
@@ -2171,6 +2185,9 @@ msgstr "Cifrado y firmado por {signer}; la firma ha caducado"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Firmado con OpenPGP; no se pudo comprobar la firma"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Firmado por {signer}"
@@ -2199,6 +2216,10 @@ msgstr "Cifrado"
 
 msgid "Signature not checked"
 msgstr "Firma no comprobada"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Mover a otra libreta de direcciones"
 
 msgid "Encrypted and signed"
 msgstr "Cifrado y firmado"
@@ -3412,8 +3433,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -3424,8 +3445,8 @@ msgstr ""
 "2. Elige Acceso con ámbitos y después Carpeta de aplicación o Dropbox "
 "completo.\n"
 "3. Asígnale un nombre que nadie haya utilizado y pulsa Crear aplicación.\n"
-"4. En Permisos, marca account_info.read, files.content.write y "
-"sharing.write; pulsa Enviar.\n"
+"4. En Permisos, marca account_info.read, files.content.write y sharing."
+"write; pulsa Enviar.\n"
 "5. En Ajustes, dentro de OAuth 2, añade la URI de redirección {uri} y pulsa "
 "Añadir.\n"
 "6. Copia la clave de la aplicación en el campo anterior.\n"
@@ -3821,6 +3842,16 @@ msgid ""
 msgstr ""
 "No hay ninguna clave OpenPGP para {addr}. Pide su clave pública o búscala "
 "desde Ajustes → OpenPGP."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nobody has confirmed that the OpenPGP keys for {addresses} belong to them. "
+"If a key is someone else's, they can read the message and the recipient "
+"cannot. Compare the fingerprint with the recipient, then mark the key as "
+"trusted under Settings, OpenPGP."
+msgstr ""
 
 msgid "Send later"
 msgstr "Enviar más tarde"
@@ -6112,6 +6143,7 @@ msgstr "Traducción"
 msgid "General"
 msgstr "General"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Apariencia"
 

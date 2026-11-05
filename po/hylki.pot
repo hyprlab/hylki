@@ -952,6 +952,9 @@ msgstr ""
 msgid "Send the message you are writing"
 msgstr ""
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr ""
 
@@ -1744,6 +1747,11 @@ msgstr ""
 msgid "The file has no rows below its first."
 msgstr ""
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 
@@ -1754,6 +1762,11 @@ msgid "Encrypted to key {id}, which is not in your keyring."
 msgstr ""
 
 msgid "The encrypted block is damaged or not OpenPGP data."
+msgstr ""
+
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
 msgstr ""
 
 msgid "Revoked"
@@ -1979,6 +1992,11 @@ msgstr ""
 msgid "Encrypted with OpenPGP"
 msgstr ""
 
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr ""
+
 msgid "Encrypted, and signed by {signer}"
 msgstr ""
 
@@ -1999,6 +2017,9 @@ msgid "Encrypted, and signed by {signer}; the signature has expired"
 msgstr ""
 
 msgid "OpenPGP-signed; the signature could not be checked"
+msgstr ""
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
 msgstr ""
 
 msgid "Signed by {signer}"
@@ -2026,6 +2047,9 @@ msgid "Encrypted"
 msgstr ""
 
 msgid "Signature not checked"
+msgstr ""
+
+msgid "Signed by another address"
 msgstr ""
 
 msgid "Encrypted and signed"
@@ -3171,8 +3195,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -3495,6 +3519,32 @@ msgstr ""
 msgid "Show Cc, Bcc and Reply-To"
 msgstr ""
 
+msgid "They prefer encrypted mail."
+msgstr ""
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key in your keyring."
+msgstr ""
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
 msgid "Cannot merge an encrypted message"
 msgstr ""
 
@@ -3521,6 +3571,16 @@ msgstr ""
 msgid ""
 "There is no OpenPGP key for {addr}. Ask them for their public key, or fetch "
 "it under Settings, OpenPGP."
+msgstr ""
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nobody has confirmed that the OpenPGP keys for {addresses} belong to them. "
+"If a key is someone else's, they can read the message and the recipient "
+"cannot. Compare the fingerprint with the recipient, then mark the key as "
+"trusted under Settings, OpenPGP."
 msgstr ""
 
 msgid "Send later"
@@ -4987,7 +5047,7 @@ msgstr ""
 msgid "Trust"
 msgstr ""
 
-msgid "The sender's key was imported from the message."
+msgid "The sender's key was taken from the message."
 msgstr ""
 
 msgid "The sender's key was fetched and imported."
@@ -5146,6 +5206,29 @@ msgid "GnuPG"
 msgstr ""
 
 msgid "The same keyring the gpg command and other mail apps use."
+msgstr ""
+
+msgid "Finding keys"
+msgstr ""
+
+msgid ""
+"Keys found for the people you write to, and keys sent with their mail "
+"(Autocrypt), are kept apart from your keyring."
+msgstr ""
+
+msgid "Look up recipients' keys"
+msgstr ""
+
+msgid ""
+"Asks each recipient's own mail domain (WKD) while you address a message."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid ""
+"keys.openpgp.org is asked for recipients their domain has no key for, and so "
+"learns who you write to."
 msgstr ""
 
 msgid "Your keys"
@@ -5658,6 +5741,7 @@ msgstr ""
 msgid "General"
 msgstr ""
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr ""
 
@@ -6730,11 +6814,11 @@ msgid ""
 "again at the next connection."
 msgstr ""
 
-msgid ""
-"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
+msgid "no OpenPGP key for {addr}"
 msgstr ""
 
-msgid "no OpenPGP key for {addr}"
+msgid ""
+"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 
 msgid "Could not save template: {e}"
@@ -7333,6 +7417,21 @@ msgid "Hide the subject of encrypted mail"
 msgstr ""
 
 msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr ""
+
+msgid "Send your key with your mail"
+msgstr ""
+
+msgid ""
+"Autocrypt: people whose mail apps support it can encrypt to you, and their "
+"keys are kept from their mail to you."
+msgstr ""
+
+msgid "Encrypt by default"
+msgstr ""
+
+msgid ""
+"Mail to people who ask for the same is encrypted unless you turn it off."
 msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."

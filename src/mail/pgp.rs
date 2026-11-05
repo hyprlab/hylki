@@ -18,6 +18,8 @@ use std::io::Write;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
+pub(crate) mod autocrypt;
+pub(crate) mod discovery;
 mod inbound;
 mod keys;
 mod outbound;
@@ -25,13 +27,15 @@ mod status;
 #[cfg(test)]
 mod tests;
 
+#[cfg(test)]
+pub(crate) use inbound::Shape;
 pub(crate) use inbound::{detect, is_encrypted, legacy_display_part, unwrap_message};
 pub(crate) use keys::{
     delete_key, export_public, fetch_key, generate_key, import_keys, key_by_fingerprint,
     key_display, list_keys, public_key_for, secret_key_by_fingerprint, secret_key_for, trust_key,
     ImportSummary, KeyInfo,
 };
-pub(crate) use outbound::{encrypt, sign_detached};
+pub(crate) use outbound::{encrypt, sign_detached, Recipient};
 
 /// A GnuPG to talk to: the system one by default, or one with its own home
 /// directory (tests build a throwaway keyring).
@@ -48,6 +52,63 @@ impl Gpg {
         Gpg {
             home: std::env::var_os("HYLKI_GNUPGHOME").map(PathBuf::from),
         }
+    }
+
+    /// A throwaway keyring in `home`, for tests.
+    #[cfg(test)]
+    pub(crate) fn at(home: PathBuf) -> Gpg {
+        Gpg::private_home(home).expect("a test keyring")
+    }
+
+    /// Hylki's own keyring for keys it found itself: from Autocrypt
+    /// headers, gossip and WKD. They are kept out of the user's keyring
+    /// because nobody chose them, and a key there is one gpg would pick
+    /// for that address everywhere else too. `None` without a data
+    /// directory.
+    pub(crate) fn discovered() -> Option<Gpg> {
+        Gpg::system().found_keyring()
+    }
+
+    /// The keyring of found keys that goes with this one: beside an
+    /// alternative home (`HYLKI_GNUPGHOME`, a test's), so a trial keyring
+    /// keeps its discoveries to itself, else in Hylki's data directory.
+    fn found_home(&self) -> Option<PathBuf> {
+        match &self.home {
+            Some(h) => Some(h.join("hylki-discovered")),
+            None => Some(crate::config::data_base()?.join("hylki/discovered-keys")),
+        }
+    }
+
+    /// [`Gpg::found_home`]'s keyring, made if it is not there yet.
+    pub(crate) fn found_keyring(&self) -> Option<Gpg> {
+        Gpg::private_home(self.found_home()?)
+    }
+
+    /// [`Gpg::found_home`]'s keyring, if anything was ever found.
+    fn found_keyring_if_any(&self) -> Option<Gpg> {
+        let home = self.found_home().filter(|h| h.is_dir())?;
+        Some(Gpg { home: Some(home) })
+    }
+
+    /// A keyring in `home`, made 0700 first when it is new. gpg refuses
+    /// a home others can read, and making the directory here rather than
+    /// letting gpg do it keeps a new gpg from setting it up for keyboxd,
+    /// a daemon per keyring that would outlive every lookup.
+    fn private_home(home: PathBuf) -> Option<Gpg> {
+        if !home.is_dir() {
+            let mut builder = std::fs::DirBuilder::new();
+            builder.recursive(true);
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::DirBuilderExt;
+                builder.mode(0o700);
+            }
+            if let Err(e) = builder.create(&home) {
+                tracing::warn!(target: "hylki::pgp", "cannot make {}: {e}", home.display());
+                return None;
+            }
+        }
+        Some(Gpg { home: Some(home) })
     }
 
     fn command(&self) -> Command {
@@ -180,4 +241,26 @@ fn run(gpg: &Gpg, args: &[&str], input: &[u8], detached_sig: Option<&[u8]>) -> R
         status_lines,
         detail,
     }
+}
+
+/// The key ids an encrypted message names (all zeros for a hidden
+/// recipient), without decrypting it. For tests.
+#[cfg(test)]
+pub(crate) fn encrypted_to(gpg: &Gpg, armored: &[u8]) -> Vec<String> {
+    run(gpg, &["--list-only", "--decrypt"], armored, None)
+        .status_lines
+        .iter()
+        .filter_map(|l| l.strip_prefix("ENC_TO "))
+        .map(|r| r.split(' ').next().unwrap_or("").to_string())
+        .collect()
+}
+
+/// Stop the daemons a test keyring started, and remove it. For tests.
+#[cfg(test)]
+pub(crate) fn drop_test_keyring(home: &std::path::Path) {
+    let _ = Command::new("gpgconf")
+        .env("GNUPGHOME", home)
+        .args(["--kill", "all"])
+        .status();
+    let _ = std::fs::remove_dir_all(home);
 }

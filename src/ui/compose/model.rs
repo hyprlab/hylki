@@ -116,6 +116,27 @@ pub(crate) struct Compose {
     /// The state the composer itself last put the Sign toggle in, until its
     /// `toggled` arrives: that one is not the user's.
     pub(super) sign_expected: Option<bool>,
+    /// Encrypt was set by hand, so Autocrypt's recommendation no longer
+    /// turns it on.
+    pub(super) encrypt_touched: bool,
+    /// The state the composer itself last put the Encrypt toggle in, until
+    /// its `toggled` arrives (as `sign_expected`).
+    pub(super) encrypt_expected: Option<bool>,
+    /// It answers an encrypted message, which Autocrypt's recommendation
+    /// counts.
+    pub(super) reply_to_encrypted: bool,
+    /// Each recipient's OpenPGP key, by lowercased address, as last looked
+    /// up; what the pills' badges show.
+    pub(super) key_statuses:
+        std::collections::HashMap<String, crate::mail::pgp::discovery::KeyStatus>,
+    /// Bumped by every change to the recipients: a lookup's answer counts
+    /// only for the recipients it was asked about.
+    pub(super) key_generation: u64,
+    /// The badges are shown: the From has an OpenPGP key of its own.
+    pub(super) key_badges: bool,
+    /// The keys Hylki found for recipients outside the user's keyring, as
+    /// the last passing send check resolved them: (address, fingerprint).
+    pub(super) peer_keys: Vec<(String, String)>,
     /// What this message is written in. Plain text hides the
     /// formatting toolbar and sends no HTML part (#180); Markdown and HTML
     /// are written as source and converted on the way out.

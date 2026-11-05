@@ -81,10 +81,13 @@ pub(super) fn signature_verdict(o: &Outcome, notes: &mut Vec<String>) -> PgpSign
                         &[("id", &key_display(&key_id))],
                     ),
                 });
+                // Compared with the From later, by `unwrap_message`, which
+                // has the message and the keyring.
                 PgpSignature::Good {
                     signer,
                     key_id,
                     trust,
+                    from_mismatch: false,
                 }
             }
             "BADSIG" => {

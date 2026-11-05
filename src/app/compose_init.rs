@@ -79,6 +79,7 @@ fn account_identities(
         .unwrap_or_default();
     let pgp_key = cfg.and_then(|c| c.pgp_key.clone());
     let sign_default = cfg.is_some_and(|c| c.sign_by_default);
+    let autocrypt_mutual = cfg.is_some_and(|c| c.autocrypt && c.autocrypt_mutual);
     let mut identities = vec![ComposeAccount {
         id,
         label,
@@ -87,6 +88,7 @@ fn account_identities(
         email: email.to_string(),
         pgp_key: pgp_key.clone(),
         sign_default,
+        autocrypt_mutual,
         alias_from: None,
     }];
     for alias in cfg.map(|c| c.aliases.as_slice()).unwrap_or_default() {
@@ -107,6 +109,7 @@ fn account_identities(
             email: addr,
             pgp_key: pgp_key.clone(),
             sign_default,
+            autocrypt_mutual,
             alias_from: Some(display),
         });
     }
@@ -138,6 +141,7 @@ fn account_identities(
             email: addr.clone(),
             pgp_key: pgp_key.clone(),
             sign_default,
+            autocrypt_mutual,
             alias_from: Some(display),
         });
     }

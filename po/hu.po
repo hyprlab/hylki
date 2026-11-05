@@ -1073,6 +1073,9 @@ msgstr "Legújabb üzenet elöl"
 msgid "Send the message you are writing"
 msgstr "Küldd el az éppen írt üzenetet"
 
+#. Save Draft, Save as Template and Delete Draft are not here:
+#. the Save Draft button and its arrow stay in the header at
+#. any width.
 msgid "Attach files"
 msgstr "Fájlok csatolása"
 
@@ -1989,6 +1992,11 @@ msgstr "A mappa nincs a kiszolgálón"
 msgid "The file has no rows below its first."
 msgstr "A mappa nincs a kiszolgálón"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "A GnuPG (gpg) nincs telepítve, ezért ez az üzenet nem olvasható."
 
@@ -2253,6 +2261,12 @@ msgstr "OpenPGP-vel titkosítva; nem sikerült visszafejteni"
 msgid "Encrypted with OpenPGP"
 msgstr "OpenPGP-vel titkosítva"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Titkosítva és aláírva: {signer}; az aláírás lejárt"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Titkosítva és aláírva: {signer}"
 
@@ -2274,6 +2288,9 @@ msgstr "Titkosítva és aláírva: {signer}; az aláírás lejárt"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "OpenPGP-vel aláírva; az aláírás nem ellenőrizhető"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Aláírta: {signer}"
@@ -2301,6 +2318,10 @@ msgstr "Titkosítva"
 
 msgid "Signature not checked"
 msgstr "Az aláírás nem került ellenőrzésre"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "El akarod menteni a könyvtárat?"
 
 msgid "Encrypted and signed"
 msgstr "Titkosítva és aláírva"
@@ -3585,8 +3606,8 @@ msgid ""
 "1. At dropbox.com/developers/apps, press Create app.\n"
 "2. Choose Scoped access, then App folder or Full Dropbox.\n"
 "3. Give it a name no one else has used and press Create app.\n"
-"4. On Permissions, tick account_info.read, files.content.write and "
-"sharing.write, then press Submit.\n"
+"4. On Permissions, tick account_info.read, files.content.write and sharing."
+"write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
@@ -4012,6 +4033,16 @@ msgstr ""
 "Nincs OpenPGP-kulcs ehhez: {addr}. Kérje el a nyilvános kulcsukat, vagy "
 "kérje le a Beállítások → OpenPGP alatt."
 
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nobody has confirmed that the OpenPGP keys for {addresses} belong to them. "
+"If a key is someone else's, they can read the message and the recipient "
+"cannot. Compare the fingerprint with the recipient, then mark the key as "
+"trusted under Settings, OpenPGP."
+msgstr ""
+
 msgid "Send later"
 msgstr "Küldés később"
 
@@ -4265,8 +4296,8 @@ msgstr ""
 
 msgid "Sign in as, such as cn=jane,ou=people,dc=example,dc=com"
 msgstr ""
-"Jelentkezzen be például a következő névvel: "
-"cn=jane,ou=people,dc=example,dc=com"
+"Jelentkezzen be például a következő névvel: cn=jane,ou=people,dc=example,"
+"dc=com"
 
 msgid "Enter the directory's server."
 msgstr "Lépjen be a könyvtár kiszolgálójára."
@@ -6402,6 +6433,7 @@ msgstr "Fordította"
 msgid "General"
 msgstr "Általános"
 
+#. Rendered as Pango markup — a bare "&" breaks it.
 msgid "Appearance"
 msgstr "Megjelenés"
 

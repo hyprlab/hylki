@@ -82,6 +82,7 @@ pub(super) fn forward_outgoing(
         importance: Default::default(),
         receipt_report: None,
         merged: false,
+        peer_keys: Vec::new(),
     }
 }
 
