@@ -6203,6 +6203,11 @@ msgstr "Ves a l'arxiu"
 msgid "Move to Trash"
 msgstr "Mou el correu de llistes a la paperera"
 
+msgid ""
+"Hylki contains no AI agent of its own but you can allow outside agents to "
+"access your mail using MCP (Model Context Protocol)"
+msgstr ""
+
 msgid "Allow AI assistants"
 msgstr ""
 

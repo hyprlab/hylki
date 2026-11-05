@@ -6515,6 +6515,11 @@ msgstr "Archiwizuj"
 msgid "Move to Trash"
 msgstr "Przenieś ten szkic do kosza"
 
+msgid ""
+"Hylki contains no AI agent of its own but you can allow outside agents to "
+"access your mail using MCP (Model Context Protocol)"
+msgstr ""
+
 msgid "Allow AI assistants"
 msgstr ""
 

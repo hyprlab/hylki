@@ -6169,6 +6169,11 @@ msgstr "Μετάβαση στο Αρχείο"
 msgid "Move to Trash"
 msgstr "Μετακίνηση στον Κάδο"
 
+msgid ""
+"Hylki contains no AI agent of its own but you can allow outside agents to "
+"access your mail using MCP (Model Context Protocol)"
+msgstr ""
+
 msgid "Allow AI assistants"
 msgstr ""
 

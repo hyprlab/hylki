@@ -86,7 +86,11 @@ impl AssistantsPage {
             activity: RefCell::new(model.assistant_activity.clone()),
         });
 
-        let connection = adw::PreferencesGroup::new();
+        let connection = adw::PreferencesGroup::builder()
+            .description(i18n(
+                "Hylki contains no AI agent of its own but you can allow outside agents to access your mail using MCP (Model Context Protocol)",
+            ))
+            .build();
         let enable = adw::SwitchRow::builder()
             .title(i18n("Allow AI assistants"))
             .subtitle(i18n("Connects through the Model Context Protocol."))

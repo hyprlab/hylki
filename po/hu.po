@@ -6433,6 +6433,11 @@ msgstr "Archiválás"
 msgid "Move to Trash"
 msgstr "Piszkozat áthelyezése a Kukába"
 
+msgid ""
+"Hylki contains no AI agent of its own but you can allow outside agents to "
+"access your mail using MCP (Model Context Protocol)"
+msgstr ""
+
 msgid "Allow AI assistants"
 msgstr ""
 
