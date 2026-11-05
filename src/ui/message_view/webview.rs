@@ -1,7 +1,7 @@
 //! Building the reader's WebView and the WebContext it shares with print
 //! preview and the composer.
 
-use super::links::{decode_data_uri, default_image_name, is_launchable_uri};
+use super::links::{decode_data_uri, default_image_name, is_launchable_uri, link_to_open};
 use super::menu::strip_navigation_items;
 use super::MessageView;
 use crate::i18n::i18n;
@@ -48,6 +48,19 @@ pub(crate) fn shared_web_context() -> webkit6::WebContext {
     WEB_CONTEXT.with(|c| c.clone())
 }
 
+/// WebKit settings every view of mail starts from: no developer tools, and
+/// no DNS prefetching. Prefetching resolves the host of every link in a
+/// document as it loads, which tells the sender's DNS server the message
+/// was opened even with remote content blocked. Recent WebKitGTK (2.54 in
+/// the GNOME 50 runtime) has deprecated the switch and keeps prefetching
+/// off; setting it costs nothing there and covers a release that reads it.
+pub(crate) fn private_settings() -> webkit6::Settings {
+    let settings = webkit6::Settings::new();
+    settings.set_enable_developer_extras(false);
+    settings.set_enable_dns_prefetching(false);
+    settings
+}
+
 /// Keep Tab and Shift+Tab moving through the window after they leave a
 /// page. WebKitGTK parents a hidden GtkTextView inside every view for its
 /// key-binding translator, and it can take focus: when Tab ran off the
@@ -89,12 +102,11 @@ fn build_webview(role: &'static str) -> webkit6::WebView {
     keep_tab_out_of_key_translator(&webview);
     crate::services::remote_content::allow_in(&webview);
 
-    let settings = webkit6::Settings::new();
+    let settings = private_settings();
     // JavaScript runs only in our own (trusted) wrapper document — it sizes each
     // message's iframe to its content. Every email body is embedded in a
     // `sandbox`ed iframe WITHOUT `allow-scripts`, so message scripts never run.
     settings.set_enable_javascript(true);
-    settings.set_enable_developer_extras(false);
     // JS console output lands on stdout, where the tracing/console-mode
     // pipeline can pick it up — a silent script error in the wrapper document
     // otherwise kills card interactions with no trace at all.
@@ -194,7 +206,7 @@ fn launch_links(webview: &webkit6::WebView) {
                             // app on a single click.
                             if is_launchable_uri(&uri) {
                                 let window = view.root().and_downcast::<gtk::Window>();
-                                crate::ui::launch::open_link(&uri, window.as_ref());
+                                crate::ui::launch::open_link(&link_to_open(&uri), window.as_ref());
                             } else {
                                 tracing::warn!(
                                     "refused to open a link with an unsupported scheme: {}",

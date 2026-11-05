@@ -8,6 +8,7 @@ use super::*;
 pub(crate) struct PrefInit {
     pub(crate) auto_remote_content: bool,
     pub(crate) remote_ahead: bool,
+    pub(crate) clean_links: bool,
     pub(crate) show_remote_banner: bool,
     pub(crate) show_spoof_banner: bool,
     /// Answering requests for read receipts, and asking for them (#520).
@@ -431,6 +432,7 @@ pub(crate) enum PrefOutput {
     PageShown(String),
     SetAutoRemoteContent(bool),
     SetRemoteAhead(bool),
+    SetCleanLinks(bool),
     SetShowRemoteBanner(bool),
     SetShowSpoofBanner(bool),
     SetReceipts(crate::config::ReceiptPolicy),

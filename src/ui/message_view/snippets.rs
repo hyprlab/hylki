@@ -220,7 +220,10 @@ pub(super) fn recipients_html(m: &Message, always_shown: bool) -> String {
                 escape_html(shown.as_deref().unwrap_or(entry))
             ));
         }
-        lines.push_str(&format!("<div><b>{}</b> {parts}</div>", escape_html(&label)));
+        lines.push_str(&format!(
+            "<div><b>{}</b> {parts}</div>",
+            escape_html(&label)
+        ));
     }
     if lines.is_empty() {
         return String::new();
