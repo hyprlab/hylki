@@ -15,6 +15,8 @@
   the words the release page and About use.
 - **[SECURITY.md](SECURITY.md):** reporting a vulnerability privately.
 - **[LICENSE.md](LICENSE.md):** the licence and third-party notices.
+- **[OPENPGP_BACKEND.md](OPENPGP_BACKEND.md):** a proposal: GnuPG, Sequoia or
+  RNP for OpenPGP v6.
 
 Also at the top of the repository: [CHANGELOG.md](../CHANGELOG.md), and
 [po/README.md](../po/README.md) for translators.

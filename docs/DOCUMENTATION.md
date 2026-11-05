@@ -1660,6 +1660,9 @@ signature. There are four ways to get one, none of which need a terminal:
   beside their name. Click it and choose **Fetch the sender's key**. Hylki
   looks in the message itself first (many clients attach the key in an
   Autocrypt header), then asks the sender's provider (WKD), then the keyservers.
+  A key from the message's Autocrypt header is taken only when the header
+  names the sender's own address, and it goes into Hylki's own keyring of
+  found keys, never yours (see below).
 - A message with a key file attached shows an **Import OpenPGP key** button on
   that attachment.
 - Under *Settings → OpenPGP → Other people's keys*, **Fetch by address…**
@@ -1719,6 +1722,34 @@ account then open with Sign on, and a reopened draft does too. Changing From
 in the composer moves Sign to the new account's setting until you press Sign
 yourself; after that the composer leaves it as you set it. Stored on the
 account as `sign_by_default = true` in `accounts.toml`.
+
+**Autocrypt and found keys**
+
+Turn on **Send your key with your mail** under an account's *OpenPGP* group
+and every message from it carries your public key in an `Autocrypt:` header
+(Autocrypt Level 1). Hylki then also keeps the keys other people send that
+way, and the keys passed on inside encrypted mail to several people
+(Autocrypt gossip). **Encrypt by default** under it says you prefer encrypted
+mail: when everyone you write to says the same, the composer turns Encrypt on
+by itself. Stored as `autocrypt = true` and `autocrypt_mutual = true`.
+
+Keys found this way, and keys found by looking a recipient up, go into a
+keyring of Hylki's own (`~/.local/share/hylki/discovered-keys`), never your
+GnuPG keyring: nobody vouched for them, and gpg would otherwise use them for
+everything else too. Which key belongs to whom is kept in the cache.
+
+While you address a message, each recipient's pill shows a lock: green for a
+key in your keyring, blue for one Hylki found (Autocrypt or WKD), amber for
+one that may be out of date, and dim (red while Encrypt is on) for none.
+Hovering says where the key came from. Recipients without a key are looked up
+on their own domain's server (WKD) a moment after you add them; *Settings →
+OpenPGP → Finding keys* turns that off, or adds keys.openpgp.org for addresses
+WKD has nothing for (off by default, as the keyserver learns who you write to).
+The pills only show locks when your From address has a key of its own.
+
+Hylki uses GnuPG for all of this. Whether it should move to an OpenPGP
+library for OpenPGP v6 keys is discussed in
+[OPENPGP_BACKEND.md](OPENPGP_BACKEND.md).
 
 **Reading the result**
 
