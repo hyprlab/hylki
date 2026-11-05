@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **Translations:** German updated (PR #578 by Samuel Edlmeier), with 2375 of
+  2458 strings translated.
+
 - **Fixed: sending from a Microsoft account could report that a message could
   not be loaded** (#538, by James Reilly). The message had gone out. Microsoft
   keeps a sent message in Drafts until it moves to Sent, and the app could list
