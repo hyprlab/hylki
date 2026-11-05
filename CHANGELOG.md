@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: one-click unsubscribe could be aimed by a forged message.** The
+  request is now sent only to an https address, as RFC 8058 requires, and only
+  when the mail provider's DKIM check covers the List-Unsubscribe header or the
+  sender check finds nothing wrong. Otherwise the list's page opens in the
+  browser.
+
 - **Fixed: `w` and `b` left a message card under the bar above it** (#587, by
   James Reilly). The card's top border and selection outline were cut off. The
   card now stops 14 px below the bar, as it does when focused for a reply.
