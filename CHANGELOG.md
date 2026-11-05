@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+- **Added: Autocrypt** (Level 1). An account can send its OpenPGP key with
+  its mail and keep the keys others send that way, and the keys passed on in
+  encrypted mail to several people. When everyone on a message prefers
+  encrypted mail, Encrypt turns on by itself. Found keys stay in a keyring of
+  Hylki's own, never the user's GnuPG keyring, and a key in a header that
+  names someone other than the sender is refused.
+
+- **Added: each recipient shows whether they have an OpenPGP key**, and
+  where it came from. A recipient without one is looked up on their own
+  domain (WKD) as they are added; a keyserver only when allowed under
+  Settings, OpenPGP.
+
+- **Fixed: drafts of encrypted messages were saved readable** by the server
+  and the cache. They are now encrypted to the user's own key, and decrypted
+  when opened again.
+
+- **Fixed: Bcc recipients' OpenPGP keys showed in encrypted mail.** Every
+  copy of an encrypted message named the key of each recipient, so the To and
+  Cc could tell whose keys were Bcc'd. A Bcc recipient's key is now in the
+  message without its key ID.
+
+- **Fixed: a signature from someone else's key showed green.** A good
+  signature by a trusted key whose addresses do not include the message's
+  From address now shows amber, **Signed by another address**, and the
+  details name the address the key lacks.
+
+- **Added: a warning before encrypting to a key you have not trusted.**
+  **Send** names the recipients whose keys nobody has vouched for and asks
+  before the message goes; **Send Anyway** sends it as before. When an
+  address has several keys, the trusted one is used.
+
 - **Fixed: `w` and `b` left a message card under the bar above it** (#587, by
   James Reilly). The card's top border and selection outline were cut off. The
   card now stops 14 px below the bar, as it does when focused for a reply.

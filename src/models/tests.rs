@@ -213,6 +213,7 @@ fn the_pgp_chip_names_its_verdict() {
         signer: "A".into(),
         key_id: "1".into(),
         trust,
+        from_mismatch: false,
     };
     let status = |encrypted, signature| PgpStatus {
         encrypted,
@@ -240,6 +241,20 @@ fn the_pgp_chip_names_its_verdict() {
         ..Default::default()
     };
     assert_eq!(locked.short_label(), "Not decrypted");
+    // A trusted key without the From address is a doubt, never green.
+    let elsewhere = status(
+        false,
+        PgpSignature::Good {
+            signer: "Eve <eve@example.org>".into(),
+            key_id: "1".into(),
+            trust: PgpTrust::Full,
+            from_mismatch: true,
+        },
+    );
+    assert_eq!(elsewhere.short_label(), "Signed by another address");
+    assert_eq!(elsewhere.css_class(), "pgp-warn");
+    assert!(elsewhere.summary().starts_with("Signed by Eve"));
+    assert_eq!(status(false, good(PgpTrust::Full)).css_class(), "pgp-good");
 }
 
 #[test]

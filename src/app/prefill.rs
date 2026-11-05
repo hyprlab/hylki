@@ -471,6 +471,7 @@ mod tests {
             importance: crate::models::Importance::High,
             receipt_report: None,
             merged: false,
+            peer_keys: Vec::new(),
         };
         let p = unsent_prefill(m);
         assert_eq!(

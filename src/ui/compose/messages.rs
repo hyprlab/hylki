@@ -11,10 +11,11 @@ use crate::worker::OutgoingMessage;
 #[derive(Debug)]
 pub(crate) enum ComposeInput {
     Send,
-    /// The OpenPGP send check answered, for these inputs.
+    /// The OpenPGP send check answered, for these inputs: what it found
+    /// (see `PgpCheck`), or what stops the send.
     PgpChecked {
         checked: Vec<String>,
-        result: Result<(), String>,
+        result: Result<super::send::PgpCheck, String>,
     },
     /// Send Later (#145): queue for this unix time, then send as usual.
     SendAt(i64),
@@ -110,6 +111,20 @@ pub(crate) enum ComposeInput {
     ShowPreview(String),
     /// The OpenPGP Encrypt toggle; encrypting turns signing on too.
     ToggleEncrypt(bool),
+    /// A recipient was added, removed or moved: their keys are looked up
+    /// again once the typing settles.
+    RecipientsChanged,
+    /// The settled lookup, for the recipients as they were at this
+    /// generation.
+    LookUpKeys(u64),
+    /// What the lookup found: each recipient's key, and whether badges are
+    /// shown at all (the From has a key of its own). Sent once from what
+    /// is on disk, and again after the network was asked.
+    KeysFound {
+        generation: u64,
+        badges: bool,
+        statuses: Vec<crate::mail::pgp::discovery::KeyStatus>,
+    },
     /// The Send menu's read receipt check (#520).
     ToggleReceipt(bool),
     /// The Send menu's importance, picked (#563).

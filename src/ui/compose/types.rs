@@ -29,6 +29,9 @@ pub(crate) struct ComposeAccount {
     pub(crate) pgp_key: Option<String>,
     /// The account signs its mail by default (#267): Sign starts on.
     pub(crate) sign_default: bool,
+    /// The account's Autocrypt preference is `mutual` (and Autocrypt is
+    /// on): encryption turns on by itself when every recipient agrees.
+    pub(crate) autocrypt_mutual: bool,
     /// Set for a send-as alias (#34): the full From to put on the wire
     /// ("Name <alias@host>"). `None` sends as the account itself.
     pub(crate) alias_from: Option<String>,

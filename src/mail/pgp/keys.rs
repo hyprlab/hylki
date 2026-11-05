@@ -84,6 +84,10 @@ pub(crate) struct KeyInfo {
     pub(crate) key_id: String,
     /// User ids, the primary first.
     pub(crate) uids: Vec<String>,
+    /// The user ids the keyring vouches for (full or ultimate validity).
+    /// Validity is per user id: a key the user signed for one address can
+    /// carry another, added later, that nobody checked.
+    vouched_uids: Vec<String>,
     /// Whether the secret half is in the keyring (one of the user's own).
     pub(super) secret: bool,
     /// Whether the key (some subkey) can encrypt.
@@ -116,6 +120,17 @@ impl KeyInfo {
     pub(super) fn matches_address(&self, addr: &str) -> bool {
         let addr = addr.trim().to_ascii_lowercase();
         self.emails().contains(&addr)
+    }
+
+    /// Whether the keyring vouches for this key belonging to `addr`.
+    pub(crate) fn vouched_for(&self, addr: &str) -> bool {
+        let addr = addr.trim();
+        self.vouched_uids.iter().any(|u| {
+            crate::config::split_identity(u)
+                .1
+                .trim()
+                .eq_ignore_ascii_case(addr)
+        })
     }
 
     /// Whether the key can still be used at all.
@@ -188,6 +203,7 @@ pub(super) fn parse_colons(text: &str, secret: bool) -> Vec<KeyInfo> {
                     fingerprint: String::new(),
                     key_id: f.get(4).copied().unwrap_or("").to_string(),
                     uids: Vec::new(),
+                    vouched_uids: Vec::new(),
                     secret,
                     can_encrypt: caps.contains(['e', 'E']),
                     can_sign: caps.contains(['s', 'S']),
@@ -214,6 +230,9 @@ pub(super) fn parse_colons(text: &str, secret: bool) -> Vec<KeyInfo> {
                     let uid = uid.replace("\\x3a", ":");
                     let valid = f.get(1).copied().unwrap_or("");
                     if !valid.starts_with('r') {
+                        if KeyValidity::from_colon(valid).trusted() {
+                            k.vouched_uids.push(uid.clone());
+                        }
                         k.uids.push(uid);
                     }
                 }
@@ -243,11 +262,22 @@ pub(crate) fn secret_key_for(gpg: &Gpg, addr: &str) -> Option<KeyInfo> {
         .find(|k| k.usable() && k.can_sign && k.matches_address(addr))
 }
 
-/// A usable public key that can encrypt to an address, if any.
+/// A usable public key that can encrypt to an address, if any: one the
+/// keyring vouches for when there is one, so a key planted beside the real
+/// one does not win by being listed first.
 pub(crate) fn public_key_for(gpg: &Gpg, addr: &str) -> Option<KeyInfo> {
-    list_keys(gpg, false)
+    pick_public_key(list_keys(gpg, false), addr)
+}
+
+pub(super) fn pick_public_key(keys: Vec<KeyInfo>, addr: &str) -> Option<KeyInfo> {
+    let mut usable = keys
         .into_iter()
-        .find(|k| k.usable() && k.can_encrypt && k.matches_address(addr))
+        .filter(|k| k.usable() && k.can_encrypt && k.matches_address(addr));
+    let first = usable.next()?;
+    if first.vouched_for(addr) {
+        return Some(first);
+    }
+    Some(usable.find(|k| k.vouched_for(addr)).unwrap_or(first))
 }
 
 /// The key with this fingerprint, if the keyring holds it.
@@ -256,6 +286,29 @@ pub(crate) fn key_by_fingerprint(gpg: &Gpg, fpr: &str) -> Option<KeyInfo> {
     list_keys(gpg, false)
         .into_iter()
         .find(|k| k.fingerprint == fpr)
+}
+
+/// The user id addresses of the key holding `fpr`, which may name a
+/// subkey, as a signature's VALIDSIG does. Listed by itself rather than
+/// through [`list_keys`], since it runs for every signed message opened.
+pub(super) fn key_addresses(gpg: &Gpg, fpr: &str) -> Vec<String> {
+    let out = run(
+        gpg,
+        &[
+            "--with-colons",
+            "--with-fingerprint",
+            "--fixed-list-mode",
+            "--list-keys",
+            "--",
+            fpr,
+        ],
+        b"",
+        None,
+    );
+    parse_colons(&String::from_utf8_lossy(&out.stdout), false)
+        .first()
+        .map(KeyInfo::emails)
+        .unwrap_or_default()
 }
 
 /// What an import did.

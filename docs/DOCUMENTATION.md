@@ -1660,6 +1660,9 @@ signature. There are four ways to get one, none of which need a terminal:
   beside their name. Click it and choose **Fetch the sender's key**. Hylki
   looks in the message itself first (many clients attach the key in an
   Autocrypt header), then asks the sender's provider (WKD), then the keyservers.
+  A key from the message's Autocrypt header is taken only when the header
+  names the sender's own address, and it goes into Hylki's own keyring of
+  found keys, never yours (see below).
 - A message with a key file attached shows an **Import OpenPGP key** button on
   that attachment.
 - Under *Settings → OpenPGP → Other people's keys*, **Fetch by address…**
@@ -1689,6 +1692,15 @@ recipient has no key in your keyring, or your address has no key of its own,
 Hylki says so before anything is sent. Replying to an encrypted message starts
 with Encrypt on.
 
+When a recipient's key is one you have not trusted yet (step 4), **Send**
+names them and asks first: anyone can publish a key with any address on it.
+**Send Anyway** encrypts to the key as it is. With several keys for one
+address, the one you trusted is used.
+
+Bcc recipients are encrypted to without their key IDs in the message, so the
+To and Cc recipients cannot tell whose keys were Bcc'd. They can still see
+that some were.
+
 An encrypted message carries its subject inside, where only the recipients
 can read it, and "..." as the subject anyone else sees, as Thunderbird does.
 Hylki and other mail programs that read subjects from there show the real one
@@ -1711,6 +1723,40 @@ in the composer moves Sign to the new account's setting until you press Sign
 yourself; after that the composer leaves it as you set it. Stored on the
 account as `sign_by_default = true` in `accounts.toml`.
 
+**Autocrypt, found keys and encrypted drafts**
+
+Turn on **Send your key with your mail** under an account's *OpenPGP* group
+and every message from it carries your public key in an `Autocrypt:` header
+(Autocrypt Level 1). Hylki then also keeps the keys other people send that
+way, and the keys passed on inside encrypted mail to several people
+(Autocrypt gossip). **Encrypt by default** under it says you prefer encrypted
+mail: when everyone you write to says the same, the composer turns Encrypt on
+by itself. Stored as `autocrypt = true` and `autocrypt_mutual = true`.
+
+Keys found this way, and keys found by looking a recipient up, go into a
+keyring of Hylki's own (`~/.local/share/hylki/discovered-keys`), never your
+GnuPG keyring: nobody vouched for them, and gpg would otherwise use them for
+everything else too. Which key belongs to whom is kept in the cache.
+
+While you address a message, each recipient's pill shows a lock: green for a
+key in your keyring, blue for one Hylki found (Autocrypt or WKD), amber for
+one that may be out of date, and dim (red while Encrypt is on) for none.
+Hovering says where the key came from. Recipients without a key are looked up
+on their own domain's server (WKD) a moment after you add them; *Settings →
+OpenPGP → Finding keys* turns that off, or adds keys.openpgp.org for addresses
+WKD has nothing for (off by default, as the keyserver learns who you write to).
+The pills only show locks when your From address has a key of its own.
+
+A draft of a message set to be encrypted is saved encrypted to your key alone,
+with its subject, recipients and Bcc inside, so neither the server nor the
+cache holds its text. Opening it again asks for your passphrase if the agent
+needs it, and the message opens with Encrypt on. This works for IMAP, JMAP and
+Microsoft 365 accounts.
+
+Hylki uses GnuPG for all of this. Whether it should move to an OpenPGP
+library for OpenPGP v6 keys is discussed in
+[OPENPGP_BACKEND.md](OPENPGP_BACKEND.md).
+
 **Reading the result**
 
 Beside a sender's name, a lock means the message was encrypted and a shield
@@ -1718,6 +1764,11 @@ means it was signed. Green: everything checks out against a trusted key.
 Amber: a doubt, such as an unknown or untrusted key, or an expired one. Red:
 a failure, such as a signature that does not match or a message that could not
 be decrypted. Click the icon for the details.
+
+A signature only shows who owns the key, so it stays amber when none of the
+key's addresses is the message's From address, however much the key is
+trusted: it reads **Signed by another address**, and the details say which
+address the key lacks.
 
 To have the result in words as well, switch on *Settings → Reading → Name the
 OpenPGP result*. The icons then sit in a label that reads **Signed**,

@@ -42,6 +42,7 @@ pub(in crate::app) fn showcase_pgp(which: &str) -> Option<crate::models::PgpStat
         signer: "Priya Nair <priya@studio.dev>".into(),
         key_id: "8F2A6C1D9B3E4F70".into(),
         trust,
+        from_mismatch: false,
     };
     let (encrypted, signature) = match which {
         "good" => (false, good(PgpTrust::Full)),

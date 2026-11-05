@@ -983,6 +983,9 @@ pub(crate) struct AppModel {
     /// The `ExportRaw` token the pending draft's bytes come back under.
     /// While it is set, the draft waits for those and not for its body.
     pub(super) pending_draft_token: Option<u64>,
+    /// An encrypted draft being decrypted before its editor opens: the
+    /// token its `DraftDecrypted` comes back under, and what to open.
+    pub(super) pending_sealed_draft: Option<(u64, Message, bool, HandOffFiles)>,
     /// Drafts and templates being fetched ahead of time, by `ExportRaw`
     /// token, so they open at once (see `draft_copies`).
     pub(super) draft_fetches: std::collections::HashMap<u64, super::draft_copies::DraftFetch>,
