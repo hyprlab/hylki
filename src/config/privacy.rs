@@ -45,6 +45,12 @@ pub(crate) struct PrivacyFile {
     /// Off by default: a sender's tracking learns of a message never opened.
     #[serde(default)]
     pub(crate) remote_ahead: bool,
+    /// Whether a link opened from a message loses its tracking parameters
+    /// (`utm_*`, `fbclid`, …) and known redirectors (Outlook Safe Links,
+    /// Google's `/url`) first; see [`crate::mail::link_clean`]. On unless
+    /// switched off: a site that needs one of them is the rare case.
+    #[serde(default = "default_on")]
+    pub(crate) clean_links: bool,
     /// Whether to load sender avatars from Gravatar (off by default — it sends
     /// a hash of each sender's email to a third party).
     #[serde(default)]
@@ -681,6 +687,7 @@ impl Default for PrivacyFile {
             allowed_senders: Vec::new(),
             auto_remote_content: false,
             remote_ahead: false,
+            clean_links: true,
             show_remote_banner: true,
             show_spoof_banner: true,
             show_unified: true,

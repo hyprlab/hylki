@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Added: trackers come off links.** A link opened from a message loses its
+  tracking tags (`utm_source` and the like, `fbclid`, `gclid`, `mc_eid`), and
+  Outlook Safe Links, Google, Facebook and YouTube redirects open at the
+  address written inside them, with nothing looked up. **Settings → Privacy →
+  Remove trackers from links** turns it off.
+
 - **Fixed: `w` and `b` left a message card under the bar above it** (#587, by
   James Reilly). The card's top border and selection outline were cut off. The
   card now stops 14 px below the bar, as it does when focused for a reply.

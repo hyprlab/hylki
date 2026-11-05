@@ -81,6 +81,7 @@ impl Preferences {
             .privacy
             .remote_ahead_row
             .set_active(init.remote_ahead);
+        widgets.privacy.clean_links_row.set_active(init.clean_links);
         widgets
             .privacy
             .show_remote_banner_row

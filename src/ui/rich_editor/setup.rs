@@ -177,9 +177,8 @@ fn editor_view() -> (webkit6::WebView, webkit6::UserContentManager) {
             exec(&v, &format!("window.__hylkiSpellMark({bad})"));
         });
     }
-    let settings = webkit6::Settings::new();
+    let settings = crate::ui::message_view::private_settings();
     settings.set_enable_javascript(true);
-    settings.set_enable_developer_extras(false);
     // A script error in the editor document (all our own code) is
     // otherwise completely silent.
     settings.set_enable_write_console_messages_to_stdout(true);

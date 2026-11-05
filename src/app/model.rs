@@ -404,6 +404,8 @@ pub(crate) struct AppModel {
     pub(super) auto_remote_content: bool,
     /// Whether the next messages' remote content is fetched ahead (#474).
     pub(super) remote_ahead: bool,
+    /// Whether links opened from a message lose their trackers first.
+    pub(super) clean_links: bool,
     /// Whether the blocked-remote-content banner is shown at all. Hiding it changes nothing about what
     /// is blocked — only whether the reader says so.
     pub(super) show_remote_banner: bool,

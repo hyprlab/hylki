@@ -149,6 +149,12 @@ impl AppModel {
                 }
             }
 
+            PrefOutput::SetCleanLinks(on) => {
+                if pref!(self.clean_links = on) {
+                    crate::ui::message_view::set_clean_links(on);
+                }
+            }
+
             PrefOutput::SetAutoRemoteContent(on) => {
                 if pref!(self.auto_remote_content = on) {
                     // Re-render what is open so the change takes effect there too:
