@@ -6157,10 +6157,7 @@ msgid ""
 "access your mail using MCP (Model Context Protocol)"
 msgstr ""
 
-msgid "Allow AI assistants"
-msgstr ""
-
-msgid "Connects through the Model Context Protocol."
+msgid "Allow AI agent access"
 msgstr ""
 
 msgid "Recent Activity"

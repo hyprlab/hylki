@@ -92,8 +92,7 @@ impl AssistantsPage {
             ))
             .build();
         let enable = adw::SwitchRow::builder()
-            .title(i18n("Allow AI assistants"))
-            .subtitle(i18n("Connects through the Model Context Protocol."))
+            .title(i18n("Allow AI agent access"))
             .active(model.assistant_policy.enabled)
             .build();
         {
