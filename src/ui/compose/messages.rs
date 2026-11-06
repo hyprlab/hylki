@@ -11,11 +11,11 @@ use crate::worker::OutgoingMessage;
 #[derive(Debug)]
 pub(crate) enum ComposeInput {
     Send,
-    /// The OpenPGP send check answered, for these inputs: the recipients
-    /// whose key nobody has vouched for, or what stops the send.
+    /// The OpenPGP send check answered, for these inputs: the keys to ask
+    /// about, or what stops the send.
     PgpChecked {
         checked: Vec<String>,
-        result: Result<Vec<String>, String>,
+        result: Result<Vec<crate::config::AcceptedKey>, String>,
     },
     /// Send Later (#145): queue for this unix time, then send as usual.
     SendAt(i64),

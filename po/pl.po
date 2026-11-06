@@ -2037,6 +2037,11 @@ msgstr "Tego katalogu nie ma na serwerze"
 msgid "The file has no rows below its first."
 msgstr "Tego katalogu nie ma na serwerze"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "Program GnuPG (gpg) nie jest zainstalowany, dlatego nie można odczytać tej "
@@ -2300,6 +2305,12 @@ msgstr "Zaszyfrowana za pomocą OpenPGP; nie udało się jej odszyfrować"
 msgid "Encrypted with OpenPGP"
 msgstr "Zaszyfrowana za pomocą OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Zaszyfrowana i podpisana przez {signer}; podpis wygasł"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Zaszyfrowana i podpisana przez {signer}"
 
@@ -2321,6 +2332,9 @@ msgstr "Zaszyfrowana i podpisana przez {signer}; podpis wygasł"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Podpisana za pomocą OpenPGP; nie udało się sprawdzić podpisu"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Podpisana przez {signer}"
@@ -2350,6 +2364,10 @@ msgstr "Wiadomość zaszyfrowana"
 #, fuzzy
 msgid "Signature not checked"
 msgstr "Podpis w odpowiedziach"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Czy zapisać filtr?"
 
 #, fuzzy
 msgid "Encrypted and signed"
@@ -4074,6 +4092,16 @@ msgid ""
 msgstr ""
 "Brak klucza OpenPGP dla adresu {addr}. Poproś właściciela adresu o klucz "
 "publiczny lub pobierz go w oknie Ustawienia → OpenPGP."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Wyślij później"

@@ -2029,6 +2029,11 @@ msgstr "Эта папка отсутствует на сервере"
 msgid "The file has no rows below its first."
 msgstr "Эта папка отсутствует на сервере"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "GnuPG (gpg) не установлен, поэтому это сообщение нельзя прочитать."
 
@@ -2288,6 +2293,12 @@ msgstr "Зашифровано с помощью OpenPGP; не удалось р
 msgid "Encrypted with OpenPGP"
 msgstr "Зашифровано с помощью OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Зашифровано и подписано {signer}; срок действия подписи истёк"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Зашифровано и подписано {signer}"
 
@@ -2310,6 +2321,9 @@ msgstr "Зашифровано и подписано {signer}; срок дейс
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Подписано OpenPGP; не удалось проверить подпись"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Подписано {signer}"
@@ -2337,6 +2351,10 @@ msgstr "Зашифровано"
 
 msgid "Signature not checked"
 msgstr "Подпись не проверена"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Сохранить каталог?"
 
 msgid "Encrypted and signed"
 msgstr "Зашифровано и подписано"
@@ -4045,6 +4063,16 @@ msgid ""
 msgstr ""
 "Отсутствует ключ OpenPGP для {addr}. Запросите у адресата его открытый ключ "
 "или получите его в разделе «Настройки» → «OpenPGP»."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Отправить позже"

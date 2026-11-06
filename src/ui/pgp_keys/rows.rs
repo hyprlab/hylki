@@ -44,8 +44,8 @@ impl KeyShow {
     pub(super) fn shows(self, key: &KeyInfo) -> bool {
         match self {
             KeyShow::All => true,
-            KeyShow::Trusted => key.validity.trusted(),
-            KeyShow::NotTrusted => key.usable() && !key.validity.trusted(),
+            KeyShow::Trusted => key.fully_vouched(),
+            KeyShow::NotTrusted => key.usable() && !key.fully_vouched(),
             KeyShow::Unusable => !key.usable(),
         }
     }
@@ -117,7 +117,7 @@ pub(super) fn key_row(
         });
         row.add_suffix(&delete);
     } else {
-        if key.validity.trusted() {
+        if key.fully_vouched() {
             let seal = gtk::Image::from_icon_name("verified-checkmark-symbolic");
             seal.set_tooltip_text(Some(&i18n("Trusted")));
             seal.add_css_class("accent");

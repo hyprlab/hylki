@@ -1888,6 +1888,11 @@ msgstr "Die Datei ist leer."
 msgid "The file has no rows below its first."
 msgstr "Keine Datenzeilen unterhalb der Kopfzeile vorhanden."
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "GnuPG (gpg) ist nicht installiert, daher kann diese Nachricht nicht gelesen "
@@ -2154,6 +2159,12 @@ msgstr "Mit OpenPGP verschlüsselt; konnte nicht entschlüsselt werden"
 msgid "Encrypted with OpenPGP"
 msgstr "Mit OpenPGP verschlüsselt"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Verschlüsselt und signiert von {signer}; die Signatur ist abgelaufen"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Verschlüsselt und signiert von {signer}"
 
@@ -2179,6 +2190,9 @@ msgstr "Verschlüsselt und signiert von {signer}; die Signatur ist abgelaufen"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "OpenPGP-signiert; die Signatur konnte nicht überprüft werden"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Unterzeichnet von {signer}"
@@ -2208,6 +2222,10 @@ msgstr "Verschlüsselt"
 
 msgid "Signature not checked"
 msgstr "Signatur nicht überprüft"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "In ein anderes Adressbuch verschieben"
 
 msgid "Encrypted and signed"
 msgstr "Verschlüsselt und signiert"
@@ -3851,6 +3869,16 @@ msgid ""
 msgstr ""
 "Es ist kein OpenPGP-Schlüssel für {addr} vorhanden. Bitte den öffentlichen "
 "Schlüssel anfragen oder unter »Einstellungen → OpenPGP« abrufen."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Später senden"

@@ -1,10 +1,10 @@
 //! Recognising signed and encrypted mail and unwrapping it for the reader.
 
-use super::keys::{key_addresses, key_display};
-use super::status::{parse_status, signature_verdict};
+use super::keys::{key_display, signing_key};
+use super::status::{parse_status, signature_verdict, trust_note};
 use super::{available, run, Gpg};
 use crate::i18n::{i18n, i18n_f};
-use crate::models::{PgpSignature, PgpStatus};
+use crate::models::{PgpSignature, PgpStatus, PgpTrust};
 
 /// The OpenPGP structure a raw message carries, if any.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -177,10 +177,15 @@ pub(crate) fn unwrap_message(raw: &[u8], gpg: &Gpg) -> Option<Unwrapped> {
 /// is a claim anyone can type: unless one of the key's user ids is the From
 /// address, the signature says nothing about who the message is from, and
 /// a trusted key of the attacker's own would otherwise show green.
+///
+/// gpg's trust line is the best validity of any user id on the key, so a key
+/// trusted for one address can gain the boss's address later and still read
+/// TRUST_FULLY. Green also needs the keyring to vouch for the From itself.
 fn check_signer(status: &mut PgpStatus, gpg: &Gpg) {
     let from = status.sender_addr.clone();
     let PgpSignature::Good {
         key_id,
+        trust,
         from_mismatch,
         ..
     } = &mut status.signature
@@ -188,14 +193,27 @@ fn check_signer(status: &mut PgpStatus, gpg: &Gpg) {
         return;
     };
     // Nothing claimed, nothing to contradict.
-    if from.is_empty() || key_carries(&key_addresses(gpg, key_id), &from) {
+    if from.is_empty() {
         return;
     }
-    *from_mismatch = true;
-    status.notes.push(i18n_f(
-        "The signing key is not for {addr}, the address this message is from, so the signature does not show who sent it.",
-        &[("addr", &from)],
-    ));
+    let key = signing_key(gpg, key_id);
+    let carried = key.as_ref().map(|k| k.emails()).unwrap_or_default();
+    if !key_carries(&carried, &from) {
+        *from_mismatch = true;
+        status.notes.push(i18n_f(
+            "The signing key is not for {addr}, the address this message is from, so the signature does not show who sent it.",
+            &[("addr", &from)],
+        ));
+        return;
+    }
+    if *trust == PgpTrust::Full && !key.is_some_and(|k| k.vouched_for(&from)) {
+        let was = trust_note(PgpTrust::Full, key_id);
+        let now = trust_note(PgpTrust::Unknown, key_id);
+        *trust = PgpTrust::Unknown;
+        for note in status.notes.iter_mut().filter(|n| **n == was) {
+            *note = now.clone();
+        }
+    }
 }
 
 /// Whether `from` is one of a key's user id addresses, ignoring case.
@@ -245,7 +263,7 @@ fn unwrap_shape(shape: Shape, _raw: &[u8], gpg: &Gpg) -> Unwrapped {
             let signature = signature_verdict(&outcome, &mut notes);
             if decrypted {
                 notes.insert(0, i18n("Decrypted with your key."));
-            } else if let Some(k) = outcome.no_seckey.first() {
+            } else if let Some(k) = outcome.named_missing_key() {
                 notes.insert(
                     0,
                     i18n_f(

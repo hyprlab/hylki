@@ -42,6 +42,12 @@ pub(crate) struct Gpg {
 }
 
 impl Gpg {
+    /// A throwaway keyring, for tests outside this module.
+    #[cfg(test)]
+    pub(crate) fn at(home: PathBuf) -> Gpg {
+        Gpg { home: Some(home) }
+    }
+
     /// The user's GnuPG (honouring `HYLKI_GNUPGHOME`, for trying an
     /// alternative keyring without touching the real one).
     pub(crate) fn system() -> Gpg {

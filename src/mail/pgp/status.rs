@@ -18,6 +18,17 @@ pub(super) struct Outcome {
     pub(super) fingerprint: Option<String>,
 }
 
+impl Outcome {
+    /// A key the message names that this keyring lacks. A hidden recipient's
+    /// key id is all zeros, which names nobody.
+    pub(super) fn named_missing_key(&self) -> Option<&str> {
+        self.no_seckey
+            .iter()
+            .map(String::as_str)
+            .find(|k| k.chars().any(|c| c != '0'))
+    }
+}
+
 /// Read gpg's status lines (`doc/DETAILS` in the GnuPG source).
 pub(super) fn parse_status(lines: &[String]) -> Outcome {
     let mut o = Outcome::default();
@@ -60,6 +71,20 @@ pub(super) fn parse_status(lines: &[String]) -> Outcome {
     o
 }
 
+/// The line that says how far the keyring trusts a signing key.
+pub(super) fn trust_note(trust: PgpTrust, key_id: &str) -> String {
+    let id = key_display(key_id);
+    match trust {
+        PgpTrust::Full => i18n_f("Signing key {id} is trusted in your keyring.", &[("id", &id)]),
+        PgpTrust::Marginal => i18n_f("Signing key {id} is only marginally trusted in your keyring.", &[("id", &id)]),
+        PgpTrust::Never => i18n_f("Signing key {id} is marked as not trusted in your keyring.", &[("id", &id)]),
+        PgpTrust::Unknown => i18n_f(
+            "Signing key {id} is in your keyring but not marked as trusted; check its fingerprint with the sender.",
+            &[("id", &id)],
+        ),
+    }
+}
+
 /// The verdict on the signature, with its explanatory lines.
 pub(super) fn signature_verdict(o: &Outcome, notes: &mut Vec<String>) -> PgpSignature {
     if let Some((kind, key, uid)) = &o.sig {
@@ -72,15 +97,7 @@ pub(super) fn signature_verdict(o: &Outcome, notes: &mut Vec<String>) -> PgpSign
         return match kind.as_str() {
             "GOODSIG" => {
                 let trust = o.trust.unwrap_or(PgpTrust::Unknown);
-                notes.push(match trust {
-                    PgpTrust::Full => i18n_f("Signing key {id} is trusted in your keyring.", &[("id", &key_display(&key_id))]),
-                    PgpTrust::Marginal => i18n_f("Signing key {id} is only marginally trusted in your keyring.", &[("id", &key_display(&key_id))]),
-                    PgpTrust::Never => i18n_f("Signing key {id} is marked as not trusted in your keyring.", &[("id", &key_display(&key_id))]),
-                    PgpTrust::Unknown => i18n_f(
-                        "Signing key {id} is in your keyring but not marked as trusted; check its fingerprint with the sender.",
-                        &[("id", &key_display(&key_id))],
-                    ),
-                });
+                notes.push(trust_note(trust, &key_id));
                 // Compared with the From later, by `unwrap_message`, which
                 // has the message and the keyring.
                 PgpSignature::Good {

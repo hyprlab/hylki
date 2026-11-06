@@ -1961,6 +1961,11 @@ msgstr "Il file non è un file di testo"
 msgid "The file has no rows below its first."
 msgstr "Il file non è un file di testo"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "GnuPG (gpg) non è installato, quindi questo messaggio non può essere letto."
@@ -2221,6 +2226,12 @@ msgstr "Crittografato con OpenPGP; impossibile decrittografare"
 msgid "Encrypted with OpenPGP"
 msgstr "Crittografato con OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Crittografato e firmato da {signer}; la firma è scaduta"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Crittografato e firmato da {signer}"
 
@@ -2244,6 +2255,9 @@ msgstr "Crittografato e firmato da {signer}; la firma è scaduta"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Firmato con OpenPGP; impossibile verificare la firma"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Firmato da {signer}"
@@ -2272,6 +2286,10 @@ msgstr "Crittografato"
 
 msgid "Signature not checked"
 msgstr "Firma non verificata"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Salvare la directory?"
 
 msgid "Encrypted and signed"
 msgstr "Crittografato e firmato"
@@ -3968,6 +3986,16 @@ msgid ""
 msgstr ""
 "Non esiste nessuna chiave OpenPGP per {addr}. Chiedi loro la chiave "
 "pubblica, o recuperala in Impostazioni, OpenPGP."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Invia più tardi"

@@ -1899,6 +1899,11 @@ msgstr "El archivo no es de texto"
 msgid "The file has no rows below its first."
 msgstr "El archivo no es de texto"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "GnuPG (gpg) no está instalado, por lo que no se puede leer este mensaje."
@@ -2156,6 +2161,12 @@ msgstr "Cifrado con OpenPGP; no se pudo descifrar"
 msgid "Encrypted with OpenPGP"
 msgstr "Cifrado con OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Cifrado y firmado por {signer}; la firma ha caducado"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Cifrado y firmado por {signer}"
 
@@ -2179,6 +2190,9 @@ msgstr "Cifrado y firmado por {signer}; la firma ha caducado"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Firmado con OpenPGP; no se pudo comprobar la firma"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Firmado por {signer}"
@@ -2207,6 +2221,10 @@ msgstr "Cifrado"
 
 msgid "Signature not checked"
 msgstr "Firma no comprobada"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Mover a otra libreta de direcciones"
 
 msgid "Encrypted and signed"
 msgstr "Cifrado y firmado"
@@ -3829,6 +3847,16 @@ msgid ""
 msgstr ""
 "No hay ninguna clave OpenPGP para {addr}. Pide su clave pública o búscala "
 "desde Ajustes → OpenPGP."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Enviar más tarde"

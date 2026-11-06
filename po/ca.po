@@ -1913,6 +1913,11 @@ msgstr "El fitxer no és un fitxer de text"
 msgid "The file has no rows below its first."
 msgstr "El fitxer no és un fitxer de text"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "El GnuPG (gpg) no està instal·lat, així que aquest missatge no es pot llegir."
@@ -2172,6 +2177,12 @@ msgstr "Xifrat amb OpenPGP; no s'ha pogut desxifrar"
 msgid "Encrypted with OpenPGP"
 msgstr "Xifrat amb OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Xifrat i signat per {signer}; la signatura ha caducat"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Xifrat i signat per {signer}"
 
@@ -2195,6 +2206,9 @@ msgstr "Xifrat i signat per {signer}; la signatura ha caducat"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Signat amb OpenPGP; no s'ha pogut comprovar la signatura"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Signat per {signer}"
@@ -2224,6 +2238,10 @@ msgstr "Xifrat"
 
 msgid "Signature not checked"
 msgstr "Signatura no comprovada"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Mou a una altra llibreta d'adreces"
 
 msgid "Encrypted and signed"
 msgstr "Xifrat i signat"
@@ -3874,6 +3892,16 @@ msgid ""
 msgstr ""
 "No hi ha cap clau OpenPGP per a {addr}. Demana'ls la seva clau pública, o "
 "obtén-la a Paràmetres, OpenPGP."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Envia més tard"

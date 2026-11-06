@@ -1893,6 +1893,11 @@ msgstr "Το αρχείο είναι κενό."
 msgid "The file has no rows below its first."
 msgstr "Το αρχείο δεν περιέχει γραμμές μετά την πρώτη."
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "Το GnuPG (gpg) δεν είναι εγκατεστημένο, επομένως αυτό το μήνυμα δεν μπορεί "
@@ -2156,6 +2161,12 @@ msgstr "Κρυπτογραφημένο με OpenPGP· δεν ήταν δυνατ
 msgid "Encrypted with OpenPGP"
 msgstr "Κρυπτογραφημένο με OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer}· η υπογραφή έχει λήξει"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer}"
 
@@ -2179,6 +2190,9 @@ msgstr "Κρυπτογραφημένο και υπογεγραμμένο από 
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Υπογεγραμμένο με OpenPGP· δεν ήταν δυνατός ο έλεγχος της υπογραφής"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Υπογεγραμμένο από {signer}"
@@ -2207,6 +2221,10 @@ msgstr "Κρυπτογραφημένο"
 
 msgid "Signature not checked"
 msgstr "Η υπογραφή δεν ελέγχθηκε"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Μετακίνηση σε άλλον κατάλογο διευθύνσεων"
 
 msgid "Encrypted and signed"
 msgstr "Κρυπτογραφημένο και υπογεγραμμένο"
@@ -3863,6 +3881,16 @@ msgid ""
 msgstr ""
 "Δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}. Ζητήστε το δημόσιο "
 "κλειδί ή ανακτήστε το στις Ρυθμίσεις, OpenPGP."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Αποστολή αργότερα"

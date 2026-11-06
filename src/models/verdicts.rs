@@ -160,7 +160,10 @@ impl PgpStatus {
 
     /// Whether the signature is good but the key is not vouched for yet.
     pub(crate) fn key_untrusted(&self) -> bool {
-        matches!(self.signature, PgpSignature::Good { trust, .. } if trust != PgpTrust::Full)
+        matches!(
+            self.signature,
+            PgpSignature::Good { trust, from_mismatch: false, .. } if trust != PgpTrust::Full
+        )
     }
 
     /// One line for the chip's tooltip and the popover heading.

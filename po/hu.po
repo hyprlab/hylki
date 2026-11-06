@@ -1997,6 +1997,11 @@ msgstr "A mappa nincs a kiszolgálón"
 msgid "The file has no rows below its first."
 msgstr "A mappa nincs a kiszolgálón"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "A GnuPG (gpg) nincs telepítve, ezért ez az üzenet nem olvasható."
 
@@ -2261,6 +2266,12 @@ msgstr "OpenPGP-vel titkosítva; nem sikerült visszafejteni"
 msgid "Encrypted with OpenPGP"
 msgstr "OpenPGP-vel titkosítva"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Titkosítva és aláírva: {signer}; az aláírás lejárt"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Titkosítva és aláírva: {signer}"
 
@@ -2282,6 +2293,9 @@ msgstr "Titkosítva és aláírva: {signer}; az aláírás lejárt"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "OpenPGP-vel aláírva; az aláírás nem ellenőrizhető"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Aláírta: {signer}"
@@ -2309,6 +2323,10 @@ msgstr "Titkosítva"
 
 msgid "Signature not checked"
 msgstr "Az aláírás nem került ellenőrzésre"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "El akarod menteni a könyvtárat?"
 
 msgid "Encrypted and signed"
 msgstr "Titkosítva és aláírva"
@@ -4019,6 +4037,16 @@ msgid ""
 msgstr ""
 "Nincs OpenPGP-kulcs ehhez: {addr}. Kérje el a nyilvános kulcsukat, vagy "
 "kérje le a Beállítások → OpenPGP alatt."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Küldés később"

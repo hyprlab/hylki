@@ -1923,6 +1923,11 @@ msgstr "O arquivo não é um arquivo de texto"
 msgid "The file has no rows below its first."
 msgstr "O arquivo não é um arquivo de texto"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "O GnuPG (gpg) não está instalado, por isso não é possível ler esta mensagem."
@@ -2181,6 +2186,12 @@ msgstr "Criptografada com OpenPGP; não foi possível descriptografá-la"
 msgid "Encrypted with OpenPGP"
 msgstr "Criptografada com OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Criptografada e assinada por {signer}; a assinatura expirou"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Criptografada e assinada por {signer}"
 
@@ -2204,6 +2215,9 @@ msgstr "Criptografada e assinada por {signer}; a assinatura expirou"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Assinada com OpenPGP; não foi possível verificar a assinatura"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Assinada por {signer}"
@@ -2232,6 +2246,10 @@ msgstr "Criptografada"
 
 msgid "Signature not checked"
 msgstr "Assinatura não verificada"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Mover para outro catálogo de endereços"
 
 msgid "Encrypted and signed"
 msgstr "Criptografada e assinada"
@@ -3882,6 +3900,16 @@ msgid ""
 msgstr ""
 "Não existe uma chave OpenPGP para {addr}. Solicite a chave pública desse "
 "contato ou procure-a em Configurações, OpenPGP."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Enviar mais tarde"

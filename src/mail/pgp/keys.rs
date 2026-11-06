@@ -88,6 +88,9 @@ pub(crate) struct KeyInfo {
     /// Validity is per user id: a key the user signed for one address can
     /// carry another, added later, that nobody checked.
     vouched_uids: Vec<String>,
+    /// The user ids nobody has vouched for yet and a local signature would
+    /// cover: not the expired ones, and not those marked as never to be trusted.
+    unchecked_uids: Vec<String>,
     /// Whether the secret half is in the keyring (one of the user's own).
     pub(super) secret: bool,
     /// Whether the key (some subkey) can encrypt.
@@ -131,6 +134,28 @@ impl KeyInfo {
                 .trim()
                 .eq_ignore_ascii_case(addr)
         })
+    }
+
+    /// Whether the keyring vouches for every address on the key. A trusted
+    /// key can gain an address after it was signed, and that address is not
+    /// vouched for until the key is signed again.
+    pub(crate) fn fully_vouched(&self) -> bool {
+        self.validity.trusted() && self.unchecked_uids.is_empty()
+    }
+
+    /// What the Trust dialog shows to compare: the fingerprint, and above it
+    /// the user ids that trusting would add when the key is trusted already,
+    /// since the fingerprint of a key that gained an address has not changed.
+    pub(crate) fn trust_details(&self) -> String {
+        if self.validity.trusted() && !self.unchecked_uids.is_empty() {
+            format!(
+                "{}\n\n{}",
+                self.unchecked_uids.join("\n"),
+                self.fingerprint_display()
+            )
+        } else {
+            self.fingerprint_display()
+        }
     }
 
     /// Whether the key can still be used at all.
@@ -204,6 +229,7 @@ pub(super) fn parse_colons(text: &str, secret: bool) -> Vec<KeyInfo> {
                     key_id: f.get(4).copied().unwrap_or("").to_string(),
                     uids: Vec::new(),
                     vouched_uids: Vec::new(),
+                    unchecked_uids: Vec::new(),
                     secret,
                     can_encrypt: caps.contains(['e', 'E']),
                     can_sign: caps.contains(['s', 'S']),
@@ -232,6 +258,8 @@ pub(super) fn parse_colons(text: &str, secret: bool) -> Vec<KeyInfo> {
                     if !valid.starts_with('r') {
                         if KeyValidity::from_colon(valid).trusted() {
                             k.vouched_uids.push(uid.clone());
+                        } else if !valid.starts_with(['e', 'n', 'i']) {
+                            k.unchecked_uids.push(uid.clone());
                         }
                         k.uids.push(uid);
                     }
@@ -288,10 +316,10 @@ pub(crate) fn key_by_fingerprint(gpg: &Gpg, fpr: &str) -> Option<KeyInfo> {
         .find(|k| k.fingerprint == fpr)
 }
 
-/// The user id addresses of the key holding `fpr`, which may name a
-/// subkey, as a signature's VALIDSIG does. Listed by itself rather than
-/// through [`list_keys`], since it runs for every signed message opened.
-pub(super) fn key_addresses(gpg: &Gpg, fpr: &str) -> Vec<String> {
+/// The key holding `fpr`, which may name a subkey, as a signature's VALIDSIG
+/// does. Listed by itself rather than through [`list_keys`], since it runs for
+/// every signed message opened.
+pub(super) fn signing_key(gpg: &Gpg, fpr: &str) -> Option<KeyInfo> {
     let out = run(
         gpg,
         &[
@@ -306,9 +334,8 @@ pub(super) fn key_addresses(gpg: &Gpg, fpr: &str) -> Vec<String> {
         None,
     );
     parse_colons(&String::from_utf8_lossy(&out.stdout), false)
-        .first()
-        .map(KeyInfo::emails)
-        .unwrap_or_default()
+        .into_iter()
+        .next()
 }
 
 /// What an import did.
@@ -456,9 +483,21 @@ pub(crate) fn fetch_key(
 
 /// Vouch for a key: a local (non-exportable) signature with one of the
 /// user's own keys, which is what makes gpg call it trusted.
+///
+/// gpg only counts a signature from a key it trusts ultimately, which it gives
+/// a key it generates but not one imported from another computer, so signing
+/// with an imported key would change nothing. Signing with it is the user
+/// saying it is theirs, so it gets that trust first.
 pub(crate) fn trust_key(gpg: &Gpg, fpr: &str, signer: Option<&str>) -> Result<(), String> {
+    let own = list_keys(gpg, true).into_iter().find(|k| {
+        k.usable() && k.can_sign && signer.is_none_or(|s| k.fingerprint.eq_ignore_ascii_case(s))
+    });
+    if let Some(own) = own.as_ref().filter(|k| k.validity != KeyValidity::Ultimate) {
+        let line = format!("{}:6:\n", own.fingerprint);
+        run(gpg, &["--import-ownertrust"], line.as_bytes(), None);
+    }
     let mut args = vec!["--yes"];
-    if let Some(s) = signer {
+    if let Some(s) = own.as_ref().map(|k| k.fingerprint.as_str()).or(signer) {
         args.extend(["--local-user", s]);
     }
     args.extend(["--quick-lsign-key", fpr]);

@@ -10,12 +10,20 @@
 - **Fixed: a signature from someone else's key showed green** (#595, by James
   Reilly). A good signature by a trusted key whose addresses do not include the
   message's From address now shows amber, **Signed by another address**, and
-  the details name the address the key lacks.
+  the details name the address the key lacks. An address added to a key after
+  it was trusted stays amber, **Signed, key not trusted**, until the key is
+  trusted again.
+
+- **Fixed: trusting a key did nothing with an imported key of your own** (#595).
+  gpg ignored the signature of a secret key imported from another computer, so
+  the key stayed untrusted after **Key trusted.** Your key now gets the trust a
+  generated one has when you sign with it.
 
 - **Added: a warning before encrypting to a key you have not trusted** (#595, by
   James Reilly). **Send** names the recipients whose keys nobody has vouched
-  for and asks before the message goes; **Send Anyway** sends it as before.
-  When an address has several keys, the trusted one is used.
+  for and asks before the message goes. **Send Anyway** sends it and does not
+  ask about that key again until the address gets a different one. When an
+  address has several keys, the trusted one is used.
 
 - **Fixed: exports and local mail files were left readable by other users** (#600,
   by James Reilly). The log exports and the settings export are written owner-only,

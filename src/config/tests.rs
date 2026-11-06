@@ -509,3 +509,20 @@ fn a_private_file_is_tightened_before_it_is_filled() {
     assert_eq!(mode(&dir.join("new.bin")), 0o600);
     let _ = std::fs::remove_dir_all(&dir);
 }
+
+#[test]
+fn accepted_keys_keep_the_address_with_the_fingerprint() {
+    let key = |addr: &str, fingerprint: &str| super::AcceptedKey {
+        addr: addr.into(),
+        fingerprint: fingerprint.into(),
+    };
+    let saved = toml::to_string_pretty(&super::remembered::AcceptedKeysFile {
+        keys: vec![key("ada@example.org", "AAAA")],
+    })
+    .unwrap();
+    let file: super::remembered::AcceptedKeysFile = toml::from_str(&saved).unwrap();
+    assert!(file.keys.contains(&key("ada@example.org", "AAAA")));
+    // Another key for the address is not the one accepted.
+    assert!(!file.keys.contains(&key("ada@example.org", "BBBB")));
+    assert!(!file.keys.contains(&key("eve@example.org", "AAAA")));
+}

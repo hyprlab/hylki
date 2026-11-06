@@ -788,3 +788,159 @@ fpr:::::::::AAAABBBBCCCCDDDDEEEEFFFF1111222233334444:\n";
     assert_eq!(old.primary_uid(), "");
     assert!(!KeyValidity::Marginal.trusted() && KeyValidity::Full.trusted());
 }
+
+/// A keyring of its own under the temp directory, removed by the test.
+fn keyring(root: &std::path::Path, name: &str) -> Gpg {
+    let home = root.join(name);
+    std::fs::create_dir_all(&home).unwrap();
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::set_permissions(&home, std::fs::Permissions::from_mode(0o700)).unwrap();
+    }
+    Gpg { home: Some(home) }
+}
+
+/// A multipart/signed message from `from`, signed by `key` in `signer`.
+fn signed_mail(signer: &Gpg, key: &str, from: &str) -> String {
+    let part = "Content-Type: text/plain\r\n\r\nsigned hello";
+    let (sig, _) = sign_detached(signer, part.as_bytes(), key).expect("signed");
+    format!(
+        "From: {from}\r\nSubject: x\r\nMIME-Version: 1.0\r\n\
+         Content-Type: multipart/signed; protocol=\"application/pgp-signature\"; \
+         micalg=pgp-sha512; boundary=\"b\"\r\n\r\n--b\r\n{part}\r\n--b\r\n\
+         Content-Type: application/pgp-signature\r\n\r\n{}\r\n--b--\r\n",
+        String::from_utf8_lossy(&sig)
+    )
+}
+
+/// gpg reads TRUST_FULLY for a key trusted at any of its addresses, so an
+/// address added after the trust signature must not pass as checked, and
+/// trusting the key again has to reach it.
+#[test]
+fn an_address_added_after_trusting_a_key_is_not_vouched_for() {
+    if !available() {
+        eprintln!("gpg not installed; skipping");
+        return;
+    }
+    let root = std::env::temp_dir().join(format!("hylki-gpg-added-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    let me = keyring(&root, "me");
+    let eve = keyring(&root, "eve");
+    generate_key(&me, "Me", "me@hylki.invalid", "never", "").expect("own key");
+    let fpr = generate_key(&eve, "Eve", "eve@hylki.invalid", "never", "").expect("eve's key");
+    import_keys(&me, &export_public(&eve, &fpr).expect("exported")).expect("imported");
+    trust_key(&me, &fpr, None).expect("trusted");
+    assert!(key_by_fingerprint(&me, &fpr).unwrap().fully_vouched());
+
+    run(
+        &eve,
+        &[
+            "--pinentry-mode",
+            "loopback",
+            "--passphrase",
+            "",
+            "--quick-add-uid",
+            "eve@hylki.invalid",
+            "Boss <boss@hylki.invalid>",
+        ],
+        b"",
+        None,
+    );
+    import_keys(&me, &export_public(&eve, &fpr).expect("exported")).expect("refreshed");
+
+    let key = key_by_fingerprint(&me, &fpr).unwrap();
+    assert!(key.validity.trusted(), "gpg still calls the key trusted");
+    assert!(!key.fully_vouched());
+    assert!(key.trust_details().contains("boss@hylki.invalid"));
+
+    let mail = signed_mail(&eve, &fpr, "Boss <boss@hylki.invalid>");
+    let u = unwrap_message(mail.as_bytes(), &me).expect("recognised");
+    assert!(
+        matches!(
+            u.status.signature,
+            PgpSignature::Good {
+                trust: PgpTrust::Unknown,
+                from_mismatch: false,
+                ..
+            }
+        ),
+        "{:?}",
+        u.status
+    );
+    assert_eq!(u.status.css_class(), "pgp-warn");
+    assert!(u.status.key_untrusted(), "the popover offers Trust");
+    assert!(
+        !u.status.notes.iter().any(|n| n.contains("is trusted in")),
+        "{:?}",
+        u.status.notes
+    );
+    // The address it was trusted for stays green.
+    let mail = signed_mail(&eve, &fpr, "Eve <eve@hylki.invalid>");
+    let u = unwrap_message(mail.as_bytes(), &me).expect("recognised");
+    assert_eq!(u.status.css_class(), "pgp-good", "{:?}", u.status);
+
+    // Trusting again signs the new address beside the one already signed.
+    trust_key(&me, &fpr, None).expect("trusted again");
+    assert!(key_by_fingerprint(&me, &fpr).unwrap().fully_vouched());
+    let mail = signed_mail(&eve, &fpr, "Boss <boss@hylki.invalid>");
+    let u = unwrap_message(mail.as_bytes(), &me).expect("recognised");
+    assert_eq!(u.status.css_class(), "pgp-good", "{:?}", u.status);
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+/// A secret key imported from another computer has no ultimate trust, and gpg
+/// ignores signatures from it. Trusting a key with it has to take effect, also
+/// for a key it signed before this was handled.
+#[test]
+fn trusting_works_with_an_imported_key_of_ones_own() {
+    if !available() {
+        eprintln!("gpg not installed; skipping");
+        return;
+    }
+    let root = std::env::temp_dir().join(format!("hylki-gpg-imported-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    let old_computer = keyring(&root, "old");
+    let me = keyring(&root, "me");
+    let peer = keyring(&root, "peer");
+    let own = generate_key(&old_computer, "Me", "me@hylki.invalid", "never", "").expect("own key");
+    let exported = run(
+        &old_computer,
+        &[
+            "--pinentry-mode",
+            "loopback",
+            "--passphrase",
+            "",
+            "--armor",
+            "--export-secret-keys",
+            &own,
+        ],
+        b"",
+        None,
+    );
+    import_keys(&me, &exported.stdout).expect("own key imported");
+    let fpr = generate_key(&peer, "Peer", "peer@hylki.invalid", "never", "").expect("peer's key");
+    import_keys(&me, &export_public(&peer, &fpr).expect("exported")).expect("imported");
+
+    // What an earlier build left behind: signed, and gpg does not count it.
+    run(&me, &["--yes", "--quick-lsign-key", &fpr], b"", None);
+    assert!(!key_by_fingerprint(&me, &fpr).unwrap().validity.trusted());
+
+    trust_key(&me, &fpr, None).expect("trusted");
+    let key = public_key_for(&me, "peer@hylki.invalid").expect("found");
+    assert!(key.vouched_for("peer@hylki.invalid"));
+    assert!(key.fully_vouched());
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+/// A hidden recipient's all-zero key id is no key to tell the user about.
+#[test]
+fn a_hidden_key_id_is_not_named_as_missing() {
+    let o = parse_status(&lines(&[
+        "NO_SECKEY 0000000000000000",
+        "NO_SECKEY 83B625A65BC4BD52",
+    ]));
+    assert_eq!(o.named_missing_key(), Some("83B625A65BC4BD52"));
+    let o = parse_status(&lines(&["NO_SECKEY 0000000000000000"]));
+    assert_eq!(o.named_missing_key(), None);
+}
