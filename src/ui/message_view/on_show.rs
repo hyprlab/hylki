@@ -12,7 +12,7 @@ use webkit6::prelude::WebViewExt;
 /// How long a message still being fetched leaves the last one on screen
 /// before it shows, with its spinner: a wait shorter than this looks like
 /// none, and a spinner flashed for a moment looks like a glitch.
-const LOADING_AFTER: std::time::Duration = std::time::Duration::from_millis(300);
+const LOADING_AFTER: std::time::Duration = std::time::Duration::from_millis(140);
 
 impl MessageView {
     // The fields of `MessageViewInput::Show`, one to one.

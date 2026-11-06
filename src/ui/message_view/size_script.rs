@@ -391,6 +391,12 @@ var t=e.target&&e.target.closest?e.target.closest('.hylki-mail'):null;\
 if(!t||!t.dataset.mail)return;\
 e.preventDefault();e.stopPropagation();mailMsg(t.dataset.mail);},true);\
 document.addEventListener('click',function(e){\
+var b=e.target&&e.target.closest?e.target.closest('.hylki-copy-addr'):null;\
+if(!b||!b.dataset.mail)return;\
+e.preventDefault();e.stopPropagation();\
+try{window.webkit.messageHandlers.hylki.postMessage('copyaddr:0:0:'+b.dataset.mail);}catch(_){}\
+showCopied();},true);\
+document.addEventListener('click',function(e){\
 var v=e.target&&e.target.closest?e.target.closest('.hylki-verify,.hylki-pgp'):null;\
 if(!v||!v.dataset.key)return;e.preventDefault();e.stopPropagation();\
 var r=v.getBoundingClientRect();\

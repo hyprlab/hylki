@@ -262,7 +262,15 @@ fn card_body(cards: &Cards<'_>, m: &Message) -> String {
         })
         .map_or((None, false), |(html, reader)| (Some(html), reader));
     let body = if m.body.trim().is_empty() && translated.is_none() {
-        "<div class=\"hylki-loading\">Loading…</div>".to_string()
+        format!(
+            "<div class=\"hylki-loading\" role=\"status\">\
+             <div class=\"hylki-loading-status\">\
+             <span class=\"hylki-loading-spinner\" aria-hidden=\"true\"></span>\
+             <span>{label}</span></div>\
+             <div class=\"hylki-loading-lines\" aria-hidden=\"true\">\
+             <span></span><span></span><span></span></div></div>",
+            label = escape_html(&i18n("Loading…")),
+        )
     } else {
         message_frame(
             translated.as_deref().unwrap_or(&m.body),
@@ -561,10 +569,16 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
             // and the copy menu. Fully entity-escaped (&<>"), so an
             // attacker-controlled address can't smuggle markup
             // through the attributes.
+            let address = escape_html(&m.from_addr).replace('"', "&quot;");
+            let copy_label =
+                gtk::glib::markup_escape_text(&i18n("Copy Address")).to_string();
             format!(
-                "<span class=\"hylki-addr hylki-mail\" data-mail=\"{0}\" \
-                     data-addr=\"&lt;{0}&gt;\">&lt;{0}&gt;</span>",
-                escape_html(&m.from_addr).replace('"', "&quot;")
+                "<span class=\"hylki-addr hylki-mail\" data-mail=\"{address}\" \
+                     data-addr=\"&lt;{address}&gt;\">&lt;{address}&gt;</span>\
+                 <button type=\"button\" class=\"hylki-copy-addr\" \
+                     data-mail=\"{address}\" title=\"{copy_label}\" \
+                     aria-label=\"{copy_label}\">{copy_icon}</button>",
+                copy_icon = inline_icon_svg("edit-copy-symbolic"),
             )
         },
         date = escape_html(&m.datetime_full()),

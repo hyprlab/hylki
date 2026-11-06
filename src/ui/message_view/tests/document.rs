@@ -599,6 +599,63 @@ fn a_sender_cannot_put_markup_in_the_conversation_header() {
     assert!(doc.contains("onerror=z&gt;"), "{doc}");
 }
 
+#[test]
+fn a_sender_address_has_a_nearby_copy_button() {
+    let mut message = msg_for_print();
+    message.from_addr = "reports@yoomoney.ru".into();
+    let doc = MessageView::conversation_document(
+        &[message],
+        &Default::default(),
+        &Default::default(),
+        &Default::default(),
+        &[],
+        "#3584e4",
+        true,
+        false,
+        false,
+        false,
+        &crate::config::ReaderStyle::NONE,
+        &Default::default(),
+        false,
+        100,
+    );
+    assert!(
+        doc.contains("class=\"hylki-copy-addr\" data-mail=\"reports@yoomoney.ru\""),
+        "the address should have a copy action beside it: {doc}"
+    );
+    assert!(
+        doc.contains("postMessage('copyaddr:0:0:'+b.dataset.mail)"),
+        "the button should use the app clipboard bridge"
+    );
+}
+
+#[test]
+fn an_empty_card_shows_a_skeleton_instead_of_plain_loading_text() {
+    let mut message = msg_for_print();
+    message.body.clear();
+    let doc = MessageView::conversation_document(
+        &[message],
+        &Default::default(),
+        &Default::default(),
+        &Default::default(),
+        &[],
+        "#3584e4",
+        true,
+        false,
+        false,
+        false,
+        &crate::config::ReaderStyle::NONE,
+        &Default::default(),
+        false,
+        100,
+    );
+    assert!(
+        doc.contains("class=\"hylki-loading\" role=\"status\""),
+        "{doc}"
+    );
+    assert!(doc.contains("hylki-loading-lines"), "{doc}");
+}
+
 /// A folded card hides its frame, and a hidden frame still loads its whole
 /// document: a long conversation folded down to its newest card rendered
 /// every message at once. The folded card's frame keeps its document aside
