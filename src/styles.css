@@ -826,6 +826,13 @@ flowbox.attach-flow > flowboxchild {
   border-top: 1px solid alpha(currentColor, 0.08);
 }
 
+/* In a pane narrower than the bar's full size (see BULK_BAR_ROOM). */
+.compact .bulk-bar button {
+  min-width: 24px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
 .bulk-count {
   font-weight: 700;
 }
@@ -967,14 +974,12 @@ flowbox.attach-flow > flowboxchild {
   color: @accent_bg_color;
 }
 
-/* Avatars off (#29, #99): read rows collapse the dot's slot entirely (see
-   the row template), so the text block starts here — 8px, matching the
-   pill's right padding for equal margins. Unread rows lead with the dot. */
+/* Avatars off (#29): read rows collapse the dot's slot entirely (see the row
+   template), so the text block starts here — 8px, matching the pill's right
+   padding for equal margins. Unread rows lead with the dot. With no circle to
+   hold the height, the padding above and below the text is what centres it. */
 .message-row.no-avatar {
-  padding-left: 8px;
-  /* Text anchors to the pill's top (#99): a tighter top inset reads as
-     top-aligned. */
-  padding-top: 6px;
+  padding: 10px 8px;
 }
 .message-row.no-avatar:dir(rtl) {
   padding-left: 8px;
@@ -993,12 +998,6 @@ flowbox.attach-flow > flowboxchild {
   margin-right: 1px;
 }
 
-/* Focus Mode takes the circles away for a quieter list, and there the text
-   sits in the middle of its pill. */
-.focus-list .message-row.no-avatar:not(.single-line) {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
 /* One line per message (#334): a short pill, everything centred on the
    line, the columns kept by the row's fixed widths. After the no-avatar
    rules, which it overrides. */
@@ -1203,6 +1202,12 @@ flowbox.attach-flow > flowboxchild {
 .message-item.thread-child .message-row:dir(rtl) {
   margin: 2px 10px 2px 6px;
   padding: 13px 10px 13px 8px;
+}
+
+/* A reply with no avatar keeps the same height as any row with none. */
+.message-item.thread-child .message-row.no-avatar:not(.single-line) {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 /* A reply on one line (#334) keeps the single-line pill's height, indented

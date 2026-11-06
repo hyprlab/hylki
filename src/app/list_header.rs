@@ -637,7 +637,6 @@ impl AppModel {
         // Focus Mode's chrome as saved: nothing is mapped yet, so the
         // revealers jump to their state without animating.
         self.sync_focus_chrome();
-        self.sync_list_focus_style();
         self.reader_overflow_btn
             .set_visible(self.reader_overflow_wanted());
     }

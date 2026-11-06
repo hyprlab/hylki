@@ -23,17 +23,6 @@ fn focus_reveal(r: &gtk::Revealer, shown: bool) {
 }
 
 impl AppModel {
-    /// A style on the list, so its rows centre their text while Focus Mode
-    /// holds: it needs no redraw of the rows, and they keep their height.
-    pub(super) fn sync_list_focus_style(&self) {
-        let list = self.message_list.widget();
-        if self.focus.enabled {
-            list.add_css_class("focus-list");
-        } else {
-            list.remove_css_class("focus-list");
-        }
-    }
-
     /// Focus Mode changed (the menu, the shortcut or Settings): save it,
     /// and animate whichever parts differ from what is on screen.
     pub(super) fn set_focus_mode(&mut self, focus: config::FocusMode) {
@@ -42,7 +31,6 @@ impl AppModel {
         if prev != focus {
             self.focus = focus;
             config::save_focus_mode(&focus);
-            self.sync_list_focus_style();
             let changed = |part: F| prev.active(part) != focus.active(part);
             if changed(F::ReaderToolbar) || changed(F::ListHeader) {
                 self.sync_focus_chrome();

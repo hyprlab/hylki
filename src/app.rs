@@ -319,12 +319,8 @@ impl SimpleComponent for AppModel {
                         // one it keeps the stock separator.
                         add_css_class: "mail-split",
                         set_wide_handle: false,
-                        // Launch at the width the rows are laid out for. That is
-                        // also the list's minimum while the avatars are on,
-                        // so `shrink_start_child: false` clamps to the same figure
-                        // either way. With the circles off the minimum drops to what
-                        // the sender and subject need (#29) — a fine width to be
-                        // able to drag down to, but a poor one to open at.
+                        // Launch at the remembered width; `shrink_start_child: false`
+                        // keeps it above the list's floor.
                         set_position: crate::config::load_list_pane_width(),
                         // Remember the width the user drags to (#28). Debounced:
                         // position-notify fires per pixel of a drag (and when the

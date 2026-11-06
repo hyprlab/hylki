@@ -11,9 +11,13 @@ use relm4::prelude::*;
 use std::rc::Rc;
 
 /// The message-list pane's floor. Rows ellipsize, so this is what keeps a
-/// conversation-member card's sender, date and subject readable beside its
-/// avatar, not a limit the rows set themselves.
-pub(super) const LIST_MIN_WIDTH: i32 = 348;
+/// card's sender, date and subject readable beside its avatar, not a limit the
+/// rows set themselves.
+pub(super) const LIST_MIN_WIDTH: i32 = 260;
+
+/// The pane width the selection bar's buttons and its count need at full size.
+/// Narrower, the buttons draw tighter so the last still fits at the floor.
+pub(super) const BULK_BAR_ROOM: i32 = 344;
 
 /// What an expanded conversation needs beyond [`LIST_MIN_WIDTH`]: the member
 /// cards' 10px rail indent plus their card margin/padding beyond a plain

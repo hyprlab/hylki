@@ -2,16 +2,19 @@
 
 ## Unreleased
 
+- **Changed: the message list can be dragged narrower**, down to 260 pixels from
+  348. The selection bar's buttons draw tighter below 344 pixels so they all
+  still fit.
+
+- **Fixed: rows with avatars switched off held their text above the middle of
+  the highlight.** It is now centered, in and out of Focus Mode.
+
 - **Removed: the actions palettes on message rows and message cards.** The ⋯ on
   a card opens the same menu as a right click, and a row is acted on with its
   right-click menu, swipes and keyboard shortcuts. Rows no longer carry a ⋯, and
-  rows without avatars are shorter for it. Settings → Message List and Reading
+  are shorter where they kept room for it. Settings → Message List and Reading
   lose the palette switches and timeouts. Show Sender's Fonts and Colors moved
   from the palette to the card's menu.
-
-- **Fixed: Focus Mode's list rows held their text above the middle of the
-  highlight.** It is now centered. Rows with avatars switched off outside Focus
-  Mode keep their text at the top.
 
 - **Changed: a click on an account's avatar in the icon rail opens its Inbox**
   (#594, suggested by Alp Sahin). A long press or a double click now opens or

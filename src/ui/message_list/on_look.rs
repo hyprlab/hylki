@@ -1,7 +1,7 @@
 //! How the list looks: the row look, columns and headings, sorting, the
 //! bars and swipes.
 
-use super::layout::schedule_midnight_refresh;
+use super::layout::{schedule_midnight_refresh, BULK_BAR_ROOM};
 use super::sort::{column_sort, SortOrder};
 use super::types::{MessageListInput, MessageListOutput};
 use super::MessageList;
@@ -279,6 +279,15 @@ impl MessageList {
             let fits = self.single_line && !self.column_scroll;
             let before = fits.then(|| self.fitted_widths());
             self.pane_width = width;
+            // Too narrow for the selection bar's buttons at their full size,
+            // the last of them would run off the edge of the pane.
+            if let Some(bars) = &self.bars {
+                if width < BULK_BAR_ROOM {
+                    bars.bulk.add_css_class("compact");
+                } else {
+                    bars.bulk.remove_css_class("compact");
+                }
+            }
             if before.is_some_and(|b| b != self.fitted_widths()) {
                 self.sync_look();
             }
