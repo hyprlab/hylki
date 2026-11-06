@@ -173,7 +173,7 @@ impl Cache {
                     from_name: row.get(6)?,
                     subject: row.get(7)?,
                     timestamp: row.get(8)?,
-                    data: row.get(9)?,
+                    data: row.get::<_, Option<Vec<u8>>>(9)?.map(Into::into),
                     downloaded: row.get(10)?,
                     folder_name: row.get(11)?,
                 })

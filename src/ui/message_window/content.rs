@@ -153,7 +153,7 @@ mod tests {
     fn file(name: &str, len: usize) -> Attachment {
         Attachment {
             name: name.into(),
-            data: vec![0; len],
+            data: vec![0; len].into(),
         }
     }
 

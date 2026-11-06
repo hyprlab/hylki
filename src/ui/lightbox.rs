@@ -514,7 +514,7 @@ impl Lightbox {
         }
         let key = thumbnails::content_key(&att.data);
         let s = sender.input_sender().clone();
-        thumbnails::lightbox_pdf_texture(&att.data, move |page| {
+        thumbnails::lightbox_pdf_texture(att.data.clone(), move |page| {
             let _ = s.send(LightboxInput::Rendered(key, page));
         });
     }

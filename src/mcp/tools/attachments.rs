@@ -258,7 +258,7 @@ mod tests {
     fn file(name: &str, data: &[u8]) -> Attachment {
         Attachment {
             name: name.into(),
-            data: data.to_vec(),
+            data: data.into(),
         }
     }
 

@@ -3,6 +3,8 @@
 //! through the OpenURI portal inside Flatpak. And saving one where the user
 //! picks.
 
+use std::sync::Arc;
+
 use gtk::prelude::*;
 
 use crate::i18n::i18n;
@@ -13,7 +15,7 @@ use crate::i18n::i18n;
 /// each caller keeps as it had it (most drop it, the gallery logs it).
 pub(crate) fn save_attachment_as(
     name: &str,
-    data: Vec<u8>,
+    data: Arc<[u8]>,
     parent: Option<&gtk::Window>,
     on_error: impl FnOnce(std::io::Error) + 'static,
 ) {

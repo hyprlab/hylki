@@ -3,6 +3,8 @@
 //! shown for files without a thumbnail. Shared with the composer's
 //! attachment drawer, the lightbox and printing.
 
+use std::sync::Arc;
+
 use gtk::prelude::*;
 use gtk::{gdk, glib};
 
@@ -188,15 +190,14 @@ pub(super) fn cached_pdf_preview(data: &[u8]) -> Option<Option<gdk::Texture>> {
 /// main thread — at once from the cache, or after a worker renders it.
 /// Failures cache too, so a broken PDF is rendered at most once.
 pub(super) fn lightbox_pdf_texture(
-    data: &[u8],
+    data: Arc<[u8]>,
     on_done: impl FnOnce(Option<gdk::Texture>) + 'static,
 ) {
-    let key = thumb_cache_key(data);
+    let key = thumb_cache_key(&data);
     if let Some(cached) = PDF_PREVIEWS.with(|c| c.borrow().get(&key).cloned()) {
         on_done(cached);
         return;
     }
-    let data = data.to_vec();
     glib::spawn_future_local(async move {
         let tex = gtk::gio::spawn_blocking(move || pdf_page_texture(&data, PREVIEW_RENDER_WIDTH))
             .await
@@ -237,7 +238,7 @@ pub(super) fn thumbnail_texture(name: &str, data: &[u8]) -> Thumbnail {
 /// window freezing.
 pub(super) fn spawn_thumbnail_render(
     name: &str,
-    data: Vec<u8>,
+    data: Arc<[u8]>,
     on_done: impl FnOnce(Option<gdk::Texture>) + 'static,
 ) {
     let key = thumb_cache_key(&data);
