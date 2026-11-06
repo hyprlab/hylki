@@ -776,6 +776,19 @@ flowbox.attach-flow > flowboxchild {
   margin-left: -14px;
 }
 
+/* Focus Mode with Unread counts off. The Outbox count is not an unread count:
+   it says mail has not left yet. */
+.no-unread-counts label.unread-badge:not(.outbox-count) {
+  opacity: 0;
+  background: none;
+  box-shadow: none;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 1px;
+}
+
 /* ---- Message list ---- */
 
 /* The boxes above and below the rows that hold search and the bulk bar,

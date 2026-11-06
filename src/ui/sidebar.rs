@@ -56,6 +56,8 @@ pub(crate) struct Sidebar {
     account_click_folds: bool,
     /// Icon rail: a dot for unread mail in place of the count.
     rail_dots: bool,
+    /// Whether unread counts show at all (Settings → Focus Mode).
+    unread_counts: bool,
     /// Icon rail: the sections that fold up by themselves when the sidebar
     /// collapses (Settings → Sidebar → Icon rail).
     rail_fold: crate::config::RailFold,
@@ -321,6 +323,7 @@ impl Component for Sidebar {
             chevrons_left: false,
             account_click_folds: false,
             rail_dots: false,
+            unread_counts: true,
             rail_fold: crate::config::RailFold::default(),
             revealers: HashMap::new(),
             chevrons: HashMap::new(),

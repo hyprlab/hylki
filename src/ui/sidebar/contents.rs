@@ -21,6 +21,7 @@ impl Sidebar {
             chevrons_left,
             account_click_folds,
             rail_dots,
+            unread_counts,
             rail_fold,
             unified_unread,
             unified_folders,
@@ -61,6 +62,7 @@ impl Sidebar {
         self.chevrons_left = chevrons_left;
         self.account_click_folds = account_click_folds;
         self.rail_dots = rail_dots;
+        self.unread_counts = unread_counts;
         // "Fold up expanded items" is a view of the rail, not a
         // change to what is saved: the rebuild below draws the
         // ticked items folded while the sidebar is collapsed and

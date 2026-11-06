@@ -18,6 +18,9 @@ pub(crate) enum SidebarInput {
         /// A click anywhere on an account's header folds it.
         account_click_folds: bool,
         rail_dots: bool,
+        /// Off, no unread count shows anywhere in the sidebar (Settings →
+        /// Focus Mode → Unread counts).
+        unread_counts: bool,
         rail_fold: crate::config::RailFold,
         unified_unread: u32,
         /// Filter-rule folders to list inside All Inboxes (already
