@@ -6,10 +6,35 @@ use super::fonts::EDITOR_FONT;
 use super::fonts::{body_font, font_style};
 use super::scripts::{
     EMOJI_SCRIPT, FOLD_SCRIPT, GRAMMAR_SCRIPT, HISTORY_SCRIPT, LINES_SCRIPT, PASTE_SCRIPT,
+    QUICK_INSERT_SCRIPT,
 };
 use super::signature::{find_src_attr, quoted_value};
 use super::toolbar::js_str;
 use crate::i18n::i18n;
+
+const QUICK_INSERT_CSS: &str = "\
+#hylki-quick-inserts{position:fixed;z-index:2147483647;display:block;\
+  box-sizing:border-box;width:max-content;min-width:210px;max-width:320px;\
+  padding:4px;border:1px solid rgba(128,128,128,0.28);border-radius:9px;\
+  background:Canvas;color:CanvasText;box-shadow:0 8px 24px rgba(0,0,0,0.18);\
+  font:13px/1.25 system-ui,sans-serif;user-select:none;}\
+#hylki-quick-inserts[hidden]{display:none;}\
+.hylki-quick-row{display:flex;align-items:center;gap:14px;min-height:28px;\
+  box-sizing:border-box;padding:4px 8px;border-radius:6px;cursor:pointer;}\
+.hylki-quick-row.active{background:rgba(128,128,128,0.16);}\
+.hylki-quick-row.active .hylki-quick-label{font-weight:600;}\
+.hylki-quick-label{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;\
+  white-space:nowrap;}\
+.hylki-quick-key{margin-inline-start:auto;color:rgba(128,128,128,0.85);\
+  font-size:11px;white-space:nowrap;}";
+
+fn script_json(value: &[String]) -> String {
+    serde_json::to_string(value)
+        .unwrap_or_else(|_| "[]".to_string())
+        .replace('<', "\\u003c")
+        .replace('>', "\\u003e")
+        .replace('&', "\\u0026")
+}
 
 /// The contentEditable HTML document, themed for light/dark. Its ground is
 /// the theme's own view background (#148), read through `webview`, so a
@@ -28,6 +53,7 @@ pub(super) fn document(
     webview: &webkit6::WebView,
     image_policy: &str,
     plain: bool,
+    quick_inserts: &[String],
 ) -> String {
     let dark = adw::StyleManager::default().is_dark();
     let scheme = if dark { "dark" } else { "light" };
@@ -43,15 +69,17 @@ pub(super) fn document(
         js_str(&i18n("Show quoted text")),
         js_str(&i18n("Hide quoted text"))
     );
+    let quick_json = script_json(quick_inserts);
     let script = format!(
         "<script>window.__hylkiPasteRich={paste_rich};\
          window.__hylkiComposeFont={compose_font};\
          window.__hylkiReturnParagraph={return_paragraph};\
          window.__hylkiFoldQuote={fold_quote};\
          window.__hylkiFoldTips={fold_tips};\
-         window.__hylkiPlain={plain};</script>\
+         window.__hylkiPlain={plain};\
+         window.__hylkiQuickInserts={quick_json};</script>\
          {LINES_SCRIPT}{PASTE_SCRIPT}{FOLD_SCRIPT}{HISTORY_SCRIPT}{EMOJI_SCRIPT}\
-         {GRAMMAR_SCRIPT}"
+         {QUICK_INSERT_SCRIPT}{GRAMMAR_SCRIPT}"
     );
     let (plain_attr, plain_css) = if plain {
         let mono = monospace_family();
@@ -136,6 +164,7 @@ pub(super) fn document(
            html.hylki-folded body>:has(+*+div[data-hylki-ui=fold]){{\
              display:none;}}\
            a{{color:#3584e4;}}\
+           {QUICK_INSERT_CSS}\
            {plain_css}\
          </style>{script}\
          <script>window.__hylkiDirty=false;\
@@ -155,10 +184,15 @@ pub(super) fn document(
 /// The text goes in after a newline: an HTML parser drops the first newline
 /// of a textarea's content, which took the blank line a Markdown reply opens
 /// with and left the caret on the quote's "wrote:" line.
-pub(super) fn source_document(text: &str, webview: &webkit6::WebView) -> String {
+pub(super) fn source_document(
+    text: &str,
+    webview: &webkit6::WebView,
+    quick_inserts: &[String],
+) -> String {
     let dark = adw::StyleManager::default().is_dark();
     let scheme = if dark { "dark" } else { "light" };
     let (ground, _, _) = crate::ui::message_view::theme_grounds_for(webview, dark);
+    let quick_json = script_json(quick_inserts);
     format!(
         "<!doctype html><html><head><meta charset=\"utf-8\">\
          <meta name=\"color-scheme\" content=\"{scheme}\">\
@@ -170,6 +204,7 @@ pub(super) fn source_document(text: &str, webview: &webkit6::WebView) -> String 
              background:{ground};color:CanvasText;\
              font:13px/1.6 {mono};\
              tab-size:2;}}\
+           {QUICK_INSERT_CSS}\
          </style></head><body>\
          <textarea id=\"src\" dir=\"auto\" spellcheck=\"true\" autocapitalize=\"off\" \
            autocorrect=\"off\">\n{text}</textarea>\
@@ -177,6 +212,7 @@ pub(super) fn source_document(text: &str, webview: &webkit6::WebView) -> String 
          (function(){{\
            var t=document.getElementById('src');\
            window.__hylkiDirty=false;\
+           window.__hylkiQuickInserts={quick_json};\
            window.__hylkiSourceText=function(){{return t.value;}};\
            t.addEventListener('input',function(){{window.__hylkiDirty=true;}});\
            /* Tab indents instead of leaving the field: in a source view it\
@@ -185,13 +221,16 @@ pub(super) fn source_document(text: &str, webview: &webkit6::WebView) -> String 
            t.addEventListener('keydown',function(e){{\
              if(e.key!=='Tab'||e.ctrlKey||e.altKey)return;\
              e.preventDefault();\
+             if(window.__hylkiQuickAccept&&window.__hylkiQuickAccept()){{\
+               window.__hylkiDirty=true;return;\
+             }}\
              var a=t.selectionStart,b=t.selectionEnd;\
              t.setRangeText('  ',a,b,'end');\
              window.__hylkiDirty=true;\
            }});\
            t.focus();t.setSelectionRange(0,0);\
          }})();\
-         </script>{HISTORY_SCRIPT}{EMOJI_SCRIPT}</body></html>",
+         </script>{HISTORY_SCRIPT}{EMOJI_SCRIPT}{QUICK_INSERT_SCRIPT}</body></html>",
         text = gtk::glib::markup_escape_text(text),
         mono = monospace_family(),
     )
@@ -324,4 +363,16 @@ pub(super) fn reground(weak: &gtk::glib::WeakRef<webkit6::WebView>, dark: bool) 
         );
     });
     true
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn quick_insert_json_cannot_close_the_document_script() {
+        let json = super::script_json(&["</script><img src=x>&".into()]);
+        assert!(!json.contains('<'));
+        assert!(!json.contains('>'));
+        assert!(!json.contains('&'));
+        assert!(json.contains("\\u003c/script\\u003e"));
+    }
 }

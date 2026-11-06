@@ -36,7 +36,7 @@ impl AccountsWindow {
     /// build, for a field most visits never reach.
     pub(super) fn sig_editor(&mut self, widgets: &AccountsWindowWidgets) -> &RichEditor {
         self.sig_editor.get_or_insert_with(|| {
-            let editor = RichEditor::new("", None, false);
+            let editor = RichEditor::new("", None, false, &[]);
             // The text keeps its height when the toolbar wraps or is
             // expanded to a second row; the panel grows instead.
             editor.set_text_height(130);

@@ -482,6 +482,7 @@ impl Component for Compose {
             &content,
             remote_images.as_deref(),
             format == ComposeFormat::Plain,
+            &quick_inserts,
         );
         editor.set_formatting_visible(format == ComposeFormat::Rich);
         editor.set_zoom(session_zoom());
@@ -853,7 +854,10 @@ impl Component for Compose {
 
                 ComposeInput::QuickInsert(phrase) => self.on_quick_insert(phrase),
 
-                ComposeInput::SetQuickInserts(phrases) => self.quick_inserts = phrases,
+                ComposeInput::SetQuickInserts(phrases) => {
+                    self.editor.set_quick_inserts(&phrases);
+                    self.quick_inserts = phrases;
+                }
 
                 ComposeInput::Suggest(field) => self.on_suggest(field, widgets, &sender),
 

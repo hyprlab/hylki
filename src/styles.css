@@ -512,26 +512,30 @@ flowbox.attach-flow > flowboxchild {
 }
 
 /* Right-click context menus (see ui/context_menu.rs): a flat icon + label
-   button per row, padded and rounded like GNOME's native popover menu items.
+   button per row, compact enough for the reader's longer action list while
+   keeping GNOME's restrained rounding and comfortable hit targets.
    Real menu rows (GtkModelButton/PopoverMenu items) are regular weight and a
    comfortable minimum width regardless of label length — plain GtkButton
    defaults to bold text and hugs its content, so both are overridden here. */
 .context-menu-list {
-  padding: 8px;
-  min-width: 220px;
+  padding: 5px;
+  min-width: 205px;
+}
+.context-menu-list > separator {
+  margin: 4px 7px;
 }
 .context-menu-item {
-  min-height: 32px;
-  padding: 10px 12px;
-  border-radius: 8px;
+  min-height: 26px;
+  padding: 5px 9px;
+  border-radius: 6px;
 }
 .context-menu-item,
 .context-menu-item label {
-  font-size: 1em;
+  font-size: 0.93em;
   font-weight: normal;
 }
 .context-menu-item image {
-  -gtk-icon-size: 18px;
+  -gtk-icon-size: 16px;
 }
 
 tooltip {

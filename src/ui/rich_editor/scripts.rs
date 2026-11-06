@@ -33,6 +33,13 @@ pub(super) const HISTORY_SCRIPT: &str =
 /// mode) keeps its own caret, and the chooser points at the field.
 pub(super) const EMOJI_SCRIPT: &str = concat!("<script>", include_str!("emoji.js"), "</script>");
 
+/// Inline completion for saved quick-insert phrases. It draws its small
+/// suggestion card outside the editable body, keeps the chosen phrase in
+/// `Tab`, and tells the host when it is open so the composer's focus cycle
+/// does not take that key first.
+pub(super) const QUICK_INSERT_SCRIPT: &str =
+    concat!("<script>", include_str!("quick_inserts.js"), "</script>");
+
 /// How the body follows the direction of each paragraph and line (#366,
 /// #524): `dir="auto"` on its blocks, and a line of a plain `<div>` or `<p>`
 /// kept as a block of its own while the message is written, joined back to

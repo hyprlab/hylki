@@ -7829,7 +7829,7 @@ msgstr ""
 
 msgid ""
 "Rich text, Markdown, HTML or plain text, with HTML signatures, customizable "
-"quick inserts, inline images, spell check and undo"
+"quick inserts and Tab completion, inline images, spell check and undo"
 msgstr ""
 
 msgid ""

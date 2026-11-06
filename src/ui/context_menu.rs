@@ -371,7 +371,7 @@ fn build_page(
         (Some(parent_page), Some(title)) => {
             // The way back: a row with a leading chevron and the submenu's
             // name, then a hairline before its entries.
-            let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
+            let row = gtk::Box::new(gtk::Orientation::Horizontal, 8);
             let img = gtk::Image::from_icon_name("go-previous-symbolic");
             img.set_pixel_size(18);
             row.append(&img);
@@ -435,7 +435,7 @@ fn build_page(
                 submenu,
             } = entry;
 
-            let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
+            let row = gtk::Box::new(gtk::Orientation::Horizontal, 8);
             if selected {
                 row.add_css_class("context-menu-selected");
             }
