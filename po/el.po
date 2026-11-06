@@ -6387,6 +6387,9 @@ msgstr "Ενότητες"
 msgid "Favorites"
 msgstr "Αγαπημένα"
 
+msgid "Show column headings"
+msgstr "Εμφάνιση επικεφαλίδων στηλών"
+
 msgid "Preview lines"
 msgstr "Γραμμές προεπισκόπησης"
 
@@ -6405,6 +6408,9 @@ msgstr "Απόκρυψη του θέματος"
 msgid "Tag chips hide with it."
 msgstr "Οι ετικέτες σε μορφή μικρών πλαισίων κρύβονται μαζί του."
 
+msgid "Tags and labels under the text"
+msgstr "Ετικέτες κάτω από το κείμενο"
+
 #, fuzzy
 msgid "Hide stars"
 msgstr "Απόκρυψη των avatar των αποστολέων"
@@ -6412,9 +6418,6 @@ msgstr "Απόκρυψη των avatar των αποστολέων"
 #, fuzzy
 msgid "Hide attachment icons"
 msgstr "Απόκρυψη συνημμένων"
-
-msgid "Tags and labels under the text"
-msgstr "Ετικέτες κάτω από το κείμενο"
 
 msgid "Fold the reading pane's toolbar"
 msgstr "Σύμπτυξη της γραμμής εργαλείων του παραθύρου ανάγνωσης"
@@ -6543,9 +6546,6 @@ msgstr ""
 "Για τη διάταξη μίας γραμμής. Σύρετε τις στήλες για αλλαγή σειράς ή έξω από "
 "τη λίστα για αφαίρεση. Η ημερομηνία λήξης εμφανίζεται μόνο για αλληλογραφία "
 "Microsoft 365."
-
-msgid "Show column headings"
-msgstr "Εμφάνιση επικεφαλίδων στηλών"
 
 msgid "Fit columns to the list"
 msgstr "Προσαρμογή στηλών στο πλάτος της λίστας"

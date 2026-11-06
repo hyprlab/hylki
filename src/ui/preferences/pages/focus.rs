@@ -7,7 +7,7 @@ use adw::prelude::*;
 use super::super::choices::list_layout_index;
 use super::super::rows::no_truncate;
 use super::super::{PrefInput, Preferences, ViewSender};
-use crate::config::FocusPart;
+use crate::config::{FocusPart, ListLayout};
 use crate::i18n::i18n;
 
 /// The page, and the rows on it that the window reaches later.
@@ -156,6 +156,13 @@ impl FocusPage {
         }
         list_group.add(&layout);
 
+        add(
+            &list_group,
+            F::ColumnHeadings,
+            i18n("Show column headings"),
+            None,
+        );
+
         let preview = adw::ComboRow::new();
         preview.set_title(&i18n("Preview lines"));
         preview.set_model(Some(&gtk::StringList::new(&[
@@ -234,6 +241,9 @@ impl FocusPage {
             match part {
                 FocusPart::RailDots => row.set_sensitive(model.focus.unread_counts),
                 FocusPart::TagsBelow => row.set_sensitive(!model.focus.hide_subject),
+                FocusPart::ColumnHeadings => {
+                    row.set_sensitive(model.focus.layout != ListLayout::Cards);
+                }
                 _ => {}
             }
         }

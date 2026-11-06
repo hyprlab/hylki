@@ -5877,6 +5877,9 @@ msgstr ""
 msgid "Favorites"
 msgstr ""
 
+msgid "Show column headings"
+msgstr ""
+
 msgid "Preview lines"
 msgstr ""
 
@@ -5895,13 +5898,13 @@ msgstr ""
 msgid "Tag chips hide with it."
 msgstr ""
 
+msgid "Tags and labels under the text"
+msgstr ""
+
 msgid "Hide stars"
 msgstr ""
 
 msgid "Hide attachment icons"
-msgstr ""
-
-msgid "Tags and labels under the text"
 msgstr ""
 
 msgid "Fold the reading pane's toolbar"
@@ -6019,9 +6022,6 @@ msgstr ""
 msgid ""
 "For the single-line layout. Drag columns to reorder them or out to remove "
 "them. Due Date shows only for Microsoft 365 mail."
-msgstr ""
-
-msgid "Show column headings"
 msgstr ""
 
 msgid "Fit columns to the list"

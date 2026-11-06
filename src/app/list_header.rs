@@ -542,6 +542,16 @@ impl AppModel {
         });
     }
 
+    /// Whether the single-line layout has column headings: Focus Mode's switch
+    /// while it is on, else the setting.
+    pub(super) fn list_headings_now(&self) -> bool {
+        if self.focus.enabled {
+            self.focus.column_headings
+        } else {
+            self.list_headings
+        }
+    }
+
     /// The avatars the list draws: Focus Mode's switch while it is on, else
     /// the setting.
     pub(super) fn list_avatars(&self) -> bool {

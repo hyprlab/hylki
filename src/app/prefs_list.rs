@@ -22,7 +22,8 @@ impl AppModel {
             }
             PrefOutput::SetListHeadings(on) => {
                 if pref!(self.list_headings = on) {
-                    self.message_list.emit(MessageListInput::SetHeadings(on));
+                    self.message_list
+                        .emit(MessageListInput::SetHeadings(self.list_headings_now()));
                 }
             }
             PrefOutput::SetListColumnScroll(on) => {

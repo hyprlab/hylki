@@ -59,6 +59,9 @@ pub(crate) struct FocusMode {
     /// a step past what the mode does by default.
     #[serde(default)]
     pub(crate) hide_subject: bool,
+    /// The single-line layout has its column headings.
+    #[serde(default)]
+    pub(crate) column_headings: bool,
     /// The message list's rows show no star, and no column for it on one line.
     #[serde(default)]
     pub(crate) hide_stars: bool,
@@ -131,6 +134,7 @@ impl Default for FocusMode {
             one_preview_line: true,
             hide_preview: true,
             hide_subject: false,
+            column_headings: false,
             hide_stars: false,
             hide_attachment_icons: false,
             rail_sidebar: true,
@@ -167,6 +171,7 @@ pub(crate) enum FocusPart {
     FoldUnified,
     HideAvatars,
     HideSubject,
+    ColumnHeadings,
     HideStars,
     HideAttachmentIcons,
     RailSidebar,
@@ -203,6 +208,7 @@ impl FocusMode {
             FocusPart::FoldUnified => self.fold_unified,
             FocusPart::HideAvatars => self.hide_avatars,
             FocusPart::HideSubject => self.hide_subject,
+            FocusPart::ColumnHeadings => self.column_headings,
             FocusPart::HideStars => self.hide_stars,
             FocusPart::HideAttachmentIcons => self.hide_attachment_icons,
             FocusPart::RailSidebar => self.rail_sidebar,
@@ -239,6 +245,7 @@ impl FocusMode {
             FocusPart::FoldUnified => self.fold_unified = on,
             FocusPart::HideAvatars => self.hide_avatars = on,
             FocusPart::HideSubject => self.hide_subject = on,
+            FocusPart::ColumnHeadings => self.column_headings = on,
             FocusPart::HideStars => self.hide_stars = on,
             FocusPart::HideAttachmentIcons => self.hide_attachment_icons = on,
             FocusPart::RailSidebar => self.rail_sidebar = on,
@@ -439,5 +446,6 @@ mod focus_tests {
         // Except the subject and the row's marks, off wherever they come from.
         assert!(!partial.hide_subject);
         assert!(!partial.hide_stars && !partial.hide_attachment_icons);
+        assert!(!partial.column_headings);
     }
 }

@@ -6672,6 +6672,10 @@ msgstr "Действия"
 msgid "Favorites"
 msgstr "Избранное"
 
+#, fuzzy
+msgid "Show column headings"
+msgstr "Заголовки столбцов"
+
 msgid "Preview lines"
 msgstr "Строки предпросмотра"
 
@@ -6691,6 +6695,9 @@ msgstr "Скрывать тему"
 msgid "Tag chips hide with it."
 msgstr ""
 
+msgid "Tags and labels under the text"
+msgstr ""
+
 #, fuzzy
 msgid "Hide stars"
 msgstr "Скрывать аватары отправителей"
@@ -6698,9 +6705,6 @@ msgstr "Скрывать аватары отправителей"
 #, fuzzy
 msgid "Hide attachment icons"
 msgstr "Скрыть вложения"
-
-msgid "Tags and labels under the text"
-msgstr ""
 
 msgid "Fold the reading pane's toolbar"
 msgstr "Сворачивать панель инструментов области чтения"
@@ -6831,10 +6835,6 @@ msgid ""
 "For the single-line layout. Drag columns to reorder them or out to remove "
 "them. Due Date shows only for Microsoft 365 mail."
 msgstr ""
-
-#, fuzzy
-msgid "Show column headings"
-msgstr "Заголовки столбцов"
 
 #, fuzzy
 msgid "Fit columns to the list"

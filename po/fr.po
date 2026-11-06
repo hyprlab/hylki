@@ -6368,6 +6368,9 @@ msgstr "Sections"
 msgid "Favorites"
 msgstr "Favoris"
 
+msgid "Show column headings"
+msgstr "Afficher les en-têtes de colonnes"
+
 msgid "Preview lines"
 msgstr "Lignes d’aperçu"
 
@@ -6386,6 +6389,9 @@ msgstr "Masquer l’objet"
 msgid "Tag chips hide with it."
 msgstr "Les pastilles de tag se masquent avec elle."
 
+msgid "Tags and labels under the text"
+msgstr "Tags et étiquettes sous le texte"
+
 #, fuzzy
 msgid "Hide stars"
 msgstr "Masquer les avatars des expéditeurs"
@@ -6393,9 +6399,6 @@ msgstr "Masquer les avatars des expéditeurs"
 #, fuzzy
 msgid "Hide attachment icons"
 msgstr "Masquer les pièces jointes"
-
-msgid "Tags and labels under the text"
-msgstr "Tags et étiquettes sous le texte"
 
 msgid "Fold the reading pane's toolbar"
 msgstr "Replier la barre d’outils du panneau de lecture"
@@ -6524,9 +6527,6 @@ msgstr ""
 "Pour la disposition sur une seule ligne. Faites glisser les colonnes pour "
 "les réordonner, ou hors de la liste pour les retirer. La date d’échéance "
 "n’apparaît que pour le courrier Microsoft 365."
-
-msgid "Show column headings"
-msgstr "Afficher les en-têtes de colonnes"
 
 msgid "Fit columns to the list"
 msgstr "Adapter les colonnes à la liste"

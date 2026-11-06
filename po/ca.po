@@ -6418,6 +6418,9 @@ msgstr "Seccions"
 msgid "Favorites"
 msgstr "Preferits"
 
+msgid "Show column headings"
+msgstr "Mostra els encapçalaments de columna"
+
 msgid "Preview lines"
 msgstr "Línies de previsualització"
 
@@ -6436,6 +6439,9 @@ msgstr "Amaga l'assumpte"
 msgid "Tag chips hide with it."
 msgstr "Les etiquetes s'amaguen amb ella."
 
+msgid "Tags and labels under the text"
+msgstr "Etiquetes i etiquetes del servidor sota el text"
+
 #, fuzzy
 msgid "Hide stars"
 msgstr "Amaga els avatars dels remitents"
@@ -6443,9 +6449,6 @@ msgstr "Amaga els avatars dels remitents"
 #, fuzzy
 msgid "Hide attachment icons"
 msgstr "Amaga els adjunts"
-
-msgid "Tags and labels under the text"
-msgstr "Etiquetes i etiquetes del servidor sota el text"
 
 msgid "Fold the reading pane's toolbar"
 msgstr "Replega la barra d'eines del panell de lectura"
@@ -6571,9 +6574,6 @@ msgstr ""
 "Per a la disposició d'una sola línia. Arrossega les columnes per reordenar-"
 "les o fora per treure-les. La data de venciment només es mostra per al "
 "correu de Microsoft 365."
-
-msgid "Show column headings"
-msgstr "Mostra els encapçalaments de columna"
 
 msgid "Fit columns to the list"
 msgstr "Ajusta les columnes a la llista"

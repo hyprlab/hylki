@@ -6,6 +6,7 @@ hide_accounts = true
 fold_unified = true
 hide_avatars = true
 hide_subject = false
+column_headings = false
 hide_stars = false
 hide_attachment_icons = false
 rail_sidebar = true

@@ -190,7 +190,7 @@ impl AppModel {
         self.message_list
             .emit(MessageListInput::SetColumns(self.list_columns.clone()));
         self.message_list
-            .emit(MessageListInput::SetHeadings(self.list_headings));
+            .emit(MessageListInput::SetHeadings(self.list_headings_now()));
         self.message_list
             .emit(MessageListInput::SetColumnScroll(self.list_column_scroll));
         self.message_list

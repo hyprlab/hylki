@@ -6602,6 +6602,10 @@ msgstr "Azioni"
 msgid "Favorites"
 msgstr "Preferiti"
 
+#, fuzzy
+msgid "Show column headings"
+msgstr "Intestazioni colonne"
+
 msgid "Preview lines"
 msgstr "Righe di anteprima"
 
@@ -6621,6 +6625,9 @@ msgstr "Nascondi l'oggetto"
 msgid "Tag chips hide with it."
 msgstr ""
 
+msgid "Tags and labels under the text"
+msgstr ""
+
 #, fuzzy
 msgid "Hide stars"
 msgstr "Nascondi gli avatar dei mittenti"
@@ -6628,9 +6635,6 @@ msgstr "Nascondi gli avatar dei mittenti"
 #, fuzzy
 msgid "Hide attachment icons"
 msgstr "Nascondi gli allegati"
-
-msgid "Tags and labels under the text"
-msgstr ""
 
 msgid "Fold the reading pane's toolbar"
 msgstr "Comprimi la barra degli strumenti del pannello di lettura"
@@ -6760,10 +6764,6 @@ msgid ""
 "For the single-line layout. Drag columns to reorder them or out to remove "
 "them. Due Date shows only for Microsoft 365 mail."
 msgstr ""
-
-#, fuzzy
-msgid "Show column headings"
-msgstr "Intestazioni colonne"
 
 #, fuzzy
 msgid "Fit columns to the list"

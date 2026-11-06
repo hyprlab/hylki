@@ -60,6 +60,8 @@ impl AppModel {
             self.push_list_look(true);
             self.push_single_line();
             self.message_list
+                .emit(MessageListInput::SetHeadings(self.list_headings_now()));
+            self.message_list
                 .emit(MessageListInput::SetPillsBelow(self.list_pills_below_now()));
             self.sidebars_emit(SidebarInput::SetAttachmentsRow(self.attachments_row_now()));
             self.contacts_page.emit(ContactsPageInput::SetBookPicker(

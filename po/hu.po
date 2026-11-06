@@ -6652,6 +6652,10 @@ msgstr "Műveletek"
 msgid "Favorites"
 msgstr ""
 
+#, fuzzy
+msgid "Show column headings"
+msgstr "Beszélgetés megjelenítése"
+
 msgid "Preview lines"
 msgstr "Előnézeti sorok"
 
@@ -6671,6 +6675,9 @@ msgstr "A tárgy elrejtése"
 msgid "Tag chips hide with it."
 msgstr ""
 
+msgid "Tags and labels under the text"
+msgstr ""
+
 #, fuzzy
 msgid "Hide stars"
 msgstr "A feladók avatárjainak elrejtése"
@@ -6678,9 +6685,6 @@ msgstr "A feladók avatárjainak elrejtése"
 #, fuzzy
 msgid "Hide attachment icons"
 msgstr "Mellékletek elrejtése"
-
-msgid "Tags and labels under the text"
-msgstr ""
 
 msgid "Fold the reading pane's toolbar"
 msgstr "Az olvasópanel eszköztárának összecsukása"
@@ -6809,10 +6813,6 @@ msgid ""
 "For the single-line layout. Drag columns to reorder them or out to remove "
 "them. Due Date shows only for Microsoft 365 mail."
 msgstr ""
-
-#, fuzzy
-msgid "Show column headings"
-msgstr "Beszélgetés megjelenítése"
 
 #, fuzzy
 msgid "Fit columns to the list"

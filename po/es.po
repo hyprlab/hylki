@@ -6355,6 +6355,9 @@ msgstr "Secciones"
 msgid "Favorites"
 msgstr "Favoritos"
 
+msgid "Show column headings"
+msgstr "Mostrar encabezados de columna"
+
 msgid "Preview lines"
 msgstr "Líneas de vista previa"
 
@@ -6373,6 +6376,9 @@ msgstr "Ocultar el asunto"
 msgid "Tag chips hide with it."
 msgstr "Las etiquetas también se ocultan."
 
+msgid "Tags and labels under the text"
+msgstr "Etiquetas y rótulos debajo del texto"
+
 #, fuzzy
 msgid "Hide stars"
 msgstr "Ocultar avatares de remitentes"
@@ -6380,9 +6386,6 @@ msgstr "Ocultar avatares de remitentes"
 #, fuzzy
 msgid "Hide attachment icons"
 msgstr "Ocultar los archivos adjuntos"
-
-msgid "Tags and labels under the text"
-msgstr "Etiquetas y rótulos debajo del texto"
 
 msgid "Fold the reading pane's toolbar"
 msgstr "Contraer la barra de herramientas del panel de lectura"
@@ -6512,9 +6515,6 @@ msgstr ""
 "Para el diseño de una sola línea. Arrastra columnas para reordenarlas o "
 "sácalas para quitarlas. La fecha de vencimiento solo aparece en mensajes de "
 "Microsoft 365."
-
-msgid "Show column headings"
-msgstr "Mostrar encabezados de columna"
 
 msgid "Fit columns to the list"
 msgstr "Ajustar columnas a la lista"
