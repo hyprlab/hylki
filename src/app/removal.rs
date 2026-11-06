@@ -44,7 +44,7 @@ impl AppModel {
     /// Whether the reader's target sits in Junk: the spam button, shortcut
     /// and menu entry then read "Not Spam" (#168).
     pub(super) fn target_in_junk(&self) -> bool {
-        self.reply_target().is_some_and(|m| self.in_junk(&m))
+        self.reply_target().is_some_and(|m| self.in_junk(m))
     }
 
     /// Delete `messages`: the ones still outside Trash are moved there, and any

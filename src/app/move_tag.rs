@@ -41,7 +41,7 @@ impl AppModel {
                         .emit(MessageListInput::Bulk(BulkAction::MoveToInbox));
                     return;
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target().cloned() {
                     self.move_to(m, FolderKind::Inbox);
                 }
             }
@@ -84,7 +84,7 @@ impl AppModel {
                     (self.list_selection[0].0, None)
                 } else {
                     match self.reply_target() {
-                        Some(m) => (m.account_id, self.resolve_folder_path(&m)),
+                        Some(m) => (m.account_id, self.resolve_folder_path(m)),
                         None => return,
                     }
                 };
@@ -251,7 +251,7 @@ impl AppModel {
                         })
                         .collect();
                     self.drop_move(account_id, dest, items);
-                } else if let Some(m) = self.reply_target() {
+                } else if let Some(m) = self.reply_target().cloned() {
                     if m.account_id == account_id {
                         self.move_to_path(m, dest);
                     } else {

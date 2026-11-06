@@ -174,7 +174,7 @@ impl AppModel {
     pub(super) fn snooze_offered(&self) -> bool {
         !self.showing_outbox
             && match self.reply_target() {
-                Some(m) => self.snoozable(&m),
+                Some(m) => self.snoozable(m),
                 None => self.many_selected(),
             }
     }
@@ -231,7 +231,7 @@ impl AppModel {
         let messages = if messages.len() > 1 {
             messages
         } else {
-            self.reply_target().into_iter().collect()
+            self.reply_target().cloned().into_iter().collect()
         };
         self.apply_snooze(action, messages);
     }
