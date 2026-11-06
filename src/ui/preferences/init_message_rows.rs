@@ -383,6 +383,13 @@ impl Preferences {
         widgets
             .composing
             .set_attachment_keywords(&init.attachment_keywords);
+        let quick_sender = ViewSender {
+            inner: sender.clone(),
+            ready: Rc::new(std::cell::Cell::new(true)),
+        };
+        widgets
+            .composing
+            .set_quick_inserts(&init.quick_inserts, &quick_sender);
         let undo_labels: Vec<String> = crate::config::UNDO_SEND_CHOICES
             .iter()
             .map(|&secs| match secs {

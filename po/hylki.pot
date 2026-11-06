@@ -7944,6 +7944,44 @@ msgstr ""
 msgid "Insert Template"
 msgstr ""
 
+#: src/ui/accounts/pages/form.rs
+msgid "Sender name"
+msgstr ""
+
+#: src/ui/accounts/pages/form.rs
+msgid ""
+"The name shown in From when this signature is selected. Leave it empty to "
+"keep the account's name."
+msgstr ""
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Quick Inserts"
+msgstr ""
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Short phrases the composer can insert at the caret."
+msgstr ""
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Add Phrase"
+msgstr ""
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Phrase"
+msgstr ""
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Remove Phrase"
+msgstr ""
+
+#: src/ui/compose/quick_inserts.rs
+msgid "No Quick Inserts"
+msgstr ""
+
+#: src/ui/compose/quick_inserts.rs
+msgid "Configure Quick Inserts…"
+msgstr ""
+
 #: src/app/drafts.rs
 msgid "The template goes into this message above the quoted original."
 msgstr ""

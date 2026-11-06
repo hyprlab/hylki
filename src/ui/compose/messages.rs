@@ -151,6 +151,12 @@ pub(crate) enum ComposeInput {
     /// One of the From account's signatures (#445), by index, in place of
     /// the one in the message; `None` takes it out.
     UseSignature(Option<usize>),
+    /// The quick phrases button: list the saved phrases.
+    QuickInsertsMenu,
+    /// Put one saved phrase at the caret.
+    QuickInsert(String),
+    /// The settings changed while this composer was open.
+    SetQuickInserts(Vec<String>),
     /// The editor content came back — finish saving the draft, or the copy
     /// kept as a template.
     SaveDraftBody {
@@ -306,6 +312,8 @@ pub(crate) enum ComposeOutput {
     SaveTemplate(Box<OutgoingMessage>),
     /// Ask the app to show its template picker for this composer.
     PickTemplate { id: u32 },
+    /// Open Settings → Composing, where quick inserts are edited.
+    OpenQuickInsertSettings,
     /// Delete the draft this composer was opened from, and close it. The app
     /// moves the draft to Trash (undoable, like deleting it from the list).
     DeleteDraft { id: u32, origin: DraftOrigin },

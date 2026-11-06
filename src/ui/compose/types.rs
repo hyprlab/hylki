@@ -146,6 +146,8 @@ pub(crate) struct ComposeInit {
     pub(crate) format: ComposeFormat,
     /// Where the signature goes against a quoted original (#237).
     pub(crate) signature_position: SignaturePosition,
+    /// Short phrases offered at the caret.
+    pub(crate) quick_inserts: Vec<String>,
 }
 
 /// An account that suggests only from its directory and its own mail

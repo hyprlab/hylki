@@ -315,6 +315,7 @@ impl AppModel {
             decorations: true,
             format,
             signature_position: self.signature_position,
+            quick_inserts: self.quick_inserts.clone(),
         };
         (id, init)
     }
@@ -338,6 +339,7 @@ impl AppModel {
                 ComposeOutput::SaveDraft(msg) => AppMsg::SaveDraftMessage(msg),
                 ComposeOutput::SaveTemplate(msg) => AppMsg::SaveTemplateMessage(msg),
                 ComposeOutput::PickTemplate { id } => AppMsg::PickTemplate { id },
+                ComposeOutput::OpenQuickInsertSettings => AppMsg::OpenQuickInsertSettings,
                 ComposeOutput::AutoSave { id, message } => AppMsg::AutoSaveDraft { id, message },
                 ComposeOutput::DiscardAutosave { id, origin } => {
                     AppMsg::DiscardAutosave { id, origin }

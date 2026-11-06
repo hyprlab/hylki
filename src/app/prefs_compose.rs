@@ -135,6 +135,15 @@ impl AppModel {
             PrefOutput::SetReplyHeader(header) => {
                 pref!(self.reply_header = header);
             }
+            PrefOutput::SetQuickInserts(phrases) => {
+                if pref!(self.quick_inserts = phrases) {
+                    for (_, composer) in self.open_composers() {
+                        composer.emit(crate::ui::compose::ComposeInput::SetQuickInserts(
+                            self.quick_inserts.clone(),
+                        ));
+                    }
+                }
+            }
             PrefOutput::SetAttachmentKeywords(words) => {
                 // Read again at each Send, so open composers follow it. The
                 // default list is not stored, so a longer one reaches it.

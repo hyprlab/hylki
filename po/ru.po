@@ -10629,6 +10629,46 @@ msgstr "Выбрать подпись"
 msgid "Insert Template"
 msgstr "Вставить шаблон"
 
+#: src/ui/accounts/pages/form.rs
+msgid "Sender name"
+msgstr "Имя отправителя"
+
+#: src/ui/accounts/pages/form.rs
+msgid ""
+"The name shown in From when this signature is selected. Leave it empty to "
+"keep the account's name."
+msgstr ""
+"Имя, отображаемое в поле «От» при выборе этой подписи. Оставьте поле "
+"пустым, чтобы сохранить имя учётной записи."
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Quick Inserts"
+msgstr "Быстрые вставки"
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Short phrases the composer can insert at the caret."
+msgstr "Короткие фразы, которые можно вставлять в текст письма по месту курсора."
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Add Phrase"
+msgstr "Добавить фразу"
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Phrase"
+msgstr "Фраза"
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Remove Phrase"
+msgstr "Удалить фразу"
+
+#: src/ui/compose/quick_inserts.rs
+msgid "No Quick Inserts"
+msgstr "Нет быстрых вставок"
+
+#: src/ui/compose/quick_inserts.rs
+msgid "Configure Quick Inserts…"
+msgstr "Настроить быстрые вставки…"
+
 #: src/app/drafts.rs
 msgid "The template goes into this message above the quoted original."
 msgstr "Шаблон будет вставлен в это сообщение перед цитируемым письмом."

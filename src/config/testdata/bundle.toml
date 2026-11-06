@@ -70,6 +70,13 @@ signature_position = "above_quote"
 signature_dashes = false
 fold_quote = true
 reply_header = ""
+quick_inserts = [
+    "Good afternoon!",
+    "Hello!",
+    "Best regards,",
+    "We are writing to introduce",
+    "We look forward to hearing from you.",
+]
 undo_send_secs = 5
 spellcheck = true
 spellcheck_langs = ""

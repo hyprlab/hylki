@@ -5,6 +5,18 @@ use super::{
     decode_gallery_folder, encode_gallery_folder, ConfigFile, ListColumn, PrivacyFile, StateFile,
 };
 
+#[test]
+fn quick_inserts_start_with_defaults_but_an_empty_list_stays_empty() {
+    let old: PrivacyFile = toml::from_str("").unwrap();
+    assert_eq!(old.quick_inserts, super::default_quick_inserts());
+    let empty: PrivacyFile = toml::from_str("quick_inserts = []").unwrap();
+    assert!(empty.quick_inserts.is_empty());
+    let saved = toml::to_string(&empty).unwrap();
+    assert!(saved.contains("quick_inserts = []"), "{saved}");
+    let read_back: PrivacyFile = toml::from_str(&saved).unwrap();
+    assert!(read_back.quick_inserts.is_empty());
+}
+
 /// A section once kept in the unified section moves above the accounts
 /// where its switch was on, and off where it was off; one already
 /// placed stays put.

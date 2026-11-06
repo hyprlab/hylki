@@ -550,6 +550,7 @@ impl AppModel {
             signature_dashes: prefs.signature_dashes,
             fold_quote: prefs.fold_quote,
             reply_header: prefs.reply_header,
+            quick_inserts: prefs.quick_inserts,
             undo_send_secs: prefs.undo_send_secs,
             attachment_keywords: prefs.attachment_keywords,
             spellcheck: prefs.spellcheck,
