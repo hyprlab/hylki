@@ -7918,3 +7918,15 @@ msgstr ""
 
 msgid "Hyprlab"
 msgstr ""
+
+#: src/ui/rich_editor/context_menu.rs
+msgid "Cut"
+msgstr ""
+
+#: src/ui/rich_editor/context_menu.rs
+msgid "Select All"
+msgstr ""
+
+#: src/ui/rich_editor/context_menu.rs
+msgid "Insert Emoji"
+msgstr ""
