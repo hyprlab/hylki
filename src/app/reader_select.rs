@@ -466,6 +466,7 @@ impl AppModel {
         self.follow_keyboard_into_reader();
         self.attachments.clear();
         self.attachments_loading = false;
+        self.attachments_asked.clear();
         self.sync_attachment_drawer();
         let account_id = m.account_id;
         let folder_path = self.resolve_folder_path(&m);
@@ -530,9 +531,8 @@ impl AppModel {
             }
             self.reader_swap.freeze();
             self.show_single(&m, display, needs_body, folder_path.clone(), related);
+            self.load_attachments_on_open(&m, folder_path);
         }
-
-        self.load_attachments_on_open(&m, folder_path);
     }
 
     /// With the Privacy switch on, the remote content of the rows likely
@@ -745,27 +745,24 @@ impl AppModel {
         self.show_message(Some(display), needs_body);
     }
 
-    /// Attachments: use the in-memory cache if present; otherwise
-    /// fetch them (disk cache first, then the server). Opening the
+    /// A lone message's attachments: use the in-memory cache if present;
+    /// otherwise fetch them (disk cache first, then the server). Opening the
     /// message is the request — the paperclip appears when they
-    /// land, with no "load attachments" click in between.
+    /// land, with no "load attachments" click in between. A conversation's
+    /// drawer spans all its messages, and `load_thread_attachments` fills it.
     fn load_attachments_on_open(&mut self, m: &Message, folder_path: Option<String>) {
-        let account_id = m.account_id;
         if m.has_attachment {
             if let Some(cached) = self.attachment_cache.get(&body_key(m)).cloned() {
                 self.attachments = cached;
                 self.sync_attachment_drawer();
             } else if let Some(path) = folder_path {
-                self.attachments_loading = true;
-                self.send_to(
-                    account_id,
-                    MailRequest::LoadAttachments {
-                        message_id: m.id,
-                        path,
-                        uid: m.uid,
-                        download: true,
-                    },
-                );
+                let req = MailRequest::LoadAttachments {
+                    message_id: m.id,
+                    path,
+                    uid: m.uid,
+                    download: true,
+                };
+                self.ask_attachments(body_key(m), req);
             }
         }
     }
