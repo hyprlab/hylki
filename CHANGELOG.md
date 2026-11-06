@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Fixed: exports and local mail files were left readable by other users** (#600,
+  by James Reilly). The log exports and the settings export are written owner-only,
+  also over an existing file. The remote-content cache and the On This Computer
+  folders are owner-only; older files in them are protected by their folder.
+
+- **Fixed: opened attachments were never cleared under Flatpak** (#600, by James
+  Reilly). The startup purge cleared `/tmp` while the Flatpak staged them in the
+  runtime directory. A second launch no longer clears them while Hylki is running,
+  in any package.
+
 - **Added: Esc takes back a message waiting out its Undo Send delay** (#607, by
   Fabio Rotondo). Outside a text field or composer it does the same as Undo, for
   the most recent message when several wait. With none waiting it goes back to

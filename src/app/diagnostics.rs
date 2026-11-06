@@ -254,7 +254,7 @@ impl AppModel {
 
             AppMsg::ExportLogTo(path) => {
                 let text = crate::desktop::console_log::export_text(&self.memory_report());
-                match std::fs::write(&path, text) {
+                match crate::config::write_private(&path, &text) {
                     Ok(()) => tracing::info!("log exported to {}", path.display()),
                     Err(e) => tracing::warn!("log export to {} failed: {e}", path.display()),
                 }

@@ -152,9 +152,11 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   message header, a message opening as one change on screen, sooner, and
   folder counts that start from the last ones the server gave.
 - [**James Reilly**](https://github.com/hanthor) ([#588](https://github.com/hyprlab/hylki/pull/588),
-  [#591](https://github.com/hyprlab/hylki/pull/591)): the gap above a message
-  card reached with `w` or `b`, and Drafts shown from the cache after a send
-  from a Microsoft account.
+  [#591](https://github.com/hyprlab/hylki/pull/591),
+  [#600](https://github.com/hyprlab/hylki/pull/600)): the gap above a message
+  card reached with `w` or `b`, Drafts shown from the cache after a send from a
+  Microsoft account, and owner-only exports and local mail files with the
+  Flatpak attachment purge.
 - [**Alp Sahin**](https://github.com/AlpSha) ([#593](https://github.com/hyprlab/hylki/issues/593)):
   text in the accent's foreground color on the accent, and a theme picked in
   Settings shown over the colors of a user's `gtk.css`.
