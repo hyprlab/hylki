@@ -995,7 +995,7 @@ with this signature** marks the one new messages, replies and forwards open
 with; with it off for all of them, a message opens without one. A signature
 left empty is not saved.
 
-With more than one, the composer's **Insert Signature** button lists them
+With more than one, the composer's **Choose Signature** button lists them
 by name, with **No Signature** at the end. The one picked replaces the
 signature in the message, in the same place; with none in the message, it
 goes where a signature goes. Changing **From** to another account puts in
@@ -1196,6 +1196,10 @@ templates there, Thunderbird among them, sees the same ones.
   Message** (on its right-click menu when the sidebar is folded to icons),
   or <kbd>Ctrl+Shift+N</kbd>, lists every account's templates to start
   from.
+- **Insert Template**, in the composer's formatting row, puts a template
+  into the message already being written. It keeps the recipients,
+  conversation headers and quoted original, so a standard answer can be
+  inserted into a reply instead of starting a separate message.
 
 A folder called Templates is taken for the role, at the top of the account
 or directly under the Inbox. Nothing on a server marks one otherwise, so a
@@ -1306,7 +1310,10 @@ the next field.
 
 ### The From address
 
-The From row lists each account's address and the aliases set up for it.
+The From row lists each account's address and the send-as identities set up
+for it. Several identities may use the same address with different display
+names, such as a manager and a director writing from one shared mailbox;
+they must use the same SMTP transport.
 Its pencil turns the row into text, where any name and address can be typed
 for this one message, a throwaway address or a `+tag` one, without making
 it an alias; the arrow beside it goes back to the list. The message still
@@ -1320,7 +1327,7 @@ A JMAP account lists the identities the server keeps for it as well, so an
 alias made in the webmail is in the From row without setting it up again.
 The message is sent as the identity with its address, or as a catch-all
 identity for its domain (`*@example.org`) when there is one. The account's
-page in Settings shows them under Send-as aliases, read-only: they are
+page in Settings shows them under Send-as identities, read-only: they are
 changed where the server keeps them.
 
 ### Return and Shift+Return

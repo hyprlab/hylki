@@ -134,6 +134,11 @@ pub(crate) enum ComposeInput {
     SaveDraft,
     /// Save a copy of the message as a template (#360), and go on writing.
     SaveAsTemplate,
+    /// Put a saved template into this message, at the caret or above the
+    /// quoted original when the editor no longer has one.
+    InsertTemplate,
+    /// The app fetched the template picked for this composer.
+    TemplateBody(String),
     /// The From account's signature, put in by hand (#385): at the caret,
     /// or before or after the text from the button's right-click menu.
     InsertSignature(SigPlace),
@@ -298,6 +303,8 @@ pub(crate) enum ComposeOutput {
     /// Save the message to the Templates folder (#360), replacing the
     /// template at its `draft_origin` if it has one.
     SaveTemplate(Box<OutgoingMessage>),
+    /// Ask the app to show its template picker for this composer.
+    PickTemplate { id: u32 },
     /// Delete the draft this composer was opened from, and close it. The app
     /// moves the draft to Trash (undoable, like deleting it from the list).
     DeleteDraft { id: u32, origin: DraftOrigin },

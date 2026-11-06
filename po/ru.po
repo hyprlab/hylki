@@ -10560,3 +10560,41 @@ msgstr "Hyprlab"
 
 #~ msgid "Inside All Inboxes"
 #~ msgstr "Внутри «Все входящие»"
+
+#: src/ui/accounts/pages/form.rs
+msgid "Send-as identities"
+msgstr "Идентичности отправителя"
+
+#: src/ui/accounts/pages/form.rs
+msgid ""
+"Extra names and addresses this account can send as. The same address may "
+"have several names."
+msgstr ""
+"Дополнительные имена и адреса, от которых можно отправлять с этой учётной "
+"записи. У одного адреса может быть несколько имён."
+
+#: src/ui/accounts/aliases.rs
+msgid ""
+"This address already has a send-as identity with its own SMTP server. "
+"Several names may share an address only when they use this account's SMTP "
+"server."
+msgstr ""
+"У этого адреса уже есть идентичность отправителя с собственным "
+"SMTP-сервером. Несколько имён могут использовать один адрес, только если "
+"они отправляют через SMTP этой учётной записи."
+
+#: src/ui/compose/setup.rs
+msgid "Choose Signature"
+msgstr "Выбрать подпись"
+
+#: src/ui/compose/setup.rs
+msgid "Insert Template"
+msgstr "Вставить шаблон"
+
+#: src/app/drafts.rs
+msgid "The template goes into this message above the quoted original."
+msgstr "Шаблон будет вставлен в это сообщение перед цитируемым письмом."
+
+#: src/app/drafts.rs
+msgid "Could not load the template body."
+msgstr "Не удалось загрузить текст шаблона."
