@@ -5824,6 +5824,92 @@ msgstr ""
 msgid "Clock"
 msgstr ""
 
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+
+msgid "Start in Focus Mode"
+msgstr ""
+
+msgid "Fold the sidebar to the icon rail"
+msgstr ""
+
+msgid "Unread dots instead of counts"
+msgstr ""
+
+msgid "Expand the sidebar on hover"
+msgstr ""
+
+msgid "Hide the accounts in the sidebar"
+msgstr ""
+
+msgid "Only the unified section stays."
+msgstr ""
+
+msgid "Fold up the accounts"
+msgstr ""
+
+msgid "In the icon rail, their avatars alone."
+msgstr ""
+
+msgid "Fold accounts with one click"
+msgstr ""
+
+msgid "Off, a click on a rail avatar opens its inbox."
+msgstr ""
+
+msgid "Fold up the unified rows"
+msgstr ""
+
+msgid "Unread counts"
+msgstr ""
+
+msgid "Unified"
+msgstr ""
+
+msgid "Inboxes"
+msgstr ""
+
+msgid "Snoozed"
+msgstr ""
+
+msgid "Sections"
+msgstr ""
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Preview lines"
+msgstr ""
+
+msgid "Fold the message list's header"
+msgstr ""
+
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr ""
+
+msgid "Hide sender avatars"
+msgstr ""
+
+msgid "Hide the subject"
+msgstr ""
+
+msgid "Tag chips hide with it."
+msgstr ""
+
+msgid "Tags and labels under the text"
+msgstr ""
+
+msgid "Fold the reading pane's toolbar"
+msgstr ""
+
+msgid "Every button goes into its ⋯ menu."
+msgstr ""
+
+msgid "Open messages in Reader View."
+msgstr ""
+
 msgid "Instant new mail (push)"
 msgstr ""
 
@@ -5887,16 +5973,10 @@ msgstr ""
 msgid "Automatic uses single lines in wide windows."
 msgstr ""
 
-msgid "Preview lines"
-msgstr ""
-
 msgid "Off also stops downloading previews."
 msgstr ""
 
 msgid "Group by date"
-msgstr ""
-
-msgid "Tags and labels under the text"
 msgstr ""
 
 msgid "Gives the subject its full width."
@@ -6018,9 +6098,6 @@ msgstr ""
 msgid "Chevron placement"
 msgstr ""
 
-msgid "Fold accounts with one click"
-msgstr ""
-
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr ""
 
@@ -6028,9 +6105,6 @@ msgid "Show Attachments Browser"
 msgstr ""
 
 msgid "Browse every account's attachments in one place."
-msgstr ""
-
-msgid "Expand the sidebar on hover"
 msgstr ""
 
 msgid "Hovering the icon rail floats the full sidebar out."
@@ -6051,28 +6125,13 @@ msgstr ""
 msgid "A count turns grey once you have looked at the folder."
 msgstr ""
 
-msgid "Unified"
-msgstr ""
-
 msgid "Shown only with more than one account."
-msgstr ""
-
-msgid "Inboxes"
-msgstr ""
-
-msgid "Snoozed"
 msgstr ""
 
 msgid "Shown only while mail is snoozed."
 msgstr ""
 
-msgid "Unread counts"
-msgstr ""
-
 msgid "Shown on the unified rows while they are folded up."
-msgstr ""
-
-msgid "Sections"
 msgstr ""
 
 msgid "Section style"
@@ -6088,9 +6147,6 @@ msgid "Favorites placement"
 msgstr ""
 
 msgid "Icon rail"
-msgstr ""
-
-msgid "Unread dots instead of counts"
 msgstr ""
 
 msgid "The count stays in the tooltip."
@@ -6398,9 +6454,6 @@ msgid "No accounts yet"
 msgstr ""
 
 msgid "New Message from Template…"
-msgstr ""
-
-msgid "Favorites"
 msgstr ""
 
 msgid "Show each inbox"
@@ -7332,59 +7385,6 @@ msgid ""
 msgstr ""
 
 msgid "Always fold the right group into ⋯"
-msgstr ""
-
-msgid ""
-"The parts switched on below hide while Focus Mode is on. Activated by "
-"Ctrl+Shift+F or the main menu."
-msgstr ""
-
-msgid "Start in Focus Mode"
-msgstr ""
-
-msgid "Fold the reading pane's toolbar"
-msgstr ""
-
-msgid "Every button goes into its ⋯ menu."
-msgstr ""
-
-msgid "Fold the message list's header"
-msgstr ""
-
-msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr ""
-
-msgid "Hide the accounts in the sidebar"
-msgstr ""
-
-msgid "Only the unified section stays."
-msgstr ""
-
-msgid "Fold up the unified rows"
-msgstr ""
-
-msgid "Hide sender avatars"
-msgstr ""
-
-msgid "Hide the preview text"
-msgstr ""
-
-msgid "One line of preview text"
-msgstr ""
-
-msgid "Hide the subject"
-msgstr ""
-
-msgid "Tag chips hide with it."
-msgstr ""
-
-msgid "Fold the sidebar to the icon rail"
-msgstr ""
-
-msgid "Hovering it slides the full sidebar out."
-msgstr ""
-
-msgid "Open messages in Reader View."
 msgstr ""
 
 msgid "Compose in the main window"

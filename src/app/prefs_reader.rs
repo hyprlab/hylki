@@ -27,16 +27,23 @@ impl AppModel {
     /// What Reader View does on each open: Focus Mode's "on" while it holds,
     /// else the setting.
     pub(super) fn effective_reader_default(&self) -> config::ReaderDefault {
-        if self.focus.active(config::FocusPart::ReaderView) {
+        if !self.focus.enabled {
+            self.reader_default
+        } else if self.focus.reader_view {
             config::ReaderDefault::On
         } else {
-            self.reader_default
+            config::ReaderDefault::Off
         }
     }
 
-    /// Reader View for the message on screen: on in Focus Mode, else as saved.
+    /// Reader View for the message on screen: Focus Mode's switch while it is
+    /// on, else as saved.
     pub(super) fn effective_reader_mode(&self) -> bool {
-        self.reader_mode || self.focus.active(config::FocusPart::ReaderView)
+        if self.focus.enabled {
+            self.focus.reader_view
+        } else {
+            self.reader_mode
+        }
     }
 
     /// The reader's font-and-color override (#56) as the reader applies it:
@@ -324,7 +331,7 @@ impl AppModel {
                 // In Focus Mode with Reader View on, the switch changes the
                 // message on screen alone: the saved choice is the ordinary
                 // one, and it comes back with the rest of the layout.
-                if self.focus.active(config::FocusPart::ReaderView) {
+                if self.focus.enabled {
                     // Nothing to remember.
                 } else if self.reader_mode != on {
                     self.reader_mode = on;

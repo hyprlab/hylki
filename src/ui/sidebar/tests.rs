@@ -665,20 +665,3 @@ fn arrange_keeps_ranked_items_and_slots_the_rest_after_their_predecessor() {
     assert_eq!(arrange(vec![0, 1, 2, 3, 4], rank, |i| i), [0, 3, 4, 1, 2]);
     assert_eq!(arrange(vec![2, 0], |_| None, |i| i), [0, 2]);
 }
-
-#[test]
-fn focus_mode_puts_placed_sections_above_the_accounts() {
-    use super::open_state::placed_at;
-    use crate::config::SectionPlacement::{AboveAccounts, BelowAccounts, Off};
-    // Out of Focus Mode each section is where it was placed.
-    assert!(placed_at(BelowAccounts, BelowAccounts, false));
-    assert!(!placed_at(BelowAccounts, AboveAccounts, false));
-    assert!(placed_at(AboveAccounts, AboveAccounts, false));
-    // In it, above the accounts and never below, whatever the placement.
-    assert!(placed_at(BelowAccounts, AboveAccounts, true));
-    assert!(!placed_at(BelowAccounts, BelowAccounts, true));
-    assert!(placed_at(AboveAccounts, AboveAccounts, true));
-    // Off stays off.
-    assert!(!placed_at(Off, AboveAccounts, true));
-    assert!(!placed_at(Off, BelowAccounts, true));
-}

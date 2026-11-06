@@ -295,6 +295,10 @@ pub(crate) enum PrefInput {
     ToggleShowAccounts(bool),
     /// One of Focus Mode's switches.
     ToggleFocus(crate::config::FocusPart, bool),
+    /// Focus Mode's list layout, by its row in the combo.
+    SetFocusLayout(u32),
+    /// Focus Mode's preview lines: the row in the combo is the number of lines.
+    SetFocusPreviewLines(u32),
     /// The app's Focus Mode changed elsewhere (menu, shortcut): follow.
     SetFocusMode(crate::config::FocusMode),
     /// The main menu flipped "Show Accounts": the switch follows.

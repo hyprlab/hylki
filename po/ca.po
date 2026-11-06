@@ -6364,6 +6364,93 @@ msgstr "Format de data"
 msgid "Clock"
 msgstr "Rellotge"
 
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+
+msgid "Start in Focus Mode"
+msgstr "Comença en mode d'enfocament"
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "Replega la barra lateral a la barra d'icones"
+
+msgid "Unread dots instead of counts"
+msgstr "Punts de no llegit en lloc de recomptes"
+
+msgid "Expand the sidebar on hover"
+msgstr "Expandeix la barra lateral en passar-hi per sobre"
+
+msgid "Hide the accounts in the sidebar"
+msgstr "Amaga els comptes a la barra lateral"
+
+msgid "Only the unified section stays."
+msgstr "Només queda la secció unificada."
+
+#, fuzzy
+msgid "Fold up the accounts"
+msgstr "A sobre dels comptes"
+
+msgid "In the icon rail, their avatars alone."
+msgstr ""
+
+msgid "Fold accounts with one click"
+msgstr "Replega els comptes amb un clic"
+
+msgid "Off, a click on a rail avatar opens its inbox."
+msgstr ""
+
+msgid "Fold up the unified rows"
+msgstr "Replega les files unificades"
+
+msgid "Unread counts"
+msgstr "Recomptes de no llegits"
+
+msgid "Unified"
+msgstr "Unificat"
+
+msgid "Inboxes"
+msgstr "Bústies d'entrada"
+
+msgid "Snoozed"
+msgstr ""
+
+msgid "Sections"
+msgstr "Seccions"
+
+msgid "Favorites"
+msgstr "Preferits"
+
+msgid "Preview lines"
+msgstr "Línies de previsualització"
+
+msgid "Fold the message list's header"
+msgstr "Replega l'encapçalament de la llista de missatges"
+
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr "Tot menys l'alternador de la barra lateral va a ⋯."
+
+msgid "Hide sender avatars"
+msgstr "Amaga els avatars dels remitents"
+
+msgid "Hide the subject"
+msgstr "Amaga l'assumpte"
+
+msgid "Tag chips hide with it."
+msgstr "Les etiquetes s'amaguen amb ella."
+
+msgid "Tags and labels under the text"
+msgstr "Etiquetes i etiquetes del servidor sota el text"
+
+msgid "Fold the reading pane's toolbar"
+msgstr "Replega la barra d'eines del panell de lectura"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "Tots els botons van al seu menú ⋯."
+
+msgid "Open messages in Reader View."
+msgstr "Obre els missatges a la vista de lector."
+
 msgid "Instant new mail (push)"
 msgstr "Correu nou instantani (push)"
 
@@ -6428,17 +6515,11 @@ msgstr "La imatge o l'emoji del compte, com a la barra lateral."
 msgid "Automatic uses single lines in wide windows."
 msgstr "Automàtic utilitza línies individuals en finestres amples."
 
-msgid "Preview lines"
-msgstr "Línies de previsualització"
-
 msgid "Off also stops downloading previews."
 msgstr "Desactivat també atura la baixada de previsualitzacions."
 
 msgid "Group by date"
 msgstr "Agrupa per data"
-
-msgid "Tags and labels under the text"
-msgstr "Etiquetes i etiquetes del servidor sota el text"
 
 msgid "Gives the subject its full width."
 msgstr "Dona a l'assumpte tota l'amplada."
@@ -6573,9 +6654,6 @@ msgstr "Arrossegar una carpeta canvia a «Ordre personalitzat»."
 msgid "Chevron placement"
 msgstr "Col·locació del xevró"
 
-msgid "Fold accounts with one click"
-msgstr "Replega els comptes amb un clic"
-
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr ""
 "Quan està desactivat, només el seu xevró o un doble clic activen el replegat."
@@ -6585,9 +6663,6 @@ msgstr "Mostra el navegador d'adjunts"
 
 msgid "Browse every account's attachments in one place."
 msgstr "Navega pels adjunts de cada compte en un sol lloc."
-
-msgid "Expand the sidebar on hover"
-msgstr "Expandeix la barra lateral en passar-hi per sobre"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -6608,29 +6683,14 @@ msgstr "Ressalta només el correu no llegit nou"
 msgid "A count turns grey once you have looked at the folder."
 msgstr "El recompte es torna gris un cop has mirat la carpeta."
 
-msgid "Unified"
-msgstr "Unificat"
-
 msgid "Shown only with more than one account."
 msgstr "Només es mostra amb més d'un compte."
-
-msgid "Inboxes"
-msgstr "Bústies d'entrada"
-
-msgid "Snoozed"
-msgstr ""
 
 msgid "Shown only while mail is snoozed."
 msgstr ""
 
-msgid "Unread counts"
-msgstr "Recomptes de no llegits"
-
 msgid "Shown on the unified rows while they are folded up."
 msgstr "Es mostren a les files unificades mentre estan replegades."
-
-msgid "Sections"
-msgstr "Seccions"
 
 msgid "Section style"
 msgstr "Estil de secció"
@@ -6646,9 +6706,6 @@ msgstr "Col·locació dels preferits"
 
 msgid "Icon rail"
 msgstr "Barra d'icones"
-
-msgid "Unread dots instead of counts"
-msgstr "Punts de no llegit en lloc de recomptes"
 
 msgid "The count stays in the tooltip."
 msgstr "El recompte es manté a l'informació emergent."
@@ -6970,9 +7027,6 @@ msgstr "Encara no hi ha comptes"
 
 msgid "New Message from Template…"
 msgstr "Missatge nou a partir d'una plantilla…"
-
-msgid "Favorites"
-msgstr "Preferits"
 
 msgid "Show each inbox"
 msgstr "Mostra cada bústia d'entrada"
@@ -8002,61 +8056,6 @@ msgstr ""
 msgid "Always fold the right group into ⋯"
 msgstr ""
 
-msgid ""
-"The parts switched on below hide while Focus Mode is on. Activated by "
-"Ctrl+Shift+F or the main menu."
-msgstr ""
-"Les parts activades a sota s'amaguen mentre el mode d'enfocament està "
-"activat. S'activa amb Ctrl+Maj+F o el menú principal."
-
-msgid "Start in Focus Mode"
-msgstr "Comença en mode d'enfocament"
-
-msgid "Fold the reading pane's toolbar"
-msgstr "Replega la barra d'eines del panell de lectura"
-
-msgid "Every button goes into its ⋯ menu."
-msgstr "Tots els botons van al seu menú ⋯."
-
-msgid "Fold the message list's header"
-msgstr "Replega l'encapçalament de la llista de missatges"
-
-msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr "Tot menys l'alternador de la barra lateral va a ⋯."
-
-msgid "Hide the accounts in the sidebar"
-msgstr "Amaga els comptes a la barra lateral"
-
-msgid "Only the unified section stays."
-msgstr "Només queda la secció unificada."
-
-msgid "Fold up the unified rows"
-msgstr "Replega les files unificades"
-
-msgid "Hide sender avatars"
-msgstr "Amaga els avatars dels remitents"
-
-msgid "Hide the preview text"
-msgstr "Amaga el text de previsualització"
-
-msgid "One line of preview text"
-msgstr "Una línia de text de previsualització"
-
-msgid "Hide the subject"
-msgstr "Amaga l'assumpte"
-
-msgid "Tag chips hide with it."
-msgstr "Les etiquetes s'amaguen amb ella."
-
-msgid "Fold the sidebar to the icon rail"
-msgstr "Replega la barra lateral a la barra d'icones"
-
-msgid "Hovering it slides the full sidebar out."
-msgstr "Passar-hi per sobre desplega la barra lateral sencera."
-
-msgid "Open messages in Reader View."
-msgstr "Obre els missatges a la vista de lector."
-
 msgid "Compose in the main window"
 msgstr "Redacta a la finestra principal"
 
@@ -8605,6 +8604,22 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "The parts switched on below hide while Focus Mode is on. Activated by "
+#~ "Ctrl+Shift+F or the main menu."
+#~ msgstr ""
+#~ "Les parts activades a sota s'amaguen mentre el mode d'enfocament està "
+#~ "activat. S'activa amb Ctrl+Maj+F o el menú principal."
+
+#~ msgid "Hide the preview text"
+#~ msgstr "Amaga el text de previsualització"
+
+#~ msgid "One line of preview text"
+#~ msgstr "Una línia de text de previsualització"
+
+#~ msgid "Hovering it slides the full sidebar out."
+#~ msgstr "Passar-hi per sobre desplega la barra lateral sencera."
 
 #~ msgid "Not spam"
 #~ msgstr "No és brossa"

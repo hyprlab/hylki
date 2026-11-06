@@ -6314,6 +6314,93 @@ msgstr "Format de date"
 msgid "Clock"
 msgstr "Horloge"
 
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+
+msgid "Start in Focus Mode"
+msgstr "Démarrer en mode Focus"
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "Replier la barre latérale en bandeau d’icônes"
+
+msgid "Unread dots instead of counts"
+msgstr "Puces de non-lus au lieu des nombres"
+
+msgid "Expand the sidebar on hover"
+msgstr "Déplier la barre latérale au survol"
+
+msgid "Hide the accounts in the sidebar"
+msgstr "Masquer les comptes dans la barre latérale"
+
+msgid "Only the unified section stays."
+msgstr "Seule la section unifiée reste affichée."
+
+#, fuzzy
+msgid "Fold up the accounts"
+msgstr "Au-dessus des comptes"
+
+msgid "In the icon rail, their avatars alone."
+msgstr ""
+
+msgid "Fold accounts with one click"
+msgstr "Replier les comptes d’un clic"
+
+msgid "Off, a click on a rail avatar opens its inbox."
+msgstr ""
+
+msgid "Fold up the unified rows"
+msgstr "Replier les lignes unifiées"
+
+msgid "Unread counts"
+msgstr "Compteurs de non-lus"
+
+msgid "Unified"
+msgstr "Unifié"
+
+msgid "Inboxes"
+msgstr "Boîtes de réception"
+
+msgid "Snoozed"
+msgstr "En veille"
+
+msgid "Sections"
+msgstr "Sections"
+
+msgid "Favorites"
+msgstr "Favoris"
+
+msgid "Preview lines"
+msgstr "Lignes d’aperçu"
+
+msgid "Fold the message list's header"
+msgstr "Replier l’en-tête de la liste des messages"
+
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr "Tout sauf le bouton de la barre latérale passe dans ⋯."
+
+msgid "Hide sender avatars"
+msgstr "Masquer les avatars des expéditeurs"
+
+msgid "Hide the subject"
+msgstr "Masquer l’objet"
+
+msgid "Tag chips hide with it."
+msgstr "Les pastilles de tag se masquent avec elle."
+
+msgid "Tags and labels under the text"
+msgstr "Tags et étiquettes sous le texte"
+
+msgid "Fold the reading pane's toolbar"
+msgstr "Replier la barre d’outils du panneau de lecture"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "Chaque bouton passe dans son menu ⋯."
+
+msgid "Open messages in Reader View."
+msgstr "Ouvre les messages en mode Lecture."
+
 msgid "Instant new mail (push)"
 msgstr "Nouveaux messages instantanés (Push)"
 
@@ -6381,17 +6468,11 @@ msgstr "L’image ou l’émoji du compte, comme dans la barre latérale."
 msgid "Automatic uses single lines in wide windows."
 msgstr "Automatique utilise des lignes simples dans les fenêtres larges."
 
-msgid "Preview lines"
-msgstr "Lignes d’aperçu"
-
 msgid "Off also stops downloading previews."
 msgstr "Désactivé, arrête aussi le téléchargement des aperçus."
 
 msgid "Group by date"
 msgstr "Grouper par date"
-
-msgid "Tags and labels under the text"
-msgstr "Tags et étiquettes sous le texte"
 
 msgid "Gives the subject its full width."
 msgstr "Donne à l’objet toute sa largeur."
@@ -6527,9 +6608,6 @@ msgstr "Faire glisser un dossier passe en Ordre personnalisé."
 msgid "Chevron placement"
 msgstr "Emplacement des chevrons"
 
-msgid "Fold accounts with one click"
-msgstr "Replier les comptes d’un clic"
-
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr "Désactivé, seul son chevron ou un double-clic active le repli."
 
@@ -6538,9 +6616,6 @@ msgstr "Afficher le panneau de pièces jointes"
 
 msgid "Browse every account's attachments in one place."
 msgstr "Parcourez les pièces jointes de tous les comptes au même endroit."
-
-msgid "Expand the sidebar on hover"
-msgstr "Déplier la barre latérale au survol"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr "Survoler la barre d’icônes fait apparaître la barre latérale complète."
@@ -6560,29 +6635,14 @@ msgstr "Mettre en évidence uniquement les nouveaux messages non lus"
 msgid "A count turns grey once you have looked at the folder."
 msgstr "Un compteur devient gris dès que vous avez consulté le dossier."
 
-msgid "Unified"
-msgstr "Unifié"
-
 msgid "Shown only with more than one account."
 msgstr "Affiché uniquement avec plus d’un compte."
-
-msgid "Inboxes"
-msgstr "Boîtes de réception"
-
-msgid "Snoozed"
-msgstr "En veille"
 
 msgid "Shown only while mail is snoozed."
 msgstr "Affiché uniquement tant que du courrier est en veille."
 
-msgid "Unread counts"
-msgstr "Compteurs de non-lus"
-
 msgid "Shown on the unified rows while they are folded up."
 msgstr "Affiché sur les lignes unifiées lorsqu’elles sont repliées."
-
-msgid "Sections"
-msgstr "Sections"
 
 msgid "Section style"
 msgstr "Style des sections"
@@ -6598,9 +6658,6 @@ msgstr "Emplacement des favoris"
 
 msgid "Icon rail"
 msgstr "Barre d’icônes"
-
-msgid "Unread dots instead of counts"
-msgstr "Puces de non-lus au lieu des nombres"
 
 msgid "The count stays in the tooltip."
 msgstr "Le compteur reste dans l’infobulle."
@@ -6921,9 +6978,6 @@ msgstr "Aucun compte pour le moment"
 
 msgid "New Message from Template…"
 msgstr "Nouveau message à partir d’un modèle…"
-
-msgid "Favorites"
-msgstr "Favoris"
 
 msgid "Show each inbox"
 msgstr "Afficher chaque boîte de réception"
@@ -7958,61 +8012,6 @@ msgstr ""
 msgid "Always fold the right group into ⋯"
 msgstr "Toujours replier le groupe de droite dans ⋯"
 
-msgid ""
-"The parts switched on below hide while Focus Mode is on. Activated by "
-"Ctrl+Shift+F or the main menu."
-msgstr ""
-"Les éléments activés ci-dessous sont masqués lorsque le mode Focus est "
-"actif. Activé par Ctrl+Maj+F ou le menu principal."
-
-msgid "Start in Focus Mode"
-msgstr "Démarrer en mode Focus"
-
-msgid "Fold the reading pane's toolbar"
-msgstr "Replier la barre d’outils du panneau de lecture"
-
-msgid "Every button goes into its ⋯ menu."
-msgstr "Chaque bouton passe dans son menu ⋯."
-
-msgid "Fold the message list's header"
-msgstr "Replier l’en-tête de la liste des messages"
-
-msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr "Tout sauf le bouton de la barre latérale passe dans ⋯."
-
-msgid "Hide the accounts in the sidebar"
-msgstr "Masquer les comptes dans la barre latérale"
-
-msgid "Only the unified section stays."
-msgstr "Seule la section unifiée reste affichée."
-
-msgid "Fold up the unified rows"
-msgstr "Replier les lignes unifiées"
-
-msgid "Hide sender avatars"
-msgstr "Masquer les avatars des expéditeurs"
-
-msgid "Hide the preview text"
-msgstr "Masquer le texte d’aperçu"
-
-msgid "One line of preview text"
-msgstr "Une ligne de texte d’aperçu"
-
-msgid "Hide the subject"
-msgstr "Masquer l’objet"
-
-msgid "Tag chips hide with it."
-msgstr "Les pastilles de tag se masquent avec elle."
-
-msgid "Fold the sidebar to the icon rail"
-msgstr "Replier la barre latérale en bandeau d’icônes"
-
-msgid "Hovering it slides the full sidebar out."
-msgstr "Le survol fait apparaître la barre latérale complète."
-
-msgid "Open messages in Reader View."
-msgstr "Ouvre les messages en mode Lecture."
-
 msgid "Compose in the main window"
 msgstr "Rédiger dans la fenêtre principale"
 
@@ -8570,6 +8569,22 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "The parts switched on below hide while Focus Mode is on. Activated by "
+#~ "Ctrl+Shift+F or the main menu."
+#~ msgstr ""
+#~ "Les éléments activés ci-dessous sont masqués lorsque le mode Focus est "
+#~ "actif. Activé par Ctrl+Maj+F ou le menu principal."
+
+#~ msgid "Hide the preview text"
+#~ msgstr "Masquer le texte d’aperçu"
+
+#~ msgid "One line of preview text"
+#~ msgstr "Une ligne de texte d’aperçu"
+
+#~ msgid "Hovering it slides the full sidebar out."
+#~ msgstr "Le survol fait apparaître la barre latérale complète."
 
 #~ msgid "Not spam"
 #~ msgstr "Non indésirable"

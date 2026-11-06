@@ -363,13 +363,23 @@ impl AppModel {
         }
     }
 
+    /// The unified rows asked for: Focus Mode's while it is on, else the
+    /// setting's.
+    pub(super) fn unified_kinds_wanted(&self) -> config::UnifiedKinds {
+        if self.focus.enabled {
+            self.focus.unified
+        } else {
+            self.unified_kinds
+        }
+    }
+
     /// The unified rows the sidebar lists: those switched on, Snoozed only
     /// while mail of an account in the unified section is snoozed (#542),
     /// as Filters and Tags show only with a rule or a tag to list. Snoozed
     /// means a Snoozed folder the server says holds mail, whoever put it
     /// there, or a snooze made here that no recount has seen land yet.
     pub(super) fn unified_kinds_listed(&self) -> config::UnifiedKinds {
-        let mut kinds = self.unified_kinds;
+        let mut kinds = self.unified_kinds_wanted();
         let recorded = self.snoozed.iter().any(|s| {
             self.account_id_by_email(&s.account)
                 .is_some_and(|id| self.in_unified(id))

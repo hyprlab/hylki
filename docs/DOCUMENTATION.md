@@ -204,8 +204,6 @@ unified section's, with a chevron that opens their list. **Section style**
 set to **Tree style** draws all four as a tree instead: the caret that
 opens and closes the list stands where the icon was, and the row has no
 chevron at its end. Clicking the name opens the combined view either way.
-Focus Mode keeps Filters, Tags and Favorites above the accounts whichever
-place is chosen here, and leaves out any set to **Off**.
 
 ### Favorites
 
@@ -1865,6 +1863,22 @@ conversation offers **Expand All Messages** and **Collapse All Messages**.
 What you fold or open stays that way while the conversation is on screen,
 and so does a message read while it is open.
 Printing shows every message in full.
+
+### Focus Mode
+
+<kbd>Ctrl+Shift+F</kbd> or the main menu turns Focus Mode on and off.
+**Settings → Focus Mode** holds everything about it. While it is on, that page
+decides the layout, and the settings on the other pages for the same things
+wait until it ends: the sidebar and its unified rows and sections, the message
+list's layout, avatars, preview lines and subjects, and Reader View. Favorites,
+Filters and Tags sit above the accounts, and Contacts and Attachments in the
+footer. What is changed from the window while it is on, such as folding the
+sidebar, lasts as long as it does.
+
+The toolbar is the one exception: with **Fold the reading pane's toolbar** off,
+the toolbar is as arranged in **Settings → Appearance → Toolbar**. Colors, fonts,
+dates and the columns of the single-line layout are the same in and out of Focus
+Mode.
 
 ### The reader's toolbar
 

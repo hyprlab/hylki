@@ -93,7 +93,11 @@ impl AppModel {
 
     /// Whether the Filters section is in the sidebar.
     pub(super) fn filtered_shown(&self) -> bool {
-        self.filtered_placement.shown()
+        if self.focus.enabled {
+            self.focus.show_filters
+        } else {
+            self.filtered_placement.shown()
+        }
     }
 
     /// The folders the unified "Filtered Folders" section lists: the

@@ -190,7 +190,8 @@ The full list. The [README](../README.md) carries a shorter one.
   Midnight), each with its own light and dark version, or the stock GNOME
   colours.
 - **Focus Mode:** Ctrl+Shift+F folds the toolbars, sidebar and list down to
-  what you are reading, and puts it back afterwards.
+  what you are reading, and puts it back afterwards. All of it is set on its
+  own page in Settings.
 - **A customizable reader toolbar:** reorder its buttons, or drag them in and
   out, in Settings → Appearance.
 - **A single-line message list:** sender, subject and the start of the

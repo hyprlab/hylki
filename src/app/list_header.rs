@@ -508,7 +508,7 @@ impl AppModel {
     /// Layout setting, or for Automatic, the width of the pane.
     pub(super) fn push_single_line(&self) {
         // With the reader below or off the list is a table (#475).
-        let on = match self.list_layout {
+        let on = match self.list_layout_now() {
             _ if self.reading_pane != config::ReadingPane::Right => true,
             config::ListLayout::Cards => false,
             config::ListLayout::SingleLine => true,
@@ -532,23 +532,45 @@ impl AppModel {
         });
     }
 
-    /// The avatars the list draws: the setting, unless Focus Mode hides them.
+    /// The avatars the list draws: Focus Mode's switch while it is on, else
+    /// the setting.
     pub(super) fn list_avatars(&self) -> bool {
-        self.avatars && !self.focus.active(config::FocusPart::HideAvatars)
+        if self.focus.enabled {
+            !self.focus.hide_avatars
+        } else {
+            self.avatars
+        }
     }
 
-    /// The preview lines the list shows: the setting, hidden outright or
-    /// capped at one by Focus Mode (previews switched off stay off).
+    /// The layout the list uses: Focus Mode's while it is on, else the setting.
+    fn list_layout_now(&self) -> config::ListLayout {
+        if self.focus.enabled {
+            self.focus.layout
+        } else {
+            self.list_layout
+        }
+    }
+
+    /// Whether a card's tags go under its text: Focus Mode's switch while it
+    /// is on, else the setting.
+    pub(super) fn list_pills_below_now(&self) -> bool {
+        if self.focus.enabled {
+            self.focus.tags_below
+        } else {
+            self.list_pills_below
+        }
+    }
+
+    /// The preview lines the list shows: Focus Mode's while it is on, else
+    /// the setting.
     ///
     /// Only what is *drawn* changes — the setting itself, and with it what
     /// the workers fetch, is left alone. So the preview text is in hand the
     /// moment Focus Mode ends, rather than waiting for the next sync the way
     /// switching previews off in Settings does.
     pub(super) fn list_preview_lines(&self) -> u32 {
-        if self.focus.active(config::FocusPart::HidePreview) {
-            0
-        } else if self.focus.active(config::FocusPart::OnePreviewLine) {
-            self.preview_lines.min(1)
+        if self.focus.enabled {
+            self.focus.preview_line_count()
         } else {
             self.preview_lines
         }
@@ -574,7 +596,7 @@ impl AppModel {
                 };
                 if wide != self.list_wide {
                     self.list_wide = wide;
-                    if self.list_layout == config::ListLayout::Automatic {
+                    if self.list_layout_now() == config::ListLayout::Automatic {
                         self.push_single_line();
                     }
                 }

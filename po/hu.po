@@ -6597,6 +6597,96 @@ msgstr "Dátumformátum"
 msgid "Clock"
 msgstr "Óra"
 
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+
+msgid "Start in Focus Mode"
+msgstr "Indítás fókusz módban"
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "Oldalsáv behajtása ikonsávra"
+
+msgid "Unread dots instead of counts"
+msgstr "Olvasatlan pontok a számok helyett"
+
+msgid "Expand the sidebar on hover"
+msgstr "Oldalsáv kibontása rámutatáskor"
+
+msgid "Hide the accounts in the sidebar"
+msgstr "A fiókok elrejtése az oldalsávban"
+
+msgid "Only the unified section stays."
+msgstr "Csak az összevont szakasz marad meg."
+
+#, fuzzy
+msgid "Fold up the accounts"
+msgstr "A fiókok felett"
+
+msgid "In the icon rail, their avatars alone."
+msgstr ""
+
+msgid "Fold accounts with one click"
+msgstr ""
+
+msgid "Off, a click on a rail avatar opens its inbox."
+msgstr ""
+
+msgid "Fold up the unified rows"
+msgstr "Hajtsd össze az összevont sorokat"
+
+msgid "Unread counts"
+msgstr "Olvasatlanok száma"
+
+msgid "Unified"
+msgstr "Egységes"
+
+msgid "Inboxes"
+msgstr "Beérkezett üzenetek"
+
+msgid "Snoozed"
+msgstr ""
+
+#, fuzzy
+msgid "Sections"
+msgstr "Műveletek"
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Preview lines"
+msgstr "Előnézeti sorok"
+
+msgid "Fold the message list's header"
+msgstr "Üzenetlista fejlécének behajtása"
+
+#, fuzzy
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr "Minden gomb megnyitja a saját ⋯ menüjét."
+
+msgid "Hide sender avatars"
+msgstr "A feladók avatárjainak elrejtése"
+
+msgid "Hide the subject"
+msgstr "A tárgy elrejtése"
+
+msgid "Tag chips hide with it."
+msgstr ""
+
+msgid "Tags and labels under the text"
+msgstr ""
+
+msgid "Fold the reading pane's toolbar"
+msgstr "Az olvasópanel eszköztárának összecsukása"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "Minden gomb megnyitja a saját ⋯ menüjét."
+
+#, fuzzy
+msgid "Open messages in Reader View."
+msgstr "Ezt az üzenetet még nem ellenőrizték."
+
 #, fuzzy
 msgid "Instant new mail (push)"
 msgstr "Az új levelek azonnali megjelenítése (IMAP push)"
@@ -6667,16 +6757,10 @@ msgstr ""
 msgid "Automatic uses single lines in wide windows."
 msgstr ""
 
-msgid "Preview lines"
-msgstr "Előnézeti sorok"
-
 msgid "Off also stops downloading previews."
 msgstr ""
 
 msgid "Group by date"
-msgstr ""
-
-msgid "Tags and labels under the text"
 msgstr ""
 
 msgid "Gives the subject its full width."
@@ -6805,9 +6889,6 @@ msgstr ""
 msgid "Chevron placement"
 msgstr "Nyíl elhelyezése"
 
-msgid "Fold accounts with one click"
-msgstr ""
-
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr ""
 
@@ -6817,9 +6898,6 @@ msgstr "Csatolmány tároló"
 
 msgid "Browse every account's attachments in one place."
 msgstr ""
-
-msgid "Expand the sidebar on hover"
-msgstr "Oldalsáv kibontása rámutatáskor"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -6839,31 +6917,15 @@ msgstr ""
 msgid "A count turns grey once you have looked at the folder."
 msgstr ""
 
-msgid "Unified"
-msgstr "Egységes"
-
 #, fuzzy
 msgid "Shown only with more than one account."
 msgstr "Csak ezt a fiókot mutasd"
 
-msgid "Inboxes"
-msgstr "Beérkezett üzenetek"
-
-msgid "Snoozed"
-msgstr ""
-
 msgid "Shown only while mail is snoozed."
 msgstr ""
 
-msgid "Unread counts"
-msgstr "Olvasatlanok száma"
-
 msgid "Shown on the unified rows while they are folded up."
 msgstr ""
-
-#, fuzzy
-msgid "Sections"
-msgstr "Műveletek"
 
 #, fuzzy
 msgid "Section style"
@@ -6881,9 +6943,6 @@ msgstr "A szűrők elhelyezése"
 
 msgid "Icon rail"
 msgstr "Ikonok sora"
-
-msgid "Unread dots instead of counts"
-msgstr "Olvasatlan pontok a számok helyett"
 
 msgid "The count stays in the tooltip."
 msgstr ""
@@ -7220,9 +7279,6 @@ msgid "No accounts yet"
 msgstr "Még nincsenek fiókok"
 
 msgid "New Message from Template…"
-msgstr ""
-
-msgid "Favorites"
 msgstr ""
 
 msgid "Show each inbox"
@@ -8285,61 +8341,6 @@ msgstr ""
 msgid "Always fold the right group into ⋯"
 msgstr ""
 
-msgid ""
-"The parts switched on below hide while Focus Mode is on. Activated by "
-"Ctrl+Shift+F or the main menu."
-msgstr ""
-
-msgid "Start in Focus Mode"
-msgstr "Indítás fókusz módban"
-
-msgid "Fold the reading pane's toolbar"
-msgstr "Az olvasópanel eszköztárának összecsukása"
-
-msgid "Every button goes into its ⋯ menu."
-msgstr "Minden gomb megnyitja a saját ⋯ menüjét."
-
-msgid "Fold the message list's header"
-msgstr "Üzenetlista fejlécének behajtása"
-
-#, fuzzy
-msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr "Minden gomb megnyitja a saját ⋯ menüjét."
-
-msgid "Hide the accounts in the sidebar"
-msgstr "A fiókok elrejtése az oldalsávban"
-
-msgid "Only the unified section stays."
-msgstr "Csak az összevont szakasz marad meg."
-
-msgid "Fold up the unified rows"
-msgstr "Hajtsd össze az összevont sorokat"
-
-msgid "Hide sender avatars"
-msgstr "A feladók avatárjainak elrejtése"
-
-msgid "Hide the preview text"
-msgstr "Elrejtés a preview text"
-
-msgid "One line of preview text"
-msgstr "Egy sor előnézeti szöveg"
-
-msgid "Hide the subject"
-msgstr "A tárgy elrejtése"
-
-msgid "Tag chips hide with it."
-msgstr ""
-
-msgid "Fold the sidebar to the icon rail"
-msgstr "Oldalsáv behajtása ikonsávra"
-
-msgid "Hovering it slides the full sidebar out."
-msgstr ""
-
-#, fuzzy
-msgid "Open messages in Reader View."
-msgstr "Ezt az üzenetet még nem ellenőrizték."
-
 msgid "Compose in the main window"
 msgstr "Levélírás a főablakban"
 
@@ -8914,6 +8915,12 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Hide the preview text"
+#~ msgstr "Elrejtés a preview text"
+
+#~ msgid "One line of preview text"
+#~ msgstr "Egy sor előnézeti szöveg"
 
 #~ msgid "Not spam"
 #~ msgstr "Nem levélszemét"

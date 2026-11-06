@@ -6333,6 +6333,93 @@ msgstr "Μορφή ημερομηνίας"
 msgid "Clock"
 msgstr "Ρολόι"
 
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+
+msgid "Start in Focus Mode"
+msgstr "Έναρξη σε Λειτουργία συγκέντρωσης"
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "Σύμπτυξη της πλευρικής στήλης σε λωρίδα εικονιδίων"
+
+msgid "Unread dots instead of counts"
+msgstr "Κουκκίδες αντί για πλήθος μη αναγνωσμένων"
+
+msgid "Expand the sidebar on hover"
+msgstr "Ανάπτυξη πλευρικής στήλης κατά την αιώρηση"
+
+msgid "Hide the accounts in the sidebar"
+msgstr "Απόκρυψη των λογαριασμών στην πλευρική στήλη"
+
+msgid "Only the unified section stays."
+msgstr "Παραμένει μόνο η ενοποιημένη ενότητα."
+
+#, fuzzy
+msgid "Fold up the accounts"
+msgstr "Πάνω από τους λογαριασμούς"
+
+msgid "In the icon rail, their avatars alone."
+msgstr ""
+
+msgid "Fold accounts with one click"
+msgstr "Σύμπτυξη λογαριασμών με ένα κλικ"
+
+msgid "Off, a click on a rail avatar opens its inbox."
+msgstr ""
+
+msgid "Fold up the unified rows"
+msgstr "Σύμπτυξη των ενοποιημένων γραμμών"
+
+msgid "Unread counts"
+msgstr "Πλήθος μη αναγνωσμένων"
+
+msgid "Unified"
+msgstr "Ενοποιημένα"
+
+msgid "Inboxes"
+msgstr "Εισερχόμενα"
+
+msgid "Snoozed"
+msgstr "Σε αναβολή"
+
+msgid "Sections"
+msgstr "Ενότητες"
+
+msgid "Favorites"
+msgstr "Αγαπημένα"
+
+msgid "Preview lines"
+msgstr "Γραμμές προεπισκόπησης"
+
+msgid "Fold the message list's header"
+msgstr "Σύμπτυξη της κεφαλίδας της λίστας μηνυμάτων"
+
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr "Όλα εκτός από το κουμπί της πλευρικής στήλης μεταφέρονται στο ⋯."
+
+msgid "Hide sender avatars"
+msgstr "Απόκρυψη των avatar των αποστολέων"
+
+msgid "Hide the subject"
+msgstr "Απόκρυψη του θέματος"
+
+msgid "Tag chips hide with it."
+msgstr "Οι ετικέτες σε μορφή μικρών πλαισίων κρύβονται μαζί του."
+
+msgid "Tags and labels under the text"
+msgstr "Ετικέτες κάτω από το κείμενο"
+
+msgid "Fold the reading pane's toolbar"
+msgstr "Σύμπτυξη της γραμμής εργαλείων του παραθύρου ανάγνωσης"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "Κάθε κουμπί μεταφέρεται στο μενού ⋯ του."
+
+msgid "Open messages in Reader View."
+msgstr "Άνοιγμα μηνυμάτων στην Προβολή ανάγνωσης."
+
 msgid "Instant new mail (push)"
 msgstr "Άμεσα νέα μηνύματα (push)"
 
@@ -6400,17 +6487,11 @@ msgstr "Η εικόνα ή το emoji του λογαριασμού, όπως σ
 msgid "Automatic uses single lines in wide windows."
 msgstr "Η αυτόματη επιλογή χρησιμοποιεί μονές γραμμές σε πλατιά παράθυρα."
 
-msgid "Preview lines"
-msgstr "Γραμμές προεπισκόπησης"
-
 msgid "Off also stops downloading previews."
 msgstr "Ανενεργό: σταματά επίσης τη λήψη προεπισκοπήσεων."
 
 msgid "Group by date"
 msgstr "Ομαδοποίηση κατά ημερομηνία"
-
-msgid "Tags and labels under the text"
-msgstr "Ετικέτες κάτω από το κείμενο"
 
 msgid "Gives the subject its full width."
 msgstr "Δίνει στο θέμα όλο το διαθέσιμο πλάτος."
@@ -6548,9 +6629,6 @@ msgstr "Η μεταφορά φακέλου ενεργοποιεί την προ�
 msgid "Chevron placement"
 msgstr "Τοποθέτηση βέλους"
 
-msgid "Fold accounts with one click"
-msgstr "Σύμπτυξη λογαριασμών με ένα κλικ"
-
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr ""
 "Όταν είναι απενεργοποιημένο, η σύμπτυξη γίνεται μόνο με το βέλος ή με διπλό "
@@ -6561,9 +6639,6 @@ msgstr "Εμφάνιση προγράμματος περιήγησης συνη�
 
 msgid "Browse every account's attachments in one place."
 msgstr "Περιήγηση στα συνημμένα όλων των λογαριασμών σε ένα μέρος."
-
-msgid "Expand the sidebar on hover"
-msgstr "Ανάπτυξη πλευρικής στήλης κατά την αιώρηση"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -6585,29 +6660,14 @@ msgstr "Επισήμανση μόνο νέας μη αναγνωσμένης α�
 msgid "A count turns grey once you have looked at the folder."
 msgstr "Ο αριθμός γίνεται γκρίζος μόλις ανοίξετε τον φάκελο."
 
-msgid "Unified"
-msgstr "Ενοποιημένα"
-
 msgid "Shown only with more than one account."
 msgstr "Εμφανίζεται μόνο όταν υπάρχουν περισσότεροι από ένας λογαριασμοί."
-
-msgid "Inboxes"
-msgstr "Εισερχόμενα"
-
-msgid "Snoozed"
-msgstr "Σε αναβολή"
 
 msgid "Shown only while mail is snoozed."
 msgstr "Εμφανίζεται μόνο όσο η αλληλογραφία βρίσκεται σε αναβολή."
 
-msgid "Unread counts"
-msgstr "Πλήθος μη αναγνωσμένων"
-
 msgid "Shown on the unified rows while they are folded up."
 msgstr "Εμφανίζεται στις ενοποιημένες γραμμές όταν είναι συμπτυγμένες."
-
-msgid "Sections"
-msgstr "Ενότητες"
 
 msgid "Section style"
 msgstr "Στυλ ενότητας"
@@ -6623,9 +6683,6 @@ msgstr "Θέση αγαπημένων"
 
 msgid "Icon rail"
 msgstr "Γραμμή εικονιδίων"
-
-msgid "Unread dots instead of counts"
-msgstr "Κουκκίδες αντί για πλήθος μη αναγνωσμένων"
 
 msgid "The count stays in the tooltip."
 msgstr "Ο αριθμός παραμένει στην επεξήγηση εργαλείου."
@@ -6948,9 +7005,6 @@ msgstr "Δεν υπάρχουν ακόμη λογαριασμοί"
 
 msgid "New Message from Template…"
 msgstr "Νέο μήνυμα από πρότυπο…"
-
-msgid "Favorites"
-msgstr "Αγαπημένα"
 
 msgid "Show each inbox"
 msgstr "Εμφάνιση κάθε φακέλου εισερχομένων"
@@ -7999,61 +8053,6 @@ msgstr ""
 msgid "Always fold the right group into ⋯"
 msgstr "Πάντα σύμπτυξη της δεξιάς ομάδας στο ⋯"
 
-msgid ""
-"The parts switched on below hide while Focus Mode is on. Activated by "
-"Ctrl+Shift+F or the main menu."
-msgstr ""
-"Τα παρακάτω ενεργοποιημένα στοιχεία κρύβονται όταν είναι ενεργή η Λειτουργία "
-"εστίασης. Ενεργοποιείται με Ctrl+Shift+F ή από το κύριο μενού."
-
-msgid "Start in Focus Mode"
-msgstr "Έναρξη σε Λειτουργία συγκέντρωσης"
-
-msgid "Fold the reading pane's toolbar"
-msgstr "Σύμπτυξη της γραμμής εργαλείων του παραθύρου ανάγνωσης"
-
-msgid "Every button goes into its ⋯ menu."
-msgstr "Κάθε κουμπί μεταφέρεται στο μενού ⋯ του."
-
-msgid "Fold the message list's header"
-msgstr "Σύμπτυξη της κεφαλίδας της λίστας μηνυμάτων"
-
-msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr "Όλα εκτός από το κουμπί της πλευρικής στήλης μεταφέρονται στο ⋯."
-
-msgid "Hide the accounts in the sidebar"
-msgstr "Απόκρυψη των λογαριασμών στην πλευρική στήλη"
-
-msgid "Only the unified section stays."
-msgstr "Παραμένει μόνο η ενοποιημένη ενότητα."
-
-msgid "Fold up the unified rows"
-msgstr "Σύμπτυξη των ενοποιημένων γραμμών"
-
-msgid "Hide sender avatars"
-msgstr "Απόκρυψη των avatar των αποστολέων"
-
-msgid "Hide the preview text"
-msgstr "Απόκρυψη του κειμένου προεπισκόπησης"
-
-msgid "One line of preview text"
-msgstr "Μία γραμμή κειμένου προεπισκόπησης"
-
-msgid "Hide the subject"
-msgstr "Απόκρυψη του θέματος"
-
-msgid "Tag chips hide with it."
-msgstr "Οι ετικέτες σε μορφή μικρών πλαισίων κρύβονται μαζί του."
-
-msgid "Fold the sidebar to the icon rail"
-msgstr "Σύμπτυξη της πλευρικής στήλης σε λωρίδα εικονιδίων"
-
-msgid "Hovering it slides the full sidebar out."
-msgstr "Με το πέρασμα του δείκτη, εμφανίζεται ολόκληρη η πλευρική στήλη."
-
-msgid "Open messages in Reader View."
-msgstr "Άνοιγμα μηνυμάτων στην Προβολή ανάγνωσης."
-
 msgid "Compose in the main window"
 msgstr "Σύνταξη στο κύριο παράθυρο"
 
@@ -8614,6 +8613,22 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "The parts switched on below hide while Focus Mode is on. Activated by "
+#~ "Ctrl+Shift+F or the main menu."
+#~ msgstr ""
+#~ "Τα παρακάτω ενεργοποιημένα στοιχεία κρύβονται όταν είναι ενεργή η "
+#~ "Λειτουργία εστίασης. Ενεργοποιείται με Ctrl+Shift+F ή από το κύριο μενού."
+
+#~ msgid "Hide the preview text"
+#~ msgstr "Απόκρυψη του κειμένου προεπισκόπησης"
+
+#~ msgid "One line of preview text"
+#~ msgstr "Μία γραμμή κειμένου προεπισκόπησης"
+
+#~ msgid "Hovering it slides the full sidebar out."
+#~ msgstr "Με το πέρασμα του δείκτη, εμφανίζεται ολόκληρη η πλευρική στήλη."
 
 #~ msgid "Not spam"
 #~ msgstr "Μη ανεπιθύμητο"

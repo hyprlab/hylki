@@ -20,7 +20,7 @@ impl AppModel {
     /// most servers (Gmail and Proton Bridge have one). An account whose
     /// folders are not known yet waits for them: it may turn out to have one.
     pub(super) fn flag_starred_accounts(&self) -> Vec<u32> {
-        if !self.unified_kinds.has(FolderKind::Starred) {
+        if !self.unified_kinds_wanted().has(FolderKind::Starred) {
             return Vec::new();
         }
         self.accounts

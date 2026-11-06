@@ -48,6 +48,7 @@ pub(crate) use messages::{PrefInit, PrefInput, PrefOutput};
 use navigation::{side_page, SIDE_PAGES};
 use pages::{
     AppearancePage, AssistantsPage, BackupPage, ComposingPage, ConversationsPage, DateTimePage,
+    FocusPage,
     GeneralPage, ListPage, PrivacyPage, ReadingPage, SidebarPage, SystemPage,
 };
 use rows::{compose_font_setup, middle_ellipsize, widen_combo_value, widen_page};
@@ -233,6 +234,7 @@ impl Component for Preferences {
         datetime: DateTimePage,
         system: SystemPage,
         backup: BackupPage,
+        focus_mode: FocusPage,
     }
 
     view! {
@@ -379,6 +381,9 @@ impl Component for Preferences {
 
                             #[local_ref]
                             add_named[Some("backup")] = backup_page -> adw::PreferencesPage {},
+
+                            #[local_ref]
+                            add_named[Some("focus")] = focus_page -> adw::PreferencesPage {},
                         },
                     },
                 },
@@ -452,7 +457,7 @@ impl Component for Preferences {
         };
         let general = GeneralPage::build(&model, &sender);
         let general_page = &general.page;
-        let appearance = AppearancePage::build(&model, &sender);
+        let appearance = AppearancePage::build(&sender);
         let appearance_page = &appearance.page;
         let sidebar = SidebarPage::build(&model, &sender);
         let sidebar_page = &sidebar.page;
@@ -474,6 +479,8 @@ impl Component for Preferences {
         let system_page = &system.page;
         let backup = BackupPage::build(&sender);
         let backup_page = &backup.page;
+        let focus_mode = FocusPage::build(&model, &sender);
+        let focus_page = &focus_mode.page;
         let widgets = view_output!();
         let ready = sender.ready.clone();
         let sender = component_sender;
@@ -536,7 +543,7 @@ impl Component for Preferences {
     /// them; the view itself has none left.
     fn pre_view() {
         general.update_view(model);
-        appearance.update_view(model);
+        focus_mode.update_view(model);
         sidebar.update_view(model);
         list.update_view(model);
         conversations.update_view(model);
@@ -651,6 +658,14 @@ impl Component for Preferences {
             } => self.on_set_accounts_panel(panel, accounts),
             PrefInput::ToggleShowAccounts(on) => self.on_toggle_show_accounts(on, sender),
             PrefInput::ToggleFocus(part, on) => self.on_toggle_focus(part, on, sender),
+            PrefInput::SetFocusLayout(index) => {
+                self.focus.layout = choices::list_layout_at(index);
+                let _ = sender.output(PrefOutput::SetFocusMode(self.focus));
+            }
+            PrefInput::SetFocusPreviewLines(lines) => {
+                self.focus.preview_lines = Some(lines);
+                let _ = sender.output(PrefOutput::SetFocusMode(self.focus));
+            }
             PrefInput::SetFocusMode(focus) => {
                 self.focus = focus;
             }

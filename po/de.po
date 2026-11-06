@@ -6323,6 +6323,95 @@ msgstr "Datumsformat"
 msgid "Clock"
 msgstr "Uhr"
 
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+
+msgid "Start in Focus Mode"
+msgstr "Im Fokusmodus starten"
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "Seitenleiste zur Symbolleiste einklappen"
+
+msgid "Unread dots instead of counts"
+msgstr "Punkte statt Zahlen für ungelesene Nachrichten"
+
+msgid "Expand the sidebar on hover"
+msgstr "Seitenleiste beim Darüberfahren ausklappen"
+
+msgid "Hide the accounts in the sidebar"
+msgstr "Konten in der Seitenleiste ausblenden"
+
+msgid "Only the unified section stays."
+msgstr "Nur der einheitliche Abschnitt bleibt bestehen."
+
+#, fuzzy
+msgid "Fold up the accounts"
+msgstr "Über den Konten"
+
+msgid "In the icon rail, their avatars alone."
+msgstr ""
+
+msgid "Fold accounts with one click"
+msgstr "Konten mit einem Klick zuklappen"
+
+msgid "Off, a click on a rail avatar opens its inbox."
+msgstr ""
+
+msgid "Fold up the unified rows"
+msgstr "Gemeinsame Zeilen einklappen"
+
+msgid "Unread counts"
+msgstr "Zähler ungelesener Nachrichten"
+
+msgid "Unified"
+msgstr "Zusammengefasst"
+
+msgid "Inboxes"
+msgstr "Posteingänge"
+
+msgid "Snoozed"
+msgstr "Zurückgestellt"
+
+msgid "Sections"
+msgstr "Abschnitte"
+
+msgid "Favorites"
+msgstr "Favoriten"
+
+msgid "Preview lines"
+msgstr "Vorschauzeilen"
+
+msgid "Fold the message list's header"
+msgstr "Kopfzeile der Nachrichtenliste einklappen"
+
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr ""
+"Alle Elemente außer dem Seitenleisten-Schalter werden unter »⋯« "
+"zusammengefasst."
+
+msgid "Hide sender avatars"
+msgstr "Absender-Avatare ausblenden"
+
+msgid "Hide the subject"
+msgstr "Betreff ausblenden"
+
+msgid "Tag chips hide with it."
+msgstr "Tag-Chips werden dabei ebenfalls ausgeblendet."
+
+msgid "Tags and labels under the text"
+msgstr "Tags und Labels unter dem Text"
+
+msgid "Fold the reading pane's toolbar"
+msgstr "Symbolleiste des Lesebereichs einklappen"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "Jeder Button geht in sein »⋯« Menü."
+
+msgid "Open messages in Reader View."
+msgstr "Nachrichten in der Leseansicht öffnen."
+
 msgid "Instant new mail (push)"
 msgstr "Neue Nachrichten sofort empfangen (Push)"
 
@@ -6395,17 +6484,11 @@ msgid "Automatic uses single lines in wide windows."
 msgstr ""
 "»Automatisch« verwendet in breiten Fenstern die einzeilige Darstellung."
 
-msgid "Preview lines"
-msgstr "Vorschauzeilen"
-
 msgid "Off also stops downloading previews."
 msgstr "Bei Deaktivierung werden keine Vorschauen mehr heruntergeladen."
 
 msgid "Group by date"
 msgstr "Nach Datum gruppieren"
-
-msgid "Tags and labels under the text"
-msgstr "Tags und Labels unter dem Text"
 
 msgid "Gives the subject its full width."
 msgstr "Zeigt den Betreff in voller Breite an."
@@ -6548,9 +6631,6 @@ msgstr ""
 msgid "Chevron placement"
 msgstr "Position der Ausklapp-Pfeile"
 
-msgid "Fold accounts with one click"
-msgstr "Konten mit einem Klick zuklappen"
-
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr ""
 "Wenn ausgeschaltet, klappt der Bereich nur durch Klick auf den Pfeil oder "
@@ -6561,9 +6641,6 @@ msgstr "Zeigt Bereich mit Anhängen"
 
 msgid "Browse every account's attachments in one place."
 msgstr "Dateianhänge aller Konten an einem zentralen Ort durchsuchen."
-
-msgid "Expand the sidebar on hover"
-msgstr "Seitenleiste beim Darüberfahren ausklappen"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -6587,29 +6664,14 @@ msgstr "Nur neue, ungelesene E-Mails hervorheben"
 msgid "A count turns grey once you have looked at the folder."
 msgstr "Sobald ein Ordner betrachtet wurde, wechselt der Zähler zu Grau."
 
-msgid "Unified"
-msgstr "Zusammengefasst"
-
 msgid "Shown only with more than one account."
 msgstr "Wird nur angezeigt, wenn mehr als ein Konto eingerichtet ist."
-
-msgid "Inboxes"
-msgstr "Posteingänge"
-
-msgid "Snoozed"
-msgstr "Zurückgestellt"
 
 msgid "Shown only while mail is snoozed."
 msgstr "Anzeige nur bei zurückgestellten Nachrichten"
 
-msgid "Unread counts"
-msgstr "Zähler ungelesener Nachrichten"
-
 msgid "Shown on the unified rows while they are folded up."
 msgstr "Anzeige auf zusammengefassten Einträgen im eingeklappten Zustand."
-
-msgid "Sections"
-msgstr "Abschnitte"
 
 msgid "Section style"
 msgstr "Abschnittsstil"
@@ -6625,9 +6687,6 @@ msgstr "Platzierung der Favoriten"
 
 msgid "Icon rail"
 msgstr "Symbolleiste"
-
-msgid "Unread dots instead of counts"
-msgstr "Punkte statt Zahlen für ungelesene Nachrichten"
 
 msgid "The count stays in the tooltip."
 msgstr "Die Zähleranzeige bleibt im Tooltip erhalten."
@@ -6949,9 +7008,6 @@ msgstr "Noch keine Konten"
 
 msgid "New Message from Template…"
 msgstr "Aus Vorlage erstellen…"
-
-msgid "Favorites"
-msgstr "Favoriten"
 
 msgid "Show each inbox"
 msgstr "Jeden Posteingang anzeigen"
@@ -7985,64 +8041,6 @@ msgstr ""
 msgid "Always fold the right group into ⋯"
 msgstr "Die rechte Gruppe immer zu »⋯« einklappen"
 
-msgid ""
-"The parts switched on below hide while Focus Mode is on. Activated by "
-"Ctrl+Shift+F or the main menu."
-msgstr ""
-"Bei eingeschaltetem Fokusmodus werden die unten ausgewählten Bereiche "
-"ausgeblendet. Lässt sich mit »Strg+Umschalt+F« oder über das Hauptmenü "
-"aktivieren."
-
-msgid "Start in Focus Mode"
-msgstr "Im Fokusmodus starten"
-
-msgid "Fold the reading pane's toolbar"
-msgstr "Symbolleiste des Lesebereichs einklappen"
-
-msgid "Every button goes into its ⋯ menu."
-msgstr "Jeder Button geht in sein »⋯« Menü."
-
-msgid "Fold the message list's header"
-msgstr "Kopfzeile der Nachrichtenliste einklappen"
-
-msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr ""
-"Alle Elemente außer dem Seitenleisten-Schalter werden unter »⋯« "
-"zusammengefasst."
-
-msgid "Hide the accounts in the sidebar"
-msgstr "Konten in der Seitenleiste ausblenden"
-
-msgid "Only the unified section stays."
-msgstr "Nur der einheitliche Abschnitt bleibt bestehen."
-
-msgid "Fold up the unified rows"
-msgstr "Gemeinsame Zeilen einklappen"
-
-msgid "Hide sender avatars"
-msgstr "Absender-Avatare ausblenden"
-
-msgid "Hide the preview text"
-msgstr "Vorschautext ausblenden"
-
-msgid "One line of preview text"
-msgstr "Eine Zeile Vorschautext"
-
-msgid "Hide the subject"
-msgstr "Betreff ausblenden"
-
-msgid "Tag chips hide with it."
-msgstr "Tag-Chips werden dabei ebenfalls ausgeblendet."
-
-msgid "Fold the sidebar to the icon rail"
-msgstr "Seitenleiste zur Symbolleiste einklappen"
-
-msgid "Hovering it slides the full sidebar out."
-msgstr "Durch Überfahren mit der Maus wird die gesamte Seitenleiste sichtbar."
-
-msgid "Open messages in Reader View."
-msgstr "Nachrichten in der Leseansicht öffnen."
-
 msgid "Compose in the main window"
 msgstr "Im Hauptfenster verfassen"
 
@@ -8617,6 +8615,24 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "The parts switched on below hide while Focus Mode is on. Activated by "
+#~ "Ctrl+Shift+F or the main menu."
+#~ msgstr ""
+#~ "Bei eingeschaltetem Fokusmodus werden die unten ausgewählten Bereiche "
+#~ "ausgeblendet. Lässt sich mit »Strg+Umschalt+F« oder über das Hauptmenü "
+#~ "aktivieren."
+
+#~ msgid "Hide the preview text"
+#~ msgstr "Vorschautext ausblenden"
+
+#~ msgid "One line of preview text"
+#~ msgstr "Eine Zeile Vorschautext"
+
+#~ msgid "Hovering it slides the full sidebar out."
+#~ msgstr ""
+#~ "Durch Überfahren mit der Maus wird die gesamte Seitenleiste sichtbar."
 
 #~ msgid "Not spam"
 #~ msgstr "Kein Spam"

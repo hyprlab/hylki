@@ -180,6 +180,8 @@ impl AppModel {
             subject: self.list_show_subject(),
             animate: false,
         });
+        self.message_list
+            .emit(MessageListInput::SetPillsBelow(self.list_pills_below_now()));
         self.message_view.emit(MessageViewInput::SetFoldLook {
             preview_lines: self.list_preview_lines(),
         });
@@ -197,14 +199,13 @@ impl AppModel {
             self.contacts_search_open,
         ));
         self.contacts_page.emit(ContactsPageInput::SetBookPicker(
-            !self.contacts_placement.shown(),
+            !self.contacts_placement_now().shown(),
         ));
         self.message_list.emit(MessageListInput::SetColumnWidths(
             self.list_column_widths.clone(),
         ));
         self.apply_view_sort();
         self.sidebars_emit(SidebarInput::SetFocus {
-            enabled: self.focus.enabled,
             hide_accounts: self.focus.active(config::FocusPart::HideAccounts),
             fold_unified: self.focus.active(config::FocusPart::FoldUnified),
             animate: false,

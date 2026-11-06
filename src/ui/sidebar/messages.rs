@@ -37,12 +37,10 @@ pub(crate) enum SidebarInput {
         /// The smart folders (#417) as (id, name).
         smart_folders: Vec<(String, String)>,
     },
-    /// Focus Mode's sidebar parts: whether it is on at all, hide the
-    /// accounts, fold the unified rows. `animate` slides what goes (or comes
-    /// back) and rebuilds once it has gone; off, the rebuild is immediate
-    /// (launch).
+    /// Focus Mode's sidebar parts: hide the accounts, fold the unified
+    /// rows. `animate` slides what goes (or comes back) and rebuilds once it
+    /// has gone; off, the rebuild is immediate (launch).
     SetFocus {
-        enabled: bool,
         hide_accounts: bool,
         fold_unified: bool,
         animate: bool,

@@ -452,7 +452,11 @@ pub(super) struct Children {
 impl Children {
     /// Launches every child with its output forwarded to the root.
     pub(super) fn launch(boot: &Boot, sender: &ComponentSender<AppModel>) -> Self {
-        let show_attachments = boot.prefs.show_attachments;
+        let show_attachments = if boot.focus.enabled {
+            boot.focus.show_attachments
+        } else {
+            boot.prefs.show_attachments
+        };
         let start = start_target(boot.prefs.start_view);
         let start_pending = start.is_some();
         let sidebar = Sidebar::builder()

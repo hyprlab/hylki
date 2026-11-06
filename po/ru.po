@@ -6617,6 +6617,96 @@ msgstr "Формат даты"
 msgid "Clock"
 msgstr "Часы"
 
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+
+msgid "Start in Focus Mode"
+msgstr "Запускать в режиме концентрации"
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "Сворачивать боковую панель в панель значков"
+
+msgid "Unread dots instead of counts"
+msgstr "Точки непрочитанного вместо счётчиков"
+
+msgid "Expand the sidebar on hover"
+msgstr "Раскрывать боковую панель при наведении"
+
+msgid "Hide the accounts in the sidebar"
+msgstr "Скрывать учётные записи на боковой панели"
+
+msgid "Only the unified section stays."
+msgstr "Остаётся только общий раздел."
+
+#, fuzzy
+msgid "Fold up the accounts"
+msgstr "Над учётными записями"
+
+msgid "In the icon rail, their avatars alone."
+msgstr ""
+
+msgid "Fold accounts with one click"
+msgstr ""
+
+msgid "Off, a click on a rail avatar opens its inbox."
+msgstr ""
+
+msgid "Fold up the unified rows"
+msgstr "Сворачивать строки общего раздела"
+
+msgid "Unread counts"
+msgstr "Счётчики непрочитанного"
+
+msgid "Unified"
+msgstr "Общие"
+
+msgid "Inboxes"
+msgstr "Входящие"
+
+msgid "Snoozed"
+msgstr ""
+
+#, fuzzy
+msgid "Sections"
+msgstr "Действия"
+
+msgid "Favorites"
+msgstr "Избранное"
+
+msgid "Preview lines"
+msgstr "Строки предпросмотра"
+
+msgid "Fold the message list's header"
+msgstr "Сворачивать заголовок списка сообщений"
+
+#, fuzzy
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr "Все кнопки убираются в меню «⋯»."
+
+msgid "Hide sender avatars"
+msgstr "Скрывать аватары отправителей"
+
+msgid "Hide the subject"
+msgstr "Скрывать тему"
+
+msgid "Tag chips hide with it."
+msgstr ""
+
+msgid "Tags and labels under the text"
+msgstr ""
+
+msgid "Fold the reading pane's toolbar"
+msgstr "Сворачивать панель инструментов области чтения"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "Все кнопки убираются в меню «⋯»."
+
+#, fuzzy
+msgid "Open messages in Reader View."
+msgstr "Сообщение ещё не загружено."
+
 msgid "Instant new mail (push)"
 msgstr "Мгновенное получение почты (push)"
 
@@ -6689,16 +6779,10 @@ msgstr ""
 msgid "Automatic uses single lines in wide windows."
 msgstr ""
 
-msgid "Preview lines"
-msgstr "Строки предпросмотра"
-
 msgid "Off also stops downloading previews."
 msgstr ""
 
 msgid "Group by date"
-msgstr ""
-
-msgid "Tags and labels under the text"
 msgstr ""
 
 msgid "Gives the subject its full width."
@@ -6827,9 +6911,6 @@ msgstr ""
 msgid "Chevron placement"
 msgstr "Расположение стрелок сворачивания"
 
-msgid "Fold accounts with one click"
-msgstr ""
-
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr ""
 
@@ -6839,9 +6920,6 @@ msgstr "Панель вложений"
 
 msgid "Browse every account's attachments in one place."
 msgstr ""
-
-msgid "Expand the sidebar on hover"
-msgstr "Раскрывать боковую панель при наведении"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -6861,31 +6939,15 @@ msgstr "Выделять только новые непрочитанные пи
 msgid "A count turns grey once you have looked at the folder."
 msgstr ""
 
-msgid "Unified"
-msgstr "Общие"
-
 #, fuzzy
 msgid "Shown only with more than one account."
 msgstr "Показывать только эту учётную запись"
 
-msgid "Inboxes"
-msgstr "Входящие"
-
-msgid "Snoozed"
-msgstr ""
-
 msgid "Shown only while mail is snoozed."
 msgstr ""
 
-msgid "Unread counts"
-msgstr "Счётчики непрочитанного"
-
 msgid "Shown on the unified rows while they are folded up."
 msgstr ""
-
-#, fuzzy
-msgid "Sections"
-msgstr "Действия"
 
 #, fuzzy
 msgid "Section style"
@@ -6903,9 +6965,6 @@ msgstr "Расположение фильтров"
 
 msgid "Icon rail"
 msgstr "Полоса с иконками"
-
-msgid "Unread dots instead of counts"
-msgstr "Точки непрочитанного вместо счётчиков"
 
 msgid "The count stays in the tooltip."
 msgstr ""
@@ -7224,9 +7283,6 @@ msgstr "Учётные записи пока не добавлены"
 
 msgid "New Message from Template…"
 msgstr "Новое сообщение из шаблона…"
-
-msgid "Favorites"
-msgstr "Избранное"
 
 msgid "Show each inbox"
 msgstr "Показывать каждую папку «Входящие»"
@@ -8289,61 +8345,6 @@ msgstr ""
 msgid "Always fold the right group into ⋯"
 msgstr ""
 
-msgid ""
-"The parts switched on below hide while Focus Mode is on. Activated by "
-"Ctrl+Shift+F or the main menu."
-msgstr ""
-
-msgid "Start in Focus Mode"
-msgstr "Запускать в режиме концентрации"
-
-msgid "Fold the reading pane's toolbar"
-msgstr "Сворачивать панель инструментов области чтения"
-
-msgid "Every button goes into its ⋯ menu."
-msgstr "Все кнопки убираются в меню «⋯»."
-
-msgid "Fold the message list's header"
-msgstr "Сворачивать заголовок списка сообщений"
-
-#, fuzzy
-msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr "Все кнопки убираются в меню «⋯»."
-
-msgid "Hide the accounts in the sidebar"
-msgstr "Скрывать учётные записи на боковой панели"
-
-msgid "Only the unified section stays."
-msgstr "Остаётся только общий раздел."
-
-msgid "Fold up the unified rows"
-msgstr "Сворачивать строки общего раздела"
-
-msgid "Hide sender avatars"
-msgstr "Скрывать аватары отправителей"
-
-msgid "Hide the preview text"
-msgstr "Скрывать текст предпросмотра"
-
-msgid "One line of preview text"
-msgstr "Одна строка текста предпросмотра"
-
-msgid "Hide the subject"
-msgstr "Скрывать тему"
-
-msgid "Tag chips hide with it."
-msgstr ""
-
-msgid "Fold the sidebar to the icon rail"
-msgstr "Сворачивать боковую панель в панель значков"
-
-msgid "Hovering it slides the full sidebar out."
-msgstr ""
-
-#, fuzzy
-msgid "Open messages in Reader View."
-msgstr "Сообщение ещё не загружено."
-
 msgid "Compose in the main window"
 msgstr "Создание писем в основном окне"
 
@@ -8908,6 +8909,12 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Hide the preview text"
+#~ msgstr "Скрывать текст предпросмотра"
+
+#~ msgid "One line of preview text"
+#~ msgstr "Одна строка текста предпросмотра"
 
 #~ msgid "Not spam"
 #~ msgstr "Не спам"

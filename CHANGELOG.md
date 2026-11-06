@@ -2,8 +2,13 @@
 
 ## Unreleased
 
-- **Changed: Focus Mode keeps Favorites, Filters and Tags above the accounts**,
-  whatever Settings → Sidebar places them at. One placed Off stays off.
+- **Changed: Focus Mode has its own page in Settings, and its own layout.** While
+  it is on, Settings → Focus Mode alone decides the sidebar, the message list's
+  layout, avatars, preview lines and subjects, and Reader View, in place of the
+  settings on the other pages. Favorites, Filters and Tags sit above the accounts
+  and can each be switched off there. The switches moved from Settings →
+  Appearance. The list's two preview switches became one Preview lines choice,
+  and hovering the rail no longer slides the sidebar out unless switched on there.
 
 - **Changed: the message list can be dragged narrower**, down to 290 pixels from
   348. The selection bar's buttons draw tighter below 344 pixels so they all
