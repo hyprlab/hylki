@@ -615,6 +615,9 @@ impl AppModel {
             }
 
             AppMsg::ReaderOverflowMenu => self.show_reader_overflow_menu(&sender),
+            // Nothing to arrange in Focus Mode: the toolbar is its page's to
+            // decide, and the way out to the editor would only be clutter.
+            AppMsg::ReaderToolbarMenu { .. } if self.focus.enabled => {}
             AppMsg::ReaderToolbarMenu { x, y } => {
                 use crate::ui::context_menu::{show_context_menu, MenuEntry};
                 if let Some(header) = self.reader_header.get() {
