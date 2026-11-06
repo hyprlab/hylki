@@ -83,6 +83,13 @@ impl ReaderSwap {
         self.0.frozen.get()
     }
 
+    /// The still is up over the pane. A freeze can be held without one (the
+    /// pane was not on screen, or GTK drew nothing for it), and then what
+    /// changes on the pane shows.
+    pub(crate) fn covered(&self) -> bool {
+        self.0.still.is_visible()
+    }
+
     /// Hold what the pane shows now until `reveal`. A freeze already under
     /// way carries on: the still up is what the reader last saw.
     pub(crate) fn freeze(&self) {
