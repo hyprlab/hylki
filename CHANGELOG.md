@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fixed: Cards turned into single lines with the reading pane below the list
+  or off** (#475, reported by fhangel). The Layout setting now holds in every
+  reading pane position; Automatic stays on single lines there, as the list has
+  the window's width.
+
 - **Changed: Focus Mode has its own page in Settings, and its own layout.** While
   it is on, Settings → Focus Mode alone decides the sidebar, the message list's
   layout, avatars, preview lines and subjects, and Reader View, in place of the
