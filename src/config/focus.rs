@@ -54,9 +54,7 @@ pub(crate) struct FocusMode {
     #[serde(default = "default_on", skip_serializing)]
     pub(crate) hide_preview: bool,
     /// The message list shows no subject either: the sender, the date and
-    /// the row's own marks, and nothing else. Off unless it is asked for —
-    /// the subject is how most people find a message again, so this one is
-    /// a step past what the mode does by default.
+    /// the row's own marks, and nothing else.
     #[serde(default)]
     pub(crate) hide_subject: bool,
     /// The single-line layout has its column headings.
@@ -120,6 +118,10 @@ pub(crate) struct FocusMode {
     pub(crate) unified: UnifiedKinds,
 }
 
+/// What a new install starts with, when there is no focus.toml. A file that
+/// is already there fills what it lacks from the field attributes above
+/// instead, and those stay off for the subject, the stars, the paperclips and
+/// the card layout, so an upgrade leaves a look someone has settled on alone.
 impl Default for FocusMode {
     fn default() -> Self {
         FocusMode {
@@ -133,10 +135,10 @@ impl Default for FocusMode {
             preview_lines: None,
             one_preview_line: true,
             hide_preview: true,
-            hide_subject: false,
+            hide_subject: true,
             column_headings: false,
-            hide_stars: false,
-            hide_attachment_icons: false,
+            hide_stars: true,
+            hide_attachment_icons: true,
             rail_sidebar: true,
             reader_view: true,
             rail_dots: true,
@@ -151,7 +153,7 @@ impl Default for FocusMode {
             show_attachments: true,
             show_inboxes: true,
             tags_below: false,
-            layout: ListLayout::default(),
+            layout: ListLayout::Automatic,
             unified: UnifiedKinds::default(),
         }
     }
@@ -364,7 +366,7 @@ mod focus_tests {
     use super::*;
 
     #[test]
-    fn focus_defaults_off_with_every_part_ticked() {
+    fn a_new_install_starts_out_of_the_mode_with_its_full_look_set() {
         let f = FocusMode::default();
         assert!(!f.enabled);
         // The app opens out of the mode until it is asked to do otherwise.
@@ -372,8 +374,9 @@ mod focus_tests {
         assert!(f.reader_toolbar && f.list_header && f.hide_accounts && f.fold_unified);
         assert!(f.hide_avatars && f.one_preview_line && f.reader_view);
         assert!(f.hide_preview && f.rail_sidebar);
-        // The exception: the subject stays until it is asked for.
-        assert!(!f.hide_subject);
+        assert!(f.hide_subject && f.hide_stars && f.hide_attachment_icons);
+        assert_eq!(f.layout, ListLayout::Automatic);
+        assert_eq!(f.preview_line_count(), 0);
         // Off, no part is in force whatever its switch says.
         assert!(!f.active(FocusPart::ReaderView));
     }
@@ -443,9 +446,11 @@ mod focus_tests {
         let partial: FocusMode = toml::from_str("enabled = true").unwrap();
         assert!(partial.enabled && partial.fold_unified);
         assert!(partial.hide_preview && partial.rail_sidebar);
-        // Except the subject and the row's marks, off wherever they come from.
+        // Except what only a new install starts with: an existing file keeps
+        // the look it has, whichever version wrote it.
         assert!(!partial.hide_subject);
         assert!(!partial.hide_stars && !partial.hide_attachment_icons);
+        assert_eq!(partial.layout, ListLayout::Cards);
         assert!(!partial.column_headings);
     }
 }

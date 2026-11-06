@@ -5,10 +5,10 @@ list_header = true
 hide_accounts = true
 fold_unified = true
 hide_avatars = true
-hide_subject = false
+hide_subject = true
 column_headings = false
-hide_stars = false
-hide_attachment_icons = false
+hide_stars = true
+hide_attachment_icons = true
 rail_sidebar = true
 reader_view = true
 rail_dots = true
@@ -23,7 +23,7 @@ show_contacts = true
 show_attachments = true
 show_inboxes = true
 tags_below = false
-layout = "cards"
+layout = "automatic"
 
 [unified]
 starred = true

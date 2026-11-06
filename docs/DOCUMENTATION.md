@@ -1877,6 +1877,10 @@ window while it is on, such as folding the sidebar, lasts as long as it does.
 **Unread counts** off takes every unread count and dot out of the sidebar, on
 avatars and folders too. The Outbox keeps its count.
 
+On a new install the message list uses the **Automatic** layout, with subjects,
+stars and attachment icons hidden. An existing Focus Mode setup is left as it
+is.
+
 The toolbar is the one exception: with **Fold the reading pane's toolbar** off,
 the toolbar is as arranged in **Settings → Appearance → Toolbar**. Colors, fonts,
 dates and the columns of the single-line layout are the same in and out of Focus

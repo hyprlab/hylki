@@ -404,10 +404,18 @@ fn focus_toml() {
         "config/testdata/focus-default.toml",
         &pretty(&FocusMode::default()),
     );
+    // The new-install look is for having no file. One that exists keeps what
+    // it has, so it reads the rest as it always did.
     assert_eq!(
         toml::from_str::<FocusMode>("").unwrap(),
-        FocusMode::default(),
-        "an empty focus.toml reads as the default"
+        FocusMode {
+            hide_subject: false,
+            hide_stars: false,
+            hide_attachment_icons: false,
+            layout: ListLayout::Cards,
+            ..FocusMode::default()
+        },
+        "an empty focus.toml reads as an old one"
     );
 }
 
