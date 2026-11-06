@@ -366,18 +366,26 @@ impl AccountsWindow {
         let user = trimmed(&d.user_row);
         let pass = d.pass_row.text().to_string();
 
-        // The address must look like one, and must not shadow the
-        // account's own address or another alias — the send path picks
-        // an alias's transport by matching the From address, so a
-        // duplicate would make "which server sends this?" ambiguous.
-        let account_email = trimmed(&widgets.form.email_row);
-        let duplicate = addr.eq_ignore_ascii_case(&account_email)
-            || self.alias_edits.iter().enumerate().any(|(i, a)| {
-                Some(i) != self.alias_editing && a.address().eq_ignore_ascii_case(&addr)
-            });
+        // The address must look like one. Several identities may share an
+        // address (a manager and a director writing from one mailbox), but
+        // they must then share its transport: the send path resolves SMTP
+        // by From address, not by the display name.
+        let repeated = self.alias_edits.iter().enumerate().find(|(i, a)| {
+            Some(*i) != self.alias_editing && a.address().eq_ignore_ascii_case(&addr)
+        });
+        let transport_conflict = repeated
+            .as_ref()
+            .is_some_and(|(_, other)| other.has_own_smtp() || own_smtp);
         let mut bad = false;
-        if addr.is_empty() || !addr.contains('@') || duplicate {
+        d.addr_row.set_tooltip_text(None);
+        if addr.is_empty() || !addr.contains('@') {
             d.addr_row.add_css_class("error");
+            bad = true;
+        } else if transport_conflict {
+            d.addr_row.add_css_class("error");
+            d.addr_row.set_tooltip_text(Some(i18n(
+                "This address already has a send-as identity with its own SMTP server. Several names may share an address only when they use this account's SMTP server.",
+            ).as_str()));
             bad = true;
         }
         if own_smtp {
