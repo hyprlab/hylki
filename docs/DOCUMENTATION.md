@@ -2247,6 +2247,18 @@ the bar spans all of it, back to the oldest message. While the bar is
 dragged in a list sorted by date, a label beside it names the month and year
 of the rows in the middle of the view.
 
+### Theme
+
+**Settings → Appearance → Theme** carries a light and a dark version of each
+palette, while the **Style** setting above it chooses which one follows the
+desktop. **System** keeps libadwaita and the desktop accent unchanged.
+
+The calm working palettes include **Mist**, built from DiaClass's neutral
+surfaces and a softened blue accent; **Sage**, its muted green counterpart;
+and **Stone**, a warm neutral with a quiet sea-glass accent. They complement
+Rose, Forest, Tidal, Earth and Midnight, all of which also include a complete
+dark palette. The choice is stored as `theme` in `privacy.toml`.
+
 ### Text size
 
 **Settings → Appearance → Text size** makes Hylki's text smaller or larger

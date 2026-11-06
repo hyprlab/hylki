@@ -110,7 +110,7 @@ pub(crate) fn gallery(selected: &str, on_pick: Rc<dyn Fn(&str)>) -> gtk::FlowBox
         SYSTEM_LIGHT,
         SYSTEM_DARK,
     )];
-    cards.extend(theme::catalog().iter().map(|t| {
+    cards.extend(theme::catalog().map(|t| {
         (
             t.id.to_string(),
             // Theme names are names, not prose: they read the same in
