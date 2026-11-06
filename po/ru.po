@@ -5,6 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
+"PO-Revision-Date: 2026-11-06 21:00+0500\n"
+"Last-Translator: Hylki contributors\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -85,127 +87,101 @@ msgstr "Не удалось сохранить учетную запись: {e}"
 msgid "Could not import account: {e}"
 msgstr "Не удалось импортировать учетную запись: {e}"
 
-#, fuzzy
 msgid "On This Computer is switched off"
-msgstr "На этом компьютере"
+msgstr "«На этом компьютере» отключено"
 
-#, fuzzy
 msgid "Could not start: {error}"
-msgstr "Не удалось сохранить PDF: {error}"
+msgstr "Не удалось запустить: {error}"
 
 msgid "Off"
 msgstr "Выкл."
 
-#, fuzzy
 msgid "No activity yet."
-msgstr "Учётные записи пока не добавлены"
+msgstr "Пока нет активности."
 
-#, fuzzy
 msgid "Message from an AI Agent"
-msgstr "Новое сообщение из шаблона"
+msgstr "Сообщение от ИИ-агента"
 
-#, fuzzy
 msgid "An AI agent prepared a message"
-msgstr "Переслать это сообщение"
+msgstr "Агент ИИ подготовил сообщение"
 
 msgid "Show"
 msgstr "Показать"
 
-#, fuzzy
 msgid "Listed accounts"
-msgstr "Над учётными записями"
+msgstr "Просмотрены учётные записи"
 
-#, fuzzy
 msgid "Listed folders"
-msgstr "Эта папка"
+msgstr "Перечисленные папки"
 
-#, fuzzy
 msgid "Listed messages"
-msgstr "Метка добавлена к {n} письму"
+msgstr "Просмотрены сообщения"
 
-#, fuzzy
 msgid "Searched mail"
-msgstr "Поиск фильтров"
+msgstr "Выполнен поиск по почте"
 
-#, fuzzy
 msgid "Searched on the server"
-msgstr "Поиск…"
+msgstr "Искал на сервере"
 
-#, fuzzy
 msgid "Read a message"
-msgstr "{n} сообщений"
+msgstr "Прочитать сообщение"
 
-#, fuzzy
 msgid "Read a conversation"
-msgstr "Всё обсуждение"
+msgstr "Прочитать разговор"
 
-#, fuzzy
 msgid "Listed attachments"
-msgstr "Скрыть вложения"
+msgstr "Перечисленные вложения"
 
-#, fuzzy
 msgid "Read an attachment"
-msgstr "{n} вложение"
+msgstr "Прочитать вложение"
 
-#, fuzzy
 msgid "Looked up contacts"
-msgstr "Сортировка контактов"
+msgstr "Посмотрел контакты"
 
-#, fuzzy
 msgid "Prepared a message"
-msgstr "Переслать это сообщение"
+msgstr "Подготовил сообщение"
 
-#, fuzzy
 msgid "Prepared a reply"
-msgstr "Отметить как прочитанное"
+msgstr "Подготовил ответ"
 
-#, fuzzy
 msgid "Prepared a forward"
-msgstr "Отметить как прочитанное"
+msgstr "Подготовил форвард"
 
 msgid "Changed read state"
-msgstr ""
+msgstr "Изменено состояние чтения"
 
 msgid "Changed stars"
-msgstr ""
+msgstr "Измененные звезды"
 
 msgid "Listed tags"
-msgstr ""
+msgstr "Перечисленные теги"
 
-#, fuzzy
 msgid "Changed tags"
-msgstr "Список изменений"
+msgstr "Изменены теги"
 
-#, fuzzy
 msgid "Moved messages"
-msgstr "Над сообщениями"
+msgstr "Перемещенные сообщения"
 
-#, fuzzy
 msgid "Archived messages"
-msgstr "Архивировать это сообщение"
+msgstr "Архивированные сообщения"
 
-#, fuzzy
 msgid "Moved messages to Trash"
-msgstr "Перемещает сообщение в «Корзину»."
+msgstr "Сообщения перемещены в корзину."
 
-#, fuzzy
 msgid "Read the open conversation"
-msgstr "Всё обсуждение"
+msgstr "Прочитайте открытый разговор"
 
-#, fuzzy
 msgid "Listed open drafts"
-msgstr "Эта папка"
+msgstr "Перечислены открытые черновики"
 
-#, fuzzy
 msgid "Read an open draft"
-msgstr "Всё обсуждение"
+msgstr "Прочитать открытый черновик"
 
 msgid "Suggested changes to a draft"
-msgstr ""
+msgstr "Предлагаемые изменения в черновике"
 
-#, fuzzy
 msgid "Refused or failed: {action}"
-msgstr "Не удалось отменить действие: {e}"
+msgstr "Отказано или не удалось: {action}"
 
 msgid "Delete the attachment from the server?"
 msgstr "Удалить вложение с сервера?"
@@ -230,17 +206,16 @@ msgid "Right"
 msgstr "Справа"
 
 msgid "Below"
-msgstr ""
+msgstr "Снизу"
 
-#, fuzzy
 msgid "Reading Pane"
-msgstr "Чтение"
+msgstr "Панель чтения"
 
 msgid "Focus Mode"
 msgstr "Режим фокусировки"
 
 msgid "Fullscreen"
-msgstr ""
+msgstr "Полный экран"
 
 msgid "Print Preview…"
 msgstr "Предпросмотр печати…"
@@ -287,34 +262,29 @@ msgstr "Развернуть все сообщения"
 msgid "Collapse All Messages"
 msgstr "Свернуть все сообщения"
 
-#, fuzzy
 msgid "Back to My Fonts and Colors"
-msgstr "Вернуться к моим шрифтам и цветам"
+msgstr "Вернуться к Моим шрифтам и цветам"
 
-#, fuzzy
 msgid "Show Sender's Fonts and Colors"
-msgstr "Показывать шрифты и цвета отправителя"
+msgstr "Показать шрифты и цвета отправителя"
 
 msgid "View Source"
 msgstr "Просмотр исходного кода"
 
-#, fuzzy
 msgid "Save as File…"
-msgstr "Сохранить как PDF…"
+msgstr "Сохранить как файл…"
 
 msgid "Add Sender to Contacts"
 msgstr "Добавить отправителя в контакты"
 
-#, fuzzy
 msgid "Create Filter from Message…"
-msgstr "Печать сообщения…"
+msgstr "Создать фильтр из сообщения…"
 
 msgid "Create Event…"
-msgstr ""
+msgstr "Создать событие…"
 
-#, fuzzy
 msgid "Create Task…"
-msgstr "Создать"
+msgstr "Создать задачу…"
 
 msgid "Tags"
 msgstr "Теги"
@@ -331,15 +301,14 @@ msgstr "Отметить как спам"
 msgid "Move To…"
 msgstr "Переместить в…"
 
-#, fuzzy
 msgid "Copy To…"
-msgstr "Переместить в…"
+msgstr "Копировать в…"
 
 msgid "Archive"
 msgstr "Архив"
 
 msgid "Snooze"
-msgstr ""
+msgstr "Отложить"
 
 msgid "Block Remote Content"
 msgstr "Блокировать удалённый контент"
@@ -356,12 +325,11 @@ msgstr "Печать…"
 msgid "New Message"
 msgstr "Новое сообщение"
 
-#, fuzzy
 msgid "Hylki Address Book"
-msgstr "Адресная книга"
+msgstr "Адресная книга Хюльки"
 
 msgid "Hylki cannot change this kind of group"
-msgstr ""
+msgstr "Хюльки не может изменить такую группу."
 
 msgid "On This Computer"
 msgstr "На этом компьютере"
@@ -369,142 +337,122 @@ msgstr "На этом компьютере"
 msgid "CardDAV Address Book"
 msgstr "Адресная книга CardDAV"
 
-#, fuzzy
 msgid "Enter the server's address."
-msgstr "Введите адрес сервера каталогов."
+msgstr "Введите адрес сервера."
 
-#, fuzzy
 msgid "“{text}” is not a server address."
-msgstr "«{addr}» не является адресом электронной почты."
+msgstr "«{text}» не является адресом сервера."
 
 msgid "The address starts with https:// or http://."
-msgstr ""
+msgstr "Адрес начинается с https:// или http://."
 
 msgid "Enter the password to sign in."
-msgstr ""
+msgstr "Введите пароль для входа."
 
-#, fuzzy
 msgid "The server did not accept the user name or password."
-msgstr "Каталог не принял пароль."
+msgstr "Сервер не принял имя пользователя или пароль."
 
-#, fuzzy
 msgid "The server's certificate could not be verified."
-msgstr "Не удалось прочитать ответ сервиса."
+msgstr "Сертификат сервера не удалось проверить."
 
-#, fuzzy
 msgid "The server's certificate could not be verified: {error}"
-msgstr "Не удалось связаться с сервисом: {e}"
+msgstr "Сертификат сервера не удалось проверить: {error}"
 
-#, fuzzy
 msgid "Could not connect to the server."
-msgstr "Не удалось связаться с сервером"
+msgstr "Не удалось подключиться к серверу."
 
-#, fuzzy
 msgid "{n} address book"
 msgid_plural "{n} address books"
-msgstr[0] "Адресная книга"
-msgstr[1] "Адресная книга"
-msgstr[2] "Адресная книга"
+msgstr[0] "{n} адресная книга"
+msgstr[1] "{n} адресные книги"
+msgstr[2] "{n} адресных книг"
 
-#, fuzzy
 msgid "{n} contact, kept by Hylki"
 msgid_plural "{n} contacts, kept by Hylki"
-msgstr[0] "Журнал экспортирован в {display}"
-msgstr[1] "Журнал экспортирован в {display}"
-msgstr[2] "Журнал экспортирован в {display}"
+msgstr[0] "{n} контакт хранится в Hylki"
+msgstr[1] "{n} контакта хранятся в Hylki"
+msgstr[2] "{n} контактов хранятся в Hylki"
 
 msgid "{books} · kept by GNOME Contacts and Evolution"
-msgstr ""
+msgstr "{books} · хранятся в GNOME Contacts and Evolution"
 
 msgid "Online account"
 msgstr "Сетевая учётная запись"
 
-#, fuzzy
 msgid "Contacts is switched off for this account in GNOME Online Accounts."
-msgstr "Войдите через «Сетевые учётные записи GNOME»."
+msgstr "Контакты этой учётной записи отключены в «Сетевых учётных записях GNOME»."
 
-#, fuzzy
 msgid "Looking for address books…"
-msgstr "Поиск ключа для {addr}…"
+msgstr "Ищем адресные книги…"
 
 msgid "This address book is switched off in Evolution."
-msgstr ""
+msgstr "Эта адресная книга отключена в Evolution."
 
 msgid "Evolution Data Server is not available"
 msgstr "Сервис Evolution Data Server недоступен"
 
-#, fuzzy
 msgid ""
 "The directory cannot be searched without signing in. Add a sign-in to it in "
 "Settings → Contacts."
-msgstr ""
-"Для доступа к каталогу требуется пароль. Добавьте его в меню Параметры → "
-"Каталоги LDAP."
+msgstr "Поиск по каталогу невозможен без входа в систему. Добавьте в него авторизацию в Настройках → Контакты."
 
 msgid "The directory did not accept the password."
 msgstr "Каталог не принял пароль."
 
-#, fuzzy
 msgid "The directory's certificate could not be verified."
-msgstr "Не удалось прочитать ответ сервиса."
+msgstr "Сертификат каталога не удалось проверить."
 
-#, fuzzy
 msgid "The directory's certificate could not be verified: {error}"
-msgstr "Не удалось связаться с сервисом: {e}"
+msgstr "Сертификат каталога не удалось проверить: {error}"
 
 msgid ""
 "Could not connect to {server} over TLS. Check the server, the port and that "
 "it takes LDAPS."
-msgstr ""
+msgstr "Не удалось подключиться к {server} по TLS. Проверьте сервер, порт и что он принимает LDAPS."
 
 msgid "Could not connect to {server}. Check the server and the port."
-msgstr ""
+msgstr "Не удалось подключиться к {server}. Проверьте сервер и порт."
 
 msgid ""
 "Could not start StartTLS with {server}: the server does not offer it, or its "
 "certificate is not trusted."
-msgstr ""
+msgstr "Не удалось запустить StartTLS с {server}: сервер не предлагает его или его сертификат не является доверенным."
 
 msgid "Could not reach {server}. Check the server's name and the network."
-msgstr ""
+msgstr "Не удалось связаться с {server}. Проверьте имя сервера и сеть."
 
-#, fuzzy
 msgid "The directory needs a password. Add it in Settings → Contacts."
-msgstr ""
-"Для доступа к каталогу требуется пароль. Добавьте его в меню Параметры → "
-"Каталоги LDAP."
+msgstr "Для каталога требуется пароль. Добавьте его в Настройки → Контакты."
 
 msgid "{name} did not answer: {error}"
 msgstr "Сервер {name} не ответил: {error}"
 
 msgid "A contact needs a name, an email address or a phone number"
-msgstr ""
+msgstr "Контакту необходимо имя, адрес электронной почты или номер телефона."
 
 msgid "The contact is too large"
-msgstr ""
+msgstr "Контакт слишком большой"
 
 msgid "UTF-16 files are not supported"
-msgstr ""
+msgstr "Файлы UTF-16 не поддерживаются."
 
-#, fuzzy
 msgid "The file is not a text file"
-msgstr "Эта папка отсутствует на сервере"
+msgstr "Файл не является текстовым файлом"
 
 msgid "The file is larger than {size} MB"
-msgstr ""
+msgstr "Размер файла превышает {size} МБ."
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{n} человек в скрытой копии"
+msgstr[1] "{n} человека в скрытой копии"
+msgstr[2] "{n} человек в скрытой копии"
 
-#, fuzzy
 msgid "{n} person"
 msgid_plural "{n} people"
-msgstr[0] "{n} получатель"
-msgstr[1] "{n} получателя"
-msgstr[2] "{n} получателей"
+msgstr[0] "{n} человек"
+msgstr[1] "{n} человека"
+msgstr[2] "{n} человек"
 
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr "Включите режим консоли в Настройки → Система и внешний вид"
@@ -542,10 +490,10 @@ msgstr "Для этой учётной записи недоступна пап�
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
-msgstr ""
+msgstr "В пересылке фильтра {rule} было отказано. Сообщение оставлено на месте и будет отправлено еще раз."
 
 msgid "The forward of filter {rule} is waiting in the Outbox"
-msgstr ""
+msgstr "Пересылка фильтра {rule} ожидает в папке «Исходящие»."
 
 msgid "No filters to apply here yet"
 msgstr "Здесь пока нет фильтров для применения"
@@ -585,23 +533,21 @@ msgstr "Папка {done} из {total}"
 
 msgid "started {n} forward"
 msgid_plural "started {n} forwards"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "запущена {n} пересылка"
+msgstr[1] "запущено {n} пересылки"
+msgstr[2] "запущено {n} пересылок"
 
-#, fuzzy
 msgid "marked {n} message as read"
 msgid_plural "marked {n} messages as read"
-msgstr[0] "Перемещено {n} письмо"
-msgstr[1] "Перемещено {n} письма"
-msgstr[2] "Перемещено {n} писем"
+msgstr[0] "отмечено {n} письмо как прочитанное"
+msgstr[1] "отмечены {n} письма как прочитанные"
+msgstr[2] "отмечено {n} писем как прочитанные"
 
-#, fuzzy
 msgid "deleted {n} message"
 msgid_plural "deleted {n} messages"
-msgstr[0] "Удалить {n} сообщений"
-msgstr[1] "Удалить {n} сообщений"
-msgstr[2] "Удалить {n} сообщений"
+msgstr[0] "удалено {n} сообщение"
+msgstr[1] "удалено {n} сообщения"
+msgstr[2] "удалено {n} сообщений"
 
 msgid "Filters looked at {n} message, and it matched nothing"
 msgid_plural "Filters looked at {n} messages, and none of them matched"
@@ -612,12 +558,11 @@ msgstr[2] "Фильтры проверили {n} писем, и совпаден
 #. Matches that needed nothing: the rules had already done their
 #. work on an earlier sync (#201). Saying "none matched" here
 #. made working rules look broken.
-#, fuzzy
 msgid "Filters looked at {n} message"
 msgid_plural "Filters looked at {n} messages"
-msgstr[0] "Фильтры добавили метку к {tagged} из {n} письма"
-msgstr[1] "Фильтры добавили метки к {tagged} из {n} писем"
-msgstr[2] "Фильтры добавили метки к {tagged} из {n} писем"
+msgstr[0] "Фильтры проверили {n} письмо"
+msgstr[1] "Фильтры проверили {n} письма"
+msgstr[2] "Фильтры проверили {n} писем"
 
 msgid ""
 "Filters matched {matched} of {n} message, and it was already tagged or filed"
@@ -664,9 +609,8 @@ msgstr "Закрыть"
 msgid "Unstar"
 msgstr "Снять отметку"
 
-#, fuzzy
 msgid "Create a folder inside {name}."
-msgstr "Создать новую папку для этого аккаунта."
+msgstr "Создайте папку внутри {name}."
 
 msgid "Create a new folder for this account."
 msgstr "Создать новую папку для этого аккаунта."
@@ -714,45 +658,38 @@ msgid "Empty"
 msgstr "Очистить"
 
 msgid "Empty Trash in Every Account?"
-msgstr ""
+msgstr "Очистить корзину во всех учётных записях?"
 
 msgid "Empty Junk in Every Account?"
-msgstr ""
+msgstr "Очистить папку «Спам» во всех учётных записях?"
 
-#, fuzzy
 msgid ""
 "Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+msgstr "Каждое сообщение в них будет удалено с сервера. Это невозможно отменить."
 
 msgid "This account can't have folders at the top level."
-msgstr ""
+msgstr "В этой учётной записи не может быть папок верхнего уровня."
 
-#, fuzzy
 msgid "Folders on this account can't hold other folders."
-msgstr "Предлагать эту учётную запись в редакторе"
+msgstr "Папки этой учётной записи не могут содержать другие папки."
 
 msgid "Create Folder"
 msgstr "Создать папку"
 
-#, fuzzy
 msgid "{name} can't hold other folders."
-msgstr "Включать другие папки"
+msgstr "{name} не может хранить другие папки."
 
-#, fuzzy
 msgid "archive"
-msgstr "Архив"
+msgstr "архив"
 
-#, fuzzy
 msgid "trash"
-msgstr "Корзина"
+msgstr "мусор"
 
-#, fuzzy
 msgid "destination"
-msgstr "Обновлённое приглашение"
+msgstr "пункт назначения"
 
 msgid "A folder can't be moved into itself."
-msgstr ""
+msgstr "Папку нельзя переместить в себя."
 
 msgid "Move Folder"
 msgstr "Переместить папку"
@@ -829,7 +766,7 @@ msgid "Upload to Cloud Storage"
 msgstr "Загрузить в облачное хранилище"
 
 msgid "The account has to connect before its folders can change."
-msgstr ""
+msgstr "Учетная запись должна подключиться, прежде чем ее папки смогут измениться."
 
 msgid "This message carries no calendar file to open."
 msgstr "В этом сообщении нет файла календаря для открытия."
@@ -865,31 +802,28 @@ msgid "Your answer has been sent: declined."
 msgstr "Ваш ответ отправлен: отклонено."
 
 msgid "Retry"
-msgstr ""
+msgstr "Повторить"
 
-#, fuzzy
 msgid "Waiting for the keyring"
-msgstr "Нечего отменять"
+msgstr "Ожидание связки ключей"
 
-#, fuzzy
 msgid "Couldn’t read the password"
-msgstr "Защитить паролем"
+msgstr "Не удалось прочитать пароль"
 
-#, fuzzy
 msgid "The keyring gave an error for {accounts}: {error}"
-msgstr "Не удалось переместить {n} сообщение в «{account}»: {error}"
+msgstr "Связка ключей выдала ошибку для {accounts}: {error}."
 
 msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
-msgstr ""
+msgstr "Брелок не ответил для {accounts}. Почта подключается, как только это произойдет."
 
 msgid ""
 "Unlock the keyring, for example the Login keyring in Passwords and Keys."
-msgstr ""
+msgstr "Разблокируйте связку ключей, например связку ключей входа в систему «Пароли и ключи»."
 
 msgid ""
 "Unlock the keyring, for example the Login keyring in Passwords and Keys, "
 "then choose Retry."
-msgstr ""
+msgstr "Разблокируйте связку ключей, например связку ключей для входа в программу «Пароли и ключи», затем выберите «Повторить»."
 
 msgid "Date (Newest first)"
 msgstr "Дата (сначала новые)"
@@ -909,44 +843,35 @@ msgstr "Сначала непрочитанные"
 msgid "Starred first"
 msgstr "Сначала отмеченные"
 
-#, fuzzy
 msgid "Clear Dates"
-msgstr "Поиск фильтров"
+msgstr "Четкие даты"
 
-#, fuzzy
 msgid "Any Date"
-msgstr "Дата"
+msgstr "Любая дата"
 
-#, fuzzy
 msgid "{from} to {to}"
-msgstr "{cur} из {total}"
+msgstr "{from} до {to}"
 
-#, fuzzy
 msgid "Since {date}"
-msgstr "срок действия истекает {date}"
+msgstr "С {date}"
 
-#, fuzzy
 msgid "Until {date}"
-msgstr "срок действия истекает {date}"
+msgstr "До {date}"
 
 msgid "Sort by"
 msgstr "Сортировать по"
 
-#, fuzzy
 msgid "Use for All Folders"
-msgstr "Все папки"
+msgstr "Использовать для всех папок"
 
-#, fuzzy
 msgid "Show only"
-msgstr "Только непрочитанные"
+msgstr "Показать только"
 
-#, fuzzy
 msgid "Clear Filters"
-msgstr "Поиск фильтров"
+msgstr "Очистить фильтры"
 
-#, fuzzy
 msgid "Dates"
-msgstr "Дата"
+msgstr "Даты"
 
 msgid "From"
 msgstr "От"
@@ -954,53 +879,46 @@ msgstr "От"
 msgid "To"
 msgstr "Кому"
 
-#, fuzzy
 msgid "Sort and filter messages"
-msgstr "{n} сообщений"
+msgstr "Сортировка и фильтрация сообщений"
 
-#, fuzzy
 msgid "Filtered: {names}"
-msgstr "Отфильтрованные папки"
+msgstr "Отфильтровано: {names}"
 
 msgid "Search Messages…"
 msgstr "Поиск сообщений…"
 
-#, fuzzy
 msgid "Filter"
-msgstr "Фильтры"
+msgstr "Фильтр"
 
 msgid "Sort"
 msgstr "Сортировать"
 
-#, fuzzy
 msgid "Sending {n} message…"
 msgid_plural "Sending {n} messages…"
-msgstr[0] "Индексация {n} сообщений…"
-msgstr[1] "Индексация {n} сообщений…"
-msgstr[2] "Индексация {n} сообщений…"
+msgstr[0] "Отправка {n} сообщения…"
+msgstr[1] "Отправка {n} сообщений…"
+msgstr[2] "Отправка {n} сообщений…"
 
 #. Each one that failed has said why already, and waits in the
 #. Outbox, a refused one included.
-#, fuzzy
 msgid "Sent {n} of {total} message"
 msgid_plural "Sent {n} of {total} messages"
-msgstr[0] "Папка {done} из {total}"
-msgstr[1] "Папка {done} из {total}"
-msgstr[2] "Папка {done} из {total}"
+msgstr[0] "Отправлено {n} из {total} сообщений"
+msgstr[1] "Отправлено {n} из {total} сообщений"
+msgstr[2] "Отправлено {n} из {total} сообщений"
 
-#, fuzzy
 msgid "Sent {n} message"
 msgid_plural "Sent {n} messages"
-msgstr[0] "Найти в сообщении"
-msgstr[1] "Найти в сообщении"
-msgstr[2] "Найти в сообщении"
+msgstr[0] "Отправлено {n} сообщение"
+msgstr[1] "Отправлено {n} сообщения"
+msgstr[2] "Отправлено {n} сообщений"
 
 msgid "Stop"
-msgstr ""
+msgstr "Остановить"
 
-#, fuzzy
 msgid "Show Outbox"
-msgstr "Исходящие"
+msgstr "Показать исходящие"
 
 #. Rightmost, beside the window controls, as in the main window.
 msgid "Actions"
@@ -1009,23 +927,20 @@ msgstr "Действия"
 msgid "Refresh or long-press for Status Bar"
 msgstr "Обновите или удерживайте для строки состояния"
 
-#, fuzzy
 msgid "Copying one message to On This Computer…"
 msgid_plural "Copying {n} messages to On This Computer…"
-msgstr[0] "Перемещение {n} сообщения в «{account}»…"
-msgstr[1] "Перемещение {n} сообщений в «{account}»…"
-msgstr[2] "Перемещение {n} сообщений в «{account}»…"
+msgstr[0] "Копирование сообщения на этот компьютер…"
+msgstr[1] "Копирование {n} сообщений на этот компьютер…"
+msgstr[2] "Копирование {n} сообщений на этот компьютер…"
 
-#, fuzzy
 msgid "Sending message…"
-msgstr "Индексация {n} сообщений…"
+msgstr "Отправка сообщения…"
 
 msgid "Sending “{subject}”…"
-msgstr ""
+msgstr "Отправка «{subject}»…"
 
-#, fuzzy
 msgid "Waiting to send"
-msgstr "Нечего отменять"
+msgstr "Ожидание отправки"
 
 msgid "Sending…"
 msgstr "Отправка…"
@@ -1045,9 +960,8 @@ msgstr "Открыть выбранное сообщение"
 msgid "Back to the message list"
 msgstr "Вернуться к списку сообщений"
 
-#, fuzzy
 msgid "Open or fold a conversation in the list"
-msgstr "Всё обсуждение"
+msgstr "Открыть или свернуть беседу в списке"
 
 msgid "Next message in the conversation"
 msgstr "Следующее сообщение в беседе"
@@ -1065,7 +979,7 @@ msgid "Reply to all"
 msgstr "Ответить всем"
 
 msgid "Delete permanently, without going to Trash"
-msgstr ""
+msgstr "Удалить навсегда, не отправляя в корзину"
 
 msgid "Mark as spam"
 msgstr "Отметить как спам"
@@ -1107,7 +1021,7 @@ msgid "Attach files"
 msgstr "Прикрепить файлы"
 
 msgid "Go to To, Cc or Bcc, showing the row"
-msgstr ""
+msgstr "Перейдите к разделу «Кому», «Копия» или «СК», отобразив строку."
 
 msgid "Back out of a reply and return to the list"
 msgstr "Отменить ответ и вернуться к списку"
@@ -1151,12 +1065,11 @@ msgstr "Показывать или скрывать учётные записи
 msgid "Focus Mode on or off"
 msgstr "Включить или выключить режим концентрации"
 
-#, fuzzy
 msgid "Fullscreen on or off"
-msgstr "Включить или выключить режим концентрации"
+msgstr "Полноэкранный режим включен или выключен"
 
 msgid "Reading pane right of the list, below it, or off"
-msgstr ""
+msgstr "Область чтения справа от списка, под ним или выключена"
 
 msgid "Message zoom in or out"
 msgstr "Увеличить или уменьшить масштаб сообщения"
@@ -1177,10 +1090,10 @@ msgid "Quit Hylki entirely"
 msgstr "Полностью выйти из Hylki"
 
 msgid "Command palette: search actions, folders and tags"
-msgstr ""
+msgstr "Палитра команд: действия поиска, папки и теги"
 
 msgid "Command palette, actions only"
-msgstr ""
+msgstr "Палитра команд, только действия"
 
 msgid "This list"
 msgstr "Этот список"
@@ -1188,115 +1101,89 @@ msgstr "Этот список"
 msgid ""
 "Move down or up the list without opening; while reading, open the next or "
 "previous conversation"
-msgstr ""
+msgstr "Переместиться вниз или вверх по списку, не открывая его; во время чтения открыть следующий или предыдущий разговор"
 
-#, fuzzy
 msgid "Open the message the cursor is on"
-msgstr "Открывает сообщение с готовым черновиком пересылки."
+msgstr "Откройте сообщение, на котором находится курсор"
 
-#, fuzzy
 msgid "Close the conversation, back to the list"
-msgstr "Всё обсуждение"
+msgstr "Закрыть разговор, вернуться к списку"
 
-#, fuzzy
 msgid "Next or previous message in the conversation"
-msgstr "Предыдущее сообщение в беседе"
+msgstr "Следующее или предыдущее сообщение в разговоре"
 
-#, fuzzy
 msgid "Expand or collapse every message of the conversation"
-msgstr "Предыдущее сообщение в беседе"
+msgstr "Развернуть или свернуть каждое сообщение беседы"
 
-#, fuzzy
 msgid "Go to Inbox"
-msgstr "Переместить во «Входящие»"
+msgstr "Перейти в папку «Входящие»"
 
-#, fuzzy
 msgid "Go to Starred"
-msgstr "Не установлено"
+msgstr "Перейти в раздел «Помеченные»"
 
-#, fuzzy
 msgid "Go to Sent"
-msgstr "Добавить в Контакты"
+msgstr "Перейти в Отправленные"
 
-#, fuzzy
 msgid "Go to Drafts"
-msgstr "Сохранить в «Черновики»"
+msgstr "Перейти в черновики"
 
-#, fuzzy
 msgid "Go to Archive"
-msgstr "Архив"
+msgstr "Перейти в архив"
 
-#, fuzzy
 msgid "Go to Contacts"
-msgstr "Добавить в Контакты"
+msgstr "Перейти в Контакты"
 
-#, fuzzy
 msgid "Archive the conversation"
-msgstr "Всё обсуждение"
+msgstr "Архивировать разговор"
 
-#, fuzzy
 msgid "Archive the conversation and open the older one"
-msgstr "Всё обсуждение"
+msgstr "Архивируйте разговор и откройте старый."
 
-#, fuzzy
 msgid "Archive the conversation and open the newer one"
-msgstr "Всё обсуждение"
+msgstr "Архивируйте разговор и откройте новый"
 
-#, fuzzy
 msgid "Mark the conversation as read"
-msgstr "Всё обсуждение"
+msgstr "Отметить беседу как прочитанную"
 
-#, fuzzy
 msgid "Mark the conversation as unread and close it"
-msgstr "Отметить прочитанным/непрочитанным"
+msgstr "Отметьте беседу как непрочитанную и закройте ее."
 
-#, fuzzy
 msgid "Mark as unread from this message on and close it"
-msgstr "Попробовать отправить сейчас"
+msgstr "Отметьте это сообщение как непрочитанное и закройте его."
 
-#, fuzzy
 msgid "Select this row without opening it"
-msgstr "Выбрать эту строку (для массового действия)"
+msgstr "Выберите эту строку, не открывая ее"
 
 msgid "Select every row, or none"
-msgstr ""
+msgstr "Выбрать каждую строку или ни одной"
 
-#, fuzzy
 msgid "Select the read or the unread conversations"
-msgstr "Удалить переписку"
+msgstr "Выберите прочитанные или непрочитанные разговоры"
 
-#, fuzzy
 msgid "Select the starred or the unstarred conversations"
-msgstr "Следующее сообщение в беседе"
+msgstr "Выберите помеченные или не помеченные беседы"
 
-#, fuzzy
 msgid "Move to a folder"
-msgstr "Переместить папку"
+msgstr "Переместить в папку"
 
-#, fuzzy
 msgid "Undo the last action"
-msgstr "Отменить последнее перемещение или удаление"
+msgstr "Отменить последнее действие"
 
-#, fuzzy
 msgid "Reply, or reply to all, in a window"
-msgstr "Ответ и пересылка в основном окне"
+msgstr "Ответить или ответить всем в окне"
 
-#, fuzzy
 msgid "Forward in a window"
-msgstr "Ответ и пересылка в основном окне"
+msgstr "Вперед в окно"
 
-#, fuzzy
 msgid "Compose in a window"
-msgstr "Создание писем в основном окне"
+msgstr "Написать в окне"
 
 msgid "Check for new mail"
 msgstr "Проверка новой почты"
 
-#, fuzzy
 msgid "Action"
-msgstr "Действия"
+msgstr "Действие"
 
-#, fuzzy
 msgid "Reply to All"
 msgstr "Ответить всем"
 
@@ -1306,25 +1193,20 @@ msgstr "Печать"
 msgid "Find in Message"
 msgstr "Найти в сообщении"
 
-#, fuzzy
 msgid "Delete Permanently"
-msgstr "Удалить это сообщение безвозвратно?"
+msgstr "Удалить навсегда"
 
-#, fuzzy
 msgid "Star or Remove Star"
-msgstr "Снять отметку"
+msgstr "Звезда или удалить звезду"
 
-#, fuzzy
 msgid "Mark as Read or Unread"
 msgstr "Отметить как прочитанное или непрочитанное"
 
-#, fuzzy
 msgid "Move to Folder"
-msgstr "Переместить папку"
+msgstr "Переместить в папку"
 
-#, fuzzy
 msgid "Open Message File…"
-msgstr "Печать сообщения…"
+msgstr "Открыть файл сообщения…"
 
 msgid "Undo"
 msgstr "Отменить"
@@ -1332,54 +1214,44 @@ msgstr "Отменить"
 msgid "Redo"
 msgstr "Повторить"
 
-#, fuzzy
 msgid "Check for New Mail"
-msgstr "Проверка новой почты"
+msgstr "Проверить новую почту"
 
-#, fuzzy
 msgid "Search Messages"
-msgstr "Поиск сообщений…"
+msgstr "Поиск сообщений"
 
-#, fuzzy
 msgid "Show or Hide the Sidebar"
-msgstr "Показывать или скрывать учётные записи на боковой панели"
+msgstr "Показать или скрыть боковую панель"
 
-#, fuzzy
 msgid "Reading Pane Right"
-msgstr "Чтение"
+msgstr "Панель чтения справа"
 
-#, fuzzy
 msgid "Reading Pane Below"
-msgstr "Чтение"
+msgstr "Панель чтения ниже"
 
-#, fuzzy
 msgid "Reading Pane Off"
-msgstr "Чтение"
+msgstr "Панель чтения выключена"
 
 msgid "Mail Accounts"
 msgstr "Почтовые учётные записи"
 
-#, fuzzy
 msgid "New Smart Folder…"
-msgstr "Создать папку…"
+msgstr "Новая смарт-папка…"
 
 msgid "Keyboard Shortcuts"
 msgstr "Сочетания клавиш"
 
-#, fuzzy
 msgid "About Hylki"
-msgstr "О программе"
+msgstr "О Хюльках"
 
-#, fuzzy
 msgid "Turn Focus Mode On"
-msgstr "Режим фокусировки"
+msgstr "Включить режим фокусировки"
 
-#, fuzzy
 msgid "Turn Focus Mode Off"
-msgstr "Режим фокусировки"
+msgstr "Выключить режим фокусировки"
 
 msgid "View"
-msgstr ""
+msgstr "Вид"
 
 msgid "All accounts"
 msgstr "Все учётные записи"
@@ -1390,21 +1262,16 @@ msgstr "Контакты"
 msgid "Outbox"
 msgstr "Исходящие"
 
-#, fuzzy
 msgid "Tag"
-msgstr "Теги"
+msgstr "Метка"
 
-#, fuzzy
 msgid "Smart Folder"
-msgstr "Сортировать папки"
+msgstr "Умная папка"
 
-#, fuzzy
 msgid ""
 "Single-key shortcuts are switched off, and Gmail keys with them. Turn them "
 "on in Settings → System."
-msgstr ""
-"Одноклавишные сочетания отключены. Включите их в меню «Параметры» → "
-"«Система»."
+msgstr "Одноклавишные сочетания отключены, а вместе с ними и клавиши Gmail. Включите их в «Настройки» → «Система»."
 
 msgid ""
 "Single-key shortcuts are switched off. Turn them on in Settings → System."
@@ -1436,42 +1303,35 @@ msgstr "(без темы)"
 msgid "Message Source"
 msgstr "Исходный текст сообщения"
 
-#, fuzzy
 msgid "Forwarded message"
-msgstr "Переслать это сообщение"
+msgstr "Пересланное сообщение"
 
-#, fuzzy
 msgid "Subject: {subject}"
-msgstr "Принято: {subject}"
+msgstr "Тема: {subject}"
 
 msgid "From: {from}"
 msgstr "От: {from}"
 
-#, fuzzy
 msgid "Date: {date}"
-msgstr "срок действия истекает {date}"
+msgstr "Дата: {date}"
 
 msgid "Export failed: {e}"
 msgstr "Ошибка экспорта: {e}"
 
-#, fuzzy
 msgid "Export Contacts"
-msgstr "Сортировка контактов"
+msgstr "Экспорт контактов"
 
-#, fuzzy
 msgid "{n} contact exported to {path}"
 msgid_plural "{n} contacts exported to {path}"
-msgstr[0] "Журнал экспортирован в {display}"
-msgstr[1] "Журнал экспортирован в {display}"
-msgstr[2] "Журнал экспортирован в {display}"
+msgstr[0] "{n} контакт экспортирован в {path}"
+msgstr[1] "{n} контакта экспортированы в {path}"
+msgstr[2] "{n} контактов экспортированы в {path}"
 
-#, fuzzy
 msgid "Could not export contacts: {e}"
-msgstr "Не удалось импортировать учетную запись: {e}"
+msgstr "Не удалось экспортировать контакты: {e}"
 
-#, fuzzy
 msgid "Delete All Contacts?"
-msgstr "Удалить контакт?"
+msgstr "Удалить все контакты?"
 
 msgid ""
 "The {n} contact in the Hylki address book is deleted. This cannot be undone; "
@@ -1479,13 +1339,12 @@ msgid ""
 msgid_plural ""
 "The {n} contacts in the Hylki address book are deleted. This cannot be "
 "undone; export the book first to keep a copy."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Контакт {n} в адресной книге Hylki удаляется. Отменить это нельзя; сначала экспортируйте книгу, чтобы сохранить копию."
+msgstr[1] "Контакты {n} в адресной книге Hylki удаляются. Отменить это нельзя; сначала экспортируйте книгу, чтобы сохранить копию."
+msgstr[2] "Контакты {n} в адресной книге Hylki удаляются. Отменить это нельзя; сначала экспортируйте книгу, чтобы сохранить копию."
 
-#, fuzzy
 msgid "Delete All"
-msgstr "Удалить"
+msgstr "Удалить все"
 
 msgid "Export Settings"
 msgstr "Экспорт настроек"
@@ -1524,9 +1383,8 @@ msgstr "Перезапустить Hylki"
 msgid "Import failed: {e}"
 msgstr "Ошибка импорта: {e}"
 
-#, fuzzy
 msgid "The renderer applies the next time Hylki starts."
-msgstr "Язык изменится при следующем запуске Hylki."
+msgstr "Средство визуализации применяется при следующем запуске Hylki."
 
 msgid "The language applies the next time Hylki starts."
 msgstr "Язык изменится при следующем запуске Hylki."
@@ -1547,25 +1405,23 @@ msgid "Customize Toolbar…"
 msgstr "Настроить панель инструментов…"
 
 msgid "Read receipt"
-msgstr ""
+msgstr "Прочитать квитанцию"
 
-#, fuzzy
 msgid "Read: {subject}"
-msgstr "Принято: {subject}"
+msgstr "Читать: {subject}"
 
 msgid ""
 "This is a read receipt for the message sent to {to} on {date} with the "
 "subject \"{subject}\"."
-msgstr ""
+msgstr "Это уведомление о прочтении сообщения, отправленного пользователю {to} {date} с темой \"{subject}\"."
 
 msgid ""
 "It means the message was shown on the recipient's screen, not that it was "
 "read or understood."
-msgstr ""
+msgstr "Это означает, что сообщение было показано на экране получателя, а не то, что оно было прочитано или понято."
 
-#, fuzzy
 msgid "Read by {reader}"
-msgstr "Адрес для ответа"
+msgstr "Прочитано {reader}"
 
 msgid "Full Release Notes on GitHub"
 msgstr "Полные примечания к выпуску на GitHub"
@@ -1596,19 +1452,15 @@ msgstr ""
 "Они уже находятся в «Корзине», поэтому будут удалены с сервера. Это действие "
 "нельзя отменить."
 
-#, fuzzy
 msgid ""
 "It will be erased from the server instead of going to Trash. This can’t be "
 "undone."
-msgstr ""
-"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+msgstr "Он будет удален с сервера, а не отправлен в корзину. Это невозможно отменить."
 
-#, fuzzy
 msgid ""
 "They will be erased from the server instead of going to Trash. This can’t be "
 "undone."
-msgstr ""
-"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+msgstr "Они будут удалены с сервера, а не отправлены в корзину. Это невозможно отменить."
 
 msgid "No {v1} folder available"
 msgstr "Нет доступной папки {v1}"
@@ -1623,14 +1475,13 @@ msgid "No {v1} folder available for some messages"
 msgstr "Для некоторых сообщений нет доступной папки {v1}"
 
 msgid "Remove Account?"
-msgstr "Удалить аккаунт?"
+msgstr "Удалить учётную запись?"
 
 msgid "Remove"
 msgstr "Удалить"
 
-#, fuzzy
 msgid "Select a conversation first."
-msgstr "Удалить переписку"
+msgstr "Сначала выберите разговор."
 
 msgid "Remove Tags"
 msgstr "Удалить теги"
@@ -1638,48 +1489,43 @@ msgstr "Удалить теги"
 msgid "Open a message first, then print it."
 msgstr "Сначала откройте сообщение, затем распечатайте его."
 
-#, fuzzy
 msgid "Delete “{name}”?"
-msgstr "Очистить «{name}»?"
+msgstr "Удалить «{name}»?"
 
 msgid ""
 "The smart folder goes from the sidebar. The mail it shows stays where it is."
-msgstr ""
+msgstr "Умная папка открывается с боковой панели. Почта, которую он показывает, остается там, где она есть."
 
 msgid "Snooze until"
-msgstr ""
+msgstr "Отложить до"
 
-#, fuzzy
 msgid "Could not add the event: {e}"
-msgstr "Не удалось обновить сообщение: {e}"
+msgstr "Не удалось добавить событие: {e}"
 
-#, fuzzy
 msgid "Could not add the task: {e}"
-msgstr "Не удалось изменить отметку: {e}"
+msgstr "Не удалось добавить задачу: {e}"
 
-#, fuzzy
 msgid "One message could not be copied to {account}: {error}"
 msgid_plural "{n} messages could not be copied to {account}: {error}"
-msgstr[0] "Не удалось переместить {n} сообщение в «{account}»: {error}"
-msgstr[1] "Не удалось переместить {n} сообщения в «{account}»: {error}"
-msgstr[2] "Не удалось переместить {n} сообщений в «{account}»: {error}"
+msgstr[0] "Не удалось скопировать сообщение в «{account}»: {error}"
+msgstr[1] "Не удалось скопировать {n} сообщения в «{account}»: {error}"
+msgstr[2] "Не удалось скопировать {n} сообщений в «{account}»: {error}"
 
 msgid "One message could not be moved to {account}: {error}"
 msgid_plural "{n} messages could not be moved to {account}: {error}"
-msgstr[0] "Не удалось переместить {n} сообщение в «{account}»: {error}"
+msgstr[0] "Не удалось переместить сообщение в «{account}»: {error}"
 msgstr[1] "Не удалось переместить {n} сообщения в «{account}»: {error}"
 msgstr[2] "Не удалось переместить {n} сообщений в «{account}»: {error}"
 
-#, fuzzy
 msgid "Copying one message to {account}…"
 msgid_plural "Copying {n} messages to {account}…"
-msgstr[0] "Перемещение {n} сообщения в «{account}»…"
-msgstr[1] "Перемещение {n} сообщений в «{account}»…"
-msgstr[2] "Перемещение {n} сообщений в «{account}»…"
+msgstr[0] "Копирование сообщения в «{account}»…"
+msgstr[1] "Копирование {n} сообщений в «{account}»…"
+msgstr[2] "Копирование {n} сообщений в «{account}»…"
 
 msgid "Moving one message to {account}…"
 msgid_plural "Moving {n} messages to {account}…"
-msgstr[0] "Перемещение {n} сообщения в «{account}»…"
+msgstr[0] "Перемещение сообщения в «{account}»…"
 msgstr[1] "Перемещение {n} сообщений в «{account}»…"
 msgstr[2] "Перемещение {n} сообщений в «{account}»…"
 
@@ -1694,9 +1540,8 @@ msgstr ""
 "Сообщений осталось на месте ({foreign}): эта учётная запись не принимает "
 "почту из другой"
 
-#, fuzzy
 msgid "Could not save the message: {e}"
-msgstr "Не удалось обновить сообщение: {e}"
+msgstr "Не удалось сохранить сообщение: {e}"
 
 msgid "Open Hylki"
 msgstr "Открыть Hylki"
@@ -1786,12 +1631,11 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr "Отписаться"
 
-#, fuzzy
 msgid "Also delete the message from {addr}"
 msgid_plural "Also delete the {n} messages from {addr}"
-msgstr[0] "Не удалось удалить сообщение: {e}"
-msgstr[1] "Не удалось удалить сообщение: {e}"
-msgstr[2] "Не удалось удалить сообщение: {e}"
+msgstr[0] "Также удалить сообщение с {addr}"
+msgstr[1] "Также удалить {n} сообщения с {addr}"
+msgstr[2] "Также удалить {n} сообщений с {addr}"
 
 msgid "the message offers no way to unsubscribe"
 msgstr "в сообщении нет способа отписаться"
@@ -1805,26 +1649,21 @@ msgstr "Вы отписались от «{name}»."
 msgid "The list's unsubscribe page is open in your browser."
 msgstr "Страница отписки этого списка рассылки открыта в вашем браузере."
 
-#, fuzzy
 msgid "Save Message"
-msgstr "Новое сообщение"
+msgstr "Сохранить сообщение"
 
-#, fuzzy
 msgid "Open Message File"
-msgstr "Новое сообщение"
+msgstr "Открыть файл сообщения"
 
-#, fuzzy
 msgid "Email messages"
-msgstr "{n} сообщений"
+msgstr "Сообщения электронной почты"
 
 #. Other programs name files .msg too (Tcl's catalogues).
-#, fuzzy
 msgid "it is not an Outlook message"
-msgstr "Программе gpg не удалось подписать сообщение."
+msgstr "это не сообщение Outlook"
 
-#, fuzzy
 msgid "Could not open {file}: {e}"
-msgstr "Не удалось переместить папку: {e}"
+msgstr "Не удалось открыть {file}: {e}"
 
 msgid "No message with the ID {id} was found"
 msgstr "Ни одного сообщения с ID {id} не найдено"
@@ -1858,9 +1697,8 @@ msgstr "Загрузка вложений…"
 msgid "Signature"
 msgstr "Подпись"
 
-#, fuzzy
 msgid "Replied"
-msgstr "Ответить"
+msgstr "Ответил"
 
 msgid "Sender"
 msgstr "Отправитель"
@@ -1889,36 +1727,29 @@ msgstr "Срок исполнения"
 msgid "Date"
 msgstr "Дата"
 
-#, fuzzy
 msgid "Newest messages"
-msgstr "Сначала новые сообщения"
+msgstr "Новейшие сообщения"
 
-#, fuzzy
 msgid "Last week"
-msgstr "Фамилия"
+msgstr "На прошлой неделе"
 
-#, fuzzy
 msgid "Last month"
-msgstr "Повторяется ежемесячно"
+msgstr "В прошлом месяце"
 
-#, fuzzy
 msgid "Last year"
-msgstr "Фамилия"
+msgstr "В прошлом году"
 
-#, fuzzy
 msgid "All mail"
-msgstr "Добавить адрес"
+msgstr "Вся почта"
 
 msgid "With sent mail"
-msgstr ""
+msgstr "С отправленным письмом"
 
-#, fuzzy
 msgid "Folder of the original"
-msgstr "Отображается оригинал."
+msgstr "Папка оригинала"
 
-#, fuzzy
 msgid "Folder of the original, not the Inbox"
-msgstr "Отображается оригинал."
+msgstr "Папка оригинала, а не Входящие"
 
 msgid "Custom Order"
 msgstr "Пользовательский порядок"
@@ -1992,42 +1823,35 @@ msgstr[0] "Новое письмо с {n} прикрёпленным файло�
 msgstr[1] "Новое письмо с {n} прикрёпленными файлами открыто в Hylki."
 msgstr[2] "Новое письмо с {n} прикрёпленными файлами открыто в Hylki."
 
-#, fuzzy
 msgid "Message ready"
-msgstr "Шрифт сообщений"
+msgstr "Сообщение готово"
 
 msgid "An AI agent prepared a message. Check it, then send it."
-msgstr ""
+msgstr "Агент ИИ подготовил сообщение. Проверьте его, а затем отправьте."
 
-#, fuzzy
 msgid "On {date} at {time}, {name} wrote:"
-msgstr "{date} в {time}"
+msgstr "{date} в {time} {name} написал:"
 
 msgid "Name"
 msgstr "Имя"
 
-#, fuzzy
 msgid "First Name"
 msgstr "Имя"
 
-#, fuzzy
 msgid "Last Name"
 msgstr "Фамилия"
 
 msgid "Email"
 msgstr "Email"
 
-#, fuzzy
 msgid "Column {n}"
-msgstr "Столбцы"
+msgstr "Столбец {n}"
 
-#, fuzzy
 msgid "The file is empty."
-msgstr "Эта папка отсутствует на сервере"
+msgstr "Файл пуст."
 
-#, fuzzy
 msgid "The file has no rows below its first."
-msgstr "Эта папка отсутствует на сервере"
+msgstr "В файле нет строк ниже первой."
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "GnuPG (gpg) не установлен, поэтому это сообщение нельзя прочитать."
@@ -2042,30 +1866,25 @@ msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "Зашифрованный блок повреждён или не содержит данных OpenPGP."
 
 msgid "Revoked"
-msgstr ""
+msgstr "Отозвано"
 
-#, fuzzy
 msgid "Expired"
-msgstr "Срок действия"
+msgstr "Срок действия истек"
 
-#, fuzzy
 msgid "Not trusted yet"
-msgstr "Не переведено"
+msgstr "Пока не доверяю"
 
-#, fuzzy
 msgid "Marked as not trusted"
-msgstr "Отметить как непрочитанное"
+msgstr "Помечен как не доверенный"
 
-#, fuzzy
 msgid "Marginally trusted"
-msgstr "Ключ отмечен как доверенный."
+msgstr "Незначительно доверяют"
 
 msgid "Trusted"
 msgstr "Доверенный"
 
-#, fuzzy
 msgid "Your own key"
-msgstr "Ваши ключи"
+msgstr "Ваш собственный ключ"
 
 msgid "No key was found in that file."
 msgstr "В этом файле не найдено ни одного ключа."
@@ -2114,38 +1933,37 @@ msgid "Import the sender's public key to verify it."
 msgstr "Импортируйте открытый ключ отправителя, чтобы проверить подпись."
 
 msgid "Labeled"
-msgstr ""
+msgstr "С меткой"
 
 msgid "Personal"
-msgstr ""
+msgstr "Личное"
 
-#, fuzzy
 msgid "Private"
-msgstr "Конфиденциальность"
+msgstr "Частный"
 
 msgid "Confidential"
-msgstr ""
+msgstr "Конфиденциально"
 
 msgid "The sender marked this message “{label}”."
-msgstr ""
+msgstr "Отправитель пометил это сообщение как «{label}»."
 
 msgid ""
 "The sender's organization labeled this message without naming the label in "
 "it. For a Microsoft 365 account, turning on “Show sensitivity label names” "
 "in its settings shows the name. Hylki shows the label but does not apply its "
 "rules."
-msgstr ""
+msgstr "Организация отправителя пометила это сообщение, не указав метку в нем. Для учетной записи Microsoft 365 при включении параметра «Показывать имена меток конфиденциальности» в настройках отображается имя. Хилки показывает метку, но не применяет ее правила."
 
 msgid ""
 "The sender's organization labeled this message “{label}”. Hylki shows the "
 "label but does not apply its rules."
-msgstr ""
+msgstr "Организация отправителя пометила это сообщение как «{label}». Хилки показывает метку, но не применяет ее правила."
 
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr "Нет данных, подтверждающих или опровергающих отправку с адреса {from}."
 
 msgid "These checks aren't known to come from your mail provider"
-msgstr ""
+msgstr "Эти проверки не подтверждены вашим почтовым провайдером."
 
 msgid ""
 "{from} checks out, but the addressing doesn't match the name on the message."
@@ -2217,12 +2035,11 @@ msgstr "Использовано {used} из {limit}"
 msgid "{free} free ({pct}%)"
 msgstr "Свободно {free} ({pct}%)"
 
-#, fuzzy
 msgid "A folder needs a name."
-msgstr "Название папки"
+msgstr "Папке нужно имя."
 
 msgid "A folder name can't contain “{c}” on this account."
-msgstr ""
+msgstr "Имя папки не может содержать «{c}» в этой учетной записи."
 
 msgid "Encrypted message"
 msgstr "Зашифрованное сообщение"
@@ -2231,15 +2048,13 @@ msgid "Today, {time}"
 msgstr "Сегодня, {time}"
 
 msgid "just now"
-msgstr ""
+msgstr "только что"
 
-#, fuzzy
 msgid "{n} minutes ago"
-msgstr "{n} ч. назад"
+msgstr "{n} минут назад"
 
-#, fuzzy
 msgid "an hour ago"
-msgstr "{n} ч. назад"
+msgstr "час назад"
 
 msgid "{n} hours ago"
 msgstr "{n} ч. назад"
@@ -2256,31 +2071,26 @@ msgstr "Ожидает {ago}"
 msgid "Scheduled for {when}"
 msgstr "Запланировано на {when}"
 
-#, fuzzy
 msgid "No read receipt yet"
-msgstr "Скрыть получателей"
+msgstr "Уведомления о прочтении пока нет"
 
 msgid "{who}, {when}"
-msgstr ""
+msgstr "{who}, {when}"
 
-#, fuzzy
 msgid "Read by {count} of {total}"
-msgstr "{name} · {current} из {total}"
+msgstr "Прочитано {count} из {total}"
 
-#, fuzzy
 msgid "Verified sender"
-msgstr "Поиск отправителей"
+msgstr "Проверенный отправитель"
 
-#, fuzzy
 msgid "Sender not verified"
-msgstr "Отправить сейчас вместо запланированного"
+msgstr "Отправитель не проверен"
 
-#, fuzzy
 msgid "Check this sender"
-msgstr "Заблокировать этого отправителя"
+msgstr "Проверьте этого отправителя"
 
 msgid "Possible forgery"
-msgstr ""
+msgstr "Возможна подделка"
 
 msgid "Encrypted with OpenPGP; could not be decrypted"
 msgstr "Зашифровано с помощью OpenPGP; не удалось расшифровать"
@@ -2365,113 +2175,95 @@ msgstr "Срок действия подписи истёк"
 msgid "This message hasn't been checked."
 msgstr "Это сообщение не проверялось."
 
-#, fuzzy
 msgid "Harper is not available for this computer."
-msgstr "Для этой учётной записи недоступна папка «Шаблоны»"
+msgstr "Программа Harper недоступна для этого компьютера."
 
 msgid "Harper is not downloaded. Download it in Settings → Composing."
-msgstr ""
+msgstr "Харпер не скачивается. Загрузите его в «Настройки» → «Написание»."
 
-#, fuzzy
 msgid "Harper could not be started: {e}"
-msgstr "Не удалось связаться с сервисом: {e}"
+msgstr "Не удалось запустить Harper: {e}"
 
-#, fuzzy
 msgid "Harper's answer could not be read."
-msgstr "Не удалось прочитать ответ сервиса."
+msgstr "Ответ Харпера прочитать не удалось."
 
-#, fuzzy
 msgid "There is no folder to install to."
-msgstr "Нет текста для перевода."
+msgstr "Нет папки для установки."
 
 msgid "There is not enough free space: {size} is needed."
-msgstr ""
+msgstr "Недостаточно свободного места: требуется {size}."
 
-#, fuzzy
 msgid "The download could not start: {e}"
-msgstr "Не удалось сохранить черновик: {e}"
+msgstr "Не удалось начать загрузку: {e}"
 
 msgid "The download was cancelled."
-msgstr ""
+msgstr "Загрузка была отменена."
 
 msgid "The download stopped: {e}"
-msgstr ""
+msgstr "Загрузка остановлена: {e}"
 
 msgid "The downloaded file is not the one expected, so it was not installed."
-msgstr ""
+msgstr "Загруженный файл не тот, который ожидался, поэтому он не был установлен."
 
-#, fuzzy
 msgid "The download could not be unpacked: {e}"
-msgstr "Не удалось связаться с сервисом: {e}"
+msgstr "Не удалось распаковать загрузку: {e}"
 
-#, fuzzy
 msgid "The files could not be written: {e}"
-msgstr "Не удалось открыть файл"
+msgstr "Не удалось записать файлы: {e}"
 
 msgid "{n} MB"
-msgstr ""
+msgstr "{n} МБ"
 
-#, fuzzy
 msgid "The server's answer could not be read."
-msgstr "Не удалось прочитать ответ сервиса."
+msgstr "Ответ сервера не удалось прочитать."
 
 msgid "Nothing answers at that address. Check that the server is running."
-msgstr ""
+msgstr "По этому адресу ничего не отвечает. Проверьте, что сервер работает."
 
-#, fuzzy
 msgid "The server's name could not be found."
-msgstr "Не удалось прочитать ответ сервиса."
+msgstr "Имя сервера не найдено."
 
-#, fuzzy
 msgid "The server's address is not valid."
-msgstr "Введите адрес сервера каталогов."
+msgstr "Адрес сервера недействителен."
 
-#, fuzzy
 msgid "The server could not be reached: {e}"
-msgstr "Не удалось связаться с сервисом: {e}"
+msgstr "Не удалось связаться с сервером: {e}"
 
-#, fuzzy
 msgid "The server did not accept the username and key."
-msgstr "Каталог не принял пароль."
+msgstr "Сервер не принял имя пользователя и ключ."
 
-#, fuzzy
 msgid "The message is too long for the server."
-msgstr "Это сообщение слишком длинное для отправки на перевод."
+msgstr "Сообщение слишком длинное для сервера."
 
 msgid "Too many requests: try again in a moment."
 msgstr "Слишком много запросов: повторите попытку чуть позже."
 
-#, fuzzy
 msgid "The server refused the request (error {code})."
-msgstr "Сервис отклонил запрос (ошибка {code})."
+msgstr "Сервер отклонил запрос (ошибка {code})."
 
-#, fuzzy
 msgid "LanguageTool is not available for this computer."
-msgstr "Для этой учётной записи недоступна папка «Черновики»"
+msgstr "LanguageTool недоступен для этого компьютера."
 
 msgid "LanguageTool stopped unexpectedly."
-msgstr ""
+msgstr "LanguageTool неожиданно остановился."
 
 msgid "LanguageTool is not downloaded. Download it in Settings → Composing."
-msgstr ""
+msgstr "LanguageTool не загружен. Загрузите его в разделе «Настройки» → «Написание»."
 
-#, fuzzy
 msgid "LanguageTool could not be started: {e}"
-msgstr "Не удалось связаться с сервисом: {e}"
+msgstr "Не удалось запустить LanguageTool: {e}"
 
 msgid "LanguageTool could not be started."
-msgstr ""
+msgstr "Не удалось запустить LanguageTool."
 
 msgid "LanguageTool took too long to start."
-msgstr ""
+msgstr "LanguageTool запускался слишком долго."
 
-#, fuzzy
 msgid "Enter the LanguageTool server's address in Settings → Composing."
-msgstr "Введите адрес сервера LibreTranslate в меню Параметры → Перевод."
+msgstr "Введите адрес сервера LanguageTool в «Настройки» → «Написание»."
 
-#, fuzzy
 msgid "Enter the server's address first."
-msgstr "Введите адрес сервера каталогов."
+msgstr "Сначала введите адрес сервера."
 
 msgid ""
 "{reason} If your organization manages your account, an administrator can "
@@ -2515,7 +2307,7 @@ msgid "This is too long to send for translation."
 msgstr "Этот текст слишком длинный для отправки на перевод."
 
 msgid "Mail"
-msgstr ""
+msgstr "Почта"
 
 msgid "Use this account in Hylki"
 msgstr "Использовать эту учётную запись в Hylki"
@@ -2533,12 +2325,11 @@ msgid "Added directly in Hylki"
 msgstr "Добавлено непосредственно в Hylki"
 
 msgid "Paused: Mail is switched off for this account in GNOME Settings"
-msgstr ""
+msgstr "Приостановлено: почта этой учётной записи отключена в настройках GNOME."
 
 msgid "Enable this account"
 msgstr "Включить эту учётную запись"
 
-#, fuzzy
 msgid "Forward to"
 msgstr "Переслать"
 
@@ -2546,35 +2337,31 @@ msgid "Move to"
 msgstr "Переместить в"
 
 msgid "forwards to {to}"
-msgstr ""
+msgstr "пересылает на {to}"
 
-#, fuzzy
 msgid "marked as read"
-msgstr "Отметить как прочитанное"
+msgstr "помечено как прочитанное"
 
 msgid "deleted for good"
-msgstr ""
+msgstr "удалил навсегда"
 
 msgid "Then"
 msgstr "Затем"
 
-#, fuzzy
 msgid "Add Action"
-msgstr "Добавить учётную запись"
+msgstr "Добавить действие"
 
-#, fuzzy
 msgid "Remove action"
-msgstr "Удалить условие"
+msgstr "Удалить действие"
 
 msgid "Addresses, separated by commas"
-msgstr ""
+msgstr "Адреса через запятую"
 
 msgid "Folder"
 msgstr "Папка"
 
-#, fuzzy
 msgid "Permanently deletes the message"
-msgstr "Перевести это сообщение"
+msgstr "Удаляет сообщение навсегда"
 
 msgid "Bring this folder back to the sidebar"
 msgstr "Вернуть эту папку на боковую панель"
@@ -2588,18 +2375,14 @@ msgstr "Отправляет через эту учётную запись"
 msgid "Remove this alias"
 msgstr "Удалить этот псевдоним"
 
-#, fuzzy
 msgid "Kept on the server; change it in your provider's webmail."
-msgstr ""
-"Хранится на сервере; измените через веб-интерфейс почтового провайдера."
+msgstr "Хранится на сервере; измените его в веб-почте вашего провайдера."
 
-#, fuzzy
 msgid "Edit Alias"
-msgstr "Редактировать тег"
+msgstr "Изменить псевдоним"
 
-#, fuzzy
 msgid "Add Alias"
-msgstr "Добавить псевдоним…"
+msgstr "Добавить псевдоним"
 
 msgid "Save"
 msgstr "Сохранить"
@@ -2649,9 +2432,8 @@ msgstr "Где искать"
 msgid "Match"
 msgstr "Совпадение"
 
-#, fuzzy
 msgid "Separate alternatives with commas."
-msgstr "Запятые разделяют варианты; учитывается любой из них"
+msgstr "Разделяйте варианты запятыми."
 
 msgid "Text to match"
 msgstr "Текст для совпадения"
@@ -2698,12 +2480,12 @@ msgstr "У учётных записей POP3 нет папок на серве�
 msgid ""
 "Only for an account added in Hylki with Microsoft 365 / Outlook as the "
 "provider, not from GNOME Online Accounts."
-msgstr ""
+msgstr "Только для учетной записи, добавленной в Hylki с Microsoft 365 / Outlook в качестве поставщика, а не из учетных записей GNOME Online."
 
 msgid ""
 "Asks Microsoft for access. Some organizations need an administrator to "
 "approve it."
-msgstr ""
+msgstr "Запрашивает доступ у Microsoft. Некоторым организациям требуется, чтобы администратор одобрил это."
 
 msgid "Choose a Picture"
 msgstr "Выбрать картинку"
@@ -2718,32 +2500,26 @@ msgstr ""
 "Сертификат выдан для другого имени. Если сервер указан верно, включите "
 "параметр «Принимать сертификат для другого имени» выше и повторите проверку."
 
-#, fuzzy
 msgid "From address"
-msgstr "Введите адрес отправителя"
+msgstr "С адреса"
 
 msgid "From name"
 msgstr "Имя отправителя"
 
-#, fuzzy
 msgid "To or Cc"
-msgstr " или "
+msgstr "Кому или копия"
 
-#, fuzzy
 msgid "Reply-To address"
 msgstr "Адрес для ответа"
 
-#, fuzzy
 msgid "Message body"
-msgstr "Шрифт сообщений"
+msgstr "Тело сообщения"
 
-#, fuzzy
 msgid "Sender is in Contacts"
-msgstr "Добавить отправителя в контакты"
+msgstr "Отправитель в Контактах"
 
-#, fuzzy
 msgid "Sender is not in Contacts"
-msgstr "Добавить отправителя в контакты"
+msgstr "Отправителя нет в Контактах"
 
 msgid "contains"
 msgstr "содержит"
@@ -2793,7 +2569,7 @@ msgid "From address when no Reply-To is set"
 msgstr "Адрес отправителя, если не указан адрес для ответа (Reply-To)"
 
 msgid "Looks in the system address books and the Hylki book"
-msgstr ""
+msgstr "Смотрит в системные адресные книги и книгу Хюльки."
 
 msgid "Tag with"
 msgstr "Присвоить тег"
@@ -2836,17 +2612,14 @@ msgstr "Сервер входящей почты"
 msgid "Port (IMAP 993 / POP3 995)"
 msgstr "Порт (IMAP 993 / POP3 995)"
 
-#, fuzzy
 msgid "Import Mbox Files"
-msgstr "Импортировать файл…"
+msgstr "Импорт файлов Mbox"
 
-#, fuzzy
 msgid "Import Maildir Folders"
-msgstr "Ошибка импорта: {e}"
+msgstr "Импортировать папки Maildir"
 
-#, fuzzy
 msgid "Signed in as {address}, not {email}."
-msgstr "Выполнен вход как {who}. {terms}"
+msgstr "Выполнен вход как {address}, а не {email}."
 
 msgid "Enter a client ID (and endpoints for a custom provider) first"
 msgstr ""
@@ -2859,48 +2632,41 @@ msgstr "Завершите вход в открывшемся окне."
 msgid "Opening browser… complete sign-in there."
 msgstr "Открытие браузера… завершите вход в нём."
 
-#, fuzzy
 msgid "Opening browser… approve access to the directory there."
-msgstr "Открытие браузера… завершите вход в нём."
+msgstr "Открываем браузер… разрешите доступ к каталогу там."
 
-#, fuzzy
 msgid "Approve access to the directory in the window that opened."
-msgstr "Завершите вход в открывшемся окне."
+msgstr "Разрешите доступ к каталогу в открывшемся окне."
 
-#, fuzzy
 msgid "Opening browser… approve access to the sensitivity labels there."
-msgstr "Открытие браузера… завершите вход в нём."
+msgstr "Открытие браузера… разрешите доступ к меткам конфиденциальности."
 
-#, fuzzy
 msgid "Approve access to the sensitivity labels in the window that opened."
-msgstr "Завершите вход в открывшемся окне."
+msgstr "Разрешите доступ к меткам конфиденциальности в открывшемся окне."
 
-#, fuzzy
 msgid "✓ Signed in. Save the account to finish."
-msgstr "✓ Вход выполнен — сохраните учётную запись для завершения"
+msgstr "✓ Выполнен вход. Для завершения сохраните учетную запись."
 
 msgid "Sign-in failed: {e}"
 msgstr "Ошибка входа: {e}"
 
 msgid "Access to the directory approved. Save the account to finish."
-msgstr ""
+msgstr "Доступ к каталогу разрешен. Сохраните учетную запись, чтобы закончить."
 
 msgid "Access to the directory was not approved: {e}"
-msgstr ""
+msgstr "Доступ к каталогу не одобрен: {e}"
 
 msgid "Access to the sensitivity labels approved. Save the account to finish."
-msgstr ""
+msgstr "Доступ к меткам конфиденциальности одобрен. Сохраните учетную запись, чтобы закончить."
 
 msgid "Access to the sensitivity labels was not approved: {e}"
-msgstr ""
+msgstr "Доступ к меткам конфиденциальности не одобрен: {e}"
 
-#, fuzzy
 msgid "Drag to reorder them in the sidebar."
-msgstr "Перетащите, чтобы изменить порядок отображения на боковой панели."
+msgstr "Перетащите, чтобы изменить их порядок на боковой панели."
 
-#, fuzzy
 msgid "Check GNOME Online Accounts for new accounts"
-msgstr "Сетевые учётные записи GNOME"
+msgstr "Проверьте «Сетевые учётные записи GNOME» на наличие новых учётных записей."
 
 msgid "Add Account…"
 msgstr "Добавить учётную запись…"
@@ -2908,7 +2674,7 @@ msgstr "Добавить учётную запись…"
 msgid ""
 "Store mail in folders that live on this computer. Move or copy mail from any "
 "account to here."
-msgstr ""
+msgstr "Храните почту в папках, находящихся на этом компьютере. Переместите или скопируйте почту из любой учетной записи сюда."
 
 msgid "Add"
 msgstr "Добавить"
@@ -2916,26 +2682,19 @@ msgstr "Добавить"
 msgid "GNOME Online Accounts"
 msgstr "Сетевые учётные записи GNOME"
 
-#, fuzzy
 msgid "Mail accounts from GNOME Settings. Switch one on to use it."
-msgstr ""
-"Учётные записи почты из настроек GNOME. Включите нужную, чтобы использовать "
-"её в Hylki."
+msgstr "Почтовые учетные записи из настроек GNOME. Включите один, чтобы использовать его."
 
-#, fuzzy
 msgid "Smart Folders"
-msgstr "Сортировать папки"
+msgstr "Умные папки"
 
-#, fuzzy
 msgid ""
 "Lists the messages that match its conditions. Shown in the sidebar under the "
 "unified rows."
-msgstr ""
-"Как эта учётная запись отображается на боковой панели и во «Всех входящих»."
+msgstr "Перечисляет сообщения, соответствующие его условиям. Отображается на боковой панели под унифицированными строками."
 
-#, fuzzy
 msgid "Add Smart Folder…"
-msgstr "Добавить папку"
+msgstr "Добавить смарт-папку…"
 
 msgid "Searching…"
 msgstr "Поиск…"
@@ -2946,10 +2705,8 @@ msgstr "Найти теги…"
 msgid "No New Tags"
 msgstr "Новых меток нет"
 
-#, fuzzy
 msgid "Every tag in your mailboxes is already set up here."
-msgstr ""
-"В ваших почтовых ящиках не найдено меток, которых ещё нет в настройках."
+msgstr "Здесь уже настроены все теги в ваших почтовых ящиках."
 
 msgid "OK"
 msgstr "ОК"
@@ -2957,10 +2714,8 @@ msgstr "ОК"
 msgid "Tags Found"
 msgstr "Найденные теги"
 
-#, fuzzy
 msgid "{n} tags are in use in your mailboxes but not set up here."
-msgstr ""
-"В ваших почтовых ящиках не найдено меток, которых ещё нет в настройках."
+msgstr "Теги: {n} используются в ваших почтовых ящиках, но не настроены здесь."
 
 msgid "Import Selected"
 msgstr "Импортировать выбранные"
@@ -2971,11 +2726,8 @@ msgstr "Импортировать все"
 msgid "{n} messages"
 msgstr "{n} сообщений"
 
-#, fuzzy
 msgid "Toggles the tag on a message (with single-key shortcuts on)"
-msgstr ""
-"Нажмите эту клавишу на сообщении, чтобы добавить или снять тег (при "
-"включенных одноклавишных комбинациях)"
+msgstr "Переключает тег в сообщении (с включенными сочетаниями клавиш)"
 
 msgid "Remove tag"
 msgstr "Удалить тег"
@@ -2989,13 +2741,10 @@ msgstr "Добавить тег"
 msgid "Keyword"
 msgstr "Ключевое слово"
 
-#, fuzzy
 msgid ""
 "How the server stores the tag, without spaces. Thunderbird's built-in tags "
 "are $label1 to $label5."
-msgstr ""
-"Как метка хранится на сервере: буквы, цифры и большинство знаков препинания, "
-"без пробелов. Встроенные теги Thunderbird — от $label1 до $label5."
+msgstr "Как сервер хранит тег, без пробелов. Встроенные теги Thunderbird — от $label1 до $label5."
 
 msgid "Color"
 msgstr "Цвет"
@@ -3006,9 +2755,8 @@ msgstr "Другой цвет…"
 msgid "Tag Color"
 msgstr "Цвет тега"
 
-#, fuzzy
 msgid "Needs an app password, not your login password."
-msgstr "Требуется пароль приложения (не ваш обычный пароль для входа)."
+msgstr "Требуется пароль приложения, а не пароль для входа."
 
 msgid "Enter your server details manually."
 msgstr "Введите параметры сервера вручную."
@@ -3016,33 +2764,22 @@ msgstr "Введите параметры сервера вручную."
 msgid "Enter your provider's OAuth endpoints, then sign in."
 msgstr "Укажите конечные точки OAuth вашего провайдера и войдите."
 
-#, fuzzy
 msgid "Your JMAP server's address or session URL. No SMTP settings needed."
-msgstr ""
-"Введите адрес вашего сервера Stalwart. Чтение и отправка почты выполняются "
-"по протоколу JMAP, поэтому параметры SMTP не требуются."
+msgstr "Адрес вашего сервера JMAP или URL-адрес сеанса. Никаких настроек SMTP не требуется."
 
-#, fuzzy
 msgid "Signs in through your browser. No password needed."
-msgstr "Войдите через браузер — пароль не требуется."
+msgstr "Авторизуемся через браузер. Пароль не требуется."
 
 msgid "Requires Proton Mail Bridge running locally."
 msgstr "Требуется локально запущенный Proton Mail Bridge."
 
-#, fuzzy
 msgid ""
 "Signs in with an API token made in Fastmail under Privacy & Security, with "
 "access to mail and sending."
-msgstr ""
-"Вход выполняется с помощью токена API, а не пароля. Создайте его в "
-"параметрах Fastmail в разделе «Конфиденциальность и безопасность» с доступом "
-"к почте и её отправке. Почта читается и отправляется по протоколу JMAP."
+msgstr "Вход в систему с помощью токена API, созданного в Fastmail в разделе «Конфиденциальность и безопасность», с доступом к почте и отправке."
 
-#, fuzzy
 msgid "Your Stalwart server's address. No SMTP settings needed."
-msgstr ""
-"Введите адрес вашего сервера Stalwart. Чтение и отправка почты выполняются "
-"по протоколу JMAP, поэтому параметры SMTP не требуются."
+msgstr "Адрес вашего сервера Stalwart. Никаких настроек SMTP не требуется."
 
 msgid "Enable POP/IMAP access in GMX settings first."
 msgstr "Сначала включите доступ по POP/IMAP в настройках GMX."
@@ -3059,9 +2796,8 @@ msgstr "Proton Mail"
 msgid "Custom OAuth"
 msgstr "Собственный OAuth"
 
-#, fuzzy
 msgid "Folders on this computer"
-msgstr "На этом компьютере"
+msgstr "Папки на этом компьютере"
 
 msgid "IMAP/POP3 account"
 msgstr "Учётная запись IMAP/POP3"
@@ -3078,14 +2814,13 @@ msgstr "Введите идентификатор клиента и войдит
 msgid ""
 "Remove {name} from Hylki? Its folders and the mail in them stay on this "
 "computer, in {dir}, and come back if it is added again."
-msgstr ""
+msgstr "Удалить пользователя {name} из Хюльки? Его папки и почта в них остаются на этом компьютере в {dir} и возвращаются, если его добавляют снова."
 
-#, fuzzy
 msgid "Edit HTML"
-msgstr "Редактировать HTML…"
+msgstr "Редактировать HTML"
 
 msgid "Edit the signature's HTML source"
-msgstr ""
+msgstr "Отредактируйте исходный HTML-код подписи."
 
 msgid "Follow Settings"
 msgstr "Из системных настроек"
@@ -3093,9 +2828,8 @@ msgstr "Из системных настроек"
 msgid "On"
 msgstr "Вкл."
 
-#, fuzzy
 msgid "Signature {n}"
-msgstr "Подпись"
+msgstr "Подпись {n}"
 
 msgid "Preview"
 msgstr "Предпросмотр печати"
@@ -3110,11 +2844,10 @@ msgid "Could Not Read the File"
 msgstr "Не удалось прочитать файл"
 
 msgid "All but Trash and Junk"
-msgstr ""
+msgstr "Все, кроме мусора и барахла"
 
-#, fuzzy
 msgid "Remove smart folder"
-msgstr "Удалить фильтр"
+msgstr "Удалить смарт-папку"
 
 msgid "Inbox"
 msgstr "Входящие"
@@ -3134,48 +2867,41 @@ msgstr "Корзина"
 msgid "Starred"
 msgstr "Отмеченные"
 
-#, fuzzy
 msgid "Not starred"
-msgstr "Не установлено"
+msgstr "Не помечено"
 
-#, fuzzy
 msgid "Unread"
-msgstr "Прочитано/Непрочитано"
+msgstr "Непрочитано"
 
-#, fuzzy
 msgid "Read"
-msgstr "Чтение"
+msgstr "Читать"
 
 msgid "Has attachments"
 msgstr "Есть вложения"
 
 msgid "Tagged"
-msgstr ""
+msgstr "с тегами"
 
-#, fuzzy
 msgid "Message preview"
-msgstr "Исходный текст сообщения"
+msgstr "Предварительный просмотр сообщения"
 
-#, fuzzy
 msgid "Edit Smart Folder"
-msgstr "Сортировать папки"
+msgstr "Редактировать смарт-папку"
 
-#, fuzzy
 msgid "Add Smart Folder"
-msgstr "Добавить папку"
+msgstr "Добавить смарт-папку"
 
-#, fuzzy
 msgid "Those in the unified section."
-msgstr "В общем разделе"
+msgstr "Те, что в едином разделе."
 
 msgid "Folders"
 msgstr "Папки"
 
 msgid "Any tag"
-msgstr ""
+msgstr "Любой тег"
 
 msgid "The preview each message has in the list"
-msgstr ""
+msgstr "Предварительный просмотр каждого сообщения в списке"
 
 msgid "Save All Attachments"
 msgstr "Сохранить все вложения"
@@ -3212,9 +2938,8 @@ msgstr "Этот ключ был импортирован ранее."
 msgid "Could not import the key"
 msgstr "Не удалось импортировать ключ"
 
-#, fuzzy
 msgid "Download"
-msgstr "Скачать…"
+msgstr "Скачать"
 
 msgid "Import OpenPGP key"
 msgstr "Импортировать ключ OpenPGP"
@@ -3265,7 +2990,7 @@ msgid "Deleting…"
 msgstr "Удаление…"
 
 msgid "Unknown"
-msgstr ""
+msgstr "Неизвестно"
 
 #. Deliberately counts messages, not attachments: until a message has
 #. been described there is no telling how many files it holds.
@@ -3279,7 +3004,7 @@ msgid "{shown} of {total}"
 msgstr "{shown} из {total}"
 
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 msgid "Search by sender, subject, type, filename…"
 msgstr "Поиск по отправителю, теме, типу, имени файла…"
@@ -3304,10 +3029,10 @@ msgstr ""
 "и папок подвал получает данные."
 
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 msgid "Size"
-msgstr ""
+msgstr "Размер"
 
 msgid "Thumbnail grid"
 msgstr "Сетка миниатюр"
@@ -3384,9 +3109,8 @@ msgstr "По типу (Я–А)"
 msgid "Previous"
 msgstr "Назад"
 
-#, fuzzy
 msgid "No preview available"
-msgstr "Нет доступной папки {v1}"
+msgstr "Предварительный просмотр недоступен"
 
 msgid "Next"
 msgstr "Вперёд"
@@ -3394,80 +3118,68 @@ msgstr "Вперёд"
 msgid "Open in the default app"
 msgstr "Открыть в приложении по умолчанию"
 
-#, fuzzy
 msgid "New Event"
-msgstr "Новый контакт"
+msgstr "Новое событие"
 
-#, fuzzy
 msgid "New Task"
-msgstr "Новых меток нет"
+msgstr "Новая задача"
 
-#, fuzzy
 msgid "Open in Calendar"
-msgstr "Открыть в отдельном окне"
+msgstr "Открыть в календаре"
 
 msgid "Title"
-msgstr ""
+msgstr "Название"
 
-#, fuzzy
 msgid "Calendar"
-msgstr "Добавить в Календарь"
+msgstr "Календарь"
 
-#, fuzzy
 msgid "Task list"
-msgstr "Этот список"
+msgstr "Список задач"
 
 msgid "Notes"
-msgstr ""
+msgstr "Заметки"
 
-#, fuzzy
 msgid "All day"
-msgstr "Добавить адрес"
+msgstr "Весь день"
 
-#, fuzzy
 msgid "Starts"
-msgstr "Отметить"
+msgstr "Начинается"
 
 msgid "Ends"
-msgstr ""
+msgstr "Окончание"
 
 msgid "Alarm"
-msgstr ""
+msgstr "Напоминание"
 
-#, fuzzy
 msgid "Second alarm"
-msgstr "Отправить все"
+msgstr "Второй сигнал тревоги"
 
-#, fuzzy
 msgid "At the start"
-msgstr "Перезапустить"
+msgstr "В начале"
 
 msgid "{n} week before"
 msgid_plural "{n} weeks before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "за {n} неделю"
+msgstr[1] "за {n} недели"
+msgstr[2] "за {n} недель"
 
-#, fuzzy
 msgid "{n} day before"
 msgid_plural "{n} days before"
-msgstr[0] "{n} дн. назад"
-msgstr[1] "{n} дн. назад"
-msgstr[2] "{n} дн. назад"
+msgstr[0] "за {n} день"
+msgstr[1] "за {n} дня"
+msgstr[2] "за {n} дней"
 
-#, fuzzy
 msgid "{n} hour before"
 msgid_plural "{n} hours before"
-msgstr[0] "{n} ч. назад"
-msgstr[1] "{n} ч. назад"
-msgstr[2] "{n} ч. назад"
+msgstr[0] "за {n} час"
+msgstr[1] "за {n} часа"
+msgstr[2] "за {n} часов"
 
-#, fuzzy
 msgid "{n} minute before"
 msgid_plural "{n} minutes before"
-msgstr[0] "{n} ч. назад"
-msgstr[1] "{n} ч. назад"
-msgstr[2] "{n} ч. назад"
+msgstr[0] "за {n} минуту"
+msgstr[1] "за {n} минуты"
+msgstr[2] "за {n} минут"
 
 msgid "Due"
 msgstr "Срок"
@@ -3499,6 +3211,18 @@ msgstr "Чтобы удалить {old}, выполните:"
 msgid "Copy"
 msgstr "Копировать"
 
+#: src/ui/rich_editor/context_menu.rs
+msgid "Cut"
+msgstr "Вырезать"
+
+#: src/ui/rich_editor/context_menu.rs
+msgid "Select All"
+msgstr "Выбрать всё"
+
+#: src/ui/rich_editor/context_menu.rs
+msgid "Insert Emoji"
+msgstr "Вставить эмодзи"
+
 msgid "Service"
 msgstr "Сервис"
 
@@ -3508,21 +3232,14 @@ msgstr "Псевдоним (необязательно)"
 msgid "Server URL"
 msgstr "URL сервера"
 
-#, fuzzy
 msgid "Two-step verification code (if used)"
-msgstr "Код двухэтапной аутентификации (если используется для учётной записи)"
+msgstr "Код двухэтапной проверки (если используется)"
 
-#, fuzzy
 msgid ""
 "Your Seafile password, and the current code if two-step verification is on. "
 "They are swapped once for an API token, which is kept instead. A token can "
 "also be pasted as the password."
-msgstr ""
-"Войдите с помощью пароля Seafile. Если для учётной записи используется "
-"двухэтапная аутентификация, также введите текущий код из приложения-"
-"аутентификатора: Hylki однократно обменяет его на токен API и сохранит его "
-"вместо пароля. Токен, полученный другим способом, можно вставить в поле "
-"пароля."
+msgstr "Ваш пароль Seafile и текущий код, если двухэтапная проверка включена. Они заменяются один раз на токен API, который вместо этого сохраняется. Токен также можно вставить в качестве пароля."
 
 msgid "Dropbox app key"
 msgstr "Ключ приложения Dropbox"
@@ -3539,26 +3256,25 @@ msgstr "Сервер находится за Cloudflare"
 msgid ""
 "For a self-hosted server behind Cloudflare: files over 100 MB go up in 90 MB "
 "pieces."
-msgstr ""
+msgstr "Для автономного сервера под Cloudflare: файлы размером более 100 МБ размещаются частями по 90 МБ."
 
 msgid "Links expire after"
 msgstr "Срок действия ссылок истекает через"
 
-#, fuzzy
 msgid "Days. 0 keeps links forever."
-msgstr "Дней; 0 — бессрочная ссылка"
+msgstr "Дни. 0 сохраняет ссылки навсегда."
 
 msgid "Protect links with a password"
 msgstr "Защищать ссылки паролем"
 
 msgid "Each file gets its own password, shown to you to pass on."
-msgstr ""
+msgstr "Каждый файл получает свой собственный пароль, который вам нужно будет передать."
 
 msgid "Link defaults"
 msgstr "Параметры ссылок по умолчанию"
 
 msgid "Used unless you change them in the upload dialog for one email."
-msgstr ""
+msgstr "Используется, если вы не измените их в диалоговом окне загрузки для одного электронного письма."
 
 msgid "Check Connection"
 msgstr "Проверить соединение"
@@ -3566,37 +3282,27 @@ msgstr "Проверить соединение"
 msgid "{email} (Files is off)"
 msgstr "{email} (Файлы отключены)"
 
-#, fuzzy
 msgid ""
 "No Microsoft 365 account in GNOME Online Accounts yet. Add one in Settings, "
 "Online Accounts."
-msgstr ""
-"В «Сетевых учётных записях GNOME» пока нет учётной записи Microsoft 365. "
-"Добавьте её в меню «Настройки» → «Сетевые учётные записи»; OneDrive "
-"автоматически авторизуется через неё, и больше ничего делать не потребуется."
+msgstr "В «Сетевых учётных записях GNOME» пока нет учётной записи Microsoft 365. Добавьте её в разделе «Настройки» → «Сетевые учётные записи»."
 
 msgid "OneDrive signs in through the online account above. No password needed."
-msgstr ""
+msgstr "OneDrive входит в систему через указанную выше онлайн-учетную запись. Пароль не требуется."
 
 msgid ""
 "Link expiry and passwords need Microsoft 365 or OneDrive for Business. A "
 "free personal OneDrive refuses links with either set."
-msgstr ""
+msgstr "Для истечения срока действия ссылки и паролей требуется Microsoft 365 или OneDrive для бизнеса. Бесплатный персональный OneDrive отказывается от ссылок ни на один из наборов."
 
-#, fuzzy
 msgid ""
 "Days. 0 keeps links forever. Needs Microsoft 365 or OneDrive for Business."
-msgstr ""
-"Дней; 0 — бессрочная ссылка. Требуется Microsoft 365 или OneDrive для бизнеса"
+msgstr "Дни. 0 сохраняет ссылки навсегда. Требуется Microsoft 365 или OneDrive для бизнеса."
 
-#, fuzzy
 msgid ""
 "Each file gets its own password, shown to you to pass on. Needs Microsoft "
 "365 or OneDrive for Business."
-msgstr ""
-"Пароль для скачивания создаётся для каждого файла и отображается вам, чтобы "
-"вы могли передать его отдельно. Требуется Microsoft 365 или OneDrive для "
-"бизнеса"
+msgstr "Каждый файл получает свой собственный пароль, который вам нужно будет передать. Требуется Microsoft 365 или OneDrive для бизнеса."
 
 msgid "User name"
 msgstr "Имя пользователя"
@@ -3616,12 +3322,11 @@ msgstr "Пароль (оставьте пустым, чтобы сохранит
 msgid ""
 "Each file gets its own password, shown to you to pass on. Paid Dropbox plans "
 "only."
-msgstr ""
+msgstr "Каждый файл получает свой собственный пароль, который вам нужно будет передать. Только платные планы Dropbox."
 
 msgid "Connect with Dropbox…"
 msgstr "Подключиться к Dropbox…"
 
-#, fuzzy
 msgid ""
 "Dropbox needs an app registered to you:\n"
 "1. At dropbox.com/developers/apps, press Create app.\n"
@@ -3633,25 +3338,7 @@ msgid ""
 "6. Copy the App key into the field above.\n"
 "Development status is enough. Leave the field empty to use this build's own "
 "key, if it has one."
-msgstr ""
-"Dropbox разрешает вход только зарегистрированным приложениям, поэтому "
-"создайте его для себя (это займёт минуту и останется приватным):\n"
-"1. Откройте dropbox.com/developers/apps под своей учётной записью Dropbox и "
-"нажмите «Create app».\n"
-"2. Выберите «Scoped access», затем «App folder» (Hylki будет видеть только "
-"свою папку в разделе Приложения) или «Full Dropbox» (файлы будут загружаться "
-"в папку, указанную выше).\n"
-"3. Укажите уникальное имя приложения, например «Hylki для [ваше имя]», и "
-"нажмите «Create app».\n"
-"4. На вкладке «Permissions» отметьте account_info.read, files.content.write "
-"и sharing.write, затем нажмите «Submit».\n"
-"5. На вкладке «Settings» в разделе «OAuth 2» добавьте URI перенаправления "
-"{uri} и нажмите «Add».\n"
-"6. Скопируйте «App key» из верхней части вкладки «Settings» и вставьте в "
-"поле выше.\n"
-"Приложение может оставаться в статусе «Development» — этого достаточно для "
-"использования вашей учётной записью. Оставьте поле пустым, чтобы "
-"использовать ключ приложения, встроенный в эту сборку (если он есть)."
+msgstr "Dropbox необходимо зарегистрировать на вас приложение: 1. На странице dropbox.com/developers/apps нажмите «Создать приложение». 2. Выберите «Ограниченный доступ», затем «Папка приложения» или «Полный Dropbox». 3. Дайте ему имя, которое никто больше не использовал, и нажмите «Создать приложение». 4. В разделе «Разрешения» отметьте «account_info.read», «files.content.write» и «sharing.write», затем нажмите «Отправить». 5. В разделе «Настройки» в разделе «OAuth 2» добавьте URI перенаправления {uri} и нажмите «Добавить». 6. Скопируйте ключ приложения в поле выше. Статуса разработки достаточно. Оставьте поле пустым, чтобы использовать собственный ключ этой сборки, если он есть."
 
 msgid "Connected as {who}."
 msgstr "Подключено как {who}."
@@ -3677,33 +3364,20 @@ msgstr "Сначала укажите URL сервера, имя пользов�
 msgid "Signed in as {who}."
 msgstr "Вход выполнен как {who}."
 
-#, fuzzy
 msgid ""
 "Uploads and plain links work. Link expiry and passwords need a Microsoft 365 "
 "subscription, so both are off for this account."
-msgstr ""
-"С этим OneDrive вы можете загружать файлы и делиться обычными ссылками. "
-"Ограничение срока действия ссылок и пароли для скачивания недоступны в "
-"бесплатной личной версии OneDrive (для них требуется подписка Microsoft "
-"365), поэтому оба параметра отключены для этой учётной записи."
+msgstr "Загрузки и простые ссылки работают. Для истечения срока действия ссылки и паролей требуется подписка на Microsoft 365, поэтому оба параметра отключены для этой учетной записи."
 
-#, fuzzy
 msgid ""
 "Uploads, links and expiry work. OneDrive for Business links take no "
 "password, so that is off for this account."
-msgstr ""
-"С этим OneDrive вы можете загружать файлы, делиться ссылками и задавать срок "
-"их действия. Пароли для скачивания недоступны для ссылок в OneDrive для "
-"бизнеса, поэтому этот параметр отключён для этой учётной записи."
+msgstr "Загрузки, ссылки и срок действия истекают. Ссылки OneDrive для бизнеса не требуют пароля, поэтому для этой учетной записи он отключен."
 
-#, fuzzy
 msgid ""
 "Uploads, links and passwords work. Link expiry is not available, so it is "
 "off for this account."
-msgstr ""
-"С этим OneDrive вы можете загружать файлы и делиться ссылками с паролем для "
-"скачивания. Ограничение срока действия ссылок недоступно, поэтому этот "
-"параметр отключён для этой учётной записи."
+msgstr "Загрузки, ссылки и пароли работают. Срок действия ссылки недоступен, поэтому для этой учетной записи он отключен."
 
 msgid "Signed in as {who}. {terms}"
 msgstr "Выполнен вход как {who}. {terms}"
@@ -3714,19 +3388,12 @@ msgstr "Облачное хранилище"
 msgid "Cloud storage"
 msgstr "Облачное хранилище"
 
-#, fuzzy
 msgid ""
 "Upload large files and send a link instead of attaching them.\n"
 "\n"
 "Supported providers: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox and "
 "Seafile."
-msgstr ""
-"Подключите ваше облачное хранилище для загрузки и отправки больших файлов "
-"вместо обычных вложений. Значок облака появится на панели инструментов "
-"редактора после добавления провайдера.\n"
-"\n"
-"Поддерживаемые сервисы: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox и "
-"Seafile."
+msgstr "Загрузите большие файлы и отправьте ссылку вместо того, чтобы прикреплять их. Поддерживаемые провайдеры: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox и Seafile."
 
 msgid "No cloud accounts yet."
 msgstr "Облачные учётные записи ещё не добавлены."
@@ -3739,7 +3406,7 @@ msgstr "Удалить {name}?"
 
 msgid ""
 "Files already uploaded and links sent stay active on the provider's service."
-msgstr ""
+msgstr "Уже загруженные файлы и отправленные ссылки остаются активными на сервисе провайдера."
 
 msgid "Removed {name}"
 msgstr "Удалено: {name}"
@@ -3763,10 +3430,10 @@ msgid "Offer this account in the composer"
 msgstr "Предлагать эту учётную запись в редакторе"
 
 msgid "Command Palette"
-msgstr ""
+msgstr "Палитра команд"
 
 msgid "Type an action, a folder or a tag, or > for actions only"
-msgstr ""
+msgstr "Введите действие, папку или тег или нажмите > только для действий."
 
 msgid "Cc"
 msgstr "Копия"
@@ -3776,84 +3443,73 @@ msgstr "Скрытая копия"
 
 msgid ""
 "An AI agent prepared this message. Check who it goes to before you send it."
-msgstr ""
+msgstr "Это сообщение подготовил ИИ-агент. Прежде чем отправить письмо, проверьте, кому оно адресовано."
 
-#, fuzzy
 msgid "It has no recipients yet."
-msgstr "Показать получателей"
+msgstr "Получателей у него пока нет."
 
 msgid "Bcc, hidden from the others:"
-msgstr ""
+msgstr "СК, скрыто от остальных:"
 
 msgid "In Bcc: the other recipients will not see this address"
-msgstr ""
+msgstr "В скрытой копии: другие получатели не увидят этот адрес."
 
 msgid "Outside your own domains"
-msgstr ""
+msgstr "За пределами ваших доменов"
 
-#, fuzzy
 msgid "Not now"
-msgstr "Скрыты"
+msgstr "Не сейчас"
 
 msgid "Accept or reject the AI agent's suggested changes first."
-msgstr ""
+msgstr "Сначала примите или отклоните изменения, предложенные агентом ИИ."
 
 msgid "Wait for the translation to come back, then accept the changes."
-msgstr ""
+msgstr "Подождите, пока перевод вернется, затем примите изменения."
 
-#, fuzzy
 msgid "Changes suggested by an AI agent"
-msgstr "Новое сообщение из шаблона"
+msgstr "Изменения, предложенные ИИ-агентом"
 
 msgid "Nothing changes until you accept them."
-msgstr ""
+msgstr "Ничего не изменится, пока вы их не примете."
 
-#, fuzzy
 msgid "Reject"
-msgstr "Проект"
+msgstr "Отклонить"
 
 msgid "Accept"
 msgstr "Принять"
 
-#, fuzzy
 msgid "To:"
-msgstr "Кому"
+msgstr "Кому:"
 
-#, fuzzy
 msgid "Cc:"
-msgstr "Копия"
+msgstr "Копия:"
 
-#, fuzzy
 msgid "Subject:"
-msgstr "Тема"
+msgstr "Тема:"
 
 msgid "Accepting removes this text's formatting, links and pictures."
-msgstr ""
+msgstr "При принятии будут удалены форматирование текста, ссылки и изображения."
 
 msgid "Taken out"
-msgstr ""
+msgstr "Вывезено"
 
 msgid "Added in Bcc: the other recipients will not see this address"
-msgstr ""
+msgstr "Добавлено в скрытой копии: другие получатели не увидят этот адрес."
 
-#, fuzzy
 msgid "Added, outside your own domains"
-msgstr "Адрес или домен"
+msgstr "Добавлено за пределами ваших доменов"
 
-#, fuzzy
 msgid "Added"
-msgstr "Добавленные слова"
+msgstr "Добавлено"
 
-#, fuzzy
 msgid "Send without an attachment?"
-msgstr "Отправить как обычное вложение"
+msgstr "Отправить без вложения?"
 
 msgid "The message mentions “{word}”, but nothing is attached."
-msgstr ""
+msgstr "В сообщении упоминается «{word}», но ничего не прикреплено."
 
-#, fuzzy
 msgid "Send Anyway"
-msgstr "Отправить сейчас"
+msgstr "Отправить в любом случае"
 
 msgid "The file was moved or deleted. Attach it again from where it is now."
 msgstr ""
@@ -3918,16 +3574,14 @@ msgstr "Отформатированный текст"
 msgid "Markdown"
 msgstr "Markdown"
 
-#, fuzzy
 msgid "HTML source"
-msgstr "Просмотреть исходный текст"
+msgstr "HTML-источник"
 
 msgid "Plain text"
 msgstr "Обычный текст"
 
-#, fuzzy
 msgid "Format as you type; it is sent as HTML"
-msgstr "Форматировать при вводе с помощью панели инструментов"
+msgstr "Форматируйте по мере ввода; он отправляется как HTML"
 
 msgid "Write Markdown; it is sent as formatted mail"
 msgstr "Писать на Markdown; отправляется как форматированное письмо"
@@ -3941,20 +3595,19 @@ msgstr "Без форматирования"
 msgid ""
 "Zoom of the text on screen, not of the message sent. A click here, or "
 "Ctrl+0, puts it back to 100%."
-msgstr ""
+msgstr "Масштабирование текста на экране, а не отправленного сообщения. Щелчок здесь или Ctrl+0 возвращает значение 100%."
 
 msgid "Writing in {format}"
 msgstr "Формат письма: {format}"
 
-#, fuzzy
 msgid "Switch to plain text?"
-msgstr "Вставлять как обычный текст"
+msgstr "Переключиться на обычный текст?"
 
 msgid "Formatting, images and links are removed."
-msgstr ""
+msgstr "Форматирование, изображения и ссылки удалены."
 
 msgid "Switch"
-msgstr ""
+msgstr "Переключить"
 
 msgid "Typing"
 msgstr "Ввод текста"
@@ -4010,27 +3663,23 @@ msgstr "Ещё"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Показать «Копия», «Скрытая копия» и «Адрес для ответа»"
 
-#, fuzzy
 msgid "Cannot merge an encrypted message"
-msgstr "Зашифрованное сообщение"
+msgstr "Невозможно объединить зашифрованное сообщение"
 
 msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
-msgstr ""
+msgstr "Каждому сообщению потребуется ключ получателя. Отключите шифрование для объединения."
 
 msgid "Check the From address"
 msgstr "Проверьте адрес отправителя"
 
-#, fuzzy
 msgid "Insert Merge Field"
-msgstr "Вставить в текст"
+msgstr "Вставить поле слияния"
 
-#, fuzzy
 msgid "Contact Groups"
-msgstr "Контакты"
+msgstr "Контактные группы"
 
-#, fuzzy
 msgid "Choose a CSV File…"
-msgstr "Сохранить как PDF…"
+msgstr "Выберите CSV-файл…"
 
 msgid ""
 "There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
@@ -4082,7 +3731,7 @@ msgstr "Выберите из ваших адресов"
 msgid ""
 "“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
 "Send."
-msgstr ""
+msgstr "«{addr}» — поле слияния почты. Отправить с помощью слияния… в меню рядом с пунктом «Отправить»."
 
 msgid "“{addr}” is not an email address."
 msgstr "«{addr}» не является адресом электронной почты."
@@ -4106,23 +3755,22 @@ msgid "Pick a date and time…"
 msgstr "Выбрать дату и время…"
 
 msgid "Mail Merge…"
-msgstr ""
+msgstr "Слияние почты…"
 
 msgid "Request a read receipt"
-msgstr ""
+msgstr "Запросить уведомление о прочтении"
 
 msgid "Not every mail app sends one."
-msgstr ""
+msgstr "Не все почтовые программы поддерживают его."
 
-#, fuzzy
 msgid "High"
-msgstr "Выделение цветом"
+msgstr "Высокая"
 
 msgid "Normal"
 msgstr "Обычный"
 
 msgid "Low"
-msgstr ""
+msgstr "Низкая"
 
 msgid "Show the message as it will be sent"
 msgstr "Показать сообщение в том виде, в котором оно будет отправлено"
@@ -4130,21 +3778,17 @@ msgstr "Показать сообщение в том виде, в которо�
 msgid "Translate what you wrote"
 msgstr "Перевести написанный текст"
 
-#, fuzzy
 msgid "Insert Signature"
-msgstr "Импортировать подпись"
+msgstr "Вставить подпись"
 
-#, fuzzy
 msgid "No Signature"
-msgstr "Подпись"
+msgstr "Нет подписи"
 
-#, fuzzy
 msgid "Insert Before the Text"
-msgstr "Вставить в текст"
+msgstr "Вставить перед текстом"
 
-#, fuzzy
 msgid "Insert After the Text"
-msgstr "Вставить в текст"
+msgstr "Вставить после текста"
 
 msgid "Show Original"
 msgstr "Показать оригинал"
@@ -4203,9 +3847,8 @@ msgstr "Удалить черновик"
 msgid "Send"
 msgstr "Отправить"
 
-#, fuzzy
 msgid "Send options"
-msgstr "Действия"
+msgstr "Варианты отправки"
 
 msgid "Show From, To and Subject"
 msgstr "Показать поля «От», «Кому» и «Тема»"
@@ -4220,23 +3863,21 @@ msgid "Reply-To"
 msgstr "Адрес для ответа"
 
 msgid "The name used here and in Contacts. Left blank, it is {own}."
-msgstr ""
+msgstr "Имя, используемое здесь и в Контактах. Если оставить пустым, это {own}."
 
 msgid ""
 "The name used here and in Contacts; GNOME Contacts keeps its own. Left "
 "blank, it is {own}."
-msgstr ""
+msgstr "Имя, используемое здесь и в Контактах; GNOME Contacts сохраняет свою актуальность. Если оставить пустым, это {own}."
 
-#, fuzzy
 msgid "Address books"
-msgstr "Адресная книга"
+msgstr "Адресные книги"
 
 msgid "Rename a book for Hylki, or switch it off to leave it out."
-msgstr ""
+msgstr "Переименуйте книгу в Hylki или выключите ее, чтобы она не отображалась."
 
-#, fuzzy
 msgid "Use in Hylki"
-msgstr "Открыть Hylki"
+msgstr "Использование в Хюльках"
 
 msgid "Address book"
 msgstr "Адресная книга"
@@ -4250,17 +3891,15 @@ msgstr "Авторизация"
 msgid "Password (saved; type to replace it)"
 msgstr "Пароль (сохранён; введите новый для замены)"
 
-#, fuzzy
 msgid "Enter the user name."
-msgstr "Введите адрес сервера каталогов."
+msgstr "Введите имя пользователя."
 
-#, fuzzy
 msgid "Enter the password."
-msgstr "Защитить паролем"
+msgstr "Введите пароль."
 
 msgid ""
 "Recipients are looked up here as you type, and Contacts searches it too."
-msgstr ""
+msgstr "Получатели просматриваются здесь по мере ввода текста, и Контакты также выполняют поиск."
 
 msgid "Encryption"
 msgstr "Шифрование"
@@ -4283,11 +3922,8 @@ msgstr "Всё дерево"
 msgid "First level"
 msgstr "Первый уровень"
 
-#, fuzzy
 msgid "Leave empty for a directory that needs no sign-in."
-msgstr ""
-"Оставьте эти поля пустыми для каталога, поиск по которому доступен без "
-"авторизации."
+msgstr "Оставьте пустым для каталога, для которого не требуется вход."
 
 msgid "Sign in as, such as cn=jane,ou=people,dc=example,dc=com"
 msgstr "Имя пользователя (DN), например cn=jane,ou=people,dc=example,dc=com"
@@ -4296,241 +3932,198 @@ msgid "Enter the directory's server."
 msgstr "Введите адрес сервера каталогов."
 
 msgid "The server took too long to answer."
-msgstr ""
+msgstr "Сервер отвечал слишком долго."
 
-#, fuzzy
 msgid "Kept by Evolution Data Server"
-msgstr "Сервис Evolution Data Server недоступен"
+msgstr "Хранится на сервере Evolution Data Server"
 
 msgid "The address books GNOME Contacts and Evolution keep on this computer."
-msgstr ""
+msgstr "Адресные книги GNOME Contacts и Evolution хранятся на этом компьютере."
 
 msgid "Open GNOME Contacts"
 msgstr "Открыть «Контакты GNOME»"
 
-#, fuzzy
 msgid "Set up in GNOME Online Accounts"
-msgstr "Найдено в «Сетевых учётных записях GNOME»"
+msgstr "Настроено в «Сетевых учётных записях GNOME»"
 
 msgid "Its sign-in and its Contacts switch are in GNOME Settings."
-msgstr ""
+msgstr "Вход в систему и переключатель «Контакты» находятся в настройках GNOME."
 
-#, fuzzy
 msgid "Open Online Accounts"
-msgstr "Открыть «Сетевые учётные записи»…"
+msgstr "Открыть онлайн-счета"
 
-#, fuzzy
 msgid "Add Address Book"
-msgstr "Адресная книга"
+msgstr "Добавить адресную книгу"
 
-#, fuzzy
 msgid "Added in GNOME Online Accounts"
-msgstr "Найдено в «Сетевых учётных записях GNOME»"
+msgstr "Добавлено в «Сетевые учётные записи GNOME»"
 
-#, fuzzy
 msgid ""
 "Google and Microsoft 365 sign in through GNOME Online Accounts. Add the "
 "account there with Contacts on, and it will be listed here."
-msgstr ""
-"В «Сетевых учётных записях GNOME» пока нет учётной записи Microsoft 365. "
-"Добавьте её в меню «Настройки» → «Сетевые учётные записи»; OneDrive "
-"автоматически авторизуется через неё, и больше ничего делать не потребуется."
+msgstr "Вход в Google и Microsoft 365 выполняется через «Сетевые учётные записи GNOME». Добавьте там учётную запись с включёнными контактами, и она появится здесь."
 
 msgid "Kept in Hylki's own data folder. Works without GNOME."
-msgstr ""
+msgstr "Хранится в собственной папке данных Hylki. Работает без GNOME."
 
-#, fuzzy
 msgid "Contacts in the Hylki book"
-msgstr "Контакты на боковой панели"
+msgstr "Контакты в книге Хюльки"
 
-#, fuzzy
 msgid "Import vCard files"
-msgstr "Большие файлы"
+msgstr "Импорт файлов vCard"
 
 msgid ""
 "Adds contacts from .vcf files. Importing a file again updates existing "
 "entries."
-msgstr ""
+msgstr "Добавляет контакты из файлов .vcf. При повторном импорте файла существующие записи обновляются."
 
-#, fuzzy
 msgid "Export as a vCard file"
-msgstr "Большие файлы"
+msgstr "Экспортировать как файл vCard"
 
 msgid "Saves every contact in the Hylki book in one .vcf file."
-msgstr ""
+msgstr "Сохраняет каждый контакт в книге Hylki в одном файле .vcf."
 
-#, fuzzy
 msgid "Delete all contacts"
-msgstr "Удалить контакт?"
+msgstr "Удалить все контакты"
 
 msgid "Other address books are not touched."
-msgstr ""
+msgstr "Другие адресные книги не трогаются."
 
-#, fuzzy
 msgid "Set up in Hylki"
-msgstr "Отображать в Hylki"
+msgstr "Установка в Хюльках"
 
-#, fuzzy
 msgid "From GNOME Online Accounts"
-msgstr "Сетевые учётные записи GNOME"
+msgstr "Из «Сетевых учётных записей GNOME»"
 
 msgid "Evolution"
-msgstr ""
+msgstr "Evolution"
 
 msgid "Kept by Evolution Data Server, set up in Evolution or GNOME Contacts"
-msgstr ""
+msgstr "Хранится на сервере данных Evolution, настраивается в контактах Evolution или GNOME."
 
-#, fuzzy
 msgid ""
 "Evolution and other apps stop seeing it too. Nothing on the server changes."
-msgstr ""
-"Каталог будет удалён из Evolution Data Server, поэтому Evolution и другие "
-"использующие его приложения также перестанут его видеть. На самом сервере "
-"ничего не изменится."
+msgstr "Evolution и другие приложения тоже перестают его видеть. На сервере ничего не меняется."
 
-#, fuzzy
 msgid ""
 "Evolution and other apps stop seeing them too. Nothing on the server changes."
-msgstr ""
-"Каталог будет удалён из Evolution Data Server, поэтому Evolution и другие "
-"использующие его приложения также перестанут его видеть. На самом сервере "
-"ничего не изменится."
+msgstr "Evolution и другие приложения тоже перестают их видеть. На сервере ничего не меняется."
 
-#, fuzzy
 msgid "{name}: {problem}"
-msgstr "{name}: пройден"
+msgstr "{name}: {problem}"
 
-#, fuzzy
 msgid "No address books were found on {name} yet."
-msgstr "Нет адресной книги для добавления контактов"
+msgstr "На сайте {name} пока не найдено ни одной адресной книги."
 
 msgid "Found {n} address book on {name}"
 msgid_plural "Found {n} address books on {name}"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Найдена {n} адресная книга на {name}"
+msgstr[1] "Найдены {n} адресные книги на {name}"
+msgstr[2] "Найдено {n} адресных книг на {name}"
 
 msgid "Connected to {name}"
 msgstr "Подключено к {name}"
 
-#, fuzzy
 msgid "Use an app-specific password, not your usual one."
-msgstr "Требуется пароль приложения (не ваш обычный пароль для входа)."
+msgstr "Используйте пароль для конкретного приложения, а не обычный."
 
-#, fuzzy
 msgid "CardDAV Server"
-msgstr "Сервер"
+msgstr "CardDAV-сервер"
 
 msgid ""
 "The server's address is usually enough. Two-step sign-in needs an app "
 "password."
-msgstr ""
+msgstr "Адреса сервера обычно достаточно. Для двухэтапного входа требуется пароль приложения."
 
 msgid ""
 "Such as cloud.example.org. With two-factor sign-in, make an app password in "
 "Nextcloud under Settings → Security."
-msgstr ""
+msgstr "Например, cloud.example.org. При двухфакторном входе создайте пароль приложения в Nextcloud в разделе «Настройки» → «Безопасность»."
 
 msgid ""
 "Use an app password with access to contacts, made in Fastmail under Settings "
 "→ Privacy & Security."
-msgstr ""
+msgstr "Используйте пароль приложения для доступа к контактам, созданный в Fastmail в разделе «Настройки» → «Конфиденциальность и безопасность»."
 
 msgid "LDAP Directory"
 msgstr "Каталог LDAP"
 
-#, fuzzy
 msgid "Address Books"
-msgstr "Адресная книга"
+msgstr "Адресные книги"
 
 msgid ""
 "Where contacts come from for Contacts, suggestions, sender pictures and "
 "filters. Switching one off leaves it out of Hylki."
-msgstr ""
+msgstr "Откуда берутся контакты для контактов, предложений, изображений отправителей и фильтров. Отключение одного из них исключает его из Хилки."
 
-#, fuzzy
 msgid "Look again for address books"
-msgstr "Поиск ключа для {addr}…"
+msgstr "Еще раз поищите адресные книги"
 
-#, fuzzy
 msgid "Add Address Book…"
-msgstr "Адресная книга"
+msgstr "Добавить адресную книгу…"
 
 msgid ""
 "Address books need Evolution Data Server, which is not installed. Install "
 "the evolution-data-server package (it runs without GNOME) and reopen this "
 "page."
-msgstr ""
+msgstr "Для адресных книг требуется Evolution Data Server, который не установлен. Установите пакет Evolution-Data-Server (он работает без GNOME) и снова откройте эту страницу."
 
-#, fuzzy
 msgid "New Contacts"
-msgstr "Новый контакт"
+msgstr "Новые контакты"
 
-#, fuzzy
 msgid "Save new contacts in"
-msgstr "Новый контакт"
+msgstr "Сохраняйте новые контакты в"
 
 msgid "Unless another is picked when the contact is made."
-msgstr ""
+msgstr "Если при установлении контакта не будет выбран другой."
 
-#, fuzzy
 msgid "In Mail"
-msgstr "Proton Mail"
+msgstr "В почте"
 
-#, fuzzy
 msgid "Show names from Contacts"
-msgstr "Нет контактов"
+msgstr "Показать имена из контактов"
 
 msgid "Saved addresses show the contact's name, not the mail's."
-msgstr ""
+msgstr "В сохраненных адресах отображается имя контакта, а не почта."
 
 msgid "Layout"
 msgstr "Разметка"
 
-#, fuzzy
 msgid "Contacts placement"
-msgstr "Расположение тегов"
+msgstr "Размещение контактов"
 
 msgid "'In the footer' disables expand/collapse."
-msgstr ""
+msgstr "«В нижнем колонтитуле» отключает развертывание/свертывание."
 
 msgid "Keep the search field open"
-msgstr ""
+msgstr "Держите поле поиска открытым"
 
-#, fuzzy
 msgid "Address Book"
 msgstr "Адресная книга"
 
-#, fuzzy
 msgid "Looking for address books on {name}…"
-msgstr "Поиск ключа для {addr}…"
+msgstr "Ищем адресные книги на {name}…"
 
-#, fuzzy
 msgid "Hylki, on this computer"
-msgstr "На этом компьютере"
+msgstr "Хилки, на этом компьютере"
 
-#, fuzzy
 msgid "Edit Group"
-msgstr "Правая группа"
+msgstr "Редактировать группу"
 
-#, fuzzy
 msgid "Delete Group…"
-msgstr "Удалить ваш ключ?"
+msgstr "Удалить группу…"
 
 msgid "New Contact"
 msgstr "Новый контакт"
 
-#, fuzzy
 msgid "New Group"
-msgstr "Левая группа"
+msgstr "Новая группа"
 
-#, fuzzy
 msgid "Rename…"
-msgstr "Переименовать"
+msgstr "Переименовать…"
 
-#, fuzzy
 msgid "Show or hide"
-msgstr "Показать или скрыть метки"
+msgstr "Показать или скрыть"
 
 msgid "Search contacts"
 msgstr "Поиск контактов"
@@ -4538,41 +4131,36 @@ msgstr "Поиск контактов"
 msgid "No Contacts"
 msgstr "Нет контактов"
 
-#, fuzzy
 msgid "Add contacts in the Contacts view to see them here."
-msgstr "Добавьте контакты в «Контактах GNOME», чтобы увидеть их здесь."
+msgstr "Добавьте контакты в представление «Контакты», чтобы видеть их здесь."
 
-#, fuzzy
 msgid "Rename Address Book"
-msgstr "Адресная книга"
+msgstr "Переименовать адресную книгу"
 
 msgid ""
 "The name is used in Hylki only; GNOME Contacts and Evolution keep the book's "
 "own."
-msgstr ""
+msgstr "Это имя используется только в Хилки; GNOME Contacts и Evolution сохраняют свою собственность."
 
 msgid "Use Its Own Name"
-msgstr ""
+msgstr "Использовать собственное имя"
 
-#, fuzzy
 msgid "All Address Books"
-msgstr "Адресная книга"
+msgstr "Все адресные книги"
 
-#, fuzzy
 msgid "Move Contact?"
-msgstr "Открыть «Контакты»"
+msgstr "Переместить контакт?"
 
 msgid ""
 "This will move {name} out of {from} and into {to}, locally and on the "
 "server. A group in {from} that holds the contact will no longer have it."
-msgstr ""
+msgstr "Это переместит {name} из {from} в {to}, локально и на сервере. Группа в {from}, содержащая контакт, больше не будет его иметь."
 
-#, fuzzy
 msgid "Move {n} Contact?"
 msgid_plural "Move {n} Contacts?"
-msgstr[0] "Открыть «Контакты»"
-msgstr[1] "Открыть «Контакты»"
-msgstr[2] "Открыть «Контакты»"
+msgstr[0] "Переместить {n} контакт?"
+msgstr[1] "Переместить {n} контакта?"
+msgstr[2] "Переместить {n} контактов?"
 
 msgid ""
 "This will move {n} contact out of the address book it is in and into {to}, "
@@ -4582,13 +4170,12 @@ msgid_plural ""
 "This will move {n} contacts out of the address books they are in and into "
 "{to}, locally and on the server. Groups there that hold them will no longer "
 "have them."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Контакт {n} будет перемещён в {to} локально и на сервере. Группа, в которой он состоит, больше не будет его содержать."
+msgstr[1] "Контакты {n} будут перемещены в {to} локально и на сервере. Группы, в которых они состоят, больше не будут их содержать."
+msgstr[2] "Контакты {n} будут перемещены в {to} локально и на сервере. Группы, в которых они состоят, больше не будут их содержать."
 
-#, fuzzy
 msgid "Move"
-msgstr "Переместить в"
+msgstr "Переместить"
 
 msgid "View photo"
 msgstr "Просмотреть фото"
@@ -4603,77 +4190,72 @@ msgid "Address"
 msgstr "Адрес"
 
 msgid "Birthday"
-msgstr ""
+msgstr "День рождения"
 
 #. ---- note ----
 msgid "Note"
-msgstr ""
+msgstr "Заметка"
 
-#, fuzzy
 msgid "Directory"
-msgstr "Добавить каталог"
+msgstr "Каталог"
 
 msgid "Details"
-msgstr ""
+msgstr "Подробности"
 
-#, fuzzy
 msgid "Members"
-msgstr "Номера страниц"
+msgstr "Члены"
 
-#, fuzzy
 msgid "No email address"
-msgstr "Адрес электронной почты"
+msgstr "Нет адреса электронной почты"
 
 msgid "No one is in this group yet."
-msgstr ""
+msgstr "В этой группе пока никого нет."
 
 msgid "Changed in the app it came from"
-msgstr ""
+msgstr "Изменено в приложении, из которого оно взято"
 
 msgid "This group names its members by contact, which Hylki does not edit."
-msgstr ""
+msgstr "Эта группа называет своих членов по контактам, которые Hylki не редактирует."
 
 msgid ""
 "Saving moves the group to this address book, with its people, and removes it "
 "from {book}."
-msgstr ""
+msgstr "При сохранении группа перемещается в эту адресную книгу вместе с ее людьми и удаляется из {book}."
 
 msgid ""
 "Groups here hold addresses, so people with no email address are left out."
-msgstr ""
+msgstr "Группы здесь хранят адреса, поэтому люди, у которых нет адреса электронной почты, остаются в стороне."
 
 msgid "Group"
-msgstr ""
+msgstr "Группа"
 
-#, fuzzy
 msgid "Send as Bcc"
-msgstr "Отправить все"
+msgstr "Отправить как СК"
 
 msgid "Members do not see each other's addresses."
-msgstr ""
+msgstr "Участники не видят адреса друг друга."
 
 #. An Apple group (iCloud's) holds cards of its own book.
 msgid ""
 "Groups in this address book hold its own contacts: anyone added who is not "
 "in it yet is added to it."
-msgstr ""
+msgstr "Группы в этой адресной книге содержат свои контакты: в нее добавляются все, кого еще нет в ней."
 
 msgid "Edit Contact"
 msgstr "Редактировать контакт"
 
 #. ---- identity fields ----
 msgid "Identity"
-msgstr ""
+msgstr "Идентичность"
 
 msgid "Nickname"
-msgstr ""
+msgstr "Псевдоним"
 
-#, fuzzy
 msgid "Organization"
-msgstr "Перевод"
+msgstr "Организация"
 
 msgid "Another book moves the contact there when saved."
-msgstr ""
+msgstr "Другая книга перемещает контакт туда при сохранении."
 
 msgid "Add email"
 msgstr "Добавить адрес"
@@ -4685,79 +4267,73 @@ msgid "Add website"
 msgstr "Добавить веб-сайт"
 
 msgid "No label"
-msgstr ""
+msgstr "Без метки"
 
 msgid "Home"
-msgstr ""
+msgstr "Домашний"
 
 msgid "Work"
-msgstr ""
+msgstr "Рабочий"
 
 msgid "Mobile"
-msgstr ""
+msgstr "Мобильный"
 
 msgid "Fax"
-msgstr ""
+msgstr "Факс"
 
 msgid "Label"
-msgstr ""
+msgstr "Метка"
 
-#, fuzzy
 msgid "Add address"
-msgstr "Адрес"
+msgstr "Добавить адрес"
 
 msgid "Street"
-msgstr ""
+msgstr "Улица"
 
 msgid "City"
-msgstr ""
+msgstr "Город"
 
 msgid "State or region"
-msgstr ""
+msgstr "Область или регион"
 
 msgid "Postal code"
-msgstr ""
+msgstr "Почтовый индекс"
 
 msgid "Country"
-msgstr ""
+msgstr "Страна"
 
 msgid "No birthday"
-msgstr ""
+msgstr "Без дня рождения"
 
 msgid "Year"
-msgstr ""
+msgstr "Год"
 
 msgid "Change Photo…"
-msgstr ""
+msgstr "Изменить фото…"
 
-#, fuzzy
 msgid "Remove Photo"
-msgstr "Удалить тег"
+msgstr "Удалить фото"
 
-#, fuzzy
 msgid "Choose a Photo"
-msgstr "Выбрать картинку"
+msgstr "Выберите фотографию"
 
-#, fuzzy
 msgid "In Directories"
-msgstr "Каталоги LDAP"
+msgstr "В каталогах"
 
 msgid "Type three letters or more to search the directory."
-msgstr ""
+msgstr "Введите три буквы или более для поиска в каталоге."
 
 msgid "Nobody in the directory matches."
-msgstr ""
+msgstr "В каталоге никто не подходит."
 
-#, fuzzy
 msgid "Remove from Group"
-msgstr "Удалить из избранного"
+msgstr "Удалить из группы"
 
 msgid "Add to Group"
-msgstr ""
+msgstr "Добавить в группу"
 
-#, fuzzy
 msgid "Move to Address Book"
-msgstr "Адресная книга"
+msgstr "Перейти в адресную книгу"
 
 msgid "Delete…"
 msgstr "Удалить…"
@@ -4768,37 +4344,32 @@ msgstr "Редактировать"
 msgid "Open in GNOME Contacts"
 msgstr "Открыть в «Контактах GNOME»"
 
-#, fuzzy
 msgid "{n} Group Selected"
 msgid_plural "{n} Groups Selected"
-msgstr[0] "Подтверждать удаление обсуждения"
-msgstr[1] "Подтверждать удаление обсуждения"
-msgstr[2] "Подтверждать удаление обсуждения"
+msgstr[0] "Выбрана {n} группа"
+msgstr[1] "Выбраны {n} группы"
+msgstr[2] "Выбрано {n} групп"
 
-#, fuzzy
 msgid "{n} Contact Selected"
 msgid_plural "{n} Contacts Selected"
-msgstr[0] "Подтверждать удаление обсуждения"
-msgstr[1] "Подтверждать удаление обсуждения"
-msgstr[2] "Подтверждать удаление обсуждения"
+msgstr[0] "Выбран {n} контакт"
+msgstr[1] "Выбраны {n} контакта"
+msgstr[2] "Выбрано {n} контактов"
 
 msgid "Move to…"
 msgstr "Переместить в…"
 
-#, fuzzy
 msgid "Move to another address book"
-msgstr "Сохранить каталог?"
+msgstr "Перейти в другую адресную книгу"
 
-#, fuzzy
 msgid "Selected"
-msgstr "Импортировать выбранные"
+msgstr "Выбрано"
 
 msgid "Add a person by name or address"
-msgstr ""
+msgstr "Добавить человека по имени или адресу"
 
-#, fuzzy
 msgid "No email address · {book}"
-msgstr "Адрес электронной почты"
+msgstr "Нет адреса электронной почты · {book}"
 
 msgid "First name"
 msgstr "Имя"
@@ -4806,85 +4377,74 @@ msgstr "Имя"
 msgid "Last name"
 msgstr "Фамилия"
 
-#, fuzzy
 msgid "Sort and filter contacts"
-msgstr "{n} сообщений"
+msgstr "Сортировка и фильтрация контактов"
 
-#, fuzzy
 msgid "Groups"
-msgstr "Левая группа"
+msgstr "Группы"
 
-#, fuzzy
 msgid "Import Contacts"
-msgstr "Сортировка контактов"
+msgstr "Импортировать контакты"
 
-#, fuzzy
 msgid "vCard files"
-msgstr "Большие файлы"
+msgstr "файлы vCard"
 
 msgid "All files"
 msgstr "Все файлы"
 
-#, fuzzy
 msgid "Directories"
-msgstr "Каталоги LDAP"
+msgstr "Каталоги"
 
 msgid "Has Photo"
-msgstr ""
+msgstr "Есть фото"
 
-#, fuzzy
 msgid "Has Email"
-msgstr "Email"
+msgstr "Имеет электронную почту"
 
-#, fuzzy
 msgid "Has Phone"
-msgstr "Телефон"
+msgstr "Есть телефон"
 
-#, fuzzy
 msgid "Has Address"
-msgstr "Адрес"
+msgstr "Имеет адрес"
 
 msgid "Has Birthday"
-msgstr ""
+msgstr "Имеет день рождения"
 
 msgid "Has Company"
-msgstr ""
+msgstr "Имеет компанию"
 
-#, fuzzy
 msgid "Not in a Group"
-msgstr "Левая группа"
+msgstr "Не в группе"
 
 msgid ""
 "This will remove the group {name} from your address book locally and on the "
 "server. The contacts are not removed."
-msgstr ""
+msgstr "Группа {name} будет удалена из вашей адресной книги локально и на сервере. Контакты не удаляются."
 
 msgid ""
 "This will remove the group {name} from your address book. The contacts are "
 "not removed."
-msgstr ""
+msgstr "Группа {name} будет удалена из вашей адресной книги. Контакты не удаляются."
 
-#, fuzzy
 msgid "Delete Group?"
-msgstr "Удалить ваш ключ?"
+msgstr "Удалить группу?"
 
 msgid ""
 "This will remove the contact {name} from your address book locally and on "
 "the server."
-msgstr ""
+msgstr "Контакт {name} будет удален из вашей адресной книги локально и на сервере."
 
 msgid "This will remove the contact {name} from your address book."
-msgstr ""
+msgstr "Контакт {name} будет удален из вашей адресной книги."
 
 msgid "Delete Contact?"
 msgstr "Удалить контакт?"
 
-#, fuzzy
 msgid "Delete {n} Group?"
 msgid_plural "Delete {n} Groups?"
-msgstr[0] "Удалить ваш ключ?"
-msgstr[1] "Удалить ваш ключ?"
-msgstr[2] "Удалить ваш ключ?"
+msgstr[0] "Удалить {n} группу?"
+msgstr[1] "Удалить {n} группы?"
+msgstr[2] "Удалить {n} групп?"
 
 msgid ""
 "This will remove {n} group from your address books locally and on the "
@@ -4892,9 +4452,9 @@ msgid ""
 msgid_plural ""
 "This will remove {n} groups from your address books locally and on the "
 "server. The contacts are not removed."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Группа {n} будет удалена из адресных книг локально и на сервере. Контакты останутся."
+msgstr[1] "Группы {n} будут удалены из адресных книг локально и на сервере. Контакты останутся."
+msgstr[2] "Группы {n} будут удалены из адресных книг локально и на сервере. Контакты останутся."
 
 msgid ""
 "This will remove {n} group from your address book. The contacts are not "
@@ -4902,16 +4462,15 @@ msgid ""
 msgid_plural ""
 "This will remove {n} groups from your address books. The contacts are not "
 "removed."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Группа {n} будет удалена из адресной книги. Контакты останутся."
+msgstr[1] "Группы {n} будут удалены из адресных книг. Контакты останутся."
+msgstr[2] "Группы {n} будут удалены из адресных книг. Контакты останутся."
 
-#, fuzzy
 msgid "Delete {n} Contact?"
 msgid_plural "Delete {n} Contacts?"
-msgstr[0] "Удалить контакт?"
-msgstr[1] "Удалить контакт?"
-msgstr[2] "Удалить контакт?"
+msgstr[0] "Удалить {n} контакт?"
+msgstr[1] "Удалить {n} контакта?"
+msgstr[2] "Удалить {n} контактов?"
 
 msgid ""
 "This will remove {n} contact from your address books locally and on the "
@@ -4919,22 +4478,21 @@ msgid ""
 msgid_plural ""
 "This will remove {n} contacts from your address books locally and on the "
 "server."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Контакт {n} будет удалён из адресных книг локально и на сервере."
+msgstr[1] "Контакты {n} будут удалены из адресных книг локально и на сервере."
+msgstr[2] "Контакты {n} будут удалены из адресных книг локально и на сервере."
 
 msgid "This will remove {n} contact from your address book."
 msgid_plural "This will remove {n} contacts from your address books."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Контакт {n} будет удалён из адресной книги."
+msgstr[1] "Контакты {n} будут удалены из адресных книг."
+msgstr[2] "Контакты {n} будут удалены из адресных книг."
 
 msgid "Import vCard files into the Hylki address book"
-msgstr ""
+msgstr "Импортируйте файлы vCard в адресную книгу Hylki."
 
-#, fuzzy
 msgid "New contact or group"
-msgstr "Новый контакт"
+msgstr "Новый контакт или группа"
 
 msgid "Loading Contacts…"
 msgstr "Загрузка контактов…"
@@ -4943,11 +4501,10 @@ msgid ""
 "Add a contact with the + button, or import vCard files. Contacts are kept in "
 "Hylki's own address book, and the address books of GNOME Contacts are listed "
 "here too."
-msgstr ""
+msgstr "Добавьте контакт с помощью кнопки + или импортируйте файлы vCard. Контакты хранятся в собственной адресной книге Hylki, здесь также перечислены адресные книги контактов GNOME."
 
-#, fuzzy
 msgid "Search contacts (Ctrl+F)"
-msgstr "Поиск контактов"
+msgstr "Поиск контактов (Ctrl+F)"
 
 msgid "Edit contact"
 msgstr "Редактировать контакт"
@@ -5043,16 +4600,14 @@ msgstr[0] "{n} письмо"
 msgstr[1] "{n} письма"
 msgstr[2] "{n} писем"
 
-#, fuzzy
 msgid "Later today ({time})"
-msgstr "Сегодня, {time}"
+msgstr "Позже сегодня ({time})"
 
-#, fuzzy
 msgid "Saturday morning ({time})"
-msgstr "В понедельник утром ({time})"
+msgstr "Суббота, утро ({time})"
 
 msgid "Unsnooze"
-msgstr ""
+msgstr "Вернуть из отложенных"
 
 msgid "That time has passed"
 msgstr "Это время уже прошло"
@@ -5086,162 +4641,140 @@ msgid "{name} · {current} of {total}"
 msgstr "{name} · {current} из {total}"
 
 msgid "To needs the field that holds the address, such as {{Email}}."
-msgstr ""
+msgstr "To необходимо поле, содержащее адрес, например {{Email}}."
 
 msgid "No row has an address to send to."
-msgstr ""
+msgstr "Ни одна строка не имеет адреса для отправки."
 
-#, fuzzy
 msgid "Text"
-msgstr "Размер текста"
+msgstr "Текст"
 
-#, fuzzy
 msgid "In {places}"
-msgstr "неизвестная папка"
+msgstr "В {places}"
 
 msgid "Takes under a minute"
-msgstr ""
+msgstr "Занимает меньше минуты"
 
 msgid "Takes about a minute"
-msgstr ""
+msgstr "Занимает около минуты"
 
 msgid "Takes about {n} minute"
 msgid_plural "Takes about {n} minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Займёт около {n} минуты"
+msgstr[1] "Займёт около {n} минут"
+msgstr[2] "Займёт около {n} минут"
 
 msgid "Takes about {n} hour"
 msgid_plural "Takes about {n} hours"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Займёт около {n} часа"
+msgstr[1] "Займёт около {n} часов"
+msgstr[2] "Займёт около {n} часов"
 
 msgid "Mail Merge"
-msgstr ""
+msgstr "Слияние почты"
 
-#, fuzzy
 msgid "Send to"
-msgstr "Отправить сейчас"
+msgstr "Отправить"
 
-#, fuzzy
 msgid "A CSV file"
-msgstr "Все файлы"
+msgstr "CSV-файл"
 
-#, fuzzy
 msgid "CSV file"
-msgstr "Звуковой файл"
+msgstr "CSV-файл"
 
 msgid "Its first row names the fields."
-msgstr ""
+msgstr "Его первая строка называет поля."
 
 msgid "Choose…"
 msgstr "Выбрать…"
 
 msgid "Fields"
-msgstr ""
+msgstr "Поля"
 
-#, fuzzy
 msgid "Leave these fields empty"
-msgstr "Сохранить фильтр?"
+msgstr "Оставьте эти поля пустыми"
 
 msgid "Limit sending rate"
-msgstr ""
+msgstr "Ограничить скорость отправки"
 
 msgid "Messages"
 msgstr "Сообщения"
 
-#, fuzzy
 msgid "per minute"
-msgstr "Каждую минуту"
+msgstr "в минуту"
 
 msgid "per hour"
-msgstr ""
+msgstr "в час"
 
-#, fuzzy
 msgid "{n} of {total}"
-msgstr "{shown} из {total}"
+msgstr "{n} из {total}"
 
-#, fuzzy
 msgid "Not in {source}"
-msgstr "Левая группа"
+msgstr "Нет в {source}"
 
 msgid "{n} row has no address and is left out."
 msgid_plural "{n} rows have no address and are left out."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{n} строка без адреса пропущена."
+msgstr[1] "{n} строки без адреса пропущены."
+msgstr[2] "{n} строк без адреса пропущены."
 
-#, fuzzy
 msgid "Send {n} Message"
 msgid_plural "Send {n} Messages"
-msgstr[0] "Найти в сообщении"
-msgstr[1] "Найти в сообщении"
-msgstr[2] "Найти в сообщении"
+msgstr[0] "Отправить {n} сообщение"
+msgstr[1] "Отправить {n} сообщения"
+msgstr[2] "Отправить {n} сообщений"
 
-#, fuzzy
 msgid "Choose a CSV File"
-msgstr "Выбрать картинку"
+msgstr "Выберите CSV-файл"
 
-#, fuzzy
 msgid "CSV files"
-msgstr "Большие файлы"
+msgstr "CSV-файлы"
 
-#, fuzzy
 msgid "The file could not be read: {error}"
-msgstr "Не удалось связаться с сервисом: {e}"
+msgstr "Не удалось прочитать файл: {error}"
 
 msgid "No Messages"
 msgstr "Нет сообщений"
 
-#, fuzzy
 msgid "No Matching Messages"
-msgstr "Нет сообщений"
+msgstr "Нет соответствующих сообщений"
 
 msgid "There's nothing here right now."
 msgstr "Здесь пока ничего нет."
 
-#, fuzzy
 msgid "No message here passes the filters."
-msgstr "Новое сообщение из шаблона"
+msgstr "Ни одно сообщение здесь не проходит фильтры."
 
 msgid "Clear selection"
 msgstr "Снять выделение"
 
 #. The scope button beside it says where it looks.
-#, fuzzy
 msgid "Search…"
-msgstr "Поиск…"
+msgstr "Искать…"
 
-#, fuzzy
 msgid "Searching the server…"
-msgstr "Поиск…"
+msgstr "Ищем сервер…"
 
 msgid "Choose which folders to search"
 msgstr "Выберите папки для поиска"
 
-#, fuzzy
 msgid "Has Attachments"
-msgstr "Есть вложения"
+msgstr "Имеет вложения"
 
-#, fuzzy
 msgid "Addressed to Me"
-msgstr "Адресная книга"
+msgstr "Адресовано мне"
 
-#, fuzzy
 msgid "From Contacts"
-msgstr "Нет контактов"
+msgstr "Из контактов"
 
-#, fuzzy
 msgid "High Importance"
 msgstr "Высокая важность"
 
 msgid "Today"
-msgstr ""
+msgstr "Сегодня"
 
-#, fuzzy
 msgid "Customize Columns…"
-msgstr "Настроить панель инструментов…"
+msgstr "Настроить столбцы…"
 
 msgid "Remove Stars"
 msgstr "Снять отметки"
@@ -5255,13 +4788,11 @@ msgstr "Отметить все как прочитанные"
 msgid "Mark All as Unread"
 msgstr "Отметить все как непрочитанные"
 
-#, fuzzy
 msgid "All folders (except trash & junk)"
-msgstr "Папки поиска"
+msgstr "Все папки (кроме корзины и нежелательной почты)"
 
-#, fuzzy
 msgid "Everywhere"
-msgstr "Или где"
+msgstr "Везде"
 
 msgid "This folder"
 msgstr "Эта папка"
@@ -5272,16 +4803,16 @@ msgstr "Все папки"
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
 "Trash or Junk looks there too."
-msgstr ""
+msgstr "Все папки всех учетных записей, кроме «Корзины» и «Нежелательной почты». Поиск, начатый в «Корзине» или «Нежелательной почте», также отображается там."
 
 msgid "Every folder of every account, Trash and Junk included."
-msgstr ""
+msgstr "Каждая папка каждой учетной записи, включая «Корзину» и «Нежелательную почту»."
 
 msgid "Only the folder or view the list is showing."
-msgstr ""
+msgstr "Отображается только папка или просмотр списка."
 
 msgid "What this searches"
-msgstr ""
+msgstr "Что это ищет"
 
 msgid "me"
 msgstr "я"
@@ -5300,46 +4831,38 @@ msgstr "Высокая важность"
 msgid "Low importance"
 msgstr "Низкая важность"
 
-#, fuzzy
 msgid "Forwarded"
-msgstr "Переслать"
+msgstr "Переадресовано"
 
-#, fuzzy
 msgid "Snoozed until {when}"
-msgstr "Запланировано на {when}"
+msgstr "Отложено до {when}"
 
-#, fuzzy
 msgid "In {folder}"
-msgstr "неизвестная папка"
+msgstr "В {folder}"
 
-#, fuzzy
 msgid "Yesterday"
-msgstr "вчера"
+msgstr "Вчера"
 
-#, fuzzy
 msgid "Last 7 days"
-msgstr "Фамилия"
+msgstr "Последние 7 дней"
 
 msgid "Last 14 days"
-msgstr ""
+msgstr "Последние 14 дней"
 
-#, fuzzy
 msgid "Older"
-msgstr "Папка"
+msgstr "Старше"
 
-#, fuzzy
 msgid "{n} conversation selected"
 msgid_plural "{n} conversations selected"
-msgstr[0] "Подтверждать удаление обсуждения"
-msgstr[1] "Подтверждать удаление обсуждения"
-msgstr[2] "Подтверждать удаление обсуждения"
+msgstr[0] "Выбрана {n} переписка"
+msgstr[1] "Выбраны {n} переписки"
+msgstr[2] "Выбрано {n} переписок"
 
-#, fuzzy
 msgid "{n} message selected"
 msgid_plural "{n} messages selected"
-msgstr[0] "Сообщение не выбрано"
-msgstr[1] "Сообщение не выбрано"
-msgstr[2] "Сообщение не выбрано"
+msgstr[0] "Выбрано {n} сообщение"
+msgstr[1] "Выбраны {n} сообщения"
+msgstr[2] "Выбрано {n} сообщений"
 
 msgid "No draft selected"
 msgstr "Сообщение не выбрано"
@@ -5348,7 +4871,7 @@ msgid "No message selected"
 msgstr "Сообщение не выбрано"
 
 msgid "The actions above the list apply to all of them."
-msgstr ""
+msgstr "Действия над списком применимы ко всем из них."
 
 msgid "Choose a draft from the list to edit it here."
 msgstr "Выберите черновик из списка, чтобы отредактировать его здесь."
@@ -5385,20 +4908,17 @@ msgstr "Следующее совпадение"
 msgid "Close find"
 msgstr "Закрыть поиск"
 
-#, fuzzy
 msgid ""
 "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "
 "click here, or Ctrl+0, puts it back to the default from Settings."
-msgstr ""
-"Масштаб сообщения. Сочетания Ctrl+ и Ctrl- меняют его; нажатие здесь или "
-"Ctrl+0 возвращает значение по умолчанию из Параметров."
+msgstr "Масштаб сообщения. Ctrl+ и Ctrl- или Ctrl и колесо прокрутки — измените его; щелчок здесь или Ctrl+0 возвращает значение по умолчанию из настроек."
 
 msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
-msgstr ""
+msgstr "Показывать это сообщение в светлом или темном режиме. Другие сообщения не затрагиваются."
 
 msgid "Light / Dark Mode"
-msgstr ""
+msgstr "Светлый/Темный режим"
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -5422,9 +4942,8 @@ msgstr "Показать цитируемый текст"
 msgid "Hide quoted text"
 msgstr "Скрыть цитируемый текст"
 
-#, fuzzy
 msgid "Copy Address"
-msgstr "Копировать адрес ссылки"
+msgstr "Копировать адрес"
 
 msgid "Double-click to open in a new window"
 msgstr "Дважды щёлкните, чтобы открыть в новом окне"
@@ -5589,39 +5108,35 @@ msgstr ""
 "Сначала сгенерируйте собственный ключ («Настройки» → «OpenPGP»): доверие "
 "ключу означает его подписание вашим ключом."
 
-#, fuzzy
 msgid "From:"
-msgstr "От"
+msgstr "От:"
 
 msgid "Bcc:"
-msgstr ""
+msgstr "СК:"
 
-#, fuzzy
 msgid "Date:"
-msgstr "Дата"
+msgstr "Дата:"
 
-#, fuzzy
 msgid "Message"
-msgstr "Сообщения"
+msgstr "Сообщение"
 
 msgid "{name} asked for a read receipt."
-msgstr ""
+msgstr "Пользователь {name} запросил уведомление о прочтении."
 
 msgid "{name} asked for a read receipt, to be sent to {addr}."
-msgstr ""
+msgstr "Пользователь {name} запросил уведомление о прочтении для отправки на адрес {addr}."
 
 msgid "Send Receipt"
-msgstr ""
+msgstr "Отправить квитанцию"
 
-#, fuzzy
 msgid "Tells the sender you opened this message"
-msgstr "Ответить всем участникам этого сообщения"
+msgstr "Сообщает отправителю, что вы открыли это сообщение"
 
 msgid "Ignore"
-msgstr ""
+msgstr "Игнорировать"
 
 msgid "Sends nothing and stops asking"
-msgstr ""
+msgstr "Ничего не отправляет и перестает спрашивать"
 
 msgid "Copied"
 msgstr "Скопировано"
@@ -5746,22 +5261,19 @@ msgid ""
 "Offline: there is no network connection, so mail is not being checked or "
 "sent. Messages you send wait in the Outbox. Everything syncs again once the "
 "network is back."
-msgstr ""
+msgstr "Не в сети: подключение к сети отсутствует, поэтому почта не проверяется и не отправляется. Сообщения, которые вы отправляете, ждут в папке «Исходящие». Все снова синхронизируется, как только сеть восстановится."
 
 msgid "Status bar ({n})"
 msgstr "Строка состояния ({n})"
 
-#, fuzzy
 msgid "All keys"
-msgstr "Все типы"
+msgstr "Все ключи"
 
-#, fuzzy
 msgid "Not trusted"
-msgstr "Не переведено"
+msgstr "Не доверяю"
 
-#, fuzzy
 msgid "Expired or revoked"
-msgstr "Подписано, ключ отозван"
+msgstr "Срок действия истек или аннулирован"
 
 msgid "expires {date}"
 msgstr "срок действия истекает {date}"
@@ -5805,23 +5317,16 @@ msgstr "5 лет"
 msgid "GnuPG"
 msgstr "GnuPG"
 
-#, fuzzy
 msgid "The same keyring the gpg command and other mail apps use."
-msgstr ""
-"Обнаружена GnuPG {version}. Hylki использует её связку ключей — ту же самую, "
-"которую используют команда gpg и другие почтовые клиенты."
+msgstr "Тот же набор ключей, который используется командой gpg и другими почтовыми приложениями."
 
 msgid "Your keys"
 msgstr "Ваши ключи"
 
-#, fuzzy
 msgid ""
 "Your key signs what you send and opens what is encrypted to you. Share its "
 "public half with people who write to you."
-msgstr ""
-"Ваш собственный ключ подписывает исходящие сообщения и расшифровывает "
-"входящие. Отправьте его открытую часть тем, кто должен писать вам в "
-"зашифрованном виде."
+msgstr "Ваш ключ подписывает то, что вы отправляете, и открывает вам то, что зашифровано. Поделитесь его публичной половиной с людьми, которые вам пишут."
 
 msgid "Import…"
 msgstr "Импортировать…"
@@ -5832,34 +5337,27 @@ msgstr "Сгенерировать…"
 msgid "Other people's keys"
 msgstr "Ключи других людей"
 
-#, fuzzy
 msgid ""
 "Keys you encrypt to and check signatures with. Check a fingerprint with its "
 "owner before trusting it."
-msgstr ""
-"Ключи, используемые для шифрования и проверки подписей. Ключ считается "
-"доверенным после вашего подтверждения; перед этим сверьте его отпечаток с "
-"владельцем."
+msgstr "Ключи, с помощью которых вы шифруете и проверяете подписи. Проверьте отпечаток пальца у его владельца, прежде чем доверять ему."
 
 msgid "Fetch by address…"
 msgstr "Получить по адресу…"
 
 msgid "Search by name, address or key ID"
-msgstr ""
+msgstr "Поиск по имени, адресу или идентификатору ключа"
 
 msgid "No keys from other people yet."
 msgstr "Ключей других людей пока нет."
 
 msgid "GnuPG {version} found."
-msgstr ""
+msgstr "GnuPG {version} найдена."
 
-#, fuzzy
 msgid ""
 "GnuPG was not found. Install the gnupg package to read encrypted mail and "
 "check signatures."
-msgstr ""
-"Пакет GnuPG не найден. Установите пакет gnupg для чтения зашифрованной почты "
-"и проверки подписей; сборка Flatpak содержит его по умолчанию."
+msgstr "GnuPG не найден. Установите пакет gnupg для чтения зашифрованной почты и проверки подписей."
 
 msgid "No key of your own yet. Generate one for your address."
 msgstr "У вас пока нет собственного ключа. Сгенерируйте его для вашего адреса."
@@ -5876,14 +5374,10 @@ msgstr "Ключ не найден: {e}"
 msgid "Generate a Key"
 msgstr "Сгенерировать ключ"
 
-#, fuzzy
 msgid ""
 "This will be kept in the GnuPG keyring. The passphrase is asked for when the "
 "key is used."
-msgstr ""
-"Ключ подписи с подключом шифрования, созданный GnuPG и хранящийся в её "
-"связке ключей. Парольная фраза запрашивается при использовании ключа; агент "
-"запоминает её на некоторое время."
+msgstr "Он будет храниться в связке ключей GnuPG. Парольная фраза запрашивается при использовании ключа."
 
 msgid "Generate"
 msgstr "Сгенерировать"
@@ -5963,14 +5457,10 @@ msgstr ""
 "Сначала сгенерируйте собственный ключ: доверие ключу означает его подписание "
 "вашим ключом."
 
-#, fuzzy
 msgid ""
 "Compare the fingerprint with the one {uid} gives you in person or another "
 "way. Trusting an unchecked key lets an impostor's signature pass."
-msgstr ""
-"Сверьте отпечаток с тем, который {uid} передаст вам лично или по другому "
-"каналу связи. Доверие непроверенному ключу позволит подписи злоумышленника "
-"выглядеть как подлинная."
+msgstr "Сравните отпечаток пальца с тем, который {uid} дает вам лично или другим способом. Доверие к непроверенному ключу позволяет пройти подписи самозванца."
 
 msgid "Could not sign the key: {e}"
 msgstr "Не удалось подписать ключ: {e}"
@@ -6002,9 +5492,8 @@ msgstr "Отображаются всегда · до {n}"
 msgid "Right group"
 msgstr "Правая группа"
 
-#, fuzzy
 msgid "Folds into ⋯ when narrow"
-msgstr "Сворачиваются в ⋯ при узком окне · до 6"
+msgstr "Складывается в ⋯, когда узкий"
 
 msgid "Not shown"
 msgstr "Скрыты"
@@ -6027,12 +5516,11 @@ msgstr "Иконка приложения"
 msgid "Symbolic"
 msgstr "Символическая"
 
-#, fuzzy
 msgid "All unread inbox mail"
-msgstr "Учитывать непрочитанную почту"
+msgstr "Вся непрочитанная входящая почта"
 
 msgid "New since the window was last in front"
-msgstr ""
+msgstr "Новое, так как окно было последним впереди"
 
 msgid "Follow system"
 msgstr "Как в системе"
@@ -6076,9 +5564,8 @@ msgstr "Каждые 15 минут"
 msgid "Every 30 minutes"
 msgstr "Каждые 30 минут"
 
-#, fuzzy
 msgid "In the footer"
-msgstr "Сохранить фильтр?"
+msgstr "В нижнем колонтитуле"
 
 msgid "Above the accounts"
 msgstr "Над учётными записями"
@@ -6105,74 +5592,65 @@ msgstr "Свинг"
 msgid "Custom File"
 msgstr "Другой файл"
 
-#, fuzzy
 msgid "Downloading: {done} of {total}"
-msgstr "Папка {done} из {total}"
+msgstr "Загрузка: {done} из {total}"
 
-#, fuzzy
 msgid "Not available for this computer."
-msgstr "Для этой учётной записи недоступна папка «Черновики»"
+msgstr "Недоступно для этого компьютера."
 
-#, fuzzy
 msgid "Version {version}, on this computer."
-msgstr "На этом компьютере"
+msgstr "Версия {version} на этом компьютере."
 
 msgid "Not downloaded yet. The download is {size}."
-msgstr ""
+msgstr "Еще не загружен. Размер загрузки: {size}."
 
-#, fuzzy
 msgid "The files could not be removed."
-msgstr "Не удалось открыть файл"
+msgstr "Файлы не удалось удалить."
 
 msgid "The download stopped unexpectedly."
-msgstr ""
+msgstr "Загрузка неожиданно остановилась."
 
 msgid "Grammar"
-msgstr ""
+msgstr "Грамматика"
 
 msgid "Check grammar and style"
-msgstr ""
+msgstr "Проверьте грамматику и стиль"
 
 msgid "Right-click a marked phrase for suggestions."
-msgstr ""
+msgstr "Щелкните правой кнопкой мыши отмеченную фразу, чтобы просмотреть предложения."
 
-#, fuzzy
 msgid "Checker"
-msgstr "Проверить"
+msgstr "Шашка"
 
 msgid "Harper"
-msgstr ""
+msgstr "Harper"
 
-#, fuzzy
 msgid "LanguageTool"
-msgstr "Язык"
+msgstr "Языковой инструмент"
 
-#, fuzzy
 msgid "LanguageTool server"
-msgstr "Языки"
+msgstr "Сервер LanguageTool"
 
 msgid "English only. Nothing leaves this computer."
-msgstr ""
+msgstr "Только английский. Ничто не покидает этот компьютер."
 
 msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
-msgstr ""
+msgstr "Многоязычная поддержка. Ничто не покидает этот компьютер. Использует 1 ГБ ОЗУ"
 
-#, fuzzy
 msgid "What you write is sent to the server as you type."
-msgstr "Эта папка отсутствует на сервере"
+msgstr "То, что вы пишете, отправляется на сервер по мере ввода."
 
 msgid "Username (LanguageTool Premium)"
-msgstr ""
+msgstr "Имя пользователя (LanguageTool Premium)"
 
 msgid "API key (LanguageTool Premium)"
-msgstr ""
+msgstr "Ключ API (LanguageTool Premium)"
 
 msgid "Check the settings"
 msgstr "Проверить параметры"
 
-#, fuzzy
 msgid "Sends a test sentence to the server."
-msgstr "Не удалось связаться с сервером"
+msgstr "Отправляет тестовое предложение на сервер."
 
 msgid "Check"
 msgstr "Проверить"
@@ -6181,10 +5659,10 @@ msgid "Checking…"
 msgstr "Проверка…"
 
 msgid "The check stopped unexpectedly."
-msgstr ""
+msgstr "Проверка неожиданно остановилась."
 
 msgid "It works: {server} answered."
-msgstr ""
+msgstr "Это работает: {server} ответил."
 
 msgid "Messages already read"
 msgstr "Уже прочитанные сообщения"
@@ -6192,13 +5670,11 @@ msgstr "Уже прочитанные сообщения"
 msgid "All but the newest"
 msgstr "Все, кроме последнего"
 
-#, fuzzy
 msgid "Top of the message"
-msgstr "Создание писем в основном окне"
+msgstr "Начало сообщения"
 
-#, fuzzy
 msgid "Bottom of the message"
-msgstr "Создание писем в основном окне"
+msgstr "Нижняя часть сообщения"
 
 msgid "Remember the last choice"
 msgstr "Запоминать последний выбор"
@@ -6233,9 +5709,8 @@ msgstr "Системное по умолчанию"
 msgid "Account of the current folder"
 msgstr "Учётная запись текущей папки"
 
-#, fuzzy
 msgid "Same as reading pane zoom"
-msgstr "Сворачивать панель инструментов области чтения"
+msgstr "То же, что и масштабирование области чтения."
 
 msgid "Above the quoted message"
 msgstr "Над цитируемым сообщением"
@@ -6243,12 +5718,11 @@ msgstr "Над цитируемым сообщением"
 msgid "Below the quoted message"
 msgstr "Под цитируемым сообщением"
 
-#, fuzzy
 msgid "{n} second"
 msgid_plural "{n} seconds"
-msgstr[0] "{n} получатель"
-msgstr[1] "{n} получателя"
-msgstr[2] "{n} получателей"
+msgstr[0] "{n} секунда"
+msgstr[1] "{n} секунды"
+msgstr[2] "{n} секунд"
 
 msgid "Above the messages"
 msgstr "Над сообщениями"
@@ -6265,21 +5739,19 @@ msgstr "Системный язык"
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
-msgstr ""
+msgstr "Словари не найдены. В Flatpak добавьте язык с помощью: Flatpak config --set extra-languages <код>"
 
 msgid "Add a word"
 msgstr "Добавить слово"
 
 msgid "Software"
-msgstr ""
+msgstr "ПО"
 
-#, fuzzy
 msgid "Unified style"
-msgstr "Общие"
+msgstr "Единый стиль"
 
-#, fuzzy
 msgid "Tree style"
-msgstr "Действия"
+msgstr "Стиль дерева"
 
 msgid "All Inboxes"
 msgstr "Все входящие"
@@ -6308,43 +5780,35 @@ msgstr "Карточки"
 msgid "Single line"
 msgstr "Одна строка"
 
-#, fuzzy
 msgid "Top of the list"
-msgstr "Создание писем в основном окне"
+msgstr "Начало списка"
 
-#, fuzzy
 msgid "Bottom of the list"
-msgstr "Создание писем в основном окне"
+msgstr "Внизу списка"
 
 msgid "Theme"
 msgstr "Тема"
 
-#, fuzzy
 msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
-msgstr ""
-"Ярлык использует значок, заданный вне Hylki. Выбор значка здесь заменит его."
+msgstr "В панели запуска отображается значок, установленный в другом месте. Выбор одного здесь заменяет его."
 
-#, fuzzy
 msgid "Always"
-msgstr "Всегда показывать"
+msgstr "Всегда"
 
-#, fuzzy
 msgid "A year"
-msgstr "1 год"
+msgstr "Год"
 
 msgid "90 days"
-msgstr ""
+msgstr "90 дней"
 
 msgid "30 days"
-msgstr ""
+msgstr "30 дней"
 
-#, fuzzy
 msgid "Bottom of the window"
-msgstr "Создание писем в основном окне"
+msgstr "Нижняя часть окна"
 
-#, fuzzy
 msgid "Top of the window"
-msgstr "Создание писем в основном окне"
+msgstr "Верхняя часть окна"
 
 msgid "When displayed"
 msgstr "При отображении"
@@ -6389,7 +5853,7 @@ msgid "Privacy"
 msgstr "Конфиденциальность"
 
 msgid "MCP"
-msgstr ""
+msgstr "MCP"
 
 msgid "Date and Time"
 msgstr "Дата и время"
@@ -6401,149 +5865,132 @@ msgid "Save the filter?"
 msgstr "Сохранить фильтр?"
 
 msgid "Your changes are lost if you discard them."
-msgstr ""
+msgstr "Ваши изменения будут потеряны, если вы их отмените."
 
-#, fuzzy
 msgid "Save the smart folder?"
-msgstr "Сохранить фильтр?"
+msgstr "Сохранить смарт-папку?"
 
 msgid "Save the tag?"
 msgstr "Сохранить метку?"
 
-#, fuzzy
 msgid "Save the address book?"
-msgstr "Сохранить каталог?"
+msgstr "Сохранить адресную книгу?"
 
 msgid "Save the account?"
 msgstr "Сохранить учётную запись?"
 
-#, fuzzy
 msgid "See message lists"
-msgstr "Сначала новые сообщения"
+msgstr "Посмотреть списки сообщений"
 
 msgid "Senders, subjects, dates, previews and folders."
-msgstr ""
+msgstr "Отправители, темы, даты, предварительный просмотр и папки."
 
-#, fuzzy
 msgid "Read message text"
-msgstr "Новое сообщение"
+msgstr "Прочитать текст сообщения"
 
-#, fuzzy
 msgid "Search on the mail server"
-msgstr "Поиск…"
+msgstr "Поиск на почтовом сервере"
 
-#, fuzzy
 msgid "Finds mail not downloaded yet."
-msgstr "Сообщение ещё не загружено."
+msgstr "Находит почту, которая еще не загружена."
 
-#, fuzzy
 msgid "Read attachments"
-msgstr "Есть вложения"
+msgstr "Читать вложения"
 
-#, fuzzy
 msgid "Prepare messages"
-msgstr "Переслать это сообщение"
+msgstr "Подготовьте сообщения"
 
 msgid "Each opens in a window for you to check and send."
-msgstr ""
+msgstr "Каждый из них открывается в окне, где вы можете проверить и отправить."
 
 msgid "Mark as read or unread"
 msgstr "Отметить как прочитанное или непрочитанное"
 
-#, fuzzy
 msgid "Add and remove stars"
-msgstr "Снять отметку"
+msgstr "Добавляйте и удаляйте звезды"
 
-#, fuzzy
 msgid "Add and remove tags"
-msgstr "Удалить тег"
+msgstr "Добавляйте и удаляйте теги"
 
-#, fuzzy
 msgid "Move and archive"
-msgstr "Архив"
+msgstr "Переместить и заархивировать"
 
-#, fuzzy
 msgid "Move to Trash"
-msgstr "Переместить этот черновик в «Корзину»"
+msgstr "Отправить в корзину"
 
-#, fuzzy
 msgid "See open conversation"
-msgstr "Показать обсуждение"
+msgstr "Посмотреть открытый разговор"
 
 msgid "The one you are reading, as you read it."
-msgstr ""
+msgstr "Тот, который вы читаете, как вы его читаете."
 
 msgid "Read and edit open drafts"
-msgstr ""
+msgstr "Чтение и редактирование открытых черновиков"
 
 msgid "Those agents prepared. You accept each edit."
-msgstr ""
+msgstr "Эти агенты подготовились. Вы принимаете каждое изменение."
 
 msgid "Include drafts you started"
-msgstr ""
+msgstr "Включите начатые вами черновики"
 
 msgid "What you are writing, unsaved text too."
-msgstr ""
+msgstr "То, что вы пишете, несохраненный текст тоже."
 
 msgid ""
 "Hylki contains no AI agent of its own but you can allow outside agents to "
 "access your mail using MCP (Model Context Protocol)"
-msgstr ""
+msgstr "Hylki не содержит собственного агента искусственного интеллекта, но вы можете разрешить внешним агентам доступ к вашей почте с помощью MCP (протокол контекста модели)."
 
 msgid "Allow AI agent access"
-msgstr ""
+msgstr "Разрешить доступ агенту ИИ"
 
 msgid "Recent Activity"
-msgstr ""
+msgstr "Недавняя активность"
 
 msgid ""
 "Nothing is shared until you allow it. Agents can't send mail, erase it "
 "permanently (moving to Trash is ok) or read encrypted mail."
-msgstr ""
+msgstr "Ничто не будет доступно для общего доступа, пока вы не разрешите это. Агенты не могут отправлять почту, стирать ее навсегда (перенос в корзину разрешен) или читать зашифрованную почту."
 
 msgid "Command for the agent"
-msgstr ""
+msgstr "Команда для агента"
 
-#, fuzzy
 msgid "Address books and directories"
-msgstr "Адресная книга"
+msgstr "Адресные книги и каталоги"
 
 msgid "People in your mail"
-msgstr ""
+msgstr "Люди в вашей почте"
 
-#, fuzzy
 msgid "From every account, shared or not."
-msgstr "Список папок каждой учётной записи."
+msgstr "Из каждой учетной записи, общей или нет."
 
-#, fuzzy
 msgid "Full access"
-msgstr "Все учётные записи"
+msgstr "Полный доступ"
 
 msgid "Grant access to entire account (except Trash and Junk)"
-msgstr ""
+msgstr "Предоставить доступ ко всей учетной записи (кроме корзины и нежелательной почты)"
 
 msgid "Junk and Trash are hidden until you allow them."
-msgstr ""
+msgstr "Нежелательная и мусорная корзина скрыты до тех пор, пока вы не разрешите это сделать."
 
-#, fuzzy
 msgid "Reset to Defaults"
-msgstr "Восстановить по умолчанию"
+msgstr "Сброс к настройкам по умолчанию"
 
 msgid "Reset permissions?"
-msgstr ""
+msgstr "Сбросить разрешения?"
 
 msgid ""
 "The account stays shared, but only for reading and preparing messages. Junk "
 "and Trash are hidden again."
-msgstr ""
+msgstr "Учетная запись остается общей, но только для чтения и подготовки сообщений. Мусор и мусор снова спрятаны."
 
 msgid "Reset"
-msgstr ""
+msgstr "Сбросить"
 
 msgid ""
 "Accounts, preferences, filters, tags and layout, in one file. Passwords and "
 "OpenPGP keys are not included."
-msgstr ""
+msgstr "Учётные записи, настройки, фильтры, метки и расположение элементов в одном файле. Пароли и ключи OpenPGP не включены."
 
 msgid "Export settings"
 msgstr "Экспортировать настройки"
@@ -6551,14 +5998,10 @@ msgstr "Экспортировать настройки"
 msgid "Import settings"
 msgstr "Импортировать настройки"
 
-#, fuzzy
 msgid ""
 "Replaces everything in place. Don't remove accounts first: that deletes "
 "their passwords."
-msgstr ""
-"Заменяет текущие учётные записи и параметры. Не удаляйте учётные записи "
-"предварительно: удаление также стирает их пароли из связки ключей, которые "
-"не содержатся в резервной копии."
+msgstr "Заменяет все на место. Не удаляйте учетные записи сначала: при этом будут удалены их пароли."
 
 msgid "Group messages by conversation"
 msgstr "Группировать сообщения по обсуждениям"
@@ -6567,7 +6010,7 @@ msgid "Expandable conversations"
 msgstr "Раскрываемые обсуждения"
 
 msgid "Off, a conversation's messages show only in the reading pane."
-msgstr ""
+msgstr "Выключено: сообщения беседы отображаются только в области чтения."
 
 msgid "Expand conversations by default"
 msgstr "Раскрывать обсуждения по умолчанию"
@@ -6575,15 +6018,14 @@ msgstr "Раскрывать обсуждения по умолчанию"
 msgid "Newest message first"
 msgstr "Сначала новые сообщения"
 
-#, fuzzy
 msgid "In the reading pane."
-msgstr "Сворачивать панель инструментов области чтения"
+msgstr "В области чтения."
 
 msgid "Fold earlier messages"
 msgstr "Сворачивать предыдущие сообщения"
 
 msgid "The newest always opens."
-msgstr ""
+msgstr "Всегда открывается самое новое."
 
 msgid "Show your own replies in the message list"
 msgstr "Отображать ваши ответы в списке сообщений"
@@ -6591,13 +6033,11 @@ msgstr "Отображать ваши ответы в списке сообще�
 msgid "Off shows the last message that arrived."
 msgstr "Если отключено, отображается последнее полученное сообщение."
 
-#, fuzzy
 msgid "Reply editor position"
-msgstr "Редактор ответа"
+msgstr "Позиция редактора ответа"
 
-#, fuzzy
 msgid "Following the reading order puts it where the conversation ends."
-msgstr "Удалить переписку"
+msgstr "Следование порядку чтения приводит к тому, что разговор заканчивается."
 
 msgid "Attachments on each message"
 msgstr "Вложения в каждом сообщении"
@@ -6609,7 +6049,7 @@ msgid "Confirm conversation deletion"
 msgstr "Подтверждать удаление обсуждения"
 
 msgid "Dates follow the system unless a format is chosen here."
-msgstr ""
+msgstr "Даты соответствуют системе, если здесь не выбран формат."
 
 msgid "Date format"
 msgstr "Формат даты"
@@ -6620,7 +6060,7 @@ msgstr "Часы"
 msgid ""
 "While it is on, this page decides the layout in place of the other settings. "
 "Ctrl+Shift+F or the main menu turns it on."
-msgstr ""
+msgstr "Пока он включен, эта страница определяет макет вместо других настроек. Ctrl+Shift+F или главное меню включает его."
 
 msgid "Start in Focus Mode"
 msgstr "Запускать в режиме концентрации"
@@ -6643,15 +6083,14 @@ msgstr "Скрывать учётные записи на боковой пан�
 msgid "Only the unified section stays."
 msgstr "Остаётся только общий раздел."
 
-#, fuzzy
 msgid "Fold up the accounts"
-msgstr "Над учётными записями"
+msgstr "Сложите счета"
 
 msgid "Collapses expanded accounts into their avatars"
-msgstr ""
+msgstr "Сворачивает развёрнутые учётные записи до аватаров"
 
 msgid "Fold accounts with one click"
-msgstr ""
+msgstr "Сворачивать учётные записи одним щелчком"
 
 msgid "Fold up the unified rows"
 msgstr "Сворачивать строки общего раздела"
@@ -6663,18 +6102,16 @@ msgid "Inboxes"
 msgstr "Входящие"
 
 msgid "Snoozed"
-msgstr ""
+msgstr "Отложенные"
 
-#, fuzzy
 msgid "Sections"
-msgstr "Действия"
+msgstr "Разделы"
 
 msgid "Favorites"
 msgstr "Избранное"
 
-#, fuzzy
 msgid "Show column headings"
-msgstr "Заголовки столбцов"
+msgstr "Показать заголовки столбцов"
 
 msgid "Preview lines"
 msgstr "Строки предпросмотра"
@@ -6682,9 +6119,8 @@ msgstr "Строки предпросмотра"
 msgid "Fold the message list's header"
 msgstr "Сворачивать заголовок списка сообщений"
 
-#, fuzzy
 msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr "Все кнопки убираются в меню «⋯»."
+msgstr "Все, кроме переключателя боковой панели, переходит в ⋯."
 
 msgid "Hide sender avatars"
 msgstr "Скрывать аватары отправителей"
@@ -6693,18 +6129,16 @@ msgid "Hide the subject"
 msgstr "Скрывать тему"
 
 msgid "Tag chips hide with it."
-msgstr ""
+msgstr "Чипы меток прячутся вместе с ним."
 
 msgid "Tags and labels under the text"
-msgstr ""
+msgstr "Теги и метки под текстом"
 
-#, fuzzy
 msgid "Hide stars"
-msgstr "Скрывать аватары отправителей"
+msgstr "Скрыть звезды"
 
-#, fuzzy
 msgid "Hide attachment icons"
-msgstr "Скрыть вложения"
+msgstr "Скрыть значки вложений"
 
 msgid "Fold the reading pane's toolbar"
 msgstr "Сворачивать панель инструментов области чтения"
@@ -6712,25 +6146,20 @@ msgstr "Сворачивать панель инструментов облас�
 msgid "Every button goes into its ⋯ menu."
 msgstr "Все кнопки убираются в меню «⋯»."
 
-#, fuzzy
 msgid "Open messages in Reader View."
-msgstr "Сообщение ещё не загружено."
+msgstr "Откройте сообщения в режиме чтения."
 
 msgid "Instant new mail (push)"
 msgstr "Мгновенное получение почты (push)"
 
-#, fuzzy
 msgid "Microsoft 365 accounts check at the interval above."
-msgstr ""
-"Сообщения поступают сразу после их отправки. Учётные записи Microsoft 365 "
-"проверяются с интервалом, указанным выше."
+msgstr "Учетные записи Microsoft 365 проверяются с интервалом, указанным выше."
 
-#, fuzzy
 msgid "Save data on metered connections"
-msgstr "Удалить переписку"
+msgstr "Сохраняйте данные на лимитных соединениях"
 
 msgid "New mail still arrives. Nothing else is fetched ahead."
-msgstr ""
+msgstr "Новая почта все еще приходит. Больше ничего не предвидится."
 
 msgid "Notifications"
 msgstr "Уведомления"
@@ -6739,17 +6168,16 @@ msgid "Desktop notifications"
 msgstr "Уведомления на рабочем столе"
 
 msgid "For new mail and errors, while the window is in the background."
-msgstr ""
+msgstr "Для новой почты и ошибок, пока окно в фоне."
 
 msgid "Show sender and subject"
 msgstr "Показывать отправителя и тему"
 
-#, fuzzy
 msgid "Read receipts"
-msgstr "Скрыть получателей"
+msgstr "Чтение квитанций"
 
 msgid "When someone opens mail you asked a receipt for."
-msgstr ""
+msgstr "Когда кто-то открывает письмо, для которого запрошено уведомление о прочтении."
 
 msgid "Sound for new mail"
 msgstr "Звук нового письма"
@@ -6764,7 +6192,7 @@ msgid "Sound file"
 msgstr "Звуковой файл"
 
 msgid "Also play while Hylki is in front"
-msgstr ""
+msgstr "Также играйте, пока Хилки впереди."
 
 msgid "Notification Buttons"
 msgstr "Кнопки в уведомлениях"
@@ -6772,52 +6200,45 @@ msgstr "Кнопки в уведомлениях"
 msgid "Up to three buttons on a notification about one message."
 msgstr "До трёх кнопок в уведомлении об одном сообщении."
 
-#, fuzzy
 msgid "Show sender avatars"
-msgstr "Аватары отправителей"
+msgstr "Показать аватары отправителей"
 
 msgid "Sent mail uses your account circle"
 msgstr "В отправленных письмах используется значок вашей учётной записи"
 
-#, fuzzy
 msgid "The account's picture or emoji, as in the sidebar."
-msgstr ""
-"Отправленные вами письма содержат Gravatar, изображение или эмодзи учётной "
-"записи — так же, как и её значок на боковой панели."
+msgstr "Изображение или эмодзи учётной записи, как на боковой панели."
 
 msgid "Automatic uses single lines in wide windows."
-msgstr ""
+msgstr "Автоматически использует одиночные линии в широких окнах."
 
 msgid "Off also stops downloading previews."
-msgstr ""
+msgstr "Выкл. также останавливает загрузку превью."
 
 msgid "Group by date"
-msgstr ""
+msgstr "Группировать по дате"
 
 msgid "Gives the subject its full width."
-msgstr ""
+msgstr "Придает объекту полную ширину."
 
-#, fuzzy
 msgid "Search field position"
-msgstr "Поиск фильтров"
+msgstr "Положение поля поиска"
 
-#, fuzzy
 msgid "Selection bar position"
-msgstr "Действия"
+msgstr "Положение панели выбора"
 
-#, fuzzy
 msgid "Tint tagged messages"
-msgstr "Метка добавлена к {n} письму"
+msgstr "Оттенок сообщений с тегами"
 
 msgid "In the color of its first tag."
-msgstr ""
+msgstr "В цвете своей первой бирки."
 
 msgid "Swipe actions"
 msgstr "Действия свайпом"
 
 msgid ""
 "Left deletes, right archives. Drag with the mouse or swipe with two fingers."
-msgstr ""
+msgstr "Слева удаляет, справа архивирует. Перетащите мышью или проведите двумя пальцами."
 
 msgid "Reverse swipe directions"
 msgstr "Инвертировать направление свайпа"
@@ -6826,7 +6247,7 @@ msgid "Trackpad swipe sensitivity"
 msgstr "Чувствительность смахивания на трекпаде"
 
 msgid "Raise it if swipes stop short. Mouse drags are unaffected."
-msgstr ""
+msgstr "Поднимите его, если смахивание прекращается. Перетаскивание мышью не затрагивается."
 
 msgid "Columns"
 msgstr "Столбцы"
@@ -6834,39 +6255,37 @@ msgstr "Столбцы"
 msgid ""
 "For the single-line layout. Drag columns to reorder them or out to remove "
 "them. Due Date shows only for Microsoft 365 mail."
-msgstr ""
+msgstr "Для однострочной компоновки. Перетащите столбцы, чтобы изменить их порядок, или переместите их, чтобы удалить. Срок выполнения отображается только для почты Microsoft 365."
 
-#, fuzzy
 msgid "Fit columns to the list"
-msgstr "Перетащите столбец сюда, чтобы скрыть его"
+msgstr "Подогнать столбцы к списку"
 
 msgid "Off, a narrow list scrolls sideways."
-msgstr ""
+msgstr "Выкл., узкий список прокручивается вбок."
 
 msgid "Restore Defaults"
 msgstr "Восстановить по умолчанию"
 
 msgid "Hylki collects no telemetry and sends no analytics."
-msgstr ""
+msgstr "Hylki не собирает телеметрию и не отправляет аналитику."
 
 msgid "Always load remote content"
 msgstr "Всегда загружать удалённое содержимое"
 
 msgid "Remote content can tell a sender when and where you read."
-msgstr ""
+msgstr "Удаленный контент может сообщить отправителю, когда и где вы читаете."
 
 msgid "Pre-load remote content for the next messages"
-msgstr ""
+msgstr "Предварительная загрузка удаленного контента для следующих сообщений"
 
 msgid "Their senders can tell they were opened."
-msgstr ""
+msgstr "Их отправители могут сказать, что они были открыты."
 
 msgid "Warn when remote content is blocked"
 msgstr "Предупреждать о блокировке удалённого содержимого"
 
-#, fuzzy
 msgid "Off hides the banner. Remote content stays blocked."
-msgstr "Предупреждать о блокировке удалённого содержимого"
+msgstr "Выкл. скрывает баннер. Удаленный контент остается заблокированным."
 
 msgid "Warn when the addressing doesn't match"
 msgstr "Предупреждать при несоответствии адресов"
@@ -6874,27 +6293,26 @@ msgstr "Предупреждать при несоответствии адре�
 msgid ""
 "The badge beside the sender stays. A possible forgery always shows the "
 "banner."
-msgstr ""
+msgstr "Значок рядом с отправителем останется. Возможная подделка всегда показывает баннер."
 
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Использовать Gravatar, если у контакта нет фото"
 
 msgid "Sends a hash of the sender's address to Gravatar."
-msgstr ""
+msgstr "Отправляет хэш адреса отправителя в Gravatar."
 
 msgid "Show sender logos"
 msgstr "Показывать логотипы отправителей"
 
 msgid ""
 "Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
+msgstr "Большинство из них извлекаются из домена отправителя, который узнает ваш IP-адрес."
 
-#, fuzzy
 msgid "Send read receipts"
-msgstr "Скрыть получателей"
+msgstr "Отправлять уведомления о прочтении"
 
 msgid "A receipt tells the sender when you opened the message."
-msgstr ""
+msgstr "Квитанция сообщает отправителю, когда вы открыли сообщение."
 
 msgid "Open at startup"
 msgstr "Открывать при запуске"
@@ -6905,35 +6323,34 @@ msgstr "Учётные записи на боковой панели"
 msgid ""
 "Off leaves only the unified section. Toggle with Ctrl+Shift+A or the main "
 "menu."
-msgstr ""
+msgstr "Выкл. оставляет только единый раздел. Переключитесь с помощью Ctrl+Shift+A или главного меню."
 
 msgid "Folder order"
 msgstr "Порядок папок"
 
 msgid "Dragging a folder switches to Custom Order."
-msgstr ""
+msgstr "Перетаскивание папки переключает в режим «Пользовательский порядок»."
 
 msgid "Chevron placement"
 msgstr "Расположение стрелок сворачивания"
 
 msgid "When off, only its chevron or a double click activates the fold."
-msgstr ""
+msgstr "В выключенном состоянии сворачивание активируется только шевроном или двойным щелчком мыши."
 
-#, fuzzy
 msgid "Show Attachments Browser"
-msgstr "Панель вложений"
+msgstr "Показать браузер вложений"
 
 msgid "Browse every account's attachments in one place."
-msgstr ""
+msgstr "Просматривайте вложения каждой учетной записи в одном месте."
 
 msgid "Hovering the icon rail floats the full sidebar out."
-msgstr ""
+msgstr "При наведении курсора на панель значков выводится вся боковая панель."
 
 msgid "Remember the sidebar layout"
 msgstr "Запоминать состояние боковой панели"
 
 msgid "Off starts every launch folded up."
-msgstr ""
+msgstr "Выкл. запускается при каждом запуске в сложенном виде."
 
 msgid "Remember icon rail state"
 msgstr "Запоминать состояние панели с иконками"
@@ -6942,21 +6359,19 @@ msgid "Highlight only new unread mail"
 msgstr "Выделять только новые непрочитанные письма"
 
 msgid "A count turns grey once you have looked at the folder."
-msgstr ""
+msgstr "Когда вы посмотрите на папку, счетчик станет серым."
 
-#, fuzzy
 msgid "Shown only with more than one account."
-msgstr "Показывать только эту учётную запись"
+msgstr "Отображается только при наличии более чем одной учетной записи."
 
 msgid "Shown only while mail is snoozed."
-msgstr ""
+msgstr "Отображается только тогда, когда почта отложена."
 
 msgid "Shown on the unified rows while they are folded up."
-msgstr ""
+msgstr "Показаны на объединенных рядах в сложенном виде."
 
-#, fuzzy
 msgid "Section style"
-msgstr "Действия"
+msgstr "Стиль раздела"
 
 msgid "Filters placement"
 msgstr "Расположение фильтров"
@@ -6964,29 +6379,28 @@ msgstr "Расположение фильтров"
 msgid "Tags placement"
 msgstr "Расположение тегов"
 
-#, fuzzy
 msgid "Favorites placement"
-msgstr "Расположение фильтров"
+msgstr "Размещение избранного"
 
 msgid "Icon rail"
 msgstr "Полоса с иконками"
 
 msgid "The count stays in the tooltip."
-msgstr ""
+msgstr "Счет остается во всплывающей подсказке."
 
 msgid "Fold up expanded items"
 msgstr "Сворачивать раскрытые элементы"
 
 msgid "The items below start folded up in the rail. Long-press to open one."
-msgstr ""
+msgstr "Предметы ниже начинают складываться в направляющую. Нажмите и удерживайте, чтобы открыть один."
 
 msgid ""
 "Inside the Flatpak sandbox, links open through the desktop's chooser. \"Ask "
 "each time\" picks the browser per link with the option to remember it."
-msgstr ""
+msgstr "Внутри песочницы Flatpak ссылки открываются через средство выбора на рабочем столе. «Спрашивать каждый раз» выбирает браузер для каждой ссылки с возможностью ее запомнить."
 
 msgid "\"Ask each time\" lets the desktop ask before each link."
-msgstr ""
+msgstr "«Спрашивать каждый раз» позволяет рабочему столу спрашивать перед каждой ссылкой."
 
 msgid "Not installed"
 msgstr "Не установлено"
@@ -6994,40 +6408,33 @@ msgstr "Не установлено"
 msgid "Installed and loaded by Files"
 msgstr "Установлено и загружено приложением «Файлы»"
 
-#, fuzzy
 msgid "Installed, but nautilus-python is missing"
-msgstr "Сначала установите пакет nautilus-python: вставьте это в терминал"
+msgstr "Установлен, но nautilus-python отсутствует."
 
 msgid "Installed. Restart Files to load it; it needs nautilus-python"
-msgstr ""
+msgstr "Установлен. Перезапустите файлы, чтобы загрузить их; ему нужен Nautilus-Python"
 
-#, fuzzy
 msgid "Installed, but from another version"
-msgstr "Установлено, но используется копия от другой версии"
+msgstr "Установил, но из другой версии"
 
-#, fuzzy
 msgid "Measuring…"
-msgstr "Поиск…"
+msgstr "Измерение…"
 
 msgid ""
 "Messages {bodies}, attachments {files}. {total} in all, with the message "
 "list."
-msgstr ""
+msgstr "Сообщения {bodies}, вложения {files}. Всего {total} со списком сообщений."
 
 msgid "Could not install the extension"
 msgstr "Не удалось установить расширение"
 
 msgid "Remove downloaded mail?"
-msgstr ""
+msgstr "Удалить загруженную почту?"
 
-#, fuzzy
 msgid ""
 "Mail and attachments on this computer are removed and fetched again when "
 "opened. Nothing on the server changes."
-msgstr ""
-"Каталог будет удалён из Evolution Data Server, поэтому Evolution и другие "
-"использующие его приложения также перестанут его видеть. На самом сервере "
-"ничего не изменится."
+msgstr "Почта и вложения на этом компьютере удаляются и загружаются снова при открытии. На сервере ничего не меняется."
 
 msgid "Could not remove the extension"
 msgstr "Не удалось удалить расширение"
@@ -7036,7 +6443,7 @@ msgid "Could not restart Files"
 msgstr "Не удалось перезапустить «Файлы»"
 
 msgid "Other Font…"
-msgstr ""
+msgstr "Другой шрифт…"
 
 msgid "Search Settings"
 msgstr "Поиск по параметрам"
@@ -7052,7 +6459,7 @@ msgstr "Ничего не найдено"
 msgid ""
 "address books CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
-msgstr ""
+msgstr "адресные книги CardDAV Каталог LDAP Каталоги Онлайн-аккаунты Nextcloud iCloud Google Microsoft vCard"
 
 msgid "System language — {language}"
 msgstr "Системный язык — {language}"
@@ -7085,11 +6492,10 @@ msgid "Could not save the PDF: {error}"
 msgstr "Не удалось сохранить PDF: {error}"
 
 msgid "Filled in by Mail Merge"
-msgstr ""
+msgstr "Заполнено слиянием почты"
 
-#, fuzzy
 msgid "Custom…"
-msgstr "Другой цвет…"
+msgstr "Пользовательский…"
 
 msgid "Sans Serif"
 msgstr "Без засечек"
@@ -7101,10 +6507,10 @@ msgid "Monospace"
 msgstr "Моноширинный"
 
 msgid "Grammar check failed: {error}"
-msgstr ""
+msgstr "Проверка грамматики не удалась: {error}"
 
 msgid "No suggestions"
-msgstr ""
+msgstr "Нет предложений"
 
 msgid "Spelling Language"
 msgstr "Язык проверки орфографии"
@@ -7166,9 +6572,8 @@ msgstr "Стиль абзаца"
 msgid "Font"
 msgstr "Шрифт"
 
-#, fuzzy
 msgid "Font size"
-msgstr "Размер текста"
+msgstr "Размер шрифта"
 
 msgid "Text color"
 msgstr "Цвет текста"
@@ -7203,19 +6608,17 @@ msgstr "Показать или скрыть папки"
 msgid "Long-press to expand or collapse"
 msgstr "Долгое нажатие — развернуть или свернуть"
 
-#, fuzzy
 msgid "Show or hide labels"
-msgstr "Показать или скрыть метки"
+msgstr "Показать или скрыть ярлыки"
 
-#, fuzzy
 msgid "Labels ({len})"
-msgstr "Папки ({len})"
+msgstr "Ярлыки ({len})"
 
 msgid "Folders ({len})"
 msgstr "Папки ({len})"
 
 msgid "Labels"
-msgstr ""
+msgstr "Метки"
 
 msgid "Sort Folders"
 msgstr "Сортировать папки"
@@ -7301,29 +6704,25 @@ msgstr "Показывать каждую папку"
 msgid "Show each tag"
 msgstr "Показывать каждую метку"
 
-#, fuzzy
 msgid "Show each smart folder"
-msgstr "Показывать каждую папку"
+msgstr "Показать каждую смарт-папку"
 
-#, fuzzy
 msgid "Show each address book"
-msgstr "Сохранить каталог?"
+msgstr "Показать каждую адресную книгу"
 
 msgid "Show or hide tags"
 msgstr "Показать или скрыть метки"
 
-#, fuzzy
 msgid "Edit Smart Folder…"
-msgstr "Редактировать фильтр…"
+msgstr "Редактировать смарт-папку…"
 
-#, fuzzy
 msgid "Delete Smart Folder…"
-msgstr "Удалить папку…"
+msgstr "Удалить смарт-папку…"
 
 msgid ""
 "Uses a translation service under your own key. A message's text is sent only "
 "when you translate it."
-msgstr ""
+msgstr "Пользуется услугой перевода под свой ключ. Текст сообщения отправляется только после его перевода."
 
 msgid "Key"
 msgstr "Ключ"
@@ -7331,9 +6730,8 @@ msgstr "Ключ"
 msgid "Region (empty for a global resource)"
 msgstr "Регион (оставьте пустым для глобального ресурса)"
 
-#, fuzzy
 msgid "Translates a greeting to test the service."
-msgstr "Переводит приветствие для проверки ответа сервиса."
+msgstr "Переводит приветствие для тестирования службы."
 
 msgid "Hylki's language ({language})"
 msgstr "Язык Hylki ({language})"
@@ -7341,13 +6739,10 @@ msgstr "Язык Hylki ({language})"
 msgid "Offer to translate"
 msgstr "Предлагать перевод"
 
-#, fuzzy
 msgid ""
 "Messages in another language show a Translate button. The language is "
 "detected on this computer."
-msgstr ""
-"Для сообщений на иностранных языках отображается кнопка «Перевести». "
-"Определение языка сообщения выполняется локально на этом компьютере."
+msgstr "В сообщениях на другом языке отображается кнопка «Перевести». Язык определен на этом компьютере."
 
 msgid "Key (if the server asks for one)"
 msgstr "Ключ (если требуется сервером)"
@@ -7435,7 +6830,7 @@ msgstr ""
 "поддерживаются только через «Сетевые учётные записи GNOME»."
 
 msgid "No mail accounts were found in Online Accounts."
-msgstr "В «Сетевых учётных записях» не найдено почтовых аккаунтов."
+msgstr "В «Сетевых учётных записях» не найдено почтовых учётных записей."
 
 msgid "Open Online Accounts…"
 msgstr "Открыть «Сетевые учётные записи»…"
@@ -7559,7 +6954,7 @@ msgstr "Пропустить"
 msgid ""
 "Offline: there is no network connection. Mail syncs again once the network "
 "is back. Click to try now, or long-press for Status Bar"
-msgstr ""
+msgstr "Оффлайн: нет подключения к сети. Почта снова синхронизируется, как только сеть восстановится. Нажмите, чтобы попробовать сейчас, или нажмите и удерживайте, чтобы открыть строку состояния."
 
 msgid ""
 "Could not read the password for {email} from the keyring ({e}). Hylki tries "
@@ -7632,7 +7027,7 @@ msgid "Could not create folder: {e}"
 msgstr "Не удалось создать папку: {e}"
 
 msgid "the folder it goes in is gone"
-msgstr ""
+msgstr "папка, в которой он находился, исчезла"
 
 msgid "Could not rename folder: {e}"
 msgstr "Не удалось переименовать папку: {e}"
@@ -7663,7 +7058,7 @@ msgstr ""
 "Учётная запись Microsoft не может получать почту из другой учётной записи"
 
 msgid "“{folder}” is left out of search: {reason}"
-msgstr ""
+msgstr "«{folder}» исключена из поиска: {reason}"
 
 msgid "Connecting to {host}…"
 msgstr "Подключение к {host}…"
@@ -7682,9 +7077,8 @@ msgstr ""
 "записи Exchange из сетевых учётных записей: удалите её и добавьте как "
 "учётную запись IMAP или Microsoft 365."
 
-#, fuzzy
 msgid "could not reach the server"
-msgstr "Не удалось связаться с сервером"
+msgstr "не удалось связаться с сервером"
 
 msgid "the server's reply could not be read (it began: {reply})"
 msgstr "не удалось прочитать ответ сервера (он начинался с: {reply})"
@@ -7749,59 +7143,46 @@ msgid "Could not reach the JMAP server: {e}"
 msgstr "Не удалось связаться с сервером JMAP: {e}"
 
 msgid "Mail on this computer is not sent, and has no drafts"
-msgstr ""
+msgstr "Почта на этом компьютере не отправляется и не имеет черновиков."
 
 msgid "Mail is not sent from On This Computer: choose another From address"
-msgstr ""
+msgstr "Почта не отправляется с «На этом компьютере»: выберите другой адрес «От»."
 
-#, fuzzy
 msgid "Could not import {path}: {e}"
-msgstr "Не удалось импортировать: {e}"
+msgstr "Не удалось импортировать {path}: {e}"
 
-#, fuzzy
 msgid "Importing {done} of {total} messages…"
-msgstr "Папка {done} из {total}"
+msgstr "Импорт сообщений: {done} из {total}…"
 
-#, fuzzy
 msgid "A folder by that name already exists"
-msgstr "Папка с именем {new_name} уже существует."
+msgstr "Папка с таким названием уже существует"
 
 msgid "The folder still holds mail"
-msgstr ""
+msgstr "В папке все еще хранится почта"
 
-#, fuzzy
 msgid "That is not a folder name"
-msgstr "Эта папка"
+msgstr "Это не имя папки"
 
-#, fuzzy
 msgid "Could not store the message: {e}"
-msgstr "Не удалось обновить сообщение: {e}"
+msgstr "Не удалось сохранить сообщение: {e}"
 
-#, fuzzy
 msgid "Could not open the folders on this computer: {e}"
-msgstr "Не удалось очистить папку: {e}"
+msgstr "Не удалось открыть папки на этом компьютере: {e}"
 
-#, fuzzy
 msgid "Reading {n} messages…"
-msgstr "Индексация {n} сообщений…"
+msgstr "Чтение {n} сообщений…"
 
 #. Nothing failed: the message waits for the network, which the
 #. Refresh button already shows is down (#442).
-#, fuzzy
 msgid ""
 "No network connection. The message is in the Outbox and will be sent when "
 "the connection is back."
-msgstr ""
-"Не удалось отправить: {e}. Сообщение находится в папке «Исходящие» и будет "
-"отправлено при восстановлении соединения."
+msgstr "Нет подключения к сети. Сообщение находится в папке «Исходящие» и будет отправлено, когда соединение восстановится."
 
 #. A merge's message the server would not take: retrying will
 #. not help unless it is edited, or the server's limit resets.
-#, fuzzy
 msgid "Send failed: {e}. The message is in the Outbox."
-msgstr ""
-"Не удалось отправить: {e}. Сообщение находится в папке «Исходящие» и будет "
-"отправлено при восстановлении соединения."
+msgstr "Не удалось отправить: {e}. Сообщение находится в папке «Исходящие»."
 
 msgid ""
 "Send failed: {e}. The message is in the Outbox and will be sent when the "
@@ -7848,24 +7229,22 @@ msgid ""
 msgstr ""
 "Вы удалили вложение из этого сообщения. Исходные заголовки MIME для вложения:"
 
-#, fuzzy
 msgid "no network connection"
-msgstr "Проверить соединение"
+msgstr "нет подключения к сети"
 
 msgid "runtime error: {e}"
 msgstr "ошибка выполнения: {e}"
 
-#, fuzzy
 msgid "No contacts were found in the selected files"
-msgstr "В этом файле не найдено ни одного ключа."
+msgstr "В выбранных файлах контакты не найдены"
 
 msgid ""
 "Contacts imported: {added} new, {updated} updated, {skipped} skipped, "
 "{errors} damaged"
-msgstr ""
+msgstr "Импортированы контакты: {added} новые, {updated} обновлено, {skipped} пропущено, {errors} повреждено."
 
 msgid "Contacts imported: {added} new, {updated} updated"
-msgstr ""
+msgstr "Импортированы контакты: {added} новые, {updated} обновлено."
 
 msgid "No address book available to add contacts"
 msgstr "Нет адресной книги для добавления контактов"
@@ -7885,34 +7264,29 @@ msgstr "Не удалось добавить контакт: {e}"
 msgid "No address book available"
 msgstr "Адресная книга недоступна"
 
-#, fuzzy
 msgid "Could not rename the address book: {e}"
-msgstr "Не удалось переименовать папку: {e}"
+msgstr "Не удалось переименовать адресную книгу: {e}"
 
-#, fuzzy
 msgid "{n} contact was not copied: {e}"
 msgid_plural "{n} contacts were not copied: {e}"
-msgstr[0] "Журнал экспортирован в {display}"
-msgstr[1] "Журнал экспортирован в {display}"
-msgstr[2] "Журнал экспортирован в {display}"
+msgstr[0] "{n} контакт не скопирован: {e}"
+msgstr[1] "{n} контакта не скопированы: {e}"
+msgstr[2] "{n} контактов не скопированы: {e}"
 
-#, fuzzy
 msgid "{n} contact was not moved: {e}"
 msgid_plural "{n} contacts were not moved: {e}"
-msgstr[0] "Журнал экспортирован в {display}"
-msgstr[1] "Журнал экспортирован в {display}"
-msgstr[2] "Журнал экспортирован в {display}"
+msgstr[0] "{n} контакт не перемещён: {e}"
+msgstr[1] "{n} контакта не перемещены: {e}"
+msgstr[2] "{n} контактов не перемещены: {e}"
 
 msgid "Could not update contact: {e}"
 msgstr "Не удалось обновить контакт: {e}"
 
-#, fuzzy
 msgid "Could not import contacts: {e}"
-msgstr "Не удалось импортировать учетную запись: {e}"
+msgstr "Не удалось импортировать контакты: {e}"
 
-#, fuzzy
 msgid "Could not read: {files}"
-msgstr "Не удалось перезапустить «Файлы»"
+msgstr "Не удалось прочитать: {files}"
 
 msgid "Search filters"
 msgstr "Поиск фильтров"
@@ -7920,7 +7294,7 @@ msgstr "Поиск фильтров"
 msgid ""
 "File or tag incoming mail automatically. Filters run on each Inbox as it "
 "syncs; Apply Now runs them over the mail already there."
-msgstr ""
+msgstr "Автоматически сохраняйте или помечайте входящую почту. Фильтры запускаются в каждом почтовом ящике во время синхронизации; Apply Now запускает их по уже имеющейся почте."
 
 msgid "Add Filter…"
 msgstr "Добавить фильтр…"
@@ -7934,20 +7308,13 @@ msgstr "Сетевая учётная запись GNOME"
 msgid "Show in Hylki"
 msgstr "Отображать в Hylki"
 
-#, fuzzy
 msgid "Off returns it to the import list. It stays in GNOME Online Accounts."
-msgstr ""
-"Отключение этого параметра вернёт учётную запись в список импорта — она "
-"останется в «Сетевых учётных записях GNOME»."
+msgstr "Если выключено, запись возвращается в список импорта. Она остаётся в «Сетевых учётных записях GNOME»."
 
-#, fuzzy
 msgid ""
 "Managed by GNOME Online Accounts. Its address, servers and password are "
 "changed in Settings → Online Accounts."
-msgstr ""
-"Эта учётная запись управляется сервисом «Сетевые учётные записи GNOME».\n"
-"Её адрес, сервера и пароль можно изменить в меню «Настройки» → «Сетевые "
-"учётные записи»."
+msgstr "Управляется онлайн-аккаунтами GNOME. Его адрес, серверы и пароль меняются в Настройках → Онлайн-аккаунты."
 
 msgid "Storage"
 msgstr "Хранилище"
@@ -7976,10 +7343,8 @@ msgstr "Имя пользователя"
 msgid "Sign in with an API token"
 msgstr "Войти с помощью токена API"
 
-#, fuzzy
 msgid "For servers, like Fastmail, that take a token instead of a password."
-msgstr ""
-"Для серверов, использующих токен вместо пароля, например, для Fastmail."
+msgstr "Для серверов, таких как Fastmail, которые принимают токен вместо пароля."
 
 msgid "Advanced"
 msgstr "Дополнительно"
@@ -7999,24 +7364,17 @@ msgstr "URI перенаправления"
 msgid "Sign In with Browser"
 msgstr "Войти через браузер"
 
-#, fuzzy
 msgid ""
 "Google and Microsoft sign in through GNOME Online Accounts. Sign in there, "
 "then reopen this window and switch the account on under GNOME Online "
 "Accounts."
-msgstr ""
-"Для входа через Google и Microsoft используются «Сетевые учётные записи "
-"GNOME».\n"
-"\n"
-"1. Откройте «Сетевые учётные записи» и войдите в систему.\n"
-"2. Вернитесь в Hylki и снова откройте это окно — учётная запись появится в "
-"разделе «Сетевые учётные записи GNOME» вверху этого окна. Включите её там."
+msgstr "Google и Microsoft входят в систему через онлайн-аккаунты GNOME. Войдите там, затем снова откройте это окно и включите учетную запись в разделе «Онлайн-аккаунты GNOME»."
 
 msgid "Separate SMTP credentials"
 msgstr "Отдельные учётные данные SMTP"
 
 msgid "Off uses the credentials above."
-msgstr ""
+msgstr "Выкл. использует указанные выше учетные данные."
 
 msgid "SMTP Username"
 msgstr "Имя пользователя SMTP"
@@ -8030,17 +7388,13 @@ msgstr "Принимать сертификат для другого имени
 msgid ""
 "For shared hosting. Turn on only when the connection test says the names "
 "differ."
-msgstr ""
+msgstr "Для виртуального хостинга. Включайте только тогда, когда проверка соединения показывает, что имена различаются."
 
 msgid "Show in All Inboxes"
 msgstr "Отображать во «Всех входящих»"
 
-#, fuzzy
 msgid "Also in the unified Starred, Sent, Drafts, Archive, Filters and Tags."
-msgstr ""
-"Включать почту этой учётной записи в объединённые папки «Входящие», "
-"«Отмеченные», «Отправленные», «Черновики» и «Архив», а также в объединённые "
-"фильтры и метки."
+msgstr "Также в единых разделах «Помеченные», «Отправленные», «Черновики», «Архив», «Фильтры» и «Теги»."
 
 msgid "Test Connection"
 msgstr "Проверить соединение"
@@ -8051,9 +7405,8 @@ msgstr "Цвет учётной записи"
 msgid "Use my Gravatar"
 msgstr "Использовать мой Gravatar"
 
-#, fuzzy
 msgid "Sends gravatar.com a hash of the address."
-msgstr "Запрашивает информацию у gravatar.com для каждого адреса отправителя"
+msgstr "Отправляет gravatar.com хэш адреса."
 
 msgid "Circle shows"
 msgstr "Что показывает кружок"
@@ -8067,9 +7420,8 @@ msgstr "Картинка"
 msgid "Emoji"
 msgstr "Эмодзи"
 
-#, fuzzy
 msgid "Instead of initials."
-msgstr "Использовать инициалы"
+msgstr "Вместо инициалов."
 
 msgid "Use initials"
 msgstr "Использовать инициалы"
@@ -8078,34 +7430,30 @@ msgid "Send-as aliases"
 msgstr "Псевдонимы для отправки"
 
 msgid "Extra addresses this account can send as."
-msgstr ""
+msgstr "Дополнительные адреса, от которых может отправлять эта учётная запись."
 
 msgid "Add Alias…"
 msgstr "Добавить псевдоним…"
 
-#, fuzzy
 msgid "Signatures"
-msgstr "Подпись"
+msgstr "Подписи"
 
 msgid ""
 "With more than one, the composer's signature button allows you to pick "
 "between them."
-msgstr ""
+msgstr "Если их несколько, кнопка подписи композитора позволяет вам выбирать между ними."
 
-#, fuzzy
 msgid "Add Signature"
-msgstr "Подпись"
+msgstr "Добавить подпись"
 
 msgid "Import File…"
 msgstr "Импортировать файл…"
 
-#, fuzzy
 msgid "Delete Signature"
-msgstr "Импортировать подпись"
+msgstr "Удалить подпись"
 
-#, fuzzy
 msgid "Start messages with this signature"
-msgstr "Написать письмо с прикреплённым файлом"
+msgstr "Начинать сообщения с этой подписью"
 
 msgid "Syncing"
 msgstr "Синхронизация"
@@ -8119,91 +7467,78 @@ msgstr "Автоматически очищать «Спам»"
 msgid "Empty Trash automatically"
 msgstr "Автоматически очищать «Корзину»"
 
-#, fuzzy
 msgid "Move list mail to Trash"
-msgstr "Переместить этот черновик в «Корзину»"
+msgstr "Переместить почту из списка в корзину"
 
 msgid ""
 "Inbox mail with an unsubscribe link older than this gets trashed unless it's "
 "starred."
-msgstr ""
+msgstr "Входящие письма со ссылкой для отказа от подписки удаляются, если они не отмечены звездочкой."
 
 msgid "Keep mail cached"
-msgstr ""
+msgstr "Хранить почту в кэше"
 
 msgid "Leaves out Trash, Junk and Drafts."
-msgstr ""
+msgstr "Исключает мусор, мусор и черновики."
 
-#, fuzzy
 msgid "Include attachments"
-msgstr "Нет вложений"
+msgstr "Включить вложения"
 
 msgid "Can consume a lot of hard drive space."
-msgstr ""
+msgstr "Может занимать много места на жестком диске."
 
-#, fuzzy
 msgid "Copy mail to On This Computer"
-msgstr "На этом компьютере"
+msgstr "Копировать почту на этот компьютер"
 
 msgid ""
 "Downloads copies of every message from every folder of this account to this "
 "computer (except Trash, Junk and Drafts) and stores them in On This Computer."
-msgstr ""
+msgstr "Загружает копии каждого сообщения из каждой папки этой учетной записи на этот компьютер (кроме «Корзины», «Нежелательной почты» и «Черновиков») и сохраняет их в папке «На этом компьютере»."
 
-#, fuzzy
 msgid "Import"
-msgstr "Импортировать…"
+msgstr "Импорт"
 
 msgid "Mail already here is not imported again."
-msgstr ""
+msgstr "Почта уже сюда снова не импортируется."
 
-#, fuzzy
 msgid "Maildir folders"
-msgstr "Все папки"
+msgstr "Папки почтового каталога"
 
 msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
-msgstr ""
+msgstr "«Эволюция на этом компьютере», Dovecot и другие деревья Maildir."
 
-#, fuzzy
 msgid "Mbox files"
-msgstr "Все файлы"
+msgstr "Mbox-файлы"
 
-#, fuzzy
 msgid "Thunderbird's folders and other mbox files."
-msgstr "Папки под строкой «Фильтры»."
+msgstr "Папки Thunderbird и другие файлы mbox."
 
-#, fuzzy
 msgid "Microsoft 365"
-msgstr "Microsoft 365 / Outlook"
+msgstr "Майкрософт 365"
 
-#, fuzzy
 msgid "Search the organization directory"
-msgstr "Сохранить каталог?"
+msgstr "Поиск в каталоге организации"
 
 msgid "Suggests people from your organization as you type."
-msgstr ""
+msgstr "По мере ввода предлагает людей из вашей организации."
 
-#, fuzzy
 msgid "Suggest only from this account"
-msgstr "Показывать только эту учётную запись"
+msgstr "Предлагать только с этой учётной записи"
 
 msgid "Suggestions come from the directory and this account's mail only."
-msgstr ""
+msgstr "Предложения поступают только из каталога и почты этой учётной записи."
 
 msgid "Show sensitivity label names"
-msgstr ""
+msgstr "Показывать названия меток конфиденциальности"
 
 msgid "Shows a label's name when a message gives only its ID."
-msgstr ""
+msgstr "Показывает имя метки, когда в сообщении указан только ее идентификатор."
 
 msgid "Folder Order"
 msgstr "Порядок папок"
 
-#, fuzzy
 msgid "Also in the right-click menu of its Folders heading."
-msgstr ""
-"Способ сортировки папок этой учётной записи на боковой панели. Настраивается "
-"также в контекстном меню заголовка «Папки»."
+msgstr "Также в контекстном меню заголовка «Папки»."
 
 msgid "Special Folders"
 msgstr "Специальные папки"
@@ -8211,23 +7546,19 @@ msgstr "Специальные папки"
 msgid ""
 "Follows the server's own markings unless you pick a folder. Nothing already "
 "on the server moves."
-msgstr ""
+msgstr "Следует собственной маркировке сервера, если вы не выберете папку. На сервере уже ничего не перемещается."
 
 msgid "Save a copy of sent mail in"
 msgstr "Сохранять копию отправленных писем в"
 
-#, fuzzy
 msgid "Save a copy of replies in"
-msgstr "Сохранять копию отправленных писем в"
+msgstr "Сохраняйте копии ответов в"
 
 msgid "Server saves its own copy of sent mail"
 msgstr "Сервер сам сохраняет копию отправленных писем"
 
-#, fuzzy
 msgid "For Gmail and others that file sent mail themselves."
-msgstr ""
-"Для Gmail и других сервисов, сохраняющих отправленные письма автоматически. "
-"Отключает параметр «Сохранять копию» выше."
+msgstr "Для Gmail и других этот файл отправлял почту самостоятельно."
 
 msgid "Templates"
 msgstr "Шаблоны"
@@ -8238,13 +7569,13 @@ msgstr "Скрытые папки"
 msgid ""
 "Hidden folders are not synced. Hide one from its right-click menu in the "
 "sidebar."
-msgstr ""
+msgstr "Скрытые папки не синхронизируются. Скройте один из контекстного меню на боковой панели."
 
 msgid "No hidden folders."
 msgstr "Скрытых папок нет."
 
 msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr ""
+msgstr "Ключи управляются в OpenPGP на боковой панели."
 
 msgid "Automatic uses the key whose address matches."
 msgstr "В автоматическом режиме используется ключ с совпадающим адресом."
@@ -8252,18 +7583,14 @@ msgstr "В автоматическом режиме используется к
 msgid "Sign messages by default"
 msgstr "Подписывать сообщения по умолчанию"
 
-#, fuzzy
 msgid "Hide the subject of encrypted mail"
-msgstr "Скрывать тему"
+msgstr "Скрыть тему зашифрованного письма"
 
 msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr ""
+msgstr "Тему видят только получатели. Другие видят «...»."
 
-#, fuzzy
 msgid "Your password is kept in the system keyring, never in plain text."
-msgstr ""
-"Ваш пароль хранится в системной связке ключей (secret-service), а не в "
-"открытом виде на диске."
+msgstr "Ваш пароль хранится в системной связке ключей, а не в виде обычного текста."
 
 msgid "Search senders"
 msgstr "Поиск отправителей"
@@ -8278,18 +7605,13 @@ msgstr ""
 msgid "Allow this sender"
 msgstr "Разрешить этого отправителя"
 
-#, fuzzy
 msgid "Blocked Senders"
-msgstr "Разрешённые отправители"
+msgstr "Заблокированные отправители"
 
-#, fuzzy
 msgid ""
 "Their mail is moved to Trash on arrival. Enter an address, or a domain like "
 "\"example.com\" to apply to all senders from that domain."
-msgstr ""
-"Входящая почта от этих отправителей удаляется автоматически (перемещается в "
-"«Корзину»). Введите адрес электронной почты или целый домен, например "
-"«example.com», чтобы заблокировать всех отправителей с него."
+msgstr "Их почта перемещается в корзину по прибытии. Введите адрес или домен, например «example.com», чтобы применить его ко всем отправителям из этого домена."
 
 msgid "Address or domain"
 msgstr "Адрес или домен"
@@ -8297,19 +7619,12 @@ msgstr "Адрес или домен"
 msgid "Block this sender"
 msgstr "Заблокировать этого отправителя"
 
-#, fuzzy
 msgid ""
 "Tags are stored on the server as IMAP keywords, so Thunderbird and other "
 "clients show them too.\n"
 "\n"
 "Drag to reorder. The first nine are mapped to the 1–9 keys."
-msgstr ""
-"Отмечайте сообщения одной или несколькими цветными тегами. Теги хранятся на "
-"почтовом сервере как ключевые слова IMAP, поэтому Thunderbird и другие "
-"клиенты будут отображать их так же.\n"
-"\n"
-"Перетащите тег, чтобы изменить порядок: порядок здесь соответствует боковой "
-"панели, а первые девять вызываются клавишами 1–9."
+msgstr "Теги хранятся на сервере как ключевые слова IMAP, поэтому Thunderbird и другие клиенты также их отображают. Перетащите, чтобы изменить порядок. Первые девять назначены клавишам 1–9."
 
 msgid "Add Tag…"
 msgstr "Добавить тег…"
@@ -8321,20 +7636,17 @@ msgstr ""
 msgid "Style"
 msgstr "Стиль оформления"
 
-#, fuzzy
 msgid "Messages have their own setting under Reading."
-msgstr ""
-"Сам интерфейс приложения. У содержимого сообщений свои настройки в разделе "
-"«Чтение»."
+msgstr "Сообщения имеют свои собственные настройки в разделе «Чтение»."
 
 msgid "Text size"
 msgstr "Размер текста"
 
 msgid "Adjusts the interface and message text size."
-msgstr ""
+msgstr "Настраивает интерфейс и размер текста сообщения."
 
 msgid "Use your desktop environment's icon set"
-msgstr ""
+msgstr "Используйте набор значков среды рабочего стола"
 
 msgid "This window opens to"
 msgstr "При открытии окна показывать"
@@ -8345,17 +7657,16 @@ msgstr "Панель инструментов"
 msgid ""
 "Drag buttons between the groups. The right group folds into ⋯ when the pane "
 "is narrow."
-msgstr ""
+msgstr "Перетаскивайте кнопки между группами. Правая группа сворачивается в ⋯, когда панель узкая."
 
 msgid "Always fold the right group into ⋯"
-msgstr ""
+msgstr "Всегда сворачивать правую группу в ⋯"
 
 msgid "Compose in the main window"
 msgstr "Создание писем в основном окне"
 
-#, fuzzy
 msgid "Off opens new messages in their own window."
-msgstr "Сначала откройте сообщение, затем распечатайте его."
+msgstr "Выкл. открывает новые сообщения в отдельном окне."
 
 msgid "Reply and forward in the main window"
 msgstr "Ответ и пересылка в основном окне"
@@ -8364,34 +7675,31 @@ msgid "Show From, To and Subject in the reply panel"
 msgstr "Показывать поля «От», «Кому» и «Тема» в панели ответа"
 
 msgid "Off folds them behind a button."
-msgstr ""
+msgstr "Если выключено, кнопки скрываются за кнопкой."
 
 msgid "Send new messages from"
 msgstr "Отправлять новые сообщения с адреса"
 
-#, fuzzy
 msgid "Replies answer from the address they were sent to."
-msgstr ""
-"Ответы по-прежнему отправляются с того адреса, на который пришло исходное "
-"письмо."
+msgstr "Ответы отвечают с адреса, на который они были отправлены."
 
 msgid "Paste as plain text"
 msgstr "Вставлять как обычный текст"
 
 msgid "Right-clicking the editor offers both either way."
-msgstr ""
+msgstr "Щелчок правой кнопкой мыши по редактору предлагает оба варианта."
 
 msgid "Return starts a new paragraph"
 msgstr "Клавиша Enter создаёт новый абзац"
 
 msgid "Shift+Return does the other."
-msgstr ""
+msgstr "Shift+Return делает другое."
 
 msgid "Formatting toolbar"
 msgstr "Панель форматирования"
 
 msgid "For new messages. The toolbar's chevron toggles it."
-msgstr ""
+msgstr "Для новых сообщений. Шеврон на панели инструментов переключает его."
 
 msgid "Always collapsed"
 msgstr "Всегда свёрнута"
@@ -8399,25 +7707,23 @@ msgstr "Всегда свёрнута"
 msgid "Always expanded"
 msgstr "Всегда развёрнута"
 
-#, fuzzy
 msgid "Start new messages in"
-msgstr "Составлять сообщения в"
+msgstr "Начать новые сообщения в"
 
 msgid "For rich text. Default leaves it to the recipient's own font."
-msgstr ""
+msgstr "Для насыщенного текста. По умолчанию это оставляется на усмотрение собственного шрифта получателя."
 
 msgid "For rich text, in points."
-msgstr ""
+msgstr "Для форматированного текста в пунктах."
 
 msgid "Default zoom"
 msgstr "Масштаб по умолчанию"
 
-#, fuzzy
 msgid "Reply in the original's format"
-msgstr "Ответить с прикреплением файлов"
+msgstr "Ответ в формате оригинала"
 
 msgid "Plain-text mail is answered in plain text."
-msgstr ""
+msgstr "На письмо с открытым текстом отвечают в виде обычного текста."
 
 msgid "Signature in replies"
 msgstr "Подпись в ответах"
@@ -8426,62 +7732,54 @@ msgid "Separator line above the signature"
 msgstr "Разделительная линия перед подписью"
 
 msgid "The standard “-- ” line, which other mail apps recognize."
-msgstr ""
+msgstr "Стандартная строка «--», которую распознают другие почтовые приложения."
 
-#, fuzzy
 msgid "Fold quoted text"
-msgstr "Показать цитируемый текст"
+msgstr "Свернуть цитируемый текст"
 
 msgid "Replies and forwards open with the original behind •••."
-msgstr ""
+msgstr "Ответы и пересылки открываются с оригиналом позади •••."
 
-#, fuzzy
 msgid "Undo Send"
-msgstr "Отменить"
+msgstr "Отменить отправку"
 
 msgid "How long Undo is offered after sending."
-msgstr ""
+msgstr "Как долго предлагается отменить действие после отправки."
 
 msgid "Request read receipts"
-msgstr ""
+msgstr "Запрашивать уведомления о прочтении"
 
-#, fuzzy
 msgid "Returned receipts"
-msgstr "Скрыть получателей"
+msgstr "Возвращенные квитанции"
 
 msgid "Sent mail shows who read it; the receipt goes here."
-msgstr ""
+msgstr "В отправленной почте видно, кто прочитал письмо; уведомления приходят сюда."
 
-#, fuzzy
 msgid "Keep in Inbox"
-msgstr "Оставить во «Входящих»"
+msgstr "Сохранить во Входящих"
 
-#, fuzzy
 msgid "Reply Header"
-msgstr "Адрес для ответа"
+msgstr "Заголовок ответа"
 
 msgid "{name}, {address}, {date} and {time} are filled in from the original."
-msgstr ""
+msgstr "{name}, {address}, {date} и {time} заполняются из оригинала."
 
-#, fuzzy
 msgid "Line above the quoted message"
-msgstr "Над цитируемым сообщением"
+msgstr "Строка над цитируемым сообщением"
 
-#, fuzzy
 msgid "Restore Default"
-msgstr "Восстановить по умолчанию"
+msgstr "Восстановить настройки по умолчанию"
 
-#, fuzzy
 msgid "Attachment Reminder"
-msgstr "Панель вложений"
+msgstr "Напоминание о вложении"
 
 msgid ""
 "Send asks first when the message mentions one of these words and nothing is "
 "attached."
-msgstr ""
+msgstr "Отправить сначала спрашивает, когда в сообщении упоминается одно из этих слов и ничего не прикреплено."
 
 msgid "Words, separated by commas"
-msgstr ""
+msgstr "Слова, разделенные запятыми"
 
 msgid "Spelling"
 msgstr "Орфография"
@@ -8490,7 +7788,7 @@ msgid "Check spelling as you type"
 msgstr "Проверять орфографию при вводе"
 
 msgid "Right-click a word for corrections."
-msgstr ""
+msgstr "Щелкните правой кнопкой мыши слово, чтобы внести исправления."
 
 msgid "Languages"
 msgstr "Языки"
@@ -8499,42 +7797,37 @@ msgid "Added words"
 msgstr "Добавленные слова"
 
 msgid "Changes apply after a restart."
-msgstr ""
+msgstr "Изменения вступят в силу после перезагрузки."
 
 msgid "Mark as read"
 msgstr "Отметить как прочитанное"
 
-#, fuzzy
 msgid "Conversations mark each message as it comes into view."
-msgstr ""
-"Условие, при котором открытое письмо считается прочитанным. В обсуждениях "
-"каждое сообщение отмечается прочитанным по мере появления на экране."
+msgstr "Разговоры отмечают каждое сообщение по мере его появления."
 
 msgid "Message appearance"
 msgstr "Оформление сообщений"
 
 msgid "Light / Dark Mode switch"
-msgstr ""
+msgstr "Переключатель светлых/темных режимов"
 
-#, fuzzy
 msgid "Displays in the message header for each message."
-msgstr "Открывает сообщение с готовым черновиком пересылки."
+msgstr "Отображается в заголовке каждого сообщения."
 
-#, fuzzy
 msgid "Show account in message header"
-msgstr "Переключатель режима чтения"
+msgstr "Показывать учётную запись в заголовке сообщения"
 
 msgid "The account a message is in, above its subject."
-msgstr ""
+msgstr "Учетная запись, в которой находится сообщение, указана над его темой."
 
 msgid "Ctrl+0 returns to the default."
-msgstr ""
+msgstr "Ctrl+0 возвращает значение по умолчанию."
 
 msgid "Use my own font"
 msgstr "Использовать свой шрифт"
 
 msgid "The font below replaces the sender's."
-msgstr ""
+msgstr "Шрифт ниже заменяет шрифт отправителя."
 
 msgid "Message font"
 msgstr "Шрифт сообщений"
@@ -8546,13 +7839,13 @@ msgid "Use my own colors"
 msgstr "Использовать свои цвета"
 
 msgid "Ignores the sender's colors. Pictures stay; links use the accent color."
-msgstr ""
+msgstr "Игнорирует цвета отправителя. Картинки остаются; ссылки используют акцентный цвет."
 
 msgid "Plain-text messages in monospace"
 msgstr "Моноширинный шрифт для обычного текста"
 
 msgid "Formatted messages are not affected."
-msgstr ""
+msgstr "Отформатированные сообщения не затрагиваются."
 
 msgid "Monospace font"
 msgstr "Моноширинный шрифт"
@@ -8564,7 +7857,7 @@ msgid "Single messages as cards"
 msgstr "Одиночные сообщения в виде карточек"
 
 msgid "Off fills the pane edge to edge."
-msgstr ""
+msgstr "Выкл. заполняет панель от края до края."
 
 msgid "Always show recipients"
 msgstr "Всегда показывать получателей"
@@ -8573,30 +7866,22 @@ msgid "Name the OpenPGP result"
 msgstr "Подписывать статус OpenPGP текстом"
 
 msgid "Off shows the icons alone."
-msgstr ""
+msgstr "Выкл. отображает только значки."
 
-#, fuzzy
 msgid "Find bar position"
-msgstr "Действия"
+msgstr "Найти положение бара"
 
-#, fuzzy
 msgid "A message's text alone, without the sender's layout, colors and fonts."
-msgstr ""
-"Режим чтения отображает сообщение в виде чистого текста в едином простом "
-"формате, без оформления, цветов и шрифтов отправителя."
+msgstr "Только текст сообщения, без макета, цветов и шрифтов отправителя."
 
-#, fuzzy
 msgid "Show Reader View switch in message header"
-msgstr "Переключатель режима чтения"
+msgstr "Показывать переключатель режима чтения в заголовке сообщения"
 
 msgid "When a message is opened"
 msgstr "При открытии сообщения"
 
-#, fuzzy
 msgid "The header's switch still changes the open message."
-msgstr ""
-"Каждое сообщение открывается в режиме чтения. Переключатель в заголовке по-"
-"прежнему позволяет изменить режим для текущего сообщения."
+msgstr "Переключатель заголовка по-прежнему меняет открытое сообщение."
 
 msgid "Printing"
 msgstr "Печать"
@@ -8610,45 +7895,41 @@ msgstr "Дата печати"
 msgid "Wider left margin"
 msgstr "Увеличенное левое поле"
 
-#, fuzzy
 msgid "25 mm, so punched holes miss the text."
-msgstr ""
-"Оставлять отступ 25 мм слева на каждой странице, чтобы отверстия дырокола не "
-"заслоняли текст."
+msgstr "25 мм, поэтому перфорированные отверстия не попадают в текст."
 
 msgid "Applies after a restart."
-msgstr ""
+msgstr "Применяется после перезагрузки."
 
-#, fuzzy
 msgid "Renderer"
-msgstr "Отправитель"
+msgstr "Рендерер"
 
 msgid "Try OpenGL or Software on older graphics. Applies after a restart."
-msgstr ""
+msgstr "Попробуйте OpenGL или программное обеспечение на старой графике. Применяется после перезагрузки."
 
 msgid "Keep running in the background"
 msgstr "Продолжать работу в фоновом режиме"
 
 msgid "Closing the window hides it. Quit from Background Apps."
-msgstr ""
+msgstr "Закрытие окна скрывает это. Выйдите из фоновых приложений."
 
 msgid "Start at login"
 msgstr "Запускать при входе в систему"
 
 msgid "Starts hidden."
-msgstr ""
+msgstr "Начинается скрыто."
 
 msgid "Start fullscreen"
-msgstr ""
+msgstr "Начать полноэкранный режим"
 
 msgid "F11 switches fullscreen on and off."
-msgstr ""
+msgstr "F11 включает и выключает полноэкранный режим."
 
 msgid "Show a tray icon"
 msgstr "Показывать значок в трее"
 
 msgid "To use on GNOME, install an AppIndicator extension."
-msgstr ""
+msgstr "Для использования в GNOME установите расширение AppIndicator."
 
 msgid "Tray icon"
 msgstr "Значок в трее"
@@ -8660,47 +7941,43 @@ msgid "Unread count on the app icon"
 msgstr "Счётчик непрочитанных на значке приложения"
 
 msgid "To use on GNOME, install a dock extension such as Dash to Dock."
-msgstr ""
+msgstr "Для использования в GNOME установите расширение док-станции, например Dash to Dock."
 
 msgid "Single-key shortcuts"
 msgstr "Одноклавишные сочетания"
 
 msgid "Press Ctrl+? to list all shortcuts."
-msgstr ""
+msgstr "Нажать Ctrl+? чтобы перечислить все ярлыки."
 
-#, fuzzy
 msgid "Gmail keys"
-msgstr "Адрес электронной почты"
+msgstr "Ключи Gmail"
 
 msgid "Swaps the single-key shortcuts for Gmail equivalents."
-msgstr ""
+msgstr "Заменяет одноклавишные сочетания клавиш эквивалентами Gmail."
 
-#, fuzzy
 msgid "Status bar"
-msgstr "Строка состояния ({n})"
+msgstr "Строка состояния"
 
 msgid "Console mode"
 msgstr "Режим консоли"
 
 msgid "Shows a console in the status bar."
-msgstr ""
+msgstr "Показывает консоль в строке состояния."
 
 msgid "For bug reports. Addresses are cut to their domain for privacy."
-msgstr ""
+msgstr "Для отчетов об ошибках. Адреса сокращены до их домена в целях конфиденциальности."
 
-#, fuzzy
 msgid "Downloaded mail"
-msgstr "Скачать…"
+msgstr "Скачанная почта"
 
-#, fuzzy
 msgid "Remove…"
-msgstr "Удалить"
+msgstr "Удалить…"
 
 msgid "Keep downloaded mail"
-msgstr ""
+msgstr "Сохранять загруженную почту"
 
 msgid "Mail inside an account's offline period is kept."
-msgstr ""
+msgstr "Почта за период автономной работы учётной записи сохраняется."
 
 msgid "GNOME Files Integration"
 msgstr "Интеграция с «Файлами» GNOME"
@@ -8708,20 +7985,19 @@ msgstr "Интеграция с «Файлами» GNOME"
 msgid ""
 "Adds “Send with Hylki” to the right-click menu in Files. Needs the nautilus-"
 "python package and a restart of Files."
-msgstr ""
+msgstr "Добавляет «Отправить с помощью Hylki» в контекстное меню «Файлов». Требуется пакет nautilus-python и перезапуск Files."
 
 msgid "Right-click menu entry"
 msgstr "Пункт контекстного меню"
 
-#, fuzzy
 msgid "Install nautilus-python first"
-msgstr "Сначала установите пакет nautilus-python: вставьте это в терминал"
+msgstr "Сначала установите nautilus-python"
 
 msgid "Restart Files"
 msgstr "Перезапустить «Файлы»"
 
 msgid "Closes every Files window, like “nautilus -q”."
-msgstr ""
+msgstr "Закрывает все окна файлов, например «nautilus -q»."
 
 msgid "Restart"
 msgstr "Перезапустить"
@@ -8733,7 +8009,7 @@ msgid "Default large attachments behavior"
 msgstr "Действие по умолчанию для крупных вложений"
 
 msgid "Without a cloud storage account, files are attached."
-msgstr ""
+msgstr "Без учетной записи облачного хранилища файлы прикрепляются."
 
 msgid "Size limit"
 msgstr "Ограничение по размеру"
