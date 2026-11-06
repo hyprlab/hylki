@@ -3243,6 +3243,19 @@ msgstr "Minden melléklet mentése egy mappába"
 msgid "Save Attachment"
 msgstr "Melléklet mentése"
 
+#, fuzzy
+msgid "Open “{name}”?"
+msgstr "Kiüríti ezt: „{name}”?"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+#, fuzzy
+msgid "Open Anyway"
+msgstr "Küldés most"
+
 msgid "The file could not be opened"
 msgstr "A fájl nem megnyitható"
 

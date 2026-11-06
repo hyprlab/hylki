@@ -3080,6 +3080,19 @@ msgstr "Guardar todos los archivos adjuntos en una carpeta"
 msgid "Save Attachment"
 msgstr "Guardar archivo adjunto"
 
+#, fuzzy
+msgid "Open “{name}”?"
+msgstr "¿Vaciar «{name}»?"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+#, fuzzy
+msgid "Open Anyway"
+msgstr "Enviar ahora"
+
 msgid "The file could not be opened"
 msgstr "No se pudo abrir el archivo"
 

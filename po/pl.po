@@ -3295,6 +3295,19 @@ msgstr "Zapisz wszystkie załączniki w katalogu"
 msgid "Save Attachment"
 msgstr "Zapisz załącznik"
 
+#, fuzzy
+msgid "Open “{name}”?"
+msgstr "Czy opróżnić katalog „{name}”?"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+#, fuzzy
+msgid "Open Anyway"
+msgstr "Wyślij teraz"
+
 msgid "The file could not be opened"
 msgstr "Nie udało się otworzyć pliku"
 

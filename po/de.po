@@ -3100,6 +3100,19 @@ msgstr "Jeden Anhang in einem Ordner speichern"
 msgid "Save Attachment"
 msgstr "Anhang speichern"
 
+#, fuzzy
+msgid "Open “{name}”?"
+msgstr "»{name}« leeren?"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+#, fuzzy
+msgid "Open Anyway"
+msgstr "Trotzdem senden"
+
 msgid "The file could not be opened"
 msgstr "Die Datei konnte nicht geöffnet werden"
 

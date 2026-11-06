@@ -3125,6 +3125,19 @@ msgstr "Desa tots els adjunts en una carpeta"
 msgid "Save Attachment"
 msgstr "Desa l'adjunt"
 
+#, fuzzy
+msgid "Open “{name}”?"
+msgstr "Vols buidar «{name}»?"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+#, fuzzy
+msgid "Open Anyway"
+msgstr "Envia ara"
+
 msgid "The file could not be opened"
 msgstr "No s'ha pogut obrir el fitxer"
 

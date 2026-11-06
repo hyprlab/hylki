@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Added: a warning before opening a program or a script** (#598, by James
+  Reilly). An attachment such as a `.desktop`, `.sh`, `.AppImage`, `.jar` or
+  `.exe` file, or one whose first bytes say it is a program whatever its name,
+  asks before it opens.
+
 - **Fixed: Bcc recipients' OpenPGP keys showed in encrypted mail** (#595, by
   James Reilly). Every copy of an encrypted message named the key of each
   recipient, so the To and Cc could tell whose keys were Bcc'd. A Bcc

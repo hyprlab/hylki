@@ -3103,6 +3103,19 @@ msgstr "Αποθήκευση κάθε συνημμένου σε φάκελο"
 msgid "Save Attachment"
 msgstr "Αποθήκευση συνημμένου"
 
+#, fuzzy
+msgid "Open “{name}”?"
+msgstr "Άδειασμα του «{name}»;"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+#, fuzzy
+msgid "Open Anyway"
+msgstr "Αποστολή τώρα"
+
 msgid "The file could not be opened"
 msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
 

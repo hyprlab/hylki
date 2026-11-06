@@ -3092,6 +3092,19 @@ msgstr "Enregistrer chaque pièce jointe dans un dossier"
 msgid "Save Attachment"
 msgstr "Enregistrer la pièce jointe"
 
+#, fuzzy
+msgid "Open “{name}”?"
+msgstr "Vider « {name} » ?"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+#, fuzzy
+msgid "Open Anyway"
+msgstr "Envoyer maintenant"
+
 msgid "The file could not be opened"
 msgstr "Le fichier n’a pas pu être ouvert"
 

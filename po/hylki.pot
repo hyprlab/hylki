@@ -2866,6 +2866,17 @@ msgstr ""
 msgid "Save Attachment"
 msgstr ""
 
+msgid "Open “{name}”?"
+msgstr ""
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+msgid "Open Anyway"
+msgstr ""
+
 msgid "The file could not be opened"
 msgstr ""
 
