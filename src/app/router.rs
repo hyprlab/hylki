@@ -268,6 +268,7 @@ impl AppModel {
             | AppMsg::PrintPreview
             | AppMsg::PrintMessage
             | AppMsg::Shortcut(..)
+            | AppMsg::EscapeKey
             | AppMsg::ZoomKey(..)
             | AppMsg::ComposerKey(..)
             | AppMsg::ZoomMessage(..)

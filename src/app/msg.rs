@@ -873,6 +873,9 @@ pub(crate) enum AppMsg {
     PrintMessage,
     /// A single-key shortcut fired.
     Shortcut(Shortcut),
+    /// Escape outside a text field: takes back the last message still
+    /// waiting out its Undo Send delay, else goes back to the list.
+    EscapeKey,
     /// The zoom keys in the main window: the inline composer's while it has
     /// the focus and its format zooms, else the message's.
     ZoomKey(i8),
