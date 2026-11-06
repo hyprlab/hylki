@@ -206,23 +206,7 @@ fn portal_open_file(path: std::path::PathBuf, ask: bool, parent: Option<gtk::Win
 /// else's access — an attacker who pre-creates it on a shared host would
 /// otherwise get every attachment the user opens.
 fn attachment_dir() -> Option<std::path::PathBuf> {
-    // Inside Flatpak /tmp is PRIVATE to the sandbox: the document portal
-    // validates an exported fd by re-opening its path in the HOST namespace,
-    // so a /tmp-staged file fails validation and every portal open dies
-    // silently before any UI. $XDG_RUNTIME_DIR/app/$FLATPAK_ID is
-    // bind-mounted from the host at the SAME path — the one temp location
-    // both sides of the sandbox agree on (and it's session-scoped tmpfs,
-    // like /tmp). Native builds keep /tmp.
-    let dir = match std::env::var("FLATPAK_ID") {
-        Ok(app_id) => {
-            let runtime = std::env::var("XDG_RUNTIME_DIR").ok()?;
-            std::path::Path::new(&runtime)
-                .join("app")
-                .join(app_id)
-                .join("vireo-attachments")
-        }
-        Err(_) => std::env::temp_dir().join("vireo-attachments"),
-    };
+    let dir = staging_dir()?;
     #[cfg(unix)]
     {
         use std::os::unix::fs::{DirBuilderExt, MetadataExt, PermissionsExt};
@@ -301,14 +285,48 @@ fn our_uid() -> u32 {
     unsafe { getuid() }
 }
 
+/// Where opened attachments are staged.
+///
+/// Inside Flatpak /tmp is PRIVATE to the sandbox: the document portal
+/// validates an exported fd by re-opening its path in the HOST namespace,
+/// so a /tmp-staged file fails validation and every portal open dies
+/// silently before any UI. $XDG_RUNTIME_DIR/app/$FLATPAK_ID is
+/// bind-mounted from the host at the SAME path — the one temp location
+/// both sides of the sandbox agree on (and it's session-scoped tmpfs,
+/// like /tmp). Native builds keep /tmp.
+fn staging_dir() -> Option<std::path::PathBuf> {
+    staging_dir_for(
+        std::env::var("FLATPAK_ID").ok().as_deref(),
+        std::env::var("XDG_RUNTIME_DIR").ok().as_deref(),
+        &std::env::temp_dir(),
+    )
+}
+
+fn staging_dir_for(
+    flatpak_id: Option<&str>,
+    runtime_dir: Option<&str>,
+    temp_dir: &std::path::Path,
+) -> Option<std::path::PathBuf> {
+    match flatpak_id {
+        Some(app_id) => Some(
+            std::path::Path::new(runtime_dir?)
+                .join("app")
+                .join(app_id)
+                .join("vireo-attachments"),
+        ),
+        None => Some(temp_dir.join("vireo-attachments")),
+    }
+}
+
 /// Delete anything left in the attachment staging directory.
 ///
 /// Opened attachments used to accumulate in `/tmp` for the life of the machine —
 /// decrypted, readable, and long past the point the user considers them gone.
 /// Called once at startup, because the helper application the user opened a file
-/// with may still have it open while Hylki is running.
+/// with may still have it open while Hylki is running. It clears the directory
+/// [`attachment_dir`] stages in, which under Flatpak is not /tmp.
 pub(crate) fn purge_attachment_dir() {
-    let dir = std::env::temp_dir().join("vireo-attachments");
+    let Some(dir) = staging_dir() else { return };
     if !dir.exists() {
         return;
     }
@@ -352,5 +370,26 @@ mod tests {
         assert_eq!(name("b.txt"), "b-1.txt");
         assert_eq!(std::fs::read(&target).unwrap(), b"keep");
         let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// The startup purge and the staging must agree on the directory:
+    /// under Flatpak the purge once cleared /tmp while the files sat in the
+    /// runtime directory.
+    #[test]
+    fn the_purge_clears_where_attachments_are_staged() {
+        let tmp = std::path::Path::new("/tmp");
+        assert_eq!(
+            staging_dir_for(Some("co.hyprlab.Hylki"), Some("/run/user/1000"), tmp),
+            Some(std::path::PathBuf::from(
+                "/run/user/1000/app/co.hyprlab.Hylki/vireo-attachments"
+            ))
+        );
+        assert_eq!(
+            staging_dir_for(None, Some("/run/user/1000"), tmp),
+            Some(std::path::PathBuf::from("/tmp/vireo-attachments"))
+        );
+        // Without a runtime directory a Flatpak has nowhere to stage, and
+        // nothing to purge.
+        assert_eq!(staging_dir_for(Some("co.hyprlab.Hylki"), None, tmp), None);
     }
 }

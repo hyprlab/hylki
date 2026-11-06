@@ -89,7 +89,9 @@ pub(super) fn write(url: &str, entry: &Entry) {
 }
 
 fn write_in(dir: &Path, url: &str, entry: &Entry) -> std::io::Result<u64> {
-    std::fs::create_dir_all(dir)?;
+    // What was fetched for a message says which mail was opened: the
+    // directory and its files are the owner's alone.
+    crate::config::private_dir(dir)?;
     let name = file_name(url);
     // Written aside and renamed into place, so a reader never sees half a file.
     let tmp = dir.join(format!("{name}.part"));
@@ -103,7 +105,7 @@ fn write_in(dir: &Path, url: &str, entry: &Entry) -> std::io::Result<u64> {
     data.extend_from_slice(content_type.as_bytes());
     data.push(b'\n');
     data.extend_from_slice(&entry.bytes);
-    std::fs::write(&tmp, &data)?;
+    crate::config::write_private_bytes(&tmp, &data)?;
     std::fs::rename(&tmp, dir.join(name))?;
     Ok(data.len() as u64)
 }
@@ -138,6 +140,7 @@ fn trim_files(dir: &Path, limit: u64, now: SystemTime) -> u64 {
             let _ = std::fs::remove_file(e.path());
             continue;
         }
+        tighten(&e.path(), &meta);
         files.push((modified, meta.len(), e.path()));
     }
     let mut total: u64 = files.iter().map(|f| f.1).sum();
@@ -155,6 +158,19 @@ fn trim_files(dir: &Path, limit: u64, now: SystemTime) -> u64 {
     }
     total
 }
+
+/// An entry written before the cache was kept private is made so at the
+/// first trim of a session.
+#[cfg(unix)]
+fn tighten(path: &Path, meta: &std::fs::Metadata) {
+    use std::os::unix::fs::PermissionsExt;
+    if meta.permissions().mode() & 0o077 != 0 {
+        let _ = std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o600));
+    }
+}
+
+#[cfg(not(unix))]
+fn tighten(_path: &Path, _meta: &std::fs::Metadata) {}
 
 #[cfg(test)]
 mod tests {
@@ -180,6 +196,33 @@ mod tests {
         assert_eq!(back.bytes, entry.bytes);
         assert!(read_in(&dir, "https://a.example/y.png", now).is_none());
         assert!(read_in(&dir, "https://a.example/x.png", now + MAX_AGE).is_none());
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn the_cache_is_its_owners_alone() {
+        use std::os::unix::fs::PermissionsExt;
+        let mode = |p: &Path| std::fs::metadata(p).unwrap().permissions().mode() & 0o777;
+        let dir = temp_dir("private");
+        // As an earlier version left it: open to every user.
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::set_permissions(&dir, std::fs::Permissions::from_mode(0o755)).unwrap();
+        let old = dir.join(file_name("https://a.example/old.png"));
+        std::fs::write(&old, b"image/png\nold").unwrap();
+        std::fs::set_permissions(&old, std::fs::Permissions::from_mode(0o644)).unwrap();
+        let entry = Entry {
+            content_type: "image/png".into(),
+            bytes: b"new".to_vec(),
+        };
+        write_in(&dir, "https://a.example/new.png", &entry).unwrap();
+        assert_eq!(mode(&dir), 0o700);
+        assert_eq!(
+            mode(&dir.join(file_name("https://a.example/new.png"))),
+            0o600
+        );
+        trim_files(&dir, LIMIT, SystemTime::now());
+        assert_eq!(mode(&old), 0o600);
         let _ = std::fs::remove_dir_all(&dir);
     }
 
