@@ -10,9 +10,10 @@ use crate::models::Message;
 /// A dialog listing messages to pick one from: a draft to continue or a
 /// message to reply to for handed-in files, or a template to start from
 /// (#360). `items` pairs each message with its account's name; a search box
-/// narrows them by sender, subject or account. `on_pick` gets `hand_off`
-/// back with the choice, or `None` for "a new message instead"; Cancel
-/// drops it.
+/// narrows them by sender, subject or account. `new_instead` offers a way to
+/// start a fresh message; without it the dialog only picks. `on_pick` gets
+/// `hand_off` back with the choice, or `None` for a new message; Cancel drops
+/// it.
 #[allow(clippy::too_many_arguments)]
 #[allow(deprecated)] // adw::MessageDialog: AlertDialog would change how it looks
 pub(super) fn show_message_picker<T: 'static>(
@@ -23,11 +24,14 @@ pub(super) fn show_message_picker<T: 'static>(
     pick_label: &str,
     items: Vec<(Message, String)>,
     hand_off: T,
+    new_instead: bool,
     on_pick: impl Fn(T, Option<Message>) + 'static,
 ) {
     let dialog = adw::MessageDialog::new(Some(parent), Some(heading), Some(body));
     dialog.add_response("cancel", &i18n("Cancel"));
-    dialog.add_response("new", &i18n("New Message Instead"));
+    if new_instead {
+        dialog.add_response("new", &i18n("New Message Instead"));
+    }
     dialog.add_response("pick", pick_label);
     dialog.set_response_appearance("pick", adw::ResponseAppearance::Suggested);
     dialog.set_response_enabled("pick", false);

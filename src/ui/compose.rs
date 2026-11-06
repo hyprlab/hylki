@@ -28,6 +28,7 @@ mod showcase;
 mod signature;
 mod subject;
 mod suggest;
+mod template;
 #[cfg(test)]
 mod tests;
 mod text_diff;
@@ -964,6 +965,14 @@ impl Component for Compose {
 
                 ComposeInput::SaveDraft => self.on_save_draft(false, widgets, &sender),
                 ComposeInput::SaveAsTemplate => self.on_save_draft(true, widgets, &sender),
+
+                ComposeInput::InsertTemplate => {
+                    let _ = sender.output(ComposeOutput::PickTemplate {
+                        id: self.compose_id,
+                    });
+                }
+
+                ComposeInput::TemplateBody(html) => self.insert_template(html),
 
                 ComposeInput::SaveDraftBody {
                     fields,

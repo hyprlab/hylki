@@ -18,9 +18,8 @@ use super::msg::AppMsg;
 use super::picker::show_message_picker;
 
 impl AppModel {
-    /// New Message from Template (#360): every template the app knows, to
-    /// start a message from.
-    fn show_template_picker(&self, sender: &ComponentSender<Self>) {
+    /// Every template the app knows, under its account's name.
+    fn template_choices(&self) -> Vec<(Message, String)> {
         let mut templates = Vec::new();
         for (account_id, folder) in self.templates_folders() {
             let list = self.listed_or_cached(account_id, &folder);
@@ -28,6 +27,12 @@ impl AppModel {
             templates.extend(list.into_iter().map(|m| (m, name.clone())));
         }
         templates.sort_by_key(|(m, _)| m.subject.to_lowercase());
+        templates
+    }
+
+    /// New Message from Template (#360): every template the app knows, to
+    /// start a message from.
+    fn show_template_picker(&self, sender: &ComponentSender<Self>) {
         let s = sender.clone();
         show_message_picker(
             self.window.upcast_ref(),
@@ -35,10 +40,50 @@ impl AppModel {
             &i18n("The new message starts as a copy of the template you pick."),
             &i18n("No templates yet. Save one from the composer's ⋯ menu with Save as Template."),
             &i18n("Use Template"),
-            templates,
+            self.template_choices(),
             (),
+            true,
             move |(), template| s.input(AppMsg::TemplatePicked(template)),
         );
+    }
+
+    /// A composer's Insert Template: choose text to put into the message
+    /// already being written, keeping its recipients and quote.
+    fn show_insert_template_picker(&self, id: u32, sender: &ComponentSender<Self>) {
+        let s = sender.clone();
+        show_message_picker(
+            self.window.upcast_ref(),
+            &i18n("Insert Template"),
+            &i18n("The template goes into this message above the quoted original."),
+            &i18n("No templates yet. Save one from the composer's ⋯ menu with Save as Template."),
+            &i18n("Insert Template"),
+            self.template_choices(),
+            id,
+            false,
+            move |id, template| s.input(AppMsg::TemplateInsertPicked { id, template }),
+        );
+    }
+
+    /// Fetch a picked template's body, then put it into composer `id`.
+    fn insert_template(&mut self, id: u32, template: Message) {
+        let template = self.with_cached_body(template);
+        if !template.body.is_empty() {
+            self.emit_to_composer(id, ComposeInput::TemplateBody(template.body));
+            return;
+        }
+        let Some(path) = self.resolve_folder_path(&template) else {
+            self.notice_error(i18n("Could not load the template body."));
+            return;
+        };
+        self.send_to(
+            template.account_id,
+            MailRequest::LoadBody {
+                message_id: template.id,
+                path,
+                uid: template.uid,
+            },
+        );
+        self.pending_template_insert = Some((id, template));
     }
 
     /// Each account's Templates folder (#360), in account order.
@@ -80,6 +125,7 @@ impl AppModel {
             &i18n("Attach to This Draft"),
             drafts,
             hand_off,
+            true,
             move |hand_off, draft| s.input(AppMsg::HandOffDraft { hand_off, draft }),
         );
     }
@@ -212,6 +258,47 @@ impl AppModel {
                 Some(m) => self.edit_as_new(m, &sender),
                 None => sender.input(AppMsg::Compose),
             },
+
+            AppMsg::PickTemplate { id } => {
+                let mut waiting = HashSet::new();
+                for (account_id, folder) in self.templates_folders() {
+                    if !self.message_cache.contains_key(&(account_id, folder.id)) {
+                        waiting.insert((account_id, folder.id));
+                        self.send_to(
+                            account_id,
+                            MailRequest::SyncFolder {
+                                folder_id: folder.id,
+                                path: folder.path.clone(),
+                            },
+                        );
+                    }
+                }
+                if waiting.is_empty() {
+                    self.show_insert_template_picker(id, &sender);
+                } else {
+                    self.pending_template_insert_pick = Some((id, waiting));
+                    let s = sender.clone();
+                    gtk::glib::timeout_add_seconds_local_once(3, move || {
+                        s.input(AppMsg::InsertTemplatePickNow { id })
+                    });
+                }
+            }
+
+            AppMsg::InsertTemplatePickNow { id } => {
+                if self
+                    .pending_template_insert_pick
+                    .take_if(|(waiting_id, _)| *waiting_id == id)
+                    .is_some()
+                {
+                    self.show_insert_template_picker(id, &sender);
+                }
+            }
+
+            AppMsg::TemplateInsertPicked { id, template } => {
+                if let Some(template) = template {
+                    self.insert_template(id, template);
+                }
+            }
 
             AppMsg::SaveDraftMessage(out) => {
                 let account_id = out.from_account_id;

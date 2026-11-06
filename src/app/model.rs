@@ -978,6 +978,11 @@ pub(crate) struct AppModel {
     pub(super) pending_draft_pick: Option<(FileHandOff, HashSet<(u32, u32)>)>,
     /// The template picker, waiting on these Templates folders' lists.
     pub(super) pending_template_pick: Option<HashSet<(u32, u32)>>,
+    /// A composer's Insert Template picker, waiting on these Templates
+    /// folders' lists.
+    pub(super) pending_template_insert_pick: Option<(u32, HashSet<(u32, u32)>)>,
+    /// The composer and template whose body is being fetched for insertion.
+    pub(super) pending_template_insert: Option<(u32, Message)>,
     /// Settings → System → GNOME Files: what handed-in files open into and
     /// what happens over the size limit.
     pub(super) files_prefs: config::FilesPrefs,

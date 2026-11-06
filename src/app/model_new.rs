@@ -236,6 +236,8 @@ impl AppModel {
             pending_reply: None,
             pending_draft_pick: None,
             pending_template_pick: None,
+            pending_template_insert_pick: None,
+            pending_template_insert: None,
             pending_edit_as_new: None,
             pending_forward: None,
             pending_to_calendar: None,
