@@ -6344,7 +6344,7 @@ msgstr "Seule la section unifiée reste affichée."
 msgid "Fold up the accounts"
 msgstr "Au-dessus des comptes"
 
-msgid "Collapses account avatars when Focus Mode is enabled"
+msgid "Collapses expanded accounts into their avatars"
 msgstr ""
 
 msgid "Fold accounts with one click"

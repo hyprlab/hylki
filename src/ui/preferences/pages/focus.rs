@@ -104,7 +104,7 @@ impl FocusPage {
             &group,
             F::FoldAccounts,
             i18n("Fold up the accounts"),
-            Some(i18n("Collapses account avatars when Focus Mode is enabled")),
+            Some(i18n("Collapses expanded accounts into their avatars")),
         );
         add(
             &group,

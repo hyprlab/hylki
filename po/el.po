@@ -6363,7 +6363,7 @@ msgstr "Παραμένει μόνο η ενοποιημένη ενότητα."
 msgid "Fold up the accounts"
 msgstr "Πάνω από τους λογαριασμούς"
 
-msgid "Collapses account avatars when Focus Mode is enabled"
+msgid "Collapses expanded accounts into their avatars"
 msgstr ""
 
 msgid "Fold accounts with one click"

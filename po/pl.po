@@ -6705,7 +6705,7 @@ msgstr "Pozostaje tylko sekcja zbiorcza."
 msgid "Fold up the accounts"
 msgstr "Nad kontami"
 
-msgid "Collapses account avatars when Focus Mode is enabled"
+msgid "Collapses expanded accounts into their avatars"
 msgstr ""
 
 msgid "Fold accounts with one click"
