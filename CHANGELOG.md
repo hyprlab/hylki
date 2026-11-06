@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- **Changed: the message list can be dragged narrower**, down to 260 pixels from
+- **Changed: the message list can be dragged narrower**, down to 290 pixels from
   348. The selection bar's buttons draw tighter below 344 pixels so they all
   still fit.
 

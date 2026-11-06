@@ -608,12 +608,12 @@ pub(crate) fn save_about_height(height: i32) {
 
 /// The message-list pane's remembered width (clamped to something sane).
 pub(crate) fn load_list_pane_width() -> i32 {
-    load_state().list_pane_width.clamp(260, 4000)
+    load_state().list_pane_width.clamp(290, 4000)
 }
 
 /// Persist the message-list pane's width (#28).
 pub(crate) fn save_list_pane_width(width: i32) {
-    update_state(|s| s.list_pane_width = width.clamp(260, 4000));
+    update_state(|s| s.list_pane_width = width.clamp(290, 4000));
 }
 
 /// The list's height with the reader below it (#475).
