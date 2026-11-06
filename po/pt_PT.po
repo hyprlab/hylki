@@ -5576,6 +5576,10 @@ msgid "Status bar ({n})"
 msgstr "Barra de estado ({n})"
 
 #, fuzzy
+msgid "Ask Again"
+msgstr "Tentar novamente"
+
+#, fuzzy
 msgid "All keys"
 msgstr "Todos os tipos"
 
@@ -5663,6 +5667,12 @@ msgid "Fetch by address…"
 msgstr "Obter por endereço…"
 
 msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "Unchecked keys you encrypt to"
+msgstr ""
+
+msgid "Send Anyway stopped the warning for these keys."
 msgstr ""
 
 msgid "No keys from other people yet."

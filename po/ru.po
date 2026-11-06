@@ -5780,6 +5780,10 @@ msgid "Status bar ({n})"
 msgstr "Строка состояния ({n})"
 
 #, fuzzy
+msgid "Ask Again"
+msgstr "Повторить попытку"
+
+#, fuzzy
 msgid "All keys"
 msgstr "Все типы"
 
@@ -5873,6 +5877,12 @@ msgid "Fetch by address…"
 msgstr "Получить по адресу…"
 
 msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "Unchecked keys you encrypt to"
+msgstr ""
+
+msgid "Send Anyway stopped the warning for these keys."
 msgstr ""
 
 msgid "No keys from other people yet."

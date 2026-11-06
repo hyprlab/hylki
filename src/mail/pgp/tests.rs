@@ -5,7 +5,7 @@ use super::inbound::{
 use super::keys::{
     delete_key, export_public, generate_key, import_keys, import_summary, key_by_fingerprint,
     key_display, list_keys, parse_colons, pick_public_key, public_key_for,
-    secret_key_by_fingerprint, secret_key_for, trust_key, KeyValidity,
+    secret_key_by_fingerprint, secret_key_for, still_unchecked, trust_key, KeyValidity,
 };
 use super::outbound::{encrypt, sign_detached};
 use super::status::{parse_status, signature_verdict, Outcome};
@@ -943,4 +943,37 @@ fn a_hidden_key_id_is_not_named_as_missing() {
     assert_eq!(o.named_missing_key(), Some("83B625A65BC4BD52"));
     let o = parse_status(&lines(&["NO_SECKEY 0000000000000000"]));
     assert_eq!(o.named_missing_key(), None);
+}
+
+/// Settings lists a Send Anyway only while it changes what Send does.
+#[test]
+fn only_accepted_keys_still_unchecked_are_listed() {
+    let text = "\
+pub:-:255:22:1111111111111111:1700000000:::-:::scESC:\n\
+fpr:::::::::1111111111111111111111111111111111111111:\n\
+uid:-::::1700000000::HASH::Zed <zed@example.org>::::::::::0:\n\
+uid:f::::1700000000::HASH::Zed <checked@example.org>::::::::::0:\n\
+pub:-:255:22:2222222222222222:1700000000:::-:::scESC:\n\
+fpr:::::::::2222222222222222222222222222222222222222:\n\
+uid:-::::1700000000::HASH::Ada <ada@example.org>::::::::::0:\n";
+    let keys = parse_colons(text, false);
+    let accepted = |addr: &str, digit: char| crate::config::AcceptedKey {
+        addr: addr.into(),
+        fingerprint: digit.to_string().repeat(40),
+    };
+    let listed = still_unchecked(
+        vec![
+            accepted("zed@example.org", '1'),
+            accepted("ada@example.org", '2'),
+            // Trusted since, per address.
+            accepted("checked@example.org", '1'),
+            // No longer in the keyring.
+            accepted("gone@example.org", '3'),
+        ],
+        &keys,
+    );
+    assert_eq!(
+        listed,
+        vec![accepted("ada@example.org", '2'), accepted("zed@example.org", '1')]
+    );
 }

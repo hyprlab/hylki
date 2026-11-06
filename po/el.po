@@ -5529,6 +5529,10 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr "Γραμμή κατάστασης ({n})"
 
+#, fuzzy
+msgid "Ask Again"
+msgstr "Δοκιμή ξανά"
+
 msgid "All keys"
 msgstr "Όλα τα κλειδιά"
 
@@ -5615,6 +5619,12 @@ msgstr "Ανάκτηση κατά διεύθυνση…"
 
 msgid "Search by name, address or key ID"
 msgstr "Αναζήτηση κατά όνομα, διεύθυνση ή αναγνωριστικό κλειδιού"
+
+msgid "Unchecked keys you encrypt to"
+msgstr ""
+
+msgid "Send Anyway stopped the warning for these keys."
+msgstr ""
 
 msgid "No keys from other people yet."
 msgstr "Δεν υπάρχουν ακόμη κλειδιά άλλων ατόμων."

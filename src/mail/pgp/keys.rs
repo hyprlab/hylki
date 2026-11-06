@@ -308,6 +308,20 @@ pub(super) fn pick_public_key(keys: Vec<KeyInfo>, addr: &str) -> Option<KeyInfo>
     Some(usable.find(|k| k.vouched_for(addr)).unwrap_or(first))
 }
 
+/// The accepted keys Send would otherwise ask about, by address. One that is
+/// no longer in the keyring, or is trusted by now, has nothing to take back.
+pub(crate) fn still_unchecked(
+    mut accepted: Vec<crate::config::AcceptedKey>,
+    keys: &[KeyInfo],
+) -> Vec<crate::config::AcceptedKey> {
+    accepted.retain(|a| {
+        keys.iter()
+            .any(|k| k.fingerprint == a.fingerprint && !k.vouched_for(&a.addr))
+    });
+    accepted.sort_by(|a, b| a.addr.cmp(&b.addr));
+    accepted
+}
+
 /// The key with this fingerprint, if the keyring holds it.
 pub(crate) fn key_by_fingerprint(gpg: &Gpg, fpr: &str) -> Option<KeyInfo> {
     let fpr = fpr.to_ascii_uppercase();

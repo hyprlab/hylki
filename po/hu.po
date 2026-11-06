@@ -5750,6 +5750,10 @@ msgid "Status bar ({n})"
 msgstr "Állapotsáv ({n})"
 
 #, fuzzy
+msgid "Ask Again"
+msgstr "Próbáld újra"
+
+#, fuzzy
 msgid "All keys"
 msgstr "Minden típus"
 
@@ -5842,6 +5846,12 @@ msgid "Fetch by address…"
 msgstr "Lekérés cím alapján…"
 
 msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "Unchecked keys you encrypt to"
+msgstr ""
+
+msgid "Send Anyway stopped the warning for these keys."
 msgstr ""
 
 msgid "No keys from other people yet."

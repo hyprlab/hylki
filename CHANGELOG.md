@@ -22,8 +22,9 @@
 - **Added: a warning before encrypting to a key you have not trusted** (#595, by
   James Reilly). **Send** names the recipients whose keys nobody has vouched
   for and asks before the message goes. **Send Anyway** sends it and does not
-  ask about that key again until the address gets a different one. When an
-  address has several keys, the trusted one is used.
+  ask about that key again until the address gets a different one, or **Ask
+  Again** takes the answer back under *Settings → OpenPGP*. When an address has
+  several keys, the trusted one is used.
 
 - **Fixed: exports and local mail files were left readable by other users** (#600,
   by James Reilly). The log exports and the settings export are written owner-only,

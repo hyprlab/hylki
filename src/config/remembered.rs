@@ -229,3 +229,11 @@ pub(crate) fn accept_keys(new: &[AcceptedKey]) {
     let file = AcceptedKeysFile { keys };
     save_private_toml(accepted_keys_path(), &file, "accepted_keys.toml", true);
 }
+
+/// Keep only the accepted keys `keep` says to: Send asks about the others again.
+pub(crate) fn retain_accepted_keys(keep: impl Fn(&AcceptedKey) -> bool) {
+    let mut keys = load_accepted_keys();
+    keys.retain(keep);
+    let file = AcceptedKeysFile { keys };
+    save_private_toml(accepted_keys_path(), &file, "accepted_keys.toml", true);
+}

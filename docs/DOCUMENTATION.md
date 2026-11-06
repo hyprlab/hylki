@@ -1701,8 +1701,10 @@ with Encrypt on.
 When a recipient's key is one you have not trusted yet (step 4), **Send**
 names them and asks first: anyone can publish a key with any address on it.
 **Send Anyway** encrypts to the key as it is and does not ask about that key
-again; it asks again if the address gets a different key. With several keys for
-one address, the one you trusted is used.
+again; it asks again if the address gets a different key. Those keys are listed
+under *Settings → OpenPGP → Unchecked keys you encrypt to*, where **Ask Again**
+takes the answer back. Removing a key does the same. With several keys for one
+address, the one you trusted is used.
 
 Bcc recipients are encrypted to without their key IDs in the message, so the
 To and Cc recipients cannot tell whose keys were Bcc'd. They can still see

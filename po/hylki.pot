@@ -5070,6 +5070,9 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr ""
 
+msgid "Ask Again"
+msgstr ""
+
 msgid "All keys"
 msgstr ""
 
@@ -5149,6 +5152,12 @@ msgid "Fetch by address…"
 msgstr ""
 
 msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "Unchecked keys you encrypt to"
+msgstr ""
+
+msgid "Send Anyway stopped the warning for these keys."
 msgstr ""
 
 msgid "No keys from other people yet."

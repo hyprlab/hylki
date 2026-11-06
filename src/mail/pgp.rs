@@ -28,8 +28,8 @@ mod tests;
 pub(crate) use inbound::{detect, is_encrypted, legacy_display_part, unwrap_message};
 pub(crate) use keys::{
     delete_key, export_public, fetch_key, generate_key, import_keys, key_by_fingerprint,
-    key_display, list_keys, public_key_for, secret_key_by_fingerprint, secret_key_for, trust_key,
-    ImportSummary, KeyInfo,
+    key_display, list_keys, public_key_for, secret_key_by_fingerprint, secret_key_for,
+    still_unchecked, trust_key, ImportSummary, KeyInfo,
 };
 pub(crate) use outbound::{encrypt, sign_detached};
 

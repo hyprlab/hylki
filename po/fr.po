@@ -5511,6 +5511,10 @@ msgstr ""
 msgid "Status bar ({n})"
 msgstr "Barre d’état ({n})"
 
+#, fuzzy
+msgid "Ask Again"
+msgstr "Réessayer"
+
 msgid "All keys"
 msgstr "Toutes les clés"
 
@@ -5597,6 +5601,12 @@ msgstr "Récupérer par adresse…"
 
 msgid "Search by name, address or key ID"
 msgstr "Rechercher par nom, adresse ou identifiant de clé"
+
+msgid "Unchecked keys you encrypt to"
+msgstr ""
+
+msgid "Send Anyway stopped the warning for these keys."
+msgstr ""
 
 msgid "No keys from other people yet."
 msgstr "Aucune clé provenant d’autres personnes pour le moment."
