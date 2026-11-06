@@ -416,6 +416,7 @@ impl Component for AccountsWindow {
             AccountsInput::SigAdd => self.on_sig_add(widgets, sender),
             AccountsInput::SigDelete => self.on_sig_delete(widgets),
             AccountsInput::SigRename => self.on_sig_rename(widgets),
+            AccountsInput::SigSenderRename => self.on_sig_sender_rename(widgets),
             AccountsInput::SigDefault => self.on_sig_default(widgets),
             AccountsInput::SigTextTouched(dirty) => self.sig_touched |= dirty,
             AccountsInput::SigStored { html, add } => self.on_sig_stored(html, add, widgets),

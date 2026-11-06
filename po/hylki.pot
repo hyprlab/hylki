@@ -7864,7 +7864,7 @@ msgid "The app:"
 msgstr ""
 
 msgid ""
-"Adaptive three-pane layout, five appearance themes, Focus Mode, a "
+"Adaptive three-pane layout, a gallery of appearance themes, Focus Mode, a "
 "customizable toolbar and swipe actions"
 msgstr ""
 
@@ -7927,4 +7927,14 @@ msgstr ""
 
 #: src/ui/rich_editor/context_menu.rs
 msgid "Insert Emoji"
+msgstr ""
+
+#: src/ui/accounts/pages/form.rs
+msgid "Sender name"
+msgstr ""
+
+#: src/ui/accounts/pages/form.rs
+msgid ""
+"The name shown in From when this signature is selected. Leave it empty to "
+"keep the account's name."
 msgstr ""

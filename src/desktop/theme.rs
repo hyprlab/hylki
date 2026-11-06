@@ -317,10 +317,42 @@ mod tests {
         assert!(ids.contains("mist"));
         assert!(ids.contains("sage"));
         assert!(ids.contains("stone"));
+        assert!(ids.contains("cloud"));
+        assert!(ids.contains("alabaster"));
+        assert!(ids.contains("graphite"));
+        assert!(ids.contains("harbor"));
+        assert!(ids.contains("linen"));
         for theme in CUSTOM_THEMES {
             assert_ne!(theme.light.canvas, theme.dark.canvas);
             assert_ne!(theme.light.text, theme.dark.text);
             assert_ne!(theme.light.accent, theme.dark.accent);
+        }
+    }
+
+    #[test]
+    fn working_themes_keep_their_surfaces_neutral() {
+        for id in ["cloud", "alabaster", "graphite", "harbor", "linen"] {
+            let theme = CUSTOM_THEMES
+                .iter()
+                .find(|theme| theme.id == id)
+                .unwrap_or_else(|| panic!("missing {id}"));
+            for palette in [&theme.light, &theme.dark] {
+                for (role, hex) in [
+                    ("canvas", palette.canvas),
+                    ("chrome", palette.chrome),
+                    ("toolbar", palette.toolbar),
+                    ("surface", palette.surface),
+                    ("sidebar", palette.sidebar),
+                ] {
+                    let channels = [
+                        u8::from_str_radix(&hex[1..3], 16).unwrap(),
+                        u8::from_str_radix(&hex[3..5], 16).unwrap(),
+                        u8::from_str_radix(&hex[5..7], 16).unwrap(),
+                    ];
+                    let spread = channels.iter().max().unwrap() - channels.iter().min().unwrap();
+                    assert!(spread <= 8, "{id} {role} is tinted too strongly: {hex}");
+                }
+            }
         }
     }
 

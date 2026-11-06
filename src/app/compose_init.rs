@@ -77,17 +77,25 @@ fn account_identities(
     let signature = default
         .map(|i| signatures[i].html.clone())
         .unwrap_or_default();
+    let signature_sender = default.and_then(|i| {
+        signatures
+            .get(i)
+            .map(|sig| sig.sender_from(&label))
+            .filter(|name| name != &label)
+    });
     let pgp_key = cfg.and_then(|c| c.pgp_key.clone());
     let sign_default = cfg.is_some_and(|c| c.sign_by_default);
     let mut identities = vec![ComposeAccount {
         id,
-        label,
+        label: signature_sender.clone().unwrap_or_else(|| label.clone()),
+        base_label: label.clone(),
         signature: signature.clone(),
         signatures: signatures.clone(),
         email: email.to_string(),
         pgp_key: pgp_key.clone(),
         sign_default,
-        alias_from: None,
+        alias_from: signature_sender,
+        base_alias_from: None,
     }];
     for alias in cfg.map(|c| c.aliases.as_slice()).unwrap_or_default() {
         let (name, addr) = split_identity(&alias.identity);
@@ -99,15 +107,21 @@ fn account_identities(
         } else {
             format!("{name} <{addr}>")
         };
+        let with_sender = default
+            .and_then(|i| signatures.get(i))
+            .map(|sig| sig.sender_from(&display))
+            .unwrap_or_else(|| display.clone());
         identities.push(ComposeAccount {
             id,
-            label: display.clone(),
+            label: with_sender.clone(),
+            base_label: display.clone(),
             signature: signature.clone(),
             signatures: signatures.clone(),
             email: addr,
             pgp_key: pgp_key.clone(),
             sign_default,
-            alias_from: Some(display),
+            alias_from: Some(with_sender),
+            base_alias_from: Some(display),
         });
     }
     // A JMAP server's own identities (#346), unless the account
@@ -130,15 +144,21 @@ fn account_identities(
         } else {
             format!("{name} <{addr}>")
         };
+        let with_sender = default
+            .and_then(|i| signatures.get(i))
+            .map(|sig| sig.sender_from(&display))
+            .unwrap_or_else(|| display.clone());
         identities.push(ComposeAccount {
             id,
-            label: display.clone(),
+            label: with_sender.clone(),
+            base_label: display.clone(),
             signature: signature.clone(),
             signatures: signatures.clone(),
             email: addr.clone(),
             pgp_key: pgp_key.clone(),
             sign_default,
-            alias_from: Some(display),
+            alias_from: Some(with_sender),
+            base_alias_from: Some(display),
         });
     }
     identities
@@ -471,6 +491,32 @@ mod tests {
                 ("Manager <office@example.com>", "office@example.com"),
             ]
         );
+    }
+
+    #[test]
+    fn the_default_signature_can_name_the_sender() {
+        let mut config = demo_account_configs();
+        config.truncate(1);
+        config[0].email = "office@example.com".into();
+        config[0].name = "Office".into();
+        config[0].set_signatures(
+            vec![crate::config::NamedSignature {
+                name: "Director".into(),
+                sender_name: "Alex Morgan".into(),
+                html: "Alex Morgan".into(),
+            }],
+            Some(0),
+        );
+
+        let ids = compose_identities(&[], &config, &HashMap::new());
+        assert_eq!(ids.len(), 1);
+        assert_eq!(ids[0].label, "Alex Morgan <office@example.com>");
+        assert_eq!(
+            ids[0].alias_from.as_deref(),
+            Some("Alex Morgan <office@example.com>")
+        );
+        assert_eq!(ids[0].base_label, "Office <office@example.com>");
+        assert_eq!(ids[0].base_alias_from, None);
     }
 
     /// B5 in the map: the reply identity is found by substring, so mail to

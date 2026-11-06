@@ -42,7 +42,7 @@
     </ul>
     <p>The app:</p>
     <ul>
-      <li>Adaptive three-pane layout, five appearance themes, Focus Mode, a customizable toolbar and swipe actions</li>
+      <li>Adaptive three-pane layout, a gallery of appearance themes, Focus Mode, a customizable toolbar and swipe actions</li>
       <li>Gmail-style single-key shortcuts, notifications with actions, an optional tray icon and background running</li>
       <li>GNOME Contacts integration, your choice of language and clock, and passwords kept in the system keyring</li>
     </ul>
@@ -76,7 +76,7 @@
   <releases>
     <release version="1.47.1" date="2026-11-05">
       <description>
-        <p>A PDF with a password no longer freezes the app.</p>
+        <p>A PDF with a password no longer freezes the app. The composer can insert saved templates into replies, and signatures can set their own sender name. New neutral working themes keep panels quiet while controls carry the accent.</p>
       </description>
     </release>
     <release version="1.47.0" date="2026-11-04">

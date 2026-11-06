@@ -8165,11 +8165,11 @@ msgid "The app:"
 msgstr "О программе:"
 
 msgid ""
-"Adaptive three-pane layout, five appearance themes, Focus Mode, a "
+"Adaptive three-pane layout, a gallery of appearance themes, Focus Mode, a "
 "customizable toolbar and swipe actions"
 msgstr ""
-"Адаптивный трехпанельный интерфейс, пять тем оформления, режим концентрации, "
-"настраиваемая панель инструментов и действия свайпом"
+"Адаптивный трёхпанельный интерфейс, галерея тем оформления, режим "
+"концентрации, настраиваемая панель инструментов и действия свайпом"
 
 msgid ""
 "Gmail-style single-key shortcuts, notifications with actions, an optional "
@@ -9874,3 +9874,15 @@ msgstr "Шаблон будет вставлен в это сообщение п
 #: src/app/drafts.rs
 msgid "Could not load the template body."
 msgstr "Не удалось загрузить текст шаблона."
+
+#: src/ui/accounts/pages/form.rs
+msgid "Sender name"
+msgstr "Имя отправителя"
+
+#: src/ui/accounts/pages/form.rs
+msgid ""
+"The name shown in From when this signature is selected. Leave it empty to "
+"keep the account's name."
+msgstr ""
+"Имя, отображаемое в поле «От» при выборе этой подписи. Оставьте поле "
+"пустым, чтобы сохранить имя учётной записи."
