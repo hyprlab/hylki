@@ -529,9 +529,10 @@ impl EditorForm {
                 // would rewrite the sender — through its own.
                 #[name = "aliases_group"]
                 add = &adw::PreferencesGroup {
-                    set_title: &i18n("Send-as aliases"),
+                    set_title: &i18n("Send-as identities"),
                     set_description: Some(
-                        i18n("Extra addresses this account can send as.").as_str()
+                        i18n("Extra names and addresses this account can send as. The same address may have several names.")
+                            .as_str()
                     ),
 
                     // At the header's end, styled like the Add

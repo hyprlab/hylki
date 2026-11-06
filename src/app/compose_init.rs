@@ -317,6 +317,7 @@ impl AppModel {
                 }
                 ComposeOutput::SaveDraft(msg) => AppMsg::SaveDraftMessage(msg),
                 ComposeOutput::SaveTemplate(msg) => AppMsg::SaveTemplateMessage(msg),
+                ComposeOutput::PickTemplate { id } => AppMsg::PickTemplate { id },
                 ComposeOutput::AutoSave { id, message } => AppMsg::AutoSaveDraft { id, message },
                 ComposeOutput::DiscardAutosave { id, origin } => {
                     AppMsg::DiscardAutosave { id, origin }
@@ -442,6 +443,32 @@ mod tests {
                     "info@x.com",
                     Some("Ann <info@x.com>")
                 ),
+            ]
+        );
+    }
+
+    #[test]
+    fn one_address_can_have_several_send_as_names() {
+        let mut config = demo_account_configs();
+        config.truncate(1);
+        config[0].email = "office@example.com".into();
+        config[0].name = "Office".into();
+        config[0].aliases = vec![
+            toml::from_str("identity = \"Boss <office@example.com>\"").unwrap(),
+            toml::from_str("identity = \"Manager <office@example.com>\"").unwrap(),
+        ];
+
+        let ids = compose_identities(&[], &config, &HashMap::new());
+        let rows: Vec<(&str, &str)> = ids
+            .iter()
+            .map(|c| (c.label.as_str(), c.email.as_str()))
+            .collect();
+        assert_eq!(
+            rows,
+            [
+                ("Office <office@example.com>", "office@example.com"),
+                ("Boss <office@example.com>", "office@example.com"),
+                ("Manager <office@example.com>", "office@example.com"),
             ]
         );
     }
