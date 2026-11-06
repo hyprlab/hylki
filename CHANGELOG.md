@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Changed: a new install starts on the Automatic list layout.** Beside the
+  reader that is cards at the list's starting width. Below the list or with the
+  reader off, it is single lines. An existing install keeps its layout.
+
 - **Fixed: Cards turned into single lines with the reading pane below the list
   or off** (#475, reported by fhangel). The Layout setting now holds in every
   reading pane position; Automatic stays on single lines there, as the list has

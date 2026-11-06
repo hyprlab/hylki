@@ -369,7 +369,9 @@ pub(crate) struct PrivacyFile {
     #[serde(default = "default_preview_lines")]
     pub(crate) preview_lines: u32,
     /// How the message list lays out a message: as a card, on one line, or
-    /// whichever the pane's width suits (#334).
+    /// whichever the pane's width suits (#334). A new install starts on
+    /// Automatic; a file without the key was written when Cards was all there
+    /// was, so it keeps cards.
     #[serde(default)]
     pub(crate) list_layout: ListLayout,
     /// The columns a single-line list shows, in order, by name (#334).
@@ -746,7 +748,7 @@ impl Default for PrivacyFile {
             text_scale: default_text_scale(),
             theme: String::new(),
             preview_lines: default_preview_lines(),
-            list_layout: ListLayout::Cards,
+            list_layout: ListLayout::Automatic,
             list_columns: default_list_columns(),
             list_headings: false,
             list_column_scroll: false,

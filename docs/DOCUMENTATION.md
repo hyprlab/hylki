@@ -2043,7 +2043,8 @@ circle and name, the subject with the text dimmed after it, then tags, a
 paperclip, the conversation's size and a short date. **Automatic** uses one
 line while the list pane is dragged wider than about 600 pixels and cards
 when it is narrower, and always one line with the reader below the list or
-off. On one line a row does not swipe, as sideways is how
+off. A new install starts on **Automatic**; an existing choice is kept. On one
+line a row does not swipe, as sideways is how
 the list scrolls to its columns; the right-click menu and keyboard shortcuts
 do the same things.
 

@@ -82,7 +82,7 @@ app_theme = "system"
 text_scale = 100
 theme = ""
 preview_lines = 1
-list_layout = "cards"
+list_layout = "automatic"
 list_columns = [
     "star",
     "replied",
