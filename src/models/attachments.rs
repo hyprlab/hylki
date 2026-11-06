@@ -1,16 +1,30 @@
 //! Attachments, the file-type helpers, and the attachments gallery's rows
 //! and sort orders.
 
+use std::fmt;
 use std::sync::Arc;
 
 /// A decoded message attachment (fetched on demand for the reader).
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub(crate) struct Attachment {
     pub(crate) name: String,
     /// The file's bytes, shared: the reader's cache, its drawer, the gallery
     /// and the lightbox each hold the same file, and a clone is a reference
     /// count rather than a copy of megabytes.
     pub(crate) data: Arc<[u8]>,
+}
+
+/// Shown by name and size. The bytes would make any log line that carries
+/// the file megabytes long, and relm4 logs every component input at the
+/// info level: written out number by number, a few attachments held the
+/// main loop for over a second.
+impl fmt::Debug for Attachment {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Attachment")
+            .field("name", &self.name)
+            .field("len", &self.data.len())
+            .finish()
+    }
 }
 
 impl Attachment {
@@ -177,7 +191,7 @@ pub(crate) struct AttachmentMeta {
 /// preview/open is instant); it is `None` both for a large cached file and for
 /// one that has never been downloaded — `downloaded` tells those apart, and
 /// either way opening it fetches on demand.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub(crate) struct GalleryItem {
     pub(crate) account_id: u32,
     pub(crate) folder_path: String,
@@ -199,6 +213,21 @@ pub(crate) struct GalleryItem {
     pub(crate) data: Option<Arc<[u8]>>,
 }
 
+/// Which file it is, and how many bytes it holds rather than the bytes, as
+/// for [`Attachment`].
+impl fmt::Debug for GalleryItem {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("GalleryItem")
+            .field("account_id", &self.account_id)
+            .field("folder_path", &self.folder_path)
+            .field("uid", &self.uid)
+            .field("name", &self.name)
+            .field("size", &self.size)
+            .field("loaded", &self.data.as_ref().map(|d| d.len()))
+            .finish_non_exhaustive()
+    }
+}
+
 impl GalleryItem {
     pub(crate) fn is_image(&self) -> bool {
         is_image_name(&self.name)
@@ -218,5 +247,22 @@ impl GalleryItem {
         } else {
             crate::datefmt::day_month_year(self.timestamp)
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn an_attachment_debugs_as_its_name_and_size_not_its_bytes() {
+        let att = Attachment {
+            name: "report.pdf".into(),
+            data: vec![7; 4096].into(),
+        };
+        assert_eq!(
+            format!("{att:?}"),
+            r#"Attachment { name: "report.pdf", len: 4096 }"#
+        );
     }
 }
