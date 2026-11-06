@@ -1,6 +1,6 @@
 //! Recognising signed and encrypted mail and unwrapping it for the reader.
 
-use super::keys::key_display;
+use super::keys::{key_addresses, key_display};
 use super::status::{parse_status, signature_verdict};
 use super::{available, run, Gpg};
 use crate::i18n::{i18n, i18n_f};
@@ -168,8 +168,40 @@ pub(crate) fn unwrap_message(raw: &[u8], gpg: &Gpg) -> Option<Unwrapped> {
     let shape = detect(raw)?;
     let mut unwrapped = unwrap_shape(shape, raw, gpg);
     unwrapped.status.sender_addr = from_address(raw);
+    check_signer(&mut unwrapped.status, gpg);
     unwrapped.status.autocrypt = autocrypt_key(raw).map(|k| crate::encoding::base64_encode(&k));
     Some(unwrapped)
+}
+
+/// A good signature proves the key's owner wrote the message, and the From
+/// is a claim anyone can type: unless one of the key's user ids is the From
+/// address, the signature says nothing about who the message is from, and
+/// a trusted key of the attacker's own would otherwise show green.
+fn check_signer(status: &mut PgpStatus, gpg: &Gpg) {
+    let from = status.sender_addr.clone();
+    let PgpSignature::Good {
+        key_id,
+        from_mismatch,
+        ..
+    } = &mut status.signature
+    else {
+        return;
+    };
+    // Nothing claimed, nothing to contradict.
+    if from.is_empty() || key_carries(&key_addresses(gpg, key_id), &from) {
+        return;
+    }
+    *from_mismatch = true;
+    status.notes.push(i18n_f(
+        "The signing key is not for {addr}, the address this message is from, so the signature does not show who sent it.",
+        &[("addr", &from)],
+    ));
+}
+
+/// Whether `from` is one of a key's user id addresses, ignoring case.
+pub(super) fn key_carries(addresses: &[String], from: &str) -> bool {
+    let from = from.trim();
+    addresses.iter().any(|a| a.eq_ignore_ascii_case(from))
 }
 
 /// The From address of a raw message, lowercased ("" when it has none).

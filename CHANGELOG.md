@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **Fixed: Bcc recipients' OpenPGP keys showed in encrypted mail** (#595, by
+  James Reilly). Every copy of an encrypted message named the key of each
+  recipient, so the To and Cc could tell whose keys were Bcc'd. A Bcc
+  recipient's key is now in the message without its key ID.
+
+- **Fixed: a signature from someone else's key showed green** (#595, by James
+  Reilly). A good signature by a trusted key whose addresses do not include the
+  message's From address now shows amber, **Signed by another address**, and
+  the details name the address the key lacks.
+
+- **Added: a warning before encrypting to a key you have not trusted** (#595, by
+  James Reilly). **Send** names the recipients whose keys nobody has vouched
+  for and asks before the message goes; **Send Anyway** sends it as before.
+  When an address has several keys, the trusted one is used.
+
 - **Fixed: exports and local mail files were left readable by other users** (#600,
   by James Reilly). The log exports and the settings export are written owner-only,
   also over an existing file. The remote-content cache and the On This Computer

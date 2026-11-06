@@ -41,13 +41,15 @@ pub(super) fn same_from(a: &str, b: &str) -> bool {
 
 /// Whether an OpenPGP send can go ahead (#133): a key of the user's own
 /// for the From address (or the account's chosen key), and, to encrypt, a
-/// public key for every recipient. The message names the first gap.
+/// public key for every recipient. The message names the first gap. What
+/// comes back are the recipients whose key nobody has vouched for, which
+/// the composer asks about before sending.
 fn pgp_send_check(
     from: &str,
     chosen_key: Option<&str>,
     fields: &[&str],
     encrypt: bool,
-) -> Result<(), String> {
+) -> Result<Vec<String>, String> {
     let gpg = crate::mail::pgp::Gpg::system();
     let own = chosen_key
         .and_then(|f| crate::mail::pgp::secret_key_by_fingerprint(&gpg, f))
@@ -59,6 +61,7 @@ fn pgp_send_check(
             &[("addr", from)],
         ));
     }
+    let mut unvouched = Vec::new();
     if encrypt {
         for field in fields {
             for (_, addr) in crate::worker::parse_recipients(field) {
@@ -66,17 +69,61 @@ fn pgp_send_check(
                 if addr.is_empty() {
                     continue;
                 }
-                if crate::mail::pgp::public_key_for(&gpg, addr).is_none() {
+                let Some(key) = crate::mail::pgp::public_key_for(&gpg, addr) else {
                     return Err(crate::i18n::i18n_f(
                         "There is no OpenPGP key for {addr}. Ask them for their public key, or fetch it \
                          under Settings, OpenPGP.",
                         &[("addr", addr)],
                     ));
+                };
+                if !key.vouched_for(addr) && !unvouched.iter().any(|u: &String| u == addr) {
+                    unvouched.push(addr.to_string());
                 }
             }
         }
     }
-    Ok(())
+    Ok(unvouched)
+}
+
+/// Ask before encrypting to keys the keyring does not vouch for. Anyone can
+/// publish a key with any address on it, so an unchecked key may belong to
+/// somebody else; the message still goes if the user says so, as the keys
+/// are often right and checking them is a step many skip. Send Anyway
+/// answers the check again as clear.
+#[allow(deprecated)] // adw::MessageDialog, as in crate::ui::dialog
+fn ask_unvouched(
+    unvouched: &[String],
+    checked: Vec<String>,
+    widgets: &ComposeWidgets,
+    sender: &ComponentSender<Compose>,
+) {
+    let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
+    let dialog = adw::MessageDialog::new(
+        parent.as_ref(),
+        Some(&i18n("Encrypt to keys you have not checked?")),
+        Some(&i18n_f(
+            "Nobody has confirmed that the OpenPGP keys for {addresses} belong to them. If a key is someone else's, they can read the message and the recipient cannot. Compare the fingerprint with the recipient, then mark the key as trusted under Settings, OpenPGP.",
+            &[("addresses", &unvouched.join(", "))],
+        )),
+    );
+    dialog.add_response("cancel", &i18n("Cancel"));
+    dialog.add_response("send", &i18n("Send Anyway"));
+    dialog.set_default_response(Some("cancel"));
+    dialog.set_close_response("cancel");
+    let pending = std::cell::RefCell::new(Some(checked));
+    let s = sender.input_sender().clone();
+    dialog.connect_response(None, move |_, resp| {
+        if resp != "send" {
+            return;
+        }
+        if let Some(checked) = pending.borrow_mut().take() {
+            s.emit(ComposeInput::PgpChecked {
+                checked,
+                result: Ok(Vec::new()),
+            });
+        }
+    });
+    dialog.present();
 }
 
 /// The Send Later picker (#145), starting from the scheduled time if there
@@ -347,16 +394,17 @@ impl Compose {
     pub(super) fn on_pgp_checked(
         &mut self,
         checked: Vec<String>,
-        result: Result<(), String>,
+        result: Result<Vec<String>, String>,
         widgets: &ComposeWidgets,
         sender: &ComponentSender<Self>,
     ) {
         self.pgp_checking = false;
         match result {
-            Ok(()) => {
+            Ok(unvouched) if unvouched.is_empty() => {
                 self.pgp_cleared = Some(checked);
                 sender.input_sender().emit(ComposeInput::Send);
             }
+            Ok(unvouched) => ask_unvouched(&unvouched, checked, widgets, sender),
             Err(problem) => {
                 let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
                 alert(parent.as_ref(), &i18n("Cannot send with OpenPGP"), &problem);

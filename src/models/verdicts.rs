@@ -90,6 +90,11 @@ pub(crate) enum PgpSignature {
         signer: String,
         key_id: String,
         trust: PgpTrust,
+        /// The signing key carries no user id with the From address: the
+        /// signature is sound, but proves only that the key's owner wrote
+        /// it, not the person the From names.
+        #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+        from_mismatch: bool,
     },
     /// The signature does not match the content.
     Bad {
@@ -168,6 +173,14 @@ impl PgpStatus {
         if self.encrypted {
             return match &self.signature {
                 S::None => i18n("Encrypted with OpenPGP"),
+                S::Good {
+                    signer,
+                    from_mismatch: true,
+                    ..
+                } => i18n_f(
+                    "Encrypted, and signed by {signer}, whose key is not for the sender's address {addr}",
+                    &[("signer", signer), ("addr", &self.sender_addr)],
+                ),
                 S::Good { signer, .. } => {
                     i18n_f("Encrypted, and signed by {signer}", &[("signer", signer)])
                 }
@@ -194,6 +207,14 @@ impl PgpStatus {
         }
         match &self.signature {
             S::None => i18n("OpenPGP-signed; the signature could not be checked"),
+            S::Good {
+                signer,
+                from_mismatch: true,
+                ..
+            } => i18n_f(
+                "Signed by {signer}, whose key is not for the sender's address {addr}",
+                &[("signer", signer), ("addr", &self.sender_addr)],
+            ),
             S::Good { signer, .. } => i18n_f("Signed by {signer}", &[("signer", signer)]),
             S::Bad { .. } => {
                 i18n("The OpenPGP signature does not match; the message may have been altered")
@@ -228,6 +249,12 @@ impl PgpStatus {
         match &self.signature {
             S::None if self.encrypted => i18n("Encrypted"),
             S::None => i18n("Signature not checked"),
+            // Before the trust arms: a vouched-for key that is someone
+            // else's says nothing about the From.
+            S::Good {
+                from_mismatch: true,
+                ..
+            } => i18n("Signed by another address"),
             S::Good {
                 trust: PgpTrust::Full,
                 ..
@@ -256,6 +283,7 @@ impl PgpStatus {
             S::Bad { .. } | S::RevokedKey { .. } => "pgp-bad",
             S::Good {
                 trust: PgpTrust::Full,
+                from_mismatch: false,
                 ..
             } => "pgp-good",
             S::Good { .. }

@@ -153,9 +153,11 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   folder counts that start from the last ones the server gave.
 - [**James Reilly**](https://github.com/hanthor) ([#588](https://github.com/hyprlab/hylki/pull/588),
   [#591](https://github.com/hyprlab/hylki/pull/591),
+  [#595](https://github.com/hyprlab/hylki/pull/595),
   [#600](https://github.com/hyprlab/hylki/pull/600)): the gap above a message
   card reached with `w` or `b`, Drafts shown from the cache after a send from a
-  Microsoft account, and owner-only exports and local mail files with the
+  Microsoft account, OpenPGP checks of the Bcc keys, the signer and unchecked
+  keys, and owner-only exports and local mail files with the
   Flatpak attachment purge.
 - [**Alp Sahin**](https://github.com/AlpSha) ([#593](https://github.com/hyprlab/hylki/issues/593)):
   text in the accent's foreground color on the accent, and a theme picked in
