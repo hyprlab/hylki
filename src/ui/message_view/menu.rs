@@ -1,7 +1,7 @@
 //! The reader's right-click menu: what the page reports under the pointer,
 //! and the entries offered for it.
 
-use super::links::{decode_data_uri, default_image_name, remote_image_name};
+use super::links::{default_image_name, own_picture, remote_image_name};
 use super::types::MessageViewInput;
 use crate::i18n::i18n;
 use adw::prelude::*;
@@ -91,9 +91,9 @@ pub(crate) fn hit_menu_entries(
         );
     }
     if let Some(uri) = &hit.image {
-        // The mail's own pictures are `data:` URIs with their bytes in hand;
-        // a remote one is only an address here.
-        match decode_data_uri(uri) {
+        // The mail's own pictures have their bytes in hand; a remote one is
+        // only an address here.
+        match own_picture(uri) {
             Some((mime, data)) => {
                 let texture = gtk::gdk::Texture::from_bytes(&gtk::glib::Bytes::from(&data)).ok();
                 let bytes = data.clone();

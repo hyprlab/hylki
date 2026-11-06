@@ -684,7 +684,7 @@ mod pinned_tests {
         assert_eq!(fnv(HISTORY_SCRIPT), (1287, 0x8e997368982bb599));
         assert_eq!(fnv(EMOJI_SCRIPT), (1621, 0x748b009b19f3f0ec));
         assert_eq!(fnv(LINES_SCRIPT), (5153, 0xb927290405c83fda));
-        assert_eq!(fnv(PASTE_SCRIPT), (40419, 0xc68b9a6a876b9791));
+        assert_eq!(fnv(PASTE_SCRIPT), (40585, 0x5dd68e531eb7f6a6));
     }
 
     #[test]

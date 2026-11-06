@@ -215,7 +215,8 @@ fn push_css(b: &[u8], start: usize, end: usize, spans: &mut Vec<(usize, usize)>)
 
 /// Whether a URL reaches a remote host.
 ///
-/// `data:` and `cid:` carry their own bytes, and a path-relative or root-relative
+/// `data:` and `cid:` carry their own bytes, as does `hylki-inline:`, a picture
+/// lifted out of the message's body, and a path-relative or root-relative
 /// URL resolves against `hylki.localhost`, which serves nothing. A
 /// protocol-relative `//host/x` does reach the network — that one is the bypass
 /// the old substring list missed.
@@ -233,7 +234,14 @@ pub(super) fn is_remote_url(u: &[u8]) -> bool {
         {
             !matches!(
                 scheme.to_ascii_lowercase().as_str(),
-                "data" | "cid" | "blocked" | "mailto" | "tel" | "about" | "javascript"
+                "data"
+                    | "cid"
+                    | "hylki-inline"
+                    | "blocked"
+                    | "mailto"
+                    | "tel"
+                    | "about"
+                    | "javascript"
             )
         }
         _ => false,

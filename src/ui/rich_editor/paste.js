@@ -80,8 +80,10 @@
   /* WebKit's own paste inserts images as blob: URLs — invisible to
      clipboardData.items, dead on the wire, and never downscaled. Convert
      every blob: image that appears, from any entry path, into the same
-     scaled data: URI a handled paste produces. */
-  function adoptBlobImage(img){
+     scaled data: URI a handled paste produces. A picture copied out of the
+     reader comes as a hylki-inline: URL, served by the app alone, and is
+     converted the same way. */
+  function adoptImage(img){
     fetch(img.src).then(function(r){ return r.blob(); }).then(function(b){
       var rd = new FileReader();
       rd.onload = function(){
@@ -100,7 +102,7 @@
         var imgs = n.tagName === 'IMG' ? [n]
           : (n.querySelectorAll ? n.querySelectorAll('img') : []);
         Array.prototype.forEach.call(imgs, function(im){
-          if(im.src && im.src.indexOf('blob:') === 0) adoptBlobImage(im);
+          if(im.src && (im.src.indexOf('blob:') === 0 || im.src.indexOf('hylki-inline:') === 0)) adoptImage(im);
         });
       });
     });
