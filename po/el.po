@@ -6344,6 +6344,9 @@ msgstr "Έναρξη σε Λειτουργία συγκέντρωσης"
 msgid "Fold the sidebar to the icon rail"
 msgstr "Σύμπτυξη της πλευρικής στήλης σε λωρίδα εικονιδίων"
 
+msgid "Unread counts"
+msgstr "Πλήθος μη αναγνωσμένων"
+
 msgid "Unread dots instead of counts"
 msgstr "Κουκκίδες αντί για πλήθος μη αναγνωσμένων"
 
@@ -6360,20 +6363,14 @@ msgstr "Παραμένει μόνο η ενοποιημένη ενότητα."
 msgid "Fold up the accounts"
 msgstr "Πάνω από τους λογαριασμούς"
 
-msgid "In the icon rail, their avatars alone."
+msgid "Collapses account avatars when Focus Mode is enabled"
 msgstr ""
 
 msgid "Fold accounts with one click"
 msgstr "Σύμπτυξη λογαριασμών με ένα κλικ"
 
-msgid "Off, a click on a rail avatar opens its inbox."
-msgstr ""
-
 msgid "Fold up the unified rows"
 msgstr "Σύμπτυξη των ενοποιημένων γραμμών"
-
-msgid "Unread counts"
-msgstr "Πλήθος μη αναγνωσμένων"
 
 msgid "Unified"
 msgstr "Ενοποιημένα"

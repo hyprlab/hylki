@@ -6312,6 +6312,9 @@ msgstr "Iniciar en modo de concentración"
 msgid "Fold the sidebar to the icon rail"
 msgstr "Contraer la barra lateral a la barra de iconos"
 
+msgid "Unread counts"
+msgstr "Contadores de no leídos"
+
 msgid "Unread dots instead of counts"
 msgstr "Puntos de no leídos en lugar de contadores"
 
@@ -6328,20 +6331,14 @@ msgstr "Solo permanece la sección unificada."
 msgid "Fold up the accounts"
 msgstr "Encima de las cuentas"
 
-msgid "In the icon rail, their avatars alone."
+msgid "Collapses account avatars when Focus Mode is enabled"
 msgstr ""
 
 msgid "Fold accounts with one click"
 msgstr "Expandir o contraer cuentas con un clic"
 
-msgid "Off, a click on a rail avatar opens its inbox."
-msgstr ""
-
 msgid "Fold up the unified rows"
 msgstr "Contraer las filas unificadas"
-
-msgid "Unread counts"
-msgstr "Contadores de no leídos"
 
 msgid "Unified"
 msgstr "Unificado"

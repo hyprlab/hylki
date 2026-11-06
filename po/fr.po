@@ -6325,6 +6325,9 @@ msgstr "Démarrer en mode Focus"
 msgid "Fold the sidebar to the icon rail"
 msgstr "Replier la barre latérale en bandeau d’icônes"
 
+msgid "Unread counts"
+msgstr "Compteurs de non-lus"
+
 msgid "Unread dots instead of counts"
 msgstr "Puces de non-lus au lieu des nombres"
 
@@ -6341,20 +6344,14 @@ msgstr "Seule la section unifiée reste affichée."
 msgid "Fold up the accounts"
 msgstr "Au-dessus des comptes"
 
-msgid "In the icon rail, their avatars alone."
+msgid "Collapses account avatars when Focus Mode is enabled"
 msgstr ""
 
 msgid "Fold accounts with one click"
 msgstr "Replier les comptes d’un clic"
 
-msgid "Off, a click on a rail avatar opens its inbox."
-msgstr ""
-
 msgid "Fold up the unified rows"
 msgstr "Replier les lignes unifiées"
-
-msgid "Unread counts"
-msgstr "Compteurs de non-lus"
 
 msgid "Unified"
 msgstr "Unifié"

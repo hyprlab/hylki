@@ -81,6 +81,7 @@ impl FocusPage {
             i18n("Fold the sidebar to the icon rail"),
             None,
         );
+        add(&group, F::UnreadCounts, i18n("Unread counts"), None);
         add(
             &group,
             F::RailDots,
@@ -103,13 +104,13 @@ impl FocusPage {
             &group,
             F::FoldAccounts,
             i18n("Fold up the accounts"),
-            Some(i18n("In the icon rail, their avatars alone.")),
+            Some(i18n("Collapses account avatars when Focus Mode is enabled")),
         );
         add(
             &group,
             F::ClickFolds,
             i18n("Fold accounts with one click"),
-            Some(i18n("Off, a click on a rail avatar opens its inbox.")),
+            None,
         );
         add(
             &group,
@@ -117,7 +118,6 @@ impl FocusPage {
             i18n("Fold up the unified rows"),
             None,
         );
-        add(&group, F::UnreadCounts, i18n("Unread counts"), None);
 
         let group = new_group(i18n("Unified"), None);
         add(&group, F::ShowInboxes, i18n("Inboxes"), None);
@@ -222,6 +222,9 @@ impl FocusPage {
     pub(in crate::ui::preferences) fn update_view(&self, model: &Preferences) {
         for (row, part) in &self.switches {
             row.set_active(model.focus.get(*part));
+            if *part == FocusPart::RailDots {
+                row.set_sensitive(model.focus.unread_counts);
+            }
         }
     }
 }

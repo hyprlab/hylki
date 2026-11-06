@@ -6628,6 +6628,9 @@ msgstr "Запускать в режиме концентрации"
 msgid "Fold the sidebar to the icon rail"
 msgstr "Сворачивать боковую панель в панель значков"
 
+msgid "Unread counts"
+msgstr "Счётчики непрочитанного"
+
 msgid "Unread dots instead of counts"
 msgstr "Точки непрочитанного вместо счётчиков"
 
@@ -6644,20 +6647,14 @@ msgstr "Остаётся только общий раздел."
 msgid "Fold up the accounts"
 msgstr "Над учётными записями"
 
-msgid "In the icon rail, their avatars alone."
+msgid "Collapses account avatars when Focus Mode is enabled"
 msgstr ""
 
 msgid "Fold accounts with one click"
 msgstr ""
 
-msgid "Off, a click on a rail avatar opens its inbox."
-msgstr ""
-
 msgid "Fold up the unified rows"
 msgstr "Сворачивать строки общего раздела"
-
-msgid "Unread counts"
-msgstr "Счётчики непрочитанного"
 
 msgid "Unified"
 msgstr "Общие"

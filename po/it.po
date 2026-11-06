@@ -6558,6 +6558,9 @@ msgstr "Avvia in Modalità focus"
 msgid "Fold the sidebar to the icon rail"
 msgstr "Comprimi la barra laterale alla barra icone"
 
+msgid "Unread counts"
+msgstr "Conteggi non letti"
+
 msgid "Unread dots instead of counts"
 msgstr "Punti non letti invece di conteggi"
 
@@ -6574,20 +6577,14 @@ msgstr "Rimane solo la sezione unificata."
 msgid "Fold up the accounts"
 msgstr "Sopra gli account"
 
-msgid "In the icon rail, their avatars alone."
+msgid "Collapses account avatars when Focus Mode is enabled"
 msgstr ""
 
 msgid "Fold accounts with one click"
 msgstr ""
 
-msgid "Off, a click on a rail avatar opens its inbox."
-msgstr ""
-
 msgid "Fold up the unified rows"
 msgstr "Comprimi le righe unificate"
-
-msgid "Unread counts"
-msgstr "Conteggi non letti"
 
 msgid "Unified"
 msgstr "Unificato"

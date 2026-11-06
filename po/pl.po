@@ -6686,6 +6686,9 @@ msgstr "Uruchamianie w trybie skupienia"
 msgid "Fold the sidebar to the icon rail"
 msgstr "Zwijanie panelu bocznego do paska ikon"
 
+msgid "Unread counts"
+msgstr "Liczniki nieprzeczytanych"
+
 msgid "Unread dots instead of counts"
 msgstr "Kropki zamiast liczników nieprzeczytanych"
 
@@ -6702,20 +6705,14 @@ msgstr "Pozostaje tylko sekcja zbiorcza."
 msgid "Fold up the accounts"
 msgstr "Nad kontami"
 
-msgid "In the icon rail, their avatars alone."
+msgid "Collapses account avatars when Focus Mode is enabled"
 msgstr ""
 
 msgid "Fold accounts with one click"
 msgstr ""
 
-msgid "Off, a click on a rail avatar opens its inbox."
-msgstr ""
-
 msgid "Fold up the unified rows"
 msgstr "Zwijanie widoków zbiorczych"
-
-msgid "Unread counts"
-msgstr "Liczniki nieprzeczytanych"
 
 msgid "Unified"
 msgstr "Widoki zbiorcze"

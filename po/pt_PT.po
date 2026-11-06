@@ -6400,6 +6400,9 @@ msgstr "Iniciar no Modo de foco"
 msgid "Fold the sidebar to the icon rail"
 msgstr "Recolher a barra lateral para a barra de ícones"
 
+msgid "Unread counts"
+msgstr "Contagens de mensagens não lidas"
+
 msgid "Unread dots instead of counts"
 msgstr "Pontos em vez de contagens de mensagens não lidas"
 
@@ -6416,20 +6419,14 @@ msgstr "Apenas permanece a secção unificada."
 msgid "Fold up the accounts"
 msgstr "Acima das contas"
 
-msgid "In the icon rail, their avatars alone."
+msgid "Collapses account avatars when Focus Mode is enabled"
 msgstr ""
 
 msgid "Fold accounts with one click"
 msgstr "Recolher contas com um clique"
 
-msgid "Off, a click on a rail avatar opens its inbox."
-msgstr ""
-
 msgid "Fold up the unified rows"
 msgstr "Recolher as linhas unificadas"
-
-msgid "Unread counts"
-msgstr "Contagens de mensagens não lidas"
 
 msgid "Unified"
 msgstr "Unificadas"
