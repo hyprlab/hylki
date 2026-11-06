@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Added: Esc takes back a message waiting out its Undo Send delay** (#607, by
+  Fabio Rotondo). Outside a text field or composer it does the same as Undo, for
+  the most recent message when several wait. With none waiting it goes back to
+  the list as before. The notice's close button still only hides the notice.
+
 - **Changed: a new install starts on the Automatic list layout.** Beside the
   reader that is cards at the list's starting width. Below the list or with the
   reader off, it is single lines. An existing install keeps its layout.

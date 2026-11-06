@@ -1109,7 +1109,9 @@ say, is tried again at the next one, without a message about it.
 ### Undo Send
 
 A message sent waits five seconds before it goes, with **Undo** on offer
-in a notice at the foot of the window. Undo brings it back to the composer
+in a notice at the foot of the window. **Esc** does the same as Undo
+(the most recent message, when several wait), unless a text field or a
+composer has the focus. Undo brings it back to the composer
 it was written in: a reply to the split beside its conversation, if that
 conversation is still open, anything else to a window. If it cannot be
 sent, the status bar says why. **Settings →

@@ -957,6 +957,7 @@ impl SimpleComponent for AppModel {
         root.add_controller(palette_key(&sender));
 
         model.install_key_controller(&root, &sender);
+        model.install_undo_send_key(&root, &sender);
 
         model.show_startup_notices(&sender);
 
