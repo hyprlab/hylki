@@ -192,17 +192,17 @@ impl FocusPage {
             i18n("Hide the subject"),
             Some(i18n("Tag chips hide with it.")),
         );
+        add(
+            &list_group,
+            F::TagsBelow,
+            i18n("Tags and labels under the text"),
+            None,
+        );
         add(&list_group, F::HideStars, i18n("Hide stars"), None);
         add(
             &list_group,
             F::HideAttachmentIcons,
             i18n("Hide attachment icons"),
-            None,
-        );
-        add(
-            &list_group,
-            F::TagsBelow,
-            i18n("Tags and labels under the text"),
             None,
         );
 
@@ -229,8 +229,12 @@ impl FocusPage {
     pub(in crate::ui::preferences) fn update_view(&self, model: &Preferences) {
         for (row, part) in &self.switches {
             row.set_active(model.focus.get(*part));
-            if *part == FocusPart::RailDots {
-                row.set_sensitive(model.focus.unread_counts);
+            // A switch with nothing left to act on, while another has taken
+            // its marks away.
+            match part {
+                FocusPart::RailDots => row.set_sensitive(model.focus.unread_counts),
+                FocusPart::TagsBelow => row.set_sensitive(!model.focus.hide_subject),
+                _ => {}
             }
         }
     }
