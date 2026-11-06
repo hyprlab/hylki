@@ -30,7 +30,7 @@ impl AppModel {
                     self.user_set_flags(star_label(star), &many, FlagKind::Star, star);
                     return;
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target().cloned() {
                     if self.thread_star_target(&m) {
                         // The conversation is the target: any member starred
                         // reads as a starred thread, and the toggle clears or
@@ -63,7 +63,7 @@ impl AppModel {
                         return;
                     }
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target().cloned() {
                     self.move_to(m, FolderKind::Archive);
                 }
             }
@@ -94,7 +94,7 @@ impl AppModel {
                     self.message_list.emit(MessageListInput::ResolveDelete);
                     return;
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target().cloned() {
                     // In the Outbox, deleting means giving up on sending it —
                     // there is no server-side copy to move to Trash.
                     if self.outbox_item(m.account_id, m.id).is_some() {
@@ -122,7 +122,7 @@ impl AppModel {
                         .emit(MessageListInput::Bulk(BulkAction::DeleteForever));
                     return;
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target().cloned() {
                     if self.outbox_item(m.account_id, m.id).is_some() {
                         self.drop_outbox_row(m.account_id, m.id, &sender);
                         self.current = None;
@@ -152,7 +152,7 @@ impl AppModel {
                 if !many.is_empty() {
                     let read = many.iter().any(|m| m.unread);
                     self.user_set_flags(read_label(read), &many, FlagKind::Read, read);
-                } else if let Some(m) = self.reply_target() {
+                } else if let Some(m) = self.reply_target().cloned() {
                     let read = m.unread;
                     self.user_set_flags(read_label(read), &[m], FlagKind::Read, read);
                 }
@@ -186,7 +186,7 @@ impl AppModel {
                         .emit(MessageListInput::Bulk(BulkAction::Spam));
                     return;
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target().cloned() {
                     if self.in_junk(&m) {
                         self.mark_ham_msg(m);
                     } else {

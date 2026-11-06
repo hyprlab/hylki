@@ -16,16 +16,18 @@ impl AppModel {
     /// one is highlighted. `None` greys the buttons out: with no card (or
     /// several) selected there is no way to say which message an action would
     /// mean.
-    pub(super) fn reply_target(&self) -> Option<Message> {
+    ///
+    /// Lent, not copied: the toolbar asks for it a dozen times on every
+    /// redraw, and a message with pictures in its body runs to megabytes.
+    pub(super) fn reply_target(&self) -> Option<&Message> {
         if self.current_thread.len() <= 1 {
-            return self.current.clone();
+            return self.current.as_ref();
         }
         match self.list_selection.as_slice() {
             [(account_id, id)] => self
                 .current_thread
                 .iter()
-                .find(|m| m.account_id == *account_id && m.id == *id)
-                .cloned(),
+                .find(|m| m.account_id == *account_id && m.id == *id),
             _ => None,
         }
     }
@@ -132,7 +134,7 @@ impl AppModel {
     /// only decides where that message is drawn (#165). A highlighted card is
     /// addressed as itself.
     pub(super) fn compose_target(&self) -> Option<Message> {
-        let m = self.reply_target()?;
+        let m = self.reply_target()?.clone();
         tracing::debug!(
             target: "hylki::reply",
             "toolbar target: selected {}:{} from={} cards={} thread={} head={}",
@@ -282,7 +284,7 @@ impl AppModel {
     /// star, or any member's when the conversation is the target.
     pub(super) fn toolbar_star_lit(&self) -> bool {
         self.reply_target().is_some_and(|m| {
-            if self.thread_star_target(&m) {
+            if self.thread_star_target(m) {
                 self.current_thread.iter().any(|t| t.starred)
             } else {
                 m.starred

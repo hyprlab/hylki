@@ -386,7 +386,7 @@ mod tests {
         assert_eq!(editable.attachments.len(), 1);
         assert_eq!(editable.attachments[0].name, "report.pdf");
         assert_eq!(
-            editable.attachments[0].data,
+            *editable.attachments[0].data,
             [0x25, 0x50, 0x44, 0x46, 0x00, 0xff]
         );
         std::fs::remove_dir_all(&dir).ok();

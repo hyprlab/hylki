@@ -397,7 +397,7 @@ impl AppModel {
                 let data = std::fs::read(&f.path).ok()?;
                 Some(Attachment {
                     name: f.card.name.clone(),
-                    data,
+                    data: data.into(),
                 })
             })
             .collect()

@@ -327,3 +327,120 @@ fn the_wrapper_in_a_real_engine_sizes_frames_and_refuses_injected_script() {
     // The frames are still same-origin, which is what the sizing relies on.
     assert!(json.contains("first"), "frame content unreadable: {json}");
 }
+
+/// A picture lifted out of a message's body (see
+/// [`crate::services::inline_images`]) in a real reader view: the frame shows
+/// it, and a page can fetch it, as the composer does with a pasted one.
+///
+/// ```text
+/// cargo test -- --ignored a_lifted_picture_in_a_real_engine
+/// ```
+///
+/// GTK starts on one thread per process, and every test gets a thread of its
+/// own: run it alone, apart from the other real-engine test.
+#[test]
+#[ignore = "needs a display and a WebKit process"]
+fn a_lifted_picture_in_a_real_engine_shows_and_fetches() {
+    use gtk::prelude::*;
+    use std::cell::RefCell;
+    use std::rc::Rc;
+
+    gtk::init().expect("a display");
+
+    // Noise, so the PNG is too big to stay in the page.
+    let pixels: Vec<u8> = (0u32..48 * 48 * 4)
+        .map(|i| (i.wrapping_mul(2_654_435_761) >> 24) as u8)
+        .collect();
+    let texture = gtk::gdk::MemoryTexture::new(
+        48,
+        48,
+        gtk::gdk::MemoryFormat::R8g8b8a8,
+        &gtk::glib::Bytes::from_owned(pixels),
+        48 * 4,
+    );
+    let png = texture.save_to_png_bytes();
+    let b64 = crate::encoding::base64_encode(&png);
+    let mut m = msg_for_print();
+    m.body = format!(r#"<p>pictured</p><img src="data:image/png;base64,{b64}">"#);
+    let html = MessageView::conversation_document(
+        &[m],
+        &Default::default(),
+        &Default::default(),
+        &Default::default(),
+        &[],
+        "#3584e4",
+        true,
+        false,
+        false,
+        false,
+        &crate::config::ReaderStyle::NONE,
+        &Default::default(),
+        false,
+        100,
+    );
+    assert!(!html.contains(&b64), "the picture is still in the page");
+    assert!(html.contains("hylki-inline://picture/"));
+
+    let view = super::super::webview::new_webview();
+    let win = gtk::Window::new();
+    win.set_child(Some(&view));
+    win.set_default_size(800, 600);
+    win.present();
+    view.load_html(&html, Some("https://hylki.localhost/message/1"));
+
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+    let ctx = gtk::glib::MainContext::default();
+    let pump = |done: &dyn Fn() -> bool| {
+        while !done() && std::time::Instant::now() < deadline {
+            if !ctx.iteration(false) {
+                std::thread::sleep(std::time::Duration::from_millis(5));
+            }
+        }
+    };
+    let answer: Rc<RefCell<Option<String>>> = Rc::new(RefCell::new(None));
+    let ask = |script: &'static str| -> String {
+        answer.replace(None);
+        let out = answer.clone();
+        view.call_async_javascript_function(
+            script,
+            None,
+            None,
+            None,
+            gtk::gio::Cancellable::NONE,
+            move |res| {
+                *out.borrow_mut() = Some(match res {
+                    Ok(v) => v.to_str().to_string(),
+                    Err(e) => format!("ERROR {e}"),
+                });
+            },
+        );
+        pump(&|| answer.borrow().is_some());
+        answer.borrow().clone().unwrap_or_default()
+    };
+
+    // The frame's picture, once it has loaded: its width says it decoded.
+    let shown = "try { const im = document.querySelector('iframe.hylki-frame')\
+                   .contentDocument.images[0];\
+                 return im && im.complete ? String(im.naturalWidth) : 'waiting'; }\
+               catch (e) { return 'waiting'; }";
+    let mut width = String::new();
+    while std::time::Instant::now() < deadline {
+        width = ask(shown);
+        if width != "waiting" {
+            break;
+        }
+        let pause = std::time::Instant::now() + std::time::Duration::from_millis(100);
+        pump(&|| std::time::Instant::now() >= pause);
+    }
+    assert_eq!(width, "48", "the frame did not show the lifted picture");
+
+    let fetched = ask(
+        "const im = document.querySelector('iframe.hylki-frame').contentDocument.images[0];\
+         const r = await fetch(im.src); return String((await r.blob()).size);",
+    );
+    assert_eq!(
+        fetched,
+        png.len().to_string(),
+        "the picture could not be fetched"
+    );
+}

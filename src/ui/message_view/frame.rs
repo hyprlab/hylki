@@ -152,6 +152,8 @@ pub(super) fn message_frame(
     } else {
         body_html(body)
     };
+    // Pictures out of the page before everything below goes over it again.
+    let doc = crate::services::inline_images::lift(doc);
     let own_style;
     let style = if reader {
         own_style = crate::config::ReaderStyle {

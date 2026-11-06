@@ -1,7 +1,7 @@
 //! Building the reader's WebView and the WebContext it shares with print
 //! preview and the composer.
 
-use super::links::{decode_data_uri, default_image_name, is_launchable_uri};
+use super::links::{default_image_name, is_launchable_uri, own_picture};
 use super::menu::strip_navigation_items;
 use super::MessageView;
 use crate::i18n::i18n;
@@ -39,6 +39,7 @@ thread_local! {
         // With WebKit's HTTP cache off, remote content comes through the
         // app's own cache instead (#474).
         crate::services::remote_content::register(&ctx);
+        crate::services::inline_images::register(&ctx);
         ctx
     };
 }
@@ -87,7 +88,13 @@ fn build_webview(role: &'static str) -> webkit6::WebView {
         .build();
     crate::desktop::memory_report::register_web_view(&webview, role);
     keep_tab_out_of_key_translator(&webview);
-    crate::services::remote_content::allow_in(&webview);
+    // Setting the allowlist replaces it: every scheme the reader's pages load
+    // from goes in at once.
+    let allowed: Vec<&str> = crate::services::remote_content::CORS_PATTERNS
+        .into_iter()
+        .chain([crate::services::inline_images::CORS_PATTERN])
+        .collect();
+    webview.set_cors_allowlist(&allowed);
 
     let settings = webkit6::Settings::new();
     // JavaScript runs only in our own (trusted) wrapper document — it sizes each
@@ -110,9 +117,9 @@ fn build_webview(role: &'static str) -> webkit6::WebView {
 /// "Save Image As…" on a right-clicked image. WebKit's own item hands the
 /// image to a download, which needs a `WebKitNetworkSession` destination
 /// handler we don't have — so it silently did nothing. Every image the reader
-/// shows inline (attached photos, and `cid:` images since 1.7.1) is a `data:`
-/// URI whose bytes are already in the document, so swap in our own item that
-/// decodes them and opens a real save dialog.
+/// shows inline (attached photos, and `cid:` images since 1.7.1) has its
+/// bytes in hand, in a `data:` URI or lifted out of the body, so swap in our
+/// own item that decodes them and opens a real save dialog.
 fn offer_save_image(webview: &webkit6::WebView) {
     webview.connect_context_menu(|view, menu, hit| {
         strip_navigation_items(menu);
@@ -122,7 +129,7 @@ fn offer_save_image(webview: &webkit6::WebView) {
         let Some(uri) = hit.image_uri() else {
             return false;
         };
-        let Some((mime, data)) = decode_data_uri(&uri) else {
+        let Some((mime, data)) = own_picture(&uri) else {
             // A remote image: WebKit's own download-backed item is the only way
             // to save it, so leave the menu untouched.
             return false;

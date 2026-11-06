@@ -49,7 +49,7 @@ impl AppModel {
     pub(super) fn selected_targets(&self) -> Vec<Message> {
         let mut targets = self.multi_selection();
         if targets.is_empty() {
-            targets.extend(self.reply_target());
+            targets.extend(self.reply_target().cloned());
         }
         targets
     }

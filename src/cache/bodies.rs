@@ -298,7 +298,7 @@ impl Cache {
             let rows = stmt.query_map(params![account_id, folder_path, uid], |row| {
                 Ok(Attachment {
                     name: row.get(0)?,
-                    data: row.get(1)?,
+                    data: row.get::<_, Vec<u8>>(1)?.into(),
                 })
             })?;
             rows.collect()

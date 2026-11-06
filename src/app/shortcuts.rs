@@ -186,7 +186,7 @@ impl AppModel {
             };
         }
         if targets.is_empty() {
-            targets.extend(self.reply_target());
+            targets.extend(self.reply_target().cloned());
         }
         if !read {
             self.hold_unread(&targets);
@@ -213,7 +213,7 @@ impl AppModel {
         let targets = if self.many_selected() {
             self.multi_selection()
         } else {
-            self.reply_target().into_iter().collect()
+            self.reply_target().cloned().into_iter().collect()
         };
         let mut changes: HashMap<u32, Vec<FlagChange>> = HashMap::new();
         for target in targets {
@@ -397,14 +397,14 @@ impl AppModel {
             return;
         }
         if self.current_thread.len() <= 1 {
-            if let Some(m) = self.reply_target() {
+            if let Some(m) = self.reply_target().cloned() {
                 self.user_set_flags(read_label(false), &[m], FlagKind::Read, false);
             }
             return;
         }
         let order = |m: &Message| (m.timestamp, m.uid);
         let start = (if self.selection_from_cards {
-            self.reply_target()
+            self.reply_target().cloned()
         } else {
             None
         })

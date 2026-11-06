@@ -104,7 +104,7 @@ pub(in crate::worker) fn attachment_parts(
             id,
             crate::models::Attachment {
                 name,
-                data: part.contents().to_vec(),
+                data: part.contents().into(),
             },
         ));
     }

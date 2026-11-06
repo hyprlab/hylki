@@ -166,6 +166,11 @@ pub(crate) struct AppModel {
     pub(super) attachments: Vec<Attachment>,
     /// True while the current message's attachments are downloading.
     pub(super) attachments_loading: bool,
+    /// The messages whose attachments the reader has asked for since the
+    /// open message or conversation was selected: opening one asks from
+    /// several places (the message, its conversation, the related lookup),
+    /// and each answer otherwise came back, megabytes and all, once per ask.
+    pub(super) attachments_asked: HashSet<BodyKey>,
     /// The reader header's right-hand actions are collapsed into the overflow menu
     /// (pane squeezed under READER_ACTIONS_BREAKPOINT).
     pub(super) reader_actions_collapsed: bool,

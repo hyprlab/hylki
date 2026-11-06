@@ -100,6 +100,7 @@ impl MessageView {
                 .filter(|_| self.thread.len() > 1)
                 .map(|m| (m.account_id, m.id)),
             read_mark: self.read_mark,
+            covered: self.swap.covered(),
         });
         let html = html.replacen("<body", &format!("<body{stamps}"), 1);
         self.did_autoscroll = true;
@@ -294,6 +295,9 @@ struct BodyStamps {
     /// The newest member of a conversation (none for a single message).
     newest: Option<(u32, u32)>,
     pub(super) read_mark: crate::config::ReadMark,
+    /// Loaded under the pane's still, whose reveal waits for the page to be
+    /// drawn: it reports ready without waiting for frames of its own.
+    covered: bool,
 }
 
 /// The attributes spliced into the wrapper's `<body` tag, in a fixed order.
@@ -337,7 +341,8 @@ fn body_stamps(s: &BodyStamps) -> String {
         " data-hylki-copied=\"{}\"",
         i18n("Copied").replace('"', "&quot;")
     );
-    format!("{noscroll}{pgp_icons}{newest}{readmark}{copied}")
+    let covered = if s.covered { " data-hylki-covered" } else { "" };
+    format!("{noscroll}{pgp_icons}{newest}{readmark}{copied}{covered}")
 }
 
 #[cfg(test)]
@@ -353,6 +358,7 @@ mod tests {
             pgp_labels: true,
             newest: None,
             read_mark: ReadMark::Manual,
+            covered: false,
         }
     }
 
@@ -370,12 +376,14 @@ mod tests {
             pgp_labels: false,
             newest: Some((1, 9)),
             read_mark: ReadMark::Delay,
+            covered: true,
         };
         assert_eq!(
             body_stamps(&s),
             " data-hylki-noscroll=\"1\" data-hylki-anchor=\"1:2:30:g\" \
              data-hylki-pgpicons data-hylki-newest=\"1:9\" \
-             data-hylki-readmark=\"2000\" data-hylki-copied=\"Copied\""
+             data-hylki-readmark=\"2000\" data-hylki-copied=\"Copied\" \
+             data-hylki-covered"
         );
     }
 

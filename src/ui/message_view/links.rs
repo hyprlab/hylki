@@ -107,6 +107,13 @@ pub(super) fn decode_data_uri(uri: &str) -> Option<(String, Vec<u8>)> {
     (!data.is_empty()).then(|| (mime.to_ascii_lowercase(), data))
 }
 
+/// The content type and bytes of a picture the message carries itself: a
+/// `data:` URI, or one lifted out of its body to be served apart. `None` for
+/// a remote picture, which is only an address here.
+pub(super) fn own_picture(uri: &str) -> Option<(String, Vec<u8>)> {
+    decode_data_uri(uri).or_else(|| crate::services::inline_images::picture(uri))
+}
+
 /// A sensible filename to pre-fill the save dialog with. The original name isn't
 /// recoverable from a `data:` URI — the properly named copy is in the attachment
 /// drawer — so offer `image.<ext>` derived from the MIME type.
