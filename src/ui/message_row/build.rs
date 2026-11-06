@@ -73,7 +73,10 @@ pub(super) fn build_widgets() -> RowWidgets {
 
     let top = gtk::Box::new(gtk::Orientation::Horizontal, 6);
     let name = gtk::Label::new(None);
-    name.set_halign(gtk::Align::Start);
+    // All the room it is given, not just its measured width: that can be out
+    // of date once a row goes from one line back to a card, and it cut short
+    // names that had space to spare.
+    name.set_xalign(0.0);
     name.set_hexpand(true);
     name.set_ellipsize(gtk::pango::EllipsizeMode::End);
     name.add_css_class("message-sender");
