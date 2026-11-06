@@ -121,6 +121,8 @@ pub(crate) struct PrefInit {
     pub(crate) fold_quote: bool,
     /// The line above a reply's quote, "" for the default (#528).
     pub(crate) reply_header: String,
+    /// Short phrases the composer offers at the caret.
+    pub(crate) quick_inserts: Vec<String>,
     /// Undo Send delay in seconds, 0 for off (#434).
     pub(crate) undo_send_secs: u32,
     /// The words that make Send ask when nothing is attached, "" for never.
@@ -565,6 +567,7 @@ pub(crate) enum PrefOutput {
     SetSignatureDashes(bool),
     SetFoldQuote(bool),
     SetReplyHeader(String),
+    SetQuickInserts(Vec<String>),
     SetAttachmentKeywords(String),
     SetUndoSend(u32),
     Closed,

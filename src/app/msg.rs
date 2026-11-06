@@ -1016,6 +1016,8 @@ pub(crate) enum AppMsg {
     // ---- on_settings_window (settings_window.rs) ----
     /// Select a settings category by id (the showcase hook).
     ShowSettingsPage(String),
+    /// Open Settings → Composing on the quick-insert editor.
+    OpenQuickInsertSettings,
     /// Open the settings window on the user's preferred view (the menu entry).
     OpenSettings,
     /// The Settings window showed a category; remembered for reopening.

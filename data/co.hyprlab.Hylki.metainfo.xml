@@ -30,7 +30,7 @@
     </ul>
     <p>Writing:</p>
     <ul>
-      <li>Rich text, Markdown, HTML or plain text, with HTML signatures, inline images, spell check and undo</li>
+      <li>Rich text, Markdown, HTML or plain text, with HTML signatures, customizable quick inserts, inline images, spell check and undo</li>
       <li>Drafts, quote folding, split replies, and forwarding that keeps the attachments</li>
       <li>Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a Send with Hylki entry in GNOME Files</li>
     </ul>
@@ -76,7 +76,7 @@
   <releases>
     <release version="1.47.1" date="2026-11-05">
       <description>
-        <p>A PDF with a password no longer freezes the app. The composer can insert saved templates into replies, and signatures can set their own sender name. New neutral working themes keep panels quiet while controls carry the accent.</p>
+        <p>A PDF with a password no longer freezes the app. The composer can insert saved templates and customizable quick phrases into replies, and signatures can set their own sender name. New neutral working themes keep panels quiet while controls carry the accent.</p>
       </description>
     </release>
     <release version="1.47.0" date="2026-11-04">

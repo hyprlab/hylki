@@ -23,6 +23,7 @@ pub(super) fn add_toolbar_end_buttons(
     adw::ButtonContent,
     gtk::Button,
     gtk::Button,
+    gtk::Button,
 ) {
     // The format chooser and the preview toggle belong with the other
     // formatting controls, at the far end of the same row: a header
@@ -117,7 +118,18 @@ pub(super) fn add_toolbar_end_buttons(
             let _ = s.send(ComposeInput::InsertTemplate);
         });
     }
+    let quick_insert_btn = gtk::Button::from_icon_name("edit-paste-symbolic");
+    quick_insert_btn.set_tooltip_text(Some(i18n("Quick Inserts").as_str()));
+    quick_insert_btn.add_css_class("flat");
+    quick_insert_btn.set_can_focus(false);
+    {
+        let s = sender.input_sender().clone();
+        quick_insert_btn.connect_clicked(move |_| {
+            let _ = s.send(ComposeInput::QuickInsertsMenu);
+        });
+    }
     editor.toolbar_end().append(&fields_btn);
+    editor.toolbar_end().append(&quick_insert_btn);
     editor.toolbar_end().append(&template_btn);
     editor.toolbar_end().append(&signature_btn);
     editor.toolbar_end().append(&translate_btn);
@@ -129,6 +141,7 @@ pub(super) fn add_toolbar_end_buttons(
         preview_content,
         translate_btn,
         signature_btn,
+        quick_insert_btn,
     )
 }
 

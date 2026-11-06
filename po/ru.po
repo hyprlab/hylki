@@ -8117,11 +8117,12 @@ msgid "Writing:"
 msgstr "Составление писем:"
 
 msgid ""
-"Rich text, Markdown, HTML or plain text, with HTML signatures, inline "
-"images, spell check and undo"
+"Rich text, Markdown, HTML or plain text, with HTML signatures, customizable "
+"quick inserts, inline images, spell check and undo"
 msgstr ""
 "Форматированный текст, Markdown, HTML или обычный текст с HTML-подписями, "
-"встроенными изображениями, проверкой орфографии и отменой действий"
+"настраиваемыми быстрыми вставками, встроенными изображениями, проверкой "
+"орфографии и отменой действий"
 
 msgid ""
 "Drafts, quote folding, split replies, and forwarding that keeps the "
@@ -9886,3 +9887,51 @@ msgid ""
 msgstr ""
 "Имя, отображаемое в поле «От» при выборе этой подписи. Оставьте поле "
 "пустым, чтобы сохранить имя учётной записи."
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Quick Inserts"
+msgstr "Быстрые вставки"
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Short phrases the composer can insert at the caret."
+msgstr "Короткие фразы, которые можно вставлять в текст письма по месту курсора."
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Add Phrase"
+msgstr "Добавить фразу"
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Phrase"
+msgstr "Фраза"
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Remove Phrase"
+msgstr "Удалить фразу"
+
+#: src/ui/compose/quick_inserts.rs
+msgid "No Quick Inserts"
+msgstr "Нет быстрых вставок"
+
+#: src/ui/compose/quick_inserts.rs
+msgid "Configure Quick Inserts…"
+msgstr "Настроить быстрые вставки…"
+
+#: src/config/privacy.rs
+msgid "Good afternoon!"
+msgstr "Добрый день!"
+
+#: src/config/privacy.rs
+msgid "Hello!"
+msgstr "Здравствуйте!"
+
+#: src/config/privacy.rs
+msgid "Best regards,"
+msgstr "С уважением,"
+
+#: src/config/privacy.rs
+msgid "We are writing to introduce"
+msgstr "Мы представляем"
+
+#: src/config/privacy.rs
+msgid "We look forward to hearing from you."
+msgstr "Надеемся на отклик."

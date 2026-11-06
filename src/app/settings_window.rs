@@ -108,6 +108,7 @@ impl AppModel {
             signature_dashes: self.signature_dashes,
             fold_quote: self.fold_quote,
             reply_header: self.reply_header.clone(),
+            quick_inserts: self.quick_inserts.clone(),
             undo_send_secs: self.undo_send_secs,
             attachment_keywords: self
                 .attachment_keywords
@@ -522,6 +523,13 @@ impl AppModel {
             AppMsg::ShowSettingsPage(id) => {
                 if let Some(p) = &self.prefs {
                     p.emit(PrefInput::ShowPageById(id));
+                }
+            }
+
+            AppMsg::OpenQuickInsertSettings => {
+                self.open_settings_window(&sender, false, false);
+                if let Some(p) = &self.prefs {
+                    p.emit(PrefInput::ShowPageById("composing".to_string()));
                 }
             }
 

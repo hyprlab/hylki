@@ -21,6 +21,7 @@ mod merge;
 mod merge_fields;
 mod messages;
 mod model;
+mod quick_inserts;
 mod send;
 mod send_menu;
 mod setup;
@@ -404,6 +405,7 @@ impl Component for Compose {
             decorations,
             format,
             signature_position,
+            quick_inserts,
         } = init;
         let in_reply_to = prefill.in_reply_to.clone();
         let references = prefill.references.clone();
@@ -519,15 +521,21 @@ impl Component for Compose {
                 });
             });
         }
-        let (format_btn, preview_btn, preview_content, translate_btn, signature_btn) =
-            add_toolbar_end_buttons(
-                &editor,
-                format,
-                accounts
-                    .get(selected)
-                    .is_some_and(|a| !a.signatures.is_empty()),
-                &sender,
-            );
+        let (
+            format_btn,
+            preview_btn,
+            preview_content,
+            translate_btn,
+            signature_btn,
+            quick_insert_btn,
+        ) = add_toolbar_end_buttons(
+            &editor,
+            format,
+            accounts
+                .get(selected)
+                .is_some_and(|a| !a.signatures.is_empty()),
+            &sender,
+        );
 
         connect_editor(&editor, &sender);
 
@@ -537,6 +545,7 @@ impl Component for Compose {
             current_sig,
             sig_dashes,
             signature_position,
+            quick_inserts,
             attachments: prefill_attachments,
             attach_thumbs: Default::default(),
             suggestions: Vec::new(),
@@ -580,6 +589,7 @@ impl Component for Compose {
             format_btn,
             translate_btn,
             signature_btn,
+            quick_insert_btn,
             translating: false,
             autosaving: false,
             autosaved: None,
@@ -838,6 +848,12 @@ impl Component for Compose {
                 ComposeInput::UseSignature(choice) => self.on_use_signature(choice, widgets),
 
                 ComposeInput::SignatureMenu => self.on_signature_menu(&sender),
+
+                ComposeInput::QuickInsertsMenu => self.on_quick_inserts_menu(&sender),
+
+                ComposeInput::QuickInsert(phrase) => self.on_quick_insert(phrase),
+
+                ComposeInput::SetQuickInserts(phrases) => self.quick_inserts = phrases,
 
                 ComposeInput::Suggest(field) => self.on_suggest(field, widgets, &sender),
 

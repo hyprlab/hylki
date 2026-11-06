@@ -797,6 +797,8 @@ pub(crate) struct AppModel {
     pub(super) fold_quote: bool,
     /// The line above a reply's quote, "" for the default (#528).
     pub(super) reply_header: String,
+    /// Short phrases the composer can put at the caret.
+    pub(super) quick_inserts: Vec<String>,
     /// Undo Send delay in seconds, 0 for off (#434).
     pub(super) undo_send_secs: u32,
     /// The words that make Send ask when nothing is attached, "" for never,

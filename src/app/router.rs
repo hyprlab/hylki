@@ -301,6 +301,7 @@ impl AppModel {
             | AppMsg::DeleteDraft { .. }
             | AppMsg::DraftSaved { .. }) => self.on_drafts(msg, sender),
             msg @ (AppMsg::ShowSettingsPage(..)
+            | AppMsg::OpenQuickInsertSettings
             | AppMsg::OpenSettings
             | AppMsg::SettingsPageShown(..)
             | AppMsg::OpenPreferences
@@ -552,6 +553,7 @@ impl AppModel {
             | PrefOutput::SetSignatureDashes(..)
             | PrefOutput::SetFoldQuote(..)
             | PrefOutput::SetReplyHeader(..)
+            | PrefOutput::SetQuickInserts(..)
             | PrefOutput::SetAttachmentKeywords(..)
             | PrefOutput::SetUndoSend(..)
             | PrefOutput::SetRequestReceipts(..)

@@ -20,6 +20,23 @@ use super::sections::{
 };
 use super::{config_file, default_on, is_zero, save_private_toml, write_private};
 
+/// Short phrases the composer offers at the caret. They are translated when
+/// first loaded; after that the user's saved text is authoritative.
+pub(crate) const DEFAULT_QUICK_INSERTS: [&str; 5] = [
+    "Good afternoon!",
+    "Hello!",
+    "Best regards,",
+    "We are writing to introduce",
+    "We look forward to hearing from you.",
+];
+
+pub(crate) fn default_quick_inserts() -> Vec<String> {
+    DEFAULT_QUICK_INSERTS
+        .iter()
+        .map(|phrase| crate::i18n::i18n(phrase))
+        .collect()
+}
+
 /// A sort a view keeps for itself: `SortOrder`'s key, and whether a heading
 /// turned it the other way.
 #[derive(Clone, Debug, Deserialize, PartialEq, Eq, Serialize)]
@@ -312,6 +329,11 @@ pub(crate) struct PrivacyFile {
     /// app's language.
     #[serde(default)]
     pub(crate) reply_header: String,
+    /// Short phrases offered at the composer's caret. Unlike most defaults,
+    /// the list is always written: an explicitly emptied list means no
+    /// quick inserts, rather than a request to restore the defaults.
+    #[serde(default = "default_quick_inserts")]
+    pub(crate) quick_inserts: Vec<String>,
     /// Undo Send (#434): seconds a sent message waits, with Undo on offer,
     /// before it is handed to the server. 0 sends at once.
     #[serde(default = "default_undo_send_secs")]
@@ -732,6 +754,7 @@ impl Default for PrivacyFile {
             signature_dashes: false,
             fold_quote: true,
             reply_header: String::new(),
+            quick_inserts: default_quick_inserts(),
             undo_send_secs: default_undo_send_secs(),
             attachment_keywords: None,
             spellcheck: true,
