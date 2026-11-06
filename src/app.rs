@@ -319,7 +319,7 @@ impl SimpleComponent for AppModel {
                         // one it keeps the stock separator.
                         add_css_class: "mail-split",
                         set_wide_handle: false,
-                        // Launch wide enough for a row's actions palette. That is
+                        // Launch at the width the rows are laid out for. That is
                         // also the list's minimum while the avatars are on,
                         // so `shrink_start_child: false` clamps to the same figure
                         // either way. With the circles off the minimum drops to what

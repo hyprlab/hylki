@@ -172,12 +172,6 @@ pub(crate) enum MessageWindowInput {
     MoveToInbox,
     /// The folder picker, under the Move To button (or the ⋯).
     MoveTo,
-    /// The folder picker at a window point (a card's Move to…).
-    MoveToAt {
-        message: Box<Message>,
-        x: f64,
-        y: f64,
-    },
     TagMenu,
     /// The Snooze menu, under its button (or the ⋯), #527.
     SnoozeMenu,
@@ -197,8 +191,6 @@ pub(crate) enum MessageWindowInput {
         action: RowAction,
         message: Box<Message>,
     },
-    /// A card's "Add sender to Contacts" — for that card's message.
-    ContactFor(Box<Message>),
     /// An email address in a card header was clicked — compose to it.
     ComposeTo(String),
     /// "Add to Contacts" from an address's right-click menu.

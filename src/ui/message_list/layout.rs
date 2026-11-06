@@ -10,11 +10,9 @@ use gtk::glib;
 use relm4::prelude::*;
 use std::rc::Rc;
 
-/// The message-list pane's floor: exactly what a conversation-member card
-/// needs to show a row's full actions palette — the tightest real constraint
-/// in the list. The sum of the card's insets (10px rail margin, 10px + 8px
-/// card margins, 12px + 12px card padding), the avatar (38px), the unread
-/// dot (8px), three 8px gaps, and the 234px actions-line reservation.
+/// The message-list pane's floor. Rows ellipsize, so this is what keeps a
+/// conversation-member card's sender, date and subject readable beside its
+/// avatar, not a limit the rows set themselves.
 pub(super) const LIST_MIN_WIDTH: i32 = 348;
 
 /// What an expanded conversation needs beyond [`LIST_MIN_WIDTH`]: the member
@@ -221,9 +219,6 @@ impl MessageList {
             look.preview_lines = self.preview_lines;
             look.show_subject = self.show_subject;
             look.pills_below = self.pills_below;
-            // The palette hangs under a card; a single line has no room for
-            // it, so actions come from the menu, swipes and keys there.
-            look.show_palette = self.list_palette && !self.single_line;
             look.single_line = self.single_line;
             look.columns = self
                 .columns
@@ -231,7 +226,6 @@ impl MessageList {
                 .copied()
                 .filter(|c| *c != crate::config::ListColumn::Due || self.graph_in_view)
                 .collect();
-            look.in_junk = self.in_junk;
             look.in_drafts = self.in_drafts;
             look.show_recipient = self.show_recipient;
             look.thread_expansion = self.thread_expansion;

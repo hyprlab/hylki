@@ -29,8 +29,6 @@ impl AppModel {
             push: self.push,
             metered_save_data: self.metered_save_data,
             blacklist: self.blacklist.clone(),
-            palette_collapse_secs: self.palette_collapse_secs,
-            card_palette_collapse_secs: self.card_palette_collapse_secs,
             threading: self.threading,
             threads_expanded: self.threads_expanded,
             thread_expansion: self.thread_expansion,
@@ -62,11 +60,6 @@ impl AppModel {
             notification_buttons: self.notification_buttons.to_list(),
             show_attachments: self.show_attachments,
             settings_open_accounts: self.settings_open_accounts,
-            card_actions_hover: self.card_actions_hover,
-            card_actions_auto: self.card_actions_auto,
-            list_palette: self.list_palette,
-            list_palette_hover: self.list_palette_hover,
-            card_palette_menu: self.card_palette_menu,
             swipe_enabled: self.swipe_enabled,
             swipe_reversed: self.swipe_reversed,
             swipe_sensitivity: self.swipe_sensitivity,
@@ -222,12 +215,7 @@ impl AppModel {
         self.message_list
             .emit(MessageListInput::SetThreadRowNewest(self.thread_row_newest));
         self.message_list
-            .emit(MessageListInput::SetListPalette(self.list_palette));
-        self.message_list
             .emit(MessageListInput::SetThreadsExpanded(self.threads_expanded));
-        self.message_list.emit(MessageListInput::SetPaletteCollapse(
-            self.palette_collapse_secs,
-        ));
         self.message_view.emit(MessageViewInput::SetContentTheme(
             self.message_theme.dark_override(),
         ));

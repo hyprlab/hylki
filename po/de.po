@@ -289,6 +289,14 @@ msgstr "Alle Nachrichten ausklappen"
 msgid "Collapse All Messages"
 msgstr "Alle Nachrichten einklappen"
 
+#, fuzzy
+msgid "Back to My Fonts and Colors"
+msgstr "Eigene Schriftarten und Farben verwenden"
+
+#, fuzzy
+msgid "Show Sender's Fonts and Colors"
+msgstr "Schriftarten und Farben des Absenders anzeigen"
+
 msgid "View Source"
 msgstr "Quelltext anzeigen"
 
@@ -5032,21 +5040,6 @@ msgstr "Unterhaltung anzeigen"
 msgid "Drag to resize, double-click for the usual width"
 msgstr "Ziehen zum Anpassen der Größe, Doppelklick für die Standardbreite"
 
-msgid "Mark as read"
-msgstr "Als gelesen markieren"
-
-msgid "Not spam"
-msgstr "Kein Spam"
-
-msgid "Add sender to Contacts"
-msgstr "Absender zu Kontakten hinzufügen"
-
-msgid "Mark as unread"
-msgstr "Als ungelesen markieren"
-
-msgid "Remove star"
-msgstr "Stern entfernen"
-
 msgid "High importance"
 msgstr "Wichtigkeit: hoch"
 
@@ -5183,48 +5176,6 @@ msgstr "Empfänger ausblenden"
 
 msgid "Show recipients"
 msgstr "Empfänger anzeigen"
-
-msgid "Mark as read or unread"
-msgstr "Als gelesen oder ungelesen markieren"
-
-msgid "Star this message"
-msgstr "Nachricht mit Stern markieren"
-
-msgid "View source"
-msgstr "Quelltext anzeigen"
-
-msgid "Translate this message"
-msgstr "Diese Nachricht übersetzen"
-
-msgid "Reply to this message"
-msgstr "Antwort auf diese Nachricht"
-
-msgid "Reply to everyone on this message"
-msgstr "Allen antworten auf diese Nachricht"
-
-msgid "Forward this message"
-msgstr "Nachricht weiterleiten"
-
-msgid "Move this message to a folder"
-msgstr "Nachricht in einen Ordner verschieben"
-
-msgid "Archive this message"
-msgstr "Nachricht archivieren"
-
-msgid "Delete this message"
-msgstr "Nachricht löschen"
-
-msgid "Back to my fonts and colors"
-msgstr "Eigene Schriftarten und Farben verwenden"
-
-msgid "Show the sender's fonts and colors"
-msgstr "Schriftarten und Farben des Absenders anzeigen"
-
-msgid "Show remote content"
-msgstr "Externe Inhalte anzeigen"
-
-msgid "Block remote content"
-msgstr "Externe Inhalte blockieren"
 
 msgid "Click to open this message"
 msgstr "Klicken zum Öffnen der Nachricht"
@@ -5972,15 +5923,6 @@ msgstr "Leseansicht ein"
 msgid "Reader View off"
 msgstr "Leseansicht aus"
 
-msgid "Hidden behind a toggle"
-msgstr "Hinter einem Schalter verborgen"
-
-msgid "Shown while hovering"
-msgstr "Beim Darüberfahren sichtbar"
-
-msgid "Always visible"
-msgstr "Immer sichtbar"
-
 msgid "Ask each time"
 msgstr "Jedes Mal fragen"
 
@@ -6207,6 +6149,9 @@ msgstr "Weitergeleitete Nachricht"
 
 msgid "Each opens in a window for you to check and send."
 msgstr ""
+
+msgid "Mark as read or unread"
+msgstr "Als gelesen oder ungelesen markieren"
 
 #, fuzzy
 msgid "Add and remove stars"
@@ -6477,15 +6422,6 @@ msgstr "Nachrichten mit Tags einfärben"
 msgid "In the color of its first tag."
 msgstr "Färbung anhand des ersten Tags"
 
-msgid "Actions palette in the message list"
-msgstr "Aktionspalette in der Nachrichtenliste"
-
-msgid "The ⋯ row under each message."
-msgstr "Die »⋯« Zeile unter jeder Nachricht"
-
-msgid "Open the actions palette on hover"
-msgstr "Aktionspalette beim Darüberfahren öffnen"
-
 msgid "Swipe actions"
 msgstr "Wischaktionen"
 
@@ -6505,12 +6441,6 @@ msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
 "Den Wert erhöhen, falls Wischgesten vorzeitig abbrechen. Mauszug-Aktionen "
 "bleiben unbeeinflusst."
-
-msgid "Actions palette timeout"
-msgstr "Zeitlimit der Aktionspalette"
-
-msgid "Seconds it stays open after the pointer leaves."
-msgstr "Zeitverzögerung in Sekunden nach dem Verlassen mit dem Zeiger."
 
 msgid "Columns"
 msgstr "Spalten"
@@ -6933,6 +6863,9 @@ msgstr "Einfügen"
 msgid "Show or hide folders"
 msgstr "Ordner anzeigen oder ausblenden"
 
+msgid "Long-press to expand or collapse"
+msgstr "Lange drücken, um aus- oder einzuklappen"
+
 msgid "Show or hide labels"
 msgstr "Beschriftungen anzeigen oder ausblenden"
 
@@ -7037,9 +6970,6 @@ msgstr "Jeden Smart Folder anzeigen"
 
 msgid "Show each address book"
 msgstr "Jedes Adressbuch anzeigen"
-
-msgid "Long-press to expand or collapse"
-msgstr "Lange drücken, um aus- oder einzuklappen"
 
 msgid "Show or hide tags"
 msgstr "Tags ein- oder ausblenden"
@@ -8268,6 +8198,9 @@ msgstr "Hinzugefügte Wörter"
 msgid "Changes apply after a restart."
 msgstr "Änderungen werden nach einem Neustart wirksam."
 
+msgid "Mark as read"
+msgstr "Als gelesen markieren"
+
 msgid "Conversations mark each message as it comes into view."
 msgstr ""
 "Gespräche markieren jede Nachricht als gelesen, sobald sie im Sichtbereich "
@@ -8327,18 +8260,6 @@ msgid "The system's monospace font unless another is chosen."
 msgstr ""
 "Die Monospace-Schriftart des Systems, es sei denn, es wird eine andere "
 "gewählt."
-
-msgid "Message card actions palette"
-msgstr "Aktionspalette für Nachrichtenkarten"
-
-msgid "Message card actions palette timeout"
-msgstr "Zeitlimit der Aktionspalette für Nachrichtenkarten"
-
-msgid "Message card actions palette as a menu"
-msgstr "Nachrichtenkarten-Aktionspalette als Menü"
-
-msgid "The ⋯ opens the right-click menu instead."
-msgstr "Das Symbol »⋯« öffnet stattdessen das Kontextmenü."
 
 msgid "Single messages as cards"
 msgstr "Einzelne Nachrichten als Karten"
@@ -8696,6 +8617,87 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Not spam"
+#~ msgstr "Kein Spam"
+
+#~ msgid "Add sender to Contacts"
+#~ msgstr "Absender zu Kontakten hinzufügen"
+
+#~ msgid "Mark as unread"
+#~ msgstr "Als ungelesen markieren"
+
+#~ msgid "Remove star"
+#~ msgstr "Stern entfernen"
+
+#~ msgid "Star this message"
+#~ msgstr "Nachricht mit Stern markieren"
+
+#~ msgid "View source"
+#~ msgstr "Quelltext anzeigen"
+
+#~ msgid "Translate this message"
+#~ msgstr "Diese Nachricht übersetzen"
+
+#~ msgid "Reply to this message"
+#~ msgstr "Antwort auf diese Nachricht"
+
+#~ msgid "Reply to everyone on this message"
+#~ msgstr "Allen antworten auf diese Nachricht"
+
+#~ msgid "Forward this message"
+#~ msgstr "Nachricht weiterleiten"
+
+#~ msgid "Move this message to a folder"
+#~ msgstr "Nachricht in einen Ordner verschieben"
+
+#~ msgid "Archive this message"
+#~ msgstr "Nachricht archivieren"
+
+#~ msgid "Delete this message"
+#~ msgstr "Nachricht löschen"
+
+#~ msgid "Show remote content"
+#~ msgstr "Externe Inhalte anzeigen"
+
+#~ msgid "Block remote content"
+#~ msgstr "Externe Inhalte blockieren"
+
+#~ msgid "Hidden behind a toggle"
+#~ msgstr "Hinter einem Schalter verborgen"
+
+#~ msgid "Shown while hovering"
+#~ msgstr "Beim Darüberfahren sichtbar"
+
+#~ msgid "Always visible"
+#~ msgstr "Immer sichtbar"
+
+#~ msgid "Actions palette in the message list"
+#~ msgstr "Aktionspalette in der Nachrichtenliste"
+
+#~ msgid "The ⋯ row under each message."
+#~ msgstr "Die »⋯« Zeile unter jeder Nachricht"
+
+#~ msgid "Open the actions palette on hover"
+#~ msgstr "Aktionspalette beim Darüberfahren öffnen"
+
+#~ msgid "Actions palette timeout"
+#~ msgstr "Zeitlimit der Aktionspalette"
+
+#~ msgid "Seconds it stays open after the pointer leaves."
+#~ msgstr "Zeitverzögerung in Sekunden nach dem Verlassen mit dem Zeiger."
+
+#~ msgid "Message card actions palette"
+#~ msgstr "Aktionspalette für Nachrichtenkarten"
+
+#~ msgid "Message card actions palette timeout"
+#~ msgstr "Zeitlimit der Aktionspalette für Nachrichtenkarten"
+
+#~ msgid "Message card actions palette as a menu"
+#~ msgstr "Nachrichtenkarten-Aktionspalette als Menü"
+
+#~ msgid "The ⋯ opens the right-click menu instead."
+#~ msgstr "Das Symbol »⋯« öffnet stattdessen das Kontextmenü."
 
 #~ msgid "Received"
 #~ msgstr "Empfangen"

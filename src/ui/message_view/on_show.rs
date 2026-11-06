@@ -180,25 +180,6 @@ impl MessageView {
         self.render();
     }
 
-    pub(super) fn on_toggle_remote(
-        &mut self,
-        account_id: u32,
-        id: u32,
-        sender: &ComponentSender<Self>,
-    ) {
-        let show = !self.remote_allowed;
-        self.remote_allowed = show;
-        self.blocked = !show && self.thread.iter().any(|m| has_remote_resources(&m.body));
-        let _ = sender.output(MessageViewOutput::SetRemote {
-            account_id,
-            id,
-            show,
-        });
-        // The app records it and re-shows the message; that render is
-        // free (the fingerprint already matches), so paint now.
-        self.render();
-    }
-
     pub(super) fn on_allow_sender_always(&mut self, sender: &ComponentSender<Self>) {
         if let Some(m) = &self.current {
             let _ = sender.output(MessageViewOutput::AllowSender(m.from_addr.clone()));

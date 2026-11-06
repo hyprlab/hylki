@@ -109,7 +109,6 @@ impl MessageList {
             last_count: String::new(),
             threading: true,
             thread_expansion: true,
-            list_palette: true,
             single_line: false,
             columns: crate::config::ListColumn::DEFAULT.to_vec(),
             graph_accounts: std::collections::HashSet::new(),

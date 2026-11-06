@@ -1,5 +1,5 @@
-//! What a card asks of the app: its action buttons, its menus, Move To,
-//! templates, and the addresses in its header.
+//! What a card asks of the app: its menus, templates, and the addresses in
+//! its header.
 
 use super::menu::{MenuHit, TranslateEntry};
 use super::types::{MessageViewInput, MessageViewOutput, TrState};
@@ -56,6 +56,12 @@ impl MessageView {
                 reader: sender.input_sender().clone(),
             });
         }
+        if self.reader_style.active() && !self.reader_mode {
+            hit.sender_style = Some((
+                self.sender_style.contains(&key),
+                sender.input_sender().clone(),
+            ));
+        }
         if self.thread.len() > 1 {
             let folded = self.folded_cards();
             hit.folds = Some((
@@ -98,40 +104,6 @@ impl MessageView {
         });
     }
 
-    pub(super) fn on_card_move_at(
-        &mut self,
-        account_id: u32,
-        id: u32,
-        x: f64,
-        y: f64,
-        page_width: f64,
-        sender: &ComponentSender<Self>,
-    ) {
-        let Some(m) = self
-            .thread
-            .iter()
-            .find(|m| m.account_id == account_id && m.id == id)
-            .cloned()
-        else {
-            return;
-        };
-        // CSS pixels → widget pixels (the page may be zoomed), then
-        // → window.
-        let ratio = self.webview.width() as f64 / page_width.max(1.0);
-        let (vx, vy) = (x * ratio, y * ratio);
-        let point = self.webview.root().and_then(|root| {
-            let root: gtk::Widget = root.upcast();
-            self.webview
-                .compute_point(&root, &gtk::graphene::Point::new(vx as f32, vy as f32))
-        });
-        let (wx, wy) = point.map_or((vx, vy), |p| (p.x() as f64, p.y() as f64));
-        let _ = sender.output(MessageViewOutput::CardMoveTo {
-            message: Box::new(m),
-            x: wx,
-            y: wy,
-        });
-    }
-
     pub(super) fn on_template_action(
         &mut self,
         account_id: u32,
@@ -155,21 +127,6 @@ impl MessageView {
                 action,
                 message: Box::new(message),
             });
-        }
-    }
-
-    pub(super) fn on_card_contact(
-        &mut self,
-        account_id: u32,
-        id: u32,
-        sender: &ComponentSender<Self>,
-    ) {
-        if let Some(m) = self
-            .thread
-            .iter()
-            .find(|m| m.account_id == account_id && m.id == id)
-        {
-            let _ = sender.output(MessageViewOutput::ContactSender(Box::new(m.clone())));
         }
     }
 

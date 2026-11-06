@@ -118,27 +118,9 @@ pub(super) fn tag_chips_html(
     out
 }
 
-/// One icon button on a conversation card's action line. The icon is the same
-/// embedded symbolic SVG the toolbar draws, inlined (its paths carry no fill,
-/// so the document's `fill:currentColor` recolors it); when the resource
-/// bundle isn't registered (tests), the button simply has no glyph.
-pub(super) fn card_action_button(key: (u32, u32), act: &str, icon: &str, title: &str) -> String {
-    let svg = inline_icon_svg(icon);
-    format!(
-        "<button type=\"button\" class=\"hylki-act\" data-act=\"{act}\" \
-         data-key=\"{aid}:{id}\" title=\"{title}\">{svg}</button>",
-        aid = key.0,
-        id = key.1,
-    )
-}
-
-/// The card's "sender's formatting" toggle icon (#56), named in full here
-/// so `tools/gen-icon-gresource.sh` (which scans for the prefixed literal)
-/// bundles it; the card draws it inline through `inline_icon_svg`.
-#[allow(dead_code)]
-const SENDER_STYLE_ICON: &str = "format-text-rich-symbolic";
-
-/// The OpenPGP chip's lock (#133), named in full for the same reason.
+/// The OpenPGP chip's lock (#133), named in full here so
+/// `tools/gen-icon-gresource.sh` (which scans for the prefixed literal)
+/// bundles it; the chip draws it inline through `inline_icon_svg`.
 #[allow(dead_code)]
 const PGP_LOCK_ICON: &str = "channel-secure-symbolic";
 

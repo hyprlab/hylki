@@ -24,6 +24,9 @@ pub(crate) struct MenuHit {
     /// Expand All and Collapse All (#326), in a conversation: whether any
     /// message is folded, whether any is open, and the reader to tell.
     pub(crate) folds: Option<(bool, bool, relm4::Sender<MessageViewInput>)>,
+    /// The sender's own fonts and colors (#56), while the reader's are on:
+    /// whether this message shows the sender's, and the reader to tell.
+    pub(crate) sender_style: Option<(bool, relm4::Sender<MessageViewInput>)>,
 }
 
 /// Translate, Show Original or Show Translation in a message's menu, sent

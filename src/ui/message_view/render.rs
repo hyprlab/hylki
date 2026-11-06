@@ -91,10 +91,6 @@ impl MessageView {
             noscroll: self.did_autoscroll,
             anchor: self.saved_anchor,
             anchor_gutter: self.anchor_gutter,
-            card_actions_hover: self.card_actions_hover,
-            card_actions_auto: self.card_actions_auto,
-            palette_collapse_secs: self.palette_collapse_secs,
-            card_palette_menu: self.card_palette_menu,
             pgp_labels: self.pgp_labels,
             // The newest member, for the open-scroll fallback (#101).
             newest: self
@@ -143,10 +139,6 @@ impl MessageView {
             .collect();
         shown.sort_unstable();
         shown.hash(&mut h);
-        self.card_actions_hover.hash(&mut h);
-        self.card_actions_auto.hash(&mut h);
-        self.palette_collapse_secs.hash(&mut h);
-        self.card_palette_menu.hash(&mut h);
         // Whether cards list their attachments (#213); the lists themselves
         // are patched in live rather than rendered for.
         self.chips_shown().hash(&mut h);
@@ -298,10 +290,6 @@ struct BodyStamps {
     anchor: Option<(u32, u32, u32)>,
     /// The saved place was in the gutter between cards.
     anchor_gutter: bool,
-    card_actions_hover: bool,
-    card_actions_auto: bool,
-    palette_collapse_secs: u64,
-    card_palette_menu: bool,
     pgp_labels: bool,
     /// The newest member of a conversation (none for a single message).
     newest: Option<(u32, u32)>,
@@ -324,30 +312,6 @@ fn body_stamps(s: &BodyStamps) -> String {
         format!(" data-hylki-noscroll=\"1\"{anchor}")
     } else {
         String::new()
-    };
-    // How card actions show is a body stamp too, so the static document
-    // builder (and its tests) need no extra parameter: "toggle" hides them
-    // behind the ⋯, "hover" shows them while the card is hovered, and no
-    // stamp means always shown.
-    let hover = if s.card_actions_hover {
-        " data-hylki-acts=\"toggle\""
-    } else if s.card_actions_auto {
-        " data-hylki-acts=\"hover\""
-    } else {
-        ""
-    };
-    // The palette timeout rides along in ms; the script reads it for the
-    // toggle mode's collapse timer and the hover mode's fade-out delay.
-    let delay = format!(
-        " data-hylki-actsdelay=\"{}\"",
-        s.palette_collapse_secs.max(1) * 1000
-    );
-    // With the ⋯ set to open the card's menu there is no palette to
-    // slide, so the script hands the click back to the app instead.
-    let acts_menu = if s.card_palette_menu {
-        " data-hylki-actsmenu=\"1\""
-    } else {
-        ""
     };
     // The OpenPGP chip as its icons alone, without the words (#300).
     let pgp_icons = if s.pgp_labels {
@@ -373,7 +337,7 @@ fn body_stamps(s: &BodyStamps) -> String {
         " data-hylki-copied=\"{}\"",
         i18n("Copied").replace('"', "&quot;")
     );
-    format!("{noscroll}{hover}{delay}{acts_menu}{pgp_icons}{newest}{readmark}{copied}")
+    format!("{noscroll}{pgp_icons}{newest}{readmark}{copied}")
 }
 
 #[cfg(test)]
@@ -386,10 +350,6 @@ mod tests {
             noscroll: false,
             anchor: None,
             anchor_gutter: false,
-            card_actions_hover: false,
-            card_actions_auto: false,
-            palette_collapse_secs: 0,
-            card_palette_menu: false,
             pgp_labels: true,
             newest: None,
             read_mark: ReadMark::Manual,
@@ -398,10 +358,7 @@ mod tests {
 
     #[test]
     fn a_first_render_stamps_little() {
-        assert_eq!(
-            body_stamps(&stamps()),
-            " data-hylki-actsdelay=\"1000\" data-hylki-copied=\"Copied\""
-        );
+        assert_eq!(body_stamps(&stamps()), " data-hylki-copied=\"Copied\"");
     }
 
     #[test]
@@ -410,10 +367,6 @@ mod tests {
             noscroll: true,
             anchor: Some((1, 2, 30)),
             anchor_gutter: true,
-            card_actions_hover: true,
-            card_actions_auto: true,
-            palette_collapse_secs: 5,
-            card_palette_menu: true,
             pgp_labels: false,
             newest: Some((1, 9)),
             read_mark: ReadMark::Delay,
@@ -421,25 +374,22 @@ mod tests {
         assert_eq!(
             body_stamps(&s),
             " data-hylki-noscroll=\"1\" data-hylki-anchor=\"1:2:30:g\" \
-             data-hylki-acts=\"toggle\" data-hylki-actsdelay=\"5000\" \
-             data-hylki-actsmenu=\"1\" data-hylki-pgpicons data-hylki-newest=\"1:9\" \
+             data-hylki-pgpicons data-hylki-newest=\"1:9\" \
              data-hylki-readmark=\"2000\" data-hylki-copied=\"Copied\""
         );
     }
 
     #[test]
-    fn hover_actions_and_a_plain_anchor() {
+    fn a_plain_anchor() {
         let s = BodyStamps {
             noscroll: true,
             anchor: Some((3, 4, 0)),
-            card_actions_auto: true,
             read_mark: ReadMark::Shown,
             ..stamps()
         };
         assert_eq!(
             body_stamps(&s),
             " data-hylki-noscroll=\"1\" data-hylki-anchor=\"3:4:0\" \
-             data-hylki-acts=\"hover\" data-hylki-actsdelay=\"1000\" \
              data-hylki-readmark=\"250\" data-hylki-copied=\"Copied\""
         );
         // Without the open scroll done, a saved anchor is not stamped.

@@ -288,6 +288,14 @@ msgstr "Expandeix tots els missatges"
 msgid "Collapse All Messages"
 msgstr "Replega tots els missatges"
 
+#, fuzzy
+msgid "Back to My Fonts and Colors"
+msgstr "Torna a les meves fonts i colors"
+
+#, fuzzy
+msgid "Show Sender's Fonts and Colors"
+msgstr "Mostra les fonts i colors del remitent"
+
 msgid "View Source"
 msgstr "Mostra el codi font"
 
@@ -5063,21 +5071,6 @@ msgstr "Mostra la conversa"
 msgid "Drag to resize, double-click for the usual width"
 msgstr "Arrossega per redimensionar, doble clic per a l'amplada habitual"
 
-msgid "Mark as read"
-msgstr "Marca com a llegit"
-
-msgid "Not spam"
-msgstr "No és brossa"
-
-msgid "Add sender to Contacts"
-msgstr "Afegeix el remitent a contactes"
-
-msgid "Mark as unread"
-msgstr "Marca com a no llegit"
-
-msgid "Remove star"
-msgstr "Treu la destacat"
-
 msgid "High importance"
 msgstr "Importància alta"
 
@@ -5216,48 +5209,6 @@ msgstr "Amaga els destinataris"
 
 msgid "Show recipients"
 msgstr "Mostra els destinataris"
-
-msgid "Mark as read or unread"
-msgstr "Marca com a llegit o no llegit"
-
-msgid "Star this message"
-msgstr "Destaca aquest missatge"
-
-msgid "View source"
-msgstr "Mostra el codi font"
-
-msgid "Translate this message"
-msgstr "Tradueix aquest missatge"
-
-msgid "Reply to this message"
-msgstr "Respon a aquest missatge"
-
-msgid "Reply to everyone on this message"
-msgstr "Respon a tots d'aquest missatge"
-
-msgid "Forward this message"
-msgstr "Reenvia aquest missatge"
-
-msgid "Move this message to a folder"
-msgstr "Mou aquest missatge a una carpeta"
-
-msgid "Archive this message"
-msgstr "Arxiva aquest missatge"
-
-msgid "Delete this message"
-msgstr "Suprimeix aquest missatge"
-
-msgid "Back to my fonts and colors"
-msgstr "Torna a les meves fonts i colors"
-
-msgid "Show the sender's fonts and colors"
-msgstr "Mostra les fonts i colors del remitent"
-
-msgid "Show remote content"
-msgstr "Mostra el contingut remot"
-
-msgid "Block remote content"
-msgstr "Bloca el contingut remot"
 
 msgid "Click to open this message"
 msgstr "Fes clic per obrir aquest missatge"
@@ -6016,15 +5967,6 @@ msgstr "Vista de lector activada"
 msgid "Reader View off"
 msgstr "Vista de lector desactivada"
 
-msgid "Hidden behind a toggle"
-msgstr "Amagat darrere un commutador"
-
-msgid "Shown while hovering"
-msgstr "Mostrat mentre es passa per sobre"
-
-msgid "Always visible"
-msgstr "Sempre visible"
-
 msgid "Ask each time"
 msgstr "Pregunta cada vegada"
 
@@ -6252,6 +6194,9 @@ msgstr "Reenvia aquest missatge"
 
 msgid "Each opens in a window for you to check and send."
 msgstr ""
+
+msgid "Mark as read or unread"
+msgstr "Marca com a llegit o no llegit"
 
 #, fuzzy
 msgid "Add and remove stars"
@@ -6510,15 +6455,6 @@ msgstr "Acoloreix els missatges etiquetats"
 msgid "In the color of its first tag."
 msgstr "Amb el color de la seva primera etiqueta."
 
-msgid "Actions palette in the message list"
-msgstr "Paleta d'accions a la llista de missatges"
-
-msgid "The ⋯ row under each message."
-msgstr "La fila ⋯ sota cada missatge."
-
-msgid "Open the actions palette on hover"
-msgstr "Obre la paleta d'accions en passar-hi per sobre"
-
 msgid "Swipe actions"
 msgstr "Accions de lliscament"
 
@@ -6538,12 +6474,6 @@ msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
 "Augmenta-la si els lliscaments queden curts. Els arrossegaments del ratolí "
 "no es veuen afectats."
-
-msgid "Actions palette timeout"
-msgstr "Temps d'espera de la paleta d'accions"
-
-msgid "Seconds it stays open after the pointer leaves."
-msgstr "Segons que es manté oberta després que el punter en surti."
 
 msgid "Columns"
 msgstr "Columnes"
@@ -6954,6 +6884,9 @@ msgstr "Insereix"
 msgid "Show or hide folders"
 msgstr "Mostra o amaga les carpetes"
 
+msgid "Long-press to expand or collapse"
+msgstr "Mantén premut per expandir o replegar"
+
 msgid "Show or hide labels"
 msgstr "Mostra o amaga les etiquetes del servidor"
 
@@ -7058,9 +6991,6 @@ msgstr "Mostra cada carpeta intel·ligent"
 
 msgid "Show each address book"
 msgstr "Mostra cada llibreta d'adreces"
-
-msgid "Long-press to expand or collapse"
-msgstr "Mantén premut per expandir o replegar"
 
 msgid "Show or hide tags"
 msgstr "Mostra o amaga les etiquetes"
@@ -8271,6 +8201,9 @@ msgstr "Paraules afegides"
 msgid "Changes apply after a restart."
 msgstr "Els canvis s'apliquen després d'un reinici."
 
+msgid "Mark as read"
+msgstr "Marca com a llegit"
+
 msgid "Conversations mark each message as it comes into view."
 msgstr "Les converses marquen cada missatge a mesura que apareix a la vista."
 
@@ -8325,18 +8258,6 @@ msgstr "Font monoespaiada"
 
 msgid "The system's monospace font unless another is chosen."
 msgstr "La font monoespaiada del sistema tret que se n'esculli una altra."
-
-msgid "Message card actions palette"
-msgstr "Paleta d'accions de la targeta de missatge"
-
-msgid "Message card actions palette timeout"
-msgstr "Temps d'espera de la paleta d'accions de la targeta de missatge"
-
-msgid "Message card actions palette as a menu"
-msgstr "Paleta d'accions de la targeta de missatge com a menú"
-
-msgid "The ⋯ opens the right-click menu instead."
-msgstr "El ⋯ obre el menú contextual en lloc d'això."
 
 msgid "Single messages as cards"
 msgstr "Missatges individuals com a targetes"
@@ -8684,6 +8605,87 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Not spam"
+#~ msgstr "No és brossa"
+
+#~ msgid "Add sender to Contacts"
+#~ msgstr "Afegeix el remitent a contactes"
+
+#~ msgid "Mark as unread"
+#~ msgstr "Marca com a no llegit"
+
+#~ msgid "Remove star"
+#~ msgstr "Treu la destacat"
+
+#~ msgid "Star this message"
+#~ msgstr "Destaca aquest missatge"
+
+#~ msgid "View source"
+#~ msgstr "Mostra el codi font"
+
+#~ msgid "Translate this message"
+#~ msgstr "Tradueix aquest missatge"
+
+#~ msgid "Reply to this message"
+#~ msgstr "Respon a aquest missatge"
+
+#~ msgid "Reply to everyone on this message"
+#~ msgstr "Respon a tots d'aquest missatge"
+
+#~ msgid "Forward this message"
+#~ msgstr "Reenvia aquest missatge"
+
+#~ msgid "Move this message to a folder"
+#~ msgstr "Mou aquest missatge a una carpeta"
+
+#~ msgid "Archive this message"
+#~ msgstr "Arxiva aquest missatge"
+
+#~ msgid "Delete this message"
+#~ msgstr "Suprimeix aquest missatge"
+
+#~ msgid "Show remote content"
+#~ msgstr "Mostra el contingut remot"
+
+#~ msgid "Block remote content"
+#~ msgstr "Bloca el contingut remot"
+
+#~ msgid "Hidden behind a toggle"
+#~ msgstr "Amagat darrere un commutador"
+
+#~ msgid "Shown while hovering"
+#~ msgstr "Mostrat mentre es passa per sobre"
+
+#~ msgid "Always visible"
+#~ msgstr "Sempre visible"
+
+#~ msgid "Actions palette in the message list"
+#~ msgstr "Paleta d'accions a la llista de missatges"
+
+#~ msgid "The ⋯ row under each message."
+#~ msgstr "La fila ⋯ sota cada missatge."
+
+#~ msgid "Open the actions palette on hover"
+#~ msgstr "Obre la paleta d'accions en passar-hi per sobre"
+
+#~ msgid "Actions palette timeout"
+#~ msgstr "Temps d'espera de la paleta d'accions"
+
+#~ msgid "Seconds it stays open after the pointer leaves."
+#~ msgstr "Segons que es manté oberta després que el punter en surti."
+
+#~ msgid "Message card actions palette"
+#~ msgstr "Paleta d'accions de la targeta de missatge"
+
+#~ msgid "Message card actions palette timeout"
+#~ msgstr "Temps d'espera de la paleta d'accions de la targeta de missatge"
+
+#~ msgid "Message card actions palette as a menu"
+#~ msgstr "Paleta d'accions de la targeta de missatge com a menú"
+
+#~ msgid "The ⋯ opens the right-click menu instead."
+#~ msgstr "El ⋯ obre el menú contextual en lloc d'això."
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "No s'ha pogut canviar el nom de la carpeta: carpeta desconeguda"

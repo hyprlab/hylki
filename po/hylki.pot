@@ -251,6 +251,12 @@ msgstr ""
 msgid "Collapse All Messages"
 msgstr ""
 
+msgid "Back to My Fonts and Colors"
+msgstr ""
+
+msgid "Show Sender's Fonts and Colors"
+msgstr ""
+
 msgid "View Source"
 msgstr ""
 
@@ -4612,21 +4618,6 @@ msgstr ""
 msgid "Drag to resize, double-click for the usual width"
 msgstr ""
 
-msgid "Mark as read"
-msgstr ""
-
-msgid "Not spam"
-msgstr ""
-
-msgid "Add sender to Contacts"
-msgstr ""
-
-msgid "Mark as unread"
-msgstr ""
-
-msgid "Remove star"
-msgstr ""
-
 msgid "High importance"
 msgstr ""
 
@@ -4753,48 +4744,6 @@ msgid "Hide recipients"
 msgstr ""
 
 msgid "Show recipients"
-msgstr ""
-
-msgid "Mark as read or unread"
-msgstr ""
-
-msgid "Star this message"
-msgstr ""
-
-msgid "View source"
-msgstr ""
-
-msgid "Translate this message"
-msgstr ""
-
-msgid "Reply to this message"
-msgstr ""
-
-msgid "Reply to everyone on this message"
-msgstr ""
-
-msgid "Forward this message"
-msgstr ""
-
-msgid "Move this message to a folder"
-msgstr ""
-
-msgid "Archive this message"
-msgstr ""
-
-msgid "Delete this message"
-msgstr ""
-
-msgid "Back to my fonts and colors"
-msgstr ""
-
-msgid "Show the sender's fonts and colors"
-msgstr ""
-
-msgid "Show remote content"
-msgstr ""
-
-msgid "Block remote content"
 msgstr ""
 
 msgid "Click to open this message"
@@ -5504,15 +5453,6 @@ msgstr ""
 msgid "Reader View off"
 msgstr ""
 
-msgid "Hidden behind a toggle"
-msgstr ""
-
-msgid "Shown while hovering"
-msgstr ""
-
-msgid "Always visible"
-msgstr ""
-
 msgid "Ask each time"
 msgstr ""
 
@@ -5728,6 +5668,9 @@ msgid "Prepare messages"
 msgstr ""
 
 msgid "Each opens in a window for you to check and send."
+msgstr ""
+
+msgid "Mark as read or unread"
 msgstr ""
 
 msgid "Add and remove stars"
@@ -5971,15 +5914,6 @@ msgstr ""
 msgid "In the color of its first tag."
 msgstr ""
 
-msgid "Actions palette in the message list"
-msgstr ""
-
-msgid "The ⋯ row under each message."
-msgstr ""
-
-msgid "Open the actions palette on hover"
-msgstr ""
-
 msgid "Swipe actions"
 msgstr ""
 
@@ -5994,12 +5928,6 @@ msgid "Trackpad swipe sensitivity"
 msgstr ""
 
 msgid "Raise it if swipes stop short. Mouse drags are unaffected."
-msgstr ""
-
-msgid "Actions palette timeout"
-msgstr ""
-
-msgid "Seconds it stays open after the pointer leaves."
 msgstr ""
 
 msgid "Columns"
@@ -6385,6 +6313,9 @@ msgstr ""
 msgid "Show or hide folders"
 msgstr ""
 
+msgid "Long-press to expand or collapse"
+msgstr ""
+
 msgid "Show or hide labels"
 msgstr ""
 
@@ -6488,9 +6419,6 @@ msgid "Show each smart folder"
 msgstr ""
 
 msgid "Show each address book"
-msgstr ""
-
-msgid "Long-press to expand or collapse"
 msgstr ""
 
 msgid "Show or hide tags"
@@ -7596,6 +7524,9 @@ msgstr ""
 msgid "Changes apply after a restart."
 msgstr ""
 
+msgid "Mark as read"
+msgstr ""
+
 msgid "Conversations mark each message as it comes into view."
 msgstr ""
 
@@ -7645,18 +7576,6 @@ msgid "Monospace font"
 msgstr ""
 
 msgid "The system's monospace font unless another is chosen."
-msgstr ""
-
-msgid "Message card actions palette"
-msgstr ""
-
-msgid "Message card actions palette timeout"
-msgstr ""
-
-msgid "Message card actions palette as a menu"
-msgstr ""
-
-msgid "The ⋯ opens the right-click menu instead."
 msgstr ""
 
 msgid "Single messages as cards"

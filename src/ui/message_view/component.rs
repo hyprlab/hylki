@@ -463,9 +463,6 @@ impl Component for MessageView {
                 &sender,
             ),
             MessageViewInput::LoadRemoteOnce => self.on_load_remote_once(&sender),
-            MessageViewInput::ToggleRemote { account_id, id } => {
-                self.on_toggle_remote(account_id, id, &sender)
-            }
             MessageViewInput::AllowSenderAlways => self.on_allow_sender_always(&sender),
             MessageViewInput::Print => self.on_print(),
             MessageViewInput::PrintPreview => self.on_print_preview(),
@@ -636,11 +633,6 @@ impl Component for MessageView {
             MessageViewInput::MarkSeen { account_id, id } => {
                 self.on_mark_seen(account_id, id, &sender)
             }
-            MessageViewInput::CardAction {
-                action,
-                account_id,
-                id,
-            } => self.on_card_action(action, account_id, id, &sender),
             MessageViewInput::CardMenuAt { key, x, y, hit } => {
                 self.on_card_menu_at(key, x, y, hit, &sender)
             }
@@ -651,19 +643,6 @@ impl Component for MessageView {
                 y,
                 page_width,
             } => self.on_card_menu_from(account_id, id, x, y, page_width, &sender),
-            MessageViewInput::CardMoveAt {
-                account_id,
-                id,
-                x,
-                y,
-                page_width,
-            } => self.on_card_move_at(account_id, id, x, y, page_width, &sender),
-            MessageViewInput::SetCardActionsMode {
-                hover_toggle,
-                hover_auto,
-            } => self.on_set_card_actions_mode(hover_toggle, hover_auto),
-            MessageViewInput::SetPaletteCollapse(secs) => self.on_set_palette_collapse(secs),
-            MessageViewInput::SetCardPaletteMenu(on) => self.on_set_card_palette_menu(on),
             MessageViewInput::ClearDot { account_id, id } => self.on_clear_dot(account_id, id),
             MessageViewInput::SetReadMark(policy) => self.on_set_read_mark(policy),
             MessageViewInput::OpenFind => self.on_open_find(&sender),
@@ -706,9 +685,11 @@ impl Component for MessageView {
                 edit,
             } => self.on_template_action(account_id, id, edit, &sender),
             MessageViewInput::HoldPlace { account_id, id } => self.on_hold_place(account_id, id),
-            MessageViewInput::CardContact { account_id, id } => {
-                self.on_card_contact(account_id, id, &sender)
-            }
+            MessageViewInput::CardAction {
+                action,
+                account_id,
+                id,
+            } => self.on_card_action(action, account_id, id, &sender),
             MessageViewInput::OpenHeader { account_id, id } => {
                 self.on_open_header(account_id, id, &sender)
             }

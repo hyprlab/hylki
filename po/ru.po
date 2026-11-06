@@ -287,6 +287,14 @@ msgstr "Развернуть все сообщения"
 msgid "Collapse All Messages"
 msgstr "Свернуть все сообщения"
 
+#, fuzzy
+msgid "Back to My Fonts and Colors"
+msgstr "Вернуться к моим шрифтам и цветам"
+
+#, fuzzy
+msgid "Show Sender's Fonts and Colors"
+msgstr "Показывать шрифты и цвета отправителя"
+
 msgid "View Source"
 msgstr "Просмотр исходного кода"
 
@@ -5286,21 +5294,6 @@ msgstr ""
 "Потяните, чтобы изменить размер, или дважды нажмите для восстановления "
 "обычной ширины"
 
-msgid "Mark as read"
-msgstr "Отметить как прочитанное"
-
-msgid "Not spam"
-msgstr "Не спам"
-
-msgid "Add sender to Contacts"
-msgstr "Добавить отправителя в «Контакты»"
-
-msgid "Mark as unread"
-msgstr "Отметить как непрочитанное"
-
-msgid "Remove star"
-msgstr "Снять отметку"
-
 msgid "High importance"
 msgstr "Высокая важность"
 
@@ -5447,48 +5440,6 @@ msgstr "Скрыть получателей"
 
 msgid "Show recipients"
 msgstr "Показать получателей"
-
-msgid "Mark as read or unread"
-msgstr "Отметить как прочитанное или непрочитанное"
-
-msgid "Star this message"
-msgstr "Отметить это сообщение"
-
-msgid "View source"
-msgstr "Просмотреть исходный текст"
-
-msgid "Translate this message"
-msgstr "Перевести это сообщение"
-
-msgid "Reply to this message"
-msgstr "Ответить на это сообщение"
-
-msgid "Reply to everyone on this message"
-msgstr "Ответить всем участникам этого сообщения"
-
-msgid "Forward this message"
-msgstr "Переслать это сообщение"
-
-msgid "Move this message to a folder"
-msgstr "Переместить это сообщение в папку"
-
-msgid "Archive this message"
-msgstr "Архивировать это сообщение"
-
-msgid "Delete this message"
-msgstr "Удалить это сообщение"
-
-msgid "Back to my fonts and colors"
-msgstr "Вернуться к моим шрифтам и цветам"
-
-msgid "Show the sender's fonts and colors"
-msgstr "Показывать шрифты и цвета отправителя"
-
-msgid "Show remote content"
-msgstr "Показать удалённое содержимое"
-
-msgid "Block remote content"
-msgstr "Блокировать удалённое содержимое"
 
 msgid "Click to open this message"
 msgstr "Нажмите, чтобы открыть это сообщение"
@@ -6258,15 +6209,6 @@ msgstr "Режим чтения: включён"
 msgid "Reader View off"
 msgstr "Режим чтения: выключен"
 
-msgid "Hidden behind a toggle"
-msgstr "Скрыто за переключателем"
-
-msgid "Shown while hovering"
-msgstr "Показывать при наведении"
-
-msgid "Always visible"
-msgstr "Всегда показывать"
-
 msgid "Ask each time"
 msgstr "Спрашивать каждый раз"
 
@@ -6504,6 +6446,9 @@ msgstr "Переслать это сообщение"
 
 msgid "Each opens in a window for you to check and send."
 msgstr ""
+
+msgid "Mark as read or unread"
+msgstr "Отметить как прочитанное или непрочитанное"
 
 #, fuzzy
 msgid "Add and remove stars"
@@ -6774,16 +6719,6 @@ msgstr "Метка добавлена к {n} письму"
 msgid "In the color of its first tag."
 msgstr ""
 
-msgid "Actions palette in the message list"
-msgstr "Палитра действий в списке сообщений"
-
-#, fuzzy
-msgid "The ⋯ row under each message."
-msgstr "Вложения в каждом сообщении"
-
-msgid "Open the actions palette on hover"
-msgstr "Открывать палитру действий при наведении"
-
 msgid "Swipe actions"
 msgstr "Действия свайпом"
 
@@ -6799,15 +6734,6 @@ msgstr "Чувствительность смахивания на трекпа�
 
 msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
-
-msgid "Actions palette timeout"
-msgstr "Задержка палитры действий"
-
-#, fuzzy
-msgid "Seconds it stays open after the pointer leaves."
-msgstr ""
-"Время в секундах, в течение которого палитра действий карточки остаётся "
-"открытой после того, как курсор покинул её."
 
 msgid "Columns"
 msgstr "Столбцы"
@@ -7210,6 +7136,9 @@ msgstr "Вставить"
 msgid "Show or hide folders"
 msgstr "Показать или скрыть папки"
 
+msgid "Long-press to expand or collapse"
+msgstr "Долгое нажатие — развернуть или свернуть"
+
 #, fuzzy
 msgid "Show or hide labels"
 msgstr "Показать или скрыть метки"
@@ -7318,9 +7247,6 @@ msgstr "Показывать каждую папку"
 #, fuzzy
 msgid "Show each address book"
 msgstr "Сохранить каталог?"
-
-msgid "Long-press to expand or collapse"
-msgstr "Долгое нажатие — развернуть или свернуть"
 
 msgid "Show or hide tags"
 msgstr "Показать или скрыть метки"
@@ -8569,6 +8495,9 @@ msgstr "Добавленные слова"
 msgid "Changes apply after a restart."
 msgstr ""
 
+msgid "Mark as read"
+msgstr "Отметить как прочитанное"
+
 #, fuzzy
 msgid "Conversations mark each message as it comes into view."
 msgstr ""
@@ -8624,18 +8553,6 @@ msgstr "Моноширинный шрифт"
 
 msgid "The system's monospace font unless another is chosen."
 msgstr "Системный моноширинный шрифт, если не выбран другой."
-
-msgid "Message card actions palette"
-msgstr "Палитра действий на карточке сообщения"
-
-msgid "Message card actions palette timeout"
-msgstr "Задержка палитры действий на карточке сообщения"
-
-msgid "Message card actions palette as a menu"
-msgstr "Палитра действий карточки сообщения в виде меню"
-
-msgid "The ⋯ opens the right-click menu instead."
-msgstr ""
 
 msgid "Single messages as cards"
 msgstr "Одиночные сообщения в виде карточек"
@@ -8991,6 +8908,88 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Not spam"
+#~ msgstr "Не спам"
+
+#~ msgid "Add sender to Contacts"
+#~ msgstr "Добавить отправителя в «Контакты»"
+
+#~ msgid "Mark as unread"
+#~ msgstr "Отметить как непрочитанное"
+
+#~ msgid "Remove star"
+#~ msgstr "Снять отметку"
+
+#~ msgid "Star this message"
+#~ msgstr "Отметить это сообщение"
+
+#~ msgid "View source"
+#~ msgstr "Просмотреть исходный текст"
+
+#~ msgid "Translate this message"
+#~ msgstr "Перевести это сообщение"
+
+#~ msgid "Reply to this message"
+#~ msgstr "Ответить на это сообщение"
+
+#~ msgid "Reply to everyone on this message"
+#~ msgstr "Ответить всем участникам этого сообщения"
+
+#~ msgid "Forward this message"
+#~ msgstr "Переслать это сообщение"
+
+#~ msgid "Move this message to a folder"
+#~ msgstr "Переместить это сообщение в папку"
+
+#~ msgid "Archive this message"
+#~ msgstr "Архивировать это сообщение"
+
+#~ msgid "Delete this message"
+#~ msgstr "Удалить это сообщение"
+
+#~ msgid "Show remote content"
+#~ msgstr "Показать удалённое содержимое"
+
+#~ msgid "Block remote content"
+#~ msgstr "Блокировать удалённое содержимое"
+
+#~ msgid "Hidden behind a toggle"
+#~ msgstr "Скрыто за переключателем"
+
+#~ msgid "Shown while hovering"
+#~ msgstr "Показывать при наведении"
+
+#~ msgid "Always visible"
+#~ msgstr "Всегда показывать"
+
+#~ msgid "Actions palette in the message list"
+#~ msgstr "Палитра действий в списке сообщений"
+
+#, fuzzy
+#~ msgid "The ⋯ row under each message."
+#~ msgstr "Вложения в каждом сообщении"
+
+#~ msgid "Open the actions palette on hover"
+#~ msgstr "Открывать палитру действий при наведении"
+
+#~ msgid "Actions palette timeout"
+#~ msgstr "Задержка палитры действий"
+
+#, fuzzy
+#~ msgid "Seconds it stays open after the pointer leaves."
+#~ msgstr ""
+#~ "Время в секундах, в течение которого палитра действий карточки остаётся "
+#~ "открытой после того, как курсор покинул её."
+
+#~ msgid "Message card actions palette"
+#~ msgstr "Палитра действий на карточке сообщения"
+
+#~ msgid "Message card actions palette timeout"
+#~ msgstr "Задержка палитры действий на карточке сообщения"
+
+#~ msgid "Message card actions palette as a menu"
+#~ msgstr "Палитра действий карточки сообщения в виде меню"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Не удалось переименовать папку: неизвестная папка"

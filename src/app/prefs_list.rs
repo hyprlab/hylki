@@ -104,26 +104,6 @@ impl AppModel {
                 }
             }
 
-            PrefOutput::SetPaletteCollapse(secs) => {
-                if pref!(self.palette_collapse_secs = secs) {
-                    self.message_list
-                        .emit(MessageListInput::SetPaletteCollapse(secs));
-                }
-            }
-
-            PrefOutput::SetListPalette(on) => {
-                if pref!(self.list_palette = on) {
-                    self.message_list.emit(MessageListInput::SetListPalette(on));
-                }
-            }
-
-            PrefOutput::SetListPaletteHover(on) => {
-                if pref!(self.list_palette_hover = on) {
-                    self.message_list
-                        .emit(MessageListInput::SetPaletteHover(on));
-                }
-            }
-
             PrefOutput::SetSwipeEnabled(on) => {
                 if pref!(self.swipe_enabled = on) {
                     self.message_list

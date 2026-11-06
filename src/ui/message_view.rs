@@ -172,20 +172,6 @@ pub(crate) struct MessageView {
     /// message that renders to the same document skips the load entirely —
     /// every load blanks the view for an instant, however briefly.
     shown_fingerprint: Option<u64>,
-    /// Conversation card actions hide until the card is hovered (expanded via
-    /// their ⋯ toggle). A preference, applied by stamping the document (see
-    /// `document_html`).
-    card_actions_hover: bool,
-    /// With the toggle off: show the actions automatically while the card is
-    /// hovered (vs always).
-    card_actions_auto: bool,
-    /// Seconds an opened card palette lingers after the pointer leaves — the
-    /// cards' own "Message card actions palette timeout", not the list's.
-    palette_collapse_secs: u64,
-    /// The card's ⋯ opens the card menu, the same one a right-click shows,
-    /// instead of sliding its actions palette out. A preference, applied by
-    /// stamping the document (see `document_html`).
-    card_palette_menu: bool,
     /// The open conversation has already auto-scrolled to its first unread
     /// message: later renders of the same thread (bodies streaming in, a theme
     /// flip) carry a no-scroll stamp so the reader's place is kept.

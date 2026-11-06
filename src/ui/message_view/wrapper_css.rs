@@ -63,10 +63,10 @@ pub(super) fn wrapper_css(
          margin-inline-start:auto;}}\
          /* Narrow pane: the meta group (folder chip, recipients chip, date)\
          drops to its own line as one unit — no mid-text wrapping — while\
-         the sender and the action palette hold the first line. */\
+         the sender and the \u{22ef} hold the first line. */\
          @media (max-width:620px){{\
          /* Tighten the right-hand insets (card gutter + header padding)\
-         so the palette toggle sits nearer the pane's edge — but the\
+         so the \u{22ef} sits nearer the pane's edge — but the\
          combined inset never drops below 20px. */\
          body.hylki-conv{{padding:10px;}}\
          body.hylki-conv .hylki-msg-hdr{{padding:12px 10px;}}\
@@ -77,9 +77,6 @@ pub(super) fn wrapper_css(
          /* Below the wrapped meta line the recipients need a touch\
          more air than the wide layout's 2px. */\
          .hylki-rcpt{{margin-top:6px;}}\
-         /* With the meta group gone from the first line, the palette\
-         pins itself to the corner (the \u{22ef} is already absolute). */\
-         body:not([data-hylki-acts=\"toggle\"]) .hylki-acts{{margin-inline-start:auto;}}\
          }}\
          body:not(.hylki-conv) .hylki-msg-hdr{{background-color:{chrome};}}\
          {plain_css}\
@@ -88,7 +85,7 @@ pub(super) fn wrapper_css(
          font-size:0.8em;font-weight:700;}}\
          /* Zero flex-basis: the name and address only absorb free space\
          (up to their natural width), so their length can never force\
-         the palette onto another line. Under pressure the address\
+         the \u{22ef}'s room onto another line. Under pressure the address\
          gives way first (tiny grow share), fading out at its right\
          edge; the name ellipsizes only after that. */\
          .hylki-from{{font-weight:700;flex:99 1 0;max-width:max-content;min-width:0;\
@@ -286,48 +283,15 @@ pub(super) fn wrapper_css(
          border:0;border-radius:999px;cursor:pointer;}}\
          .hylki-quote:hover{{opacity:0.95;background:rgba(128,128,128,0.28);}}\
          .hylki-quote.open{{opacity:0.95;position:absolute;inset-inline-start:0;z-index:2;}}\
-         .hylki-acts{{display:flex;gap:2px;flex:none;align-self:center;margin-inline-start:4px;}}\
-         /* Read-toggle: the icon showing is the ACTION (read envelope\
-         means mark-as-read); the section's unread class decides. */\
-         .hylki-act .tr-when-unread,.hylki-act .tr-when-read{{display:none;line-height:0;}}\
-         .hylki-msg.unread .hylki-act[data-act=\"toggleread\"] .tr-when-unread{{display:inline-flex;}}\
-         .hylki-msg:not(.unread) .hylki-act[data-act=\"toggleread\"] .tr-when-read{{display:inline-flex;}}\
-         .hylki-act{{color:inherit;background:none;border:none;border-radius:6px;\
-         padding:5px 8px;cursor:pointer;opacity:0.7;\
-         display:inline-flex;align-items:center;justify-content:center;\
-         vertical-align:middle;line-height:0;\
-         transition:opacity 120ms ease,background 120ms ease;}}\
-         .hylki-act:hover{{opacity:1;background:rgba(128,128,128,0.18);}}\
-         .hylki-act:active{{background:rgba(128,128,128,0.3);}}\
-         .hylki-act svg{{width:14px;height:14px;display:block;}}\
-         .hylki-act svg,.hylki-act svg *{{fill:currentColor;}}\
-         /* A set star: the one state that carries color. */\
-         .hylki-act.on{{color:#e5a50a;opacity:1;}}\
-         .hylki-acts-toggle{{display:none;}}\
-         /* Behind-the-\u{22ef} mode: the palette overlays the header line as an\
-         absolute strip anchored at the toggle, expanding leftward over\
-         the text beneath (never pushing it), its left edge fading in\
-         from transparent. The \u{22ef} itself never moves. */\
-         body[data-hylki-acts=\"toggle\"] .hylki-acts{{position:absolute;\
-         inset-inline-end:34px;top:13px;transform:translateY(-50%) scaleX(0.6);\
-         transform-origin:right center;margin:0;\
-         padding-block:2px;padding-inline:30px 6px;border-radius:8px;\
-         background:linear-gradient(to right,transparent,{bg} 26px);\
-         opacity:0;pointer-events:none;\
-         transition:opacity 140ms ease,transform 180ms ease;}}\
-         body[data-hylki-acts=\"toggle\"] .hylki-acts.open{{opacity:1;\
-         pointer-events:auto;transform:translateY(-50%) scaleX(1);}}\
-         body:not(.hylki-conv)[data-hylki-acts=\"toggle\"] .hylki-acts{{\
-         background:linear-gradient(to right,transparent,{chrome} 26px);}}\
-         /* Always visible (not just on card hover), and OUT OF FLOW:\
-         absolutely pinned to the header's right edge, so no amount of\
-         header content can push or wrap it. The line reserves the\
-         button's footprint as fixed right padding instead. */\
-         body[data-hylki-acts=\"toggle\"] .hylki-hdr-line{{padding-inline-end:38px;}}\
+         /* The card's menu. Always visible and OUT OF FLOW: absolutely\
+         pinned to the header's right edge, so no amount of header content\
+         can push or wrap it. The line reserves the button's footprint as\
+         fixed right padding instead. */\
+         .hylki-hdr-line{{padding-inline-end:38px;}}\
          /* Anchored to the FIRST row's centre (the 26px avatar/sender\
          line), not the line box's — when the meta row wraps beneath,\
          the box grows downward but the button must not move. */\
-         body[data-hylki-acts=\"toggle\"] .hylki-acts-toggle{{display:block;\
+         .hylki-acts-toggle{{display:block;\
          position:absolute;inset-inline-end:0;top:13px;transform:translateY(-50%);\
          color:{toggle_color};background:none;border:none;border-radius:6px;\
          padding:4px 8px;margin:0;cursor:pointer;\
@@ -336,13 +300,7 @@ pub(super) fn wrapper_css(
          attribute, which a rule on the svg element alone can't beat. */\
          .hylki-acts-toggle svg{{width:14px;height:14px;display:block;}}\
          .hylki-acts-toggle svg,.hylki-acts-toggle svg *{{fill:currentColor;}}\
-         body[data-hylki-acts=\"toggle\"] .hylki-acts-toggle:hover{{opacity:1;\
-         background:rgba(128,128,128,0.18);}}\
-         body[data-hylki-acts=\"toggle\"] .hylki-acts-toggle.open{{opacity:1;}}\
-         body[data-hylki-acts=\"hover\"] .hylki-acts{{opacity:0;pointer-events:none;\
-         transition:opacity 300ms ease var(--acts-delay,0ms);}}\
-         body[data-hylki-acts=\"hover\"] .hylki-msg:hover .hylki-acts{{opacity:1;\
-         pointer-events:auto;transition:opacity 300ms ease 0ms;}}\
+         .hylki-acts-toggle:hover{{opacity:1;background:rgba(128,128,128,0.18);}}\
          .hylki-folder{{padding:0.05em 0.45em;border-radius:0.7em;\
          font-size:0.78em;opacity:0.75;border:1px solid currentColor;\
          white-space:nowrap;flex:none;}}\
@@ -370,11 +328,6 @@ pub(super) fn wrapper_css(
          -webkit-mask-image:linear-gradient(to left,#000 calc(100% - 18px),transparent);\
          mask-image:linear-gradient(to left,#000 calc(100% - 18px),transparent);}}\
          html[dir=rtl] .hylki-addr.clipped:hover{{-webkit-mask-image:none;mask-image:none;}}\
-         html[dir=rtl] body[data-hylki-acts=\"toggle\"] .hylki-acts{{\
-         transform-origin:left center;\
-         background:linear-gradient(to left,transparent,{bg} 26px);}}\
-         html[dir=rtl] body:not(.hylki-conv)[data-hylki-acts=\"toggle\"] .hylki-acts{{\
-         background:linear-gradient(to left,transparent,{chrome} 26px);}}\
          /* Each chip's words in their own direction, as a GTK label\
          has them: an English 1 recipient in a right-to-left line\
          otherwise reads recipient 1. */\

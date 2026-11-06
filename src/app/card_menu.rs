@@ -131,6 +131,26 @@ fn fold_entries(hit: &crate::ui::message_view::MenuHit) -> Option<Vec<MenuEntry>
     ])
 }
 
+/// The sender's fonts and colors for this message, or back to the reader's
+/// (#56): offered only while the reader's own are on.
+fn sender_style_entry(hit: &crate::ui::message_view::MenuHit, m: &Message) -> Option<MenuEntry> {
+    let (showing, reader) = hit.sender_style.clone()?;
+    let (account_id, id) = (m.account_id, m.id);
+    let label = if showing {
+        i18n("Back to My Fonts and Colors")
+    } else {
+        i18n("Show Sender's Fonts and Colors")
+    };
+    Some(
+        MenuEntry::new(label, move || {
+            reader.emit(
+                crate::ui::message_view::MessageViewInput::ToggleSenderStyle { account_id, id },
+            );
+        })
+        .icon("format-text-rich-symbolic"),
+    )
+}
+
 /// Translate (when the reader offers it), View Source and Save as File.
 fn source_entries(
     item: &impl Fn(RowAction, String, &str) -> MenuEntry,
@@ -212,7 +232,9 @@ impl AppModel {
             ),
             item(RowAction::CreateTask, i18n("Create Task…"), "task-due"),
         ]);
-        sections.push(vec![self.card_remote_entry(&m, sender)]);
+        let mut content = vec![self.card_remote_entry(&m, sender)];
+        content.extend(sender_style_entry(&hit, &m));
+        sections.push(content);
         if let Some(folds) = fold_entries(&hit) {
             sections.push(folds);
         }

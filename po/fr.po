@@ -288,6 +288,14 @@ msgstr "Déplier tous les messages"
 msgid "Collapse All Messages"
 msgstr "Réduire tous les messages"
 
+#, fuzzy
+msgid "Back to My Fonts and Colors"
+msgstr "Retour à mes polices et couleurs"
+
+#, fuzzy
+msgid "Show Sender's Fonts and Colors"
+msgstr "Afficher les polices et les couleurs de l’expéditeur"
+
 msgid "View Source"
 msgstr "Afficher le code source"
 
@@ -5027,21 +5035,6 @@ msgid "Drag to resize, double-click for the usual width"
 msgstr ""
 "Faites glisser pour redimensionner, double-cliquez pour la largeur habituelle"
 
-msgid "Mark as read"
-msgstr "Marquer comme lu"
-
-msgid "Not spam"
-msgstr "Non indésirable"
-
-msgid "Add sender to Contacts"
-msgstr "Ajouter l’expéditeur aux contacts"
-
-msgid "Mark as unread"
-msgstr "Marquer comme non lu"
-
-msgid "Remove star"
-msgstr "Retirer l’étoile"
-
 msgid "High importance"
 msgstr "Importance haute"
 
@@ -5178,48 +5171,6 @@ msgstr "Masquer les destinataires"
 
 msgid "Show recipients"
 msgstr "Afficher les destinataires"
-
-msgid "Mark as read or unread"
-msgstr "Marquer comme lu ou non lu"
-
-msgid "Star this message"
-msgstr "Ajouter une étoile à ce message"
-
-msgid "View source"
-msgstr "Afficher le code source"
-
-msgid "Translate this message"
-msgstr "Traduire ce message"
-
-msgid "Reply to this message"
-msgstr "Répondre à ce message"
-
-msgid "Reply to everyone on this message"
-msgstr "Répondre à tous sur ce message"
-
-msgid "Forward this message"
-msgstr "Transférer ce message"
-
-msgid "Move this message to a folder"
-msgstr "Déplacer ce message vers un dossier"
-
-msgid "Archive this message"
-msgstr "Archiver ce message"
-
-msgid "Delete this message"
-msgstr "Supprimer ce message"
-
-msgid "Back to my fonts and colors"
-msgstr "Retour à mes polices et couleurs"
-
-msgid "Show the sender's fonts and colors"
-msgstr "Afficher les polices et les couleurs de l’expéditeur"
-
-msgid "Show remote content"
-msgstr "Afficher le contenu distant"
-
-msgid "Block remote content"
-msgstr "Bloquer le contenu distant"
 
 msgid "Click to open this message"
 msgstr "Cliquez pour ouvrir ce message"
@@ -5967,15 +5918,6 @@ msgstr "Mode Lecture activé"
 msgid "Reader View off"
 msgstr "Mode Lecture désactivé"
 
-msgid "Hidden behind a toggle"
-msgstr "Masqué derrière un bouton"
-
-msgid "Shown while hovering"
-msgstr "Affiché au survol"
-
-msgid "Always visible"
-msgstr "Toujours visible"
-
 msgid "Ask each time"
 msgstr "Demander à chaque fois"
 
@@ -6202,6 +6144,9 @@ msgstr "Message transféré"
 
 msgid "Each opens in a window for you to check and send."
 msgstr ""
+
+msgid "Mark as read or unread"
+msgstr "Marquer comme lu ou non lu"
 
 #, fuzzy
 msgid "Add and remove stars"
@@ -6463,15 +6408,6 @@ msgstr "Teinter les messages avec tag"
 msgid "In the color of its first tag."
 msgstr "Dans la couleur de son premier tag."
 
-msgid "Actions palette in the message list"
-msgstr "Palette d’actions dans la liste des messages"
-
-msgid "The ⋯ row under each message."
-msgstr "La ligne ⋯ sous chaque message."
-
-msgid "Open the actions palette on hover"
-msgstr "Ouvrir la palette d’actions au survol"
-
 msgid "Swipe actions"
 msgstr "Actions par glissement"
 
@@ -6491,13 +6427,6 @@ msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
 "Augmentez-la si les balayages s’arrêtent trop tôt. Les glissements à la "
 "souris ne sont pas affectés."
-
-msgid "Actions palette timeout"
-msgstr "Délai d’expiration de la palette d’actions"
-
-msgid "Seconds it stays open after the pointer leaves."
-msgstr ""
-"Secondes pendant lesquelles il reste ouvert après que le pointeur l’a quitté."
 
 msgid "Columns"
 msgstr "Colonnes"
@@ -6906,6 +6835,9 @@ msgstr "Insérer"
 msgid "Show or hide folders"
 msgstr "Afficher ou masquer les dossiers"
 
+msgid "Long-press to expand or collapse"
+msgstr "Appui long pour déplier ou replier"
+
 msgid "Show or hide labels"
 msgstr "Afficher ou masquer les tags"
 
@@ -7010,9 +6942,6 @@ msgstr "Afficher chaque dossier intelligent"
 
 msgid "Show each address book"
 msgstr "Afficher chaque carnet d’adresses"
-
-msgid "Long-press to expand or collapse"
-msgstr "Appui long pour déplier ou replier"
 
 msgid "Show or hide tags"
 msgstr "Afficher ou masquer les tags"
@@ -8233,6 +8162,9 @@ msgstr "Mots ajoutés"
 msgid "Changes apply after a restart."
 msgstr "Les changements s’appliquent après un redémarrage."
 
+msgid "Mark as read"
+msgstr "Marquer comme lu"
+
 msgid "Conversations mark each message as it comes into view."
 msgstr ""
 "Les conversations marquent chaque message au moment où il apparaît à l’écran."
@@ -8287,18 +8219,6 @@ msgstr "Police monospace"
 
 msgid "The system's monospace font unless another is chosen."
 msgstr "La police à espacement fixe du système, sauf si une autre est choisie."
-
-msgid "Message card actions palette"
-msgstr "Palette d’actions de la carte du message"
-
-msgid "Message card actions palette timeout"
-msgstr "Délai d’expiration de la palette d’actions de la carte du message"
-
-msgid "Message card actions palette as a menu"
-msgstr "Palette d’actions de la carte du message sous forme de menu"
-
-msgid "The ⋯ opens the right-click menu instead."
-msgstr "Le ⋯ ouvre à la place le menu contextuel."
 
 msgid "Single messages as cards"
 msgstr "Messages isolés sous forme de cartes"
@@ -8650,6 +8570,89 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Not spam"
+#~ msgstr "Non indésirable"
+
+#~ msgid "Add sender to Contacts"
+#~ msgstr "Ajouter l’expéditeur aux contacts"
+
+#~ msgid "Mark as unread"
+#~ msgstr "Marquer comme non lu"
+
+#~ msgid "Remove star"
+#~ msgstr "Retirer l’étoile"
+
+#~ msgid "Star this message"
+#~ msgstr "Ajouter une étoile à ce message"
+
+#~ msgid "View source"
+#~ msgstr "Afficher le code source"
+
+#~ msgid "Translate this message"
+#~ msgstr "Traduire ce message"
+
+#~ msgid "Reply to this message"
+#~ msgstr "Répondre à ce message"
+
+#~ msgid "Reply to everyone on this message"
+#~ msgstr "Répondre à tous sur ce message"
+
+#~ msgid "Forward this message"
+#~ msgstr "Transférer ce message"
+
+#~ msgid "Move this message to a folder"
+#~ msgstr "Déplacer ce message vers un dossier"
+
+#~ msgid "Archive this message"
+#~ msgstr "Archiver ce message"
+
+#~ msgid "Delete this message"
+#~ msgstr "Supprimer ce message"
+
+#~ msgid "Show remote content"
+#~ msgstr "Afficher le contenu distant"
+
+#~ msgid "Block remote content"
+#~ msgstr "Bloquer le contenu distant"
+
+#~ msgid "Hidden behind a toggle"
+#~ msgstr "Masqué derrière un bouton"
+
+#~ msgid "Shown while hovering"
+#~ msgstr "Affiché au survol"
+
+#~ msgid "Always visible"
+#~ msgstr "Toujours visible"
+
+#~ msgid "Actions palette in the message list"
+#~ msgstr "Palette d’actions dans la liste des messages"
+
+#~ msgid "The ⋯ row under each message."
+#~ msgstr "La ligne ⋯ sous chaque message."
+
+#~ msgid "Open the actions palette on hover"
+#~ msgstr "Ouvrir la palette d’actions au survol"
+
+#~ msgid "Actions palette timeout"
+#~ msgstr "Délai d’expiration de la palette d’actions"
+
+#~ msgid "Seconds it stays open after the pointer leaves."
+#~ msgstr ""
+#~ "Secondes pendant lesquelles il reste ouvert après que le pointeur l’a "
+#~ "quitté."
+
+#~ msgid "Message card actions palette"
+#~ msgstr "Palette d’actions de la carte du message"
+
+#~ msgid "Message card actions palette timeout"
+#~ msgstr "Délai d’expiration de la palette d’actions de la carte du message"
+
+#~ msgid "Message card actions palette as a menu"
+#~ msgstr "Palette d’actions de la carte du message sous forme de menu"
+
+#~ msgid "The ⋯ opens the right-click menu instead."
+#~ msgstr "Le ⋯ ouvre à la place le menu contextuel."
 
 #~ msgid "Received"
 #~ msgstr "Reçu"

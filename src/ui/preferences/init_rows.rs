@@ -13,7 +13,6 @@ impl Preferences {
             &widgets.general.fetch_row,
             &widgets.list.preview_lines_row,
             &widgets.reading.message_theme_row,
-            &widgets.reading.card_actions_row,
             &widgets.appearance.app_theme_row,
             &widgets.appearance.text_scale_row,
             &widgets.appearance.settings_open_row,
@@ -775,7 +774,7 @@ impl Preferences {
             .set_selected(theme_sel as u32);
     }
 
-    /// The reader's font and color overrides, and the swipe and palette timing
+    /// The reader's font and color overrides, and the swipe timing
     /// rows.
     pub(super) fn init_reader_fonts_and_gestures(
         &self,
@@ -862,23 +861,6 @@ impl Preferences {
         widgets
             .list
             .swipe_sensitivity_row
-            .set_adjustment(Some(&adj));
-
-        // Hover-palette delay spinner (0–3000ms, step 50).
-        // Actions palette timeout: 1–30 seconds.
-        let adj = gtk::Adjustment::new(init.palette_collapse_secs as f64, 1.0, 30.0, 1.0, 5.0, 0.0);
-        widgets.list.palette_collapse_row.set_adjustment(Some(&adj));
-        let adj = gtk::Adjustment::new(
-            init.card_palette_collapse_secs as f64,
-            1.0,
-            30.0,
-            1.0,
-            5.0,
-            0.0,
-        );
-        widgets
-            .reading
-            .card_palette_collapse_row
             .set_adjustment(Some(&adj));
 
         widgets

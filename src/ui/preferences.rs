@@ -110,12 +110,6 @@ pub(crate) struct Preferences {
     /// Mirrors the expandable-conversations switch — "expand by default" only
     /// means anything while conversations can expand in the list at all.
     thread_expansion: bool,
-    /// Mirrors the list-palette switch, so the hover row under it can grey
-    /// out when there is no palette to open.
-    list_palette: bool,
-    /// Mirrors the card-actions mode: only its hidden-behind-a-toggle choice
-    /// has a ⋯, so only there can the ⋯ stand in for a menu.
-    card_actions_hover: bool,
     /// Mirrors the sender-avatars switch: with no circles drawn at all,
     /// whose face they would show doesn't arise (#189).
     avatars: bool,
@@ -429,8 +423,6 @@ impl Component for Preferences {
             swipe_enabled: init.swipe_enabled,
             threading: init.threading,
             thread_expansion: init.thread_expansion,
-            list_palette: init.list_palette,
-            card_actions_hover: init.card_actions_hover,
             avatars: init.avatars,
             panels_stack: None,
             accounts_slot: None,
@@ -468,7 +460,7 @@ impl Component for Preferences {
         let list_page = &list.page;
         let conversations = ConversationsPage::build(&model, &sender);
         let conversations_page = &conversations.page;
-        let reading = ReadingPage::build(&model, &sender);
+        let reading = ReadingPage::build(&sender);
         let reading_page = &reading.page;
         let composing = ComposingPage::build(&sender);
         let composing_page = &composing.page;
@@ -548,7 +540,6 @@ impl Component for Preferences {
         sidebar.update_view(model);
         list.update_view(model);
         conversations.update_view(model);
-        reading.update_view(model);
         assistants.update_view(model);
         system.update_view(model);
     }
@@ -589,10 +580,6 @@ impl Component for Preferences {
             PrefInput::ToggleThreadExpansion(on) => self.on_toggle_thread_expansion(on, sender),
             PrefInput::ChangeReaderDefault(idx) => self.on_change_reader_default(idx, sender),
             PrefInput::ChangeReaderZoom(idx) => self.on_change_reader_zoom(idx, sender),
-            PrefInput::ChangeCardActionsMode(index) => {
-                self.on_change_card_actions_mode(index, sender)
-            }
-            PrefInput::ToggleListPalette(on) => self.on_toggle_list_palette(on, sender),
             PrefInput::ToggleSwipeEnabled(on) => self.on_toggle_swipe_enabled(on, sender),
             PrefInput::ChangeComposeDefaultFrom(index) => {
                 self.on_change_compose_default_from(index, sender)

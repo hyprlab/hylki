@@ -226,53 +226,6 @@ fn a_card_with_no_recipients_shows_no_chip() {
     );
 }
 
-#[test]
-fn a_card_offers_remote_content_both_ways_and_only_where_there_is_any() {
-    let mut with_remote = msg_for_print();
-    with_remote.body = "<p>Hello</p><img src=\"https://example.com/track.gif\">".into();
-    let mut without = msg_for_print();
-    without.id = 2;
-    without.body = "<p>Just words.</p>".into();
-    let doc_for = |restrict: bool| {
-        MessageView::conversation_document(
-            &[with_remote.clone(), without.clone()],
-            &std::collections::HashMap::new(),
-            &Default::default(),
-            &Default::default(),
-            &[],
-            "#3584e4",
-            restrict,
-            false,
-            false,
-            false,
-            &crate::config::ReaderStyle::NONE,
-            &Default::default(),
-            false,
-            100,
-        )
-    };
-    // Only the card with something to load carries the button.
-    let blocked = doc_for(true);
-    assert_eq!(
-        blocked.matches("data-act=\"remote\"").count(),
-        1,
-        "{blocked}"
-    );
-    assert!(blocked.contains("Show remote content"), "{blocked}");
-    assert!(
-        !blocked.contains("class=\"hylki-act on\" data-act=\"remote\""),
-        "not lit while blocked"
-    );
-    // Showing it, the same button offers to put the block back, and is lit.
-    let shown = doc_for(false);
-    assert_eq!(shown.matches("data-act=\"remote\"").count(), 1, "{shown}");
-    assert!(shown.contains("Block remote content"), "{shown}");
-    assert!(
-        shown.contains("class=\"hylki-act on\" data-act=\"remote\""),
-        "lit while showing: {shown}"
-    );
-}
-
 /// Each card carries its own Reply/Reply all/Forward, keyed to that message
 /// — the toolbar's buttons are disabled in a conversation precisely because
 /// they could not say which message they meant.
@@ -297,16 +250,14 @@ fn every_card_carries_its_own_actions_keyed_to_that_message() {
         false,
         100,
     );
-    for act in ["reply", "replyall", "forward"] {
-        assert_eq!(
-            doc.matches(&format!("data-act=\"{act}\"")).count(),
-            2,
-            "one {act} button per card: {doc}"
-        );
-    }
-    // Keyed per message, so the action can't land on the wrong one.
-    assert!(doc.contains("data-act=\"reply\" data-key=\"1:1\""), "{doc}");
-    assert!(doc.contains("data-act=\"reply\" data-key=\"1:2\""), "{doc}");
+    assert_eq!(
+        doc.matches("class=\"hylki-acts-toggle\"").count(),
+        2,
+        "one menu button per card: {doc}"
+    );
+    // Keyed per message, so the menu can't open for the wrong one.
+    assert!(doc.contains("data-key=\"1:1\">"), "{doc}");
+    assert!(doc.contains("data-key=\"1:2\">"), "{doc}");
 }
 
 /// An unread message in a conversation is marked with its dot; reading is
@@ -503,8 +454,8 @@ fn a_single_message_keeps_the_header_but_goes_full_bleed() {
         "no card gutter: {doc}"
     );
     assert!(
-        doc.contains("data-act=\"reply\""),
-        "card actions present: {doc}"
+        doc.contains("class=\"hylki-acts-toggle\""),
+        "card menu present: {doc}"
     );
     // Full-bleed also means the plain ground, not the cards' deeper page.
     assert!(

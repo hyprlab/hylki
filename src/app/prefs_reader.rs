@@ -72,16 +72,6 @@ impl AppModel {
         self.popouts_emit(|| MessageWindowInput::SetReaderStyle(style.clone()));
     }
 
-    /// Tell the reader how card actions should show (⋯ toggle / auto on
-    /// hover / always).
-    fn push_card_actions_mode(&self) {
-        self.message_view
-            .emit(MessageViewInput::SetCardActionsMode {
-                hover_toggle: self.card_actions_hover,
-                hover_auto: self.card_actions_auto,
-            });
-    }
-
     /// The settings changes the router sends here (see `AppModel::route`).
     pub(super) fn on_prefs_reader_pref(&mut self, pref: PrefOutput) {
         match pref {
@@ -186,18 +176,6 @@ impl AppModel {
                 pref!(self.confirm_thread_delete = on);
             }
 
-            PrefOutput::SetCardActionsMode {
-                hover_toggle,
-                hover_auto,
-            } => {
-                if self.card_actions_hover != hover_toggle || self.card_actions_auto != hover_auto {
-                    self.card_actions_hover = hover_toggle;
-                    self.card_actions_auto = hover_auto;
-                    self.save_settings();
-                    self.push_card_actions_mode();
-                }
-            }
-
             PrefOutput::SetThreadsExpanded(on) => {
                 if pref!(self.threads_expanded = on) {
                     self.message_list
@@ -289,20 +267,6 @@ impl AppModel {
                             self.show_message(Some(m), false);
                         }
                     }
-                }
-            }
-
-            PrefOutput::SetCardPaletteCollapse(secs) => {
-                if pref!(self.card_palette_collapse_secs = secs) {
-                    self.message_view
-                        .emit(MessageViewInput::SetPaletteCollapse(secs));
-                }
-            }
-
-            PrefOutput::SetCardPaletteMenu(on) => {
-                if pref!(self.card_palette_menu = on) {
-                    self.message_view
-                        .emit(MessageViewInput::SetCardPaletteMenu(on));
                 }
             }
 

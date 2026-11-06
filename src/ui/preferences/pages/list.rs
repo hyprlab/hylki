@@ -20,12 +20,9 @@ pub(in crate::ui::preferences) struct ListPage {
     pub(in crate::ui::preferences) list_search_place_row: adw::ComboRow,
     pub(in crate::ui::preferences) list_bulk_place_row: adw::ComboRow,
     pub(in crate::ui::preferences) tag_row_tint_row: adw::SwitchRow,
-    pub(in crate::ui::preferences) list_palette_row: adw::SwitchRow,
-    pub(in crate::ui::preferences) list_palette_hover_row: adw::SwitchRow,
     pub(in crate::ui::preferences) swipe_enabled_row: adw::SwitchRow,
     pub(in crate::ui::preferences) swipe_reversed_row: adw::SwitchRow,
     pub(in crate::ui::preferences) swipe_sensitivity_row: adw::SpinRow,
-    pub(in crate::ui::preferences) palette_collapse_row: adw::SpinRow,
     pub(in crate::ui::preferences) columns_group: adw::PreferencesGroup,
     pub(in crate::ui::preferences) list_headings_row: adw::SwitchRow,
     pub(in crate::ui::preferences) list_fit_row: adw::SwitchRow,
@@ -128,25 +125,6 @@ impl ListPage {
                         },
                     },
 
-                    #[name = "list_palette_row"]
-                    adw::SwitchRow {
-                        set_title: &i18n("Actions palette in the message list"),
-                        set_subtitle: &i18n("The ⋯ row under each message."),
-                        connect_active_notify[sender] => move |row| {
-                            sender.input(PrefInput::ToggleListPalette(row.is_active()));
-                        },
-                    },
-
-                    #[name = "list_palette_hover_row"]
-                    adw::SwitchRow {
-                        // Kept current by update_view.
-                        set_sensitive: model.list_palette,
-                        set_title: &i18n("Open the actions palette on hover"),
-                        connect_active_notify[sender] => move |row| {
-                            let _ = sender.output(PrefOutput::SetListPaletteHover(row.is_active()));
-                        },
-                    },
-
                     #[name = "swipe_enabled_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Swipe actions"),
@@ -177,14 +155,6 @@ impl ListPage {
                         },
                     },
 
-                    #[name = "palette_collapse_row"]
-                    adw::SpinRow {
-                        set_title: &i18n("Actions palette timeout"),
-                        set_subtitle: &i18n("Seconds it stays open after the pointer leaves."),
-                        connect_value_notify[sender] => move |row| {
-                            let _ = sender.output(PrefOutput::SetPaletteCollapse(row.value() as u64));
-                        },
-                    },
                 },
 
                 // The single-line list's columns (#334): two
@@ -244,12 +214,9 @@ impl ListPage {
             list_search_place_row,
             list_bulk_place_row,
             tag_row_tint_row,
-            list_palette_row,
-            list_palette_hover_row,
             swipe_enabled_row,
             swipe_reversed_row,
             swipe_sensitivity_row,
-            palette_collapse_row,
             columns_group,
             list_headings_row,
             list_fit_row,
@@ -261,8 +228,6 @@ impl ListPage {
     /// view had them (see the module comment of `pages`).
     pub(in crate::ui::preferences) fn update_view(&self, model: &Preferences) {
         self.own_mailbox_face_row.set_sensitive(model.avatars);
-        self.list_palette_hover_row
-            .set_sensitive(model.list_palette);
         self.swipe_reversed_row.set_sensitive(model.swipe_enabled);
         self.swipe_sensitivity_row
             .set_sensitive(model.swipe_enabled);

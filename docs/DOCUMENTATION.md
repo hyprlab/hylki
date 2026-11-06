@@ -1866,6 +1866,10 @@ Printing shows every message in full.
 
 ### The reader's toolbar
 
+The ⋯ at the end of a message's header opens the same menu as a right click on
+the message. It acts on that message, and has **Show Sender's Fonts and Colors**
+while **Settings → Reading → Use my own font** or **Use my own colors** is on.
+
 The buttons above the message are in two groups. The left group, up to seven
 buttons, stays on the bar at every width: Reply, Reply All, Forward, Star,
 Archive, Spam and Delete by default. The right group folds into a ⋯ menu:
@@ -2016,9 +2020,9 @@ their own. **Single line** puts them on one line in columns: the sender's
 circle and name, the subject with the text dimmed after it, then tags, a
 paperclip, the conversation's size and a short date. **Automatic** uses one
 line while the list pane is dragged wider than about 600 pixels and cards
-when it is narrower. On one line the actions palette is not shown and a
-row does not swipe, as sideways is how the list scrolls to its columns;
-the right-click menu and keyboard shortcuts do the same things.
+when it is narrower. On one line a row does not swipe, as sideways is how
+the list scrolls to its columns; the right-click menu and keyboard shortcuts
+do the same things.
 
 **Settings → Message List → Columns** chooses what a single line shows and
 in what order: drag a column between **Shown** and **Not shown**, or along

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Removed: the actions palettes on message rows and message cards.** The ⋯ on
+  a card opens the same menu as a right click, and a row is acted on with its
+  right-click menu, swipes and keyboard shortcuts. Rows no longer carry a ⋯, and
+  rows without avatars are shorter for it. Settings → Message List and Reading
+  lose the palette switches and timeouts. Show Sender's Fonts and Colors moved
+  from the palette to the card's menu.
+
 - **Fixed: Focus Mode's list rows held their text above the middle of the
   highlight.** It is now centered. Rows with avatars switched off outside Focus
   Mode keep their text at the top.

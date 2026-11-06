@@ -142,33 +142,6 @@ impl Preferences {
             .confirm_thread_delete_row
             .set_active(init.confirm_thread_delete);
         widgets
-            .reading
-            .card_actions_row
-            .set_model(Some(&gtk::StringList::new(&[
-                i18n("Hidden behind a toggle").as_str(),
-                i18n("Shown while hovering").as_str(),
-                i18n("Always visible").as_str(),
-            ])));
-        widgets
-            .reading
-            .card_actions_row
-            .set_selected(if init.card_actions_hover {
-                0
-            } else if init.card_actions_auto {
-                1
-            } else {
-                2
-            });
-        widgets.list.list_palette_row.set_active(init.list_palette);
-        widgets
-            .list
-            .list_palette_hover_row
-            .set_active(init.list_palette_hover);
-        widgets
-            .reading
-            .card_palette_menu_row
-            .set_active(init.card_palette_menu);
-        widgets
             .list
             .swipe_enabled_row
             .set_active(init.swipe_enabled);

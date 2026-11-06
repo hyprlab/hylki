@@ -289,6 +289,14 @@ msgstr "Ανάπτυξη όλων των μηνυμάτων"
 msgid "Collapse All Messages"
 msgstr "Σύμπτυξη όλων των μηνυμάτων"
 
+#, fuzzy
+msgid "Back to My Fonts and Colors"
+msgstr "Επιστροφή στις γραμματοσειρές και τα χρώματά μου"
+
+#, fuzzy
+msgid "Show Sender's Fonts and Colors"
+msgstr "Εμφάνιση των γραμματοσειρών και των χρωμάτων του αποστολέα"
+
 msgid "View Source"
 msgstr "Προβολή πηγαίου κώδικα"
 
@@ -5046,21 +5054,6 @@ msgstr "Εμφάνιση συζήτησης"
 msgid "Drag to resize, double-click for the usual width"
 msgstr "Σύρετε για αλλαγή μεγέθους, κάντε διπλό κλικ για το συνηθισμένο πλάτος"
 
-msgid "Mark as read"
-msgstr "Σήμανση ως αναγνωσμένο"
-
-msgid "Not spam"
-msgstr "Μη ανεπιθύμητο"
-
-msgid "Add sender to Contacts"
-msgstr "Προσθήκη αποστολέα στις Επαφές"
-
-msgid "Mark as unread"
-msgstr "Σήμανση ως μη αναγνωσμένο"
-
-msgid "Remove star"
-msgstr "Αφαίρεση αστεριού"
-
 msgid "High importance"
 msgstr "Υψηλή σημασία"
 
@@ -5197,48 +5190,6 @@ msgstr "Απόκρυψη παραληπτών"
 
 msgid "Show recipients"
 msgstr "Εμφάνιση παραληπτών"
-
-msgid "Mark as read or unread"
-msgstr "Σήμανση ως αναγνωσμένο ή μη αναγνωσμένο"
-
-msgid "Star this message"
-msgstr "Προσθήκη αστεριού σε αυτό το μήνυμα"
-
-msgid "View source"
-msgstr "Προβολή πηγαίου κώδικα"
-
-msgid "Translate this message"
-msgstr "Μετάφραση αυτού του μηνύματος"
-
-msgid "Reply to this message"
-msgstr "Απάντηση σε αυτό το μήνυμα"
-
-msgid "Reply to everyone on this message"
-msgstr "Απάντηση σε όλους σε αυτό το μήνυμα"
-
-msgid "Forward this message"
-msgstr "Προώθηση αυτού του μηνύματος"
-
-msgid "Move this message to a folder"
-msgstr "Μετακίνηση αυτού του μηνύματος σε φάκελο"
-
-msgid "Archive this message"
-msgstr "Αρχειοθέτηση αυτού του μηνύματος"
-
-msgid "Delete this message"
-msgstr "Διαγραφή αυτού του μηνύματος"
-
-msgid "Back to my fonts and colors"
-msgstr "Επιστροφή στις γραμματοσειρές και τα χρώματά μου"
-
-msgid "Show the sender's fonts and colors"
-msgstr "Εμφάνιση των γραμματοσειρών και των χρωμάτων του αποστολέα"
-
-msgid "Show remote content"
-msgstr "Εμφάνιση απομακρυσμένου περιεχομένου"
-
-msgid "Block remote content"
-msgstr "Αποκλεισμός απομακρυσμένου περιεχομένου"
 
 msgid "Click to open this message"
 msgstr "Κάντε κλικ για να ανοίξετε αυτό το μήνυμα"
@@ -5984,15 +5935,6 @@ msgstr "Προβολή ανάγνωσης ενεργή"
 msgid "Reader View off"
 msgstr "Προβολή ανάγνωσης ανενεργή"
 
-msgid "Hidden behind a toggle"
-msgstr "Κρυμμένη πίσω από διακόπτη"
-
-msgid "Shown while hovering"
-msgstr "Εμφάνιση κατά την αιώρηση"
-
-msgid "Always visible"
-msgstr "Πάντα ορατή"
-
 msgid "Ask each time"
 msgstr "Ερώτηση κάθε φορά"
 
@@ -6219,6 +6161,9 @@ msgstr "Προωθημένο μήνυμα"
 
 msgid "Each opens in a window for you to check and send."
 msgstr ""
+
+msgid "Mark as read or unread"
+msgstr "Σήμανση ως αναγνωσμένο ή μη αναγνωσμένο"
 
 #, fuzzy
 msgid "Add and remove stars"
@@ -6482,15 +6427,6 @@ msgstr "Χρωματισμός μηνυμάτων με ετικέτα"
 msgid "In the color of its first tag."
 msgstr "Στο χρώμα της πρώτης ετικέτας του."
 
-msgid "Actions palette in the message list"
-msgstr "Παλέτα ενεργειών στη λίστα μηνυμάτων"
-
-msgid "The ⋯ row under each message."
-msgstr "Η γραμμή ⋯ κάτω από κάθε μήνυμα."
-
-msgid "Open the actions palette on hover"
-msgstr "Άνοιγμα της παλέτας ενεργειών κατά την αιώρηση"
-
 msgid "Swipe actions"
 msgstr "Ενέργειες σάρωσης"
 
@@ -6510,12 +6446,6 @@ msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
 "Αυξήστε την τιμή αν οι κινήσεις σάρωσης δεν φτάνουν μέχρι το τέλος. Οι "
 "κινήσεις με το ποντίκι δεν επηρεάζονται."
-
-msgid "Actions palette timeout"
-msgstr "Χρόνος λήξης παλέτας ενεργειών"
-
-msgid "Seconds it stays open after the pointer leaves."
-msgstr "Δευτερόλεπτα που παραμένει ανοιχτό αφού απομακρυνθεί ο δείκτης."
 
 msgid "Columns"
 msgstr "Στήλες"
@@ -6932,6 +6862,9 @@ msgstr "Εισαγωγή"
 msgid "Show or hide folders"
 msgstr "Εμφάνιση ή απόκρυψη φακέλων"
 
+msgid "Long-press to expand or collapse"
+msgstr "Παρατεταμένο πάτημα για ανάπτυξη ή σύμπτυξη"
+
 msgid "Show or hide labels"
 msgstr "Εμφάνιση ή απόκρυψη ετικετών"
 
@@ -7036,9 +6969,6 @@ msgstr "Εμφάνιση κάθε έξυπνου φακέλου"
 
 msgid "Show each address book"
 msgstr "Εμφάνιση κάθε καταλόγου διευθύνσεων"
-
-msgid "Long-press to expand or collapse"
-msgstr "Παρατεταμένο πάτημα για ανάπτυξη ή σύμπτυξη"
 
 msgid "Show or hide tags"
 msgstr "Εμφάνιση ή απόκρυψη ετικετών"
@@ -8273,6 +8203,9 @@ msgstr "Λέξεις που προστέθηκαν"
 msgid "Changes apply after a restart."
 msgstr "Οι αλλαγές εφαρμόζονται μετά από επανεκκίνηση."
 
+msgid "Mark as read"
+msgstr "Σήμανση ως αναγνωσμένο"
+
 msgid "Conversations mark each message as it comes into view."
 msgstr "Οι συζητήσεις σημειώνουν κάθε μήνυμα ως αναγνωσμένο καθώς εμφανίζεται."
 
@@ -8325,18 +8258,6 @@ msgstr "Γραμματοσειρά σταθερού πλάτους"
 
 msgid "The system's monospace font unless another is chosen."
 msgstr "Η γραμματοσειρά monospace του συστήματος, εκτός αν επιλεγεί άλλη."
-
-msgid "Message card actions palette"
-msgstr "Παλέτα ενεργειών κάρτας μηνύματος"
-
-msgid "Message card actions palette timeout"
-msgstr "Χρόνος λήξης παλέτας ενεργειών κάρτας μηνύματος"
-
-msgid "Message card actions palette as a menu"
-msgstr "Παλέτα ενεργειών κάρτας μηνύματος ως μενού"
-
-msgid "The ⋯ opens the right-click menu instead."
-msgstr "Το ⋯ ανοίγει αντί γι’ αυτό το μενού δεξιού κλικ."
 
 msgid "Single messages as cards"
 msgstr "Μεμονωμένα μηνύματα ως κάρτες"
@@ -8693,6 +8614,87 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Not spam"
+#~ msgstr "Μη ανεπιθύμητο"
+
+#~ msgid "Add sender to Contacts"
+#~ msgstr "Προσθήκη αποστολέα στις Επαφές"
+
+#~ msgid "Mark as unread"
+#~ msgstr "Σήμανση ως μη αναγνωσμένο"
+
+#~ msgid "Remove star"
+#~ msgstr "Αφαίρεση αστεριού"
+
+#~ msgid "Star this message"
+#~ msgstr "Προσθήκη αστεριού σε αυτό το μήνυμα"
+
+#~ msgid "View source"
+#~ msgstr "Προβολή πηγαίου κώδικα"
+
+#~ msgid "Translate this message"
+#~ msgstr "Μετάφραση αυτού του μηνύματος"
+
+#~ msgid "Reply to this message"
+#~ msgstr "Απάντηση σε αυτό το μήνυμα"
+
+#~ msgid "Reply to everyone on this message"
+#~ msgstr "Απάντηση σε όλους σε αυτό το μήνυμα"
+
+#~ msgid "Forward this message"
+#~ msgstr "Προώθηση αυτού του μηνύματος"
+
+#~ msgid "Move this message to a folder"
+#~ msgstr "Μετακίνηση αυτού του μηνύματος σε φάκελο"
+
+#~ msgid "Archive this message"
+#~ msgstr "Αρχειοθέτηση αυτού του μηνύματος"
+
+#~ msgid "Delete this message"
+#~ msgstr "Διαγραφή αυτού του μηνύματος"
+
+#~ msgid "Show remote content"
+#~ msgstr "Εμφάνιση απομακρυσμένου περιεχομένου"
+
+#~ msgid "Block remote content"
+#~ msgstr "Αποκλεισμός απομακρυσμένου περιεχομένου"
+
+#~ msgid "Hidden behind a toggle"
+#~ msgstr "Κρυμμένη πίσω από διακόπτη"
+
+#~ msgid "Shown while hovering"
+#~ msgstr "Εμφάνιση κατά την αιώρηση"
+
+#~ msgid "Always visible"
+#~ msgstr "Πάντα ορατή"
+
+#~ msgid "Actions palette in the message list"
+#~ msgstr "Παλέτα ενεργειών στη λίστα μηνυμάτων"
+
+#~ msgid "The ⋯ row under each message."
+#~ msgstr "Η γραμμή ⋯ κάτω από κάθε μήνυμα."
+
+#~ msgid "Open the actions palette on hover"
+#~ msgstr "Άνοιγμα της παλέτας ενεργειών κατά την αιώρηση"
+
+#~ msgid "Actions palette timeout"
+#~ msgstr "Χρόνος λήξης παλέτας ενεργειών"
+
+#~ msgid "Seconds it stays open after the pointer leaves."
+#~ msgstr "Δευτερόλεπτα που παραμένει ανοιχτό αφού απομακρυνθεί ο δείκτης."
+
+#~ msgid "Message card actions palette"
+#~ msgstr "Παλέτα ενεργειών κάρτας μηνύματος"
+
+#~ msgid "Message card actions palette timeout"
+#~ msgstr "Χρόνος λήξης παλέτας ενεργειών κάρτας μηνύματος"
+
+#~ msgid "Message card actions palette as a menu"
+#~ msgstr "Παλέτα ενεργειών κάρτας μηνύματος ως μενού"
+
+#~ msgid "The ⋯ opens the right-click menu instead."
+#~ msgstr "Το ⋯ ανοίγει αντί γι’ αυτό το μενού δεξιού κλικ."
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"

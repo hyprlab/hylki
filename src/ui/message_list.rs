@@ -309,8 +309,6 @@ pub(crate) struct MessageList {
     /// row keeps its count chip and chevron, but never opens — the thread is
     /// read through the reader's cards instead.
     thread_expansion: bool,
-    /// Whether rows carry the actions palette line at all (preference).
-    list_palette: bool,
     /// One line per message (#334): set by the Layout setting, or by the
     /// pane's width when it is Automatic.
     single_line: bool,

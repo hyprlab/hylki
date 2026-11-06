@@ -344,20 +344,13 @@ fn sender_style_toggle_escapes_one_card() {
         false,
         100,
     );
-    assert_eq!(doc.matches("data-act=\"senderfmt\"").count(), 2, "{doc}");
-    assert_eq!(
-        doc.matches("class=\"hylki-act on\" data-act=\"senderfmt\"")
-            .count(),
-        1,
-        "{doc}"
-    );
     assert_eq!(
         doc.matches(":root :not(#hylki-a)").count(),
         1,
         "only the other card is styled: {doc}"
     );
 
-    // No override: no toggle, nothing injected.
+    // No override: nothing injected.
     let plain = MessageView::conversation_document(
         &[a, b],
         &Default::default(),
@@ -374,7 +367,6 @@ fn sender_style_toggle_escapes_one_card() {
         false,
         100,
     );
-    assert!(!plain.contains("senderfmt"), "{plain}");
     assert!(!plain.contains(":not(#hylki-a)"), "{plain}");
 }
 
