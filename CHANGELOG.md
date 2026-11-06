@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **Changed: Focus Mode keeps Favorites, Filters and Tags above the accounts**,
+  whatever Settings → Sidebar places them at. One placed Off stays off.
+
 - **Changed: the message list can be dragged narrower**, down to 290 pixels from
   348. The selection bar's buttons draw tighter below 344 pixels so they all
   still fit.

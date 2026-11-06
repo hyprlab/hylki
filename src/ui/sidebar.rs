@@ -226,6 +226,9 @@ pub(crate) struct Sidebar {
     contacts_placement: crate::config::SectionPlacement,
     /// Focus Mode: the account sections are hidden.
     focus_hide_accounts: bool,
+    /// Focus Mode is on: Favorites, Filters and Tags go above the accounts,
+    /// whatever their placement says.
+    focus_on: bool,
     /// Focus Mode: the unified rows show folded, whatever their saved
     /// state; a click opens one for the mode alone (`rail_open`), the way
     /// the icon rail does.
@@ -408,6 +411,7 @@ impl Component for Sidebar {
             favorites_placement: crate::config::SectionPlacement::AboveAccounts,
             contacts_placement: crate::config::SectionPlacement::AboveAccounts,
             focus_hide_accounts: false,
+            focus_on: false,
             focus_fold_unified: false,
             accounts_revealer: None,
             reveal_accounts_late: false,
@@ -533,10 +537,11 @@ impl Sidebar {
             SidebarInput::SetBusy(busy) => self.on_set_busy(busy),
             SidebarInput::SetOffline(offline) => self.on_set_offline(offline),
             SidebarInput::SetFocus {
+                enabled,
                 hide_accounts,
                 fold_unified,
                 animate,
-            } => self.on_set_focus(hide_accounts, fold_unified, animate, widgets, sender),
+            } => self.on_set_focus(enabled, hide_accounts, fold_unified, animate, widgets, sender),
             SidebarInput::FocusSettled => self.on_focus_settled(widgets, sender),
             SidebarInput::SetCollapsed(collapsed) => {
                 self.on_set_collapsed(collapsed, widgets, sender)

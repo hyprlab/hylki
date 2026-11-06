@@ -6,6 +6,7 @@ use super::*;
 impl Sidebar {
     pub(super) fn on_set_focus(
         &mut self,
+        enabled: bool,
         hide_accounts: bool,
         fold_unified: bool,
         animate: bool,
@@ -15,9 +16,14 @@ impl Sidebar {
         let hiding = hide_accounts && !self.focus_hide_accounts;
         let showing = !hide_accounts && self.focus_hide_accounts;
         let folding = fold_unified && !self.focus_fold_unified;
-        if !hiding && !showing && fold_unified == self.focus_fold_unified {
+        if !hiding
+            && !showing
+            && fold_unified == self.focus_fold_unified
+            && enabled == self.focus_on
+        {
             return;
         }
+        self.focus_on = enabled;
         self.focus_hide_accounts = hide_accounts;
         self.focus_fold_unified = fold_unified;
         // Whatever was opened for the mode alone goes with it.

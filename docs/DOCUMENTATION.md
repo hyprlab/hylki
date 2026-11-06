@@ -204,6 +204,8 @@ unified section's, with a chevron that opens their list. **Section style**
 set to **Tree style** draws all four as a tree instead: the caret that
 opens and closes the list stands where the icon was, and the row has no
 chevron at its end. Clicking the name opens the combined view either way.
+Focus Mode keeps Filters, Tags and Favorites above the accounts whichever
+place is chosen here, and leaves out any set to **Off**.
 
 ### Favorites
 

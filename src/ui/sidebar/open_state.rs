@@ -279,13 +279,14 @@ impl Sidebar {
     /// below the accounts.
     pub(super) fn placed_rows(&self, at: crate::config::SectionPlacement) -> Vec<UnifiedRow> {
         let mut rows = Vec::new();
-        if self.favorites_shown() && self.favorites_placement == at {
+        let here = |placement| placed_at(placement, at, self.focus_on);
+        if self.favorites_shown() && here(self.favorites_placement) {
             rows.push(UnifiedRow::Favorites);
         }
-        if !self.unified_folders.is_empty() && self.filtered_placement == at {
+        if !self.unified_folders.is_empty() && here(self.filtered_placement) {
             rows.push(UnifiedRow::Filtered);
         }
-        if self.unified_tags_shown() && self.tags_placement == at {
+        if self.unified_tags_shown() && here(self.tags_placement) {
             rows.push(UnifiedRow::Tags);
         }
         if self.contacts_shown() && self.contacts_placement == at {
@@ -520,5 +521,21 @@ impl Sidebar {
     pub(super) fn on_expand_for_drop(&mut self, id: u32, sender: ComponentSender<Self>) {
         // Expand a collapsed account so its folders become drop targets.
         self.reveal_account(id, &sender);
+    }
+}
+
+/// Whether a section placed at `placement` is drawn `at` that place. Focus Mode
+/// puts every section above the accounts whatever its placement; one placed Off
+/// stays off.
+pub(super) fn placed_at(
+    placement: crate::config::SectionPlacement,
+    at: crate::config::SectionPlacement,
+    focus_on: bool,
+) -> bool {
+    use crate::config::SectionPlacement::AboveAccounts;
+    if focus_on {
+        placement.shown() && at == AboveAccounts
+    } else {
+        placement == at
     }
 }

@@ -204,6 +204,7 @@ impl AppModel {
         ));
         self.apply_view_sort();
         self.sidebars_emit(SidebarInput::SetFocus {
+            enabled: self.focus.enabled,
             hide_accounts: self.focus.active(config::FocusPart::HideAccounts),
             fold_unified: self.focus.active(config::FocusPart::FoldUnified),
             animate: false,
