@@ -120,6 +120,12 @@ impl AppModel {
             )));
             let s = sender.clone();
             toast.connect_button_clicked(move |_| s.input(AppMsg::UndoSend(ticket)));
+            // Escape closes the toast before the window sees the key. A toast
+            // closed while its message still waits was closed by the user, and
+            // means Undo. Dispatch and Undo take the message off the held list
+            // before they dismiss it, so this finds nothing to do for them.
+            let s = sender.clone();
+            toast.connect_dismissed(move |_| s.input(AppMsg::UndoSend(ticket)));
             // The timer is never cancelled: Undo or Send now take the
             // message off the list, and this finds nothing to do.
             let s = sender.clone();

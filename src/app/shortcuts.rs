@@ -26,6 +26,23 @@ use super::types::UnifiedView;
 use super::undo::{FlagChange, FlagKind, FlagRef, UndoStep};
 
 impl AppModel {
+    /// Escape outside a text field. While a message is still waiting out its
+    /// Undo Send delay, the most recent one comes back to its composer; with
+    /// none waiting, Escape backs out to the message list.
+    fn on_escape_key(&mut self, sender: &ComponentSender<Self>) {
+        let last_held = self
+            .outgoing
+            .borrow()
+            .iter()
+            .filter(|o| o.held)
+            .map(|o| o.ticket)
+            .max();
+        match last_held {
+            Some(ticket) => self.undo_send(ticket, sender),
+            None => self.run_shortcut(Shortcut::BackToList, sender),
+        }
+    }
+
     /// Carry out a single-key shortcut.
     fn run_shortcut(&mut self, action: Shortcut, sender: &ComponentSender<Self>) {
         // Contacts covers the list and the reader: a key there must not
@@ -483,6 +500,7 @@ impl AppModel {
             }
 
             AppMsg::Shortcut(action) => self.run_shortcut(action, &sender),
+            AppMsg::EscapeKey => self.on_escape_key(&sender),
             AppMsg::ZoomKey(step) => {
                 // The keys are the application's, so they reach the main
                 // window before the composer in it could take them.
@@ -654,14 +672,15 @@ fn always_on_key(
     shift: bool,
     shortcut: &impl Fn(Shortcut) -> AppMsg,
 ) -> Option<gtk::glib::Propagation> {
-    // Escape backs out to the message list whatever else is going on,
+    // Escape takes back a message waiting out its Undo Send delay, else
+    // backs out to the message list whatever else is going on,
     // and without needing single-key shortcuts switched on. A text
     // field keeps it, though — there it clears the search.
     if keyval == gtk::gdk::Key::Escape {
         if focus_is_text(window) {
             return Some(gtk::glib::Propagation::Proceed);
         }
-        s.input(AppMsg::Shortcut(Shortcut::BackToList));
+        s.input(AppMsg::EscapeKey);
         return Some(gtk::glib::Propagation::Stop);
     }
     // Delete moves the selection to Trash and Shift+Delete erases
