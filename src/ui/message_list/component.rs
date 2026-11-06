@@ -441,6 +441,9 @@ impl SimpleComponent for MessageList {
                 subject,
                 animate,
             } => self.on_set_look(avatars, preview_lines, subject, animate, &sender),
+            MessageListInput::SetMarks { stars, attachments } => {
+                self.on_set_marks(stars, attachments)
+            }
             MessageListInput::LookSettled => {
                 self.avatars = false;
                 self.sync_look();

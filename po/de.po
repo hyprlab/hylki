@@ -6397,6 +6397,14 @@ msgstr "Betreff ausblenden"
 msgid "Tag chips hide with it."
 msgstr "Tag-Chips werden dabei ebenfalls ausgeblendet."
 
+#, fuzzy
+msgid "Hide stars"
+msgstr "Absender-Avatare ausblenden"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Anhänge ausblenden"
+
 msgid "Tags and labels under the text"
 msgstr "Tags und Labels unter dem Text"
 

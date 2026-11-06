@@ -6691,6 +6691,14 @@ msgstr "Скрывать тему"
 msgid "Tag chips hide with it."
 msgstr ""
 
+#, fuzzy
+msgid "Hide stars"
+msgstr "Скрывать аватары отправителей"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Скрыть вложения"
+
 msgid "Tags and labels under the text"
 msgstr ""
 

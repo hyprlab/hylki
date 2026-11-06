@@ -1870,9 +1870,9 @@ Printing shows every message in full.
 **Settings → Focus Mode** holds everything about it. While it is on, that page
 decides the layout, and the settings on the other pages for the same things
 wait until it ends: the sidebar and its unified rows and sections, the message
-list's layout, avatars, preview lines and subjects, and Reader View. Favorites,
-Filters and Tags sit above the accounts, and Contacts and Attachments in the
-footer. What is changed from the window while it is on, such as folding the
+list's layout, avatars, preview lines, subjects, stars and attachment icons,
+and Reader View. Favorites, Filters and Tags sit above the accounts, and
+Contacts and Attachments in the footer. What is changed from the window while it is on, such as folding the
 sidebar, lasts as long as it does. **Unread counts** off takes every unread
 count and dot out of the sidebar, on avatars and folders too. The Outbox keeps
 its count.

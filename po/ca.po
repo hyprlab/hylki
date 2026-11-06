@@ -6436,6 +6436,14 @@ msgstr "Amaga l'assumpte"
 msgid "Tag chips hide with it."
 msgstr "Les etiquetes s'amaguen amb ella."
 
+#, fuzzy
+msgid "Hide stars"
+msgstr "Amaga els avatars dels remitents"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Amaga els adjunts"
+
 msgid "Tags and labels under the text"
 msgstr "Etiquetes i etiquetes del servidor sota el text"
 

@@ -59,6 +59,13 @@ pub(crate) struct FocusMode {
     /// a step past what the mode does by default.
     #[serde(default)]
     pub(crate) hide_subject: bool,
+    /// The message list's rows show no star, and no column for it on one line.
+    #[serde(default)]
+    pub(crate) hide_stars: bool,
+    /// The message list's rows show no paperclip, and no column for it on one
+    /// line.
+    #[serde(default)]
+    pub(crate) hide_attachment_icons: bool,
     /// The sidebar shows as the icon rail, with unread dots in place of the
     /// counts. The user's own rail choice is untouched: this is on screen
     /// for as long as Focus Mode is, and the sidebar comes back as it was.
@@ -124,6 +131,8 @@ impl Default for FocusMode {
             one_preview_line: true,
             hide_preview: true,
             hide_subject: false,
+            hide_stars: false,
+            hide_attachment_icons: false,
             rail_sidebar: true,
             reader_view: true,
             rail_dots: true,
@@ -158,6 +167,8 @@ pub(crate) enum FocusPart {
     FoldUnified,
     HideAvatars,
     HideSubject,
+    HideStars,
+    HideAttachmentIcons,
     RailSidebar,
     ReaderView,
     RailDots,
@@ -192,6 +203,8 @@ impl FocusMode {
             FocusPart::FoldUnified => self.fold_unified,
             FocusPart::HideAvatars => self.hide_avatars,
             FocusPart::HideSubject => self.hide_subject,
+            FocusPart::HideStars => self.hide_stars,
+            FocusPart::HideAttachmentIcons => self.hide_attachment_icons,
             FocusPart::RailSidebar => self.rail_sidebar,
             FocusPart::ReaderView => self.reader_view,
             FocusPart::RailDots => self.rail_dots,
@@ -226,6 +239,8 @@ impl FocusMode {
             FocusPart::FoldUnified => self.fold_unified = on,
             FocusPart::HideAvatars => self.hide_avatars = on,
             FocusPart::HideSubject => self.hide_subject = on,
+            FocusPart::HideStars => self.hide_stars = on,
+            FocusPart::HideAttachmentIcons => self.hide_attachment_icons = on,
             FocusPart::RailSidebar => self.rail_sidebar = on,
             FocusPart::ReaderView => self.reader_view = on,
             FocusPart::RailDots => self.rail_dots = on,
@@ -421,7 +436,8 @@ mod focus_tests {
         let partial: FocusMode = toml::from_str("enabled = true").unwrap();
         assert!(partial.enabled && partial.fold_unified);
         assert!(partial.hide_preview && partial.rail_sidebar);
-        // Except the subject, which is off wherever it comes from.
+        // Except the subject and the row's marks, off wherever they come from.
         assert!(!partial.hide_subject);
+        assert!(!partial.hide_stars && !partial.hide_attachment_icons);
     }
 }

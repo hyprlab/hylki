@@ -6671,6 +6671,14 @@ msgstr "A tárgy elrejtése"
 msgid "Tag chips hide with it."
 msgstr ""
 
+#, fuzzy
+msgid "Hide stars"
+msgstr "A feladók avatárjainak elrejtése"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Mellékletek elrejtése"
+
 msgid "Tags and labels under the text"
 msgstr ""
 

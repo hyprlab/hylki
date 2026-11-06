@@ -108,6 +108,14 @@ impl MessageList {
         }
     }
 
+    pub(super) fn on_set_marks(&mut self, stars: bool, attachments: bool) {
+        if self.show_stars != stars || self.show_attachments != attachments {
+            self.show_stars = stars;
+            self.show_attachments = attachments;
+            self.sync_look();
+        }
+    }
+
     pub(super) fn on_set_avatars(&mut self, on: bool) {
         if self.avatars != on {
             self.avatars = on;

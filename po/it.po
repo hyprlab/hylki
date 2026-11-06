@@ -6621,6 +6621,14 @@ msgstr "Nascondi l'oggetto"
 msgid "Tag chips hide with it."
 msgstr ""
 
+#, fuzzy
+msgid "Hide stars"
+msgstr "Nascondi gli avatar dei mittenti"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Nascondi gli allegati"
+
 msgid "Tags and labels under the text"
 msgstr ""
 

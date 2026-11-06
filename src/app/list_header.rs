@@ -526,9 +526,19 @@ impl AppModel {
             subject: self.list_show_subject(),
             animate,
         });
+        self.push_list_marks();
         // A folded card in a conversation shows what a list row does (#326).
         self.message_view.emit(MessageViewInput::SetFoldLook {
             preview_lines: self.list_preview_lines(),
+        });
+    }
+
+    /// The marks the list's rows wear: all of them, unless Focus Mode's parts
+    /// are in force.
+    pub(super) fn push_list_marks(&self) {
+        self.message_list.emit(MessageListInput::SetMarks {
+            stars: !self.focus.active(config::FocusPart::HideStars),
+            attachments: !self.focus.active(config::FocusPart::HideAttachmentIcons),
         });
     }
 

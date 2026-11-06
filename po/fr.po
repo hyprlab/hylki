@@ -6386,6 +6386,14 @@ msgstr "Masquer l’objet"
 msgid "Tag chips hide with it."
 msgstr "Les pastilles de tag se masquent avec elle."
 
+#, fuzzy
+msgid "Hide stars"
+msgstr "Masquer les avatars des expéditeurs"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Masquer les pièces jointes"
+
 msgid "Tags and labels under the text"
 msgstr "Tags et étiquettes sous le texte"
 

@@ -150,7 +150,7 @@ impl Row {
         w.clip.set_visible(if single {
             col(ListColumn::Attachment)
         } else {
-            msg.has_attachment
+            msg.has_attachment && look.show_attachments
         });
         w.clip
             .set_opacity(if msg.has_attachment { 1.0 } else { 0.0 });
@@ -158,7 +158,7 @@ impl Row {
         w.star.set_visible(if single {
             col(ListColumn::Star)
         } else {
-            starred
+            starred && look.show_stars
         });
         w.star.set_opacity(if starred { 1.0 } else { 0.0 });
         // A card shows it beside its other marks when there is one (#563).

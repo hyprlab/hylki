@@ -6749,6 +6749,14 @@ msgstr "Ukrywanie tematu"
 msgid "Tag chips hide with it."
 msgstr ""
 
+#, fuzzy
+msgid "Hide stars"
+msgstr "Ukrywanie awatarów nadawców"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Ukryj załączniki"
+
 msgid "Tags and labels under the text"
 msgstr ""
 

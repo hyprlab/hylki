@@ -5895,6 +5895,12 @@ msgstr ""
 msgid "Tag chips hide with it."
 msgstr ""
 
+msgid "Hide stars"
+msgstr ""
+
+msgid "Hide attachment icons"
+msgstr ""
+
 msgid "Tags and labels under the text"
 msgstr ""
 

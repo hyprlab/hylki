@@ -6461,6 +6461,14 @@ msgstr "Ocultar o assunto"
 msgid "Tag chips hide with it."
 msgstr "As etiquetas também ficam ocultas."
 
+#, fuzzy
+msgid "Hide stars"
+msgstr "Ocultar os avatares dos remetentes"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Ocultar os anexos"
+
 msgid "Tags and labels under the text"
 msgstr "Etiquetas e classificações abaixo do texto"
 

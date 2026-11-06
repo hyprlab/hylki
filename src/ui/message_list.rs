@@ -148,6 +148,10 @@ pub(crate) struct MessageList {
     preview_lines: u32,
     /// Whether rows draw their subject line (Focus Mode can take it away).
     show_subject: bool,
+    /// Whether rows wear a star (Focus Mode can take it away).
+    show_stars: bool,
+    /// Whether rows wear a paperclip (Focus Mode can take it away).
+    show_attachments: bool,
     /// Whether the colored avatars are drawn (#29).
     avatars: bool,
     /// Whether a sender's site icon may fill one (#30).

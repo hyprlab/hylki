@@ -166,6 +166,12 @@ pub(crate) enum MessageListInput {
         subject: bool,
         animate: bool,
     },
+    /// Whether rows wear their star and paperclip (Focus Mode can take them
+    /// away).
+    SetMarks {
+        stars: bool,
+        attachments: bool,
+    },
     /// The Focus Mode slide finished: rebuild the rows as they now are.
     LookSettled,
     /// Lay the rows out on one line, or as cards (#334).

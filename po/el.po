@@ -6405,6 +6405,14 @@ msgstr "Απόκρυψη του θέματος"
 msgid "Tag chips hide with it."
 msgstr "Οι ετικέτες σε μορφή μικρών πλαισίων κρύβονται μαζί του."
 
+#, fuzzy
+msgid "Hide stars"
+msgstr "Απόκρυψη των avatar των αποστολέων"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Απόκρυψη συνημμένων"
+
 msgid "Tags and labels under the text"
 msgstr "Ετικέτες κάτω από το κείμενο"
 

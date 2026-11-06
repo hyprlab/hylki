@@ -192,6 +192,13 @@ impl FocusPage {
             i18n("Hide the subject"),
             Some(i18n("Tag chips hide with it.")),
         );
+        add(&list_group, F::HideStars, i18n("Hide stars"), None);
+        add(
+            &list_group,
+            F::HideAttachmentIcons,
+            i18n("Hide attachment icons"),
+            None,
+        );
         add(
             &list_group,
             F::TagsBelow,

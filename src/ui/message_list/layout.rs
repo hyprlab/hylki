@@ -212,6 +212,23 @@ impl MessageList {
         }
     }
 
+    /// The single-line columns on screen: the setting's, less Due without
+    /// Microsoft 365 mail in view and the marks Focus Mode has taken away. The
+    /// setting itself keeps them for when they return.
+    pub(super) fn columns_shown(&self) -> Vec<crate::config::ListColumn> {
+        use crate::config::ListColumn as C;
+        self.columns
+            .iter()
+            .copied()
+            .filter(|c| match c {
+                C::Due => self.graph_in_view,
+                C::Star => self.show_stars,
+                C::Attachment => self.show_attachments,
+                _ => true,
+            })
+            .collect()
+    }
+
     /// The list's settings as every row reads them, pushed to the rows on
     /// screen. The rest pick them up when they are shown.
     pub(super) fn sync_look(&self) {
@@ -222,14 +239,11 @@ impl MessageList {
             look.sender_logos = self.sender_logos;
             look.preview_lines = self.preview_lines;
             look.show_subject = self.show_subject;
+            look.show_stars = self.show_stars;
+            look.show_attachments = self.show_attachments;
             look.pills_below = self.pills_below;
             look.single_line = self.single_line;
-            look.columns = self
-                .columns
-                .iter()
-                .copied()
-                .filter(|c| *c != crate::config::ListColumn::Due || self.graph_in_view)
-                .collect();
+            look.columns = self.columns_shown();
             look.in_drafts = self.in_drafts;
             look.show_recipient = self.show_recipient;
             look.thread_expansion = self.thread_expansion;
@@ -271,12 +285,7 @@ impl MessageList {
         const DATE_PX: i32 = 64;
         /// Room kept for the subject.
         const SUBJECT_PX: i32 = 100;
-        let columns: Vec<C> = self
-            .columns
-            .iter()
-            .copied()
-            .filter(|c| *c != C::Due || self.graph_in_view)
-            .collect();
+        let columns = self.columns_shown();
         // The pill's margins and padding, the unread dot and the spacing.
         let mut fixed = 12 + 18 + 18 + 8 * columns.len().saturating_sub(1) as i32;
         if self.avatars {

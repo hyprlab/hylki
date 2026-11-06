@@ -180,6 +180,7 @@ impl AppModel {
             subject: self.list_show_subject(),
             animate: false,
         });
+        self.push_list_marks();
         self.message_list
             .emit(MessageListInput::SetPillsBelow(self.list_pills_below_now()));
         self.message_view.emit(MessageViewInput::SetFoldLook {
