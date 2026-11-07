@@ -21,6 +21,7 @@ pub(crate) mod spell;
 pub(crate) mod startup;
 pub(crate) mod text_scale;
 pub(crate) mod theme;
+mod theme_custom;
 mod theme_palettes;
 pub(crate) mod web_fonts;
 pub(crate) mod x11_shm;

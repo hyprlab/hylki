@@ -22,6 +22,7 @@
 
 use std::cell::RefCell;
 
+use crate::desktop::theme_custom::THEMES as CUSTOM_THEMES;
 use crate::desktop::theme_palettes::THEMES;
 
 /// The stock GNOME look: no palette of our own, just libadwaita and the
@@ -102,8 +103,8 @@ impl Theme {
 
 /// Every bundled theme, in picker order. The stock look is not in here: it
 /// is the absence of a theme, and the picker lists it first itself.
-pub(crate) fn catalog() -> &'static [Theme] {
-    THEMES
+pub(crate) fn catalog() -> impl Iterator<Item = &'static Theme> {
+    THEMES.iter().chain(CUSTOM_THEMES.iter())
 }
 
 /// The theme with this id, or `None` for the stock look (and for an id from
@@ -112,7 +113,7 @@ fn find(id: &str) -> Option<&'static Theme> {
     if id.is_empty() || id == SYSTEM_ID {
         return None;
     }
-    THEMES.iter().find(|t| t.id == id)
+    catalog().find(|t| t.id == id)
 }
 
 thread_local! {
@@ -301,4 +302,90 @@ border: none;box-shadow: none;outline: none;}}",
         warning = p.warning,
         on_warning = crate::color::readable_text(p.warning),
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashSet;
+
+    use super::{catalog, CUSTOM_THEMES};
+
+    #[test]
+    fn the_theme_picker_has_unique_themes_and_both_appearances() {
+        let ids: HashSet<_> = catalog().map(|theme| theme.id).collect();
+        assert_eq!(ids.len(), catalog().count());
+        assert!(ids.contains("mist"));
+        assert!(ids.contains("sage"));
+        assert!(ids.contains("stone"));
+        assert!(ids.contains("cloud"));
+        assert!(ids.contains("alabaster"));
+        assert!(ids.contains("graphite"));
+        assert!(ids.contains("harbor"));
+        assert!(ids.contains("linen"));
+        for theme in CUSTOM_THEMES {
+            assert_ne!(theme.light.canvas, theme.dark.canvas);
+            assert_ne!(theme.light.text, theme.dark.text);
+            assert_ne!(theme.light.accent, theme.dark.accent);
+        }
+    }
+
+    #[test]
+    fn working_themes_keep_their_surfaces_neutral() {
+        for id in ["cloud", "alabaster", "graphite", "harbor", "linen"] {
+            let theme = CUSTOM_THEMES
+                .iter()
+                .find(|theme| theme.id == id)
+                .unwrap_or_else(|| panic!("missing {id}"));
+            for palette in [&theme.light, &theme.dark] {
+                for (role, hex) in [
+                    ("canvas", palette.canvas),
+                    ("chrome", palette.chrome),
+                    ("toolbar", palette.toolbar),
+                    ("surface", palette.surface),
+                    ("sidebar", palette.sidebar),
+                ] {
+                    let channels = [
+                        u8::from_str_radix(&hex[1..3], 16).unwrap(),
+                        u8::from_str_radix(&hex[3..5], 16).unwrap(),
+                        u8::from_str_radix(&hex[5..7], 16).unwrap(),
+                    ];
+                    let spread = channels.iter().max().unwrap() - channels.iter().min().unwrap();
+                    assert!(spread <= 8, "{id} {role} is tinted too strongly: {hex}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn calm_themes_keep_text_and_buttons_legible() {
+        fn luminance(hex: &str) -> f64 {
+            let channel = |at: usize| {
+                let value = u8::from_str_radix(&hex[at..at + 2], 16).unwrap() as f64 / 255.0;
+                if value <= 0.04045 {
+                    value / 12.92
+                } else {
+                    ((value + 0.055) / 1.055).powf(2.4)
+                }
+            };
+            0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5)
+        }
+        fn contrast(a: &str, b: &str) -> f64 {
+            let (bright, dark) = {
+                let (a, b) = (luminance(a), luminance(b));
+                if a > b {
+                    (a, b)
+                } else {
+                    (b, a)
+                }
+            };
+            (bright + 0.05) / (dark + 0.05)
+        }
+
+        for theme in CUSTOM_THEMES {
+            for palette in [&theme.light, &theme.dark] {
+                assert!(contrast(palette.text, palette.canvas) >= 7.0);
+                assert!(contrast(palette.accent, palette.accent_foreground) >= 4.5);
+            }
+        }
+    }
 }
