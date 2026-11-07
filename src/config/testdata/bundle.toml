@@ -76,6 +76,11 @@ quick_inserts = [
     "Best regards,",
     "We are writing to introduce",
     "We look forward to hearing from you.",
+    "Добрый день!",
+    "Здравствуйте!",
+    "С уважением,",
+    "Мы представляем",
+    "Надеемся на отклик.",
 ]
 undo_send_secs = 5
 spellcheck = true

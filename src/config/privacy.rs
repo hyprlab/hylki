@@ -20,20 +20,27 @@ use super::sections::{
 };
 use super::{config_file, default_on, is_zero, save_private_toml, write_private};
 
-/// Short phrases the composer offers at the caret. They are translated when
-/// first loaded; after that the user's saved text is authoritative.
-pub(crate) const DEFAULT_QUICK_INSERTS: [&str; 5] = [
+/// Short phrases the composer offers at the caret. The starter set includes
+/// both English and Russian so composing in either language works without
+/// first editing the library; the user's saved text is authoritative after
+/// the first load.
+pub(crate) const DEFAULT_QUICK_INSERTS: [&str; 10] = [
     "Good afternoon!",
     "Hello!",
     "Best regards,",
     "We are writing to introduce",
     "We look forward to hearing from you.",
+    "Добрый день!",
+    "Здравствуйте!",
+    "С уважением,",
+    "Мы представляем",
+    "Надеемся на отклик.",
 ];
 
 pub(crate) fn default_quick_inserts() -> Vec<String> {
     DEFAULT_QUICK_INSERTS
         .iter()
-        .map(|phrase| crate::i18n::i18n(phrase))
+        .map(|phrase| (*phrase).to_string())
         .collect()
 }
 
