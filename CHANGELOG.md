@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: the remote picture cache could delete other programs' files**
+  (#614). Outside Flatpak the cache was kept in `~/.cache/remote` rather than
+  `~/.cache/hylki/remote`, and its weekly trim removed every file in that
+  folder. It now lives in `~/.cache/hylki/remote`, and a trim touches only the
+  files the cache wrote. Hylki's own entries are cleared out of the old
+  folder, which goes only if nothing else is left in it.
+
 - **Changed: one message fades into the next in the reading pane.** Since
   #570 the pane cut from one message to the next; the old message now fades
   out over the new one in 80 ms.
