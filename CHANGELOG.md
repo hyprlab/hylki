@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Changed: one message fades into the next in the reading pane.** Since
+  #570 the pane cut from one message to the next; the old message now fades
+  out over the new one in 80 ms.
+
 - **Fixed: Add to Calendar could close the app** (#611, by FLASH911). An
   invitation is handed to the calendar under a file name made from its title,
   cut to 60 characters. The cut was made in bytes, so a long title in Russian,
