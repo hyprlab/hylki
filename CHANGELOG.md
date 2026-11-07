@@ -12,6 +12,9 @@
   right-click menu** (#611, by FLASH911) were in the system's language rather
   than the one chosen in Hylki. They now follow Hylki's.
 
+- **Translations:** Russian completed (PR #611 by FLASH911), with 2440 of 2450
+  strings translated.
+
 - **Added: trackers come off links** (#599, by James Reilly). A link opened or
   copied from a message loses its tracking tags (`utm_source` and the like,
   `fbclid`, `gclid`, `mc_eid`), and Google, Facebook and YouTube redirects

@@ -167,8 +167,9 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   text in the accent's foreground color on the accent, and a theme picked in
   Settings shown over the colors of a user's `gtk.css`.
 - [**FLASH911**](https://github.com/FLASH911) ([#611](https://github.com/hyprlab/hylki/pull/611)):
-  the crash in Add to Calendar on a long non-Latin invitation title, and the
-  composer menu entries left in the system's language.
+  the crash in Add to Calendar on a long non-Latin invitation title, the
+  composer menu entries left in the system's language, and the Russian
+  translation completed.
 
 ## Reports, design and ideas
 
@@ -228,7 +229,8 @@ Every language Hylki speaks was given to it by somebody:
 - **Italian:** [Jimmy](https://github.com/amivaleo)
 - **Polish:** [Tomasz Bojanowski](https://github.com/TomaszBojanowski)
 - **Portuguese (Portugal and Brazil):** [Paulo Fino](https://github.com/somepaulo)
-- **Russian:** [Ilya Semenkovich](https://github.com/iliasen)
+- **Russian:** [Ilya Semenkovich](https://github.com/iliasen) and
+  [FLASH911](https://github.com/FLASH911)
 - **Spanish:** [Daniel Miguel](https://github.com/danielmigueltejedor)
 
 Adding or updating one is the easiest way in: see [po/README.md](../po/README.md).
