@@ -6289,9 +6289,10 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
+#, fuzzy
 msgid ""
-"Accounts, preferences, filters, tags and layout, in one file. Passwords and "
-"OpenPGP keys are not included."
+"Accounts, preferences, filters, tags and layout, in one file. Passwords, "
+"OAuth client secrets and OpenPGP keys are not included."
 msgstr ""
 "Comptes, préférences, filtres, tags et mise en page, dans un seul fichier. "
 "Les mots de passe et les clés OpenPGP ne sont pas inclus."

@@ -142,9 +142,8 @@ impl AppModel {
                 &i18n("Export Settings"),
                 "hylki-settings.toml",
                 |path| {
-                    // It carries every account's server and address, and
-                    // OAuth client secrets: no more readable than the files
-                    // it was made from.
+                    // It carries every account's server and address: no
+                    // more readable than the files it was made from.
                     crate::config::export_bundle().and_then(|t| {
                         crate::config::write_private(path, &t).map_err(|e| e.to_string())
                     })

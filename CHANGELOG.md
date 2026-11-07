@@ -37,6 +37,11 @@
   Again** takes the answer back under *Settings → OpenPGP*. When an address has
   several keys, the trusted one is used.
 
+- **Fixed: the settings export carried OAuth client secrets** (#597, by James
+  Reilly). An account's own OAuth client secret is now left out. Importing the
+  file on the same computer keeps the secret already there; on another one, an
+  account with its own OAuth client needs the secret typed in again.
+
 - **Fixed: exports and local mail files were left readable by other users** (#600,
   by James Reilly). The log exports and the settings export are written owner-only,
   also over an existing file. The remote-content cache and the On This Computer
