@@ -54,6 +54,11 @@ pub(super) struct RichEditor {
     /// only text. Read by every load of the document and by whatever puts
     /// files or the clipboard into it.
     plain: std::rc::Rc<std::cell::Cell<bool>>,
+    /// The phrases inline completion offers, and whether its suggestion card
+    /// is open now. The latter is reported by the document so Tab can accept
+    /// the suggestion before the composer moves focus.
+    quick_inserts: std::rc::Rc<std::cell::RefCell<Vec<String>>>,
+    quick_suggestion_open: std::rc::Rc<std::cell::Cell<bool>>,
     /// Where "Send as Attachment Instead" delivers the lifted image, as a
     /// temp-file path the host adds to its attachment list. Set by the host
     /// via [`RichEditor::connect_send_as_attachment`].
@@ -211,7 +216,13 @@ impl RichEditor {
         self.show_preview(None);
         crate::desktop::web_fonts::load_html(
             &self.webview,
-            &document(content, &self.webview, &self.image_policy, self.plain.get()),
+            &document(
+                content,
+                &self.webview,
+                &self.image_policy,
+                self.plain.get(),
+                &self.quick_inserts.borrow(),
+            ),
             Some("https://hylki.localhost/editor"),
         );
     }
@@ -224,9 +235,63 @@ impl RichEditor {
         self.show_preview(None);
         crate::desktop::web_fonts::load_html(
             &self.webview,
-            &source_document(text, &self.webview),
+            &source_document(text, &self.webview, &self.quick_inserts.borrow()),
             Some("https://hylki.localhost/editor"),
         );
+    }
+
+    /// Replace the phrases offered by inline completion.
+    pub(super) fn set_quick_inserts(&self, phrases: &[String]) {
+        *self.quick_inserts.borrow_mut() = phrases.to_vec();
+        self.quick_suggestion_open.set(false);
+        let json = serde_json::to_string(phrases).unwrap_or_else(|_| "[]".into());
+        if self.loaded.get() {
+            self.run_js(&format!(
+                "window.__hylkiQuickSet&&window.__hylkiQuickSet({json})"
+            ));
+        } else {
+            let weak = self.webview.downgrade();
+            self.when_loaded(move || {
+                if let Some(view) = weak.upgrade() {
+                    exec(
+                        &view,
+                        &format!("window.__hylkiQuickSet&&window.__hylkiQuickSet({json})"),
+                    );
+                }
+            });
+        }
+    }
+
+    pub(super) fn has_quick_suggestion(&self) -> bool {
+        self.quick_suggestion_open.get()
+    }
+
+    pub(super) fn accept_quick_suggestion(&self, done: impl FnOnce(bool) + 'static) {
+        self.quick_suggestion_open.set(false);
+        self.webview.evaluate_javascript(
+            "!!(window.__hylkiQuickAccept&&window.__hylkiQuickAccept())",
+            None,
+            None,
+            gtk::gio::Cancellable::NONE,
+            move |result| {
+                done(
+                    result
+                        .map(|value| value.to_str() == "true")
+                        .unwrap_or(false),
+                );
+            },
+        );
+    }
+
+    pub(super) fn move_quick_suggestion(&self, delta: i32) {
+        self.run_js(&format!(
+            "window.__hylkiQuickMove&&window.__hylkiQuickMove({delta})"
+        ));
+    }
+
+    pub(super) fn dismiss_quick_suggestion(&self) {
+        self.quick_suggestion_open.set(false);
+        self.run_js("window.__hylkiQuickDismiss&&window.__hylkiQuickDismiss()");
     }
 
     /// `f`, once, when the document now loading has loaded.

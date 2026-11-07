@@ -175,6 +175,30 @@ impl Compose {
                 s.input_sender().emit(input);
                 return Propagation::Stop;
             }
+            // The editor's quick-insert card owns these keys while it is
+            // visible. This has to happen before Tab's focus cycle and the
+            // composer-level Escape below; otherwise Tab would leave the
+            // body and Escape would try to close the whole message.
+            if editor.has_focus() && editor.has_quick_suggestion() {
+                if !state.intersects(
+                    gtk::gdk::ModifierType::CONTROL_MASK
+                        | gtk::gdk::ModifierType::ALT_MASK
+                        | gtk::gdk::ModifierType::SUPER_MASK,
+                ) {
+                    if keyval == gtk::gdk::Key::Down {
+                        editor.move_quick_suggestion(1);
+                        return Propagation::Stop;
+                    }
+                    if keyval == gtk::gdk::Key::Up {
+                        editor.move_quick_suggestion(-1);
+                        return Propagation::Stop;
+                    }
+                    if keyval == gtk::gdk::Key::Escape {
+                        editor.dismiss_quick_suggestion();
+                        return Propagation::Stop;
+                    }
+                }
+            }
             // Tab and Shift+Tab go round the composer and nowhere else.
             // Left to the window, Tab off the body went on into the main
             // window's sidebar and list, never back to To. The HTML and
@@ -182,6 +206,22 @@ impl Compose {
             if let Some(direction) = tab_direction(keyval, state) {
                 if editor.source_kind().is_some() && editor.has_focus() {
                     return Propagation::Proceed;
+                }
+                if direction == gtk::DirectionType::TabForward && editor.has_focus() {
+                    let key_root = key_root.clone();
+                    let editor = editor.clone();
+                    let focused = editor.clone();
+                    editor.accept_quick_suggestion(move |accepted| {
+                        if accepted {
+                            focused.grab_focus();
+                            return;
+                        }
+                        cycle_focus(key_root.upcast_ref(), gtk::DirectionType::TabForward);
+                        if focused.has_focus() {
+                            focused.grab_focus();
+                        }
+                    });
+                    return Propagation::Stop;
                 }
                 cycle_focus(key_root.upcast_ref(), direction);
                 // Focus on the view alone leaves the document without a
