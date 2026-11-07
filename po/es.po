@@ -6593,6 +6593,13 @@ msgstr "Precargar contenido remoto de los mensajes siguientes"
 msgid "Their senders can tell they were opened."
 msgstr "Sus remitentes pueden saber que se han abierto."
 
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Eliminar este alias"
+
+msgid "Takes off utm_ tags and redirects that log the click."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Avisar cuando se bloquee contenido remoto"
 

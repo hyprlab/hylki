@@ -6651,6 +6651,13 @@ msgstr ""
 msgid "Their senders can tell they were opened."
 msgstr ""
 
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Elimina aquest àlies"
+
+msgid "Takes off utm_ tags and redirects that log the click."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Avisa quan es bloca el contingut remot"
 

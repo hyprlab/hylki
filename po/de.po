@@ -6623,6 +6623,13 @@ msgid "Their senders can tell they were opened."
 msgstr ""
 "Das Öffnen dieser Nachrichten ist für die jeweiligen Absender sichtbar."
 
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Alias entfernen"
+
+msgid "Takes off utm_ tags and redirects that log the click."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Warnen, wenn externe Inhalte blockiert sind"
 

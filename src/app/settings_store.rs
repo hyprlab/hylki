@@ -17,6 +17,7 @@ impl AppModel {
             allowed_senders: self.allowed_senders.clone(),
             auto_remote_content: self.auto_remote_content,
             remote_ahead: self.remote_ahead,
+            clean_links: self.clean_links,
             gravatar: self.gravatar,
             avatars: self.avatars,
             own_mailbox_face: self.own_mailbox_face,
@@ -172,6 +173,7 @@ impl AppModel {
         self.message_list
             .emit(MessageListInput::SetSenderLogos(self.sender_logos));
         crate::ui::message_view::set_face_tiers(self.gravatar, self.sender_logos);
+        crate::ui::message_view::set_clean_links(self.clean_links);
         crate::datefmt::set_style(self.date_style, self.clock_style);
         crate::ui::print_preview::set_options(self.print_options);
         self.message_list.emit(MessageListInput::SetLook {

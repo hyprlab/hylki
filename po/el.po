@@ -6625,6 +6625,13 @@ msgstr "Προφόρτωση απομακρυσμένου περιεχομένο
 msgid "Their senders can tell they were opened."
 msgstr "Οι αποστολείς τους μπορούν να καταλάβουν ότι ανοίχτηκαν."
 
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Αφαίρεση αυτού του ψευδωνύμου"
+
+msgid "Takes off utm_ tags and redirects that log the click."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Προειδοποίηση όταν αποκλείεται απομακρυσμένο περιεχόμενο"
 

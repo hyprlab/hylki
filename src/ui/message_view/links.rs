@@ -33,6 +33,29 @@ pub(super) fn is_launchable_uri(uri: &str) -> bool {
     }
 }
 
+thread_local! {
+    /// The Privacy switch for taking trackers off links. Held here rather
+    /// than by each reader, so the pop-out window's follows it too.
+    static CLEAN_LINKS: std::cell::Cell<bool> = const { std::cell::Cell::new(true) };
+}
+
+/// Hand the readers the Privacy switch for tracking parameters and
+/// redirectors on links.
+pub(crate) fn set_clean_links(on: bool) {
+    CLEAN_LINKS.with(|c| c.set(on));
+}
+
+/// The address to open or copy for a link in a message: without its trackers and
+/// redirectors while the Privacy switch is on (see
+/// [`crate::mail::link_clean`]).
+pub(super) fn link_to_open(uri: &str) -> String {
+    if CLEAN_LINKS.with(std::cell::Cell::get) {
+        crate::mail::link_clean::clean_link(uri)
+    } else {
+        uri.to_string()
+    }
+}
+
 /// What to show in the link preview: the destination, plus an explicit warning
 /// when the link's visible text claims a different site than it goes to — the
 /// oldest phishing trick there is (`click here: paypal.com` pointing elsewhere).

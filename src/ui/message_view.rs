@@ -49,6 +49,7 @@ use crate::models::Message;
 
 pub(crate) use faces::set_face_tiers;
 pub(crate) use frame::theme_grounds_for;
+pub(crate) use links::set_clean_links;
 pub(crate) use menu::MenuHit;
 pub(crate) use menu::{hit_menu_entries, strip_navigation_items};
 pub(crate) use remote::remote_urls;
@@ -56,7 +57,9 @@ pub(crate) use types::{
     CardAttachment, InviteAction, MessageViewInput, MessageViewOutput, SelectMode, TrState,
     UnsubState,
 };
-pub(crate) use webview::{keep_tab_out_of_key_translator, new_preview_webview, shared_web_context};
+pub(crate) use webview::{
+    keep_tab_out_of_key_translator, new_preview_webview, private_settings, shared_web_context,
+};
 
 /// Each card's detected language, with the body length it was worked out
 /// for.

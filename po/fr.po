@@ -6606,6 +6606,13 @@ msgstr "Précharger le contenu distant des messages suivants"
 msgid "Their senders can tell they were opened."
 msgstr "Leurs expéditeurs peuvent savoir qu’ils ont été ouverts."
 
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Supprimer cet alias"
+
+msgid "Takes off utm_ tags and redirects that log the click."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Avertir lorsque le contenu distant est bloqué"
 

@@ -1,7 +1,7 @@
 //! The reader's right-click menu: what the page reports under the pointer,
 //! and the entries offered for it.
 
-use super::links::{decode_data_uri, default_image_name, remote_image_name};
+use super::links::{decode_data_uri, default_image_name, link_to_open, remote_image_name};
 use super::types::MessageViewInput;
 use crate::i18n::i18n;
 use adw::prelude::*;
@@ -68,7 +68,7 @@ pub(crate) fn hit_menu_entries(
         );
     }
     if let Some(uri) = &hit.link {
-        let (open, w) = (uri.clone(), window.clone());
+        let (open, w) = (link_to_open(uri), window.clone());
         out.push(
             MenuEntry::new(i18n("Open Link"), move || {
                 crate::ui::launch::open_link(&open, w.as_ref());
@@ -85,7 +85,7 @@ pub(crate) fn hit_menu_entries(
         out.push(
             match address {
                 Some(a) => MenuEntry::new(i18n("Copy Email Address"), copy(a)),
-                None => MenuEntry::new(i18n("Copy Link Address"), copy(uri.clone())),
+                None => MenuEntry::new(i18n("Copy Link Address"), copy(link_to_open(uri))),
             }
             .icon("edit-copy-symbolic"),
         );

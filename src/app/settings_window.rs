@@ -60,6 +60,7 @@ impl AppModel {
         PrefInit {
             auto_remote_content: self.auto_remote_content,
             remote_ahead: self.remote_ahead,
+            clean_links: self.clean_links,
             show_remote_banner: self.show_remote_banner,
             show_spoof_banner: self.show_spoof_banner,
             receipts: self.receipts,

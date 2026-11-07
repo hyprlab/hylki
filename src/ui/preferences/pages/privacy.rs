@@ -11,6 +11,7 @@ pub(in crate::ui::preferences) struct PrivacyPage {
     pub(in crate::ui::preferences) page: adw::PreferencesPage,
     pub(in crate::ui::preferences) auto_remote_content_row: adw::SwitchRow,
     pub(in crate::ui::preferences) remote_ahead_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) clean_links_row: adw::SwitchRow,
     pub(in crate::ui::preferences) show_remote_banner_row: adw::SwitchRow,
     pub(in crate::ui::preferences) show_spoof_banner_row: adw::SwitchRow,
     pub(in crate::ui::preferences) gravatar_row: adw::SwitchRow,
@@ -43,6 +44,15 @@ impl PrivacyPage {
                         set_subtitle: &i18n("Their senders can tell they were opened."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetRemoteAhead(row.is_active()));
+                        },
+                    },
+
+                    #[name = "clean_links_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Remove trackers from links"),
+                        set_subtitle: &i18n("Takes off utm_ tags and redirects that log the click."),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetCleanLinks(row.is_active()));
                         },
                     },
 
@@ -105,6 +115,7 @@ impl PrivacyPage {
             page,
             auto_remote_content_row,
             remote_ahead_row,
+            clean_links_row,
             show_remote_banner_row,
             show_spoof_banner_row,
             gravatar_row,

@@ -6912,6 +6912,13 @@ msgstr ""
 msgid "Their senders can tell they were opened."
 msgstr ""
 
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Удалить этот псевдоним"
+
+msgid "Takes off utm_ tags and redirects that log the click."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Предупреждать о блокировке удалённого содержимого"
 

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Added: trackers come off links** (#599, by James Reilly). A link opened or
+  copied from a message loses its tracking tags (`utm_source` and the like,
+  `fbclid`, `gclid`, `mc_eid`), and Google, Facebook and YouTube redirects
+  open at the address written inside them, with nothing looked up. Outlook
+  Safe Links are left alone. **Settings → Privacy → Remove trackers from
+  links** turns it off. The reader and the composer also turn DNS prefetching
+  off explicitly.
+
 - **Fixed: a forged message could send a one-click unsubscribe** (#596, by
   James Reilly). The request now goes only to an https address, as RFC 8058
   requires, and only when the mail provider's DKIM check covers the

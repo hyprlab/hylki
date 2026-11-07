@@ -2552,6 +2552,20 @@ connection when Settings asks to save data there. It is off by default,
 because a sender's tracking pixel then reports a message as opened before you
 open it. Stored as `remote_ahead` in `privacy.toml`.
 
+**Links in messages** lose their tracking tags (`utm_source` and the other
+`utm_` tags, `fbclid`, `gclid`, `mc_eid` and similar) before the browser opens
+them, and **Copy Link Address** copies them without. A link wrapped by a
+redirector that logs the click, such as Google's `/url` or Facebook's
+`l.php`, opens at the address it carries, when that address is written in the
+link itself; nothing is looked up to find it. Outlook Safe Links stay as they
+are, because Microsoft Defender checks the address when the link is clicked.
+**Settings → Privacy → Remove trackers from links** turns this off. Stored as
+`clean_links` in `privacy.toml`.
+
+The reader and the composer never look up the addresses of a message's links
+ahead of a click (DNS prefetching), which would tell the sender's DNS server
+that the message was opened.
+
 **Attachments that are programs or scripts**, such as `.desktop`, `.sh`,
 `.AppImage`, `.jar` or `.exe` files, or a file whose first bytes say it is
 one whatever its name, are asked about before they open: opening one can run

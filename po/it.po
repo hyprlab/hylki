@@ -6841,6 +6841,13 @@ msgstr ""
 msgid "Their senders can tell they were opened."
 msgstr ""
 
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Rimuovi questo alias"
+
+msgid "Takes off utm_ tags and redirects that log the click."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr "Avvisa quando il contenuto remoto è bloccato"
 

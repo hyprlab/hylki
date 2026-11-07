@@ -6094,6 +6094,12 @@ msgstr ""
 msgid "Their senders can tell they were opened."
 msgstr ""
 
+msgid "Remove trackers from links"
+msgstr ""
+
+msgid "Takes off utm_ tags and redirects that log the click."
+msgstr ""
+
 msgid "Warn when remote content is blocked"
 msgstr ""
 
