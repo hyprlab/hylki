@@ -36,7 +36,7 @@ impl AccountsWindow {
     /// build, for a field most visits never reach.
     pub(super) fn sig_editor(&mut self, widgets: &AccountsWindowWidgets) -> &RichEditor {
         self.sig_editor.get_or_insert_with(|| {
-            let editor = RichEditor::new("", None, false);
+            let editor = RichEditor::new("", None, false, &[]);
             // The text keeps its height when the toolbar wraps or is
             // expanded to a second row; the panel grows instead.
             editor.set_text_height(130);
@@ -87,6 +87,7 @@ impl AccountsWindow {
         if signatures.is_empty() {
             signatures.push(NamedSignature {
                 name: i18n("Signature"),
+                sender_name: String::new(),
                 html: String::new(),
             });
             default = Some(0);
@@ -122,6 +123,12 @@ impl AccountsWindow {
             self.sig_edits
                 .get(i)
                 .map(|s| s.name.as_str())
+                .unwrap_or_default(),
+        );
+        widgets.form.sig_sender_row.set_text(
+            self.sig_edits
+                .get(i)
+                .map(|s| s.sender_name.as_str())
                 .unwrap_or_default(),
         );
         widgets
@@ -167,6 +174,7 @@ impl AccountsWindow {
             }
             kept.push(NamedSignature {
                 name: signature_label(&self.sig_edits, i),
+                sender_name: sig.sender_name.trim().to_string(),
                 html: sig.html.clone(),
             });
         }
@@ -337,6 +345,19 @@ impl AccountsWindow {
         }
     }
 
+    pub(super) fn on_sig_sender_rename(&mut self, widgets: &AccountsWindowWidgets) {
+        let sender_name = widgets.form.sig_sender_row.text().trim().to_string();
+        let shown = self.sig_shown;
+        let Some(sig) = self.sig_edits.get_mut(shown) else {
+            return;
+        };
+        if sig.sender_name == sender_name {
+            return;
+        }
+        sig.sender_name = sender_name;
+        self.sig_touched = true;
+    }
+
     pub(super) fn on_sig_default(&mut self, widgets: &AccountsWindowWidgets) {
         let on = widgets.form.sig_default_row.is_active();
         let shown = Some(self.sig_shown);
@@ -363,6 +384,7 @@ impl AccountsWindow {
             let n = self.sig_edits.len() + 1;
             self.sig_edits.push(NamedSignature {
                 name: i18n_f("Signature {n}", &[("n", &n.to_string())]),
+                sender_name: String::new(),
                 html: String::new(),
             });
             self.sig_touched = true;
@@ -397,10 +419,12 @@ mod tests {
         let sigs = vec![
             NamedSignature {
                 name: " Work ".into(),
+                sender_name: "Ada".into(),
                 html: String::new(),
             },
             NamedSignature {
                 name: "  ".into(),
+                sender_name: String::new(),
                 html: String::new(),
             },
         ];

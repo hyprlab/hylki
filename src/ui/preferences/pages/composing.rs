@@ -40,6 +40,7 @@ pub(in crate::ui::preferences) struct ComposingPage {
     /// The attachment reminder's words as last saved: the apply button is
     /// up only while the text differs from them.
     attachment_keywords_saved: Rc<RefCell<String>>,
+    pub(in crate::ui::preferences) quick_inserts_list: gtk::ListBox,
     pub(in crate::ui::preferences) spelling_group: adw::PreferencesGroup,
     pub(in crate::ui::preferences) spellcheck_row: adw::SwitchRow,
     pub(in crate::ui::preferences) spell_lang_row: adw::ExpanderRow,
@@ -292,6 +293,43 @@ impl ComposingPage {
             }
         }
         page.add(&super::super::grammar::group());
+        let quick_inserts_group = adw::PreferencesGroup::builder()
+            .title(i18n("Quick Inserts"))
+            .description(i18n("Short phrases the composer can insert at the caret."))
+            .build();
+        let quick_inserts_list = gtk::ListBox::new();
+        quick_inserts_list.add_css_class("boxed-list");
+        quick_inserts_group.add(&quick_inserts_list);
+        let quick_insert_buttons = gtk::Box::new(gtk::Orientation::Vertical, 6);
+        quick_insert_buttons.set_valign(gtk::Align::Start);
+        quick_insert_buttons.set_halign(gtk::Align::End);
+        let add_quick_insert = gtk::Button::with_label(&i18n("Add Phrase"));
+        add_quick_insert.set_size_request(130, -1);
+        let restore_quick_inserts = gtk::Button::with_label(&i18n("Restore Defaults"));
+        restore_quick_inserts.set_size_request(130, -1);
+        quick_insert_buttons.append(&add_quick_insert);
+        quick_insert_buttons.append(&restore_quick_inserts);
+        quick_inserts_group.set_header_suffix(Some(&quick_insert_buttons));
+        {
+            let list = quick_inserts_list.clone();
+            let sender = sender.clone();
+            add_quick_insert.connect_clicked(move |_| {
+                let row = append_quick_insert_row(&list, &sender, "", true);
+                row.grab_focus();
+            });
+        }
+        {
+            let list = quick_inserts_list.clone();
+            let sender = sender.clone();
+            restore_quick_inserts.connect_clicked(move |_| {
+                clear_quick_insert_rows(&list);
+                for phrase in crate::config::default_quick_inserts() {
+                    append_quick_insert_row(&list, &sender, &phrase, true);
+                }
+                emit_quick_inserts(&list, &sender);
+            });
+        }
+        page.add(&quick_inserts_group);
         let reply_header_saved = Rc::new(RefCell::new(String::new()));
         wire_reply_header(
             &reply_header_row,
@@ -330,6 +368,7 @@ impl ComposingPage {
             reply_header_saved,
             attachment_keywords_row,
             attachment_keywords_saved,
+            quick_inserts_list,
             spelling_group,
             spellcheck_row,
             spell_lang_row,
@@ -339,6 +378,18 @@ impl ComposingPage {
 }
 
 impl ComposingPage {
+    /// Replace the editor with the saved phrases.
+    pub(in crate::ui::preferences) fn set_quick_inserts(
+        &self,
+        phrases: &[String],
+        sender: &ViewSender,
+    ) {
+        clear_quick_insert_rows(&self.quick_inserts_list);
+        for phrase in phrases {
+            append_quick_insert_row(&self.quick_inserts_list, sender, phrase, true);
+        }
+    }
+
     /// Show the saved reply header, "" for the default.
     pub(in crate::ui::preferences) fn set_reply_header(&self, stored: &str) {
         let text = shown_template(stored);
@@ -352,6 +403,59 @@ impl ComposingPage {
         set_quietly(&self.attachment_keywords_row, &text);
         *self.attachment_keywords_saved.borrow_mut() = text;
     }
+}
+
+fn append_quick_insert_row(
+    list: &gtk::ListBox,
+    sender: &ViewSender,
+    phrase: &str,
+    announce: bool,
+) -> adw::EntryRow {
+    let row = adw::EntryRow::new();
+    row.set_title(&i18n("Phrase"));
+    row.set_text(phrase);
+    let remove = gtk::Button::from_icon_name("user-trash-symbolic");
+    remove.set_valign(gtk::Align::Center);
+    remove.set_tooltip_text(Some(i18n("Remove Phrase").as_str()));
+    remove.add_css_class("flat");
+    row.add_suffix(&remove);
+    if announce {
+        let list = list.clone();
+        let sender = sender.clone();
+        row.connect_changed(move |_| emit_quick_inserts(&list, &sender));
+    }
+    {
+        let list = list.clone();
+        let sender = sender.clone();
+        let row = row.clone();
+        remove.connect_clicked(move |_| {
+            list.remove(&row);
+            emit_quick_inserts(&list, &sender);
+        });
+    }
+    list.append(&row);
+    row
+}
+
+fn clear_quick_insert_rows(list: &gtk::ListBox) {
+    while let Some(child) = list.first_child() {
+        list.remove(&child);
+    }
+}
+
+fn emit_quick_inserts(list: &gtk::ListBox, sender: &ViewSender) {
+    let mut phrases = Vec::new();
+    let mut child = list.first_child();
+    while let Some(widget) = child {
+        if let Some(row) = widget.downcast_ref::<adw::EntryRow>() {
+            let phrase = row.text().trim().to_string();
+            if !phrase.is_empty() {
+                phrases.push(phrase);
+            }
+        }
+        child = widget.next_sibling();
+    }
+    let _ = sender.output(PrefOutput::SetQuickInserts(phrases));
 }
 
 /// The text the row shows for a stored header, "" being the default.

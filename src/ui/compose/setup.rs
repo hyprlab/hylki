@@ -10,8 +10,8 @@ use crate::ui::rich_editor::RichEditor;
 use adw::prelude::*;
 use relm4::prelude::*;
 
-/// The buttons at the far end of the format bar: merge fields, signature,
-/// translate, preview and the format chooser, in that order.
+/// The buttons at the far end of the format bar: merge fields, template,
+/// signature, translate, preview and the format chooser, in that order.
 pub(super) fn add_toolbar_end_buttons(
     editor: &RichEditor,
     format: ComposeFormat,
@@ -21,6 +21,7 @@ pub(super) fn add_toolbar_end_buttons(
     gtk::Button,
     gtk::ToggleButton,
     adw::ButtonContent,
+    gtk::Button,
     gtk::Button,
     gtk::Button,
 ) {
@@ -77,7 +78,7 @@ pub(super) fn add_toolbar_end_buttons(
         });
     }
     let signature_btn = gtk::Button::from_icon_name("signature-symbolic");
-    signature_btn.set_tooltip_text(Some(i18n("Insert Signature").as_str()));
+    signature_btn.set_tooltip_text(Some(i18n("Choose Signature").as_str()));
     signature_btn.add_css_class("flat");
     signature_btn.set_can_focus(false);
     signature_btn.set_visible(has_signatures);
@@ -107,7 +108,29 @@ pub(super) fn add_toolbar_end_buttons(
             let _ = s.send(ComposeInput::MergeFields(FieldTarget::Body));
         });
     }
+    let template_btn = gtk::Button::from_icon_name("folder-templates-symbolic");
+    template_btn.set_tooltip_text(Some(i18n("Insert Template").as_str()));
+    template_btn.add_css_class("flat");
+    template_btn.set_can_focus(false);
+    {
+        let s = sender.input_sender().clone();
+        template_btn.connect_clicked(move |_| {
+            let _ = s.send(ComposeInput::InsertTemplate);
+        });
+    }
+    let quick_insert_btn = gtk::Button::from_icon_name("edit-paste-symbolic");
+    quick_insert_btn.set_tooltip_text(Some(i18n("Quick Inserts").as_str()));
+    quick_insert_btn.add_css_class("flat");
+    quick_insert_btn.set_can_focus(false);
+    {
+        let s = sender.input_sender().clone();
+        quick_insert_btn.connect_clicked(move |_| {
+            let _ = s.send(ComposeInput::QuickInsertsMenu);
+        });
+    }
     editor.toolbar_end().append(&fields_btn);
+    editor.toolbar_end().append(&quick_insert_btn);
+    editor.toolbar_end().append(&template_btn);
     editor.toolbar_end().append(&signature_btn);
     editor.toolbar_end().append(&translate_btn);
     editor.toolbar_end().append(&preview_btn);
@@ -118,6 +141,7 @@ pub(super) fn add_toolbar_end_buttons(
         preview_content,
         translate_btn,
         signature_btn,
+        quick_insert_btn,
     )
 }
 

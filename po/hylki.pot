@@ -7918,3 +7918,74 @@ msgstr ""
 
 msgid "Hyprlab"
 msgstr ""
+
+#: src/ui/accounts/pages/form.rs
+msgid "Send-as identities"
+msgstr ""
+
+#: src/ui/accounts/pages/form.rs
+msgid ""
+"Extra names and addresses this account can send as. The same address may "
+"have several names."
+msgstr ""
+
+#: src/ui/accounts/aliases.rs
+msgid ""
+"This address already has a send-as identity with its own SMTP server. "
+"Several names may share an address only when they use this account's SMTP "
+"server."
+msgstr ""
+
+#: src/ui/compose/setup.rs
+msgid "Choose Signature"
+msgstr ""
+
+#: src/ui/compose/setup.rs
+msgid "Insert Template"
+msgstr ""
+
+#: src/ui/accounts/pages/form.rs
+msgid "Sender name"
+msgstr ""
+
+#: src/ui/accounts/pages/form.rs
+msgid ""
+"The name shown in From when this signature is selected. Leave it empty to "
+"keep the account's name."
+msgstr ""
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Quick Inserts"
+msgstr ""
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Short phrases the composer can insert at the caret."
+msgstr ""
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Add Phrase"
+msgstr ""
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Phrase"
+msgstr ""
+
+#: src/ui/preferences/pages/composing.rs
+msgid "Remove Phrase"
+msgstr ""
+
+#: src/ui/compose/quick_inserts.rs
+msgid "No Quick Inserts"
+msgstr ""
+
+#: src/ui/compose/quick_inserts.rs
+msgid "Configure Quick Inserts…"
+msgstr ""
+
+#: src/app/drafts.rs
+msgid "The template goes into this message above the quoted original."
+msgstr ""
+
+#: src/app/drafts.rs
+msgid "Could not load the template body."
+msgstr ""

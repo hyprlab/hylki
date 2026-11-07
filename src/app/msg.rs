@@ -974,6 +974,13 @@ pub(crate) enum AppMsg {
     TemplatePickNow,
     /// The template picker answered (None: a blank message instead).
     TemplatePicked(Option<Message>),
+    /// A composer's Insert Template button: choose a template to put into
+    /// that message rather than start a new one from.
+    PickTemplate { id: u32 },
+    /// Show the insertion picker with whatever Templates lists have arrived.
+    InsertTemplatePickNow { id: u32 },
+    /// The insertion picker answered (None: do nothing).
+    TemplateInsertPicked { id: u32, template: Option<Message> },
     /// A composer's Save Draft: store the message in its account's Drafts
     /// folder.
     SaveDraftMessage(Box<OutgoingMessage>),
@@ -1009,6 +1016,8 @@ pub(crate) enum AppMsg {
     // ---- on_settings_window (settings_window.rs) ----
     /// Select a settings category by id (the showcase hook).
     ShowSettingsPage(String),
+    /// Open Settings → Composing on the quick-insert editor.
+    OpenQuickInsertSettings,
     /// Open the settings window on the user's preferred view (the menu entry).
     OpenSettings,
     /// The Settings window showed a category; remembered for reopening.

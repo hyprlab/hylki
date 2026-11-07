@@ -398,8 +398,36 @@ pub(crate) struct AccountConfig {
 #[derive(Debug, Clone, Default, PartialEq, Deserialize, Serialize)]
 pub(crate) struct NamedSignature {
     pub(crate) name: String,
+    /// The display name put in From when this signature is selected. Empty
+    /// keeps the identity's configured name, which is also how signatures
+    /// written before this field behaved.
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub(crate) sender_name: String,
     /// The signature as HTML.
     pub(crate) html: String,
+}
+
+impl NamedSignature {
+    /// `identity` with this signature's sender name in place, keeping its
+    /// address. An empty name leaves the identity exactly as configured.
+    pub(crate) fn sender_from(&self, identity: &str) -> String {
+        sender_identity(identity, &self.sender_name)
+    }
+}
+
+/// Put a signature's sender name on an existing From identity. Empty names
+/// leave the identity untouched, which keeps old signatures behaving as they
+/// did.
+pub(crate) fn sender_identity(identity: &str, sender_name: &str) -> String {
+    let name = sender_name.trim();
+    if name.is_empty() {
+        return identity.to_string();
+    }
+    let (_, address) = split_identity(identity);
+    if address.is_empty() {
+        return identity.to_string();
+    }
+    crate::worker::format_recipient(name, &address)
 }
 
 /// A send-as alias (#34): an extra From identity the composer offers. By
@@ -520,6 +548,7 @@ impl AccountConfig {
                 Some(html) => (
                     vec![NamedSignature {
                         name: crate::i18n::i18n("Signature"),
+                        sender_name: String::new(),
                         html: html.to_string(),
                     }],
                     Some(0),
@@ -842,6 +871,35 @@ mod tests {
         assert_eq!(
             split_identity("\"Quoted\" <q@x.example>"),
             ("Quoted".into(), "q@x.example".into())
+        );
+    }
+
+    #[test]
+    fn a_signature_can_replace_the_sender_name_and_keep_the_address() {
+        let sig = NamedSignature {
+            name: "Director".into(),
+            sender_name: "Alex Morgan".into(),
+            html: String::new(),
+        };
+        assert_eq!(
+            sig.sender_from("Office <office@example.com>"),
+            "Alex Morgan <office@example.com>"
+        );
+        assert_eq!(
+            sig.sender_from("office@example.com"),
+            "Alex Morgan <office@example.com>"
+        );
+        let quoted = NamedSignature {
+            sender_name: "Morgan, Alex".into(),
+            ..sig
+        };
+        assert_eq!(
+            quoted.sender_from("office@example.com"),
+            "\"Morgan, Alex\" <office@example.com>"
+        );
+        assert_eq!(
+            NamedSignature::default().sender_from("Office <office@example.com>"),
+            "Office <office@example.com>"
         );
     }
 }

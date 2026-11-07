@@ -382,10 +382,19 @@ impl Compose {
         self.signature_btn
             .set_visible(!account.signatures.is_empty());
         let new_sig = account.signature.clone();
-        if !account_changed || new_sig == self.current_sig {
+        let sender_name = account
+            .signatures
+            .iter()
+            .find(|sig| sig.html == account.signature)
+            .map(|sig| sig.sender_name.clone())
+            .unwrap_or_default();
+        if !account_changed {
             return;
         }
-        self.put_signature(new_sig);
+        if new_sig != self.current_sig {
+            self.put_signature(new_sig);
+        }
+        self.apply_signature_sender(idx, &sender_name, widgets);
     }
 
     /// Handles [`ComposeInput::ToggleSign`].
@@ -792,7 +801,18 @@ impl Compose {
         });
         widgets.from_row.set_factory(Some(&factory));
         widgets.from_row.set_selected(selected as u32);
-        widgets.from_row.set_visible(self.accounts.len() > 1);
+        // A sender name carried by a signature is part of the From even
+        // when there is only one address, so the row stays visible to show
+        // which name will actually go out.
+        let named_by_signature = self.accounts.iter().any(|account| {
+            account
+                .signatures
+                .iter()
+                .any(|signature| !signature.sender_name.trim().is_empty())
+        });
+        widgets
+            .from_row
+            .set_visible(self.accounts.len() > 1 || named_by_signature);
         {
             // The pencil types a From of your own (#347); the custom row's
             // button goes back to the list.

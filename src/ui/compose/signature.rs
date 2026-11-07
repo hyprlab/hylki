@@ -5,7 +5,7 @@ use super::messages::ComposeInput;
 use super::types::{ComposeAccount, SigPlace};
 use super::Compose;
 use super::ComposeWidgets;
-use crate::config::SignaturePosition;
+use crate::config::{sender_identity, NamedSignature, SignaturePosition};
 use crate::i18n::i18n;
 use crate::ui::context_menu::{show_context_menu, MenuEntry};
 use crate::ui::rich_editor::{self, js_escape, SourceKind};
@@ -38,24 +38,54 @@ pub(super) fn sig_source(kind: SourceKind, sig: &str, dashes: bool) -> String {
 }
 
 impl Compose {
-    /// The signature Insert Signature puts in: the one the message last
-    /// had, if it is one of `account`'s, else its default, else its first.
-    fn chosen_signature(&self, account: &ComposeAccount) -> String {
-        if account
+    /// The signature the composer would use for `account`: the one already
+    /// in the body, else the account's default, else the first.
+    fn chosen_signature_entry<'a>(
+        &self,
+        account: &'a ComposeAccount,
+    ) -> Option<&'a NamedSignature> {
+        if let Some(sig) = account
             .signatures
             .iter()
-            .any(|s| s.html == self.current_sig)
+            .find(|s| !self.current_sig.is_empty() && s.html == self.current_sig)
         {
-            return self.current_sig.clone();
-        }
-        if !account.signature.is_empty() {
-            return account.signature.clone();
+            return Some(sig);
         }
         account
             .signatures
-            .first()
-            .map(|s| s.html.clone())
-            .unwrap_or_default()
+            .iter()
+            .find(|s| !account.signature.is_empty() && s.html == account.signature)
+            .or_else(|| account.signatures.first())
+    }
+
+    /// Put a signature's sender name in the picked From without changing
+    /// its address. An empty name restores the identity as configured.
+    pub(super) fn apply_signature_sender(
+        &mut self,
+        idx: usize,
+        sender_name: &str,
+        widgets: &ComposeWidgets,
+    ) {
+        // A From typed by hand belongs to the user; a signature only swaps
+        // the body in that mode.
+        if self.custom_from {
+            return;
+        }
+        let Some(account) = self.accounts.get_mut(idx) else {
+            return;
+        };
+        let display = sender_identity(&account.base_label, sender_name);
+        account.label = display.clone();
+        account.alias_from = if sender_name.trim().is_empty() {
+            account.base_alias_from.clone()
+        } else {
+            Some(display.clone())
+        };
+        let label = account.label.clone();
+        if let Some(list) = widgets.from_row.model().and_downcast::<gtk::StringList>() {
+            list.splice(idx as u32, 1, &[label.as_str()]);
+        }
+        widgets.from_row.set_selected(idx as u32);
     }
 
     /// Put `new_sig` in the editor in place of the current signature block,
@@ -246,12 +276,16 @@ window.__hylkiDirty=true;})()"#
     /// Handles [`ComposeInput::InsertSignature`].
     pub(super) fn on_insert_signature(&mut self, place: SigPlace, widgets: &ComposeWidgets) {
         let idx = widgets.from_row.selected() as usize;
-        let sig = self
+        let Some(sig) = self
             .accounts
             .get(idx)
-            .map(|a| self.chosen_signature(a))
-            .unwrap_or_default();
-        self.insert_signature(sig, place);
+            .and_then(|a| self.chosen_signature_entry(a))
+            .cloned()
+        else {
+            return;
+        };
+        self.insert_signature(sig.html.clone(), place);
+        self.apply_signature_sender(idx, &sig.sender_name, widgets);
     }
 
     /// Handles [`ComposeInput::SignatureClicked`].
@@ -303,15 +337,21 @@ window.__hylkiDirty=true;})()"#
     pub(super) fn on_use_signature(&mut self, choice: Option<usize>, widgets: &ComposeWidgets) {
         let idx = widgets.from_row.selected() as usize;
         let sig = match choice {
-            Some(i) => match self.accounts.get(idx).and_then(|a| a.signatures.get(i)) {
-                Some(sig) => sig.html.clone(),
+            Some(i) => match self
+                .accounts
+                .get(idx)
+                .and_then(|a| a.signatures.get(i))
+                .cloned()
+            {
+                Some(sig) => sig,
                 None => return,
             },
-            None => String::new(),
+            None => NamedSignature::default(),
         };
-        if sig != self.current_sig {
-            self.put_signature(sig);
+        if sig.html != self.current_sig {
+            self.put_signature(sig.html.clone());
         }
+        self.apply_signature_sender(idx, &sig.sender_name, widgets);
     }
 
     /// Handles [`ComposeInput::SignatureMenu`].

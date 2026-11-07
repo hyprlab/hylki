@@ -17,6 +17,10 @@ pub(crate) enum Field {
 pub(crate) struct ComposeAccount {
     pub(crate) id: u32,
     pub(crate) label: String,
+    /// The identity's name before a signature puts another sender name in
+    /// From. Kept so choosing a signature without a sender name can restore
+    /// it.
+    pub(crate) base_label: String,
     /// Signature text appended to the body when this account is selected:
     /// its default one, or empty when new messages start without.
     pub(crate) signature: String,
@@ -32,6 +36,8 @@ pub(crate) struct ComposeAccount {
     /// Set for a send-as alias (#34): the full From to put on the wire
     /// ("Name <alias@host>"). `None` sends as the account itself.
     pub(crate) alias_from: Option<String>,
+    /// The alias From before a signature overrode its display name.
+    pub(crate) base_alias_from: Option<String>,
 }
 
 /// Initial field contents (empty for a new message; populated for reply/forward).
@@ -140,6 +146,8 @@ pub(crate) struct ComposeInit {
     pub(crate) format: ComposeFormat,
     /// Where the signature goes against a quoted original (#237).
     pub(crate) signature_position: SignaturePosition,
+    /// Short phrases offered at the caret.
+    pub(crate) quick_inserts: Vec<String>,
 }
 
 /// An account that suggests only from its directory and its own mail

@@ -20,6 +20,8 @@ pub(crate) struct Compose {
     /// Where that signature sits against a quoted original (#237), so a
     /// signature added on an account switch lands in the same place.
     pub(super) signature_position: SignaturePosition,
+    /// Short phrases offered at the caret.
+    pub(super) quick_inserts: Vec<String>,
     /// Files to attach.
     pub(super) attachments: Vec<std::path::PathBuf>,
     /// Thumbnails of the attached pictures and PDFs by path (#299), kept
@@ -133,6 +135,8 @@ pub(crate) struct Compose {
     /// signature out, and this puts it back by hand. With several (#445)
     /// it lists them. Shown only while the From account has one.
     pub(super) signature_btn: gtk::Button,
+    /// The quick phrases button, also the menu's anchor.
+    pub(super) quick_insert_btn: gtk::Button,
     /// A translation is out: the button waits and the body is locked.
     pub(super) translating: bool,
     /// Saving on its own (#340): a save on its way, what the last one held

@@ -26,14 +26,32 @@ impl RichEditor {
     /// pictures): opening a reply must not fetch what reading the message
     /// did not (#295). The markup keeps every address, so the recipient
     /// gets the quote whole.
-    pub(crate) fn new(initial_html: &str, remote_images: Option<&[String]>, plain: bool) -> Self {
+    pub(crate) fn new(
+        initial_html: &str,
+        remote_images: Option<&[String]>,
+        plain: bool,
+        quick_inserts: &[String],
+    ) -> Self {
         let plain = std::rc::Rc::new(std::cell::Cell::new(plain));
         let image_policy: std::rc::Rc<str> = image_policy_meta(remote_images).into();
         let (webview, ucm) = editor_view();
+        let quick_suggestion_open = std::rc::Rc::new(std::cell::Cell::new(false));
+        {
+            let open = quick_suggestion_open.clone();
+            ucm.connect_script_message_received(Some("hylkiQuick"), move |_, value| {
+                open.set(value.to_str() == "1");
+            });
+        }
         let spinner = loading_spinner(&webview);
         crate::desktop::web_fonts::load_html(
             &webview,
-            &document(initial_html, &webview, &image_policy, plain.get()),
+            &document(
+                initial_html,
+                &webview,
+                &image_policy,
+                plain.get(),
+                quick_inserts,
+            ),
             Some("https://hylki.localhost/editor"),
         );
         let theme_handler = follow_theme(&webview);
@@ -127,6 +145,8 @@ impl RichEditor {
             preview: std::rc::Rc::new(std::cell::RefCell::new(None)),
             source: source.clone(),
             plain,
+            quick_inserts: std::rc::Rc::new(std::cell::RefCell::new(quick_inserts.to_vec())),
+            quick_suggestion_open,
             attach_cb,
             loaded,
             pending_files,
@@ -156,6 +176,9 @@ fn editor_view() -> (webkit6::WebView, webkit6::UserContentManager) {
     // The block state under the caret (quote, bulleted or numbered list)
     // comes out through this one, to light the matching toolbar button.
     ucm.register_script_message_handler("hylkiFormat", None);
+    // Inline quick-insert completion: whether its card is open, so Tab can
+    // accept it before the composer's focus cycle takes the key.
+    ucm.register_script_message_handler("hylkiQuick", None);
     let webview = webkit6::WebView::builder()
         .web_context(&crate::ui::message_view::shared_web_context())
         .user_content_manager(&ucm)

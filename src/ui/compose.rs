@@ -21,6 +21,7 @@ mod merge;
 mod merge_fields;
 mod messages;
 mod model;
+mod quick_inserts;
 mod send;
 mod send_menu;
 mod setup;
@@ -28,6 +29,7 @@ mod showcase;
 mod signature;
 mod subject;
 mod suggest;
+mod template;
 #[cfg(test)]
 mod tests;
 mod text_diff;
@@ -403,6 +405,7 @@ impl Component for Compose {
             decorations,
             format,
             signature_position,
+            quick_inserts,
         } = init;
         let in_reply_to = prefill.in_reply_to.clone();
         let references = prefill.references.clone();
@@ -479,6 +482,7 @@ impl Component for Compose {
             &content,
             remote_images.as_deref(),
             format == ComposeFormat::Plain,
+            &quick_inserts,
         );
         editor.set_formatting_visible(format == ComposeFormat::Rich);
         editor.set_zoom(session_zoom());
@@ -518,15 +522,21 @@ impl Component for Compose {
                 });
             });
         }
-        let (format_btn, preview_btn, preview_content, translate_btn, signature_btn) =
-            add_toolbar_end_buttons(
-                &editor,
-                format,
-                accounts
-                    .get(selected)
-                    .is_some_and(|a| !a.signatures.is_empty()),
-                &sender,
-            );
+        let (
+            format_btn,
+            preview_btn,
+            preview_content,
+            translate_btn,
+            signature_btn,
+            quick_insert_btn,
+        ) = add_toolbar_end_buttons(
+            &editor,
+            format,
+            accounts
+                .get(selected)
+                .is_some_and(|a| !a.signatures.is_empty()),
+            &sender,
+        );
 
         connect_editor(&editor, &sender);
 
@@ -536,6 +546,7 @@ impl Component for Compose {
             current_sig,
             sig_dashes,
             signature_position,
+            quick_inserts,
             attachments: prefill_attachments,
             attach_thumbs: Default::default(),
             suggestions: Vec::new(),
@@ -579,6 +590,7 @@ impl Component for Compose {
             format_btn,
             translate_btn,
             signature_btn,
+            quick_insert_btn,
             translating: false,
             autosaving: false,
             autosaved: None,
@@ -838,6 +850,15 @@ impl Component for Compose {
 
                 ComposeInput::SignatureMenu => self.on_signature_menu(&sender),
 
+                ComposeInput::QuickInsertsMenu => self.on_quick_inserts_menu(&sender),
+
+                ComposeInput::QuickInsert(phrase) => self.on_quick_insert(phrase),
+
+                ComposeInput::SetQuickInserts(phrases) => {
+                    self.editor.set_quick_inserts(&phrases);
+                    self.quick_inserts = phrases;
+                }
+
                 ComposeInput::Suggest(field) => self.on_suggest(field, widgets, &sender),
 
                 ComposeInput::DirectoriesKnown { graph, own_mail } => {
@@ -964,6 +985,14 @@ impl Component for Compose {
 
                 ComposeInput::SaveDraft => self.on_save_draft(false, widgets, &sender),
                 ComposeInput::SaveAsTemplate => self.on_save_draft(true, widgets, &sender),
+
+                ComposeInput::InsertTemplate => {
+                    let _ = sender.output(ComposeOutput::PickTemplate {
+                        id: self.compose_id,
+                    });
+                }
+
+                ComposeInput::TemplateBody(html) => self.insert_template(html),
 
                 ComposeInput::SaveDraftBody {
                     fields,
