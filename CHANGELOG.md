@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: Add to Calendar could close the app** (#611, by FLASH911). An
+  invitation is handed to the calendar under a file name made from its title,
+  cut to 60 characters. The cut was made in bytes, so a long title in Russian,
+  Greek or any other non-Latin script could fall inside a character, and the
+  app crashed. It is now cut in characters.
+
 - **Added: trackers come off links** (#599, by James Reilly). A link opened or
   copied from a message loses its tracking tags (`utm_source` and the like,
   `fbclid`, `gclid`, `mc_eid`), and Google, Facebook and YouTube redirects
