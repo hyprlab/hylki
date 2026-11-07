@@ -67,6 +67,7 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) openpgp_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) sig_choice_row: adw::ComboRow,
     pub(in crate::ui::accounts) sig_name_row: adw::EntryRow,
+    pub(in crate::ui::accounts) sig_sender_row: adw::EntryRow,
     pub(in crate::ui::accounts) sig_default_row: adw::SwitchRow,
     pub(in crate::ui::accounts) sig_holder: gtk::Box,
     pub(in crate::ui::accounts) push_row: adw::ComboRow,
@@ -614,6 +615,15 @@ impl EditorForm {
                             connect_clicked => AccountsInput::SigDelete,
                         },
                     },
+                    #[name = "sig_sender_row"]
+                    adw::EntryRow {
+                        set_title: &i18n("Sender name"),
+                        set_tooltip_text: Some(
+                            i18n("The name shown in From when this signature is selected. Leave it empty to keep the account's name.")
+                                .as_str()
+                        ),
+                        connect_changed => AccountsInput::SigSenderRename,
+                    },
                     #[name = "sig_default_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Start messages with this signature"),
@@ -946,6 +956,7 @@ impl EditorForm {
             openpgp_group,
             sig_choice_row,
             sig_name_row,
+            sig_sender_row,
             sig_default_row,
             sig_holder,
             push_row,
