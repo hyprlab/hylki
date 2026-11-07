@@ -831,6 +831,30 @@ fn recheck_suspicious_senders_drops_only_those_verdicts_and_bodies() {
     );
 }
 
+/// v24: plain bodies that may hold a flowed soft break go, to render again
+/// with their lines joined; HTML and other plain bodies stay.
+#[test]
+fn drop_soft_broken_plain_bodies_keeps_html_and_fixed_text() {
+    use crate::worker::wrap_plain;
+    let c = Cache::in_memory().unwrap();
+    c.save_body(1, "INBOX", 1, &wrap_plain("soft \r\nbreak"));
+    c.save_body(1, "INBOX", 2, &wrap_plain("hard\r\nbreak"));
+    c.save_body(1, "INBOX", 3, "<p>html \n</p>");
+    c.save_body(
+        1,
+        "INBOX",
+        4,
+        "<div class=\"hylki-plain\">soft \nbreak</div>",
+    );
+
+    Cache::drop_soft_broken_plain_bodies(&c.conn);
+
+    assert!(c.load_body(1, "INBOX", 1).is_none());
+    assert!(c.load_body(1, "INBOX", 2).is_some());
+    assert!(c.load_body(1, "INBOX", 3).is_some());
+    assert!(c.load_body(1, "INBOX", 4).is_none());
+}
+
 #[test]
 fn clean_quoted_names_strips_the_escapes_in_place() {
     let c = Cache::in_memory().unwrap();

@@ -268,6 +268,9 @@ impl Cache {
         if (LAYOUT_VERSION..23).contains(&version) {
             Self::drop_unvouched_one_click(conn);
         }
+        if (LAYOUT_VERSION..24).contains(&version) {
+            Self::drop_soft_broken_plain_bodies(conn);
+        }
         // `attachment_meta` is the gallery's record of every attachment that
         // *exists*; `attachments` holds the few whose bytes were downloaded.
         // Seed the first from the second so files already in hand keep showing
@@ -340,6 +343,21 @@ impl Cache {
     pub(super) fn recheck_suspicious_senders(conn: &Connection) {
         delete_downloaded_where_check(conn, "s.trust = 'suspicious'");
         let _ = conn.execute("DELETE FROM sender_checks WHERE trust = 'suspicious'", []);
+    }
+
+    /// Drop the plain-text bodies with a space before a line break, the mark
+    /// of a `format=flowed` soft break, so the next open renders them with
+    /// their paragraphs joined (v24, #606). Which of them were flowed was not
+    /// recorded, so a fixed one with a trailing space comes along and is only
+    /// fetched again; HTML bodies and every other plain one stay.
+    pub(super) fn drop_soft_broken_plain_bodies(conn: &Connection) {
+        let _ = conn.execute(
+            "DELETE FROM bodies \
+             WHERE (instr(body, 'class=\"hylki-plain\"') > 0 \
+                    OR instr(body, 'sans-serif;white-space:pre-wrap') > 0) \
+               AND (instr(body, ' ' || char(10)) > 0 OR instr(body, ' ' || char(13)) > 0)",
+            [],
+        );
     }
 
     /// Take the one-click handle off stored unsubscribe routes the current

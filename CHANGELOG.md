@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Fixed: plain-text mail stopped a third of the way across the reader**
+  (#606). Thunderbird, Apple Mail and Evolution send plain text as
+  `format=flowed` (RFC 3676): lines broken at about 72 characters, with a
+  space before each break so the reader can join them again. Hylki showed the
+  breaks as they arrived. The lines of a paragraph are now joined and wrap to
+  the pane, quoted paragraphs included; lines the sender ended without the
+  space stay as written. Plain-text messages already read are rendered again
+  the next time they are opened.
+
 - **Fixed: the remote picture cache could delete other programs' files**
   (#614). Outside Flatpak the cache was kept in `~/.cache/remote` rather than
   `~/.cache/hylki/remote`, and its weekly trim removed every file in that

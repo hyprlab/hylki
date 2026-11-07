@@ -4,6 +4,7 @@
 pub(crate) mod attachment_reminder;
 pub(crate) mod attribution;
 pub(crate) mod direction;
+pub(crate) mod flowed;
 pub(crate) mod invite;
 pub(crate) mod link_clean;
 mod mail_header;
