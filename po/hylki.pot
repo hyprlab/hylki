@@ -7836,6 +7836,15 @@ msgstr ""
 msgid "Paste as Plain Text"
 msgstr ""
 
+msgid "Cut"
+msgstr ""
+
+msgid "Select All"
+msgstr ""
+
+msgid "Insert Emoji"
+msgstr ""
+
 msgid "Email Client"
 msgstr ""
 

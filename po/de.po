@@ -8545,6 +8545,18 @@ msgstr "Mit Formatierung einfügen"
 msgid "Paste as Plain Text"
 msgstr "Als reinen Text einfügen"
 
+#, fuzzy
+msgid "Cut"
+msgstr "Land"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Alle löschen"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Emoji einfügen"
+
 msgid "Email Client"
 msgstr "E-Mail-Client"
 

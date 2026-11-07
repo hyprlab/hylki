@@ -167,7 +167,8 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   text in the accent's foreground color on the accent, and a theme picked in
   Settings shown over the colors of a user's `gtk.css`.
 - [**FLASH911**](https://github.com/FLASH911) ([#611](https://github.com/hyprlab/hylki/pull/611)):
-  the crash in Add to Calendar on a long non-Latin invitation title.
+  the crash in Add to Calendar on a long non-Latin invitation title, and the
+  composer menu entries left in the system's language.
 
 ## Reports, design and ideas
 

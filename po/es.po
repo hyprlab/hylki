@@ -8480,6 +8480,18 @@ msgstr "Pegar con formato"
 msgid "Paste as Plain Text"
 msgstr "Pegar como texto sin formato"
 
+#, fuzzy
+msgid "Cut"
+msgstr "País"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Eliminar todo"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Insertar emoji"
+
 msgid "Email Client"
 msgstr "Cliente de correo electrónico"
 

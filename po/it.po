@@ -8763,6 +8763,17 @@ msgstr "Incolla con formattazione"
 msgid "Paste as Plain Text"
 msgstr "Incolla come testo normale"
 
+msgid "Cut"
+msgstr ""
+
+#, fuzzy
+msgid "Select All"
+msgstr "Elimina tutto"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Inserisci emoji"
+
 msgid "Email Client"
 msgstr "Client e-mail"
 

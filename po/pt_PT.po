@@ -8581,6 +8581,18 @@ msgstr "Colar com formatação"
 msgid "Paste as Plain Text"
 msgstr "Colar como texto simples"
 
+#, fuzzy
+msgid "Cut"
+msgstr "País"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Eliminar todos"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Inserir emoji"
+
 msgid "Email Client"
 msgstr "Cliente de correio eletrónico"
 

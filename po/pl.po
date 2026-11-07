@@ -8915,6 +8915,17 @@ msgstr "Wklej z formatowaniem"
 msgid "Paste as Plain Text"
 msgstr "Wklej jako zwykły tekst"
 
+msgid "Cut"
+msgstr ""
+
+#, fuzzy
+msgid "Select All"
+msgstr "Usuń"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Wstaw odnośnik"
+
 msgid "Email Client"
 msgstr "Klient poczty"
 

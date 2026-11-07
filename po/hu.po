@@ -8840,6 +8840,17 @@ msgstr "Beillesztés formázással"
 msgid "Paste as Plain Text"
 msgstr "Beillesztés egyszerű szövegként"
 
+msgid "Cut"
+msgstr ""
+
+#, fuzzy
+msgid "Select All"
+msgstr "Törlés"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Hivatkozás beszúrása"
+
 msgid "Email Client"
 msgstr "E-mail kliens"
 

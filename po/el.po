@@ -8541,6 +8541,18 @@ msgstr "Επικόλληση με μορφοποίηση"
 msgid "Paste as Plain Text"
 msgstr "Επικόλληση ως απλό κείμενο"
 
+#, fuzzy
+msgid "Cut"
+msgstr "Χώρα"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Διαγραφή όλων"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Εισαγωγή emoji"
+
 msgid "Email Client"
 msgstr "Πρόγραμμα-πελάτης email"
 

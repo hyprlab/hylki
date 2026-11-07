@@ -8,6 +8,10 @@
   Greek or any other non-Latin script could fall inside a character, and the
   app crashed. It is now cut in characters.
 
+- **Fixed: Cut, Copy, Delete, Select All and Insert Emoji in the composer's
+  right-click menu** (#611, by FLASH911) were in the system's language rather
+  than the one chosen in Hylki. They now follow Hylki's.
+
 - **Added: trackers come off links** (#599, by James Reilly). A link opened or
   copied from a message loses its tracking tags (`utm_source` and the like,
   `fbclid`, `gclid`, `mc_eid`), and Google, Facebook and YouTube redirects

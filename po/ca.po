@@ -8535,6 +8535,18 @@ msgstr "Enganxa amb format"
 msgid "Paste as Plain Text"
 msgstr "Enganxa com a text pla"
 
+#, fuzzy
+msgid "Cut"
+msgstr "País"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Elimina-ho tot"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Insereix un emoji"
+
 msgid "Email Client"
 msgstr "Client de correu"
 

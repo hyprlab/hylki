@@ -8498,6 +8498,18 @@ msgstr "Coller avec la mise en forme"
 msgid "Paste as Plain Text"
 msgstr "Coller comme texte brut"
 
+#, fuzzy
+msgid "Cut"
+msgstr "Pays"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Tout supprimer"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Insérer un émoji"
+
 msgid "Email Client"
 msgstr "Client e-mail"
 
