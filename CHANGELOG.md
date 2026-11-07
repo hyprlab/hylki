@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: a forged message could send a one-click unsubscribe** (#596, by
+  James Reilly). The request now goes only to an https address, as RFC 8058
+  requires, and only when the mail provider's DKIM check covers the
+  List-Unsubscribe header or the sender check finds nothing wrong. Otherwise
+  the list's page opens in the browser.
+
 - **Added: a warning before opening a program or a script** (#598, by James
   Reilly). An attachment such as a `.desktop`, `.sh`, `.AppImage`, `.jar` or
   `.exe` file, or one whose first bytes say it is a program whatever its name,

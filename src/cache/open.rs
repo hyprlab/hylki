@@ -265,6 +265,9 @@ impl Cache {
         if (LAYOUT_VERSION..21).contains(&version) {
             Self::recheck_suspicious_senders(conn);
         }
+        if (LAYOUT_VERSION..23).contains(&version) {
+            Self::drop_unvouched_one_click(conn);
+        }
         // `attachment_meta` is the gallery's record of every attachment that
         // *exists*; `attachments` holds the few whose bytes were downloaded.
         // Seed the first from the second so files already in hand keep showing
@@ -337,6 +340,24 @@ impl Cache {
     pub(super) fn recheck_suspicious_senders(conn: &Connection) {
         delete_downloaded_where_check(conn, "s.trust = 'suspicious'");
         let _ = conn.execute("DELETE FROM sender_checks WHERE trust = 'suspicious'", []);
+    }
+
+    /// Take the one-click handle off stored unsubscribe routes the current
+    /// rules would not offer it on (v23, #596): one that is not https, and
+    /// any on a suspicious or failed sender, since whether DKIM covered the
+    /// header was not recorded. The banner then opens the list's page, which
+    /// the handle also is; nothing is fetched again.
+    pub(super) fn drop_unvouched_one_click(conn: &Connection) {
+        let _ = conn.execute(
+            "UPDATE sender_checks \
+             SET unsubscribe = json_set(unsubscribe, '$.one_click', NULL) \
+             WHERE json_valid(unsubscribe) \
+               AND json_extract(unsubscribe, '$.one_click') IS NOT NULL \
+               AND (trust IN ('suspicious', 'fail') \
+                    OR lower(ltrim(json_extract(unsubscribe, '$.one_click'))) \
+                       NOT LIKE 'https://%')",
+            [],
+        );
     }
 
     /// Clean the names and subjects an earlier build stored as the server

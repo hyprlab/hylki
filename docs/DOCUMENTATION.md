@@ -2357,6 +2357,13 @@ The Unsubscribe banner on mail from a list asks before it leaves the list, and
 can take the mail already received from that address to the Trash with it:
 tick **Also delete the messages from …** in that dialog.
 
+Where a list offers one-click unsubscribe (RFC 8058), Hylki sends the request
+itself, with no page in between. It does so only over https, and only when
+the mail provider's DKIM check covers the List-Unsubscribe header or nothing
+about the sender looks wrong (no failed or suspicious sender check). Otherwise
+the list's unsubscribe page opens in the browser instead, so a forged message
+cannot have Hylki send a request in your name.
+
 For the rest, each account's settings have **Move list mail to Trash**, under
 Syncing: Inbox mail with an unsubscribe link (a List-Unsubscribe header) that
 is older than 30, 60, 90 or 180 days goes to the Trash, checked at each sync

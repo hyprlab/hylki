@@ -78,6 +78,10 @@ struct Evidence {
     /// How to leave the list this came from (RFC 2369/8058), read in the
     /// same pass over the headers so it rides with the verdict.
     unsubscribe: Option<crate::models::Unsubscribe>,
+    /// Whether a DKIM signature the provider reported passing covers the
+    /// `List-Unsubscribe` header (and `List-Unsubscribe-Post`, when there
+    /// is one), as RFC 8058 §4 asks before a one-click POST.
+    unsubscribe_signed: bool,
     /// The meeting it invites the reader to (#223), read in the same pass
     /// over the same parse, for the same reason.
     invite: Option<Box<crate::models::Invite>>,
@@ -185,7 +189,59 @@ fn gather(raw: &[u8]) -> Evidence {
             ev.checked = true;
         }
     }
+    ev.unsubscribe_signed = ev.dkim == Some(AuthResult::Pass)
+        && ev.dkim_domain.as_deref().is_some_and(|d| {
+            let mut needed = vec!["list-unsubscribe"];
+            if parsed.header("List-Unsubscribe-Post").is_some() {
+                needed.push("list-unsubscribe-post");
+            }
+            dkim_covers(&raw_dkim_signatures(&parsed), d, &needed)
+        });
     ev
+}
+
+/// The unfolded value of every `DKIM-Signature` header, as written.
+fn raw_dkim_signatures(parsed: &mail_parser::Message) -> Vec<String> {
+    let raw = parsed.raw_message();
+    parsed
+        .headers()
+        .iter()
+        .filter(|h| h.name().eq_ignore_ascii_case("DKIM-Signature"))
+        .filter_map(|h| raw.get(h.offset_start()..h.offset_end()))
+        .map(|b| crate::mail::mail_header::unfold(&String::from_utf8_lossy(b)))
+        .collect()
+}
+
+/// Whether one of these `DKIM-Signature` values, by the domain `domain`
+/// whose signature passed, lists every header in `needed` in its `h=`.
+/// Hylki does not check signatures itself; the provider's verdict says one
+/// by that domain held, and its `h=` says what that one covered.
+fn dkim_covers(signatures: &[String], domain: &str, needed: &[&str]) -> bool {
+    signatures.iter().any(|sig| {
+        let tag = |name: &str| {
+            sig.split(';').find_map(|t| {
+                let (k, v) = t.split_once('=')?;
+                k.trim()
+                    .eq_ignore_ascii_case(name)
+                    .then(|| v.chars().filter(|c| !c.is_whitespace()).collect::<String>())
+            })
+        };
+        let signed_by = tag("d").is_some_and(|d| d.eq_ignore_ascii_case(domain));
+        let headers: Vec<String> = tag("h")
+            .unwrap_or_default()
+            .split(':')
+            .map(str::to_ascii_lowercase)
+            .collect();
+        signed_by && needed.iter().all(|n| headers.iter().any(|h| h == n))
+    })
+}
+
+/// Whether the one-click POST (RFC 8058) may run for this message. It acts
+/// in the user's name without a page in between, so a forged or altered
+/// message must not get to aim it: either the provider's DKIM check
+/// vouches for the header, or nothing about the sender looks wrong.
+fn one_click_allowed(trust: SenderTrust, unsubscribe_signed: bool) -> bool {
+    unsubscribe_signed || !matches!(trust, SenderTrust::Suspicious | SenderTrust::Fail)
 }
 
 /// A header's text, whatever shape `mail_parser` stored it in.
@@ -293,12 +349,20 @@ fn judge(ev: &Evidence) -> SenderCheck {
     } else {
         summary
     };
+    let mut unsubscribe = ev.unsubscribe.clone();
+    if let Some(u) = unsubscribe.as_mut() {
+        // The one-click handle is also the list's page (`web`), so the
+        // request still reaches the list, through the browser.
+        if !one_click_allowed(trust, ev.unsubscribe_signed) {
+            u.one_click = None;
+        }
+    }
     SenderCheck {
         trust,
         summary,
         findings,
         pgp: None,
-        unsubscribe: ev.unsubscribe.clone(),
+        unsubscribe,
         invite: ev.invite.clone(),
         label: ev.label.clone(),
         receipt: ev.receipt.clone(),
@@ -642,7 +706,10 @@ mod tests {
         )));
         assert_eq!(check.trust, SenderTrust::Pass);
         assert_eq!(check.authority.as_deref(), Some(""));
-        assert!(!check.findings.iter().any(|f| f.contains("spf=")), "{check:?}");
+        assert!(
+            !check.findings.iter().any(|f| f.contains("spf=")),
+            "{check:?}"
+        );
     }
 
     /// Real mail from the author's mailbox: a billing notice relayed through a
@@ -767,6 +834,72 @@ mod tests {
         assert!(same_site("amazon.co.uk", "help.amazon.co.uk"));
         assert!(!same_site("amazon.in", "amazon-security.in"));
         assert!(!same_site("amazon.co.uk", "amazon.co"));
+    }
+
+    #[test]
+    fn dkim_coverage_is_read_from_the_passing_domains_h_tag() {
+        let sig = |d: &str, h: &str| format!("v=1; a=rsa-sha256; d={d}; s=s1; h={h}; bh=x; b=y");
+        let needed = ["list-unsubscribe", "list-unsubscribe-post"];
+        let signed = [sig(
+            "list.example",
+            "From : To:Subject:List-Unsubscribe:\r\n List-Unsubscribe-Post",
+        )];
+        assert!(dkim_covers(&signed, "LIST.example", &needed));
+        // The header is signed, but by a domain whose signature was not the
+        // one reported passing.
+        assert!(!dkim_covers(&signed, "esp.example", &needed));
+        // The passing signature leaves the header out.
+        let partial = [sig("list.example", "from:to:subject:list-unsubscribe")];
+        assert!(!dkim_covers(&partial, "list.example", &needed));
+        assert!(dkim_covers(&partial, "list.example", &needed[..1]));
+        // A header name that only starts the same is not the header.
+        let lookalike = [sig("list.example", "from:list-unsubscribe-x")];
+        assert!(!dkim_covers(&lookalike, "list.example", &needed[..1]));
+        assert!(!dkim_covers(&[], "list.example", &needed[..1]));
+    }
+
+    /// RFC 8058 one-click only for a message the provider's DKIM check
+    /// vouches for the header of, or one nothing looks wrong about; the rest
+    /// open the list's page instead.
+    #[test]
+    fn one_click_needs_a_signed_header_or_a_sender_with_nothing_wrong() {
+        let list = concat!(
+            "List-Unsubscribe: <https://list.example/u/1>\r\n",
+            "List-Unsubscribe-Post: List-Unsubscribe=One-Click\r\n",
+        );
+        let check = |auth: &str, extra: &str| {
+            check_sender(&msg(&format!(
+                "{auth}From: News <news@list.example>\r\n{extra}{list}Subject: s"
+            )))
+        };
+        let signed = "DKIM-Signature: v=1; d=list.example; s=s; h=from:list-unsubscribe:list-unsubscribe-post; bh=x; b=y\r\n";
+        let unsigned = "DKIM-Signature: v=1; d=list.example; s=s; h=from:subject; bh=x; b=y\r\n";
+        let pass =
+            "Authentication-Results: mx.example; dkim=pass header.d=list.example; dmarc=pass\r\n";
+        let rogue_reply = "Reply-To: collector@gmail.com\r\n";
+        let signed_rogue = format!("{signed}{rogue_reply}");
+        let unsigned_rogue = format!("{unsigned}{rogue_reply}");
+        for (auth, extra, trust, one_click) in [
+            // Nothing wrong with the sender: allowed, signed or not.
+            (pass, unsigned, SenderTrust::Pass, true),
+            ("", "", SenderTrust::Unverified, true),
+            // Something off, but DKIM vouches for the header itself.
+            (pass, signed_rogue.as_str(), SenderTrust::Suspicious, true),
+            // Something off, and nothing vouches for the header.
+            (pass, unsigned_rogue.as_str(), SenderTrust::Suspicious, false),
+            (
+                "Authentication-Results: mx.example; dkim=fail header.d=list.example; dmarc=fail\r\n",
+                signed,
+                SenderTrust::Fail,
+                false,
+            ),
+        ] {
+            let c = check(auth, extra);
+            assert_eq!(c.trust, trust, "{auth}{extra}");
+            let u = c.unsubscribe.expect("the list offers a way out");
+            assert_eq!(u.one_click.is_some(), one_click, "{auth}{extra}");
+            assert_eq!(u.web.as_deref(), Some("https://list.example/u/1"));
+        }
     }
 
     #[test]
