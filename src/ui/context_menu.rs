@@ -371,9 +371,9 @@ fn build_page(
         (Some(parent_page), Some(title)) => {
             // The way back: a row with a leading chevron and the submenu's
             // name, then a hairline before its entries.
-            let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
+            let row = gtk::Box::new(gtk::Orientation::Horizontal, 8);
             let img = gtk::Image::from_icon_name("go-previous-symbolic");
-            img.set_pixel_size(16);
+            img.set_pixel_size(18);
             row.append(&img);
             let lbl = gtk::Label::new(Some(title));
             lbl.set_xalign(0.0);
@@ -435,7 +435,7 @@ fn build_page(
                 submenu,
             } = entry;
 
-            let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
+            let row = gtk::Box::new(gtk::Orientation::Horizontal, 8);
             if selected {
                 row.add_css_class("context-menu-selected");
             }
@@ -446,7 +446,7 @@ fn build_page(
                     Some(name) => gtk::Image::from_icon_name(name),
                     None => gtk::Image::new(),
                 };
-                img.set_pixel_size(16);
+                img.set_pixel_size(18);
                 row.append(&img);
             }
             // A long name (an address book's account) is cut short, so

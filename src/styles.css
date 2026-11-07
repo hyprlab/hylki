@@ -512,22 +512,40 @@ flowbox.attach-flow > flowboxchild {
 }
 
 /* Right-click context menus (see ui/context_menu.rs): a flat icon + label
-   button per row, padded and rounded like GNOME's native popover menu items.
+   button per row, compact enough for the reader's longer action list while
+   keeping GNOME's restrained rounding and comfortable hit targets.
    Real menu rows (GtkModelButton/PopoverMenu items) are regular weight and a
    comfortable minimum width regardless of label length — plain GtkButton
    defaults to bold text and hugs its content, so both are overridden here. */
 .context-menu-list {
-  padding: 6px;
-  min-width: 190px;
+  padding: 5px;
+  min-width: 205px;
+}
+.context-menu-list > separator {
+  margin: 4px 7px;
 }
 .context-menu-item {
-  padding: 8px 10px;
+  min-height: 26px;
+  padding: 5px 9px;
   border-radius: 6px;
 }
 .context-menu-item,
 .context-menu-item label {
+  font-size: 0.93em;
   font-weight: normal;
 }
+.context-menu-item image {
+  -gtk-icon-size: 16px;
+}
+
+tooltip {
+  font-size: 1em;
+}
+
+tooltip label {
+  padding: 2px 4px;
+}
+
 /* The entry a menu is currently set to. `color` is inherited, so one class
    on the row carries both the label and the symbolic icon beside it, and
    `@accent_color` is libadwaita's legible-on-a-normal-background accent —
@@ -1405,6 +1423,24 @@ flowbox.attach-flow > flowboxchild {
 
 /* ---- Reader ---- */
 
+/* The full-message wait: a spinner explains the action, the faint lines
+   give the incoming page a stable shape instead of leaving the pane blank. */
+.reader-loading-skeleton {
+  margin-top: 8px;
+  animation: reader-loading-pulse 1.4s ease-in-out infinite;
+}
+
+.reader-loading-line {
+  min-height: 9px;
+  border-radius: 999px;
+  background-color: alpha(currentColor, 0.13);
+}
+
+@keyframes reader-loading-pulse {
+  0%, 100% { opacity: 0.48; }
+  50% { opacity: 0.9; }
+}
+
 /* The reader pane's toolbar: tighter than stock between the action icons —
    narrower buttons and less gap in the packed start/end groups — so the full
    row fits down to READER_ACTIONS_BREAKPOINT before folding into the ⋯ menu. */
@@ -1416,9 +1452,11 @@ headerbar.compose-toolbar box.end {
 }
 headerbar.reader-toolbar button.image-button,
 headerbar.compose-toolbar button.image-button {
-  min-width: 28px;
-  padding-left: 3px;
-  padding-right: 3px;
+  min-width: 32px;
+  min-height: 32px;
+  padding-left: 4px;
+  padding-right: 4px;
+  -gtk-icon-size: 18px;
 }
 
 /* The narrowest reader pane: the left group never folds, so its buttons
@@ -1430,9 +1468,11 @@ headerbar.reader-toolbar.compact box.end {
 }
 headerbar.reader-toolbar.compact box.start button,
 headerbar.reader-toolbar.compact box.end > button {
-  min-width: 24px;
-  padding-left: 1px;
-  padding-right: 1px;
+  min-width: 28px;
+  min-height: 28px;
+  padding-left: 2px;
+  padding-right: 2px;
+  -gtk-icon-size: 16px;
 }
 
 /* The same toolbar in the list header, with the reader below the list or

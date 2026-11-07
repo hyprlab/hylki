@@ -361,6 +361,8 @@ impl Component for MessageView {
                     // pane's still or as the reveal after it, never dissolved
                     // over the message before.
                     set_vexpand: true,
+                    set_transition_type: gtk::StackTransitionType::Crossfade,
+                    set_transition_duration: 160,
                     #[watch]
                     set_visible_child_name: model.body_page(),
 
@@ -383,6 +385,30 @@ impl Component for MessageView {
                             // is picked for the message theme — `dim-label` would
                             // fade it against the app's instead.
                             set_label: &i18n("Loading…"),
+                        },
+                        gtk::Box {
+                            add_css_class: "reader-loading-skeleton",
+                            set_orientation: gtk::Orientation::Vertical,
+                            set_spacing: 8,
+                            set_width_request: 260,
+
+                            gtk::Box {
+                                add_css_class: "reader-loading-line",
+                                set_height_request: 9,
+                                set_width_request: 260,
+                            },
+                            gtk::Box {
+                                add_css_class: "reader-loading-line",
+                                set_height_request: 9,
+                                set_width_request: 216,
+                                set_halign: gtk::Align::Start,
+                            },
+                            gtk::Box {
+                                add_css_class: "reader-loading-line",
+                                set_height_request: 9,
+                                set_width_request: 238,
+                                set_halign: gtk::Align::Start,
+                            },
                         },
                     },
                 },

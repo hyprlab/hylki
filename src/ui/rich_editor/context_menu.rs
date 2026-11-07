@@ -29,6 +29,7 @@ pub(super) fn connect_context_menu(
             }
         };
         crate::ui::message_view::strip_navigation_items(menu);
+        localize_stock_items(menu);
         if hit.context_is_image() {
             // Stock image entries (copy/save/open variants) are replaced
             // by ours, which also know about the editable document.
@@ -188,4 +189,34 @@ pub(super) fn connect_context_menu(
         lead(menu);
         false
     });
+}
+
+/// Replace WebKit's built-in labels with the app's own. WebKit names these
+/// actions in the process locale, which can differ from the language Hylki
+/// is using and leaves English Cut, Copy and Select All in a Russian menu.
+fn localize_stock_items(menu: &webkit6::ContextMenu) {
+    for (action, label) in [
+        (webkit6::ContextMenuAction::Cut, i18n("Cut")),
+        (webkit6::ContextMenuAction::Copy, i18n("Copy")),
+        (webkit6::ContextMenuAction::Delete, i18n("Delete")),
+        (webkit6::ContextMenuAction::SelectAll, i18n("Select All")),
+        (
+            webkit6::ContextMenuAction::InsertEmoji,
+            i18n("Insert Emoji"),
+        ),
+    ] {
+        let Some(index) = menu
+            .items()
+            .iter()
+            .position(|item| item.stock_action() == action)
+        else {
+            continue;
+        };
+        let item = menu.items()[index].clone();
+        menu.remove(&item);
+        menu.insert(
+            &webkit6::ContextMenuItem::from_stock_action_with_label(action, &label),
+            index as i32,
+        );
+    }
 }

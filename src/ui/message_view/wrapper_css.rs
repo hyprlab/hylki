@@ -248,6 +248,14 @@ pub(super) fn wrapper_css(
          body[data-hylki-pgpicons] .hylki-pgp-text{{display:none;}}\
          .hylki-mail{{cursor:pointer;}}\
          .hylki-mail:hover{{text-decoration:underline;}}\
+         .hylki-copy-addr{{display:inline-flex;align-items:center;justify-content:center;\
+         width:24px;height:24px;padding:3px;border:none;border-radius:6px;\
+         background:transparent;color:inherit;opacity:0.5;cursor:pointer;\
+         flex:none;align-self:center;transition:opacity 120ms ease,background 120ms ease;}}\
+         .hylki-copy-addr:hover{{opacity:1;background:rgba(128,128,128,0.14);}}\
+         .hylki-copy-addr:active{{background:rgba(128,128,128,0.24);}}\
+         .hylki-copy-addr svg{{width:15px;height:15px;display:block;}}\
+         .hylki-copy-addr svg,.hylki-copy-addr svg *{{fill:currentColor;}}\
          /* Styled after the app's own context menus (context_menu.rs +\
          .context-menu-list in styles.css): same padding, min width,\
          row shape and weight, so both menu families read as one. */\
@@ -256,9 +264,9 @@ pub(super) fn wrapper_css(
          .hylki-mailmenu{{position:fixed;z-index:99;background:{bg};\
          border:1px solid rgba(128,128,128,0.2);border-radius:12px;\
          box-shadow:0 6px 24px rgba(0,0,0,0.22);padding:6px;\
-         min-width:190px;font-size:0.95em;}}\
+         min-width:214px;font-size:1em;}}\
          .hylki-mailmenu button{{display:block;width:100%;text-align:start;\
-         background:none;border:none;padding:8px 10px;border-radius:6px;\
+         background:none;border:none;padding:10px 12px;border-radius:8px;\
          color:inherit;cursor:pointer;font:inherit;font-weight:normal;}}\
          .hylki-mailmenu button:hover{{background:rgba(128,128,128,0.14);}}\
          .hylki-addr.clipped:hover::after{{content:attr(data-addr);\
@@ -315,7 +323,25 @@ pub(super) fn wrapper_css(
          .hylki-rcpt{{font-size:0.85em;opacity:0.75;\
          user-select:text;overflow-wrap:anywhere;margin:2px 0 0;margin-inline-start:34px;}}\
          .hylki-rcpt div{{margin-top:2px;}}\
-         .hylki-loading{{opacity:0.5;padding:16px;}}\
+         .hylki-loading{{padding:18px 20px 24px;opacity:0.72;}}\
+         .hylki-loading-status{{display:flex;align-items:center;gap:9px;\
+         font-size:0.88em;font-weight:600;opacity:0.8;}}\
+         .hylki-loading-spinner{{width:16px;height:16px;border-radius:50%;\
+         border:2px solid currentColor;border-inline-end-color:transparent;\
+         animation:hylki-loading-spin 0.8s linear infinite;}}\
+         .hylki-loading-lines{{display:flex;flex-direction:column;gap:9px;margin-top:16px;}}\
+         .hylki-loading-lines span{{display:block;height:9px;border-radius:999px;\
+         background:linear-gradient(90deg,rgba(128,128,128,0.10) 25%,\
+         rgba(128,128,128,0.21) 50%,rgba(128,128,128,0.10) 75%);\
+         background-size:220% 100%;animation:hylki-loading-shimmer 1.45s ease-in-out infinite;}}\
+         .hylki-loading-lines span:nth-child(1){{width:92%;}}\
+         .hylki-loading-lines span:nth-child(2){{width:70%;}}\
+         .hylki-loading-lines span:nth-child(3){{width:84%;}}\
+         @keyframes hylki-loading-spin{{to{{transform:rotate(360deg);}}}}\
+         @keyframes hylki-loading-shimmer{{0%{{background-position:100% 0;}}\
+         100%{{background-position:-100% 0;}}}}\
+         @media (prefers-reduced-motion:reduce){{\
+         .hylki-loading-spinner,.hylki-loading-lines span{{animation:none;}}}}\
          /* The Copied pill after Ctrl+C: a toast the page draws itself,\
          since the reader has no toast overlay of its own. */\
          .hylki-copied{{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(8px);\
