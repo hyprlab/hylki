@@ -1,5 +1,169 @@
 # Changelog
 
+## 1.48.0-beta.3 — 2026-11-08
+
+- **Added: the mail cache can be encrypted on disk** (by hanthor, #601).
+  **Settings → Privacy → Encrypt stored mail**, off by default, makes
+  `cache.db`, which holds every message and attachment kept on the computer,
+  a SQLCipher database under a random key kept in the keyring. The cache is
+  converted at the next start, in a window that shows its progress, and left
+  as it was if that fails or is quit. A keyring that is locked, or a key that
+  is missing or wrong, never opens the cache unencrypted: Hylki asks to try
+  again, quit, or reset the cache, and shows a window while the keyring is
+  slow to answer. Versions before this one cannot open an encrypted cache, so
+  turning it on asks first and says to turn it off before going back to one.
+
+- **Added: trackers come off links** (#599, by James Reilly). A link opened or
+  copied from a message loses its tracking tags (`utm_source` and the like,
+  `fbclid`, `gclid`, `mc_eid`), and Google, Facebook and YouTube redirects
+  open at the address written inside them, with nothing looked up. Outlook
+  Safe Links are left alone. **Settings → Privacy → Remove trackers from
+  links** turns it off. The reader and the composer also turn DNS prefetching
+  off explicitly.
+
+- **Added: a warning before opening a program or a script** (#598, by James
+  Reilly). An attachment such as a `.desktop`, `.sh`, `.AppImage`, `.jar` or
+  `.exe` file, or one whose first bytes say it is a program whatever its name,
+  asks before it opens.
+
+- **Added: a warning before encrypting to a key you have not trusted** (#595, by
+  James Reilly). **Send** names the recipients whose keys nobody has vouched
+  for and asks before the message goes. **Send Anyway** sends it and does not
+  ask about that key again until the address gets a different one, or **Ask
+  Again** takes the answer back under *Settings → OpenPGP*. When an address has
+  several keys, the trusted one is used.
+
+- **Added: Esc takes back a message waiting out its Undo Send delay** (#607, by
+  Fabio Rotondo). Outside a text field or composer it does the same as Undo, for
+  the most recent message when several wait. With none waiting it goes back to
+  the list as before. The notice's close button still only hides the notice.
+
+- **Fixed: plain-text mail stopped a third of the way across the reader**
+  (#606). Thunderbird, Apple Mail and Evolution send plain text as
+  `format=flowed` (RFC 3676): lines broken at about 72 characters, with a
+  space before each break so the reader can join them again. Hylki showed the
+  breaks as they arrived. The lines of a paragraph are now joined and wrap to
+  the pane, quoted paragraphs included; lines the sender ended without the
+  space stay as written. Plain-text messages already read are rendered again
+  the next time they are opened.
+
+- **Fixed: the remote picture cache could delete other programs' files**
+  (#614). Outside Flatpak the cache was kept in `~/.cache/remote` rather than
+  `~/.cache/hylki/remote`, and its weekly trim removed every file in that
+  folder. It now lives in `~/.cache/hylki/remote`, and a trim touches only the
+  files the cache wrote. Hylki's own entries are cleared out of the old
+  folder, which goes only if nothing else is left in it.
+
+- **Changed: one message fades into the next in the reading pane.** Since
+  #570 the pane cut from one message to the next; the old message now fades
+  out over the new one in 80 ms.
+
+- **Fixed: sent and deleted drafts stayed in Drafts with Aster Mail** (#604,
+  reported by czinehuba). Aster Bridge refuses to move a draft to Trash once
+  its server no longer has the draft. A draft it will not move is now marked
+  deleted and erased in place, and a refusal that names a reason other than
+  TRYCREATE no longer makes the app create the folder and try again.
+
+- **Fixed: Add to Calendar could close the app** (#611, by FLASH911). An
+  invitation is handed to the calendar under a file name made from its title,
+  cut to 60 characters. The cut was made in bytes, so a long title in Russian,
+  Greek or any other non-Latin script could fall inside a character, and the
+  app crashed. It is now cut in characters.
+
+- **Fixed: Cut, Copy, Delete, Select All and Insert Emoji in the composer's
+  right-click menu** (#611, by FLASH911) were in the system's language rather
+  than the one chosen in Hylki. They now follow Hylki's.
+
+- **Fixed: a forged message could send a one-click unsubscribe** (#596, by
+  James Reilly). The request now goes only to an https address, as RFC 8058
+  requires, and only when the mail provider's DKIM check covers the
+  List-Unsubscribe header or the sender check finds nothing wrong. Otherwise
+  the list's page opens in the browser.
+
+- **Fixed: Bcc recipients' OpenPGP keys showed in encrypted mail** (#595, by
+  James Reilly). Every copy of an encrypted message named the key of each
+  recipient, so the To and Cc could tell whose keys were Bcc'd. A Bcc
+  recipient's key is now in the message without its key ID.
+
+- **Fixed: a signature from someone else's key showed green** (#595, by James
+  Reilly). A good signature by a trusted key whose addresses do not include the
+  message's From address now shows amber, **Signed by another address**, and
+  the details name the address the key lacks. An address added to a key after
+  it was trusted stays amber, **Signed, key not trusted**, until the key is
+  trusted again.
+
+- **Fixed: trusting a key did nothing with an imported key of your own** (#595).
+  gpg ignored the signature of a secret key imported from another computer, so
+  the key stayed untrusted after **Key trusted.** Your key now gets the trust a
+  generated one has when you sign with it.
+
+- **Fixed: the settings export carried OAuth client secrets** (#597, by James
+  Reilly). An account's own OAuth client secret is now left out. Importing the
+  file on the same computer keeps the secret already there; on another one, an
+  account with its own OAuth client needs the secret typed in again.
+
+- **Fixed: exports and local mail files were left readable by other users** (#600,
+  by James Reilly). The log exports and the settings export are written owner-only,
+  also over an existing file. The remote-content cache and the On This Computer
+  folders are owner-only; older files in them are protected by their folder.
+
+- **Fixed: opened attachments were never cleared under Flatpak** (#600, by James
+  Reilly). The startup purge cleared `/tmp` while the Flatpak staged them in the
+  runtime directory. A second launch no longer clears them while Hylki is running,
+  in any package.
+
+- **Changed: a new install starts on the Automatic list layout.** Beside the
+  reader that is cards at the list's starting width. Below the list or with the
+  reader off, it is single lines. An existing install keeps its layout.
+
+- **Fixed: Cards turned into single lines with the reading pane below the list
+  or off** (#475, reported by fhangel). The Layout setting now holds in every
+  reading pane position; Automatic stays on single lines there, as the list has
+  the window's width.
+
+- **Changed: Focus Mode has its own page in Settings, and its own layout.** While
+  it is on, Settings → Focus Mode alone decides the sidebar, the message list's
+  layout, avatars, preview lines and subjects, and Reader View, in place of the
+  settings on the other pages. Favorites, Filters and Tags sit above the accounts
+  and can each be switched off there. The switches moved from Settings →
+  Appearance. The list's two preview switches became one Preview lines choice,
+  and hovering the rail no longer slides the sidebar out unless switched on there.
+
+- **Changed: the message list can be dragged narrower**, down to 290 pixels from
+  348. The selection bar's buttons draw tighter below 344 pixels so they all
+  still fit.
+
+- **Fixed: rows with avatars switched off held their text above the middle of
+  the highlight.** It is now centered, in and out of Focus Mode.
+
+- **Removed: the actions palettes on message rows and message cards.** The ⋯ on
+  a card opens the same menu as a right click, and a row is acted on with its
+  right-click menu, swipes and keyboard shortcuts. Rows no longer carry a ⋯, and
+  are shorter where they kept room for it. Settings → Message List and Reading
+  lose the palette switches and timeouts. Show Sender's Fonts and Colors moved
+  from the palette to the card's menu.
+
+- **Changed: a click on an account's avatar in the icon rail opens its Inbox**
+  (#594, suggested by Alp Sahin). A long press or a double click now opens or
+  closes its folders. The avatar is lit while a folder of that account is open
+  and folded away. With Settings → Sidebar → Fold accounts with one click on, a
+  click opens or closes the folders as before.
+
+- **Fixed: a theme picked in Settings could have no effect** (#593, by Alp Sahin).
+  A `~/.config/gtk-4.0/gtk.css` that sets GTK's named colors, as theme generators
+  do, overrode it. A picked theme now wins. With no theme picked, that file still
+  colors the app.
+
+- **Fixed: text on the accent color could be hard to read** (#593, by Alp Sahin).
+  New Message, a selected message and a selected contact used white whatever the
+  accent, so a pale accent from a desktop's GTK colors left white on pale. They
+  now use the accent's foreground color. GNOME's accents still get white. The
+  dark palettes of Forest, Tidal and Earth now get their dark foreground on the
+  accent, and Rose's its pale pink.
+
+- **Translations:** Russian completed (PR #611 by FLASH911), with 2440 of 2450
+  strings translated.
+
 ## 1.48.0-beta.2 — 2026-11-05
 
 Carries the fix from 1.47.1 (#582), which has its own section below.

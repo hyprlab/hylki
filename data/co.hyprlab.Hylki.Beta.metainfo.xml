@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.48.0-beta.3" date="2026-11-08" type="development">
+      <description>
+        <p>Stored mail can be encrypted on disk, trackers come off links and a warning comes before opening a program. Plain-text mail fills the reader and Focus Mode has its own Settings page.</p>
+      </description>
+    </release>
     <release version="1.48.0-beta.2" date="2026-11-05" type="development">
       <description>
         <p>Each folder keeps its own sort, and a double click folds sub-folders and sidebar headings. A PDF with a password no longer freezes the app.</p>

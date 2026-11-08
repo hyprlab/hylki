@@ -2,6 +2,45 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.48.0-beta.3
+
+### New features:
+
+- Encrypt Stored Mail in Settings → Privacy by @hanthor - (#601)
+- Trackers taken off links by @hanthor - (#599)
+- A warning before opening a program or a script by @hanthor - (#598)
+- A warning before encrypting to a key nobody has trusted by @hanthor - (#595)
+- Esc takes back a message during Undo Send by @fsoft72 - (#607)
+- Focus Mode has its own Settings page and layout
+- A click on an account's rail avatar opens its Inbox - (#594)
+- The ⋯ on a card opens its right-click menu in place of the actions palette
+- New installs start on the Automatic list layout
+- The message list drags down to 290 pixels
+
+### Fixes:
+
+- plain-text mail stopping a third of the way across the reader - (#606)
+- the remote picture cache deleting other programs' files - (#614)
+- Add to Calendar closing the app by @FLASH911 - (#611)
+- composer menu entries in the system's language by @FLASH911 - (#611)
+- sent and deleted drafts staying in Drafts with Aster Mail - (#604)
+- a forged message sending a one-click unsubscribe by @hanthor - (#596)
+- Bcc recipients' OpenPGP keys showing in encrypted mail by @hanthor - (#595)
+- a signature from someone else's key showing green by @hanthor - (#595)
+- trusting an imported key of your own doing nothing - (#595)
+- OAuth client secrets in the settings export by @hanthor - (#597)
+- exports and local mail files readable by other users by @hanthor - (#600)
+- opened attachments never cleared under Flatpak by @hanthor - (#600)
+- Cards turning into single lines with the reading pane below or off - (#475)
+- a theme picked in Settings having no effect by @AlpSha - (#593)
+- hard-to-read text on the accent color by @AlpSha - (#593)
+- row text sitting above the middle with avatars off
+- the reading pane cutting from one message to the next
+
+### Translations:
+
+- Russian by @FLASH911 - (#611)
+
 ## What's new in 1.48.0-beta.2
 
 ### New features:
