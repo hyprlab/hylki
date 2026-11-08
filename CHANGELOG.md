@@ -29,6 +29,14 @@
   files the cache wrote. Hylki's own entries are cleared out of the old
   folder, which goes only if nothing else is left in it.
 
+- **Fixed: a Microsoft account could stop checking for mail after a
+  suspend** (#618, reported by jorgegarciaavila). Requests to Microsoft Graph
+  and to Microsoft's sign-in had no read deadline, so a download whose
+  connection died while the computer slept waited for it forever, and every
+  later check and Refresh queued behind it until the account was switched off
+  and on. A request now fails after a minute without an answer (half a minute
+  for a sign-in renewal), and the next check connects again.
+
 - **Changed: one message fades into the next in the reading pane.** Since
   #570 the pane cut from one message to the next; the old message now fades
   out over the new one in 80 ms.
