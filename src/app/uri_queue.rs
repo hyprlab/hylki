@@ -5,6 +5,7 @@
 use adw::prelude::*;
 use relm4::prelude::*;
 
+use crate::desktop::single_instance::StartView;
 use crate::i18n::{i18n, i18n_f};
 use crate::ui::notifications::NotifyInput;
 use crate::worker::MailRequest;
@@ -232,7 +233,39 @@ pub(crate) fn queue_attach_files(paths: Vec<std::path::PathBuf>) {
 static ATTACH_PENDING: std::sync::Mutex<Vec<Vec<std::path::PathBuf>>> =
     std::sync::Mutex::new(Vec::new());
 
+/// Open a view on a fresh launch (`hylki --contacts`), once the app is up.
+pub(crate) fn queue_start_view(view: StartView) {
+    send_or_park(&VIEW_PENDING, view, view_msg);
+}
+
+/// What opens `view`: the same as its sidebar row.
+fn view_msg(view: StartView) -> AppMsg {
+    match view {
+        StartView::Contacts => AppMsg::OpenContacts,
+        StartView::Attachments => AppMsg::ShowAttachments,
+    }
+}
+
+/// A view asked for before the component was up (see `MAILTO_PENDING`).
+static VIEW_PENDING: std::sync::Mutex<Vec<StartView>> = std::sync::Mutex::new(Vec::new());
+
 impl AppModel {
+    /// The launcher's Contacts and Attachments actions, for a second launch
+    /// (see `relay_to_primary`): raise the window on that view.
+    pub(super) fn install_view_actions(&self, sender: &ComponentSender<Self>) {
+        let app = relm4::main_application();
+        for view in [StartView::Contacts, StartView::Attachments] {
+            let action = gtk::gio::SimpleAction::new(view.action(), None);
+            let win = self.window.clone();
+            let s = sender.clone();
+            action.connect_activate(move |_, _| {
+                crate::desktop::session::present_window(&win);
+                s.input(view_msg(view));
+            });
+            app.add_action(&action);
+        }
+    }
+
     /// Ask where to put a message's bytes, and write them there (#398).
     pub(super) fn save_message_file(&self, name: String, raw: Vec<u8>) {
         let dialog = gtk::FileDialog::new();
@@ -439,6 +472,9 @@ impl AppModel {
         }
         for paths in parked(&ATTACH_PENDING).drain(..) {
             sender.input(AppMsg::OpenWithFiles(paths));
+        }
+        for view in parked(&VIEW_PENDING).drain(..) {
+            sender.input(view_msg(view));
         }
     }
 }

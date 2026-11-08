@@ -28,7 +28,7 @@ use relm4::RelmApp;
 
 use crate::app::AppModel;
 pub(crate) use crate::desktop::single_instance::primary_instance_running;
-use crate::desktop::single_instance::{relay_to_primary, UriKind};
+use crate::desktop::single_instance::{relay_to_primary, StartView, UriKind};
 
 const APP_ID: &str = if cfg!(feature = "beta") {
     "co.hyprlab.Hylki.Beta"
@@ -127,6 +127,8 @@ fn main() {
     start_logo_probe();
 
     let (args, hidden) = strip_hidden_flag(std::env::args().collect());
+    // The launcher's Contacts and Attachments actions.
+    let (args, view) = StartView::strip(args);
     HIDDEN_START.store(hidden, std::sync::atomic::Ordering::Relaxed);
 
     apply_renderer();
@@ -146,8 +148,11 @@ fn main() {
     // must NOT be registered early either — relm4 builds the whole UI in a
     // `startup` handler it connects inside run(), and registration is what
     // emits `startup`. So remoteness is checked bus-side, touching nothing.
-    if primary_instance_running() && relay_to_primary(&args) {
+    if primary_instance_running() && relay_to_primary(&args, view) {
         return;
+    }
+    if let Some(view) = view {
+        app::queue_start_view(view);
     }
 
     // Attachments the user opened in a previous session were decrypted to a temp
