@@ -33,6 +33,12 @@
   #570 the pane cut from one message to the next; the old message now fades
   out over the new one in 80 ms.
 
+- **Fixed: sent and deleted drafts stayed in Drafts with Aster Mail** (#604,
+  reported by czinehuba). Aster Bridge refuses to move a draft to Trash once
+  its server no longer has the draft. A draft it will not move is now marked
+  deleted and erased in place, and a refusal that names a reason other than
+  TRYCREATE no longer makes the app create the folder and try again.
+
 - **Fixed: Add to Calendar could close the app** (#611, by FLASH911). An
   invitation is handed to the calendar under a file name made from its title,
   cut to 60 characters. The cut was made in bytes, so a long title in Russian,
