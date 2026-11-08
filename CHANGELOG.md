@@ -57,6 +57,7 @@
   than the one chosen in Hylki. They now follow Hylki's.
 
 - **Translations:** Russian completed (PR #611 by FLASH911), with 2440 of 2450
+  strings translated. French updated (PR #615 by frenchy82), with 2419 of 2474
   strings translated.
 
 - **Added: trackers come off links** (#599, by James Reilly). A link opened or
