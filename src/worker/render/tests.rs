@@ -508,6 +508,24 @@ fn plain_text_only_message_still_renders() {
     assert!(body.contains("hello &lt;there&gt;"), "body was: {body}");
 }
 
+/// Thunderbird's plain text: broken at 72 characters with a space before each
+/// soft break. The reader joins the lines so the text wraps to the pane (#606).
+#[test]
+fn flowed_plain_text_joins_its_soft_breaks() {
+    let raw = b"Content-Type: text/plain; charset=UTF-8; format=flowed\r\n\r\n\
+        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus \r\n\
+        ex sapien vitae pellentesque sem placerat.\r\n\r\nSecond paragraph.\r\n";
+    let body = extract_body(raw);
+    assert!(
+        body.contains("Quisque faucibus ex sapien vitae pellentesque sem placerat.\n\nSecond"),
+        "body was: {body}"
+    );
+
+    // The same text, not flowed, keeps every break the sender wrote.
+    let fixed = b"Content-Type: text/plain\r\n\r\nfaucibus \r\nex sapien\r\n";
+    assert!(extract_body(fixed).contains("faucibus \r\nex sapien"));
+}
+
 /// The same part, read out of the raw message rather than described by
 /// the server, and named the same way.
 #[test]

@@ -4,6 +4,8 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 use crate::config;
+use crate::ui::contacts_page::ContactsPageInput;
+use crate::ui::message_list::MessageListInput;
 use crate::ui::message_view::MessageViewInput;
 use crate::ui::message_window::MessageWindowInput;
 use crate::ui::preferences::PrefInput;
@@ -29,6 +31,8 @@ impl AppModel {
         use config::FocusPart as F;
         let prev = self.focus;
         if prev != focus {
+            let shape_before = self.sidebar_shape();
+            let rail_before = self.rail_wanted();
             self.focus = focus;
             config::save_focus_mode(&focus);
             let changed = |part: F| prev.active(part) != focus.active(part);
@@ -52,20 +56,27 @@ impl AppModel {
                     animate: true,
                 });
             }
-            if changed(F::HideAvatars)
-                || changed(F::OnePreviewLine)
-                || changed(F::HidePreview)
-                || changed(F::HideSubject)
-            {
-                self.push_list_look(true);
-            }
-            if changed(F::RailSidebar) {
+            // Each of these changes nothing when its value did not.
+            self.push_list_look(true);
+            self.push_single_line();
+            self.message_list
+                .emit(MessageListInput::SetHeadings(self.list_headings_now()));
+            self.message_list
+                .emit(MessageListInput::SetPillsBelow(self.list_pills_below_now()));
+            self.sidebars_emit(SidebarInput::SetAttachmentsRow(self.attachments_row_now()));
+            self.contacts_page.emit(ContactsPageInput::SetBookPicker(
+                !self.contacts_placement_now().shown(),
+            ));
+            let rail_moved = self.rail_wanted() != rail_before;
+            if rail_moved || self.sidebar_shape() != shape_before {
                 // The dots (or counts) are drawn with the rows, so the
                 // sidebar is rebuilt before it folds.
                 self.rebuild_sidebar();
+            }
+            if rail_moved {
                 self.sync_rail();
             }
-            if changed(F::ReaderView) {
+            if prev.enabled != focus.enabled || changed(F::ReaderView) {
                 self.push_reader_focus();
             }
         }

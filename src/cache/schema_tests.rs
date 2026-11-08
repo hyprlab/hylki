@@ -5,6 +5,7 @@ use std::path::PathBuf;
 
 use rusqlite::Connection;
 
+use super::at_rest::Protection;
 use super::{Cache, SCHEMA};
 use crate::config::golden::assert_golden;
 
@@ -63,7 +64,8 @@ fn dump(conn: &Connection) -> String {
 #[test]
 fn a_new_database_gets_the_whole_schema() {
     let db = TempDb::new("fresh");
-    let cache = Cache::open_at(&db.0).unwrap();
+    let key = Protection::Encrypted(super::at_rest::Key::generate().unwrap());
+    let cache = Cache::open_at(&db.0, key).unwrap();
     let fresh = dump(&cache.conn);
     assert_golden("cache/testdata/schema-new.txt", &fresh);
     // The demo's in-memory cache runs the same schema.
@@ -133,7 +135,7 @@ fn an_older_layout_gains_the_new_columns() {
         )
         .unwrap();
     }
-    let cache = Cache::open_at(&db.0).unwrap();
+    let cache = Cache::open_at(&db.0, Protection::Plain).unwrap();
     assert_golden("cache/testdata/schema-upgraded.txt", &dump(&cache.conn));
     assert_eq!(cache.count_messages(1, "INBOX"), 1);
 }
@@ -230,7 +232,7 @@ fn every_version_gate_drops_and_rewrites_what_it_should() {
             conn.execute_batch(&format!("PRAGMA user_version = {version};"))
                 .unwrap();
         }
-        let cache = Cache::open_at(&db.0).unwrap();
+        let cache = Cache::open_at(&db.0, Protection::Plain).unwrap();
         report += &format!("== from version {version}\n{}", contents(&cache.conn));
         let after: i64 = cache
             .conn
@@ -263,6 +265,7 @@ fn a_sender_check_row_as_stored() {
                 signer: "Ada <ada@x>".into(),
                 key_id: "ABCD".into(),
                 trust: PgpTrust::Marginal,
+                from_mismatch: false,
             },
             ..Default::default()
         }),
@@ -344,4 +347,56 @@ fn a_sender_check_row_as_stored() {
     assert_eq!(back.findings, check.findings);
     assert_eq!(back.authority, check.authority);
     assert_eq!(back.from_domain, check.from_domain);
+}
+
+/// v23 (#596): a stored one-click handle stays only on an https handle of a
+/// sender with nothing wrong; the list's page and the other routes stay.
+#[test]
+fn v23_drops_the_one_click_handles_the_rules_no_longer_offer() {
+    let db = TempDb::new("v23");
+    let route = |one_click: &str| {
+        format!(r#"{{"one_click":"{one_click}","web":"{one_click}","mailto":null}}"#)
+    };
+    {
+        let conn = Connection::open(&db.0).unwrap();
+        conn.execute_batch(SCHEMA).unwrap();
+        for (uid, trust, unsubscribe) in [
+            (1, "pass", route("https://list.example/u/1")),
+            (2, "unverified", route("http://list.example/u/2")),
+            (3, "suspicious", route("https://list.example/u/3")),
+            (4, "fail", route("https://list.example/u/4")),
+            (5, "pass", String::new()),
+        ] {
+            conn.execute(
+                "INSERT INTO sender_checks \
+                 (account_id, folder_path, uid, trust, summary, findings, unsubscribe) \
+                 VALUES (1, 'INBOX', ?1, ?2, '', '', ?3)",
+                rusqlite::params![uid, trust, unsubscribe],
+            )
+            .unwrap();
+        }
+        conn.execute_batch("PRAGMA user_version = 22;").unwrap();
+    }
+    let cache = Cache::open_at(&db.0, Protection::Plain).unwrap();
+    let stored = |uid: i64| -> Option<crate::models::Unsubscribe> {
+        let json: String = cache
+            .conn
+            .query_row(
+                "SELECT unsubscribe FROM sender_checks WHERE uid = ?1",
+                [uid],
+                |r| r.get(0),
+            )
+            .unwrap();
+        serde_json::from_str(&json).ok()
+    };
+    let one_click = |uid| stored(uid).and_then(|u| u.one_click);
+    assert_eq!(one_click(1).as_deref(), Some("https://list.example/u/1"));
+    assert_eq!(one_click(2), None);
+    assert_eq!(one_click(3), None);
+    assert_eq!(one_click(4), None);
+    assert_eq!(
+        stored(3).and_then(|u| u.web).as_deref(),
+        Some("https://list.example/u/3")
+    );
+    assert!(stored(5).is_none());
 }

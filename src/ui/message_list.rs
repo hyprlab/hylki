@@ -148,6 +148,10 @@ pub(crate) struct MessageList {
     preview_lines: u32,
     /// Whether rows draw their subject line (Focus Mode can take it away).
     show_subject: bool,
+    /// Whether rows wear a star (Focus Mode can take it away).
+    show_stars: bool,
+    /// Whether rows wear a paperclip (Focus Mode can take it away).
+    show_attachments: bool,
     /// Whether the colored avatars are drawn (#29).
     avatars: bool,
     /// Whether a sender's site icon may fill one (#30).
@@ -309,8 +313,6 @@ pub(crate) struct MessageList {
     /// row keeps its count chip and chevron, but never opens — the thread is
     /// read through the reader's cards instead.
     thread_expansion: bool,
-    /// Whether rows carry the actions palette line at all (preference).
-    list_palette: bool,
     /// One line per message (#334): set by the Layout setting, or by the
     /// pane's width when it is Automatic.
     single_line: bool,

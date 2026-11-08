@@ -118,8 +118,9 @@ impl AppModel {
                 if pref!(self.contacts_placement = p) {
                     // Without its books under it in the sidebar, Contacts
                     // picks them itself.
-                    self.contacts_page
-                        .emit(ContactsPageInput::SetBookPicker(!p.shown()));
+                    self.contacts_page.emit(ContactsPageInput::SetBookPicker(
+                        !self.contacts_placement_now().shown(),
+                    ));
                     self.rebuild_sidebar();
                 }
             }

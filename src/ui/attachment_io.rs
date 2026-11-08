@@ -32,6 +32,105 @@ pub(crate) fn save_attachment_as(
     });
 }
 
+/// File name endings that run as a program, or carry one, when opened with
+/// the desktop's default handler: the ones a file manager would at least
+/// ask about, and the Windows ones a Wine install hands to Wine.
+const RISKY_EXTENSIONS: &[&str] = &[
+    "desktop",
+    "sh",
+    "bash",
+    "zsh",
+    "ksh",
+    "csh",
+    "fish",
+    "command",
+    "run",
+    "bin",
+    "elf",
+    "so",
+    "appimage",
+    "flatpakref",
+    "flatpakrepo",
+    "deb",
+    "rpm",
+    "apk",
+    "snap",
+    "flatpak",
+    "jar",
+    "jnlp",
+    "py",
+    "pyc",
+    "pl",
+    "rb",
+    "php",
+    "exe",
+    "msi",
+    "com",
+    "scr",
+    "pif",
+    "bat",
+    "cmd",
+    "ps1",
+    "psm1",
+    "vbs",
+    "vbe",
+    "js",
+    "jse",
+    "wsf",
+    "wsh",
+    "hta",
+    "lnk",
+    "reg",
+    "cpl",
+    "msc",
+    "dll",
+    "docm",
+    "xlsm",
+    "pptm",
+    "dotm",
+    "xltm",
+    "xlsb",
+    "xlam",
+    "ppsm",
+    "potm",
+    "ppam",
+    "sldm",
+];
+
+/// Whether an attachment is a program or a script by its name, or by its
+/// first bytes (an ELF or Windows binary, or a `#!` script) whatever it is
+/// called. Its name and type come from whoever sent it, so the bytes are
+/// looked at too.
+fn is_risky_attachment(name: &str, data: &[u8]) -> bool {
+    let name = name.trim_end_matches(|c: char| c == '.' || c.is_whitespace());
+    let risky_name = name.rsplit_once('.').is_some_and(|(_, ext)| {
+        RISKY_EXTENSIONS
+            .iter()
+            .any(|r| r.eq_ignore_ascii_case(ext.trim()))
+    });
+    risky_name || data.starts_with(b"\x7fELF") || data.starts_with(b"MZ") || data.starts_with(b"#!")
+}
+
+/// Open an attachment, asking first when it is a program or a script (see
+/// [`is_risky_attachment`]).
+pub(crate) fn open_bytes(name: &str, data: &[u8], parent: Option<&gtk::Window>) {
+    if !is_risky_attachment(name, data) {
+        open_now(name, data, parent);
+        return;
+    }
+    let (owned_name, owned_data, owned_parent) = (name.to_string(), data.to_vec(), parent.cloned());
+    crate::ui::dialog::confirm_destructive(
+        parent,
+        &crate::i18n::i18n_f("Open “{name}”?", &[("name", name)]),
+        &i18n(
+            "This attachment is a program or a script. Opening it can run it with your permissions. Open it only if you expected it and trust where it came from.",
+        ),
+        "open",
+        &i18n("Open Anyway"),
+        move || open_now(&owned_name, &owned_data, owned_parent.as_ref()),
+    );
+}
+
 /// Write bytes to a temp file and open it in the default application.
 ///
 /// The filename comes from an email, so it comes from whoever sent it. The
@@ -46,7 +145,7 @@ pub(crate) fn save_attachment_as(
 /// (common for attachments — nothing may ever have been "set as default" for
 /// a `.pdf`) the portal falls back to GNOME's own app-chooser dialog instead
 /// of silently doing nothing.
-pub(crate) fn open_bytes(name: &str, data: &[u8], parent: Option<&gtk::Window>) {
+fn open_now(name: &str, data: &[u8], parent: Option<&gtk::Window>) {
     let safe: String = name
         .chars()
         .map(|c| {
@@ -206,23 +305,7 @@ fn portal_open_file(path: std::path::PathBuf, ask: bool, parent: Option<gtk::Win
 /// else's access — an attacker who pre-creates it on a shared host would
 /// otherwise get every attachment the user opens.
 fn attachment_dir() -> Option<std::path::PathBuf> {
-    // Inside Flatpak /tmp is PRIVATE to the sandbox: the document portal
-    // validates an exported fd by re-opening its path in the HOST namespace,
-    // so a /tmp-staged file fails validation and every portal open dies
-    // silently before any UI. $XDG_RUNTIME_DIR/app/$FLATPAK_ID is
-    // bind-mounted from the host at the SAME path — the one temp location
-    // both sides of the sandbox agree on (and it's session-scoped tmpfs,
-    // like /tmp). Native builds keep /tmp.
-    let dir = match std::env::var("FLATPAK_ID") {
-        Ok(app_id) => {
-            let runtime = std::env::var("XDG_RUNTIME_DIR").ok()?;
-            std::path::Path::new(&runtime)
-                .join("app")
-                .join(app_id)
-                .join("vireo-attachments")
-        }
-        Err(_) => std::env::temp_dir().join("vireo-attachments"),
-    };
+    let dir = staging_dir()?;
     #[cfg(unix)]
     {
         use std::os::unix::fs::{DirBuilderExt, MetadataExt, PermissionsExt};
@@ -301,14 +384,48 @@ fn our_uid() -> u32 {
     unsafe { getuid() }
 }
 
+/// Where opened attachments are staged.
+///
+/// Inside Flatpak /tmp is PRIVATE to the sandbox: the document portal
+/// validates an exported fd by re-opening its path in the HOST namespace,
+/// so a /tmp-staged file fails validation and every portal open dies
+/// silently before any UI. $XDG_RUNTIME_DIR/app/$FLATPAK_ID is
+/// bind-mounted from the host at the SAME path — the one temp location
+/// both sides of the sandbox agree on (and it's session-scoped tmpfs,
+/// like /tmp). Native builds keep /tmp.
+fn staging_dir() -> Option<std::path::PathBuf> {
+    staging_dir_for(
+        std::env::var("FLATPAK_ID").ok().as_deref(),
+        std::env::var("XDG_RUNTIME_DIR").ok().as_deref(),
+        &std::env::temp_dir(),
+    )
+}
+
+fn staging_dir_for(
+    flatpak_id: Option<&str>,
+    runtime_dir: Option<&str>,
+    temp_dir: &std::path::Path,
+) -> Option<std::path::PathBuf> {
+    match flatpak_id {
+        Some(app_id) => Some(
+            std::path::Path::new(runtime_dir?)
+                .join("app")
+                .join(app_id)
+                .join("vireo-attachments"),
+        ),
+        None => Some(temp_dir.join("vireo-attachments")),
+    }
+}
+
 /// Delete anything left in the attachment staging directory.
 ///
 /// Opened attachments used to accumulate in `/tmp` for the life of the machine —
 /// decrypted, readable, and long past the point the user considers them gone.
 /// Called once at startup, because the helper application the user opened a file
-/// with may still have it open while Hylki is running.
+/// with may still have it open while Hylki is running. It clears the directory
+/// [`attachment_dir`] stages in, which under Flatpak is not /tmp.
 pub(crate) fn purge_attachment_dir() {
-    let dir = std::env::temp_dir().join("vireo-attachments");
+    let Some(dir) = staging_dir() else { return };
     if !dir.exists() {
         return;
     }
@@ -321,6 +438,35 @@ pub(crate) fn purge_attachment_dir() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn programs_and_scripts_are_asked_about_by_name_or_by_bytes() {
+        for (name, data, risky) in [
+            ("report.pdf", &b"%PDF-1.7"[..], false),
+            ("photo.JPG", b"\xff\xd8\xff", false),
+            ("notes.txt", b"plain words", false),
+            ("invite.ics", b"BEGIN:VCALENDAR", false),
+            ("setup.desktop", b"[Desktop Entry]", true),
+            ("install.sh", b"echo", true),
+            ("Tool.AppImage", b"", true),
+            ("app.jar", b"PK", true),
+            ("invoice.pdf.exe", b"", true),
+            ("invoice.exe. ", b"", true),
+            ("macro.DOCM", b"PK", true),
+            ("show.ppsm", b"PK", true),
+            ("App.flatpak", b"", true),
+            // What the name hides, the first bytes give away.
+            ("invoice.pdf", b"\x7fELF\x02\x01", true),
+            ("readme.txt", b"#!/bin/sh\nrm -rf ~", true),
+            ("cv.doc", b"MZ\x90\x00", true),
+            // The desktop types these by the ending, so they count as one.
+            (".sh", b"", true),
+            (".desktop", b"", true),
+            ("noextension", b"", false),
+        ] {
+            assert_eq!(is_risky_attachment(name, data), risky, "{name}");
+        }
+    }
 
     #[cfg(unix)]
     #[test]
@@ -352,5 +498,26 @@ mod tests {
         assert_eq!(name("b.txt"), "b-1.txt");
         assert_eq!(std::fs::read(&target).unwrap(), b"keep");
         let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// The startup purge and the staging must agree on the directory:
+    /// under Flatpak the purge once cleared /tmp while the files sat in the
+    /// runtime directory.
+    #[test]
+    fn the_purge_clears_where_attachments_are_staged() {
+        let tmp = std::path::Path::new("/tmp");
+        assert_eq!(
+            staging_dir_for(Some("co.hyprlab.Hylki"), Some("/run/user/1000"), tmp),
+            Some(std::path::PathBuf::from(
+                "/run/user/1000/app/co.hyprlab.Hylki/vireo-attachments"
+            ))
+        );
+        assert_eq!(
+            staging_dir_for(None, Some("/run/user/1000"), tmp),
+            Some(std::path::PathBuf::from("/tmp/vireo-attachments"))
+        );
+        // Without a runtime directory a Flatpak has nowhere to stage, and
+        // nothing to purge.
+        assert_eq!(staging_dir_for(Some("co.hyprlab.Hylki"), None, tmp), None);
     }
 }

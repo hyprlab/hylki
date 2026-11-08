@@ -60,45 +60,6 @@ impl AppModel {
         });
     }
 
-    /// HYLKI_SHOWCASE_PALETTE=N opens row N's actions palette
-    /// (so a capture can verify the floating palette's look).
-    pub(super) fn stage_palette(&self, root: &adw::ApplicationWindow) {
-        if let Some(Ok(idx)) = std::env::var("HYLKI_SHOWCASE_PALETTE")
-            .ok()
-            .map(|v| v.parse())
-        {
-            let list = self.message_list.sender().clone();
-            let burst = std::env::var("HYLKI_SHOWCASE_BURST").ok();
-            let win = root.clone();
-            {
-                // An occluded window's frame clock is suspended
-                // and animations cannot progress — raise it well
-                // ahead so the slide actually runs for the burst.
-                let win = win.clone();
-                gtk::glib::timeout_add_seconds_local_once(5, move || {
-                    win.present();
-                });
-            }
-            gtk::glib::timeout_add_seconds_local_once(7, move || {
-                let _ = list.send(MessageListInput::DebugOpenPalette(idx));
-                // TEMP: frame burst right after the open, to see
-                // the slide animation (or its absence) in stills.
-                if let Some(base) = burst.clone() {
-                    for (i, ms) in [40u64, 90, 140, 240].iter().enumerate() {
-                        let win = win.clone();
-                        let path = format!("{base}.{i}.png");
-                        gtk::glib::timeout_add_local_once(
-                            std::time::Duration::from_millis(*ms),
-                            move || {
-                                showcase_capture(win.upcast_ref::<gtk::Widget>(), &path);
-                            },
-                        );
-                    }
-                }
-            });
-        }
-    }
-
     /// Highlights the conversation's mid-thread card (account 1, message
     /// 2) at 6 s.
     pub(super) fn stage_open_card(&self) {

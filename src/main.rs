@@ -123,9 +123,6 @@ fn main() {
     // An AppImage has no fixed path for the GNOME Files extension to launch,
     // so it leaves one behind (#235).
     desktop::nautilus_ext::record_launcher();
-    // Attachments the user opened in a previous session were decrypted to a temp
-    // directory and left there. Clear it before anything else runs.
-    ui::attachment_io::purge_attachment_dir();
     register_resources();
     start_logo_probe();
 
@@ -150,6 +147,18 @@ fn main() {
     // `startup` handler it connects inside run(), and registration is what
     // emits `startup`. So remoteness is checked bus-side, touching nothing.
     if primary_instance_running() && relay_to_primary(&args) {
+        return;
+    }
+
+    // Attachments the user opened in a previous session were decrypted to a temp
+    // directory and left there. Only the primary clears it: a second launch must
+    // not pull files from under what the running instance opened.
+    ui::attachment_io::purge_attachment_dir();
+
+    // The cache's key comes from the keyring before anything can open the
+    // cache: the window, the workers and the assistant server all read it
+    // from their first moment, and none may find it unencrypted instead.
+    if !ui::cache_unlock::unlock_cache() {
         return;
     }
 

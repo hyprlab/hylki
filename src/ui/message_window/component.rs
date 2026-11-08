@@ -354,9 +354,6 @@ impl Component for MessageWindow {
                 root.close();
             }
             MessageWindowInput::MoveTo => self.on_move_to(&sender, root),
-            MessageWindowInput::MoveToAt { message, x, y } => {
-                let _ = sender.output(MessageWindowOutput::MoveTo { message, x, y });
-            }
             MessageWindowInput::Key(action) => self.run_key(action, &sender, root),
             MessageWindowInput::TagMenu => self.show_tag_menu(&sender),
             MessageWindowInput::SnoozeMenu => self.show_snooze_menu(&sender),
@@ -377,12 +374,6 @@ impl Component for MessageWindow {
                 let _ = sender.output(MessageWindowOutput::AddToContacts {
                     name: String::new(),
                     email: addr,
-                });
-            }
-            MessageWindowInput::ContactFor(m) => {
-                let _ = sender.output(MessageWindowOutput::AddToContacts {
-                    name: m.from_name.clone(),
-                    email: m.from_addr.clone(),
                 });
             }
             MessageWindowInput::ComposeTo(addr) => {
@@ -410,15 +401,11 @@ fn from_reader(out: MessageViewOutput) -> MessageWindowInput {
         MessageViewOutput::CardAction { action, message } => {
             MessageWindowInput::CardAction { action, message }
         }
-        MessageViewOutput::ContactSender(m) => MessageWindowInput::ContactFor(m),
         MessageViewOutput::MarkSeen { account_id, id } => {
             MessageWindowInput::Seen { account_id, id }
         }
         MessageViewOutput::CardMenu { message, x, y, hit } => {
             MessageWindowInput::CardMenu { message, x, y, hit }
-        }
-        MessageViewOutput::CardMoveTo { message, x, y } => {
-            MessageWindowInput::MoveToAt { message, x, y }
         }
         MessageViewOutput::SelectCards(_) => MessageWindowInput::Ignore,
         MessageViewOutput::AttachmentAction {

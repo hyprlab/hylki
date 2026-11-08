@@ -129,6 +129,10 @@ the composer window's close button do; <kbd>Esc</kbd> again keeps editing.
 It works whether or not single-key shortcuts are enabled, as does everything
 in the menus, and in a search field it still clears the search.
 
+While a sent message waits out its Undo Send delay, <kbd>Esc</kbd> outside a
+text field or composer brings it back to its composer, the most recent one
+when several wait.
+
 <kbd>Ctrl+N</kbd> starts a new message, <kbd>Ctrl+Shift+N</kbd> starts one
 from a [template](DOCUMENTATION.md#templates), <kbd>Ctrl+R</kbd> replies,
 <kbd>Ctrl+Shift+R</kbd> replies to all and <kbd>Ctrl+U</kbd> shows the

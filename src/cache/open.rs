@@ -2,8 +2,10 @@
 //! demo cache, the upgrade from every earlier version, and moving rows when
 //! accounts change places.
 
-use rusqlite::{params, Connection};
+use rusqlite::{params, Connection, OpenFlags};
 use std::time::Duration;
+
+use super::at_rest::{self, Protection};
 
 use super::schema::{
     ACCOUNT_TABLES, DOWNLOADED_TABLES, FOLDER_TABLES, LAYOUT_VERSION, RENDER_VERSION, SCHEMA,
@@ -36,7 +38,10 @@ impl Cache {
         let conn = Connection::open_in_memory()?;
         conn.execute_batch(SCHEMA)?;
         let _ = conn.execute_batch(&format!("PRAGMA user_version = {SCHEMA_VERSION};"));
-        Ok(Cache { conn })
+        Ok(Cache {
+            conn,
+            protection: Protection::Plain,
+        })
     }
 
     /// Make the cached rows follow the accounts they belong to: `accounts` is
@@ -167,28 +172,24 @@ impl Cache {
         let path = self.conn.path().ok_or_else(|| {
             rusqlite::Error::InvalidPath(std::path::PathBuf::from("cache has no database file"))
         })?;
-        let conn = Connection::open_with_flags(path, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)?;
-        conn.busy_timeout(Duration::from_secs(5))?;
-        Ok(Cache { conn })
+        Self::reader_at(std::path::Path::new(path), self.protection.clone())
     }
 
     /// Read the running app's cache without migrations or cleanup writes.
     /// The app initializes it before accepting assistant connections.
     pub(crate) fn open_reader() -> rusqlite::Result<Cache> {
-        let db = crate::config::data_base()
-            .ok_or_else(|| {
-                rusqlite::Error::InvalidPath(std::path::PathBuf::from(
-                    "no XDG data directory for the mail cache",
-                ))
-            })?
-            .join("hylki/cache.db");
-        let conn = Connection::open_with_flags(db, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)?;
-        conn.busy_timeout(Duration::from_secs(5))?;
-        Ok(Cache { conn })
+        Self::reader_at(&Self::db_path()?, at_rest::unlocked()?)
     }
 
-    /// Open (creating if needed) the cache DB at `~/.local/share/hylki/cache.db`.
-    pub(crate) fn open() -> rusqlite::Result<Cache> {
+    fn reader_at(db: &std::path::Path, protection: Protection) -> rusqlite::Result<Cache> {
+        let conn = at_rest::connect(db, OpenFlags::SQLITE_OPEN_READ_ONLY, &protection)?;
+        conn.busy_timeout(Duration::from_secs(5))?;
+        Ok(Cache { conn, protection })
+    }
+
+    /// The cache's directory, `~/.local/share/hylki`, created if needed and
+    /// kept to its owner.
+    pub(crate) fn dir() -> rusqlite::Result<std::path::PathBuf> {
         // No `temp_dir` fallback: this database holds message bodies, attachment
         // bytes and the harvested address book, and a shared world-writable
         // directory is the wrong place for any of it. Without a data dir there
@@ -202,13 +203,25 @@ impl Cache {
             .join("hylki");
         let _ = std::fs::create_dir_all(&path);
         restrict(&path, 0o700);
-        Self::open_at(&path.join("cache.db"))
+        Ok(path)
+    }
+
+    /// The cache database, `~/.local/share/hylki/cache.db`.
+    pub(crate) fn db_path() -> rusqlite::Result<std::path::PathBuf> {
+        Ok(Self::dir()?.join("cache.db"))
+    }
+
+    /// Open (creating if needed) the cache DB at `~/.local/share/hylki/cache.db`,
+    /// keyed as [`at_rest::prepare`] decided. Fails while the cache is locked.
+    pub(crate) fn open() -> rusqlite::Result<Cache> {
+        let protection = at_rest::unlocked()?;
+        Self::open_at(&Self::db_path()?, protection)
     }
 
     /// Open (creating if needed) the cache database at `db`, bring it to the
     /// current schema, and share it in WAL mode.
-    pub(super) fn open_at(db: &std::path::Path) -> rusqlite::Result<Cache> {
-        let conn = Connection::open(db)?;
+    pub(super) fn open_at(db: &std::path::Path, protection: Protection) -> rusqlite::Result<Cache> {
+        let conn = at_rest::connect(db, OpenFlags::default(), &protection)?;
         // The whole mailbox lives here, so it gets at least the care
         // `accounts.toml` gets.
         restrict(db, 0o600);
@@ -219,17 +232,15 @@ impl Cache {
         let _ = conn.busy_timeout(Duration::from_secs(5));
 
         // SQLite creates the WAL sidecars itself, and only once WAL mode is on —
-        // hence here rather than beside the `Connection::open` above. They hold
-        // the same message data mid-transaction, so they get the same mode. The
-        // 0700 on the directory is what actually keeps other users out; this is
-        // in case the cache is ever moved somewhere less private.
+        // hence here rather than beside the open above. They hold the same
+        // message data mid-transaction, so they get the same mode. The 0700 on
+        // the directory is what actually keeps other users out; this is in
+        // case the cache is ever moved somewhere less private.
         for suffix in ["-wal", "-shm", "-journal"] {
-            let mut side = db.as_os_str().to_os_string();
-            side.push(suffix);
-            restrict(std::path::Path::new(&side), 0o600);
+            restrict(&at_rest::sidecar(db, suffix), 0o600);
         }
 
-        Ok(Cache { conn })
+        Ok(Cache { conn, protection })
     }
 
     /// Bring a database of any earlier version to the current schema: drop
@@ -264,6 +275,12 @@ impl Cache {
         }
         if (LAYOUT_VERSION..21).contains(&version) {
             Self::recheck_suspicious_senders(conn);
+        }
+        if (LAYOUT_VERSION..23).contains(&version) {
+            Self::drop_unvouched_one_click(conn);
+        }
+        if (LAYOUT_VERSION..24).contains(&version) {
+            Self::drop_soft_broken_plain_bodies(conn);
         }
         // `attachment_meta` is the gallery's record of every attachment that
         // *exists*; `attachments` holds the few whose bytes were downloaded.
@@ -337,6 +354,39 @@ impl Cache {
     pub(super) fn recheck_suspicious_senders(conn: &Connection) {
         delete_downloaded_where_check(conn, "s.trust = 'suspicious'");
         let _ = conn.execute("DELETE FROM sender_checks WHERE trust = 'suspicious'", []);
+    }
+
+    /// Drop the plain-text bodies with a space before a line break, the mark
+    /// of a `format=flowed` soft break, so the next open renders them with
+    /// their paragraphs joined (v24, #606). Which of them were flowed was not
+    /// recorded, so a fixed one with a trailing space comes along and is only
+    /// fetched again; HTML bodies and every other plain one stay.
+    pub(super) fn drop_soft_broken_plain_bodies(conn: &Connection) {
+        let _ = conn.execute(
+            "DELETE FROM bodies \
+             WHERE (instr(body, 'class=\"hylki-plain\"') > 0 \
+                    OR instr(body, 'sans-serif;white-space:pre-wrap') > 0) \
+               AND (instr(body, ' ' || char(10)) > 0 OR instr(body, ' ' || char(13)) > 0)",
+            [],
+        );
+    }
+
+    /// Take the one-click handle off stored unsubscribe routes the current
+    /// rules would not offer it on (v23, #596): one that is not https, and
+    /// any on a suspicious or failed sender, since whether DKIM covered the
+    /// header was not recorded. The banner then opens the list's page, which
+    /// the handle also is; nothing is fetched again.
+    pub(super) fn drop_unvouched_one_click(conn: &Connection) {
+        let _ = conn.execute(
+            "UPDATE sender_checks \
+             SET unsubscribe = json_set(unsubscribe, '$.one_click', NULL) \
+             WHERE json_valid(unsubscribe) \
+               AND json_extract(unsubscribe, '$.one_click') IS NOT NULL \
+               AND (trust IN ('suspicious', 'fail') \
+                    OR lower(ltrim(json_extract(unsubscribe, '$.one_click'))) \
+                       NOT LIKE 'https://%')",
+            [],
+        );
     }
 
     /// Clean the names and subjects an earlier build stored as the server

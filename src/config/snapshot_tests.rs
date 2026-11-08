@@ -146,9 +146,9 @@ fn privacy_toml() {
 /// Where `PrivacyFile::default()` (a new install) and an empty file (an
 /// upgrade from before every key) differ: the flags that record a default
 /// already applied, the section placements that `LegacySwitches` decides
-/// for an old file, and what is on for a new install only (the toolbar's
-/// folded right group, single-key shortcuts). The two default sets must
-/// keep exactly this difference.
+/// for an old file, and what is for a new install only (the toolbar's folded
+/// right group, single-key shortcuts, the Automatic list layout). The two
+/// default sets must keep exactly this difference.
 #[test]
 fn privacy_defaults_differ_only_in_the_applied_flags() {
     let fresh = toml::Table::try_from(PrivacyFile::default()).unwrap();
@@ -404,10 +404,18 @@ fn focus_toml() {
         "config/testdata/focus-default.toml",
         &pretty(&FocusMode::default()),
     );
+    // The new-install look is for having no file. One that exists keeps what
+    // it has, so it reads the rest as it always did.
     assert_eq!(
         toml::from_str::<FocusMode>("").unwrap(),
-        FocusMode::default(),
-        "an empty focus.toml reads as the default"
+        FocusMode {
+            hide_subject: false,
+            hide_stars: false,
+            hide_attachment_icons: false,
+            layout: ListLayout::Cards,
+            ..FocusMode::default()
+        },
+        "an empty focus.toml reads as an old one"
     );
 }
 

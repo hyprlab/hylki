@@ -61,8 +61,10 @@ pub(super) struct Maildir {
 }
 
 impl Maildir {
-    /// The tree at `root`, with its Inbox and Trash made if missing.
+    /// The tree at `root`, with its Inbox and Trash made if missing. The
+    /// tree is the owner's alone, as the cache is: it is the only copy.
     pub(super) fn open(root: PathBuf) -> std::io::Result<Maildir> {
+        crate::config::private_dir(&root)?;
         let md = Maildir {
             root,
             folders: HashMap::new(),
@@ -504,9 +506,21 @@ fn folder_dir(root: &Path, path: &str) -> PathBuf {
 fn make_folder_dirs(root: &Path, path: &str) -> std::io::Result<()> {
     let dir = folder_dir(root, path);
     for sub in ["cur", "new", "tmp"] {
-        std::fs::create_dir_all(dir.join(sub))?;
+        crate::config::private_dir(&dir.join(sub))?;
     }
     Ok(())
+}
+
+/// A file in the tree, readable by its owner alone however the umask is set.
+fn create_private(path: &Path) -> std::io::Result<std::fs::File> {
+    let mut opts = std::fs::OpenOptions::new();
+    opts.write(true).create(true).truncate(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        opts.mode(0o600);
+    }
+    opts.open(path)
 }
 
 /// Write a message into the folder at `dir`: in full under `tmp`, synced,
@@ -516,7 +530,7 @@ fn write_message(dir: &Path, raw: &[u8], flags: &str) -> std::io::Result<String>
     let unique = unique_name();
     let tmp = dir.join("tmp").join(&unique);
     {
-        let mut f = std::fs::File::create(&tmp)?;
+        let mut f = create_private(&tmp)?;
         f.write_all(raw)?;
         f.sync_all()?;
     }
@@ -726,7 +740,7 @@ fn keyword_letters(dir: &Path, keywords: &[String], add: bool) -> String {
 fn write_atomic(path: &Path, bytes: &[u8]) -> std::io::Result<()> {
     let tmp = path.with_extension("tmp");
     {
-        let mut f = std::fs::File::create(&tmp)?;
+        let mut f = create_private(&tmp)?;
         f.write_all(bytes)?;
         f.sync_all()?;
     }

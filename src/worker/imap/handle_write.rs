@@ -2,11 +2,12 @@
 //! tags, moves, spam reports, imports, attachment removal, undo, deleting
 //! for good, and folders.
 
-use super::{ensured, After, Emit, ImapWorker};
+use super::{ensured, After, Emit, ImapSession, ImapWorker};
+use crate::cache::Cache;
 use crate::i18n::{i18n, i18n_f};
-use crate::models::FolderHierarchy;
+use crate::models::{FolderHierarchy, FolderKind};
 use crate::worker::folders::restore_folders;
-use crate::worker::imap::folders::refresh_folders;
+use crate::worker::imap::folders::{cached_folder_kind, refresh_folders};
 use crate::worker::imap::gmail::{
     drop_gmail_label_copies, gmail_erase, gmail_labels_wanted, gmail_trash, store_gmail_labels,
     tag_labels,
@@ -22,6 +23,45 @@ use crate::worker::imap::strip_attachment::strip_imap_attachment;
 use crate::worker::imap::wire::{append_msg, search_uids, sel, uid_set};
 use crate::worker::strip::{cache_rewritten, strip_refused};
 use crate::worker::{has_gmail_labels, WorkerEvent};
+
+/// Whether a refused move is a draft on its way to Trash. Deleting a
+/// draft means it should be gone, and some servers take it out of Drafts
+/// only by erasing it: Aster Bridge answers `[SERVERBUG]` to a MOVE of a
+/// draft its server no longer has, yet expunges that draft without
+/// complaint (#604).
+fn drafts_to_trash(
+    cache: Option<&Cache>,
+    account_id: u32,
+    path: &str,
+    dest: &str,
+    e: &async_imap::error::Error,
+) -> bool {
+    matches!(e, async_imap::error::Error::No(_))
+        && cached_folder_kind(cache, account_id, path) == Some(FolderKind::Drafts)
+        && cached_folder_kind(cache, account_id, dest) == Some(FolderKind::Trash)
+}
+
+/// Erase drafts in place after the server refused to move them to Trash.
+/// Answers like the move did (no folder created), or with the move's own
+/// refusal when the erase fails too, as that is the one the user asked for.
+async fn erase_drafts(
+    sess: &mut ImapSession,
+    path: &str,
+    uids: &[u32],
+    refused: async_imap::error::Error,
+) -> Result<bool, async_imap::error::Error> {
+    tracing::info!(
+        "drafts {} not moved to Trash ({refused}): erasing them in {path:?}",
+        uid_set(uids)
+    );
+    match purge_messages(sess, path, uids).await {
+        Ok(()) => Ok(false),
+        Err(e) => {
+            tracing::warn!("erasing the drafts failed too: {e}");
+            Err(refused)
+        }
+    }
+}
 
 impl<E: Emit> ImapWorker<E> {
     /// Mark a message read or unread.
@@ -373,7 +413,13 @@ impl<E: Emit> ImapWorker<E> {
         let emit = &self.emit;
         let mut lost = false;
         let sess = ensured(session);
-        match move_message(sess, &path, uid, &dest).await {
+        let moved = match move_message(sess, &path, uid, &dest).await {
+            Err(e) if drafts_to_trash(cache.as_ref(), account_id, &path, &dest, &e) => {
+                erase_drafts(sess, &path, &[uid], e).await
+            }
+            other => other,
+        };
+        match moved {
             Ok(created) => {
                 if let Some(c) = cache.as_ref() {
                     drop_gmail_label_copies(c, account_id, account, &path, &[uid], &dest);
@@ -408,7 +454,13 @@ impl<E: Emit> ImapWorker<E> {
         let emit = &self.emit;
         let mut lost = false;
         let sess = ensured(session);
-        match move_messages(sess, &path, &uids, &dest).await {
+        let moved = match move_messages(sess, &path, &uids, &dest).await {
+            Err(e) if drafts_to_trash(cache.as_ref(), account_id, &path, &dest, &e) => {
+                erase_drafts(sess, &path, &uids, e).await
+            }
+            other => other,
+        };
+        match moved {
             Ok(created) => {
                 if let Some(c) = cache.as_ref() {
                     drop_gmail_label_copies(c, account_id, account, &path, &uids, &dest);

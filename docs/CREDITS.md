@@ -112,12 +112,14 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
 - [**Fabio Rotondo**](https://github.com/fsoft72) ([#379](https://github.com/hyprlab/hylki/pull/379),
   [#380](https://github.com/hyprlab/hylki/pull/380), [#383](https://github.com/hyprlab/hylki/pull/383),
   [#384](https://github.com/hyprlab/hylki/pull/384), [#386](https://github.com/hyprlab/hylki/pull/386),
-  [#573](https://github.com/hyprlab/hylki/pull/573), [#575](https://github.com/hyprlab/hylki/pull/575)):
+  [#573](https://github.com/hyprlab/hylki/pull/573), [#575](https://github.com/hyprlab/hylki/pull/575),
+  [#607](https://github.com/hyprlab/hylki/pull/607)):
   the Hylki address book with vCard import, filters on whether the sender is
   in Contacts, the per-message Light / Dark Mode switch, tag-colored rows,
   marking a message read from its unread dot, a search that stays open
   while its folder scope is picked, a window that no longer opens blank
-  while the keyring is locked, and the reminder for a forgotten attachment.
+  while the keyring is locked, the reminder for a forgotten attachment, and
+  Esc taking back a message in Undo Send.
 - [**Elliot**](https://github.com/Elliot-32) ([#409](https://github.com/hyprlab/hylki/pull/409)):
   a startup crash when a folder's name has a non-ASCII character near its
   start.
@@ -150,9 +152,26 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   message header, a message opening as one change on screen, sooner, and
   folder counts that start from the last ones the server gave.
 - [**James Reilly**](https://github.com/hanthor) ([#588](https://github.com/hyprlab/hylki/pull/588),
-  [#591](https://github.com/hyprlab/hylki/pull/591)): the gap above a message
-  card reached with `w` or `b`, and Drafts shown from the cache after a send
-  from a Microsoft account.
+  [#591](https://github.com/hyprlab/hylki/pull/591),
+  [#595](https://github.com/hyprlab/hylki/pull/595),
+  [#597](https://github.com/hyprlab/hylki/pull/597),
+  [#598](https://github.com/hyprlab/hylki/pull/598),
+  [#599](https://github.com/hyprlab/hylki/pull/599),
+  [#600](https://github.com/hyprlab/hylki/pull/600),
+  [#601](https://github.com/hyprlab/hylki/pull/601)): the gap above a message
+  card reached with `w` or `b`, Drafts shown from the cache after a send from a
+  Microsoft account, OpenPGP checks of the Bcc keys, the signer and unchecked
+  keys, a warning before opening a program or a script, trackers taken off
+  links, owner-only exports and local mail files with the Flatpak attachment
+  purge, a settings export without OAuth client secrets, and the encrypted
+  mail cache.
+- [**Alp Sahin**](https://github.com/AlpSha) ([#593](https://github.com/hyprlab/hylki/issues/593)):
+  text in the accent's foreground color on the accent, and a theme picked in
+  Settings shown over the colors of a user's `gtk.css`.
+- [**FLASH911**](https://github.com/FLASH911) ([#611](https://github.com/hyprlab/hylki/pull/611)):
+  the crash in Add to Calendar on a long non-Latin invitation title, the
+  composer menu entries left in the system's language, and the Russian
+  translation completed.
 
 ## Reports, design and ideas
 
@@ -212,7 +231,8 @@ Every language Hylki speaks was given to it by somebody:
 - **Italian:** [Jimmy](https://github.com/amivaleo)
 - **Polish:** [Tomasz Bojanowski](https://github.com/TomaszBojanowski)
 - **Portuguese (Portugal and Brazil):** [Paulo Fino](https://github.com/somepaulo)
-- **Russian:** [Ilya Semenkovich](https://github.com/iliasen)
+- **Russian:** [Ilya Semenkovich](https://github.com/iliasen) and
+  [FLASH911](https://github.com/FLASH911)
 - **Spanish:** [Daniel Miguel](https://github.com/danielmigueltejedor)
 
 Adding or updating one is the easiest way in: see [po/README.md](../po/README.md).

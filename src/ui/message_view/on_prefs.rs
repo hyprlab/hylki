@@ -151,34 +151,6 @@ impl MessageView {
         }
     }
 
-    pub(super) fn on_set_card_actions_mode(&mut self, hover_toggle: bool, hover_auto: bool) {
-        if self.card_actions_hover != hover_toggle || self.card_actions_auto != hover_auto {
-            self.card_actions_hover = hover_toggle;
-            self.card_actions_auto = hover_auto;
-            if self.current.is_some() && !self.loading {
-                self.render();
-            }
-        }
-    }
-
-    pub(super) fn on_set_palette_collapse(&mut self, secs: u64) {
-        if self.palette_collapse_secs != secs {
-            self.palette_collapse_secs = secs;
-            if self.current.is_some() && !self.loading {
-                self.render();
-            }
-        }
-    }
-
-    pub(super) fn on_set_card_palette_menu(&mut self, on: bool) {
-        if self.card_palette_menu != on {
-            self.card_palette_menu = on;
-            if self.current.is_some() && !self.loading {
-                self.render();
-            }
-        }
-    }
-
     pub(super) fn on_set_read_mark(&mut self, policy: crate::config::ReadMark) {
         if self.read_mark != policy {
             self.read_mark = policy;

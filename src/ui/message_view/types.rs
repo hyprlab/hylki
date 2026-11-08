@@ -99,12 +99,6 @@ pub(crate) enum MessageViewInput {
     },
     LoadRemoteOnce,
     AllowSenderAlways,
-    /// A card's remote-content button: show what is blocked, or put the block
-    /// back. The banner does the first half and can be switched off entirely.
-    ToggleRemote {
-        account_id: u32,
-        id: u32,
-    },
     /// The system/app light-dark preference changed; re-render to match.
     ThemeChanged,
     /// What one of the user's own mailboxes shows has changed — a Gravatar
@@ -302,15 +296,10 @@ pub(crate) enum MessageViewInput {
         account_id: u32,
         id: u32,
     },
-    /// Reply / Reply all / Forward chosen on one card's header, so the action
-    /// applies to that message rather than to whichever the reader calls primary.
+    /// An action on one card, by key, for the showcase's probes: the card's
+    /// menu goes to the app directly.
     CardAction {
         action: crate::ui::message_list::RowAction,
-        account_id: u32,
-        id: u32,
-    },
-    /// The card's "Add sender to Contacts" button.
-    CardContact {
         account_id: u32,
         id: u32,
     },
@@ -323,16 +312,7 @@ pub(crate) enum MessageViewInput {
         y: f64,
         hit: MenuHit,
     },
-    /// A card's Move to… button, at page point (x, y) in CSS pixels of a
-    /// page `page_width` wide: the app opens the folder picker there.
-    CardMoveAt {
-        account_id: u32,
-        id: u32,
-        x: f64,
-        y: f64,
-        page_width: f64,
-    },
-    /// The card's ⋯, acting as a menu, was clicked at page point (x, y) in
+    /// The card's ⋯ was clicked at page point (x, y) in
     /// CSS pixels of a page `page_width` wide: the app shows that message's
     /// menu there.
     CardMenuFrom {
@@ -342,18 +322,6 @@ pub(crate) enum MessageViewInput {
         y: f64,
         page_width: f64,
     },
-    /// Preferences: how card actions show — behind the ⋯ toggle, automatically
-    /// on hover, or always.
-    SetCardActionsMode {
-        hover_toggle: bool,
-        hover_auto: bool,
-    },
-    /// Preferences: seconds an opened card palette lingers after the pointer
-    /// leaves. The cards' own timeout; the list keeps a separate one.
-    SetPaletteCollapse(u64),
-    /// Preferences: the card's ⋯ opens the card menu instead of sliding its
-    /// actions palette out.
-    SetCardPaletteMenu(bool),
     /// A conversation message was read: clear its card's unread dot in place,
     /// without reloading the document.
     ClearDot {
@@ -478,8 +446,6 @@ pub(crate) enum MessageViewOutput {
         id: u32,
         show: bool,
     },
-    /// A card's "Add sender to Contacts" button — add this message's sender.
-    ContactSender(Box<Message>),
     /// A card's attachment chip (#213): open the file at `index` of that
     /// message's attachments, or save it.
     AttachmentAction {
@@ -495,13 +461,6 @@ pub(crate) enum MessageViewOutput {
         x: f64,
         y: f64,
         hit: MenuHit,
-    },
-    /// A card's Move to… button: the folder picker for that message, at
-    /// window point (x, y).
-    CardMoveTo {
-        message: Box<Message>,
-        x: f64,
-        y: f64,
     },
     /// An email address in a card header was clicked — open a composer to it.
     ComposeTo(String),

@@ -343,8 +343,6 @@ impl MessageView {
         }
         let js = format!(
             "(function(){{\
-             var b=document.querySelector('.hylki-act[data-act=\"star\"][data-key=\"{account_id}:{id}\"]');\
-             if(b)b.classList.{0}('on');\
              var s=document.querySelector('.hylki-msg[data-key=\"{account_id}:{id}\"]');\
              if(s)s.classList.{0}('starred');}})()",
             if starred { "add" } else { "remove" },

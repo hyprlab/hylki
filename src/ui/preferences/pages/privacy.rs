@@ -11,6 +11,7 @@ pub(in crate::ui::preferences) struct PrivacyPage {
     pub(in crate::ui::preferences) page: adw::PreferencesPage,
     pub(in crate::ui::preferences) auto_remote_content_row: adw::SwitchRow,
     pub(in crate::ui::preferences) remote_ahead_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) clean_links_row: adw::SwitchRow,
     pub(in crate::ui::preferences) show_remote_banner_row: adw::SwitchRow,
     pub(in crate::ui::preferences) show_spoof_banner_row: adw::SwitchRow,
     pub(in crate::ui::preferences) gravatar_row: adw::SwitchRow,
@@ -31,7 +32,6 @@ impl PrivacyPage {
                     #[name = "auto_remote_content_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Always load remote content"),
-                        set_subtitle: &i18n("Remote content can tell a sender when and where you read."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetAutoRemoteContent(row.is_active()));
                         },
@@ -40,9 +40,16 @@ impl PrivacyPage {
                     #[name = "remote_ahead_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Pre-load remote content for the next messages"),
-                        set_subtitle: &i18n("Their senders can tell they were opened."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetRemoteAhead(row.is_active()));
+                        },
+                    },
+
+                    #[name = "clean_links_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Remove trackers from links"),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetCleanLinks(row.is_active()));
                         },
                     },
 
@@ -58,7 +65,6 @@ impl PrivacyPage {
                     #[name = "show_spoof_banner_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Warn when the addressing doesn't match"),
-                        set_subtitle: &i18n("The badge beside the sender stays. A possible forgery always shows the banner."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetShowSpoofBanner(row.is_active()));
                         },
@@ -76,7 +82,6 @@ impl PrivacyPage {
                     #[name = "sender_logos_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Show sender logos"),
-                        set_subtitle: &i18n("Most are fetched from the sender's domain, which learns your IP address."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetSenderLogos(row.is_active()));
                         },
@@ -85,7 +90,6 @@ impl PrivacyPage {
                     #[name = "receipts_row"]
                     adw::ComboRow {
                         set_title: &i18n("Send read receipts"),
-                        set_subtitle: &i18n("A receipt tells the sender when you opened the message."),
                         set_model: Some(&gtk::StringList::new(&[
                             &i18n("Ask each time"),
                             &i18n("Always"),
@@ -99,12 +103,30 @@ impl PrivacyPage {
                     },
 
                 },
+
+                add = &adw::PreferencesGroup {
+                    // Not "On This Computer": that names an account kind.
+                    set_title: &i18n("Stored Mail"),
+
+                    adw::SwitchRow {
+                        set_title: &i18n("Encrypt stored mail"),
+                        set_active: crate::config::cache_encrypted(),
+                        connect_active_notify => move |row| {
+                            if !row.is_active() {
+                                crate::config::save_cache_encrypted(false);
+                            } else if !crate::config::cache_encrypted() {
+                                confirm_encrypted(row);
+                            }
+                        },
+                    },
+                },
             }
         }
         Self {
             page,
             auto_remote_content_row,
             remote_ahead_row,
+            clean_links_row,
             show_remote_banner_row,
             show_spoof_banner_row,
             gravatar_row,
@@ -112,4 +134,30 @@ impl PrivacyPage {
             receipts_row,
         }
     }
+}
+
+/// Settings → Privacy → Encrypt stored mail, switched on. Asked about
+/// first: the first start after it converts the whole cache, and an earlier
+/// version, one a beta tester goes back to included, cannot open what it
+/// leaves. The cache itself is converted at the next start, when nothing
+/// has it open.
+fn confirm_encrypted(row: &adw::SwitchRow) {
+    let dialog = adw::AlertDialog::new(
+        Some(&i18n("Encrypt Stored Mail?")),
+        Some(&i18n("Mail stored on this computer will be encrypted at the next start which can take a few minutes. Earlier versions of the app cannot open it. Turn this setting off and restart before going back to an older version.")),
+    );
+    dialog.add_response("cancel", &i18n("Cancel"));
+    dialog.add_response("encrypt", &i18n("Encrypt"));
+    dialog.set_response_appearance("encrypt", adw::ResponseAppearance::Suggested);
+    dialog.set_default_response(Some("cancel"));
+    dialog.set_close_response("cancel");
+    let switch = row.clone();
+    dialog.connect_response(None, move |_, response| {
+        if response == "encrypt" {
+            crate::config::save_cache_encrypted(true);
+        } else {
+            switch.set_active(false);
+        }
+    });
+    dialog.present(Some(row));
 }

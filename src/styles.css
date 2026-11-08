@@ -23,13 +23,14 @@ switch > image {
 
 /* The sidebar's "New message" action: a standing accent button shaped like a
    row — full width, rounded like the row highlights, icon column aligned with
-   the rows below. Text and icon in plain white on the accent. */
+   the rows below. Text and icon in the accent's own foreground: white on
+   GNOME's accents, dark on a pale one a desktop or theme defines (#593). */
 /* Row geometry plus extra vertical presence: 5px above and below the
    shared .folder-row padding, so the accent button stands taller than a
    plain row without changing its width alignment. */
 row.compose-row {
   background-color: @accent_bg_color;
-  color: white;
+  color: @accent_fg_color;
   padding-top: 5px;
   padding-bottom: 5px;
 }
@@ -50,7 +51,7 @@ row.compose-row:active {
 
 row.compose-row .folder-icon,
 row.compose-row .account-name {
-  color: white;
+  color: @accent_fg_color;
   opacity: 1;
 }
 
@@ -66,7 +67,7 @@ row.compose-row .compose-split:dir(rtl) {
   padding-right: 8px;
 }
 row.compose-row .compose-split > separator {
-  background-color: alpha(white, 0.55);
+  background-color: alpha(@accent_fg_color, 0.55);
   min-width: 1px;
   margin: 3px 4px 3px 8px;
 }
@@ -74,7 +75,7 @@ row.compose-row .compose-split > separator:dir(rtl) {
   margin: 3px 8px 3px 4px;
 }
 row.compose-row .compose-caret {
-  color: white;
+  color: @accent_fg_color;
   min-height: 0;
   min-width: 0;
   padding: 2px 6px;
@@ -87,10 +88,10 @@ row.compose-row .compose-caret:dir(rtl) {
   margin-left: -3px;
 }
 row.compose-row .compose-caret:hover {
-  background-color: alpha(white, 0.15);
+  background-color: alpha(@accent_fg_color, 0.15);
 }
 row.compose-row .compose-caret:active {
-  background-color: alpha(white, 0.28);
+  background-color: alpha(@accent_fg_color, 0.28);
 }
 
 .account-header {
@@ -108,6 +109,11 @@ row.compose-row .compose-caret:active {
   padding-right: 4px;
   margin-left: 2px;
   margin-right: 2px;
+}
+
+/* A rail avatar whose account holds the open folder, folded out of sight. */
+.rail-collapsed .account-header.rail-current {
+  background-color: alpha(currentColor, 0.1);
 }
 
 .rail-collapsed .folder-row {
@@ -605,7 +611,8 @@ flowbox.attach-flow > flowboxchild {
 /* ---- Contacts view ---- */
 
 /* Selected contact: the full accent treatment the message list's selection
-   gets — accent ground, everything on it white at full strength. */
+   gets — accent ground, everything on it the accent's foreground at full
+   strength. */
 .contacts-listbox > row:selected,
 .contacts-listbox > row:selected:hover,
 .contacts-listbox > row:selected:active {
@@ -642,7 +649,7 @@ flowbox.attach-flow > flowboxchild {
    row is also its descendant, and a bare `label` selector painted the menu's
    text white-on-white. */
 .contacts-listbox > row:selected box.header label {
-  color: white;
+  color: @accent_fg_color;
   opacity: 1;
 }
 
@@ -769,6 +776,19 @@ flowbox.attach-flow > flowboxchild {
   margin-left: -14px;
 }
 
+/* Focus Mode with Unread counts off. The Outbox count is not an unread count:
+   it says mail has not left yet. */
+.no-unread-counts label.unread-badge:not(.outbox-count) {
+  opacity: 0;
+  background: none;
+  box-shadow: none;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 1px;
+}
+
 /* ---- Message list ---- */
 
 /* The boxes above and below the rows that hold search and the bulk bar,
@@ -817,6 +837,13 @@ flowbox.attach-flow > flowboxchild {
   padding-bottom: 5px;
   border-bottom: none;
   border-top: 1px solid alpha(currentColor, 0.08);
+}
+
+/* In a pane narrower than the bar's full size (see BULK_BAR_ROOM). */
+.compact .bulk-bar button {
+  min-width: 24px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 .bulk-count {
@@ -908,7 +935,8 @@ flowbox.attach-flow > flowboxchild {
 /* Gmail's j/k cursor (#392): an accent outline inside the pill, while the
    list has the keyboard. It is a class the list sets for j and k and takes
    off at a click, not a focus ring, so a click never draws it. On the
-   selected row, whose pill is already the accent, it is white. */
+   selected row, whose pill is already the accent, it is the accent's
+   foreground. */
 .message-list:focus-within > row > .message-item.kbd-cursor:not(.swiping) .message-row {
   box-shadow: inset 0 0 0 2px alpha(@accent_color, 0.85);
 }
@@ -918,13 +946,12 @@ flowbox.attach-flow > flowboxchild {
 }
 
 .message-list:focus-within > row:selected > .message-item.kbd-cursor:not(.swiping) .message-row {
-  box-shadow: inset 0 0 0 2px alpha(white, 0.8);
+  box-shadow: inset 0 0 0 2px alpha(@accent_fg_color, 0.8);
 }
 
 .message-row {
   /* The pill: inset from the list edges, rounded like the thread cards.
-     Vertical padding is symmetric — the Actions Palette floats in an overlay
-     and takes no room, so the text block sits centred in the pill. */
+     Vertical padding is symmetric, so the text block sits centred in it. */
   margin: 2px 6px;
   border-radius: 12px;
   padding: 13px 8px 13px 10px;
@@ -933,24 +960,25 @@ flowbox.attach-flow > flowboxchild {
   padding: 13px 10px 13px 8px;
 }
 
-/* Selected rows: every text element fully white at full strength, in both
-   schemes — the accent ground (see install_scheme_css) carries the
-   contrast, so nothing on it is dimmed. */
+/* Selected rows: every text element in the accent's foreground at full
+   strength, in both schemes — the accent ground (see install_scheme_css)
+   carries the contrast, so nothing on it is dimmed. */
 .message-list > row:selected .message-row label {
-  color: white;
+  color: @accent_fg_color;
   opacity: 1;
 }
 
 /* The unread dot inverts on the accent ground too — accent-on-accent would
    vanish, and a selected thread head must still show its unread mark. */
 .message-list > row:selected .message-row .unread-dot {
-  background: white;
+  background: @accent_fg_color;
 }
 
-/* The thread chip inverts on the accent ground: white pill, accent text
-   and caret — a grey chip would sink into the highlight. */
+/* The thread chip inverts on the accent ground: a pill in the accent's
+   foreground, accent text and caret — a grey chip would sink into the
+   highlight. */
 .message-list > row:selected .message-row .thread-chip {
-  background: white;
+  background: @accent_fg_color;
   opacity: 1;
 }
 
@@ -959,26 +987,16 @@ flowbox.attach-flow > flowboxchild {
   color: @accent_bg_color;
 }
 
-/* Avatars off (#29, #99): read rows collapse the dot's slot entirely (see
-   the row template), so the text block starts here — 8px, matching the
-   pill's right padding for equal margins. Unread rows lead with the dot. */
+/* Avatars off (#29): read rows collapse the dot's slot entirely (see the row
+   template), so the text block starts here — 8px, matching the pill's right
+   padding for equal margins. Unread rows lead with the dot. With no circle to
+   hold the height, the padding above and below the text is what centres it. */
 .message-row.no-avatar {
-  padding-left: 8px;
-  /* Text anchors to the pill's top (#99): a tighter top inset reads as
-     top-aligned, and the freed room stays at the bottom where the floating
-     Actions Palette rides. */
-  padding-top: 6px;
+  padding: 10px 8px;
 }
 .message-row.no-avatar:dir(rtl) {
   padding-left: 8px;
   padding-right: 8px;
-}
-
-/* With the palette on, the no-avatar pill grows at the bottom so the
-   floating ⋯ clears the text; palette off, the room isn't needed
-   (.no-palette rows keep the plain padding). */
-.message-row.no-avatar:not(.no-palette) {
-  padding-bottom: 18px;
 }
 
 .message-row.no-avatar .unread-dot {
@@ -991,15 +1009,6 @@ flowbox.attach-flow > flowboxchild {
 .message-row.no-avatar .unread-dot:dir(rtl) {
   margin-left: -2px;
   margin-right: 1px;
-}
-
-/* Palette + avatars + previews off: a two-line row is too short for
-   the floating ⋯ to clear the circle, so the pill reserves exactly the height
-   the pair needs — centred 38px circle, 2px air, the ⋯ riding 1px off the
-   pill's bottom edge — and not a pixel more. Rows with a preview are already
-   tall enough and keep their natural height. */
-.message-row.palette-room {
-  min-height: 54px;
 }
 
 /* One line per message (#334): a short pill, everything centred on the
@@ -1080,11 +1089,11 @@ flowbox.attach-flow > flowboxchild {
   opacity: 1;
 }
 
-/* On the accent ground of a selected row they read in white, as the rest
-   of the row does. */
+/* On the accent ground of a selected row they take the accent's
+   foreground, as the rest of the row does. */
 .message-list > row:selected .message-row.single-line .message-date.overdue,
 .message-list > row:selected .message-row .importance-high {
-  color: white;
+  color: @accent_fg_color;
 }
 
 /* Conversation threading: count chip + compact expand/collapse chevron on the
@@ -1105,7 +1114,7 @@ flowbox.attach-flow > flowboxchild {
 
 .message-list > row:selected .message-row .tag-chip {
   /* Keep the tag's own color on a selected row; the selection paints
-     everything else white. */
+     everything else in the accent's foreground. */
   opacity: 0.95;
 }
 
@@ -1159,7 +1168,7 @@ flowbox.attach-flow > flowboxchild {
 .message-item.thread-child {
   margin-left: 10px;
   /* @window_fg_color, not currentColor: a selected row's currentColor is the
-     white selection foreground, which made the rail vanish under selection. */
+     selection foreground, which made the rail vanish under selection. */
   border-left: 2px dotted alpha(@window_fg_color, 0.3);
 }
 .message-item.thread-child:dir(rtl) {
@@ -1208,6 +1217,12 @@ flowbox.attach-flow > flowboxchild {
   padding: 13px 10px 13px 8px;
 }
 
+/* A reply with no avatar keeps the same height as any row with none. */
+.message-item.thread-child .message-row.no-avatar:not(.single-line) {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 /* A reply on one line (#334) keeps the single-line pill's height, indented
    onto the rail like any reply. */
 .message-item.thread-child .message-row.single-line {
@@ -1248,77 +1263,6 @@ flowbox.attach-flow > flowboxchild {
 
 .message-list:focus-within > row:selected > .message-item.thread-child:not(.swiping) .message-row {
   background-color: alpha(@accent_bg_color, 0.5);
-}
-
-/* The Actions Palette: quick-action buttons that expand rightward out of the
-   ⋯. The whole line floats in an overlay over the pill's bottom-left corner,
-   taking no room in the row. Open, the container itself is the card — the ⋯
-   is its left cap and the icons continue on the same surface, no seam. */
-.actions-line {
-  border-radius: 8px;
-}
-
-.actions-line.open {
-  background: @view_bg_color;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-}
-
-/* On the shared card the toggle drops its own wash and dimming. */
-.actions-line.open .palette-toggle,
-.actions-line.open .palette-toggle.revealed,
-.actions-line.open .palette-toggle.revealed:hover {
-  background: none;
-  opacity: 1;
-}
-
-.actions-palette {
-  padding: 1px 4px 1px 0;
-}
-.actions-palette:dir(rtl) {
-  padding: 1px 0 1px 4px;
-}
-
-.actions-palette button {
-  min-width: 22px;
-  min-height: 0;
-  padding: 0 2px;
-}
-
-.actions-palette button image {
-  -gtk-icon-size: 14px;
-}
-
-/* The chevron that slides the Actions Palette open. Hidden until the row is
-   hovered (or the palette is open), then faded in over 200ms. Its slot is always
-   reserved, so revealing it doesn't shift the preview text. */
-.palette-toggle {
-  min-width: 20px;
-  min-height: 0;
-  /* A hair inside the row pill's edge, so the hover wash never touches it. */
-  padding: 1px 3px;
-  opacity: 0;
-  transition: opacity 200ms ease-in-out;
-}
-
-/* Revealed (row hovered) but collapsed: the bare ⋯ — no ground of its own.
-   The semi-opaque wash appears only under the pointer itself, and the full
-   card surface only while open (the .actions-line.open rules above). */
-.palette-toggle.revealed {
-  opacity: 0.85;
-  border-radius: 8px;
-}
-
-.palette-toggle.revealed:hover {
-  opacity: 1;
-  background: alpha(@view_bg_color, 0.55);
-}
-
-.palette-toggle.revealed:hover {
-  opacity: 1;
-}
-
-.palette-toggle image {
-  -gtk-icon-size: 14px;
 }
 
 /* Mid-swipe (.swiping, held from the first drag until the snap-back lands):
@@ -1430,7 +1374,7 @@ flowbox.attach-flow > flowboxchild {
 }
 
 .message-list > row:selected .message-date.snoozed {
-  color: white;
+  color: @accent_fg_color;
 }
 
 .dim-icon,
@@ -1456,7 +1400,7 @@ flowbox.attach-flow > flowboxchild {
 }
 
 .message-list > row:selected .read-receipt.read {
-  color: white;
+  color: @accent_fg_color;
 }
 
 /* ---- Reader ---- */

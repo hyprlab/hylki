@@ -30,28 +30,6 @@ impl Preferences {
         }
     }
 
-    pub(super) fn on_change_card_actions_mode(
-        &mut self,
-        index: u32,
-        sender: ComponentSender<Self>,
-    ) {
-        self.card_actions_hover = index == 0;
-        let (hover_toggle, hover_auto) = match index {
-            0 => (true, false),
-            1 => (false, true),
-            _ => (false, false),
-        };
-        let _ = sender.output(PrefOutput::SetCardActionsMode {
-            hover_toggle,
-            hover_auto,
-        });
-    }
-
-    pub(super) fn on_toggle_list_palette(&mut self, on: bool, sender: ComponentSender<Self>) {
-        self.list_palette = on;
-        let _ = sender.output(PrefOutput::SetListPalette(on));
-    }
-
     pub(super) fn on_toggle_swipe_enabled(&mut self, on: bool, sender: ComponentSender<Self>) {
         self.swipe_enabled = on;
         let _ = sender.output(PrefOutput::SetSwipeEnabled(on));

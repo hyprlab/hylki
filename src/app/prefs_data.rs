@@ -142,8 +142,11 @@ impl AppModel {
                 &i18n("Export Settings"),
                 "hylki-settings.toml",
                 |path| {
-                    crate::config::export_bundle()
-                        .and_then(|t| std::fs::write(path, t).map_err(|e| e.to_string()))
+                    // It carries every account's server and address: no
+                    // more readable than the files it was made from.
+                    crate::config::export_bundle().and_then(|t| {
+                        crate::config::write_private(path, &t).map_err(|e| e.to_string())
+                    })
                 },
                 |path| {
                     i18n_f(
@@ -166,8 +169,13 @@ impl AppModel {
                     &title,
                     &name,
                     move |path| {
-                        std::fs::write(path, crate::desktop::console_log::export_text(&memory))
-                            .map_err(|e| e.to_string())
+                        // Redaction shortens addresses only: names, subjects
+                        // and hosts are still in it.
+                        crate::config::write_private(
+                            path,
+                            &crate::desktop::console_log::export_text(&memory),
+                        )
+                        .map_err(|e| e.to_string())
                     },
                     |path| {
                         i18n_f(

@@ -2,7 +2,7 @@
 
 use adw::prelude::*;
 
-use super::super::{PrefInput, PrefOutput, Preferences, ViewSender};
+use super::super::{PrefInput, PrefOutput, ViewSender};
 use crate::i18n::i18n;
 
 /// The page, and the rows on it that the window reaches later.
@@ -21,9 +21,6 @@ pub(in crate::ui::preferences) struct ReadingPage {
     pub(in crate::ui::preferences) plain_mono_row: adw::SwitchRow,
     pub(in crate::ui::preferences) plain_font_row: adw::ActionRow,
     pub(in crate::ui::preferences) plain_font_button: gtk::FontDialogButton,
-    pub(in crate::ui::preferences) card_actions_row: adw::ComboRow,
-    pub(in crate::ui::preferences) card_palette_collapse_row: adw::SpinRow,
-    pub(in crate::ui::preferences) card_palette_menu_row: adw::SwitchRow,
     pub(in crate::ui::preferences) single_message_card_row: adw::SwitchRow,
     pub(in crate::ui::preferences) always_show_recipients_row: adw::SwitchRow,
     pub(in crate::ui::preferences) pgp_labels_row: adw::SwitchRow,
@@ -36,7 +33,7 @@ pub(in crate::ui::preferences) struct ReadingPage {
 }
 
 impl ReadingPage {
-    pub(in crate::ui::preferences) fn build(model: &Preferences, sender: &ViewSender) -> Self {
+    pub(in crate::ui::preferences) fn build(sender: &ViewSender) -> Self {
         relm4::view! {
             page = adw::PreferencesPage {
                 add = &adw::PreferencesGroup {
@@ -153,37 +150,6 @@ impl ReadingPage {
                         },
                     },
 
-                    #[name = "card_actions_row"]
-                    adw::ComboRow {
-                        set_title: &i18n("Message card actions palette"),
-                        connect_selected_notify[sender] => move |row| {
-                            sender.input(PrefInput::ChangeCardActionsMode(row.selected()));
-                        },
-                    },
-
-                    #[name = "card_palette_collapse_row"]
-                    adw::SpinRow {
-                        set_title: &i18n("Message card actions palette timeout"),
-                        set_subtitle: &i18n("Seconds it stays open after the pointer leaves."),
-                        connect_value_notify[sender] => move |row| {
-                            let _ = sender.output(PrefOutput::SetCardPaletteCollapse(row.value() as u64));
-                        },
-                    },
-
-                    // Only the hidden-behind-a-toggle mode has
-                    // a ⋯ to press, so the choice is only live
-                    // there.
-                    #[name = "card_palette_menu_row"]
-                    adw::SwitchRow {
-                        // Kept current by update_view.
-                        set_sensitive: model.card_actions_hover,
-                        set_title: &i18n("Message card actions palette as a menu"),
-                        set_subtitle: &i18n("The ⋯ opens the right-click menu instead."),
-                        connect_active_notify[sender] => move |row| {
-                            let _ = sender.output(PrefOutput::SetCardPaletteMenu(row.is_active()));
-                        },
-                    },
-
                     #[name = "single_message_card_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Single messages as cards"),
@@ -285,9 +251,6 @@ impl ReadingPage {
             plain_mono_row,
             plain_font_row,
             plain_font_button,
-            card_actions_row,
-            card_palette_collapse_row,
-            card_palette_menu_row,
             single_message_card_row,
             always_show_recipients_row,
             pgp_labels_row,
@@ -298,12 +261,5 @@ impl ReadingPage {
             print_date_row,
             print_punch_margin_row,
         }
-    }
-
-    /// The view's `#[watch]` setters for this page, in the order the
-    /// view had them (see the module comment of `pages`).
-    pub(in crate::ui::preferences) fn update_view(&self, model: &Preferences) {
-        self.card_palette_menu_row
-            .set_sensitive(model.card_actions_hover);
     }
 }

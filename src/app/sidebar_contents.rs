@@ -10,6 +10,26 @@ use crate::ui::sidebar::{SectionData, SidebarInput};
 
 use super::model::AppModel;
 
+/// The settings the sidebar is drawn from, as they stand right now. Focus Mode
+/// replaces all of them while it is on, so comparing two of these says whether
+/// a change of mode has to redraw the sidebar at once.
+#[derive(PartialEq)]
+pub(super) struct SidebarShape {
+    show_unified: bool,
+    unified_kinds: config::UnifiedKinds,
+    show_accounts: bool,
+    unified_chips: config::UnifiedChips,
+    account_click_folds: bool,
+    rail_dots: bool,
+    unread_counts: bool,
+    rail_fold: config::RailFold,
+    section_style: config::SectionStyle,
+    filtered_placement: config::SectionPlacement,
+    tags_placement: config::SectionPlacement,
+    favorites_placement: config::SectionPlacement,
+    contacts_placement: config::SectionPlacement,
+}
+
 impl AppModel {
     /// The Special Folders choices per account email (#82): every folder of
     /// every configured account, for the settings editor's combos.
@@ -56,17 +76,9 @@ impl AppModel {
         map
     }
 
-    /// Push the current accounts + folders to the sidebar, in the user's chosen
-    /// order and with each account's collapsed state.
-    pub(super) fn rebuild_sidebar(&self) {
-        // The accounts are being redrawn because something about them changed;
-        // the faces their own mail wears follow from the same place (#189).
-        self.refresh_own_faces();
-        let order = self.ordered_emails();
-        let sections: Vec<SectionData> = order
-            .iter()
-            .filter_map(|email| self.section_data(email))
-            .collect();
+    /// What the sidebar is drawn from: Focus Mode's own choices while it is
+    /// on, else the settings.
+    pub(super) fn sidebar_shape(&self) -> SidebarShape {
         // Count enabled accounts from config, not just the workers that have
         // reported in: at startup the accounts stream in one by one, and
         // counting only the connected ones made the first sidebar build look
@@ -81,29 +93,102 @@ impl AppModel {
         } else {
             config::UnifiedKinds::NONE
         };
-        self.snoozed_row.set(unified_kinds.snoozed);
+        let rail_dots = self.rail_dots_now();
+        let focus = &self.focus;
+        if focus.enabled {
+            let placed = config::FocusMode::section_placement;
+            SidebarShape {
+                show_unified,
+                unified_kinds,
+                // Its own switch hides them, by the sliding way (`SetFocus`).
+                show_accounts: true,
+                unified_chips: focus.unified_chips(),
+                account_click_folds: focus.click_folds,
+                rail_dots,
+                unread_counts: focus.unread_counts,
+                rail_fold: focus.rail_fold(),
+                section_style: config::SectionStyle::Unified,
+                filtered_placement: placed(focus.show_filters),
+                tags_placement: placed(focus.show_tags),
+                favorites_placement: placed(focus.show_favorites),
+                contacts_placement: focus.contacts_placement(),
+            }
+        } else {
+            SidebarShape {
+                show_unified,
+                unified_kinds,
+                show_accounts: self.show_accounts,
+                unified_chips: self.unified_chips,
+                account_click_folds: self.account_click_folds,
+                rail_dots,
+                unread_counts: true,
+                rail_fold: self.rail_fold,
+                section_style: self.section_style,
+                filtered_placement: self.filtered_placement,
+                tags_placement: self.tags_placement,
+                favorites_placement: self.favorites_placement,
+                contacts_placement: self.contacts_placement,
+            }
+        }
+    }
+
+    /// Where Contacts is in the sidebar: Focus Mode's choice while it is on,
+    /// else the setting. Without its books under it there, the Contacts page
+    /// picks them itself.
+    pub(super) fn contacts_placement_now(&self) -> config::SectionPlacement {
+        if self.focus.enabled {
+            self.focus.contacts_placement()
+        } else {
+            self.contacts_placement
+        }
+    }
+
+    /// Whether the Attachments row shows: Focus Mode's switch while it is on,
+    /// else the setting.
+    pub(super) fn attachments_row_now(&self) -> bool {
+        if self.focus.enabled {
+            self.focus.show_attachments
+        } else {
+            self.show_attachments
+        }
+    }
+
+    /// Push the current accounts + folders to the sidebar, in the user's chosen
+    /// order and with each account's collapsed state.
+    pub(super) fn rebuild_sidebar(&self) {
+        // The accounts are being redrawn because something about them changed;
+        // the faces their own mail wears follow from the same place (#189).
+        self.refresh_own_faces();
+        let order = self.ordered_emails();
+        let sections: Vec<SectionData> = order
+            .iter()
+            .filter_map(|email| self.section_data(email))
+            .collect();
+        let shape = self.sidebar_shape();
+        self.snoozed_row.set(shape.unified_kinds.snoozed);
         let unified_unread = self.unified_inboxes_unread();
         let unified_folders = self.unified_folder_refs();
         let favorite_folders = self.favorite_folder_refs();
         self.sidebars_emit(SidebarInput::SetContents {
             sections,
-            show_unified,
-            unified_kinds,
-            show_accounts: self.show_accounts,
-            unified_chips: self.unified_chips,
+            show_unified: shape.show_unified,
+            unified_kinds: shape.unified_kinds,
+            show_accounts: shape.show_accounts,
+            unified_chips: shape.unified_chips,
             chevrons_left: self.chevrons_left,
-            account_click_folds: self.account_click_folds,
-            rail_dots: self.rail_dots_now(),
-            rail_fold: self.rail_fold,
+            account_click_folds: shape.account_click_folds,
+            rail_dots: shape.rail_dots,
+            unread_counts: shape.unread_counts,
+            rail_fold: shape.rail_fold,
             unified_unread,
             unified_folders,
             favorite_folders,
             tags: self.tags.clone(),
-            section_style: self.section_style,
-            filtered_placement: self.filtered_placement,
-            tags_placement: self.tags_placement,
-            favorites_placement: self.favorites_placement,
-            contacts_placement: self.contacts_placement,
+            section_style: shape.section_style,
+            filtered_placement: shape.filtered_placement,
+            tags_placement: shape.tags_placement,
+            favorites_placement: shape.favorites_placement,
+            contacts_placement: shape.contacts_placement,
             smart_folders: self
                 .smart_folders
                 .iter()

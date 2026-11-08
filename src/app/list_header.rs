@@ -505,14 +505,16 @@ impl AppModel {
     }
 
     /// Tell the list whether to lay messages out on one line (#334): the
-    /// Layout setting, or for Automatic, the width of the pane.
+    /// Layout setting, or for Automatic, the width of the pane. `list_wide`
+    /// only follows the split beside the reader; with the reader below or
+    /// off the list has the window's width, so Automatic counts it as wide.
     pub(super) fn push_single_line(&self) {
-        // With the reader below or off the list is a table (#475).
-        let on = match self.list_layout {
-            _ if self.reading_pane != config::ReadingPane::Right => true,
+        let on = match self.list_layout_now() {
             config::ListLayout::Cards => false,
             config::ListLayout::SingleLine => true,
-            config::ListLayout::Automatic => self.list_wide,
+            config::ListLayout::Automatic => {
+                self.list_wide || self.reading_pane != config::ReadingPane::Right
+            }
         };
         self.message_list.emit(MessageListInput::SetSingleLine(on));
     }
@@ -526,29 +528,71 @@ impl AppModel {
             subject: self.list_show_subject(),
             animate,
         });
+        self.push_list_marks();
         // A folded card in a conversation shows what a list row does (#326).
         self.message_view.emit(MessageViewInput::SetFoldLook {
             preview_lines: self.list_preview_lines(),
         });
     }
 
-    /// The avatars the list draws: the setting, unless Focus Mode hides them.
-    pub(super) fn list_avatars(&self) -> bool {
-        self.avatars && !self.focus.active(config::FocusPart::HideAvatars)
+    /// The marks the list's rows wear: all of them, unless Focus Mode's parts
+    /// are in force.
+    pub(super) fn push_list_marks(&self) {
+        self.message_list.emit(MessageListInput::SetMarks {
+            stars: !self.focus.active(config::FocusPart::HideStars),
+            attachments: !self.focus.active(config::FocusPart::HideAttachmentIcons),
+        });
     }
 
-    /// The preview lines the list shows: the setting, hidden outright or
-    /// capped at one by Focus Mode (previews switched off stay off).
+    /// Whether the single-line layout has column headings: Focus Mode's switch
+    /// while it is on, else the setting.
+    pub(super) fn list_headings_now(&self) -> bool {
+        if self.focus.enabled {
+            self.focus.column_headings
+        } else {
+            self.list_headings
+        }
+    }
+
+    /// The avatars the list draws: Focus Mode's switch while it is on, else
+    /// the setting.
+    pub(super) fn list_avatars(&self) -> bool {
+        if self.focus.enabled {
+            !self.focus.hide_avatars
+        } else {
+            self.avatars
+        }
+    }
+
+    /// The layout the list uses: Focus Mode's while it is on, else the setting.
+    fn list_layout_now(&self) -> config::ListLayout {
+        if self.focus.enabled {
+            self.focus.layout
+        } else {
+            self.list_layout
+        }
+    }
+
+    /// Whether a card's tags go under its text: Focus Mode's switch while it
+    /// is on, else the setting.
+    pub(super) fn list_pills_below_now(&self) -> bool {
+        if self.focus.enabled {
+            self.focus.tags_below
+        } else {
+            self.list_pills_below
+        }
+    }
+
+    /// The preview lines the list shows: Focus Mode's while it is on, else
+    /// the setting.
     ///
     /// Only what is *drawn* changes — the setting itself, and with it what
     /// the workers fetch, is left alone. So the preview text is in hand the
     /// moment Focus Mode ends, rather than waiting for the next sync the way
     /// switching previews off in Settings does.
     pub(super) fn list_preview_lines(&self) -> u32 {
-        if self.focus.active(config::FocusPart::HidePreview) {
-            0
-        } else if self.focus.active(config::FocusPart::OnePreviewLine) {
-            self.preview_lines.min(1)
+        if self.focus.enabled {
+            self.focus.preview_line_count()
         } else {
             self.preview_lines
         }
@@ -574,7 +618,7 @@ impl AppModel {
                 };
                 if wide != self.list_wide {
                     self.list_wide = wide;
-                    if self.list_layout == config::ListLayout::Automatic {
+                    if self.list_layout_now() == config::ListLayout::Automatic {
                         self.push_single_line();
                     }
                 }

@@ -1,6 +1,7 @@
 allowed_senders = []
 auto_remote_content = false
 remote_ahead = false
+clean_links = true
 gravatar = false
 avatars = true
 sender_logos = false
@@ -13,8 +14,6 @@ fetch_interval_secs = 300
 push = true
 metered_save_data = true
 blacklist = []
-palette_collapse_secs = 5
-card_palette_collapse_secs = 5
 threading = true
 threads_expanded = false
 thread_expansion = false
@@ -50,11 +49,6 @@ notification_buttons = [
 ]
 show_attachments = true
 settings_open_accounts = false
-card_actions_hover = true
-card_actions_auto = false
-list_palette = true
-list_palette_hover = false
-card_palette_menu = true
 swipe_enabled = true
 swipe_reversed = false
 swipe_sensitivity = 3.5
@@ -85,7 +79,7 @@ app_theme = "system"
 text_scale = 100
 theme = ""
 preview_lines = 1
-list_layout = "cards"
+list_layout = "automatic"
 list_columns = [
     "star",
     "replied",

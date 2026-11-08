@@ -253,15 +253,29 @@ fn rows_of_folders_an_account_does_not_have_go() {
 /// `HYLKI_CACHE_TIMING=<copy of cache.db> cargo test --release --bin hylki
 /// cache::tests::thread_lookup_timing -- --ignored --nocapture`. Takes
 /// each account's newest 256 Message-IDs as one page of badges, and the
-/// newest reply's ids as one opened conversation.
+/// newest reply's ids as one opened conversation. An encrypted copy also
+/// needs its key in `HYLKI_CACHE_TIMING_KEY`, from
+/// `secret-tool lookup service co.hyprlab.Hylki username cache-key`.
 #[test]
 #[ignore]
 fn thread_lookup_timing() {
     let Ok(path) = std::env::var("HYLKI_CACHE_TIMING") else {
         return;
     };
+    let protection = match std::env::var("HYLKI_CACHE_TIMING_KEY") {
+        Ok(hex) => super::at_rest::Protection::Encrypted(
+            super::at_rest::Key::from_hex(&hex).expect("a 64-digit hex key"),
+        ),
+        Err(_) => super::at_rest::Protection::Plain,
+    };
     let c = Cache {
-        conn: Connection::open(path).unwrap(),
+        conn: super::at_rest::connect(
+            std::path::Path::new(&path),
+            rusqlite::OpenFlags::default(),
+            &protection,
+        )
+        .unwrap(),
+        protection,
     };
     let accounts: Vec<u32> = c
         .conn
@@ -313,6 +327,7 @@ fn background_reader_sees_wal_updates_without_writing() {
         .unwrap();
     let cache = Cache {
         conn: Connection::open(&path).unwrap(),
+        protection: super::at_rest::Protection::Plain,
     };
     cache.conn.execute_batch(SCHEMA).unwrap();
     cache
@@ -362,6 +377,9 @@ fn the_cache_is_not_world_readable() {
     std::fs::write(dir.join("cache.db"), b"").unwrap();
     std::fs::set_permissions(dir.join("cache.db"), std::fs::Permissions::from_mode(0o644)).unwrap();
 
+    super::at_rest::unlock(super::at_rest::Protection::Encrypted(
+        super::at_rest::Key::generate().unwrap(),
+    ));
     let cache = Cache::open().expect("cache opens");
     drop(cache);
 
@@ -829,6 +847,30 @@ fn recheck_suspicious_senders_drops_only_those_verdicts_and_bodies() {
         c.load_sender_check(1, "INBOX", 2).map(|k| k.trust),
         Some(SenderTrust::Pass)
     );
+}
+
+/// v24: plain bodies that may hold a flowed soft break go, to render again
+/// with their lines joined; HTML and other plain bodies stay.
+#[test]
+fn drop_soft_broken_plain_bodies_keeps_html_and_fixed_text() {
+    use crate::worker::wrap_plain;
+    let c = Cache::in_memory().unwrap();
+    c.save_body(1, "INBOX", 1, &wrap_plain("soft \r\nbreak"));
+    c.save_body(1, "INBOX", 2, &wrap_plain("hard\r\nbreak"));
+    c.save_body(1, "INBOX", 3, "<p>html \n</p>");
+    c.save_body(
+        1,
+        "INBOX",
+        4,
+        "<div class=\"hylki-plain\">soft \nbreak</div>",
+    );
+
+    Cache::drop_soft_broken_plain_bodies(&c.conn);
+
+    assert!(c.load_body(1, "INBOX", 1).is_none());
+    assert!(c.load_body(1, "INBOX", 2).is_some());
+    assert!(c.load_body(1, "INBOX", 3).is_some());
+    assert!(c.load_body(1, "INBOX", 4).is_none());
 }
 
 #[test]

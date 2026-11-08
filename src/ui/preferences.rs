@@ -48,6 +48,7 @@ pub(crate) use messages::{PrefInit, PrefInput, PrefOutput};
 use navigation::{side_page, SIDE_PAGES};
 use pages::{
     AppearancePage, AssistantsPage, BackupPage, ComposingPage, ConversationsPage, DateTimePage,
+    FocusPage,
     GeneralPage, ListPage, PrivacyPage, ReadingPage, SidebarPage, SystemPage,
 };
 use rows::{compose_font_setup, middle_ellipsize, widen_combo_value, widen_page};
@@ -110,12 +111,6 @@ pub(crate) struct Preferences {
     /// Mirrors the expandable-conversations switch — "expand by default" only
     /// means anything while conversations can expand in the list at all.
     thread_expansion: bool,
-    /// Mirrors the list-palette switch, so the hover row under it can grey
-    /// out when there is no palette to open.
-    list_palette: bool,
-    /// Mirrors the card-actions mode: only its hidden-behind-a-toggle choice
-    /// has a ⋯, so only there can the ⋯ stand in for a menu.
-    card_actions_hover: bool,
     /// Mirrors the sender-avatars switch: with no circles drawn at all,
     /// whose face they would show doesn't arise (#189).
     avatars: bool,
@@ -239,6 +234,7 @@ impl Component for Preferences {
         datetime: DateTimePage,
         system: SystemPage,
         backup: BackupPage,
+        focus_mode: FocusPage,
     }
 
     view! {
@@ -385,6 +381,9 @@ impl Component for Preferences {
 
                             #[local_ref]
                             add_named[Some("backup")] = backup_page -> adw::PreferencesPage {},
+
+                            #[local_ref]
+                            add_named[Some("focus")] = focus_page -> adw::PreferencesPage {},
                         },
                     },
                 },
@@ -429,8 +428,6 @@ impl Component for Preferences {
             swipe_enabled: init.swipe_enabled,
             threading: init.threading,
             thread_expansion: init.thread_expansion,
-            list_palette: init.list_palette,
-            card_actions_hover: init.card_actions_hover,
             avatars: init.avatars,
             panels_stack: None,
             accounts_slot: None,
@@ -460,7 +457,7 @@ impl Component for Preferences {
         };
         let general = GeneralPage::build(&model, &sender);
         let general_page = &general.page;
-        let appearance = AppearancePage::build(&model, &sender);
+        let appearance = AppearancePage::build(&sender);
         let appearance_page = &appearance.page;
         let sidebar = SidebarPage::build(&model, &sender);
         let sidebar_page = &sidebar.page;
@@ -468,7 +465,7 @@ impl Component for Preferences {
         let list_page = &list.page;
         let conversations = ConversationsPage::build(&model, &sender);
         let conversations_page = &conversations.page;
-        let reading = ReadingPage::build(&model, &sender);
+        let reading = ReadingPage::build(&sender);
         let reading_page = &reading.page;
         let composing = ComposingPage::build(&sender);
         let composing_page = &composing.page;
@@ -482,6 +479,8 @@ impl Component for Preferences {
         let system_page = &system.page;
         let backup = BackupPage::build(&sender);
         let backup_page = &backup.page;
+        let focus_mode = FocusPage::build(&model, &sender);
+        let focus_page = &focus_mode.page;
         let widgets = view_output!();
         let ready = sender.ready.clone();
         let sender = component_sender;
@@ -544,11 +543,10 @@ impl Component for Preferences {
     /// them; the view itself has none left.
     fn pre_view() {
         general.update_view(model);
-        appearance.update_view(model);
+        focus_mode.update_view(model);
         sidebar.update_view(model);
         list.update_view(model);
         conversations.update_view(model);
-        reading.update_view(model);
         assistants.update_view(model);
         system.update_view(model);
     }
@@ -589,10 +587,6 @@ impl Component for Preferences {
             PrefInput::ToggleThreadExpansion(on) => self.on_toggle_thread_expansion(on, sender),
             PrefInput::ChangeReaderDefault(idx) => self.on_change_reader_default(idx, sender),
             PrefInput::ChangeReaderZoom(idx) => self.on_change_reader_zoom(idx, sender),
-            PrefInput::ChangeCardActionsMode(index) => {
-                self.on_change_card_actions_mode(index, sender)
-            }
-            PrefInput::ToggleListPalette(on) => self.on_toggle_list_palette(on, sender),
             PrefInput::ToggleSwipeEnabled(on) => self.on_toggle_swipe_enabled(on, sender),
             PrefInput::ChangeComposeDefaultFrom(index) => {
                 self.on_change_compose_default_from(index, sender)
@@ -664,6 +658,14 @@ impl Component for Preferences {
             } => self.on_set_accounts_panel(panel, accounts),
             PrefInput::ToggleShowAccounts(on) => self.on_toggle_show_accounts(on, sender),
             PrefInput::ToggleFocus(part, on) => self.on_toggle_focus(part, on, sender),
+            PrefInput::SetFocusLayout(index) => {
+                self.focus.layout = choices::list_layout_at(index);
+                let _ = sender.output(PrefOutput::SetFocusMode(self.focus));
+            }
+            PrefInput::SetFocusPreviewLines(lines) => {
+                self.focus.preview_lines = Some(lines);
+                let _ = sender.output(PrefOutput::SetFocusMode(self.focus));
+            }
             PrefInput::SetFocusMode(focus) => {
                 self.focus = focus;
             }

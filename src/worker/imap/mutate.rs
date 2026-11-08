@@ -155,6 +155,22 @@ pub(super) async fn store_keyword(
     Ok(true)
 }
 
+/// Whether a refused move might go through once the destination exists:
+/// the server said TRYCREATE, or gave no reason at all. A refusal that names
+/// another one (Aster Bridge's `[SERVERBUG]`, `[CANNOT]`, …) is not about the
+/// folder, and a CREATE and second try only bury that answer (#604).
+pub(super) fn worth_creating(e: &async_imap::error::Error) -> bool {
+    let async_imap::error::Error::No(why) = e else {
+        return true;
+    };
+    // async-imap words it `code: {:?}, info: {:?}`: a code imap-proto knows
+    // is in `code`, one it does not stays at the front of `info`.
+    if why.contains("code: Some(TryCreate)") || why.contains("[TRYCREATE]") {
+        return true;
+    }
+    !why.contains("code: Some(") && !why.contains("info: Some(\"[")
+}
+
 /// Move a message to `dest`, creating (and subscribing to) the destination
 /// mailbox first if it doesn't exist yet. Returns whether a folder was created,
 /// so the caller can refresh the folder list.
@@ -165,8 +181,10 @@ async fn move_or_create(
     dest: &str,
 ) -> Result<bool, async_imap::error::Error> {
     sel(session, path).await?;
-    if uid_move(session, &uid.to_string(), dest).await.is_ok() {
-        return Ok(false);
+    match uid_move(session, &uid.to_string(), dest).await {
+        Ok(()) => return Ok(false),
+        Err(e) if !worth_creating(&e) => return Err(e),
+        Err(_) => {}
     }
     // The move failed — most likely the destination mailbox doesn't exist (the
     // account has no Archive/Junk/… folder yet). Create it, subscribe, and retry;
@@ -202,8 +220,10 @@ pub(super) async fn move_messages(
     let mut ensured_dest = false;
     for chunk in uids.chunks(300) {
         let set = uid_set(chunk);
-        if uid_move(session, &set, dest).await.is_ok() {
-            continue;
+        match uid_move(session, &set, dest).await {
+            Ok(()) => continue,
+            Err(e) if !worth_creating(&e) => return Err(e),
+            Err(_) => {}
         }
         // First failure is most likely a missing destination mailbox — create,
         // subscribe, re-select the source, and retry this chunk (then the rest).
@@ -368,6 +388,28 @@ mod tests {
         assert_eq!(import_flags(true, false).as_deref(), Some("(\\Seen)"));
         assert_eq!(import_flags(false, true).as_deref(), Some("(\\Flagged)"));
         assert_eq!(import_flags(false, false), None);
+    }
+
+    /// Only a refusal that could be about a missing folder is worth a
+    /// CREATE and a second try (#604).
+    #[test]
+    fn a_named_refusal_creates_no_folder() {
+        use async_imap::error::Error;
+        let no = |s: &str| Error::No(s.to_string());
+        assert!(worth_creating(&no(
+            "code: Some(TryCreate), info: Some(\"Mailbox doesn't exist: Archive\")"
+        )));
+        assert!(worth_creating(&no(
+            "code: None, info: Some(\"Mailbox does not exist\")"
+        )));
+        assert!(worth_creating(&no("code: None, info: None")));
+        assert!(!worth_creating(&no(
+            "code: None, info: Some(\"[SERVERBUG] could not move message on the server\")"
+        )));
+        assert!(!worth_creating(&no(
+            "code: Some(ReadOnly), info: Some(\"Mailbox is read-only\")"
+        )));
+        assert!(worth_creating(&Error::Bad("code: None, info: None".into())));
     }
 
     #[test]

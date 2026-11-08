@@ -105,8 +105,8 @@ const FACE: i32 = 34;
 impl ListRow {
     pub(super) fn new() -> Self {
         let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
-        // `header`, as in a list box row: the selected row's text turns
-        // white by that class (styles.css).
+        // `header`, as in a list box row: the selected row's text takes the
+        // accent's foreground by that class (styles.css).
         // The measures of the `adw::ActionRow` the list had before.
         let header = gtk::Box::new(gtk::Orientation::Horizontal, 12);
         header.add_css_class("header");

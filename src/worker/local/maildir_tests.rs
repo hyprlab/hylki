@@ -46,6 +46,28 @@ fn cur_names(md: &Maildir, path: &str) -> Vec<String> {
     v
 }
 
+#[cfg(unix)]
+#[test]
+fn the_tree_is_its_owners_alone() {
+    use std::os::unix::fs::PermissionsExt;
+    let mode = |p: &Path| std::fs::metadata(p).unwrap().permissions().mode() & 0o777;
+    let dir = Scratch::new();
+    let root = dir.path().join("local");
+    // As an earlier version left it: open to every user.
+    std::fs::create_dir_all(root.join("cur")).unwrap();
+    std::fs::set_permissions(&root, std::fs::Permissions::from_mode(0o755)).unwrap();
+    let md = Maildir::open(root.clone()).expect("open");
+    assert_eq!(mode(&root), 0o700);
+    assert_eq!(mode(&root.join("new")), 0o700);
+    deliver_into(md.root(), "Work/Sub", RAW, "S").unwrap();
+    let cur = folder_dir(md.root(), "Work/Sub").join("cur");
+    assert_eq!(mode(&cur), 0o700);
+    for e in std::fs::read_dir(&cur).unwrap().flatten() {
+        assert_eq!(mode(&e.path()), 0o600, "{}", e.path().display());
+    }
+    assert_eq!(std::fs::read_dir(&cur).unwrap().count(), 1);
+}
+
 #[test]
 fn a_new_tree_has_an_inbox_and_a_trash() {
     let (_d, md) = tree();

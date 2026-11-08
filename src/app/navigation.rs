@@ -58,7 +58,12 @@ impl AppModel {
     /// The sidebar has an Inboxes row: the preference is on and there is
     /// more than one account to merge.
     pub(super) fn unified_inboxes_shown(&self) -> bool {
-        self.show_unified_pref && self.multi_account()
+        let wanted = if self.focus.enabled {
+            self.focus.show_inboxes
+        } else {
+            self.show_unified_pref
+        };
+        wanted && self.multi_account()
     }
 
     /// An account joined or left the unified section (#267): the unified
@@ -87,7 +92,12 @@ impl AppModel {
             }
             UnifiedView::Filtered => self.filtered_shown(),
             UnifiedView::Favorites => {
-                self.favorites_placement.shown() && !self.favorites.is_empty()
+                let shown = if self.focus.enabled {
+                    self.focus.show_favorites
+                } else {
+                    self.favorites_placement.shown()
+                };
+                shown && !self.favorites.is_empty()
             }
         };
         if listed {

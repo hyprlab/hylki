@@ -158,10 +158,6 @@ impl AppModel {
                 }
             }
 
-            AppMsg::CardContact(message) => {
-                self.show_add_contact_dialog(&message.from_name, &message.from_addr, &sender);
-            }
-
             AppMsg::RowAction {
                 action,
                 message,
@@ -307,7 +303,7 @@ impl AppModel {
             );
         }
         if self.outbox_item(m.account_id, m.id).is_some() {
-            // Nothing else in the palette applies to an unsent message,
+            // Nothing else in a row's actions applies to an unsent message,
             // and every other action would aim an IMAP command at a UID
             // that doesn't exist on any server.
             if matches!(action, RowAction::Delete) {

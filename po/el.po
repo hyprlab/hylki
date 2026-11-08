@@ -289,6 +289,14 @@ msgstr "Ανάπτυξη όλων των μηνυμάτων"
 msgid "Collapse All Messages"
 msgstr "Σύμπτυξη όλων των μηνυμάτων"
 
+#, fuzzy
+msgid "Back to My Fonts and Colors"
+msgstr "Επιστροφή στις γραμματοσειρές και τα χρώματά μου"
+
+#, fuzzy
+msgid "Show Sender's Fonts and Colors"
+msgstr "Εμφάνιση των γραμματοσειρών και των χρωμάτων του αποστολέα"
+
 msgid "View Source"
 msgstr "Προβολή πηγαίου κώδικα"
 
@@ -1885,6 +1893,11 @@ msgstr "Το αρχείο είναι κενό."
 msgid "The file has no rows below its first."
 msgstr "Το αρχείο δεν περιέχει γραμμές μετά την πρώτη."
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "Το GnuPG (gpg) δεν είναι εγκατεστημένο, επομένως αυτό το μήνυμα δεν μπορεί "
@@ -2148,6 +2161,12 @@ msgstr "Κρυπτογραφημένο με OpenPGP· δεν ήταν δυνατ
 msgid "Encrypted with OpenPGP"
 msgstr "Κρυπτογραφημένο με OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer}· η υπογραφή έχει λήξει"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Κρυπτογραφημένο και υπογεγραμμένο από {signer}"
 
@@ -2171,6 +2190,9 @@ msgstr "Κρυπτογραφημένο και υπογεγραμμένο από 
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Υπογεγραμμένο με OpenPGP· δεν ήταν δυνατός ο έλεγχος της υπογραφής"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Υπογεγραμμένο από {signer}"
@@ -2199,6 +2221,10 @@ msgstr "Κρυπτογραφημένο"
 
 msgid "Signature not checked"
 msgstr "Η υπογραφή δεν ελέγχθηκε"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Μετακίνηση σε άλλον κατάλογο διευθύνσεων"
 
 msgid "Encrypted and signed"
 msgstr "Κρυπτογραφημένο και υπογεγραμμένο"
@@ -3077,6 +3103,19 @@ msgstr "Αποθήκευση κάθε συνημμένου σε φάκελο"
 msgid "Save Attachment"
 msgstr "Αποθήκευση συνημμένου"
 
+#, fuzzy
+msgid "Open “{name}”?"
+msgstr "Άδειασμα του «{name}»;"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+#, fuzzy
+msgid "Open Anyway"
+msgstr "Αποστολή τώρα"
+
 msgid "The file could not be opened"
 msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
 
@@ -3215,6 +3254,122 @@ msgstr "Επόμενο"
 
 msgid "Open in the default app"
 msgstr "Άνοιγμα στην προεπιλεγμένη εφαρμογή"
+
+#, fuzzy
+msgid "Waiting for the Keyring"
+msgstr "Αναμονή για αποστολή"
+
+msgid ""
+"Mail stored on this computer is encrypted with a key stored in the keyring. "
+"Unlock the keyring if it asks."
+msgstr ""
+
+msgid ""
+"This happens once and can take a few minutes. If you quit, your mail is left "
+"as it was."
+msgstr ""
+
+#, fuzzy
+msgid "Checking the copy"
+msgstr "Έλεγχος σύνδεσης…"
+
+msgid "Encrypting Stored Mail"
+msgstr ""
+
+#, fuzzy
+msgid "Decrypting Stored Mail"
+msgstr "Έλεγχος για νέα αλληλογραφία"
+
+#, fuzzy
+msgid "Store Unencrypted…"
+msgstr "Δεν έχει αποκρυπτογραφηθεί"
+
+msgid "Reset Cache…"
+msgstr ""
+
+msgid "Try Again"
+msgstr "Δοκιμή ξανά"
+
+#, fuzzy
+msgid "Keyring Unavailable"
+msgstr "Δεν υπάρχει διαθέσιμος φάκελος {v1}"
+
+msgid ""
+"Mail kept on this computer is encrypted with a key stored in the keyring, "
+"and the keyring is locked or did not answer. Unlock it, then try again."
+msgstr ""
+
+msgid "Mail Cache Key Missing"
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is encrypted, and the keyring no longer holds its "
+"key. If the keyring was replaced, restore the old one and try again. "
+"Otherwise reset the cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Cannot Be Unlocked"
+msgstr ""
+
+msgid ""
+"The key in the keyring does not open the mail kept on this computer. If the "
+"keyring was replaced, restore the old one and try again. Otherwise reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Not Converted"
+msgstr ""
+
+msgid ""
+"The mail kept on this computer could not be converted, and was left as it "
+"was. Check that the disk has free space, then try again."
+msgstr ""
+
+#, fuzzy
+msgid "Mail Cache Unreadable"
+msgstr "Σήμανση ως μη αναγνωσμένο"
+
+msgid ""
+"The mail kept on this computer could not be read. Try again, or reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid ""
+"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"unsent mail in the Outbox."
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Mail kept on this computer is deleted and downloaded again from the server."
+msgstr "Η τοπική αλληλογραφία δεν αποστέλλεται και δεν διαθέτει πρόχειρα"
+
+msgid "Reset the Mail Cache?"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid ""
+"Anyone who can read your files, or a backup of them, can then read the mail "
+"kept on this computer, including mail that is end-to-end encrypted on the "
+"server."
+msgstr ""
+
+msgid "Encryption can be turned back on in Settings → Privacy."
+msgstr ""
+
+msgid ""
+"The encrypted cache cannot be opened without the keyring, so it is deleted "
+"and your mail is downloaded again."
+msgstr ""
+
+msgid "Store Mail Unencrypted?"
+msgstr ""
+
+#, fuzzy
+msgid "Store Unencrypted"
+msgstr "Δεν έχει αποκρυπτογραφηθεί"
 
 msgid "New Event"
 msgstr "Νέο συμβάν"
@@ -3855,6 +4010,16 @@ msgid ""
 msgstr ""
 "Δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}. Ζητήστε το δημόσιο "
 "κλειδί ή ανακτήστε το στις Ρυθμίσεις, OpenPGP."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Αποστολή αργότερα"
@@ -5046,21 +5211,6 @@ msgstr "Εμφάνιση συζήτησης"
 msgid "Drag to resize, double-click for the usual width"
 msgstr "Σύρετε για αλλαγή μεγέθους, κάντε διπλό κλικ για το συνηθισμένο πλάτος"
 
-msgid "Mark as read"
-msgstr "Σήμανση ως αναγνωσμένο"
-
-msgid "Not spam"
-msgstr "Μη ανεπιθύμητο"
-
-msgid "Add sender to Contacts"
-msgstr "Προσθήκη αποστολέα στις Επαφές"
-
-msgid "Mark as unread"
-msgstr "Σήμανση ως μη αναγνωσμένο"
-
-msgid "Remove star"
-msgstr "Αφαίρεση αστεριού"
-
 msgid "High importance"
 msgstr "Υψηλή σημασία"
 
@@ -5197,48 +5347,6 @@ msgstr "Απόκρυψη παραληπτών"
 
 msgid "Show recipients"
 msgstr "Εμφάνιση παραληπτών"
-
-msgid "Mark as read or unread"
-msgstr "Σήμανση ως αναγνωσμένο ή μη αναγνωσμένο"
-
-msgid "Star this message"
-msgstr "Προσθήκη αστεριού σε αυτό το μήνυμα"
-
-msgid "View source"
-msgstr "Προβολή πηγαίου κώδικα"
-
-msgid "Translate this message"
-msgstr "Μετάφραση αυτού του μηνύματος"
-
-msgid "Reply to this message"
-msgstr "Απάντηση σε αυτό το μήνυμα"
-
-msgid "Reply to everyone on this message"
-msgstr "Απάντηση σε όλους σε αυτό το μήνυμα"
-
-msgid "Forward this message"
-msgstr "Προώθηση αυτού του μηνύματος"
-
-msgid "Move this message to a folder"
-msgstr "Μετακίνηση αυτού του μηνύματος σε φάκελο"
-
-msgid "Archive this message"
-msgstr "Αρχειοθέτηση αυτού του μηνύματος"
-
-msgid "Delete this message"
-msgstr "Διαγραφή αυτού του μηνύματος"
-
-msgid "Back to my fonts and colors"
-msgstr "Επιστροφή στις γραμματοσειρές και τα χρώματά μου"
-
-msgid "Show the sender's fonts and colors"
-msgstr "Εμφάνιση των γραμματοσειρών και των χρωμάτων του αποστολέα"
-
-msgid "Show remote content"
-msgstr "Εμφάνιση απομακρυσμένου περιεχομένου"
-
-msgid "Block remote content"
-msgstr "Αποκλεισμός απομακρυσμένου περιεχομένου"
 
 msgid "Click to open this message"
 msgstr "Κάντε κλικ για να ανοίξετε αυτό το μήνυμα"
@@ -5476,9 +5584,6 @@ msgstr "Μετάφραση…"
 msgid "Could not translate: {why}"
 msgstr "Δεν ήταν δυνατή η μετάφραση: {why}"
 
-msgid "Try Again"
-msgstr "Δοκιμή ξανά"
-
 msgid "Translated from {language} by {service}."
 msgstr "Μεταφράστηκε από τα {language} μέσω {service}."
 
@@ -5549,6 +5654,10 @@ msgstr ""
 
 msgid "Status bar ({n})"
 msgstr "Γραμμή κατάστασης ({n})"
+
+#, fuzzy
+msgid "Ask Again"
+msgstr "Δοκιμή ξανά"
 
 msgid "All keys"
 msgstr "Όλα τα κλειδιά"
@@ -5636,6 +5745,12 @@ msgstr "Ανάκτηση κατά διεύθυνση…"
 
 msgid "Search by name, address or key ID"
 msgstr "Αναζήτηση κατά όνομα, διεύθυνση ή αναγνωριστικό κλειδιού"
+
+msgid "Unchecked keys you encrypt to"
+msgstr ""
+
+msgid "Send Anyway stopped the warning for these keys."
+msgstr ""
 
 msgid "No keys from other people yet."
 msgstr "Δεν υπάρχουν ακόμη κλειδιά άλλων ατόμων."
@@ -5984,15 +6099,6 @@ msgstr "Προβολή ανάγνωσης ενεργή"
 msgid "Reader View off"
 msgstr "Προβολή ανάγνωσης ανενεργή"
 
-msgid "Hidden behind a toggle"
-msgstr "Κρυμμένη πίσω από διακόπτη"
-
-msgid "Shown while hovering"
-msgstr "Εμφάνιση κατά την αιώρηση"
-
-msgid "Always visible"
-msgstr "Πάντα ορατή"
-
 msgid "Ask each time"
 msgstr "Ερώτηση κάθε φορά"
 
@@ -6220,6 +6326,9 @@ msgstr "Προωθημένο μήνυμα"
 msgid "Each opens in a window for you to check and send."
 msgstr ""
 
+msgid "Mark as read or unread"
+msgstr "Σήμανση ως αναγνωσμένο ή μη αναγνωσμένο"
+
 #, fuzzy
 msgid "Add and remove stars"
 msgstr "Αφαίρεση αστεριού"
@@ -6307,12 +6416,10 @@ msgid ""
 "and Trash are hidden again."
 msgstr ""
 
-msgid "Reset"
-msgstr ""
-
+#, fuzzy
 msgid ""
-"Accounts, preferences, filters, tags and layout, in one file. Passwords and "
-"OpenPGP keys are not included."
+"Accounts, preferences, filters, tags and layout, in one file. Passwords, "
+"OAuth client secrets and OpenPGP keys are not included."
 msgstr ""
 "Λογαριασμοί, προτιμήσεις, φίλτρα, ετικέτες και διάταξη σε ένα αρχείο. Δεν "
 "περιλαμβάνονται κωδικοί πρόσβασης και κλειδιά OpenPGP."
@@ -6388,6 +6495,101 @@ msgstr "Μορφή ημερομηνίας"
 msgid "Clock"
 msgstr "Ρολόι"
 
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+
+msgid "Start in Focus Mode"
+msgstr "Έναρξη σε Λειτουργία συγκέντρωσης"
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "Σύμπτυξη της πλευρικής στήλης σε λωρίδα εικονιδίων"
+
+msgid "Unread counts"
+msgstr "Πλήθος μη αναγνωσμένων"
+
+msgid "Unread dots instead of counts"
+msgstr "Κουκκίδες αντί για πλήθος μη αναγνωσμένων"
+
+msgid "Expand the sidebar on hover"
+msgstr "Ανάπτυξη πλευρικής στήλης κατά την αιώρηση"
+
+msgid "Hide the accounts in the sidebar"
+msgstr "Απόκρυψη των λογαριασμών στην πλευρική στήλη"
+
+msgid "Only the unified section stays."
+msgstr "Παραμένει μόνο η ενοποιημένη ενότητα."
+
+#, fuzzy
+msgid "Fold up the accounts"
+msgstr "Πάνω από τους λογαριασμούς"
+
+msgid "Collapses expanded accounts into their avatars"
+msgstr ""
+
+msgid "Fold accounts with one click"
+msgstr "Σύμπτυξη λογαριασμών με ένα κλικ"
+
+msgid "Fold up the unified rows"
+msgstr "Σύμπτυξη των ενοποιημένων γραμμών"
+
+msgid "Unified"
+msgstr "Ενοποιημένα"
+
+msgid "Inboxes"
+msgstr "Εισερχόμενα"
+
+msgid "Snoozed"
+msgstr "Σε αναβολή"
+
+msgid "Sections"
+msgstr "Ενότητες"
+
+msgid "Favorites"
+msgstr "Αγαπημένα"
+
+msgid "Show column headings"
+msgstr "Εμφάνιση επικεφαλίδων στηλών"
+
+msgid "Preview lines"
+msgstr "Γραμμές προεπισκόπησης"
+
+msgid "Fold the message list's header"
+msgstr "Σύμπτυξη της κεφαλίδας της λίστας μηνυμάτων"
+
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr "Όλα εκτός από το κουμπί της πλευρικής στήλης μεταφέρονται στο ⋯."
+
+msgid "Hide sender avatars"
+msgstr "Απόκρυψη των avatar των αποστολέων"
+
+msgid "Hide the subject"
+msgstr "Απόκρυψη του θέματος"
+
+msgid "Tag chips hide with it."
+msgstr "Οι ετικέτες σε μορφή μικρών πλαισίων κρύβονται μαζί του."
+
+msgid "Tags and labels under the text"
+msgstr "Ετικέτες κάτω από το κείμενο"
+
+#, fuzzy
+msgid "Hide stars"
+msgstr "Απόκρυψη των avatar των αποστολέων"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Απόκρυψη συνημμένων"
+
+msgid "Fold the reading pane's toolbar"
+msgstr "Σύμπτυξη της γραμμής εργαλείων του παραθύρου ανάγνωσης"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "Κάθε κουμπί μεταφέρεται στο μενού ⋯ του."
+
+msgid "Open messages in Reader View."
+msgstr "Άνοιγμα μηνυμάτων στην Προβολή ανάγνωσης."
+
 msgid "Instant new mail (push)"
 msgstr "Άμεσα νέα μηνύματα (push)"
 
@@ -6455,17 +6657,11 @@ msgstr "Η εικόνα ή το emoji του λογαριασμού, όπως σ
 msgid "Automatic uses single lines in wide windows."
 msgstr "Η αυτόματη επιλογή χρησιμοποιεί μονές γραμμές σε πλατιά παράθυρα."
 
-msgid "Preview lines"
-msgstr "Γραμμές προεπισκόπησης"
-
 msgid "Off also stops downloading previews."
 msgstr "Ανενεργό: σταματά επίσης τη λήψη προεπισκοπήσεων."
 
 msgid "Group by date"
 msgstr "Ομαδοποίηση κατά ημερομηνία"
-
-msgid "Tags and labels under the text"
-msgstr "Ετικέτες κάτω από το κείμενο"
 
 msgid "Gives the subject its full width."
 msgstr "Δίνει στο θέμα όλο το διαθέσιμο πλάτος."
@@ -6481,15 +6677,6 @@ msgstr "Χρωματισμός μηνυμάτων με ετικέτα"
 
 msgid "In the color of its first tag."
 msgstr "Στο χρώμα της πρώτης ετικέτας του."
-
-msgid "Actions palette in the message list"
-msgstr "Παλέτα ενεργειών στη λίστα μηνυμάτων"
-
-msgid "The ⋯ row under each message."
-msgstr "Η γραμμή ⋯ κάτω από κάθε μήνυμα."
-
-msgid "Open the actions palette on hover"
-msgstr "Άνοιγμα της παλέτας ενεργειών κατά την αιώρηση"
 
 msgid "Swipe actions"
 msgstr "Ενέργειες σάρωσης"
@@ -6511,12 +6698,6 @@ msgstr ""
 "Αυξήστε την τιμή αν οι κινήσεις σάρωσης δεν φτάνουν μέχρι το τέλος. Οι "
 "κινήσεις με το ποντίκι δεν επηρεάζονται."
 
-msgid "Actions palette timeout"
-msgstr "Χρόνος λήξης παλέτας ενεργειών"
-
-msgid "Seconds it stays open after the pointer leaves."
-msgstr "Δευτερόλεπτα που παραμένει ανοιχτό αφού απομακρυνθεί ο δείκτης."
-
 msgid "Columns"
 msgstr "Στήλες"
 
@@ -6527,9 +6708,6 @@ msgstr ""
 "Για τη διάταξη μίας γραμμής. Σύρετε τις στήλες για αλλαγή σειράς ή έξω από "
 "τη λίστα για αφαίρεση. Η ημερομηνία λήξης εμφανίζεται μόνο για αλληλογραφία "
 "Microsoft 365."
-
-msgid "Show column headings"
-msgstr "Εμφάνιση επικεφαλίδων στηλών"
 
 msgid "Fit columns to the list"
 msgstr "Προσαρμογή στηλών στο πλάτος της λίστας"
@@ -6546,16 +6724,12 @@ msgstr "Το Hylki δεν συλλέγει τηλεμετρία ούτε στέ�
 msgid "Always load remote content"
 msgstr "Να φορτώνεται πάντα το απομακρυσμένο περιεχόμενο"
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr ""
-"Το απομακρυσμένο περιεχόμενο μπορεί να ενημερώσει τον αποστολέα για το πότε "
-"και πού διαβάσατε το μήνυμα."
-
 msgid "Pre-load remote content for the next messages"
 msgstr "Προφόρτωση απομακρυσμένου περιεχομένου για τα επόμενα μηνύματα"
 
-msgid "Their senders can tell they were opened."
-msgstr "Οι αποστολείς τους μπορούν να καταλάβουν ότι ανοίχτηκαν."
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Αφαίρεση αυτού του ψευδωνύμου"
 
 msgid "Warn when remote content is blocked"
 msgstr "Προειδοποίηση όταν αποκλείεται απομακρυσμένο περιεχόμενο"
@@ -6568,13 +6742,6 @@ msgstr ""
 msgid "Warn when the addressing doesn't match"
 msgstr "Προειδοποίηση όταν οι διευθύνσεις δεν ταιριάζουν"
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-"Το σήμα δίπλα στον αποστολέα παραμένει. Αν υπάρχει πιθανότητα "
-"πλαστογράφησης, το πλαίσιο προειδοποίησης εμφανίζεται πάντα."
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Χρήση Gravatar όταν μια επαφή δεν έχει φωτογραφία"
 
@@ -6584,17 +6751,31 @@ msgstr "Στέλνει στο Gravatar ένα hash της διεύθυνσης �
 msgid "Show sender logos"
 msgstr "Εμφάνιση λογοτύπων αποστολέων"
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-"Τα περισσότερα λαμβάνονται από τον τομέα του αποστολέα, ο οποίος μαθαίνει τη "
-"διεύθυνση IP σας."
-
 msgid "Send read receipts"
 msgstr "Αποστολή επιβεβαιώσεων ανάγνωσης"
 
-msgid "A receipt tells the sender when you opened the message."
-msgstr "Η επιβεβαίωση ενημερώνει τον αποστολέα πότε ανοίξατε το μήνυμα."
+#. Not "On This Computer": that names an account kind.
+#, fuzzy
+msgid "Stored Mail"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Encrypt stored mail"
+msgstr "Κρυπτογραφημένο μήνυμα"
+
+#, fuzzy
+msgid "Encrypt Stored Mail?"
+msgstr "Κρυπτογραφημένο"
+
+msgid ""
+"Mail stored on this computer will be encrypted at the next start which can "
+"take a few minutes. Earlier versions of the app cannot open it. Turn this "
+"setting off and restart before going back to an older version."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt"
+msgstr "Κρυπτογραφημένο"
 
 msgid "Open at startup"
 msgstr "Άνοιγμα κατά την εκκίνηση"
@@ -6618,9 +6799,6 @@ msgstr "Η μεταφορά φακέλου ενεργοποιεί την προ�
 msgid "Chevron placement"
 msgstr "Τοποθέτηση βέλους"
 
-msgid "Fold accounts with one click"
-msgstr "Σύμπτυξη λογαριασμών με ένα κλικ"
-
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr ""
 "Όταν είναι απενεργοποιημένο, η σύμπτυξη γίνεται μόνο με το βέλος ή με διπλό "
@@ -6631,9 +6809,6 @@ msgstr "Εμφάνιση προγράμματος περιήγησης συνη�
 
 msgid "Browse every account's attachments in one place."
 msgstr "Περιήγηση στα συνημμένα όλων των λογαριασμών σε ένα μέρος."
-
-msgid "Expand the sidebar on hover"
-msgstr "Ανάπτυξη πλευρικής στήλης κατά την αιώρηση"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -6655,29 +6830,14 @@ msgstr "Επισήμανση μόνο νέας μη αναγνωσμένης α�
 msgid "A count turns grey once you have looked at the folder."
 msgstr "Ο αριθμός γίνεται γκρίζος μόλις ανοίξετε τον φάκελο."
 
-msgid "Unified"
-msgstr "Ενοποιημένα"
-
 msgid "Shown only with more than one account."
 msgstr "Εμφανίζεται μόνο όταν υπάρχουν περισσότεροι από ένας λογαριασμοί."
-
-msgid "Inboxes"
-msgstr "Εισερχόμενα"
-
-msgid "Snoozed"
-msgstr "Σε αναβολή"
 
 msgid "Shown only while mail is snoozed."
 msgstr "Εμφανίζεται μόνο όσο η αλληλογραφία βρίσκεται σε αναβολή."
 
-msgid "Unread counts"
-msgstr "Πλήθος μη αναγνωσμένων"
-
 msgid "Shown on the unified rows while they are folded up."
 msgstr "Εμφανίζεται στις ενοποιημένες γραμμές όταν είναι συμπτυγμένες."
-
-msgid "Sections"
-msgstr "Ενότητες"
 
 msgid "Section style"
 msgstr "Στυλ ενότητας"
@@ -6693,9 +6853,6 @@ msgstr "Θέση αγαπημένων"
 
 msgid "Icon rail"
 msgstr "Γραμμή εικονιδίων"
-
-msgid "Unread dots instead of counts"
-msgstr "Κουκκίδες αντί για πλήθος μη αναγνωσμένων"
 
 msgid "The count stays in the tooltip."
 msgstr "Ο αριθμός παραμένει στην επεξήγηση εργαλείου."
@@ -6932,6 +7089,9 @@ msgstr "Εισαγωγή"
 msgid "Show or hide folders"
 msgstr "Εμφάνιση ή απόκρυψη φακέλων"
 
+msgid "Long-press to expand or collapse"
+msgstr "Παρατεταμένο πάτημα για ανάπτυξη ή σύμπτυξη"
+
 msgid "Show or hide labels"
 msgstr "Εμφάνιση ή απόκρυψη ετικετών"
 
@@ -7016,9 +7176,6 @@ msgstr "Δεν υπάρχουν ακόμη λογαριασμοί"
 msgid "New Message from Template…"
 msgstr "Νέο μήνυμα από πρότυπο…"
 
-msgid "Favorites"
-msgstr "Αγαπημένα"
-
 msgid "Show each inbox"
 msgstr "Εμφάνιση κάθε φακέλου εισερχομένων"
 
@@ -7036,9 +7193,6 @@ msgstr "Εμφάνιση κάθε έξυπνου φακέλου"
 
 msgid "Show each address book"
 msgstr "Εμφάνιση κάθε καταλόγου διευθύνσεων"
-
-msgid "Long-press to expand or collapse"
-msgstr "Παρατεταμένο πάτημα για ανάπτυξη ή σύμπτυξη"
 
 msgid "Show or hide tags"
 msgstr "Εμφάνιση ή απόκρυψη ετικετών"
@@ -8069,61 +8223,6 @@ msgstr ""
 msgid "Always fold the right group into ⋯"
 msgstr "Πάντα σύμπτυξη της δεξιάς ομάδας στο ⋯"
 
-msgid ""
-"The parts switched on below hide while Focus Mode is on. Activated by "
-"Ctrl+Shift+F or the main menu."
-msgstr ""
-"Τα παρακάτω ενεργοποιημένα στοιχεία κρύβονται όταν είναι ενεργή η Λειτουργία "
-"εστίασης. Ενεργοποιείται με Ctrl+Shift+F ή από το κύριο μενού."
-
-msgid "Start in Focus Mode"
-msgstr "Έναρξη σε Λειτουργία συγκέντρωσης"
-
-msgid "Fold the reading pane's toolbar"
-msgstr "Σύμπτυξη της γραμμής εργαλείων του παραθύρου ανάγνωσης"
-
-msgid "Every button goes into its ⋯ menu."
-msgstr "Κάθε κουμπί μεταφέρεται στο μενού ⋯ του."
-
-msgid "Fold the message list's header"
-msgstr "Σύμπτυξη της κεφαλίδας της λίστας μηνυμάτων"
-
-msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr "Όλα εκτός από το κουμπί της πλευρικής στήλης μεταφέρονται στο ⋯."
-
-msgid "Hide the accounts in the sidebar"
-msgstr "Απόκρυψη των λογαριασμών στην πλευρική στήλη"
-
-msgid "Only the unified section stays."
-msgstr "Παραμένει μόνο η ενοποιημένη ενότητα."
-
-msgid "Fold up the unified rows"
-msgstr "Σύμπτυξη των ενοποιημένων γραμμών"
-
-msgid "Hide sender avatars"
-msgstr "Απόκρυψη των avatar των αποστολέων"
-
-msgid "Hide the preview text"
-msgstr "Απόκρυψη του κειμένου προεπισκόπησης"
-
-msgid "One line of preview text"
-msgstr "Μία γραμμή κειμένου προεπισκόπησης"
-
-msgid "Hide the subject"
-msgstr "Απόκρυψη του θέματος"
-
-msgid "Tag chips hide with it."
-msgstr "Οι ετικέτες σε μορφή μικρών πλαισίων κρύβονται μαζί του."
-
-msgid "Fold the sidebar to the icon rail"
-msgstr "Σύμπτυξη της πλευρικής στήλης σε λωρίδα εικονιδίων"
-
-msgid "Hovering it slides the full sidebar out."
-msgstr "Με το πέρασμα του δείκτη, εμφανίζεται ολόκληρη η πλευρική στήλη."
-
-msgid "Open messages in Reader View."
-msgstr "Άνοιγμα μηνυμάτων στην Προβολή ανάγνωσης."
-
 msgid "Compose in the main window"
 msgstr "Σύνταξη στο κύριο παράθυρο"
 
@@ -8273,6 +8372,9 @@ msgstr "Λέξεις που προστέθηκαν"
 msgid "Changes apply after a restart."
 msgstr "Οι αλλαγές εφαρμόζονται μετά από επανεκκίνηση."
 
+msgid "Mark as read"
+msgstr "Σήμανση ως αναγνωσμένο"
+
 msgid "Conversations mark each message as it comes into view."
 msgstr "Οι συζητήσεις σημειώνουν κάθε μήνυμα ως αναγνωσμένο καθώς εμφανίζεται."
 
@@ -8325,18 +8427,6 @@ msgstr "Γραμματοσειρά σταθερού πλάτους"
 
 msgid "The system's monospace font unless another is chosen."
 msgstr "Η γραμματοσειρά monospace του συστήματος, εκτός αν επιλεγεί άλλη."
-
-msgid "Message card actions palette"
-msgstr "Παλέτα ενεργειών κάρτας μηνύματος"
-
-msgid "Message card actions palette timeout"
-msgstr "Χρόνος λήξης παλέτας ενεργειών κάρτας μηνύματος"
-
-msgid "Message card actions palette as a menu"
-msgstr "Παλέτα ενεργειών κάρτας μηνύματος ως μενού"
-
-msgid "The ⋯ opens the right-click menu instead."
-msgstr "Το ⋯ ανοίγει αντί γι’ αυτό το μενού δεξιού κλικ."
 
 msgid "Single messages as cards"
 msgstr "Μεμονωμένα μηνύματα ως κάρτες"
@@ -8557,6 +8647,18 @@ msgstr "Επικόλληση με μορφοποίηση"
 msgid "Paste as Plain Text"
 msgstr "Επικόλληση ως απλό κείμενο"
 
+#, fuzzy
+msgid "Cut"
+msgstr "Χώρα"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Διαγραφή όλων"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Εισαγωγή emoji"
+
 msgid "Email Client"
 msgstr "Πρόγραμμα-πελάτης email"
 
@@ -8693,6 +8795,127 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Remote content can tell a sender when and where you read."
+#~ msgstr ""
+#~ "Το απομακρυσμένο περιεχόμενο μπορεί να ενημερώσει τον αποστολέα για το "
+#~ "πότε και πού διαβάσατε το μήνυμα."
+
+#~ msgid "Their senders can tell they were opened."
+#~ msgstr "Οι αποστολείς τους μπορούν να καταλάβουν ότι ανοίχτηκαν."
+
+#~ msgid ""
+#~ "The badge beside the sender stays. A possible forgery always shows the "
+#~ "banner."
+#~ msgstr ""
+#~ "Το σήμα δίπλα στον αποστολέα παραμένει. Αν υπάρχει πιθανότητα "
+#~ "πλαστογράφησης, το πλαίσιο προειδοποίησης εμφανίζεται πάντα."
+
+#~ msgid ""
+#~ "Most are fetched from the sender's domain, which learns your IP address."
+#~ msgstr ""
+#~ "Τα περισσότερα λαμβάνονται από τον τομέα του αποστολέα, ο οποίος μαθαίνει "
+#~ "τη διεύθυνση IP σας."
+
+#~ msgid "A receipt tells the sender when you opened the message."
+#~ msgstr "Η επιβεβαίωση ενημερώνει τον αποστολέα πότε ανοίξατε το μήνυμα."
+
+#~ msgid ""
+#~ "The parts switched on below hide while Focus Mode is on. Activated by "
+#~ "Ctrl+Shift+F or the main menu."
+#~ msgstr ""
+#~ "Τα παρακάτω ενεργοποιημένα στοιχεία κρύβονται όταν είναι ενεργή η "
+#~ "Λειτουργία εστίασης. Ενεργοποιείται με Ctrl+Shift+F ή από το κύριο μενού."
+
+#~ msgid "Hide the preview text"
+#~ msgstr "Απόκρυψη του κειμένου προεπισκόπησης"
+
+#~ msgid "One line of preview text"
+#~ msgstr "Μία γραμμή κειμένου προεπισκόπησης"
+
+#~ msgid "Hovering it slides the full sidebar out."
+#~ msgstr "Με το πέρασμα του δείκτη, εμφανίζεται ολόκληρη η πλευρική στήλη."
+
+#~ msgid "Not spam"
+#~ msgstr "Μη ανεπιθύμητο"
+
+#~ msgid "Add sender to Contacts"
+#~ msgstr "Προσθήκη αποστολέα στις Επαφές"
+
+#~ msgid "Mark as unread"
+#~ msgstr "Σήμανση ως μη αναγνωσμένο"
+
+#~ msgid "Remove star"
+#~ msgstr "Αφαίρεση αστεριού"
+
+#~ msgid "Star this message"
+#~ msgstr "Προσθήκη αστεριού σε αυτό το μήνυμα"
+
+#~ msgid "View source"
+#~ msgstr "Προβολή πηγαίου κώδικα"
+
+#~ msgid "Translate this message"
+#~ msgstr "Μετάφραση αυτού του μηνύματος"
+
+#~ msgid "Reply to this message"
+#~ msgstr "Απάντηση σε αυτό το μήνυμα"
+
+#~ msgid "Reply to everyone on this message"
+#~ msgstr "Απάντηση σε όλους σε αυτό το μήνυμα"
+
+#~ msgid "Forward this message"
+#~ msgstr "Προώθηση αυτού του μηνύματος"
+
+#~ msgid "Move this message to a folder"
+#~ msgstr "Μετακίνηση αυτού του μηνύματος σε φάκελο"
+
+#~ msgid "Archive this message"
+#~ msgstr "Αρχειοθέτηση αυτού του μηνύματος"
+
+#~ msgid "Delete this message"
+#~ msgstr "Διαγραφή αυτού του μηνύματος"
+
+#~ msgid "Show remote content"
+#~ msgstr "Εμφάνιση απομακρυσμένου περιεχομένου"
+
+#~ msgid "Block remote content"
+#~ msgstr "Αποκλεισμός απομακρυσμένου περιεχομένου"
+
+#~ msgid "Hidden behind a toggle"
+#~ msgstr "Κρυμμένη πίσω από διακόπτη"
+
+#~ msgid "Shown while hovering"
+#~ msgstr "Εμφάνιση κατά την αιώρηση"
+
+#~ msgid "Always visible"
+#~ msgstr "Πάντα ορατή"
+
+#~ msgid "Actions palette in the message list"
+#~ msgstr "Παλέτα ενεργειών στη λίστα μηνυμάτων"
+
+#~ msgid "The ⋯ row under each message."
+#~ msgstr "Η γραμμή ⋯ κάτω από κάθε μήνυμα."
+
+#~ msgid "Open the actions palette on hover"
+#~ msgstr "Άνοιγμα της παλέτας ενεργειών κατά την αιώρηση"
+
+#~ msgid "Actions palette timeout"
+#~ msgstr "Χρόνος λήξης παλέτας ενεργειών"
+
+#~ msgid "Seconds it stays open after the pointer leaves."
+#~ msgstr "Δευτερόλεπτα που παραμένει ανοιχτό αφού απομακρυνθεί ο δείκτης."
+
+#~ msgid "Message card actions palette"
+#~ msgstr "Παλέτα ενεργειών κάρτας μηνύματος"
+
+#~ msgid "Message card actions palette timeout"
+#~ msgstr "Χρόνος λήξης παλέτας ενεργειών κάρτας μηνύματος"
+
+#~ msgid "Message card actions palette as a menu"
+#~ msgstr "Παλέτα ενεργειών κάρτας μηνύματος ως μενού"
+
+#~ msgid "The ⋯ opens the right-click menu instead."
+#~ msgstr "Το ⋯ ανοίγει αντί γι’ αυτό το μενού δεξιού κλικ."
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Δεν ήταν δυνατή η μετονομασία φακέλου: άγνωστος φάκελος"

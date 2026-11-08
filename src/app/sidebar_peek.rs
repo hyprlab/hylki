@@ -4,7 +4,6 @@
 use adw::prelude::*;
 use relm4::prelude::*;
 
-use crate::config;
 use crate::ui::sidebar::SidebarInput;
 
 use super::model::AppModel;
@@ -140,27 +139,34 @@ impl AppModel {
     }
 
     /// Whether the icon rail marks unread folders with a dot instead of a
-    /// count: the preference, or Focus Mode's rail part while it holds.
+    /// count: Focus Mode's switch while it is on, else the setting.
     pub(super) fn rail_dots_now(&self) -> bool {
-        self.rail_dots || self.focus.active(config::FocusPart::RailSidebar)
+        if self.focus.enabled {
+            self.focus.rail_dots
+        } else {
+            self.rail_dots
+        }
     }
 
     /// Whether the rail belongs on screen: the window is too narrow for the
-    /// full sidebar, Focus Mode has folded it, or the user collapsed it
-    /// themselves. Only the last of those is ever saved.
-    fn rail_wanted(&self) -> bool {
+    /// full sidebar, or Focus Mode's switch says so while it is on, or else
+    /// the user collapsed it themselves. Only the last of those is ever saved.
+    pub(super) fn rail_wanted(&self) -> bool {
         self.auto_rail
-            || self.focus.active(config::FocusPart::RailSidebar)
-            || self.sidebar_collapsed
+            || if self.focus.enabled {
+                self.focus.rail_sidebar
+            } else {
+                self.sidebar_collapsed
+            }
     }
 
-    /// Whether the sidebar's layout is Focus Mode's for the while: the rail
-    /// part is in force, so collapsing or expanding it is a look for as long
-    /// as the mode lasts and never the layout the user keeps. Nothing is
-    /// saved while this holds, and ending the mode gives back exactly the
-    /// sidebar it took over — whatever was done to it meanwhile.
+    /// Whether the sidebar's layout is Focus Mode's for the while: collapsing
+    /// or expanding it is a look for as long as the mode lasts and never the
+    /// layout the user keeps. Nothing is saved while this holds, and ending
+    /// the mode gives back exactly the sidebar it took over — whatever was
+    /// done to it meanwhile.
     fn sidebar_layout_borrowed(&self) -> bool {
-        self.focus.active(config::FocusPart::RailSidebar)
+        self.focus.enabled
     }
 
     /// Put the rail up or take it down to match [`Self::rail_wanted`],
@@ -259,7 +265,12 @@ impl AppModel {
                 // The same peek the expand button opens, dismissed the same
                 // ways (navigation, or a click outside the panel).
                 let rail_up = self.rail_wanted();
-                if self.sidebar_hover_expand && rail_up && !self.sidebar_peek {
+                let hover_expand = if self.focus.enabled {
+                    self.focus.hover_expand
+                } else {
+                    self.sidebar_hover_expand
+                };
+                if hover_expand && rail_up && !self.sidebar_peek {
                     self.rail_active = false;
                     self.set_sidebar_peek(true, true);
                 }

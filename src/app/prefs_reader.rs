@@ -27,16 +27,23 @@ impl AppModel {
     /// What Reader View does on each open: Focus Mode's "on" while it holds,
     /// else the setting.
     pub(super) fn effective_reader_default(&self) -> config::ReaderDefault {
-        if self.focus.active(config::FocusPart::ReaderView) {
+        if !self.focus.enabled {
+            self.reader_default
+        } else if self.focus.reader_view {
             config::ReaderDefault::On
         } else {
-            self.reader_default
+            config::ReaderDefault::Off
         }
     }
 
-    /// Reader View for the message on screen: on in Focus Mode, else as saved.
+    /// Reader View for the message on screen: Focus Mode's switch while it is
+    /// on, else as saved.
     pub(super) fn effective_reader_mode(&self) -> bool {
-        self.reader_mode || self.focus.active(config::FocusPart::ReaderView)
+        if self.focus.enabled {
+            self.focus.reader_view
+        } else {
+            self.reader_mode
+        }
     }
 
     /// The reader's font-and-color override (#56) as the reader applies it:
@@ -70,16 +77,6 @@ impl AppModel {
         self.message_view
             .emit(MessageViewInput::SetReaderStyle(style.clone()));
         self.popouts_emit(|| MessageWindowInput::SetReaderStyle(style.clone()));
-    }
-
-    /// Tell the reader how card actions should show (⋯ toggle / auto on
-    /// hover / always).
-    fn push_card_actions_mode(&self) {
-        self.message_view
-            .emit(MessageViewInput::SetCardActionsMode {
-                hover_toggle: self.card_actions_hover,
-                hover_auto: self.card_actions_auto,
-            });
     }
 
     /// The settings changes the router sends here (see `AppModel::route`).
@@ -149,6 +146,12 @@ impl AppModel {
                 }
             }
 
+            PrefOutput::SetCleanLinks(on) => {
+                if pref!(self.clean_links = on) {
+                    crate::ui::message_view::set_clean_links(on);
+                }
+            }
+
             PrefOutput::SetAutoRemoteContent(on) => {
                 if pref!(self.auto_remote_content = on) {
                     // Re-render what is open so the change takes effect there too:
@@ -184,18 +187,6 @@ impl AppModel {
 
             PrefOutput::SetConfirmThreadDelete(on) => {
                 pref!(self.confirm_thread_delete = on);
-            }
-
-            PrefOutput::SetCardActionsMode {
-                hover_toggle,
-                hover_auto,
-            } => {
-                if self.card_actions_hover != hover_toggle || self.card_actions_auto != hover_auto {
-                    self.card_actions_hover = hover_toggle;
-                    self.card_actions_auto = hover_auto;
-                    self.save_settings();
-                    self.push_card_actions_mode();
-                }
             }
 
             PrefOutput::SetThreadsExpanded(on) => {
@@ -292,20 +283,6 @@ impl AppModel {
                 }
             }
 
-            PrefOutput::SetCardPaletteCollapse(secs) => {
-                if pref!(self.card_palette_collapse_secs = secs) {
-                    self.message_view
-                        .emit(MessageViewInput::SetPaletteCollapse(secs));
-                }
-            }
-
-            PrefOutput::SetCardPaletteMenu(on) => {
-                if pref!(self.card_palette_menu = on) {
-                    self.message_view
-                        .emit(MessageViewInput::SetCardPaletteMenu(on));
-                }
-            }
-
             PrefOutput::SetMessageTheme(theme) => {
                 if pref!(self.message_theme = theme) {
                     let dark = theme.dark_override();
@@ -360,7 +337,7 @@ impl AppModel {
                 // In Focus Mode with Reader View on, the switch changes the
                 // message on screen alone: the saved choice is the ordinary
                 // one, and it comes back with the rest of the layout.
-                if self.focus.active(config::FocusPart::ReaderView) {
+                if self.focus.enabled {
                     // Nothing to remember.
                 } else if self.reader_mode != on {
                     self.reader_mode = on;

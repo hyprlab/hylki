@@ -14,11 +14,11 @@ use crate::config::ListColumn;
 use crate::i18n::i18n;
 use crate::models::Message;
 
+mod actions;
 mod build;
 mod faces;
 mod headings;
 mod model;
-mod palette;
 mod refresh;
 mod row;
 mod shared;

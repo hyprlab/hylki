@@ -8,6 +8,7 @@ use super::*;
 pub(crate) struct PrefInit {
     pub(crate) auto_remote_content: bool,
     pub(crate) remote_ahead: bool,
+    pub(crate) clean_links: bool,
     pub(crate) show_remote_banner: bool,
     pub(crate) show_spoof_banner: bool,
     /// Answering requests for read receipts, and asking for them (#520).
@@ -28,10 +29,6 @@ pub(crate) struct PrefInit {
     pub(crate) fetch_interval_secs: u64,
     pub(crate) push: bool,
     pub(crate) metered_save_data: bool,
-    pub(crate) palette_collapse_secs: u64,
-    /// Seconds a message card's actions palette stays open — its own, not
-    /// the message list's.
-    pub(crate) card_palette_collapse_secs: u64,
     pub(crate) threading: bool,
     pub(crate) threads_expanded: bool,
     /// Reading pane shows conversations newest-message-first.
@@ -69,17 +66,6 @@ pub(crate) struct PrefInit {
     pub(crate) thread_row_newest: bool,
     /// Deleting a whole selected conversation asks for confirmation.
     pub(crate) confirm_thread_delete: bool,
-    /// Conversation card actions hide until the card is hovered.
-    pub(crate) card_actions_hover: bool,
-    /// With the ⋯ toggle off: card actions appear automatically on hover.
-    pub(crate) card_actions_auto: bool,
-    /// The list rows carry an actions palette line at all.
-    pub(crate) list_palette: bool,
-    /// The list's actions palette opens on row hover (no ⋯ click).
-    pub(crate) list_palette_hover: bool,
-    /// A message card's ⋯ opens the card menu instead of sliding its
-    /// actions palette out.
-    pub(crate) card_palette_menu: bool,
     /// Message rows take a sideways swipe to archive / delete (#92).
     pub(crate) swipe_enabled: bool,
     /// The message list's swipe-gesture sides are swapped (#swipe).
@@ -274,8 +260,6 @@ pub(crate) enum PrefInput {
     ChangeReaderDefault(u32),
     ChangeReaderZoom(u32),
     ToggleThreadExpansion(bool),
-    ChangeCardActionsMode(u32),
-    ToggleListPalette(bool),
     ToggleSwipeEnabled(bool),
     /// The "Send new messages from" combo: 0 = the open folder's account,
     /// then `identities` in order.
@@ -312,6 +296,10 @@ pub(crate) enum PrefInput {
     ToggleShowAccounts(bool),
     /// One of Focus Mode's switches.
     ToggleFocus(crate::config::FocusPart, bool),
+    /// Focus Mode's list layout, by its row in the combo.
+    SetFocusLayout(u32),
+    /// Focus Mode's preview lines: the row in the combo is the number of lines.
+    SetFocusPreviewLines(u32),
     /// The app's Focus Mode changed elsewhere (menu, shortcut): follow.
     SetFocusMode(crate::config::FocusMode),
     /// The main menu flipped "Show Accounts": the switch follows.
@@ -431,6 +419,7 @@ pub(crate) enum PrefOutput {
     PageShown(String),
     SetAutoRemoteContent(bool),
     SetRemoteAhead(bool),
+    SetCleanLinks(bool),
     SetShowRemoteBanner(bool),
     SetShowSpoofBanner(bool),
     SetReceipts(crate::config::ReceiptPolicy),
@@ -466,13 +455,6 @@ pub(crate) enum PrefOutput {
     SetThreadExpansion(bool),
     SetThreadRowNewest(bool),
     SetConfirmThreadDelete(bool),
-    SetCardActionsMode {
-        hover_toggle: bool,
-        hover_auto: bool,
-    },
-    SetListPalette(bool),
-    SetListPaletteHover(bool),
-    SetCardPaletteMenu(bool),
     SetSwipeEnabled(bool),
     SetSwipeReversed(bool),
     SetSwipeSensitivity(f64),
@@ -572,8 +554,6 @@ pub(crate) enum PrefOutput {
     /// What AI assistants may reach changed (`crate::mcp`).
     SetAssistantPolicy(Box<crate::config::AssistantPolicy>),
     SetAppIcon(String),
-    SetPaletteCollapse(u64),
-    SetCardPaletteCollapse(u64),
     SetMessageTheme(MessageTheme),
     SetOverrideFonts(bool),
     SetReaderFont(String),

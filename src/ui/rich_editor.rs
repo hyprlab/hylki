@@ -282,9 +282,8 @@ impl RichEditor {
         let view = match existing {
             Some(v) => v,
             None => {
-                let settings = webkit6::Settings::new();
+                let settings = super::message_view::private_settings();
                 settings.set_enable_javascript(false);
-                settings.set_enable_developer_extras(false);
                 let v = webkit6::WebView::builder()
                     .web_context(&super::message_view::shared_web_context())
                     .settings(&settings)

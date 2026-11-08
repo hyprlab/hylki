@@ -79,10 +79,6 @@ impl MessageView {
             checked: (0, false),
             show_banner: crate::config::load_privacy().show_remote_banner,
             show_spoof_banner: crate::config::load_privacy().show_spoof_banner,
-            card_actions_hover: crate::config::load_privacy().card_actions_hover,
-            card_actions_auto: crate::config::load_privacy().card_actions_auto,
-            palette_collapse_secs: crate::config::load_privacy().card_palette_collapse_secs,
-            card_palette_menu: crate::config::load_privacy().card_palette_menu,
             remote_allowed: false,
             account_name: None,
             account_color: None,
@@ -250,6 +246,7 @@ impl MessageView {
                     selection: None,
                     translate: None,
                     folds: None,
+                    sender_style: None,
                 };
                 let selected = hit.context_is_selection();
                 let (x, y) = point.get();

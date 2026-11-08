@@ -293,6 +293,14 @@ msgstr "Keresés az üzenetben"
 msgid "Collapse All Messages"
 msgstr "Olvasói nézetre váltás"
 
+#, fuzzy
+msgid "Back to My Fonts and Colors"
+msgstr "Vissza a saját betűtípusaimhoz és színeimhez"
+
+#, fuzzy
+msgid "Show Sender's Fonts and Colors"
+msgstr "Feladó betűtípusainak és színeinek megjelenítése"
+
 msgid "View Source"
 msgstr "Forrás megtekintése"
 
@@ -1989,6 +1997,11 @@ msgstr "A mappa nincs a kiszolgálón"
 msgid "The file has no rows below its first."
 msgstr "A mappa nincs a kiszolgálón"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "A GnuPG (gpg) nincs telepítve, ezért ez az üzenet nem olvasható."
 
@@ -2253,6 +2266,12 @@ msgstr "OpenPGP-vel titkosítva; nem sikerült visszafejteni"
 msgid "Encrypted with OpenPGP"
 msgstr "OpenPGP-vel titkosítva"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Titkosítva és aláírva: {signer}; az aláírás lejárt"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Titkosítva és aláírva: {signer}"
 
@@ -2274,6 +2293,9 @@ msgstr "Titkosítva és aláírva: {signer}; az aláírás lejárt"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "OpenPGP-vel aláírva; az aláírás nem ellenőrizhető"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Aláírta: {signer}"
@@ -2301,6 +2323,10 @@ msgstr "Titkosítva"
 
 msgid "Signature not checked"
 msgstr "Az aláírás nem került ellenőrzésre"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "El akarod menteni a könyvtárat?"
 
 msgid "Encrypted and signed"
 msgstr "Titkosítva és aláírva"
@@ -3217,6 +3243,19 @@ msgstr "Minden melléklet mentése egy mappába"
 msgid "Save Attachment"
 msgstr "Melléklet mentése"
 
+#, fuzzy
+msgid "Open “{name}”?"
+msgstr "Kiüríti ezt: „{name}”?"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+#, fuzzy
+msgid "Open Anyway"
+msgstr "Küldés most"
+
 msgid "The file could not be opened"
 msgstr "A fájl nem megnyitható"
 
@@ -3355,6 +3394,125 @@ msgstr "Következő"
 
 msgid "Open in the default app"
 msgstr "Megnyitás az alapértelmezett alkalmazásban"
+
+#, fuzzy
+msgid "Waiting for the Keyring"
+msgstr "Nincs visszavonható művelet"
+
+msgid ""
+"Mail stored on this computer is encrypted with a key stored in the keyring. "
+"Unlock the keyring if it asks."
+msgstr ""
+
+msgid ""
+"This happens once and can take a few minutes. If you quit, your mail is left "
+"as it was."
+msgstr ""
+
+#, fuzzy
+msgid "Checking the copy"
+msgstr "Kapcsolat ellenőrzése…"
+
+msgid "Encrypting Stored Mail"
+msgstr ""
+
+#, fuzzy
+msgid "Decrypting Stored Mail"
+msgstr "Új levelek keresése"
+
+#, fuzzy
+msgid "Store Unencrypted…"
+msgstr "Nincs dekódolva"
+
+msgid "Reset Cache…"
+msgstr ""
+
+msgid "Try Again"
+msgstr "Próbáld újra"
+
+#, fuzzy
+msgid "Keyring Unavailable"
+msgstr "Nem érhető el a(z) {v1} mappa"
+
+msgid ""
+"Mail kept on this computer is encrypted with a key stored in the keyring, "
+"and the keyring is locked or did not answer. Unlock it, then try again."
+msgstr ""
+
+msgid "Mail Cache Key Missing"
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is encrypted, and the keyring no longer holds its "
+"key. If the keyring was replaced, restore the old one and try again. "
+"Otherwise reset the cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Cannot Be Unlocked"
+msgstr ""
+
+msgid ""
+"The key in the keyring does not open the mail kept on this computer. If the "
+"keyring was replaced, restore the old one and try again. Otherwise reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Not Converted"
+msgstr ""
+
+msgid ""
+"The mail kept on this computer could not be converted, and was left as it "
+"was. Check that the disk has free space, then try again."
+msgstr ""
+
+#, fuzzy
+msgid "Mail Cache Unreadable"
+msgstr "Megjelölés olvasatlanként"
+
+msgid ""
+"The mail kept on this computer could not be read. Try again, or reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid ""
+"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"unsent mail in the Outbox."
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Mail kept on this computer is deleted and downloaded again from the server."
+msgstr ""
+"A könyvtár eltávolításra kerül az Evolution Data Server-ről, így az "
+"Evolution és az azt használó egyéb alkalmazások sem látják többé. A "
+"kiszolgálón semmi sem változik."
+
+msgid "Reset the Mail Cache?"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid ""
+"Anyone who can read your files, or a backup of them, can then read the mail "
+"kept on this computer, including mail that is end-to-end encrypted on the "
+"server."
+msgstr ""
+
+msgid "Encryption can be turned back on in Settings → Privacy."
+msgstr ""
+
+msgid ""
+"The encrypted cache cannot be opened without the keyring, so it is deleted "
+"and your mail is downloaded again."
+msgstr ""
+
+msgid "Store Mail Unencrypted?"
+msgstr ""
+
+#, fuzzy
+msgid "Store Unencrypted"
+msgstr "Nincs dekódolva"
 
 #, fuzzy
 msgid "New Event"
@@ -4011,6 +4169,16 @@ msgid ""
 msgstr ""
 "Nincs OpenPGP-kulcs ehhez: {addr}. Kérje el a nyilvános kulcsukat, vagy "
 "kérje le a Beállítások → OpenPGP alatt."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Küldés később"
@@ -5246,21 +5414,6 @@ msgstr "Beszélgetés megjelenítése"
 msgid "Drag to resize, double-click for the usual width"
 msgstr ""
 
-msgid "Mark as read"
-msgstr "Megjelölés olvasottként"
-
-msgid "Not spam"
-msgstr "Nem levélszemét"
-
-msgid "Add sender to Contacts"
-msgstr "Feladó hozzáadása a névjegyekhez"
-
-msgid "Mark as unread"
-msgstr "Megjelölés olvasatlanként"
-
-msgid "Remove star"
-msgstr "Csillag eltávolítása"
-
 msgid "High importance"
 msgstr ""
 
@@ -5408,49 +5561,6 @@ msgstr "Címzettek elrejtése"
 
 msgid "Show recipients"
 msgstr "Címzettek megjelenítése"
-
-msgid "Mark as read or unread"
-msgstr "Megjelölés olvasottként vagy olvasatlanként"
-
-msgid "Star this message"
-msgstr "Üzenet csillagozása"
-
-msgid "View source"
-msgstr "Forrás megtekintése"
-
-#, fuzzy
-msgid "Translate this message"
-msgstr "Üzenet törlése"
-
-msgid "Reply to this message"
-msgstr "Válasz erre az üzenetre"
-
-msgid "Reply to everyone on this message"
-msgstr "Válasz az üzenet minden címzettjének"
-
-msgid "Forward this message"
-msgstr "Üzenet továbbítása"
-
-msgid "Move this message to a folder"
-msgstr "Üzenet mappába helyezése"
-
-msgid "Archive this message"
-msgstr "Üzenet archiválása"
-
-msgid "Delete this message"
-msgstr "Üzenet törlése"
-
-msgid "Back to my fonts and colors"
-msgstr "Vissza a saját betűtípusaimhoz és színeimhez"
-
-msgid "Show the sender's fonts and colors"
-msgstr "Feladó betűtípusainak és színeinek megjelenítése"
-
-msgid "Show remote content"
-msgstr "Távoli tartalom megjelenítése"
-
-msgid "Block remote content"
-msgstr "Távoli tartalom letiltása"
 
 #, fuzzy
 msgid "Click to open this message"
@@ -5698,9 +5808,6 @@ msgstr "Tesztelés folyamatban…"
 msgid "Could not translate: {why}"
 msgstr "Az üzenet nem címkézhető: {e}"
 
-msgid "Try Again"
-msgstr "Próbáld újra"
-
 msgid "Translated from {language} by {service}."
 msgstr ""
 
@@ -5770,6 +5877,10 @@ msgstr ""
 
 msgid "Status bar ({n})"
 msgstr "Állapotsáv ({n})"
+
+#, fuzzy
+msgid "Ask Again"
+msgstr "Próbáld újra"
 
 #, fuzzy
 msgid "All keys"
@@ -5864,6 +5975,12 @@ msgid "Fetch by address…"
 msgstr "Lekérés cím alapján…"
 
 msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "Unchecked keys you encrypt to"
+msgstr ""
+
+msgid "Send Anyway stopped the warning for these keys."
 msgstr ""
 
 msgid "No keys from other people yet."
@@ -6232,15 +6349,6 @@ msgstr "Olvasói nézet Be"
 msgid "Reader View off"
 msgstr "Olvasói nézet Ki"
 
-msgid "Hidden behind a toggle"
-msgstr "Egy kapcsoló mögött rejtve"
-
-msgid "Shown while hovering"
-msgstr "Megjelenítés rámutatáskor"
-
-msgid "Always visible"
-msgstr "Mindig látható"
-
 msgid "Ask each time"
 msgstr "Mindig kérdezz"
 
@@ -6482,6 +6590,9 @@ msgstr "Üzenet továbbítása"
 msgid "Each opens in a window for you to check and send."
 msgstr ""
 
+msgid "Mark as read or unread"
+msgstr "Megjelölés olvasottként vagy olvasatlanként"
+
 #, fuzzy
 msgid "Add and remove stars"
 msgstr "Csillag eltávolítása"
@@ -6569,13 +6680,10 @@ msgid ""
 "and Trash are hidden again."
 msgstr ""
 
-msgid "Reset"
-msgstr ""
-
 #, fuzzy
 msgid ""
-"Accounts, preferences, filters, tags and layout, in one file. Passwords and "
-"OpenPGP keys are not included."
+"Accounts, preferences, filters, tags and layout, in one file. Passwords, "
+"OAuth client secrets and OpenPGP keys are not included."
 msgstr ""
 "Fiókok és beállítások egyetlen fájlban. A jelszavak a rendszer kulcstartóján "
 "maradnak, és soha nem kerülnek exportálásra."
@@ -6653,6 +6761,105 @@ msgstr "Dátumformátum"
 msgid "Clock"
 msgstr "Óra"
 
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+
+msgid "Start in Focus Mode"
+msgstr "Indítás fókusz módban"
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "Oldalsáv behajtása ikonsávra"
+
+msgid "Unread counts"
+msgstr "Olvasatlanok száma"
+
+msgid "Unread dots instead of counts"
+msgstr "Olvasatlan pontok a számok helyett"
+
+msgid "Expand the sidebar on hover"
+msgstr "Oldalsáv kibontása rámutatáskor"
+
+msgid "Hide the accounts in the sidebar"
+msgstr "A fiókok elrejtése az oldalsávban"
+
+msgid "Only the unified section stays."
+msgstr "Csak az összevont szakasz marad meg."
+
+#, fuzzy
+msgid "Fold up the accounts"
+msgstr "A fiókok felett"
+
+msgid "Collapses expanded accounts into their avatars"
+msgstr ""
+
+msgid "Fold accounts with one click"
+msgstr ""
+
+msgid "Fold up the unified rows"
+msgstr "Hajtsd össze az összevont sorokat"
+
+msgid "Unified"
+msgstr "Egységes"
+
+msgid "Inboxes"
+msgstr "Beérkezett üzenetek"
+
+msgid "Snoozed"
+msgstr ""
+
+#, fuzzy
+msgid "Sections"
+msgstr "Műveletek"
+
+msgid "Favorites"
+msgstr ""
+
+#, fuzzy
+msgid "Show column headings"
+msgstr "Beszélgetés megjelenítése"
+
+msgid "Preview lines"
+msgstr "Előnézeti sorok"
+
+msgid "Fold the message list's header"
+msgstr "Üzenetlista fejlécének behajtása"
+
+#, fuzzy
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr "Minden gomb megnyitja a saját ⋯ menüjét."
+
+msgid "Hide sender avatars"
+msgstr "A feladók avatárjainak elrejtése"
+
+msgid "Hide the subject"
+msgstr "A tárgy elrejtése"
+
+msgid "Tag chips hide with it."
+msgstr ""
+
+msgid "Tags and labels under the text"
+msgstr ""
+
+#, fuzzy
+msgid "Hide stars"
+msgstr "A feladók avatárjainak elrejtése"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Mellékletek elrejtése"
+
+msgid "Fold the reading pane's toolbar"
+msgstr "Az olvasópanel eszköztárának összecsukása"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "Minden gomb megnyitja a saját ⋯ menüjét."
+
+#, fuzzy
+msgid "Open messages in Reader View."
+msgstr "Ezt az üzenetet még nem ellenőrizték."
+
 #, fuzzy
 msgid "Instant new mail (push)"
 msgstr "Az új levelek azonnali megjelenítése (IMAP push)"
@@ -6723,16 +6930,10 @@ msgstr ""
 msgid "Automatic uses single lines in wide windows."
 msgstr ""
 
-msgid "Preview lines"
-msgstr "Előnézeti sorok"
-
 msgid "Off also stops downloading previews."
 msgstr ""
 
 msgid "Group by date"
-msgstr ""
-
-msgid "Tags and labels under the text"
 msgstr ""
 
 msgid "Gives the subject its full width."
@@ -6753,16 +6954,6 @@ msgstr "{n} db üzenet címkézve"
 msgid "In the color of its first tag."
 msgstr ""
 
-msgid "Actions palette in the message list"
-msgstr "Műveletpaletta az üzenetlistában"
-
-#, fuzzy
-msgid "The ⋯ row under each message."
-msgstr "Mellékletek az egyes üzenetekhez"
-
-msgid "Open the actions palette on hover"
-msgstr "Műveletpaletta megnyitása, amikor a kurzor fölé van helyezve"
-
 msgid "Swipe actions"
 msgstr "Csúsztatási műveletek"
 
@@ -6779,15 +6970,6 @@ msgstr "Az érintőpad csúsztatási érzékenysége"
 msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
 
-msgid "Actions palette timeout"
-msgstr "A műveletpaletta időtúllépése"
-
-#, fuzzy
-msgid "Seconds it stays open after the pointer leaves."
-msgstr ""
-"Hány másodpercig marad nyitva a kártya műveletpalettája, miután a kurzor "
-"elhagyja azt."
-
 msgid "Columns"
 msgstr ""
 
@@ -6795,10 +6977,6 @@ msgid ""
 "For the single-line layout. Drag columns to reorder them or out to remove "
 "them. Due Date shows only for Microsoft 365 mail."
 msgstr ""
-
-#, fuzzy
-msgid "Show column headings"
-msgstr "Beszélgetés megjelenítése"
 
 #, fuzzy
 msgid "Fit columns to the list"
@@ -6816,14 +6994,12 @@ msgstr ""
 msgid "Always load remote content"
 msgstr "Távoli tartalom mindig töltődjön be"
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr ""
-
 msgid "Pre-load remote content for the next messages"
 msgstr ""
 
-msgid "Their senders can tell they were opened."
-msgstr ""
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Álnév (alias) eltávolítása"
 
 msgid "Warn when remote content is blocked"
 msgstr "Figyelmeztetés távoli tartalom blokkolásakor"
@@ -6835,11 +7011,6 @@ msgstr "Figyelmeztetés távoli tartalom blokkolásakor"
 msgid "Warn when the addressing doesn't match"
 msgstr "Figyelmeztetés, ha a címzés nem egyezik"
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Gravatar használata, ha a névjegyhez nincs fénykép"
 
@@ -6849,16 +7020,32 @@ msgstr ""
 msgid "Show sender logos"
 msgstr "Feladói logók megjelenítése"
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-
 #, fuzzy
 msgid "Send read receipts"
 msgstr "Címzettek elrejtése"
 
-msgid "A receipt tells the sender when you opened the message."
+#. Not "On This Computer": that names an account kind.
+#, fuzzy
+msgid "Stored Mail"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Encrypt stored mail"
+msgstr "Titkosított üzenet"
+
+#, fuzzy
+msgid "Encrypt Stored Mail?"
+msgstr "Titkosítva"
+
+msgid ""
+"Mail stored on this computer will be encrypted at the next start which can "
+"take a few minutes. Earlier versions of the app cannot open it. Turn this "
+"setting off and restart before going back to an older version."
 msgstr ""
+
+#, fuzzy
+msgid "Encrypt"
+msgstr "Titkosítva"
 
 msgid "Open at startup"
 msgstr "Automatikus indítás rendszerindításkor"
@@ -6880,9 +7067,6 @@ msgstr ""
 msgid "Chevron placement"
 msgstr "Nyíl elhelyezése"
 
-msgid "Fold accounts with one click"
-msgstr ""
-
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr ""
 
@@ -6892,9 +7076,6 @@ msgstr "Csatolmány tároló"
 
 msgid "Browse every account's attachments in one place."
 msgstr ""
-
-msgid "Expand the sidebar on hover"
-msgstr "Oldalsáv kibontása rámutatáskor"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -6914,31 +7095,15 @@ msgstr ""
 msgid "A count turns grey once you have looked at the folder."
 msgstr ""
 
-msgid "Unified"
-msgstr "Egységes"
-
 #, fuzzy
 msgid "Shown only with more than one account."
 msgstr "Csak ezt a fiókot mutasd"
 
-msgid "Inboxes"
-msgstr "Beérkezett üzenetek"
-
-msgid "Snoozed"
-msgstr ""
-
 msgid "Shown only while mail is snoozed."
 msgstr ""
 
-msgid "Unread counts"
-msgstr "Olvasatlanok száma"
-
 msgid "Shown on the unified rows while they are folded up."
 msgstr ""
-
-#, fuzzy
-msgid "Sections"
-msgstr "Műveletek"
 
 #, fuzzy
 msgid "Section style"
@@ -6956,9 +7121,6 @@ msgstr "A szűrők elhelyezése"
 
 msgid "Icon rail"
 msgstr "Ikonok sora"
-
-msgid "Unread dots instead of counts"
-msgstr "Olvasatlan pontok a számok helyett"
 
 msgid "The count stays in the tooltip."
 msgstr ""
@@ -7206,6 +7368,9 @@ msgstr "Beszúrás"
 msgid "Show or hide folders"
 msgstr "Mappák megjelenítése vagy elrejtése"
 
+msgid "Long-press to expand or collapse"
+msgstr "Hosszú gombnyomással kibontható vagy összecsukható"
+
 #, fuzzy
 msgid "Show or hide labels"
 msgstr "Címkék megjelenítése vagy elrejtése"
@@ -7294,9 +7459,6 @@ msgstr "Még nincsenek fiókok"
 msgid "New Message from Template…"
 msgstr ""
 
-msgid "Favorites"
-msgstr ""
-
 msgid "Show each inbox"
 msgstr "Minden beérkezett megjelenítése"
 
@@ -7316,9 +7478,6 @@ msgstr "Minden mappa megjelenítése"
 #, fuzzy
 msgid "Show each address book"
 msgstr "El akarod menteni a könyvtárat?"
-
-msgid "Long-press to expand or collapse"
-msgstr "Hosszú gombnyomással kibontható vagy összecsukható"
 
 msgid "Show or hide tags"
 msgstr "Címkék megjelenítése vagy elrejtése"
@@ -8360,61 +8519,6 @@ msgstr ""
 msgid "Always fold the right group into ⋯"
 msgstr ""
 
-msgid ""
-"The parts switched on below hide while Focus Mode is on. Activated by "
-"Ctrl+Shift+F or the main menu."
-msgstr ""
-
-msgid "Start in Focus Mode"
-msgstr "Indítás fókusz módban"
-
-msgid "Fold the reading pane's toolbar"
-msgstr "Az olvasópanel eszköztárának összecsukása"
-
-msgid "Every button goes into its ⋯ menu."
-msgstr "Minden gomb megnyitja a saját ⋯ menüjét."
-
-msgid "Fold the message list's header"
-msgstr "Üzenetlista fejlécének behajtása"
-
-#, fuzzy
-msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr "Minden gomb megnyitja a saját ⋯ menüjét."
-
-msgid "Hide the accounts in the sidebar"
-msgstr "A fiókok elrejtése az oldalsávban"
-
-msgid "Only the unified section stays."
-msgstr "Csak az összevont szakasz marad meg."
-
-msgid "Fold up the unified rows"
-msgstr "Hajtsd össze az összevont sorokat"
-
-msgid "Hide sender avatars"
-msgstr "A feladók avatárjainak elrejtése"
-
-msgid "Hide the preview text"
-msgstr "Elrejtés a preview text"
-
-msgid "One line of preview text"
-msgstr "Egy sor előnézeti szöveg"
-
-msgid "Hide the subject"
-msgstr "A tárgy elrejtése"
-
-msgid "Tag chips hide with it."
-msgstr ""
-
-msgid "Fold the sidebar to the icon rail"
-msgstr "Oldalsáv behajtása ikonsávra"
-
-msgid "Hovering it slides the full sidebar out."
-msgstr ""
-
-#, fuzzy
-msgid "Open messages in Reader View."
-msgstr "Ezt az üzenetet még nem ellenőrizték."
-
 msgid "Compose in the main window"
 msgstr "Levélírás a főablakban"
 
@@ -8570,6 +8674,9 @@ msgstr "Hozzáadott szavak"
 msgid "Changes apply after a restart."
 msgstr ""
 
+msgid "Mark as read"
+msgstr "Megjelölés olvasottként"
+
 #, fuzzy
 msgid "Conversations mark each message as it comes into view."
 msgstr ""
@@ -8626,18 +8733,6 @@ msgstr "Fix szélességű betűtípus"
 msgid "The system's monospace font unless another is chosen."
 msgstr ""
 "A rendszer fix szélességű betűtípusa, amennyiben nincs másik választva."
-
-msgid "Message card actions palette"
-msgstr "Üzenetkártya-műveletek palettája"
-
-msgid "Message card actions palette timeout"
-msgstr "Az üzenetkártya műveletpalettájának időtúllépése"
-
-msgid "Message card actions palette as a menu"
-msgstr "Az üzenetkártya műveleteinek palettája menüként"
-
-msgid "The ⋯ opens the right-click menu instead."
-msgstr ""
 
 msgid "Single messages as cards"
 msgstr "Önálló üzenetek kártyaként"
@@ -8860,6 +8955,17 @@ msgstr "Beillesztés formázással"
 msgid "Paste as Plain Text"
 msgstr "Beillesztés egyszerű szövegként"
 
+msgid "Cut"
+msgstr ""
+
+#, fuzzy
+msgid "Select All"
+msgstr "Törlés"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Hivatkozás beszúrása"
+
 msgid "Email Client"
 msgstr "E-mail kliens"
 
@@ -8998,6 +9104,95 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Hide the preview text"
+#~ msgstr "Elrejtés a preview text"
+
+#~ msgid "One line of preview text"
+#~ msgstr "Egy sor előnézeti szöveg"
+
+#~ msgid "Not spam"
+#~ msgstr "Nem levélszemét"
+
+#~ msgid "Add sender to Contacts"
+#~ msgstr "Feladó hozzáadása a névjegyekhez"
+
+#~ msgid "Mark as unread"
+#~ msgstr "Megjelölés olvasatlanként"
+
+#~ msgid "Remove star"
+#~ msgstr "Csillag eltávolítása"
+
+#~ msgid "Star this message"
+#~ msgstr "Üzenet csillagozása"
+
+#~ msgid "View source"
+#~ msgstr "Forrás megtekintése"
+
+#, fuzzy
+#~ msgid "Translate this message"
+#~ msgstr "Üzenet törlése"
+
+#~ msgid "Reply to this message"
+#~ msgstr "Válasz erre az üzenetre"
+
+#~ msgid "Reply to everyone on this message"
+#~ msgstr "Válasz az üzenet minden címzettjének"
+
+#~ msgid "Forward this message"
+#~ msgstr "Üzenet továbbítása"
+
+#~ msgid "Move this message to a folder"
+#~ msgstr "Üzenet mappába helyezése"
+
+#~ msgid "Archive this message"
+#~ msgstr "Üzenet archiválása"
+
+#~ msgid "Delete this message"
+#~ msgstr "Üzenet törlése"
+
+#~ msgid "Show remote content"
+#~ msgstr "Távoli tartalom megjelenítése"
+
+#~ msgid "Block remote content"
+#~ msgstr "Távoli tartalom letiltása"
+
+#~ msgid "Hidden behind a toggle"
+#~ msgstr "Egy kapcsoló mögött rejtve"
+
+#~ msgid "Shown while hovering"
+#~ msgstr "Megjelenítés rámutatáskor"
+
+#~ msgid "Always visible"
+#~ msgstr "Mindig látható"
+
+#~ msgid "Actions palette in the message list"
+#~ msgstr "Műveletpaletta az üzenetlistában"
+
+#, fuzzy
+#~ msgid "The ⋯ row under each message."
+#~ msgstr "Mellékletek az egyes üzenetekhez"
+
+#~ msgid "Open the actions palette on hover"
+#~ msgstr "Műveletpaletta megnyitása, amikor a kurzor fölé van helyezve"
+
+#~ msgid "Actions palette timeout"
+#~ msgstr "A műveletpaletta időtúllépése"
+
+#, fuzzy
+#~ msgid "Seconds it stays open after the pointer leaves."
+#~ msgstr ""
+#~ "Hány másodpercig marad nyitva a kártya műveletpalettája, miután a kurzor "
+#~ "elhagyja azt."
+
+#~ msgid "Message card actions palette"
+#~ msgstr "Üzenetkártya-műveletek palettája"
+
+#~ msgid "Message card actions palette timeout"
+#~ msgstr "Az üzenetkártya műveletpalettájának időtúllépése"
+
+#~ msgid "Message card actions palette as a menu"
+#~ msgstr "Az üzenetkártya műveleteinek palettája menüként"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "A mappa nem nevezhető át: ismeretlen mappa"

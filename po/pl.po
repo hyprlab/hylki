@@ -292,6 +292,14 @@ msgstr "Znajdź w wiadomości"
 msgid "Collapse All Messages"
 msgstr "Zwiń do panelu czytania"
 
+#, fuzzy
+msgid "Back to My Fonts and Colors"
+msgstr "Przywróć własne czcionki i kolory"
+
+#, fuzzy
+msgid "Show Sender's Fonts and Colors"
+msgstr "Wyświetl czcionki i kolory nadawcy"
+
 msgid "View Source"
 msgstr "Wyświetl źródło"
 
@@ -2029,6 +2037,11 @@ msgstr "Tego katalogu nie ma na serwerze"
 msgid "The file has no rows below its first."
 msgstr "Tego katalogu nie ma na serwerze"
 
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr ""
 "Program GnuPG (gpg) nie jest zainstalowany, dlatego nie można odczytać tej "
@@ -2292,6 +2305,12 @@ msgstr "Zaszyfrowana za pomocą OpenPGP; nie udało się jej odszyfrować"
 msgid "Encrypted with OpenPGP"
 msgstr "Zaszyfrowana za pomocą OpenPGP"
 
+#, fuzzy
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "Zaszyfrowana i podpisana przez {signer}; podpis wygasł"
+
 msgid "Encrypted, and signed by {signer}"
 msgstr "Zaszyfrowana i podpisana przez {signer}"
 
@@ -2313,6 +2332,9 @@ msgstr "Zaszyfrowana i podpisana przez {signer}; podpis wygasł"
 
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "Podpisana za pomocą OpenPGP; nie udało się sprawdzić podpisu"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr ""
 
 msgid "Signed by {signer}"
 msgstr "Podpisana przez {signer}"
@@ -2342,6 +2364,10 @@ msgstr "Wiadomość zaszyfrowana"
 #, fuzzy
 msgid "Signature not checked"
 msgstr "Podpis w odpowiedziach"
+
+#, fuzzy
+msgid "Signed by another address"
+msgstr "Czy zapisać filtr?"
 
 #, fuzzy
 msgid "Encrypted and signed"
@@ -3269,6 +3295,19 @@ msgstr "Zapisz wszystkie załączniki w katalogu"
 msgid "Save Attachment"
 msgstr "Zapisz załącznik"
 
+#, fuzzy
+msgid "Open “{name}”?"
+msgstr "Czy opróżnić katalog „{name}”?"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+
+#, fuzzy
+msgid "Open Anyway"
+msgstr "Wyślij teraz"
+
 msgid "The file could not be opened"
 msgstr "Nie udało się otworzyć pliku"
 
@@ -3407,6 +3446,120 @@ msgstr "Następny"
 
 msgid "Open in the default app"
 msgstr "Otwórz w domyślnej aplikacji"
+
+#, fuzzy
+msgid "Waiting for the Keyring"
+msgstr "Klucz jest już w bazie kluczy"
+
+msgid ""
+"Mail stored on this computer is encrypted with a key stored in the keyring. "
+"Unlock the keyring if it asks."
+msgstr ""
+
+msgid ""
+"This happens once and can take a few minutes. If you quit, your mail is left "
+"as it was."
+msgstr ""
+
+#, fuzzy
+msgid "Checking the copy"
+msgstr "Sprawdzanie połączenia…"
+
+msgid "Encrypting Stored Mail"
+msgstr ""
+
+#, fuzzy
+msgid "Decrypting Stored Mail"
+msgstr "Sprawdzanie nowej poczty"
+
+msgid "Store Unencrypted…"
+msgstr ""
+
+msgid "Reset Cache…"
+msgstr ""
+
+msgid "Try Again"
+msgstr "Spróbuj ponownie"
+
+#, fuzzy
+msgid "Keyring Unavailable"
+msgstr "Brak katalogu {v1}"
+
+msgid ""
+"Mail kept on this computer is encrypted with a key stored in the keyring, "
+"and the keyring is locked or did not answer. Unlock it, then try again."
+msgstr ""
+
+msgid "Mail Cache Key Missing"
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is encrypted, and the keyring no longer holds its "
+"key. If the keyring was replaced, restore the old one and try again. "
+"Otherwise reset the cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Cannot Be Unlocked"
+msgstr ""
+
+msgid ""
+"The key in the keyring does not open the mail kept on this computer. If the "
+"keyring was replaced, restore the old one and try again. Otherwise reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Not Converted"
+msgstr ""
+
+msgid ""
+"The mail kept on this computer could not be converted, and was left as it "
+"was. Check that the disk has free space, then try again."
+msgstr ""
+
+#, fuzzy
+msgid "Mail Cache Unreadable"
+msgstr "Oznacz jako nieprzeczytane"
+
+msgid ""
+"The mail kept on this computer could not be read. Try again, or reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid ""
+"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"unsent mail in the Outbox."
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is deleted and downloaded again from the server."
+msgstr ""
+
+msgid "Reset the Mail Cache?"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid ""
+"Anyone who can read your files, or a backup of them, can then read the mail "
+"kept on this computer, including mail that is end-to-end encrypted on the "
+"server."
+msgstr ""
+
+msgid "Encryption can be turned back on in Settings → Privacy."
+msgstr ""
+
+msgid ""
+"The encrypted cache cannot be opened without the keyring, so it is deleted "
+"and your mail is downloaded again."
+msgstr ""
+
+msgid "Store Mail Unencrypted?"
+msgstr ""
+
+#, fuzzy
+msgid "Store Unencrypted"
+msgstr "Wiadomość zaszyfrowana"
 
 #, fuzzy
 msgid "New Event"
@@ -4066,6 +4219,16 @@ msgid ""
 msgstr ""
 "Brak klucza OpenPGP dla adresu {addr}. Poproś właściciela adresu o klucz "
 "publiczny lub pobierz go w oknie Ustawienia → OpenPGP."
+
+msgid "Encrypt to keys you have not checked?"
+msgstr ""
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
 
 msgid "Send later"
 msgstr "Wyślij później"
@@ -5315,21 +5478,6 @@ msgstr "Wyświetl rozmowę"
 msgid "Drag to resize, double-click for the usual width"
 msgstr ""
 
-msgid "Mark as read"
-msgstr "Oznacz jako przeczytane"
-
-msgid "Not spam"
-msgstr "To nie jest spam"
-
-msgid "Add sender to Contacts"
-msgstr "Dodaj nadawcę do kontaktów"
-
-msgid "Mark as unread"
-msgstr "Oznacz jako nieprzeczytane"
-
-msgid "Remove star"
-msgstr "Usuń gwiazdkę"
-
 msgid "High importance"
 msgstr ""
 
@@ -5479,50 +5627,6 @@ msgstr "Ukryj odbiorców"
 
 msgid "Show recipients"
 msgstr "Wyświetl odbiorców"
-
-msgid "Mark as read or unread"
-msgstr "Oznacz jako przeczytane lub nieprzeczytane"
-
-#, fuzzy
-msgid "Star this message"
-msgstr "Modyfikuj tę wiadomość"
-
-msgid "View source"
-msgstr "Wyświetl źródło"
-
-#, fuzzy
-msgid "Translate this message"
-msgstr "Usuń tę wiadomość"
-
-msgid "Reply to this message"
-msgstr "Odpowiedz na tę wiadomość"
-
-msgid "Reply to everyone on this message"
-msgstr "Odpowiedz wszystkim adresatom tej wiadomości"
-
-msgid "Forward this message"
-msgstr "Przekaż dalej tę wiadomość"
-
-msgid "Move this message to a folder"
-msgstr "Przenieś tę wiadomość do katalogu"
-
-msgid "Archive this message"
-msgstr "Archiwizuj tę wiadomość"
-
-msgid "Delete this message"
-msgstr "Usuń tę wiadomość"
-
-msgid "Back to my fonts and colors"
-msgstr "Przywróć własne czcionki i kolory"
-
-msgid "Show the sender's fonts and colors"
-msgstr "Wyświetl czcionki i kolory nadawcy"
-
-msgid "Show remote content"
-msgstr "Wyświetl zdalne treści"
-
-msgid "Block remote content"
-msgstr "Blokuj zdalne treści"
 
 #, fuzzy
 msgid "Click to open this message"
@@ -5777,9 +5881,6 @@ msgstr "Sprawdzanie…"
 msgid "Could not translate: {why}"
 msgstr "Nie udało się oznaczyć wiadomości etykietą: {e}"
 
-msgid "Try Again"
-msgstr "Spróbuj ponownie"
-
 msgid "Translated from {language} by {service}."
 msgstr ""
 
@@ -5848,6 +5949,10 @@ msgstr ""
 
 msgid "Status bar ({n})"
 msgstr "Pasek stanu ({n})"
+
+#, fuzzy
+msgid "Ask Again"
+msgstr "Spróbuj ponownie"
 
 #, fuzzy
 msgid "All keys"
@@ -5944,6 +6049,12 @@ msgid "Fetch by address…"
 msgstr "Pobierz według adresu…"
 
 msgid "Search by name, address or key ID"
+msgstr ""
+
+msgid "Unchecked keys you encrypt to"
+msgstr ""
+
+msgid "Send Anyway stopped the warning for these keys."
 msgstr ""
 
 msgid "No keys from other people yet."
@@ -6313,15 +6424,6 @@ msgstr "Widok czytania włączony"
 msgid "Reader View off"
 msgstr "Widok czytania wyłączony"
 
-msgid "Hidden behind a toggle"
-msgstr "Ukryta za przełącznikiem"
-
-msgid "Shown while hovering"
-msgstr "Wyświetlana po najechaniu kursorem"
-
-msgid "Always visible"
-msgstr "Zawsze widoczna"
-
 msgid "Ask each time"
 msgstr "Pytaj za każdym razem"
 
@@ -6564,6 +6666,9 @@ msgstr "Przekaż dalej tę wiadomość"
 msgid "Each opens in a window for you to check and send."
 msgstr ""
 
+msgid "Mark as read or unread"
+msgstr "Oznacz jako przeczytane lub nieprzeczytane"
+
 #, fuzzy
 msgid "Add and remove stars"
 msgstr "Usuń gwiazdkę"
@@ -6651,12 +6756,9 @@ msgid ""
 "and Trash are hidden again."
 msgstr ""
 
-msgid "Reset"
-msgstr ""
-
 msgid ""
-"Accounts, preferences, filters, tags and layout, in one file. Passwords and "
-"OpenPGP keys are not included."
+"Accounts, preferences, filters, tags and layout, in one file. Passwords, "
+"OAuth client secrets and OpenPGP keys are not included."
 msgstr ""
 
 msgid "Export settings"
@@ -6732,6 +6834,105 @@ msgstr "Format daty"
 msgid "Clock"
 msgstr "Zegar"
 
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+
+msgid "Start in Focus Mode"
+msgstr "Uruchamianie w trybie skupienia"
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "Zwijanie panelu bocznego do paska ikon"
+
+msgid "Unread counts"
+msgstr "Liczniki nieprzeczytanych"
+
+msgid "Unread dots instead of counts"
+msgstr "Kropki zamiast liczników nieprzeczytanych"
+
+msgid "Expand the sidebar on hover"
+msgstr "Rozwijanie panelu bocznego po najechaniu kursorem"
+
+msgid "Hide the accounts in the sidebar"
+msgstr "Ukrywanie kont w panelu bocznym"
+
+msgid "Only the unified section stays."
+msgstr "Pozostaje tylko sekcja zbiorcza."
+
+#, fuzzy
+msgid "Fold up the accounts"
+msgstr "Nad kontami"
+
+msgid "Collapses expanded accounts into their avatars"
+msgstr ""
+
+msgid "Fold accounts with one click"
+msgstr ""
+
+msgid "Fold up the unified rows"
+msgstr "Zwijanie widoków zbiorczych"
+
+msgid "Unified"
+msgstr "Widoki zbiorcze"
+
+msgid "Inboxes"
+msgstr "Skrzynki odbiorcze"
+
+msgid "Snoozed"
+msgstr ""
+
+#, fuzzy
+msgid "Sections"
+msgstr "Działania"
+
+msgid "Favorites"
+msgstr ""
+
+#, fuzzy
+msgid "Show column headings"
+msgstr "Wyświetl rozmowę"
+
+msgid "Preview lines"
+msgstr "Wiersze podglądu"
+
+msgid "Fold the message list's header"
+msgstr "Zwijanie nagłówka listy wiadomości"
+
+#, fuzzy
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr "Wszystkie przyciski trafiają do menu ⋯."
+
+msgid "Hide sender avatars"
+msgstr "Ukrywanie awatarów nadawców"
+
+msgid "Hide the subject"
+msgstr "Ukrywanie tematu"
+
+msgid "Tag chips hide with it."
+msgstr ""
+
+msgid "Tags and labels under the text"
+msgstr ""
+
+#, fuzzy
+msgid "Hide stars"
+msgstr "Ukrywanie awatarów nadawców"
+
+#, fuzzy
+msgid "Hide attachment icons"
+msgstr "Ukryj załączniki"
+
+msgid "Fold the reading pane's toolbar"
+msgstr "Zwijanie paska narzędzi panelu czytania"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "Wszystkie przyciski trafiają do menu ⋯."
+
+#, fuzzy
+msgid "Open messages in Reader View."
+msgstr "Ta wiadomość nie została sprawdzona."
+
 #, fuzzy
 msgid "Instant new mail (push)"
 msgstr "Natychmiastowe odbieranie nowej poczty (IMAP push)"
@@ -6802,16 +7003,10 @@ msgstr ""
 msgid "Automatic uses single lines in wide windows."
 msgstr ""
 
-msgid "Preview lines"
-msgstr "Wiersze podglądu"
-
 msgid "Off also stops downloading previews."
 msgstr ""
 
 msgid "Group by date"
-msgstr ""
-
-msgid "Tags and labels under the text"
 msgstr ""
 
 msgid "Gives the subject its full width."
@@ -6832,16 +7027,6 @@ msgstr "Oznaczono etykietą {n} wiadomość"
 msgid "In the color of its first tag."
 msgstr ""
 
-msgid "Actions palette in the message list"
-msgstr "Paleta działań na liście wiadomości"
-
-#, fuzzy
-msgid "The ⋯ row under each message."
-msgstr "Załączniki przy każdej wiadomości"
-
-msgid "Open the actions palette on hover"
-msgstr "Otwieranie palety działań po najechaniu kursorem"
-
 msgid "Swipe actions"
 msgstr "Gesty przesuwania"
 
@@ -6858,15 +7043,6 @@ msgstr "Czułość przesuwania na gładziku"
 msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
 
-msgid "Actions palette timeout"
-msgstr "Czas wyświetlania palety działań"
-
-#, fuzzy
-msgid "Seconds it stays open after the pointer leaves."
-msgstr ""
-"Liczba sekund, przez które paleta działań karty pozostaje otwarta po "
-"odsunięciu z niej kursora."
-
 msgid "Columns"
 msgstr ""
 
@@ -6874,10 +7050,6 @@ msgid ""
 "For the single-line layout. Drag columns to reorder them or out to remove "
 "them. Due Date shows only for Microsoft 365 mail."
 msgstr ""
-
-#, fuzzy
-msgid "Show column headings"
-msgstr "Wyświetl rozmowę"
 
 #, fuzzy
 msgid "Fit columns to the list"
@@ -6895,14 +7067,12 @@ msgstr ""
 msgid "Always load remote content"
 msgstr "Automatyczne wczytywanie zdalnych treści"
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr ""
-
 msgid "Pre-load remote content for the next messages"
 msgstr ""
 
-msgid "Their senders can tell they were opened."
-msgstr ""
+#, fuzzy
+msgid "Remove trackers from links"
+msgstr "Usuń ten alias"
 
 msgid "Warn when remote content is blocked"
 msgstr "Ostrzeganie o zablokowanych zdalnych treściach"
@@ -6914,11 +7084,6 @@ msgstr "Ostrzeganie o zablokowanych zdalnych treściach"
 msgid "Warn when the addressing doesn't match"
 msgstr "Ostrzeganie o niezgodności adresów"
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Gravatar dla kontaktów bez zdjęcia"
 
@@ -6928,16 +7093,32 @@ msgstr ""
 msgid "Show sender logos"
 msgstr "Logo nadawców"
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-
 #, fuzzy
 msgid "Send read receipts"
 msgstr "Ukryj odbiorców"
 
-msgid "A receipt tells the sender when you opened the message."
+#. Not "On This Computer": that names an account kind.
+#, fuzzy
+msgid "Stored Mail"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Encrypt stored mail"
+msgstr "Wiadomość zaszyfrowana"
+
+#, fuzzy
+msgid "Encrypt Stored Mail?"
+msgstr "Wiadomość zaszyfrowana"
+
+msgid ""
+"Mail stored on this computer will be encrypted at the next start which can "
+"take a few minutes. Earlier versions of the app cannot open it. Turn this "
+"setting off and restart before going back to an older version."
 msgstr ""
+
+#, fuzzy
+msgid "Encrypt"
+msgstr "Wiadomość zaszyfrowana"
 
 msgid "Open at startup"
 msgstr "Widok po uruchomieniu"
@@ -6959,9 +7140,6 @@ msgstr ""
 msgid "Chevron placement"
 msgstr "Położenie strzałek rozwijania"
 
-msgid "Fold accounts with one click"
-msgstr ""
-
 msgid "When off, only its chevron or a double click activates the fold."
 msgstr ""
 
@@ -6971,9 +7149,6 @@ msgstr "Szuflada załączników"
 
 msgid "Browse every account's attachments in one place."
 msgstr ""
-
-msgid "Expand the sidebar on hover"
-msgstr "Rozwijanie panelu bocznego po najechaniu kursorem"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -6993,31 +7168,15 @@ msgstr ""
 msgid "A count turns grey once you have looked at the folder."
 msgstr ""
 
-msgid "Unified"
-msgstr "Widoki zbiorcze"
-
 #, fuzzy
 msgid "Shown only with more than one account."
 msgstr "Wyświetl tylko to konto"
 
-msgid "Inboxes"
-msgstr "Skrzynki odbiorcze"
-
-msgid "Snoozed"
-msgstr ""
-
 msgid "Shown only while mail is snoozed."
 msgstr ""
 
-msgid "Unread counts"
-msgstr "Liczniki nieprzeczytanych"
-
 msgid "Shown on the unified rows while they are folded up."
 msgstr ""
-
-#, fuzzy
-msgid "Sections"
-msgstr "Działania"
 
 #, fuzzy
 msgid "Section style"
@@ -7035,9 +7194,6 @@ msgstr "Położenie filtrów"
 
 msgid "Icon rail"
 msgstr "Pasek ikon"
-
-msgid "Unread dots instead of counts"
-msgstr "Kropki zamiast liczników nieprzeczytanych"
 
 msgid "The count stays in the tooltip."
 msgstr ""
@@ -7281,6 +7437,9 @@ msgstr "Wstaw"
 msgid "Show or hide folders"
 msgstr "Wyświetl lub ukryj katalogi"
 
+msgid "Long-press to expand or collapse"
+msgstr "Przytrzymaj, aby rozwinąć lub zwinąć"
+
 #, fuzzy
 msgid "Show or hide labels"
 msgstr "Wyświetl lub ukryj etykiety"
@@ -7369,9 +7528,6 @@ msgstr "Brak kont"
 msgid "New Message from Template…"
 msgstr ""
 
-msgid "Favorites"
-msgstr ""
-
 msgid "Show each inbox"
 msgstr "Wyświetl poszczególne skrzynki odbiorcze"
 
@@ -7391,9 +7547,6 @@ msgstr "Wyświetl poszczególne katalogi"
 #, fuzzy
 msgid "Show each address book"
 msgstr "Czy zapisać filtr?"
-
-msgid "Long-press to expand or collapse"
-msgstr "Przytrzymaj, aby rozwinąć lub zwinąć"
 
 msgid "Show or hide tags"
 msgstr "Wyświetl lub ukryj etykiety"
@@ -8436,61 +8589,6 @@ msgstr ""
 msgid "Always fold the right group into ⋯"
 msgstr ""
 
-msgid ""
-"The parts switched on below hide while Focus Mode is on. Activated by "
-"Ctrl+Shift+F or the main menu."
-msgstr ""
-
-msgid "Start in Focus Mode"
-msgstr "Uruchamianie w trybie skupienia"
-
-msgid "Fold the reading pane's toolbar"
-msgstr "Zwijanie paska narzędzi panelu czytania"
-
-msgid "Every button goes into its ⋯ menu."
-msgstr "Wszystkie przyciski trafiają do menu ⋯."
-
-msgid "Fold the message list's header"
-msgstr "Zwijanie nagłówka listy wiadomości"
-
-#, fuzzy
-msgid "Everything but the sidebar toggle goes into ⋯."
-msgstr "Wszystkie przyciski trafiają do menu ⋯."
-
-msgid "Hide the accounts in the sidebar"
-msgstr "Ukrywanie kont w panelu bocznym"
-
-msgid "Only the unified section stays."
-msgstr "Pozostaje tylko sekcja zbiorcza."
-
-msgid "Fold up the unified rows"
-msgstr "Zwijanie widoków zbiorczych"
-
-msgid "Hide sender avatars"
-msgstr "Ukrywanie awatarów nadawców"
-
-msgid "Hide the preview text"
-msgstr "Ukrywanie podglądu treści"
-
-msgid "One line of preview text"
-msgstr "Jeden wiersz podglądu treści"
-
-msgid "Hide the subject"
-msgstr "Ukrywanie tematu"
-
-msgid "Tag chips hide with it."
-msgstr ""
-
-msgid "Fold the sidebar to the icon rail"
-msgstr "Zwijanie panelu bocznego do paska ikon"
-
-msgid "Hovering it slides the full sidebar out."
-msgstr ""
-
-#, fuzzy
-msgid "Open messages in Reader View."
-msgstr "Ta wiadomość nie została sprawdzona."
-
 msgid "Compose in the main window"
 msgstr "Pisanie w oknie głównym"
 
@@ -8646,6 +8744,9 @@ msgstr "Dodane słowa"
 msgid "Changes apply after a restart."
 msgstr ""
 
+msgid "Mark as read"
+msgstr "Oznacz jako przeczytane"
+
 #, fuzzy
 msgid "Conversations mark each message as it comes into view."
 msgstr ""
@@ -8701,18 +8802,6 @@ msgstr "Czcionka o stałej szerokości"
 
 msgid "The system's monospace font unless another is chosen."
 msgstr "Systemowa czcionka o stałej szerokości, o ile nie wybrano innej."
-
-msgid "Message card actions palette"
-msgstr "Paleta działań na kartach wiadomości"
-
-msgid "Message card actions palette timeout"
-msgstr "Czas wyświetlania palety działań na kartach"
-
-msgid "Message card actions palette as a menu"
-msgstr "Paleta działań na kartach jako menu"
-
-msgid "The ⋯ opens the right-click menu instead."
-msgstr ""
 
 msgid "Single messages as cards"
 msgstr "Pojedyncze wiadomości jako karty"
@@ -8936,6 +9025,17 @@ msgstr "Wklej z formatowaniem"
 msgid "Paste as Plain Text"
 msgstr "Wklej jako zwykły tekst"
 
+msgid "Cut"
+msgstr ""
+
+#, fuzzy
+msgid "Select All"
+msgstr "Usuń"
+
+#, fuzzy
+msgid "Insert Emoji"
+msgstr "Wstaw odnośnik"
+
 msgid "Email Client"
 msgstr "Klient poczty"
 
@@ -9071,6 +9171,96 @@ msgstr "Zbiorcza skrzynka odbiorcza w jasnym motywie"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Hide the preview text"
+#~ msgstr "Ukrywanie podglądu treści"
+
+#~ msgid "One line of preview text"
+#~ msgstr "Jeden wiersz podglądu treści"
+
+#~ msgid "Not spam"
+#~ msgstr "To nie jest spam"
+
+#~ msgid "Add sender to Contacts"
+#~ msgstr "Dodaj nadawcę do kontaktów"
+
+#~ msgid "Mark as unread"
+#~ msgstr "Oznacz jako nieprzeczytane"
+
+#~ msgid "Remove star"
+#~ msgstr "Usuń gwiazdkę"
+
+#, fuzzy
+#~ msgid "Star this message"
+#~ msgstr "Modyfikuj tę wiadomość"
+
+#~ msgid "View source"
+#~ msgstr "Wyświetl źródło"
+
+#, fuzzy
+#~ msgid "Translate this message"
+#~ msgstr "Usuń tę wiadomość"
+
+#~ msgid "Reply to this message"
+#~ msgstr "Odpowiedz na tę wiadomość"
+
+#~ msgid "Reply to everyone on this message"
+#~ msgstr "Odpowiedz wszystkim adresatom tej wiadomości"
+
+#~ msgid "Forward this message"
+#~ msgstr "Przekaż dalej tę wiadomość"
+
+#~ msgid "Move this message to a folder"
+#~ msgstr "Przenieś tę wiadomość do katalogu"
+
+#~ msgid "Archive this message"
+#~ msgstr "Archiwizuj tę wiadomość"
+
+#~ msgid "Delete this message"
+#~ msgstr "Usuń tę wiadomość"
+
+#~ msgid "Show remote content"
+#~ msgstr "Wyświetl zdalne treści"
+
+#~ msgid "Block remote content"
+#~ msgstr "Blokuj zdalne treści"
+
+#~ msgid "Hidden behind a toggle"
+#~ msgstr "Ukryta za przełącznikiem"
+
+#~ msgid "Shown while hovering"
+#~ msgstr "Wyświetlana po najechaniu kursorem"
+
+#~ msgid "Always visible"
+#~ msgstr "Zawsze widoczna"
+
+#~ msgid "Actions palette in the message list"
+#~ msgstr "Paleta działań na liście wiadomości"
+
+#, fuzzy
+#~ msgid "The ⋯ row under each message."
+#~ msgstr "Załączniki przy każdej wiadomości"
+
+#~ msgid "Open the actions palette on hover"
+#~ msgstr "Otwieranie palety działań po najechaniu kursorem"
+
+#~ msgid "Actions palette timeout"
+#~ msgstr "Czas wyświetlania palety działań"
+
+#, fuzzy
+#~ msgid "Seconds it stays open after the pointer leaves."
+#~ msgstr ""
+#~ "Liczba sekund, przez które paleta działań karty pozostaje otwarta po "
+#~ "odsunięciu z niej kursora."
+
+#~ msgid "Message card actions palette"
+#~ msgstr "Paleta działań na kartach wiadomości"
+
+#~ msgid "Message card actions palette timeout"
+#~ msgstr "Czas wyświetlania palety działań na kartach"
+
+#~ msgid "Message card actions palette as a menu"
+#~ msgstr "Paleta działań na kartach jako menu"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Nie udało się zmienić nazwy katalogu: nieznany katalog"

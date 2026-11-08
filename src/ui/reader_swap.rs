@@ -20,11 +20,15 @@
 
 use adw::prelude::*;
 use relm4::prelude::*;
-use std::cell::Cell;
+use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
 /// A freeze nothing lifts (a page that never reports in) ends on its own.
 const BACKSTOP_MS: u64 = 1500;
+
+/// How long the still takes to fade out over the new message, so one
+/// message dissolves into the next rather than cutting to it.
+const FADE_MS: u32 = 80;
 
 struct Inner {
     /// Holds the pane, with the still laid over it.
@@ -34,6 +38,8 @@ struct Inner {
     /// Bumped per freeze, so what was meant to end one (a reveal, the
     /// backstop) can't end the next.
     generation: Cell<u64>,
+    /// The still fading out after a reveal.
+    fade: RefCell<Option<adw::TimedAnimation>>,
 }
 
 /// One reading pane's freeze. Cheap to clone; the reader, its attachment
@@ -61,6 +67,7 @@ impl ReaderSwap {
             still,
             frozen: Cell::new(false),
             generation: Cell::new(0),
+            fade: RefCell::new(None),
         }))
     }
 
@@ -105,6 +112,12 @@ impl ReaderSwap {
         let started = std::time::Instant::now();
         match still_of(&inner.host, &pane) {
             Ok(still) => {
+                // A still still fading from the last reveal gives way to
+                // this one, at full strength.
+                if let Some(fade) = inner.fade.take() {
+                    fade.pause();
+                }
+                inner.still.set_opacity(1.0);
                 inner.still.set_paintable(Some(&still));
                 inner.still.set_visible(true);
                 tracing::debug!(
@@ -120,17 +133,42 @@ impl ReaderSwap {
         }
     }
 
-    /// Show the pane as it now is, in one frame. Only for the freeze it was
-    /// meant for: a later one has a still of its own. `why` is for the log.
+    /// Show the pane as it now is: the still fades out over it in
+    /// `FADE_MS`. Only for the freeze it was meant for: a later one has a
+    /// still of its own. `why` is for the log.
     pub(crate) fn reveal(&self, generation: u64, why: &str) {
         let inner = &self.0;
         if inner.generation.get() != generation || !inner.frozen.get() {
             return;
         }
         tracing::debug!(target: "hylki::swap", "reveal {generation}: {why}");
-        inner.still.set_visible(false);
-        inner.still.set_paintable(None::<&gtk::gdk::Paintable>);
         inner.frozen.set(false);
+        if !inner.still.is_visible() {
+            return;
+        }
+        let still = inner.still.clone();
+        let target = adw::CallbackAnimationTarget::new(move |v| still.set_opacity(v));
+        let fade = adw::TimedAnimation::new(&inner.still, 1.0, 0.0, FADE_MS, target);
+        // Five frames at 60 Hz: an eased curve spends most of its change in
+        // the first, which reads as a cut. Even steps dissolve.
+        fade.set_easing(adw::Easing::Linear);
+        // Weak: the animation is kept in `Inner`.
+        let weak = Rc::downgrade(&self.0);
+        fade.connect_done(move |_| {
+            let Some(inner) = weak.upgrade() else { return };
+            // A freeze since has put up a still of its own.
+            if inner.frozen.get() || inner.generation.get() != generation {
+                return;
+            }
+            inner.still.set_visible(false);
+            inner.still.set_paintable(None::<&gtk::gdk::Paintable>);
+            inner.still.set_opacity(1.0);
+            inner.fade.replace(None);
+        });
+        if let Some(old) = inner.fade.replace(Some(fade.clone())) {
+            old.pause();
+        }
+        fade.play();
     }
 }
 

@@ -164,6 +164,51 @@ pub(super) fn oauth_key(email: &str) -> String {
     format!("oauth:{email}")
 }
 
+/// Keyring key for the mail cache's encryption key (`cache::at_rest`). No
+/// address can be this, so it never meets an account's password.
+const CACHE_KEY: &str = "cache-key";
+
+/// Run `f` on the keyring thread and wait up to `limit` for it. The cache
+/// key is read before the window exists, so a keyring that never answers
+/// must not leave the app invisible: past `limit` the read counts as
+/// failed, and the user is asked what to do.
+fn on_keyring_thread_within<T: Send + 'static>(
+    limit: std::time::Duration,
+    f: impl FnOnce() -> Result<T, String> + Send + 'static,
+) -> Result<T, String> {
+    let (tx, rx) = std::sync::mpsc::sync_channel(1);
+    keyring_later(move || {
+        let _ = tx.send(f());
+    });
+    match rx.recv_timeout(limit) {
+        Ok(answer) => answer,
+        Err(_) => Err(format!(
+            "the keyring did not answer within {} seconds",
+            limit.as_secs()
+        )),
+    }
+}
+
+/// The mail cache's key, `Ok(None)` when there is none, `Err` when the
+/// keyring is locked or did not answer within `limit`. Not looked for under
+/// Vireo's or Veem's service: neither encrypted its cache.
+pub(crate) fn read_cache_key(limit: std::time::Duration) -> Result<Option<String>, String> {
+    on_keyring_thread_within(limit, || {
+        match keyring_entry(CACHE_KEY).and_then(|e| e.get_password()) {
+            Ok(key) => Ok(Some(key)),
+            Err(keyring::Error::NoEntry) => Ok(None),
+            Err(e) => Err(e.to_string()),
+        }
+    })
+}
+
+pub(crate) fn store_cache_key(key: &str, limit: std::time::Duration) -> Result<(), String> {
+    let key = key.to_owned();
+    on_keyring_thread_within(limit, move || {
+        set_secret(CACHE_KEY, &key).map_err(|e| e.to_string())
+    })
+}
+
 pub(crate) fn store_oauth_refresh(email: &str, token: &str) -> keyring::Result<()> {
     set_secret(&oauth_key(email), token)
 }

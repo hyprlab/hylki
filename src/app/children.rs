@@ -140,7 +140,6 @@ fn message_view_output_msg(out: MessageViewOutput) -> AppMsg {
             thread: Vec::new(),
         },
         MessageViewOutput::CardAction { action, message } => AppMsg::CardAction { action, message },
-        MessageViewOutput::ContactSender(m) => AppMsg::CardContact(m),
         MessageViewOutput::AttachmentAction {
             account_id,
             id,
@@ -158,12 +157,6 @@ fn message_view_output_msg(out: MessageViewOutput) -> AppMsg {
             y,
             hit,
             popout: None,
-        },
-        MessageViewOutput::CardMoveTo { message, x, y } => AppMsg::ListMoveTo {
-            messages: vec![*message],
-            offer_whole: false,
-            x,
-            y,
         },
         MessageViewOutput::MarkSeen { account_id, id } => {
             AppMsg::ThreadMessageSeen { account_id, id }
@@ -459,7 +452,11 @@ pub(super) struct Children {
 impl Children {
     /// Launches every child with its output forwarded to the root.
     pub(super) fn launch(boot: &Boot, sender: &ComponentSender<AppModel>) -> Self {
-        let show_attachments = boot.prefs.show_attachments;
+        let show_attachments = if boot.focus.enabled {
+            boot.focus.show_attachments
+        } else {
+            boot.prefs.show_attachments
+        };
         let start = start_target(boot.prefs.start_view);
         let start_pending = start.is_some();
         let sidebar = Sidebar::builder()

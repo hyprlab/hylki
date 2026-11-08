@@ -22,8 +22,8 @@ impl MessageList {
         y: f64,
         sender: &ComponentSender<Self>,
     ) {
-        // Each entry carries the same icon as the reader-toolbar button (or
-        // row-palette button) for that action, tying the two together.
+        // Each entry carries the same icon as the reader-toolbar button for
+        // that action, tying the two together.
         let conversation = self.row_conversation(msg);
         let item = |action: RowAction, label: &str, icon: &str| -> MenuEntry {
             let s = sender.clone();

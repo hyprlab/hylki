@@ -318,8 +318,8 @@ pub(crate) struct AppModel {
     /// Whether the sidebar is in icon-only (collapsed) mode.
     pub(super) sidebar_collapsed: bool,
     /// The narrow-window breakpoint is currently applied (window is too narrow
-    /// for the expanded sidebar + a full-width actions palette — e.g. tiled to
-    /// half of a 1920px screen).
+    /// for the expanded sidebar + the list's floor — e.g. tiled to half of a
+    /// 1920px screen).
     pub(super) auto_rail: bool,
     /// The rail's current on-screen state — the user's choice OR'd with the
     /// breakpoint, tracked so apply/unapply only animate real changes.
@@ -404,6 +404,8 @@ pub(crate) struct AppModel {
     pub(super) auto_remote_content: bool,
     /// Whether the next messages' remote content is fetched ahead (#474).
     pub(super) remote_ahead: bool,
+    /// Whether links opened from a message lose their trackers first.
+    pub(super) clean_links: bool,
     /// Whether the blocked-remote-content banner is shown at all. Hiding it changes nothing about what
     /// is blocked — only whether the reader says so.
     pub(super) show_remote_banner: bool,
@@ -425,11 +427,6 @@ pub(crate) struct AppModel {
     pub(super) receipts_filed: HashSet<BodyKey>,
     /// Addresses/domains whose incoming inbox mail is auto-deleted (lowercased).
     pub(super) blacklist: Vec<String>,
-    /// Seconds the message-list actions palette stays open after the cursor leaves.
-    pub(super) palette_collapse_secs: u64,
-    /// Seconds a message card's actions palette stays open — the cards' own,
-    /// separate from the list's above.
-    pub(super) card_palette_collapse_secs: u64,
     /// Whether to load sender avatars from Gravatar.
     pub(super) gravatar: bool,
     /// Whether the colored avatars are drawn at all (#29).
@@ -761,17 +758,6 @@ pub(crate) struct AppModel {
     /// selection over an open conversation stands for the whole thread when
     /// deleting; a lone picked card never does.
     pub(super) selection_from_cards: bool,
-    /// Conversation card actions hide until hovered (preference).
-    pub(super) card_actions_hover: bool,
-    /// With the ⋯ toggle off: card actions appear automatically on hover.
-    pub(super) card_actions_auto: bool,
-    /// Whether the message list rows carry an actions palette at all.
-    pub(super) list_palette: bool,
-    /// The list's actions palette opens on row hover (no ⋯ click).
-    pub(super) list_palette_hover: bool,
-    /// A message card's ⋯ opens the card menu instead of sliding its
-    /// actions palette out.
-    pub(super) card_palette_menu: bool,
     /// Message rows take a sideways swipe to archive / delete (#92).
     pub(super) swipe_enabled: bool,
     /// The message list's swipe-gesture sides are swapped (#swipe).

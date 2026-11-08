@@ -61,8 +61,8 @@ impl SimpleComponent for MessageList {
                 #[name = "scroller"]
                 set_child = &gtk::ScrolledWindow {
                     set_vexpand: true,
-                    // External, not Never: with Never the widest row's minimum (the
-                    // actions palette reservation plus the avatar column) propagates
+                    // External, not Never: with Never the widest row's minimum
+                    // propagates
                     // all the way up and becomes part of the window's minimum width,
                     // which pushed it past half of a 1920px screen — at which point
                     // GNOME refuses to tile the window to the left/right edge. Rows
@@ -72,12 +72,10 @@ impl SimpleComponent for MessageList {
                     // edge (#443), with a bar that says so.
                     #[watch]
                     set_hscrollbar_policy: if model.single_line && model.column_scroll { gtk::PolicyType::Automatic } else { gtk::PolicyType::External },
-                    // The pane's own floor, now that rows no longer set one: room
-                    // for a row's full actions palette (avatar + dot + the reserved
-                    // actions line), so opening the palette never needs to clip —
-                    // the narrow-window breakpoint rails the sidebar in time to
-                    // afford this even in a half-screen tile. (Grows by the thread
-                    // indent while a conversation is expanded — see the rebuild.)
+                    // The pane's own floor, now that rows no longer set one: the
+                    // narrow-window breakpoint rails the sidebar in time to afford
+                    // this even in a half-screen tile. (Grows by the thread indent
+                    // while a conversation is expanded — see the rebuild.)
                     set_size_request: (LIST_MIN_WIDTH, -1),
 
                     // The view must be the scroller's own child to build only
@@ -412,7 +410,6 @@ impl SimpleComponent for MessageList {
             MessageListInput::SetOwnAddresses(addresses) => self.on_set_own_addresses(addresses),
             MessageListInput::SetThreading(on) => self.on_set_threading(on),
             MessageListInput::SetThreadExpansion(on) => self.on_set_thread_expansion(on),
-            MessageListInput::SetListPalette(on) => self.on_set_list_palette(on),
             MessageListInput::ResolveDelete => self.on_resolve_delete(&sender),
             MessageListInput::SetThreadsExpanded(on) => self.on_set_threads_expanded(on),
             // Every row's date, and a conversation's latest, is worked out
@@ -444,6 +441,9 @@ impl SimpleComponent for MessageList {
                 subject,
                 animate,
             } => self.on_set_look(avatars, preview_lines, subject, animate, &sender),
+            MessageListInput::SetMarks { stars, attachments } => {
+                self.on_set_marks(stars, attachments)
+            }
             MessageListInput::LookSettled => {
                 self.avatars = false;
                 self.sync_look();
@@ -567,11 +567,6 @@ impl SimpleComponent for MessageList {
                 labels,
             } => self.on_set_keywords(slot, keywords, labels),
             MessageListInput::SetTags(tags) => self.on_set_tags(tags),
-            MessageListInput::SetTagFor {
-                message,
-                keyword,
-                add,
-            } => self.on_set_tag_for(message, keyword, add, &sender),
             MessageListInput::SetHasAttachment {
                 account_id,
                 folder_id,
@@ -587,10 +582,6 @@ impl SimpleComponent for MessageList {
             MessageListInput::RowAction { action, message } => {
                 self.on_row_action(action, message, &sender)
             }
-            MessageListInput::SetPaletteCollapse(secs) => {
-                self.shared.palette_collapse_secs.set(secs)
-            }
-            MessageListInput::SetPaletteHover(on) => self.shared.palette_hover.set(on),
             MessageListInput::SetSwipeReversed(on) => self.shared.swipe_reversed.set(on),
             MessageListInput::SetSwipeEnabled(on) => self.on_set_swipe_enabled(on),
             MessageListInput::SetSwipeSensitivity(factor) => {
@@ -598,13 +589,9 @@ impl SimpleComponent for MessageList {
                 self.shared.refresh_all();
             }
             MessageListInput::SetSelected(id) => self.on_set_selected(id),
-            MessageListInput::DebugOpenPalette(idx) => self.on_debug_open_palette(idx),
             MessageListInput::DebugSwipe { index, left } => self.on_debug_swipe(index, left),
             MessageListInput::DebugRowMenu => self.on_debug_row_menu(&sender),
             MessageListInput::SelectAndLoad(key) => self.on_select_and_load(key, &sender),
-            MessageListInput::RowMoveTo { message, x, y } => {
-                self.on_row_move_to(message, x, y, &sender)
-            }
             MessageListInput::ContextMenu { x, y, key } => self.on_context_menu(x, y, key, &sender),
         }
         // Whatever just happened, restate the header count if it moved — every

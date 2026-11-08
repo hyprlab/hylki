@@ -201,11 +201,12 @@ fn from_headers(
             }
         }
     }
-    // RFC 8058 asks for https; a sender who promised one-click on an http
-    // handle still gets the POST — the token is already in a cleartext mail,
-    // and the alternative is a browser.
+    // RFC 8058 allows the POST to an https handle only: over http the
+    // request, and the token that unsubscribes, can be read and replayed
+    // on the way, or answered by anyone in between. An http handle is still
+    // the list's page, for the browser.
     let one_click = match post {
-        Some(p) if squash_ascii(p) == ONE_CLICK => https.or_else(|| web.clone()),
+        Some(p) if squash_ascii(p) == ONE_CLICK => https,
         _ => None,
     };
     if one_click.is_none() && mailto.is_none() && web.is_none() {
@@ -375,10 +376,11 @@ mod tests {
             None,
         )
         .unwrap();
+        assert_eq!(u.one_click, None, "RFC 8058: no POST over http");
         assert_eq!(
-            u.one_click.as_deref(),
+            u.web.as_deref(),
             Some("http://list.example/u/1"),
-            "http gets the POST too"
+            "the page still opens in the browser"
         );
     }
 

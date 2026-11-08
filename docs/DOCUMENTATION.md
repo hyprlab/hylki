@@ -180,7 +180,10 @@ header, opens or closes its folders, and a single click elsewhere on it
 does nothing. **Settings → Sidebar → Fold accounts with one click** brings
 back the single click anywhere on the header. In the icon rail, which has
 no chevrons, a click on a section's icon opens or closes it, and a long
-press or a double click opens or closes the unified rows.
+press or a double click opens or closes the unified rows. A click on an
+account's avatar opens that account's Inbox, and a long press or a double
+click opens or closes its folders; with **Fold accounts with one click** on,
+a click opens or closes them instead.
 
 **Settings → Sidebar → Unified** chooses the unified section's rows.
 Inboxes, Starred, Sent, Drafts, Archive and Snoozed are on until switched
@@ -1106,7 +1109,9 @@ say, is tried again at the next one, without a message about it.
 ### Undo Send
 
 A message sent waits five seconds before it goes, with **Undo** on offer
-in a notice at the foot of the window. Undo brings it back to the composer
+in a notice at the foot of the window. **Esc** does the same as Undo
+(the most recent message, when several wait), unless a text field or a
+composer has the focus. Undo brings it back to the composer
 it was written in: a reply to the split beside its conversation, if that
 conversation is still open, anything else to a window. If it cannot be
 sent, the status bar says why. **Settings →
@@ -1680,6 +1685,10 @@ key…** in the shield's popover). Hylki signs the key locally with your own,
 which is what turns the shield green. Trusting a key you have not checked
 lets an impostor's signature pass as theirs, so do check.
 
+Trust covers the addresses the key has when you give it. If a trusted key later
+gains an address, its row offers **Trust…** again and the dialog names the new
+address, and mail signed from that address stays amber until then.
+
 **5. Send signed or encrypted mail**
 
 The composer has two buttons beside Send: **Sign** and **Encrypt**. Sign adds
@@ -1688,6 +1697,19 @@ message to every recipient's key and your own, and turns Sign on too. If a
 recipient has no key in your keyring, or your address has no key of its own,
 Hylki says so before anything is sent. Replying to an encrypted message starts
 with Encrypt on.
+
+When a recipient's key is one you have not trusted yet (step 4), **Send**
+names them and asks first: anyone can publish a key with any address on it.
+**Send Anyway** encrypts to the key as it is and does not ask about that key
+again; it asks again if the address gets a different key. Those keys are listed
+under *Settings → OpenPGP → Unchecked keys you encrypt to*, where **Ask Again**
+takes the answer back. Removing a key does the same. With several keys for one
+address, the one you trusted is used.
+
+Bcc recipients are encrypted to without their key IDs in the message, so the
+To and Cc recipients cannot tell whose keys were Bcc'd. They can still see
+that some were. gpg tries each secret key a recipient has on a hidden key ID, so
+someone with several passphrase-protected keys may be asked for more than one.
 
 An encrypted message carries its subject inside, where only the recipients
 can read it, and "..." as the subject anyone else sees, as Thunderbird does.
@@ -1718,6 +1740,11 @@ means it was signed. Green: everything checks out against a trusted key.
 Amber: a doubt, such as an unknown or untrusted key, or an expired one. Red:
 a failure, such as a signature that does not match or a message that could not
 be decrypted. Click the icon for the details.
+
+A signature only shows who owns the key, so it stays amber when none of the
+key's addresses is the message's From address, however much the key is
+trusted: it reads **Signed by another address**, and the details say which
+address the key lacks.
 
 To have the result in words as well, switch on *Settings → Reading → Name the
 OpenPGP result*. The icons then sit in a label that reads **Signed**,
@@ -1861,7 +1888,33 @@ What you fold or open stays that way while the conversation is on screen,
 and so does a message read while it is open.
 Printing shows every message in full.
 
+### Focus Mode
+
+<kbd>Ctrl+Shift+F</kbd> or the main menu turns Focus Mode on and off.
+**Settings → Focus Mode** holds everything about it. While it is on, that page
+decides the layout, and the settings on the other pages for the same things
+wait until it ends: the sidebar and its unified rows and sections, the message
+list's layout, column headings, avatars, preview lines, subjects, stars and
+attachment icons, and Reader View. Favorites, Filters and Tags sit above the
+accounts, and Contacts and Attachments in the footer. What is changed from the
+window while it is on, such as folding the sidebar, lasts as long as it does.
+**Unread counts** off takes every unread count and dot out of the sidebar, on
+avatars and folders too. The Outbox keeps its count.
+
+On a new install the message list uses the **Automatic** layout, with subjects,
+stars and attachment icons hidden. An existing Focus Mode setup is left as it
+is.
+
+The toolbar is the one exception: with **Fold the reading pane's toolbar** off,
+the toolbar is as arranged in **Settings → Appearance → Toolbar**. Colors, fonts,
+dates and the columns of the single-line layout are the same in and out of Focus
+Mode.
+
 ### The reader's toolbar
+
+The ⋯ at the end of a message's header opens the same menu as a right click on
+the message. It acts on that message, and has **Show Sender's Fonts and Colors**
+while **Settings → Reading → Use my own font** or **Use my own colors** is on.
 
 The buttons above the message are in two groups. The left group, up to seven
 buttons, stays on the bar at every width: Reply, Reply All, Forward, Star,
@@ -1988,9 +2041,9 @@ that opens calendar files, as an invitation's **Add to Calendar** is.
 
 **Main menu → Reading Pane** puts the reader **Right** of the list, **Below**
 it or **Off**; <kbd>Ctrl+Alt+1</kbd>, <kbd>Ctrl+Alt+2</kbd> and
-<kbd>Ctrl+Alt+3</kbd> do the same. Below or off, the list shows a message on a single line, whatever
-the layout below says, the window's close button moves to the list's header,
-and replies, forwards and new messages open in a window of their own. Below,
+<kbd>Ctrl+Alt+3</kbd> do the same. Below or off, the window's close button moves
+to the list's header, and replies, forwards and new messages open in a window
+of their own. Below,
 the toolbar stays at the top of the reader; drag the line between the list and
 the reader to set the list's height, which Hylki remembers apart from its width
 beside the reader, and the attachments start folded.
@@ -2013,9 +2066,11 @@ their own. **Single line** puts them on one line in columns: the sender's
 circle and name, the subject with the text dimmed after it, then tags, a
 paperclip, the conversation's size and a short date. **Automatic** uses one
 line while the list pane is dragged wider than about 600 pixels and cards
-when it is narrower. On one line the actions palette is not shown and a
-row does not swipe, as sideways is how the list scrolls to its columns;
-the right-click menu and keyboard shortcuts do the same things.
+when it is narrower, and always one line with the reader below the list or
+off. A new install starts on **Automatic**; an existing choice is kept. On one
+line a row does not swipe, as sideways is how
+the list scrolls to its columns; the right-click menu and keyboard shortcuts
+do the same things.
 
 **Settings → Message List → Columns** chooses what a single line shows and
 in what order: drag a column between **Shown** and **Not shown**, or along
@@ -2302,6 +2357,13 @@ The Unsubscribe banner on mail from a list asks before it leaves the list, and
 can take the mail already received from that address to the Trash with it:
 tick **Also delete the messages from …** in that dialog.
 
+Where a list offers one-click unsubscribe (RFC 8058), Hylki sends the request
+itself, with no page in between. It does so only over https, and only when
+the mail provider's DKIM check covers the List-Unsubscribe header or nothing
+about the sender looks wrong (no failed or suspicious sender check). Otherwise
+the list's unsubscribe page opens in the browser instead, so a forged message
+cannot have Hylki send a request in your name.
+
 For the rest, each account's settings have **Move list mail to Trash**, under
 Syncing: Inbox mail with an unsubscribe link (a List-Unsubscribe header) that
 is older than 30, 60, 90 or 180 days goes to the Trash, checked at each sync
@@ -2474,6 +2536,50 @@ views' caches in `~/.cache/hylki/`, and account pictures in
 Passwords and tokens are never in those files: they go to the system keyring
 through the Secret Service. Decrypted OpenPGP messages are never cached at all.
 
+**Settings → Privacy → Encrypt stored mail** encrypts the mail cache. It is
+off by default. `cache.db` holds the message list, every message and
+attachment that was opened or kept offline, the Outbox and the addresses
+collected from mail, mail that a local bridge decrypted from end-to-end
+encryption included. With the switch on, it is a SQLCipher 4 database
+(AES-256, with an HMAC on every page) under a random 256-bit key, made the
+first time and kept in the keyring as `cache-key` beside the passwords. A copy
+of the file, or a backup of it, is unreadable without that keyring. Reads from
+an encrypted cache are a little slower.
+
+The switch takes effect at the next start. The cache is then encrypted in
+place: an encrypted copy is made and checked against the original table by
+table, and only then takes its place, so a failure leaves the original as it
+was. A window shows how far it has got; it takes about a minute for every
+2 GB, and quitting from it leaves the cache as it was. The unencrypted file is
+then deleted, but as with any deleted file, the disk may keep its old blocks
+until they are written over. Turning the switch off decrypts the cache the
+same way at the next start.
+
+Versions before 1.48.0-beta.3 cannot open an encrypted cache, and fail to
+load mail. Before going back to one, turn **Encrypt stored mail** off and
+restart Hylki once, which decrypts the cache. Otherwise delete
+`~/.local/share/hylki/cache.db` (in the Flatpak,
+`~/.var/app/co.hyprlab.Hylki/data/hylki/cache.db`), and the mail is downloaded
+again.
+
+An encrypted cache is never opened unencrypted instead. A window says so when
+the keyring is slow to answer. When it is locked, or has not answered within a
+minute and a half, holds no key, or holds one that does not open the cache,
+Hylki asks before its window opens: **Try Again**, **Quit**, or **Reset
+Cache…**, which deletes the cache and downloads the mail again. Mail that
+exists only on this computer is then lost: a POP3 account's mail, and unsent
+mail in the Outbox. When the keyring cannot be reached at all, **Store
+Unencrypted…** takes the place of the reset: it turns the switch off and
+deletes the encrypted cache it cannot open. The switch is stored as the
+one-line file `cache-encryption` in `~/.config/hylki/`. The demo (`HYLKI_DEMO`)
+never opens the cache and asks nothing.
+
+**Settings → Backup → Export settings** writes a file only you can
+read. It carries no passwords or tokens, and no OAuth client secret either:
+importing it on the same computer keeps the secret already there, and on
+another one, an account with its own OAuth client needs the secret typed in
+again.
+
 **Remote content**, once allowed for a message, is fetched by Hylki itself, with
 no cookies and no Referer, and kept in `~/.cache/hylki/remote/` for a week, up
 to 2 GB, so a message shown again does not fetch it again. **Settings →
@@ -2483,6 +2589,25 @@ for mail whose remote content would load anyway, and not on a metered
 connection when Settings asks to save data there. It is off by default,
 because a sender's tracking pixel then reports a message as opened before you
 open it. Stored as `remote_ahead` in `privacy.toml`.
+
+**Links in messages** lose their tracking tags (`utm_source` and the other
+`utm_` tags, `fbclid`, `gclid`, `mc_eid` and similar) before the browser opens
+them, and **Copy Link Address** copies them without. A link wrapped by a
+redirector that logs the click, such as Google's `/url` or Facebook's
+`l.php`, opens at the address it carries, when that address is written in the
+link itself; nothing is looked up to find it. Outlook Safe Links stay as they
+are, because Microsoft Defender checks the address when the link is clicked.
+**Settings → Privacy → Remove trackers from links** turns this off. Stored as
+`clean_links` in `privacy.toml`.
+
+The reader and the composer never look up the addresses of a message's links
+ahead of a click (DNS prefetching), which would tell the sender's DNS server
+that the message was opened.
+
+**Attachments that are programs or scripts**, such as `.desktop`, `.sh`,
+`.AppImage`, `.jar` or `.exe` files, or a file whose first bytes say it is
+one whatever its name, are asked about before they open: opening one can run
+it.
 
 **Read receipts** are sent only when you press **Send Receipt**, unless
 **Settings → Privacy → Send read receipts** is **Always**. See

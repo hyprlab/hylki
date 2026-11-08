@@ -193,6 +193,33 @@ fn only_web_and_mail_links_reach_the_desktop() {
     }
 }
 
+/// The Privacy switch decides whether a clicked link loses its trackers;
+/// what comes off is `crate::mail::link_clean`'s own table.
+#[test]
+fn opened_links_lose_their_trackers_while_the_switch_is_on() {
+    let link = "https://shop.example/item?id=7&utm_source=news";
+    assert_eq!(link_to_open(link), "https://shop.example/item?id=7");
+    set_clean_links(false);
+    assert_eq!(link_to_open(link), link);
+    set_clean_links(true);
+    assert_eq!(link_to_open(link), "https://shop.example/item?id=7");
+}
+
+/// Reader, composer and preview all start from these settings, so none of
+/// them resolves a message's link hosts ahead of a click. (On WebKitGTK
+/// 2.54 the getter is deprecated and always answers false.)
+///
+/// Ignored by default, as below: WebKit's settings object wants a display.
+/// `xvfb-run -a cargo test -- --ignored mail_views_never_prefetch_dns`
+#[test]
+#[ignore = "needs a display"]
+fn mail_views_never_prefetch_dns() {
+    gtk::init().expect("a display");
+    let settings = crate::ui::message_view::private_settings();
+    assert!(!settings.enables_dns_prefetching());
+    assert!(!settings.enables_developer_extras());
+}
+
 /// Renders the real wrapper document in a real WebView and reports what
 /// actually happened in the engine.
 ///

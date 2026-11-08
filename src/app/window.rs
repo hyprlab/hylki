@@ -68,13 +68,12 @@ impl AppModel {
         if self.start_fullscreen {
             root.fullscreen();
         }
-        // Below this width the expanded sidebar and a full-width Actions
-        // Palette can't both fit (280 sidebar + 324 list + 492 reader), so the
-        // sidebar drops to its icon rail automatically — this is what keeps the
-        // palette whole when the window is tiled to half of a 1920px screen.
-        // With a breakpoint present the window no longer derives its minimum
-        // size from its content, so pin an explicit floor: the sidebar rail
-        // (80) + the list's palette floor (324) + the reader header (~492).
+        // Below this width the sidebar drops to its icon rail automatically,
+        // which leaves the list and the reader their room when the window is
+        // tiled to half of a 1920px screen. With a breakpoint present the window
+        // no longer derives its minimum size from its content, so pin an explicit
+        // floor: the sidebar rail (80), a list at its usual width and the reader
+        // header (~492).
         root.set_size_request(904, 360);
         let narrow = adw::Breakpoint::new(adw::BreakpointCondition::new_length(
             adw::BreakpointConditionLengthType::MaxWidth,

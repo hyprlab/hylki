@@ -215,6 +215,14 @@ impl Sidebar {
             } else {
                 w.remove_css_class("rail-dots");
             }
+            // The same way, for every count in the sidebar: their visibility
+            // is set in many places as the numbers change, and all of those
+            // may stay unaware of this switch.
+            if self.unread_counts {
+                w.remove_css_class("no-unread-counts");
+            } else {
+                w.add_css_class("no-unread-counts");
+            }
         }
     }
 
@@ -583,6 +591,7 @@ impl Sidebar {
             pin_icon_size(&img);
             let badge = gtk::Label::new(Some(&self.outbox_count.to_string()));
             style_badge(&badge, 5);
+            badge.add_css_class("outbox-count");
             if self.collapsed {
                 hbox.set_halign(gtk::Align::Center);
                 row.set_tooltip_text(Some(&format!(

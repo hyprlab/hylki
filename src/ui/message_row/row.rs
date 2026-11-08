@@ -26,11 +26,6 @@ pub(super) struct RowWidgets {
     pub(super) overlay: gtk::Overlay,
     pub(super) rail_stub: gtk::Box,
     pub(super) node: gtk::Box,
-    pub(super) actions_line: gtk::Box,
-    pub(super) chevron: gtk::Button,
-    pub(super) palette_clip: gtk::Overlay,
-    pub(super) palette_spacer: gtk::Box,
-    pub(super) palette_inner: gtk::Box,
     pub(super) content: gtk::Box,
     pub(super) avatar_revealer: gtk::Revealer,
     pub(super) avatar: adw::Avatar,
@@ -81,16 +76,6 @@ pub(super) struct RowWidgets {
     pub(super) preview: gtk::Label,
 }
 
-/// The action palette's state-carrying buttons, once built.
-pub(super) struct PaletteButtons {
-    /// Absent for a draft: a draft is neither read nor unread.
-    pub(super) read: Option<gtk::Button>,
-    pub(super) star: gtk::Button,
-    pub(super) tag: gtk::Button,
-    /// Built for Junk ("Not spam") and Drafts (no read toggle) or not.
-    pub(super) built_for: (bool, bool),
-}
-
 /// What a row's tag chips were last built for: its keywords, its Gmail
 /// labels, the tags' generation and the folder pill it shows.
 type TagsKey = (Vec<String>, Vec<String>, u64, Option<String>);
@@ -111,16 +96,10 @@ pub(super) struct RowState {
     /// The keywords, Gmail labels and tag generation the chips were built for.
     pub(super) tags_for: Option<TagsKey>,
     pub(super) avatar_shown: bool,
-    pub(super) hovered: bool,
     /// The columns the widgets are laid out in on one line, or `None` for
     /// the card (#334).
     pub(super) columns: Option<Vec<ListColumn>>,
     pub(super) dragging: bool,
-    pub(super) palette_open: bool,
-    pub(super) palette: Option<PaletteButtons>,
-    pub(super) palette_target: i32,
-    pub(super) palette_anim: Option<adw::TimedAnimation>,
-    pub(super) collapse_timer: Option<glib::SourceId>,
     /// Current swipe distance in px (negative = dragged left) — the source
     /// of truth while a gesture is live; reset to 0 the instant a release is
     /// resolved (the strip then animates back out of view).
@@ -218,20 +197,9 @@ impl Row {
             }
         };
 
-        // Hover: the ⋯ fades in, and in hover mode the palette opens.
-        let motion = gtk::EventControllerMotion::new();
-        {
-            let enter = on(|r| r.set_hover(true));
-            motion.connect_enter(move |_, _, _| enter());
-            let leave = on(|r| r.set_hover(false));
-            motion.connect_leave(move |_| leave());
-        }
-        self.w.host.add_controller(motion);
-
         // Right-click: the row's menu, in the capture phase so the press
-        // reaches it before anything inside the row (the count chip, the
-        // palette's buttons) can take it; claimed, so none of them acts on
-        // it afterwards, and the row is not selected.
+        // reaches it before anything inside the row (the count chip) can take
+        // it; claimed, so nothing acts on it afterwards, and the row is not selected.
         let click = gtk::GestureClick::new();
         click.set_button(gtk::gdk::BUTTON_SECONDARY);
         click.set_propagation_phase(gtk::PropagationPhase::Capture);
@@ -303,29 +271,6 @@ impl Row {
             self.w.dot.add_controller(click);
             self.w.dot.set_cursor_from_name(Some("pointer"));
         }
-        // The ⋯ and the palette.
-        {
-            let toggle = on(Row::toggle_palette);
-            self.w.chevron.connect_clicked(move |_| toggle());
-        }
-        let palette_motion = gtk::EventControllerMotion::new();
-        {
-            let enter = on(Row::cancel_collapse);
-            palette_motion.connect_enter(move |_, _, _| enter());
-            let leave = on(|r| {
-                if r.st.borrow().palette_open {
-                    r.arm_collapse();
-                }
-            });
-            palette_motion.connect_leave(move |_| leave());
-        }
-        self.w.palette_inner.add_controller(palette_motion);
-        // The clip is set once: the palette hangs clipped over the spacer
-        // whose width is the one thing animated.
-        self.w
-            .palette_clip
-            .set_clip_overlay(&self.w.palette_inner, true);
-
         // The conversation chip.
         {
             let toggle = on(|r| {
@@ -430,13 +375,10 @@ impl Row {
     }
 
     /// Put away whatever the row was doing for the message it showed: a
-    /// palette open, a swipe under way, a circle on loan from a lookup.
+    /// swipe under way, a circle on loan from a lookup.
     fn reset(&self) {
-        let (palette_anim, swipe_anim, timer) = {
+        let swipe_anim = {
             let mut st = self.st.borrow_mut();
-            st.palette_open = false;
-            st.palette_target = 0;
-            st.hovered = false;
             st.dragging = false;
             st.avatar_shown = true;
             st.swipe_progress = 0.0;
@@ -447,29 +389,11 @@ impl Row {
             st.swipe_active = false;
             st.avatar_texture = None;
             st.face_for = None;
-            (
-                st.palette_anim.take(),
-                st.swipe_anim.take(),
-                st.collapse_timer.take(),
-            )
+            st.swipe_anim.take()
         };
-        if let Some(a) = palette_anim {
-            a.pause();
-        }
         if let Some(a) = swipe_anim {
             a.pause();
         }
-        if let Some(t) = timer {
-            t.remove();
-        }
-        if let Some(shared) = self.shared() {
-            let open = shared.open_palette.borrow().upgrade();
-            if open.is_some_and(|r| std::ptr::eq(Rc::as_ptr(&r), self)) {
-                shared.open_palette.replace(Weak::new());
-            }
-        }
-        self.w.palette_spacer.set_width_request(0);
-        self.w.palette_inner.set_visible(false);
         self.w.surface.set_progress_px(0.0);
         self.w.revealer.set_transition_duration(0);
         self.w.revealer.set_reveal_child(true);
@@ -484,8 +408,6 @@ impl Row {
     // ── Names and faces ──
 
     // ── Focus Mode ──
-
-    // ── The palette ──
 
     // ── The swipe ──
 }

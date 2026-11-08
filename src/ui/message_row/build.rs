@@ -46,7 +46,7 @@ pub(super) fn build_widgets() -> RowWidgets {
     // The content: avatar, unread dot and the three lines of text.
     let content = gtk::Box::new(gtk::Orientation::Horizontal, 8);
     content.add_css_class("message-row");
-    // A palette wider than the row is clipped here rather than painted
+    // Anything wider than the row is clipped here rather than painted
     // across the divider into the reader.
     content.set_overflow(gtk::Overflow::Hidden);
     overlay.set_child(Some(&content));
@@ -73,7 +73,10 @@ pub(super) fn build_widgets() -> RowWidgets {
 
     let top = gtk::Box::new(gtk::Orientation::Horizontal, 6);
     let name = gtk::Label::new(None);
-    name.set_halign(gtk::Align::Start);
+    // All the room it is given, not just its measured width: that can be out
+    // of date once a row goes from one line back to a card, and it cut short
+    // names that had space to spare.
+    name.set_xalign(0.0);
     name.set_hexpand(true);
     name.set_ellipsize(gtk::pango::EllipsizeMode::End);
     name.add_css_class("message-sender");
@@ -227,45 +230,6 @@ pub(super) fn build_widgets() -> RowWidgets {
     node.set_valign(gtk::Align::Center);
     overlay.add_overlay(&node);
 
-    // The actions palette floats over the pill's bottom-left corner, opening
-    // rightward from the ⋯ (#81). The holder has a FIXED width: overlay
-    // children are re-allocated lazily, so one that grew with the slide
-    // would snap instead of animating.
-    let holder = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    holder.set_width_request(320);
-    holder.set_halign(gtk::Align::Start);
-    holder.set_valign(gtk::Align::End);
-    let actions_line = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    actions_line.set_halign(gtk::Align::Start);
-    actions_line.set_valign(gtk::Align::End);
-    actions_line.add_css_class("actions-line");
-    // The ⋯ opens and closes the palette without selecting the message: a
-    // button's click is consumed before the row's selection gesture.
-    let chevron = gtk::Button::from_icon_name("view-more-horizontal-symbolic");
-    chevron.add_css_class("flat");
-    chevron.add_css_class("palette-toggle");
-    chevron.set_tooltip_text(Some(i18n("Actions").as_str()));
-    chevron.set_valign(gtk::Align::Center);
-    actions_line.append(&chevron);
-    // The palette hangs clipped over a spacer whose width is the one thing
-    // animated: a Box's width request is only a floor, so the spacer is the
-    // hard cap.
-    let palette_clip = gtk::Overlay::new();
-    let spacer_holder = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    let palette_spacer = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    palette_spacer.set_width_request(0);
-    spacer_holder.append(&palette_spacer);
-    palette_clip.set_child(Some(&spacer_holder));
-    let palette_inner = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    palette_inner.add_css_class("actions-palette");
-    palette_inner.set_halign(gtk::Align::Start);
-    palette_inner.set_valign(gtk::Align::Center);
-    palette_inner.set_visible(false);
-    palette_clip.add_overlay(&palette_inner);
-    actions_line.append(&palette_clip);
-    holder.append(&actions_line);
-    overlay.add_overlay(&holder);
-
     RowWidgets {
         host,
         revealer,
@@ -277,11 +241,6 @@ pub(super) fn build_widgets() -> RowWidgets {
         overlay,
         rail_stub,
         node,
-        actions_line,
-        chevron,
-        palette_clip,
-        palette_spacer,
-        palette_inner,
         content,
         recipients,
         recipients_col,

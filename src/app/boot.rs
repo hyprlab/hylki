@@ -100,7 +100,11 @@ fn load_sidebar_layout(
         focus.enabled = focus.start_focused;
         config::save_focus_mode(&focus);
     }
-    let rail_now = icon_only || focus.active(config::FocusPart::RailSidebar);
+    let rail_now = if focus.enabled {
+        focus.rail_sidebar
+    } else {
+        icon_only
+    };
     if !prefs.remember_sidebar {
         // The layout starts fresh; the order things were put in stays.
         sidebar_state = config::SidebarState {

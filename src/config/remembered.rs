@@ -1,12 +1,13 @@
 //! Answers given from the reader that are remembered: the lists
 //! unsubscribed from (unsubscribed.toml), the invitations answered
 //! (invites.toml) and the read receipts sent or declined (receipts.toml).
-//! Also the receipts that came back for mail sent (read_by.toml).
+//! Also the receipts that came back for mail sent (read_by.toml), and the
+//! unchecked OpenPGP keys the composer was told to use (accepted_keys.toml).
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-use super::{config_file, read_toml, save_plain_toml};
+use super::{config_file, read_toml, save_plain_toml, save_private_toml};
 
 /// A mailing list the user has unsubscribed from through the reader's
 /// button, so a later message from the same list can say so.
@@ -187,4 +188,52 @@ pub(crate) fn save_read_by(file: &ReadByFile) {
         read: file.read[read..].to_vec(),
     };
     save_plain_toml(read_by_path(), &file);
+}
+
+/// An unchecked OpenPGP key the user chose to encrypt to anyway. The address
+/// goes with the fingerprint, so a different key turning up for the address
+/// asks again.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub(crate) struct AcceptedKey {
+    /// Lowercased.
+    pub(crate) addr: String,
+    pub(crate) fingerprint: String,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub(super) struct AcceptedKeysFile {
+    #[serde(default)]
+    pub(super) keys: Vec<AcceptedKey>,
+}
+
+fn accepted_keys_path() -> Option<PathBuf> {
+    config_file("accepted_keys.toml")
+}
+
+/// The keys **Send Anyway** was answered for.
+pub(crate) fn load_accepted_keys() -> Vec<AcceptedKey> {
+    read_toml::<AcceptedKeysFile>(accepted_keys_path())
+        .unwrap_or_default()
+        .keys
+}
+
+/// Remember these keys beside those already accepted. Who someone writes to
+/// encrypted stays owner-only.
+pub(crate) fn accept_keys(new: &[AcceptedKey]) {
+    let mut keys = load_accepted_keys();
+    for key in new {
+        if !keys.contains(key) {
+            keys.push(key.clone());
+        }
+    }
+    let file = AcceptedKeysFile { keys };
+    save_private_toml(accepted_keys_path(), &file, "accepted_keys.toml", true);
+}
+
+/// Keep only the accepted keys `keep` says to: Send asks about the others again.
+pub(crate) fn retain_accepted_keys(keep: impl Fn(&AcceptedKey) -> bool) {
+    let mut keys = load_accepted_keys();
+    keys.retain(keep);
+    let file = AcceptedKeysFile { keys };
+    save_private_toml(accepted_keys_path(), &file, "accepted_keys.toml", true);
 }

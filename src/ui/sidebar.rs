@@ -56,6 +56,8 @@ pub(crate) struct Sidebar {
     account_click_folds: bool,
     /// Icon rail: a dot for unread mail in place of the count.
     rail_dots: bool,
+    /// Whether unread counts show at all (Settings → Focus Mode).
+    unread_counts: bool,
     /// Icon rail: the sections that fold up by themselves when the sidebar
     /// collapses (Settings → Sidebar → Icon rail).
     rail_fold: crate::config::RailFold,
@@ -207,6 +209,8 @@ pub(crate) struct Sidebar {
     /// or folded, when "Fold up expanded items" covers it.
     rail_open: HashMap<UnifiedRow, bool>,
     rail_open_accounts: HashMap<u32, bool>,
+    /// The rail avatar clicked last and when, to tell a double click.
+    rail_last_click: Option<(u32, std::time::Instant)>,
     /// Which unified Starred / Sent / Drafts rows are shown, whether their
     /// account lists are open, and their widgets.
     unified_kinds: crate::config::UnifiedKinds,
@@ -319,6 +323,7 @@ impl Component for Sidebar {
             chevrons_left: false,
             account_click_folds: false,
             rail_dots: false,
+            unread_counts: true,
             rail_fold: crate::config::RailFold::default(),
             revealers: HashMap::new(),
             chevrons: HashMap::new(),
@@ -398,6 +403,7 @@ impl Component for Sidebar {
             kind_widgets: HashMap::new(),
             rail_open: HashMap::new(),
             rail_open_accounts: HashMap::new(),
+            rail_last_click: None,
             show_accounts: true,
             section_style: crate::config::SectionStyle::default(),
             filtered_placement: crate::config::SectionPlacement::AboveAccounts,
@@ -540,6 +546,7 @@ impl Sidebar {
             }
             SidebarInput::ToggleCollapsed => self.on_toggle_collapsed(widgets, sender),
             SidebarInput::ToggleCollapseLocal(id) => self.on_toggle_collapse_local(id, sender),
+            SidebarInput::RailAvatarClicked(id) => self.on_rail_avatar_clicked(id, sender),
             SidebarInput::ToggleCustomFoldersLocal(id) => {
                 self.on_toggle_custom_folders_local(id, sender)
             }

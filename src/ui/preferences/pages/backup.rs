@@ -18,7 +18,7 @@ impl BackupPage {
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Backup"),
                     set_description: Some(
-                        i18n("Accounts, preferences, filters, tags and layout, in one file. Passwords and OpenPGP keys are not included.").as_str()
+                        i18n("Accounts, preferences, filters, tags and layout, in one file. Passwords, OAuth client secrets and OpenPGP keys are not included.").as_str()
                     ),
 
                     adw::ActionRow {

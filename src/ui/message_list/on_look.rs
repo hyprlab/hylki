@@ -1,7 +1,7 @@
 //! How the list looks: the row look, columns and headings, sorting, the
-//! bars, swipes and the palette.
+//! bars and swipes.
 
-use super::layout::schedule_midnight_refresh;
+use super::layout::{schedule_midnight_refresh, BULK_BAR_ROOM};
 use super::sort::{column_sort, SortOrder};
 use super::types::{MessageListInput, MessageListOutput};
 use super::MessageList;
@@ -10,13 +10,6 @@ use gtk::glib;
 use relm4::prelude::*;
 
 impl MessageList {
-    pub(super) fn on_set_list_palette(&mut self, on: bool) {
-        if self.list_palette != on {
-            self.list_palette = on;
-            self.sync_look();
-        }
-    }
-
     pub(super) fn on_set_sender_logos(&mut self, on: bool) {
         if self.sender_logos != on {
             self.sender_logos = on;
@@ -112,6 +105,14 @@ impl MessageList {
                     row.slide_avatar_in();
                 }
             }
+        }
+    }
+
+    pub(super) fn on_set_marks(&mut self, stars: bool, attachments: bool) {
+        if self.show_stars != stars || self.show_attachments != attachments {
+            self.show_stars = stars;
+            self.show_attachments = attachments;
+            self.sync_look();
         }
     }
 
@@ -286,6 +287,15 @@ impl MessageList {
             let fits = self.single_line && !self.column_scroll;
             let before = fits.then(|| self.fitted_widths());
             self.pane_width = width;
+            // Too narrow for the selection bar's buttons at their full size,
+            // the last of them would run off the edge of the pane.
+            if let Some(bars) = &self.bars {
+                if width < BULK_BAR_ROOM {
+                    bars.bulk.add_css_class("compact");
+                } else {
+                    bars.bulk.remove_css_class("compact");
+                }
+            }
             if before.is_some_and(|b| b != self.fitted_widths()) {
                 self.sync_look();
             }

@@ -70,15 +70,7 @@ impl AppModel {
         }
         // Named for the meeting so the calendar's import dialog says what it
         // is about, rather than "invite.ics".
-        let stem: String = invite
-            .summary
-            .chars()
-            .filter(|c| c.is_alphanumeric() || matches!(c, ' ' | '-' | '_'))
-            .collect();
-        let name = match stem.trim() {
-            "" => "invite.ics".to_string(),
-            s => format!("{}.ics", &s[..s.len().min(60)]),
-        };
+        let name = invite_calendar_file_name(&invite.summary);
         crate::ui::attachment_io::open_bytes(
             &name,
             invite.ics.as_bytes(),
@@ -228,5 +220,41 @@ impl AppModel {
             }
             _ => unreachable!("not routed to on_invites"),
         }
+    }
+}
+
+/// The file name an invitation opens under. Limit by characters rather than
+/// bytes: slicing a UTF-8 string at a fixed byte offset panics inside a
+/// multi-byte character, as a long non-Latin meeting title does.
+fn invite_calendar_file_name(summary: &str) -> String {
+    let stem: String = summary
+        .chars()
+        .filter(|c| c.is_alphanumeric() || matches!(c, ' ' | '-' | '_'))
+        .take(60)
+        .collect();
+    match stem.trim() {
+        "" => "invite.ics".to_string(),
+        stem => format!("{stem}.ics"),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::invite_calendar_file_name;
+
+    #[test]
+    fn a_long_unicode_invitation_title_makes_a_valid_file_name() {
+        let summary = "Еженедельная встреча руководителей и менеджеров по продажам ".repeat(2);
+        let name = invite_calendar_file_name(&summary);
+        let stem = name.trim_end_matches(".ics");
+        assert!(!stem.is_empty());
+        assert!(stem.chars().count() <= 60);
+        assert!(name.ends_with(".ics"));
+    }
+
+    #[test]
+    fn an_invitation_without_usable_title_uses_a_fallback_name() {
+        assert_eq!(invite_calendar_file_name(""), "invite.ics");
+        assert_eq!(invite_calendar_file_name("<>"), "invite.ics");
     }
 }

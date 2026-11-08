@@ -10,12 +10,14 @@ use gtk::glib;
 use relm4::prelude::*;
 use std::rc::Rc;
 
-/// The message-list pane's floor: exactly what a conversation-member card
-/// needs to show a row's full actions palette — the tightest real constraint
-/// in the list. The sum of the card's insets (10px rail margin, 10px + 8px
-/// card margins, 12px + 12px card padding), the avatar (38px), the unread
-/// dot (8px), three 8px gaps, and the 234px actions-line reservation.
-pub(super) const LIST_MIN_WIDTH: i32 = 348;
+/// The message-list pane's floor. Rows ellipsize, so this is what keeps a
+/// card's sender, date and subject readable beside its avatar, not a limit the
+/// rows set themselves.
+pub(super) const LIST_MIN_WIDTH: i32 = 290;
+
+/// The pane width the selection bar's buttons and its count need at full size.
+/// Narrower, the buttons draw tighter so the last still fits at the floor.
+pub(super) const BULK_BAR_ROOM: i32 = 344;
 
 /// What an expanded conversation needs beyond [`LIST_MIN_WIDTH`]: the member
 /// cards' 10px rail indent plus their card margin/padding beyond a plain
@@ -210,6 +212,23 @@ impl MessageList {
         }
     }
 
+    /// The single-line columns on screen: the setting's, less Due without
+    /// Microsoft 365 mail in view and the marks Focus Mode has taken away. The
+    /// setting itself keeps them for when they return.
+    pub(super) fn columns_shown(&self) -> Vec<crate::config::ListColumn> {
+        use crate::config::ListColumn as C;
+        self.columns
+            .iter()
+            .copied()
+            .filter(|c| match c {
+                C::Due => self.graph_in_view,
+                C::Star => self.show_stars,
+                C::Attachment => self.show_attachments,
+                _ => true,
+            })
+            .collect()
+    }
+
     /// The list's settings as every row reads them, pushed to the rows on
     /// screen. The rest pick them up when they are shown.
     pub(super) fn sync_look(&self) {
@@ -220,18 +239,11 @@ impl MessageList {
             look.sender_logos = self.sender_logos;
             look.preview_lines = self.preview_lines;
             look.show_subject = self.show_subject;
+            look.show_stars = self.show_stars;
+            look.show_attachments = self.show_attachments;
             look.pills_below = self.pills_below;
-            // The palette hangs under a card; a single line has no room for
-            // it, so actions come from the menu, swipes and keys there.
-            look.show_palette = self.list_palette && !self.single_line;
             look.single_line = self.single_line;
-            look.columns = self
-                .columns
-                .iter()
-                .copied()
-                .filter(|c| *c != crate::config::ListColumn::Due || self.graph_in_view)
-                .collect();
-            look.in_junk = self.in_junk;
+            look.columns = self.columns_shown();
             look.in_drafts = self.in_drafts;
             look.show_recipient = self.show_recipient;
             look.thread_expansion = self.thread_expansion;
@@ -273,12 +285,7 @@ impl MessageList {
         const DATE_PX: i32 = 64;
         /// Room kept for the subject.
         const SUBJECT_PX: i32 = 100;
-        let columns: Vec<C> = self
-            .columns
-            .iter()
-            .copied()
-            .filter(|c| *c != C::Due || self.graph_in_view)
-            .collect();
+        let columns = self.columns_shown();
         // The pill's margins and padding, the unread dot and the spacing.
         let mut fixed = 12 + 18 + 18 + 8 * columns.len().saturating_sub(1) as i32;
         if self.avatars {

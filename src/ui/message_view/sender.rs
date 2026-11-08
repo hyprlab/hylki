@@ -27,7 +27,7 @@ pub(super) fn confirm_trust(
             &[("uid", signer)],
         )),
     );
-    let fpr_label = gtk::Label::new(Some(&key.fingerprint_display()));
+    let fpr_label = gtk::Label::new(Some(&key.trust_details()));
     fpr_label.add_css_class("monospace");
     fpr_label.set_wrap(true);
     fpr_label.set_selectable(true);

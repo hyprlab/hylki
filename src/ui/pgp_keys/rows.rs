@@ -1,5 +1,6 @@
-//! The rows of the OpenPGP page: one per key, and which of other people's
-//! keys a search and the show filter leave in view (#432).
+//! The rows of the OpenPGP page: one per key, one per Send Anyway to take
+//! back, and which of other people's keys a search and the show filter leave
+//! in view (#432).
 
 use adw::prelude::*;
 use relm4::prelude::*;
@@ -7,6 +8,23 @@ use relm4::prelude::*;
 use super::{PgpKeys, PgpKeysInput};
 use crate::i18n::{i18n, i18n_f, ni18n_f};
 use crate::mail::pgp::{self, KeyInfo};
+
+/// A key Send Anyway was answered for, and the way to take that back.
+pub(super) fn accepted_row(
+    key: crate::config::AcceptedKey,
+    sender: &ComponentSender<PgpKeys>,
+) -> adw::ActionRow {
+    let row = adw::ActionRow::new();
+    row.set_title(&gtk::glib::markup_escape_text(&key.addr));
+    row.set_subtitle(&pgp::key_display(&key.fingerprint));
+    let ask = gtk::Button::with_label(&i18n("Ask Again"));
+    ask.set_valign(gtk::Align::Center);
+    ask.add_css_class("flat");
+    let s = sender.clone();
+    ask.connect_clicked(move |_| s.input(PgpKeysInput::AskAgain(key.clone())));
+    row.add_suffix(&ask);
+    row
+}
 
 /// Which of other people's keys are listed, in the show filter's order.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -44,8 +62,8 @@ impl KeyShow {
     pub(super) fn shows(self, key: &KeyInfo) -> bool {
         match self {
             KeyShow::All => true,
-            KeyShow::Trusted => key.validity.trusted(),
-            KeyShow::NotTrusted => key.usable() && !key.validity.trusted(),
+            KeyShow::Trusted => key.fully_vouched(),
+            KeyShow::NotTrusted => key.usable() && !key.fully_vouched(),
             KeyShow::Unusable => !key.usable(),
         }
     }
@@ -117,7 +135,7 @@ pub(super) fn key_row(
         });
         row.add_suffix(&delete);
     } else {
-        if key.validity.trusted() {
+        if key.fully_vouched() {
             let seal = gtk::Image::from_icon_name("verified-checkmark-symbolic");
             seal.set_tooltip_text(Some(&i18n("Trusted")));
             seal.add_css_class("accent");

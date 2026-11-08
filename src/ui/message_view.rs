@@ -49,6 +49,7 @@ use crate::models::Message;
 
 pub(crate) use faces::set_face_tiers;
 pub(crate) use frame::theme_grounds_for;
+pub(crate) use links::set_clean_links;
 pub(crate) use menu::MenuHit;
 pub(crate) use menu::{hit_menu_entries, strip_navigation_items};
 pub(crate) use remote::remote_urls;
@@ -56,7 +57,9 @@ pub(crate) use types::{
     CardAttachment, InviteAction, MessageViewInput, MessageViewOutput, SelectMode, TrState,
     UnsubState,
 };
-pub(crate) use webview::{keep_tab_out_of_key_translator, new_preview_webview, shared_web_context};
+pub(crate) use webview::{
+    keep_tab_out_of_key_translator, new_preview_webview, private_settings, shared_web_context,
+};
 
 /// Each card's detected language, with the body length it was worked out
 /// for.
@@ -172,20 +175,6 @@ pub(crate) struct MessageView {
     /// message that renders to the same document skips the load entirely —
     /// every load blanks the view for an instant, however briefly.
     shown_fingerprint: Option<u64>,
-    /// Conversation card actions hide until the card is hovered (expanded via
-    /// their ⋯ toggle). A preference, applied by stamping the document (see
-    /// `document_html`).
-    card_actions_hover: bool,
-    /// With the toggle off: show the actions automatically while the card is
-    /// hovered (vs always).
-    card_actions_auto: bool,
-    /// Seconds an opened card palette lingers after the pointer leaves — the
-    /// cards' own "Message card actions palette timeout", not the list's.
-    palette_collapse_secs: u64,
-    /// The card's ⋯ opens the card menu, the same one a right-click shows,
-    /// instead of sliding its actions palette out. A preference, applied by
-    /// stamping the document (see `document_html`).
-    card_palette_menu: bool,
     /// The open conversation has already auto-scrolled to its first unread
     /// message: later renders of the same thread (bodies streaming in, a theme
     /// flip) carry a no-scroll stamp so the reader's place is kept.

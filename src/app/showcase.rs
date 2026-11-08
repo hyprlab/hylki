@@ -62,7 +62,6 @@ impl AppModel {
                 self.stage_heights(delay);
                 if stage {
                     self.stage_select_first_row();
-                    self.stage_palette(root);
                     self.stage_open_card();
                 }
                 self.stage_swipe(root);
