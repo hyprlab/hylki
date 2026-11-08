@@ -39,6 +39,11 @@
   deleted and erased in place, and a refusal that names a reason other than
   TRYCREATE no longer makes the app create the folder and try again.
 
+- **Changed: the status bar is always blue.** It took the desktop accent
+  color, so a pink or green accent turned it pink or green. It is now
+  `#3383e0` whatever the accent, and still turns amber for an error or while
+  offline.
+
 - **Fixed: the high-importance mark in the reader was a fixed red** (#619,
   reported by yioannides). The mark beside a message's date was always
   `#e01b24`, in light and dark alike, while the message list draws it in the
