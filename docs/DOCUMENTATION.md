@@ -2536,6 +2536,44 @@ views' caches in `~/.cache/hylki/`, and account pictures in
 Passwords and tokens are never in those files: they go to the system keyring
 through the Secret Service. Decrypted OpenPGP messages are never cached at all.
 
+**Settings → Privacy → Encrypt stored mail** encrypts the mail cache. It is
+off by default. `cache.db` holds the message list, every message and
+attachment that was opened or kept offline, the Outbox and the addresses
+collected from mail, mail that a local bridge decrypted from end-to-end
+encryption included. With the switch on, it is a SQLCipher 4 database
+(AES-256, with an HMAC on every page) under a random 256-bit key, made the
+first time and kept in the keyring as `cache-key` beside the passwords. A copy
+of the file, or a backup of it, is unreadable without that keyring. Reads from
+an encrypted cache are a little slower.
+
+The switch takes effect at the next start. The cache is then encrypted in
+place: an encrypted copy is made and checked against the original table by
+table, and only then takes its place, so a failure leaves the original as it
+was. A window shows how far it has got; it takes about a minute for every
+2 GB, and quitting from it leaves the cache as it was. The unencrypted file is
+then deleted, but as with any deleted file, the disk may keep its old blocks
+until they are written over. Turning the switch off decrypts the cache the
+same way at the next start.
+
+Versions before 1.48.0-beta.3 cannot open an encrypted cache, and fail to
+load mail. Before going back to one, turn **Encrypt stored mail** off and
+restart Hylki once, which decrypts the cache. Otherwise delete
+`~/.local/share/hylki/cache.db` (in the Flatpak,
+`~/.var/app/co.hyprlab.Hylki/data/hylki/cache.db`), and the mail is downloaded
+again.
+
+An encrypted cache is never opened unencrypted instead. A window says so when
+the keyring is slow to answer. When it is locked, or has not answered within a
+minute and a half, holds no key, or holds one that does not open the cache,
+Hylki asks before its window opens: **Try Again**, **Quit**, or **Reset
+Cache…**, which deletes the cache and downloads the mail again. Mail that
+exists only on this computer is then lost: a POP3 account's mail, and unsent
+mail in the Outbox. When the keyring cannot be reached at all, **Store
+Unencrypted…** takes the place of the reset: it turns the switch off and
+deletes the encrypted cache it cannot open. The switch is stored as the
+one-line file `cache-encryption` in `~/.config/hylki/`. The demo (`HYLKI_DEMO`)
+never opens the cache and asks nothing.
+
 **Settings → Backup → Export settings** writes a file only you can
 read. It carries no passwords or tokens, and no OAuth client secret either:
 importing it on the same computer keeps the secret already there, and on

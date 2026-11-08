@@ -2,8 +2,10 @@
 
 Hylki needs the Rust toolchain ([rustup](https://rustup.rs)), a C compiler,
 and the GTK 4 / libadwaita / WebKitGTK 6 development libraries, plus
-OpenSSL, gettext and Wayland headers. At runtime it needs a Secret Service
-provider (e.g. gnome-keyring).
+OpenSSL, gettext and Wayland headers. OpenSSL's libcrypto also backs the
+SQLCipher that encrypts the mail cache, which is built from the copy
+`rusqlite` bundles. At runtime it needs a Secret Service provider (e.g.
+gnome-keyring), which keeps the cache's key as well as the passwords.
 
 ## Dependencies
 

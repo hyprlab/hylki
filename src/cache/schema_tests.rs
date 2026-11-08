@@ -5,6 +5,7 @@ use std::path::PathBuf;
 
 use rusqlite::Connection;
 
+use super::at_rest::Protection;
 use super::{Cache, SCHEMA};
 use crate::config::golden::assert_golden;
 
@@ -63,7 +64,8 @@ fn dump(conn: &Connection) -> String {
 #[test]
 fn a_new_database_gets_the_whole_schema() {
     let db = TempDb::new("fresh");
-    let cache = Cache::open_at(&db.0).unwrap();
+    let key = Protection::Encrypted(super::at_rest::Key::generate().unwrap());
+    let cache = Cache::open_at(&db.0, key).unwrap();
     let fresh = dump(&cache.conn);
     assert_golden("cache/testdata/schema-new.txt", &fresh);
     // The demo's in-memory cache runs the same schema.
@@ -133,7 +135,7 @@ fn an_older_layout_gains_the_new_columns() {
         )
         .unwrap();
     }
-    let cache = Cache::open_at(&db.0).unwrap();
+    let cache = Cache::open_at(&db.0, Protection::Plain).unwrap();
     assert_golden("cache/testdata/schema-upgraded.txt", &dump(&cache.conn));
     assert_eq!(cache.count_messages(1, "INBOX"), 1);
 }
@@ -230,7 +232,7 @@ fn every_version_gate_drops_and_rewrites_what_it_should() {
             conn.execute_batch(&format!("PRAGMA user_version = {version};"))
                 .unwrap();
         }
-        let cache = Cache::open_at(&db.0).unwrap();
+        let cache = Cache::open_at(&db.0, Protection::Plain).unwrap();
         report += &format!("== from version {version}\n{}", contents(&cache.conn));
         let after: i64 = cache
             .conn
@@ -375,7 +377,7 @@ fn v23_drops_the_one_click_handles_the_rules_no_longer_offer() {
         }
         conn.execute_batch("PRAGMA user_version = 22;").unwrap();
     }
-    let cache = Cache::open_at(&db.0).unwrap();
+    let cache = Cache::open_at(&db.0, Protection::Plain).unwrap();
     let stored = |uid: i64| -> Option<crate::models::Unsubscribe> {
         let json: String = cache
             .conn

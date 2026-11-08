@@ -103,6 +103,23 @@ impl PrivacyPage {
                     },
 
                 },
+
+                add = &adw::PreferencesGroup {
+                    // Not "On This Computer": that names an account kind.
+                    set_title: &i18n("Stored Mail"),
+
+                    adw::SwitchRow {
+                        set_title: &i18n("Encrypt stored mail"),
+                        set_active: crate::config::cache_encrypted(),
+                        connect_active_notify => move |row| {
+                            if !row.is_active() {
+                                crate::config::save_cache_encrypted(false);
+                            } else if !crate::config::cache_encrypted() {
+                                confirm_encrypted(row);
+                            }
+                        },
+                    },
+                },
             }
         }
         Self {
@@ -117,4 +134,30 @@ impl PrivacyPage {
             receipts_row,
         }
     }
+}
+
+/// Settings → Privacy → Encrypt stored mail, switched on. Asked about
+/// first: the first start after it converts the whole cache, and an earlier
+/// version, one a beta tester goes back to included, cannot open what it
+/// leaves. The cache itself is converted at the next start, when nothing
+/// has it open.
+fn confirm_encrypted(row: &adw::SwitchRow) {
+    let dialog = adw::AlertDialog::new(
+        Some(&i18n("Encrypt Stored Mail?")),
+        Some(&i18n("Mail stored on this computer will be encrypted at the next start which can take a few minutes. Earlier versions of the app cannot open it. Turn this setting off and restart before going back to an older version.")),
+    );
+    dialog.add_response("cancel", &i18n("Cancel"));
+    dialog.add_response("encrypt", &i18n("Encrypt"));
+    dialog.set_response_appearance("encrypt", adw::ResponseAppearance::Suggested);
+    dialog.set_default_response(Some("cancel"));
+    dialog.set_close_response("cancel");
+    let switch = row.clone();
+    dialog.connect_response(None, move |_, response| {
+        if response == "encrypt" {
+            crate::config::save_cache_encrypted(true);
+        } else {
+            switch.set_active(false);
+        }
+    });
+    dialog.present(Some(row));
 }

@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Added: the mail cache can be encrypted on disk** (by hanthor, #601).
+  **Settings → Privacy → Encrypt stored mail**, off by default, makes
+  `cache.db`, which holds every message and attachment kept on the computer,
+  a SQLCipher database under a random key kept in the keyring. The cache is
+  converted at the next start, in a window that shows its progress, and left
+  as it was if that fails or is quit. A keyring that is locked, or a key that
+  is missing or wrong, never opens the cache unencrypted: Hylki asks to try
+  again, quit, or reset the cache, and shows a window while the keyring is
+  slow to answer. Versions before this one cannot open an encrypted cache, so
+  turning it on asks first and says to turn it off before going back to one.
+
 - **Fixed: plain-text mail stopped a third of the way across the reader**
   (#606). Thunderbird, Apple Mail and Evolution send plain text as
   `format=flowed` (RFC 3676): lines broken at about 72 characters, with a

@@ -3278,6 +3278,124 @@ msgid "Open in the default app"
 msgstr "Obre amb l'aplicació per defecte"
 
 #, fuzzy
+msgid "Waiting for the Keyring"
+msgstr "Esperant per enviar"
+
+msgid ""
+"Mail stored on this computer is encrypted with a key stored in the keyring. "
+"Unlock the keyring if it asks."
+msgstr ""
+
+msgid ""
+"This happens once and can take a few minutes. If you quit, your mail is left "
+"as it was."
+msgstr ""
+
+#, fuzzy
+msgid "Checking the copy"
+msgstr "S'està comprovant la connexió…"
+
+msgid "Encrypting Stored Mail"
+msgstr ""
+
+#, fuzzy
+msgid "Decrypting Stored Mail"
+msgstr "S'està comprovant si hi ha correu nou"
+
+#, fuzzy
+msgid "Store Unencrypted…"
+msgstr "No desxifrat"
+
+msgid "Reset Cache…"
+msgstr ""
+
+msgid "Try Again"
+msgstr "Torna-ho a provar"
+
+#, fuzzy
+msgid "Keyring Unavailable"
+msgstr "No hi ha cap carpeta {v1} disponible"
+
+msgid ""
+"Mail kept on this computer is encrypted with a key stored in the keyring, "
+"and the keyring is locked or did not answer. Unlock it, then try again."
+msgstr ""
+
+msgid "Mail Cache Key Missing"
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is encrypted, and the keyring no longer holds its "
+"key. If the keyring was replaced, restore the old one and try again. "
+"Otherwise reset the cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Cannot Be Unlocked"
+msgstr ""
+
+msgid ""
+"The key in the keyring does not open the mail kept on this computer. If the "
+"keyring was replaced, restore the old one and try again. Otherwise reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Not Converted"
+msgstr ""
+
+msgid ""
+"The mail kept on this computer could not be converted, and was left as it "
+"was. Check that the disk has free space, then try again."
+msgstr ""
+
+#, fuzzy
+msgid "Mail Cache Unreadable"
+msgstr "Marca com a no llegit"
+
+msgid ""
+"The mail kept on this computer could not be read. Try again, or reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid ""
+"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"unsent mail in the Outbox."
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Mail kept on this computer is deleted and downloaded again from the server."
+msgstr ""
+"El correu i els adjunts d'aquest ordinador s'eliminen i es tornen a obtenir "
+"quan s'obren. Res canvia al servidor."
+
+msgid "Reset the Mail Cache?"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid ""
+"Anyone who can read your files, or a backup of them, can then read the mail "
+"kept on this computer, including mail that is end-to-end encrypted on the "
+"server."
+msgstr ""
+
+msgid "Encryption can be turned back on in Settings → Privacy."
+msgstr ""
+
+msgid ""
+"The encrypted cache cannot be opened without the keyring, so it is deleted "
+"and your mail is downloaded again."
+msgstr ""
+
+msgid "Store Mail Unencrypted?"
+msgstr ""
+
+#, fuzzy
+msgid "Store Unencrypted"
+msgstr "No desxifrat"
+
+#, fuzzy
 msgid "New Event"
 msgstr "Contacte nou"
 
@@ -5488,9 +5606,6 @@ msgstr "S'està traduint…"
 msgid "Could not translate: {why}"
 msgstr "No s'ha pogut traduir: {why}"
 
-msgid "Try Again"
-msgstr "Torna-ho a provar"
-
 msgid "Translated from {language} by {service}."
 msgstr "Traduït de l'{language} per {service}."
 
@@ -6336,9 +6451,6 @@ msgid ""
 "and Trash are hidden again."
 msgstr ""
 
-msgid "Reset"
-msgstr ""
-
 #, fuzzy
 msgid ""
 "Accounts, preferences, filters, tags and layout, in one file. Passwords, "
@@ -6670,6 +6782,29 @@ msgstr "Mostra els logotips dels remitents"
 #, fuzzy
 msgid "Send read receipts"
 msgstr "Amaga els destinataris"
+
+#. Not "On This Computer": that names an account kind.
+#, fuzzy
+msgid "Stored Mail"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Encrypt stored mail"
+msgstr "Missatge xifrat"
+
+#, fuzzy
+msgid "Encrypt Stored Mail?"
+msgstr "Xifrat"
+
+msgid ""
+"Mail stored on this computer will be encrypted at the next start which can "
+"take a few minutes. Earlier versions of the app cannot open it. Turn this "
+"setting off and restart before going back to an older version."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt"
+msgstr "Xifrat"
 
 msgid "Open at startup"
 msgstr "Obre en iniciar"

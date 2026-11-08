@@ -3013,6 +3013,114 @@ msgstr ""
 msgid "Open in the default app"
 msgstr ""
 
+msgid "Waiting for the Keyring"
+msgstr ""
+
+msgid ""
+"Mail stored on this computer is encrypted with a key stored in the keyring. "
+"Unlock the keyring if it asks."
+msgstr ""
+
+msgid ""
+"This happens once and can take a few minutes. If you quit, your mail is left "
+"as it was."
+msgstr ""
+
+msgid "Checking the copy"
+msgstr ""
+
+msgid "Encrypting Stored Mail"
+msgstr ""
+
+msgid "Decrypting Stored Mail"
+msgstr ""
+
+msgid "Store Unencrypted…"
+msgstr ""
+
+msgid "Reset Cache…"
+msgstr ""
+
+msgid "Try Again"
+msgstr ""
+
+msgid "Keyring Unavailable"
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is encrypted with a key stored in the keyring, "
+"and the keyring is locked or did not answer. Unlock it, then try again."
+msgstr ""
+
+msgid "Mail Cache Key Missing"
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is encrypted, and the keyring no longer holds its "
+"key. If the keyring was replaced, restore the old one and try again. "
+"Otherwise reset the cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Cannot Be Unlocked"
+msgstr ""
+
+msgid ""
+"The key in the keyring does not open the mail kept on this computer. If the "
+"keyring was replaced, restore the old one and try again. Otherwise reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid "Mail Cache Not Converted"
+msgstr ""
+
+msgid ""
+"The mail kept on this computer could not be converted, and was left as it "
+"was. Check that the disk has free space, then try again."
+msgstr ""
+
+msgid "Mail Cache Unreadable"
+msgstr ""
+
+msgid ""
+"The mail kept on this computer could not be read. Try again, or reset the "
+"cache to download your mail again."
+msgstr ""
+
+msgid ""
+"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"unsent mail in the Outbox."
+msgstr ""
+
+msgid ""
+"Mail kept on this computer is deleted and downloaded again from the server."
+msgstr ""
+
+msgid "Reset the Mail Cache?"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid ""
+"Anyone who can read your files, or a backup of them, can then read the mail "
+"kept on this computer, including mail that is end-to-end encrypted on the "
+"server."
+msgstr ""
+
+msgid "Encryption can be turned back on in Settings → Privacy."
+msgstr ""
+
+msgid ""
+"The encrypted cache cannot be opened without the keyring, so it is deleted "
+"and your mail is downloaded again."
+msgstr ""
+
+msgid "Store Mail Unencrypted?"
+msgstr ""
+
+msgid "Store Unencrypted"
+msgstr ""
+
 msgid "New Event"
 msgstr ""
 
@@ -5012,9 +5120,6 @@ msgstr ""
 msgid "Could not translate: {why}"
 msgstr ""
 
-msgid "Try Again"
-msgstr ""
-
 msgid "Translated from {language} by {service}."
 msgstr ""
 
@@ -5797,9 +5902,6 @@ msgid ""
 "and Trash are hidden again."
 msgstr ""
 
-msgid "Reset"
-msgstr ""
-
 msgid ""
 "Accounts, preferences, filters, tags and layout, in one file. Passwords, "
 "OAuth client secrets and OpenPGP keys are not included."
@@ -6110,6 +6212,25 @@ msgid "Show sender logos"
 msgstr ""
 
 msgid "Send read receipts"
+msgstr ""
+
+#. Not "On This Computer": that names an account kind.
+msgid "Stored Mail"
+msgstr ""
+
+msgid "Encrypt stored mail"
+msgstr ""
+
+msgid "Encrypt Stored Mail?"
+msgstr ""
+
+msgid ""
+"Mail stored on this computer will be encrypted at the next start which can "
+"take a few minutes. Earlier versions of the app cannot open it. Turn this "
+"setting off and restart before going back to an older version."
+msgstr ""
+
+msgid "Encrypt"
 msgstr ""
 
 msgid "Open at startup"
