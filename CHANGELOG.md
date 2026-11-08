@@ -39,6 +39,13 @@
   deleted and erased in place, and a refusal that names a reason other than
   TRYCREATE no longer makes the app create the folder and try again.
 
+- **Fixed: a wide gap between the recipients chip and the date** (#616,
+  reported by yioannides). Since 1.47.0 a message's header kept room for a
+  star and a paperclip even when it had neither, which left about 56 px of
+  blank space before the date. That room is now kept only while another
+  message in the conversation is starred or has files, so the marks of its
+  cards still line up.
+
 - **Fixed: Add to Calendar could close the app** (#611, by FLASH911). An
   invitation is handed to the calendar under a file name made from its title,
   cut to 60 characters. The cut was made in bytes, so a long title in Russian,

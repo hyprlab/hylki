@@ -39,15 +39,23 @@ pub(super) fn wrapper_css(
          margin:-6px 0 12px;padding:0;padding-inline:50px 16px;position:relative;z-index:2;\
          cursor:pointer;user-select:none;}}\
          .hylki-msg.hylki-folded>:not(.hylki-fbar):not(.hylki-msg-hdr){{display:none;}}\
-         .hylki-marks{{display:inline-flex;gap:8px;align-self:center;flex:none;}}\
-         .hylki-mark{{display:inline-flex;opacity:0.55;line-height:0;}}\
+         /* Contents, not a box: a slot that is not drawn then takes no\
+         gap in the meta row either (#616). */\
+         .hylki-marks{{display:contents;}}\
+         .hylki-mark{{display:inline-flex;opacity:0.55;line-height:0;\
+         align-self:center;flex:none;}}\
          .hylki-mark svg{{width:16px;height:16px;}}\
          .hylki-mark svg,.hylki-mark svg *{{fill:currentColor;}}\
          .hylki-mark-none{{width:16px;height:16px;}}\
-         /* The star keeps its place unstarred, so starring moves nothing. */\
+         /* An unstarred star and a missing paperclip keep their place, so\
+         the marks of a conversation's cards stand in the same columns, but\
+         only while some message on the page fills that column: otherwise\
+         they are empty space between the chips and the date (#616). */\
          .hylki-mark-star{{color:#e5a50a;opacity:1;}}\
          .hylki-mark-high{{color:#e01b24;opacity:1;}}\
          .hylki-msg:not(.starred) .hylki-mark-star{{visibility:hidden;}}\
+         body:not(:has(.hylki-msg.starred)) .hylki-mark-star,\
+         body:not(:has(.hylki-mark-clip)) .hylki-mark-none{{display:none;}}\
          body.hylki-folds .hylki-msg-hdr{{cursor:pointer;}}\
          @media print{{.hylki-msg.hylki-folded>:not(.hylki-fbar){{display:revert !important;}}\
          .hylki-msg.hylki-folded>.hylki-fbar{{display:none !important;}}}}\
