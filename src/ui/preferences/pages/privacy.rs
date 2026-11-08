@@ -32,7 +32,6 @@ impl PrivacyPage {
                     #[name = "auto_remote_content_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Always load remote content"),
-                        set_subtitle: &i18n("Remote content can tell a sender when and where you read."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetAutoRemoteContent(row.is_active()));
                         },
@@ -41,7 +40,6 @@ impl PrivacyPage {
                     #[name = "remote_ahead_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Pre-load remote content for the next messages"),
-                        set_subtitle: &i18n("Their senders can tell they were opened."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetRemoteAhead(row.is_active()));
                         },
@@ -50,7 +48,6 @@ impl PrivacyPage {
                     #[name = "clean_links_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Remove trackers from links"),
-                        set_subtitle: &i18n("Takes off utm_ tags and redirects that log the click."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetCleanLinks(row.is_active()));
                         },
@@ -68,7 +65,6 @@ impl PrivacyPage {
                     #[name = "show_spoof_banner_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Warn when the addressing doesn't match"),
-                        set_subtitle: &i18n("The badge beside the sender stays. A possible forgery always shows the banner."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetShowSpoofBanner(row.is_active()));
                         },
@@ -86,7 +82,6 @@ impl PrivacyPage {
                     #[name = "sender_logos_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Show sender logos"),
-                        set_subtitle: &i18n("Most are fetched from the sender's domain, which learns your IP address."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetSenderLogos(row.is_active()));
                         },
@@ -95,7 +90,6 @@ impl PrivacyPage {
                     #[name = "receipts_row"]
                     adw::ComboRow {
                         set_title: &i18n("Send read receipts"),
-                        set_subtitle: &i18n("A receipt tells the sender when you opened the message."),
                         set_model: Some(&gtk::StringList::new(&[
                             &i18n("Ask each time"),
                             &i18n("Always"),

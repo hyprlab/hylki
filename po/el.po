@@ -6614,23 +6614,12 @@ msgstr "Το Hylki δεν συλλέγει τηλεμετρία ούτε στέ�
 msgid "Always load remote content"
 msgstr "Να φορτώνεται πάντα το απομακρυσμένο περιεχόμενο"
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr ""
-"Το απομακρυσμένο περιεχόμενο μπορεί να ενημερώσει τον αποστολέα για το πότε "
-"και πού διαβάσατε το μήνυμα."
-
 msgid "Pre-load remote content for the next messages"
 msgstr "Προφόρτωση απομακρυσμένου περιεχομένου για τα επόμενα μηνύματα"
-
-msgid "Their senders can tell they were opened."
-msgstr "Οι αποστολείς τους μπορούν να καταλάβουν ότι ανοίχτηκαν."
 
 #, fuzzy
 msgid "Remove trackers from links"
 msgstr "Αφαίρεση αυτού του ψευδωνύμου"
-
-msgid "Takes off utm_ tags and redirects that log the click."
-msgstr ""
 
 msgid "Warn when remote content is blocked"
 msgstr "Προειδοποίηση όταν αποκλείεται απομακρυσμένο περιεχόμενο"
@@ -6643,13 +6632,6 @@ msgstr ""
 msgid "Warn when the addressing doesn't match"
 msgstr "Προειδοποίηση όταν οι διευθύνσεις δεν ταιριάζουν"
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-"Το σήμα δίπλα στον αποστολέα παραμένει. Αν υπάρχει πιθανότητα "
-"πλαστογράφησης, το πλαίσιο προειδοποίησης εμφανίζεται πάντα."
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Χρήση Gravatar όταν μια επαφή δεν έχει φωτογραφία"
 
@@ -6659,17 +6641,8 @@ msgstr "Στέλνει στο Gravatar ένα hash της διεύθυνσης �
 msgid "Show sender logos"
 msgstr "Εμφάνιση λογοτύπων αποστολέων"
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-"Τα περισσότερα λαμβάνονται από τον τομέα του αποστολέα, ο οποίος μαθαίνει τη "
-"διεύθυνση IP σας."
-
 msgid "Send read receipts"
 msgstr "Αποστολή επιβεβαιώσεων ανάγνωσης"
-
-msgid "A receipt tells the sender when you opened the message."
-msgstr "Η επιβεβαίωση ενημερώνει τον αποστολέα πότε ανοίξατε το μήνυμα."
 
 msgid "Open at startup"
 msgstr "Άνοιγμα κατά την εκκίνηση"
@@ -8689,6 +8662,30 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Remote content can tell a sender when and where you read."
+#~ msgstr ""
+#~ "Το απομακρυσμένο περιεχόμενο μπορεί να ενημερώσει τον αποστολέα για το "
+#~ "πότε και πού διαβάσατε το μήνυμα."
+
+#~ msgid "Their senders can tell they were opened."
+#~ msgstr "Οι αποστολείς τους μπορούν να καταλάβουν ότι ανοίχτηκαν."
+
+#~ msgid ""
+#~ "The badge beside the sender stays. A possible forgery always shows the "
+#~ "banner."
+#~ msgstr ""
+#~ "Το σήμα δίπλα στον αποστολέα παραμένει. Αν υπάρχει πιθανότητα "
+#~ "πλαστογράφησης, το πλαίσιο προειδοποίησης εμφανίζεται πάντα."
+
+#~ msgid ""
+#~ "Most are fetched from the sender's domain, which learns your IP address."
+#~ msgstr ""
+#~ "Τα περισσότερα λαμβάνονται από τον τομέα του αποστολέα, ο οποίος μαθαίνει "
+#~ "τη διεύθυνση IP σας."
+
+#~ msgid "A receipt tells the sender when you opened the message."
+#~ msgstr "Η επιβεβαίωση ενημερώνει τον αποστολέα πότε ανοίξατε το μήνυμα."
 
 #~ msgid ""
 #~ "The parts switched on below hide while Focus Mode is on. Activated by "

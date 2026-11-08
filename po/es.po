@@ -6583,22 +6583,12 @@ msgstr "Hylki no recopila telemetría ni envía datos analíticos."
 msgid "Always load remote content"
 msgstr "Cargar siempre contenido remoto"
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr ""
-"El contenido remoto puede revelar al remitente cuándo y desde dónde lees."
-
 msgid "Pre-load remote content for the next messages"
 msgstr "Precargar contenido remoto de los mensajes siguientes"
-
-msgid "Their senders can tell they were opened."
-msgstr "Sus remitentes pueden saber que se han abierto."
 
 #, fuzzy
 msgid "Remove trackers from links"
 msgstr "Eliminar este alias"
-
-msgid "Takes off utm_ tags and redirects that log the click."
-msgstr ""
 
 msgid "Warn when remote content is blocked"
 msgstr "Avisar cuando se bloquee contenido remoto"
@@ -6610,13 +6600,6 @@ msgstr ""
 msgid "Warn when the addressing doesn't match"
 msgstr "Avisar cuando las direcciones no coincidan"
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-"Se mantiene el indicador junto al remitente. Un posible intento de "
-"suplantación siempre muestra el aviso."
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Usar Gravatar cuando un contacto no tenga foto"
 
@@ -6626,17 +6609,8 @@ msgstr "Envía a Gravatar un hash de la dirección del remitente."
 msgid "Show sender logos"
 msgstr "Mostrar logotipos de remitentes"
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-"La mayoría se descarga desde el dominio del remitente, que puede conocer tu "
-"dirección IP."
-
 msgid "Send read receipts"
 msgstr "Enviar confirmaciones de lectura"
-
-msgid "A receipt tells the sender when you opened the message."
-msgstr "Una confirmación indica al remitente cuándo abriste el mensaje."
 
 msgid "Open at startup"
 msgstr "Abrir al iniciar"
@@ -8625,6 +8599,29 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Remote content can tell a sender when and where you read."
+#~ msgstr ""
+#~ "El contenido remoto puede revelar al remitente cuándo y desde dónde lees."
+
+#~ msgid "Their senders can tell they were opened."
+#~ msgstr "Sus remitentes pueden saber que se han abierto."
+
+#~ msgid ""
+#~ "The badge beside the sender stays. A possible forgery always shows the "
+#~ "banner."
+#~ msgstr ""
+#~ "Se mantiene el indicador junto al remitente. Un posible intento de "
+#~ "suplantación siempre muestra el aviso."
+
+#~ msgid ""
+#~ "Most are fetched from the sender's domain, which learns your IP address."
+#~ msgstr ""
+#~ "La mayoría se descarga desde el dominio del remitente, que puede conocer "
+#~ "tu dirección IP."
+
+#~ msgid "A receipt tells the sender when you opened the message."
+#~ msgstr "Una confirmación indica al remitente cuándo abriste el mensaje."
 
 #~ msgid ""
 #~ "The parts switched on below hide while Focus Mode is on. Activated by "

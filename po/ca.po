@@ -6642,21 +6642,12 @@ msgstr "L'Hylki no recull cap telemetria ni envia analítiques."
 msgid "Always load remote content"
 msgstr "Carrega sempre el contingut remot"
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr "El contingut remot pot dir a un remitent quan i on llegeixes."
-
 msgid "Pre-load remote content for the next messages"
-msgstr ""
-
-msgid "Their senders can tell they were opened."
 msgstr ""
 
 #, fuzzy
 msgid "Remove trackers from links"
 msgstr "Elimina aquest àlies"
-
-msgid "Takes off utm_ tags and redirects that log the click."
-msgstr ""
 
 msgid "Warn when remote content is blocked"
 msgstr "Avisa quan es bloca el contingut remot"
@@ -6667,13 +6658,6 @@ msgstr "Desactivat amaga el bàner. El contingut remot continua blocat."
 msgid "Warn when the addressing doesn't match"
 msgstr "Avisa quan l'adreçament no coincideix"
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-"La insígnia al costat del remitent es manté. Una possible falsificació "
-"sempre mostra el bàner."
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Utilitza el Gravatar quan un contacte no té foto"
 
@@ -6683,18 +6667,9 @@ msgstr "Envia a Gravatar un hash de l'adreça del remitent."
 msgid "Show sender logos"
 msgstr "Mostra els logotips dels remitents"
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-"La majoria s'obtenen del domini del remitent, que llavors aprèn la teva "
-"adreça IP."
-
 #, fuzzy
 msgid "Send read receipts"
 msgstr "Amaga els destinataris"
-
-msgid "A receipt tells the sender when you opened the message."
-msgstr ""
 
 msgid "Open at startup"
 msgstr "Obre en iniciar"
@@ -8680,6 +8655,22 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Remote content can tell a sender when and where you read."
+#~ msgstr "El contingut remot pot dir a un remitent quan i on llegeixes."
+
+#~ msgid ""
+#~ "The badge beside the sender stays. A possible forgery always shows the "
+#~ "banner."
+#~ msgstr ""
+#~ "La insígnia al costat del remitent es manté. Una possible falsificació "
+#~ "sempre mostra el bàner."
+
+#~ msgid ""
+#~ "Most are fetched from the sender's domain, which learns your IP address."
+#~ msgstr ""
+#~ "La majoria s'obtenen del domini del remitent, que llavors aprèn la teva "
+#~ "adreça IP."
 
 #~ msgid ""
 #~ "The parts switched on below hide while Focus Mode is on. Activated by "

@@ -6611,24 +6611,12 @@ msgstr "Hylki erfasst keine Telemetriedaten und übermittelt keine Analysen."
 msgid "Always load remote content"
 msgstr "Externe Inhalte immer laden"
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr ""
-"Externe Inhalte können dem Absender verraten, wann und wo eine Nachricht "
-"gelesen wird."
-
 msgid "Pre-load remote content for the next messages"
 msgstr "Externe Inhalte für die nächsten Nachrichten vorab laden"
-
-msgid "Their senders can tell they were opened."
-msgstr ""
-"Das Öffnen dieser Nachrichten ist für die jeweiligen Absender sichtbar."
 
 #, fuzzy
 msgid "Remove trackers from links"
 msgstr "Alias entfernen"
-
-msgid "Takes off utm_ tags and redirects that log the click."
-msgstr ""
 
 msgid "Warn when remote content is blocked"
 msgstr "Warnen, wenn externe Inhalte blockiert sind"
@@ -6641,13 +6629,6 @@ msgstr ""
 msgid "Warn when the addressing doesn't match"
 msgstr "Bei abweichenden Adressangaben warnen"
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-"Das Kennzeichen neben dem Absender bleibt bestehen. Bei möglicher Fälschung "
-"wird das Banner stets angezeigt."
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Verwende Gravatar, wenn ein Kontakt kein Foto hat"
 
@@ -6658,19 +6639,8 @@ msgstr ""
 msgid "Show sender logos"
 msgstr "Absender-Logos anzeigen"
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-"Der Abruf erfolgt überwiegend von der Absender-Domain, wodurch die eigene IP-"
-"Adresse offengelegt wird."
-
 msgid "Send read receipts"
 msgstr "Lesebestätigungen senden"
-
-msgid "A receipt tells the sender when you opened the message."
-msgstr ""
-"Eine Lesebestätigung informiert die absendende Person darüber, wann die "
-"Nachricht geöffnet wurde."
 
 msgid "Open at startup"
 msgstr "Beim Start öffnen"
@@ -8691,6 +8661,33 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Remote content can tell a sender when and where you read."
+#~ msgstr ""
+#~ "Externe Inhalte können dem Absender verraten, wann und wo eine Nachricht "
+#~ "gelesen wird."
+
+#~ msgid "Their senders can tell they were opened."
+#~ msgstr ""
+#~ "Das Öffnen dieser Nachrichten ist für die jeweiligen Absender sichtbar."
+
+#~ msgid ""
+#~ "The badge beside the sender stays. A possible forgery always shows the "
+#~ "banner."
+#~ msgstr ""
+#~ "Das Kennzeichen neben dem Absender bleibt bestehen. Bei möglicher "
+#~ "Fälschung wird das Banner stets angezeigt."
+
+#~ msgid ""
+#~ "Most are fetched from the sender's domain, which learns your IP address."
+#~ msgstr ""
+#~ "Der Abruf erfolgt überwiegend von der Absender-Domain, wodurch die eigene "
+#~ "IP-Adresse offengelegt wird."
+
+#~ msgid "A receipt tells the sender when you opened the message."
+#~ msgstr ""
+#~ "Eine Lesebestätigung informiert die absendende Person darüber, wann die "
+#~ "Nachricht geöffnet wurde."
 
 #~ msgid ""
 #~ "The parts switched on below hide while Focus Mode is on. Activated by "

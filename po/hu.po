@@ -6881,21 +6881,12 @@ msgstr ""
 msgid "Always load remote content"
 msgstr "Távoli tartalom mindig töltődjön be"
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr ""
-
 msgid "Pre-load remote content for the next messages"
-msgstr ""
-
-msgid "Their senders can tell they were opened."
 msgstr ""
 
 #, fuzzy
 msgid "Remove trackers from links"
 msgstr "Álnév (alias) eltávolítása"
-
-msgid "Takes off utm_ tags and redirects that log the click."
-msgstr ""
 
 msgid "Warn when remote content is blocked"
 msgstr "Figyelmeztetés távoli tartalom blokkolásakor"
@@ -6907,11 +6898,6 @@ msgstr "Figyelmeztetés távoli tartalom blokkolásakor"
 msgid "Warn when the addressing doesn't match"
 msgstr "Figyelmeztetés, ha a címzés nem egyezik"
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Gravatar használata, ha a névjegyhez nincs fénykép"
 
@@ -6921,16 +6907,9 @@ msgstr ""
 msgid "Show sender logos"
 msgstr "Feladói logók megjelenítése"
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-
 #, fuzzy
 msgid "Send read receipts"
 msgstr "Címzettek elrejtése"
-
-msgid "A receipt tells the sender when you opened the message."
-msgstr ""
 
 msgid "Open at startup"
 msgstr "Automatikus indítás rendszerindításkor"

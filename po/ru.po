@@ -6540,19 +6540,10 @@ msgstr "Hylki не собирает телеметрию и не отправл�
 msgid "Always load remote content"
 msgstr "Всегда загружать удалённое содержимое"
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr "Удаленный контент может сообщить отправителю, когда и где вы читаете."
-
 msgid "Pre-load remote content for the next messages"
 msgstr "Предварительная загрузка удаленного контента для следующих сообщений"
 
-msgid "Their senders can tell they were opened."
-msgstr "Их отправители могут сказать, что они были открыты."
-
 msgid "Remove trackers from links"
-msgstr ""
-
-msgid "Takes off utm_ tags and redirects that log the click."
 msgstr ""
 
 msgid "Warn when remote content is blocked"
@@ -6564,13 +6555,6 @@ msgstr "Выкл. скрывает баннер. Удаленный контен
 msgid "Warn when the addressing doesn't match"
 msgstr "Предупреждать при несоответствии адресов"
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-"Значок рядом с отправителем останется. Возможная подделка всегда показывает "
-"баннер."
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Использовать Gravatar, если у контакта нет фото"
 
@@ -6580,17 +6564,8 @@ msgstr "Отправляет хэш адреса отправителя в Grava
 msgid "Show sender logos"
 msgstr "Показывать логотипы отправителей"
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-"Большинство из них извлекаются из домена отправителя, который узнает ваш IP-"
-"адрес."
-
 msgid "Send read receipts"
 msgstr "Отправлять уведомления о прочтении"
-
-msgid "A receipt tells the sender when you opened the message."
-msgstr "Квитанция сообщает отправителю, когда вы открыли сообщение."
 
 msgid "Open at startup"
 msgstr "Открывать при запуске"
@@ -8559,6 +8534,29 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Remote content can tell a sender when and where you read."
+#~ msgstr ""
+#~ "Удаленный контент может сообщить отправителю, когда и где вы читаете."
+
+#~ msgid "Their senders can tell they were opened."
+#~ msgstr "Их отправители могут сказать, что они были открыты."
+
+#~ msgid ""
+#~ "The badge beside the sender stays. A possible forgery always shows the "
+#~ "banner."
+#~ msgstr ""
+#~ "Значок рядом с отправителем останется. Возможная подделка всегда "
+#~ "показывает баннер."
+
+#~ msgid ""
+#~ "Most are fetched from the sender's domain, which learns your IP address."
+#~ msgstr ""
+#~ "Большинство из них извлекаются из домена отправителя, который узнает ваш "
+#~ "IP-адрес."
+
+#~ msgid "A receipt tells the sender when you opened the message."
+#~ msgstr "Квитанция сообщает отправителю, когда вы открыли сообщение."
 
 #~ msgid ""
 #~ "Accounts, preferences, filters, tags and layout, in one file. Passwords "

@@ -6085,19 +6085,10 @@ msgstr ""
 msgid "Always load remote content"
 msgstr ""
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr ""
-
 msgid "Pre-load remote content for the next messages"
 msgstr ""
 
-msgid "Their senders can tell they were opened."
-msgstr ""
-
 msgid "Remove trackers from links"
-msgstr ""
-
-msgid "Takes off utm_ tags and redirects that log the click."
 msgstr ""
 
 msgid "Warn when remote content is blocked"
@@ -6109,11 +6100,6 @@ msgstr ""
 msgid "Warn when the addressing doesn't match"
 msgstr ""
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr ""
 
@@ -6123,14 +6109,7 @@ msgstr ""
 msgid "Show sender logos"
 msgstr ""
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-
 msgid "Send read receipts"
-msgstr ""
-
-msgid "A receipt tells the sender when you opened the message."
 msgstr ""
 
 msgid "Open at startup"

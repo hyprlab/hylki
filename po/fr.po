@@ -6596,22 +6596,12 @@ msgstr ""
 msgid "Always load remote content"
 msgstr "Toujours charger le contenu distant"
 
-msgid "Remote content can tell a sender when and where you read."
-msgstr ""
-"Le contenu distant peut indiquer à un expéditeur quand et où vous lisez."
-
 msgid "Pre-load remote content for the next messages"
 msgstr "Précharger le contenu distant des messages suivants"
-
-msgid "Their senders can tell they were opened."
-msgstr "Leurs expéditeurs peuvent savoir qu’ils ont été ouverts."
 
 #, fuzzy
 msgid "Remove trackers from links"
 msgstr "Supprimer cet alias"
-
-msgid "Takes off utm_ tags and redirects that log the click."
-msgstr ""
 
 msgid "Warn when remote content is blocked"
 msgstr "Avertir lorsque le contenu distant est bloqué"
@@ -6622,13 +6612,6 @@ msgstr "Désactivé, masque le bandeau. Le contenu distant reste bloqué."
 msgid "Warn when the addressing doesn't match"
 msgstr "Avertir lorsque l’adressage ne correspond pas"
 
-msgid ""
-"The badge beside the sender stays. A possible forgery always shows the "
-"banner."
-msgstr ""
-"Le badge à côté de l’expéditeur reste. Une falsification possible affiche "
-"toujours le bandeau."
-
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Utiliser Gravatar quand un contact n’a pas de photo"
 
@@ -6638,17 +6621,8 @@ msgstr "Envoie à Gravatar un hachage de l’adresse de l’expéditeur."
 msgid "Show sender logos"
 msgstr "Afficher les logos de l’expéditeur"
 
-msgid ""
-"Most are fetched from the sender's domain, which learns your IP address."
-msgstr ""
-"La plupart sont récupérés depuis le domaine de l’expéditeur, qui apprend "
-"ainsi votre adresse IP."
-
 msgid "Send read receipts"
 msgstr "Envoyer des accusés de lecture"
-
-msgid "A receipt tells the sender when you opened the message."
-msgstr "Un accusé indique à l’expéditeur quand vous avez ouvert le message."
 
 msgid "Open at startup"
 msgstr "Ouvrir au démarrage"
@@ -8645,6 +8619,29 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Remote content can tell a sender when and where you read."
+#~ msgstr ""
+#~ "Le contenu distant peut indiquer à un expéditeur quand et où vous lisez."
+
+#~ msgid "Their senders can tell they were opened."
+#~ msgstr "Leurs expéditeurs peuvent savoir qu’ils ont été ouverts."
+
+#~ msgid ""
+#~ "The badge beside the sender stays. A possible forgery always shows the "
+#~ "banner."
+#~ msgstr ""
+#~ "Le badge à côté de l’expéditeur reste. Une falsification possible affiche "
+#~ "toujours le bandeau."
+
+#~ msgid ""
+#~ "Most are fetched from the sender's domain, which learns your IP address."
+#~ msgstr ""
+#~ "La plupart sont récupérés depuis le domaine de l’expéditeur, qui apprend "
+#~ "ainsi votre adresse IP."
+
+#~ msgid "A receipt tells the sender when you opened the message."
+#~ msgstr "Un accusé indique à l’expéditeur quand vous avez ouvert le message."
 
 #~ msgid ""
 #~ "The parts switched on below hide while Focus Mode is on. Activated by "
