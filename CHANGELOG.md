@@ -39,6 +39,14 @@
   deleted and erased in place, and a refusal that names a reason other than
   TRYCREATE no longer makes the app create the folder and try again.
 
+- **Fixed: the high-importance mark in the reader was a fixed red** (#619,
+  reported by yioannides). The mark beside a message's date was always
+  `#e01b24`, in light and dark alike, while the message list draws it in the
+  theme's error color. The reader now uses the same color as the list. The
+  sender check, the OpenPGP chip and a returned read receipt in a message's
+  header now take the theme's error, warning and success colors too, as they
+  do in the toolbar.
+
 - **Fixed: a wide gap between the recipients chip and the date** (#616,
   reported by yioannides). Since 1.47.0 a message's header kept room for a
   star and a paperclip even when it had neither, which left about 56 px of
