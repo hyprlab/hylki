@@ -952,7 +952,7 @@ impl Component for Compose {
 
                 ComposeInput::MailMerge => self.on_mail_merge(widgets, &sender),
 
-                ComposeInput::MergeFields(target) => self.on_merge_fields(target, widgets, &sender),
+                ComposeInput::MergeFields(target) => self.on_merge_fields(target, widgets),
 
                 ComposeInput::MergeBody(fields) => self.on_merge_body(fields, widgets, &sender),
 

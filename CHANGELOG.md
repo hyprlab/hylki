@@ -37,6 +37,14 @@
   and on. A request now fails after a minute without an answer (half a minute
   for a sign-in renewal), and the next check connects again.
 
+- **Fixed: choosing a CSV file from the merge field button stopped the window
+  responding** (#617, reported by samuel-edlmeier). The field list tried to
+  open again by itself once the file was chosen. GNOME refuses a popup that
+  no click in the window asked for, and the window was left waiting on a list
+  that was never shown, ignoring every click and key until Hylki was
+  restarted. The file is now only remembered, and its columns are in the list
+  the next time the button is clicked.
+
 - **Changed: one message fades into the next in the reading pane.** Since
   #570 the pane cut from one message to the next; the old message now fades
   out over the new one in 80 ms.
