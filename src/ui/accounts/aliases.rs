@@ -170,8 +170,8 @@ impl AccountsWindow {
         let (name, addr) = split_identity(&alias.identity);
         let identity_group = adw::PreferencesGroup::new();
         identity_group.set_description(Some(
-            "The composer's From menu offers this address, and replies to \
-             mail sent to it answer from it.",
+            i18n("Will appear in the composer's From menu. Replies will come to this address.")
+                .as_str(),
         ));
         let name_row = adw::EntryRow::builder()
             .title(i18n("Display name (optional)"))
@@ -260,6 +260,14 @@ impl AccountsWindow {
         toolbar.set_content(Some(&scroller));
         window.set_content(Some(&toolbar));
 
+        // The window keeps the height it opened with unless asked again:
+        // a default height of -1 takes the content's, so it grows down for
+        // the SMTP fields and shrinks back when they go.
+        let w = window.clone();
+        smtp_switch.connect_active_notify(move |_| {
+            let w = w.clone();
+            gtk::glib::idle_add_local_once(move || w.set_default_size(w.width(), -1));
+        });
         let w = window.clone();
         cancel.connect_clicked(move |_| w.close());
         let s = sender.input_sender().clone();
