@@ -1534,11 +1534,11 @@ headerbar box.list-tools.compact button {
 
 /* ---- Notifications ---- */
 
-/* The bar uses the desktop accent color (libadwaita maps the GNOME accent to
-   @accent_bg_color, defaulting to #3584e4); errors turn amber. */
+/* The bar is always the same blue, whatever the accent color; errors and
+   the offline line turn it amber. */
 .notify-area {
-  background-color: @accent_bg_color;
-  color: @accent_fg_color;
+  background-color: #3383e0;
+  color: #ffffff;
 }
 
 .notify-area.error {

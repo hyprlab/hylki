@@ -62,6 +62,54 @@ pub(super) const PAGE: (&str, &str) = ("#f1f1f1", "#141414");
 /// paints its in-document header this color so the two read as one surface.
 pub(super) const CHROME: (&str, &str) = ("#fafafa", "#242424");
 
+/// The theme's error, warning and success colors, which the reader's marks
+/// and verdicts wear as the app's own widgets do (#619).
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct StatusColors {
+    pub error: String,
+    pub warning: String,
+    pub success: String,
+}
+
+/// Stock libadwaita `error_color`, `warning_color` and `success_color`, light
+/// and dark, for a scheme the app isn't in (and for the tests).
+const STATUS: [(&str, &str, &str); 2] = [
+    ("#c30000", "#905400", "#007c3d"),
+    ("#ff938c", "#ffc252", "#78e9ab"),
+];
+
+impl StatusColors {
+    pub(crate) fn stock(dark: bool) -> Self {
+        let (error, warning, success) = STATUS[usize::from(dark)];
+        Self {
+            error: error.into(),
+            warning: warning.into(),
+            success: success.into(),
+        }
+    }
+}
+
+/// The theme's status colors for `dark`, as `@error_color` and the rest
+/// resolve in the app's own CSS. As with the grounds, only the scheme the app
+/// is in can be read from the theme.
+#[allow(deprecated)] // lookup_color: named theme colors have no successor yet
+pub(crate) fn theme_status_for(widget: &impl IsA<gtk::Widget>, dark: bool) -> StatusColors {
+    let mut colors = StatusColors::stock(dark);
+    if dark == adw::StyleManager::default().is_dark() {
+        let style = widget.style_context();
+        for (name, slot) in [
+            ("error_color", &mut colors.error),
+            ("warning_color", &mut colors.warning),
+            ("success_color", &mut colors.success),
+        ] {
+            if let Some(c) = style.lookup_color(name) {
+                *slot = crate::color::to_hex(&c);
+            }
+        }
+    }
+    colors
+}
+
 /// Each card's translation banner, and the translation (and whether it is
 /// a Reader View fragment) the card shows instead of its message.
 type TranslationsShown = std::collections::HashMap<(u32, u32), (String, Option<(String, bool)>)>;
@@ -73,6 +121,10 @@ thread_local! {
     /// this hands it the theme without widening that signature. `None` (as in
     /// tests) falls back to the stock GNOME values above.
     pub(super) static LIVE_GROUNDS: std::cell::RefCell<Option<(String, String, String)>> =
+        const { std::cell::RefCell::new(None) };
+    /// The theme's status colors (#619), handed over as the grounds are.
+    /// `None` (as in tests) falls back to the stock libadwaita ones.
+    pub(super) static LIVE_STATUS: std::cell::RefCell<Option<StatusColors>> =
         const { std::cell::RefCell::new(None) };
     /// The tags (#71), handed to the document builder the same way, for the
     /// card headers' chips. Empty in tests: no chips.

@@ -5,7 +5,7 @@
 <h1 align="center">Hylki</h1>
 
 <p align="center">
-  A fast, GNOME-native email client, built with Rust and libadwaita.
+  A GNOME-native email client built with Rust and libadwaita.
 </p>
 
 <p align="center">
@@ -27,9 +27,9 @@
 
 ---
 
-Hylki is an email client for the Linux desktop, made to fit in with GNOME. It
-sends no telemetry or analytics. It is free software, built for GNOME, to be
-feature rich and beautiful ([the manifesto](docs/MANIFESTO.md)).
+Hylki is an email client for the Linux desktop made to fit in with GNOME. It
+sends no telemetry or analytics. It is free software built to be
+both feature rich and beautiful ([the manifesto](docs/MANIFESTO.md)).
 
 > [!NOTE]
 > **Vireo is now Hylki.** Since v1.35.0 the app once called Vireo (and Veem
@@ -121,12 +121,11 @@ involved, and everything merged is reviewed by a person.
 
 ## Contributing
 
-Hylki is maintained by Hyprlab, and much of it started as a request or a patch
-from someone who uses it. Bug reports, feature requests, design feedback,
+Hylki is maintained by Hyprlab with the help of the open source community. Bug reports, feature requests, design feedback,
 translations, packaging and code are all welcome. Everyone whose work is in the
 app is named in the About window and in [CREDITS.md](docs/CREDITS.md).
 
-Translating needs no Rust ([po/README.md](po/README.md)), and a clear bug report
+Translating needs no Rust knowledge ([po/README.md](po/README.md)), and a clear bug report
 is often as useful as a patch. **[How to contribute →](docs/CONTRIBUTING.md)**
 
 ## Contact & support

@@ -265,10 +265,12 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
         WorkerEvent::DraftSaved {
             autosave,
             message_id,
+            template,
         } => AppMsg::DraftSaved {
             account_id,
             autosave,
             message_id,
+            template,
         },
         WorkerEvent::Status(text) => AppMsg::Status { account_id, text },
         WorkerEvent::CopyProgress { left } => AppMsg::CopyProgress { left },

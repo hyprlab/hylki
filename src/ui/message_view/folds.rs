@@ -57,9 +57,14 @@ impl MessageView {
             )
         };
         // An empty slot when there are no files, so the marks of every card
-        // stand in the same columns.
+        // stand in the same columns; the CSS draws it only while another
+        // message on the page has files (#616).
         let clip = if m.has_attachment {
-            icon("", "mail-attachment-symbolic", &i18n("Has attachments"))
+            icon(
+                " hylki-mark-clip",
+                "mail-attachment-symbolic",
+                &i18n("Has attachments"),
+            )
         } else {
             "<span class=\"hylki-mark hylki-mark-none\"></span>".to_string()
         };

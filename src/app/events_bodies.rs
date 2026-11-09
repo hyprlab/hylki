@@ -5,6 +5,7 @@ use relm4::prelude::*;
 
 use crate::models::{Attachment, Message};
 use crate::ui::attachments_gallery::GalleryInput;
+use crate::ui::compose::ComposeInput;
 use crate::ui::message_view::MessageViewInput;
 use crate::ui::message_window::MessageWindowInput;
 use crate::worker::MailRequest;
@@ -360,6 +361,14 @@ impl AppModel {
                 return true;
             }
             self.pending_draft = Some((pd, inline, extra));
+        }
+        // A template being inserted into a composer that is already open.
+        if let Some((composer_id, template)) = self.pending_template_insert.take() {
+            if template.account_id == account_id && template.id == message_id {
+                self.emit_to_composer(composer_id, ComposeInput::TemplateBody(body.to_string()));
+                return true;
+            }
+            self.pending_template_insert = Some((composer_id, template));
         }
         // Likewise a copy being edited as a new message: the body is
         // in the cache now, so the second pass finds it there.

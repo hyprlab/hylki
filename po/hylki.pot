@@ -442,14 +442,29 @@ msgstr[1] ""
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr ""
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+
 msgid "New Message from Template"
 msgstr ""
 
 msgid "The new message starts as a copy of the template you pick."
 msgstr ""
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgid "Insert Template"
+msgstr ""
+
+msgid "The template goes in where the cursor is."
+msgstr ""
+
+msgid "Templates"
+msgstr ""
+
+msgid "Template saved to {folder} in {account}"
+msgstr ""
+
+msgid "Could not load the template."
 msgstr ""
 
 msgid "Continue a Draft"
@@ -1358,6 +1373,15 @@ msgstr ""
 
 msgid "Delete this conversation?"
 msgstr ""
+
+msgid ""
+"The message in this conversation will be deleted. You can turn this warning "
+"off in Settings."
+msgid_plural ""
+"All {n} messages in this conversation will be deleted. You can turn this "
+"warning off in Settings."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Delete Conversation"
 msgstr ""
@@ -2286,6 +2310,11 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+msgid ""
+"Will appear in the composer's From menu. Replies to mail sent here will come "
+"from this address."
+msgstr ""
+
 msgid "Display name (optional)"
 msgstr ""
 
@@ -2296,6 +2325,10 @@ msgid "Sending"
 msgstr ""
 
 msgid "Own SMTP server"
+msgstr ""
+
+msgid ""
+"Needed when this account's provider, such as Gmail, rewrites the sender."
 msgstr ""
 
 msgid "SMTP server"
@@ -2311,6 +2344,9 @@ msgid "SMTP password"
 msgstr ""
 
 msgid "Test SMTP"
+msgstr ""
+
+msgid "Names that share an address send through this account's server."
 msgstr ""
 
 msgid "Testing…"
@@ -2878,6 +2914,16 @@ msgid "Open Anyway"
 msgstr ""
 
 msgid "The file could not be opened"
+msgstr ""
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+#. Offer the steps that actually work.
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Download the file, then open it from Files\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
 msgstr ""
 
 msgid "Go to Message"
@@ -6945,6 +6991,16 @@ msgstr ""
 msgid "Could not remove the attachment: {e}"
 msgstr ""
 
+msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid ""
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Settings → Mail Accounts and sign in to it again."
+msgstr ""
+
 msgid "The attachment is no longer in the message on the server"
 msgstr ""
 
@@ -7311,7 +7367,7 @@ msgstr ""
 msgid "Send-as aliases"
 msgstr ""
 
-msgid "Extra addresses this account can send as."
+msgid "Extra names and addresses this account can send as."
 msgstr ""
 
 msgid "Add Alias…"
@@ -7332,6 +7388,12 @@ msgid "Import File…"
 msgstr ""
 
 msgid "Delete Signature"
+msgstr ""
+
+msgid "Sender name"
+msgstr ""
+
+msgid "Replaces the account's name in From. Aliases keep their own."
 msgstr ""
 
 msgid "Start messages with this signature"
@@ -7440,9 +7502,6 @@ msgid "Server saves its own copy of sent mail"
 msgstr ""
 
 msgid "For Gmail and others that file sent mail themselves."
-msgstr ""
-
-msgid "Templates"
 msgstr ""
 
 msgid "Hidden Folders"

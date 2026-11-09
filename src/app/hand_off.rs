@@ -311,6 +311,7 @@ impl AppModel {
                     &i18n("Reply With the Files"),
                     messages,
                     hand_off,
+                    true,
                     move |hand_off, message| s.input(AppMsg::HandOffReply { hand_off, message }),
                 );
             }

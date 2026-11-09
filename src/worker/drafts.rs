@@ -18,6 +18,7 @@ pub(super) fn draft_not_saved(
         emit(WorkerEvent::DraftSaved {
             autosave,
             message_id: None,
+            template,
         });
         return;
     }

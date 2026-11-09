@@ -121,6 +121,8 @@ pub(crate) enum AccountsInput {
     SigDelete,
     /// The name field changed.
     SigRename,
+    /// The display name this signature puts in From changed.
+    SigSenderRename,
     /// The "Start messages with this signature" switch changed.
     SigDefault,
     /// The WebView's dirty flag, read as a signature is left.

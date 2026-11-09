@@ -32,6 +32,10 @@ pub(crate) struct ComposeAccount {
     /// Set for a send-as alias (#34): the full From to put on the wire
     /// ("Name <alias@host>"). `None` sends as the account itself.
     pub(crate) alias_from: Option<String>,
+    /// The account's own address under the sender name of the signature in
+    /// the message ("Name <address>"), sent in place of the account's name.
+    /// Aliases keep their own names, so this stays `None` for them.
+    pub(crate) signed_as: Option<String>,
 }
 
 /// Initial field contents (empty for a new message; populated for reply/forward).
@@ -140,6 +144,8 @@ pub(crate) struct ComposeInit {
     pub(crate) format: ComposeFormat,
     /// Where the signature goes against a quoted original (#237).
     pub(crate) signature_position: SignaturePosition,
+    /// Whether any account has a Templates folder, for Insert Template.
+    pub(crate) has_templates: bool,
 }
 
 /// An account that suggests only from its directory and its own mail

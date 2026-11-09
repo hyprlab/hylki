@@ -1002,6 +1002,12 @@ goes where a signature goes. Changing **From** to another account puts in
 that account's own signature; an alias of the same account keeps the one
 picked.
 
+A signature's **Sender name** replaces the account's name in From while that
+signature is in the message, so one mailbox can sign as different people
+(empty keeps the account's name). It applies to the account's own address
+only: an alias keeps its own name. The From row then shows even when the
+account has a single address.
+
 ### Where the signature goes
 
 In a reply or forward the account's signature is placed above the quoted
@@ -1198,6 +1204,10 @@ templates there, Thunderbird among them, sees the same ones.
   Message** (on its right-click menu when the sidebar is folded to icons),
   or <kbd>Ctrl+Shift+N</kbd>, lists every account's templates to start
   from.
+- **Insert Template**, in the composer's formatting row, puts a template's
+  text into the message being written, where the cursor is. The recipients,
+  the subject and the quoted original stay, so a reply can use a standard
+  answer. The template's own signature is left out.
 
 A folder called Templates is taken for the role, at the top of the account
 or directly under the Inbox. Nothing on a server marks one otherwise, so a
@@ -1317,6 +1327,12 @@ appears under **More**. A reply to mail sent to a `+tag` address of one of
 your addresses starts from that address, and a draft saved from a typed
 address opens with it. Whether the server accepts mail from an address it
 does not know is up to the server: many refuse it, or rewrite it.
+
+Several aliases can share one address under different names, such as a
+manager and a director writing from one shared mailbox, and the account's own
+address can have more names the same way. Mail from a shared address goes
+through the account's own SMTP server: an alias with its own server needs an
+address of its own.
 
 A JMAP account lists the identities the server keeps for it as well, so an
 alias made in the webmail is in the From row without setting it up again.

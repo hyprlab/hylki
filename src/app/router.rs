@@ -291,6 +291,8 @@ impl AppModel {
             msg @ (AppMsg::NewFromTemplate
             | AppMsg::TemplatePickNow
             | AppMsg::TemplatePicked(..)
+            | AppMsg::PickTemplate { .. }
+            | AppMsg::TemplateInsertPicked { .. }
             | AppMsg::SaveDraftMessage(..)
             | AppMsg::SaveTemplateMessage(..)
             | AppMsg::AutoSaveDraft { .. }

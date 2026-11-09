@@ -15,6 +15,15 @@ use super::conversation::{body_key, next_after_vanish};
 use super::model::AppModel;
 use super::msg::AppMsg;
 
+/// Whether mail a filter just filed into a folder of `kind` is announced
+/// as new mail. Mail sent straight to Trash or Junk is mail the person
+/// asked never to see: no notification and no sound for it, just as
+/// `counted_folders` never counts it as unread. `None` is a folder the app
+/// does not know yet, which counts like any other.
+fn announces_filed(kind: Option<FolderKind>) -> bool {
+    !matches!(kind, Some(FolderKind::Trash | FolderKind::Junk))
+}
+
 impl AppModel {
     /// The messages the router sends here (see `AppModel::route`).
     pub(super) fn on_events_messages(&mut self, msg: AppMsg, sender: ComponentSender<Self>) {
@@ -351,6 +360,7 @@ impl AppModel {
     /// message on startup. "New" = unread and not in the previous sync.
     /// Mail a filter just filed elsewhere still counts (#47 feedback):
     /// it is new mail even though it never lands in the inbox list.
+    /// Mail filed into Trash or Junk does not (see announces_filed).
     /// With the window in front, the sound alone, when Settings asks
     /// for it there (#337): see announce_new_mail.
     fn notify_new_mail(
@@ -374,6 +384,9 @@ impl AppModel {
                 let fresh_filed: Vec<&(Message, String)> = filed
                     .iter()
                     .filter(|(m, _)| m.unread && !old_uids.contains(&m.uid))
+                    .filter(|(_, dest)| {
+                        announces_filed(self.folder_by_path(account_id, dest).map(|f| f.kind))
+                    })
                     .collect();
                 let others = (fresh.len() + fresh_filed.len()).saturating_sub(1);
                 let newest = fresh.iter().max_by_key(|m| m.timestamp);
@@ -462,7 +475,7 @@ impl AppModel {
                 sender.input(AppMsg::HandOffDraftPickNow);
             }
         }
-        if let Some(waiting) = self.pending_template_pick.as_mut() {
+        if let Some((_, waiting)) = self.pending_template_pick.as_mut() {
             waiting.remove(&(account_id, folder_id));
             if waiting.is_empty() {
                 sender.input(AppMsg::TemplatePickNow);
@@ -573,5 +586,24 @@ impl AppModel {
         } else if self.smart_view.is_some() {
             self.refresh_smart_view(sender);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::announces_filed;
+    use crate::models::FolderKind;
+
+    #[test]
+    fn mail_filed_to_trash_or_junk_is_not_announced() {
+        assert!(!announces_filed(Some(FolderKind::Trash)));
+        assert!(!announces_filed(Some(FolderKind::Junk)));
+    }
+
+    #[test]
+    fn mail_filed_elsewhere_is_still_announced() {
+        assert!(announces_filed(Some(FolderKind::Custom)));
+        assert!(announces_filed(Some(FolderKind::Archive)));
+        assert!(announces_filed(None), "a folder not known yet");
     }
 }

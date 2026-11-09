@@ -91,7 +91,6 @@ impl Compose {
         &mut self,
         target: FieldTarget,
         widgets: &ComposeWidgets,
-        sender: &ComponentSender<Self>,
     ) {
         let Some(text) = subject_text(widgets) else {
             return;
@@ -102,19 +101,21 @@ impl Compose {
             FieldTarget::Focused => FieldTarget::Body,
             other => other,
         };
+        // The file is only remembered: the palette is not opened again by
+        // itself. Its popup would come from no click in this window, which
+        // the compositor refuses, and GTK was left holding the input grab
+        // of a popover nobody could see, so the window took no clicks or
+        // keys (#617). The file's columns are there the next time it opens.
         let choose: Rc<dyn Fn()> = {
-            let s = sender.input_sender().clone();
             let row = widgets.subject_row.clone();
             Rc::new(move || {
-                let s = s.clone();
                 let parent = row.root().and_downcast::<gtk::Window>();
                 crate::ui::merge_dialog::csv_file_dialog().open(
                     parent.as_ref(),
                     gtk::gio::Cancellable::NONE,
-                    move |res| {
+                    |res| {
                         if let Some(path) = res.ok().and_then(|f| f.path()) {
                             crate::config::save_merge_file(&path);
-                            s.emit(ComposeInput::MergeFields(target));
                         }
                     },
                 );

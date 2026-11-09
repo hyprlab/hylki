@@ -498,17 +498,36 @@ msgid "Enable Console mode in Settings → System & Appearance"
 msgstr ""
 "Ενεργοποίηση της λειτουργίας κονσόλας στις Ρυθμίσεις → Σύστημα & εμφάνιση"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+"Δεν υπάρχουν ακόμη πρότυπα. Αποθηκεύστε ένα από το μενού ⋯ του συντάκτη με "
+"την επιλογή «Αποθήκευση ως πρότυπο»."
+
 msgid "New Message from Template"
 msgstr "Νέο μήνυμα από πρότυπο"
 
 msgid "The new message starts as a copy of the template you pick."
 msgstr "Το νέο μήνυμα ξεκινά ως αντίγραφο του προτύπου που επιλέγετε."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr ""
-"Δεν υπάρχουν ακόμη πρότυπα. Αποθηκεύστε ένα από το μενού ⋯ του συντάκτη με "
-"την επιλογή «Αποθήκευση ως πρότυπο»."
+#, fuzzy
+msgid "Insert Template"
+msgstr "Χρήση προτύπου"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Τοποθέτηση της εικόνας στη θέση του δρομέα"
+
+msgid "Templates"
+msgstr "Πρότυπα"
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Δημιουργήστε έναν νέο φάκελο για αυτόν τον λογαριασμό."
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "Δεν ήταν δυνατή η αποθήκευση του προτύπου: {e}"
 
 msgid "Continue a Draft"
 msgstr "Συνέχιση προχείρου"
@@ -1469,6 +1488,15 @@ msgstr "Όλες οι σημειώσεις έκδοσης στο GitHub"
 
 msgid "Delete this conversation?"
 msgstr "Διαγραφή αυτής της συνομιλίας;"
+
+msgid ""
+"The message in this conversation will be deleted. You can turn this warning "
+"off in Settings."
+msgid_plural ""
+"All {n} messages in this conversation will be deleted. You can turn this "
+"warning off in Settings."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Delete Conversation"
 msgstr "Διαγραφή συνομιλίας"
@@ -2475,6 +2503,11 @@ msgstr "Προσθήκη ψευδωνύμου"
 msgid "Save"
 msgstr "Αποθήκευση"
 
+msgid ""
+"Will appear in the composer's From menu. Replies to mail sent here will come "
+"from this address."
+msgstr ""
+
 msgid "Display name (optional)"
 msgstr "Εμφανιζόμενο όνομα (προαιρετικό)"
 
@@ -2486,6 +2519,10 @@ msgstr "Αποστολή"
 
 msgid "Own SMTP server"
 msgstr "Ιδιόκτητος διακομιστής SMTP"
+
+msgid ""
+"Needed when this account's provider, such as Gmail, rewrites the sender."
+msgstr ""
 
 msgid "SMTP server"
 msgstr "Διακομιστής SMTP"
@@ -2501,6 +2538,9 @@ msgstr "Κωδικός πρόσβασης SMTP"
 
 msgid "Test SMTP"
 msgstr "Δοκιμή SMTP"
+
+msgid "Names that share an address send through this account's server."
+msgstr ""
 
 msgid "Testing…"
 msgstr "Δοκιμή…"
@@ -3118,6 +3158,23 @@ msgstr "Αποστολή τώρα"
 
 msgid "The file could not be opened"
 msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+#. Offer the steps that actually work.
+#, fuzzy
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Download the file, then open it from Files\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
+msgstr ""
+"Η πύλη της επιφάνειας εργασίας ανέφερε: {error}\n"
+"\n"
+"• Κάντε δεξί κλικ στον σύνδεσμο, αντιγράψτε τον και ανοίξτε τον στο "
+"πρόγραμμα περιήγησής σας\n"
+"• Η ενημέρωση του «xdg-desktop-portal» και η εκ νέου σύνδεση ενδέχεται να "
+"διορθώσουν το απευθείας άνοιγμα συνδέσμων"
 
 msgid "Go to Message"
 msgstr "Μετάβαση στο μήνυμα"
@@ -7542,6 +7599,16 @@ msgstr "Αφαίρεση του συνημμένου…"
 msgid "Could not remove the attachment: {e}"
 msgstr "Δεν ήταν δυνατή η αφαίρεση του συνημμένου: {e}"
 
+msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid ""
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Settings → Mail Accounts and sign in to it again."
+msgstr ""
+
 msgid "The attachment is no longer in the message on the server"
 msgstr "Το συνημμένο δεν υπάρχει πλέον στο μήνυμα στον διακομιστή"
 
@@ -7954,7 +8021,8 @@ msgstr "Χρήση αρχικών"
 msgid "Send-as aliases"
 msgstr "Ψευδώνυμα αποστολέα"
 
-msgid "Extra addresses this account can send as."
+#, fuzzy
+msgid "Extra names and addresses this account can send as."
 msgstr "Πρόσθετες διευθύνσεις αποστολής για αυτόν τον λογαριασμό."
 
 msgid "Add Alias…"
@@ -7978,6 +8046,13 @@ msgstr "Εισαγωγή αρχείου…"
 
 msgid "Delete Signature"
 msgstr "Διαγραφή υπογραφής"
+
+#, fuzzy
+msgid "Sender name"
+msgstr "Όνομα φακέλου"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
 
 msgid "Start messages with this signature"
 msgstr "Έναρξη μηνυμάτων με αυτήν την υπογραφή"
@@ -8100,9 +8175,6 @@ msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 "Για το Gmail και άλλες υπηρεσίες που αποθηκεύουν μόνες τους την απεσταλμένη "
 "αλληλογραφία."
-
-msgid "Templates"
-msgstr "Πρότυπα"
 
 msgid "Hidden Folders"
 msgstr "Κρυφοί φάκελοι"

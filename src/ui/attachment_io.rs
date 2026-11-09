@@ -5,7 +5,7 @@
 
 use gtk::prelude::*;
 
-use crate::i18n::i18n;
+use crate::i18n::{i18n, i18n_f};
 
 /// Ask where to save one attachment ("Save Attachment", the file's own name
 /// offered) and write it there. A place without a local path is passed over
@@ -216,10 +216,9 @@ fn launch_failed_dialog(parent: Option<&gtk::Window>, error: &str) {
         // No Flatseal toggle can help here: portal access is not a
         // permission, and the failure is inside the portal's own launcher.
         // Offer the steps that actually work.
-        .detail(format!(
-            "The desktop portal reported: {error}\n\n\
-             \u{2022} Download the file, then open it from Files\n\
-             \u{2022} Updating \u{201c}xdg-desktop-portal\u{201d} and logging back in may fix direct opening"
+        .detail(i18n_f(
+            "The desktop portal reported: {error}\n\n• Download the file, then open it from Files\n• Updating “xdg-desktop-portal” and logging back in may fix direct opening",
+            &[("error", error)],
         ))
         .modal(true)
         .build();

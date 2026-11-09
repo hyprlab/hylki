@@ -113,6 +113,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             Some(id) => emit(WorkerEvent::DraftSaved {
                 autosave,
                 message_id: Some(id),
+                template,
             }),
             None => draft_not_saved(autosave, template, why, message, emit),
         }

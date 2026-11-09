@@ -2,17 +2,28 @@
 //! banners, in the reader's grounds and accent. One `format!` so the bytes
 //! stay exactly what the page has always received.
 
+use super::frame::StatusColors;
+
 /// The wrapper's stylesheet: the cards, their headers and chips, in the
-/// reader's grounds and accent.
+/// reader's grounds and accent. The marks and verdicts wear the theme's
+/// status colors, as the app's own widgets do (#619).
+// Each a color or a fragment dropped into the one `format!`.
+#[allow(clippy::too_many_arguments)]
 pub(super) fn wrapper_css(
     scheme: &str,
     page: &str,
     bg: &str,
     chrome: &str,
     accent: &str,
+    status: &StatusColors,
     toggle_color: &str,
     plain_css: &str,
 ) -> String {
+    let StatusColors {
+        error,
+        warning,
+        success,
+    } = status;
     format!(
         "\
          :root{{color-scheme:{scheme};}}\
@@ -39,15 +50,23 @@ pub(super) fn wrapper_css(
          margin:-6px 0 12px;padding:0;padding-inline:50px 16px;position:relative;z-index:2;\
          cursor:pointer;user-select:none;}}\
          .hylki-msg.hylki-folded>:not(.hylki-fbar):not(.hylki-msg-hdr){{display:none;}}\
-         .hylki-marks{{display:inline-flex;gap:8px;align-self:center;flex:none;}}\
-         .hylki-mark{{display:inline-flex;opacity:0.55;line-height:0;}}\
+         /* Contents, not a box: a slot that is not drawn then takes no\
+         gap in the meta row either (#616). */\
+         .hylki-marks{{display:contents;}}\
+         .hylki-mark{{display:inline-flex;opacity:0.55;line-height:0;\
+         align-self:center;flex:none;}}\
          .hylki-mark svg{{width:16px;height:16px;}}\
          .hylki-mark svg,.hylki-mark svg *{{fill:currentColor;}}\
          .hylki-mark-none{{width:16px;height:16px;}}\
-         /* The star keeps its place unstarred, so starring moves nothing. */\
+         /* An unstarred star and a missing paperclip keep their place, so\
+         the marks of a conversation's cards stand in the same columns, but\
+         only while some message on the page fills that column: otherwise\
+         they are empty space between the chips and the date (#616). */\
          .hylki-mark-star{{color:#e5a50a;opacity:1;}}\
-         .hylki-mark-high{{color:#e01b24;opacity:1;}}\
+         .hylki-mark-high{{color:{error};opacity:1;}}\
          .hylki-msg:not(.starred) .hylki-mark-star{{visibility:hidden;}}\
+         body:not(:has(.hylki-msg.starred)) .hylki-mark-star,\
+         body:not(:has(.hylki-mark-clip)) .hylki-mark-none{{display:none;}}\
          body.hylki-folds .hylki-msg-hdr{{cursor:pointer;}}\
          @media print{{.hylki-msg.hylki-folded>:not(.hylki-fbar){{display:revert !important;}}\
          .hylki-msg.hylki-folded>.hylki-fbar{{display:none !important;}}}}\
@@ -191,7 +210,7 @@ pub(super) fn wrapper_css(
          offers Copy / New Message. */\
          /* Sender-authentication seal (#88): invisible until a\
          verdict arrives; a pass wears Bazaar's fixed blue (never the\
-         system accent), problems the warning/error reds.\
+         system accent), problems the theme's warning and error colors.\
          Sized in em and anchored to the text baseline, then eased\
          down to the name's optical centre with an em transform\
          (margins can't move it: WebKit synthesizes the missing\
@@ -206,8 +225,8 @@ pub(super) fn wrapper_css(
          .hylki-verify svg,.hylki-verify svg *{{fill:currentColor;}}\
          .hylki-verify.trust-pass{{color:#3584e4;}}\
          .hylki-verify.trust-unverified{{color:currentColor;opacity:0.4;}}\
-         .hylki-verify.trust-suspicious{{color:#cd9309;}}\
-         .hylki-verify.trust-fail{{color:#c01c28;}}\
+         .hylki-verify.trust-suspicious{{color:{warning};}}\
+         .hylki-verify.trust-fail{{color:{error};}}\
          /* The OpenPGP chip (#133), a labelled pill since #300: the\
          verdict reads in words on a wash of its color. Text of its\
          own, so it sits on the name's baseline without the seal's\
@@ -222,9 +241,9 @@ pub(super) fn wrapper_css(
          .hylki-pgp svg,.hylki-pgp svg *{{fill:currentColor;}}\
          .hylki-pgp.enc svg:first-child{{display:block;}}\
          .hylki-pgp.sig svg:nth-child(2){{display:block;}}\
-         .hylki-pgp.pgp-good{{color:#26a269;background:rgba(38,162,105,0.16);}}\
-         .hylki-pgp.pgp-warn{{color:#cd9309;background:rgba(205,147,9,0.16);}}\
-         .hylki-pgp.pgp-bad{{color:#c01c28;background:rgba(192,28,40,0.14);}}\
+         .hylki-pgp.pgp-good{{color:{success};background:color-mix(in srgb,{success} 16%,transparent);}}\
+         .hylki-pgp.pgp-warn{{color:{warning};background:color-mix(in srgb,{warning} 16%,transparent);}}\
+         .hylki-pgp.pgp-bad{{color:{error};background:color-mix(in srgb,{error} 14%,transparent);}}\
          .hylki-pgp:hover{{filter:brightness(1.1);}}\
          /* The sensitivity label (#411): the OpenPGP pill's shape in a\
          neutral wash, since a label is a statement, not a verdict.\
@@ -273,7 +292,7 @@ pub(super) fn wrapper_css(
          .hylki-read svg{{width:1.05em;height:1.05em;display:block;}}\
          .hylki-read svg,.hylki-read svg *{{fill:currentColor;}}\
          .hylki-read.asked{{opacity:0.55;}}\
-         .hylki-read.read{{color:#26a269;}}\
+         .hylki-read.read{{color:{success};}}\
          .hylki-dot{{width:8px;height:8px;border-radius:50%;background:#3584e4;\
          flex:none;align-self:center;}}\
          .hylki-end{{height:1px;}}\

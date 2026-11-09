@@ -511,6 +511,10 @@ msgid "Enable Console mode in Settings → System & Appearance"
 msgstr ""
 "Engedélyezze a konzol módot a Beállítások → Rendszer és megjelenés menüben"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+
 #, fuzzy
 msgid "New Message from Template"
 msgstr "Inkább új üzenet"
@@ -519,9 +523,24 @@ msgstr "Inkább új üzenet"
 msgid "The new message starts as a copy of the template you pick."
 msgstr "A fájlok az Ön által kiválasztott üzenetre adott válaszba kerülnek."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+#, fuzzy
+msgid "Insert Template"
+msgstr "Címke szerkesztése"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Helyezd el a képet a kurzor helyére"
+
+msgid "Templates"
 msgstr ""
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Új mappa létrehozása ehhez a fiókhoz."
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "A piszkozat nem menthető: {e}"
 
 msgid "Continue a Draft"
 msgstr "Folytatás piszkozatként"
@@ -1548,6 +1567,15 @@ msgstr "A teljes verzióinformáció a GitHub-on"
 
 msgid "Delete this conversation?"
 msgstr "Törli ezt a beszélgetést?"
+
+msgid ""
+"The message in this conversation will be deleted. You can turn this warning "
+"off in Settings."
+msgid_plural ""
+"All {n} messages in this conversation will be deleted. You can turn this "
+"warning off in Settings."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Delete Conversation"
 msgstr "Beszélgetés törlése"
@@ -2591,6 +2619,11 @@ msgstr "Álnév (alias) hozzáadása…"
 msgid "Save"
 msgstr "Mentés"
 
+msgid ""
+"Will appear in the composer's From menu. Replies to mail sent here will come "
+"from this address."
+msgstr ""
+
 msgid "Display name (optional)"
 msgstr "Megjelenítendő név (opcionális)"
 
@@ -2602,6 +2635,10 @@ msgstr "Küldés"
 
 msgid "Own SMTP server"
 msgstr "Saját SMTP kiszolgáló"
+
+msgid ""
+"Needed when this account's provider, such as Gmail, rewrites the sender."
+msgstr ""
 
 msgid "SMTP server"
 msgstr "SMTP kiszolgáló"
@@ -2617,6 +2654,9 @@ msgstr "SMTP jelszó"
 
 msgid "Test SMTP"
 msgstr "SMTP tesztelése"
+
+msgid "Names that share an address send through this account's server."
+msgstr ""
 
 msgid "Testing…"
 msgstr "Tesztelés folyamatban…"
@@ -3258,6 +3298,23 @@ msgstr "Küldés most"
 
 msgid "The file could not be opened"
 msgstr "A fájl nem megnyitható"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+#. Offer the steps that actually work.
+#, fuzzy
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Download the file, then open it from Files\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
+msgstr ""
+"Az portál a következő üzenetet jelezte: {error}\n"
+"\n"
+"• Kattints jobb gombbal a hivatkozásra, másold ki, majd nyisd meg a "
+"böngésződben\n"
+"• Az „xdg-desktop-portal” frissítése és az újbóli bejelentkezés megoldhatja "
+"a hivatkozások közvetlen megnyitásának problémáját"
 
 msgid "Go to Message"
 msgstr "Ugrás az üzenethez"
@@ -7822,6 +7879,16 @@ msgstr "A melléklet eltávolítása…"
 msgid "Could not remove the attachment: {e}"
 msgstr "A melléklet eltávolítása nem sikerült: {e}"
 
+msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid ""
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Settings → Mail Accounts and sign in to it again."
+msgstr ""
+
 msgid "The attachment is no longer in the message on the server"
 msgstr "A melléklet már nem található az üzenetben a kiszolgálón"
 
@@ -8244,7 +8311,7 @@ msgstr "Használj kezdőbetűket"
 msgid "Send-as aliases"
 msgstr "Álnevek és címek (alias)"
 
-msgid "Extra addresses this account can send as."
+msgid "Extra names and addresses this account can send as."
 msgstr ""
 
 msgid "Add Alias…"
@@ -8269,6 +8336,13 @@ msgstr "Fájl importálása…"
 #, fuzzy
 msgid "Delete Signature"
 msgstr "Aláírás importálása"
+
+#, fuzzy
+msgid "Sender name"
+msgstr "Mappanév"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
 
 #, fuzzy
 msgid "Start messages with this signature"
@@ -8395,9 +8469,6 @@ msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 "A Gmail és más olyan szolgáltatások esetében, amelyek maguk mentik el a "
 "kiküldött leveleket. Letiltja a fenti „Másolat mentése” opciót."
-
-msgid "Templates"
-msgstr ""
 
 msgid "Hidden Folders"
 msgstr "Rejtett mappák"

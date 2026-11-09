@@ -462,17 +462,35 @@ msgstr[2] "{n} человек"
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr "Включите режим консоли в Настройки → Система и внешний вид"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+"Шаблонов пока нет. Сохраните письмо как шаблон через меню «⋯» в окне "
+"редактора."
+
 msgid "New Message from Template"
 msgstr "Новое сообщение из шаблона"
 
 msgid "The new message starts as a copy of the template you pick."
 msgstr "Новое сообщение будет создано на основе выбранного шаблона."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr ""
-"Шаблонов пока нет. Сохраните письмо как шаблон через меню «⋯» в окне "
-"редактора."
+msgid "Insert Template"
+msgstr "Вставить шаблон"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Поместить изображение в место указателя"
+
+msgid "Templates"
+msgstr "Шаблоны"
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Создать новую папку для этого аккаунта."
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "Не удалось сохранить шаблон: {e}"
 
 msgid "Continue a Draft"
 msgstr "Продолжить черновик"
@@ -1458,6 +1476,16 @@ msgstr "Полные примечания к выпуску на GitHub"
 
 msgid "Delete this conversation?"
 msgstr "Удалить эту переписку?"
+
+msgid ""
+"The message in this conversation will be deleted. You can turn this warning "
+"off in Settings."
+msgid_plural ""
+"All {n} messages in this conversation will be deleted. You can turn this "
+"warning off in Settings."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 msgid "Delete Conversation"
 msgstr "Удалить переписку"
@@ -2448,6 +2476,11 @@ msgstr "Добавить псевдоним"
 msgid "Save"
 msgstr "Сохранить"
 
+msgid ""
+"Will appear in the composer's From menu. Replies to mail sent here will come "
+"from this address."
+msgstr ""
+
 msgid "Display name (optional)"
 msgstr "Необязательно. Отображается вместо инициалов."
 
@@ -2459,6 +2492,10 @@ msgstr "Отправка"
 
 msgid "Own SMTP server"
 msgstr "Собственный сервер SMTP"
+
+msgid ""
+"Needed when this account's provider, such as Gmail, rewrites the sender."
+msgstr ""
 
 msgid "SMTP server"
 msgstr "Сервер SMTP"
@@ -2474,6 +2511,9 @@ msgstr "Пароль SMTP"
 
 msgid "Test SMTP"
 msgstr "Проверить SMTP"
+
+msgid "Names that share an address send through this account's server."
+msgstr ""
 
 msgid "Testing…"
 msgstr "Проверка…"
@@ -3075,6 +3115,23 @@ msgstr ""
 
 msgid "The file could not be opened"
 msgstr "Не удалось открыть файл"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+#. Offer the steps that actually work.
+#, fuzzy
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Download the file, then open it from Files\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
+msgstr ""
+"Системный портал сообщил: {error}\n"
+"\n"
+"• Нажмите правой кнопкой мыши по ссылке, скопируйте её и откройте в "
+"браузере\n"
+"• Обновление пакета «xdg-desktop-portal» и повторный вход в систему могут "
+"исправить прямое открытие ссылок"
 
 msgid "Go to Message"
 msgstr "Перейти к сообщению"
@@ -7455,6 +7512,16 @@ msgstr "Удаление вложения…"
 msgid "Could not remove the attachment: {e}"
 msgstr "Не удалось удалить вложение: {e}"
 
+msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid ""
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Settings → Mail Accounts and sign in to it again."
+msgstr ""
+
 msgid "The attachment is no longer in the message on the server"
 msgstr "Вложение больше не содержится в сообщении на сервере"
 
@@ -7860,7 +7927,8 @@ msgstr "Использовать инициалы"
 msgid "Send-as aliases"
 msgstr "Псевдонимы для отправки"
 
-msgid "Extra addresses this account can send as."
+#, fuzzy
+msgid "Extra names and addresses this account can send as."
 msgstr "Дополнительные адреса, от которых может отправлять эта учётная запись."
 
 msgid "Add Alias…"
@@ -7884,6 +7952,13 @@ msgstr "Импортировать файл…"
 
 msgid "Delete Signature"
 msgstr "Удалить подпись"
+
+#, fuzzy
+msgid "Sender name"
+msgstr "Название папки"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
 
 msgid "Start messages with this signature"
 msgstr "Начинать сообщения с этой подписью"
@@ -8000,9 +8075,6 @@ msgstr "Сервер сам сохраняет копию отправленны
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr "Для Gmail и других этот файл отправлял почту самостоятельно."
-
-msgid "Templates"
-msgstr "Шаблоны"
 
 msgid "Hidden Folders"
 msgstr "Скрытые папки"

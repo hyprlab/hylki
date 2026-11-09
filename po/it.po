@@ -506,17 +506,36 @@ msgstr[1] "{n} destinatari"
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr "Abilita la modalità Console in Impostazioni → Sistema e aspetto"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+"Nessun modello ancora. Salvane uno dal menu ⋯ del compositore con Salva come "
+"modello."
+
 msgid "New Message from Template"
 msgstr "Nuovo messaggio da modello"
 
 msgid "The new message starts as a copy of the template you pick."
 msgstr "Il nuovo messaggio inizia come copia del modello che sceglierai."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr ""
-"Nessun modello ancora. Salvane uno dal menu ⋯ del compositore con Salva come "
-"modello."
+#, fuzzy
+msgid "Insert Template"
+msgstr "Usa modello"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Inserisci l'immagine dove si trova il cursore"
+
+msgid "Templates"
+msgstr "Modelli"
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Crea una nuova cartella per questo account."
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "Impossibile salvare il modello: {e}"
 
 msgid "Continue a Draft"
 msgstr "Continua una bozza"
@@ -1517,6 +1536,15 @@ msgstr "Note di rilascio complete su GitHub"
 
 msgid "Delete this conversation?"
 msgstr "Eliminare questa conversazione?"
+
+msgid ""
+"The message in this conversation will be deleted. You can turn this warning "
+"off in Settings."
+msgid_plural ""
+"All {n} messages in this conversation will be deleted. You can turn this "
+"warning off in Settings."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Delete Conversation"
 msgstr "Elimina conversazione"
@@ -2560,6 +2588,11 @@ msgstr "Aggiungi alias"
 msgid "Save"
 msgstr "Salva"
 
+msgid ""
+"Will appear in the composer's From menu. Replies to mail sent here will come "
+"from this address."
+msgstr ""
+
 msgid "Display name (optional)"
 msgstr "Nome visualizzato (opzionale)"
 
@@ -2571,6 +2604,10 @@ msgstr "Invio"
 
 msgid "Own SMTP server"
 msgstr "Server SMTP proprio"
+
+msgid ""
+"Needed when this account's provider, such as Gmail, rewrites the sender."
+msgstr ""
 
 msgid "SMTP server"
 msgstr "Server SMTP"
@@ -2586,6 +2623,9 @@ msgstr "Password SMTP"
 
 msgid "Test SMTP"
 msgstr "Test SMTP"
+
+msgid "Names that share an address send through this account's server."
+msgstr ""
 
 msgid "Testing…"
 msgstr "Test in corso…"
@@ -3217,6 +3257,22 @@ msgstr "Invia ora"
 
 msgid "The file could not be opened"
 msgstr "Impossibile aprire il file"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+#. Offer the steps that actually work.
+#, fuzzy
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Download the file, then open it from Files\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
+msgstr ""
+"Il portale desktop ha segnalato: {error}\n"
+"\n"
+"• Fai clic destro sul link, copialo e aprilo nel browser\n"
+"• Aggiornare “xdg-desktop-portal” e rieseguire l'accesso potrebbe "
+"risolverel'apertura diretta dei link"
 
 msgid "Go to Message"
 msgstr "Vai al messaggio"
@@ -7745,6 +7801,16 @@ msgstr "Rimozione dell'allegato in corso…"
 msgid "Could not remove the attachment: {e}"
 msgstr "Impossibile rimuovere l'allegato: {e}"
 
+msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid ""
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Settings → Mail Accounts and sign in to it again."
+msgstr ""
+
 msgid "The attachment is no longer in the message on the server"
 msgstr "L'allegato non è più nel messaggio sul server"
 
@@ -8167,7 +8233,7 @@ msgstr "Usa iniziali"
 msgid "Send-as aliases"
 msgstr "Alias di invio"
 
-msgid "Extra addresses this account can send as."
+msgid "Extra names and addresses this account can send as."
 msgstr ""
 
 msgid "Add Alias…"
@@ -8192,6 +8258,13 @@ msgstr "Importa file…"
 #, fuzzy
 msgid "Delete Signature"
 msgstr "Inserisci firma"
+
+#, fuzzy
+msgid "Sender name"
+msgstr "Nome cartella"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
 
 #, fuzzy
 msgid "Start messages with this signature"
@@ -8324,9 +8397,6 @@ msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 "Per Gmail e altri che archiviano la posta inviata autonomamente. Disabilita "
 "il salvataggio copia sopra."
-
-msgid "Templates"
-msgstr "Modelli"
 
 msgid "Hidden Folders"
 msgstr "Cartelle nascoste"
