@@ -1,5 +1,81 @@
 # Changelog
 
+## 1.48.0-beta.4 — 2026-11-09
+
+- **Added: Insert Template in the composer** (#610, by FLASH911). A button in
+  the formatting row puts a saved template's text into the message being
+  written, at the cursor, so a reply can use a standard answer and keep its
+  recipients, subject and quote. The template's own signature is left out.
+  The button shows only when an account has a Templates folder.
+
+- **Added: several names on one send-as address** (#610, by FLASH911). A
+  shared mailbox can send as, say, a manager and a director: aliases may now
+  repeat an address, or the account's own, under another name. Such an
+  address goes through the account's own SMTP server, since an alias's server
+  is chosen by address. A draft reopens on the name it was saved with.
+
+- **Added: a signature can name the sender** (#610, by FLASH911). The
+  signature editor's **Sender name** replaces the account's name in From
+  while that signature is in the message. It applies to the account's own
+  address; aliases keep their names.
+
+- **Fixed: mail a filter sends to Trash or Junk still raised a new mail
+  notification** (#621, by Fabio Rotondo). A filter that moves a new message
+  into Trash or Junk now gives no notification and no sound for it, as the
+  tray icon already showed no new mail. Mail filed into any other folder is
+  still announced.
+
+- **Fixed: a Microsoft account could stop checking for mail after a
+  suspend** (#618, reported by jorgegarciaavila). Requests to Microsoft Graph
+  and to Microsoft's sign-in had no read deadline, so a download whose
+  connection died while the computer slept waited for it forever, and every
+  later check and Refresh queued behind it until the account was switched off
+  and on. A request now fails after a minute without an answer (half a minute
+  for a sign-in renewal), and the next check connects again.
+
+- **Fixed: choosing a CSV file from the merge field button stopped the window
+  responding** (#617, reported by samuel-edlmeier). The field list tried to
+  open again by itself once the file was chosen. GNOME refuses a popup that
+  no click in the window asked for, and the window was left waiting on a list
+  that was never shown, ignoring every click and key until Hylki was
+  restarted. The file is now only remembered, and its columns are in the list
+  the next time the button is clicked.
+
+- **Fixed: the warning before deleting a conversation was always in
+  English** (#620, reported by samuel-edlmeier). Its text was missing from
+  `po/hylki.pot`, as were the dialog shown when the desktop portal cannot open
+  an attachment and the two Microsoft sign-in errors. All four can now be
+  translated. The warning also names Settings rather than Preferences, the
+  name the window has.
+
+- **Changed: Save as Template says where the template went.** The composer
+  stays open after the save, so nothing showed that it had worked. A
+  notification now names the Templates folder and the account once the server
+  has the copy.
+
+- **Changed: the status bar is always blue.** It took the desktop accent
+  color, so a pink or green accent turned it pink or green. It is now
+  `#3383e0` whatever the accent, and still turns amber for an error or while
+  offline.
+
+- **Fixed: the high-importance mark in the reader was a fixed red** (#619,
+  reported by yioannides). The mark beside a message's date was always
+  `#e01b24`, in light and dark alike, while the message list draws it in the
+  theme's error color. The reader now uses the same color as the list. The
+  sender check, the OpenPGP chip and a returned read receipt in a message's
+  header now take the theme's error, warning and success colors too, as they
+  do in the toolbar.
+
+- **Fixed: a wide gap between the recipients chip and the date** (#616,
+  reported by yioannides). Since 1.47.0 a message's header kept room for a
+  star and a paperclip even when it had neither, which left about 56 px of
+  blank space before the date. That room is now kept only while another
+  message in the conversation is starred or has files, so the marks of its
+  cards still line up.
+
+- **Translations:** French updated (PR #615 by frenchy82), with 2419 of 2474
+  strings translated.
+
 ## 1.48.0-beta.3 — 2026-11-08
 
 - **Added: the mail cache can be encrypted on disk** (by hanthor, #601).

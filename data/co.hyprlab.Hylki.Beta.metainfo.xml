@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.48.0-beta.4" date="2026-11-09" type="development">
+      <description>
+        <p>A template can be inserted into the message being written, one address can send under several names, and a signature can name the sender. A Microsoft account keeps checking for mail after a suspend.</p>
+      </description>
+    </release>
     <release version="1.48.0-beta.3" date="2026-11-08" type="development">
       <description>
         <p>Stored mail can be encrypted on disk, trackers come off links and a warning comes before opening a program. Plain-text mail fills the reader and Focus Mode has its own Settings page.</p>

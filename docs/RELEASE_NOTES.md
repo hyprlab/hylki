@@ -2,6 +2,29 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.48.0-beta.4
+
+### New features:
+
+- Insert Template in the composer by @FLASH911 - (#610)
+- Several names on one send-as address by @FLASH911 - (#610)
+- A signature can name the sender by @FLASH911 - (#610)
+- Save as Template says where the template went
+- The status bar stays blue whatever the accent color
+
+### Fixes:
+
+- a new mail alert for mail a filter sends to Trash or Junk by @fsoft72 - (#621)
+- a Microsoft account no longer checking for mail after a suspend - (#618)
+- the window not responding after choosing a merge CSV file - (#617)
+- the delete-conversation warning always in English - (#620)
+- the reader's high-importance mark in a fixed red - (#619)
+- a wide gap before a message's date - (#616)
+
+### Translations:
+
+- French by @frenchy82 - (#615)
+
 ## What's new in 1.48.0-beta.3
 
 ### New features:
