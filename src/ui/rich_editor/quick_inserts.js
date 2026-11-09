@@ -1,7 +1,9 @@
 (function(){
   var MIN_PREFIX = 3;
   var MAX_SUGGESTIONS = 3;
-  var candidates = Array.isArray(window.__hylkiQuickInserts) ? window.__hylkiQuickInserts.slice() : [];
+  var LOOKBEHIND = 256;
+  var candidates = [];
+  var lowered = [];
   var selected = 0;
   var current = null;
   var popup = null;
@@ -20,6 +22,13 @@
     return document.getElementById('src') || document.querySelector('body[contenteditable="true"]');
   }
 
+  function remember(words) {
+    candidates = (Array.isArray(words) ? words : [])
+      .map(function(value){ return String(value || '').trim(); })
+      .filter(Boolean);
+    lowered = candidates.map(function(value){ return value.toLocaleLowerCase(); });
+  }
+
   function hide() {
     open = false;
     current = null;
@@ -29,40 +38,46 @@
 
   function wordBeforeCaret() {
     var text = '';
-    var rect = null;
     var source = document.getElementById('src');
     if (source) {
       if (!document.hasFocus() || document.activeElement !== source) return null;
       if (source.selectionStart !== source.selectionEnd) return null;
-      text = source.value.slice(0, source.selectionStart);
-      var box = source.getBoundingClientRect();
-      rect = { left: box.left + 16, top: box.top + 18, bottom: box.top + 40 };
+      var source_end = source.selectionStart;
+      text = source.value.slice(Math.max(0, source_end - LOOKBEHIND), source_end);
     } else {
       if (!document.hasFocus()) return null;
       var sel = window.getSelection();
       if (!sel || !sel.rangeCount || !sel.isCollapsed) return null;
       var node = sel.focusNode;
       if (!node || node.nodeType !== Node.TEXT_NODE) return null;
-      text = (node.data || '').slice(0, sel.focusOffset);
+      text = (node.data || '').slice(
+        Math.max(0, sel.focusOffset - LOOKBEHIND),
+        sel.focusOffset
+      );
+    }
+    var match = text.match(/(?:^|[\s\u00a0])([^\s.,!?;:()\[\]{}"«»„“\-—]{3,})$/u);
+    if (!match || match[1].length < MIN_PREFIX) return null;
+    var rect = null;
+    if (source) {
+      var box = source.getBoundingClientRect();
+      rect = { left: box.left + 16, top: box.top + 18, bottom: box.top + 40 };
+    } else {
       var range = sel.getRangeAt(0).cloneRange();
       range.collapse(true);
-      var rects = range.getClientRects();
-      rect = rects.length ? rects[rects.length - 1] : range.getBoundingClientRect();
+      rect = range.getBoundingClientRect();
       if (!rect || (!rect.width && !rect.height)) {
-        rect = node.parentElement ? node.parentElement.getBoundingClientRect() : null;
+        rect = node && node.parentElement ? node.parentElement.getBoundingClientRect() : null;
       }
     }
     if (!rect) return null;
-    var match = text.match(/(?:^|[\s\u00a0])([^\s.,!?;:()\[\]{}"«»„“\-—]{3,})$/u);
-    if (!match || match[1].length < MIN_PREFIX) return null;
     return { prefix: match[1], rect: rect };
   }
 
   function matching(prefix) {
     var low = prefix.toLocaleLowerCase();
-    return candidates.map(function(value){ return String(value || '').trim(); })
-      .filter(function(value){ return value && value.toLocaleLowerCase().startsWith(low); })
-      .filter(function(value){ return value.toLocaleLowerCase() !== low; })
+    return candidates.filter(function(value, i){
+      return lowered[i].startsWith(low) && lowered[i] !== low;
+    })
       .slice(0, MAX_SUGGESTIONS);
   }
 
@@ -129,6 +144,7 @@
   }
 
   function refresh() {
+    if (!candidates.length) { hide(); return; }
     var found = wordBeforeCaret();
     if (!found) { hide(); return; }
     var words = matching(found.prefix);
@@ -149,6 +165,7 @@
   }
 
   function accept() {
+    if (!open || !current) refresh();
     if (!open || !current || !current.words.length) return false;
     var phrase = current.words[selected];
     var prefix = current.prefix;
@@ -177,7 +194,7 @@
   }
 
   window.__hylkiQuickSet = function(words){
-    candidates = Array.isArray(words) ? words.slice() : [];
+    remember(words);
     selected = 0;
     schedule();
   };
@@ -190,7 +207,8 @@
   };
   window.__hylkiQuickDismiss = function(){ hide(); };
 
-  document.addEventListener('input', refresh, true);
+  remember(window.__hylkiQuickInserts);
+  document.addEventListener('input', schedule, true);
   document.addEventListener('compositionend', schedule, true);
   document.addEventListener('click', schedule, true);
   document.addEventListener('keyup', function(e){
