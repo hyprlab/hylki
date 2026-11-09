@@ -170,8 +170,11 @@ impl AccountsWindow {
         let (name, addr) = split_identity(&alias.identity);
         let identity_group = adw::PreferencesGroup::new();
         identity_group.set_description(Some(
-            i18n("Will appear in the composer's From menu. Replies will come to this address.")
-                .as_str(),
+            i18n(
+                "Will appear in the composer's From menu. Replies to mail sent here will come \
+                 from this address.",
+            )
+            .as_str(),
         ));
         let name_row = adw::EntryRow::builder()
             .title(i18n("Display name (optional)"))
@@ -188,11 +191,9 @@ impl AccountsWindow {
         smtp_group.set_title(&i18n("Sending"));
         let smtp_switch = adw::SwitchRow::builder()
             .title(i18n("Own SMTP server"))
-            .subtitle(
-                "Send through the alias's own mail provider, with its own \
-                 sign-in — instead of this account's server. Needed when the \
-                 account's provider (e.g. Gmail) rewrites the sender address.",
-            )
+            .subtitle(i18n(
+                "Needed when this account's provider, such as Gmail, rewrites the sender.",
+            ))
             .build();
         smtp_switch.set_active(alias.has_own_smtp());
         let host_row = adw::EntryRow::builder().title(i18n("SMTP server")).build();
@@ -252,7 +253,8 @@ impl AccountsWindow {
         let scroller = gtk::ScrolledWindow::builder()
             .hscrollbar_policy(gtk::PolicyType::Never)
             .propagate_natural_height(true)
-            .max_content_height(640)
+            // The SMTP fields need about 670 px; a short screen still scrolls.
+            .max_content_height(760)
             .child(&content)
             .build();
         let toolbar = adw::ToolbarView::new();

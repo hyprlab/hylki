@@ -2542,7 +2542,8 @@ msgid "Save"
 msgstr "Salvar"
 
 msgid ""
-"Will appear in the composer's From menu. Replies will come to this address."
+"Will appear in the composer's From menu. Replies to mail sent here will come "
+"from this address."
 msgstr ""
 
 msgid "Display name (optional)"
@@ -2556,6 +2557,10 @@ msgstr "Envio"
 
 msgid "Own SMTP server"
 msgstr "Servidor SMTP próprio"
+
+msgid ""
+"Needed when this account's provider, such as Gmail, rewrites the sender."
+msgstr ""
 
 msgid "SMTP server"
 msgstr "Servidor SMTP"
