@@ -8031,6 +8031,13 @@ msgstr "Εισαγωγή αρχείου…"
 msgid "Delete Signature"
 msgstr "Διαγραφή υπογραφής"
 
+#, fuzzy
+msgid "Sender name"
+msgstr "Όνομα φακέλου"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
+
 msgid "Start messages with this signature"
 msgstr "Έναρξη μηνυμάτων με αυτήν την υπογραφή"
 

@@ -8244,6 +8244,13 @@ msgid "Delete Signature"
 msgstr "Inserisci firma"
 
 #, fuzzy
+msgid "Sender name"
+msgstr "Nome cartella"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
+
+#, fuzzy
 msgid "Start messages with this signature"
 msgstr "Inizia un messaggio con il file allegato"
 

@@ -20,11 +20,17 @@ const AUTOSAVE_SECS: u32 = 30;
 
 /// An identity's From as the composer writes it out: "Name <address>".
 fn identity_display(a: &ComposeAccount) -> String {
-    a.alias_from
-        .clone()
+    wire_from(a)
         .unwrap_or_else(|| a.label.clone())
         .trim()
         .to_string()
+}
+
+/// The From an identity puts on the wire, `None` for the account's own as
+/// configured: an alias's, or the account's address under the sender name of
+/// the signature in the message.
+fn wire_from(a: &ComposeAccount) -> Option<String> {
+    a.alias_from.clone().or_else(|| a.signed_as.clone())
 }
 
 /// Whether two Froms name the same person at the same address, however
@@ -158,7 +164,7 @@ impl Compose {
     /// address.
     pub(super) fn chosen_from(&self, widgets: &ComposeWidgets) -> Result<Option<String>, String> {
         let idx = widgets.from_row.selected() as usize;
-        let picked = self.accounts.get(idx).and_then(|a| a.alias_from.clone());
+        let picked = self.accounts.get(idx).and_then(wire_from);
         if !self.custom_from {
             return Ok(picked);
         }
@@ -250,7 +256,7 @@ impl Compose {
         let from_account_id = self.accounts.get(idx).map(|a| a.id).unwrap_or(1);
         let from_alias = self
             .chosen_from(widgets)
-            .unwrap_or_else(|_| self.accounts.get(idx).and_then(|a| a.alias_from.clone()));
+            .unwrap_or_else(|_| self.accounts.get(idx).and_then(wire_from));
         OutgoingFields {
             html: String::new(),
             text: String::new(),
@@ -382,10 +388,19 @@ impl Compose {
         self.signature_btn
             .set_visible(!account.signatures.is_empty());
         let new_sig = account.signature.clone();
-        if !account_changed || new_sig == self.current_sig {
-            return;
+        if account_changed && new_sig != self.current_sig {
+            self.put_signature(new_sig);
         }
-        self.put_signature(new_sig);
+        // The account's own address takes the sender name of the signature
+        // now in the message, which an alias of the same account may have
+        // picked.
+        let sender_name = self.accounts[idx]
+            .signatures
+            .iter()
+            .find(|sig| !self.current_sig.is_empty() && sig.html == self.current_sig)
+            .map(|sig| sig.sender_name.clone())
+            .unwrap_or_default();
+        self.apply_signature_sender(idx, &sender_name, widgets);
     }
 
     /// Handles [`ComposeInput::ToggleSign`].
@@ -765,7 +780,8 @@ impl Compose {
         sender: &ComponentSender<Self>,
     ) {
         // Populate the From dropdown.
-        let labels: Vec<&str> = self.accounts.iter().map(|a| a.label.as_str()).collect();
+        let labels: Vec<String> = self.accounts.iter().map(identity_display).collect();
+        let labels: Vec<&str> = labels.iter().map(String::as_str).collect();
         let strings = gtk::StringList::new(&labels);
         widgets.from_row.set_model(Some(&strings));
         // Custom factory so the selected account isn't needlessly ellipsized.
@@ -792,7 +808,18 @@ impl Compose {
         });
         widgets.from_row.set_factory(Some(&factory));
         widgets.from_row.set_selected(selected as u32);
-        widgets.from_row.set_visible(self.accounts.len() > 1);
+        // A sender name carried by a signature is part of the From even
+        // when there is only one address, so the row stays visible to show
+        // which name will actually go out.
+        let named_by_signature = self.accounts.iter().any(|account| {
+            account
+                .signatures
+                .iter()
+                .any(|signature| !signature.sender_name.trim().is_empty())
+        });
+        widgets
+            .from_row
+            .set_visible(self.accounts.len() > 1 || named_by_signature);
         {
             // The pencil types a From of your own (#347); the custom row's
             // button goes back to the list.

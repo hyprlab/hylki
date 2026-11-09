@@ -8322,6 +8322,13 @@ msgid "Delete Signature"
 msgstr "Aláírás importálása"
 
 #, fuzzy
+msgid "Sender name"
+msgstr "Mappanév"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
+
+#, fuzzy
 msgid "Start messages with this signature"
 msgstr "Üzenet indítása a melléklet csatolásával"
 

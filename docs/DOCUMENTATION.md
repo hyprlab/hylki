@@ -1002,6 +1002,12 @@ goes where a signature goes. Changing **From** to another account puts in
 that account's own signature; an alias of the same account keeps the one
 picked.
 
+A signature's **Sender name** replaces the account's name in From while that
+signature is in the message, so one mailbox can sign as different people
+(empty keeps the account's name). It applies to the account's own address
+only: an alias keeps its own name. The From row then shows even when the
+account has a single address.
+
 ### Where the signature goes
 
 In a reply or forward the account's signature is placed above the quoted

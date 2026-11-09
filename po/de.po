@@ -8023,6 +8023,13 @@ msgstr "Datei importieren…"
 msgid "Delete Signature"
 msgstr "Signatur entfernen"
 
+#, fuzzy
+msgid "Sender name"
+msgstr "Name des Ordners"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
+
 msgid "Start messages with this signature"
 msgstr "Neue Nachricht mit dieser Signatur"
 

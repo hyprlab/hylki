@@ -733,6 +733,7 @@ mod tests {
         new.set_signatures(
             vec![crate::config::NamedSignature {
                 name: "Short".into(),
+                sender_name: String::new(),
                 html: "Jason".into(),
             }],
             None,

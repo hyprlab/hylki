@@ -7937,6 +7937,13 @@ msgstr "Импортировать файл…"
 msgid "Delete Signature"
 msgstr "Удалить подпись"
 
+#, fuzzy
+msgid "Sender name"
+msgstr "Название папки"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
+
 msgid "Start messages with this signature"
 msgstr "Начинать сообщения с этой подписью"
 

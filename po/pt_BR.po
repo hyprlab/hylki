@@ -8058,6 +8058,13 @@ msgstr "Importar arquivo…"
 msgid "Delete Signature"
 msgstr "Excluir assinatura"
 
+#, fuzzy
+msgid "Sender name"
+msgstr "Nome da pasta"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
+
 msgid "Start messages with this signature"
 msgstr "Iniciar mensagens com esta assinatura"
 

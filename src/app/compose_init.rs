@@ -77,6 +77,12 @@ fn account_identities(
     let signature = default
         .map(|i| signatures[i].html.clone())
         .unwrap_or_default();
+    // The default signature's sender name goes on the account's own
+    // address; the aliases below keep theirs.
+    let signed_as = default
+        .and_then(|i| signatures.get(i))
+        .map(|sig| sig.sender_from(&label))
+        .filter(|from| *from != label);
     let pgp_key = cfg.and_then(|c| c.pgp_key.clone());
     let sign_default = cfg.is_some_and(|c| c.sign_by_default);
     let mut identities = vec![ComposeAccount {
@@ -88,6 +94,7 @@ fn account_identities(
         pgp_key: pgp_key.clone(),
         sign_default,
         alias_from: None,
+        signed_as,
     }];
     for alias in cfg.map(|c| c.aliases.as_slice()).unwrap_or_default() {
         let (name, addr) = split_identity(&alias.identity);
@@ -108,6 +115,7 @@ fn account_identities(
             pgp_key: pgp_key.clone(),
             sign_default,
             alias_from: Some(display),
+            signed_as: None,
         });
     }
     // A JMAP server's own identities (#346), unless the account
@@ -139,6 +147,7 @@ fn account_identities(
             pgp_key: pgp_key.clone(),
             sign_default,
             alias_from: Some(display),
+            signed_as: None,
         });
     }
     identities
@@ -494,6 +503,42 @@ mod tests {
             ..Default::default()
         };
         assert_eq!(choose_identity(&ids, ids[0].id, &mut draft), 2);
+    }
+
+    #[test]
+    fn the_default_signature_names_the_account_but_not_its_aliases() {
+        let mut config = demo_account_configs();
+        config.truncate(1);
+        config[0].email = "office@example.com".into();
+        config[0].name = "Office".into();
+        config[0].aliases =
+            vec![toml::from_str("identity = \"Boss <office@example.com>\"").unwrap()];
+        config[0].set_signatures(
+            vec![crate::config::NamedSignature {
+                name: "Director".into(),
+                sender_name: "Alex Morgan".into(),
+                html: "Alex Morgan".into(),
+            }],
+            Some(0),
+        );
+
+        let ids = compose_identities(&[], &config, &HashMap::new());
+        assert_eq!(ids[0].label, "Office <office@example.com>");
+        assert_eq!(ids[0].alias_from, None);
+        assert_eq!(
+            ids[0].signed_as.as_deref(),
+            Some("Alex Morgan <office@example.com>")
+        );
+        assert_eq!(
+            ids[1].alias_from.as_deref(),
+            Some("Boss <office@example.com>")
+        );
+        assert_eq!(ids[1].signed_as, None);
+        // A new message still opens on the account's own address.
+        assert_eq!(
+            choose_identity(&ids, ids[0].id, &mut ComposePrefill::default()),
+            0
+        );
     }
 
     /// B5 in the map: the reply identity is found by substring, so mail to

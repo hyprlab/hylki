@@ -8048,6 +8048,13 @@ msgstr "Importa un fitxer…"
 msgid "Delete Signature"
 msgstr "Suprimeix la signatura"
 
+#, fuzzy
+msgid "Sender name"
+msgstr "Nom de la carpeta"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr ""
+
 msgid "Start messages with this signature"
 msgstr "Comença els missatges amb aquesta signatura"
 
