@@ -2503,6 +2503,9 @@ msgstr "Contraseña SMTP"
 msgid "Test SMTP"
 msgstr "Probar SMTP"
 
+msgid "Names that share an address send through this account's server."
+msgstr ""
+
 msgid "Testing…"
 msgstr "Probando…"
 
@@ -7944,7 +7947,8 @@ msgstr "Usar iniciales"
 msgid "Send-as aliases"
 msgstr "Alias de envío"
 
-msgid "Extra addresses this account can send as."
+#, fuzzy
+msgid "Extra names and addresses this account can send as."
 msgstr "Direcciones adicionales desde las que esta cuenta puede enviar correo."
 
 msgid "Add Alias…"

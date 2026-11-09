@@ -2322,6 +2322,9 @@ msgstr ""
 msgid "Test SMTP"
 msgstr ""
 
+msgid "Names that share an address send through this account's server."
+msgstr ""
+
 msgid "Testing…"
 msgstr ""
 
@@ -7340,7 +7343,7 @@ msgstr ""
 msgid "Send-as aliases"
 msgstr ""
 
-msgid "Extra addresses this account can send as."
+msgid "Extra names and addresses this account can send as."
 msgstr ""
 
 msgid "Add Alias…"

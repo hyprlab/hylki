@@ -2511,6 +2511,9 @@ msgstr "Κωδικός πρόσβασης SMTP"
 msgid "Test SMTP"
 msgstr "Δοκιμή SMTP"
 
+msgid "Names that share an address send through this account's server."
+msgstr ""
+
 msgid "Testing…"
 msgstr "Δοκιμή…"
 
@@ -7990,7 +7993,8 @@ msgstr "Χρήση αρχικών"
 msgid "Send-as aliases"
 msgstr "Ψευδώνυμα αποστολέα"
 
-msgid "Extra addresses this account can send as."
+#, fuzzy
+msgid "Extra names and addresses this account can send as."
 msgstr "Πρόσθετες διευθύνσεις αποστολής για αυτόν τον λογαριασμό."
 
 msgid "Add Alias…"

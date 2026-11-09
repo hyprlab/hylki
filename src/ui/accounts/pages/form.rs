@@ -531,7 +531,7 @@ impl EditorForm {
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Send-as aliases"),
                     set_description: Some(
-                        i18n("Extra addresses this account can send as.").as_str()
+                        i18n("Extra names and addresses this account can send as.").as_str()
                     ),
 
                     // At the header's end, styled like the Add

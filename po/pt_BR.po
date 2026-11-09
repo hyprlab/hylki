@@ -2549,6 +2549,9 @@ msgstr "Senha SMTP"
 msgid "Test SMTP"
 msgstr "Testar SMTP"
 
+msgid "Names that share an address send through this account's server."
+msgstr ""
+
 msgid "Testing…"
 msgstr "Testando…"
 
@@ -8017,7 +8020,8 @@ msgstr "Usar iniciais"
 msgid "Send-as aliases"
 msgstr "Endereços alternativos de envio"
 
-msgid "Extra addresses this account can send as."
+#, fuzzy
+msgid "Extra names and addresses this account can send as."
 msgstr "Endereços adicionais pelos quais esta conta pode enviar mensagens."
 
 msgid "Add Alias…"

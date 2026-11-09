@@ -1318,6 +1318,12 @@ your addresses starts from that address, and a draft saved from a typed
 address opens with it. Whether the server accepts mail from an address it
 does not know is up to the server: many refuse it, or rewrite it.
 
+Several aliases can share one address under different names, such as a
+manager and a director writing from one shared mailbox, and the account's own
+address can have more names the same way. Mail from a shared address goes
+through the account's own SMTP server: an alias with its own server needs an
+address of its own.
+
 A JMAP account lists the identities the server keeps for it as well, so an
 alias made in the webmail is in the From row without setting it up again.
 The message is sent as the identity with its address, or as a catch-all

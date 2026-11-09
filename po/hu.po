@@ -2627,6 +2627,9 @@ msgstr "SMTP jelszó"
 msgid "Test SMTP"
 msgstr "SMTP tesztelése"
 
+msgid "Names that share an address send through this account's server."
+msgstr ""
+
 msgid "Testing…"
 msgstr "Tesztelés folyamatban…"
 
@@ -8280,7 +8283,7 @@ msgstr "Használj kezdőbetűket"
 msgid "Send-as aliases"
 msgstr "Álnevek és címek (alias)"
 
-msgid "Extra addresses this account can send as."
+msgid "Extra names and addresses this account can send as."
 msgstr ""
 
 msgid "Add Alias…"

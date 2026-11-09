@@ -2485,6 +2485,9 @@ msgstr "Пароль SMTP"
 msgid "Test SMTP"
 msgstr "Проверить SMTP"
 
+msgid "Names that share an address send through this account's server."
+msgstr ""
+
 msgid "Testing…"
 msgstr "Проверка…"
 
@@ -7897,7 +7900,8 @@ msgstr "Использовать инициалы"
 msgid "Send-as aliases"
 msgstr "Псевдонимы для отправки"
 
-msgid "Extra addresses this account can send as."
+#, fuzzy
+msgid "Extra names and addresses this account can send as."
 msgstr "Дополнительные адреса, от которых может отправлять эта учётная запись."
 
 msgid "Add Alias…"

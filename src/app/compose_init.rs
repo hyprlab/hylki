@@ -183,6 +183,19 @@ fn choose_identity(
     if let Some((_, from)) = &plus {
         prefill.custom_from = from.clone();
     }
+    // A draft saved from one of several names at one address reopens on
+    // that name, not on the first identity with the address.
+    let named = || {
+        let found = crate::worker::parse_recipients(&prefill.custom_from);
+        let [(name, addr)] = found.as_slice() else {
+            return None;
+        };
+        accounts.iter().position(|c| {
+            let display = c.alias_from.clone().unwrap_or_else(|| c.label.clone());
+            let (n, a) = crate::config::split_identity(&display);
+            c.id == account_id && n == *name && a.eq_ignore_ascii_case(addr)
+        })
+    };
     let hay = prefill.reply_addressed_to.to_lowercase();
     let want = prefill.from_address.trim().to_lowercase();
     // An account with no From of its own (On This Computer, #552) answers
@@ -198,6 +211,7 @@ fn choose_identity(
             .flatten()
     };
     plus.map(|(i, _)| i)
+        .or_else(named)
         .or_else(by_reply)
         .or_else(|| {
             (!want.is_empty())
@@ -444,6 +458,40 @@ mod tests {
                 ),
             ]
         );
+    }
+
+    #[test]
+    fn one_address_can_have_several_send_as_names() {
+        let mut config = demo_account_configs();
+        config.truncate(1);
+        config[0].email = "office@example.com".into();
+        config[0].name = "Office".into();
+        config[0].aliases = vec![
+            toml::from_str("identity = \"Boss <office@example.com>\"").unwrap(),
+            toml::from_str("identity = \"Manager <office@example.com>\"").unwrap(),
+        ];
+
+        let ids = compose_identities(&[], &config, &HashMap::new());
+        let rows: Vec<(&str, &str)> = ids
+            .iter()
+            .map(|c| (c.label.as_str(), c.email.as_str()))
+            .collect();
+        assert_eq!(
+            rows,
+            [
+                ("Office <office@example.com>", "office@example.com"),
+                ("Boss <office@example.com>", "office@example.com"),
+                ("Manager <office@example.com>", "office@example.com"),
+            ]
+        );
+
+        // A draft saved as one of them reopens on that name.
+        let mut draft = ComposePrefill {
+            from_address: "office@example.com".into(),
+            custom_from: "Manager <office@example.com>".into(),
+            ..Default::default()
+        };
+        assert_eq!(choose_identity(&ids, ids[0].id, &mut draft), 2);
     }
 
     /// B5 in the map: the reply identity is found by substring, so mail to

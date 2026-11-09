@@ -366,18 +366,32 @@ impl AccountsWindow {
         let user = trimmed(&d.user_row);
         let pass = d.pass_row.text().to_string();
 
-        // The address must look like one, and must not shadow the
-        // account's own address or another alias — the send path picks
-        // an alias's transport by matching the From address, so a
-        // duplicate would make "which server sends this?" ambiguous.
+        // The address must look like one. Several names may share an
+        // address (a manager and a director writing from one mailbox), but
+        // then only through the account's own SMTP: the send path picks an
+        // alias's server by the From address alone, so an alias with its
+        // own server at a shared address, or at the account's address,
+        // would decide which server sends for all of them.
         let account_email = trimmed(&widgets.form.email_row);
-        let duplicate = addr.eq_ignore_ascii_case(&account_email)
+        let shared = addr.eq_ignore_ascii_case(&account_email)
             || self.alias_edits.iter().enumerate().any(|(i, a)| {
                 Some(i) != self.alias_editing && a.address().eq_ignore_ascii_case(&addr)
             });
+        let conflict = self.alias_edits.iter().enumerate().any(|(i, a)| {
+            Some(i) != self.alias_editing
+                && a.has_own_smtp()
+                && a.address().eq_ignore_ascii_case(&addr)
+        });
         let mut bad = false;
-        if addr.is_empty() || !addr.contains('@') || duplicate {
+        d.addr_row.set_tooltip_text(None);
+        if addr.is_empty() || !addr.contains('@') {
             d.addr_row.add_css_class("error");
+            bad = true;
+        } else if conflict || (shared && own_smtp) {
+            d.addr_row.add_css_class("error");
+            d.addr_row.set_tooltip_text(Some(
+                i18n("Names that share an address send through this account's server.").as_str(),
+            ));
             bad = true;
         }
         if own_smtp {
