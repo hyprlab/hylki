@@ -13,6 +13,11 @@
   slow to answer. Versions before this one cannot open an encrypted cache, so
   turning it on asks first and says to turn it off before going back to one.
 
+- **Fixed: mail a filter sends to Trash or Junk still raised a new mail
+  notification**. A filter that moves a new message into Trash or Junk now
+  gives no notification and no sound for it, as the tray icon already showed
+  no new mail. Mail filed into any other folder is still announced.
+
 - **Fixed: plain-text mail stopped a third of the way across the reader**
   (#606). Thunderbird, Apple Mail and Evolution send plain text as
   `format=flowed` (RFC 3676): lines broken at about 72 characters, with a
