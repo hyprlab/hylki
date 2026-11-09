@@ -27,9 +27,9 @@
 
 ---
 
-Hylki is an email client for the Linux desktop, made to fit in with GNOME. It
-sends no telemetry or analytics. It is free software, built for GNOME, to be
-feature rich and beautiful ([the manifesto](docs/MANIFESTO.md)).
+Hylki is an email client for the Linux desktop made to fit in with GNOME. It
+sends no telemetry or analytics. It is free software built to be
+both feature rich and beautiful ([the manifesto](docs/MANIFESTO.md)).
 
 > [!NOTE]
 > **Vireo is now Hylki.** Since v1.35.0 the app once called Vireo (and Veem
