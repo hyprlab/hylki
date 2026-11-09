@@ -309,6 +309,7 @@ impl AppModel {
             decorations: true,
             format,
             signature_position: self.signature_position,
+            has_templates: !self.templates_folders().is_empty(),
         };
         (id, init)
     }
@@ -331,6 +332,7 @@ impl AppModel {
                 }
                 ComposeOutput::SaveDraft(msg) => AppMsg::SaveDraftMessage(msg),
                 ComposeOutput::SaveTemplate(msg) => AppMsg::SaveTemplateMessage(msg),
+                ComposeOutput::PickTemplate { id } => AppMsg::PickTemplate { id },
                 ComposeOutput::AutoSave { id, message } => AppMsg::AutoSaveDraft { id, message },
                 ComposeOutput::DiscardAutosave { id, origin } => {
                     AppMsg::DiscardAutosave { id, origin }

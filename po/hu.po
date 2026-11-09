@@ -511,6 +511,10 @@ msgid "Enable Console mode in Settings → System & Appearance"
 msgstr ""
 "Engedélyezze a konzol módot a Beállítások → Rendszer és megjelenés menüben"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+
 #, fuzzy
 msgid "New Message from Template"
 msgstr "Inkább új üzenet"
@@ -519,9 +523,17 @@ msgstr "Inkább új üzenet"
 msgid "The new message starts as a copy of the template you pick."
 msgstr "A fájlok az Ön által kiválasztott üzenetre adott válaszba kerülnek."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr ""
+#, fuzzy
+msgid "Insert Template"
+msgstr "Címke szerkesztése"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Helyezd el a képet a kurzor helyére"
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "A piszkozat nem menthető: {e}"
 
 msgid "Continue a Draft"
 msgstr "Folytatás piszkozatként"

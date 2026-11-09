@@ -495,17 +495,29 @@ msgstr[1] "{n} persones"
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr "Activa el mode de consola a Paràmetres → Sistema i aparença"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+"Encara no hi ha plantilles. Desa'n una des del menú ⋯ del redactor amb «Desa "
+"com a plantilla»."
+
 msgid "New Message from Template"
 msgstr "Missatge nou a partir d'una plantilla"
 
 msgid "The new message starts as a copy of the template you pick."
 msgstr "El missatge nou començarà com una còpia de la plantilla que triïs."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr ""
-"Encara no hi ha plantilles. Desa'n una des del menú ⋯ del redactor amb «Desa "
-"com a plantilla»."
+#, fuzzy
+msgid "Insert Template"
+msgstr "Utilitza la plantilla"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Col·loca la imatge on és el cursor"
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "No s'ha pogut desar la plantilla: {e}"
 
 msgid "Continue a Draft"
 msgstr "Continua un esborrany"

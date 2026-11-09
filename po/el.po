@@ -498,17 +498,29 @@ msgid "Enable Console mode in Settings → System & Appearance"
 msgstr ""
 "Ενεργοποίηση της λειτουργίας κονσόλας στις Ρυθμίσεις → Σύστημα & εμφάνιση"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+"Δεν υπάρχουν ακόμη πρότυπα. Αποθηκεύστε ένα από το μενού ⋯ του συντάκτη με "
+"την επιλογή «Αποθήκευση ως πρότυπο»."
+
 msgid "New Message from Template"
 msgstr "Νέο μήνυμα από πρότυπο"
 
 msgid "The new message starts as a copy of the template you pick."
 msgstr "Το νέο μήνυμα ξεκινά ως αντίγραφο του προτύπου που επιλέγετε."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr ""
-"Δεν υπάρχουν ακόμη πρότυπα. Αποθηκεύστε ένα από το μενού ⋯ του συντάκτη με "
-"την επιλογή «Αποθήκευση ως πρότυπο»."
+#, fuzzy
+msgid "Insert Template"
+msgstr "Χρήση προτύπου"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Τοποθέτηση της εικόνας στη θέση του δρομέα"
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "Δεν ήταν δυνατή η αποθήκευση του προτύπου: {e}"
 
 msgid "Continue a Draft"
 msgstr "Συνέχιση προχείρου"

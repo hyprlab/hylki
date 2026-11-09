@@ -1198,6 +1198,10 @@ templates there, Thunderbird among them, sees the same ones.
   Message** (on its right-click menu when the sidebar is folded to icons),
   or <kbd>Ctrl+Shift+N</kbd>, lists every account's templates to start
   from.
+- **Insert Template**, in the composer's formatting row, puts a template's
+  text into the message being written, where the cursor is. The recipients,
+  the subject and the quoted original stay, so a reply can use a standard
+  answer. The template's own signature is left out.
 
 A folder called Templates is taken for the role, at the top of the account
 or directly under the Inbox. Nothing on a server marks one otherwise, so a

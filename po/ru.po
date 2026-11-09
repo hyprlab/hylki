@@ -462,17 +462,28 @@ msgstr[2] "{n} человек"
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr "Включите режим консоли в Настройки → Система и внешний вид"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+"Шаблонов пока нет. Сохраните письмо как шаблон через меню «⋯» в окне "
+"редактора."
+
 msgid "New Message from Template"
 msgstr "Новое сообщение из шаблона"
 
 msgid "The new message starts as a copy of the template you pick."
 msgstr "Новое сообщение будет создано на основе выбранного шаблона."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr ""
-"Шаблонов пока нет. Сохраните письмо как шаблон через меню «⋯» в окне "
-"редактора."
+msgid "Insert Template"
+msgstr "Вставить шаблон"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Поместить изображение в место указателя"
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "Не удалось сохранить шаблон: {e}"
 
 msgid "Continue a Draft"
 msgstr "Продолжить черновик"

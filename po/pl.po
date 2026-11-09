@@ -507,6 +507,10 @@ msgstr[2] "{n} odbiorców"
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr "Włącz tryb konsoli w oknie Ustawienia → System"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+
 #, fuzzy
 msgid "New Message from Template"
 msgstr "Nowa wiadomość"
@@ -515,9 +519,17 @@ msgstr "Nowa wiadomość"
 msgid "The new message starts as a copy of the template you pick."
 msgstr "Pliki zostaną dołączone do odpowiedzi na wybraną wiadomość."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr ""
+#, fuzzy
+msgid "Insert Template"
+msgstr "Modyfikuj etykietę"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Umieść obraz w miejscu kursora"
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "Nie udało się zapisać szkicu: {e}"
 
 msgid "Continue a Draft"
 msgstr "Kontynuuj szkic"

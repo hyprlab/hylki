@@ -464,6 +464,12 @@ msgstr[1] "{n} personnes"
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr "Activez le mode Console dans Paramètres → Système et apparence"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+"Aucun modèle pour le moment. Enregistrez-en un depuis le menu ⋯ de la "
+"fenêtre de rédaction avec « Enregistrer comme modèle »."
+
 msgid "New Message from Template"
 msgstr "Nouveau message à partir d’un modèle"
 
@@ -471,11 +477,17 @@ msgid "The new message starts as a copy of the template you pick."
 msgstr ""
 "Le nouveau message démarre comme une copie du modèle que vous choisissez."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr ""
-"Aucun modèle pour le moment. Enregistrez-en un depuis le menu ⋯ de la "
-"fenêtre de rédaction avec « Enregistrer comme modèle »."
+#, fuzzy
+msgid "Insert Template"
+msgstr "Utiliser le modèle"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Placer l’image à l’emplacement du curseur"
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "Impossible d’enregistrer le modèle : {e}"
 
 msgid "Continue a Draft"
 msgstr "Continuer un brouillon"

@@ -500,17 +500,29 @@ msgstr[1] "{n} pessoas"
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr "Ative o modo de consola em Definições → Sistema e aspeto"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+"Ainda não há modelos. Guarde um através da opção Guardar como modelo no menu "
+"⋯ do editor de mensagens."
+
 msgid "New Message from Template"
 msgstr "Nova mensagem a partir de um modelo"
 
 msgid "The new message starts as a copy of the template you pick."
 msgstr "A nova mensagem começa como uma cópia do modelo que escolher."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr ""
-"Ainda não há modelos. Guarde um através da opção Guardar como modelo no menu "
-"⋯ do editor de mensagens."
+#, fuzzy
+msgid "Insert Template"
+msgstr "Utilizar modelo"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Colocar a imagem onde está o cursor"
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "Não foi possível guardar o modelo: {e}"
 
 msgid "Continue a Draft"
 msgstr "Continuar um rascunho"

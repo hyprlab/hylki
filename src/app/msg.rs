@@ -974,6 +974,10 @@ pub(crate) enum AppMsg {
     TemplatePickNow,
     /// The template picker answered (None: a blank message instead).
     TemplatePicked(Option<Message>),
+    /// A composer's Insert Template: pick a template to put into its message.
+    PickTemplate { id: u32 },
+    /// The template picked for composer `id`.
+    TemplateInsertPicked { id: u32, template: Message },
     /// A composer's Save Draft: store the message in its account's Drafts
     /// folder.
     SaveDraftMessage(Box<OutgoingMessage>),

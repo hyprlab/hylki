@@ -43,6 +43,10 @@ type PendingTagKey = (u32, String, u32, String);
 /// subject).
 type TrayMailRow = (u32, u32, String, String);
 
+/// A template picker waiting on Templates folders' lists, by (account,
+/// folder): with a composer's id when the template goes into its message.
+type TemplatePick = (Option<u32>, HashSet<(u32, u32)>);
+
 /// The root component's state: the accounts and their workers, what the
 /// list and the reader show, the session caches, every setting the app
 /// applies, and the child components.
@@ -978,8 +982,11 @@ pub(crate) struct AppModel {
     /// A draft picker waiting for Drafts folders never listed this run
     /// (the hand-off, and the folders still to answer).
     pub(super) pending_draft_pick: Option<(FileHandOff, HashSet<(u32, u32)>)>,
-    /// The template picker, waiting on these Templates folders' lists.
-    pub(super) pending_template_pick: Option<HashSet<(u32, u32)>>,
+    /// The template picker, waiting on these Templates folders' lists; with
+    /// a composer's id when the template goes into that message.
+    pub(super) pending_template_pick: Option<TemplatePick>,
+    /// The composer and template whose body is being fetched for insertion.
+    pub(super) pending_template_insert: Option<(u32, Message)>,
     /// Settings → System → GNOME Files: what handed-in files open into and
     /// what happens over the size limit.
     pub(super) files_prefs: config::FilesPrefs,

@@ -462,7 +462,7 @@ impl AppModel {
                 sender.input(AppMsg::HandOffDraftPickNow);
             }
         }
-        if let Some(waiting) = self.pending_template_pick.as_mut() {
+        if let Some((_, waiting)) = self.pending_template_pick.as_mut() {
             waiting.remove(&(account_id, folder_id));
             if waiting.is_empty() {
                 sender.input(AppMsg::TemplatePickNow);

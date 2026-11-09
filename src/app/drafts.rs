@@ -18,9 +18,8 @@ use super::msg::AppMsg;
 use super::picker::show_message_picker;
 
 impl AppModel {
-    /// New Message from Template (#360): every template the app knows, to
-    /// start a message from.
-    fn show_template_picker(&self, sender: &ComponentSender<Self>) {
+    /// Every template the app knows, under its account's name.
+    fn template_choices(&self) -> Vec<(Message, String)> {
         let mut templates = Vec::new();
         for (account_id, folder) in self.templates_folders() {
             let list = self.listed_or_cached(account_id, &folder);
@@ -28,21 +27,94 @@ impl AppModel {
             templates.extend(list.into_iter().map(|m| (m, name.clone())));
         }
         templates.sort_by_key(|(m, _)| m.subject.to_lowercase());
+        templates
+    }
+
+    /// The template picker: to start a new message from (#360), or with
+    /// `into`, to put into that composer's message. As the draft picker
+    /// does, Templates folders not listed this run are fetched first, and a
+    /// silent worker gets three seconds.
+    fn pick_template(&mut self, into: Option<u32>, sender: &ComponentSender<Self>) {
+        let mut waiting = HashSet::new();
+        for (account_id, folder) in self.templates_folders() {
+            if !self.message_cache.contains_key(&(account_id, folder.id)) {
+                waiting.insert((account_id, folder.id));
+                self.send_to(
+                    account_id,
+                    MailRequest::SyncFolder {
+                        folder_id: folder.id,
+                        path: folder.path.clone(),
+                    },
+                );
+            }
+        }
+        if waiting.is_empty() {
+            self.show_template_picker(into, sender);
+        } else {
+            self.pending_template_pick = Some((into, waiting));
+            let s = sender.clone();
+            gtk::glib::timeout_add_seconds_local_once(3, move || s.input(AppMsg::TemplatePickNow));
+        }
+    }
+
+    fn show_template_picker(&self, into: Option<u32>, sender: &ComponentSender<Self>) {
         let s = sender.clone();
-        show_message_picker(
-            self.window.upcast_ref(),
-            &i18n("New Message from Template"),
-            &i18n("The new message starts as a copy of the template you pick."),
-            &i18n("No templates yet. Save one from the composer's ⋯ menu with Save as Template."),
-            &i18n("Use Template"),
-            templates,
-            (),
-            move |(), template| s.input(AppMsg::TemplatePicked(template)),
+        let empty =
+            i18n("No templates yet. Save one from the composer's ⋯ menu with Save as Template.");
+        match into {
+            None => show_message_picker(
+                self.window.upcast_ref(),
+                &i18n("New Message from Template"),
+                &i18n("The new message starts as a copy of the template you pick."),
+                &empty,
+                &i18n("Use Template"),
+                self.template_choices(),
+                (),
+                true,
+                move |(), template| s.input(AppMsg::TemplatePicked(template)),
+            ),
+            Some(id) => show_message_picker(
+                self.window.upcast_ref(),
+                &i18n("Insert Template"),
+                &i18n("The template goes in where the cursor is."),
+                &empty,
+                &i18n("Insert Template"),
+                self.template_choices(),
+                id,
+                false,
+                move |id, template| {
+                    if let Some(template) = template {
+                        s.input(AppMsg::TemplateInsertPicked { id, template });
+                    }
+                },
+            ),
+        }
+    }
+
+    /// Fetch a picked template's body, then put it into composer `id`.
+    fn insert_template(&mut self, id: u32, template: Message) {
+        let template = self.with_cached_body(template);
+        if !template.body.is_empty() {
+            self.emit_to_composer(id, ComposeInput::TemplateBody(template.body));
+            return;
+        }
+        let Some(path) = self.resolve_folder_path(&template) else {
+            self.notice_error(i18n("Could not load the template."));
+            return;
+        };
+        self.send_to(
+            template.account_id,
+            MailRequest::LoadBody {
+                message_id: template.id,
+                path,
+                uid: template.uid,
+            },
         );
+        self.pending_template_insert = Some((id, template));
     }
 
     /// Each account's Templates folder (#360), in account order.
-    fn templates_folders(&self) -> Vec<(u32, Folder)> {
+    pub(super) fn templates_folders(&self) -> Vec<(u32, Folder)> {
         self.folders_of_kind(FolderKind::Templates)
     }
 
@@ -80,6 +152,7 @@ impl AppModel {
             &i18n("Attach to This Draft"),
             drafts,
             hand_off,
+            true,
             move |hand_off, draft| s.input(AppMsg::HandOffDraft { hand_off, draft }),
         );
     }
@@ -174,37 +247,12 @@ impl AppModel {
     /// The messages the router sends here (see `AppModel::route`).
     pub(super) fn on_drafts(&mut self, msg: AppMsg, sender: ComponentSender<Self>) {
         match msg {
-            AppMsg::NewFromTemplate => {
-                // As the draft picker does: Templates folders not listed this
-                // run are fetched first, and a silent worker gets three
-                // seconds.
-                let mut waiting = HashSet::new();
-                for (account_id, folder) in self.templates_folders() {
-                    if !self.message_cache.contains_key(&(account_id, folder.id)) {
-                        waiting.insert((account_id, folder.id));
-                        self.send_to(
-                            account_id,
-                            MailRequest::SyncFolder {
-                                folder_id: folder.id,
-                                path: folder.path.clone(),
-                            },
-                        );
-                    }
-                }
-                if waiting.is_empty() {
-                    self.show_template_picker(&sender);
-                } else {
-                    self.pending_template_pick = Some(waiting);
-                    let s = sender.clone();
-                    gtk::glib::timeout_add_seconds_local_once(3, move || {
-                        s.input(AppMsg::TemplatePickNow)
-                    });
-                }
-            }
+            AppMsg::NewFromTemplate => self.pick_template(None, &sender),
+            AppMsg::PickTemplate { id } => self.pick_template(Some(id), &sender),
 
             AppMsg::TemplatePickNow => {
-                if self.pending_template_pick.take().is_some() {
-                    self.show_template_picker(&sender);
+                if let Some((into, _)) = self.pending_template_pick.take() {
+                    self.show_template_picker(into, &sender);
                 }
             }
 
@@ -212,6 +260,8 @@ impl AppModel {
                 Some(m) => self.edit_as_new(m, &sender),
                 None => sender.input(AppMsg::Compose),
             },
+
+            AppMsg::TemplateInsertPicked { id, template } => self.insert_template(id, template),
 
             AppMsg::SaveDraftMessage(out) => {
                 let account_id = out.from_account_id;

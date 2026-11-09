@@ -492,15 +492,27 @@ msgstr[1] "{n} Personen"
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr "Konsolenmodus unter »Einstellungen → System« aktivieren"
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr "Keine Vorlagen. Im Editor-Menü »⋯« »Als Vorlage speichern« wählen."
+
 msgid "New Message from Template"
 msgstr "Aus Vorlage erstellen"
 
 msgid "The new message starts as a copy of the template you pick."
 msgstr "Neue Nachricht basiert auf gewählter Vorlage."
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
-msgstr "Keine Vorlagen. Im Editor-Menü »⋯« »Als Vorlage speichern« wählen."
+#, fuzzy
+msgid "Insert Template"
+msgstr "Vorlage verwenden"
+
+#, fuzzy
+msgid "The template goes in where the cursor is."
+msgstr "Bild an der Cursorposition einfügen"
+
+#, fuzzy
+msgid "Could not load the template."
+msgstr "Konnte die Vorlage nicht speichern: {e}"
 
 msgid "Continue a Draft"
 msgstr "Entwurf fortsetzen"

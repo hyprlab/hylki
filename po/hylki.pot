@@ -442,14 +442,23 @@ msgstr[1] ""
 msgid "Enable Console mode in Settings → System & Appearance"
 msgstr ""
 
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr ""
+
 msgid "New Message from Template"
 msgstr ""
 
 msgid "The new message starts as a copy of the template you pick."
 msgstr ""
 
-msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgid "Insert Template"
+msgstr ""
+
+msgid "The template goes in where the cursor is."
+msgstr ""
+
+msgid "Could not load the template."
 msgstr ""
 
 msgid "Continue a Draft"
