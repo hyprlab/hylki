@@ -531,6 +531,13 @@ msgstr "Címke szerkesztése"
 msgid "The template goes in where the cursor is."
 msgstr "Helyezd el a képet a kurzor helyére"
 
+msgid "Templates"
+msgstr ""
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Új mappa létrehozása ehhez a fiókhoz."
+
 #, fuzzy
 msgid "Could not load the template."
 msgstr "A piszkozat nem menthető: {e}"
@@ -2611,6 +2618,10 @@ msgstr "Álnév (alias) hozzáadása…"
 
 msgid "Save"
 msgstr "Mentés"
+
+msgid ""
+"Will appear in the composer's From menu. Replies will come to this address."
+msgstr ""
 
 msgid "Display name (optional)"
 msgstr "Megjelenítendő név (opcionális)"
@@ -8453,9 +8464,6 @@ msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 "A Gmail és más olyan szolgáltatások esetében, amelyek maguk mentik el a "
 "kiküldött leveleket. Letiltja a fenti „Másolat mentése” opciót."
-
-msgid "Templates"
-msgstr ""
 
 msgid "Hidden Folders"
 msgstr "Rejtett mappák"

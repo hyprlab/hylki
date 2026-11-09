@@ -481,6 +481,13 @@ msgstr "Вставить шаблон"
 msgid "The template goes in where the cursor is."
 msgstr "Поместить изображение в место указателя"
 
+msgid "Templates"
+msgstr "Шаблоны"
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Создать новую папку для этого аккаунта."
+
 #, fuzzy
 msgid "Could not load the template."
 msgstr "Не удалось сохранить шаблон: {e}"
@@ -2468,6 +2475,10 @@ msgstr "Добавить псевдоним"
 
 msgid "Save"
 msgstr "Сохранить"
+
+msgid ""
+"Will appear in the composer's From menu. Replies will come to this address."
+msgstr ""
 
 msgid "Display name (optional)"
 msgstr "Необязательно. Отображается вместо инициалов."
@@ -8059,9 +8070,6 @@ msgstr "Сервер сам сохраняет копию отправленны
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr "Для Gmail и других этот файл отправлял почту самостоятельно."
-
-msgid "Templates"
-msgstr "Шаблоны"
 
 msgid "Hidden Folders"
 msgstr "Скрытые папки"

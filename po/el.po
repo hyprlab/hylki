@@ -518,6 +518,13 @@ msgstr "Χρήση προτύπου"
 msgid "The template goes in where the cursor is."
 msgstr "Τοποθέτηση της εικόνας στη θέση του δρομέα"
 
+msgid "Templates"
+msgstr "Πρότυπα"
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Δημιουργήστε έναν νέο φάκελο για αυτόν τον λογαριασμό."
+
 #, fuzzy
 msgid "Could not load the template."
 msgstr "Δεν ήταν δυνατή η αποθήκευση του προτύπου: {e}"
@@ -2495,6 +2502,10 @@ msgstr "Προσθήκη ψευδωνύμου"
 
 msgid "Save"
 msgstr "Αποθήκευση"
+
+msgid ""
+"Will appear in the composer's From menu. Replies will come to this address."
+msgstr ""
 
 msgid "Display name (optional)"
 msgstr "Εμφανιζόμενο όνομα (προαιρετικό)"
@@ -8159,9 +8170,6 @@ msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 "Για το Gmail και άλλες υπηρεσίες που αποθηκεύουν μόνες τους την απεσταλμένη "
 "αλληλογραφία."
-
-msgid "Templates"
-msgstr "Πρότυπα"
 
 msgid "Hidden Folders"
 msgstr "Κρυφοί φάκελοι"

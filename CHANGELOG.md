@@ -69,6 +69,11 @@
   while that signature is in the message. It applies to the account's own
   address; aliases keep their names.
 
+- **Changed: Save as Template says where the template went.** The composer
+  stays open after the save, so nothing showed that it had worked. A
+  notification now names the Templates folder and the account once the server
+  has the copy.
+
 - **Changed: one message fades into the next in the reading pane.** Since
   #570 the pane cut from one message to the next; the old message now fades
   out over the new one in 80 ms.

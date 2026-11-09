@@ -526,6 +526,13 @@ msgstr "Usa modello"
 msgid "The template goes in where the cursor is."
 msgstr "Inserisci l'immagine dove si trova il cursore"
 
+msgid "Templates"
+msgstr "Modelli"
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Crea una nuova cartella per questo account."
+
 #, fuzzy
 msgid "Could not load the template."
 msgstr "Impossibile salvare il modello: {e}"
@@ -2580,6 +2587,10 @@ msgstr "Aggiungi alias"
 
 msgid "Save"
 msgstr "Salva"
+
+msgid ""
+"Will appear in the composer's From menu. Replies will come to this address."
+msgstr ""
 
 msgid "Display name (optional)"
 msgstr "Nome visualizzato (opzionale)"
@@ -8381,9 +8392,6 @@ msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 "Per Gmail e altri che archiviano la posta inviata autonomamente. Disabilita "
 "il salvataggio copia sopra."
-
-msgid "Templates"
-msgstr "Modelli"
 
 msgid "Hidden Folders"
 msgstr "Cartelle nascoste"

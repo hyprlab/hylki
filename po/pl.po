@@ -527,6 +527,13 @@ msgstr "Modyfikuj etykietę"
 msgid "The template goes in where the cursor is."
 msgstr "Umieść obraz w miejscu kursora"
 
+msgid "Templates"
+msgstr ""
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Utwórz nowy katalog na tym koncie."
+
 #, fuzzy
 msgid "Could not load the template."
 msgstr "Nie udało się zapisać szkicu: {e}"
@@ -2660,6 +2667,10 @@ msgstr "Dodaj alias…"
 
 msgid "Save"
 msgstr "Zapisz"
+
+msgid ""
+"Will appear in the composer's From menu. Replies will come to this address."
+msgstr ""
 
 msgid "Display name (optional)"
 msgstr "Wyświetlana nazwa (opcjonalnie)"
@@ -8526,9 +8537,6 @@ msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 "Dla usługi Gmail i innych, które same zapisują wysłaną pocztę. Wyłącza "
 "powyższe zapisywanie kopii."
-
-msgid "Templates"
-msgstr ""
 
 msgid "Hidden Folders"
 msgstr "Ukryte katalogi"

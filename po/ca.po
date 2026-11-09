@@ -515,6 +515,13 @@ msgstr "Utilitza la plantilla"
 msgid "The template goes in where the cursor is."
 msgstr "Col·loca la imatge on és el cursor"
 
+msgid "Templates"
+msgstr "Plantilles"
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Crea una carpeta nova per a aquest compte."
+
 #, fuzzy
 msgid "Could not load the template."
 msgstr "No s'ha pogut desar la plantilla: {e}"
@@ -2530,6 +2537,10 @@ msgstr "Afegeix un àlies"
 
 msgid "Save"
 msgstr "Desa"
+
+msgid ""
+"Will appear in the composer's From menu. Replies will come to this address."
+msgstr ""
 
 msgid "Display name (optional)"
 msgstr "Nom visible (opcional)"
@@ -8172,9 +8183,6 @@ msgstr "El servidor desa la seva pròpia còpia del correu enviat"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr "Per al Gmail i altres que arxiven ells mateixos el correu enviat."
-
-msgid "Templates"
-msgstr "Plantilles"
 
 msgid "Hidden Folders"
 msgstr "Carpetes amagades"

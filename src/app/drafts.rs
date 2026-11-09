@@ -5,7 +5,7 @@ use std::collections::HashSet;
 use adw::prelude::*;
 use relm4::prelude::*;
 
-use crate::i18n::i18n;
+use crate::i18n::{i18n, i18n_f};
 use crate::models::{Folder, FolderKind, Message};
 use crate::ui::compose::ComposeInput;
 use crate::ui::message_list::MessageListInput;
@@ -89,6 +89,24 @@ impl AppModel {
                 },
             ),
         }
+    }
+
+    /// Where a template just saved from `account_id` went.
+    fn toast_template_saved(&self, account_id: u32) {
+        let folder = self
+            .templates_folders()
+            .into_iter()
+            .find(|(id, _)| *id == account_id)
+            .map(|(_, f)| f.name)
+            .unwrap_or_else(|| i18n("Templates"));
+        let text = i18n_f(
+            "Template saved to {folder} in {account}",
+            &[
+                ("folder", &folder),
+                ("account", &self.account_label(account_id)),
+            ],
+        );
+        self.show_toast(&adw::Toast::new(&text));
     }
 
     /// Fetch a picked template's body, then put it into composer `id`.
@@ -374,7 +392,14 @@ impl AppModel {
                 account_id,
                 autosave,
                 message_id,
+                template,
             } => {
+                // Save as Template leaves its composer open with nothing
+                // changed in it, so a toast says where the copy went.
+                if template && message_id.is_some() {
+                    self.toast_template_saved(account_id);
+                    return;
+                }
                 // The Drafts folder reload already reflects the saved draft; an
                 // explicit save's composer has closed. No notification (mirrors
                 // silent send). An automatic save tells its composer where the

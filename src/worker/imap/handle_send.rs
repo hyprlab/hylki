@@ -295,6 +295,7 @@ impl<E: Emit> ImapWorker<E> {
                         emit(WorkerEvent::DraftSaved {
                             autosave,
                             message_id: Some(message_id),
+                            template,
                         });
                     }
                     Err(e) => {

@@ -307,9 +307,12 @@ pub(super) async fn run_mock(
                 message_ids,
                 done: true,
             }),
-            MailRequest::SaveDraft { autosave, .. } => emit(WorkerEvent::DraftSaved {
+            MailRequest::SaveDraft {
+                autosave, template, ..
+            } => emit(WorkerEvent::DraftSaved {
                 autosave,
                 message_id: None,
+                template,
             }),
             // Only On This Computer imports mail (#552).
             MailRequest::ImportMail { .. } => {}

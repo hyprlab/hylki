@@ -1008,6 +1008,7 @@ pub(crate) enum AppMsg {
         account_id: u32,
         autosave: Option<u32>,
         message_id: Option<String>,
+        template: bool,
     },
 
     // ---- on_settings_window (settings_window.rs) ----

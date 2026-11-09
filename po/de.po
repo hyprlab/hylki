@@ -510,6 +510,13 @@ msgstr "Vorlage verwenden"
 msgid "The template goes in where the cursor is."
 msgstr "Bild an der Cursorposition einfügen"
 
+msgid "Templates"
+msgstr "Vorlagen"
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Neuen Ordner für dieses Konto erstellen."
+
 #, fuzzy
 msgid "Could not load the template."
 msgstr "Konnte die Vorlage nicht speichern: {e}"
@@ -2501,6 +2508,10 @@ msgstr "Alias hinzufügen"
 
 msgid "Save"
 msgstr "Speichern"
+
+msgid ""
+"Will appear in the composer's From menu. Replies will come to this address."
+msgstr ""
 
 msgid "Display name (optional)"
 msgstr "Anzeigename (optional)"
@@ -8151,9 +8162,6 @@ msgstr "Server speichert selbst eine Kopie gesendeter Nachrichten"
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 "Für Gmail und andere Anbieter, die gesendete Nachrichten selbst ablegen."
-
-msgid "Templates"
-msgstr "Vorlagen"
 
 msgid "Hidden Folders"
 msgstr "Ausgeblendete Ordner"

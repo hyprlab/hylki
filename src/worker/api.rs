@@ -706,6 +706,8 @@ pub(crate) enum WorkerEvent {
     DraftSaved {
         autosave: Option<u32>,
         message_id: Option<String>,
+        /// Saved as a template, in the Templates folder (#360).
+        template: bool,
     },
     /// A bulk MoveMessages request finished (success or failure) — drives the
     /// bulk-action spinner in the UI.

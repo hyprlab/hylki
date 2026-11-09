@@ -458,6 +458,12 @@ msgstr ""
 msgid "The template goes in where the cursor is."
 msgstr ""
 
+msgid "Templates"
+msgstr ""
+
+msgid "Template saved to {folder} in {account}"
+msgstr ""
+
 msgid "Could not load the template."
 msgstr ""
 
@@ -2302,6 +2308,10 @@ msgid "Add Alias"
 msgstr ""
 
 msgid "Save"
+msgstr ""
+
+msgid ""
+"Will appear in the composer's From menu. Replies will come to this address."
 msgstr ""
 
 msgid "Display name (optional)"
@@ -7487,9 +7497,6 @@ msgid "Server saves its own copy of sent mail"
 msgstr ""
 
 msgid "For Gmail and others that file sent mail themselves."
-msgstr ""
-
-msgid "Templates"
 msgstr ""
 
 msgid "Hidden Folders"

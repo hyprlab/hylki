@@ -509,6 +509,13 @@ msgstr "Usar plantilla"
 msgid "The template goes in where the cursor is."
 msgstr "Colocar la imagen donde está el cursor"
 
+msgid "Templates"
+msgstr "Plantillas"
+
+#, fuzzy
+msgid "Template saved to {folder} in {account}"
+msgstr "Crea una nueva carpeta para esta cuenta."
+
 #, fuzzy
 msgid "Could not load the template."
 msgstr "No se pudo guardar la plantilla: {e}"
@@ -2487,6 +2494,10 @@ msgstr "Añadir alias"
 
 msgid "Save"
 msgstr "Guardar"
+
+msgid ""
+"Will appear in the composer's From menu. Replies will come to this address."
+msgstr ""
 
 msgid "Display name (optional)"
 msgstr "Nombre para mostrar (opcional)"
@@ -8109,9 +8120,6 @@ msgstr "El servidor guarda su propia copia del correo enviado"
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
 "Para Gmail y otros servicios que guardan por sí mismos el correo enviado."
-
-msgid "Templates"
-msgstr "Plantillas"
 
 msgid "Hidden Folders"
 msgstr "Carpetas ocultas"
