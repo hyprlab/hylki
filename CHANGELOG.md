@@ -52,6 +52,23 @@
   translated. The warning also names Settings rather than Preferences, the
   name the window has.
 
+- **Added: Insert Template in the composer** (#610, by FLASH911). A button in
+  the formatting row puts a saved template's text into the message being
+  written, at the cursor, so a reply can use a standard answer and keep its
+  recipients, subject and quote. The template's own signature is left out.
+  The button shows only when an account has a Templates folder.
+
+- **Added: several names on one send-as address** (#610, by FLASH911). A
+  shared mailbox can send as, say, a manager and a director: aliases may now
+  repeat an address, or the account's own, under another name. Such an
+  address goes through the account's own SMTP server, since an alias's server
+  is chosen by address. A draft reopens on the name it was saved with.
+
+- **Added: a signature can name the sender** (#610, by FLASH911). The
+  signature editor's **Sender name** replaces the account's name in From
+  while that signature is in the message. It applies to the account's own
+  address; aliases keep their names.
+
 - **Changed: one message fades into the next in the reading pane.** Since
   #570 the pane cut from one message to the next; the old message now fades
   out over the new one in 80 ms.
