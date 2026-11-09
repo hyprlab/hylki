@@ -1492,6 +1492,15 @@ msgstr "Notas de lançamento completas no GitHub"
 msgid "Delete this conversation?"
 msgstr "Eliminar esta conversa?"
 
+msgid ""
+"The message in this conversation will be deleted. You can turn this warning "
+"off in Settings."
+msgid_plural ""
+"All {n} messages in this conversation will be deleted. You can turn this "
+"warning off in Settings."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Delete Conversation"
 msgstr "Eliminar conversa"
 
@@ -3157,6 +3166,22 @@ msgstr "Enviar agora"
 
 msgid "The file could not be opened"
 msgstr "Não foi possível abrir o ficheiro"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+#. Offer the steps that actually work.
+#, fuzzy
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Download the file, then open it from Files\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
+msgstr ""
+"O portal do ambiente de trabalho comunicou: {error}\n"
+"\n"
+"• Clique com o botão direito na ligação, copie-a e abra-a no navegador\n"
+"• Atualizar o “xdg-desktop-portal” e terminar e voltar a iniciar a sessão "
+"poderá corrigir a abertura direta das ligações"
 
 msgid "Go to Message"
 msgstr "Ir para a mensagem"
@@ -7589,6 +7614,16 @@ msgstr "A remover o anexo…"
 
 msgid "Could not remove the attachment: {e}"
 msgstr "Não foi possível remover o anexo: {e}"
+
+msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid ""
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Settings → Mail Accounts and sign in to it again."
+msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "O anexo já não está na mensagem no servidor"

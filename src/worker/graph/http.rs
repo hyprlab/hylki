@@ -5,6 +5,7 @@ use std::sync::OnceLock;
 use std::time::Duration;
 
 use crate::config::AccountConfig;
+use crate::i18n::i18n_f;
 use crate::services::graph_api::bearer;
 use crate::worker::auth::fetch_oauth_token;
 use crate::worker::WorkerEvent;
@@ -244,17 +245,16 @@ pub(super) async fn graph_token(
         None => {
             // Signed in through Hylki's own Microsoft app (#329) rather than
             // GNOME Online Accounts: it is Hylki's sign-in to renew.
+            let email = [("email", account.email.as_str())];
             emit(WorkerEvent::net_error(if account.goa_id.is_some() {
-                format!(
-                    "GNOME Online Accounts could not provide a sign-in token for {}. Open \
-                     Settings → Online Accounts and sign in again.",
-                    account.email
+                i18n_f(
+                    "GNOME Online Accounts could not provide a sign-in token for {email}. Open Settings → Online Accounts and sign in again.",
+                    &email,
                 )
             } else {
-                format!(
-                    "Microsoft did not accept the saved sign-in for {}. Open Hylki's Settings → \
-                     Mail Accounts and sign in to it again.",
-                    account.email
+                i18n_f(
+                    "Microsoft did not accept the saved sign-in for {email}. Open Hylki's Settings → Mail Accounts and sign in to it again.",
+                    &email,
                 )
             }));
             None

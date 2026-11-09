@@ -45,6 +45,13 @@
   restarted. The file is now only remembered, and its columns are in the list
   the next time the button is clicked.
 
+- **Fixed: the warning before deleting a conversation was always in
+  English** (#620, reported by samuel-edlmeier). Its text was missing from
+  `po/hylki.pot`, as were the dialog shown when the desktop portal cannot open
+  an attachment and the two Microsoft sign-in errors. All four can now be
+  translated. The warning also names Settings rather than Preferences, the
+  name the window has.
+
 - **Changed: one message fades into the next in the reading pane.** Since
   #570 the pane cut from one message to the next; the old message now fades
   out over the new one in 80 ms.

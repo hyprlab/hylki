@@ -1442,6 +1442,15 @@ msgstr "Notes de version complètes sur GitHub"
 msgid "Delete this conversation?"
 msgstr "Supprimer cette conversation ?"
 
+msgid ""
+"The message in this conversation will be deleted. You can turn this warning "
+"off in Settings."
+msgid_plural ""
+"All {n} messages in this conversation will be deleted. You can turn this "
+"warning off in Settings."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Delete Conversation"
 msgstr "Supprimer la conversation"
 
@@ -3080,6 +3089,23 @@ msgstr ""
 
 msgid "The file could not be opened"
 msgstr "Le fichier n’a pas pu être ouvert"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+#. Offer the steps that actually work.
+#, fuzzy
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Download the file, then open it from Files\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
+msgstr ""
+"Le portail de bureau a signalé : {error}\n"
+"\n"
+"• Faites un clic droit sur le lien, copiez-le, puis ouvrez-le dans votre "
+"navigateur\n"
+"• Mettre à jour « xdg-desktop-portal » et vous reconnecter peut résoudre "
+"l’ouverture directe des liens"
 
 msgid "Go to Message"
 msgstr "Aller au message"
@@ -7454,6 +7480,16 @@ msgstr "Suppression de la pièce jointe…"
 
 msgid "Could not remove the attachment: {e}"
 msgstr "Impossible de supprimer la pièce jointe : {e}"
+
+msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid ""
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Settings → Mail Accounts and sign in to it again."
+msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "La pièce jointe ne se trouve plus dans le message sur le serveur"

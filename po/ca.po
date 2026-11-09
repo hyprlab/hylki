@@ -1478,6 +1478,15 @@ msgstr "Notes completes de la versió al GitHub"
 msgid "Delete this conversation?"
 msgstr "Vols suprimir aquesta conversa?"
 
+msgid ""
+"The message in this conversation will be deleted. You can turn this warning "
+"off in Settings."
+msgid_plural ""
+"All {n} messages in this conversation will be deleted. You can turn this "
+"warning off in Settings."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Delete Conversation"
 msgstr "Suprimeix la conversa"
 
@@ -3140,6 +3149,22 @@ msgstr "Envia ara"
 
 msgid "The file could not be opened"
 msgstr "No s'ha pogut obrir el fitxer"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+#. Offer the steps that actually work.
+#, fuzzy
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Download the file, then open it from Files\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
+msgstr ""
+"El portal de l'escriptori ha informat: {error}\n"
+"\n"
+"• Fes clic dret a l'enllaç, copia'l i obre'l al navegador\n"
+"• Actualitzar «xdg-desktop-portal» i tornar a iniciar sessió pot arreglar "
+"l'obertura directa d'enllaços"
 
 msgid "Go to Message"
 msgstr "Ves al missatge"
@@ -7563,6 +7588,16 @@ msgstr "S'està eliminant l'adjunt…"
 
 msgid "Could not remove the attachment: {e}"
 msgstr "No s'ha pogut eliminar l'adjunt: {e}"
+
+msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid ""
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Settings → Mail Accounts and sign in to it again."
+msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "L'adjunt ja no és al missatge del servidor"

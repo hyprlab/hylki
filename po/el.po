@@ -1470,6 +1470,15 @@ msgstr "Όλες οι σημειώσεις έκδοσης στο GitHub"
 msgid "Delete this conversation?"
 msgstr "Διαγραφή αυτής της συνομιλίας;"
 
+msgid ""
+"The message in this conversation will be deleted. You can turn this warning "
+"off in Settings."
+msgid_plural ""
+"All {n} messages in this conversation will be deleted. You can turn this "
+"warning off in Settings."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Delete Conversation"
 msgstr "Διαγραφή συνομιλίας"
 
@@ -3118,6 +3127,23 @@ msgstr "Αποστολή τώρα"
 
 msgid "The file could not be opened"
 msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+#. Offer the steps that actually work.
+#, fuzzy
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Download the file, then open it from Files\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
+msgstr ""
+"Η πύλη της επιφάνειας εργασίας ανέφερε: {error}\n"
+"\n"
+"• Κάντε δεξί κλικ στον σύνδεσμο, αντιγράψτε τον και ανοίξτε τον στο "
+"πρόγραμμα περιήγησής σας\n"
+"• Η ενημέρωση του «xdg-desktop-portal» και η εκ νέου σύνδεση ενδέχεται να "
+"διορθώσουν το απευθείας άνοιγμα συνδέσμων"
 
 msgid "Go to Message"
 msgstr "Μετάβαση στο μήνυμα"
@@ -7541,6 +7567,16 @@ msgstr "Αφαίρεση του συνημμένου…"
 
 msgid "Could not remove the attachment: {e}"
 msgstr "Δεν ήταν δυνατή η αφαίρεση του συνημμένου: {e}"
+
+msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid ""
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Settings → Mail Accounts and sign in to it again."
+msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "Το συνημμένο δεν υπάρχει πλέον στο μήνυμα στον διακομιστή"
