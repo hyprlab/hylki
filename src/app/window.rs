@@ -51,15 +51,11 @@ pub(super) fn exit_now(
     std::process::exit(0)
 }
 
-/// The window's narrowest width with the reader beside the list: the
-/// sidebar rail, a list at its usual width and the reader's header.
-const MIN_WIDTH_BESIDE: i32 = 904;
-
 const MIN_HEIGHT: i32 = 360;
 
-/// Keep the window's minimum width at what is on show (#624). With the
-/// reader below the list or off there is one column, so the window can
-/// tile to half of a laptop screen. The panes' needs change as the toolbar
+/// Keep the window's minimum width at what is on show (#624): the sidebar
+/// rail beside the panes at their floors, so the window tiles to half of a
+/// laptop screen. The panes' needs change as the toolbar
 /// folds, Focus Mode hides parts of a header or the gallery opens, and each
 /// of those draws a frame, so the floor is checked after every one: an
 /// unchanged measure comes from GTK's cache.
@@ -67,29 +63,18 @@ fn follow_content_floor(root: &adw::ApplicationWindow, widgets: &AppModelWidgets
     let Some(content) = widgets.content_stack.parent() else {
         return;
     };
-    let split = widgets.mail_split.downgrade();
-    let reader = widgets.reader_bin.downgrade();
     let content = content.downgrade();
     let fit = move |win: &adw::ApplicationWindow| {
-        let (Some(split), Some(reader), Some(content)) =
-            (split.upgrade(), reader.upgrade(), content.upgrade())
-        else {
+        let Some(content) = content.upgrade() else {
             return;
         };
-        let need = super::sidebar_peek::SIDEBAR_RAIL_WIDTH as i32
+        let width = super::sidebar_peek::SIDEBAR_RAIL_WIDTH as i32
             + content.measure(gtk::Orientation::Horizontal, -1).0;
-        let beside = split.orientation() == gtk::Orientation::Horizontal && reader.is_visible();
-        let width = if beside {
-            need.max(MIN_WIDTH_BESIDE)
-        } else {
-            need
-        };
         if win.width_request() != width {
             win.set_size_request(width, MIN_HEIGHT);
         }
     };
-    // Before the first frame too, or the window would open at the floor
-    // set in init_window_size.
+    // Before the first frame too: the window opens at the floor.
     root.connect_realize(move |win| {
         fit(win);
         let Some(clock) = win.frame_clock() else {
@@ -126,7 +111,6 @@ impl AppModel {
         // tiled to half of a 1920px screen. With a breakpoint present the window
         // no longer derives its minimum size from its content, so it is given
         // one (see follow_content_floor).
-        root.set_size_request(MIN_WIDTH_BESIDE, MIN_HEIGHT);
         follow_content_floor(root, widgets);
         let narrow = adw::Breakpoint::new(adw::BreakpointCondition::new_length(
             adw::BreakpointConditionLengthType::MaxWidth,

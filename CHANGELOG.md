@@ -13,13 +13,18 @@
   slow to answer. Versions before this one cannot open an encrypted cache, so
   turning it on asks first and says to turn it off before going back to one.
 
-- **Changed: the window goes narrower with the reading pane below the list
-  or off** (#624). The window's minimum width was 904 pixels whatever the
-  layout, which kept it from tiling to half of a laptop screen. It now
-  follows what is on show: 480 pixels with the reader below the list, about
-  780 with the reader off and the toolbar in the list's header, and 904 as
-  before with the reader beside the list. The Attachments page no longer
-  holds the window wide while the mail is showing.
+- **Changed: the window goes narrower** (#624). The window's minimum width
+  was 904 pixels whatever the layout, which kept it from tiling to half of a
+  laptop screen. It now follows what is on show: 480 pixels with the reader
+  below the list, about 770 with the reader beside the list, and about 780
+  with the reader off and the toolbar in the list's header. The Attachments
+  page no longer holds the window wide while the mail is showing.
+
+- **Fixed: a narrow reader was drawn past the window's edge when a message
+  had attachments** (#624). The attachment drawer's header needs about 560
+  pixels with its thumbnail size slider, and a narrower reader lost its ⋯,
+  the window's close button and the right side of the message. The slider
+  now folds away while the reader is too narrow for it.
 
 - **Fixed: a name with a part in parentheses got a bracket for an initial**
   (#627). libadwaita takes the first character of the first and last word,
