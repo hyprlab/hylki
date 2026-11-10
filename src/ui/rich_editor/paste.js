@@ -906,9 +906,16 @@
       return;
     }
     /* An image on the clipboard beats any text flavour riding along with it,
-       and pastes inline whichever paste mode is set. */
+       and pastes inline whichever paste mode is set. Not when the HTML
+       flavour holds words: a spreadsheet or word processor offers a picture
+       of the selection beside the cells themselves (#623), where a copied
+       picture's HTML is a bare <img>. DOMParser builds an inert document,
+       so nothing in the markup runs or loads. */
     var its = cd.items || [];
-    for(var i = 0; i < its.length; i++){
+    var h0 = cd.getData('text/html');
+    var words = !!h0 && !!new DOMParser().parseFromString(h0, 'text/html')
+      .body.textContent.trim();
+    for(var i = 0; i < its.length && !words; i++){
       if(its[i].kind === 'file' && /^image\//.test(its[i].type)){
         e.preventDefault();
         insertImageFile(its[i].getAsFile());
@@ -917,7 +924,7 @@
     }
     var rich = window.__hylkiPasteRich === true;
     if(window.__hylkiPasteOnce !== null){ rich = window.__hylkiPasteOnce; window.__hylkiPasteOnce = null; }
-    var html = cd.getData('text/html');
+    var html = h0;
     var text = cd.getData('text/plain');
     if(rich){
       if(html) return;                       // native paste keeps the formatting

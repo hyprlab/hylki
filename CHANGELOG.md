@@ -13,6 +13,13 @@
   slow to answer. Versions before this one cannot open an encrypted cache, so
   turning it on asks first and says to turn it off before going back to one.
 
+- **Fixed: cells copied from a spreadsheet pasted as a picture** (#623).
+  LibreOffice Calc, like Word and other office programs, puts a picture of
+  the selection on the clipboard beside the cells, and the composer always
+  took the picture. When the clipboard's HTML holds text, the paste now uses
+  it, so the cells arrive as a table, or as tab-separated text when pasting
+  as plain text. A copied picture still pastes as a picture.
+
 - **Fixed: a message attached to another opened the Send file dialog**
   (#622). An attached message the sender gave no file name was listed as
   `attachment-1`, a blank file, and opening it handed it to the desktop,
