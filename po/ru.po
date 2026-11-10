@@ -1074,6 +1074,10 @@ msgstr "Полужирный, курсив, подчёркнутый"
 msgid "Preview the highlighted attachment"
 msgstr "Предпросмотр выделенного вложения"
 
+#, fuzzy
+msgid "Open the highlighted attachment"
+msgstr "Предпросмотр выделенного вложения"
+
 msgid "Previous or next in the gallery's preview"
 msgstr "Предыдущее или следующее в окне предпросмотра галереи"
 

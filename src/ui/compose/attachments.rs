@@ -503,6 +503,36 @@ fn add_open_and_menu(
         }
     };
     let open = std::rc::Rc::new(open);
+    // The file previewer (#625) is shown a staged copy, as for mail: the
+    // file itself may be where a sandbox keeps the host's previewer out.
+    let preview = {
+        let owned = path.to_path_buf();
+        let name = name.to_string();
+        let chip = chip.downgrade();
+        std::rc::Rc::new(move || {
+            let parent = chip
+                .upgrade()
+                .and_then(|c| c.root())
+                .and_downcast::<gtk::Window>();
+            let owned = owned.clone();
+            let name = name.clone();
+            gtk::glib::spawn_future_local(async move {
+                let read = owned.clone();
+                match gtk::gio::spawn_blocking(move || std::fs::read(read)).await {
+                    Ok(Ok(data)) => crate::desktop::previewer::show(
+                        vec![crate::models::Attachment { name, data }],
+                        0,
+                        parent.as_ref(),
+                        None,
+                    ),
+                    Ok(Err(e)) => {
+                        tracing::warn!("could not read the attachment to preview it: {e}")
+                    }
+                    Err(_) => {}
+                }
+            });
+        })
+    };
     let double = gtk::GestureClick::new();
     double.set_button(gtk::gdk::BUTTON_PRIMARY);
     {
@@ -526,14 +556,20 @@ fn add_open_and_menu(
             };
             let open = open.clone();
             let s = s.clone();
+            let mut first = Vec::new();
+            if crate::desktop::previewer::available() {
+                let preview = preview.clone();
+                first.push(
+                    MenuEntry::new(i18n("Preview"), move || preview()).icon("view-reveal-symbolic"),
+                );
+            }
+            first.push(MenuEntry::new(i18n("Open"), move || open()).icon("document-open-symbolic"));
             show_context_menu(
                 &chip,
                 x,
                 y,
                 vec![
-                    vec![
-                        MenuEntry::new(i18n("Open"), move || open()).icon("document-open-symbolic")
-                    ],
+                    first,
                     vec![MenuEntry::new(i18n("Remove"), move || {
                         let _ = s.send(ComposeInput::RemoveAttachment(index));
                     })

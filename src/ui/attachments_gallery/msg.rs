@@ -107,6 +107,8 @@ pub(crate) enum GalleryInput {
     GoToCurrent,
     /// Open item `index` externally (double-click / context menu / lightbox).
     OpenItem(usize),
+    /// Show item `index` in the file previewer (#625).
+    PreviewItem(usize),
     /// Save item `index` to a file the user picks.
     DownloadItem(usize),
     /// Jump to item `index`'s source message.

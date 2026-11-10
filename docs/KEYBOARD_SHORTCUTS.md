@@ -201,8 +201,10 @@ In the composer, <kbd>Ctrl+Z</kbd> and <kbd>Ctrl+Shift+Z</kbd> undo and redo
 your typing instead, and <kbd>Ctrl+B</kbd>, <kbd>Ctrl+I</kbd> and
 <kbd>Ctrl+U</kbd> set bold, italic and underline.
 
-In the attachment drawer, <kbd>Space</kbd> or <kbd>Enter</kbd> previews the
-highlighted attachment. In the attachments gallery's preview, <kbd>←</kbd> and
+In the attachment drawer, <kbd>Space</kbd> previews the highlighted
+attachment, in the GNOME file previewer when it is installed and the file is
+not a picture or a PDF, and <kbd>Enter</kbd> opens it as a double click does
+([Previewing an attachment](DOCUMENTATION.md#previewing-an-attachment)). In the attachments gallery's preview, <kbd>←</kbd> and
 <kbd>→</kbd> step to the previous and next one, and <kbd>Esc</kbd> closes it.
 
 In the Contacts view, <kbd>Ctrl+F</kbd> and <kbd>/</kbd> open its search

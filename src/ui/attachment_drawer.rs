@@ -39,10 +39,12 @@ use crate::ui::attachment_io::open_bytes;
 
 mod actions;
 mod cells;
+mod header_fold;
 mod motion;
 mod setup;
 
 pub(crate) use cells::previewable;
+use header_fold::header_fold;
 use setup::{
     activate_on_keys, grab_pill, remove_paned_gestures, showcase_clicks, wire_drawer_edge,
 };
@@ -51,6 +53,10 @@ const MIN_THUMB: f64 = 56.0;
 const MAX_THUMB: f64 = 220.0;
 /// Minimum expanded drawer height in px (the drag can't go below this).
 const MIN_HEIGHT: i32 = 96;
+
+/// The size slider and its two pictures, with the gaps before them: what
+/// the header needs beyond its other buttons for the slider to show.
+const SLIDER_ROOM: i32 = 12 + 130 + 22 + 3 * 8;
 
 /// What the drawer needs at launch: its remembered state plus the reader widget
 /// it docks beneath (which becomes the top pane of its internal `GtkPaned`).
@@ -117,6 +123,11 @@ pub(crate) struct AttachmentDrawer {
     /// Bumped by every list, so an empty one held back is dropped when the
     /// next message's list follows it.
     empty_gen: u64,
+    /// The header is too narrow for the size slider, which then hides: a
+    /// narrow reader would otherwise be pushed past the window's edge.
+    narrow: bool,
+    /// Applies below the width the header needs with the slider showing.
+    header_fold: Option<adw::Breakpoint>,
 }
 
 /// What the drawer asks the app to do.
@@ -151,10 +162,14 @@ pub(crate) enum AttachmentDrawerInput {
     Open(usize),
     /// Import an attached OpenPGP public key into the keyring (#133).
     ImportKey(usize),
-    /// Activate a cell/row (display order) — double-click, or Space/Enter on
+    /// Activate a cell/row (display order) — double-click, or Enter on
     /// the highlighted one: preview images and PDFs in the lightbox, open
     /// anything else in its default app.
     Activate(usize),
+    /// Space, or Preview in the menu: as [`Self::Activate`], except that
+    /// what the lightbox cannot show goes to the file previewer when there
+    /// is one (#625).
+    Preview(usize),
     /// Save an attachment to disk (file chooser).
     Download(usize),
     /// Scroll the reader to the message the attachment belongs to (#213).
@@ -197,6 +212,8 @@ pub(crate) enum AttachmentDrawerInput {
     /// An empty list held back (see `SetItems`) is due, unless a newer list
     /// came since: carries the `empty_gen` it was held under.
     SettleEmpty(u64),
+    /// The header became too narrow for the size slider, or wide enough.
+    SetNarrow(bool),
 }
 
 #[relm4::component(pub(crate))]
@@ -246,7 +263,14 @@ impl SimpleComponent for AttachmentDrawer {
                     set_cursor_from_name: Some("ns-resize"),
                 },
 
-                gtk::Box {
+                // Its own minimum width, so the slider folds away rather
+                // than hold the reader wider than its pane (#624). The
+                // sizes are set in post_view, from the header's.
+                #[name = "header_bin"]
+                adw::BreakpointBin {
+                #[wrap(Some)]
+                #[name = "header"]
+                set_child = &gtk::Box {
                     set_orientation: gtk::Orientation::Horizontal,
                     set_spacing: 8,
                     add_css_class: "attachment-drawer-header",
@@ -317,7 +341,7 @@ impl SimpleComponent for AttachmentDrawer {
                         // The size slider is meaningless with the grid hidden
                         // (and sizes thumbnails only, so also in the list view).
                         #[watch]
-                        set_visible: !model.collapsed && !model.list_view,
+                        set_visible: model.slider_shown(),
                     },
                     gtk::Scale {
                         set_orientation: gtk::Orientation::Horizontal,
@@ -329,7 +353,7 @@ impl SimpleComponent for AttachmentDrawer {
                         set_tooltip_text: Some(i18n("Thumbnail size").as_str()),
                         set_valign: gtk::Align::Center,
                         #[watch]
-                        set_visible: !model.collapsed && !model.list_view,
+                        set_visible: model.slider_shown(),
                         connect_value_changed[sender] => move |s| {
                             sender.input_sender().emit(AttachmentDrawerInput::SetThumbSize(s.value() as i32));
                         },
@@ -339,7 +363,7 @@ impl SimpleComponent for AttachmentDrawer {
                         add_css_class: "dim-label",
                         set_pixel_size: 22,
                         #[watch]
-                        set_visible: !model.collapsed && !model.list_view,
+                        set_visible: model.slider_shown(),
                     },
                     gtk::Button {
                         add_css_class: "flat",
@@ -389,6 +413,7 @@ impl SimpleComponent for AttachmentDrawer {
                             sender.input_sender().emit(AttachmentDrawerInput::SaveAll);
                         },
                     },
+                },
                 },
 
                 #[local_ref]
@@ -460,10 +485,13 @@ impl SimpleComponent for AttachmentDrawer {
             pending_items: None,
             drawer_body: None,
             empty_gen: 0,
+            narrow: false,
+            header_fold: None,
         };
 
         let widgets = view_output!();
         model.drawer_body = Some(widgets.drawer_body.clone());
+        model.header_fold = Some(header_fold(&widgets.header_bin, &sender));
         // The body moves into an overlay of its own (`header_height` reads
         // it there). The overlay comes and goes with the body, so the split
         // still hides its seam with no drawer.
@@ -498,12 +526,17 @@ impl SimpleComponent for AttachmentDrawer {
         ComponentParts { model, widgets }
     }
 
+    fn post_view() {
+        self.fit_header(&widgets.header_bin, &widgets.header);
+    }
+
     fn update(&mut self, msg: Self::Input, sender: ComponentSender<Self>) {
         match msg {
             AttachmentDrawerInput::SetItems(items) if self.fading > 0 => {
                 self.pending_items = Some(items);
             }
             AttachmentDrawerInput::SetItems(items) => self.set_items(items, &sender),
+            AttachmentDrawerInput::SetNarrow(narrow) => self.narrow = narrow,
             AttachmentDrawerInput::SettleEmpty(gen) => {
                 if gen == self.empty_gen {
                     self.apply_items(Vec::new(), &sender);
@@ -562,6 +595,7 @@ impl SimpleComponent for AttachmentDrawer {
                 }
             }
             AttachmentDrawerInput::Activate(i) => self.activate(i, &sender),
+            AttachmentDrawerInput::Preview(i) => self.preview(i, &sender),
             AttachmentDrawerInput::SaveAll => {
                 self.save_all();
             }

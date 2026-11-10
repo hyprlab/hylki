@@ -402,6 +402,22 @@ replied to are letters in its name, and tags are listed in
 `new` directory are found when the folder opens. Removing the account leaves
 the folders where they are, and adding it again finds them.
 
+### Previewing an attachment
+
+A double click on a picture or a PDF in the attachment drawer shows it in
+Hylki's full-window preview, and any other file opens in the program the
+desktop has for it. Where the GNOME file previewer, Sushi, is installed,
+**Space** on a highlighted file, or **Preview** in its right-click menu, shows
+the other files in it, as GNOME Files does: text, office documents, audio,
+video and fonts among them. The arrow keys there move through the drawer's
+files, and **Space** or **Esc** closes it. The attachment gallery and the
+composer have **Preview** in a file's right-click menu too. Without Sushi,
+**Space** does what a double click does.
+
+Sushi is a package of the system: `sushi` in Fedora and Arch, `gnome-sushi`
+in Debian and Ubuntu. The Flatpak reaches it on the session bus as
+`org.gnome.NautilusPreviewer`.
+
 ### Deleting an attachment from the server
 
 **Delete from Server…** in the right-click menu of a file in the attachment

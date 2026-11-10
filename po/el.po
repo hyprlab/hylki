@@ -1084,6 +1084,10 @@ msgstr "Έντονα, πλάγια, υπογραμμισμένα"
 msgid "Preview the highlighted attachment"
 msgstr "Προεπισκόπηση του επιλεγμένου συνημμένου"
 
+#, fuzzy
+msgid "Open the highlighted attachment"
+msgstr "Προεπισκόπηση του επιλεγμένου συνημμένου"
+
 msgid "Previous or next in the gallery's preview"
 msgstr "Προηγούμενο ή επόμενο στην προεπισκόπηση της συλλογής"
 

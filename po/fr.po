@@ -1059,6 +1059,10 @@ msgstr "Gras, italique, souligné"
 msgid "Preview the highlighted attachment"
 msgstr "Prévisualiser la pièce jointe sélectionnée"
 
+#, fuzzy
+msgid "Open the highlighted attachment"
+msgstr "Prévisualiser la pièce jointe sélectionnée"
+
 msgid "Previous or next in the gallery's preview"
 msgstr "Précédent ou suivant dans l’aperçu de la galerie"
 

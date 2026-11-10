@@ -1148,6 +1148,10 @@ msgstr ""
 msgid "Preview the highlighted attachment"
 msgstr "Ukryj załączniki"
 
+#, fuzzy
+msgid "Open the highlighted attachment"
+msgstr "Ukryj załączniki"
+
 msgid "Previous or next in the gallery's preview"
 msgstr ""
 

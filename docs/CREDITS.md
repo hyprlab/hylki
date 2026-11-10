@@ -63,10 +63,10 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   choices that could not be translated; and layouts that make room for
   longer translated labels.
 - [**Christian Lauinger**](https://github.com/ChrisLauinger77) ([#254](https://github.com/hyprlab/hylki/issues/254),
-  [#272](https://github.com/hyprlab/hylki/pull/272), [#310](https://github.com/hyprlab/hylki/pull/310)): the German translation;
+  [#272](https://github.com/hyprlab/hylki/pull/272), [#310](https://github.com/hyprlab/hylki/pull/310), [#626](https://github.com/hyprlab/hylki/pull/626)): the German translation;
   the report that GNOME Online Accounts mail accounts ignored the server's
-  security settings; and the Debian package build the official package grew
-  from.
+  security settings; the Debian package build the official package grew
+  from; and the launcher's Contacts and Attachments actions.
 - [**Tomasz Bojanowski**](https://github.com/TomaszBojanowski) ([#306](https://github.com/hyprlab/hylki/pull/306)): the
   Polish translation.
 - [**Anton Palgunov**](https://github.com/Toxblh) ([#7](https://github.com/hyprlab/hylki/pull/7),

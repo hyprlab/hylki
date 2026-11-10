@@ -114,6 +114,14 @@ fn is_risky_attachment(name: &str, data: &[u8]) -> bool {
 /// Open an attachment, asking first when it is a program or a script (see
 /// [`is_risky_attachment`]).
 pub(crate) fn open_bytes(name: &str, data: &[u8], parent: Option<&gtk::Window>) {
+    // An attached message is read here, in a window of its own (#622).
+    // Handed to the desktop, it came back to Hylki as a file to attach.
+    if crate::mail::message_file::is_message(name, data) {
+        if let Some(path) = stage(name, data) {
+            crate::app::queue_message_file(path);
+        }
+        return;
+    }
     if !is_risky_attachment(name, data) {
         open_now(name, data, parent);
         return;
@@ -134,7 +142,7 @@ pub(crate) fn open_bytes(name: &str, data: &[u8], parent: Option<&gtk::Window>) 
 /// Write bytes to a temp file and open it in the default application.
 ///
 /// The filename comes from an email, so it comes from whoever sent it. The
-/// sanitizer below removes every path separator, which is what stops traversal;
+/// sanitizer in `stage` removes every path separator, which is what stops traversal;
 /// the rest of the care here is about `/tmp` being shared on a native install
 /// (under Flatpak it is per-app): the directory is created private and its
 /// ownership checked, and each file is created fresh rather than written
@@ -146,34 +154,9 @@ pub(crate) fn open_bytes(name: &str, data: &[u8], parent: Option<&gtk::Window>) 
 /// a `.pdf`) the portal falls back to GNOME's own app-chooser dialog instead
 /// of silently doing nothing.
 fn open_now(name: &str, data: &[u8], parent: Option<&gtk::Window>) {
-    let safe: String = name
-        .chars()
-        .map(|c| {
-            if c.is_alphanumeric() || matches!(c, '.' | '-' | '_') {
-                c
-            } else {
-                '_'
-            }
-        })
-        .collect();
-    let Some(dir) = attachment_dir() else { return };
-    let base = if safe.is_empty() {
-        "attachment".to_string()
-    } else {
-        safe
-    };
-    let Some((mut file, path)) = create_private(&dir, &base) else {
-        tracing::warn!("could not open a temporary file for the attachment");
+    let Some(path) = stage(name, data) else {
         return;
     };
-    // Write through the handle rather than reopening by path: the checks below
-    // are about what is at that name, and going back through it would hand the
-    // result to whatever is there by the time we look again.
-    if let Err(e) = std::io::Write::write_all(&mut file, data) {
-        tracing::warn!("could not write the attachment: {e}");
-        return;
-    }
-    drop(file);
     let uri = format!("file://{}", path.to_string_lossy());
     // Outside Flatpak, GIO launches the default handler directly; the portal
     // route has been seen accepting an OpenURI request and then launching
@@ -206,6 +189,40 @@ fn open_now(name: &str, data: &[u8], parent: Option<&gtk::Window>) {
             }
         });
     }
+}
+
+/// Write an attachment's bytes to a fresh private file, under its name made
+/// safe (see `open_now`), and return where.
+pub(crate) fn stage(name: &str, data: &[u8]) -> Option<std::path::PathBuf> {
+    let safe: String = name
+        .chars()
+        .map(|c| {
+            if c.is_alphanumeric() || matches!(c, '.' | '-' | '_') {
+                c
+            } else {
+                '_'
+            }
+        })
+        .collect();
+    let dir = attachment_dir()?;
+    let base = if safe.is_empty() {
+        "attachment".to_string()
+    } else {
+        safe
+    };
+    let Some((mut file, path)) = create_private(&dir, &base) else {
+        tracing::warn!("could not open a temporary file for the attachment");
+        return None;
+    };
+    // Write through the handle rather than reopening by path: the checks below
+    // are about what is at that name, and going back through it would hand the
+    // result to whatever is there by the time we look again.
+    if let Err(e) = std::io::Write::write_all(&mut file, data) {
+        tracing::warn!("could not write the attachment: {e}");
+        return None;
+    }
+    drop(file);
+    Some(path)
 }
 
 /// Both launch roads failed — tell the user what happened and what still

@@ -840,6 +840,7 @@ impl Component for AttachmentsGallery {
                 }
             }
             GalleryInput::OpenItem(i) => self.open_item(i, &sender),
+            GalleryInput::PreviewItem(i) => self.preview_item(i, &sender),
             GalleryInput::DownloadItem(i) => self.download_item(i, &sender),
             GalleryInput::GoToItem(i) => self.goto_item(i, &sender),
             GalleryInput::ShowcaseDelete(name) => self.on_showcase_delete(name, &sender),

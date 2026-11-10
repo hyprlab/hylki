@@ -1107,6 +1107,10 @@ msgstr "Negrito, itálico, sublinhado"
 msgid "Preview the highlighted attachment"
 msgstr "Pré-visualizar o anexo selecionado"
 
+#, fuzzy
+msgid "Open the highlighted attachment"
+msgstr "Pré-visualizar o anexo selecionado"
+
 msgid "Previous or next in the gallery's preview"
 msgstr "Anterior ou seguinte na pré-visualização da galeria"
 

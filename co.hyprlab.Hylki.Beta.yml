@@ -37,6 +37,7 @@ finish-args:
   - --talk-name=org.kde.StatusNotifierWatcher      # optional tray icon (#116); absent on plain GNOME
   - --talk-name=com.canonical.Unity                # notice Dash/Ubuntu Dock coming back, to resend the badge (#353); Flatpak has no --see-name
   - --talk-name=org.gnome.Nautilus                 # "Restart Files" after installing the Files extension (#188)
+  - --talk-name=org.gnome.NautilusPreviewer        # preview attachments in the GNOME file previewer, Sushi (#625)
   - --talk-name=com.microsoft.identity.broker1      # Microsoft sign-in on a managed device, Conditional Access (#329)
   # Deliberately NOT --talk-name=org.freedesktop.Flatpak — see the stable
   # manifest for why (it would permit arbitrary host command execution).

@@ -362,11 +362,9 @@ fn circle_html(m: &Message, dark: bool) -> String {
             .map(|uri| format!("<img class=\"hylki-ava\" src=\"{uri}\" alt=\"\">"))
     };
     own.or_else(face).unwrap_or_else(|| {
-        let initial = m
-            .shown_from_name()
-            .trim()
-            .chars()
-            .next()
+        let initial = crate::ui::initials::word_initials(&m.shown_from_name())
+            .first()
+            .copied()
             .or_else(|| m.from_addr.trim().chars().next())
             .map(|c| c.to_uppercase().to_string())
             .unwrap_or_else(|| "?".to_string());

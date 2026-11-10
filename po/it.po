@@ -1114,6 +1114,10 @@ msgstr "Grassetto, corsivo, sottolineato"
 msgid "Preview the highlighted attachment"
 msgstr "Anteprima dell'allegato evidenziato"
 
+#, fuzzy
+msgid "Open the highlighted attachment"
+msgstr "Anteprima dell'allegato evidenziato"
+
 msgid "Previous or next in the gallery's preview"
 msgstr "Precedente o successivo nell'anteprima della galleria"
 

@@ -131,10 +131,8 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
     (
         i18n_noop("Attachments"),
         &[
-            (
-                "Space  or  Enter",
-                i18n_noop("Preview the highlighted attachment"),
-            ),
+            ("Space", i18n_noop("Preview the highlighted attachment")),
+            ("Enter", i18n_noop("Open the highlighted attachment")),
             (
                 "←  /  →",
                 i18n_noop("Previous or next in the gallery's preview"),

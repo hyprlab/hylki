@@ -5,6 +5,7 @@
 use adw::prelude::*;
 use relm4::prelude::*;
 
+use crate::desktop::single_instance::StartView;
 use crate::i18n::{i18n, i18n_f};
 use crate::ui::notifications::NotifyInput;
 use crate::worker::MailRequest;
@@ -187,34 +188,20 @@ pub(crate) fn queue_message_file(path: std::path::PathBuf) {
 /// Message files that arrived before the component was up (see `MAILTO_PENDING`).
 static FILE_PENDING: std::sync::Mutex<Vec<std::path::PathBuf>> = std::sync::Mutex::new(Vec::new());
 
-/// Whether a file handed in is a message to read rather than one to attach:
-/// a `.eml`, the usual name for a message saved whole, or Outlook's `.msg`
-/// (#398).
+/// Whether a file handed in is a message to read rather than one to attach
+/// (#398): a `.eml` or an Outlook `.msg`, or a file with no suffix that
+/// starts like a message (#622), see `message_file::is_message`.
 pub(crate) fn is_message_file(path: &std::path::Path) -> bool {
-    path.extension()
-        .is_some_and(|e| e.eq_ignore_ascii_case("eml") || e.eq_ignore_ascii_case("msg"))
-}
-
-/// The name Save as File offers: the subject, without what a file name
-/// cannot hold, and `.eml`.
-pub(super) fn eml_file_name(subject: &str) -> String {
-    let stem: String = subject
-        .chars()
-        .map(|c| {
-            if matches!(c, '/' | '\\' | ':' | '*' | '?' | '"' | '<' | '>' | '|') || c.is_control() {
-                '-'
-            } else {
-                c
-            }
-        })
-        .collect();
-    let stem = stem.trim().trim_matches('.');
-    let stem: String = stem.chars().take(80).collect();
-    if stem.is_empty() {
-        "message.eml".to_string()
-    } else {
-        format!("{stem}.eml")
+    use std::io::Read;
+    let name = path
+        .file_name()
+        .map(|n| n.to_string_lossy())
+        .unwrap_or_default();
+    let mut head = Vec::new();
+    if let Ok(f) = std::fs::File::open(path) {
+        let _ = f.take(16 * 1024).read_to_end(&mut head);
     }
+    crate::mail::message_file::is_message(&name, &head)
 }
 
 /// The folder id a message read from a file carries (#398): no folder has
@@ -232,7 +219,39 @@ pub(crate) fn queue_attach_files(paths: Vec<std::path::PathBuf>) {
 static ATTACH_PENDING: std::sync::Mutex<Vec<Vec<std::path::PathBuf>>> =
     std::sync::Mutex::new(Vec::new());
 
+/// Open a view on a fresh launch (`hylki --contacts`), once the app is up.
+pub(crate) fn queue_start_view(view: StartView) {
+    send_or_park(&VIEW_PENDING, view, view_msg);
+}
+
+/// What opens `view`: the same as its sidebar row.
+fn view_msg(view: StartView) -> AppMsg {
+    match view {
+        StartView::Contacts => AppMsg::OpenContacts,
+        StartView::Attachments => AppMsg::ShowAttachments,
+    }
+}
+
+/// A view asked for before the component was up (see `MAILTO_PENDING`).
+static VIEW_PENDING: std::sync::Mutex<Vec<StartView>> = std::sync::Mutex::new(Vec::new());
+
 impl AppModel {
+    /// The launcher's Contacts and Attachments actions, for a second launch
+    /// (see `relay_to_primary`): raise the window on that view.
+    pub(super) fn install_view_actions(&self, sender: &ComponentSender<Self>) {
+        let app = relm4::main_application();
+        for view in [StartView::Contacts, StartView::Attachments] {
+            let action = gtk::gio::SimpleAction::new(view.action(), None);
+            let win = self.window.clone();
+            let s = sender.clone();
+            action.connect_activate(move |_, _| {
+                crate::desktop::session::present_window(&win);
+                s.input(view_msg(view));
+            });
+            app.add_action(&action);
+        }
+    }
+
     /// Ask where to put a message's bytes, and write them there (#398).
     pub(super) fn save_message_file(&self, name: String, raw: Vec<u8>) {
         let dialog = gtk::FileDialog::new();
@@ -440,6 +459,9 @@ impl AppModel {
         for paths in parked(&ATTACH_PENDING).drain(..) {
             sender.input(AppMsg::OpenWithFiles(paths));
         }
+        for view in parked(&VIEW_PENDING).drain(..) {
+            sender.input(view_msg(view));
+        }
     }
 }
 
@@ -533,14 +555,12 @@ mod tests {
     }
 
     #[test]
-    fn save_as_file_offers_the_subject() {
-        assert_eq!(
-            super::eml_file_name("Re: Q3 roadmap / review?"),
-            "Re- Q3 roadmap - review-.eml"
-        );
-        assert_eq!(super::eml_file_name("   "), "message.eml");
-        assert_eq!(super::eml_file_name("..."), "message.eml");
-        assert!(super::is_message_file(std::path::Path::new("/tmp/A.EML")));
-        assert!(!super::is_message_file(std::path::Path::new("/tmp/a.pdf")));
+    fn message_files_by_suffix() {
+        assert!(super::is_message_file(std::path::Path::new(
+            "/nonexistent/A.EML"
+        )));
+        assert!(!super::is_message_file(std::path::Path::new(
+            "/nonexistent/a.pdf"
+        )));
     }
 }

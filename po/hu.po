@@ -1122,6 +1122,10 @@ msgstr ""
 msgid "Preview the highlighted attachment"
 msgstr "Mellékletek elrejtése"
 
+#, fuzzy
+msgid "Open the highlighted attachment"
+msgstr "Mellékletek elrejtése"
+
 msgid "Previous or next in the gallery's preview"
 msgstr ""
 

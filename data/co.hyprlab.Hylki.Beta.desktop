@@ -13,8 +13,16 @@ Keywords=Email;Mail;IMAP;
 MimeType=x-scheme-handler/mailto;x-scheme-handler/mid;message/rfc822;application/vnd.ms-outlook;
 StartupNotify=true
 StartupWMClass=co.hyprlab.Hylki.Beta
-Actions=new-message;
+Actions=new-message;contacts;attachments;
 
 [Desktop Action new-message]
 Name=New Message
 Exec=hylki mailto:
+
+[Desktop Action contacts]
+Name=Contacts
+Exec=hylki --contacts
+
+[Desktop Action attachments]
+Name=Attachments
+Exec=hylki --attachments

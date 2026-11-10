@@ -25,7 +25,8 @@ pub(crate) fn card(
     let card = gtk::Box::new(gtk::Orientation::Horizontal, 12);
     card.add_css_class("message-drag-card");
     let avatar = adw::Avatar::new(34, Some(name), true);
-    avatar.set_custom_image(image);
+    let initials = crate::ui::initials::InitialsPaintable::for_name(name);
+    avatar.set_custom_image(image.or(initials.as_ref().map(|p| p.upcast_ref())));
     avatar.set_valign(gtk::Align::Center);
     card.append(&avatar);
     let text = gtk::Box::new(gtk::Orientation::Vertical, 3);
