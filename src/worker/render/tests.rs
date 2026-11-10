@@ -552,3 +552,25 @@ fn image_mime_rejects_a_hostile_subtype() {
     let part = parsed.html_bodies().next().unwrap();
     assert!(image_mime(part).is_none());
 }
+
+/// #622: a message forwarded as an attachment, unnamed by its sender, is
+/// listed under its own subject with `.eml`, so it opens as a message.
+#[test]
+fn an_attached_message_is_named_eml() {
+    let raw = concat!(
+        "Content-Type: multipart/mixed; boundary=\"b\"\r\n\r\n",
+        "--b\r\nContent-Type: text/plain\r\n\r\nSee below.\r\n",
+        "--b\r\nContent-Type: message/rfc822\r\n",
+        "Content-Disposition: attachment\r\n\r\n",
+        "MIME-Version: 1.0\r\nFrom: Ann <ann@example.org>\r\n",
+        "Subject: Q3 / plan\r\n\r\nInner body.\r\n",
+        "--b--\r\n",
+    );
+    let found = extract_attachments(raw.as_bytes());
+    assert_eq!(found.len(), 1);
+    assert_eq!(found[0].name, "Q3 - plan.eml");
+    assert!(crate::mail::message_file::is_message(
+        &found[0].name,
+        &found[0].data
+    ));
+}

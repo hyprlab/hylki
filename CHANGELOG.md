@@ -13,6 +13,14 @@
   slow to answer. Versions before this one cannot open an encrypted cache, so
   turning it on asks first and says to turn it off before going back to one.
 
+- **Fixed: a message attached to another opened the Send file dialog**
+  (#622). An attached message the sender gave no file name was listed as
+  `attachment-1`, a blank file, and opening it handed it to the desktop,
+  which passed it back to Hylki as a file to attach. Attached messages are
+  now listed under their subject with `.eml` and open in a message window of
+  their own. A file with no suffix that starts with mail headers, as one
+  saved from an older version does, is read as a message too.
+
 - **Fixed: mail a filter sends to Trash or Junk still raised a new mail
   notification** (#621, by Fabio Rotondo). A filter that moves a new message
   into Trash or Junk now gives no notification and no sound for it, as the

@@ -15,7 +15,7 @@ use super::model::AppModel;
 use super::msg::AppMsg;
 use super::prefill::{reply_all_prefill, reply_prefill};
 use super::undo::FlagKind;
-use super::uri_queue::eml_file_name;
+use crate::mail::message_file::eml_file_name;
 
 impl AppModel {
     /// The messages the router sends here (see `AppModel::route`).

@@ -91,15 +91,36 @@ pub(in crate::worker) fn attachment_parts(
         {
             continue;
         }
-        let name = attachment_name_of(part, raw).unwrap_or_else(|| {
-            // Unnamed, as a meeting request's calendar part often is (#223):
-            // give it the suffix its type implies, or nothing opens it.
-            let ext = part
-                .content_type()
-                .map(|c| mime_extension(c.ctype(), c.subtype().unwrap_or_default()))
-                .unwrap_or_default();
-            format!("attachment-{}{ext}", i + 1)
-        });
+        let given = attachment_name_of(part, raw);
+        let inner = match &part.body {
+            mail_parser::PartType::Message(inner) => Some(inner),
+            _ => None,
+        };
+        let carried = inner.is_some()
+            || part.content_type().is_some_and(|c| {
+                crate::mail::message_file::is_message_type(
+                    c.ctype(),
+                    c.subtype().unwrap_or_default(),
+                )
+            });
+        let name = if carried {
+            // A message carried whole (#622): read in the app, so `.eml`.
+            crate::mail::message_file::attached_message_name(
+                given.as_deref(),
+                inner.and_then(|m| m.subject()),
+                i + 1,
+            )
+        } else {
+            given.unwrap_or_else(|| {
+                // Unnamed, as a meeting request's calendar part often is (#223):
+                // give it the suffix its type implies, or nothing opens it.
+                let ext = part
+                    .content_type()
+                    .map(|c| mime_extension(c.ctype(), c.subtype().unwrap_or_default()))
+                    .unwrap_or_default();
+                format!("attachment-{}{ext}", i + 1)
+            })
+        };
         out.push((
             id,
             crate::models::Attachment {

@@ -119,19 +119,39 @@ pub(super) fn structure_attachments(
                 if !counts {
                     return;
                 }
-                let name = common
+                let given = common
                     .disposition
                     .as_ref()
                     .and_then(|d| param(&d.params, "filename"))
                     .or_else(|| param(&common.ty.params, "name"))
-                    .filter(|n| !n.trim().is_empty())
-                    .unwrap_or_else(|| {
+                    .filter(|n| !n.trim().is_empty());
+                // A message carried whole (#622) is named as the reader names
+                // it, by its subject, with `.eml`.
+                let carried = match bs {
+                    Bs::Message { envelope, .. }
+                        if crate::mail::message_file::is_message_type(
+                            &common.ty.ty,
+                            &common.ty.subtype,
+                        ) =>
+                    {
+                        Some(envelope.subject.as_deref().map(decode_header))
+                    }
+                    _ => None,
+                };
+                let name = match carried {
+                    Some(subject) => crate::mail::message_file::attached_message_name(
+                        given.as_deref(),
+                        subject.as_deref(),
+                        out.len() + 1,
+                    ),
+                    None => given.unwrap_or_else(|| {
                         // Unnamed, as Apple Mail's inline photos arrive: give it
                         // the extension its type implies so the gallery can sort
                         // and filter it like any other file.
                         let ext = mime_extension(&common.ty.ty, &common.ty.subtype);
                         format!("attachment-{}{ext}", out.len() + 1)
-                    });
+                    }),
+                };
                 out.push(crate::models::AttachmentMeta {
                     idx: out.len() as u32,
                     name,
@@ -537,5 +557,45 @@ mod attachment_scan_tests {
         // Unnamed by the sender, as Outlook sends it: named for its type, so
         // something will open it.
         assert!(metas[0].name.ends_with(".ics"), "{}", metas[0].name);
+    }
+
+    /// #622: an attached message, unnamed, is named by its envelope's
+    /// subject with `.eml`, as the reader names it.
+    #[test]
+    fn an_attached_message_is_named_by_its_subject() {
+        let BodyStructure::Basic { common, other, .. } = single(
+            "message",
+            "rfc822",
+            9000,
+            ContentEncoding::SevenBit,
+            None,
+            None,
+            None,
+        ) else {
+            unreachable!()
+        };
+        let carried = BodyStructure::Message {
+            common,
+            other,
+            envelope: async_imap::imap_proto::types::Envelope {
+                date: None,
+                subject: Some(Cow::Borrowed(b"Re: lunch?")),
+                from: None,
+                sender: None,
+                reply_to: None,
+                to: None,
+                cc: None,
+                bcc: None,
+                in_reply_to: None,
+                message_id: None,
+            },
+            body: Box::new(text("plain", 100)),
+            lines: 20,
+            extension: None,
+        };
+        let metas = structure_attachments(&multipart(vec![text("plain", 400), carried]));
+        assert_eq!(metas.len(), 1);
+        assert_eq!(metas[0].name, "Re- lunch-.eml");
+        assert_eq!(metas[0].mime, "message/rfc822");
     }
 }
