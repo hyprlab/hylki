@@ -2,6 +2,28 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.48.0-beta.5
+
+### New features:
+
+- Attachments preview in the GNOME file previewer - (#625)
+- Contacts and Attachments in the launcher's menu by @ChrisLauinger77 - (#626)
+- A narrower minimum window width - (#624)
+- Faint cell lines on the table being written in the composer - (#623)
+
+### Fixes:
+
+- cells copied from a spreadsheet pasting as a picture - (#623)
+- a message attached to another opening the Send file dialog - (#622)
+- a Microsoft account that could still stop checking for mail after a suspend - (#618)
+- a narrow reader drawn past the window's edge with attachments - (#624)
+- a bracket or a dot as a contact's initial - (#627)
+
+### Translations:
+
+- German by @samuel-edlmeier - (#628)
+- Spanish by @danielmigueltejedor - (#629)
+
 ## What's new in 1.48.0-beta.4
 
 ### New features:

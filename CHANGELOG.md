@@ -1,5 +1,71 @@
 # Changelog
 
+## 1.48.0-beta.5 — 2026-11-10
+
+- **Added: attachments preview in the GNOME file previewer** (#625). Where
+  Sushi is installed, Space on a file in the attachment drawer, or Preview
+  in the right-click menu of a file in the drawer, the attachment gallery or
+  the composer, shows it in Sushi over Hylki's window, as Space does in GNOME
+  Files. The arrow keys there step through the drawer's files. Pictures and
+  PDFs keep Hylki's own preview, and Enter opens a file as a double click
+  does. The Flatpak gains `--talk-name=org.gnome.NautilusPreviewer` for it.
+
+- **Added: Contacts and Attachments in the launcher's menu** (by
+  ChrisLauinger77, #626). Right-clicking Hylki's icon in the dock or app grid
+  now offers **Contacts** and **Attachments** beside **New Message**, opening
+  the window on that view. From a terminal, `hylki --contacts` and
+  `hylki --attachments` do the same, and hand over to the window already
+  open.
+
+- **Changed: the window goes narrower** (#624). The window's minimum width
+  was 904 pixels whatever the layout, which kept it from tiling to half of a
+  laptop screen. It now follows what is on show: 480 pixels with the reader
+  below the list, about 770 with the reader beside the list, and about 780
+  with the reader off and the toolbar in the list's header. The Attachments
+  page no longer holds the window wide while the mail is showing.
+
+- **Fixed: a narrow reader was drawn past the window's edge when a message
+  had attachments** (#624). The attachment drawer's header needs about 560
+  pixels with its thumbnail size slider, and a narrower reader lost its ⋯,
+  the window's close button and the right side of the message. The slider
+  now folds away while the reader is too narrow for it.
+
+- **Fixed: a name with a part in parentheses got a bracket for an initial**
+  (#627). libadwaita takes the first character of the first and last word,
+  so "Foo Bar (Baz)" showed "F(" and ".Foo" showed ".". Initials now skip
+  anything in parentheses and the punctuation a word starts with, as
+  libadwaita merge request 1848 proposes, so those read "FB" and "F". This
+  covers the message list, the reader's cards, the account circles, the
+  contacts window, the contact picker and the drag card. A name that is
+  nothing but a parenthesis keeps its letters.
+
+- **Fixed: cells copied from a spreadsheet pasted as a picture** (#623).
+  LibreOffice Calc, like Word and other office programs, puts a picture of
+  the selection on the clipboard beside the cells, and the composer always
+  took the picture. When the clipboard's HTML holds text, the paste now uses
+  it, so the cells arrive as a table, or as tab-separated text when pasting
+  as plain text. A copied picture still pastes as a picture.
+  While the caret is in a table, faint lines mark its cells, so a table
+  with no borders of its own can be filled in. The lines are not part of the
+  message and go when the caret leaves the table.
+
+- **Fixed: a message attached to another opened the Send file dialog**
+  (#622). An attached message the sender gave no file name was listed as
+  `attachment-1`, a blank file, and opening it handed it to the desktop,
+  which passed it back to Hylki as a file to attach. Attached messages are
+  now listed under their subject with `.eml` and open in a message window of
+  their own. A file with no suffix that starts with mail headers, as one
+  saved from an older version does, is read as a message too.
+
+- **Fixed: a Microsoft account could still stop checking for mail after a
+  suspend** (#618, reported by jorgegarciaavila). 1.48.0-beta.4 kept
+  connections open for the next request, and the HTTP library drops the read
+  deadline from a kept one, so a connection that died during a suspend could
+  still hold the account. Each request now opens its own connection.
+
+- **Translations:** German (PR #628 by Samuel Edlmeier) and Spanish (PR #629
+  by Daniel Miguel) updated, each with 2487 of 2488 strings translated.
+
 ## 1.48.0-beta.4 — 2026-11-09
 
 - **Added: Insert Template in the composer** (#610, by FLASH911). A button in
