@@ -19,6 +19,9 @@
   took the picture. When the clipboard's HTML holds text, the paste now uses
   it, so the cells arrive as a table, or as tab-separated text when pasting
   as plain text. A copied picture still pastes as a picture.
+  While the caret is in a table, faint lines mark its cells, so a table
+  with no borders of its own can be filled in. The lines are not part of the
+  message and go when the caret leaves the table.
 
 - **Fixed: a message attached to another opened the Send file dialog**
   (#622). An attached message the sender gave no file name was listed as

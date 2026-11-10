@@ -58,6 +58,9 @@ pub(super) const PASTE_SCRIPT: &str = concat!("<script>", include_str!("paste.js
 /// view flattens the body first.
 pub(super) const FOLD_SCRIPT: &str = concat!("<script>", include_str!("fold.js"), "</script>");
 
+/// Faint guide lines on the cells of the table the caret is in (#623).
+pub(super) const TABLES_SCRIPT: &str = concat!("<script>", include_str!("tables.js"), "</script>");
+
 /// Grammar and style marks (#452), drawn over the text the user wrote once
 /// the host switches them on. See [`super::grammar`].
 pub(super) const GRAMMAR_SCRIPT: &str =
