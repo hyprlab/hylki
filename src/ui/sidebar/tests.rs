@@ -615,6 +615,9 @@ fn account_initials_take_two_words_then_the_address() {
     assert_eq!(account_initials("  émile  ", "x@y"), "É");
     assert_eq!(account_initials("", "work@example.org"), "W");
     assert_eq!(account_initials("   ", ""), "?");
+    assert_eq!(account_initials("Jane Doe (Work)", "x@y"), "JD");
+    assert_eq!(account_initials("(Work) jane", "x@y"), "J");
+    assert_eq!(account_initials("\"Jane\" .Doe", "x@y"), "JD");
 }
 
 #[test]

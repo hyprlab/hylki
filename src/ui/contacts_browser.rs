@@ -74,7 +74,10 @@ pub(super) fn present(
                 row.set_subtitle(&gtk::glib::markup_escape_text(&c.email));
             }
             row.set_activatable(true);
-            row.add_prefix(&adw::Avatar::new(32, Some(&c.name), true));
+            let avatar = adw::Avatar::new(32, Some(&c.name), true);
+            let initials = crate::ui::initials::InitialsPaintable::for_name(&c.name);
+            avatar.set_custom_image(initials.as_ref());
+            row.add_prefix(&avatar);
 
             let contact = c.clone();
             let cb = on_choose.clone();

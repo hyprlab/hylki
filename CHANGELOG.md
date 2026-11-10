@@ -13,6 +13,15 @@
   slow to answer. Versions before this one cannot open an encrypted cache, so
   turning it on asks first and says to turn it off before going back to one.
 
+- **Fixed: a name with a part in parentheses got a bracket for an initial**
+  (#627). libadwaita takes the first character of the first and last word,
+  so "Foo Bar (Baz)" showed "F(" and ".Foo" showed ".". Initials now skip
+  anything in parentheses and the punctuation a word starts with, as
+  libadwaita merge request 1848 proposes, so those read "FB" and "F". This
+  covers the message list, the reader's cards, the account circles, the
+  contacts window, the contact picker and the drag card. A name that is
+  nothing but a parenthesis keeps its letters.
+
 - **Fixed: cells copied from a spreadsheet pasted as a picture** (#623).
   LibreOffice Calc, like Word and other office programs, puts a picture of
   the selection on the clipboard beside the cells, and the composer always

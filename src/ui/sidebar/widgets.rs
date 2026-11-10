@@ -98,9 +98,9 @@ pub(super) fn account_gravatar(email: &str) -> Option<gtk::gdk::Texture> {
 }
 
 pub(crate) fn account_initials(name: &str, email: &str) -> String {
-    let mut it = name.split_whitespace();
-    let a = it.next().and_then(|w| w.chars().next());
-    let b = it.next().and_then(|w| w.chars().next());
+    let letters = crate::ui::initials::word_initials(name);
+    let a = letters.first().copied();
+    let b = letters.get(1).copied();
     match (a, b) {
         (Some(a), Some(b)) => format!("{a}{b}").to_uppercase(),
         (Some(a), None) => a.to_uppercase().to_string(),

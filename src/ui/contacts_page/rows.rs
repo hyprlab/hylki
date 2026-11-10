@@ -485,6 +485,9 @@ pub(super) fn avatar_with(c: &ContactDetails, size: i32, photo: Option<&[u8]>) -
     let avatar = adw::Avatar::new(size, Some(&c.name), !c.is_group());
     if c.is_group() {
         avatar.set_icon_name(Some("system-users-symbolic"));
+    } else if let Some(initials) = crate::ui::initials::InitialsPaintable::for_name(&c.name) {
+        // Ours, not libadwaita's: it reads "Foo Bar (Baz)" as "F(" (#627).
+        avatar.set_custom_image(Some(&initials));
     }
     if let Some(photo) = photo {
         let bytes = gtk::glib::Bytes::from(photo);

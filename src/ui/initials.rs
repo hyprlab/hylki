@@ -46,19 +46,48 @@ fn palette_index(text: &str) -> usize {
     (hash % PALETTE.len() as u32) as usize
 }
 
-/// The initials `adw::Avatar` would show for `text`: the first letter of
-/// the first word and of the last, uppercased; nothing for an empty name.
-fn initials_of(text: &str) -> String {
-    let upper = text.trim().to_uppercase();
-    let mut words = upper
-        .split_whitespace()
-        .filter(|w| w.chars().any(char::is_alphanumeric));
-    let Some(first) = words.next() else {
-        return String::new();
+/// The first letter or digit of each word of `text`, ignoring words in
+/// parentheses and any punctuation a word starts with: "Foo Bar (Baz)" and
+/// "\"Foo\" .Bar" both give F, B. libadwaita takes the first character as it
+/// stands, which turns those into "F(" and "\"." (#627, following
+/// libadwaita!1848). A name made only of a parenthesis keeps its words.
+pub(crate) fn word_initials(text: &str) -> Vec<char> {
+    let firsts = |t: &str| -> Vec<char> {
+        t.split_whitespace()
+            .filter_map(|w| w.chars().find(|c| c.is_alphanumeric()))
+            .collect()
     };
-    let mut out: String = first.chars().take(1).collect();
-    if let Some(last) = words.next_back() {
-        out.extend(last.chars().take(1));
+    let mut depth = 0usize;
+    let outside: String = text
+        .chars()
+        .filter(|&c| match c {
+            '(' => {
+                depth += 1;
+                false
+            }
+            ')' if depth > 0 => {
+                depth -= 1;
+                false
+            }
+            _ if depth > 0 => false,
+            _ => true,
+        })
+        .collect();
+    let found = firsts(&outside);
+    if found.is_empty() { firsts(text) } else { found }
+}
+
+/// The initials for `text`: the first letter of the first word and of the
+/// last, uppercased, as `adw::Avatar` picks them but by [`word_initials`];
+/// nothing for an empty name.
+fn initials_of(text: &str) -> String {
+    let letters = word_initials(&text.to_uppercase());
+    let mut out = String::new();
+    if let Some(first) = letters.first() {
+        out.push(*first);
+    }
+    if letters.len() > 1 {
+        out.extend(letters.last());
     }
     out
 }
@@ -410,6 +439,20 @@ mod tests {
         assert_eq!(initials_of("GNOME Foundation Board"), "GB");
         assert_eq!(initials_of("émile zola"), "ÉZ");
         assert_eq!(initials_of("  "), "");
+    }
+
+    #[test]
+    fn initials_skip_parentheses_and_punctuation() {
+        assert_eq!(initials_of("Marco Trevisan (3v1n0)"), "MT");
+        assert_eq!(initials_of(".Marco .Trevisan"), "MT");
+        assert_eq!(initials_of("Marco (Treviño)"), "M");
+        assert_eq!(initials_of("Marco (Treviño) (Trevi)"), "M");
+        assert_eq!(initials_of("Marco (Treviño) Trevisan"), "MT");
+        assert_eq!(initials_of("Marco Trevisan (Treviño (Trevi))"), "MT");
+        assert_eq!(initials_of("\"Foo Bar\" via List"), "FL");
+        assert_eq!(initials_of("Foo(Bar)"), "F");
+        assert_eq!(initials_of("(Support)"), "S");
+        assert_eq!(initials_of("--- ..."), "");
         // GLib's djb2, as libadwaita hashes the name for its color.
         assert_eq!(palette_index(""), (5381u32 % 14) as usize);
         assert!(palette_index("Marcus Chen") < PALETTE.len());
