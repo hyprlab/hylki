@@ -299,6 +299,10 @@ impl SimpleComponent for AppModel {
                     #[name = "content_stack"]
                     gtk::Stack {
                         set_hexpand: true,
+                        // Only the page on show asks for width: the
+                        // gallery's columns would hold the window wide
+                        // while the mail is showing (#624).
+                        set_hhomogeneous: false,
                         // Swap the mail panes for the attachments gallery or
                         // the contacts view, at once: no transition.
                         #[watch]

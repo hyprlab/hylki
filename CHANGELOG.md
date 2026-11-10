@@ -13,6 +13,14 @@
   slow to answer. Versions before this one cannot open an encrypted cache, so
   turning it on asks first and says to turn it off before going back to one.
 
+- **Changed: the window goes narrower with the reading pane below the list
+  or off** (#624). The window's minimum width was 904 pixels whatever the
+  layout, which kept it from tiling to half of a laptop screen. It now
+  follows what is on show: 480 pixels with the reader below the list, about
+  780 with the reader off and the toolbar in the list's header, and 904 as
+  before with the reader beside the list. The Attachments page no longer
+  holds the window wide while the mail is showing.
+
 - **Fixed: a name with a part in parentheses got a bracket for an initial**
   (#627). libadwaita takes the first character of the first and last word,
   so "Foo Bar (Baz)" showed "F(" and ".Foo" showed ".". Initials now skip
