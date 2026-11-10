@@ -10,6 +10,13 @@
   PDFs keep Hylki's own preview, and Enter opens a file as a double click
   does. The Flatpak gains `--talk-name=org.gnome.NautilusPreviewer` for it.
 
+- **Added: Contacts and Attachments in the launcher's menu** (by
+  ChrisLauinger77, #626). Right-clicking Hylki's icon in the dock or app grid
+  now offers **Contacts** and **Attachments** beside **New Message**, opening
+  the window on that view. From a terminal, `hylki --contacts` and
+  `hylki --attachments` do the same, and hand over to the window already
+  open.
+
 - **Added: the mail cache can be encrypted on disk** (by hanthor, #601).
   **Settings → Privacy → Encrypt stored mail**, off by default, makes
   `cache.db`, which holds every message and attachment kept on the computer,

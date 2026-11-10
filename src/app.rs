@@ -139,6 +139,7 @@ pub(crate) use model::AppModel;
 pub(crate) use msg::AppMsg;
 pub(crate) use uri_queue::{
     is_message_file, queue_attach_files, queue_mailto, queue_message_file, queue_mid,
+    queue_start_view,
 };
 
 use attachments::schedule_download_prune;
@@ -945,6 +946,7 @@ impl SimpleComponent for AppModel {
         model.init_compose_overlay(&widgets);
         model.init_gallery_page(&widgets, &sender);
         model.install_notification_actions(&sender);
+        model.install_view_actions(&sender);
         model.init_window_size(&root, &widgets, &sender);
         model.init_hover_peek(&widgets, &sender);
         model.sidebar_split = Some(widgets.sidebar_split.clone());

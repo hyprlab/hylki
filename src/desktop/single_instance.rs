@@ -26,6 +26,46 @@ impl UriKind {
     }
 }
 
+/// A view a launcher action opens (`hylki --contacts`, `hylki --attachments`):
+/// the desktop file's Contacts and Attachments actions.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum StartView {
+    Contacts,
+    Attachments,
+}
+
+impl StartView {
+    const ALL: [StartView; 2] = [StartView::Contacts, StartView::Attachments];
+
+    /// The command-line flag that asks for this view.
+    pub(crate) fn flag(self) -> &'static str {
+        match self {
+            StartView::Contacts => "--contacts",
+            StartView::Attachments => "--attachments",
+        }
+    }
+
+    /// The app action that shows it, which a second launch activates on the
+    /// running instance.
+    pub(crate) fn action(self) -> &'static str {
+        match self {
+            StartView::Contacts => "show-contacts",
+            StartView::Attachments => "show-attachments",
+        }
+    }
+
+    /// The view flags taken out of `args` (GTK would reject them as unknown,
+    /// as it would `--hidden`), and the last one asked for.
+    pub(crate) fn strip(mut args: Vec<String>) -> (Vec<String>, Option<StartView>) {
+        let view = args
+            .iter()
+            .rev()
+            .find_map(|a| Self::ALL.into_iter().find(|v| v.flag() == a));
+        args.retain(|a| !Self::ALL.iter().any(|v| v.flag() == a));
+        (args, view)
+    }
+}
+
 /// Whether another instance already owns the app's D-Bus name.
 pub(crate) fn primary_instance_running() -> bool {
     use gtk::glib::prelude::ToVariant;
@@ -67,9 +107,12 @@ pub(crate) fn primary_instance_running() -> bool {
 /// from whoever launched us: Nautilus's "Send by email", a mailto: link in
 /// a browser.)
 ///
+/// A `view` (a launcher action) is asked for with that app action instead of
+/// `Activate`; it goes through the same remote path, so it carries the token.
+///
 /// Returns false when no primary answered after all (it quit between the
 /// name check and the hand-off): the caller then starts normally.
-pub(crate) fn relay_to_primary(args: &[String]) -> bool {
+pub(crate) fn relay_to_primary(args: &[String], view: Option<StartView>) -> bool {
     use gtk::gio::prelude::ApplicationExt;
     let files: Vec<gtk::gio::File> = args
         .iter()
@@ -103,10 +146,20 @@ pub(crate) fn relay_to_primary(args: &[String]) -> bool {
         "handing off to the running instance ({} argument(s))",
         files.len()
     );
-    if files.is_empty() {
-        remote.activate();
-    } else {
-        remote.open(&files, "");
+    use gtk::gio::prelude::ActionGroupExt;
+    match view {
+        // A primary still starting up has not added the action yet: it
+        // only comes to the front then.
+        Some(view) if files.is_empty() && remote.has_action(view.action()) => {
+            remote.activate_action(view.action(), None);
+            // Unlike Activate and Open, an action goes out without waiting
+            // for a reply: flush it before the process ends.
+            if let Some(conn) = remote.dbus_connection() {
+                let _ = conn.flush_sync(gtk::gio::Cancellable::NONE);
+            }
+        }
+        _ if files.is_empty() => remote.activate(),
+        _ => remote.open(&files, ""),
     }
     // The call has been delivered (both are synchronous round trips). The
     // process ends right after this; letting the object go instead would
@@ -119,6 +172,23 @@ pub(crate) fn relay_to_primary(args: &[String]) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn view_flags_are_taken_out_of_the_arguments() {
+        let args = |a: &[&str]| a.iter().map(|s| s.to_string()).collect::<Vec<_>>();
+        assert_eq!(
+            StartView::strip(args(&["hylki", "--contacts"])),
+            (args(&["hylki"]), Some(StartView::Contacts))
+        );
+        assert_eq!(
+            StartView::strip(args(&["hylki", "--contacts", "mailto:", "--attachments"])),
+            (args(&["hylki", "mailto:"]), Some(StartView::Attachments))
+        );
+        assert_eq!(
+            StartView::strip(args(&["hylki", "a.pdf"])),
+            (args(&["hylki", "a.pdf"]), None)
+        );
+    }
 
     #[test]
     fn arguments_are_told_apart_by_their_scheme() {
