@@ -25,6 +25,12 @@ const GRAPH_IO_TIMEOUT: Duration = Duration::from_secs(60);
 /// worker blocked in it, every poll and Refresh queued behind, until the
 /// account was switched off and on (#618). A read that hears nothing for a
 /// minute fails instead, and the next poll dials again.
+///
+/// No connection is kept for the next request. ureq 2 clears a socket's
+/// timeouts when it goes back to the pool and sets them again only on a new
+/// connection, so a request sent on a kept one that died over a suspend
+/// waited for its answer with no deadline at all. A new connection each time
+/// is what Graph did before the shared agent, through `ureq::get`.
 fn agent() -> &'static ureq::Agent {
     static AGENT: OnceLock<ureq::Agent> = OnceLock::new();
     AGENT.get_or_init(|| build_agent(GRAPH_IO_TIMEOUT))
@@ -35,6 +41,7 @@ fn build_agent(io: Duration) -> ureq::Agent {
         .timeout_connect(GRAPH_CONNECT_TIMEOUT)
         .timeout_read(io)
         .timeout_write(io)
+        .max_idle_connections(0)
         .build()
 }
 
@@ -284,5 +291,49 @@ mod tests {
         assert!(r.is_err());
         assert!(started.elapsed() < Duration::from_secs(2));
         held.join().unwrap();
+    }
+
+    /// The request after a successful one, to a server that stops answering:
+    /// it fails at the read deadline too, rather than riding a kept
+    /// connection whose timeouts ureq has cleared (#618).
+    #[test]
+    fn the_next_request_times_out_too() {
+        use std::io::{Read, Write};
+        fn read_head(conn: &mut std::net::TcpStream) {
+            let mut head = Vec::new();
+            let mut byte = [0];
+            while !head.ends_with(b"\r\n\r\n") {
+                conn.read_exact(&mut byte).unwrap();
+                head.push(byte[0]);
+            }
+        }
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let addr = listener.local_addr().unwrap();
+        let server = std::thread::spawn(move || {
+            let (mut first, _) = listener.accept().unwrap();
+            read_head(&mut first);
+            first
+                .write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: keep-alive\r\n\r\n{}")
+                .unwrap();
+            // Whatever comes next, on this connection or a new one, gets
+            // no answer.
+            listener.set_nonblocking(true).unwrap();
+            let mut held = vec![first];
+            let until = std::time::Instant::now() + Duration::from_secs(3);
+            while std::time::Instant::now() < until {
+                if let Ok((conn, _)) = listener.accept() {
+                    held.push(conn);
+                }
+                std::thread::sleep(Duration::from_millis(20));
+            }
+        });
+        let agent = build_agent(Duration::from_millis(300));
+        let url = format!("http://{addr}/");
+        let first: serde_json::Value = agent.get(&url).call().unwrap().into_json().unwrap();
+        assert!(first.is_object());
+        let started = std::time::Instant::now();
+        assert!(agent.get(&url).call().is_err());
+        assert!(started.elapsed() < Duration::from_secs(2));
+        server.join().unwrap();
     }
 }

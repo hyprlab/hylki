@@ -41,7 +41,10 @@
   connection died while the computer slept waited for it forever, and every
   later check and Refresh queued behind it until the account was switched off
   and on. A request now fails after a minute without an answer (half a minute
-  for a sign-in renewal), and the next check connects again.
+  for a sign-in renewal), and the next check connects again. Each request
+  opens its own connection: 1.48.0-beta.4 kept connections for the next
+  request, and the HTTP library drops the deadline from a kept one, so a
+  connection that died during a suspend could still hold the account.
 
 - **Fixed: choosing a CSV file from the merge field button stopped the window
   responding** (#617, reported by samuel-edlmeier). The field list tried to

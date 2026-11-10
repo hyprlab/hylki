@@ -14,7 +14,8 @@ use super::flow::Authorization;
 /// The token endpoint and the sign-in's `/me`, with deadlines: a refresh
 /// runs ahead of every mail request once the access token expires, so one
 /// that waited forever on a dead connection stopped the account's mail with
-/// it (#618).
+/// it (#618). A new connection for every request: ureq 2 leaves a kept one
+/// with no timeouts (see the Graph agent in `worker::graph::http`).
 fn agent() -> &'static ureq::Agent {
     static AGENT: OnceLock<ureq::Agent> = OnceLock::new();
     AGENT.get_or_init(|| {
@@ -22,6 +23,7 @@ fn agent() -> &'static ureq::Agent {
             .timeout_connect(Duration::from_secs(20))
             .timeout_read(Duration::from_secs(30))
             .timeout_write(Duration::from_secs(30))
+            .max_idle_connections(0)
             .build()
     })
 }
