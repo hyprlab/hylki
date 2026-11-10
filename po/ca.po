@@ -1094,6 +1094,10 @@ msgstr "Negreta, cursiva, subratllat"
 msgid "Preview the highlighted attachment"
 msgstr "Previsualitza l'adjunt ressaltat"
 
+#, fuzzy
+msgid "Open the highlighted attachment"
+msgstr "Previsualitza l'adjunt ressaltat"
+
 msgid "Previous or next in the gallery's preview"
 msgstr "Anterior o següent a la previsualització de la galeria"
 

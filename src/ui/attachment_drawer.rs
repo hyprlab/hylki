@@ -162,10 +162,14 @@ pub(crate) enum AttachmentDrawerInput {
     Open(usize),
     /// Import an attached OpenPGP public key into the keyring (#133).
     ImportKey(usize),
-    /// Activate a cell/row (display order) — double-click, or Space/Enter on
+    /// Activate a cell/row (display order) — double-click, or Enter on
     /// the highlighted one: preview images and PDFs in the lightbox, open
     /// anything else in its default app.
     Activate(usize),
+    /// Space, or Preview in the menu: as [`Self::Activate`], except that
+    /// what the lightbox cannot show goes to the file previewer when there
+    /// is one (#625).
+    Preview(usize),
     /// Save an attachment to disk (file chooser).
     Download(usize),
     /// Scroll the reader to the message the attachment belongs to (#213).
@@ -591,6 +595,7 @@ impl SimpleComponent for AttachmentDrawer {
                 }
             }
             AttachmentDrawerInput::Activate(i) => self.activate(i, &sender),
+            AttachmentDrawerInput::Preview(i) => self.preview(i, &sender),
             AttachmentDrawerInput::SaveAll => {
                 self.save_all();
             }

@@ -1087,6 +1087,10 @@ msgstr "Fett, kursiv, unterstrichen"
 msgid "Preview the highlighted attachment"
 msgstr "Vorschau des hervorgehobenen Anhangs anzeigen"
 
+#, fuzzy
+msgid "Open the highlighted attachment"
+msgstr "Vorschau des hervorgehobenen Anhangs anzeigen"
+
 msgid "Previous or next in the gallery's preview"
 msgstr "Vorheriges oder nächstes Element in der Galerie-Vorschau"
 

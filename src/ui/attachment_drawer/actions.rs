@@ -125,6 +125,19 @@ impl AttachmentDrawer {
                 .emit(AttachmentDrawerInput::Download(index))
         })
         .icon("folder-download-symbolic");
+        let mut first = vec![open, download];
+        if self
+            .item_at(index)
+            .is_some_and(|a| previewable(a) || crate::desktop::previewer::available())
+        {
+            let s = sender.clone();
+            let preview = MenuEntry::new(i18n("Preview"), move || {
+                s.input_sender().emit(AttachmentDrawerInput::Preview(index))
+            })
+            .icon("view-reveal-symbolic")
+            .accel("space");
+            first.insert(0, preview);
+        }
         // The drawer gathers the whole conversation's files; this finds the
         // message a file came with (#213).
         let s = sender.clone();
@@ -147,12 +160,7 @@ impl AttachmentDrawer {
             .child_at_index(index as i32)
             .map(|c| c.upcast())
             .unwrap_or_else(|| self.flow.clone().upcast());
-        show_context_menu(
-            &parent,
-            x,
-            y,
-            vec![vec![open, download], vec![show], vec![delete]],
-        );
+        show_context_menu(&parent, x, y, vec![first, vec![show], vec![delete]]);
     }
 
     /// Ask the app to show its full-window lightbox over the message's
@@ -253,7 +261,42 @@ impl AttachmentDrawer {
         }
     }
 
-    /// A double click, Space or Return on a file.
+    /// Space, or Preview in the menu: images and PDFs in the lightbox,
+    /// attached messages in a window, anything else in the file previewer, with the arrow keys there
+    /// stepping through the drawer's files and its highlight following.
+    /// Without a previewer it is a double click.
+    pub(super) fn preview(&mut self, i: usize, sender: &ComponentSender<Self>) {
+        let Some(att) = self.item_at(i) else {
+            return;
+        };
+        // An attached message reads best in a window of Hylki's own (#622).
+        if previewable(att)
+            || crate::mail::message_file::is_message(&att.name, &att.data)
+            || !crate::desktop::previewer::available()
+        {
+            self.activate(i, sender);
+            return;
+        }
+        let files: Vec<Attachment> = (0..self.display_order.len())
+            .filter_map(|d| self.item_at(d).cloned())
+            .collect();
+        let flow = self.flow.downgrade();
+        let follow = move |at: usize| {
+            if let Some(flow) = flow.upgrade() {
+                if let Some(child) = flow.child_at_index(at as i32) {
+                    flow.select_child(&child);
+                }
+            }
+        };
+        crate::desktop::previewer::show(
+            files,
+            i,
+            self.window().as_ref(),
+            Some(std::rc::Rc::new(follow)),
+        );
+    }
+
+    /// A double click, or Return on a file.
     pub(super) fn activate(&mut self, i: usize, sender: &ComponentSender<Self>) {
         // Single clicks do nothing at all (a first click must never
         // steal the second — a modal lightbox on click one made the

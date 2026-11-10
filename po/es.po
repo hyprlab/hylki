@@ -1083,6 +1083,10 @@ msgstr "Negrita, cursiva y subrayado"
 msgid "Preview the highlighted attachment"
 msgstr "Vista previa del archivo adjunto resaltado"
 
+#, fuzzy
+msgid "Open the highlighted attachment"
+msgstr "Vista previa del archivo adjunto resaltado"
+
 msgid "Previous or next in the gallery's preview"
 msgstr "Anterior o siguiente en la vista previa de la galería"
 

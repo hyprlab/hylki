@@ -7,23 +7,24 @@ use relm4::prelude::*;
 
 use super::{AttachmentDrawer, AttachmentDrawerInput};
 
-/// Space (or Enter) previews the highlighted attachment — the keyboard
-/// side of the single-click-then-preview flow (issue #37).
+/// Space previews the highlighted attachment and Enter opens it, as a
+/// double click does: the keyboard side of the single-click-then-preview
+/// flow (issue #37). They differ only for what the lightbox cannot show,
+/// which Space hands to the file previewer as Files does (#625).
 pub(super) fn activate_on_keys(flow: &gtk::FlowBox, sender: &ComponentSender<AttachmentDrawer>) {
     let key = gtk::EventControllerKey::new();
     let s = sender.clone();
     let flow_ref = flow.clone();
     key.connect_key_pressed(move |_, keyval, _, _| {
         use gtk::gdk::Key;
-        if matches!(
-            keyval,
-            Key::space | Key::KP_Space | Key::Return | Key::KP_Enter
-        ) {
-            if let Some(child) = flow_ref.selected_children().first() {
-                s.input_sender()
-                    .emit(AttachmentDrawerInput::Activate(child.index() as usize));
-                return gtk::glib::Propagation::Stop;
-            }
+        let input = match keyval {
+            Key::space | Key::KP_Space => AttachmentDrawerInput::Preview,
+            Key::Return | Key::KP_Enter => AttachmentDrawerInput::Activate,
+            _ => return gtk::glib::Propagation::Proceed,
+        };
+        if let Some(child) = flow_ref.selected_children().first() {
+            s.input_sender().emit(input(child.index() as usize));
+            return gtk::glib::Propagation::Stop;
         }
         gtk::glib::Propagation::Proceed
     });

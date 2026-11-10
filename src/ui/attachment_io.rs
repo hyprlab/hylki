@@ -193,7 +193,7 @@ fn open_now(name: &str, data: &[u8], parent: Option<&gtk::Window>) {
 
 /// Write an attachment's bytes to a fresh private file, under its name made
 /// safe (see `open_now`), and return where.
-fn stage(name: &str, data: &[u8]) -> Option<std::path::PathBuf> {
+pub(crate) fn stage(name: &str, data: &[u8]) -> Option<std::path::PathBuf> {
     let safe: String = name
         .chars()
         .map(|c| {

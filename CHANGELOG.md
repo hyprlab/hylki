@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Added: attachments preview in the GNOME file previewer** (#625). Where
+  Sushi is installed, Space on a file in the attachment drawer, or Preview
+  in the right-click menu of a file in the drawer, the attachment gallery or
+  the composer, shows it in Sushi over Hylki's window, as Space does in GNOME
+  Files. The arrow keys there step through the drawer's files. Pictures and
+  PDFs keep Hylki's own preview, and Enter opens a file as a double click
+  does. The Flatpak gains `--talk-name=org.gnome.NautilusPreviewer` for it.
+
 - **Added: the mail cache can be encrypted on disk** (by hanthor, #601).
   **Settings → Privacy → Encrypt stored mail**, off by default, makes
   `cache.db`, which holds every message and attachment kept on the computer,
