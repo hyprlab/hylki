@@ -1370,6 +1370,19 @@ still starts the next item, and pressed twice in a quote it still leaves the
 quote. The setting applies when a composer opens. Markdown, HTML and plain
 text are written as source, where <kbd>Return</kbd> is always a new line.
 
+### Pasting
+
+**Settings → Composing → Paste as plain text**, on by default, makes
+<kbd>Ctrl+V</kbd> paste the clipboard's text without its formatting. Cells
+copied from a spreadsheet, such as LibreOffice Calc, are the exception: they
+arrive as their table, with the fonts, colors, borders and column widths the
+spreadsheet gave them, as other mail clients show them. A single cell
+arrives as its value. With the setting off, <kbd>Ctrl+V</kbd> keeps the
+formatting of whatever is pasted. Right-clicking the text offers **Paste
+with Formatting** and **Paste as Plain Text** either way, and
+<kbd>Ctrl+Shift+V</kbd> pastes the text alone, so cells arrive as text
+separated by tabs.
+
 ### The formatting toolbar
 
 The rich text editor's toolbar has bold, italic, underline, strikethrough,

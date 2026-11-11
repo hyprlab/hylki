@@ -897,13 +897,21 @@
     out = out.replace(/\r\n|\r|\n/g,'<br>');
     document.execCommand('insertHTML', false, out);
   }
+  /* Ctrl+Shift+V is WebKit's own Paste as Plain Text, and its paste event
+     looks like any other: the key is what tells it apart. */
+  var textKey = false;
+  document.addEventListener('keydown', function(e){
+    textKey = (e.ctrlKey || e.metaKey) && e.shiftKey && !e.altKey && /^v$/i.test(e.key);
+  }, true);
   document.addEventListener('paste', function(e){
     var cd = e.clipboardData; if(!cd) return;
+    var once = window.__hylkiPasteOnce, asText = textKey;
+    window.__hylkiPasteOnce = null;
+    textKey = false;
     /* Plain text takes the clipboard's text and nothing else: no
        formatting, no picture, no link made of an address. Its indents
        stay, as typed ones do (#635). */
     if(window.__hylkiPlain){
-      window.__hylkiPasteOnce = null;
       e.preventDefault();
       var t = cd.getData('text/plain');
       if(t) document.execCommand('insertHTML', false, t.split(/\r\n|\r|\n/)
@@ -917,9 +925,9 @@
        picture's HTML is a bare <img>. DOMParser builds an inert document,
        so nothing in the markup runs or loads. */
     var its = cd.items || [];
-    var h0 = cd.getData('text/html');
-    var words = !!h0 && !!new DOMParser().parseFromString(h0, 'text/html')
-      .body.textContent.trim();
+    var html = cd.getData('text/html');
+    var doc = html ? new DOMParser().parseFromString(html, 'text/html') : null;
+    var words = !!doc && !!doc.body.textContent.trim();
     for(var i = 0; i < its.length && !words; i++){
       if(its[i].kind === 'file' && /^image\//.test(its[i].type)){
         e.preventDefault();
@@ -927,9 +935,22 @@
         return;
       }
     }
-    var rich = window.__hylkiPasteRich === true;
-    if(window.__hylkiPasteOnce !== null){ rich = window.__hylkiPasteOnce; window.__hylkiPasteOnce = null; }
-    var html = h0;
+    /* true keeps the formatting, false takes the text; 'cells' (Ctrl+V
+       with Paste as plain text set) takes the text, but a spreadsheet's
+       cells as the table they are, which their text cannot show. */
+    var rich = once !== null ? once : window.__hylkiPasteRich === true;
+    if(asText) rich = false;
+    if(rich !== false && doc){
+      var sheet = window.__hylkiSheet(doc, rich === true);
+      if(sheet){
+        e.preventDefault();
+        /* The break gives the caret a line below the table to go on
+           writing on, where it would be left in the last cell. */
+        document.execCommand('insertHTML', false, sheet + '<br>');
+        return;
+      }
+    }
+    rich = rich === true;
     var text = cd.getData('text/plain');
     if(rich && html) return;                 // native paste keeps the formatting
     if(!text) return;                        // no text flavour; let WebKit try

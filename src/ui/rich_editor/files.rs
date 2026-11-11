@@ -81,6 +81,39 @@ fn data_uri_to_temp_file(uri: &str) -> Option<std::path::PathBuf> {
     Some(path)
 }
 
+/// What a paste keeps of what the clipboard holds.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum PasteAs {
+    /// The formatting, as WebKit pastes it.
+    Formatted,
+    /// The text and nothing else.
+    Text,
+    /// The text, but a spreadsheet's cells as their table (#623): Ctrl+V
+    /// with Paste as plain text set, where the tab-separated text of the
+    /// cells is no use in a message.
+    TextOrCells,
+}
+
+impl PasteAs {
+    /// Ctrl+V's, from the "Paste as plain text" preference.
+    pub(crate) fn preferred(paste_plain: bool) -> Self {
+        if paste_plain {
+            Self::TextOrCells
+        } else {
+            Self::Formatted
+        }
+    }
+
+    /// The value of `__hylkiPasteOnce` the paste handler reads.
+    fn js(self) -> &'static str {
+        match self {
+            Self::Formatted => "true",
+            Self::Text => "false",
+            Self::TextOrCells => "'cells'",
+        }
+    }
+}
+
 /// One paste in an explicit mode: arm the document's one-shot flag, then run
 /// the editing command once the flag is in place (the callback orders the two,
 /// since both travel to the web process asynchronously). The DOM paste handler
@@ -92,7 +125,12 @@ fn data_uri_to_temp_file(uri: &str) -> Option<std::path::PathBuf> {
 /// `clipboardData` and the bare path arrives as text. The formats are checked
 /// synchronously so an ordinary text paste is not delayed by a read that was
 /// always going to fail.
-pub(super) fn paste_into(webview: &webkit6::WebView, rich: bool, cb: &AttachCallback, plain: bool) {
+pub(super) fn paste_into(
+    webview: &webkit6::WebView,
+    mode: PasteAs,
+    cb: &AttachCallback,
+    plain: bool,
+) {
     if webview
         .clipboard()
         .formats()
@@ -112,20 +150,20 @@ pub(super) fn paste_into(webview: &webkit6::WebView, rich: bool, cb: &AttachCall
                 // Nothing usable on the clipboard after all: the ordinary
                 // paste still owes the user whatever else is on it.
                 if !taken {
-                    paste_via_webkit(&v, rich);
+                    paste_via_webkit(&v, mode);
                 }
             },
         );
         return;
     }
-    paste_via_webkit(webview, rich);
+    paste_via_webkit(webview, mode);
 }
 
 /// The stock paste: arm the one-shot mode flag, then let WebKit paste.
-fn paste_via_webkit(webview: &webkit6::WebView, rich: bool) {
+fn paste_via_webkit(webview: &webkit6::WebView, mode: PasteAs) {
     let v = webview.clone();
     webview.evaluate_javascript(
-        &format!("window.__hylkiPasteOnce={rich};"),
+        &format!("window.__hylkiPasteOnce={};", mode.js()),
         None,
         None,
         gtk::gio::Cancellable::NONE,

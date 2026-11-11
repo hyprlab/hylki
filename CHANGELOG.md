@@ -103,11 +103,19 @@
   LibreOffice Calc, like Word and other office programs, puts a picture of
   the selection on the clipboard beside the cells, and the composer always
   took the picture. When the clipboard's HTML holds text, the paste now uses
-  it, so the cells arrive as a table, or as tab-separated text when pasting
-  as plain text. A copied picture still pastes as a picture.
-  While the caret is in a table, faint lines mark its cells, so a table
-  with no borders of its own can be filled in. The lines are not part of the
-  message and go when the caret leaves the table.
+  it. A copied picture still pastes as a picture.
+  The cells arrive as a table that looks as it does in other mail clients:
+  the font, colors, borders and column widths the spreadsheet set, which
+  Calc keeps partly in a stylesheet the paste used to drop, are written onto
+  the table, so they go out with the message too. Ctrl+V pastes
+  them as a table even with **Paste as plain text** on, the default, where it
+  used to give tab-separated text; a single cell still arrives as its value,
+  and Ctrl+Shift+V or **Paste as Plain Text** gives the text. In a
+  dark composer the table shows on the white it was made on, a double line
+  is drawn as two, and the typing goes on below the table.
+  While the caret is in a table, faint lines mark the cells that have no
+  borders of their own, so such a table can be filled in. The lines are not
+  part of the message and go when the caret leaves the table.
 
 - **Fixed: indented text lost its indent in the composer** (#635). Text
   pasted without formatting, and a plain-text draft opened again, lost the

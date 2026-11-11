@@ -6,7 +6,7 @@ use super::fonts::EDITOR_FONT;
 use super::fonts::{body_font, font_style};
 use super::scripts::{
     EMOJI_SCRIPT, FOLD_SCRIPT, GRAMMAR_SCRIPT, HISTORY_SCRIPT, LINES_SCRIPT, PASTE_SCRIPT,
-    TABLES_SCRIPT,
+    SHEETS_SCRIPT, TABLES_SCRIPT,
 };
 use super::signature::{find_src_attr, quoted_value};
 use super::toolbar::js_str;
@@ -51,7 +51,7 @@ pub(super) fn document(
          window.__hylkiFoldQuote={fold_quote};\
          window.__hylkiFoldTips={fold_tips};\
          window.__hylkiPlain={plain};</script>\
-         {LINES_SCRIPT}{PASTE_SCRIPT}{FOLD_SCRIPT}{HISTORY_SCRIPT}{EMOJI_SCRIPT}\
+         {LINES_SCRIPT}{SHEETS_SCRIPT}{PASTE_SCRIPT}{FOLD_SCRIPT}{HISTORY_SCRIPT}{EMOJI_SCRIPT}\
          {GRAMMAR_SCRIPT}{TABLES_SCRIPT}"
     );
     let (plain_attr, plain_css) = if plain {
@@ -115,6 +115,11 @@ pub(super) fn document(
               ground it was designed for. */\
            blockquote.hylki-quote-mail{{background:#ffffff;color:#1e1e1e;\
              color-scheme:light;}}\
+           /* So is a spreadsheet's table (#623), black on white as the\
+              program drew it: its black lines vanish on a dark ground. */\
+           table.hylki-sheet{{background:#ffffff;color:#000000;\
+             color-scheme:light;}}\
+           table.hylki-sheet a{{color:#0000ee;}}\
            .hylki-sig{{opacity:0.85;}}\
            /* The font set for new messages is for what is written here,\
               the signature included (#548), which its editor shows in that\

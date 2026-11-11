@@ -22,6 +22,7 @@ pub(crate) use documents::remote_image_urls;
 use documents::{document, preview_document, source_document};
 pub(crate) use files::is_inline_image;
 use files::{deliver_files, paste_into};
+pub(crate) use files::PasteAs;
 pub(crate) use fonts::{choose_family, compose_font_choices, preview_font, recent_font_css, SIZES};
 pub(crate) use signature::{signature_from_source, signature_to_html};
 pub(crate) use spelling::apply_spellcheck;
@@ -377,11 +378,11 @@ impl RichEditor {
         );
     }
 
-    /// Paste the clipboard into the editor, keeping (`rich`) or stripping the
-    /// clipboard's formatting for this one paste, whatever the standing
+    /// Paste the clipboard into the editor, keeping as much of its
+    /// formatting as `mode` says for this one paste, whatever the standing
     /// preference says.
-    pub(super) fn paste(&self, rich: bool) {
-        paste_into(&self.webview, rich, &self.attach_cb, self.plain.get());
+    pub(super) fn paste(&self, mode: PasteAs) {
+        paste_into(&self.webview, mode, &self.attach_cb, self.plain.get());
     }
 
     /// Whether the body has been edited since it was loaded (async read of a JS
@@ -683,7 +684,7 @@ mod pinned_tests {
         assert_eq!(fnv(HISTORY_SCRIPT), (1287, 0x8e997368982bb599));
         assert_eq!(fnv(EMOJI_SCRIPT), (1621, 0x748b009b19f3f0ec));
         assert_eq!(fnv(LINES_SCRIPT), (5153, 0xb927290405c83fda));
-        assert_eq!(fnv(PASTE_SCRIPT), (41465, 0x16a591f82bc0a659));
+        assert_eq!(fnv(PASTE_SCRIPT), (42419, 0xc08840b92b48929b));
     }
 
     #[test]
