@@ -446,6 +446,7 @@ impl AppModel {
             chevrons_left: prefs.chevrons_left,
             account_click_folds: prefs.account_click_folds,
             start_view,
+            stand_in: false,
             folder_sort: prefs.folder_sort,
             console_mode: prefs.console_mode,
             status_bar_top: prefs.status_bar_top,

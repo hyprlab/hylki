@@ -70,6 +70,18 @@
   star changes to one message that queue up while the server is busy are
   sent as the last one only.
 
+- **Fixed: Open at startup and the window size were forgotten after a
+  logout** (#642). The window size was saved only when the window closed,
+  so a logout, a restart or an update, or a resize after closing to the
+  background, lost it; it is now saved a second after it changes. The view
+  set under **Settings → Sidebar → Open at startup** waited five seconds
+  from launch for its account, and a slow start (a login, the first start
+  after an update) ran that out and opened All Inboxes, which then replaced
+  the remembered view. The wait now starts once the account is listed, and a
+  stand-in view is never remembered. Settings files are written beside the
+  old one and then put in its place, so a write cut short by a logout no
+  longer leaves an empty file that resets every remembered setting.
+
 - **Fixed: mail sent as an alias with its own SMTP server was kept
   nowhere** (#640). With **Server saves its own copy of sent mail** on, Hylki
   saved no copy of anything it sent, but the server only sees mail that

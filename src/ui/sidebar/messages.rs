@@ -197,6 +197,10 @@ pub(crate) enum SidebarInput {
 
 #[derive(Debug)]
 pub(crate) enum SidebarOutput {
+    /// The launch view could not be shown, and the view picked next is a
+    /// stand-in: the app must not remember it as the one to open next
+    /// time (#642).
+    StandIn,
     /// The unified sections' open state changed (a click, or the rail's
     /// fold-up) — for persistence.
     SectionsOpen {

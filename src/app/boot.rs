@@ -153,17 +153,26 @@ fn load_accounts(sidebar_state: &mut config::SidebarState) -> Vec<AccountConfig>
 }
 
 /// The view the sidebar picks first instead of All Inboxes (#256), from
-/// Settings → General's start view and the last view left.
-pub(super) fn start_target(start_view: config::StartView) -> Option<StartTarget> {
+/// Settings → General's start view and the last view left. Only for an
+/// account that will be listed: the sidebar waits for it.
+pub(super) fn start_target(
+    start_view: config::StartView,
+    accounts: &[AccountConfig],
+) -> Option<StartTarget> {
     let (last, last_account) = config::load_last_view();
+    let listed = |email: &String| {
+        accounts
+            .iter()
+            .any(|a| a.enabled && a.email.eq_ignore_ascii_case(email))
+    };
+    let (last, last_account) = (
+        last.filter(|v| listed(&v.email)),
+        Some(last_account).filter(listed),
+    );
     match start_view {
         config::StartView::AllInboxes => None,
-        config::StartView::AccountInbox => Some(last_account)
-            .filter(|e| !e.is_empty())
-            .map(StartTarget::Inbox),
-        config::StartView::LastFolder => last
-            .filter(|v| !v.email.is_empty())
-            .map(|v| StartTarget::Folder(v.email, v.path)),
+        config::StartView::AccountInbox => last_account.map(StartTarget::Inbox),
+        config::StartView::LastFolder => last.map(|v| StartTarget::Folder(v.email, v.path)),
     }
 }
 

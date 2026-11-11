@@ -83,6 +83,7 @@ impl AppModel {
             | AppMsg::OpenAttachmentMessage { .. }) => self.on_gallery(msg),
             msg @ (AppMsg::UnifiedSelected(..)
             | AppMsg::AccountStarredSelected(..)
+            | AppMsg::StandInView
             | AppMsg::FolderSelected { .. }) => self.on_navigation(msg, sender),
             msg @ (AppMsg::AccountFolded { .. }
             | AppMsg::ToggleCustomFolders(..)

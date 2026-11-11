@@ -529,11 +529,37 @@ impl Sidebar {
 }
 
 impl Sidebar {
-    pub(super) fn on_drop_start(&mut self) {
+    pub(super) fn on_drop_start(&mut self, sender: &ComponentSender<Self>) {
+        self.start_wait = false;
         let waited = self.start.take().is_some() | self.reannounce.take().is_some();
         if waited && self.selected == Sel::None {
+            let _ = sender.output(SidebarOutput::StandIn);
             self.restore_selection();
         }
+    }
+
+    /// Give the launch view's account five seconds to list its folders,
+    /// counted from when the account itself is listed (#642). Its cached
+    /// folders come with it; with none cached they wait on the network,
+    /// which an account offline at launch never reaches. Counted from
+    /// launch, as before, a slow start (a login, a cache brought up to date
+    /// after an upgrade) ran the time out before any account was listed.
+    pub(super) fn wait_for_start(&mut self, sender: &ComponentSender<Self>) {
+        let Some(StartTarget::Inbox(email) | StartTarget::Folder(email, _)) = &self.start else {
+            return;
+        };
+        let bare = self
+            .sections
+            .iter()
+            .any(|s| s.account.email.eq_ignore_ascii_case(email) && s.folders.is_empty());
+        if self.start_wait || !bare {
+            return;
+        }
+        self.start_wait = true;
+        let s = sender.input_sender().clone();
+        gtk::glib::timeout_add_seconds_local_once(5, move || {
+            let _ = s.send(SidebarInput::DropStart);
+        });
     }
 
     pub(super) fn on_reannounce(&mut self, sender: ComponentSender<Self>) {

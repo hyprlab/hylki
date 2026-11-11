@@ -151,6 +151,8 @@ pub(crate) enum AppMsg {
     /// An account's starred mail, for an account with no Starred folder
     /// (#482): the unified Starred view narrowed to it.
     AccountStarredSelected(u32),
+    /// The sidebar's next pick stands in for the launch view (#642).
+    StandInView,
     /// A folder row was chosen (the sidebar, the command palette): list it.
     FolderSelected {
         account_id: u32,

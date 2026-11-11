@@ -15,6 +15,7 @@ impl Sidebar {
             sender,
         );
         self.restore_selection();
+        self.wait_for_start(sender);
     }
 
     /// Rebuild the list: optional unified row, then per-account headers with

@@ -14,7 +14,7 @@ use crate::ui::message_view::{MessageView, MessageViewOutput};
 use crate::ui::notifications::{NotificationCenter, NotifyOutput};
 use crate::ui::preferences::PrefOutput;
 use crate::ui::reader_swap::ReaderSwap;
-use crate::ui::sidebar::{Sidebar, SidebarInput, SidebarOutput};
+use crate::ui::sidebar::{Sidebar, SidebarOutput};
 
 use super::attachments::AttachmentTarget;
 use super::boot::{sidebar_init, start_target, Boot};
@@ -310,6 +310,7 @@ pub(super) fn sidebar_output_msg(out: SidebarOutput) -> AppMsg {
         SidebarOutput::UnifiedSelected => {
             AppMsg::UnifiedSelected(UnifiedView::Kind(FolderKind::Inbox))
         }
+        SidebarOutput::StandIn => AppMsg::StandInView,
         SidebarOutput::UnifiedKindSelected(kind) => {
             AppMsg::UnifiedSelected(UnifiedView::Kind(kind))
         }
@@ -457,8 +458,7 @@ impl Children {
         } else {
             boot.prefs.show_attachments
         };
-        let start = start_target(boot.prefs.start_view);
-        let start_pending = start.is_some();
+        let start = start_target(boot.prefs.start_view, &boot.config);
         let sidebar = Sidebar::builder()
             .launch(sidebar_init(
                 &boot.sidebar_state,
@@ -468,14 +468,6 @@ impl Children {
                 start,
             ))
             .forward(sender.input_sender(), sidebar_output_msg);
-        // The sidebar waits for the launch view's account to list its
-        // folders; one that is offline with nothing cached never does.
-        if start_pending {
-            let s = sidebar.sender().clone();
-            gtk::glib::timeout_add_seconds_local_once(5, move || {
-                let _ = s.send(SidebarInput::DropStart);
-            });
-        }
         // The peek panel's rows: a second, always-expanded instance.
         let peek_sidebar = Sidebar::builder()
             .launch(sidebar_init(

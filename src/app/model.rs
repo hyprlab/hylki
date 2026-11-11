@@ -631,6 +631,9 @@ pub(crate) struct AppModel {
     pub(super) account_click_folds: bool,
     /// What the window shows at launch (#256).
     pub(super) start_view: config::StartView,
+    /// The view about to open stands in for a launch view that could not
+    /// be shown, and is not remembered as the last one (#642).
+    pub(super) stand_in: bool,
     /// How accounts' folders are sorted, unless an account chooses
     /// (Settings → Sidebar).
     pub(super) folder_sort: config::FolderSort,
