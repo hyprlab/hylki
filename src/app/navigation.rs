@@ -124,7 +124,8 @@ impl AppModel {
         sender: &ComponentSender<Self>,
     ) {
         let t_open = std::time::Instant::now();
-        if view == UnifiedView::Kind(FolderKind::Inbox) && !demo_mode() {
+        let stand_in = std::mem::take(&mut self.stand_in);
+        if view == UnifiedView::Kind(FolderKind::Inbox) && !demo_mode() && !stand_in {
             config::save_last_view(config::LastView::default());
         }
         self.close_sidebar_peek();
@@ -352,7 +353,11 @@ impl AppModel {
         path: String,
     ) {
         // For "Open at startup" (#256). The demo's accounts are not real.
-        if let Some(email) = self.email_of(account_id).filter(|_| !demo_mode()) {
+        let stand_in = std::mem::take(&mut self.stand_in);
+        if let Some(email) = self
+            .email_of(account_id)
+            .filter(|_| !demo_mode() && !stand_in)
+        {
             config::save_last_view(config::LastView {
                 email,
                 path: path.clone(),
@@ -454,6 +459,8 @@ impl AppModel {
             AppMsg::UnifiedSelected(view) => {
                 self.open_unified(view, &sender);
             }
+
+            AppMsg::StandInView => self.stand_in = true,
 
             AppMsg::AccountStarredSelected(account_id) => {
                 self.open_unified_in(

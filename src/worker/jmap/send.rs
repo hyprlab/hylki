@@ -229,7 +229,8 @@ fn jmap_reply_target(
     cache: Option<&Cache>,
     in_reply_to: &str,
 ) -> Option<(u32, String, String)> {
-    let path = reply_copy_path(account, account_id, cache, in_reply_to)?;
+    // JMAP submits through its own server, never an alias's SMTP.
+    let path = reply_copy_path(account, account_id, cache, in_reply_to, None)?;
     let (folder_id, mailbox_id) = state.folders.get(&path).cloned()?;
     Some((folder_id, path, mailbox_id))
 }

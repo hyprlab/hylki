@@ -803,6 +803,13 @@ impl AppModel {
         self.refresh_own_faces();
         self.warm_own_gravatars(sender);
         self.spawn_workers(sender);
+        // The sidebar gives the launch view's account a while to list its
+        // folders once it is listed itself (#642). An account whose worker
+        // never lists it at all must not leave the window without a view.
+        let s = self.sidebar.sender().clone();
+        gtk::glib::timeout_add_seconds_local_once(30, move || {
+            let _ = s.send(SidebarInput::DropStart);
+        });
     }
 }
 

@@ -631,6 +631,9 @@ pub(crate) struct AppModel {
     pub(super) account_click_folds: bool,
     /// What the window shows at launch (#256).
     pub(super) start_view: config::StartView,
+    /// The view about to open stands in for a launch view that could not
+    /// be shown, and is not remembered as the last one (#642).
+    pub(super) stand_in: bool,
     /// How accounts' folders are sorted, unless an account chooses
     /// (Settings → Sidebar).
     pub(super) folder_sort: config::FolderSort,
@@ -640,6 +643,9 @@ pub(crate) struct AppModel {
     pub(super) status_bar_top: bool,
     /// Read-marking policy (#100).
     pub(super) read_mark: config::ReadMark,
+    /// The lone message opened unread before its body came, to be marked
+    /// read by `read_mark` once it does (#638).
+    pub(super) read_mark_waiting: Option<Box<Message>>,
     /// Mail filter rules (#47), applied to inbox syncs.
     pub(super) filters: Vec<config::FilterRule>,
     /// The saved contacts' addresses, for rules on whether a sender is in
@@ -793,6 +799,8 @@ pub(crate) struct AppModel {
     pub(super) compose_format: crate::config::ComposeFormat,
     /// Replies and forwards to plain-text mail open in plain text (#436).
     pub(super) follow_plain: bool,
+    /// Switching to plain text asks first when something would be lost.
+    pub(super) ask_plain_switch: bool,
     /// Where the split reply opens in the reading pane (#212).
     pub(super) reply_position: config::ReplyPosition,
     /// Where the signature sits in a reply or forward (#237).

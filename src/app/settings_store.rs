@@ -79,6 +79,7 @@ impl AppModel {
             compose_plain: self.compose_format == config::ComposeFormat::Plain,
             compose_format: Some(self.compose_format),
             follow_plain: self.follow_plain,
+            ask_plain_switch: self.ask_plain_switch,
             reply_position: self.reply_position,
             signature_position: self.signature_position,
             signature_dashes: self.signature_dashes,

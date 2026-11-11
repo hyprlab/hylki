@@ -446,10 +446,12 @@ impl AppModel {
             chevrons_left: prefs.chevrons_left,
             account_click_folds: prefs.account_click_folds,
             start_view,
+            stand_in: false,
             folder_sort: prefs.folder_sort,
             console_mode: prefs.console_mode,
             status_bar_top: prefs.status_bar_top,
             read_mark: prefs.read_mark,
+            read_mark_waiting: None,
             // The demo (no accounts of its own) ships with tags and filter
             // rules, so its sidebar shows the Tags and Filtered Folders
             // sections; a staged tags.toml / filters.toml still wins.
@@ -545,6 +547,7 @@ impl AppModel {
             print_options: prefs.print,
             compose_format: config::load_compose_format(),
             follow_plain: prefs.follow_plain,
+            ask_plain_switch: prefs.ask_plain_switch,
             reply_position: prefs.reply_position,
             signature_position: prefs.signature_position,
             signature_dashes: prefs.signature_dashes,

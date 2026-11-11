@@ -18,6 +18,11 @@
 // Listeners on a script-less sandboxed document never fire, so it is
 // polled; `init` runs once and the later `load` only measures again.
 //
+// A card counts as read only from `ready` on, and only once its body is
+// drawn: a card still saying Loading… is not watched at all (the page is
+// built again when its body comes), and the count for one whose frame is
+// not yet live starts when it is (#638).
+//
 // `ready` is posted once the open scroll (`openAt`) has been applied and
 // drawn, two animation frames on: the reader reveals the page at that
 // moment, so the page must already be where it opens. Its timeout is queued
@@ -170,7 +175,7 @@ setTimeout(function(){s(f);},250);setTimeout(function(){s(f);},1000);}\
 function all(){return document.querySelectorAll('iframe.hylki-frame');}\
 document.addEventListener('DOMContentLoaded',function(){\
 var fs=all();var pend=fs.length,rdy=false;\
-function ready(){if(rdy)return;rdy=true;openAt();\
+function ready(){if(rdy)return;rdy=true;openAt();watchRead();\
 setTimeout(function(){function post(){\
 try{window.webkit.messageHandlers.hylki.postMessage('ready:0:0');}catch(_){}}\
 if(document.visibilityState==='hidden'){post();return;}\
@@ -212,19 +217,23 @@ tm=setTimeout(function(){tm=null;foldCard(h.closest('.hylki-msg'));},260);});})(
 var fb=document.querySelectorAll('.hylki-fbar');\
 for(var j=0;j<fb.length;j++){fb[j].addEventListener('click',function(e){\
 if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;foldCard(this.closest('.hylki-msg'));});}}\
-var rbd=document.body.dataset;\
-if(rbd.hylkiReadmark&&document.body.classList.contains('hylki-conv')){\
+function watchRead(){var rbd=document.body.dataset;\
+if(!rbd.hylkiReadmark||!document.body.classList.contains('hylki-conv'))return;\
 var rdel=parseInt(rbd.hylkiReadmark,10)||250;var rt={};\
+function rdone(el){if(el.classList.contains('hylki-folded'))return true;\
+var f=el.querySelector('iframe.hylki-frame');return !f||f.classList.contains('hylki-live');}\
+function rarm(el,k){if(!rdone(el)){rt[k]=setTimeout(function(){rarm(el,k);},100);return;}\
+rt[k]=setTimeout(function(){\
+try{window.webkit.messageHandlers.hylki.postMessage('seen:'+k);}catch(_){}\
+rio.unobserve(el);},rdel);}\
 var rio=new IntersectionObserver(function(es){es.forEach(function(en){\
 var el=en.target,k=el.dataset.key;\
 var vis=en.intersectionRatio>=0.5||en.intersectionRect.height>window.innerHeight*0.6;\
-if(vis&&!rt[k]){rt[k]=setTimeout(function(){\
-try{window.webkit.messageHandlers.hylki.postMessage('seen:'+k);}catch(_){}\
-rio.unobserve(el);},rdel);}\
+if(vis&&!rt[k])rarm(el,k);\
 else if(!vis&&rt[k]){clearTimeout(rt[k]);delete rt[k];}\
 });},{threshold:[0,0.25,0.5,0.75,1]});\
 var rsecs=document.querySelectorAll('.hylki-msg');\
-for(var ri=0;ri<rsecs.length;ri++){if(rsecs[ri].querySelector('.hylki-dot'))rio.observe(rsecs[ri]);}}\
+for(var ri=0;ri<rsecs.length;ri++){if(rsecs[ri].querySelector('.hylki-dot')&&!rsecs[ri].querySelector('.hylki-loading'))rio.observe(rsecs[ri]);}}\
 window.vf={marks:[],cur:-1};\
 window.vfZoom=function(z){window.vfZ=z;var fs=all();for(var i=0;i<fs.length;i++){try{var d=fs[i].contentDocument;\
 if(d&&d.documentElement)d.documentElement.style.zoom=z;fs[i]._h=0;s(fs[i]);}catch(_){}}};\

@@ -138,6 +138,9 @@ pub(crate) struct Sidebar {
     /// The launch view still to be picked (#256): kept until the account
     /// it names has its folders listed, then taken by the first pick.
     start: Option<StartTarget>,
+    /// The launch view's account is listed with no folders yet, and the
+    /// wait for them is running (#642).
+    start_wait: bool,
     /// The view to pick again, and announce, once its account is listed
     /// again: the app dropped what it showed when the accounts reconnected
     /// (an account saved), while this list still showed it selected. The
@@ -359,6 +362,7 @@ impl Component for Sidebar {
             quiet: std::rc::Rc::new(std::cell::Cell::new(false)),
             mirror: init.mirror,
             start: if init.mirror { None } else { init.start },
+            start_wait: false,
             reannounce: None,
             show_attachments: init.show_attachments,
             outbox_count: 0,
@@ -457,7 +461,7 @@ impl Sidebar {
         _root: &<Self as Component>::Root,
     ) {
         match msg {
-            SidebarInput::DropStart => self.on_drop_start(),
+            SidebarInput::DropStart => self.on_drop_start(&sender),
             SidebarInput::Reannounce => self.on_reannounce(sender),
             SidebarInput::MirrorSelection(sel) => self.on_mirror_selection(sel),
             msg @ SidebarInput::SetContents { .. } => self.on_set_contents(msg, widgets, sender),

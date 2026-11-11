@@ -33,6 +33,30 @@ pub(super) fn save_window_geometry(w: &adw::ApplicationWindow) {
     crate::config::save_window_state(width, height, maximized);
 }
 
+/// Save the geometry a second after it changes, not only on close (#642):
+/// a logout or a restart ends Hylki without a close, and with Run in
+/// Background the window was closed long before, at another size.
+fn save_geometry_on_change(window: &adw::ApplicationWindow) {
+    let due = std::rc::Rc::new(std::cell::Cell::new(false));
+    let changed = move |w: &adw::ApplicationWindow| {
+        if due.replace(true) {
+            return;
+        }
+        let (w, due) = (w.downgrade(), due.clone());
+        gtk::glib::timeout_add_seconds_local_once(1, move || {
+            due.set(false);
+            // A hidden window's size is not one the user chose.
+            if let Some(w) = w.upgrade().filter(|w| w.is_visible()) {
+                save_window_geometry(&w);
+            }
+        });
+    };
+    for property in ["default-width", "default-height", "maximized"] {
+        let changed = changed.clone();
+        window.connect_notify_local(Some(property), move |w, _| changed(w));
+    }
+}
+
 /// Exits the process the moment state is saved. Letting GTK, WebKit and
 /// the per-account worker threads tear down the normal way can abort — a
 /// Rust panic fired from a GObject dispose callback becomes SIGABRT, which
@@ -106,6 +130,7 @@ impl AppModel {
         if self.start_fullscreen {
             root.fullscreen();
         }
+        save_geometry_on_change(root);
         // Below this width the sidebar drops to its icon rail automatically,
         // which leaves the list and the reader their room when the window is
         // tiled to half of a 1920px screen. With a breakpoint present the window

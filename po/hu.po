@@ -7932,6 +7932,10 @@ msgstr "a kiszolgáló válasza nem olvasható (így kezdődött: {reply})"
 msgid "Could not load {path}: {e}"
 msgstr "Nem tölthető be: {path}: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "Ez az üzenet nem tartalmaz megnyitható naptárfájlt."
+
 msgid "Could not load conversation: {e}"
 msgstr "A beszélgetés nem tölthető be: {e}"
 
@@ -8664,6 +8668,13 @@ msgid "Reply in the original's format"
 msgstr "Válasz ezekkel a fájlokkal"
 
 msgid "Plain-text mail is answered in plain text."
+msgstr ""
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Beillesztés egyszerű szövegként"
+
+msgid "Only when formatting, images or links would be removed."
 msgstr ""
 
 msgid "Signature in replies"

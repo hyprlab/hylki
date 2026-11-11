@@ -27,14 +27,17 @@
   /* Each cell draws its right and bottom line, the first row its top and the
      first column its left, so neighbouring cells never double a line. Inset
      shadows take no room, so the table does not move when they appear. */
+  /* A cell with lines of its own (a spreadsheet's borders) is drawn as
+     it will be sent: a guide beside a black line would double it. */
+  var BARE = ':not([style*=border])';
   function rules(t){
     /* The first row group, not the first child: a table from Calc opens
        with a <colgroup>. */
     var g = t + '>:nth-child(1 of thead,tbody,tfoot)';
-    var cell = [t + '>tr>:is(td,th)', t + '>*>tr>:is(td,th)'];
-    var top = [t + '>tr:first-of-type>*', g + '>tr:first-child>*'];
-    var left = [t + '>tr>:first-child', t + '>*>tr>:first-child'];
-    var corner = [t + '>tr:first-of-type>:first-child', g + '>tr:first-child>:first-child'];
+    var cell = [t + '>tr>:is(td,th)' + BARE, t + '>*>tr>:is(td,th)' + BARE];
+    var top = [t + '>tr:first-of-type>*' + BARE, g + '>tr:first-child>*' + BARE];
+    var left = [t + '>tr>:first-child' + BARE, t + '>*>tr>:first-child' + BARE];
+    var corner = [t + '>tr:first-of-type>:first-child' + BARE, g + '>tr:first-child>:first-child' + BARE];
     var r = 'inset -1px -1px 0 ' + C, tp = 'inset 0 1px 0 ' + C, lf = 'inset 1px 0 0 ' + C;
     return cell.join(',') + '{box-shadow:' + r + '}' +
       top.join(',') + '{box-shadow:' + r + ',' + tp + '}' +

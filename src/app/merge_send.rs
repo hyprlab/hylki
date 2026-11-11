@@ -136,7 +136,10 @@ impl AppModel {
         interval: Option<Duration>,
         sender: &ComponentSender<Self>,
     ) {
-        let Some(account_id) = messages.first().map(|m| m.from_account_id) else {
+        let Some((account_id, from_alias)) = messages
+            .first()
+            .map(|m| (m.from_account_id, m.from_alias.clone()))
+        else {
             return;
         };
         let recipients: Vec<(String, String)> = messages
@@ -171,7 +174,7 @@ impl AppModel {
             id,
             account_id,
             account,
-            sent_path: self.sent_copy_path(account_id),
+            sent_path: self.sent_copy_path_as(account_id, from_alias.as_deref()),
             waiting: messages.into(),
             total,
             sent: 0,

@@ -526,3 +526,34 @@ fn accepted_keys_keep_the_address_with_the_fingerprint() {
     assert!(!file.keys.contains(&key("ada@example.org", "BBBB")));
     assert!(!file.keys.contains(&key("eve@example.org", "AAAA")));
 }
+
+/// A settings file is replaced whole (#642): a failed write leaves the old
+/// one as it was and no stray file beside it, and a file kept as a link
+/// stays a link.
+#[cfg(unix)]
+#[test]
+fn a_settings_file_is_replaced_whole() {
+    let dir = std::env::temp_dir().join(format!("hylki-replace-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let file = dir.join("state.toml");
+    std::fs::write(&file, "old").unwrap();
+
+    super::replace_file(&file, |tmp| std::fs::write(tmp, "new")).unwrap();
+    assert_eq!(std::fs::read_to_string(&file).unwrap(), "new");
+
+    let failed = super::replace_file(&file, |tmp| {
+        std::fs::write(tmp, "half")?;
+        Err(std::io::Error::other("disk full"))
+    });
+    assert!(failed.is_err());
+    assert_eq!(std::fs::read_to_string(&file).unwrap(), "new");
+    assert_eq!(std::fs::read_dir(&dir).unwrap().count(), 1);
+
+    let link = dir.join("window.toml");
+    std::os::unix::fs::symlink(&file, &link).unwrap();
+    super::replace_file(&link, |tmp| std::fs::write(tmp, "through")).unwrap();
+    assert!(std::fs::symlink_metadata(&link).unwrap().file_type().is_symlink());
+    assert_eq!(std::fs::read_to_string(&file).unwrap(), "through");
+    let _ = std::fs::remove_dir_all(&dir);
+}

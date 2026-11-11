@@ -83,6 +83,7 @@ impl AppModel {
             | AppMsg::OpenAttachmentMessage { .. }) => self.on_gallery(msg),
             msg @ (AppMsg::UnifiedSelected(..)
             | AppMsg::AccountStarredSelected(..)
+            | AppMsg::StandInView
             | AppMsg::FolderSelected { .. }) => self.on_navigation(msg, sender),
             msg @ (AppMsg::AccountFolded { .. }
             | AppMsg::ToggleCustomFolders(..)
@@ -547,6 +548,7 @@ impl AppModel {
             | PrefOutput::SetSpellcheckLangs(..)
             | PrefOutput::SetComposeFormat(..)
             | PrefOutput::SetFollowPlain(..)
+            | PrefOutput::SetAskPlainSwitch(..)
             | PrefOutput::SetReplyPosition(..)
             | PrefOutput::SetSignaturePosition(..)
             | PrefOutput::SetSignatureDashes(..)

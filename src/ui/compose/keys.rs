@@ -146,7 +146,9 @@ impl Compose {
                 && keyval == gtk::gdk::Key::v
                 && editor.has_focus()
             {
-                editor.paste(!crate::config::load_privacy().paste_plain);
+                editor.paste(rich_editor::PasteAs::preferred(
+                    crate::config::load_privacy().paste_plain,
+                ));
                 return Propagation::Stop;
             }
             // Ctrl+ / Ctrl- / Ctrl+0 zoom the body, as they zoom the reader.

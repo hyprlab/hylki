@@ -7658,6 +7658,10 @@ msgstr ""
 msgid "Could not load {path}: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση του {path}: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τον διακομιστή."
+
 msgid "Could not load conversation: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση της συζήτησης: {e}"
 
@@ -8365,6 +8369,14 @@ msgstr "Απάντηση με τη μορφοποίηση του αρχικού"
 
 msgid "Plain-text mail is answered in plain text."
 msgstr "Τα μηνύματα απλού κειμένου απαντώνται σε απλό κείμενο."
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Μετάβαση σε απλό κείμενο;"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "Η μορφοποίηση, οι εικόνες και οι σύνδεσμοι θα αφαιρεθούν."
 
 msgid "Signature in replies"
 msgstr "Υπογραφή στις απαντήσεις"

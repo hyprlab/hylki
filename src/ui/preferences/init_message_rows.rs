@@ -364,6 +364,10 @@ impl Preferences {
             .set_active(init.follow_plain);
         widgets
             .composing
+            .ask_plain_switch_row
+            .set_active(init.ask_plain_switch);
+        widgets
+            .composing
             .signature_position_row
             .set_model(Some(&gtk::StringList::new(&[
                 &i18n("Above the quoted message"),

@@ -19,7 +19,7 @@ use crate::worker::imap::ladder::Idle;
 use crate::worker::imap::send::flush_outbox;
 use crate::worker::imap::stream::ImapIo;
 use crate::worker::imap::watch::{watch_folder, FolderWatch};
-use crate::worker::preempt::reorder_reader_loads;
+use crate::worker::preempt::{reorder_reader_loads, superseded};
 use crate::worker::{MailRequest, WorkerEvent};
 
 pub(super) mod backfill;
@@ -38,6 +38,8 @@ pub(super) mod keywords;
 mod ladder;
 #[cfg(test)]
 mod live_copy_tests;
+#[cfg(test)]
+mod live_count_tests;
 #[cfg(test)]
 mod live_hierarchy_tests;
 #[cfg(test)]
@@ -336,6 +338,9 @@ impl<E: Emit> ImapWorker<E> {
                 },
             };
             let req = reorder_reader_loads(req, &mut self.rx, &mut self.backlog);
+            if superseded(&req, &self.backlog) {
+                continue;
+            }
             self.handle(req).await;
         }
 

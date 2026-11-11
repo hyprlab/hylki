@@ -7596,6 +7596,10 @@ msgstr "no se pudo leer la respuesta del servidor (comenzaba por: {reply})"
 msgid "Could not load {path}: {e}"
 msgstr "No se pudo cargar {path}: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "El mensaje es demasiado largo para el servidor."
+
 msgid "Could not load conversation: {e}"
 msgstr "No se pudo cargar la conversación: {e}"
 
@@ -8291,6 +8295,14 @@ msgstr "Responder en el formato original"
 
 msgid "Plain-text mail is answered in plain text."
 msgstr "Los mensajes de texto sin formato se responden también sin formato."
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "¿Cambiar a texto sin formato?"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "Se eliminarán el formato, las imágenes y los enlaces."
 
 msgid "Signature in replies"
 msgstr "Firma en las respuestas"

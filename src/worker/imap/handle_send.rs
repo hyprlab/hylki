@@ -103,8 +103,13 @@ impl<E: Emit> ImapWorker<E> {
                 // Save a copy to the Sent folder, or beside the
                 // original for a reply (#468); sending still counts
                 // as success even if this part fails.
-                let reply =
-                    reply_copy_path(account, account_id, cache.as_ref(), &message.in_reply_to);
+                let reply = reply_copy_path(
+                    account,
+                    account_id,
+                    cache.as_ref(),
+                    &message.in_reply_to,
+                    message.from_alias.as_deref(),
+                );
                 let sess = ensured(session);
                 match file_sent_copy(sess, reply.as_deref(), sent_path.as_deref(), &raw).await {
                     Ok(Some(path)) => {

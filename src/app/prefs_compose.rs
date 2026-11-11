@@ -116,6 +116,10 @@ impl AppModel {
             PrefOutput::SetFollowPlain(on) => {
                 pref!(self.follow_plain = on);
             }
+            PrefOutput::SetAskPlainSwitch(on) => {
+                // Read at each switch, so open composers follow it.
+                pref!(self.ask_plain_switch = on);
+            }
             PrefOutput::SetReplyPosition(position) => {
                 // A split reply already open stays where it is; the next
                 // one opens in the new place.

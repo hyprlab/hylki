@@ -72,19 +72,6 @@ pub(super) fn smtp_tls_parameters(
     }
 }
 
-/// The account's send-as alias matching `addr` (case-insensitive), when that
-/// alias carries its own SMTP transport (#34). Plain aliases — and the
-/// account's own address — resolve to `None`: the account's transport.
-fn alias_with_own_smtp<'a>(
-    account: &'a AccountConfig,
-    addr: &str,
-) -> Option<&'a crate::config::AliasConfig> {
-    account
-        .aliases
-        .iter()
-        .find(|a| a.has_own_smtp() && a.address().eq_ignore_ascii_case(addr.trim()))
-}
-
 /// A TLS-configured transport builder for one SMTP endpoint. A loopback
 /// bridge signs its own certificate (see `is_loopback_host`), so the relay
 /// builders' verification would reject it — TLS stays required, only the
@@ -190,7 +177,7 @@ pub(super) async fn send_raw_smtp(
     // the alias's server.
     let alias = envelope
         .from()
-        .and_then(|f| alias_with_own_smtp(account, f.as_ref()));
+        .and_then(|f| account.alias_with_own_smtp(f.as_ref()));
     let host = alias
         .map(|a| a.smtp_host.trim().to_string())
         .unwrap_or_else(|| smtp_host(account));
@@ -276,12 +263,51 @@ mod tests {
             ..sample_account()
         };
         // A plain alias, and the account's own address, keep the account transport.
-        assert!(alias_with_own_smtp(&account, "plain@fwd.example").is_none());
-        assert!(alias_with_own_smtp(&account, "me@example.com").is_none());
+        assert!(account.alias_with_own_smtp("plain@fwd.example").is_none());
+        assert!(account.alias_with_own_smtp("me@example.com").is_none());
         // The per-SMTP alias resolves — case-insensitively, as addresses are.
-        let hit = alias_with_own_smtp(&account, "Ann@Work.example").expect("matches");
+        let hit = account
+            .alias_with_own_smtp("Ann@Work.example")
+            .expect("matches");
         assert_eq!(hit.smtp_host, "smtp.work.example");
         // An address that is nobody's alias resolves to the account transport.
-        assert!(alias_with_own_smtp(&account, "stranger@else.example").is_none());
+        assert!(account
+            .alias_with_own_smtp("stranger@else.example")
+            .is_none());
+        // A full "Name <address>" identity resolves the same way.
+        assert!(account
+            .alias_with_own_smtp("Ann <ann@work.example>")
+            .is_some());
+    }
+
+    #[test]
+    fn an_alias_with_its_own_smtp_always_gets_a_sent_copy() {
+        use crate::config::AliasConfig;
+        let account = AccountConfig {
+            email: "me@example.com".into(),
+            server_saves_sent: true,
+            aliases: vec![
+                AliasConfig {
+                    identity: "plain@fwd.example".into(),
+                    ..Default::default()
+                },
+                AliasConfig {
+                    identity: "Ann <ann@work.example>".into(),
+                    smtp_host: "smtp.work.example".into(),
+                    ..Default::default()
+                },
+            ],
+            ..sample_account()
+        };
+        // Through the account's SMTP the server keeps the copy.
+        assert!(account.server_files_sent(None));
+        assert!(account.server_files_sent(Some("Plain <plain@fwd.example>")));
+        // Through the alias's own server it never sees the message (#640).
+        assert!(!account.server_files_sent(Some("Ann <ann@work.example>")));
+        let off = AccountConfig {
+            server_saves_sent: false,
+            ..account
+        };
+        assert!(!off.server_files_sent(None));
     }
 }

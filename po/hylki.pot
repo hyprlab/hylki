@@ -7042,6 +7042,9 @@ msgstr ""
 msgid "Could not load {path}: {e}"
 msgstr ""
 
+msgid "This message was moved or deleted on the server."
+msgstr ""
+
 msgid "Could not load conversation: {e}"
 msgstr ""
 
@@ -7665,6 +7668,12 @@ msgid "Reply in the original's format"
 msgstr ""
 
 msgid "Plain-text mail is answered in plain text."
+msgstr ""
+
+msgid "Ask before switching to plain text"
+msgstr ""
+
+msgid "Only when formatting, images or links would be removed."
 msgstr ""
 
 msgid "Signature in replies"

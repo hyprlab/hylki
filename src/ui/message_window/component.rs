@@ -336,6 +336,9 @@ impl Component for MessageWindow {
                 self.msg.unread = !self.msg.unread;
                 self.sync_toolbar();
             }
+            MessageWindowInput::Print if self.lightbox.model().is_open() => {
+                self.lightbox.emit(LightboxInput::PrintCurrent);
+            }
             MessageWindowInput::Print => self.view.emit(MessageViewInput::Print),
             MessageWindowInput::PrintPreview => self.view.emit(MessageViewInput::PrintPreview),
             MessageWindowInput::Find => self.view.emit(MessageViewInput::OpenFind),

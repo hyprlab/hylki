@@ -298,9 +298,22 @@ pub(crate) fn save_unread_seen(seen: &std::collections::BTreeMap<String, u32>) {
 
 /// Change one thing in state.toml.
 fn update_state(change: impl FnOnce(&mut StateFile)) {
+    edit_state(|s| {
+        change(s);
+        true
+    });
+}
+
+/// Change state.toml when `change` says it changed something. One change
+/// at a time: a worker thread saves here too (`save_fetch_mode`), and two
+/// read-modify-writes that overlap would lose one of them (#642).
+fn edit_state(change: impl FnOnce(&mut StateFile) -> bool) {
+    static LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+    let _held = LOCK.lock().unwrap_or_else(std::sync::PoisonError::into_inner);
     let mut s = load_state();
-    change(&mut s);
-    save_state(&s);
+    if change(&mut s) {
+        save_state(&s);
+    }
 }
 
 fn save_state(state: &StateFile) {
@@ -327,18 +340,19 @@ pub(crate) fn load_last_view() -> (Option<LastView>, String) {
 /// Record the view just opened, unless it is the one already recorded:
 /// this runs on every folder switch.
 pub(crate) fn save_last_view(view: LastView) {
-    let mut s = load_state();
-    let account = if view.email.is_empty() {
-        s.last_account.clone()
-    } else {
-        view.email.clone()
-    };
-    if s.last_view.as_ref() == Some(&view) && s.last_account == account {
-        return;
-    }
-    s.last_view = Some(view);
-    s.last_account = account;
-    save_state(&s);
+    edit_state(|s| {
+        let account = if view.email.is_empty() {
+            s.last_account.clone()
+        } else {
+            view.email.clone()
+        };
+        if s.last_view.as_ref() == Some(&view) && s.last_account == account {
+            return false;
+        }
+        s.last_view = Some(view);
+        s.last_account = account;
+        true
+    });
 }
 
 /// Whether the welcome wizard has been completed before.
@@ -347,11 +361,7 @@ pub(crate) fn wizard_completed() -> bool {
 }
 
 pub(crate) fn mark_wizard_completed() {
-    let mut s = load_state();
-    if !s.wizard_completed {
-        s.wizard_completed = true;
-        save_state(&s);
-    }
+    edit_state(|s| !std::mem::replace(&mut s.wizard_completed, true));
 }
 
 /// The runtime commit WebKit's font fallback was settled under (#296).
@@ -360,12 +370,14 @@ pub(crate) fn load_web_font_fallback() -> Option<String> {
 }
 
 pub(crate) fn save_web_font_fallback(runtime: Option<&str>) {
-    let mut s = load_state();
     let runtime = runtime.map(str::to_string);
-    if s.web_font_fallback != runtime {
+    edit_state(|s| {
+        if s.web_font_fallback == runtime {
+            return false;
+        }
         s.web_font_fallback = runtime;
-        save_state(&s);
-    }
+        true
+    });
 }
 
 /// The chosen app icon id, if one has been settled.
@@ -392,9 +404,7 @@ pub(crate) fn mint_keyring_help_dismissed() -> bool {
 
 /// Persist that the user dismissed the Mint keyring setup tip ("Don't show again").
 pub(crate) fn dismiss_mint_keyring_help() {
-    let mut state = load_state();
-    state.mint_keyring_help_dismissed = true;
-    save_state(&state);
+    update_state(|s| s.mint_keyring_help_dismissed = true);
 }
 
 /// Persisted state of the in-message attachment drawer.
@@ -476,20 +486,20 @@ pub(super) fn fetch_mode_name(use_envelope: bool, previews_rejected: bool) -> Op
 pub(crate) fn save_fetch_mode(email: &str, use_envelope: bool, previews_rejected: bool) {
     let mode = fetch_mode_name(use_envelope, previews_rejected);
     let key = email.to_ascii_lowercase();
-    let mut s = load_state();
-    let current = s.fetch_modes.get(&key).map(String::as_str);
-    if current == mode {
-        return;
-    }
-    match mode {
-        Some(m) => {
-            s.fetch_modes.insert(key, m.to_string());
+    edit_state(|s| {
+        if s.fetch_modes.get(&key).map(String::as_str) == mode {
+            return false;
         }
-        None => {
-            s.fetch_modes.remove(&key);
+        match mode {
+            Some(m) => {
+                s.fetch_modes.insert(key, m.to_string());
+            }
+            None => {
+                s.fetch_modes.remove(&key);
+            }
         }
-    }
-    save_state(&s);
+        true
+    });
 }
 
 /// Persist whether the attachment drawer is collapsed.
@@ -571,14 +581,14 @@ pub(crate) fn load_gallery_scope() -> (bool, bool, Vec<(u32, String, bool)>) {
 
 /// Persist the attachments gallery's folder scope.
 pub(crate) fn save_gallery_scope(archive: bool, other: bool, folders: &[(u32, String, bool)]) {
-    let mut s = load_state();
-    s.gallery_archive = archive;
-    s.gallery_other = other;
-    s.gallery_folders = folders
-        .iter()
-        .map(|(id, path, on)| encode_gallery_folder(*id, path, *on))
-        .collect();
-    save_state(&s);
+    update_state(|s| {
+        s.gallery_archive = archive;
+        s.gallery_other = other;
+        s.gallery_folders = folders
+            .iter()
+            .map(|(id, path, on)| encode_gallery_folder(*id, path, *on))
+            .collect();
+    });
 }
 
 /// The split-reply panel's dragged height; 0 when it has never been dragged

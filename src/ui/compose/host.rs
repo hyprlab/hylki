@@ -186,6 +186,7 @@ impl Compose {
 
     /// Handles [`ComposeInput::Discard`].
     pub(super) fn on_discard(&mut self, sender: &ComponentSender<Self>) {
+        self.stop_autosave();
         // A message nobody saved leaves nothing behind, though the
         // composer saved it on its own meanwhile (#340).
         match self.draft_origin.clone().filter(|_| self.autosave_made) {
@@ -326,6 +327,7 @@ impl Compose {
     /// Handles [`ComposeInput::DeleteDraft`].
     pub(super) fn on_delete_draft(&mut self, sender: &ComponentSender<Self>) {
         if let Some(origin) = self.draft_origin.clone() {
+            self.stop_autosave();
             let _ = sender.output(ComposeOutput::DeleteDraft {
                 id: self.compose_id,
                 origin,

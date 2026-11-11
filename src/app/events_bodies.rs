@@ -453,6 +453,10 @@ impl AppModel {
         } else if self.current.as_ref().is_some_and(is_target) {
             let current = self.current.clone();
             self.show_message(current, false);
+            // Opened before its body came: it can be read from now on (#638).
+            if let Some(m) = self.read_mark_waiting.take_if(|m| is_target(m)) {
+                self.start_read_mark(&m, sender);
+            }
         }
     }
 }

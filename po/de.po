@@ -7653,6 +7653,10 @@ msgstr ""
 msgid "Could not load {path}: {e}"
 msgstr "{path} konnte nicht geladen werden: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "Die Nachricht ist zu lang für den Server."
+
 msgid "Could not load conversation: {e}"
 msgstr "Konnte die Unterhaltung nicht laden: {e}"
 
@@ -8355,6 +8359,14 @@ msgstr "Im ursprünglichen Format antworten"
 
 msgid "Plain-text mail is answered in plain text."
 msgstr "Text-E-Mails werden als reiner Text beantwortet."
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Zu reinem Text wechseln?"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "Formatierungen, Bilder und Links werden entfernt"
 
 msgid "Signature in replies"
 msgstr "Signatur in Antworten"

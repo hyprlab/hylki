@@ -617,10 +617,17 @@ impl AppModel {
     /// account editor if it still exists, else the Sent folder. `None` when
     /// the account has neither — the message is sent without a copy.
     pub(super) fn sent_copy_path(&self, account_id: u32) -> Option<String> {
+        self.sent_copy_path_as(account_id, None)
+    }
+
+    /// [`Self::sent_copy_path`] for a message sent as `from` (the composer's
+    /// From alias; `None` for the account's own address), which may leave
+    /// through an alias's own SMTP and so need a copy after all (#640).
+    pub(super) fn sent_copy_path_as(&self, account_id: u32, from: Option<&str>) -> Option<String> {
         let cfg = self.account_config(account_id);
         // The server files its own copy: appending a second one is what makes
         // a Gmail account show every sent message twice.
-        if cfg.is_some_and(|c| c.server_saves_sent) {
+        if cfg.is_some_and(|c| c.server_files_sent(from)) {
             return None;
         }
         let chosen = cfg.and_then(|c| c.sent_copy_path.as_deref());

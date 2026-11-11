@@ -7998,6 +7998,10 @@ msgstr "nie udało się odczytać odpowiedzi serwera (jej początek: {reply})"
 msgid "Could not load {path}: {e}"
 msgstr "Nie udało się wczytać pliku {path}: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "Ta wiadomość nie zawiera pliku kalendarza do otwarcia."
+
 msgid "Could not load conversation: {e}"
 msgstr "Nie udało się wczytać rozmowy: {e}"
 
@@ -8735,6 +8739,13 @@ msgid "Reply in the original's format"
 msgstr "Odpowiedz z plikami"
 
 msgid "Plain-text mail is answered in plain text."
+msgstr ""
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Wklejanie jako zwykły tekst"
+
+msgid "Only when formatting, images or links would be removed."
 msgstr ""
 
 msgid "Signature in replies"

@@ -47,6 +47,7 @@ pub(super) async fn sel(
     let r = session.select(path).await;
     if r.is_ok() {
         session.as_mut().set_selected_folder(Some(path));
+        session.as_mut().set_selected_writable();
     }
     wired(&cmd, &r);
     r
@@ -69,13 +70,28 @@ pub(super) async fn exam(
 
 /// PEEK reads work in either SELECT or EXAMINE. Reusing the mailbox already
 /// selected on this connection avoids a round trip for every prefetched body.
-/// List syncs and mutations still select explicitly to get current metadata
-/// and the write mode they need. A new connection starts unselected.
+/// List syncs still select explicitly to get current metadata, and writes
+/// go through [`select_for_write`]. A new connection starts unselected.
 pub(super) async fn select_for_read(
     session: &mut ImapSession,
     path: &str,
 ) -> Result<(), async_imap::error::Error> {
     if !session.as_mut().is_selected(path) {
+        sel(session, path).await?;
+    }
+    Ok(())
+}
+
+/// A STORE or MOVE by UID needs the mailbox open read-write and nothing
+/// fresher: UIDs do not change while it stays selected. Re-selecting before
+/// each one cost a full SELECT per read toggle or archive, 2 to 3 seconds
+/// apiece on a large Gmail inbox, and the reader queued behind them (#296).
+/// Callers that read the SELECT reply (EXISTS, PERMANENTFLAGS) use [`sel`].
+pub(super) async fn select_for_write(
+    session: &mut ImapSession,
+    path: &str,
+) -> Result<(), async_imap::error::Error> {
+    if !session.as_mut().is_selected_writable(path) {
         sel(session, path).await?;
     }
     Ok(())
@@ -174,6 +190,82 @@ pub(super) async fn search_uids<S: AsRef<str>>(
     let r = session.uid_search(query.as_ref()).await;
     wired(&cmd, &r);
     r
+}
+
+/// Whether the server lists `name` among its capabilities, read once per
+/// connection; `None` when it would not say.
+pub(super) async fn has_capability(session: &mut ImapSession, name: &str) -> Option<bool> {
+    if session.as_mut().capabilities().is_none() {
+        let cmd = "CAPABILITY";
+        wire(cmd);
+        let r = session.capabilities().await;
+        wired(cmd, &r);
+        let caps = r.ok()?;
+        let list = caps
+            .iter()
+            .map(|c| match c {
+                async_imap::types::Capability::Imap4rev1 => "IMAP4REV1".to_string(),
+                async_imap::types::Capability::Auth(a) => format!("AUTH={}", a.to_uppercase()),
+                async_imap::types::Capability::Atom(a) => a.to_uppercase(),
+            })
+            .collect();
+        session.as_mut().set_capabilities(list);
+    }
+    let caps = session.as_mut().capabilities()?;
+    Some(caps.iter().any(|c| c.eq_ignore_ascii_case(name)))
+}
+
+/// How many messages in the selected mailbox match `query`, counted by the
+/// server (ESEARCH, RFC 4731) so only the number comes back. `None` when
+/// the server has no ESEARCH or its answer does not read as one; the
+/// caller then counts the UIDs itself.
+///
+/// A plain `UID SEARCH UNSEEN` answers with every UID: for a Gmail All Mail
+/// holding 234,000 unread messages, about 1.5 MB per count, and the folder
+/// watchers counted again on every change (#296).
+pub(super) async fn search_count(session: &mut ImapSession, query: &str) -> Option<u32> {
+    use async_imap::imap_proto::{Response, Status};
+    if !has_capability(session, "ESEARCH").await? {
+        return None;
+    }
+    let cmd = format!("UID SEARCH RETURN (COUNT) {query}");
+    wire(&cmd);
+    session.as_mut().hold_untagged(b"* ESEARCH ");
+    let answered = match session.run_command(&cmd).await {
+        Ok(id) => loop {
+            match session.read_response().await {
+                Some(Ok(reply)) => match reply.parsed() {
+                    Response::Done { tag, status, .. } if *tag == id => {
+                        break matches!(status, Status::Ok);
+                    }
+                    _ => {}
+                },
+                Some(Err(_)) | None => break false,
+            }
+        },
+        Err(_) => false,
+    };
+    let held = session.as_mut().release_namespace();
+    if !answered {
+        tracing::warn!(target: "hylki::imap", "< no count ({})", cmd_head(&cmd));
+        return None;
+    }
+    let count = esearch_count(held.as_deref().unwrap_or_default());
+    tracing::debug!(target: "hylki::imap", "< OK ({}) COUNT {count:?}", cmd_head(&cmd));
+    count
+}
+
+/// The `COUNT` in an `* ESEARCH` response. A server that found nothing may
+/// leave out the response, or the count, altogether: that is zero.
+fn esearch_count(raw: &[u8]) -> Option<u32> {
+    let text = std::str::from_utf8(raw).ok()?;
+    let mut words = text.split_ascii_whitespace();
+    while let Some(w) = words.next() {
+        if w.eq_ignore_ascii_case("COUNT") {
+            return words.next()?.trim_end_matches(')').parse().ok();
+        }
+    }
+    Some(0)
 }
 
 pub(super) async fn create_box(
@@ -420,5 +512,21 @@ mod uid_set_tests {
         assert_eq!(cmd_head("UID FETCH 1:5 (FLAGS)"), "UID FETCH 1:5");
         assert_eq!(cmd_head("  NOOP "), "NOOP");
         assert_eq!(cmd_head(""), "");
+    }
+}
+
+#[cfg(test)]
+mod esearch_tests {
+    use super::esearch_count;
+
+    #[test]
+    fn an_esearch_count_is_read() {
+        assert_eq!(
+            esearch_count(b"* ESEARCH (TAG \"A12\") UID COUNT 234460\r\n"),
+            Some(234460)
+        );
+        assert_eq!(esearch_count(b"* ESEARCH (TAG \"A1\") UID\r\n"), Some(0));
+        assert_eq!(esearch_count(b""), Some(0));
+        assert_eq!(esearch_count(b"* ESEARCH UID COUNT many\r\n"), None);
     }
 }

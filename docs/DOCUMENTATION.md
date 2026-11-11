@@ -414,6 +414,9 @@ files, and **Space** or **Esc** closes it. The attachment gallery and the
 composer have **Preview** in a file's right-click menu too. Without Sushi,
 **Space** does what a double click does.
 
+Hylki's preview prints the file it shows from its printer button or
+**Ctrl+P**: a PDF as it is, a picture centred on one page.
+
 Sushi is a package of the system: `sushi` in Fedora and Arch, `gnome-sushi`
 in Debian and Ubuntu. The Flatpak reaches it on the session bus as
 `org.gnome.NautilusPreviewer`.
@@ -1367,6 +1370,19 @@ still starts the next item, and pressed twice in a quote it still leaves the
 quote. The setting applies when a composer opens. Markdown, HTML and plain
 text are written as source, where <kbd>Return</kbd> is always a new line.
 
+### Pasting
+
+**Settings → Composing → Paste as plain text**, on by default, makes
+<kbd>Ctrl+V</kbd> paste the clipboard's text without its formatting. Cells
+copied from a spreadsheet, such as LibreOffice Calc, are the exception: they
+arrive as their table, with the fonts, colors, borders and column widths the
+spreadsheet gave them, as other mail clients show them. A single cell
+arrives as its value. With the setting off, <kbd>Ctrl+V</kbd> keeps the
+formatting of whatever is pasted. Right-clicking the text offers **Paste
+with Formatting** and **Paste as Plain Text** either way, and
+<kbd>Ctrl+Shift+V</kbd> pastes the text alone, so cells arrive as text
+separated by tabs.
+
 ### The formatting toolbar
 
 The rich text editor's toolbar has bold, italic, underline, strikethrough,
@@ -1517,7 +1533,10 @@ the same way.
 
 Switching format converts what is already in the message, so you can start a
 reply in rich text and finish it in Markdown; the quoted original comes
-across as `>` lines.
+across as `>` lines. Switching from rich text to plain text asks first when
+the message holds formatting, pictures or links, which plain text removes
+and switching back does not restore. **Settings → Composing → Ask before
+switching to plain text** turns the question off.
 
 **Settings → Composing → Reply in the original's format**, off by default,
 answers plain text in kind. A reply, a reply to all or a forward of a message

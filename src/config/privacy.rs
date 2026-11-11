@@ -296,6 +296,10 @@ pub(crate) struct PrivacyFile {
     /// and the people on them often write plain text and expect it back.
     #[serde(default)]
     pub(crate) follow_plain: bool,
+    /// Whether switching a message from rich to plain text asks first when
+    /// it holds formatting, pictures or links that plain text drops.
+    #[serde(default = "default_on")]
+    pub(crate) ask_plain_switch: bool,
     /// Where the split reply opens in the reading pane (#212).
     #[serde(default)]
     pub(crate) reply_position: ReplyPosition,
@@ -736,6 +740,7 @@ impl Default for PrivacyFile {
             compose_plain: false,
             compose_format: None,
             follow_plain: false,
+            ask_plain_switch: true,
             reply_position: ReplyPosition::default(),
             signature_position: SignaturePosition::default(),
             signature_dashes: false,

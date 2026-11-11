@@ -4,7 +4,7 @@ use webkit6::prelude::WebViewExt;
 
 use crate::i18n::i18n;
 
-use super::files::{detach_ctx_image, paste_into};
+use super::files::{detach_ctx_image, paste_into, PasteAs};
 use super::grammar::{lead_menu, GrammarState};
 use super::spelling::append_spelling_menu;
 use super::{exec, js_escape, AttachCallback, SpellLangsCallback};
@@ -150,7 +150,12 @@ pub(super) fn connect_context_menu(
             );
             let v = view.clone();
             let cb = menu_attach_cb.clone();
-            action.connect_activate(move |_, _| paste_into(&v, rich, &cb, plain));
+            let mode = if rich {
+                PasteAs::Formatted
+            } else {
+                PasteAs::Text
+            };
+            action.connect_activate(move |_, _| paste_into(&v, mode, &cb, plain));
             menu.insert(
                 &webkit6::ContextMenuItem::from_gaction(&action, &label, None),
                 at,

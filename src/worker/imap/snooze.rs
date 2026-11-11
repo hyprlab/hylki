@@ -23,8 +23,8 @@ pub(super) async fn find_by_message_ids(
 ) -> Result<Vec<u32>, async_imap::error::Error> {
     let exists = sel(sess, path).await?.exists;
     let mut uids: Vec<u32> = Vec::new();
-    for id in message_ids {
-        uids.extend(search_uids(sess, format!("HEADER Message-ID \"{id}\"")).await?);
+    for chunk in message_ids.chunks(MESSAGE_IDS_PER_SEARCH) {
+        uids.extend(search_uids(sess, message_id_query(chunk)).await?);
     }
     uids.sort_unstable();
     uids.dedup();
@@ -52,6 +52,26 @@ pub(super) async fn find_by_message_ids(
         );
     }
     Ok(uids)
+}
+
+/// How many Message-IDs one search asks for. A search per id cost a round
+/// trip each: undoing a 425-message delete on Gmail spent nine minutes on
+/// them while the account's other requests waited (#296). The OR chain
+/// nests one level per id, so it stays short enough for any server.
+const MESSAGE_IDS_PER_SEARCH: usize = 50;
+
+/// `HEADER Message-ID "a"`, or `OR OR HEADER Message-ID "a" HEADER
+/// Message-ID "b" HEADER Message-ID "c"` for several: IMAP's OR takes two
+/// keys.
+fn message_id_query(ids: &[String]) -> String {
+    let mut q = "OR ".repeat(ids.len().saturating_sub(1));
+    q.push_str(
+        &ids.iter()
+            .map(|id| format!("HEADER Message-ID \"{id}\""))
+            .collect::<Vec<_>>()
+            .join(" "),
+    );
+    q
 }
 
 impl<E: Emit> ImapWorker<E> {
@@ -129,5 +149,22 @@ impl<E: Emit> ImapWorker<E> {
             done: true,
         });
         After::Done
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::message_id_query;
+
+    #[test]
+    fn message_id_search_pairs_its_keys() {
+        assert_eq!(
+            message_id_query(&["a@x".into()]),
+            r#"HEADER Message-ID "a@x""#
+        );
+        assert_eq!(
+            message_id_query(&["a@x".into(), "b@x".into(), "c@x".into()]),
+            r#"OR OR HEADER Message-ID "a@x" HEADER Message-ID "b@x" HEADER Message-ID "c@x""#
+        );
     }
 }
