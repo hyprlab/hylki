@@ -60,6 +60,15 @@
   with no borders of its own can be filled in. The lines are not part of the
   message and go when the caret leaves the table.
 
+- **Fixed: indented text lost its indent in the composer** (#635). Text
+  pasted without formatting, and a plain-text draft opened again, lost the
+  spaces at the start of each line and had other runs of spaces cut to one,
+  so an indented list was sent flat. Indents, runs of spaces and tabs (as
+  spaces to the next stop of eight) now stay as they were, on screen and in
+  what is sent. Plain text pasted into rich text no longer becomes a
+  paragraph a line, which put an empty line under every line of the text
+  part, and of the message when switched to plain text.
+
 - **Fixed: a message attached to another opened the Send file dialog**
   (#622). An attached message the sender gave no file name was listed as
   `attachment-1`, a blank file, and opening it handed it to the desktop,

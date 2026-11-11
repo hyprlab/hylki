@@ -129,9 +129,7 @@ pub(super) fn parse_mailto(uri: &str) -> Option<crate::ui::compose::ComposePrefi
     let body_html = if body.is_empty() {
         String::new()
     } else {
-        gtk::glib::markup_escape_text(&body)
-            .replace("\r\n", "\n")
-            .replace('\n', "<br>")
+        crate::encoding::text_lines_html(&body)
     };
     Some(crate::ui::compose::ComposePrefill {
         to,
