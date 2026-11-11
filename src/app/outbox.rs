@@ -188,6 +188,7 @@ impl AppModel {
             no_signature: false,
             template: false,
             original_plain: false,
+            written_plain: editable.plain,
             typed_html: String::new(),
             assistant: false,
         };

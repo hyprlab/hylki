@@ -50,6 +50,9 @@ pub(crate) struct EditableMessage {
     pub(crate) receipt: bool,
     /// How important it is marked (#563).
     pub(crate) importance: crate::models::Importance,
+    /// It has no HTML part: it was written in plain text, and opens in
+    /// plain text again (#634).
+    pub(crate) plain: bool,
 }
 
 /// Whoever the envelope names that none of the `headers` (address lists)
@@ -127,6 +130,15 @@ fn msgid_list(hv: &mail_parser::HeaderValue) -> String {
     }
 }
 
+/// Whether the message carries an HTML part of its own, rather than only
+/// the HTML mail-parser writes for a text part.
+fn has_html_part(p: &mail_parser::Message) -> bool {
+    p.html_body
+        .iter()
+        .filter_map(|&id| p.part(id))
+        .any(|part| matches!(part.body, mail_parser::PartType::Html(_)))
+}
+
 /// The body as the composer edits it: the HTML part with its `cid:`
 /// pictures inlined (their Content-IDs noted in `embedded`), else the text
 /// part escaped, its lines and indents kept.
@@ -134,12 +146,7 @@ fn editable_body(parsed: Option<&mail_parser::Message>, embedded: &mut Vec<Strin
     // Only an HTML part of its own: for a text part mail-parser writes
     // HTML in which the text's indents collapse (#635).
     let html = parsed
-        .filter(|p| {
-            p.html_body
-                .iter()
-                .filter_map(|&id| p.part(id))
-                .any(|part| matches!(part.body, mail_parser::PartType::Html(_)))
-        })
+        .filter(|p| has_html_part(p))
         .and_then(|p| {
             let html = p.body_html(0)?;
             let mut budget = 16 * 1024 * 1024;
@@ -257,6 +264,7 @@ pub(crate) fn editable_from_raw(raw: &[u8], envelope_rcpts: &[String]) -> Editab
         importance: crate::models::Importance::from_headers(|name| {
             parsed.as_ref().and_then(|p| p.header_raw(name))
         }),
+        plain: parsed.as_ref().is_some_and(|p| !has_html_part(p)),
     }
 }
 
@@ -337,6 +345,8 @@ mod tests {
             editable.body_html,
             "<div>List:<br>\u{a0}- Foo<br>\u{a0}\u{a0}\u{a0}\u{a0}- SubFoo<br><br>End</div>"
         );
+        // And in plain text, as it was written (#634).
+        assert!(editable.plain);
     }
 
     /// The copy filed in Sent names the Bcc recipients the wire copy leaves
@@ -410,6 +420,7 @@ mod tests {
         let editable = editable_from_raw(&email.formatted(), &rcpts);
 
         // The HTML alternative is what the composer edits, not the plain fallback.
+        assert!(!editable.plain);
         assert!(
             editable.body_html.contains("rich <b>body</b>"),
             "{}",

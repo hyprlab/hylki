@@ -6,7 +6,7 @@ use crate::models::Message;
 use crate::ui::compose::ComposePrefill;
 
 use crate::mail::attribution::attribution;
-use crate::mail::quote::{body_is_plain_text, escaped_lines, quoted_original};
+use crate::mail::quote::{body_is_plain_text, quoted_original};
 
 /// A reply's subject: the original's, with one "Re:" in front.
 pub(super) fn reply_subject(subject: &str) -> String {
@@ -211,11 +211,17 @@ pub(super) fn forward_prefill(m: &Message) -> ComposePrefill {
 /// no longer be read, the usual reason for the first, is left out: the error
 /// just shown names it.
 pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefill {
-    let body_html = if m.html.trim().is_empty() {
-        m.body
-            .split("\n\n")
-            .map(|p| format!("<p>{}</p>", escaped_lines(p)))
-            .collect()
+    // Written in plain text, it went with no HTML part (#634).
+    let written_plain = m.html.trim().is_empty();
+    // Its lines go back in one block, indents kept, as a plain-text
+    // draft's do: a paragraph each would come out as blank lines (#635).
+    let body_html = if written_plain {
+        let text = m.body.trim_end_matches(['\r', '\n']);
+        if text.is_empty() {
+            String::new()
+        } else {
+            format!("<div>{}</div>", crate::encoding::text_lines_html(text))
+        }
     } else {
         m.html
     };
@@ -257,6 +263,7 @@ pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefil
         // A template that failed to save comes back cut loose from it.
         template: false,
         original_plain: false,
+        written_plain,
         typed_html: String::new(),
         assistant: false,
     }
@@ -446,7 +453,7 @@ mod tests {
     }
 
     #[test]
-    fn unsent_prefill_paragraphs_split_on_lf_only() {
+    fn unsent_plain_text_opens_plain_with_its_lines() {
         let m = crate::worker::OutgoingMessage {
             from_account_id: 1,
             from_alias: Some("Me <me@x.org>".into()),
@@ -472,10 +479,19 @@ mod tests {
             receipt_report: None,
             merged: false,
         };
+        let rich = unsent_prefill(crate::worker::OutgoingMessage {
+            html: "<p>rich</p>".into(),
+            ..m.clone()
+        });
+        assert!(!rich.written_plain);
+        assert_eq!(rich.body_html, "<p>rich</p>");
         let p = unsent_prefill(m);
+        // Sent with no HTML part: it was plain text, and opens as such
+        // (#634), its lines in one block.
+        assert!(p.written_plain);
         assert_eq!(
             p.body_html,
-            "<p>one\r<br>\r<br>two &lt;b&gt;<br>three</p><p>four</p>"
+            "<div>one<br><br>two &lt;b&gt;<br>three<br><br>four</div>"
         );
         assert!(p.attachments.is_empty(), "unreadable files are left out");
         assert_eq!(p.from_address, "me@x.org");

@@ -109,6 +109,10 @@ pub(crate) struct ComposePrefill {
     /// The message replied to or forwarded had no HTML part (#436): with
     /// the setting on, the composer opens in plain text.
     pub(crate) original_plain: bool,
+    /// The message being picked up again (a draft, a queued or unsent
+    /// message, a copy) was written in plain text: it opens in plain text
+    /// whatever the default format is (#634).
+    pub(crate) written_plain: bool,
     /// Text that goes where the user would type (an assistant's, already
     /// HTML), ahead of the signature and any quote. Empty: a blank line.
     pub(crate) typed_html: String,

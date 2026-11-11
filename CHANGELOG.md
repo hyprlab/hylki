@@ -75,6 +75,12 @@
   paragraph a line, which put an empty line under every line of the text
   part, and of the message when switched to plain text.
 
+- **Fixed: a plain-text draft opened again in rich text** (#634). A message
+  written in plain text came back in the composer's default format when its
+  draft was opened, when Undo Send was pressed, when it was edited in the
+  Outbox, and when it was used as a template or with Edit as New. A message
+  with no HTML part now opens in plain text, whatever the default.
+
 - **Fixed: a message attached to another opened the Send file dialog**
   (#622). An attached message the sender gave no file name was listed as
   `attachment-1`, a blank file, and opening it handed it to the desktop,

@@ -177,6 +177,7 @@ impl AppModel {
             to: m.to.clone(),
             cc: m.cc.clone(),
             subject: m.subject.clone(),
+            written_plain: crate::mail::quote::body_is_plain_text(&body_html),
             body_html,
             from_address: m.from_addr.clone(),
             attachments: extra.attach,
@@ -208,6 +209,7 @@ impl AppModel {
             bcc: e.bcc,
             subject: e.subject,
             body_html: e.body_html,
+            written_plain: e.plain,
             in_reply_to: e.in_reply_to,
             references: e.references,
             receipt: Some(e.receipt),
@@ -372,6 +374,7 @@ impl AppModel {
                 cc: m.cc.clone(),
                 subject: m.subject.clone(),
                 body_html: editable_copy_html(&m.body),
+                written_plain: crate::mail::quote::body_is_plain_text(&m.body),
                 attachments,
                 from_address: if template {
                     m.from_addr.clone()

@@ -291,9 +291,10 @@ impl AppModel {
         let selected = choose_identity(&accounts, account_id, &mut prefill);
         prefill.receipt.get_or_insert(self.request_receipts);
 
-        // A reply or forward to plain-text mail answers in kind when the
-        // setting says so (#436); anything else starts in the chosen format.
-        let format = if self.follow_plain && prefill.original_plain {
+        // Plain text picked up again stays plain (#634). A reply or forward
+        // to plain-text mail answers in kind when the setting says so
+        // (#436); anything else starts in the chosen format.
+        let format = if prefill.written_plain || (self.follow_plain && prefill.original_plain) {
             config::ComposeFormat::Plain
         } else {
             self.compose_format
