@@ -5,8 +5,8 @@ use async_imap::types::{Fetch, Flag};
 use futures::TryStreamExt;
 
 use crate::worker::imap::wire::{
-    copy_uids, create_box, delete_box, expunge_all, expunge_uids, imap_unquote, mv_uids,
-    quote_mailbox, rename_box, sel, select_for_write, store_uids, subscribe_box, uid_set,
+    copy_uids, create_box, delete_box, expunge_all, expunge_uids, has_capability, imap_unquote,
+    mv_uids, quote_mailbox, rename_box, sel, select_for_write, store_uids, subscribe_box, uid_set,
     unsubscribe_box,
 };
 use crate::worker::imap::ImapSession;
@@ -81,19 +81,16 @@ pub(super) fn kept_flags<'a>(flags: impl Iterator<Item = Flag<'a>>) -> Vec<Strin
 /// did before there was a MOVE: `UID COPY`, flag the originals `\Deleted`,
 /// expunge (issue #128 — a server without MOVE answers `UID MOVE` with
 /// "command not permitted with UID", and every move, deleting included,
-/// failed on it). The capability is asked for each time: it is one short
-/// round trip, and a session's answer can change after login on some
-/// servers, so it is not worth caching wrong.
+/// failed on it). The capability is read once per connection, after login:
+/// asked before every move, it cost up to two seconds apiece on a slow
+/// server (#296).
 pub(super) async fn uid_move(
     session: &mut ImapSession,
     set: &str,
     dest: &str,
 ) -> Result<(), async_imap::error::Error> {
-    let can_move = match session.capabilities().await {
-        Ok(caps) => caps.has_str("MOVE"),
-        // If even CAPABILITY fails, let MOVE produce the real error.
-        Err(_) => true,
-    };
+    // If even CAPABILITY fails, let MOVE produce the real error.
+    let can_move = has_capability(session, "MOVE").await.unwrap_or(true);
     tracing::debug!(target: "hylki::imap", "server {} MOVE", if can_move { "offers" } else { "lacks" });
     if can_move {
         return mv_uids(session, set, dest).await;

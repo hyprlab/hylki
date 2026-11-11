@@ -27,6 +27,10 @@ pub(in crate::worker) struct ImapIo<S> {
     /// Whether `selected_folder` was opened with SELECT (read-write) rather
     /// than EXAMINE, so a STORE or MOVE can run in it as it stands.
     selected_writable: bool,
+    /// CAPABILITY as read once logged in, upper case: it does not change
+    /// for the life of a session, and asking again cost a round trip before
+    /// every move (#296).
+    capabilities: Option<Vec<String>>,
     /// While NAMESPACE is out (#554), what arrives is read through this.
     namespace: Option<NamespaceFilter>,
     /// Bytes read and let through, not yet handed to async-imap.
@@ -44,6 +48,7 @@ impl<S> ImapIo<S> {
             failed: false,
             selected_folder: None,
             selected_writable: false,
+            capabilities: None,
             namespace: None,
             passing: Vec::new(),
         }
@@ -53,6 +58,22 @@ impl<S> ImapIo<S> {
     /// fail the session on it, until [`Self::release_namespace`].
     pub(in crate::worker) fn hold_namespace(&mut self) {
         self.namespace = Some(NamespaceFilter::default());
+    }
+
+    /// Hold back the untagged response starting with `head` (upper case,
+    /// space included), which async-imap would fail the session on, until
+    /// [`Self::release_namespace`] hands it over.
+    pub(in crate::worker) fn hold_untagged(&mut self, head: &'static [u8]) {
+        self.namespace = Some(NamespaceFilter::holding(head));
+    }
+
+    /// The server's capabilities as this connection last read them.
+    pub(in crate::worker) fn capabilities(&self) -> Option<&[String]> {
+        self.capabilities.as_deref()
+    }
+
+    pub(in crate::worker) fn set_capabilities(&mut self, caps: Vec<String>) {
+        self.capabilities = Some(caps);
     }
 
     /// Stop holding, and hand over the NAMESPACE reply if one came.

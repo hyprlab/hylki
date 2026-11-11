@@ -55,6 +55,21 @@
   on another device says so in the reader at once, instead of being asked
   for six times over 20 seconds and ending in an error.
 
+- **Fixed: large Gmail accounts were slow in other ways too** (#296). The
+  unread count of a folder is now asked of the server as a number where it
+  can give one (ESEARCH), instead of as the list of every unread message:
+  for a Gmail All Mail with 234,000 unread messages that list was about
+  1.5 MB, fetched again on every change. A page of conversations finds its
+  members in other folders with one pass over the cache instead of one per
+  conversation, which took a page of 205 conversations from about 9 seconds
+  to under a tenth of a second on an 87,000-message cache. A message opened
+  while the account is still connecting is fetched first on the new
+  connection, rather than after a second connect. How the server's folders
+  nest is read once per run instead of at every reconnect, and its
+  capabilities once per connection instead of before every move. Read and
+  star changes to one message that queue up while the server is busy are
+  sent as the last one only.
+
 - **Fixed: Ctrl+P in an attachment's preview printed the message** (#632).
   With a PDF or a picture open in Hylki's full-window preview, Ctrl+P now
   prints that file, as does a new printer button beside Open and Download. A

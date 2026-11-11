@@ -499,3 +499,38 @@ fn a_conversation_holds_its_members_however_old_they_are() {
         "all three, any age"
     );
 }
+
+/// A page of conversations looked up at once (#296) holds, for each one,
+/// what looking it up alone holds: shared members in both, unrelated mail
+/// in neither, newest first.
+#[test]
+fn a_page_of_conversations_matches_each_one_looked_up_alone() {
+    let c = Cache::in_memory().unwrap();
+    add_threaded(&c, "INBOX", 1, 500, "a@x", "");
+    add_threaded(&c, "Sent", 2, 600, "a-reply@x", "a@x");
+    add_threaded(&c, "INBOX", 3, 700, "b@x", "");
+    add_threaded(&c, "Archive", 4, 800, "b-reply@x", "b@x a@x");
+    add_threaded(&c, "Archive", 5, 900, "other@x", "nothing@x");
+    let groups = [
+        vec!["a@x".to_string()],
+        vec!["b@x".to_string(), "b-reply@x".to_string()],
+        vec!["unknown@x".to_string()],
+        vec![String::new()],
+    ];
+    let lists: Vec<&[String]> = groups.iter().map(Vec::as_slice).collect();
+    let page = c.messages_by_thread_groups(1, &lists);
+    assert_eq!(page.len(), groups.len());
+    for (ids, found) in groups.iter().zip(&page) {
+        let alone: Vec<(String, u32)> = c
+            .messages_by_thread_ids(1, ids)
+            .into_iter()
+            .map(|(p, m)| (p, m.uid))
+            .collect();
+        let together: Vec<(String, u32)> = found.iter().map(|(p, m)| (p.clone(), m.uid)).collect();
+        assert_eq!(together, alone, "{ids:?}");
+    }
+    let uids = |i: usize| page[i].iter().map(|(_, m)| m.uid).collect::<Vec<_>>();
+    assert_eq!(uids(0), [4, 2, 1]);
+    assert_eq!(uids(1), [4, 3]);
+    assert!(page[2].is_empty() && page[3].is_empty());
+}

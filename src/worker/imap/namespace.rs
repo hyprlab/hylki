@@ -24,9 +24,12 @@ pub(super) trait Wire:
 impl<T: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin + std::fmt::Debug + Send> Wire for T {}
 
 /// Splits the bytes off the wire into whole responses, literals and all,
-/// and holds back a `* NAMESPACE` one.
-#[derive(Debug, Default)]
+/// and holds back the first one that starts with `head`: `* NAMESPACE ` by
+/// default, `* ESEARCH ` for a count (#296).
+#[derive(Debug)]
 pub(super) struct NamespaceFilter {
+    /// The start of the untagged response held back, upper case.
+    head: &'static [u8],
     /// The response being put together.
     line: Vec<u8>,
     /// Where in `line` the last literal ended: a CRLF only ends the
@@ -37,7 +40,24 @@ pub(super) struct NamespaceFilter {
     found: Option<Vec<u8>>,
 }
 
+impl Default for NamespaceFilter {
+    fn default() -> Self {
+        Self::holding(b"* NAMESPACE ")
+    }
+}
+
 impl NamespaceFilter {
+    /// A filter that holds back the response starting with `head`.
+    pub(super) fn holding(head: &'static [u8]) -> Self {
+        Self {
+            head,
+            line: Vec::new(),
+            scan_from: 0,
+            literal: 0,
+            found: None,
+        }
+    }
+
     /// Take `bytes` off the wire, adding to `out` what goes on to async-imap.
     pub(super) fn feed(&mut self, bytes: &[u8], out: &mut Vec<u8>) {
         for &b in bytes {
@@ -58,13 +78,18 @@ impl NamespaceFilter {
                 self.scan_from = self.line.len();
                 continue;
             }
-            if is_namespace(&self.line) && self.found.is_none() {
+            if self.holds(&self.line) && self.found.is_none() {
                 self.found = Some(std::mem::take(&mut self.line));
             } else {
                 out.append(&mut self.line);
             }
             self.scan_from = 0;
         }
+    }
+
+    fn holds(&self, line: &[u8]) -> bool {
+        line.get(..self.head.len())
+            .is_some_and(|start| start.eq_ignore_ascii_case(self.head))
     }
 
     /// The command is done: anything still held goes on, and the NAMESPACE
@@ -86,11 +111,6 @@ fn literal_len(text: &[u8]) -> Option<usize> {
         return None;
     }
     std::str::from_utf8(digits).ok()?.parse().ok()
-}
-
-fn is_namespace(line: &[u8]) -> bool {
-    line.get(..12)
-        .is_some_and(|head| head.eq_ignore_ascii_case(b"* NAMESPACE "))
 }
 
 /// The personal namespace in a NAMESPACE answer: `Ok(None)` for NIL, the

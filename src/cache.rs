@@ -26,6 +26,7 @@ mod outbox;
 mod schema;
 mod smart;
 mod text_index;
+mod thread_members;
 mod threads;
 
 pub(crate) use assistant::{MailScope, ScopedFolder};

@@ -57,7 +57,13 @@ pub(super) async fn connect_and_list(
                     note_gmail_account(account_id, account, &folders);
                     // How the folders nest, before the folders themselves,
                     // so the sidebar draws them by it (#554).
-                    if let Some(h) = read_hierarchy(&mut session, &folders).await {
+                    let read = if hierarchy_read(account) {
+                        None
+                    } else {
+                        read_hierarchy(&mut session, &folders).await
+                    };
+                    if let Some(h) = read {
+                        note_hierarchy_read(account);
                         tracing::info!(
                             target: "hylki::imap",
                             "account {account_id}: folders nest by {:?}, top level {:?} (said: {})",
@@ -106,6 +112,32 @@ pub(super) async fn connect_and_list(
 
     emit(WorkerEvent::Status(String::new()));
     result
+}
+
+/// The servers whose hierarchy has been read since Hylki started, by host
+/// and user. It does not change while Hylki runs, and NAMESPACE took 2 to
+/// 4 seconds on a slow Gmail account, at every reconnect (#296).
+static HIERARCHY_READ: std::sync::Mutex<Vec<(String, String)>> = std::sync::Mutex::new(Vec::new());
+
+fn hierarchy_key(account: &AccountConfig) -> (String, String) {
+    (
+        account.imap_host.to_ascii_lowercase(),
+        account.username.clone(),
+    )
+}
+
+fn hierarchy_read(account: &AccountConfig) -> bool {
+    let key = hierarchy_key(account);
+    HIERARCHY_READ.lock().is_ok_and(|read| read.contains(&key))
+}
+
+fn note_hierarchy_read(account: &AccountConfig) {
+    let key = hierarchy_key(account);
+    if let Ok(mut read) = HIERARCHY_READ.lock() {
+        if !read.contains(&key) {
+            read.push(key);
+        }
+    }
 }
 
 /// XOAUTH2 SASL authenticator for async-imap.

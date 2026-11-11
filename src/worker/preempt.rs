@@ -151,6 +151,82 @@ pub(super) fn reorder_reader_loads(
     first
 }
 
+/// After a wait before `req` could start (connecting, which took 8 seconds
+/// on a slow Gmail account), whether a reader load that arrived meanwhile
+/// goes first. If so, both are put back at the front of `backlog`, the
+/// reader's load ahead, and `None` comes back; else `req` does.
+///
+/// Started anyway, the list fetch was interrupted by the queued load at
+/// once, and an interrupted read drops its connection, so the reader paid
+/// for a second connect before its message came (#296).
+pub(super) fn yield_to_queued_reader(
+    req: MailRequest,
+    rx: &mut mpsc::UnboundedReceiver<MailRequest>,
+    backlog: &mut std::collections::VecDeque<MailRequest>,
+) -> Option<MailRequest> {
+    if !can_yield_to_reader(&req) {
+        return Some(req);
+    }
+    while let Ok(r) = rx.try_recv() {
+        backlog.push_back(r);
+    }
+    // Reader loads keep their order among themselves, so only the first
+    // can come to the front.
+    let Some(at) = backlog.iter().position(is_reader_load) else {
+        return Some(req);
+    };
+    if !backlog
+        .iter()
+        .take(at)
+        .all(|ahead| may_overtake(&backlog[at], ahead))
+    {
+        return Some(req);
+    }
+    let reader = backlog.remove(at).expect("found above");
+    backlog.push_front(req);
+    backlog.push_front(reader);
+    None
+}
+
+/// Whether `req`, a read or star change, is replaced by a later one for the
+/// same message already in `backlog`, with nothing between that moves or
+/// erases the message. Only the last of them decides what the server ends
+/// up with: toggled ten times in a minute on a slow server, each one had
+/// cost a round trip with the reader waiting behind them (#296).
+pub(super) fn superseded(
+    req: &MailRequest,
+    backlog: &std::collections::VecDeque<MailRequest>,
+) -> bool {
+    let same = |a: &MailRequest, b: &MailRequest| match (a, b) {
+        (
+            MailRequest::SetSeen { path, uid, .. },
+            MailRequest::SetSeen {
+                path: p, uid: u, ..
+            },
+        )
+        | (
+            MailRequest::SetFlagged { path, uid, .. },
+            MailRequest::SetFlagged {
+                path: p, uid: u, ..
+            },
+        ) => path == p && uid == u,
+        _ => false,
+    };
+    let (MailRequest::SetSeen { path, uid, .. } | MailRequest::SetFlagged { path, uid, .. }) = req
+    else {
+        return false;
+    };
+    for later in backlog {
+        if same(req, later) {
+            return true;
+        }
+        if !leaves_alone(later, path, std::slice::from_ref(uid)) && !is_reader_load(later) {
+            return false;
+        }
+    }
+    false
+}
+
 /// Let a reader interrupt network reads, without overtaking a queued
 /// mutation it has to wait for.
 /// Callers must own the session inside `work`, so cancellation drops a partially
@@ -286,6 +362,69 @@ mod reader_preemption_tests {
             backlog.pop_front(),
             Some(MailRequest::SetSeen { uid: 7, .. })
         ));
+    }
+
+    #[test]
+    fn only_the_last_read_change_of_a_message_is_sent() {
+        use crate::worker::preempt::superseded;
+        let queued = std::collections::VecDeque::from([seen(9), move_of(7), seen(42)]);
+        assert!(superseded(&seen(42), &queued));
+        assert!(!superseded(
+            &seen(9),
+            &std::collections::VecDeque::from([seen(42)])
+        ));
+        // A move of the message in between: the earlier mark still goes,
+        // before the move takes it away.
+        let queued = std::collections::VecDeque::from([move_of(42), seen(42)]);
+        assert!(!superseded(&seen(42), &queued));
+        // A star change does not replace a read change.
+        let star = MailRequest::SetFlagged {
+            path: "INBOX".into(),
+            uid: 42,
+            flagged: true,
+        };
+        assert!(!superseded(
+            &seen(42),
+            &std::collections::VecDeque::from([star])
+        ));
+    }
+
+    /// #296: a click while the list fetch was still connecting.
+    #[test]
+    fn a_reader_queued_while_connecting_goes_first_on_the_new_session() {
+        use crate::worker::preempt::yield_to_queued_reader;
+        let list = || MailRequest::LoadMessages {
+            folder_id: 1,
+            path: "INBOX".into(),
+        };
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(seen(7)).unwrap();
+        tx.send(body()).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        assert!(yield_to_queued_reader(list(), &mut rx, &mut backlog).is_none());
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::LoadBody { .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::LoadMessages { .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::SetSeen { .. })
+        ));
+
+        // Behind a move of its own message it waits, and so does the list.
+        let mut backlog = std::collections::VecDeque::from([move_of(42), body()]);
+        let kept = yield_to_queued_reader(list(), &mut rx, &mut backlog);
+        assert!(matches!(kept, Some(MailRequest::LoadMessages { .. })));
+        assert_eq!(backlog.len(), 2);
+
+        // A mutation is never put off for a reader.
+        let mut backlog = std::collections::VecDeque::from([body()]);
+        let kept = yield_to_queued_reader(seen(7), &mut rx, &mut backlog);
+        assert!(matches!(kept, Some(MailRequest::SetSeen { .. })));
     }
 
     #[tokio::test(start_paused = true)]

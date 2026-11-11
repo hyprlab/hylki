@@ -258,9 +258,21 @@ fn related_in(
     ids: &[String],
     skipped: &[FolderKind],
 ) -> Vec<Message> {
-    cache
-        .messages_by_thread_ids(account_id, ids)
-        .into_iter()
+    in_folders(
+        cache.messages_by_thread_ids(account_id, ids),
+        folders,
+        skipped,
+    )
+}
+
+/// Cached rows with the folder each sits in, given the app's folder ids and
+/// without the folders of the `skipped` kinds.
+fn in_folders(
+    rows: Vec<(String, Message)>,
+    folders: &[crate::models::Folder],
+    skipped: &[FolderKind],
+) -> Vec<Message> {
+    rows.into_iter()
         .filter_map(|(path, mut m)| {
             let f = folders.iter().find(|f| f.path == path)?;
             if skipped.contains(&f.kind) {
@@ -293,13 +305,20 @@ pub(super) fn thread_summaries_with_members(
         FolderKind::Drafts,
         FolderKind::Templates,
     ];
-    for (tag, summary) in &mut summaries {
-        if summary.count < 2 {
-            continue;
-        }
-        if let Some((_, ids)) = groups.iter().find(|(t, _)| t == tag) {
-            summary.members = related_in(cache, account_id, &folders, ids, &skipped);
-        }
+    // Every conversation's members from one pass over the cache (#296).
+    let wanted: Vec<(usize, &[String])> = summaries
+        .iter()
+        .enumerate()
+        .filter(|(_, (_, s))| s.count >= 2)
+        .filter_map(|(si, (tag, _))| {
+            let (_, ids) = groups.iter().find(|(t, _)| t == tag)?;
+            Some((si, ids.as_slice()))
+        })
+        .collect();
+    let lists: Vec<&[String]> = wanted.iter().map(|(_, ids)| *ids).collect();
+    let found = cache.messages_by_thread_groups(account_id, &lists);
+    for ((si, _), rows) in wanted.into_iter().zip(found) {
+        summaries[si].1.members = in_folders(rows, &folders, &skipped);
     }
     summaries
 }
