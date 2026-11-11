@@ -1517,7 +1517,10 @@ the same way.
 
 Switching format converts what is already in the message, so you can start a
 reply in rich text and finish it in Markdown; the quoted original comes
-across as `>` lines.
+across as `>` lines. Switching from rich text to plain text asks first when
+the message holds formatting, pictures or links, which plain text removes
+and switching back does not restore. **Settings → Composing → Ask before
+switching to plain text** turns the question off.
 
 **Settings → Composing → Reply in the original's format**, off by default,
 answers plain text in kind. A reply, a reply to all or a forward of a message

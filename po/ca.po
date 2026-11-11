@@ -8368,6 +8368,14 @@ msgstr "Respon en el format de l'original"
 msgid "Plain-text mail is answered in plain text."
 msgstr "El correu de text pla es respon en text pla."
 
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Vols canviar a text pla?"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "El format, les imatges i els enllaços s'eliminen."
+
 msgid "Signature in replies"
 msgstr "Signatura a les respostes"
 

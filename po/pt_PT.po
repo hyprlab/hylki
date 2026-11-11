@@ -8296,6 +8296,14 @@ msgstr "Responder no formato original"
 msgid "Plain-text mail is answered in plain text."
 msgstr "As mensagens em texto simples são respondidas em texto simples."
 
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Mudar para texto simples?"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "A formatação, as imagens e as ligações são removidas."
+
 msgid "Signature in replies"
 msgstr "Assinatura nas respostas"
 

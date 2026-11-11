@@ -62,6 +62,7 @@ return_paragraph = false
 toolbar_expanded = false
 compose_plain = false
 follow_plain = false
+ask_plain_switch = true
 reply_position = "top"
 signature_position = "above_quote"
 signature_dashes = false

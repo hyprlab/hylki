@@ -8255,6 +8255,14 @@ msgstr "Ответ в формате оригинала"
 msgid "Plain-text mail is answered in plain text."
 msgstr "На письмо с открытым текстом отвечают в виде обычного текста."
 
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Переключиться на обычный текст?"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "Форматирование, изображения и ссылки удалены."
+
 msgid "Signature in replies"
 msgstr "Подпись в ответах"
 

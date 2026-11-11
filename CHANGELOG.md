@@ -28,6 +28,12 @@
   slow to answer. Versions before this one cannot open an encrypted cache, so
   turning it on asks first and says to turn it off before going back to one.
 
+- **Added: Ask before switching to plain text can be turned off.**
+  **Settings → Composing → Ask before switching to plain text**, on by
+  default, is the question asked when a message holding formatting,
+  pictures or links is switched from rich text to plain text. Off, the
+  message switches at once.
+
 - **Changed: the window goes narrower** (#624). The window's minimum width
   was 904 pixels whatever the layout, which kept it from tiling to half of a
   laptop screen. It now follows what is on show: 480 pixels with the reader

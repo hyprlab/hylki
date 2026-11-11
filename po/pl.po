@@ -8737,6 +8737,13 @@ msgstr "Odpowiedz z plikami"
 msgid "Plain-text mail is answered in plain text."
 msgstr ""
 
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Wklejanie jako zwykły tekst"
+
+msgid "Only when formatting, images or links would be removed."
+msgstr ""
+
 msgid "Signature in replies"
 msgstr "Podpis w odpowiedziach"
 

@@ -8590,6 +8590,13 @@ msgstr "Rispondi con i file"
 msgid "Plain-text mail is answered in plain text."
 msgstr ""
 
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Incolla come testo normale"
+
+msgid "Only when formatting, images or links would be removed."
+msgstr ""
+
 msgid "Signature in replies"
 msgstr "Firma nelle risposte"
 

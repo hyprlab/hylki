@@ -793,6 +793,8 @@ pub(crate) struct AppModel {
     pub(super) compose_format: crate::config::ComposeFormat,
     /// Replies and forwards to plain-text mail open in plain text (#436).
     pub(super) follow_plain: bool,
+    /// Switching to plain text asks first when something would be lost.
+    pub(super) ask_plain_switch: bool,
     /// Where the split reply opens in the reading pane (#212).
     pub(super) reply_position: config::ReplyPosition,
     /// Where the signature sits in a reply or forward (#237).

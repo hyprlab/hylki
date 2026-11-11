@@ -545,6 +545,7 @@ impl AppModel {
             print_options: prefs.print,
             compose_format: config::load_compose_format(),
             follow_plain: prefs.follow_plain,
+            ask_plain_switch: prefs.ask_plain_switch,
             reply_position: prefs.reply_position,
             signature_position: prefs.signature_position,
             signature_dashes: prefs.signature_dashes,

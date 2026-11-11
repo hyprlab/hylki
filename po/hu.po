@@ -8666,6 +8666,13 @@ msgstr "Válasz ezekkel a fájlokkal"
 msgid "Plain-text mail is answered in plain text."
 msgstr ""
 
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Beillesztés egyszerű szövegként"
+
+msgid "Only when formatting, images or links would be removed."
+msgstr ""
+
 msgid "Signature in replies"
 msgstr "Aláírás a válaszokban"
 

@@ -184,8 +184,12 @@ impl Compose {
         }
         // Plain text shows only what is sent (#424), so moving a
         // formatted body there drops what it cannot show, and the
-        // way back does not bring it back.
-        if self.format == ComposeFormat::Rich && to == ComposeFormat::Plain {
+        // way back does not bring it back. Settings → Composing can
+        // turn the question off.
+        if self.format == ComposeFormat::Rich
+            && to == ComposeFormat::Plain
+            && crate::config::load_privacy().ask_plain_switch
+        {
             let s = sender.clone();
             self.editor.eval(
                 "String(!!(window.__hylkiPlainLoses&&window.__hylkiPlainLoses()))",

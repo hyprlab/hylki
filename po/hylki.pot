@@ -7667,6 +7667,12 @@ msgstr ""
 msgid "Plain-text mail is answered in plain text."
 msgstr ""
 
+msgid "Ask before switching to plain text"
+msgstr ""
+
+msgid "Only when formatting, images or links would be removed."
+msgstr ""
+
 msgid "Signature in replies"
 msgstr ""
 
