@@ -327,6 +327,12 @@ impl AppModel {
             }
 
             AppMsg::AutoSaveDraft { id, message } => {
+                // Its composer saved, sent or closed meanwhile: the message
+                // has gone its own way, and this copy would sit beside it
+                // in Drafts (#634).
+                if !self.composer_exists(id) {
+                    return;
+                }
                 let account_id = message.from_account_id;
                 match self.drafts_target(account_id) {
                     Some((folder_id, path)) => self.send_to(

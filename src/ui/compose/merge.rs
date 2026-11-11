@@ -140,6 +140,7 @@ impl Compose {
         if messages.is_empty() {
             return;
         }
+        self.stop_autosave();
         let _ = sender.output(ComposeOutput::SendMerged { messages, interval });
         let _ = sender.output(ComposeOutput::Close(self.compose_id));
     }

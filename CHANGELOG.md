@@ -81,6 +81,13 @@
   Outbox, and when it was used as a template or with Edit as New. A message
   with no HTML part now opens in plain text, whatever the default.
 
+- **Fixed: saving a draft could leave a second copy in Drafts** (#634). An
+  automatic save that began just before Save, Send or Discard reached the
+  server after the composer had closed, with no draft to replace. The copy
+  it made stayed beside the saved one, or the clean-up that followed
+  removed the saved one instead. A closing composer now saves nothing more
+  on its own.
+
 - **Fixed: a message attached to another opened the Send file dialog**
   (#622). An attached message the sender gave no file name was listed as
   `attachment-1`, a blank file, and opening it handed it to the desktop,

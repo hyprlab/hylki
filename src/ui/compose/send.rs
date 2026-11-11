@@ -319,6 +319,7 @@ impl Compose {
 
     /// Handles [`ComposeInput::SaveDraftIfDirty`].
     pub(super) fn on_save_draft_if_dirty(&mut self, sender: &ComponentSender<Self>) {
+        self.stop_autosave();
         // Save only if the user actually edited something, so navigating
         // away from a pristine quote-only reply doesn't litter Drafts.
         if self.fields_dirty {
@@ -593,6 +594,7 @@ impl Compose {
 
     /// Hand the message to the app to send, and close the composer.
     pub(super) fn finish_send(&mut self, fields: OutgoingFields, sender: &ComponentSender<Self>) {
+        self.stop_autosave();
         let mut out = self.outgoing_message(fields);
         // The direction of each line (#524) is written in only here, on
         // the way out: a draft goes back into the editor, which finds it
@@ -636,12 +638,21 @@ impl Compose {
             let _ = sender.output(ComposeOutput::SaveTemplate(Box::new(out)));
             return;
         }
+        self.stop_autosave();
         if self.template {
             let _ = sender.output(ComposeOutput::SaveTemplate(Box::new(out)));
         } else {
             let _ = sender.output(ComposeOutput::SaveDraft(Box::new(out)));
         }
         let _ = sender.output(ComposeOutput::Close(self.compose_id));
+    }
+
+    /// The composer is done with the message (saved, sent or thrown away):
+    /// no automatic save may follow. One whose body was still being read
+    /// would reach the worker after the composer's own save, with no draft
+    /// to replace, and leave a second copy in Drafts (#634).
+    pub(super) fn stop_autosave(&mut self) {
+        self.autosave_off = true;
     }
 
     /// Handles [`ComposeInput::AutoSave`].
@@ -669,7 +680,7 @@ impl Compose {
         widgets: &ComposeWidgets,
         sender: &ComponentSender<Self>,
     ) {
-        if self.autosaving {
+        if self.autosaving || self.autosave_off {
             return;
         }
         let fields = self.draft_fields(widgets);
@@ -723,7 +734,7 @@ impl Compose {
             .all(|f| f.trim().is_empty())
             && text.trim().is_empty()
             && self.attachments.is_empty();
-        if self.autosaved == Some(hash) || empty || self.autosaving {
+        if self.autosaved == Some(hash) || empty || self.autosaving || self.autosave_off {
             return;
         }
         let out = self.outgoing_message(OutgoingFields {
