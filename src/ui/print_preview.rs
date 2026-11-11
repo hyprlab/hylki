@@ -26,6 +26,9 @@ use webkit6::prelude::WebViewExt;
 use crate::config::PrintOptions;
 use crate::i18n::{i18n, i18n_f};
 
+mod attachment;
+pub(crate) use attachment::print_attachment;
+
 /// The margin on every side of a printed page, in millimetres. The paper's
 /// own default (a quarter of an inch) puts text where a printer may not reach.
 const MARGIN_MM: f64 = 15.0;

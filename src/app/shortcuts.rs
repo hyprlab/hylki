@@ -460,6 +460,10 @@ impl AppModel {
                 }
             }
 
+            AppMsg::PrintMessage if self.lightbox.model().is_open() => {
+                self.lightbox
+                    .emit(crate::ui::lightbox::LightboxInput::PrintCurrent);
+            }
             AppMsg::PrintPreview | AppMsg::PrintMessage => {
                 // Only the reader can print: it holds the rendered message, and
                 // printing from an empty reader would offer a blank page. Say so

@@ -58,6 +58,8 @@ pub(crate) enum LightboxInput {
     OpenCurrent,
     /// Save the shown item via a file chooser.
     DownloadCurrent,
+    /// Print the shown item: Ctrl+P while the lightbox is open (#632).
+    PrintCurrent,
     /// A full-size PDF render finished (content hash, and the page unless
     /// it failed): show it if that item is still on screen.
     Rendered(u64, Option<gtk::gdk::Texture>),
@@ -215,6 +217,14 @@ impl Component for Lightbox {
                         connect_clicked => LightboxInput::OpenCurrent,
                     },
                     gtk::Button {
+                        set_icon_name: "printer-symbolic",
+                        set_tooltip_text: Some(i18n("Print…").as_str()),
+                        add_css_class: "flat",
+                        #[watch]
+                        set_sensitive: model.printable(),
+                        connect_clicked => LightboxInput::PrintCurrent,
+                    },
+                    gtk::Button {
                         set_icon_name: "folder-download-symbolic",
                         set_tooltip_text: Some(i18n("Download…").as_str()),
                         add_css_class: "flat",
@@ -348,6 +358,12 @@ impl Component for Lightbox {
                     );
                 }
             }
+            LightboxInput::PrintCurrent => {
+                if let Some(att) = self.items.get(self.pos) {
+                    let window = root.root().and_downcast::<gtk::Window>();
+                    crate::ui::print_preview::print_attachment(&att.name, &att.data, window);
+                }
+            }
             LightboxInput::Rendered(key, page) => {
                 let still_current = self
                     .items
@@ -362,6 +378,20 @@ impl Component for Lightbox {
 }
 
 impl Lightbox {
+    /// Whether the lightbox covers its window: the window's Ctrl+P then
+    /// prints the attachment rather than the message under it.
+    pub(crate) fn is_open(&self) -> bool {
+        !self.items.is_empty()
+    }
+
+    /// An image that does not decode has nothing to print; a PDF poppler
+    /// cannot open may still print, as the printer reads it, not poppler.
+    fn printable(&self) -> bool {
+        self.items
+            .get(self.pos)
+            .is_some_and(|a| !(self.no_preview && crate::models::is_image_name(&a.name)))
+    }
+
     /// Escape and the arrow keys drive the lightbox from anywhere in its
     /// window: capture phase, and only while it is open, so typing
     /// elsewhere is untouched.

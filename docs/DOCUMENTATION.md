@@ -414,6 +414,9 @@ files, and **Space** or **Esc** closes it. The attachment gallery and the
 composer have **Preview** in a file's right-click menu too. Without Sushi,
 **Space** does what a double click does.
 
+Hylki's preview prints the file it shows from its printer button or
+**Ctrl+P**: a PDF as it is, a picture centred on one page.
+
 Sushi is a package of the system: `sushi` in Fedora and Arch, `gnome-sushi`
 in Debian and Ubuntu. The Flatpak reaches it on the session bus as
 `org.gnome.NautilusPreviewer`.

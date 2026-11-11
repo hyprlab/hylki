@@ -42,6 +42,13 @@
   reader off and the toolbar in the list's header. The Attachments
   page no longer holds the window wide while the mail is showing.
 
+- **Fixed: Ctrl+P in an attachment's preview printed the message** (#632).
+  With a PDF or a picture open in Hylki's full-window preview, Ctrl+P now
+  prints that file, as does a new printer button beside Open and Download. A
+  PDF goes to the printer as it is; a picture is centred on one page inside
+  15 mm margins, shrunk to fit and never enlarged past its size on screen.
+  The same applies in a message's own window.
+
 - **Fixed: a narrow reader was drawn past the window's edge when a message
   had attachments** (#624). The attachment drawer's header needs about 560
   pixels with its thumbnail size slider, and a narrower reader lost its ⋯,
