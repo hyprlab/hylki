@@ -182,6 +182,8 @@
   strings translated. French updated (PR #615 by frenchy82), with 2419 of 2474
   strings translated. German (PR #628 by Samuel Edlmeier) and Spanish (PR #629
   by Daniel Miguel) updated, each with 2487 of 2488 strings translated.
+  Portuguese (Portugal) and Portuguese (Brazil) completed (PR #633 by Paulo
+  Fino), 2488 of 2488 strings each.
 
 - **Added: trackers come off links** (#599, by James Reilly). A link opened or
   copied from a message loses its tracking tags (`utm_source` and the like,
