@@ -423,6 +423,16 @@ mod tests {
     }
 
     #[test]
+    fn a_flag_list_line_can_be_held_back_too() {
+        let mut filter = NamespaceFilter::holding(b"* FLAGS ");
+        let mut out = Vec::new();
+        filter.feed(b"* 12 EXISTS\r\n* FLAGS (\\Answered \\Deleted \\Draft \\Flagged \\Seen \\Flagged \\Seen \\Answered)\r\n* OK [UIDNEXT 42]\r\nA1 OK\r\n", &mut out);
+        let found = filter.finish(&mut out);
+        assert_eq!(out, b"* 12 EXISTS\r\n* OK [UIDNEXT 42]\r\nA1 OK\r\n");
+        assert_eq!(found.unwrap(), b"* FLAGS (\\Answered \\Deleted \\Draft \\Flagged \\Seen \\Flagged \\Seen \\Answered)\r\n");
+    }
+
+    #[test]
     fn split_reads_and_literals_are_followed() {
         // Every byte its own read, and a literal holding a line that looks
         // like the answer, which is mail and must go on untouched.

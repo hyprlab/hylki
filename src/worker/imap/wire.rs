@@ -44,7 +44,14 @@ pub(super) async fn sel(
     let cmd = format!("SELECT {}", quote_mailbox(path));
     wire(&cmd);
     session.as_mut().set_selected_folder(None);
+    // Purelymail has been seen to send a `* FLAGS` line with repeated system
+    // flags, e.g. `\Flagged \Seen \Answered` twice in a row, which the
+    // async-imap parser rejects even though the mailbox metadata is otherwise
+    // fine. Keep that untagged response off the parser and continue with the
+    // mailbox's EXISTS/RECENT/UIDNEXT data.
+    session.as_mut().hold_untagged(b"* FLAGS ");
     let r = session.select(path).await;
+    let _ = session.as_mut().release_namespace();
     if r.is_ok() {
         session.as_mut().set_selected_folder(Some(path));
         session.as_mut().set_selected_writable();
@@ -60,7 +67,11 @@ pub(super) async fn exam(
     let cmd = format!("EXAMINE {}", quote_mailbox(path));
     wire(&cmd);
     session.as_mut().set_selected_folder(None);
+    // Some IMAP servers repeat system flags in the `* FLAGS` response that the
+    // async-imap parser does not accept. Ignore that line for EXAMINE too.
+    session.as_mut().hold_untagged(b"* FLAGS ");
     let r = session.examine(path).await;
+    let _ = session.as_mut().release_namespace();
     if r.is_ok() {
         session.as_mut().set_selected_folder(Some(path));
     }

@@ -10,6 +10,7 @@ use std::time::Duration;
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 use tokio::time::Sleep;
 
+use super::fetch_flags::FetchFlags;
 use super::namespace::NamespaceFilter;
 use crate::i18n::i18n;
 
@@ -33,6 +34,8 @@ pub(in crate::worker) struct ImapIo<S> {
     capabilities: Option<Vec<String>>,
     /// While NAMESPACE is out (#554), what arrives is read through this.
     namespace: Option<NamespaceFilter>,
+    /// Bounded syntax state; literal bodies are never held for flag repair.
+    fetch_flags: FetchFlags,
     /// Bytes read and let through, not yet handed to async-imap.
     passing: Vec<u8>,
 }
@@ -50,6 +53,7 @@ impl<S> ImapIo<S> {
             selected_writable: false,
             capabilities: None,
             namespace: None,
+            fetch_flags: FetchFlags::default(),
             passing: Vec::new(),
         }
     }
@@ -170,8 +174,27 @@ impl<S: AsyncRead + Unpin> AsyncRead for ImapIo<S> {
             this.pass(buf);
             return Poll::Ready(Ok(()));
         }
+        if buf.remaining() == 0 {
+            return Poll::Ready(Ok(()));
+        }
         if this.namespace.is_none() {
-            return this.poll_wire(cx, buf);
+            loop {
+                let before = buf.filled().len();
+                match this.poll_wire(cx, buf) {
+                    Poll::Pending => return Poll::Pending,
+                    Poll::Ready(Err(e)) => return Poll::Ready(Err(e)),
+                    Poll::Ready(Ok(())) => {}
+                }
+                if buf.filled().len() == before {
+                    return Poll::Ready(Ok(()));
+                }
+                let n = this.fetch_flags.normalize(&mut buf.filled_mut()[before..]);
+                buf.set_filled(before + n);
+                if n > 0 {
+                    return Poll::Ready(Ok(()));
+                }
+                // A read containing only a redundant slash is not EOF.
+            }
         }
         loop {
             let mut chunk = [0u8; 4096];
@@ -183,13 +206,15 @@ impl<S: AsyncRead + Unpin> AsyncRead for ImapIo<S> {
             }
             if read.filled().is_empty() {
                 // The end of the stream: what was held goes on before it.
-                let filter = this.namespace.take().expect("held above");
-                filter.finish(&mut this.passing);
+                if let Some(filter) = this.namespace.take() {
+                    filter.finish(&mut this.passing);
+                }
                 this.pass(buf);
                 return Poll::Ready(Ok(()));
             }
+            let n = this.fetch_flags.normalize(read.filled_mut());
             if let Some(filter) = this.namespace.as_mut() {
-                filter.feed(read.filled(), &mut this.passing);
+                filter.feed(&read.filled()[..n], &mut this.passing);
             }
             if !this.passing.is_empty() {
                 this.pass(buf);
@@ -261,7 +286,16 @@ mod tests {
         async_imap::Session<ImapIo<DuplexStream>>,
         BufReader<DuplexStream>,
     ) {
-        let (client, server) = tokio::io::duplex(1024);
+        session_with_capacity(1024).await
+    }
+
+    async fn session_with_capacity(
+        capacity: usize,
+    ) -> (
+        async_imap::Session<ImapIo<DuplexStream>>,
+        BufReader<DuplexStream>,
+    ) {
+        let (client, server) = tokio::io::duplex(capacity);
         let login = tokio::spawn(async move {
             async_imap::Client::new(ImapIo::new(client))
                 .login("test", "test")
@@ -290,6 +324,98 @@ mod tests {
             async_imap::error::Error::Io(e) => assert_eq!(e.kind(), io::ErrorKind::TimedOut),
             e => panic!("expected I/O timeout, got {e}"),
         }
+    }
+
+    #[tokio::test]
+    async fn fetch_repairs_doubled_flag_prefixes_without_changing_message_bytes() {
+        fetch_doubled_flags(false).await;
+        fetch_doubled_flags(true).await;
+    }
+
+    async fn fetch_doubled_flags(hold_namespace: bool) {
+        use async_imap::types::Flag;
+
+        // Both flag prefixes and literal markers cross reads. The literal's
+        // apparent responses must never be scanned as protocol syntax.
+        let body = b"Subject: FLAGS (\\\\Seen)\r\n\r\n* 9 FETCH (FLAGS (\\\\Seen))\r\n";
+        // Capacity one makes every underlying read byte-fragmented, including
+        // the otherwise easily coalesced pair of backslashes.
+        let (mut client, mut server) = session_with_capacity(1).await;
+        if hold_namespace {
+            client.as_mut().hold_namespace();
+        }
+        let fetch = tokio::spawn(async move {
+            client
+                .uid_fetch("7:8", "(UID FLAGS BODY.PEEK[])")
+                .await
+                .unwrap()
+                .try_collect::<Vec<_>>()
+                .await
+                .unwrap()
+        });
+        let tag = command(&mut server, "UID FETCH").await;
+        let mut answer = format!(
+            "* 1 fEtCh (UID 7 fLaGs (\\\\Seen \\Answered custom) \
+             BODYSTRUCTURE (\"TEXT\" \"PLAIN\" (\"NAME\" \"FLAGS (\\\\Seen)\") NIL NIL \"7BIT\" 12 1) \
+             ENVELOPE (NIL \"FLAGS (\\\\Seen)\" NIL NIL NIL NIL NIL NIL NIL NIL) BODY[] {{{}}}\r\n",
+            body.len()
+        )
+        .into_bytes();
+        answer.extend_from_slice(body);
+        answer.extend_from_slice(
+            format!(
+                ")\r\n* 2 FETCH (BODY[HEADER.FIELDS (FLAGS)] {{{}}}\r\n",
+                body.len()
+            )
+            .as_bytes(),
+        );
+        answer.extend_from_slice(body);
+        answer.extend_from_slice(b" UID 8 FLAGS (\\\\Seen \\Flagged keyword))\r\n");
+        answer.extend_from_slice(format!("{tag} OK fetched\r\n").as_bytes());
+        if hold_namespace {
+            answer.splice(0..0, b"* NAMESPACE NIL NIL NIL\r\n".iter().copied());
+        }
+        for byte in answer {
+            server.get_mut().write_all(&[byte]).await.unwrap();
+            tokio::task::yield_now().await;
+        }
+        let fetched = fetch.await.unwrap();
+        assert_eq!(fetched.len(), 2);
+        assert_eq!(fetched[0].uid, Some(7));
+        assert_eq!(fetched[0].body(), Some(body.as_slice()));
+        assert!(fetched[0].bodystructure().is_some());
+        assert_eq!(
+            fetched[0].envelope().unwrap().subject.as_deref(),
+            Some(b"FLAGS (\\\\Seen)".as_slice())
+        );
+        assert_eq!(
+            fetched[0].flags().collect::<Vec<_>>(),
+            vec![Flag::Seen, Flag::Answered, Flag::Custom("custom".into())]
+        );
+        assert_eq!(fetched[1].uid, Some(8));
+        assert_eq!(fetched[1].header(), Some(body.as_slice()));
+        assert_eq!(
+            fetched[1].flags().collect::<Vec<_>>(),
+            vec![Flag::Seen, Flag::Flagged, Flag::Custom("keyword".into())]
+        );
+    }
+
+    #[tokio::test]
+    async fn fetch_literal_bytes_pass_before_the_rest_of_the_response_arrives() {
+        let (client, mut server) = tokio::io::duplex(4096);
+        let mut client = ImapIo::new(client);
+        let first = b"* 1 FETCH (UID 7 FLAGS (\\\\Seen) BODY[] {1000000}\r\n\
+                      * 9 FETCH (FLAGS (\\\\Seen))\r\n";
+        let expected = b"* 1 FETCH (UID 7 FLAGS (\\Seen) BODY[] {1000000}\r\n\
+                         * 9 FETCH (FLAGS (\\\\Seen))\r\n";
+        server.write_all(first).await.unwrap();
+        let mut received = vec![0; expected.len()];
+        tokio::time::timeout(Duration::from_secs(1), client.read_exact(&mut received))
+            .await
+            .expect("flag repair buffered an incomplete literal")
+            .unwrap();
+        assert_eq!(received, expected);
+        // The peer remains open and the million-byte literal is unfinished.
     }
 
     #[tokio::test(start_paused = true)]
