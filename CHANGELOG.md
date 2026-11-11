@@ -1,5 +1,119 @@
 # Changelog
 
+## 1.48.0-beta.6 — 2026-11-11
+
+- **Added: Ask before switching to plain text can be turned off.**
+  **Settings → Composing → Ask before switching to plain text**, on by
+  default, is the question asked when a message holding formatting,
+  pictures or links is switched from rich text to plain text. Off, the
+  message switches at once.
+
+- **Fixed: a message being written in a narrow window ran past the
+  reader's edge** (#624). The reply or new message written in the reader's
+  place was not counted in 1.48.0-beta.5's narrower minimum width, so its
+  header ran past a reader of about 400 pixels. The window now keeps about
+  810 pixels with the reader beside the list, and about 520 with it below.
+
+- **Fixed: a message opened while mail was being archived or marked read
+  waited for all of it** (#296). Each account's server connection takes one
+  request at a time, and a message's text was kept behind every move and
+  read or star change queued before it; on a slow server a run of them held
+  the reader on its spinner for a minute or more. The text is now fetched
+  first, unless one of those changes moves that very message. Each change
+  also no longer selects its folder again when it is already open, which
+  cost 2 to 3 seconds apiece on a large Gmail inbox. Undoing a delete of
+  many messages finds them again 50 at a time instead of one by one, which
+  took nine minutes for 425 messages on Gmail. A message moved or deleted
+  on another device says so in the reader at once, instead of being asked
+  for six times over 20 seconds and ending in an error.
+
+- **Fixed: large Gmail accounts were slow in other ways too** (#296). The
+  unread count of a folder is now asked of the server as a number where it
+  can give one (ESEARCH), instead of as the list of every unread message:
+  for a Gmail All Mail with 234,000 unread messages that list was about
+  1.5 MB, fetched again on every change. A page of conversations finds its
+  members in other folders with one pass over the cache instead of one per
+  conversation, which took a page of 205 conversations from about 9 seconds
+  to under a tenth of a second on an 87,000-message cache. A message opened
+  while the account is still connecting is fetched first on the new
+  connection, rather than after a second connect. How the server's folders
+  nest is read once per run instead of at every reconnect, and its
+  capabilities once per connection instead of before every move. Read and
+  star changes to one message that queue up while the server is busy are
+  sent as the last one only.
+
+- **Fixed: a message was marked read before it had loaded** (#638). A
+  message opened while its text was still being fetched was marked read at
+  once, or two seconds later with **Settings → Reading → Mark as read** set
+  to **After two seconds**, whether or not the text had come. It is now marked once
+  the text shows, and the two seconds count from then. In a conversation, a
+  message still saying Loading… is no longer marked as it scrolls past, and
+  the count for each message starts once its text is drawn.
+
+- **Fixed: Open at startup and the window size were forgotten after a
+  logout** (#642). The window size was saved only when the window closed,
+  so a logout, a restart or an update, or a resize after closing to the
+  background, lost it; it is now saved a second after it changes. The view
+  set under **Settings → Sidebar → Open at startup** waited five seconds
+  from launch for its account, and a slow start (a login, the first start
+  after an update) ran that out and opened All Inboxes, which then replaced
+  the remembered view. The wait now starts once the account is listed, and a
+  stand-in view is never remembered. Settings files are written beside the
+  old one and then put in its place, so a write cut short by a logout no
+  longer leaves an empty file that resets every remembered setting.
+
+- **Fixed: mail sent as an alias with its own SMTP server was kept
+  nowhere** (#640). With **Server saves its own copy of sent mail** on, Hylki
+  saved no copy of anything it sent, but the server only sees mail that
+  leaves through the account's SMTP. Mail sent as an alias through the
+  alias's own server now gets Hylki's copy in Sent, or beside the message it
+  answers, as the account's settings say.
+
+- **Fixed: Ctrl+P in an attachment's preview printed the message** (#632).
+  With a PDF or a picture open in Hylki's full-window preview, Ctrl+P now
+  prints that file, as does a new printer button beside Open and Download. A
+  PDF goes to the printer as it is; a picture is centred on one page inside
+  15 mm margins, shrunk to fit and never enlarged past its size on screen.
+  The same applies in a message's own window.
+
+- **Fixed: cells pasted from a spreadsheet lost their look** (#623). The
+  table took the editor's font and line height, since LibreOffice Calc keeps
+  part of a table's look in a stylesheet the paste dropped. The font,
+  colors, borders and column widths the spreadsheet set are now written onto
+  the table, so they go out with the message too. Ctrl+V pastes the cells as
+  a table even with **Paste as plain text** on, the default, where it gave
+  tab-separated text; a single cell still arrives as its value, and
+  Ctrl+Shift+V or **Paste as Plain Text** gives the text. In a dark composer
+  the table shows on the white it was made on, a double line is drawn as
+  two, and the typing goes on below the table. The faint lines shown while
+  the caret is in a table now mark only the cells with no borders of their
+  own.
+
+- **Fixed: indented text lost its indent in the composer** (#635). Text
+  pasted without formatting, and a plain-text draft opened again, lost the
+  spaces at the start of each line and had other runs of spaces cut to one,
+  so an indented list was sent flat. Indents, runs of spaces and tabs (as
+  spaces to the next stop of eight) now stay as they were, on screen and in
+  what is sent. Plain text pasted into rich text no longer becomes a
+  paragraph a line, which put an empty line under every line of the text
+  part, and of the message when switched to plain text.
+
+- **Fixed: a plain-text draft opened again in rich text** (#634). A message
+  written in plain text came back in the composer's default format when its
+  draft was opened, when Undo Send was pressed, when it was edited in the
+  Outbox, and when it was used as a template or with Edit as New. A message
+  with no HTML part now opens in plain text, whatever the default.
+
+- **Fixed: saving a draft could leave a second copy in Drafts** (#634). An
+  automatic save that began just before Save, Send or Discard reached the
+  server after the composer had closed, with no draft to replace. The copy
+  it made stayed beside the saved one, or the clean-up that followed
+  removed the saved one instead. A closing composer now saves nothing more
+  on its own.
+
+- **Translations:** Portuguese (Portugal) and Portuguese (Brazil) updated
+  (PR #633 by Paulo Fino), each with 2488 of 2492 strings translated.
+
 ## 1.48.0-beta.5 — 2026-11-10
 
 - **Added: attachments preview in the GNOME file previewer** (#625). Where

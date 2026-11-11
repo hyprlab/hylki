@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.48.0-beta.6" date="2026-11-11" type="development">
+      <description>
+        <p>Messages open ahead of queued moves and read changes, and large Gmail accounts count unread mail faster. Mail is marked read once it has loaded, Open at startup survives a logout, and plain-text drafts reopen in plain text with their indents.</p>
+      </description>
+    </release>
     <release version="1.48.0-beta.5" date="2026-11-10" type="development">
       <description>
         <p>Attachments open in the GNOME file previewer, the launcher's menu has Contacts and Attachments, and the window can be much narrower. Spreadsheet cells paste as a table, and an attached message opens as a message.</p>

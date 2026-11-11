@@ -2,6 +2,30 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.48.0-beta.6
+
+### New features:
+
+- Asking before switching to plain text can be turned off
+
+### Fixes:
+
+- a message opened behind queued moves and read changes waiting for them - (#296)
+- slow unread counts and conversation pages on large Gmail accounts - (#296)
+- mail marked read before it had loaded - (#638)
+- Open at startup and the window size forgotten after a logout - (#642)
+- no Sent copy for mail sent as an alias with its own SMTP server - (#640)
+- Ctrl+P in an attachment's preview printing the message - (#632)
+- cells pasted from a spreadsheet losing their look - (#623)
+- indents lost from pasted and reopened plain text - (#635)
+- plain-text drafts reopening in rich text - (#634)
+- a second copy of a draft left in Drafts - (#634)
+- a message being written running past a narrow reader - (#624)
+
+### Translations:
+
+- Portuguese and Brazilian Portuguese by @somepaulo - (#633)
+
 ## What's new in 1.48.0-beta.5
 
 ### New features:
