@@ -451,6 +451,7 @@ impl AppModel {
             console_mode: prefs.console_mode,
             status_bar_top: prefs.status_bar_top,
             read_mark: prefs.read_mark,
+            read_mark_waiting: None,
             // The demo (no accounts of its own) ships with tags and filter
             // rules, so its sidebar shows the Tags and Filtered Folders
             // sections; a staged tags.toml / filters.toml still wins.

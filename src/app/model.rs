@@ -643,6 +643,9 @@ pub(crate) struct AppModel {
     pub(super) status_bar_top: bool,
     /// Read-marking policy (#100).
     pub(super) read_mark: config::ReadMark,
+    /// The lone message opened unread before its body came, to be marked
+    /// read by `read_mark` once it does (#638).
+    pub(super) read_mark_waiting: Option<Box<Message>>,
     /// Mail filter rules (#47), applied to inbox syncs.
     pub(super) filters: Vec<config::FilterRule>,
     /// The saved contacts' addresses, for rules on whether a sender is in

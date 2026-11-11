@@ -70,6 +70,14 @@
   star changes to one message that queue up while the server is busy are
   sent as the last one only.
 
+- **Fixed: a message was marked read before it had loaded** (#638). A
+  message opened while its text was still being fetched was marked read at
+  once, or two seconds later with **Settings → Reading → Mark as read** set
+  to **After two seconds**, whether or not the text had come. It is now marked once
+  the text shows, and the two seconds count from then. In a conversation, a
+  message still saying Loading… is no longer marked as it scrolls past, and
+  the count for each message starts once its text is drawn.
+
 - **Fixed: Open at startup and the window size were forgotten after a
   logout** (#642). The window size was saved only when the window closed,
   so a logout, a restart or an update, or a resize after closing to the

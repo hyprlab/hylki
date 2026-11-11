@@ -483,7 +483,7 @@ impl AppModel {
         // Marking that one outright left it read, and folded, every
         // time an unread conversation was opened again (#392).
         let conversation = thread.len() > 1;
-        self.mark_read_on_open(&m, conversation, &sender);
+        self.mark_read_on_open(&m, conversation, needs_body, &sender);
 
         let mut current = m.clone();
         if !conversation {
@@ -572,29 +572,43 @@ impl AppModel {
 
     /// Marks a lone message read as the read-mark setting says: at once,
     /// after two seconds in view (#100), or never. A conversation is marked
-    /// card by card as the reader shows them.
+    /// card by card as the reader shows them. One whose body is still on its
+    /// way waits for it: nothing can be read before then (#638).
     fn mark_read_on_open(
         &mut self,
         m: &Message,
         conversation: bool,
+        needs_body: bool,
         sender: &ComponentSender<Self>,
     ) {
-        if m.unread && !conversation {
-            match self.read_mark {
-                config::ReadMark::Shown => self.mark_opened_read(m),
-                config::ReadMark::Delay => {
-                    // Mark after a beat in view — navigating away
-                    // before then leaves it unread (#100).
-                    let s = sender.clone();
-                    let msg = m.clone();
-                    gtk::glib::timeout_add_seconds_local_once(2, move || {
-                        s.input(AppMsg::DeferredMarkRead {
-                            message: Box::new(msg.clone()),
-                        });
+        self.read_mark_waiting = None;
+        if !m.unread || conversation {
+            return;
+        }
+        if needs_body && self.read_mark != config::ReadMark::Manual {
+            self.read_mark_waiting = Some(Box::new(m.clone()));
+            return;
+        }
+        self.start_read_mark(m, sender);
+    }
+
+    /// The lone message on screen can be read now: mark it, or start the
+    /// count to marking it, as the read-mark setting says.
+    pub(super) fn start_read_mark(&mut self, m: &Message, sender: &ComponentSender<Self>) {
+        match self.read_mark {
+            config::ReadMark::Shown => self.mark_opened_read(m),
+            config::ReadMark::Delay => {
+                // Mark after a beat in view — navigating away
+                // before then leaves it unread (#100).
+                let s = sender.clone();
+                let msg = m.clone();
+                gtk::glib::timeout_add_seconds_local_once(2, move || {
+                    s.input(AppMsg::DeferredMarkRead {
+                        message: Box::new(msg.clone()),
                     });
-                }
-                config::ReadMark::Manual => {}
+                });
             }
+            config::ReadMark::Manual => {}
         }
     }
 
