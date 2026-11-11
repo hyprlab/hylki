@@ -7675,6 +7675,10 @@ msgstr "no s'ha pogut llegir la resposta del servidor (començava: {reply})"
 msgid "Could not load {path}: {e}"
 msgstr "No s'ha pogut carregar {path}: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
+
 msgid "Could not load conversation: {e}"
 msgstr "No s'ha pogut carregar la conversa: {e}"
 

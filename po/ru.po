@@ -7568,6 +7568,10 @@ msgstr "не удалось прочитать ответ сервера (он �
 msgid "Could not load {path}: {e}"
 msgstr "Не удалось загрузить {path}: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "Сообщение слишком длинное для сервера."
+
 msgid "Could not load conversation: {e}"
 msgstr "Не удалось загрузить обсуждение: {e}"
 

@@ -7592,6 +7592,10 @@ msgstr "não foi possível ler a resposta do servidor (começava por: {reply})"
 msgid "Could not load {path}: {e}"
 msgstr "Não foi possível carregar {path}: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "A mensagem é demasiado longa para o servidor."
+
 msgid "Could not load conversation: {e}"
 msgstr "Não foi possível carregar a conversa: {e}"
 

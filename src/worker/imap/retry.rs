@@ -109,7 +109,7 @@ pub(super) async fn load_body_retry(
     account: &AccountConfig,
     path: &str,
     uid: u32,
-) -> Result<(String, crate::models::SenderCheck, bool), async_imap::error::Error> {
+) -> Result<Option<(String, crate::models::SenderCheck, bool)>, async_imap::error::Error> {
     with_one_retry(session, account, async |s| load_body(s, path, uid).await).await
 }
 

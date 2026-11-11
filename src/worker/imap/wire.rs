@@ -47,6 +47,7 @@ pub(super) async fn sel(
     let r = session.select(path).await;
     if r.is_ok() {
         session.as_mut().set_selected_folder(Some(path));
+        session.as_mut().set_selected_writable();
     }
     wired(&cmd, &r);
     r
@@ -69,13 +70,28 @@ pub(super) async fn exam(
 
 /// PEEK reads work in either SELECT or EXAMINE. Reusing the mailbox already
 /// selected on this connection avoids a round trip for every prefetched body.
-/// List syncs and mutations still select explicitly to get current metadata
-/// and the write mode they need. A new connection starts unselected.
+/// List syncs still select explicitly to get current metadata, and writes
+/// go through [`select_for_write`]. A new connection starts unselected.
 pub(super) async fn select_for_read(
     session: &mut ImapSession,
     path: &str,
 ) -> Result<(), async_imap::error::Error> {
     if !session.as_mut().is_selected(path) {
+        sel(session, path).await?;
+    }
+    Ok(())
+}
+
+/// A STORE or MOVE by UID needs the mailbox open read-write and nothing
+/// fresher: UIDs do not change while it stays selected. Re-selecting before
+/// each one cost a full SELECT per read toggle or archive, 2 to 3 seconds
+/// apiece on a large Gmail inbox, and the reader queued behind them (#296).
+/// Callers that read the SELECT reply (EXISTS, PERMANENTFLAGS) use [`sel`].
+pub(super) async fn select_for_write(
+    session: &mut ImapSession,
+    path: &str,
+) -> Result<(), async_imap::error::Error> {
+    if !session.as_mut().is_selected_writable(path) {
         sel(session, path).await?;
     }
     Ok(())

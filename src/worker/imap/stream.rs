@@ -24,6 +24,9 @@ pub(in crate::worker) struct ImapIo<S> {
     idle: bool,
     failed: bool,
     selected_folder: Option<String>,
+    /// Whether `selected_folder` was opened with SELECT (read-write) rather
+    /// than EXAMINE, so a STORE or MOVE can run in it as it stands.
+    selected_writable: bool,
     /// While NAMESPACE is out (#554), what arrives is read through this.
     namespace: Option<NamespaceFilter>,
     /// Bytes read and let through, not yet handed to async-imap.
@@ -40,6 +43,7 @@ impl<S> ImapIo<S> {
             idle: false,
             failed: false,
             selected_folder: None,
+            selected_writable: false,
             namespace: None,
             passing: Vec::new(),
         }
@@ -68,8 +72,19 @@ impl<S> ImapIo<S> {
         !self.failed && self.selected_folder.as_deref() == Some(path)
     }
 
+    /// [`Self::is_selected`], opened read-write.
+    pub(in crate::worker) fn is_selected_writable(&self, path: &str) -> bool {
+        self.selected_writable && self.is_selected(path)
+    }
+
     pub(in crate::worker) fn set_selected_folder(&mut self, path: Option<&str>) {
         self.selected_folder = path.map(str::to_owned);
+        self.selected_writable = false;
+    }
+
+    /// Record that the folder just selected was opened read-write.
+    pub(in crate::worker) fn set_selected_writable(&mut self) {
+        self.selected_writable = self.selected_folder.is_some();
     }
 
     fn timed_out() -> io::Error {

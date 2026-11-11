@@ -7658,6 +7658,10 @@ msgstr ""
 msgid "Could not load {path}: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση του {path}: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τον διακομιστή."
+
 msgid "Could not load conversation: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση της συζήτησης: {e}"
 

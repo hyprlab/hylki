@@ -62,9 +62,7 @@ pub(super) async fn load_source(
     uid: u32,
 ) -> Result<String, async_imap::error::Error> {
     select_for_read(session, path).await?;
-    let raw = fetch_raw_message(session, uid)
-        .await?
-        .ok_or_else(|| no_content_error(uid))?;
+    let raw = fetch_raw_message(session, uid).await?.bytes(uid)?;
     Ok(String::from_utf8_lossy(&raw).into_owned())
 }
 
@@ -95,16 +93,43 @@ fn raw_of(f: &Fetch) -> Option<Vec<u8>> {
     }
 }
 
+/// What asking for one message's raw bytes came to.
+enum Raw {
+    Message(Vec<u8>),
+    /// The server lists the message but would not hand it over (#226).
+    Withheld,
+    /// The folder no longer holds the UID: moved or deleted elsewhere.
+    Gone,
+}
+
+impl Raw {
+    /// The bytes, or the error that says why there are none.
+    fn bytes(self, uid: u32) -> Result<Vec<u8>, async_imap::error::Error> {
+        match self {
+            Raw::Message(raw) => Ok(raw),
+            Raw::Withheld => Err(no_content_error(uid)),
+            Raw::Gone => Err(async_imap::error::Error::Bad(format!(
+                "message {uid} is no longer in this folder"
+            ))),
+        }
+    }
+}
+
 /// Fetch one message's raw bytes, asking three ways before giving up: the
 /// usual `BODY.PEEK[]`, then `RFC822`, then the header and text as two
 /// items. Mailfence answered the first with a FETCH that carried no
 /// message at all (#226), which read as an empty message and was shown,
-/// and cached, as one. `None` means the server would not hand it over any
-/// way; the reply's shape is logged so the export says what came back.
+/// and cached, as one. The reply's shape is logged so the export says what
+/// came back.
+///
+/// A first answer with no FETCH at all is a UID the folder no longer has,
+/// which the server confirms: asking twice more, then reconnecting and
+/// asking three times again, kept a message moved on another device on its
+/// spinner for 20 seconds and ended in an error (#296).
 async fn fetch_raw_message(
     session: &mut ImapSession,
     uid: u32,
-) -> Result<Option<Vec<u8>>, async_imap::error::Error> {
+) -> Result<Raw, async_imap::error::Error> {
     for (n, items) in [
         "(BODY.PEEK[])",
         "(RFC822)",
@@ -121,7 +146,16 @@ async fn fetch_raw_message(
             if n > 0 {
                 tracing::info!(target: "hylki::imap", "message {uid}: content came with {items}");
             }
-            return Ok(Some(raw));
+            return Ok(Raw::Message(raw));
+        }
+        if n == 0
+            && fetches.is_empty()
+            && search_uids(session, format!("UID {uid}"))
+                .await
+                .is_ok_and(|present| !present.contains(&uid))
+        {
+            tracing::info!(target: "hylki::imap", "message {uid}: no longer in the folder");
+            return Ok(Raw::Gone);
         }
         tracing::warn!(
             target: "hylki::imap",
@@ -130,7 +164,7 @@ async fn fetch_raw_message(
             fetches.iter().map(|f| format!("{f:?}")).collect::<Vec<_>>().join(" | ").chars().take(600).collect::<String>()
         );
     }
-    Ok(None)
+    Ok(Raw::Withheld)
 }
 
 /// The error for a message the server would not hand over (#226): surfaced
@@ -147,18 +181,17 @@ pub(super) async fn load_raw(
     uid: u32,
 ) -> Result<Vec<u8>, async_imap::error::Error> {
     select_for_read(session, path).await?;
-    fetch_raw_message(session, uid)
-        .await?
-        .ok_or_else(|| no_content_error(uid))
+    fetch_raw_message(session, uid).await?.bytes(uid)
 }
 
 /// Returns the rendered body, the sender verdict, and whether the message
-/// actually carries attachments — all three from the one fetch.
+/// actually carries attachments — all three from the one fetch. `None` when
+/// the folder no longer holds the message.
 pub(in crate::worker) async fn load_body(
     session: &mut ImapSession,
     path: &str,
     uid: u32,
-) -> Result<(String, crate::models::SenderCheck, bool), async_imap::error::Error> {
+) -> Result<Option<(String, crate::models::SenderCheck, bool)>, async_imap::error::Error> {
     select_for_read(session, path).await?;
 
     // Fetch the whole message (PEEK so \Seen isn't set) and extract the body with
@@ -174,10 +207,10 @@ pub(in crate::worker) async fn load_body(
     // network cost. A server that hands nothing over is an error, not an
     // empty message (#226): shown as one, it read as the message being
     // blank, and was cached as such.
-    let raw = fetch_raw_message(session, uid)
-        .await?
-        .ok_or_else(|| no_content_error(uid))?;
-    Ok(render_raw(&raw))
+    match fetch_raw_message(session, uid).await? {
+        Raw::Gone => Ok(None),
+        raw => Ok(Some(render_raw(&raw.bytes(uid)?))),
+    }
 }
 
 /// Fetch several messages' bodies from one folder in a single `uid_fetch`.

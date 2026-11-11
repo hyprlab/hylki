@@ -7568,6 +7568,10 @@ msgstr ""
 msgid "Could not load {path}: {e}"
 msgstr "Impossible de charger {path} : {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "Le message est trop long pour le serveur."
+
 msgid "Could not load conversation: {e}"
 msgstr "Impossible de charger la conversation : {e}"
 

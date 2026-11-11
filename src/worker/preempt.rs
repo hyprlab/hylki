@@ -1,6 +1,7 @@
 //! Reader-first ordering: the loads the reader waits on may overtake list
-//! syncs and refresh ticks, never a mutation, and may interrupt an in-flight
-//! network read when nothing but reads is queued.
+//! syncs, refresh ticks and the mutations that leave the mail they read
+//! alone, and may interrupt an in-flight network read when nothing they
+//! must wait for is queued.
 
 use tokio::sync::mpsc;
 
@@ -46,6 +47,63 @@ fn can_yield_to_reader(req: &MailRequest) -> bool {
         )
 }
 
+/// The folder and UIDs a reader load reads, `None` for any other request.
+fn reads(req: &MailRequest) -> Option<(&str, Vec<u32>)> {
+    match req {
+        MailRequest::LoadBody { path, uid, .. }
+        | MailRequest::LoadSource { path, uid, .. }
+        | MailRequest::LoadAttachments { path, uid, .. }
+        | MailRequest::ExportRaw { path, uid, .. } => Some((path, vec![*uid])),
+        MailRequest::LoadBodies { items, path } => {
+            Some((path, items.iter().map(|(_, uid)| *uid).collect()))
+        }
+        _ => None,
+    }
+}
+
+/// Whether `ahead`, a mutation queued before a reader load of `uids` in
+/// `path`, leaves what that load reads as it was.
+///
+/// A message's content never changes under its UID (RFC 3501 §2.3.1.1), so
+/// a flag or keyword change cannot alter what a body fetch returns, and a
+/// move or erase alters it only by taking that very message out of `path`.
+/// Anything else (a folder renamed or deleted, a draft saved, a reconnect)
+/// stays a barrier.
+fn leaves_alone(ahead: &MailRequest, path: &str, uids: &[u32]) -> bool {
+    let untouched = |p: &str, moved: &[u32]| p != path || !moved.iter().any(|u| uids.contains(u));
+    match ahead {
+        MailRequest::SetSeen { .. }
+        | MailRequest::SetFlagged { .. }
+        | MailRequest::SetKeyword { .. }
+        | MailRequest::MarkAllRead { .. }
+        | MailRequest::Settle { .. } => true,
+        MailRequest::MoveMessage { path: p, uid, .. }
+        | MailRequest::MarkSpam { path: p, uid, .. }
+        | MailRequest::MarkHam { path: p, uid, .. } => untouched(p, std::slice::from_ref(uid)),
+        MailRequest::MoveMessages {
+            path: p,
+            uids: moved,
+            ..
+        }
+        | MailRequest::MarkHamMany {
+            path: p,
+            uids: moved,
+            ..
+        }
+        | MailRequest::PurgeMessages {
+            path: p,
+            uids: moved,
+        } => untouched(p, moved),
+        _ => false,
+    }
+}
+
+/// Whether the reader load `reader` may go ahead of `ahead`.
+fn may_overtake(reader: &MailRequest, ahead: &MailRequest) -> bool {
+    can_yield_to_reader(ahead)
+        || reads(reader).is_some_and(|(path, uids)| leaves_alone(ahead, path, &uids))
+}
+
 /// Take everything else already queued behind `first` and move the reader's
 /// loads ahead of the list syncs they sit behind, keeping every other order.
 ///
@@ -54,9 +112,12 @@ fn can_yield_to_reader(req: &MailRequest) -> bool {
 /// asks every account for its inbox, then opens the mail) waited for the
 /// whole list fetch — and the IDLE hand-off before it — before its body was
 /// even asked for. The body is what the user is looking at; the list can
-/// follow. A reader load overtakes lists and deferred refresh ticks, never a
-/// move, flag change or reconnect, so what it reads is what the
-/// requests before it left.
+/// follow. A reader load overtakes lists and deferred refresh ticks, and
+/// flag changes and moves of other mail (#296: a run of archives or read
+/// toggles on a slow server kept the message clicked on its spinner for a
+/// minute). It never overtakes a move of the mail it reads, nor a folder
+/// change or reconnect, so what it reads is what the requests before it
+/// left.
 pub(super) fn reorder_reader_loads(
     first: MailRequest,
     rx: &mut mpsc::UnboundedReceiver<MailRequest>,
@@ -74,7 +135,7 @@ pub(super) fn reorder_reader_loads(
             if is_reader_load(&req) {
                 // Slot in ahead of list fetches and deferred refresh ticks.
                 let mut at = ordered.len();
-                while at > 0 && can_yield_to_reader(&ordered[at - 1]) {
+                while at > 0 && may_overtake(&req, &ordered[at - 1]) {
                     at -= 1;
                 }
                 ordered.insert(at, req);
@@ -90,7 +151,8 @@ pub(super) fn reorder_reader_loads(
     first
 }
 
-/// Let a reader interrupt network reads, without overtaking queued mutations.
+/// Let a reader interrupt network reads, without overtaking a queued
+/// mutation it has to wait for.
 /// Callers must own the session inside `work`, so cancellation drops a partially
 /// consumed IMAP response, and restore the interrupted job for a later retry.
 /// The reader then reconnects rather than reusing that response stream.
@@ -107,7 +169,7 @@ pub(super) async fn interrupt_read_for_reader<F: std::future::Future>(
             req = rx.recv(), if !closed => {
                 let Some(req) = req else { closed = true; continue; };
                 let interrupt = is_reader_load(&req) && backlog.iter().all(|r| {
-                    is_reader_load(r) || can_yield_to_reader(r)
+                    is_reader_load(r) || may_overtake(&req, r)
                 });
                 backlog.push_back(req);
                 if interrupt {
@@ -133,6 +195,114 @@ mod reader_preemption_tests {
             path: "INBOX".into(),
             uid: 42,
         }
+    }
+
+    fn move_of(uid: u32) -> MailRequest {
+        MailRequest::MoveMessage {
+            path: "INBOX".into(),
+            uid,
+            dest: "Archive".into(),
+        }
+    }
+
+    fn seen(uid: u32) -> MailRequest {
+        MailRequest::SetSeen {
+            path: "INBOX".into(),
+            uid,
+            seen: false,
+        }
+    }
+
+    /// #296: a run of read toggles and archives queued on a slow server
+    /// held the message clicked on behind every one of them. None of them
+    /// touches it, so it goes first and they keep their order.
+    #[test]
+    fn a_body_overtakes_flag_changes_and_moves_of_other_mail() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(seen(42)).unwrap();
+        tx.send(move_of(7)).unwrap();
+        tx.send(MailRequest::Settle {
+            path: "INBOX".into(),
+            uids: vec![7],
+        })
+        .unwrap();
+        tx.send(MailRequest::MoveMessages {
+            path: "Archive".into(),
+            uids: vec![42],
+            dest: "Trash".into(),
+        })
+        .unwrap();
+        tx.send(body()).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(seen(9), &mut rx, &mut backlog);
+        assert!(matches!(first, MailRequest::LoadBody { uid: 42, .. }));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::SetSeen { uid: 9, .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::SetSeen { uid: 42, .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::MoveMessage { uid: 7, .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::Settle { .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::MoveMessages { .. })
+        ));
+    }
+
+    /// A move taking the message out of its folder is what the body has to
+    /// wait for, and so is anything behind which it would have to pass.
+    #[test]
+    fn a_body_waits_for_a_move_of_its_own_message() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(MailRequest::MoveMessages {
+            path: "INBOX".into(),
+            uids: vec![41, 42],
+            dest: "Trash".into(),
+        })
+        .unwrap();
+        tx.send(seen(7)).unwrap();
+        tx.send(body()).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(MailRequest::Reconnect, &mut rx, &mut backlog);
+        assert!(matches!(first, MailRequest::Reconnect));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::MoveMessages { .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::LoadBody { .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::SetSeen { uid: 7, .. })
+        ));
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn a_reader_interrupts_a_read_with_only_other_mail_changing() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        let mut backlog = std::collections::VecDeque::from([seen(42), move_of(7)]);
+        tokio::spawn(async move {
+            tokio::time::sleep(Duration::from_millis(20)).await;
+            tx.send(body()).unwrap();
+        });
+        let result = interrupt_read_for_reader(
+            tokio::time::sleep(Duration::from_secs(10)),
+            &mut rx,
+            &mut backlog,
+        )
+        .await;
+        assert!(result.is_none());
     }
 
     #[test]
@@ -198,12 +368,7 @@ mod reader_preemption_tests {
     fn overtaking_refresh_ticks_still_preserves_mutation_order() {
         let (tx, mut rx) = mpsc::unbounded_channel();
         tx.send(MailRequest::RefreshUnread).unwrap();
-        tx.send(MailRequest::SetSeen {
-            path: "INBOX".into(),
-            uid: 42,
-            seen: true,
-        })
-        .unwrap();
+        tx.send(move_of(42)).unwrap();
         tx.send(MailRequest::LoadMessages {
             folder_id: 1,
             path: "INBOX".into(),
@@ -227,7 +392,7 @@ mod reader_preemption_tests {
         ));
         assert!(matches!(
             backlog.pop_front(),
-            Some(MailRequest::SetSeen { .. })
+            Some(MailRequest::MoveMessage { .. })
         ));
         assert!(matches!(
             backlog.pop_front(),
@@ -269,11 +434,7 @@ mod reader_preemption_tests {
     #[tokio::test(start_paused = true)]
     async fn a_reader_does_not_overtake_a_queued_mutation() {
         let (tx, mut rx) = mpsc::unbounded_channel();
-        let mut backlog = std::collections::VecDeque::from([MailRequest::SetSeen {
-            path: "INBOX".into(),
-            uid: 42,
-            seen: true,
-        }]);
+        let mut backlog = std::collections::VecDeque::from([move_of(42)]);
         tx.send(body()).unwrap();
         let result = interrupt_read_for_reader(
             async {
@@ -287,7 +448,7 @@ mod reader_preemption_tests {
         assert_eq!(result, Some(7));
         assert!(matches!(
             backlog.pop_front(),
-            Some(MailRequest::SetSeen { .. })
+            Some(MailRequest::MoveMessage { .. })
         ));
         assert!(matches!(
             backlog.pop_front(),
@@ -299,12 +460,7 @@ mod reader_preemption_tests {
     async fn an_arriving_mutation_remains_a_barrier_to_a_later_reader() {
         let (tx, mut rx) = mpsc::unbounded_channel();
         let mut backlog = std::collections::VecDeque::new();
-        tx.send(MailRequest::SetSeen {
-            path: "INBOX".into(),
-            uid: 42,
-            seen: true,
-        })
-        .unwrap();
+        tx.send(move_of(42)).unwrap();
         tx.send(body()).unwrap();
         let result = interrupt_read_for_reader(
             async {
@@ -318,7 +474,7 @@ mod reader_preemption_tests {
         assert_eq!(result, Some(7));
         assert!(matches!(
             backlog.pop_front(),
-            Some(MailRequest::SetSeen { .. })
+            Some(MailRequest::MoveMessage { .. })
         ));
         assert!(matches!(
             backlog.pop_front(),

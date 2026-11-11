@@ -6,7 +6,8 @@ use futures::TryStreamExt;
 
 use crate::worker::imap::wire::{
     copy_uids, create_box, delete_box, expunge_all, expunge_uids, imap_unquote, mv_uids,
-    quote_mailbox, rename_box, sel, store_uids, subscribe_box, uid_set, unsubscribe_box,
+    quote_mailbox, rename_box, sel, select_for_write, store_uids, subscribe_box, uid_set,
+    unsubscribe_box,
 };
 use crate::worker::imap::ImapSession;
 
@@ -113,7 +114,7 @@ pub(super) async fn store_flag(
     flag: &str,
     add: bool,
 ) -> Result<(), async_imap::error::Error> {
-    sel(session, path).await?;
+    select_for_write(session, path).await?;
     let op = if add { "+FLAGS" } else { "-FLAGS" };
     let query = format!("{op} ({flag})");
     // Drain the resulting FETCH stream so the command completes.
@@ -180,7 +181,7 @@ async fn move_or_create(
     uid: u32,
     dest: &str,
 ) -> Result<bool, async_imap::error::Error> {
-    sel(session, path).await?;
+    select_for_write(session, path).await?;
     match uid_move(session, &uid.to_string(), dest).await {
         Ok(()) => return Ok(false),
         Err(e) if !worth_creating(&e) => return Err(e),
@@ -215,7 +216,7 @@ pub(super) async fn move_messages(
     uids: &[u32],
     dest: &str,
 ) -> Result<bool, async_imap::error::Error> {
-    sel(session, path).await?;
+    select_for_write(session, path).await?;
     let mut created = false;
     let mut ensured_dest = false;
     for chunk in uids.chunks(300) {
@@ -344,7 +345,7 @@ pub(super) async fn mark_spam(
     uid: u32,
     dest: &str,
 ) -> Result<bool, async_imap::error::Error> {
-    sel(session, path).await?;
+    select_for_write(session, path).await?;
     for query in ["+FLAGS ($Junk)", "-FLAGS ($NotJunk)"] {
         if let Ok(stream) = store_uids(session, uid.to_string(), query).await {
             let _: Result<Vec<Fetch>, _> = stream.try_collect().await;
@@ -361,7 +362,7 @@ pub(super) async fn mark_ham(
     uids: &[u32],
     dest: &str,
 ) -> Result<bool, async_imap::error::Error> {
-    sel(session, path).await?;
+    select_for_write(session, path).await?;
     let set = uid_set(uids);
     for query in ["+FLAGS ($NotJunk)", "-FLAGS ($Junk)"] {
         if let Ok(stream) = store_uids(session, set.clone(), query).await {

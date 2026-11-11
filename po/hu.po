@@ -7932,6 +7932,10 @@ msgstr "a kiszolgáló válasza nem olvasható (így kezdődött: {reply})"
 msgid "Could not load {path}: {e}"
 msgstr "Nem tölthető be: {path}: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "Ez az üzenet nem tartalmaz megnyitható naptárfájlt."
+
 msgid "Could not load conversation: {e}"
 msgstr "A beszélgetés nem tölthető be: {e}"
 

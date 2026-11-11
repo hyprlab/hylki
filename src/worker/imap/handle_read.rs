@@ -215,7 +215,25 @@ impl<E: Emit> ImapWorker<E> {
         let session = &mut self.session;
         let emit = &self.emit;
         match load_body_retry(session, account, &path, uid).await {
-            Ok(rendered) => {
+            Ok(None) => {
+                // Moved or deleted elsewhere since the list was fetched. The
+                // list's next sync drops the row; until then the reader says
+                // why it is empty rather than spin.
+                if let Some(c) = cache.as_ref() {
+                    c.delete_message(account_id, &path, uid);
+                }
+                emit(WorkerEvent::Gone {
+                    message_id,
+                    path: path.clone(),
+                    uid,
+                });
+                emit(WorkerEvent::Body {
+                    message_id,
+                    path,
+                    body: i18n("This message was moved or deleted on the server."),
+                });
+            }
+            Ok(Some(rendered)) => {
                 deliver_body(
                     cache.as_ref(),
                     account_id,

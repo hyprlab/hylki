@@ -7857,6 +7857,10 @@ msgstr ""
 msgid "Could not load {path}: {e}"
 msgstr "Impossibile caricare {path}: {e}"
 
+#, fuzzy
+msgid "This message was moved or deleted on the server."
+msgstr "Questo messaggio è troppo lungo per essere inviato per la traduzione."
+
 msgid "Could not load conversation: {e}"
 msgstr "Impossibile caricare la conversazione: {e}"
 

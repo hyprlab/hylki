@@ -42,6 +42,19 @@
   reader off and the toolbar in the list's header. The Attachments
   page no longer holds the window wide while the mail is showing.
 
+- **Fixed: a message opened while mail was being archived or marked read
+  waited for all of it** (#296). Each account's server connection takes one
+  request at a time, and a message's text was kept behind every move and
+  read or star change queued before it; on a slow server a run of them held
+  the reader on its spinner for a minute or more. The text is now fetched
+  first, unless one of those changes moves that very message. Each change
+  also no longer selects its folder again when it is already open, which
+  cost 2 to 3 seconds apiece on a large Gmail inbox. Undoing a delete of
+  many messages finds them again 50 at a time instead of one by one, which
+  took nine minutes for 425 messages on Gmail. A message moved or deleted
+  on another device says so in the reader at once, instead of being asked
+  for six times over 20 seconds and ending in an error.
+
 - **Fixed: Ctrl+P in an attachment's preview printed the message** (#632).
   With a PDF or a picture open in Hylki's full-window preview, Ctrl+P now
   prints that file, as does a new printer button beside Open and Download. A
