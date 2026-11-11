@@ -117,15 +117,21 @@ impl AppModel {
             .as_deref()
             .and_then(first_recipient)
             .unwrap_or_else(|| (account.name.clone(), account.email.clone()));
-        let folder_id =
-            worker::reply_copy_path(account, account_id, self.cache.as_ref(), &out.in_reply_to)
-                .or_else(|| self.sent_copy_path(account_id))
-                .and_then(|p| self.folder_by_path(account_id, &p).map(|f| f.id))
-                .or_else(|| {
-                    self.folder_of_kind(account_id, FolderKind::Sent)
-                        .map(|f| f.id)
-                })
-                .or_else(|| self.current.as_ref().map(|m| m.folder_id))?;
+        let from = out.from_alias.as_deref();
+        let folder_id = worker::reply_copy_path(
+            account,
+            account_id,
+            self.cache.as_ref(),
+            &out.in_reply_to,
+            from,
+        )
+        .or_else(|| self.sent_copy_path_as(account_id, from))
+        .and_then(|p| self.folder_by_path(account_id, &p).map(|f| f.id))
+        .or_else(|| {
+            self.folder_of_kind(account_id, FolderKind::Sent)
+                .map(|f| f.id)
+        })
+        .or_else(|| self.current.as_ref().map(|m| m.folder_id))?;
         self.related_id_seq = self.related_id_seq.saturating_sub(1);
         // The card lists its files from the moment it is on screen, not
         // once the copy has been sent, appended and read back.

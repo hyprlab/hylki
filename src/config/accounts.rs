@@ -583,6 +583,25 @@ impl AccountConfig {
             _ => self.email.clone(),
         }
     }
+
+    /// The send-as alias `from` names ("Name <address>" or a bare address,
+    /// case-insensitive) when it carries its own SMTP transport (#34). Plain
+    /// aliases and the account's own address resolve to `None`.
+    pub(crate) fn alias_with_own_smtp(&self, from: &str) -> Option<&AliasConfig> {
+        let (_, addr) = split_identity(from);
+        self.aliases
+            .iter()
+            .find(|a| a.has_own_smtp() && a.address().eq_ignore_ascii_case(&addr))
+    }
+
+    /// Whether the server files its own copy of a message sent as `from`
+    /// (`None`: the account's own address). Only mail through the account's
+    /// SMTP reaches the server that keeps that copy; an alias with its own
+    /// SMTP leaves through another provider, and without Hylki's copy the
+    /// message is kept nowhere (#640).
+    pub(crate) fn server_files_sent(&self, from: Option<&str>) -> bool {
+        self.server_saves_sent && from.and_then(|f| self.alias_with_own_smtp(f)).is_none()
+    }
 }
 
 fn default_imap_port() -> u16 {

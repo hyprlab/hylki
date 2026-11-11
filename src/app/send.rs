@@ -508,7 +508,7 @@ impl AppModel {
                 });
             }
         }
-        let sent_path = self.sent_copy_path(account_id);
+        let sent_path = self.sent_copy_path_as(account_id, out.from_alias.as_deref());
         if out.send_at.is_some() {
             // Send Later has its own way back: the message waits in
             // the Outbox, where it can be edited or dropped.

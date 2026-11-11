@@ -70,6 +70,13 @@
   star changes to one message that queue up while the server is busy are
   sent as the last one only.
 
+- **Fixed: mail sent as an alias with its own SMTP server was kept
+  nowhere** (#640). With **Server saves its own copy of sent mail** on, Hylki
+  saved no copy of anything it sent, but the server only sees mail that
+  leaves through the account's SMTP. Mail sent as an alias through the
+  alias's own server now gets Hylki's copy in Sent, or beside the message it
+  answers, as the account's settings say.
+
 - **Fixed: Ctrl+P in an attachment's preview printed the message** (#632).
   With a PDF or a picture open in Hylki's full-window preview, Ctrl+P now
   prints that file, as does a new printer button beside Open and Download. A

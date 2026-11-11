@@ -126,17 +126,21 @@ pub(in crate::worker) async fn flush_outbox(
                     emit,
                 )
                 .await;
+                // Who it left as decides whether the server kept a copy (#640).
+                let from = envelope.from().map(|f| f.to_string());
                 let dest = current_sent_copy_path(
                     account,
                     account_id,
                     Some(cache),
                     item.sent_path.as_deref(),
+                    from.as_deref(),
                 );
                 let reply = reply_copy_path(
                     account,
                     account_id,
                     Some(cache),
                     &raw_in_reply_to(&item.raw),
+                    from.as_deref(),
                 );
                 if let Some(sess) = session.as_mut() {
                     let copy = queued_with_bcc(&item.raw, &item.rcpts);
