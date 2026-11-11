@@ -36,9 +36,10 @@
 
 - **Changed: the window goes narrower** (#624). The window's minimum width
   was 904 pixels whatever the layout, which kept it from tiling to half of a
-  laptop screen. It now follows what is on show: 480 pixels with the reader
-  below the list, about 770 with the reader beside the list, and about 780
-  with the reader off and the toolbar in the list's header. The Attachments
+  laptop screen. It now follows what is on show: about 520 pixels with the
+  reader below the list, about 810 with the reader beside the list, where a
+  message being written has room for its buttons, and about 780 with the
+  reader off and the toolbar in the list's header. The Attachments
   page no longer holds the window wide while the mail is showing.
 
 - **Fixed: a narrow reader was drawn past the window's edge when a message
