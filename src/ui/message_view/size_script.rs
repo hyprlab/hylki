@@ -368,7 +368,9 @@ return JSON.stringify({key:(m.dataset&&m.dataset.key)||'',sel:sel});};\
 /* A left click at widget point (x, y) that landed on a message's body\
    frame, which never reports its own clicks, picks that card as a click\
    on the rest of the card does. A link or a text selection in the body\
-   keeps the click to itself. mo is p (plain), t (Ctrl) or r (Shift). */\
+   keeps the click to itself: a Shift+click that extended the selection\
+   there is text selection, not a range of cards (#643). mo is p (plain),\
+   t (Ctrl) or r (Shift). */\
 /* The card a press at widget point (x, y) can drag: one whose header, or\
    folded bar, is under it, away from the buttons, links and chips there.\
    Its key, or nothing. */\
@@ -387,7 +389,7 @@ if(!f||f.tagName!=='IFRAME'||!f.classList.contains('hylki-frame'))return;\
 var m=f.closest('.hylki-msg');var k=(m&&m.dataset.key)||f.dataset.key;if(!k)return;\
 try{var d=f.contentDocument,b=f.getBoundingClientRect();\
 var t=d.elementFromPoint(x-b.left,y-b.top);if(t&&t.closest&&t.closest('a'))return;\
-var g=d.getSelection();if(g){if(mo!=='p')g.removeAllRanges();else if(String(g).length)return;}}catch(_){}\
+var g=d.getSelection();if(g){if(mo!=='t'&&String(g).length)return;if(mo!=='p')g.removeAllRanges();}}catch(_){}\
 reportPos();\
 try{window.webkit.messageHandlers.hylki.postMessage('sel:'+k+':'+mo);}catch(_){}};\
 window.addEventListener('keydown',function(e){if(e.key!=='Escape'||!window.__hylkiMailMenu)return;\
