@@ -8386,6 +8386,20 @@ msgstr "Πάντα ανεπτυγμένο"
 msgid "Start new messages in"
 msgstr "Έναρξη νέων μηνυμάτων σε"
 
+msgid "Reply in the original's format"
+msgstr "Απάντηση με τη μορφοποίηση του αρχικού"
+
+msgid "Plain text for plain-text mail, formatting for formatted mail."
+msgstr ""
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Μετάβαση σε απλό κείμενο;"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "Η μορφοποίηση, οι εικόνες και οι σύνδεσμοι θα αφαιρεθούν."
+
 msgid "For rich text. Default leaves it to the recipient's own font."
 msgstr ""
 "Για εμπλουτισμένο κείμενο. Από προεπιλογή χρησιμοποιείται η γραμματοσειρά "
@@ -8396,20 +8410,6 @@ msgstr "Για εμπλουτισμένο κείμενο, σε στιγμές (p
 
 msgid "Default zoom"
 msgstr "Προεπιλεγμένη μεγέθυνση"
-
-msgid "Reply in the original's format"
-msgstr "Απάντηση με τη μορφοποίηση του αρχικού"
-
-msgid "Plain-text mail is answered in plain text."
-msgstr "Τα μηνύματα απλού κειμένου απαντώνται σε απλό κείμενο."
-
-#, fuzzy
-msgid "Ask before switching to plain text"
-msgstr "Μετάβαση σε απλό κείμενο;"
-
-#, fuzzy
-msgid "Only when formatting, images or links would be removed."
-msgstr "Η μορφοποίηση, οι εικόνες και οι σύνδεσμοι θα αφαιρεθούν."
 
 msgid "Signature in replies"
 msgstr "Υπογραφή στις απαντήσεις"
@@ -8916,6 +8916,9 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Plain-text mail is answered in plain text."
+#~ msgstr "Τα μηνύματα απλού κειμένου απαντώνται σε απλό κείμενο."
 
 #~ msgid "Remote content can tell a sender when and where you read."
 #~ msgstr ""

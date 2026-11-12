@@ -3,10 +3,10 @@
 
 use crate::i18n::{i18n, i18n_f};
 use crate::models::Message;
-use crate::ui::compose::ComposePrefill;
+use crate::ui::compose::{ComposePrefill, Original};
 
 use crate::mail::attribution::attribution;
-use crate::mail::quote::{body_is_plain_text, quoted_original};
+use crate::mail::quote::quoted_original;
 
 /// A reply's subject: the original's, with one "Re:" in front.
 pub(super) fn reply_subject(subject: &str) -> String {
@@ -41,7 +41,7 @@ pub(super) fn reply_prefill(m: &Message, header: &str) -> ComposePrefill {
         // into one bar, so an answer to an answer lost the shape of the
         // conversation it was answering (#248).
         body_html: quoted_original(&attribution, &m.body),
-        original_plain: body_is_plain_text(&m.body),
+        original: Original::of(&m.body),
         // What makes this a reply rather than a new conversation: In-Reply-To
         // names the parent, References carries the chain it belongs to.
         in_reply_to: m.message_id.clone(),
@@ -200,7 +200,7 @@ pub(super) fn forward_prefill(m: &Message) -> ComposePrefill {
         cc: String::new(),
         subject,
         body_html,
-        original_plain: body_is_plain_text(&m.body),
+        original: Original::of(&m.body),
         forwards: m.message_id.clone(),
         ..Default::default()
     }
@@ -262,7 +262,7 @@ pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefil
         no_signature: false,
         // A template that failed to save comes back cut loose from it.
         template: false,
-        original_plain: false,
+        original: Original::Unknown,
         written_plain,
         typed_html: String::new(),
         assistant: false,
@@ -401,16 +401,20 @@ mod tests {
     }
 
     #[test]
-    fn a_reply_or_forward_knows_its_original_was_plain_text() {
+    fn a_reply_or_forward_knows_how_its_original_was_written() {
         let mut m = msg(1, 1, 10);
         m.subject = "Hi".into();
         m.body = crate::worker::extract_body(b"Content-Type: text/plain\r\n\r\nHello\r\n");
-        assert!(super::reply_prefill(&m, "").original_plain);
-        assert!(super::reply_all_prefill(&m, &["me@example.com".to_string()], "").original_plain);
-        assert!(super::forward_prefill(&m).original_plain);
+        let own = ["me@example.com".to_string()];
+        assert_eq!(super::reply_prefill(&m, "").original, Original::Plain);
+        assert_eq!(super::reply_all_prefill(&m, &own, "").original, Original::Plain);
+        assert_eq!(super::forward_prefill(&m).original, Original::Plain);
         m.body = "<html><body><p>Hello</p></body></html>".into();
-        assert!(!super::reply_prefill(&m, "").original_plain);
-        assert!(!super::forward_prefill(&m).original_plain);
+        assert_eq!(super::reply_prefill(&m, "").original, Original::Formatted);
+        assert_eq!(super::forward_prefill(&m).original, Original::Formatted);
+        // A body not loaded yet says nothing either way.
+        m.body = String::new();
+        assert_eq!(super::reply_prefill(&m, "").original, Original::Unknown);
     }
 
     #[test]

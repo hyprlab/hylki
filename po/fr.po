@@ -8291,6 +8291,20 @@ msgstr "Toujours déployée"
 msgid "Start new messages in"
 msgstr "Démarrer les nouveaux messages en"
 
+msgid "Reply in the original's format"
+msgstr "Répondre dans le format de l’original"
+
+msgid "Plain text for plain-text mail, formatting for formatted mail."
+msgstr ""
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Passer en texte brut ?"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "La mise en forme, les images et les liens seront supprimés."
+
 msgid "For rich text. Default leaves it to the recipient's own font."
 msgstr ""
 "Pour le texte enrichi. Par défaut laisse la police propre au destinataire."
@@ -8300,20 +8314,6 @@ msgstr "Pour le texte enrichi, en points."
 
 msgid "Default zoom"
 msgstr "Zoom par défaut"
-
-msgid "Reply in the original's format"
-msgstr "Répondre dans le format de l’original"
-
-msgid "Plain-text mail is answered in plain text."
-msgstr "Le courrier en texte brut reçoit une réponse en texte brut."
-
-#, fuzzy
-msgid "Ask before switching to plain text"
-msgstr "Passer en texte brut ?"
-
-#, fuzzy
-msgid "Only when formatting, images or links would be removed."
-msgstr "La mise en forme, les images et les liens seront supprimés."
 
 msgid "Signature in replies"
 msgstr "Signature dans les réponses"
@@ -8814,6 +8814,9 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Plain-text mail is answered in plain text."
+#~ msgstr "Le courrier en texte brut reçoit une réponse en texte brut."
 
 #~ msgid "Not spam"
 #~ msgstr "Non indésirable"

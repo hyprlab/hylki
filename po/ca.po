@@ -8388,20 +8388,11 @@ msgstr "Sempre expandit"
 msgid "Start new messages in"
 msgstr "Comença els missatges nous en"
 
-msgid "For rich text. Default leaves it to the recipient's own font."
-msgstr "Per al text enriquit. Per defecte deixa la font del destinatari."
-
-msgid "For rich text, in points."
-msgstr "Per al text enriquit, en punts."
-
-msgid "Default zoom"
-msgstr "Zoom per defecte"
-
 msgid "Reply in the original's format"
 msgstr "Respon en el format de l'original"
 
-msgid "Plain-text mail is answered in plain text."
-msgstr "El correu de text pla es respon en text pla."
+msgid "Plain text for plain-text mail, formatting for formatted mail."
+msgstr ""
 
 #, fuzzy
 msgid "Ask before switching to plain text"
@@ -8410,6 +8401,15 @@ msgstr "Vols canviar a text pla?"
 #, fuzzy
 msgid "Only when formatting, images or links would be removed."
 msgstr "El format, les imatges i els enllaços s'eliminen."
+
+msgid "For rich text. Default leaves it to the recipient's own font."
+msgstr "Per al text enriquit. Per defecte deixa la font del destinatari."
+
+msgid "For rich text, in points."
+msgstr "Per al text enriquit, en punts."
+
+msgid "Default zoom"
+msgstr "Zoom per defecte"
 
 msgid "Signature in replies"
 msgstr "Signatura a les respostes"
@@ -8908,6 +8908,9 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Plain-text mail is answered in plain text."
+#~ msgstr "El correu de text pla es respon en text pla."
 
 #~ msgid "Remote content can tell a sender when and where you read."
 #~ msgstr "El contingut remot pot dir a un remitent quan i on llegeixes."

@@ -1516,7 +1516,7 @@ The settings are in `grammar.toml`; the API key is in the keyring.
 ### Writing in Markdown or HTML
 
 A message can be written in any of four formats, chosen in **Settings →
-Composing → Write messages in** for new messages and switched for any single
+Composing → Start new messages in** for new messages and switched for any single
 message with the format button at the right-hand end of the composer's
 formatting row, which wears the icon of the format it is set to and lists
 the others, the current one in your accent colour:
@@ -1545,12 +1545,14 @@ and switching back does not restore. **Settings → Composing → Ask before
 switching to plain text** turns the question off.
 
 **Settings → Composing → Reply in the original's format**, off by default,
-answers plain text in kind. A reply, a reply to all or a forward of a message
+answers mail in kind. A reply, a reply to all or a forward of a message
 that came as plain text only, the way mailing lists and many of the people on
 them send it, opens in plain text, the original quoted as `>` lines that keep
-its indents. A message with an HTML part is answered in the format chosen in
-**Write messages in**. Drafts, templates and **Edit as New** open as they
-always have, and the format button still switches any one message.
+its indents. A message with formatting of its own opens in rich text when
+**Start new messages in** is set to plain text, so the quote keeps its look;
+with Markdown or HTML source chosen it opens in that, as both send formatted
+mail. Drafts, templates and **Edit as New** open as they always have, and the
+format button still switches any one message.
 
 **The Markdown Hylki understands** is the dialect documented at
 [markdownguide.org](https://www.markdownguide.org/): all of the basic

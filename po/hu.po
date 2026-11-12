@@ -8682,20 +8682,11 @@ msgstr "Feladó mindig engedélyezve"
 msgid "Start new messages in"
 msgstr "Írj üzeneteket a"
 
-msgid "For rich text. Default leaves it to the recipient's own font."
-msgstr ""
-
-msgid "For rich text, in points."
-msgstr ""
-
-msgid "Default zoom"
-msgstr "Alapértelmezett nagyítás"
-
 #, fuzzy
 msgid "Reply in the original's format"
 msgstr "Válasz ezekkel a fájlokkal"
 
-msgid "Plain-text mail is answered in plain text."
+msgid "Plain text for plain-text mail, formatting for formatted mail."
 msgstr ""
 
 #, fuzzy
@@ -8704,6 +8695,15 @@ msgstr "Beillesztés egyszerű szövegként"
 
 msgid "Only when formatting, images or links would be removed."
 msgstr ""
+
+msgid "For rich text. Default leaves it to the recipient's own font."
+msgstr ""
+
+msgid "For rich text, in points."
+msgstr ""
+
+msgid "Default zoom"
+msgstr "Alapértelmezett nagyítás"
 
 msgid "Signature in replies"
 msgstr "Aláírás a válaszokban"

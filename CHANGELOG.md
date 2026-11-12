@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Changed: Reply in the original's format also answers formatted mail in
+  rich text** (#646, requested by 3v1n0). With the setting on and new
+  messages starting in plain text, a reply or forward to a message with
+  formatting of its own opens in rich text, so its quote keeps its look.
+  Plain-text mail is still answered in plain text. The switch now sits
+  under **Start new messages in**.
+
 - **Fixed: attachment icons in the reader kept fixed colors** (#651,
   reported by yioannides). A PDF's icon now wears the theme's error color,
   as the importance mark does since #619, and the other file types take

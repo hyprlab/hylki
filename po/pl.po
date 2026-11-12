@@ -8753,20 +8753,11 @@ msgstr "Zawsze zezwalaj temu nadawcy"
 msgid "Start new messages in"
 msgstr "Format pisania wiadomości"
 
-msgid "For rich text. Default leaves it to the recipient's own font."
-msgstr ""
-
-msgid "For rich text, in points."
-msgstr ""
-
-msgid "Default zoom"
-msgstr "Domyślne powiększenie"
-
 #, fuzzy
 msgid "Reply in the original's format"
 msgstr "Odpowiedz z plikami"
 
-msgid "Plain-text mail is answered in plain text."
+msgid "Plain text for plain-text mail, formatting for formatted mail."
 msgstr ""
 
 #, fuzzy
@@ -8775,6 +8766,15 @@ msgstr "Wklejanie jako zwykły tekst"
 
 msgid "Only when formatting, images or links would be removed."
 msgstr ""
+
+msgid "For rich text. Default leaves it to the recipient's own font."
+msgstr ""
+
+msgid "For rich text, in points."
+msgstr ""
+
+msgid "Default zoom"
+msgstr "Domyślne powiększenie"
 
 msgid "Signature in replies"
 msgstr "Podpis w odpowiedziach"

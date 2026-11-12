@@ -48,7 +48,7 @@ use showcase::showcase_hooks;
 use signature::sig_html;
 use subject::wire_subject;
 use suggest::{load_suggestions, wire_recipient_rows};
-pub(crate) use types::{ComposeAccount, ComposeInit, ComposePrefill};
+pub(crate) use types::{ComposeAccount, ComposeInit, ComposePrefill, Original};
 
 #[relm4::component(pub(crate))]
 impl Component for Compose {

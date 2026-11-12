@@ -7680,6 +7680,18 @@ msgstr ""
 msgid "Start new messages in"
 msgstr ""
 
+msgid "Reply in the original's format"
+msgstr ""
+
+msgid "Plain text for plain-text mail, formatting for formatted mail."
+msgstr ""
+
+msgid "Ask before switching to plain text"
+msgstr ""
+
+msgid "Only when formatting, images or links would be removed."
+msgstr ""
+
 msgid "For rich text. Default leaves it to the recipient's own font."
 msgstr ""
 
@@ -7687,18 +7699,6 @@ msgid "For rich text, in points."
 msgstr ""
 
 msgid "Default zoom"
-msgstr ""
-
-msgid "Reply in the original's format"
-msgstr ""
-
-msgid "Plain-text mail is answered in plain text."
-msgstr ""
-
-msgid "Ask before switching to plain text"
-msgstr ""
-
-msgid "Only when formatting, images or links would be removed."
 msgstr ""
 
 msgid "Signature in replies"

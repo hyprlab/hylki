@@ -8375,6 +8375,20 @@ msgstr "Immer ausgeklappt"
 msgid "Start new messages in"
 msgstr "Format für neue Nachrichten"
 
+msgid "Reply in the original's format"
+msgstr "Im ursprünglichen Format antworten"
+
+msgid "Plain text for plain-text mail, formatting for formatted mail."
+msgstr ""
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Zu reinem Text wechseln?"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "Formatierungen, Bilder und Links werden entfernt"
+
 msgid "For rich text. Default leaves it to the recipient's own font."
 msgstr ""
 "Für formatierten Text (HTML). Die Standardeinstellung überlässt die "
@@ -8385,20 +8399,6 @@ msgstr "Für formatierten Text (in Pt)."
 
 msgid "Default zoom"
 msgstr "Standard-Zoom"
-
-msgid "Reply in the original's format"
-msgstr "Im ursprünglichen Format antworten"
-
-msgid "Plain-text mail is answered in plain text."
-msgstr "Text-E-Mails werden als reiner Text beantwortet."
-
-#, fuzzy
-msgid "Ask before switching to plain text"
-msgstr "Zu reinem Text wechseln?"
-
-#, fuzzy
-msgid "Only when formatting, images or links would be removed."
-msgstr "Formatierungen, Bilder und Links werden entfernt"
 
 msgid "Signature in replies"
 msgstr "Signatur in Antworten"
@@ -8910,6 +8910,9 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Plain-text mail is answered in plain text."
+#~ msgstr "Text-E-Mails werden als reiner Text beantwortet."
 
 #~ msgid "Remote content can tell a sender when and where you read."
 #~ msgstr ""

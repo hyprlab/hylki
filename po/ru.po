@@ -8277,6 +8277,20 @@ msgstr "Всегда развёрнута"
 msgid "Start new messages in"
 msgstr "Начать новые сообщения в"
 
+msgid "Reply in the original's format"
+msgstr "Ответ в формате оригинала"
+
+msgid "Plain text for plain-text mail, formatting for formatted mail."
+msgstr ""
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Переключиться на обычный текст?"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "Форматирование, изображения и ссылки удалены."
+
 msgid "For rich text. Default leaves it to the recipient's own font."
 msgstr ""
 "Для насыщенного текста. По умолчанию это оставляется на усмотрение "
@@ -8287,20 +8301,6 @@ msgstr "Для форматированного текста в пунктах."
 
 msgid "Default zoom"
 msgstr "Масштаб по умолчанию"
-
-msgid "Reply in the original's format"
-msgstr "Ответ в формате оригинала"
-
-msgid "Plain-text mail is answered in plain text."
-msgstr "На письмо с открытым текстом отвечают в виде обычного текста."
-
-#, fuzzy
-msgid "Ask before switching to plain text"
-msgstr "Переключиться на обычный текст?"
-
-#, fuzzy
-msgid "Only when formatting, images or links would be removed."
-msgstr "Форматирование, изображения и ссылки удалены."
 
 msgid "Signature in replies"
 msgstr "Подпись в ответах"
@@ -8790,6 +8790,9 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Plain-text mail is answered in plain text."
+#~ msgstr "На письмо с открытым текстом отвечают в виде обычного текста."
 
 #~ msgid "Remote content can tell a sender when and where you read."
 #~ msgstr ""

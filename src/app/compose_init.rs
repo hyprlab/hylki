@@ -10,7 +10,7 @@ use crate::config;
 use crate::config::{split_identity, AccountConfig};
 use crate::i18n::i18n;
 use crate::ui::compose::{Compose, ComposeInit, ComposeOutput};
-use crate::ui::compose::{ComposeAccount, ComposePrefill};
+use crate::ui::compose::{ComposeAccount, ComposePrefill, Original};
 use crate::ui::preferences::PrefOutput;
 
 use super::model::AppModel;
@@ -291,14 +291,12 @@ impl AppModel {
         let selected = choose_identity(&accounts, account_id, &mut prefill);
         prefill.receipt.get_or_insert(self.request_receipts);
 
-        // Plain text picked up again stays plain (#634). A reply or forward
-        // to plain-text mail answers in kind when the setting says so
-        // (#436); anything else starts in the chosen format.
-        let format = if prefill.written_plain || (self.follow_plain && prefill.original_plain) {
-            config::ComposeFormat::Plain
-        } else {
-            self.compose_format
-        };
+        let format = opening_format(
+            self.compose_format,
+            self.follow_plain,
+            prefill.written_plain,
+            prefill.original,
+        );
         // The user's own addresses go last in the recipient suggestions.
         let own: Vec<(String, String)> = self
             .config
@@ -404,6 +402,26 @@ impl AppModel {
             }
         });
         win
+    }
+}
+
+/// The format a composer opens in. Plain text picked up again stays plain
+/// (#634). With "Reply in the original's format" on, a reply or forward
+/// answers in kind (#436): plain text to plain-text mail, and rich text to
+/// formatted mail when new messages start in plain text (#646). Markdown and
+/// HTML source are kept, as both send formatted mail. Anything else starts
+/// in the chosen format.
+fn opening_format(
+    chosen: config::ComposeFormat,
+    follow: bool,
+    written_plain: bool,
+    original: Original,
+) -> config::ComposeFormat {
+    use config::ComposeFormat::{Plain, Rich};
+    match (written_plain, follow, original) {
+        (true, _, _) | (_, true, Original::Plain) => Plain,
+        (_, true, Original::Formatted) if chosen == Plain => Rich,
+        _ => chosen,
     }
 }
 
@@ -608,5 +626,27 @@ mod tests {
         assert_eq!(choose_identity(&ids, 1, &mut reply), 1);
         let mut fresh = ComposePrefill::default();
         assert_eq!(choose_identity(&ids, 1, &mut fresh), 0);
+    }
+
+    #[test]
+    fn an_answer_opens_in_the_original_format_when_asked() {
+        use config::ComposeFormat::{Html, Markdown, Plain, Rich};
+        // Off: the chosen format, whatever the original was.
+        for original in [Original::Plain, Original::Formatted, Original::Unknown] {
+            assert_eq!(opening_format(Rich, false, false, original), Rich);
+            assert_eq!(opening_format(Plain, false, false, original), Plain);
+        }
+        // On: plain-text mail is answered in plain text (#436)...
+        assert_eq!(opening_format(Rich, true, false, Original::Plain), Plain);
+        assert_eq!(opening_format(Markdown, true, false, Original::Plain), Plain);
+        // ...and formatted mail in rich text when the default is plain (#646).
+        assert_eq!(opening_format(Plain, true, false, Original::Formatted), Rich);
+        assert_eq!(opening_format(Markdown, true, false, Original::Formatted), Markdown);
+        assert_eq!(opening_format(Html, true, false, Original::Formatted), Html);
+        // A new message, or one whose original was not loaded.
+        assert_eq!(opening_format(Plain, true, false, Original::Unknown), Plain);
+        assert_eq!(opening_format(Rich, true, false, Original::Unknown), Rich);
+        // Plain text picked up again stays plain (#634).
+        assert_eq!(opening_format(Rich, true, true, Original::Formatted), Plain);
     }
 }

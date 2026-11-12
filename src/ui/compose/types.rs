@@ -4,6 +4,32 @@
 use crate::config::{ComposeFormat, SignaturePosition};
 use crate::models::DraftOrigin;
 
+/// How the message replied to or forwarded was written, for the setting
+/// that answers in kind (#436, #646).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub(crate) enum Original {
+    /// Not an answer, or its body was not there to look at.
+    #[default]
+    Unknown,
+    /// It had no HTML part.
+    Plain,
+    /// It had formatting of its own.
+    Formatted,
+}
+
+impl Original {
+    /// What a message's rendered `body` says about how it was written.
+    pub(crate) fn of(body: &str) -> Self {
+        if crate::mail::quote::body_is_plain_text(body) {
+            Self::Plain
+        } else if body.trim().is_empty() {
+            Self::Unknown
+        } else {
+            Self::Formatted
+        }
+    }
+}
+
 /// Which recipient field a suggestion is for.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum Field {
@@ -106,9 +132,10 @@ pub(crate) struct ComposePrefill {
     /// Editing a template (#360): `draft_origin` is where it is kept, and
     /// saving puts it back there rather than in Drafts.
     pub(crate) template: bool,
-    /// The message replied to or forwarded had no HTML part (#436): with
-    /// the setting on, the composer opens in plain text.
-    pub(crate) original_plain: bool,
+    /// How the message replied to or forwarded was written: with the
+    /// setting on, the composer opens in plain text for plain-text mail and
+    /// in rich text for formatted mail (#436, #646).
+    pub(crate) original: Original,
     /// The message being picked up again (a draft, a queued or unsent
     /// message, a copy) was written in plain text: it opens in plain text
     /// whatever the default format is (#634).

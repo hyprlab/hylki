@@ -8285,21 +8285,11 @@ msgstr "Sempre expandida"
 msgid "Start new messages in"
 msgstr "Iniciar novas mensagens em"
 
-msgid "For rich text. Default leaves it to the recipient's own font."
-msgstr "Para texto formatado. A opção Padrão usa a fonte do destinatário."
-
-msgid "For rich text, in points."
-msgstr "Para texto formatado, em pontos."
-
-msgid "Default zoom"
-msgstr "Zoom padrão"
-
 msgid "Reply in the original's format"
 msgstr "Responder no formato original"
 
-msgid "Plain-text mail is answered in plain text."
+msgid "Plain text for plain-text mail, formatting for formatted mail."
 msgstr ""
-"As mensagens em texto sem formatação são respondidas em texto sem formatação."
 
 #, fuzzy
 msgid "Ask before switching to plain text"
@@ -8308,6 +8298,15 @@ msgstr "Mudar para texto sem formatação?"
 #, fuzzy
 msgid "Only when formatting, images or links would be removed."
 msgstr "A formatação, as imagens e os links são removidos."
+
+msgid "For rich text. Default leaves it to the recipient's own font."
+msgstr "Para texto formatado. A opção Padrão usa a fonte do destinatário."
+
+msgid "For rich text, in points."
+msgstr "Para texto formatado, em pontos."
+
+msgid "Default zoom"
+msgstr "Zoom padrão"
 
 msgid "Signature in replies"
 msgstr "Assinatura nas respostas"
@@ -8800,3 +8799,8 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Plain-text mail is answered in plain text."
+#~ msgstr ""
+#~ "As mensagens em texto sem formatação são respondidas em texto sem "
+#~ "formatação."

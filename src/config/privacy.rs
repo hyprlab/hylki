@@ -291,9 +291,11 @@ pub(crate) struct PrivacyFile {
     /// where `compose_plain` above still says which of the two it is.
     #[serde(default)]
     pub(crate) compose_format: Option<ComposeFormat>,
-    /// Whether a reply or forward to mail that had no HTML part is written
-    /// in plain text whatever `compose_format` says (#436). Mailing lists
-    /// and the people on them often write plain text and expect it back.
+    /// Whether a reply or forward answers in the original's format: plain
+    /// text to mail that had no HTML part whatever `compose_format` says
+    /// (#436), and rich text to formatted mail when `compose_format` is
+    /// plain (#646). Mailing lists and the people on them often write plain
+    /// text and expect it back; formatted mail keeps its look.
     #[serde(default)]
     pub(crate) follow_plain: bool,
     /// Whether switching a message from rich to plain text asks first when
