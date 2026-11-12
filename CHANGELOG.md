@@ -1,6 +1,13 @@
 # Changelog
 
-## Unreleased
+## 1.48.0 — 2026-11-12
+
+Everything from 1.48.0-beta.1 to 1.48.0-beta.7: AI agents that reach your mail
+over MCP as far as you allow, an encrypted mail cache, templates inserted from
+the composer, attachments previewed in the GNOME file previewer, a sort kept
+for each folder, trackers taken off links, warnings before opening a program
+or encrypting to a key nobody has trusted, a narrower window, and faster mail
+on large Gmail accounts.
 
 - **Fixed: a search from one account's folder looked in every account**
   (#649, reported by rsx-xp). From an account's folder the scope picker now
@@ -333,12 +340,11 @@
   right-click menu** (#611, by FLASH911) were in the system's language rather
   than the one chosen in Hylki. They now follow Hylki's.
 
-- **Translations:** Russian completed (PR #611 by FLASH911), with 2440 of 2450
-  strings translated. French updated (PR #615 by frenchy82), with 2419 of 2474
-  strings translated. Spanish updated (PR #629 by Daniel Miguel), with 2487 of
-  2488 strings translated. German updated (PRs #628 and #636 by Samuel
-  Edlmeier), with 2488 of 2496 strings translated. Portuguese (Portugal) and Portuguese (Brazil) completed (PR #633 by Paulo
-  Fino), 2488 of 2488 strings each.
+- **Translations:** German (PRs #578, #628 and #636 by Samuel Edlmeier),
+  2488 of 2498 strings translated. Spanish (PR #629 by Daniel Miguel), 2487.
+  Portuguese (Portugal) and Portuguese (Brazil) (PR #633 by Paulo Fino), 2488
+  each. Russian (PR #611 by FLASH911), 2435. French (PR #615 by frenchy82),
+  2418.
 
 - **Added: trackers come off links** (#599, by James Reilly). A link opened or
   copied from a message loses its tracking tags (`utm_source` and the like,
@@ -451,9 +457,6 @@
   now use the accent's foreground color. GNOME's accents still get white. The
   dark palettes of Forest, Tidal and Earth now get their dark foreground on the
   accent, and Rose's its pale pink.
-
-- **Translations:** German updated (PR #578 by Samuel Edlmeier), with 2375 of
-  2458 strings translated.
 
 - **Fixed: sending from a Microsoft account could report that a message could
   not be loaded** (#538, by James Reilly). The message had gone out. Microsoft
