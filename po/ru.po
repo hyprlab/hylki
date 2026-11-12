@@ -5168,6 +5168,12 @@ msgstr "Отметить все как прочитанные"
 msgid "Mark All as Unread"
 msgstr "Отметить все как непрочитанные"
 
+#, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr ""
+"Предоставить доступ ко всей учётной записи (кроме корзины и нежелательной "
+"почты)"
+
 msgid "All folders (except trash & junk)"
 msgstr "Все папки (кроме корзины и нежелательной почты)"
 
@@ -5177,8 +5183,20 @@ msgstr "Везде"
 msgid "This folder"
 msgstr "Эта папка"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Почтовая учётная запись"
+
 msgid "All folders"
 msgstr "Все папки"
+
+#, fuzzy
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"Все папки всех учётных записей, кроме «Корзины» и «Нежелательной почты». "
+"Поиск, начатый в «Корзине» или «Нежелательной почте», также отображается там."
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5194,6 +5212,12 @@ msgstr ""
 
 msgid "Only the folder or view the list is showing."
 msgstr "Отображается только папка или просмотр списка."
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr ""
+"Каждая папка каждой учётной записи, включая «Корзину» и «Нежелательную "
+"почту»."
 
 msgid "What this searches"
 msgstr "Что это ищет"

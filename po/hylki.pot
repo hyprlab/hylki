@@ -4777,6 +4777,9 @@ msgstr ""
 msgid "Mark All as Unread"
 msgstr ""
 
+msgid "This Account (Except Trash & Junk)"
+msgstr ""
+
 msgid "All folders (except trash & junk)"
 msgstr ""
 
@@ -4786,7 +4789,15 @@ msgstr ""
 msgid "This folder"
 msgstr ""
 
+msgid "This Account"
+msgstr ""
+
 msgid "All folders"
+msgstr ""
+
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
 msgstr ""
 
 msgid ""
@@ -4798,6 +4809,9 @@ msgid "Every folder of every account, Trash and Junk included."
 msgstr ""
 
 msgid "Only the folder or view the list is showing."
+msgstr ""
+
+msgid "Every folder of this account, Trash and Junk included."
 msgstr ""
 
 msgid "What this searches"

@@ -228,56 +228,78 @@ pub(super) fn decide(query: &Query, found: u64, m: &Message, hits: Option<&TextH
 pub(crate) enum ServerScope {
     /// The folders the list is showing, by (account, folder id).
     Here(Vec<(u32, u32)>),
-    /// Every folder of every account; Trash and Junk only with `waste`.
-    All { waste: bool },
+    /// Every folder of `account`, or of every account when it is `None`;
+    /// Trash and Junk only with `waste`.
+    All { waste: bool, account: Option<u32> },
 }
 
 /// Which messages the search field filters over.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum SearchScope {
-    /// Every folder of every account (the merged `search_pool`) but Trash
-    /// and Junk, unless the list is showing one of them (#374).
+    /// Every folder (the merged `search_pool`) of the account on show, or of
+    /// every account from a view across them (#649), but Trash and Junk,
+    /// unless the list is showing one of them (#374).
     AllFolders,
     /// Every folder of every account, Trash and Junk too.
     Everywhere,
     /// Only the folder currently shown (the local `all` index).
     ThisFolder,
+    /// Every folder of the account on show, Trash and Junk too (#649).
+    /// Offered only while the list shows a single account's folder.
+    Account,
 }
 
 impl SearchScope {
-    /// In the order the search bar's dropdown lists them.
-    pub(super) const ALL: [SearchScope; 3] = [
+    /// By place, as the showcase names them; the dropdown puts `Account`
+    /// first.
+    pub(super) const ALL: [SearchScope; 4] = [
         SearchScope::AllFolders,
         SearchScope::Everywhere,
         SearchScope::ThisFolder,
+        SearchScope::Account,
     ];
 
-    pub(super) fn label(self) -> String {
+    /// Whether the scope keeps to the account on show, when there is one.
+    pub(super) fn per_account(self) -> bool {
+        matches!(self, SearchScope::AllFolders | SearchScope::Account)
+    }
+
+    /// `one_account`: the list shows a single account's folder, which
+    /// "All folders" keeps to (#649).
+    pub(super) fn label(self, one_account: bool) -> String {
         match self {
+            SearchScope::AllFolders if one_account => {
+                i18n("This Account (Except Trash & Junk)")
+            }
             SearchScope::AllFolders => i18n("All folders (except trash & junk)"),
             SearchScope::Everywhere => i18n("Everywhere"),
             SearchScope::ThisFolder => i18n("This folder"),
+            SearchScope::Account => i18n("This Account"),
         }
     }
 
     /// The name on the picker's button, short enough for a narrow list: the
     /// popover spells the scope out.
-    fn button_label(self) -> String {
+    fn button_label(self, one_account: bool) -> String {
         match self {
-            SearchScope::AllFolders => i18n("All folders"),
-            _ => self.label(),
+            SearchScope::AllFolders if !one_account => i18n("All folders"),
+            _ => self.label(one_account),
         }
     }
 
     /// What the scope searches, behind the info button beside its name in
     /// the picker.
-    fn description(self) -> String {
+    fn description(self, one_account: bool) -> String {
         match self {
+            SearchScope::AllFolders if one_account => i18n(
+                "Every folder of this account, except Trash and Junk. A search started in Trash or Junk looks there too.",
+            ),
             SearchScope::AllFolders => i18n(
                 "Every folder of every account, except Trash and Junk. A search started in Trash or Junk looks there too.",
             ),
             SearchScope::Everywhere => i18n("Every folder of every account, Trash and Junk included."),
             SearchScope::ThisFolder => i18n("Only the folder or view the list is showing."),
+            SearchScope::Account => i18n("Every folder of this account, Trash and Junk included."),
         }
     }
 }
@@ -292,13 +314,17 @@ pub(super) struct ScopePicker {
     radios: Vec<(SearchScope, gtk::CheckButton)>,
     /// Each scope's info button, in the same order.
     pub(super) infos: Vec<gtk::MenuButton>,
+    /// What each info button tells, in the same order.
+    abouts: Vec<gtk::Label>,
+    /// Each scope's row in the popover, in the same order.
+    rows: Vec<gtk::Box>,
 }
 
 impl ScopePicker {
     pub(super) fn new(button: &gtk::MenuButton, input: &relm4::Sender<MessageListInput>) -> Self {
         // An ellipsizing label, so the button, not the messages, gives way
         // first in a narrow list (#29).
-        let label = gtk::Label::new(Some(&SearchScope::AllFolders.button_label()));
+        let label = gtk::Label::new(Some(&SearchScope::AllFolders.button_label(false)));
         label.set_ellipsize(gtk::pango::EllipsizeMode::End);
         let face = gtk::Box::new(gtk::Orientation::Horizontal, 6);
         face.append(&label);
@@ -311,12 +337,14 @@ impl ScopePicker {
         list.add_css_class("search-scope-popover");
         let mut radios: Vec<(SearchScope, gtk::CheckButton)> = Vec::new();
         let mut infos = Vec::new();
+        let mut abouts = Vec::new();
+        let mut rows = Vec::new();
         for scope in SearchScope::ALL {
-            let radio = gtk::CheckButton::with_label(&scope.label());
+            let radio = gtk::CheckButton::with_label(&scope.label(false));
             radio.set_hexpand(true);
             // Beside the radio, not in it: a click on it must not pick the
             // scope.
-            let about = gtk::Label::new(Some(&scope.description()));
+            let about = gtk::Label::new(Some(&scope.description(false)));
             about.set_xalign(0.0);
             about.set_wrap(true);
             about.set_max_width_chars(34);
@@ -334,6 +362,7 @@ impl ScopePicker {
             row.append(&radio);
             row.append(&info);
             infos.push(info);
+            abouts.push(about);
             if let Some((_, first)) = radios.first() {
                 radio.set_group(Some(first));
             }
@@ -346,7 +375,14 @@ impl ScopePicker {
                     popover.popdown();
                 }
             });
-            list.append(&row);
+            // The whole account heads the list, shown only for one account.
+            if scope == SearchScope::Account {
+                row.set_visible(false);
+                list.prepend(&row);
+            } else {
+                list.append(&row);
+            }
+            rows.push(row);
             radios.push((scope, radio));
         }
         popover.set_child(Some(&list));
@@ -357,11 +393,22 @@ impl ScopePicker {
             arrow,
             radios,
             infos,
+            abouts,
+            rows,
         }
     }
 
-    pub(super) fn sync(&self, scope: SearchScope) {
-        self.label.set_label(&scope.button_label());
+    /// Show `scope` as chosen, the names and rows as the list showing a
+    /// single account's folder, or not, has them (#649).
+    pub(super) fn sync(&self, scope: SearchScope, one_account: bool) {
+        self.label.set_label(&scope.button_label(one_account));
+        for (((s, radio), about), row) in self.radios.iter().zip(&self.abouts).zip(&self.rows) {
+            radio.set_label(Some(&s.label(one_account)));
+            about.set_label(&s.description(one_account));
+            if *s == SearchScope::Account {
+                row.set_visible(one_account);
+            }
+        }
         if let Some((_, radio)) = self.radios.iter().find(|(s, _)| *s == scope) {
             if !radio.is_active() {
                 radio.set_active(true);
@@ -405,6 +452,13 @@ impl MessageList {
 
     pub(super) fn searching_pool(&self) -> bool {
         self.wants_pool() && !self.search_pool.is_empty()
+    }
+
+    /// The one account a search looks in, when the list shows a single
+    /// account's folder and the scope keeps to it (#649).
+    pub(super) fn search_kept_to(&self) -> Option<u32> {
+        self.search_account
+            .filter(|_| self.wants_pool() && self.scope.per_account())
     }
 
     /// Drop any active search: clear the query and the entry text so a folder
@@ -503,10 +557,12 @@ impl MessageList {
                     .map(|(k, _)| *k)
                     .collect()
             });
+        let account = self.search_kept_to();
         let query = self.parsed.clone();
         move |m: &Message| {
             let key = (m.account_id, m.folder_id);
-            !left_out.contains(&key)
+            account.is_none_or(|a| a == m.account_id)
+                && !left_out.contains(&key)
                 && folders.as_ref().is_none_or(|f| f.contains(&key))
                 && query.match_flags(m)
                 && quick.passes(m)

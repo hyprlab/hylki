@@ -5503,6 +5503,10 @@ msgid "Mark All as Unread"
 msgstr "Oznacz wszystkie jako nieprzeczytane"
 
 #, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr "Wyszukaj katalogi"
+
+#, fuzzy
 msgid "All folders (except trash & junk)"
 msgstr "Wyszukaj katalogi"
 
@@ -5513,8 +5517,17 @@ msgstr "Lub jeśli"
 msgid "This folder"
 msgstr "Ten katalog"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Konto pocztowe"
+
 msgid "All folders"
 msgstr "Wszystkie katalogi"
+
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5526,6 +5539,10 @@ msgstr ""
 
 msgid "Only the folder or view the list is showing."
 msgstr ""
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr "Wyszukaj katalogi"
 
 msgid "What this searches"
 msgstr ""
@@ -9351,10 +9368,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Nie udało się zmienić nazwy katalogu: nieznany katalog"
-
-#, fuzzy
-#~ msgid "Search all folders but Trash and Junk"
-#~ msgstr "Wyszukaj katalogi"
 
 #, fuzzy
 #~ msgid "Search all folders, Trash and Junk too"

@@ -474,6 +474,7 @@ impl SimpleComponent for MessageList {
                 self.on_server_hits(terms, hits, done)
             }
             MessageListInput::SetScope(scope) => self.on_set_scope(scope, &sender),
+            MessageListInput::SetSearchAccount(account) => self.on_set_search_account(account),
             MessageListInput::SetSearchPool(pool, folders, text) => {
                 self.on_set_search_pool(pool, folders, text)
             }

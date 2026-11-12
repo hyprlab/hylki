@@ -247,7 +247,8 @@ impl MessageList {
             look.in_drafts = self.in_drafts;
             look.show_recipient = self.show_recipient;
             look.thread_expansion = self.thread_expansion;
-            look.ringed = if self.colorize {
+            // One account's results need no tint to tell them apart.
+            look.ringed = if self.colorize && self.search_kept_to().is_none() {
                 self.account_colors.keys().copied().collect()
             } else {
                 Default::default()

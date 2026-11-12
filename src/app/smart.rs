@@ -97,6 +97,10 @@ impl AppModel {
         self.message_list
             .emit(MessageListInput::SetScope(SearchScope::ThisFolder));
         self.message_list.emit(MessageListInput::SetColorize(true));
+        // A tag view narrowed to one account searches that account.
+        self.message_list.emit(MessageListInput::SetSearchAccount(
+            self.tag_view.as_ref().and_then(|(account, _)| *account),
+        ));
         let sent = self
             .open_smart_folder()
             .is_some_and(|f| f.folder == Some(config::SmartFolderKind::Sent));

@@ -5225,6 +5225,11 @@ msgstr "Alle als gelesen markieren"
 msgid "Mark All as Unread"
 msgstr "Alle als ungelesen markieren"
 
+#, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr ""
+"Zugriff auf das gesamte Konto gewähren (ausgenommen Papierkorb und Spam)"
+
 msgid "All folders (except trash & junk)"
 msgstr "Alle Ordner (außer Papierkorb und Spam)"
 
@@ -5234,8 +5239,20 @@ msgstr "Alle Ordner"
 msgid "This folder"
 msgstr "Dieser Ordner"
 
+#, fuzzy
+msgid "This Account"
+msgstr "E-Mail-Konto"
+
 msgid "All folders"
 msgstr "Alle Ordner"
+
+#, fuzzy
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"Alle Ordner aller Konten, ausgenommen Papierkorb und Spam. Wird die Suche im "
+"Papierkorb oder Spam gestartet, werden diese ebenfalls durchsucht."
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5249,6 +5266,10 @@ msgstr "Alle Ordner aller Konten, inklusive Papierkorb und Spam.)"
 
 msgid "Only the folder or view the list is showing."
 msgstr "Nur der aktuell angezeigte Ordner oder die aktuelle Ansicht"
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr "Alle Ordner aller Konten, inklusive Papierkorb und Spam.)"
 
 msgid "What this searches"
 msgstr "Durchsuchte Ordner"

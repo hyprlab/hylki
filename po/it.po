@@ -5412,6 +5412,10 @@ msgid "Mark All as Unread"
 msgstr "Segna tutto come non letto"
 
 #, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr "Tutto tranne Cestino e Posta indesiderata"
+
+#, fuzzy
 msgid "All folders (except trash & junk)"
 msgstr "Tutto tranne Cestino e Posta indesiderata"
 
@@ -5422,8 +5426,17 @@ msgstr "O dove"
 msgid "This folder"
 msgstr "Questa cartella"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Account e-mail"
+
 msgid "All folders"
 msgstr "Tutte le cartelle"
+
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5435,6 +5448,10 @@ msgstr ""
 
 msgid "Only the folder or view the list is showing."
 msgstr ""
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr "Tutto tranne Cestino e Posta indesiderata"
 
 msgid "What this searches"
 msgstr ""
@@ -9201,10 +9218,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Received"
 #~ msgstr "Ricevuto"
-
-#, fuzzy
-#~ msgid "Search all folders but Trash and Junk"
-#~ msgstr "Tutto tranne Cestino e Posta indesiderata"
 
 #, fuzzy
 #~ msgid "Search all folders, Trash and Junk too"

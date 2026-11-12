@@ -5438,6 +5438,10 @@ msgid "Mark All as Unread"
 msgstr "Összes megjelölése olvasatlanként"
 
 #, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr "Keresés a mappákban"
+
+#, fuzzy
 msgid "All folders (except trash & junk)"
 msgstr "Keresés a mappákban"
 
@@ -5448,8 +5452,17 @@ msgstr "Vagy ahol"
 msgid "This folder"
 msgstr "Ez a mappa"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Levelezési fiók"
+
 msgid "All folders"
 msgstr "Minden mappa"
+
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5461,6 +5474,10 @@ msgstr ""
 
 msgid "Only the folder or view the list is showing."
 msgstr ""
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr "Keresés a mappákban"
 
 msgid "What this searches"
 msgstr ""
@@ -9282,10 +9299,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "A mappa nem nevezhető át: ismeretlen mappa"
-
-#, fuzzy
-#~ msgid "Search all folders but Trash and Junk"
-#~ msgstr "Keresés a mappákban"
 
 #, fuzzy
 #~ msgid "Search all folders, Trash and Junk too"

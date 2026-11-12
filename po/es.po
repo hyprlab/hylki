@@ -5189,6 +5189,11 @@ msgstr "Marcar todo como leído"
 msgid "Mark All as Unread"
 msgstr "Marcar todo como no leído"
 
+#, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr ""
+"Conceder acceso a toda la cuenta (excepto Papelera y Correo no deseado)"
+
 msgid "All folders (except trash & junk)"
 msgstr "Todas las carpetas (excepto Papelera y Correo no deseado)"
 
@@ -5198,8 +5203,21 @@ msgstr "En todas partes"
 msgid "This folder"
 msgstr "Esta carpeta"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Cuenta de correo"
+
 msgid "All folders"
 msgstr "Todas las carpetas"
+
+#, fuzzy
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"Busca en todas las carpetas de todas las cuentas, excepto Papelera y Correo "
+"no deseado. Si inicias la búsqueda desde una de esas carpetas, también se "
+"buscará en ella."
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5216,6 +5234,12 @@ msgstr ""
 
 msgid "Only the folder or view the list is showing."
 msgstr "Solo en la carpeta o vista que se muestra en la lista."
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr ""
+"Busca en todas las carpetas de todas las cuentas, incluidas Papelera y "
+"Correo no deseado."
 
 msgid "What this searches"
 msgstr "Ámbito de búsqueda"

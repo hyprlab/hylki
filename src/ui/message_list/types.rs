@@ -233,6 +233,9 @@ pub(crate) enum MessageListInput {
     Search(String),
     /// Change the search scope (all folders vs. the current folder).
     SetScope(SearchScope),
+    /// The account an "All folders" search keeps to, `None` for every
+    /// account: the view's own, sent with each view (#649).
+    SetSearchAccount(Option<u32>),
     /// Replace the cross-folder search pool (all folders, all accounts). Sent by
     /// the app when a search begins; cleared to empty when it ends. The
     /// pool's [`search_text_of`], worked out where the pool was put together,

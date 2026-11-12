@@ -211,6 +211,9 @@ impl AppModel {
             )));
         self.message_list
             .emit(MessageListInput::SetColorize(account.is_none()));
+        // An "All folders" search keeps to the account a view is narrowed to.
+        self.message_list
+            .emit(MessageListInput::SetSearchAccount(account));
         // A Sent view's rows all come from you — name the recipients.
         self.message_list.emit(MessageListInput::SetShowRecipient(
             view == UnifiedView::Kind(FolderKind::Sent),
@@ -387,6 +390,8 @@ impl AppModel {
                 self.folder_kind(account_id, folder_id) == Some(FolderKind::Inbox),
             )));
         self.message_list.emit(MessageListInput::SetColorize(false));
+        self.message_list
+            .emit(MessageListInput::SetSearchAccount(Some(account_id)));
         // A Sent folder's rows all come from you — name the recipients (#27).
         let is_sent = self.folder_kind(account_id, folder_id) == Some(FolderKind::Sent);
         self.message_list
