@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.48.0-beta.7" date="2026-11-12" type="development">
+      <description>
+        <p>The message list can keep its share of the window as it resizes, and an alias with its own SMTP server can leave the sent copy to that server. Searches from one account's folder stay in that account, and the single-key shortcuts work in Drafts.</p>
+      </description>
+    </release>
     <release version="1.48.0-beta.6" date="2026-11-11" type="development">
       <description>
         <p>Messages open ahead of queued moves and read changes, and large Gmail accounts count unread mail faster. Mail is marked read once it has loaded, Open at startup survives a logout, and plain-text drafts reopen in plain text with their indents.</p>

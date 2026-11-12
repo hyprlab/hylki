@@ -1,5 +1,66 @@
 # Changelog
 
+## 1.48.0-beta.7 — 2026-11-12
+
+- **Added: Resize the list with the window** (#648). **Settings → Message
+  List → Resize the list with the window**, off by default, keeps the list's
+  share of the window instead of its width as the window resizes. Turned on,
+  the list keeps the share it has at that moment; a drag sets a new one.
+
+- **Added: Server saves its own copy of sent mail for each alias** (#647,
+  requested by 3v1n0). An alias with its own SMTP server has the switch in
+  its settings, off by default. On, mail sent as that alias gets no copy
+  from Hylki, whatever the account's switch says. The account's sent copy
+  rows stay available while an alias still needs Hylki's copy.
+
+- **Fixed: the message list stayed narrow after the window grew** (#648,
+  reported by MisterPerson42). A window too small for the list's width
+  narrowed the list, and that narrower width was kept, so the list had to be
+  dragged wide again after maximizing. The list now goes back to the width it
+  was dragged to, and with the reader below the list, to its height.
+
+- **Fixed: the single-key shortcuts did nothing in Drafts** (#392, reported
+  by 3v1n0). Selecting a draft opened it in the reading pane and put the
+  keyboard in the editor, so the next key was typed into the draft, and the
+  action keys found no message to act on. A draft selected from the list now
+  leaves the keyboard on the list, and the keys act on it; o, Enter or a
+  click moves into the editor. A draft deleted or moved while its editor is
+  open closes the editor without saving it back.
+
+- **Fixed: Gmail's x dropped the conversation picked with the pointer**
+  (#392, reported by 3v1n0). With a conversation opened by a click, j to
+  another and x, only the second ended up selected. Both are now.
+
+- **Fixed: a search from one account's folder looked in every account**
+  (#649, reported by rsx-xp). From an account's folder the scope picker now
+  offers **This Account** and **This Account (Except Trash & Junk)**, the
+  default, and both look only in that account, on disk and on the server.
+  From a unified view the scopes are unchanged, and **Everywhere** covers
+  every account.
+
+- **Fixed: Enter and a paste left the new line below the composer's edge**
+  (#645). WebKit scrolls to the caret only after its own typing, not after
+  the editing commands the composer's Enter and paste handlers run, so the
+  caret could end up out of sight. The composer now scrolls to it.
+
+- **Fixed: Shift+click could not extend a selection of a message's text**
+  (#643). The click picked a range of cards and cleared the selection
+  WebKit had just extended. When the body holds a selection, a Shift+click
+  is now left to the text.
+
+- **Fixed: the app could crash as a message opened on Wayland** (#650). The
+  sender's initials circle was drawn through the GPU renderer of the first
+  window, which can be a hidden one, as after opening the window from the
+  tray; a hidden window has no surface to draw to, and the app aborted. The
+  circle is now drawn without the GPU.
+
+- **Fixed: the hint shown when no spelling dictionaries are installed was
+  missing** (#650). The line in **Settings → Composing** was dropped
+  because of the markup in its text.
+
+- **Translations:** German updated (PR #636 by Samuel Edlmeier), with 2488
+  of 2498 strings translated.
+
 ## 1.48.0-beta.6 — 2026-11-11
 
 - **Added: Ask before switching to plain text can be turned off.**
