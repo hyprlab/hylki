@@ -112,7 +112,7 @@
   on its own.
 
 - **Translations:** Portuguese (Portugal) and Portuguese (Brazil) updated
-  (PR #633 by Paulo Fino), each with 2488 of 2492 strings translated.
+  (PR #633 by Paulo Fino), each with 2488 of 2491 strings translated.
 
 ## 1.48.0-beta.5 — 2026-11-10
 
