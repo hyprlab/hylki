@@ -95,7 +95,7 @@ open the composer in a window of its own even when **Settings → Composing**
 puts replies or new messages in the reading pane.
 
 <kbd>x</kbd> selects the row the cursor is on without opening it, and closes
-the conversation that was open. While rows are selected this way, the
+the conversation that was open, which stays selected with it. While rows are selected this way, the
 reading pane counts them and the bar above the list acts on them, as do the
 action keys; <kbd>x</kbd> again on a row takes it out. <kbd>o</kbd>,
 <kbd>Enter</kbd> or a click opens a row in the reading pane and ends the
@@ -103,6 +103,12 @@ selection; with several rows selected, <kbd>o</kbd> and <kbd>Enter</kbd> do
 nothing. Deleting the selected rows leaves the cursor on the conversation
 above them, or the one below, without opening it. An action key pressed with
 none selected says that a selection is needed.
+
+In Drafts, a draft selected with <kbd>j</kbd>, <kbd>k</kbd> or a click opens
+in the reading pane with the keyboard still on the list, so the keys go on
+working and act on that draft. <kbd>o</kbd>, <kbd>Enter</kbd> or a click in
+the editor moves into it. A draft deleted or moved while open closes its
+editor without saving it again.
 
 <kbd>Enter</kbd> on a message that is already open opens it in a window of
 its own. A <kbd>g</kbd> or <kbd>*</kbd> waits a second and a half for the key

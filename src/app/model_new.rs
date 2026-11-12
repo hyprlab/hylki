@@ -253,6 +253,7 @@ impl AppModel {
             current_thread: Vec::new(),
             listed_thread: Vec::new(),
             reader_focus_pending: false,
+            draft_keeps_list: None,
             list_selection: Vec::new(),
             list_slots: Vec::new(),
             checked: None,

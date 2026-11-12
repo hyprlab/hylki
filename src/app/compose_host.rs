@@ -4,6 +4,7 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 use crate::config;
+use crate::models::Message;
 use crate::ui::compose::{Compose, ComposeInput, ComposePrefill};
 use crate::ui::message_list::MessageListInput;
 use crate::ui::message_view::MessageViewInput;
@@ -38,8 +39,9 @@ pub(super) struct ReaderCompose {
     /// The message a split reply answers, by (account, id): its card in the
     /// reader is the one the reply was opened from.
     pub(super) answering: Option<(u32, u32)>,
-    /// A draft opened by selecting its row, which the list keeps selected.
-    pub(super) list_draft: bool,
+    /// A draft opened by selecting its row, which the list keeps selected,
+    /// by (account, id).
+    pub(super) list_draft: Option<(u32, u32)>,
 }
 
 /// A composer's id and its component.
@@ -278,6 +280,25 @@ impl AppModel {
         }
     }
 
+    /// The draft open from its row left its folder (deleted, moved): its
+    /// editor goes without saving, or the save would bring it back (#392).
+    pub(super) fn close_gone_draft(&mut self, m: &Message) {
+        let gone = Some((m.account_id, m.id));
+        let Some(r) = self
+            .reader_compose
+            .take_if(|r| r.window.is_none() && r.list_draft == gone)
+        else {
+            return;
+        };
+        self.compose_history = (None, None);
+        self.refresh_undo_menu();
+        self.animate_cover_close();
+        self.reader_overflow_btn
+            .set_visible(self.reader_overflow_wanted());
+        r.controller.emit(ComposeInput::Discard);
+        self.draining_composers.push((r.id, r.controller));
+    }
+
     /// Promote the reader's inline pane to a window, or collapse a window back
     /// inline — reparenting the live pane so the editor state survives the move.
     fn toggle_compose_window(&mut self, id: u32, sender: &ComponentSender<Self>) {
@@ -343,7 +364,7 @@ impl AppModel {
                     // over a reader that says no draft is selected, and a
                     // click on it, being no change, opens nothing. Saving
                     // gives the draft a new row anyway.
-                    if r.list_draft {
+                    if r.list_draft.is_some() {
                         self.message_list.emit(MessageListInput::ClearSelection);
                     }
                     // A sent split reply turns into its card; cancel, and

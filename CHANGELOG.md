@@ -70,6 +70,18 @@
   star changes to one message that queue up while the server is busy are
   sent as the last one only.
 
+- **Fixed: the single-key shortcuts did nothing in Drafts** (#392, reported
+  by 3v1n0). Selecting a draft opened it in the reading pane and put the
+  keyboard in the editor, so the next key was typed into the draft, and the
+  action keys found no message to act on. A draft selected from the list now
+  leaves the keyboard on the list, and the keys act on it; o, Enter or a
+  click moves into the editor. A draft deleted or moved while its editor is
+  open closes the editor without saving it back.
+
+- **Fixed: Gmail's x dropped the conversation picked with the pointer**
+  (#392, reported by 3v1n0). With a conversation opened by a click, j to
+  another and x, only the second ended up selected. Both are now.
+
 - **Fixed: a message was marked read before it had loaded** (#638). A
   message opened while its text was still being fetched was marked read at
   once, or two seconds later with **Settings → Reading → Mark as read** set
