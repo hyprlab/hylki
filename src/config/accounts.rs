@@ -454,6 +454,12 @@ pub(crate) struct AliasConfig {
     /// never on disk.
     #[serde(default, skip_serializing)]
     pub(crate) smtp_password: String,
+    /// The alias's own SMTP server files the sent copy in this account, so
+    /// none is appended (#647). The account's switch stops at its own SMTP:
+    /// mail through another server usually reaches no Sent folder at all
+    /// (#640), hence off by default.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub(crate) server_saves_sent: bool,
 }
 
 impl Default for AliasConfig {
@@ -464,6 +470,7 @@ impl Default for AliasConfig {
             smtp_port: default_smtp_port(),
             smtp_username: String::new(),
             smtp_password: String::new(),
+            server_saves_sent: false,
         }
     }
 }
@@ -596,11 +603,24 @@ impl AccountConfig {
 
     /// Whether the server files its own copy of a message sent as `from`
     /// (`None`: the account's own address). Only mail through the account's
-    /// SMTP reaches the server that keeps that copy; an alias with its own
-    /// SMTP leaves through another provider, and without Hylki's copy the
-    /// message is kept nowhere (#640).
+    /// SMTP reaches the server the account's switch speaks for; an alias
+    /// with its own SMTP leaves through another one, which has its own
+    /// switch (#640, #647).
     pub(crate) fn server_files_sent(&self, from: Option<&str>) -> bool {
-        self.server_saves_sent && from.and_then(|f| self.alias_with_own_smtp(f)).is_none()
+        match from.and_then(|f| self.alias_with_own_smtp(f)) {
+            Some(alias) => alias.server_saves_sent,
+            None => self.server_saves_sent,
+        }
+    }
+
+    /// Whether any mail from this account is still filed by Hylki: the
+    /// account's own, or an alias's through a server that keeps no copy.
+    pub(crate) fn files_some_sent(&self) -> bool {
+        !self.server_saves_sent
+            || self
+                .aliases
+                .iter()
+                .any(|a| a.has_own_smtp() && !a.server_saves_sent)
     }
 }
 

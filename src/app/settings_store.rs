@@ -98,6 +98,7 @@ impl AppModel {
             list_column_scroll: self.list_column_scroll,
             list_group_by_date: self.list_group_by_date,
             list_pills_below: self.list_pills_below,
+            list_follows_window: self.mail_split.follows(),
             list_sort: self.list_sort.0.to_string(),
             list_sort_reversed: self.list_sort.1,
             list_sorts: self.list_sorts.clone(),

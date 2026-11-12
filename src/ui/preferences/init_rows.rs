@@ -458,6 +458,10 @@ impl Preferences {
             .set_active(init.list_pills_below);
         widgets
             .list
+            .list_follows_window_row
+            .set_active(init.list_follows_window);
+        widgets
+            .list
             .list_search_open_row
             .set_active(init.list_search_open);
         for (row, bottom) in [

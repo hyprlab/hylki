@@ -184,7 +184,7 @@ pub(crate) struct AppModel {
     pub(super) list_fold: std::rc::Rc<super::reading_pane::ListFold>,
     /// The list and the reader's split, turned on its side for the reader
     /// below the list (#475).
-    pub(super) mail_split: std::cell::OnceCell<gtk::Paned>,
+    pub(super) mail_split: std::rc::Rc<super::mail_split::MailSplit>,
     /// A print with the reading pane off, waiting for its bodies.
     pub(super) pending_print: Option<super::reading_pane::PendingPrint>,
     /// The right group stays in the ⋯ menu at every width.
@@ -918,6 +918,9 @@ pub(crate) struct AppModel {
     /// The next message opened takes the keyboard into the reader (Gmail's
     /// o and Enter, #392).
     pub(super) reader_focus_pending: bool,
+    /// A draft selected in the list without o or Enter: its editor opens
+    /// with the keyboard left on the list, for the next key (#392).
+    pub(super) draft_keeps_list: Option<(u32, u32)>,
     /// Every message currently selected (list rows or reader cards), newest
     /// report wins. Lets the toolbar's Delete act on the whole multi-selection.
     pub(super) list_selection: Vec<(u32, u32)>,

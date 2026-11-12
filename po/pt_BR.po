@@ -2505,6 +2505,12 @@ msgstr "Nome de usuário SMTP"
 msgid "SMTP password"
 msgstr "Senha SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "O servidor salva sua própria cópia das mensagens enviadas"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Testar SMTP"
 
@@ -5175,6 +5181,10 @@ msgstr "Marcar tudo como lido"
 msgid "Mark All as Unread"
 msgstr "Marcar tudo como não lido"
 
+#, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr "Dar acesso a toda a conta (exceto à Lixeira e ao spam)"
+
 msgid "All folders (except trash & junk)"
 msgstr "Todas as pastas (exceto lixeira e spam)"
 
@@ -5184,8 +5194,20 @@ msgstr "Em todos os lugares"
 msgid "This folder"
 msgstr "Esta pasta"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Conta de email"
+
 msgid "All folders"
 msgstr "Todas as pastas"
+
+#, fuzzy
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"Todas as pastas de todas as contas, exceto Lixeira e Spam. Uma pesquisa "
+"iniciada na Lixeira ou no Spam também pesquisa nessas pastas."
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5199,6 +5221,10 @@ msgstr "Todas as pastas de todas as contas, incluindo Lixeira e Spam."
 
 msgid "Only the folder or view the list is showing."
 msgstr "Apenas a pasta ou visualização exibida na lista."
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr "Todas as pastas de todas as contas, incluindo Lixeira e Spam."
 
 msgid "What this searches"
 msgstr "Escopo desta pesquisa"
@@ -6147,6 +6173,8 @@ msgstr "Segue a ordem de leitura"
 msgid "System language"
 msgstr "Idioma do sistema"
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -6642,6 +6670,12 @@ msgstr "A imagem ou emoji da conta, como na barra lateral."
 
 msgid "Automatic uses single lines in wide windows."
 msgstr "O modo Automático usa linhas únicas em janelas largas."
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
+msgstr ""
 
 msgid "Off also stops downloading previews."
 msgstr "Desativado, também deixa de baixar visualizações."
@@ -8084,9 +8118,6 @@ msgstr "Salvar uma cópia das mensagens enviadas em"
 
 msgid "Save a copy of replies in"
 msgstr "Salvar uma cópia das respostas em"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "O servidor salva sua própria cópia das mensagens enviadas"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""

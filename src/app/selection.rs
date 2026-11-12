@@ -15,8 +15,25 @@ impl AppModel {
     /// itself, or — in a conversation — the one highlighted card, when exactly
     /// one is highlighted. `None` greys the buttons out: with no card (or
     /// several) selected there is no way to say which message an action would
-    /// mean.
+    /// mean. A draft selected in Drafts is open in the editor, not the
+    /// reader, and is the target itself, so its keys work (#392).
     pub(super) fn reply_target(&self) -> Option<Message> {
+        self.open_target().or_else(|| self.selected_draft())
+    }
+
+    /// The draft selected in the list and open in the reader's editor, as
+    /// the list has it now.
+    fn selected_draft(&self) -> Option<Message> {
+        let r = self.reader_compose.as_ref()?;
+        let draft = r.list_draft.filter(|_| r.window.is_none())?;
+        if self.list_selection != [draft] {
+            return None;
+        }
+        self.rows_at(&self.list_slots).into_iter().next()
+    }
+
+    /// [`Self::reply_target`] among the messages the reader shows.
+    fn open_target(&self) -> Option<Message> {
         if self.current_thread.len() <= 1 {
             return self.current.clone();
         }
@@ -132,7 +149,9 @@ impl AppModel {
     /// only decides where that message is drawn (#165). A highlighted card is
     /// addressed as itself.
     pub(super) fn compose_target(&self) -> Option<Message> {
-        let m = self.reply_target()?;
+        // Not a draft being edited: answering one's own draft is not
+        // what r or f on it mean.
+        let m = self.open_target()?;
         tracing::debug!(
             target: "hylki::reply",
             "toolbar target: selected {}:{} from={} cards={} thread={} head={}",

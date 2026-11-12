@@ -159,12 +159,13 @@ impl AccountsWindow {
             )),
             _ => None,
         };
-        // The switch above may already have taken this row out of play.
-        let server_saves = acc.is_some_and(|a| a.server_saves_sent);
-        widgets.form.server_saves_row.set_active(server_saves);
-        row.set_sensitive(unsupported.is_none() && !server_saves);
+        widgets
+            .form
+            .server_saves_row
+            .set_active(acc.is_some_and(|a| a.server_saves_sent));
         row.set_subtitle(&unsupported.unwrap_or_else(|| i18n(SENT_COPY_HINT)));
-        widgets.form.reply_copies_row.set_sensitive(!server_saves);
+        // The switch above may already have taken this row out of play.
+        self.refresh_copy_rows(widgets);
     }
 
     /// The "Save a copy of sent mail in" combo's current choice: a folder path,

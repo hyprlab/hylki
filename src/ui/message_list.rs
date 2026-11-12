@@ -120,6 +120,9 @@ pub(crate) struct MessageList {
     server_searching: bool,
     /// Which messages the search field filters over.
     scope: SearchScope,
+    /// The account of the folder or view on show, which the "This Account"
+    /// scopes keep to (#649); `None` from a view across accounts.
+    search_account: Option<u32>,
     /// The search scope's button and popover.
     scope_picker: Option<ScopePicker>,
     /// The search field widget, kept so a folder switch can clear its text.

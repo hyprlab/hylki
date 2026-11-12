@@ -14,6 +14,8 @@ gallery_folders = [
 ]
 list_pane_width = 420
 list_pane_height = 320
+list_pane_width_share = 0.0
+list_pane_height_share = 0.0
 contacts_pane_width = 380
 about_height = 500
 split_reply_height = 240

@@ -5,6 +5,7 @@ use relm4::prelude::*;
 
 use crate::config;
 use crate::models::{thread_ids, Message, ThreadSummary};
+use crate::ui::compose::ComposeInput;
 use crate::ui::contacts_page::ContactsPageInput;
 use crate::ui::message_list::{DateBound, MessageListInput, QuickFilters};
 use crate::ui::message_view::MessageViewInput;
@@ -61,6 +62,24 @@ impl AppModel {
     pub(super) fn on_reader_select(&mut self, msg: AppMsg, sender: ComponentSender<Self>) {
         match msg {
             AppMsg::OpenedByKey { already_open } => {
+                // A draft selected opens in the reader's editor, at once or
+                // once its bytes come: o and Enter take the keyboard there.
+                self.draft_keeps_list = None;
+                let draft = self
+                    .reader_compose
+                    .as_ref()
+                    .filter(|r| r.list_draft.is_some() && r.window.is_none());
+                if let Some(r) = draft {
+                    r.controller.emit(ComposeInput::FocusInitial);
+                    return;
+                }
+                if self
+                    .pending_draft
+                    .as_ref()
+                    .is_some_and(|(_, inline, _)| *inline)
+                {
+                    return;
+                }
                 if !self.reader_shown() {
                     // No pane to read it in: Gmail's o or Enter opens a
                     // window, now or once the row is selected (#475).
@@ -459,7 +478,8 @@ impl AppModel {
         // Selecting a draft opens it in the compose editor, in the
         // reading pane where the message would otherwise show.
         if self.is_drafts_folder(m.account_id, m.folder_id) {
-            self.reader_focus_pending = false;
+            self.draft_keeps_list =
+                (!std::mem::take(&mut self.reader_focus_pending)).then_some((m.account_id, m.id));
             self.open_draft(m, true, HandOffFiles::default(), &sender);
             return;
         }

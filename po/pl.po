@@ -2705,6 +2705,12 @@ msgstr "Nazwa użytkownika SMTP"
 msgid "SMTP password"
 msgstr "Hasło SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "Serwer sam zapisuje kopię wysłanej poczty"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Sprawdź SMTP"
 
@@ -5503,6 +5509,10 @@ msgid "Mark All as Unread"
 msgstr "Oznacz wszystkie jako nieprzeczytane"
 
 #, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr "Wyszukaj katalogi"
+
+#, fuzzy
 msgid "All folders (except trash & junk)"
 msgstr "Wyszukaj katalogi"
 
@@ -5513,8 +5523,17 @@ msgstr "Lub jeśli"
 msgid "This folder"
 msgstr "Ten katalog"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Konto pocztowe"
+
 msgid "All folders"
 msgstr "Wszystkie katalogi"
+
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5526,6 +5545,10 @@ msgstr ""
 
 msgid "Only the folder or view the list is showing."
 msgstr ""
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr "Wyszukaj katalogi"
 
 msgid "What this searches"
 msgstr ""
@@ -6540,6 +6563,8 @@ msgstr "Zgodnie z kolejnością czytania"
 msgid "System language"
 msgstr "Język systemu – {language}"
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -7063,6 +7088,12 @@ msgstr ""
 "tak jak jego kółko w panelu bocznym."
 
 msgid "Automatic uses single lines in wide windows."
+msgstr ""
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
 msgstr ""
 
 msgid "Off also stops downloading previews."
@@ -8542,9 +8573,6 @@ msgstr "Katalog kopii wysłanej poczty"
 msgid "Save a copy of replies in"
 msgstr "Katalog kopii wysłanej poczty"
 
-msgid "Server saves its own copy of sent mail"
-msgstr "Serwer sam zapisuje kopię wysłanej poczty"
-
 #, fuzzy
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
@@ -9351,10 +9379,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Could not rename folder: unknown folder"
 #~ msgstr "Nie udało się zmienić nazwy katalogu: nieznany katalog"
-
-#, fuzzy
-#~ msgid "Search all folders but Trash and Junk"
-#~ msgstr "Wyszukaj katalogi"
 
 #, fuzzy
 #~ msgid "Search all folders, Trash and Junk too"

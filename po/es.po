@@ -2509,6 +2509,12 @@ msgstr "Nombre de usuario SMTP"
 msgid "SMTP password"
 msgstr "Contraseña SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "El servidor guarda su propia copia del correo enviado"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Probar SMTP"
 
@@ -5189,6 +5195,11 @@ msgstr "Marcar todo como leído"
 msgid "Mark All as Unread"
 msgstr "Marcar todo como no leído"
 
+#, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr ""
+"Conceder acceso a toda la cuenta (excepto Papelera y Correo no deseado)"
+
 msgid "All folders (except trash & junk)"
 msgstr "Todas las carpetas (excepto Papelera y Correo no deseado)"
 
@@ -5198,8 +5209,21 @@ msgstr "En todas partes"
 msgid "This folder"
 msgstr "Esta carpeta"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Cuenta de correo"
+
 msgid "All folders"
 msgstr "Todas las carpetas"
+
+#, fuzzy
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"Busca en todas las carpetas de todas las cuentas, excepto Papelera y Correo "
+"no deseado. Si inicias la búsqueda desde una de esas carpetas, también se "
+"buscará en ella."
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5216,6 +5240,12 @@ msgstr ""
 
 msgid "Only the folder or view the list is showing."
 msgstr "Solo en la carpeta o vista que se muestra en la lista."
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr ""
+"Busca en todas las carpetas de todas las cuentas, incluidas Papelera y "
+"Correo no deseado."
 
 msgid "What this searches"
 msgstr "Ámbito de búsqueda"
@@ -6165,6 +6195,8 @@ msgstr "Seguir el orden de lectura"
 msgid "System language"
 msgstr "Idioma del sistema"
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -6665,6 +6697,12 @@ msgstr "La imagen o el emoji de la cuenta, como en la barra lateral."
 
 msgid "Automatic uses single lines in wide windows."
 msgstr "El modo automático utiliza una sola línea en ventanas anchas."
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
+msgstr ""
 
 msgid "Off also stops downloading previews."
 msgstr "Al desactivarlo, también deja de descargar vistas previas."
@@ -8111,9 +8149,6 @@ msgstr "Guardar una copia del correo enviado en"
 
 msgid "Save a copy of replies in"
 msgstr "Guardar una copia de las respuestas en"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "El servidor guarda su propia copia del correo enviado"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""

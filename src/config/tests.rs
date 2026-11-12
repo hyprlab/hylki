@@ -252,6 +252,16 @@ fn a_missing_state_file_falls_back_to_the_declared_defaults() {
     assert_eq!(fresh.list_pane_width, super::default_list_pane_width());
 }
 
+/// A share of the window the list cannot have reads as none, and the list
+/// keeps its width instead (#648).
+#[test]
+fn a_list_share_out_of_range_reads_as_unset() {
+    assert_eq!(super::list_share(0.4), 0.4);
+    for bad in [0.0, 0.01, 0.99, 1.4, -0.3, f64::NAN] {
+        assert_eq!(super::list_share(bad), 0.0, "{bad}");
+    }
+}
+
 #[test]
 fn plain_string_aliases_still_load() {
     // The pre-per-alias-SMTP format (#34): a bare array of identity strings.
@@ -304,6 +314,36 @@ fn aliases_can_carry_their_own_smtp() {
         alias.smtp_password.is_empty(),
         "passwords live in the keyring"
     );
+}
+
+#[test]
+fn an_alias_server_saves_switch_round_trips() {
+    let toml_in = r#"
+        [[accounts]]
+        name = "Ann"
+        email = "ann@example.org"
+        imap_host = "imap.example.org"
+        username = "ann"
+
+        [[accounts.aliases]]
+        identity = "ann@work.org"
+        smtp_host = "smtp.work.org"
+        smtp_username = "ann"
+        server_saves_sent = true
+
+        [[accounts.aliases]]
+        identity = "ann@home.org"
+        smtp_host = "smtp.home.org"
+        smtp_username = "ann"
+        "#;
+    let cfg: ConfigFile = toml::from_str(toml_in).unwrap();
+    // A config from before #647 has no key: Hylki keeps filing the copy.
+    assert!(cfg.accounts[0].aliases[0].server_saves_sent);
+    assert!(!cfg.accounts[0].aliases[1].server_saves_sent);
+    let out = toml::to_string_pretty(&cfg).unwrap();
+    assert_eq!(out.matches("server_saves_sent").count(), 1, "{out}");
+    let back: ConfigFile = toml::from_str(&out).unwrap();
+    assert!(back.accounts[0].aliases[0].server_saves_sent);
 }
 
 #[test]

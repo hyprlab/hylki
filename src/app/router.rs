@@ -524,6 +524,7 @@ impl AppModel {
             | PrefOutput::SetListBulkBarBottom(..)
             | PrefOutput::SetGroupByDate(..)
             | PrefOutput::SetPillsBelow(..)
+            | PrefOutput::SetListFollowsWindow(..)
             | PrefOutput::SetListColumns(..)
             | PrefOutput::SetPreviewLines(..)
             | PrefOutput::SetAttachmentsRow(..)

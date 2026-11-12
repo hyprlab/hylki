@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hylki\n"
 "Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-11-09 18:22+0100\n"
+"PO-Revision-Date: 2026-11-11 02:19+0100\n"
 "Last-Translator: Samuel Edlmeier <samuel.edlmeier@gmx.net>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -250,7 +250,7 @@ msgid "Remove Star"
 msgstr "Stern entfernen"
 
 msgid "Star"
-msgstr "Stern"
+msgstr "Mit Stern markieren"
 
 msgid "Mark as Read"
 msgstr "Als gelesen markieren"
@@ -822,7 +822,7 @@ msgid "Couldn’t read the password"
 msgstr "Passwort konnte nicht gelesen werden"
 
 msgid "The keyring gave an error for {accounts}: {error}"
-msgstr "Fehler des Schlüsselbunds für {accounts}: {error}"
+msgstr "Fehler beim Zugriff auf den Schlüsselbund für {accounts}: {error}"
 
 msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
 msgstr ""
@@ -840,7 +840,7 @@ msgid ""
 "then choose Retry."
 msgstr ""
 "Schlüsselbund entsperren (z. B. Login-Schlüsselbund in »Passwörter und "
-"Verschlüsselung«) und »Erneut versuchen« wählen."
+"Verschlüsselung«) und wiederholen."
 
 msgid "Date (Newest first)"
 msgstr "Datum (neueste zuerst)"
@@ -1056,7 +1056,7 @@ msgid "Preview the highlighted attachment"
 msgstr "Vorschau des hervorgehobenen Anhangs anzeigen"
 
 msgid "Open the highlighted attachment"
-msgstr ""
+msgstr "Hervorgehobenen Anhang öffnen"
 
 msgid "Previous or next in the gallery's preview"
 msgstr "Vorheriges oder nächstes Element in der Galerie-Vorschau"
@@ -2525,6 +2525,12 @@ msgstr "SMTP-Benutzername"
 msgid "SMTP password"
 msgstr "SMTP-Passwort"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "Server speichert selbst eine Kopie gesendeter Nachrichten"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "SMTP testen"
 
@@ -3151,7 +3157,7 @@ msgid ""
 "• Download the file, then open it from Files\n"
 "• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
 msgstr ""
-"Desktop-Portal berichtete: {error}\n"
+"Desktop-Portal meldet: {error}\n"
 "\n"
 "• Die Datei herunterladen und in »Dateien« öffnen.\n"
 "• Aktualisieren von »xdg-desktop-portal« und erneutes Anmelden behebt "
@@ -4441,7 +4447,7 @@ msgid ""
 "password."
 msgstr ""
 "Normalerweise ist nur die Serveradresse nötig. Eine Zwei-Faktor-"
-"Authentifizierung erfordert den Einsatz eines App-Passworts."
+"Authentifizierung erfordert ein App-Passwort."
 
 msgid ""
 "Such as cloud.example.org. With two-factor sign-in, make an app password in "
@@ -4657,7 +4663,7 @@ msgstr ""
 msgid ""
 "Groups here hold addresses, so people with no email address are left out."
 msgstr ""
-"Kontaktlisten enthalten hier Adressen, daher werden Personen ohne E-Mail-"
+"Kontaktlisten enthalten E-Mail-Adressen, daher werden Personen ohne E-Mail-"
 "Adresse nicht berücksichtigt."
 
 msgid "Group"
@@ -4781,7 +4787,7 @@ msgid "Edit"
 msgstr "Bearbeiten"
 
 msgid "Open in GNOME Contacts"
-msgstr "In GNOME Kontakte öffnen"
+msgstr "In »GNOME Kontakte« öffnen"
 
 msgid "{n} Group Selected"
 msgid_plural "{n} Groups Selected"
@@ -5058,7 +5064,7 @@ msgid "Choose a time later than now."
 msgstr "Uhrzeit in der Zukunft wählen."
 
 msgid "the portal answered response code {code}"
-msgstr "das Portal hat mit dem Antwortcode {code} geantwortet"
+msgstr "Das Portal hat mit dem Antwortcode »{code}« geantwortet"
 
 msgid "The link could not be opened"
 msgstr "Der Link konnte nicht geöffnet werden"
@@ -5225,6 +5231,11 @@ msgstr "Alle als gelesen markieren"
 msgid "Mark All as Unread"
 msgstr "Alle als ungelesen markieren"
 
+#, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr ""
+"Zugriff auf das gesamte Konto gewähren (ausgenommen Papierkorb und Spam)"
+
 msgid "All folders (except trash & junk)"
 msgstr "Alle Ordner (außer Papierkorb und Spam)"
 
@@ -5234,8 +5245,20 @@ msgstr "Alle Ordner"
 msgid "This folder"
 msgstr "Dieser Ordner"
 
+#, fuzzy
+msgid "This Account"
+msgstr "E-Mail-Konto"
+
 msgid "All folders"
 msgstr "Alle Ordner"
+
+#, fuzzy
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"Alle Ordner aller Konten, ausgenommen Papierkorb und Spam. Wird die Suche im "
+"Papierkorb oder Spam gestartet, werden diese ebenfalls durchsucht."
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5245,10 +5268,14 @@ msgstr ""
 "Papierkorb oder Spam gestartet, werden diese ebenfalls durchsucht."
 
 msgid "Every folder of every account, Trash and Junk included."
-msgstr "Alle Ordner aller Konten, inklusive Papierkorb und Spam.)"
+msgstr "Alle Ordner aller Konten, inklusive Papierkorb und Spam."
 
 msgid "Only the folder or view the list is showing."
 msgstr "Nur der aktuell angezeigte Ordner oder die aktuelle Ansicht"
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr "Alle Ordner aller Konten, inklusive Papierkorb und Spam.)"
 
 msgid "What this searches"
 msgstr "Durchsuchte Ordner"
@@ -5364,8 +5391,8 @@ msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
 msgstr ""
-"Reader View zeigt eine Nachricht als Text allein, in einem einfachen Format, "
-"ohne das Layout, die Farben und die Schriftarten des Absenders."
+"Leseansicht stellt den Nachrichtentext im einfachen Format ohne das Layout, "
+"die Farben und Schriftarten des Absenders dar."
 
 msgid "Reader View"
 msgstr "Leseansicht"
@@ -6201,6 +6228,8 @@ msgstr "Befolgt die Lesereihenfolge"
 msgid "System language"
 msgstr "Systemsprache"
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -6709,6 +6738,12 @@ msgstr ""
 msgid "Automatic uses single lines in wide windows."
 msgstr ""
 "»Automatisch« verwendet in breiten Fenstern die einzeilige Darstellung."
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
+msgstr ""
 
 msgid "Off also stops downloading previews."
 msgstr "Bei Deaktivierung werden keine Vorschauen mehr heruntergeladen."
@@ -8167,9 +8202,6 @@ msgstr "Kopie gesendeter Nachrichten speichern in"
 
 msgid "Save a copy of replies in"
 msgstr "Kopie von Antworten speichern in"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "Server speichert selbst eine Kopie gesendeter Nachrichten"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""

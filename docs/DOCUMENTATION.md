@@ -1353,6 +1353,12 @@ address can have more names the same way. Mail from a shared address goes
 through the account's own SMTP server: an alias with its own server needs an
 address of its own.
 
+The account's **Server saves its own copy of sent mail** only covers mail
+that goes through the account's own SMTP server. Mail sent as an alias
+through its own server gets a copy in the account's Sent folder, unless
+**Server saves its own copy of sent mail** is on in that alias's settings,
+for a server that files sent mail in the account itself.
+
 A JMAP account lists the identities the server keeps for it as well, so an
 alias made in the webmail is in the From row without setting it up again.
 The message is sent as the identity with its address, or as a catch-all
@@ -2110,6 +2116,12 @@ its own (see [A message in its own window](#a-message-in-its-own-window)),
 which marks it read as **Settings → Reading → Mark as read** says. A
 conversation opens whole, each message marked as its window scrolls through
 it. Hylki remembers the choice.
+
+The list keeps the width it is dragged to, or its height with the reader below.
+A window too small for that narrows the list for the moment, and the list goes
+back to it when the window grows again. **Settings → Message List → Resize the
+list with the window** keeps the list's share of the window instead: a list
+dragged to half the window stays half of it at any size.
 
 **Settings → Message List → Layout** sets how the list shows a message.
 **Cards** gives the sender, the subject and the start of the text lines of

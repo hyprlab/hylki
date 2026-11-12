@@ -2575,6 +2575,12 @@ msgstr "Nom d'usuari SMTP"
 msgid "SMTP password"
 msgstr "Contrasenya SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "El servidor desa la seva pròpia còpia del correu enviat"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Prova l'SMTP"
 
@@ -5253,6 +5259,10 @@ msgstr "Marca-ho tot com a llegit"
 msgid "Mark All as Unread"
 msgstr "Marca-ho tot com a no llegit"
 
+#, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr "Totes les carpetes (menys la paperera i la brossa)"
+
 msgid "All folders (except trash & junk)"
 msgstr "Totes les carpetes (menys la paperera i la brossa)"
 
@@ -5262,8 +5272,20 @@ msgstr "A tot arreu"
 msgid "This folder"
 msgstr "Aquesta carpeta"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Compte de correu"
+
 msgid "All folders"
 msgstr "Totes les carpetes"
+
+#, fuzzy
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"Totes les carpetes de tots els comptes, menys la paperera i la brossa. Una "
+"cerca iniciada a la paperera o a la brossa també hi cerca."
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5277,6 +5299,10 @@ msgstr "Totes les carpetes de tots els comptes, paperera i brossa incloses."
 
 msgid "Only the folder or view the list is showing."
 msgstr "Només la carpeta o vista que mostra la llista."
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr "Totes les carpetes de tots els comptes, paperera i brossa incloses."
 
 msgid "What this searches"
 msgstr "Què cerca això"
@@ -6244,6 +6270,8 @@ msgstr "Segueix l'ordre de lectura"
 msgid "System language"
 msgstr "Idioma del sistema"
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -6746,6 +6774,12 @@ msgstr "La imatge o l'emoji del compte, com a la barra lateral."
 
 msgid "Automatic uses single lines in wide windows."
 msgstr "Automàtic utilitza línies individuals en finestres amples."
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
+msgstr ""
 
 msgid "Off also stops downloading previews."
 msgstr "Desactivat també atura la baixada de previsualitzacions."
@@ -8190,9 +8224,6 @@ msgstr "Desa una còpia del correu enviat a"
 
 msgid "Save a copy of replies in"
 msgstr "Desa una còpia de les respostes a"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "El servidor desa la seva pròpia còpia del correu enviat"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr "Per al Gmail i altres que arxiven ells mateixos el correu enviat."

@@ -438,6 +438,7 @@ impl AppModel {
             p.window.close();
         }
         self.discard_from_caches(m);
+        self.close_gone_draft(m);
         if self
             .current
             .as_ref()

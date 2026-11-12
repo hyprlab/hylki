@@ -92,8 +92,16 @@ impl MessageList {
                 here.dedup();
                 ServerScope::Here(here)
             }
-            SearchScope::Everywhere => ServerScope::All { waste: true },
+            SearchScope::Everywhere => ServerScope::All {
+                waste: true,
+                account: None,
+            },
+            SearchScope::Account => ServerScope::All {
+                waste: true,
+                account: self.search_kept_to(),
+            },
             _ => ServerScope::All {
+                account: self.search_kept_to(),
                 waste: !self.parsed.folder.is_empty()
                     || self.all.iter().any(|m| {
                         self.pool_folders
@@ -174,7 +182,7 @@ impl MessageList {
 
     pub(super) fn on_set_scope(&mut self, scope: SearchScope, sender: &ComponentSender<Self>) {
         if let Some(picker) = &self.scope_picker {
-            picker.sync(scope);
+            picker.sync(scope, self.search_account.is_some());
         }
         if self.scope != scope {
             let was_active = self.wants_pool();
@@ -196,6 +204,27 @@ impl MessageList {
                     self.on_search_servers(self.server_round, sender);
                 }
             }
+        }
+    }
+
+    pub(super) fn on_set_search_account(&mut self, account: Option<u32>) {
+        if self.search_account == account {
+            return;
+        }
+        self.search_account = account;
+        if let Some(picker) = &self.scope_picker {
+            picker.sync(self.scope, account.is_some());
+        }
+        // "This Account" has no meaning across accounts.
+        if account.is_none() && self.scope == SearchScope::Account {
+            self.scope = SearchScope::AllFolders;
+            if let Some(picker) = &self.scope_picker {
+                picker.sync(self.scope, false);
+            }
+        }
+        if self.searching_pool() && self.scope.per_account() {
+            self.sync_look();
+            self.rebuild();
         }
     }
 

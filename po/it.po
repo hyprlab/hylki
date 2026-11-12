@@ -2625,6 +2625,12 @@ msgstr "Nome utente SMTP"
 msgid "SMTP password"
 msgstr "Password SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "Il server salva la propria copia della posta inviata"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Test SMTP"
 
@@ -5412,6 +5418,10 @@ msgid "Mark All as Unread"
 msgstr "Segna tutto come non letto"
 
 #, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr "Tutto tranne Cestino e Posta indesiderata"
+
+#, fuzzy
 msgid "All folders (except trash & junk)"
 msgstr "Tutto tranne Cestino e Posta indesiderata"
 
@@ -5422,8 +5432,17 @@ msgstr "O dove"
 msgid "This folder"
 msgstr "Questa cartella"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Account e-mail"
+
 msgid "All folders"
 msgstr "Tutte le cartelle"
+
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5435,6 +5454,10 @@ msgstr ""
 
 msgid "Only the folder or view the list is showing."
 msgstr ""
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr "Tutto tranne Cestino e Posta indesiderata"
 
 msgid "What this searches"
 msgstr ""
@@ -6419,6 +6442,8 @@ msgstr "Segue l'ordine di lettura"
 msgid "System language"
 msgstr "Lingua di sistema"
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -6939,6 +6964,12 @@ msgstr ""
 "dell'account, come fa il suo cerchio nella barra laterale."
 
 msgid "Automatic uses single lines in wide windows."
+msgstr ""
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
 msgstr ""
 
 msgid "Off also stops downloading previews."
@@ -8397,9 +8428,6 @@ msgstr "Salva una copia della posta inviata in"
 msgid "Save a copy of replies in"
 msgstr "Salva una copia della posta inviata in"
 
-msgid "Server saves its own copy of sent mail"
-msgstr "Il server salva la propria copia della posta inviata"
-
 #, fuzzy
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
@@ -9201,10 +9229,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Received"
 #~ msgstr "Ricevuto"
-
-#, fuzzy
-#~ msgid "Search all folders but Trash and Junk"
-#~ msgstr "Tutto tranne Cestino e Posta indesiderata"
 
 #, fuzzy
 #~ msgid "Search all folders, Trash and Junk too"

@@ -158,19 +158,12 @@ impl AppModel {
     /// width or height. Below, the attachment drawer starts folded: the
     /// pane is short.
     pub(super) fn place_reader(&self) {
-        let Some(split) = self.mail_split.get() else {
-            return;
-        };
         let below = self.reading_pane == config::ReadingPane::Below;
-        let (orientation, position) = if below {
-            (gtk::Orientation::Vertical, config::load_list_pane_height())
+        self.mail_split.set_orientation(if below {
+            gtk::Orientation::Vertical
         } else {
-            (gtk::Orientation::Horizontal, config::load_list_pane_width())
-        };
-        if split.orientation() != orientation {
-            split.set_orientation(orientation);
-            split.set_position(position);
-        }
+            gtk::Orientation::Horizontal
+        });
         if below {
             self.attachment_drawer.emit(AttachmentDrawerInput::Fold);
         }

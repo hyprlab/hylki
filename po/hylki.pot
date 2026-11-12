@@ -2346,6 +2346,12 @@ msgstr ""
 msgid "SMTP password"
 msgstr ""
 
+msgid "Server saves its own copy of sent mail"
+msgstr ""
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr ""
 
@@ -4777,6 +4783,9 @@ msgstr ""
 msgid "Mark All as Unread"
 msgstr ""
 
+msgid "This Account (Except Trash & Junk)"
+msgstr ""
+
 msgid "All folders (except trash & junk)"
 msgstr ""
 
@@ -4786,7 +4795,15 @@ msgstr ""
 msgid "This folder"
 msgstr ""
 
+msgid "This Account"
+msgstr ""
+
 msgid "All folders"
+msgstr ""
+
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
 msgstr ""
 
 msgid ""
@@ -4798,6 +4815,9 @@ msgid "Every folder of every account, Trash and Junk included."
 msgstr ""
 
 msgid "Only the folder or view the list is showing."
+msgstr ""
+
+msgid "Every folder of this account, Trash and Junk included."
 msgstr ""
 
 msgid "What this searches"
@@ -5703,6 +5723,8 @@ msgstr ""
 msgid "System language"
 msgstr ""
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -6174,6 +6196,12 @@ msgid "The account's picture or emoji, as in the sidebar."
 msgstr ""
 
 msgid "Automatic uses single lines in wide windows."
+msgstr ""
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
 msgstr ""
 
 msgid "Off also stops downloading previews."
@@ -7502,9 +7530,6 @@ msgid "Save a copy of sent mail in"
 msgstr ""
 
 msgid "Save a copy of replies in"
-msgstr ""
-
-msgid "Server saves its own copy of sent mail"
 msgstr ""
 
 msgid "For Gmail and others that file sent mail themselves."

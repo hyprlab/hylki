@@ -316,11 +316,12 @@ impl MessageList {
         let selection = &self.shared.selection;
         if self.gmail_keys && !self.checking {
             // Gmail's x checks a conversation without opening it
-            // (#392): the one open closes, and the checks start
-            // from this row.
+            // (#392): the one open closes, and the checks start from
+            // it and this row. A row picked with the pointer before j
+            // moved the keyboard on stays checked too.
             self.checking = true;
             self.selected_id = None;
-            selection.select_item(pos as u32, true);
+            selection.select_item(pos as u32, false);
         } else if selection.is_selected(pos as u32) {
             selection.unselect_item(pos as u32);
         } else {

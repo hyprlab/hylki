@@ -76,8 +76,10 @@ impl AppModel {
                     .iter()
                     .filter(|f| match scope {
                         ServerScope::Here(here) => here.contains(&(*aid, f.id)),
-                        ServerScope::All { waste } => {
-                            *waste || !matches!(f.kind, FolderKind::Trash | FolderKind::Junk)
+                        ServerScope::All { waste, account } => {
+                            account.is_none_or(|a| a == *aid)
+                                && (*waste
+                                    || !matches!(f.kind, FolderKind::Trash | FolderKind::Junk))
                         }
                     })
                     .map(|f| f.path.clone())

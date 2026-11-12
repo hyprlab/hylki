@@ -188,7 +188,7 @@ impl AppModel {
             list_compact: false,
             list_fold: Default::default(),
             pending_print: None,
-            mail_split: std::cell::OnceCell::new(),
+            mail_split: super::mail_split::MailSplit::new(prefs.list_follows_window),
             reader_toolbar: config::load_reader_toolbar(),
             reader_toolbar_widgets: std::cell::OnceCell::new(),
             reader_overflow_btn: {
@@ -253,6 +253,7 @@ impl AppModel {
             current_thread: Vec::new(),
             listed_thread: Vec::new(),
             reader_focus_pending: false,
+            draft_keeps_list: None,
             list_selection: Vec::new(),
             list_slots: Vec::new(),
             checked: None,

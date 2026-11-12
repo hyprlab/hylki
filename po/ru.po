@@ -2513,6 +2513,12 @@ msgstr "Имя пользователя SMTP"
 msgid "SMTP password"
 msgstr "Пароль SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "Сервер сам сохраняет копию отправленных писем"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Проверить SMTP"
 
@@ -5168,6 +5174,12 @@ msgstr "Отметить все как прочитанные"
 msgid "Mark All as Unread"
 msgstr "Отметить все как непрочитанные"
 
+#, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr ""
+"Предоставить доступ ко всей учётной записи (кроме корзины и нежелательной "
+"почты)"
+
 msgid "All folders (except trash & junk)"
 msgstr "Все папки (кроме корзины и нежелательной почты)"
 
@@ -5177,8 +5189,20 @@ msgstr "Везде"
 msgid "This folder"
 msgstr "Эта папка"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Почтовая учётная запись"
+
 msgid "All folders"
 msgstr "Все папки"
+
+#, fuzzy
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"Все папки всех учётных записей, кроме «Корзины» и «Нежелательной почты». "
+"Поиск, начатый в «Корзине» или «Нежелательной почте», также отображается там."
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5194,6 +5218,12 @@ msgstr ""
 
 msgid "Only the folder or view the list is showing."
 msgstr "Отображается только папка или просмотр списка."
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr ""
+"Каждая папка каждой учётной записи, включая «Корзину» и «Нежелательную "
+"почту»."
 
 msgid "What this searches"
 msgstr "Что это ищет"
@@ -6149,6 +6179,8 @@ msgstr "Соответствует порядку чтения"
 msgid "System language"
 msgstr "Системный язык"
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -6643,6 +6675,12 @@ msgstr "Изображение или эмодзи учётной записи, 
 
 msgid "Automatic uses single lines in wide windows."
 msgstr "Автоматически использует одиночные линии в широких окнах."
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
+msgstr ""
 
 msgid "Off also stops downloading previews."
 msgstr "Выкл. также останавливает загрузку превью."
@@ -8077,9 +8115,6 @@ msgstr "Сохранять копию отправленных писем в"
 
 msgid "Save a copy of replies in"
 msgstr "Сохраняйте копии ответов в"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "Сервер сам сохраняет копию отправленных писем"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr "Для Gmail и других этот файл отправлял почту самостоятельно."

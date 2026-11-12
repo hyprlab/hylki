@@ -63,6 +63,12 @@ pub(super) struct StateFile {
     /// The list's height with the reader below it (#475).
     #[serde(default = "default_list_pane_height")]
     list_pane_height: i32,
+    /// The list's share of the window beside the reader and above it, for
+    /// `list_follows_window` (#648). 0 until worked out from the size.
+    #[serde(default)]
+    list_pane_width_share: f64,
+    #[serde(default)]
+    list_pane_height_share: f64,
     /// Contacts view: the contact-list pane's width in px.
     #[serde(default = "default_contacts_pane_width")]
     contacts_pane_width: i32,
@@ -621,18 +627,38 @@ pub(crate) fn load_list_pane_width() -> i32 {
     load_state().list_pane_width.clamp(290, 4000)
 }
 
-/// Persist the message-list pane's width (#28).
-pub(crate) fn save_list_pane_width(width: i32) {
-    update_state(|s| s.list_pane_width = width.clamp(290, 4000));
-}
-
 /// The list's height with the reader below it (#475).
 pub(crate) fn load_list_pane_height() -> i32 {
     load_state().list_pane_height.clamp(120, 4000)
 }
 
-pub(crate) fn save_list_pane_height(height: i32) {
-    update_state(|s| s.list_pane_height = height.clamp(120, 4000));
+/// The list's share of the split beside the reader and above it (#648).
+pub(crate) fn load_list_pane_shares() -> (f64, f64) {
+    let s = load_state();
+    (
+        list_share(s.list_pane_width_share),
+        list_share(s.list_pane_height_share),
+    )
+}
+
+/// A share the list can have: anything else is not worked out yet.
+pub(super) fn list_share(value: f64) -> f64 {
+    if (0.05..=0.95).contains(&value) {
+        value
+    } else {
+        0.0
+    }
+}
+
+/// The list's width and height as the user dragged them (#28, #475), and
+/// the share of the window each was (#648).
+pub(crate) fn save_list_split(width: i32, height: i32, width_share: f64, height_share: f64) {
+    update_state(|s| {
+        s.list_pane_width = width.clamp(290, 4000);
+        s.list_pane_height = height.clamp(120, 4000);
+        s.list_pane_width_share = list_share(width_share);
+        s.list_pane_height_share = list_share(height_share);
+    });
 }
 
 /// The contacts view's remembered list-pane width (280 is also its floor).

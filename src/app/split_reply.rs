@@ -197,6 +197,20 @@ impl AppModel {
         focus: Option<(u32, u32)>,
         sender: &ComponentSender<Self>,
     ) {
+        self.open_inline_compose(account_id, prefill, focus, true, sender);
+    }
+
+    /// [`Self::open_inline_reply`], with the keyboard left where it is
+    /// unless `take_keys`: a draft selected in the list stays out of its
+    /// editor until it is asked for, so the list's keys go on working.
+    pub(super) fn open_inline_compose(
+        &mut self,
+        account_id: u32,
+        prefill: ComposePrefill,
+        focus: Option<(u32, u32)>,
+        take_keys: bool,
+        sender: &ComponentSender<Self>,
+    ) {
         // No reading pane to open in, or one too short below the list to
         // write in (#475): a window of its own.
         if self.reading_pane != config::ReadingPane::Right {
@@ -223,14 +237,14 @@ impl AppModel {
         if contextual && !self.showing_contacts {
             self.open_split_panel(&controller, bottom, focus);
         } else {
-            self.open_covering_composer(&controller);
+            self.open_covering_composer(&controller, take_keys);
         }
         self.reader_compose = Some(ReaderCompose {
             id,
             controller,
             window: None,
             answering: focus,
-            list_draft: false,
+            list_draft: None,
         });
         // A fresh composer has nothing to take back yet; the last one's
         // labels must not carry over into its menu.
@@ -357,7 +371,7 @@ impl AppModel {
     }
 
     /// A composer that covers the whole reader pane, sliding down over it.
-    fn open_covering_composer(&self, controller: &Controller<Compose>) {
+    fn open_covering_composer(&self, controller: &Controller<Compose>, take_keys: bool) {
         // Composing clears the reader toolbar too (decorations excepted);
         // the ⋯ overflow is managed by hand, so hide it by hand.
         self.reader_overflow_btn.set_visible(false);
@@ -373,6 +387,8 @@ impl AppModel {
         // skipped — the composer pops in instead of sliding down.
         let s = slot.clone();
         gtk::glib::idle_add_local_once(move || s.set_reveal_child(true));
-        controller.emit(ComposeInput::FocusInitial);
+        if take_keys {
+            controller.emit(ComposeInput::FocusInitial);
+        }
     }
 }

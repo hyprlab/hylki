@@ -2540,6 +2540,12 @@ msgstr "Όνομα χρήστη SMTP"
 msgid "SMTP password"
 msgstr "Κωδικός πρόσβασης SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "Ο διακομιστής αποθηκεύει δικό του αντίγραφο των απεσταλμένων"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Δοκιμή SMTP"
 
@@ -5233,6 +5239,10 @@ msgstr "Σήμανση όλων ως αναγνωσμένων"
 msgid "Mark All as Unread"
 msgstr "Σήμανση όλων ως μη αναγνωσμένων"
 
+#, fuzzy
+msgid "This Account (Except Trash & Junk)"
+msgstr "Όλοι οι φάκελοι (εκτός από Κάδο και Ανεπιθύμητα)"
+
 msgid "All folders (except trash & junk)"
 msgstr "Όλοι οι φάκελοι (εκτός από Κάδο και Ανεπιθύμητα)"
 
@@ -5242,8 +5252,20 @@ msgstr "Παντού"
 msgid "This folder"
 msgstr "Αυτός ο φάκελος"
 
+#, fuzzy
+msgid "This Account"
+msgstr "Λογαριασμός αλληλογραφίας"
+
 msgid "All folders"
 msgstr "Όλοι οι φάκελοι"
+
+#, fuzzy
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"Όλοι οι φάκελοι όλων των λογαριασμών, εκτός από τον Κάδο και τα Ανεπιθύμητα. "
+"Μια αναζήτηση που ξεκινά εκεί αναζητά και σε αυτούς."
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5259,6 +5281,12 @@ msgstr ""
 
 msgid "Only the folder or view the list is showing."
 msgstr "Μόνο ο φάκελος ή η προβολή που εμφανίζεται στη λίστα."
+
+#, fuzzy
+msgid "Every folder of this account, Trash and Junk included."
+msgstr ""
+"Όλοι οι φάκελοι όλων των λογαριασμών, συμπεριλαμβανομένων του Κάδου και των "
+"Ανεπιθύμητων."
 
 msgid "What this searches"
 msgstr "Τι αναζητά αυτή η επιλογή"
@@ -6210,6 +6238,8 @@ msgstr "Ακολουθεί τη σειρά ανάγνωσης"
 msgid "System language"
 msgstr "Γλώσσα συστήματος"
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -6717,6 +6747,12 @@ msgstr "Η εικόνα ή το emoji του λογαριασμού, όπως σ
 
 msgid "Automatic uses single lines in wide windows."
 msgstr "Η αυτόματη επιλογή χρησιμοποιεί μονές γραμμές σε πλατιά παράθυρα."
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
+msgstr ""
 
 msgid "Off also stops downloading previews."
 msgstr "Ανενεργό: σταματά επίσης τη λήψη προεπισκοπήσεων."
@@ -8175,9 +8211,6 @@ msgstr "Αποθήκευση αντιγράφου των απεσταλμένω�
 
 msgid "Save a copy of replies in"
 msgstr "Αποθήκευση αντιγράφου των απαντήσεων στον"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "Ο διακομιστής αποθηκεύει δικό του αντίγραφο των απεσταλμένων"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""
