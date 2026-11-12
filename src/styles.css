@@ -1877,18 +1877,22 @@ headerbar box.list-tools.compact button {
   opacity: 0.85;
 }
 
-/* Type-tinted attachment icons (symbolic icons follow `color`). Colors read
-   on both light and dark backgrounds. */
-.ftype-pdf      { color: #e01b24; } /* red    — PDF */
-.ftype-doc      { color: #3584e4; } /* blue   — Word / documents */
-.ftype-sheet    { color: #2ec27e; } /* green  — Excel / spreadsheets */
-.ftype-slides   { color: #ff7800; } /* orange — PowerPoint / presentations */
-.ftype-archive  { color: #e5a50a; } /* amber  — zip / archives */
-.ftype-audio    { color: #9141ac; } /* purple — audio */
-.ftype-video    { color: #e6689e; } /* pink   — video */
-.ftype-calendar { color: #009e8f; } /* teal   — calendar */
-.ftype-image    { color: #1c9bd8; } /* cyan   — images */
-.ftype-generic  { color: #8c8c8c; } /* grey   — everything else */
+/* Type-tinted attachment icons (symbolic icons follow `color`), in the
+   theme's colors (#651): a PDF wears the error color, as the importance mark
+   does, and the rest libadwaita's accent palette made standalone the way
+   libadwaita makes accent_color, so each reads on its own scheme. The
+   reader's chips use the same mapping (message_view/wrapper_css.rs). */
+.ftype-pdf      { color: var(--error-color); }
+.ftype-doc      { color: oklab(from var(--accent-blue) var(--standalone-color-oklab)); }
+.ftype-sheet    { color: oklab(from var(--accent-green) var(--standalone-color-oklab)); }
+.ftype-slides   { color: oklab(from var(--accent-orange) var(--standalone-color-oklab)); }
+.ftype-archive  { color: oklab(from var(--accent-yellow) var(--standalone-color-oklab)); }
+.ftype-audio    { color: oklab(from var(--accent-purple) var(--standalone-color-oklab)); }
+.ftype-video    { color: oklab(from var(--accent-pink) var(--standalone-color-oklab)); }
+.ftype-calendar { color: oklab(from var(--accent-teal) var(--standalone-color-oklab)); }
+/* Cyan, which the accents lack. */
+.ftype-image    { color: oklab(from #1c9bd8 var(--standalone-color-oklab)); }
+.ftype-generic  { color: alpha(currentColor, 0.55); }
 
 /* Quick-open button on the thumbnail, revealed on hover. */
 .gallery-open {
@@ -1926,6 +1930,13 @@ headerbar box.list-tools.compact button {
 /* The page for an item with no picture sits on the dark ground in any theme. */
 .gallery-lightbox-file {
   color: white;
+}
+/* Its file-type icon too: the dark scheme's tints whatever the scheme. */
+.gallery-lightbox {
+  --standalone-color-oklab: max(l, 0.85) a b;
+}
+.gallery-lightbox .ftype-pdf {
+  color: oklab(from var(--error-bg-color) max(l, 0.85) a b);
 }
 
 /* In-message attachment drawer (footer beneath the reader body). */

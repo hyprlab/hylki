@@ -101,9 +101,68 @@ pub(crate) fn tinted_text(hex: &str, alpha: f64, ground: &str, min: f64) -> Stri
     format!("#{:02x}{:02x}{:02x}", text.0, text.1, text.2)
 }
 
+/// `hex` as libadwaita makes a standalone color (text, an icon) from a
+/// background one, the way `accent_color` comes from `accent_bg_color`: its
+/// OKLab lightness capped at 0.5 on a light ground, raised to at least 0.85
+/// on a dark one. The reader has no libadwaita stylesheet to do this (#651).
+pub(crate) fn standalone(hex: &str, dark: bool) -> String {
+    let Some((r, g, b)) = rgb(hex) else {
+        return hex.to_string();
+    };
+    let lin = |c: u8| {
+        let c = c as f64 / 255.0;
+        if c <= 0.04045 {
+            c / 12.92
+        } else {
+            ((c + 0.055) / 1.055).powf(2.4)
+        }
+    };
+    let (r, g, b) = (lin(r), lin(g), lin(b));
+    let l = (0.412_221_470_8 * r + 0.536_332_536_3 * g + 0.051_445_992_9 * b).cbrt();
+    let m = (0.211_903_498_2 * r + 0.680_699_545_1 * g + 0.107_396_956_6 * b).cbrt();
+    let s = (0.088_302_461_9 * r + 0.281_718_837_6 * g + 0.629_978_700_5 * b).cbrt();
+    let big_l = 0.210_454_255_3 * l + 0.793_617_785 * m - 0.004_072_046_8 * s;
+    let a = 1.977_998_495_1 * l - 2.428_592_205 * m + 0.450_593_709_9 * s;
+    let bb = 0.025_904_037_1 * l + 0.782_771_766_2 * m - 0.808_675_766 * s;
+    let big_l = if dark {
+        big_l.max(0.85)
+    } else {
+        big_l.min(0.5)
+    };
+    let l = (big_l + 0.396_337_777_4 * a + 0.215_803_757_3 * bb).powi(3);
+    let m = (big_l - 0.105_561_345_8 * a - 0.063_854_172_8 * bb).powi(3);
+    let s = (big_l - 0.089_484_177_5 * a - 1.291_485_548 * bb).powi(3);
+    // Out of gamut is clipped per channel, as GTK does.
+    let enc = |c: f64| {
+        let c = c.clamp(0.0, 1.0);
+        let c = if c <= 0.003_130_8 {
+            c * 12.92
+        } else {
+            1.055 * c.powf(1.0 / 2.4) - 0.055
+        };
+        (c * 255.0).round() as u8
+    };
+    format!(
+        "#{:02x}{:02x}{:02x}",
+        enc(4.076_741_662_1 * l - 3.307_711_591_3 * m + 0.230_969_929_2 * s),
+        enc(-1.268_438_004_6 * l + 2.609_757_401_1 * m - 0.341_319_396_5 * s),
+        enc(-0.004_196_086_3 * l - 0.703_418_614_7 * m + 1.707_614_701 * s),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn standalone_matches_libadwaita() {
+        // What GTK computes for libadwaita's own blue accent and red error.
+        assert_eq!(standalone("#3584e4", false), "#0461be");
+        assert_eq!(standalone("#3584e4", true), "#81d0ff");
+        assert_eq!(standalone("#e01b24", false), "#c30000");
+        assert_eq!(standalone("#c01c28", true), "#ff938c");
+        assert_eq!(standalone("no color", true), "no color");
+    }
 
     #[test]
     fn pale_is_the_color_at_an_alpha_or_transparent() {

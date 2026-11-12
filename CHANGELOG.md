@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- **Fixed: attachment icons in the reader kept fixed colors** (#651,
+  reported by yioannides). A PDF's icon now wears the theme's error color,
+  as the importance mark does since #619, and the other file types take
+  libadwaita's accent palette, lightened for a dark scheme the way libadwaita
+  lightens its own accent color. The attachment drawer, the gallery and the
+  lightbox use the same colors.
+
+- **Changed: the reader's outlined chips are filled** (#651). An attachment
+  is a pair of filled buttons, open and save, the folder chip on a card is a
+  filled pill, and an invitation's answer buttons lose their outline, in
+  the style of the recipients chip and the Unsubscribe button (#342).
+
 ## 1.48.0 — 2026-11-12
 
 Everything from 1.48.0-beta.1 to 1.48.0-beta.7: AI agents that reach your mail

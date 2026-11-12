@@ -24,6 +24,7 @@ pub(super) fn wrapper_css(
         warning,
         success,
     } = status;
+    let ftype_css = ftype_css(scheme == "dark", error);
     format!(
         "\
          :root{{color-scheme:{scheme};}}\
@@ -151,40 +152,35 @@ pub(super) fn wrapper_css(
          .hylki-inv-row{{opacity:0.8;margin-top:2px;}}\
          .hylki-inv-note{{margin-top:4px;opacity:0.8;font-style:italic;}}\
          .hylki-inv-acts{{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}}\
-         .hylki-inv-btn{{border:1px solid rgba(128,128,128,0.4);border-radius:6px;\
-         padding:3px 12px;background:rgba(128,128,128,0.1);color:inherit;font:inherit;\
-         font-size:0.95em;font-weight:600;cursor:pointer;}}\
-         .hylki-inv-btn:hover{{background:rgba(128,128,128,0.22);}}\
+         .hylki-inv-btn{{border:none;border-radius:6px;\
+         padding:3px 12px;background:color-mix(in srgb,currentColor 10%,transparent);\
+         color:inherit;font:inherit;font-size:0.95em;font-weight:600;cursor:pointer;}}\
+         .hylki-inv-btn:hover{{background:color-mix(in srgb,currentColor 15%,transparent);}}\
+         .hylki-inv-btn:active{{background:color-mix(in srgb,currentColor 30%,transparent);}}\
          /* The answer already given is marked, so a meeting opened\
          again shows where it stands at a glance. */\
-         .hylki-inv-btn.on{{border-color:{accent};color:{accent};\
+         .hylki-inv-btn.on{{color:{accent};\
          background:color-mix(in srgb, {accent} 16%, transparent);}}\
+         /* An attachment is a linked pair of filled buttons, open and\
+         save, with no outline: a libadwaita .linked box (#651). */\
          .hylki-attw{{display:inline-flex;align-items:stretch;max-width:100%;\
-         border:1px solid rgba(128,128,128,0.35);border-radius:8px;overflow:hidden;\
-         background:rgba(128,128,128,0.08);}}\
+         gap:1px;border-radius:6px;overflow:hidden;}}\
+         .hylki-attc,.hylki-attsave{{border:none;color:inherit;cursor:pointer;\
+         background:color-mix(in srgb,currentColor 10%,transparent);}}\
+         .hylki-attc:hover,.hylki-attsave:hover{{\
+         background:color-mix(in srgb,currentColor 15%,transparent);}}\
+         .hylki-attc:active,.hylki-attsave:active{{\
+         background:color-mix(in srgb,currentColor 30%,transparent);}}\
          .hylki-attc{{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;\
-         border:none;background:none;color:inherit;font:inherit;font-size:0.85em;\
-         cursor:pointer;min-width:0;max-width:320px;}}\
-         .hylki-attc:hover{{background:rgba(128,128,128,0.18);}}\
+         font:inherit;font-size:0.85em;min-width:0;max-width:320px;}}\
          .hylki-attc svg{{width:16px;height:16px;flex:none;display:block;}}\
          .hylki-attc svg,.hylki-attc svg *{{fill:currentColor;}}\
-         .hylki-attc.ftype-pdf svg{{color:#e01b24;}}\
-         .hylki-attc.ftype-doc svg{{color:#3584e4;}}\
-         .hylki-attc.ftype-sheet svg{{color:#2ec27e;}}\
-         .hylki-attc.ftype-slides svg{{color:#ff7800;}}\
-         .hylki-attc.ftype-archive svg{{color:#e5a50a;}}\
-         .hylki-attc.ftype-audio svg{{color:#9141ac;}}\
-         .hylki-attc.ftype-video svg{{color:#e6689e;}}\
-         .hylki-attc.ftype-calendar svg{{color:#009e8f;}}\
-         .hylki-attc.ftype-image svg{{color:#1c9bd8;}}\
-         .hylki-attc.ftype-generic svg{{color:#8c8c8c;}}\
+         {ftype_css}\
          .hylki-attn{{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}}\
          .hylki-attz{{opacity:0.55;white-space:nowrap;flex:none;}}\
-         .hylki-attsave{{display:inline-flex;align-items:center;padding:0 7px;border:none;\
-         border-inline-start:1px solid rgba(128,128,128,0.35);background:none;color:inherit;\
-         cursor:pointer;opacity:0.6;}}\
-         .hylki-attsave:hover{{opacity:1;background:rgba(128,128,128,0.18);}}\
-         .hylki-attsave svg{{width:14px;height:14px;display:block;}}\
+         .hylki-attsave{{display:inline-flex;align-items:center;padding:0 7px;}}\
+         .hylki-attsave svg{{width:14px;height:14px;display:block;opacity:0.6;}}\
+         .hylki-attsave:hover svg{{opacity:1;}}\
          .hylki-attsave svg,.hylki-attsave svg *{{fill:currentColor;}}\
          .hylki-atts.flash .hylki-attw{{animation:hylki-att-flash 1.2s ease-out;}}\
          @keyframes hylki-att-flash{{0%,40%{{box-shadow:0 0 0 3px rgba(53,132,228,0.7);}}\
@@ -320,8 +316,11 @@ pub(super) fn wrapper_css(
          .hylki-acts-toggle svg{{width:14px;height:14px;display:block;}}\
          .hylki-acts-toggle svg,.hylki-acts-toggle svg *{{fill:currentColor;}}\
          .hylki-acts-toggle:hover{{opacity:1;background:rgba(128,128,128,0.18);}}\
-         .hylki-folder{{padding:0.05em 0.45em;border-radius:0.7em;\
-         font-size:0.78em;opacity:0.75;border:1px solid currentColor;\
+         /* The folder is a label, not a button: a filled pill (#651),\
+         the recipients chip's height but round. */\
+         .hylki-folder{{padding:0.15em 0.6em;border-radius:999px;\
+         font-size:0.78em;opacity:0.75;\
+         background:color-mix(in srgb,currentColor 13%,transparent);\
          white-space:nowrap;flex:none;}}\
          .hylki-rcpt-toggle{{font:inherit;font-size:0.78em;color:inherit;\
          background:color-mix(in srgb,currentColor 10%,transparent);\
@@ -354,4 +353,29 @@ pub(super) fn wrapper_css(
          .hylki-folder,.hylki-rcpt div){{unicode-bidi:plaintext;}}\
          "
     )
+}
+
+/// The attachment chips' file-type icons in the theme's colors (#651): a
+/// PDF wears the error color, as the importance mark does, and the rest
+/// libadwaita's accent palette made standalone for the scheme. The same
+/// mapping as `.ftype-*` in styles.css; the reader cannot read the
+/// palette from the theme, so it is computed here.
+fn ftype_css(dark: bool, error: &str) -> String {
+    const PALETTE: [(&str, &str); 8] = [
+        ("doc", "#3584e4"),      // accent blue
+        ("sheet", "#3a944a"),    // accent green
+        ("slides", "#ed5b00"),   // accent orange
+        ("archive", "#c88800"),  // accent yellow
+        ("audio", "#9141ac"),    // accent purple
+        ("video", "#d56199"),    // accent pink
+        ("calendar", "#2190a4"), // accent teal
+        ("image", "#1c9bd8"),    // cyan, which the accents lack
+    ];
+    let mut css = format!(".hylki-attc.ftype-pdf svg{{color:{error};}}");
+    for (kind, hex) in PALETTE {
+        let c = crate::color::standalone(hex, dark);
+        css.push_str(&format!(".hylki-attc.ftype-{kind} svg{{color:{c};}}"));
+    }
+    css.push_str(".hylki-attc.ftype-generic svg{opacity:0.55;}");
+    css
 }
