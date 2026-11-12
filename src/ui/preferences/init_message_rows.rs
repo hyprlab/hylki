@@ -461,9 +461,11 @@ impl Preferences {
                 rows.show(&current);
                 if dicts.is_empty() {
                     rows.expander.set_sensitive(false);
-                    spelling_group.set_description(Some(&i18n(
+                    // A group's description is markup: "<code>" would be
+                    // read as a tag and the whole line dropped.
+                    spelling_group.set_description(Some(&gtk::glib::markup_escape_text(&i18n(
                         "No dictionaries found. On Flatpak, add a language with: flatpak config --set extra-languages <code>",
-                    )));
+                    ))));
                 }
                 // Connected after the switches show the saved choice, and
                 // guarded besides, so showing it never saves it again.
