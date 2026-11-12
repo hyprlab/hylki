@@ -297,9 +297,9 @@
 
 - **Translations:** Russian completed (PR #611 by FLASH911), with 2440 of 2450
   strings translated. French updated (PR #615 by frenchy82), with 2419 of 2474
-  strings translated. German (PR #628 by Samuel Edlmeier) and Spanish (PR #629
-  by Daniel Miguel) updated, each with 2487 of 2488 strings translated.
-  Portuguese (Portugal) and Portuguese (Brazil) completed (PR #633 by Paulo
+  strings translated. Spanish updated (PR #629 by Daniel Miguel), with 2487 of
+  2488 strings translated. German updated (PRs #628 and #636 by Samuel
+  Edlmeier), with 2488 of 2496 strings translated. Portuguese (Portugal) and Portuguese (Brazil) completed (PR #633 by Paulo
   Fino), 2488 of 2488 strings each.
 
 - **Added: trackers come off links** (#599, by James Reilly). A link opened or
