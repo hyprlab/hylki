@@ -371,38 +371,46 @@ pub(crate) fn cache_stats() -> (usize, u64, usize, usize) {
 }
 
 /// `text` on a flat `bg`, as a `data:` PNG for an `<img>` of `size` CSS
-/// pixels — rendered at the screen's scale, so it is as crisp as the
-/// document's own text. Drawn through the window's renderer; `None` before
-/// a window exists.
+/// pixels, rendered at the screen's scale, so it is as crisp as the
+/// document's own text.
+///
+/// Drawn with cairo, not a window's renderer: the first toplevel GTK lists
+/// can be a hidden one, and on Wayland a hidden window has no EGL surface,
+/// so its GL context would not make current and libepoxy aborted the whole
+/// app as the reader opened a message (#650).
 pub(super) fn png_data_uri(text: &str, bg: gdk::RGBA, size: i32) -> Option<String> {
     let key = (text.to_string(), bg.to_string(), size);
     if let Some(hit) = PNG_CACHE.with(|c| c.borrow().get(&key).cloned()) {
         return Some(hit);
     }
-    // No display (the document builder under test, say): there is nothing to
-    // render with, and asking GTK for its toplevels would panic rather than
-    // say so. The caller falls back to markup.
+    // No display (the document builder under test, say): the text cannot be
+    // laid out, and asking GTK for its toplevels would panic rather than say
+    // so. The caller falls back to markup.
     if !gtk::is_initialized_main_thread() {
         return None;
     }
-    let window = gtk::Window::list_toplevels()
+    // The scale of a window on screen; twice, as the pictures beside it are
+    // drawn, while none is.
+    let scale = gtk::Window::list_toplevels()
         .into_iter()
-        .find_map(|w| w.downcast::<gtk::Window>().ok())?;
-    let renderer = window.renderer()?;
-    let scale = window.scale_factor().max(1);
+        .filter(|w| w.is_mapped())
+        .map(|w| w.scale_factor())
+        .max()
+        .unwrap_or(2)
+        .max(1);
     let px = size * scale;
     let paintable = InitialsPaintable::solid(text, bg, gdk::RGBA::WHITE, 0.0);
     let snapshot = gtk::Snapshot::new();
     paintable.snapshot(&snapshot, f64::from(px), f64::from(px));
     let node = snapshot.to_node()?;
-    let texture = renderer.render_texture(
-        &node,
-        Some(&graphene::Rect::new(0.0, 0.0, px as f32, px as f32)),
-    );
-    let uri = format!(
-        "data:image/png;base64,{}",
-        glib::base64_encode(&texture.save_to_png_bytes())
-    );
+    let surface = gtk::cairo::ImageSurface::create(gtk::cairo::Format::ARgb32, px, px).ok()?;
+    {
+        let cr = gtk::cairo::Context::new(&surface).ok()?;
+        node.draw(&cr);
+    }
+    let mut png = Vec::new();
+    surface.write_to_png(&mut png).ok()?;
+    let uri = format!("data:image/png;base64,{}", glib::base64_encode(&png));
     PNG_CACHE.with(|c| {
         c.borrow_mut().insert(key, uri.clone());
     });
