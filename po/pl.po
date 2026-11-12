@@ -8757,9 +8757,6 @@ msgstr "Format pisania wiadomości"
 msgid "Reply in the original's format"
 msgstr "Odpowiedz z plikami"
 
-msgid "Plain text for plain-text mail, formatting for formatted mail."
-msgstr ""
-
 #, fuzzy
 msgid "Ask before switching to plain text"
 msgstr "Wklejanie jako zwykły tekst"

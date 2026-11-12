@@ -8391,9 +8391,6 @@ msgstr "Comença els missatges nous en"
 msgid "Reply in the original's format"
 msgstr "Respon en el format de l'original"
 
-msgid "Plain text for plain-text mail, formatting for formatted mail."
-msgstr ""
-
 #, fuzzy
 msgid "Ask before switching to plain text"
 msgstr "Vols canviar a text pla?"

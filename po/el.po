@@ -8389,9 +8389,6 @@ msgstr "Έναρξη νέων μηνυμάτων σε"
 msgid "Reply in the original's format"
 msgstr "Απάντηση με τη μορφοποίηση του αρχικού"
 
-msgid "Plain text for plain-text mail, formatting for formatted mail."
-msgstr ""
-
 #, fuzzy
 msgid "Ask before switching to plain text"
 msgstr "Μετάβαση σε απλό κείμενο;"

@@ -8280,9 +8280,6 @@ msgstr "Начать новые сообщения в"
 msgid "Reply in the original's format"
 msgstr "Ответ в формате оригинала"
 
-msgid "Plain text for plain-text mail, formatting for formatted mail."
-msgstr ""
-
 #, fuzzy
 msgid "Ask before switching to plain text"
 msgstr "Переключиться на обычный текст?"

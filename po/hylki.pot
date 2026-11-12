@@ -7683,9 +7683,6 @@ msgstr ""
 msgid "Reply in the original's format"
 msgstr ""
 
-msgid "Plain text for plain-text mail, formatting for formatted mail."
-msgstr ""
-
 msgid "Ask before switching to plain text"
 msgstr ""
 

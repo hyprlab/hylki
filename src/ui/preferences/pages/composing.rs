@@ -131,7 +131,6 @@ impl ComposingPage {
                     #[name = "follow_plain_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Reply in the original's format"),
-                        set_subtitle: &i18n("Plain text for plain-text mail, formatting for formatted mail."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetFollowPlain(row.is_active()));
                         },

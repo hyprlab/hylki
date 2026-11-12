@@ -8294,9 +8294,6 @@ msgstr "Démarrer les nouveaux messages en"
 msgid "Reply in the original's format"
 msgstr "Répondre dans le format de l’original"
 
-msgid "Plain text for plain-text mail, formatting for formatted mail."
-msgstr ""
-
 #, fuzzy
 msgid "Ask before switching to plain text"
 msgstr "Passer en texte brut ?"
