@@ -6270,6 +6270,8 @@ msgstr "Segueix l'ordre de lectura"
 msgid "System language"
 msgstr "Idioma del sistema"
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -6772,6 +6774,12 @@ msgstr "La imatge o l'emoji del compte, com a la barra lateral."
 
 msgid "Automatic uses single lines in wide windows."
 msgstr "Automàtic utilitza línies individuals en finestres amples."
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
+msgstr ""
 
 msgid "Off also stops downloading previews."
 msgstr "Desactivat també atura la baixada de previsualitzacions."

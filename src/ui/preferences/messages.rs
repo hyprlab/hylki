@@ -172,6 +172,7 @@ pub(crate) struct PrefInit {
     pub(crate) list_column_scroll: bool,
     pub(crate) list_group_by_date: bool,
     pub(crate) list_pills_below: bool,
+    pub(crate) list_follows_window: bool,
     pub(crate) list_search_open: bool,
     pub(crate) contacts_search_open: bool,
     pub(crate) contact_names: bool,
@@ -530,6 +531,8 @@ pub(crate) enum PrefOutput {
     SetGroupByDate(bool),
     /// A card's tags and labels on a line under its text (#374).
     SetPillsBelow(bool),
+    /// The list keeps its share of the window, not its width (#648).
+    SetListFollowsWindow(bool),
     /// Keep the list's search field open (#446).
     SetListSearchOpen(bool),
     /// Keep Contacts' search field open.

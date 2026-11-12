@@ -74,6 +74,7 @@ mod keymap;
 mod keyring_alert;
 mod list_header;
 mod list_sort;
+mod mail_split;
 mod merge_send;
 mod model;
 mod model_new;
@@ -324,45 +325,8 @@ impl SimpleComponent for AppModel {
                         // one it keeps the stock separator.
                         add_css_class: "mail-split",
                         set_wide_handle: false,
-                        // Launch at the remembered width; `shrink_start_child: false`
-                        // keeps it above the list's floor.
-                        set_position: crate::config::load_list_pane_width(),
-                        // Remember the width the user drags to (#28). Debounced:
-                        // position-notify fires per pixel of a drag (and when the
-                        // window squeezes the pane), one write once it settles.
-                        connect_position_notify[
-                            sender,
-                            pending = std::rc::Rc::new(std::cell::RefCell::new(
-                                None::<gtk::glib::SourceId>,
-                            ))
-                        ] => move |p| {
-                            let pos = p.position();
-                            // With the reader below, the list's height (#475).
-                            let below = p.orientation() == gtk::Orientation::Vertical;
-                            // Automatic layout follows the width as it is
-                            // dragged, not once the drag has settled (#334).
-                            if !below {
-                                sender.input(AppMsg::ListPaneWidth(pos));
-                            }
-                            if let Some(id) = pending.borrow_mut().take() {
-                                id.remove();
-                            }
-                            let armed = pending.clone();
-                            *pending.borrow_mut() = Some(gtk::glib::timeout_add_local_once(
-                                std::time::Duration::from_millis(600),
-                                move || {
-                                    *armed.borrow_mut() = None;
-                                    if below {
-                                        crate::config::save_list_pane_height(pos);
-                                    } else {
-                                        crate::config::save_list_pane_width(pos);
-                                    }
-                                },
-                            ));
-                        },
-                        // The list keeps its width as the window resizes (the
-                        // reader absorbs the change), and can't be dragged narrower
-                        // than its own minimum. The reader has a floor of its own:
+                        // `MailSplit` places the divider (#28, #648). The
+                        // list can't be dragged narrower than its own minimum. The reader has a floor of its own:
                         // its header carries a full row of actions, and squeezing it
                         // pushed them off the right-hand edge of the window.
                         set_resize_start_child: false,
@@ -938,7 +902,7 @@ impl SimpleComponent for AppModel {
         let reader_snooze_btn = model.reader_snooze_btn.clone();
         let widgets = view_output!();
         let _ = model.reader_header.set(widgets.reader_header.clone());
-        let _ = model.mail_split.set(widgets.mail_split.clone());
+        model.mail_split.wire(widgets.mail_split.clone(), &sender);
         let _ = model.toasts.set(widgets.toasts.clone());
         model.init_reader_header_menu(&widgets, &sender);
         model.init_reader_toolbar_fold(&widgets, &sender);

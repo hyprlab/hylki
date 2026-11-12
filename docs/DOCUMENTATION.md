@@ -2117,6 +2117,12 @@ which marks it read as **Settings → Reading → Mark as read** says. A
 conversation opens whole, each message marked as its window scrolls through
 it. Hylki remembers the choice.
 
+The list keeps the width it is dragged to, or its height with the reader below.
+A window too small for that narrows the list for the moment, and the list goes
+back to it when the window grows again. **Settings → Message List → Resize the
+list with the window** keeps the list's share of the window instead: a list
+dragged to half the window stays half of it at any size.
+
 **Settings → Message List → Layout** sets how the list shows a message.
 **Cards** gives the sender, the subject and the start of the text lines of
 their own. **Single line** puts them on one line in columns: the sender's

@@ -6238,6 +6238,8 @@ msgstr "Ακολουθεί τη σειρά ανάγνωσης"
 msgid "System language"
 msgstr "Γλώσσα συστήματος"
 
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
 msgid ""
 "No dictionaries found. On Flatpak, add a language with: flatpak config --set "
 "extra-languages <code>"
@@ -6745,6 +6747,12 @@ msgstr "Η εικόνα ή το emoji του λογαριασμού, όπως σ
 
 msgid "Automatic uses single lines in wide windows."
 msgstr "Η αυτόματη επιλογή χρησιμοποιεί μονές γραμμές σε πλατιά παράθυρα."
+
+msgid "Resize the list with the window"
+msgstr ""
+
+msgid "Off, it keeps its width and the reader resizes."
+msgstr ""
 
 msgid "Off also stops downloading previews."
 msgstr "Ανενεργό: σταματά επίσης τη λήψη προεπισκοπήσεων."

@@ -184,7 +184,7 @@ pub(crate) struct AppModel {
     pub(super) list_fold: std::rc::Rc<super::reading_pane::ListFold>,
     /// The list and the reader's split, turned on its side for the reader
     /// below the list (#475).
-    pub(super) mail_split: std::cell::OnceCell<gtk::Paned>,
+    pub(super) mail_split: std::rc::Rc<super::mail_split::MailSplit>,
     /// A print with the reading pane off, waiting for its bodies.
     pub(super) pending_print: Option<super::reading_pane::PendingPrint>,
     /// The right group stays in the ⋯ menu at every width.

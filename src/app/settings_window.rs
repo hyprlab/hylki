@@ -173,6 +173,7 @@ impl AppModel {
             list_column_scroll: self.list_column_scroll,
             list_group_by_date: self.list_group_by_date,
             list_pills_below: self.list_pills_below,
+            list_follows_window: self.mail_split.follows(),
             list_search_open: self.list_search_open,
             contacts_search_open: self.contacts_search_open,
             contact_names: self.contact_names,

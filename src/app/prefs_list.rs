@@ -70,6 +70,12 @@ impl AppModel {
                         .emit(MessageListInput::SetPillsBelow(self.list_pills_below_now()));
                 }
             }
+            PrefOutput::SetListFollowsWindow(on) => {
+                if self.mail_split.follows() != on {
+                    self.mail_split.set_follows(on);
+                    self.save_settings();
+                }
+            }
             PrefOutput::SetListColumns(columns) => {
                 if pref!(self.list_columns = columns.clone()) {
                     self.message_list

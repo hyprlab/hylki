@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Fixed: the message list stayed narrow after the window grew** (#648,
+  reported by MisterPerson42). A window too small for the list's width
+  narrowed the list, and that narrower width was kept, so the list had to be
+  dragged wide again after maximizing. The list now goes back to the width it
+  was dragged to, and with the reader below the list, to its height.
+
+- **Added: Resize the list with the window** (#648). **Settings → Message
+  List → Resize the list with the window**, off by default, keeps the list's
+  share of the window instead of its width as the window resizes. Turned on,
+  the list keeps the share it has at that moment; a drag sets a new one.
+
 - **Added: attachments preview in the GNOME file previewer** (#625). Where
   Sushi is installed, Space on a file in the attachment drawer, or Preview
   in the right-click menu of a file in the drawer, the attachment gallery or

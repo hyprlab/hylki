@@ -406,6 +406,10 @@ pub(crate) struct PrivacyFile {
     /// text, instead of at the end of the subject (#374).
     #[serde(default)]
     pub(crate) list_pills_below: bool,
+    /// The list keeps its share of the window as the window resizes,
+    /// instead of its width (#648). Off by default.
+    #[serde(default)]
+    pub(crate) list_follows_window: bool,
     /// The list's sort, by its key, and whether a heading turned it the
     /// other way (#574). Empty is newest first.
     #[serde(default)]
@@ -766,6 +770,7 @@ impl Default for PrivacyFile {
             list_column_scroll: false,
             list_group_by_date: true,
             list_pills_below: false,
+            list_follows_window: false,
             list_sort: String::new(),
             list_sort_reversed: false,
             list_sorts: Default::default(),

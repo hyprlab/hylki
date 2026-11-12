@@ -252,6 +252,16 @@ fn a_missing_state_file_falls_back_to_the_declared_defaults() {
     assert_eq!(fresh.list_pane_width, super::default_list_pane_width());
 }
 
+/// A share of the window the list cannot have reads as none, and the list
+/// keeps its width instead (#648).
+#[test]
+fn a_list_share_out_of_range_reads_as_unset() {
+    assert_eq!(super::list_share(0.4), 0.4);
+    for bad in [0.0, 0.01, 0.99, 1.4, -0.3, f64::NAN] {
+        assert_eq!(super::list_share(bad), 0.0, "{bad}");
+    }
+}
+
 #[test]
 fn plain_string_aliases_still_load() {
     // The pre-per-alias-SMTP format (#34): a bare array of identity strings.
