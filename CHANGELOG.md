@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+- **Fixed: a search from one account's folder looked in every account**
+  (#649, reported by rsx-xp). From an account's folder the scope picker now
+  offers **This Account** and **This Account (Except Trash & Junk)**, the
+  default, and both look only in that account, on disk and on the server.
+  From a unified view the scopes are unchanged, and **Everywhere** covers
+  every account.
+
+- **Fixed: Enter and a paste left the new line below the composer's edge**
+  (#645). WebKit scrolls to the caret only after its own typing, not after
+  the editing commands the composer's Enter and paste handlers run, so the
+  caret could end up out of sight. The composer now scrolls to it.
+
+- **Fixed: Shift+click could not extend a selection of a message's text**
+  (#643). The click picked a range of cards and cleared the selection
+  WebKit had just extended. When the body holds a selection, a Shift+click
+  is now left to the text.
+
+- **Fixed: the app could crash as a message opened on Wayland** (#650). The
+  sender's initials circle was drawn through the GPU renderer of the first
+  window, which can be a hidden one, as after opening the window from the
+  tray; a hidden window has no surface to draw to, and the app aborted. The
+  circle is now drawn without the GPU.
+
+- **Fixed: the hint shown when no spelling dictionaries are installed was
+  missing** (#650). The line in **Settings → Composing** was dropped
+  because of the markup in its text.
+
 - **Fixed: the message list stayed narrow after the window grew** (#648,
   reported by MisterPerson42). A window too small for the list's width
   narrowed the list, and that narrower width was kept, so the list had to be
