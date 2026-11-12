@@ -141,7 +141,7 @@ impl AppModel {
     /// filed beside what they answer (#468) can be in any folder.
     fn own_mail_to_skip(&self, account_id: u32, src: Option<&str>) -> Vec<String> {
         let files_replies = self.account_config(account_id).is_some_and(|c| {
-            c.reply_copies != crate::config::ReplyCopies::WithSent && !c.server_saves_sent
+            c.reply_copies != crate::config::ReplyCopies::WithSent && c.files_some_sent()
         });
         let diverted = (files_replies || self.sent_copy_path(account_id).as_deref() == src)
             && self

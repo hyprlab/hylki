@@ -36,9 +36,25 @@ impl AccountsWindow {
         self.refresh_preview(widgets);
     }
 
-    pub(super) fn on_set_server_saves_sent(&mut self, on: bool, widgets: &AccountsWindowWidgets) {
-        widgets.form.folder_sent_copy_row.set_sensitive(!on);
-        widgets.form.reply_copies_row.set_sensitive(!on);
+    pub(super) fn on_set_server_saves_sent(&mut self, _on: bool, widgets: &AccountsWindowWidgets) {
+        self.refresh_copy_rows(widgets);
+    }
+
+    /// Take the copy rows out of play only when no copy is left for this
+    /// client to file: an alias through its own SMTP still needs one,
+    /// whatever the account's server does (#640, #647).
+    pub(super) fn refresh_copy_rows(&self, widgets: &AccountsWindowWidgets) {
+        let files = !widgets.form.server_saves_row.is_active()
+            || self
+                .alias_edits
+                .iter()
+                .any(|a| a.has_own_smtp() && !a.server_saves_sent);
+        let supported = !matches!(form_protocol(widgets), Protocol::Graph | Protocol::Pop3);
+        widgets
+            .form
+            .folder_sent_copy_row
+            .set_sensitive(files && supported);
+        widgets.form.reply_copies_row.set_sensitive(files);
     }
 
     pub(super) fn on_set_folder_sort(

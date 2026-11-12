@@ -2705,6 +2705,12 @@ msgstr "Nazwa użytkownika SMTP"
 msgid "SMTP password"
 msgstr "Hasło SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "Serwer sam zapisuje kopię wysłanej poczty"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Sprawdź SMTP"
 
@@ -8558,9 +8564,6 @@ msgstr "Katalog kopii wysłanej poczty"
 #, fuzzy
 msgid "Save a copy of replies in"
 msgstr "Katalog kopii wysłanej poczty"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "Serwer sam zapisuje kopię wysłanej poczty"
 
 #, fuzzy
 msgid "For Gmail and others that file sent mail themselves."

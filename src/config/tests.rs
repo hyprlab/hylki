@@ -307,6 +307,36 @@ fn aliases_can_carry_their_own_smtp() {
 }
 
 #[test]
+fn an_alias_server_saves_switch_round_trips() {
+    let toml_in = r#"
+        [[accounts]]
+        name = "Ann"
+        email = "ann@example.org"
+        imap_host = "imap.example.org"
+        username = "ann"
+
+        [[accounts.aliases]]
+        identity = "ann@work.org"
+        smtp_host = "smtp.work.org"
+        smtp_username = "ann"
+        server_saves_sent = true
+
+        [[accounts.aliases]]
+        identity = "ann@home.org"
+        smtp_host = "smtp.home.org"
+        smtp_username = "ann"
+        "#;
+    let cfg: ConfigFile = toml::from_str(toml_in).unwrap();
+    // A config from before #647 has no key: Hylki keeps filing the copy.
+    assert!(cfg.accounts[0].aliases[0].server_saves_sent);
+    assert!(!cfg.accounts[0].aliases[1].server_saves_sent);
+    let out = toml::to_string_pretty(&cfg).unwrap();
+    assert_eq!(out.matches("server_saves_sent").count(), 1, "{out}");
+    let back: ConfigFile = toml::from_str(&out).unwrap();
+    assert!(back.accounts[0].aliases[0].server_saves_sent);
+}
+
+#[test]
 fn alias_smtp_password_never_reaches_disk() {
     let mut cfg: ConfigFile = toml::from_str(
         r#"

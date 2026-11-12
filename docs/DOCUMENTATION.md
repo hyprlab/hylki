@@ -1353,6 +1353,12 @@ address can have more names the same way. Mail from a shared address goes
 through the account's own SMTP server: an alias with its own server needs an
 address of its own.
 
+The account's **Server saves its own copy of sent mail** only covers mail
+that goes through the account's own SMTP server. Mail sent as an alias
+through its own server gets a copy in the account's Sent folder, unless
+**Server saves its own copy of sent mail** is on in that alias's settings,
+for a server that files sent mail in the account itself.
+
 A JMAP account lists the identities the server keeps for it as well, so an
 alias made in the webmail is in the From row without setting it up again.
 The message is sent as the identity with its address, or as a catch-all

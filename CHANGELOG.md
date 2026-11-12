@@ -109,6 +109,12 @@
   alias's own server now gets Hylki's copy in Sent, or beside the message it
   answers, as the account's settings say.
 
+- **Added: Server saves its own copy of sent mail for each alias** (#647,
+  requested by 3v1n0). An alias with its own SMTP server has the switch in
+  its settings, off by default. On, mail sent as that alias gets no copy
+  from Hylki, whatever the account's switch says. The account's sent copy
+  rows stay available while an alias still needs Hylki's copy.
+
 - **Fixed: Ctrl+P in an attachment's preview printed the message** (#632).
   With a PDF or a picture open in Hylki's full-window preview, Ctrl+P now
   prints that file, as does a new printer button beside Open and Download. A

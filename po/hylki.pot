@@ -2346,6 +2346,12 @@ msgstr ""
 msgid "SMTP password"
 msgstr ""
 
+msgid "Server saves its own copy of sent mail"
+msgstr ""
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr ""
 
@@ -7516,9 +7522,6 @@ msgid "Save a copy of sent mail in"
 msgstr ""
 
 msgid "Save a copy of replies in"
-msgstr ""
-
-msgid "Server saves its own copy of sent mail"
 msgstr ""
 
 msgid "For Gmail and others that file sent mail themselves."

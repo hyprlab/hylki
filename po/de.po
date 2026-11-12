@@ -2525,6 +2525,12 @@ msgstr "SMTP-Benutzername"
 msgid "SMTP password"
 msgstr "SMTP-Passwort"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "Server speichert selbst eine Kopie gesendeter Nachrichten"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "SMTP testen"
 
@@ -8188,9 +8194,6 @@ msgstr "Kopie gesendeter Nachrichten speichern in"
 
 msgid "Save a copy of replies in"
 msgstr "Kopie von Antworten speichern in"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "Server speichert selbst eine Kopie gesendeter Nachrichten"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""

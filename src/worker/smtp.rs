@@ -304,10 +304,52 @@ mod tests {
         assert!(account.server_files_sent(Some("Plain <plain@fwd.example>")));
         // Through the alias's own server it never sees the message (#640).
         assert!(!account.server_files_sent(Some("Ann <ann@work.example>")));
+        assert!(account.files_some_sent());
         let off = AccountConfig {
             server_saves_sent: false,
             ..account
         };
         assert!(!off.server_files_sent(None));
+    }
+
+    #[test]
+    fn an_alias_server_that_files_sent_mail_gets_no_second_copy() {
+        use crate::config::AliasConfig;
+        let alias = |server_saves_sent| AliasConfig {
+            identity: "Ann <ann@work.example>".into(),
+            smtp_host: "smtp.work.example".into(),
+            server_saves_sent,
+            ..Default::default()
+        };
+        // The alias's switch decides for its own server, either way round
+        // from the account's (#647).
+        let account = AccountConfig {
+            email: "me@example.com".into(),
+            server_saves_sent: false,
+            aliases: vec![alias(true)],
+            ..sample_account()
+        };
+        assert!(!account.server_files_sent(None));
+        assert!(account.server_files_sent(Some("ann@work.example")));
+        assert!(account.files_some_sent());
+        // Both servers file their own: nothing is left to this client.
+        let both = AccountConfig {
+            server_saves_sent: true,
+            ..account
+        };
+        assert!(both.server_files_sent(None));
+        assert!(!both.files_some_sent());
+        // A plain alias leaves through the account's SMTP, so a switch it
+        // cannot show changes nothing.
+        let plain = AccountConfig {
+            server_saves_sent: false,
+            aliases: vec![AliasConfig {
+                identity: "plain@fwd.example".into(),
+                server_saves_sent: true,
+                ..Default::default()
+            }],
+            ..both
+        };
+        assert!(!plain.server_files_sent(Some("plain@fwd.example")));
     }
 }

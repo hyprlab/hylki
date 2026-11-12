@@ -2656,6 +2656,12 @@ msgstr "SMTP felhasználónév"
 msgid "SMTP password"
 msgstr "SMTP jelszó"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "A szerver elmenti az elküldött levelek saját másolatát"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "SMTP tesztelése"
 
@@ -8485,9 +8491,6 @@ msgstr "Elküldött levelek másolatának mentése ide"
 #, fuzzy
 msgid "Save a copy of replies in"
 msgstr "Elküldött levelek másolatának mentése ide"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "A szerver elmenti az elküldött levelek saját másolatát"
 
 #, fuzzy
 msgid "For Gmail and others that file sent mail themselves."

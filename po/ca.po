@@ -2575,6 +2575,12 @@ msgstr "Nom d'usuari SMTP"
 msgid "SMTP password"
 msgstr "Contrasenya SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "El servidor desa la seva pròpia còpia del correu enviat"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Prova l'SMTP"
 
@@ -8210,9 +8216,6 @@ msgstr "Desa una còpia del correu enviat a"
 
 msgid "Save a copy of replies in"
 msgstr "Desa una còpia de les respostes a"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "El servidor desa la seva pròpia còpia del correu enviat"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr "Per al Gmail i altres que arxiven ells mateixos el correu enviat."

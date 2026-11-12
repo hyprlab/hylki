@@ -2540,6 +2540,12 @@ msgstr "Όνομα χρήστη SMTP"
 msgid "SMTP password"
 msgstr "Κωδικός πρόσβασης SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "Ο διακομιστής αποθηκεύει δικό του αντίγραφο των απεσταλμένων"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Δοκιμή SMTP"
 
@@ -8197,9 +8203,6 @@ msgstr "Αποθήκευση αντιγράφου των απεσταλμένω�
 
 msgid "Save a copy of replies in"
 msgstr "Αποθήκευση αντιγράφου των απαντήσεων στον"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "Ο διακομιστής αποθηκεύει δικό του αντίγραφο των απεσταλμένων"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr ""

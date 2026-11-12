@@ -2513,6 +2513,12 @@ msgstr "Имя пользователя SMTP"
 msgid "SMTP password"
 msgstr "Пароль SMTP"
 
+msgid "Server saves its own copy of sent mail"
+msgstr "Сервер сам сохраняет копию отправленных писем"
+
+msgid "Only when this server files sent mail in this account."
+msgstr ""
+
 msgid "Test SMTP"
 msgstr "Проверить SMTP"
 
@@ -8101,9 +8107,6 @@ msgstr "Сохранять копию отправленных писем в"
 
 msgid "Save a copy of replies in"
 msgstr "Сохраняйте копии ответов в"
-
-msgid "Server saves its own copy of sent mail"
-msgstr "Сервер сам сохраняет копию отправленных писем"
 
 msgid "For Gmail and others that file sent mail themselves."
 msgstr "Для Gmail и других этот файл отправлял почту самостоятельно."

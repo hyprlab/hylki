@@ -13,6 +13,7 @@ pub(super) struct AliasDialog {
     port_row: adw::EntryRow,
     user_row: adw::EntryRow,
     pass_row: adw::PasswordEntryRow,
+    saves_row: adw::SwitchRow,
     test_btn: gtk::Button,
     test_result: gtk::Label,
 }
@@ -208,11 +209,19 @@ impl AccountsWindow {
             .title(i18n("SMTP password"))
             .build();
         pass_row.set_text(&alias.smtp_password);
+        // The account's switch of the same name covers only its own SMTP
+        // (#647): this one is for a server that files in this account too.
+        let saves_row = adw::SwitchRow::builder()
+            .title(i18n("Server saves its own copy of sent mail"))
+            .subtitle(i18n("Only when this server files sent mail in this account."))
+            .build();
+        saves_row.set_active(alias.server_saves_sent);
         smtp_group.add(&smtp_switch);
         smtp_group.add(&host_row);
         smtp_group.add(&port_row);
         smtp_group.add(&user_row);
         smtp_group.add(&pass_row);
+        smtp_group.add(&saves_row);
 
         let test_btn = gtk::Button::with_label(&i18n("Test SMTP"));
         test_btn.set_halign(gtk::Align::Start);
@@ -231,6 +240,7 @@ impl AccountsWindow {
             port_row.upcast_ref(),
             user_row.upcast_ref(),
             pass_row.upcast_ref(),
+            saves_row.upcast_ref(),
             test_box.upcast_ref(),
         ] {
             smtp_switch
@@ -296,6 +306,7 @@ impl AccountsWindow {
             port_row,
             user_row,
             pass_row,
+            saves_row,
             test_btn,
             test_result,
         });
@@ -352,6 +363,7 @@ impl AccountsWindow {
             // dropped on Save, when the removal actually takes effect.
             self.alias_edits.remove(i);
             self.rebuild_alias_list(&widgets.form.aliases_list, &sender);
+            self.refresh_copy_rows(widgets);
         }
     }
 
@@ -432,6 +444,7 @@ impl AccountsWindow {
             smtp_port: port,
             smtp_username: if own_smtp { user } else { String::new() },
             smtp_password: if own_smtp { pass } else { String::new() },
+            server_saves_sent: own_smtp && d.saves_row.is_active(),
         };
         match self.alias_editing {
             Some(i) if i < self.alias_edits.len() => self.alias_edits[i] = alias,
@@ -440,6 +453,7 @@ impl AccountsWindow {
         self.alias_editing = None;
         self.close_alias_dialog();
         self.rebuild_alias_list(&widgets.form.aliases_list, &sender);
+        self.refresh_copy_rows(widgets);
     }
 
     pub(super) fn on_alias_dialog_test(
@@ -456,6 +470,7 @@ impl AccountsWindow {
             smtp_port: trimmed(&d.port_row).parse().unwrap_or(587),
             smtp_username: trimmed(&d.user_row),
             smtp_password: d.pass_row.text().to_string(),
+            ..AliasConfig::default()
         };
         let email = trimmed(&widgets.form.email_row);
         d.test_btn.set_sensitive(false);
