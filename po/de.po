@@ -327,11 +327,20 @@ msgstr "Drucken…"
 msgid "New Message"
 msgstr "Neue Nachricht"
 
-msgid "Hylki Address Book"
-msgstr "Hylki Adressbuch"
+#, fuzzy
+msgid "A group needs a name."
+msgstr "Ordnername erforderlich"
+
+msgid ""
+"A group in this address book is kept on its people's cards, so it needs at "
+"least one person."
+msgstr ""
 
 msgid "Hylki cannot change this kind of group"
 msgstr "Kontaktlisten dieser Art können nicht geändert werden."
+
+msgid "Hylki Address Book"
+msgstr "Hylki Adressbuch"
 
 msgid "On This Computer"
 msgstr "Auf diesem Rechner"
@@ -4675,7 +4684,8 @@ msgstr "Als Bcc senden"
 msgid "Members do not see each other's addresses."
 msgstr "Mitglieder sehen die Adressen der anderen nicht."
 
-#. An Apple group (iCloud's) holds cards of its own book.
+#. An Apple group (iCloud's) or a category (Nextcloud's) holds
+#. cards of its own book.
 msgid ""
 "Groups in this address book hold its own contacts: anyone added who is not "
 "in it yet is added to it."

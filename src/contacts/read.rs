@@ -10,7 +10,7 @@ use super::details::{
 };
 use super::eds_write::{factory_dest, open_book, BOOK_IFACE};
 use super::photos::find_dbs;
-use super::registry::{book_group_formats, book_uid_active, book_uid_name, registry_books};
+use super::registry::{book_uid_active, book_uid_name, registry_books, registry_books_and_formats};
 use super::vcard::{is_group_vcard, vcard_display_name, vcard_photo_with};
 use super::Contact;
 use crate::i18n::i18n;
@@ -278,10 +278,14 @@ pub(super) fn read_contacts_in(
 }
 
 /// Every contact group in the address books the suggestions read, with its
-/// members' addresses: Evolution's lists, vCard 4 and Apple groups, and the
+/// members' addresses: Evolution's lists, vCard 4 and Apple groups,
+/// Nextcloud's categories in the books `formats` says keep them, and the
 /// groups of the Hylki book, in the EDS books `active` names. Only the
-/// groups' cards are read, not the books.
-pub(super) fn read_groups_in(active: &Option<HashMap<String, String>>) -> Vec<ContactDetails> {
+/// groups' cards are read, and the cards with categories, not the books.
+pub(super) fn read_groups_in(
+    active: &Option<HashMap<String, String>>,
+    formats: &HashMap<String, Option<GroupFormat>>,
+) -> Vec<ContactDetails> {
     const WHERE: &str = "LIKE '%X-EVOLUTION-LIST%' OR {col} LIKE '%KIND:group%'";
     let mut out = Vec::new();
     let mut read = |db: &std::path::Path, table: &str, col: &str, uid_col: &str| {
@@ -315,6 +319,7 @@ pub(super) fn read_groups_in(active: &Option<HashMap<String, String>>) -> Vec<Co
             read(&db, layout.cards, layout.vcard, layout.uid);
         }
     }
+    out.extend(read_category_groups(active, formats));
     if crate::contacts::local::exists() && crate::contacts::contact_sources::hylki_used() {
         match crate::contacts::local::group_vcards() {
             Ok(vcards) => {
@@ -339,6 +344,48 @@ pub(super) fn read_groups_in(active: &Option<HashMap<String, String>>) -> Vec<Co
         }
     }
     out
+}
+
+/// The category groups of the cached books that keep them, from the cards
+/// that have categories.
+fn read_category_groups(
+    active: &Option<HashMap<String, String>>,
+    formats: &HashMap<String, Option<GroupFormat>>,
+) -> Vec<ContactDetails> {
+    let mut cards = Vec::new();
+    let layout = &CACHED_BOOKS;
+    for (db, uid) in layout.books() {
+        if formats.get(&uid) != Some(&Some(GroupFormat::Categories))
+            || !book_uid_active(&uid, active)
+        {
+            continue;
+        }
+        let Ok(conn) = open_book_db(&db) else {
+            continue;
+        };
+        let query = format!(
+            "SELECT {col} FROM {table} WHERE {col} LIKE '%CATEGORIES%'",
+            col = layout.vcard,
+            table = layout.cards
+        );
+        let Ok(mut stmt) = conn.prepare(&query) else {
+            continue;
+        };
+        let Ok(rows) = stmt.query_map([], |r| r.get::<_, String>(0)) else {
+            continue;
+        };
+        for vcard in rows.flatten() {
+            let Some(mut c) = parse_vcard_fields(&vcard).filter(|c| !c.is_group()) else {
+                continue;
+            };
+            c.book_uid = uid.clone();
+            c.raw_vcard = vcard;
+            cards.push(c);
+        }
+    }
+    super::categories::add_category_groups(&mut cards, formats);
+    cards.retain(ContactDetails::is_group);
+    cards
 }
 
 /// Append the local book's addresses, skipping the ones already in `seen`.
@@ -519,8 +566,7 @@ fn read_book_db(
 /// Address books the user can add contacts to (local + cached/CardDAV).
 pub(crate) fn writable_books() -> Vec<Book> {
     let mut books = Vec::new();
-    let active = registry_books();
-    let formats = book_group_formats();
+    let (active, formats) = registry_books_and_formats();
     for layout in EDS_LAYOUTS {
         // A book whose groups the registry does not describe keeps them as
         // its kind of book usually does.

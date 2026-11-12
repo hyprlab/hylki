@@ -814,6 +814,19 @@ same book, but is changed in the app it came from. Groups are not counted as con
 Contacts**, and the people in a group do not count as contacts for the
 filters below.
 
+A group in a Nextcloud book is saved the way Nextcloud keeps its own. It has
+no card: it is a category on the card of each person in it, which the
+Nextcloud Contacts app, DAVx⁵ and Thunderbird show as the group. The
+categories on a Nextcloud book's contacts are listed as its groups.
+Changing a group in Hylki changes its people's cards: someone added gets the
+category, someone removed loses it, and renaming or deleting the group
+renames it on, or takes it off, every card that has it. The people stay.
+Like an Apple group, it holds contacts of its own book, copied there from
+another book when they join, and can hold people with no email address. A
+group with nobody in it has nothing to keep it, so a new one needs at least
+one person. Send as Bcc is kept in Hylki, since a category cannot say it.
+Hylki knows a Nextcloud book by its address, which has `/remote.php/` in it.
+
 ### Filtering on Contacts
 
 A filter condition can be **Sender is in Contacts** or **Sender is not in

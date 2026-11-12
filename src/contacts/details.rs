@@ -4,7 +4,7 @@
 use std::collections::{HashMap, HashSet};
 
 use super::read::{local_details, open_book_db, EDS_LAYOUTS};
-use super::registry::{book_uid_active, book_uid_name, registry_books};
+use super::registry::{book_uid_active, book_uid_name, registry_books_and_formats};
 use super::vcard::{
     escape_vcard_value, property_name, split_unescaped, split_vcard_line, unescape_vcard_text,
     unfold_vcard, vcard_photo, vcard_photo_with,
@@ -187,12 +187,13 @@ impl ContactDetails {
         self.group.is_some()
     }
 
-    /// Whether the group can be changed here: Evolution's lists and
-    /// Apple's groups, the kinds Hylki writes. A vCard 4 group is only read.
+    /// Whether the group can be changed here: Evolution's lists, Apple's
+    /// groups and categories, the kinds Hylki writes. A vCard 4 group is
+    /// only read.
     pub(crate) fn group_editable(&self) -> bool {
         matches!(
             self.group,
-            Some(GroupFormat::Evolution | GroupFormat::Apple)
+            Some(GroupFormat::Evolution | GroupFormat::Apple | GroupFormat::Categories)
         )
     }
 
@@ -228,6 +229,17 @@ pub(crate) enum GroupFormat {
     Apple,
     /// `KIND:group` (vCard 4), with `MEMBER` lines.
     Kind,
+    /// No card of its own: the group's name in the `CATEGORIES` of each
+    /// member's card, the only groups Nextcloud knows (#652).
+    Categories,
+}
+
+impl GroupFormat {
+    /// Whether the group holds cards of its own book, and so can hold
+    /// someone with no address, rather than addresses.
+    pub(crate) fn holds_cards(self) -> bool {
+        matches!(self, Self::Apple | Self::Categories)
+    }
 }
 
 /// One person in a contact group.
@@ -272,7 +284,7 @@ impl Member {
 pub(crate) fn read_contact_details() -> Vec<ContactDetails> {
     let mut out: Vec<ContactDetails> = Vec::new();
     let mut seen: HashSet<String> = HashSet::new();
-    let active = registry_books();
+    let (active, formats) = registry_books_and_formats();
     // Walk the book directories directly (like `writable_books`) so each
     // contact remembers which book it belongs to.
     for layout in EDS_LAYOUTS {
@@ -285,6 +297,7 @@ pub(crate) fn read_contact_details() -> Vec<ContactDetails> {
             read_detail_db(&db, &sql, &uid, &name, &mut out, &mut seen);
         }
     }
+    super::categories::add_category_groups(&mut out, &formats);
     out.extend(local_details());
     out.sort_by_key(|c| c.name.to_lowercase());
     // Hashed here, off the main thread: the page finds the photos it has
