@@ -3,6 +3,7 @@
 
 use std::path::PathBuf;
 
+use super::categories::{category_of, delete_category_group, save_category_group};
 use super::details::{parse_vcard_fields, ContactDetails, GroupFormat, Labeled, Member, Postal};
 use super::eds_write::{
     book_call, book_get_contact, book_get_uids, factory_dest, open_book, sexpr_escape,
@@ -170,7 +171,7 @@ fn kept_lines(original: &str, replaced: &[&str]) -> Vec<String> {
 /// The lines of `original` before END:VCARD, less the properties (with
 /// their folded continuations) `drop` names; `drop` is given the upper-case
 /// property name.
-fn kept_lines_by(original: &str, drop: impl Fn(&str) -> bool) -> Vec<String> {
+pub(super) fn kept_lines_by(original: &str, drop: impl Fn(&str) -> bool) -> Vec<String> {
     let mut out: Vec<String> = Vec::new();
     let mut skipping = false;
     for raw in original.lines() {
@@ -307,6 +308,9 @@ pub(crate) fn save_group(
     original: Option<&str>,
     mut edit: GroupEdit,
 ) -> Result<(), String> {
+    if format == GroupFormat::Categories {
+        return save_category_group(book_uid, original, edit);
+    }
     let create = original.is_none();
     let original = original.unwrap_or(EMPTY_VCARD);
     let vcard = match format {
@@ -323,7 +327,9 @@ pub(crate) fn save_group(
             }
             patched_apple_group(original, &edit)
         }
-        GroupFormat::Kind => return Err(i18n("Hylki cannot change this kind of group")),
+        GroupFormat::Kind | GroupFormat::Categories => {
+            return Err(i18n("Hylki cannot change this kind of group"))
+        }
     };
     if create {
         create_contact(book_uid, &vcard)
@@ -346,7 +352,7 @@ pub(crate) fn move_group(
 }
 
 /// The people's cards of one book, for giving each group member one.
-enum BookCards {
+pub(super) enum BookCards {
     Local,
     Eds {
         conn: zbus::blocking::Connection,
@@ -356,7 +362,7 @@ enum BookCards {
 }
 
 impl BookCards {
-    fn open(book_uid: &str) -> Result<Self, String> {
+    pub(super) fn open(book_uid: &str) -> Result<Self, String> {
         if is_local_book(book_uid) {
             return Ok(Self::Local);
         }
@@ -369,7 +375,12 @@ impl BookCards {
     /// The UID of the person in the book with `email` (or, with none, of
     /// that name), after making them a card when there is none: `copy`, the
     /// card of another book, else one with their name and address.
-    fn card_for(&mut self, name: &str, email: &str, copy: &str) -> Result<String, String> {
+    pub(super) fn card_for(
+        &mut self,
+        name: &str,
+        email: &str,
+        copy: &str,
+    ) -> Result<String, String> {
         let card = if copy.is_empty() {
             new_vcard(&ContactEdit {
                 name: if name.trim().is_empty() {
@@ -497,8 +508,18 @@ pub(crate) fn create_contact(book_uid: &str, vcard: &str) -> Result<(), String> 
 
 /// Delete contacts (by their EDS UIDs) from one book, in one call.
 pub(crate) fn delete_contacts(book_uid: &str, uids: &[String]) -> Result<(), String> {
+    // A category group has no card: its name comes off its people's.
+    let (groups, uids): (Vec<&String>, Vec<&String>) =
+        uids.iter().partition(|u| category_of(u).is_some());
+    for g in groups {
+        delete_category_group(book_uid, category_of(g).unwrap_or_default())?;
+    }
+    if uids.is_empty() {
+        return Ok(());
+    }
+    let uids: Vec<String> = uids.into_iter().cloned().collect();
     if is_local_book(book_uid) {
-        for uid in uids {
+        for uid in &uids {
             crate::contacts::local::delete(uid)?;
         }
         return write_local(Ok(()));
@@ -554,6 +575,9 @@ pub(crate) fn move_contact(
 
 /// Delete a contact (by its EDS UID) from its book.
 pub(super) fn delete_contact(book_uid: &str, uid: &str) -> Result<(), String> {
+    if let Some(name) = category_of(uid) {
+        return delete_category_group(book_uid, name);
+    }
     if is_local_book(book_uid) {
         return write_local(crate::contacts::local::delete(uid));
     }

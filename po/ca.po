@@ -355,11 +355,20 @@ msgstr "Imprimeix…"
 msgid "New Message"
 msgstr "Missatge nou"
 
-msgid "Hylki Address Book"
-msgstr "Llibreta d'adreces de l'Hylki"
+#, fuzzy
+msgid "A group needs a name."
+msgstr "Nom de la carpeta"
+
+msgid ""
+"A group in this address book is kept on its people's cards, so it needs at "
+"least one person."
+msgstr ""
 
 msgid "Hylki cannot change this kind of group"
 msgstr "L'Hylki no pot modificar aquest tipus de grup"
+
+msgid "Hylki Address Book"
+msgstr "Llibreta d'adreces de l'Hylki"
 
 msgid "On This Computer"
 msgstr "En aquest ordinador"
@@ -4686,7 +4695,8 @@ msgstr "Envia com a Cco"
 msgid "Members do not see each other's addresses."
 msgstr "Els membres no veuen les adreces dels altres."
 
-#. An Apple group (iCloud's) holds cards of its own book.
+#. An Apple group (iCloud's) or a category (Nextcloud's) holds
+#. cards of its own book.
 msgid ""
 "Groups in this address book hold its own contacts: anyone added who is not "
 "in it yet is added to it."

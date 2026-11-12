@@ -14,6 +14,7 @@ use std::sync::Arc;
 
 use crate::i18n::ni18n_f;
 
+mod categories;
 mod demo;
 mod details;
 mod edit;
@@ -213,7 +214,7 @@ pub(crate) fn suggestions(own: &[(String, String)]) -> Vec<Suggestion> {
     let mut map: std::collections::HashMap<String, Suggestion> = std::collections::HashMap::new();
 
     // The registry is asked once for both reads: this runs as a composer opens.
-    let active = registry_books();
+    let (active, formats) = registry_books_and_formats();
     for c in read_contacts_in(&active, false).0 {
         let key = c.email.to_lowercase();
         if own_keys.contains(&key) {
@@ -262,7 +263,7 @@ pub(crate) fn suggestions(own: &[(String, String)]) -> Vec<Suggestion> {
     }
 
     let mut out: Vec<Suggestion> = map.into_values().collect();
-    out.extend(group_suggestions(read_groups_in(&active)));
+    out.extend(group_suggestions(read_groups_in(&active, &formats)));
     // Default order: most-used first, then name (the field filter re-ranks live).
     out.sort_by(|a, b| {
         b.score

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Fixed: contact groups in Nextcloud books** (#652, reported by 7system7).
+  Nextcloud keeps a group as a category on each member's card, not as a
+  card of its own, so Hylki listed none of its groups, and a group made in
+  Hylki showed in Nextcloud as a contact. The categories on a
+  Nextcloud book's contacts are now its groups in Hylki, and making,
+  changing, renaming or deleting a group there changes the categories on
+  its people's cards. Send as Bcc for such a group is kept in Hylki.
+
 - **Changed: Reply in the original's format also answers formatted mail in
   rich text** (#646, requested by 3v1n0). With the setting on and new
   messages starting in plain text, a reply or forward to a message with

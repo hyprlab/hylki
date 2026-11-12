@@ -301,8 +301,8 @@ fn render_group_card(
 }
 
 /// `person` as a new member of `group`, when the group can take them and
-/// does not have them. An Apple group names its members by their card in
-/// its own book, so someone of another book is copied there, whole, when
+/// does not have them. An Apple group or a category names its members by
+/// their card in its own book, so someone of another book is copied there, whole, when
 /// they join (unless the book has them by address already); an Evolution
 /// list holds addresses, so it takes only someone with one. The copy, with
 /// its photo, is made only `with_card`, for the save: a menu only asks.
@@ -314,7 +314,7 @@ pub(super) fn member_for(
     if !group.group_editable() || person.is_group() {
         return None;
     }
-    let apple = group.group == Some(GroupFormat::Apple);
+    let apple = group.group.is_some_and(GroupFormat::holds_cards);
     let own_card = apple && person.book_uid == group.book_uid && !person.eds_uid.is_empty();
     let member = Member {
         name: person.name.clone(),
@@ -371,9 +371,10 @@ fn follow_book_choice(
     row.connect_selected_notify(move |row| {
         let at = row.selected() as usize;
         let format = formats.get(at).copied().flatten();
-        cards.set(format == Some(GroupFormat::Apple));
+        let holds_cards = format.is_some_and(GroupFormat::holds_cards);
+        cards.set(holds_cards);
         if let Some(note) = note.upgrade() {
-            note.set_visible(format == Some(GroupFormat::Apple));
+            note.set_visible(holds_cards);
         }
         let Some(move_note) = move_note.upgrade() else { return };
         let moving = own.is_some_and(|own| own != at);
@@ -489,7 +490,7 @@ impl ContactsPage {
         };
         row.set_selected(at as u32);
         row.set_sensitive(books.len() > 1);
-        let apple = books[at].groups == Some(GroupFormat::Apple);
+        let apple = books[at].groups.is_some_and(GroupFormat::holds_cards);
         identity.append(&row);
         // What saving in another book does, said while one is picked.
         let move_note = gtk::Label::new(None);
@@ -521,7 +522,8 @@ impl ContactsPage {
             Rc::new(no_address),
             cards.clone(),
         );
-        // An Apple group (iCloud's) holds cards of its own book.
+        // An Apple group (iCloud's) or a category (Nextcloud's) holds
+        // cards of its own book.
         let note = gtk::Label::new(Some(&i18n(
             "Groups in this address book hold its own contacts: anyone added who is not in it yet is added to it.",
         )));

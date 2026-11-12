@@ -242,6 +242,30 @@ fn books_keep_groups_as_their_servers_do() {
     assert_eq!(group_format_for(Some("microsoft365")), None);
 }
 
+/// Nextcloud's books, from GNOME Online Accounts or added in Hylki, are
+/// under /remote.php/ and keep groups as categories (#652).
+#[test]
+fn nextcloud_books_keep_categories() {
+    let book = |path: &str| {
+        format!(
+            "[Data Source]\nDisplayName=Contacts\nParent=abc\n\n[WebDAV Backend]\n\
+             DisplayName=Contacts\nResourcePath={path}\n\n[Address Book]\nBackendName=carddav\n"
+        )
+    };
+    assert!(super::keeps_categories(&book(
+        "/remote.php/dav/addressbooks/users/admin/contacts/"
+    )));
+    assert!(super::keeps_categories(&book(
+        "/nextcloud/remote.php/carddav/addressbooks/ann/contacts/"
+    )));
+    assert!(!super::keeps_categories(&book(
+        "/1234567/carddavhome/card/"
+    )));
+    assert!(!super::keeps_categories(
+        "[Data Source]\nDisplayName=Local\n\n[Address Book]\nBackendName=local\n"
+    ));
+}
+
 #[test]
 fn an_edited_list_keeps_the_lines_of_the_members_it_keeps() {
     let c = super::parse_vcard_fields(EDS_LIST).unwrap();

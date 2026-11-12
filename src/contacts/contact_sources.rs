@@ -32,6 +32,10 @@ struct SwitchFile {
     /// the book's own.
     #[serde(default)]
     names: std::collections::BTreeMap<String, String>,
+    /// The category groups whose mail goes in Bcc, by book UID: a category
+    /// has nowhere to say so on the server (#652).
+    #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
+    bcc: std::collections::BTreeMap<String, Vec<String>>,
 }
 
 fn read_file() -> SwitchFile {
@@ -64,6 +68,40 @@ pub(crate) fn set_name(uid: &str, name: Option<&str>) -> Result<(), String> {
         Some(name) => file.names.insert(uid.to_string(), name.to_string()),
         None => file.names.remove(uid),
     };
+    write_file(&file)
+}
+
+/// The category groups sent as Bcc, by book UID.
+pub(crate) fn bcc_groups() -> HashMap<String, HashSet<String>> {
+    read_file()
+        .bcc
+        .into_iter()
+        .map(|(book, names)| (book, names.into_iter().collect()))
+        .collect()
+}
+
+/// Keep whether mail to a book's category group `name` goes in Bcc; `old`
+/// is its name before a rename, forgotten either way.
+pub(crate) fn set_bcc_group(
+    book_uid: &str,
+    old: Option<&str>,
+    name: &str,
+    on: bool,
+) -> Result<(), String> {
+    let mut file = read_file();
+    let names = file.bcc.entry(book_uid.to_string()).or_default();
+    let had = names.clone();
+    names.retain(|n| n != name && Some(n.as_str()) != old);
+    if on {
+        names.push(name.to_string());
+        names.sort();
+    }
+    if *names == had {
+        return Ok(());
+    }
+    if names.is_empty() {
+        file.bcc.remove(book_uid);
+    }
     write_file(&file)
 }
 
@@ -661,11 +699,21 @@ mod tests {
             names: [("book-1".to_string(), "Family".to_string())]
                 .into_iter()
                 .collect(),
+            bcc: Default::default(),
         };
         assert_eq!(
             toml::to_string_pretty(&file).unwrap(),
             "off = [\n    \"eds-local\",\n    \"goa1\",\n]\n\n[names]\nbook-1 = \"Family\"\n"
         );
+        let with_bcc = super::SwitchFile {
+            bcc: [("nc-1".to_string(), vec!["Family".to_string()])]
+                .into_iter()
+                .collect(),
+            ..Default::default()
+        };
+        let text = toml::to_string_pretty(&with_bcc).unwrap();
+        let back: super::SwitchFile = toml::from_str(&text).unwrap();
+        assert_eq!(back.bcc, with_bcc.bcc);
         let empty: super::SwitchFile = toml::from_str("").unwrap();
         assert!(empty.off.is_empty() && empty.names.is_empty());
     }
