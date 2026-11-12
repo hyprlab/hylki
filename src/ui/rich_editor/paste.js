@@ -147,6 +147,28 @@
     var n = sel.rangeCount ? sel.anchorNode : null;
     return n && n.nodeType === 3 ? n.parentNode : n;
   }
+  /* WebKit scrolls to the caret after what it types itself, not after an
+     execCommand from script: Enter and a paste handled here left the new
+     line below the window until a letter was typed (#645). The caret's
+     own line comes into view, at the nearest edge, as typing brings it.
+     A collapsed range after a <br> has no box, so the placeholder <br>
+     at the caret, or the element it is in, stands in for it. */
+  function revealCaret(){
+    var sel = getSelection();
+    if(!sel.rangeCount) return;
+    var n = sel.focusNode, o = sel.focusOffset, r = document.createRange();
+    r.setStart(n, o);
+    var box = r.getBoundingClientRect();
+    if(!box.height){
+      var el = n.nodeType === 1 ? (n.childNodes[o] || n) : n.parentNode;
+      if(el.nodeType !== 1) el = el.parentNode;
+      box = el.getBoundingClientRect();
+    }
+    var view = window.innerHeight;
+    if(!box.height || box.height > view) return;
+    if(box.bottom > view) window.scrollBy(0, box.bottom - view);
+    else if(box.top < 0) window.scrollBy(0, box.top);
+  }
   /* WebKit's Indent wraps the paragraph in a blockquote of its own, with
      no border: an indent, not a quote, for the Quote toggle and for Enter
      twice (#358). */
@@ -414,6 +436,7 @@
       e.preventDefault();
       document.execCommand('outdent');
       enterInQuote = false;
+      revealCaret();
       return;
     }
     enterInQuote = inQuote && !e.shiftKey;
@@ -421,6 +444,7 @@
     if(!window.__hylkiReturnParagraph === !e.shiftKey){
       if(!lineBlock(blockOf(n))){
         document.execCommand('insertLineBreak');
+        revealCaret();
         return;
       }
       document.execCommand('insertParagraph');
@@ -429,6 +453,7 @@
         l.setAttribute(LINE, '');
         l.setAttribute('dir', 'auto');
       }
+      revealCaret();
       return;
     }
     /* WebKit makes only the new block a paragraph, and the first line of
@@ -446,6 +471,7 @@
     if(b && b.tagName === 'DIV' && bare(b)){
       document.execCommand('formatBlock', false, 'p');
     }
+    revealCaret();
   }, true);
   document.addEventListener('compositionstart', function(){ composing = true; });
   document.addEventListener('compositionend', function(){ composing = false; });
@@ -896,6 +922,7 @@
     out += esc(text.slice(last));
     out = out.replace(/\r\n|\r|\n/g,'<br>');
     document.execCommand('insertHTML', false, out);
+    revealCaret();
   }
   /* Ctrl+Shift+V is WebKit's own Paste as Plain Text, and its paste event
      looks like any other: the key is what tells it apart. */
@@ -916,6 +943,7 @@
       var t = cd.getData('text/plain');
       if(t) document.execCommand('insertHTML', false, t.split(/\r\n|\r|\n/)
         .map(function(l){ return esc(keepSpaces(l)); }).join('<br>'));
+      revealCaret();
       return;
     }
     /* An image on the clipboard beats any text flavour riding along with it,
@@ -947,6 +975,7 @@
         /* The break gives the caret a line below the table to go on
            writing on, where it would be left in the last cell. */
         document.execCommand('insertHTML', false, sheet + '<br>');
+        revealCaret();
         return;
       }
     }
