@@ -284,6 +284,9 @@ msgstr "Создать событие…"
 msgid "Create Task…"
 msgstr "Создать задачу…"
 
+msgid "Copy To…"
+msgstr "Копировать в…"
+
 msgid "Tags"
 msgstr "Теги"
 
@@ -298,9 +301,6 @@ msgstr "Отметить как спам"
 
 msgid "Move To…"
 msgstr "Переместить в…"
-
-msgid "Copy To…"
-msgstr "Копировать в…"
 
 msgid "Archive"
 msgstr "Архив"
@@ -2611,6 +2611,14 @@ msgstr ""
 "Запрашивает доступ у Microsoft. Некоторым организациям требуется, чтобы "
 "администратор одобрил это."
 
+#, fuzzy
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+"Если выключено, запись возвращается в список импорта. Она остаётся в "
+"«Сетевых учётных записях GNOME»."
+
 msgid "Choose a Picture"
 msgstr "Выбрать картинку"
 
@@ -2708,6 +2716,16 @@ msgid "Include the folder's unread mail in the tray icon's unread count"
 msgstr ""
 "Включать непрочитанные письма этой папки в счётчик непрочитанного у значка в "
 "трее"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
 
 msgid "Never"
 msgstr "Никогда"
@@ -6138,6 +6156,9 @@ msgstr "Режим чтения: включён"
 msgid "Reader View off"
 msgstr "Режим чтения: выключен"
 
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
+
 msgid "Ask each time"
 msgstr "Спрашивать каждый раз"
 
@@ -8463,6 +8484,9 @@ msgstr "Выкл. отображает только значки."
 
 msgid "Find bar position"
 msgstr "Положение панели поиска"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr "Только текст сообщения, без макета, цветов и шрифтов отправителя."

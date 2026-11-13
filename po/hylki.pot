@@ -2437,6 +2437,11 @@ msgid ""
 "approve it."
 msgstr ""
 
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+
 msgid "Choose a Picture"
 msgstr ""
 
@@ -2529,6 +2534,16 @@ msgid "Count unread mail"
 msgstr ""
 
 msgid "Include the folder's unread mail in the tray icon's unread count"
+msgstr ""
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
 msgstr ""
 
 msgid "Never"

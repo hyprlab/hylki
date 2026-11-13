@@ -808,11 +808,10 @@ fn show_goa_state(widgets: &AccountsWindowWidgets, acc: &AccountConfig) {
         .form
         .goa_enabled_row
         .set_sensitive(!acc.goa_mail_disabled);
-    widgets.form.goa_enabled_row.set_subtitle(if acc.goa_mail_disabled {
-        "Paused: Mail is switched off for this account in GNOME Settings \u{2192} Online Accounts."
+    widgets.form.goa_enabled_row.set_subtitle(&if acc.goa_mail_disabled {
+        i18n("Paused: Mail is switched off for this account in GNOME Settings")
     } else {
-        "Switching this off returns the account to the import list — it \
-         stays in GNOME Online Accounts."
+        i18n("Switching this off returns the account to the import list. It stays in GNOME Online Accounts.")
     });
 }
 

@@ -43,13 +43,16 @@ pub(super) fn wrap_subtitle(row: &impl IsA<gtk::Widget>, chars: i32) {
 /// which already says "a copy": the originals are the Sent row's business.
 /// Declared once because the row is rebuilt whenever an editor opens, and the
 /// two copies drifting apart is how a hint goes stale.
+///
+/// Marked with `i18n_noop` because the extractor only sees literals inside a
+/// helper's call, and these are translated where the row is built (#656).
 pub(super) const SENT_COPY_HINT: &str =
-    "Any folder, inbox included. Only applies to mail sent from this Hylki client \
-     going forward. Not recursive.";
+    i18n_noop("Any folder, the Inbox included. Applies only to mail sent from here, starting now.");
 
-pub(super) const REPLY_COPIES_HINT: &str =
-    "Where the message replied to is when the reply is sent. Replies to mail in Sent, \
-     Drafts, Trash or Junk go with sent mail.";
+pub(super) const REPLY_COPIES_HINT: &str = i18n_noop(
+    "Uses the original's folder at the time the reply is sent. Replies to mail in Sent, \
+     Drafts, Trash or Junk go with sent mail.",
+);
 
 /// Whether a list row survives the page's search text (#141): matched
 /// against the row's title and, for an action row, its subtitle.

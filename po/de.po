@@ -288,6 +288,9 @@ msgstr "Erstelle Termin…"
 msgid "Create Task…"
 msgstr "Erstelle Aufgabe…"
 
+msgid "Copy To…"
+msgstr "Kopieren nach…"
+
 msgid "Tags"
 msgstr "Tags"
 
@@ -302,9 +305,6 @@ msgstr "Als Spam markieren"
 
 msgid "Move To…"
 msgstr "Verschieben nach…"
-
-msgid "Copy To…"
-msgstr "Kopieren nach…"
 
 msgid "Archive"
 msgstr "Archivieren"
@@ -2625,6 +2625,14 @@ msgstr ""
 "Fordert Zugriff bei Microsoft an. In einigen Organisationen ist hierfür die "
 "Genehmigung eines Administratiors erforderlich."
 
+#, fuzzy
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+"Beim Deaktivieren wird das Konto wieder in die Importliste verschoben – es "
+"verbleibt in GNOME-Online-Konten."
+
 msgid "Choose a Picture"
 msgstr "Bild auswählen"
 
@@ -2723,6 +2731,16 @@ msgid "Include the folder's unread mail in the tray icon's unread count"
 msgstr ""
 "Ungelesene Nachrichten dieses Ordners zum Zähler im Symbol im Infobereich "
 "hinzufügen"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
 
 msgid "Never"
 msgstr "Nie"
@@ -6188,6 +6206,9 @@ msgstr "Leseansicht ein"
 msgid "Reader View off"
 msgstr "Leseansicht aus"
 
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
+
 msgid "Ask each time"
 msgstr "Jedes Mal fragen"
 
@@ -8573,6 +8594,9 @@ msgstr "Bei Deaktivierung werden nur Symbole angezeigt."
 
 msgid "Find bar position"
 msgstr "Position der Suchleiste"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""

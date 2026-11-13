@@ -322,6 +322,10 @@ msgstr ""
 msgid "Create Task…"
 msgstr "Létrehozás"
 
+#, fuzzy
+msgid "Copy To…"
+msgstr "Áthelyezés ide…"
+
 msgid "Tags"
 msgstr "Címkék"
 
@@ -335,10 +339,6 @@ msgid "Mark as Spam"
 msgstr "Megjelölés levélszemétként"
 
 msgid "Move To…"
-msgstr "Áthelyezés ide…"
-
-#, fuzzy
-msgid "Copy To…"
 msgstr "Áthelyezés ide…"
 
 msgid "Archive"
@@ -2755,6 +2755,14 @@ msgid ""
 "approve it."
 msgstr ""
 
+#, fuzzy
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+"Kikapcsolva a fiók visszakerül az importálási listára — a GNOME Internetes "
+"Fiókok között marad."
+
 msgid "Choose a Picture"
 msgstr "Kép választása"
 
@@ -2858,6 +2866,16 @@ msgid "Include the folder's unread mail in the tray icon's unread count"
 msgstr ""
 "A mappa olvasatlan leveleit is vegye figyelembe a tálcaikonon megjelenő "
 "olvasatlan levelek számának kiszámításakor"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
 
 msgid "Never"
 msgstr "Soha"
@@ -6443,6 +6461,9 @@ msgstr "Olvasói nézet Be"
 msgid "Reader View off"
 msgstr "Olvasói nézet Ki"
 
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
+
 msgid "Ask each time"
 msgstr "Mindig kérdezz"
 
@@ -8876,6 +8897,9 @@ msgstr ""
 #, fuzzy
 msgid "Find bar position"
 msgstr "Műveletek"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr ""
 
 #, fuzzy
 msgid "A message's text alone, without the sender's layout, colors and fonts."
