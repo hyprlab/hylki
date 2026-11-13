@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Fixed: addresses in plain-text mail are links** (#653, reported by
+  3v1n0). Email addresses, Matrix IDs (`@name:server.org`, opened through
+  matrix.to) and fediverse handles (`@name@server.org`, opened on their
+  server) in plain-text mail are now links, as web addresses were. The
+  Markdown composer read a fediverse handle as an `@` in front of an email
+  address; it links it as a handle now. Cache v25 drops the plain bodies
+  holding an `@` once, so mail already read renders again.
+
 - **Fixed: contact groups in Nextcloud books** (#652, reported by 7system7).
   Nextcloud keeps a group as a category on each member's card, not as a
   card of its own, so Hylki listed none of its groups, and a group made in

@@ -873,6 +873,30 @@ fn drop_soft_broken_plain_bodies_keeps_html_and_fixed_text() {
     assert!(c.load_body(1, "INBOX", 4).is_none());
 }
 
+/// v25: plain bodies with an `@` go, to render again with their addresses
+/// linked; HTML and other plain bodies stay.
+#[test]
+fn drop_plain_bodies_with_addresses_keeps_html_and_other_text() {
+    use crate::worker::wrap_plain;
+    let c = Cache::in_memory().unwrap();
+    c.save_body(1, "INBOX", 1, &wrap_plain("mail ann@example.com"));
+    c.save_body(1, "INBOX", 2, &wrap_plain("no address"));
+    c.save_body(1, "INBOX", 3, "<p>ann@example.com</p>");
+    c.save_body(
+        1,
+        "INBOX",
+        4,
+        "<div class=\"hylki-plain\">@ann@example.org</div>",
+    );
+
+    Cache::drop_plain_bodies_with_addresses(&c.conn);
+
+    assert!(c.load_body(1, "INBOX", 1).is_none());
+    assert!(c.load_body(1, "INBOX", 2).is_some());
+    assert!(c.load_body(1, "INBOX", 3).is_some());
+    assert!(c.load_body(1, "INBOX", 4).is_none());
+}
+
 #[test]
 fn clean_quoted_names_strips_the_escapes_in_place() {
     let c = Cache::in_memory().unwrap();

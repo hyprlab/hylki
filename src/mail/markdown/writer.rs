@@ -457,7 +457,10 @@ fn inline(e: &Elem) -> String {
             // half of the <a><a> Outlook writes) is not worth writing.
             if href.is_empty() || bare.is_empty() {
                 text
-            } else if bare == href || href == format!("mailto:{bare}") {
+            } else if bare == href
+                || href == format!("mailto:{bare}")
+                || crate::mail::at_link::whole_link(bare).is_some_and(|h| h == href)
+            {
                 // An autolink reads better as itself than as a link whose
                 // text and target are the same string twice.
                 bare.replace('\\', "")

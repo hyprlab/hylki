@@ -282,6 +282,9 @@ impl Cache {
         if (LAYOUT_VERSION..24).contains(&version) {
             Self::drop_soft_broken_plain_bodies(conn);
         }
+        if (LAYOUT_VERSION..25).contains(&version) {
+            Self::drop_plain_bodies_with_addresses(conn);
+        }
         // `attachment_meta` is the gallery's record of every attachment that
         // *exists*; `attachments` holds the few whose bytes were downloaded.
         // Seed the first from the second so files already in hand keep showing
@@ -367,6 +370,19 @@ impl Cache {
              WHERE (instr(body, 'class=\"hylki-plain\"') > 0 \
                     OR instr(body, 'sans-serif;white-space:pre-wrap') > 0) \
                AND (instr(body, ' ' || char(10)) > 0 OR instr(body, ' ' || char(13)) > 0)",
+            [],
+        );
+    }
+
+    /// Drop the plain-text bodies holding an `@`, so the next open renders
+    /// them with their email addresses, Matrix IDs and fediverse handles as
+    /// links (v25, #653). HTML bodies keep the links their sender wrote.
+    pub(super) fn drop_plain_bodies_with_addresses(conn: &Connection) {
+        let _ = conn.execute(
+            "DELETE FROM bodies \
+             WHERE (instr(body, 'class=\"hylki-plain\"') > 0 \
+                    OR instr(body, 'sans-serif;white-space:pre-wrap') > 0) \
+               AND instr(body, '@') > 0",
             [],
         );
     }
