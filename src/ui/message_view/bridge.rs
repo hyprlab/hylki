@@ -6,7 +6,7 @@
 //! parse is dropped. `extra` is everything after the third colon, so it may
 //! itself contain colons.
 
-use super::types::{InviteAction, MessageViewInput, SelectMode};
+use super::types::{ChipAction, InviteAction, MessageViewInput, SelectMode};
 
 /// What one page message asks for.
 #[derive(Debug)]
@@ -118,14 +118,20 @@ pub(super) fn parse_bridge(msg: &str) -> Option<Bridge> {
                 action,
             }
         }
-        // A card's attachment chip (#213); `extra` is the index.
-        "attopen" | "attsave" => MessageViewInput::AttachmentAction {
+        // A card's attachment chip (#213, #625); `extra` is the index.
+        // The page cannot know a preview's event time; the reader fills
+        // it in from its own key controller.
+        "attopen" | "attsave" | "attprev" => MessageViewInput::AttachmentAction {
             account_id,
             id,
             index: extra
                 .and_then(|x| x.trim().parse::<usize>().ok())
                 .unwrap_or(0),
-            save: verb == "attsave",
+            action: match verb {
+                "attsave" => ChipAction::Save,
+                "attprev" => ChipAction::Preview(0),
+                _ => ChipAction::Open,
+            },
         },
         "found" => {
             let (current, total) = extra
@@ -288,11 +294,15 @@ mod tests {
             ),
             (
                 "attopen:1:2: 3",
-                "Some(Input(AttachmentAction { account_id: 1, id: 2, index: 3, save: false }))",
+                "Some(Input(AttachmentAction { account_id: 1, id: 2, index: 3, action: Open }))",
             ),
             (
                 "attsave:1:2:x",
-                "Some(Input(AttachmentAction { account_id: 1, id: 2, index: 0, save: true }))",
+                "Some(Input(AttachmentAction { account_id: 1, id: 2, index: 0, action: Save }))",
+            ),
+            (
+                "attprev:1:2:1",
+                "Some(Input(AttachmentAction { account_id: 1, id: 2, index: 1, action: Preview(0) }))",
             ),
             (
                 "found:1:2:3,9",

@@ -410,9 +410,11 @@ desktop has for it. Where the GNOME file previewer, Sushi, is installed,
 **Space** on a highlighted file, or **Preview** in its right-click menu, shows
 the other files in it, as GNOME Files does: text, office documents, audio,
 video and fonts among them. The arrow keys there move through the drawer's
-files, and **Space** or **Esc** closes it. The attachment gallery and the
-composer have **Preview** in a file's right-click menu too. Without Sushi,
-**Space** does what a double click does.
+files, and **Space** or **Esc** closes it. **Space** on an attachment
+beneath a message in the reader, reached with **Tab**, does the same, and
+the arrow keys move through that message's files. The attachment gallery and
+the composer have **Preview** in a file's right-click menu too. Without
+Sushi, **Space** does what a double click does.
 
 Hylki's preview prints the file it shows from its printer button or
 **Ctrl+P**: a PDF as it is, a picture centred on one page.

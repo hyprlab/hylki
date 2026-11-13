@@ -314,8 +314,8 @@ impl Component for MessageWindow {
                 account_id,
                 id,
                 index,
-                save,
-            } => self.on_card_attachment(account_id, id, index, save, root),
+                action,
+            } => self.on_card_attachment(account_id, id, index, action, root),
             MessageWindowInput::DeleteAttachment(att) => self.on_delete_attachment(att, &sender),
             MessageWindowInput::ShowAttachment(att) => {
                 if let Some(m) = self.owner(&att) {
@@ -415,12 +415,12 @@ fn from_reader(out: MessageViewOutput) -> MessageWindowInput {
             account_id,
             id,
             index,
-            save,
+            action,
         } => MessageWindowInput::CardAttachment {
             account_id,
             id,
             index,
-            save,
+            action,
         },
         // The pop-out keeps its own view's state; the main window's
         // per-message record is not its to write.

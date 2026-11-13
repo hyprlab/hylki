@@ -507,8 +507,8 @@ impl Component for MessageView {
                 account_id,
                 id,
                 index,
-                save,
-            } => self.on_attachment_action(account_id, id, index, save, &sender),
+                action,
+            } => self.on_attachment_action(account_id, id, index, action, &sender),
             MessageViewInput::SetBannerShown(show) => {
                 self.show_banner = show;
             }

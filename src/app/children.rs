@@ -144,12 +144,12 @@ fn message_view_output_msg(out: MessageViewOutput) -> AppMsg {
             account_id,
             id,
             index,
-            save,
+            action,
         } => AppMsg::CardAttachment {
             account_id,
             id,
             index,
-            save,
+            action,
         },
         MessageViewOutput::CardMenu { message, x, y, hit } => AppMsg::CardMenu {
             message,

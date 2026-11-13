@@ -8,10 +8,11 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 use crate::config::ToolbarItem;
+use crate::ui::attachment_drawer::for_previewer;
 use crate::ui::attachment_io::save_attachment_as;
 use crate::ui::lightbox::LightboxInput;
 use crate::ui::message_list::RowAction;
-use crate::ui::message_view::MessageViewInput;
+use crate::ui::message_view::{ChipAction, MessageViewInput};
 
 impl MessageWindow {
     pub(super) fn on_invite_action(
@@ -125,7 +126,7 @@ impl MessageWindow {
         account_id: u32,
         id: u32,
         index: usize,
-        save: bool,
+        action: ChipAction,
         root: &adw::Window,
     ) {
         let Some(files) = self
@@ -139,9 +140,22 @@ impl MessageWindow {
         let Some(att) = files.get(index).cloned() else {
             return;
         };
-        if save {
+        let preview = match action {
+            ChipAction::Preview(time) if for_previewer(&att) => Some(time),
+            _ => None,
+        };
+        if action == ChipAction::Save {
             // A failed write is dropped.
             save_attachment_as(&att.name, att.data, Some(root.upcast_ref()), |_| {});
+        } else if let Some(time) = preview {
+            // Space on a chip (#625).
+            crate::desktop::previewer::show(
+                files.clone(),
+                index,
+                Some(root.upcast_ref()),
+                time,
+                None,
+            );
         } else if crate::ui::attachment_drawer::previewable(&att) {
             // The lightbox pages through this message's previewable
             // files, starting at the one clicked.

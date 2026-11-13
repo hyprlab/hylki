@@ -8,11 +8,11 @@ use relm4::prelude::*;
 use crate::config;
 use crate::i18n::{i18n, i18n_f};
 use crate::models::Attachment;
-use crate::ui::attachment_drawer::AttachmentDrawerInput;
+use crate::ui::attachment_drawer::{for_previewer, AttachmentDrawerInput};
 use crate::ui::attachment_io::save_attachment_as;
 use crate::ui::attachments_gallery::GalleryInput;
 use crate::ui::message_list::MessageListInput;
-use crate::ui::message_view::MessageViewInput;
+use crate::ui::message_view::{ChipAction, MessageViewInput};
 use crate::ui::message_window::MessageWindowInput;
 use crate::worker::MailRequest;
 
@@ -346,7 +346,7 @@ impl AppModel {
                 account_id,
                 id,
                 index,
-                save,
+                action,
             } => {
                 let Some(items) = self
                     .member_key((account_id, id))
@@ -359,9 +359,23 @@ impl AppModel {
                 let Some(att) = items.get(index).cloned() else {
                     return;
                 };
-                if save {
+                let preview = match action {
+                    ChipAction::Preview(time) if for_previewer(&att) => Some(time),
+                    _ => None,
+                };
+                if action == ChipAction::Save {
                     // A card chip's save button (#213); a failed write is dropped.
                     save_attachment_as(&att.name, att.data, Some(self.window.upcast_ref()), |_| {});
+                } else if let Some(time) = preview {
+                    // Space on a chip (#625); the previewer's arrow keys
+                    // step through this message's files.
+                    crate::desktop::previewer::show(
+                        items,
+                        index,
+                        Some(self.window.upcast_ref()),
+                        time,
+                        None,
+                    );
                 } else if crate::ui::attachment_drawer::previewable(&att) {
                     // The lightbox pages through this message's previewable
                     // files, starting at the one clicked.

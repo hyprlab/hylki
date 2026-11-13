@@ -54,8 +54,8 @@ pub(crate) use menu::MenuHit;
 pub(crate) use menu::{hit_menu_entries, strip_navigation_items};
 pub(crate) use remote::remote_urls;
 pub(crate) use types::{
-    CardAttachment, InviteAction, MessageViewInput, MessageViewOutput, SelectMode, TrState,
-    UnsubState,
+    CardAttachment, ChipAction, InviteAction, MessageViewInput, MessageViewOutput, SelectMode,
+    TrState, UnsubState,
 };
 pub(crate) use webview::{
     keep_tab_out_of_key_translator, new_preview_webview, private_settings, shared_web_context,

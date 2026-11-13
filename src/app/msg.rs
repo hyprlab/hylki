@@ -435,12 +435,13 @@ pub(crate) enum AppMsg {
         items: Vec<Attachment>,
         start: usize,
     },
-    /// A card's attachment chip (#213): open the file, or save it.
+    /// A card's attachment chip (#213): open the file, save it, or
+    /// preview it (#625).
     CardAttachment {
         account_id: u32,
         id: u32,
         index: usize,
-        save: bool,
+        action: crate::ui::message_view::ChipAction,
     },
     /// The drawer's "Show in Message": scroll the reader to the message this
     /// attachment came with (#213).

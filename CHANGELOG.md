@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Added: Space previews a reader card's attachment** (#625, requested by
+  3v1n0). On an attachment chip beneath a message, **Space** shows the file
+  as **Space** in the attachment drawer does: a picture or a PDF in Hylki's
+  preview, any other file in the GNOME file previewer, whose arrow keys move
+  through that message's files. **Enter** still opens it. **Tab** reaches the
+  chips now: it used to stop on the message body, which reached none of its
+  links, and then went back to the top of the reader. The focus token Hylki
+  hands the previewer carries the time of the key press that asked for it.
+
 - **Fixed: a message opened from a file can be saved and imported** (#398,
   reported by 3v1n0). In the window of a `.eml` or `.msg` file, or of a
   message attached to another, Save as File and View Source did nothing,

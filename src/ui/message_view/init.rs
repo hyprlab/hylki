@@ -8,7 +8,7 @@ use super::bridge::{parse_bridge, Bridge};
 use super::chrome::ClassRules;
 use super::links::{is_launchable_uri, link_destination, CLICK_LINK_PROBE};
 use super::menu::{menu_lookup, menu_skipped, MenuHit};
-use super::types::MessageViewInput;
+use super::types::{ChipAction, MessageViewInput};
 use super::MessageView;
 use adw::prelude::*;
 use relm4::prelude::*;
@@ -286,10 +286,39 @@ impl MessageView {
     pub(super) fn watch_bridge(&self, sender: &ComponentSender<Self>) {
         // Everything the page posts to the `hylki` handler (see bridge.rs).
         if let Some(ucm) = self.webview.user_content_manager() {
+            // The time of the last Space, for a chip's preview (#625): the
+            // page's own event times are not the display's, and the
+            // previewer's focus token wants the display's.
+            let space_time = std::rc::Rc::new(std::cell::Cell::new(gtk::gdk::CURRENT_TIME));
+            let key = gtk::EventControllerKey::new();
+            key.set_propagation_phase(gtk::PropagationPhase::Capture);
+            {
+                let space_time = space_time.clone();
+                key.connect_key_pressed(move |key, keyval, _, _| {
+                    if matches!(keyval, gtk::gdk::Key::space | gtk::gdk::Key::KP_Space) {
+                        space_time.set(key.current_event_time());
+                    }
+                    gtk::glib::Propagation::Proceed
+                });
+            }
+            self.webview.add_controller(key);
             let open_sender = sender.clone();
             ucm.connect_script_message_received(
                 Some("hylki"),
                 move |_ucm, value| match parse_bridge(&value.to_str()) {
+                    Some(Bridge::Input(MessageViewInput::AttachmentAction {
+                        account_id,
+                        id,
+                        index,
+                        action: ChipAction::Preview(_),
+                    })) => open_sender
+                        .input_sender()
+                        .emit(MessageViewInput::AttachmentAction {
+                            account_id,
+                            id,
+                            index,
+                            action: ChipAction::Preview(space_time.get()),
+                        }),
                     Some(Bridge::Input(input)) => open_sender.input_sender().emit(input),
                     Some(Bridge::Clipboard(text)) => {
                         if let Some(display) = gtk::gdk::Display::default() {

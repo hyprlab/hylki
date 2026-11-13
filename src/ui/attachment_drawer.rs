@@ -43,7 +43,7 @@ mod header_fold;
 mod motion;
 mod setup;
 
-pub(crate) use cells::previewable;
+pub(crate) use cells::{for_previewer, previewable};
 use header_fold::header_fold;
 use setup::{
     activate_on_keys, grab_pill, remove_paned_gestures, showcase_clicks, wire_drawer_edge,

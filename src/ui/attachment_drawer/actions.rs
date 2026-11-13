@@ -1,7 +1,7 @@
 //! What the user does with the files: open, save, save all, the context menu,
 //! the lightbox, and the cells rebuilt to match.
 
-use super::cells::{build_cell, build_list_row, previewable};
+use super::cells::{build_cell, build_list_row, for_previewer, previewable};
 use super::{AttachmentDrawer, AttachmentDrawerInput, DrawerOutput};
 use crate::i18n::i18n;
 use crate::models::Attachment;
@@ -273,11 +273,7 @@ impl AttachmentDrawer {
         let Some(att) = self.item_at(i) else {
             return;
         };
-        // An attached message reads best in a window of Hylki's own (#622).
-        if previewable(att)
-            || crate::mail::message_file::is_message(&att.name, &att.data)
-            || !crate::desktop::previewer::available()
-        {
+        if !for_previewer(att) {
             self.activate(i, sender);
             return;
         }

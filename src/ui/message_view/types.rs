@@ -11,6 +11,20 @@ pub(crate) struct CardAttachment {
     pub(crate) size: u64,
 }
 
+/// What a card's attachment chip asks for (#213, #625).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum ChipAction {
+    /// A click, or Return: the lightbox for pictures and PDFs, the default
+    /// app for the rest.
+    Open,
+    /// The chip's save button.
+    Save,
+    /// Space: as `Open`, except that a file the lightbox does not show goes
+    /// to the GNOME file previewer when there is one. The time is the key
+    /// press's, for the previewer's focus token.
+    Preview(u32),
+}
+
 #[derive(Debug)]
 pub(crate) enum MessageViewInput {
     /// Whether the blocked-remote-content banner is shown. It doesn't change
@@ -61,12 +75,13 @@ pub(crate) enum MessageViewInput {
         account_id: u32,
         id: u32,
     },
-    /// A card's attachment chip was clicked (open) or its save button (#213).
+    /// A card's attachment chip was clicked (open), its save button, or
+    /// Space was pressed on it (#213, #625).
     AttachmentAction {
         account_id: u32,
         id: u32,
         index: usize,
-        save: bool,
+        action: ChipAction,
     },
     Show {
         /// The conversation, newest first. A single message for a normal open;
@@ -446,13 +461,13 @@ pub(crate) enum MessageViewOutput {
         id: u32,
         show: bool,
     },
-    /// A card's attachment chip (#213): open the file at `index` of that
-    /// message's attachments, or save it.
+    /// A card's attachment chip (#213): open, save or preview the file at
+    /// `index` of that message's attachments.
     AttachmentAction {
         account_id: u32,
         id: u32,
         index: usize,
-        save: bool,
+        action: ChipAction,
     },
     /// A right-click on a card: the app shows the message's full menu (the
     /// list row's) at window point (x, y), with `hit`'s entries first.

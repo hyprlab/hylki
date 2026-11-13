@@ -2,7 +2,7 @@
 //! focus, scroll places and live patches.
 
 use super::snippets::tag_chips_html;
-use super::types::{CardAttachment, MessageViewOutput, SelectMode};
+use super::types::{CardAttachment, ChipAction, MessageViewOutput, SelectMode};
 use super::MessageView;
 use adw::prelude::*;
 use relm4::prelude::*;
@@ -52,14 +52,14 @@ impl MessageView {
         account_id: u32,
         id: u32,
         index: usize,
-        save: bool,
+        action: ChipAction,
         sender: &ComponentSender<Self>,
     ) {
         let _ = sender.output(MessageViewOutput::AttachmentAction {
             account_id,
             id,
             index,
-            save,
+            action,
         });
     }
 

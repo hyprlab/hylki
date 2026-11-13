@@ -303,6 +303,11 @@ var t=e.target&&e.target.closest?e.target.closest('.hylki-attc,.hylki-attsave'):
 e.stopPropagation();e.preventDefault();\
 var verb=t.classList.contains('hylki-attsave')?'attsave':'attopen';\
 try{window.webkit.messageHandlers.hylki.postMessage(verb+':'+t.dataset.key+':'+t.dataset.idx);}catch(_){}},true);\
+document.addEventListener('keydown',function(e){\
+if(e.key!==' '||e.ctrlKey||e.altKey||e.metaKey||e.shiftKey)return;\
+var t=e.target&&e.target.closest?e.target.closest('.hylki-attc'):null;if(!t)return;\
+e.stopPropagation();e.preventDefault();if(e.repeat)return;\
+try{window.webkit.messageHandlers.hylki.postMessage('attprev:'+t.dataset.key+':'+t.dataset.idx);}catch(_){}},true);\
 var ms=document.querySelectorAll('.hylki-msg');\
 for(var q=0;q<ms.length;q++){ms[q].addEventListener('click',function(e){\
 var k=this.dataset.key;if(k)pick(k,e);});}\

@@ -274,8 +274,12 @@ pub(super) fn message_frame(
         // vertical wheel deltas it cannot use, leaving the reader stuck.
         // A top-document div has no such latch: unused vertical deltas
         // bubble on to the page.
+        // Out of the Tab order: WebKit gave the frame a stop that reached
+        // none of its links and sent the next Tab back to the top of the
+        // page, so nothing after a body, its attachments among them (#625),
+        // could be reached from the keyboard. A click still focuses it.
         "<div class=\"hylki-pan\"><iframe class=\"hylki-frame\" data-key=\"{aid}:{id}\"{style} \
-         sandbox=\"allow-same-origin allow-popups\" srcdoc=\"{doc}\"></iframe></div>",
+         tabindex=\"-1\" sandbox=\"allow-same-origin allow-popups\" srcdoc=\"{doc}\"></iframe></div>",
         aid = key.0,
         id = key.1,
         style = match height {

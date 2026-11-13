@@ -18,6 +18,16 @@ pub(crate) fn previewable(att: &Attachment) -> bool {
     (is_image_name(&att.name) && texture_from(&att.data).is_some()) || is_pdf_name(&att.name)
 }
 
+/// Whether Space shows an attachment in the GNOME file previewer (#625):
+/// one the lightbox does not show, nor an attached message, which reads
+/// best in a window of Hylki's own (#622), and only with a previewer there.
+/// Anything else Space opens as a click would.
+pub(crate) fn for_previewer(att: &Attachment) -> bool {
+    !previewable(att)
+        && !crate::mail::message_file::is_message(&att.name, &att.data)
+        && crate::desktop::previewer::available()
+}
+
 /// The drawer's cover-cropped picture for a ready thumbnail texture.
 fn drawer_picture(tex: &gtk::gdk::Texture) -> gtk::Widget {
     let pic = gtk::Picture::for_paintable(tex);
