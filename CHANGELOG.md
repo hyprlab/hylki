@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: account settings hints can be translated** (#656, reported by
+  samuel-edlmeier). The hints under "Save a copy of sent mail in", "Save a
+  copy of replies in" and the GNOME Online Accounts switch were never in
+  the translation template, so they stayed in English in every language.
+  The template now has them, and the new Sushi setting's strings too.
+
 - **Added: Space previews a reader card's attachment** (#625, requested by
   3v1n0). On an attachment chip beneath a message, **Space** shows the file
   as **Space** in the attachment drawer does: a picture or a PDF in Hylki's
