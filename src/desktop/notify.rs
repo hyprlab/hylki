@@ -167,16 +167,19 @@ pub(crate) fn posted_for(account_id: u32) -> Option<(u32, u32)> {
 }
 
 thread_local! {
-    /// The sound playing and when it started, held until it ends: a dropped
-    /// `MediaFile` stops mid-play.
-    static SOUND: std::cell::RefCell<Option<(gtk::MediaFile, std::time::Instant)>> =
+    /// The sound playing, its number and when it started, held until it
+    /// ends: a dropped player stops mid-play.
+    static SOUND: std::cell::RefCell<Option<(crate::desktop::sound::Player, u64, std::time::Instant)>> =
         const { std::cell::RefCell::new(None) };
+    /// The number the next sound gets, so a late end cannot let go of the
+    /// sound that replaced it.
+    static SOUND_SERIAL: std::cell::Cell<u64> = const { std::cell::Cell::new(0) };
 }
 
 /// How long a playing sound holds off the next one. Notifications from
-/// accounts syncing together land within a second or two of each other; an
-/// alert sound that still says "playing" after this has not ended and never
-/// will (#337), and must not silence every sound after it.
+/// accounts syncing together land within a second or two of each other; a
+/// sound that has not ended after this never will (#337), and must not
+/// silence every sound after it.
 const HOLD_OFF: std::time::Duration = std::time::Duration::from_secs(10);
 
 /// Play the new-mail sound (#292). The notification itself goes through the
@@ -193,30 +196,30 @@ pub(crate) fn play_sound(sound: &crate::config::SoundSource, restart: bool) {
     SOUND.with(|slot| {
         let mut slot = slot.borrow_mut();
         if !restart {
-            if let Some((m, since)) = slot.as_ref() {
-                if m.is_playing() {
-                    let age = since.elapsed();
-                    if age < HOLD_OFF {
-                        tracing::info!(
-                            "new-mail sound: skipped, the previous one has been playing for {:.1} s",
-                            age.as_secs_f32()
-                        );
-                        return;
-                    }
-                    tracing::warn!(
-                        "new-mail sound: the previous one has said playing for {:.0} s without ending; playing anyway",
+            if let Some((_, _, since)) = slot.as_ref() {
+                let age = since.elapsed();
+                if age < HOLD_OFF {
+                    tracing::info!(
+                        "new-mail sound: skipped, the previous one has been playing for {:.1} s",
                         age.as_secs_f32()
                     );
+                    return;
                 }
+                tracing::warn!(
+                    "new-mail sound: the previous one has said playing for {:.0} s without ending; playing anyway",
+                    age.as_secs_f32()
+                );
             }
         }
-        let (media, what) = match sound {
+        // Stop the old one before the new one opens its audio stream.
+        *slot = None;
+        let (uri, what) = match sound {
             crate::config::SoundSource::Resource(path) => {
                 let name = path.rsplit('/').next().unwrap_or(path).trim_end_matches(".ogg");
-                (gtk::MediaFile::for_resource(path), format!("{name} (built-in)"))
+                (format!("resource://{path}"), format!("{name} (built-in)"))
             }
             crate::config::SoundSource::File(path) => (
-                gtk::MediaFile::for_filename(path),
+                gio::File::for_path(path).uri().to_string(),
                 path.file_name().map_or_else(|| path.display().to_string(), |n| n.to_string_lossy().into_owned()),
             ),
         };
@@ -225,39 +228,35 @@ pub(crate) fn play_sound(sound: &crate::config::SoundSource, restart: bool) {
             if restart { "from Settings" } else { "for new mail" }
         );
         let started = std::time::Instant::now();
-        media.connect_error_notify(|m| {
-            if let Some(e) = m.error() {
-                tracing::warn!("new-mail sound: {e}");
-            }
+        let serial = SOUND_SERIAL.with(|s| {
+            let n = s.get().wrapping_add(1);
+            s.set(n);
+            n
         });
-        media.connect_prepared_notify(|m| {
-            if m.is_prepared() && m.error().is_none() {
-                tracing::debug!(
-                    "new-mail sound: ready, {} ms, audio: {}",
-                    m.duration() / 1000,
-                    if m.has_audio() { "yes" } else { "no" }
-                );
+        let played = crate::desktop::sound::Player::play(&uri, move |end| {
+            match end {
+                crate::desktop::sound::End::Finished => tracing::info!(
+                    "new-mail sound: finished after {:.1} s",
+                    started.elapsed().as_secs_f32()
+                ),
+                crate::desktop::sound::End::Failed(e) => tracing::warn!("new-mail sound: {e}"),
             }
-        });
-        // Let go of it once it has played, or its audio stream stays open
-        // for as long as the app runs.
-        media.connect_ended_notify(move |m| {
-            if !m.is_ended() {
-                return;
-            }
-            tracing::info!("new-mail sound: finished after {:.1} s", started.elapsed().as_secs_f32());
-            let m = m.clone();
+            // Let go of it once it has played, or its audio stream stays
+            // open for as long as the app runs. Not from inside the bus
+            // signal that is telling us.
             gtk::glib::idle_add_local_once(move || {
                 SOUND.with(|slot| {
                     let mut slot = slot.borrow_mut();
-                    if slot.as_ref().is_some_and(|(held, _)| held == &m) {
+                    if slot.as_ref().is_some_and(|(_, n, _)| *n == serial) {
                         *slot = None;
                     }
                 });
             });
         });
-        media.play();
-        *slot = Some((media, started));
+        match played {
+            Ok(player) => *slot = Some((player, serial, started)),
+            Err(e) => tracing::warn!("new-mail sound: {e}"),
+        }
     });
 }
 
