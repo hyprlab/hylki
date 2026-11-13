@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           hylki
-Version:        1.48.0
+Version:        1.48.1
 Release:        1%{?dist}
 Summary:        A clean, fast GNOME-native email client
 License:        AGPL-3.0-or-later

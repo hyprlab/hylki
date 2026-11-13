@@ -2,12 +2,6 @@
 
 ## Unreleased
 
-- **Fixed: account settings hints can be translated** (#656, reported by
-  samuel-edlmeier). The hints under "Save a copy of sent mail in", "Save a
-  copy of replies in" and the GNOME Online Accounts switch were never in
-  the translation template, so they stayed in English in every language.
-  The template now has them, and the new Sushi setting's strings too.
-
 - **Added: Space previews a reader card's attachment** (#625, requested by
   3v1n0). On an attachment chip beneath a message, **Space** shows the file
   as **Space** in the attachment drawer does: a picture or a PDF in Hylki's
@@ -19,6 +13,34 @@
   **Settings → Reading → Space shows pictures and PDFs in Sushi**
   sends those to the previewer too, in the drawer and the reader; it is off
   to start with, and greyed out where Sushi is not installed.
+
+- **Changed: Reply in the original's format also answers formatted mail in
+  rich text** (#646, requested by 3v1n0). With the setting on and new
+  messages starting in plain text, a reply or forward to a message with
+  formatting of its own opens in rich text, so its quote keeps its look.
+  Plain-text mail is still answered in plain text. The switch now sits
+  under **Start new messages in**.
+
+## 1.48.1 — 2026-11-13
+
+A patch release with the fixes since 1.48.0: the app no longer aborts after a
+new-mail sound, addresses in plain-text mail are links, Nextcloud contact
+groups work, a message opened from a file can be saved, and the reader's
+attachment icons and chips follow the theme.
+
+- **Fixed: the app aborted after a new-mail sound** (#644 and #661, reported
+  by samuel-edlmeier). GTK's media player gave even a sound a video output
+  that shares GDK's EGL display on Wayland, and GStreamer closed that display
+  when the sound was let go. With the OpenGL renderer the next frame failed
+  to draw and the app aborted; with the Vulkan renderer it aborted later, the
+  first time something else needed GL, such as sending a reply from the
+  reading pane. The sound now plays through GStreamer's `playbin` with audio
+  only, which never touches GL.
+
+- **Fixed: account settings hints can be translated** (#656, reported by
+  samuel-edlmeier). The hints under "Save a copy of sent mail in", "Save a
+  copy of replies in" and the GNOME Online Accounts switch were never in
+  the translation template, so they stayed in English in every language.
 
 - **Fixed: a message opened from a file can be saved and imported** (#398,
   reported by 3v1n0). In the window of a `.eml` or `.msg` file, or of a
@@ -44,12 +66,10 @@
   changing, renaming or deleting a group there changes the categories on
   its people's cards. Send as Bcc for such a group is kept in Hylki.
 
-- **Changed: Reply in the original's format also answers formatted mail in
-  rich text** (#646, requested by 3v1n0). With the setting on and new
-  messages starting in plain text, a reply or forward to a message with
-  formatting of its own opens in rich text, so its quote keeps its look.
-  Plain-text mail is still answered in plain text. The switch now sits
-  under **Start new messages in**.
+- **Fixed: the file previewer could open without focus on X11** (#625).
+  The focus token Hylki hands the GNOME file previewer from the attachment
+  drawer carries the time of the Space press that asked for it, where it
+  used to take the display's last user time.
 
 - **Fixed: attachment icons in the reader kept fixed colors** (#651,
   reported by yioannides). A PDF's icon now wears the theme's error color,
@@ -66,13 +86,6 @@
   the style of the recipients chip and the Unsubscribe button (#342).
   Their fills mix from the theme's own foreground, so in light mode they
   are as light as a selected sidebar row.
-
-- **Fixed: the app froze after a new-mail sound with the OpenGL renderer**
-  (#644, reported by samuel-edlmeier; #650). GTK's media player gave even a
-  sound a video output that shares GDK's EGL display on Wayland, and
-  GStreamer closed that display when the sound was let go, so the next frame
-  failed to draw and the app aborted. The sound now plays through
-  GStreamer's `playbin` with audio only, which never touches GL.
 
 ## 1.48.0 — 2026-11-12
 
