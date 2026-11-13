@@ -295,7 +295,9 @@ pub(super) const DOWNLOADED_TABLES: [&str; 3] = ["bodies", "attachments", "attac
 /// v24: `format=flowed` plain text is shown with its soft line breaks joined
 /// (#606). Plain bodies with a space before a line break are dropped once to
 /// render again; the rest of the cache stays.
-pub(super) const SCHEMA_VERSION: i64 = 24;
+/// v25: plain text links email addresses, Matrix IDs and fediverse handles
+/// (#653). Plain bodies holding an `@` are dropped once to render again.
+pub(super) const SCHEMA_VERSION: i64 = 25;
 
 /// The newest version whose change altered how bodies are *rendered* or how
 /// senders are checked. Opening a database older than this drops `bodies` and

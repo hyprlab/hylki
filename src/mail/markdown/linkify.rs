@@ -1,12 +1,14 @@
-//! Bare web addresses and email addresses in Markdown text.
+//! Bare web addresses, and the addresses written around an `@`, in
+//! Markdown text.
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub(super) enum UrlKind {
     /// Carries its own scheme.
     Web,
     /// `www.` with no scheme.
     Bare,
-    Mail,
+    /// An email address, Matrix ID or fediverse handle, with its link.
+    At(String),
 }
 
 /// Byte ranges of the links in `text`. Trailing punctuation is left out, so
@@ -22,23 +24,13 @@ pub(super) fn find_urls(text: &str) -> Vec<(usize, usize, UrlKind)> {
             i += 1;
             continue;
         }
-        // An email address: the word around an `@`. Checked before the
-        // word-boundary rule below, because an address's `@` is never at
-        // the start of a word.
-        if b[i] == b'@' && i > 0 {
-            let start = text[..i]
-                .char_indices()
-                .rfind(|&(_, c)| is_break_char(c))
-                .map_or(0, |(p, c)| p + c.len_utf8());
-            let end = i + text[i..].find(is_break_char).unwrap_or(text.len() - i);
-            let end = trim_trailing(text, i, end);
-            let domain = text.get(i + 1..end).unwrap_or("");
-            if start >= last_end && start < i && domain.contains('.') && !domain.starts_with('.') {
-                found.push((start, end, UrlKind::Mail));
-                i = end;
-                last_end = end;
-                continue;
-            }
+        // Checked before the word-boundary rule below, because an email
+        // address's `@` is never at the start of a word.
+        if let Some((start, end, href)) = crate::mail::at_link::at_link(text, last_end, i) {
+            found.push((start, end, UrlKind::At(href)));
+            i = end;
+            last_end = end;
+            continue;
         }
         // A URL only ever starts at a word boundary.
         if text[..i].chars().next_back().is_none_or(is_break) {
@@ -55,7 +47,13 @@ pub(super) fn find_urls(text: &str) -> Vec<(usize, usize, UrlKind)> {
                     .find(|c: char| c.is_whitespace() || c == '<' || c == '>')
                     .unwrap_or(rest.len());
                 let end = trim_trailing(text, i, end);
-                if end > i {
+                // `www.name@host` is an email address, found at its `@`.
+                let www_mail = matches!(kind, UrlKind::Bare)
+                    && text[i..end]
+                        .split('/')
+                        .next()
+                        .is_some_and(|h| h.contains('@'));
+                if end > i && !www_mail {
                     found.push((i, end, kind));
                     i = end;
                     last_end = end;
@@ -70,14 +68,6 @@ pub(super) fn find_urls(text: &str) -> Vec<(usize, usize, UrlKind)> {
 
 fn is_break(c: char) -> bool {
     c.is_whitespace() || matches!(c, '(' | '[' | '<' | '"' | '\'')
-}
-
-fn is_break_char(c: char) -> bool {
-    c.is_whitespace()
-        || matches!(
-            c,
-            '(' | ')' | '[' | ']' | '<' | '>' | '"' | '\'' | ',' | ';'
-        )
 }
 
 /// Pull sentence punctuation (and an unbalanced closing bracket) back off

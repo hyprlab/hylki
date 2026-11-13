@@ -1,4 +1,4 @@
-user_version 24
+user_version 25
 
 table account_owner
 CREATE TABLE account_owner (

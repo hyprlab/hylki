@@ -267,11 +267,12 @@ pub(super) fn image_mime(part: &mail_parser::MessagePart) -> Option<String> {
     safe.then(|| format!("image/{}", subtype.to_ascii_lowercase()))
 }
 
-/// HTML-escape plain text and turn bare URLs into clickable links. Runs on raw
-/// (unescaped) text: non-URL spans are escaped as usual; each URL becomes an
-/// `<a href>` whose scheme is always http(s) (a bare `www.` host is prefixed with
+/// HTML-escape plain text and turn bare URLs, email addresses, Matrix IDs and
+/// fediverse handles into clickable links. Runs on raw (unescaped) text:
+/// non-link spans are escaped as usual; each link becomes an `<a href>` whose
+/// scheme is always http(s) or mailto (a bare `www.` host is prefixed with
 /// `https://`), so no `javascript:`-style link can be forged. Links open in the
-/// external browser via the reader's navigation policy.
+/// external browser via the reader's navigation policy, addresses in a composer.
 pub(super) fn linkify(text: &str) -> String {
     let mut out = String::new();
     let mut i = 0;
@@ -288,13 +289,16 @@ pub(super) fn linkify(text: &str) -> String {
     out
 }
 
-/// Find the next bare URL at or after `from`, returning `(start, end, href)`.
+/// Find the next link at or after `from`, returning `(start, end, href)`.
 fn next_url(text: &str, from: usize) -> Option<(usize, usize, String)> {
     let mut i = from;
     while i < text.len() {
         if !text.is_char_boundary(i) {
             i += 1;
             continue;
+        }
+        if let Some(link) = crate::mail::at_link::at_link(text, from, i) {
+            return Some(link);
         }
         let rest = &text[i..];
         let (prefix, add_https) = if rest.starts_with("https://") {
@@ -314,8 +318,14 @@ fn next_url(text: &str, from: usize) -> Option<(usize, usize, String)> {
             c.is_whitespace() || matches!(c, '(' | '<' | '[' | '{' | '"' | '\'' | '|')
         });
         let end = consume_url(text, i);
+        // `www.name@host` is an email address, found at its `@`.
+        let www_mail = add_https
+            && text[i..end]
+                .split('/')
+                .next()
+                .is_some_and(|h| h.contains('@'));
         // Reject a scheme with nothing (usable) after it.
-        if boundary && end > i + prefix.len() {
+        if boundary && !www_mail && end > i + prefix.len() {
             let url = &text[i..end];
             let href = if add_https {
                 format!("https://{url}")
