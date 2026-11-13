@@ -61,6 +61,13 @@
   Their fills mix from the theme's own foreground, so in light mode they
   are as light as a selected sidebar row.
 
+- **Fixed: the app froze after a new-mail sound with the OpenGL renderer**
+  (#644, reported by samuel-edlmeier; #650). GTK's media player gave even a
+  sound a video output that shares GDK's EGL display on Wayland, and
+  GStreamer closed that display when the sound was let go, so the next frame
+  failed to draw and the app aborted. The sound now plays through
+  GStreamer's `playbin` with audio only, which never touches GL.
+
 ## 1.48.0 — 2026-11-12
 
 Everything from 1.48.0-beta.1 to 1.48.0-beta.7: AI agents that reach your mail
