@@ -59,6 +59,8 @@ pub(crate) struct PrefInit {
     pub(crate) card_attachments: bool,
     /// The attachment drawer beneath the reader is shown (#213).
     pub(crate) attachment_drawer: bool,
+    /// Space sends pictures and PDFs to the file previewer too (#625).
+    pub(crate) previewer_pictures: bool,
     /// Conversation rows may expand into their members in the message list.
     pub(crate) thread_expansion: bool,
     /// A conversation's row speaks for the newest message anywhere in the
@@ -455,6 +457,7 @@ pub(crate) enum PrefOutput {
     SetReaderZoom(u32),
     SetCardAttachments(bool),
     SetAttachmentDrawer(bool),
+    SetPreviewerPictures(bool),
     SetThreadExpansion(bool),
     SetThreadRowNewest(bool),
     SetConfirmThreadDelete(bool),

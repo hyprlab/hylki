@@ -209,7 +209,8 @@ your typing instead, and <kbd>Ctrl+B</kbd>, <kbd>Ctrl+I</kbd> and
 
 In the attachment drawer, <kbd>Space</kbd> previews the highlighted
 attachment, in the GNOME file previewer when it is installed and the file is
-not a picture or a PDF, and <kbd>Enter</kbd> opens it as a double click does
+not a picture or a PDF (pictures and PDFs too, if Settings says so), and
+<kbd>Enter</kbd> opens it as a double click does
 ([Previewing an attachment](DOCUMENTATION.md#previewing-an-attachment)).
 The same two keys work on an attachment beneath a message in the reader,
 reached with <kbd>Tab</kbd>.

@@ -275,6 +275,9 @@ msgstr ""
 msgid "Create Task…"
 msgstr ""
 
+msgid "Copy To…"
+msgstr ""
+
 msgid "Tags"
 msgstr ""
 
@@ -288,9 +291,6 @@ msgid "Mark as Spam"
 msgstr ""
 
 msgid "Move To…"
-msgstr ""
-
-msgid "Copy To…"
 msgstr ""
 
 msgid "Archive"
@@ -5682,6 +5682,9 @@ msgstr ""
 msgid "Reader View off"
 msgstr ""
 
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
+
 msgid "Ask each time"
 msgstr ""
 
@@ -7851,6 +7854,9 @@ msgid "Off shows the icons alone."
 msgstr ""
 
 msgid "Find bar position"
+msgstr ""
+
+msgid "Space shows pictures and PDFs in Sushi"
 msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."

@@ -37,6 +37,7 @@ reader_default = "remember"
 reader_zoom = 100
 card_attachments = true
 attachment_drawer = true
+previewer_pictures = false
 confirm_thread_delete = true
 message_theme = "system"
 override_fonts = false

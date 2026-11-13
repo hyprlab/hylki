@@ -529,6 +529,7 @@ impl AppModel {
             reader_default: prefs.reader_default,
             card_attachments: prefs.card_attachments,
             drawer_enabled: prefs.attachment_drawer,
+            previewer_pictures: prefs.previewer_pictures,
             thread_expansion: prefs.thread_expansion,
             thread_row_newest: prefs.thread_row_newest,
             confirm_thread_delete: prefs.confirm_thread_delete,

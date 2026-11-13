@@ -49,6 +49,7 @@ impl AppModel {
             reader_zoom: self.zoom_default,
             card_attachments: self.card_attachments,
             attachment_drawer: self.drawer_enabled,
+            previewer_pictures: self.previewer_pictures,
             confirm_thread_delete: self.confirm_thread_delete,
             message_theme: self.message_theme,
             override_fonts: self.override_fonts,
@@ -176,6 +177,7 @@ impl AppModel {
             .emit(MessageListInput::SetSenderLogos(self.sender_logos));
         crate::ui::message_view::set_face_tiers(self.gravatar, self.sender_logos);
         crate::ui::message_view::set_clean_links(self.clean_links);
+        crate::desktop::previewer::set_pictures(self.previewer_pictures);
         crate::datefmt::set_style(self.date_style, self.clock_style);
         crate::ui::print_preview::set_options(self.print_options);
         self.message_list.emit(MessageListInput::SetLook {

@@ -130,6 +130,15 @@ impl Preferences {
             .attachment_drawer_row
             .set_active(init.attachment_drawer);
         widgets
+            .reading
+            .previewer_pictures_row
+            .set_active(init.previewer_pictures);
+        if !crate::desktop::previewer::available() {
+            let row = &widgets.reading.previewer_pictures_row;
+            row.set_sensitive(false);
+            row.set_subtitle(&i18n("Needs Sushi, the GNOME file previewer."));
+        }
+        widgets
             .conversations
             .thread_expansion_row
             .set_active(init.thread_expansion);

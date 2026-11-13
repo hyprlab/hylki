@@ -39,6 +39,19 @@ thread_local! {
     /// Sushi 51 added an activation token to `ShowFile`; older ones refuse
     /// the call with it, and are then called without it.
     static WITH_TOKEN: Cell<bool> = const { Cell::new(true) };
+    /// Settings: Space sends pictures and PDFs here too, not only the files
+    /// Hylki's own preview cannot show.
+    static PICTURES: Cell<bool> = const { Cell::new(false) };
+}
+
+/// Set from Settings → Reading, at start and on change.
+pub(crate) fn set_pictures(on: bool) {
+    PICTURES.set(on);
+}
+
+/// Whether Space sends pictures and PDFs here too.
+pub(crate) fn pictures() -> bool {
+    PICTURES.get()
 }
 
 fn bus() -> Option<gio::DBusConnection> {

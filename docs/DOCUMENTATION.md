@@ -416,6 +416,10 @@ the arrow keys move through that message's files. The attachment gallery and
 the composer have **Preview** in a file's right-click menu too. Without
 Sushi, **Space** does what a double click does.
 
+**Settings → Reading → Space shows pictures and PDFs in Sushi** sends
+those to Sushi too, in the drawer and in the reader. Off, as it starts,
+**Space** shows them in Hylki's own preview.
+
 Hylki's preview prints the file it shows from its printer button or
 **Ctrl+P**: a PDF as it is, a picture centred on one page.
 

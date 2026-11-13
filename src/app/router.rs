@@ -504,6 +504,7 @@ impl AppModel {
             | PrefOutput::SetAlwaysShowRecipients(..)
             | PrefOutput::SetCardAttachments(..)
             | PrefOutput::SetAttachmentDrawer(..)
+            | PrefOutput::SetPreviewerPictures(..)
             | PrefOutput::SetReaderDefault(..)
             | PrefOutput::SetPgpLabels(..)
             | PrefOutput::SetAccountChip(..)

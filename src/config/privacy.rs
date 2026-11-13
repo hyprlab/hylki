@@ -174,6 +174,10 @@ pub(crate) struct PrivacyFile {
     /// in the open conversation (#213).
     #[serde(default = "default_on")]
     pub(crate) attachment_drawer: bool,
+    /// Space sends pictures and PDFs to the GNOME file previewer too (#625).
+    /// Off, Space shows them in the full-window preview, as a click does.
+    #[serde(default)]
+    pub(crate) previewer_pictures: bool,
     /// Whether deleting a whole selected conversation asks for confirmation
     /// first.
     #[serde(default = "default_on")]
@@ -717,6 +721,7 @@ impl Default for PrivacyFile {
             reader_zoom: default_reader_zoom(),
             card_attachments: true,
             attachment_drawer: true,
+            previewer_pictures: false,
             confirm_thread_delete: true,
             message_theme: MessageTheme::default(),
             override_fonts: false,

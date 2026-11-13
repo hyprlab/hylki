@@ -93,6 +93,7 @@ impl AppModel {
             reader_zoom: self.zoom_default,
             card_attachments: self.card_attachments,
             attachment_drawer: self.drawer_enabled,
+            previewer_pictures: self.previewer_pictures,
             thread_expansion: self.thread_expansion,
             thread_row_newest: self.thread_row_newest,
             confirm_thread_delete: self.confirm_thread_delete,

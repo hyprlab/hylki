@@ -10,6 +10,9 @@
   chips now: it used to stop on the message body, which reached none of its
   links, and then went back to the top of the reader. The focus token Hylki
   hands the previewer carries the time of the key press that asked for it.
+  **Settings → Reading → Space shows pictures and PDFs in Sushi**
+  sends those to the previewer too, in the drawer and the reader; it is off
+  to start with, and greyed out where Sushi is not installed.
 
 - **Fixed: a message opened from a file can be saved and imported** (#398,
   reported by 3v1n0). In the window of a `.eml` or `.msg` file, or of a

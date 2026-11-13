@@ -759,6 +759,8 @@ pub(crate) struct AppModel {
     pub(super) card_attachments: bool,
     /// The attachment drawer beneath the reader is shown at all (#213).
     pub(super) drawer_enabled: bool,
+    /// Space sends pictures and PDFs to the file previewer too (#625).
+    pub(super) previewer_pictures: bool,
     /// Whether conversation rows may expand into their members in the list
     /// (the row keeps its chip and chevron either way).
     pub(super) thread_expansion: bool,

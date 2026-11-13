@@ -233,6 +233,11 @@ impl AppModel {
                     self.popouts_emit(|| MessageWindowInput::SetCardAttachmentsShown(on));
                 }
             }
+            PrefOutput::SetPreviewerPictures(on) => {
+                if pref!(self.previewer_pictures = on) {
+                    crate::desktop::previewer::set_pictures(on);
+                }
+            }
             PrefOutput::SetAttachmentDrawer(on) => {
                 if pref!(self.drawer_enabled = on) {
                     self.sync_attachment_drawer();
