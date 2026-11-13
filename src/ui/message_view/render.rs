@@ -3,8 +3,8 @@
 //! body with the settings the page script reads.
 
 use super::frame::{
-    theme_status_for, LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE, LIVE_MARKS,
-    LIVE_READ, LIVE_RECEIPT, LIVE_STATUS, LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE,
+    theme_colors_for, LIVE_ATTS, LIVE_COLORS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE,
+    LIVE_MARKS, LIVE_READ, LIVE_RECEIPT, LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE,
     LIVE_TRANSLATE_ON, LIVE_UNSUB,
 };
 use super::types::TrState;
@@ -181,7 +181,7 @@ impl MessageView {
         // Hand the live theme grounds to the (display-free, testable) document
         // builder without widening its signature — see LIVE_GROUNDS.
         LIVE_GROUNDS.with(|g| *g.borrow_mut() = Some(self.theme_grounds(dark)));
-        LIVE_STATUS.with(|s| *s.borrow_mut() = Some(theme_status_for(&self.webview, dark)));
+        LIVE_COLORS.with(|s| *s.borrow_mut() = Some(theme_colors_for(&self.webview, dark)));
         LIVE_TAGS.with(|t| *t.borrow_mut() = self.tags.clone());
         LIVE_ATTS.with(|a| {
             *a.borrow_mut() = if self.chips_shown() {

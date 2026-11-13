@@ -15,6 +15,8 @@
   is a pair of filled buttons, open and save, the folder chip on a card is a
   filled pill, and an invitation's answer buttons lose their outline, in
   the style of the recipients chip and the Unsubscribe button (#342).
+  Their fills mix from the theme's own foreground, so in light mode they
+  are as light as a selected sidebar row.
 
 ## 1.48.0 — 2026-11-12
 
