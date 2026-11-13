@@ -132,7 +132,11 @@ impl AttachmentDrawer {
         {
             let s = sender.clone();
             let preview = MenuEntry::new(i18n("Preview"), move || {
-                s.input_sender().emit(AttachmentDrawerInput::Preview(index))
+                // A menu button's click is not an event it hands on.
+                s.input_sender().emit(AttachmentDrawerInput::Preview(
+                    index,
+                    gtk::gdk::CURRENT_TIME,
+                ))
             })
             .icon("view-reveal-symbolic")
             .accel("space");
@@ -265,7 +269,7 @@ impl AttachmentDrawer {
     /// attached messages in a window, anything else in the file previewer, with the arrow keys there
     /// stepping through the drawer's files and its highlight following.
     /// Without a previewer it is a double click.
-    pub(super) fn preview(&mut self, i: usize, sender: &ComponentSender<Self>) {
+    pub(super) fn preview(&mut self, i: usize, time: u32, sender: &ComponentSender<Self>) {
         let Some(att) = self.item_at(i) else {
             return;
         };
@@ -292,6 +296,7 @@ impl AttachmentDrawer {
             files,
             i,
             self.window().as_ref(),
+            time,
             Some(std::rc::Rc::new(follow)),
         );
     }

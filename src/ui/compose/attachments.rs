@@ -523,6 +523,7 @@ fn add_open_and_menu(
                         vec![crate::models::Attachment { name, data }],
                         0,
                         parent.as_ref(),
+                        gtk::gdk::CURRENT_TIME,
                         None,
                     ),
                     Ok(Err(e)) => {

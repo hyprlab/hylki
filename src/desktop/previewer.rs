@@ -79,17 +79,21 @@ pub(crate) fn available() -> bool {
 
 /// Preview `files[at]`, over `parent`. The arrow keys in the previewer move
 /// through `files`, and `on_step` hears where they land. Shown again, the
-/// file closes the previewer, as Space does in Files.
+/// file closes the previewer, as Space does in Files. `time` is the time of
+/// the input event that asked, or `gdk::CURRENT_TIME` without one.
 pub(crate) fn show(
     files: Vec<Attachment>,
     at: usize,
     parent: Option<&gtk::Window>,
+    time: u32,
     on_step: Option<Rc<dyn Fn(usize)>>,
 ) {
     if at >= files.len() {
         return;
     }
-    let token = parent.and_then(activation_token).unwrap_or_default();
+    let token = parent
+        .and_then(|window| activation_token(window, time))
+        .unwrap_or_default();
     let start = move |handle: ExportedHandle| {
         // A file shown before keeps the copy staged for it, so the
         // previewer knows it for the same file and closes on it.
@@ -123,10 +127,13 @@ pub(crate) fn show(
     }
 }
 
-/// An xdg-activation token, so the compositor lets the previewer take the
-/// focus it was asked for.
-fn activation_token(window: &gtk::Window) -> Option<String> {
+/// An activation token, so the compositor lets the previewer take the
+/// focus it was asked for. On X11 the token carries `time`, and a time
+/// older than the window's last input loses the focus; Wayland's carries
+/// the serial of the last input instead.
+fn activation_token(window: &gtk::Window, time: u32) -> Option<String> {
     let context = WidgetExt::display(window).app_launch_context();
+    context.set_timestamp(time);
     context
         .startup_notify_id(None::<&gio::AppInfo>, &[])
         .map(|t| t.to_string())

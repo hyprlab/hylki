@@ -259,7 +259,13 @@ impl AttachmentsGallery {
                     data: data.clone(),
                 };
                 let parent = self.flow.root().and_downcast::<gtk::Window>();
-                crate::desktop::previewer::show(vec![file], 0, parent.as_ref(), None);
+                crate::desktop::previewer::show(
+                    vec![file],
+                    0,
+                    parent.as_ref(),
+                    gtk::gdk::CURRENT_TIME,
+                    None,
+                );
             }
             None => self.fetch_item(item, sender),
         }
