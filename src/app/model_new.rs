@@ -280,6 +280,7 @@ impl AppModel {
             transfers: HashMap::new(),
             next_transfer: 0,
             next_local_id: u32::MAX - 1,
+            file_raws: HashMap::new(),
             pending_saves: HashMap::new(),
             transfer_tally: TransferTally::default(),
             sidebar_split: None,

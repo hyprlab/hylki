@@ -2018,11 +2018,13 @@ double-click it in GNOME Files (Hylki is offered for email files), pass it to
 palette (**Ctrl+K**). It is drawn as mail from a server is, with its
 attachments in the drawer, and **Reply**, **Reply All** and **Forward**
 write from the account in view. It belongs to no folder, so there is nothing
-to star, move or delete.
+to star, move or delete. **Copy To…** in its right-click menu stores it in
+a folder of any account that takes mail, On This Computer included, marked
+read; the window stays open.
 
 **Save as File…**, in a message's right-click menu in the list or on its card,
 saves the message whole, as the server keeps it, under its subject with
-`.eml` on the end.
+`.eml` on the end. In a message window, the same menu also has **Copy To…**.
 
 A `.msg` keeps the headers the mail server sent when Outlook has them, and
 otherwise its sender, recipients, subject and date are read from the file.

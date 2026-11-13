@@ -401,6 +401,14 @@ pub(crate) enum AppMsg {
         x: f64,
         y: f64,
     },
+    /// A message window's Copy To (#398): the folder picker over that
+    /// window, at its point (x, y). The window stays open.
+    PopoutCopyTo {
+        key: (u32, u32),
+        message: Box<Message>,
+        x: f64,
+        y: f64,
+    },
     /// A message window's single-key shortcut that needs the app (#392):
     /// the window's message and the conversation it shows.
     PopoutShortcut {

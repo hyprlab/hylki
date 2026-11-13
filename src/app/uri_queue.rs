@@ -250,14 +250,21 @@ impl AppModel {
         }
     }
 
-    /// Ask where to put a message's bytes, and write them there (#398).
-    pub(super) fn save_message_file(&self, name: String, raw: Vec<u8>) {
+    /// Ask where to put a message's bytes, and write them there (#398),
+    /// over `parent` (a message window) or else the main window.
+    pub(super) fn save_message_file(
+        &self,
+        name: String,
+        raw: Vec<u8>,
+        parent: Option<gtk::Window>,
+    ) {
         let dialog = gtk::FileDialog::new();
         dialog.set_title(&i18n("Save Message"));
         dialog.set_initial_name(Some(&name));
         let notifications = self.notifications.sender().clone();
+        let parent = parent.unwrap_or_else(|| self.window.clone().upcast());
         dialog.save(
-            Some(&self.window),
+            Some(&parent),
             gtk::gio::Cancellable::NONE,
             move |res| {
                 let Ok(file) = res else { return };
@@ -272,6 +279,15 @@ impl AppModel {
                 }
             },
         );
+    }
+
+    /// The bytes of a message open from a file (#398); `None` for mail on
+    /// a server.
+    pub(super) fn file_raw(&self, m: &crate::models::Message) -> Option<&Vec<u8>> {
+        if m.folder_id != FILE_FOLDER {
+            return None;
+        }
+        self.file_raws.get(&(m.account_id, m.id))
     }
 
     /// Pick a message file to read (#398).
@@ -344,6 +360,7 @@ impl AppModel {
             .insert(key, crate::worker::extract_attachments_of(&raw));
         self.sender_cache.insert(key, Box::new(check));
         tracing::info!("open: {} as a message", path.display());
+        self.file_raws.insert((m.account_id, m.id), raw);
         self.open_message_window(m, Vec::new(), sender);
     }
 

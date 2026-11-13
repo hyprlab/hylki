@@ -225,6 +225,10 @@ impl AppModel {
         dest: String,
     ) {
         for m in messages {
+            if let Some(raw) = self.file_raw(&m).cloned() {
+                self.import_file_message(&m, raw, dest_account, &dest);
+                continue;
+            }
             let Some(src) = self.resolve_folder_path(&m) else {
                 continue;
             };
@@ -265,6 +269,40 @@ impl AppModel {
             .dest_folders
             .insert((dest_account, dest));
         self.transfer_step();
+    }
+
+    /// Copy To for a message open from a file (#398): the bytes are here
+    /// already, so it goes straight to the receiving account, read.
+    fn import_file_message(&mut self, m: &Message, raw: Vec<u8>, dest_account: u32, dest: &str) {
+        let token = self.next_transfer;
+        self.next_transfer += 1;
+        self.transfers.insert(
+            token,
+            Transfer {
+                src_account: m.account_id,
+                src_folder: m.folder_id,
+                src_path: String::new(),
+                uid: m.uid,
+                dest_account,
+                dest_path: dest.to_string(),
+                seen: true,
+                flagged: false,
+                row: None,
+                copy: true,
+            },
+        );
+        self.transfer_tally.total += 1;
+        self.transfer_tally.copying = true;
+        self.send_to(
+            dest_account,
+            MailRequest::ImportRaw {
+                token,
+                path: dest.to_string(),
+                raw,
+                seen: true,
+                flagged: false,
+            },
+        );
     }
 
     /// A message is stored in its new account: take the original out,
@@ -612,7 +650,7 @@ impl AppModel {
                 }
                 if let Some(name) = self.pending_saves.remove(&token) {
                     match raw {
-                        Ok(raw) => self.save_message_file(name, raw),
+                        Ok(raw) => self.save_message_file(name, raw, None),
                         Err(e) => self
                             .notice_error(i18n_f("Could not save the message: {e}", &[("e", &e)])),
                     }
