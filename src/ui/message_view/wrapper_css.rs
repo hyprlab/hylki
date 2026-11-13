@@ -2,11 +2,11 @@
 //! banners, in the reader's grounds and accent. One `format!` so the bytes
 //! stay exactly what the page has always received.
 
-use super::frame::StatusColors;
+use super::frame::ThemeColors;
 
 /// The wrapper's stylesheet: the cards, their headers and chips, in the
-/// reader's grounds and accent. The marks and verdicts wear the theme's
-/// status colors, as the app's own widgets do (#619).
+/// reader's grounds, foreground and accent. The marks and verdicts wear
+/// the theme's status colors, as the app's own widgets do (#619).
 // Each a color or a fragment dropped into the one `format!`.
 #[allow(clippy::too_many_arguments)]
 pub(super) fn wrapper_css(
@@ -15,20 +15,25 @@ pub(super) fn wrapper_css(
     bg: &str,
     chrome: &str,
     accent: &str,
-    status: &StatusColors,
+    colors: &ThemeColors,
     toggle_color: &str,
     plain_css: &str,
 ) -> String {
-    let StatusColors {
+    let ThemeColors {
+        fg,
         error,
         warning,
         success,
-    } = status;
+    } = colors;
     let ftype_css = ftype_css(scheme == "dark", error);
     format!(
         "\
          :root{{color-scheme:{scheme};}}\
-         body{{margin:0;padding:0;background:{page};font:14px/1.55 system-ui,sans-serif;}}\
+         /* The theme's own foreground, not the page's black: the chips\
+         and buttons mix their fills from it, so they come out as light as\
+         libadwaita's (#651). The messages are in frames of their own. */\
+         body{{margin:0;padding:0;background:{page};color:{fg};\
+         font:14px/1.55 system-ui,sans-serif;}}\
          body.hylki-conv{{padding:14px;}}\
          iframe.hylki-frame{{width:100%;border:0;display:block;background:{bg};\
          visibility:hidden;}}\
