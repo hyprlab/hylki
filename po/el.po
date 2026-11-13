@@ -6216,9 +6216,6 @@ msgstr "Προβολή ανάγνωσης ενεργή"
 msgid "Reader View off"
 msgstr "Προβολή ανάγνωσης ανενεργή"
 
-msgid "Needs Sushi, the GNOME file previewer."
-msgstr ""
-
 msgid "Ask each time"
 msgstr "Ερώτηση κάθε φορά"
 
@@ -8597,9 +8594,6 @@ msgstr "Ανενεργό: εμφανίζονται μόνο τα εικονίδ�
 
 msgid "Find bar position"
 msgstr "Θέση γραμμής αναζήτησης"
-
-msgid "Space shows pictures and PDFs in Sushi"
-msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""

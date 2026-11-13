@@ -6206,9 +6206,6 @@ msgstr "Leseansicht ein"
 msgid "Reader View off"
 msgstr "Leseansicht aus"
 
-msgid "Needs Sushi, the GNOME file previewer."
-msgstr ""
-
 msgid "Ask each time"
 msgstr "Jedes Mal fragen"
 
@@ -8594,9 +8591,6 @@ msgstr "Bei Deaktivierung werden nur Symbole angezeigt."
 
 msgid "Find bar position"
 msgstr "Position der Suchleiste"
-
-msgid "Space shows pictures and PDFs in Sushi"
-msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""

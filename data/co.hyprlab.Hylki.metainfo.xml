@@ -74,6 +74,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.48.1" date="2026-11-13">
+      <description>
+        <p>The app no longer closes after a new-mail sound. Addresses in plain-text mail are links, Nextcloud contact groups work, a message opened from a file can be saved and attachment icons follow the theme.</p>
+      </description>
+    </release>
     <release version="1.48.0" date="2026-11-12">
       <description>
         <p>AI agents that reach your mail over MCP as far as you allow, an encrypted mail cache, templates inserted from the composer, attachment previews in the GNOME file previewer, a sort kept for each folder, trackers taken off links and a narrower window.</p>

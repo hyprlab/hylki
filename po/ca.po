@@ -6247,9 +6247,6 @@ msgstr "Vista de lector activada"
 msgid "Reader View off"
 msgstr "Vista de lector desactivada"
 
-msgid "Needs Sushi, the GNOME file previewer."
-msgstr ""
-
 msgid "Ask each time"
 msgstr "Pregunta cada vegada"
 
@@ -8599,9 +8596,6 @@ msgstr "Desactivat mostra només les icones."
 #, fuzzy
 msgid "Find bar position"
 msgstr "Posició de la barra de selecció"
-
-msgid "Space shows pictures and PDFs in Sushi"
-msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""

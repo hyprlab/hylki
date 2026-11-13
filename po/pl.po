@@ -6537,9 +6537,6 @@ msgstr "Widok czytania włączony"
 msgid "Reader View off"
 msgstr "Widok czytania wyłączony"
 
-msgid "Needs Sushi, the GNOME file previewer."
-msgstr ""
-
 msgid "Ask each time"
 msgstr "Pytaj za każdym razem"
 
@@ -8967,9 +8964,6 @@ msgstr ""
 #, fuzzy
 msgid "Find bar position"
 msgstr "Działania"
-
-msgid "Space shows pictures and PDFs in Sushi"
-msgstr ""
 
 #, fuzzy
 msgid "A message's text alone, without the sender's layout, colors and fonts."

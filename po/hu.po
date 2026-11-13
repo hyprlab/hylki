@@ -6461,9 +6461,6 @@ msgstr "Olvasói nézet Be"
 msgid "Reader View off"
 msgstr "Olvasói nézet Ki"
 
-msgid "Needs Sushi, the GNOME file previewer."
-msgstr ""
-
 msgid "Ask each time"
 msgstr "Mindig kérdezz"
 
@@ -8897,9 +8894,6 @@ msgstr ""
 #, fuzzy
 msgid "Find bar position"
 msgstr "Műveletek"
-
-msgid "Space shows pictures and PDFs in Sushi"
-msgstr ""
 
 #, fuzzy
 msgid "A message's text alone, without the sender's layout, colors and fonts."

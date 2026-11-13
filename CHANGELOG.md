@@ -1,6 +1,54 @@
 # Changelog
 
-## Unreleased
+## 1.48.1 — 2026-11-13
+
+A patch release with the fixes since 1.48.0: the app no longer aborts after a
+new-mail sound, addresses in plain-text mail are links, Nextcloud contact
+groups work, a message opened from a file can be saved, and the reader's
+attachment icons and chips follow the theme.
+
+- **Fixed: the app aborted after a new-mail sound** (#644 and #661, reported
+  by samuel-edlmeier). GTK's media player gave even a sound a video output
+  that shares GDK's EGL display on Wayland, and GStreamer closed that display
+  when the sound was let go. With the OpenGL renderer the next frame failed
+  to draw and the app aborted; with the Vulkan renderer it aborted later, the
+  first time something else needed GL, such as sending a reply from the
+  reading pane. The sound now plays through GStreamer's `playbin` with audio
+  only, which never touches GL.
+
+- **Fixed: account settings hints can be translated** (#656, reported by
+  samuel-edlmeier). The hints under "Save a copy of sent mail in", "Save a
+  copy of replies in" and the GNOME Online Accounts switch were never in
+  the translation template, so they stayed in English in every language.
+
+- **Fixed: a message opened from a file can be saved and imported** (#398,
+  reported by 3v1n0). In the window of a `.eml` or `.msg` file, or of a
+  message attached to another, Save as File and View Source did nothing,
+  as there was no server to ask; they now use the file's own bytes. Its
+  right-click menu has Copy To…, which stores the message in a folder of
+  any account that takes mail, and no longer offers Star, Archive, Delete
+  and the rest. Message windows of mail on a server gain Copy To… too.
+
+- **Fixed: addresses in plain-text mail are links** (#653, reported by
+  3v1n0). Email addresses, Matrix IDs (`@name:server.org`, opened through
+  matrix.to) and fediverse handles (`@name@server.org`, opened on their
+  server) in plain-text mail are now links, as web addresses were. The
+  Markdown composer read a fediverse handle as an `@` in front of an email
+  address; it links it as a handle now. Cache v25 drops the plain bodies
+  holding an `@` once, so mail already read renders again.
+
+- **Fixed: contact groups in Nextcloud books** (#652, reported by 7system7).
+  Nextcloud keeps a group as a category on each member's card, not as a
+  card of its own, so Hylki listed none of its groups, and a group made in
+  Hylki showed in Nextcloud as a contact. The categories on a
+  Nextcloud book's contacts are now its groups in Hylki, and making,
+  changing, renaming or deleting a group there changes the categories on
+  its people's cards. Send as Bcc for such a group is kept in Hylki.
+
+- **Fixed: the file previewer could open without focus on X11** (#625).
+  The focus token Hylki hands the GNOME file previewer from the attachment
+  drawer carries the time of the Space press that asked for it, where it
+  used to take the display's last user time.
 
 - **Fixed: attachment icons in the reader kept fixed colors** (#651,
   reported by yioannides). A PDF's icon now wears the theme's error color,

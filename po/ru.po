@@ -6156,9 +6156,6 @@ msgstr "Режим чтения: включён"
 msgid "Reader View off"
 msgstr "Режим чтения: выключен"
 
-msgid "Needs Sushi, the GNOME file previewer."
-msgstr ""
-
 msgid "Ask each time"
 msgstr "Спрашивать каждый раз"
 
@@ -8484,9 +8481,6 @@ msgstr "Выкл. отображает только значки."
 
 msgid "Find bar position"
 msgstr "Положение панели поиска"
-
-msgid "Space shows pictures and PDFs in Sushi"
-msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr "Только текст сообщения, без макета, цветов и шрифтов отправителя."
