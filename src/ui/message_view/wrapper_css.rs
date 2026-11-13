@@ -178,6 +178,13 @@ pub(super) fn wrapper_css(
          background:color-mix(in srgb,currentColor 30%,transparent);}}\
          .hylki-attc{{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;\
          font:inherit;font-size:0.85em;min-width:0;max-width:320px;}}\
+         /* The pair's overflow clips an outline drawn outside a button, so\
+         the focus ring (#625) is drawn inside, libadwaita's: 2px of the\
+         accent at half strength, following the pair's corners. */\
+         .hylki-attc{{border-radius:6px 0 0 6px;}}\
+         .hylki-attsave{{border-radius:0 6px 6px 0;}}\
+         .hylki-attc:focus-visible,.hylki-attsave:focus-visible{{\
+         outline:2px solid color-mix(in srgb,{accent} 50%,transparent);outline-offset:-2px;}}\
          .hylki-attc svg{{width:16px;height:16px;flex:none;display:block;}}\
          .hylki-attc svg,.hylki-attc svg *{{fill:currentColor;}}\
          {ftype_css}\
