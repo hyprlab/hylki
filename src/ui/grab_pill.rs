@@ -63,7 +63,12 @@ pub(super) fn edge_pill_widget() -> gtk::Box {
     hit.set_hexpand(true);
     hit.set_halign(gtk::Align::Fill);
     hit.set_cursor_from_name(Some("ns-resize"));
-    hit.append(&pill_bar());
+    let bar = pill_bar();
+    // Centred in the zone the bar floated 12px off the drawer's edge, too
+    // far to read as its handle; the top margin brings it 4px closer while
+    // the zone keeps its full height to press.
+    bar.set_margin_top(8);
+    hit.append(&bar);
     hit
 }
 
