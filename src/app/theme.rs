@@ -37,6 +37,7 @@ pub(super) static WIZARD_HOLDS_LIGHT: std::sync::atomic::AtomicBool =
 /// - The remote-content banner's shield: amber on dark, a deeper orange on
 ///   light where amber washes out.
 /// - The Refresh button while offline (#442): orange, a step deeper on light.
+/// - The attachment type icons' palette step (#651).
 /// - The composer's ground: the reader's deeper page shade, read from the
 ///   live theme (#148) rather than the stock GNOME values, so a custom theme
 ///   carries through to the composer like it does to the reader.
@@ -90,7 +91,9 @@ pub(super) fn install_scheme_css(window: &impl IsA<gtk::Widget>) {
              .remote-alert image {{ color: {shield}; }}\
              .refresh-offline {{ color: {offline}; }}\
              .inline-compose-surface, .compose-pane {{ background-color: {page}; }}\
-             .reader-split > separator {{ background-color: {page}; }}"
+             .reader-split > separator {{ background-color: {page}; }}\
+             {ftype}",
+            ftype = crate::ui::thumbnails::ftype_css(dark),
         ));
     };
     let style = adw::StyleManager::default();
