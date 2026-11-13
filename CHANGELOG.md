@@ -27,10 +27,12 @@
 
 - **Fixed: attachment icons in the reader kept fixed colors** (#651,
   reported by yioannides). A PDF's icon now wears the theme's error color,
-  as the importance mark does since #619, and the other file types take
-  libadwaita's accent palette, lightened for a dark scheme the way libadwaita
-  lightens its own accent color. The attachment drawer, the gallery and the
-  lightbox use the same colors.
+  as the importance mark does since #619, and the other file types take the
+  GNOME palette: shade 1 in a dark scheme, shade 5 in a light one, the steps
+  that keep 3:1 contrast on a card. Archives are brown, since no yellow step
+  reads on white; audio and video share purple, a calendar shares blue, and
+  an image is grey like any other file. The attachment drawer, the gallery
+  and the lightbox use the same colors.
 
 - **Changed: the reader's outlined chips are filled** (#651). An attachment
   is a pair of filled buttons, open and save, the folder chip on a card is a

@@ -345,6 +345,65 @@ pub(super) fn icon_for(name: &str) -> &'static str {
     }
 }
 
+/// The GNOME palette color each tinted file kind wears (#651): shade 1 on a
+/// dark ground, shade 5 on a light one, the only steps at which every hue
+/// keeps 3:1 against its card. Yellow holds at no step on white, so archives
+/// are brown; the palette has fewer hues than kinds, so audio and video share
+/// purple and a calendar shares blue. A PDF wears the error color and an image
+/// the grey of everything else (styles.css). The GTK side names the palette's
+/// variables ([`ftype_css`]); the reader, which has no libadwaita stylesheet,
+/// takes the hex values.
+pub(crate) const FTYPE_PALETTE: [FtypeColor; 7] = [
+    FtypeColor::new("doc", "blue", "#99c1f1", "#1a5fb4"),
+    FtypeColor::new("sheet", "green", "#8ff0a4", "#26a269"),
+    FtypeColor::new("slides", "orange", "#ffbe6f", "#c64600"),
+    FtypeColor::new("archive", "brown", "#cdab8f", "#63452c"),
+    FtypeColor::new("audio", "purple", "#dc8add", "#613583"),
+    FtypeColor::new("video", "purple", "#dc8add", "#613583"),
+    FtypeColor::new("calendar", "blue", "#99c1f1", "#1a5fb4"),
+];
+
+/// One row of [`FTYPE_PALETTE`]: the `ftype-` class suffix, the palette hue,
+/// and that hue's shade 1 and shade 5.
+pub(crate) struct FtypeColor {
+    pub kind: &'static str,
+    pub hue: &'static str,
+    pub dark: &'static str,
+    pub light: &'static str,
+}
+
+impl FtypeColor {
+    const fn new(
+        kind: &'static str,
+        hue: &'static str,
+        dark: &'static str,
+        light: &'static str,
+    ) -> Self {
+        Self {
+            kind,
+            hue,
+            dark,
+            light,
+        }
+    }
+}
+
+/// The `.ftype-*` tints for the app's scheme provider, which reloads on a
+/// scheme flip: static CSS cannot pick a palette step by scheme. The
+/// lightbox sits on a dark ground in either scheme, so it always takes
+/// shade 1.
+pub(crate) fn ftype_css(dark: bool) -> String {
+    let shade = if dark { 1 } else { 5 };
+    let mut css = String::new();
+    for FtypeColor { kind, hue, .. } in FTYPE_PALETTE {
+        css.push_str(&format!(
+            ".ftype-{kind} {{ color: var(--{hue}-{shade}); }}\
+             .gallery-lightbox .ftype-{kind} {{ color: var(--{hue}-1); }}"
+        ));
+    }
+    css
+}
+
 /// CSS class that tints a type icon by file kind: PDFs red, Word docs blue,
 /// spreadsheets green, and so on (see `styles.css`). Symbolic icons pick up the
 /// class's `color`, so an unthumbnailed attachment reads at a glance.

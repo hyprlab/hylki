@@ -1878,20 +1878,12 @@ headerbar box.list-tools.compact button {
 }
 
 /* Type-tinted attachment icons (symbolic icons follow `color`), in the
-   theme's colors (#651): a PDF wears the error color, as the importance mark
-   does, and the rest libadwaita's accent palette made standalone the way
-   libadwaita makes accent_color, so each reads on its own scheme. The
-   reader's chips use the same mapping (message_view/wrapper_css.rs). */
+   theme's colors (#651). A PDF wears the error color, as the importance mark
+   does; the other kinds take GNOME palette steps chosen by scheme, which the
+   scheme provider sets (thumbnails::FTYPE_PALETTE, app/theme.rs). An image
+   and anything unknown stay grey. */
 .ftype-pdf      { color: var(--error-color); }
-.ftype-doc      { color: oklab(from var(--accent-blue) var(--standalone-color-oklab)); }
-.ftype-sheet    { color: oklab(from var(--accent-green) var(--standalone-color-oklab)); }
-.ftype-slides   { color: oklab(from var(--accent-orange) var(--standalone-color-oklab)); }
-.ftype-archive  { color: oklab(from var(--accent-yellow) var(--standalone-color-oklab)); }
-.ftype-audio    { color: oklab(from var(--accent-purple) var(--standalone-color-oklab)); }
-.ftype-video    { color: oklab(from var(--accent-pink) var(--standalone-color-oklab)); }
-.ftype-calendar { color: oklab(from var(--accent-teal) var(--standalone-color-oklab)); }
-/* Cyan, which the accents lack. */
-.ftype-image    { color: oklab(from #1c9bd8 var(--standalone-color-oklab)); }
+.ftype-image,
 .ftype-generic  { color: alpha(currentColor, 0.55); }
 
 /* Quick-open button on the thumbnail, revealed on hover. */
@@ -1931,10 +1923,8 @@ headerbar box.list-tools.compact button {
 .gallery-lightbox-file {
   color: white;
 }
-/* Its file-type icon too: the dark scheme's tints whatever the scheme. */
-.gallery-lightbox {
-  --standalone-color-oklab: max(l, 0.85) a b;
-}
+/* Its file-type icon too: the dark scheme's tints whatever the scheme (the
+   palette kinds are in the scheme provider). */
 .gallery-lightbox .ftype-pdf {
   color: oklab(from var(--error-bg-color) max(l, 0.85) a b);
 }

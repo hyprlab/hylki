@@ -356,26 +356,16 @@ pub(super) fn wrapper_css(
 }
 
 /// The attachment chips' file-type icons in the theme's colors (#651): a
-/// PDF wears the error color, as the importance mark does, and the rest
-/// libadwaita's accent palette made standalone for the scheme. The same
-/// mapping as `.ftype-*` in styles.css; the reader cannot read the
-/// palette from the theme, so it is computed here.
+/// PDF wears the error color, as the importance mark does, and the rest the
+/// GNOME palette step for the scheme. The same mapping as `.ftype-*` in the
+/// app (`thumbnails::FTYPE_PALETTE`), as hex: the reader has no libadwaita
+/// stylesheet to name the palette from.
 fn ftype_css(dark: bool, error: &str) -> String {
-    const PALETTE: [(&str, &str); 8] = [
-        ("doc", "#3584e4"),      // accent blue
-        ("sheet", "#3a944a"),    // accent green
-        ("slides", "#ed5b00"),   // accent orange
-        ("archive", "#c88800"),  // accent yellow
-        ("audio", "#9141ac"),    // accent purple
-        ("video", "#d56199"),    // accent pink
-        ("calendar", "#2190a4"), // accent teal
-        ("image", "#1c9bd8"),    // cyan, which the accents lack
-    ];
     let mut css = format!(".hylki-attc.ftype-pdf svg{{color:{error};}}");
-    for (kind, hex) in PALETTE {
-        let c = crate::color::standalone(hex, dark);
-        css.push_str(&format!(".hylki-attc.ftype-{kind} svg{{color:{c};}}"));
+    for c in crate::ui::thumbnails::FTYPE_PALETTE {
+        let hex = if dark { c.dark } else { c.light };
+        css.push_str(&format!(".hylki-attc.ftype-{} svg{{color:{hex};}}", c.kind));
     }
-    css.push_str(".hylki-attc.ftype-generic svg{opacity:0.55;}");
+    css.push_str(".hylki-attc.ftype-image svg,.hylki-attc.ftype-generic svg{opacity:0.55;}");
     css
 }
