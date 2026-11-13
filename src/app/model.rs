@@ -297,6 +297,10 @@ pub(crate) struct AppModel {
     /// Ids for messages opened from files (#398), counting down from the
     /// top so they never meet a server's UIDs.
     pub(super) next_local_id: u32,
+    /// The bytes of each message open from a file, by (account, id), kept
+    /// while its window is open: Save as File, View Source and Copy To
+    /// have no server to ask (#398).
+    pub(super) file_raws: HashMap<(u32, u32), Vec<u8>>,
     /// The `ExportRaw` tokens of Save as File, with the name to offer.
     pub(super) pending_saves: HashMap<u64, String>,
     /// How the moves to other accounts under way are going, for the status

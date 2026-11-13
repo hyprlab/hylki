@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Fixed: a message opened from a file can be saved and imported** (#398,
+  reported by 3v1n0). In the window of a `.eml` or `.msg` file, or of a
+  message attached to another, Save as File and View Source did nothing,
+  as there was no server to ask; they now use the file's own bytes. Its
+  right-click menu has Copy To…, which stores the message in a folder of
+  any account that takes mail, and no longer offers Star, Archive, Delete
+  and the rest. Message windows of mail on a server gain Copy To… too.
+
 - **Fixed: addresses in plain-text mail are links** (#653, reported by
   3v1n0). Email addresses, Matrix IDs (`@name:server.org`, opened through
   matrix.to) and fediverse handles (`@name@server.org`, opened on their

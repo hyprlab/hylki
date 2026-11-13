@@ -136,6 +136,7 @@ impl AppModel {
             | AppMsg::PopoutClosed(..)
             | AppMsg::AddContactFrom { .. }
             | AppMsg::PopoutMoveTo { .. }
+            | AppMsg::PopoutCopyTo { .. }
             | AppMsg::PopoutShortcut { .. }
             | AppMsg::ViewSource) => self.on_popout(msg, sender),
             msg @ (AppMsg::SetReadingPane(..)

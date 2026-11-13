@@ -416,6 +416,7 @@ impl AppModel {
 
             AppMsg::PopoutClosed(key) => {
                 self.popouts.remove(&key);
+                self.file_raws.remove(&key);
             }
 
             AppMsg::AddContactFrom { name, email } => {
@@ -448,6 +449,35 @@ impl AppModel {
                         });
                         // As Archive and Delete do: the message has left.
                         closing.close();
+                    },
+                );
+            }
+
+            AppMsg::PopoutCopyTo { key, message, x, y } => {
+                let Some(window) = self.popouts.get(&key).map(|p| p.window.clone()) else {
+                    return;
+                };
+                // A message from a file is in no folder: every folder of
+                // every account that takes mail is somewhere to put it.
+                let exclude = self.resolve_folder_path(&message);
+                let accounts = self.copy_picker_accounts(message.account_id, exclude);
+                if accounts.is_empty() {
+                    return;
+                }
+                let s = sender.input_sender().clone();
+                let picked = (*message).clone();
+                crate::ui::folder_picker::show_folder_picker(
+                    &window,
+                    x,
+                    y,
+                    accounts,
+                    None,
+                    move |account_id, dest, _| {
+                        let _ = s.send(AppMsg::CopyMessagesTo {
+                            account_id,
+                            dest,
+                            messages: vec![picked.clone()],
+                        });
                     },
                 );
             }
