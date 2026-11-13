@@ -315,6 +315,10 @@ msgstr ""
 msgid "Create Task…"
 msgstr "Crea"
 
+#, fuzzy
+msgid "Copy To…"
+msgstr "Mou a…"
+
 msgid "Tags"
 msgstr "Etiquetes"
 
@@ -328,10 +332,6 @@ msgid "Mark as Spam"
 msgstr "Marca com a brossa"
 
 msgid "Move To…"
-msgstr "Mou a…"
-
-#, fuzzy
-msgid "Copy To…"
 msgstr "Mou a…"
 
 msgid "Archive"
@@ -2673,6 +2673,14 @@ msgstr ""
 "Demana accés a Microsoft. Algunes organitzacions necessiten que un "
 "administrador ho aprovi."
 
+#, fuzzy
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+"Desactivat el torna a la llista d'importació. Es manté als comptes en línia "
+"del GNOME."
+
 msgid "Choose a Picture"
 msgstr "Tria una imatge"
 
@@ -2770,6 +2778,16 @@ msgid "Include the folder's unread mail in the tray icon's unread count"
 msgstr ""
 "Inclou el correu no llegit de la carpeta al recompte de no llegits de la "
 "icona de la safata"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
 
 msgid "Never"
 msgstr "Mai"
@@ -6229,6 +6247,9 @@ msgstr "Vista de lector activada"
 msgid "Reader View off"
 msgstr "Vista de lector desactivada"
 
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
+
 msgid "Ask each time"
 msgstr "Pregunta cada vegada"
 
@@ -8575,6 +8596,9 @@ msgstr "Desactivat mostra només les icones."
 #, fuzzy
 msgid "Find bar position"
 msgstr "Posició de la barra de selecció"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""

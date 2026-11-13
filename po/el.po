@@ -315,6 +315,9 @@ msgstr "Δημιουργία συμβάντος…"
 msgid "Create Task…"
 msgstr "Δημιουργία εργασίας…"
 
+msgid "Copy To…"
+msgstr "Αντιγραφή σε…"
+
 msgid "Tags"
 msgstr "Ετικέτες"
 
@@ -329,9 +332,6 @@ msgstr "Σήμανση ως ανεπιθύμητο"
 
 msgid "Move To…"
 msgstr "Μετακίνηση σε…"
-
-msgid "Copy To…"
-msgstr "Αντιγραφή σε…"
 
 msgid "Archive"
 msgstr "Αρχειοθέτηση"
@@ -2640,6 +2640,14 @@ msgstr ""
 "Ζητά πρόσβαση από τη Microsoft. Ορισμένοι οργανισμοί απαιτούν έγκριση "
 "διαχειριστή."
 
+#, fuzzy
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+"Η απενεργοποίηση τον επιστρέφει στη λίστα εισαγωγής. Παραμένει στους "
+"Διαδικτυακούς λογαριασμούς GNOME."
+
 msgid "Choose a Picture"
 msgstr "Επιλογή εικόνας"
 
@@ -2738,6 +2746,16 @@ msgid "Include the folder's unread mail in the tray icon's unread count"
 msgstr ""
 "Συμπερίληψη της μη αναγνωσμένης αλληλογραφίας του φακέλου στον αριθμό μη "
 "αναγνωσμένων του εικονιδίου στην περιοχή ειδοποιήσεων"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
 
 msgid "Never"
 msgstr "Ποτέ"
@@ -6198,6 +6216,9 @@ msgstr "Προβολή ανάγνωσης ενεργή"
 msgid "Reader View off"
 msgstr "Προβολή ανάγνωσης ανενεργή"
 
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
+
 msgid "Ask each time"
 msgstr "Ερώτηση κάθε φορά"
 
@@ -8573,6 +8594,9 @@ msgstr "Ανενεργό: εμφανίζονται μόνο τα εικονίδ�
 
 msgid "Find bar position"
 msgstr "Θέση γραμμής αναζήτησης"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""

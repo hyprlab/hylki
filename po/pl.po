@@ -321,6 +321,10 @@ msgstr ""
 msgid "Create Task…"
 msgstr "Utwórz"
 
+#, fuzzy
+msgid "Copy To…"
+msgstr "Przenieś do…"
+
 msgid "Tags"
 msgstr "Etykiety"
 
@@ -334,10 +338,6 @@ msgid "Mark as Spam"
 msgstr "Oznacz jako spam"
 
 msgid "Move To…"
-msgstr "Przenieś do…"
-
-#, fuzzy
-msgid "Copy To…"
 msgstr "Przenieś do…"
 
 msgid "Archive"
@@ -2801,6 +2801,14 @@ msgid ""
 "approve it."
 msgstr ""
 
+#, fuzzy
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+"Wyłączenie przywraca konto na listę do zaimportowania – nadal pozostaje ono "
+"w kontach online GNOME."
+
 msgid "Choose a Picture"
 msgstr "Wybierz obraz"
 
@@ -2907,6 +2915,16 @@ msgstr "Liczenie nieprzeczytanej poczty"
 msgid "Include the folder's unread mail in the tray icon's unread count"
 msgstr ""
 "Uwzględnia nieprzeczytaną pocztę z katalogu w liczniku ikony w zasobniku"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
 
 msgid "Never"
 msgstr "Nigdy"
@@ -6519,6 +6537,9 @@ msgstr "Widok czytania włączony"
 msgid "Reader View off"
 msgstr "Widok czytania wyłączony"
 
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
+
 msgid "Ask each time"
 msgstr "Pytaj za każdym razem"
 
@@ -8943,6 +8964,9 @@ msgstr ""
 #, fuzzy
 msgid "Find bar position"
 msgstr "Działania"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr ""
 
 #, fuzzy
 msgid "A message's text alone, without the sender's layout, colors and fonts."

@@ -288,6 +288,9 @@ msgstr "Criar evento…"
 msgid "Create Task…"
 msgstr "Criar tarefa…"
 
+msgid "Copy To…"
+msgstr "Copiar para…"
+
 msgid "Tags"
 msgstr "Etiquetas"
 
@@ -302,9 +305,6 @@ msgstr "Marcar como spam"
 
 msgid "Move To…"
 msgstr "Mover para…"
-
-msgid "Copy To…"
-msgstr "Copiar para…"
 
 msgid "Archive"
 msgstr "Arquivar"
@@ -2605,6 +2605,14 @@ msgstr ""
 "Solicita acesso à Microsoft. Algumas organizações exigem a aprovação de um "
 "administrador."
 
+#, fuzzy
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+"Desativar devolve a conta à lista de importação. A conta permanece nas "
+"Contas online do GNOME."
+
 msgid "Choose a Picture"
 msgstr "Escolher uma imagem"
 
@@ -2702,6 +2710,16 @@ msgid "Include the folder's unread mail in the tray icon's unread count"
 msgstr ""
 "Incluir o email não lido da pasta na contagem de mensagens não lidas do "
 "ícone da área de notificação"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
 
 msgid "Never"
 msgstr "Nunca"
@@ -6133,6 +6151,9 @@ msgstr "Modo de leitura ativado"
 msgid "Reader View off"
 msgstr "Modo de leitura desativado"
 
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
+
 msgid "Ask each time"
 msgstr "Perguntar sempre"
 
@@ -8469,6 +8490,9 @@ msgstr "Desativado, mostra apenas os ícones."
 
 msgid "Find bar position"
 msgstr "Posição da barra de pesquisa"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""
