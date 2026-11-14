@@ -2563,11 +2563,6 @@ msgstr "Adreça de correu electrònic"
 msgid "Default From address"
 msgstr "Escriu una adreça de remitent"
 
-#, fuzzy
-msgid "New messages from this account start from it."
-msgstr ""
-"Un missatge s'ha quedat on era: aquest compte no pot rebre correu d'un altre"
-
 msgid "Sending"
 msgstr "Enviament"
 
@@ -8935,6 +8930,12 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr ""
+#~ "Un missatge s'ha quedat on era: aquest compte no pot rebre correu d'un "
+#~ "altre"
 
 #~ msgid ""
 #~ "With more than one, the composer's signature button allows you to pick "

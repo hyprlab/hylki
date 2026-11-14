@@ -2511,10 +2511,6 @@ msgstr "E-Mail-Adresse"
 msgid "Default From address"
 msgstr "Absenderadresse eingeben"
 
-#, fuzzy
-msgid "New messages from this account start from it."
-msgstr "Wird an neue Nachrichten dieses Kontos angehängt."
-
 msgid "Sending"
 msgstr "Senden"
 
@@ -8936,6 +8932,10 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr "Wird an neue Nachrichten dieses Kontos angehängt."
 
 #~ msgid ""
 #~ "With more than one, the composer's signature button allows you to pick "

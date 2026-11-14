@@ -2495,10 +2495,6 @@ msgstr "Dirección de correo electrónico"
 msgid "Default From address"
 msgstr "Escribir una dirección de remitente"
 
-#, fuzzy
-msgid "New messages from this account start from it."
-msgstr "Se añade a los mensajes nuevos enviados desde esta cuenta."
-
 msgid "Sending"
 msgstr "Envío"
 
@@ -8862,6 +8858,10 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr "Se añade a los mensajes nuevos enviados desde esta cuenta."
 
 #~ msgid ""
 #~ "With more than one, the composer's signature button allows you to pick "

@@ -2528,11 +2528,6 @@ msgstr "Διεύθυνση email"
 msgid "Default From address"
 msgstr "Πληκτρολογήστε μια διεύθυνση αποστολέα"
 
-#, fuzzy
-msgid "New messages from this account start from it."
-msgstr ""
-"Προστίθεται στα νέα μηνύματα που αποστέλλονται από αυτόν τον λογαριασμό."
-
 msgid "Sending"
 msgstr "Αποστολή"
 
@@ -8942,6 +8937,11 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr ""
+#~ "Προστίθεται στα νέα μηνύματα που αποστέλλονται από αυτόν τον λογαριασμό."
 
 #~ msgid ""
 #~ "With more than one, the composer's signature button allows you to pick "

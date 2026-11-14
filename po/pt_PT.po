@@ -2501,11 +2501,6 @@ msgstr "Endereço de e-mail"
 msgid "Default From address"
 msgstr "Introduzir um endereço no campo De"
 
-#, fuzzy
-msgid "New messages from this account start from it."
-msgstr ""
-"Uma mensagem não foi movida — não é possível mover correio entre contas"
-
 msgid "Sending"
 msgstr "Envio"
 
@@ -8856,6 +8851,11 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr ""
+#~ "Uma mensagem não foi movida — não é possível mover correio entre contas"
 
 #~ msgid ""
 #~ "With more than one, the composer's signature button allows you to pick "

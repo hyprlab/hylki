@@ -2644,10 +2644,6 @@ msgstr "E-mail-cím"
 msgid "Default From address"
 msgstr "Feladó címe"
 
-#, fuzzy
-msgid "New messages from this account start from it."
-msgstr "Ebből a fiókból elküldött új üzenetekhez csatolva."
-
 msgid "Sending"
 msgstr "Küldés"
 
@@ -9246,6 +9242,10 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr "Ebből a fiókból elküldött új üzenetekhez csatolva."
 
 #~ msgid "Sends through this account"
 #~ msgstr "Küldés ezen a fiókon keresztül"

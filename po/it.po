@@ -2613,10 +2613,6 @@ msgstr "Indirizzo e-mail"
 msgid "Default From address"
 msgstr "Digita un indirizzo Da"
 
-#, fuzzy
-msgid "New messages from this account start from it."
-msgstr "Aggiunta ai nuovi messaggi inviati da questo account."
-
 msgid "Sending"
 msgstr "Invio"
 
@@ -9163,6 +9159,10 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr "Aggiunta ai nuovi messaggi inviati da questo account."
 
 #~ msgid "Sends through this account"
 #~ msgstr "Invia tramite questo account"

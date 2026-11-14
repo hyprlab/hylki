@@ -2501,10 +2501,6 @@ msgstr "Адрес электронной почты"
 msgid "Default From address"
 msgstr "Введите адрес отправителя"
 
-#, fuzzy
-msgid "New messages from this account start from it."
-msgstr "Добавляется к новым сообщениям, отправляемым с этой учётной записи."
-
 msgid "Sending"
 msgstr "Отправка"
 
@@ -8815,6 +8811,10 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr "Добавляется к новым сообщениям, отправляемым с этой учётной записи."
 
 #~ msgid ""
 #~ "With more than one, the composer's signature button allows you to pick "

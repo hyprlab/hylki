@@ -200,7 +200,6 @@ impl AccountsWindow {
         // wherever a message has no From of its own to go by (#157).
         let default_row = adw::SwitchRow::builder()
             .title(i18n("Default From address"))
-            .subtitle(i18n("New messages from this account start from it."))
             .build();
         default_row.set_active(alias.default_from);
         identity_group.add(&name_row);

@@ -2693,10 +2693,6 @@ msgstr "Adres e-mail"
 msgid "Default From address"
 msgstr "Adres e-mail"
 
-#, fuzzy
-msgid "New messages from this account start from it."
-msgstr "Dołączany do nowych wiadomości wysyłanych z tego konta."
-
 msgid "Sending"
 msgstr "Wysyłanie"
 
@@ -9314,6 +9310,10 @@ msgstr "Zbiorcza skrzynka odbiorcza w jasnym motywie"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr "Dołączany do nowych wiadomości wysyłanych z tego konta."
 
 #~ msgid "Sends through this account"
 #~ msgstr "Wysyła przez to konto"
