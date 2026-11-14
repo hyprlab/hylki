@@ -168,6 +168,11 @@ pub(crate) struct SectionData {
     pub(crate) avatar: Option<std::path::PathBuf>,
     /// Custom-folder paths whose tree node is collapsed (#51).
     pub(crate) tree_collapsed: Vec<String>,
+    /// The paths of rows this section's tree added for ancestors the server
+    /// keeps as non-mailbox containers (Dovecot's shared mailboxes): they
+    /// draw and fold like folders, but are not selectable and take no
+    /// folder work (see `tree::container_ancestors`).
+    pub(crate) containers: Vec<String>,
     /// The user's own folder order (paths): a folder sorts among its
     /// siblings by where it stands here, unlisted ones after, as the server
     /// sorted them. Empty keeps the default order.
