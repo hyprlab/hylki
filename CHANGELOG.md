@@ -8,6 +8,24 @@
   mail sent to none of the account's addresses. A reply to one of its
   addresses still answers from it. The alias list marks the default.
 
+- **Added: Autocrypt** (#602, by James Reilly). Two switches in an
+  account's settings, both off to start with: one sends the account's
+  OpenPGP key with its mail, the other says the account prefers encrypted
+  mail. With the first on, keys others send that way are kept, and so are
+  the keys passed on in encrypted mail to several people (gossip). A key is
+  taken only from mail that passes the sender check, and only for the
+  address it came from. When everyone on a message prefers encrypted mail,
+  Encrypt turns on by itself. Found keys stay in a keyring of their own,
+  never the user's GnuPG keyring. Encrypting to a key from Autocrypt or WKD
+  does not ask first; a key passed on by someone else is asked about, as a
+  key in the keyring nobody vouched for is.
+
+- **Added: each recipient shows whether they have an OpenPGP key** (#602,
+  by James Reilly), and where it came from. **Settings → OpenPGP → Look up
+  recipients' keys** asks each recipient's own domain (WKD) as they are
+  added, and **Also ask a keyserver** asks keys.openpgp.org; both are off to
+  start with.
+
 - **Added: Space previews a reader card's attachment** (#625, requested by
   3v1n0). On an attachment chip beneath a message, **Space** shows the file
   as **Space** in the attachment drawer does: a picture or a PDF in Hylki's

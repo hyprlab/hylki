@@ -1750,6 +1750,9 @@ signature. There are four ways to get one, none of which need a terminal:
   beside their name. Click it and choose **Fetch the sender's key**. Hylki
   looks in the message itself first (many clients attach the key in an
   Autocrypt header), then asks the sender's provider (WKD), then the keyservers.
+  A key from the message's Autocrypt header is taken only when the header
+  names the sender's own address, and it goes into Hylki's own keyring of
+  found keys, never yours (see below).
 - A message with a key file attached shows an **Import OpenPGP key** button on
   that attachment.
 - Under *Settings → OpenPGP → Other people's keys*, **Fetch by address…**
@@ -1817,6 +1820,40 @@ account then open with Sign on, and a reopened draft does too. Changing From
 in the composer moves Sign to the new account's setting until you press Sign
 yourself; after that the composer leaves it as you set it. Stored on the
 account as `sign_by_default = true` in `accounts.toml`.
+
+**Autocrypt and found keys**
+
+Turn on **Send your key with your mail** under an account's *OpenPGP* group
+and every message from it carries your public key in an `Autocrypt:` header
+(Autocrypt Level 1). Hylki then also keeps the keys other people send that
+way, and the keys passed on inside encrypted mail to several people
+(Autocrypt gossip). A key is taken only from mail whose From address the
+receiving server authenticated (a green sender check), and only for that
+address. **Encrypt by default** under it says you prefer encrypted mail:
+when everyone you write to says the same, the composer turns Encrypt on by
+itself. Stored as `autocrypt = true` and `autocrypt_mutual = true`.
+
+Keys found this way, and keys found by looking a recipient up, go into a
+keyring of Hylki's own (`discovered-keys` in Hylki's data folder), never
+your GnuPG keyring: nobody vouched for them, and gpg would otherwise use them
+for everything else too. Which key belongs to whom is kept in the cache.
+
+Sending encrypted to a key the recipient sent with their mail, or one their
+domain or keys.openpgp.org publishes, does not ask first. A key passed on by
+someone else asks, as a key in your keyring that nobody vouched for does,
+and **Send Anyway** stops asking about it.
+
+While you address a message, each recipient's pill shows a lock: green for a
+key in your keyring, blue for one Hylki found (Autocrypt or WKD), amber for
+one passed on by someone else or that may be out of date, and dim (red while
+Encrypt is on) for none. Hovering says where the key came from. The pills
+only show locks when your From address has a key of its own.
+
+*Settings → OpenPGP → Finding keys* has two switches, both off to start
+with. **Look up recipients' keys** asks each recipient's own domain (WKD) a
+moment after you add them, which tells that domain that you are writing to
+the address. **Also ask a keyserver** asks keys.openpgp.org for addresses WKD
+has nothing for, which tells it who you write to.
 
 **Reading the result**
 

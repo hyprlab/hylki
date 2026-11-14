@@ -1972,6 +1972,14 @@ msgstr "Xifrat per a la clau {id}, que no és al teu anell de claus."
 msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "El bloc xifrat està malmès o no són dades OpenPGP."
 
+#, fuzzy
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+"La clau de signatura {id} és al teu anell de claus però no està marcada com "
+"a de confiança; comprova'n l'empremta amb el remitent."
+
 msgid "Revoked"
 msgstr "Revocada"
 
@@ -4078,6 +4086,34 @@ msgid "Show Cc, Bcc and Reply-To"
 msgstr "Mostra Cc, Cco i Respon a"
 
 #, fuzzy
+msgid "They prefer encrypted mail."
+msgstr "Amaga l'assumpte del correu xifrat"
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+#, fuzzy
+msgid "OpenPGP key in your keyring."
+msgstr "Ja és al teu anell de claus"
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
+#, fuzzy
 msgid "Cannot merge an encrypted message"
 msgstr "Missatge xifrat"
 
@@ -5675,7 +5711,8 @@ msgstr ""
 msgid "Trust"
 msgstr "Confia-hi"
 
-msgid "The sender's key was imported from the message."
+#, fuzzy
+msgid "The sender's key was taken from the message."
 msgstr "La clau del remitent s'ha importat del missatge."
 
 msgid "The sender's key was fetched and imported."
@@ -5847,6 +5884,26 @@ msgid "The same keyring the gpg command and other mail apps use."
 msgstr ""
 "El mateix anell de claus que utilitzen l'ordre gpg i altres aplicacions de "
 "correu."
+
+#, fuzzy
+msgid "Finding keys"
+msgstr "Cerca al missatge"
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr ""
+
+#, fuzzy
+msgid "Look up recipients' keys"
+msgstr "Mostra els destinataris"
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid "keys.openpgp.org learns who you write to."
+msgstr ""
 
 msgid "Your keys"
 msgstr "Les teves claus"
@@ -7603,14 +7660,14 @@ msgstr ""
 "No s'ha pogut llegir la contrasenya de {email} de l'anell de claus ({e}). "
 "L'Hylki ho tornarà a provar a la propera connexió."
 
+msgid "no OpenPGP key for {addr}"
+msgstr "no hi ha cap clau OpenPGP per a {addr}"
+
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 "no tens cap clau OpenPGP pròpia per a {addr}; genera'n una a Paràmetres, "
 "OpenPGP"
-
-msgid "no OpenPGP key for {addr}"
-msgstr "no hi ha cap clau OpenPGP per a {addr}"
 
 msgid "Could not save template: {e}"
 msgstr "No s'ha pogut desar la plantilla: {e}"
@@ -8272,6 +8329,20 @@ msgstr "Amaga l'assumpte del correu xifrat"
 
 msgid "Only the recipients see the subject. Others see \"...\"."
 msgstr "Només els destinataris veuen l'assumpte. Els altres veuen «...»."
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "So per a correu nou"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Expandeix les converses per defecte"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""

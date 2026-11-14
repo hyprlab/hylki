@@ -2055,6 +2055,14 @@ msgstr "A(z) {id} kulccsal titkosítva, amely nincs a kulcstartóján."
 msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "A titkosított blokk sérült, vagy nem OpenPGP adat."
 
+#, fuzzy
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+"A(z) {id} aláírókulcs a kulcstartóján van, de nincs megbízhatóként "
+"megjelölve; ellenőrizze az ujjlenyomatát a feladóval."
+
 msgid "Revoked"
 msgstr ""
 
@@ -4224,6 +4232,34 @@ msgid "Show Cc, Bcc and Reply-To"
 msgstr "Másolat, titkos másolat és válaszcím megjelenítése"
 
 #, fuzzy
+msgid "They prefer encrypted mail."
+msgstr "A tárgy elrejtése"
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+#, fuzzy
+msgid "OpenPGP key in your keyring."
+msgstr "Már a kulcstartóján van"
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
+#, fuzzy
 msgid "Cannot merge an encrypted message"
 msgstr "Titkosított üzenet"
 
@@ -5871,7 +5907,8 @@ msgstr ""
 msgid "Trust"
 msgstr "Hitelesít"
 
-msgid "The sender's key was imported from the message."
+#, fuzzy
+msgid "The sender's key was taken from the message."
 msgstr "A feladó kulcsa importálva az üzenetből."
 
 msgid "The sender's key was fetched and imported."
@@ -6048,6 +6085,26 @@ msgid "The same keyring the gpg command and other mail apps use."
 msgstr ""
 "A GnuPG {version} megtalálva. A Hylki olvassa és írja a kulcskészletét, "
 "amelyet a gpg parancs és más e-mail programok is használnak."
+
+#, fuzzy
+msgid "Finding keys"
+msgstr "Keresés az üzenetben"
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr ""
+
+#, fuzzy
+msgid "Look up recipients' keys"
+msgstr "Címzettek keresése ebben a címjegyzékben"
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid "keys.openpgp.org learns who you write to."
+msgstr ""
 
 msgid "Your keys"
 msgstr "Saját kulcsok"
@@ -7857,14 +7914,14 @@ msgid ""
 "again at the next connection."
 msgstr ""
 
+msgid "no OpenPGP key for {addr}"
+msgstr "nincs OpenPGP-kulcs ehhez: {addr}"
+
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 "nincs saját OpenPGP-kulcs ehhez: {addr}; hozzon létre egyet a Beállítások → "
 "OpenPGP alatt"
-
-msgid "no OpenPGP key for {addr}"
-msgstr "nincs OpenPGP-kulcs ehhez: {addr}"
 
 #, fuzzy
 msgid "Could not save template: {e}"
@@ -8550,6 +8607,20 @@ msgid "Hide the subject of encrypted mail"
 msgstr "A tárgy elrejtése"
 
 msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr ""
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Beillesztés formázással"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Beszélgetések kibontása alapértelmezés szerint"
+
+msgid "Mail to people who ask for the same is encrypted."
 msgstr ""
 
 #, fuzzy
@@ -10519,9 +10590,6 @@ msgstr "Hyprlab"
 #~ msgid "Add Directory"
 #~ msgstr "Könyvtár hozzáadása"
 
-#~ msgid "Look up recipients in this directory"
-#~ msgstr "Címzettek keresése ebben a címjegyzékben"
-
 #, fuzzy
 #~ msgid "Save the CardDAV account?"
 #~ msgstr "Elmented a fiókot?"
@@ -10743,10 +10811,6 @@ msgstr "Hyprlab"
 
 #, fuzzy
 #~ msgid "Plain text: send without formatting"
-#~ msgstr "Beillesztés formázással"
-
-#, fuzzy
-#~ msgid "Send with formatting"
 #~ msgstr "Beillesztés formázással"
 
 #, fuzzy

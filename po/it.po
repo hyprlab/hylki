@@ -2020,6 +2020,14 @@ msgstr "Crittografato per la chiave {id}, che non è nel tuo portachiavi."
 msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "Il blocco crittografato è danneggiato o non è dati OpenPGP."
 
+#, fuzzy
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+"La chiave di firma {id} è nel tuo portachiavi ma non è contrassegnata come "
+"attendibile; verifica la sua impronta digitale con il mittente."
+
 msgid "Revoked"
 msgstr "Revocata"
 
@@ -4172,6 +4180,34 @@ msgid "Show Cc, Bcc and Reply-To"
 msgstr "Mostra Cc, Ccn e Rispondi a"
 
 #, fuzzy
+msgid "They prefer encrypted mail."
+msgstr "Nascondi l'oggetto"
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+#, fuzzy
+msgid "OpenPGP key in your keyring."
+msgstr "Già nel tuo portachiavi"
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
+#, fuzzy
 msgid "Cannot merge an encrypted message"
 msgstr "Messaggio crittografato"
 
@@ -5838,7 +5874,8 @@ msgstr ""
 msgid "Trust"
 msgstr "Rendi attendibile"
 
-msgid "The sender's key was imported from the message."
+#, fuzzy
+msgid "The sender's key was taken from the message."
 msgstr "La chiave del mittente è stata importata dal messaggio."
 
 msgid "The sender's key was fetched and imported."
@@ -6008,6 +6045,26 @@ msgid "The same keyring the gpg command and other mail apps use."
 msgstr ""
 "GnuPG {version} trovato. Hylki legge e scrive il suo portachiavi, lo stesso "
 "usato dal comando gpg e da altri programmi di posta."
+
+#, fuzzy
+msgid "Finding keys"
+msgstr "Trova nel messaggio"
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr ""
+
+#, fuzzy
+msgid "Look up recipients' keys"
+msgstr "Cerca i destinatari in questa directory"
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid "keys.openpgp.org learns who you write to."
+msgstr ""
 
 msgid "Your keys"
 msgstr "Le tue chiavi"
@@ -7783,13 +7840,13 @@ msgstr ""
 "Impossibile leggere la password per {email} dal portachiavi ({e}). Hylki "
 "riproverà alla prossima connessione."
 
+msgid "no OpenPGP key for {addr}"
+msgstr "nessuna chiave OpenPGP per {addr}"
+
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 "nessuna tua chiave OpenPGP per {addr}; generane una in Impostazioni, OpenPGP"
-
-msgid "no OpenPGP key for {addr}"
-msgstr "nessuna chiave OpenPGP per {addr}"
 
 msgid "Could not save template: {e}"
 msgstr "Impossibile salvare il modello: {e}"
@@ -8478,6 +8535,20 @@ msgid "Hide the subject of encrypted mail"
 msgstr "Nascondi l'oggetto"
 
 msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr ""
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Suono per nuova posta"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Espandi le conversazioni per impostazione predefinita"
+
+msgid "Mail to people who ask for the same is encrypted."
 msgstr ""
 
 #, fuzzy
@@ -10548,9 +10619,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Add Directory"
 #~ msgstr "Aggiungi directory"
-
-#~ msgid "Look up recipients in this directory"
-#~ msgstr "Cerca i destinatari in questa directory"
 
 #, fuzzy
 #~ msgid "Save the CardDAV account?"

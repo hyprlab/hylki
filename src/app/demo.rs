@@ -67,6 +67,8 @@ pub(super) fn demo_account_configs() -> Vec<AccountConfig> {
         folder_sort: None,
         sign_by_default: false,
         plain_subject: false,
+        autocrypt: false,
+        autocrypt_mutual: false,
         graph_directory: false,
         graph_directory_only: false,
         graph_label_names: false,

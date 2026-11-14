@@ -1729,6 +1729,35 @@ headerbar box.list-tools.compact button {
   color: @error_color;
 }
 
+/* The OpenPGP key badge before a pill's name: green for a key in the
+   user's keyring, accent for one Hylki found (Autocrypt, WKD), amber for
+   one that may be out of date, dim for none, red for none while the
+   message is to be encrypted. A selected pill keeps its own colours. */
+.recipient-pill > image.key-badge.key-keyring {
+  color: @success_color;
+}
+
+.recipient-pill > image.key-badge.key-found {
+  color: @accent_color;
+}
+
+.recipient-pill > image.key-badge.key-weak {
+  color: @warning_color;
+}
+
+.recipient-pill > image.key-badge.key-none {
+  opacity: 0.45;
+}
+
+.recipient-pill > image.key-badge.key-missing {
+  color: @error_color;
+}
+
+.recipient-pill.selected > image.key-badge {
+  color: inherit;
+  opacity: 1;
+}
+
 /* Selected pills (#492), and the one with the keyboard focus. */
 .recipient-pill.selected {
   background-color: @accent_bg_color;

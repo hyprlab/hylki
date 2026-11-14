@@ -85,6 +85,7 @@ fn account_identities(
         .filter(|from| *from != label);
     let pgp_key = cfg.and_then(|c| c.pgp_key.clone());
     let sign_default = cfg.is_some_and(|c| c.sign_by_default);
+    let autocrypt_mutual = cfg.is_some_and(|c| c.autocrypt && c.autocrypt_mutual);
     let mut identities = vec![ComposeAccount {
         id,
         label,
@@ -93,6 +94,7 @@ fn account_identities(
         email: email.to_string(),
         pgp_key: pgp_key.clone(),
         sign_default,
+        autocrypt_mutual,
         alias_from: None,
         signed_as,
         default_from: false,
@@ -115,6 +117,7 @@ fn account_identities(
             email: addr,
             pgp_key: pgp_key.clone(),
             sign_default,
+            autocrypt_mutual,
             alias_from: Some(display),
             signed_as: None,
             default_from: alias.default_from,
@@ -148,6 +151,7 @@ fn account_identities(
             email: addr.clone(),
             pgp_key: pgp_key.clone(),
             sign_default,
+            autocrypt_mutual,
             alias_from: Some(display),
             signed_as: None,
             default_from: false,
@@ -576,8 +580,7 @@ mod tests {
         config[0].email = "me@x.com".into();
         config[0].aliases = vec![
             toml::from_str("identity = \"Info <info@x.com>\"").unwrap(),
-            toml::from_str("identity = \"Sales <sales@x.com>\"\ndefault_from = true")
-                .unwrap(),
+            toml::from_str("identity = \"Sales <sales@x.com>\"\ndefault_from = true").unwrap(),
         ];
         let ids = compose_identities(&[], &config, &HashMap::new());
         let id = ids[0].id;
@@ -680,10 +683,19 @@ mod tests {
         }
         // On: plain-text mail is answered in plain text (#436)...
         assert_eq!(opening_format(Rich, true, false, Original::Plain), Plain);
-        assert_eq!(opening_format(Markdown, true, false, Original::Plain), Plain);
+        assert_eq!(
+            opening_format(Markdown, true, false, Original::Plain),
+            Plain
+        );
         // ...and formatted mail in rich text when the default is plain (#646).
-        assert_eq!(opening_format(Plain, true, false, Original::Formatted), Rich);
-        assert_eq!(opening_format(Markdown, true, false, Original::Formatted), Markdown);
+        assert_eq!(
+            opening_format(Plain, true, false, Original::Formatted),
+            Rich
+        );
+        assert_eq!(
+            opening_format(Markdown, true, false, Original::Formatted),
+            Markdown
+        );
         assert_eq!(opening_format(Html, true, false, Original::Formatted), Html);
         // A new message, or one whose original was not loaded.
         assert_eq!(opening_format(Plain, true, false, Original::Unknown), Plain);

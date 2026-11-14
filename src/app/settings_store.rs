@@ -13,6 +13,8 @@ use super::model::AppModel;
 impl AppModel {
     /// Persist all app settings together.
     pub(super) fn save_settings(&self) {
+        // Kept from disk: Settings, OpenPGP writes these itself.
+        let on_disk = config::load_privacy();
         config::save_privacy(config::PrivacyFile {
             allowed_senders: self.allowed_senders.clone(),
             auto_remote_content: self.auto_remote_content,
@@ -38,6 +40,8 @@ impl AppModel {
             fold_messages: self.fold_messages,
             always_show_recipients: self.always_show_recipients,
             pgp_labels: self.pgp_labels,
+            key_lookup: on_disk.key_lookup,
+            keyserver_lookup: on_disk.keyserver_lookup,
             reader_find_bottom: self.reader_find_bottom,
             single_message_card: self.single_message_card,
             reader_mode: self.reader_mode,

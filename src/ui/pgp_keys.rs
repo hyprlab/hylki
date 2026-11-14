@@ -121,6 +121,35 @@ impl Component for PgpKeys {
                     },
                 },
 
+                // Automatic key discovery while composing, off until asked
+                // for: each lookup tells a server who the user writes to.
+                add = &adw::PreferencesGroup {
+                    set_title: &i18n("Finding keys"),
+                    set_description: Some(
+                        i18n("Keys found here are kept apart from your keyring.").as_str()
+                    ),
+                    adw::SwitchRow {
+                        set_title: &i18n("Look up recipients' keys"),
+                        set_subtitle: &i18n("Each recipient's domain (WKD) learns that you write to them."),
+                        set_active: crate::config::load_privacy().key_lookup,
+                        connect_active_notify => move |row| {
+                            let mut prefs = crate::config::load_privacy();
+                            prefs.key_lookup = row.is_active();
+                            crate::config::save_privacy(prefs);
+                        },
+                    },
+                    adw::SwitchRow {
+                        set_title: &i18n("Also ask a keyserver"),
+                        set_subtitle: &i18n("keys.openpgp.org learns who you write to."),
+                        set_active: crate::config::load_privacy().keyserver_lookup,
+                        connect_active_notify => move |row| {
+                            let mut prefs = crate::config::load_privacy();
+                            prefs.keyserver_lookup = row.is_active();
+                            crate::config::save_privacy(prefs);
+                        },
+                    },
+                },
+
                 #[name = "own_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Your keys"),
@@ -403,7 +432,13 @@ impl PgpKeys {
                 let gpg = Gpg::system();
                 let own = pgp::list_keys(&gpg, true);
                 let all = pgp::list_keys(&gpg, false);
-                let accepted = pgp::still_unchecked(crate::config::load_accepted_keys(), &all);
+                // A gossip key Send Anyway accepted is in the keyring of
+                // found keys, not the user's.
+                let mut known = all.clone();
+                if let Some(found) = gpg.found_keyring_if_any() {
+                    known.extend(pgp::list_keys(&found, false));
+                }
+                let accepted = pgp::still_unchecked(crate::config::load_accepted_keys(), &known);
                 let others = all
                     .into_iter()
                     .filter(|k| !own.iter().any(|o| o.fingerprint == k.fingerprint))

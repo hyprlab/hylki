@@ -182,6 +182,14 @@ fn build_message(
             &wire_references,
         )));
     }
+    // Autocrypt (Level 1): the sender's key on everything the account
+    // sends, so the people it writes to can encrypt back. Not on a draft,
+    // which goes to no one.
+    if !draft {
+        if let Some(header) = super::pgp_mime::autocrypt_header(account, &from_addr) {
+            builder = builder.raw_header(header);
+        }
+    }
 
     use lettre::message::{header::ContentType, Attachment, MultiPart, SinglePart};
     // An answer to an invitation (#223): plain text for the person,

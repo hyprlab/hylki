@@ -1955,6 +1955,14 @@ msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr ""
 "Το κρυπτογραφημένο τμήμα είναι κατεστραμμένο ή δεν περιέχει δεδομένα OpenPGP."
 
+#, fuzzy
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+"Το κλειδί υπογραφής {id} βρίσκεται στην κλειδοθήκη σας αλλά δεν έχει "
+"επισημανθεί ως έμπιστο· ελέγξτε το αποτύπωμά του με τον αποστολέα."
+
 msgid "Revoked"
 msgstr "Ανακλήθηκε"
 
@@ -4067,6 +4075,34 @@ msgstr "Περισσότερα"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Εμφάνιση Κοιν., Κρυφής κοιν. και Απάντησης προς"
 
+#, fuzzy
+msgid "They prefer encrypted mail."
+msgstr "Απόκρυψη του θέματος κρυπτογραφημένων μηνυμάτων"
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+#, fuzzy
+msgid "OpenPGP key in your keyring."
+msgstr "Υπάρχει ήδη στην κλειδοθήκη σας"
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
 msgid "Cannot merge an encrypted message"
 msgstr "Δεν είναι δυνατή η συγχώνευση κρυπτογραφημένου μηνύματος"
 
@@ -5656,7 +5692,8 @@ msgstr ""
 msgid "Trust"
 msgstr "Ορισμός ως έμπιστου"
 
-msgid "The sender's key was imported from the message."
+#, fuzzy
+msgid "The sender's key was taken from the message."
 msgstr "Το κλειδί του αποστολέα εισήχθη από το μήνυμα."
 
 msgid "The sender's key was fetched and imported."
@@ -5826,6 +5863,26 @@ msgid "The same keyring the gpg command and other mail apps use."
 msgstr ""
 "Η ίδια κλειδοθήκη που χρησιμοποιούν η εντολή gpg και άλλες εφαρμογές "
 "αλληλογραφίας."
+
+#, fuzzy
+msgid "Finding keys"
+msgstr "Εύρεση στο μήνυμα"
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr ""
+
+#, fuzzy
+msgid "Look up recipients' keys"
+msgstr "Αναζήτηση παραληπτών σε αυτόν τον κατάλογο"
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid "keys.openpgp.org learns who you write to."
+msgstr ""
 
 msgid "Your keys"
 msgstr "Τα κλειδιά σας"
@@ -7585,14 +7642,14 @@ msgstr ""
 "Δεν ήταν δυνατή η ανάγνωση του κωδικού πρόσβασης για το {email} από την "
 "κλειδοθήκη ({e}). Το Hylki θα προσπαθήσει ξανά στην επόμενη σύνδεση."
 
+msgid "no OpenPGP key for {addr}"
+msgstr "δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}"
+
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 "δεν υπάρχει δικό σας κλειδί OpenPGP για τη διεύθυνση {addr}· δημιουργήστε "
 "ένα στις Ρυθμίσεις, OpenPGP"
-
-msgid "no OpenPGP key for {addr}"
-msgstr "δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}"
 
 msgid "Could not save template: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του προτύπου: {e}"
@@ -8262,6 +8319,20 @@ msgstr "Απόκρυψη του θέματος κρυπτογραφημένων 
 
 msgid "Only the recipients see the subject. Others see \"...\"."
 msgstr "Το θέμα εμφανίζεται μόνο στους παραλήπτες. Οι υπόλοιποι βλέπουν «…»."
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Ήχος για νέα αλληλογραφία"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Ανάπτυξη συζητήσεων από προεπιλογή"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
@@ -10418,9 +10489,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Add Directory"
 #~ msgstr "Προσθήκη καταλόγου"
-
-#~ msgid "Look up recipients in this directory"
-#~ msgstr "Αναζήτηση παραληπτών σε αυτόν τον κατάλογο"
 
 #~ msgid "Save the CardDAV account?"
 #~ msgstr "Αποθήκευση του λογαριασμού;"

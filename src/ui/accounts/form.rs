@@ -276,6 +276,8 @@ pub(super) fn read_account(
             .and_then(|i| crate::config::FolderSort::ALL.get(i as usize).copied()),
         sign_by_default: widgets.form.sign_default_row.is_active(),
         plain_subject: !widgets.form.hide_subject_row.is_active(),
+        autocrypt: widgets.form.autocrypt_row.is_active(),
+        autocrypt_mutual: widgets.form.autocrypt_mutual_row.is_active(),
         graph_directory: protocol == Protocol::Graph
             && widgets.form.graph_directory_row.is_active(),
         graph_directory_only: protocol == Protocol::Graph
@@ -534,6 +536,11 @@ pub(super) fn fill_editor(widgets: &AccountsWindowWidgets, acc: &AccountConfig) 
         .sign_default_row
         .set_active(acc.sign_by_default);
     widgets.form.hide_subject_row.set_active(!acc.plain_subject);
+    widgets.form.autocrypt_row.set_active(acc.autocrypt);
+    widgets
+        .form
+        .autocrypt_mutual_row
+        .set_active(acc.autocrypt_mutual);
     widgets
         .form
         .reply_copies_row
@@ -657,6 +664,8 @@ pub(super) fn clear_editor(widgets: &AccountsWindowWidgets) {
     widgets.form.folder_sort_row.set_selected(0);
     widgets.form.sign_default_row.set_active(false);
     widgets.form.hide_subject_row.set_active(true);
+    widgets.form.autocrypt_row.set_active(false);
+    widgets.form.autocrypt_mutual_row.set_active(false);
     widgets.form.reply_copies_row.set_selected(0);
     widgets.form.graph_directory_row.set_active(false);
     widgets.form.directory_only_row.set_active(false);

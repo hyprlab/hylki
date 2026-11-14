@@ -67,6 +67,9 @@ rusqlite = { version = "0.32", features = ["bundled-sqlcipher"] }
 # ids are stored in the cache, and std may change its algorithm in any
 # release; this crate won't. Already in the graph via phf.
 siphasher = "1"
+# WKD names a key by the SHA-1 of its address's local part. Already in
+# Cargo.lock as another crate's dependency, so nothing new is downloaded.
+sha1 = "0.10"
 
 # Configuration
 serde = { version = "1", features = ["derive"] }

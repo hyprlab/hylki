@@ -16,11 +16,13 @@ mod cloud;
 mod format;
 mod history;
 mod host;
+mod key_status;
 mod keys;
 mod merge;
 mod merge_fields;
 mod messages;
 mod model;
+mod pgp_check;
 mod send;
 mod send_menu;
 mod setup;
@@ -577,6 +579,13 @@ impl Component for Compose {
             sign: false,
             sign_touched: false,
             sign_expected: None,
+            encrypt_touched: false,
+            encrypt_expected: None,
+            reply_to_encrypted: prefill_encrypt,
+            key_statuses: Default::default(),
+            key_generation: 0,
+            key_badges: false,
+            peer_keys: Vec::new(),
             format,
             zoom_chip,
             format_btn,
@@ -624,6 +633,7 @@ impl Component for Compose {
         let widgets = view_output!();
         if prefill_encrypt && crate::mail::pgp::available() {
             // Through the buttons, so the toggles and the model agree.
+            model.encrypt_expected = Some(true);
             widgets.encrypt_btn.set_active(true);
         } else if sign_default && crate::mail::pgp::available() {
             // A draft does not record whether it was signed, so a reopened
@@ -689,6 +699,8 @@ impl Component for Compose {
         load_suggestions(own_addresses, &sender);
 
         wire_recipient_rows(&widgets, &sender);
+        // The prefilled recipients' keys (a reply's, a draft's).
+        sender.input(ComposeInput::RecipientsChanged);
 
         wire_subject(&widgets, &sender);
 
@@ -831,7 +843,11 @@ impl Component for Compose {
 
                 ComposeInput::CustomFrom(on) => self.on_custom_from(on, widgets),
 
-                ComposeInput::AccountChanged => self.on_account_changed(widgets),
+                ComposeInput::AccountChanged => {
+                    self.on_account_changed(widgets);
+                    // Another From may have another key and preference.
+                    sender.input(ComposeInput::RecipientsChanged);
+                }
 
                 ComposeInput::InsertSignature(place) => self.on_insert_signature(place, widgets),
 
@@ -928,14 +944,16 @@ impl Component for Compose {
                     };
                     self.editor.show_preview(Some(&html));
                 }
-                ComposeInput::ToggleEncrypt(on) => {
-                    self.encrypt = on;
-                    self.editor.pause_grammar(on);
-                    if on && !self.sign {
-                        self.sign = true;
-                        widgets.sign_btn.set_active(true);
-                    }
+                ComposeInput::ToggleEncrypt(on) => self.on_toggle_encrypt(on, widgets),
+                ComposeInput::RecipientsChanged => self.on_recipients_changed(widgets, &sender),
+                ComposeInput::LookUpKeys(generation) => {
+                    self.on_look_up_keys(generation, widgets, &sender)
                 }
+                ComposeInput::KeysFound {
+                    generation,
+                    badges,
+                    statuses,
+                } => self.on_keys_found(generation, badges, statuses, widgets),
                 ComposeInput::ToggleReceipt(on) => {
                     self.request_receipt = on;
                     self.fields_dirty = true;

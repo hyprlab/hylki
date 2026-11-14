@@ -272,7 +272,7 @@ fn build_email_signs_and_encrypts_with_pgp_mime() {
         .to_string();
     assert!(err.contains("keyless@hylki.invalid"), "{err}");
     // The account's chosen key overrides the address match.
-    account.pgp_key = Some(fpr);
+    account.pgp_key = Some(fpr.clone());
     build_email(&account, &msg).expect("chosen key signs");
 
     // A draft of the same message stays plain.
@@ -283,6 +283,85 @@ fn build_email_signs_and_encrypts_with_pgp_mime() {
     };
     let raw = build_email(&account, &plain).expect("builds").formatted();
     assert!(String::from_utf8_lossy(&raw).contains("secret body text"));
+
+    use crate::mail::pgp::autocrypt::{gossip, sender_header, PreferEncrypt};
+    use crate::mail::pgp::discovery::{export_minimal, import_one};
+    use crate::mail::pgp::{encrypted_to, generate_key, unwrap_message, Gpg, Shape};
+    let armored = |raw: &[u8]| match crate::mail::pgp::detect(raw) {
+        Some(Shape::Encrypted { armored }) => armored,
+        other => panic!("not PGP/MIME encrypted: {other:?}"),
+    };
+    account.email = "sender@hylki.invalid".into();
+
+    // Autocrypt on: the sender's key goes with every message, folded.
+    account.autocrypt = true;
+    account.autocrypt_mutual = true;
+    let mut open = sample_outgoing();
+    open.to = "peer@hylki.invalid".into();
+    open.body = "hello".into();
+    let raw = build_email(&account, &open).expect("builds").formatted();
+    let text = String::from_utf8_lossy(&raw).to_string();
+    let head = text.split("\r\n\r\n").next().unwrap_or_default();
+    assert!(head.lines().all(|l| l.len() <= 78), "{head}");
+    let header = sender_header(&raw).expect("a valid Autocrypt header");
+    assert_eq!(header.addr, "sender@hylki.invalid");
+    assert_eq!(header.prefer_encrypt, PreferEncrypt::Mutual);
+    let found = gpg.found_keyring().expect("found keyring");
+    assert_eq!(
+        import_one(&found, &header.keydata, "sender@hylki.invalid").expect("one key"),
+        fpr
+    );
+    assert!(
+        !String::from_utf8_lossy(&build_draft(&account, &open).unwrap().formatted())
+            .contains("Autocrypt:"),
+        "a draft carries no key"
+    );
+
+    // A recipient known only from Hylki's own keyring is encrypted to
+    // once the composer names their key; each of two recipients gets
+    // the other's key as gossip; a Bcc is a hidden recipient.
+    let other_home = home.join("other");
+    let other = Gpg::at(other_home.clone());
+    let found_fpr = generate_key(&other, "", "found@hylki.invalid", "never", "").unwrap();
+    let found_key = export_minimal(&other, &found_fpr, "found@hylki.invalid").unwrap();
+    assert_eq!(
+        import_one(&found, &found_key, "found@hylki.invalid").unwrap(),
+        found_fpr
+    );
+    generate_key(&gpg, "", "bcc@hylki.invalid", "never", "").expect("bcc key");
+    let mut many = msg.clone();
+    many.to = "Peer <peer@hylki.invalid>, found@hylki.invalid".into();
+    many.bcc = "bcc@hylki.invalid".into();
+    let err = build_email(&account, &many)
+        .expect_err("no key for found@ without the composer's")
+        .to_string();
+    assert!(err.contains("found@hylki.invalid"), "{err}");
+    many.peer_keys = vec![("found@hylki.invalid".into(), found_fpr.clone())];
+    let raw = build_email(&account, &many).expect("builds").formatted();
+    let ids = encrypted_to(&gpg, &armored(&raw));
+    assert_eq!(ids.len(), 4, "peer, found, Bcc, sender: {ids:?}");
+    assert_eq!(
+        ids.iter().filter(|i| i.chars().all(|c| c == '0')).count(),
+        1,
+        "the Bcc is hidden: {ids:?}"
+    );
+    let text = String::from_utf8_lossy(&raw).to_string();
+    assert!(!text.contains("Autocrypt-Gossip"), "gossip only inside");
+    let u = unwrap_message(&raw, &other).expect("recognised");
+    assert!(
+        u.status.decrypted,
+        "the found recipient reads it: {:?}",
+        u.status
+    );
+    let inner = u.inner.unwrap();
+    let told = gossip(
+        &inner,
+        &["peer@hylki.invalid".into(), "found@hylki.invalid".into()],
+    );
+    assert_eq!(told.len(), 2, "{}", String::from_utf8_lossy(&inner));
+    assert!(!String::from_utf8_lossy(&inner).contains("bcc@hylki.invalid"));
+    crate::mail::pgp::drop_test_keyring(&other_home);
+    crate::mail::pgp::drop_test_keyring(&home.join("hylki-discovered"));
 
     std::env::remove_var("HYLKI_GNUPGHOME");
     let _ = std::process::Command::new("gpgconf")

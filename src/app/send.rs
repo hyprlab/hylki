@@ -52,6 +52,7 @@ pub(super) fn machine_message(
         importance: Default::default(),
         receipt_report: None,
         merged: false,
+        peer_keys: Vec::new(),
     }
 }
 

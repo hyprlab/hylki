@@ -1946,6 +1946,14 @@ msgstr "Зашифровано для ключа {id}, которого нет �
 msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "Зашифрованный блок повреждён или не содержит данных OpenPGP."
 
+#, fuzzy
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+"Ключ подписи {id} есть в вашей связке ключей, но не отмечен как доверенный; "
+"сверьте его отпечаток с отправителем."
+
 msgid "Revoked"
 msgstr "Отозвано"
 
@@ -3999,6 +4007,34 @@ msgstr "Ещё"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Показать «Копия», «Скрытая копия» и «Адрес для ответа»"
 
+#, fuzzy
+msgid "They prefer encrypted mail."
+msgstr "Скрыть тему зашифрованного письма"
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+#, fuzzy
+msgid "OpenPGP key in your keyring."
+msgstr "Уже в вашей связке ключей"
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
 msgid "Cannot merge an encrypted message"
 msgstr "Невозможно объединить зашифрованное сообщение"
 
@@ -5600,7 +5636,8 @@ msgstr ""
 msgid "Trust"
 msgstr "Доверять"
 
-msgid "The sender's key was imported from the message."
+#, fuzzy
+msgid "The sender's key was taken from the message."
 msgstr "Ключ отправителя импортирован из сообщения."
 
 msgid "The sender's key was fetched and imported."
@@ -5768,6 +5805,26 @@ msgid "The same keyring the gpg command and other mail apps use."
 msgstr ""
 "Тот же набор ключей, который используется командой gpg и другими почтовыми "
 "приложениями."
+
+#, fuzzy
+msgid "Finding keys"
+msgstr "Найти в сообщении"
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr ""
+
+#, fuzzy
+msgid "Look up recipients' keys"
+msgstr "Искать получателей в этом каталоге"
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid "keys.openpgp.org learns who you write to."
+msgstr ""
 
 msgid "Your keys"
 msgstr "Ваши ключи"
@@ -7500,14 +7557,14 @@ msgstr ""
 "Не удалось прочитать пароль для {email} из связки ключей ({e}). Hylki "
 "повторит попытку при следующем подключении."
 
+msgid "no OpenPGP key for {addr}"
+msgstr "нет ключа OpenPGP для {addr}"
+
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 "отсутствует собственный ключ OpenPGP для {addr}; создайте его в разделе "
 "Параметры → OpenPGP"
-
-msgid "no OpenPGP key for {addr}"
-msgstr "нет ключа OpenPGP для {addr}"
 
 msgid "Could not save template: {e}"
 msgstr "Не удалось сохранить шаблон: {e}"
@@ -8162,6 +8219,20 @@ msgstr "Скрыть тему зашифрованного письма"
 
 msgid "Only the recipients see the subject. Others see \"...\"."
 msgstr "Тему видят только получатели. Другие видят «...»."
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Люди в вашей почте"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Раскрывать обсуждения по умолчанию"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
@@ -10176,9 +10247,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Add Directory"
 #~ msgstr "Добавить каталог"
-
-#~ msgid "Look up recipients in this directory"
-#~ msgstr "Искать получателей в этом каталоге"
 
 #, fuzzy
 #~ msgid "Save the CardDAV account?"

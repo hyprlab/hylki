@@ -2098,6 +2098,14 @@ msgstr "Zaszyfrowano dla klucza {id}, którego nie ma w bazie kluczy."
 msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "Zaszyfrowany blok jest uszkodzony lub nie zawiera danych OpenPGP."
 
+#, fuzzy
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+"Klucz podpisujący {id} jest w bazie kluczy, ale nie jest oznaczony jako "
+"zaufany; odcisk klucza należy potwierdzić u nadawcy."
+
 msgid "Revoked"
 msgstr ""
 
@@ -4275,6 +4283,34 @@ msgid "Show Cc, Bcc and Reply-To"
 msgstr "Wyświetl pola „DW”, „UDW” i „Odpowiedź do”"
 
 #, fuzzy
+msgid "They prefer encrypted mail."
+msgstr "Ukrywanie tematu"
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+#, fuzzy
+msgid "OpenPGP key in your keyring."
+msgstr "Klucz jest już w bazie kluczy"
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
+#, fuzzy
 msgid "Cannot merge an encrypted message"
 msgstr "Wiadomość zaszyfrowana"
 
@@ -5945,7 +5981,8 @@ msgstr ""
 msgid "Trust"
 msgstr "Zaufaj"
 
-msgid "The sender's key was imported from the message."
+#, fuzzy
+msgid "The sender's key was taken from the message."
 msgstr "Zaimportowano klucz nadawcy z wiadomości."
 
 msgid "The sender's key was fetched and imported."
@@ -6123,6 +6160,26 @@ msgstr ""
 "Odnaleziono program GnuPG {version}. Aplikacja Hylki odczytuje i zapisuje "
 "jego bazę kluczy – tę samą, której używa polecenie gpg i inne programy "
 "pocztowe."
+
+#, fuzzy
+msgid "Finding keys"
+msgstr "Znajdź w wiadomości"
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr ""
+
+#, fuzzy
+msgid "Look up recipients' keys"
+msgstr "Wyświetl odbiorców"
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid "keys.openpgp.org learns who you write to."
+msgstr ""
 
 msgid "Your keys"
 msgstr "Własne klucze"
@@ -7923,14 +7980,14 @@ msgid ""
 "again at the next connection."
 msgstr ""
 
+msgid "no OpenPGP key for {addr}"
+msgstr "brak klucza OpenPGP dla adresu {addr}"
+
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 "brak własnego klucza OpenPGP dla adresu {addr}; wygeneruj go w oknie "
 "Ustawienia → OpenPGP"
-
-msgid "no OpenPGP key for {addr}"
-msgstr "brak klucza OpenPGP dla adresu {addr}"
 
 #, fuzzy
 msgid "Could not save template: {e}"
@@ -8623,6 +8680,20 @@ msgid "Hide the subject of encrypted mail"
 msgstr "Ukrywanie tematu"
 
 msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr ""
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Dźwięk przy nowej poczcie"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Domyślne rozwijanie rozmów"
+
+msgid "Mail to people who ask for the same is encrypted."
 msgstr ""
 
 #, fuzzy

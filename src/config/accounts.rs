@@ -373,6 +373,15 @@ pub(crate) struct AccountConfig {
     /// negative way round so every account built in code hides it.
     #[serde(default, skip_serializing_if = "is_false")]
     pub(crate) plain_subject: bool,
+    /// Autocrypt (Level 1): this account's mail carries its OpenPGP key in
+    /// an `Autocrypt:` header, and the keys others send that way are kept
+    /// for encrypting to them. Off until the user turns it on.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub(crate) autocrypt: bool,
+    /// The account's Autocrypt preference is `mutual`: mail to people who
+    /// say the same is encrypted by default.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub(crate) autocrypt_mutual: bool,
     /// The composer's recipient suggestions also search the organization's
     /// directory through Microsoft Graph (#410). Only for a Microsoft 365
     /// account signed in within Hylki: the scopes it needs are asked for
@@ -698,6 +707,8 @@ pub(crate) fn blank_account() -> AccountConfig {
         folder_sort: None,
         sign_by_default: false,
         plain_subject: false,
+        autocrypt: false,
+        autocrypt_mutual: false,
         graph_directory: false,
         graph_directory_only: false,
         graph_label_names: false,
@@ -775,6 +786,7 @@ pub(crate) fn load() -> Option<Vec<AccountConfig>> {
                 cfg.accounts.len(),
                 path.display()
             );
+            crate::mail::pgp::discovery::note_accounts(&cfg.accounts);
             Some(cfg.accounts)
         }
         Ok(_) => None,
@@ -798,6 +810,7 @@ pub(crate) fn load() -> Option<Vec<AccountConfig>> {
 /// queued after this call sees them.
 pub(crate) fn save(accounts: &[AccountConfig]) -> std::io::Result<()> {
     write_config(accounts)?;
+    crate::mail::pgp::discovery::note_accounts(accounts);
     prune_avatars(accounts);
     let accounts = accounts.to_vec();
     keyring_later(move || store_secrets(&accounts));

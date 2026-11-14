@@ -253,12 +253,10 @@ pub(super) fn unsent_prefill(
         importance: m.importance,
         outbox_origin: m.outbox_origin,
         reply_addressed_to: String::new(),
-        from_address: m
-            .from_alias
-            .as_deref()
-            .map_or_else(|| account_email.to_string(), |f| {
-                crate::config::split_identity(f).1
-            }),
+        from_address: m.from_alias.as_deref().map_or_else(
+            || account_email.to_string(),
+            |f| crate::config::split_identity(f).1,
+        ),
         custom_from: m.from_alias.clone().unwrap_or_default(),
         send_at: m.send_at,
         cloud_uploads: Vec::new(),
@@ -413,7 +411,10 @@ mod tests {
         m.body = crate::worker::extract_body(b"Content-Type: text/plain\r\n\r\nHello\r\n");
         let own = ["me@example.com".to_string()];
         assert_eq!(super::reply_prefill(&m, "").original, Original::Plain);
-        assert_eq!(super::reply_all_prefill(&m, &own, "").original, Original::Plain);
+        assert_eq!(
+            super::reply_all_prefill(&m, &own, "").original,
+            Original::Plain
+        );
         assert_eq!(super::forward_prefill(&m).original, Original::Plain);
         m.body = "<html><body><p>Hello</p></body></html>".into();
         assert_eq!(super::reply_prefill(&m, "").original, Original::Formatted);
@@ -488,6 +489,7 @@ mod tests {
             importance: crate::models::Importance::High,
             receipt_report: None,
             merged: false,
+            peer_keys: Vec::new(),
         };
         let rich = unsent_prefill(
             crate::worker::OutgoingMessage {
