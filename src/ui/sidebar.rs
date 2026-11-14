@@ -34,7 +34,9 @@ mod unified;
 mod widgets;
 
 pub(crate) use messages::{CtxAction, SidebarInput, SidebarOutput};
-pub(crate) use tree::{folder_depth, order_folders, placed_run, TREE_EXPANDER_WIDTH};
+pub(crate) use tree::{
+    container_ancestors, folder_depth, order_folders, placed_run, TREE_EXPANDER_WIDTH,
+};
 pub(crate) use types::kind_label;
 use types::{InboxRef, KindWidgets, SectionWidgets, UnifiedRow};
 pub(crate) use types::{SectionData, Sel, SidebarInit, Slot, StartTarget, UnifiedFolderRef};

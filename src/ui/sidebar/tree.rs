@@ -67,6 +67,56 @@ pub(super) fn custom_parent<'a>(
         .map(String::from)
 }
 
+/// The tree rows for ancestors the server never offers as mailboxes of
+/// their own: a shared mailbox (Dovecot's, mailcow among them) lists the
+/// way in — `Shared/user@dom` for its mailbox at `Shared/user@dom/INBOX` —
+/// only as `\Noselect` containers the folder listing skips, leaving the
+/// mailboxes under them nothing to nest by. One row per missing ancestor,
+/// so a shared mailbox draws its way in as Roundcube lays it out.
+///
+/// A name the listing keeps as a folder of its own (every level of an
+/// ordinary tree is one) is no container, and neither is anything under
+/// the Inbox (#345 lays that tree out around the Inbox itself). Containers
+/// draw like folders but take no folder work: `childless` keeps New
+/// Folder, a drop into, and a move under them off (#554's rule), and the
+/// row is not selectable — they hold no mail and the server refuses to
+/// open them.
+pub(crate) fn container_ancestors(folders: &[Folder], h: &FolderHierarchy) -> Vec<Folder> {
+    let Some(d) = h.delimiter else {
+        return Vec::new();
+    };
+    let account = folders.first().map_or(0, |f| f.account_id);
+    let mut made: Vec<Folder> = Vec::new();
+    for f in folders
+        .iter()
+        .filter(|f| f.kind == FolderKind::Custom && !under_inbox(&f.path, h))
+    {
+        // Each of the folder's ancestors is a prefix that ends before a
+        // delimiter; the walk stops short of the folder's own name.
+        let mut end = 0;
+        while let Some(at) = f.path[end..].find(d) {
+            end += at;
+            let prefix = &f.path[..end];
+            end += d.len_utf8();
+            if folders.iter().any(|g| g.path.eq_ignore_ascii_case(prefix))
+                || made.iter().any(|g| g.path == prefix)
+            {
+                continue;
+            }
+            made.push(Folder {
+                id: 0,
+                account_id: account,
+                name: h.name_of(h.leaf(prefix)),
+                path: prefix.to_string(),
+                kind: FolderKind::Custom,
+                unread: 0,
+                childless: true,
+            });
+        }
+    }
+    made
+}
+
 /// An account's folders as the sidebar lists them: the main folders first,
 /// in the server's order by kind, then the custom folders as a tree, each
 /// parent's children sorted by `sort`. By name means the name shown (so
@@ -231,9 +281,11 @@ pub(super) fn hidden_by_collapse(
 /// counting delimiters) keeps namespace prefixes honest — "INBOX.Clients" is
 /// top-level on a Dovecot-style server because "INBOX" isn't in the custom
 /// list, while "INBOX.Clients.Acme" is one level down because "INBOX.Clients"
-/// is.
+/// is. By path, not by id: a folder's own row is `is_under` never, and the
+/// way into a shared mailbox draws in rows that carry no ids of their own
+/// (see [`container_ancestors`]).
 pub(crate) fn folder_depth(folder: &Folder, all: &[&Folder], h: &FolderHierarchy) -> usize {
     all.iter()
-        .filter(|g| g.id != folder.id && h.is_under(&folder.path, &g.path))
+        .filter(|g| g.path != folder.path && h.is_under(&folder.path, &g.path))
         .count()
 }

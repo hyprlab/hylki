@@ -5,7 +5,9 @@ use super::dnd::parse_move_payload;
 use super::dnd::{folder_drop_zone, FolderDrop};
 use super::tree::folder_depth;
 use super::tree::hidden_by_collapse;
-use super::tree::{is_main_row, nests_in_inbox, order_folders, placed_run, under_inbox};
+use super::tree::{
+    container_ancestors, is_main_row, nests_in_inbox, order_folders, placed_run, under_inbox,
+};
 use crate::config::FolderSort;
 use crate::models::{Folder, FolderHierarchy, FolderKind};
 
@@ -27,6 +29,87 @@ fn custom(id: u32, path: &str) -> Folder {
         unread: 0,
         childless: false,
     }
+}
+
+#[test]
+fn a_shared_mailbox_draws_the_way_in_as_containers() {
+    // Dovecot offers the way into a shared mailbox (`Shared/user@dom`) only
+    // as \Noselect containers the folder listing skips: the app adds rows
+    // for them, so the mailboxes nest as Roundcube lays the tree out.
+    let h = slash();
+    let mut folders = vec![custom(1, "Shared/u@x.ink/INBOX"), custom(2, "Shared/u@x.ink/Sent")];
+    let containers = container_ancestors(&folders, &h);
+    assert_eq!(
+        containers
+            .iter()
+            .map(|f| f.path.as_str())
+            .collect::<Vec<&str>>(),
+        ["Shared", "Shared/u@x.ink"]
+    );
+    // They hold no mail and take none of a folder's work (New Folder, a
+    // drop into, a move under them), and every level names itself.
+    for c in &containers {
+        assert!(c.childless);
+        assert_eq!(c.account_id, 1);
+        assert_eq!(c.name, c.path.rsplit('/').next().unwrap_or(&c.path));
+    }
+    // The walk puts the way in ahead of the mailboxes it carries.
+    folders.extend(containers);
+    let flat = order_folders(folders, &[], FolderSort::Path, &slash());
+    assert_eq!(
+        flat.iter().map(|f| f.path.as_str()).collect::<Vec<&str>>(),
+        ["Shared", "Shared/u@x.ink", "Shared/u@x.ink/INBOX", "Shared/u@x.ink/Sent"]
+    );
+}
+
+#[test]
+fn folders_the_listing_keeps_are_no_containers() {
+    // "Work" is a listed folder: an ordinary tree needs nothing added, and
+    // a name like the Inbox's own levels stands before the Inbox rule too.
+    let h = slash();
+    let folders = vec![
+        custom(1, "Work"),
+        custom(2, "Work/A"),
+        custom(3, "INBOX/Deep/Leaf"),
+    ];
+    assert!(container_ancestors(&folders, &h).is_empty());
+}
+
+#[test]
+fn a_shared_ancestor_matches_a_listed_folder_by_its_case_too() {
+    // IMAP paths promise no case: an ancestor the listing keeps under its
+    // own spelling is a folder of the user's, not a container.
+    let h = slash();
+    let folders = vec![
+        custom(1, "SHARED"),
+        custom(2, "shared/u@x"),
+        custom(3, "shared/u@x/INBOX"),
+    ];
+    assert!(container_ancestors(&folders, &h).is_empty());
+}
+
+#[test]
+fn a_flat_server_makes_no_containers() {
+    // Nothing nests, so nothing can be missing.
+    let h = FolderHierarchy::imap(None, Some(String::new()));
+    let folders = vec![custom(1, "a/b")];
+    assert!(container_ancestors(&folders, &h).is_empty());
+}
+
+#[test]
+fn containers_count_toward_the_depth_of_the_mailboxes_under_them() {
+    // The way in draws in rows that carry no ids of their own (only the
+    // listing is renumbered): depth follows the hierarchy, not the ids, or
+    // every level under it flattens to the top of the Folders section.
+    let h = slash();
+    let mut folders = vec![custom(1, "Shared/u@x/INBOX"), custom(2, "Shared/u@x/Sent")];
+    folders.extend(container_ancestors(&folders, &h));
+    let refs: Vec<&Folder> = folders.iter().collect();
+    let row = |path: &str| refs.iter().find(|f| f.path == path).unwrap();
+    assert_eq!(folder_depth(row("Shared"), &refs, &slash()), 0);
+    assert_eq!(folder_depth(row("Shared/u@x"), &refs, &slash()), 1);
+    assert_eq!(folder_depth(row("Shared/u@x/INBOX"), &refs, &slash()), 2);
+    assert_eq!(folder_depth(row("Shared/u@x/Sent"), &refs, &slash()), 2);
 }
 
 #[test]
