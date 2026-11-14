@@ -207,7 +207,8 @@ impl AppModel {
         m: crate::worker::OutgoingMessage,
         sender: &ComponentSender<Self>,
     ) {
-        self.open_compose(account_id, unsent_prefill(m), sender);
+        let own = self.email_of_config(account_id);
+        self.open_compose(account_id, unsent_prefill(m, &own), sender);
     }
 
     /// The messages the router sends here (see `AppModel::route`).

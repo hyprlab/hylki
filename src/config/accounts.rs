@@ -460,6 +460,10 @@ pub(crate) struct AliasConfig {
     /// (#640), hence off by default.
     #[serde(default, skip_serializing_if = "is_false")]
     pub(crate) server_saves_sent: bool,
+    /// New messages from the account start from this alias rather than the
+    /// account's own address (#157). One alias per account at most.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub(crate) default_from: bool,
 }
 
 impl Default for AliasConfig {
@@ -471,6 +475,7 @@ impl Default for AliasConfig {
             smtp_username: String::new(),
             smtp_password: String::new(),
             server_saves_sent: false,
+            default_from: false,
         }
     }
 }

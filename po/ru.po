@@ -2500,6 +2500,14 @@ msgstr "Необязательно. Отображается вместо ини
 msgid "Email address"
 msgstr "Адрес электронной почты"
 
+#, fuzzy
+msgid "Default From address"
+msgstr "Введите адрес отправителя"
+
+#, fuzzy
+msgid "New messages from this account start from it."
+msgstr "Добавляется к новым сообщениям, отправляемым с этой учётной записи."
+
 msgid "Sending"
 msgstr "Отправка"
 
@@ -10216,9 +10224,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Apply"
 #~ msgstr "Применить"
-
-#~ msgid "Appended to new messages sent from this account."
-#~ msgstr "Добавляется к новым сообщениям, отправляемым с этой учётной записи."
 
 #~ msgid "HTML"
 #~ msgstr "HTML"

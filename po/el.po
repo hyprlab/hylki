@@ -2527,6 +2527,15 @@ msgstr "Εμφανιζόμενο όνομα (προαιρετικό)"
 msgid "Email address"
 msgstr "Διεύθυνση email"
 
+#, fuzzy
+msgid "Default From address"
+msgstr "Πληκτρολογήστε μια διεύθυνση αποστολέα"
+
+#, fuzzy
+msgid "New messages from this account start from it."
+msgstr ""
+"Προστίθεται στα νέα μηνύματα που αποστέλλονται από αυτόν τον λογαριασμό."
+
 msgid "Sending"
 msgstr "Αποστολή"
 
@@ -10456,10 +10465,6 @@ msgstr "Hyprlab"
 #~ "Ο οργανισμός του αποστολέα επισήμανε αυτό το μήνυμα χωρίς να αναφέρει το "
 #~ "όνομα της ετικέτας. Το Hylki εμφανίζει την ετικέτα, αλλά δεν εφαρμόζει "
 #~ "τους κανόνες της."
-
-#~ msgid "Appended to new messages sent from this account."
-#~ msgstr ""
-#~ "Προστίθεται στα νέα μηνύματα που αποστέλλονται από αυτόν τον λογαριασμό."
 
 #~ msgid "Edit HTML…"
 #~ msgstr "Επεξεργασία HTML…"

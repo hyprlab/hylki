@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Added: an alias can be its account's default From address** (#157,
+  requested by 3v1n0). **Default From address** in an alias's settings
+  makes new messages from the account start from that alias, and replies to
+  mail sent to none of the account's addresses. A reply to one of its
+  addresses still answers from it. The alias list marks the default.
+
 - **Added: Space previews a reader card's attachment** (#625, requested by
   3v1n0). On an attachment chip beneath a message, **Space** shows the file
   as **Space** in the attachment drawer does: a picture or a PDF in Hylki's

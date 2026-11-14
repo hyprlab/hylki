@@ -2643,6 +2643,14 @@ msgstr "Megjelenítendő név (opcionális)"
 msgid "Email address"
 msgstr "E-mail-cím"
 
+#, fuzzy
+msgid "Default From address"
+msgstr "Feladó címe"
+
+#, fuzzy
+msgid "New messages from this account start from it."
+msgstr "Ebből a fiókból elküldött új üzenetekhez csatolva."
+
 msgid "Sending"
 msgstr "Küldés"
 
@@ -10566,9 +10574,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Apply"
 #~ msgstr "Alkalmazás"
-
-#~ msgid "Appended to new messages sent from this account."
-#~ msgstr "Ebből a fiókból elküldött új üzenetekhez csatolva."
 
 #~ msgid "HTML"
 #~ msgstr "HTML"

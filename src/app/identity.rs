@@ -250,6 +250,13 @@ impl AppModel {
             .map(|a| a.email.clone())
     }
 
+    /// An account's own address from its settings, empty for an unknown id.
+    pub(super) fn email_of_config(&self, account_id: u32) -> String {
+        self.account_config(account_id)
+            .map(|c| c.email.clone())
+            .unwrap_or_default()
+    }
+
     /// Every address this account sends as: its own, plus its send-as
     /// aliases (#34). Lower-cased comparison is the caller's job.
     pub(super) fn own_identities(&self, account_id: u32) -> Vec<String> {

@@ -2612,6 +2612,14 @@ msgstr "Nome visualizzato (opzionale)"
 msgid "Email address"
 msgstr "Indirizzo e-mail"
 
+#, fuzzy
+msgid "Default From address"
+msgstr "Digita un indirizzo Da"
+
+#, fuzzy
+msgid "New messages from this account start from it."
+msgstr "Aggiunta ai nuovi messaggi inviati da questo account."
+
 msgid "Sending"
 msgstr "Invio"
 
@@ -10597,9 +10605,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Apply"
 #~ msgstr "Applica"
-
-#~ msgid "Appended to new messages sent from this account."
-#~ msgstr "Aggiunta ai nuovi messaggi inviati da questo account."
 
 #~ msgid "HTML"
 #~ msgstr "HTML"

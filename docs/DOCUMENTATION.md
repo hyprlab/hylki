@@ -1366,6 +1366,13 @@ your addresses starts from that address, and a draft saved from a typed
 address opens with it. Whether the server accepts mail from an address it
 does not know is up to the server: many refuse it, or rewrite it.
 
+An alias can be the account's default From address: **Default From
+address** in the alias's settings. A new message from the account starts
+from it, and so does a reply to mail that was not sent to one of the
+account's addresses, such as a mailing list's. A reply to mail sent to an
+address still answers from that address, and **Settings → Composing → Send
+new messages from** still comes first when it names an address.
+
 Several aliases can share one address under different names, such as a
 manager and a director writing from one shared mailbox, and the account's own
 address can have more names the same way. Mail from a shared address goes

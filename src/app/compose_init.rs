@@ -95,6 +95,7 @@ fn account_identities(
         sign_default,
         alias_from: None,
         signed_as,
+        default_from: false,
     }];
     for alias in cfg.map(|c| c.aliases.as_slice()).unwrap_or_default() {
         let (name, addr) = split_identity(&alias.identity);
@@ -116,6 +117,7 @@ fn account_identities(
             sign_default,
             alias_from: Some(display),
             signed_as: None,
+            default_from: alias.default_from,
         });
     }
     // A JMAP server's own identities (#346), unless the account
@@ -148,6 +150,7 @@ fn account_identities(
             sign_default,
             alias_from: Some(display),
             signed_as: None,
+            default_from: false,
         });
     }
     identities
@@ -157,7 +160,8 @@ fn account_identities(
 /// the original was sent to — mail to an alias is answered as the alias.
 /// For a new message, the default sender chosen in Settings (#157), if
 /// it is one of this account's addresses. Otherwise (and when nothing
-/// matches) the account's own address.
+/// matches) the alias the account marks as its default, else the
+/// account's own address.
 /// A reply to a `+tag` address of one of the account's identities
 /// (#347) answers from that address, as typed, through the identity.
 ///
@@ -230,6 +234,11 @@ fn choose_identity(
                         .position(|c| c.id == account_id && c.email.to_lowercase() == want)
                 })
                 .flatten()
+        })
+        .or_else(|| {
+            accounts
+                .iter()
+                .position(|c| c.id == account_id && c.default_from)
         })
         .or_else(|| {
             accounts
@@ -558,6 +567,39 @@ mod tests {
             choose_identity(&ids, ids[0].id, &mut ComposePrefill::default()),
             0
         );
+    }
+
+    #[test]
+    fn a_default_alias_opens_new_messages_but_not_replies_to_the_account() {
+        let mut config = demo_account_configs();
+        config.truncate(1);
+        config[0].email = "me@x.com".into();
+        config[0].aliases = vec![
+            toml::from_str("identity = \"Info <info@x.com>\"").unwrap(),
+            toml::from_str("identity = \"Sales <sales@x.com>\"\ndefault_from = true")
+                .unwrap(),
+        ];
+        let ids = compose_identities(&[], &config, &HashMap::new());
+        let id = ids[0].id;
+        assert_eq!(choose_identity(&ids, id, &mut ComposePrefill::default()), 2);
+        // Mail to one of the account's addresses is answered from it.
+        let mut reply = ComposePrefill {
+            reply_addressed_to: "me@x.com".into(),
+            ..Default::default()
+        };
+        assert_eq!(choose_identity(&ids, id, &mut reply), 0);
+        // A list's mail, sent to none of them, gets the default.
+        let mut list = ComposePrefill {
+            reply_addressed_to: "list@lists.example".into(),
+            ..Default::default()
+        };
+        assert_eq!(choose_identity(&ids, id, &mut list), 2);
+        // An address chosen elsewhere (Settings, a draft) still wins.
+        let mut chosen = ComposePrefill {
+            from_address: "me@x.com".into(),
+            ..Default::default()
+        };
+        assert_eq!(choose_identity(&ids, id, &mut chosen), 0);
     }
 
     /// B5 in the map: the reply identity is found by substring, so mail to

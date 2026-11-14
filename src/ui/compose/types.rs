@@ -62,6 +62,8 @@ pub(crate) struct ComposeAccount {
     /// the message ("Name <address>"), sent in place of the account's name.
     /// Aliases keep their own names, so this stays `None` for them.
     pub(crate) signed_as: Option<String>,
+    /// The alias the account marks as its default From (#157).
+    pub(crate) default_from: bool,
 }
 
 /// Initial field contents (empty for a new message; populated for reply/forward).

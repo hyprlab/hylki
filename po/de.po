@@ -2510,6 +2510,14 @@ msgstr "Anzeigename (optional)"
 msgid "Email address"
 msgstr "E-Mail-Adresse"
 
+#, fuzzy
+msgid "Default From address"
+msgstr "Absenderadresse eingeben"
+
+#, fuzzy
+msgid "New messages from this account start from it."
+msgstr "Wird an neue Nachrichten dieses Kontos angehängt."
+
 msgid "Sending"
 msgstr "Senden"
 
@@ -10462,9 +10470,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Apply"
 #~ msgstr "Anwenden"
-
-#~ msgid "Appended to new messages sent from this account."
-#~ msgstr "Wird an neue Nachrichten dieses Kontos angehängt."
 
 #~ msgid "HTML"
 #~ msgstr "HTML"

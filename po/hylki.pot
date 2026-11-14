@@ -2332,6 +2332,12 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
+msgid "Default From address"
+msgstr ""
+
+msgid "New messages from this account start from it."
+msgstr ""
+
 msgid "Sending"
 msgstr ""
 

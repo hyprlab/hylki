@@ -2562,6 +2562,15 @@ msgstr "Nom visible (opcional)"
 msgid "Email address"
 msgstr "Adreça de correu electrònic"
 
+#, fuzzy
+msgid "Default From address"
+msgstr "Escriu una adreça de remitent"
+
+#, fuzzy
+msgid "New messages from this account start from it."
+msgstr ""
+"Un missatge s'ha quedat on era: aquest compte no pot rebre correu d'un altre"
+
 msgid "Sending"
 msgstr "Enviament"
 

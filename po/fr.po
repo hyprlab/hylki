@@ -2495,6 +2495,14 @@ msgstr "Nom d’affichage (facultatif)"
 msgid "Email address"
 msgstr "Adresse e-mail"
 
+#, fuzzy
+msgid "Default From address"
+msgstr "Saisir une adresse d’expéditeur"
+
+#, fuzzy
+msgid "New messages from this account start from it."
+msgstr "Ajoutée aux nouveaux messages envoyés depuis ce compte."
+
 msgid "Sending"
 msgstr "Envoi"
 
@@ -10412,9 +10420,6 @@ msgstr "Hyprlab"
 #~ "L'organisation de l'expéditeur a étiqueté ce message, sans indiquer le "
 #~ "nom de l'étiquette. Hylki affiche l'étiquette mais n'applique pas ses "
 #~ "règles."
-
-#~ msgid "Appended to new messages sent from this account."
-#~ msgstr "Ajoutée aux nouveaux messages envoyés depuis ce compte."
 
 #~ msgid "Edit HTML…"
 #~ msgstr "Modifier le HTML…"

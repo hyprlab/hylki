@@ -209,8 +209,13 @@ pub(super) fn forward_prefill(m: &Message) -> ComposePrefill {
 /// A message handed back from Send, as a composer's prefill: by the worker
 /// when nothing could keep it (#340), or by Undo Send (#434). A file that can
 /// no longer be read, the usual reason for the first, is left out: the error
-/// just shown names it.
-pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefill {
+/// just shown names it. `account_email` is the address it was written from
+/// when it was not an alias, so it reopens on that and not on the
+/// account's default alias (#157).
+pub(super) fn unsent_prefill(
+    m: crate::worker::OutgoingMessage,
+    account_email: &str,
+) -> ComposePrefill {
     // Written in plain text, it went with no HTML part (#634).
     let written_plain = m.html.trim().is_empty();
     // Its lines go back in one block, indents kept, as a plain-text
@@ -251,8 +256,9 @@ pub(super) fn unsent_prefill(m: crate::worker::OutgoingMessage) -> ComposePrefil
         from_address: m
             .from_alias
             .as_deref()
-            .map(|f| crate::config::split_identity(f).1)
-            .unwrap_or_default(),
+            .map_or_else(|| account_email.to_string(), |f| {
+                crate::config::split_identity(f).1
+            }),
         custom_from: m.from_alias.clone().unwrap_or_default(),
         send_at: m.send_at,
         cloud_uploads: Vec::new(),
@@ -483,13 +489,16 @@ mod tests {
             receipt_report: None,
             merged: false,
         };
-        let rich = unsent_prefill(crate::worker::OutgoingMessage {
-            html: "<p>rich</p>".into(),
-            ..m.clone()
-        });
+        let rich = unsent_prefill(
+            crate::worker::OutgoingMessage {
+                html: "<p>rich</p>".into(),
+                ..m.clone()
+            },
+            "me@x.org",
+        );
         assert!(!rich.written_plain);
         assert_eq!(rich.body_html, "<p>rich</p>");
-        let p = unsent_prefill(m);
+        let p = unsent_prefill(m, "me@x.org");
         // Sent with no HTML part: it was plain text, and opens as such
         // (#634), its lines in one block.
         assert!(p.written_plain);

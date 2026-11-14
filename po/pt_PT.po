@@ -2500,6 +2500,15 @@ msgstr "Nome de apresentação (opcional)"
 msgid "Email address"
 msgstr "Endereço de e-mail"
 
+#, fuzzy
+msgid "Default From address"
+msgstr "Introduzir um endereço no campo De"
+
+#, fuzzy
+msgid "New messages from this account start from it."
+msgstr ""
+"Uma mensagem não foi movida — não é possível mover correio entre contas"
+
 msgid "Sending"
 msgstr "Envio"
 

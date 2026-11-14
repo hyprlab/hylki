@@ -309,7 +309,7 @@ impl AppModel {
             self.show_message(None, false);
         }
         let account_id = o.account_id;
-        let prefill = unsent_prefill(*o.message);
+        let prefill = unsent_prefill(*o.message, &self.email_of_config(account_id));
         let free = self.reader_compose.is_none() && !self.showing_contacts && !self.showing_outbox;
         match o.origin {
             super::outgoing::Origin::Split(answering)
