@@ -183,12 +183,19 @@ fn editor_view() -> (webkit6::WebView, webkit6::UserContentManager) {
     // otherwise completely silent.
     settings.set_enable_write_console_messages_to_stdout(true);
     webview.set_settings(&settings);
-    // Transparent until the document paints: a fresh WebView otherwise
-    // renders an opaque default surface (black) for its first frames,
-    // which flashes while the inline composer slides over the reader.
-    // The document itself paints `Canvas` below, so the editor's normal
-    // ground appears with the first real frame.
-    webview.set_background_color(&gtk::gdk::RGBA::new(0.0, 0.0, 0.0, 0.0));
+    // Opaque, like the reader's view (message_view::apply_webview_bg):
+    // a WebView with a transparent background keeps an alpha channel in
+    // its surface for its whole life, which the proprietary NVIDIA
+    // driver renders as artifacts through the DMABUF path — the
+    // composer was the only transparent one. Nothing is traded away:
+    // the view sits at opacity 0 until its fade-in, and the document
+    // paints this same ground (see `document()` in documents.rs), so
+    // the first visible frame is unchanged.
+    let (ground, _, _) = crate::ui::message_view::theme_grounds_for(
+        &webview,
+        adw::StyleManager::default().is_dark(),
+    );
+    webview.set_background_color(&crate::ui::message_view::ground_rgba(&ground));
     // The document paints asynchronously: the host panel slides in
     // smoothly and the editor's content would land a beat later as a
     // pop. Start the view invisible and fade it in when its load
