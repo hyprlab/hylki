@@ -2471,9 +2471,6 @@ msgstr "Вернуть эту папку на боковую панель"
 msgid "Sends through {host}"
 msgstr "Отправляет через {host}"
 
-msgid "Sends through this account"
-msgstr "Отправляет через эту учётную запись"
-
 msgid "Remove this alias"
 msgstr "Удалить этот псевдоним"
 
@@ -8012,22 +8009,11 @@ msgstr "Использовать инициалы"
 msgid "Send-as aliases"
 msgstr "Псевдонимы для отправки"
 
-#, fuzzy
-msgid "Extra names and addresses this account can send as."
-msgstr "Дополнительные адреса, от которых может отправлять эта учётная запись."
-
 msgid "Add Alias…"
 msgstr "Добавить псевдоним…"
 
 msgid "Signatures"
 msgstr "Подписи"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
-"Если их несколько, кнопка подписи композитора позволяет вам выбирать между "
-"ними."
 
 msgid "Add Signature"
 msgstr "Добавить подпись"
@@ -8829,6 +8815,21 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "With more than one, the composer's signature button allows you to pick "
+#~ "between them."
+#~ msgstr ""
+#~ "Если их несколько, кнопка подписи композитора позволяет вам выбирать "
+#~ "между ними."
+
+#~ msgid "Sends through this account"
+#~ msgstr "Отправляет через эту учётную запись"
+
+#, fuzzy
+#~ msgid "Extra names and addresses this account can send as."
+#~ msgstr ""
+#~ "Дополнительные адреса, от которых может отправлять эта учётная запись."
 
 #~ msgid "Plain-text mail is answered in plain text."
 #~ msgstr "На письмо с открытым текстом отвечают в виде обычного текста."

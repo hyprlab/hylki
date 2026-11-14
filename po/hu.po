@@ -2612,9 +2612,6 @@ msgstr "Helyezd vissza ezt a mappát az oldalsávba"
 msgid "Sends through {host}"
 msgstr "Küldés ezen keresztül: {host}"
 
-msgid "Sends through this account"
-msgstr "Küldés ezen a fiókon keresztül"
-
 msgid "Remove this alias"
 msgstr "Álnév (alias) eltávolítása"
 
@@ -8389,20 +8386,12 @@ msgstr "Használj kezdőbetűket"
 msgid "Send-as aliases"
 msgstr "Álnevek és címek (alias)"
 
-msgid "Extra names and addresses this account can send as."
-msgstr ""
-
 msgid "Add Alias…"
 msgstr "Álnév (alias) hozzáadása…"
 
 #, fuzzy
 msgid "Signatures"
 msgstr "Aláírás"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
 
 #, fuzzy
 msgid "Add Signature"
@@ -9257,6 +9246,9 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Sends through this account"
+#~ msgstr "Küldés ezen a fiókon keresztül"
 
 #~ msgid "Hide the preview text"
 #~ msgstr "Elrejtés a preview text"

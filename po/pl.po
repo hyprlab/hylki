@@ -2661,9 +2661,6 @@ msgstr "Przywróć ten katalog do panelu bocznego"
 msgid "Sends through {host}"
 msgstr "Wysyła przez {host}"
 
-msgid "Sends through this account"
-msgstr "Wysyła przez to konto"
-
 msgid "Remove this alias"
 msgstr "Usuń ten alias"
 
@@ -8460,20 +8457,12 @@ msgstr "Użyj inicjałów"
 msgid "Send-as aliases"
 msgstr "Aliasy do wysyłania"
 
-msgid "Extra names and addresses this account can send as."
-msgstr ""
-
 msgid "Add Alias…"
 msgstr "Dodaj alias…"
 
 #, fuzzy
 msgid "Signatures"
 msgstr "Podpis"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
 
 #, fuzzy
 msgid "Add Signature"
@@ -9325,6 +9314,9 @@ msgstr "Zbiorcza skrzynka odbiorcza w jasnym motywie"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Sends through this account"
+#~ msgstr "Wysyła przez to konto"
 
 #~ msgid "Hide the preview text"
 #~ msgstr "Ukrywanie podglądu treści"

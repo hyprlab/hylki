@@ -2580,9 +2580,6 @@ msgstr "Riporta questa cartella nella barra laterale"
 msgid "Sends through {host}"
 msgstr "Invia tramite {host}"
 
-msgid "Sends through this account"
-msgstr "Invia tramite questo account"
-
 msgid "Remove this alias"
 msgstr "Rimuovi questo alias"
 
@@ -8311,20 +8308,12 @@ msgstr "Usa iniziali"
 msgid "Send-as aliases"
 msgstr "Alias di invio"
 
-msgid "Extra names and addresses this account can send as."
-msgstr ""
-
 msgid "Add Alias…"
 msgstr "Aggiungi alias…"
 
 #, fuzzy
 msgid "Signatures"
 msgstr "Firma"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
 
 #, fuzzy
 msgid "Add Signature"
@@ -9174,6 +9163,9 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Sends through this account"
+#~ msgstr "Invia tramite questo account"
 
 #~ msgid "Hide the preview text"
 #~ msgstr "Nascondi il testo di anteprima"

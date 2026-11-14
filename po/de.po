@@ -2477,9 +2477,6 @@ msgstr "Diesen Ordner wieder in die Seitenleiste einfügen"
 msgid "Sends through {host}"
 msgstr "Versendet über {host}"
 
-msgid "Sends through this account"
-msgstr "Versendet über dieses Konto"
-
 msgid "Remove this alias"
 msgstr "Alias entfernen"
 
@@ -8095,21 +8092,11 @@ msgstr "Initialen verwenden"
 msgid "Send-as aliases"
 msgstr "Absender-Aliasse"
 
-msgid "Extra names and addresses this account can send as."
-msgstr "Zusätzliche Identitäten und Absenderadressen für dieses Konto."
-
 msgid "Add Alias…"
 msgstr "Alias hinzufügen…"
 
 msgid "Signatures"
 msgstr "Signaturen"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
-"Bei mehreren Einträgen ermöglicht die Signatur-Schaltfläche im Verfassen-"
-"Fenster die Auswahl."
 
 msgid "Add Signature"
 msgstr "Signatur hinzufügen"
@@ -8949,6 +8936,19 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "With more than one, the composer's signature button allows you to pick "
+#~ "between them."
+#~ msgstr ""
+#~ "Bei mehreren Einträgen ermöglicht die Signatur-Schaltfläche im Verfassen-"
+#~ "Fenster die Auswahl."
+
+#~ msgid "Sends through this account"
+#~ msgstr "Versendet über dieses Konto"
+
+#~ msgid "Extra names and addresses this account can send as."
+#~ msgstr "Zusätzliche Identitäten und Absenderadressen für dieses Konto."
 
 #~ msgid "Plain-text mail is answered in plain text."
 #~ msgstr "Text-E-Mails werden als reiner Text beantwortet."

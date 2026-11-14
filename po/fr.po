@@ -2465,9 +2465,6 @@ msgstr "Ramener ce dossier dans la barre latérale"
 msgid "Sends through {host}"
 msgstr "Envoie via {host}"
 
-msgid "Sends through this account"
-msgstr "Envoie via ce compte"
-
 msgid "Remove this alias"
 msgstr "Supprimer cet alias"
 
@@ -8013,22 +8010,11 @@ msgstr "Utiliser les initiales"
 msgid "Send-as aliases"
 msgstr "Alias d’expédition"
 
-#, fuzzy
-msgid "Extra names and addresses this account can send as."
-msgstr "Adresses supplémentaires depuis lesquelles ce compte peut envoyer."
-
 msgid "Add Alias…"
 msgstr "Ajouter un alias…"
 
 msgid "Signatures"
 msgstr "Signatures"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
-"Avec plusieurs signatures, le bouton de signature de la fenêtre de rédaction "
-"permet de choisir entre elles."
 
 msgid "Add Signature"
 msgstr "Ajouter une signature"
@@ -8853,6 +8839,20 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "With more than one, the composer's signature button allows you to pick "
+#~ "between them."
+#~ msgstr ""
+#~ "Avec plusieurs signatures, le bouton de signature de la fenêtre de "
+#~ "rédaction permet de choisir entre elles."
+
+#~ msgid "Sends through this account"
+#~ msgstr "Envoie via ce compte"
+
+#, fuzzy
+#~ msgid "Extra names and addresses this account can send as."
+#~ msgstr "Adresses supplémentaires depuis lesquelles ce compte peut envoyer."
 
 #~ msgid "Plain-text mail is answered in plain text."
 #~ msgstr "Le courrier en texte brut reçoit une réponse en texte brut."

@@ -2303,9 +2303,6 @@ msgstr ""
 msgid "Sends through {host}"
 msgstr ""
 
-msgid "Sends through this account"
-msgstr ""
-
 msgid "Remove this alias"
 msgstr ""
 
@@ -7434,18 +7431,10 @@ msgstr ""
 msgid "Send-as aliases"
 msgstr ""
 
-msgid "Extra names and addresses this account can send as."
-msgstr ""
-
 msgid "Add Alias…"
 msgstr ""
 
 msgid "Signatures"
-msgstr ""
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
 msgstr ""
 
 msgid "Add Signature"

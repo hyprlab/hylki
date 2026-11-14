@@ -2462,9 +2462,6 @@ msgstr "Volver a mostrar esta carpeta en la barra lateral"
 msgid "Sends through {host}"
 msgstr "Envía mediante {host}"
 
-msgid "Sends through this account"
-msgstr "Envía mediante esta cuenta"
-
 msgid "Remove this alias"
 msgstr "Eliminar este alias"
 
@@ -8040,23 +8037,11 @@ msgstr "Usar iniciales"
 msgid "Send-as aliases"
 msgstr "Alias de envío"
 
-msgid "Extra names and addresses this account can send as."
-msgstr ""
-"Nombres y direcciones adicionales con los que esta cuenta puede enviar "
-"correo."
-
 msgid "Add Alias…"
 msgstr "Añadir alias…"
 
 msgid "Signatures"
 msgstr "Firmas"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
-"Si tienes varias firmas, el botón de firmas del editor te permite elegir "
-"entre ellas."
 
 msgid "Add Signature"
 msgstr "Añadir firma"
@@ -8877,6 +8862,21 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "With more than one, the composer's signature button allows you to pick "
+#~ "between them."
+#~ msgstr ""
+#~ "Si tienes varias firmas, el botón de firmas del editor te permite elegir "
+#~ "entre ellas."
+
+#~ msgid "Sends through this account"
+#~ msgstr "Envía mediante esta cuenta"
+
+#~ msgid "Extra names and addresses this account can send as."
+#~ msgstr ""
+#~ "Nombres y direcciones adicionales con los que esta cuenta puede enviar "
+#~ "correo."
 
 #~ msgid "Plain-text mail is answered in plain text."
 #~ msgstr "Los mensajes de texto sin formato se responden también sin formato."

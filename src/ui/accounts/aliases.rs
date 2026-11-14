@@ -89,11 +89,14 @@ impl AccountsWindow {
             let row = adw::ActionRow::new();
             row.set_activatable(true);
             row.set_title(&gtk::glib::markup_escape_text(&alias.identity));
-            row.set_subtitle(&gtk::glib::markup_escape_text(&if alias.has_own_smtp() {
-                i18n_f("Sends through {host}", &[("host", &alias.smtp_host)])
-            } else {
-                i18n("Sends through this account")
-            }));
+            // Only an alias with a server of its own says so; the rest send
+            // through the account, which goes without saying.
+            if alias.has_own_smtp() {
+                row.set_subtitle(&gtk::glib::markup_escape_text(&i18n_f(
+                    "Sends through {host}",
+                    &[("host", &alias.smtp_host)],
+                )));
+            }
 
             if alias.default_from {
                 let tag = gtk::Label::new(Some(i18n("Default").as_str()));

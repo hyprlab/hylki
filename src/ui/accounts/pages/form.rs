@@ -531,9 +531,6 @@ impl EditorForm {
                 #[name = "aliases_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Send-as aliases"),
-                    set_description: Some(
-                        i18n("Extra names and addresses this account can send as.").as_str()
-                    ),
 
                     // At the header's end, styled like the Add
                     // Filter…, Add Tag… and cloud Add Account…
@@ -564,10 +561,6 @@ impl EditorForm {
                 #[name = "signatures_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Signatures"),
-                    set_description: Some(
-                        i18n("With more than one, the composer's signature button allows you to pick between them.")
-                            .as_str()
-                    ),
                     // A designed signature usually exists as HTML
                     // already (#120): bring it in from its file.
                     // Its source is edited in place, from the

@@ -2459,9 +2459,6 @@ msgstr "Voltar a mostrar esta pasta na barra lateral"
 msgid "Sends through {host}"
 msgstr "Envia através de {host}"
 
-msgid "Sends through this account"
-msgstr "Envia através desta conta"
-
 msgid "Remove this alias"
 msgstr "Remover este endereço alternativo"
 
@@ -8010,22 +8007,11 @@ msgstr "Usar iniciais"
 msgid "Send-as aliases"
 msgstr "Endereços alternativos de envio"
 
-msgid "Extra names and addresses this account can send as."
-msgstr ""
-"Nomes e endereços adicionais que esta conta pode usar para enviar mensagens."
-
 msgid "Add Alias…"
 msgstr "Adicionar endereço alternativo…"
 
 msgid "Signatures"
 msgstr "Assinaturas"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
-"Se houver mais de uma, o botão de assinatura do editor de mensagens permite "
-"escolher entre elas."
 
 msgid "Add Signature"
 msgstr "Adicionar assinatura"
@@ -8838,6 +8824,21 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "With more than one, the composer's signature button allows you to pick "
+#~ "between them."
+#~ msgstr ""
+#~ "Se houver mais de uma, o botão de assinatura do editor de mensagens "
+#~ "permite escolher entre elas."
+
+#~ msgid "Sends through this account"
+#~ msgstr "Envia através desta conta"
+
+#~ msgid "Extra names and addresses this account can send as."
+#~ msgstr ""
+#~ "Nomes e endereços adicionais que esta conta pode usar para enviar "
+#~ "mensagens."
 
 #~ msgid "Plain-text mail is answered in plain text."
 #~ msgstr ""

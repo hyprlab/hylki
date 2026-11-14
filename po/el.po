@@ -2498,9 +2498,6 @@ msgstr "Επαναφορά αυτού του φακέλου στην πλευρ�
 msgid "Sends through {host}"
 msgstr "Αποστολή μέσω {host}"
 
-msgid "Sends through this account"
-msgstr "Αποστολή μέσω αυτού του λογαριασμού"
-
 msgid "Remove this alias"
 msgstr "Αφαίρεση αυτού του ψευδωνύμου"
 
@@ -8105,22 +8102,11 @@ msgstr "Χρήση αρχικών"
 msgid "Send-as aliases"
 msgstr "Ψευδώνυμα αποστολέα"
 
-#, fuzzy
-msgid "Extra names and addresses this account can send as."
-msgstr "Πρόσθετες διευθύνσεις αποστολής για αυτόν τον λογαριασμό."
-
 msgid "Add Alias…"
 msgstr "Προσθήκη ψευδωνύμου…"
 
 msgid "Signatures"
 msgstr "Υπογραφές"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
-"Με περισσότερες από μία υπογραφές, το κουμπί υπογραφής στη σύνταξη επιτρέπει "
-"την επιλογή τους."
 
 msgid "Add Signature"
 msgstr "Προσθήκη υπογραφής"
@@ -8956,6 +8942,20 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "With more than one, the composer's signature button allows you to pick "
+#~ "between them."
+#~ msgstr ""
+#~ "Με περισσότερες από μία υπογραφές, το κουμπί υπογραφής στη σύνταξη "
+#~ "επιτρέπει την επιλογή τους."
+
+#~ msgid "Sends through this account"
+#~ msgstr "Αποστολή μέσω αυτού του λογαριασμού"
+
+#, fuzzy
+#~ msgid "Extra names and addresses this account can send as."
+#~ msgstr "Πρόσθετες διευθύνσεις αποστολής για αυτόν τον λογαριασμό."
 
 #~ msgid "Plain-text mail is answered in plain text."
 #~ msgstr "Τα μηνύματα απλού κειμένου απαντώνται σε απλό κείμενο."

@@ -2533,9 +2533,6 @@ msgstr "Torna a portar aquesta carpeta a la barra lateral"
 msgid "Sends through {host}"
 msgstr "Envia a través de {host}"
 
-msgid "Sends through this account"
-msgstr "Envia a través d'aquest compte"
-
 msgid "Remove this alias"
 msgstr "Elimina aquest àlies"
 
@@ -8121,21 +8118,11 @@ msgstr "Utilitza les inicials"
 msgid "Send-as aliases"
 msgstr "Àlies d'enviament"
 
-#, fuzzy
-msgid "Extra names and addresses this account can send as."
-msgstr "Adreces addicionals amb què aquest compte pot enviar."
-
 msgid "Add Alias…"
 msgstr "Afegeix un àlies…"
 
 msgid "Signatures"
 msgstr "Signatures"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
-"Amb més d'una, el botó de signatura del redactor et permet triar entre elles."
 
 msgid "Add Signature"
 msgstr "Afegeix una signatura"
@@ -8948,6 +8935,20 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "With more than one, the composer's signature button allows you to pick "
+#~ "between them."
+#~ msgstr ""
+#~ "Amb més d'una, el botó de signatura del redactor et permet triar entre "
+#~ "elles."
+
+#~ msgid "Sends through this account"
+#~ msgstr "Envia a través d'aquest compte"
+
+#, fuzzy
+#~ msgid "Extra names and addresses this account can send as."
+#~ msgstr "Adreces addicionals amb què aquest compte pot enviar."
 
 #~ msgid "Plain-text mail is answered in plain text."
 #~ msgstr "El correu de text pla es respon en text pla."
