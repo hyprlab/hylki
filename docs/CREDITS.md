@@ -159,13 +159,14 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   [#599](https://github.com/hyprlab/hylki/pull/599),
   [#600](https://github.com/hyprlab/hylki/pull/600),
   [#601](https://github.com/hyprlab/hylki/pull/601),
-  [#602](https://github.com/hyprlab/hylki/pull/602)): the gap above a message
+  [#602](https://github.com/hyprlab/hylki/pull/602),
+  [#603](https://github.com/hyprlab/hylki/pull/603)): the gap above a message
   card reached with `w` or `b`, Drafts shown from the cache after a send from a
   Microsoft account, OpenPGP checks of the Bcc keys, the signer and unchecked
   keys, a warning before opening a program or a script, trackers taken off
   links, owner-only exports and local mail files with the Flatpak attachment
   purge, a settings export without OAuth client secrets, the encrypted
-  mail cache, and Autocrypt with recipient key lookups.
+  mail cache, Autocrypt with recipient key lookups, and encrypted drafts.
 - [**Alp Sahin**](https://github.com/AlpSha) ([#593](https://github.com/hyprlab/hylki/issues/593)):
   text in the accent's foreground color on the accent, and a theme picked in
   Settings shown over the colors of a user's `gtk.css`.

@@ -188,7 +188,10 @@ impl AppModel {
     }
 
     /// Open the compose editor on a draft's own bytes: everything it was
-    /// saved with, its files written out for the composer to attach.
+    /// saved with, its files written out for the composer to attach. An
+    /// encrypted draft is decrypted first, off the main thread, as gpg may
+    /// ask for the passphrase; the editor opens when it answers (see the
+    /// `DraftDecrypted` handler).
     pub(super) fn compose_from_draft_raw(
         &mut self,
         m: Message,
@@ -197,7 +200,31 @@ impl AppModel {
         extra: HandOffFiles,
         sender: &ComponentSender<Self>,
     ) {
+        if crate::mail::pgp::is_encrypted(raw) {
+            let token = self.next_transfer;
+            self.next_transfer += 1;
+            self.pending_sealed_draft = Some((token, m, inline, extra));
+            let raw = raw.to_vec();
+            let s = sender.input_sender().clone();
+            std::thread::spawn(move || {
+                let raw = crate::worker::decrypt_draft(&raw);
+                let _ = s.send(AppMsg::DraftDecrypted { token, raw });
+            });
+            return;
+        }
         let e = crate::worker::editable_from_raw(raw, &[]);
+        self.compose_from_editable(m, e, inline, extra, sender);
+    }
+
+    /// The editor on a draft taken apart (and decrypted, if it was).
+    pub(super) fn compose_from_editable(
+        &mut self,
+        m: Message,
+        e: crate::worker::EditableMessage,
+        inline: bool,
+        extra: HandOffFiles,
+        sender: &ComponentSender<Self>,
+    ) {
         let mut attachments = stage_attachments(
             &format!("hylki-draft-{}-{}", m.account_id, m.uid),
             &e.attachments,
@@ -214,6 +241,7 @@ impl AppModel {
             references: e.references,
             receipt: Some(e.receipt),
             importance: e.importance,
+            encrypt: e.encrypt,
             from_address: first_recipient(&e.from)
                 .map(|(_, addr)| addr)
                 .unwrap_or_default(),

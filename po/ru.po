@@ -1619,6 +1619,10 @@ msgstr ""
 msgid "Could not save the message: {e}"
 msgstr "Не удалось сохранить сообщение: {e}"
 
+#, fuzzy
+msgid "Could not decrypt the draft: {e}"
+msgstr "Не удалось очистить папку: {e}"
+
 msgid "Open Hylki"
 msgstr "Открыть Hylki"
 
@@ -7556,6 +7560,14 @@ msgid ""
 msgstr ""
 "Не удалось прочитать пароль для {email} из связки ключей ({e}). Hylki "
 "повторит попытку при следующем подключении."
+
+#, fuzzy
+msgid "The draft is not an OpenPGP message."
+msgstr "это не сообщение Outlook"
+
+#, fuzzy
+msgid "The draft could not be decrypted."
+msgstr "Не удалось открыть файл"
 
 msgid "no OpenPGP key for {addr}"
 msgstr "нет ключа OpenPGP для {addr}"

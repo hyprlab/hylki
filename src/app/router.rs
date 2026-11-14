@@ -399,9 +399,9 @@ impl AppModel {
             | AppMsg::MovesSettled { .. }
             | AppMsg::FolderUnreadByPath { .. }
             | AppMsg::BodyHits { .. }) => self.on_events_folders(msg, sender),
-            msg @ (AppMsg::RawExported { .. } | AppMsg::RawImported { .. }) => {
-                self.on_transfer(msg, sender)
-            }
+            msg @ (AppMsg::RawExported { .. }
+            | AppMsg::RawImported { .. }
+            | AppMsg::DraftDecrypted { .. }) => self.on_transfer(msg, sender),
             msg @ (AppMsg::Messages { .. }
             | AppMsg::MessagesAppend { .. }
             | AppMsg::BackfillDone { .. }

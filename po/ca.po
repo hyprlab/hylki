@@ -1636,6 +1636,10 @@ msgstr ""
 msgid "Could not save the message: {e}"
 msgstr "No s'ha pogut desar el missatge: {e}"
 
+#, fuzzy
+msgid "Could not decrypt the draft: {e}"
+msgstr "No s'ha pogut buidar la carpeta: {e}"
+
 msgid "Open Hylki"
 msgstr "Obre l'Hylki"
 
@@ -7659,6 +7663,14 @@ msgid ""
 msgstr ""
 "No s'ha pogut llegir la contrasenya de {email} de l'anell de claus ({e}). "
 "L'Hylki ho tornarà a provar a la propera connexió."
+
+#, fuzzy
+msgid "The draft is not an OpenPGP message."
+msgstr "no és un missatge de l'Outlook"
+
+#, fuzzy
+msgid "The draft could not be decrypted."
+msgstr "No s'ha pogut obrir el fitxer"
 
 msgid "no OpenPGP key for {addr}"
 msgstr "no hi ha cap clau OpenPGP per a {addr}"

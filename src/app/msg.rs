@@ -1435,6 +1435,13 @@ pub(crate) enum AppMsg {
         token: u64,
         result: Result<(), String>,
     },
+    /// An encrypted draft decrypted for its editor (the pending sealed
+    /// draft's `token`): the message with its protected headers, or why
+    /// it could not be.
+    DraftDecrypted {
+        token: u64,
+        raw: Result<Vec<u8>, String>,
+    },
 
     // ---- on_events_messages (events_messages.rs) ----
     /// A worker sent a folder's messages.

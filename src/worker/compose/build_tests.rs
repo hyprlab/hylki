@@ -293,6 +293,58 @@ fn build_email_signs_and_encrypts_with_pgp_mime() {
     };
     account.email = "sender@hylki.invalid".into();
 
+    // An encrypted draft (Autocrypt Level 1): to the sender alone, never
+    // signed, with the subject and the Bcc inside and its state outside.
+    msg.bcc = "Hidden <hidden@hylki.invalid>".into();
+    let draft = build_draft(&account, &msg)
+        .expect("draft builds")
+        .formatted();
+    let text = String::from_utf8_lossy(&draft).to_string();
+    assert!(text.contains("multipart/encrypted"), "{text}");
+    for secret in ["secret body text", "Secret plans", "hidden@hylki.invalid"] {
+        assert!(!text.contains(secret), "{secret} must not appear: {text}");
+    }
+    assert!(
+        text.contains("Autocrypt-Draft-State: encrypt=yes"),
+        "{text}"
+    );
+    assert_eq!(
+        encrypted_to(&gpg, &armored(&draft)).len(),
+        1,
+        "to the sender alone"
+    );
+    // The cache keeps the draft as the server has it, encrypted.
+    let cache = crate::cache::Cache::in_memory().expect("cache");
+    cache.save_draft_copy(1, "Drafts", 9, "d@x", 1, &draft);
+    let kept = cache
+        .load_draft_copy(1, "Drafts", 9, "d@x", 1)
+        .expect("kept");
+    assert!(!String::from_utf8_lossy(&kept).contains("secret body text"));
+    // Opened again: decrypted, everything back, still to be encrypted.
+    let opened = crate::worker::decrypt_draft(&kept).expect("decrypts");
+    let e = crate::worker::editable_from_raw(&opened, &[]);
+    assert_eq!(e.subject, "Secret plans");
+    assert_eq!(e.to, "Peer <peer@hylki.invalid>");
+    assert_eq!(e.bcc, "Hidden <hidden@hylki.invalid>");
+    assert!(e.body_html.contains("secret body text"), "{}", e.body_html);
+    assert!(e.encrypt);
+    // Without a key of the user's own the draft is still kept, readable,
+    // and still opens to be sent encrypted.
+    let mut keyless = account.clone();
+    keyless.email = "keyless@hylki.invalid".into();
+    keyless.pgp_key = None;
+    let kept = build_draft(&keyless, &msg)
+        .expect("kept all the same")
+        .formatted();
+    let text = String::from_utf8_lossy(&kept).to_string();
+    assert!(text.contains("secret body text"), "{text}");
+    assert!(text.contains("Secret plans"), "{text}");
+    assert!(
+        crate::worker::editable_from_raw(&kept, &[]).encrypt,
+        "{text}"
+    );
+    msg.bcc.clear();
+
     // Autocrypt on: the sender's key goes with every message, folded.
     account.autocrypt = true;
     account.autocrypt_mutual = true;

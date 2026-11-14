@@ -232,6 +232,7 @@ impl AppModel {
             vouchers: Default::default(),
             pending_draft: None,
             pending_draft_token: None,
+            pending_sealed_draft: None,
             draft_fetches: Default::default(),
             pending_reply: None,
             pending_draft_pick: None,

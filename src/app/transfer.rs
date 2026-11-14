@@ -707,6 +707,29 @@ impl AppModel {
                 Ok(()) => self.transfer_landed(token),
                 Err(e) => self.transfer_failed(token, e),
             },
+            AppMsg::DraftDecrypted { token, raw } => {
+                let Some((t, m, inline, extra)) = self.pending_sealed_draft.take() else {
+                    return;
+                };
+                // Another draft was opened since: this one is not wanted.
+                if t != token {
+                    self.pending_sealed_draft = Some((t, m, inline, extra));
+                    return;
+                }
+                match raw {
+                    Ok(plain) => {
+                        let mut e = crate::worker::editable_from_raw(&plain, &[]);
+                        // It was encrypted, so it goes out encrypted, whatever
+                        // wrote it and whether or not it said so.
+                        e.encrypt = true;
+                        self.compose_from_editable(m, e, inline, extra, &sender);
+                    }
+                    Err(e) => {
+                        tracing::warn!("draft {} could not be decrypted: {e}", m.uid);
+                        self.notice_error(i18n_f("Could not decrypt the draft: {e}", &[("e", &e)]));
+                    }
+                }
+            }
             _ => unreachable!("not routed to on_transfer"),
         }
     }

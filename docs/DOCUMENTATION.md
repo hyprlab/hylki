@@ -1821,7 +1821,7 @@ in the composer moves Sign to the new account's setting until you press Sign
 yourself; after that the composer leaves it as you set it. Stored on the
 account as `sign_by_default = true` in `accounts.toml`.
 
-**Autocrypt and found keys**
+**Autocrypt, found keys and encrypted drafts**
 
 Turn on **Send your key with your mail** under an account's *OpenPGP* group
 and every message from it carries your public key in an `Autocrypt:` header
@@ -1854,6 +1854,13 @@ with. **Look up recipients' keys** asks each recipient's own domain (WKD) a
 moment after you add them, which tells that domain that you are writing to
 the address. **Also ask a keyserver** asks keys.openpgp.org for addresses WKD
 has nothing for, which tells it who you write to.
+
+A draft of a message set to be encrypted is saved encrypted to your key alone,
+with its subject, recipients and Bcc inside, so neither the server nor the
+cache holds its text. Opening it again asks for your passphrase if the agent
+needs it, and the message opens with Encrypt on. This works for IMAP, JMAP and
+Microsoft 365 accounts. Without a key of your own for the From address, the
+draft is saved readable, as it was before.
 
 **Reading the result**
 

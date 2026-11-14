@@ -26,6 +26,12 @@
   added, and **Also ask a keyserver** asks keys.openpgp.org; both are off to
   start with.
 
+- **Fixed: drafts of encrypted messages were saved readable** (#603, by
+  James Reilly) on the server and in the cache. A draft of a message set to
+  be encrypted is now encrypted to the user's own key, with its subject and
+  recipients inside, and decrypted when opened again, with Encrypt on.
+  Without a key of the user's own it is still saved readable.
+
 - **Added: Space previews a reader card's attachment** (#625, requested by
   3v1n0). On an attachment chip beneath a message, **Space** shows the file
   as **Space** in the attachment drawer does: a picture or a PDF in Hylki's
