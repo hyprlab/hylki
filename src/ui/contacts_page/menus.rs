@@ -215,8 +215,11 @@ pub(super) fn new_menu(button: &gtk::Button, sender: &ComponentSender<ContactsPa
 }
 
 /// The address book dropdown's labels; `ellipsize` for its own, which
-/// the pane's width holds.
-pub(super) fn book_label_factory(ellipsize: bool) -> gtk::SignalListItemFactory {
+/// the pane's width holds. Each label also gets its whole text as a
+/// tooltip, so a name cut off on the row or squeezed in the popup (two
+/// books of one CardDAV account begin with the same long prefix, and the
+/// choice between them lives in the cut-off tail) still reads on a hover.
+pub(crate) fn book_label_factory(ellipsize: bool) -> gtk::SignalListItemFactory {
     let factory = gtk::SignalListItemFactory::new();
     factory.connect_setup(move |_, item| {
         let Some(item) = item.downcast_ref::<gtk::ListItem>() else {
@@ -226,6 +229,10 @@ pub(super) fn book_label_factory(ellipsize: bool) -> gtk::SignalListItemFactory 
         label.set_xalign(0.0);
         if ellipsize {
             label.set_ellipsize(gtk::pango::EllipsizeMode::End);
+            // The room the row's own label asks before giving way: the
+            // default combo factory's, so the row keeps holding its width.
+            label.set_max_width_chars(20);
+            label.set_width_chars(1);
         }
         item.set_child(Some(&label));
     });
@@ -239,7 +246,11 @@ pub(super) fn book_label_factory(ellipsize: bool) -> gtk::SignalListItemFactory 
         ) else {
             return;
         };
-        label.set_label(&text.string());
+        let name = text.string();
+        label.set_label(&name);
+        // A GtkListItem is not a widget, so the tooltip goes on its label:
+        // hovering the row's value or a popup line reads the name whole.
+        label.set_tooltip_text(Some(name.as_str()));
     });
     factory
 }
