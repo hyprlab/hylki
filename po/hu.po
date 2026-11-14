@@ -2629,11 +2629,6 @@ msgstr "Álnév (alias) hozzáadása…"
 msgid "Save"
 msgstr "Mentés"
 
-msgid ""
-"Will appear in the composer's From menu. Replies to mail sent here will come "
-"from this address."
-msgstr ""
-
 msgid "Display name (optional)"
 msgstr "Megjelenítendő név (opcionális)"
 

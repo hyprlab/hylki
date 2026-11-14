@@ -2598,11 +2598,6 @@ msgstr "Aggiungi alias"
 msgid "Save"
 msgstr "Salva"
 
-msgid ""
-"Will appear in the composer's From menu. Replies to mail sent here will come "
-"from this address."
-msgstr ""
-
 msgid "Display name (optional)"
 msgstr "Nome visualizzato (opzionale)"
 

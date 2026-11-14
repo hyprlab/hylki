@@ -2484,13 +2484,6 @@ msgstr "Adicionar endereço alternativo"
 msgid "Save"
 msgstr "Guardar"
 
-msgid ""
-"Will appear in the composer's From menu. Replies to mail sent here will come "
-"from this address."
-msgstr ""
-"Aparece no menu De da janela de composição. As respostas às mensagens "
-"enviadas para este endereço serão enviadas a partir dele."
-
 msgid "Display name (optional)"
 msgstr "Nome de apresentação (opcional)"
 
@@ -8851,6 +8844,13 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Will appear in the composer's From menu. Replies to mail sent here will "
+#~ "come from this address."
+#~ msgstr ""
+#~ "Aparece no menu De da janela de composição. As respostas às mensagens "
+#~ "enviadas para este endereço serão enviadas a partir dele."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."

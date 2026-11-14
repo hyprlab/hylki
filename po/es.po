@@ -2478,13 +2478,6 @@ msgstr "Añadir alias"
 msgid "Save"
 msgstr "Guardar"
 
-msgid ""
-"Will appear in the composer's From menu. Replies to mail sent here will come "
-"from this address."
-msgstr ""
-"Aparecerá en el menú De del redactor. Las respuestas al correo enviado a "
-"esta dirección se enviarán desde ella."
-
 msgid "Display name (optional)"
 msgstr "Nombre para mostrar (opcional)"
 
@@ -8858,6 +8851,13 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Will appear in the composer's From menu. Replies to mail sent here will "
+#~ "come from this address."
+#~ msgstr ""
+#~ "Aparecerá en el menú De del redactor. Las respuestas al correo enviado a "
+#~ "esta dirección se enviarán desde ella."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."

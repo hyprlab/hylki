@@ -181,13 +181,6 @@ impl AccountsWindow {
 
         let (name, addr) = split_identity(&alias.identity);
         let identity_group = adw::PreferencesGroup::new();
-        identity_group.set_description(Some(
-            i18n(
-                "Will appear in the composer's From menu. Replies to mail sent here will come \
-                 from this address.",
-            )
-            .as_str(),
-        ));
         let name_row = adw::EntryRow::builder()
             .title(i18n("Display name (optional)"))
             .build();

@@ -2548,11 +2548,6 @@ msgstr "Afegeix un àlies"
 msgid "Save"
 msgstr "Desa"
 
-msgid ""
-"Will appear in the composer's From menu. Replies to mail sent here will come "
-"from this address."
-msgstr ""
-
 msgid "Display name (optional)"
 msgstr "Nom visible (opcional)"
 

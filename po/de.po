@@ -2494,13 +2494,6 @@ msgstr "Alias hinzufügen"
 msgid "Save"
 msgstr "Speichern"
 
-msgid ""
-"Will appear in the composer's From menu. Replies to mail sent here will come "
-"from this address."
-msgstr ""
-"Auswahl im Menü »Von« beim Verfassen möglich. Antworten auf hier eingehende "
-"Nachrichten nutzen diese Adresse."
-
 msgid "Display name (optional)"
 msgstr "Anzeigename (optional)"
 
@@ -8932,6 +8925,13 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Will appear in the composer's From menu. Replies to mail sent here will "
+#~ "come from this address."
+#~ msgstr ""
+#~ "Auswahl im Menü »Von« beim Verfassen möglich. Antworten auf hier "
+#~ "eingehende Nachrichten nutzen diese Adresse."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."
