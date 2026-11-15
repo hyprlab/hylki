@@ -999,6 +999,12 @@ msgstr "Desde {date}"
 msgid "Until {date}"
 msgstr "Hasta {date}"
 
+msgid "Sender"
+msgstr "Remitente"
+
+msgid "Recipients"
+msgstr "Destinatarios"
+
 msgid "Sort by"
 msgstr "Ordenar por"
 
@@ -1875,12 +1881,6 @@ msgstr "Firma"
 
 msgid "Replied"
 msgstr "Respondido"
-
-msgid "Sender"
-msgstr "Remitente"
-
-msgid "Recipients"
-msgstr "Destinatarios"
 
 msgid "Correspondents"
 msgstr "Correspondientes"

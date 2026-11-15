@@ -1055,6 +1055,14 @@ msgstr "lejár: {date}"
 msgid "Until {date}"
 msgstr "lejár: {date}"
 
+#, fuzzy
+msgid "Sender"
+msgstr "Feladók"
+
+#, fuzzy
+msgid "Recipients"
+msgstr "Címzettek elrejtése"
+
 msgid "Sort by"
 msgstr "Rendezés"
 
@@ -1991,14 +1999,6 @@ msgstr "Aláírás"
 #, fuzzy
 msgid "Replied"
 msgstr "Válasz"
-
-#, fuzzy
-msgid "Sender"
-msgstr "Feladók"
-
-#, fuzzy
-msgid "Recipients"
-msgstr "Címzettek elrejtése"
 
 msgid "Correspondents"
 msgstr ""

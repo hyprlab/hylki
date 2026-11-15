@@ -1051,6 +1051,12 @@ msgstr "scade il {date}"
 msgid "Until {date}"
 msgstr "scade il {date}"
 
+msgid "Sender"
+msgstr "Mittente"
+
+msgid "Recipients"
+msgstr "Destinatari"
+
 msgid "Sort by"
 msgstr "Ordina per"
 
@@ -1961,12 +1967,6 @@ msgstr "Firma"
 #, fuzzy
 msgid "Replied"
 msgstr "Rispondi"
-
-msgid "Sender"
-msgstr "Mittente"
-
-msgid "Recipients"
-msgstr "Destinatari"
 
 msgid "Correspondents"
 msgstr "Corrispondenti"

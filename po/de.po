@@ -1003,6 +1003,12 @@ msgstr "Seit {date}"
 msgid "Until {date}"
 msgstr "Bis zum {date}"
 
+msgid "Sender"
+msgstr "Absender"
+
+msgid "Recipients"
+msgstr "Empfänger"
+
 msgid "Sort by"
 msgstr "Sortieren nach"
 
@@ -1870,12 +1876,6 @@ msgstr "Signatur"
 
 msgid "Replied"
 msgstr "Replied"
-
-msgid "Sender"
-msgstr "Absender"
-
-msgid "Recipients"
-msgstr "Empfänger"
 
 msgid "Correspondents"
 msgstr "Beteiligte"

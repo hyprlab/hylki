@@ -38,6 +38,21 @@ impl ListHeaderWidgets {
         self.sort.set_state(&key.to_variant());
         self.filter.sort_for_all.set_sensitive(any_kept);
     }
+
+    /// Show whether the open view names the sender or the recipients,
+    /// without taking the move for a choice.
+    pub(super) fn show_names(&self, recipients: bool) {
+        let names = &self.filter.names;
+        names.quiet.set(true);
+        names.radios[usize::from(recipients)].set_active(true);
+        names.quiet.set(false);
+    }
+}
+
+/// The popover's Sender and Recipients radios (#657), in that order.
+struct NamesRadios {
+    radios: [gtk::CheckButton; 2],
+    quiet: Rc<Cell<bool>>,
 }
 
 /// The orders the list header offers, by their keys in `SortOrder`. The
@@ -57,6 +72,7 @@ const SORT_ORDERS: [(&str, &str); 6] = [
 struct SortFilterPopover {
     button: gtk::MenuButton,
     sort_for_all: gtk::Button,
+    names: NamesRadios,
     filters: Vec<(QuickFilter, gtk::CheckButton)>,
     dates: Rc<DateRange>,
     clear: gtk::Button,
@@ -294,7 +310,28 @@ impl SortFilterPopover {
             col
         };
 
-        let sort_col = column(&i18n("Sort by"));
+        // Whom the rows name heads the first column: a folder of mail you
+        // sent that is not your Sent folder reads better by recipient (#657).
+        let sort_col = column(&i18n("Show"));
+        let quiet = Rc::new(Cell::new(false));
+        let radios = [i18n("Sender"), i18n("Recipients")].map(|l| gtk::CheckButton::with_label(&l));
+        radios[1].set_group(Some(&radios[0]));
+        for (recipients, radio) in [false, true].into_iter().zip(&radios) {
+            let (s, quiet) = (sender.clone(), quiet.clone());
+            radio.connect_toggled(move |r| {
+                if r.is_active() && !quiet.get() {
+                    s.emit(AppMsg::ListShowRecipients(recipients));
+                }
+            });
+            sort_col.append(radio);
+        }
+        let names = NamesRadios { radios, quiet };
+        let caption = gtk::Label::new(Some(&i18n("Sort by")));
+        caption.set_xalign(0.0);
+        caption.add_css_class("dim-label");
+        caption.add_css_class("caption-heading");
+        caption.add_css_class("sort-filter-caption-next");
+        sort_col.append(&caption);
         let mut radios: Vec<(&'static str, gtk::CheckButton)> = Vec::new();
         for (label, key) in SORT_ORDERS {
             let radio = gtk::CheckButton::with_label(&i18n(label));
@@ -381,6 +418,7 @@ impl SortFilterPopover {
         Self {
             button,
             sort_for_all,
+            names,
             filters,
             dates: range,
             clear,
@@ -483,7 +521,17 @@ impl AppModel {
             .collect();
         let sort =
             MenuEntry::submenu(i18n("Sort"), vec![orders]).icon("view-sort-descending-symbolic");
-        let sections = vec![vec![search], vec![filter, sort]];
+        let shown = self.view_names_recipients();
+        let names: Vec<MenuEntry> = [(i18n("Sender"), false), (i18n("Recipients"), true)]
+            .into_iter()
+            .map(|(label, recipients)| {
+                let s = sender.input_sender().clone();
+                MenuEntry::new(label, move || s.emit(AppMsg::ListShowRecipients(recipients)))
+                    .selected(shown == recipients)
+            })
+            .collect();
+        let names = MenuEntry::submenu(i18n("Show"), vec![names]).icon("avatar-default-symbolic");
+        let sections = vec![vec![search], vec![filter, sort, names]];
         // The message count heads the menu, where the header showed it.
         let header = (!self.list_count.is_empty()).then(|| self.list_count.clone());
         let btn = lh.overflow.clone();
@@ -630,6 +678,7 @@ impl AppModel {
             }
             AppMsg::ListSortChanged(key, reversed) => self.keep_view_sort(key, reversed),
             AppMsg::ListSortForAll => self.use_view_sort_for_all(),
+            AppMsg::ListShowRecipients(on) => self.keep_view_names(on),
             _ => unreachable!("not routed to on_list_header"),
         }
     }
@@ -678,6 +727,7 @@ impl AppModel {
             sort: sort_action,
         });
         self.show_view_sort();
+        self.apply_view_names();
         // Focus Mode's chrome as saved: nothing is mapped yet, so the
         // revealers jump to their state without animating.
         self.sync_focus_chrome();

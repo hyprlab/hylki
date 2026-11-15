@@ -832,6 +832,8 @@ pub(crate) enum AppMsg {
     ListSortChanged(&'static str, bool),
     /// The open view's sort becomes every view's.
     ListSortForAll,
+    /// Sender or Recipients was chosen for the open view's rows (#657).
+    ListShowRecipients(bool),
 
     // ---- on_identity (identity.rs) ----
     /// A Gravatar one of the accounts asked for came back (#189).

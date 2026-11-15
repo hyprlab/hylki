@@ -436,6 +436,10 @@ pub(crate) struct PrivacyFile {
     /// A view not named here uses `list_sort`.
     #[serde(default)]
     pub(crate) list_sorts: std::collections::BTreeMap<String, ListSort>,
+    /// The views whose rows name the recipients (`true`) or the sender
+    /// (`false`) against their default, by the view's name (#657).
+    #[serde(default)]
+    pub(crate) list_recipients: std::collections::BTreeMap<String, bool>,
     /// Grouping by date was turned on once for an install from before it
     /// became the default: every save writes every key, so those files
     /// carry the old `false` without anyone having chosen it. A new
@@ -793,6 +797,7 @@ impl Default for PrivacyFile {
             list_sort: String::new(),
             list_sort_reversed: false,
             list_sorts: Default::default(),
+            list_recipients: Default::default(),
             date_groups_default_applied: true,
             list_search_open: false,
             contacts_search_open: false,

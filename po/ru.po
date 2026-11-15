@@ -1020,6 +1020,12 @@ msgstr "С {date}"
 msgid "Until {date}"
 msgstr "До {date}"
 
+msgid "Sender"
+msgstr "Отправитель"
+
+msgid "Recipients"
+msgstr "Получатели"
+
 msgid "Sort by"
 msgstr "Сортировать по"
 
@@ -1898,12 +1904,6 @@ msgstr "Подпись"
 
 msgid "Replied"
 msgstr "Ответил"
-
-msgid "Sender"
-msgstr "Отправитель"
-
-msgid "Recipients"
-msgstr "Получатели"
 
 msgid "Correspondents"
 msgstr "Корреспонденты"

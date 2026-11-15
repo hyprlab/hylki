@@ -497,6 +497,9 @@ pub(crate) struct AppModel {
     /// The sorts views keep for themselves, by `list_view_name`; any other
     /// view uses `list_sort`.
     pub(super) list_sorts: std::collections::BTreeMap<String, config::ListSort>,
+    /// The views that name the sender or the recipients against their
+    /// default, by `list_view_name` (#657).
+    pub(super) list_recipients: std::collections::BTreeMap<String, bool>,
     /// The list's search field stays open (#446).
     pub(super) list_search_open: bool,
     /// Contacts' search field stays open.

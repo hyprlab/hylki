@@ -2369,7 +2369,12 @@ A value with spaces goes in quotes: `from:"mario rossi"`. A colon in any other
 word, such as `10:30` or `re:`, is searched for as written.
 
 The sort and filter button in the list's header opens a popover of three
-columns. **Sort by** orders the list by date, newest or oldest first, by
+columns. **Show** at the top of the first chooses whom each message's row
+names: its **Sender**, or its **Recipients** after "To:". Sent folders and
+the Outbox name the recipients and every other folder the sender, until
+the other is chosen; the choice is kept for the open folder, as its order
+is, so a folder of sent mail imported elsewhere can name its recipients
+too. **Sort by** orders the list by date, newest or oldest first, by
 sender or subject, or puts unread or starred mail first. The order chosen
 there or by a column heading is kept for the open folder, from one launch to
 the next, and each folder, unified row, tag and smart folder has its own.

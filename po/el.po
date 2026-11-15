@@ -1032,6 +1032,12 @@ msgstr "Από {date}"
 msgid "Until {date}"
 msgstr "Έως {date}"
 
+msgid "Sender"
+msgstr "Αποστολέας"
+
+msgid "Recipients"
+msgstr "Παραλήπτες"
+
 msgid "Sort by"
 msgstr "Ταξινόμηση κατά"
 
@@ -1904,12 +1910,6 @@ msgstr "Υπογραφή"
 
 msgid "Replied"
 msgstr "Απαντήθηκε"
-
-msgid "Sender"
-msgstr "Αποστολέας"
-
-msgid "Recipients"
-msgstr "Παραλήπτες"
 
 msgid "Correspondents"
 msgstr "Αλληλογραφούντες"

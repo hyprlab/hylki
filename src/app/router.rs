@@ -251,7 +251,8 @@ impl AppModel {
             | AppMsg::ListCount(..)
             | AppMsg::ListColumnWidths(..)
             | AppMsg::ListSortChanged(..)
-            | AppMsg::ListSortForAll) => self.on_list_header(msg, sender),
+            | AppMsg::ListSortForAll
+            | AppMsg::ListShowRecipients(_)) => self.on_list_header(msg, sender),
             msg @ AppMsg::OwnGravatarFetched { .. } => self.on_identity(msg),
             msg @ (AppMsg::SetReaderActionsCollapsed(..)
             | AppMsg::SetReaderCompact(..)

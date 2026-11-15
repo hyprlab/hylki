@@ -2545,6 +2545,10 @@ textview.console-view text selection {
 .sort-filter-column > label {
   margin: 4px 8px 4px 8px;
 }
+/* A second caption in a column, Sort by under Show (#657). */
+.sort-filter-column > label.sort-filter-caption-next {
+  margin-top: 14px;
+}
 .sort-filter-column > checkbutton {
   padding: 6px 8px;
   border-radius: 6px;

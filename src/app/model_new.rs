@@ -389,6 +389,7 @@ impl AppModel {
                 prefs.list_sort_reversed,
             ),
             list_sorts: prefs.list_sorts.clone(),
+            list_recipients: prefs.list_recipients.clone(),
             list_search_open: prefs.list_search_open,
             contacts_search_open: prefs.contacts_search_open,
             contact_names: prefs.contact_names,

@@ -165,6 +165,8 @@ tags = true
 
 [privacy.list_sorts]
 
+[privacy.list_recipients]
+
 [privacy.list_column_widths]
 
 [privacy.unified_chips]

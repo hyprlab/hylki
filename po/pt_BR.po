@@ -1002,6 +1002,12 @@ msgstr "Desde {date}"
 msgid "Until {date}"
 msgstr "Até {date}"
 
+msgid "Sender"
+msgstr "Remetente"
+
+msgid "Recipients"
+msgstr "Destinatários"
+
 msgid "Sort by"
 msgstr "Ordenar por"
 
@@ -1869,12 +1875,6 @@ msgstr "Assinatura"
 
 msgid "Replied"
 msgstr "Respondida"
-
-msgid "Sender"
-msgstr "Remetente"
-
-msgid "Recipients"
-msgstr "Destinatários"
 
 msgid "Correspondents"
 msgstr "Correspondentes"

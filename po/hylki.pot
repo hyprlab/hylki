@@ -934,6 +934,12 @@ msgstr ""
 msgid "Until {date}"
 msgstr ""
 
+msgid "Sender"
+msgstr ""
+
+msgid "Recipients"
+msgstr ""
+
 msgid "Sort by"
 msgstr ""
 
@@ -1745,12 +1751,6 @@ msgid "Signature"
 msgstr ""
 
 msgid "Replied"
-msgstr ""
-
-msgid "Sender"
-msgstr ""
-
-msgid "Recipients"
 msgstr ""
 
 msgid "Correspondents"

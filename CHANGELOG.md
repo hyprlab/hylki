@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Added: any folder's list can name the recipients instead of the
+  sender** (#657, requested by samuel-edlmeier). **Show → Sender** or
+  **Recipients** in the list's sort and filter popover, or in its ⋯ menu in
+  Focus Mode, is kept for the open folder, unified row, tag or smart folder,
+  as its sort is. Sent folders and the Outbox still name the recipients
+  until Sender is chosen. The Outbox now always does, where it used to keep
+  whatever the folder before it showed.
+
 - **Added: contacts can be imported from CSV files, into any address
   book** (#655). The import in Settings → Contacts and in the Contacts view
   takes `.csv` files as well as `.vcf`, and opens **Import Contacts**, which

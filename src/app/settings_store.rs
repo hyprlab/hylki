@@ -107,6 +107,7 @@ impl AppModel {
             list_sort: self.list_sort.0.to_string(),
             list_sort_reversed: self.list_sort.1,
             list_sorts: self.list_sorts.clone(),
+            list_recipients: self.list_recipients.clone(),
             date_groups_default_applied: true,
             list_search_open: self.list_search_open,
             contacts_search_open: self.contacts_search_open,

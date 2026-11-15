@@ -59,7 +59,7 @@ impl AppModel {
 
     /// The open view's name in `list_sorts`. A folder goes by its sidebar
     /// key, so a rename can carry its sort along.
-    fn list_view_name(&self) -> Option<String> {
+    pub(super) fn list_view_name(&self) -> Option<String> {
         if self.showing_outbox {
             return Some("outbox".to_string());
         }
@@ -90,13 +90,15 @@ impl AppModel {
         sort_of(&self.list_sorts, self.list_sort, Some(&name))
     }
 
-    /// Give the list the open view's sort. Sent after `ResetPaging`, which
-    /// keeps the view being left as built, under the sort it had.
+    /// Give the list the open view's sort, and the names its rows show.
+    /// Sent after `ResetPaging`, which keeps the view being left as built,
+    /// under the sort it had.
     pub(super) fn apply_view_sort(&self) {
         let (order, reversed) = self.view_sort();
         self.message_list
             .emit(MessageListInput::ApplySort { order, reversed });
         self.show_view_sort();
+        self.apply_view_names();
     }
 
     pub(super) fn show_view_sort(&self) {
