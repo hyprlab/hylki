@@ -431,6 +431,11 @@ impl Sidebar {
         let mut folders_heading: Option<gtk::Widget> = None;
         if !custom.is_empty() {
             for folder in custom {
+                // A container (`tree::container_ancestors`) draws like a
+                // folder but takes no folder work: nothing to select, and
+                // nothing to pick up. Its chevron still folds it, and its
+                // children's depths come from it.
+                let inert = section.containers.contains(&folder.path);
                 let depth = folder_depth(folder, custom, &section.hierarchy);
                 // The expander slot (#51): a chevron for folders with
                 // sub-folders, an equal-width spacer for leaves so names
@@ -453,6 +458,10 @@ impl Sidebar {
                     filter_icon(section, folder),
                     &section.hierarchy,
                 );
+                if inert {
+                    row.set_selectable(false);
+                    row.set_focusable(false);
+                }
                 // Hidden while any ancestor is collapsed; the row still
                 // exists, so selection indices stay stable. Its content
                 // sits in a revealer so user toggles slide open/closed —
@@ -466,7 +475,7 @@ impl Sidebar {
                 row.set_visible(!hidden);
                 // Custom folders can be picked up and dropped on a new
                 // parent (#51), or on a sibling's edge to reorder them.
-                if !self.collapsed {
+                if !self.collapsed && !inert {
                     let payload = format!("vireo-folder\t{id}\t{}", folder.path);
                     row.add_controller(folder_drag_source(&row, payload));
                 }
@@ -695,6 +704,7 @@ impl Sidebar {
             id,
             folders.iter().map(|f| (*f).clone()).collect(),
             section.filtered.iter().map(|f| f.path.clone()).collect(),
+            section.containers.clone(),
             self.favorite_paths(id),
             section.has_filters,
             section.hierarchy.nests(),

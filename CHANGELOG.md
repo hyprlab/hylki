@@ -60,6 +60,16 @@
   Plain-text mail is still answered in plain text. The switch now sits
   under **Start new messages in**.
 
+- **Fixed: shared mailboxes drew at the top of Folders with no parent**
+  (#664, by Peter Hagen). On Dovecot servers, mailcow among them, a shared
+  mailbox such as `Shared/user@dom/INBOX` showed as a lone "Inbox", because
+  the levels above it cannot be opened and the server lists them as
+  containers only. The Folders tree now draws those levels as rows of their
+  own, so the mailbox nests as Shared, then user@dom, then INBOX. The rows
+  fold like any parent but cannot be selected, dragged, dropped into or
+  right-clicked. Gmail's own `[Gmail]` container is left out, so its labels
+  stay where they were.
+
 - **Translations:** French (PR #660 by frenchy82), 2492 of 2523 strings
   translated.
 

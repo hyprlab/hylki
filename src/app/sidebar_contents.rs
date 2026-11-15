@@ -206,7 +206,7 @@ impl AppModel {
         let account = self.accounts.iter().find(|a| a.email == email)?.clone();
         // Use the server-side unread count (accurate beyond the loaded
         // window) for each folder's badge.
-        let folders = self
+        let folders: Vec<Folder> = self
             .folders
             .get(&account.id)
             .cloned()
@@ -237,6 +237,16 @@ impl AppModel {
         let folder_sort = self.folder_sort_of(account.id);
         let own_folder_sort = self.own_folder_sort(account.id);
         let hierarchy = self.drawn_hierarchy(account.id);
+        // Ancestors the server keeps as non-mailbox containers (Dovecot's
+        // shared mailboxes): rows the sidebar draws as inert tree parents,
+        // so the mailboxes under them nest the way folders' children do.
+        let containers = crate::ui::sidebar::container_ancestors(&folders, &hierarchy);
+        let container_paths = containers.iter().map(|f| f.path.clone()).collect();
+        let folders = {
+            let mut all = folders;
+            all.extend(containers);
+            all
+        };
         let filtered = self.account_filtered_folders(account.id);
         let has_filters = self
             .filters
@@ -257,6 +267,7 @@ impl AppModel {
             folders,
             filtered,
             tree_collapsed,
+            containers: container_paths,
             folder_order,
             hierarchy,
             folder_sort,
