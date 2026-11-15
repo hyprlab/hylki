@@ -179,9 +179,10 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   one send-as address, and a sender name for each signature.
 - [**reqhald**](https://github.com/reqhald) ([#665](https://github.com/hyprlab/hylki/pull/665)):
   the composer drawn without flicker or garbled text on the NVIDIA driver.
-- [**Peter Hagen**](https://github.com/PeterHagen) ([#664](https://github.com/hyprlab/hylki/pull/664)):
-  shared mailboxes nested under their Shared and user rows in the Folders
-  tree.
+- [**Peter Hagen**](https://github.com/PeterHagen) ([#664](https://github.com/hyprlab/hylki/pull/664),
+  [#663](https://github.com/hyprlab/hylki/pull/663)): shared mailboxes nested
+  under their Shared and user rows in the Folders tree, and address book names
+  shown whole in their dropdowns.
 
 ## Reports, design and ideas
 

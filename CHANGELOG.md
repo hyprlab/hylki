@@ -70,6 +70,14 @@
   right-clicked. Gmail's own `[Gmail]` container is left out, so its labels
   stay where they were.
 
+- **Fixed: address book names cut off in their dropdowns** (#663, by Peter
+  Hagen). Settings → Contacts → **Save new contacts in** and the **Address
+  book** row of the contact and group editors now list every book's name
+  whole, so two books of one CardDAV account that share a long prefix can be
+  told apart. The row's own value keeps its width and shows the whole name as
+  a tooltip. The address book picker above the contact list shows the
+  checkmark on the picked book, like the others.
+
 - **Translations:** French (PR #660 by frenchy82), 2492 of 2523 strings
   translated.
 

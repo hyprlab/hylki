@@ -215,8 +215,12 @@ pub(super) fn new_menu(button: &gtk::Button, sender: &ComponentSender<ContactsPa
 }
 
 /// The address book dropdown's labels; `ellipsize` for its own, which
-/// the pane's width holds.
-pub(super) fn book_label_factory(ellipsize: bool) -> gtk::SignalListItemFactory {
+/// the pane's width holds, and which carries the whole name as a tooltip:
+/// two books of one CardDAV account begin with the same long prefix, and
+/// the choice between them lives in the tail that gets cut off. The
+/// popup's lines show the name whole, with the stock checkmark on the
+/// picked one.
+pub(crate) fn book_label_factory(ellipsize: bool) -> gtk::SignalListItemFactory {
     let factory = gtk::SignalListItemFactory::new();
     factory.connect_setup(move |_, item| {
         let Some(item) = item.downcast_ref::<gtk::ListItem>() else {
@@ -226,20 +230,42 @@ pub(super) fn book_label_factory(ellipsize: bool) -> gtk::SignalListItemFactory 
         label.set_xalign(0.0);
         if ellipsize {
             label.set_ellipsize(gtk::pango::EllipsizeMode::End);
+            // The default combo factory's sizes, so a row keeps its width.
+            label.set_max_width_chars(20);
+            label.set_width_chars(1);
+            item.set_child(Some(&label));
+            return;
         }
-        item.set_child(Some(&label));
+        let line = gtk::Box::new(gtk::Orientation::Horizontal, 6);
+        line.append(&label);
+        let check = gtk::Image::from_icon_name("object-select-symbolic");
+        // The popup's own selection follows the dropdown's, so the list
+        // item's flag is the picked book.
+        item.bind_property("selected", &check, "opacity")
+            .transform_to(|_, picked: bool| Some(if picked { 1.0 } else { 0.0 }))
+            .sync_create()
+            .build();
+        line.append(&check);
+        item.set_child(Some(&line));
     });
     factory.connect_bind(|_, item| {
         let Some(item) = item.downcast_ref::<gtk::ListItem>() else {
             return;
         };
-        let (Some(label), Some(text)) = (
-            item.child().and_downcast::<gtk::Label>(),
-            item.item().and_downcast::<gtk::StringObject>(),
-        ) else {
+        let Some(text) = item.item().and_downcast::<gtk::StringObject>() else {
             return;
         };
-        label.set_label(&text.string());
+        let name = text.string();
+        if let Some(label) = item.child().and_downcast::<gtk::Label>() {
+            label.set_label(&name);
+            label.set_tooltip_text(Some(&name));
+        } else if let Some(label) = item
+            .child()
+            .and_then(|line| line.first_child())
+            .and_downcast::<gtk::Label>()
+        {
+            label.set_label(&name);
+        }
     });
     factory
 }
