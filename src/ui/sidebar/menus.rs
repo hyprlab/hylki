@@ -218,6 +218,7 @@ pub(super) fn attach_folder_context_menu(
     id: u32,
     folders: Vec<Folder>,
     filtered: Vec<String>,
+    containers: Vec<String>,
     favorites: Vec<String>,
     has_filters: bool,
     nests: bool,
@@ -232,6 +233,11 @@ pub(super) fn attach_folder_context_menu(
             .row_at_y(y as i32)
             .and_then(|row| folders.get(row.index() as usize))
         {
+            // A container (`tree::container_ancestors`) is no folder the
+            // server will act on: every entry here would be refused.
+            if containers.contains(&f.path) {
+                return;
+            }
             let items = folder_menu_items(
                 id,
                 f,
