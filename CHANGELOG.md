@@ -60,6 +60,27 @@
   Plain-text mail is still answered in plain text. The switch now sits
   under **Start new messages in**.
 
+## 1.48.2 — 2026-11-15
+
+A patch release with two fixes: OpenPGP signatures stay valid when the
+message passes through a Microsoft Exchange server, and the composer no
+longer flickers on the NVIDIA driver.
+
+- **Fixed: signed mail sent through Exchange arrived with a bad signature**
+  (#666, reported by Roblexander). Exchange rewrites a message's MIME on the
+  way out and leaves a blank line before the boundary that ends the signed
+  part, which hands that part a line break its signature never covered.
+  Hylki now writes the signed part the way Evolution does, ending with that
+  line break and signing it, so there is nothing left for the server to
+  change. Mail already sent the old way still shows a bad signature.
+
+- **Fixed: the composer flickered and garbled its text on NVIDIA** (#665,
+  by reqhald). The rich text editor and its preview were the only WebViews
+  with a transparent background, and a transparent WebView keeps an alpha
+  channel in its surface, which the proprietary NVIDIA driver draws as
+  flicker and garbled text. They now paint the theme's ground, as the
+  reader does, and follow it when the theme changes.
+
 ## 1.48.1 — 2026-11-13
 
 A patch release with the fixes since 1.48.0: the app no longer aborts after a
