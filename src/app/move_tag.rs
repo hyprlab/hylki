@@ -41,7 +41,7 @@ impl AppModel {
                         .emit(MessageListInput::Bulk(BulkAction::MoveToInbox));
                     return;
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target_owned() {
                     self.move_to(m, FolderKind::Inbox);
                 }
             }
@@ -251,7 +251,7 @@ impl AppModel {
                         })
                         .collect();
                     self.drop_move(account_id, dest, items);
-                } else if let Some(m) = self.reply_target() {
+                } else if let Some(m) = self.reply_target_owned() {
                     if m.account_id == account_id {
                         self.move_to_path(m, dest);
                     } else {
