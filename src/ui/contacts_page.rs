@@ -23,10 +23,10 @@ mod menus;
 mod rows;
 mod types;
 
-use menus::{book_label_factory, new_menu, FilterMenu};
+use menus::{new_menu, FilterMenu};
 use rows::{row_factory, DragKeys};
 
-pub(crate) use menus::choose_vcf_files;
+pub(crate) use menus::{book_label_factory, choose_vcf_files};
 pub(crate) use rows::dragged_contacts;
 pub(crate) use types::*;
 

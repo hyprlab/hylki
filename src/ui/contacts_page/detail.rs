@@ -14,7 +14,7 @@ use super::forms::{
     PHONE_LABELS,
 };
 use super::member_editor::member_editor;
-use super::menus::editor_bar;
+use super::menus::{book_label_factory, editor_bar};
 use super::rows::{avatar_for, avatar_with, copy_button, flat_button, group, labeled_row};
 use super::types::{
     ContactForm, ContactsPage, ContactsPageInput, ContactsPageOutput, Editor, GroupForm, DIRECTORY,
@@ -481,6 +481,8 @@ impl ContactsPage {
         row.set_title(&i18n("Address book"));
         let labels: Vec<&str> = books.iter().map(|b| b.name.as_str()).collect();
         row.set_model(Some(&gtk::StringList::new(&labels)));
+        row.set_factory(Some(&book_label_factory(true)));
+        row.set_list_factory(Some(&book_label_factory(false)));
         // Its own book, or for a new one the first book the list shows,
         // else the default (first).
         let at = if editing {
@@ -688,6 +690,8 @@ impl ContactsPage {
             row.set_title(&i18n("Address book"));
             let labels: Vec<&str> = self.books.iter().map(|b| b.name.as_str()).collect();
             row.set_model(Some(&gtk::StringList::new(&labels)));
+            row.set_factory(Some(&book_label_factory(true)));
+            row.set_list_factory(Some(&book_label_factory(false)));
             // Its own book, or for a new one the first book the list shows,
             // else the default (first).
             let at = own
