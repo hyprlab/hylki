@@ -147,10 +147,12 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
 - [**Valentin Morice**](https://github.com/valentin-morice) ([#545](https://github.com/hyprlab/hylki/pull/545),
   [#546](https://github.com/hyprlab/hylki/pull/546),
   [#570](https://github.com/hyprlab/hylki/pull/570),
-  [#571](https://github.com/hyprlab/hylki/pull/571)): the count centered in
+  [#571](https://github.com/hyprlab/hylki/pull/571),
+  [#608](https://github.com/hyprlab/hylki/pull/608)): the count centered in
   the sidebar's unread chip, a setting to hide the account chip in the
-  message header, a message opening as one change on screen, sooner, and
-  folder counts that start from the last ones the server gave.
+  message header, a message opening as one change on screen, sooner, folder
+  counts that start from the last ones the server gave, and messages with
+  large attachments or pictures opening faster.
 - [**James Reilly**](https://github.com/hanthor) ([#588](https://github.com/hyprlab/hylki/pull/588),
   [#591](https://github.com/hyprlab/hylki/pull/591),
   [#595](https://github.com/hyprlab/hylki/pull/595),
