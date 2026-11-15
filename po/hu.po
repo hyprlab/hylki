@@ -374,7 +374,123 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr ""
 
-msgid "No column of the file holds a name, an email address or a phone number."
+msgid "Home"
+msgstr ""
+
+msgid "Work"
+msgstr ""
+
+msgid "Mobile"
+msgstr ""
+
+msgid "Fax"
+msgstr ""
+
+msgid "{field} ({label})"
+msgstr ""
+
+#, fuzzy
+msgid "Do not import"
+msgstr "Nem importálható: {e}"
+
+#, fuzzy
+msgid "Full name"
+msgstr "Mappanév"
+
+msgid "First name"
+msgstr "Keresztnév"
+
+#, fuzzy
+msgid "Middle name"
+msgstr "Mappanév"
+
+msgid "Last name"
+msgstr "Vezetéknév"
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr ""
+
+#, fuzzy
+msgid "Company"
+msgstr "Levélírás"
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Birthday"
+msgstr ""
+
+#, fuzzy
+msgid "Birth year"
+msgstr "Vezetéknév"
+
+#, fuzzy
+msgid "Birth month"
+msgstr "Havonta ismétlődik"
+
+msgid "Birth day"
+msgstr ""
+
+#, fuzzy
+msgid "Groups"
+msgstr "Bal oldali csoport"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Phone"
+msgstr "Telefon"
+
+#, fuzzy
+msgid "Email label"
+msgstr "E-mail kliens"
+
+#, fuzzy
+msgid "Phone label"
+msgstr "Telefon"
+
+#, fuzzy
+msgid "Address label"
+msgstr "Címjegyzék"
+
+#, fuzzy
+msgid "Website label"
+msgstr "Honlap"
+
+msgid "Address"
+msgstr "Cím"
+
+msgid "Street"
+msgstr ""
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "State or region"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Country"
 msgstr ""
 
 #, fuzzy
@@ -2030,9 +2146,6 @@ msgstr "Keresztnév"
 msgid "Last Name"
 msgstr "Vezetéknév"
 
-msgid "Email"
-msgstr "E-mail"
-
 #, fuzzy
 msgid "Column {n}"
 msgstr "{n} feltétel"
@@ -3642,9 +3755,6 @@ msgstr "Hozzáadás a naptárhoz"
 msgid "Task list"
 msgstr "Ez a lista"
 
-msgid "Notes"
-msgstr ""
-
 #, fuzzy
 msgid "All day"
 msgstr "E-mail hozzáadása"
@@ -4494,6 +4604,32 @@ msgstr "Letöltési jelszó ehhez: {name}: {password}"
 msgid "Reply-To"
 msgstr "Válaszcím"
 
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+
+#, fuzzy
+msgid "Import Contacts"
+msgstr "Névjegyek rendezése"
+
+#, fuzzy
+msgid "Import"
+msgstr "Importálás…"
+
+#, fuzzy
+msgid "Import into"
+msgstr "Aláírás importálása"
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+#, fuzzy
+msgid "Not imported"
+msgstr "Kulcs importálva"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "Nagy fájlok"
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
 
@@ -4870,15 +5006,6 @@ msgstr "Fénykép megtekintése"
 msgid "Add to Contacts"
 msgstr "Hozzáadás a névjegyekhez"
 
-msgid "Phone"
-msgstr "Telefon"
-
-msgid "Address"
-msgstr "Cím"
-
-msgid "Birthday"
-msgstr ""
-
 #. ---- note ----
 msgid "Note"
 msgstr ""
@@ -4939,9 +5066,6 @@ msgstr "Névjegy szerkesztése"
 msgid "Identity"
 msgstr ""
 
-msgid "Nickname"
-msgstr ""
-
 #, fuzzy
 msgid "Organization"
 msgstr "Fordította"
@@ -4961,39 +5085,12 @@ msgstr "Webhely hozzáadása"
 msgid "No label"
 msgstr ""
 
-msgid "Home"
-msgstr ""
-
-msgid "Work"
-msgstr ""
-
-msgid "Mobile"
-msgstr ""
-
-msgid "Fax"
-msgstr ""
-
 msgid "Label"
 msgstr ""
 
 #, fuzzy
 msgid "Add address"
 msgstr "Cím"
-
-msgid "Street"
-msgstr ""
-
-msgid "City"
-msgstr ""
-
-msgid "State or region"
-msgstr ""
-
-msgid "Postal code"
-msgstr ""
-
-msgid "Country"
-msgstr ""
 
 msgid "No birthday"
 msgstr ""
@@ -5072,23 +5169,9 @@ msgstr ""
 msgid "No email address · {book}"
 msgstr "E-mail-cím"
 
-msgid "First name"
-msgstr "Keresztnév"
-
-msgid "Last name"
-msgstr "Vezetéknév"
-
 #, fuzzy
 msgid "Sort and filter contacts"
 msgstr "{n} db üzenet"
-
-#, fuzzy
-msgid "Groups"
-msgstr "Bal oldali csoport"
-
-#, fuzzy
-msgid "Import Contacts"
-msgstr "Névjegyek rendezése"
 
 #, fuzzy
 msgid "vCard and CSV files"
@@ -8520,10 +8603,6 @@ msgid ""
 "Downloads copies of every message from every folder of this account to this "
 "computer (except Trash, Junk and Drafts) and stores them in On This Computer."
 msgstr ""
-
-#, fuzzy
-msgid "Import"
-msgstr "Importálás…"
 
 msgid "Mail already here is not imported again."
 msgstr ""

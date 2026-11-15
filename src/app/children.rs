@@ -279,7 +279,9 @@ fn contacts_page_output_msg(out: ContactsPageOutput) -> AppMsg {
         ContactsPageOutput::CopyContacts { to, cards } => AppMsg::CopyContacts { to, cards },
         ContactsPageOutput::RenameBook { uid, name } => AppMsg::RenameBook { uid, name },
         ContactsPageOutput::Tree(tree) => AppMsg::ContactTree(tree),
-        ContactsPageOutput::ImportContacts(paths) => AppMsg::ImportContacts(paths),
+        ContactsPageOutput::ImportContacts { paths, book } => {
+            AppMsg::ImportContacts { paths, book }
+        }
         ContactsPageOutput::WantSuggestions => AppMsg::ContactSuggestions,
         ContactsPageOutput::ShowPhoto { name, data } => {
             // The lightbox routes by extension — a bare contact

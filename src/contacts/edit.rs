@@ -1,8 +1,6 @@
 //! Editing contacts and groups: patching the stored vCard so everything
 //! the editor does not know survives, and the EDS calls that write it.
 
-use std::path::PathBuf;
-
 use super::categories::{category_of, delete_category_group, save_category_group};
 use super::details::{parse_vcard_fields, ContactDetails, GroupFormat, Labeled, Member, Postal};
 use super::eds_write::{
@@ -456,18 +454,6 @@ fn write_local(result: Result<(), String>) -> Result<(), String> {
         local_changed();
     }
     result
-}
-
-/// Import `.vcf` and CSV files into the local Hylki book (blocking: call
-/// from a background thread).
-pub(crate) fn import_contact_files(
-    paths: &[PathBuf],
-) -> Result<crate::contacts::local::ImportOutcome, String> {
-    let outcome = crate::contacts::local::import_files(paths)?;
-    if outcome.added + outcome.updated > 0 {
-        local_changed();
-    }
-    Ok(outcome)
 }
 
 /// Write a modified vCard back to its book through EDS.

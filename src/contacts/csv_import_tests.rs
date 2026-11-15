@@ -50,7 +50,6 @@ Home,\"1 High St, Leeds\",1 High St,Leeds,LS1 1AA,UK,,https://ann.example\r\n";
     assert!(card.contains("CATEGORIES:Friends,Book club"), "{card}");
     let groups: Vec<_> = found.groups.iter().map(|(g, m)| (&**g, m.len())).collect();
     assert_eq!(groups, [("Friends", 1), ("Book club", 1)]);
-    assert_eq!(found.groups[0].1[0].email, "ann@home.org");
 }
 
 #[test]
@@ -115,10 +114,10 @@ fn rows_naming_nobody_are_skipped_and_files_naming_nothing_refused() {
     let found = read("Name,Email,Notes\nAnn,,\n,,a note\n");
     assert_eq!((found.cards.len(), found.skipped), (1, 1));
     assert!(csv_contacts(b"Colour,Size\nred,big\n").is_err());
-    // A person with only a phone is a contact; no group without an address.
+    // A person with only a phone is a contact, and in their group.
     let found = read("Phone,Labels\n0300,Friends\n");
     assert_eq!(found.cards.len(), 1);
-    assert!(found.groups.is_empty());
+    assert_eq!(found.groups, [("Friends".to_string(), vec![0])]);
 }
 
 #[test]
@@ -146,4 +145,59 @@ fn reads_headers() {
     assert_eq!(classify("title", true), Some(Col::Single(Single::Prefix)));
     assert_eq!(classify("assistant s phone", false), None);
     assert_eq!(classify("email type", false), None);
+}
+
+fn table(csv: &str) -> Table {
+    crate::mail::merge::parse_csv(csv.as_bytes()).unwrap()
+}
+
+#[test]
+fn google_address_columns_make_one_address_each_and_labels_find_their_values() {
+    let t = table(
+        "Address 1 - Label,Address 1 - Street,Address 1 - City,Address 2 - Label,\
+Address 2 - Street,Address 2 - City,Phone 1 - Label,Phone 1 - Value\n\
+Home,1 A St,Leeds,Work,2 B St,York,Mobile,0100\n",
+    );
+    let cols = fields::resolve(&detect(&t));
+    assert_eq!(cols[0], Some(Col::Label(Kind::Address, "c1".into())));
+    assert_eq!(cols[4], Some(Col::Address("c4".into(), "", Part::Street)));
+    assert_eq!(cols[5], Some(Col::Address("c4".into(), "", Part::Locality)));
+    assert_eq!(cols[6], Some(Col::Label(Kind::Phone, "c7".into())));
+    let c = person(&contacts_from(&t, &detect(&t)).cards[0]);
+    let places: Vec<_> = c.postal.iter().map(|p| (&*p.label, &*p.locality)).collect();
+    assert_eq!(places, [("Home", "Leeds"), ("Work", "York")]);
+    assert_eq!(c.phones[0].label, "Mobile");
+}
+
+#[test]
+fn a_column_matched_by_hand_is_read_as_matched() {
+    let t = table("Nom,Prénom,Courriel,Ville,Étiquettes\nCurie,Marie,m@x.org,Paris,Physique\n");
+    let mut fields = detect(&t);
+    assert_eq!(fields[0], Target::Ignore);
+    assert_eq!(fields[2], Target::Email(""));
+    fields[0] = Target::Single(Single::Family);
+    fields[1] = Target::Single(Single::Given);
+    fields[3] = Target::Address("Home", Part::Locality);
+    fields[4] = Target::Single(Single::Groups);
+    let found = contacts_from(&t, &fields);
+    let c = person(&found.cards[0]);
+    assert_eq!(c.name, "Marie Curie");
+    assert_eq!(c.postal[0].locality, "Paris");
+    assert_eq!(c.postal[0].label, "Home");
+    assert_eq!(found.groups, [("Physique".to_string(), vec![0])]);
+    // Nothing that names anyone, nothing to import.
+    assert!(!can_import(&[Target::Ignore, Target::Single(Single::Note)]));
+}
+
+#[test]
+fn every_detected_match_is_one_the_dialog_offers() {
+    let all = targets();
+    let t = table(
+        "First Name,Last Name,E-mail 1 - Label,E-mail 1 - Value,Home Street,Home City,\
+Business Fax,Web Page,Categories,Address 1 - PO Box,Address 1 - Extended Address\nA,B,Home,a@x,1,2,3,4,5,6,7\n",
+    );
+    for f in detect(&t) {
+        assert!(all.contains(&f), "{f:?}");
+        assert!(!f.name().is_empty());
+    }
 }

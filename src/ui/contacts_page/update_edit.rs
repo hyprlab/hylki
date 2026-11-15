@@ -11,7 +11,9 @@ use crate::ui::context_menu::show_context_menu;
 use super::detail::member_for;
 use super::member_editor::collect_edit;
 use super::menus::{choose_contact_files, confirm};
-use super::types::{ContactsPage, ContactsPageInput, ContactsPageOutput, Editor, DIRECTORY};
+use super::types::{
+    ContactScope, ContactsPage, ContactsPageInput, ContactsPageOutput, Editor, DIRECTORY,
+};
 use super::{ContactsPageWidgets, Flow};
 
 impl ContactsPage {
@@ -128,8 +130,15 @@ impl ContactsPage {
     pub(super) fn on_import_contacts(&mut self, sender: ComponentSender<Self>) -> Flow {
         let parent = relm4::main_application().active_window();
         let s = sender.clone();
+        let book = match &self.scope {
+            ContactScope::Book(uid) | ContactScope::Group { book: uid, .. } => Some(uid.clone()),
+            ContactScope::All | ContactScope::Account(_) => None,
+        };
         choose_contact_files(parent.as_ref(), move |paths| {
-            let _ = s.output(ContactsPageOutput::ImportContacts(paths));
+            let _ = s.output(ContactsPageOutput::ImportContacts {
+                paths,
+                book: book.clone(),
+            });
         });
         Flow::Continue(())
     }

@@ -335,9 +335,124 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr "Хюльки не может изменить такую группу."
 
+msgid "Home"
+msgstr "Домашний"
+
+msgid "Work"
+msgstr "Рабочий"
+
+msgid "Mobile"
+msgstr "Мобильный"
+
+msgid "Fax"
+msgstr "Факс"
+
+msgid "{field} ({label})"
+msgstr ""
+
 #, fuzzy
-msgid "No column of the file holds a name, an email address or a phone number."
-msgstr "Контакту необходимо имя, адрес электронной почты или номер телефона."
+msgid "Do not import"
+msgstr "Не удалось импортировать: {e}"
+
+#, fuzzy
+msgid "Full name"
+msgstr "Название папки"
+
+msgid "First name"
+msgstr "Имя"
+
+#, fuzzy
+msgid "Middle name"
+msgstr "Название папки"
+
+msgid "Last name"
+msgstr "Фамилия"
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr "Псевдоним"
+
+#, fuzzy
+msgid "Company"
+msgstr "Имеет компанию"
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+msgid "Notes"
+msgstr "Заметки"
+
+msgid "Birthday"
+msgstr "День рождения"
+
+#, fuzzy
+msgid "Birth year"
+msgstr "День рождения"
+
+#, fuzzy
+msgid "Birth month"
+msgstr "В прошлом месяце"
+
+#, fuzzy
+msgid "Birth day"
+msgstr "День рождения"
+
+msgid "Groups"
+msgstr "Группы"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Phone"
+msgstr "Телефон"
+
+#, fuzzy
+msgid "Email label"
+msgstr "Почтовый клиент"
+
+#, fuzzy
+msgid "Phone label"
+msgstr "Без метки"
+
+#, fuzzy
+msgid "Address label"
+msgstr "Адресная книга"
+
+#, fuzzy
+msgid "Website label"
+msgstr "Веб-сайт"
+
+msgid "Address"
+msgstr "Адрес"
+
+msgid "Street"
+msgstr "Улица"
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr "Город"
+
+msgid "State or region"
+msgstr "Область или регион"
+
+msgid "Postal code"
+msgstr "Почтовый индекс"
+
+msgid "Country"
+msgstr "Страна"
 
 msgid "Hylki Address Book"
 msgstr "Адресная книга Хюльки"
@@ -1925,9 +2040,6 @@ msgstr "Имя"
 msgid "Last Name"
 msgstr "Фамилия"
 
-msgid "Email"
-msgstr "Email"
-
 msgid "Column {n}"
 msgstr "Столбец {n}"
 
@@ -3451,9 +3563,6 @@ msgstr "Календарь"
 msgid "Task list"
 msgstr "Список задач"
 
-msgid "Notes"
-msgstr "Заметки"
-
 msgid "All day"
 msgstr "Весь день"
 
@@ -4256,6 +4365,31 @@ msgstr "Пароль для скачивания {name}: {password}"
 msgid "Reply-To"
 msgstr "Адрес для ответа"
 
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Контакту необходимо имя, адрес электронной почты или номер телефона."
+
+msgid "Import Contacts"
+msgstr "Импортировать контакты"
+
+msgid "Import"
+msgstr "Импорт"
+
+#, fuzzy
+msgid "Import into"
+msgstr "Импортировать подпись"
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+#, fuzzy
+msgid "Not imported"
+msgstr "Ключ импортирован"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "файлы vCard"
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
 "Имя, используемое здесь и в Контактах. Если оставить пустым, это {own}."
@@ -4618,15 +4752,6 @@ msgstr "Просмотреть фото"
 msgid "Add to Contacts"
 msgstr "Добавить в Контакты"
 
-msgid "Phone"
-msgstr "Телефон"
-
-msgid "Address"
-msgstr "Адрес"
-
-msgid "Birthday"
-msgstr "День рождения"
-
 #. ---- note ----
 msgid "Note"
 msgstr "Заметка"
@@ -4691,9 +4816,6 @@ msgstr "Редактировать контакт"
 msgid "Identity"
 msgstr "Идентичность"
 
-msgid "Nickname"
-msgstr "Псевдоним"
-
 msgid "Organization"
 msgstr "Организация"
 
@@ -4712,38 +4834,11 @@ msgstr "Добавить веб-сайт"
 msgid "No label"
 msgstr "Без метки"
 
-msgid "Home"
-msgstr "Домашний"
-
-msgid "Work"
-msgstr "Рабочий"
-
-msgid "Mobile"
-msgstr "Мобильный"
-
-msgid "Fax"
-msgstr "Факс"
-
 msgid "Label"
 msgstr "Метка"
 
 msgid "Add address"
 msgstr "Добавить адрес"
-
-msgid "Street"
-msgstr "Улица"
-
-msgid "City"
-msgstr "Город"
-
-msgid "State or region"
-msgstr "Область или регион"
-
-msgid "Postal code"
-msgstr "Почтовый индекс"
-
-msgid "Country"
-msgstr "Страна"
 
 msgid "No birthday"
 msgstr "Без дня рождения"
@@ -4814,20 +4909,8 @@ msgstr "Добавить человека по имени или адресу"
 msgid "No email address · {book}"
 msgstr "Нет адреса электронной почты · {book}"
 
-msgid "First name"
-msgstr "Имя"
-
-msgid "Last name"
-msgstr "Фамилия"
-
 msgid "Sort and filter contacts"
 msgstr "Сортировка и фильтрация контактов"
-
-msgid "Groups"
-msgstr "Группы"
-
-msgid "Import Contacts"
-msgstr "Импортировать контакты"
 
 #, fuzzy
 msgid "vCard and CSV files"
@@ -8147,9 +8230,6 @@ msgstr ""
 "Загружает копии каждого сообщения из каждой папки этой учётной записи на "
 "этот компьютер (кроме «Корзины», «Нежелательной почты» и «Черновиков») и "
 "сохраняет их в папке «На этом компьютере»."
-
-msgid "Import"
-msgstr "Импорт"
 
 msgid "Mail already here is not imported again."
 msgstr "Почта уже сюда снова не импортируется."

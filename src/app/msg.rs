@@ -746,8 +746,14 @@ pub(crate) enum AppMsg {
     },
     /// A contact write finished (`Some` = the error to show).
     ContactWriteDone(Option<String>),
-    /// `.vcf` files chosen in the Contacts page, to import into the Hylki book.
-    ImportContacts(Vec<std::path::PathBuf>),
+    /// Files chosen to import, and the book to offer first.
+    ImportContacts {
+        paths: Vec<std::path::PathBuf>,
+        book: Option<String>,
+    },
+    /// The files are read: ask where they go and what their columns are.
+    ContactImportReady(Box<crate::contacts::import::ImportStart>),
+    RunContactImport(crate::contacts::import::ImportRequest),
     /// The import finished.
     ContactsImported(Result<crate::contacts::local::ImportOutcome, String>),
 

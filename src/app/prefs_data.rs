@@ -79,7 +79,10 @@ impl AppModel {
                 crate::ui::contacts_page::choose_contact_files(
                     self.dialog_parent().as_ref(),
                     move |paths| {
-                        s.input(AppMsg::ImportContacts(paths));
+                        s.input(AppMsg::ImportContacts {
+                            paths,
+                            book: Some(crate::contacts::local::LOCAL_BOOK_UID.to_string()),
+                        });
                     },
                 );
             }

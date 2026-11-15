@@ -25,7 +25,7 @@ pub(crate) const LOCAL_BOOK_UID: &str = "hylki-local";
 /// Largest `.vcf` file read in one go.
 const MAX_FILE_BYTES: u64 = 50 * 1024 * 1024;
 /// Largest single vCard accepted (a contact with an embedded photo can be big).
-const MAX_VCARD_BYTES: usize = 5 * 1024 * 1024;
+pub(super) const MAX_VCARD_BYTES: usize = 5 * 1024 * 1024;
 /// The stored cards that may be groups, by their text: an Evolution list,
 /// or a vCard 4 or Apple group. LIKE ignores ASCII case.
 const GROUP_WHERE: &str = "vcard LIKE '%X-EVOLUTION-LIST:TRUE%' OR vcard LIKE '%KIND:group%'";
@@ -62,7 +62,7 @@ pub(crate) struct ImportOutcome {
 
 impl ImportOutcome {
     /// Add another outcome's counts to this one.
-    fn merge(&mut self, other: ImportOutcome) {
+    pub(crate) fn merge(&mut self, other: ImportOutcome) {
         self.added += other.added;
         self.updated += other.updated;
         self.skipped += other.skipped;
@@ -423,7 +423,7 @@ fn random_uid() -> Result<String, String> {
 }
 
 /// A UID derived from the vCard text, so the same card always maps to the same contact.
-fn content_uid(vcard: &str) -> String {
+pub(super) fn content_uid(vcard: &str) -> String {
     use sha2::{Digest, Sha256};
     let digest = Sha256::digest(vcard.replace("\r\n", "\n").trim().as_bytes());
     let hex: String = digest.iter().take(12).map(|b| format!("{b:02x}")).collect();
@@ -432,7 +432,7 @@ fn content_uid(vcard: &str) -> String {
 
 /// Insert a `UID:` line just before `END:VCARD` (returns the text unchanged
 /// when there is no end marker).
-fn insert_uid(vcard: &str, uid: &str) -> String {
+pub(super) fn insert_uid(vcard: &str, uid: &str) -> String {
     let Some(pos) = vcard.to_ascii_uppercase().rfind("END:VCARD") else {
         return vcard.to_string();
     };
@@ -595,53 +595,39 @@ fn qp_bytes(raw: &str) -> Vec<u8> {
     out
 }
 
+/// The vCards of a `.vcf` file's bytes, quoted-printable values decoded,
+/// and how many were cut short.
+pub(super) fn vcard_cards(bytes: &[u8]) -> Result<(Vec<String>, usize), String> {
+    let text = decode_text(bytes)?;
+    let (blocks, truncated) = split_vcards(&text);
+    let blocks = blocks.iter().map(|b| decode_quoted_printable(b)).collect();
+    Ok((blocks, truncated))
+}
+
 /// Import the vCards found in `text` into the store, in one transaction.
+#[cfg(test)]
 fn import_text_into(store: &mut Store, text: &str) -> Result<ImportOutcome, String> {
-    let (blocks, truncated) = split_vcards(text);
-    let blocks: Vec<String> = blocks.iter().map(|b| decode_quoted_printable(b)).collect();
+    let (blocks, truncated) = vcard_cards(text.as_bytes())?;
     let mut out = store.upsert_all(&blocks)?;
     out.errors += truncated;
     Ok(out)
 }
 
-/// Import the contacts of a CSV file (#655), and add each to the groups
-/// its row names: an existing group of the same name, or a new one.
-fn import_csv_into(store: &mut Store, bytes: &[u8]) -> Result<ImportOutcome, String> {
-    let found = super::csv_import::csv_contacts(bytes)?;
-    let mut out = store.upsert_all(&found.cards)?;
-    out.skipped += found.skipped;
-    store.merge_groups(&found.groups)?;
-    Ok(out)
-}
-
-/// Import several `.vcf` or CSV files. A file that cannot be read or
-/// stored is listed in `failed_files`; the others are still imported.
-pub(crate) fn import_files(paths: &[PathBuf]) -> Result<ImportOutcome, String> {
+/// Store imported cards in the book, then add the people to `groups`:
+/// to an existing group of the same name, or a new one.
+pub(super) fn store_cards(
+    cards: &[String],
+    groups: &[(String, Vec<Member>)],
+) -> Result<ImportOutcome, String> {
     let mut store = Store::open()?;
-    let mut total = ImportOutcome::default();
-    for path in paths {
-        let label = path
-            .file_name()
-            .map(|n| n.to_string_lossy().to_string())
-            .unwrap_or_default();
-        let imported = read_file(path).and_then(|bytes| {
-            if is_csv(path, &bytes) {
-                import_csv_into(&mut store, &bytes)
-            } else {
-                decode_text(&bytes).and_then(|text| import_text_into(&mut store, &text))
-            }
-        });
-        match imported {
-            Ok(outcome) => total.merge(outcome),
-            Err(e) => total.failed_files.push(format!("{label}: {e}")),
-        }
-    }
-    Ok(total)
+    let out = store.upsert_all(cards)?;
+    store.merge_groups(groups)?;
+    Ok(out)
 }
 
 /// Whether a file is a CSV rather than vCards: by its name, else by
 /// having no vCard in it.
-fn is_csv(path: &Path, bytes: &[u8]) -> bool {
+pub(super) fn is_csv(path: &Path, bytes: &[u8]) -> bool {
     let ext = path
         .extension()
         .map(|e| e.to_string_lossy().to_ascii_lowercase())
@@ -656,7 +642,7 @@ fn is_csv(path: &Path, bytes: &[u8]) -> bool {
 }
 
 /// Read one file to import, refusing anything over [`MAX_FILE_BYTES`].
-fn read_file(path: &Path) -> Result<Vec<u8>, String> {
+pub(super) fn read_file(path: &Path) -> Result<Vec<u8>, String> {
     let len = std::fs::metadata(path).map_err(|e| e.to_string())?.len();
     if len > MAX_FILE_BYTES {
         return Err(i18n_f(

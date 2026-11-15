@@ -366,9 +366,126 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr ""
 
+msgid "Home"
+msgstr ""
+
+msgid "Work"
+msgstr ""
+
+msgid "Mobile"
+msgstr ""
+
+msgid "Fax"
+msgstr ""
+
+msgid "{field} ({label})"
+msgstr ""
+
 #, fuzzy
-msgid "No column of the file holds a name, an email address or a phone number."
-msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
+msgid "Do not import"
+msgstr "Impossibile importare: {e}"
+
+#, fuzzy
+msgid "Full name"
+msgstr "Nome cartella"
+
+msgid "First name"
+msgstr "Nome"
+
+#, fuzzy
+msgid "Middle name"
+msgstr "Nome cartella"
+
+msgid "Last name"
+msgstr "Cognome"
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr "Soprannome"
+
+#, fuzzy
+msgid "Company"
+msgstr "Composizione"
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+#, fuzzy
+msgid "Notes"
+msgstr "Nota"
+
+msgid "Birthday"
+msgstr "Compleanno"
+
+#, fuzzy
+msgid "Birth year"
+msgstr "Compleanno"
+
+#, fuzzy
+msgid "Birth month"
+msgstr "Si ripete ogni mese"
+
+#, fuzzy
+msgid "Birth day"
+msgstr "Compleanno"
+
+#, fuzzy
+msgid "Groups"
+msgstr "Gruppo sinistra"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Phone"
+msgstr "Telefono"
+
+#, fuzzy
+msgid "Email label"
+msgstr "Client e-mail"
+
+#, fuzzy
+msgid "Phone label"
+msgstr "Telefono"
+
+#, fuzzy
+msgid "Address label"
+msgstr "Rubrica"
+
+#, fuzzy
+msgid "Website label"
+msgstr "Sito web"
+
+msgid "Address"
+msgstr "Indirizzo"
+
+msgid "Street"
+msgstr ""
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "State or region"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Country"
+msgstr ""
 
 msgid "Hylki Address Book"
 msgstr "Rubrica Hylki"
@@ -1995,9 +2112,6 @@ msgstr "Nome"
 msgid "Last Name"
 msgstr "Cognome"
 
-msgid "Email"
-msgstr "Email"
-
 #, fuzzy
 msgid "Column {n}"
 msgstr "Colonne"
@@ -3601,10 +3715,6 @@ msgid "Task list"
 msgstr "Questo elenco"
 
 #, fuzzy
-msgid "Notes"
-msgstr "Nota"
-
-#, fuzzy
 msgid "All day"
 msgstr "Aggiungi e-mail"
 
@@ -4430,6 +4540,32 @@ msgstr "Password di download per {name}: {password}"
 msgid "Reply-To"
 msgstr "Rispondi a"
 
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
+
+msgid "Import Contacts"
+msgstr "Importa contatti"
+
+#, fuzzy
+msgid "Import"
+msgstr "Importa…"
+
+#, fuzzy
+msgid "Import into"
+msgstr "Importa firma"
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+#, fuzzy
+msgid "Not imported"
+msgstr "Chiave importata"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "File vCard"
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
 
@@ -4815,15 +4951,6 @@ msgstr "Visualizza foto"
 msgid "Add to Contacts"
 msgstr "Aggiungi ai contatti"
 
-msgid "Phone"
-msgstr "Telefono"
-
-msgid "Address"
-msgstr "Indirizzo"
-
-msgid "Birthday"
-msgstr "Compleanno"
-
 #. ---- note ----
 msgid "Note"
 msgstr "Nota"
@@ -4885,9 +5012,6 @@ msgstr "Modifica contatto"
 msgid "Identity"
 msgstr "Identità"
 
-msgid "Nickname"
-msgstr "Soprannome"
-
 msgid "Organization"
 msgstr "Organizzazione"
 
@@ -4906,18 +5030,6 @@ msgstr "Aggiungi sito web"
 msgid "No label"
 msgstr ""
 
-msgid "Home"
-msgstr ""
-
-msgid "Work"
-msgstr ""
-
-msgid "Mobile"
-msgstr ""
-
-msgid "Fax"
-msgstr ""
-
 #, fuzzy
 msgid "Label"
 msgstr "Etichette"
@@ -4925,21 +5037,6 @@ msgstr "Etichette"
 #, fuzzy
 msgid "Add address"
 msgstr "Indirizzo"
-
-msgid "Street"
-msgstr ""
-
-msgid "City"
-msgstr ""
-
-msgid "State or region"
-msgstr ""
-
-msgid "Postal code"
-msgstr ""
-
-msgid "Country"
-msgstr ""
 
 #, fuzzy
 msgid "No birthday"
@@ -5020,22 +5117,9 @@ msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
 msgid "No email address · {book}"
 msgstr "Indirizzo e-mail"
 
-msgid "First name"
-msgstr "Nome"
-
-msgid "Last name"
-msgstr "Cognome"
-
 #, fuzzy
 msgid "Sort and filter contacts"
 msgstr "Messaggi e-mail"
-
-#, fuzzy
-msgid "Groups"
-msgstr "Gruppo sinistra"
-
-msgid "Import Contacts"
-msgstr "Importa contatti"
 
 #, fuzzy
 msgid "vCard and CSV files"
@@ -8450,10 +8534,6 @@ msgid ""
 "Downloads copies of every message from every folder of this account to this "
 "computer (except Trash, Junk and Drafts) and stores them in On This Computer."
 msgstr ""
-
-#, fuzzy
-msgid "Import"
-msgstr "Importa…"
 
 msgid "Mail already here is not imported again."
 msgstr ""

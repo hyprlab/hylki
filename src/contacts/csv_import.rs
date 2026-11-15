@@ -1,18 +1,21 @@
 //! Contacts from a CSV file (#655): what Google Contacts, Outlook and
 //! Thunderbird export, and any sheet whose first row names its columns in
-//! English ("Name", "Email", "Phone"…). Each row becomes a vCard, which goes
-//! into the Hylki book as an imported `.vcf` card does, and the labels or
-//! categories a row names become contact groups.
+//! English ("Name", "Email", "Phone"…), matched to contact fields first by
+//! their headers and then in the import dialog. Each row becomes a vCard,
+//! and the labels or categories a row names become contact groups.
 
-use super::details::{birthday_parts, birthday_value, Labeled, Member, Postal};
+mod fields;
+
+pub(crate) use fields::{can_import, detect, targets, Target};
+
+use super::details::{birthday_parts, birthday_value, Labeled, Postal};
 use super::edit::{new_vcard, ContactEdit};
 use super::vcard::escape_vcard_value;
-use crate::i18n::i18n;
-use crate::mail::merge::{parse_csv, Table};
+use crate::mail::merge::Table;
 
 /// A column that holds one thing about the person.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-enum Single {
+pub(crate) enum Single {
     Full,
     Given,
     Middle,
@@ -33,7 +36,7 @@ enum Single {
 
 /// The kinds of value a person can have several of.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum Kind {
+pub(crate) enum Kind {
     Email,
     Phone,
     Url,
@@ -42,7 +45,7 @@ enum Kind {
 
 /// A part of a postal address.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum Part {
+pub(crate) enum Part {
     PoBox,
     Extended,
     Street,
@@ -54,9 +57,9 @@ enum Part {
     Formatted,
 }
 
-/// What a column holds. A value of a set is keyed by its slot: Google's
-/// "E-mail 2 - Value" and "E-mail 2 - Label" share slot "2", Outlook's
-/// "Home City" and "Home Street" slot "home".
+/// What a column holds. A value of a set is keyed by its slot: a label
+/// column and the value it labels share one, as do the parts of one
+/// address ([`fields::resolve`]).
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum Col {
     Single(Single),
@@ -252,18 +255,6 @@ fn columns(table: &Table) -> Vec<Option<Col>> {
     cols
 }
 
-/// Whether the columns can say who a row is.
-fn names_anyone(cols: &[Option<Col>]) -> bool {
-    cols.iter().flatten().any(|c| {
-        matches!(
-            c,
-            Col::Single(
-                Single::Full | Single::Given | Single::Family | Single::Nickname | Single::Org
-            ) | Col::Value(Kind::Email | Kind::Phone, ..)
-        )
-    })
-}
-
 /// The values in a cell: Google puts several in one, split by ":::".
 fn values(cell: &str) -> impl Iterator<Item = &str> {
     cell.split(":::").map(str::trim).filter(|v| !v.is_empty())
@@ -337,53 +328,53 @@ struct Slot {
 
 /// The contacts of a CSV file, ready to store.
 #[derive(Debug, Default)]
-pub(super) struct CsvContacts {
-    pub(super) cards: Vec<String>,
-    /// Each group a row names, with its members who have an address: an
-    /// Evolution list, the Hylki book's kind of group, holds addresses.
-    pub(super) groups: Vec<(String, Vec<Member>)>,
+pub(crate) struct CsvContacts {
+    pub(crate) cards: Vec<String>,
+    /// Each group the rows name, with its members as indexes into `cards`.
+    pub(crate) groups: Vec<(String, Vec<usize>)>,
     /// Rows that name nobody: no name, address, phone or company.
-    pub(super) skipped: usize,
+    pub(crate) skipped: usize,
 }
 
-/// Read the contacts of a CSV file.
-pub(super) fn csv_contacts(bytes: &[u8]) -> Result<CsvContacts, String> {
-    let table = parse_csv(bytes)?;
-    let cols = columns(&table);
-    if !names_anyone(&cols) {
-        return Err(i18n(
-            "No column of the file holds a name, an email address or a phone number.",
-        ));
-    }
+/// The contacts of `table`, its columns matched as `targets` says.
+pub(crate) fn contacts_from(table: &Table, targets: &[Target]) -> CsvContacts {
+    let cols = fields::resolve(targets);
     let mut out = CsvContacts::default();
     for row in &table.rows {
-        let Some((card, groups, member)) = row_card(&cols, row) else {
+        let Some((card, groups)) = row_card(&cols, row) else {
             out.skipped += 1;
             continue;
         };
+        let at = out.cards.len();
         out.cards.push(card);
-        let Some(member) = member else { continue };
         for g in groups {
             match out
                 .groups
                 .iter_mut()
                 .find(|(name, _)| name.eq_ignore_ascii_case(&g))
             {
-                Some((_, members)) => {
-                    if !members.iter().any(|m| m.same(&member)) {
-                        members.push(member.clone());
-                    }
-                }
-                None => out.groups.push((g, vec![member.clone()])),
+                Some((_, members)) => members.push(at),
+                None => out.groups.push((g, vec![at])),
             }
         }
     }
-    Ok(out)
+    out
 }
 
-/// One row's vCard, the groups it names and the person as a group member
-/// (`None` without an address). `None` for a row that names nobody.
-fn row_card(cols: &[Option<Col>], row: &[String]) -> Option<(String, Vec<String>, Option<Member>)> {
+/// The contacts of a CSV file, its columns matched by their headers.
+#[cfg(test)]
+fn csv_contacts(bytes: &[u8]) -> Result<CsvContacts, String> {
+    let table = crate::mail::merge::parse_csv(bytes)?;
+    let targets = detect(&table);
+    if !can_import(&targets) {
+        return Err("nothing names anyone".into());
+    }
+    Ok(contacts_from(&table, &targets))
+}
+
+/// One row's vCard and the groups it names; `None` for a row that names
+/// nobody.
+fn row_card(cols: &[Option<Col>], row: &[String]) -> Option<(String, Vec<String>)> {
     let mut one = std::collections::HashMap::new();
     let mut groups = Vec::new();
     let mut slots: Vec<Slot> = Vec::new();
@@ -558,16 +549,7 @@ fn row_card(cols: &[Option<Col>], row: &[String]) -> Option<(String, Vec<String>
     if !groups.is_empty() {
         card = super::categories::with_categories(&card, &groups);
     }
-    let member = edit.emails.first().map(|e| Member {
-        name: if edit.name.is_empty() {
-            edit.org.clone()
-        } else {
-            edit.name.clone()
-        },
-        email: e.value.clone(),
-        ..Member::default()
-    });
-    Some((card, groups, member))
+    Some((card, groups))
 }
 
 /// Add each of `new` that `list` does not have yet (the same address in

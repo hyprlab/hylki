@@ -325,7 +325,112 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr ""
 
-msgid "No column of the file holds a name, an email address or a phone number."
+msgid "Home"
+msgstr ""
+
+msgid "Work"
+msgstr ""
+
+msgid "Mobile"
+msgstr ""
+
+msgid "Fax"
+msgstr ""
+
+msgid "{field} ({label})"
+msgstr ""
+
+msgid "Do not import"
+msgstr ""
+
+msgid "Full name"
+msgstr ""
+
+msgid "First name"
+msgstr ""
+
+msgid "Middle name"
+msgstr ""
+
+msgid "Last name"
+msgstr ""
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr ""
+
+msgid "Company"
+msgstr ""
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Birthday"
+msgstr ""
+
+msgid "Birth year"
+msgstr ""
+
+msgid "Birth month"
+msgstr ""
+
+msgid "Birth day"
+msgstr ""
+
+msgid "Groups"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Phone"
+msgstr ""
+
+msgid "Email label"
+msgstr ""
+
+msgid "Phone label"
+msgstr ""
+
+msgid "Address label"
+msgstr ""
+
+msgid "Website label"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "Street"
+msgstr ""
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "State or region"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Country"
 msgstr ""
 
 msgid "Hylki Address Book"
@@ -1779,9 +1884,6 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-msgid "Email"
-msgstr ""
-
 msgid "Column {n}"
 msgstr ""
 
@@ -3223,9 +3325,6 @@ msgstr ""
 msgid "Task list"
 msgstr ""
 
-msgid "Notes"
-msgstr ""
-
 msgid "All day"
 msgstr ""
 
@@ -3945,6 +4044,27 @@ msgstr ""
 msgid "Reply-To"
 msgstr ""
 
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+
+msgid "Import Contacts"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Import into"
+msgstr ""
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+msgid "Not imported"
+msgstr ""
+
+msgid "vCard files"
+msgstr ""
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
 
@@ -4263,15 +4383,6 @@ msgstr ""
 msgid "Add to Contacts"
 msgstr ""
 
-msgid "Phone"
-msgstr ""
-
-msgid "Address"
-msgstr ""
-
-msgid "Birthday"
-msgstr ""
-
 #. ---- note ----
 msgid "Note"
 msgstr ""
@@ -4329,9 +4440,6 @@ msgstr ""
 msgid "Identity"
 msgstr ""
 
-msgid "Nickname"
-msgstr ""
-
 msgid "Organization"
 msgstr ""
 
@@ -4350,37 +4458,10 @@ msgstr ""
 msgid "No label"
 msgstr ""
 
-msgid "Home"
-msgstr ""
-
-msgid "Work"
-msgstr ""
-
-msgid "Mobile"
-msgstr ""
-
-msgid "Fax"
-msgstr ""
-
 msgid "Label"
 msgstr ""
 
 msgid "Add address"
-msgstr ""
-
-msgid "Street"
-msgstr ""
-
-msgid "City"
-msgstr ""
-
-msgid "State or region"
-msgstr ""
-
-msgid "Postal code"
-msgstr ""
-
-msgid "Country"
 msgstr ""
 
 msgid "No birthday"
@@ -4450,19 +4531,7 @@ msgstr ""
 msgid "No email address · {book}"
 msgstr ""
 
-msgid "First name"
-msgstr ""
-
-msgid "Last name"
-msgstr ""
-
 msgid "Sort and filter contacts"
-msgstr ""
-
-msgid "Groups"
-msgstr ""
-
-msgid "Import Contacts"
 msgstr ""
 
 msgid "vCard and CSV files"
@@ -7546,9 +7615,6 @@ msgstr ""
 msgid ""
 "Downloads copies of every message from every folder of this account to this "
 "computer (except Trash, Junk and Drafts) and stores them in On This Computer."
-msgstr ""
-
-msgid "Import"
 msgstr ""
 
 msgid "Mail already here is not imported again."

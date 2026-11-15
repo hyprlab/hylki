@@ -366,9 +366,124 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr "Το Hylki δεν μπορεί να αλλάξει αυτόν τον τύπο ομάδας"
 
+msgid "Home"
+msgstr "Οικία"
+
+msgid "Work"
+msgstr "Εργασία"
+
+msgid "Mobile"
+msgstr "Κινητό"
+
+msgid "Fax"
+msgstr "Φαξ"
+
+msgid "{field} ({label})"
+msgstr ""
+
 #, fuzzy
-msgid "No column of the file holds a name, an email address or a phone number."
-msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
+msgid "Do not import"
+msgstr "Δεν ήταν δυνατή η εισαγωγή: {e}"
+
+#, fuzzy
+msgid "Full name"
+msgstr "Όνομα φακέλου"
+
+msgid "First name"
+msgstr "Όνομα"
+
+#, fuzzy
+msgid "Middle name"
+msgstr "Όνομα φακέλου"
+
+msgid "Last name"
+msgstr "Επώνυμο"
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr "Ψευδώνυμο"
+
+#, fuzzy
+msgid "Company"
+msgstr "Έχει εταιρεία"
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+msgid "Notes"
+msgstr "Σημειώσεις"
+
+msgid "Birthday"
+msgstr "Γενέθλια"
+
+#, fuzzy
+msgid "Birth year"
+msgstr "Γενέθλια"
+
+#, fuzzy
+msgid "Birth month"
+msgstr "Τον προηγούμενο μήνα"
+
+#, fuzzy
+msgid "Birth day"
+msgstr "Γενέθλια"
+
+msgid "Groups"
+msgstr "Αριστερή ομάδα"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+#, fuzzy
+msgid "Email label"
+msgstr "Πρόγραμμα-πελάτης email"
+
+#, fuzzy
+msgid "Phone label"
+msgstr "Χωρίς ετικέτα"
+
+#, fuzzy
+msgid "Address label"
+msgstr "Βιβλίο διευθύνσεων"
+
+#, fuzzy
+msgid "Website label"
+msgstr "Ιστότοπος"
+
+msgid "Address"
+msgstr "Διεύθυνση"
+
+msgid "Street"
+msgstr "Οδός"
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr "Πόλη"
+
+msgid "State or region"
+msgstr "Πολιτεία ή περιφέρεια"
+
+msgid "Postal code"
+msgstr "Ταχυδρομικός κώδικας"
+
+msgid "Country"
+msgstr "Χώρα"
 
 msgid "Hylki Address Book"
 msgstr "Βιβλίο διευθύνσεων Hylki"
@@ -1929,9 +2044,6 @@ msgstr "Όνομα"
 
 msgid "Last Name"
 msgstr "Επώνυμο"
-
-msgid "Email"
-msgstr "Email"
 
 msgid "Column {n}"
 msgstr "Στήλη {n}"
@@ -3495,9 +3607,6 @@ msgstr "Ημερολόγιο"
 msgid "Task list"
 msgstr "Λίστα εργασιών"
 
-msgid "Notes"
-msgstr "Σημειώσεις"
-
 msgid "All day"
 msgstr "Όλη την ημέρα"
 
@@ -4325,6 +4434,31 @@ msgstr "Κωδικός λήψης για {name}: {password}"
 msgid "Reply-To"
 msgstr "Απάντηση προς"
 
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
+
+msgid "Import Contacts"
+msgstr "Εισαγωγή επαφών"
+
+msgid "Import"
+msgstr "Εισαγωγή"
+
+#, fuzzy
+msgid "Import into"
+msgstr "Εισαγωγή υπογραφής"
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+#, fuzzy
+msgid "Not imported"
+msgstr "Το κλειδί εισήχθη"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "Αρχεία vCard"
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
 "Το όνομα που χρησιμοποιείται εδώ και στις Επαφές. Αν μείνει κενό, είναι "
@@ -4692,15 +4826,6 @@ msgstr "Προβολή φωτογραφίας"
 msgid "Add to Contacts"
 msgstr "Προσθήκη στις επαφές"
 
-msgid "Phone"
-msgstr "Τηλέφωνο"
-
-msgid "Address"
-msgstr "Διεύθυνση"
-
-msgid "Birthday"
-msgstr "Γενέθλια"
-
 #. ---- note ----
 msgid "Note"
 msgstr "Σημείωση"
@@ -4766,9 +4891,6 @@ msgstr "Επεξεργασία επαφής"
 msgid "Identity"
 msgstr "Ταυτότητα"
 
-msgid "Nickname"
-msgstr "Ψευδώνυμο"
-
 msgid "Organization"
 msgstr "Οργανισμός"
 
@@ -4788,38 +4910,11 @@ msgstr "Προσθήκη ιστοτόπου"
 msgid "No label"
 msgstr "Χωρίς ετικέτα"
 
-msgid "Home"
-msgstr "Οικία"
-
-msgid "Work"
-msgstr "Εργασία"
-
-msgid "Mobile"
-msgstr "Κινητό"
-
-msgid "Fax"
-msgstr "Φαξ"
-
 msgid "Label"
 msgstr "Ετικέτα"
 
 msgid "Add address"
 msgstr "Προσθήκη διεύθυνσης"
-
-msgid "Street"
-msgstr "Οδός"
-
-msgid "City"
-msgstr "Πόλη"
-
-msgid "State or region"
-msgstr "Πολιτεία ή περιφέρεια"
-
-msgid "Postal code"
-msgstr "Ταχυδρομικός κώδικας"
-
-msgid "Country"
-msgstr "Χώρα"
 
 msgid "No birthday"
 msgstr "Χωρίς γενέθλια"
@@ -4888,20 +4983,8 @@ msgstr "Προσθήκη ατόμου με όνομα ή διεύθυνση"
 msgid "No email address · {book}"
 msgstr "Χωρίς διεύθυνση email · {book}"
 
-msgid "First name"
-msgstr "Όνομα"
-
-msgid "Last name"
-msgstr "Επώνυμο"
-
 msgid "Sort and filter contacts"
 msgstr "Ταξινόμηση και φιλτράρισμα επαφών"
-
-msgid "Groups"
-msgstr "Αριστερή ομάδα"
-
-msgid "Import Contacts"
-msgstr "Εισαγωγή επαφών"
 
 #, fuzzy
 msgid "vCard and CSV files"
@@ -8240,9 +8323,6 @@ msgstr ""
 "Λαμβάνει αντίγραφα όλων των μηνυμάτων από όλους τους φακέλους αυτού του "
 "λογαριασμού (εκτός από τον Κάδο, τα Ανεπιθύμητα και τα Πρόχειρα) και τα "
 "αποθηκεύει στο «Σε αυτόν τον υπολογιστή»."
-
-msgid "Import"
-msgstr "Εισαγωγή"
 
 msgid "Mail already here is not imported again."
 msgstr "Η αλληλογραφία που υπάρχει ήδη εδώ δεν εισάγεται ξανά."

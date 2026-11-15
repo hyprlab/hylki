@@ -281,6 +281,22 @@ fn a_newer_schema_is_refused() {
     assert!(Store::init(conn).is_err());
 }
 
+/// A CSV file's rows as the import stores them in the Hylki book.
+fn import_csv(store: &mut Store, csv: &str) -> ImportOutcome {
+    use crate::contacts::csv_import::{contacts_from, detect};
+    let table = crate::mail::merge::parse_csv(csv.as_bytes()).unwrap();
+    let found = contacts_from(&table, &detect(&table));
+    let named = crate::contacts::import::group_members(
+        &found.cards,
+        &[],
+        &found.groups,
+        GroupFormat::Evolution,
+    );
+    let out = store.upsert_all(&found.cards).unwrap();
+    store.merge_groups(&named).unwrap();
+    out
+}
+
 #[test]
 fn a_csv_import_fills_groups_by_name_and_is_idempotent() {
     let mut store = Store::in_memory();
@@ -288,9 +304,9 @@ fn a_csv_import_fills_groups_by_name_and_is_idempotent() {
                 EMAIL:Tom <t@x.org>\r\nEND:VCARD\r\n";
     import_text_into(&mut store, list).unwrap();
     let csv = "Name,Email,Labels\nAnn,a@x.org,* myContacts ::: friends ::: Choir\nBob,,Choir\n";
-    let first = import_csv_into(&mut store, csv.as_bytes()).unwrap();
+    let first = import_csv(&mut store, csv);
     assert_eq!((first.added, first.updated), (2, 0));
-    let second = import_csv_into(&mut store, csv.as_bytes()).unwrap();
+    let second = import_csv(&mut store, csv);
     assert_eq!((second.added, second.updated), (0, 2));
     let groups: Vec<_> = store
         .group_vcards()
@@ -323,4 +339,24 @@ fn csv_files_are_told_from_vcards() {
         Path::new("export"),
         b"begin:vcard\r\nFN:A\r\nend:vcard"
     ));
+}
+
+#[test]
+fn group_members_follow_the_book_kind_of_group() {
+    use crate::contacts::import::group_members;
+    let cards = [
+        "BEGIN:VCARD\r\nVERSION:3.0\r\nFN:Ann\r\nEMAIL:a@x.org\r\nEND:VCARD\r\n".to_string(),
+        "BEGIN:VCARD\r\nVERSION:3.0\r\nFN:Bob\r\nTEL:0100\r\nEND:VCARD\r\n".to_string(),
+    ];
+    let groups = [("Team".to_string(), vec![0, 1])];
+    let uids = ["u-ann".to_string(), "u-bob".to_string()];
+    // A list holds addresses, so Bob, with only a phone, is left out.
+    let lists = group_members(&cards, &uids, &groups, GroupFormat::Evolution);
+    assert_eq!(lists[0].1.len(), 1);
+    // An Apple group holds cards, his among them.
+    let apple = group_members(&cards, &uids, &groups, GroupFormat::Apple);
+    let held: Vec<_> = apple[0].1.iter().map(|m| m.uid.as_str()).collect();
+    assert_eq!(held, ["u-ann", "u-bob"]);
+    // Categories are on the cards already.
+    assert!(group_members(&cards, &uids, &groups, GroupFormat::Categories).is_empty());
 }

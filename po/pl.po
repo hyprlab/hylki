@@ -373,7 +373,123 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr ""
 
-msgid "No column of the file holds a name, an email address or a phone number."
+msgid "Home"
+msgstr ""
+
+msgid "Work"
+msgstr ""
+
+msgid "Mobile"
+msgstr ""
+
+msgid "Fax"
+msgstr ""
+
+msgid "{field} ({label})"
+msgstr ""
+
+#, fuzzy
+msgid "Do not import"
+msgstr "Nie udało się zaimportować: {e}"
+
+#, fuzzy
+msgid "Full name"
+msgstr "Nazwa katalogu"
+
+msgid "First name"
+msgstr "Imię"
+
+#, fuzzy
+msgid "Middle name"
+msgstr "Nazwa katalogu"
+
+msgid "Last name"
+msgstr "Nazwisko"
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr ""
+
+#, fuzzy
+msgid "Company"
+msgstr "Pisanie wiadomości"
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Birthday"
+msgstr ""
+
+#, fuzzy
+msgid "Birth year"
+msgstr "Nazwisko"
+
+#, fuzzy
+msgid "Birth month"
+msgstr "Powtarza się co miesiąc"
+
+msgid "Birth day"
+msgstr ""
+
+#, fuzzy
+msgid "Groups"
+msgstr "Lewa grupa"
+
+msgid "Email"
+msgstr "Adres e-mail"
+
+msgid "Phone"
+msgstr "Telefon"
+
+#, fuzzy
+msgid "Email label"
+msgstr "Klient poczty"
+
+#, fuzzy
+msgid "Phone label"
+msgstr "Telefon"
+
+#, fuzzy
+msgid "Address label"
+msgstr "Książka adresowa"
+
+#, fuzzy
+msgid "Website label"
+msgstr "Witryna internetowa"
+
+msgid "Address"
+msgstr "Adres"
+
+msgid "Street"
+msgstr ""
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "State or region"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Country"
 msgstr ""
 
 #, fuzzy
@@ -2071,9 +2187,6 @@ msgstr "Imię"
 msgid "Last Name"
 msgstr "Nazwisko"
 
-msgid "Email"
-msgstr "Adres e-mail"
-
 #, fuzzy
 msgid "Column {n}"
 msgstr "Warunek {n}"
@@ -3690,9 +3803,6 @@ msgstr "Dodaj do kalendarza"
 msgid "Task list"
 msgstr "Ta lista"
 
-msgid "Notes"
-msgstr ""
-
 #, fuzzy
 msgid "All day"
 msgstr "Dodaj adres e-mail"
@@ -4544,6 +4654,32 @@ msgstr "Hasło do pobrania pliku {name}: {password}"
 msgid "Reply-To"
 msgstr "Odpowiedź do"
 
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+
+#, fuzzy
+msgid "Import Contacts"
+msgstr "Sortuj kontakty"
+
+#, fuzzy
+msgid "Import"
+msgstr "Importuj…"
+
+#, fuzzy
+msgid "Import into"
+msgstr "Importuj podpis"
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+#, fuzzy
+msgid "Not imported"
+msgstr "Zaimportowano klucz"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "Duże pliki"
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
 
@@ -4915,15 +5051,6 @@ msgstr "Wyświetl zdjęcie"
 msgid "Add to Contacts"
 msgstr "Dodaj do kontaktów"
 
-msgid "Phone"
-msgstr "Telefon"
-
-msgid "Address"
-msgstr "Adres"
-
-msgid "Birthday"
-msgstr ""
-
 #. ---- note ----
 msgid "Note"
 msgstr ""
@@ -4984,9 +5111,6 @@ msgstr "Modyfikuj kontakt"
 msgid "Identity"
 msgstr ""
 
-msgid "Nickname"
-msgstr ""
-
 #, fuzzy
 msgid "Organization"
 msgstr "Tłumacze"
@@ -5006,39 +5130,12 @@ msgstr "Dodaj witrynę"
 msgid "No label"
 msgstr ""
 
-msgid "Home"
-msgstr ""
-
-msgid "Work"
-msgstr ""
-
-msgid "Mobile"
-msgstr ""
-
-msgid "Fax"
-msgstr ""
-
 msgid "Label"
 msgstr ""
 
 #, fuzzy
 msgid "Add address"
 msgstr "Adres"
-
-msgid "Street"
-msgstr ""
-
-msgid "City"
-msgstr ""
-
-msgid "State or region"
-msgstr ""
-
-msgid "Postal code"
-msgstr ""
-
-msgid "Country"
-msgstr ""
 
 msgid "No birthday"
 msgstr ""
@@ -5119,23 +5216,9 @@ msgstr ""
 msgid "No email address · {book}"
 msgstr "Adres e-mail"
 
-msgid "First name"
-msgstr "Imię"
-
-msgid "Last name"
-msgstr "Nazwisko"
-
 #, fuzzy
 msgid "Sort and filter contacts"
 msgstr "wiadomości: {n}"
-
-#, fuzzy
-msgid "Groups"
-msgstr "Lewa grupa"
-
-#, fuzzy
-msgid "Import Contacts"
-msgstr "Sortuj kontakty"
 
 #, fuzzy
 msgid "vCard and CSV files"
@@ -8593,10 +8676,6 @@ msgid ""
 "Downloads copies of every message from every folder of this account to this "
 "computer (except Trash, Junk and Drafts) and stores them in On This Computer."
 msgstr ""
-
-#, fuzzy
-msgid "Import"
-msgstr "Importuj…"
 
 msgid "Mail already here is not imported again."
 msgstr ""

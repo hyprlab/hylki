@@ -744,30 +744,46 @@ contacts made in Hylki, from the Contacts view or with **Add Sender to
 Contacts**. Until it is set, a new contact goes to the first writable EDS
 book, or to the Hylki book when there is none.
 
-Importing reads `.vcf` and `.csv` files into the Hylki book, from Settings
-or from the import button in the Contacts view's header. A file can hold many contacts,
-in vCard 2.1, 3.0 or 4.0. A contact with the same ID as one already in the
-book updates it, and one without an ID is matched by its content, so
-importing a file twice adds nothing new. A contact list in the file becomes
-a group (see [Contact groups](#contact-groups)). Entries with neither a name
-nor an address are skipped; truncated or oversized entries
-(over 5 MB) are counted as damaged; a second card with the same ID in one
-file is skipped, so the first is kept. Files over 50 MB are refused, and
-photos are used only when they are inside the file: nothing is fetched from
-the web. A person who is in both an EDS book and the Hylki book appears in
-each, with the book named, and once in the composer's suggestions.
+Importing reads `.vcf` and `.csv` files, from Settings or from the import
+button in the Contacts view's header. Once the files are chosen, **Import
+Contacts** asks which address book they go to: the Hylki book or any EDS
+book that can be written to. It starts on the book the Contacts view is
+showing, and from Settings on the Hylki book. A `.vcf` file can hold many
+contacts, in vCard 2.1, 3.0 or 4.0. A contact with the same ID as one
+already in the book updates it, and one without an ID is matched by its
+content, so importing a file into the same book twice adds nothing new. A
+contact list in the file becomes a group (see
+[Contact groups](#contact-groups)). Entries with neither a name nor an
+address are skipped; truncated or oversized entries (over 5 MB) are counted
+as damaged; a second card with the same ID in one file is skipped, so the
+first is kept. Files over 50 MB are refused, and photos are used only when
+they are inside the file: nothing is fetched from the web. A person who is
+in both an EDS book and the Hylki book appears in each, with the book
+named, and once in the composer's suggestions.
 
-A CSV file's first row names its columns. The exports of Google Contacts,
-Outlook and Thunderbird are read as they are, and so is any sheet whose
-columns are named in English: Name or First Name and Last Name, Email,
-Phone, Company, Job Title, Address or its parts (Street, City, Postal Code,
-Country), Website, Birthday and Notes. A column of email addresses is read
-as one whatever its name. Commas, semicolons and tabs all work as the
-separator, and the file can be UTF-8, UTF-16 or Windows-1252. Google's
-labels, Outlook's categories or a Groups column put each person with an
-email address into the group of that name, which is made when the book has
-none. A row with no name, address, phone number or company is skipped, and
-importing the same file again adds nothing new.
+A CSV file's first row names its columns, and each column with a value in
+it has a row in **Import Contacts**: its name, its first values, and the
+contact field it fills, which can be changed to any other field or to **Do
+not import**. Columns start matched by their names. The exports of Google
+Contacts, Outlook and Thunderbird are matched as they are, and so are
+columns named in English: Name or First Name and Last Name, Email, Phone,
+Company, Job Title, Address or its parts (Street, City, Postal Code,
+Country), Website, Birthday and Notes. A column of email addresses is
+matched to Email whatever its name. A label column, such as Google's
+"E-mail 1 - Label", gives the value after it its label (Home, Work, Mobile
+or Fax). Under the file's name the window counts the contacts and groups
+the file makes; it imports nothing until a column is matched to a name, an
+email address or a phone number. Commas, semicolons and tabs all work as
+the separator, and the file can be UTF-8, UTF-16 or Windows-1252. A row
+with no name, address, phone number or company is skipped.
+
+Google's labels, Outlook's categories, or a column matched to **Groups**,
+put each person in the group of that name, which is made when the book has
+none. A book whose groups are Evolution lists, such as the Hylki book or
+On This Computer, takes only the people with an email address into them; a
+CardDAV book's groups take everyone. A Nextcloud book keeps the names as
+categories on each contact, and a Google or Microsoft 365 book, which keeps
+no groups, leaves them on each contact.
 
 The book is the file `local_contacts.db` in Hylki's data folder, kept apart
 from the mail cache, so clearing the cache leaves it alone.

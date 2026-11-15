@@ -367,10 +367,126 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr "L'Hylki no pot modificar aquest tipus de grup"
 
-#, fuzzy
-msgid "No column of the file holds a name, an email address or a phone number."
+msgid "Home"
+msgstr "Casa"
+
+msgid "Work"
+msgstr "Feina"
+
+msgid "Mobile"
+msgstr "Mòbil"
+
+msgid "Fax"
+msgstr "Fax"
+
+msgid "{field} ({label})"
 msgstr ""
-"Un contacte necessita un nom, una adreça de correu o un número de telèfon"
+
+#, fuzzy
+msgid "Do not import"
+msgstr "No s'ha pogut importar: {e}"
+
+#, fuzzy
+msgid "Full name"
+msgstr "Nom de la carpeta"
+
+msgid "First name"
+msgstr "Nom"
+
+#, fuzzy
+msgid "Middle name"
+msgstr "Nom de la carpeta"
+
+msgid "Last name"
+msgstr "Cognom"
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr "Àlies"
+
+#, fuzzy
+msgid "Company"
+msgstr "Té empresa"
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+#, fuzzy
+msgid "Notes"
+msgstr "Nota"
+
+msgid "Birthday"
+msgstr "Aniversari"
+
+#, fuzzy
+msgid "Birth year"
+msgstr "Aniversari"
+
+#, fuzzy
+msgid "Birth month"
+msgstr "Es repeteix mensualment"
+
+#, fuzzy
+msgid "Birth day"
+msgstr "Aniversari"
+
+#, fuzzy
+msgid "Groups"
+msgstr "Grup"
+
+msgid "Email"
+msgstr "Correu electrònic"
+
+msgid "Phone"
+msgstr "Telèfon"
+
+#, fuzzy
+msgid "Email label"
+msgstr "Client de correu"
+
+#, fuzzy
+msgid "Phone label"
+msgstr "Sense etiqueta"
+
+#, fuzzy
+msgid "Address label"
+msgstr "Llibreta d'adreces"
+
+#, fuzzy
+msgid "Website label"
+msgstr "Lloc web"
+
+msgid "Address"
+msgstr "Adreça"
+
+msgid "Street"
+msgstr "Carrer"
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr "Ciutat"
+
+msgid "State or region"
+msgstr "Estat o regió"
+
+msgid "Postal code"
+msgstr "Codi postal"
+
+msgid "Country"
+msgstr "País"
 
 msgid "Hylki Address Book"
 msgstr "Llibreta d'adreces de l'Hylki"
@@ -1948,9 +2064,6 @@ msgstr "Nom"
 msgid "Last Name"
 msgstr "Cognom"
 
-msgid "Email"
-msgstr "Correu electrònic"
-
 #, fuzzy
 msgid "Column {n}"
 msgstr "Columnes"
@@ -3525,10 +3638,6 @@ msgid "Task list"
 msgstr "Aquesta llista"
 
 #, fuzzy
-msgid "Notes"
-msgstr "Nota"
-
-#, fuzzy
 msgid "All day"
 msgstr "Afegeix un correu"
 
@@ -4335,6 +4444,33 @@ msgstr "Contrasenya de descàrrega per a {name}: {password}"
 msgid "Reply-To"
 msgstr "Respon a"
 
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+"Un contacte necessita un nom, una adreça de correu o un número de telèfon"
+
+msgid "Import Contacts"
+msgstr "Importa contactes"
+
+#, fuzzy
+msgid "Import"
+msgstr "Importa…"
+
+#, fuzzy
+msgid "Import into"
+msgstr "Importa una signatura"
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+#, fuzzy
+msgid "Not imported"
+msgstr "Clau importada"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "Fitxers vCard"
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr "El nom utilitzat aquí i a Contactes. Si es deixa buit, és {own}."
 
@@ -4699,15 +4835,6 @@ msgstr "Mostra la foto"
 msgid "Add to Contacts"
 msgstr "Afegeix a contactes"
 
-msgid "Phone"
-msgstr "Telèfon"
-
-msgid "Address"
-msgstr "Adreça"
-
-msgid "Birthday"
-msgstr "Aniversari"
-
 #. ---- note ----
 msgid "Note"
 msgstr "Nota"
@@ -4772,9 +4899,6 @@ msgstr "Edita el contacte"
 msgid "Identity"
 msgstr "Identitat"
 
-msgid "Nickname"
-msgstr "Àlies"
-
 msgid "Organization"
 msgstr "Organització"
 
@@ -4793,38 +4917,11 @@ msgstr "Afegeix un lloc web"
 msgid "No label"
 msgstr "Sense etiqueta"
 
-msgid "Home"
-msgstr "Casa"
-
-msgid "Work"
-msgstr "Feina"
-
-msgid "Mobile"
-msgstr "Mòbil"
-
-msgid "Fax"
-msgstr "Fax"
-
 msgid "Label"
 msgstr "Etiqueta"
 
 msgid "Add address"
 msgstr "Afegeix una adreça"
-
-msgid "Street"
-msgstr "Carrer"
-
-msgid "City"
-msgstr "Ciutat"
-
-msgid "State or region"
-msgstr "Estat o regió"
-
-msgid "Postal code"
-msgstr "Codi postal"
-
-msgid "Country"
-msgstr "País"
 
 msgid "No birthday"
 msgstr "Sense aniversari"
@@ -4893,21 +4990,8 @@ msgstr "Afegeix una persona pel nom o l'adreça"
 msgid "No email address · {book}"
 msgstr "Sense adreça de correu · {book}"
 
-msgid "First name"
-msgstr "Nom"
-
-msgid "Last name"
-msgstr "Cognom"
-
 msgid "Sort and filter contacts"
 msgstr "Ordena i filtra contactes"
-
-#, fuzzy
-msgid "Groups"
-msgstr "Grup"
-
-msgid "Import Contacts"
-msgstr "Importa contactes"
 
 #, fuzzy
 msgid "vCard and CSV files"
@@ -8255,10 +8339,6 @@ msgid ""
 "Downloads copies of every message from every folder of this account to this "
 "computer (except Trash, Junk and Drafts) and stores them in On This Computer."
 msgstr ""
-
-#, fuzzy
-msgid "Import"
-msgstr "Importa…"
 
 msgid "Mail already here is not imported again."
 msgstr ""

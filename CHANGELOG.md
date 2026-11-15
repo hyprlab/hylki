@@ -2,11 +2,15 @@
 
 ## Unreleased
 
-- **Added: contacts can be imported from CSV files** (#655). The import in
-  Settings → Contacts and in the Contacts view takes `.csv` files as well as
-  `.vcf`. Exports from Google Contacts, Outlook and Thunderbird are read as
-  they are, as is any sheet with columns such as Name, Email and Phone.
-  Labels and categories become contact groups.
+- **Added: contacts can be imported from CSV files, into any address
+  book** (#655). The import in Settings → Contacts and in the Contacts view
+  takes `.csv` files as well as `.vcf`, and opens **Import Contacts**, which
+  asks for the address book (the Hylki book or any writable EDS book) and
+  shows each CSV column with its first values and the contact field it
+  fills. Columns start matched from the exports of Google Contacts, Outlook
+  and Thunderbird, or from English names such as Name, Email and Phone, and
+  any of them can be matched by hand. Labels and categories become contact
+  groups in the book's own kind of group.
 
 - **Fixed: a message with large attachments or pictures was slow to open**
   (#608, by Valentin Morice). A conversation with a 19 MB attachment opened

@@ -228,7 +228,9 @@ impl AppModel {
             | AppMsg::CopyContacts { .. }
             | AppMsg::MoveContacts { .. }
             | AppMsg::ContactWriteDone(..)
-            | AppMsg::ImportContacts(..)
+            | AppMsg::ImportContacts { .. }
+            | AppMsg::ContactImportReady(..)
+            | AppMsg::RunContactImport(..)
             | AppMsg::ContactsImported(..)) => self.on_contacts(msg, sender),
             msg @ AppMsg::OpenAbout => self.on_about(msg, sender),
             msg @ (AppMsg::AllowSender(..)

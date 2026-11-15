@@ -505,12 +505,30 @@ impl AppModel {
                 reload_contacts(&sender, 500);
             }
 
-            AppMsg::ImportContacts(paths) => {
+            AppMsg::ImportContacts { paths, book } => {
                 let s = sender.clone();
                 std::thread::spawn(move || {
-                    s.input(AppMsg::ContactsImported(
-                        crate::contacts::import_contact_files(&paths),
-                    ));
+                    let books = if demo_mode() {
+                        crate::contacts::demo_books()
+                    } else {
+                        crate::contacts::writable_books()
+                    };
+                    let start = crate::contacts::import::prepare(paths, books, book);
+                    s.input(AppMsg::ContactImportReady(Box::new(start)));
+                });
+            }
+
+            AppMsg::ContactImportReady(start) => {
+                let s = sender.input_sender().clone();
+                crate::ui::contact_import::show(self.dialog_parent().as_ref(), *start, move |req| {
+                    let _ = s.send(AppMsg::RunContactImport(req));
+                });
+            }
+
+            AppMsg::RunContactImport(req) => {
+                let s = sender.clone();
+                std::thread::spawn(move || {
+                    s.input(AppMsg::ContactsImported(crate::contacts::import::run(&req)));
                 });
             }
 
