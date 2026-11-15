@@ -4,8 +4,10 @@
 use std::fmt;
 use std::sync::Arc;
 
-/// A decoded message attachment (fetched on demand for the reader).
-#[derive(Clone)]
+/// A decoded message attachment (fetched on demand for the reader). Two are
+/// equal when their names and bytes are; for copies of one file that costs a
+/// pointer comparison, as `Arc` checks for the same allocation first.
+#[derive(Clone, PartialEq, Eq)]
 pub(crate) struct Attachment {
     pub(crate) name: String,
     /// The file's bytes, shared: the reader's cache, its drawer, the gallery

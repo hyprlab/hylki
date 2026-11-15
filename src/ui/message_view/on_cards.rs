@@ -27,6 +27,12 @@ impl MessageView {
         &mut self,
         map: std::collections::HashMap<(u32, u32), Vec<CardAttachment>>,
     ) {
+        // Handed over again with every refresh of the drawer, most often
+        // unchanged: patching the same rows in only lays the page out again.
+        // A page loaded since takes them in on its own (`on_rendered`).
+        if map == self.card_atts {
+            return;
+        }
         self.card_atts = map;
         let keys: Vec<(u32, u32)> = self.thread.iter().map(|m| (m.account_id, m.id)).collect();
         self.patch_card_atts(&keys);

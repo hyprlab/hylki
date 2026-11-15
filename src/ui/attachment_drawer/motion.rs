@@ -251,6 +251,12 @@ impl AttachmentDrawer {
     /// A new list of files, the empty one held back a moment (see `SetItems`).
     pub(super) fn set_items(&mut self, items: Vec<Attachment>, sender: &ComponentSender<Self>) {
         self.empty_gen += 1;
+        // A conversation's drawer is handed the whole list again as each
+        // member's files come in, most often the same files: rebuilding the
+        // grid for them only asked for every thumbnail once more.
+        if items == self.items {
+            return;
+        }
         // Opening a message clears the list and then gives the new
         // one, as two messages. Taken as they come, the drawer would
         // fade out and back in between two messages that both have
