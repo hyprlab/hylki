@@ -174,7 +174,7 @@ impl AttachmentsGallery {
             }
             None => {
                 let s = sender.clone();
-                lightbox_pdf_texture(data, move |_| {
+                lightbox_pdf_texture(data.clone(), move |_| {
                     s.input(GalleryInput::PreviewRendered(key));
                 });
             }

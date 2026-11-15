@@ -287,7 +287,10 @@ fn contacts_page_output_msg(out: ContactsPageOutput) -> AppMsg {
             // hung the UI trying to parse it. Name it by content.
             let name = format!("{name}.{}", crate::models::image_ext(&data));
             AppMsg::ShowLightbox {
-                items: vec![crate::models::Attachment { name, data }],
+                items: vec![crate::models::Attachment {
+                    name,
+                    data: data.into(),
+                }],
                 start: 0,
             }
         }

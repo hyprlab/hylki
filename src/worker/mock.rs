@@ -25,22 +25,28 @@ fn demo_attachment_files(message_id: u32) -> Vec<crate::models::Attachment> {
     let first = match message_id {
         23 => crate::models::Attachment {
             name: "Q3-roadmap-draft.pdf".into(),
-            data: include_bytes!("../../data/demo/q3-roadmap-draft.pdf").to_vec(),
+            data: include_bytes!("../../data/demo/q3-roadmap-draft.pdf")
+                .as_slice()
+                .into(),
         },
         21 => crate::models::Attachment {
             name: "migration-timeline.pdf".into(),
-            data: include_bytes!("../../data/demo/migration-timeline.pdf").to_vec(),
+            data: include_bytes!("../../data/demo/migration-timeline.pdf")
+                .as_slice()
+                .into(),
         },
         _ => crate::models::Attachment {
             name: "palette-hover.png".into(),
-            data: PNG_1X1.to_vec(),
+            data: PNG_1X1.into(),
         },
     };
     vec![
         first,
         crate::models::Attachment {
             name: "notes.txt".into(),
-            data: b"Hover palette: reserved-space fade vs. layout shift.\n".to_vec(),
+            data: b"Hover palette: reserved-space fade vs. layout shift.\n"
+                .as_slice()
+                .into(),
         },
     ]
 }
@@ -250,7 +256,7 @@ pub(super) async fn run_mock(
                 let items = if let Some(inv) = invite {
                     vec![crate::models::Attachment {
                         name: "invite.ics".to_string(),
-                        data: inv.ics.into_bytes(),
+                        data: inv.ics.into_bytes().into(),
                     }]
                 } else if backend
                     .message(message_id)

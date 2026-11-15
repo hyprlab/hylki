@@ -1,11 +1,16 @@
 //! Attachments, the file-type helpers, and the attachments gallery's rows
 //! and sort orders.
 
+use std::sync::Arc;
+
 /// A decoded message attachment (fetched on demand for the reader).
 #[derive(Debug, Clone)]
 pub(crate) struct Attachment {
     pub(crate) name: String,
-    pub(crate) data: Vec<u8>,
+    /// The file's bytes, shared: the reader's cache, its drawer, the gallery
+    /// and the lightbox each hold the same file, and a clone is a reference
+    /// count rather than a copy of megabytes.
+    pub(crate) data: Arc<[u8]>,
 }
 
 impl Attachment {
@@ -191,7 +196,7 @@ pub(crate) struct GalleryItem {
     pub(crate) subject: String,
     /// Source message timestamp (for sorting, newest first).
     pub(crate) timestamp: i64,
-    pub(crate) data: Option<Vec<u8>>,
+    pub(crate) data: Option<Arc<[u8]>>,
 }
 
 impl GalleryItem {
