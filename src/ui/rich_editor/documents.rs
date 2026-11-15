@@ -11,6 +11,7 @@ use super::scripts::{
 use super::signature::{find_src_attr, quoted_value};
 use super::toolbar::js_str;
 use crate::i18n::i18n;
+use webkit6::prelude::WebViewExt;
 
 /// The contentEditable HTML document, themed for light/dark. Its ground is
 /// the theme's own view background (#148), read through `webview`, so a
@@ -316,6 +317,8 @@ pub(super) fn reground(weak: &gtk::glib::WeakRef<webkit6::WebView>, dark: bool) 
     gtk::glib::idle_add_local_once(move || {
         let Some(v) = weak.upgrade() else { return };
         let (ground, _, _) = crate::ui::message_view::theme_grounds_for(&v, dark);
+        // The surface follows the document's new ground (see rich_editor/setup.rs).
+        v.set_background_color(&crate::ui::message_view::ground_rgba(&ground));
         let scheme = if dark { "dark" } else { "light" };
         exec(
             &v,

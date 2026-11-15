@@ -48,6 +48,7 @@ use self::page_load::PendingLoad;
 use crate::models::Message;
 
 pub(crate) use faces::set_face_tiers;
+pub(crate) use frame::ground_rgba;
 pub(crate) use frame::theme_grounds_for;
 pub(crate) use links::set_clean_links;
 pub(crate) use menu::MenuHit;

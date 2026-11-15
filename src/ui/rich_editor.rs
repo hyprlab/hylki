@@ -292,7 +292,13 @@ impl RichEditor {
                 crate::desktop::memory_report::register_web_view(&v, "editor preview");
                 super::message_view::keep_tab_out_of_key_translator(&v);
                 v.set_zoom_level(self.zoom.get());
-                v.set_background_color(&gtk::gdk::RGBA::new(0.0, 0.0, 0.0, 0.0));
+                // Opaque for the same NVIDIA reason as the editor itself
+                // (see rich_editor/setup.rs).
+                let (ground, _, _) = crate::ui::message_view::theme_grounds_for(
+                    &v,
+                    adw::StyleManager::default().is_dark(),
+                );
+                v.set_background_color(&crate::ui::message_view::ground_rgba(&ground));
                 self.stack.add_named(&v, Some("preview"));
                 *self.preview.borrow_mut() = Some(v.clone());
                 v

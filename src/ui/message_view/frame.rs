@@ -183,7 +183,7 @@ thread_local! {
 }
 
 /// That ground as a color the WebView itself can be painted with.
-pub(super) fn ground_rgba(hex: &str) -> gtk::gdk::RGBA {
+pub(crate) fn ground_rgba(hex: &str) -> gtk::gdk::RGBA {
     let v = |i: usize| u8::from_str_radix(&hex[i..i + 2], 16).unwrap_or(0) as f32 / 255.0;
     gtk::gdk::RGBA::new(v(1), v(3), v(5), 1.0)
 }
