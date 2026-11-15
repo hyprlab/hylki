@@ -182,6 +182,7 @@ impl AppModel {
             attachments: Vec::new(),
             lightbox,
             attachments_loading: false,
+            attachments_asked: Default::default(),
             reader_actions_collapsed: false,
             reader_compact: false,
             list_actions_collapsed: false,
