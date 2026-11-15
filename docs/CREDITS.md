@@ -173,6 +173,8 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   composer menu entries left in the system's language, the Russian
   translation completed, Insert Template in the composer, several names on
   one send-as address, and a sender name for each signature.
+- [**reqhald**](https://github.com/reqhald) ([#665](https://github.com/hyprlab/hylki/pull/665)):
+  the composer drawn without flicker or garbled text on the NVIDIA driver.
 
 ## Reports, design and ideas
 
