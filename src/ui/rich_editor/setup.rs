@@ -162,6 +162,9 @@ fn editor_view() -> (webkit6::WebView, webkit6::UserContentManager) {
         .build();
     crate::desktop::memory_report::register_web_view(&webview, "editor");
     crate::ui::message_view::keep_tab_out_of_key_translator(&webview);
+    // A picture copied out of the reader comes with its `hylki-inline:` URL,
+    // which the paste script fetches to keep its bytes.
+    webview.set_cors_allowlist(&[crate::services::inline_images::CORS_PATTERN]);
     // Everything the view itself owns (its content manager's handlers,
     // its event controllers, its toolbar's buttons via the format-state
     // handler) holds the view WEAKLY. A strong clone in any of those

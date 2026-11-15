@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Fixed: a message with large attachments or pictures was slow to open**
+  (#608, by Valentin Morice). A conversation with a 19 MB attachment opened
+  in 150 ms instead of 360 ms, and one with megabytes of pictures in its
+  body in 260 ms instead of 760 ms. Attachments are asked for once per
+  opening and shared instead of copied, the attachment drawer is built once
+  and renders each thumbnail once, and pictures carried in a message's body
+  are served apart from its page. Logging at the info level no longer writes
+  an attachment out byte by byte.
+
 - **Added: an alias can be its account's default From address** (#157,
   requested by 3v1n0). **Default From address** in an alias's settings
   makes new messages from the account start from that alias, and replies to

@@ -145,14 +145,11 @@ pub(crate) fn register(ctx: &webkit6::WebContext) {
     );
 }
 
-/// Let `view`'s pages load from the cached schemes. WebKitGTK shows a
-/// custom scheme only to a page it may request it from, which by default is
-/// a page on that scheme; the allowlist is what opens it to the reader's
-/// `https://hylki.localhost` documents.
-pub(crate) fn allow_in(view: &webkit6::WebView) {
-    use webkit6::prelude::WebViewExt;
-    view.set_cors_allowlist(&["hylki-http://*/*", "hylki-https://*/*"]);
-}
+/// What lets a page load from the cached schemes, for the view's CORS
+/// allowlist. WebKitGTK shows a custom scheme only to a page it may request
+/// it from, which by default is a page on that scheme; the allowlist is what
+/// opens it to the reader's `https://hylki.localhost` documents.
+pub(crate) const CORS_PATTERNS: [&str; 2] = ["hylki-http://*/*", "hylki-https://*/*"];
 
 fn handle(request: &webkit6::URISchemeRequest) {
     let Some(url) = request.uri().and_then(|u| origin_url(&u)) else {
