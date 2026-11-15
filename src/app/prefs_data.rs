@@ -76,7 +76,7 @@ impl AppModel {
             }
             PrefOutput::ImportLocalContacts => {
                 let s = sender.clone();
-                crate::ui::contacts_page::choose_vcf_files(
+                crate::ui::contacts_page::choose_contact_files(
                     self.dialog_parent().as_ref(),
                     move |paths| {
                         s.input(AppMsg::ImportContacts(paths));

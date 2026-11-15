@@ -337,6 +337,11 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr "Hylki ne peut pas modifier ce type de groupe"
 
+#, fuzzy
+msgid "No column of the file holds a name, an email address or a phone number."
+msgstr ""
+"Un contact doit avoir un nom, une adresse e-mail ou un numéro de téléphone"
+
 msgid "Hylki Address Book"
 msgstr "Carnet d’adresses Hylki"
 
@@ -4412,12 +4417,14 @@ msgstr ""
 msgid "Contacts in the Hylki book"
 msgstr "Contacts du carnet Hylki"
 
-msgid "Import vCard files"
+#, fuzzy
+msgid "Import vCard or CSV files"
 msgstr "Importer des fichiers vCard"
 
+#, fuzzy
 msgid ""
-"Adds contacts from .vcf files. Importing a file again updates existing "
-"entries."
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
 msgstr ""
 "Ajoute des contacts depuis des fichiers .vcf. Réimporter un fichier met à "
 "jour les entrées existantes."
@@ -4868,7 +4875,8 @@ msgstr "Groupes"
 msgid "Import Contacts"
 msgstr "Importer des contacts"
 
-msgid "vCard files"
+#, fuzzy
+msgid "vCard and CSV files"
 msgstr "Fichiers vCard"
 
 msgid "All files"
@@ -4982,7 +4990,8 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "{n} contact sera supprimé de votre carnet d’adresses."
 msgstr[1] "{n} contacts seront supprimés de vos carnets d’adresses."
 
-msgid "Import vCard files into the Hylki address book"
+#, fuzzy
+msgid "Import vCard or CSV files into the Hylki address book"
 msgstr "Importer des fichiers vCard dans le carnet d’adresses Hylki"
 
 msgid "New contact or group"
@@ -4991,10 +5000,11 @@ msgstr "Nouveau contact ou groupe"
 msgid "Loading Contacts…"
 msgstr "Chargement des contacts…"
 
+#, fuzzy
 msgid ""
-"Add a contact with the + button, or import vCard files. Contacts are kept in "
-"Hylki's own address book, and the address books of GNOME Contacts are listed "
-"here too."
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
 msgstr ""
 "Ajoutez un contact avec le bouton +, ou importez des fichiers vCard. Les "
 "contacts sont conservés dans le carnet d’adresses propre à Hylki, et les "

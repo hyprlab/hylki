@@ -335,6 +335,10 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr "Хюльки не может изменить такую группу."
 
+#, fuzzy
+msgid "No column of the file holds a name, an email address or a phone number."
+msgstr "Контакту необходимо имя, адрес электронной почты или номер телефона."
+
 msgid "Hylki Address Book"
 msgstr "Адресная книга Хюльки"
 
@@ -4369,12 +4373,14 @@ msgstr "Хранится в собственной папке данных Hylki
 msgid "Contacts in the Hylki book"
 msgstr "Контакты в книге Хюльки"
 
-msgid "Import vCard files"
+#, fuzzy
+msgid "Import vCard or CSV files"
 msgstr "Импорт файлов vCard"
 
+#, fuzzy
 msgid ""
-"Adds contacts from .vcf files. Importing a file again updates existing "
-"entries."
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
 msgstr ""
 "Добавляет контакты из файлов .vcf. При повторном импорте файла существующие "
 "записи обновляются."
@@ -4823,7 +4829,8 @@ msgstr "Группы"
 msgid "Import Contacts"
 msgstr "Импортировать контакты"
 
-msgid "vCard files"
+#, fuzzy
+msgid "vCard and CSV files"
 msgstr "файлы vCard"
 
 msgid "All files"
@@ -4935,7 +4942,8 @@ msgstr[0] "Контакт {n} будет удалён из адресной кн
 msgstr[1] "Контакты {n} будут удалены из адресных книг."
 msgstr[2] "Контакты {n} будут удалены из адресных книг."
 
-msgid "Import vCard files into the Hylki address book"
+#, fuzzy
+msgid "Import vCard or CSV files into the Hylki address book"
 msgstr "Импортируйте файлы vCard в адресную книгу Hylki."
 
 msgid "New contact or group"
@@ -4944,10 +4952,11 @@ msgstr "Новый контакт или группа"
 msgid "Loading Contacts…"
 msgstr "Загрузка контактов…"
 
+#, fuzzy
 msgid ""
-"Add a contact with the + button, or import vCard files. Contacts are kept in "
-"Hylki's own address book, and the address books of GNOME Contacts are listed "
-"here too."
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
 msgstr ""
 "Добавьте контакт с помощью кнопки + или импортируйте файлы vCard. Контакты "
 "хранятся в собственной адресной книге Hylki, здесь также перечислены "

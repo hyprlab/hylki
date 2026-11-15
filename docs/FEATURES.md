@@ -210,7 +210,7 @@ The full list. The [README](../README.md) carries a shorter one.
   Mark as Spam, and a sound if you want one: built in, or a file of your own.
 - **GNOME Contacts:** names and photos from your address book, optional.
 - **Hylki address book:** a book of your own, beside the ones Evolution Data
-  Server keeps, with vCard (`.vcf`) import. It works without GNOME.
+  Server keeps, with vCard (`.vcf`) and CSV import. It works without GNOME.
 - **CardDAV accounts:** the address books of Nextcloud, iCloud, Fastmail or
   any CardDAV server, set up in Hylki, through Evolution Data Server. See
   [CardDAV accounts](DOCUMENTATION.md#carddav-accounts).

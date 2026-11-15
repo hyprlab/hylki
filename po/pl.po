@@ -373,6 +373,9 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr ""
 
+msgid "No column of the file holds a name, an email address or a phone number."
+msgstr ""
+
 #, fuzzy
 msgid "Hylki Address Book"
 msgstr "Książka adresowa"
@@ -4667,12 +4670,12 @@ msgid "Contacts in the Hylki book"
 msgstr "Kontakty w panelu bocznym"
 
 #, fuzzy
-msgid "Import vCard files"
+msgid "Import vCard or CSV files"
 msgstr "Duże pliki"
 
 msgid ""
-"Adds contacts from .vcf files. Importing a file again updates existing "
-"entries."
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
 msgstr ""
 
 #, fuzzy
@@ -5135,7 +5138,7 @@ msgid "Import Contacts"
 msgstr "Sortuj kontakty"
 
 #, fuzzy
-msgid "vCard files"
+msgid "vCard and CSV files"
 msgstr "Duże pliki"
 
 msgid "All files"
@@ -5245,7 +5248,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-msgid "Import vCard files into the Hylki address book"
+msgid "Import vCard or CSV files into the Hylki address book"
 msgstr ""
 
 #, fuzzy
@@ -5256,9 +5259,9 @@ msgid "Loading Contacts…"
 msgstr "Wczytywanie kontaktów…"
 
 msgid ""
-"Add a contact with the + button, or import vCard files. Contacts are kept in "
-"Hylki's own address book, and the address books of GNOME Contacts are listed "
-"here too."
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
 msgstr ""
 
 #, fuzzy

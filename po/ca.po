@@ -367,6 +367,11 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr "L'Hylki no pot modificar aquest tipus de grup"
 
+#, fuzzy
+msgid "No column of the file holds a name, an email address or a phone number."
+msgstr ""
+"Un contacte necessita un nom, una adreça de correu o un número de telèfon"
+
 msgid "Hylki Address Book"
 msgstr "Llibreta d'adreces de l'Hylki"
 
@@ -4450,12 +4455,14 @@ msgstr ""
 msgid "Contacts in the Hylki book"
 msgstr "Contactes a la llibreta de l'Hylki"
 
-msgid "Import vCard files"
+#, fuzzy
+msgid "Import vCard or CSV files"
 msgstr "Importa fitxers vCard"
 
+#, fuzzy
 msgid ""
-"Adds contacts from .vcf files. Importing a file again updates existing "
-"entries."
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
 msgstr ""
 "Afegeix contactes dels fitxers .vcf. Tornar a importar un fitxer "
 "n'actualitza les entrades existents."
@@ -4902,7 +4909,8 @@ msgstr "Grup"
 msgid "Import Contacts"
 msgstr "Importa contactes"
 
-msgid "vCard files"
+#, fuzzy
+msgid "vCard and CSV files"
 msgstr "Fitxers vCard"
 
 msgid "All files"
@@ -5016,7 +5024,8 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Això eliminarà {n} contacte de la teva llibreta d'adreces."
 msgstr[1] "Això eliminarà {n} contactes de les teves llibretes d'adreces."
 
-msgid "Import vCard files into the Hylki address book"
+#, fuzzy
+msgid "Import vCard or CSV files into the Hylki address book"
 msgstr "Importa fitxers vCard a la llibreta d'adreces de l'Hylki"
 
 msgid "New contact or group"
@@ -5025,10 +5034,11 @@ msgstr "Contacte o grup nou"
 msgid "Loading Contacts…"
 msgstr "S'estan carregant els contactes…"
 
+#, fuzzy
 msgid ""
-"Add a contact with the + button, or import vCard files. Contacts are kept in "
-"Hylki's own address book, and the address books of GNOME Contacts are listed "
-"here too."
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
 msgstr ""
 "Afegeix un contacte amb el botó +, o importa fitxers vCard. Els contactes es "
 "conserven a la llibreta d'adreces pròpia de l'Hylki, i les llibretes "

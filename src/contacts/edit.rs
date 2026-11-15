@@ -458,9 +458,9 @@ fn write_local(result: Result<(), String>) -> Result<(), String> {
     result
 }
 
-/// Import `.vcf` files into the local Hylki book (blocking: call from a
-/// background thread).
-pub(crate) fn import_vcf_files(
+/// Import `.vcf` and CSV files into the local Hylki book (blocking: call
+/// from a background thread).
+pub(crate) fn import_contact_files(
     paths: &[PathBuf],
 ) -> Result<crate::contacts::local::ImportOutcome, String> {
     let outcome = crate::contacts::local::import_files(paths)?;

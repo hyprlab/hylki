@@ -15,6 +15,7 @@ use std::sync::Arc;
 use crate::i18n::ni18n_f;
 
 mod categories;
+mod csv_import;
 mod demo;
 mod details;
 mod edit;

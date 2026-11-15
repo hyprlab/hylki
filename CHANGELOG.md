@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Added: contacts can be imported from CSV files** (#655). The import in
+  Settings → Contacts and in the Contacts view takes `.csv` files as well as
+  `.vcf`. Exports from Google Contacts, Outlook and Thunderbird are read as
+  they are, as is any sheet with columns such as Name, Email and Phone.
+  Labels and categories become contact groups.
+
 - **Fixed: a message with large attachments or pictures was slow to open**
   (#608, by Valentin Morice). A conversation with a 19 MB attachment opened
   in 150 ms instead of 360 ms, and one with megabytes of pictures in its

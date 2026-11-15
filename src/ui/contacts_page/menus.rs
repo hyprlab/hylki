@@ -297,9 +297,9 @@ pub(super) fn names_groups(q: &str) -> bool {
             .any(|w| w.to_lowercase() == q)
 }
 
-/// Ask for `.vcf` files to import into the Hylki book, and hand their paths
-/// to `done` (never called for a cancelled dialog or no files).
-pub(crate) fn choose_vcf_files(
+/// Ask for `.vcf` or CSV files to import into the Hylki book, and hand
+/// their paths to `done` (never called for a cancelled dialog or no files).
+pub(crate) fn choose_contact_files(
     parent: Option<&gtk::Window>,
     done: impl Fn(Vec<std::path::PathBuf>) + 'static,
 ) {
@@ -307,11 +307,18 @@ pub(crate) fn choose_vcf_files(
         .title(i18n("Import Contacts"))
         .build();
     let filter = gtk::FileFilter::new();
-    filter.set_name(Some(&i18n("vCard files")));
-    filter.add_pattern("*.vcf");
-    filter.add_pattern("*.vcard");
-    filter.add_mime_type("text/vcard");
-    filter.add_mime_type("text/x-vcard");
+    filter.set_name(Some(&i18n("vCard and CSV files")));
+    for pattern in ["*.vcf", "*.vcard", "*.csv", "*.tsv"] {
+        filter.add_pattern(pattern);
+    }
+    for mime in [
+        "text/vcard",
+        "text/x-vcard",
+        "text/csv",
+        "text/tab-separated-values",
+    ] {
+        filter.add_mime_type(mime);
+    }
     let filters = gtk::gio::ListStore::new::<gtk::FileFilter>();
     filters.append(&filter);
     let any = gtk::FileFilter::new();

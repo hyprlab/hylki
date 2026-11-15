@@ -296,8 +296,8 @@ impl ContactSources {
                 row
             };
         group.add(&action(
-            i18n("Import vCard files"),
-            i18n("Adds contacts from .vcf files. Importing a file again updates existing entries."),
+            i18n("Import vCard or CSV files"),
+            i18n("Adds contacts from .vcf or .csv files. Importing a file again updates existing entries."),
             || ContactSourcesInput::ImportLocal,
             true,
         ));

@@ -736,7 +736,7 @@ in every book is listed, so someone kept in two books shows twice, each
 with its book named.
 
 The Hylki book's page in **Settings → Contacts** shows how many contacts it
-holds, and has **Import vCard files**, **Export as a vCard file** (one `.vcf`
+holds, and has **Import vCard or CSV files**, **Export as a vCard file** (one `.vcf`
 file with every contact, which other apps can import) and **Delete all
 contacts**, which asks first and leaves the other books alone. **Save new
 contacts in**, on the same page as the list, sets the default book for
@@ -744,8 +744,8 @@ contacts made in Hylki, from the Contacts view or with **Add Sender to
 Contacts**. Until it is set, a new contact goes to the first writable EDS
 book, or to the Hylki book when there is none.
 
-Importing reads `.vcf` files into the Hylki book, from Settings or from the
-import button in the Contacts view's header. A file can hold many contacts,
+Importing reads `.vcf` and `.csv` files into the Hylki book, from Settings
+or from the import button in the Contacts view's header. A file can hold many contacts,
 in vCard 2.1, 3.0 or 4.0. A contact with the same ID as one already in the
 book updates it, and one without an ID is matched by its content, so
 importing a file twice adds nothing new. A contact list in the file becomes
@@ -756,6 +756,18 @@ file is skipped, so the first is kept. Files over 50 MB are refused, and
 photos are used only when they are inside the file: nothing is fetched from
 the web. A person who is in both an EDS book and the Hylki book appears in
 each, with the book named, and once in the composer's suggestions.
+
+A CSV file's first row names its columns. The exports of Google Contacts,
+Outlook and Thunderbird are read as they are, and so is any sheet whose
+columns are named in English: Name or First Name and Last Name, Email,
+Phone, Company, Job Title, Address or its parts (Street, City, Postal Code,
+Country), Website, Birthday and Notes. A column of email addresses is read
+as one whatever its name. Commas, semicolons and tabs all work as the
+separator, and the file can be UTF-8, UTF-16 or Windows-1252. Google's
+labels, Outlook's categories or a Groups column put each person with an
+email address into the group of that name, which is made when the book has
+none. A row with no name, address, phone number or company is skipped, and
+importing the same file again adds nothing new.
 
 The book is the file `local_contacts.db` in Hylki's data folder, kept apart
 from the mail cache, so clearing the cache leaves it alone.

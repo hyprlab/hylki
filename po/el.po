@@ -366,6 +366,10 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr "Το Hylki δεν μπορεί να αλλάξει αυτόν τον τύπο ομάδας"
 
+#, fuzzy
+msgid "No column of the file holds a name, an email address or a phone number."
+msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
+
 msgid "Hylki Address Book"
 msgstr "Βιβλίο διευθύνσεων Hylki"
 
@@ -4442,12 +4446,14 @@ msgstr ""
 msgid "Contacts in the Hylki book"
 msgstr "Επαφές στο βιβλίο του Hylki"
 
-msgid "Import vCard files"
+#, fuzzy
+msgid "Import vCard or CSV files"
 msgstr "Εισαγωγή αρχείων vCard"
 
+#, fuzzy
 msgid ""
-"Adds contacts from .vcf files. Importing a file again updates existing "
-"entries."
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
 msgstr ""
 "Προσθέτει επαφές από αρχεία .vcf. Η επανεισαγωγή ενός αρχείου ενημερώνει τις "
 "υπάρχουσες εγγραφές."
@@ -4897,7 +4903,8 @@ msgstr "Αριστερή ομάδα"
 msgid "Import Contacts"
 msgstr "Εισαγωγή επαφών"
 
-msgid "vCard files"
+#, fuzzy
+msgid "vCard and CSV files"
 msgstr "Αρχεία vCard"
 
 msgid "All files"
@@ -5011,7 +5018,8 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Αυτό θα αφαιρέσει {n} επαφή από τον κατάλογο διευθύνσεών σας."
 msgstr[1] "Αυτό θα αφαιρέσει {n} επαφές από τους καταλόγους διευθύνσεών σας."
 
-msgid "Import vCard files into the Hylki address book"
+#, fuzzy
+msgid "Import vCard or CSV files into the Hylki address book"
 msgstr "Εισαγωγή αρχείων vCard στο βιβλίο διευθύνσεων του Hylki"
 
 msgid "New contact or group"
@@ -5020,10 +5028,11 @@ msgstr "Νέα επαφή ή ομάδα"
 msgid "Loading Contacts…"
 msgstr "Φόρτωση επαφών…"
 
+#, fuzzy
 msgid ""
-"Add a contact with the + button, or import vCard files. Contacts are kept in "
-"Hylki's own address book, and the address books of GNOME Contacts are listed "
-"here too."
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
 msgstr ""
 "Προσθέστε μια επαφή με το κουμπί + ή εισαγάγετε αρχεία vCard. Οι επαφές "
 "διατηρούνται στο δικό του βιβλίο διευθύνσεων του Hylki, ενώ εδώ εμφανίζονται "

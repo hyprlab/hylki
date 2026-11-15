@@ -325,6 +325,9 @@ msgstr ""
 msgid "Hylki cannot change this kind of group"
 msgstr ""
 
+msgid "No column of the file holds a name, an email address or a phone number."
+msgstr ""
+
 msgid "Hylki Address Book"
 msgstr ""
 
@@ -4049,12 +4052,12 @@ msgstr ""
 msgid "Contacts in the Hylki book"
 msgstr ""
 
-msgid "Import vCard files"
+msgid "Import vCard or CSV files"
 msgstr ""
 
 msgid ""
-"Adds contacts from .vcf files. Importing a file again updates existing "
-"entries."
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
 msgstr ""
 
 msgid "Export as a vCard file"
@@ -4462,7 +4465,7 @@ msgstr ""
 msgid "Import Contacts"
 msgstr ""
 
-msgid "vCard files"
+msgid "vCard and CSV files"
 msgstr ""
 
 msgid "All files"
@@ -4558,7 +4561,7 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Import vCard files into the Hylki address book"
+msgid "Import vCard or CSV files into the Hylki address book"
 msgstr ""
 
 msgid "New contact or group"
@@ -4568,9 +4571,9 @@ msgid "Loading Contacts…"
 msgstr ""
 
 msgid ""
-"Add a contact with the + button, or import vCard files. Contacts are kept in "
-"Hylki's own address book, and the address books of GNOME Contacts are listed "
-"here too."
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
 msgstr ""
 
 msgid "Search contacts (Ctrl+F)"

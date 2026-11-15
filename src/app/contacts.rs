@@ -508,9 +508,9 @@ impl AppModel {
             AppMsg::ImportContacts(paths) => {
                 let s = sender.clone();
                 std::thread::spawn(move || {
-                    s.input(AppMsg::ContactsImported(crate::contacts::import_vcf_files(
-                        &paths,
-                    )));
+                    s.input(AppMsg::ContactsImported(
+                        crate::contacts::import_contact_files(&paths),
+                    ));
                 });
             }
 
