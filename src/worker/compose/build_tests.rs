@@ -157,6 +157,16 @@ fn build_email_signs_and_encrypts_with_pgp_mime() {
         u.status
     );
     assert!(!extract_attachments(&u.inner.unwrap()).is_empty());
+    // The signed multipart ends with its own CRLF and a blank line comes
+    // before the outer delimiter, the layout Exchange rewrites a message
+    // into, so the signature still holds after it has (#666).
+    let text = String::from_utf8_lossy(&raw);
+    let outer = text
+        .split("boundary=\"")
+        .nth(1)
+        .and_then(|b| b.split('"').next())
+        .expect("outer boundary");
+    assert!(text.contains(&format!("--\r\n\r\n--{outer}\r\n")), "{text}");
 
     // Encrypted and signed: readable by the peer and by the sender.
     msg.attachments.clear();
