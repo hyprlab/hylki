@@ -280,8 +280,10 @@ fn build_message(
         } else {
             entity
         };
-        let wrapped = pgp_wrap(account, msg, &from_addr, entity, draft)?;
-        return Ok(builder.multipart(wrapped)?);
+        return Ok(match pgp_wrap(account, msg, &from_addr, entity, draft)? {
+            PgpEntity::Multi(m) => builder.multipart(m)?,
+            PgpEntity::Single(s) => builder.singlepart(s)?,
+        });
     }
     let email = if msg.attachments.is_empty() {
         match content {

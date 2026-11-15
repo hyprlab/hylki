@@ -226,7 +226,7 @@ pub(super) fn pgp_wrap(
     from_addr: &str,
     entity: PgpEntity,
     draft: bool,
-) -> Result<lettre::message::MultiPart, SmtpError> {
+) -> Result<PgpEntity, SmtpError> {
     use lettre::message::{header::ContentType, MultiPart, SinglePart};
     let gpg = Gpg::system();
     let key = signing_key(account, from_addr);
@@ -296,30 +296,70 @@ pub(super) fn pgp_wrap(
                     .expect("static content type"),
             )
             .body(armored(ciphertext));
-        return Ok(MultiPart::encrypted("application/pgp-encrypted".into())
-            .singlepart(control)
-            .singlepart(payload));
+        return Ok(PgpEntity::Multi(
+            MultiPart::encrypted("application/pgp-encrypted".into())
+                .singlepart(control)
+                .singlepart(payload),
+        ));
     }
     let inner = entity.formatted();
     let key = key.ok_or_else(no_key)?;
-    // lettre writes a part as its formatted bytes, CRLF-terminated, and the
-    // boundary delimiter straight after; RFC 3156 counts that CRLF as part
-    // of the boundary, so the signature covers everything before it.
-    let signed_bytes = inner.strip_suffix(b"\r\n").unwrap_or(&inner);
-    let (signature, micalg) =
-        crate::mail::pgp::sign_detached(&gpg, signed_bytes, &key.fingerprint)?;
-    let signed = MultiPart::signed("application/pgp-signature".into(), micalg);
-    let signed = match entity {
-        PgpEntity::Multi(m) => signed.multipart(m),
-        PgpEntity::Single(s) => signed.singlepart(s),
-    };
+    let (signature, micalg) = crate::mail::pgp::sign_detached(&gpg, &inner, &key.fingerprint)?;
     let sig_part = SinglePart::builder()
         .header(
             ContentType::parse("application/pgp-signature; name=\"signature.asc\"")
                 .expect("static content type"),
         )
         .body(armored(signature));
-    Ok(signed.singlepart(sig_part))
+    Ok(PgpEntity::Single(signed_multipart(
+        &inner,
+        &sig_part.formatted(),
+        &micalg,
+    )?))
+}
+
+/// The multipart/signed entity, written by hand rather than by lettre (#666).
+///
+/// lettre puts the outer delimiter straight after the signed part's last
+/// line, so that part's final CRLF belongs to the delimiter and the
+/// signature covers the part without it. Exchange rewrites a message's MIME
+/// on the way out and leaves a blank line there, which hands the CRLF back
+/// to the part and breaks the signature. Evolution writes that blank line
+/// itself and signs the part with its CRLF; so does this, and a server that
+/// tidies the layout the same way finds nothing to change.
+fn signed_multipart(
+    inner: &[u8],
+    signature: &[u8],
+    micalg: &str,
+) -> Result<lettre::message::SinglePart, SmtpError> {
+    use lettre::message::header::{ContentTransferEncoding, ContentType};
+    use lettre::message::{Body, SinglePart};
+    let boundary = crate::rng::from_alphabet(
+        40,
+        b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+    )
+    .map_err(|e| e.to_string())?;
+    let content_type = ContentType::parse(&format!(
+        "multipart/signed; boundary=\"{boundary}\"; protocol=\"application/pgp-signature\"; micalg=\"{micalg}\""
+    ))
+    .map_err(|e| e.to_string())?;
+    let mut body = Vec::with_capacity(inner.len() + signature.len() + 3 * boundary.len() + 16);
+    body.extend_from_slice(format!("--{boundary}\r\n").as_bytes());
+    body.extend_from_slice(inner);
+    body.extend_from_slice(format!("\r\n--{boundary}\r\n").as_bytes());
+    body.extend_from_slice(signature);
+    // lettre ends a single part's body with the CRLF this line needs.
+    body.extend_from_slice(format!("--{boundary}--").as_bytes());
+    // Every part lettre builds is 7-bit already; 8bit is for one that is
+    // not, as a multipart may carry no other encoding.
+    let encoding = if body.is_ascii() {
+        ContentTransferEncoding::SevenBit
+    } else {
+        ContentTransferEncoding::EightBit
+    };
+    Ok(SinglePart::builder()
+        .header(content_type)
+        .body(Body::dangerous_pre_encoded(body, encoding)))
 }
 
 /// gpg's ASCII armour as text, so lettre gives it CRLF line endings: as raw
