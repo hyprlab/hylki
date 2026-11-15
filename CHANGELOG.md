@@ -60,6 +60,9 @@
   Plain-text mail is still answered in plain text. The switch now sits
   under **Start new messages in**.
 
+- **Translations:** French (PR #660 by frenchy82), 2492 of 2523 strings
+  translated.
+
 ## 1.48.2 — 2026-11-15
 
 A patch release with two fixes: OpenPGP signatures stay valid when the
