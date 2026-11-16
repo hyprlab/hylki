@@ -52,6 +52,7 @@ pub(super) fn merge_loaded_suggestions(current: &mut Vec<Suggestion>, mut loaded
         {
             // The snapshot may already include that send: do not count it twice.
             s.score = s.score.max(recent.score);
+            s.sent = s.sent.max(recent.sent);
             if s.name.trim().is_empty() || s.name == s.email {
                 s.name = recent.name;
             }
@@ -85,8 +86,8 @@ impl Compose {
             .map(|own| &own.addresses)
     }
 
-    /// Suggestions matching `token`, ranked best-first (prefix match, then most
-    /// frequently used), capped to a handful.
+    /// Suggestions matching `token`, ranked best-first (written to, then a
+    /// prefix match, then most used), capped to a handful.
     fn ranked_matches(&self, token: &str) -> Vec<Suggestion> {
         let narrowed = self.narrowed();
         let matches: Vec<Suggestion> = self
@@ -378,6 +379,7 @@ impl Compose {
             {
                 Some(s) => {
                     s.score += 1;
+                    s.sent += 1;
                     if s.name.trim().is_empty() || s.name == s.email {
                         s.name = n.name;
                     }

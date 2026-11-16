@@ -310,11 +310,18 @@ impl AppModel {
             prefill.written_plain,
             prefill.original,
         );
-        // The user's own addresses go last in the recipient suggestions.
+        // The user's own addresses, aliases included, go last in the
+        // recipient suggestions, and mail from them counts as sent.
         let own: Vec<(String, String)> = self
             .config
             .iter()
-            .map(|c| (c.name.clone(), c.email.clone()))
+            .flat_map(|c| {
+                std::iter::once((c.name.clone(), c.email.clone())).chain(
+                    c.aliases
+                        .iter()
+                        .map(|alias| crate::config::split_identity(&alias.identity)),
+                )
+            })
             .collect();
         let id = self.next_compose_id;
         self.next_compose_id += 1;

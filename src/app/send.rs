@@ -492,6 +492,7 @@ impl AppModel {
                 own: own.contains(&email.to_lowercase()),
                 email,
                 score: 1,
+                sent: 1,
                 ..Default::default()
             })
             .collect();

@@ -70,6 +70,9 @@ pub(crate) struct Suggestion {
     pub(crate) from_directory: bool,
     /// How often this address appears in mail history (0 for contacts-only).
     pub(crate) score: u32,
+    /// How many messages the user sent to it: someone written to comes
+    /// before someone the typing merely matches.
+    pub(crate) sent: u32,
     /// One of the user's own account addresses: offered, since people do
     /// mail themselves, but ranked after everyone else so it does not sit
     /// on top of every list (it is on nearly every message received).
@@ -116,19 +119,27 @@ impl Suggestion {
     }
 }
 
-/// Order the suggestions matching `typed` best first: one whose name or
-/// address starts with it, then the most used, then by name. The user's own
-/// addresses come after everyone else's, prefix match or not.
+/// Order the suggestions matching `typed` best first: those the user has
+/// written to, then one whose address or a word of whose name starts with
+/// it, then the most written to, then the most seen, then by name. The
+/// user's own addresses come after everyone else's.
 pub(crate) fn rank(matches: &mut [Suggestion], typed: &str) {
     let q = typed.to_lowercase();
-    matches.sort_by(|a, b| {
-        let pa = a.email.to_lowercase().starts_with(&q) || a.name.to_lowercase().starts_with(&q);
-        let pb = b.email.to_lowercase().starts_with(&q) || b.name.to_lowercase().starts_with(&q);
-        a.own
-            .cmp(&b.own)
-            .then(pb.cmp(&pa))
-            .then(b.score.cmp(&a.score))
-            .then(a.name.to_lowercase().cmp(&b.name.to_lowercase()))
+    matches.sort_by_cached_key(|s| {
+        let name = s.name.to_lowercase();
+        let starts = s.email.to_lowercase().starts_with(&q)
+            || name.starts_with(&q)
+            || name
+                .split(|c: char| !c.is_alphanumeric())
+                .any(|word| !word.is_empty() && word.starts_with(&q));
+        (
+            s.own,
+            s.sent == 0,
+            !starts,
+            std::cmp::Reverse(s.sent),
+            std::cmp::Reverse(s.score),
+            name,
+        )
     });
 }
 
@@ -208,9 +219,10 @@ pub(crate) fn lookup(
 
 /// Combined, de-duplicated recipient suggestions from Contacts and mail history
 /// (addresses sent to / received from). History frequency becomes each
-/// suggestion's `score` so frequently used addresses — contact or not — can
-/// rank ahead. The user's `own` (name, email) account addresses are in the
-/// list too, flagged and with no score, so they come last.
+/// suggestion's `score`, and the messages sent to it from one of `own` its
+/// `sent`, so the people written to most rank ahead. The user's `own`
+/// (name, email) addresses are in the list too, flagged and with no score,
+/// so they come last.
 pub(crate) fn suggestions(own: &[(String, String)]) -> Vec<Suggestion> {
     let own_keys: HashSet<String> = own.iter().map(|(_, e)| e.to_lowercase()).collect();
     let mut map: std::collections::HashMap<String, Suggestion> = std::collections::HashMap::new();
@@ -231,17 +243,20 @@ pub(crate) fn suggestions(own: &[(String, String)]) -> Vec<Suggestion> {
     }
 
     if let Ok(cache) = crate::cache::Cache::open() {
-        for (name, email, count) in cache.address_history() {
-            let key = email.to_lowercase();
-            if own_keys.contains(&key) {
+        for seen in cache.address_history(&own_keys) {
+            if own_keys.contains(&seen.email) {
                 continue;
             }
-            map.entry(key)
-                .and_modify(|s| s.score = s.score.max(count))
+            map.entry(seen.email.clone())
+                .and_modify(|s| {
+                    s.score = s.score.max(seen.seen);
+                    s.sent = s.sent.max(seen.sent);
+                })
                 .or_insert(Suggestion {
-                    name,
-                    email,
-                    score: count,
+                    name: seen.name,
+                    email: seen.email,
+                    score: seen.seen,
+                    sent: seen.sent,
                     ..Default::default()
                 });
         }
@@ -266,10 +281,12 @@ pub(crate) fn suggestions(own: &[(String, String)]) -> Vec<Suggestion> {
 
     let mut out: Vec<Suggestion> = map.into_values().collect();
     out.extend(group_suggestions(read_groups_in(&active, &formats)));
-    // Default order: most-used first, then name (the field filter re-ranks live).
+    // Default order: most written to, then most seen, then name (the field
+    // filter re-ranks live).
     out.sort_by(|a, b| {
-        b.score
-            .cmp(&a.score)
+        b.sent
+            .cmp(&a.sent)
+            .then(b.score.cmp(&a.score))
             .then(a.name.to_lowercase().cmp(&b.name.to_lowercase()))
     });
     out
