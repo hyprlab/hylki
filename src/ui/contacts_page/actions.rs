@@ -424,15 +424,6 @@ impl ContactsPage {
             .collect()
     }
 
-    /// The people of the selection that can move to the book `to`: those
-    /// in another book Hylki can write to, and delete from.
-    pub(super) fn movable(&self, to: &str) -> Vec<usize> {
-        self.chosen()
-            .into_iter()
-            .filter(|&i| self.can_move(&self.contacts[i], to))
-            .collect()
-    }
-
     /// Whether a person can move to the book `to`: from another book Hylki
     /// can write to, and delete from.
     pub(super) fn can_move(&self, c: &ContactDetails, to: &str) -> bool {

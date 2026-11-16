@@ -703,8 +703,9 @@ Several contacts are selected together with <kbd>Ctrl</kbd> or
 <kbd>Shift</kbd> and a click, or <kbd>Ctrl+A</kbd> for the whole list. The
 right-hand pane then lists them, with **Add to Group**, which puts them in
 a group (those it can take: see [Contact groups](#contact-groups)), **Move
-to…**, which moves them to another address book, and **Delete…**; a
-right-click on one of them offers the same. A move adds each contact to the
+to…**, which asks for another address book and moves them there, and
+**Delete…**; a right-click on one of them offers the same, with **Move to
+Address Book…** for the move. A move adds each contact to the
 book picked and removes it from the one it was in, locally and on the
 server, with its photo; a group that names it by its card in the old book
 loses it. Contacts in a book Hylki cannot write to are not moved. With a
@@ -717,11 +718,13 @@ the book picked in the sidebar, or on the default book when every book is
 shown. A contact being edited can move to another book
 from the same row, which then names the one it is in: saving asks first,
 and moves it with its changes. A contact's right-click menu has **Move to
-Address Book** too, and several selected together move with **Move to…**
-(see below). A move takes the contact out of its book and puts it in the
-other, locally and on the server, after a question that names both; a group
-in the old book that held the contact no longer has it. A contact in a book
-Hylki cannot write to stays where it is.
+Address Book…** too, which lists the books it can go to; one picked and
+**Move** pressed, the contact moves. It needs no address books in the
+sidebar to drag onto. Several selected together move with **Move to…** (see
+below). A move takes the contact out of its book and puts it in the other,
+locally and on the server; a group in the old book that held the contact no
+longer has it. A contact in a book Hylki cannot write to stays where it
+is, and the menu item is unavailable when there is no other book to go to.
 
 The contact form holds the photo, which **Change Photo…** replaces with an
 image file (made at most 512 pixels a side and kept in the card) and

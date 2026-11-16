@@ -4963,7 +4963,8 @@ msgstr "Αφαίρεση από ομάδα"
 msgid "Add to Group"
 msgstr "Προσθήκη στην ομάδα"
 
-msgid "Move to Address Book"
+#, fuzzy
+msgid "Move to Address Book…"
 msgstr "Μετακίνηση σε κατάλογο διευθύνσεων"
 
 msgid "Delete…"
@@ -5009,6 +5010,34 @@ msgstr "Αρχεία vCard"
 
 msgid "All files"
 msgstr "Όλα τα αρχεία"
+
+#, fuzzy
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"Η επαφή {name} θα μετακινηθεί από το {from} στο {to}, τοπικά και στον "
+"διακομιστή. Οι ομάδες στο {from} που περιλαμβάνουν την επαφή δεν θα την "
+"περιλαμβάνουν πλέον."
+
+#, fuzzy
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"Η {n} επαφή θα μετακινηθεί από τον τρέχοντα κατάλογο στο {to}, τοπικά και "
+"στον διακομιστή. Οι ομάδες που την περιλαμβάνουν δεν θα την περιλαμβάνουν "
+"πλέον."
+msgstr[1] ""
+"Οι {n} επαφές θα μετακινηθούν από τους τρέχοντες καταλόγους στο {to}, τοπικά "
+"και στον διακομιστή. Οι ομάδες που τις περιλαμβάνουν δεν θα τις "
+"περιλαμβάνουν πλέον."
+
+msgid "Move to Address Book"
+msgstr "Μετακίνηση σε κατάλογο διευθύνσεων"
 
 msgid "Directories"
 msgstr "Κατάλογοι"

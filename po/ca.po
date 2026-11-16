@@ -4970,7 +4970,8 @@ msgstr "Treu del grup"
 msgid "Add to Group"
 msgstr "Afegeix a un grup"
 
-msgid "Move to Address Book"
+#, fuzzy
+msgid "Move to Address Book…"
 msgstr "Mou a una llibreta d'adreces"
 
 msgid "Delete…"
@@ -5016,6 +5017,31 @@ msgstr "Fitxers vCard"
 
 msgid "All files"
 msgstr "Tots els fitxers"
+
+#, fuzzy
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"Això mourà {name} de {from} a {to}, localment i al servidor. Un grup a "
+"{from} que contingui el contacte deixarà de tenir-lo."
+
+#, fuzzy
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"Això mourà {n} contacte de la llibreta d'adreces on és a {to}, localment i "
+"al servidor. Un grup allà que el contingui deixarà de tenir-lo."
+msgstr[1] ""
+"Això mourà {n} contactes de les llibretes d'adreces on són a {to}, localment "
+"i al servidor. Els grups allà que els continguin deixaran de tenir-los."
+
+msgid "Move to Address Book"
+msgstr "Mou a una llibreta d'adreces"
 
 msgid "Directories"
 msgstr "Directoris"

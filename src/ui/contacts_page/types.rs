@@ -389,14 +389,10 @@ pub(crate) enum ContactsPageInput {
     /// re-read and re-sorted while the dialog was open.
     DeleteConfirmed(Vec<(String, String)>),
     /// The entries selected together: put the people in the group at this
-    /// index, ask to move them to this book or to delete them all.
+    /// index, or ask to delete them all.
     BulkAddToGroup(usize),
-    BulkMoveRequest(String),
-    /// Ask to move the contact at this index to the book `to`.
-    MoveRequest {
-        idx: usize,
-        to: String,
-    },
+    /// Ask which book the people at these indexes move to.
+    MoveDialog(Vec<usize>),
     /// Move the contact being edited, by book and UID, to the book `to`
     /// as `vcard` (its card with the edits, made for the new book),
     /// confirmed.

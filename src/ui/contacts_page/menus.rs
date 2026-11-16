@@ -127,11 +127,11 @@ impl FilterMenu {
     }
 }
 
-/// The groups and books a selection of several can go to, as (index into
-/// `contacts`, name) and (book UID, name).
+/// The groups a selection of several can go to, as (index into
+/// `contacts`, name), and whether any of them can move to another book.
 pub(super) struct BulkChoices {
     pub(super) groups: Vec<(usize, String)>,
-    pub(super) books: Vec<(String, String)>,
+    pub(super) can_move: bool,
 }
 
 impl BulkChoices {
@@ -144,19 +144,6 @@ impl BulkChoices {
                     let _ = s.send(ContactsPageInput::BulkAddToGroup(g));
                 })
                 .icon("system-users-symbolic")
-            })
-            .collect()
-    }
-
-    pub(super) fn book_entries(&self, s: &relm4::Sender<ContactsPageInput>) -> Vec<MenuEntry> {
-        self.books
-            .iter()
-            .map(|(uid, name)| {
-                let (s, uid) = (s.clone(), uid.clone());
-                MenuEntry::new(name.clone(), move || {
-                    let _ = s.send(ContactsPageInput::BulkMoveRequest(uid.clone()));
-                })
-                .icon("x-office-address-book-symbolic")
             })
             .collect()
     }

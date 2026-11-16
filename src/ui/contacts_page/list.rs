@@ -430,10 +430,16 @@ impl ContactsPage {
                     .icon("system-users-symbolic"),
             );
         }
-        if !choices.books.is_empty() {
+        let chosen = self.chosen();
+        if chosen.iter().any(|&i| !self.contacts[i].is_group()) {
+            let sm = s.clone();
+            let can = choices.can_move;
             first.push(
-                MenuEntry::submenu(i18n("Move to Address Book"), vec![choices.book_entries(s)])
-                    .icon("x-office-address-book-symbolic"),
+                MenuEntry::new(i18n("Move to Address Book…"), move || {
+                    let _ = sm.send(ContactsPageInput::MoveDialog(chosen.clone()));
+                })
+                .icon("x-office-address-book-symbolic")
+                .enabled(can),
             );
         }
         let sd = s.clone();
@@ -512,30 +518,16 @@ impl ContactsPage {
                 );
             }
         }
-        // Another book, with a question first.
-        let books: Vec<(String, String)> = self
-            .books
-            .iter()
-            .filter(|b| self.can_move(c, &b.uid))
-            .map(|b| (b.uid.clone(), b.name.clone()))
-            .collect();
-        if !books.is_empty() {
-            let entries = books
-                .into_iter()
-                .map(|(uid, name)| {
-                    let sm = s.clone();
-                    MenuEntry::new(name, move || {
-                        let _ = sm.send(ContactsPageInput::MoveRequest {
-                            idx,
-                            to: uid.clone(),
-                        });
-                    })
-                    .icon("x-office-address-book-symbolic")
-                })
-                .collect();
+        // Another book, picked in a dialog. Shown even when there is none
+        // to go to, so the way to move is always where it is looked for.
+        if !group {
+            let sm = s.clone();
             first.push(
-                MenuEntry::submenu(i18n("Move to Address Book"), vec![entries])
-                    .icon("x-office-address-book-symbolic"),
+                MenuEntry::new(i18n("Move to Address Book…"), move || {
+                    let _ = sm.send(ContactsPageInput::MoveDialog(vec![idx]));
+                })
+                .icon("x-office-address-book-symbolic")
+                .enabled(self.can_move_any(&[idx])),
             );
         }
         // GNOME Contacts knows nothing of the Hylki book, nor of groups.
@@ -569,13 +561,8 @@ impl ContactsPage {
             .map(|g| (g, self.contacts[g].name.clone()))
             .collect();
         groups.sort_by_key(|(_, name)| name.to_lowercase());
-        let books = self
-            .books
-            .iter()
-            .filter(|b| !self.movable(&b.uid).is_empty())
-            .map(|b| (b.uid.clone(), b.name.clone()))
-            .collect();
-        BulkChoices { groups, books }
+        let can_move = self.can_move_any(&chosen);
+        BulkChoices { groups, can_move }
     }
 
     /// The pane for several entries selected together: how many, what
@@ -659,15 +646,10 @@ impl ContactsPage {
             actions.append(&add);
             let move_btn = pill(&i18n("Move to…"));
             move_btn.set_tooltip_text(Some(&i18n("Move to another address book")));
-            move_btn.set_sensitive(!choices.books.is_empty());
-            let (c, s) = (choices.clone(), sender.input_sender().clone());
-            move_btn.connect_clicked(move |b| {
-                show_context_menu(
-                    b,
-                    (b.width() / 2) as f64,
-                    b.height() as f64,
-                    vec![c.book_entries(&s)],
-                );
+            move_btn.set_sensitive(choices.can_move);
+            let (people, s) = (chosen.clone(), sender.input_sender().clone());
+            move_btn.connect_clicked(move |_| {
+                let _ = s.send(ContactsPageInput::MoveDialog(people.clone()));
             });
             actions.append(&move_btn);
         }

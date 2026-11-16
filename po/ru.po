@@ -4887,7 +4887,8 @@ msgstr "Удалить из группы"
 msgid "Add to Group"
 msgstr "Добавить в группу"
 
-msgid "Move to Address Book"
+#, fuzzy
+msgid "Move to Address Book…"
 msgstr "Перейти в адресную книгу"
 
 msgid "Delete…"
@@ -4935,6 +4936,34 @@ msgstr "файлы vCard"
 
 msgid "All files"
 msgstr "Все файлы"
+
+#, fuzzy
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"Это переместит {name} из {from} в {to}, локально и на сервере. Группа в "
+"{from}, содержащая контакт, больше не будет его иметь."
+
+#, fuzzy
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"Контакт {n} будет перемещён в {to} локально и на сервере. Группа, в которой "
+"он состоит, больше не будет его содержать."
+msgstr[1] ""
+"Контакты {n} будут перемещены в {to} локально и на сервере. Группы, в "
+"которых они состоят, больше не будут их содержать."
+msgstr[2] ""
+"Контакты {n} будут перемещены в {to} локально и на сервере. Группы, в "
+"которых они состоят, больше не будут их содержать."
+
+msgid "Move to Address Book"
+msgstr "Перейти в адресную книгу"
 
 msgid "Directories"
 msgstr "Каталоги"

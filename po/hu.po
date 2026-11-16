@@ -5144,7 +5144,7 @@ msgid "Add to Group"
 msgstr ""
 
 #, fuzzy
-msgid "Move to Address Book"
+msgid "Move to Address Book…"
 msgstr "Címjegyzék"
 
 msgid "Delete…"
@@ -5196,6 +5196,24 @@ msgstr "Nagy fájlok"
 
 msgid "All files"
 msgstr "Minden fájl"
+
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Move to Address Book"
+msgstr "Címjegyzék"
 
 #, fuzzy
 msgid "Directories"

@@ -4920,7 +4920,8 @@ msgstr "Quitar del grupo"
 msgid "Add to Group"
 msgstr "Añadir al grupo"
 
-msgid "Move to Address Book"
+#, fuzzy
+msgid "Move to Address Book…"
 msgstr "Mover a otra libreta de direcciones"
 
 msgid "Delete…"
@@ -4966,6 +4967,33 @@ msgstr "Archivos vCard"
 
 msgid "All files"
 msgstr "Todos los archivos"
+
+#, fuzzy
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"Se moverá {name} de {from} a {to}, tanto localmente como en el servidor. Si "
+"el contacto pertenece a algún grupo de {from}, dejará de pertenecer a él."
+
+#, fuzzy
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"Se moverá {n} contacto de su libreta de direcciones a {to}, tanto localmente "
+"como en el servidor. Dejará de pertenecer a los grupos de su libreta "
+"anterior."
+msgstr[1] ""
+"Se moverán {n} contactos de sus libretas de direcciones a {to}, tanto "
+"localmente como en el servidor. Dejarán de pertenecer a los grupos de sus "
+"libretas anteriores."
+
+msgid "Move to Address Book"
+msgstr "Mover a otra libreta de direcciones"
 
 msgid "Directories"
 msgstr "Directorios"

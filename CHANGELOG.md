@@ -50,6 +50,15 @@
   it counts as read-only, so a Nextcloud book that had not been opened yet
   is no longer missing from the books contacts can go to.
 
+- **Changed: contacts move to another address book from a dialog.**
+  **Move to Address Book…** in a contact's right-click menu, in the menu of
+  several selected together, and **Move to…** in their pane open a dialog
+  that lists the books they can go to, each under its account; one picked
+  and **Move** pressed, they move, with no second question. It replaces the
+  submenus of book names, and needs no address books in the sidebar to drag
+  onto. The menu item stays in the menu, unavailable, when there is no other
+  book to go to.
+
 - **Fixed: a message with large attachments or pictures was slow to open**
   (#608, by Valentin Morice). A conversation with a 19 MB attachment opened
   in 150 ms instead of 360 ms, and one with megabytes of pictures in its

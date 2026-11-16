@@ -225,41 +225,6 @@ impl ContactsPage {
         Flow::Continue(())
     }
 
-    pub(super) fn on_bulk_move_request(
-        &mut self,
-        widgets: &mut ContactsPageWidgets,
-        sender: ComponentSender<Self>,
-        to: String,
-    ) -> Flow {
-        let keys: Vec<(String, String)> = self
-            .movable(&to)
-            .into_iter()
-            .map(|i| {
-                (
-                    self.contacts[i].book_uid.clone(),
-                    self.contacts[i].eds_uid.clone(),
-                )
-            })
-            .collect();
-        self.ask_move(widgets, &sender, keys, to, None);
-        Flow::Continue(())
-    }
-
-    pub(super) fn on_move_request(
-        &mut self,
-        widgets: &mut ContactsPageWidgets,
-        sender: ComponentSender<Self>,
-        idx: usize,
-        to: String,
-    ) -> Flow {
-        let Some(c) = self.contacts.get(idx).filter(|c| self.can_move(c, &to)) else {
-            return Flow::Break(());
-        };
-        let key = (c.book_uid.clone(), c.eds_uid.clone());
-        self.ask_move(widgets, &sender, vec![key], to, None);
-        Flow::Continue(())
-    }
-
     pub(super) fn on_edit_move_confirmed(
         &mut self,
         widgets: &mut ContactsPageWidgets,
