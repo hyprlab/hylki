@@ -76,7 +76,7 @@ pub(crate) fn extract_body(raw: &[u8]) -> String {
         match &part.body {
             PartType::Text(text) if !text.trim().is_empty() => {
                 inner.push_str("<div class=\"hylki-plain\">");
-                inner.push_str(&linkify(&display_text(part, text)));
+                inner.push_str(&linkify(&crate::mail::flowed::readable(part, text)));
                 inner.push_str("</div>");
             }
             PartType::Binary(bytes) | PartType::InlineBinary(bytes) => {
@@ -111,7 +111,7 @@ pub(crate) fn extract_body(raw: &[u8]) -> String {
                     body: PartType::Text(text),
                     ..
                 },
-            ) => Some(display_text(part, text)),
+            ) => Some(crate::mail::flowed::readable(part, text)),
             _ => parsed.body_text(0),
         };
         return match text {
@@ -120,18 +120,6 @@ pub(crate) fn extract_body(raw: &[u8]) -> String {
         };
     }
     wrap_fragment(&inner)
-}
-
-/// The text of a plain part as the reader shows it: a `format=flowed` part
-/// with its soft line breaks joined (#606), any other as it is.
-fn display_text<'a>(
-    part: &mail_parser::MessagePart<'_>,
-    text: &'a str,
-) -> std::borrow::Cow<'a, str> {
-    match crate::mail::flowed::flowed_params(part) {
-        Some(delsp) => crate::mail::flowed::unflow(text, delsp).into(),
-        None => text.into(),
-    }
 }
 
 /// Rewrite `cid:` resource references in `html` to `data:` URIs built from the

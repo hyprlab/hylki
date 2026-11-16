@@ -216,8 +216,18 @@ fn editable_body(parsed: Option<&mail_parser::Message>, embedded: &mut Vec<Strin
         })
         .unwrap_or_default();
     if html.trim().is_empty() {
+        // A flowed draft (#606) opens as the paragraphs it was written as,
+        // not as the lines it was wrapped into.
         let text = parsed
-            .and_then(|p| p.body_text(0).map(|b| b.to_string()))
+            .and_then(|p| match p.text_part(0) {
+                Some(
+                    part @ mail_parser::MessagePart {
+                        body: mail_parser::PartType::Text(text),
+                        ..
+                    },
+                ) => Some(crate::mail::flowed::readable(part, text).into_owned()),
+                _ => p.body_text(0).map(|b| b.to_string()),
+            })
             .unwrap_or_default();
         // One block of lines, the way the composer holds the lines it is
         // given: a block per line would read back in plain text as a

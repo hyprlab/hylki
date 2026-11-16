@@ -97,6 +97,15 @@
   Plain-text mail is still answered in plain text. The switch now sits
   under **Start new messages in**.
 
+- **Changed: plain text is sent wrapped** (#606, requested by 3v1n0). The
+  text part of every message goes out as `format=flowed` (RFC 3676), as
+  Thunderbird and Apple Mail send it: lines of at most 72 characters, each
+  broken after a space, so a reader that knows flowed text joins them again
+  and one that doesn't still gets lines of a readable length. Hard line
+  breaks, quotes, the signature separator, Markdown code blocks and long
+  links stay whole. A saved plain-text draft reopens with its paragraphs
+  joined.
+
 - **Fixed: shared mailboxes drew at the top of Folders with no parent**
   (#664, by Peter Hagen). On Dovecot servers, mailcow among them, a shared
   mailbox such as `Shared/user@dom/INBOX` showed as a lone "Inbox", because

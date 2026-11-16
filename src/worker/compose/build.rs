@@ -229,7 +229,7 @@ fn build_message(
             .header(ContentType::parse(&ctype).unwrap_or(ContentType::TEXT_PLAIN))
             .body(cal.ics.clone());
         let alt = MultiPart::alternative()
-            .singlepart(SinglePart::plain(msg.body.clone()))
+            .singlepart(plain_part(&msg.body))
             .singlepart(part);
         return Ok(builder.multipart(alt)?);
     }
@@ -246,7 +246,9 @@ fn build_message(
     // distinction the reader's own `extract_attachments` draws.
     let content = has_html.then(|| {
         let (html, images) = extract_data_images(&msg.html);
-        let alt = MultiPart::alternative_plain_html(msg.body.clone(), html);
+        let alt = MultiPart::alternative()
+            .singlepart(plain_part(&msg.body))
+            .singlepart(SinglePart::html(html));
         if images.is_empty() {
             return alt;
         }
@@ -270,7 +272,7 @@ fn build_message(
         let entity = if msg.attachments.is_empty() {
             match content {
                 Some(content) => PgpEntity::Multi(content),
-                None => PgpEntity::Single(SinglePart::plain(msg.body.clone())),
+                None => PgpEntity::Single(plain_part(&msg.body)),
             }
         } else {
             PgpEntity::Multi(attachments_multipart(content, msg)?)
@@ -290,12 +292,37 @@ fn build_message(
             Some(content) => builder.multipart(content)?,
             // A bare body() writes no MIME-Version and no charset, so a
             // client that doesn't guess UTF-8 garbles every accent (#412).
-            None => builder.singlepart(SinglePart::plain(msg.body.clone()))?,
+            None => builder.singlepart(plain_part(&msg.body))?,
         }
     } else {
         builder.multipart(attachments_multipart(content, msg)?)?
     };
     Ok(email)
+}
+
+/// The plain-text part of a message: `format=flowed`, so a reader that
+/// knows it wraps the text to its own width and one that doesn't still gets
+/// lines of a readable length (#606). The space each soft break ends in is
+/// sent quoted-printable when the text would otherwise go as 7bit: a server
+/// that trims trailing spaces would join nothing, and break a signature.
+fn plain_part(text: &str) -> lettre::message::SinglePart {
+    use lettre::message::{header::ContentTransferEncoding, header::ContentType, Body, SinglePart};
+    let flowed = crate::mail::flowed::flow(text);
+    let body = Body::new(flowed.clone());
+    let soft_breaks = flowed.contains(" \n");
+    let body = match body.encoding() {
+        ContentTransferEncoding::SevenBit | ContentTransferEncoding::EightBit if soft_breaks => {
+            Body::new_with_encoding(flowed, ContentTransferEncoding::QuotedPrintable)
+                .unwrap_or(body)
+        }
+        _ => body,
+    };
+    SinglePart::builder()
+        .header(
+            ContentType::parse("text/plain; charset=utf-8; format=flowed")
+                .expect("static content type"),
+        )
+        .body(body)
 }
 
 /// The text part (plain, or alternative plain+html) followed by the
@@ -304,10 +331,10 @@ fn attachments_multipart(
     content: Option<lettre::message::MultiPart>,
     msg: &OutgoingMessage,
 ) -> Result<lettre::message::MultiPart, SmtpError> {
-    use lettre::message::{header::ContentType, Attachment, MultiPart, SinglePart};
+    use lettre::message::{header::ContentType, Attachment, MultiPart};
     let mut multipart = match content {
         Some(content) => MultiPart::mixed().multipart(content),
-        None => MultiPart::mixed().singlepart(SinglePart::plain(msg.body.clone())),
+        None => MultiPart::mixed().singlepart(plain_part(&msg.body)),
     };
     for path in &msg.attachments {
         // Name the file in the error: "No such file or directory" on its own

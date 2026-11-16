@@ -604,7 +604,7 @@ fn plain_text_declares_its_charset() {
     let text = String::from_utf8_lossy(&raw);
     assert!(text.contains("MIME-Version: 1.0\r\n"), "{text}");
     assert!(
-        text.contains("Content-Type: text/plain; charset=utf-8\r\n"),
+        text.contains("Content-Type: text/plain; charset=utf-8; format=flowed\r\n"),
         "{text}"
     );
     assert!(!has_bare_lf(&raw), "{text}");
@@ -615,6 +615,41 @@ fn plain_text_declares_its_charset() {
         parsed.body_text(0).as_deref().map(str::trim_end),
         Some("Plain text with öäü and 🙂\r\nsecond line")
     );
+}
+
+/// #606: a long plain-text paragraph goes out flowed, in lines a reader
+/// without flowed text can read, and comes back whole in the reader and in
+/// the composer.
+#[test]
+fn plain_text_goes_out_flowed_and_comes_back_whole() {
+    let paragraph = "This paragraph is long enough to need breaking, ".repeat(5);
+    let paragraph = paragraph.trim_end();
+    let msg = OutgoingMessage {
+        to: "ada@example.com".into(),
+        body: format!("Hi Ada,\n\n{paragraph}\n\nJane"),
+        ..sample_outgoing()
+    };
+    let raw = build_email(&sample_account(), &msg)
+        .expect("email builds")
+        .formatted();
+    let text = String::from_utf8_lossy(&raw);
+    assert!(text.contains("format=flowed"), "{text}");
+    assert!(
+        text.contains("Content-Transfer-Encoding: quoted-printable\r\n"),
+        "the soft breaks' spaces are protected: {text}"
+    );
+    let parsed = mail_parser::MessageParser::default()
+        .parse(&raw)
+        .expect("parses");
+    let wire = parsed.body_text(0).expect("a text part").into_owned();
+    assert!(wire.lines().all(|l| l.chars().count() <= 72), "{wire}");
+    assert!(wire.lines().count() > 5, "{wire}");
+
+    let shown = extract_body(&raw);
+    assert!(shown.contains(paragraph), "{shown}");
+
+    let editable = crate::worker::compose::editable::editable_from_raw(&raw, &[]);
+    assert!(editable.body_html.contains(paragraph), "{}", editable.body_html);
 }
 
 /// #414: a text file with Unix line endings goes out as base64, so its
