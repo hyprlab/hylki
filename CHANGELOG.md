@@ -124,6 +124,17 @@
   a tooltip. The address book picker above the contact list shows the
   checkmark on the picked book, like the others.
 
+- **Changed: address completion suggests the people written to most
+  first.** Anyone the user has sent mail to comes before an address that
+  only matches the typing, and the most written to before the rest, so a
+  newsletter no longer outranks a person. Mail sent is counted from the
+  Sent folders (mail from one of the user's addresses or aliases) and from
+  each send. A word inside a name now matches as well as its start.
+
+- **Changed: the contributors and translators are on a Credits page** of
+  the About dialog, opened from a **Credits** row under **Release Notes**,
+  instead of over sixty rows on its main page.
+
 - **Translations:** French (PR #660 by frenchy82), 2492 of 2523 strings
   translated.
 
