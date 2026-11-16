@@ -191,7 +191,7 @@ their dropdowns.
   checkmark on the picked book, like the others.
 
 - **Translations:** French (PR #660 by frenchy82), 2498 of 2503 strings
-  translated.
+  translated. German (PR #668 by Samuel Edlmeier), complete.
 
 ## 1.48.2 — 2026-11-15
 
