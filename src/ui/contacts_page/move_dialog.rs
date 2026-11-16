@@ -12,6 +12,9 @@ use super::rows::split_book_name;
 use super::types::{ContactsPage, ContactsPageInput};
 use super::{ContactsPageWidgets, Flow};
 
+/// More books than this scroll in the dialog.
+const SCROLL_AFTER: usize = 6;
+
 /// A book the contacts can go to, and those of them that can.
 struct Target {
     uid: String,
@@ -89,9 +92,6 @@ impl ContactsPage {
         let list = gtk::ListBox::new();
         list.add_css_class("boxed-list");
         list.set_selection_mode(gtk::SelectionMode::None);
-        // Room for the list's shadow inside the scroller.
-        list.set_margin_top(3);
-        list.set_margin_bottom(3);
         let picked = std::rc::Rc::new(std::cell::Cell::new(None::<usize>));
         let mut first: Option<gtk::CheckButton> = None;
         for (i, t) in targets.iter().enumerate() {
@@ -116,14 +116,27 @@ impl ContactsPage {
             });
             row.add_prefix(&check);
             row.set_activatable_widget(Some(&check));
+            // The radio takes the keyboard; a focused row drew its ring
+            // across the list as the dialog opened.
+            row.set_focusable(false);
             list.append(&row);
         }
-        let scroll = gtk::ScrolledWindow::new();
-        scroll.set_hscrollbar_policy(gtk::PolicyType::Never);
-        scroll.set_propagate_natural_height(true);
-        scroll.set_max_content_height(320);
-        scroll.set_child(Some(&list));
-        dialog.set_extra_child(Some(&scroll));
+        // A scroller clips the list's shadow, so only a long list has one,
+        // with room around the list for the shadow inside it.
+        if targets.len() > SCROLL_AFTER {
+            list.set_margin_top(6);
+            list.set_margin_bottom(6);
+            list.set_margin_start(6);
+            list.set_margin_end(6);
+            let scroll = gtk::ScrolledWindow::new();
+            scroll.set_hscrollbar_policy(gtk::PolicyType::Never);
+            scroll.set_propagate_natural_height(true);
+            scroll.set_max_content_height(360);
+            scroll.set_child(Some(&list));
+            dialog.set_extra_child(Some(&scroll));
+        } else {
+            dialog.set_extra_child(Some(&list));
+        }
 
         dialog.add_response("cancel", &i18n("Cancel"));
         dialog.add_response("move", &i18n("Move"));
@@ -146,6 +159,8 @@ impl ContactsPage {
             });
         });
         dialog.present();
+        // Opened from a menu, nothing in it has the keyboard yet.
+        gtk::prelude::GtkWindowExt::set_focus(&dialog, None::<&gtk::Widget>);
         Flow::Continue(())
     }
 }
