@@ -49,6 +49,7 @@ pub(crate) mod rich_editor;
 pub(crate) mod send_morph;
 mod sender_row;
 pub(crate) mod showcase;
+pub(crate) mod source_find;
 pub(crate) mod sidebar;
 mod theme_picker;
 pub(crate) mod thumbnails;

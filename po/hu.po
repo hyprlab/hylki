@@ -1576,9 +1576,6 @@ msgstr "Keresés feladó, tárgy vagy fiók szerint"
 msgid "(no subject)"
 msgstr "(nincs tárgy)"
 
-msgid "Message Source"
-msgstr "Üzenetforrás"
-
 #, fuzzy
 msgid "Forwarded message"
 msgstr "Üzenet továbbítása"
@@ -1783,6 +1780,21 @@ msgstr "Címkék eltávolítása"
 
 msgid "Open a message first, then print it."
 msgstr "Előbb nyisson meg egy üzenetet, majd nyomtassa ki."
+
+msgid "Message Source"
+msgstr "Üzenetforrás"
+
+msgid "Find in message"
+msgstr "Keresés az üzenetben"
+
+msgid "Previous match"
+msgstr "Előző találat"
+
+msgid "Next match"
+msgstr "Következő találat"
+
+msgid "Close find"
+msgstr "Keresés bezárása"
 
 #, fuzzy
 msgid "Delete “{name}”?"
@@ -5714,6 +5726,10 @@ msgstr "Válasszon ki egy piszkozatot a listából szerkesztésre."
 msgid "Choose a message from the list to read it here."
 msgstr "Válasszon ki egy üzenetet a listából az itteni olvasásához."
 
+#, fuzzy
+msgid "Show Message"
+msgstr "Megjelenítés az üzenetben"
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 "A távoli tartalom (képek, követők) az adatvédelem érdekében blokkolva van."
@@ -5724,23 +5740,11 @@ msgstr "Betöltés"
 msgid "Always allow sender"
 msgstr "Feladó mindig engedélyezve"
 
-msgid "Find in message"
-msgstr "Keresés az üzenetben"
-
 msgid "No matches"
 msgstr "Nincs találat"
 
 msgid "{cur} of {total}"
 msgstr "{cur} / {total}"
-
-msgid "Previous match"
-msgstr "Előző találat"
-
-msgid "Next match"
-msgstr "Következő találat"
-
-msgid "Close find"
-msgstr "Keresés bezárása"
 
 #, fuzzy
 msgid ""

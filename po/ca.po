@@ -1506,9 +1506,6 @@ msgstr "Cerca per remitent, assumpte o compte"
 msgid "(no subject)"
 msgstr "(sense assumpte)"
 
-msgid "Message Source"
-msgstr "Codi font del missatge"
-
 #, fuzzy
 msgid "Forwarded message"
 msgstr "Reenvia aquest missatge"
@@ -1712,6 +1709,21 @@ msgstr "Treu les etiquetes"
 
 msgid "Open a message first, then print it."
 msgstr "Obre primer un missatge i després imprimeix-lo."
+
+msgid "Message Source"
+msgstr "Codi font del missatge"
+
+msgid "Find in message"
+msgstr "Cerca al missatge"
+
+msgid "Previous match"
+msgstr "Coincidència anterior"
+
+msgid "Next match"
+msgstr "Coincidència següent"
+
+msgid "Close find"
+msgstr "Tanca la cerca"
 
 msgid "Delete “{name}”?"
 msgstr "Vols suprimir «{name}»?"
@@ -5532,6 +5544,10 @@ msgstr "Tria un esborrany de la llista per editar-lo aquí."
 msgid "Choose a message from the list to read it here."
 msgstr "Tria un missatge de la llista per llegir-lo aquí."
 
+#, fuzzy
+msgid "Show Message"
+msgstr "Mostra al missatge"
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 "El contingut remot (imatges, rastrejadors) està blocat per protegir la teva "
@@ -5543,23 +5559,11 @@ msgstr "Carrega"
 msgid "Always allow sender"
 msgstr "Permet sempre el remitent"
 
-msgid "Find in message"
-msgstr "Cerca al missatge"
-
 msgid "No matches"
 msgstr "No hi ha coincidències"
 
 msgid "{cur} of {total}"
 msgstr "{cur} de {total}"
-
-msgid "Previous match"
-msgstr "Coincidència anterior"
-
-msgid "Next match"
-msgstr "Coincidència següent"
-
-msgid "Close find"
-msgstr "Tanca la cerca"
 
 msgid ""
 "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "

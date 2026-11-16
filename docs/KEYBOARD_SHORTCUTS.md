@@ -142,8 +142,10 @@ when several wait.
 <kbd>Ctrl+N</kbd> starts a new message, <kbd>Ctrl+Shift+N</kbd> starts one
 from a [template](DOCUMENTATION.md#templates), <kbd>Ctrl+R</kbd> replies,
 <kbd>Ctrl+Shift+R</kbd> replies to all and <kbd>Ctrl+U</kbd> shows the
-message's source, with or without single-key shortcuts. While you are
-writing, the composer keeps them: there <kbd>Ctrl+U</kbd> underlines.
+message's source in the reader, with or without single-key shortcuts.
+<kbd>Ctrl+U</kbd> again, <kbd>Esc</kbd> or **Show Message** goes back to the
+message. While you are writing, the composer keeps them: there
+<kbd>Ctrl+U</kbd> underlines.
 
 <kbd>Ctrl+Enter</kbd> sends the message you are writing, from the body or
 any of its address rows. It does what the Send button does, so a message with
@@ -190,7 +192,7 @@ These work with or without single-key shortcuts too:
 | <kbd>→</kbd> <kbd>←</kbd> | Open a conversation out in the list, or fold it back up, with the list focused; <kbd>←</kbd> works from any of its replies |
 | <kbd>←</kbd> <kbd>→</kbd> | Fold the date section of a message whose conversation is folded or that stands alone, and open a folded section from its heading, with the list grouped by date |
 | <kbd>Shift+Delete</kbd> | Delete the selected messages permanently, without going to Trash, after asking |
-| <kbd>Ctrl+F</kbd> | Search the message list, or find in the message when it has the focus; in Message Source, find in the source |
+| <kbd>Ctrl+F</kbd> | Search the message list, or find in the message when it has the focus; in the message source, find in the source |
 | <kbd>Ctrl+P</kbd> | Print the message you are reading |
 | <kbd>Ctrl+Shift+P</kbd> | Preview it as a PDF first |
 | <kbd>Ctrl+Z</kbd> | Undo the last action (a move, a delete, a star) |

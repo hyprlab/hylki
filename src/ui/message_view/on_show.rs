@@ -39,6 +39,7 @@ impl MessageView {
             .zip(shown.as_ref())
             .is_some_and(|(a, b)| a.id == b.id && a.account_id == b.account_id);
         if !same_message {
+            self.on_close_source();
             self.sender_check = None;
             self.member_checks.clear();
             self.unsub_state.clear();

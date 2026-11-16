@@ -458,16 +458,7 @@ impl AppModel {
 
             AppMsg::ViewSource => {
                 if let Some(m) = self.current.clone() {
-                    if let Some(path) = self.resolve_folder_path(&m) {
-                        self.send_to(
-                            m.account_id,
-                            MailRequest::LoadSource {
-                                message_id: m.id,
-                                path,
-                                uid: m.uid,
-                            },
-                        );
-                    }
+                    self.request_source(&m);
                 }
             }
             _ => unreachable!("not routed to on_popout"),

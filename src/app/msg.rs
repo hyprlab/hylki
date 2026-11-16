@@ -1496,8 +1496,12 @@ pub(crate) enum AppMsg {
         path: String,
         body: String,
     },
-    /// A message's source arrived: show it.
-    Source { text: String },
+    /// A message's source arrived, `None` when it could not be loaded.
+    Source {
+        account_id: u32,
+        message_id: u32,
+        text: Option<String>,
+    },
     /// These, like `Body`, name the folder: a UID means a message only
     /// within its folder.
     Attachments {

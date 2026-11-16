@@ -656,8 +656,11 @@ pub(crate) enum WorkerEvent {
         message_id: u32,
         check: crate::models::SenderCheck,
     },
+    /// A message's raw source, `None` when it could not be loaded (the
+    /// error is reported apart): a reader waiting on it stops waiting.
     Source {
-        text: String,
+        message_id: u32,
+        text: Option<String>,
     },
     Attachments {
         path: String,

@@ -285,7 +285,11 @@ impl<E: Emit> ImapWorker<E> {
                 uid,
             } => self.on_load_body(message_id, path, uid).await,
             MailRequest::LoadBodies { path, .. } => self.on_load_bodies(path, pending_bodies).await,
-            MailRequest::LoadSource { path, uid, .. } => self.on_load_source(path, uid).await,
+            MailRequest::LoadSource {
+                message_id,
+                path,
+                uid,
+            } => self.on_load_source(message_id, path, uid).await,
             MailRequest::LoadAttachments {
                 message_id,
                 path,

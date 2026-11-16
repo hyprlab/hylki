@@ -394,25 +394,6 @@ impl AppModel {
         }
     }
 
-    /// View Source: ask the server for the message as it keeps it, or show
-    /// a file's as it was read.
-    fn request_source(&self, m: &Message) {
-        if let Some(raw) = self.file_raw(m) {
-            self.show_source_window(&String::from_utf8_lossy(raw));
-            return;
-        }
-        if let Some(path) = self.resolve_folder_path(m) {
-            self.send_to(
-                m.account_id,
-                MailRequest::LoadSource {
-                    message_id: m.id,
-                    path,
-                    uid: m.uid,
-                },
-            );
-        }
-    }
-
     /// Save as File: the whole message as the server keeps it, asked for
     /// first; the save dialog opens once it is here.
     fn save_as_file(&mut self, m: &Message) {

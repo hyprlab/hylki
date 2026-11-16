@@ -137,6 +137,9 @@ impl MessageView {
         // flash this avoids. Under the pane's still nothing shows anyway, and
         // the page loads in view instead: hidden behind the spinner it is
         // neither laid out nor drawn, and would only be once revealed.
+        if let Some(source) = &self.source {
+            return if source.loading { "loading" } else { "source" };
+        }
         if self.loading || (!self.webview_ready && !self.swap.held()) {
             "loading"
         } else {

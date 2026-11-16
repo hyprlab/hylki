@@ -2,11 +2,15 @@
 
 ## Unreleased
 
-- **Added: find in Message Source** (#658, requested by samuel-edlmeier).
-  Ctrl+F in the window that View Source opens shows the reader's find bar.
-  Matches are marked as you type, Enter, Ctrl+G and the arrows step through
-  them with a count, and Esc or Ctrl+F closes the bar. It sits above or
-  below the source, as Settings places it in the reader.
+- **Added: the message source opens in the reader, with find**
+  (#658, requested by samuel-edlmeier). View Source shows the source in
+  place of the message, in the main window's reader or a message's own
+  window, under a **Message Source** bar. **Show Message**, Esc or Ctrl+U
+  again goes back to the message, as does opening another one. Ctrl+F finds
+  in the source with the reader's find bar: matches are marked as you type,
+  and Enter, Ctrl+G and the arrows step through them with a count. With the
+  reading pane off, or for a message that is not open, the source still
+  opens in a window of its own, which has the same find bar.
 
 - **Added: the date sections of the message list fold** (#659, requested
   by samuel-edlmeier). A click on **Today**, **Yesterday** or another

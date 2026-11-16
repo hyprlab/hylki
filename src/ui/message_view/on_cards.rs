@@ -233,6 +233,9 @@ impl MessageView {
                     page.grab_focus();
                     self.focus_held.set(true);
                 }
+                _ if self.source_shown() => {
+                    self.source_view.grab_focus();
+                }
                 _ => {
                     self.webview.grab_focus();
                 }

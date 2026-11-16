@@ -28,6 +28,7 @@ mod on_find;
 mod on_prefs;
 mod on_services;
 mod on_show;
+mod on_source;
 mod page_load;
 mod print;
 mod receipt_banner;
@@ -220,6 +221,11 @@ pub(crate) struct MessageView {
     webview_ready: bool,
     /// In-message find (#103).
     find_open: bool,
+    /// The message's source in place of its body (#658), and the view and
+    /// find that show it.
+    source: Option<on_source::SourceMode>,
+    source_view: gtk::TextView,
+    source_find: crate::ui::source_find::SourceFind,
     /// The split reply is open above this reader: its header bar is gone and
     /// the subject block meets the composer's grab strip instead, where the
     /// list-aligned 4px reads as cramped.

@@ -178,6 +178,12 @@ pub(crate) enum MessageWindowInput {
     SnoozeMenu,
     OverflowMenu,
     Find,
+    /// View Source in this window's reader (#658): asked for, then here.
+    SourceLoading((u32, u32)),
+    ShowSource {
+        key: (u32, u32),
+        text: Option<String>,
+    },
     /// A single-key shortcut pressed in this window (#392).
     Key(Shortcut),
     // ---- from the embedded reader ----

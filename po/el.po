@@ -1494,9 +1494,6 @@ msgstr "Αναζήτηση κατά αποστολέα, θέμα ή λογαρι
 msgid "(no subject)"
 msgstr "(χωρίς θέμα)"
 
-msgid "Message Source"
-msgstr "Πηγαίος κώδικας μηνύματος"
-
 msgid "Forwarded message"
 msgstr "Προωθημένο μήνυμα"
 
@@ -1703,6 +1700,21 @@ msgstr "Αφαίρεση ετικετών"
 
 msgid "Open a message first, then print it."
 msgstr "Ανοίξτε πρώτα ένα μήνυμα και έπειτα εκτυπώστε το."
+
+msgid "Message Source"
+msgstr "Πηγαίος κώδικας μηνύματος"
+
+msgid "Find in message"
+msgstr "Εύρεση στο μήνυμα"
+
+msgid "Previous match"
+msgstr "Προηγούμενη αντιστοιχία"
+
+msgid "Next match"
+msgstr "Επόμενη αντιστοιχία"
+
+msgid "Close find"
+msgstr "Κλείσιμο εύρεσης"
 
 msgid "Delete “{name}”?"
 msgstr "Διαγραφή του «{name}»;"
@@ -5513,6 +5525,10 @@ msgstr "Επιλέξτε ένα πρόχειρο από τη λίστα για �
 msgid "Choose a message from the list to read it here."
 msgstr "Επιλέξτε ένα μήνυμα από τη λίστα για να το διαβάσετε εδώ."
 
+#, fuzzy
+msgid "Show Message"
+msgstr "Εμφάνιση στο μήνυμα"
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 "Το απομακρυσμένο περιεχόμενο (εικόνες, trackers) αποκλείεται για την "
@@ -5524,23 +5540,11 @@ msgstr "Φόρτωση"
 msgid "Always allow sender"
 msgstr "Να επιτρέπεται πάντα ο αποστολέας"
 
-msgid "Find in message"
-msgstr "Εύρεση στο μήνυμα"
-
 msgid "No matches"
 msgstr "Δεν υπάρχουν αντιστοιχίες"
 
 msgid "{cur} of {total}"
 msgstr "{cur} από {total}"
-
-msgid "Previous match"
-msgstr "Προηγούμενη αντιστοιχία"
-
-msgid "Next match"
-msgstr "Επόμενη αντιστοιχία"
-
-msgid "Close find"
-msgstr "Κλείσιμο εύρεσης"
 
 msgid ""
 "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "

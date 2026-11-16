@@ -1597,9 +1597,6 @@ msgstr "Wyszukaj według nadawcy, tematu lub konta"
 msgid "(no subject)"
 msgstr "(bez tematu)"
 
-msgid "Message Source"
-msgstr "Źródło wiadomości"
-
 #, fuzzy
 msgid "Forwarded message"
 msgstr "Przekaż dalej tę wiadomość"
@@ -1813,6 +1810,21 @@ msgstr "Usuń etykiety"
 
 msgid "Open a message first, then print it."
 msgstr "Najpierw otwórz wiadomość, a potem ją wydrukuj."
+
+msgid "Message Source"
+msgstr "Źródło wiadomości"
+
+msgid "Find in message"
+msgstr "Znajdź w wiadomości"
+
+msgid "Previous match"
+msgstr "Poprzedni wynik"
+
+msgid "Next match"
+msgstr "Następny wynik"
+
+msgid "Close find"
+msgstr "Zamknij wyszukiwanie"
 
 #, fuzzy
 msgid "Delete “{name}”?"
@@ -5781,6 +5793,10 @@ msgstr "Wybierz szkic z listy, aby go tu zmodyfikować."
 msgid "Choose a message from the list to read it here."
 msgstr "Wybierz wiadomość z listy, aby ją tu przeczytać."
 
+#, fuzzy
+msgid "Show Message"
+msgstr "Wyświetl w wiadomości"
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 "Zdalne treści (obrazy, elementy śledzące) są blokowane, aby chronić "
@@ -5792,23 +5808,11 @@ msgstr "Wczytaj"
 msgid "Always allow sender"
 msgstr "Zawsze zezwalaj temu nadawcy"
 
-msgid "Find in message"
-msgstr "Znajdź w wiadomości"
-
 msgid "No matches"
 msgstr "Brak wyników"
 
 msgid "{cur} of {total}"
 msgstr "{cur} z {total}"
-
-msgid "Previous match"
-msgstr "Poprzedni wynik"
-
-msgid "Next match"
-msgstr "Następny wynik"
-
-msgid "Close find"
-msgstr "Zamknij wyszukiwanie"
 
 #, fuzzy
 msgid ""

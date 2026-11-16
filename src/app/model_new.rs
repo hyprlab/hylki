@@ -252,6 +252,7 @@ impl AppModel {
                 choice
             },
             popouts: HashMap::new(),
+            sources_wanted: Vec::new(),
             current_thread: Vec::new(),
             listed_thread: Vec::new(),
             reader_focus_pending: false,

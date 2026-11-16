@@ -320,17 +320,24 @@ impl<E: Emit> ImapWorker<E> {
     }
 
     /// A message's raw source for the source view.
-    pub(super) async fn on_load_source(&mut self, path: String, uid: u32) -> After {
+    pub(super) async fn on_load_source(&mut self, message_id: u32, path: String, uid: u32) -> After {
         let account = &self.account;
         let session = &mut self.session;
         let emit = &self.emit;
         match load_source_retry(session, account, &path, uid).await {
-            Ok(text) => emit(WorkerEvent::Source { text }),
+            Ok(text) => emit(WorkerEvent::Source {
+                message_id,
+                text: Some(text),
+            }),
             Err(e) => {
                 emit(WorkerEvent::net_error(i18n_f(
                     "Could not load source: {e}",
                     &[("e", &(e).to_string())],
                 )));
+                emit(WorkerEvent::Source {
+                    message_id,
+                    text: None,
+                });
             }
         }
         After::Done

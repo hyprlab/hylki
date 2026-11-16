@@ -1481,9 +1481,6 @@ msgstr "Поиск по отправителю, теме или учётной �
 msgid "(no subject)"
 msgstr "(без темы)"
 
-msgid "Message Source"
-msgstr "Исходный текст сообщения"
-
 msgid "Forwarded message"
 msgstr "Пересланное сообщение"
 
@@ -1692,6 +1689,21 @@ msgstr "Удалить теги"
 
 msgid "Open a message first, then print it."
 msgstr "Сначала откройте сообщение, затем распечатайте его."
+
+msgid "Message Source"
+msgstr "Исходный текст сообщения"
+
+msgid "Find in message"
+msgstr "Найти в сообщении"
+
+msgid "Previous match"
+msgstr "Предыдущее совпадение"
+
+msgid "Next match"
+msgstr "Следующее совпадение"
+
+msgid "Close find"
+msgstr "Закрыть поиск"
 
 msgid "Delete “{name}”?"
 msgstr "Удалить «{name}»?"
@@ -5454,6 +5466,10 @@ msgstr "Выберите черновик из списка, чтобы отре
 msgid "Choose a message from the list to read it here."
 msgstr "Выберите сообщение из списка, чтобы прочитать его здесь."
 
+#, fuzzy
+msgid "Show Message"
+msgstr "Показать в сообщении"
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 "Удалённое содержимое (картинки, трекеры) блокируется для защиты вашей "
@@ -5465,23 +5481,11 @@ msgstr "Загрузить"
 msgid "Always allow sender"
 msgstr "Всегда разрешать для этого отправителя"
 
-msgid "Find in message"
-msgstr "Найти в сообщении"
-
 msgid "No matches"
 msgstr "Совпадений не найдено"
 
 msgid "{cur} of {total}"
 msgstr "{cur} из {total}"
-
-msgid "Previous match"
-msgstr "Предыдущее совпадение"
-
-msgid "Next match"
-msgstr "Следующее совпадение"
-
-msgid "Close find"
-msgstr "Закрыть поиск"
 
 msgid ""
 "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "

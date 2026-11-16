@@ -239,7 +239,10 @@ pub(super) async fn run_mock(
                     .message(message_id)
                     .map(|m| m.body)
                     .unwrap_or_default();
-                emit(WorkerEvent::Source { text });
+                emit(WorkerEvent::Source {
+                    message_id,
+                    text: Some(text),
+                });
             }
             MailRequest::LoadAttachments {
                 message_id,

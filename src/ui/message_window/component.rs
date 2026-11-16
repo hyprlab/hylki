@@ -342,6 +342,12 @@ impl Component for MessageWindow {
             MessageWindowInput::Print => self.view.emit(MessageViewInput::Print),
             MessageWindowInput::PrintPreview => self.view.emit(MessageViewInput::PrintPreview),
             MessageWindowInput::Find => self.view.emit(MessageViewInput::OpenFind),
+            MessageWindowInput::SourceLoading(key) => {
+                self.view.emit(MessageViewInput::SourceLoading(key))
+            }
+            MessageWindowInput::ShowSource { key, text } => {
+                self.view.emit(MessageViewInput::ShowSource { key, text })
+            }
             // Moving the message away: let the app handle it, then close.
             MessageWindowInput::Delete => {
                 self.emit_action(RowAction::Delete, &sender);

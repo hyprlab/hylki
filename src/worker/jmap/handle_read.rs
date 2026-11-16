@@ -280,21 +280,32 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
     }
 
     /// A message's raw source for the source view.
-    pub(super) async fn on_load_source(&mut self, path: String, uid: u32) {
+    pub(super) async fn on_load_source(&mut self, message_id: u32, path: String, uid: u32) {
         let account = &self.account;
         let state = &mut self.state;
         let emit = &self.emit;
         let Some(s) = jmap_session(account, state, emit).await else {
+            emit(WorkerEvent::Source {
+                message_id,
+                text: None,
+            });
             return;
         };
         match jmap_fetch_raw(&s, state, &path, uid).await {
             Ok(raw) => emit(WorkerEvent::Source {
-                text: String::from_utf8_lossy(&raw).into_owned(),
+                message_id,
+                text: Some(String::from_utf8_lossy(&raw).into_owned()),
             }),
-            Err(e) => emit(WorkerEvent::net_error(i18n_f(
-                "Could not load source: {e}",
-                &[("e", &e)],
-            ))),
+            Err(e) => {
+                emit(WorkerEvent::net_error(i18n_f(
+                    "Could not load source: {e}",
+                    &[("e", &e)],
+                )));
+                emit(WorkerEvent::Source {
+                    message_id,
+                    text: None,
+                });
+            }
         }
     }
 

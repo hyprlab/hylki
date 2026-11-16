@@ -43,6 +43,10 @@ impl AppModel {
             Shortcut::NextMessage => self.message_list.emit(MessageListInput::MoveSelection(1)),
             Shortcut::PrevMessage => self.message_list.emit(MessageListInput::MoveSelection(-1)),
             Shortcut::ToggleSelect => self.message_list.emit(MessageListInput::ToggleSelection),
+            // Out of the source first, back to the message (#658).
+            Shortcut::BackToList if self.message_view.model().source_key().is_some() => {
+                self.message_view.emit(MessageViewInput::CloseSource);
+            }
             Shortcut::BackToList => {
                 // Gmail's u and Esc close the conversation, back to the list
                 // with nothing open (#392); the classic keys only move the

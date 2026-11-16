@@ -1381,9 +1381,6 @@ msgstr ""
 msgid "(no subject)"
 msgstr ""
 
-msgid "Message Source"
-msgstr ""
-
 msgid "Forwarded message"
 msgstr ""
 
@@ -1566,6 +1563,21 @@ msgid "Remove Tags"
 msgstr ""
 
 msgid "Open a message first, then print it."
+msgstr ""
+
+msgid "Message Source"
+msgstr ""
+
+msgid "Find in message"
+msgstr ""
+
+msgid "Previous match"
+msgstr ""
+
+msgid "Next match"
+msgstr ""
+
+msgid "Close find"
 msgstr ""
 
 msgid "Delete “{name}”?"
@@ -5014,6 +5026,9 @@ msgstr ""
 msgid "Choose a message from the list to read it here."
 msgstr ""
 
+msgid "Show Message"
+msgstr ""
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 
@@ -5023,22 +5038,10 @@ msgstr ""
 msgid "Always allow sender"
 msgstr ""
 
-msgid "Find in message"
-msgstr ""
-
 msgid "No matches"
 msgstr ""
 
 msgid "{cur} of {total}"
-msgstr ""
-
-msgid "Previous match"
-msgstr ""
-
-msgid "Next match"
-msgstr ""
-
-msgid "Close find"
 msgstr ""
 
 msgid ""

@@ -924,6 +924,8 @@ pub(crate) struct AppModel {
     pub(super) gallery_scan_left: HashMap<(u32, String), u32>,
     /// Messages popped out into their own windows, keyed by (account, message).
     pub(super) popouts: HashMap<(u32, u32), PopOut>,
+    /// Sources asked for and not here yet, with where each goes (#658).
+    pub(super) sources_wanted: Vec<((u32, u32), super::source::SourceTarget)>,
     /// The conversation currently shown in the reader (newest first), with bodies
     /// filled in as they arrive. More than one entry = conversation/thread mode.
     pub(super) current_thread: Vec<Message>,

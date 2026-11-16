@@ -362,6 +362,16 @@ pub(crate) enum MessageViewInput {
     SetTags(Vec<crate::config::Tag>),
     /// Read-marking policy changed (#100).
     SetReadMark(crate::config::ReadMark),
+    /// The source of this (account, message) was asked for (#658): show
+    /// the reader waiting for it.
+    SourceLoading((u32, u32)),
+    /// It arrived, `None` when it could not be loaded.
+    ShowSource {
+        key: (u32, u32),
+        text: Option<String>,
+    },
+    /// Back from the source to the message.
+    CloseSource,
     /// In-message find (#103): open/close the bar, run/step the search.
     OpenFind,
     CloseFind,

@@ -77,13 +77,38 @@ impl Component for MessageView {
                     },
                 },
 
+                // Source mode (#658): what the body shows, and the way back.
+                gtk::Revealer {
+                    set_transition_type: gtk::RevealerTransitionType::SlideDown,
+                    #[watch]
+                    set_reveal_child: model.source.is_some(),
+
+                    gtk::Box {
+                        add_css_class: "source-bar",
+                        set_spacing: 8,
+
+                        gtk::Image { set_icon_name: Some("code-symbolic") },
+                        gtk::Label {
+                            set_label: &i18n("Message Source"),
+                            set_hexpand: true,
+                            set_halign: gtk::Align::Start,
+                            set_xalign: 0.0,
+                        },
+                        gtk::Button {
+                            set_label: &i18n("Show Message"),
+                            set_valign: gtk::Align::Center,
+                            connect_clicked => MessageViewInput::CloseSource,
+                        },
+                    },
+                },
+
                 #[name = "remote_alert"]
                 gtk::Revealer {
                     set_transition_type: gtk::RevealerTransitionType::SlideDown,
                     #[watch]
                     set_transition_duration: model.banner_slide_ms(),
                     #[watch]
-                    set_reveal_child: model.blocked && model.show_banner,
+                    set_reveal_child: model.blocked && model.show_banner && model.source.is_none(),
 
                     gtk::Box {
                         add_css_class: "remote-alert",
@@ -201,6 +226,7 @@ impl Component for MessageView {
                         "under-bar",
                         model.spoof_alert_shown()
                             || (model.blocked && model.show_banner)
+                            || model.source.is_some()
                             || (model.find_open && !model.find_bottom),
                     ),
                     // Under the split reply there is no list row to line up
@@ -429,6 +455,9 @@ impl Component for MessageView {
             },
         ));
         widgets.body_stack.add_named(&body_overlay, Some("body"));
+        widgets
+            .body_stack
+            .add_named(&model.source_scroller(&sender), Some("source"));
         widgets.body_stack.set_visible_child_name("body");
         ComponentParts { model, widgets }
     }
@@ -650,8 +679,13 @@ impl Component for MessageView {
             MessageViewInput::SetFindBottom(on) => self.on_set_find_bottom(on),
             MessageViewInput::DragCard(key) => self.on_drag_card(key),
             MessageViewInput::FindChanged(text) => self.on_find_changed(text),
+            MessageViewInput::FindNext if self.source_shown() => self.source_find_step(1),
+            MessageViewInput::FindPrev if self.source_shown() => self.source_find_step(-1),
             MessageViewInput::FindNext => self.eval_find("hylkiFindStep(1)"),
             MessageViewInput::FindPrev => self.eval_find("hylkiFindStep(-1)"),
+            MessageViewInput::SourceLoading(key) => self.on_source_loading(key),
+            MessageViewInput::ShowSource { key, text } => self.on_show_source(key, text),
+            MessageViewInput::CloseSource => self.on_close_source(),
             MessageViewInput::FindCounted { current, total } => {
                 self.find_matches = Some((current, total));
             }

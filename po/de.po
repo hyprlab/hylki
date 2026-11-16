@@ -1459,9 +1459,6 @@ msgstr "Suche nach Absender, Betreff oder Konto"
 msgid "(no subject)"
 msgstr "(kein Betreff)"
 
-msgid "Message Source"
-msgstr "Nachrichtenquelle"
-
 msgid "Forwarded message"
 msgstr "Weitergeleitete Nachricht"
 
@@ -1670,6 +1667,21 @@ msgstr "Tags entfernen"
 
 msgid "Open a message first, then print it."
 msgstr "Zuerst eine Nachricht öffnen, dann drucken."
+
+msgid "Message Source"
+msgstr "Nachrichtenquelle"
+
+msgid "Find in message"
+msgstr "In Nachricht suchen"
+
+msgid "Previous match"
+msgstr "Vorheriger Treffer"
+
+msgid "Next match"
+msgstr "Nächster Treffer"
+
+msgid "Close find"
+msgstr "Suche schließen"
 
 msgid "Delete “{name}”?"
 msgstr "Lösche »{name}«?"
@@ -5501,6 +5513,10 @@ msgstr "Einen Entwurf aus der Liste auswählen, um ihn hier zu bearbeiten."
 msgid "Choose a message from the list to read it here."
 msgstr "Eine Nachricht aus der Liste auswählen, um sie hier zu lesen."
 
+#, fuzzy
+msgid "Show Message"
+msgstr "In Nachricht anzeigen"
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 "Remote-Inhalte (Bilder, Tracker) werden blockiert, um die Privatsphäre zu "
@@ -5512,23 +5528,11 @@ msgstr "Laden"
 msgid "Always allow sender"
 msgstr "Absender immer zulassen"
 
-msgid "Find in message"
-msgstr "In Nachricht suchen"
-
 msgid "No matches"
 msgstr "Keine Treffer"
 
 msgid "{cur} of {total}"
 msgstr "{cur} von {total}"
-
-msgid "Previous match"
-msgstr "Vorheriger Treffer"
-
-msgid "Next match"
-msgstr "Nächster Treffer"
-
-msgid "Close find"
-msgstr "Suche schließen"
 
 msgid ""
 "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "

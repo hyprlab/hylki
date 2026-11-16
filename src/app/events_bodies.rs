@@ -89,11 +89,11 @@ impl AppModel {
                 body,
             } => self.on_body(account_id, message_id, path, body, sender),
 
-            AppMsg::Source { text } => {
-                // Source is only fetched on explicit request (toolbar or context
-                // menu), so always show it — even for a message that isn't open.
-                self.show_source_window(&text);
-            }
+            AppMsg::Source {
+                account_id,
+                message_id,
+                text,
+            } => self.on_source(account_id, message_id, text),
 
             AppMsg::Attachments {
                 account_id,
