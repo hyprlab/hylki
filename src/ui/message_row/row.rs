@@ -18,6 +18,7 @@ use std::rc::{Rc, Weak};
 pub(super) struct RowWidgets {
     pub(super) host: gtk::Box,
     pub(super) revealer: gtk::Revealer,
+    pub(super) fold: super::fold::FoldHeading,
     pub(super) surface: SwipeSurface,
     pub(super) swipe_bg: gtk::Box,
     pub(super) swipe_inner: gtk::Box,
@@ -282,6 +283,7 @@ impl Row {
         }
 
         self.wire_swipe();
+        self.wire_fold();
     }
 
     // ── Binding ──

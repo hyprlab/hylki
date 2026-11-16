@@ -99,6 +99,7 @@ impl AppModel {
             .emit(MessageListInput::ApplySort { order, reversed });
         self.show_view_sort();
         self.apply_view_names();
+        self.apply_view_folds();
     }
 
     pub(super) fn show_view_sort(&self) {

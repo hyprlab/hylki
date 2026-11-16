@@ -39,6 +39,7 @@ fn message_list_output_msg(out: MessageListOutput) -> AppMsg {
         MessageListOutput::SelectionKeys(keys) => AppMsg::SelectionKeys(keys),
         MessageListOutput::Checked(count) => AppMsg::ListChecked(count),
         MessageListOutput::ViewMissed => AppMsg::EmitUnifiedNow,
+        MessageListOutput::FoldedDays(keys) => AppMsg::ListFoldedDays(keys),
         MessageListOutput::MoveMessages {
             account_id,
             dest,

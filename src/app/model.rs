@@ -500,6 +500,8 @@ pub(crate) struct AppModel {
     /// The views that name the sender or the recipients against their
     /// default, by `list_view_name` (#657).
     pub(super) list_recipients: std::collections::BTreeMap<String, bool>,
+    /// The date sections each view keeps folded, by `list_view_name` (#659).
+    pub(super) list_folded_days: std::collections::BTreeMap<String, Vec<String>>,
     /// The list's search field stays open (#446).
     pub(super) list_search_open: bool,
     /// Contacts' search field stays open.

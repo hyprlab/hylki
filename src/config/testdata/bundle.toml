@@ -167,6 +167,8 @@ tags = true
 
 [privacy.list_recipients]
 
+[privacy.list_folded_days]
+
 [privacy.list_column_widths]
 
 [privacy.unified_chips]

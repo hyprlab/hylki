@@ -2294,7 +2294,16 @@ on at midnight. A conversation goes under the heading of the message that
 places it in the sort, the newest for newest first and the oldest for oldest
 first, and its replies stay with it when it is opened out. The headings work
 in both layouts and in search results, and are not rows: the keyboard,
-selection and swipes pass them by. It is off unless switched on.
+selection and swipes pass them by.
+
+A click on a heading folds its section: the heading stays, with the number
+of conversations under it and a dot when any of them is unread, and its mail
+is out of the list until a click on the heading opens it again. With the list focused, <kbd>←</kbd> on
+a message folds its section, and <kbd>→</kbd> or <kbd>Enter</kbd> on a
+folded heading opens it; the arrow keys stop on a folded heading, which
+opens nothing in the reader. Each folder, unified row, tag and smart folder
+keeps the sections folded in it, as it keeps its sort. A message opened from
+elsewhere, such as a notification, opens the section it is in.
 
 **Settings → Message List → Tint tagged messages** washes the row of a
 tagged message with its tag's color, in both layouts. A message with more

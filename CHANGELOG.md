@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Added: the date sections of the message list fold** (#659, requested
+  by samuel-edlmeier). A click on **Today**, **Yesterday** or another
+  heading folds its section to the heading, which shows how many
+  conversations it holds and a dot when any is unread, and a click on it
+  again opens it. With the list focused, Left folds the section of the message the
+  keyboard is on, once its conversation is folded, and Right or Enter on a
+  folded heading opens it. Each folder, unified row, tag and smart folder
+  keeps the sections folded in it.
+
 - **Added: any folder's list can name the recipients instead of the
   sender** (#657, requested by samuel-edlmeier). **Show → Sender** or
   **Recipients** in the list's sort and filter popover, or in its ⋯ menu in

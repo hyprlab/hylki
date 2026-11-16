@@ -77,6 +77,9 @@ impl MessageList {
 
     pub(super) fn on_selection_changed(&mut self, sender: &ComponentSender<Self>) {
         let positions = self.selected_positions();
+        if self.drop_stubs_from_selection(&positions) {
+            return;
+        }
         let keys = self.keys_at(&positions);
         self.selection_count = keys.len();
         // Set from the reader, which is already showing these messages:
@@ -167,6 +170,10 @@ impl MessageList {
                 self.shown.len() as i64
             });
         let next = (current + delta as i64).clamp(0, self.shown.len() as i64 - 1) as usize;
+        // A folded date heading is no message to open: the next one past it.
+        let Some(next) = self.mail_row_from(next, delta) else {
+            return;
+        };
         self.shared.set_cursor(None);
         self.shared.selection.select_item(next as u32, true);
         self.stop_checking(sender);
@@ -287,7 +294,10 @@ impl MessageList {
         let is_child = |p: usize| self.shared.model.row(p).is_some_and(|r| r.meta.is_child);
         let picked = gtk::Bitset::new_empty();
         for (pos, m) in self.shown.iter().enumerate() {
-            if !is_child(pos) && filter.matches(&self.conversation_for(m).0) {
+            if !is_child(pos)
+                && !self.is_stub_at(pos)
+                && filter.matches(&self.conversation_for(m).0)
+            {
                 picked.add(pos as u32);
             }
         }
@@ -369,6 +379,19 @@ impl MessageList {
     }
 
     pub(super) fn on_row_activated(&mut self, index: i32, sender: &ComponentSender<Self>) {
+        // A folded date heading opens (#659).
+        if let Some(r) = self
+            .shared
+            .model
+            .row(index as usize)
+            .filter(|r| r.meta.folded.is_some())
+        {
+            sender.input(MessageListInput::FoldDay {
+                section: r.section,
+                fold: false,
+            });
+            return;
+        }
         // With Gmail's keys, Enter on the row the cursor reached opens
         // it here, as o does, checked or not (#392); a row already
         // open goes to a window.
@@ -469,6 +492,9 @@ impl MessageList {
                 solo,
                 ahead,
             });
+        } else if self.unfold_for(&[asked], sender) {
+            // Hidden in a folded date section (#659), which is now open.
+            self.on_select_and_load(asked, sender);
         } else {
             // Not listed yet: mail that has only just arrived, whose
             // notification was clicked before its folder's list was in.
@@ -487,6 +513,7 @@ impl MessageList {
         [step, 2 * step, 3 * step, -step]
             .into_iter()
             .filter_map(|d| at.checked_add_signed(d))
+            .filter(|&i| !self.is_stub_at(i))
             .filter_map(|i| self.shown.get(i))
             .map(|m| Message::clone(m))
             .collect()

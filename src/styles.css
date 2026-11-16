@@ -896,6 +896,53 @@ flowbox.attach-flow > flowboxchild {
   margin-top: 6px;
 }
 
+/* A click on a heading folds its section (#659): its chevron is dim like
+   the text beside it, and both come up under the pointer. */
+.list-day-heading .list-day-chevron {
+  opacity: 0.6;
+}
+
+.list-day-heading:hover .list-day-chevron,
+.list-day-heading:hover label.dim-label {
+  opacity: 1;
+}
+
+.list-day-heading .list-day-count {
+  font-size: 0.85em;
+}
+
+.list-day-heading .unread-dot {
+  min-width: 8px;
+  min-height: 8px;
+}
+
+/* A folded section's heading is a row, which the arrow keys reach: it sits
+   where an open heading would, and the keyboard on it shows as the j/k
+   cursor does on a message. */
+/* Padded inside a ring's room, the text still lined up with the headings'. */
+.message-item > .list-day-heading {
+  margin: 10px 10px 0 10px;
+  padding: 4px 6px;
+  border-radius: 8px;
+}
+
+.message-list > header:first-child + row .message-item > .list-day-heading {
+  margin-top: 4px;
+}
+
+.message-list.single-line .message-item > .list-day-heading {
+  margin: 6px 8px 0 8px;
+}
+
+.message-list.single-line > header:first-child + row .message-item > .list-day-heading {
+  margin-top: 2px;
+}
+
+.message-list:focus-within > row:focus-within > .message-item > .list-day-heading {
+  background-color: alpha(@accent_bg_color, 0.1);
+  box-shadow: inset 0 0 0 2px alpha(@accent_color, 0.85);
+}
+
 /* Every state tint lives on the inner .message-row as an inset rounded pill
    — matching the thread member cards — never on the full-width row, so
    highlights stop touching the list edges and crossing the separators. */

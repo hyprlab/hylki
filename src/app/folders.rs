@@ -547,8 +547,18 @@ impl AppModel {
                     (k, on)
                 })
                 .collect();
+            let folds = std::mem::take(&mut self.list_folded_days);
+            let folds_before = folds.keys().cloned().collect::<Vec<_>>();
+            self.list_folded_days = folds
+                .into_iter()
+                .map(|(mut k, days)| {
+                    rekey_folder_key(&mut k, &key_prefix, h, path, new_path);
+                    (k, days)
+                })
+                .collect();
             if !self.list_sorts.keys().eq(before.iter())
                 || !self.list_recipients.keys().eq(names_before.iter())
+                || !self.list_folded_days.keys().eq(folds_before.iter())
             {
                 self.save_settings();
             }

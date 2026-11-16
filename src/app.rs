@@ -72,6 +72,7 @@ mod identity;
 mod invites;
 mod keymap;
 mod keyring_alert;
+mod list_folds;
 mod list_header;
 mod list_names;
 mod list_sort;

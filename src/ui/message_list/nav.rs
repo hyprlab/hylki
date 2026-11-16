@@ -41,6 +41,7 @@ impl MessageList {
     pub(super) fn keys_at(&self, positions: &[usize]) -> Vec<(u32, u32)> {
         positions
             .iter()
+            .filter(|&&p| !self.is_stub_at(p))
             .filter_map(|&p| self.shown.get(p).map(|m| (m.account_id, m.id)))
             .collect()
     }
@@ -48,6 +49,7 @@ impl MessageList {
     pub(super) fn slots_at(&self, positions: &[usize]) -> Vec<Slot> {
         positions
             .iter()
+            .filter(|&&p| !self.is_stub_at(p))
             .filter_map(|&p| self.shown.get(p).map(|m| thread_slot(m)))
             .collect()
     }
@@ -119,11 +121,24 @@ impl MessageList {
 
     /// The row `delta` conversations away from `from`, clamped to the list:
     /// the replies of a conversation opened out in the list are stepped
-    /// over, as Gmail's j and k move between conversations (#392). From no
-    /// row, the first step lands on the top or the bottom one.
+    /// over, as Gmail's j and k move between conversations (#392), and so
+    /// are folded date headings (#659). From no row, the first step lands on
+    /// the top or the bottom one.
     pub(super) fn conversation_step(&self, from: Option<usize>, delta: i32) -> usize {
+        let pos = self.conversation_step_any(from, delta);
+        if !self.is_stub_at(pos) {
+            return pos;
+        }
+        self.mail_row_from(pos, delta)
+            .or_else(|| self.mail_row_from(pos, -delta))
+            .unwrap_or(pos)
+    }
+
+    fn conversation_step_any(&self, from: Option<usize>, delta: i32) -> usize {
         let last = self.shown.len().saturating_sub(1);
-        let is_child = |p: usize| self.shared.model.row(p).is_some_and(|r| r.meta.is_child);
+        let is_child = |p: usize| {
+            self.is_stub_at(p) || self.shared.model.row(p).is_some_and(|r| r.meta.is_child)
+        };
         let Some(mut pos) = from.filter(|&p| p <= last) else {
             let mut p = if delta > 0 { 0 } else { last };
             while p > 0 && is_child(p) {
@@ -168,7 +183,12 @@ impl MessageList {
         } else {
             idx
         };
-        next.min(self.shown.len().saturating_sub(1))
+        let next = next.min(self.shown.len().saturating_sub(1));
+        // Not onto a folded date heading (#659): the next message past it.
+        let step = if self.nav_direction < 0 { -1 } else { 1 };
+        self.mail_row_from(next, step)
+            .or_else(|| self.mail_row_from(next, -step))
+            .unwrap_or(next)
     }
 
     /// Put keyboard focus on row `idx` without touching selection — the

@@ -679,6 +679,7 @@ impl AppModel {
             AppMsg::ListSortChanged(key, reversed) => self.keep_view_sort(key, reversed),
             AppMsg::ListSortForAll => self.use_view_sort_for_all(),
             AppMsg::ListShowRecipients(on) => self.keep_view_names(on),
+            AppMsg::ListFoldedDays(days) => self.keep_view_folds(days),
             _ => unreachable!("not routed to on_list_header"),
         }
     }
@@ -728,6 +729,7 @@ impl AppModel {
         });
         self.show_view_sort();
         self.apply_view_names();
+        self.apply_view_folds();
         // Focus Mode's chrome as saved: nothing is mapped yet, so the
         // revealers jump to their state without animating.
         self.sync_focus_chrome();

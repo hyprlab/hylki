@@ -24,6 +24,9 @@ impl Row {
         let (Some(data), Some(shared)) = (self.data(), self.shared()) else {
             return;
         };
+        if data.meta.folded.is_some() {
+            return;
+        }
         let Some(view) = shared.view.upgrade() else {
             return;
         };
@@ -77,6 +80,9 @@ impl Row {
 
     pub(super) fn drag_payload(&self) -> Option<gtk::gdk::ContentProvider> {
         let (data, shared) = (self.data()?, self.shared()?);
+        if data.meta.folded.is_some() {
+            return None;
+        }
         let me = (
             data.msg.account_id,
             data.msg.folder_id,

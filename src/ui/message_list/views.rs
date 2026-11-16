@@ -138,13 +138,14 @@ impl MessageList {
         let mut graph: Vec<&u32> = self.graph_accounts.iter().collect();
         graph.sort();
         format!(
-            "{:?}{}{}{}{}{}{:?}{:?}{}{:?}{:?}{:?}{}",
+            "{:?}{}{}{}{}{}{:?}{:?}{:?}{}{:?}{:?}{:?}{}",
             sort,
             reversed,
             self.threading,
             self.thread_expansion,
             self.default_expanded,
             self.group_by_date,
+            self.folded_days,
             self.columns,
             self.quick,
             self.thread_row_newest,

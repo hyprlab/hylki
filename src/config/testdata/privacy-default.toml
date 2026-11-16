@@ -163,6 +163,8 @@ tags = true
 
 [list_recipients]
 
+[list_folded_days]
+
 [list_column_widths]
 
 [unified_chips]

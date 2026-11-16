@@ -834,6 +834,8 @@ pub(crate) enum AppMsg {
     ListSortForAll,
     /// Sender or Recipients was chosen for the open view's rows (#657).
     ListShowRecipients(bool),
+    /// The date sections folded in the open view changed (#659).
+    ListFoldedDays(Vec<String>),
 
     // ---- on_identity (identity.rs) ----
     /// A Gravatar one of the accounts asked for came back (#189).

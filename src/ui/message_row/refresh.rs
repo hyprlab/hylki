@@ -18,6 +18,9 @@ impl Row {
     pub(crate) fn refresh(&self) {
         let Some(shared) = self.shared() else { return };
         let Some(data) = self.data() else { return };
+        if self.refresh_fold(&data) {
+            return;
+        }
         let look = shared.look.borrow().clone();
         let msg = &data.msg;
         let meta = &data.meta;

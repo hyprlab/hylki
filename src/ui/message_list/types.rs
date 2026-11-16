@@ -154,6 +154,14 @@ pub(crate) enum MessageListInput {
     /// The open folder is (or stopped being) a Sent folder — rows name the
     /// recipient there instead of the sender (#27).
     SetShowRecipient(bool),
+    /// Fold a date section of the list or open it (#659): its heading's
+    /// chevron, a double click on it, or the arrow keys.
+    FoldDay {
+        section: crate::ui::message_row::DaySection,
+        fold: bool,
+    },
+    /// The date sections the view being opened keeps folded, by their keys.
+    SetFoldedDays(Vec<String>),
     /// Show or hide the colored avatars (#29).
     SetAvatars(bool),
     /// The avatars and preview lines together, as the settings and Focus
@@ -486,6 +494,9 @@ pub(crate) enum MessageListOutput {
     OpenedByKey { already_open: bool },
     /// The header-bar count changed — app/list_header.rs shows it.
     CountChanged(String),
+    /// The date sections folded in the view on show changed, by their keys
+    /// (#659): the app keeps them for the view.
+    FoldedDays(Vec<String>),
     /// A row was double-clicked: open it in its own window. `thread` is the
     /// whole conversation when the row heads one (same shape as `Selected`),
     /// so the window shows every card — otherwise just `[message]`.
