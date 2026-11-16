@@ -2,6 +2,145 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.49.0-beta.1
+
+### New features:
+
+- The message source opens in the reader, with find - (#658)
+- The date sections of the message list fold - (#659)
+- Any folder's list can name the recipients instead of the sender - (#657)
+- Contacts import from CSV files into any address book - (#655)
+- An alias can be its account's default From address - (#157)
+- Autocrypt, by @hanthor - (#602)
+- Each recipient shows whether they have an OpenPGP key, by @hanthor - (#602)
+- Space previews a reader card's attachment - (#625)
+- Reply in the original's format answers formatted mail in rich text - (#646)
+- Plain text is sent wrapped as format=flowed - (#606)
+- Address completion suggests the people written to most first
+- The contributors and translators are on a Credits page of the About dialog
+
+### Fixes:
+
+- a message with large attachments or pictures slow to open by @valentin-morice - (#608)
+- drafts of encrypted messages saved readable by @hanthor - (#603)
+- shared mailboxes at the top of Folders with no parent by @PeterHagen - (#664)
+- address book names cut off in their dropdowns by @PeterHagen - (#663)
+
+### Translations:
+
+- French by @frenchy82 - (#660)
+
+## What's new in 1.48.2
+
+### Fixes:
+
+- a bad signature on signed mail sent through an Exchange server - (#666)
+- the composer flickering with garbled text on NVIDIA by @reqhald - (#665)
+
+## What's new in 1.48.1
+
+### Fixes:
+
+- the app closing after a new-mail sound - (#644)
+- the app closing as a reply was sent after a sound with the Vulkan renderer - (#661)
+- account settings hints left in English - (#656)
+- Save as File and View Source doing nothing for a message opened from a file - (#398)
+- addresses and handles in plain-text mail not being links - (#653)
+- no contact groups from Nextcloud books - (#652)
+- attachment icons in fixed colors that ignored the theme - (#651)
+- the file previewer opening without focus on X11 - (#625)
+
+## What's new in 1.48.0
+
+### New features:
+
+- AI agents reach your mail over MCP, as far as you allow, by @isaksamsten - (#577)
+- Agents suggest changes to drafts for you to accept, by @isaksamsten - (#577)
+- Encrypt Stored Mail in Settings → Privacy by @hanthor - (#601)
+- Insert Template in the composer by @FLASH911 - (#610)
+- Several names on one send-as address by @FLASH911 - (#610)
+- A signature can name the sender by @FLASH911 - (#610)
+- Attachments preview in the GNOME file previewer - (#625)
+- Each folder keeps its own sort - (#574)
+- Trackers taken off links by @hanthor - (#599)
+- A warning before opening a program or a script by @hanthor - (#598)
+- A warning before encrypting to a key nobody has trusted by @hanthor - (#595)
+- Esc takes back a message during Undo Send by @fsoft72 - (#607)
+- Focus Mode has its own Settings page and layout
+- A narrower minimum window width - (#624)
+- Resize the list with the window - (#648)
+- Server saves its own copy of sent mail for each alias - (#647)
+- Contacts and Attachments in the launcher's menu by @ChrisLauinger77 - (#626)
+- A double click folds sub-folders and the Folders, Labels and Tags headings - (#583)
+- A click on an account's rail avatar opens its Inbox - (#594)
+- Faint cell lines on the table being written in the composer - (#623)
+- Asking before switching to plain text can be turned off
+- The ⋯ on a card opens its right-click menu in place of the actions palette
+- New installs start on the Automatic list layout
+- The message list drags down to 290 pixels
+- Save as Template says where the template went
+- The status bar stays blue whatever the accent color
+
+### Fixes:
+
+- a long conversation using all the memory by @gonzisdev - (#581)
+- a message opened behind queued moves and read changes waiting for them - (#296)
+- slow unread counts and conversation pages on large Gmail accounts - (#296)
+- a crash as a message opened on Wayland - (#650)
+- Add to Calendar closing the app by @FLASH911 - (#611)
+- a Microsoft account no longer checking for mail after a suspend - (#618)
+- the window not responding after choosing a merge CSV file - (#617)
+- mail marked read before it had loaded - (#638)
+- no Sent copy for mail sent as an alias with its own SMTP server - (#640)
+- a search from one account's folder looking in every account - (#649)
+- single-key shortcuts doing nothing in Drafts - (#392)
+- Gmail's x dropping the conversation picked with the pointer - (#392)
+- Open at startup and the window size forgotten after a logout - (#642)
+- the message list staying narrow after the window grew - (#648)
+- plain-text mail stopping a third of the way across the reader - (#606)
+- spreadsheet cells pasting as a picture or losing their look - (#623)
+- indents lost from pasted and reopened plain text - (#635)
+- plain-text drafts reopening in rich text - (#634)
+- a second copy of a draft left in Drafts - (#634)
+- sent and deleted drafts staying in Drafts with Aster Mail - (#604)
+- a sent Microsoft message reported as not loaded by @hanthor - (#538)
+- a message attached to another opening the Send file dialog - (#622)
+- Ctrl+P in an attachment's preview printing the message - (#632)
+- a new line from Enter or a paste left below the composer's edge - (#645)
+- Shift+click not extending a selection of a message's text - (#643)
+- a new mail alert for mail a filter sends to Trash or Junk by @fsoft72 - (#621)
+- a forged message sending a one-click unsubscribe by @hanthor - (#596)
+- Bcc recipients' OpenPGP keys showing in encrypted mail by @hanthor - (#595)
+- a signature from someone else's key showing green by @hanthor - (#595)
+- trusting an imported key of your own doing nothing - (#595)
+- OAuth client secrets in the settings export by @hanthor - (#597)
+- exports and local mail files readable by other users by @hanthor - (#600)
+- opened attachments never cleared under Flatpak by @hanthor - (#600)
+- the remote picture cache deleting other programs' files - (#614)
+- composer menu entries in the system's language by @FLASH911 - (#611)
+- the delete-conversation warning always in English - (#620)
+- a theme picked in Settings having no effect by @AlpSha - (#593)
+- hard-to-read text on the accent color by @AlpSha - (#593)
+- the reader's high-importance mark in a fixed red - (#619)
+- a wide gap before a message's date - (#616)
+- cards turning into single lines with the reading pane below or off - (#475)
+- `w` and `b` leaving a message card under the bar above it by @hanthor - (#587)
+- a column's resize line standing on its heading's first letter - (#579)
+- row titles breaking letter by letter in New Event and New Task - (#564)
+- a bracket or a dot as a contact's initial - (#627)
+- the missing hint when no spelling dictionaries are installed - (#650)
+- row text sitting above the middle with avatars off
+- the reading pane cutting from one message to the next
+- cached mail left behind from folders an account does not have
+
+### Translations:
+
+- German by @samuel-edlmeier
+- Portuguese and Brazilian Portuguese by @somepaulo - (#633)
+- Spanish by @danielmigueltejedor - (#629)
+- Russian by @FLASH911 - (#611)
+- French by @frenchy82 - (#615)
+
 ## What's new in 1.48.0-beta.7
 
 ### New features:

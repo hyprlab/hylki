@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.49.0-beta.1" date="2026-11-15" type="development">
+      <description>
+        <p>The message source opens in the reader with find, the message list's date sections fold, contacts import from CSV files, and an alias can be its account's default From address. Autocrypt can send and collect OpenPGP keys, drafts of encrypted messages are saved encrypted, and plain text is sent wrapped as format=flowed.</p>
+      </description>
+    </release>
     <release version="1.48.0-beta.7" date="2026-11-12" type="development">
       <description>
         <p>The message list can keep its share of the window as it resizes, and an alias with its own SMTP server can leave the sent copy to that server. Searches from one account's folder stay in that account, and the single-key shortcuts work in Drafts.</p>
