@@ -445,6 +445,10 @@
   even after you have opened it. See
   [AI agents](docs/DOCUMENTATION.md#ai-agents).
 
+- **Fixed: mail could fail to load from servers sending doubled backslashes in
+  message flags.** FETCH flags such as `\\Seen` are now read as `\Seen`, without
+  changing message contents or delaying streaming downloads.
+
 ## 1.47.1 — 2026-11-05
 
 A patch for #582: a PDF with a password no longer freezes the app.
