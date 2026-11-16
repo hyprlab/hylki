@@ -767,6 +767,7 @@ mod tests {
             from_name: "Ada".into(),
             from_addr: "ada@example.com".into(),
             reply_to: String::new(),
+            reply_to_name: String::new(),
             to: String::new(),
             cc: String::new(),
             bcc: String::new(),

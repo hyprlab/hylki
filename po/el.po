@@ -4737,6 +4737,9 @@ msgstr ""
 "Οι αποθηκευμένες διευθύνσεις εμφανίζουν το όνομα της επαφής και όχι αυτό του "
 "μηνύματος."
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Διάταξη"
 
@@ -5861,6 +5864,12 @@ msgstr "Έναρξη νέου μηνύματος από αντίγραφο το�
 
 msgid "Save…"
 msgstr "Αποθήκευση…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Αναζήτηση αποστολέων"
 
 msgid "Translating…"
 msgstr "Μετάφραση…"

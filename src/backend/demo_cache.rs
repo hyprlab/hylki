@@ -112,6 +112,7 @@ fn attachment_message(
         from_name,
         from_addr,
         reply_to: String::new(),
+        reply_to_name: String::new(),
         to: String::new(),
         cc: String::new(),
         bcc: String::new(),

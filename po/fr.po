@@ -4710,6 +4710,9 @@ msgstr ""
 "Les adresses enregistrées affichent le nom du contact, et non celui du "
 "message."
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Disposition"
 
@@ -5828,6 +5831,12 @@ msgstr "Démarrer un nouveau message à partir d’une copie du modèle"
 
 msgid "Save…"
 msgstr "Enregistrer…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Rechercher les expéditeurs"
 
 msgid "Translating…"
 msgstr "Traduction en cours…"

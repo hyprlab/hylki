@@ -36,6 +36,7 @@ impl Preferences {
             .launch(crate::ui::contact_sources::ContactSourcesInit {
                 search_open: init.contacts_search_open,
                 contact_names: init.contact_names,
+                reply_to_sender: init.reply_to_sender,
                 placement: init.contacts_placement,
             })
             .forward(sender.input_sender(), PrefInput::Contacts);

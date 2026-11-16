@@ -109,6 +109,17 @@ impl AppModel {
         });
     }
 
+    /// Name mail by its Reply-To sender, or by From (#641), and redraw
+    /// what names it when that changed.
+    pub(super) fn apply_reply_to_sender(&self) {
+        if crate::contacts::set_reply_to_sender(self.reply_to_sender) {
+            self.message_list
+                .emit(MessageListInput::ContactNamesChanged);
+            self.message_view.emit(MessageViewInput::FacesChanged);
+            self.popouts_emit(|| MessageWindowInput::FacesChanged);
+        }
+    }
+
     /// The window a dialog opened from Settings belongs to: Settings while
     /// it is open, else the main window.
     pub(super) fn dialog_parent(&self) -> Option<gtk::Window> {

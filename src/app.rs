@@ -891,6 +891,7 @@ impl SimpleComponent for AppModel {
         if model.contact_names {
             model.read_contact_names(&sender);
         }
+        model.apply_reply_to_sender();
         watch_system_events(&sender);
         model.open_wizard_if_needed(&sender);
         model.push_settings_to_children();

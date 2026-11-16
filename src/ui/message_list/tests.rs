@@ -176,6 +176,7 @@ fn msg(id: u32, message_id: &str, references: &str) -> Message {
         from_name: "X".into(),
         from_addr: "x@example.com".into(),
         reply_to: String::new(),
+        reply_to_name: String::new(),
         to: String::new(),
         cc: String::new(),
         bcc: String::new(),

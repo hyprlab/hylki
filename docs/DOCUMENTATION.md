@@ -642,6 +642,17 @@ which gives it away. Address books that fill themselves from mail
 (Collected Addresses, Recently Contacted, Other Contacts) are not used for
 this, and a contact saved without a name keeps the message's.
 
+**Show the Reply-To sender**, below it, names mail by the first address in
+its Reply-To header instead of From, when it has one: in the message list,
+the reader and the new-mail notification. A web form sends from its own
+address and puts whoever filled it in under Reply-To, so the list shows
+that person. The reader's header still shows the From address after the
+name, as "via no-reply@example.com". Mail from your own accounts, and mail
+whose Reply-To is its From address, keep their sender. A mailing list that
+sets Reply-To to its own address is named by the list. Mail downloaded by
+an earlier version shows the Reply-To address in place of the name until
+it is fetched again.
+
 A contact's photo is the sender's circle in the message list and in the
 reader's message headers. Without one, the circle shows the sender's
 Gravatar or their domain's logo when those are switched on in **Settings →

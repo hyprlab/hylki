@@ -104,6 +104,7 @@ date_groups_default_applied = true
 list_search_open = false
 contacts_search_open = false
 contact_names = false
+reply_to_sender = false
 list_search_bottom = false
 list_bulk_bar_bottom = false
 toolbar_fold_right = true

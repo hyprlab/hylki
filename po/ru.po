@@ -4662,6 +4662,9 @@ msgstr "Показать имена из контактов"
 msgid "Saved addresses show the contact's name, not the mail's."
 msgstr "В сохраненных адресах отображается имя контакта, а не почта."
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Разметка"
 
@@ -5805,6 +5808,12 @@ msgstr "Создать новое сообщение на основе копи�
 
 msgid "Save…"
 msgstr "Сохранить…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Поиск отправителей"
 
 msgid "Translating…"
 msgstr "Перевод…"

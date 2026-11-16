@@ -462,6 +462,10 @@ pub(crate) struct PrivacyFile {
     /// its mail gives (#541). Off by default.
     #[serde(default)]
     pub(crate) contact_names: bool,
+    /// Mail is named by its first Reply-To mailbox, not From, when it has
+    /// one (#641). Off by default.
+    #[serde(default)]
+    pub(crate) reply_to_sender: bool,
     /// The search field and the bulk bar open under the list instead of
     /// above it (#496). Off by default.
     #[serde(default)]
@@ -807,6 +811,7 @@ impl Default for PrivacyFile {
             list_search_open: false,
             contacts_search_open: false,
             contact_names: false,
+            reply_to_sender: false,
             list_search_bottom: false,
             list_bulk_bar_bottom: false,
             toolbar_fold_right: true,

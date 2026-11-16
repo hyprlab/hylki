@@ -4913,6 +4913,9 @@ msgstr "Nincsenek névjegyek"
 msgid "Saved addresses show the contact's name, not the mail's."
 msgstr ""
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr ""
 
@@ -6061,6 +6064,12 @@ msgstr "Kezdd az üzenetet úgy, hogy a képet beilleszted a szövegbe"
 
 msgid "Save…"
 msgstr "Mentés…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Feladók keresése"
 
 #, fuzzy
 msgid "Translating…"

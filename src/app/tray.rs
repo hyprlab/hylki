@@ -260,7 +260,7 @@ impl AppModel {
             .into_iter()
             .take(indicator::MAIL_LIMIT)
             .map(|(a, m)| {
-                let sender = crate::contacts::shown_name_or_addr(&m.from_name, &m.from_addr);
+                let sender = m.shown_from_name_or_addr();
                 let mut heading = indicator::clip(&sender, 40);
                 if several {
                     heading.push_str(" · ");
@@ -270,10 +270,11 @@ impl AppModel {
                     heading.push_str(" · ");
                     heading.push_str(&m.date);
                 }
-                let texture = match crate::services::avatar::lookup(&m.from_addr, self.gravatar) {
-                    crate::services::avatar::CacheLookup::Texture(t) => Some(t),
-                    _ => None,
-                };
+                let texture =
+                    match crate::services::avatar::lookup(m.shown_from_addr(), self.gravatar) {
+                        crate::services::avatar::CacheLookup::Texture(t) => Some(t),
+                        _ => None,
+                    };
                 indicator::TrayMail {
                     account_id: m.account_id,
                     folder_id: m.folder_id,
@@ -281,7 +282,11 @@ impl AppModel {
                     heading,
                     subject: indicator::clip(&m.subject, 60),
                     preview: indicator::clip(&m.preview, 70),
-                    icon: indicator::sender_icon(&m.shown_from_name(), &m.from_addr, texture),
+                    icon: indicator::sender_icon(
+                        &m.shown_from_name(),
+                        m.shown_from_addr(),
+                        texture,
+                    ),
                 }
             })
             .collect()

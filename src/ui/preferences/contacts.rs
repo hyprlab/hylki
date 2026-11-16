@@ -50,6 +50,9 @@ impl Preferences {
             Out::SetContactNames(on) => {
                 let _ = sender.output(PrefOutput::SetContactNames(on));
             }
+            Out::SetReplyToSender(on) => {
+                let _ = sender.output(PrefOutput::SetReplyToSender(on));
+            }
             // Through the Sidebar page's row, which tells the app.
             Out::SetPlacement(placement) => {
                 if let Some(row) = &self.contacts_placement_row {

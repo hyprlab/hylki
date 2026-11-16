@@ -43,6 +43,11 @@ impl AppModel {
                     self.read_contact_names(&sender);
                 }
             }
+            PrefOutput::SetReplyToSender(on) => {
+                if pref!(self.reply_to_sender = on) {
+                    self.apply_reply_to_sender();
+                }
+            }
             PrefOutput::SetContactsSearchOpen(on) => {
                 if pref!(self.contacts_search_open = on) {
                     self.contacts_page

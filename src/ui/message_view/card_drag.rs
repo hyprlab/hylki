@@ -149,7 +149,7 @@ impl MessageView {
             .map(|m| (m.account_id, m.folder_id, m.uid, m.id))
             .collect();
         let card = |m: &crate::models::Message| {
-            drag_card::card(&m.subject, &m.from_name, &m.from_addr, None)
+            drag_card::card(&m.subject, &m.shown_from_name(), m.shown_from_addr(), None)
         };
         let icon = if carried.len() > 1 {
             let behind = carried

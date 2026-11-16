@@ -4852,6 +4852,9 @@ msgstr "Nessun contatto"
 msgid "Saved addresses show the contact's name, not the mail's."
 msgstr ""
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Layout"
 
@@ -6040,6 +6043,12 @@ msgstr "Inizia un nuovo messaggio da una copia del modello"
 
 msgid "Save…"
 msgstr "Salva…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Cerca mittenti"
 
 msgid "Translating…"
 msgstr "Traduzione in corso…"

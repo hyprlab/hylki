@@ -83,6 +83,14 @@ pub(super) fn summary_from_headers(account_id: u32, fetch: &Fetch, folder_id: u3
     } else {
         reply_to
     };
+    let reply_to_name = crate::worker::headers::reply_to_display_name(
+        &reply_to,
+        parsed
+            .as_ref()
+            .and_then(|p| p.reply_to())
+            .and_then(|a| a.first())
+            .and_then(|a| a.name()),
+    );
 
     // Best-effort attachment hint from the top-level Content-Type (BODYSTRUCTURE
     // isn't available on this path). multipart/mixed is the usual attachment case.
@@ -108,6 +116,7 @@ pub(super) fn summary_from_headers(account_id: u32, fetch: &Fetch, folder_id: u3
         from_name,
         from_addr,
         reply_to,
+        reply_to_name,
         to,
         cc,
         bcc,
@@ -172,6 +181,14 @@ pub(super) fn build_summary(account_id: u32, fetch: &Fetch, folder_id: u32) -> M
     } else {
         reply_to
     };
+    let reply_to_name = crate::worker::headers::reply_to_display_name(
+        &reply_to,
+        env.and_then(|e| e.reply_to.as_ref())
+            .and_then(|v| v.first())
+            .map(address_parts)
+            .map(|(name, _)| name)
+            .as_deref(),
+    );
 
     let has_attachment = fetch
         .bodystructure()
@@ -200,6 +217,7 @@ pub(super) fn build_summary(account_id: u32, fetch: &Fetch, folder_id: u32) -> M
         from_name,
         from_addr,
         reply_to,
+        reply_to_name,
         to,
         cc,
         bcc,

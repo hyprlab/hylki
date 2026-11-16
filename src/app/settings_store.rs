@@ -113,6 +113,7 @@ impl AppModel {
             list_search_open: self.list_search_open,
             contacts_search_open: self.contacts_search_open,
             contact_names: self.contact_names,
+            reply_to_sender: self.reply_to_sender,
             list_search_bottom: self.list_search_bottom,
             list_bulk_bar_bottom: self.list_bulk_bar_bottom,
             toolbar_fold_right: self.toolbar_fold_right,

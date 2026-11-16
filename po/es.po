@@ -4696,6 +4696,9 @@ msgstr ""
 "Las direcciones guardadas muestran el nombre del contacto en lugar del que "
 "figura en el correo."
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Diseño"
 
@@ -5821,6 +5824,12 @@ msgstr "Crear un mensaje nuevo a partir de una copia de la plantilla"
 
 msgid "Save…"
 msgstr "Guardar…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Buscar remitentes"
 
 msgid "Translating…"
 msgstr "Traduciendo…"

@@ -4731,6 +4731,9 @@ msgstr ""
 "Gespeicherte Adressen werden mit dem Namen aus den Kontakten dargestellt, "
 "nicht mit dem der E-Mail."
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Layout"
 
@@ -5848,6 +5851,12 @@ msgstr "Kopie der Vorlage als neue Nachricht verwenden"
 
 msgid "Save…"
 msgstr "Speichern…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Absender suchen"
 
 msgid "Translating…"
 msgstr "übersetze…"

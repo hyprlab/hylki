@@ -153,7 +153,7 @@ impl Row {
         if let Some((_, addr)) = &data.meta.from {
             return addr.clone();
         }
-        data.msg.from_addr.clone()
+        data.msg.shown_from_addr().to_string()
     }
 
     /// What the avatar circle shows: the sender's picture when one is known,

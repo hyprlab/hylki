@@ -505,6 +505,7 @@ mod gmail_label_tests {
             from_name: String::new(),
             from_addr: String::new(),
             reply_to: String::new(),
+            reply_to_name: String::new(),
             to: String::new(),
             cc: String::new(),
             bcc: String::new(),

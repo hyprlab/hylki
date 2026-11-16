@@ -526,6 +526,7 @@ impl AppModel {
             | PrefOutput::SetListSearchOpen(..)
             | PrefOutput::SetContactsSearchOpen(..)
             | PrefOutput::SetContactNames(..)
+            | PrefOutput::SetReplyToSender(..)
             | PrefOutput::SetListSearchBottom(..)
             | PrefOutput::SetListBulkBarBottom(..)
             | PrefOutput::SetGroupByDate(..)

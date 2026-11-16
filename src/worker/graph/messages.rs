@@ -61,6 +61,10 @@ pub(super) fn graph_message(
     } else {
         reply_to
     };
+    let reply_to_name = crate::worker::headers::reply_to_display_name(
+        &reply_to,
+        v["replyTo"][0]["emailAddress"]["name"].as_str(),
+    );
     let last_verb = v["singleValueExtendedProperties"]
         .as_array()
         .and_then(|props| {
@@ -82,6 +86,7 @@ pub(super) fn graph_message(
             .to_string(),
         from_addr,
         reply_to,
+        reply_to_name,
         to: graph_addrs(&v["toRecipients"]),
         cc: graph_addrs(&v["ccRecipients"]),
         bcc: graph_addrs(&v["bccRecipients"]),

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Added: mail can be named by its Reply-To sender** (#641, requested by
+  somepaulo). **Settings → Contacts → Show the Reply-To sender** names a
+  message by the first address in its Reply-To header instead of From, in
+  the message list, the reader and notifications, so a web form's mail
+  shows the person who filled it in. The reader's header follows the name
+  with "via" and the From address. Mail from your own accounts, and mail
+  whose Reply-To repeats From, keep their sender. Off by default. A search
+  for a sender now also finds the Reply-To name and address.
+
 - **Added: the message source opens in the reader, with find**
   (#658, requested by samuel-edlmeier). View Source shows the source in
   place of the message, in the main window's reader or a message's own

@@ -58,6 +58,22 @@ pub(crate) fn clean_display_name(name: &str) -> String {
         .to_string()
 }
 
+/// The name to keep for the first Reply-To mailbox (#641): its display
+/// name, cleaned, or nothing when there is no Reply-To worth keeping or
+/// the name only repeats the address.
+pub(crate) fn reply_to_display_name(reply_to: &str, name: Option<&str>) -> String {
+    if reply_to.is_empty() {
+        return String::new();
+    }
+    let first = reply_to.split(',').next().unwrap_or("").trim();
+    let name = clean_display_name(name.unwrap_or(""));
+    if name.eq_ignore_ascii_case(first) {
+        String::new()
+    } else {
+        name
+    }
+}
+
 pub(super) fn bytes_to_string(b: &[u8]) -> String {
     String::from_utf8_lossy(b).into_owned()
 }

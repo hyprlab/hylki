@@ -4749,6 +4749,9 @@ msgstr "De contactes"
 msgid "Saved addresses show the contact's name, not the mail's."
 msgstr ""
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Disposició"
 
@@ -5879,6 +5882,12 @@ msgstr "Comença un missatge nou a partir d'una còpia de la plantilla"
 
 msgid "Save…"
 msgstr "Desa…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Cerca remitents"
 
 msgid "Translating…"
 msgstr "S'està traduint…"

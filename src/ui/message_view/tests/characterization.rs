@@ -64,6 +64,7 @@ fn message(id: u32) -> Message {
         from_name: format!("Sender {id}"),
         from_addr: format!("sender{id}@golden.example"),
         reply_to: String::new(),
+        reply_to_name: String::new(),
         to: "\"Doe, Jane\" <jane@golden.example>, bob@golden.example".into(),
         cc: String::new(),
         bcc: String::new(),
