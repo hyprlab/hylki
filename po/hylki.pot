@@ -23,6 +23,12 @@ msgstr ""
 msgid "Release Notes"
 msgstr ""
 
+msgid "Credits"
+msgstr ""
+
+msgid "Contributors and translators"
+msgstr ""
+
 msgid "Keyring Setup Help"
 msgstr ""
 
@@ -48,15 +54,14 @@ msgstr ""
 msgid "Buy Me a Coffee"
 msgstr ""
 
-#. Contributors — people outside Hyprlab whose patches are in the app.
+#. Contributors: people outside Hyprlab whose patches are in the app.
 msgid "Special thanks to these contributors"
 msgstr ""
 
-#. Translators — the same list, with the languages each one carried.
+#. Translators: the same list, with the languages each one carried.
 msgid "Translated by"
 msgstr ""
 
-#. Footer.
 msgid "© 2026 Hyprlab"
 msgstr ""
 

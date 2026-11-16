@@ -34,6 +34,12 @@ msgstr ""
 msgid "Release Notes"
 msgstr "Σημειώσεις έκδοσης"
 
+msgid "Credits"
+msgstr ""
+
+msgid "Contributors and translators"
+msgstr ""
+
 msgid "Keyring Setup Help"
 msgstr "Βοήθεια ρύθμισης κλειδοθήκης"
 
@@ -59,15 +65,14 @@ msgstr "Άδεια (GNU AGPL v3)"
 msgid "Buy Me a Coffee"
 msgstr "Κεράστε με έναν καφέ"
 
-#. Contributors — people outside Hyprlab whose patches are in the app.
+#. Contributors: people outside Hyprlab whose patches are in the app.
 msgid "Special thanks to these contributors"
 msgstr "Ιδιαίτερες ευχαριστίες σε αυτούς τους συντελεστές"
 
-#. Translators — the same list, with the languages each one carried.
+#. Translators: the same list, with the languages each one carried.
 msgid "Translated by"
 msgstr "Μετάφραση από"
 
-#. Footer.
 msgid "© 2026 Hyprlab"
 msgstr "© 2026 Hyprlab"
 
