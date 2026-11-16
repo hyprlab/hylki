@@ -3,12 +3,14 @@
 
 use std::collections::{HashMap, HashSet};
 use std::path::PathBuf;
+use std::sync::Mutex;
+use std::time::{Duration, Instant};
 
 use super::details::{
     parse_vcard_fields, person_address, resolve_book_members, resolve_members, ContactDetails,
     GroupFormat,
 };
-use super::eds_write::{factory_dest, open_book, BOOK_IFACE};
+use super::eds_write::{factory_dest, open_book, wait_writable};
 use super::photos::find_dbs;
 use super::registry::{book_uid_active, book_uid_name, registry_books, registry_books_and_formats};
 use super::vcard::{is_group_vcard, vcard_display_name, vcard_photo_with};
@@ -585,7 +587,19 @@ pub(crate) fn writable_books() -> Vec<Book> {
         }
     }
     if let (Some(dest), Ok(conn)) = (factory_dest(), zbus::blocking::Connection::session()) {
-        books.retain(|b| !book_read_only(&conn, &dest, &b.uid));
+        // Side by side: a read-only book takes the whole wait to tell.
+        let read_only: Vec<bool> = std::thread::scope(|s| {
+            let checks: Vec<_> = books
+                .iter()
+                .map(|b| s.spawn(|| book_read_only(&conn, &dest, &b.uid)))
+                .collect();
+            checks
+                .into_iter()
+                .map(|c| c.join().unwrap_or(false))
+                .collect()
+        });
+        let mut read_only = read_only.into_iter();
+        books.retain(|_| !read_only.next().unwrap_or(false));
     }
     // Last: unless chosen in Settings, EDS books keep priority as the
     // default destination.
@@ -604,25 +618,37 @@ pub(super) fn prefer_book(books: &mut [Book], uid: &str) {
     }
 }
 
+/// How long a book gets to turn writable before it counts as read-only.
+const READ_ONLY_WAIT: Duration = Duration::from_secs(5);
+/// How long a book's answer is kept before it is asked again.
+const READ_ONLY_KEPT: Duration = Duration::from_secs(10 * 60);
+
 /// Whether EDS says the book is read-only (Nextcloud's "Recently contacted"
-/// and system address books are). `Open` fills in `Writable` — from the
-/// server's privileges on first connect, cached after that. Any error counts
-/// as writable, so a save still reports EDS's real failure.
+/// and system address books are). A server's book says so for a moment
+/// after it opens, until EDS has connected (#652), so it gets
+/// [`READ_ONLY_WAIT`] to turn writable; the answer is kept a while, as every
+/// list of books would otherwise wait that long on each read-only one. Any
+/// error counts as writable, so a save still reports EDS's real failure.
 fn book_read_only(conn: &zbus::blocking::Connection, dest: &str, uid: &str) -> bool {
+    static KNOWN: Mutex<Option<HashMap<String, (bool, Instant)>>> = Mutex::new(None);
+    let known = |uid: &str| {
+        let guard = KNOWN.lock().ok()?;
+        let (read_only, at) = guard.as_ref()?.get(uid)?;
+        (at.elapsed() < READ_ONLY_KEPT).then_some(*read_only)
+    };
+    if let Some(read_only) = known(uid) {
+        return read_only;
+    }
     let Ok((bus, path)) = open_book(conn, dest, uid) else {
         return false;
     };
-    conn.call_method(
-        Some(bus.as_str()),
-        path.as_str(),
-        Some("org.freedesktop.DBus.Properties"),
-        "Get",
-        &(BOOK_IFACE, "Writable"),
-    )
-    .ok()
-    .and_then(|r| r.body().deserialize::<(zbus::zvariant::OwnedValue,)>().ok())
-    .and_then(|(v,)| v.downcast_ref::<bool>().ok())
-        == Some(false)
+    let read_only = !wait_writable(conn, &bus, &path, READ_ONLY_WAIT);
+    if let Ok(mut guard) = KNOWN.lock() {
+        guard
+            .get_or_insert_with(HashMap::new)
+            .insert(uid.to_string(), (read_only, Instant::now()));
+    }
+    read_only
 }
 
 /// Best-effort display name from the EDS source file for a book UID.

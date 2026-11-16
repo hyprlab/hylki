@@ -39,6 +39,17 @@
   any of them can be matched by hand. Labels and categories become contact
   groups in the book's own kind of group.
 
+- **Fixed: contacts moved to a Nextcloud book stayed in the Hylki book**
+  (#652, reported by 7system7). Evolution Data Server keeps a server's
+  address book read-only for a moment after it opens, until it has
+  connected, and refuses every write in that time with "Permission
+  denied". When no other app held the book open, a move, copy, edit or
+  import into it failed that way, so moved contacts stayed where they were
+  and showed again beside the next import. A write now waits up to 10
+  seconds for its book to become writable, and a book gets 5 seconds before
+  it counts as read-only, so a Nextcloud book that had not been opened yet
+  is no longer missing from the books contacts can go to.
+
 - **Fixed: a message with large attachments or pictures was slow to open**
   (#608, by Valentin Morice). A conversation with a 19 MB attachment opened
   in 150 ms instead of 360 ms, and one with megabytes of pictures in its
