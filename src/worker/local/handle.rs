@@ -29,14 +29,25 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
                     self.on_load_body(message_id, &path, uid);
                 }
             }
-            MailRequest::LoadSource { path, uid, .. } => match self.store.read(&path, uid) {
+            MailRequest::LoadSource {
+                message_id,
+                path,
+                uid,
+            } => match self.store.read(&path, uid) {
                 Ok(raw) => emit(WorkerEvent::Source {
-                    text: String::from_utf8_lossy(&raw).into_owned(),
+                    message_id,
+                    text: Some(String::from_utf8_lossy(&raw).into_owned()),
                 }),
-                Err(e) => emit(WorkerEvent::error(i18n_f(
-                    "Could not load source: {e}",
-                    &[("e", &e.to_string())],
-                ))),
+                Err(e) => {
+                    emit(WorkerEvent::error(i18n_f(
+                        "Could not load source: {e}",
+                        &[("e", &e.to_string())],
+                    )));
+                    emit(WorkerEvent::Source {
+                        message_id,
+                        text: None,
+                    });
+                }
             },
             // The file is right here: no download to wait for, whatever
             // the setting says.

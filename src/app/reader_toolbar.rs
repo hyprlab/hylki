@@ -109,7 +109,7 @@ impl AppModel {
                     .retain(|k| many.iter().all(|m| self.carries_tag(m, k)));
                 all
             }
-            None => self.reply_target()?,
+            None => self.reply_target()?.into_owned(),
         };
         let s = sender.input_sender().clone();
         Some(crate::ui::message_list::tag_menu_entries(
@@ -205,11 +205,12 @@ impl AppModel {
         use config::ToolbarItem as T;
         use MessageAction as A;
         let target = self.reply_target();
+        let target = target.as_deref();
         let acts = target.is_some();
         let many = acts || self.many_selected();
-        let starred = target.as_ref().is_some_and(|m| m.starred);
-        let target_unread = target.as_ref().is_some_and(|m| m.unread);
-        let restorable = target.as_ref().is_some_and(|m| {
+        let starred = target.is_some_and(|m| m.starred);
+        let target_unread = target.is_some_and(|m| m.unread);
+        let restorable = target.is_some_and(|m| {
             self.folder_kind(m.account_id, m.folder_id)
                 .is_some_and(|k| matches!(k, FolderKind::Trash | FolderKind::Junk))
         });

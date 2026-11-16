@@ -31,6 +31,12 @@ msgstr ""
 msgid "Release Notes"
 msgstr "Notes de la versió"
 
+msgid "Credits"
+msgstr ""
+
+msgid "Contributors and translators"
+msgstr ""
+
 msgid "Keyring Setup Help"
 msgstr "Ajuda per a la configuració de l'anell de claus"
 
@@ -56,15 +62,14 @@ msgstr "Llicència (GNU AGPL v3)"
 msgid "Buy Me a Coffee"
 msgstr "Convida'm a un cafè"
 
-#. Contributors — people outside Hyprlab whose patches are in the app.
+#. Contributors: people outside Hyprlab whose patches are in the app.
 msgid "Special thanks to these contributors"
 msgstr "Agraïments especials a aquests col·laboradors"
 
-#. Translators — the same list, with the languages each one carried.
+#. Translators: the same list, with the languages each one carried.
 msgid "Translated by"
 msgstr "Traduït per"
 
-#. Footer.
 msgid "© 2026 Hyprlab"
 msgstr "© 2026 Hyprlab"
 
@@ -315,6 +320,10 @@ msgstr ""
 msgid "Create Task…"
 msgstr "Crea"
 
+#, fuzzy
+msgid "Copy To…"
+msgstr "Mou a…"
+
 msgid "Tags"
 msgstr "Etiquetes"
 
@@ -328,10 +337,6 @@ msgid "Mark as Spam"
 msgstr "Marca com a brossa"
 
 msgid "Move To…"
-msgstr "Mou a…"
-
-#, fuzzy
-msgid "Copy To…"
 msgstr "Mou a…"
 
 msgid "Archive"
@@ -355,11 +360,141 @@ msgstr "Imprimeix…"
 msgid "New Message"
 msgstr "Missatge nou"
 
-msgid "Hylki Address Book"
-msgstr "Llibreta d'adreces de l'Hylki"
+#, fuzzy
+msgid "A group needs a name."
+msgstr "Nom de la carpeta"
+
+msgid ""
+"A group in this address book is kept on its people's cards, so it needs at "
+"least one person."
+msgstr ""
 
 msgid "Hylki cannot change this kind of group"
 msgstr "L'Hylki no pot modificar aquest tipus de grup"
+
+msgid "Home"
+msgstr "Casa"
+
+msgid "Work"
+msgstr "Feina"
+
+msgid "Mobile"
+msgstr "Mòbil"
+
+msgid "Fax"
+msgstr "Fax"
+
+msgid "{field} ({label})"
+msgstr ""
+
+#, fuzzy
+msgid "Do not import"
+msgstr "No s'ha pogut importar: {e}"
+
+#, fuzzy
+msgid "Full name"
+msgstr "Nom de la carpeta"
+
+msgid "First name"
+msgstr "Nom"
+
+#, fuzzy
+msgid "Middle name"
+msgstr "Nom de la carpeta"
+
+msgid "Last name"
+msgstr "Cognom"
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr "Àlies"
+
+#, fuzzy
+msgid "Company"
+msgstr "Té empresa"
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+#, fuzzy
+msgid "Notes"
+msgstr "Nota"
+
+msgid "Birthday"
+msgstr "Aniversari"
+
+#, fuzzy
+msgid "Birth year"
+msgstr "Aniversari"
+
+#, fuzzy
+msgid "Birth month"
+msgstr "Es repeteix mensualment"
+
+#, fuzzy
+msgid "Birth day"
+msgstr "Aniversari"
+
+#, fuzzy
+msgid "Groups"
+msgstr "Grup"
+
+msgid "Email"
+msgstr "Correu electrònic"
+
+msgid "Phone"
+msgstr "Telèfon"
+
+#, fuzzy
+msgid "Email label"
+msgstr "Client de correu"
+
+#, fuzzy
+msgid "Phone label"
+msgstr "Sense etiqueta"
+
+#, fuzzy
+msgid "Address label"
+msgstr "Llibreta d'adreces"
+
+#, fuzzy
+msgid "Website label"
+msgstr "Lloc web"
+
+msgid "Address"
+msgstr "Adreça"
+
+msgid "Street"
+msgstr "Carrer"
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr "Ciutat"
+
+msgid "State or region"
+msgstr "Estat o regió"
+
+msgid "Postal code"
+msgstr "Codi postal"
+
+msgid "Country"
+msgstr "País"
+
+msgid "Hylki Address Book"
+msgstr "Llibreta d'adreces de l'Hylki"
 
 msgid "On This Computer"
 msgstr "En aquest ordinador"
@@ -907,6 +1042,12 @@ msgstr "caduca el {date}"
 msgid "Until {date}"
 msgstr "caduca el {date}"
 
+msgid "Sender"
+msgstr "Remitent"
+
+msgid "Recipients"
+msgstr "Destinataris"
+
 msgid "Sort by"
 msgstr "Ordena per"
 
@@ -1365,9 +1506,6 @@ msgstr "Cerca per remitent, assumpte o compte"
 msgid "(no subject)"
 msgstr "(sense assumpte)"
 
-msgid "Message Source"
-msgstr "Codi font del missatge"
-
 #, fuzzy
 msgid "Forwarded message"
 msgstr "Reenvia aquest missatge"
@@ -1572,6 +1710,21 @@ msgstr "Treu les etiquetes"
 msgid "Open a message first, then print it."
 msgstr "Obre primer un missatge i després imprimeix-lo."
 
+msgid "Message Source"
+msgstr "Codi font del missatge"
+
+msgid "Find in message"
+msgstr "Cerca al missatge"
+
+msgid "Previous match"
+msgstr "Coincidència anterior"
+
+msgid "Next match"
+msgstr "Coincidència següent"
+
+msgid "Close find"
+msgstr "Tanca la cerca"
+
 msgid "Delete “{name}”?"
 msgstr "Vols suprimir «{name}»?"
 
@@ -1626,6 +1779,10 @@ msgstr ""
 
 msgid "Could not save the message: {e}"
 msgstr "No s'ha pogut desar el missatge: {e}"
+
+#, fuzzy
+msgid "Could not decrypt the draft: {e}"
+msgstr "No s'ha pogut buidar la carpeta: {e}"
 
 msgid "Open Hylki"
 msgstr "Obre l'Hylki"
@@ -1782,12 +1939,6 @@ msgstr "Signatura"
 msgid "Replied"
 msgstr "Respost"
 
-msgid "Sender"
-msgstr "Remitent"
-
-msgid "Recipients"
-msgstr "Destinataris"
-
 msgid "Correspondents"
 msgstr "Corresponsals"
 
@@ -1930,9 +2081,6 @@ msgstr "Nom"
 msgid "Last Name"
 msgstr "Cognom"
 
-msgid "Email"
-msgstr "Correu electrònic"
-
 #, fuzzy
 msgid "Column {n}"
 msgstr "Columnes"
@@ -1962,6 +2110,14 @@ msgstr "Xifrat per a la clau {id}, que no és al teu anell de claus."
 
 msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "El bloc xifrat està malmès o no són dades OpenPGP."
+
+#, fuzzy
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+"La clau de signatura {id} és al teu anell de claus però no està marcada com "
+"a de confiança; comprova'n l'empremta amb el remitent."
 
 msgid "Revoked"
 msgstr "Revocada"
@@ -2524,9 +2680,6 @@ msgstr "Torna a portar aquesta carpeta a la barra lateral"
 msgid "Sends through {host}"
 msgstr "Envia a través de {host}"
 
-msgid "Sends through this account"
-msgstr "Envia a través d'aquest compte"
-
 msgid "Remove this alias"
 msgstr "Elimina aquest àlies"
 
@@ -2542,16 +2695,15 @@ msgstr "Afegeix un àlies"
 msgid "Save"
 msgstr "Desa"
 
-msgid ""
-"Will appear in the composer's From menu. Replies to mail sent here will come "
-"from this address."
-msgstr ""
-
 msgid "Display name (optional)"
 msgstr "Nom visible (opcional)"
 
 msgid "Email address"
 msgstr "Adreça de correu electrònic"
+
+#, fuzzy
+msgid "Default From address"
+msgstr "Escriu una adreça de remitent"
 
 msgid "Sending"
 msgstr "Enviament"
@@ -2664,6 +2816,14 @@ msgstr ""
 "Demana accés a Microsoft. Algunes organitzacions necessiten que un "
 "administrador ho aprovi."
 
+#, fuzzy
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+"Desactivat el torna a la llista d'importació. Es manté als comptes en línia "
+"del GNOME."
+
 msgid "Choose a Picture"
 msgstr "Tria una imatge"
 
@@ -2761,6 +2921,16 @@ msgid "Include the folder's unread mail in the tray icon's unread count"
 msgstr ""
 "Inclou el correu no llegit de la carpeta al recompte de no llegits de la "
 "icona de la safata"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
 
 msgid "Never"
 msgstr "Mai"
@@ -3485,10 +3655,6 @@ msgid "Task list"
 msgstr "Aquesta llista"
 
 #, fuzzy
-msgid "Notes"
-msgstr "Nota"
-
-#, fuzzy
 msgid "All day"
 msgstr "Afegeix un correu"
 
@@ -4055,6 +4221,34 @@ msgid "Show Cc, Bcc and Reply-To"
 msgstr "Mostra Cc, Cco i Respon a"
 
 #, fuzzy
+msgid "They prefer encrypted mail."
+msgstr "Amaga l'assumpte del correu xifrat"
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+#, fuzzy
+msgid "OpenPGP key in your keyring."
+msgstr "Ja és al teu anell de claus"
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
+#, fuzzy
 msgid "Cannot merge an encrypted message"
 msgstr "Missatge xifrat"
 
@@ -4267,6 +4461,33 @@ msgstr "Contrasenya de descàrrega per a {name}: {password}"
 msgid "Reply-To"
 msgstr "Respon a"
 
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+"Un contacte necessita un nom, una adreça de correu o un número de telèfon"
+
+msgid "Import Contacts"
+msgstr "Importa contactes"
+
+#, fuzzy
+msgid "Import"
+msgstr "Importa…"
+
+#, fuzzy
+msgid "Import into"
+msgstr "Importa una signatura"
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+#, fuzzy
+msgid "Not imported"
+msgstr "Clau importada"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "Fitxers vCard"
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr "El nom utilitzat aquí i a Contactes. Si es deixa buit, és {own}."
 
@@ -4387,12 +4608,14 @@ msgstr ""
 msgid "Contacts in the Hylki book"
 msgstr "Contactes a la llibreta de l'Hylki"
 
-msgid "Import vCard files"
+#, fuzzy
+msgid "Import vCard or CSV files"
 msgstr "Importa fitxers vCard"
 
+#, fuzzy
 msgid ""
-"Adds contacts from .vcf files. Importing a file again updates existing "
-"entries."
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
 msgstr ""
 "Afegeix contactes dels fitxers .vcf. Tornar a importar un fitxer "
 "n'actualitza les entrades existents."
@@ -4629,15 +4852,6 @@ msgstr "Mostra la foto"
 msgid "Add to Contacts"
 msgstr "Afegeix a contactes"
 
-msgid "Phone"
-msgstr "Telèfon"
-
-msgid "Address"
-msgstr "Adreça"
-
-msgid "Birthday"
-msgstr "Aniversari"
-
 #. ---- note ----
 msgid "Note"
 msgstr "Nota"
@@ -4686,7 +4900,8 @@ msgstr "Envia com a Cco"
 msgid "Members do not see each other's addresses."
 msgstr "Els membres no veuen les adreces dels altres."
 
-#. An Apple group (iCloud's) holds cards of its own book.
+#. An Apple group (iCloud's) or a category (Nextcloud's) holds
+#. cards of its own book.
 msgid ""
 "Groups in this address book hold its own contacts: anyone added who is not "
 "in it yet is added to it."
@@ -4700,9 +4915,6 @@ msgstr "Edita el contacte"
 #. ---- identity fields ----
 msgid "Identity"
 msgstr "Identitat"
-
-msgid "Nickname"
-msgstr "Àlies"
 
 msgid "Organization"
 msgstr "Organització"
@@ -4722,38 +4934,11 @@ msgstr "Afegeix un lloc web"
 msgid "No label"
 msgstr "Sense etiqueta"
 
-msgid "Home"
-msgstr "Casa"
-
-msgid "Work"
-msgstr "Feina"
-
-msgid "Mobile"
-msgstr "Mòbil"
-
-msgid "Fax"
-msgstr "Fax"
-
 msgid "Label"
 msgstr "Etiqueta"
 
 msgid "Add address"
 msgstr "Afegeix una adreça"
-
-msgid "Street"
-msgstr "Carrer"
-
-msgid "City"
-msgstr "Ciutat"
-
-msgid "State or region"
-msgstr "Estat o regió"
-
-msgid "Postal code"
-msgstr "Codi postal"
-
-msgid "Country"
-msgstr "País"
 
 msgid "No birthday"
 msgstr "Sense aniversari"
@@ -4822,23 +5007,11 @@ msgstr "Afegeix una persona pel nom o l'adreça"
 msgid "No email address · {book}"
 msgstr "Sense adreça de correu · {book}"
 
-msgid "First name"
-msgstr "Nom"
-
-msgid "Last name"
-msgstr "Cognom"
-
 msgid "Sort and filter contacts"
 msgstr "Ordena i filtra contactes"
 
 #, fuzzy
-msgid "Groups"
-msgstr "Grup"
-
-msgid "Import Contacts"
-msgstr "Importa contactes"
-
-msgid "vCard files"
+msgid "vCard and CSV files"
 msgstr "Fitxers vCard"
 
 msgid "All files"
@@ -4952,7 +5125,8 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Això eliminarà {n} contacte de la teva llibreta d'adreces."
 msgstr[1] "Això eliminarà {n} contactes de les teves llibretes d'adreces."
 
-msgid "Import vCard files into the Hylki address book"
+#, fuzzy
+msgid "Import vCard or CSV files into the Hylki address book"
 msgstr "Importa fitxers vCard a la llibreta d'adreces de l'Hylki"
 
 msgid "New contact or group"
@@ -4961,10 +5135,11 @@ msgstr "Contacte o grup nou"
 msgid "Loading Contacts…"
 msgstr "S'estan carregant els contactes…"
 
+#, fuzzy
 msgid ""
-"Add a contact with the + button, or import vCard files. Contacts are kept in "
-"Hylki's own address book, and the address books of GNOME Contacts are listed "
-"here too."
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
 msgstr ""
 "Afegeix un contacte amb el botó +, o importa fitxers vCard. Els contactes es "
 "conserven a la llibreta d'adreces pròpia de l'Hylki, i les llibretes "
@@ -5369,6 +5544,10 @@ msgstr "Tria un esborrany de la llista per editar-lo aquí."
 msgid "Choose a message from the list to read it here."
 msgstr "Tria un missatge de la llista per llegir-lo aquí."
 
+#, fuzzy
+msgid "Show Message"
+msgstr "Mostra al missatge"
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 "El contingut remot (imatges, rastrejadors) està blocat per protegir la teva "
@@ -5380,23 +5559,11 @@ msgstr "Carrega"
 msgid "Always allow sender"
 msgstr "Permet sempre el remitent"
 
-msgid "Find in message"
-msgstr "Cerca al missatge"
-
 msgid "No matches"
 msgstr "No hi ha coincidències"
 
 msgid "{cur} of {total}"
 msgstr "{cur} de {total}"
-
-msgid "Previous match"
-msgstr "Coincidència anterior"
-
-msgid "Next match"
-msgstr "Coincidència següent"
-
-msgid "Close find"
-msgstr "Tanca la cerca"
 
 msgid ""
 "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "
@@ -5651,7 +5818,8 @@ msgstr ""
 msgid "Trust"
 msgstr "Confia-hi"
 
-msgid "The sender's key was imported from the message."
+#, fuzzy
+msgid "The sender's key was taken from the message."
 msgstr "La clau del remitent s'ha importat del missatge."
 
 msgid "The sender's key was fetched and imported."
@@ -5823,6 +5991,26 @@ msgid "The same keyring the gpg command and other mail apps use."
 msgstr ""
 "El mateix anell de claus que utilitzen l'ordre gpg i altres aplicacions de "
 "correu."
+
+#, fuzzy
+msgid "Finding keys"
+msgstr "Cerca al missatge"
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr ""
+
+#, fuzzy
+msgid "Look up recipients' keys"
+msgstr "Mostra els destinataris"
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid "keys.openpgp.org learns who you write to."
+msgstr ""
 
 msgid "Your keys"
 msgstr "Les teves claus"
@@ -6218,6 +6406,9 @@ msgstr "Vista de lector activada"
 
 msgid "Reader View off"
 msgstr "Vista de lector desactivada"
+
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
 
 msgid "Ask each time"
 msgstr "Pregunta cada vegada"
@@ -7576,14 +7767,22 @@ msgstr ""
 "No s'ha pogut llegir la contrasenya de {email} de l'anell de claus ({e}). "
 "L'Hylki ho tornarà a provar a la propera connexió."
 
+#, fuzzy
+msgid "The draft is not an OpenPGP message."
+msgstr "no és un missatge de l'Outlook"
+
+#, fuzzy
+msgid "The draft could not be decrypted."
+msgstr "No s'ha pogut obrir el fitxer"
+
+msgid "no OpenPGP key for {addr}"
+msgstr "no hi ha cap clau OpenPGP per a {addr}"
+
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 "no tens cap clau OpenPGP pròpia per a {addr}; genera'n una a Paràmetres, "
 "OpenPGP"
-
-msgid "no OpenPGP key for {addr}"
-msgstr "no hi ha cap clau OpenPGP per a {addr}"
 
 msgid "Could not save template: {e}"
 msgstr "No s'ha pogut desar la plantilla: {e}"
@@ -8081,21 +8280,11 @@ msgstr "Utilitza les inicials"
 msgid "Send-as aliases"
 msgstr "Àlies d'enviament"
 
-#, fuzzy
-msgid "Extra names and addresses this account can send as."
-msgstr "Adreces addicionals amb què aquest compte pot enviar."
-
 msgid "Add Alias…"
 msgstr "Afegeix un àlies…"
 
 msgid "Signatures"
 msgstr "Signatures"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
-"Amb més d'una, el botó de signatura del redactor et permet triar entre elles."
 
 msgid "Add Signature"
 msgstr "Afegeix una signatura"
@@ -8159,10 +8348,6 @@ msgid ""
 "Downloads copies of every message from every folder of this account to this "
 "computer (except Trash, Junk and Drafts) and stores them in On This Computer."
 msgstr ""
-
-#, fuzzy
-msgid "Import"
-msgstr "Importa…"
 
 msgid "Mail already here is not imported again."
 msgstr ""
@@ -8255,6 +8440,20 @@ msgstr "Amaga l'assumpte del correu xifrat"
 
 msgid "Only the recipients see the subject. Others see \"...\"."
 msgstr "Només els destinataris veuen l'assumpte. Els altres veuen «...»."
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "So per a correu nou"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Expandeix les converses per defecte"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
@@ -8388,20 +8587,8 @@ msgstr "Sempre expandit"
 msgid "Start new messages in"
 msgstr "Comença els missatges nous en"
 
-msgid "For rich text. Default leaves it to the recipient's own font."
-msgstr "Per al text enriquit. Per defecte deixa la font del destinatari."
-
-msgid "For rich text, in points."
-msgstr "Per al text enriquit, en punts."
-
-msgid "Default zoom"
-msgstr "Zoom per defecte"
-
 msgid "Reply in the original's format"
 msgstr "Respon en el format de l'original"
-
-msgid "Plain-text mail is answered in plain text."
-msgstr "El correu de text pla es respon en text pla."
 
 #, fuzzy
 msgid "Ask before switching to plain text"
@@ -8410,6 +8597,15 @@ msgstr "Vols canviar a text pla?"
 #, fuzzy
 msgid "Only when formatting, images or links would be removed."
 msgstr "El format, les imatges i els enllaços s'eliminen."
+
+msgid "For rich text. Default leaves it to the recipient's own font."
+msgstr "Per al text enriquit. Per defecte deixa la font del destinatari."
+
+msgid "For rich text, in points."
+msgstr "Per al text enriquit, en punts."
+
+msgid "Default zoom"
+msgstr "Zoom per defecte"
 
 msgid "Signature in replies"
 msgstr "Signatura a les respostes"
@@ -8568,6 +8764,9 @@ msgstr "Desactivat mostra només les icones."
 #, fuzzy
 msgid "Find bar position"
 msgstr "Posició de la barra de selecció"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""
@@ -8908,6 +9107,29 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr ""
+#~ "Un missatge s'ha quedat on era: aquest compte no pot rebre correu d'un "
+#~ "altre"
+
+#~ msgid ""
+#~ "With more than one, the composer's signature button allows you to pick "
+#~ "between them."
+#~ msgstr ""
+#~ "Amb més d'una, el botó de signatura del redactor et permet triar entre "
+#~ "elles."
+
+#~ msgid "Sends through this account"
+#~ msgstr "Envia a través d'aquest compte"
+
+#, fuzzy
+#~ msgid "Extra names and addresses this account can send as."
+#~ msgstr "Adreces addicionals amb què aquest compte pot enviar."
+
+#~ msgid "Plain-text mail is answered in plain text."
+#~ msgstr "El correu de text pla es respon en text pla."
 
 #~ msgid "Remote content can tell a sender when and where you read."
 #~ msgstr "El contingut remot pot dir a un remitent quan i on llegeixes."

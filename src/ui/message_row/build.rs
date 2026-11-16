@@ -21,6 +21,11 @@ pub(super) fn build_widgets() -> RowWidgets {
     revealer.set_reveal_child(true);
     host.append(&revealer);
 
+    // A folded date section's heading, shown in place of the rest (#659).
+    let fold = super::fold::FoldHeading::new();
+    fold.bx.set_visible(false);
+    host.append(&fold.bx);
+
     // The swipe surface: the fixed action strip underneath, the row's real
     // content on top, slid away from it under a drag (#swipe).
     let surface = SwipeSurface::default();
@@ -233,6 +238,7 @@ pub(super) fn build_widgets() -> RowWidgets {
     RowWidgets {
         host,
         revealer,
+        fold,
         surface,
         swipe_bg,
         swipe_inner,

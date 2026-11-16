@@ -124,6 +124,19 @@ fn about_info_rows(page: &gtk::Box, nav: &adw::NavigationView, sender: &Componen
     }
     info.append(&notes_row);
 
+    // The thanks lists outgrew the main page, so they slide in like the notes.
+    let credits_row = adw::ActionRow::builder()
+        .title(i18n("Credits"))
+        .subtitle(i18n("Contributors and translators"))
+        .activatable(true)
+        .build();
+    credits_row.add_suffix(&gtk::Image::from_icon_name("go-next-symbolic"));
+    {
+        let nav = nav.clone();
+        credits_row.connect_activated(move |_| nav.push_by_tag("credits"));
+    }
+    info.append(&credits_row);
+
     // Linux Mint (Cinnamon): re-open the one-time keyring setup tip. Shown only
     // where that tip applies, so Mint users who dismissed it can find it again.
     if crate::desktop::platform::is_mint_cinnamon() {
@@ -195,43 +208,67 @@ fn about_links(page: &gtk::Box) {
     page.append(&links);
 }
 
-/// The contributors and translators, and the footer.
-fn about_thanks(page: &gtk::Box) {
-    // Contributors — people outside Hyprlab whose patches are in the app.
-    page.append(&section_heading(&i18n(
-        "Special thanks to these contributors",
-    )));
+/// One boxed list of people, each row opening their GitHub profile.
+fn people_list(rows: Vec<(&'static str, &'static str, &'static str)>) -> gtk::ListBox {
+    let list = gtk::ListBox::new();
+    list.add_css_class("boxed-list");
+    list.set_selection_mode(gtk::SelectionMode::None);
+    for (name, handle, note) in rows {
+        let subtitle = if note.is_empty() {
+            format!("@{handle}")
+        } else {
+            format!("{note} · @{handle}")
+        };
+        let row = adw::ActionRow::builder()
+            .title(name)
+            .subtitle(subtitle)
+            .activatable(true)
+            .build();
+        let url = format!("https://github.com/{handle}");
+        row.set_tooltip_text(Some(&url));
+        row.add_suffix(&gtk::Image::from_icon_name("adw-external-link-symbolic"));
+        row.connect_activated(move |_| crate::services::oauth::open_uri(&url));
+        list.append(&row);
+    }
+    list
+}
 
-    let people = |rows: Vec<(&'static str, &'static str, &'static str)>| {
-        let list = gtk::ListBox::new();
-        list.add_css_class("boxed-list");
-        list.set_selection_mode(gtk::SelectionMode::None);
-        for (name, handle, note) in rows {
-            let subtitle = if note.is_empty() {
-                format!("@{handle}")
-            } else {
-                format!("{note} · @{handle}")
-            };
-            let row = adw::ActionRow::builder()
-                .title(name)
-                .subtitle(subtitle)
-                .activatable(true)
-                .build();
-            let url = format!("https://github.com/{handle}");
-            row.set_tooltip_text(Some(&url));
-            row.add_suffix(&gtk::Image::from_icon_name("adw-external-link-symbolic"));
-            row.connect_activated(move |_| crate::services::oauth::open_uri(&url));
-            list.append(&row);
-        }
-        list
-    };
-    page.append(&people(credits(CONTRIBUTORS)));
+/// The Credits sub-page: the contributors and the translators.
+fn credits_page() -> adw::NavigationPage {
+    let page = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    page.set_margin_bottom(24);
 
-    // Translators — the same list, with the languages each one carried.
+    // Contributors: people outside Hyprlab whose patches are in the app.
+    let heading = section_heading(&i18n("Special thanks to these contributors"));
+    heading.set_margin_top(6);
+    page.append(&heading);
+    page.append(&people_list(credits(CONTRIBUTORS)));
+
+    // Translators: the same list, with the languages each one carried.
     page.append(&section_heading(&i18n("Translated by")));
-    page.append(&people(credits(TRANSLATORS)));
+    page.append(&people_list(credits(TRANSLATORS)));
 
-    // Footer.
+    let clamp = adw::Clamp::builder().maximum_size(420).build();
+    clamp.set_child(Some(&page));
+    let scroller = gtk::ScrolledWindow::builder()
+        .hscrollbar_policy(gtk::PolicyType::Never)
+        .vexpand(true)
+        .child(&clamp)
+        .build();
+
+    let tv = adw::ToolbarView::new();
+    tv.add_top_bar(&adw::HeaderBar::new());
+    tv.set_content(Some(&scroller));
+
+    adw::NavigationPage::builder()
+        .title(i18n("Credits").as_str())
+        .tag("credits")
+        .child(&tv)
+        .build()
+}
+
+/// The copyright line at the foot of the main page.
+fn about_footer(page: &gtk::Box) {
     let footer = gtk::Label::new(Some(i18n("© 2026 Hyprlab").as_str()));
     footer.add_css_class("dim-label");
     footer.add_css_class("caption");
@@ -276,7 +313,7 @@ impl AppModel {
         about_identity(&page);
         about_info_rows(&page, &nav, sender);
         about_links(&page);
-        about_thanks(&page);
+        about_footer(&page);
 
         clamp.set_child(Some(&page));
         scroller.set_child(Some(&clamp));
@@ -296,14 +333,14 @@ impl AppModel {
                 .build(),
         );
         nav.add(&release_notes_page());
+        nav.add(&credits_page());
 
         win.set_content(Some(&nav));
         win.present();
 
         // Screenshot hook: HYLKI_SHOWCASE_SCROLL runs the page down by that
         // fraction once it has been laid out, so a capture can show the
-        // thanks lists at the bottom (the same variable does this for
-        // Settings).
+        // links at the bottom (the same variable does this for Settings).
         if let Some(frac) = std::env::var("HYLKI_SHOWCASE_SCROLL")
             .ok()
             .map(|v| v.parse::<f64>().unwrap_or(1.0))

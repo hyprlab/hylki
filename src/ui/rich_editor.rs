@@ -292,7 +292,13 @@ impl RichEditor {
                 crate::desktop::memory_report::register_web_view(&v, "editor preview");
                 super::message_view::keep_tab_out_of_key_translator(&v);
                 v.set_zoom_level(self.zoom.get());
-                v.set_background_color(&gtk::gdk::RGBA::new(0.0, 0.0, 0.0, 0.0));
+                // Opaque for the same NVIDIA reason as the editor itself
+                // (see rich_editor/setup.rs).
+                let (ground, _, _) = crate::ui::message_view::theme_grounds_for(
+                    &v,
+                    adw::StyleManager::default().is_dark(),
+                );
+                v.set_background_color(&crate::ui::message_view::ground_rgba(&ground));
                 self.stack.add_named(&v, Some("preview"));
                 *self.preview.borrow_mut() = Some(v.clone());
                 v
@@ -684,7 +690,7 @@ mod pinned_tests {
         assert_eq!(fnv(HISTORY_SCRIPT), (1287, 0x8e997368982bb599));
         assert_eq!(fnv(EMOJI_SCRIPT), (1621, 0x748b009b19f3f0ec));
         assert_eq!(fnv(LINES_SCRIPT), (5153, 0xb927290405c83fda));
-        assert_eq!(fnv(PASTE_SCRIPT), (43618, 0x511aca19373da885));
+        assert_eq!(fnv(PASTE_SCRIPT), (43784, 0x95d42bd90001121c));
     }
 
     #[test]

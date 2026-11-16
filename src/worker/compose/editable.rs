@@ -53,6 +53,9 @@ pub(crate) struct EditableMessage {
     /// It has no HTML part: it was written in plain text, and opens in
     /// plain text again (#634).
     pub(crate) plain: bool,
+    /// It is to be sent encrypted: a draft saved with an
+    /// `Autocrypt-Draft-State` asking for it.
+    pub(crate) encrypt: bool,
 }
 
 /// Whoever the envelope names that none of the `headers` (address lists)
@@ -139,6 +142,65 @@ fn has_html_part(p: &mail_parser::Message) -> bool {
         .any(|part| matches!(part.body, mail_parser::PartType::Html(_)))
 }
 
+/// An encrypted draft (Autocrypt Level 1, "Message Drafts") opened again:
+/// decrypted with the user's key, its protected headers (Subject, the
+/// addresses, Bcc too) in place of the outer ones. gpg may ask for the
+/// passphrase, so this runs off the main thread.
+pub(crate) fn decrypt_draft(raw: &[u8]) -> Result<Vec<u8>, String> {
+    let gpg = crate::mail::pgp::Gpg::system();
+    let u = crate::mail::pgp::unwrap_message(raw, &gpg)
+        .ok_or_else(|| crate::i18n::i18n("The draft is not an OpenPGP message."))?;
+    match u.inner {
+        Some(inner) if u.status.decrypted => Ok(merge_decrypted(raw, &inner)),
+        _ => Err(u
+            .status
+            .notes
+            .first()
+            .cloned()
+            .unwrap_or_else(|| crate::i18n::i18n("The draft could not be decrypted."))),
+    }
+}
+
+/// The outer header fields of `outer` that `inner` (a decrypted entity)
+/// does not carry itself, then `inner`, headers and body: one message
+/// with the threading and receipt headers from outside and everything
+/// protected from inside. The outer MIME structure goes, as it described
+/// the ciphertext.
+pub(in crate::worker) fn merge_decrypted(outer: &[u8], inner: &[u8]) -> Vec<u8> {
+    let inner_names: Vec<String> = crate::mail::pgp::autocrypt::header_fields(inner)
+        .into_iter()
+        .map(|(n, _)| n.to_ascii_lowercase())
+        .collect();
+    let text = String::from_utf8_lossy(outer);
+    let mut out = String::new();
+    let mut keep = false;
+    for line in text.split_inclusive('\n') {
+        let bare = line.trim_end_matches(['\r', '\n']);
+        if bare.is_empty() {
+            break;
+        }
+        if !line.starts_with([' ', '\t']) {
+            let name = bare
+                .split_once(':')
+                .map(|(n, _)| n.trim().to_ascii_lowercase())
+                .unwrap_or_default();
+            keep = !name.is_empty()
+                && !matches!(
+                    name.as_str(),
+                    "content-type" | "content-transfer-encoding" | "mime-version"
+                )
+                && !inner_names.contains(&name);
+        }
+        if keep {
+            out.push_str(bare);
+            out.push_str("\r\n");
+        }
+    }
+    let mut merged = out.into_bytes();
+    merged.extend_from_slice(inner);
+    merged
+}
+
 /// The body as the composer edits it: the HTML part with its `cid:`
 /// pictures inlined (their Content-IDs noted in `embedded`), else the text
 /// part escaped, its lines and indents kept.
@@ -154,8 +216,18 @@ fn editable_body(parsed: Option<&mail_parser::Message>, embedded: &mut Vec<Strin
         })
         .unwrap_or_default();
     if html.trim().is_empty() {
+        // A flowed draft (#606) opens as the paragraphs it was written as,
+        // not as the lines it was wrapped into.
         let text = parsed
-            .and_then(|p| p.body_text(0).map(|b| b.to_string()))
+            .and_then(|p| match p.text_part(0) {
+                Some(
+                    part @ mail_parser::MessagePart {
+                        body: mail_parser::PartType::Text(text),
+                        ..
+                    },
+                ) => Some(crate::mail::flowed::readable(part, text).into_owned()),
+                _ => p.body_text(0).map(|b| b.to_string()),
+            })
             .unwrap_or_default();
         // One block of lines, the way the composer holds the lines it is
         // given: a block per line would read back in plain text as a
@@ -265,6 +337,7 @@ pub(crate) fn editable_from_raw(raw: &[u8], envelope_rcpts: &[String]) -> Editab
             parsed.as_ref().and_then(|p| p.header_raw(name))
         }),
         plain: parsed.as_ref().is_some_and(|p| !has_html_part(p)),
+        encrypt: crate::mail::pgp::autocrypt::draft_wants_encryption(raw),
     }
 }
 
@@ -429,7 +502,7 @@ mod tests {
         assert_eq!(editable.attachments.len(), 1);
         assert_eq!(editable.attachments[0].name, "report.pdf");
         assert_eq!(
-            editable.attachments[0].data,
+            *editable.attachments[0].data,
             [0x25, 0x50, 0x44, 0x46, 0x00, 0xff]
         );
         std::fs::remove_dir_all(&dir).ok();

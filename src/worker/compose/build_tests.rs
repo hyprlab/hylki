@@ -157,6 +157,16 @@ fn build_email_signs_and_encrypts_with_pgp_mime() {
         u.status
     );
     assert!(!extract_attachments(&u.inner.unwrap()).is_empty());
+    // The signed multipart ends with its own CRLF and a blank line comes
+    // before the outer delimiter, the layout Exchange rewrites a message
+    // into, so the signature still holds after it has (#666).
+    let text = String::from_utf8_lossy(&raw);
+    let outer = text
+        .split("boundary=\"")
+        .nth(1)
+        .and_then(|b| b.split('"').next())
+        .expect("outer boundary");
+    assert!(text.contains(&format!("--\r\n\r\n--{outer}\r\n")), "{text}");
 
     // Encrypted and signed: readable by the peer and by the sender.
     msg.attachments.clear();
@@ -272,7 +282,7 @@ fn build_email_signs_and_encrypts_with_pgp_mime() {
         .to_string();
     assert!(err.contains("keyless@hylki.invalid"), "{err}");
     // The account's chosen key overrides the address match.
-    account.pgp_key = Some(fpr);
+    account.pgp_key = Some(fpr.clone());
     build_email(&account, &msg).expect("chosen key signs");
 
     // A draft of the same message stays plain.
@@ -283,6 +293,137 @@ fn build_email_signs_and_encrypts_with_pgp_mime() {
     };
     let raw = build_email(&account, &plain).expect("builds").formatted();
     assert!(String::from_utf8_lossy(&raw).contains("secret body text"));
+
+    use crate::mail::pgp::autocrypt::{gossip, sender_header, PreferEncrypt};
+    use crate::mail::pgp::discovery::{export_minimal, import_one};
+    use crate::mail::pgp::{encrypted_to, generate_key, unwrap_message, Gpg, Shape};
+    let armored = |raw: &[u8]| match crate::mail::pgp::detect(raw) {
+        Some(Shape::Encrypted { armored }) => armored,
+        other => panic!("not PGP/MIME encrypted: {other:?}"),
+    };
+    account.email = "sender@hylki.invalid".into();
+
+    // An encrypted draft (Autocrypt Level 1): to the sender alone, never
+    // signed, with the subject and the Bcc inside and its state outside.
+    msg.bcc = "Hidden <hidden@hylki.invalid>".into();
+    let draft = build_draft(&account, &msg)
+        .expect("draft builds")
+        .formatted();
+    let text = String::from_utf8_lossy(&draft).to_string();
+    assert!(text.contains("multipart/encrypted"), "{text}");
+    for secret in ["secret body text", "Secret plans", "hidden@hylki.invalid"] {
+        assert!(!text.contains(secret), "{secret} must not appear: {text}");
+    }
+    assert!(
+        text.contains("Autocrypt-Draft-State: encrypt=yes"),
+        "{text}"
+    );
+    assert_eq!(
+        encrypted_to(&gpg, &armored(&draft)).len(),
+        1,
+        "to the sender alone"
+    );
+    // The cache keeps the draft as the server has it, encrypted.
+    let cache = crate::cache::Cache::in_memory().expect("cache");
+    cache.save_draft_copy(1, "Drafts", 9, "d@x", 1, &draft);
+    let kept = cache
+        .load_draft_copy(1, "Drafts", 9, "d@x", 1)
+        .expect("kept");
+    assert!(!String::from_utf8_lossy(&kept).contains("secret body text"));
+    // Opened again: decrypted, everything back, still to be encrypted.
+    let opened = crate::worker::decrypt_draft(&kept).expect("decrypts");
+    let e = crate::worker::editable_from_raw(&opened, &[]);
+    assert_eq!(e.subject, "Secret plans");
+    assert_eq!(e.to, "Peer <peer@hylki.invalid>");
+    assert_eq!(e.bcc, "Hidden <hidden@hylki.invalid>");
+    assert!(e.body_html.contains("secret body text"), "{}", e.body_html);
+    assert!(e.encrypt);
+    // Without a key of the user's own the draft is still kept, readable,
+    // and still opens to be sent encrypted.
+    let mut keyless = account.clone();
+    keyless.email = "keyless@hylki.invalid".into();
+    keyless.pgp_key = None;
+    let kept = build_draft(&keyless, &msg)
+        .expect("kept all the same")
+        .formatted();
+    let text = String::from_utf8_lossy(&kept).to_string();
+    assert!(text.contains("secret body text"), "{text}");
+    assert!(text.contains("Secret plans"), "{text}");
+    assert!(
+        crate::worker::editable_from_raw(&kept, &[]).encrypt,
+        "{text}"
+    );
+    msg.bcc.clear();
+
+    // Autocrypt on: the sender's key goes with every message, folded.
+    account.autocrypt = true;
+    account.autocrypt_mutual = true;
+    let mut open = sample_outgoing();
+    open.to = "peer@hylki.invalid".into();
+    open.body = "hello".into();
+    let raw = build_email(&account, &open).expect("builds").formatted();
+    let text = String::from_utf8_lossy(&raw).to_string();
+    let head = text.split("\r\n\r\n").next().unwrap_or_default();
+    assert!(head.lines().all(|l| l.len() <= 78), "{head}");
+    let header = sender_header(&raw).expect("a valid Autocrypt header");
+    assert_eq!(header.addr, "sender@hylki.invalid");
+    assert_eq!(header.prefer_encrypt, PreferEncrypt::Mutual);
+    let found = gpg.found_keyring().expect("found keyring");
+    assert_eq!(
+        import_one(&found, &header.keydata, "sender@hylki.invalid").expect("one key"),
+        fpr
+    );
+    assert!(
+        !String::from_utf8_lossy(&build_draft(&account, &open).unwrap().formatted())
+            .contains("Autocrypt:"),
+        "a draft carries no key"
+    );
+
+    // A recipient known only from Hylki's own keyring is encrypted to
+    // once the composer names their key; each of two recipients gets
+    // the other's key as gossip; a Bcc is a hidden recipient.
+    let other_home = home.join("other");
+    let other = Gpg::at(other_home.clone());
+    let found_fpr = generate_key(&other, "", "found@hylki.invalid", "never", "").unwrap();
+    let found_key = export_minimal(&other, &found_fpr, "found@hylki.invalid").unwrap();
+    assert_eq!(
+        import_one(&found, &found_key, "found@hylki.invalid").unwrap(),
+        found_fpr
+    );
+    generate_key(&gpg, "", "bcc@hylki.invalid", "never", "").expect("bcc key");
+    let mut many = msg.clone();
+    many.to = "Peer <peer@hylki.invalid>, found@hylki.invalid".into();
+    many.bcc = "bcc@hylki.invalid".into();
+    let err = build_email(&account, &many)
+        .expect_err("no key for found@ without the composer's")
+        .to_string();
+    assert!(err.contains("found@hylki.invalid"), "{err}");
+    many.peer_keys = vec![("found@hylki.invalid".into(), found_fpr.clone())];
+    let raw = build_email(&account, &many).expect("builds").formatted();
+    let ids = encrypted_to(&gpg, &armored(&raw));
+    assert_eq!(ids.len(), 4, "peer, found, Bcc, sender: {ids:?}");
+    assert_eq!(
+        ids.iter().filter(|i| i.chars().all(|c| c == '0')).count(),
+        1,
+        "the Bcc is hidden: {ids:?}"
+    );
+    let text = String::from_utf8_lossy(&raw).to_string();
+    assert!(!text.contains("Autocrypt-Gossip"), "gossip only inside");
+    let u = unwrap_message(&raw, &other).expect("recognised");
+    assert!(
+        u.status.decrypted,
+        "the found recipient reads it: {:?}",
+        u.status
+    );
+    let inner = u.inner.unwrap();
+    let told = gossip(
+        &inner,
+        &["peer@hylki.invalid".into(), "found@hylki.invalid".into()],
+    );
+    assert_eq!(told.len(), 2, "{}", String::from_utf8_lossy(&inner));
+    assert!(!String::from_utf8_lossy(&inner).contains("bcc@hylki.invalid"));
+    crate::mail::pgp::drop_test_keyring(&other_home);
+    crate::mail::pgp::drop_test_keyring(&home.join("hylki-discovered"));
 
     std::env::remove_var("HYLKI_GNUPGHOME");
     let _ = std::process::Command::new("gpgconf")
@@ -463,7 +604,7 @@ fn plain_text_declares_its_charset() {
     let text = String::from_utf8_lossy(&raw);
     assert!(text.contains("MIME-Version: 1.0\r\n"), "{text}");
     assert!(
-        text.contains("Content-Type: text/plain; charset=utf-8\r\n"),
+        text.contains("Content-Type: text/plain; charset=utf-8; format=flowed\r\n"),
         "{text}"
     );
     assert!(!has_bare_lf(&raw), "{text}");
@@ -474,6 +615,41 @@ fn plain_text_declares_its_charset() {
         parsed.body_text(0).as_deref().map(str::trim_end),
         Some("Plain text with öäü and 🙂\r\nsecond line")
     );
+}
+
+/// #606: a long plain-text paragraph goes out flowed, in lines a reader
+/// without flowed text can read, and comes back whole in the reader and in
+/// the composer.
+#[test]
+fn plain_text_goes_out_flowed_and_comes_back_whole() {
+    let paragraph = "This paragraph is long enough to need breaking, ".repeat(5);
+    let paragraph = paragraph.trim_end();
+    let msg = OutgoingMessage {
+        to: "ada@example.com".into(),
+        body: format!("Hi Ada,\n\n{paragraph}\n\nJane"),
+        ..sample_outgoing()
+    };
+    let raw = build_email(&sample_account(), &msg)
+        .expect("email builds")
+        .formatted();
+    let text = String::from_utf8_lossy(&raw);
+    assert!(text.contains("format=flowed"), "{text}");
+    assert!(
+        text.contains("Content-Transfer-Encoding: quoted-printable\r\n"),
+        "the soft breaks' spaces are protected: {text}"
+    );
+    let parsed = mail_parser::MessageParser::default()
+        .parse(&raw)
+        .expect("parses");
+    let wire = parsed.body_text(0).expect("a text part").into_owned();
+    assert!(wire.lines().all(|l| l.chars().count() <= 72), "{wire}");
+    assert!(wire.lines().count() > 5, "{wire}");
+
+    let shown = extract_body(&raw);
+    assert!(shown.contains(paragraph), "{shown}");
+
+    let editable = crate::worker::compose::editable::editable_from_raw(&raw, &[]);
+    assert!(editable.body_html.contains(paragraph), "{}", editable.body_html);
 }
 
 /// #414: a text file with Unix line endings goes out as base64, so its

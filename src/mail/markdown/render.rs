@@ -259,8 +259,9 @@ fn find_script(text: &str) -> Option<(usize, char, usize)> {
     None
 }
 
-/// Bare `https://…`, `www.…` and `name@host` runs become links; everything
-/// else stays text (and is escaped by the HTML writer).
+/// Bare `https://…`, `www.…`, `name@host`, `@name:host` and `@name@host`
+/// runs become links; everything else stays text (and is escaped by the HTML
+/// writer).
 fn push_linkified(out: &mut Vec<Event<'static>>, text: &str, linkable: bool) {
     if text.is_empty() {
         return;
@@ -278,7 +279,7 @@ fn push_linkified(out: &mut Vec<Event<'static>>, text: &str, linkable: bool) {
         let href = match kind {
             UrlKind::Web => shown.to_string(),
             UrlKind::Bare => format!("https://{shown}"),
-            UrlKind::Mail => format!("mailto:{shown}"),
+            UrlKind::At(href) => href,
         };
         out.push(Event::InlineHtml(
             format!(

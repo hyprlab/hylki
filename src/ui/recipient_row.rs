@@ -24,12 +24,14 @@ use gtk::glib;
 use gtk::glib::subclass::Signal;
 
 mod flow;
+mod key_badge;
 mod parse;
 mod pill;
 mod selection;
 mod wire;
 
 pub(crate) use flow::PillFlow;
+pub(crate) use key_badge::KeyBadge;
 
 /// Space between pills, and between lines of them.
 const SPACING: i32 = 4;

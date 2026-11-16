@@ -451,6 +451,10 @@ impl SimpleComponent for MessageList {
             MessageListInput::SetAvatars(on) => self.on_set_avatars(on),
             MessageListInput::SetGravatar(on) => self.on_set_gravatar(on),
             MessageListInput::SetShowRecipient(on) => self.on_set_show_recipient(on),
+            MessageListInput::FoldDay { section, fold } => {
+                self.on_fold_day(section, fold, &sender)
+            }
+            MessageListInput::SetFoldedDays(keys) => self.on_set_folded_days(keys),
             MessageListInput::SetRestorable(on) => self.restorable = on,
             MessageListInput::SetSnoozeOffer(offer) => self.snooze_offer = offer,
             MessageListInput::SetInJunk(on) => self.on_set_in_junk(on),

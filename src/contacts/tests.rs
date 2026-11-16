@@ -509,3 +509,37 @@ fn directory_matches_join_the_known_ones_once() {
     assert!(found[0].from_directory);
     assert_eq!(found[0].name, "Ada Lovelace");
 }
+
+/// Someone written to comes before someone the typing only matches, even
+/// one whose name starts with it or who is in more mail; among those
+/// written to, the most written to first.
+#[test]
+fn the_people_written_to_come_first() {
+    use super::{rank, Suggestion};
+    let person = |name: &str, email: &str, score: u32, sent: u32| Suggestion {
+        name: name.into(),
+        email: email.into(),
+        score,
+        sent,
+        ..Default::default()
+    };
+    let mut found = vec![
+        person("Jo Newsletter", "jo@news.example", 400, 0),
+        person("Joan Smith", "joan@example.org", 3, 1),
+        person("Mary Jones", "mary@example.org", 5, 9),
+        person("Major Bob", "bob@example.org", 50, 30),
+        person("John Doe", "john@example.org", 0, 0),
+    ];
+    rank(&mut found, "jo");
+    let emails: Vec<&str> = found.iter().map(|s| s.email.as_str()).collect();
+    assert_eq!(
+        emails,
+        [
+            "mary@example.org",
+            "joan@example.org",
+            "bob@example.org",
+            "jo@news.example",
+            "john@example.org",
+        ]
+    );
+}

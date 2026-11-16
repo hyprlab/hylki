@@ -8,11 +8,11 @@ use relm4::prelude::*;
 use crate::config;
 use crate::i18n::{i18n, i18n_f};
 use crate::models::Attachment;
-use crate::ui::attachment_drawer::AttachmentDrawerInput;
+use crate::ui::attachment_drawer::{for_previewer, AttachmentDrawerInput};
 use crate::ui::attachment_io::save_attachment_as;
 use crate::ui::attachments_gallery::GalleryInput;
 use crate::ui::message_list::MessageListInput;
-use crate::ui::message_view::MessageViewInput;
+use crate::ui::message_view::{ChipAction, MessageViewInput};
 use crate::ui::message_window::MessageWindowInput;
 use crate::worker::MailRequest;
 
@@ -185,7 +185,7 @@ impl AppModel {
     /// hand. Opening a thread used to load nothing at all — the drawer only
     /// appeared after clicking a member, which runs the single-message path.
     pub(super) fn load_thread_attachments(&mut self) {
-        let wanted: Vec<(u32, u32, u32, String)> = self
+        let wanted: Vec<(BodyKey, MailRequest)> = self
             .current_thread
             .iter()
             .filter(|tm| tm.has_attachment)
@@ -193,25 +193,31 @@ impl AppModel {
             .filter(|tm| !self.provisionals.contains_key(&(tm.account_id, tm.id)))
             .filter(|tm| !self.attachment_cache.contains_key(&body_key(tm)))
             .filter_map(|tm| {
-                self.resolve_folder_path(tm)
-                    .map(|p| (tm.account_id, tm.id, tm.uid, p))
+                let path = self.resolve_folder_path(tm)?;
+                let req = MailRequest::LoadAttachments {
+                    message_id: tm.id,
+                    path,
+                    uid: tm.uid,
+                    download: true,
+                };
+                Some((body_key(tm), req))
             })
             .collect();
-        if !wanted.is_empty() {
-            self.attachments_loading = true;
-        }
-        for (account_id, message_id, uid, path) in wanted {
-            self.send_to(
-                account_id,
-                MailRequest::LoadAttachments {
-                    message_id,
-                    path,
-                    uid,
-                    download: true,
-                },
-            );
+        for (key, req) in wanted {
+            self.ask_attachments(key, req);
         }
         self.refresh_thread_attachments();
+    }
+
+    /// Send `req`, which asks for the attachments of the message at `key`,
+    /// unless this opening has asked for them already: the message, its
+    /// conversation and the related lookup each want them, and every answer
+    /// carries the files' bytes.
+    pub(super) fn ask_attachments(&mut self, key: BodyKey, req: MailRequest) {
+        if self.attachments_asked.insert(key) {
+            self.attachments_loading = true;
+            self.send_to(key.0, req);
+        }
     }
 
     /// Point the drawer at the union of cached attachments across the open
@@ -346,7 +352,7 @@ impl AppModel {
                 account_id,
                 id,
                 index,
-                save,
+                action,
             } => {
                 let Some(items) = self
                     .member_key((account_id, id))
@@ -359,9 +365,23 @@ impl AppModel {
                 let Some(att) = items.get(index).cloned() else {
                     return;
                 };
-                if save {
+                let preview = match action {
+                    ChipAction::Preview(time) if for_previewer(&att) => Some(time),
+                    _ => None,
+                };
+                if action == ChipAction::Save {
                     // A card chip's save button (#213); a failed write is dropped.
                     save_attachment_as(&att.name, att.data, Some(self.window.upcast_ref()), |_| {});
+                } else if let Some(time) = preview {
+                    // Space on a chip (#625); the previewer's arrow keys
+                    // step through this message's files.
+                    crate::desktop::previewer::show(
+                        items,
+                        index,
+                        Some(self.window.upcast_ref()),
+                        time,
+                        None,
+                    );
                 } else if crate::ui::attachment_drawer::previewable(&att) {
                     // The lightbox pages through this message's previewable
                     // files, starting at the one clicked.

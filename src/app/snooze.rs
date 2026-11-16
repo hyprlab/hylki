@@ -231,7 +231,7 @@ impl AppModel {
         let messages = if messages.len() > 1 {
             messages
         } else {
-            self.reply_target().into_iter().collect()
+            self.reply_target_owned().into_iter().collect()
         };
         self.apply_snooze(action, messages);
     }

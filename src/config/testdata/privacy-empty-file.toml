@@ -22,6 +22,8 @@ thread_newest_first = false
 fold_messages = "never"
 always_show_recipients = false
 pgp_labels = false
+key_lookup = false
+keyserver_lookup = false
 reader_find_bottom = false
 single_message_card = true
 reader_mode = false
@@ -33,6 +35,7 @@ reader_default = "remember"
 reader_zoom = 100
 card_attachments = true
 attachment_drawer = true
+previewer_pictures = false
 confirm_thread_delete = true
 message_theme = "system"
 override_fonts = false
@@ -157,6 +160,10 @@ filtered = true
 tags = true
 
 [list_sorts]
+
+[list_recipients]
+
+[list_folded_days]
 
 [list_column_widths]
 

@@ -52,6 +52,7 @@ pub(super) fn machine_message(
         importance: Default::default(),
         receipt_report: None,
         merged: false,
+        peer_keys: Vec::new(),
     }
 }
 
@@ -309,7 +310,7 @@ impl AppModel {
             self.show_message(None, false);
         }
         let account_id = o.account_id;
-        let prefill = unsent_prefill(*o.message);
+        let prefill = unsent_prefill(*o.message, &self.email_of_config(account_id));
         let free = self.reader_compose.is_none() && !self.showing_contacts && !self.showing_outbox;
         match o.origin {
             super::outgoing::Origin::Split(answering)
@@ -491,6 +492,7 @@ impl AppModel {
                 own: own.contains(&email.to_lowercase()),
                 email,
                 score: 1,
+                sent: 1,
                 ..Default::default()
             })
             .collect();

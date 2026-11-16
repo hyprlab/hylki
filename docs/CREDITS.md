@@ -147,10 +147,12 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
 - [**Valentin Morice**](https://github.com/valentin-morice) ([#545](https://github.com/hyprlab/hylki/pull/545),
   [#546](https://github.com/hyprlab/hylki/pull/546),
   [#570](https://github.com/hyprlab/hylki/pull/570),
-  [#571](https://github.com/hyprlab/hylki/pull/571)): the count centered in
+  [#571](https://github.com/hyprlab/hylki/pull/571),
+  [#608](https://github.com/hyprlab/hylki/pull/608)): the count centered in
   the sidebar's unread chip, a setting to hide the account chip in the
-  message header, a message opening as one change on screen, sooner, and
-  folder counts that start from the last ones the server gave.
+  message header, a message opening as one change on screen, sooner, folder
+  counts that start from the last ones the server gave, and messages with
+  large attachments or pictures opening faster.
 - [**James Reilly**](https://github.com/hanthor) ([#588](https://github.com/hyprlab/hylki/pull/588),
   [#591](https://github.com/hyprlab/hylki/pull/591),
   [#595](https://github.com/hyprlab/hylki/pull/595),
@@ -158,13 +160,15 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   [#598](https://github.com/hyprlab/hylki/pull/598),
   [#599](https://github.com/hyprlab/hylki/pull/599),
   [#600](https://github.com/hyprlab/hylki/pull/600),
-  [#601](https://github.com/hyprlab/hylki/pull/601)): the gap above a message
+  [#601](https://github.com/hyprlab/hylki/pull/601),
+  [#602](https://github.com/hyprlab/hylki/pull/602),
+  [#603](https://github.com/hyprlab/hylki/pull/603)): the gap above a message
   card reached with `w` or `b`, Drafts shown from the cache after a send from a
   Microsoft account, OpenPGP checks of the Bcc keys, the signer and unchecked
   keys, a warning before opening a program or a script, trackers taken off
   links, owner-only exports and local mail files with the Flatpak attachment
-  purge, a settings export without OAuth client secrets, and the encrypted
-  mail cache.
+  purge, a settings export without OAuth client secrets, the encrypted
+  mail cache, Autocrypt with recipient key lookups, and encrypted drafts.
 - [**Alp Sahin**](https://github.com/AlpSha) ([#593](https://github.com/hyprlab/hylki/issues/593)):
   text in the accent's foreground color on the accent, and a theme picked in
   Settings shown over the colors of a user's `gtk.css`.
@@ -173,6 +177,12 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   composer menu entries left in the system's language, the Russian
   translation completed, Insert Template in the composer, several names on
   one send-as address, and a sender name for each signature.
+- [**reqhald**](https://github.com/reqhald) ([#665](https://github.com/hyprlab/hylki/pull/665)):
+  the composer drawn without flicker or garbled text on the NVIDIA driver.
+- [**Peter Hagen**](https://github.com/PeterHagen) ([#664](https://github.com/hyprlab/hylki/pull/664),
+  [#663](https://github.com/hyprlab/hylki/pull/663)): shared mailboxes nested
+  under their Shared and user rows in the Folders tree, and address book names
+  shown whole in their dropdowns.
 
 ## Reports, design and ideas
 

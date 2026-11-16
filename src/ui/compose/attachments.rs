@@ -520,9 +520,10 @@ fn add_open_and_menu(
                 let read = owned.clone();
                 match gtk::gio::spawn_blocking(move || std::fs::read(read)).await {
                     Ok(Ok(data)) => crate::desktop::previewer::show(
-                        vec![crate::models::Attachment { name, data }],
+                        vec![crate::models::Attachment { name, data: data.into() }],
                         0,
                         parent.as_ref(),
+                        gtk::gdk::CURRENT_TIME,
                         None,
                     ),
                     Ok(Err(e)) => {

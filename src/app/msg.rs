@@ -401,6 +401,14 @@ pub(crate) enum AppMsg {
         x: f64,
         y: f64,
     },
+    /// A message window's Copy To (#398): the folder picker over that
+    /// window, at its point (x, y). The window stays open.
+    PopoutCopyTo {
+        key: (u32, u32),
+        message: Box<Message>,
+        x: f64,
+        y: f64,
+    },
     /// A message window's single-key shortcut that needs the app (#392):
     /// the window's message and the conversation it shows.
     PopoutShortcut {
@@ -427,12 +435,13 @@ pub(crate) enum AppMsg {
         items: Vec<Attachment>,
         start: usize,
     },
-    /// A card's attachment chip (#213): open the file, or save it.
+    /// A card's attachment chip (#213): open the file, save it, or
+    /// preview it (#625).
     CardAttachment {
         account_id: u32,
         id: u32,
         index: usize,
-        save: bool,
+        action: crate::ui::message_view::ChipAction,
     },
     /// The drawer's "Show in Message": scroll the reader to the message this
     /// attachment came with (#213).
@@ -737,8 +746,14 @@ pub(crate) enum AppMsg {
     },
     /// A contact write finished (`Some` = the error to show).
     ContactWriteDone(Option<String>),
-    /// `.vcf` files chosen in the Contacts page, to import into the Hylki book.
-    ImportContacts(Vec<std::path::PathBuf>),
+    /// Files chosen to import, and the book to offer first.
+    ImportContacts {
+        paths: Vec<std::path::PathBuf>,
+        book: Option<String>,
+    },
+    /// The files are read: ask where they go and what their columns are.
+    ContactImportReady(Box<crate::contacts::import::ImportStart>),
+    RunContactImport(crate::contacts::import::ImportRequest),
     /// The import finished.
     ContactsImported(Result<crate::contacts::local::ImportOutcome, String>),
 
@@ -817,6 +832,10 @@ pub(crate) enum AppMsg {
     ListSortChanged(&'static str, bool),
     /// The open view's sort becomes every view's.
     ListSortForAll,
+    /// Sender or Recipients was chosen for the open view's rows (#657).
+    ListShowRecipients(bool),
+    /// The date sections folded in the open view changed (#659).
+    ListFoldedDays(Vec<String>),
 
     // ---- on_identity (identity.rs) ----
     /// A Gravatar one of the accounts asked for came back (#189).
@@ -1426,6 +1445,13 @@ pub(crate) enum AppMsg {
         token: u64,
         result: Result<(), String>,
     },
+    /// An encrypted draft decrypted for its editor (the pending sealed
+    /// draft's `token`): the message with its protected headers, or why
+    /// it could not be.
+    DraftDecrypted {
+        token: u64,
+        raw: Result<Vec<u8>, String>,
+    },
 
     // ---- on_events_messages (events_messages.rs) ----
     /// A worker sent a folder's messages.
@@ -1470,8 +1496,12 @@ pub(crate) enum AppMsg {
         path: String,
         body: String,
     },
-    /// A message's source arrived: show it.
-    Source { text: String },
+    /// A message's source arrived, `None` when it could not be loaded.
+    Source {
+        account_id: u32,
+        message_id: u32,
+        text: Option<String>,
+    },
     /// These, like `Body`, name the folder: a UID means a message only
     /// within its folder.
     Attachments {

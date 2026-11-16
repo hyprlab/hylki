@@ -73,8 +73,7 @@ impl AppModel {
     /// Switches to a view the index assembles, a tag (`tag_view`) or a
     /// smart folder (`smart_view`): no folder selected, the reader blank,
     /// the list reset to a colorized view whose rows cannot be restored,
-    /// junked or edited as drafts. Recipients are named in a smart folder
-    /// held to Sent, as Sent does; a tag view never is.
+    /// junked or edited as drafts.
     pub(super) fn enter_index_view(
         &mut self,
         sel: crate::ui::sidebar::Sel,
@@ -101,11 +100,6 @@ impl AppModel {
         self.message_list.emit(MessageListInput::SetSearchAccount(
             self.tag_view.as_ref().and_then(|(account, _)| *account),
         ));
-        let sent = self
-            .open_smart_folder()
-            .is_some_and(|f| f.folder == Some(config::SmartFolderKind::Sent));
-        self.message_list
-            .emit(MessageListInput::SetShowRecipient(sent));
         self.message_list
             .emit(MessageListInput::SetRestorable(false));
         self.message_list.emit(MessageListInput::SetInJunk(false));

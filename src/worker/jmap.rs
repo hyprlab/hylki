@@ -285,10 +285,10 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
             } => self.on_load_body(message_id, path, uid).await,
             MailRequest::LoadBodies { items, path } => self.on_load_bodies(items, path).await,
             MailRequest::LoadSource {
-                message_id: _,
+                message_id,
                 path,
                 uid,
-            } => self.on_load_source(path, uid).await,
+            } => self.on_load_source(message_id, path, uid).await,
             MailRequest::LoadAttachments {
                 message_id,
                 path,

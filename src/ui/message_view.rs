@@ -28,6 +28,7 @@ mod on_find;
 mod on_prefs;
 mod on_services;
 mod on_show;
+mod on_source;
 mod page_load;
 mod print;
 mod receipt_banner;
@@ -48,14 +49,15 @@ use self::page_load::PendingLoad;
 use crate::models::Message;
 
 pub(crate) use faces::set_face_tiers;
+pub(crate) use frame::ground_rgba;
 pub(crate) use frame::theme_grounds_for;
 pub(crate) use links::set_clean_links;
 pub(crate) use menu::MenuHit;
 pub(crate) use menu::{hit_menu_entries, strip_navigation_items};
 pub(crate) use remote::remote_urls;
 pub(crate) use types::{
-    CardAttachment, InviteAction, MessageViewInput, MessageViewOutput, SelectMode, TrState,
-    UnsubState,
+    CardAttachment, ChipAction, InviteAction, MessageViewInput, MessageViewOutput, SelectMode,
+    TrState, UnsubState,
 };
 pub(crate) use webview::{
     keep_tab_out_of_key_translator, new_preview_webview, private_settings, shared_web_context,
@@ -219,6 +221,11 @@ pub(crate) struct MessageView {
     webview_ready: bool,
     /// In-message find (#103).
     find_open: bool,
+    /// The message's source in place of its body (#658), and the view and
+    /// find that show it.
+    source: Option<on_source::SourceMode>,
+    source_view: gtk::TextView,
+    source_find: crate::ui::source_find::SourceFind,
     /// The split reply is open above this reader: its header bar is gone and
     /// the subject block meets the composer's grab strip instead, where the
     /// list-aligned 4px reads as cramped.

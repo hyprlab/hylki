@@ -30,7 +30,7 @@ impl AppModel {
                     self.user_set_flags(star_label(star), &many, FlagKind::Star, star);
                     return;
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target_owned() {
                     if self.thread_star_target(&m) {
                         // The conversation is the target: any member starred
                         // reads as a starred thread, and the toggle clears or
@@ -63,7 +63,7 @@ impl AppModel {
                         return;
                     }
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target_owned() {
                     self.move_to(m, FolderKind::Archive);
                 }
             }
@@ -94,7 +94,7 @@ impl AppModel {
                     self.message_list.emit(MessageListInput::ResolveDelete);
                     return;
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target_owned() {
                     // In the Outbox, deleting means giving up on sending it —
                     // there is no server-side copy to move to Trash.
                     if self.outbox_item(m.account_id, m.id).is_some() {
@@ -122,7 +122,7 @@ impl AppModel {
                         .emit(MessageListInput::Bulk(BulkAction::DeleteForever));
                     return;
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target_owned() {
                     if self.outbox_item(m.account_id, m.id).is_some() {
                         self.drop_outbox_row(m.account_id, m.id, &sender);
                         self.current = None;
@@ -152,7 +152,7 @@ impl AppModel {
                 if !many.is_empty() {
                     let read = many.iter().any(|m| m.unread);
                     self.user_set_flags(read_label(read), &many, FlagKind::Read, read);
-                } else if let Some(m) = self.reply_target() {
+                } else if let Some(m) = self.reply_target_owned() {
                     let read = m.unread;
                     self.user_set_flags(read_label(read), &[m], FlagKind::Read, read);
                 }
@@ -186,7 +186,7 @@ impl AppModel {
                         .emit(MessageListInput::Bulk(BulkAction::Spam));
                     return;
                 }
-                if let Some(m) = self.reply_target() {
+                if let Some(m) = self.reply_target_owned() {
                     if self.in_junk(&m) {
                         self.mark_ham_msg(m);
                     } else {
@@ -394,23 +394,19 @@ impl AppModel {
         }
     }
 
-    /// View Source: ask the server for the message as it keeps it.
-    fn request_source(&self, m: &Message) {
-        if let Some(path) = self.resolve_folder_path(m) {
-            self.send_to(
-                m.account_id,
-                MailRequest::LoadSource {
-                    message_id: m.id,
-                    path,
-                    uid: m.uid,
-                },
-            );
-        }
-    }
-
     /// Save as File: the whole message as the server keeps it, asked for
     /// first; the save dialog opens once it is here.
     fn save_as_file(&mut self, m: &Message) {
+        // A message open from a file is saved from the bytes it was read
+        // from, over its own window.
+        if let Some(raw) = self.file_raw(m) {
+            let parent = self
+                .popouts
+                .get(&(m.account_id, m.id))
+                .map(|p| gtk::prelude::Cast::upcast(p.window.clone()));
+            self.save_message_file(eml_file_name(&m.subject), raw.clone(), parent);
+            return;
+        }
         if let Some(path) = self.resolve_folder_path(m) {
             let token = self.next_transfer;
             self.next_transfer += 1;

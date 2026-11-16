@@ -13,6 +13,8 @@ use super::model::AppModel;
 impl AppModel {
     /// Persist all app settings together.
     pub(super) fn save_settings(&self) {
+        // Kept from disk: Settings, OpenPGP writes these itself.
+        let on_disk = config::load_privacy();
         config::save_privacy(config::PrivacyFile {
             allowed_senders: self.allowed_senders.clone(),
             auto_remote_content: self.auto_remote_content,
@@ -38,6 +40,8 @@ impl AppModel {
             fold_messages: self.fold_messages,
             always_show_recipients: self.always_show_recipients,
             pgp_labels: self.pgp_labels,
+            key_lookup: on_disk.key_lookup,
+            keyserver_lookup: on_disk.keyserver_lookup,
             reader_find_bottom: self.reader_find_bottom,
             single_message_card: self.single_message_card,
             reader_mode: self.reader_mode,
@@ -49,6 +53,7 @@ impl AppModel {
             reader_zoom: self.zoom_default,
             card_attachments: self.card_attachments,
             attachment_drawer: self.drawer_enabled,
+            previewer_pictures: self.previewer_pictures,
             confirm_thread_delete: self.confirm_thread_delete,
             message_theme: self.message_theme,
             override_fonts: self.override_fonts,
@@ -102,6 +107,8 @@ impl AppModel {
             list_sort: self.list_sort.0.to_string(),
             list_sort_reversed: self.list_sort.1,
             list_sorts: self.list_sorts.clone(),
+            list_recipients: self.list_recipients.clone(),
+            list_folded_days: self.list_folded_days.clone(),
             date_groups_default_applied: true,
             list_search_open: self.list_search_open,
             contacts_search_open: self.contacts_search_open,
@@ -176,6 +183,7 @@ impl AppModel {
             .emit(MessageListInput::SetSenderLogos(self.sender_logos));
         crate::ui::message_view::set_face_tiers(self.gravatar, self.sender_logos);
         crate::ui::message_view::set_clean_links(self.clean_links);
+        crate::desktop::previewer::set_pictures(self.previewer_pictures);
         crate::datefmt::set_style(self.date_style, self.clock_style);
         crate::ui::print_preview::set_options(self.print_options);
         self.message_list.emit(MessageListInput::SetLook {

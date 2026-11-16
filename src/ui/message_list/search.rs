@@ -61,10 +61,10 @@ pub(crate) fn load_address_names() {
         };
         let t = std::time::Instant::now();
         let names: HashMap<String, String> = cache
-            .address_history()
+            .address_history(&Default::default())
             .into_iter()
-            .filter(|(name, email, _)| !name.is_empty() && !name.eq_ignore_ascii_case(email))
-            .map(|(name, email, _)| (email, name))
+            .filter(|a| !a.name.is_empty() && !a.name.eq_ignore_ascii_case(&a.email))
+            .map(|a| (a.email, a.name))
             .collect();
         tracing::debug!("search: {} names read in {:?}", names.len(), t.elapsed());
         if let Ok(mut slot) = ADDRESS_NAMES.write() {
@@ -268,9 +268,7 @@ impl SearchScope {
     /// "All folders" keeps to (#649).
     pub(super) fn label(self, one_account: bool) -> String {
         match self {
-            SearchScope::AllFolders if one_account => {
-                i18n("This Account (Except Trash & Junk)")
-            }
+            SearchScope::AllFolders if one_account => i18n("This Account (Except Trash & Junk)"),
             SearchScope::AllFolders => i18n("All folders (except trash & junk)"),
             SearchScope::Everywhere => i18n("Everywhere"),
             SearchScope::ThisFolder => i18n("This folder"),

@@ -252,7 +252,7 @@ impl MessageList {
     /// membership for the whole-conversation actions as it goes.
     /// `full`: work out what the row shows too, not only the conversation
     /// maps; a row described without it is filled in by `grow_window`.
-    fn describe_group(
+    pub(super) fn describe_group(
         &mut self,
         key: &(u32, String),
         own: &[Rc<Message>],
@@ -641,6 +641,13 @@ impl MessageList {
             let section = day_starts
                 .as_ref()
                 .map_or(DaySection::None, |d| DaySection::of(msgs[0].timestamp, d));
+            if section != DaySection::None && self.folded_days.contains(&section) {
+                for m in &msgs {
+                    unseen.remove(&(m.account_id, m.id));
+                }
+                self.fold_group(key, msgs, section, passes, &mut shown, &mut rows);
+                continue;
+            }
             // A conversation reads like a transcript: the message that started it
             // is the row on screen, and its replies descend beneath it to the
             // newest. Where the *thread* sits among the other rows is still the
@@ -891,9 +898,11 @@ impl MessageList {
 
 /// What Right or Left does on the row the keyboard is on (#540): Right opens
 /// a folded conversation out in the list, Left folds an open one, from its
-/// head or any of its replies. `None` leaves the key to the window's own
-/// shortcuts: the row stands alone, is already as asked, or conversations
-/// do not open out in the list.
+/// head or any of its replies. Past a conversation, the keys fold and open
+/// the date section, as in a tree (#659): Left on a row whose conversation
+/// is folded, or that stands alone, folds its section, and Right on a
+/// folded section's heading opens it. `None` leaves the key to the window's
+/// own shortcuts: there is nothing to fold or open.
 fn fold_key(
     shared: &RowShared,
     keyval: gtk::gdk::Key,
@@ -910,9 +919,6 @@ fn fold_key(
         Key::Left | Key::KP_Left => false,
         _ => return None,
     };
-    if !shared.look.borrow().thread_expansion {
-        return None;
-    }
     let view = shared.view.upgrade()?;
     // Right to left the tree opens the other way, as GTK's own do.
     let open = forward != (view.direction() == gtk::TextDirection::Rtl);
@@ -921,17 +927,32 @@ fn fold_key(
         .into_iter()
         .find(|r| r.has_focus_within())
         .and_then(|r| r.position())?;
+    let here = shared.model.row(pos)?;
+    if here.meta.folded.is_some() {
+        return open.then_some(MessageListInput::FoldDay {
+            section: here.section,
+            fold: false,
+        });
+    }
     let mut head = pos;
     while head > 0 && shared.model.row(head).is_some_and(|r| r.meta.is_child) {
         head -= 1;
     }
     let row = shared.model.row(head)?;
-    let key = row.meta.key.clone()?;
-    if row.meta.expanded == open {
-        return None;
+    let conversation = row
+        .meta
+        .key
+        .clone()
+        .filter(|_| shared.look.borrow().thread_expansion);
+    match conversation {
+        Some(key) if row.meta.expanded != open => Some(MessageListInput::FoldByKey {
+            key,
+            head: (head != pos).then_some(head),
+        }),
+        _ if !open && row.section != DaySection::None => Some(MessageListInput::FoldDay {
+            section: row.section,
+            fold: true,
+        }),
+        _ => None,
     }
-    Some(MessageListInput::FoldByKey {
-        key,
-        head: (head != pos).then_some(head),
-    })
 }

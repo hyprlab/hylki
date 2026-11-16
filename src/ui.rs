@@ -14,6 +14,7 @@ mod cloud_accounts;
 mod column_bin;
 pub(crate) mod command_palette;
 pub(crate) mod compose;
+pub(crate) mod contact_import;
 mod contact_sources;
 mod contact_tree;
 pub(crate) mod contacts_browser;
@@ -48,6 +49,7 @@ pub(crate) mod rich_editor;
 pub(crate) mod send_morph;
 mod sender_row;
 pub(crate) mod showcase;
+pub(crate) mod source_find;
 pub(crate) mod sidebar;
 mod theme_picker;
 pub(crate) mod thumbnails;
@@ -103,7 +105,7 @@ pub(crate) fn close_key() -> gtk::ShortcutController {
 /// move to another widget of its own row (the scope dropdown, a button, the
 /// popover a dropdown opens). The check waits for an idle turn because the
 /// new focus widget is not set yet while the leave event runs.
-fn close_if_focus_left_row(entry: &gtk::SearchEntry, close: impl Fn() + 'static) {
+pub(crate) fn close_if_focus_left_row(entry: &gtk::SearchEntry, close: impl Fn() + 'static) {
     use gtk::prelude::*;
     if !entry.text().trim().is_empty() {
         return;

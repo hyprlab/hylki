@@ -17,6 +17,7 @@ use crate::models::Message;
 mod actions;
 mod build;
 mod faces;
+mod fold;
 mod headings;
 mod model;
 mod refresh;
@@ -25,6 +26,7 @@ mod shared;
 mod swipe;
 
 pub(crate) use faces::recipient_names;
+pub(crate) use fold::{fold_stub, is_fold_stub};
 pub(crate) use headings::{fill_headings, pill_label, tag_menu_entries};
 pub(crate) use model::{MessageModel, RowItem};
 pub(crate) use shared::{
@@ -201,12 +203,15 @@ pub(crate) struct RowMeta {
     /// conversation maps need, by this key: the rest is worked out when it
     /// comes on screen (a large folder holds tens of thousands).
     pub(super) pending: Option<(u32, String)>,
+    /// A folded date heading standing in for its section (#659): how many
+    /// conversations it holds, and how many of those are unread.
+    pub(super) folded: Option<(usize, usize)>,
 }
 
 /// The date heading a row sits under while the list is grouped by date
 /// (#435). `None` everywhere when it is not: one section, and no heading.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
-pub(super) enum DaySection {
+pub(crate) enum DaySection {
     #[default]
     None,
     Today,
@@ -245,6 +250,31 @@ impl DaySection {
             DaySection::LastFortnight => i18n("Last 14 days"),
             DaySection::Older => i18n("Older"),
         }
+    }
+
+    /// The section's name in the settings, where a view keeps the ones it
+    /// has folded (#659).
+    pub(crate) fn key(self) -> &'static str {
+        match self {
+            DaySection::None => "",
+            DaySection::Today => "today",
+            DaySection::Yesterday => "yesterday",
+            DaySection::LastWeek => "week",
+            DaySection::LastFortnight => "fortnight",
+            DaySection::Older => "older",
+        }
+    }
+
+    pub(crate) fn from_key(key: &str) -> Option<Self> {
+        [
+            DaySection::Today,
+            DaySection::Yesterday,
+            DaySection::LastWeek,
+            DaySection::LastFortnight,
+            DaySection::Older,
+        ]
+        .into_iter()
+        .find(|s| s.key() == key)
     }
 }
 

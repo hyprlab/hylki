@@ -16,6 +16,7 @@ use crate::ui::message_row::{RowData, RowShared};
 
 mod component;
 mod conversations;
+mod day_fold;
 mod filters;
 mod init;
 mod layout;
@@ -333,6 +334,8 @@ pub(crate) struct MessageList {
     /// has them.
     group_by_date: bool,
     day_headings: bool,
+    /// The date sections the view on show keeps folded (#659).
+    folded_days: Vec<crate::ui::message_row::DaySection>,
     /// A card's pills on a line under its text (#374).
     pills_below: bool,
     /// Show the column headings over a single-line list (#334).

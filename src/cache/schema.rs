@@ -197,6 +197,23 @@ CREATE TABLE IF NOT EXISTS draft_copies (
     raw         BLOB    NOT NULL,
     PRIMARY KEY (account_id, folder_path, uid)
 );
+-- OpenPGP correspondents (Autocrypt Level 1 peer state, plus what a WKD or
+-- keyserver lookup found), by lowercased address. Keys are fingerprints in
+-- Hylki's own keyring of discovered keys, never the keys themselves.
+CREATE TABLE IF NOT EXISTS pgp_peers (
+    addr                TEXT    PRIMARY KEY,
+    last_seen           INTEGER NOT NULL DEFAULT 0,
+    autocrypt_timestamp INTEGER NOT NULL DEFAULT 0,
+    autocrypt_key       TEXT    NOT NULL DEFAULT '',
+    autocrypt_digest    TEXT    NOT NULL DEFAULT '',
+    prefer_encrypt      INTEGER NOT NULL DEFAULT 0,
+    gossip_timestamp    INTEGER NOT NULL DEFAULT 0,
+    gossip_key          TEXT    NOT NULL DEFAULT '',
+    gossip_digest       TEXT    NOT NULL DEFAULT '',
+    found_key           TEXT    NOT NULL DEFAULT '',
+    found_by            TEXT    NOT NULL DEFAULT '',
+    found_checked       INTEGER NOT NULL DEFAULT 0
+);
 ";
 
 /// Every table whose rows belong to one account, by `account_id`. An account's
@@ -295,7 +312,9 @@ pub(super) const DOWNLOADED_TABLES: [&str; 3] = ["bodies", "attachments", "attac
 /// v24: `format=flowed` plain text is shown with its soft line breaks joined
 /// (#606). Plain bodies with a space before a line break are dropped once to
 /// render again; the rest of the cache stays.
-pub(super) const SCHEMA_VERSION: i64 = 24;
+/// v25: plain text links email addresses, Matrix IDs and fediverse handles
+/// (#653). Plain bodies holding an `@` are dropped once to render again.
+pub(super) const SCHEMA_VERSION: i64 = 25;
 
 /// The newest version whose change altered how bodies are *rendered* or how
 /// senders are checked. Opening a database older than this drops `bodies` and

@@ -162,6 +162,9 @@ fn editor_view() -> (webkit6::WebView, webkit6::UserContentManager) {
         .build();
     crate::desktop::memory_report::register_web_view(&webview, "editor");
     crate::ui::message_view::keep_tab_out_of_key_translator(&webview);
+    // A picture copied out of the reader comes with its `hylki-inline:` URL,
+    // which the paste script fetches to keep its bytes.
+    webview.set_cors_allowlist(&[crate::services::inline_images::CORS_PATTERN]);
     // Everything the view itself owns (its content manager's handlers,
     // its event controllers, its toolbar's buttons via the format-state
     // handler) holds the view WEAKLY. A strong clone in any of those
@@ -183,12 +186,18 @@ fn editor_view() -> (webkit6::WebView, webkit6::UserContentManager) {
     // otherwise completely silent.
     settings.set_enable_write_console_messages_to_stdout(true);
     webview.set_settings(&settings);
-    // Transparent until the document paints: a fresh WebView otherwise
-    // renders an opaque default surface (black) for its first frames,
-    // which flashes while the inline composer slides over the reader.
-    // The document itself paints `Canvas` below, so the editor's normal
-    // ground appears with the first real frame.
-    webview.set_background_color(&gtk::gdk::RGBA::new(0.0, 0.0, 0.0, 0.0));
+    // Opaque, like the reader's view (message_view::apply_webview_bg):
+    // a WebView with a transparent background keeps an alpha channel in
+    // its surface for its whole life, which the proprietary NVIDIA
+    // driver renders as flicker and garbled text through the DMABUF path
+    // (#665). The view sits at opacity 0 until its fade-in, and the
+    // document paints this same ground (see `document()` in documents.rs),
+    // so the first visible frame is unchanged.
+    let (ground, _, _) = crate::ui::message_view::theme_grounds_for(
+        &webview,
+        adw::StyleManager::default().is_dark(),
+    );
+    webview.set_background_color(&crate::ui::message_view::ground_rgba(&ground));
     // The document paints asynchronously: the host panel slides in
     // smoothly and the editor's content would land a beat later as a
     // pop. Start the view invisible and fade it in when its load

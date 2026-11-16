@@ -62,26 +62,30 @@ pub(super) const PAGE: (&str, &str) = ("#f1f1f1", "#141414");
 /// paints its in-document header this color so the two read as one surface.
 pub(super) const CHROME: (&str, &str) = ("#fafafa", "#242424");
 
-/// The theme's error, warning and success colors, which the reader's marks
-/// and verdicts wear as the app's own widgets do (#619).
+/// The theme's view foreground, which the card chrome's text and filled
+/// buttons mix from as libadwaita's do (#651), and its error, warning and
+/// success colors, which the marks and verdicts wear (#619).
 #[derive(Clone, Debug, PartialEq)]
-pub(crate) struct StatusColors {
+pub(crate) struct ThemeColors {
+    pub fg: String,
     pub error: String,
     pub warning: String,
     pub success: String,
 }
 
-/// Stock libadwaita `error_color`, `warning_color` and `success_color`, light
-/// and dark, for a scheme the app isn't in (and for the tests).
-const STATUS: [(&str, &str, &str); 2] = [
-    ("#c30000", "#905400", "#007c3d"),
-    ("#ff938c", "#ffc252", "#78e9ab"),
+/// Stock libadwaita `view_fg_color`, `error_color`, `warning_color` and
+/// `success_color`, light and dark, for a scheme the app isn't in (and for
+/// the tests).
+const THEME: [(&str, &str, &str, &str); 2] = [
+    ("rgba(0,0,6,0.8)", "#c30000", "#905400", "#007c3d"),
+    ("#ffffff", "#ff938c", "#ffc252", "#78e9ab"),
 ];
 
-impl StatusColors {
+impl ThemeColors {
     pub(crate) fn stock(dark: bool) -> Self {
-        let (error, warning, success) = STATUS[usize::from(dark)];
+        let (fg, error, warning, success) = THEME[usize::from(dark)];
         Self {
+            fg: fg.into(),
             error: error.into(),
             warning: warning.into(),
             success: success.into(),
@@ -89,14 +93,19 @@ impl StatusColors {
     }
 }
 
-/// The theme's status colors for `dark`, as `@error_color` and the rest
-/// resolve in the app's own CSS. As with the grounds, only the scheme the app
-/// is in can be read from the theme.
+/// The theme's colors for `dark`, as `@view_fg_color` and the rest resolve
+/// in the app's own CSS. As with the grounds, only the scheme the app is in
+/// can be read from the theme.
 #[allow(deprecated)] // lookup_color: named theme colors have no successor yet
-pub(crate) fn theme_status_for(widget: &impl IsA<gtk::Widget>, dark: bool) -> StatusColors {
-    let mut colors = StatusColors::stock(dark);
+pub(crate) fn theme_colors_for(widget: &impl IsA<gtk::Widget>, dark: bool) -> ThemeColors {
+    let mut colors = ThemeColors::stock(dark);
     if dark == adw::StyleManager::default().is_dark() {
         let style = widget.style_context();
+        // The foreground keeps its alpha: libadwaita's is translucent, and
+        // the fills mixed from it are lighter for that.
+        if let Some(c) = style.lookup_color("view_fg_color") {
+            colors.fg = c.to_str().into();
+        }
         for (name, slot) in [
             ("error_color", &mut colors.error),
             ("warning_color", &mut colors.warning),
@@ -122,9 +131,10 @@ thread_local! {
     /// tests) falls back to the stock GNOME values above.
     pub(super) static LIVE_GROUNDS: std::cell::RefCell<Option<(String, String, String)>> =
         const { std::cell::RefCell::new(None) };
-    /// The theme's status colors (#619), handed over as the grounds are.
-    /// `None` (as in tests) falls back to the stock libadwaita ones.
-    pub(super) static LIVE_STATUS: std::cell::RefCell<Option<StatusColors>> =
+    /// The theme's foreground and status colors (#619, #651), handed over
+    /// as the grounds are. `None` (as in tests) falls back to the stock
+    /// libadwaita ones.
+    pub(super) static LIVE_COLORS: std::cell::RefCell<Option<ThemeColors>> =
         const { std::cell::RefCell::new(None) };
     /// The tags (#71), handed to the document builder the same way, for the
     /// card headers' chips. Empty in tests: no chips.
@@ -173,7 +183,7 @@ thread_local! {
 }
 
 /// That ground as a color the WebView itself can be painted with.
-pub(super) fn ground_rgba(hex: &str) -> gtk::gdk::RGBA {
+pub(crate) fn ground_rgba(hex: &str) -> gtk::gdk::RGBA {
     let v = |i: usize| u8::from_str_radix(&hex[i..i + 2], 16).unwrap_or(0) as f32 / 255.0;
     gtk::gdk::RGBA::new(v(1), v(3), v(5), 1.0)
 }
@@ -204,6 +214,8 @@ pub(super) fn message_frame(
     } else {
         body_html(body)
     };
+    // Pictures out of the page before everything below goes over it again.
+    let doc = crate::services::inline_images::lift(doc);
     let own_style;
     let style = if reader {
         own_style = crate::config::ReaderStyle {
@@ -264,8 +276,12 @@ pub(super) fn message_frame(
         // vertical wheel deltas it cannot use, leaving the reader stuck.
         // A top-document div has no such latch: unused vertical deltas
         // bubble on to the page.
+        // Out of the Tab order: WebKit gave the frame a stop that reached
+        // none of its links and sent the next Tab back to the top of the
+        // page, so nothing after a body, its attachments among them (#625),
+        // could be reached from the keyboard. A click still focuses it.
         "<div class=\"hylki-pan\"><iframe class=\"hylki-frame\" data-key=\"{aid}:{id}\"{style} \
-         sandbox=\"allow-same-origin allow-popups\" srcdoc=\"{doc}\"></iframe></div>",
+         tabindex=\"-1\" sandbox=\"allow-same-origin allow-popups\" srcdoc=\"{doc}\"></iframe></div>",
         aid = key.0,
         id = key.1,
         style = match height {

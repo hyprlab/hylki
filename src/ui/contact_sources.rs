@@ -16,6 +16,7 @@ use crate::contacts::carddav::{self, Account, Status};
 use crate::contacts::contact_sources::{self as sources, Source};
 use crate::contacts::directory::Directory;
 use crate::i18n::{i18n, i18n_f, i18n_noop};
+use crate::ui::contacts_page::book_label_factory;
 
 mod forms;
 mod pages;
@@ -279,6 +280,8 @@ impl SimpleComponent for ContactSources {
                                     adw::ComboRow {
                                         set_title: &i18n("Save new contacts in"),
                                         set_subtitle: &i18n("Unless another is picked when the contact is made."),
+                                        set_factory: Some(&book_label_factory(true)),
+                                        set_list_factory: Some(&book_label_factory(false)),
                                         connect_selected_notify[sender] => move |row| {
                                             sender.input(ContactSourcesInput::ChangeBook(row.selected()));
                                         },

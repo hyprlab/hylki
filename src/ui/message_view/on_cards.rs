@@ -2,7 +2,7 @@
 //! focus, scroll places and live patches.
 
 use super::snippets::tag_chips_html;
-use super::types::{CardAttachment, MessageViewOutput, SelectMode};
+use super::types::{CardAttachment, ChipAction, MessageViewOutput, SelectMode};
 use super::MessageView;
 use adw::prelude::*;
 use relm4::prelude::*;
@@ -27,6 +27,12 @@ impl MessageView {
         &mut self,
         map: std::collections::HashMap<(u32, u32), Vec<CardAttachment>>,
     ) {
+        // Handed over again with every refresh of the drawer, most often
+        // unchanged: patching the same rows in only lays the page out again.
+        // A page loaded since takes them in on its own (`on_rendered`).
+        if map == self.card_atts {
+            return;
+        }
         self.card_atts = map;
         let keys: Vec<(u32, u32)> = self.thread.iter().map(|m| (m.account_id, m.id)).collect();
         self.patch_card_atts(&keys);
@@ -52,14 +58,14 @@ impl MessageView {
         account_id: u32,
         id: u32,
         index: usize,
-        save: bool,
+        action: ChipAction,
         sender: &ComponentSender<Self>,
     ) {
         let _ = sender.output(MessageViewOutput::AttachmentAction {
             account_id,
             id,
             index,
-            save,
+            action,
         });
     }
 
@@ -226,6 +232,9 @@ impl MessageView {
                 Some(page) if self.body_page() == "loading" => {
                     page.grab_focus();
                     self.focus_held.set(true);
+                }
+                _ if self.source_shown() => {
+                    self.source_view.grab_focus();
                 }
                 _ => {
                     self.webview.grab_focus();

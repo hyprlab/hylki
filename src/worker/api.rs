@@ -398,6 +398,10 @@ pub(crate) struct OutgoingMessage {
     /// the Outbox with the reason, rather than opening it in a composer,
     /// which for a merge could be a window for each of hundreds.
     pub(crate) merged: bool,
+    /// Keys for recipients that are not in the user's keyring, found by
+    /// Hylki (Autocrypt, gossip, WKD): (address, fingerprint in Hylki's own
+    /// keyring), as the composer showed them. Read only to encrypt.
+    pub(crate) peer_keys: Vec<(String, String)>,
 }
 
 /// The calendar half of an outgoing message (#223).
@@ -652,8 +656,11 @@ pub(crate) enum WorkerEvent {
         message_id: u32,
         check: crate::models::SenderCheck,
     },
+    /// A message's raw source, `None` when it could not be loaded (the
+    /// error is reported apart): a reader waiting on it stops waiting.
     Source {
-        text: String,
+        message_id: u32,
+        text: Option<String>,
     },
     Attachments {
         path: String,

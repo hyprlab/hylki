@@ -19,14 +19,36 @@ use crate::i18n::i18n;
 /// never written to disk. `None` when the registry can't be reached (then
 /// keep everything rather than hide it all).
 pub(super) fn registry_books() -> Option<HashMap<String, String>> {
-    let sources: HashMap<String, String> = registry_sources()?
-        .into_iter()
-        .map(|(_, uid, data)| (uid, data))
-        .collect();
+    Some(books_from(&source_map()?))
+}
+
+/// How each book keeps a new group, by book UID.
+pub(super) type BookFormats = HashMap<String, Option<GroupFormat>>;
+
+/// [`registry_books`], and how each book keeps a new group
+/// ([`formats_from`]), from one call to the registry.
+pub(super) fn registry_books_and_formats() -> (Option<HashMap<String, String>>, BookFormats) {
+    match source_map() {
+        Some(sources) => (Some(books_from(&sources)), formats_from(&sources)),
+        None => (None, HashMap::new()),
+    }
+}
+
+/// The registry's sources by UID.
+fn source_map() -> Option<HashMap<String, String>> {
+    Some(
+        registry_sources()?
+            .into_iter()
+            .map(|(_, uid, data)| (uid, data))
+            .collect(),
+    )
+}
+
+fn books_from(sources: &HashMap<String, String>) -> HashMap<String, String> {
     let mut books = HashMap::new();
     let off = crate::contacts::contact_sources::off();
     let names = crate::contacts::contact_sources::names();
-    for (uid, data) in &sources {
+    for (uid, data) in sources {
         // An address book, and not switched off (GOA sets the book source's
         // [Data Source] Enabled=false when Contacts is toggled off for the
         // account). Only that section's Enabled counts — other sections
@@ -34,17 +56,17 @@ pub(super) fn registry_books() -> Option<HashMap<String, String>> {
         // for Hylki in Settings → Contacts, it or its account.
         if data.contains("[Address Book]")
             && !data_source_disabled(data)
-            && crate::contacts::contact_sources::book_used(uid, &sources, &off)
+            && crate::contacts::contact_sources::book_used(uid, sources, &off)
         {
-            let name = book_display_name(data, &sources);
-            let account = names.get(&crate::contacts::contact_sources::group_of(uid, &sources));
+            let name = book_display_name(data, sources);
+            let account = names.get(&crate::contacts::contact_sources::group_of(uid, sources));
             books.insert(
                 uid.clone(),
                 with_given_name(&with_account_name(&name, account), names.get(uid)),
             );
         }
     }
-    Some(books)
+    books
 }
 
 /// Every source the EDS registry holds: (object path, UID, key file).
@@ -193,28 +215,31 @@ fn book_account(
 }
 
 /// How each address book in the registry keeps a new group: Evolution's
-/// lists on this computer, Apple's groups on a CardDAV server (what iCloud,
-/// Fastmail and the Apple and DAVx⁵ clients read), none on Google, which
-/// keeps a group as a person with odd addresses, nor on Microsoft 365 or a
-/// directory, which take none.
-pub(super) fn book_group_formats() -> HashMap<String, Option<GroupFormat>> {
-    let Some(sources) = registry_sources() else {
-        return HashMap::new();
-    };
-    let sources: HashMap<String, String> = sources
-        .into_iter()
-        .map(|(_, uid, data)| (uid, data))
-        .collect();
+/// lists on this computer, categories on Nextcloud, Apple's groups on
+/// another CardDAV server (what iCloud, Fastmail and the Apple and DAVx⁵
+/// clients read), none on Google, which keeps a group as a person with odd
+/// addresses, nor on Microsoft 365 or a directory, which take none.
+fn formats_from(sources: &HashMap<String, String>) -> BookFormats {
     sources
         .iter()
         .filter(|(_, data)| data.contains("[Address Book]"))
         .map(|(uid, data)| {
-            (
-                uid.clone(),
-                group_format_for(book_account(data, &sources).0.as_deref()),
-            )
+            let format = if keeps_categories(data) {
+                Some(GroupFormat::Categories)
+            } else {
+                group_format_for(book_account(data, sources).0.as_deref())
+            };
+            (uid.clone(), format)
         })
         .collect()
+}
+
+/// Whether a book is Nextcloud's (or ownCloud's, which it came from), whose
+/// books are all under `/remote.php/`: its Contacts app knows a group only
+/// as a category on each member's card (#652).
+pub(super) fn keeps_categories(book_data: &str) -> bool {
+    crate::desktop::platform::keyfile_value(book_data, "WebDAV Backend", "ResourcePath")
+        .is_some_and(|path| path.to_ascii_lowercase().contains("/remote.php/"))
 }
 
 pub(super) fn group_format_for(backend: Option<&str>) -> Option<GroupFormat> {

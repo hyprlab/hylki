@@ -228,7 +228,11 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
             message_id,
             check: Box::new(check),
         },
-        WorkerEvent::Source { text, .. } => AppMsg::Source { text },
+        WorkerEvent::Source { message_id, text } => AppMsg::Source {
+            account_id,
+            message_id,
+            text,
+        },
         WorkerEvent::Attachments {
             path,
             message_id,

@@ -46,9 +46,10 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
                 template_gid = Some(gid);
             }
         }
+        // Never signed; encrypted to the user when it is to be sent
+        // encrypted (see `build_draft`).
         let mut message = OutgoingMessage {
             sign: false,
-            encrypt: false,
             ..*message
         };
         restore_msgid_case(cache.as_ref(), &mut message);

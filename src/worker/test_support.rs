@@ -24,6 +24,8 @@ pub(super) fn sample_account() -> AccountConfig {
         folder_sort: None,
         sign_by_default: false,
         plain_subject: false,
+        autocrypt: false,
+        autocrypt_mutual: false,
         graph_directory: false,
         graph_directory_only: false,
         graph_label_names: false,
@@ -120,6 +122,7 @@ pub(super) fn sample_outgoing() -> OutgoingMessage {
         importance: Default::default(),
         receipt_report: None,
         merged: false,
+        peer_keys: Vec::new(),
     }
 }
 

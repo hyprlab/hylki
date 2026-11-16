@@ -12,6 +12,7 @@ use crate::ui::message_window::MessageWindowInput;
 
 use super::model::AppModel;
 use super::msg::AppMsg;
+use super::uri_queue::FILE_FOLDER;
 
 /// One entry of a card's menu that does what a list row's action does.
 ///
@@ -207,11 +208,17 @@ impl AppModel {
             sections.push(here);
         }
         sections.push(answer_entries(&item, kind));
-        sections.push(flag_entries(&item, &m));
-        if let Some(tags) = self.card_tags_entry(&m, sender) {
-            sections.push(vec![tags]);
+        if m.folder_id == FILE_FOLDER {
+            // A message open from a file (#398) has no server to star,
+            // tag, file or delete it on: it can only be copied into one.
+            sections.push(vec![self.copy_to_entry(&m, popout, (x, y), sender)]);
+        } else {
+            sections.push(flag_entries(&item, &m));
+            if let Some(tags) = self.card_tags_entry(&m, sender) {
+                sections.push(vec![tags]);
+            }
+            sections.push(self.card_place_entries(&item, &m, kind, popout, (x, y), sender));
         }
-        sections.push(self.card_place_entries(&item, &m, kind, popout, (x, y), sender));
         sections.push(vec![
             item(
                 RowAction::AddContact,
@@ -241,6 +248,35 @@ impl AppModel {
         sections.push(source_entries(&item, &m, &hit));
         sections.push(self.card_print_entries(popout, sender));
         show_context_menu(&parent, x, y, sections);
+    }
+
+    /// Copy To…, its picker over the window the menu is in.
+    fn copy_to_entry(
+        &self,
+        m: &Message,
+        popout: Option<(u32, u32)>,
+        (x, y): (f64, f64),
+        sender: &ComponentSender<Self>,
+    ) -> MenuEntry {
+        let s = sender.input_sender().clone();
+        let message = m.clone();
+        MenuEntry::new(i18n("Copy To…"), move || {
+            let _ = s.send(match popout {
+                Some(key) => AppMsg::PopoutCopyTo {
+                    key,
+                    message: Box::new(message.clone()),
+                    x,
+                    y,
+                },
+                None => AppMsg::ListCopyTo {
+                    messages: vec![message.clone()],
+                    offer_whole: false,
+                    x,
+                    y,
+                },
+            });
+        })
+        .icon("edit-copy-symbolic")
     }
 
     /// The Tags submenu, when there are tags.
@@ -315,20 +351,8 @@ impl AppModel {
                 .icon("folder-symbolic")
                 .keys(MessageAction::MoveTo.keys(KeysOf::Main)),
             );
-            let s = sender.input_sender().clone();
-            let message = m.clone();
-            acts.push(
-                MenuEntry::new(i18n("Copy To…"), move || {
-                    let _ = s.send(AppMsg::ListCopyTo {
-                        messages: vec![message.clone()],
-                        offer_whole: false,
-                        x,
-                        y,
-                    });
-                })
-                .icon("edit-copy-symbolic"),
-            );
         }
+        acts.push(self.copy_to_entry(m, popout, (x, y), sender));
         acts.push(item(RowAction::Archive, i18n("Archive"), "mail-archive"));
         // Snooze (#527): the card's message alone, as its other actions.
         if let Some(snoozed) = self.snooze_offer(m.account_id, kind) {

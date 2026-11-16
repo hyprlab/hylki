@@ -43,13 +43,16 @@ pub(super) fn wrap_subtitle(row: &impl IsA<gtk::Widget>, chars: i32) {
 /// which already says "a copy": the originals are the Sent row's business.
 /// Declared once because the row is rebuilt whenever an editor opens, and the
 /// two copies drifting apart is how a hint goes stale.
+///
+/// Marked with `i18n_noop` because the extractor only sees literals inside a
+/// helper's call, and these are translated where the row is built (#656).
 pub(super) const SENT_COPY_HINT: &str =
-    "Any folder, inbox included. Only applies to mail sent from this Hylki client \
-     going forward. Not recursive.";
+    i18n_noop("Any folder, the Inbox included. Applies only to mail sent from here, starting now.");
 
-pub(super) const REPLY_COPIES_HINT: &str =
-    "Where the message replied to is when the reply is sent. Replies to mail in Sent, \
-     Drafts, Trash or Junk go with sent mail.";
+pub(super) const REPLY_COPIES_HINT: &str = i18n_noop(
+    "Uses the original's folder at the time the reply is sent. Replies to mail in Sent, \
+     Drafts, Trash or Junk go with sent mail.",
+);
 
 /// Whether a list row survives the page's search text (#141): matched
 /// against the row's title and, for an action row, its subtitle.
@@ -273,6 +276,8 @@ pub(super) fn read_account(
             .and_then(|i| crate::config::FolderSort::ALL.get(i as usize).copied()),
         sign_by_default: widgets.form.sign_default_row.is_active(),
         plain_subject: !widgets.form.hide_subject_row.is_active(),
+        autocrypt: widgets.form.autocrypt_row.is_active(),
+        autocrypt_mutual: widgets.form.autocrypt_mutual_row.is_active(),
         graph_directory: protocol == Protocol::Graph
             && widgets.form.graph_directory_row.is_active(),
         graph_directory_only: protocol == Protocol::Graph
@@ -531,6 +536,11 @@ pub(super) fn fill_editor(widgets: &AccountsWindowWidgets, acc: &AccountConfig) 
         .sign_default_row
         .set_active(acc.sign_by_default);
     widgets.form.hide_subject_row.set_active(!acc.plain_subject);
+    widgets.form.autocrypt_row.set_active(acc.autocrypt);
+    widgets
+        .form
+        .autocrypt_mutual_row
+        .set_active(acc.autocrypt_mutual);
     widgets
         .form
         .reply_copies_row
@@ -654,6 +664,8 @@ pub(super) fn clear_editor(widgets: &AccountsWindowWidgets) {
     widgets.form.folder_sort_row.set_selected(0);
     widgets.form.sign_default_row.set_active(false);
     widgets.form.hide_subject_row.set_active(true);
+    widgets.form.autocrypt_row.set_active(false);
+    widgets.form.autocrypt_mutual_row.set_active(false);
     widgets.form.reply_copies_row.set_selected(0);
     widgets.form.graph_directory_row.set_active(false);
     widgets.form.directory_only_row.set_active(false);

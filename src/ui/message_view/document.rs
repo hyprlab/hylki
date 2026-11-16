@@ -6,9 +6,9 @@
 use super::wrapper_css::wrapper_css;
 
 use super::frame::{
-    message_frame, StatusColors, CHROME, GROUND, LIVE_ATTS, LIVE_FOLDBAR, LIVE_FOLDED,
-    LIVE_GROUNDS, LIVE_INVITE, LIVE_MARKS, LIVE_READ, LIVE_RECEIPT, LIVE_STATUS, LIVE_TAGS,
-    LIVE_TEMPLATES, LIVE_TRANSLATE, LIVE_UNSUB, PAGE,
+    message_frame, ThemeColors, CHROME, GROUND, LIVE_ATTS, LIVE_COLORS, LIVE_FOLDBAR, LIVE_FOLDED,
+    LIVE_GROUNDS, LIVE_INVITE, LIVE_MARKS, LIVE_READ, LIVE_RECEIPT, LIVE_TAGS, LIVE_TEMPLATES,
+    LIVE_TRANSLATE, LIVE_UNSUB, PAGE,
 };
 use super::html::attr_escape;
 use super::invite::invite_row_html;
@@ -91,12 +91,13 @@ fn grounds(dark: bool) -> (String, String, String) {
         })
 }
 
-/// The colors of the marks and verdicts (#619): the live theme's when the
-/// reader set them, stock libadwaita otherwise (tests).
-fn status_colors(dark: bool) -> StatusColors {
-    LIVE_STATUS
+/// The chrome's foreground and the colors of the marks and verdicts (#619):
+/// the live theme's when the reader set them, stock libadwaita otherwise
+/// (tests).
+fn theme_colors(dark: bool) -> ThemeColors {
+    LIVE_COLORS
         .with(|s| s.borrow().clone())
-        .unwrap_or_else(|| StatusColors::stock(dark))
+        .unwrap_or_else(|| ThemeColors::stock(dark))
 }
 
 /// What every card of one document shares.
@@ -189,7 +190,7 @@ impl MessageView {
         // Paint the wrapper and the (still-loading) iframes in the theme color so
         // there's no white flash before each message's content renders.
         let (bg, deep, chrome) = grounds(dark);
-        let status = status_colors(dark);
+        let colors = theme_colors(dark);
         // Each message card only reads as a card against a slightly deeper
         // ground than its own; a full-bleed single message sits on its own
         // ground — the chrome ground when it paints no background (see
@@ -241,7 +242,7 @@ impl MessageView {
                 &bg,
                 &chrome,
                 accent,
-                &status,
+                &colors,
                 toggle_color,
                 &plain_css
             ),

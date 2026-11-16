@@ -1,6 +1,8 @@
 //! Which messages an action applies to: the open one, the list's
 //! selection, or the conversation.
 
+use std::borrow::Cow;
+
 use adw::prelude::*;
 use relm4::prelude::*;
 
@@ -17,8 +19,19 @@ impl AppModel {
     /// several) selected there is no way to say which message an action would
     /// mean. A draft selected in Drafts is open in the editor, not the
     /// reader, and is the target itself, so its keys work (#392).
-    pub(super) fn reply_target(&self) -> Option<Message> {
-        self.open_target().or_else(|| self.selected_draft())
+    ///
+    /// Lent when the reader holds it: the toolbar asks for it a dozen times
+    /// on every redraw, and a message with pictures in its body runs to
+    /// megabytes. Only a selected draft, a list row without a body, is built.
+    pub(super) fn reply_target(&self) -> Option<Cow<'_, Message>> {
+        self.open_target()
+            .map(Cow::Borrowed)
+            .or_else(|| self.selected_draft().map(Cow::Owned))
+    }
+
+    /// [`Self::reply_target`] for an action that keeps the message.
+    pub(super) fn reply_target_owned(&self) -> Option<Message> {
+        self.reply_target().map(Cow::into_owned)
     }
 
     /// The draft selected in the list and open in the reader's editor, as
@@ -33,16 +46,15 @@ impl AppModel {
     }
 
     /// [`Self::reply_target`] among the messages the reader shows.
-    fn open_target(&self) -> Option<Message> {
+    fn open_target(&self) -> Option<&Message> {
         if self.current_thread.len() <= 1 {
-            return self.current.clone();
+            return self.current.as_ref();
         }
         match self.list_selection.as_slice() {
             [(account_id, id)] => self
                 .current_thread
                 .iter()
-                .find(|m| m.account_id == *account_id && m.id == *id)
-                .cloned(),
+                .find(|m| m.account_id == *account_id && m.id == *id),
             _ => None,
         }
     }
@@ -151,7 +163,7 @@ impl AppModel {
     pub(super) fn compose_target(&self) -> Option<Message> {
         // Not a draft being edited: answering one's own draft is not
         // what r or f on it mean.
-        let m = self.open_target()?;
+        let m = self.open_target()?.clone();
         tracing::debug!(
             target: "hylki::reply",
             "toolbar target: selected {}:{} from={} cards={} thread={} head={}",

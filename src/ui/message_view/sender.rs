@@ -52,17 +52,17 @@ pub(super) fn confirm_trust(
     dialog.present();
 }
 
-/// Get the sender's key into the keyring (#133): the Autocrypt key the
-/// message carried first, then WKD and the keyservers by address and by the
-/// key id the signature named. Runs off the main thread (network).
+/// Get the sender's key (#133): the Autocrypt key the message carried
+/// first, into Hylki's own keyring of found keys (it is the sender's say-so
+/// alone, so it stays out of the user's keyring); then WKD and the
+/// keyservers by address and by the key id the signature named, into the
+/// user's keyring, as asked. Runs off the main thread (network).
 pub(super) fn fetch_sender_key(pgp: &crate::models::PgpStatus) -> Result<String, String> {
     let gpg = crate::mail::pgp::Gpg::system();
     if let Some(b64) = &pgp.autocrypt {
         if let Some(bytes) = crate::encoding::base64_decode(b64) {
-            if let Ok(s) = crate::mail::pgp::import_keys(&gpg, &bytes) {
-                if !s.fingerprints.is_empty() {
-                    return Ok(i18n("The sender's key was imported from the message."));
-                }
+            if crate::mail::pgp::discovery::take_sender_key(&pgp.sender_addr, &bytes).is_ok() {
+                return Ok(i18n("The sender's key was taken from the message."));
             }
         }
     }

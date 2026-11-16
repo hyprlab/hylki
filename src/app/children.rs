@@ -39,6 +39,7 @@ fn message_list_output_msg(out: MessageListOutput) -> AppMsg {
         MessageListOutput::SelectionKeys(keys) => AppMsg::SelectionKeys(keys),
         MessageListOutput::Checked(count) => AppMsg::ListChecked(count),
         MessageListOutput::ViewMissed => AppMsg::EmitUnifiedNow,
+        MessageListOutput::FoldedDays(keys) => AppMsg::ListFoldedDays(keys),
         MessageListOutput::MoveMessages {
             account_id,
             dest,
@@ -144,12 +145,12 @@ fn message_view_output_msg(out: MessageViewOutput) -> AppMsg {
             account_id,
             id,
             index,
-            save,
+            action,
         } => AppMsg::CardAttachment {
             account_id,
             id,
             index,
-            save,
+            action,
         },
         MessageViewOutput::CardMenu { message, x, y, hit } => AppMsg::CardMenu {
             message,
@@ -279,7 +280,9 @@ fn contacts_page_output_msg(out: ContactsPageOutput) -> AppMsg {
         ContactsPageOutput::CopyContacts { to, cards } => AppMsg::CopyContacts { to, cards },
         ContactsPageOutput::RenameBook { uid, name } => AppMsg::RenameBook { uid, name },
         ContactsPageOutput::Tree(tree) => AppMsg::ContactTree(tree),
-        ContactsPageOutput::ImportContacts(paths) => AppMsg::ImportContacts(paths),
+        ContactsPageOutput::ImportContacts { paths, book } => {
+            AppMsg::ImportContacts { paths, book }
+        }
         ContactsPageOutput::WantSuggestions => AppMsg::ContactSuggestions,
         ContactsPageOutput::ShowPhoto { name, data } => {
             // The lightbox routes by extension — a bare contact
@@ -287,7 +290,10 @@ fn contacts_page_output_msg(out: ContactsPageOutput) -> AppMsg {
             // hung the UI trying to parse it. Name it by content.
             let name = format!("{name}.{}", crate::models::image_ext(&data));
             AppMsg::ShowLightbox {
-                items: vec![crate::models::Attachment { name, data }],
+                items: vec![crate::models::Attachment {
+                    name,
+                    data: data.into(),
+                }],
                 start: 0,
             }
         }

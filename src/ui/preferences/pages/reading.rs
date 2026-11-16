@@ -25,6 +25,7 @@ pub(in crate::ui::preferences) struct ReadingPage {
     pub(in crate::ui::preferences) always_show_recipients_row: adw::SwitchRow,
     pub(in crate::ui::preferences) pgp_labels_row: adw::SwitchRow,
     pub(in crate::ui::preferences) find_place_row: adw::ComboRow,
+    pub(in crate::ui::preferences) previewer_pictures_row: adw::SwitchRow,
     pub(in crate::ui::preferences) reader_switch_row: adw::SwitchRow,
     pub(in crate::ui::preferences) reader_default_row: adw::ComboRow,
     pub(in crate::ui::preferences) print_page_numbers_row: adw::SwitchRow,
@@ -183,6 +184,17 @@ impl ReadingPage {
                             let _ = sender.output(PrefOutput::SetReaderFindBottom(row.selected() == 1));
                         },
                     },
+
+                    // Off, Space shows pictures and PDFs in the full-window
+                    // preview, as a click does; other files go to Sushi
+                    // either way (#625).
+                    #[name = "previewer_pictures_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Space shows pictures and PDFs in Sushi"),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetPreviewerPictures(row.is_active()));
+                        },
+                    },
                 },
 
                 add = &adw::PreferencesGroup {
@@ -255,6 +267,7 @@ impl ReadingPage {
             always_show_recipients_row,
             pgp_labels_row,
             find_place_row,
+            previewer_pictures_row,
             reader_switch_row,
             reader_default_row,
             print_page_numbers_row,

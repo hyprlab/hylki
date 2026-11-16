@@ -76,7 +76,7 @@ pub(crate) fn extract_body(raw: &[u8]) -> String {
         match &part.body {
             PartType::Text(text) if !text.trim().is_empty() => {
                 inner.push_str("<div class=\"hylki-plain\">");
-                inner.push_str(&linkify(&display_text(part, text)));
+                inner.push_str(&linkify(&crate::mail::flowed::readable(part, text)));
                 inner.push_str("</div>");
             }
             PartType::Binary(bytes) | PartType::InlineBinary(bytes) => {
@@ -111,7 +111,7 @@ pub(crate) fn extract_body(raw: &[u8]) -> String {
                     body: PartType::Text(text),
                     ..
                 },
-            ) => Some(display_text(part, text)),
+            ) => Some(crate::mail::flowed::readable(part, text)),
             _ => parsed.body_text(0),
         };
         return match text {
@@ -120,18 +120,6 @@ pub(crate) fn extract_body(raw: &[u8]) -> String {
         };
     }
     wrap_fragment(&inner)
-}
-
-/// The text of a plain part as the reader shows it: a `format=flowed` part
-/// with its soft line breaks joined (#606), any other as it is.
-fn display_text<'a>(
-    part: &mail_parser::MessagePart<'_>,
-    text: &'a str,
-) -> std::borrow::Cow<'a, str> {
-    match crate::mail::flowed::flowed_params(part) {
-        Some(delsp) => crate::mail::flowed::unflow(text, delsp).into(),
-        None => text.into(),
-    }
 }
 
 /// Rewrite `cid:` resource references in `html` to `data:` URIs built from the
@@ -267,11 +255,12 @@ pub(super) fn image_mime(part: &mail_parser::MessagePart) -> Option<String> {
     safe.then(|| format!("image/{}", subtype.to_ascii_lowercase()))
 }
 
-/// HTML-escape plain text and turn bare URLs into clickable links. Runs on raw
-/// (unescaped) text: non-URL spans are escaped as usual; each URL becomes an
-/// `<a href>` whose scheme is always http(s) (a bare `www.` host is prefixed with
+/// HTML-escape plain text and turn bare URLs, email addresses, Matrix IDs and
+/// fediverse handles into clickable links. Runs on raw (unescaped) text:
+/// non-link spans are escaped as usual; each link becomes an `<a href>` whose
+/// scheme is always http(s) or mailto (a bare `www.` host is prefixed with
 /// `https://`), so no `javascript:`-style link can be forged. Links open in the
-/// external browser via the reader's navigation policy.
+/// external browser via the reader's navigation policy, addresses in a composer.
 pub(super) fn linkify(text: &str) -> String {
     let mut out = String::new();
     let mut i = 0;
@@ -288,13 +277,16 @@ pub(super) fn linkify(text: &str) -> String {
     out
 }
 
-/// Find the next bare URL at or after `from`, returning `(start, end, href)`.
+/// Find the next link at or after `from`, returning `(start, end, href)`.
 fn next_url(text: &str, from: usize) -> Option<(usize, usize, String)> {
     let mut i = from;
     while i < text.len() {
         if !text.is_char_boundary(i) {
             i += 1;
             continue;
+        }
+        if let Some(link) = crate::mail::at_link::at_link(text, from, i) {
+            return Some(link);
         }
         let rest = &text[i..];
         let (prefix, add_https) = if rest.starts_with("https://") {
@@ -314,8 +306,14 @@ fn next_url(text: &str, from: usize) -> Option<(usize, usize, String)> {
             c.is_whitespace() || matches!(c, '(' | '<' | '[' | '{' | '"' | '\'' | '|')
         });
         let end = consume_url(text, i);
+        // `www.name@host` is an email address, found at its `@`.
+        let www_mail = add_https
+            && text[i..end]
+                .split('/')
+                .next()
+                .is_some_and(|h| h.contains('@'));
         // Reject a scheme with nothing (usable) after it.
-        if boundary && end > i + prefix.len() {
+        if boundary && !www_mail && end > i + prefix.len() {
             let url = &text[i..end];
             let href = if add_https {
                 format!("https://{url}")

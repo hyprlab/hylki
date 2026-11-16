@@ -119,6 +119,7 @@ impl MessageList {
             sort_reversed: false,
             group_by_date: crate::config::load_privacy().list_group_by_date,
             day_headings: false,
+            folded_days: Vec::new(),
             pills_below: crate::config::load_privacy().list_pills_below,
             headings: false,
             headings_bar: gtk::Box::new(gtk::Orientation::Horizontal, 8),

@@ -408,7 +408,7 @@ fn attachments_downloaded_under_one_label_answer_for_the_others() {
         7,
         &[Attachment {
             name: "spec.pdf".into(),
-            data: vec![1, 2, 3],
+            data: [1, 2, 3].as_slice().into(),
         }],
     );
 

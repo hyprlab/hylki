@@ -36,6 +36,9 @@ impl MessageView {
             entry.set_text("");
             self.return_focus_from_find(&entry);
         }
+        if self.source_shown() {
+            self.source_find_changed("");
+        }
         self.eval_find("hylkiFindClear()");
     }
 
@@ -84,6 +87,10 @@ impl MessageView {
     }
 
     pub(super) fn on_find_changed(&mut self, text: String) {
+        if self.source_shown() {
+            self.source_find_changed(&text);
+            return;
+        }
         let text = text.trim();
         if text.is_empty() {
             self.find_matches = None;

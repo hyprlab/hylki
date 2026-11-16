@@ -30,6 +30,12 @@ msgstr ""
 msgid "Release Notes"
 msgstr "Note di rilascio"
 
+msgid "Credits"
+msgstr ""
+
+msgid "Contributors and translators"
+msgstr ""
+
 msgid "Keyring Setup Help"
 msgstr "Aiuto configurazione portachiavi"
 
@@ -55,15 +61,14 @@ msgstr "Licenza (GNU AGPL v3)"
 msgid "Buy Me a Coffee"
 msgstr "Offrimi un caffè"
 
-#. Contributors — people outside Hyprlab whose patches are in the app.
+#. Contributors: people outside Hyprlab whose patches are in the app.
 msgid "Special thanks to these contributors"
 msgstr "Un ringraziamento speciale a questi contributori"
 
-#. Translators — the same list, with the languages each one carried.
+#. Translators: the same list, with the languages each one carried.
 msgid "Translated by"
 msgstr "Tradotto da"
 
-#. Footer.
 msgid "© 2026 Hyprlab"
 msgstr "© 2026 Hyprlab"
 
@@ -314,6 +319,10 @@ msgstr ""
 msgid "Create Task…"
 msgstr "Crea"
 
+#, fuzzy
+msgid "Copy To…"
+msgstr "Sposta in…"
+
 msgid "Tags"
 msgstr "Etichette"
 
@@ -327,10 +336,6 @@ msgid "Mark as Spam"
 msgstr "Segna come indesiderato"
 
 msgid "Move To…"
-msgstr "Sposta in…"
-
-#, fuzzy
-msgid "Copy To…"
 msgstr "Sposta in…"
 
 msgid "Archive"
@@ -354,11 +359,141 @@ msgstr "Stampa…"
 msgid "New Message"
 msgstr "Nuovo messaggio"
 
-msgid "Hylki Address Book"
-msgstr "Rubrica Hylki"
+#, fuzzy
+msgid "A group needs a name."
+msgstr "Nome cartella"
+
+msgid ""
+"A group in this address book is kept on its people's cards, so it needs at "
+"least one person."
+msgstr ""
 
 msgid "Hylki cannot change this kind of group"
 msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Work"
+msgstr ""
+
+msgid "Mobile"
+msgstr ""
+
+msgid "Fax"
+msgstr ""
+
+msgid "{field} ({label})"
+msgstr ""
+
+#, fuzzy
+msgid "Do not import"
+msgstr "Impossibile importare: {e}"
+
+#, fuzzy
+msgid "Full name"
+msgstr "Nome cartella"
+
+msgid "First name"
+msgstr "Nome"
+
+#, fuzzy
+msgid "Middle name"
+msgstr "Nome cartella"
+
+msgid "Last name"
+msgstr "Cognome"
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr "Soprannome"
+
+#, fuzzy
+msgid "Company"
+msgstr "Composizione"
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+#, fuzzy
+msgid "Notes"
+msgstr "Nota"
+
+msgid "Birthday"
+msgstr "Compleanno"
+
+#, fuzzy
+msgid "Birth year"
+msgstr "Compleanno"
+
+#, fuzzy
+msgid "Birth month"
+msgstr "Si ripete ogni mese"
+
+#, fuzzy
+msgid "Birth day"
+msgstr "Compleanno"
+
+#, fuzzy
+msgid "Groups"
+msgstr "Gruppo sinistra"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Phone"
+msgstr "Telefono"
+
+#, fuzzy
+msgid "Email label"
+msgstr "Client e-mail"
+
+#, fuzzy
+msgid "Phone label"
+msgstr "Telefono"
+
+#, fuzzy
+msgid "Address label"
+msgstr "Rubrica"
+
+#, fuzzy
+msgid "Website label"
+msgstr "Sito web"
+
+msgid "Address"
+msgstr "Indirizzo"
+
+msgid "Street"
+msgstr ""
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "State or region"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
+msgid "Hylki Address Book"
+msgstr "Rubrica Hylki"
 
 msgid "On This Computer"
 msgstr "Su questo computer"
@@ -921,6 +1056,12 @@ msgstr "scade il {date}"
 msgid "Until {date}"
 msgstr "scade il {date}"
 
+msgid "Sender"
+msgstr "Mittente"
+
+msgid "Recipients"
+msgstr "Destinatari"
+
 msgid "Sort by"
 msgstr "Ordina per"
 
@@ -1405,9 +1546,6 @@ msgstr "Cerca per mittente, oggetto o account"
 msgid "(no subject)"
 msgstr "(nessun oggetto)"
 
-msgid "Message Source"
-msgstr "Sorgente del messaggio"
-
 #, fuzzy
 msgid "Forwarded message"
 msgstr "Inoltra questo messaggio"
@@ -1616,6 +1754,21 @@ msgstr "Rimuovi etichette"
 msgid "Open a message first, then print it."
 msgstr "Apri prima un messaggio, poi stampalo."
 
+msgid "Message Source"
+msgstr "Sorgente del messaggio"
+
+msgid "Find in message"
+msgstr "Trova nel messaggio"
+
+msgid "Previous match"
+msgstr "Corrispondenza precedente"
+
+msgid "Next match"
+msgstr "Corrispondenza successiva"
+
+msgid "Close find"
+msgstr "Chiudi ricerca"
+
 msgid "Delete “{name}”?"
 msgstr "Eliminare \"{name}\"?"
 
@@ -1671,6 +1824,10 @@ msgstr ""
 
 msgid "Could not save the message: {e}"
 msgstr "Impossibile salvare il messaggio: {e}"
+
+#, fuzzy
+msgid "Could not decrypt the draft: {e}"
+msgstr "Impossibile svuotare la cartella: {e}"
 
 msgid "Open Hylki"
 msgstr "Apri Hylki"
@@ -1828,12 +1985,6 @@ msgstr "Firma"
 msgid "Replied"
 msgstr "Rispondi"
 
-msgid "Sender"
-msgstr "Mittente"
-
-msgid "Recipients"
-msgstr "Destinatari"
-
 msgid "Correspondents"
 msgstr "Corrispondenti"
 
@@ -1978,9 +2129,6 @@ msgstr "Nome"
 msgid "Last Name"
 msgstr "Cognome"
 
-msgid "Email"
-msgstr "Email"
-
 #, fuzzy
 msgid "Column {n}"
 msgstr "Colonne"
@@ -2010,6 +2158,14 @@ msgstr "Crittografato per la chiave {id}, che non è nel tuo portachiavi."
 
 msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "Il blocco crittografato è danneggiato o non è dati OpenPGP."
+
+#, fuzzy
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+"La chiave di firma {id} è nel tuo portachiavi ma non è contrassegnata come "
+"attendibile; verifica la sua impronta digitale con il mittente."
 
 msgid "Revoked"
 msgstr "Revocata"
@@ -2571,9 +2727,6 @@ msgstr "Riporta questa cartella nella barra laterale"
 msgid "Sends through {host}"
 msgstr "Invia tramite {host}"
 
-msgid "Sends through this account"
-msgstr "Invia tramite questo account"
-
 msgid "Remove this alias"
 msgstr "Rimuovi questo alias"
 
@@ -2592,16 +2745,15 @@ msgstr "Aggiungi alias"
 msgid "Save"
 msgstr "Salva"
 
-msgid ""
-"Will appear in the composer's From menu. Replies to mail sent here will come "
-"from this address."
-msgstr ""
-
 msgid "Display name (optional)"
 msgstr "Nome visualizzato (opzionale)"
 
 msgid "Email address"
 msgstr "Indirizzo e-mail"
+
+#, fuzzy
+msgid "Default From address"
+msgstr "Digita un indirizzo Da"
 
 msgid "Sending"
 msgstr "Invio"
@@ -2719,6 +2871,14 @@ msgstr ""
 "Attivando questa opzione si richiede a Microsoft l'accesso alla directory; "
 "alcune organizzazioni richiedono l'approvazione di un amministratore."
 
+#, fuzzy
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+"Disattivarlo riporta l'account nell'elenco di importazione — rimane in GNOME "
+"Account online."
+
 msgid "Choose a Picture"
 msgstr "Scegli una foto"
 
@@ -2816,6 +2976,16 @@ msgid "Include the folder's unread mail in the tray icon's unread count"
 msgstr ""
 "Includi la posta non letta della cartella nel conteggio non letti dell'icona "
 "nella barra"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
 
 msgid "Never"
 msgstr "Mai"
@@ -3562,10 +3732,6 @@ msgid "Task list"
 msgstr "Questo elenco"
 
 #, fuzzy
-msgid "Notes"
-msgstr "Nota"
-
-#, fuzzy
 msgid "All day"
 msgstr "Aggiungi e-mail"
 
@@ -4149,6 +4315,34 @@ msgid "Show Cc, Bcc and Reply-To"
 msgstr "Mostra Cc, Ccn e Rispondi a"
 
 #, fuzzy
+msgid "They prefer encrypted mail."
+msgstr "Nascondi l'oggetto"
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+#, fuzzy
+msgid "OpenPGP key in your keyring."
+msgstr "Già nel tuo portachiavi"
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
+#, fuzzy
 msgid "Cannot merge an encrypted message"
 msgstr "Messaggio crittografato"
 
@@ -4363,6 +4557,32 @@ msgstr "Password di download per {name}: {password}"
 msgid "Reply-To"
 msgstr "Rispondi a"
 
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
+
+msgid "Import Contacts"
+msgstr "Importa contatti"
+
+#, fuzzy
+msgid "Import"
+msgstr "Importa…"
+
+#, fuzzy
+msgid "Import into"
+msgstr "Importa firma"
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+#, fuzzy
+msgid "Not imported"
+msgstr "Chiave importata"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "File vCard"
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
 
@@ -4488,13 +4708,14 @@ msgstr ""
 msgid "Contacts in the Hylki book"
 msgstr "Contatti nella rubrica Hylki"
 
-msgid "Import vCard files"
+#, fuzzy
+msgid "Import vCard or CSV files"
 msgstr "Importa file vCard"
 
 #, fuzzy
 msgid ""
-"Adds contacts from .vcf files. Importing a file again updates existing "
-"entries."
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
 msgstr ""
 "Aggiunge i contatti nei file .vcf alla rubrica Hylki. Reimportare un file "
 "aggiorna i suoi contatti."
@@ -4747,15 +4968,6 @@ msgstr "Visualizza foto"
 msgid "Add to Contacts"
 msgstr "Aggiungi ai contatti"
 
-msgid "Phone"
-msgstr "Telefono"
-
-msgid "Address"
-msgstr "Indirizzo"
-
-msgid "Birthday"
-msgstr "Compleanno"
-
 #. ---- note ----
 msgid "Note"
 msgstr "Nota"
@@ -4803,7 +5015,8 @@ msgstr "Invia tutti"
 msgid "Members do not see each other's addresses."
 msgstr ""
 
-#. An Apple group (iCloud's) holds cards of its own book.
+#. An Apple group (iCloud's) or a category (Nextcloud's) holds
+#. cards of its own book.
 msgid ""
 "Groups in this address book hold its own contacts: anyone added who is not "
 "in it yet is added to it."
@@ -4815,9 +5028,6 @@ msgstr "Modifica contatto"
 #. ---- identity fields ----
 msgid "Identity"
 msgstr "Identità"
-
-msgid "Nickname"
-msgstr "Soprannome"
 
 msgid "Organization"
 msgstr "Organizzazione"
@@ -4837,18 +5047,6 @@ msgstr "Aggiungi sito web"
 msgid "No label"
 msgstr ""
 
-msgid "Home"
-msgstr ""
-
-msgid "Work"
-msgstr ""
-
-msgid "Mobile"
-msgstr ""
-
-msgid "Fax"
-msgstr ""
-
 #, fuzzy
 msgid "Label"
 msgstr "Etichette"
@@ -4856,21 +5054,6 @@ msgstr "Etichette"
 #, fuzzy
 msgid "Add address"
 msgstr "Indirizzo"
-
-msgid "Street"
-msgstr ""
-
-msgid "City"
-msgstr ""
-
-msgid "State or region"
-msgstr ""
-
-msgid "Postal code"
-msgstr ""
-
-msgid "Country"
-msgstr ""
 
 #, fuzzy
 msgid "No birthday"
@@ -4951,24 +5134,12 @@ msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
 msgid "No email address · {book}"
 msgstr "Indirizzo e-mail"
 
-msgid "First name"
-msgstr "Nome"
-
-msgid "Last name"
-msgstr "Cognome"
-
 #, fuzzy
 msgid "Sort and filter contacts"
 msgstr "Messaggi e-mail"
 
 #, fuzzy
-msgid "Groups"
-msgstr "Gruppo sinistra"
-
-msgid "Import Contacts"
-msgstr "Importa contatti"
-
-msgid "vCard files"
+msgid "vCard and CSV files"
 msgstr "File vCard"
 
 msgid "All files"
@@ -5102,7 +5273,8 @@ msgstr[1] ""
 "{name} viene rimosso dalla rubrica, e per una rubrica sincronizzata, anche "
 "dal server."
 
-msgid "Import vCard files into the Hylki address book"
+#, fuzzy
+msgid "Import vCard or CSV files into the Hylki address book"
 msgstr "Importa file vCard nella rubrica Hylki"
 
 #, fuzzy
@@ -5112,10 +5284,11 @@ msgstr "Nuovo contatto"
 msgid "Loading Contacts…"
 msgstr "Caricamento contatti in corso…"
 
+#, fuzzy
 msgid ""
-"Add a contact with the + button, or import vCard files. Contacts are kept in "
-"Hylki's own address book, and the address books of GNOME Contacts are listed "
-"here too."
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
 msgstr ""
 "Aggiungi un contatto con il pulsante +, o importa file vCard. I contatti "
 "vengono conservati nella rubrica di Hylki, e le rubriche di GNOME Contatti "
@@ -5531,6 +5704,10 @@ msgstr "Scegli una bozza dall'elenco per modificarla qui."
 msgid "Choose a message from the list to read it here."
 msgstr "Scegli un messaggio dall'elenco per leggerlo qui."
 
+#, fuzzy
+msgid "Show Message"
+msgstr "Mostra nel messaggio"
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 "Il contenuto remoto (immagini, tracker) è bloccato per proteggere la tua "
@@ -5542,23 +5719,11 @@ msgstr "Carica"
 msgid "Always allow sender"
 msgstr "Autorizza sempre il mittente"
 
-msgid "Find in message"
-msgstr "Trova nel messaggio"
-
 msgid "No matches"
 msgstr "Nessuna corrispondenza"
 
 msgid "{cur} of {total}"
 msgstr "{cur} di {total}"
-
-msgid "Previous match"
-msgstr "Corrispondenza precedente"
-
-msgid "Next match"
-msgstr "Corrispondenza successiva"
-
-msgid "Close find"
-msgstr "Chiudi ricerca"
 
 #, fuzzy
 msgid ""
@@ -5814,7 +5979,8 @@ msgstr ""
 msgid "Trust"
 msgstr "Rendi attendibile"
 
-msgid "The sender's key was imported from the message."
+#, fuzzy
+msgid "The sender's key was taken from the message."
 msgstr "La chiave del mittente è stata importata dal messaggio."
 
 msgid "The sender's key was fetched and imported."
@@ -5984,6 +6150,26 @@ msgid "The same keyring the gpg command and other mail apps use."
 msgstr ""
 "GnuPG {version} trovato. Hylki legge e scrive il suo portachiavi, lo stesso "
 "usato dal comando gpg e da altri programmi di posta."
+
+#, fuzzy
+msgid "Finding keys"
+msgstr "Trova nel messaggio"
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr ""
+
+#, fuzzy
+msgid "Look up recipients' keys"
+msgstr "Cerca i destinatari in questa directory"
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid "keys.openpgp.org learns who you write to."
+msgstr ""
 
 msgid "Your keys"
 msgstr "Le tue chiavi"
@@ -6389,6 +6575,9 @@ msgstr "Modalità lettore attiva"
 
 msgid "Reader View off"
 msgstr "Modalità lettore disattivata"
+
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
 
 msgid "Ask each time"
 msgstr "Chiedi ogni volta"
@@ -7756,13 +7945,21 @@ msgstr ""
 "Impossibile leggere la password per {email} dal portachiavi ({e}). Hylki "
 "riproverà alla prossima connessione."
 
+#, fuzzy
+msgid "The draft is not an OpenPGP message."
+msgstr "non è un messaggio Outlook"
+
+#, fuzzy
+msgid "The draft could not be decrypted."
+msgstr "Impossibile aprire il file"
+
+msgid "no OpenPGP key for {addr}"
+msgstr "nessuna chiave OpenPGP per {addr}"
+
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 "nessuna tua chiave OpenPGP per {addr}; generane una in Impostazioni, OpenPGP"
-
-msgid "no OpenPGP key for {addr}"
-msgstr "nessuna chiave OpenPGP per {addr}"
 
 msgid "Could not save template: {e}"
 msgstr "Impossibile salvare il modello: {e}"
@@ -8272,20 +8469,12 @@ msgstr "Usa iniziali"
 msgid "Send-as aliases"
 msgstr "Alias di invio"
 
-msgid "Extra names and addresses this account can send as."
-msgstr ""
-
 msgid "Add Alias…"
 msgstr "Aggiungi alias…"
 
 #, fuzzy
 msgid "Signatures"
 msgstr "Firma"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
 
 #, fuzzy
 msgid "Add Signature"
@@ -8354,10 +8543,6 @@ msgid ""
 "Downloads copies of every message from every folder of this account to this "
 "computer (except Trash, Junk and Drafts) and stores them in On This Computer."
 msgstr ""
-
-#, fuzzy
-msgid "Import"
-msgstr "Importa…"
 
 msgid "Mail already here is not imported again."
 msgstr ""
@@ -8459,6 +8644,20 @@ msgid "Hide the subject of encrypted mail"
 msgstr "Nascondi l'oggetto"
 
 msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr ""
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Suono per nuova posta"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Espandi le conversazioni per impostazione predefinita"
+
+msgid "Mail to people who ask for the same is encrypted."
 msgstr ""
 
 #, fuzzy
@@ -8606,6 +8805,17 @@ msgstr "Sempre espanso"
 msgid "Start new messages in"
 msgstr "Scrivi i messaggi in"
 
+#, fuzzy
+msgid "Reply in the original's format"
+msgstr "Rispondi con i file"
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Incolla come testo normale"
+
+msgid "Only when formatting, images or links would be removed."
+msgstr ""
+
 msgid "For rich text. Default leaves it to the recipient's own font."
 msgstr ""
 
@@ -8614,20 +8824,6 @@ msgstr ""
 
 msgid "Default zoom"
 msgstr "Zoom predefinito"
-
-#, fuzzy
-msgid "Reply in the original's format"
-msgstr "Rispondi con i file"
-
-msgid "Plain-text mail is answered in plain text."
-msgstr ""
-
-#, fuzzy
-msgid "Ask before switching to plain text"
-msgstr "Incolla come testo normale"
-
-msgid "Only when formatting, images or links would be removed."
-msgstr ""
 
 msgid "Signature in replies"
 msgstr "Firma nelle risposte"
@@ -8792,6 +8988,9 @@ msgstr ""
 #, fuzzy
 msgid "Find bar position"
 msgstr "Azioni"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr ""
 
 #, fuzzy
 msgid "A message's text alone, without the sender's layout, colors and fonts."
@@ -9135,6 +9334,13 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr "Aggiunta ai nuovi messaggi inviati da questo account."
+
+#~ msgid "Sends through this account"
+#~ msgstr "Invia tramite questo account"
 
 #~ msgid "Hide the preview text"
 #~ msgstr "Nascondi il testo di anteprima"
@@ -10523,9 +10729,6 @@ msgstr "Hyprlab"
 #~ msgid "Add Directory"
 #~ msgstr "Aggiungi directory"
 
-#~ msgid "Look up recipients in this directory"
-#~ msgstr "Cerca i destinatari in questa directory"
-
 #, fuzzy
 #~ msgid "Save the CardDAV account?"
 #~ msgstr "Salvare l'account?"
@@ -10566,9 +10769,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Apply"
 #~ msgstr "Applica"
-
-#~ msgid "Appended to new messages sent from this account."
-#~ msgstr "Aggiunta ai nuovi messaggi inviati da questo account."
 
 #~ msgid "HTML"
 #~ msgstr "HTML"

@@ -3,6 +3,8 @@
 //! shown for files without a thumbnail. Shared with the composer's
 //! attachment drawer, the lightbox and printing.
 
+use std::sync::Arc;
+
 use gtk::prelude::*;
 use gtk::{gdk, glib};
 
@@ -98,6 +100,38 @@ thread_local! {
     /// (same key, much bigger pixels). Failures cache too.
     pub(super) static PDF_PREVIEWS: std::cell::RefCell<TextureCache> =
         std::cell::RefCell::new(TextureCache::new(PDF_PREVIEW_BUDGET));
+    /// Thumbnail renders under way, by content hash, with everyone waiting
+    /// on each. A grid built again while its thumbnails render asks for the
+    /// same files again, and the asks wait for the render already running:
+    /// PDF pages render one at a time, so every extra render of one held up
+    /// the rest by its whole length.
+    static RENDERING: std::cell::RefCell<std::collections::HashMap<u64, Vec<OnRendered>>> =
+        Default::default();
+}
+
+/// What a finished thumbnail render is handed to.
+type OnRendered = Box<dyn FnOnce(Option<gdk::Texture>)>;
+
+/// Wait for the render of `key` with `on_done`. True when no render of it was
+/// under way, and the caller is to start one.
+fn join_render(key: u64, on_done: OnRendered) -> bool {
+    RENDERING.with(|r| {
+        let mut r = r.borrow_mut();
+        let waiting = r.entry(key).or_default();
+        waiting.push(on_done);
+        waiting.len() == 1
+    })
+}
+
+/// The render of `key` is done: everyone who waited for it gets `tex`.
+fn finish_render(key: u64, tex: &Option<gdk::Texture>) {
+    // Taken out before anyone is answered, as an answer may ask for a render.
+    let waiting = RENDERING
+        .with(|r| r.borrow_mut().remove(&key))
+        .unwrap_or_default();
+    for on_done in waiting {
+        on_done(tex.clone());
+    }
 }
 
 /// The session's render caches, for the memory section of an export:
@@ -155,6 +189,21 @@ mod texture_cache_tests {
     }
 
     #[test]
+    fn a_render_asked_for_twice_runs_once_and_answers_both() {
+        let answered = std::rc::Rc::new(std::cell::Cell::new(0));
+        let ask = || -> OnRendered {
+            let answered = answered.clone();
+            Box::new(move |_| answered.set(answered.get() + 1))
+        };
+        assert!(join_render(7, ask()), "the first ask starts the render");
+        assert!(!join_render(7, ask()), "the second waits for it");
+        finish_render(7, &None);
+        assert_eq!(answered.get(), 2);
+        assert!(join_render(7, ask()), "once it is done, a new ask renders");
+        finish_render(7, &None);
+    }
+
+    #[test]
     fn a_single_render_over_budget_is_still_kept() {
         let mut c = TextureCache::new(1_000);
         c.insert(1, Some(texture(100)));
@@ -188,15 +237,14 @@ pub(super) fn cached_pdf_preview(data: &[u8]) -> Option<Option<gdk::Texture>> {
 /// main thread — at once from the cache, or after a worker renders it.
 /// Failures cache too, so a broken PDF is rendered at most once.
 pub(super) fn lightbox_pdf_texture(
-    data: &[u8],
+    data: Arc<[u8]>,
     on_done: impl FnOnce(Option<gdk::Texture>) + 'static,
 ) {
-    let key = thumb_cache_key(data);
+    let key = thumb_cache_key(&data);
     if let Some(cached) = PDF_PREVIEWS.with(|c| c.borrow().get(&key).cloned()) {
         on_done(cached);
         return;
     }
-    let data = data.to_vec();
     glib::spawn_future_local(async move {
         let tex = gtk::gio::spawn_blocking(move || pdf_page_texture(&data, PREVIEW_RENDER_WIDTH))
             .await
@@ -234,13 +282,17 @@ pub(super) fn thumbnail_texture(name: &str, data: &[u8]) -> Thumbnail {
 /// Decode an image, or render a PDF's first page, off the main thread; hand
 /// the result to `on_done` back on it and record it in the cache either way.
 /// The GTK loop keeps running — cells show their spinner instead of the
-/// window freezing.
+/// window freezing. Asked for bytes already rendering, it waits for that
+/// render rather than starting another.
 pub(super) fn spawn_thumbnail_render(
     name: &str,
-    data: Vec<u8>,
+    data: Arc<[u8]>,
     on_done: impl FnOnce(Option<gdk::Texture>) + 'static,
 ) {
     let key = thumb_cache_key(&data);
+    if !join_render(key, Box::new(on_done)) {
+        return;
+    }
     let image = is_image_name(name);
     glib::spawn_future_local(async move {
         let tex = gtk::gio::spawn_blocking(move || {
@@ -256,7 +308,7 @@ pub(super) fn spawn_thumbnail_render(
         THUMB_CACHE.with(|c| {
             c.borrow_mut().insert(key, tex.clone());
         });
-        on_done(tex);
+        finish_render(key, &tex);
     });
 }
 
@@ -343,6 +395,65 @@ pub(super) fn icon_for(name: &str) -> &'static str {
         "ics" => "x-office-calendar-symbolic",
         _ => "text-x-generic-symbolic",
     }
+}
+
+/// The GNOME palette color each tinted file kind wears (#651): shade 1 on a
+/// dark ground, shade 5 on a light one, the only steps at which every hue
+/// keeps 3:1 against its card. Yellow holds at no step on white, so archives
+/// are brown; the palette has fewer hues than kinds, so audio and video share
+/// purple and a calendar shares blue. A PDF wears the error color and an image
+/// the grey of everything else (styles.css). The GTK side names the palette's
+/// variables ([`ftype_css`]); the reader, which has no libadwaita stylesheet,
+/// takes the hex values.
+pub(crate) const FTYPE_PALETTE: [FtypeColor; 7] = [
+    FtypeColor::new("doc", "blue", "#99c1f1", "#1a5fb4"),
+    FtypeColor::new("sheet", "green", "#8ff0a4", "#26a269"),
+    FtypeColor::new("slides", "orange", "#ffbe6f", "#c64600"),
+    FtypeColor::new("archive", "brown", "#cdab8f", "#63452c"),
+    FtypeColor::new("audio", "purple", "#dc8add", "#613583"),
+    FtypeColor::new("video", "purple", "#dc8add", "#613583"),
+    FtypeColor::new("calendar", "blue", "#99c1f1", "#1a5fb4"),
+];
+
+/// One row of [`FTYPE_PALETTE`]: the `ftype-` class suffix, the palette hue,
+/// and that hue's shade 1 and shade 5.
+pub(crate) struct FtypeColor {
+    pub kind: &'static str,
+    pub hue: &'static str,
+    pub dark: &'static str,
+    pub light: &'static str,
+}
+
+impl FtypeColor {
+    const fn new(
+        kind: &'static str,
+        hue: &'static str,
+        dark: &'static str,
+        light: &'static str,
+    ) -> Self {
+        Self {
+            kind,
+            hue,
+            dark,
+            light,
+        }
+    }
+}
+
+/// The `.ftype-*` tints for the app's scheme provider, which reloads on a
+/// scheme flip: static CSS cannot pick a palette step by scheme. The
+/// lightbox sits on a dark ground in either scheme, so it always takes
+/// shade 1.
+pub(crate) fn ftype_css(dark: bool) -> String {
+    let shade = if dark { 1 } else { 5 };
+    let mut css = String::new();
+    for FtypeColor { kind, hue, .. } in FTYPE_PALETTE {
+        css.push_str(&format!(
+            ".ftype-{kind} {{ color: var(--{hue}-{shade}); }}\
+             .gallery-lightbox .ftype-{kind} {{ color: var(--{hue}-1); }}"
+        ));
+    }
+    css
 }
 
 /// CSS class that tints a type icon by file kind: PDFs red, Word docs blue,

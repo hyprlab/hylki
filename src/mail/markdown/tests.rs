@@ -158,6 +158,19 @@ fn highlight_emoji_and_bare_urls() {
 }
 
 #[test]
+fn handles_become_links_and_read_back_bare() {
+    // #653: `@foo@bar.io` linked `@foo` as an email address.
+    let html = to_html("mastodon @foo@bar.io, matrix @foo:bar.net");
+    has(&html, "href=\"https://bar.io/@foo\"");
+    has(&html, "href=\"https://matrix.to/#/@foo:bar.net\"");
+    assert!(!html.contains("mailto:"));
+    assert_eq!(
+        from_html("<p><a href=\"https://bar.io/@foo\">@foo@bar.io</a></p>"),
+        "@foo@bar.io"
+    );
+}
+
+#[test]
 fn a_url_keeps_the_sentence_punctuation_out_of_the_link() {
     let html = to_html("Read https://example.com/page, then stop.");
     has(&html, "href=\"https://example.com/page\"");

@@ -218,6 +218,7 @@ mod tests {
             from_contacts: true,
             from_directory: false,
             score,
+            sent: 0,
             own: false,
             group: None,
         }

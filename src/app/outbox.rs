@@ -2,7 +2,7 @@
 
 use relm4::prelude::*;
 
-use crate::ui::compose::ComposePrefill;
+use crate::ui::compose::{ComposePrefill, Original};
 use crate::ui::message_list::{MessageListInput, SearchScope};
 use crate::ui::sidebar::SidebarInput;
 use crate::worker::MailRequest;
@@ -187,7 +187,7 @@ impl AppModel {
             resumed: false,
             no_signature: false,
             template: false,
-            original_plain: false,
+            original: Original::Unknown,
             written_plain: editable.plain,
             typed_html: String::new(),
             assistant: false,
@@ -207,7 +207,8 @@ impl AppModel {
         m: crate::worker::OutgoingMessage,
         sender: &ComponentSender<Self>,
     ) {
-        self.open_compose(account_id, unsent_prefill(m), sender);
+        let own = self.email_of_config(account_id);
+        self.open_compose(account_id, unsent_prefill(m, &own), sender);
     }
 
     /// The messages the router sends here (see `AppModel::route`).

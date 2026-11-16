@@ -23,6 +23,12 @@ msgstr ""
 msgid "Release Notes"
 msgstr ""
 
+msgid "Credits"
+msgstr ""
+
+msgid "Contributors and translators"
+msgstr ""
+
 msgid "Keyring Setup Help"
 msgstr ""
 
@@ -48,15 +54,14 @@ msgstr ""
 msgid "Buy Me a Coffee"
 msgstr ""
 
-#. Contributors — people outside Hyprlab whose patches are in the app.
+#. Contributors: people outside Hyprlab whose patches are in the app.
 msgid "Special thanks to these contributors"
 msgstr ""
 
-#. Translators — the same list, with the languages each one carried.
+#. Translators: the same list, with the languages each one carried.
 msgid "Translated by"
 msgstr ""
 
-#. Footer.
 msgid "© 2026 Hyprlab"
 msgstr ""
 
@@ -275,6 +280,9 @@ msgstr ""
 msgid "Create Task…"
 msgstr ""
 
+msgid "Copy To…"
+msgstr ""
+
 msgid "Tags"
 msgstr ""
 
@@ -288,9 +296,6 @@ msgid "Mark as Spam"
 msgstr ""
 
 msgid "Move To…"
-msgstr ""
-
-msgid "Copy To…"
 msgstr ""
 
 msgid "Archive"
@@ -314,10 +319,126 @@ msgstr ""
 msgid "New Message"
 msgstr ""
 
-msgid "Hylki Address Book"
+msgid "A group needs a name."
+msgstr ""
+
+msgid ""
+"A group in this address book is kept on its people's cards, so it needs at "
+"least one person."
 msgstr ""
 
 msgid "Hylki cannot change this kind of group"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Work"
+msgstr ""
+
+msgid "Mobile"
+msgstr ""
+
+msgid "Fax"
+msgstr ""
+
+msgid "{field} ({label})"
+msgstr ""
+
+msgid "Do not import"
+msgstr ""
+
+msgid "Full name"
+msgstr ""
+
+msgid "First name"
+msgstr ""
+
+msgid "Middle name"
+msgstr ""
+
+msgid "Last name"
+msgstr ""
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr ""
+
+msgid "Company"
+msgstr ""
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Birthday"
+msgstr ""
+
+msgid "Birth year"
+msgstr ""
+
+msgid "Birth month"
+msgstr ""
+
+msgid "Birth day"
+msgstr ""
+
+msgid "Groups"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Phone"
+msgstr ""
+
+msgid "Email label"
+msgstr ""
+
+msgid "Phone label"
+msgstr ""
+
+msgid "Address label"
+msgstr ""
+
+msgid "Website label"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "Street"
+msgstr ""
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "State or region"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
+msgid "Hylki Address Book"
 msgstr ""
 
 msgid "On This Computer"
@@ -818,6 +939,12 @@ msgstr ""
 msgid "Until {date}"
 msgstr ""
 
+msgid "Sender"
+msgstr ""
+
+msgid "Recipients"
+msgstr ""
+
 msgid "Sort by"
 msgstr ""
 
@@ -1254,9 +1381,6 @@ msgstr ""
 msgid "(no subject)"
 msgstr ""
 
-msgid "Message Source"
-msgstr ""
-
 msgid "Forwarded message"
 msgstr ""
 
@@ -1441,6 +1565,21 @@ msgstr ""
 msgid "Open a message first, then print it."
 msgstr ""
 
+msgid "Message Source"
+msgstr ""
+
+msgid "Find in message"
+msgstr ""
+
+msgid "Previous match"
+msgstr ""
+
+msgid "Next match"
+msgstr ""
+
+msgid "Close find"
+msgstr ""
+
 msgid "Delete “{name}”?"
 msgstr ""
 
@@ -1485,6 +1624,9 @@ msgid ""
 msgstr ""
 
 msgid "Could not save the message: {e}"
+msgstr ""
+
+msgid "Could not decrypt the draft: {e}"
 msgstr ""
 
 msgid "Open Hylki"
@@ -1628,12 +1770,6 @@ msgstr ""
 msgid "Replied"
 msgstr ""
 
-msgid "Sender"
-msgstr ""
-
-msgid "Recipients"
-msgstr ""
-
 msgid "Correspondents"
 msgstr ""
 
@@ -1765,9 +1901,6 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-msgid "Email"
-msgstr ""
-
 msgid "Column {n}"
 msgstr ""
 
@@ -1792,6 +1925,11 @@ msgid "Encrypted to key {id}, which is not in your keyring."
 msgstr ""
 
 msgid "The encrypted block is damaged or not OpenPGP data."
+msgstr ""
+
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
 msgstr ""
 
 msgid "Revoked"
@@ -2295,9 +2433,6 @@ msgstr ""
 msgid "Sends through {host}"
 msgstr ""
 
-msgid "Sends through this account"
-msgstr ""
-
 msgid "Remove this alias"
 msgstr ""
 
@@ -2313,15 +2448,13 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-msgid ""
-"Will appear in the composer's From menu. Replies to mail sent here will come "
-"from this address."
-msgstr ""
-
 msgid "Display name (optional)"
 msgstr ""
 
 msgid "Email address"
+msgstr ""
+
+msgid "Default From address"
 msgstr ""
 
 msgid "Sending"
@@ -2429,6 +2562,11 @@ msgid ""
 "approve it."
 msgstr ""
 
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+
 msgid "Choose a Picture"
 msgstr ""
 
@@ -2521,6 +2659,16 @@ msgid "Count unread mail"
 msgstr ""
 
 msgid "Include the folder's unread mail in the tray icon's unread count"
+msgstr ""
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
 msgstr ""
 
 msgid "Never"
@@ -3194,9 +3342,6 @@ msgstr ""
 msgid "Task list"
 msgstr ""
 
-msgid "Notes"
-msgstr ""
-
 msgid "All day"
 msgstr ""
 
@@ -3691,6 +3836,32 @@ msgstr ""
 msgid "Show Cc, Bcc and Reply-To"
 msgstr ""
 
+msgid "They prefer encrypted mail."
+msgstr ""
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key in your keyring."
+msgstr ""
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
 msgid "Cannot merge an encrypted message"
 msgstr ""
 
@@ -3890,6 +4061,27 @@ msgstr ""
 msgid "Reply-To"
 msgstr ""
 
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+
+msgid "Import Contacts"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Import into"
+msgstr ""
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+msgid "Not imported"
+msgstr ""
+
+msgid "vCard files"
+msgstr ""
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
 
@@ -3997,12 +4189,12 @@ msgstr ""
 msgid "Contacts in the Hylki book"
 msgstr ""
 
-msgid "Import vCard files"
+msgid "Import vCard or CSV files"
 msgstr ""
 
 msgid ""
-"Adds contacts from .vcf files. Importing a file again updates existing "
-"entries."
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
 msgstr ""
 
 msgid "Export as a vCard file"
@@ -4208,15 +4400,6 @@ msgstr ""
 msgid "Add to Contacts"
 msgstr ""
 
-msgid "Phone"
-msgstr ""
-
-msgid "Address"
-msgstr ""
-
-msgid "Birthday"
-msgstr ""
-
 #. ---- note ----
 msgid "Note"
 msgstr ""
@@ -4260,7 +4443,8 @@ msgstr ""
 msgid "Members do not see each other's addresses."
 msgstr ""
 
-#. An Apple group (iCloud's) holds cards of its own book.
+#. An Apple group (iCloud's) or a category (Nextcloud's) holds
+#. cards of its own book.
 msgid ""
 "Groups in this address book hold its own contacts: anyone added who is not "
 "in it yet is added to it."
@@ -4271,9 +4455,6 @@ msgstr ""
 
 #. ---- identity fields ----
 msgid "Identity"
-msgstr ""
-
-msgid "Nickname"
 msgstr ""
 
 msgid "Organization"
@@ -4294,37 +4475,10 @@ msgstr ""
 msgid "No label"
 msgstr ""
 
-msgid "Home"
-msgstr ""
-
-msgid "Work"
-msgstr ""
-
-msgid "Mobile"
-msgstr ""
-
-msgid "Fax"
-msgstr ""
-
 msgid "Label"
 msgstr ""
 
 msgid "Add address"
-msgstr ""
-
-msgid "Street"
-msgstr ""
-
-msgid "City"
-msgstr ""
-
-msgid "State or region"
-msgstr ""
-
-msgid "Postal code"
-msgstr ""
-
-msgid "Country"
 msgstr ""
 
 msgid "No birthday"
@@ -4394,22 +4548,10 @@ msgstr ""
 msgid "No email address · {book}"
 msgstr ""
 
-msgid "First name"
-msgstr ""
-
-msgid "Last name"
-msgstr ""
-
 msgid "Sort and filter contacts"
 msgstr ""
 
-msgid "Groups"
-msgstr ""
-
-msgid "Import Contacts"
-msgstr ""
-
-msgid "vCard files"
+msgid "vCard and CSV files"
 msgstr ""
 
 msgid "All files"
@@ -4505,7 +4647,7 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Import vCard files into the Hylki address book"
+msgid "Import vCard or CSV files into the Hylki address book"
 msgstr ""
 
 msgid "New contact or group"
@@ -4515,9 +4657,9 @@ msgid "Loading Contacts…"
 msgstr ""
 
 msgid ""
-"Add a contact with the + button, or import vCard files. Contacts are kept in "
-"Hylki's own address book, and the address books of GNOME Contacts are listed "
-"here too."
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
 msgstr ""
 
 msgid "Search contacts (Ctrl+F)"
@@ -4884,6 +5026,9 @@ msgstr ""
 msgid "Choose a message from the list to read it here."
 msgstr ""
 
+msgid "Show Message"
+msgstr ""
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 
@@ -4893,22 +5038,10 @@ msgstr ""
 msgid "Always allow sender"
 msgstr ""
 
-msgid "Find in message"
-msgstr ""
-
 msgid "No matches"
 msgstr ""
 
 msgid "{cur} of {total}"
-msgstr ""
-
-msgid "Previous match"
-msgstr ""
-
-msgid "Next match"
-msgstr ""
-
-msgid "Close find"
 msgstr ""
 
 msgid ""
@@ -5150,7 +5283,7 @@ msgstr ""
 msgid "Trust"
 msgstr ""
 
-msgid "The sender's key was imported from the message."
+msgid "The sender's key was taken from the message."
 msgstr ""
 
 msgid "The sender's key was fetched and imported."
@@ -5309,6 +5442,24 @@ msgid "GnuPG"
 msgstr ""
 
 msgid "The same keyring the gpg command and other mail apps use."
+msgstr ""
+
+msgid "Finding keys"
+msgstr ""
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr ""
+
+msgid "Look up recipients' keys"
+msgstr ""
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid "keys.openpgp.org learns who you write to."
 msgstr ""
 
 msgid "Your keys"
@@ -5671,6 +5822,9 @@ msgid "Reader View on"
 msgstr ""
 
 msgid "Reader View off"
+msgstr ""
+
+msgid "Needs Sushi, the GNOME file previewer."
 msgstr ""
 
 msgid "Ask each time"
@@ -6943,11 +7097,17 @@ msgid ""
 "again at the next connection."
 msgstr ""
 
-msgid ""
-"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
+msgid "The draft is not an OpenPGP message."
+msgstr ""
+
+msgid "The draft could not be decrypted."
 msgstr ""
 
 msgid "no OpenPGP key for {addr}"
+msgstr ""
+
+msgid ""
+"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 
 msgid "Could not save template: {e}"
@@ -7401,18 +7561,10 @@ msgstr ""
 msgid "Send-as aliases"
 msgstr ""
 
-msgid "Extra names and addresses this account can send as."
-msgstr ""
-
 msgid "Add Alias…"
 msgstr ""
 
 msgid "Signatures"
-msgstr ""
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
 msgstr ""
 
 msgid "Add Signature"
@@ -7471,9 +7623,6 @@ msgstr ""
 msgid ""
 "Downloads copies of every message from every folder of this account to this "
 "computer (except Trash, Junk and Drafts) and stores them in On This Computer."
-msgstr ""
-
-msgid "Import"
 msgstr ""
 
 msgid "Mail already here is not imported again."
@@ -7559,6 +7708,18 @@ msgid "Hide the subject of encrypted mail"
 msgstr ""
 
 msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr ""
+
+msgid "Send your key with your mail"
+msgstr ""
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+msgid "Encrypt by default"
+msgstr ""
+
+msgid "Mail to people who ask for the same is encrypted."
 msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
@@ -7680,6 +7841,15 @@ msgstr ""
 msgid "Start new messages in"
 msgstr ""
 
+msgid "Reply in the original's format"
+msgstr ""
+
+msgid "Ask before switching to plain text"
+msgstr ""
+
+msgid "Only when formatting, images or links would be removed."
+msgstr ""
+
 msgid "For rich text. Default leaves it to the recipient's own font."
 msgstr ""
 
@@ -7687,18 +7857,6 @@ msgid "For rich text, in points."
 msgstr ""
 
 msgid "Default zoom"
-msgstr ""
-
-msgid "Reply in the original's format"
-msgstr ""
-
-msgid "Plain-text mail is answered in plain text."
-msgstr ""
-
-msgid "Ask before switching to plain text"
-msgstr ""
-
-msgid "Only when formatting, images or links would be removed."
 msgstr ""
 
 msgid "Signature in replies"
@@ -7845,6 +8003,9 @@ msgid "Off shows the icons alone."
 msgstr ""
 
 msgid "Find bar position"
+msgstr ""
+
+msgid "Space shows pictures and PDFs in Sushi"
 msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."

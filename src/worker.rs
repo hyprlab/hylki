@@ -56,7 +56,7 @@ pub(crate) use api::{
 pub(crate) use api::{ServerFound, ServerSearch};
 pub(crate) use auth::{forget_access_token, oauth_token_blocking};
 pub(crate) use compose::build::sent_body_preview;
-pub(crate) use compose::editable::editable_from_raw;
+pub(crate) use compose::editable::{decrypt_draft, editable_from_raw, EditableMessage};
 pub(crate) use compose::recipients::{
     clean_recipient_field, format_recipient, invalid_recipient, parse_recipients,
 };

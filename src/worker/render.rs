@@ -16,8 +16,20 @@ mod tests;
 /// for an explicit open, never for the background prefetch.
 pub(crate) fn render_raw(raw: &[u8]) -> (String, crate::models::SenderCheck, bool) {
     let mut check = crate::mail::verify::check_sender(raw);
+    // Autocrypt (Level 1) takes keys only from mail whose From the
+    // receiving server authenticated: anyone can type a From, and a key
+    // taken from a forged one would be encrypted to without asking.
+    let authentic = check.trust == crate::models::SenderTrust::Pass;
     match crate::mail::pgp::unwrap_message(raw, &crate::mail::pgp::Gpg::system()) {
-        Some(u) => {
+        Some(mut u) => {
+            // Gossip only comes from inside a decrypted message.
+            let decrypted = u.inner.as_deref().filter(|_| u.status.decrypted);
+            if authentic {
+                crate::mail::pgp::discovery::observe(raw, decrypted);
+            } else {
+                // Nor does the reader offer to import it.
+                u.status.autocrypt = None;
+            }
             let body = match &u.inner {
                 Some(inner) => extract_body(inner),
                 None => wrap_plain(&pgp_notice(&u.status)),
@@ -29,11 +41,16 @@ pub(crate) fn render_raw(raw: &[u8]) -> (String, crate::models::SenderCheck, boo
             check.pgp = Some(u.status);
             (body, check, has)
         }
-        None => (
-            extract_body(raw),
-            check,
-            !extract_attachments(raw).is_empty(),
-        ),
+        None => {
+            if authentic {
+                crate::mail::pgp::discovery::observe(raw, None);
+            }
+            (
+                extract_body(raw),
+                check,
+                !extract_attachments(raw).is_empty(),
+            )
+        }
     }
 }
 

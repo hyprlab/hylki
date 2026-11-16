@@ -30,6 +30,9 @@ impl MessageView {
     /// lays out the new size, and, when the size did change, for the old
     /// page to be drawn at it (two animation frames in the page), then
     /// replaces a page that is fully drawn. An unchanged size costs a frame.
+    ///
+    /// Under the pane's still none of that can show, and the still is lifted
+    /// only once the new page has been drawn: the page is handed over at once.
     pub(super) fn load_after_paint(&self, html: String, uri: String) {
         let state = self.pending_load.clone();
         let wait = {
@@ -59,9 +62,10 @@ impl MessageView {
         let clock = self
             .webview
             .frame_clock()
-            .filter(|_| self.webview.is_mapped());
+            .filter(|_| self.webview.is_mapped() && !self.swap.covered());
         let Some(clock) = clock else {
-            // Nothing on screen, so no frame to wait for or to flash.
+            // Nothing on screen, or under the still: no frame to wait for,
+            // and nothing to flash.
             load();
             return;
         };
@@ -133,6 +137,9 @@ impl MessageView {
         // flash this avoids. Under the pane's still nothing shows anyway, and
         // the page loads in view instead: hidden behind the spinner it is
         // neither laid out nor drawn, and would only be once revealed.
+        if let Some(source) = &self.source {
+            return if source.loading { "loading" } else { "source" };
+        }
         if self.loading || (!self.webview_ready && !self.swap.held()) {
             "loading"
         } else {

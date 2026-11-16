@@ -127,6 +127,16 @@ pub(crate) struct PrivacyFile {
     /// words (#300); off, the default, shows the lock and shield icons alone.
     #[serde(default)]
     pub(crate) pgp_labels: bool,
+    /// The composer looks each recipient's OpenPGP key up by WKD, on their
+    /// own domain's server, while the message is addressed. Off by default:
+    /// it tells that domain that someone is writing to the address.
+    #[serde(default)]
+    pub(crate) key_lookup: bool,
+    /// Recipients WKD has no key for are also looked up on a keyserver
+    /// (keys.openpgp.org). Off by default: that tells a third party who
+    /// the user writes to.
+    #[serde(default)]
+    pub(crate) keyserver_lookup: bool,
     /// The reader's find bar opens under the message instead of above it
     /// (#392). Off by default.
     #[serde(default)]
@@ -174,6 +184,10 @@ pub(crate) struct PrivacyFile {
     /// in the open conversation (#213).
     #[serde(default = "default_on")]
     pub(crate) attachment_drawer: bool,
+    /// Space sends pictures and PDFs to the GNOME file previewer too (#625).
+    /// Off, Space shows them in the full-window preview, as a click does.
+    #[serde(default)]
+    pub(crate) previewer_pictures: bool,
     /// Whether deleting a whole selected conversation asks for confirmation
     /// first.
     #[serde(default = "default_on")]
@@ -291,9 +305,11 @@ pub(crate) struct PrivacyFile {
     /// where `compose_plain` above still says which of the two it is.
     #[serde(default)]
     pub(crate) compose_format: Option<ComposeFormat>,
-    /// Whether a reply or forward to mail that had no HTML part is written
-    /// in plain text whatever `compose_format` says (#436). Mailing lists
-    /// and the people on them often write plain text and expect it back.
+    /// Whether a reply or forward answers in the original's format: plain
+    /// text to mail that had no HTML part whatever `compose_format` says
+    /// (#436), and rich text to formatted mail when `compose_format` is
+    /// plain (#646). Mailing lists and the people on them often write plain
+    /// text and expect it back; formatted mail keeps its look.
     #[serde(default)]
     pub(crate) follow_plain: bool,
     /// Whether switching a message from rich to plain text asks first when
@@ -420,6 +436,14 @@ pub(crate) struct PrivacyFile {
     /// A view not named here uses `list_sort`.
     #[serde(default)]
     pub(crate) list_sorts: std::collections::BTreeMap<String, ListSort>,
+    /// The views whose rows name the recipients (`true`) or the sender
+    /// (`false`) against their default, by the view's name (#657).
+    #[serde(default)]
+    pub(crate) list_recipients: std::collections::BTreeMap<String, bool>,
+    /// The date sections each view keeps folded (#659), by the view's name
+    /// as in `list_sorts`. A view not named here has none folded.
+    #[serde(default)]
+    pub(crate) list_folded_days: std::collections::BTreeMap<String, Vec<String>>,
     /// Grouping by date was turned on once for an install from before it
     /// became the default: every save writes every key, so those files
     /// carry the old `false` without anyone having chosen it. A new
@@ -704,6 +728,8 @@ impl Default for PrivacyFile {
             fold_messages: FoldMessages::Never,
             always_show_recipients: false,
             pgp_labels: false,
+            key_lookup: false,
+            keyserver_lookup: false,
             reader_find_bottom: false,
             single_message_card: default_single_message_card(),
             reader_mode: false,
@@ -715,6 +741,7 @@ impl Default for PrivacyFile {
             reader_zoom: default_reader_zoom(),
             card_attachments: true,
             attachment_drawer: true,
+            previewer_pictures: false,
             confirm_thread_delete: true,
             message_theme: MessageTheme::default(),
             override_fonts: false,
@@ -774,6 +801,8 @@ impl Default for PrivacyFile {
             list_sort: String::new(),
             list_sort_reversed: false,
             list_sorts: Default::default(),
+            list_recipients: Default::default(),
+            list_folded_days: Default::default(),
             date_groups_default_applied: true,
             list_search_open: false,
             contacts_search_open: false,

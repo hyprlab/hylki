@@ -206,7 +206,7 @@ impl RowShared {
     pub(crate) fn refresh_headers(&self) {
         self.headers.borrow_mut().retain(|h| h.upgrade().is_some());
         for header in self.headers.borrow().iter().filter_map(|h| h.upgrade()) {
-            fill_header(&header);
+            super::fold::fill_header(&header);
         }
     }
 
@@ -414,7 +414,8 @@ pub(crate) fn factory(shared: &Rc<RowShared>) -> gtk::SignalListItemFactory {
 }
 
 /// The view's factory for the date headings (#435): a dim heading over each
-/// section, not a row, so it is never selected or focused.
+/// section, not a row, so it is never selected or focused. Its chevron folds
+/// the section (#659).
 pub(crate) fn header_factory(shared: &Rc<RowShared>) -> gtk::SignalListItemFactory {
     let factory = gtk::SignalListItemFactory::new();
     let weak = Rc::downgrade(shared);
@@ -422,36 +423,18 @@ pub(crate) fn header_factory(shared: &Rc<RowShared>) -> gtk::SignalListItemFacto
         let Some(header) = obj.downcast_ref::<gtk::ListHeader>() else {
             return;
         };
-        let label = gtk::Label::new(None);
-        label.set_xalign(0.0);
-        label.set_ellipsize(gtk::pango::EllipsizeMode::End);
-        label.add_css_class("heading");
-        label.add_css_class("dim-label");
-        label.add_css_class("list-day-heading");
-        header.set_child(Some(&label));
-        if let Some(shared) = weak.upgrade() {
-            shared.headers.borrow_mut().push(header.downgrade());
-        }
+        let Some(shared) = weak.upgrade() else {
+            return;
+        };
+        let heading = super::fold::header_heading(header, shared.input.clone());
+        header.set_child(Some(&heading));
+        shared.headers.borrow_mut().push(header.downgrade());
     });
     factory.connect_bind(|_, obj| {
         if let Some(header) = obj.downcast_ref::<gtk::ListHeader>() {
-            fill_header(header);
+            super::fold::fill_header(header);
         }
     });
     factory
 }
 
-/// A heading names the section of the row it stands over.
-fn fill_header(header: &gtk::ListHeader) {
-    let Some(label) = header.child().and_downcast::<gtk::Label>() else {
-        return;
-    };
-    let text = header
-        .item()
-        .and_downcast::<RowItem>()
-        .map(|i| i.data().section.label())
-        .unwrap_or_default();
-    if label.label() != text {
-        label.set_label(&text);
-    }
-}

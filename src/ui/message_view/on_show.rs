@@ -39,6 +39,7 @@ impl MessageView {
             .zip(shown.as_ref())
             .is_some_and(|(a, b)| a.id == b.id && a.account_id == b.account_id);
         if !same_message {
+            self.on_close_source();
             self.sender_check = None;
             self.member_checks.clear();
             self.unsub_state.clear();
@@ -206,14 +207,20 @@ impl MessageView {
     }
 
     pub(super) fn on_rendered(&mut self) {
+        let uri = self.webview.uri().unwrap_or_default().to_string();
+        // A page reports once. The backstop for one that never does fires
+        // 600 ms after every load, and taken for a second report it patched
+        // the page again and could lift the still of a message opened since.
+        if self.webview_ready && uri == self.ready_uri {
+            return;
+        }
         tracing::debug!(
             target: "hylki::swap",
-            "page ready: {} (newest {})",
-            self.webview.uri().unwrap_or_default(),
+            "page ready: {uri} (newest {})",
             self.latest_uri
         );
         self.webview_ready = true;
-        self.ready_uri = self.webview.uri().unwrap_or_default().to_string();
+        self.ready_uri = uri;
         // Verdicts that arrived while the document was still loading.
         for (aid, id) in self.member_checks.keys().copied().collect::<Vec<_>>() {
             self.patch_verify_badge(aid, id);

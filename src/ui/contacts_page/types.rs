@@ -377,7 +377,7 @@ pub(crate) enum ContactsPageInput {
         group: usize,
         person: usize,
     },
-    /// The header's import button: choose `.vcf` files for the Hylki book.
+    /// The header's import button: choose `.vcf` or CSV files to import.
     ImportContacts,
     CancelEdit,
     SaveEdit,
@@ -494,8 +494,12 @@ pub(crate) enum ContactsPageOutput {
     Tree(ContactTree),
     /// Name an address book in Hylki (`None`: its own name again).
     RenameBook { uid: String, name: Option<String> },
-    /// `.vcf` files chosen for import into the local Hylki book.
-    ImportContacts(Vec<std::path::PathBuf>),
+    /// Files chosen for import, and the book being looked at, to offer
+    /// first.
+    ImportContacts {
+        paths: Vec<std::path::PathBuf>,
+        book: Option<String>,
+    },
     /// Show the contact's photo in the app lightbox.
     ShowPhoto { name: String, data: Vec<u8> },
     /// Read the composer's suggestions for a group form

@@ -34,6 +34,12 @@ msgstr ""
 msgid "Release Notes"
 msgstr "Σημειώσεις έκδοσης"
 
+msgid "Credits"
+msgstr ""
+
+msgid "Contributors and translators"
+msgstr ""
+
 msgid "Keyring Setup Help"
 msgstr "Βοήθεια ρύθμισης κλειδοθήκης"
 
@@ -59,15 +65,14 @@ msgstr "Άδεια (GNU AGPL v3)"
 msgid "Buy Me a Coffee"
 msgstr "Κεράστε με έναν καφέ"
 
-#. Contributors — people outside Hyprlab whose patches are in the app.
+#. Contributors: people outside Hyprlab whose patches are in the app.
 msgid "Special thanks to these contributors"
 msgstr "Ιδιαίτερες ευχαριστίες σε αυτούς τους συντελεστές"
 
-#. Translators — the same list, with the languages each one carried.
+#. Translators: the same list, with the languages each one carried.
 msgid "Translated by"
 msgstr "Μετάφραση από"
 
-#. Footer.
 msgid "© 2026 Hyprlab"
 msgstr "© 2026 Hyprlab"
 
@@ -315,6 +320,9 @@ msgstr "Δημιουργία συμβάντος…"
 msgid "Create Task…"
 msgstr "Δημιουργία εργασίας…"
 
+msgid "Copy To…"
+msgstr "Αντιγραφή σε…"
+
 msgid "Tags"
 msgstr "Ετικέτες"
 
@@ -329,9 +337,6 @@ msgstr "Σήμανση ως ανεπιθύμητο"
 
 msgid "Move To…"
 msgstr "Μετακίνηση σε…"
-
-msgid "Copy To…"
-msgstr "Αντιγραφή σε…"
 
 msgid "Archive"
 msgstr "Αρχειοθέτηση"
@@ -354,11 +359,139 @@ msgstr "Εκτύπωση…"
 msgid "New Message"
 msgstr "Νέο μήνυμα"
 
-msgid "Hylki Address Book"
-msgstr "Βιβλίο διευθύνσεων Hylki"
+#, fuzzy
+msgid "A group needs a name."
+msgstr "Ο φάκελος πρέπει να έχει όνομα."
+
+msgid ""
+"A group in this address book is kept on its people's cards, so it needs at "
+"least one person."
+msgstr ""
 
 msgid "Hylki cannot change this kind of group"
 msgstr "Το Hylki δεν μπορεί να αλλάξει αυτόν τον τύπο ομάδας"
+
+msgid "Home"
+msgstr "Οικία"
+
+msgid "Work"
+msgstr "Εργασία"
+
+msgid "Mobile"
+msgstr "Κινητό"
+
+msgid "Fax"
+msgstr "Φαξ"
+
+msgid "{field} ({label})"
+msgstr ""
+
+#, fuzzy
+msgid "Do not import"
+msgstr "Δεν ήταν δυνατή η εισαγωγή: {e}"
+
+#, fuzzy
+msgid "Full name"
+msgstr "Όνομα φακέλου"
+
+msgid "First name"
+msgstr "Όνομα"
+
+#, fuzzy
+msgid "Middle name"
+msgstr "Όνομα φακέλου"
+
+msgid "Last name"
+msgstr "Επώνυμο"
+
+msgid "Name prefix"
+msgstr ""
+
+msgid "Name suffix"
+msgstr ""
+
+msgid "Nickname"
+msgstr "Ψευδώνυμο"
+
+#, fuzzy
+msgid "Company"
+msgstr "Έχει εταιρεία"
+
+msgid "Department"
+msgstr ""
+
+msgid "Job title"
+msgstr ""
+
+msgid "Notes"
+msgstr "Σημειώσεις"
+
+msgid "Birthday"
+msgstr "Γενέθλια"
+
+#, fuzzy
+msgid "Birth year"
+msgstr "Γενέθλια"
+
+#, fuzzy
+msgid "Birth month"
+msgstr "Τον προηγούμενο μήνα"
+
+#, fuzzy
+msgid "Birth day"
+msgstr "Γενέθλια"
+
+msgid "Groups"
+msgstr "Αριστερή ομάδα"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+#, fuzzy
+msgid "Email label"
+msgstr "Πρόγραμμα-πελάτης email"
+
+#, fuzzy
+msgid "Phone label"
+msgstr "Χωρίς ετικέτα"
+
+#, fuzzy
+msgid "Address label"
+msgstr "Βιβλίο διευθύνσεων"
+
+#, fuzzy
+msgid "Website label"
+msgstr "Ιστότοπος"
+
+msgid "Address"
+msgstr "Διεύθυνση"
+
+msgid "Street"
+msgstr "Οδός"
+
+msgid "Apartment or suite"
+msgstr ""
+
+msgid "PO box"
+msgstr ""
+
+msgid "City"
+msgstr "Πόλη"
+
+msgid "State or region"
+msgstr "Πολιτεία ή περιφέρεια"
+
+msgid "Postal code"
+msgstr "Ταχυδρομικός κώδικας"
+
+msgid "Country"
+msgstr "Χώρα"
+
+msgid "Hylki Address Book"
+msgstr "Βιβλίο διευθύνσεων Hylki"
 
 msgid "On This Computer"
 msgstr "Σε αυτόν τον υπολογιστή"
@@ -904,6 +1037,12 @@ msgstr "Από {date}"
 msgid "Until {date}"
 msgstr "Έως {date}"
 
+msgid "Sender"
+msgstr "Αποστολέας"
+
+msgid "Recipients"
+msgstr "Παραλήπτες"
+
 msgid "Sort by"
 msgstr "Ταξινόμηση κατά"
 
@@ -1355,9 +1494,6 @@ msgstr "Αναζήτηση κατά αποστολέα, θέμα ή λογαρι
 msgid "(no subject)"
 msgstr "(χωρίς θέμα)"
 
-msgid "Message Source"
-msgstr "Πηγαίος κώδικας μηνύματος"
-
 msgid "Forwarded message"
 msgstr "Προωθημένο μήνυμα"
 
@@ -1565,6 +1701,21 @@ msgstr "Αφαίρεση ετικετών"
 msgid "Open a message first, then print it."
 msgstr "Ανοίξτε πρώτα ένα μήνυμα και έπειτα εκτυπώστε το."
 
+msgid "Message Source"
+msgstr "Πηγαίος κώδικας μηνύματος"
+
+msgid "Find in message"
+msgstr "Εύρεση στο μήνυμα"
+
+msgid "Previous match"
+msgstr "Προηγούμενη αντιστοιχία"
+
+msgid "Next match"
+msgstr "Επόμενη αντιστοιχία"
+
+msgid "Close find"
+msgstr "Κλείσιμο εύρεσης"
+
 msgid "Delete “{name}”?"
 msgstr "Διαγραφή του «{name}»;"
 
@@ -1616,6 +1767,10 @@ msgstr ""
 
 msgid "Could not save the message: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του μηνύματος: {e}"
+
+#, fuzzy
+msgid "Could not decrypt the draft: {e}"
+msgstr "Δεν ήταν δυνατό το άδειασμα του φακέλου: {e}"
 
 msgid "Open Hylki"
 msgstr "Άνοιγμα Hylki"
@@ -1773,12 +1928,6 @@ msgstr "Υπογραφή"
 msgid "Replied"
 msgstr "Απαντήθηκε"
 
-msgid "Sender"
-msgstr "Αποστολέας"
-
-msgid "Recipients"
-msgstr "Παραλήπτες"
-
 msgid "Correspondents"
 msgstr "Αλληλογραφούντες"
 
@@ -1913,9 +2062,6 @@ msgstr "Όνομα"
 msgid "Last Name"
 msgstr "Επώνυμο"
 
-msgid "Email"
-msgstr "Email"
-
 msgid "Column {n}"
 msgstr "Στήλη {n}"
 
@@ -1945,6 +2091,14 @@ msgstr ""
 msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr ""
 "Το κρυπτογραφημένο τμήμα είναι κατεστραμμένο ή δεν περιέχει δεδομένα OpenPGP."
+
+#, fuzzy
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+"Το κλειδί υπογραφής {id} βρίσκεται στην κλειδοθήκη σας αλλά δεν έχει "
+"επισημανθεί ως έμπιστο· ελέγξτε το αποτύπωμά του με τον αποστολέα."
 
 msgid "Revoked"
 msgstr "Ανακλήθηκε"
@@ -2489,9 +2643,6 @@ msgstr "Επαναφορά αυτού του φακέλου στην πλευρ�
 msgid "Sends through {host}"
 msgstr "Αποστολή μέσω {host}"
 
-msgid "Sends through this account"
-msgstr "Αποστολή μέσω αυτού του λογαριασμού"
-
 msgid "Remove this alias"
 msgstr "Αφαίρεση αυτού του ψευδωνύμου"
 
@@ -2507,16 +2658,15 @@ msgstr "Προσθήκη ψευδωνύμου"
 msgid "Save"
 msgstr "Αποθήκευση"
 
-msgid ""
-"Will appear in the composer's From menu. Replies to mail sent here will come "
-"from this address."
-msgstr ""
-
 msgid "Display name (optional)"
 msgstr "Εμφανιζόμενο όνομα (προαιρετικό)"
 
 msgid "Email address"
 msgstr "Διεύθυνση email"
+
+#, fuzzy
+msgid "Default From address"
+msgstr "Πληκτρολογήστε μια διεύθυνση αποστολέα"
 
 msgid "Sending"
 msgstr "Αποστολή"
@@ -2631,6 +2781,14 @@ msgstr ""
 "Ζητά πρόσβαση από τη Microsoft. Ορισμένοι οργανισμοί απαιτούν έγκριση "
 "διαχειριστή."
 
+#, fuzzy
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr ""
+"Η απενεργοποίηση τον επιστρέφει στη λίστα εισαγωγής. Παραμένει στους "
+"Διαδικτυακούς λογαριασμούς GNOME."
+
 msgid "Choose a Picture"
 msgstr "Επιλογή εικόνας"
 
@@ -2729,6 +2887,16 @@ msgid "Include the folder's unread mail in the tray icon's unread count"
 msgstr ""
 "Συμπερίληψη της μη αναγνωσμένης αλληλογραφίας του φακέλου στον αριθμό μη "
 "αναγνωσμένων του εικονιδίου στην περιοχή ειδοποιήσεων"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr ""
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
 
 msgid "Never"
 msgstr "Ποτέ"
@@ -3456,9 +3624,6 @@ msgstr "Ημερολόγιο"
 msgid "Task list"
 msgstr "Λίστα εργασιών"
 
-msgid "Notes"
-msgstr "Σημειώσεις"
-
 msgid "All day"
 msgstr "Όλη την ημέρα"
 
@@ -4044,6 +4209,34 @@ msgstr "Περισσότερα"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Εμφάνιση Κοιν., Κρυφής κοιν. και Απάντησης προς"
 
+#, fuzzy
+msgid "They prefer encrypted mail."
+msgstr "Απόκρυψη του θέματος κρυπτογραφημένων μηνυμάτων"
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr ""
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+
+#, fuzzy
+msgid "OpenPGP key in your keyring."
+msgstr "Υπάρχει ήδη στην κλειδοθήκη σας"
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr ""
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr ""
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr ""
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr ""
+
 msgid "Cannot merge an encrypted message"
 msgstr "Δεν είναι δυνατή η συγχώνευση κρυπτογραφημένου μηνύματος"
 
@@ -4258,6 +4451,31 @@ msgstr "Κωδικός λήψης για {name}: {password}"
 msgid "Reply-To"
 msgstr "Απάντηση προς"
 
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
+
+msgid "Import Contacts"
+msgstr "Εισαγωγή επαφών"
+
+msgid "Import"
+msgstr "Εισαγωγή"
+
+#, fuzzy
+msgid "Import into"
+msgstr "Εισαγωγή υπογραφής"
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr ""
+
+#, fuzzy
+msgid "Not imported"
+msgstr "Το κλειδί εισήχθη"
+
+#, fuzzy
+msgid "vCard files"
+msgstr "Αρχεία vCard"
+
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
 "Το όνομα που χρησιμοποιείται εδώ και στις Επαφές. Αν μείνει κενό, είναι "
@@ -4379,12 +4597,14 @@ msgstr ""
 msgid "Contacts in the Hylki book"
 msgstr "Επαφές στο βιβλίο του Hylki"
 
-msgid "Import vCard files"
+#, fuzzy
+msgid "Import vCard or CSV files"
 msgstr "Εισαγωγή αρχείων vCard"
 
+#, fuzzy
 msgid ""
-"Adds contacts from .vcf files. Importing a file again updates existing "
-"entries."
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
 msgstr ""
 "Προσθέτει επαφές από αρχεία .vcf. Η επανεισαγωγή ενός αρχείου ενημερώνει τις "
 "υπάρχουσες εγγραφές."
@@ -4623,15 +4843,6 @@ msgstr "Προβολή φωτογραφίας"
 msgid "Add to Contacts"
 msgstr "Προσθήκη στις επαφές"
 
-msgid "Phone"
-msgstr "Τηλέφωνο"
-
-msgid "Address"
-msgstr "Διεύθυνση"
-
-msgid "Birthday"
-msgstr "Γενέθλια"
-
 #. ---- note ----
 msgid "Note"
 msgstr "Σημείωση"
@@ -4681,7 +4892,8 @@ msgstr "Αποστολή ως κρυφή κοινοποίηση"
 msgid "Members do not see each other's addresses."
 msgstr "Τα μέλη δεν βλέπουν τις διευθύνσεις των υπόλοιπων."
 
-#. An Apple group (iCloud's) holds cards of its own book.
+#. An Apple group (iCloud's) or a category (Nextcloud's) holds
+#. cards of its own book.
 msgid ""
 "Groups in this address book hold its own contacts: anyone added who is not "
 "in it yet is added to it."
@@ -4695,9 +4907,6 @@ msgstr "Επεξεργασία επαφής"
 #. ---- identity fields ----
 msgid "Identity"
 msgstr "Ταυτότητα"
-
-msgid "Nickname"
-msgstr "Ψευδώνυμο"
 
 msgid "Organization"
 msgstr "Οργανισμός"
@@ -4718,38 +4927,11 @@ msgstr "Προσθήκη ιστοτόπου"
 msgid "No label"
 msgstr "Χωρίς ετικέτα"
 
-msgid "Home"
-msgstr "Οικία"
-
-msgid "Work"
-msgstr "Εργασία"
-
-msgid "Mobile"
-msgstr "Κινητό"
-
-msgid "Fax"
-msgstr "Φαξ"
-
 msgid "Label"
 msgstr "Ετικέτα"
 
 msgid "Add address"
 msgstr "Προσθήκη διεύθυνσης"
-
-msgid "Street"
-msgstr "Οδός"
-
-msgid "City"
-msgstr "Πόλη"
-
-msgid "State or region"
-msgstr "Πολιτεία ή περιφέρεια"
-
-msgid "Postal code"
-msgstr "Ταχυδρομικός κώδικας"
-
-msgid "Country"
-msgstr "Χώρα"
 
 msgid "No birthday"
 msgstr "Χωρίς γενέθλια"
@@ -4818,22 +5000,11 @@ msgstr "Προσθήκη ατόμου με όνομα ή διεύθυνση"
 msgid "No email address · {book}"
 msgstr "Χωρίς διεύθυνση email · {book}"
 
-msgid "First name"
-msgstr "Όνομα"
-
-msgid "Last name"
-msgstr "Επώνυμο"
-
 msgid "Sort and filter contacts"
 msgstr "Ταξινόμηση και φιλτράρισμα επαφών"
 
-msgid "Groups"
-msgstr "Αριστερή ομάδα"
-
-msgid "Import Contacts"
-msgstr "Εισαγωγή επαφών"
-
-msgid "vCard files"
+#, fuzzy
+msgid "vCard and CSV files"
 msgstr "Αρχεία vCard"
 
 msgid "All files"
@@ -4947,7 +5118,8 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Αυτό θα αφαιρέσει {n} επαφή από τον κατάλογο διευθύνσεών σας."
 msgstr[1] "Αυτό θα αφαιρέσει {n} επαφές από τους καταλόγους διευθύνσεών σας."
 
-msgid "Import vCard files into the Hylki address book"
+#, fuzzy
+msgid "Import vCard or CSV files into the Hylki address book"
 msgstr "Εισαγωγή αρχείων vCard στο βιβλίο διευθύνσεων του Hylki"
 
 msgid "New contact or group"
@@ -4956,10 +5128,11 @@ msgstr "Νέα επαφή ή ομάδα"
 msgid "Loading Contacts…"
 msgstr "Φόρτωση επαφών…"
 
+#, fuzzy
 msgid ""
-"Add a contact with the + button, or import vCard files. Contacts are kept in "
-"Hylki's own address book, and the address books of GNOME Contacts are listed "
-"here too."
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
 msgstr ""
 "Προσθέστε μια επαφή με το κουμπί + ή εισαγάγετε αρχεία vCard. Οι επαφές "
 "διατηρούνται στο δικό του βιβλίο διευθύνσεων του Hylki, ενώ εδώ εμφανίζονται "
@@ -5352,6 +5525,10 @@ msgstr "Επιλέξτε ένα πρόχειρο από τη λίστα για �
 msgid "Choose a message from the list to read it here."
 msgstr "Επιλέξτε ένα μήνυμα από τη λίστα για να το διαβάσετε εδώ."
 
+#, fuzzy
+msgid "Show Message"
+msgstr "Εμφάνιση στο μήνυμα"
+
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
 "Το απομακρυσμένο περιεχόμενο (εικόνες, trackers) αποκλείεται για την "
@@ -5363,23 +5540,11 @@ msgstr "Φόρτωση"
 msgid "Always allow sender"
 msgstr "Να επιτρέπεται πάντα ο αποστολέας"
 
-msgid "Find in message"
-msgstr "Εύρεση στο μήνυμα"
-
 msgid "No matches"
 msgstr "Δεν υπάρχουν αντιστοιχίες"
 
 msgid "{cur} of {total}"
 msgstr "{cur} από {total}"
-
-msgid "Previous match"
-msgstr "Προηγούμενη αντιστοιχία"
-
-msgid "Next match"
-msgstr "Επόμενη αντιστοιχία"
-
-msgid "Close find"
-msgstr "Κλείσιμο εύρεσης"
 
 msgid ""
 "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "
@@ -5632,7 +5797,8 @@ msgstr ""
 msgid "Trust"
 msgstr "Ορισμός ως έμπιστου"
 
-msgid "The sender's key was imported from the message."
+#, fuzzy
+msgid "The sender's key was taken from the message."
 msgstr "Το κλειδί του αποστολέα εισήχθη από το μήνυμα."
 
 msgid "The sender's key was fetched and imported."
@@ -5802,6 +5968,26 @@ msgid "The same keyring the gpg command and other mail apps use."
 msgstr ""
 "Η ίδια κλειδοθήκη που χρησιμοποιούν η εντολή gpg και άλλες εφαρμογές "
 "αλληλογραφίας."
+
+#, fuzzy
+msgid "Finding keys"
+msgstr "Εύρεση στο μήνυμα"
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr ""
+
+#, fuzzy
+msgid "Look up recipients' keys"
+msgstr "Αναζήτηση παραληπτών σε αυτόν τον κατάλογο"
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr ""
+
+msgid "Also ask a keyserver"
+msgstr ""
+
+msgid "keys.openpgp.org learns who you write to."
+msgstr ""
 
 msgid "Your keys"
 msgstr "Τα κλειδιά σας"
@@ -6187,6 +6373,9 @@ msgstr "Προβολή ανάγνωσης ενεργή"
 
 msgid "Reader View off"
 msgstr "Προβολή ανάγνωσης ανενεργή"
+
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr ""
 
 msgid "Ask each time"
 msgstr "Ερώτηση κάθε φορά"
@@ -7558,14 +7747,22 @@ msgstr ""
 "Δεν ήταν δυνατή η ανάγνωση του κωδικού πρόσβασης για το {email} από την "
 "κλειδοθήκη ({e}). Το Hylki θα προσπαθήσει ξανά στην επόμενη σύνδεση."
 
+#, fuzzy
+msgid "The draft is not an OpenPGP message."
+msgstr "δεν είναι μήνυμα Outlook"
+
+#, fuzzy
+msgid "The draft could not be decrypted."
+msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
+
+msgid "no OpenPGP key for {addr}"
+msgstr "δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}"
+
 msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 "δεν υπάρχει δικό σας κλειδί OpenPGP για τη διεύθυνση {addr}· δημιουργήστε "
 "ένα στις Ρυθμίσεις, OpenPGP"
-
-msgid "no OpenPGP key for {addr}"
-msgstr "δεν υπάρχει κλειδί OpenPGP για τη διεύθυνση {addr}"
 
 msgid "Could not save template: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του προτύπου: {e}"
@@ -8065,22 +8262,11 @@ msgstr "Χρήση αρχικών"
 msgid "Send-as aliases"
 msgstr "Ψευδώνυμα αποστολέα"
 
-#, fuzzy
-msgid "Extra names and addresses this account can send as."
-msgstr "Πρόσθετες διευθύνσεις αποστολής για αυτόν τον λογαριασμό."
-
 msgid "Add Alias…"
 msgstr "Προσθήκη ψευδωνύμου…"
 
 msgid "Signatures"
 msgstr "Υπογραφές"
-
-msgid ""
-"With more than one, the composer's signature button allows you to pick "
-"between them."
-msgstr ""
-"Με περισσότερες από μία υπογραφές, το κουμπί υπογραφής στη σύνταξη επιτρέπει "
-"την επιλογή τους."
 
 msgid "Add Signature"
 msgstr "Προσθήκη υπογραφής"
@@ -8146,9 +8332,6 @@ msgstr ""
 "Λαμβάνει αντίγραφα όλων των μηνυμάτων από όλους τους φακέλους αυτού του "
 "λογαριασμού (εκτός από τον Κάδο, τα Ανεπιθύμητα και τα Πρόχειρα) και τα "
 "αποθηκεύει στο «Σε αυτόν τον υπολογιστή»."
-
-msgid "Import"
-msgstr "Εισαγωγή"
 
 msgid "Mail already here is not imported again."
 msgstr "Η αλληλογραφία που υπάρχει ήδη εδώ δεν εισάγεται ξανά."
@@ -8246,6 +8429,20 @@ msgstr "Απόκρυψη του θέματος κρυπτογραφημένων 
 
 msgid "Only the recipients see the subject. Others see \"...\"."
 msgstr "Το θέμα εμφανίζεται μόνο στους παραλήπτες. Οι υπόλοιποι βλέπουν «…»."
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Ήχος για νέα αλληλογραφία"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Ανάπτυξη συζητήσεων από προεπιλογή"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
@@ -8386,6 +8583,17 @@ msgstr "Πάντα ανεπτυγμένο"
 msgid "Start new messages in"
 msgstr "Έναρξη νέων μηνυμάτων σε"
 
+msgid "Reply in the original's format"
+msgstr "Απάντηση με τη μορφοποίηση του αρχικού"
+
+#, fuzzy
+msgid "Ask before switching to plain text"
+msgstr "Μετάβαση σε απλό κείμενο;"
+
+#, fuzzy
+msgid "Only when formatting, images or links would be removed."
+msgstr "Η μορφοποίηση, οι εικόνες και οι σύνδεσμοι θα αφαιρεθούν."
+
 msgid "For rich text. Default leaves it to the recipient's own font."
 msgstr ""
 "Για εμπλουτισμένο κείμενο. Από προεπιλογή χρησιμοποιείται η γραμματοσειρά "
@@ -8396,20 +8604,6 @@ msgstr "Για εμπλουτισμένο κείμενο, σε στιγμές (p
 
 msgid "Default zoom"
 msgstr "Προεπιλεγμένη μεγέθυνση"
-
-msgid "Reply in the original's format"
-msgstr "Απάντηση με τη μορφοποίηση του αρχικού"
-
-msgid "Plain-text mail is answered in plain text."
-msgstr "Τα μηνύματα απλού κειμένου απαντώνται σε απλό κείμενο."
-
-#, fuzzy
-msgid "Ask before switching to plain text"
-msgstr "Μετάβαση σε απλό κείμενο;"
-
-#, fuzzy
-msgid "Only when formatting, images or links would be removed."
-msgstr "Η μορφοποίηση, οι εικόνες και οι σύνδεσμοι θα αφαιρεθούν."
 
 msgid "Signature in replies"
 msgstr "Υπογραφή στις απαντήσεις"
@@ -8566,6 +8760,9 @@ msgstr "Ανενεργό: εμφανίζονται μόνο τα εικονίδ�
 
 msgid "Find bar position"
 msgstr "Θέση γραμμής αναζήτησης"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr ""
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr ""
@@ -8916,6 +9113,28 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "New messages from this account start from it."
+#~ msgstr ""
+#~ "Προστίθεται στα νέα μηνύματα που αποστέλλονται από αυτόν τον λογαριασμό."
+
+#~ msgid ""
+#~ "With more than one, the composer's signature button allows you to pick "
+#~ "between them."
+#~ msgstr ""
+#~ "Με περισσότερες από μία υπογραφές, το κουμπί υπογραφής στη σύνταξη "
+#~ "επιτρέπει την επιλογή τους."
+
+#~ msgid "Sends through this account"
+#~ msgstr "Αποστολή μέσω αυτού του λογαριασμού"
+
+#, fuzzy
+#~ msgid "Extra names and addresses this account can send as."
+#~ msgstr "Πρόσθετες διευθύνσεις αποστολής για αυτόν τον λογαριασμό."
+
+#~ msgid "Plain-text mail is answered in plain text."
+#~ msgstr "Τα μηνύματα απλού κειμένου απαντώνται σε απλό κείμενο."
 
 #~ msgid "Remote content can tell a sender when and where you read."
 #~ msgstr ""
@@ -10381,9 +10600,6 @@ msgstr "Hyprlab"
 #~ msgid "Add Directory"
 #~ msgstr "Προσθήκη καταλόγου"
 
-#~ msgid "Look up recipients in this directory"
-#~ msgstr "Αναζήτηση παραληπτών σε αυτόν τον κατάλογο"
-
 #~ msgid "Save the CardDAV account?"
 #~ msgstr "Αποθήκευση του λογαριασμού;"
 
@@ -10422,10 +10638,6 @@ msgstr "Hyprlab"
 #~ "Ο οργανισμός του αποστολέα επισήμανε αυτό το μήνυμα χωρίς να αναφέρει το "
 #~ "όνομα της ετικέτας. Το Hylki εμφανίζει την ετικέτα, αλλά δεν εφαρμόζει "
 #~ "τους κανόνες της."
-
-#~ msgid "Appended to new messages sent from this account."
-#~ msgstr ""
-#~ "Προστίθεται στα νέα μηνύματα που αποστέλλονται από αυτόν τον λογαριασμό."
 
 #~ msgid "Edit HTML…"
 #~ msgstr "Επεξεργασία HTML…"

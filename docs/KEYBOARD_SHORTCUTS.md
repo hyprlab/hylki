@@ -142,8 +142,10 @@ when several wait.
 <kbd>Ctrl+N</kbd> starts a new message, <kbd>Ctrl+Shift+N</kbd> starts one
 from a [template](DOCUMENTATION.md#templates), <kbd>Ctrl+R</kbd> replies,
 <kbd>Ctrl+Shift+R</kbd> replies to all and <kbd>Ctrl+U</kbd> shows the
-message's source, with or without single-key shortcuts. While you are
-writing, the composer keeps them: there <kbd>Ctrl+U</kbd> underlines.
+message's source in the reader, with or without single-key shortcuts.
+<kbd>Ctrl+U</kbd> again, <kbd>Esc</kbd> or **Show Message** goes back to the
+message. While you are writing, the composer keeps them: there
+<kbd>Ctrl+U</kbd> underlines.
 
 <kbd>Ctrl+Enter</kbd> sends the message you are writing, from the body or
 any of its address rows. It does what the Send button does, so a message with
@@ -188,8 +190,9 @@ These work with or without single-key shortcuts too:
 | <kbd>Delete</kbd> | Delete the selected messages, or the message you are reading, in the main window or its own |
 | <kbd>Backspace</kbd> | Delete the selected messages, with the list focused |
 | <kbd>→</kbd> <kbd>←</kbd> | Open a conversation out in the list, or fold it back up, with the list focused; <kbd>←</kbd> works from any of its replies |
+| <kbd>←</kbd> <kbd>→</kbd> | Fold the date section of a message whose conversation is folded or that stands alone, and open a folded section from its heading, with the list grouped by date |
 | <kbd>Shift+Delete</kbd> | Delete the selected messages permanently, without going to Trash, after asking |
-| <kbd>Ctrl+F</kbd> | Search the message list, or find in the message when it has the focus |
+| <kbd>Ctrl+F</kbd> | Search the message list, or find in the message when it has the focus; in the message source, find in the source |
 | <kbd>Ctrl+P</kbd> | Print the message you are reading |
 | <kbd>Ctrl+Shift+P</kbd> | Preview it as a PDF first |
 | <kbd>Ctrl+Z</kbd> | Undo the last action (a move, a delete, a star) |
@@ -209,8 +212,11 @@ your typing instead, and <kbd>Ctrl+B</kbd>, <kbd>Ctrl+I</kbd> and
 
 In the attachment drawer, <kbd>Space</kbd> previews the highlighted
 attachment, in the GNOME file previewer when it is installed and the file is
-not a picture or a PDF, and <kbd>Enter</kbd> opens it as a double click does
+not a picture or a PDF (pictures and PDFs too, if Settings says so), and
+<kbd>Enter</kbd> opens it as a double click does
 ([Previewing an attachment](DOCUMENTATION.md#previewing-an-attachment)).
+The same two keys work on an attachment beneath a message in the reader,
+reached with <kbd>Tab</kbd>.
 In Hylki's preview of a picture or a PDF, <kbd>Ctrl+P</kbd> prints that
 file rather than the message. In the attachments gallery's preview, <kbd>←</kbd> and
 <kbd>→</kbd> step to the previous and next one, and <kbd>Esc</kbd> closes it.

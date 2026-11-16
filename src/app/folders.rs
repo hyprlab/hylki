@@ -528,7 +528,7 @@ impl AppModel {
                 rekey_folder_key(k, &key_prefix, h, path, new_path);
             }
             self.save_sidebar_state();
-            // A folder keeps its sort, under its new name.
+            // A folder keeps its sort and names, under its new name.
             let sorts = std::mem::take(&mut self.list_sorts);
             let before = sorts.keys().cloned().collect::<Vec<_>>();
             self.list_sorts = sorts
@@ -538,7 +538,28 @@ impl AppModel {
                     (k, sort)
                 })
                 .collect();
-            if !self.list_sorts.keys().eq(before.iter()) {
+            let names = std::mem::take(&mut self.list_recipients);
+            let names_before = names.keys().cloned().collect::<Vec<_>>();
+            self.list_recipients = names
+                .into_iter()
+                .map(|(mut k, on)| {
+                    rekey_folder_key(&mut k, &key_prefix, h, path, new_path);
+                    (k, on)
+                })
+                .collect();
+            let folds = std::mem::take(&mut self.list_folded_days);
+            let folds_before = folds.keys().cloned().collect::<Vec<_>>();
+            self.list_folded_days = folds
+                .into_iter()
+                .map(|(mut k, days)| {
+                    rekey_folder_key(&mut k, &key_prefix, h, path, new_path);
+                    (k, days)
+                })
+                .collect();
+            if !self.list_sorts.keys().eq(before.iter())
+                || !self.list_recipients.keys().eq(names_before.iter())
+                || !self.list_folded_days.keys().eq(folds_before.iter())
+            {
                 self.save_settings();
             }
         }

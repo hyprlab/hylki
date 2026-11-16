@@ -170,6 +170,11 @@ pub(crate) struct AppModel {
     pub(super) attachments: Vec<Attachment>,
     /// True while the current message's attachments are downloading.
     pub(super) attachments_loading: bool,
+    /// The messages whose attachments the reader has asked for since the
+    /// open message or conversation was selected: opening one asks from
+    /// several places (the message, its conversation, the related lookup),
+    /// and each answer otherwise came back, megabytes and all, once per ask.
+    pub(super) attachments_asked: HashSet<BodyKey>,
     /// The reader header's right-hand actions are collapsed into the overflow menu
     /// (pane squeezed under READER_ACTIONS_BREAKPOINT).
     pub(super) reader_actions_collapsed: bool,
@@ -297,6 +302,10 @@ pub(crate) struct AppModel {
     /// Ids for messages opened from files (#398), counting down from the
     /// top so they never meet a server's UIDs.
     pub(super) next_local_id: u32,
+    /// The bytes of each message open from a file, by (account, id), kept
+    /// while its window is open: Save as File, View Source and Copy To
+    /// have no server to ask (#398).
+    pub(super) file_raws: HashMap<(u32, u32), Vec<u8>>,
     /// The `ExportRaw` tokens of Save as File, with the name to offer.
     pub(super) pending_saves: HashMap<u64, String>,
     /// How the moves to other accounts under way are going, for the status
@@ -488,6 +497,11 @@ pub(crate) struct AppModel {
     /// The sorts views keep for themselves, by `list_view_name`; any other
     /// view uses `list_sort`.
     pub(super) list_sorts: std::collections::BTreeMap<String, config::ListSort>,
+    /// The views that name the sender or the recipients against their
+    /// default, by `list_view_name` (#657).
+    pub(super) list_recipients: std::collections::BTreeMap<String, bool>,
+    /// The date sections each view keeps folded, by `list_view_name` (#659).
+    pub(super) list_folded_days: std::collections::BTreeMap<String, Vec<String>>,
     /// The list's search field stays open (#446).
     pub(super) list_search_open: bool,
     /// Contacts' search field stays open.
@@ -755,6 +769,8 @@ pub(crate) struct AppModel {
     pub(super) card_attachments: bool,
     /// The attachment drawer beneath the reader is shown at all (#213).
     pub(super) drawer_enabled: bool,
+    /// Space sends pictures and PDFs to the file previewer too (#625).
+    pub(super) previewer_pictures: bool,
     /// Whether conversation rows may expand into their members in the list
     /// (the row keeps its chip and chevron either way).
     pub(super) thread_expansion: bool,
@@ -908,6 +924,8 @@ pub(crate) struct AppModel {
     pub(super) gallery_scan_left: HashMap<(u32, String), u32>,
     /// Messages popped out into their own windows, keyed by (account, message).
     pub(super) popouts: HashMap<(u32, u32), PopOut>,
+    /// Sources asked for and not here yet, with where each goes (#658).
+    pub(super) sources_wanted: Vec<((u32, u32), super::source::SourceTarget)>,
     /// The conversation currently shown in the reader (newest first), with bodies
     /// filled in as they arrive. More than one entry = conversation/thread mode.
     pub(super) current_thread: Vec<Message>,
@@ -984,6 +1002,9 @@ pub(crate) struct AppModel {
     /// The `ExportRaw` token the pending draft's bytes come back under.
     /// While it is set, the draft waits for those and not for its body.
     pub(super) pending_draft_token: Option<u64>,
+    /// An encrypted draft being decrypted before its editor opens: the
+    /// token its `DraftDecrypted` comes back under, and what to open.
+    pub(super) pending_sealed_draft: Option<(u64, Message, bool, HandOffFiles)>,
     /// Drafts and templates being fetched ahead of time, by `ExportRaw`
     /// token, so they open at once (see `draft_copies`).
     pub(super) draft_fetches: std::collections::HashMap<u64, super::draft_copies::DraftFetch>,

@@ -17,6 +17,7 @@ pub(crate) mod platform;
 pub(crate) mod power;
 pub(crate) mod previewer;
 pub(crate) mod session;
+pub(crate) mod sound;
 pub(crate) mod single_instance;
 pub(crate) mod spell;
 pub(crate) mod startup;

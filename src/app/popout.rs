@@ -4,7 +4,6 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 use crate::config;
-use crate::i18n::i18n;
 use crate::models::{Attachment, FolderKind, Message};
 use crate::ui::message_window::{
     MessageWindow, MessageWindowInit, MessageWindowInput, MessageWindowOutput,
@@ -115,39 +114,6 @@ impl AppModel {
         for p in self.popouts.values() {
             p.controller.emit(msg());
         }
-    }
-
-    /// Present a read-only window showing raw message source (monospace).
-    pub(super) fn show_source_window(&self, text: &str) {
-        let buffer = gtk::TextBuffer::new(None);
-        buffer.set_text(text);
-        let view = gtk::TextView::with_buffer(&buffer);
-        view.set_editable(false);
-        view.set_monospace(true);
-        view.set_wrap_mode(gtk::WrapMode::WordChar);
-        view.set_left_margin(12);
-        view.set_right_margin(12);
-        view.set_top_margin(8);
-        view.set_bottom_margin(8);
-
-        let scroller = gtk::ScrolledWindow::builder()
-            .vexpand(true)
-            .hexpand(true)
-            .child(&view)
-            .build();
-
-        let toolbar = adw::ToolbarView::new();
-        toolbar.add_top_bar(&adw::HeaderBar::new());
-        toolbar.set_content(Some(&scroller));
-
-        let window = adw::Window::builder()
-            .transient_for(&self.window)
-            .title(i18n("Message Source"))
-            .default_width(720)
-            .default_height(620)
-            .content(&toolbar)
-            .build();
-        window.present();
     }
 
     /// Pop a message out into its own standalone window with a dedicated
@@ -416,6 +382,7 @@ impl AppModel {
 
             AppMsg::PopoutClosed(key) => {
                 self.popouts.remove(&key);
+                self.file_raws.remove(&key);
             }
 
             AppMsg::AddContactFrom { name, email } => {
@@ -452,6 +419,35 @@ impl AppModel {
                 );
             }
 
+            AppMsg::PopoutCopyTo { key, message, x, y } => {
+                let Some(window) = self.popouts.get(&key).map(|p| p.window.clone()) else {
+                    return;
+                };
+                // A message from a file is in no folder: every folder of
+                // every account that takes mail is somewhere to put it.
+                let exclude = self.resolve_folder_path(&message);
+                let accounts = self.copy_picker_accounts(message.account_id, exclude);
+                if accounts.is_empty() {
+                    return;
+                }
+                let s = sender.input_sender().clone();
+                let picked = (*message).clone();
+                crate::ui::folder_picker::show_folder_picker(
+                    &window,
+                    x,
+                    y,
+                    accounts,
+                    None,
+                    move |account_id, dest, _| {
+                        let _ = s.send(AppMsg::CopyMessagesTo {
+                            account_id,
+                            dest,
+                            messages: vec![picked.clone()],
+                        });
+                    },
+                );
+            }
+
             AppMsg::PopoutShortcut {
                 action,
                 message,
@@ -462,16 +458,7 @@ impl AppModel {
 
             AppMsg::ViewSource => {
                 if let Some(m) = self.current.clone() {
-                    if let Some(path) = self.resolve_folder_path(&m) {
-                        self.send_to(
-                            m.account_id,
-                            MailRequest::LoadSource {
-                                message_id: m.id,
-                                path,
-                                uid: m.uid,
-                            },
-                        );
-                    }
+                    self.request_source(&m);
                 }
             }
             _ => unreachable!("not routed to on_popout"),

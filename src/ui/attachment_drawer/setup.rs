@@ -15,18 +15,26 @@ pub(super) fn activate_on_keys(flow: &gtk::FlowBox, sender: &ComponentSender<Att
     let key = gtk::EventControllerKey::new();
     let s = sender.clone();
     let flow_ref = flow.clone();
-    key.connect_key_pressed(move |_, keyval, _, _| {
+    key.connect_key_pressed(move |key, keyval, _, _| {
         use gtk::gdk::Key;
+        let Some(i) = flow_ref
+            .selected_children()
+            .first()
+            .map(|c| c.index() as usize)
+        else {
+            return gtk::glib::Propagation::Proceed;
+        };
         let input = match keyval {
-            Key::space | Key::KP_Space => AttachmentDrawerInput::Preview,
-            Key::Return | Key::KP_Enter => AttachmentDrawerInput::Activate,
+            // The previewer's focus is asked for with the key press's
+            // time, which the compositor weighs against the last input.
+            Key::space | Key::KP_Space => {
+                AttachmentDrawerInput::Preview(i, key.current_event_time())
+            }
+            Key::Return | Key::KP_Enter => AttachmentDrawerInput::Activate(i),
             _ => return gtk::glib::Propagation::Proceed,
         };
-        if let Some(child) = flow_ref.selected_children().first() {
-            s.input_sender().emit(input(child.index() as usize));
-            return gtk::glib::Propagation::Stop;
-        }
-        gtk::glib::Propagation::Proceed
+        s.input_sender().emit(input);
+        gtk::glib::Propagation::Stop
     });
     flow.add_controller(key);
 }

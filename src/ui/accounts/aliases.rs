@@ -8,6 +8,7 @@ pub(super) struct AliasDialog {
     window: adw::Window,
     name_row: adw::EntryRow,
     addr_row: adw::EntryRow,
+    default_row: adw::SwitchRow,
     smtp_switch: adw::SwitchRow,
     host_row: adw::EntryRow,
     port_row: adw::EntryRow,
@@ -88,11 +89,21 @@ impl AccountsWindow {
             let row = adw::ActionRow::new();
             row.set_activatable(true);
             row.set_title(&gtk::glib::markup_escape_text(&alias.identity));
-            row.set_subtitle(&gtk::glib::markup_escape_text(&if alias.has_own_smtp() {
-                i18n_f("Sends through {host}", &[("host", &alias.smtp_host)])
-            } else {
-                i18n("Sends through this account")
-            }));
+            // Only an alias with a server of its own says so; the rest send
+            // through the account, which goes without saying.
+            if alias.has_own_smtp() {
+                row.set_subtitle(&gtk::glib::markup_escape_text(&i18n_f(
+                    "Sends through {host}",
+                    &[("host", &alias.smtp_host)],
+                )));
+            }
+
+            if alias.default_from {
+                let tag = gtk::Label::new(Some(i18n("Default").as_str()));
+                tag.add_css_class("dim-label");
+                tag.add_css_class("caption");
+                row.add_suffix(&tag);
+            }
 
             // A dim pencil says "activate to edit"; the trash button removes.
             let edit = gtk::Image::from_icon_name("document-edit-symbolic");
@@ -170,13 +181,6 @@ impl AccountsWindow {
 
         let (name, addr) = split_identity(&alias.identity);
         let identity_group = adw::PreferencesGroup::new();
-        identity_group.set_description(Some(
-            i18n(
-                "Will appear in the composer's From menu. Replies to mail sent here will come \
-                 from this address.",
-            )
-            .as_str(),
-        ));
         let name_row = adw::EntryRow::builder()
             .title(i18n("Display name (optional)"))
             .build();
@@ -185,8 +189,15 @@ impl AccountsWindow {
             .title(i18n("Email address"))
             .build();
         addr_row.set_text(&addr);
+        // One alias per account can stand in for the account's own address
+        // wherever a message has no From of its own to go by (#157).
+        let default_row = adw::SwitchRow::builder()
+            .title(i18n("Default From address"))
+            .build();
+        default_row.set_active(alias.default_from);
         identity_group.add(&name_row);
         identity_group.add(&addr_row);
+        identity_group.add(&default_row);
 
         let smtp_group = adw::PreferencesGroup::new();
         smtp_group.set_title(&i18n("Sending"));
@@ -301,6 +312,7 @@ impl AccountsWindow {
             window,
             name_row,
             addr_row,
+            default_row,
             smtp_switch,
             host_row,
             port_row,
@@ -445,7 +457,14 @@ impl AccountsWindow {
             smtp_username: if own_smtp { user } else { String::new() },
             smtp_password: if own_smtp { pass } else { String::new() },
             server_saves_sent: own_smtp && d.saves_row.is_active(),
+            default_from: d.default_row.is_active(),
         };
+        // Only one alias can be the default.
+        if alias.default_from {
+            for other in &mut self.alias_edits {
+                other.default_from = false;
+            }
+        }
         match self.alias_editing {
             Some(i) if i < self.alias_edits.len() => self.alias_edits[i] = alias,
             _ => self.alias_edits.push(alias),

@@ -93,6 +93,21 @@ fn build_message(
             account.email.clone(),
         ),
     };
+    // A draft of a message to be encrypted is encrypted to the user. Without
+    // gpg or a key of their own it is kept readable, as before, rather than
+    // not kept at all; it still says it is to be encrypted.
+    let draft_encrypts = draft && msg.encrypt;
+    let readable;
+    let msg = if draft_encrypts && !super::pgp_mime::can_seal(account, &from_addr) {
+        tracing::warn!("no OpenPGP key of your own for {from_addr}; draft kept unencrypted");
+        readable = OutgoingMessage {
+            encrypt: false,
+            ..msg.clone()
+        };
+        &readable
+    } else {
+        msg
+    };
     let sender_address = from.email.clone();
     let from_mailbox = from.clone();
     let mut builder = LettreMessage::builder().from(from);
@@ -115,9 +130,14 @@ fn build_message(
         builder = builder.cc(recipient(&name, &addr)?);
         recipients += 1;
     }
-    for (name, addr) in parse_recipients(&msg.bcc) {
-        builder = builder.bcc(recipient(&name, &addr)?);
-        recipients += 1;
+    // An encrypted draft keeps its Bcc inside, with the rest of what only
+    // the user is to read (see `protect_headers`).
+    let sealed_draft = draft && msg.encrypt;
+    if !sealed_draft {
+        for (name, addr) in parse_recipients(&msg.bcc) {
+            builder = builder.bcc(recipient(&name, &addr)?);
+            recipients += 1;
+        }
     }
     // A draft is the user's own copy and has to come back with its Bcc
     // recipients (#350); a sent message goes without them, and only its
@@ -182,6 +202,22 @@ fn build_message(
             &wire_references,
         )));
     }
+    // Autocrypt (Level 1): the sender's key on everything the account
+    // sends, so the people it writes to can encrypt back. Not on a draft,
+    // which goes to no one; an encrypted one says so instead, to be
+    // encrypted again when it is sent.
+    if !draft {
+        if let Some(header) = super::pgp_mime::autocrypt_header(account, &from_addr) {
+            builder = builder.raw_header(header);
+        }
+    } else if draft_encrypts {
+        builder = builder.raw_header(lettre::message::header::HeaderValue::new(
+            lettre::message::header::HeaderName::new_from_ascii_str(
+                crate::mail::pgp::autocrypt::DRAFT_STATE,
+            ),
+            crate::mail::pgp::autocrypt::draft_state(true),
+        ));
+    }
 
     use lettre::message::{header::ContentType, Attachment, MultiPart, SinglePart};
     // An answer to an invitation (#223): plain text for the person,
@@ -193,7 +229,7 @@ fn build_message(
             .header(ContentType::parse(&ctype).unwrap_or(ContentType::TEXT_PLAIN))
             .body(cal.ics.clone());
         let alt = MultiPart::alternative()
-            .singlepart(SinglePart::plain(msg.body.clone()))
+            .singlepart(plain_part(&msg.body))
             .singlepart(part);
         return Ok(builder.multipart(alt)?);
     }
@@ -210,7 +246,9 @@ fn build_message(
     // distinction the reader's own `extract_attachments` draws.
     let content = has_html.then(|| {
         let (html, images) = extract_data_images(&msg.html);
-        let alt = MultiPart::alternative_plain_html(msg.body.clone(), html);
+        let alt = MultiPart::alternative()
+            .singlepart(plain_part(&msg.body))
+            .singlepart(SinglePart::html(html));
         if images.is_empty() {
             return alt;
         }
@@ -228,35 +266,63 @@ fn build_message(
         related
     });
     // OpenPGP (#133): the body as one MIME entity, signed and/or encrypted
-    // into the PGP/MIME shape the reader recognises.
-    if msg.sign || msg.encrypt {
+    // into the PGP/MIME shape the reader recognises. A draft is never
+    // signed (Level 1: its signature would mean nothing), only encrypted.
+    if (msg.sign && !draft) || msg.encrypt {
         let entity = if msg.attachments.is_empty() {
             match content {
                 Some(content) => PgpEntity::Multi(content),
-                None => PgpEntity::Single(SinglePart::plain(msg.body.clone())),
+                None => PgpEntity::Single(plain_part(&msg.body)),
             }
         } else {
             PgpEntity::Multi(attachments_multipart(content, msg)?)
         };
-        let entity = if protect {
-            protect_headers(entity, msg, &from_mailbox)?
+        let entity = if protect || sealed_draft {
+            protect_headers(entity, msg, &from_mailbox, sealed_draft)?
         } else {
             entity
         };
-        let wrapped = pgp_wrap(account, msg, &from_addr, entity)?;
-        return Ok(builder.multipart(wrapped)?);
+        return Ok(match pgp_wrap(account, msg, &from_addr, entity, draft)? {
+            PgpEntity::Multi(m) => builder.multipart(m)?,
+            PgpEntity::Single(s) => builder.singlepart(s)?,
+        });
     }
     let email = if msg.attachments.is_empty() {
         match content {
             Some(content) => builder.multipart(content)?,
             // A bare body() writes no MIME-Version and no charset, so a
             // client that doesn't guess UTF-8 garbles every accent (#412).
-            None => builder.singlepart(SinglePart::plain(msg.body.clone()))?,
+            None => builder.singlepart(plain_part(&msg.body))?,
         }
     } else {
         builder.multipart(attachments_multipart(content, msg)?)?
     };
     Ok(email)
+}
+
+/// The plain-text part of a message: `format=flowed`, so a reader that
+/// knows it wraps the text to its own width and one that doesn't still gets
+/// lines of a readable length (#606). The space each soft break ends in is
+/// sent quoted-printable when the text would otherwise go as 7bit: a server
+/// that trims trailing spaces would join nothing, and break a signature.
+fn plain_part(text: &str) -> lettre::message::SinglePart {
+    use lettre::message::{header::ContentTransferEncoding, header::ContentType, Body, SinglePart};
+    let flowed = crate::mail::flowed::flow(text);
+    let body = Body::new(flowed.clone());
+    let soft_breaks = flowed.contains(" \n");
+    let body = match body.encoding() {
+        ContentTransferEncoding::SevenBit | ContentTransferEncoding::EightBit if soft_breaks => {
+            Body::new_with_encoding(flowed, ContentTransferEncoding::QuotedPrintable)
+                .unwrap_or(body)
+        }
+        _ => body,
+    };
+    SinglePart::builder()
+        .header(
+            ContentType::parse("text/plain; charset=utf-8; format=flowed")
+                .expect("static content type"),
+        )
+        .body(body)
 }
 
 /// The text part (plain, or alternative plain+html) followed by the
@@ -265,10 +331,10 @@ fn attachments_multipart(
     content: Option<lettre::message::MultiPart>,
     msg: &OutgoingMessage,
 ) -> Result<lettre::message::MultiPart, SmtpError> {
-    use lettre::message::{header::ContentType, Attachment, MultiPart, SinglePart};
+    use lettre::message::{header::ContentType, Attachment, MultiPart};
     let mut multipart = match content {
         Some(content) => MultiPart::mixed().multipart(content),
-        None => MultiPart::mixed().singlepart(SinglePart::plain(msg.body.clone())),
+        None => MultiPart::mixed().singlepart(plain_part(&msg.body)),
     };
     for path in &msg.attachments {
         // Name the file in the error: "No such file or directory" on its own

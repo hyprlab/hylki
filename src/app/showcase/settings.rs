@@ -136,19 +136,23 @@ pub(super) fn stage_dialog() {
 }
 
 impl AppModel {
-    /// HYLKI_SHOWCASE_CONTACTS=list|new|group|search:<text>[@<n>]|filter:<n>|multi:<n>
+    /// HYLKI_SHOWCASE_CONTACTS=list|new|group|search:<text>[@<n>]|filter:<n>|multi:<n>|import:<files>
     /// opens Contacts at 3s, and with "new" its editor for a new
     /// contact at 5s ("group": for a new group), or with "search:"
     /// types the text into its search
     /// then, so the directories are asked too (#307), and with
     /// "@<n>" shows only book n of the filter at 6s; "filter:"
     /// turns on its nth "Show only" filter at 5s; "multi:"
-    /// selects the first n entries at 5s.
+    /// selects the first n entries at 5s; "import:" imports the files,
+    /// split by commas, at 5s (see `ui::contact_import`).
     pub(super) fn stage_contacts(&self, sender: &ComponentSender<AppModel>) {
         if let Ok(which) = std::env::var("HYLKI_SHOWCASE_CONTACTS") {
             input_after(sender, 3, AppMsg::OpenContacts);
             let page = self.contacts_page.sender().clone();
-            if which == "new" || which == "group" {
+            if let Some(files) = which.strip_prefix("import:") {
+                let paths = files.split(',').map(std::path::PathBuf::from).collect();
+                input_after(sender, 5, AppMsg::ImportContacts { paths, book: None });
+            } else if which == "new" || which == "group" {
                 gtk::glib::timeout_add_seconds_local_once(5, move || {
                     let _ = page.send(if which == "group" {
                         ContactsPageInput::NewGroup
