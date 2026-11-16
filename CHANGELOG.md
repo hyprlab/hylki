@@ -1,5 +1,44 @@
 # Changelog
 
+## 1.48.3 — 2026-11-16
+
+A patch release with three fixes and a French update: contacts moved to a
+Nextcloud address book leave the Hylki book, shared mailboxes nest under
+their parents in the Folders tree, and address book names show whole in
+their dropdowns.
+
+- **Fixed: contacts moved to a Nextcloud book stayed in the Hylki book**
+  (#652, reported by 7system7). Evolution Data Server keeps a server's
+  address book read-only for a moment after it opens, until it has
+  connected, and refuses every write in that time with "Permission
+  denied". When no other app held the book open, a move, copy or edit into
+  it failed that way, so moved contacts stayed where they were and showed
+  again beside the next import. A write now waits up to 10 seconds for its
+  book to become writable, and a book gets 5 seconds before it counts as
+  read-only, so a Nextcloud book that had not been opened yet is no longer
+  missing from the books contacts can go to.
+
+- **Fixed: shared mailboxes drew at the top of Folders with no parent**
+  (#664, by Peter Hagen). On Dovecot servers, mailcow among them, a shared
+  mailbox such as `Shared/user@dom/INBOX` showed as a lone "Inbox", because
+  the levels above it cannot be opened and the server lists them as
+  containers only. The Folders tree now draws those levels as rows of their
+  own, so the mailbox nests as Shared, then user@dom, then INBOX. The rows
+  fold like any parent but cannot be selected, dragged, dropped into or
+  right-clicked. Gmail's own `[Gmail]` container is left out, so its labels
+  stay where they were.
+
+- **Fixed: address book names cut off in their dropdowns** (#663, by Peter
+  Hagen). Settings → Contacts → **Save new contacts in** and the **Address
+  book** row of the contact and group editors now list every book's name
+  whole, so two books of one CardDAV account that share a long prefix can be
+  told apart. The row's own value keeps its width and shows the whole name as
+  a tooltip. The address book picker above the contact list shows the
+  checkmark on the picked book, like the others.
+
+- **Translations:** French (PR #660 by frenchy82), 2498 of 2503 strings
+  translated.
+
 ## 1.48.2 — 2026-11-15
 
 A patch release with two fixes: OpenPGP signatures stay valid when the
