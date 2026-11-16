@@ -446,8 +446,9 @@
   [AI agents](docs/DOCUMENTATION.md#ai-agents).
 
 - **Fixed: mail could fail to load from servers sending doubled backslashes in
-  message flags.** FETCH flags such as `\\Seen` are now read as `\Seen`, without
-  changing message contents or delaying streaming downloads.
+  message flags.** A targeted IMAP parser fix reads flags such as `\\Seen` as
+  `\Seen` in mailbox, permanent and fetched flags, without changing message
+  contents or delaying streaming downloads.
 
 ## 1.47.1 — 2026-11-05
 

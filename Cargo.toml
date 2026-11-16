@@ -128,6 +128,10 @@ glib-build-tools = "0.20"
 [dev-dependencies]
 tokio = { version = "1", features = ["test-util"] }
 
+[patch.crates-io]
+# Purelymail doubles flag prefixes; repair them in the shared flag-list parser.
+imap-proto = { git = "https://github.com/rimmer/imap-proto.git", rev = "e0b5df0444b299b935decb275a6aa3e756e7e7ec" }
+
 [profile.dev]
 opt-level = 1
 
