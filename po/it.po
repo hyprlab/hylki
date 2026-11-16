@@ -3322,11 +3322,37 @@ msgstr "Letti"
 msgid "Has attachments"
 msgstr "Ha allegati"
 
+msgid "No attachments"
+msgstr "Nessun allegato"
+
 msgid "Tagged"
 msgstr "Etichettato"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "Non contrassegnati"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Client e-mail"
+
 msgid "Message preview"
 msgstr "Anteprima messaggio"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Salva i nuovi contatti in"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "inizia con"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "termina con"
 
 msgid "Edit Smart Folder"
 msgstr "Modifica cartella smart"
@@ -3343,6 +3369,9 @@ msgstr "Cartelle"
 
 msgid "Any tag"
 msgstr "Qualsiasi etichetta"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "L'anteprima che ogni messaggio ha nell'elenco"
@@ -3482,9 +3511,6 @@ msgstr "Cerca per mittente, oggetto, tipo, nome file…"
 
 msgid "Loading attachments…"
 msgstr "Caricamento allegati in corso…"
-
-msgid "No attachments"
-msgstr "Nessun allegato"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Gli allegati delle tue caselle in arrivo appariranno qui."

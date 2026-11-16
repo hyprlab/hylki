@@ -234,14 +234,20 @@ deletes it. Deleting one takes only the search away, never the mail.
   section.
 - **Folders:** one kind of folder (Inbox, Sent, Drafts, Archive, Junk or
   Trash), or every folder but Trash and Junk.
-- **Conditions:** starred or not, unread or read, has attachments, tagged
-  with a tag or any tag, and the text conditions filters use: From address
-  and name, To or Cc, Reply-To, the message preview, and whether the sender
-  is in Contacts. **Condition matching** says whether all must match or any
-  one may.
+- **Conditions:** starred or not, unread or read, with or without
+  attachments, tagged or not tagged (with a tag, or any tag), a Gmail
+  label, and the text conditions filters use: From address and name, To or
+  Cc, Reply-To, the message preview, and whether the sender is in Contacts.
+  Each text condition, the Gmail label included, can be turned around:
+  **does not contain**, **is not**, **does not start with**, **does not
+  end with**. A Gmail label with no text matches any label, so "Gmail
+  label, does not contain" and no text finds mail with no label at all.
+  **Condition matching** says whether all must match or any one may.
 
 "Sent mail that is starred or tagged" is Folders: Sent, with Starred and
-Tagged (any tag) as conditions and Any one may match. A smart folder
+Tagged (any tag) as conditions and Any one may match. "Inbox mail not from
+a shop" is Folders: Inbox, with From address, does not end with,
+`@shop.example`. A smart folder
 searches the mail on this computer, so it finds what has been synced, and
 lists at most 5,000 messages per account. They are kept in
 `smart_folders.toml`.

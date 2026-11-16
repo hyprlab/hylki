@@ -2962,10 +2962,31 @@ msgstr ""
 msgid "Has attachments"
 msgstr ""
 
+msgid "No attachments"
+msgstr ""
+
 msgid "Tagged"
 msgstr ""
 
+msgid "Not tagged"
+msgstr ""
+
+msgid "Gmail label"
+msgstr ""
+
 msgid "Message preview"
+msgstr ""
+
+msgid "does not contain"
+msgstr ""
+
+msgid "is not"
+msgstr ""
+
+msgid "does not start with"
+msgstr ""
+
+msgid "does not end with"
 msgstr ""
 
 msgid "Edit Smart Folder"
@@ -2981,6 +3002,9 @@ msgid "Folders"
 msgstr ""
 
 msgid "Any tag"
+msgstr ""
+
+msgid "With no text, any label matches."
 msgstr ""
 
 msgid "The preview each message has in the list"
@@ -3110,9 +3134,6 @@ msgid "Search by sender, subject, type, filename…"
 msgstr ""
 
 msgid "Loading attachments…"
-msgstr ""
-
-msgid "No attachments"
 msgstr ""
 
 msgid "Attachments from your inboxes will appear here."

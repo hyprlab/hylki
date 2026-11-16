@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Added: smart folders with negative conditions** (#639, requested by
+  3v1n0). A text condition can now be **does not contain**, **is not**,
+  **does not start with** or **does not end with**, and **No attachments**
+  and **Not tagged** join the conditions. A new **Gmail label** condition
+  finds mail by its labels, or with no text any label, so it can also find
+  mail that has none. On Gmail, the copy of a message filed under a label
+  now counts as having it, so "Not tagged Work" leaves out mail under Work.
+
 - **Added: mail can be named by its Reply-To sender** (#641, requested by
   somepaulo). **Settings → Contacts → Show the Reply-To sender** names a
   message by the first address in its Reply-To header instead of From, in

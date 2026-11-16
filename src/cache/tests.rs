@@ -27,12 +27,12 @@ fn smart_scan_reads_only_what_it_is_asked_for() {
     let none = crate::config::SmartPrefilter::default();
     let trash = vec!["Trash".to_string()];
     assert_eq!(
-        uids(c.smart_scan(1, None, &trash, none, 10, |_| true)),
+        uids(c.smart_scan(1, None, &trash, none, 10, |_, _| true)),
         [2, 3, 1]
     );
     let sent = vec!["Sent".to_string()];
     assert_eq!(
-        uids(c.smart_scan(1, Some(&sent), &[], none, 10, |_| true)),
+        uids(c.smart_scan(1, Some(&sent), &[], none, 10, |_, _| true)),
         [3]
     );
     let starred = crate::config::SmartPrefilter {
@@ -40,18 +40,21 @@ fn smart_scan_reads_only_what_it_is_asked_for() {
         ..none
     };
     assert_eq!(
-        uids(c.smart_scan(1, None, &trash, starred, 10, |_| true)),
+        uids(c.smart_scan(1, None, &trash, starred, 10, |_, _| true)),
         [3, 1]
     );
     assert_eq!(
-        uids(c.smart_scan(1, None, &trash, none, 10, |m| m.subject.ends_with("one"))),
+        uids(c.smart_scan(1, None, &trash, none, 10, |_, m| m.subject.ends_with("one"))),
         [1]
     );
-    assert_eq!(uids(c.smart_scan(1, None, &[], none, 2, |_| true)), [4, 2]);
+    assert_eq!(
+        uids(c.smart_scan(1, None, &[], none, 2, |_, _| true)),
+        [4, 2]
+    );
     assert!(c
-        .smart_scan(1, Some(&[]), &[], none, 10, |_| true)
+        .smart_scan(1, Some(&[]), &[], none, 10, |_, _| true)
         .is_empty());
-    assert!(c.smart_scan(2, None, &[], none, 10, |_| true).is_empty());
+    assert!(c.smart_scan(2, None, &[], none, 10, |_, _| true).is_empty());
 }
 
 /// An account that suggests only its own (#410) gets the addresses in

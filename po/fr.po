@@ -3185,11 +3185,37 @@ msgstr "Lu"
 msgid "Has attachments"
 msgstr "Contient des pièces jointes"
 
+msgid "No attachments"
+msgstr "Aucune pièce jointe"
+
 msgid "Tagged"
 msgstr "Avec tag"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "Sans favori"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Client e-mail"
+
 msgid "Message preview"
 msgstr "Aperçu du message"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Enregistrer les nouveaux contacts dans"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "commence par"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "se termine par"
 
 msgid "Edit Smart Folder"
 msgstr "Modifier le dossier intelligent"
@@ -3205,6 +3231,9 @@ msgstr "Dossiers"
 
 msgid "Any tag"
 msgstr "N’importe quel tag"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "L’aperçu de chaque message dans la liste"
@@ -3345,9 +3374,6 @@ msgstr "Rechercher par expéditeur, objet, type, nom de fichier…"
 
 msgid "Loading attachments…"
 msgstr "Chargement des pièces jointes…"
-
-msgid "No attachments"
-msgstr "Aucune pièce jointe"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Les pièces jointes de vos boîtes de réception apparaîtront ici."

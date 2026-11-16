@@ -345,9 +345,10 @@ impl FilterField {
     ];
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum FilterMatch {
+    #[default]
     Contains,
     Equals,
     StartsWith,
@@ -362,6 +363,16 @@ impl FilterMatch {
         FilterMatch::StartsWith,
         FilterMatch::EndsWith,
     ];
+
+    /// Whether `hay` matches `needle` this way; both already lower case.
+    pub(crate) fn test(self, hay: &str, needle: &str) -> bool {
+        match self {
+            FilterMatch::Contains => hay.contains(needle),
+            FilterMatch::Equals => hay == needle,
+            FilterMatch::StartsWith => hay.starts_with(needle),
+            FilterMatch::EndsWith => hay.ends_with(needle),
+        }
+    }
 }
 
 /// What a message offers the conditions to look at.
@@ -440,14 +451,8 @@ impl FilterCondition {
         } else {
             vec![hay]
         };
-        alts.iter().any(|needle| {
-            hays.iter().any(|hay| match self.matcher {
-                FilterMatch::Contains => hay.contains(needle.as_str()),
-                FilterMatch::Equals => hay == needle,
-                FilterMatch::StartsWith => hay.starts_with(needle.as_str()),
-                FilterMatch::EndsWith => hay.ends_with(needle.as_str()),
-            })
-        })
+        alts.iter()
+            .any(|needle| hays.iter().any(|hay| self.matcher.test(hay, needle)))
     }
 }
 

@@ -27,10 +27,25 @@ struct SmartContext {
     /// The tags themselves, for the Gmail labels that stand for them (#374).
     tag_list: Vec<config::Tag>,
     contacts: Option<std::sync::Arc<std::collections::HashSet<String>>>,
+    /// The Gmail folders that are labels, by account and path. A copy's
+    /// stored labels leave out the folder it sits in, so without these
+    /// "not tagged Work" would keep the copy filed under Work (#639).
+    label_folders: std::collections::HashSet<(u32, String)>,
 }
 
 impl SmartContext {
-    pub(super) fn matches(&self, folder: &config::SmartFolder, m: &Message) -> bool {
+    /// Whether `folder` keeps `m`, the copy of it cached in `path`.
+    pub(super) fn matches(&self, folder: &config::SmartFolder, path: &str, m: &Message) -> bool {
+        let labels: std::borrow::Cow<[String]> = if self
+            .label_folders
+            .contains(&(m.account_id, path.to_string()))
+        {
+            let mut l = m.labels.clone();
+            l.push(path.to_string());
+            l.into()
+        } else {
+            m.labels.as_slice().into()
+        };
         let recipients = [m.to.as_str(), m.cc.as_str()]
             .into_iter()
             .filter(|s| !s.trim().is_empty())
@@ -54,10 +69,18 @@ impl SmartContext {
             starred: m.starred,
             unread: m.unread,
             attachment: m.has_attachment,
-            keywords: &m.tag_keywords(&self.tag_list),
+            keywords: &m.tag_keywords_with(&labels, &self.tag_list),
             tags: &self.tags,
+            labels: &labels,
         })
     }
+}
+
+/// Whether a Gmail folder is one of Gmail's own, under `[Gmail]` (or
+/// `[Google Mail]` where Google has that name).
+fn gmail_system(path: &str) -> bool {
+    let root = path.split('/').next().unwrap_or(path);
+    root.eq_ignore_ascii_case("[Gmail]") || root.eq_ignore_ascii_case("[Google Mail]")
 }
 
 /// Where a smart folder looks: per account, the folders it is held to
@@ -150,6 +173,19 @@ impl AppModel {
             } else {
                 None
             },
+            label_folders: self
+                .folders
+                .iter()
+                .filter(|(account_id, _)| self.gmail_labels(**account_id))
+                .flat_map(|(account_id, folders)| {
+                    // Gmail's own folders under [Gmail] are system labels,
+                    // which the stored labels leave out too.
+                    folders
+                        .iter()
+                        .filter(|x| x.kind == FolderKind::Custom && !gmail_system(&x.path))
+                        .map(|x| (*account_id, x.path.clone()))
+                })
+                .collect(),
         }
     }
 
@@ -206,7 +242,7 @@ impl AppModel {
                         &exclude,
                         folder.prefilter(),
                         SMART_VIEW_LIMIT,
-                        |m| ctx.matches(&folder, m),
+                        |path, m| ctx.matches(&folder, path, m),
                     );
                     rows.extend(found.into_iter().map(|(path, m)| (account_id, path, m)));
                 }
@@ -260,7 +296,12 @@ impl AppModel {
                         continue;
                     }
                     if let Some(messages) = self.message_cache.get(&(account_id, f.id)) {
-                        out.extend(messages.iter().filter(|m| ctx.matches(folder, m)).cloned());
+                        out.extend(
+                            messages
+                                .iter()
+                                .filter(|m| ctx.matches(folder, &f.path, m))
+                                .cloned(),
+                        );
                     }
                 }
             }
@@ -334,7 +375,7 @@ impl AppModel {
                             &exclude,
                             pre,
                             usize::MAX,
-                            |m| ctx.matches(&folder, m),
+                            |path, m| ctx.matches(&folder, path, m),
                         ) {
                             if m.message_id.is_empty() || seen.insert((account_id, m.message_id)) {
                                 n += 1;
@@ -464,6 +505,7 @@ mod tests {
             tags: Vec::new(),
             tag_list: Vec::new(),
             contacts: None,
+            label_folders: Default::default(),
         };
         let folder = |field, value: &str| SmartFolder {
             id: "s".into(),
@@ -475,14 +517,15 @@ mod tests {
                 field,
                 matcher: FilterMatch::Contains,
                 value: value.into(),
+                not: false,
             }],
         };
         let mut m = msg(1, 1, 1);
         m.cc = "carol@x".into();
         m.preview = "quarterly numbers".into();
-        assert!(ctx.matches(&folder(SmartField::Recipients, "carol"), &m));
-        assert!(ctx.matches(&folder(SmartField::Body, "quarterly"), &m));
+        assert!(ctx.matches(&folder(SmartField::Recipients, "carol"), "INBOX", &m));
+        assert!(ctx.matches(&folder(SmartField::Body, "quarterly"), "INBOX", &m));
         m.body = "something else".into();
-        assert!(!ctx.matches(&folder(SmartField::Body, "quarterly"), &m));
+        assert!(!ctx.matches(&folder(SmartField::Body, "quarterly"), "INBOX", &m));
     }
 }

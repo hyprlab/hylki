@@ -3175,11 +3175,37 @@ msgstr "Lida"
 msgid "Has attachments"
 msgstr "Tem anexos"
 
+msgid "No attachments"
+msgstr "Sem anexos"
+
 msgid "Tagged"
 msgstr "Com etiqueta"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "Sem estrela"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Cliente de email"
+
 msgid "Message preview"
 msgstr "Visualização da mensagem"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Salvar novos contatos em"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "começa com"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "termina com"
 
 msgid "Edit Smart Folder"
 msgstr "Editar pasta de pesquisa"
@@ -3195,6 +3221,9 @@ msgstr "Pastas"
 
 msgid "Any tag"
 msgstr "Qualquer etiqueta"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "A visualização de cada mensagem na lista"
@@ -3334,9 +3363,6 @@ msgstr "Pesquisar por remetente, assunto, tipo, nome de arquivo…"
 
 msgid "Loading attachments…"
 msgstr "Carregando anexos…"
-
-msgid "No attachments"
-msgstr "Sem anexos"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Os anexos das suas caixas de entrada irão aparecer aqui."

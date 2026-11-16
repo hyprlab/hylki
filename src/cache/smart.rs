@@ -13,7 +13,7 @@ impl Cache {
     /// The account's cached messages a smart folder (#417) keeps, newest
     /// first with the folder each sits in: those in `include` (every folder
     /// when `None`) and not in `exclude`, past what `pre` rules out, for
-    /// which `keep` says yes. Rows are read one at a time and only the kept
+    /// which `keep`, given the folder and the message, says yes. Rows are read one at a time and only the kept
     /// ones become messages, so a folder over a large index stays cheap to
     /// hold; reading stops at `limit` kept.
     pub(crate) fn smart_scan(
@@ -23,7 +23,7 @@ impl Cache {
         exclude: &[String],
         pre: crate::config::SmartPrefilter,
         limit: usize,
-        mut keep: impl FnMut(&Message) -> bool,
+        mut keep: impl FnMut(&str, &Message) -> bool,
     ) -> Vec<(String, Message)> {
         use rusqlite::types::Value;
         let mut args: Vec<Value> = vec![Value::Integer(account_id.into())];
@@ -70,8 +70,9 @@ impl Cache {
             let mut out = Vec::new();
             while let Some(row) = rows.next()? {
                 let m = message_from_row(row, 1, account_id, 0)?;
-                if keep(&m) {
-                    out.push((row.get::<_, String>(0)?, m));
+                let path: String = row.get(0)?;
+                if keep(&path, &m) {
+                    out.push((path, m));
                     if out.len() >= limit {
                         break;
                     }

@@ -3409,12 +3409,37 @@ msgstr "Czytanie"
 msgid "Has attachments"
 msgstr "Brak załączników"
 
+msgid "No attachments"
+msgstr "Brak załączników"
+
 msgid "Tagged"
 msgstr ""
 
 #, fuzzy
+msgid "Not tagged"
+msgstr "Niezainstalowane"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Klient poczty"
+
+#, fuzzy
 msgid "Message preview"
 msgstr "Źródło wiadomości"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Nowy kontakt"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "Uruchom ponownie teraz"
+
+msgid "does not end with"
+msgstr ""
 
 #, fuzzy
 msgid "Edit Smart Folder"
@@ -3432,6 +3457,9 @@ msgid "Folders"
 msgstr "Katalogi"
 
 msgid "Any tag"
+msgstr ""
+
+msgid "With no text, any label matches."
 msgstr ""
 
 msgid "The preview each message has in the list"
@@ -3575,9 +3603,6 @@ msgstr "Wyszukaj według nadawcy, tematu, typu, nazwy pliku…"
 
 msgid "Loading attachments…"
 msgstr "Wczytywanie załączników…"
-
-msgid "No attachments"
-msgstr "Brak załączników"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "W tym miejscu będą wyświetlane załączniki ze skrzynek odbiorczych."

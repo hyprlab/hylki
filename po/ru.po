@@ -3179,11 +3179,37 @@ msgstr "Читать"
 msgid "Has attachments"
 msgstr "Есть вложения"
 
+msgid "No attachments"
+msgstr "Нет вложений"
+
 msgid "Tagged"
 msgstr "с тегами"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "Не помечено"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Почтовый клиент"
+
 msgid "Message preview"
 msgstr "Предварительный просмотр сообщения"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Сохраняйте новые контакты в"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "начинается с"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "заканчивается на"
 
 msgid "Edit Smart Folder"
 msgstr "Редактировать смарт-папку"
@@ -3199,6 +3225,9 @@ msgstr "Папки"
 
 msgid "Any tag"
 msgstr "Любой тег"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "Предварительный просмотр каждого сообщения в списке"
@@ -3339,9 +3368,6 @@ msgstr "Поиск по отправителю, теме, типу, имени �
 
 msgid "Loading attachments…"
 msgstr "Загрузка вложений…"
-
-msgid "No attachments"
-msgstr "Нет вложений"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Вложения из ваших почтовых ящиков появятся здесь."

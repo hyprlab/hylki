@@ -3221,11 +3221,37 @@ msgstr "Αναγνωσμένα"
 msgid "Has attachments"
 msgstr "Έχει συνημμένα"
 
+msgid "No attachments"
+msgstr "Δεν υπάρχουν συνημμένα"
+
 msgid "Tagged"
 msgstr "Με ετικέτα"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "Χωρίς αστέρι"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Πρόγραμμα-πελάτης email"
+
 msgid "Message preview"
 msgstr "Προεπισκόπηση μηνύματος"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Αποθήκευση νέων επαφών στο"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "αρχίζει με"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "τελειώνει με"
 
 msgid "Edit Smart Folder"
 msgstr "Επεξεργασία έξυπνου φακέλου"
@@ -3241,6 +3267,9 @@ msgstr "Φάκελοι"
 
 msgid "Any tag"
 msgstr "Οποιαδήποτε ετικέτα"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "Η προεπισκόπηση κάθε μηνύματος στη λίστα"
@@ -3382,9 +3411,6 @@ msgstr "Αναζήτηση κατά αποστολέα, θέμα, τύπο, όν
 
 msgid "Loading attachments…"
 msgstr "Φόρτωση συνημμένων…"
-
-msgid "No attachments"
-msgstr "Δεν υπάρχουν συνημμένα"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Τα συνημμένα από τα εισερχόμενά σας θα εμφανίζονται εδώ."

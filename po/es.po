@@ -3180,11 +3180,37 @@ msgstr "Leído"
 msgid "Has attachments"
 msgstr "Tiene archivos adjuntos"
 
+msgid "No attachments"
+msgstr "No hay archivos adjuntos"
+
 msgid "Tagged"
 msgstr "Etiquetado"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "No destacado"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Cliente de correo electrónico"
+
 msgid "Message preview"
 msgstr "Vista previa del mensaje"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Guardar los contactos nuevos en"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "empieza por"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "termina en"
 
 msgid "Edit Smart Folder"
 msgstr "Editar carpeta inteligente"
@@ -3200,6 +3226,9 @@ msgstr "Carpetas"
 
 msgid "Any tag"
 msgstr "Cualquier etiqueta"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "La vista previa de cada mensaje en la lista"
@@ -3338,9 +3367,6 @@ msgstr "Buscar por remitente, asunto, tipo, nombre de archivo…"
 
 msgid "Loading attachments…"
 msgstr "Cargando archivos adjuntos…"
-
-msgid "No attachments"
-msgstr "No hay archivos adjuntos"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Los archivos adjuntos de tus bandejas de entrada aparecerán aquí."

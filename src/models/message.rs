@@ -279,9 +279,20 @@ impl Message {
     /// The message's keywords, with the keyword of every tag a Gmail label
     /// stands for: what the tag checks go by.
     pub(crate) fn tag_keywords(&self, tags: &[crate::config::Tag]) -> Vec<String> {
+        self.tag_keywords_with(&self.labels, tags)
+    }
+
+    /// [`Message::tag_keywords`] with `labels` in place of the message's
+    /// own: a smart folder adds the label of the folder a Gmail copy sits
+    /// in, which the stored labels leave out.
+    pub(crate) fn tag_keywords_with(
+        &self,
+        labels: &[String],
+        tags: &[crate::config::Tag],
+    ) -> Vec<String> {
         let mut out = self.keywords.clone();
         for t in tags {
-            if !self.has_keyword(&t.keyword) && self.labels.iter().any(|l| label_names_tag(l, t)) {
+            if !self.has_keyword(&t.keyword) && labels.iter().any(|l| label_names_tag(l, t)) {
                 out.push(t.keyword.clone());
             }
         }

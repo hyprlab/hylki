@@ -3357,12 +3357,38 @@ msgstr "Olvasás"
 msgid "Has attachments"
 msgstr "Nincsenek mellékletek"
 
+msgid "No attachments"
+msgstr "Nincsenek mellékletek"
+
 msgid "Tagged"
 msgstr ""
 
 #, fuzzy
+msgid "Not tagged"
+msgstr "Nincs telepítve"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "E-mail kliens"
+
+#, fuzzy
 msgid "Message preview"
 msgstr "Üzenetforrás"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Új névjegy"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "ezzel kezdődik"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "ezzel végződik"
 
 #, fuzzy
 msgid "Edit Smart Folder"
@@ -3380,6 +3406,9 @@ msgid "Folders"
 msgstr "Mappák"
 
 msgid "Any tag"
+msgstr ""
+
+msgid "With no text, any label matches."
 msgstr ""
 
 msgid "The preview each message has in the list"
@@ -3522,9 +3551,6 @@ msgstr "Keresés feladó, tárgy, típus vagy fájlnév alapján…"
 
 msgid "Loading attachments…"
 msgstr "Mellékletek betöltése…"
-
-msgid "No attachments"
-msgstr "Nincsenek mellékletek"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "A beérkezett üzenetek mellékletei itt jelennek meg."

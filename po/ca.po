@@ -3246,11 +3246,37 @@ msgstr "Llegit"
 msgid "Has attachments"
 msgstr "Té adjunts"
 
+msgid "No attachments"
+msgstr "No hi ha adjunts"
+
 msgid "Tagged"
 msgstr "Etiquetat"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "No destacat"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Client de correu"
+
 msgid "Message preview"
 msgstr "Previsualització del missatge"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Desa els contactes nous a"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "comença per"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "acaba amb"
 
 msgid "Edit Smart Folder"
 msgstr "Edita la carpeta intel·ligent"
@@ -3266,6 +3292,9 @@ msgstr "Carpetes"
 
 msgid "Any tag"
 msgstr "Qualsevol etiqueta"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "La previsualització que cada missatge té a la llista"
@@ -3405,9 +3434,6 @@ msgstr "Cerca per remitent, assumpte, tipus, nom de fitxer…"
 
 msgid "Loading attachments…"
 msgstr "S'estan carregant els adjunts…"
-
-msgid "No attachments"
-msgstr "No hi ha adjunts"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Els adjunts de les teves bústies d'entrada apareixeran aquí."
