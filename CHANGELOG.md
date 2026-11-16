@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Added: events and tasks from selected text** (#637, requested by
+  adri99-net). With text selected in the reader, the right-click menu offers
+  **Create Event from Selection…** and **Create Task from Selection…**. The
+  dialog starts from the date, start and end times, or range of days written
+  in the selection ("Friday at 3pm", "Nov 20-22", "20/11, 14:00-15:30"),
+  takes a short selection without its date as the title, and puts the
+  selection in the notes. A day without a time makes an all-day event.
+  Relative words and dates without a year count from the message's date.
+  Month and weekday names are read in English and the desktop's language.
+  The dates are read by fixed rules on this computer, with no language model.
+
 - **Added: smart folders with negative conditions** (#639, requested by
   3v1n0). A text condition can now be **does not contain**, **is not**,
   **does not start with** or **does not end with**, and **No attachments**

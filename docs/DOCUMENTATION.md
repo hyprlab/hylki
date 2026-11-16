@@ -2212,6 +2212,20 @@ next time. Each is listed under its account's name in **Settings →
 Contacts**, else the nickname of the mail account with the same address,
 else the address.
 
+With text selected in the reader, the right-click menu has **Create Event
+from Selection…** and **Create Task from Selection…** in their place. The
+dialog then starts from the date and times written in the selection:
+"Friday at 3pm", "Nov 20-22", "20/11/2026, 14:00-15:30", "tomorrow, 10-11am".
+A short one-line selection becomes the title, without its date and times;
+anything longer leaves the subject as the title. The selection goes in the
+notes instead of the whole message. A day without a time makes an all-day
+event, and a task's due date is switched on. Words such as "tomorrow" and
+"Friday", and a date written without a year, count from the day the message
+was sent. Month and weekday names are read in English and in the desktop's
+language, and a date such as 03/04 in the order the desktop writes dates.
+Hylki reads the dates by fixed rules, on this computer; whatever it did not
+find stays at the dialog's usual default.
+
 On a desktop without Evolution Data Server the dialog's button is **Open in
 Calendar**: the event or task is handed as an `.ics` file to the application
 that opens calendar files, as an invitation's **Add to Calendar** is.

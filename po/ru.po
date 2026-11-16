@@ -271,6 +271,14 @@ msgstr "Вернуться к Моим шрифтам и цветам"
 msgid "Show Sender's Fonts and Colors"
 msgstr "Показать шрифты и цвета отправителя"
 
+#, fuzzy
+msgid "Create Event from Selection…"
+msgstr "Создать событие…"
+
+#, fuzzy
+msgid "Create Task from Selection…"
+msgstr "Создать задачу…"
+
 msgid "View Source"
 msgstr "Просмотр исходного кода"
 
@@ -1915,6 +1923,16 @@ msgstr "Найти в сообщении (Ctrl+F)"
 
 msgid "Downloading attachments…"
 msgstr "Загрузка вложений…"
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+#, fuzzy
+msgid "today tonight"
+msgstr "Слева направо"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
 
 msgid "Signature"
 msgstr "Подпись"

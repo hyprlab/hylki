@@ -302,6 +302,14 @@ msgstr "Επιστροφή στις γραμματοσειρές και τα χ�
 msgid "Show Sender's Fonts and Colors"
 msgstr "Εμφάνιση των γραμματοσειρών και των χρωμάτων του αποστολέα"
 
+#, fuzzy
+msgid "Create Event from Selection…"
+msgstr "Δημιουργία συμβάντος…"
+
+#, fuzzy
+msgid "Create Task from Selection…"
+msgstr "Δημιουργία εργασίας…"
+
 msgid "View Source"
 msgstr "Προβολή πηγαίου κώδικα"
 
@@ -1921,6 +1929,16 @@ msgstr "Εύρεση στο μήνυμα (Ctrl+F)"
 
 msgid "Downloading attachments…"
 msgstr "Λήψη συνημμένων…"
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+#, fuzzy
+msgid "today tonight"
+msgstr "Από αριστερά προς τα δεξιά"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
 
 msgid "Signature"
 msgstr "Υπογραφή"

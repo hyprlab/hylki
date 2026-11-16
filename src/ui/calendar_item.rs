@@ -10,7 +10,7 @@ use adw::prelude::*;
 use chrono::{DateTime, Datelike, Duration, Local, NaiveDate, TimeZone, Timelike};
 use gtk::glib;
 
-use crate::calendar::{Item, ItemKind, Source, When};
+use crate::calendar::{Found, Item, ItemKind, Source, When};
 use crate::i18n::{i18n, ni18n_f};
 
 /// The width of the dialog's form, in pixels.
@@ -21,6 +21,9 @@ pub(crate) struct Start {
     pub(crate) kind: ItemKind,
     pub(crate) summary: String,
     pub(crate) notes: String,
+    /// The date and times read from selected text (#637), each set in
+    /// place of the default where it was found.
+    pub(crate) found: Found,
     /// Where an item went last time, chosen again if it is still offered.
     pub(crate) last_source: String,
     /// The alarms the last event had, chosen again.
@@ -88,8 +91,8 @@ pub(crate) fn show(
     });
 
     let when: Box<dyn Fn() -> (When, Vec<u32>)> = match kind {
-        ItemKind::Event => event_rows(&form, &start.last_alarms),
-        ItemKind::Task => task_rows(&form),
+        ItemKind::Event => event_rows(&form, &start.last_alarms, &start.found),
+        ItemKind::Task => task_rows(&form, &start.found),
     };
 
     let notes = gtk::TextView::new();
@@ -147,12 +150,18 @@ pub(crate) fn show(
 
 /// All day, Starts, Ends and two alarms. Moving the start takes the end
 /// along, so the event keeps its length.
-fn event_rows(form: &gtk::ListBox, last_alarms: &[u32]) -> Box<dyn Fn() -> (When, Vec<u32>)> {
-    let begin = next_hour();
+fn event_rows(
+    form: &gtk::ListBox,
+    last_alarms: &[u32],
+    found: &Found,
+) -> Box<dyn Fn() -> (When, Vec<u32>)> {
+    let (begin, finish) = event_span(found);
     let start = Moment::new(begin);
-    let end = Moment::new(begin + Duration::hours(1));
+    let end = Moment::new(finish);
     let all_day = adw::SwitchRow::new();
     all_day.set_title(&i18n("All day"));
+    // A day written without a time is taken for the whole day.
+    all_day.set_active(found.date.is_some() && found.start.is_none());
     form.append(&all_day);
     form.append(&start.row(&i18n("Starts")));
     form.append(&end.row(&i18n("Ends")));
@@ -275,10 +284,11 @@ fn alarm_label(alarm: Option<u32>) -> String {
 }
 
 /// Due, with a switch: a task has no due day unless one is given.
-fn task_rows(form: &gtk::ListBox) -> Box<dyn Fn() -> (When, Vec<u32>)> {
-    let due = Moment::new(Local::now());
+fn task_rows(form: &gtk::ListBox, found: &Found) -> Box<dyn Fn() -> (When, Vec<u32>)> {
+    let due = Moment::new(found.date.and_then(at_noon).unwrap_or_else(Local::now));
     due.time.set_visible(false);
     let on = gtk::Switch::new();
+    on.set_active(found.date.is_some());
     on.set_valign(gtk::Align::Center);
     on.bind_property("active", &due.button, "sensitive")
         .sync_create()
@@ -293,6 +303,47 @@ fn task_rows(form: &gtk::ListBox) -> Box<dyn Fn() -> (When, Vec<u32>)> {
             Vec::new(),
         )
     })
+}
+
+/// Where an event starts and ends: what `found` gives, the next whole hour
+/// and an hour after it for the rest. A day with no time keeps that hour,
+/// for the All day switch turned off.
+fn event_span(found: &Found) -> (DateTime<Local>, DateTime<Local>) {
+    let default = next_hour();
+    let day = found.date.unwrap_or_else(|| Local::now().date_naive());
+    let start = found
+        .start
+        .map(|t| day.and_time(t))
+        .or_else(|| found.date.map(|d| d.and_time(default.time())))
+        .and_then(|t| Local.from_local_datetime(&t).earliest())
+        .unwrap_or(default);
+    let last = found.last.unwrap_or(start.date_naive());
+    let end = found
+        .end
+        .map(|t| {
+            let end = last.and_time(t);
+            // "10pm-1am" ends the next day.
+            if end <= start.naive_local() {
+                end + Duration::days(1)
+            } else {
+                end
+            }
+        })
+        .or_else(|| {
+            found
+                .last
+                .map(|d| d.and_time(start.time()) + Duration::hours(1))
+        })
+        .and_then(|t| Local.from_local_datetime(&t).earliest())
+        .unwrap_or(start + Duration::hours(1));
+    (start, end)
+}
+
+/// Midday of `day`, local time.
+fn at_noon(day: NaiveDate) -> Option<DateTime<Local>> {
+    Local
+        .from_local_datetime(&day.and_hms_opt(12, 0, 0)?)
+        .earliest()
 }
 
 /// The next whole hour from now.

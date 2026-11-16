@@ -67,7 +67,7 @@ fn fmt(dt: &glib::DateTime, pattern: &str) -> String {
 }
 
 /// Whether the day is written before the month (23.08. rather than 08/23).
-fn day_first() -> bool {
+pub(crate) fn day_first() -> bool {
     match DATE_STYLE.load(Ordering::Relaxed) {
         1 | 3 => return false,
         2 => return true,

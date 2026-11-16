@@ -262,6 +262,12 @@ msgstr ""
 msgid "Show Sender's Fonts and Colors"
 msgstr ""
 
+msgid "Create Event from Selection…"
+msgstr ""
+
+msgid "Create Task from Selection…"
+msgstr ""
+
 msgid "View Source"
 msgstr ""
 
@@ -1762,6 +1768,15 @@ msgid "Find in message (Ctrl+F)"
 msgstr ""
 
 msgid "Downloading attachments…"
+msgstr ""
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr ""
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
 msgstr ""
 
 msgid "Signature"
