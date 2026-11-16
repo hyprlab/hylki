@@ -104,7 +104,7 @@ pub(crate) fn close_key() -> gtk::ShortcutController {
 /// move to another widget of its own row (the scope dropdown, a button, the
 /// popover a dropdown opens). The check waits for an idle turn because the
 /// new focus widget is not set yet while the leave event runs.
-fn close_if_focus_left_row(entry: &gtk::SearchEntry, close: impl Fn() + 'static) {
+pub(crate) fn close_if_focus_left_row(entry: &gtk::SearchEntry, close: impl Fn() + 'static) {
     use gtk::prelude::*;
     if !entry.text().trim().is_empty() {
         return;

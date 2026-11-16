@@ -113,6 +113,7 @@ mod settings_store;
 mod settings_window;
 mod shortcuts;
 mod showcase;
+mod source_window;
 mod sidebar;
 mod sidebar_contents;
 mod sidebar_peek;

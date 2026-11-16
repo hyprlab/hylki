@@ -4,7 +4,6 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 use crate::config;
-use crate::i18n::i18n;
 use crate::models::{Attachment, FolderKind, Message};
 use crate::ui::message_window::{
     MessageWindow, MessageWindowInit, MessageWindowInput, MessageWindowOutput,
@@ -115,39 +114,6 @@ impl AppModel {
         for p in self.popouts.values() {
             p.controller.emit(msg());
         }
-    }
-
-    /// Present a read-only window showing raw message source (monospace).
-    pub(super) fn show_source_window(&self, text: &str) {
-        let buffer = gtk::TextBuffer::new(None);
-        buffer.set_text(text);
-        let view = gtk::TextView::with_buffer(&buffer);
-        view.set_editable(false);
-        view.set_monospace(true);
-        view.set_wrap_mode(gtk::WrapMode::WordChar);
-        view.set_left_margin(12);
-        view.set_right_margin(12);
-        view.set_top_margin(8);
-        view.set_bottom_margin(8);
-
-        let scroller = gtk::ScrolledWindow::builder()
-            .vexpand(true)
-            .hexpand(true)
-            .child(&view)
-            .build();
-
-        let toolbar = adw::ToolbarView::new();
-        toolbar.add_top_bar(&adw::HeaderBar::new());
-        toolbar.set_content(Some(&scroller));
-
-        let window = adw::Window::builder()
-            .transient_for(&self.window)
-            .title(i18n("Message Source"))
-            .default_width(720)
-            .default_height(620)
-            .content(&toolbar)
-            .build();
-        window.present();
     }
 
     /// Pop a message out into its own standalone window with a dedicated
