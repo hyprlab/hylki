@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Fixed: Purelymail folders could fail to open** (#672, reported by
+  rimmer). Purelymail can list flags with two backslashes, such as `\\Seen`,
+  beside the real ones. They are not valid IMAP, and the parser failed the
+  whole response on them, so the folder did not open and its mail did not
+  sync. Hylki now leaves these flags out of the server's flag lists before
+  reading them. They are not read as the flag they resemble: a message only
+  shows as read, starred or answered when the server sets the real flag.
+  Message text passes through untouched.
+
 - **Added: events and tasks from selected text** (#637, requested by
   adri99-net). With text selected in the reader, the right-click menu offers
   **Create Event from Selection…** and **Create Task from Selection…**. The

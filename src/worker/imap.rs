@@ -26,6 +26,7 @@ pub(super) mod backfill;
 mod bodies;
 pub(super) mod connect;
 mod dispatch;
+mod doubled_flags;
 pub(super) mod fetch_mode;
 mod flag_sync;
 mod folders;

@@ -102,7 +102,7 @@ impl NamespaceFilter {
 
 /// The length of the literal a line announces at its end (`{12}` or the
 /// LITERAL+ `{12+}`), if it does.
-fn literal_len(text: &[u8]) -> Option<usize> {
+pub(super) fn literal_len(text: &[u8]) -> Option<usize> {
     let body = text.strip_suffix(b"}")?;
     let open = body.iter().rposition(|&b| b == b'{')?;
     let digits = &body[open + 1..];
