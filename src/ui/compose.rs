@@ -39,7 +39,7 @@ mod types;
 
 use cloud::not_signed_in;
 pub(crate) use format::forget_zoom;
-use format::{markdown_body, session_zoom, zoom_chip, SHOWCASE_PLAIN_LOG};
+use format::{markdown_body, session_zoom, theme_switch, zoom_chip, SHOWCASE_PLAIN_LOG};
 use host::{fold_on_first_map, pgp_tooltip, set_toggle_icon, size_for_host, COMPOSE_MIN_WIDTH};
 pub(crate) use keys::composer_key;
 pub(crate) use messages::{ComposeInput, ComposeOutput};
@@ -488,6 +488,8 @@ impl Component for Compose {
         editor.set_zoom(session_zoom());
         let zoom_chip = zoom_chip(&sender);
         editor.toolbar_end().prepend(&zoom_chip);
+        let theme_switch = theme_switch(&editor, &sender);
+        editor.toolbar_end().prepend(&theme_switch);
         {
             let s = sender.input_sender().clone();
             editor.widget.add_controller(super::ctrl_scroll_zoom(
@@ -588,6 +590,7 @@ impl Component for Compose {
             peer_keys: Vec::new(),
             format,
             zoom_chip,
+            theme_switch,
             format_btn,
             translate_btn,
             signature_btn,
@@ -826,6 +829,8 @@ impl Component for Compose {
                 ComposeInput::RemoveAttachment(i) => self.on_remove_attachment(i, widgets, &sender),
 
                 ComposeInput::Zoom(step) => self.on_zoom(step),
+                ComposeInput::EditorDark(on) => self.on_editor_dark(on),
+                ComposeInput::SetThemeSwitchShown(on) => self.theme_switch.set_visible(on),
 
                 ComposeInput::History { redo } => {
                     self.history_step(redo, widgets, &sender);

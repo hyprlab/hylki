@@ -21,8 +21,8 @@ mod toolbar;
 pub(crate) use documents::remote_image_urls;
 use documents::{document, preview_document, source_document};
 pub(crate) use files::is_inline_image;
-use files::{deliver_files, paste_into};
 pub(crate) use files::PasteAs;
+use files::{deliver_files, paste_into};
 pub(crate) use fonts::{choose_family, compose_font_choices, preview_font, recent_font_css, SIZES};
 pub(crate) use signature::{signature_from_source, signature_to_html};
 pub(crate) use spelling::apply_spellcheck;
@@ -84,6 +84,11 @@ pub(super) struct RichEditor {
     /// The Content-Security-Policy `<meta>` every document this editor loads
     /// carries, or empty when any picture may load. See [`RichEditor::new`].
     image_policy: std::rc::Rc<str>,
+    /// The scheme picked for this editor alone with the Light / Dark switch,
+    /// or `None` to follow the system. See [`RichEditor::set_dark_pick`].
+    dark_pick: std::rc::Rc<std::cell::Cell<Option<bool>>>,
+    /// The HTML the preview last showed, to draw again when the scheme flips.
+    preview_html: std::rc::Rc<std::cell::RefCell<String>>,
     /// The page zoom set by [`RichEditor::set_zoom`], kept for a preview
     /// built after it.
     zoom: std::rc::Rc<std::cell::Cell<f64>>,
@@ -212,7 +217,13 @@ impl RichEditor {
         self.show_preview(None);
         crate::desktop::web_fonts::load_html(
             &self.webview,
-            &document(content, &self.webview, &self.image_policy, self.plain.get()),
+            &document(
+                content,
+                &self.webview,
+                &self.image_policy,
+                self.plain.get(),
+                self.is_dark(),
+            ),
             Some("https://hylki.localhost/editor"),
         );
     }
@@ -225,7 +236,7 @@ impl RichEditor {
         self.show_preview(None);
         crate::desktop::web_fonts::load_html(
             &self.webview,
-            &source_document(text, &self.webview),
+            &source_document(text, &self.webview, self.is_dark()),
             Some("https://hylki.localhost/editor"),
         );
     }
@@ -294,22 +305,63 @@ impl RichEditor {
                 v.set_zoom_level(self.zoom.get());
                 // Opaque for the same NVIDIA reason as the editor itself
                 // (see rich_editor/setup.rs).
-                let (ground, _, _) = crate::ui::message_view::theme_grounds_for(
-                    &v,
-                    adw::StyleManager::default().is_dark(),
-                );
-                v.set_background_color(&crate::ui::message_view::ground_rgba(&ground));
+                self.ground_preview(&v);
                 self.stack.add_named(&v, Some("preview"));
                 *self.preview.borrow_mut() = Some(v.clone());
                 v
             }
         };
+        self.ground_preview(&view);
+        *self.preview_html.borrow_mut() = html.to_string();
         crate::desktop::web_fonts::load_html(
             &view,
-            &preview_document(html, &view, &self.image_policy),
+            &preview_document(html, &view, &self.image_policy, self.is_dark()),
             Some("https://hylki.localhost/preview"),
         );
         self.stack.set_visible_child_name("preview");
+    }
+
+    /// Whether the editor is drawn dark: the scheme picked for it, else the
+    /// system's.
+    pub(crate) fn is_dark(&self) -> bool {
+        self.dark_pick
+            .get()
+            .unwrap_or_else(|| adw::StyleManager::default().is_dark())
+    }
+
+    /// The scheme picked with [`RichEditor::set_dark_pick`], shared, for a
+    /// control that has to read it without holding the editor.
+    pub(crate) fn scheme_pick(&self) -> std::rc::Rc<std::cell::Cell<Option<bool>>> {
+        self.dark_pick.clone()
+    }
+
+    /// Paint the preview view's surface with the editor's current ground.
+    fn ground_preview(&self, view: &webkit6::WebView) {
+        let (ground, _, _) = crate::ui::message_view::theme_grounds_for(view, self.is_dark());
+        view.set_background_color(&crate::ui::message_view::ground_rgba(&ground));
+    }
+
+    /// Draw this editor in the dark (`Some(true)`) or light (`Some(false)`)
+    /// scheme whatever the system says, or follow the system again with
+    /// `None`. It reaches the text surface and the preview only: the message
+    /// that is sent carries no scheme.
+    pub(crate) fn set_dark_pick(&self, pick: Option<bool>) {
+        if self.dark_pick.get() == pick {
+            return;
+        }
+        self.dark_pick.set(pick);
+        documents::reground(&self.webview.downgrade(), self.is_dark());
+        let preview = self.preview.borrow().clone();
+        let Some(view) = preview else { return };
+        // The preview runs no scripts, so it is drawn again rather than
+        // re-grounded.
+        let html = self.preview_html.borrow().clone();
+        self.ground_preview(&view);
+        crate::desktop::web_fonts::load_html(
+            &view,
+            &preview_document(&html, &view, &self.image_policy, self.is_dark()),
+            Some("https://hylki.localhost/preview"),
+        );
     }
 
     pub(crate) fn grab_focus(&self) {

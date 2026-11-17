@@ -4185,6 +4185,16 @@ msgstr ""
 "Μεγέθυνση του κειμένου στην οθόνη, όχι του απεσταλμένου μηνύματος. Κάντε "
 "κλικ εδώ ή πατήστε Ctrl+0 για επαναφορά στο 100%."
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Εμφάνιση αυτού του μηνύματος σε φωτεινή ή σκοτεινή λειτουργία. Δεν "
+"επηρεάζονται άλλα μηνύματα."
+
+msgid "Light / Dark Mode"
+msgstr "Φωτεινή / σκοτεινή λειτουργία"
+
 msgid "Writing in {format}"
 msgstr "Σύνταξη σε {format}"
 
@@ -5635,9 +5645,6 @@ msgid ""
 msgstr ""
 "Εμφάνιση αυτού του μηνύματος σε φωτεινή ή σκοτεινή λειτουργία. Δεν "
 "επηρεάζονται άλλα μηνύματα."
-
-msgid "Light / Dark Mode"
-msgstr "Φωτεινή / σκοτεινή λειτουργία"
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -8781,8 +8788,11 @@ msgstr "Εμφάνιση μηνυμάτων"
 msgid "Light / Dark Mode switch"
 msgstr "Εναλλαγή φωτεινής / σκοτεινής λειτουργίας"
 
-msgid "Displays in the message header for each message."
-msgstr "Εμφανίζεται στην κεφαλίδα κάθε μηνύματος."
+#, fuzzy
+msgid "Shown in the message header and the composer."
+msgstr ""
+"Εμφάνιση του διακόπτη στην κεφαλίδα του μηνύματος, δίπλα στο όνομα του "
+"λογαριασμού."
 
 msgid "Show account in message header"
 msgstr "Εμφάνιση λογαριασμού στην κεφαλίδα μηνύματος"
@@ -9195,6 +9205,9 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Εμφανίζεται στην κεφαλίδα κάθε μηνύματος."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."
@@ -10201,11 +10214,6 @@ msgstr "Hyprlab"
 #~ "υπογεγραμμένο ή κρυπτογραφημένο και αν ο έλεγχός του είναι επιτυχής. Όταν "
 #~ "είναι απενεργοποιημένο, εμφανίζονται μόνο τα εικονίδια κλειδαριάς και "
 #~ "ασπίδας."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr ""
-#~ "Εμφάνιση του διακόπτη στην κεφαλίδα του μηνύματος, δίπλα στο όνομα του "
-#~ "λογαριασμού."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

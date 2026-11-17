@@ -29,14 +29,22 @@ impl RichEditor {
     pub(crate) fn new(initial_html: &str, remote_images: Option<&[String]>, plain: bool) -> Self {
         let plain = std::rc::Rc::new(std::cell::Cell::new(plain));
         let image_policy: std::rc::Rc<str> = image_policy_meta(remote_images).into();
+        let dark_pick: std::rc::Rc<std::cell::Cell<Option<bool>>> =
+            std::rc::Rc::new(std::cell::Cell::new(None));
         let (webview, ucm) = editor_view();
         let spinner = loading_spinner(&webview);
         crate::desktop::web_fonts::load_html(
             &webview,
-            &document(initial_html, &webview, &image_policy, plain.get()),
+            &document(
+                initial_html,
+                &webview,
+                &image_policy,
+                plain.get(),
+                adw::StyleManager::default().is_dark(),
+            ),
             Some("https://hylki.localhost/editor"),
         );
-        let theme_handler = follow_theme(&webview);
+        let theme_handler = follow_theme(&webview, &dark_pick);
 
         // WebKitGTK never turns Ctrl+Z into an editing command: its key
         // binding translator forwards the key to a hidden GtkTextView and
@@ -136,6 +144,8 @@ impl RichEditor {
             grammar,
             _theme_handler: std::rc::Rc::new(ThemeHandlerGuard(Some(theme_handler))),
             image_policy,
+            dark_pick,
+            preview_html: std::rc::Rc::new(std::cell::RefCell::new(String::new())),
             zoom: std::rc::Rc::new(std::cell::Cell::new(1.0)),
         }
     }
@@ -263,7 +273,14 @@ fn loading_spinner(webview: &webkit6::WebView) -> gtk::Spinner {
 
 /// Re-ground the document when the theme changes; the handler is
 /// disconnected with the editor's last handle.
-fn follow_theme(webview: &webkit6::WebView) -> gtk::glib::SignalHandlerId {
+///
+/// `pick` is the scheme the user chose for this editor with the Light / Dark
+/// switch, if any: it wins over the system's, so a theme change does not
+/// undo it.
+fn follow_theme(
+    webview: &webkit6::WebView,
+    pick: &std::rc::Rc<std::cell::Cell<Option<bool>>>,
+) -> gtk::glib::SignalHandlerId {
     // A live theme flip re-grounds the open document (#148): the scheme
     // and the ground are baked into the document at load, so without
     // this the editor stays in the scheme it was opened in. Deferred to
@@ -271,8 +288,9 @@ fn follow_theme(webview: &webkit6::WebView) -> gtk::glib::SignalHandlerId {
     // re-resolved after the signal fires.
     let handler = {
         let weak = webview.downgrade();
+        let pick = pick.clone();
         adw::StyleManager::default().connect_dark_notify(move |sm| {
-            reground(&weak, sm.is_dark());
+            reground(&weak, pick.get().unwrap_or_else(|| sm.is_dark()));
         })
     };
     // An appearance theme moves the same colors with no scheme flip, so
@@ -280,8 +298,13 @@ fn follow_theme(webview: &webkit6::WebView) -> gtk::glib::SignalHandlerId {
     // once its view is gone.
     {
         let weak = webview.downgrade();
+        let pick = pick.clone();
         crate::desktop::theme::connect_changed(move || {
-            reground(&weak, adw::StyleManager::default().is_dark())
+            reground(
+                &weak,
+                pick.get()
+                    .unwrap_or_else(|| adw::StyleManager::default().is_dark()),
+            )
         });
     }
     handler

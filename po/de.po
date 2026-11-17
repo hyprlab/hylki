@@ -4154,6 +4154,16 @@ msgstr ""
 "Zoomstufe der Bildschirmanzeige (betrifft nicht die gesendete Nachricht). "
 "Ein Klick hierauf oder »Strg+0« stellt die Standardgröße (100 %) wieder her."
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Diese Nachricht im hellen oder dunklen Modus anzeigen. Andere Nachrichten "
+"bleiben davon unberührt."
+
+msgid "Light / Dark Mode"
+msgstr "Heller / Dunkler Modus"
+
 msgid "Writing in {format}"
 msgstr "Schreiben in: {format}"
 
@@ -5597,9 +5607,6 @@ msgid ""
 msgstr ""
 "Diese Nachricht im hellen oder dunklen Modus anzeigen. Andere Nachrichten "
 "bleiben davon unberührt."
-
-msgid "Light / Dark Mode"
-msgstr "Heller / Dunkler Modus"
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -8742,8 +8749,9 @@ msgstr "Darstellung der Nachricht"
 msgid "Light / Dark Mode switch"
 msgstr "Hell-/Dunkelmodus-Umschalter"
 
-msgid "Displays in the message header for each message."
-msgstr "Anzeige in der Kopfzeile jeder Nachricht."
+#, fuzzy
+msgid "Shown in the message header and the composer."
+msgstr "Schalter im Nachrichten-Header neben dem Kontonamen anzeigen."
 
 msgid "Show account in message header"
 msgstr "Konto im Nachrichtenkopf anzeigen"
@@ -9160,6 +9168,9 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Anzeige in der Kopfzeile jeder Nachricht."
 
 #~ msgid "Sends through this account"
 #~ msgstr "Versendet über dieses Konto"
@@ -10194,9 +10205,6 @@ msgstr "Hyprlab"
 #~ "Neben dem Absender in Worten anzeigen, ob eine Nachricht signiert oder "
 #~ "verschlüsselt ist und ob die Prüfung erfolgreich war. Wenn diese Option "
 #~ "deaktiviert ist, werden nur die Schloss- und Schildsymbole angezeigt."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr "Schalter im Nachrichten-Header neben dem Kontonamen anzeigen."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

@@ -367,6 +367,11 @@ impl AppModel {
                     self.message_view
                         .emit(MessageViewInput::SetThemeSwitchShown(on));
                     self.popouts_emit(|| MessageWindowInput::SetThemeSwitchShown(on));
+                    // The same row hides the composers' switch.
+                    let composers = self.reader_compose.iter().map(|r| &r.controller);
+                    for c in composers.chain(self.composers.iter().map(|h| &h.controller)) {
+                        c.emit(crate::ui::compose::ComposeInput::SetThemeSwitchShown(on));
+                    }
                 }
             }
 

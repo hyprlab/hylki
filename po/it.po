@@ -4290,6 +4290,16 @@ msgid ""
 "Ctrl+0, puts it back to 100%."
 msgstr ""
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Mostra questo messaggio in modalità chiara o scura. Gli altri messaggi non "
+"vengono influenzati."
+
+msgid "Light / Dark Mode"
+msgstr "Modalità chiara / scura"
+
 msgid "Writing in {format}"
 msgstr "Scrittura in {format}"
 
@@ -5810,9 +5820,6 @@ msgid ""
 msgstr ""
 "Mostra questo messaggio in modalità chiara o scura. Gli altri messaggi non "
 "vengono influenzati."
-
-msgid "Light / Dark Mode"
-msgstr "Modalità chiara / scura"
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -9001,8 +9008,10 @@ msgid "Light / Dark Mode switch"
 msgstr "Interruttore Modalità chiara / scura"
 
 #, fuzzy
-msgid "Displays in the message header for each message."
-msgstr "Apre il messaggio con un inoltro avviato."
+msgid "Shown in the message header and the composer."
+msgstr ""
+"Mostra l'interruttore nell'intestazione del messaggio, accanto al nome "
+"dell'account."
 
 #, fuzzy
 msgid "Show account in message header"
@@ -9412,6 +9421,10 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Apre il messaggio con un inoltro avviato."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."
@@ -10330,11 +10343,6 @@ msgstr "Hyprlab"
 #~ "Accanto al mittente, indica a parole se un messaggio è firmato o "
 #~ "crittografato e se supera la verifica. Disattivato mostra solo le icone "
 #~ "lucchetto e scudo."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr ""
-#~ "Mostra l'interruttore nell'intestazione del messaggio, accanto al nome "
-#~ "dell'account."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

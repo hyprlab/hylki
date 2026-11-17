@@ -7,7 +7,7 @@ use crate::config::ComposeFormat;
 use crate::i18n::{i18n, i18n_f};
 use crate::ui::context_menu::show_context_menu;
 use crate::ui::context_menu::MenuEntry;
-use crate::ui::rich_editor::SourceKind;
+use crate::ui::rich_editor::{RichEditor, SourceKind};
 use adw::prelude::*;
 use relm4::prelude::*;
 
@@ -99,6 +99,52 @@ pub(super) fn zoom_chip(sender: &ComponentSender<Compose>) -> gtk::Label {
     chip
 }
 
+/// The Light / Dark Mode switch for the editor: the same control the reader
+/// has for one message, here for the text surface of this composer alone.
+/// On while the editor is drawn opposite the system's scheme; the message
+/// that is sent carries no scheme, so it is never affected. The Settings
+/// row that hides the reader's switch hides this one too.
+///
+/// Nothing here holds the editor: the switch sits in the editor's own
+/// toolbar, so a strong handle would keep a closed composer and its web
+/// process alive (#221). A flip goes to the composer as a message, and the
+/// theme handler reads only the editor's scheme pick.
+pub(super) fn theme_switch(editor: &RichEditor, sender: &ComponentSender<Compose>) -> gtk::Box {
+    let bx = gtk::Box::new(gtk::Orientation::Horizontal, 6);
+    bx.set_valign(gtk::Align::Center);
+    bx.add_css_class("reader-toggle");
+    bx.set_tooltip_text(Some(
+        i18n("Show the editor in light or dark mode. The message sent is not affected.").as_str(),
+    ));
+    bx.set_visible(crate::config::load_privacy().theme_switch);
+    let icon = gtk::Image::from_icon_name("highlights-symbolic");
+    icon.add_css_class("dim-label");
+    bx.append(&icon);
+    let sw = gtk::Switch::new();
+    sw.set_valign(gtk::Align::Center);
+    sw.update_property(&[gtk::accessible::Property::Label(&i18n("Light / Dark Mode"))]);
+    bx.append(&sw);
+
+    let s = sender.input_sender().clone();
+    sw.connect_active_notify(move |sw| s.emit(ComposeInput::EditorDark(sw.is_active())));
+    // A system flip moves the opposite scheme with it, so the switch reads
+    // off once the editor and the system agree.
+    let weak = sw.downgrade();
+    let pick = editor.scheme_pick();
+    let id = adw::StyleManager::default().connect_dark_notify(move |sm| {
+        if let Some(sw) = weak.upgrade() {
+            sw.set_active(pick.get().is_some_and(|dark| dark != sm.is_dark()));
+        }
+    });
+    let id = std::cell::Cell::new(Some(id));
+    bx.connect_destroy(move |_| {
+        if let Some(id) = id.take() {
+            adw::StyleManager::default().disconnect(id);
+        }
+    });
+    bx
+}
+
 pub(super) fn show_zoom(chip: &gtk::Label, zoom: u32) {
     chip.set_label(&format!("{zoom}%"));
     chip.set_visible(zoom != 100);
@@ -150,6 +196,16 @@ impl Compose {
             .selected(format == self.format)
         })
         .collect()
+    }
+
+    /// Handles [`ComposeInput::EditorDark`]: `on` draws the editor opposite
+    /// the system's scheme. Setting it to what is already shown (the switch
+    /// following a system flip) does nothing.
+    pub(super) fn on_editor_dark(&mut self, on: bool) {
+        let system = adw::StyleManager::default().is_dark();
+        if (self.editor.is_dark() != system) != on {
+            self.editor.set_dark_pick(on.then_some(!system));
+        }
     }
 
     /// Handles [`ComposeInput::Zoom`].

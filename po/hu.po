@@ -4336,6 +4336,13 @@ msgid ""
 "Ctrl+0, puts it back to 100%."
 msgstr ""
 
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+
+msgid "Light / Dark Mode"
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr "{format} formátumben írás"
 
@@ -5821,9 +5828,6 @@ msgstr ""
 
 msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
-msgstr ""
-
-msgid "Light / Dark Mode"
 msgstr ""
 
 msgid ""
@@ -9064,8 +9068,8 @@ msgid "Light / Dark Mode switch"
 msgstr ""
 
 #, fuzzy
-msgid "Displays in the message header for each message."
-msgstr "Megnyitja az üzenetet, amelyben már megkezdődött az átirányítás."
+msgid "Shown in the message header and the composer."
+msgstr "Jelenítsd meg a kapcsolót az üzenet fejlécében, a fióknév mellett."
 
 #, fuzzy
 msgid "Show account in message header"
@@ -9481,6 +9485,10 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Megnyitja az üzenetet, amelyben már megkezdődött az átirányítás."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."
@@ -10327,9 +10335,6 @@ msgstr "Hyprlab"
 #~ "A feladó mellett szövegesen jelzi, hogy az üzenet alá van-e írva vagy "
 #~ "titkosítva, és hogy érvényes-e. „Ki” beállítás esetén csak a lakat és a "
 #~ "pajzs ikonok jelennek meg."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr "Jelenítsd meg a kapcsolót az üzenet fejlécében, a fióknév mellett."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

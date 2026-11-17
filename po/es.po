@@ -4140,6 +4140,16 @@ msgstr ""
 "Zoom del texto en pantalla, no del mensaje enviado. Haz clic aquí o pulsa "
 "Ctrl+0 para restablecerlo al 100 %."
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Mostrar este mensaje en modo claro u oscuro. Los demás mensajes no se ven "
+"afectados."
+
+msgid "Light / Dark Mode"
+msgstr "Modo claro/oscuro"
+
 msgid "Writing in {format}"
 msgstr "Escribiendo en {format}"
 
@@ -5594,9 +5604,6 @@ msgid ""
 msgstr ""
 "Mostrar este mensaje en modo claro u oscuro. Los demás mensajes no se ven "
 "afectados."
-
-msgid "Light / Dark Mode"
-msgstr "Modo claro/oscuro"
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -8706,8 +8713,11 @@ msgstr "Apariencia de los mensajes"
 msgid "Light / Dark Mode switch"
 msgstr "Interruptor del modo claro/oscuro"
 
-msgid "Displays in the message header for each message."
-msgstr "Se muestra en la cabecera de cada mensaje."
+#, fuzzy
+msgid "Shown in the message header and the composer."
+msgstr ""
+"Mostrar el interruptor en la cabecera del mensaje junto al nombre de la "
+"cuenta."
 
 msgid "Show account in message header"
 msgstr "Mostrar la cuenta en la cabecera del mensaje"
@@ -9115,6 +9125,9 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Se muestra en la cabecera de cada mensaje."
 
 #~ msgid ""
 #~ "Will appear in the composer's From menu. Replies to mail sent here will "
@@ -10162,11 +10175,6 @@ msgstr "Hyprlab"
 #~ "Junto al remitente, indica con palabras si un mensaje está firmado o "
 #~ "cifrado y si la comprobación es correcta. Desactivado muestra solo los "
 #~ "iconos de candado y escudo."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr ""
-#~ "Mostrar el interruptor en la cabecera del mensaje junto al nombre de la "
-#~ "cuenta."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

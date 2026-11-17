@@ -3808,6 +3808,13 @@ msgid ""
 "Ctrl+0, puts it back to 100%."
 msgstr ""
 
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+
+msgid "Light / Dark Mode"
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr ""
 
@@ -5107,9 +5114,6 @@ msgstr ""
 
 msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
-msgstr ""
-
-msgid "Light / Dark Mode"
 msgstr ""
 
 msgid ""
@@ -8006,7 +8010,7 @@ msgstr ""
 msgid "Light / Dark Mode switch"
 msgstr ""
 
-msgid "Displays in the message header for each message."
+msgid "Shown in the message header and the composer."
 msgstr ""
 
 msgid "Show account in message header"

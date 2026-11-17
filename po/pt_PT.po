@@ -4153,6 +4153,16 @@ msgstr ""
 "Altera a ampliação do texto no ecrã. A mensagem enviada mantém-se igual. "
 "Clique aqui ou prima Ctrl+0 para voltar a 100%."
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Mostrar esta mensagem no modo claro ou escuro. As outras mensagens não são "
+"afetadas."
+
+msgid "Light / Dark Mode"
+msgstr "Modo claro / escuro"
+
 msgid "Writing in {format}"
 msgstr "A escrever em {format}"
 
@@ -5593,9 +5603,6 @@ msgid ""
 msgstr ""
 "Mostrar esta mensagem no modo claro ou escuro. As outras mensagens não são "
 "afetadas."
-
-msgid "Light / Dark Mode"
-msgstr "Modo claro / escuro"
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -8706,7 +8713,8 @@ msgstr "Aspeto das mensagens"
 msgid "Light / Dark Mode switch"
 msgstr "Botão de modo claro / escuro"
 
-msgid "Displays in the message header for each message."
+#, fuzzy
+msgid "Shown in the message header and the composer."
 msgstr "Mostrado no cabeçalho de cada mensagem."
 
 msgid "Show account in message header"

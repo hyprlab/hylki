@@ -4386,6 +4386,13 @@ msgid ""
 "Ctrl+0, puts it back to 100%."
 msgstr ""
 
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+
+msgid "Light / Dark Mode"
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr "Tryb pisania: {format}"
 
@@ -5888,9 +5895,6 @@ msgstr ""
 
 msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
-msgstr ""
-
-msgid "Light / Dark Mode"
 msgstr ""
 
 msgid ""
@@ -9135,8 +9139,8 @@ msgid "Light / Dark Mode switch"
 msgstr ""
 
 #, fuzzy
-msgid "Displays in the message header for each message."
-msgstr "Otwiera wiadomość z rozpoczętym przekazywaniem dalej."
+msgid "Shown in the message header and the composer."
+msgstr "Wyświetla przełącznik w nagłówku wiadomości, obok nazwy konta."
 
 #, fuzzy
 msgid "Show account in message header"
@@ -9549,6 +9553,10 @@ msgstr "Zbiorcza skrzynka odbiorcza w jasnym motywie"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Otwiera wiadomość z rozpoczętym przekazywaniem dalej."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."
@@ -10355,9 +10363,6 @@ msgstr "Hyprlab"
 #~ msgstr ""
 #~ "Wyświetla odbiorców każdej wiadomości pod nadawcą bez klikania przycisku "
 #~ "odbiorców. Przy jednym odbiorcy przycisk nie jest w ogóle wyświetlany."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr "Wyświetla przełącznik w nagłówku wiadomości, obok nazwy konta."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

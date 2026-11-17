@@ -257,6 +257,11 @@ pub(crate) enum ComposeInput {
     },
     /// Zoom the body one step in (1) or out (-1), or back to 100% (0).
     Zoom(i8),
+    /// The Light / Dark Mode switch: on draws the editor opposite the
+    /// system's scheme.
+    EditorDark(bool),
+    /// Settings showed or hid the Light / Dark Mode switches.
+    SetThemeSwitchShown(bool),
     /// The body's text history changed: WebKit gained or lost a step. The
     /// flag is whether it now has anything to take back.
     BodyHistory(bool),

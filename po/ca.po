@@ -4199,6 +4199,16 @@ msgid ""
 "Ctrl+0, puts it back to 100%."
 msgstr ""
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Mostra aquest missatge en mode clar o fosc. Els altres missatges no es veuen "
+"afectats."
+
+msgid "Light / Dark Mode"
+msgstr "Mode clar / fosc"
+
 msgid "Writing in {format}"
 msgstr "S'està escrivint en {format}"
 
@@ -5651,9 +5661,6 @@ msgid ""
 msgstr ""
 "Mostra aquest missatge en mode clar o fosc. Els altres missatges no es veuen "
 "afectats."
-
-msgid "Light / Dark Mode"
-msgstr "Mode clar / fosc"
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -8779,7 +8786,8 @@ msgstr "Aparença dels missatges"
 msgid "Light / Dark Mode switch"
 msgstr "Interruptor de mode clar / fosc"
 
-msgid "Displays in the message header for each message."
+#, fuzzy
+msgid "Shown in the message header and the composer."
 msgstr "Es mostra a l'encapçalament de cada missatge."
 
 #, fuzzy

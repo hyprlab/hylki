@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Added: Light / Dark Mode switch in the composer** (#671, by Fabio
+  Rotondo). The editor's toolbar has the switch the reader has. It shows the
+  text being written, its source and its preview in the other scheme, for
+  that composer alone. The message sent is not affected. Settings → Reading
+  → Light / Dark Mode switch shows or hides both switches, open composers
+  included.
+
 - **Fixed: Purelymail folders could fail to open** (#672, reported by
   rimmer). Purelymail can list flags with two backslashes, such as `\\Seen`,
   beside the real ones. They are not valid IMAP, and the parser failed the

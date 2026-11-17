@@ -4137,6 +4137,16 @@ msgstr ""
 "Масштабирование текста на экране, а не отправленного сообщения. Щелчок здесь "
 "или Ctrl+0 возвращает значение 100%."
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Показывать это сообщение в светлом или темном режиме. Другие сообщения не "
+"затрагиваются."
+
+msgid "Light / Dark Mode"
+msgstr "Светлый/Темный режим"
+
 msgid "Writing in {format}"
 msgstr "Формат письма: {format}"
 
@@ -5578,9 +5588,6 @@ msgid ""
 msgstr ""
 "Показывать это сообщение в светлом или темном режиме. Другие сообщения не "
 "затрагиваются."
-
-msgid "Light / Dark Mode"
-msgstr "Светлый/Темный режим"
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -8674,8 +8681,10 @@ msgstr "Оформление сообщений"
 msgid "Light / Dark Mode switch"
 msgstr "Переключатель светлых/темных режимов"
 
-msgid "Displays in the message header for each message."
-msgstr "Отображается в заголовке каждого сообщения."
+#, fuzzy
+msgid "Shown in the message header and the composer."
+msgstr ""
+"Отображать переключатель в заголовке сообщения рядом с именем учётной записи."
 
 msgid "Show account in message header"
 msgstr "Показывать учётную запись в заголовке сообщения"
@@ -9075,6 +9084,9 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Отображается в заголовке каждого сообщения."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."
@@ -9998,11 +10010,6 @@ msgstr "Hyprlab"
 #~ "Текстом указывать рядом с отправителем, подписано ли сообщение, "
 #~ "зашифровано ли оно и прошла ли проверка. Если отключено, выводятся только "
 #~ "значки замка и щита."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr ""
-#~ "Отображать переключатель в заголовке сообщения рядом с именем учётной "
-#~ "записи."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "
