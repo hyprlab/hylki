@@ -16,7 +16,7 @@ use super::receipt_banner::{read_mark_html, receipt_row_html};
 use super::size_script::SIZE_SCRIPT;
 use super::snippets::{
     att_row_html, inline_icon_svg, paints_own_background, recipient_count, recipients_html,
-    tag_chips_html, template_row_html, unsub_row_html,
+    sender_addr_html, tag_chips_html, template_row_html, unsub_row_html,
 };
 use super::MessageView;
 use crate::encoding::escape_html;
@@ -359,18 +359,18 @@ fn circle_html(m: &Message, dark: bool) -> String {
         }
     });
     let face = || {
-        super::faces::known_face(&m.from_addr)
+        super::faces::known_face(m.shown_from_addr())
             .map(|uri| format!("<img class=\"hylki-ava\" src=\"{uri}\" alt=\"\">"))
     };
     own.or_else(face).unwrap_or_else(|| {
         let initial = crate::ui::initials::word_initials(&m.shown_from_name())
             .first()
             .copied()
-            .or_else(|| m.from_addr.trim().chars().next())
+            .or_else(|| m.shown_from_addr().trim().chars().next())
             .map(|c| c.to_uppercase().to_string())
             .unwrap_or_else(|| "?".to_string());
         let hue = m
-            .from_addr
+            .shown_from_addr()
             .to_ascii_lowercase()
             .bytes()
             .fold(0u32, |h, b| h.wrapping_mul(31).wrapping_add(b as u32))
@@ -562,20 +562,7 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
         // could reach for, and the initial is escaped like every
         // other header field.
         ava = ava_html,
-        addr = if m.from_addr.is_empty() {
-            String::new()
-        } else {
-            // `data-addr` feeds the hover reveal's ::after overlay;
-            // `data-mail` (the bare address) drives click-to-compose
-            // and the copy menu. Fully entity-escaped (&<>"), so an
-            // attacker-controlled address can't smuggle markup
-            // through the attributes.
-            format!(
-                "<span class=\"hylki-addr hylki-mail\" data-mail=\"{0}\" \
-                     data-addr=\"&lt;{0}&gt;\">&lt;{0}&gt;</span>",
-                escape_html(&m.from_addr).replace('"', "&quot;")
-            )
-        },
+        addr = sender_addr_html(m),
         date = escape_html(&m.datetime_full()),
         // Everyone the message went to, tucked behind a small chip so
         // a card's header stays one line tall until asked. Escaped

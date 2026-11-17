@@ -373,11 +373,11 @@ impl AppModel {
             // A conversation's row makes it from the message it shows.
             RowAction::CreateEvent => {
                 let m = self.newest_to_answer(&conversation, m);
-                self.make_calendar_item(m, crate::calendar::ItemKind::Event, &sender);
+                self.make_calendar_item(m, crate::calendar::ItemKind::Event, None, &sender);
             }
             RowAction::CreateTask => {
                 let m = self.newest_to_answer(&conversation, m);
-                self.make_calendar_item(m, crate::calendar::ItemKind::Task, &sender);
+                self.make_calendar_item(m, crate::calendar::ItemKind::Task, None, &sender);
             }
             // A conversation's row snoozes the conversation, as far as it
             // is in this folder: a reply in Sent stays where it is.

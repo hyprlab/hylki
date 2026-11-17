@@ -276,6 +276,14 @@ msgstr "Voltar aos meus tipos de letra e cores"
 msgid "Show Sender's Fonts and Colors"
 msgstr "Mostrar os tipos de letra e as cores do remetente"
 
+#, fuzzy
+msgid "Create Event from Selection…"
+msgstr "Criar evento…"
+
+#, fuzzy
+msgid "Create Task from Selection…"
+msgstr "Criar tarefa…"
+
 msgid "View Source"
 msgstr "Ver fonte"
 
@@ -1893,6 +1901,16 @@ msgstr "Localizar na mensagem (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "A transferir anexos…"
 
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+#, fuzzy
+msgid "today tonight"
+msgstr "Da esquerda para a direita"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
 msgid "Signature"
 msgstr "Assinatura"
 
@@ -3192,11 +3210,37 @@ msgstr "Lida"
 msgid "Has attachments"
 msgstr "Tem anexos"
 
+msgid "No attachments"
+msgstr "Sem anexos"
+
 msgid "Tagged"
 msgstr "Com etiqueta"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "Sem estrela"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Cliente de correio eletrónico"
+
 msgid "Message preview"
 msgstr "Pré-visualização da mensagem"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Guardar novos contactos em"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "começa por"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "termina com"
 
 msgid "Edit Smart Folder"
 msgstr "Editar pasta de pesquisa"
@@ -3212,6 +3256,9 @@ msgstr "Pastas"
 
 msgid "Any tag"
 msgstr "Qualquer etiqueta"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "A pré-visualização de cada mensagem na lista"
@@ -3352,9 +3399,6 @@ msgstr "Pesquisar por remetente, assunto, tipo, nome de ficheiro…"
 
 msgid "Loading attachments…"
 msgstr "A carregar anexos…"
-
-msgid "No attachments"
-msgstr "Sem anexos"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Os anexos das suas caixas de entrada irão aparecer aqui."
@@ -4109,6 +4153,16 @@ msgstr ""
 "Altera a ampliação do texto no ecrã. A mensagem enviada mantém-se igual. "
 "Clique aqui ou prima Ctrl+0 para voltar a 100%."
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Mostrar esta mensagem no modo claro ou escuro. As outras mensagens não são "
+"afetadas."
+
+msgid "Light / Dark Mode"
+msgstr "Modo claro / escuro"
+
 msgid "Writing in {format}"
 msgstr "A escrever em {format}"
 
@@ -4703,6 +4757,9 @@ msgstr ""
 "Os endereços guardados são apresentados com o nome do contacto, em vez do "
 "nome indicado na mensagem."
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Disposição"
 
@@ -4929,7 +4986,8 @@ msgstr "Remover do grupo"
 msgid "Add to Group"
 msgstr "Adicionar ao grupo"
 
-msgid "Move to Address Book"
+#, fuzzy
+msgid "Move to Address Book…"
 msgstr "Mover para o livro de endereços"
 
 msgid "Delete…"
@@ -4975,6 +5033,33 @@ msgstr "Ficheiros vCard"
 
 msgid "All files"
 msgstr "Todos os ficheiros"
+
+#, fuzzy
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"Esta ação irá mover {name} de {from} para {to}, localmente e no servidor. Um "
+"grupo em {from} que contenha o contacto deixará de o conter."
+
+#, fuzzy
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"Esta ação irá mover {n} contacto do livro de endereços onde se encontra para "
+"{to}, localmente e no servidor. Um grupo nesse livro que o contenha deixará "
+"de o conter."
+msgstr[1] ""
+"Esta ação irá mover {n} contactos dos livros de endereços onde se encontram "
+"para {to}, localmente e no servidor. Os grupos nesses livros que os "
+"contenham deixarão de os conter."
+
+msgid "Move to Address Book"
+msgstr "Mover para o livro de endereços"
 
 msgid "Directories"
 msgstr "Diretórios"
@@ -5519,9 +5604,6 @@ msgstr ""
 "Mostrar esta mensagem no modo claro ou escuro. As outras mensagens não são "
 "afetadas."
 
-msgid "Light / Dark Mode"
-msgstr "Modo claro / escuro"
-
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
@@ -5791,6 +5873,12 @@ msgstr "Iniciar uma nova mensagem a partir de uma cópia do modelo"
 
 msgid "Save…"
 msgstr "Guardar…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Pesquisar remetentes"
 
 msgid "Translating…"
 msgstr "A traduzir…"
@@ -8625,7 +8713,8 @@ msgstr "Aspeto das mensagens"
 msgid "Light / Dark Mode switch"
 msgstr "Botão de modo claro / escuro"
 
-msgid "Displays in the message header for each message."
+#, fuzzy
+msgid "Shown in the message header and the composer."
 msgstr "Mostrado no cabeçalho de cada mensagem."
 
 msgid "Show account in message header"

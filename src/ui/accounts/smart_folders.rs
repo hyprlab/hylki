@@ -68,20 +68,44 @@ impl AccountsWindow {
         }
     }
 
-    fn smart_field_label(f: crate::config::SmartField) -> String {
+    /// A Where choice: the field, or its negation for the fields the
+    /// choice turns around (#639).
+    fn smart_field_label((f, not): (crate::config::SmartField, bool)) -> String {
         use crate::config::SmartField::*;
-        match f {
-            Starred => i18n("Starred"),
-            NotStarred => i18n("Not starred"),
-            Unread => i18n("Unread"),
-            Read => i18n("Read"),
-            Attachment => i18n("Has attachments"),
-            Tagged => i18n("Tagged"),
-            Body => i18n("Message preview"),
-            other => other
+        match (f, not) {
+            (Starred, _) => i18n("Starred"),
+            (NotStarred, _) => i18n("Not starred"),
+            (Unread, _) => i18n("Unread"),
+            (Read, _) => i18n("Read"),
+            (Attachment, false) => i18n("Has attachments"),
+            (Attachment, true) => i18n("No attachments"),
+            (Tagged, false) => i18n("Tagged"),
+            (Tagged, true) => i18n("Not tagged"),
+            (Label, _) => i18n("Gmail label"),
+            (Body, _) => i18n("Message preview"),
+            (other, _) => other
                 .filter_field()
                 .map(Self::field_label)
                 .unwrap_or_default(),
+        }
+    }
+
+    /// The Match choices: each matcher, then its negation (#639).
+    fn smart_match_choices() -> Vec<(crate::config::FilterMatch, bool)> {
+        crate::config::FilterMatch::ALL
+            .iter()
+            .flat_map(|m| [(*m, false), (*m, true)])
+            .collect()
+    }
+
+    fn smart_match_label((m, not): (crate::config::FilterMatch, bool)) -> String {
+        use crate::config::FilterMatch::*;
+        match (m, not) {
+            (_, false) => Self::match_label(m),
+            (Contains, true) => i18n("does not contain"),
+            (Equals, true) => i18n("is not"),
+            (StartsWith, true) => i18n("does not start with"),
+            (EndsWith, true) => i18n("does not end with"),
         }
     }
 
@@ -137,13 +161,14 @@ impl AccountsWindow {
         // The conditions: Where, then Match and Text for the fields that
         // look at text, or the tag for Tagged.
         let conds: std::rc::Rc<std::cell::RefCell<Vec<SmartCondRows>>> = Default::default();
-        let field_names: Vec<String> = SmartField::ALL
+        let field_names: Vec<String> = SmartField::CHOICES
             .iter()
             .map(|f| Self::smart_field_label(*f))
             .collect();
-        let match_names: Vec<String> = FilterMatch::ALL
+        let match_choices = Self::smart_match_choices();
+        let match_names: Vec<String> = match_choices
             .iter()
-            .map(|m| Self::match_label(*m))
+            .map(|m| Self::smart_match_label(*m))
             .collect();
         let tags = self.tags.clone();
         let tag_names: Vec<String> = std::iter::once(i18n("Any tag"))
@@ -151,6 +176,7 @@ impl AccountsWindow {
             .collect();
         let make_cond = {
             let tags = tags.clone();
+            let match_choices = match_choices.clone();
             move |init: Option<&SmartCondition>| -> SmartCondRows {
                 let rows = CondRows::new(&field_names, &match_names);
                 let (field, matcher, value) = (&rows.field, &rows.matcher, &rows.value);
@@ -159,10 +185,18 @@ impl AccountsWindow {
                 let refs: Vec<&str> = tag_names.iter().map(|s| s.as_str()).collect();
                 tag.set_model(Some(&gtk::StringList::new(&refs)));
                 if let Some(c) = init {
-                    if let Some(i) = SmartField::ALL.iter().position(|f| *f == c.field) {
+                    let by_choice = c.not && c.field.negated_by_choice();
+                    if let Some(i) = SmartField::CHOICES
+                        .iter()
+                        .position(|f| *f == (c.field, by_choice))
+                    {
                         field.set_selected(i as u32);
                     }
-                    if let Some(i) = FilterMatch::ALL.iter().position(|m| *m == c.matcher) {
+                    let by_match = c.not && c.field.takes_text();
+                    if let Some(i) = match_choices
+                        .iter()
+                        .position(|m| *m == (c.matcher, by_match))
+                    {
                         matcher.set_selected(i as u32);
                     }
                     if c.field == SmartField::Tagged {
@@ -176,20 +210,33 @@ impl AccountsWindow {
                         value.set_text(&c.value);
                     }
                 }
+                // The preview is only ever searched for words in it, so
+                // it keeps to "contains" and "does not contain".
+                let body_match = {
+                    let field = field.clone();
+                    move |matcher: &adw::ComboRow| {
+                        let chosen = SmartField::CHOICES.get(field.selected() as usize);
+                        if chosen.is_some_and(|(f, _)| *f == SmartField::Body)
+                            && matcher.selected() > 1
+                        {
+                            matcher.set_selected(matcher.selected() % 2);
+                        }
+                    }
+                };
+                matcher.connect_selected_notify(body_match.clone());
                 let explain = {
                     let (matcher, value, tag) = (matcher.clone(), value.clone(), tag.clone());
                     move |field: &adw::ComboRow| {
-                        let chosen = SmartField::ALL.get(field.selected() as usize).copied();
+                        let chosen = SmartField::CHOICES
+                            .get(field.selected() as usize)
+                            .map(|(f, _)| *f);
                         let text = chosen.is_some_and(|f| f.takes_text());
-                        let body = chosen == Some(SmartField::Body);
-                        if body {
-                            matcher.set_selected(0);
-                        }
+                        body_match(&matcher);
                         matcher.set_visible(text);
-                        matcher.set_sensitive(!body);
                         value.set_visible(text);
                         tag.set_visible(chosen == Some(SmartField::Tagged));
                         field.set_subtitle(&match chosen {
+                            Some(SmartField::Label) => i18n("With no text, any label matches."),
                             Some(SmartField::Body) => {
                                 i18n("The preview each message has in the list")
                             }
@@ -280,14 +327,17 @@ impl AccountsWindow {
             vec![name_row.clone()],
             move || {
                 let name = name_row.text().trim().to_string();
-                // A text condition with no text says nothing and is dropped;
-                // the others need none.
+                // A text condition with no text says nothing and is dropped,
+                // but for a Gmail label, where it means any label; the
+                // others need none.
                 let conditions: Vec<SmartCondition> = conds
                     .borrow()
                     .iter()
                     .filter_map(|c| {
-                        let field = SmartField::ALL
-                            [c.rows.field.selected() as usize % SmartField::ALL.len()];
+                        let (field, field_not) = SmartField::CHOICES
+                            [c.rows.field.selected() as usize % SmartField::CHOICES.len()];
+                        let (matcher, match_not) =
+                            match_choices[c.rows.matcher.selected() as usize % match_choices.len()];
                         let value = if field == SmartField::Tagged {
                             match c.tag.selected() {
                                 0 => String::new(),
@@ -298,18 +348,19 @@ impl AccountsWindow {
                             }
                         } else if field.takes_text() {
                             let v = c.rows.value.text().trim().to_string();
-                            if v.is_empty() {
+                            if v.is_empty() && field != SmartField::Label {
                                 return None;
                             }
                             v
                         } else {
                             String::new()
                         };
+                        let text = field.takes_text();
                         Some(SmartCondition {
                             field,
-                            matcher: FilterMatch::ALL
-                                [c.rows.matcher.selected() as usize % FilterMatch::ALL.len()],
+                            matcher: if text { matcher } else { FilterMatch::Contains },
                             value,
+                            not: if text { match_not } else { field_not },
                         })
                     })
                     .collect();

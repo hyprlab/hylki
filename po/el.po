@@ -302,6 +302,14 @@ msgstr "Επιστροφή στις γραμματοσειρές και τα χ�
 msgid "Show Sender's Fonts and Colors"
 msgstr "Εμφάνιση των γραμματοσειρών και των χρωμάτων του αποστολέα"
 
+#, fuzzy
+msgid "Create Event from Selection…"
+msgstr "Δημιουργία συμβάντος…"
+
+#, fuzzy
+msgid "Create Task from Selection…"
+msgstr "Δημιουργία εργασίας…"
+
 msgid "View Source"
 msgstr "Προβολή πηγαίου κώδικα"
 
@@ -1922,6 +1930,16 @@ msgstr "Εύρεση στο μήνυμα (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "Λήψη συνημμένων…"
 
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+#, fuzzy
+msgid "today tonight"
+msgstr "Από αριστερά προς τα δεξιά"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
 msgid "Signature"
 msgstr "Υπογραφή"
 
@@ -3221,11 +3239,37 @@ msgstr "Αναγνωσμένα"
 msgid "Has attachments"
 msgstr "Έχει συνημμένα"
 
+msgid "No attachments"
+msgstr "Δεν υπάρχουν συνημμένα"
+
 msgid "Tagged"
 msgstr "Με ετικέτα"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "Χωρίς αστέρι"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Πρόγραμμα-πελάτης email"
+
 msgid "Message preview"
 msgstr "Προεπισκόπηση μηνύματος"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Αποθήκευση νέων επαφών στο"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "αρχίζει με"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "τελειώνει με"
 
 msgid "Edit Smart Folder"
 msgstr "Επεξεργασία έξυπνου φακέλου"
@@ -3241,6 +3285,9 @@ msgstr "Φάκελοι"
 
 msgid "Any tag"
 msgstr "Οποιαδήποτε ετικέτα"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "Η προεπισκόπηση κάθε μηνύματος στη λίστα"
@@ -3382,9 +3429,6 @@ msgstr "Αναζήτηση κατά αποστολέα, θέμα, τύπο, όν
 
 msgid "Loading attachments…"
 msgstr "Φόρτωση συνημμένων…"
-
-msgid "No attachments"
-msgstr "Δεν υπάρχουν συνημμένα"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Τα συνημμένα από τα εισερχόμενά σας θα εμφανίζονται εδώ."
@@ -4141,6 +4185,16 @@ msgstr ""
 "Μεγέθυνση του κειμένου στην οθόνη, όχι του απεσταλμένου μηνύματος. Κάντε "
 "κλικ εδώ ή πατήστε Ctrl+0 για επαναφορά στο 100%."
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Εμφάνιση αυτού του μηνύματος σε φωτεινή ή σκοτεινή λειτουργία. Δεν "
+"επηρεάζονται άλλα μηνύματα."
+
+msgid "Light / Dark Mode"
+msgstr "Φωτεινή / σκοτεινή λειτουργία"
+
 msgid "Writing in {format}"
 msgstr "Σύνταξη σε {format}"
 
@@ -4737,6 +4791,9 @@ msgstr ""
 "Οι αποθηκευμένες διευθύνσεις εμφανίζουν το όνομα της επαφής και όχι αυτό του "
 "μηνύματος."
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Διάταξη"
 
@@ -4963,7 +5020,8 @@ msgstr "Αφαίρεση από ομάδα"
 msgid "Add to Group"
 msgstr "Προσθήκη στην ομάδα"
 
-msgid "Move to Address Book"
+#, fuzzy
+msgid "Move to Address Book…"
 msgstr "Μετακίνηση σε κατάλογο διευθύνσεων"
 
 msgid "Delete…"
@@ -5009,6 +5067,34 @@ msgstr "Αρχεία vCard"
 
 msgid "All files"
 msgstr "Όλα τα αρχεία"
+
+#, fuzzy
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"Η επαφή {name} θα μετακινηθεί από το {from} στο {to}, τοπικά και στον "
+"διακομιστή. Οι ομάδες στο {from} που περιλαμβάνουν την επαφή δεν θα την "
+"περιλαμβάνουν πλέον."
+
+#, fuzzy
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"Η {n} επαφή θα μετακινηθεί από τον τρέχοντα κατάλογο στο {to}, τοπικά και "
+"στον διακομιστή. Οι ομάδες που την περιλαμβάνουν δεν θα την περιλαμβάνουν "
+"πλέον."
+msgstr[1] ""
+"Οι {n} επαφές θα μετακινηθούν από τους τρέχοντες καταλόγους στο {to}, τοπικά "
+"και στον διακομιστή. Οι ομάδες που τις περιλαμβάνουν δεν θα τις "
+"περιλαμβάνουν πλέον."
+
+msgid "Move to Address Book"
+msgstr "Μετακίνηση σε κατάλογο διευθύνσεων"
 
 msgid "Directories"
 msgstr "Κατάλογοι"
@@ -5560,9 +5646,6 @@ msgstr ""
 "Εμφάνιση αυτού του μηνύματος σε φωτεινή ή σκοτεινή λειτουργία. Δεν "
 "επηρεάζονται άλλα μηνύματα."
 
-msgid "Light / Dark Mode"
-msgstr "Φωτεινή / σκοτεινή λειτουργία"
-
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
@@ -5832,6 +5915,12 @@ msgstr "Έναρξη νέου μηνύματος από αντίγραφο το�
 
 msgid "Save…"
 msgstr "Αποθήκευση…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Αναζήτηση αποστολέων"
 
 msgid "Translating…"
 msgstr "Μετάφραση…"
@@ -8699,8 +8788,11 @@ msgstr "Εμφάνιση μηνυμάτων"
 msgid "Light / Dark Mode switch"
 msgstr "Εναλλαγή φωτεινής / σκοτεινής λειτουργίας"
 
-msgid "Displays in the message header for each message."
-msgstr "Εμφανίζεται στην κεφαλίδα κάθε μηνύματος."
+#, fuzzy
+msgid "Shown in the message header and the composer."
+msgstr ""
+"Εμφάνιση του διακόπτη στην κεφαλίδα του μηνύματος, δίπλα στο όνομα του "
+"λογαριασμού."
 
 msgid "Show account in message header"
 msgstr "Εμφάνιση λογαριασμού στην κεφαλίδα μηνύματος"
@@ -9113,6 +9205,9 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Εμφανίζεται στην κεφαλίδα κάθε μηνύματος."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."
@@ -10119,11 +10214,6 @@ msgstr "Hyprlab"
 #~ "υπογεγραμμένο ή κρυπτογραφημένο και αν ο έλεγχός του είναι επιτυχής. Όταν "
 #~ "είναι απενεργοποιημένο, εμφανίζονται μόνο τα εικονίδια κλειδαριάς και "
 #~ "ασπίδας."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr ""
-#~ "Εμφάνιση του διακόπτη στην κεφαλίδα του μηνύματος, δίπλα στο όνομα του "
-#~ "λογαριασμού."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

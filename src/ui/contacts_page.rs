@@ -20,6 +20,7 @@ mod forms;
 mod list;
 mod member_editor;
 mod menus;
+mod move_dialog;
 mod rows;
 mod types;
 
@@ -470,11 +471,8 @@ impl Component for ContactsPage {
             }
             ContactsPageInput::SelectFirst(n) => self.on_select_first(n),
             ContactsPageInput::BulkAddToGroup(g) => self.on_bulk_add_to_group(sender.clone(), g),
-            ContactsPageInput::BulkMoveRequest(to) => {
-                self.on_bulk_move_request(widgets, sender.clone(), to)
-            }
-            ContactsPageInput::MoveRequest { idx, to } => {
-                self.on_move_request(widgets, sender.clone(), idx, to)
+            ContactsPageInput::MoveDialog(people) => {
+                self.on_move_dialog(widgets, sender.clone(), people)
             }
             ContactsPageInput::EditMoveConfirmed { to, key, vcard } => {
                 self.on_edit_move_confirmed(widgets, sender.clone(), to, key, vcard)

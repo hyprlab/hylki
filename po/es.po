@@ -271,6 +271,14 @@ msgstr "Volver a mis fuentes y colores"
 msgid "Show Sender's Fonts and Colors"
 msgstr "Mostrar las fuentes y colores del remitente"
 
+#, fuzzy
+msgid "Create Event from Selection…"
+msgstr "Crear evento…"
+
+#, fuzzy
+msgid "Create Task from Selection…"
+msgstr "Crear tarea…"
+
 msgid "View Source"
 msgstr "Ver código fuente"
 
@@ -1893,6 +1901,16 @@ msgstr "Buscar en el mensaje (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "Descargando archivos adjuntos…"
 
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+#, fuzzy
+msgid "today tonight"
+msgstr "De izquierda a derecha"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
 msgid "Signature"
 msgstr "Firma"
 
@@ -3180,11 +3198,37 @@ msgstr "Leído"
 msgid "Has attachments"
 msgstr "Tiene archivos adjuntos"
 
+msgid "No attachments"
+msgstr "No hay archivos adjuntos"
+
 msgid "Tagged"
 msgstr "Etiquetado"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "No destacado"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Cliente de correo electrónico"
+
 msgid "Message preview"
 msgstr "Vista previa del mensaje"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Guardar los contactos nuevos en"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "empieza por"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "termina en"
 
 msgid "Edit Smart Folder"
 msgstr "Editar carpeta inteligente"
@@ -3200,6 +3244,9 @@ msgstr "Carpetas"
 
 msgid "Any tag"
 msgstr "Cualquier etiqueta"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "La vista previa de cada mensaje en la lista"
@@ -3338,9 +3385,6 @@ msgstr "Buscar por remitente, asunto, tipo, nombre de archivo…"
 
 msgid "Loading attachments…"
 msgstr "Cargando archivos adjuntos…"
-
-msgid "No attachments"
-msgstr "No hay archivos adjuntos"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Los archivos adjuntos de tus bandejas de entrada aparecerán aquí."
@@ -4096,6 +4140,16 @@ msgstr ""
 "Zoom del texto en pantalla, no del mensaje enviado. Haz clic aquí o pulsa "
 "Ctrl+0 para restablecerlo al 100 %."
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Mostrar este mensaje en modo claro u oscuro. Los demás mensajes no se ven "
+"afectados."
+
+msgid "Light / Dark Mode"
+msgstr "Modo claro/oscuro"
+
 msgid "Writing in {format}"
 msgstr "Escribiendo en {format}"
 
@@ -4696,6 +4750,9 @@ msgstr ""
 "Las direcciones guardadas muestran el nombre del contacto en lugar del que "
 "figura en el correo."
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Diseño"
 
@@ -4920,7 +4977,8 @@ msgstr "Quitar del grupo"
 msgid "Add to Group"
 msgstr "Añadir al grupo"
 
-msgid "Move to Address Book"
+#, fuzzy
+msgid "Move to Address Book…"
 msgstr "Mover a otra libreta de direcciones"
 
 msgid "Delete…"
@@ -4966,6 +5024,33 @@ msgstr "Archivos vCard"
 
 msgid "All files"
 msgstr "Todos los archivos"
+
+#, fuzzy
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"Se moverá {name} de {from} a {to}, tanto localmente como en el servidor. Si "
+"el contacto pertenece a algún grupo de {from}, dejará de pertenecer a él."
+
+#, fuzzy
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"Se moverá {n} contacto de su libreta de direcciones a {to}, tanto localmente "
+"como en el servidor. Dejará de pertenecer a los grupos de su libreta "
+"anterior."
+msgstr[1] ""
+"Se moverán {n} contactos de sus libretas de direcciones a {to}, tanto "
+"localmente como en el servidor. Dejarán de pertenecer a los grupos de sus "
+"libretas anteriores."
+
+msgid "Move to Address Book"
+msgstr "Mover a otra libreta de direcciones"
 
 msgid "Directories"
 msgstr "Directorios"
@@ -5520,9 +5605,6 @@ msgstr ""
 "Mostrar este mensaje en modo claro u oscuro. Los demás mensajes no se ven "
 "afectados."
 
-msgid "Light / Dark Mode"
-msgstr "Modo claro/oscuro"
-
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
@@ -5793,6 +5875,12 @@ msgstr "Crear un mensaje nuevo a partir de una copia de la plantilla"
 
 msgid "Save…"
 msgstr "Guardar…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Buscar remitentes"
 
 msgid "Translating…"
 msgstr "Traduciendo…"
@@ -8625,8 +8713,11 @@ msgstr "Apariencia de los mensajes"
 msgid "Light / Dark Mode switch"
 msgstr "Interruptor del modo claro/oscuro"
 
-msgid "Displays in the message header for each message."
-msgstr "Se muestra en la cabecera de cada mensaje."
+#, fuzzy
+msgid "Shown in the message header and the composer."
+msgstr ""
+"Mostrar el interruptor en la cabecera del mensaje junto al nombre de la "
+"cuenta."
 
 msgid "Show account in message header"
 msgstr "Mostrar la cuenta en la cabecera del mensaje"
@@ -9034,6 +9125,9 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Se muestra en la cabecera de cada mensaje."
 
 #~ msgid ""
 #~ "Will appear in the composer's From menu. Replies to mail sent here will "
@@ -10081,11 +10175,6 @@ msgstr "Hyprlab"
 #~ "Junto al remitente, indica con palabras si un mensaje está firmado o "
 #~ "cifrado y si la comprobación es correcta. Desactivado muestra solo los "
 #~ "iconos de candado y escudo."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr ""
-#~ "Mostrar el interruptor en la cabecera del mensaje junto al nombre de la "
-#~ "cuenta."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

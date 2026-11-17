@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS messages (
     answered       INTEGER NOT NULL DEFAULT 0,
     forwarded      INTEGER NOT NULL DEFAULT 0,
     bcc            TEXT    NOT NULL DEFAULT '',
+    reply_to_name  TEXT    NOT NULL DEFAULT '',
     PRIMARY KEY (account_id, folder_path, uid)
 );
 CREATE INDEX IF NOT EXISTS messages_by_message_id ON messages (message_id);

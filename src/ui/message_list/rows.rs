@@ -57,7 +57,10 @@ fn newest_line(
     } else if count > 1 {
         (
             Some(newest_here.datetime_list()),
-            Some((newest_here.from_name.clone(), newest_here.from_addr.clone())),
+            Some({
+                let (name, addr) = newest_here.sender();
+                (name.to_string(), addr.to_string())
+            }),
             Some(newest_here.preview.clone()),
             Some((newest_here.timestamp, newest_here.date.clone())),
         )

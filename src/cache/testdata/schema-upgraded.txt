@@ -164,7 +164,7 @@ CREATE TABLE messages (
     starred        INTEGER NOT NULL,
     has_attachment INTEGER NOT NULL,
     message_id     TEXT    NOT NULL DEFAULT '',
-    references_    TEXT    NOT NULL DEFAULT '', preview TEXT NOT NULL DEFAULT '', reply_to TEXT NOT NULL DEFAULT '', keywords TEXT NOT NULL DEFAULT '', importance INTEGER NOT NULL DEFAULT 0, due INTEGER NOT NULL DEFAULT 0, gmail_labels TEXT NOT NULL DEFAULT '', answered INTEGER NOT NULL DEFAULT 0, forwarded INTEGER NOT NULL DEFAULT 0, bcc TEXT NOT NULL DEFAULT '',
+    references_    TEXT    NOT NULL DEFAULT '', preview TEXT NOT NULL DEFAULT '', reply_to TEXT NOT NULL DEFAULT '', keywords TEXT NOT NULL DEFAULT '', importance INTEGER NOT NULL DEFAULT 0, due INTEGER NOT NULL DEFAULT 0, gmail_labels TEXT NOT NULL DEFAULT '', answered INTEGER NOT NULL DEFAULT 0, forwarded INTEGER NOT NULL DEFAULT 0, bcc TEXT NOT NULL DEFAULT '', reply_to_name TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (account_id, folder_path, uid)
 )
 

@@ -262,6 +262,12 @@ msgstr ""
 msgid "Show Sender's Fonts and Colors"
 msgstr ""
 
+msgid "Create Event from Selection…"
+msgstr ""
+
+msgid "Create Task from Selection…"
+msgstr ""
+
 msgid "View Source"
 msgstr ""
 
@@ -1764,6 +1770,15 @@ msgstr ""
 msgid "Downloading attachments…"
 msgstr ""
 
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr ""
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
 msgid "Signature"
 msgstr ""
 
@@ -2962,10 +2977,31 @@ msgstr ""
 msgid "Has attachments"
 msgstr ""
 
+msgid "No attachments"
+msgstr ""
+
 msgid "Tagged"
 msgstr ""
 
+msgid "Not tagged"
+msgstr ""
+
+msgid "Gmail label"
+msgstr ""
+
 msgid "Message preview"
+msgstr ""
+
+msgid "does not contain"
+msgstr ""
+
+msgid "is not"
+msgstr ""
+
+msgid "does not start with"
+msgstr ""
+
+msgid "does not end with"
 msgstr ""
 
 msgid "Edit Smart Folder"
@@ -2981,6 +3017,9 @@ msgid "Folders"
 msgstr ""
 
 msgid "Any tag"
+msgstr ""
+
+msgid "With no text, any label matches."
 msgstr ""
 
 msgid "The preview each message has in the list"
@@ -3110,9 +3149,6 @@ msgid "Search by sender, subject, type, filename…"
 msgstr ""
 
 msgid "Loading attachments…"
-msgstr ""
-
-msgid "No attachments"
 msgstr ""
 
 msgid "Attachments from your inboxes will appear here."
@@ -3772,6 +3808,13 @@ msgid ""
 "Ctrl+0, puts it back to 100%."
 msgstr ""
 
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+
+msgid "Light / Dark Mode"
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr ""
 
@@ -4305,6 +4348,9 @@ msgstr ""
 msgid "Saved addresses show the contact's name, not the mail's."
 msgstr ""
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr ""
 
@@ -4511,7 +4557,7 @@ msgstr ""
 msgid "Add to Group"
 msgstr ""
 
-msgid "Move to Address Book"
+msgid "Move to Address Book…"
 msgstr ""
 
 msgid "Delete…"
@@ -4555,6 +4601,23 @@ msgid "vCard and CSV files"
 msgstr ""
 
 msgid "All files"
+msgstr ""
+
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Move to Address Book"
 msgstr ""
 
 msgid "Directories"
@@ -5053,9 +5116,6 @@ msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
 msgstr ""
 
-msgid "Light / Dark Mode"
-msgstr ""
-
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
@@ -5314,6 +5374,11 @@ msgid "Start a new message from a copy of the template"
 msgstr ""
 
 msgid "Save…"
+msgstr ""
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+msgid "via {sender}"
 msgstr ""
 
 msgid "Translating…"
@@ -7945,7 +8010,7 @@ msgstr ""
 msgid "Light / Dark Mode switch"
 msgstr ""
 
-msgid "Displays in the message header for each message."
+msgid "Shown in the message header and the composer."
 msgstr ""
 
 msgid "Show account in message header"

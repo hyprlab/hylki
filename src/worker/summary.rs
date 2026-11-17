@@ -98,6 +98,14 @@ pub(crate) fn summary_from_raw(account_id: u32, folder_id: u32, uid: u32, raw: &
     } else {
         reply_to
     };
+    let reply_to_name = crate::worker::headers::reply_to_display_name(
+        &reply_to,
+        parsed
+            .as_ref()
+            .and_then(|p| p.reply_to())
+            .and_then(|a| a.first())
+            .and_then(|a| a.name()),
+    );
     let has_attachment = parsed
         .as_ref()
         .map(|p| p.attachment_count() > 0)
@@ -112,6 +120,7 @@ pub(crate) fn summary_from_raw(account_id: u32, folder_id: u32, uid: u32, raw: &
         from_name,
         from_addr,
         reply_to,
+        reply_to_name,
         to,
         cc,
         bcc,
@@ -188,5 +197,36 @@ mod tests {
 
         let nameless = summary_from_raw(3, 1, 7, b"From: a@x\r\n\r\n");
         assert_eq!(nameless.from_name, "a@x");
+    }
+
+    /// A web form's mail keeps the name of whoever filled it in (#641).
+    #[test]
+    fn the_first_reply_to_name_is_kept() {
+        let raw = b"From: Example Site <no-reply@site.example>\r\n\
+    Reply-To: \"Doe, Jane\" <jane@x.example>, desk@site.example\r\n\
+    Subject: Contact form\r\n\r\nbody\r\n";
+        let m = summary_from_raw(1, 1, 1, raw);
+        assert_eq!(m.reply_to, "jane@x.example, desk@site.example");
+        assert_eq!(m.reply_to_name, "Doe, Jane");
+
+        let bare = summary_from_raw(
+            1,
+            1,
+            2,
+            b"From: Site <no-reply@site.example>\r\nReply-To: jane@x.example\r\n\r\nx\r\n",
+        );
+        assert_eq!(bare.reply_to, "jane@x.example");
+        assert_eq!(bare.reply_to_name, "");
+
+        let echo = summary_from_raw(
+            1,
+            1,
+            3,
+            b"From: Ann <ann@x.example>\r\nReply-To: Ann <ann@x.example>\r\n\r\nx\r\n",
+        );
+        assert_eq!(
+            (echo.reply_to.as_str(), echo.reply_to_name.as_str()),
+            ("", "")
+        );
     }
 }

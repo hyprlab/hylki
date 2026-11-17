@@ -145,6 +145,7 @@ pub(super) fn build_widgets() -> RowWidgets {
     subject.set_hexpand(true);
     subject.set_ellipsize(gtk::pango::EllipsizeMode::End);
     subject.add_css_class("message-subject");
+    tip_when_cut(&subject);
     subject_line.append(&subject);
     let tags_box = gtk::Box::new(gtk::Orientation::Horizontal, 4);
     tags_box.set_valign(gtk::Align::Center);
@@ -169,6 +170,7 @@ pub(super) fn build_widgets() -> RowWidgets {
     preview.set_wrap_mode(gtk::pango::WrapMode::WordChar);
     preview.set_ellipsize(gtk::pango::EllipsizeMode::End);
     preview.add_css_class("message-preview");
+    tip_when_cut(&preview);
     preview_line.append(&preview);
     text.append(&preview_line);
 
@@ -286,4 +288,23 @@ pub(super) fn build_widgets() -> RowWidgets {
         lock,
         preview,
     }
+}
+
+/// The label's whole text as its tooltip, offered only while the row cuts
+/// it short: a subject or preview that fits has nothing more to show (#673).
+/// It is read from the label when asked, so a recycled row never shows the
+/// text of the message it held before.
+fn tip_when_cut(label: &gtk::Label) {
+    label.set_has_tooltip(true);
+    label.connect_query_tooltip(|label, _, _, _, tooltip| {
+        if !label.layout().is_ellipsized() {
+            return false;
+        }
+        if label.uses_markup() {
+            tooltip.set_markup(Some(&label.label()));
+        } else {
+            tooltip.set_text(Some(&label.text()));
+        }
+        true
+    });
 }

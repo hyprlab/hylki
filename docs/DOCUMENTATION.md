@@ -234,14 +234,20 @@ deletes it. Deleting one takes only the search away, never the mail.
   section.
 - **Folders:** one kind of folder (Inbox, Sent, Drafts, Archive, Junk or
   Trash), or every folder but Trash and Junk.
-- **Conditions:** starred or not, unread or read, has attachments, tagged
-  with a tag or any tag, and the text conditions filters use: From address
-  and name, To or Cc, Reply-To, the message preview, and whether the sender
-  is in Contacts. **Condition matching** says whether all must match or any
-  one may.
+- **Conditions:** starred or not, unread or read, with or without
+  attachments, tagged or not tagged (with a tag, or any tag), a Gmail
+  label, and the text conditions filters use: From address and name, To or
+  Cc, Reply-To, the message preview, and whether the sender is in Contacts.
+  Each text condition, the Gmail label included, can be turned around:
+  **does not contain**, **is not**, **does not start with**, **does not
+  end with**. A Gmail label with no text matches any label, so "Gmail
+  label, does not contain" and no text finds mail with no label at all.
+  **Condition matching** says whether all must match or any one may.
 
 "Sent mail that is starred or tagged" is Folders: Sent, with Starred and
-Tagged (any tag) as conditions and Any one may match. A smart folder
+Tagged (any tag) as conditions and Any one may match. "Inbox mail not from
+a shop" is Folders: Inbox, with From address, does not end with,
+`@shop.example`. A smart folder
 searches the mail on this computer, so it finds what has been synced, and
 lists at most 5,000 messages per account. They are kept in
 `smart_folders.toml`.
@@ -642,6 +648,17 @@ which gives it away. Address books that fill themselves from mail
 (Collected Addresses, Recently Contacted, Other Contacts) are not used for
 this, and a contact saved without a name keeps the message's.
 
+**Show the Reply-To sender**, below it, names mail by the first address in
+its Reply-To header instead of From, when it has one: in the message list,
+the reader and the new-mail notification. A web form sends from its own
+address and puts whoever filled it in under Reply-To, so the list shows
+that person. The reader's header still shows the From address after the
+name, as "via no-reply@example.com". Mail from your own accounts, and mail
+whose Reply-To is its From address, keep their sender. A mailing list that
+sets Reply-To to its own address is named by the list. Mail downloaded by
+an earlier version shows the Reply-To address in place of the name until
+it is fetched again.
+
 A contact's photo is the sender's circle in the message list and in the
 reader's message headers. Without one, the circle shows the sender's
 Gravatar or their domain's logo when those are switched on in **Settings →
@@ -703,8 +720,9 @@ Several contacts are selected together with <kbd>Ctrl</kbd> or
 <kbd>Shift</kbd> and a click, or <kbd>Ctrl+A</kbd> for the whole list. The
 right-hand pane then lists them, with **Add to Group**, which puts them in
 a group (those it can take: see [Contact groups](#contact-groups)), **Move
-to…**, which moves them to another address book, and **Delete…**; a
-right-click on one of them offers the same. A move adds each contact to the
+to…**, which asks for another address book and moves them there, and
+**Delete…**; a right-click on one of them offers the same, with **Move to
+Address Book…** for the move. A move adds each contact to the
 book picked and removes it from the one it was in, locally and on the
 server, with its photo; a group that names it by its card in the old book
 loses it. Contacts in a book Hylki cannot write to are not moved. With a
@@ -717,11 +735,13 @@ the book picked in the sidebar, or on the default book when every book is
 shown. A contact being edited can move to another book
 from the same row, which then names the one it is in: saving asks first,
 and moves it with its changes. A contact's right-click menu has **Move to
-Address Book** too, and several selected together move with **Move to…**
-(see below). A move takes the contact out of its book and puts it in the
-other, locally and on the server, after a question that names both; a group
-in the old book that held the contact no longer has it. A contact in a book
-Hylki cannot write to stays where it is.
+Address Book…** too, which lists the books it can go to; one picked and
+**Move** pressed, the contact moves. It needs no address books in the
+sidebar to drag onto. Several selected together move with **Move to…** (see
+below). A move takes the contact out of its book and puts it in the other,
+locally and on the server; a group in the old book that held the contact no
+longer has it. A contact in a book Hylki cannot write to stays where it
+is, and the menu item is unavailable when there is no other book to go to.
 
 The contact form holds the photo, which **Change Photo…** replaces with an
 image file (made at most 512 pixels a side and kept in the card) and
@@ -2191,6 +2211,20 @@ the Reminders app. The last calendar and task list used are chosen first the
 next time. Each is listed under its account's name in **Settings →
 Contacts**, else the nickname of the mail account with the same address,
 else the address.
+
+With text selected in the reader, the right-click menu has **Create Event
+from Selection…** and **Create Task from Selection…** in their place. The
+dialog then starts from the date and times written in the selection:
+"Friday at 3pm", "Nov 20-22", "20/11/2026, 14:00-15:30", "tomorrow, 10-11am".
+A short one-line selection becomes the title, without its date and times;
+anything longer leaves the subject as the title. The selection goes in the
+notes instead of the whole message. A day without a time makes an all-day
+event, and a task's due date is switched on. Words such as "tomorrow" and
+"Friday", and a date written without a year, count from the day the message
+was sent. Month and weekday names are read in English and in the desktop's
+language, and a date such as 03/04 in the order the desktop writes dates.
+Hylki reads the dates by fixed rules, on this computer; whatever it did not
+find stays at the dialog's usual default.
 
 On a desktop without Evolution Data Server the dialog's button is **Open in
 Calendar**: the event or task is handed as an `.ics` file to the application

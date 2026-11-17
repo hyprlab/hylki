@@ -6,6 +6,7 @@ use relm4::prelude::*;
 use crate::config;
 use crate::models::Message;
 use crate::ui::compose::{Compose, ComposeInput, ComposePrefill};
+use crate::ui::cover_slot;
 use crate::ui::message_list::MessageListInput;
 use crate::ui::message_view::MessageViewInput;
 
@@ -129,7 +130,7 @@ impl AppModel {
             // Without this the hidden, pane-covering revealer keeps
             // swallowing every click and scroll over the pane beneath.
             r.set_can_target(false);
-            r.set_child(None::<&gtk::Widget>);
+            cover_slot::set_child(r, None);
         }
         // In-flow (not overlay) slot: no click-swallowing to disarm. Settle
         // any running slide, then remember the height the user dragged the
@@ -170,17 +171,17 @@ impl AppModel {
             &self.reader_compose_revealer,
             &self.contacts_compose_revealer,
         ] {
-            let Some(child) = r.child() else { continue };
+            let Some(child) = cover_slot::child(r) else { continue };
             r.set_can_target(false);
             if !r.reveals_child() {
-                r.set_child(None::<&gtk::Widget>);
+                cover_slot::set_child(r, None);
                 continue;
             }
             r.set_reveal_child(false);
             let r2 = r.clone();
             gtk::glib::timeout_add_local_once(std::time::Duration::from_millis(340), move || {
-                if r2.child().as_ref() == Some(&child) && !r2.reveals_child() {
-                    r2.set_child(None::<&gtk::Widget>);
+                if cover_slot::child(&r2).as_ref() == Some(&child) && !r2.reveals_child() {
+                    cover_slot::set_child(&r2, None);
                 }
             });
         }
@@ -329,7 +330,7 @@ impl AppModel {
                 widget.add_css_class("inline-compose-surface");
                 self.reader_overflow_btn.set_visible(false);
                 let slot = self.compose_slot();
-                slot.set_child(Some(&widget));
+                cover_slot::set_child(slot, Some(widget.upcast_ref()));
                 slot.set_can_target(true);
                 let s = slot.clone();
                 gtk::glib::idle_add_local_once(move || s.set_reveal_child(true));

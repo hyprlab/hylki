@@ -300,6 +300,13 @@ msgstr "Torna ai miei caratteri e colori"
 msgid "Show Sender's Fonts and Colors"
 msgstr "Mostra i caratteri e i colori del mittente"
 
+msgid "Create Event from Selection…"
+msgstr ""
+
+#, fuzzy
+msgid "Create Task from Selection…"
+msgstr "Crea"
+
 msgid "View Source"
 msgstr "Visualizza sorgente"
 
@@ -1978,6 +1985,16 @@ msgstr "Trova nel messaggio (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "Download allegati in corso…"
 
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+#, fuzzy
+msgid "today tonight"
+msgstr "Da sinistra a destra"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
 msgid "Signature"
 msgstr "Firma"
 
@@ -3322,11 +3339,37 @@ msgstr "Letti"
 msgid "Has attachments"
 msgstr "Ha allegati"
 
+msgid "No attachments"
+msgstr "Nessun allegato"
+
 msgid "Tagged"
 msgstr "Etichettato"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "Non contrassegnati"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Client e-mail"
+
 msgid "Message preview"
 msgstr "Anteprima messaggio"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Salva i nuovi contatti in"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "inizia con"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "termina con"
 
 msgid "Edit Smart Folder"
 msgstr "Modifica cartella smart"
@@ -3343,6 +3386,9 @@ msgstr "Cartelle"
 
 msgid "Any tag"
 msgstr "Qualsiasi etichetta"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "L'anteprima che ogni messaggio ha nell'elenco"
@@ -3482,9 +3528,6 @@ msgstr "Cerca per mittente, oggetto, tipo, nome file…"
 
 msgid "Loading attachments…"
 msgstr "Caricamento allegati in corso…"
-
-msgid "No attachments"
-msgstr "Nessun allegato"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Gli allegati delle tue caselle in arrivo appariranno qui."
@@ -4247,6 +4290,16 @@ msgid ""
 "Ctrl+0, puts it back to 100%."
 msgstr ""
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Mostra questo messaggio in modalità chiara o scura. Gli altri messaggi non "
+"vengono influenzati."
+
+msgid "Light / Dark Mode"
+msgstr "Modalità chiara / scura"
+
 msgid "Writing in {format}"
 msgstr "Scrittura in {format}"
 
@@ -4852,6 +4905,9 @@ msgstr "Nessun contatto"
 msgid "Saved addresses show the contact's name, not the mail's."
 msgstr ""
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Layout"
 
@@ -5091,7 +5147,7 @@ msgid "Add to Group"
 msgstr ""
 
 #, fuzzy
-msgid "Move to Address Book"
+msgid "Move to Address Book…"
 msgstr "Rubrica"
 
 msgid "Delete…"
@@ -5144,6 +5200,32 @@ msgstr "File vCard"
 
 msgid "All files"
 msgstr "Tutti i file"
+
+#, fuzzy
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"{name} viene rimosso dalla rubrica, e per una rubrica sincronizzata, anche "
+"dal server."
+
+#, fuzzy
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"{name} viene rimosso dalla rubrica, e per una rubrica sincronizzata, anche "
+"dal server."
+msgstr[1] ""
+"{name} viene rimosso dalla rubrica, e per una rubrica sincronizzata, anche "
+"dal server."
+
+#, fuzzy
+msgid "Move to Address Book"
+msgstr "Rubrica"
 
 #, fuzzy
 msgid "Directories"
@@ -5739,9 +5821,6 @@ msgstr ""
 "Mostra questo messaggio in modalità chiara o scura. Gli altri messaggi non "
 "vengono influenzati."
 
-msgid "Light / Dark Mode"
-msgstr "Modalità chiara / scura"
-
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
@@ -6014,6 +6093,12 @@ msgstr "Inizia un nuovo messaggio da una copia del modello"
 
 msgid "Save…"
 msgstr "Salva…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Cerca mittenti"
 
 msgid "Translating…"
 msgstr "Traduzione in corso…"
@@ -8923,8 +9008,10 @@ msgid "Light / Dark Mode switch"
 msgstr "Interruttore Modalità chiara / scura"
 
 #, fuzzy
-msgid "Displays in the message header for each message."
-msgstr "Apre il messaggio con un inoltro avviato."
+msgid "Shown in the message header and the composer."
+msgstr ""
+"Mostra l'interruttore nell'intestazione del messaggio, accanto al nome "
+"dell'account."
 
 #, fuzzy
 msgid "Show account in message header"
@@ -9334,6 +9421,10 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Apre il messaggio con un inoltro avviato."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."
@@ -10252,11 +10343,6 @@ msgstr "Hyprlab"
 #~ "Accanto al mittente, indica a parole se un messaggio è firmato o "
 #~ "crittografato e se supera la verifica. Disattivato mostra solo le icone "
 #~ "lucchetto e scudo."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr ""
-#~ "Mostra l'interruttore nell'intestazione del messaggio, accanto al nome "
-#~ "dell'account."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

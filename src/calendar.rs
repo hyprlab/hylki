@@ -3,9 +3,11 @@
 //! the calendar application as an `.ics` file.
 
 mod eds;
+mod extract;
 mod ical;
 
 pub(crate) use eds::{create, sources};
+pub(crate) use extract::{find, title, Found, Words};
 pub(crate) use ical::{calendar_file, new_uid};
 
 use std::collections::HashMap;

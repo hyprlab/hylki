@@ -152,6 +152,41 @@ fn sender_style_entry(hit: &crate::ui::message_view::MenuHit, m: &Message) -> Op
     )
 }
 
+/// Create Event and Create Task from the text selected in the card (#637):
+/// the item starts from the date and times written in it.
+fn selection_calendar_entries(
+    m: &Message,
+    text: &str,
+    sender: &ComponentSender<AppModel>,
+) -> Vec<MenuEntry> {
+    use crate::calendar::ItemKind;
+    let entry = |kind: ItemKind, label: String, icon: &str| {
+        let (s, message, text) = (sender.input_sender().clone(), m.clone(), text.to_string());
+        MenuEntry::new(label, move || {
+            let _ = s.send(AppMsg::ToCalendar(
+                super::to_calendar::ToCalendar::FromSelection {
+                    message: Box::new(message.clone()),
+                    kind,
+                    text: text.clone(),
+                },
+            ));
+        })
+        .icon(icon)
+    };
+    vec![
+        entry(
+            ItemKind::Event,
+            i18n("Create Event from Selection…"),
+            "x-office-calendar-symbolic",
+        ),
+        entry(
+            ItemKind::Task,
+            i18n("Create Task from Selection…"),
+            "task-due-symbolic",
+        ),
+    ]
+}
+
 /// Translate (when the reader offers it), View Source and Save as File.
 fn source_entries(
     item: &impl Fn(RowAction, String, &str) -> MenuEntry,
@@ -231,14 +266,17 @@ impl AppModel {
                 "filter-folder",
             ),
         ]);
-        sections.push(vec![
-            item(
-                RowAction::CreateEvent,
-                i18n("Create Event…"),
-                "x-office-calendar",
-            ),
-            item(RowAction::CreateTask, i18n("Create Task…"), "task-due"),
-        ]);
+        sections.push(match &hit.selection {
+            Some(text) => selection_calendar_entries(&m, text, sender),
+            None => vec![
+                item(
+                    RowAction::CreateEvent,
+                    i18n("Create Event…"),
+                    "x-office-calendar",
+                ),
+                item(RowAction::CreateTask, i18n("Create Task…"), "task-due"),
+            ],
+        });
         let mut content = vec![self.card_remote_entry(&m, sender)];
         content.extend(sender_style_entry(&hit, &m));
         sections.push(content);

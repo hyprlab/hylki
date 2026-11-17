@@ -17,7 +17,7 @@ pub(crate) struct MenuHit {
     /// The picture's URI: a `data:` one for mail's own pictures.
     pub(super) image: Option<String>,
     /// The selected text, when the click was on it.
-    pub(super) selection: Option<String>,
+    pub(crate) selection: Option<String>,
     /// The message's translation entry (#327), when a service is set up:
     /// what it says, and the reader to tell.
     pub(crate) translate: Option<TranslateEntry>,

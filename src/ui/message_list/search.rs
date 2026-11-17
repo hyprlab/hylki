@@ -21,10 +21,21 @@ const SEARCH_OFF_MAIN: usize = 4000;
 /// query never matches across two of them (the layout
 /// [`Query::match_text`] reads).
 pub(crate) fn search_text_of(m: &Message) -> Box<str> {
+    // The Reply-To sender counts as the sender too, so the name a row
+    // shows with Settings → Contacts → Show the Reply-To sender (#641)
+    // finds it, whichever way the switch is set.
+    let (name, addr);
+    let (from_name, from_addr) = if m.reply_to.is_empty() {
+        (m.from_name.as_str(), m.from_addr.as_str())
+    } else {
+        name = format!("{} {}", m.from_name, m.reply_to_name);
+        addr = format!("{} {}", m.from_addr, m.reply_to);
+        (name.as_str(), addr.as_str())
+    };
     search_text_parts(
         &m.subject,
-        &m.from_name,
-        &m.from_addr,
+        from_name,
+        from_addr,
         &recipients_of(m),
         &m.preview,
     )

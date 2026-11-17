@@ -152,6 +152,7 @@ impl AppModel {
             from_name,
             from_addr,
             reply_to: out.reply_to.clone(),
+            reply_to_name: String::new(),
             to: out.to.clone(),
             cc: out.cc.clone(),
             bcc: out.bcc.clone(),

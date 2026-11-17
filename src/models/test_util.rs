@@ -13,6 +13,7 @@ pub(crate) fn msg(account_id: u32, folder_id: u32, uid: u32) -> Message {
         from_name: String::new(),
         from_addr: String::new(),
         reply_to: String::new(),
+        reply_to_name: String::new(),
         to: String::new(),
         cc: String::new(),
         bcc: String::new(),

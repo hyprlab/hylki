@@ -19,6 +19,7 @@ fn smart_input<'a>(
         attachment: false,
         keywords,
         tags,
+        labels: &[],
     }
 }
 
@@ -38,7 +39,79 @@ fn smart_cond(field: SmartField, value: &str) -> SmartCondition {
         field,
         matcher: FilterMatch::Contains,
         value: value.into(),
+        not: false,
     }
+}
+
+fn smart_not(field: SmartField, matcher: FilterMatch, value: &str) -> SmartCondition {
+    SmartCondition {
+        field,
+        matcher,
+        value: value.into(),
+        not: true,
+    }
+}
+
+/// #639: each condition can be turned around.
+#[test]
+fn smart_folder_negated_conditions() {
+    let none: Vec<String> = Vec::new();
+    let tags = vec!["$label1".to_string()];
+    let tagged = vec!["$Label1".to_string()];
+    let input = smart_input(false, false, &none, &tags);
+    let not = |field, matcher, value: &str| smart(false, vec![smart_not(field, matcher, value)]);
+    assert!(!not(SmartField::Subject, FilterMatch::Contains, "invoice").matches(&input));
+    assert!(not(SmartField::Subject, FilterMatch::Contains, "receipt").matches(&input));
+    assert!(!not(SmartField::FromAddress, FilterMatch::StartsWith, "billing@").matches(&input));
+    assert!(not(SmartField::FromAddress, FilterMatch::EndsWith, ".org").matches(&input));
+    assert!(not(SmartField::Subject, FilterMatch::Equals, "invoice").matches(&input));
+    // Not tagged: with no tag, or without the one named.
+    let untagged = not(SmartField::Tagged, FilterMatch::Contains, "");
+    assert!(untagged.matches(&input));
+    assert!(!untagged.matches(&smart_input(false, false, &tagged, &tags)));
+    let not_work = not(SmartField::Tagged, FilterMatch::Contains, "work");
+    assert!(not_work.matches(&smart_input(false, false, &tagged, &tags)));
+    // No attachments, and the cache can rule out the rest ahead.
+    let bare = not(SmartField::Attachment, FilterMatch::Contains, "");
+    assert!(bare.matches(&input));
+    assert_eq!(
+        bare.prefilter(),
+        SmartPrefilter {
+            attachment: Some(false),
+            ..Default::default()
+        }
+    );
+    // What cannot be judged matches nothing, turned around or not.
+    assert!(!not(SmartField::Subject, FilterMatch::Contains, " , ").matches(&input));
+    assert!(!not(SmartField::FromInContacts, FilterMatch::Contains, "").matches(&input));
+}
+
+/// #639: Gmail labels by name, decoded, or any label at all.
+#[test]
+fn smart_folder_gmail_labels() {
+    let none: Vec<String> = Vec::new();
+    let labels = vec!["Clients/Acme".to_string(), "R&AOk-sum&AOk-".to_string()];
+    let mut input = smart_input(false, false, &none, &none);
+    let label = |matcher, value: &str, not| {
+        smart(
+            false,
+            vec![SmartCondition {
+                field: SmartField::Label,
+                matcher,
+                value: value.into(),
+                not,
+            }],
+        )
+    };
+    assert!(!label(FilterMatch::Contains, "", false).matches(&input));
+    assert!(label(FilterMatch::Contains, "", true).matches(&input));
+    input.labels = &labels;
+    assert!(label(FilterMatch::Contains, "", false).matches(&input));
+    assert!(!label(FilterMatch::Contains, "", true).matches(&input));
+    assert!(label(FilterMatch::StartsWith, "clients/", false).matches(&input));
+    assert!(label(FilterMatch::Equals, "résumé", false).matches(&input));
+    assert!(!label(FilterMatch::Equals, "acme", false).matches(&input));
+    assert!(label(FilterMatch::Equals, "acme", true).matches(&input));
 }
 
 /// #417's own example: sent mail that is starred or carries a tag.
@@ -113,6 +186,21 @@ fn smart_folders_file_round_trips() {
         FilterMatch::Contains
     );
     assert!(short.folders[0].folder.is_none() && !short.folders[0].any);
+    assert!(!short.folders[0].conditions[0].not);
+    // A negation is written only where there is one.
+    let not = smart(
+        false,
+        vec![smart_not(SmartField::Subject, FilterMatch::Contains, "x")],
+    );
+    let text = toml::to_string_pretty(&SmartFoldersFile {
+        folders: vec![not.clone()],
+    })
+    .unwrap();
+    assert!(text.contains("not = true"), "{text}");
+    assert_eq!(
+        toml::from_str::<SmartFoldersFile>(&text).unwrap().folders,
+        vec![not]
+    );
 }
 
 pub(super) fn rule(field: FilterField, matcher: FilterMatch, value: &str) -> FilterRule {

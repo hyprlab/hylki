@@ -260,3 +260,36 @@ fn a_cards_attachment_row_lists_its_own_files() {
         "<div class=\"hylki-atts\" data-key=\"1:8\"></div>"
     );
 }
+
+/// A card named by its Reply-To sender still says who sent it (#641).
+#[test]
+fn a_reply_to_sender_card_shows_the_from_address() {
+    let mut m = super::msg_for_print();
+    m.from_addr = "no-reply@site.example".into();
+    m.reply_to = "jane@x.example".into();
+    m.reply_to_name = "Jane <Doe>".into();
+
+    crate::contacts::set_reply_to_sender(false);
+    let plain = sender_addr_html(&m);
+    assert!(
+        plain.contains("data-mail=\"no-reply@site.example\""),
+        "{plain}"
+    );
+    assert!(!plain.contains("via"), "{plain}");
+
+    crate::contacts::set_reply_to_sender(true);
+    let via = sender_addr_html(&m);
+    assert!(
+        via.contains("data-mail=\"jane@x.example\">&lt;jane@x.example&gt;"),
+        "{via}"
+    );
+    assert!(
+        via.contains(" via <span class=\"hylki-mail\" data-mail=\"no-reply@site.example\">"),
+        "{via}"
+    );
+    assert!(
+        via.contains("data-addr=\"&lt;jane@x.example&gt; via no-reply@site.example\""),
+        "{via}"
+    );
+    crate::contacts::set_reply_to_sender(false);
+}

@@ -116,6 +116,8 @@ pub(super) fn jmap_message(
     } else {
         reply_to
     };
+    let reply_to_name =
+        crate::worker::headers::reply_to_display_name(&reply_to, v["replyTo"][0]["name"].as_str());
     let keywords = v["keywords"].as_object();
     let has = |k: &str| {
         keywords
@@ -148,6 +150,7 @@ pub(super) fn jmap_message(
         from_name: from["name"].as_str().unwrap_or("").to_string(),
         from_addr,
         reply_to,
+        reply_to_name,
         to: jmap_addrs(&v["to"]),
         cc: jmap_addrs(&v["cc"]),
         bcc: jmap_addrs(&v["bcc"]),

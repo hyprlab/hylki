@@ -31,10 +31,10 @@ msgid "Release Notes"
 msgstr "Примечания к выпуску"
 
 msgid "Credits"
-msgstr ""
+msgstr "Благодарности"
 
 msgid "Contributors and translators"
-msgstr ""
+msgstr "Участники и переводчики"
 
 msgid "Keyring Setup Help"
 msgstr "Справка по настройке связки ключей"
@@ -130,16 +130,16 @@ msgid "Read a message"
 msgstr "Прочитать сообщение"
 
 msgid "Read a conversation"
-msgstr "Прочитать разговор"
+msgstr "Прочитать переписку"
 
 msgid "Listed attachments"
-msgstr "Перечисленные вложения"
+msgstr "Просмотренные вложения"
 
 msgid "Read an attachment"
 msgstr "Прочитать вложение"
 
 msgid "Looked up contacts"
-msgstr "Посмотрел контакты"
+msgstr "Выполнил поиск контактов"
 
 msgid "Prepared a message"
 msgstr "Подготовил сообщение"
@@ -148,31 +148,31 @@ msgid "Prepared a reply"
 msgstr "Подготовил ответ"
 
 msgid "Prepared a forward"
-msgstr "Подготовил форвард"
+msgstr "Подготовил пересылаемое сообщение"
 
 msgid "Changed read state"
-msgstr "Изменено состояние чтения"
+msgstr "Изменён статус прочтения"
 
 msgid "Changed stars"
-msgstr "Измененные звезды"
+msgstr "Изменены отметки"
 
 msgid "Listed tags"
-msgstr "Перечисленные теги"
+msgstr "Просмотренные теги"
 
 msgid "Changed tags"
 msgstr "Изменены теги"
 
 msgid "Moved messages"
-msgstr "Перемещенные сообщения"
+msgstr "Перемещённые сообщения"
 
 msgid "Archived messages"
 msgstr "Архивированные сообщения"
 
 msgid "Moved messages to Trash"
-msgstr "Сообщения перемещены в корзину."
+msgstr "Перемещённые в корзину сообщения"
 
 msgid "Read the open conversation"
-msgstr "Прочитайте открытый разговор"
+msgstr "Прочитать открытую переписку"
 
 msgid "Listed open drafts"
 msgstr "Перечислены открытые черновики"
@@ -271,6 +271,12 @@ msgstr "Вернуться к Моим шрифтам и цветам"
 msgid "Show Sender's Fonts and Colors"
 msgstr "Показать шрифты и цвета отправителя"
 
+msgid "Create Event from Selection…"
+msgstr "Создать событие из выделенного текста…"
+
+msgid "Create Task from Selection…"
+msgstr "Создать задачу из выделенного текста…"
+
 msgid "View Source"
 msgstr "Просмотр исходного кода"
 
@@ -328,14 +334,15 @@ msgstr "Печать…"
 msgid "New Message"
 msgstr "Новое сообщение"
 
-#, fuzzy
 msgid "A group needs a name."
-msgstr "Папке нужно имя."
+msgstr "Группе необходимо название."
 
 msgid ""
 "A group in this address book is kept on its people's cards, so it needs at "
 "least one person."
 msgstr ""
+"Группа в этой адресной книге хранится в карточках её участников, поэтому в "
+"ней должен быть хотя бы один контакт."
 
 msgid "Hylki cannot change this kind of group"
 msgstr "Хюльки не может изменить такую группу."
@@ -353,44 +360,40 @@ msgid "Fax"
 msgstr "Факс"
 
 msgid "{field} ({label})"
-msgstr ""
+msgstr "{field} ({label})"
 
-#, fuzzy
 msgid "Do not import"
-msgstr "Не удалось импортировать: {e}"
+msgstr "Не импортировать"
 
-#, fuzzy
 msgid "Full name"
-msgstr "Название папки"
+msgstr "Полное имя"
 
 msgid "First name"
 msgstr "Имя"
 
-#, fuzzy
 msgid "Middle name"
-msgstr "Название папки"
+msgstr "Отчество"
 
 msgid "Last name"
 msgstr "Фамилия"
 
 msgid "Name prefix"
-msgstr ""
+msgstr "Префикс имени"
 
 msgid "Name suffix"
-msgstr ""
+msgstr "Суффикс имени"
 
 msgid "Nickname"
 msgstr "Псевдоним"
 
-#, fuzzy
 msgid "Company"
-msgstr "Имеет компанию"
+msgstr "Компания"
 
 msgid "Department"
-msgstr ""
+msgstr "Отдел"
 
 msgid "Job title"
-msgstr ""
+msgstr "Должность"
 
 msgid "Notes"
 msgstr "Заметки"
@@ -398,15 +401,12 @@ msgstr "Заметки"
 msgid "Birthday"
 msgstr "День рождения"
 
-#, fuzzy
 msgid "Birth year"
-msgstr "День рождения"
+msgstr "Год рождения"
 
-#, fuzzy
 msgid "Birth month"
-msgstr "В прошлом месяце"
+msgstr "Месяц рождения"
 
-#, fuzzy
 msgid "Birth day"
 msgstr "День рождения"
 
@@ -419,21 +419,17 @@ msgstr "Email"
 msgid "Phone"
 msgstr "Телефон"
 
-#, fuzzy
 msgid "Email label"
-msgstr "Почтовый клиент"
+msgstr "Метка эл. почты"
 
-#, fuzzy
 msgid "Phone label"
-msgstr "Без метки"
+msgstr "Метка телефона"
 
-#, fuzzy
 msgid "Address label"
-msgstr "Адресная книга"
+msgstr "Метка адреса"
 
-#, fuzzy
 msgid "Website label"
-msgstr "Веб-сайт"
+msgstr "Метка веб-сайта"
 
 msgid "Address"
 msgstr "Адрес"
@@ -442,10 +438,10 @@ msgid "Street"
 msgstr "Улица"
 
 msgid "Apartment or suite"
-msgstr ""
+msgstr "Квартира или офис"
 
 msgid "PO box"
-msgstr ""
+msgstr "Абонентский ящик"
 
 msgid "City"
 msgstr "Город"
@@ -610,20 +606,17 @@ msgstr "Новое сообщение будет создано на основ�
 msgid "Insert Template"
 msgstr "Вставить шаблон"
 
-#, fuzzy
 msgid "The template goes in where the cursor is."
-msgstr "Поместить изображение в место указателя"
+msgstr "Шаблон вставляется в позицию курсора."
 
 msgid "Templates"
 msgstr "Шаблоны"
 
-#, fuzzy
 msgid "Template saved to {folder} in {account}"
-msgstr "Создать новую папку для этого аккаунта."
+msgstr "Шаблон сохранён в папку «{folder}» учётной записи «{account}»"
 
-#, fuzzy
 msgid "Could not load the template."
-msgstr "Не удалось сохранить шаблон: {e}"
+msgstr "Не удалось загрузить шаблон."
 
 msgid "Continue a Draft"
 msgstr "Продолжить черновик"
@@ -1134,13 +1127,13 @@ msgid "Back to the message list"
 msgstr "Вернуться к списку сообщений"
 
 msgid "Open or fold a conversation in the list"
-msgstr "Открыть или свернуть беседу в списке"
+msgstr "Открыть или свернуть переписку в списке"
 
 msgid "Next message in the conversation"
-msgstr "Следующее сообщение в беседе"
+msgstr "Следующее сообщение в обсуждении"
 
 msgid "Previous message in the conversation"
-msgstr "Предыдущее сообщение в беседе"
+msgstr "Предыдущее сообщение в обсуждении"
 
 msgid "Search"
 msgstr "Поиск"
@@ -1158,7 +1151,7 @@ msgid "Mark as spam"
 msgstr "Отметить как спам"
 
 msgid "Star or unstar"
-msgstr "Поставить или снять отметку"
+msgstr "Отметить или снять отметку"
 
 msgid "Mark read or unread"
 msgstr "Отметить прочитанным/непрочитанным"
@@ -1213,9 +1206,8 @@ msgstr "Полужирный, курсив, подчёркнутый"
 msgid "Preview the highlighted attachment"
 msgstr "Предпросмотр выделенного вложения"
 
-#, fuzzy
 msgid "Open the highlighted attachment"
-msgstr "Предпросмотр выделенного вложения"
+msgstr "Открыть выделенное вложение"
 
 msgid "Previous or next in the gallery's preview"
 msgstr "Предыдущее или следующее в окне предпросмотра галереи"
@@ -1280,25 +1272,25 @@ msgid ""
 "previous conversation"
 msgstr ""
 "Переместиться вниз или вверх по списку, не открывая его; во время чтения "
-"открыть следующий или предыдущий разговор"
+"открыть следующую или предыдущую переписку"
 
 msgid "Open the message the cursor is on"
 msgstr "Откройте сообщение, на котором находится курсор"
 
 msgid "Close the conversation, back to the list"
-msgstr "Закрыть разговор, вернуться к списку"
+msgstr "Закрыть переписку и вернуться к списку"
 
 msgid "Next or previous message in the conversation"
-msgstr "Следующее или предыдущее сообщение в разговоре"
+msgstr "Следующее или предыдущее сообщение в переписке"
 
 msgid "Expand or collapse every message of the conversation"
-msgstr "Развернуть или свернуть каждое сообщение беседы"
+msgstr "Развернуть или свернуть каждое сообщение переписки"
 
 msgid "Go to Inbox"
 msgstr "Перейти в папку «Входящие»"
 
 msgid "Go to Starred"
-msgstr "Перейти в раздел «Помеченные»"
+msgstr "Перейти в раздел «Отмеченные»"
 
 msgid "Go to Sent"
 msgstr "Перейти в Отправленные"
@@ -1313,19 +1305,19 @@ msgid "Go to Contacts"
 msgstr "Перейти в Контакты"
 
 msgid "Archive the conversation"
-msgstr "Архивировать разговор"
+msgstr "Архивировать переписку"
 
 msgid "Archive the conversation and open the older one"
-msgstr "Архивируйте разговор и откройте старый."
+msgstr "Архивируйте переписку и откройте старую"
 
 msgid "Archive the conversation and open the newer one"
-msgstr "Архивируйте разговор и откройте новый"
+msgstr "Архивируйте переписку и откройте новую"
 
 msgid "Mark the conversation as read"
-msgstr "Отметить беседу как прочитанную"
+msgstr "Отметить переписку как прочитанную"
 
 msgid "Mark the conversation as unread and close it"
-msgstr "Отметьте беседу как непрочитанную и закройте ее."
+msgstr "Отметьте переписку как непрочитанную и закройте ее."
 
 msgid "Mark as unread from this message on and close it"
 msgstr "Отметьте это сообщение как непрочитанное и закройте его."
@@ -1337,10 +1329,10 @@ msgid "Select every row, or none"
 msgstr "Выбрать каждую строку или ни одной"
 
 msgid "Select the read or the unread conversations"
-msgstr "Выберите прочитанные или непрочитанные разговоры"
+msgstr "Выберите прочитанные или непрочитанные переписки"
 
 msgid "Select the starred or the unstarred conversations"
-msgstr "Выберите помеченные или не помеченные беседы"
+msgstr "Выберите отмеченные или не отмеченные переписки"
 
 msgid "Move to a folder"
 msgstr "Переместить в папку"
@@ -1376,7 +1368,7 @@ msgid "Delete Permanently"
 msgstr "Удалить навсегда"
 
 msgid "Star or Remove Star"
-msgstr "Звезда или удалить звезду"
+msgstr "Пометить или снять отметку"
 
 msgid "Mark as Read or Unread"
 msgstr "Отметить как прочитанное или непрочитанное"
@@ -1553,9 +1545,9 @@ msgid ""
 "imported. Restart Hylki to apply them. Passwords and sign-ins are not part "
 "of a backup; re-enter them on first use if this is a new machine."
 msgstr ""
-"Импортировано почтовых аккаунтов: {n}, а также аккаунты облачного хранилища "
-"и все настройки. Перезапустите Hylki, чтобы применить их. Пароли и данные "
-"для входа не входят в резервную копию — введите их заново при первом "
+"Импортировано почтовых учетных записей: {n}, а также аккаунты облачного "
+"хранилища и все настройки. Перезапустите Hylki, чтобы применить их. Пароли и "
+"данные для входа не входят в резервную копию — введите их заново при первом "
 "использовании, если это новый компьютер."
 
 msgid "Later"
@@ -1624,8 +1616,14 @@ msgid_plural ""
 "All {n} messages in this conversation will be deleted. You can turn this "
 "warning off in Settings."
 msgstr[0] ""
+"Сообщение в этом обсуждении будет удалено. Это предупреждение можно "
+"отключить в разделе «Параметры»."
 msgstr[1] ""
+"Все {n} сообщения в этом обсуждении будут удалены. Это предупреждение можно "
+"отключить в разделе «Параметры»."
 msgstr[2] ""
+"Все {n} сообщений в этом обсуждении будут удалены. Это предупреждение можно "
+"отключить в разделе «Параметры»."
 
 msgid "Delete Conversation"
 msgstr "Удалить переписку"
@@ -1682,7 +1680,7 @@ msgid "Remove"
 msgstr "Удалить"
 
 msgid "Select a conversation first."
-msgstr "Сначала выберите разговор."
+msgstr "Сначала выберите переписку."
 
 msgid "Remove Tags"
 msgstr "Удалить теги"
@@ -1761,9 +1759,8 @@ msgstr ""
 msgid "Could not save the message: {e}"
 msgstr "Не удалось сохранить сообщение: {e}"
 
-#, fuzzy
 msgid "Could not decrypt the draft: {e}"
-msgstr "Не удалось очистить папку: {e}"
+msgstr "Не удалось расшифровать черновик: {e}"
 
 msgid "Open Hylki"
 msgstr "Открыть Hylki"
@@ -1792,12 +1789,12 @@ msgstr ""
 "мгновение."
 
 msgid "Restart to finish switching icons?"
-msgstr "Перезапустить, чтобы завершить изменение иконки?"
+msgstr "Перезапустить, чтобы завершить изменение значка?"
 
 msgid ""
 "The dock and Hylki's own windows keep the old icon until Hylki restarts."
 msgstr ""
-"В доке и окнах Hylki будет отображаться старая иконка до перезапуска "
+"В доке и окнах Hylki будет отображаться старый значок до перезапуска "
 "программы."
 
 msgid "Restart Now"
@@ -1808,7 +1805,7 @@ msgid ""
 "the icon."
 msgstr ""
 "Не удалось перезапустить автоматически — закройте и снова откройте Hylki, "
-"чтобы завершить смену иконки."
+"чтобы завершить смену значка."
 
 msgid "Move to {name}"
 msgstr "Переместить в {name}"
@@ -1915,6 +1912,15 @@ msgstr "Найти в сообщении (Ctrl+F)"
 
 msgid "Downloading attachments…"
 msgstr "Загрузка вложений…"
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr "сегодня"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr "завтра"
 
 msgid "Signature"
 msgstr "Подпись"
@@ -2070,6 +2076,8 @@ msgid ""
 "The signing key is not for {addr}, the address this message is from, so the "
 "signature does not show who sent it."
 msgstr ""
+"Ключ подписи не предназначен для {addr} — адреса, с которого отправлено это "
+"сообщение, поэтому подпись не подтверждает отправителя."
 
 msgid "GnuPG (gpg) is not installed, so this message cannot be read."
 msgstr "GnuPG (gpg) не установлен, поэтому это сообщение нельзя прочитать."
@@ -2083,13 +2091,13 @@ msgstr "Зашифровано для ключа {id}, которого нет �
 msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "Зашифрованный блок повреждён или не содержит данных OpenPGP."
 
-#, fuzzy
 msgid ""
 "Signing key {id} came with the sender's mail or from their domain, not from "
 "your keyring; check its fingerprint with the sender before trusting it."
 msgstr ""
-"Ключ подписи {id} есть в вашей связке ключей, но не отмечен как доверенный; "
-"сверьте его отпечаток с отправителем."
+"Ключ подписи {id} был получен вместе с письмом отправителя или с его домена, "
+"а не из вашей связки ключей; сверьте его отпечаток с отправителем, прежде "
+"чем доверять ему."
 
 msgid "Revoked"
 msgstr "Отозвано"
@@ -2330,11 +2338,12 @@ msgstr "Зашифровано с помощью OpenPGP; не удалось р
 msgid "Encrypted with OpenPGP"
 msgstr "Зашифровано с помощью OpenPGP"
 
-#, fuzzy
 msgid ""
 "Encrypted, and signed by {signer}, whose key is not for the sender's address "
 "{addr}"
-msgstr "Зашифровано и подписано {signer}; срок действия подписи истёк"
+msgstr ""
+"Зашифровано и подписано {signer}, но этот ключ не соответствует адресу "
+"отправителя {addr}"
 
 msgid "Encrypted, and signed by {signer}"
 msgstr "Зашифровано и подписано {signer}"
@@ -2637,9 +2646,8 @@ msgstr "Необязательно. Отображается вместо ини
 msgid "Email address"
 msgstr "Адрес электронной почты"
 
-#, fuzzy
 msgid "Default From address"
-msgstr "Введите адрес отправителя"
+msgstr "Адрес отправителя по умолчанию"
 
 msgid "Sending"
 msgstr "Отправка"
@@ -2650,6 +2658,8 @@ msgstr "Собственный сервер SMTP"
 msgid ""
 "Needed when this account's provider, such as Gmail, rewrites the sender."
 msgstr ""
+"Необходимо, когда провайдер этой учётной записи, например Gmail, "
+"перезаписывает адрес отправителя."
 
 msgid "SMTP server"
 msgstr "Сервер SMTP"
@@ -2668,12 +2678,16 @@ msgstr "Сервер сам сохраняет копию отправленны
 
 msgid "Only when this server files sent mail in this account."
 msgstr ""
+"Только если этот сервер сохраняет отправленные письма в данной учётной "
+"записи."
 
 msgid "Test SMTP"
 msgstr "Проверить SMTP"
 
 msgid "Names that share an address send through this account's server."
 msgstr ""
+"Имена, использующие общий адрес, отправляют почту через сервер этой учётной "
+"записи."
 
 msgid "Testing…"
 msgstr "Проверка…"
@@ -2752,12 +2766,11 @@ msgstr ""
 "Запрашивает доступ у Microsoft. Некоторым организациям требуется, чтобы "
 "администратор одобрил это."
 
-#, fuzzy
 msgid ""
 "Switching this off returns the account to the import list. It stays in GNOME "
 "Online Accounts."
 msgstr ""
-"Если выключено, запись возвращается в список импорта. Она остаётся в "
+"При отключении учётная запись вернётся в список импорта, но останется в "
 "«Сетевых учётных записях GNOME»."
 
 msgid "Choose a Picture"
@@ -2862,11 +2875,16 @@ msgid ""
 "Any folder, the Inbox included. Applies only to mail sent from here, "
 "starting now."
 msgstr ""
+"Любая папка, включая «Входящие». Применяется только к письмам, отправленным "
+"отсюда начиная с этого момента."
 
 msgid ""
 "Uses the original's folder at the time the reply is sent. Replies to mail in "
 "Sent, Drafts, Trash or Junk go with sent mail."
 msgstr ""
+"Используется папка исходного письма на момент отправки ответа. Ответы на "
+"письма из папок «Отправленные», «Черновики», «Корзина» или «Спам» помещаются "
+"в отправленные."
 
 msgid "Never"
 msgstr "Никогда"
@@ -3168,7 +3186,7 @@ msgid "Starred"
 msgstr "Отмеченные"
 
 msgid "Not starred"
-msgstr "Не помечено"
+msgstr "Без отметки"
 
 msgid "Unread"
 msgstr "Непрочитано"
@@ -3179,11 +3197,32 @@ msgstr "Читать"
 msgid "Has attachments"
 msgstr "Есть вложения"
 
+msgid "No attachments"
+msgstr "Нет вложений"
+
 msgid "Tagged"
 msgstr "с тегами"
 
+msgid "Not tagged"
+msgstr "Без тега"
+
+msgid "Gmail label"
+msgstr "Ярлык Gmail"
+
 msgid "Message preview"
 msgstr "Предварительный просмотр сообщения"
+
+msgid "does not contain"
+msgstr "не содержит"
+
+msgid "is not"
+msgstr "не равно"
+
+msgid "does not start with"
+msgstr "не начинается с"
+
+msgid "does not end with"
+msgstr "не заканчивается на"
 
 msgid "Edit Smart Folder"
 msgstr "Редактировать смарт-папку"
@@ -3199,6 +3238,9 @@ msgstr "Папки"
 
 msgid "Any tag"
 msgstr "Любой тег"
+
+msgid "With no text, any label matches."
+msgstr "Если поле пустое, подходит любой ярлык."
 
 msgid "The preview each message has in the list"
 msgstr "Предварительный просмотр каждого сообщения в списке"
@@ -3281,15 +3323,18 @@ msgid "Save Attachment"
 msgstr "Сохранить вложение"
 
 msgid "Open “{name}”?"
-msgstr ""
+msgstr "Открыть «{name}»?"
 
 msgid ""
 "This attachment is a program or a script. Opening it can run it with your "
 "permissions. Open it only if you expected it and trust where it came from."
 msgstr ""
+"Это вложение является программой или сценарием. При открытии оно может "
+"запуститься с вашими правами доступа. Открывайте его только в том случае, "
+"если вы ожидали этот файл и доверяете его источнику."
 
 msgid "Open Anyway"
-msgstr ""
+msgstr "Всё равно открыть"
 
 msgid "The file could not be opened"
 msgstr "Не удалось открыть файл"
@@ -3297,7 +3342,6 @@ msgstr "Не удалось открыть файл"
 #. No Flatseal toggle can help here: portal access is not a
 #. permission, and the failure is inside the portal's own launcher.
 #. Offer the steps that actually work.
-#, fuzzy
 msgid ""
 "The desktop portal reported: {error}\n"
 "\n"
@@ -3306,10 +3350,9 @@ msgid ""
 msgstr ""
 "Системный портал сообщил: {error}\n"
 "\n"
-"• Нажмите правой кнопкой мыши по ссылке, скопируйте её и откройте в "
-"браузере\n"
+"• Загрузите файл, а затем откройте его через приложение «Файлы»\n"
 "• Обновление пакета «xdg-desktop-portal» и повторный вход в систему могут "
-"исправить прямое открытие ссылок"
+"исправить прямое открытие файлов"
 
 msgid "Go to Message"
 msgstr "Перейти к сообщению"
@@ -3339,9 +3382,6 @@ msgstr "Поиск по отправителю, теме, типу, имени �
 
 msgid "Loading attachments…"
 msgstr "Загрузка вложений…"
-
-msgid "No attachments"
-msgstr "Нет вложений"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Вложения из ваших почтовых ящиков появятся здесь."
@@ -3446,7 +3486,6 @@ msgstr "Вперёд"
 msgid "Open in the default app"
 msgstr "Открыть в приложении по умолчанию"
 
-#, fuzzy
 msgid "Waiting for the Keyring"
 msgstr "Ожидание связки ключей"
 
@@ -3454,89 +3493,107 @@ msgid ""
 "Mail stored on this computer is encrypted with a key stored in the keyring. "
 "Unlock the keyring if it asks."
 msgstr ""
+"Почта, хранящаяся на этом компьютере, зашифрована ключом из связки ключей. "
+"Разблокируйте связку ключей, если появится запрос."
 
 msgid ""
 "This happens once and can take a few minutes. If you quit, your mail is left "
 "as it was."
 msgstr ""
+"Это выполняется один раз и может занять несколько минут. Если выйти из "
+"приложения, ваша почта останется в прежнем виде."
 
-#, fuzzy
 msgid "Checking the copy"
-msgstr "Проверка соединения…"
+msgstr "Проверка копии"
 
 msgid "Encrypting Stored Mail"
-msgstr ""
+msgstr "Шифрование хранимой почты"
 
-#, fuzzy
 msgid "Decrypting Stored Mail"
-msgstr "Проверка новой почты"
+msgstr "Расшифровка хранимой почты"
 
-#, fuzzy
 msgid "Store Unencrypted…"
-msgstr "Не расшифровано"
+msgstr "Хранить в незашифрованном виде…"
 
 msgid "Reset Cache…"
-msgstr ""
+msgstr "Сбросить кэш…"
 
 msgid "Try Again"
 msgstr "Повторить попытку"
 
-#, fuzzy
 msgid "Keyring Unavailable"
-msgstr "Предварительный просмотр недоступен"
+msgstr "Связка ключей недоступна"
 
 msgid ""
 "Mail kept on this computer is encrypted with a key stored in the keyring, "
 "and the keyring is locked or did not answer. Unlock it, then try again."
 msgstr ""
+"Почта, хранящаяся на этом компьютере, зашифрована ключом из связки ключей, а "
+"сама связка ключей заблокирована или не отвечает. Разблокируйте её и "
+"повторите попытку."
 
 msgid "Mail Cache Key Missing"
-msgstr ""
+msgstr "Отсутствует ключ кэша почты"
 
 msgid ""
 "Mail kept on this computer is encrypted, and the keyring no longer holds its "
 "key. If the keyring was replaced, restore the old one and try again. "
 "Otherwise reset the cache to download your mail again."
 msgstr ""
+"Почта, хранящаяся на этом компьютере, зашифрована, но в связке ключей больше "
+"нет её ключа. Если связка ключей была заменена, восстановите прежнюю и "
+"повторите попытку. В противном случае сбросьте кэш, чтобы загрузить почту "
+"заново."
 
 msgid "Mail Cache Cannot Be Unlocked"
-msgstr ""
+msgstr "Не удаётся разблокировать кэш почты"
 
 msgid ""
 "The key in the keyring does not open the mail kept on this computer. If the "
 "keyring was replaced, restore the old one and try again. Otherwise reset the "
 "cache to download your mail again."
 msgstr ""
+"Ключ из связки ключей не подходит для расшифровки почты, хранящейся на этом "
+"компьютере. Если связка ключей была заменена, восстановите прежнюю и "
+"повторите попытку. В противном случае сбросьте кэш, чтобы загрузить почту "
+"заново."
 
 msgid "Mail Cache Not Converted"
-msgstr ""
+msgstr "Кэш почты не преобразован"
 
 msgid ""
 "The mail kept on this computer could not be converted, and was left as it "
 "was. Check that the disk has free space, then try again."
 msgstr ""
+"Не удалось преобразовать почту, хранящуюся на этом компьютере; она оставлена "
+"в прежнем виде. Убедитесь, что на диске есть свободное место, и повторите "
+"попытку."
 
-#, fuzzy
 msgid "Mail Cache Unreadable"
-msgstr "Отметить как непрочитанное"
+msgstr "Не удаётся прочитать кэш почты"
 
 msgid ""
 "The mail kept on this computer could not be read. Try again, or reset the "
 "cache to download your mail again."
 msgstr ""
+"Не удалось прочитать почту, хранящуюся на этом компьютере. Повторите попытку "
+"или сбросьте кэш, чтобы загрузить почту заново."
 
 msgid ""
 "Mail that exists only on this computer is lost: a POP3 account's mail, and "
 "unsent mail in the Outbox."
 msgstr ""
+"Письма, которые хранятся только на этом компьютере, будут утеряны: почта "
+"учётных записей POP3 и неотправленные письма из папки «Исходящие»."
 
-#, fuzzy
 msgid ""
 "Mail kept on this computer is deleted and downloaded again from the server."
-msgstr "Почта на этом компьютере не отправляется и не имеет черновиков."
+msgstr ""
+"Почта, хранящаяся на этом компьютере, будет удалена и загружена с сервера "
+"заново."
 
 msgid "Reset the Mail Cache?"
-msgstr ""
+msgstr "Сбросить кэш почты?"
 
 msgid "Reset"
 msgstr "Сбросить"
@@ -3546,21 +3603,26 @@ msgid ""
 "kept on this computer, including mail that is end-to-end encrypted on the "
 "server."
 msgstr ""
+"Любой, кто имеет доступ к вашим файлам или их резервным копиям, сможет "
+"прочитать почту, хранящуюся на этом компьютере, включая письма со сквозным "
+"шифрованием на сервере."
 
 msgid "Encryption can be turned back on in Settings → Privacy."
 msgstr ""
+"Шифрование можно снова включить в разделе «Параметры → Конфиденциальность»."
 
 msgid ""
 "The encrypted cache cannot be opened without the keyring, so it is deleted "
 "and your mail is downloaded again."
 msgstr ""
+"Зашифрованный кэш невозможно открыть без связки ключей, поэтому он будет "
+"удалён, а ваша почта будет загружена заново."
 
 msgid "Store Mail Unencrypted?"
-msgstr ""
+msgstr "Хранить почту в незашифрованном виде?"
 
-#, fuzzy
 msgid "Store Unencrypted"
-msgstr "Не расшифровано"
+msgstr "Хранить без шифрования"
 
 msgid "New Event"
 msgstr "Новое событие"
@@ -4075,6 +4137,16 @@ msgstr ""
 "Масштабирование текста на экране, а не отправленного сообщения. Щелчок здесь "
 "или Ctrl+0 возвращает значение 100%."
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Показывать это сообщение в светлом или темном режиме. Другие сообщения не "
+"затрагиваются."
+
+msgid "Light / Dark Mode"
+msgstr "Светлый/Темный режим"
+
 msgid "Writing in {format}"
 msgstr "Формат письма: {format}"
 
@@ -4141,33 +4213,33 @@ msgstr "Ещё"
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Показать «Копия», «Скрытая копия» и «Адрес для ответа»"
 
-#, fuzzy
 msgid "They prefer encrypted mail."
-msgstr "Скрыть тему зашифрованного письма"
+msgstr "Получатель предпочитает зашифрованную почту."
 
 msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
-msgstr ""
+msgstr "Нет ключа OpenPGP: почту для этого получателя нельзя зашифровать."
 
 msgid ""
 "OpenPGP key from older mail: their recent mail came without it, so they may "
 "no longer read encrypted mail."
 msgstr ""
+"Ключ OpenPGP из старого письма: недавние письма от получателя пришли без "
+"него, поэтому он может больше не читать зашифрованную почту."
 
-#, fuzzy
 msgid "OpenPGP key in your keyring."
-msgstr "Уже в вашей связке ключей"
+msgstr "Ключ OpenPGP находится в вашей связке ключей."
 
 msgid "OpenPGP key sent with their mail (Autocrypt)."
-msgstr ""
+msgstr "Ключ OpenPGP отправлен вместе с их письмом (Autocrypt)."
 
 msgid "OpenPGP key passed on in someone else's encrypted mail."
-msgstr ""
+msgstr "Ключ OpenPGP передан в зашифрованном письме другого отправителя."
 
 msgid "OpenPGP key published by their mail domain (WKD)."
-msgstr ""
+msgstr "Ключ OpenPGP опубликован их почтовым доменом (WKD)."
 
 msgid "OpenPGP key from the keyserver keys.openpgp.org."
-msgstr ""
+msgstr "Ключ OpenPGP получен с сервера ключей keys.openpgp.org."
 
 msgid "Cannot merge an encrypted message"
 msgstr "Невозможно объединить зашифрованное сообщение"
@@ -4212,6 +4284,12 @@ msgid ""
 "To check a key, compare its fingerprint with its owner and trust it under "
 "Settings, OpenPGP. Send Anyway does not ask about these keys again."
 msgstr ""
+"Ничто не подтверждает, что ключи для {addresses} принадлежат их владельцам. "
+"Если один из них принадлежит кому-то другому, этот человек сможет прочитать "
+"сообщение, а получатель — нет. Чтобы проверить ключ, сверьте его отпечаток с "
+"владельцем и отметьте его как доверенный в разделе «Параметры → OpenPGP». "
+"Кнопка «Всё равно отправить» больше не будет запрашивать подтверждение для "
+"этих ключей."
 
 msgid "Send later"
 msgstr "Отправить позже"
@@ -4382,9 +4460,8 @@ msgstr "Пароль для скачивания {name}: {password}"
 msgid "Reply-To"
 msgstr "Адрес для ответа"
 
-#, fuzzy
 msgid "Match a column to a name, an email address or a phone number."
-msgstr "Контакту необходимо имя, адрес электронной почты или номер телефона."
+msgstr "Сопоставьте столбец с именем, адресом эл. почты или номером телефона."
 
 msgid "Import Contacts"
 msgstr "Импортировать контакты"
@@ -4392,20 +4469,17 @@ msgstr "Импортировать контакты"
 msgid "Import"
 msgstr "Импорт"
 
-#, fuzzy
 msgid "Import into"
-msgstr "Импортировать подпись"
+msgstr "Импортировать в"
 
 msgid "Keeps no groups: their names stay on each contact."
-msgstr ""
+msgstr "Не сохраняет группы: их названия остаются в карточке каждого контакта."
 
-#, fuzzy
 msgid "Not imported"
-msgstr "Ключ импортирован"
+msgstr "Не импортировано"
 
-#, fuzzy
 msgid "vCard files"
-msgstr "файлы vCard"
+msgstr "Файлы vCard"
 
 msgid "The name used here and in Contacts. Left blank, it is {own}."
 msgstr ""
@@ -4524,17 +4598,15 @@ msgstr "Хранится в собственной папке данных Hylki
 msgid "Contacts in the Hylki book"
 msgstr "Контакты в книге Хюльки"
 
-#, fuzzy
 msgid "Import vCard or CSV files"
-msgstr "Импорт файлов vCard"
+msgstr "Импортировать файлы vCard или CSV"
 
-#, fuzzy
 msgid ""
 "Adds contacts from .vcf or .csv files. Importing a file again updates "
 "existing entries."
 msgstr ""
-"Добавляет контакты из файлов .vcf. При повторном импорте файла существующие "
-"записи обновляются."
+"Добавляет контакты из файлов .vcf или .csv. При повторном импорте файла "
+"существующие записи обновляются."
 
 msgid "Export as a vCard file"
 msgstr "Экспортировать как файл vCard"
@@ -4661,6 +4733,9 @@ msgstr "Показать имена из контактов"
 
 msgid "Saved addresses show the contact's name, not the mail's."
 msgstr "В сохраненных адресах отображается имя контакта, а не почта."
+
+msgid "Show the Reply-To sender"
+msgstr "Показывать отправителя из поля «Кому ответить»"
 
 msgid "Layout"
 msgstr "Разметка"
@@ -4887,8 +4962,8 @@ msgstr "Удалить из группы"
 msgid "Add to Group"
 msgstr "Добавить в группу"
 
-msgid "Move to Address Book"
-msgstr "Перейти в адресную книгу"
+msgid "Move to Address Book…"
+msgstr "Переместить в адресную книгу…"
 
 msgid "Delete…"
 msgstr "Удалить…"
@@ -4929,12 +5004,37 @@ msgstr "Нет адреса электронной почты · {book}"
 msgid "Sort and filter contacts"
 msgstr "Сортировка и фильтрация контактов"
 
-#, fuzzy
 msgid "vCard and CSV files"
-msgstr "файлы vCard"
+msgstr "Файлы vCard и CSV"
 
 msgid "All files"
 msgstr "Все файлы"
+
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"Контакт «{name}» будет удалён из «{from}» (локально и на сервере), а также "
+"из всех групп в этой адресной книге, в которых он состоит."
+
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"{n} контакт будет удалён из своей адресной книги (локально и на сервере), а "
+"также из всех групп в ней, в которых он состоит."
+msgstr[1] ""
+"{n} контакта будут удалены из своих адресных книг (локально и на сервере), а "
+"также из всех групп в них, в которых они состоят."
+msgstr[2] ""
+"{n} контактов будут удалены из своих адресных книг (локально и на сервере), "
+"а также из всех групп в них, в которых они состоят."
+
+msgid "Move to Address Book"
+msgstr "Перейти в адресную книгу"
 
 msgid "Directories"
 msgstr "Каталоги"
@@ -5042,9 +5142,8 @@ msgstr[0] "Контакт {n} будет удалён из адресной кн
 msgstr[1] "Контакты {n} будут удалены из адресных книг."
 msgstr[2] "Контакты {n} будут удалены из адресных книг."
 
-#, fuzzy
 msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "Импортируйте файлы vCard в адресную книгу Hylki."
+msgstr "Импортировать файлы vCard или CSV в адресную книгу Hylki"
 
 msgid "New contact or group"
 msgstr "Новый контакт или группа"
@@ -5052,15 +5151,14 @@ msgstr "Новый контакт или группа"
 msgid "Loading Contacts…"
 msgstr "Загрузка контактов…"
 
-#, fuzzy
 msgid ""
 "Add a contact with the + button, or import vCard or CSV files. Contacts are "
 "kept in Hylki's own address book, and the address books of GNOME Contacts "
 "are listed here too."
 msgstr ""
-"Добавьте контакт с помощью кнопки + или импортируйте файлы vCard. Контакты "
-"хранятся в собственной адресной книге Hylki, здесь также перечислены "
-"адресные книги контактов GNOME."
+"Добавьте контакт с помощью кнопки «+» или импортируйте файлы vCard или CSV. "
+"Контакты хранятся в собственной адресной книге Hylki, а также здесь "
+"отображаются адресные книги приложения «Контакты» GNOME."
 
 msgid "Search contacts (Ctrl+F)"
 msgstr "Поиск контактов (Ctrl+F)"
@@ -5339,7 +5437,7 @@ msgid "Remove Stars"
 msgstr "Снять отметки"
 
 msgid "Star Conversation"
-msgstr "Отметить обсуждение"
+msgstr "Отметить переписку"
 
 msgid "Mark All as Read"
 msgstr "Отметить все как прочитанные"
@@ -5347,11 +5445,8 @@ msgstr "Отметить все как прочитанные"
 msgid "Mark All as Unread"
 msgstr "Отметить все как непрочитанные"
 
-#, fuzzy
 msgid "This Account (Except Trash & Junk)"
-msgstr ""
-"Предоставить доступ ко всей учётной записи (кроме корзины и нежелательной "
-"почты)"
+msgstr "Эта учётная запись (кроме «Корзины» и «Спама»)"
 
 msgid "All folders (except trash & junk)"
 msgstr "Все папки (кроме корзины и нежелательной почты)"
@@ -5362,20 +5457,18 @@ msgstr "Везде"
 msgid "This folder"
 msgstr "Эта папка"
 
-#, fuzzy
 msgid "This Account"
-msgstr "Почтовая учётная запись"
+msgstr "Эта учётная запись"
 
 msgid "All folders"
 msgstr "Все папки"
 
-#, fuzzy
 msgid ""
 "Every folder of this account, except Trash and Junk. A search started in "
 "Trash or Junk looks there too."
 msgstr ""
-"Все папки всех учётных записей, кроме «Корзины» и «Нежелательной почты». "
-"Поиск, начатый в «Корзине» или «Нежелательной почте», также отображается там."
+"Все папки этой учётной записи, кроме «Корзины» и «Спама». Поиск, начатый в "
+"«Корзине» или «Спаме», выполняется и в них."
 
 msgid ""
 "Every folder of every account, except Trash and Junk. A search started in "
@@ -5392,11 +5485,8 @@ msgstr ""
 msgid "Only the folder or view the list is showing."
 msgstr "Отображается только папка или просмотр списка."
 
-#, fuzzy
 msgid "Every folder of this account, Trash and Junk included."
-msgstr ""
-"Каждая папка каждой учётной записи, включая «Корзину» и «Нежелательную "
-"почту»."
+msgstr "Все папки этой учётной записи, включая «Корзину» и «Спам»."
 
 msgid "What this searches"
 msgstr "Что это ищет"
@@ -5405,7 +5495,7 @@ msgid "me"
 msgstr "я"
 
 msgid "Show conversation"
-msgstr "Показать обсуждение"
+msgstr "Показать переписку"
 
 msgid "Drag to resize, double-click for the usual width"
 msgstr ""
@@ -5466,9 +5556,8 @@ msgstr "Выберите черновик из списка, чтобы отре
 msgid "Choose a message from the list to read it here."
 msgstr "Выберите сообщение из списка, чтобы прочитать его здесь."
 
-#, fuzzy
 msgid "Show Message"
-msgstr "Показать в сообщении"
+msgstr "Показать сообщение"
 
 msgid "Remote content (images, trackers) is blocked to protect your privacy."
 msgstr ""
@@ -5499,9 +5588,6 @@ msgid ""
 msgstr ""
 "Показывать это сообщение в светлом или темном режиме. Другие сообщения не "
 "затрагиваются."
-
-msgid "Light / Dark Mode"
-msgstr "Светлый/Темный режим"
 
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
@@ -5741,9 +5827,8 @@ msgstr ""
 msgid "Trust"
 msgstr "Доверять"
 
-#, fuzzy
 msgid "The sender's key was taken from the message."
-msgstr "Ключ отправителя импортирован из сообщения."
+msgstr "Ключ отправителя получен из сообщения."
 
 msgid "The sender's key was fetched and imported."
 msgstr "Ключ отправителя получен и импортирован."
@@ -5776,6 +5861,11 @@ msgstr "Создать новое сообщение на основе копи�
 
 msgid "Save…"
 msgstr "Сохранить…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+msgid "via {sender}"
+msgstr "через {sender}"
 
 msgid "Translating…"
 msgstr "Перевод…"
@@ -5911,25 +6001,23 @@ msgstr ""
 "Тот же набор ключей, который используется командой gpg и другими почтовыми "
 "приложениями."
 
-#, fuzzy
 msgid "Finding keys"
-msgstr "Найти в сообщении"
+msgstr "Поиск ключей"
 
 msgid "Keys found here are kept apart from your keyring."
-msgstr ""
+msgstr "Найденные здесь ключи хранятся отдельно от вашей связки ключей."
 
-#, fuzzy
 msgid "Look up recipients' keys"
-msgstr "Искать получателей в этом каталоге"
+msgstr "Искать ключи получателей"
 
 msgid "Each recipient's domain (WKD) learns that you write to them."
-msgstr ""
+msgstr "Почтовый домен каждого получателя (WKD) узнает, что вы ему пишете."
 
 msgid "Also ask a keyserver"
-msgstr ""
+msgstr "Также запрашивать на сервере ключей"
 
 msgid "keys.openpgp.org learns who you write to."
-msgstr ""
+msgstr "Сервер keys.openpgp.org узнает, кому вы пишете."
 
 msgid "Your keys"
 msgstr "Ваши ключи"
@@ -6138,7 +6226,7 @@ msgid "Drop a column here to hide it"
 msgstr "Перетащите столбец сюда, чтобы скрыть его"
 
 msgid "App icon"
-msgstr "Иконка приложения"
+msgstr "Значок приложения"
 
 msgid "Symbolic"
 msgstr "Символическая"
@@ -6315,7 +6403,7 @@ msgid "Reader View off"
 msgstr "Режим чтения: выключен"
 
 msgid "Needs Sushi, the GNOME file previewer."
-msgstr ""
+msgstr "Требуется Sushi — средство предпросмотра файлов GNOME."
 
 msgid "Ask each time"
 msgstr "Спрашивать каждый раз"
@@ -6479,7 +6567,7 @@ msgid "Message List"
 msgstr "Список сообщений"
 
 msgid "Conversations"
-msgstr "Обсуждения"
+msgstr "Переписки"
 
 msgid "Reading"
 msgstr "Чтение"
@@ -6545,7 +6633,7 @@ msgid "Mark as read or unread"
 msgstr "Отметить как прочитанное или непрочитанное"
 
 msgid "Add and remove stars"
-msgstr "Добавляйте и удаляйте звезды"
+msgstr "Добавлять и снимать отметки"
 
 msgid "Add and remove tags"
 msgstr "Добавляйте и удаляйте теги"
@@ -6557,7 +6645,7 @@ msgid "Move to Trash"
 msgstr "Отправить в корзину"
 
 msgid "See open conversation"
-msgstr "Посмотреть открытый разговор"
+msgstr "Посмотреть открытую переписку"
 
 msgid "The one you are reading, as you read it."
 msgstr "Тот, который вы читаете, как вы его читаете."
@@ -6638,6 +6726,8 @@ msgid ""
 "Accounts, preferences, filters, tags and layout, in one file. Passwords, "
 "OAuth client secrets and OpenPGP keys are not included."
 msgstr ""
+"Учётные записи, параметры, фильтры, метки и расположение элементов в одном "
+"файле. Пароли, секреты клиентов OAuth и ключи OpenPGP не включаются."
 
 msgid "Export settings"
 msgstr "Экспортировать настройки"
@@ -6659,7 +6749,7 @@ msgid "Expandable conversations"
 msgstr "Раскрываемые обсуждения"
 
 msgid "Off, a conversation's messages show only in the reading pane."
-msgstr "Выключено: сообщения беседы отображаются только в области чтения."
+msgstr "Выключено: сообщения переписки отображаются только в области чтения."
 
 msgid "Expand conversations by default"
 msgstr "Раскрывать обсуждения по умолчанию"
@@ -6686,7 +6776,7 @@ msgid "Reply editor position"
 msgstr "Позиция редактора ответа"
 
 msgid "Following the reading order puts it where the conversation ends."
-msgstr "Следование порядку чтения приводит к тому, что разговор заканчивается."
+msgstr "При порядке чтения редактор ответа располагается в конце переписки."
 
 msgid "Attachments on each message"
 msgstr "Вложения в каждом сообщении"
@@ -6786,7 +6876,7 @@ msgid "Tags and labels under the text"
 msgstr "Теги и метки под текстом"
 
 msgid "Hide stars"
-msgstr "Скрыть звезды"
+msgstr "Скрыть значки звёзд"
 
 msgid "Hide attachment icons"
 msgstr "Скрыть значки вложений"
@@ -6866,10 +6956,10 @@ msgid "Automatic uses single lines in wide windows."
 msgstr "Автоматически использует одиночные линии в широких окнах."
 
 msgid "Resize the list with the window"
-msgstr ""
+msgstr "Изменять ширину списка вместе с окном"
 
 msgid "Off, it keeps its width and the reader resizes."
-msgstr ""
+msgstr "Если выключено, список сохраняет ширину, а изменяется область чтения."
 
 msgid "Off also stops downloading previews."
 msgstr "Выкл. также останавливает загрузку превью."
@@ -6942,7 +7032,7 @@ msgid "Pre-load remote content for the next messages"
 msgstr "Предварительная загрузка удаленного контента для следующих сообщений"
 
 msgid "Remove trackers from links"
-msgstr ""
+msgstr "Удалять трекеры из ссылок"
 
 msgid "Warn when remote content is blocked"
 msgstr "Предупреждать о блокировке удалённого содержимого"
@@ -6966,27 +7056,27 @@ msgid "Send read receipts"
 msgstr "Отправлять уведомления о прочтении"
 
 #. Not "On This Computer": that names an account kind.
-#, fuzzy
 msgid "Stored Mail"
-msgstr "Proton Mail"
+msgstr "Хранимая почта"
 
-#, fuzzy
 msgid "Encrypt stored mail"
-msgstr "Зашифрованное сообщение"
+msgstr "Шифровать хранимую почту"
 
-#, fuzzy
 msgid "Encrypt Stored Mail?"
-msgstr "Зашифровано"
+msgstr "Шифровать хранимую почту?"
 
 msgid ""
 "Mail stored on this computer will be encrypted at the next start which can "
 "take a few minutes. Earlier versions of the app cannot open it. Turn this "
 "setting off and restart before going back to an older version."
 msgstr ""
+"Почта, хранящаяся на этом компьютере, будет зашифрована при следующем "
+"запуске — это может занять несколько минут. Более ранние версии приложения "
+"не смогут её открыть. Отключите этот параметр и перезапустите приложение "
+"перед возвратом к старой версии."
 
-#, fuzzy
 msgid "Encrypt"
-msgstr "Зашифровано"
+msgstr "Зашифровать"
 
 msgid "Open at startup"
 msgstr "Открывать при запуске"
@@ -7028,10 +7118,12 @@ msgid "Remember the sidebar layout"
 msgstr "Запоминать состояние боковой панели"
 
 msgid "Off starts every launch folded up."
-msgstr "Выкл. запускается при каждом запуске в сложенном виде."
+msgstr ""
+"Если отключено, при каждом запуске приложение будет открываться в свёрнутом "
+"виде."
 
 msgid "Remember icon rail state"
-msgstr "Запоминать состояние панели с иконками"
+msgstr "Запоминать состояние панели со значками"
 
 msgid "Highlight only new unread mail"
 msgstr "Выделять только новые непрочитанные письма"
@@ -7058,21 +7150,21 @@ msgid "Tags placement"
 msgstr "Расположение тегов"
 
 msgid "Favorites placement"
-msgstr "Размещение избранного"
+msgstr "Расположение избранного"
 
 msgid "Icon rail"
-msgstr "Полоса с иконками"
+msgstr "Полоса со значками"
 
 msgid "The count stays in the tooltip."
-msgstr "Счет остается во всплывающей подсказке."
+msgstr "Количество отображается во всплывающей подсказке."
 
 msgid "Fold up expanded items"
 msgstr "Сворачивать раскрытые элементы"
 
 msgid "The items below start folded up in the rail. Long-press to open one."
 msgstr ""
-"Предметы ниже начинают складываться в направляющую. Нажмите и удерживайте, "
-"чтобы открыть один."
+"Элементы ниже изначально свёрнуты на боковой панели. Нажмите и удерживайте "
+"элемент, чтобы открыть его."
 
 msgid ""
 "Inside the Flatpak sandbox, links open through the desktop's chooser. \"Ask "
@@ -7560,7 +7652,7 @@ msgid "Fetch sender logos"
 msgstr "Загружать логотипы отправителей"
 
 msgid "Looks up company icons for the message list"
-msgstr "Ищет иконки компаний для отображения в списке сообщений"
+msgstr "Ищет логотипы компаний для отображения в списке сообщений"
 
 msgid "Show message content in notifications"
 msgstr "Показывать содержимое писем в уведомлениях"
@@ -7662,13 +7754,11 @@ msgstr ""
 "Не удалось прочитать пароль для {email} из связки ключей ({e}). Hylki "
 "повторит попытку при следующем подключении."
 
-#, fuzzy
 msgid "The draft is not an OpenPGP message."
-msgstr "это не сообщение Outlook"
+msgstr "Этот черновик не является сообщением OpenPGP."
 
-#, fuzzy
 msgid "The draft could not be decrypted."
-msgstr "Не удалось открыть файл"
+msgstr "Не удалось расшифровать черновик."
 
 msgid "no OpenPGP key for {addr}"
 msgstr "нет ключа OpenPGP для {addr}"
@@ -7755,11 +7845,16 @@ msgid ""
 "GNOME Online Accounts could not provide a sign-in token for {email}. Open "
 "Settings → Online Accounts and sign in again."
 msgstr ""
+"Служба сетевых учётных записей GNOME не смогла предоставить токен входа для "
+"{email}. Откройте «Настройки → Сетевые учётные записи» и выполните вход "
+"повторно."
 
 msgid ""
 "Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
+"Microsoft не приняла сохранённые данные входа для {email}. Откройте "
+"«Параметры → Почтовые учётные записи» в Hylki и выполните вход повторно."
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "Вложение больше не содержится в сообщении на сервере"
@@ -7803,9 +7898,8 @@ msgstr "не удалось прочитать ответ сервера (он �
 msgid "Could not load {path}: {e}"
 msgstr "Не удалось загрузить {path}: {e}"
 
-#, fuzzy
 msgid "This message was moved or deleted on the server."
-msgstr "Сообщение слишком длинное для сервера."
+msgstr "Это сообщение было перемещено или удалено на сервере."
 
 msgid "Could not load conversation: {e}"
 msgstr "Не удалось загрузить обсуждение: {e}"
@@ -8134,7 +8228,7 @@ msgstr "Отображать во «Всех входящих»"
 
 msgid "Also in the unified Starred, Sent, Drafts, Archive, Filters and Tags."
 msgstr ""
-"Также в единых разделах «Помеченные», «Отправленные», «Черновики», «Архив», "
+"Также в единых разделах «Отмеченные», «Отправленные», «Черновики», «Архив», "
 "«Фильтры» и «Теги»."
 
 msgid "Test Connection"
@@ -8185,12 +8279,13 @@ msgstr "Импортировать файл…"
 msgid "Delete Signature"
 msgstr "Удалить подпись"
 
-#, fuzzy
 msgid "Sender name"
-msgstr "Название папки"
+msgstr "Имя отправителя"
 
 msgid "Replaces the account's name in From. Aliases keep their own."
 msgstr ""
+"Заменяет имя учётной записи в поле «От кого». У псевдонимов сохраняются "
+"собственные имена."
 
 msgid "Start messages with this signature"
 msgstr "Начинать сообщения с этой подписью"
@@ -8214,8 +8309,8 @@ msgid ""
 "Inbox mail with an unsubscribe link older than this gets trashed unless it's "
 "starred."
 msgstr ""
-"Входящие письма со ссылкой для отказа от подписки удаляются, если они не "
-"отмечены звездочкой."
+"Письма из папки «Входящие» со ссылкой для отказа от подписки старше "
+"указанного срока удаляются, если они не отмечены."
 
 msgid "Keep mail cached"
 msgstr "Хранить почту в кэше"
@@ -8330,19 +8425,18 @@ msgstr "Скрыть тему зашифрованного письма"
 msgid "Only the recipients see the subject. Others see \"...\"."
 msgstr "Тему видят только получатели. Другие видят «...»."
 
-#, fuzzy
 msgid "Send your key with your mail"
-msgstr "Люди в вашей почте"
+msgstr "Отправлять ваш ключ вместе с письмами"
 
 msgid "Autocrypt. Keys others send this way are kept too."
 msgstr ""
+"Autocrypt. Ключи, отправленные таким способом другими, также сохраняются."
 
-#, fuzzy
 msgid "Encrypt by default"
-msgstr "Раскрывать обсуждения по умолчанию"
+msgstr "Шифровать по умолчанию"
 
 msgid "Mail to people who ask for the same is encrypted."
-msgstr ""
+msgstr "Письма получателям с аналогичной настройкой будут шифроваться."
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
@@ -8477,13 +8571,12 @@ msgstr "Начать новые сообщения в"
 msgid "Reply in the original's format"
 msgstr "Ответ в формате оригинала"
 
-#, fuzzy
 msgid "Ask before switching to plain text"
-msgstr "Переключиться на обычный текст?"
+msgstr "Спрашивать перед переключением на обычный текст"
 
-#, fuzzy
 msgid "Only when formatting, images or links would be removed."
-msgstr "Форматирование, изображения и ссылки удалены."
+msgstr ""
+"Только если при этом будут удалены форматирование, изображения или ссылки."
 
 msgid "For rich text. Default leaves it to the recipient's own font."
 msgstr ""
@@ -8578,7 +8671,9 @@ msgid "Mark as read"
 msgstr "Отметить как прочитанное"
 
 msgid "Conversations mark each message as it comes into view."
-msgstr "Разговоры отмечают каждое сообщение по мере его появления."
+msgstr ""
+"В переписке каждое сообщение отмечается прочитанным, когда появляется на "
+"экране."
 
 msgid "Message appearance"
 msgstr "Оформление сообщений"
@@ -8586,8 +8681,10 @@ msgstr "Оформление сообщений"
 msgid "Light / Dark Mode switch"
 msgstr "Переключатель светлых/темных режимов"
 
-msgid "Displays in the message header for each message."
-msgstr "Отображается в заголовке каждого сообщения."
+#, fuzzy
+msgid "Shown in the message header and the composer."
+msgstr ""
+"Отображать переключатель в заголовке сообщения рядом с именем учётной записи."
 
 msgid "Show account in message header"
 msgstr "Показывать учётную запись в заголовке сообщения"
@@ -8649,7 +8746,7 @@ msgid "Find bar position"
 msgstr "Положение панели поиска"
 
 msgid "Space shows pictures and PDFs in Sushi"
-msgstr ""
+msgstr "Клавиша пробела открывает изображения и файлы PDF в Sushi"
 
 msgid "A message's text alone, without the sender's layout, colors and fonts."
 msgstr "Только текст сообщения, без макета, цветов и шрифтов отправителя."
@@ -8686,8 +8783,8 @@ msgstr "Рендерер"
 
 msgid "Try OpenGL or Software on older graphics. Applies after a restart."
 msgstr ""
-"Попробуйте OpenGL или программное обеспечение на старой графике. Применяется "
-"после перезагрузки."
+"На старых видеокартах попробуйте OpenGL или программный рендеринг. Изменение "
+"вступит в силу после перезапуска приложения."
 
 msgid "Keep running in the background"
 msgstr "Продолжать работу в фоновом режиме"
@@ -8699,10 +8796,10 @@ msgid "Start at login"
 msgstr "Запускать при входе в систему"
 
 msgid "Starts hidden."
-msgstr "Начинается скрыто."
+msgstr "Запускается в скрытом режиме."
 
 msgid "Start fullscreen"
-msgstr "Начать полноэкранный режим"
+msgstr "Запускать в полноэкранном режиме"
 
 msgid "F11 switches fullscreen on and off."
 msgstr "F11 включает и выключает полноэкранный режим."
@@ -8987,6 +9084,9 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Отображается в заголовке каждого сообщения."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."
@@ -9910,11 +10010,6 @@ msgstr "Hyprlab"
 #~ "Текстом указывать рядом с отправителем, подписано ли сообщение, "
 #~ "зашифровано ли оно и прошла ли проверка. Если отключено, выводятся только "
 #~ "значки замка и щита."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr ""
-#~ "Отображать переключатель в заголовке сообщения рядом с именем учётной "
-#~ "записи."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

@@ -7,9 +7,7 @@ use crate::models::Message;
 
 /// Order two messages by the chosen sort (ties fall back to date).
 pub(super) fn message_cmp(a: &Message, b: &Message, order: SortOrder) -> std::cmp::Ordering {
-    let name_of = |m: &Message| {
-        crate::contacts::shown_name_or_addr(&m.from_name, &m.from_addr).to_lowercase()
-    };
+    let name_of = |m: &Message| m.shown_from_name_or_addr().to_lowercase();
     match order {
         SortOrder::DateNewest => b.timestamp.cmp(&a.timestamp),
         SortOrder::DateOldest => a.timestamp.cmp(&b.timestamp),
@@ -141,7 +139,7 @@ pub(super) fn correspondents(msgs: &[&Message]) -> String {
         let key = if own {
             String::new()
         } else {
-            m.from_addr.to_ascii_lowercase()
+            m.shown_from_addr().to_ascii_lowercase()
         };
         if !seen.insert(key) {
             continue;
@@ -150,8 +148,7 @@ pub(super) fn correspondents(msgs: &[&Message]) -> String {
             names.push(i18n("me"));
         } else {
             others = true;
-            names
-                .push(crate::contacts::shown_name_or_addr(&m.from_name, &m.from_addr).into_owned());
+            names.push(m.shown_from_name_or_addr().into_owned());
         }
     }
     if !others {

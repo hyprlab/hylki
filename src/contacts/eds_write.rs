@@ -243,6 +243,12 @@ pub(super) fn merge_target(vcards: &[String], name: &str) -> Option<String> {
         .cloned()
 }
 
+/// The calls that change a book.
+const WRITES: [&str; 3] = ["CreateContacts", "ModifyContacts", "RemoveContacts"];
+
+/// How long a write waits for its book to become writable.
+const WRITE_WAIT: std::time::Duration = std::time::Duration::from_secs(10);
+
 pub(super) fn book_call<B>(
     conn: &zbus::blocking::Connection,
     bus: &str,
@@ -253,8 +259,51 @@ pub(super) fn book_call<B>(
 where
     B: serde::Serialize + zbus::zvariant::DynamicType,
 {
+    if WRITES.contains(&method) {
+        wait_writable(conn, bus, path, WRITE_WAIT);
+    }
     conn.call_method(Some(bus), path, Some(BOOK_IFACE), method, body)
         .map_err(|e| e.to_string())
+}
+
+/// The book's `Writable` property, `None` when it cannot be read.
+fn book_writable(conn: &zbus::blocking::Connection, bus: &str, path: &str) -> Option<bool> {
+    let reply = conn
+        .call_method(
+            Some(bus),
+            path,
+            Some("org.freedesktop.DBus.Properties"),
+            "Get",
+            &(BOOK_IFACE, "Writable"),
+        )
+        .ok()?;
+    let (value,): (zbus::zvariant::OwnedValue,) = reply.body().deserialize().ok()?;
+    value.downcast_ref::<bool>().ok()
+}
+
+/// Wait up to `limit` for an open book to say it can be written, and answer
+/// whether it did. A server's book starts read-only and turns writable once
+/// EDS has connected and read the server's privileges, about two seconds
+/// for Nextcloud; until then every write is refused as "Permission denied",
+/// and a book nothing else holds open starts over at each open (#652). A
+/// property that cannot be read counts as writable, so a write goes ahead
+/// and reports EDS's own answer.
+pub(super) fn wait_writable(
+    conn: &zbus::blocking::Connection,
+    bus: &str,
+    path: &str,
+    limit: std::time::Duration,
+) -> bool {
+    let start = std::time::Instant::now();
+    loop {
+        match book_writable(conn, bus, path) {
+            Some(false) if start.elapsed() < limit => {
+                std::thread::sleep(std::time::Duration::from_millis(100));
+            }
+            Some(false) => return false,
+            _ => return true,
+        }
+    }
 }
 
 pub(super) fn book_get_uids(

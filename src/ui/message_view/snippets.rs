@@ -202,13 +202,55 @@ pub(super) fn recipients_html(m: &Message, always_shown: bool) -> String {
                 escape_html(shown.as_deref().unwrap_or(entry))
             ));
         }
-        lines.push_str(&format!("<div><b>{}</b> {parts}</div>", escape_html(&label)));
+        lines.push_str(&format!(
+            "<div><b>{}</b> {parts}</div>",
+            escape_html(&label)
+        ));
     }
     if lines.is_empty() {
         return String::new();
     }
     let hidden = if always_shown { "" } else { " hidden" };
     format!("<div class=\"hylki-rcpt\"{hidden}>{lines}</div>")
+}
+
+/// The sender's address beside the name on a card's header. When the card
+/// names the Reply-To sender (#641), the From address follows as "via …",
+/// so who actually sent the mail stays on screen.
+pub(super) fn sender_addr_html(m: &Message) -> String {
+    let shown = m.shown_from_addr();
+    if shown.is_empty() {
+        return String::new();
+    }
+    // `data-addr` feeds the hover reveal's ::after overlay; `data-mail` (the
+    // bare address) drives click-to-compose and the copy menu. Fully
+    // entity-escaped (&<>"), so an attacker-controlled address can't smuggle
+    // markup through the attributes.
+    let esc = |s: &str| escape_html(s).replace('"', "&quot;");
+    if !m.shows_reply_to() || m.from_addr.trim().is_empty() {
+        return format!(
+            "<span class=\"hylki-addr hylki-mail\" data-mail=\"{0}\" \
+                 data-addr=\"&lt;{0}&gt;\">&lt;{0}&gt;</span>",
+            esc(shown)
+        );
+    }
+    // The translation decides where the address sits; only the text around
+    // it is escaped, and the address goes in as a link of its own.
+    let via = i18n("via {sender}");
+    let from = m.from_addr.trim();
+    let reveal = esc(&via.replace("{sender}", from));
+    let via = escape_html(&via).replace(
+        "{sender}",
+        &format!(
+            "<span class=\"hylki-mail\" data-mail=\"{0}\">{0}</span>",
+            esc(from)
+        ),
+    );
+    format!(
+        "<span class=\"hylki-addr\" data-addr=\"&lt;{0}&gt; {reveal}\">\
+             <span class=\"hylki-mail\" data-mail=\"{0}\">&lt;{0}&gt;</span> {via}</span>",
+        esc(shown)
+    )
 }
 
 /// Split an address-list header on commas, honouring double-quoted display

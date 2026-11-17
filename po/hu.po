@@ -306,6 +306,14 @@ msgstr "Vissza a saját betűtípusaimhoz és színeimhez"
 msgid "Show Sender's Fonts and Colors"
 msgstr "Feladó betűtípusainak és színeinek megjelenítése"
 
+#, fuzzy
+msgid "Create Event from Selection…"
+msgstr "Nyomtatás…"
+
+#, fuzzy
+msgid "Create Task from Selection…"
+msgstr "Létrehozás"
+
 msgid "View Source"
 msgstr "Forrás megtekintése"
 
@@ -2010,6 +2018,15 @@ msgstr "Keresés az üzenetben (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "Mellékletek letöltése…"
 
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr ""
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
 msgid "Signature"
 msgstr "Aláírás"
 
@@ -3357,12 +3374,38 @@ msgstr "Olvasás"
 msgid "Has attachments"
 msgstr "Nincsenek mellékletek"
 
+msgid "No attachments"
+msgstr "Nincsenek mellékletek"
+
 msgid "Tagged"
 msgstr ""
 
 #, fuzzy
+msgid "Not tagged"
+msgstr "Nincs telepítve"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "E-mail kliens"
+
+#, fuzzy
 msgid "Message preview"
 msgstr "Üzenetforrás"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Új névjegy"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "ezzel kezdődik"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "ezzel végződik"
 
 #, fuzzy
 msgid "Edit Smart Folder"
@@ -3380,6 +3423,9 @@ msgid "Folders"
 msgstr "Mappák"
 
 msgid "Any tag"
+msgstr ""
+
+msgid "With no text, any label matches."
 msgstr ""
 
 msgid "The preview each message has in the list"
@@ -3522,9 +3568,6 @@ msgstr "Keresés feladó, tárgy, típus vagy fájlnév alapján…"
 
 msgid "Loading attachments…"
 msgstr "Mellékletek betöltése…"
-
-msgid "No attachments"
-msgstr "Nincsenek mellékletek"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "A beérkezett üzenetek mellékletei itt jelennek meg."
@@ -4293,6 +4336,13 @@ msgid ""
 "Ctrl+0, puts it back to 100%."
 msgstr ""
 
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+
+msgid "Light / Dark Mode"
+msgstr ""
+
 msgid "Writing in {format}"
 msgstr "{format} formátumben írás"
 
@@ -4913,6 +4963,9 @@ msgstr "Nincsenek névjegyek"
 msgid "Saved addresses show the contact's name, not the mail's."
 msgstr ""
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr ""
 
@@ -5144,7 +5197,7 @@ msgid "Add to Group"
 msgstr ""
 
 #, fuzzy
-msgid "Move to Address Book"
+msgid "Move to Address Book…"
 msgstr "Címjegyzék"
 
 msgid "Delete…"
@@ -5196,6 +5249,24 @@ msgstr "Nagy fájlok"
 
 msgid "All files"
 msgstr "Minden fájl"
+
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Move to Address Book"
+msgstr "Címjegyzék"
 
 #, fuzzy
 msgid "Directories"
@@ -5759,9 +5830,6 @@ msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
 msgstr ""
 
-msgid "Light / Dark Mode"
-msgstr ""
-
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
@@ -6043,6 +6111,12 @@ msgstr "Kezdd az üzenetet úgy, hogy a képet beilleszted a szövegbe"
 
 msgid "Save…"
 msgstr "Mentés…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Feladók keresése"
 
 #, fuzzy
 msgid "Translating…"
@@ -8994,8 +9068,8 @@ msgid "Light / Dark Mode switch"
 msgstr ""
 
 #, fuzzy
-msgid "Displays in the message header for each message."
-msgstr "Megnyitja az üzenetet, amelyben már megkezdődött az átirányítás."
+msgid "Shown in the message header and the composer."
+msgstr "Jelenítsd meg a kapcsolót az üzenet fejlécében, a fióknév mellett."
 
 #, fuzzy
 msgid "Show account in message header"
@@ -9411,6 +9485,10 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Displays in the message header for each message."
+#~ msgstr "Megnyitja az üzenetet, amelyben már megkezdődött az átirányítás."
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."
@@ -10257,9 +10335,6 @@ msgstr "Hyprlab"
 #~ "A feladó mellett szövegesen jelzi, hogy az üzenet alá van-e írva vagy "
 #~ "titkosítva, és hogy érvényes-e. „Ki” beállítás esetén csak a lakat és a "
 #~ "pajzs ikonok jelennek meg."
-
-#~ msgid "Show the switch in the message header, beside the account name."
-#~ msgstr "Jelenítsd meg a kapcsolót az üzenet fejlécében, a fióknév mellett."
 
 #~ msgid ""
 #~ "Keep the switch where it was last set, or start every message in Reader "

@@ -10,6 +10,7 @@ use std::time::Duration;
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 use tokio::time::Sleep;
 
+use super::doubled_flags::DoubledFlags;
 use super::namespace::NamespaceFilter;
 use crate::i18n::i18n;
 
@@ -33,6 +34,8 @@ pub(in crate::worker) struct ImapIo<S> {
     capabilities: Option<Vec<String>>,
     /// While NAMESPACE is out (#554), what arrives is read through this.
     namespace: Option<NamespaceFilter>,
+    /// Every read goes through this first (#672).
+    doubled_flags: DoubledFlags,
     /// Bytes read and let through, not yet handed to async-imap.
     passing: Vec<u8>,
 }
@@ -50,6 +53,7 @@ impl<S> ImapIo<S> {
             selected_writable: false,
             capabilities: None,
             namespace: None,
+            doubled_flags: DoubledFlags::default(),
             passing: Vec::new(),
         }
     }
@@ -151,11 +155,34 @@ impl<S: AsyncRead + Unpin> ImapIo<S> {
         }
     }
 
-    /// Hand on what the NAMESPACE filter let through, as much as fits.
+    /// Hand on what the filters let through, as much as fits.
     fn pass(&mut self, buf: &mut ReadBuf<'_>) {
         let n = self.passing.len().min(buf.remaining());
         buf.put_slice(&self.passing[..n]);
         self.passing.drain(..n);
+    }
+
+    /// Run `bytes` off the wire through the filters into `passing`; an
+    /// empty `bytes` is the end of the stream, and lets out all they hold.
+    fn filter(&mut self, bytes: &[u8]) {
+        let Some(namespace) = self.namespace.as_mut() else {
+            if bytes.is_empty() {
+                self.doubled_flags.finish(&mut self.passing);
+            } else {
+                self.doubled_flags.feed(bytes, &mut self.passing);
+            }
+            return;
+        };
+        let mut repaired = Vec::new();
+        if bytes.is_empty() {
+            self.doubled_flags.finish(&mut repaired);
+            namespace.feed(&repaired, &mut self.passing);
+            let filter = self.namespace.take().expect("held above");
+            filter.finish(&mut self.passing);
+        } else {
+            self.doubled_flags.feed(bytes, &mut repaired);
+            namespace.feed(&repaired, &mut self.passing);
+        }
     }
 }
 
@@ -166,32 +193,22 @@ impl<S: AsyncRead + Unpin> AsyncRead for ImapIo<S> {
         buf: &mut ReadBuf<'_>,
     ) -> Poll<io::Result<()>> {
         let this = &mut *self;
-        if !this.passing.is_empty() {
-            this.pass(buf);
-            return Poll::Ready(Ok(()));
-        }
-        if this.namespace.is_none() {
-            return this.poll_wire(cx, buf);
-        }
         loop {
-            let mut chunk = [0u8; 4096];
+            if !this.passing.is_empty() {
+                this.pass(buf);
+                return Poll::Ready(Ok(()));
+            }
+            let mut chunk = [0u8; 16 * 1024];
             let mut read = ReadBuf::new(&mut chunk);
             match this.poll_wire(cx, &mut read) {
                 Poll::Pending => return Poll::Pending,
                 Poll::Ready(Err(e)) => return Poll::Ready(Err(e)),
                 Poll::Ready(Ok(())) => {}
             }
-            if read.filled().is_empty() {
-                // The end of the stream: what was held goes on before it.
-                let filter = this.namespace.take().expect("held above");
-                filter.finish(&mut this.passing);
-                this.pass(buf);
-                return Poll::Ready(Ok(()));
-            }
-            if let Some(filter) = this.namespace.as_mut() {
-                filter.feed(read.filled(), &mut this.passing);
-            }
-            if !this.passing.is_empty() {
+            let end = read.filled().is_empty();
+            this.filter(read.filled());
+            if end {
+                // Anything held went on above; after it, the end itself.
                 this.pass(buf);
                 return Poll::Ready(Ok(()));
             }
@@ -261,7 +278,16 @@ mod tests {
         async_imap::Session<ImapIo<DuplexStream>>,
         BufReader<DuplexStream>,
     ) {
-        let (client, server) = tokio::io::duplex(1024);
+        session_with_capacity(1024).await
+    }
+
+    async fn session_with_capacity(
+        capacity: usize,
+    ) -> (
+        async_imap::Session<ImapIo<DuplexStream>>,
+        BufReader<DuplexStream>,
+    ) {
+        let (client, server) = tokio::io::duplex(capacity);
         let login = tokio::spawn(async move {
             async_imap::Client::new(ImapIo::new(client))
                 .login("test", "test")
@@ -290,6 +316,119 @@ mod tests {
             async_imap::error::Error::Io(e) => assert_eq!(e.kind(), io::ErrorKind::TimedOut),
             e => panic!("expected I/O timeout, got {e}"),
         }
+    }
+
+    #[tokio::test]
+    async fn select_and_examine_drop_doubled_flags() {
+        use async_imap::types::Flag;
+
+        for writable in [true, false] {
+            let (mut client, mut server) = session().await;
+            let select = tokio::spawn(async move {
+                if writable {
+                    client.select("INBOX").await
+                } else {
+                    client.examine("INBOX").await
+                }
+                .unwrap()
+            });
+            let tag = command(&mut server, if writable { "SELECT" } else { "EXAMINE" }).await;
+            server
+                .get_mut()
+                .write_all(
+                    format!(
+                        "* FLAGS (\\Seen \\\\Flagged custom)\r\n\
+                         * 2 EXISTS\r\n\
+                         * OK [PERMANENTFLAGS (\\Seen \\\\Flagged \\*)] F\r\n\
+                         * OK [UIDNEXT 42] next\r\n\
+                         {tag} OK selected\r\n"
+                    )
+                    .as_bytes(),
+                )
+                .await
+                .unwrap();
+            let mailbox = select.await.unwrap();
+            assert_eq!(
+                mailbox.flags,
+                vec![Flag::Seen, Flag::Custom("custom".into())]
+            );
+            assert_eq!(mailbox.permanent_flags, vec![Flag::Seen, Flag::MayCreate]);
+            assert_eq!(mailbox.exists, 2);
+            assert_eq!(mailbox.uid_next, Some(42));
+        }
+    }
+
+    #[tokio::test]
+    async fn fetch_drops_doubled_flags_without_changing_message_bytes() {
+        fetch_doubled_flags(false).await;
+        fetch_doubled_flags(true).await;
+    }
+
+    async fn fetch_doubled_flags(hold_namespace: bool) {
+        use async_imap::types::Flag;
+
+        // The literal holds text that reads like flag lists and responses:
+        // it must reach async-imap byte for byte.
+        let body = b"Subject: FLAGS (\\\\Seen)\r\n\r\n* 9 FETCH (FLAGS (\\\\Seen))\r\n";
+        // Capacity one splits every read, the pair of backslashes included.
+        let (mut client, mut server) = session_with_capacity(1).await;
+        if hold_namespace {
+            client.as_mut().hold_namespace();
+        }
+        let fetch = tokio::spawn(async move {
+            client
+                .uid_fetch("7:8", "(UID FLAGS BODY.PEEK[])")
+                .await
+                .unwrap()
+                .try_collect::<Vec<_>>()
+                .await
+                .unwrap()
+        });
+        let tag = command(&mut server, "UID FETCH").await;
+        let mut answer = format!(
+            "* 1 fEtCh (UID 7 fLaGs (\\\\Seen \\Answered custom) \
+             BODYSTRUCTURE (\"TEXT\" \"PLAIN\" (\"NAME\" \"FLAGS (\\\\Seen)\") NIL NIL \"7BIT\" 12 1) \
+             ENVELOPE (NIL \"FLAGS (\\\\Seen)\" NIL NIL NIL NIL NIL NIL NIL NIL) BODY[] {{{}}}\r\n",
+            body.len()
+        )
+        .into_bytes();
+        answer.extend_from_slice(body);
+        answer.extend_from_slice(
+            format!(
+                ")\r\n* 2 FETCH (BODY[HEADER.FIELDS (FLAGS)] {{{}}}\r\n",
+                body.len()
+            )
+            .as_bytes(),
+        );
+        answer.extend_from_slice(body);
+        answer.extend_from_slice(b" UID 8 FLAGS (\\\\Seen \\Flagged keyword))\r\n");
+        answer.extend_from_slice(format!("{tag} OK fetched\r\n").as_bytes());
+        if hold_namespace {
+            answer.splice(0..0, b"* NAMESPACE NIL NIL NIL\r\n".iter().copied());
+        }
+        for byte in answer {
+            server.get_mut().write_all(&[byte]).await.unwrap();
+            tokio::task::yield_now().await;
+        }
+        let fetched = fetch.await.unwrap();
+        assert_eq!(fetched.len(), 2);
+        assert_eq!(fetched[0].uid, Some(7));
+        assert_eq!(fetched[0].body(), Some(body.as_slice()));
+        assert!(fetched[0].bodystructure().is_some());
+        assert_eq!(
+            fetched[0].envelope().unwrap().subject.as_deref(),
+            Some(b"FLAGS (\\\\Seen)".as_slice())
+        );
+        assert_eq!(
+            fetched[0].flags().collect::<Vec<_>>(),
+            vec![Flag::Answered, Flag::Custom("custom".into())]
+        );
+        assert_eq!(fetched[1].uid, Some(8));
+        assert_eq!(fetched[1].header(), Some(body.as_slice()));
+        assert_eq!(
+            fetched[1].flags().collect::<Vec<_>>(),
+            vec![Flag::Flagged, Flag::Custom("keyword".into())]
+        );
     }
 
     #[tokio::test(start_paused = true)]

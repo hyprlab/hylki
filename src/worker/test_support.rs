@@ -75,6 +75,7 @@ pub(super) fn flagged_message(uid: u32) -> Message {
         from_name: String::new(),
         from_addr: String::new(),
         reply_to: String::new(),
+        reply_to_name: String::new(),
         to: String::new(),
         cc: String::new(),
         bcc: String::new(),

@@ -157,13 +157,7 @@ impl AppModel {
                 p
             },
             window_drop_zones: None,
-            reader_compose_revealer: {
-                let r = gtk::Revealer::new();
-                r.set_transition_type(gtk::RevealerTransitionType::SlideDown);
-                r.set_transition_duration(300);
-                r.set_reveal_child(false);
-                r
-            },
+            reader_compose_revealer: crate::ui::cover_slot::new(),
             contacts_compose_revealer,
             next_compose_id: 1,
             menu,
@@ -395,6 +389,7 @@ impl AppModel {
             list_search_open: prefs.list_search_open,
             contacts_search_open: prefs.contacts_search_open,
             contact_names: prefs.contact_names,
+            reply_to_sender: prefs.reply_to_sender,
             list_search_bottom: prefs.list_search_bottom,
             list_bulk_bar_bottom: prefs.list_bulk_bar_bottom,
             toolbar_fold_right: prefs.toolbar_fold_right,

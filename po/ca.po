@@ -301,6 +301,14 @@ msgstr "Torna a les meves fonts i colors"
 msgid "Show Sender's Fonts and Colors"
 msgstr "Mostra les fonts i colors del remitent"
 
+#, fuzzy
+msgid "Create Event from Selection…"
+msgstr "Crea un filtre a partir del missatge…"
+
+#, fuzzy
+msgid "Create Task from Selection…"
+msgstr "Crea"
+
 msgid "View Source"
 msgstr "Mostra el codi font"
 
@@ -1933,6 +1941,16 @@ msgstr "Cerca al missatge (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "S'estan baixant els adjunts…"
 
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+#, fuzzy
+msgid "today tonight"
+msgstr "D'esquerra a dreta"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
 msgid "Signature"
 msgstr "Signatura"
 
@@ -3246,11 +3264,37 @@ msgstr "Llegit"
 msgid "Has attachments"
 msgstr "Té adjunts"
 
+msgid "No attachments"
+msgstr "No hi ha adjunts"
+
 msgid "Tagged"
 msgstr "Etiquetat"
 
+#, fuzzy
+msgid "Not tagged"
+msgstr "No destacat"
+
+#, fuzzy
+msgid "Gmail label"
+msgstr "Client de correu"
+
 msgid "Message preview"
 msgstr "Previsualització del missatge"
+
+#, fuzzy
+msgid "does not contain"
+msgstr "Desa els contactes nous a"
+
+msgid "is not"
+msgstr ""
+
+#, fuzzy
+msgid "does not start with"
+msgstr "comença per"
+
+#, fuzzy
+msgid "does not end with"
+msgstr "acaba amb"
 
 msgid "Edit Smart Folder"
 msgstr "Edita la carpeta intel·ligent"
@@ -3266,6 +3310,9 @@ msgstr "Carpetes"
 
 msgid "Any tag"
 msgstr "Qualsevol etiqueta"
+
+msgid "With no text, any label matches."
+msgstr ""
 
 msgid "The preview each message has in the list"
 msgstr "La previsualització que cada missatge té a la llista"
@@ -3405,9 +3452,6 @@ msgstr "Cerca per remitent, assumpte, tipus, nom de fitxer…"
 
 msgid "Loading attachments…"
 msgstr "S'estan carregant els adjunts…"
-
-msgid "No attachments"
-msgstr "No hi ha adjunts"
 
 msgid "Attachments from your inboxes will appear here."
 msgstr "Els adjunts de les teves bústies d'entrada apareixeran aquí."
@@ -4155,6 +4199,16 @@ msgid ""
 "Ctrl+0, puts it back to 100%."
 msgstr ""
 
+#, fuzzy
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr ""
+"Mostra aquest missatge en mode clar o fosc. Els altres missatges no es veuen "
+"afectats."
+
+msgid "Light / Dark Mode"
+msgstr "Mode clar / fosc"
+
 msgid "Writing in {format}"
 msgstr "S'està escrivint en {format}"
 
@@ -4749,6 +4803,9 @@ msgstr "De contactes"
 msgid "Saved addresses show the contact's name, not the mail's."
 msgstr ""
 
+msgid "Show the Reply-To sender"
+msgstr ""
+
 msgid "Layout"
 msgstr "Disposició"
 
@@ -4970,7 +5027,8 @@ msgstr "Treu del grup"
 msgid "Add to Group"
 msgstr "Afegeix a un grup"
 
-msgid "Move to Address Book"
+#, fuzzy
+msgid "Move to Address Book…"
 msgstr "Mou a una llibreta d'adreces"
 
 msgid "Delete…"
@@ -5016,6 +5074,31 @@ msgstr "Fitxers vCard"
 
 msgid "All files"
 msgstr "Tots els fitxers"
+
+#, fuzzy
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"Això mourà {name} de {from} a {to}, localment i al servidor. Un grup a "
+"{from} que contingui el contacte deixarà de tenir-lo."
+
+#, fuzzy
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"Això mourà {n} contacte de la llibreta d'adreces on és a {to}, localment i "
+"al servidor. Un grup allà que el contingui deixarà de tenir-lo."
+msgstr[1] ""
+"Això mourà {n} contactes de les llibretes d'adreces on són a {to}, localment "
+"i al servidor. Els grups allà que els continguin deixaran de tenir-los."
+
+msgid "Move to Address Book"
+msgstr "Mou a una llibreta d'adreces"
 
 msgid "Directories"
 msgstr "Directoris"
@@ -5579,9 +5662,6 @@ msgstr ""
 "Mostra aquest missatge en mode clar o fosc. Els altres missatges no es veuen "
 "afectats."
 
-msgid "Light / Dark Mode"
-msgstr "Mode clar / fosc"
-
 msgid ""
 "Reader View shows a message as its text alone, in one plain format, without "
 "the sender's layout, colors and fonts."
@@ -5853,6 +5933,12 @@ msgstr "Comença un missatge nou a partir d'una còpia de la plantilla"
 
 msgid "Save…"
 msgstr "Desa…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+#, fuzzy
+msgid "via {sender}"
+msgstr "Cerca remitents"
 
 msgid "Translating…"
 msgstr "S'està traduint…"
@@ -8700,7 +8786,8 @@ msgstr "Aparença dels missatges"
 msgid "Light / Dark Mode switch"
 msgstr "Interruptor de mode clar / fosc"
 
-msgid "Displays in the message header for each message."
+#, fuzzy
+msgid "Shown in the message header and the composer."
 msgstr "Es mostra a l'encapçalament de cada missatge."
 
 #, fuzzy

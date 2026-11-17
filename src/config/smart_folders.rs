@@ -68,24 +68,32 @@ impl SmartFolderKind {
 
 /// One condition of a [`SmartFolder`]: the filter conditions, which look at
 /// text, and the message's own state, which a filter has no use for.
-#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, serde::Serialize, serde::Deserialize)]
 pub(crate) struct SmartCondition {
     pub(crate) field: SmartField,
     #[serde(default = "contains_match")]
     pub(crate) matcher: FilterMatch,
     /// The text to match, commas separating alternatives, or for
-    /// [`SmartField::Tagged`] the tag's keyword (empty for any tag).
+    /// [`SmartField::Tagged`] the tag's keyword (empty for any tag). For
+    /// [`SmartField::Label`], empty means any label.
     #[serde(default, skip_serializing_if = "String::is_empty")]
     pub(crate) value: String,
+    /// The condition holds when the rest of it does not (#639): "does not
+    /// contain", "not tagged", "no attachments". The filter matchers stay
+    /// as they are: a filter has no use for a negation, and its server-side
+    /// body search has none to offer.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub(crate) not: bool,
 }
 
 fn contains_match() -> FilterMatch {
     FilterMatch::Contains
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum SmartField {
+    #[default]
     FromAddress,
     FromName,
     Subject,
@@ -101,25 +109,32 @@ pub(crate) enum SmartField {
     Read,
     Attachment,
     Tagged,
+    /// A Gmail label (#639), by its name; any label when the text is empty.
+    Label,
 }
 
 impl SmartField {
-    /// Every field, in the order the editor lists them.
-    pub(crate) const ALL: [SmartField; 14] = [
-        SmartField::Starred,
-        SmartField::NotStarred,
-        SmartField::Unread,
-        SmartField::Read,
-        SmartField::Attachment,
-        SmartField::Tagged,
-        SmartField::FromAddress,
-        SmartField::FromName,
-        SmartField::Subject,
-        SmartField::Recipients,
-        SmartField::ReplyTo,
-        SmartField::Body,
-        SmartField::FromInContacts,
-        SmartField::FromNotInContacts,
+    /// What the editor's Where row offers, in its order: each field, and
+    /// the negation of the ones with no opposite of their own. The text
+    /// fields are negated by their matcher instead.
+    pub(crate) const CHOICES: [(SmartField, bool); 17] = [
+        (SmartField::Starred, false),
+        (SmartField::NotStarred, false),
+        (SmartField::Unread, false),
+        (SmartField::Read, false),
+        (SmartField::Attachment, false),
+        (SmartField::Attachment, true),
+        (SmartField::Tagged, false),
+        (SmartField::Tagged, true),
+        (SmartField::Label, false),
+        (SmartField::FromAddress, false),
+        (SmartField::FromName, false),
+        (SmartField::Subject, false),
+        (SmartField::Recipients, false),
+        (SmartField::ReplyTo, false),
+        (SmartField::Body, false),
+        (SmartField::FromInContacts, false),
+        (SmartField::FromNotInContacts, false),
     ];
 
     /// The filter field the condition matches through, for the ones that
@@ -140,7 +155,13 @@ impl SmartField {
 
     /// Whether the field takes text to match.
     pub(crate) fn takes_text(self) -> bool {
-        self.filter_field().is_some_and(|f| !f.is_contact_check())
+        self == SmartField::Label || self.filter_field().is_some_and(|f| !f.is_contact_check())
+    }
+
+    /// Whether the editor's Where row says the condition's negation itself,
+    /// as "Not tagged" does, rather than its matcher.
+    pub(crate) fn negated_by_choice(self) -> bool {
+        matches!(self, SmartField::Attachment | SmartField::Tagged)
     }
 }
 
@@ -154,11 +175,22 @@ pub(crate) struct SmartInput<'a> {
     /// The keywords of the tags there are, lower case: what "any tag" means,
     /// since a server sets keywords of its own ($Forwarded, $Junk) too.
     pub(crate) tags: &'a [String],
+    /// The Gmail labels on the message as the server names them, the one
+    /// of the folder this copy sits in included; empty elsewhere.
+    pub(crate) labels: &'a [String],
 }
 
 impl SmartCondition {
+    /// Whether the message meets the condition, its negation applied. One
+    /// that cannot be judged, text with nothing to match or the address
+    /// books unread, matches nothing either way: "not in Contacts" must
+    /// not take in every sender because the books failed to load.
     pub(crate) fn matches(&self, input: &SmartInput) -> bool {
-        match self.field {
+        self.holds(input).is_some_and(|hit| hit != self.not)
+    }
+
+    fn holds(&self, input: &SmartInput) -> Option<bool> {
+        Some(match self.field {
             SmartField::Starred => input.starred,
             SmartField::NotStarred => !input.starred,
             SmartField::Unread => input.unread,
@@ -172,10 +204,27 @@ impl SmartCondition {
                 .keywords
                 .iter()
                 .any(|k| k.eq_ignore_ascii_case(&self.value)),
+            SmartField::Label => {
+                let names: Vec<String> = input
+                    .labels
+                    .iter()
+                    .map(|l| crate::mail::mutf7::decode(l).to_lowercase())
+                    .collect();
+                let alts = FilterCondition::alternatives(&self.value);
+                if alts.is_empty() {
+                    !names.is_empty()
+                } else {
+                    alts.iter()
+                        .any(|a| names.iter().any(|n| self.matcher.test(n, a)))
+                }
+            }
             field => {
-                let Some(field) = field.filter_field() else {
-                    return false;
-                };
+                let field = field.filter_field()?;
+                if field.is_contact_check() {
+                    input.text.contacts?;
+                } else if FilterCondition::alternatives(&self.value).is_empty() {
+                    return None;
+                }
                 FilterCondition {
                     field,
                     matcher: self.matcher,
@@ -183,7 +232,7 @@ impl SmartCondition {
                 }
                 .matches(&input.text)
             }
-        }
+        })
     }
 }
 
@@ -216,12 +265,13 @@ impl SmartFolder {
             return pre;
         }
         for c in &self.conditions {
+            let yes = !c.not;
             match c.field {
-                SmartField::Starred => pre.starred = Some(true),
-                SmartField::NotStarred => pre.starred = Some(false),
-                SmartField::Unread => pre.unread = Some(true),
-                SmartField::Read => pre.unread = Some(false),
-                SmartField::Attachment => pre.attachment = Some(true),
+                SmartField::Starred => pre.starred = Some(yes),
+                SmartField::NotStarred => pre.starred = Some(!yes),
+                SmartField::Unread => pre.unread = Some(yes),
+                SmartField::Read => pre.unread = Some(!yes),
+                SmartField::Attachment => pre.attachment = Some(yes),
                 _ => {}
             }
         }

@@ -60,7 +60,7 @@ impl ReadingPage {
                     #[name = "theme_switch_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Light / Dark Mode switch"),
-                        set_subtitle: &i18n("Displays in the message header for each message."),
+                        set_subtitle: &i18n("Shown in the message header and the composer."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetThemeSwitch(row.is_active()));
                         },

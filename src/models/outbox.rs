@@ -79,6 +79,7 @@ impl OutboxItem {
             },
             from_addr: self.from_addr.clone(),
             reply_to: String::new(),
+            reply_to_name: String::new(),
             to: self.recipients.clone(),
             cc: String::new(),
             bcc: String::new(),

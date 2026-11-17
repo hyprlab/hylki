@@ -23,6 +23,7 @@ pub(super) fn msg_for_print() -> Message {
         from_name: "Ada Lovelace".into(),
         from_addr: "ada@example.com".into(),
         reply_to: String::new(),
+        reply_to_name: String::new(),
         to: "me@example.com".into(),
         cc: "carol@example.com".into(),
         bcc: String::new(),

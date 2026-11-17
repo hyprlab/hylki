@@ -1,5 +1,6 @@
 //! The names saved in the address books, shown instead of the names mail
-//! gives itself when Settings → Contacts asks for it (#541).
+//! gives itself when Settings → Contacts asks for it (#541), and whether
+//! mail is named by its Reply-To sender (#641).
 //!
 //! Only books kept by hand count: a book that fills itself from mail
 //! would hand back whatever name a message once claimed. So a forged
@@ -20,6 +21,24 @@ thread_local! {
     /// name runs.
     static NAMES: RefCell<Rc<HashMap<String, String>>> = RefCell::default();
     static GENERATION: Cell<u64> = const { Cell::new(0) };
+    /// Settings → Contacts → Show the Reply-To sender (#641).
+    static REPLY_TO_SENDER: Cell<bool> = const { Cell::new(false) };
+}
+
+/// Name the Reply-To sender from now on, or From. True when that changed,
+/// and what is on screen wants drawing again.
+pub(crate) fn set_reply_to_sender(on: bool) -> bool {
+    if REPLY_TO_SENDER.with(|c| c.replace(on)) == on {
+        return false;
+    }
+    GENERATION.with(|g| g.set(g.get().wrapping_add(1)));
+    true
+}
+
+/// Whether mail is named by its Reply-To sender; see
+/// [`crate::models::Message::sender`].
+pub(crate) fn reply_to_sender() -> bool {
+    REPLY_TO_SENDER.with(Cell::get)
 }
 
 /// The saved contacts' names by lower-cased address, read from the books.

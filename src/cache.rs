@@ -78,7 +78,7 @@ fn message_columns() -> String {
     format!(
         "uid, from_name, from_addr, subject, date, ts, unread, starred, has_attachment, \
          recipients, cc, message_id, references_, preview, reply_to, {KEYWORDS_COL}, \
-         importance, due, gmail_labels, answered, forwarded, bcc"
+         importance, due, gmail_labels, answered, forwarded, bcc, reply_to_name"
     )
 }
 
@@ -100,6 +100,7 @@ fn message_from_row(
         from_name: row.get(col(1))?,
         from_addr: row.get(col(2))?,
         reply_to: row.get(col(14))?,
+        reply_to_name: row.get(col(22))?,
         to: row.get(col(9))?,
         cc: row.get(col(10))?,
         bcc: row.get(col(21))?,

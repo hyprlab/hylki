@@ -1,11 +1,13 @@
 //! Create Event and Create Task (#564): a message made into an event or a
 //! task, written to a calendar in Evolution Data Server, or handed to the
-//! calendar application as an `.ics` file where EDS has none.
+//! calendar application as an `.ics` file where EDS has none. Made from
+//! text selected in the reader (#637), the item starts from the date and
+//! the times written in it.
 
 use adw::prelude::*;
 use relm4::prelude::*;
 
-use crate::calendar::{Item, ItemKind, Source};
+use crate::calendar::{Found, Item, ItemKind, Source, Words};
 use crate::i18n::i18n_f;
 use crate::models::Message;
 use crate::worker::MailRequest;
@@ -23,7 +25,14 @@ pub(crate) enum ToCalendar {
     Sources {
         message: Box<Message>,
         kind: ItemKind,
+        selection: Option<String>,
         sources: Option<Vec<Source>>,
+    },
+    /// Create Event or Create Task from text selected in a message.
+    FromSelection {
+        message: Box<Message>,
+        kind: ItemKind,
+        text: String,
     },
     /// Writing the item to EDS finished.
     Saved(ItemKind, Result<(), String>),
@@ -31,18 +40,20 @@ pub(crate) enum ToCalendar {
 
 impl AppModel {
     /// Start making `m` into an event or a task: its body first, if it is
-    /// still on the server, then where the item can go.
+    /// still on the server and no `selection` stands in for it, then where
+    /// the item can go.
     pub(super) fn make_calendar_item(
         &mut self,
         m: Message,
         kind: ItemKind,
+        selection: Option<String>,
         sender: &ComponentSender<Self>,
     ) {
         let mut m = self.with_cached_body(m);
         if let Some(subject) = self.decrypted_subject(&m) {
             m.subject = subject;
         }
-        if m.body.is_empty() {
+        if m.body.is_empty() && selection.is_none() {
             if let Some(path) = self.resolve_folder_path(&m) {
                 self.send_to(
                     m.account_id,
@@ -69,6 +80,7 @@ impl AppModel {
             let _ = input.send(AppMsg::ToCalendar(ToCalendar::Sources {
                 message: Box::new(m),
                 kind,
+                selection,
                 sources,
             }));
         });
@@ -107,7 +119,7 @@ impl AppModel {
         match self.pending_to_calendar.take() {
             Some((mut m, kind)) if m.account_id == account_id && m.id == message_id => {
                 m.body = body.to_string();
-                self.make_calendar_item(m, kind, sender);
+                self.make_calendar_item(m, kind, None, sender);
             }
             other => self.pending_to_calendar = other,
         }
@@ -119,8 +131,20 @@ impl AppModel {
             ToCalendar::Sources {
                 message,
                 kind,
+                selection,
                 sources,
-            } => self.calendar_dialog(&message, kind, sources.unwrap_or_default(), &sender),
+            } => self.calendar_dialog(
+                &message,
+                kind,
+                selection.as_deref(),
+                sources.unwrap_or_default(),
+                &sender,
+            ),
+            ToCalendar::FromSelection {
+                message,
+                kind,
+                text,
+            } => self.make_calendar_item(*message, kind, Some(text), &sender),
             ToCalendar::Saved(_, Ok(())) => {}
             ToCalendar::Saved(kind, Err(e)) => self.notice_error(match kind {
                 ItemKind::Event => i18n_f("Could not add the event: {e}", &[("e", &e)]),
@@ -133,15 +157,29 @@ impl AppModel {
         &self,
         m: &Message,
         kind: ItemKind,
+        selection: Option<&str>,
         sources: Vec<Source>,
         sender: &ComponentSender<Self>,
     ) {
-        let body = crate::mail::quote::message_text(&m.body);
-        let notes = format!("{}\n\n{}", sender_lines(m), body.trim());
+        let (summary, text, found) = match selection {
+            Some(text) => {
+                let found = crate::calendar::find(text, &Words::system(), sent_on(m));
+                let summary =
+                    crate::calendar::title(text, &found.spans).unwrap_or_else(|| m.subject.clone());
+                (summary, text.to_string(), found)
+            }
+            None => (
+                m.subject.clone(),
+                crate::mail::quote::message_text(&m.body),
+                Found::default(),
+            ),
+        };
+        let notes = format!("{}\n\n{}", sender_lines(m), text.trim());
         let start = crate::ui::calendar_item::Start {
             kind,
-            summary: m.subject.clone(),
+            summary,
             notes,
+            found,
             last_source: crate::config::load_calendar_choice(kind == ItemKind::Task),
             last_alarms: crate::config::load_event_alarms(),
         };
@@ -171,6 +209,17 @@ impl AppModel {
             }
         });
     }
+}
+
+/// The day `m` was sent, which its "tomorrow" and "Friday" count from.
+fn sent_on(m: &Message) -> chrono::NaiveDate {
+    use chrono::TimeZone;
+    chrono::Local
+        .timestamp_opt(m.timestamp, 0)
+        .single()
+        .filter(|_| m.timestamp > 0)
+        .unwrap_or_else(chrono::Local::now)
+        .date_naive()
 }
 
 /// No EDS: the item goes to whatever opens calendar files, as an

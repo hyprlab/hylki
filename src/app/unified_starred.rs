@@ -81,7 +81,7 @@ impl AppModel {
                         &exclude,
                         starred,
                         SMART_VIEW_LIMIT,
-                        |_| true,
+                        |_, _| true,
                     );
                     rows.insert(account_id, found);
                 }

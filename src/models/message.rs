@@ -18,6 +18,9 @@ pub(crate) struct Message {
     /// Where the sender asked replies to go (comma-separated emails), from the
     /// Reply-To header. Empty when the header is absent — reply to `from_addr`.
     pub(crate) reply_to: String,
+    /// The display name of the first Reply-To mailbox, empty when it gives
+    /// none (or there is no Reply-To). Only for showing that sender (#641).
+    pub(crate) reply_to_name: String,
     /// Original recipients (comma-separated emails), used for Reply All.
     pub(crate) to: String,
     pub(crate) cc: String,
@@ -177,6 +180,7 @@ impl Message {
             from_name: String::new(),
             from_addr: String::new(),
             reply_to: String::new(),
+            reply_to_name: String::new(),
             to: String::new(),
             cc: String::new(),
             bcc: String::new(),
@@ -199,10 +203,55 @@ impl Message {
         }
     }
 
+    /// Who the list and the reader name as the sender, as (name, address):
+    /// From, or the first Reply-To mailbox when Settings asks for it and the
+    /// message has one (#641). Web forms send from their own address and put
+    /// the person who filled them in under Reply-To. Replies, filters and
+    /// the sender checks keep going by the real headers.
+    pub(crate) fn sender(&self) -> (&str, &str) {
+        if self.shows_reply_to() {
+            if let Some(addr) = self.reply_to_addr() {
+                let name = match self.reply_to_name.trim() {
+                    "" => addr,
+                    name => name,
+                };
+                return (name, addr);
+            }
+        }
+        (&self.from_name, &self.from_addr)
+    }
+
+    /// The first Reply-To address, when it differs from From.
+    pub(crate) fn reply_to_addr(&self) -> Option<&str> {
+        let first = self.reply_to.split(',').next()?.trim();
+        (!first.is_empty() && !first.eq_ignore_ascii_case(self.from_addr.trim())).then_some(first)
+    }
+
+    /// Whether [`Message::sender`] names the Reply-To mailbox. Mail from
+    /// one of your own accounts stays yours, whoever it asks replies to go to.
+    pub(crate) fn shows_reply_to(&self) -> bool {
+        crate::contacts::reply_to_sender()
+            && self.reply_to_addr().is_some()
+            && crate::services::avatar::account_face(&self.from_addr).is_none()
+    }
+
+    /// The address of the sender as shown; see [`Message::sender`].
+    pub(crate) fn shown_from_addr(&self) -> &str {
+        self.sender().1
+    }
+
     /// The sender's name as shown: the address book's for a saved contact
     /// when Settings asks for it (#541), else the one the mail gives.
     pub(crate) fn shown_from_name(&self) -> std::borrow::Cow<'_, str> {
-        crate::contacts::shown_name(&self.from_name, &self.from_addr)
+        let (name, addr) = self.sender();
+        crate::contacts::shown_name(name, addr)
+    }
+
+    /// [`Message::shown_from_name`], or the bare address where neither
+    /// names anyone.
+    pub(crate) fn shown_from_name_or_addr(&self) -> std::borrow::Cow<'_, str> {
+        let (name, addr) = self.sender();
+        crate::contacts::shown_name_or_addr(name, addr)
     }
 
     /// Whether the message carries `keyword`. IMAP keywords are atoms
@@ -230,9 +279,20 @@ impl Message {
     /// The message's keywords, with the keyword of every tag a Gmail label
     /// stands for: what the tag checks go by.
     pub(crate) fn tag_keywords(&self, tags: &[crate::config::Tag]) -> Vec<String> {
+        self.tag_keywords_with(&self.labels, tags)
+    }
+
+    /// [`Message::tag_keywords`] with `labels` in place of the message's
+    /// own: a smart folder adds the label of the folder a Gmail copy sits
+    /// in, which the stored labels leave out.
+    pub(crate) fn tag_keywords_with(
+        &self,
+        labels: &[String],
+        tags: &[crate::config::Tag],
+    ) -> Vec<String> {
         let mut out = self.keywords.clone();
         for t in tags {
-            if !self.has_keyword(&t.keyword) && self.labels.iter().any(|l| label_names_tag(l, t)) {
+            if !self.has_keyword(&t.keyword) && labels.iter().any(|l| label_names_tag(l, t)) {
                 out.push(t.keyword.clone());
             }
         }
@@ -262,6 +322,7 @@ impl Message {
             &mut self.from_name,
             &mut self.from_addr,
             &mut self.reply_to,
+            &mut self.reply_to_name,
             &mut self.to,
             &mut self.cc,
             &mut self.bcc,
