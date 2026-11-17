@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.49.0-beta.2" date="2026-11-17" type="development">
+      <description>
+        <p>The composer has a Light / Dark Mode switch, events and tasks can be made from selected text, smart folders take negative and Gmail label conditions, and mail can be named by its Reply-To sender. Tooltips show cut subjects and previews whole, and Purelymail folders open again.</p>
+      </description>
+    </release>
     <release version="1.49.0-beta.1" date="2026-11-15" type="development">
       <description>
         <p>The message source opens in the reader with find, the message list's date sections fold, contacts import from CSV files, and an alias can be its account's default From address. Autocrypt can send and collect OpenPGP keys, drafts of encrypted messages are saved encrypted, and plain text is sent wrapped as format=flowed.</p>

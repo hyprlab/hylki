@@ -2,6 +2,44 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.49.0-beta.2
+
+### New features:
+
+- Light / Dark Mode switch in the composer by @fsoft72 - (#671)
+- Events and tasks from selected text - (#637)
+- Smart folders with negative and Gmail label conditions - (#639)
+- Mail can be named by its Reply-To sender - (#641)
+- Tooltips show cut subjects and previews whole - (#673)
+- Contacts move to another address book from a dialog
+
+### Fixes:
+
+- Purelymail folders failing to open - (#672)
+
+### Translations:
+
+- German, complete, by @samuel-edlmeier
+- Russian by @iliasen
+
+## What's new in 1.48.4
+
+### Fixes:
+
+- the system running out of memory as a message was sent on NVIDIA - (#669)
+
+## What's new in 1.48.3
+
+### Fixes:
+
+- contacts moved to a Nextcloud book staying in the Hylki book - (#652)
+- shared mailboxes at the top of Folders with no parent by @PeterHagen - (#664)
+- address book names cut off in their dropdowns by @PeterHagen - (#663)
+
+### Translations:
+
+- French by @frenchy82
+
 ## What's new in 1.49.0-beta.1
 
 ### New features:

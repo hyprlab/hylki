@@ -1,5 +1,123 @@
 # Changelog
 
+## 1.49.0-beta.2 — 2026-11-17
+
+- **Added: tooltips for cut subjects and previews** (#673, requested by
+  3v1n0). Hovering a subject or preview that the message list cuts short
+  shows its whole text in a tooltip: the full subject, and all of the
+  preview Hylki keeps for the message, a few hundred characters. Text that
+  fits shows no tooltip.
+
+- **Added: Light / Dark Mode switch in the composer** (#671, by Fabio
+  Rotondo). The editor's toolbar has the switch the reader has. It shows the
+  text being written, its source and its preview in the other scheme, for
+  that composer alone. The message sent is not affected. Settings → Reading
+  → Light / Dark Mode switch shows or hides both switches, open composers
+  included.
+
+- **Fixed: Purelymail folders could fail to open** (#672, reported by
+  rimmer). Purelymail can list flags with two backslashes, such as `\\Seen`,
+  beside the real ones. They are not valid IMAP, and the parser failed the
+  whole response on them, so the folder did not open and its mail did not
+  sync. Hylki now leaves these flags out of the server's flag lists before
+  reading them. They are not read as the flag they resemble: a message only
+  shows as read, starred or answered when the server sets the real flag.
+  Message text passes through untouched.
+
+- **Added: events and tasks from selected text** (#637, requested by
+  adri99-net). With text selected in the reader, the right-click menu offers
+  **Create Event from Selection…** and **Create Task from Selection…**. The
+  dialog starts from the date, start and end times, or range of days written
+  in the selection ("Friday at 3pm", "Nov 20-22", "20/11, 14:00-15:30"),
+  takes a short selection without its date as the title, and puts the
+  selection in the notes. A day without a time makes an all-day event.
+  Relative words and dates without a year count from the message's date.
+  Month and weekday names are read in English and the desktop's language.
+  The dates are read by fixed rules on this computer, with no language model.
+
+- **Added: smart folders with negative conditions** (#639, requested by
+  3v1n0). A text condition can now be **does not contain**, **is not**,
+  **does not start with** or **does not end with**, and **No attachments**
+  and **Not tagged** join the conditions. A new **Gmail label** condition
+  finds mail by its labels, or with no text any label, so it can also find
+  mail that has none. On Gmail, the copy of a message filed under a label
+  now counts as having it, so "Not tagged Work" leaves out mail under Work.
+
+- **Added: mail can be named by its Reply-To sender** (#641, requested by
+  somepaulo). **Settings → Contacts → Show the Reply-To sender** names a
+  message by the first address in its Reply-To header instead of From, in
+  the message list, the reader and notifications, so a web form's mail
+  shows the person who filled it in. The reader's header follows the name
+  with "via" and the From address. Mail from your own accounts, and mail
+  whose Reply-To repeats From, keep their sender. Off by default. A search
+  for a sender now also finds the Reply-To name and address.
+
+- **Changed: contacts move to another address book from a dialog.**
+  **Move to Address Book…** in a contact's right-click menu, in the menu of
+  several selected together, and **Move to…** in their pane open a dialog
+  that lists the books they can go to, each under its account; one picked
+  and **Move** pressed, they move, with no second question. It replaces the
+  submenus of book names, and needs no address books in the sidebar to drag
+  onto. The menu item stays in the menu, unavailable, when there is no other
+  book to go to.
+
+- **Translations:** German (PRs #668 and #674 by Samuel Edlmeier),
+  complete. Russian (PR #670 by Ilya Semenkovich), 2564 of 2566 strings
+  translated.
+
+## 1.48.4 — 2026-11-17
+
+A patch release with one fix: sending a message no longer runs the system
+out of memory on the NVIDIA driver.
+
+- **Fixed: sending a new message could run the system out of memory on
+  NVIDIA** (#669, reported by glw907). The composer that covers the reader
+  slid in and out by stretching instead of moving: on the last frames of
+  its slide its editor was millions of pixels tall, and WebKit made a
+  drawing surface that size. On the proprietary NVIDIA driver that surface
+  fell back to shared memory, about 30 GB for one send. The composer now
+  keeps the pane's size and moves over it, and its WebView stays the same
+  size throughout.
+
+## 1.48.3 — 2026-11-16
+
+A patch release with three fixes and a French update: contacts moved to a
+Nextcloud address book leave the Hylki book, shared mailboxes nest under
+their parents in the Folders tree, and address book names show whole in
+their dropdowns.
+
+- **Fixed: contacts moved to a Nextcloud book stayed in the Hylki book**
+  (#652, reported by 7system7). Evolution Data Server keeps a server's
+  address book read-only for a moment after it opens, until it has
+  connected, and refuses every write in that time with "Permission
+  denied". When no other app held the book open, a move, copy or edit into
+  it failed that way, so moved contacts stayed where they were and showed
+  again beside the next import. A write now waits up to 10 seconds for its
+  book to become writable, and a book gets 5 seconds before it counts as
+  read-only, so a Nextcloud book that had not been opened yet is no longer
+  missing from the books contacts can go to.
+
+- **Fixed: shared mailboxes drew at the top of Folders with no parent**
+  (#664, by Peter Hagen). On Dovecot servers, mailcow among them, a shared
+  mailbox such as `Shared/user@dom/INBOX` showed as a lone "Inbox", because
+  the levels above it cannot be opened and the server lists them as
+  containers only. The Folders tree now draws those levels as rows of their
+  own, so the mailbox nests as Shared, then user@dom, then INBOX. The rows
+  fold like any parent but cannot be selected, dragged, dropped into or
+  right-clicked. Gmail's own `[Gmail]` container is left out, so its labels
+  stay where they were.
+
+- **Fixed: address book names cut off in their dropdowns** (#663, by Peter
+  Hagen). Settings → Contacts → **Save new contacts in** and the **Address
+  book** row of the contact and group editors now list every book's name
+  whole, so two books of one CardDAV account that share a long prefix can be
+  told apart. The row's own value keeps its width and shows the whole name as
+  a tooltip. The address book picker above the contact list shows the
+  checkmark on the picked book, like the others.
+
+- **Translations:** French (PR #660 by frenchy82), 2498 of 2503 strings
+  translated.
+
 ## 1.49.0-beta.1 — 2026-11-15
 
 - **Added: the message source opens in the reader, with find**
