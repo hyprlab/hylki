@@ -514,10 +514,7 @@ impl Children {
         // Built here (not in the model literal) because the contacts page
         // mounts it over its detail pane at launch.
         let contacts_compose_revealer = {
-            let r = gtk::Revealer::new();
-            r.set_transition_type(gtk::RevealerTransitionType::SlideDown);
-            r.set_transition_duration(300);
-            r.set_reveal_child(false);
+            let r = crate::ui::cover_slot::new();
             r.set_can_target(false);
             r
         };

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Fixed: sending a new message could run the system out of memory on
+  NVIDIA** (#669, reported by glw907). The composer that covers the reader
+  slid in and out by stretching instead of moving: on the last frames of
+  its slide its editor was millions of pixels tall, and WebKit made a
+  drawing surface that size. On the proprietary NVIDIA driver that surface
+  fell back to shared memory, about 30 GB for one send. The composer now
+  keeps the pane's size and moves over it, and its WebView stays the same
+  size throughout.
+
 - **Added: events and tasks from selected text** (#637, requested by
   adri99-net). With text selected in the reader, the right-click menu offers
   **Create Event from Selection…** and **Create Task from Selection…**. The
