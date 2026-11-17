@@ -19,6 +19,7 @@ mod contact_tree;
 pub(crate) mod contacts_browser;
 pub(crate) mod contacts_page;
 pub(crate) mod context_menu;
+pub(crate) mod cover_slot;
 pub(crate) mod dialog;
 pub(crate) mod drag_card;
 pub(crate) mod drop_zones;

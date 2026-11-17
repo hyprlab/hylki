@@ -380,7 +380,7 @@ impl AppModel {
         let widget = controller.widget();
         widget.set_vexpand(true);
         let slot = self.compose_slot();
-        slot.set_child(Some(widget));
+        crate::ui::cover_slot::set_child(slot, Some(widget.upcast_ref()));
         slot.set_can_target(true);
         // Revealed a frame later: starting the transition in the same
         // cycle the child was set finds it unmapped, and the slide is
