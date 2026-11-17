@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Added: tooltips for cut subjects and previews** (#673, requested by
+  3v1n0). Hovering a subject or preview that the message list cuts short
+  shows its whole text in a tooltip: the full subject, and all of the
+  preview Hylki keeps for the message, a few hundred characters. Text that
+  fits shows no tooltip.
+
 - **Added: Light / Dark Mode switch in the composer** (#671, by Fabio
   Rotondo). The editor's toolbar has the switch the reader has. It shows the
   text being written, its source and its preview in the other scheme, for
