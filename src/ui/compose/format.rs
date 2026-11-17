@@ -7,7 +7,7 @@ use crate::config::ComposeFormat;
 use crate::i18n::{i18n, i18n_f};
 use crate::ui::context_menu::show_context_menu;
 use crate::ui::context_menu::MenuEntry;
-use crate::ui::rich_editor::SourceKind;
+use crate::ui::rich_editor::{RichEditor, SourceKind};
 use adw::prelude::*;
 use relm4::prelude::*;
 
@@ -97,6 +97,58 @@ pub(super) fn zoom_chip(sender: &ComponentSender<Compose>) -> gtk::Label {
     chip.add_controller(click);
     show_zoom(&chip, session_zoom());
     chip
+}
+
+/// The Light / Dark Mode switch for the editor: the same control the reader
+/// has for one message, here for the text surface of this composer alone.
+/// On while the editor is drawn opposite the system's scheme; the message
+/// that is sent carries no scheme, so it is never affected. Hidden when the
+/// reader's switch is hidden in Settings, which hides both.
+pub(super) fn theme_switch(editor: &RichEditor) -> gtk::Box {
+    let bx = gtk::Box::new(gtk::Orientation::Horizontal, 6);
+    bx.set_valign(gtk::Align::Center);
+    bx.add_css_class("reader-toggle");
+    bx.set_tooltip_text(Some(
+        i18n("Show the editor in light or dark mode. The message that is sent is not affected.")
+            .as_str(),
+    ));
+    bx.set_visible(crate::config::load_privacy().theme_switch);
+    let icon = gtk::Image::from_icon_name("highlights-symbolic");
+    icon.add_css_class("dim-label");
+    bx.append(&icon);
+    let sw = gtk::Switch::new();
+    sw.set_valign(gtk::Align::Center);
+    sw.update_property(&[gtk::accessible::Property::Label(&i18n("Light / Dark Mode"))]);
+    bx.append(&sw);
+
+    let system_dark = || adw::StyleManager::default().is_dark();
+    let ed = editor.clone();
+    sw.connect_active_notify(move |sw| {
+        let on = sw.is_active();
+        // Setting it to what is already shown (a system theme change) does
+        // nothing.
+        if (ed.is_dark() != system_dark()) == on {
+            return;
+        }
+        ed.set_dark_pick(on.then(|| !system_dark()));
+    });
+    // A system flip moves the opposite scheme with it, so the switch reads
+    // off once the editor and the system agree. The handler goes with the
+    // switch.
+    let weak = sw.downgrade();
+    let ed = editor.clone();
+    let id = adw::StyleManager::default().connect_dark_notify(move |sm| {
+        if let Some(sw) = weak.upgrade() {
+            sw.set_active(ed.is_dark() != sm.is_dark());
+        }
+    });
+    let id = std::cell::Cell::new(Some(id));
+    bx.connect_destroy(move |_| {
+        if let Some(id) = id.take() {
+            adw::StyleManager::default().disconnect(id);
+        }
+    });
+    bx
 }
 
 pub(super) fn show_zoom(chip: &gtk::Label, zoom: u32) {

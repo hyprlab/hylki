@@ -39,7 +39,7 @@ mod types;
 
 use cloud::not_signed_in;
 pub(crate) use format::forget_zoom;
-use format::{markdown_body, session_zoom, zoom_chip, SHOWCASE_PLAIN_LOG};
+use format::{markdown_body, session_zoom, theme_switch, zoom_chip, SHOWCASE_PLAIN_LOG};
 use host::{fold_on_first_map, pgp_tooltip, set_toggle_icon, size_for_host, COMPOSE_MIN_WIDTH};
 pub(crate) use keys::composer_key;
 pub(crate) use messages::{ComposeInput, ComposeOutput};
@@ -488,6 +488,7 @@ impl Component for Compose {
         editor.set_zoom(session_zoom());
         let zoom_chip = zoom_chip(&sender);
         editor.toolbar_end().prepend(&zoom_chip);
+        editor.toolbar_end().prepend(&theme_switch(&editor));
         {
             let s = sender.input_sender().clone();
             editor.widget.add_controller(super::ctrl_scroll_zoom(

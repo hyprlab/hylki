@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Added: Light / Dark Mode switch in the composer.** The editor's toolbar
+  gets the same switch the reader has: it draws the text you are writing in
+  the other scheme, for that composer alone, and the preview follows. The
+  message that is sent is not affected. It is hidden along with the
+  reader's switch in Settings.
+
 - **Added: events and tasks from selected text** (#637, requested by
   adri99-net). With text selected in the reader, the right-click menu offers
   **Create Event from Selection…** and **Create Task from Selection…**. The
