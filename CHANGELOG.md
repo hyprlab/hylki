@@ -176,6 +176,10 @@
   the About dialog, opened from a **Credits** row under **Release Notes**,
   instead of over sixty rows on its main page.
 
+- **Translations:** German (PRs #668 and #674 by Samuel Edlmeier),
+  complete. Russian (PR #670 by Ilya Semenkovich), 2564 of 2566 strings
+  translated.
+
 ## 1.48.4 — 2026-11-17
 
 A patch release with one fix: sending a message no longer runs the system
@@ -227,8 +231,7 @@ their dropdowns.
   checkmark on the picked book, like the others.
 
 - **Translations:** French (PR #660 by frenchy82), 2498 of 2503 strings
-  translated. German (PRs #668 and #674 by Samuel Edlmeier), complete.
-  Russian (PR #670 by Ilya Semenkovich), complete.
+  translated.
 
 ## 1.48.2 — 2026-11-15
 
