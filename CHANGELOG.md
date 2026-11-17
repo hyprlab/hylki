@@ -2,15 +2,6 @@
 
 ## Unreleased
 
-- **Fixed: sending a new message could run the system out of memory on
-  NVIDIA** (#669, reported by glw907). The composer that covers the reader
-  slid in and out by stretching instead of moving: on the last frames of
-  its slide its editor was millions of pixels tall, and WebKit made a
-  drawing surface that size. On the proprietary NVIDIA driver that surface
-  fell back to shared memory, about 30 GB for one send. The composer now
-  keeps the pane's size and moves over it, and its WebView stays the same
-  size throughout.
-
 - **Added: events and tasks from selected text** (#637, requested by
   adri99-net). With text selected in the reader, the right-click menu offers
   **Create Event from Selection…** and **Create Task from Selection…**. The
@@ -162,6 +153,20 @@
 - **Changed: the contributors and translators are on a Credits page** of
   the About dialog, opened from a **Credits** row under **Release Notes**,
   instead of over sixty rows on its main page.
+
+## 1.48.4 — 2026-11-17
+
+A patch release with one fix: sending a message no longer runs the system
+out of memory on the NVIDIA driver.
+
+- **Fixed: sending a new message could run the system out of memory on
+  NVIDIA** (#669, reported by glw907). The composer that covers the reader
+  slid in and out by stretching instead of moving: on the last frames of
+  its slide its editor was millions of pixels tall, and WebKit made a
+  drawing surface that size. On the proprietary NVIDIA driver that surface
+  fell back to shared memory, about 30 GB for one send. The composer now
+  keeps the pane's size and moves over it, and its WebView stays the same
+  size throughout.
 
 ## 1.48.3 — 2026-11-16
 

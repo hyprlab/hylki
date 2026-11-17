@@ -74,6 +74,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.48.4" date="2026-11-17">
+      <description>
+        <p>Sending a message no longer runs the system out of memory on the NVIDIA driver.</p>
+      </description>
+    </release>
     <release version="1.48.3" date="2026-11-16">
       <description>
         <p>Contacts moved to a Nextcloud address book leave the Hylki book, shared mailboxes nest under their parents in the Folders tree and address book names show whole in their dropdowns.</p>
