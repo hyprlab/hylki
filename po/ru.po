@@ -271,6 +271,12 @@ msgstr "Вернуться к Моим шрифтам и цветам"
 msgid "Show Sender's Fonts and Colors"
 msgstr "Показать шрифты и цвета отправителя"
 
+msgid "Create Event from Selection…"
+msgstr "Создать событие из выделенного текста…"
+
+msgid "Create Task from Selection…"
+msgstr "Создать задачу из выделенного текста…"
+
 msgid "View Source"
 msgstr "Просмотр исходного кода"
 
@@ -1907,6 +1913,15 @@ msgstr "Найти в сообщении (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "Загрузка вложений…"
 
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr "сегодня"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr "завтра"
+
 msgid "Signature"
 msgstr "Подпись"
 
@@ -3178,11 +3193,32 @@ msgstr "Читать"
 msgid "Has attachments"
 msgstr "Есть вложения"
 
+msgid "No attachments"
+msgstr "Нет вложений"
+
 msgid "Tagged"
 msgstr "с тегами"
 
+msgid "Not tagged"
+msgstr "Без тега"
+
+msgid "Gmail label"
+msgstr "Ярлык Gmail"
+
 msgid "Message preview"
 msgstr "Предварительный просмотр сообщения"
+
+msgid "does not contain"
+msgstr "не содержит"
+
+msgid "is not"
+msgstr "не равно"
+
+msgid "does not start with"
+msgstr "не начинается с"
+
+msgid "does not end with"
+msgstr "не заканчивается на"
 
 msgid "Edit Smart Folder"
 msgstr "Редактировать смарт-папку"
@@ -3198,6 +3234,9 @@ msgstr "Папки"
 
 msgid "Any tag"
 msgstr "Любой тег"
+
+msgid "With no text, any label matches."
+msgstr "Если поле пустое, подходит любой ярлык."
 
 msgid "The preview each message has in the list"
 msgstr "Предварительный просмотр каждого сообщения в списке"
@@ -4684,6 +4723,9 @@ msgstr "Показать имена из контактов"
 msgid "Saved addresses show the contact's name, not the mail's."
 msgstr "В сохраненных адресах отображается имя контакта, а не почта."
 
+msgid "Show the Reply-To sender"
+msgstr "Показывать отправителя из поля «Кому ответить»"
+
 msgid "Layout"
 msgstr "Разметка"
 
@@ -5394,6 +5436,7 @@ msgstr "Отметить все как непрочитанные"
 
 msgid "This Account (Except Trash & Junk)"
 msgstr "Эта учётная запись (кроме «Корзины» и «Спама»)"
+
 msgid "All folders (except trash & junk)"
 msgstr "Все папки (кроме корзины и нежелательной почты)"
 
@@ -5810,6 +5853,11 @@ msgstr "Создать новое сообщение на основе копи�
 
 msgid "Save…"
 msgstr "Сохранить…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+msgid "via {sender}"
+msgstr "через {sender}"
 
 msgid "Translating…"
 msgstr "Перевод…"
