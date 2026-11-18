@@ -8301,6 +8301,11 @@ msgstr "Ta wiadomość nie zawiera pliku kalendarza do otwarcia."
 msgid "Could not load conversation: {e}"
 msgstr "Nie udało się wczytać rozmowy: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "Wysłano wiadomość, ale nie udało się jej zapisać w katalogu „Wysłane”: {e}"

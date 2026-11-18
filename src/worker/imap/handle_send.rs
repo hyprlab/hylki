@@ -111,7 +111,11 @@ impl<E: Emit> ImapWorker<E> {
                     message.from_alias.as_deref(),
                 );
                 let sess = ensured(session);
-                match file_sent_copy(sess, reply.as_deref(), sent_path.as_deref(), &raw).await {
+                // Whether a copy of the message exists somewhere other than
+                // the draft it was written in, which is deleted next.
+                let kept = match file_sent_copy(sess, reply.as_deref(), sent_path.as_deref(), &raw)
+                    .await
+                {
                     Ok(Some(path)) => {
                         index_sent_copy(
                             account_id,
@@ -123,25 +127,48 @@ impl<E: Emit> ImapWorker<E> {
                             emit,
                         )
                         .await;
+                        true
                     }
-                    Ok(None) => {}
-                    Err(e) => emit(WorkerEvent::error(i18n_f(
-                        "Message sent, but saving to Sent failed: {e}",
-                        &[("e", &(e).to_string())],
-                    ))),
-                }
+                    Ok(None) => true,
+                    Err(e) => {
+                        // The message went, so it is not the Outbox's: keep
+                        // the copy for the next connection to file (#678).
+                        let e = e.to_string();
+                        let held = cache.as_ref().is_some_and(|c| {
+                            c.queue_sent_copy(
+                                account_id,
+                                &raw,
+                                reply.as_deref(),
+                                sent_path.as_deref(),
+                                &e,
+                            )
+                            .is_some()
+                        });
+                        emit(WorkerEvent::error(if held {
+                            i18n_f(
+                                "Message sent, but saving it to Sent failed: {e}. A copy is kept and saved there when Hylki next connects.",
+                                &[("e", &e)],
+                            )
+                        } else {
+                            i18n_f("Message sent, but saving to Sent failed: {e}", &[("e", &e)])
+                        }));
+                        held
+                    }
+                };
                 // If sending an edited draft (from this account), remove the
-                // now-obsolete draft and refresh the Drafts folder.
-                if let Some(o) = message.draft_origin.clone() {
+                // now-obsolete draft and refresh the Drafts folder. With no
+                // copy kept anywhere, the draft is the only one left.
+                if let Some(o) = message.draft_origin.clone().filter(|_| kept) {
                     if o.account_id == account_id {
-                        {
-                            // Not `ensured`: index_sent_copy above can leave
-                            // the session `None`, and this then panics (a
-                            // suspected bug kept as it is, B1 in the notes).
-                            let sess = session.as_mut().unwrap();
-                            let _ = delete_draft(sess, &o.path, o.uid).await;
-                        }
-                        if let Some(c) = cache.as_ref() {
+                        // index_sent_copy above can leave the session `None`
+                        // when its listing fails. The draft then stays in
+                        // Drafts, where unwrapping used to panic the worker
+                        // after the message had gone.
+                        let deleted = match session.as_mut() {
+                            Some(sess) => delete_draft(sess, &o.path, o.uid).await.is_ok(),
+                            None => false,
+                        };
+                        if let (true, Some(c)) = (deleted, cache.as_ref()) {
                             c.delete_message(account_id, &o.path, o.uid);
                         }
                         if let Ok(messages) = load_messages_retry(

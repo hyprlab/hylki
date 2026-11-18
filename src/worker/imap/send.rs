@@ -89,6 +89,7 @@ pub(in crate::worker) async fn flush_outbox(
     loud: bool,
 ) {
     let Some(cache) = cache else { return };
+    file_pending_sent_copies(cache, account_id, account, session, use_envelope, emit).await;
     let items = due_outbox_items(cache, account_id, id);
     if items.is_empty() {
         return;
@@ -158,7 +159,16 @@ pub(in crate::worker) async fn flush_outbox(
                             .await;
                         }
                         Ok(None) => {}
-                        Err(e) => tracing::warn!("outbox: sent, but saving the copy failed: {e}"),
+                        Err(e) => {
+                            tracing::warn!("outbox: sent, but saving the copy failed: {e}");
+                            cache.queue_sent_copy(
+                                account_id,
+                                &copy,
+                                reply.as_deref(),
+                                dest.as_deref(),
+                                &e.to_string(),
+                            );
+                        }
                     }
                 }
             }
@@ -199,6 +209,54 @@ pub(in crate::worker) async fn flush_outbox(
         emit(WorkerEvent::Sent);
     }
     emit_outbox(Some(cache), account_id, emit);
+}
+
+/// File the copies of sent messages that the server refused earlier (#678),
+/// oldest first. One that fails again stays for the next connection; the
+/// user was told when the send happened, so a retry is quiet.
+async fn file_pending_sent_copies(
+    cache: &Cache,
+    account_id: u32,
+    account: &AccountConfig,
+    session: &mut Option<ImapSession>,
+    use_envelope: &mut bool,
+    emit: &impl Fn(WorkerEvent),
+) {
+    for copy in cache.pending_sent_copies(account_id) {
+        let Some(sess) = session.as_mut() else { return };
+        match file_sent_copy(
+            sess,
+            copy.reply_path.as_deref(),
+            copy.sent_path.as_deref(),
+            &copy.raw,
+        )
+        .await
+        {
+            Ok(path) => {
+                cache.delete_sent_copy(copy.id);
+                if let Some(path) = path {
+                    index_sent_copy(
+                        account_id,
+                        session,
+                        account,
+                        &path,
+                        use_envelope,
+                        Some(cache),
+                        emit,
+                    )
+                    .await;
+                }
+            }
+            Err(e) => {
+                tracing::warn!(
+                    "[account {account_id}] the sent copy kept since {} attempts still could not be saved: {e}",
+                    copy.attempts
+                );
+                cache.record_sent_copy_failure(copy.id, &e.to_string());
+                return;
+            }
+        }
+    }
 }
 
 pub(super) async fn append_to_sent(
@@ -295,4 +353,73 @@ pub(super) async fn delete_draft(
         .await;
     let _: Vec<u32> = expunge_all(session).await?.try_collect().await?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A sent copy the server refused is kept, and filed by the next
+    /// connection once the folder takes it (#678). Run against a test
+    /// server only: `IMAP_LIVE=host,port,user,password`.
+    #[test]
+    #[ignore]
+    fn live_a_refused_sent_copy_is_filed_later() {
+        use crate::worker::imap::connect::connect;
+        use crate::worker::imap::wire::{box_status, create_box, delete_box};
+        use crate::worker::test_support::sample_account;
+
+        let Ok(spec) = std::env::var("IMAP_LIVE") else {
+            return;
+        };
+        let p: Vec<&str> = spec.splitn(4, ',').collect();
+        let account = AccountConfig {
+            imap_host: p[0].into(),
+            imap_port: p[1].parse().expect("port"),
+            username: p[2].into(),
+            password: p[3].into(),
+            security: Some(crate::config::ServerSecurity {
+                imap_starttls: false,
+                imap_accept_invalid_certs: true,
+                ..Default::default()
+            }),
+            ..sample_account()
+        };
+        let folder = format!("SentCopy-{}", std::process::id());
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap();
+        rt.block_on(async {
+            let cache = Cache::in_memory().unwrap();
+            let mut session = Some(connect(&account).await.expect("connect"));
+            let raw =
+                b"From: me@example.test\r\nTo: ada@example.test\r\nSubject: Kept\r\n\r\nText\r\n";
+            let id = cache
+                .queue_sent_copy(1, raw, None, Some(&folder), "first try")
+                .expect("kept");
+            let mut use_envelope = true;
+            let emit = |_: WorkerEvent| {};
+
+            // The folder does not exist yet: the copy stays.
+            file_pending_sent_copies(&cache, 1, &account, &mut session, &mut use_envelope, &emit)
+                .await;
+            let kept = cache.pending_sent_copies(1);
+            assert_eq!(kept.len(), 1);
+            assert_eq!((kept[0].id, kept[0].attempts), (id, 2));
+
+            create_box(session.as_mut().unwrap(), &folder)
+                .await
+                .expect("create");
+            file_pending_sent_copies(&cache, 1, &account, &mut session, &mut use_envelope, &emit)
+                .await;
+            assert!(cache.pending_sent_copies(1).is_empty());
+            let sess = session.as_mut().expect("still connected");
+            let status = box_status(sess, &folder, "(MESSAGES)")
+                .await
+                .expect("status");
+            assert_eq!(status.exists, 1);
+            delete_box(sess, &folder).await.expect("delete");
+        });
+    }
 }

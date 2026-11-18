@@ -7932,6 +7932,11 @@ msgstr "Ce message a été déplacé ou supprimé sur le serveur."
 msgid "Could not load conversation: {e}"
 msgstr "Impossible de charger la conversation : {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Message envoyé, mais l’enregistrement dans Envoyés a échoué : {e}"
 

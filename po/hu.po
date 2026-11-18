@@ -8235,6 +8235,11 @@ msgstr "Ez az üzenet nem tartalmaz megnyitható naptárfájlt."
 msgid "Could not load conversation: {e}"
 msgstr "A beszélgetés nem tölthető be: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Az üzenet elküldve, de az Elküldött mappába mentés sikertelen: {e}"
 

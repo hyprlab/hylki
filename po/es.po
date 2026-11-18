@@ -7926,6 +7926,11 @@ msgstr "El mensaje es demasiado largo para el servidor."
 msgid "Could not load conversation: {e}"
 msgstr "No se pudo cargar la conversación: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Mensaje enviado, pero no se pudo guardar en Enviados: {e}"
 

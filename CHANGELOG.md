@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: a sent message could be left with no copy** (#678). When the
+  server would not take the copy into Sent, Hylki showed an error but kept
+  nothing, and deleted the message's draft as after any send. The copy is
+  now kept on this computer and saved to Sent when Hylki next connects, and
+  the draft stays if the copy cannot be kept. The account's connection also
+  no longer panics when it drops right after an edited draft is sent.
+
 - **Fixed: replies sent from another computer joined their conversation
   only after Sent was opened** (#675). Hylki listed Sent at startup and
   when it was opened, so a reply sent elsewhere later stayed out of the

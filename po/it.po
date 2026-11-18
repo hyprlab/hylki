@@ -8177,6 +8177,11 @@ msgstr "Questo messaggio è troppo lungo per essere inviato per la traduzione."
 msgid "Could not load conversation: {e}"
 msgstr "Impossibile caricare la conversazione: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Messaggio inviato, ma il salvataggio negli Inviati non è riuscito: {e}"
 

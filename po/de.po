@@ -7949,6 +7949,11 @@ msgstr "Nachricht auf dem Server verschoben oder gelöscht."
 msgid "Could not load conversation: {e}"
 msgstr "Konnte die Unterhaltung nicht laden: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "Nachricht gesendet, aber Speichern im Ordner »Gesendet« fehlgeschlagen: {e}"

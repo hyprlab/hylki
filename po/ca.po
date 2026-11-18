@@ -8001,6 +8001,11 @@ msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
 msgid "Could not load conversation: {e}"
 msgstr "No s'ha pogut carregar la conversa: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Missatge enviat, però desar-lo a Enviats ha fallat: {e}"
 

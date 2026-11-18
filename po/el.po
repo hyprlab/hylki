@@ -7987,6 +7987,11 @@ msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τ
 msgid "Could not load conversation: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση της συζήτησης: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Το μήνυμα στάλθηκε, αλλά η αποθήκευση στα Απεσταλμένα απέτυχε: {e}"
 

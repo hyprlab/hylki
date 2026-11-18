@@ -7301,6 +7301,11 @@ msgstr ""
 msgid "Could not load conversation: {e}"
 msgstr ""
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 

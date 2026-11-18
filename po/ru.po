@@ -7904,6 +7904,11 @@ msgstr "Это сообщение было перемещено или удал�
 msgid "Could not load conversation: {e}"
 msgstr "Не удалось загрузить обсуждение: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "Сообщение отправлено, но сохранить его в «Отправленные» не удалось: {e}"

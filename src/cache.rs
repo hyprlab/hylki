@@ -25,6 +25,7 @@ mod open;
 mod outbox;
 mod pgp_peers;
 mod schema;
+mod sent_copies;
 mod smart;
 mod text_index;
 mod thread_members;
