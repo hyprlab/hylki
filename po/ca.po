@@ -681,6 +681,13 @@ msgstr "No hi ha esborranys per continuar."
 msgid "Attach to This Draft"
 msgstr "Adjunta-ho a aquest esborrany"
 
+#, fuzzy
+msgid "Message discarded"
+msgstr "Cos del missatge"
+
+msgid "Undo"
+msgstr "Desfés"
+
 msgid "No Drafts folder available for this account"
 msgstr "No hi ha cap carpeta d'esborranys disponible per a aquest compte"
 
@@ -1268,6 +1275,9 @@ msgstr "Mostra la barra d'estat (també: mantén premut Actualitza)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Mostra o amaga els comptes a la barra lateral"
 
+msgid "Check for new mail"
+msgstr "Comprova si hi ha correu nou"
+
 msgid "Focus Mode on or off"
 msgstr "Activa o desactiva el mode d'enfocament"
 
@@ -1387,9 +1397,6 @@ msgstr "Reenvia en una finestra"
 msgid "Compose in a window"
 msgstr "Redacta en una finestra"
 
-msgid "Check for new mail"
-msgstr "Comprova si hi ha correu nou"
-
 msgid "Action"
 msgstr "Acció"
 
@@ -1416,9 +1423,6 @@ msgstr "Mou a una carpeta"
 
 msgid "Open Message File…"
 msgstr "Obre un fitxer de missatge…"
-
-msgid "Undo"
-msgstr "Desfés"
 
 msgid "Redo"
 msgstr "Refés"

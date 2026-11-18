@@ -3,6 +3,7 @@
 
 use super::messages::ComposeInput;
 use super::messages::ComposeOutput;
+use super::messages::OutgoingFields;
 use super::suggest::field_row;
 use super::types::ComposePrefill;
 use super::types::Field;
@@ -122,6 +123,7 @@ fn confirm_discard_dialog(
     dialog.connect_response(None, move |_, resp| {
         let _ = sender.send(match resp {
             "save" => ComposeInput::SaveDraft,
+            "discard" if !template => ComposeInput::DiscardWritten,
             "discard" => ComposeInput::Discard,
             _ => ComposeInput::KeepEditing,
         });
@@ -200,6 +202,40 @@ impl Compose {
                 let _ = sender.output(ComposeOutput::Close(self.compose_id));
             }
         }
+    }
+
+    /// Handles [`ComposeInput::DiscardWritten`]: the message is read as it
+    /// stands, then discarded.
+    pub(super) fn on_discard_written(
+        &mut self,
+        widgets: &ComposeWidgets,
+        sender: &ComponentSender<Self>,
+    ) {
+        self.stop_autosave();
+        let fields = self.draft_fields(widgets);
+        let s = sender.clone();
+        self.read_body_as(self.format, false, move |html, text| {
+            s.input_sender()
+                .emit(ComposeInput::DiscardWrittenBody(OutgoingFields {
+                    html,
+                    text,
+                    ..fields.clone()
+                }));
+        });
+    }
+
+    /// Handles [`ComposeInput::DiscardWrittenBody`]. The draft an automatic
+    /// save made goes with the discard, so the message the app keeps comes
+    /// back as a new one.
+    pub(super) fn on_discard_written_body(
+        &mut self,
+        fields: OutgoingFields,
+        sender: &ComponentSender<Self>,
+    ) {
+        let mut message = self.outgoing_message(fields);
+        message.draft_origin = None;
+        let _ = sender.output(ComposeOutput::Discarded(Box::new(message)));
+        self.on_discard(sender);
     }
 
     /// Handles [`ComposeInput::FocusField`].

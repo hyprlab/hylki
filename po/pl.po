@@ -691,6 +691,13 @@ msgstr "Brak szkiców do kontynuowania."
 msgid "Attach to This Draft"
 msgstr "Dołącz do tego szkicu"
 
+#, fuzzy
+msgid "Message discarded"
+msgstr "Czcionka wiadomości"
+
+msgid "Undo"
+msgstr "Cofnij"
+
 msgid "No Drafts folder available for this account"
 msgstr "To konto nie ma katalogu szkiców"
 
@@ -1322,6 +1329,9 @@ msgstr "Wyświetl pasek stanu (lub przytrzymaj przycisk odświeżania)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Wyświetl lub ukryj konta w panelu bocznym"
 
+msgid "Check for new mail"
+msgstr "Sprawdzanie nowej poczty"
+
 msgid "Focus Mode on or off"
 msgstr "Włącz lub wyłącz tryb skupienia"
 
@@ -1462,9 +1472,6 @@ msgstr "Odpowiadanie i przekazywanie w oknie głównym"
 msgid "Compose in a window"
 msgstr "Pisanie w oknie głównym"
 
-msgid "Check for new mail"
-msgstr "Sprawdzanie nowej poczty"
-
 #, fuzzy
 msgid "Action"
 msgstr "Działania"
@@ -1498,9 +1505,6 @@ msgstr "Przenieś katalog"
 #, fuzzy
 msgid "Open Message File…"
 msgstr "Drukuj wiadomość…"
-
-msgid "Undo"
-msgstr "Cofnij"
 
 msgid "Redo"
 msgstr "Ponów"

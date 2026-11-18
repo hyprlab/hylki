@@ -17,6 +17,10 @@ use super::model::AppModel;
 use super::msg::AppMsg;
 use super::picker::show_message_picker;
 
+/// How long Undo stays on offer after a discard: longer than a toast's
+/// usual few seconds, as the message is gone for good once it ends.
+const UNDO_DISCARD_SECS: u32 = 15;
+
 impl AppModel {
     /// Every template the app knows, under its account's name.
     fn template_choices(&self) -> Vec<(Message, String)> {
@@ -262,6 +266,29 @@ impl AppModel {
         out
     }
 
+    /// A written message was discarded (#678): a toast offers it back for
+    /// a while, as Undo Send does for one sent.
+    fn offer_undo_discard(
+        &self,
+        message: crate::worker::OutgoingMessage,
+        sender: &ComponentSender<Self>,
+    ) {
+        let toast = adw::Toast::builder()
+            .title(i18n("Message discarded"))
+            .button_label(i18n("Undo"))
+            .timeout(UNDO_DISCARD_SECS)
+            .build();
+        // Taken by the first click: a second one finds nothing to reopen.
+        let held = std::cell::RefCell::new(Some(message));
+        let s = sender.clone();
+        toast.connect_button_clicked(move |_| {
+            if let Some(m) = held.borrow_mut().take() {
+                s.input(AppMsg::UndoDiscard(Box::new(m)));
+            }
+        });
+        self.show_toast(&toast);
+    }
+
     /// The messages the router sends here (see `AppModel::route`).
     pub(super) fn on_drafts(&mut self, msg: AppMsg, sender: ComponentSender<Self>) {
         match msg {
@@ -353,6 +380,11 @@ impl AppModel {
                         },
                     ),
                 }
+            }
+
+            AppMsg::ComposeDiscarded(message) => self.offer_undo_discard(*message, &sender),
+            AppMsg::UndoDiscard(message) => {
+                self.compose_unsent(message.from_account_id, *message, &sender)
             }
 
             AppMsg::DiscardAutosave { id, origin } => {

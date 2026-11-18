@@ -1018,6 +1018,11 @@ pub(crate) enum AppMsg {
         id: u32,
         origin: crate::models::DraftOrigin,
     },
+    /// A message with something written in it was discarded: Undo is
+    /// offered for a while (#678).
+    ComposeDiscarded(Box<OutgoingMessage>),
+    /// Undo on that offer: the message reopens in a composer.
+    UndoDiscard(Box<OutgoingMessage>),
     /// The composer's Delete Draft: trash the draft it was opened from and
     /// close that composer without saving.
     DeleteDraft {

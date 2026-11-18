@@ -606,6 +606,12 @@ msgstr ""
 msgid "Attach to This Draft"
 msgstr ""
 
+msgid "Message discarded"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
 msgid "No Drafts folder available for this account"
 msgstr ""
 
@@ -1151,6 +1157,9 @@ msgstr ""
 msgid "Show or hide the accounts in the sidebar"
 msgstr ""
 
+msgid "Check for new mail"
+msgstr ""
+
 msgid "Focus Mode on or off"
 msgstr ""
 
@@ -1267,9 +1276,6 @@ msgstr ""
 msgid "Compose in a window"
 msgstr ""
 
-msgid "Check for new mail"
-msgstr ""
-
 msgid "Action"
 msgstr ""
 
@@ -1295,9 +1301,6 @@ msgid "Move to Folder"
 msgstr ""
 
 msgid "Open Message File…"
-msgstr ""
-
-msgid "Undo"
 msgstr ""
 
 msgid "Redo"

@@ -631,6 +631,13 @@ msgstr "Keine Entwürfe, um fortzufahren"
 msgid "Attach to This Draft"
 msgstr "Diesem Entwurf beifügen"
 
+#, fuzzy
+msgid "Message discarded"
+msgstr "Nachricht bereit"
+
+msgid "Undo"
+msgstr "Rückgängig"
+
 msgid "No Drafts folder available for this account"
 msgstr "Für dieses Konto ist kein Entwurfsordner verfügbar."
 
@@ -1215,6 +1222,9 @@ msgstr "Statusleiste anzeigen (auch: Aktualisieren lange drücken)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Konten in der Seitenleiste ein- oder ausblenden"
 
+msgid "Check for new mail"
+msgstr "Auf neue Nachrichten prüfen"
+
 msgid "Focus Mode on or off"
 msgstr "Fokusmodus ein- oder ausschalten"
 
@@ -1333,9 +1343,6 @@ msgstr "In einem eigenen Fenster weiterleiten"
 msgid "Compose in a window"
 msgstr "In einem eigenen Fenster verfassen"
 
-msgid "Check for new mail"
-msgstr "Auf neue Nachrichten prüfen"
-
 msgid "Action"
 msgstr "Aktion"
 
@@ -1362,9 +1369,6 @@ msgstr "In Ordner verschieben"
 
 msgid "Open Message File…"
 msgstr "Nachrichtendatei öffnen…"
-
-msgid "Undo"
-msgstr "Rückgängig"
 
 msgid "Redo"
 msgstr "Wiederholen"

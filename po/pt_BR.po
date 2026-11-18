@@ -646,6 +646,13 @@ msgstr "Não há rascunhos para continuar."
 msgid "Attach to This Draft"
 msgstr "Anexar a este rascunho"
 
+#, fuzzy
+msgid "Message discarded"
+msgstr "Mensagem pronta"
+
+msgid "Undo"
+msgstr "Desfazer"
+
 msgid "No Drafts folder available for this account"
 msgstr "Não existe uma pasta Rascunhos disponível para esta conta"
 
@@ -1225,6 +1232,9 @@ msgstr "Mostrar a barra de status (também: pressionar e segurar Atualizar)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Mostrar ou ocultar as contas na barra lateral"
 
+msgid "Check for new mail"
+msgstr "Procurar novas mensagens"
+
 msgid "Focus Mode on or off"
 msgstr "Ativar ou desativar o modo de foco"
 
@@ -1343,9 +1353,6 @@ msgstr "Encaminhar em uma janela"
 msgid "Compose in a window"
 msgstr "Escrever em uma janela"
 
-msgid "Check for new mail"
-msgstr "Procurar novas mensagens"
-
 msgid "Action"
 msgstr "Ação"
 
@@ -1372,9 +1379,6 @@ msgstr "Mover para uma pasta"
 
 msgid "Open Message File…"
 msgstr "Abrir arquivo de mensagem…"
-
-msgid "Undo"
-msgstr "Desfazer"
 
 msgid "Redo"
 msgstr "Refazer"

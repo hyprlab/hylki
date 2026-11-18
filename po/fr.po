@@ -644,6 +644,13 @@ msgstr "Aucun brouillon à continuer."
 msgid "Attach to This Draft"
 msgstr "Joindre à ce brouillon"
 
+#, fuzzy
+msgid "Message discarded"
+msgstr "Message prêt"
+
+msgid "Undo"
+msgstr "Annuler"
+
 msgid "No Drafts folder available for this account"
 msgstr "Aucun dossier Brouillons disponible pour ce compte"
 
@@ -1227,6 +1234,9 @@ msgstr "Afficher la barre d’état (ou appui long sur Actualiser)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Afficher ou masquer les comptes dans la barre latérale"
 
+msgid "Check for new mail"
+msgstr "Vérifier s’il y a de nouveaux messages"
+
 msgid "Focus Mode on or off"
 msgstr "Activer ou désactiver le mode Focus"
 
@@ -1346,9 +1356,6 @@ msgstr "Transférer dans une fenêtre"
 msgid "Compose in a window"
 msgstr "Rédiger dans une fenêtre"
 
-msgid "Check for new mail"
-msgstr "Vérifier s’il y a de nouveaux messages"
-
 msgid "Action"
 msgstr "Action"
 
@@ -1375,9 +1382,6 @@ msgstr "Déplacer vers un dossier"
 
 msgid "Open Message File…"
 msgstr "Ouvrir un fichier de message…"
-
-msgid "Undo"
-msgstr "Annuler"
 
 msgid "Redo"
 msgstr "Rétablir"

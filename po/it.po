@@ -691,6 +691,13 @@ msgstr "Nessuna bozza da continuare."
 msgid "Attach to This Draft"
 msgstr "Allega a questa bozza"
 
+#, fuzzy
+msgid "Message discarded"
+msgstr "Corpo del messaggio"
+
+msgid "Undo"
+msgstr "Annulla"
+
 msgid "No Drafts folder available for this account"
 msgstr "Nessuna cartella Bozze disponibile per questo account"
 
@@ -1287,6 +1294,9 @@ msgstr "Mostra la barra di stato (anche: tieni premuto Aggiorna)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Mostra o nascondi gli account nella barra laterale"
 
+msgid "Check for new mail"
+msgstr "Controlla nuova posta"
+
 msgid "Focus Mode on or off"
 msgstr "Modalità focus attiva/disattiva"
 
@@ -1424,9 +1434,6 @@ msgstr "Rispondi e inoltra nella finestra principale"
 msgid "Compose in a window"
 msgstr "Componi nella finestra principale"
 
-msgid "Check for new mail"
-msgstr "Controlla nuova posta"
-
 msgid "Action"
 msgstr "Azione"
 
@@ -1454,9 +1461,6 @@ msgstr "Sposta nella cartella"
 
 msgid "Open Message File…"
 msgstr "Apri file messaggio…"
-
-msgid "Undo"
-msgstr "Annulla"
 
 msgid "Redo"
 msgstr "Ripristina"

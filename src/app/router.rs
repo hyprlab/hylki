@@ -303,6 +303,8 @@ impl AppModel {
             | AppMsg::SaveTemplateMessage(..)
             | AppMsg::AutoSaveDraft { .. }
             | AppMsg::DiscardAutosave { .. }
+            | AppMsg::ComposeDiscarded(..)
+            | AppMsg::UndoDiscard(..)
             | AppMsg::DeleteDraft { .. }
             | AppMsg::DraftSaved { .. }) => self.on_drafts(msg, sender),
             msg @ (AppMsg::ShowSettingsPage(..)

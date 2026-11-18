@@ -695,6 +695,13 @@ msgstr "Nincs piszkozat a folytatáshoz."
 msgid "Attach to This Draft"
 msgstr "Csatolás ehhez a piszkozathoz"
 
+#, fuzzy
+msgid "Message discarded"
+msgstr "Üzenet betűtípusa"
+
+msgid "Undo"
+msgstr "Visszavonás"
+
 msgid "No Drafts folder available for this account"
 msgstr "Ehhez a fiókhoz nem érhető el Piszkozatok mappa"
 
@@ -1298,6 +1305,9 @@ msgstr "Állapotsáv megjelenítése (vagy a Frissítés hosszan lenyomva tartá
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Fiókok megjelenítése vagy elrejtése az oldalsávban"
 
+msgid "Check for new mail"
+msgstr "Új levelek keresése"
+
 msgid "Focus Mode on or off"
 msgstr "Fókuszmód be- vagy kikapcsolása"
 
@@ -1439,9 +1449,6 @@ msgstr "Válasz és továbbítás a főablakban"
 msgid "Compose in a window"
 msgstr "Levélírás a főablakban"
 
-msgid "Check for new mail"
-msgstr "Új levelek keresése"
-
 #, fuzzy
 msgid "Action"
 msgstr "Műveletek"
@@ -1475,9 +1482,6 @@ msgstr "Mappa áthelyezése"
 #, fuzzy
 msgid "Open Message File…"
 msgstr "Nyomtatás…"
-
-msgid "Undo"
-msgstr "Visszavonás"
 
 msgid "Redo"
 msgstr "Újra"

@@ -642,6 +642,13 @@ msgstr "No hay borradores que continuar."
 msgid "Attach to This Draft"
 msgstr "Adjuntar a este borrador"
 
+#, fuzzy
+msgid "Message discarded"
+msgstr "Mensaje preparado"
+
+msgid "Undo"
+msgstr "Deshacer"
+
 msgid "No Drafts folder available for this account"
 msgstr "No hay ninguna carpeta de borradores disponible para esta cuenta"
 
@@ -1221,6 +1228,9 @@ msgstr "Mostrar la barra de estado (también: mantener pulsado Actualizar)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Mostrar u ocultar las cuentas en la barra lateral"
 
+msgid "Check for new mail"
+msgstr "Comprobar correo nuevo"
+
 msgid "Focus Mode on or off"
 msgstr "Activar o desactivar el modo de concentración"
 
@@ -1343,9 +1353,6 @@ msgstr "Reenviar en una ventana"
 msgid "Compose in a window"
 msgstr "Redactar en una ventana"
 
-msgid "Check for new mail"
-msgstr "Comprobar correo nuevo"
-
 msgid "Action"
 msgstr "Acción"
 
@@ -1372,9 +1379,6 @@ msgstr "Mover a carpeta"
 
 msgid "Open Message File…"
 msgstr "Abrir archivo de mensaje…"
-
-msgid "Undo"
-msgstr "Deshacer"
 
 msgid "Redo"
 msgstr "Rehacer"

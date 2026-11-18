@@ -682,6 +682,13 @@ msgstr "Δεν υπάρχουν πρόχειρα για συνέχιση."
 msgid "Attach to This Draft"
 msgstr "Επισύναψη σε αυτό το πρόχειρο"
 
+#, fuzzy
+msgid "Message discarded"
+msgstr "Σώμα μηνύματος"
+
+msgid "Undo"
+msgstr "Αναίρεση"
+
 msgid "No Drafts folder available for this account"
 msgstr "Δεν υπάρχει φάκελος Προχείρων για αυτόν τον λογαριασμό"
 
@@ -1259,6 +1266,9 @@ msgstr ""
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Εμφάνιση ή απόκρυψη λογαριασμών στην πλευρική στήλη"
 
+msgid "Check for new mail"
+msgstr "Έλεγχος για νέα μηνύματα"
+
 msgid "Focus Mode on or off"
 msgstr "Ενεργοποίηση ή απενεργοποίηση της Λειτουργίας συγκέντρωσης"
 
@@ -1378,9 +1388,6 @@ msgstr "Προώθηση σε νέο παράθυρο"
 msgid "Compose in a window"
 msgstr "Σύνταξη σε νέο παράθυρο"
 
-msgid "Check for new mail"
-msgstr "Έλεγχος για νέα μηνύματα"
-
 msgid "Action"
 msgstr "Ενέργεια"
 
@@ -1407,9 +1414,6 @@ msgstr "Μετακίνηση σε φάκελο"
 
 msgid "Open Message File…"
 msgstr "Άνοιγμα αρχείου μηνύματος…"
-
-msgid "Undo"
-msgstr "Αναίρεση"
 
 msgid "Redo"
 msgstr "Επανάληψη"

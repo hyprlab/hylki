@@ -630,6 +630,13 @@ msgstr "Нет черновиков для продолжения."
 msgid "Attach to This Draft"
 msgstr "Прикрепить к этому черновику"
 
+#, fuzzy
+msgid "Message discarded"
+msgstr "Сообщение готово"
+
+msgid "Undo"
+msgstr "Отменить"
+
 msgid "No Drafts folder available for this account"
 msgstr "Для этой учётной записи недоступна папка «Черновики»"
 
@@ -1231,6 +1238,9 @@ msgstr "Показать строку состояния (также: удерж
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Показывать или скрывать учётные записи на боковой панели"
 
+msgid "Check for new mail"
+msgstr "Проверка новой почты"
+
 msgid "Focus Mode on or off"
 msgstr "Включить или выключить режим концентрации"
 
@@ -1349,9 +1359,6 @@ msgstr "Вперед в окно"
 msgid "Compose in a window"
 msgstr "Написать в окне"
 
-msgid "Check for new mail"
-msgstr "Проверка новой почты"
-
 msgid "Action"
 msgstr "Действие"
 
@@ -1378,9 +1385,6 @@ msgstr "Переместить в папку"
 
 msgid "Open Message File…"
 msgstr "Открыть файл сообщения…"
-
-msgid "Undo"
-msgstr "Отменить"
 
 msgid "Redo"
 msgstr "Повторить"
