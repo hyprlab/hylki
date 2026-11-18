@@ -136,6 +136,19 @@ CREATE TABLE IF NOT EXISTS outbox (
     send_at     INTEGER,
     forwards    TEXT    NOT NULL DEFAULT ''
 );
+-- A message that went out but whose copy the server would not take into
+-- Sent (#678). Kept until an APPEND succeeds: by then it is the only copy
+-- left, the draft it was written in having been deleted on send.
+CREATE TABLE IF NOT EXISTS sent_copies (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_id  INTEGER NOT NULL,
+    raw         BLOB    NOT NULL,
+    reply_path  TEXT,
+    sent_path   TEXT,
+    queued_at   INTEGER NOT NULL,
+    attempts    INTEGER NOT NULL DEFAULT 1,
+    last_error  TEXT    NOT NULL DEFAULT ''
+);
 CREATE TABLE IF NOT EXISTS attachments_checked (
     account_id  INTEGER NOT NULL,
     folder_path TEXT NOT NULL,
@@ -220,7 +233,7 @@ CREATE TABLE IF NOT EXISTS pgp_peers (
 /// Every table whose rows belong to one account, by `account_id`. An account's
 /// id is its place in the account list, so `Cache::claim_accounts` moves
 /// these rows when the places change.
-pub(super) const ACCOUNT_TABLES: [&str; 14] = [
+pub(super) const ACCOUNT_TABLES: [&str; 15] = [
     "folders",
     "imap_hierarchy",
     "refs_repair",
@@ -230,6 +243,7 @@ pub(super) const ACCOUNT_TABLES: [&str; 14] = [
     "sender_checks",
     "attachments",
     "outbox",
+    "sent_copies",
     "attachments_checked",
     "attachment_meta",
     "attachment_scan",

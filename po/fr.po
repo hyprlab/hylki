@@ -644,6 +644,16 @@ msgstr "Aucun brouillon à continuer."
 msgid "Attach to This Draft"
 msgstr "Joindre à ce brouillon"
 
+msgid "Discard"
+msgstr "Abandonner"
+
+#, fuzzy
+msgid "Message discarded"
+msgstr "Message prêt"
+
+msgid "Undo"
+msgstr "Annuler"
+
 msgid "No Drafts folder available for this account"
 msgstr "Aucun dossier Brouillons disponible pour ce compte"
 
@@ -1227,6 +1237,9 @@ msgstr "Afficher la barre d’état (ou appui long sur Actualiser)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Afficher ou masquer les comptes dans la barre latérale"
 
+msgid "Check for new mail"
+msgstr "Vérifier s’il y a de nouveaux messages"
+
 msgid "Focus Mode on or off"
 msgstr "Activer ou désactiver le mode Focus"
 
@@ -1346,9 +1359,6 @@ msgstr "Transférer dans une fenêtre"
 msgid "Compose in a window"
 msgstr "Rédiger dans une fenêtre"
 
-msgid "Check for new mail"
-msgstr "Vérifier s’il y a de nouveaux messages"
-
 msgid "Action"
 msgstr "Action"
 
@@ -1375,9 +1385,6 @@ msgstr "Déplacer vers un dossier"
 
 msgid "Open Message File…"
 msgstr "Ouvrir un fichier de message…"
-
-msgid "Undo"
-msgstr "Annuler"
 
 msgid "Redo"
 msgstr "Rétablir"
@@ -4208,9 +4215,6 @@ msgstr "Enregistrer le brouillon"
 
 msgid "Keep Editing"
 msgstr "Continuer la modification"
-
-msgid "Discard"
-msgstr "Abandonner"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Téléverser vers un stockage en ligne et partager un lien"
@@ -7932,6 +7936,11 @@ msgstr "Ce message a été déplacé ou supprimé sur le serveur."
 msgid "Could not load conversation: {e}"
 msgstr "Impossible de charger la conversation : {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Message envoyé, mais l’enregistrement dans Envoyés a échoué : {e}"
 
@@ -8010,6 +8019,10 @@ msgstr "Ce n’est pas un nom de dossier"
 
 msgid "Could not store the message: {e}"
 msgstr "Impossible d’enregistrer le message : {e}"
+
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr "Message envoyé, mais l’enregistrement dans Envoyés a échoué : {e}"
 
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Impossible d’ouvrir les dossiers sur cet ordinateur : {e}"
@@ -8653,6 +8666,12 @@ msgstr "Annuler l’envoi"
 
 msgid "How long Undo is offered after sending."
 msgstr "Durée pendant laquelle Annuler est proposé après l’envoi."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr "Demander des accusés de lecture"

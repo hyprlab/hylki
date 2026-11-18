@@ -681,6 +681,16 @@ msgstr "No hi ha esborranys per continuar."
 msgid "Attach to This Draft"
 msgstr "Adjunta-ho a aquest esborrany"
 
+msgid "Discard"
+msgstr "Descarta"
+
+#, fuzzy
+msgid "Message discarded"
+msgstr "Cos del missatge"
+
+msgid "Undo"
+msgstr "Desfés"
+
 msgid "No Drafts folder available for this account"
 msgstr "No hi ha cap carpeta d'esborranys disponible per a aquest compte"
 
@@ -1268,6 +1278,9 @@ msgstr "Mostra la barra d'estat (també: mantén premut Actualitza)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Mostra o amaga els comptes a la barra lateral"
 
+msgid "Check for new mail"
+msgstr "Comprova si hi ha correu nou"
+
 msgid "Focus Mode on or off"
 msgstr "Activa o desactiva el mode d'enfocament"
 
@@ -1387,9 +1400,6 @@ msgstr "Reenvia en una finestra"
 msgid "Compose in a window"
 msgstr "Redacta en una finestra"
 
-msgid "Check for new mail"
-msgstr "Comprova si hi ha correu nou"
-
 msgid "Action"
 msgstr "Acció"
 
@@ -1416,9 +1426,6 @@ msgstr "Mou a una carpeta"
 
 msgid "Open Message File…"
 msgstr "Obre un fitxer de missatge…"
-
-msgid "Undo"
-msgstr "Desfés"
 
 msgid "Redo"
 msgstr "Refés"
@@ -4252,9 +4259,6 @@ msgstr "Desa l'esborrany"
 
 msgid "Keep Editing"
 msgstr "Continua editant"
-
-msgid "Discard"
-msgstr "Descarta"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Puja a l'emmagatzematge al núvol i comparteix un enllaç"
@@ -8001,6 +8005,11 @@ msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
 msgid "Could not load conversation: {e}"
 msgstr "No s'ha pogut carregar la conversa: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Missatge enviat, però desar-lo a Enviats ha fallat: {e}"
 
@@ -8080,6 +8089,10 @@ msgstr "Aquesta carpeta"
 #, fuzzy
 msgid "Could not store the message: {e}"
 msgstr "No s'ha pogut desar el missatge: {e}"
+
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr "Missatge enviat, però desar-lo a Enviats ha fallat: {e}"
 
 #, fuzzy
 msgid "Could not open the folders on this computer: {e}"
@@ -8714,6 +8727,12 @@ msgstr "Desfés l'enviament"
 
 msgid "How long Undo is offered after sending."
 msgstr "Quant de temps s'ofereix desfer després d'enviar."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr ""

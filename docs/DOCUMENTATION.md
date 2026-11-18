@@ -378,6 +378,15 @@ another folder on the server is not copied again. Switching the setting on
 adds On This Computer when there is none. Which messages are copied is
 listed in `hylki-copied/` beside the folders.
 
+#### Copies of sent mail
+
+A POP3 account has no folders on its server, and an IMAP account may have
+no Sent folder. A copy of the mail such an account sends goes to On This
+Computer's Sent folder, and On This Computer is added when there is none.
+With **Server saves its own copy of sent mail** on, no copy is made here.
+When a server's Sent folder refuses the copy, Hylki keeps it and saves it
+there the next time the account connects.
+
 #### Importing from another program
 
 **Settings → Accounts → On This Computer → Import** takes mail from
@@ -1197,6 +1206,13 @@ reply leaves no draft. Each save replaces the one before, and **Save Draft**,
 saved. **Discard** on a new message removes the copy it left; on a draft you
 had saved before, the last automatic save stays. A save that fails, offline
 say, is tried again at the next one, without a message about it.
+
+After **Discard**, **Undo Discard** in the main menu, or Ctrl+Z, opens the
+message again in a composer as it was, as a new message. The last ten
+discarded messages can be brought back this way until Hylki quits. With
+**Settings → Composing → Undo after Discard** on, a notice at the foot of the
+window also offers **Undo** for 15 seconds. A template's changes are
+discarded without it.
 
 ### Undo Send
 
@@ -2731,6 +2747,18 @@ it at the top instead. <kbd>Ctrl+Shift+S</kbd>, or a long press on Refresh,
 shows or hides it. Its buttons are, from the left, **Export log** (while the
 console is open), the console, and the bar's own toggle. Stored as
 `status_bar_top` in `privacy.toml`.
+
+#### The send log
+
+The console holds only what happened since Hylki started. What happens to
+each message written is also kept in `send-log.tsv` in Hylki's data folder
+(`~/.local/share/hylki/`, or `~/.var/app/co.hyprlab.Hylki/data/hylki/` in
+the Flatpak), readable by you alone: Send pressed, Undo Send, sent, not
+sent and why, held in the Outbox, discarded, and where the copy of a sent
+message went. Each line has the time, the account, what happened, the
+subject and the recipients. The file is cut back to its newest half when
+it passes 512 KB. **Export log** includes its last 30 days, without
+subjects and with addresses shortened to their domain.
 
 ## Privacy
 

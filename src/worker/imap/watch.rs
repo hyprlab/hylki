@@ -6,7 +6,7 @@ use std::rc::Rc;
 use std::time::Duration;
 
 use crate::config::AccountConfig;
-use crate::models::FolderKind;
+use crate::models::{Folder, FolderKind};
 use crate::worker::imap::connect::connect;
 use crate::worker::imap::idle::idle_done;
 use crate::worker::imap::sweep::selected_unseen;
@@ -48,14 +48,14 @@ pub(in crate::worker) fn watchable(kind: FolderKind) -> bool {
 pub(super) fn watch_changed_folders(
     watchers: &mut std::collections::HashMap<String, FolderWatch>,
     account: &AccountConfig,
-    changed: &[(FolderKind, String)],
+    changed: &[Folder],
     emit: &(impl Fn(WorkerEvent) + Clone + 'static),
 ) {
     // A sweep claiming more folders moved than the pool could ever hold says
     // nothing about which are hot — that shape is a bulk event (a client
     // reorganizing, a suspect baseline), and admitting them would churn every
     // standing watcher out for nothing. Let the next sweep pick the real ones.
-    if changed.iter().filter(|(k, _)| watchable(*k)).count() > WATCHER_LIMIT {
+    if changed.iter().filter(|f| watchable(f.kind)).count() > WATCHER_LIMIT {
         tracing::info!(
             "sweep: bulk change ({} folders), not adjusting watchers",
             changed.len()
@@ -63,8 +63,8 @@ pub(super) fn watch_changed_folders(
         return;
     }
     let mut stagger = 0;
-    for (kind, path) in changed {
-        if watchable(*kind) && watch_active_folder(watchers, account, path, stagger, emit) {
+    for f in changed {
+        if watchable(f.kind) && watch_active_folder(watchers, account, &f.path, stagger, emit) {
             stagger += 1;
         }
     }

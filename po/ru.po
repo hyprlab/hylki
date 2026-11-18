@@ -630,6 +630,16 @@ msgstr "Нет черновиков для продолжения."
 msgid "Attach to This Draft"
 msgstr "Прикрепить к этому черновику"
 
+msgid "Discard"
+msgstr "Отменить"
+
+#, fuzzy
+msgid "Message discarded"
+msgstr "Сообщение готово"
+
+msgid "Undo"
+msgstr "Отменить"
+
 msgid "No Drafts folder available for this account"
 msgstr "Для этой учётной записи недоступна папка «Черновики»"
 
@@ -1231,6 +1241,9 @@ msgstr "Показать строку состояния (также: удерж
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Показывать или скрывать учётные записи на боковой панели"
 
+msgid "Check for new mail"
+msgstr "Проверка новой почты"
+
 msgid "Focus Mode on or off"
 msgstr "Включить или выключить режим концентрации"
 
@@ -1349,9 +1362,6 @@ msgstr "Вперед в окно"
 msgid "Compose in a window"
 msgstr "Написать в окне"
 
-msgid "Check for new mail"
-msgstr "Проверка новой почты"
-
 msgid "Action"
 msgstr "Действие"
 
@@ -1378,9 +1388,6 @@ msgstr "Переместить в папку"
 
 msgid "Open Message File…"
 msgstr "Открыть файл сообщения…"
-
-msgid "Undo"
-msgstr "Отменить"
 
 msgid "Redo"
 msgstr "Повторить"
@@ -4191,9 +4198,6 @@ msgstr "Сохранить черновик"
 
 msgid "Keep Editing"
 msgstr "Продолжить редактирование"
-
-msgid "Discard"
-msgstr "Отменить"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Загрузить в облачное хранилище и поделиться ссылкой"
@@ -7904,6 +7908,11 @@ msgstr "Это сообщение было перемещено или удал�
 msgid "Could not load conversation: {e}"
 msgstr "Не удалось загрузить обсуждение: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "Сообщение отправлено, но сохранить его в «Отправленные» не удалось: {e}"
@@ -7981,6 +7990,11 @@ msgstr "Это не имя папки"
 
 msgid "Could not store the message: {e}"
 msgstr "Не удалось сохранить сообщение: {e}"
+
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr ""
+"Сообщение отправлено, но сохранить его в «Отправленные» не удалось: {e}"
 
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Не удалось открыть папки на этом компьютере: {e}"
@@ -8610,6 +8624,12 @@ msgstr "Отменить отправку"
 
 msgid "How long Undo is offered after sending."
 msgstr "Как долго предлагается отменить действие после отправки."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr "Запрашивать уведомления о прочтении"

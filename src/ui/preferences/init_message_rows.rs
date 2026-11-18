@@ -392,6 +392,10 @@ impl Preferences {
             .signature_dashes_row
             .set_active(init.signature_dashes);
         widgets.composing.fold_quote_row.set_active(init.fold_quote);
+        widgets
+            .composing
+            .discard_notice_row
+            .set_active(init.discard_notice);
         widgets.composing.set_reply_header(&init.reply_header);
         widgets
             .composing

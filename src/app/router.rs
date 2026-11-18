@@ -284,7 +284,9 @@ impl AppModel {
             | AppMsg::SetThemeSwitchShown(..)
             | AppMsg::SetRemoteContent { .. }
             | AppMsg::ReloadBody(..)) => self.on_prefs_reader(msg),
-            msg @ (AppMsg::Undo | AppMsg::Redo | AppMsg::UndoRestored { .. }) => self.on_undo(msg),
+            msg @ (AppMsg::Undo | AppMsg::Redo | AppMsg::UndoRestored { .. }) => {
+                self.on_undo(msg, sender)
+            }
             msg @ AppMsg::ComposeHistory { .. } => self.on_prefs_compose(msg),
             msg @ (AppMsg::HandOffAction { .. }
             | AppMsg::HandOffDraftPickNow
@@ -303,6 +305,8 @@ impl AppModel {
             | AppMsg::SaveTemplateMessage(..)
             | AppMsg::AutoSaveDraft { .. }
             | AppMsg::DiscardAutosave { .. }
+            | AppMsg::ComposeDiscarded(..)
+            | AppMsg::UndoDiscard(..)
             | AppMsg::DeleteDraft { .. }
             | AppMsg::DraftSaved { .. }) => self.on_drafts(msg, sender),
             msg @ (AppMsg::ShowSettingsPage(..)
@@ -353,6 +357,7 @@ impl AppModel {
             msg @ (AppMsg::OpenAccounts
             | AppMsg::AddFirstAccount
             | AppMsg::AccountSaved { .. }
+            | AppMsg::SentFiledHere
             | AppMsg::ShowKeyringHelp { .. }
             | AppMsg::KeyringRead { .. }
             | AppMsg::ReconnectAccounts
@@ -564,6 +569,7 @@ impl AppModel {
             | PrefOutput::SetReplyHeader(..)
             | PrefOutput::SetAttachmentKeywords(..)
             | PrefOutput::SetUndoSend(..)
+            | PrefOutput::SetDiscardNotice(..)
             | PrefOutput::SetRequestReceipts(..)
             | PrefOutput::SetReturnedReceipts(..)) => self.on_prefs_compose_pref(pref),
             pref @ PrefOutput::SetAssistantPolicy(..) => self.on_assistant_pref(pref, sender),

@@ -101,6 +101,8 @@ pub(crate) enum AppMsg {
     Status { account_id: u32, text: String },
     /// What is left to copy to On This Computer (#552).
     CopyProgress { left: usize },
+    /// A sent message's copy is in On This Computer's Sent (#678).
+    SentFiledHere,
     /// A worker's error, for the log and the notification bar;
     /// `connectivity` marks one that clears itself once a later connect or
     /// sync succeeds.
@@ -1016,6 +1018,11 @@ pub(crate) enum AppMsg {
         id: u32,
         origin: crate::models::DraftOrigin,
     },
+    /// A message with something written in it was discarded: it goes on
+    /// the Undo history, and a toast may offer it back too (#678).
+    ComposeDiscarded(Box<OutgoingMessage>),
+    /// The toast's Undo: discarded message `key` reopens in a composer.
+    UndoDiscard(u64),
     /// The composer's Delete Draft: trash the draft it was opened from and
     /// close that composer without saving.
     DeleteDraft {

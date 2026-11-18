@@ -73,6 +73,12 @@ pub(super) enum UndoStep {
         from: String,
         to: String,
     },
+    /// Open a discarded message again (#678), from
+    /// [`AppModel::discarded`](super::model::AppModel) under `key`. It has
+    /// no redo: closing the composer it reopens is how to discard it again.
+    Reopen {
+        key: u64,
+    },
 }
 
 impl UndoStep {
@@ -103,6 +109,8 @@ impl UndoStep {
                 from: to.clone(),
                 to: from.clone(),
             },
+            // Never inverted: undo_redo reopens it and records no redo.
+            UndoStep::Reopen { key } => UndoStep::Reopen { key: *key },
         }
     }
 }
@@ -303,7 +311,7 @@ impl AppModel {
     /// covers the body and its attachments, and nobody writing a reply means
     /// "archive that message again" by Ctrl+Z. The menu entries follow the
     /// same rule, so what they say is always what the key would do.
-    fn undo_redo(&mut self, redo: bool) {
+    fn undo_redo(&mut self, redo: bool, sender: &ComponentSender<Self>) {
         if let Some(compose) = self.menu_compose() {
             compose.controller.emit(ComposeInput::History { redo });
             return;
@@ -316,6 +324,11 @@ impl AppModel {
         // Nothing to say when there is nothing to do: the menu entry is
         // already greyed out, and the key should just be inert (#200).
         let Some(entry) = entry else { return };
+        if let UndoStep::Reopen { key } = entry.step {
+            self.reopen_discarded(key, sender);
+            self.refresh_undo_menu();
+            return;
+        }
         let back = UndoEntry {
             account_id: entry.account_id,
             what: entry.what.clone(),
@@ -566,6 +579,8 @@ impl AppModel {
                 self.apply_folder_rename(account_id, from.clone(), to.clone(), None);
                 true
             }
+            // Handled in undo_redo, which has the sender a composer needs.
+            UndoStep::Reopen { .. } => false,
         }
     }
 
@@ -683,11 +698,11 @@ impl AppModel {
     }
 
     /// The messages the router sends here (see `AppModel::route`).
-    pub(super) fn on_undo(&mut self, msg: AppMsg) {
+    pub(super) fn on_undo(&mut self, msg: AppMsg, sender: ComponentSender<Self>) {
         match msg {
-            AppMsg::Undo => self.undo_redo(false),
+            AppMsg::Undo => self.undo_redo(false, &sender),
 
-            AppMsg::Redo => self.undo_redo(true),
+            AppMsg::Redo => self.undo_redo(true, &sender),
 
             AppMsg::UndoRestored {
                 account_id,

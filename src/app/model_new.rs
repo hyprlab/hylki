@@ -557,6 +557,8 @@ impl AppModel {
             fold_quote: prefs.fold_quote,
             reply_header: prefs.reply_header,
             undo_send_secs: prefs.undo_send_secs,
+            discard_notice: prefs.discard_notice,
+            discarded: Vec::new(),
             attachment_keywords: prefs.attachment_keywords,
             spellcheck: prefs.spellcheck,
             spellcheck_langs: prefs.spellcheck_langs,

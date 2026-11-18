@@ -59,6 +59,10 @@ pub(super) struct JmapState {
     pub(super) looked_up: HashMap<String, std::time::Instant>,
     /// No background step before this, after one failed.
     pub(super) backfill_wait: Option<std::time::Instant>,
+    /// Each Sent folder's message count at the last listing (#675).
+    pub(super) sent_totals: HashMap<String, u32>,
+    /// Sent folders whose count moved, to list again on the next tick.
+    pub(super) sent_due: Vec<(u32, String)>,
 }
 
 /// The background index of one folder (#429): its id listing a page a
@@ -159,6 +163,8 @@ impl JmapState {
             listed_ids: HashMap::new(),
             looked_up: HashMap::new(),
             backfill_wait: None,
+            sent_totals: HashMap::new(),
+            sent_due: Vec::new(),
         }
     }
 

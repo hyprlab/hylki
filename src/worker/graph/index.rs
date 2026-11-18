@@ -216,6 +216,10 @@ pub(super) struct GraphState {
     pub(super) looked_up: std::collections::HashMap<String, std::time::Instant>,
     /// No background step before this, after one failed.
     pub(super) backfill_wait: Option<std::time::Instant>,
+    /// Each Sent folder's message count at the last listing (#675).
+    pub(super) sent_totals: std::collections::HashMap<String, u32>,
+    /// Sent folders whose count moved, to list again on the next tick.
+    pub(super) sent_due: Vec<(u32, String)>,
 }
 
 impl GraphState {
@@ -232,6 +236,8 @@ impl GraphState {
             listed: Default::default(),
             looked_up: Default::default(),
             backfill_wait: None,
+            sent_totals: Default::default(),
+            sent_due: Vec::new(),
         }
     }
 

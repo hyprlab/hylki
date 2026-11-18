@@ -176,6 +176,10 @@ pub(crate) enum ComposeInput {
     AutoSave,
     AutoSaveRead,
     AutoSaveBody(OutgoingFields),
+    /// Discard chosen for a message with something written in it: its
+    /// fields and body are read first, for the app to offer Undo (#678).
+    DiscardWritten,
+    DiscardWrittenBody(OutgoingFields),
     /// An automatic save came back: whether it went through, and where the
     /// copy is now, to be replaced by the next save.
     Autosaved {
@@ -351,6 +355,9 @@ pub(crate) enum ComposeOutput {
     /// Discarded, a new message that only automatic saves put in Drafts:
     /// take that copy out, and close.
     DiscardAutosave { id: u32, origin: DraftOrigin },
+    /// What a discarded message held, sent just before it closes, so the
+    /// app can bring it back (#678).
+    Discarded(Box<OutgoingMessage>),
     /// The spelling languages were changed from the body's right-click
     /// menu (#365): the whole new setting, saved app-wide like the
     /// Settings switches.

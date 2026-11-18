@@ -149,6 +149,9 @@ impl AppModel {
                 // A message already waiting keeps the delay it was sent with.
                 pref!(self.undo_send_secs = secs);
             }
+            PrefOutput::SetDiscardNotice(on) => {
+                pref!(self.discard_notice = on);
+            }
             PrefOutput::SetRequestReceipts(on) => {
                 // Open composers keep the check they opened with.
                 pref!(self.request_receipts = on);

@@ -342,6 +342,10 @@ pub(crate) struct PrivacyFile {
     /// before it is handed to the server. 0 sends at once.
     #[serde(default = "default_undo_send_secs")]
     pub(crate) undo_send_secs: u32,
+    /// A notice with Undo after a written message is discarded (#678). Off,
+    /// it is still taken back with Undo in the main menu or Ctrl+Z.
+    #[serde(default)]
+    pub(crate) discard_notice: bool,
     /// The words, comma-separated, that make Send ask when nothing is
     /// attached. Empty never asks. Absent is the default list, left out of
     /// the file so that a list grown in a later version reaches it.
@@ -782,6 +786,7 @@ impl Default for PrivacyFile {
             fold_quote: true,
             reply_header: String::new(),
             undo_send_secs: default_undo_send_secs(),
+            discard_notice: false,
             attachment_keywords: None,
             spellcheck: true,
             spellcheck_langs: String::new(),

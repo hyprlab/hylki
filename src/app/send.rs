@@ -99,6 +99,15 @@ impl AppModel {
         let ticket = self.send_ticket;
         self.mark_answered_ahead(ticket, &out);
         let delay = self.undo_send_secs;
+        crate::desktop::send_log::note_message(
+            &account.email,
+            &out,
+            &if delay > 0 {
+                format!("Send pressed; Undo on offer for {delay} s")
+            } else {
+                "Send pressed".to_string()
+            },
+        );
         let toast = adw::Toast::builder()
             .priority(adw::ToastPriority::High)
             .timeout(0)
@@ -295,6 +304,11 @@ impl AppModel {
                 .map(|i| list.remove(i))
         };
         let Some(o) = taken else { return };
+        crate::desktop::send_log::note_message(
+            &o.account.email,
+            &o.message,
+            "Undo Send: back in the composer",
+        );
         o.toast.dismiss();
         self.unmark_answered(ticket);
         self.push_outbox();
@@ -405,7 +419,14 @@ impl AppModel {
                         .position(|o| o.ticket == ticket)
                         .map(|i| list.remove(i))
                 };
-                if done.is_some() {
+                if let Some(o) = done {
+                    if sent {
+                        crate::desktop::send_log::note_message(
+                            &o.account.email,
+                            &o.message,
+                            "sent",
+                        );
+                    }
                     self.push_outbox();
                 }
             }

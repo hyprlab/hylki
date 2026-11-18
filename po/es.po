@@ -642,6 +642,16 @@ msgstr "No hay borradores que continuar."
 msgid "Attach to This Draft"
 msgstr "Adjuntar a este borrador"
 
+msgid "Discard"
+msgstr "Descartar"
+
+#, fuzzy
+msgid "Message discarded"
+msgstr "Mensaje preparado"
+
+msgid "Undo"
+msgstr "Deshacer"
+
 msgid "No Drafts folder available for this account"
 msgstr "No hay ninguna carpeta de borradores disponible para esta cuenta"
 
@@ -1221,6 +1231,9 @@ msgstr "Mostrar la barra de estado (también: mantener pulsado Actualizar)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Mostrar u ocultar las cuentas en la barra lateral"
 
+msgid "Check for new mail"
+msgstr "Comprobar correo nuevo"
+
 msgid "Focus Mode on or off"
 msgstr "Activar o desactivar el modo de concentración"
 
@@ -1343,9 +1356,6 @@ msgstr "Reenviar en una ventana"
 msgid "Compose in a window"
 msgstr "Redactar en una ventana"
 
-msgid "Check for new mail"
-msgstr "Comprobar correo nuevo"
-
 msgid "Action"
 msgstr "Acción"
 
@@ -1372,9 +1382,6 @@ msgstr "Mover a carpeta"
 
 msgid "Open Message File…"
 msgstr "Abrir archivo de mensaje…"
-
-msgid "Undo"
-msgstr "Deshacer"
 
 msgid "Redo"
 msgstr "Rehacer"
@@ -4195,9 +4202,6 @@ msgstr "Guardar borrador"
 
 msgid "Keep Editing"
 msgstr "Seguir editando"
-
-msgid "Discard"
-msgstr "Descartar"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Subir al almacenamiento en la nube y compartir un enlace"
@@ -7926,6 +7930,11 @@ msgstr "El mensaje es demasiado largo para el servidor."
 msgid "Could not load conversation: {e}"
 msgstr "No se pudo cargar la conversación: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Mensaje enviado, pero no se pudo guardar en Enviados: {e}"
 
@@ -8001,6 +8010,10 @@ msgstr "Ese nombre de carpeta no es válido"
 
 msgid "Could not store the message: {e}"
 msgstr "No se pudo guardar el mensaje: {e}"
+
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr "Mensaje enviado, pero no se pudo guardar en Enviados: {e}"
 
 msgid "Could not open the folders on this computer: {e}"
 msgstr "No se pudieron abrir las carpetas de este equipo: {e}"
@@ -8642,6 +8655,12 @@ msgstr "Deshacer envío"
 
 msgid "How long Undo is offered after sending."
 msgstr "Tiempo durante el que se ofrece Deshacer después de enviar."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr "Solicitar confirmaciones de lectura"

@@ -735,6 +735,10 @@ impl Component for Compose {
                 ComposeInput::KeepEditing => self.asking_discard = false,
 
                 ComposeInput::Discard => self.on_discard(&sender),
+                ComposeInput::DiscardWritten => self.on_discard_written(widgets, &sender),
+                ComposeInput::DiscardWrittenBody(fields) => {
+                    self.on_discard_written_body(fields, &sender)
+                }
 
                 ComposeInput::SendAt(at) => {
                     self.send_at = Some(at);

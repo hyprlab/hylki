@@ -691,6 +691,16 @@ msgstr "Brak szkiców do kontynuowania."
 msgid "Attach to This Draft"
 msgstr "Dołącz do tego szkicu"
 
+msgid "Discard"
+msgstr "Odrzuć"
+
+#, fuzzy
+msgid "Message discarded"
+msgstr "Czcionka wiadomości"
+
+msgid "Undo"
+msgstr "Cofnij"
+
 msgid "No Drafts folder available for this account"
 msgstr "To konto nie ma katalogu szkiców"
 
@@ -1322,6 +1332,9 @@ msgstr "Wyświetl pasek stanu (lub przytrzymaj przycisk odświeżania)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Wyświetl lub ukryj konta w panelu bocznym"
 
+msgid "Check for new mail"
+msgstr "Sprawdzanie nowej poczty"
+
 msgid "Focus Mode on or off"
 msgstr "Włącz lub wyłącz tryb skupienia"
 
@@ -1462,9 +1475,6 @@ msgstr "Odpowiadanie i przekazywanie w oknie głównym"
 msgid "Compose in a window"
 msgstr "Pisanie w oknie głównym"
 
-msgid "Check for new mail"
-msgstr "Sprawdzanie nowej poczty"
-
 #, fuzzy
 msgid "Action"
 msgstr "Działania"
@@ -1498,9 +1508,6 @@ msgstr "Przenieś katalog"
 #, fuzzy
 msgid "Open Message File…"
 msgstr "Drukuj wiadomość…"
-
-msgid "Undo"
-msgstr "Cofnij"
 
 msgid "Redo"
 msgstr "Ponów"
@@ -4443,9 +4450,6 @@ msgstr "Zapisz szkic"
 
 msgid "Keep Editing"
 msgstr "Wróć do pisania"
-
-msgid "Discard"
-msgstr "Odrzuć"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Prześlij do chmury i udostępnij odnośnik"
@@ -8301,6 +8305,11 @@ msgstr "Ta wiadomość nie zawiera pliku kalendarza do otwarcia."
 msgid "Could not load conversation: {e}"
 msgstr "Nie udało się wczytać rozmowy: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "Wysłano wiadomość, ale nie udało się jej zapisać w katalogu „Wysłane”: {e}"
@@ -8383,6 +8392,11 @@ msgstr "Ten katalog"
 #, fuzzy
 msgid "Could not store the message: {e}"
 msgstr "Nie udało się zaktualizować wiadomości: {e}"
+
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr ""
+"Wysłano wiadomość, ale nie udało się jej zapisać w katalogu „Wysłane”: {e}"
 
 #, fuzzy
 msgid "Could not open the folders on this computer: {e}"
@@ -9061,6 +9075,12 @@ msgid "Undo Send"
 msgstr "Cofnij"
 
 msgid "How long Undo is offered after sending."
+msgstr ""
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr ""
 
 msgid "Request read receipts"

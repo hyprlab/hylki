@@ -682,6 +682,16 @@ msgstr "Δεν υπάρχουν πρόχειρα για συνέχιση."
 msgid "Attach to This Draft"
 msgstr "Επισύναψη σε αυτό το πρόχειρο"
 
+msgid "Discard"
+msgstr "Απόρριψη"
+
+#, fuzzy
+msgid "Message discarded"
+msgstr "Σώμα μηνύματος"
+
+msgid "Undo"
+msgstr "Αναίρεση"
+
 msgid "No Drafts folder available for this account"
 msgstr "Δεν υπάρχει φάκελος Προχείρων για αυτόν τον λογαριασμό"
 
@@ -1259,6 +1269,9 @@ msgstr ""
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Εμφάνιση ή απόκρυψη λογαριασμών στην πλευρική στήλη"
 
+msgid "Check for new mail"
+msgstr "Έλεγχος για νέα μηνύματα"
+
 msgid "Focus Mode on or off"
 msgstr "Ενεργοποίηση ή απενεργοποίηση της Λειτουργίας συγκέντρωσης"
 
@@ -1378,9 +1391,6 @@ msgstr "Προώθηση σε νέο παράθυρο"
 msgid "Compose in a window"
 msgstr "Σύνταξη σε νέο παράθυρο"
 
-msgid "Check for new mail"
-msgstr "Έλεγχος για νέα μηνύματα"
-
 msgid "Action"
 msgstr "Ενέργεια"
 
@@ -1407,9 +1417,6 @@ msgstr "Μετακίνηση σε φάκελο"
 
 msgid "Open Message File…"
 msgstr "Άνοιγμα αρχείου μηνύματος…"
-
-msgid "Undo"
-msgstr "Αναίρεση"
 
 msgid "Redo"
 msgstr "Επανάληψη"
@@ -4241,9 +4248,6 @@ msgstr "Αποθήκευση προχείρου"
 
 msgid "Keep Editing"
 msgstr "Συνέχεια επεξεργασίας"
-
-msgid "Discard"
-msgstr "Απόρριψη"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Μεταφόρτωση στον χώρο αποθήκευσης cloud και κοινοποίηση συνδέσμου"
@@ -7987,6 +7991,11 @@ msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τ
 msgid "Could not load conversation: {e}"
 msgstr "Δεν ήταν δυνατή η φόρτωση της συζήτησης: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Το μήνυμα στάλθηκε, αλλά η αποθήκευση στα Απεσταλμένα απέτυχε: {e}"
 
@@ -8063,6 +8072,10 @@ msgstr "Αυτό δεν είναι έγκυρο όνομα φακέλου"
 
 msgid "Could not store the message: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του μηνύματος: {e}"
+
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr "Το μήνυμα στάλθηκε, αλλά η αποθήκευση στα Απεσταλμένα απέτυχε: {e}"
 
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Δεν ήταν δυνατό το άνοιγμα των τοπικών φακέλων: {e}"
@@ -8717,6 +8730,12 @@ msgstr "Αναίρεση αποστολής"
 
 msgid "How long Undo is offered after sending."
 msgstr "Για πόσο χρόνο είναι διαθέσιμη η αναίρεση μετά την αποστολή."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr "Αίτημα επιβεβαιώσεων ανάγνωσης"

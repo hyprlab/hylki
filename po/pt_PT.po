@@ -649,6 +649,16 @@ msgstr "Não existem rascunhos para continuar."
 msgid "Attach to This Draft"
 msgstr "Anexar a este rascunho"
 
+msgid "Discard"
+msgstr "Descartar"
+
+#, fuzzy
+msgid "Message discarded"
+msgstr "Mensagem pronta"
+
+msgid "Undo"
+msgstr "Anular"
+
 msgid "No Drafts folder available for this account"
 msgstr "Não existe uma pasta Rascunhos disponível para esta conta"
 
@@ -1230,6 +1240,9 @@ msgstr "Mostrar a barra de estado (também: premir sem soltar Atualizar)"
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Mostrar ou ocultar as contas na barra lateral"
 
+msgid "Check for new mail"
+msgstr "Procurar novas mensagens"
+
 msgid "Focus Mode on or off"
 msgstr "Ativar ou desativar o modo de foco"
 
@@ -1348,9 +1361,6 @@ msgstr "Reencaminhar numa janela"
 msgid "Compose in a window"
 msgstr "Compor numa janela"
 
-msgid "Check for new mail"
-msgstr "Procurar novas mensagens"
-
 msgid "Action"
 msgstr "Ação"
 
@@ -1377,9 +1387,6 @@ msgstr "Mover para uma pasta"
 
 msgid "Open Message File…"
 msgstr "Abrir ficheiro de mensagem…"
-
-msgid "Undo"
-msgstr "Anular"
 
 msgid "Redo"
 msgstr "Refazer"
@@ -4207,9 +4214,6 @@ msgstr "Guardar rascunho"
 
 msgid "Keep Editing"
 msgstr "Continuar a editar"
-
-msgid "Discard"
-msgstr "Descartar"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Carregar para o armazenamento na nuvem e partilhar uma ligação"
@@ -7918,6 +7922,11 @@ msgstr "A mensagem é demasiado longa para o servidor."
 msgid "Could not load conversation: {e}"
 msgstr "Não foi possível carregar a conversa: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr ""
 "A mensagem foi enviada, mas não foi possível guardá-la em Enviadas: {e}"
@@ -7996,6 +8005,11 @@ msgstr "Nome de pasta inválido"
 
 msgid "Could not store the message: {e}"
 msgstr "Não foi possível guardar a mensagem: {e}"
+
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr ""
+"A mensagem foi enviada, mas não foi possível guardá-la em Enviadas: {e}"
 
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Não foi possível abrir as pastas neste computador: {e}"
@@ -8642,6 +8656,12 @@ msgstr "Anular envio"
 
 msgid "How long Undo is offered after sending."
 msgstr "Durante quanto tempo é possível anular após enviar."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr "Pedir confirmações de leitura"

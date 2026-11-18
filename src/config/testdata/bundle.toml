@@ -76,6 +76,7 @@ signature_dashes = false
 fold_quote = true
 reply_header = ""
 undo_send_secs = 5
+discard_notice = false
 spellcheck = true
 spellcheck_langs = ""
 sidebar_hover_expand = false

@@ -10,6 +10,7 @@ use crate::worker::imap::retry::load_messages_retry;
 use crate::worker::imap::send::{
     append_draft, delete_draft, file_sent_copy, flush_outbox, index_sent_copy, mark_answered,
 };
+use crate::worker::local::sent::keep_sent_here;
 use crate::worker::outbox::{drop_superseded_outbox, schedule_send, send_failed};
 use crate::worker::smtp::{send_smtp, smtp_refused};
 use crate::worker::{reply_copy_path, OutgoingMessage, WorkerEvent};
@@ -110,9 +111,17 @@ impl<E: Emit> ImapWorker<E> {
                     &message.in_reply_to,
                     message.from_alias.as_deref(),
                 );
+                let log = |event: &str| {
+                    crate::desktop::send_log::note(&account.email, &message.subject, "", event)
+                };
                 let sess = ensured(session);
-                match file_sent_copy(sess, reply.as_deref(), sent_path.as_deref(), &raw).await {
+                // Whether a copy of the message exists somewhere other than
+                // the draft it was written in, which is deleted next.
+                let kept = match file_sent_copy(sess, reply.as_deref(), sent_path.as_deref(), &raw)
+                    .await
+                {
                     Ok(Some(path)) => {
+                        log(&format!("copy saved to {path}"));
                         index_sent_copy(
                             account_id,
                             session,
@@ -123,25 +132,57 @@ impl<E: Emit> ImapWorker<E> {
                             emit,
                         )
                         .await;
+                        true
                     }
-                    Ok(None) => {}
-                    Err(e) => emit(WorkerEvent::error(i18n_f(
-                        "Message sent, but saving to Sent failed: {e}",
-                        &[("e", &(e).to_string())],
-                    ))),
-                }
+                    Ok(None) => {
+                        let from = message.from_alias.as_deref();
+                        keep_sent_here(account, from, &raw, &message.subject, emit);
+                        true
+                    }
+                    Err(e) => {
+                        // The message went, so it is not the Outbox's: keep
+                        // the copy for the next connection to file (#678).
+                        let e = e.to_string();
+                        let held = cache.as_ref().is_some_and(|c| {
+                            c.queue_sent_copy(
+                                account_id,
+                                &raw,
+                                reply.as_deref(),
+                                sent_path.as_deref(),
+                                &e,
+                            )
+                            .is_some()
+                        });
+                        log(&if held {
+                            format!("copy refused by the server: {e}; kept to save later")
+                        } else {
+                            format!("copy refused by the server: {e}; draft left in Drafts")
+                        });
+                        emit(WorkerEvent::error(if held {
+                            i18n_f(
+                                "Message sent, but saving it to Sent failed: {e}. A copy is kept and saved there when Hylki next connects.",
+                                &[("e", &e)],
+                            )
+                        } else {
+                            i18n_f("Message sent, but saving to Sent failed: {e}", &[("e", &e)])
+                        }));
+                        held
+                    }
+                };
                 // If sending an edited draft (from this account), remove the
-                // now-obsolete draft and refresh the Drafts folder.
-                if let Some(o) = message.draft_origin.clone() {
+                // now-obsolete draft and refresh the Drafts folder. With no
+                // copy kept anywhere, the draft is the only one left.
+                if let Some(o) = message.draft_origin.clone().filter(|_| kept) {
                     if o.account_id == account_id {
-                        {
-                            // Not `ensured`: index_sent_copy above can leave
-                            // the session `None`, and this then panics (a
-                            // suspected bug kept as it is, B1 in the notes).
-                            let sess = session.as_mut().unwrap();
-                            let _ = delete_draft(sess, &o.path, o.uid).await;
-                        }
-                        if let Some(c) = cache.as_ref() {
+                        // index_sent_copy above can leave the session `None`
+                        // when its listing fails. The draft then stays in
+                        // Drafts, where unwrapping used to panic the worker
+                        // after the message had gone.
+                        let deleted = match session.as_mut() {
+                            Some(sess) => delete_draft(sess, &o.path, o.uid).await.is_ok(),
+                            None => false,
+                        };
+                        if let (true, Some(c)) = (deleted, cache.as_ref()) {
                             c.delete_message(account_id, &o.path, o.uid);
                         }
                         if let Ok(messages) = load_messages_retry(

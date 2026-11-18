@@ -8,7 +8,7 @@ use tokio::sync::mpsc;
 
 use crate::cache::Cache;
 use crate::config::AccountConfig;
-use crate::models::{FolderKind, Message};
+use crate::models::{Folder, FolderKind, Message};
 use crate::worker::chores::{
     auto_empty_due, auto_empty_roles, clean_lists_due, clean_lists_query, imap_before_date,
     role_folder_path,
@@ -232,8 +232,8 @@ pub(super) async fn refresh_unread_counts(
     pending: &mut Vec<crate::models::Folder>,
     rx: &mpsc::UnboundedReceiver<MailRequest>,
     emit: &impl Fn(WorkerEvent),
-) -> (Vec<(FolderKind, String)>, bool) {
-    let mut changed = Vec::new();
+) -> (Vec<Folder>, bool) {
+    let mut changed: Vec<Folder> = Vec::new();
     if pending.is_empty() {
         *pending = cache
             .map(|c| c.load_folders(account_id))
@@ -273,7 +273,7 @@ pub(super) async fn refresh_unread_counts(
         match baseline.insert(f.path.clone(), now) {
             Some(prev) if prev != now => {
                 tracing::debug!("sweep: {} moved {:?} -> {:?}", f.path, prev, now);
-                changed.push((f.kind, f.path.clone()));
+                changed.push(f.clone());
             }
             _ => {}
         }
@@ -281,10 +281,31 @@ pub(super) async fn refresh_unread_counts(
     if !changed.is_empty() {
         tracing::info!(
             "sweep: changed {:?}",
-            changed.iter().map(|(_, p)| p.as_str()).collect::<Vec<_>>()
+            changed.iter().map(|f| f.path.as_str()).collect::<Vec<_>>()
         );
     }
     (changed, true)
+}
+
+/// Quiet resyncs for the sent folders among those the sweep saw move
+/// (#675). A conversation takes the user's own replies from the cache, and
+/// Sent is listed once at startup and otherwise only when it is opened: a
+/// reply sent from another computer stayed out of the conversation until
+/// Sent was visited by hand. Sent never gets an IDLE watcher (see
+/// `watchable`), so the sweep's UIDNEXT check is what notices it. The
+/// folder Hylki files its own copies in counts too, when that is not Sent;
+/// the Inbox is left to its own watcher.
+pub(super) fn sent_resyncs(changed: &[Folder], account: &AccountConfig) -> Vec<MailRequest> {
+    let copy = account.sent_copy_path.as_deref();
+    changed
+        .iter()
+        .filter(|f| f.kind != FolderKind::Inbox)
+        .filter(|f| f.kind == FolderKind::Sent || copy == Some(f.path.as_str()))
+        .map(|f| MailRequest::SyncFolder {
+            folder_id: f.id,
+            path: f.path.clone(),
+        })
+        .collect()
 }
 
 /// The chip number for the currently-selected mailbox: unseen, or every
@@ -386,6 +407,51 @@ pub(super) async fn selected_unseen(session: &mut ImapSession) -> Option<u32> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn folder(id: u32, path: &str, kind: FolderKind) -> Folder {
+        Folder {
+            id,
+            account_id: 1,
+            name: path.into(),
+            path: path.into(),
+            kind,
+            unread: 0,
+            childless: false,
+        }
+    }
+
+    fn synced(reqs: &[MailRequest]) -> Vec<(u32, &str)> {
+        reqs.iter()
+            .map(|r| match r {
+                MailRequest::SyncFolder { folder_id, path } => (*folder_id, path.as_str()),
+                other => panic!("not a folder sync: {other:?}"),
+            })
+            .collect()
+    }
+
+    #[test]
+    fn a_moved_sent_folder_is_listed_again() {
+        // #675: a reply sent from another computer moves Sent's UIDNEXT, and
+        // only a fresh listing brings it into the conversation.
+        let mut account = crate::worker::test_support::sample_account();
+        let changed = vec![
+            folder(1, "INBOX", FolderKind::Inbox),
+            folder(2, "Sent", FolderKind::Sent),
+            folder(3, "Work", FolderKind::Custom),
+            folder(4, "Copies", FolderKind::Custom),
+        ];
+        assert_eq!(synced(&sent_resyncs(&changed, &account)), [(2, "Sent")]);
+        // The folder Hylki files its copies in is sent mail too.
+        account.sent_copy_path = Some("Copies".into());
+        assert_eq!(
+            synced(&sent_resyncs(&changed, &account)),
+            [(2, "Sent"), (4, "Copies")]
+        );
+        // Copies filed in the Inbox are its watcher's to pick up.
+        account.sent_copy_path = Some("INBOX".into());
+        assert_eq!(synced(&sent_resyncs(&changed, &account)), [(2, "Sent")]);
+        assert!(sent_resyncs(&changed[2..3], &account).is_empty());
+    }
 
     #[test]
     fn body_search_keys_quote_and_declare_charset() {

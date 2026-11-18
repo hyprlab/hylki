@@ -695,6 +695,16 @@ msgstr "Nincs piszkozat a folytatáshoz."
 msgid "Attach to This Draft"
 msgstr "Csatolás ehhez a piszkozathoz"
 
+msgid "Discard"
+msgstr "Elvetés"
+
+#, fuzzy
+msgid "Message discarded"
+msgstr "Üzenet betűtípusa"
+
+msgid "Undo"
+msgstr "Visszavonás"
+
 msgid "No Drafts folder available for this account"
 msgstr "Ehhez a fiókhoz nem érhető el Piszkozatok mappa"
 
@@ -1298,6 +1308,9 @@ msgstr "Állapotsáv megjelenítése (vagy a Frissítés hosszan lenyomva tartá
 msgid "Show or hide the accounts in the sidebar"
 msgstr "Fiókok megjelenítése vagy elrejtése az oldalsávban"
 
+msgid "Check for new mail"
+msgstr "Új levelek keresése"
+
 msgid "Focus Mode on or off"
 msgstr "Fókuszmód be- vagy kikapcsolása"
 
@@ -1439,9 +1452,6 @@ msgstr "Válasz és továbbítás a főablakban"
 msgid "Compose in a window"
 msgstr "Levélírás a főablakban"
 
-msgid "Check for new mail"
-msgstr "Új levelek keresése"
-
 #, fuzzy
 msgid "Action"
 msgstr "Műveletek"
@@ -1475,9 +1485,6 @@ msgstr "Mappa áthelyezése"
 #, fuzzy
 msgid "Open Message File…"
 msgstr "Nyomtatás…"
-
-msgid "Undo"
-msgstr "Visszavonás"
 
 msgid "Redo"
 msgstr "Újra"
@@ -4393,9 +4400,6 @@ msgstr "Piszkozat mentése"
 
 msgid "Keep Editing"
 msgstr "Szerkesztés folytatása"
-
-msgid "Discard"
-msgstr "Elvetés"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Feltöltés felhőtárhelyre és hivatkozás megosztása"
@@ -8235,6 +8239,11 @@ msgstr "Ez az üzenet nem tartalmaz megnyitható naptárfájlt."
 msgid "Could not load conversation: {e}"
 msgstr "A beszélgetés nem tölthető be: {e}"
 
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+
 msgid "Message sent, but saving to Sent failed: {e}"
 msgstr "Az üzenet elküldve, de az Elküldött mappába mentés sikertelen: {e}"
 
@@ -8314,6 +8323,10 @@ msgstr "Ez a mappa"
 #, fuzzy
 msgid "Could not store the message: {e}"
 msgstr "Az üzenet nem frissíthető: {e}"
+
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr "Az üzenet elküldve, de az Elküldött mappába mentés sikertelen: {e}"
 
 #, fuzzy
 msgid "Could not open the folders on this computer: {e}"
@@ -8990,6 +9003,12 @@ msgid "Undo Send"
 msgstr "Visszavonás"
 
 msgid "How long Undo is offered after sending."
+msgstr ""
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr ""
 
 msgid "Request read receipts"

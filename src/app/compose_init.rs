@@ -366,6 +366,7 @@ impl AppModel {
                     AppMsg::DiscardAutosave { id, origin }
                 }
                 ComposeOutput::DeleteDraft { id, origin } => AppMsg::DeleteDraft { id, origin },
+                ComposeOutput::Discarded(message) => AppMsg::ComposeDiscarded(message),
                 ComposeOutput::ToggleWindow(id) => AppMsg::ComposeToggleWindow(id),
                 ComposeOutput::Close(id) => AppMsg::ComposeClosed(id),
                 ComposeOutput::History { id, undo, redo } => {

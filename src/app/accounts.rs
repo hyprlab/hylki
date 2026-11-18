@@ -317,6 +317,15 @@ impl AppModel {
                 original_email,
                 account,
             } => self.on_account_saved(original_email, account, sender),
+            // The copy is in the tree whether or not the account is there
+            // to show it; it is added once, never re-enabled behind the
+            // user's back.
+            AppMsg::SentFiledHere => {
+                if !self.config.iter().any(AccountConfig::is_local) {
+                    let local = Box::new(config::local_account());
+                    self.on_account_saved(None, local, sender);
+                }
+            }
 
             AppMsg::ShowKeyringHelp { problem } => self.show_keyring_help(problem),
             AppMsg::KeyringRead { account_id, read } => {

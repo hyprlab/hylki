@@ -242,6 +242,18 @@ CREATE TABLE sender_checks (
     PRIMARY KEY (account_id, folder_path, uid)
 )
 
+table sent_copies
+CREATE TABLE sent_copies (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_id  INTEGER NOT NULL,
+    raw         BLOB    NOT NULL,
+    reply_path  TEXT,
+    sent_path   TEXT,
+    queued_at   INTEGER NOT NULL,
+    attempts    INTEGER NOT NULL DEFAULT 1,
+    last_error  TEXT    NOT NULL DEFAULT ''
+)
+
 index sqlite_autoindex_addresses_1
 
 

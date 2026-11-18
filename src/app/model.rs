@@ -831,6 +831,11 @@ pub(crate) struct AppModel {
     pub(super) reply_header: String,
     /// Undo Send delay in seconds, 0 for off (#434).
     pub(super) undo_send_secs: u32,
+    /// A notice with Undo follows a discard (#678).
+    pub(super) discard_notice: bool,
+    /// Messages discarded with something written in them, newest last,
+    /// each under the key its Undo entry names (#678).
+    pub(super) discarded: Vec<(u64, crate::worker::OutgoingMessage)>,
     /// The words that make Send ask when nothing is attached, "" for never,
     /// `None` for the default list.
     pub(super) attachment_keywords: Option<String>,

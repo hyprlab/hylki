@@ -131,6 +131,16 @@ pub(crate) fn export_text(memory: &str) -> String {
         }
         out.push('\n');
     }
+    // Kept across restarts (#678), unlike the lines below.
+    let sends = crate::desktop::send_log::export_lines();
+    if !sends.is_empty() {
+        out.push_str("Messages written in the last 30 days:\n");
+        for line in sends {
+            out.push_str(&redact_addresses(&line));
+            out.push('\n');
+        }
+        out.push('\n');
+    }
     for line in all_lines() {
         out.push_str(&redact_addresses(&line));
         out.push('\n');
