@@ -462,6 +462,9 @@ pub(crate) enum WorkerEvent {
     CopyProgress {
         left: usize,
     },
+    /// A message's copy went to On This Computer's Sent, the account having
+    /// nowhere on its server for it (#678).
+    SentFiledHere,
     Messages {
         folder_id: u32,
         messages: Vec<Message>,

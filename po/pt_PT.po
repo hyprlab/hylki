@@ -8002,6 +8002,11 @@ msgstr "Nome de pasta inválido"
 msgid "Could not store the message: {e}"
 msgstr "Não foi possível guardar a mensagem: {e}"
 
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr ""
+"A mensagem foi enviada, mas não foi possível guardá-la em Enviadas: {e}"
+
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Não foi possível abrir as pastas neste computador: {e}"
 

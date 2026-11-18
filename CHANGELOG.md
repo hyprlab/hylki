@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fixed: mail sent from a POP3 account, or one with no Sent folder, kept
+  no copy** (#678). A copy now goes to On This Computer's Sent folder, and
+  On This Computer is added when there is none. An account whose server
+  files its own copy of sent mail is left as it was.
+
 - **Fixed: a sent message could be left with no copy** (#678). When the
   server would not take the copy into Sent, Hylki showed an error but kept
   nothing, and deleted the message's draft as after any send. The copy is

@@ -378,6 +378,15 @@ another folder on the server is not copied again. Switching the setting on
 adds On This Computer when there is none. Which messages are copied is
 listed in `hylki-copied/` beside the folders.
 
+#### Copies of sent mail
+
+A POP3 account has no folders on its server, and an IMAP account may have
+no Sent folder. A copy of the mail such an account sends goes to On This
+Computer's Sent folder, and On This Computer is added when there is none.
+With **Server saves its own copy of sent mail** on, no copy is made here.
+When a server's Sent folder refuses the copy, Hylki keeps it and saves it
+there the next time the account connects.
+
 #### Importing from another program
 
 **Settings → Accounts → On This Computer → Import** takes mail from

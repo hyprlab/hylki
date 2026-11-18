@@ -7377,6 +7377,9 @@ msgstr ""
 msgid "Could not store the message: {e}"
 msgstr ""
 
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr ""
+
 msgid "Could not open the folders on this computer: {e}"
 msgstr ""
 

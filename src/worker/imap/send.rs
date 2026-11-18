@@ -15,6 +15,7 @@ use crate::worker::imap::wire::{
     append_msg, create_box, expunge_all, sel, store_uids, subscribe_box,
 };
 use crate::worker::imap::ImapSession;
+use crate::worker::local::sent::keep_sent_here;
 use crate::worker::outbox::{
     current_sent_copy_path, due_outbox_items, emit_outbox, note_answered, outbox_envelope,
     raw_in_reply_to,
@@ -143,32 +144,37 @@ pub(in crate::worker) async fn flush_outbox(
                     &raw_in_reply_to(&item.raw),
                     from.as_deref(),
                 );
-                if let Some(sess) = session.as_mut() {
-                    let copy = queued_with_bcc(&item.raw, &item.rcpts);
-                    match file_sent_copy(sess, reply.as_deref(), dest.as_deref(), &copy).await {
-                        Ok(Some(path)) => {
-                            index_sent_copy(
-                                account_id,
-                                session,
-                                account,
-                                &path,
-                                use_envelope,
-                                Some(cache),
-                                emit,
-                            )
-                            .await;
-                        }
-                        Ok(None) => {}
-                        Err(e) => {
-                            tracing::warn!("outbox: sent, but saving the copy failed: {e}");
-                            cache.queue_sent_copy(
-                                account_id,
-                                &copy,
-                                reply.as_deref(),
-                                dest.as_deref(),
-                                &e.to_string(),
-                            );
-                        }
+                let copy = queued_with_bcc(&item.raw, &item.rcpts);
+                let filed = match session.as_mut() {
+                    Some(sess) => {
+                        file_sent_copy(sess, reply.as_deref(), dest.as_deref(), &copy).await
+                    }
+                    // A POP3 account: no folders on its server.
+                    None => Ok(None),
+                };
+                match filed {
+                    Ok(Some(path)) => {
+                        index_sent_copy(
+                            account_id,
+                            session,
+                            account,
+                            &path,
+                            use_envelope,
+                            Some(cache),
+                            emit,
+                        )
+                        .await;
+                    }
+                    Ok(None) => keep_sent_here(account, from.as_deref(), &copy, emit),
+                    Err(e) => {
+                        tracing::warn!("outbox: sent, but saving the copy failed: {e}");
+                        cache.queue_sent_copy(
+                            account_id,
+                            &copy,
+                            reply.as_deref(),
+                            dest.as_deref(),
+                            &e.to_string(),
+                        );
                     }
                 }
             }

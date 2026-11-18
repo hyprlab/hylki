@@ -10,6 +10,7 @@ use crate::worker::imap::retry::load_messages_retry;
 use crate::worker::imap::send::{
     append_draft, delete_draft, file_sent_copy, flush_outbox, index_sent_copy, mark_answered,
 };
+use crate::worker::local::sent::keep_sent_here;
 use crate::worker::outbox::{drop_superseded_outbox, schedule_send, send_failed};
 use crate::worker::smtp::{send_smtp, smtp_refused};
 use crate::worker::{reply_copy_path, OutgoingMessage, WorkerEvent};
@@ -129,7 +130,10 @@ impl<E: Emit> ImapWorker<E> {
                         .await;
                         true
                     }
-                    Ok(None) => true,
+                    Ok(None) => {
+                        keep_sent_here(account, message.from_alias.as_deref(), &raw, emit);
+                        true
+                    }
                     Err(e) => {
                         // The message went, so it is not the Outbox's: keep
                         // the copy for the next connection to file (#678).

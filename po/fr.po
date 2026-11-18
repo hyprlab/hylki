@@ -8016,6 +8016,10 @@ msgstr "Ce n’est pas un nom de dossier"
 msgid "Could not store the message: {e}"
 msgstr "Impossible d’enregistrer le message : {e}"
 
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr "Message envoyé, mais l’enregistrement dans Envoyés a échoué : {e}"
+
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Impossible d’ouvrir les dossiers sur cet ordinateur : {e}"
 

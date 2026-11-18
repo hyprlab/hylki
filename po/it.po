@@ -8263,6 +8263,10 @@ msgid "Could not store the message: {e}"
 msgstr "Impossibile salvare il messaggio: {e}"
 
 #, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr "Messaggio inviato, ma il salvataggio negli Inviati non è riuscito: {e}"
+
+#, fuzzy
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Impossibile svuotare la cartella: {e}"
 

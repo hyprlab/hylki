@@ -8087,6 +8087,10 @@ msgid "Could not store the message: {e}"
 msgstr "No s'ha pogut desar el missatge: {e}"
 
 #, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr "Missatge enviat, però desar-lo a Enviats ha fallat: {e}"
+
+#, fuzzy
 msgid "Could not open the folders on this computer: {e}"
 msgstr "No s'ha pogut buidar la carpeta: {e}"
 

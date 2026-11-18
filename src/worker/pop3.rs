@@ -12,6 +12,7 @@ use crate::worker::compose::build::restore_msgid_case;
 use crate::worker::ids::hash_uid;
 use crate::worker::imap::send::flush_outbox;
 use crate::worker::index_queue::index_pause;
+use crate::worker::local::sent::keep_sent_here;
 use crate::worker::offline::Offline;
 use crate::worker::outbox::{
     delete_queued, drop_superseded_outbox, emit_outbox, note_answered, send_failed,
@@ -531,7 +532,9 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
         let emit = &self.emit;
         restore_msgid_case(cache.as_ref(), &mut message);
         match send_smtp(account, &message).await {
-            Ok(_) => {
+            Ok(raw) => {
+                // POP3 has no folder for it on the server (#678).
+                keep_sent_here(account, message.from_alias.as_deref(), &raw, emit);
                 // Kept in the cache only: POP3 has no flags.
                 for (path, uid, forwarded) in answered_copies(
                     cache.as_ref(),

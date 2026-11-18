@@ -31,6 +31,7 @@ mod handle;
 mod import;
 mod maildir;
 mod ops;
+pub(super) mod sent;
 
 use maildir::{Entry, Maildir, INBOX};
 

@@ -8069,6 +8069,10 @@ msgstr "Αυτό δεν είναι έγκυρο όνομα φακέλου"
 msgid "Could not store the message: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του μηνύματος: {e}"
 
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr "Το μήνυμα στάλθηκε, αλλά η αποθήκευση στα Απεσταλμένα απέτυχε: {e}"
+
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Δεν ήταν δυνατό το άνοιγμα των τοπικών φακέλων: {e}"
 

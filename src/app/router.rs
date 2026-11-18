@@ -353,6 +353,7 @@ impl AppModel {
             msg @ (AppMsg::OpenAccounts
             | AppMsg::AddFirstAccount
             | AppMsg::AccountSaved { .. }
+            | AppMsg::SentFiledHere
             | AppMsg::ShowKeyringHelp { .. }
             | AppMsg::KeyringRead { .. }
             | AppMsg::ReconnectAccounts

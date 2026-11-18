@@ -7987,6 +7987,11 @@ msgstr "Это не имя папки"
 msgid "Could not store the message: {e}"
 msgstr "Не удалось сохранить сообщение: {e}"
 
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr ""
+"Сообщение отправлено, но сохранить его в «Отправленные» не удалось: {e}"
+
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Не удалось открыть папки на этом компьютере: {e}"
 

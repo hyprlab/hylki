@@ -8031,6 +8031,11 @@ msgstr "Ungültiger Ordnername"
 msgid "Could not store the message: {e}"
 msgstr "Nachricht konnte nicht gespeichert werden: {e}"
 
+#, fuzzy
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr ""
+"Nachricht gesendet, aber Speichern im Ordner »Gesendet« fehlgeschlagen: {e}"
+
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Lokale Ordner konnten nicht geöffnet werden: {e}"
 
