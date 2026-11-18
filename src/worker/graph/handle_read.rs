@@ -327,5 +327,11 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             )
             .await;
         }
+        // The Sent folders whose count a refresh saw move (#675), listed
+        // again so a reply sent from another computer joins its
+        // conversation.
+        for (folder_id, path) in std::mem::take(&mut self.state.sent_due) {
+            self.on_load_messages(folder_id, path, false).await;
+        }
     }
 }

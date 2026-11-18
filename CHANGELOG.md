@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Fixed: replies sent from another computer joined their conversation
+  only after Sent was opened** (#675). Hylki listed Sent at startup and
+  when it was opened, so a reply sent elsewhere later stayed out of the
+  conversation and the message list's thread. Sent is now listed again
+  whenever the periodic check sees it change: by its next message number on
+  IMAP, by its message count on Microsoft 365 and JMAP. On IMAP this
+  includes the folder chosen for copies of sent mail.
+
 - **Added: tooltips for cut subjects and previews** (#673, requested by
   3v1n0). Hovering a subject or preview that the message list cuts short
   shows its whole text in a tooltip: the full subject, and all of the

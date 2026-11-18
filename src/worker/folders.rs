@@ -28,6 +28,28 @@ pub(crate) fn snoozed_counts<T>(list: &[T], of: impl Fn(&T) -> (&Folder, u32)) -
         .collect()
 }
 
+/// The Sent folders of a listing whose message count moved since the one
+/// before (#675), as (folder id, path), with `seen` keeping each count for
+/// the next. A conversation takes the user's own replies from the cache,
+/// and Sent is otherwise listed only at startup and when it is opened: a
+/// reply sent from another computer stayed out of the conversation until
+/// Sent was visited by hand. A folder seen for the first time is noted,
+/// not reported; startup lists Sent anyway.
+pub(crate) fn moved_sent<T>(
+    list: &[T],
+    of: impl Fn(&T) -> (&Folder, u32),
+    seen: &mut std::collections::HashMap<String, u32>,
+) -> Vec<(u32, String)> {
+    list.iter()
+        .map(of)
+        .filter(|(f, _)| f.kind == FolderKind::Sent)
+        .filter_map(|(f, total)| {
+            let before = seen.insert(f.path.clone(), total)?;
+            (before != total).then(|| (f.id, f.path.clone()))
+        })
+        .collect()
+}
+
 /// The chip number for a folder whose messages are all in hand.
 pub(super) fn chip_count_of(kind: FolderKind, messages: &[Message]) -> u32 {
     if chip_counts_all(kind) {
@@ -183,6 +205,24 @@ mod tests {
             unread: 0,
             childless: false,
         }
+    }
+
+    /// #675: Sent is listed again when its count moves, not on first sight
+    /// and not for other folders.
+    #[test]
+    fn a_sent_folder_is_reported_when_its_count_moves() {
+        let listing = |sent: u32, inbox: u32| {
+            vec![
+                (folder("INBOX", FolderKind::Inbox), inbox),
+                (folder("Sent", FolderKind::Sent), sent),
+            ]
+        };
+        let mut seen = std::collections::HashMap::new();
+        let moved = |list: &[(Folder, u32)], seen: &mut _| moved_sent(list, |(f, n)| (f, *n), seen);
+        assert!(moved(&listing(10, 3), &mut seen).is_empty());
+        assert!(moved(&listing(10, 4), &mut seen).is_empty());
+        assert_eq!(moved(&listing(11, 4), &mut seen), [(0, "Sent".to_string())]);
+        assert!(moved(&listing(11, 4), &mut seen).is_empty());
     }
 
     /// The ids are stored: roles first in their fixed order, then the

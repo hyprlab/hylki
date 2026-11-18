@@ -9,7 +9,7 @@ use crate::models::{Folder, FolderKind};
 use crate::worker::folders::number_folders;
 use crate::worker::jmap::index::JmapState;
 use crate::worker::jmap::wire::{args, call, jmap_call, JmapSession, CAP_CORE, CAP_MAIL};
-use crate::worker::{blocking, chip_counts_all, snoozed_counts, WorkerEvent};
+use crate::worker::{blocking, chip_counts_all, moved_sent, snoozed_counts, WorkerEvent};
 
 /// One mailbox, flattened out of the tree.
 pub(super) struct JmapFolder {
@@ -181,6 +181,11 @@ pub(super) async fn jmap_refresh_unread(
     }
     state.adopt_folders(&list);
     let snoozed = snoozed_counts(&list, |f| (&f.folder, f.total));
+    for moved in moved_sent(&list, |f| (&f.folder, f.total), &mut state.sent_totals) {
+        if !state.sent_due.contains(&moved) {
+            state.sent_due.push(moved);
+        }
+    }
     let folders: Vec<Folder> = list.into_iter().map(|f| f.folder).collect();
     if let Some(c) = cache {
         c.save_folders(account_id, &folders);
