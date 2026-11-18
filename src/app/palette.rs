@@ -156,6 +156,7 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
                 "Ctrl+Shift+A",
                 i18n_noop("Show or hide the accounts in the sidebar"),
             ),
+            ("F5", i18n_noop("Check for new mail")),
             ("Ctrl+Shift+F", i18n_noop("Focus Mode on or off")),
             ("F11", i18n_noop("Fullscreen on or off")),
             (
@@ -316,7 +317,9 @@ impl AppModel {
         });
         add(i18n("Undo"), &action, "Ctrl+Z", || AppMsg::Undo);
         add(i18n("Redo"), &action, "Ctrl+Shift+Z", || AppMsg::Redo);
-        add(i18n("Check for New Mail"), &action, "", || AppMsg::Refresh);
+        add(i18n("Check for New Mail"), &action, "F5", || {
+            AppMsg::Refresh
+        });
         add(i18n("Search Messages"), &action, "Ctrl+F", || {
             AppMsg::OpenListSearch
         });

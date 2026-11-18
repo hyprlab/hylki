@@ -235,6 +235,13 @@ impl AppModel {
             "app.focus-mode",
             &["<Ctrl><Shift>f"],
         );
+        // F5 checks for new mail, as Refresh does, whichever key map is
+        // on (#678).
+        let refresh = gtk::gio::SimpleAction::new("refresh", None);
+        let s = sender.clone();
+        refresh.connect_activate(move |_, _| s.input(AppMsg::Refresh));
+        app.add_action(&refresh);
+        gtk::prelude::GtkApplicationExt::set_accels_for_action(&app, "app.refresh", &["F5"]);
         // Ctrl+ / Ctrl- / Ctrl+0: message zoom, the bodies alone. The
         // = key stands in for + on layouts where + needs Shift, and the
         // keypad's keys count too, as in every browser.

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **Added: F5 checks for new mail** (#678), as the Refresh button does, in
+  every key map. The shortcuts list and the command palette show it.
+
 - **Fixed: mail sent from a POP3 account, or one with no Sent folder, kept
   no copy** (#678). A copy now goes to On This Computer's Sent folder, and
   On This Computer is added when there is none. An account whose server
