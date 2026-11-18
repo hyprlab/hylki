@@ -606,6 +606,9 @@ msgstr ""
 msgid "Attach to This Draft"
 msgstr ""
 
+msgid "Discard"
+msgstr ""
+
 msgid "Message discarded"
 msgstr ""
 
@@ -3859,9 +3862,6 @@ msgid "Save Draft"
 msgstr ""
 
 msgid "Keep Editing"
-msgstr ""
-
-msgid "Discard"
 msgstr ""
 
 msgid "Upload to cloud storage and share a link"
@@ -7954,6 +7954,12 @@ msgid "Undo Send"
 msgstr ""
 
 msgid "How long Undo is offered after sending."
+msgstr ""
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr ""
 
 msgid "Request read receipts"

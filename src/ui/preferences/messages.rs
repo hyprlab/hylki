@@ -128,6 +128,8 @@ pub(crate) struct PrefInit {
     pub(crate) reply_header: String,
     /// Undo Send delay in seconds, 0 for off (#434).
     pub(crate) undo_send_secs: u32,
+    /// A notice with Undo after a discard (#678).
+    pub(crate) discard_notice: bool,
     /// The words that make Send ask when nothing is attached, "" for never.
     pub(crate) attachment_keywords: String,
     pub(crate) app_theme: AppTheme,
@@ -581,5 +583,6 @@ pub(crate) enum PrefOutput {
     SetReplyHeader(String),
     SetAttachmentKeywords(String),
     SetUndoSend(u32),
+    SetDiscardNotice(bool),
     Closed,
 }

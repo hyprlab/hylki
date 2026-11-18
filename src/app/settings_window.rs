@@ -112,6 +112,7 @@ impl AppModel {
             fold_quote: self.fold_quote,
             reply_header: self.reply_header.clone(),
             undo_send_secs: self.undo_send_secs,
+            discard_notice: self.discard_notice,
             attachment_keywords: self
                 .attachment_keywords
                 .clone()

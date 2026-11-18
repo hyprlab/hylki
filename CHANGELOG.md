@@ -9,8 +9,10 @@
   30 days of it, without subjects and with addresses shortened.
 
 - **Added: Undo after discarding a message** (#678). Discard in the
-  composer's Save the message? dialog shows a notice with Undo for 15
-  seconds, which opens the message again as it was.
+  composer's Save the message? dialog goes on the window's Undo history:
+  Undo Discard in the main menu, or Ctrl+Z, opens the message again as it
+  was. Settings → Composing → Undo after Discard, off by default, also shows
+  a notice with Undo for 15 seconds.
 
 - **Added: F5 checks for new mail** (#678), as the Refresh button does, in
   every key map. The shortcuts list and the command palette show it.

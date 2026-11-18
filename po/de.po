@@ -631,6 +631,9 @@ msgstr "Keine Entwürfe, um fortzufahren"
 msgid "Attach to This Draft"
 msgstr "Diesem Entwurf beifügen"
 
+msgid "Discard"
+msgstr "Verwerfen"
+
 #, fuzzy
 msgid "Message discarded"
 msgstr "Nachricht bereit"
@@ -4212,9 +4215,6 @@ msgstr "Entwurf speichern"
 
 msgid "Keep Editing"
 msgstr "Weiter bearbeiten"
-
-msgid "Discard"
-msgstr "Verwerfen"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "In Cloud-Speicher hochladen und Link teilen"
@@ -8688,6 +8688,12 @@ msgstr "Senden widerrufen"
 
 msgid "How long Undo is offered after sending."
 msgstr "Dauer der Einblendung zum Wiederrufen des Sendevorgangs"
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr "Lesebestätigungen anfordern"

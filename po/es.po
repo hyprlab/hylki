@@ -642,6 +642,9 @@ msgstr "No hay borradores que continuar."
 msgid "Attach to This Draft"
 msgstr "Adjuntar a este borrador"
 
+msgid "Discard"
+msgstr "Descartar"
+
 #, fuzzy
 msgid "Message discarded"
 msgstr "Mensaje preparado"
@@ -4199,9 +4202,6 @@ msgstr "Guardar borrador"
 
 msgid "Keep Editing"
 msgstr "Seguir editando"
-
-msgid "Discard"
-msgstr "Descartar"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Subir al almacenamiento en la nube y compartir un enlace"
@@ -8655,6 +8655,12 @@ msgstr "Deshacer envío"
 
 msgid "How long Undo is offered after sending."
 msgstr "Tiempo durante el que se ofrece Deshacer después de enviar."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr "Solicitar confirmaciones de lectura"

@@ -17,9 +17,13 @@ use super::model::AppModel;
 use super::msg::AppMsg;
 use super::picker::show_message_picker;
 
-/// How long Undo stays on offer after a discard: longer than a toast's
-/// usual few seconds, as the message is gone for good once it ends.
+/// How long the notice after a discard stays up: longer than a toast's
+/// usual few seconds, as it is the reminder that Undo can bring it back.
 const UNDO_DISCARD_SECS: u32 = 15;
+
+/// How many discarded messages Undo can still reopen. An older one's entry
+/// finds nothing and is passed over.
+const DISCARDED_KEPT: usize = 10;
 
 impl AppModel {
     /// Every template the app knows, under its account's name.
@@ -266,27 +270,51 @@ impl AppModel {
         out
     }
 
-    /// A written message was discarded (#678): a toast offers it back for
-    /// a while, as Undo Send does for one sent.
+    /// A written message was discarded (#678): it goes on the window's Undo
+    /// history, and with the setting on, a toast offers it back as well.
     fn offer_undo_discard(
-        &self,
+        &mut self,
         message: crate::worker::OutgoingMessage,
         sender: &ComponentSender<Self>,
     ) {
+        let key = self.discarded.last().map_or(1, |(k, _)| k + 1);
+        let account_id = message.from_account_id;
+        self.discarded.push((key, message));
+        if self.discarded.len() > DISCARDED_KEPT {
+            self.discarded.remove(0);
+        }
+        self.push_undo(
+            account_id,
+            i18n("Discard"),
+            super::undo::UndoStep::Reopen { key },
+        );
+        if !self.discard_notice {
+            return;
+        }
         let toast = adw::Toast::builder()
             .title(i18n("Message discarded"))
             .button_label(i18n("Undo"))
             .timeout(UNDO_DISCARD_SECS)
             .build();
-        // Taken by the first click: a second one finds nothing to reopen.
-        let held = std::cell::RefCell::new(Some(message));
         let s = sender.clone();
-        toast.connect_button_clicked(move |_| {
-            if let Some(m) = held.borrow_mut().take() {
-                s.input(AppMsg::UndoDiscard(Box::new(m)));
-            }
-        });
+        toast.connect_button_clicked(move |_| s.input(AppMsg::UndoDiscard(key)));
         self.show_toast(&toast);
+    }
+
+    /// Open discarded message `key` again, once: Undo from the toast, the
+    /// menu or Ctrl+Z, whichever comes first, takes it.
+    pub(super) fn reopen_discarded(&mut self, key: u64, sender: &ComponentSender<Self>) {
+        let Some(at) = self.discarded.iter().position(|(k, _)| *k == key) else {
+            return;
+        };
+        let (_, message) = self.discarded.remove(at);
+        let account = self.email_of_config(message.from_account_id);
+        crate::desktop::send_log::note_message(
+            &account,
+            &message,
+            "discard undone: back in the composer",
+        );
+        self.compose_unsent(message.from_account_id, message, sender);
     }
 
     /// The messages the router sends here (see `AppModel::route`).
@@ -387,14 +415,12 @@ impl AppModel {
                 crate::desktop::send_log::note_message(&account, &message, "discarded");
                 self.offer_undo_discard(*message, &sender)
             }
-            AppMsg::UndoDiscard(message) => {
-                let account = self.email_of_config(message.from_account_id);
-                crate::desktop::send_log::note_message(
-                    &account,
-                    &message,
-                    "discard undone: back in the composer",
-                );
-                self.compose_unsent(message.from_account_id, *message, &sender)
+            AppMsg::UndoDiscard(key) => {
+                // The toast's Undo: the history entry goes with it.
+                self.undo_stack
+                    .retain(|e| e.step != super::undo::UndoStep::Reopen { key });
+                self.refresh_undo_menu();
+                self.reopen_discarded(key, &sender);
             }
 
             AppMsg::DiscardAutosave { id, origin } => {

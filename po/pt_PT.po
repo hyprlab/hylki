@@ -649,6 +649,9 @@ msgstr "Não existem rascunhos para continuar."
 msgid "Attach to This Draft"
 msgstr "Anexar a este rascunho"
 
+msgid "Discard"
+msgstr "Descartar"
+
 #, fuzzy
 msgid "Message discarded"
 msgstr "Mensagem pronta"
@@ -4211,9 +4214,6 @@ msgstr "Guardar rascunho"
 
 msgid "Keep Editing"
 msgstr "Continuar a editar"
-
-msgid "Discard"
-msgstr "Descartar"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Carregar para o armazenamento na nuvem e partilhar uma ligação"
@@ -8656,6 +8656,12 @@ msgstr "Anular envio"
 
 msgid "How long Undo is offered after sending."
 msgstr "Durante quanto tempo é possível anular após enviar."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr "Pedir confirmações de leitura"

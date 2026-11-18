@@ -1207,9 +1207,12 @@ saved. **Discard** on a new message removes the copy it left; on a draft you
 had saved before, the last automatic save stays. A save that fails, offline
 say, is tried again at the next one, without a message about it.
 
-After **Discard**, a notice at the foot of the window offers **Undo** for
-15 seconds. Undo opens the message again in a composer as it was, as a new
-message. A template's changes are discarded without it.
+After **Discard**, **Undo Discard** in the main menu, or Ctrl+Z, opens the
+message again in a composer as it was, as a new message. The last ten
+discarded messages can be brought back this way until Hylki quits. With
+**Settings → Composing → Undo after Discard** on, a notice at the foot of the
+window also offers **Undo** for 15 seconds. A template's changes are
+discarded without it.
 
 ### Undo Send
 

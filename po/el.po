@@ -682,6 +682,9 @@ msgstr "Δεν υπάρχουν πρόχειρα για συνέχιση."
 msgid "Attach to This Draft"
 msgstr "Επισύναψη σε αυτό το πρόχειρο"
 
+msgid "Discard"
+msgstr "Απόρριψη"
+
 #, fuzzy
 msgid "Message discarded"
 msgstr "Σώμα μηνύματος"
@@ -4245,9 +4248,6 @@ msgstr "Αποθήκευση προχείρου"
 
 msgid "Keep Editing"
 msgstr "Συνέχεια επεξεργασίας"
-
-msgid "Discard"
-msgstr "Απόρριψη"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Μεταφόρτωση στον χώρο αποθήκευσης cloud και κοινοποίηση συνδέσμου"
@@ -8730,6 +8730,12 @@ msgstr "Αναίρεση αποστολής"
 
 msgid "How long Undo is offered after sending."
 msgstr "Για πόσο χρόνο είναι διαθέσιμη η αναίρεση μετά την αποστολή."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr "Αίτημα επιβεβαιώσεων ανάγνωσης"

@@ -691,6 +691,9 @@ msgstr "Brak szkiców do kontynuowania."
 msgid "Attach to This Draft"
 msgstr "Dołącz do tego szkicu"
 
+msgid "Discard"
+msgstr "Odrzuć"
+
 #, fuzzy
 msgid "Message discarded"
 msgstr "Czcionka wiadomości"
@@ -4447,9 +4450,6 @@ msgstr "Zapisz szkic"
 
 msgid "Keep Editing"
 msgstr "Wróć do pisania"
-
-msgid "Discard"
-msgstr "Odrzuć"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Prześlij do chmury i udostępnij odnośnik"
@@ -9075,6 +9075,12 @@ msgid "Undo Send"
 msgstr "Cofnij"
 
 msgid "How long Undo is offered after sending."
+msgstr ""
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr ""
 
 msgid "Request read receipts"

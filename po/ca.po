@@ -681,6 +681,9 @@ msgstr "No hi ha esborranys per continuar."
 msgid "Attach to This Draft"
 msgstr "Adjunta-ho a aquest esborrany"
 
+msgid "Discard"
+msgstr "Descarta"
+
 #, fuzzy
 msgid "Message discarded"
 msgstr "Cos del missatge"
@@ -4256,9 +4259,6 @@ msgstr "Desa l'esborrany"
 
 msgid "Keep Editing"
 msgstr "Continua editant"
-
-msgid "Discard"
-msgstr "Descarta"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Puja a l'emmagatzematge al núvol i comparteix un enllaç"
@@ -8727,6 +8727,12 @@ msgstr "Desfés l'enviament"
 
 msgid "How long Undo is offered after sending."
 msgstr "Quant de temps s'ofereix desfer després d'enviar."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr ""

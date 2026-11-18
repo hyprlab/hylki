@@ -630,6 +630,9 @@ msgstr "Нет черновиков для продолжения."
 msgid "Attach to This Draft"
 msgstr "Прикрепить к этому черновику"
 
+msgid "Discard"
+msgstr "Отменить"
+
 #, fuzzy
 msgid "Message discarded"
 msgstr "Сообщение готово"
@@ -4195,9 +4198,6 @@ msgstr "Сохранить черновик"
 
 msgid "Keep Editing"
 msgstr "Продолжить редактирование"
-
-msgid "Discard"
-msgstr "Отменить"
 
 msgid "Upload to cloud storage and share a link"
 msgstr "Загрузить в облачное хранилище и поделиться ссылкой"
@@ -8624,6 +8624,12 @@ msgstr "Отменить отправку"
 
 msgid "How long Undo is offered after sending."
 msgstr "Как долго предлагается отменить действие после отправки."
+
+msgid "Undo after Discard"
+msgstr ""
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
 
 msgid "Request read receipts"
 msgstr "Запрашивать уведомления о прочтении"
