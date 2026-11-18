@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.49.0-beta.3" date="2026-11-18" type="development">
+      <description>
+        <p>A send log is kept across restarts, Discard in the composer can be undone, and F5 checks for new mail. Sent mail always keeps a copy, also from POP3 accounts and when the server refuses it, and replies sent from another computer join their conversation without opening Sent.</p>
+      </description>
+    </release>
     <release version="1.49.0-beta.2" date="2026-11-17" type="development">
       <description>
         <p>The composer has a Light / Dark Mode switch, events and tasks can be made from selected text, smart folders take negative and Gmail label conditions, and mail can be named by its Reply-To sender. Tooltips show cut subjects and previews whole, and Purelymail folders open again.</p>

@@ -1,5 +1,45 @@
 # Changelog
 
+## 1.49.0-beta.3 — 2026-11-18
+
+- **Added: a send log kept across restarts** (#678). Each message written
+  leaves a line in `send-log.tsv` in Hylki's data folder for what happened
+  to it: Send pressed, Undo Send, sent, not sent and why, held in the
+  Outbox, discarded, and where its copy went. Export log includes the last
+  30 days of it, without subjects and with addresses shortened.
+
+- **Added: Undo after discarding a message** (#678). Discard in the
+  composer's Save the message? dialog goes on the window's Undo history:
+  Undo Discard in the main menu, or Ctrl+Z, opens the message again as it
+  was. Settings → Composing → Undo after Discard, off by default, also shows
+  a notice with Undo for 15 seconds.
+
+- **Added: F5 checks for new mail** (#678), as the Refresh button does, in
+  every key map. The shortcuts list and the command palette show it.
+
+- **Fixed: mail sent from a POP3 account, or one with no Sent folder, kept
+  no copy** (#678). A copy now goes to On This Computer's Sent folder, and
+  On This Computer is added when there is none. An account whose server
+  files its own copy of sent mail is left as it was.
+
+- **Fixed: a sent message could be left with no copy** (#678). When the
+  server would not take the copy into Sent, Hylki showed an error but kept
+  nothing, and deleted the message's draft as after any send. The copy is
+  now kept on this computer and saved to Sent when Hylki next connects, and
+  the draft stays if the copy cannot be kept. The account's connection also
+  no longer panics when it drops right after an edited draft is sent.
+
+- **Fixed: replies sent from another computer joined their conversation
+  only after Sent was opened** (#675). Hylki listed Sent at startup and
+  when it was opened, so a reply sent elsewhere later stayed out of the
+  conversation and the message list's thread. Sent is now listed again
+  whenever the periodic check sees it change: by its next message number on
+  IMAP, by its message count on Microsoft 365 and JMAP. On IMAP this
+  includes the folder chosen for copies of sent mail.
+
+- **Translations:** German (PR #682 by Samuel Edlmeier), 2567 of 2571
+  strings translated.
+
 ## 1.49.0-beta.2 — 2026-11-17
 
 - **Added: tooltips for cut subjects and previews** (#673, requested by
