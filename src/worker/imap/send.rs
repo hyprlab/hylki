@@ -119,6 +119,15 @@ pub(in crate::worker) async fn flush_outbox(
                 sent_any = true;
                 sent += 1;
                 cache.delete_outbox(item.id);
+                let log = |event: &str| {
+                    crate::desktop::send_log::note(
+                        &account.email,
+                        &item.subject,
+                        &item.recipients,
+                        event,
+                    )
+                };
+                log("sent from the Outbox");
                 mark_answered(
                     session,
                     Some(cache),
@@ -154,6 +163,7 @@ pub(in crate::worker) async fn flush_outbox(
                 };
                 match filed {
                     Ok(Some(path)) => {
+                        log(&format!("copy saved to {path}"));
                         index_sent_copy(
                             account_id,
                             session,
@@ -165,9 +175,14 @@ pub(in crate::worker) async fn flush_outbox(
                         )
                         .await;
                     }
-                    Ok(None) => keep_sent_here(account, from.as_deref(), &copy, emit),
+                    Ok(None) => {
+                        keep_sent_here(account, from.as_deref(), &copy, &item.subject, emit)
+                    }
                     Err(e) => {
                         tracing::warn!("outbox: sent, but saving the copy failed: {e}");
+                        log(&format!(
+                            "copy refused by the server: {e}; kept to save later"
+                        ));
                         cache.queue_sent_copy(
                             account_id,
                             &copy,
@@ -180,6 +195,12 @@ pub(in crate::worker) async fn flush_outbox(
             }
             Err(e) => {
                 cache.record_outbox_failure(item.id, &e.to_string());
+                crate::desktop::send_log::note(
+                    &account.email,
+                    &item.subject,
+                    &item.recipients,
+                    &format!("still not sent: {e}; held in the Outbox"),
+                );
                 if loud {
                     emit(WorkerEvent::error(i18n_f(
                         "Still could not send “{subject}”: {e}",
@@ -240,6 +261,14 @@ async fn file_pending_sent_copies(
         {
             Ok(path) => {
                 cache.delete_sent_copy(copy.id);
+                if let Some(path) = &path {
+                    crate::desktop::send_log::note(
+                        &account.email,
+                        "",
+                        "",
+                        &format!("copy kept since an earlier send saved to {path}"),
+                    );
+                }
                 if let Some(path) = path {
                     index_sent_copy(
                         account_id,

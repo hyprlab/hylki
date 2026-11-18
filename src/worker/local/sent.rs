@@ -20,20 +20,34 @@ pub(in crate::worker) fn keep_sent_here(
     account: &AccountConfig,
     from: Option<&str>,
     raw: &[u8],
+    subject: &str,
     emit: &impl Fn(WorkerEvent),
 ) {
-    if account.server_files_sent(from) || account.is_local() {
+    let log = |event: &str| crate::desktop::send_log::note(&account.email, subject, "", event);
+    if account.is_local() {
+        return;
+    }
+    if account.server_files_sent(from) {
+        log("copy left to the server");
         return;
     }
     let filed = crate::config::local_mail_dir()
         .ok_or_else(|| std::io::Error::other("no data folder"))
         .and_then(|root| file_sent_at(&root, raw));
     match filed {
-        Ok(()) => emit(WorkerEvent::SentFiledHere),
-        Err(e) => emit(WorkerEvent::error(i18n_f(
-            "Message sent, but saving it to On This Computer failed: {e}",
-            &[("e", &e.to_string())],
-        ))),
+        Ok(()) => {
+            log("no Sent folder on the server; copy saved to On This Computer, Sent");
+            emit(WorkerEvent::SentFiledHere);
+        }
+        Err(e) => {
+            log(&format!(
+                "no Sent folder on the server; copy not saved: {e}"
+            ));
+            emit(WorkerEvent::error(i18n_f(
+                "Message sent, but saving it to On This Computer failed: {e}",
+                &[("e", &e.to_string())],
+            )));
+        }
     }
 }
 
@@ -69,7 +83,7 @@ mod tests {
             ..crate::worker::test_support::sample_account()
         };
         let emitted = std::cell::Cell::new(false);
-        keep_sent_here(&account, None, b"x", &|_| emitted.set(true));
+        keep_sent_here(&account, None, b"x", "", &|_| emitted.set(true));
         assert!(!emitted.get());
     }
 }

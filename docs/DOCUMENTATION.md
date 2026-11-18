@@ -2745,6 +2745,18 @@ shows or hides it. Its buttons are, from the left, **Export log** (while the
 console is open), the console, and the bar's own toggle. Stored as
 `status_bar_top` in `privacy.toml`.
 
+#### The send log
+
+The console holds only what happened since Hylki started. What happens to
+each message written is also kept in `send-log.tsv` in Hylki's data folder
+(`~/.local/share/hylki/`, or `~/.var/app/co.hyprlab.Hylki/data/hylki/` in
+the Flatpak), readable by you alone: Send pressed, Undo Send, sent, not
+sent and why, held in the Outbox, discarded, and where the copy of a sent
+message went. Each line has the time, the account, what happened, the
+subject and the recipients. The file is cut back to its newest half when
+it passes 512 KB. **Export log** includes its last 30 days, without
+subjects and with addresses shortened to their domain.
+
 ## Privacy
 
 Hylki collects no telemetry and sends no analytics. Remote content in messages is

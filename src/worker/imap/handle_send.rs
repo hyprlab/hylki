@@ -111,6 +111,9 @@ impl<E: Emit> ImapWorker<E> {
                     &message.in_reply_to,
                     message.from_alias.as_deref(),
                 );
+                let log = |event: &str| {
+                    crate::desktop::send_log::note(&account.email, &message.subject, "", event)
+                };
                 let sess = ensured(session);
                 // Whether a copy of the message exists somewhere other than
                 // the draft it was written in, which is deleted next.
@@ -118,6 +121,7 @@ impl<E: Emit> ImapWorker<E> {
                     .await
                 {
                     Ok(Some(path)) => {
+                        log(&format!("copy saved to {path}"));
                         index_sent_copy(
                             account_id,
                             session,
@@ -131,7 +135,8 @@ impl<E: Emit> ImapWorker<E> {
                         true
                     }
                     Ok(None) => {
-                        keep_sent_here(account, message.from_alias.as_deref(), &raw, emit);
+                        let from = message.from_alias.as_deref();
+                        keep_sent_here(account, from, &raw, &message.subject, emit);
                         true
                     }
                     Err(e) => {
@@ -147,6 +152,11 @@ impl<E: Emit> ImapWorker<E> {
                                 &e,
                             )
                             .is_some()
+                        });
+                        log(&if held {
+                            format!("copy refused by the server: {e}; kept to save later")
+                        } else {
+                            format!("copy refused by the server: {e}; draft left in Drafts")
                         });
                         emit(WorkerEvent::error(if held {
                             i18n_f(

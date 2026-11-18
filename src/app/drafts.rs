@@ -382,8 +382,18 @@ impl AppModel {
                 }
             }
 
-            AppMsg::ComposeDiscarded(message) => self.offer_undo_discard(*message, &sender),
+            AppMsg::ComposeDiscarded(message) => {
+                let account = self.email_of_config(message.from_account_id);
+                crate::desktop::send_log::note_message(&account, &message, "discarded");
+                self.offer_undo_discard(*message, &sender)
+            }
             AppMsg::UndoDiscard(message) => {
+                let account = self.email_of_config(message.from_account_id);
+                crate::desktop::send_log::note_message(
+                    &account,
+                    &message,
+                    "discard undone: back in the composer",
+                );
                 self.compose_unsent(message.from_account_id, *message, &sender)
             }
 

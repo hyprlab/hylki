@@ -72,6 +72,15 @@ pub(super) fn send_failed(
     if let (true, Some(old), Some(c)) = (queued, msg.outbox_origin, cache) {
         c.delete_outbox(old);
     }
+    crate::desktop::send_log::note_message(
+        &account.email,
+        msg,
+        &if queued {
+            format!("not sent: {error}; held in the Outbox")
+        } else {
+            format!("not sent: {error}; back in the composer")
+        },
+    );
     if queued && error == offline_text() {
         // Nothing failed: the message waits for the network, which the
         // Refresh button already shows is down (#442).
@@ -117,6 +126,15 @@ pub(super) fn schedule_send(
     emit: &impl Fn(WorkerEvent),
 ) {
     let queued = queue_outbox_message(cache, account_id, account, msg, sent_path, "", Some(at));
+    crate::desktop::send_log::note_message(
+        &account.email,
+        msg,
+        &if queued {
+            format!("held in the Outbox until {}", crate::datefmt::date_time(at))
+        } else {
+            "could not be scheduled; back in the composer".to_string()
+        },
+    );
     if queued {
         if let (Some(old), Some(c)) = (msg.outbox_origin, cache) {
             c.delete_outbox(old);
@@ -217,6 +235,15 @@ pub(crate) fn park_for_next_launch(
     if let (true, Some(old)) = (queued, msg.outbox_origin) {
         cache.delete_outbox(old);
     }
+    crate::desktop::send_log::note_message(
+        &account.email,
+        &msg,
+        if queued {
+            "Hylki quit during Undo Send; held in the Outbox for the next start"
+        } else {
+            "Hylki quit during Undo Send; could not be kept"
+        },
+    );
     queued
 }
 

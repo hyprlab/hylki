@@ -16,6 +16,7 @@ pub(crate) mod notify;
 pub(crate) mod platform;
 pub(crate) mod power;
 pub(crate) mod previewer;
+pub(crate) mod send_log;
 pub(crate) mod session;
 pub(crate) mod sound;
 pub(crate) mod single_instance;

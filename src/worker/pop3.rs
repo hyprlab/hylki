@@ -534,7 +534,13 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
         match send_smtp(account, &message).await {
             Ok(raw) => {
                 // POP3 has no folder for it on the server (#678).
-                keep_sent_here(account, message.from_alias.as_deref(), &raw, emit);
+                keep_sent_here(
+                    account,
+                    message.from_alias.as_deref(),
+                    &raw,
+                    &message.subject,
+                    emit,
+                );
                 // Kept in the cache only: POP3 has no flags.
                 for (path, uid, forwarded) in answered_copies(
                     cache.as_ref(),

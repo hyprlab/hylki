@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Added: a send log kept across restarts** (#678). Each message written
+  leaves a line in `send-log.tsv` in Hylki's data folder for what happened
+  to it: Send pressed, Undo Send, sent, not sent and why, held in the
+  Outbox, discarded, and where its copy went. Export log includes the last
+  30 days of it, without subjects and with addresses shortened.
+
 - **Added: Undo after discarding a message** (#678). Discard in the
   composer's Save the message? dialog shows a notice with Undo for 15
   seconds, which opens the message again as it was.
