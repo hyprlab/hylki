@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.49.1-beta.1" date="2026-11-19" type="development">
+      <description>
+        <p>Every message is written to the Outbox when Send is pressed and leaves it once the server accepts it, so closing Hylki or a crash no longer loses a message on its way. The Outbox appears only when a message could not be sent. A message being sent goes ahead of background downloads.</p>
+      </description>
+    </release>
     <release version="1.49.0-beta.4" date="2026-11-19" type="development">
       <description>
         <p>An address or link followed by Japanese, Chinese, Korean or Thai text no longer stops the mail worker or runs into the text, and sends survive a worker that stops. Messages open ahead of background flag checks and draft fetches, m marks the picked card, previews show no HTML, and calendar names show whole.</p>

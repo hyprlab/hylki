@@ -2,6 +2,61 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.49.1-beta.1
+
+### Fixes:
+
+- messages lost when Hylki was closed before they went - (#678)
+- messages slow to send behind background downloads - (#678)
+
+## What's new in 1.49.0
+
+### New features:
+
+- Autocrypt, by @hanthor - (#602)
+- Each recipient shows whether they have an OpenPGP key, by @hanthor - (#602)
+- The message source opens in the reader, with find - (#658)
+- The date sections of the message list fold - (#659)
+- Any folder's list can name the recipients instead of the sender - (#657)
+- Contacts import from CSV files into any address book - (#655)
+- Contacts move to another address book from a dialog
+- An alias can be its account's default From address - (#157)
+- Events and tasks from selected text - (#637)
+- Smart folders with negative and Gmail label conditions - (#639)
+- Mail can be named by its Reply-To sender - (#641)
+- Light / Dark Mode switch in the composer by @fsoft72 - (#671)
+- A send log kept across restarts - (#678)
+- Undo after discarding a message - (#678)
+- F5 checks for new mail - (#678)
+- Tooltips show cut subjects and previews whole - (#673)
+- Space previews a reader card's attachment - (#625)
+- Reply in the original's format answers formatted mail in rich text - (#646)
+- Plain text is sent wrapped as format=flowed - (#606)
+- Address completion suggests the people written to most first
+- The contributors and translators are on a Credits page of the About dialog
+
+### Fixes:
+
+- a message with large attachments or pictures slow to open by @valentin-morice - (#608)
+- drafts of encrypted messages saved readable by @hanthor - (#603)
+- mail sent from POP3 or with no Sent folder keeping no copy - (#678)
+- a sent message left with no copy when the server refused it - (#678)
+- replies sent elsewhere joining their conversation only after Sent was opened - (#675)
+- the mail worker stopping on an address with Japanese text after it - (#684)
+- web links running on into Chinese, Japanese, Korean or Thai text - (#684)
+- messages slow to open behind flag checks and draft fetches - (#680)
+- m marking the conversation's first message instead of the picked card - (#679)
+- calendar names cut short in the New Event and New Task dialogs - (#685)
+- HTML showing in message list previews - (#683)
+- Purelymail folders failing to open - (#672)
+- a hover on account headers that a click does not fold
+
+### Translations:
+
+- German by @samuel-edlmeier
+- Russian by @iliasen
+- French, complete, by @frenchy82
+
 ## What's new in 1.49.0-beta.4
 
 ### Fixes:

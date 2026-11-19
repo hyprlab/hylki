@@ -1,5 +1,284 @@
 # Changelog
 
+## 1.49.1-beta.1 — 2026-11-19
+
+- **Fixed: a message could be lost when Hylki was closed before it went**
+  (#678, reported by DarkStarCrashes123). A message waited in memory between
+  Send and the server taking it, and on a slow server it could wait behind
+  minutes of other work; closing Hylki then lost it. Every message is now
+  written to the Outbox when Send is pressed and leaves it once the server
+  accepts it, so a failure, a quit or a crash leaves it there to be sent.
+  While a message is on its way the Outbox does not list it: the Outbox
+  appears only when a message could not be sent. A message the server
+  refused stays in the Outbox with the reason, where Edit opens it.
+
+- **Fixed: a message could take minutes to send** (#678). Sending waited
+  behind folder syncs, flag checks and drafts downloaded in the background,
+  which on Yahoo with large drafts was two minutes. A message being sent now
+  goes ahead of them.
+
+## 1.49.0 — 2026-11-19
+
+Everything from 1.49.0-beta.1 to 1.49.0-beta.4: Autocrypt, the message source
+in the reader with find, contacts imported from CSV files, events and tasks
+made from selected text, smart folders with negative and Gmail label
+conditions, a send log with Undo after Discard, a Light / Dark Mode switch in
+the composer, and plain text sent wrapped as format=flowed.
+
+- **Fixed: the mail worker stopped on an address with Japanese text right
+  after it** (#684, reported by mjoach). An address such as `example.jpも`,
+  its domain followed by a letter of another script, stopped the account's
+  connection, and messages being sent stayed on Sending… and were lost at
+  quit. The domain now ends where the other script starts. If an account's
+  connection stops all the same, its sends move to the Outbox and the
+  connection starts again, up to three times in ten minutes.
+
+- **Fixed: web links ran on into Chinese, Japanese, Korean or Thai text**
+  (#684). Those scripts follow a link without a space, so their letters and
+  full-width punctuation became part of the URL. They now end a link, and a
+  link may start right after them, in the reader, Markdown and pasted text.
+
+- **Fixed: a message could take a long time to open** (#680, reported by
+  DarkStarCrashes123). Checks of a view's flags and tags, and drafts fetched
+  in the background, kept the connection ahead of the message clicked. The
+  message clicked now goes first. A draft over 8 MB is also fetched once,
+  not again on every listing of its folder.
+
+- **Fixed: m marked the conversation's first message, not the picked card**
+  (#679, reported by mbetrifork). With a card picked in the reader, m marks
+  that card read or unread, as the toolbar button does.
+
+- **Fixed: an account header showed a hover when a click on it does
+  nothing.** With Fold accounts with one click off in Settings → Sidebar,
+  only the chevron lights up.
+
+- **Fixed: the New Event and New Task dialogs cut calendar names short**
+  (#685, reported by rsx-xp). The Calendar and Task list pickers, and the
+  alarm pickers, show each name whole; a long name picked is shortened in
+  the row and shown whole in its tooltip.
+
+- **Fixed: message list previews showed HTML** (#683, reported by Khaitu).
+  A plain-text part written with HTML entities, such as a marketing
+  preheader of `&zwnj;` repeated, reached the list as written, and so did a
+  server's preview of one on JMAP and Microsoft 365. A preview is now words
+  only: tags, comments and a tag cut off by the fetch are removed and every
+  entity is decoded, wherever the text came from. Rows already cached are
+  shown cleaned and read again from an IMAP server when their folder syncs.
+
+- **Added: a send log kept across restarts** (#678). Each message written
+  leaves a line in `send-log.tsv` in Hylki's data folder for what happened
+  to it: Send pressed, Undo Send, sent, not sent and why, held in the
+  Outbox, discarded, and where its copy went. Export log includes the last
+  30 days of it, without subjects and with addresses shortened.
+
+- **Added: Undo after discarding a message** (#678). Discard in the
+  composer's Save the message? dialog goes on the window's Undo history:
+  Undo Discard in the main menu, or Ctrl+Z, opens the message again as it
+  was. Settings → Composing → Undo after Discard, off by default, also shows
+  a notice with Undo for 15 seconds.
+
+- **Added: F5 checks for new mail** (#678), as the Refresh button does, in
+  every key map. The shortcuts list and the command palette show it.
+
+- **Fixed: mail sent from a POP3 account, or one with no Sent folder, kept
+  no copy** (#678). A copy now goes to On This Computer's Sent folder, and
+  On This Computer is added when there is none. An account whose server
+  files its own copy of sent mail is left as it was.
+
+- **Fixed: a sent message could be left with no copy** (#678). When the
+  server would not take the copy into Sent, Hylki showed an error but kept
+  nothing, and deleted the message's draft as after any send. The copy is
+  now kept on this computer and saved to Sent when Hylki next connects, and
+  the draft stays if the copy cannot be kept. The account's connection also
+  no longer panics when it drops right after an edited draft is sent.
+
+- **Fixed: replies sent from another computer joined their conversation
+  only after Sent was opened** (#675). Hylki listed Sent at startup and
+  when it was opened, so a reply sent elsewhere later stayed out of the
+  conversation and the message list's thread. Sent is now listed again
+  whenever the periodic check sees it change: by its next message number on
+  IMAP, by its message count on Microsoft 365 and JMAP. On IMAP this
+  includes the folder chosen for copies of sent mail.
+
+- **Added: tooltips for cut subjects and previews** (#673, requested by
+  3v1n0). Hovering a subject or preview that the message list cuts short
+  shows its whole text in a tooltip: the full subject, and all of the
+  preview Hylki keeps for the message, a few hundred characters. Text that
+  fits shows no tooltip.
+
+- **Added: Light / Dark Mode switch in the composer** (#671, by Fabio
+  Rotondo). The editor's toolbar has the switch the reader has. It shows the
+  text being written, its source and its preview in the other scheme, for
+  that composer alone. The message sent is not affected. Settings → Reading
+  → Light / Dark Mode switch shows or hides both switches, open composers
+  included.
+
+- **Fixed: Purelymail folders could fail to open** (#672, reported by
+  rimmer). Purelymail can list flags with two backslashes, such as `\\Seen`,
+  beside the real ones. They are not valid IMAP, and the parser failed the
+  whole response on them, so the folder did not open and its mail did not
+  sync. Hylki now leaves these flags out of the server's flag lists before
+  reading them. They are not read as the flag they resemble: a message only
+  shows as read, starred or answered when the server sets the real flag.
+  Message text passes through untouched.
+
+- **Added: events and tasks from selected text** (#637, requested by
+  adri99-net). With text selected in the reader, the right-click menu offers
+  **Create Event from Selection…** and **Create Task from Selection…**. The
+  dialog starts from the date, start and end times, or range of days written
+  in the selection ("Friday at 3pm", "Nov 20-22", "20/11, 14:00-15:30"),
+  takes a short selection without its date as the title, and puts the
+  selection in the notes. A day without a time makes an all-day event.
+  Relative words and dates without a year count from the message's date.
+  Month and weekday names are read in English and the desktop's language.
+  The dates are read by fixed rules on this computer, with no language model.
+
+- **Added: smart folders with negative conditions** (#639, requested by
+  3v1n0). A text condition can now be **does not contain**, **is not**,
+  **does not start with** or **does not end with**, and **No attachments**
+  and **Not tagged** join the conditions. A new **Gmail label** condition
+  finds mail by its labels, or with no text any label, so it can also find
+  mail that has none. On Gmail, the copy of a message filed under a label
+  now counts as having it, so "Not tagged Work" leaves out mail under Work.
+
+- **Added: mail can be named by its Reply-To sender** (#641, requested by
+  somepaulo). **Settings → Contacts → Show the Reply-To sender** names a
+  message by the first address in its Reply-To header instead of From, in
+  the message list, the reader and notifications, so a web form's mail
+  shows the person who filled it in. The reader's header follows the name
+  with "via" and the From address. Mail from your own accounts, and mail
+  whose Reply-To repeats From, keep their sender. Off by default. A search
+  for a sender now also finds the Reply-To name and address.
+
+- **Added: the message source opens in the reader, with find**
+  (#658, requested by samuel-edlmeier). View Source shows the source in
+  place of the message, in the main window's reader or a message's own
+  window, under a **Message Source** bar. **Show Message**, Esc or Ctrl+U
+  again goes back to the message, as does opening another one. Ctrl+F finds
+  in the source with the reader's find bar: matches are marked as you type,
+  and Enter, Ctrl+G and the arrows step through them with a count. With the
+  reading pane off, or for a message that is not open, the source still
+  opens in a window of its own, which has the same find bar.
+
+- **Added: the date sections of the message list fold** (#659, requested
+  by samuel-edlmeier). A click on **Today**, **Yesterday** or another
+  heading folds its section to the heading, which shows how many
+  conversations it holds and a dot when any is unread, and a click on it
+  again opens it. With the list focused, Left folds the section of the message the
+  keyboard is on, once its conversation is folded, and Right or Enter on a
+  folded heading opens it. Each folder, unified row, tag and smart folder
+  keeps the sections folded in it.
+
+- **Added: any folder's list can name the recipients instead of the
+  sender** (#657, requested by samuel-edlmeier). **Show → Sender** or
+  **Recipients** in the list's sort and filter popover, or in its ⋯ menu in
+  Focus Mode, is kept for the open folder, unified row, tag or smart folder,
+  as its sort is. Sent folders and the Outbox still name the recipients
+  until Sender is chosen. The Outbox now always does, where it used to keep
+  whatever the folder before it showed.
+
+- **Added: contacts can be imported from CSV files, into any address
+  book** (#655). The import in Settings → Contacts and in the Contacts view
+  takes `.csv` files as well as `.vcf`, and opens **Import Contacts**, which
+  asks for the address book (the Hylki book or any writable EDS book) and
+  shows each CSV column with its first values and the contact field it
+  fills. Columns start matched from the exports of Google Contacts, Outlook
+  and Thunderbird, or from English names such as Name, Email and Phone, and
+  any of them can be matched by hand. Labels and categories become contact
+  groups in the book's own kind of group.
+
+- **Changed: contacts move to another address book from a dialog.**
+  **Move to Address Book…** in a contact's right-click menu, in the menu of
+  several selected together, and **Move to…** in their pane open a dialog
+  that lists the books they can go to, each under its account; one picked
+  and **Move** pressed, they move, with no second question. It replaces the
+  submenus of book names, and needs no address books in the sidebar to drag
+  onto. The menu item stays in the menu, unavailable, when there is no other
+  book to go to.
+
+- **Fixed: a message with large attachments or pictures was slow to open**
+  (#608, by Valentin Morice). A conversation with a 19 MB attachment opened
+  in 150 ms instead of 360 ms, and one with megabytes of pictures in its
+  body in 260 ms instead of 760 ms. Attachments are asked for once per
+  opening and shared instead of copied, the attachment drawer is built once
+  and renders each thumbnail once, and pictures carried in a message's body
+  are served apart from its page. Logging at the info level no longer writes
+  an attachment out byte by byte.
+
+- **Added: an alias can be its account's default From address** (#157,
+  requested by 3v1n0). **Default From address** in an alias's settings
+  makes new messages from the account start from that alias, and replies to
+  mail sent to none of the account's addresses. A reply to one of its
+  addresses still answers from it. The alias list marks the default.
+
+- **Added: Autocrypt** (#602, by James Reilly). Two switches in an
+  account's settings, both off to start with: one sends the account's
+  OpenPGP key with its mail, the other says the account prefers encrypted
+  mail. With the first on, keys others send that way are kept, and so are
+  the keys passed on in encrypted mail to several people (gossip). A key is
+  taken only from mail that passes the sender check, and only for the
+  address it came from. When everyone on a message prefers encrypted mail,
+  Encrypt turns on by itself. Found keys stay in a keyring of their own,
+  never the user's GnuPG keyring. Encrypting to a key from Autocrypt or WKD
+  does not ask first; a key passed on by someone else is asked about, as a
+  key in the keyring nobody vouched for is.
+
+- **Added: each recipient shows whether they have an OpenPGP key** (#602,
+  by James Reilly), and where it came from. **Settings → OpenPGP → Look up
+  recipients' keys** asks each recipient's own domain (WKD) as they are
+  added, and **Also ask a keyserver** asks keys.openpgp.org; both are off to
+  start with.
+
+- **Fixed: drafts of encrypted messages were saved readable** (#603, by
+  James Reilly) on the server and in the cache. A draft of a message set to
+  be encrypted is now encrypted to the user's own key, with its subject and
+  recipients inside, and decrypted when opened again, with Encrypt on.
+  Without a key of the user's own it is still saved readable.
+
+- **Added: Space previews a reader card's attachment** (#625, requested by
+  3v1n0). On an attachment chip beneath a message, **Space** shows the file
+  as **Space** in the attachment drawer does: a picture or a PDF in Hylki's
+  preview, any other file in the GNOME file previewer, whose arrow keys move
+  through that message's files. **Enter** still opens it. **Tab** reaches the
+  chips now: it used to stop on the message body, which reached none of its
+  links, and then went back to the top of the reader. The focus token Hylki
+  hands the previewer carries the time of the key press that asked for it.
+  **Settings → Reading → Space shows pictures and PDFs in Sushi**
+  sends those to the previewer too, in the drawer and the reader; it is off
+  to start with, and greyed out where Sushi is not installed.
+
+- **Changed: Reply in the original's format also answers formatted mail in
+  rich text** (#646, requested by 3v1n0). With the setting on and new
+  messages starting in plain text, a reply or forward to a message with
+  formatting of its own opens in rich text, so its quote keeps its look.
+  Plain-text mail is still answered in plain text. The switch now sits
+  under **Start new messages in**.
+
+- **Changed: plain text is sent wrapped** (#606, requested by 3v1n0). The
+  text part of every message goes out as `format=flowed` (RFC 3676), as
+  Thunderbird and Apple Mail send it: lines of at most 72 characters, each
+  broken after a space, so a reader that knows flowed text joins them again
+  and one that doesn't still gets lines of a readable length. Hard line
+  breaks, quotes, the signature separator, Markdown code blocks and long
+  links stay whole. A saved plain-text draft reopens with its paragraphs
+  joined.
+
+- **Changed: address completion suggests the people written to most
+  first.** Anyone the user has sent mail to comes before an address that
+  only matches the typing, and the most written to before the rest, so a
+  newsletter no longer outranks a person. Mail sent is counted from the
+  Sent folders (mail from one of the user's addresses or aliases) and from
+  each send. A word inside a name now matches as well as its start.
+
+- **Changed: the contributors and translators are on a Credits page** of
+  the About dialog, opened from a **Credits** row under **Release Notes**,
+  instead of over sixty rows on its main page.
+
+- **Translations:** German (PRs #668, #674, #682 and #686 by Samuel
+  Edlmeier), 2571 of 2576 strings translated. Russian (PR #670 by Ilya
+  Semenkovich), 2564 of 2576 strings translated. French (PR #687 by
+  frenchy82), complete at 2576.
+
 ## 1.49.0-beta.4 — 2026-11-19
 
 - **Fixed: the mail worker stopped on an address with Japanese text right
