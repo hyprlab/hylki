@@ -148,7 +148,10 @@ impl AppModel {
             Shortcut::Spam => sender.input(AppMsg::MarkSpam),
             Shortcut::Star => sender.input(AppMsg::ToggleStar),
             Shortcut::ToggleRead => {
-                if self.many_selected() {
+                // The picked card, as the toolbar's button has it: the open
+                // message is the conversation's row, which a card picked
+                // below it is not (#679).
+                if self.many_selected() || self.reply_target().is_some() {
                     sender.input(AppMsg::ToggleReadCurrent);
                 } else if let Some(m) = self.current.clone() {
                     let read = m.unread;
