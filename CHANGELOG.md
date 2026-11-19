@@ -226,7 +226,8 @@
 
 - **Translations:** German (PRs #668, #674, #682 and #686 by Samuel
   Edlmeier), 2571 of 2576 strings translated. Russian (PR #670 by Ilya Semenkovich),
-  2564 of 2566 strings translated.
+  2564 of 2566 strings translated. French (PR #687 by frenchy82), complete
+  at 2576.
 
 ## 1.48.4 — 2026-11-17
 
