@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fixed: the New Event and New Task dialogs cut calendar names short**
+  (#685, reported by rsx-xp). The Calendar and Task list pickers, and the
+  alarm pickers, show each name whole; a long name picked is shortened in
+  the row and shown whole in its tooltip.
+
 - **Fixed: message list previews showed HTML** (#683, reported by Khaitu).
   A plain-text part written with HTML entities, such as a marketing
   preheader of `&zwnj;` repeated, reached the list as written, and so did a

@@ -12,6 +12,7 @@ use gtk::glib;
 
 use crate::calendar::{Found, Item, ItemKind, Source, When};
 use crate::i18n::{i18n, ni18n_f};
+use crate::ui::contacts_page::book_label_factory;
 
 /// The width of the dialog's form, in pixels.
 const FORM_WIDTH: i32 = 400;
@@ -83,6 +84,10 @@ pub(crate) fn show(
         });
         let labels: Vec<&str> = sources.iter().map(|s| s.name.as_str()).collect();
         row.set_model(Some(&gtk::StringList::new(&labels)));
+        // The stock popup cuts a calendar's name short, and two Google
+        // calendars named by address differ only in the part it cuts (#685).
+        row.set_factory(Some(&book_label_factory(true)));
+        row.set_list_factory(Some(&book_label_factory(false)));
         if let Some(i) = sources.iter().position(|s| s.uid == start.last_source) {
             row.set_selected(i as u32);
         }
@@ -238,6 +243,7 @@ fn alarm_row(title: &str, last: Option<u32>) -> adw::ComboRow {
     let row = adw::ComboRow::new();
     row.set_title(title);
     row.set_model(Some(&gtk::StringList::new(&labels)));
+    row.set_list_factory(Some(&book_label_factory(false)));
     if let Some(i) = ALARMS.iter().position(|a| *a == last) {
         row.set_selected(i as u32);
     }
