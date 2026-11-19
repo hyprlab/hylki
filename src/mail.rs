@@ -14,6 +14,7 @@ pub(crate) mod merge;
 pub(crate) mod message_file;
 pub(crate) mod mutf7;
 pub(crate) mod outlook_msg;
+pub(crate) mod preview_text;
 pub(crate) mod pgp;
 pub(crate) mod quote;
 pub(crate) mod reader;

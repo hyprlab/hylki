@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Fixed: message list previews showed HTML** (#683, reported by Khaitu).
+  A plain-text part written with HTML entities, such as a marketing
+  preheader of `&zwnj;` repeated, reached the list as written, and so did a
+  server's preview of one on JMAP and Microsoft 365. A preview is now words
+  only: tags, comments and a tag cut off by the fetch are removed and every
+  entity is decoded, wherever the text came from. Rows already cached are
+  shown cleaned and read again from an IMAP server when their folder syncs.
+
 - **Added: a send log kept across restarts** (#678). Each message written
   leaves a line in `send-log.tsv` in Hylki's data folder for what happened
   to it: Send pressed, Undo Send, sent, not sent and why, held in the

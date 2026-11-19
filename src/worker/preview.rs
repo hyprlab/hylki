@@ -158,28 +158,10 @@ pub(super) fn finish_preview(decoded: String) -> String {
         .collect::<Vec<_>>()
         .join("\n");
     let body = strip_link_noise(&body);
-    // Marketing "preheader padding" — long chains of &nbsp; + zero-width
-    // characters (zwnj, word-joiner, combining grapheme joiner, soft hyphen…)
-    // meant to push the real body out of inbox previews. The zero-width
-    // characters are NOT Unicode whitespace, so they would survive the
-    // collapse below as a huge blank gap ending in the ellipsis. Drop them;
-    // the non-breaking spaces between them then collapse away normally.
-    let body: String = body
-        .chars()
-        .filter(|c| {
-            !matches!(
-                c,
-                '\u{200b}'
-                    ..='\u{200d}' // zero-width space/nbsp/joiners
-                    | '\u{2060}'        // word joiner
-                    | '\u{feff}'        // BOM / zero-width no-break space
-                    | '\u{00ad}'        // soft hyphen
-                    | '\u{034f}'        // combining grapheme joiner
-                    | '\u{2800}' // Braille blank, another padder
-            )
-        })
-        .collect();
-    let collapsed = body.split_whitespace().collect::<Vec<_>>().join(" ");
+    // Words only: a plain part can be written in entities and an HTML part
+    // can be escaped twice, and the preheader padding either one carries
+    // is invisible characters a collapse alone would keep (#683).
+    let collapsed = crate::mail::preview_text::one_line(&body);
     if let Some(p) = pgp_preview(&collapsed) {
         return p;
     }
@@ -748,6 +730,26 @@ mod tests {
         // Malformed rather than cut short: "=Z" is no escape at all, and
         // whatever it is, it isn't ours to remove.
         assert_eq!(preview_from_part(b"Total: 50=Z", None, None), "Total: 50=Z");
+    }
+
+    #[test]
+    fn preview_shows_words_not_the_markup_a_part_is_written_in() {
+        // A plain-text alternative that kept its HTML entities (#683).
+        let mut plain = b"Iberia ".to_vec();
+        for _ in 0..12 {
+            plain.extend_from_slice(b"&zwnj;&nbsp;");
+        }
+        plain.extend_from_slice(b"\r\n<p>Tomas, prepara tu viaje a Madrid</p>");
+        let mut body = b"--B\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n".to_vec();
+        body.extend_from_slice(&plain);
+        body.extend_from_slice(b"\r\n--B--\r\n");
+        assert_eq!(
+            preview_from_part(&body, None, None),
+            "Iberia Tomas, prepara tu viaje a Madrid"
+        );
+        // An HTML part escaped twice spells its tags out as text.
+        let html = b"<div>Sale &amp;lt;b&amp;gt;today&amp;lt;/b&amp;gt; &amp;zwnj;only</div>";
+        assert_eq!(preview_from_part(html, None, None), "Sale today only");
     }
 
     #[test]

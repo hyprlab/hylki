@@ -123,9 +123,14 @@ pub(super) async fn redecode_garbled_previews(session: &mut ImapSession, message
     if !inline_previews_wanted(account_id) {
         return;
     }
+    // Markup too (#683): a row cached with a preheader's entities holds
+    // little else, and the real text is a re-read away. A preview read
+    // since never carries any, so a row is re-read once.
     let uids: Vec<u32> = messages
         .iter()
-        .filter(|m| m.preview.contains('\u{fffd}'))
+        .filter(|m| {
+            m.preview.contains('\u{fffd}') || crate::mail::preview_text::has_markup(&m.preview)
+        })
         .take(PREVIEW_REDECODE_ROWS)
         .map(|m| m.uid)
         .collect();
