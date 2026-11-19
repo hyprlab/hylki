@@ -1894,6 +1894,26 @@ msgstr "Не удалось открыть {file}: {e}"
 msgid "No message with the ID {id} was found"
 msgstr "Ни одного сообщения с ID {id} не найдено"
 
+msgid ""
+"The connection to {account} stopped after an internal error and was "
+"restarted. Mail that was being sent is in the Outbox."
+msgstr ""
+
+msgid ""
+"The connection to {account} stopped after an internal error and was "
+"restarted."
+msgstr ""
+
+msgid ""
+"The connection to {account} keeps stopping after an internal error. Mail "
+"that was being sent is in the Outbox. Restart Hylki to connect again."
+msgstr ""
+
+msgid ""
+"The connection to {account} keeps stopping after an internal error. Restart "
+"Hylki to connect again."
+msgstr ""
+
 msgid "Main Menu"
 msgstr "Главное меню"
 
@@ -8031,6 +8051,10 @@ msgstr "Письмо «{subject}» будет отправлено {when}"
 
 msgid "Could not schedule the message."
 msgstr "Не удалось запланировать отправку сообщения."
+
+#, fuzzy
+msgid "The connection stopped after an internal error."
+msgstr "Соединение IMAP перестало отвечать"
 
 msgid "Could not delete message: {e}"
 msgstr "Не удалось удалить сообщение: {e}"

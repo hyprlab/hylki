@@ -329,8 +329,11 @@ impl<E: Emit> ImapWorker<E> {
                 self.on_mark_ham_many(path, uids, dest).await
             }
             MailRequest::ExportRaw {
-                token, path, uid, ..
-            } => self.on_export_raw(token, path, uid).await,
+                token,
+                path,
+                uid,
+                for_reader,
+            } => self.on_export_raw(token, path, uid, for_reader).await,
             MailRequest::ImportRaw {
                 token,
                 path,

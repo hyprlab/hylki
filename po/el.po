@@ -1911,6 +1911,26 @@ msgstr "Δεν ήταν δυνατό το άνοιγμα του {file}: {e}"
 msgid "No message with the ID {id} was found"
 msgstr "Δεν βρέθηκε μήνυμα με αναγνωριστικό {id}"
 
+msgid ""
+"The connection to {account} stopped after an internal error and was "
+"restarted. Mail that was being sent is in the Outbox."
+msgstr ""
+
+msgid ""
+"The connection to {account} stopped after an internal error and was "
+"restarted."
+msgstr ""
+
+msgid ""
+"The connection to {account} keeps stopping after an internal error. Mail "
+"that was being sent is in the Outbox. Restart Hylki to connect again."
+msgstr ""
+
+msgid ""
+"The connection to {account} keeps stopping after an internal error. Restart "
+"Hylki to connect again."
+msgstr ""
+
 msgid "Main Menu"
 msgstr "Κύριο μενού"
 
@@ -8112,6 +8132,10 @@ msgstr "Το «{subject}» θα σταλεί {when}"
 
 msgid "Could not schedule the message."
 msgstr "Δεν ήταν δυνατός ο προγραμματισμός του μηνύματος."
+
+#, fuzzy
+msgid "The connection stopped after an internal error."
+msgstr "Η σύνδεση IMAP σταμάτησε να προχωρά"
 
 msgid "Could not delete message: {e}"
 msgstr "Δεν ήταν δυνατή η διαγραφή του μηνύματος: {e}"

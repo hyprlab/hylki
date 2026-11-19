@@ -2038,6 +2038,26 @@ msgstr "Nie udało się przenieść katalogu: {e}"
 msgid "No message with the ID {id} was found"
 msgstr "Nie odnaleziono wiadomości o identyfikatorze {id}"
 
+msgid ""
+"The connection to {account} stopped after an internal error and was "
+"restarted. Mail that was being sent is in the Outbox."
+msgstr ""
+
+msgid ""
+"The connection to {account} stopped after an internal error and was "
+"restarted."
+msgstr ""
+
+msgid ""
+"The connection to {account} keeps stopping after an internal error. Mail "
+"that was being sent is in the Outbox. Restart Hylki to connect again."
+msgstr ""
+
+msgid ""
+"The connection to {account} keeps stopping after an internal error. Restart "
+"Hylki to connect again."
+msgstr ""
+
 msgid "Main Menu"
 msgstr "Menu główne"
 
@@ -8440,6 +8460,9 @@ msgstr "Wiadomość „{subject}” zostanie wysłana {when}"
 #, fuzzy
 msgid "Could not schedule the message."
 msgstr "Nie udało się usunąć wiadomości: {e}"
+
+msgid "The connection stopped after an internal error."
+msgstr ""
 
 msgid "Could not delete message: {e}"
 msgstr "Nie udało się usunąć wiadomości: {e}"

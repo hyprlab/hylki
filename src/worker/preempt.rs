@@ -35,11 +35,16 @@ fn is_list_load(req: &MailRequest) -> bool {
 /// barrier between a reader and a folder sync already in the backlog.
 /// Drafts fetched ahead of time (and a message's bytes for a move to
 /// another account) are reads too, which the draft clicked on overtakes.
+/// So are the star, read and tag checks of a view: they change flags in the
+/// index, never what a body fetch returns, and one queued behind a run of
+/// drafts fetched ahead kept a message on its spinner for 100 s (#680).
 fn can_yield_to_reader(req: &MailRequest) -> bool {
     is_list_load(req)
         || matches!(
             req,
             MailRequest::RefreshUnread
+                | MailRequest::RefreshFlags { .. }
+                | MailRequest::RefreshKeywords { .. }
                 | MailRequest::ExportRaw {
                     for_reader: false,
                     ..
@@ -475,6 +480,43 @@ mod reader_preemption_tests {
         assert!(matches!(
             backlog.pop_front(),
             Some(MailRequest::LoadMessages { .. })
+        ));
+    }
+
+    /// A view's flag and tag checks read flags only: the message clicked
+    /// goes ahead of them and of the drafts queued before them (#680).
+    #[test]
+    fn a_body_overtakes_flag_checks_and_drafts_fetched_ahead() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(MailRequest::RefreshFlags {
+            paths: vec!["INBOX".into()],
+        })
+        .unwrap();
+        tx.send(MailRequest::RefreshKeywords {
+            keywords: vec!["$label1".into()],
+        })
+        .unwrap();
+        tx.send(body()).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let draft = MailRequest::ExportRaw {
+            token: 1,
+            path: "Drafts".into(),
+            uid: 1,
+            for_reader: false,
+        };
+        let first = reorder_reader_loads(draft, &mut rx, &mut backlog);
+        assert!(matches!(first, MailRequest::LoadBody { .. }));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::ExportRaw { .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::RefreshFlags { .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::RefreshKeywords { .. })
         ));
     }
 

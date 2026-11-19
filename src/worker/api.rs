@@ -732,6 +732,9 @@ pub(crate) enum WorkerEvent {
         text: String,
         connectivity: bool,
     },
+    /// The worker panicked and is gone: nothing it was asked will be
+    /// answered (#684).
+    Stopped,
 }
 
 impl WorkerEvent {

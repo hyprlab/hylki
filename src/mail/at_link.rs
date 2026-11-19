@@ -2,6 +2,8 @@
 //! email address, a Matrix ID (`@name:server.org`) and a fediverse handle
 //! (`@name@server.org`, as Mastodon writes one) (#653).
 
+use crate::mail::unspaced::is_unspaced;
+
 /// The link the `@` at byte `at` of `text` belongs to: `(start, end, href)`.
 /// `from` is where the text not yet linked starts, so an address never
 /// reaches back into a link already made.
@@ -38,11 +40,12 @@ fn email(text: &str, from: usize, at: usize) -> Option<(usize, usize, String)> {
     if local.is_empty() || local.ends_with('.') {
         return None;
     }
-    // Glued to a word or to another `@`: not an address of its own.
+    // Glued to a word or to another `@`: not an address of its own. Text
+    // written without spaces runs straight up to an address.
     if text[..start]
         .chars()
         .next_back()
-        .is_some_and(|c| c.is_alphanumeric() || c == '@')
+        .is_some_and(|c| (c.is_alphanumeric() && !is_unspaced(c)) || c == '@')
     {
         return None;
     }
@@ -98,7 +101,17 @@ fn domain_end(text: &str, start: usize) -> Option<usize> {
     let len = rest
         .find(|c: char| !(c.is_alphanumeric() || c == '.' || c == '-'))
         .unwrap_or(rest.len());
-    let host = rest[..len].trim_end_matches(['.', '-']);
+    let mut host = rest[..len].trim_end_matches(['.', '-']);
+    // A top-level domain in Latin letters ends where another script starts:
+    // Japanese puts the next word right after it, `example.jpも` (#684).
+    if let Some(dot) = host.rfind('.') {
+        let tld = &host[dot + 1..];
+        if tld.starts_with(|c: char| c.is_ascii_alphabetic()) {
+            if let Some(cut) = tld.find(|c: char| !c.is_ascii()) {
+                host = host[..dot + 1 + cut].trim_end_matches(['.', '-']);
+            }
+        }
+    }
     let labels: Vec<&str> = host.split('.').collect();
     if labels.len() < 2
         || labels
@@ -109,7 +122,7 @@ fn domain_end(text: &str, start: usize) -> Option<usize> {
     }
     let tld = labels[labels.len() - 1];
     let letters = tld.chars().count() >= 2 && tld.chars().all(char::is_alphabetic);
-    let punycode = tld.len() > 4 && tld[..4].eq_ignore_ascii_case("xn--");
+    let punycode = tld.len() > 4 && tld.get(..4).is_some_and(|p| p.eq_ignore_ascii_case("xn--"));
     (letters || punycode).then_some(start + host.len())
 }
 
@@ -212,6 +225,60 @@ mod tests {
             ".@example.com",
         ] {
             assert_eq!(links(text), vec![], "{text}");
+        }
+    }
+
+    #[test]
+    fn japanese_text_runs_up_to_an_address_684() {
+        assert_eq!(
+            links("test@example.jpも使えます。"),
+            vec![("test@example.jp", "mailto:test@example.jp".to_string())]
+        );
+        assert_eq!(
+            links("連絡はtest@example.co.jpまで"),
+            vec![(
+                "test@example.co.jp",
+                "mailto:test@example.co.jp".to_string()
+            )]
+        );
+        assert_eq!(
+            links("@ann@social.example.orgさん"),
+            vec![(
+                "@ann@social.example.org",
+                "https://social.example.org/@ann".to_string()
+            )]
+        );
+        assert_eq!(
+            links("@foo:matrix.orgへ"),
+            vec![(
+                "@foo:matrix.org",
+                "https://matrix.to/#/@foo:matrix.org".to_string()
+            )]
+        );
+        // A name or top-level domain in another script is kept whole.
+        assert_eq!(
+            links("a@例え.テスト"),
+            vec![("a@例え.テスト", "mailto:a@例え.テスト".to_string())]
+        );
+    }
+
+    #[test]
+    fn no_text_after_an_address_panics() {
+        for text in [
+            "a@b.xnも",
+            "a@b.xn-も",
+            "a@b.jpも",
+            "a@b.xn--も",
+            "@a@b.jpも",
+            "@a:b.jpも",
+            "a@b.é",
+            "a@b.jé",
+            "a@b.jé:1",
+            "a@b.も.jp",
+            "a@b.c🙂",
+            "a@b.cd🙂",
+        ] {
+            links(text);
         }
     }
 

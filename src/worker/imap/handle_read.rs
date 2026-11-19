@@ -381,14 +381,37 @@ impl<E: Emit> ImapWorker<E> {
     }
 
     /// A message's raw bytes, for Save As or for the reader.
-    pub(super) async fn on_export_raw(&mut self, token: u64, path: String, uid: u32) -> After {
-        let account = &self.account;
-        let session = &mut self.session;
-        let emit = &self.emit;
-        let raw = load_raw_retry(session, account, &path, uid)
-            .await
-            .map_err(|e| e.to_string());
-        emit(WorkerEvent::RawExported { token, raw });
+    pub(super) async fn on_export_raw(
+        &mut self,
+        token: u64,
+        path: String,
+        uid: u32,
+        for_reader: bool,
+    ) -> After {
+        let fetch = load_raw_retry(&mut self.session, &self.account, &path, uid);
+        let raw = if for_reader {
+            fetch.await
+        } else {
+            // A draft fetched ahead can run to tens of megabytes; the
+            // message clicked meanwhile does not wait for it (#680). It goes
+            // again first thing after the reader, in its place in the queue.
+            let Some(raw) = interrupt_read_for_reader(fetch, &mut self.rx, &mut self.backlog).await
+            else {
+                tracing::debug!("raw export of {uid} yielded to the reader: {path}");
+                self.backlog.push_front(MailRequest::ExportRaw {
+                    token,
+                    path,
+                    uid,
+                    for_reader,
+                });
+                return After::Skip;
+            };
+            raw
+        };
+        (self.emit)(WorkerEvent::RawExported {
+            token,
+            raw: raw.map_err(|e| e.to_string()),
+        });
         After::Done
     }
 

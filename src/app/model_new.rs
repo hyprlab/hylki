@@ -147,6 +147,7 @@ impl AppModel {
             outgoing: Default::default(),
             merges: Default::default(),
             send_ticket: 0,
+            worker_stops: HashMap::new(),
             reader_split: {
                 let p = gtk::Paned::new(gtk::Orientation::Vertical);
                 // The separator itself is styled invisible — painted the

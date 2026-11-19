@@ -1,7 +1,14 @@
 
 (function(){
   window.__hylkiPasteOnce = null;
-  var urlRe = /((?:https?:\/\/|www\.)[^\s<>()]+[^\s<>().,;:!?'"])/gi;
+  /* Text written without spaces (Chinese, Japanese, Korean particles, Thai)
+     runs straight on after a link and ends it (#684); the ranges are
+     src/mail/unspaced.rs's. */
+  var unspaced = '\\u0E00-\\u0EFF\\u1000-\\u109F\\u1100-\\u11FF\\u1780-\\u17FF' +
+    '\\u3000-\\u303F\\u3040-\\u30FF\\u3130-\\u318F\\u31F0-\\u31FF\\u3400-\\u4DBF' +
+    '\\u4E00-\\u9FFF\\uAC00-\\uD7AF\\uF900-\\uFAFF\\uFF00-\\uFFEF\\u{20000}-\\u{3FFFF}';
+  var urlRe = new RegExp('((?:https?://|www\\.)[^\\s<>()' + unspaced + ']+' +
+    '[^\\s<>().,;:!?\'"' + unspaced + '])', 'giu');
   /* Quotes too: a linkified address goes inside href="", and urlRe lets a
      `"` through in the middle of one. */
   function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}

@@ -1,6 +1,8 @@
 //! Bare web addresses, and the addresses written around an `@`, in
 //! Markdown text.
 
+use crate::mail::unspaced::is_unspaced;
+
 #[derive(Clone)]
 pub(super) enum UrlKind {
     /// Carries its own scheme.
@@ -43,8 +45,9 @@ pub(super) fn find_urls(text: &str) -> Vec<(usize, usize, UrlKind)> {
                 None
             };
             if let Some(kind) = kind {
+                // Text written without spaces ends a link (#684).
                 let end = i + rest
-                    .find(|c: char| c.is_whitespace() || c == '<' || c == '>')
+                    .find(|c: char| c.is_whitespace() || c == '<' || c == '>' || is_unspaced(c))
                     .unwrap_or(rest.len());
                 let end = trim_trailing(text, i, end);
                 // `www.name@host` is an email address, found at its `@`.
@@ -67,7 +70,7 @@ pub(super) fn find_urls(text: &str) -> Vec<(usize, usize, UrlKind)> {
 }
 
 fn is_break(c: char) -> bool {
-    c.is_whitespace() || matches!(c, '(' | '[' | '<' | '"' | '\'')
+    c.is_whitespace() || matches!(c, '(' | '[' | '<' | '"' | '\'') || is_unspaced(c)
 }
 
 /// Pull sentence punctuation (and an unbalanced closing bracket) back off

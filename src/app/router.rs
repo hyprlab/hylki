@@ -342,6 +342,7 @@ impl AppModel {
             | AppMsg::SendDone { .. }
             | AppMsg::Sent { .. }
             | AppMsg::Unsent { .. }) => self.on_send(msg, sender),
+            AppMsg::WorkerStopped { account_id } => self.worker_stopped(account_id, &sender),
             msg @ (AppMsg::FillUnifiedSlices
             | AppMsg::Preload
             | AppMsg::PrebuildViews

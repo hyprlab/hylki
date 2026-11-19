@@ -163,6 +163,10 @@ pub(crate) fn is_reply_or_forward_subject(subject: &str) -> bool {
 pub(crate) fn preview_display(preview: &str) -> String {
     if preview_is_encrypted(preview) {
         i18n("Encrypted message")
+    } else if preview.contains(['<', '&']) {
+        // A row cached before previews were cleaned of markup (#683) shows
+        // its words until the next sync reads it again.
+        crate::mail::preview_text::one_line(preview)
     } else {
         preview.to_string()
     }

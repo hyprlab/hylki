@@ -201,12 +201,12 @@ pub(super) fn new_menu(button: &gtk::Button, sender: &ComponentSender<ContactsPa
     );
 }
 
-/// The address book dropdown's labels; `ellipsize` for its own, which
-/// the pane's width holds, and which carries the whole name as a tooltip:
-/// two books of one CardDAV account begin with the same long prefix, and
-/// the choice between them lives in the tail that gets cut off. The
-/// popup's lines show the name whole, with the stock checkmark on the
-/// picked one.
+/// The address book dropdown's labels, and the calendar picker's (#685);
+/// `ellipsize` for its own, which the pane's width holds, and which
+/// carries the whole name as a tooltip: two books of one CardDAV account
+/// begin with the same long prefix, and the choice between them lives in
+/// the tail that gets cut off. The popup's lines show the name whole, with
+/// the stock checkmark on the picked one.
 pub(crate) fn book_label_factory(ellipsize: bool) -> gtk::SignalListItemFactory {
     let factory = gtk::SignalListItemFactory::new();
     factory.connect_setup(move |_, item| {

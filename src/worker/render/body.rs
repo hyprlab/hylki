@@ -301,9 +301,11 @@ fn next_url(text: &str, from: usize) -> Option<(usize, usize, String)> {
         };
         // Only match at a boundary — the start, after whitespace, or after an
         // opening bracket/quote — so "shttp://", "awww." and "hi@www.x" (an email)
-        // aren't linked.
+        // aren't linked. Japanese and the like run straight up to a link.
         let boundary = text[..i].chars().next_back().is_none_or(|c| {
-            c.is_whitespace() || matches!(c, '(' | '<' | '[' | '{' | '"' | '\'' | '|')
+            c.is_whitespace()
+                || matches!(c, '(' | '<' | '[' | '{' | '"' | '\'' | '|')
+                || crate::mail::unspaced::is_unspaced(c)
         });
         let end = consume_url(text, i);
         // `www.name@host` is an email address, found at its `@`.
@@ -329,10 +331,14 @@ fn next_url(text: &str, from: usize) -> Option<(usize, usize, String)> {
 
 /// The end index of the URL that begins at `start`: consume non-terminator chars,
 /// then trim trailing sentence punctuation (keeping a `)` that balances a `(`).
+/// Text written without spaces ends it: `https://example.jp/も` (#684).
 fn consume_url(text: &str, start: usize) -> usize {
     let mut end = start;
     for (off, ch) in text[start..].char_indices() {
-        if ch.is_whitespace() || matches!(ch, '<' | '>' | '"' | '`' | '\'' | '\\') {
+        if ch.is_whitespace()
+            || matches!(ch, '<' | '>' | '"' | '`' | '\'' | '\\')
+            || crate::mail::unspaced::is_unspaced(ch)
+        {
             break;
         }
         end = start + off + ch.len_utf8();

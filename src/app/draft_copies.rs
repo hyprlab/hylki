@@ -13,7 +13,9 @@ use super::model::AppModel;
 const AHEAD: usize = 50;
 
 /// A draft larger than this is fetched when it is opened, not kept: its
-/// bytes would sit in the cache, written from the UI thread.
+/// bytes would sit in the cache, written from the UI thread. It is marked
+/// as too large instead, or every listing of its folder downloaded it again
+/// (#680: seven drafts of 20 to 34 MB, twice in three minutes).
 const LARGEST: usize = 8 * 1024 * 1024;
 
 /// A draft on its way into the cache.
@@ -99,7 +101,7 @@ impl AppModel {
         true
     }
 
-    /// Keep a draft's bytes, unless they are too large to.
+    /// Keep a draft's bytes, or the mark that they are too large to keep.
     pub(super) fn keep_draft(
         &self,
         path: &str,
@@ -109,11 +111,12 @@ impl AppModel {
         ts: i64,
         raw: &[u8],
     ) {
-        if raw.is_empty() || raw.len() > LARGEST {
+        if raw.is_empty() {
             return;
         }
+        let kept: &[u8] = if raw.len() > LARGEST { &[] } else { raw };
         if let Some(cache) = self.cache.as_ref() {
-            cache.save_draft_copy(account_id, path, uid, message_id, ts, raw);
+            cache.save_draft_copy(account_id, path, uid, message_id, ts, kept);
         }
     }
 

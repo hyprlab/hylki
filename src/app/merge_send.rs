@@ -31,6 +31,8 @@ pub(super) struct MergeRun {
     stopped: bool,
     /// The ticket of the message the worker has now.
     in_flight: Option<u64>,
+    /// That message, kept should its worker stop before answering (#684).
+    in_flight_message: Option<OutgoingMessage>,
     interval: Option<Duration>,
     /// When the last message went to the worker, to wait from.
     last: Option<Instant>,
@@ -127,6 +129,30 @@ pub(super) fn park_waiting(runs: &MergeRuns) {
     }
 }
 
+/// The merge messages `account_id`'s worker had when it panicked (#684),
+/// kept in the Outbox; their tickets, for the merge to count as failed.
+pub(super) fn keep_stopped(
+    runs: &MergeRuns,
+    cache: &crate::cache::Cache,
+    account_id: u32,
+) -> Vec<u64> {
+    runs.borrow()
+        .iter()
+        .filter(|r| r.account_id == account_id)
+        .filter_map(|r| {
+            let message = r.in_flight_message.as_ref()?;
+            crate::worker::keep_after_stop(
+                cache,
+                r.account_id,
+                &r.account,
+                message,
+                r.sent_path.as_deref(),
+            );
+            r.in_flight
+        })
+        .collect()
+}
+
 impl AppModel {
     /// A merge from a composer: its addresses remembered, its toast up, and
     /// the first message on its way.
@@ -181,6 +207,7 @@ impl AppModel {
             failed: 0,
             stopped: false,
             in_flight: None,
+            in_flight_message: None,
             interval,
             last: None,
             waiting_out: false,
@@ -228,6 +255,7 @@ impl AppModel {
         self.send_ticket += 1;
         let ticket = self.send_ticket;
         run.in_flight = Some(ticket);
+        run.in_flight_message = Some(message.clone());
         run.last = Some(Instant::now());
         let (account_id, sent_path) = (run.account_id, run.sent_path.clone());
         drop(runs);
@@ -278,6 +306,7 @@ impl AppModel {
                 return false;
             };
             run.in_flight = None;
+            run.in_flight_message = None;
             if sent {
                 run.sent += 1;
             } else {

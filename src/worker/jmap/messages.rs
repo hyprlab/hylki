@@ -94,12 +94,8 @@ pub(super) fn jmap_message(
         .and_then(|s| chrono::DateTime::parse_from_rfc3339(s).ok())
         .map(|dt| dt.timestamp())
         .unwrap_or(0);
-    let preview: String = v["preview"]
-        .as_str()
-        .unwrap_or("")
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ")
+    // The server builds this from the text part, entities and all (#683).
+    let preview: String = crate::mail::preview_text::one_line(v["preview"].as_str().unwrap_or(""))
         .chars()
         .take(200)
         .collect();

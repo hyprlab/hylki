@@ -41,15 +41,12 @@ pub(super) fn graph_message(
         .and_then(|s| chrono::DateTime::parse_from_rfc3339(s).ok())
         .map(|dt| dt.timestamp())
         .unwrap_or(0);
-    let preview: String = v["bodyPreview"]
-        .as_str()
-        .unwrap_or("")
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ")
-        .chars()
-        .take(200)
-        .collect();
+    // The server builds this from the text part, entities and all (#683).
+    let preview: String =
+        crate::mail::preview_text::one_line(v["bodyPreview"].as_str().unwrap_or(""))
+            .chars()
+            .take(200)
+            .collect();
     let preview = pgp_preview(&preview).unwrap_or(preview);
     let from_addr = v["from"]["emailAddress"]["address"]
         .as_str()

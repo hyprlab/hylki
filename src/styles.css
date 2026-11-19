@@ -103,6 +103,14 @@ row.compose-row .compose-caret:active {
   border-radius: 9px;
 }
 
+/* With one-click folding off (Settings → Sidebar), a click on the header
+   does nothing: no hover or press highlight, only the chevron's own. */
+.account-header.fold-chevron-only:hover,
+.account-header.fold-chevron-only:active {
+  background-color: transparent;
+  background-image: none;
+}
+
 /* Icon-only rail: tighten horizontal padding/margin so pills/icons fit a narrow column. */
 .rail-collapsed .account-header {
   padding-left: 4px;
