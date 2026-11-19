@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 1.49.0 — 2026-11-19
+
+Everything from 1.49.0-beta.1 to 1.49.0-beta.4: Autocrypt, the message source
+in the reader with find, contacts imported from CSV files, events and tasks
+made from selected text, smart folders with negative and Gmail label
+conditions, a send log with Undo after Discard, a Light / Dark Mode switch in
+the composer, and plain text sent wrapped as format=flowed.
 
 - **Fixed: the mail worker stopped on an address with Japanese text right
   after it** (#684, reported by mjoach). An address such as `example.jpも`,
@@ -24,10 +30,6 @@
 - **Fixed: m marked the conversation's first message, not the picked card**
   (#679, reported by mbetrifork). With a card picked in the reader, m marks
   that card read or unread, as the toolbar button does.
-
-- **Fixed: a translated "today" written with an apostrophe was not read in
-  selected text** (#637), such as French "aujourd’hui", so Create Event
-  from Selection missed the date.
 
 - **Fixed: an account header showed a hover when a click on it does
   nothing.** With Fold accounts with one click off in Settings → Sidebar,
@@ -256,9 +258,9 @@
   instead of over sixty rows on its main page.
 
 - **Translations:** German (PRs #668, #674, #682 and #686 by Samuel
-  Edlmeier), 2571 of 2576 strings translated. Russian (PR #670 by Ilya Semenkovich),
-  2564 of 2566 strings translated. French (PR #687 by frenchy82), complete
-  at 2576.
+  Edlmeier), 2571 of 2576 strings translated. Russian (PR #670 by Ilya
+  Semenkovich), 2564 of 2576 strings translated. French (PR #687 by
+  frenchy82), complete at 2576.
 
 ## 1.48.4 — 2026-11-17
 
