@@ -1097,12 +1097,6 @@ msgstr "Nachricht wird gesendet…"
 msgid "Sending “{subject}”…"
 msgstr "»{subject}« wird gesendet…"
 
-msgid "Waiting to send"
-msgstr "Wartet auf Versand"
-
-msgid "Sending…"
-msgstr "Wird gesendet…"
-
 msgid "Move around"
 msgstr "Navigation"
 
@@ -7864,6 +7858,9 @@ msgstr "Konnte keine Anhänge laden: {e}"
 msgid "Could not reach the server"
 msgstr "Server konnte nicht erreicht werden"
 
+msgid "Sending…"
+msgstr "Wird gesendet…"
+
 msgid "unknown folder"
 msgstr "Ordner unbekannt"
 
@@ -8117,6 +8114,11 @@ msgid ""
 msgstr ""
 "POP3 kann Nachrichten auf dem Server nicht ändern. Daher wurde der Anhang "
 "nicht entfernt"
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
@@ -9215,6 +9217,9 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Waiting to send"
+#~ msgstr "Wartet auf Versand"
 
 #~ msgid "Displays in the message header for each message."
 #~ msgstr "Anzeige in der Kopfzeile jeder Nachricht."

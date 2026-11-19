@@ -1096,12 +1096,6 @@ msgstr "Envoi du message…"
 msgid "Sending “{subject}”…"
 msgstr "Envoi de « {subject} »…"
 
-msgid "Waiting to send"
-msgstr "En attente d’envoi"
-
-msgid "Sending…"
-msgstr "Envoi en cours…"
-
 msgid "Move around"
 msgstr "Se déplacer"
 
@@ -7838,6 +7832,9 @@ msgstr "Impossible de charger les pièces jointes : {e}"
 msgid "Could not reach the server"
 msgstr "Impossible de joindre le serveur"
 
+msgid "Sending…"
+msgstr "Envoi en cours…"
+
 msgid "unknown folder"
 msgstr "dossier inconnu"
 
@@ -8089,6 +8086,11 @@ msgid ""
 msgstr ""
 "Le POP3 ne permet pas de modifier un message sur le serveur, la pièce jointe "
 "n’a donc pas été supprimée"
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
@@ -9169,6 +9171,9 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Waiting to send"
+#~ msgstr "En attente d’envoi"
 
 #~ msgid "Displays in the message header for each message."
 #~ msgstr "S’affiche dans l’en-tête du message, pour chaque message."

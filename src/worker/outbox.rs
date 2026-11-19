@@ -14,9 +14,10 @@ use crate::worker::{offline_text, OutgoingMessage, WorkerEvent};
 
 /// Push the account's queue to the UI (empty list = nothing waiting).
 pub(super) fn emit_outbox(cache: Option<&Cache>, account_id: u32, emit: &impl Fn(WorkerEvent)) {
-    let items = cache
+    let mut items = cache
         .map(|c| c.outbox_items(account_id))
         .unwrap_or_default();
+    super::send_journal::hide_in_hand(&mut items);
     emit(WorkerEvent::Outbox { items });
 }
 
@@ -43,6 +44,7 @@ pub(super) fn drop_superseded_outbox(
 ) {
     if let (Some(queued), Some(c)) = (msg.outbox_origin, cache) {
         c.delete_outbox(queued);
+        super::send_journal::release(queued);
         emit_outbox(cache, account_id, emit);
     }
 }
@@ -54,7 +56,9 @@ pub(super) fn drop_superseded_outbox(
 /// cache there is nowhere to keep it, and the error must not claim otherwise.
 /// `refused` is a server that read the message and said no, to a recipient
 /// most often (#368). Sending it again would only fail again, so the message
-/// goes back to the composer to be fixed, not to the Outbox to wait.
+/// goes back to the composer to be fixed, not to the Outbox to wait, unless
+/// it is in the Outbox already: journaled at Send (#678), it stays there,
+/// where Edit opens it to be fixed.
 pub(super) fn send_failed(
     cache: Option<&Cache>,
     account_id: u32,
@@ -65,13 +69,9 @@ pub(super) fn send_failed(
     refused: bool,
     emit: &impl Fn(WorkerEvent),
 ) {
-    let queued = (!refused || msg.merged)
+    let journaled = msg.outbox_origin.is_some_and(super::send_journal::in_hand);
+    let queued = (!refused || msg.merged || journaled)
         && queue_outbox_message(cache, account_id, account, msg, sent_path, error, None);
-    // Queue first, drop the superseded row second: a crash in between leaves
-    // the message queued twice, which is recoverable, rather than not at all.
-    if let (true, Some(old), Some(c)) = (queued, msg.outbox_origin, cache) {
-        c.delete_outbox(old);
-    }
     crate::desktop::send_log::note_message(
         &account.email,
         msg,
@@ -136,9 +136,6 @@ pub(super) fn schedule_send(
         },
     );
     if queued {
-        if let (Some(old), Some(c)) = (msg.outbox_origin, cache) {
-            c.delete_outbox(old);
-        }
         emit(WorkerEvent::Notice(i18n_f(
             "“{subject}” will be sent {when}",
             &[
@@ -165,17 +162,57 @@ fn queue_outbox_message(
     let Some(cache) = cache else {
         return false;
     };
-    // Build once, here: the composed attachments are read from disk now, while
-    // their files certainly exist. A retry sends these bytes verbatim.
+    // A message journaled at Send (#678) is in the Outbox already, as these
+    // very bytes: it only needs its time, or the reason it is still there.
+    if let Some(id) = msg
+        .outbox_origin
+        .filter(|id| super::send_journal::in_hand(*id))
+    {
+        match send_at {
+            Some(at) => cache.reschedule_outbox(id, at),
+            None => cache.record_outbox_failure(id, error),
+        }
+        super::send_journal::release(id);
+        return true;
+    }
+    if build_for_outbox(account, msg)
+        .and_then(|built| built.insert(cache, account_id, msg, sent_path, error, send_at))
+        .is_none()
+    {
+        return false;
+    }
+    // Queue first, drop the version it was edited from second: a crash in
+    // between leaves the message queued twice, which is recoverable, rather
+    // than not at all.
+    if let Some(old) = msg.outbox_origin {
+        cache.delete_outbox(old);
+    }
+    true
+}
+
+/// A message built for the Outbox, not yet stored.
+pub(super) struct BuiltForOutbox {
+    from: String,
+    rcpts: Vec<String>,
+    recipients: String,
+    preview: String,
+    raw: Vec<u8>,
+}
+
+/// Build once, here: the composed attachments are read from disk now, while
+/// their files certainly exist. A retry sends these bytes verbatim.
+pub(super) fn build_for_outbox(
+    account: &AccountConfig,
+    msg: &OutgoingMessage,
+) -> Option<BuiltForOutbox> {
     let email = match build_email(account, msg) {
         Ok(email) => email,
         Err(e) => {
-            tracing::warn!("could not build the failed message for the outbox: {e}");
-            return false;
+            tracing::warn!("could not build the message for the outbox: {e}");
+            return None;
         }
     };
     let envelope = email.envelope().clone();
-    let raw = email.formatted();
     let recipients = [&msg.to, &msg.cc]
         .iter()
         .filter(|s| !s.trim().is_empty())
@@ -183,31 +220,43 @@ fn queue_outbox_message(
         .collect::<Vec<_>>()
         .join(", ");
     let preview: String = msg.body.split_whitespace().collect::<Vec<_>>().join(" ");
-    let preview: String = preview.chars().take(160).collect();
-    let id = cache.queue_outbox(
-        account_id,
-        envelope
-            .from()
-            .map(|f| f.to_string())
-            .unwrap_or_default()
-            .as_str(),
-        &envelope
-            .to()
-            .iter()
-            .map(|a| a.to_string())
-            .collect::<Vec<_>>(),
-        &recipients,
-        &msg.subject,
-        &preview,
-        &raw,
-        sent_path,
-        error,
-        send_at,
-    );
-    if let Some(id) = id.filter(|_| !msg.forwards.is_empty()) {
-        cache.set_outbox_forwards(id, &msg.forwards);
+    Some(BuiltForOutbox {
+        from: envelope.from().map(|f| f.to_string()).unwrap_or_default(),
+        rcpts: envelope.to().iter().map(|a| a.to_string()).collect(),
+        recipients,
+        preview: preview.chars().take(160).collect(),
+        raw: email.formatted(),
+    })
+}
+
+impl BuiltForOutbox {
+    /// Store it; its Outbox id.
+    pub(super) fn insert(
+        &self,
+        cache: &Cache,
+        account_id: u32,
+        msg: &OutgoingMessage,
+        sent_path: Option<&str>,
+        error: &str,
+        send_at: Option<i64>,
+    ) -> Option<u32> {
+        let id = cache.queue_outbox(
+            account_id,
+            &self.from,
+            &self.rcpts,
+            &self.recipients,
+            &msg.subject,
+            &self.preview,
+            &self.raw,
+            sent_path,
+            error,
+            send_at,
+        )?;
+        if !msg.forwards.is_empty() {
+            cache.set_outbox_forwards(id, &msg.forwards);
+        }
+        Some(id)
     }
-    id.is_some()
 }
 
 /// Quitting while a message waits out the Undo Send delay (#434): queue it
@@ -269,9 +318,6 @@ fn hold(
     let mut msg = msg.clone();
     restore_msgid_case(Some(cache), &mut msg);
     let queued = queue_outbox_message(Some(cache), account_id, account, &msg, sent_path, error, at);
-    if let (true, Some(old)) = (queued, msg.outbox_origin) {
-        cache.delete_outbox(old);
-    }
     crate::desktop::send_log::note_message(
         &account.email,
         &msg,
@@ -477,8 +523,10 @@ pub(super) fn due_outbox_items(
     id: Option<u32>,
 ) -> Vec<crate::models::OutboxItem> {
     let now = crate::datefmt::now();
-    cache
-        .outbox_items(account_id)
+    let mut items = cache.outbox_items(account_id);
+    // A message on its way out is its worker's until it answers (#678).
+    super::send_journal::hide_in_hand(&mut items);
+    items
         .into_iter()
         .filter(|item| match id {
             Some(wanted) => wanted == item.id,

@@ -1115,12 +1115,6 @@ msgstr "Отправка сообщения…"
 msgid "Sending “{subject}”…"
 msgstr "Отправка «{subject}»…"
 
-msgid "Waiting to send"
-msgstr "Ожидание отправки"
-
-msgid "Sending…"
-msgstr "Отправка…"
-
 msgid "Move around"
 msgstr "Перемещаться"
 
@@ -7820,6 +7814,9 @@ msgstr "Не удалось загрузить вложения: {e}"
 msgid "Could not reach the server"
 msgstr "Не удалось связаться с сервером"
 
+msgid "Sending…"
+msgstr "Отправка…"
+
 msgid "unknown folder"
 msgstr "неизвестная папка"
 
@@ -8070,6 +8067,11 @@ msgid ""
 msgstr ""
 "Протокол POP3 не позволяет изменять сообщения на сервере, поэтому вложение "
 "не было удалено"
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
@@ -9128,6 +9130,9 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Waiting to send"
+#~ msgstr "Ожидание отправки"
 
 #~ msgid "Displays in the message header for each message."
 #~ msgstr "Отображается в заголовке каждого сообщения."

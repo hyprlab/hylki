@@ -26,13 +26,8 @@ impl AppModel {
 
     /// Every account's queue merged, oldest first — the order they will send in.
     fn outbox_items(&self) -> Vec<crate::models::OutboxItem> {
-        let mut items: Vec<crate::models::OutboxItem> = self
-            .outbox_by_account
-            .values()
-            .flatten()
-            .cloned()
-            .chain(self.outgoing.borrow().iter().map(|o| o.as_outbox_item()))
-            .collect();
+        let mut items: Vec<crate::models::OutboxItem> =
+            self.outbox_by_account.values().flatten().cloned().collect();
         items.sort_by_key(|i| (i.queued_at, i.id));
         items
     }
@@ -46,14 +41,6 @@ impl AppModel {
         if !self.showing_outbox {
             return None;
         }
-        if let Some(o) = self
-            .outgoing
-            .borrow()
-            .iter()
-            .find(|o| super::outgoing::row_id(o.ticket) == id)
-        {
-            return Some(o.as_outbox_item());
-        }
         self.outbox_by_account
             .get(&account_id)?
             .iter()
@@ -61,37 +48,8 @@ impl AppModel {
             .cloned()
     }
 
-    /// The ticket of the message on its way out behind an Outbox row, while
-    /// Undo can still take it back.
-    fn outgoing_ticket(&self, row: u32) -> Option<u64> {
-        self.outgoing
-            .borrow()
-            .iter()
-            .find(|o| o.held && super::outgoing::row_id(o.ticket) == row)
-            .map(|o| o.ticket)
-    }
-
-    /// Delete on an Outbox row. A message still waiting out its delay goes
-    /// back to its composer instead, where discarding it is a choice made
-    /// with the message in view; one already with its worker is past
-    /// stopping.
-    pub(super) fn drop_outbox_row(
-        &mut self,
-        account_id: u32,
-        id: u32,
-        sender: &ComponentSender<Self>,
-    ) {
-        if self
-            .outgoing
-            .borrow()
-            .iter()
-            .any(|o| super::outgoing::row_id(o.ticket) == id)
-        {
-            if let Some(ticket) = self.outgoing_ticket(id) {
-                self.undo_send(ticket, sender);
-            }
-            return;
-        }
+    /// Delete on an Outbox row.
+    pub(super) fn drop_outbox_row(&mut self, account_id: u32, id: u32) {
         self.send_to(account_id, MailRequest::DeleteOutbox { id });
     }
 
@@ -99,30 +57,6 @@ impl AppModel {
     /// this is a local render — the same one the worker would produce.
     pub(super) fn show_outbox_message(&mut self, item: &crate::models::OutboxItem) {
         let mut message = item.as_message();
-        // A message on its way out has no bytes yet (#434): it shows as
-        // its card in Sent will.
-        let outgoing = self
-            .outgoing
-            .borrow()
-            .iter()
-            .find(|o| super::outgoing::row_id(o.ticket) == item.id)
-            .map(|o| {
-                let body = crate::worker::sent_body_preview(&o.account, &o.message)
-                    .unwrap_or_else(|| crate::worker::wrap_plain(&o.message.body));
-                (body, o.message.attachments.is_empty())
-            });
-        if let Some((body, no_files)) = outgoing {
-            message.body = crate::desktop::legacy::current_markup(body);
-            message.date = item.status.clone();
-            message.has_attachment = !no_files;
-            self.attachments.clear();
-            self.attachments_loading = false;
-            self.sync_attachment_drawer();
-            self.current = Some(message.clone());
-            self.current_thread.clear();
-            self.show_message(Some(message), false);
-            return;
-        }
         message.body =
             crate::desktop::legacy::current_markup(crate::worker::extract_body(&item.raw));
         message.date = crate::models::OutboxItem::waiting_label(item.queued_at);
@@ -252,27 +186,13 @@ impl AppModel {
 
             AppMsg::EditCurrentOutbox => {
                 if let Some(m) = self.current.clone() {
-                    match self.outgoing_ticket(m.id) {
-                        Some(ticket) => self.undo_send(ticket, &sender),
-                        None => self.compose_from_outbox(m.account_id, m.id, &sender),
-                    }
+                    self.compose_from_outbox(m.account_id, m.id, &sender);
                 }
             }
 
             AppMsg::SendCurrentOutbox => {
                 if let Some(m) = self.current.clone() {
-                    let in_flight = self
-                        .outgoing
-                        .borrow()
-                        .iter()
-                        .any(|o| super::outgoing::row_id(o.ticket) == m.id);
-                    match self.outgoing_ticket(m.id) {
-                        Some(ticket) => self.dispatch_send(ticket),
-                        None if in_flight => {}
-                        None => {
-                            self.send_to(m.account_id, MailRequest::FlushOutbox { id: Some(m.id) })
-                        }
-                    }
+                    self.send_to(m.account_id, MailRequest::FlushOutbox { id: Some(m.id) });
                 }
             }
 
@@ -299,16 +219,6 @@ impl AppModel {
             }
 
             AppMsg::RetryAllOutbox => {
-                let held: Vec<u64> = self
-                    .outgoing
-                    .borrow()
-                    .iter()
-                    .filter(|o| o.held)
-                    .map(|o| o.ticket)
-                    .collect();
-                for ticket in held {
-                    self.dispatch_send(ticket);
-                }
                 let accounts: Vec<u32> = self
                     .outbox_by_account
                     .iter()

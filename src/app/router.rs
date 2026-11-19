@@ -338,6 +338,7 @@ impl AppModel {
             | AppMsg::MergeTick(..)
             | AppMsg::StopMerge(..)
             | AppMsg::DispatchSend(..)
+            | AppMsg::Journaled { .. }
             | AppMsg::UndoSend(..)
             | AppMsg::SendDone { .. }
             | AppMsg::Sent { .. }

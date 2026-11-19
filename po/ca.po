@@ -1150,12 +1150,6 @@ msgstr "S'està enviant el missatge…"
 msgid "Sending “{subject}”…"
 msgstr "S'està enviant «{subject}»…"
 
-msgid "Waiting to send"
-msgstr "Esperant per enviar"
-
-msgid "Sending…"
-msgstr "S'està enviant…"
-
 msgid "Move around"
 msgstr "Mou-te"
 
@@ -7921,6 +7915,9 @@ msgstr "No s'han pogut carregar els adjunts: {e}"
 msgid "Could not reach the server"
 msgstr "No s'ha pogut contactar amb el servidor"
 
+msgid "Sending…"
+msgstr "S'està enviant…"
+
 msgid "unknown folder"
 msgstr "carpeta desconeguda"
 
@@ -8173,6 +8170,11 @@ msgid ""
 msgstr ""
 "El POP3 no pot modificar un missatge al servidor, així que l'adjunt no s'ha "
 "eliminat"
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr "El missatge està signat o xifrat, i eliminar un fitxer el trencaria"
@@ -9237,6 +9239,9 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Waiting to send"
+#~ msgstr "Esperant per enviar"
 
 #, fuzzy
 #~ msgid "New messages from this account start from it."

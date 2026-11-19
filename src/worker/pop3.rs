@@ -533,6 +533,9 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
         restore_msgid_case(cache.as_ref(), &mut message);
         match send_smtp(account, &message).await {
             Ok(raw) => {
+                // Gone: out of the Outbox it was journaled in (#678) at once, not
+                // after the copies and the draft, which a quit or a crash can cut short.
+                drop_superseded_outbox(cache.as_ref(), account_id, &message, emit);
                 // POP3 has no folder for it on the server (#678).
                 keep_sent_here(
                     account,
@@ -550,7 +553,6 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
                 ) {
                     note_answered(cache.as_ref(), account_id, path, uid, forwarded, emit);
                 }
-                drop_superseded_outbox(cache.as_ref(), account_id, &message, emit);
                 emit(WorkerEvent::Sent);
                 emit(WorkerEvent::SendDone { ticket, sent: true });
             }

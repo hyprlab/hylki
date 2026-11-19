@@ -158,6 +158,9 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
         restore_msgid_case(cache.as_ref(), &mut message);
         match graph_send_message(account, &message, emit).await {
             Ok(()) => {
+                // Gone: out of the Outbox it was journaled in (#678) at once, not
+                // after the copies and the draft, which a quit or a crash can cut short.
+                drop_superseded_outbox(cache.as_ref(), account_id, &message, emit);
                 emit(WorkerEvent::Status(String::new()));
                 graph_mark_answered(
                     account,
@@ -195,7 +198,6 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
                         }
                     }
                 }
-                drop_superseded_outbox(cache.as_ref(), account_id, &message, emit);
                 // The server files the copy in Sent Items itself; list
                 // that folder now so the copy is in the cache and can
                 // join the conversation it answers (#199).

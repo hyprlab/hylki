@@ -1105,12 +1105,6 @@ msgstr "Enviando mensaje…"
 msgid "Sending “{subject}”…"
 msgstr "Enviando «{subject}»…"
 
-msgid "Waiting to send"
-msgstr "En espera de envío"
-
-msgid "Sending…"
-msgstr "Enviando…"
-
 msgid "Move around"
 msgstr "Navegación"
 
@@ -7843,6 +7837,9 @@ msgstr "No se pudieron cargar los archivos adjuntos: {e}"
 msgid "Could not reach the server"
 msgstr "No se pudo contactar con el servidor"
 
+msgid "Sending…"
+msgstr "Enviando…"
+
 msgid "unknown folder"
 msgstr "carpeta desconocida"
 
@@ -8089,6 +8086,11 @@ msgid ""
 msgstr ""
 "POP3 no puede modificar un mensaje en el servidor, por lo que el archivo "
 "adjunto no se eliminó"
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
@@ -9168,6 +9170,9 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Waiting to send"
+#~ msgstr "En espera de envío"
 
 #~ msgid "Displays in the message header for each message."
 #~ msgstr "Se muestra en la cabecera de cada mensaje."

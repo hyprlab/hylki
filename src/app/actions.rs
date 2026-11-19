@@ -98,7 +98,7 @@ impl AppModel {
                     // In the Outbox, deleting means giving up on sending it —
                     // there is no server-side copy to move to Trash.
                     if self.outbox_item(m.account_id, m.id).is_some() {
-                        self.drop_outbox_row(m.account_id, m.id, &sender);
+                        self.drop_outbox_row(m.account_id, m.id);
                         self.current = None;
                         self.show_message(None, false);
                     } else {
@@ -124,7 +124,7 @@ impl AppModel {
                 }
                 if let Some(m) = self.reply_target_owned() {
                     if self.outbox_item(m.account_id, m.id).is_some() {
-                        self.drop_outbox_row(m.account_id, m.id, &sender);
+                        self.drop_outbox_row(m.account_id, m.id);
                         self.current = None;
                         self.show_message(None, false);
                     } else {
@@ -307,7 +307,7 @@ impl AppModel {
             // and every other action would aim an IMAP command at a UID
             // that doesn't exist on any server.
             if matches!(action, RowAction::Delete) {
-                self.drop_outbox_row(m.account_id, m.id, &sender);
+                self.drop_outbox_row(m.account_id, m.id);
             }
             return;
         }
@@ -472,7 +472,7 @@ impl AppModel {
         if self.showing_outbox {
             if matches!(action, BulkAction::Delete | BulkAction::DeleteForever) {
                 for m in &messages {
-                    self.drop_outbox_row(m.account_id, m.id, &sender);
+                    self.drop_outbox_row(m.account_id, m.id);
                 }
             }
             self.message_list.emit(MessageListInput::ClearSelection);
