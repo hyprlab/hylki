@@ -219,8 +219,8 @@
   the About dialog, opened from a **Credits** row under **Release Notes**,
   instead of over sixty rows on its main page.
 
-- **Translations:** German (PRs #668, #674 and #682 by Samuel Edlmeier),
-  2567 of 2571 strings translated. Russian (PR #670 by Ilya Semenkovich),
+- **Translations:** German (PRs #668, #674, #682 and #686 by Samuel
+  Edlmeier), 2571 of 2576 strings translated. Russian (PR #670 by Ilya Semenkovich),
   2564 of 2566 strings translated.
 
 ## 1.48.4 — 2026-11-17
