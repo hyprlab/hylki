@@ -205,6 +205,9 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         emit(WorkerEvent::Status(String::new()));
         match sent {
             Ok(s) => {
+                // Gone: out of the Outbox it was journaled in (#678) at once, not
+                // after the copies and the draft, which a quit or a crash can cut short.
+                drop_superseded_outbox(cache.as_ref(), account_id, &message, emit);
                 jmap_mark_answered(
                     &s,
                     state,
@@ -235,7 +238,6 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
                         }
                     }
                 }
-                drop_superseded_outbox(cache.as_ref(), account_id, &message, emit);
                 emit(WorkerEvent::Sent);
                 emit(WorkerEvent::SendDone { ticket, sent: true });
             }

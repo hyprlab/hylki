@@ -105,6 +105,14 @@ impl Cache {
             .execute("DELETE FROM outbox WHERE id = ?1", params![id]);
     }
 
+    /// Hold a queued message until `at`, with nothing gone wrong.
+    pub(crate) fn reschedule_outbox(&self, id: u32, at: i64) {
+        let _ = self.conn.execute(
+            "UPDATE outbox SET send_at = ?2, last_error = '' WHERE id = ?1",
+            params![id, at],
+        );
+    }
+
     /// Record another failed attempt, so the list can say what went wrong.
     pub(crate) fn record_outbox_failure(&self, id: u32, error: &str) {
         let _ = self.conn.execute(

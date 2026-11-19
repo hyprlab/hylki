@@ -42,6 +42,7 @@ mod preempt;
 mod preview;
 mod reconcile;
 mod render;
+pub(crate) mod send_journal;
 mod smtp;
 mod strip;
 mod summary;

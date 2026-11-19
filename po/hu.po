@@ -1175,13 +1175,6 @@ msgstr "{n} üzenet indexelése…"
 msgid "Sending “{subject}”…"
 msgstr ""
 
-#, fuzzy
-msgid "Waiting to send"
-msgstr "Nincs visszavonható művelet"
-
-msgid "Sending…"
-msgstr "Küldés…"
-
 msgid "Move around"
 msgstr "Navigáció"
 
@@ -8157,6 +8150,9 @@ msgstr "A mellékletek nem tölthetők be: {e}"
 msgid "Could not reach the server"
 msgstr "Nem sikerült elérni a kiszolgálót"
 
+msgid "Sending…"
+msgstr "Küldés…"
+
 #, fuzzy
 msgid "unknown folder"
 msgstr "Minden mappa megjelenítése"
@@ -8408,6 +8404,11 @@ msgid ""
 msgstr ""
 "A POP3 nem tudja módosítani a kiszolgálón található üzenetet, ezért a "
 "melléklet nem került eltávolításra"
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
@@ -9527,6 +9528,10 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Waiting to send"
+#~ msgstr "Nincs visszavonható művelet"
 
 #, fuzzy
 #~ msgid "Displays in the message header for each message."

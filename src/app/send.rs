@@ -112,15 +112,25 @@ impl AppModel {
             .priority(adw::ToastPriority::High)
             .timeout(0)
             .build();
+        self.journal_send(
+            ticket,
+            account_id,
+            &account,
+            &out,
+            sent_path.as_deref(),
+            sender,
+        );
         let o = super::outgoing::Outgoing {
             ticket,
             account_id,
             account,
             message: out,
             sent_path,
-            queued_at: crate::datefmt::now(),
             origin,
             held: delay > 0,
+            journal: super::outgoing::Journal::Writing,
+            // With nothing to undo, it goes as soon as its copy is written.
+            due: delay == 0,
             toast: toast.clone(),
         };
         toast.set_title(&o.sending_title());
@@ -140,19 +150,106 @@ impl AppModel {
                 move || s.input(AppMsg::DispatchSend(ticket)),
             );
             self.show_toast(&toast);
-        } else {
-            // With nothing to undo, there is no toast.
-            self.send_to(
-                account_id,
-                MailRequest::Send {
-                    message: o.message.clone(),
-                    sent_path: o.sent_path.clone(),
-                    ticket,
-                },
-            );
         }
+        // With nothing to undo, there is no toast.
         self.outgoing.borrow_mut().push(o);
-        self.push_outbox();
+    }
+
+    /// Write the message to the Outbox (#678) off the main thread; the
+    /// answer comes back as `Journaled`. Until then its worker does not have
+    /// it, so a flush of the Outbox and the worker never both send it.
+    pub(super) fn journal_send(
+        &self,
+        ticket: u64,
+        account_id: u32,
+        account: &crate::config::AccountConfig,
+        message: &OutgoingMessage,
+        sent_path: Option<&str>,
+        sender: &ComponentSender<Self>,
+    ) {
+        let (account, message, sent_path) = (
+            account.clone(),
+            message.clone(),
+            sent_path.map(str::to_string),
+        );
+        let s = sender.clone();
+        gtk::glib::spawn_future_local(async move {
+            let id = gtk::gio::spawn_blocking(move || {
+                crate::worker::send_journal::write(
+                    account_id,
+                    &account,
+                    &message,
+                    sent_path.as_deref(),
+                )
+            })
+            .await
+            .ok()
+            .flatten();
+            s.input(AppMsg::Journaled { ticket, id });
+        });
+    }
+
+    /// A message's copy is in the Outbox, or could not be written. If its
+    /// delay is over meanwhile, it goes to its worker now.
+    fn journaled(&mut self, ticket: u64, id: Option<u32>) {
+        let due = {
+            let mut list = self.outgoing.borrow_mut();
+            match list.iter_mut().find(|o| o.ticket == ticket) {
+                Some(o) => {
+                    match id {
+                        Some(id) => {
+                            o.journal = super::outgoing::Journal::Kept(id);
+                            // The version it was edited from is gone: this
+                            // copy is the one a send or a failure settles.
+                            o.message.outbox_origin = Some(id);
+                        }
+                        None => o.journal = super::outgoing::Journal::NotKept,
+                    }
+                    Some(o.due)
+                }
+                None => None,
+            }
+        };
+        match due {
+            Some(true) => self.hand_to_worker(ticket),
+            Some(false) => {}
+            None => {
+                if !self.merge_journaled(ticket, id) {
+                    // Undone while it was written.
+                    self.drop_journal(id);
+                }
+            }
+        }
+    }
+
+    /// Take a message's copy out of the Outbox: Undo took it back.
+    pub(super) fn drop_journal(&self, id: Option<u32>) {
+        if let Some(id) = id {
+            if let Some(c) = self.cache.as_ref() {
+                c.delete_outbox(id);
+            }
+            crate::worker::send_journal::release(id);
+        }
+    }
+
+    /// The message goes to its worker.
+    fn hand_to_worker(&self, ticket: u64) {
+        let request = {
+            let list = self.outgoing.borrow();
+            let Some(o) = list.iter().find(|o| o.ticket == ticket) else {
+                return;
+            };
+            (o.account_id, o.message.clone(), o.sent_path.clone())
+        };
+        let (account_id, message, sent_path) = request;
+        self.send_to(
+            account_id,
+            MailRequest::Send {
+                message,
+                sent_path,
+                ticket,
+            },
+        );
     }
 
     /// Mark what a reply or forward answers as soon as it is sent, rather
@@ -272,25 +369,19 @@ impl AppModel {
     /// The delay is over, or Send now was asked for: hand the message to its
     /// worker. Undo is no longer possible.
     pub(super) fn dispatch_send(&self, ticket: u64) {
-        let request = {
+        let written = {
             let mut list = self.outgoing.borrow_mut();
             let Some(o) = list.iter_mut().find(|o| o.ticket == ticket && o.held) else {
                 return;
             };
             o.held = false;
             o.toast.dismiss();
-            (o.account_id, o.message.clone(), o.sent_path.clone())
+            o.due = o.journal == super::outgoing::Journal::Writing;
+            !o.due
         };
-        let (account_id, message, sent_path) = request;
-        self.send_to(
-            account_id,
-            MailRequest::Send {
-                message,
-                sent_path,
-                ticket,
-            },
-        );
-        self.push_outbox();
+        if written {
+            self.hand_to_worker(ticket);
+        }
     }
 
     /// Undo Send: the message comes back to the composer it was written in,
@@ -303,26 +394,27 @@ impl AppModel {
                 .position(|o| o.ticket == ticket && o.held)
                 .map(|i| list.remove(i))
         };
-        let Some(o) = taken else { return };
+        let Some(mut o) = taken else { return };
         crate::desktop::send_log::note_message(
             &o.account.email,
             &o.message,
             "Undo Send: back in the composer",
         );
         o.toast.dismiss();
+        // Its copy leaves the Outbox, now or once written (`journaled`
+        // finds no message for it). The version it was edited from went
+        // when the copy was written, so the composer is all there is.
+        match o.journal {
+            super::outgoing::Journal::Kept(id) => {
+                self.drop_journal(Some(id));
+                o.message.outbox_origin = None;
+            }
+            super::outgoing::Journal::Writing => o.message.outbox_origin = None,
+            super::outgoing::Journal::NotKept => {}
+        }
         self.unmark_answered(ticket);
-        self.push_outbox();
         self.send_morph.finish();
         self.drop_provisional(&o.message.in_reply_to);
-        if self.showing_outbox
-            && self
-                .current
-                .as_ref()
-                .is_some_and(|m| m.id == super::outgoing::row_id(ticket))
-        {
-            self.current = None;
-            self.show_message(None, false);
-        }
         let account_id = o.account_id;
         let prefill = unsent_prefill(*o.message, &self.email_of_config(account_id));
         let free = self.reader_compose.is_none() && !self.showing_contacts && !self.showing_outbox;
@@ -398,6 +490,8 @@ impl AppModel {
 
             AppMsg::DispatchSend(ticket) => self.dispatch_send(ticket),
 
+            AppMsg::Journaled { ticket, id } => self.journaled(ticket, id),
+
             AppMsg::UndoSend(ticket) => self.undo_send(ticket, &sender),
 
             AppMsg::SendDone { ticket, sent } => {
@@ -420,6 +514,9 @@ impl AppModel {
                         .map(|i| list.remove(i))
                 };
                 if let Some(o) = done {
+                    if let super::outgoing::Journal::Kept(id) = o.journal {
+                        crate::worker::send_journal::release(id);
+                    }
                     if sent {
                         crate::desktop::send_log::note_message(
                             &o.account.email,
@@ -427,7 +524,6 @@ impl AppModel {
                             "sent",
                         );
                     }
-                    self.push_outbox();
                 }
             }
 

@@ -1169,12 +1169,6 @@ msgstr "Indicizzazione di {n} messaggi…"
 msgid "Sending “{subject}”…"
 msgstr ""
 
-msgid "Waiting to send"
-msgstr ""
-
-msgid "Sending…"
-msgstr "Invio in corso…"
-
 msgid "Move around"
 msgstr "Naviga"
 
@@ -8097,6 +8091,9 @@ msgstr "Impossibile caricare gli allegati: {e}"
 msgid "Could not reach the server"
 msgstr "Impossibile raggiungere il server"
 
+msgid "Sending…"
+msgstr "Invio in corso…"
+
 msgid "unknown folder"
 msgstr "cartella sconosciuta"
 
@@ -8350,6 +8347,11 @@ msgid ""
 msgstr ""
 "POP3 non può modificare un messaggio sul server, quindi l'allegato non è "
 "stato rimosso"
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""

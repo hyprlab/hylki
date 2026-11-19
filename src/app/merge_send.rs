@@ -33,6 +33,9 @@ pub(super) struct MergeRun {
     in_flight: Option<u64>,
     /// That message, kept should its worker stop before answering (#684).
     in_flight_message: Option<OutgoingMessage>,
+    /// That message while its copy is written to the Outbox (#678), before
+    /// it goes to the worker.
+    writing: Option<OutgoingMessage>,
     interval: Option<Duration>,
     /// When the last message went to the worker, to wait from.
     last: Option<Instant>,
@@ -208,6 +211,7 @@ impl AppModel {
             stopped: false,
             in_flight: None,
             in_flight_message: None,
+            writing: None,
             interval,
             last: None,
             waiting_out: false,
@@ -255,10 +259,38 @@ impl AppModel {
         self.send_ticket += 1;
         let ticket = self.send_ticket;
         run.in_flight = Some(ticket);
-        run.in_flight_message = Some(message.clone());
+        run.writing = Some(message.clone());
         run.last = Some(Instant::now());
-        let (account_id, sent_path) = (run.account_id, run.sent_path.clone());
+        let (account_id, account, sent_path) =
+            (run.account_id, run.account.clone(), run.sent_path.clone());
         drop(runs);
+        self.journal_send(
+            ticket,
+            account_id,
+            &account,
+            &message,
+            sent_path.as_deref(),
+            sender,
+        );
+    }
+
+    /// The copy of a merge's message is in the Outbox, or could not be
+    /// written: the message goes to its worker. False if no merge has it.
+    pub(super) fn merge_journaled(&mut self, ticket: u64, id: Option<u32>) -> bool {
+        let (account_id, message, sent_path) = {
+            let mut runs = self.merges.borrow_mut();
+            let Some(run) = runs.iter_mut().find(|r| r.in_flight == Some(ticket)) else {
+                return false;
+            };
+            let Some(mut message) = run.writing.take() else {
+                return false;
+            };
+            if id.is_some() {
+                message.outbox_origin = id;
+            }
+            run.in_flight_message = Some(message.clone());
+            (run.account_id, message, run.sent_path.clone())
+        };
         self.send_to(
             account_id,
             MailRequest::Send {
@@ -267,6 +299,7 @@ impl AppModel {
                 ticket,
             },
         );
+        true
     }
 
     /// A merge's wait is over.
@@ -306,7 +339,9 @@ impl AppModel {
                 return false;
             };
             run.in_flight = None;
-            run.in_flight_message = None;
+            if let Some(id) = run.in_flight_message.take().and_then(|m| m.outbox_origin) {
+                crate::worker::send_journal::release(id);
+            }
             if sent {
                 run.sent += 1;
             } else {
