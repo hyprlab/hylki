@@ -1037,12 +1037,6 @@ msgstr ""
 msgid "Sending “{subject}”…"
 msgstr ""
 
-msgid "Waiting to send"
-msgstr ""
-
-msgid "Sending…"
-msgstr ""
-
 msgid "Move around"
 msgstr ""
 
@@ -7225,6 +7219,9 @@ msgstr ""
 msgid "Could not reach the server"
 msgstr ""
 
+msgid "Sending…"
+msgstr ""
+
 msgid "unknown folder"
 msgstr ""
 
@@ -7449,6 +7446,11 @@ msgstr ""
 
 msgid ""
 "POP3 cannot change a message on the server, so the attachment was not removed"
+msgstr ""
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
 msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"

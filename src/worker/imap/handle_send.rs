@@ -91,6 +91,9 @@ impl<E: Emit> ImapWorker<E> {
         restore_msgid_case(cache.as_ref(), &mut message);
         match send_smtp(account, &message).await {
             Ok(raw) => {
+                // Gone: out of the Outbox it was journaled in (#678) at once, not
+                // after the copies and the draft, which a quit or a crash can cut short.
+                drop_superseded_outbox(cache.as_ref(), account_id, &message, emit);
                 emit(WorkerEvent::Status(String::new()));
                 mark_answered(
                     session,
@@ -207,7 +210,6 @@ impl<E: Emit> ImapWorker<E> {
                     }
                 }
                 // This version replaces the queued one it was edited from.
-                drop_superseded_outbox(cache.as_ref(), account_id, &message, emit);
                 emit(WorkerEvent::Sent);
                 emit(WorkerEvent::SendDone { ticket, sent: true });
             }

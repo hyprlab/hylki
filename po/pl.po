@@ -1204,12 +1204,6 @@ msgstr "Indeksowanie wiadomości ({n})…"
 msgid "Sending “{subject}”…"
 msgstr ""
 
-msgid "Waiting to send"
-msgstr ""
-
-msgid "Sending…"
-msgstr "Wysyłanie…"
-
 msgid "Move around"
 msgstr "Nawigacja"
 
@@ -8223,6 +8217,9 @@ msgstr "Nie udało się wczytać załączników: {e}"
 msgid "Could not reach the server"
 msgstr "Nie udało się połączyć z serwerem"
 
+msgid "Sending…"
+msgstr "Wysyłanie…"
+
 #, fuzzy
 msgid "unknown folder"
 msgstr "Wyświetl poszczególne katalogi"
@@ -8478,6 +8475,11 @@ msgid ""
 msgstr ""
 "Protokół POP3 nie pozwala zmieniać wiadomości na serwerze, dlatego załącznik "
 "nie został usunięty"
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""

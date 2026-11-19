@@ -1139,12 +1139,6 @@ msgstr "Αποστολή μηνύματος…"
 msgid "Sending “{subject}”…"
 msgstr "Αποστολή «{subject}»…"
 
-msgid "Waiting to send"
-msgstr "Αναμονή για αποστολή"
-
-msgid "Sending…"
-msgstr "Αποστολή…"
-
 msgid "Move around"
 msgstr "Μετακίνηση"
 
@@ -7904,6 +7898,9 @@ msgstr "Δεν ήταν δυνατή η φόρτωση των συνημμένω
 msgid "Could not reach the server"
 msgstr "Δεν ήταν δυνατή η επικοινωνία με τον διακομιστή"
 
+msgid "Sending…"
+msgstr "Αποστολή…"
+
 msgid "unknown folder"
 msgstr "άγνωστος φάκελος"
 
@@ -8153,6 +8150,11 @@ msgid ""
 msgstr ""
 "Το POP3 δεν μπορεί να τροποποιήσει ένα μήνυμα στον διακομιστή, επομένως το "
 "συνημμένο δεν αφαιρέθηκε."
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
@@ -9248,6 +9250,9 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Waiting to send"
+#~ msgstr "Αναμονή για αποστολή"
 
 #~ msgid "Displays in the message header for each message."
 #~ msgstr "Εμφανίζεται στην κεφαλίδα κάθε μηνύματος."

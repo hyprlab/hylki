@@ -1141,6 +1141,9 @@ pub(crate) enum AppMsg {
     /// A message's Undo Send delay is over, or Send now was asked for it in
     /// the Outbox: it goes to its worker (#434).
     DispatchSend(u64),
+    /// A message's copy is in the Outbox under this id, or could not be
+    /// written there (#678).
+    Journaled { ticket: u64, id: Option<u32> },
     /// Undo on a message still waiting out its delay (#434).
     UndoSend(u64),
     /// The worker is done with a message on its way out (#434).

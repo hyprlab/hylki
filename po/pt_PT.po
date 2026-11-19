@@ -1113,12 +1113,6 @@ msgstr "A enviar mensagem…"
 msgid "Sending “{subject}”…"
 msgstr "A enviar “{subject}”…"
 
-msgid "Waiting to send"
-msgstr "A aguardar envio"
-
-msgid "Sending…"
-msgstr "A enviar…"
-
 msgid "Move around"
 msgstr "Navegação"
 
@@ -7832,6 +7826,9 @@ msgstr "Não foi possível carregar os anexos: {e}"
 msgid "Could not reach the server"
 msgstr "Não foi possível aceder ao servidor"
 
+msgid "Sending…"
+msgstr "A enviar…"
+
 msgid "unknown folder"
 msgstr "pasta desconhecida"
 
@@ -8085,6 +8082,11 @@ msgid ""
 msgstr ""
 "O POP3 não pode alterar uma mensagem no servidor, pelo que o anexo não foi "
 "removido"
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr ""
 
 msgid "The message is signed or encrypted, and removing a file would break it"
 msgstr ""
@@ -9160,6 +9162,9 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Waiting to send"
+#~ msgstr "A aguardar envio"
 
 #~ msgid ""
 #~ "Will appear in the composer's From menu. Replies to mail sent here will "

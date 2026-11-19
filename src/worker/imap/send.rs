@@ -457,4 +457,96 @@ mod tests {
             delete_box(sess, &folder).await.expect("delete");
         });
     }
+
+    /// #678 against a real server, with `IMAP_LIVE=host,port,user,password`
+    /// and `SMTP_LIVE=host,port` (implicit TLS): a message journaled at Send
+    /// whose session ended before it went (a quit, a crash) is in the
+    /// Outbox, and the next flush sends it and takes it out.
+    #[test]
+    #[ignore]
+    fn live_a_send_cut_short_goes_from_the_outbox() {
+        use crate::worker::imap::connect::connect;
+        use crate::worker::imap::sync::load_messages;
+        use crate::worker::send_journal;
+        use crate::worker::test_support::{sample_account, sample_outgoing};
+
+        let (Ok(spec), Ok(smtp)) = (std::env::var("IMAP_LIVE"), std::env::var("SMTP_LIVE")) else {
+            return;
+        };
+        let p: Vec<&str> = spec.splitn(4, ',').collect();
+        let (smtp_host, smtp_port) = smtp.split_once(',').expect("host,port");
+        let account = AccountConfig {
+            email: p[2].into(),
+            imap_host: p[0].into(),
+            imap_port: p[1].parse().expect("port"),
+            smtp_host: smtp_host.into(),
+            smtp_port: smtp_port.parse().expect("port"),
+            username: p[2].into(),
+            password: p[3].into(),
+            security: Some(crate::config::ServerSecurity {
+                imap_starttls: false,
+                smtp_starttls: false,
+                imap_accept_invalid_certs: true,
+                smtp_accept_invalid_certs: true,
+                ..Default::default()
+            }),
+            ..sample_account()
+        };
+        let subject = format!("Journaled {}", std::process::id());
+        let msg = crate::worker::OutgoingMessage {
+            to: account.email.clone(),
+            subject: subject.clone(),
+            body: "Written to the Outbox at Send.".into(),
+            ..sample_outgoing()
+        };
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap();
+        rt.block_on(async {
+            let cache = Cache::in_memory().unwrap();
+            let id = send_journal::write_to(&cache, 1, &account, &msg, None).expect("written");
+            let mut session = Some(connect(&account).await.expect("connect"));
+            let mut use_envelope = true;
+            // In hand: the flush leaves it to the worker that has it.
+            flush_outbox(
+                Some(&cache),
+                1,
+                &account,
+                None,
+                &mut session,
+                &mut use_envelope,
+                &|_| {},
+                false,
+            )
+            .await;
+            assert_eq!(cache.outbox_items(1).len(), 1);
+            // The session ends with it unsent; the next one flushes it.
+            send_journal::release(id);
+            flush_outbox(
+                Some(&cache),
+                1,
+                &account,
+                None,
+                &mut session,
+                &mut use_envelope,
+                &|_| {},
+                false,
+            )
+            .await;
+            assert!(cache.outbox_items(1).is_empty());
+            let sess = session.as_mut().expect("connected");
+            for _ in 0..20 {
+                let inbox = load_messages(1, sess, 1, "INBOX", true, None)
+                    .await
+                    .expect("load");
+                if let Some(m) = inbox.into_iter().find(|m| m.subject == subject) {
+                    delete_draft(sess, "INBOX", m.uid).await.expect("clean up");
+                    return;
+                }
+                tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+            }
+            panic!("{subject} never arrived");
+        });
+    }
 }
