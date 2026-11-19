@@ -249,7 +249,7 @@ enum Kind {
     Word(String),
     /// The value and how many digits wrote it.
     Num(u32, usize),
-    /// Any other character; every dash is '-'.
+    /// Any other character; every dash is '-', every apostrophe '\''.
     Mark(char),
 }
 
@@ -292,6 +292,8 @@ fn tokens(text: &str) -> Vec<Tok> {
             Kind::Num(digits.parse().unwrap_or(u32::MAX), digits.len())
         } else if matches!(c, '–' | '—' | '‐' | '‑') {
             Kind::Mark('-')
+        } else if matches!(c, '’' | 'ʼ') {
+            Kind::Mark('\'')
         } else {
             Kind::Mark(c)
         };
@@ -407,15 +409,29 @@ impl Parser<'_> {
         }
     }
 
+    /// The index after one of `words` written at token `i`. A word can be
+    /// several tokens with nothing between them: French "aujourd'hui".
+    fn phrase(&self, i: usize, words: &[String]) -> Option<usize> {
+        words.iter().find_map(|w| {
+            let want = tokens(w);
+            let fits = !want.is_empty()
+                && want.iter().enumerate().all(|(k, tok)| {
+                    self.t.get(i + k).is_some_and(|t| t.kind == tok.kind)
+                        && (k == 0 || self.tight(i + k))
+                });
+            fits.then_some(i + want.len())
+        })
+    }
+
     /// A day, or a range of days, starting at token `i`; the index after it.
     fn date(&self, i: usize) -> Option<(NaiveDate, Option<NaiveDate>, usize)> {
+        if let Some(next) = self.phrase(i, &self.w.today) {
+            return Some((self.reference, None, next));
+        }
+        if let Some(next) = self.phrase(i, &self.w.tomorrow) {
+            return Some((self.reference + Duration::days(1), None, next));
+        }
         let word = self.word(i);
-        if word.is_some_and(|w| self.w.today.iter().any(|t| t == w)) {
-            return Some((self.reference, None, i + 1));
-        }
-        if word.is_some_and(|w| self.w.tomorrow.iter().any(|t| t == w)) {
-            return Some((self.reference + Duration::days(1), None, i + 1));
-        }
         let next = word == Some("next");
         let j = i + usize::from(next || word == Some("this"));
         if let Some(day) = self.word(j).and_then(|w| self.w.weekday(w)) {

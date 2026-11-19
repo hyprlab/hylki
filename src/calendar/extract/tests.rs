@@ -76,6 +76,17 @@ fn weekdays_and_relative_days() {
 }
 
 #[test]
+fn translated_today_with_an_apostrophe() {
+    let mut w = Words::english(true);
+    w.today.push("aujourd’hui".into());
+    let fr = |text: &str| find(text, &w, monday());
+    assert_eq!(fr("rendez-vous aujourd’hui à 15h").date, d(2026, 11, 16));
+    assert_eq!(fr("Aujourd'hui").date, d(2026, 11, 16));
+    assert_eq!(fr("aujourd").date, None);
+    assert_eq!(fr("aujourd’ hui").date, None);
+}
+
+#[test]
 fn times() {
     assert_eq!(us("at 3pm").start, t(15, 0));
     assert_eq!(us("at 3:30 p.m.").start, t(15, 30));
