@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+- **Fixed: the mail worker stopped on an address with Japanese text right
+  after it** (#684, reported by mjoach). An address such as `example.jpも`,
+  its domain followed by a letter of another script, stopped the account's
+  connection, and messages being sent stayed on Sending… and were lost at
+  quit. The domain now ends where the other script starts. If an account's
+  connection stops all the same, its sends move to the Outbox and the
+  connection starts again, up to three times in ten minutes.
+
+- **Fixed: web links ran on into Chinese, Japanese, Korean or Thai text**
+  (#684). Those scripts follow a link without a space, so their letters and
+  full-width punctuation became part of the URL. They now end a link, and a
+  link may start right after them, in the reader, Markdown and pasted text.
+
+- **Fixed: a message could take a long time to open** (#680, reported by
+  DarkStarCrashes123). Checks of a view's flags and tags, and drafts fetched
+  in the background, kept the connection ahead of the message clicked. The
+  message clicked now goes first. A draft over 8 MB is also fetched once,
+  not again on every listing of its folder.
+
+- **Fixed: m marked the conversation's first message, not the picked card**
+  (#679, reported by mbetrifork). With a card picked in the reader, m marks
+  that card read or unread, as the toolbar button does.
+
+- **Fixed: a translated "today" written with an apostrophe was not read in
+  selected text** (#637), such as French "aujourd’hui", so Create Event
+  from Selection missed the date.
+
+- **Fixed: an account header showed a hover when a click on it does
+  nothing.** With Fold accounts with one click off in Settings → Sidebar,
+  only the chevron lights up.
+
 - **Fixed: the New Event and New Task dialogs cut calendar names short**
   (#685, reported by rsx-xp). The Calendar and Task list pickers, and the
   alarm pickers, show each name whole; a long name picked is shortened in
