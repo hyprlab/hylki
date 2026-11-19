@@ -7,7 +7,8 @@ use super::Cache;
 
 impl Cache {
     /// A draft's bytes as kept, if they are still this message's: the same
-    /// Message-ID and date at the same place.
+    /// Message-ID and date at the same place. A draft marked too large to
+    /// keep has none.
     pub(crate) fn load_draft_copy(
         &self,
         account_id: u32,
@@ -24,9 +25,11 @@ impl Cache {
                 |row| row.get::<_, Vec<u8>>(0),
             )
             .ok()
+            .filter(|raw| !raw.is_empty())
     }
 
-    /// The drafts of a folder kept already, as (uid, Message-ID, date).
+    /// The drafts of a folder kept already, as (uid, Message-ID, date),
+    /// those marked too large to keep included.
     pub(crate) fn draft_copies_in(
         &self,
         account_id: u32,
@@ -47,7 +50,9 @@ impl Cache {
         run().unwrap_or_default()
     }
 
-    /// Keep a draft's bytes, in place of any copy at the same place.
+    /// Keep a draft's bytes, in place of any copy at the same place. Empty
+    /// bytes mark a draft too large to keep, so it is not fetched ahead
+    /// again on every listing of its folder (#680).
     pub(crate) fn save_draft_copy(
         &self,
         account_id: u32,
@@ -105,5 +110,16 @@ mod tests {
             cache.draft_copies_in(1, "Drafts"),
             vec![(8, "c@x".to_string(), 300)]
         );
+    }
+
+    #[test]
+    fn a_draft_marked_too_large_counts_as_kept_but_serves_nothing() {
+        let cache = Cache::in_memory().expect("cache");
+        cache.save_draft_copy(1, "Drafts", 7, "a@x", 100, b"");
+        assert_eq!(
+            cache.draft_copies_in(1, "Drafts"),
+            vec![(7, "a@x".to_string(), 100)]
+        );
+        assert!(cache.load_draft_copy(1, "Drafts", 7, "a@x", 100).is_none());
     }
 }
