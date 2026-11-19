@@ -1,5 +1,54 @@
 # Changelog
 
+## 1.49.0-beta.4 — 2026-11-19
+
+- **Fixed: the mail worker stopped on an address with Japanese text right
+  after it** (#684, reported by mjoach). An address such as `example.jpも`,
+  its domain followed by a letter of another script, stopped the account's
+  connection, and messages being sent stayed on Sending… and were lost at
+  quit. The domain now ends where the other script starts. If an account's
+  connection stops all the same, its sends move to the Outbox and the
+  connection starts again, up to three times in ten minutes.
+
+- **Fixed: web links ran on into Chinese, Japanese, Korean or Thai text**
+  (#684). Those scripts follow a link without a space, so their letters and
+  full-width punctuation became part of the URL. They now end a link, and a
+  link may start right after them, in the reader, Markdown and pasted text.
+
+- **Fixed: a message could take a long time to open** (#680, reported by
+  DarkStarCrashes123). Checks of a view's flags and tags, and drafts fetched
+  in the background, kept the connection ahead of the message clicked. The
+  message clicked now goes first. A draft over 8 MB is also fetched once,
+  not again on every listing of its folder.
+
+- **Fixed: m marked the conversation's first message, not the picked card**
+  (#679, reported by mbetrifork). With a card picked in the reader, m marks
+  that card read or unread, as the toolbar button does.
+
+- **Fixed: a translated "today" written with an apostrophe was not read in
+  selected text** (#637), such as French "aujourd’hui", so Create Event
+  from Selection missed the date.
+
+- **Fixed: an account header showed a hover when a click on it does
+  nothing.** With Fold accounts with one click off in Settings → Sidebar,
+  only the chevron lights up.
+
+- **Fixed: the New Event and New Task dialogs cut calendar names short**
+  (#685, reported by rsx-xp). The Calendar and Task list pickers, and the
+  alarm pickers, show each name whole; a long name picked is shortened in
+  the row and shown whole in its tooltip.
+
+- **Fixed: message list previews showed HTML** (#683, reported by Khaitu).
+  A plain-text part written with HTML entities, such as a marketing
+  preheader of `&zwnj;` repeated, reached the list as written, and so did a
+  server's preview of one on JMAP and Microsoft 365. A preview is now words
+  only: tags, comments and a tag cut off by the fetch are removed and every
+  entity is decoded, wherever the text came from. Rows already cached are
+  shown cleaned and read again from an IMAP server when their folder syncs.
+
+- **Translations:** German (PR #686 by Samuel Edlmeier), 2571 of 2576
+  strings translated. French (PR #687 by frenchy82), complete at 2576.
+
 ## 1.49.0-beta.3 — 2026-11-18
 
 - **Added: a send log kept across restarts** (#678). Each message written

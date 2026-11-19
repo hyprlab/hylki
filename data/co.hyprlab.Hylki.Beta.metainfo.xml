@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.49.0-beta.4" date="2026-11-19" type="development">
+      <description>
+        <p>An address or link followed by Japanese, Chinese, Korean or Thai text no longer stops the mail worker or runs into the text, and sends survive a worker that stops. Messages open ahead of background flag checks and draft fetches, m marks the picked card, previews show no HTML, and calendar names show whole.</p>
+      </description>
+    </release>
     <release version="1.49.0-beta.3" date="2026-11-18" type="development">
       <description>
         <p>A send log is kept across restarts, Discard in the composer can be undone, and F5 checks for new mail. Sent mail always keeps a copy, also from POP3 accounts and when the server refuses it, and replies sent from another computer join their conversation without opening Sent.</p>
