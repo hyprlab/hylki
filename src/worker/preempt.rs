@@ -1,7 +1,8 @@
 //! Reader-first ordering: the loads the reader waits on may overtake list
 //! syncs, refresh ticks and the mutations that leave the mail they read
 //! alone, and may interrupt an in-flight network read when nothing they
-//! must wait for is queued.
+//! must wait for is queued. A message being sent overtakes and interrupts
+//! the same reads, though no mutation.
 
 use tokio::sync::mpsc;
 
@@ -21,6 +22,20 @@ fn is_reader_load(req: &MailRequest) -> bool {
                 ..
             }
     )
+}
+
+/// A message sent now. The user has closed its composer and is waiting for
+/// it to go: it waited behind two minutes of drafts fetched ahead on a slow
+/// server (#678). Send Later only files it in the Outbox, which can wait.
+fn is_send_now(req: &MailRequest) -> bool {
+    matches!(req, MailRequest::Send { message, .. }
+        if message.send_at.is_none_or(|t| t <= crate::datefmt::now()))
+}
+
+/// What goes ahead of the work done for the user's sake rather than at
+/// their asking: the reader's loads and a message being sent.
+fn goes_first(req: &MailRequest) -> bool {
+    is_reader_load(req) || is_send_now(req)
 }
 
 /// A folder list fetch: work the reader's loads may go ahead of.
@@ -110,7 +125,8 @@ fn may_overtake(reader: &MailRequest, ahead: &MailRequest) -> bool {
 }
 
 /// Take everything else already queued behind `first` and move the reader's
-/// loads ahead of the list syncs they sit behind, keeping every other order.
+/// loads and sends ahead of the list syncs they sit behind, keeping every
+/// other order.
 ///
 /// The worker serves one request at a time, so a message opened right after
 /// a view that loads its folder (a notification click into Inboxes, which
@@ -137,7 +153,7 @@ pub(super) fn reorder_reader_loads(
     if queue.len() > 1 {
         let mut ordered: Vec<MailRequest> = Vec::with_capacity(queue.len());
         for req in queue {
-            if is_reader_load(&req) {
+            if goes_first(&req) {
                 // Slot in ahead of list fetches and deferred refresh ticks.
                 let mut at = ordered.len();
                 while at > 0 && may_overtake(&req, &ordered[at - 1]) {
@@ -175,9 +191,9 @@ pub(super) fn yield_to_queued_reader(
     while let Ok(r) = rx.try_recv() {
         backlog.push_back(r);
     }
-    // Reader loads keep their order among themselves, so only the first
-    // can come to the front.
-    let Some(at) = backlog.iter().position(is_reader_load) else {
+    // Reader loads and sends keep their order among themselves, so only
+    // the first can come to the front.
+    let Some(at) = backlog.iter().position(goes_first) else {
         return Some(req);
     };
     if !backlog
@@ -249,8 +265,8 @@ pub(super) async fn interrupt_read_for_reader<F: std::future::Future>(
             result = &mut work => return Some(result),
             req = rx.recv(), if !closed => {
                 let Some(req) = req else { closed = true; continue; };
-                let interrupt = is_reader_load(&req) && backlog.iter().all(|r| {
-                    is_reader_load(r) || may_overtake(&req, r)
+                let interrupt = goes_first(&req) && backlog.iter().all(|r| {
+                    goes_first(r) || may_overtake(&req, r)
                 });
                 backlog.push_back(req);
                 if interrupt {
@@ -543,6 +559,99 @@ mod reader_preemption_tests {
         assert_eq!(token(&first), 9);
         let rest: Vec<u64> = backlog.iter().map(token).collect();
         assert_eq!(rest, [1, 2, 3]);
+    }
+
+    fn send(ticket: u64, send_at: Option<i64>) -> MailRequest {
+        let message = crate::worker::OutgoingMessage {
+            send_at,
+            ..crate::worker::test_support::sample_outgoing()
+        };
+        MailRequest::Send {
+            message: Box::new(message),
+            sent_path: None,
+            ticket,
+        }
+    }
+
+    fn draft_ahead(uid: u32) -> MailRequest {
+        MailRequest::ExportRaw {
+            token: uid.into(),
+            path: "Drafts".into(),
+            uid,
+            for_reader: false,
+        }
+    }
+
+    /// #678: Send pressed while seven large drafts were being fetched ahead
+    /// went out two minutes later. It goes ahead of them, and of the list
+    /// and flag checks, but never ahead of a draft being saved.
+    #[test]
+    fn a_send_overtakes_drafts_fetched_ahead_but_not_a_save() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(draft_ahead(2)).unwrap();
+        tx.send(MailRequest::RefreshFlags {
+            paths: vec!["INBOX".into()],
+        })
+        .unwrap();
+        tx.send(send(7, None)).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(draft_ahead(1), &mut rx, &mut backlog);
+        assert!(matches!(first, MailRequest::Send { ticket: 7, .. }));
+        assert_eq!(backlog.len(), 3);
+
+        // A mutation stays a barrier, and what is ahead of it stays there.
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(seen(4)).unwrap();
+        tx.send(send(8, None)).unwrap();
+        tx.send(draft_ahead(2)).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(draft_ahead(1), &mut rx, &mut backlog);
+        assert!(matches!(first, MailRequest::ExportRaw { uid: 1, .. }));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::SetSeen { .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::Send { ticket: 8, .. })
+        ));
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(send(9, None)).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(seen(4), &mut rx, &mut backlog);
+        assert!(matches!(first, MailRequest::SetSeen { .. }));
+    }
+
+    /// Send Later only files the message in the Outbox: it keeps its place.
+    #[test]
+    fn a_send_later_keeps_its_place() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        let later = crate::datefmt::now() + 3600;
+        tx.send(send(7, Some(later))).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(draft_ahead(1), &mut rx, &mut backlog);
+        assert!(matches!(first, MailRequest::ExportRaw { .. }));
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn a_send_interrupts_a_draft_being_fetched_ahead() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        let mut backlog = std::collections::VecDeque::from([draft_ahead(3)]);
+        tokio::spawn(async move {
+            tokio::time::sleep(Duration::from_millis(20)).await;
+            tx.send(send(7, None)).unwrap();
+        });
+        let result = interrupt_read_for_reader(
+            tokio::time::sleep(Duration::from_secs(10)),
+            &mut rx,
+            &mut backlog,
+        )
+        .await;
+        assert!(result.is_none());
+        assert!(matches!(
+            backlog.pop_back(),
+            Some(MailRequest::Send { ticket: 7, .. })
+        ));
     }
 
     #[test]
