@@ -20,5 +20,6 @@ pub(crate) mod quote;
 pub(crate) mod reader;
 pub(crate) mod receipt;
 pub(crate) mod sensitivity;
+pub(crate) mod unspaced;
 pub(crate) mod unsubscribe;
 pub(crate) mod verify;

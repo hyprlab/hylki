@@ -178,6 +178,16 @@ fn a_url_keeps_the_sentence_punctuation_out_of_the_link() {
 }
 
 #[test]
+fn a_link_ends_where_japanese_starts_684() {
+    let html = to_html("詳細はhttps://example.jp/pageも見てください。");
+    has(&html, "詳細は<a href=\"https://example.jp/page\">");
+    has(&html, "</a>も見てください。");
+    let html = to_html("連絡はwww.example.co.jpまで");
+    has(&html, "href=\"https://www.example.co.jp\"");
+    has(&html, "</a>まで");
+}
+
+#[test]
 fn links_after_multibyte_whitespace_and_symbols() {
     // A no-break space right before an address used to slice
     // mid-character (#479).

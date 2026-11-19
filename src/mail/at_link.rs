@@ -2,6 +2,8 @@
 //! email address, a Matrix ID (`@name:server.org`) and a fediverse handle
 //! (`@name@server.org`, as Mastodon writes one) (#653).
 
+use crate::mail::unspaced::is_unspaced;
+
 /// The link the `@` at byte `at` of `text` belongs to: `(start, end, href)`.
 /// `from` is where the text not yet linked starts, so an address never
 /// reaches back into a link already made.
@@ -122,22 +124,6 @@ fn domain_end(text: &str, start: usize) -> Option<usize> {
     let letters = tld.chars().count() >= 2 && tld.chars().all(char::is_alphabetic);
     let punycode = tld.len() > 4 && tld.get(..4).is_some_and(|p| p.eq_ignore_ascii_case("xn--"));
     (letters || punycode).then_some(start + host.len())
-}
-
-/// A letter of a script written without spaces between words: Chinese,
-/// Japanese, Thai and their neighbours.
-fn is_unspaced(c: char) -> bool {
-    matches!(c,
-        '\u{0E00}'..='\u{0EFF}' // Thai, Lao
-        | '\u{1000}'..='\u{109F}' // Myanmar
-        | '\u{1780}'..='\u{17FF}' // Khmer
-        | '\u{3040}'..='\u{30FF}' // Hiragana, Katakana
-        | '\u{3400}'..='\u{4DBF}' // CJK Extension A
-        | '\u{4E00}'..='\u{9FFF}' // CJK Unified Ideographs
-        | '\u{F900}'..='\u{FAFF}' // CJK Compatibility Ideographs
-        | '\u{FF66}'..='\u{FF9F}' // Halfwidth Katakana
-        | '\u{20000}'..='\u{3FFFF}' // CJK Extensions B onwards
-    )
 }
 
 /// What the part of an address before its `@` is written with in practice;

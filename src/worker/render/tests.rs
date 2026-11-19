@@ -95,6 +95,27 @@ fn linkify_wraps_http_and_https() {
 }
 
 #[test]
+fn linkify_ends_a_link_where_japanese_starts_684() {
+    assert_eq!(
+        linkify("詳細はhttps://example.jp/page?a=1も見てください。"),
+        "詳細は<a href=\"https://example.jp/page?a=1\">https://example.jp/page?a=1</a>も見てください。"
+    );
+    assert_eq!(
+        linkify("（www.example.com）"),
+        "（<a href=\"https://www.example.com\">www.example.com</a>）"
+    );
+    assert_eq!(
+        linkify("https://example.kr에서"),
+        "<a href=\"https://example.kr\">https://example.kr</a>에서"
+    );
+    // Other scripts written with spaces stay in a link.
+    assert_eq!(
+        linkify("https://de.wikipedia.org/wiki/Müller"),
+        "<a href=\"https://de.wikipedia.org/wiki/Müller\">https://de.wikipedia.org/wiki/Müller</a>"
+    );
+}
+
+#[test]
 fn linkify_prefixes_bare_www_with_https() {
     assert_eq!(
         linkify("go to www.example.com today"),
