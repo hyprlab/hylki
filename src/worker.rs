@@ -71,7 +71,7 @@ pub(crate) use imap::keywords::is_system_keyword;
 use imap::run_imap;
 use lane::cache_lane;
 use mock::run_mock;
-pub(crate) use outbox::{answered_copies, park_for_next_launch, reply_copy_path};
+pub(crate) use outbox::{answered_copies, keep_after_stop, park_for_next_launch, reply_copy_path};
 use pop3::run_pop3;
 pub(crate) use render::attachments::{extract_attachments_of, guess_mime};
 pub(crate) use render::body::extract_body;
@@ -147,7 +147,16 @@ pub(crate) fn spawn(
             // be spawned as (non-Send) local tasks sharing this thread; they
             // are cancelled with it when the worker winds down.
             let local = tokio::task::LocalSet::new();
-            local.block_on(&rt, run(account_id, account, rx, emit));
+            let stopped = emit.clone();
+            // A panic would otherwise end the thread unseen, and every
+            // request after it, a Send included, would wait forever (#684).
+            let ran = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                local.block_on(&rt, run(account_id, account, rx, emit))
+            }));
+            if ran.is_err() {
+                tracing::error!("[account {account_id}] the mail worker panicked");
+                stopped(WorkerEvent::Stopped);
+            }
         })
         .expect("failed to spawn mail worker thread");
 

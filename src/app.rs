@@ -136,6 +136,7 @@ mod unsubscribe;
 mod uri_queue;
 mod view_flags;
 mod window;
+mod worker_stop;
 mod workers;
 
 pub(crate) use accounts::finish_keyring_writes;

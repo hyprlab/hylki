@@ -1148,6 +1148,9 @@ pub(crate) enum AppMsg {
     /// An account's worker sent a message: refresh the folder its copy
     /// lands in when it is the open one.
     Sent { account_id: u32 },
+    /// An account's worker panicked (#684): its sends are kept and it is
+    /// started again.
+    WorkerStopped { account_id: u32 },
     /// A message nothing could keep, back for a composer (#340).
     Unsent {
         account_id: u32,

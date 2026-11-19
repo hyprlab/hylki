@@ -260,6 +260,7 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
         },
         WorkerEvent::Sent => AppMsg::Sent { account_id },
         WorkerEvent::SendDone { ticket, sent } => AppMsg::SendDone { ticket, sent },
+        WorkerEvent::Stopped => AppMsg::WorkerStopped { account_id },
         WorkerEvent::Unsent(message) => AppMsg::Unsent {
             account_id,
             message,
@@ -545,15 +546,10 @@ impl AppModel {
             }
         } else {
             self.claim_cached_accounts();
-            // Copying to On This Computer (#552) needs it there, and on.
-            let local = self.config.iter().any(|c| c.is_local() && c.enabled);
-            for (i, account) in self.config.iter().enumerate() {
-                if !account.enabled {
+            for account_id in 1..=self.config.len() as u32 {
+                let Some(account) = self.worker_account(account_id) else {
                     continue;
-                }
-                let account_id = i as u32 + 1;
-                let mut account = account.clone();
-                account.copy_to_local &= local;
+                };
                 let worker = Self::spawn_worker(account_id, Some(account), sender);
                 self.workers.insert(account_id, worker);
                 // Anything left queued by a previous run has to show up now, not
@@ -563,7 +559,19 @@ impl AppModel {
         }
     }
 
-    fn spawn_worker(
+    /// The account as its worker is given it; `None` when it is off.
+    pub(super) fn worker_account(&self, account_id: u32) -> Option<AccountConfig> {
+        let mut account = self
+            .config
+            .get(account_id.checked_sub(1)? as usize)
+            .filter(|a| a.enabled)?
+            .clone();
+        // Copying to On This Computer (#552) needs it there, and on.
+        account.copy_to_local &= self.config.iter().any(|c| c.is_local() && c.enabled);
+        Some(account)
+    }
+
+    pub(super) fn spawn_worker(
         account_id: u32,
         account: Option<AccountConfig>,
         sender: &ComponentSender<Self>,

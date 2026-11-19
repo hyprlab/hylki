@@ -1750,6 +1750,26 @@ msgstr ""
 msgid "No message with the ID {id} was found"
 msgstr ""
 
+msgid ""
+"The connection to {account} stopped after an internal error and was "
+"restarted. Mail that was being sent is in the Outbox."
+msgstr ""
+
+msgid ""
+"The connection to {account} stopped after an internal error and was "
+"restarted."
+msgstr ""
+
+msgid ""
+"The connection to {account} keeps stopping after an internal error. Mail "
+"that was being sent is in the Outbox. Restart Hylki to connect again."
+msgstr ""
+
+msgid ""
+"The connection to {account} keeps stopping after an internal error. Restart "
+"Hylki to connect again."
+msgstr ""
+
 msgid "Main Menu"
 msgstr ""
 
@@ -7413,6 +7433,9 @@ msgid "“{subject}” will be sent {when}"
 msgstr ""
 
 msgid "Could not schedule the message."
+msgstr ""
+
+msgid "The connection stopped after an internal error."
 msgstr ""
 
 msgid "Could not delete message: {e}"

@@ -135,3 +135,26 @@ pub(super) fn park_held(list: &OutgoingList) {
         );
     }
 }
+
+/// The messages `account_id`'s worker had when it panicked (#684), kept in
+/// the Outbox; their tickets, for the app to settle as failed sends.
+pub(super) fn keep_stopped(
+    list: &OutgoingList,
+    cache: &crate::cache::Cache,
+    account_id: u32,
+) -> Vec<u64> {
+    list.borrow()
+        .iter()
+        .filter(|o| o.account_id == account_id && !o.held)
+        .map(|o| {
+            crate::worker::keep_after_stop(
+                cache,
+                o.account_id,
+                &o.account,
+                &o.message,
+                o.sent_path.as_deref(),
+            );
+            o.ticket
+        })
+        .collect()
+}

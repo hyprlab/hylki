@@ -221,27 +221,64 @@ pub(crate) fn park_for_next_launch(
     sent_path: Option<&str>,
     at: i64,
 ) -> bool {
-    let mut msg = msg.clone();
-    restore_msgid_case(Some(cache), &mut msg);
-    let queued = queue_outbox_message(
-        Some(cache),
+    hold(
+        cache,
         account_id,
         account,
-        &msg,
+        msg,
         sent_path,
         "",
         Some(at),
-    );
+        "Hylki quit during Undo Send",
+    )
+}
+
+/// A message its worker had when the worker panicked (#684): it may never
+/// have gone, so it waits in the Outbox, as a failed send does, rather than
+/// on an answer that will not come.
+pub(crate) fn keep_after_stop(
+    cache: &Cache,
+    account_id: u32,
+    account: &AccountConfig,
+    msg: &OutgoingMessage,
+    sent_path: Option<&str>,
+) -> bool {
+    hold(
+        cache,
+        account_id,
+        account,
+        msg,
+        sent_path,
+        &i18n("The connection stopped after an internal error."),
+        None,
+        "the mail worker stopped",
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn hold(
+    cache: &Cache,
+    account_id: u32,
+    account: &AccountConfig,
+    msg: &OutgoingMessage,
+    sent_path: Option<&str>,
+    error: &str,
+    at: Option<i64>,
+    why: &str,
+) -> bool {
+    let mut msg = msg.clone();
+    restore_msgid_case(Some(cache), &mut msg);
+    let queued = queue_outbox_message(Some(cache), account_id, account, &msg, sent_path, error, at);
     if let (true, Some(old)) = (queued, msg.outbox_origin) {
         cache.delete_outbox(old);
     }
     crate::desktop::send_log::note_message(
         &account.email,
         &msg,
-        if queued {
-            "Hylki quit during Undo Send; held in the Outbox for the next start"
+        &if queued {
+            format!("{why}; held in the Outbox")
         } else {
-            "Hylki quit during Undo Send; could not be kept"
+            format!("{why}; could not be kept")
         },
     );
     queued

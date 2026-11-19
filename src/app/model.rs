@@ -137,6 +137,9 @@ pub(crate) struct AppModel {
     pub(super) merges: super::merge_send::MergeRuns,
     /// The last ticket handed to a send; 0 is never used.
     pub(super) send_ticket: u64,
+    /// When each account's worker last panicked, to stop restarting one
+    /// that keeps doing so (#684).
+    pub(super) worker_stops: HashMap<u32, Vec<std::time::Instant>>,
     /// Same idea over the contacts view's detail pane: composing from a
     /// contact slides down right there instead of yanking the mail view back.
     pub(super) contacts_compose_revealer: gtk::Revealer,
