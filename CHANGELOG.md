@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- **Fixed: a message could be lost when Hylki was closed before it went**
+  (#678, reported by DarkStarCrashes123). A message waited in memory between
+  Send and the server taking it, and on a slow server it could wait behind
+  minutes of other work; closing Hylki then lost it. Every message is now
+  written to the Outbox when Send is pressed and leaves it once the server
+  accepts it, so a failure, a quit or a crash leaves it there to be sent.
+  While a message is on its way the Outbox does not list it: the Outbox
+  appears only when a message could not be sent. A message the server
+  refused stays in the Outbox with the reason, where Edit opens it.
+
+- **Fixed: a message could take minutes to send** (#678). Sending waited
+  behind folder syncs, flag checks and drafts downloaded in the background,
+  which on Yahoo with large drafts was two minutes. A message being sent now
+  goes ahead of them.
+
 ## 1.49.0 — 2026-11-19
 
 Everything from 1.49.0-beta.1 to 1.49.0-beta.4: Autocrypt, the message source
