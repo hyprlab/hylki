@@ -4557,11 +4557,8 @@ msgid "Reply-To"
 msgstr "Απάντηση προς"
 
 #, fuzzy
-msgid "Match a column to a name, an email address or a phone number."
-msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
-
-msgid "Import Contacts"
-msgstr "Εισαγωγή επαφών"
+msgid "Import from Mail"
+msgstr "Εισαγωγή αρχείων Mbox"
 
 msgid "Import"
 msgstr "Εισαγωγή"
@@ -4569,6 +4566,53 @@ msgstr "Εισαγωγή"
 #, fuzzy
 msgid "Import into"
 msgstr "Εισαγωγή υπογραφής"
+
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Accounts"
+msgstr "Όλοι οι λογαριασμοί"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Αναζήτηση κατά όνομα, διεύθυνση ή αναγνωριστικό κλειδιού"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Διαγραφή όλων"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Επιλεγμένα"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "Επιλέχθη {n} μήνυμα"
+msgstr[1] "Επιλέχθησαν {n} μηνύματα"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} μήνυμα"
+msgstr[1] "{n} μηνύματα"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Δεν βρέθηκαν αποτελέσματα"
+
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
+
+msgid "Import Contacts"
+msgstr "Εισαγωγή επαφών"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr ""
@@ -5120,6 +5164,10 @@ msgid "From Thunderbird…"
 msgstr ""
 
 #, fuzzy
+msgid "From Mail…"
+msgstr "Εισαγωγή αρχείου…"
+
+#, fuzzy
 msgid "Contact files"
 msgstr "Επαφές"
 
@@ -5360,11 +5408,6 @@ msgstr "Αναζήτηση φακέλων"
 
 msgid "Whole conversation"
 msgstr "Ολόκληρη συζήτηση"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} μήνυμα"
-msgstr[1] "{n} μηνύματα"
 
 msgid "Later today ({time})"
 msgstr "Αργότερα σήμερα ({time})"
@@ -9144,10 +9187,6 @@ msgstr "Επικόλληση ως απλό κείμενο"
 #, fuzzy
 msgid "Cut"
 msgstr "Χώρα"
-
-#, fuzzy
-msgid "Select All"
-msgstr "Διαγραφή όλων"
 
 #, fuzzy
 msgid "Insert Emoji"

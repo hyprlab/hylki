@@ -563,6 +563,66 @@ impl AppModel {
                 );
             }
 
+            AppMsg::ImportFromMail { book } => {
+                let own = self.own_addresses();
+                let accounts: Vec<(u32, String)> = self
+                    .effective_config()
+                    .iter()
+                    .enumerate()
+                    .map(|(i, _)| i as u32 + 1)
+                    .map(|id| (id, self.account_label(id)))
+                    .collect();
+                let skip: std::collections::HashSet<(u32, String)> = self
+                    .folders
+                    .iter()
+                    .flat_map(|(aid, fs)| fs.iter().map(move |f| (*aid, f)))
+                    .filter(|(_, f)| {
+                        matches!(
+                            f.kind,
+                            crate::models::FolderKind::Trash | crate::models::FolderKind::Junk
+                        )
+                    })
+                    .map(|(aid, f)| (aid, f.path.clone()))
+                    .collect();
+                let s = sender.clone();
+                std::thread::spawn(move || {
+                    let (mut books, saved) = if demo_mode() {
+                        let saved = crate::contacts::demo_contacts()
+                            .iter()
+                            .flat_map(|c| c.emails.iter().map(|e| e.value.to_lowercase()))
+                            .collect();
+                        (crate::contacts::demo_books(), saved)
+                    } else {
+                        (
+                            crate::contacts::writable_books(),
+                            crate::contacts::from_mail::saved_addresses(),
+                        )
+                    };
+                    crate::contacts::import::with_local_book(&mut books);
+                    s.input(AppMsg::FromMailReady(Box::new(
+                        crate::contacts::from_mail::FromMailStart {
+                            books,
+                            book,
+                            accounts,
+                            own,
+                            saved,
+                            skip,
+                        },
+                    )));
+                });
+            }
+
+            AppMsg::FromMailReady(start) => {
+                let s = sender.input_sender().clone();
+                crate::ui::contact_from_mail::show(
+                    self.dialog_parent().as_ref(),
+                    *start,
+                    move |req| {
+                        let _ = s.send(AppMsg::RunContactImport(req));
+                    },
+                );
+            }
+
             AppMsg::ContactImportReady(start) => {
                 let s = sender.input_sender().clone();
                 crate::ui::contact_import::show(

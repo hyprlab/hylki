@@ -360,3 +360,42 @@ fn group_members_follow_the_book_kind_of_group() {
     // Categories are on the cards already.
     assert!(group_members(&cards, &uids, &groups, GroupFormat::Categories).is_empty());
 }
+
+/// The people picked from the mail (#677) go in as contacts once: a second
+/// import of the same people updates them.
+#[test]
+fn people_from_mail_import_once() {
+    use crate::contacts::from_mail::{cards_for, MailPerson};
+    let dir = std::env::temp_dir().join(format!("hylki-from-mail-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = dir.join("local_contacts.db");
+    let _ = std::fs::remove_file(&path);
+    let cards = cards_for(&[
+        MailPerson {
+            name: "Ann Lee".into(),
+            email: "ann@example.org".into(),
+            seen: 4,
+        },
+        MailPerson {
+            name: String::new(),
+            email: "bob@example.org".into(),
+            seen: 1,
+        },
+    ]);
+    let mut store = Store::open_at(&path).unwrap();
+    let first = store.upsert_all(&cards).unwrap();
+    let second = store.upsert_all(&cards).unwrap();
+    assert_eq!((first.added, first.updated), (2, 0));
+    assert_eq!((second.added, second.updated), (0, 2));
+    let mut held = store.emails().unwrap();
+    held.sort();
+    assert_eq!(
+        held,
+        vec![
+            ("Ann Lee".to_string(), "ann@example.org".to_string()),
+            ("bob@example.org".to_string(), "bob@example.org".to_string()),
+        ]
+    );
+    drop(store);
+    let _ = std::fs::remove_dir_all(&dir);
+}

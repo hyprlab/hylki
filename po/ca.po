@@ -4567,12 +4567,8 @@ msgid "Reply-To"
 msgstr "Respon a"
 
 #, fuzzy
-msgid "Match a column to a name, an email address or a phone number."
-msgstr ""
-"Un contacte necessita un nom, una adreça de correu o un número de telèfon"
-
-msgid "Import Contacts"
-msgstr "Importa contactes"
+msgid "Import from Mail"
+msgstr "Importa un fitxer…"
 
 #, fuzzy
 msgid "Import"
@@ -4581,6 +4577,54 @@ msgstr "Importa…"
 #, fuzzy
 msgid "Import into"
 msgstr "Importa una signatura"
+
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Accounts"
+msgstr "Tots els comptes"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Cerca, filtres i ordenació"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Elimina-ho tot"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Seleccionat"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "{n} missatge seleccionat"
+msgstr[1] "{n} missatges seleccionats"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} missatge"
+msgstr[1] "{n} missatges"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "No hi ha resultats"
+
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+"Un contacte necessita un nom, una adreça de correu o un número de telèfon"
+
+msgid "Import Contacts"
+msgstr "Importa contactes"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr ""
@@ -5127,6 +5171,10 @@ msgid "From Thunderbird…"
 msgstr ""
 
 #, fuzzy
+msgid "From Mail…"
+msgstr "Importa un fitxer…"
+
+#, fuzzy
 msgid "Contact files"
 msgstr "Contactes"
 
@@ -5365,11 +5413,6 @@ msgstr "Cerca carpetes"
 
 msgid "Whole conversation"
 msgstr "Conversa sencera"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} missatge"
-msgstr[1] "{n} missatges"
 
 #, fuzzy
 msgid "Later today ({time})"
@@ -9136,10 +9179,6 @@ msgstr "Enganxa com a text pla"
 #, fuzzy
 msgid "Cut"
 msgstr "País"
-
-#, fuzzy
-msgid "Select All"
-msgstr "Elimina-ho tot"
 
 #, fuzzy
 msgid "Insert Emoji"

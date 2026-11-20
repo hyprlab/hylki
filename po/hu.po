@@ -4719,12 +4719,9 @@ msgstr "Letöltési jelszó ehhez: {name}: {password}"
 msgid "Reply-To"
 msgstr "Válaszcím"
 
-msgid "Match a column to a name, an email address or a phone number."
-msgstr ""
-
 #, fuzzy
-msgid "Import Contacts"
-msgstr "Névjegyek rendezése"
+msgid "Import from Mail"
+msgstr "Fájl importálása…"
 
 #, fuzzy
 msgid "Import"
@@ -4733,6 +4730,53 @@ msgstr "Importálás…"
 #, fuzzy
 msgid "Import into"
 msgstr "Aláírás importálása"
+
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Accounts"
+msgstr "Összes fiók"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Keresés, szűrők és rendezés"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Törlés"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Kijelöltek importálása"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "Nincs kijelölt üzenet"
+msgstr[1] "Nincs kijelölt üzenet"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} üzenet"
+msgstr[1] "{n} üzenet"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Nincs találat"
+
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+
+#, fuzzy
+msgid "Import Contacts"
+msgstr "Névjegyek rendezése"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr ""
@@ -5299,6 +5343,10 @@ msgid "From Thunderbird…"
 msgstr ""
 
 #, fuzzy
+msgid "From Mail…"
+msgstr "Fájl importálása…"
+
+#, fuzzy
 msgid "Contact files"
 msgstr "Névjegyek"
 
@@ -5518,11 +5566,6 @@ msgstr "Keresés a mappákban"
 
 msgid "Whole conversation"
 msgstr "A teljes beszélgetés"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} üzenet"
-msgstr[1] "{n} üzenet"
 
 #, fuzzy
 msgid "Later today ({time})"
@@ -9419,10 +9462,6 @@ msgstr "Beillesztés egyszerű szövegként"
 
 msgid "Cut"
 msgstr ""
-
-#, fuzzy
-msgid "Select All"
-msgstr "Törlés"
 
 #, fuzzy
 msgid "Insert Emoji"

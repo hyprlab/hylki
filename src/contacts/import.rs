@@ -45,8 +45,13 @@ pub(crate) struct ImportStart {
 #[derive(Debug, Clone)]
 pub(crate) enum ImportFile {
     Vcard(PathBuf),
-    Csv { path: PathBuf, fields: Vec<Target> },
+    Csv {
+        path: PathBuf,
+        fields: Vec<Target>,
+    },
     Thunderbird(PathBuf),
+    /// Cards made here: the people picked from the mail (#677).
+    Cards(Vec<String>),
 }
 
 /// What the import dialog asks for.
@@ -120,14 +125,20 @@ pub(crate) fn prepare(
             })
         })
         .collect();
-    if !books.iter().any(|b| is_local_book(&b.uid)) {
-        books.push(crate::contacts::local_book());
-    }
+    with_local_book(&mut books);
     ImportStart {
         files,
         books,
         book,
         thunderbird: found,
+    }
+}
+
+/// Add the Hylki book to `books` when they lack it: it is always there to
+/// import into, even before it is used.
+pub(crate) fn with_local_book(books: &mut Vec<Book>) {
+    if !books.iter().any(|b| is_local_book(&b.uid)) {
+        books.push(crate::contacts::local_book());
     }
 }
 
@@ -140,6 +151,10 @@ pub(crate) fn run(req: &ImportRequest) -> Result<ImportOutcome, String> {
         let path = match file {
             ImportFile::Vcard(p) | ImportFile::Csv { path: p, .. } | ImportFile::Thunderbird(p) => {
                 p
+            }
+            ImportFile::Cards(made) => {
+                cards.extend(made.iter().cloned());
+                continue;
             }
         };
         let read = match file {

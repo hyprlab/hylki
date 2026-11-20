@@ -4662,11 +4662,8 @@ msgid "Reply-To"
 msgstr "Rispondi a"
 
 #, fuzzy
-msgid "Match a column to a name, an email address or a phone number."
-msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
-
-msgid "Import Contacts"
-msgstr "Importa contatti"
+msgid "Import from Mail"
+msgstr "Importa file…"
 
 #, fuzzy
 msgid "Import"
@@ -4675,6 +4672,53 @@ msgstr "Importa…"
 #, fuzzy
 msgid "Import into"
 msgstr "Importa firma"
+
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Accounts"
+msgstr "Tutti gli account"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Cerca, filtri e ordinamento"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Elimina tutto"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Importa selezionati"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "Nessun messaggio selezionato"
+msgstr[1] "Nessun messaggio selezionato"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} messaggio"
+msgstr[1] "{n} messaggi"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Nessun risultato"
+
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
+
+msgid "Import Contacts"
+msgstr "Importa contatti"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr ""
@@ -5253,6 +5297,10 @@ msgid "From Thunderbird…"
 msgstr ""
 
 #, fuzzy
+msgid "From Mail…"
+msgstr "Importa file…"
+
+#, fuzzy
 msgid "Contact files"
 msgstr "Contatti"
 
@@ -5513,11 +5561,6 @@ msgstr "Cerca cartelle"
 
 msgid "Whole conversation"
 msgstr "Intera conversazione"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} messaggio"
-msgstr[1] "{n} messaggi"
 
 #, fuzzy
 msgid "Later today ({time})"
@@ -9362,10 +9405,6 @@ msgstr "Incolla come testo normale"
 
 msgid "Cut"
 msgstr ""
-
-#, fuzzy
-msgid "Select All"
-msgstr "Elimina tutto"
 
 #, fuzzy
 msgid "Insert Emoji"

@@ -136,7 +136,7 @@ pub(super) fn stage_dialog() {
 }
 
 impl AppModel {
-    /// HYLKI_SHOWCASE_CONTACTS=list|new|group|search:<text>[@<n>]|filter:<n>|multi:<n>|import:<files>
+    /// HYLKI_SHOWCASE_CONTACTS=list|new|group|search:<text>[@<n>]|filter:<n>|multi:<n>|import:<files>|mail
     /// opens Contacts at 3s, and with "new" its editor for a new
     /// contact at 5s ("group": for a new group), or with "search:"
     /// types the text into its search
@@ -144,12 +144,15 @@ impl AppModel {
     /// "@<n>" shows only book n of the filter at 6s; "filter:"
     /// turns on its nth "Show only" filter at 5s; "multi:"
     /// selects the first n entries at 5s; "import:" imports the files,
-    /// split by commas, at 5s (see `ui::contact_import`).
+    /// split by commas, at 5s (see `ui::contact_import`); "mail" opens
+    /// Import from Mail at 5s.
     pub(super) fn stage_contacts(&self, sender: &ComponentSender<AppModel>) {
         if let Ok(which) = std::env::var("HYLKI_SHOWCASE_CONTACTS") {
             input_after(sender, 3, AppMsg::OpenContacts);
             let page = self.contacts_page.sender().clone();
-            if let Some(files) = which.strip_prefix("import:") {
+            if which == "mail" {
+                input_after(sender, 5, AppMsg::ImportFromMail { book: None });
+            } else if let Some(files) = which.strip_prefix("import:") {
                 let paths = files.split(',').map(std::path::PathBuf::from).collect();
                 input_after(sender, 5, AppMsg::ImportContacts { paths, book: None });
             } else if which == "new" || which == "group" {

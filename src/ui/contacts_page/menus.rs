@@ -201,9 +201,14 @@ pub(super) fn new_menu(button: &gtk::Button, sender: &ComponentSender<ContactsPa
     );
 }
 
-/// The import button's menu: files, or Thunderbird's books (#681).
+/// The import button's menu: files, Thunderbird's books (#681), or the
+/// people in the mail (#677).
 pub(super) fn import_menu(button: &gtk::Button, sender: &ComponentSender<ContactsPage>) {
-    let (sf, st) = (sender.input_sender().clone(), sender.input_sender().clone());
+    let (sf, st, sm) = (
+        sender.input_sender().clone(),
+        sender.input_sender().clone(),
+        sender.input_sender().clone(),
+    );
     show_context_menu(
         button,
         (button.width() / 2) as f64,
@@ -217,6 +222,10 @@ pub(super) fn import_menu(button: &gtk::Button, sender: &ComponentSender<Contact
                 let _ = st.send(ContactsPageInput::ImportThunderbird);
             })
             .icon("x-office-address-book-symbolic"),
+            MenuEntry::new(i18n("From Mail…"), move || {
+                let _ = sm.send(ContactsPageInput::ImportFromMail);
+            })
+            .icon("mail-unread-symbolic"),
         ]],
     );
 }

@@ -4144,16 +4144,53 @@ msgstr ""
 msgid "Reply-To"
 msgstr ""
 
-msgid "Match a column to a name, an email address or a phone number."
-msgstr ""
-
-msgid "Import Contacts"
+msgid "Import from Mail"
 msgstr ""
 
 msgid "Import"
 msgstr ""
 
 msgid "Import into"
+msgstr ""
+
+msgid "Look in"
+msgstr ""
+
+msgid "All Accounts"
+msgstr ""
+
+msgid "Search names and addresses"
+msgstr ""
+
+msgid "Select All"
+msgstr ""
+
+msgid "Select None"
+msgstr ""
+
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+msgid "No Results Found"
+msgstr ""
+
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+
+msgid "Import Contacts"
 msgstr ""
 
 msgid "Keeps no groups: their names stay on each contact."
@@ -4643,6 +4680,9 @@ msgstr ""
 msgid "From Thunderbird…"
 msgstr ""
 
+msgid "From Mail…"
+msgstr ""
+
 msgid "Contact files"
 msgstr ""
 
@@ -4847,11 +4887,6 @@ msgstr ""
 
 msgid "Whole conversation"
 msgstr ""
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid "Later today ({time})"
 msgstr ""
@@ -8330,9 +8365,6 @@ msgid "Paste as Plain Text"
 msgstr ""
 
 msgid "Cut"
-msgstr ""
-
-msgid "Select All"
 msgstr ""
 
 msgid "Insert Emoji"

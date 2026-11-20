@@ -4515,13 +4515,8 @@ msgid "Reply-To"
 msgstr "Responder a"
 
 #, fuzzy
-msgid "Match a column to a name, an email address or a phone number."
-msgstr ""
-"Un contacto necesita un nombre, una dirección de correo o un número de "
-"teléfono"
-
-msgid "Import Contacts"
-msgstr "Importar contactos"
+msgid "Import from Mail"
+msgstr "Importar archivos Mbox"
 
 msgid "Import"
 msgstr "Importar"
@@ -4529,6 +4524,54 @@ msgstr "Importar"
 #, fuzzy
 msgid "Import into"
 msgstr "Importar firma"
+
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Accounts"
+msgstr "Todas las cuentas"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Buscar por nombre, dirección o identificador de clave"
+
+msgid "Select All"
+msgstr "Seleccionar todo"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Seleccionados"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "{n} mensaje seleccionado"
+msgstr[1] "{n} mensajes seleccionados"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} mensaje"
+msgstr[1] "{n} mensajes"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Sin resultados"
+
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+"Un contacto necesita un nombre, una dirección de correo o un número de "
+"teléfono"
+
+msgid "Import Contacts"
+msgstr "Importar contactos"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr ""
@@ -5077,6 +5120,10 @@ msgid "From Thunderbird…"
 msgstr ""
 
 #, fuzzy
+msgid "From Mail…"
+msgstr "Importar archivo…"
+
+#, fuzzy
 msgid "Contact files"
 msgstr "Contactos"
 
@@ -5316,11 +5363,6 @@ msgstr "Buscar carpetas"
 
 msgid "Whole conversation"
 msgstr "Conversación completa"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} mensaje"
-msgstr[1] "{n} mensajes"
 
 msgid "Later today ({time})"
 msgstr "Más tarde hoy ({time})"
@@ -9069,9 +9111,6 @@ msgstr "Pegar como texto sin formato"
 
 msgid "Cut"
 msgstr "Cortar"
-
-msgid "Select All"
-msgstr "Seleccionar todo"
 
 msgid "Insert Emoji"
 msgstr "Insertar emoji"

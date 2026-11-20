@@ -14,6 +14,7 @@ mod cloud_accounts;
 mod column_bin;
 pub(crate) mod command_palette;
 pub(crate) mod compose;
+pub(crate) mod contact_from_mail;
 pub(crate) mod contact_import;
 mod contact_sources;
 mod contact_tree;

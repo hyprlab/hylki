@@ -4533,18 +4533,61 @@ msgstr "Mot de passe de téléchargement pour {name} : {password}"
 msgid "Reply-To"
 msgstr "Répondre à"
 
-msgid "Match a column to a name, an email address or a phone number."
-msgstr ""
-"Associez une colonne à un nom, une adresse e-mail ou un numéro de téléphone."
-
-msgid "Import Contacts"
-msgstr "Importer des contacts"
+#, fuzzy
+msgid "Import from Mail"
+msgstr "Importer des fichiers mbox"
 
 msgid "Import"
 msgstr "Importer"
 
 msgid "Import into"
 msgstr "Importer dans"
+
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Accounts"
+msgstr "Tous les comptes"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Rechercher par nom, adresse ou identifiant de clé"
+
+msgid "Select All"
+msgstr "Tout sélectionner"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Sélectionné"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "{n} message sélectionné"
+msgstr[1] "{n} messages sélectionnés"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} message"
+msgstr[1] "{n} messages"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Aucun résultat"
+
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+"Associez une colonne à un nom, une adresse e-mail ou un numéro de téléphone."
+
+msgid "Import Contacts"
+msgstr "Importer des contacts"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr "Ne conserve aucun groupe : leurs noms restent sur chaque contact."
@@ -5090,6 +5133,10 @@ msgid "From Thunderbird…"
 msgstr ""
 
 #, fuzzy
+msgid "From Mail…"
+msgstr "Importer le fichier…"
+
+#, fuzzy
 msgid "Contact files"
 msgstr "Contacts"
 
@@ -5325,11 +5372,6 @@ msgstr "Rechercher des dossiers"
 
 msgid "Whole conversation"
 msgstr "Conversation entière"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} message"
-msgstr[1] "{n} messages"
 
 msgid "Later today ({time})"
 msgstr "Plus tard aujourd’hui ({time})"
@@ -9070,9 +9112,6 @@ msgstr "Coller comme texte brut"
 
 msgid "Cut"
 msgstr "Couper"
-
-msgid "Select All"
-msgstr "Tout sélectionner"
 
 msgid "Insert Emoji"
 msgstr "Insérer un émoji"

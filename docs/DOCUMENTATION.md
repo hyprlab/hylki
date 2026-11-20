@@ -818,6 +818,19 @@ Thunderbird's IDs, so a second import updates them, and mailing lists
 become groups. Thunderbird 78 or later is needed; photos on cards made
 before Thunderbird 102 are not imported.
 
+**From Mail…**, in the same menu, lists the people in the mail Hylki keeps
+who are not in Contacts yet, each with the number of messages they are on,
+sent or received, most first. Your own addresses are left out, and so are
+no-reply senders, bounce addresses, the mail system's own, and senders
+whose mail is only in Trash or Junk. Address books that fill themselves
+from mail, such as Evolution's Collected Addresses, do not count as
+Contacts here. **Look in** narrows the list to one account's mail. The
+search box filters by name and address, **Select All** and **Select None**
+act on the people the search shows, and **Import** adds the ones ticked
+to the book chosen in **Import into**, each with the name the mail gives
+them, or the address when it gives none. Importing the same people again
+adds nothing new.
+
 Google's labels, Outlook's categories, or a column matched to **Groups**,
 put each person in the group of that name, which is made when the book has
 none. A book whose groups are Evolution lists, such as the Hylki book or

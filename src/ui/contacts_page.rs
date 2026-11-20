@@ -501,6 +501,12 @@ impl Component for ContactsPage {
                 });
                 Flow::Continue(())
             }
+            ContactsPageInput::ImportFromMail => {
+                let _ = sender.output(ContactsPageOutput::ImportFromMail {
+                    book: self.import_book(),
+                });
+                Flow::Continue(())
+            }
             ContactsPageInput::CancelEdit => self.on_cancel_edit(widgets, sender.clone()),
             ContactsPageInput::SaveEdit => self.on_save_edit(widgets, sender.clone()),
             ContactsPageInput::OpenInGnome(idx) => self.on_open_in_gnome(idx),

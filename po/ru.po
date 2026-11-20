@@ -4512,17 +4512,62 @@ msgstr "Пароль для скачивания {name}: {password}"
 msgid "Reply-To"
 msgstr "Адрес для ответа"
 
-msgid "Match a column to a name, an email address or a phone number."
-msgstr "Сопоставьте столбец с именем, адресом эл. почты или номером телефона."
-
-msgid "Import Contacts"
-msgstr "Импортировать контакты"
+#, fuzzy
+msgid "Import from Mail"
+msgstr "Импорт файлов Mbox"
 
 msgid "Import"
 msgstr "Импорт"
 
 msgid "Import into"
 msgstr "Импортировать в"
+
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Accounts"
+msgstr "Все учётные записи"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Поиск по имени, адресу или идентификатору ключа"
+
+msgid "Select All"
+msgstr "Выбрать всё"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Выбрано"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "Выбрано {n} сообщение"
+msgstr[1] "Выбраны {n} сообщения"
+msgstr[2] "Выбрано {n} сообщений"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} письмо"
+msgstr[1] "{n} письма"
+msgstr[2] "{n} писем"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Ничего не найдено"
+
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Сопоставьте столбец с именем, адресом эл. почты или номером телефона."
+
+msgid "Import Contacts"
+msgstr "Импортировать контакты"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr "Не сохраняет группы: их названия остаются в карточке каждого контакта."
@@ -5064,6 +5109,10 @@ msgid "From Thunderbird…"
 msgstr ""
 
 #, fuzzy
+msgid "From Mail…"
+msgstr "Импортировать файл…"
+
+#, fuzzy
 msgid "Contact files"
 msgstr "Контакты"
 
@@ -5307,12 +5356,6 @@ msgstr "Папки поиска"
 
 msgid "Whole conversation"
 msgstr "Всё обсуждение"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} письмо"
-msgstr[1] "{n} письма"
-msgstr[2] "{n} писем"
 
 msgid "Later today ({time})"
 msgstr "Позже сегодня ({time})"
@@ -9031,9 +9074,6 @@ msgstr "Вставить как обычный текст"
 
 msgid "Cut"
 msgstr "Вырезать"
-
-msgid "Select All"
-msgstr "Выбрать всё"
 
 msgid "Insert Emoji"
 msgstr "Вставить эмодзи"

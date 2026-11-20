@@ -17,6 +17,16 @@ pub(crate) struct AddressSeen {
     pub(crate) sent: u32,
 }
 
+/// The mail an address history is read from.
+#[derive(Debug, Default, Clone)]
+pub(crate) struct AddressScope {
+    /// One account's mail, or every account's.
+    pub(crate) account: Option<u32>,
+    /// Folders left out, by account and path: Trash and Junk, whose
+    /// senders are mostly not people anyone wants as contacts.
+    pub(crate) skip: std::collections::HashSet<(u32, String)>,
+}
+
 impl Cache {
     /// Record recipients the user has sent to, so they autocomplete even before
     /// the Sent folder syncs. Each send bumps the address's frequency. The app
@@ -51,6 +61,15 @@ impl Cache {
         &self,
         own: &std::collections::HashSet<String>,
     ) -> Vec<AddressSeen> {
+        self.address_history_in(own, &AddressScope::default())
+    }
+
+    /// [`Cache::address_history`] over the mail `scope` takes in (#677).
+    pub(crate) fn address_history_in(
+        &self,
+        own: &std::collections::HashSet<String>,
+        scope: &AddressScope,
+    ) -> Vec<AddressSeen> {
         use std::collections::{HashMap, HashSet};
         let mut counts: HashMap<String, AddressSeen> = HashMap::new();
         fn entry<'a>(
@@ -81,10 +100,10 @@ impl Cache {
         // All Mail): it counts once.
         let mut sent_ids: HashSet<String> = HashSet::new();
         let mut sent_folder: HashMap<String, u32> = HashMap::new();
-        if let Ok(mut stmt) = self
-            .conn
-            .prepare("SELECT from_name, from_addr, recipients, cc, message_id FROM messages")
-        {
+        if let Ok(mut stmt) = self.conn.prepare(
+            "SELECT from_name, from_addr, recipients, cc, message_id, account_id, folder_path \
+                 FROM messages",
+        ) {
             let rows = stmt.query_map([], |r| {
                 Ok((
                     r.get::<_, String>(0).unwrap_or_default(),
@@ -92,10 +111,17 @@ impl Cache {
                     r.get::<_, String>(2).unwrap_or_default(),
                     r.get::<_, String>(3).unwrap_or_default(),
                     r.get::<_, String>(4).unwrap_or_default(),
+                    r.get::<_, u32>(5).unwrap_or_default(),
+                    r.get::<_, String>(6).unwrap_or_default(),
                 ))
             });
             if let Ok(rows) = rows {
-                for (from_name, from_addr, to, cc, message_id) in rows.flatten() {
+                for (from_name, from_addr, to, cc, message_id, account, folder) in rows.flatten() {
+                    if scope.account.is_some_and(|a| a != account)
+                        || scope.skip.contains(&(account, folder))
+                    {
+                        continue;
+                    }
                     if let Some(e) = entry(&mut counts, &from_name, &from_addr) {
                         e.seen += 1;
                     }
@@ -118,9 +144,13 @@ impl Cache {
         // Recorded at each send, so mostly the same sends as the Sent folder
         // holds: the larger of the two, not their sum.
         let mut recorded: HashMap<String, u32> = HashMap::new();
-        if let Ok(mut stmt) = self
+        // Sends are recorded with no account, so only all mail takes them.
+        let all_accounts = scope.account.is_none();
+        if let Some(mut stmt) = self
             .conn
             .prepare("SELECT name, email, count FROM addresses")
+            .ok()
+            .filter(|_| all_accounts)
         {
             let rows = stmt.query_map([], |r| {
                 Ok((
@@ -226,5 +256,28 @@ mod tests {
         );
         assert_eq!(get("ann@example.org").sent, 1);
         assert_eq!(get("bob@example.org").sent, 2);
+    }
+
+    /// A scope leaves out the folders it skips, and with one account the
+    /// sends recorded with none.
+    #[test]
+    fn a_scope_reads_only_its_mail() {
+        let c = Cache::in_memory().unwrap();
+        add(&c, "INBOX", 1, "ann@example.org", "me@example.org", "<a>");
+        add(&c, "Junk", 2, "spam@example.net", "me@example.org", "<b>");
+        c.record_addresses(&[("Bob".into(), "bob@example.org".into())]);
+        let own = ["me@example.org".to_string()].into_iter().collect();
+        let scope = super::AddressScope {
+            account: Some(1),
+            skip: [(1, "Junk".to_string())].into_iter().collect(),
+        };
+        let found: Vec<String> = c
+            .address_history_in(&own, &scope)
+            .into_iter()
+            .map(|a| a.email)
+            .collect();
+        assert!(found.contains(&"ann@example.org".to_string()));
+        assert!(!found.contains(&"spam@example.net".to_string()));
+        assert!(!found.contains(&"bob@example.org".to_string()));
     }
 }
