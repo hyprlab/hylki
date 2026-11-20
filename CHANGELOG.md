@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: "entity not found" opening a conversation in On This Computer**
+  (#689, reported by samuel-edlmeier). With the empty Inbox left out of
+  the folder list, the cache numbered the folders one off from the ids
+  the app knew, so a conversation's messages in other folders were looked
+  for in the wrong one. The cache now keeps each folder's own id.
+
 - **New: contacts picked from the mail** (#677, requested by
   DarkStarCrashes123). **From Mail…** in the Contacts view's import menu
   lists everyone in the cached mail who is not a contact yet, with how many

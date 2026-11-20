@@ -556,7 +556,7 @@ fn drop_stale_tables(conn: &Connection, version: i64) {
 /// each is added in place rather than dropping the message index, which
 /// would cost every user a full re-sync; the error when a column is already
 /// there is the expected outcome, not a problem.
-const ADDED_COLUMNS: [&str; 19] = [
+const ADDED_COLUMNS: [&str; 20] = [
     // The list preview.
     "ALTER TABLE messages ADD COLUMN preview TEXT NOT NULL DEFAULT ''",
     // Send Later (#145): when a queued message is due; NULL sends at once.
@@ -607,6 +607,11 @@ const ADDED_COLUMNS: [&str; 19] = [
     // And the Reply-To sender's name (#641): mail already cached is named
     // by its Reply-To address until its folder's recent window syncs.
     "ALTER TABLE messages ADD COLUMN reply_to_name TEXT NOT NULL DEFAULT ''",
+    // And the id the app knows the folder by (#689), which is not always
+    // its place in the list: On This Computer numbers its folders before
+    // leaving out an empty Inbox. A listing saved before reads as numbered
+    // by place until it is saved again.
+    "ALTER TABLE folders ADD COLUMN id INTEGER NOT NULL DEFAULT 0",
 ];
 
 /// The cleanups run at every open, whatever the version.

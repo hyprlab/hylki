@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS folders (
     unread     INTEGER NOT NULL,
     ord        INTEGER NOT NULL,
     childless  INTEGER NOT NULL DEFAULT 0,
+    id         INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (account_id, path)
 );
 -- How an IMAP account's folders nest (#554), as its server said at the
