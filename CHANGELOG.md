@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: m marked an unread conversation unread** (#679, reported by
+  mbetrifork). Opening a conversation reads its newest message, and **m**
+  toggled that message alone, so the first press made it unread while the
+  others stayed unread. On a conversation's row **m** now toggles the whole
+  conversation: any unread message makes it all read. A card picked in the
+  reader still toggles that card.
+
 - **New: contacts imported straight from Thunderbird** (#681, requested by
   DarkStarCrashes123). The Contacts view's import button is a menu, and
   **From Thunderbird…** finds Thunderbird's profiles (its own folder, the
