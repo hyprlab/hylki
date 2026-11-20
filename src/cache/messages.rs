@@ -75,6 +75,7 @@ pub(crate) fn folders_equal(a: &[Folder], b: &[Folder]) -> bool {
                 && x.kind == y.kind
                 && x.unread == y.unread
                 && x.childless == y.childless
+                && x.id == y.id
         })
 }
 
@@ -134,7 +135,7 @@ impl Cache {
     pub(crate) fn load_folders(&self, account_id: u32) -> Vec<Folder> {
         let run = || -> rusqlite::Result<Vec<Folder>> {
             let mut stmt = self.conn.prepare(
-                "SELECT path, name, kind, unread, childless FROM folders WHERE account_id = ?1 ORDER BY ord",
+                "SELECT path, name, kind, unread, childless, id FROM folders WHERE account_id = ?1 ORDER BY ord",
             )?;
             let rows = stmt.query_map([account_id], |row| {
                 Ok((
@@ -143,13 +144,17 @@ impl Cache {
                     row.get::<_, i64>(2)?,
                     row.get::<_, u32>(3)?,
                     row.get::<_, bool>(4)?,
+                    row.get::<_, u32>(5)?,
                 ))
             })?;
             let mut folders = Vec::new();
             for (i, r) in rows.enumerate() {
-                let (path, name, kind, unread, childless) = r?;
+                let (path, name, kind, unread, childless, id) = r?;
                 folders.push(Folder {
-                    id: i as u32 + 1,
+                    // The id the worker gave it, so a cached message maps
+                    // back to the folder the app knows (#689); by place for
+                    // a row saved without one.
+                    id: if id == 0 { i as u32 + 1 } else { id },
                     account_id,
                     name,
                     path,
@@ -172,8 +177,8 @@ impl Cache {
             tx.execute("DELETE FROM folders WHERE account_id = ?1", [account_id])?;
             for (i, f) in folders.iter().enumerate() {
                 tx.execute(
-                    "INSERT INTO folders (account_id, path, name, kind, unread, ord, childless)
-                     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+                    "INSERT INTO folders (account_id, path, name, kind, unread, ord, childless, id)
+                     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
                     params![
                         account_id,
                         f.path,
@@ -181,7 +186,8 @@ impl Cache {
                         kind_to_i64(f.kind),
                         f.unread,
                         i as i64,
-                        f.childless
+                        f.childless,
+                        f.id
                     ],
                 )?;
             }

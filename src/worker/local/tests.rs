@@ -90,6 +90,84 @@ fn an_empty_inbox_is_not_listed() {
     );
 }
 
+/// A conversation filed across two folders, with the Inbox empty and so
+/// left out of the list, names each member's own folder: asked for in
+/// the other one, its body was not found (#689).
+#[test]
+fn a_conversation_across_folders_names_each_members_folder() {
+    const REPLY: &[u8] = b"From: Me <me@example.com>\r\n\
+To: ann@example.org\r\n\
+Subject: Re: Kept\r\n\
+Date: Tue, 1 Jul 2025 11:52:37 +0200\r\n\
+Message-ID: <reply-1@example.com>\r\n\
+In-Reply-To: <kept-1@example.org>\r\n\
+References: <kept-1@example.org>\r\n\r\nThe reply\r\n";
+    let dir = Scratch::new();
+    let (mut w, events) = worker(&dir);
+    import(&mut w, "Received", true);
+    run(
+        &mut w,
+        MailRequest::ImportRaw {
+            token: 8,
+            path: "Sent".to_string(),
+            raw: REPLY.to_vec(),
+            seen: true,
+            flagged: false,
+        },
+    );
+    assert!(w.folder(INBOX).is_none());
+    for path in ["Received", "Sent"] {
+        let f = w.folder(path).expect("listed").clone();
+        run(
+            &mut w,
+            MailRequest::LoadMessages {
+                folder_id: f.id,
+                path: f.path,
+            },
+        );
+    }
+    run(
+        &mut w,
+        MailRequest::LoadRelated {
+            message_id: 1,
+            ids: vec!["kept-1@example.org".to_string()],
+        },
+    );
+    let members = events
+        .borrow()
+        .iter()
+        .rev()
+        .find_map(|e| match e {
+            WorkerEvent::Related { messages, .. } => Some(messages.clone()),
+            _ => None,
+        })
+        .expect("related");
+    assert_eq!(members.len(), 2);
+    for m in &members {
+        let f = w
+            .folders
+            .iter()
+            .find(|f| f.id == m.folder_id)
+            .expect("a listed folder")
+            .clone();
+        events.borrow_mut().clear();
+        run(
+            &mut w,
+            MailRequest::LoadBody {
+                message_id: 1,
+                path: f.path.clone(),
+                uid: m.uid,
+            },
+        );
+        let body = events.borrow().iter().find_map(|e| match e {
+            WorkerEvent::Body { body, .. } => Some(body.clone()),
+            _ => None,
+        });
+        let want = if f.path == "Sent" { "The reply" } else { "The body" };
+        assert!(body.expect("a body").contains(want), "{}", f.path);
+    }
+}
+
 #[test]
 fn mail_moved_in_is_stored_listed_and_answered() {
     let dir = Scratch::new();
