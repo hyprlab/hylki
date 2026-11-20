@@ -148,10 +148,13 @@ impl AppModel {
             Shortcut::Spam => sender.input(AppMsg::MarkSpam),
             Shortcut::Star => sender.input(AppMsg::ToggleStar),
             Shortcut::ToggleRead => {
-                // The picked card, as the toolbar's button has it: the open
-                // message is the conversation's row, which a card picked
-                // below it is not (#679).
-                if self.many_selected() || self.reply_target().is_some() {
+                // A conversation's row toggles the conversation, as its dot
+                // shows it: opening it read only the newest message, so that
+                // one alone would go unread while the dot stays (#679). A
+                // card picked in the reader is the toolbar's target instead.
+                if self.acts_on_conversation(false) {
+                    self.toggle_conversation_read();
+                } else if self.many_selected() || self.reply_target().is_some() {
                     sender.input(AppMsg::ToggleReadCurrent);
                 } else if let Some(m) = self.current.clone() {
                     let read = m.unread;
@@ -206,6 +209,21 @@ impl AppModel {
         // unread, rather than leave it open to be read again.
         if !read {
             self.close_after_unread();
+        }
+    }
+
+    /// Any unread message makes the open conversation read, otherwise it
+    /// all goes back to unread, as the row's menu does.
+    fn toggle_conversation_read(&mut self) {
+        let read = self.current_thread.iter().any(|m| m.unread);
+        let mut targets = if read {
+            self.current_thread.clone()
+        } else {
+            self.conversation_to_mark_unread()
+        };
+        targets.retain(|m| m.unread == read);
+        if !targets.is_empty() {
+            self.user_set_flags(read_label(read), &targets, FlagKind::Read, read);
         }
     }
 
