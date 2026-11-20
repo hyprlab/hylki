@@ -153,7 +153,7 @@ pub(crate) fn show(
     start: Start,
     done: impl Fn(Vec<Letter>, Option<std::time::Duration>) + 'static,
 ) {
-    let dialog = adw::MessageDialog::new(Some(parent), Some(&i18n("Mail Merge")), None);
+    let dialog = crate::ui::dialog::message_dialog(Some(parent), Some(&i18n("Mail Merge")), None);
     dialog.add_response("cancel", &i18n("Cancel"));
     dialog.add_response("send", &i18n("Send"));
     dialog.set_response_appearance("send", adw::ResponseAppearance::Suggested);

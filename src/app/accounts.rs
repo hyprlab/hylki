@@ -296,7 +296,8 @@ impl AppModel {
             );
         }
 
-        let dialog = adw::MessageDialog::new(Some(&self.window), Some(&heading), Some(&body));
+        let dialog =
+            crate::ui::dialog::message_dialog(Some(&self.window), Some(&heading), Some(&body));
         dialog.add_response("ok", &i18n("Got it"));
         dialog.set_default_response(Some("ok"));
         // The proactive tip is a one-time thing: mark it seen once dismissed (by

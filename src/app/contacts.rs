@@ -162,7 +162,7 @@ impl AppModel {
             return;
         }
 
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.window),
             Some(i18n("Add to Contacts").as_str()),
             None,

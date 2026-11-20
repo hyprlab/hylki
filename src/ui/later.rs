@@ -165,7 +165,7 @@ pub(crate) fn pick_later_time(
             n.with_minute(0).and_then(|n| n.with_second(0)).unwrap_or(n)
         }
     };
-    let dialog = adw::MessageDialog::new(parent, Some(title), None);
+    let dialog = crate::ui::dialog::message_dialog(parent, Some(title), None);
     dialog.add_response("cancel", &i18n("Cancel"));
     dialog.add_response("ok", confirm);
     dialog.set_default_response(Some("ok"));

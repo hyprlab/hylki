@@ -69,7 +69,7 @@ impl AppModel {
             return;
         }
         let dialog = dialog.unwrap_or_else(|| {
-            let dialog = adw::MessageDialog::new(Some(&self.window), None, None);
+            let dialog = crate::ui::dialog::message_dialog(Some(&self.window), None, None);
             dialog.add_response("close", &i18n("Close"));
             dialog.set_close_response("close");
             let s = sender.clone();

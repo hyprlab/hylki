@@ -736,7 +736,11 @@ fn pick_pictures(webview: &webkit6::WebView, anchor: &gtk::Button, attach_cb: &A
 #[allow(deprecated)] // adw::MessageDialog: AlertDialog would change how it looks
 fn prompt_link(webview: &webkit6::WebView, anchor: &gtk::Button) {
     let parent = anchor.root().and_downcast::<gtk::Window>();
-    let dialog = adw::MessageDialog::new(parent.as_ref(), Some(i18n("Insert Link").as_str()), None);
+    let dialog = crate::ui::dialog::message_dialog(
+        parent.as_ref(),
+        Some(i18n("Insert Link").as_str()),
+        None,
+    );
     dialog.add_response("cancel", &i18n("Cancel"));
     dialog.add_response("ok", &i18n("Insert"));
     dialog.set_default_response(Some("ok"));

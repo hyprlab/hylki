@@ -112,7 +112,8 @@ fn confirm_discard_dialog(
             i18n("Save Draft"),
         )
     };
-    let dialog = adw::MessageDialog::new(parent, Some(heading.as_str()), Some(body.as_str()));
+    let dialog =
+        crate::ui::dialog::message_dialog(parent, Some(heading.as_str()), Some(body.as_str()));
     dialog.add_response("keep", &i18n("Keep Editing"));
     dialog.add_response("discard", &i18n("Discard"));
     dialog.add_response("save", &save);

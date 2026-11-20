@@ -25,7 +25,7 @@ impl AppModel {
             }
             _ => i18n("Create a new folder for this account."),
         };
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.window),
             Some(i18n("New Folder").as_str()),
             Some(body.as_str()),
@@ -63,7 +63,7 @@ impl AppModel {
         path: String,
         sender: &ComponentSender<Self>,
     ) {
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.window),
             Some(&format!("Rename {name:?}")),
             Some(i18n("Sub-folders keep their place under the new name.").as_str()),
@@ -134,7 +134,7 @@ impl AppModel {
         path: String,
         sender: &ComponentSender<Self>,
     ) {
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.window),
             Some(&format!("Delete “{name}”?")),
             Some(
