@@ -72,7 +72,7 @@ impl AccountsWindow {
         sender: &ComponentSender<Self>,
     ) {
         if found.is_empty() {
-            let dialog = adw::MessageDialog::new(
+            let dialog = crate::ui::dialog::message_dialog(
                 parent,
                 Some(i18n("No New Tags").as_str()),
                 Some(i18n("Every tag in your mailboxes is already set up here.").as_str()),
@@ -85,7 +85,7 @@ impl AccountsWindow {
         }
 
         let n = found.len();
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             parent,
             Some(i18n("Tags Found").as_str()),
             Some(

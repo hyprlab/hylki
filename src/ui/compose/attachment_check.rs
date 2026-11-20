@@ -75,7 +75,7 @@ impl Compose {
         sender: &ComponentSender<Self>,
     ) {
         let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             parent.as_ref(),
             Some(&i18n("Send without an attachment?")),
             Some(&i18n_f(

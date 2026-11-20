@@ -184,7 +184,8 @@ impl AppModel {
         let parent = relm4::main_application()
             .active_window()
             .unwrap_or_else(|| self.window.clone().upcast());
-        let dialog = adw::MessageDialog::new(Some(&parent), Some(&heading), Some(body.as_str()));
+        let dialog =
+            crate::ui::dialog::message_dialog(Some(&parent), Some(&heading), Some(body.as_str()));
         dialog.add_response("cancel", &i18n("Cancel"));
         dialog.add_response("unsub", &i18n("Unsubscribe"));
         dialog.set_default_response(Some("unsub"));

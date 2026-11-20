@@ -522,7 +522,7 @@ impl PgpKeys {
     #[allow(deprecated)] // adw::MessageDialog: AlertDialog would change how it looks
     fn generate_dialog(&self, sender: &ComponentSender<Self>) {
         let parent = relm4::main_application().active_window();
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             parent.as_ref(),
             Some(&i18n("Generate a Key")),
             Some(&i18n("This will be kept in the GnuPG keyring. The passphrase is asked for when the key is used.")),
@@ -746,7 +746,7 @@ impl PgpKeys {
                 i18n_f("{uid} will be removed from your keyring. It can be imported or fetched again later.", &[("uid", key.primary_uid())]),
             )
         };
-        let dialog = adw::MessageDialog::new(parent.as_ref(), Some(&title), Some(&body));
+        let dialog = crate::ui::dialog::message_dialog(parent.as_ref(), Some(&title), Some(&body));
         dialog.add_response("cancel", &i18n("Cancel"));
         dialog.add_response(
             "delete",
@@ -799,7 +799,7 @@ impl PgpKeys {
     #[allow(deprecated)] // adw::MessageDialog: AlertDialog would change how it looks
     fn on_fetch(&mut self, sender: &ComponentSender<Self>) {
         let parent = relm4::main_application().active_window();
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             parent.as_ref(),
             Some(&i18n("Fetch a Key")),
             Some(&i18n("Looks the address up where its provider publishes keys (WKD), then on the keyservers.")),
@@ -856,7 +856,7 @@ impl PgpKeys {
             return;
         }
         let parent = relm4::main_application().active_window();
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             parent.as_ref(),
             Some(&i18n("Trust this key?")),
             Some(&i18n_f(

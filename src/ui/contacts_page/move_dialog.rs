@@ -83,7 +83,7 @@ impl ContactsPage {
             }
         };
         let win = widgets.page_stack.root().and_downcast::<gtk::Window>();
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             win.as_ref(),
             Some(&i18n("Move to Address Book")),
             Some(&body),

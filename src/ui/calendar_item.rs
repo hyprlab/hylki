@@ -45,7 +45,7 @@ pub(crate) fn show(
         ItemKind::Event => i18n("New Event"),
         ItemKind::Task => i18n("New Task"),
     };
-    let dialog = adw::MessageDialog::new(Some(parent), Some(&heading), None);
+    let dialog = crate::ui::dialog::message_dialog(Some(parent), Some(&heading), None);
     dialog.add_response("cancel", &i18n("Cancel"));
     // With nothing in EDS the item goes to the calendar application, which
     // asks again; the button says where it is going.

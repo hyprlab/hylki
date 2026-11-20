@@ -185,8 +185,11 @@ impl AppModel {
             .filter(|w| w.is_visible())
             .map(|w| w.upcast())
             .or_else(|| Some(self.window.clone().upcast()));
-        let dialog =
-            adw::MessageDialog::new(parent.as_ref(), Some(&i18n("Applying Filters")), None);
+        let dialog = crate::ui::dialog::message_dialog(
+            parent.as_ref(),
+            Some(&i18n("Applying Filters")),
+            None,
+        );
         dialog.set_body_use_markup(false);
         dialog.add_response(FILTER_RUN_RESPONSE, &i18n("Run in Background"));
         dialog.set_close_response(FILTER_RUN_RESPONSE);

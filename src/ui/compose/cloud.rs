@@ -27,7 +27,7 @@ fn cloud_upload_dialog(
         return;
     }
     let n = paths.len();
-    let dialog = adw::MessageDialog::new(
+    let dialog = crate::ui::dialog::message_dialog(
         parent,
         Some(i18n("Upload to Cloud Storage").as_str()),
         Some(
