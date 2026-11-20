@@ -456,8 +456,14 @@ pub(crate) fn generate_key(
         .unwrap_or_else(|| i18n("gpg did not create the key.")))
 }
 
+/// The keyserver asked when gpg's own finds nothing: keys.openpgp.org
+/// lists a key under an address only once its owner proved the address,
+/// and holds many that gpg's default (keyserver.ubuntu.com) lacks.
+const FALLBACK_KEYSERVER: &str = "hkps://keys.openpgp.org";
+
 /// Look a key up by address (WKD, then the keyservers), and by key id
-/// when the message named one, importing what is found.
+/// when the message named one, importing what is found. What gpg's own
+/// keyserver lacks is asked of [`FALLBACK_KEYSERVER`].
 pub(crate) fn fetch_key(
     gpg: &Gpg,
     addr: &str,
@@ -465,34 +471,44 @@ pub(crate) fn fetch_key(
 ) -> Result<ImportSummary, String> {
     let mut total = ImportSummary::default();
     let mut detail = None;
-    if !addr.trim().is_empty() {
-        let out = run(
-            gpg,
-            &[
-                "--auto-key-locate",
-                "clear,wkd,keyserver",
-                "--locate-external-keys",
-                addr.trim(),
-            ],
-            b"",
-            None,
-        );
-        total.add(import_summary(&out));
-        detail = out.detail;
-    }
-    if total.fingerprints.is_empty() {
-        if let Some(id) = key_id.filter(|k| !k.is_empty()) {
-            let out = run(gpg, &["--recv-keys", id], b"", None);
+    let addr = addr.trim();
+    let key_id = key_id.filter(|k| !k.is_empty());
+    for keyserver in [None, Some(FALLBACK_KEYSERVER)] {
+        let mut base: Vec<&str> = Vec::new();
+        if let Some(server) = keyserver {
+            base.extend(["--keyserver", server]);
+        }
+        if !addr.is_empty() {
+            // WKD asks the address's own domain: once is enough.
+            let locate = if keyserver.is_some() {
+                "clear,keyserver"
+            } else {
+                "clear,wkd,keyserver"
+            };
+            let mut args = base.clone();
+            args.extend(["--auto-key-locate", locate, "--locate-external-keys", addr]);
+            let out = run(gpg, &args, b"", None);
             total.add(import_summary(&out));
             if out.detail.is_some() {
                 detail = out.detail;
             }
         }
+        if total.fingerprints.is_empty() {
+            if let Some(id) = key_id {
+                let mut args = base;
+                args.extend(["--recv-keys", id]);
+                let out = run(gpg, &args, b"", None);
+                total.add(import_summary(&out));
+                if out.detail.is_some() {
+                    detail = out.detail;
+                }
+            }
+        }
+        if !total.fingerprints.is_empty() {
+            return Ok(total);
+        }
     }
-    if total.fingerprints.is_empty() {
-        return Err(detail.unwrap_or_else(|| i18n("No key was found for that address.")));
-    }
-    Ok(total)
+    Err(detail.unwrap_or_else(|| i18n("No key was found for that address.")))
 }
 
 /// Vouch for a key: a local (non-exportable) signature with one of the

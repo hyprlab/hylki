@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Fixed: Fetch the sender's key found nothing for many addresses.** gpg
+  asks only the keyserver it is set up with, keyserver.ubuntu.com by
+  default, which lacks many keys (edward-en@fsf.org's among them). When WKD
+  and that keyserver find nothing, Hylki now asks keys.openpgp.org too, both
+  for **Fetch the sender's key** and for **Fetch by address…**.
+
 - **New: contacts picked from the mail** (#677, requested by
   DarkStarCrashes123). **From Mail…** in the Contacts view's import menu
   lists everyone in the cached mail who is not a contact yet, with how many
